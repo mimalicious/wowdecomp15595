@@ -30,6 +30,7 @@
 #include "Engine/Source/Services/RibbonEmitter.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
+#include "Engine/Source/ShaderEffect/ShadowCache.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C33Matrix.h"
 #include "Engine/Source/Tempest/CAaRect.h"
@@ -3767,7 +3768,7 @@ void CM2Model::RenderBatchShadowMap(int32_t untextured, M2ShadowBatch* batch, co
                 influences = 1;
             }
 
-            CShaderEffect::SetDefaultShaders(influences, untextured);
+            CShadowCache::SetShadowMapModel(influences, untextured);
         }
 
         gxBatch.m_count = instances * section->m_indexCount;
@@ -5177,9 +5178,9 @@ int32_t CM2Model::SetVerticesMultiSample(int32_t optimized, M2SkinSection* secti
 // OFFSET: 0x0081FF50
 void CM2Model::RenderModelBatchesShadowMap(const CModelBatchList& untextured, const CModelBatchList& textured) {
     GxRsSet(GxRs_BlendingMode, static_cast<int32_t>(0));
-    CShaderEffect::SetDefaultShaders(0, 1);
+    CShadowCache::SetShadowMapModel(0, 1);
     CM2Model::RenderModelBatchListShadowMap(1, untextured);
-    CShaderEffect::SetDefaultShaders(0, 0);
+    CShadowCache::SetShadowMapModel(0, 0);
     g_theGxDevicePtr->RsPush();
     CM2Model::RenderModelBatchListShadowMap(0, textured);
     g_theGxDevicePtr->RsPop();

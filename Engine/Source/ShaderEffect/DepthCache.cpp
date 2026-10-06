@@ -55,7 +55,7 @@ DepthCache::EDepthMode DepthCache::GetDepthMode() {
     return s_depthMode;
 }
 
-// OFFSET: %0x009708E0
+// OFFSET: 0x00A2F8C0/0x1407D95C0
 int32_t DepthCache::IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFormat* resolveFormat) {
     EGxTexFormat resolve = GxTex_Unknown;
     EDepthMode depthMode = DM_Unknown;
@@ -125,7 +125,7 @@ int32_t DepthCache::IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFo
     return depthMode != DM_Unknown;
 }
 
-// OFFSET: %0x00970A50
+// OFFSET: 0x00A2FA40/0x1407D9780
 void DepthCache::Release() {
     if (--s_refCount) {
         return;
@@ -161,7 +161,7 @@ void DepthCache::Resolve() {
     }
 }
 
-// OFFSET: %0x00970AB0
+// OFFSET: 0x00A2FAA0/0x1407D9810
 static void CreateTextures() {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_theGxDevicePtr->CapsWindowSize(rect);
@@ -204,7 +204,7 @@ static void CreateTextures() {
     }
 }
 
-// OFFSET: %0x00970C90
+// OFFSET: 0x00A2FCA0/0x1407D9A60
 void DepthCache::AddRef() {
     if (s_refCount++) {
         return;

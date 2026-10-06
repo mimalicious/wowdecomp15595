@@ -96,7 +96,7 @@ void CShaderEffect::AddRef() {
     this->m_refCount++;
 }
 
-// OFFSET: %0x0043BFD0
+// OFFSET: 0x00431E30/0x14003A610
 void CShaderEffect::InitEffect(const char* vertexShader, const char* hullShader, const char* domainShader, const char* pixelShader) {
     this->m_vertexShader = NULL;
     this->m_hullShader = NULL;
@@ -128,7 +128,7 @@ void CShaderEffect::InitFixedFuncPass(const EGxTexOp* colorOps, const EGxTexOp* 
     }
 }
 
-// OFFSET: %0x0043C0A0
+// OFFSET: 0x00431EC0
 uint32_t CShaderEffect::SelectShadowShader(uint32_t shadow) {
     if (!(CShaderEffect::s_fogColorAlphaRef.w > 0.0f) || (g_theGxDevicePtr->m_caps.unk_02F4 && (CShaderEffect::s_forceAlphaTest || !shadow))) {
         return shadow + 4 * CShaderEffect::s_usePcfFiltering;
@@ -137,7 +137,7 @@ uint32_t CShaderEffect::SelectShadowShader(uint32_t shadow) {
     return shadow + 4 * (CShaderEffect::s_usePcfFiltering + 2);
 }
 
-// OFFSET: %0x0043C100
+// OFFSET: 0x00431F20
 void CShaderEffect::SetGlobalLighting(CM2Light* light) {
     CShaderEffect::s_sunDir = light->m_dir;
     CShaderEffect::s_sunSpec = light->m_specColor;
@@ -163,7 +163,7 @@ void CShaderEffect::SetGlobalLighting(CM2Light* light) {
     }
 }
 
-// OFFSET: %0x0043C2B0
+// OFFSET: 0x004320D0
 void CShaderEffect::ComputeLocalLights(LocalLights* localLights, uint32_t lightCount, CM2Light** lights, const C3Vector* origin) {
     uint32_t i = 0;
 
@@ -284,7 +284,7 @@ int32_t CShaderEffect::TerrainDisplEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_terrainDisplFactor != 0.0f;
 }
 
-// OFFSET: %0x0043CD70
+// OFFSET: 0x00431D90/0x14003A560
 void CShaderEffect::InitShaderSystem(int32_t enableShaders, int32_t usePcfFiltering) {
     CShaderEffect::s_enableShaders = enableShaders;
     CShaderEffect::SetUsePcfFiltering(usePcfFiltering);
@@ -304,7 +304,7 @@ void CShaderEffect::InitShaderSystem(int32_t enableShaders, int32_t usePcfFilter
     FileNotification::RegisterSingleFile("bls", ReloadShadersCallback);
 }
 
-// OFFSET: %0x0043CE20
+// OFFSET: 0x00433260/0x14003B4B0
 void CShaderEffect::SetCurrent() {
     CShaderEffect::s_curEffect = this;
 
@@ -318,7 +318,7 @@ void CShaderEffect::SetCurrent() {
     }
 }
 
-// OFFSET: %0x0043CEF0
+// OFFSET: 0x00433330/0x14003B5C0
 void CShaderEffect::ResetShaders(uint32_t hullPermute, uint32_t domainPermute) {
     if (!CShaderEffect::s_enableShaders) {
         return;
@@ -333,7 +333,7 @@ void CShaderEffect::ResetShaders(uint32_t hullPermute, uint32_t domainPermute) {
     }
 }
 
-// OFFSET: %0x0043CF40
+// OFFSET: 0x00433380/0x14003B620
 void CShaderEffect::SetShaders(uint32_t vertexPermute, int32_t hullPermute, int32_t domainPermute, uint32_t pixelPermute) {
     int32_t useAlphaRef = 1;
 
@@ -366,7 +366,7 @@ void CShaderEffect::SetShaders(uint32_t vertexPermute, int32_t hullPermute, int3
     }
 }
 
-// OFFSET: %0x0043D0B0
+// OFFSET: 0x004334F0/0x14003B7D0
 void CShaderEffect::SetDefaultShaders(uint32_t shadow, uint32_t boneInfluences) {
     if (!CShaderEffect::s_enableShaders) {
         return;
@@ -384,7 +384,7 @@ void CShaderEffect::SetDefaultShaders(uint32_t shadow, uint32_t boneInfluences) 
     CShaderEffect::SetShaders(4 * (localLights + 4 * (shadowIndex + bones + 2 * shadowIndex)), -1, -1, pixelPermute);
 }
 
-// OFFSET: %0x0043D130
+// OFFSET: 0x00433570
 void CShaderEffect::SetLightingEnabled(int32_t enabled) {
     CShaderEffect::s_lightEnabled = enabled;
 
@@ -393,7 +393,7 @@ void CShaderEffect::SetLightingEnabled(int32_t enabled) {
     }
 }
 
-// OFFSET: %0x0043D180
+// OFFSET: 0x004335C0/0x14003B8F0
 void CShaderEffect::SetClipEnabled(int32_t enabled) {
     CShaderEffect::s_clipEnabled = enabled;
 
@@ -404,7 +404,7 @@ void CShaderEffect::SetClipEnabled(int32_t enabled) {
     GxRsSet(GxRs_ClipPlaneMask, enabled ? 1 : 0);
 }
 
-// OFFSET: %0x0043D210
+// OFFSET: 0x00433650/0x14003B9A0
 void CShaderEffect::SetFogParams(float start, float end, float density, const CImVector& color, float extra) {
     if (CShaderEffect::s_enableShaders) {
         CShaderEffect::s_fogColorAlphaRef.x = color.r * 0.0039215689f;
@@ -429,7 +429,7 @@ void CShaderEffect::SetFogParams(float start, float end, float density, const CI
     GxRsSet(GxRs_FogColor, *reinterpret_cast<const int32_t*>(&color));
 }
 
-// OFFSET: %0x0043D3C0
+// OFFSET: 0x00433800
 void CShaderEffect::SetFogEnabled(int32_t enabled) {
     if (enabled && g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog)) {
         if (CShaderEffect::s_enableShaders) {
@@ -452,7 +452,7 @@ void CShaderEffect::SetFogEnabled(int32_t enabled) {
     }
 }
 
-// OFFSET: %0x0043D4A0
+// OFFSET: 0x004338E0/0x14003BCC0
 void CShaderEffect::SetTexMtx_Identity(uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float matrix[8] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
@@ -465,7 +465,7 @@ void CShaderEffect::SetTexMtx_Identity(uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: %0x0043D580
+// OFFSET: 0x004339C0
 void CShaderEffect::SetTexMtx_SphereMap(uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float matrix[8] = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
@@ -478,7 +478,7 @@ void CShaderEffect::SetTexMtx_SphereMap(uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 6);
 }
 
-// OFFSET: %0x0043D660
+// OFFSET: 0x00433AA0
 void CShaderEffect::SetTexMtx(const C2Vector& scale, const C2Vector& offset, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float constants[8] = { scale.x, 0.0f, 0.0f, offset.x, 0.0f, scale.y, 0.0f, offset.y };
@@ -500,7 +500,7 @@ void CShaderEffect::SetTexMtx(const C2Vector& scale, const C2Vector& offset, uin
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: %0x0043D830
+// OFFSET: 0x00433C70
 void CShaderEffect::SetTexMtx(const C44Matrix& matrix, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         float constants[8] = { matrix.a0, matrix.b0, matrix.c0, matrix.d0, matrix.a1, matrix.b1, matrix.c1, matrix.d1 };
@@ -518,7 +518,7 @@ void CShaderEffect::SetTexMtx(const C44Matrix& matrix, uint32_t stage) {
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
-// OFFSET: %0x0043D960
+// OFFSET: 0x00433DA0
 void CShaderEffect::SetTexMtx_TexGen(EGxTexGen texGen, const C44Matrix& matrix, uint32_t stage) {
     if (CShaderEffect::s_enableShaders) {
         C44Matrix view;
@@ -541,7 +541,7 @@ void CShaderEffect::SetTexMtx_TexGen(EGxTexGen texGen, const C44Matrix& matrix, 
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 2);
 }
 
-// OFFSET: %0x0043DB70
+// OFFSET: 0x00432A20/0x14003C670
 void CShaderEffect::UpdateWorldViewMatrix() {
     if (!CShaderEffect::s_enableShaders) {
         return;
@@ -560,7 +560,7 @@ void CShaderEffect::UpdateWorldViewMatrix() {
     GxShaderConstantsSet(GxSh_Vertex, 31, reinterpret_cast<const float*>(&worldView), 4);
 }
 
-// OFFSET: %0x0043DD50
+// OFFSET: 0x00432C00/0x14003C960
 void CShaderEffect::UpdateProjMatrix() {
     if (!CShaderEffect::s_enableShaders) {
         return;
@@ -581,7 +581,7 @@ void CShaderEffect::UpdateProjMatrix() {
     GxShaderConstantsSet(GxSh_Vertex, 2, reinterpret_cast<const float*>(&projection), 4);
 }
 
-// OFFSET: %0x0043DEA0
+// OFFSET: 0x00432D50/0x14003CAA0
 void CShaderEffect::UpdateTesselation() {
     float params[4] = { CShaderEffect::s_tesselationFactor, CShaderEffect::s_tesselationDist, 0.0f, 0.0f };
     g_theGxDevicePtr->ShaderConstantsSet(GxSh_Hull, 0, params, 1);
@@ -601,7 +601,7 @@ void CShaderEffect::UpdateTesselation() {
     g_theGxDevicePtr->ShaderConstantsSet(GxSh_Domain, 0, reinterpret_cast<const float*>(&projection), 4);
 }
 
-// OFFSET: %0x0043E030
+// OFFSET: 0x00432EE0
 void CShaderEffect::UpdateDisplacement() {
     C44Matrix projection;
     projection = g_theGxDevicePtr->m_projNative;
@@ -626,7 +626,7 @@ void CShaderEffect::UpdateDisplacement() {
     }
 }
 
-// OFFSET: %0x0043E1F0
+// OFFSET: 0x004330A0
 void CShaderEffect::UpdateTerrainDispl() {
     C44Matrix projection;
     projection = g_theGxDevicePtr->m_projNative;
@@ -651,7 +651,7 @@ void CShaderEffect::UpdateTerrainDispl() {
     }
 }
 
-// OFFSET: %0x0043E3B0
+// OFFSET: 0x00433FB0
 void CShaderEffect::SetDiffuse(const C4Vector& color) {
     if (CShaderEffect::s_enableShaders) {
         GxShaderConstantsSet(GxSh_Vertex, 28, &color.x, 1);
@@ -672,7 +672,7 @@ void CShaderEffect::SetDiffuse(const C4Vector& color) {
     GxRsSet(GxRs_MatDiffuse, *reinterpret_cast<int32_t*>(&diffuse));
 }
 
-// OFFSET: %0x0043E500
+// OFFSET: 0x00434100
 void CShaderEffect::SetEmissive(const C4Vector& color) {
     if (CShaderEffect::s_enableShaders) {
         GxShaderConstantsSet(GxSh_Vertex, 29, &color.x, 1);
@@ -693,7 +693,7 @@ void CShaderEffect::SetEmissive(const C4Vector& color) {
     GxRsSet(GxRs_MatEmissive, *reinterpret_cast<int32_t*>(&emissive));
 }
 
-// OFFSET: %0x0043E650
+// OFFSET: 0x00434250/0x14003D2A0
 void CShaderEffect::SetAlphaRef(float alphaRef) {
     CShaderEffect::s_fogColorAlphaRef.w = alphaRef;
 
@@ -705,7 +705,7 @@ void CShaderEffect::SetAlphaRef(float alphaRef) {
     GxRsSet(GxRs_AlphaRef, static_cast<int32_t>(static_cast<uint8_t>(static_cast<int32_t>(alphaRef * 255.0f))));
 }
 
-// OFFSET: %0x0043E6F0
+// OFFSET: 0x00434370
 void CShaderEffect::SetLocalLighting(CM2Lighting* lighting, int32_t enabled, const C3Vector* origin) {
     CShaderEffect::s_lightEnabled = enabled;
 
@@ -757,13 +757,13 @@ void CShaderEffect::SetLocalLighting(CM2Lighting* lighting, int32_t enabled, con
     CShadowCache::SetShadowMapGenericInterior(lighting->m_flags & 8);
 }
 
-// OFFSET: %0x0043E940
+// OFFSET: 0x004345C0
 void CShaderEffect::SetAlphaRefDefault() {
     float alphaRef = CGxDevice::s_alphaRef[g_theGxDevicePtr->m_appRenderStates[GxRs_BlendingMode].m_value.m_data.i[0]] * 0.0039215689f;
     CShaderEffect::SetAlphaRef(alphaRef);
 }
 
-// OFFSET: %0x0043E990
+// OFFSET: 0x004342F0
 CShaderEffect::~CShaderEffect() {
     if (CShaderEffect::s_displTex) {
         TextureRelease(CShaderEffect::s_displTex);

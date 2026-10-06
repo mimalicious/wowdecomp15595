@@ -8,7 +8,7 @@
 // STATIC: %0x00C3CD58
 TSHashTable<CShaderEffect, HASHKEY_STRI> CShaderEffectManager::m_ShaderList;
 
-// OFFSET: %0x0043EBC0
+// OFFSET: 0x004347C0
 void CShaderEffectManager::DestroyAllEffects() {
     CShaderEffect* effect = CShaderEffectManager::m_ShaderList.Head();
 
@@ -19,19 +19,19 @@ void CShaderEffectManager::DestroyAllEffects() {
     }
 }
 
-// OFFSET: %0x0043EC20
+// OFFSET: 0x00434630/0x14003D7E0
 CShaderEffect* CShaderEffectManager::GetEffect(const char* name) {
     return CShaderEffectManager::m_ShaderList.Ptr(name);
 }
 
-// OFFSET: %0x0043F2E0
+// OFFSET: 0x00434EB0/0x14003E410
 CShaderEffect* CShaderEffectManager::CreateEffect(const char* name) {
     CShaderEffectManager::m_ShaderList.Ptr(name);
 
     return CShaderEffectManager::m_ShaderList.New(name, 0, 0);
 }
 
-// OFFSET: %0x0043F3A0
+// OFFSET: 0x00434F70/0x14003E590
 void CShaderEffectManager::ParseEffectCallback(const CShaderEffectParser::ParsedEffect& effect, void* param) {
     CShaderEffect* shaderEffect = CShaderEffectManager::m_ShaderList.New(effect.m_name, 0, 0);
 
@@ -43,7 +43,7 @@ void CShaderEffectManager::ParseEffectCallback(const CShaderEffectParser::Parsed
     }
 }
 
-// OFFSET: %0x0043F4A0
+// OFFSET: 0x00435070/0x14003E770
 void CShaderEffectManager::AddEffectFile(const char* fileName) {
     char path[256];
     sprintf(path, "Shaders\\Effects\\%s", fileName);

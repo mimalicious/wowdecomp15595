@@ -10,6 +10,7 @@
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 
+class CGxShader;
 class CGxTex;
 class CTexture;
 struct CShadowCacheQueryData;
@@ -85,6 +86,8 @@ class CShadowCache {
     static C3Vector s_sunDir;
     static C4Vector s_sunDirViewSpace;
     static float s_textureSize[2];
+    static CGxShader* s_shadowMapPixelShader;
+    static CGxShader* s_shadowMapVertexShader;
 
     static void ClearBandTextures();
     static void Create();
@@ -106,9 +109,11 @@ class CShadowCache {
     static void SetMatrixCallback(ShadowMatrixCallback callback);
     static void SetQueryCallback(ShadowQueryCallback callback);
     static void SetRenderCallback(ShadowRenderCallback callback);
+    static void SetShadowMapAlphaTest(int32_t enable);
     static void SetShadowMapDetailDoodad();
     static void SetShadowMapGenericGlobal();
     static void SetShadowMapGenericInterior(int32_t interior);
+    static void SetShadowMapModel(uint32_t boneInfluences, int32_t untextured);
     static void SetShadowMapTerrain();
     static int32_t SetShadowMode(EShadowMode mode);
     static void SetShadowScale(float scale);

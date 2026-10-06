@@ -25,7 +25,7 @@ const char* CShaderEffectParser::s_gxTexOpNames[GxTexOps_Last] = {
     "Fade",
 };
 
-// OFFSET: %0x00442840
+// OFFSET: 0x004387A0
 static int32_t FindScope(const char* data, uint32_t start, uint32_t end, uint32_t* open, uint32_t* close) {
     int32_t depth = 0;
 
@@ -57,7 +57,7 @@ static EGxTexOp LookupTexOp(const char* name) {
     return GxTexOp_Mod;
 }
 
-// OFFSET: %0x00442760
+// OFFSET: 0x004386C0/0x1400426D0
 int32_t CShaderEffectParser::ExtractFuncKeyword(const char* text, const char* keyword, char (*args)[64], uint32_t& argCount, uint32_t& pos) {
     size_t length = strlen(keyword);
 
@@ -97,7 +97,7 @@ int32_t CShaderEffectParser::ExtractFuncKeyword(const char* text, const char* ke
     return 1;
 }
 
-// OFFSET: %0x004428E0
+// OFFSET: 0x00438840/0x140042890
 void CShaderEffectParser::ParseFixedFunc(char* data, uint32_t size, uint32_t& pos, char (*args)[64], uint32_t argCount, ParsedEffect* effect) {
     uint32_t open;
     uint32_t close;
@@ -150,7 +150,7 @@ void CShaderEffectParser::ParseFixedFunc(char* data, uint32_t size, uint32_t& po
     pos = close + 1;
 }
 
-// OFFSET: %0x00442A80
+// OFFSET: 0x004389E0/0x140042BB0
 void CShaderEffectParser::ParseShader(char* data, uint32_t size, uint32_t& pos, char (*args)[64], uint32_t argCount, ParsedEffect* effect) {
     uint32_t open;
     uint32_t close;
@@ -189,7 +189,7 @@ void CShaderEffectParser::ParseShader(char* data, uint32_t size, uint32_t& pos, 
     pos = close + 1;
 }
 
-// OFFSET: %0x00442BB0
+// OFFSET: 0x00438B10/0x140042D90
 void CShaderEffectParser::ParseEffect(char* data, uint32_t size, uint32_t& pos, char (*args)[64], uint32_t argCount, ParsedEffect* effect) {
     SStrCopy(effect->m_name, args[0], sizeof(effect->m_name));
     effect->m_fixedFuncPassCount = 0;

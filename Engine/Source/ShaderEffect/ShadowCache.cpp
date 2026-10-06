@@ -12,6 +12,12 @@
 #include "Engine/Source/Tempest/CFrustum.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
+// STATIC: 0x00D38338
+CGxShader* CShadowCache::s_shadowMapPixelShader;
+
+// STATIC: 0x00D3833C
+CGxShader* CShadowCache::s_shadowMapVertexShader;
+
 // STATIC: %0x00BACE10
 float CShadowCache::s_debugAspect = 1.0f;
 
@@ -1083,4 +1089,25 @@ void CShadowCache::CreateResources() {
     CShadowCache::Destroy();
     CShadowCache::Create();
     CShadowCache::s_recreateTextures = 0;
+}
+
+// OFFSET: 0x004380A0
+void CShadowCache::SetShadowMapAlphaTest(int32_t enable) {
+    if (CShaderEffect::s_forceAlphaTest) {
+        GxRsSet(GxRs_AlphaRef, enable ? 0x80 : 0);
+        return;
+    }
+
+    float constants[4] = { 0.0f, 0.0f, 0.0f, enable ? 0.50196081f : 0.0f };
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 2, constants, 1);
+}
+
+// OFFSET: 0x00438630
+void CShadowCache::SetShadowMapModel(uint32_t boneInfluences, int32_t untextured) {
+    uint32_t vertexPermute = boneInfluences > 2 ? 2 : boneInfluences;
+    uint32_t pixelPermute = untextured ? 0 : (CShaderEffect::s_forceAlphaTest != 0) + 1;
+
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &CShadowCache::s_shadowMapVertexShader->m_permutes[vertexPermute]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &CShadowCache::s_shadowMapPixelShader->m_permutes[pixelPermute]);
+    CShadowCache::SetShadowMapAlphaTest(!untextured);
 }
