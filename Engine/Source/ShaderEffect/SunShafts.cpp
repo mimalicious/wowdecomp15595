@@ -35,7 +35,7 @@ static CGxTex* s_gxTex[2];
 // STATIC: 0x00F803C0
 static CTexture* s_tex[2];
 
-// STATIC: 0x00F803C8
+// STATIC: 0x00F803C8/0x140E78240
 static uint32_t s_mode;
 
 // PROVEN: 2201f9d8 IDENTICAL/IDENTICAL
@@ -50,7 +50,8 @@ CGxTex* SunShafts::GetBuffer() {
     return s_gxTex[1];
 }
 
-// OFFSET: 0x00A2ED20
+// PROVEN: 1ed95b87 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2ED20/0x1407D8700
 void SunShafts::Create() {
     CGxTexFlags flags;
     flags.m_renderTarget = 1;
@@ -68,7 +69,8 @@ void SunShafts::Create() {
     DepthCache::AddRef();
 }
 
-// OFFSET: 0x00A2EE40
+// PROVEN: 7aba222d IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2EE40/0x1407D8880
 void SunShafts::Destroy() {
     for (uint32_t i = 0; i < 2; i++) {
         if (s_tex[i]) {
@@ -124,7 +126,7 @@ uint32_t SunShafts::ValidateMode(uint32_t mode) {
     return DepthCache::IsSupported(NULL, NULL, NULL) ? 0 : 8;
 }
 
-// OFFSET: 0x00A2EF60
+// OFFSET: 0x00A2EF60/0x1407D89F0
 int32_t SunShafts::SetMode(uint32_t mode) {
     if (!mode || (mode <= 2 && g_theGxDevicePtr->m_caps.m_shaderModel >= 4 && DepthCache::IsSupported(NULL, NULL, NULL))) {
         if (SunShafts::IsEnabled() != (mode > 0)) {

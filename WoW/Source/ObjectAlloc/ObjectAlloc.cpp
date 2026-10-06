@@ -88,7 +88,7 @@ void ReleaseObjAllocGlobals() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: 0x00486910
+// OFFSET: 0x00486910/0x1400A7980
 void CObjectHeapList::FreeEmptyHeaps() {
     uint32_t count = this->m_heaps.Count();
     uint32_t allocated = 0;
@@ -214,7 +214,7 @@ void* ObjectPtr(uint32_t heapId, uint32_t memHandle) {
     return ptr;
 }
 
-// OFFSET: 0x00486AC0
+// OFFSET: 0x00486AC0/0x1400A7A90
 void CObjectHeapList::Delete(uint32_t index) {
     uint32_t heapIndex = index / this->m_objsPerBlock;
     CObjectHeap& heap = this->m_heaps[heapIndex];
@@ -238,7 +238,7 @@ void CObjectHeapList::Delete(uint32_t index) {
     }
 }
 
-// OFFSET: 0x00486B40
+// OFFSET: 0x00486B40/0x1400A7B30
 static void HeapUse() {
     s_globalsLock.Enter();
 
@@ -262,7 +262,8 @@ static void HeapUse() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: 0x00486D40
+// PROVEN: 71ce0149 IDENTICAL/NONE
+// OFFSET: 0x00486D40/0x1400A7D90
 void ObjectFree(uint32_t heapId, uint32_t memHandle) {
     s_globalsLock.Enter();
     s_globals.objects[heapId].Delete(memHandle);
@@ -351,7 +352,7 @@ void ObjectAllocDestroy() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: 0x004871D0
+// OFFSET: 0x004871D0/0x1400A8530
 uint32_t ObjectAllocAddHeap(uint32_t objectSize, uint32_t objectsPerBlock, const char* name, bool freeEmptyHeaps) {
     if (objectSize) {
         s_globalsLock.Enter();

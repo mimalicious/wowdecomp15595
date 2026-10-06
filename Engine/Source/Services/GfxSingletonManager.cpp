@@ -9,7 +9,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRandom.h"
 
-// STATIC: 0x00D27C88
+// STATIC: 0x00D27C88/0x140BE64B0
 static float s_scaler = 1.0f;
 
 // STATIC: 0x01008B38
@@ -51,7 +51,7 @@ void ParticleSystemManager::Flush() {
     this->m_pendingEmitters2.m_count = 0;
 }
 
-// OFFSET: 0x00B13C60
+// OFFSET: 0x00B13C60/0x1408D9A10
 CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitter2* emitter, int32_t copyParticles) {
     if (!emitter) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -80,7 +80,7 @@ void RibbonManager::Flush() {
     this->m_pendingEmitters.m_count = 0;
 }
 
-// OFFSET: 0x00B13D00
+// OFFSET: 0x00B13D00/0x1408D9AF0
 ParticleSystemManager* ParticleSystemManager::GetInstance() {
     if (ParticleSystemManager::s_instance) {
         return ParticleSystemManager::s_instance;

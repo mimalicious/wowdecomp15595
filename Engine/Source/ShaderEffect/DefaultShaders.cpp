@@ -55,7 +55,8 @@ void DefaultShaders::Initialize() {
     }
 }
 
-// OFFSET: %0x0043AFB0
+// PROVEN: 3bf9c181 IDENTICAL/DIFFERENT
+// OFFSET: 0x00430B80/0x140038EE0
 void DefaultShaders::Destroy() {
     if (--s_initCount) {
         return;

@@ -41,12 +41,14 @@ void CAngle::Set_(const float& value) {
     this->m_sin = sin(this->m_data);
 }
 
-// OFFSET: 0x0054A460
+// PROVEN: 7a2f638f IDENTICAL/NONE
+// OFFSET: 0x0054A460/0x1401A35C0
 void CameraAddRef(CCamera* camera) {
     camera->m_refCount++;
 }
 
-// OFFSET: 0x0054A470
+// PROVEN: 913dc92b IDENTICAL/NONE
+// OFFSET: 0x0054A470/0x1401A35D0
 void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     switch (index) {
         case 7:
@@ -59,7 +61,8 @@ void CameraGetCoord(CCamera* camera, uint32_t index, C3Vector* value) {
     }
 }
 
-// OFFSET: 0x0054A4C0
+// PROVEN: 7bd54c5b IDENTICAL/NONE
+// OFFSET: 0x0054A4C0/0x1401A3610
 float CameraGetFloat(CCamera* camera, uint32_t index) {
     switch (index) {
         case 0:
@@ -88,7 +91,8 @@ float CameraGetFloat(CCamera* camera, uint32_t index) {
     }
 }
 
-// OFFSET: 0x0054A530
+// PROVEN: a5a23e49 IDENTICAL/NONE
+// OFFSET: 0x0054A530/0x1401A3680
 void CameraSetCoord(CCamera* camera, uint32_t index, const C3Vector& value) {
     switch (index) {
         case 7:
@@ -101,7 +105,7 @@ void CameraSetCoord(CCamera* camera, uint32_t index, const C3Vector& value) {
     }
 }
 
-// OFFSET: 0x0054A580
+// OFFSET: 0x0054A580/0x1401A36C0
 void CameraSetFloat(CCamera* camera, uint32_t index, float value) {
     switch (index) {
         case 0:
@@ -158,12 +162,13 @@ void CCamera::SetupWorldProjection(const CRect& rect, uint32_t flags) {
     CShaderEffect::UpdateProjMatrix();
 }
 
-// OFFSET: 0x0054AA40
+// PROVEN: 27f2465f IDENTICAL/NONE
+// OFFSET: 0x0054AA40/0x1401A3B30
 CCamera* CameraCreate() {
     return new (__FILE__, __LINE__) CCamera;
 }
 
-// OFFSET: 0x0054AA60
+// OFFSET: 0x0054AA60/0x1401A3B70
 CCamera* CameraDuplicate(CCamera* source) {
     if (!source) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -189,7 +194,7 @@ CCamera* CameraDuplicate(CCamera* source) {
     return camera;
 }
 
-// OFFSET: 0x0054AB40
+// OFFSET: 0x0054AB40/0x1401A3C80
 void CameraRelease(CCamera*& camera) {
     if (camera->m_refCount-- == 1) {
         delete camera;

@@ -85,12 +85,13 @@ static void GxuLightSetMaxLightsImpl(uint32_t maxLights) {
     }
 }
 
-// OFFSET: 0x00610A50
+// PROVEN: 59b9700f IDENTICAL/NONE
+// OFFSET: 0x00610A50/0x14029AFD0
 static float GxuLightGetGridSizeImpl() {
     return s_gridSize;
 }
 
-// OFFSET: 0x00610A60
+// OFFSET: 0x00610A60/0x14029AFE0
 static void GxuLightSetGridSizeImpl(float gridSize) {
     s_gridSize = gridSize;
     s_gridHalfSize = gridSize * 0.5;
@@ -154,7 +155,7 @@ CGxuLightLink* CGxuLight::NewLink() {
     return link;
 }
 
-// OFFSET: 0x00610E20
+// OFFSET: 0x00610E20/0x14029B4C0
 CLightList::~CLightList() {
 }
 
