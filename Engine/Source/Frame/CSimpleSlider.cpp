@@ -335,7 +335,8 @@ int32_t CSimpleSlider::OnLayerMouseDown(const CMouseEvent& evt, const char* btn)
     return CSimpleFrame::OnLayerMouseDown(evt, btn);
 }
 
-// OFFSET: %0x00531680
+// PROVEN: 15300170 IDENTICAL/UNPROVEN
+// OFFSET: 0x005217B0/0x14016F350
 void CSimpleSlider::SetMinMaxValues(float min, float max) {
     float range = max - min;
 

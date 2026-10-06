@@ -23,13 +23,15 @@
 
 
 
-// OFFSET: %0x0096C300
+// PROVEN: eb928bf3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A290/0x1407D2300
 static int math_abs (lua_State *L) {
   lua_pushnumber(L, fabs(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C330
+// PROVEN: 4b071646 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A2C0/0x1407D2340
 static int math_sin (lua_State *L) {
   lua_pushnumber(L, sin(luaL_checknumber(L, 1)));
   return 1;
@@ -41,7 +43,8 @@ static int math_sinh (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C390
+// PROVEN: eb1f19b7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A320/0x1407D23A0
 static int math_cos (lua_State *L) {
   lua_pushnumber(L, cos(luaL_checknumber(L, 1)));
   return 1;
@@ -53,7 +56,8 @@ static int math_cosh (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C3F0
+// PROVEN: 3235195e IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A380/0x1407D2400
 static int math_tan (lua_State *L) {
   lua_pushnumber(L, tan(luaL_checknumber(L, 1)));
   return 1;
@@ -77,13 +81,15 @@ static int math_acos (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C4B0
+// PROVEN: a83893a5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A440/0x1407D24C0
 static int math_atan (lua_State *L) {
   lua_pushnumber(L, atan(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C4E0
+// PROVEN: 5c278da5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A470/0x1407D24F0
 static int math_atan2 (lua_State *L) {
   lua_pushnumber(L, atan2(luaL_checknumber(L, 1), luaL_checknumber(L, 2)));
   return 1;
@@ -107,7 +113,8 @@ static int math_fmod (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C5D0
+// PROVEN: ed9a2def IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A560/0x1407D2690
 static int math_modf (lua_State *L) {
   double ip;
   double fp = modf(luaL_checknumber(L, 1), &ip);
@@ -116,7 +123,8 @@ static int math_modf (lua_State *L) {
   return 2;
 }
 
-// OFFSET: %0x0096C620
+// PROVEN: d47fde2d IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A5B0/0x1407D26E0
 static int math_sqrt (lua_State *L) {
   lua_pushnumber(L, sqrt(luaL_checknumber(L, 1)));
   return 1;
@@ -128,19 +136,22 @@ static int math_pow (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C6A0
+// PROVEN: 1616cdf6 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A630/0x1407D2770
 static int math_log (lua_State *L) {
   lua_pushnumber(L, log(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C6D0
+// PROVEN: b5f3a494 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A660/0x1407D27A0
 static int math_log10 (lua_State *L) {
   lua_pushnumber(L, log10(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C700
+// PROVEN: 57391248 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2A690/0x1407D27D0
 static int math_exp (lua_State *L) {
   lua_pushnumber(L, exp(luaL_checknumber(L, 1)));
   return 1;
@@ -158,7 +169,8 @@ static int math_rad (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C7A0
+// PROVEN: ff1b06c3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2A730/0x1407D2880
 static int math_frexp (lua_State *L) {
   int e;
   lua_pushnumber(L, frexp(luaL_checknumber(L, 1), &e));
@@ -166,7 +178,8 @@ static int math_frexp (lua_State *L) {
   return 2;
 }
 
-// OFFSET: %0x0096C7E0
+// PROVEN: 01664e6f IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2A770/0x1407D28C0
 static int math_ldexp (lua_State *L) {
   lua_pushnumber(L, ldexp(luaL_checknumber(L, 1), luaL_checkint(L, 2)));
   return 1;
@@ -204,7 +217,8 @@ static int math_max (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096C900
+// PROVEN: aead1376 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2A890/0x1407D2A10
 static int math_random (lua_State *L) {
   /* the `%' avoids the (rare) case of r==1, and is needed also because on
      some systems (SunOS!) `rand()' may return a value larger than RAND_MAX */

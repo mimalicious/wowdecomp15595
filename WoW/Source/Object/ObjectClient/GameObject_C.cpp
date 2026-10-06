@@ -1624,6 +1624,7 @@ int32_t CGGameObject_C_TypeBase::Animate(float elapsed) {
     return 1;
 }
 
+// PROVEN: 13be4357 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CGGameObject_C_TypeBase::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
 }

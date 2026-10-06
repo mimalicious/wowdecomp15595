@@ -110,7 +110,8 @@ int luaO_str2d (const char *s, lua_Number *result) {
 
 
 
-// OFFSET: %0x0042A0D0
+// PROVEN: 4c6851ce IDENTICAL/UNPROVEN
+// OFFSET: 0x0041FBC0/0x140023E90
 static void pushstr (lua_State *L, const char *str) {
   if (str == NULL) str = "(null)";
   setsvalue2s(L, L->top, luaS_new(L, str));
@@ -181,7 +182,8 @@ const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
 }
 
 
-// OFFSET: %0x0042A3E0
+// PROVEN: 13a3cddd IDENTICAL/UNPROVEN
+// OFFSET: 0x0041FED0/0x1400243C0
 const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
   const char *msg;
   va_list argp;

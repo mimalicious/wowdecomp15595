@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "Sha1.h"
 
-// STATIC: #0x00ADEDA8
+// STATIC: 0x00CA04E0/0x140B3C6A0
 static uint8_t pads[64] = { 0x80 };
 
 namespace Private {

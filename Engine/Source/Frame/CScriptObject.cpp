@@ -50,7 +50,8 @@ void CScriptObject::CreateName(const char* source, char* dest, uint32_t destSize
     SStrPack(dest, source + SStrLen("$parent"), destSize);
 }
 
-// OFFSET: %0x005207A0
+// PROVEN: 7e707b6f IDENTICAL/UNPROVEN
+// OFFSET: 0x005103F0/0x140159AD0
 CScriptObject* CScriptObject::GetScriptObjectByName(const char* name, int32_t type) {
     lua_State* L = FrameScript_GetContext();
 

@@ -202,7 +202,8 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const
     return this->GetScriptByName(lower, data);
 }
 
-// OFFSET: %0x007A3330
+// PROVEN: 5df4fffa IDENTICAL/UNPROVEN
+// OFFSET: 0x0083CF90/0x140567D00
 void FrameScript_Object::GetScriptTime(lua_State* L, const FrameScript_Object::ScriptIx& script, double* time, uint32_t* calls) {
     if (!this->HasScript(script)) {
         return;

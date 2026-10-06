@@ -10,12 +10,14 @@ static void* (*s_jpegAlloc)(size_t bytes);
 // STATIC: %0x00ED7668
 static void (*s_jpegFree)(void* ptr);
 
-// OFFSET: %0x00A8F5A0
+// PROVEN: 2f4b4a9f IDENTICAL/NONE
+// OFFSET: 0x00B5D340
 void jpeg_set_malloc(void* (*allocFunc)(size_t bytes)) {
     s_jpegAlloc = allocFunc;
 }
 
-// OFFSET: %0x00A8F5B0
+// PROVEN: 1ae689b1 IDENTICAL/NONE
+// OFFSET: 0x00B5D350
 void jpeg_set_free(void (*freeFunc)(void* ptr)) {
     s_jpegFree = freeFunc;
 }

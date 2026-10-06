@@ -49,7 +49,8 @@ void CM2Scene::SetTime(uint32_t time) {
     this->m_cache->GarbageCollect(0);
 }
 
-// OFFSET: %0x0078DB60
+// PROVEN: 6d1d632b IDENTICAL/UNPROVEN
+// OFFSET: 0x00827550/0x1405454D0
 void CM2Scene::ReloadModel(CM2Model* model, CM2Shared* shared) {
     model->Reload(this, shared);
 }

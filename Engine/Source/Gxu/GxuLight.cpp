@@ -66,7 +66,8 @@ static void GxuLightSetEnabledImpl(CGxuLight* light, bool enabled) {
     GxuLightUnlock(light);
 }
 
-// OFFSET: %0x006213E0
+// PROVEN: d937cbcd IDENTICAL/DIFFERENT
+// OFFSET: 0x00610A00/0x14029AF80
 static int32_t GxuLightGetEnabledImpl(CGxuLight* light) {
     int32_t enabled = GxuLightLock(light)->m_flags & 1;
     GxuLightUnlock(light);

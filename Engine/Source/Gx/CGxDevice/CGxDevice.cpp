@@ -85,7 +85,7 @@ HSLOG CGxDevice::m_log;
 // STATIC: %0x00D92E88
 C2iVector CGxDevice::s_clientAdjust;
 
-// STATIC: %0x00D92EA0
+// STATIC: 0x00EC6678
 static uint32_t s_nextFrameTime;
 
 // STATIC: %0x00C0E4CC
@@ -103,7 +103,7 @@ CGxShader* CGxDevice::s_uiVertexShader;
 // STATIC: %0x00D92D34
 CGxShader* CGxDevice::s_uiPixelShader;
 
-// STATIC: %0x00D8BCF0
+// STATIC: 0x00EBF4A0
 ShadowConstants CGxDevice::s_shadowConstants[GxShTargets_Last];
 
 // STATIC: %0x00D92D80
@@ -158,61 +158,61 @@ void CGxDevice::DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex* dest
 }
 
 // OFFSET: 0x00841930
-CGxRenderTargetGroup* CGxDevice::RenderTargetGroupCreate() {
-    return new (SMemAlloc(sizeof(CGxRenderTargetGroup), __FILE__, __LINE__, 0)) CGxRenderTargetGroup();
+CGxFrameBuffer* CGxDevice::FrameBufferCreate() {
+    return new (SMemAlloc(sizeof(CGxFrameBuffer), __FILE__, __LINE__, 0)) CGxFrameBuffer();
 }
 
-// PROVEN: b62dc613 IDENTICAL/NONE
+// PROVEN: a989595e IDENTICAL/NONE
 // OFFSET: 0x00841960
-void CGxDevice::RenderTargetGroupDestroy(CGxRenderTargetGroup*& group) {
-    if (group) {
-        SMemFree(group, "delete", -1, 0);
+void CGxDevice::FrameBufferDelete(CGxFrameBuffer*& frameBuffer) {
+    if (frameBuffer) {
+        SMemFree(frameBuffer, "delete", -1, 0);
     }
 
-    group = NULL;
+    frameBuffer = NULL;
 }
 
-// PROVEN: ef3f5c94 IDENTICAL/NONE
+// PROVEN: 004f5c49 IDENTICAL/NONE
 // OFFSET: 0x00841990
-int32_t CGxDevice::RenderTargetGroupSetTarget(CGxRenderTargetGroup* group, EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
-    return group->SetTarget(buffer, texture, plane);
+int32_t CGxDevice::FrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
+    return frameBuffer->Attach(buffer, texture, plane);
 }
 
-// PROVEN: 93533f6d IDENTICAL/NONE
+// PROVEN: a8e0bac9 IDENTICAL/NONE
 // OFFSET: 0x008419B0
-int32_t CGxDevice::RenderTargetGroupValidate(CGxRenderTargetGroup* group) {
-    CGxTex* depth = group->m_targets[GxBuffers_Depth].m_texture;
-    CGxTex* color = group->m_targets[GxBuffers_Color].m_texture;
+int32_t CGxDevice::FrameBufferFinalize(CGxFrameBuffer* frameBuffer) {
+    CGxTex* depth = frameBuffer->m_targets[GxBuffers_Depth].m_texture;
+    CGxTex* color = frameBuffer->m_targets[GxBuffers_Color].m_texture;
 
-    if ((!depth || !color || (!depth->m_width && !depth->m_height) || (depth->m_width >= color->m_width && depth->m_height >= color->m_height)) && group->Update()) {
+    if ((!depth || !color || (!depth->m_width && !depth->m_height) || (depth->m_width >= color->m_width && depth->m_height >= color->m_height)) && frameBuffer->Finalize()) {
         return 1;
     }
 
     return 0;
 }
 
-// PROVEN: 07ea608f IDENTICAL/NONE
+// PROVEN: 70b6b2d3 IDENTICAL/NONE
 // OFFSET: 0x00841A00
-CGxRenderTargetGroup* CGxDevice::DeviceCurrentRenderTargetGroup() {
-    return this->m_renderTargetGroup;
+CGxFrameBuffer* CGxDevice::FrameBufferGet() {
+    return this->m_frameBuffer;
 }
 
-// PROVEN: ddd43aab IDENTICAL/NONE
+// PROVEN: 4d27eae8 IDENTICAL/NONE
 // OFFSET: 0x00841900
-CGxTex* CGxDevice::DeviceDefaultColorTarget() {
-    return this->m_defaultColorTarget;
+CGxTex* CGxDevice::BackBufferColorTex() {
+    return this->m_backBufferColorTex;
 }
 
-// PROVEN: af0c9589 IDENTICAL/NONE
+// PROVEN: 8e58a0a4 IDENTICAL/NONE
 // OFFSET: 0x00841910
-CGxTex* CGxDevice::DeviceDefaultDepthTarget() {
-    return this->m_defaultDepthTarget;
+CGxTex* CGxDevice::BackBufferDepthTex() {
+    return this->m_backBufferDepthTex;
 }
 
-// PROVEN: ade631e7 IDENTICAL/NONE
+// PROVEN: afd1fd5e IDENTICAL/NONE
 // OFFSET: 0x00841920
-CGxRenderTargetGroup* CGxDevice::DeviceDefaultRenderTargetGroup() {
-    return this->m_defaultRenderTargetGroup;
+CGxFrameBuffer* CGxDevice::BackBuffer() {
+    return this->m_backBuffer;
 }
 
 void CGxDevice::LogCrashInfo(char* buffer, uint32_t size) {
@@ -1013,12 +1013,14 @@ void CGxDevice::ShaderConstantsSet(EGxShTarget target, uint32_t index, const flo
     }
 }
 
-// OFFSET: %0x007AE8A0
+// PROVEN: 0378b82d IDENTICAL/UNPROVEN
+// OFFSET: 0x00848CD0/0x140576820
 float* CGxDevice::ShaderConstantsLock(EGxShTarget target) {
     return CGxDevice::s_shadowConstants[target].constants;
 }
 
-// OFFSET: %0x007AE8C0
+// PROVEN: 2cd027af IDENTICAL/UNPROVEN
+// OFFSET: 0x00848CF0/0x140576840
 void CGxDevice::ShaderConstantsUnlock(EGxShTarget target, uint32_t index, uint32_t count) {
     ShadowConstants& shadow = CGxDevice::s_shadowConstants[target];
 
@@ -1185,7 +1187,8 @@ void CGxDevice::TexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* user
     texId->m_updatePlaneMax = texId->m_depth;
 }
 
-// OFFSET: %0x007A9B50
+// PROVEN: 2672507e IDENTICAL/UNPROVEN
+// OFFSET: 0x00843CD0/0x140570210
 void CGxDevice::ICursorCreate(const CGxFormat& format) {
     this->m_hwCursor = format.m_hwCursor && this->m_caps.m_hwCursor;
 
@@ -1762,8 +1765,73 @@ CGxDevice::CGxDevice() : m_defWindowRect(), m_curWindowRect(), m_viewport(), m_s
     this->ShaderConstantsClear();
 }
 
+// PROVEN: 36b582c1 IDENTICAL/DIFFERENT
+// OFFSET: 0x00844430/0x140570F20
+void CGxDevice::ICreateBackBufferFB(uint32_t width, uint32_t height, void* colorApiData, void* depthApiData) {
+    CGxTexFlags flags;
+    flags.m_renderTarget = 1;
+
+    if (!this->m_backBufferColorTex) {
+        this->m_backBufferColorTex = new (SMemAlloc(sizeof(CGxTex), __FILE__, __LINE__, 0)) CGxTex(GxTex_5, width, height, 1, GxTex_Abgr8888, GxTex_Abgr8888, flags, NULL, NULL, "backBufferColorTex");
+    }
+
+    this->m_backBufferColorTex->m_width = width;
+    this->m_backBufferColorTex->m_height = height;
+    this->m_backBufferColorTex->m_apiSpecificData = colorApiData;
+    this->m_backBufferColorTex->m_needsCreation = 0;
+
+    if (!this->m_backBufferDepthTex) {
+        this->m_backBufferDepthTex = new (SMemAlloc(sizeof(CGxTex), __FILE__, __LINE__, 0)) CGxTex(GxTex_5, width, height, 1, GxTex_D24X8, GxTex_D24X8, flags, NULL, NULL, "backBufferDepthTex");
+    }
+
+    this->m_backBufferDepthTex->m_width = width;
+    this->m_backBufferDepthTex->m_height = height;
+    this->m_backBufferDepthTex->m_apiSpecificData = depthApiData;
+    this->m_backBufferDepthTex->m_needsCreation = 0;
+
+    if (!this->m_backBuffer) {
+        this->m_backBuffer = GxFrameBufferCreate(this->m_backBufferDepthTex, this->m_backBufferColorTex);
+    }
+
+    this->m_frameBufferVersion = 0;
+    this->m_frameBuffer = this->m_backBuffer;
+}
+
+// PROVEN: 70cf3799 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847A20/0x140574E60
+void CGxDevice::IDeleteBackBufferFB(int32_t deleteTextures) {
+    if (deleteTextures) {
+        CGxTex* colorTex = this->m_backBufferColorTex;
+
+        if (colorTex) {
+            colorTex->~CGxTex();
+            SMemFree(colorTex, "delete", -1, 0);
+        }
+
+        this->m_backBufferColorTex = NULL;
+        CGxTex* depthTex = this->m_backBufferDepthTex;
+
+        if (depthTex) {
+            depthTex->~CGxTex();
+            SMemFree(depthTex, "delete", -1, 0);
+        }
+
+        this->m_backBufferDepthTex = NULL;
+    }
+
+    if (this->m_backBuffer) {
+        this->m_backBuffer->m_bound = 0;
+
+        if (this->m_backBuffer) {
+            g_theGxDevicePtr->FrameBufferDelete(this->m_backBuffer);
+        }
+    }
+}
+
 // OFFSET: [%0x007AE400, %0x007AE5A0]
 CGxDevice::~CGxDevice() {
+    this->IDeleteBackBufferFB(1);
+    this->m_frameBuffer = NULL;
     this->BufDestroy(this->m_streamBufs[0]);
     this->BufDestroy(this->m_streamBufs[1]);
     this->PoolDestroy(this->m_vertexPool);
@@ -1807,29 +1875,29 @@ void CGxDevice::DeviceCreatePools() {
     this->m_indexPool = this->PoolCreate(GxPoolTarget_Index, GxPoolUsage_Stream, s_streamIndexPoolSize, GxPoolHintBit_Unk3, "Stream_idx");
 }
 
-// PROVEN: 9fe8fe91 IDENTICAL/NONE
+// PROVEN: 3eb9bc67 IDENTICAL/NONE
 // OFFSET: 0x008433F0
-void CGxDevice::DeviceSetRenderTargetGroup(CGxRenderTargetGroup* group) {
-    if (this->m_renderTargetGroup == group && this->m_renderTargetGroupVersion == group->m_version) {
+void CGxDevice::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
+    if (this->m_frameBuffer == frameBuffer && this->m_frameBufferVersion == frameBuffer->m_version) {
         return;
     }
 
-    int32_t oldCount = this->m_renderTargetGroup->m_count;
-    int32_t count = group->m_count;
+    int32_t oldCount = this->m_frameBuffer->m_count;
+    int32_t count = frameBuffer->m_count;
     int32_t i;
 
     for (i = 0; i < count; i++) {
-        this->DeviceSetRenderTarget(static_cast<EGxBuffer>(i), group->m_targets[i].m_texture, group->m_targets[i].m_plane);
+        this->DeviceSetRenderTarget(static_cast<EGxBuffer>(i), frameBuffer->m_targets[i].m_texture, frameBuffer->m_targets[i].m_plane);
     }
 
     for (i = count; i < oldCount; i++) {
         this->DeviceSetRenderTarget(static_cast<EGxBuffer>(i), NULL, 0);
     }
 
-    this->m_renderTargetGroup->m_bound = 0;
-    this->m_renderTargetGroup = group;
-    group->m_bound = 1;
-    this->m_renderTargetGroupVersion = this->m_renderTargetGroup->m_version;
+    this->m_frameBuffer->m_bound = 0;
+    this->m_frameBuffer = frameBuffer;
+    frameBuffer->m_bound = 1;
+    this->m_frameBufferVersion = this->m_frameBuffer->m_version;
 }
 
 // PROVEN: d3395b75 IDENTICAL/IDENTICAL
@@ -1845,7 +1913,8 @@ void CGxDevice::DeviceOverride(EGxOverride override, uint32_t value) {
     }
 }
 
-// OFFSET: %0x007A8590
+// PROVEN: 5e767dc5 IDENTICAL/DIFFERENT
+// OFFSET: 0x00842670/0x14056E9B0
 void CGxDevice::WaitForFPSCap() {
     uint32_t maxFps = GxGetMaxFPS() ? GxGetMaxFPS() : 0xFFFFFFFF;
     uint32_t maxFpsBk = GxGetMaxFPSBk() ? GxGetMaxFPSBk() : 0xFFFFFFFF;

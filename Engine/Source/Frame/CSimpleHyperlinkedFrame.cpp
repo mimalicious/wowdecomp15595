@@ -206,17 +206,20 @@ void CSimpleHyperlinkedFrame::GetScriptTime(lua_State* L, double* time, uint32_t
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x005467F0
+// PROVEN: f342770c IDENTICAL/NONE
+// OFFSET: 0x00533080
 void CSimpleHyperlinkedFrame::OnHyperlinkEnter(const char* link, const char* text) {
     this->RunOnHyperlinkEnterScript(link, text);
 }
 
-// OFFSET: %0x00546800
+// PROVEN: db7c1134 IDENTICAL/NONE
+// OFFSET: 0x00533090
 void CSimpleHyperlinkedFrame::OnHyperlinkLeave(const char* link, const char* text) {
     this->RunOnHyperlinkLeaveScript(link, text);
 }
 
-// OFFSET: %0x00546810
+// PROVEN: 4493a059 IDENTICAL/NONE
+// OFFSET: 0x005330A0
 void CSimpleHyperlinkedFrame::OnHyperlinkClick(const char* link, const char* text, const char* btn) {
     this->RunOnHyperlinkClickScript(link, text, btn);
 }

@@ -368,7 +368,8 @@ void SE3::StopCapture() {
     }
 }
 
-// OFFSET: %0x00679790
+// PROVEN: 0d05ed9c IDENTICAL/DIFFERENT
+// OFFSET: 0x00712AD0/0x1403E48A0
 void SE3::ShutDownCapture() {
     s_capturing = 0;
 

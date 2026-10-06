@@ -227,7 +227,8 @@ void CSimpleScrollFrame::UpdateScrollChildRect(float width, float height) {
     }
 }
 
-// OFFSET: %0x00530570
+// PROVEN: a086e605 IDENTICAL/UNPROVEN
+// OFFSET: 0x00520690/0x14016DE10
 void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 

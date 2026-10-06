@@ -56,7 +56,8 @@ void CRibbonEmitter::SetUserEnabled(uint32_t enabled) {
     }
 }
 
-// OFFSET: %0x00A591C0
+// PROVEN: bd4877f3 IDENTICAL/NONE
+// OFFSET: 0x00B25330
 void CRibbonEmitter::SetTexSlot(uint32_t slot) {
     if (this->m_texSlot != slot) {
         this->m_texSlot = slot;
@@ -103,7 +104,8 @@ void CRibbonEmitter::InitInterpDeltas() {
     this->m_endTangent = C3Vector(this->m_currDir.x * distance, this->m_currDir.y * distance, distance * this->m_currDir.z);
 }
 
-// OFFSET: %0x00A595B0
+// PROVEN: 32b7ca9b IDENTICAL/UNPROVEN
+// OFFSET: 0x00B25720/0x1408ED720
 void CRibbonEmitter::CloseTextureHandles() {
     uint32_t count = this->m_textures.Count();
 

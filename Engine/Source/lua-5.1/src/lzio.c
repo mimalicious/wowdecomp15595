@@ -75,7 +75,8 @@ size_t luaZ_read (ZIO *z, void *b, size_t n) {
 }
 
 /* ------------------------------------------------------------------------ */
-// OFFSET: %0x00435B70
+// PROVEN: 659e061c IDENTICAL/UNPROVEN
+// OFFSET: 0x0042B700/0x140032830
 char *luaZ_openspace (lua_State *L, Mbuffer *buff, size_t n) {
   if (n > buff->buffsize) {
     if (n < LUA_MINBUFFER) n = LUA_MINBUFFER;

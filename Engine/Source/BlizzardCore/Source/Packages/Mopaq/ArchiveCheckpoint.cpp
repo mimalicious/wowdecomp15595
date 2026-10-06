@@ -30,7 +30,8 @@ struct RestorePointCopier {
     bool Write(const void* buffer, int64_t offset, uint32_t size);
 };
 
-// OFFSET: %0x00719C50
+// PROVEN: 6b5ea1be IDENTICAL/NONE
+// OFFSET: 0x007B8800
 bool RestorePointCopier::Read(void* buffer, int64_t offset, uint32_t size) {
     int32_t count = size;
     bool result;

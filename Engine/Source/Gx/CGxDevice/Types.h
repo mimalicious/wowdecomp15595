@@ -81,6 +81,7 @@ enum EGxTexTarget {
     GxTex_Rectangle = 2,
     GxTex_NonPow2 = 3,
     GxTex_Volume = 4,
+    GxTex_5 = 5,
     GxTexTargets_Last = 5,
 };
 

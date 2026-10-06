@@ -24,7 +24,7 @@
 // STATIC: #0x009EDCB8
 static const RECTF s_defaultRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
-// STATIC: %0x00C0C880
+// STATIC: 0x00D07518
 static char s_screenshotFormat[16] = "jpeg";
 
 // STATIC: %0x00C0C890
@@ -69,7 +69,7 @@ static void LAYER_MemFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: b7ec33c5 NONE/IDENTICAL
+// PROVEN: b7ec33c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FF2B0/0x140512E90
 static int32_t OnIdle(const void* data, void* param) {
     s_elapsedSec += static_cast<const EVENT_DATA_IDLE*>(data)->m_elapsedSec;
@@ -112,7 +112,7 @@ void ScrnLayerSetFlags(HLAYER layer, uint32_t flags) {
     reinterpret_cast<CILayer*>(layer)->m_flags = flags;
 }
 
-// PROVEN: 10d2d3e5 UNPROVEN/IDENTICAL
+// PROVEN: 10d2d3e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FF330/0x140512EE0
 void ScrnScreenshot(void (*callback)(int32_t success), uint8_t* data, uint32_t size, const char* directory, const char* fileName) {
     s_screenshotCallback = callback;

@@ -152,7 +152,8 @@ void CGxDeviceD3d11::IBindPixelShader(CGxShaderPermute* permute) {
     this->m_d3dContext->PSSetShader(static_cast<ID3D11PixelShader*>(permute->m_apiSpecific), NULL, 0);
 }
 
-// OFFSET: %0x007D04C0
+// PROVEN: f389d5c8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00871570/0x1405A7410
 void CGxDeviceD3d11::IShaderConstantsFlush() {
     int32_t renderStates[GxShTargets_Last] = { GxRs_VertexShader, GxRs_HullShader, GxRs_DomainShader, GxRs_GeometryShader, GxRs_PixelShader, -1 };
 

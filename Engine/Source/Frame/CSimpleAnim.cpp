@@ -146,7 +146,8 @@ bool CSimpleAnim::GetSmoothing(float& in, float& out) {
     return false;
 }
 
-// OFFSET: %0x005370F0
+// PROVEN: 7b271f0a IDENTICAL/NONE
+// OFFSET: 0x00526CE0
 void CSimpleAnim::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
 

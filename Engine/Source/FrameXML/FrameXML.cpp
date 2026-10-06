@@ -404,7 +404,8 @@ int32_t FrameXML_RegisterFactory(const char* name, CSimpleFrame* (*factory)(CSim
     return 1;
 }
 
-// OFFSET: %0x004FDD80
+// PROVEN: 73fa6583 IDENTICAL/UNPROVEN
+// OFFSET: 0x004EDFB0/0x140132110
 int32_t FrameXML_RegisterDefault() {
     FrameXML_RegisterFactory("Button", Create_SimpleButton, false);
     FrameXML_RegisterFactory("CheckButton", Create_SimpleCheckButton, false);

@@ -885,7 +885,8 @@ void System_Mopaq::ChecksumData::ChecksumCrcAndMd5(ChecksumData* data, const voi
     data->m_md5.Process(buffer, size);
 }
 
-// OFFSET: %0x0071B860
+// PROVEN: ba9a6b77 IDENTICAL/UNPROVEN
+// OFFSET: 0x007BA4B0/0x1404B1CF0
 bool System_Mopaq::ChecksumData::FinishCrc(ChecksumData* data, Blizzard::Mopaq::MpqHandleRecord* handle) {
     handle->m_blockEntry.m_crc = data->m_crc;
 
@@ -909,7 +910,8 @@ bool System_Mopaq::ChecksumData::FinishMd5(ChecksumData* data, Blizzard::Mopaq::
     return true;
 }
 
-// OFFSET: %0x0071B890
+// PROVEN: 2e2353a6 IDENTICAL/DIFFERENT
+// OFFSET: 0x007BA4E0/0x1404B1D20
 bool System_Mopaq::ChecksumData::FinishCrcAndMd5(ChecksumData* data, Blizzard::Mopaq::MpqHandleRecord* handle) {
     Blizzard::Util::Digest<16> md5;
     data->m_md5.Finish(md5.m_data);

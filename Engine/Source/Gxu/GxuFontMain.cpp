@@ -313,7 +313,7 @@ int32_t GxuFontStringSetGradient(CGxString* string, int32_t start, int32_t lengt
     return string->SetGradient(start, length);
 }
 
-// PROVEN: 9aac0737 UNPROVEN/IDENTICAL
+// PROVEN: 9aac0737 IDENTICAL/IDENTICAL
 // OFFSET: 0x00613530/0x14029EA50
 void GxuFontSetTokenCallback(const char* (*callback)(uint32_t, uint32_t)) {
     s_tokenCallback = callback;

@@ -147,7 +147,8 @@ void DepthCache::Release() {
     s_depthMode = DM_Unknown;
 }
 
-// OFFSET: %0x00970A60
+// PROVEN: 7a3dc296 IDENTICAL/NONE
+// OFFSET: 0x00A2FA50
 void DepthCache::Resolve() {
     CGxTex* depth = TextureGetGxTex(s_depthTex);
 
@@ -214,7 +215,8 @@ void DepthCache::AddRef() {
     g_theGxDevicePtr->AddTextureRecreationCallback(DepthCache::Reset);
 }
 
-// OFFSET: %0x00970CD0
+// PROVEN: ac54ae27 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2FCE0/0x1407D9AB0
 void DepthCache::Validate() {
     if (s_needsCreate && s_refCount) {
         CreateTextures();

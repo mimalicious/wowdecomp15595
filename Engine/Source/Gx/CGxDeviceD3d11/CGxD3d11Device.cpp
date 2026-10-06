@@ -13,10 +13,10 @@
 typedef HRESULT (WINAPI* D3D11CreateDeviceProc)(IDXGIAdapter* adapter, D3D_DRIVER_TYPE driverType, HMODULE software, UINT flags, const D3D_FEATURE_LEVEL* featureLevels, UINT numFeatureLevels, UINT sdkVersion, ID3D11Device** device, D3D_FEATURE_LEVEL* featureLevel, ID3D11DeviceContext** context);
 typedef HRESULT (WINAPI* CreateDXGIFactory1Proc)(REFIID riid, void** factory);
 
-// STATIC: %0x00AFC3A4
+// STATIC: 0x00BD530C/0x1409CA468
 const DXGI_FORMAT CGxDeviceD3d11::s_GxFormatToDxgiFormat[CGxFormat::Formats_Last] = { DXGI_FORMAT_B5G6R5_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_R10G10B10A2_UNORM, DXGI_FORMAT_D16_UNORM, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D32_FLOAT };
 
-// STATIC: %0x00AFC3C4
+// STATIC: 0x00BD532C/0x0009CA488
 const DXGI_FORMAT CGxDeviceD3d11::s_GxFormatToDxgiTypeless[CGxFormat::Formats_Last] = { DXGI_FORMAT_B5G6R5_UNORM, DXGI_FORMAT_R8G8B8A8_TYPELESS, DXGI_FORMAT_R8G8B8A8_TYPELESS, DXGI_FORMAT_R10G10B10A2_TYPELESS, DXGI_FORMAT_R16_TYPELESS, DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_R24G8_TYPELESS, DXGI_FORMAT_R32_TYPELESS };
 
 // STATIC: %0x00AFC3E4
@@ -40,13 +40,13 @@ const uint32_t CGxDeviceD3d11::s_numRenderTargets[6] = { 1, 1, 4, 8, 8, 8 };
 // STATIC: %0x00AFC474
 const D3D11_QUERY CGxDeviceD3d11::s_queryTypes[1] = { D3D11_QUERY_OCCLUSION };
 
-// STATIC: %0x00D92ECC
+// STATIC: 0x00EC66C0/0x140DB8828
 static int32_t s_d3dLibRefCount;
 
 // STATIC: %0x00D92ED0
 static HMODULE s_d3d11Lib;
 
-// STATIC: %0x00D92ED4
+// STATIC: 0x00EC66C8/0x140DB8838
 static HMODULE s_dxgiLib;
 
 // STATIC: %0x00D92ED8
@@ -246,7 +246,8 @@ int32_t CGxDeviceD3d11::IQueryDxgi() {
     return 0;
 }
 
-// OFFSET: %0x007B1D80
+// PROVEN: 0f08fa78 IDENTICAL/UNPROVEN
+// OFFSET: 0x008538D0/0x140583460
 int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     this->m_swapChain->GetDesc(&swapChainDesc);
@@ -302,10 +303,10 @@ int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
 
     D3D11_TEXTURE2D_DESC depthDesc;
     depthDesc.Width = swapChainDesc.BufferDesc.Width;
-    depthDesc.Format = s_GxFormatToDxgiTypeless[this->m_format.m_depthFormat];
     depthDesc.Height = swapChainDesc.BufferDesc.Height;
     depthDesc.MipLevels = 1;
     depthDesc.ArraySize = 1;
+    depthDesc.Format = s_GxFormatToDxgiTypeless[this->m_format.m_depthFormat];
     depthDesc.SampleDesc.Count = swapChainDesc.SampleDesc.Count;
     depthDesc.SampleDesc.Quality = swapChainDesc.SampleDesc.Quality;
     depthDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -321,29 +322,30 @@ int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
         return 0;
     }
 
+    this->m_depthViews = static_cast<TexTargetViews*>(SMemAlloc(sizeof(TexTargetViews), __FILE__, __LINE__, 0));
+    this->m_depthViews->m_type = 2;
+    this->m_depthViews->m_srv = NULL;
+
     D3D11_DEPTH_STENCIL_VIEW_DESC viewDesc;
     viewDesc.Format = s_GxFormatToDxgiFormat[this->m_format.m_depthFormat];
     viewDesc.Flags = 0;
 
-    if (swapChainDesc.SampleDesc.Count <= 1) {
+    if (swapChainDesc.SampleDesc.Count > 1) {
+        viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    } else {
         viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         viewDesc.Texture2D.MipSlice = 0;
-    } else {
-        viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     }
 
-    if (FAILED(this->m_d3dDevice->CreateDepthStencilView(this->m_depthTexture, &viewDesc, &this->m_depthView))) {
+    if (FAILED(this->m_d3dDevice->CreateDepthStencilView(this->m_depthTexture, &viewDesc, reinterpret_cast<ID3D11DepthStencilView**>(&this->m_depthViews->m_targetView)))) {
         return 0;
     }
 
-    this->m_numRenderTargets = 1;
-    this->m_renderTargets[0] = static_cast<ID3D11RenderTargetView*>(this->m_backBufferViews->m_targetView);
-    this->m_curDepthView = this->m_depthView;
-    this->m_colorTargetFormat = GxTex_Unknown;
-    this->m_d3dContext->OMSetRenderTargets(1, this->m_renderTargets, this->m_depthView);
-
     this->m_format.m_size.x = swapChainDesc.BufferDesc.Width;
     this->m_format.m_size.y = swapChainDesc.BufferDesc.Height;
+    this->ICreateBackBufferFB(swapChainDesc.BufferDesc.Width, swapChainDesc.BufferDesc.Height, this->m_backBufferViews, this->m_depthViews);
+    memset(this->m_textureTarget, 0, sizeof(this->m_textureTarget));
+    GxFrameBufferSet(g_theGxDevicePtr->BackBuffer());
 
     return 1;
 }
@@ -381,9 +383,22 @@ void CGxDeviceD3d11::IReleaseTargets() {
         this->m_backBufferViews = NULL;
     }
 
-    if (this->m_depthView) {
-        this->m_depthView->Release();
-        this->m_depthView = NULL;
+    if (this->m_depthViews) {
+        if (this->m_depthViews->m_targetView) {
+            this->m_depthViews->m_targetView->Release();
+            this->m_depthViews->m_targetView = NULL;
+        }
+
+        if (this->m_depthViews->m_srv) {
+            this->m_depthViews->m_srv->Release();
+            this->m_depthViews->m_srv = NULL;
+        }
+
+        if (this->m_depthViews) {
+            SMemFree(this->m_depthViews, "delete", -1, 0);
+        }
+
+        this->m_depthViews = NULL;
     }
 
     if (this->m_depthTexture) {
@@ -397,7 +412,8 @@ void CGxDeviceD3d11::IReleaseTargets() {
     }
 }
 
-// OFFSET: %0x007B2110
+// PROVEN: 56f97a97 IDENTICAL/DIFFERENT
+// OFFSET: 0x008521C0/0x140581C00
 void CGxDeviceD3d11::IUnloadD3dLib() {
     if (--s_d3dLibRefCount) {
         return;
@@ -1180,7 +1196,8 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     return 0;
 }
 
-// OFFSET: %0x007B3380
+// PROVEN: c409669f IDENTICAL/DIFFERENT
+// OFFSET: 0x00852FF0/0x140582CE0
 void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context) {
         return;
@@ -1206,16 +1223,6 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
         target.m_apiSpecific = NULL;
     }
 
-    this->m_curDepthView = this->m_depthView;
-    this->m_numRenderTargets = 1;
-
-    for (uint32_t i = 0; i < 8; i++) {
-        this->m_renderTargets[i] = NULL;
-    }
-
-    this->m_renderTargets[0] = static_cast<ID3D11RenderTargetView*>(this->m_backBufferViews->m_targetView);
-    this->m_colorTargetFormat = GxTex_Unknown;
-
     for (uint32_t i = GxBuffers_Color; i <= GxBuffers_Color3; i++) {
         TexTargetViews* views = static_cast<TexTargetViews*>(this->m_textureTarget[i].m_apiSpecific);
 
@@ -1223,18 +1230,16 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
             continue;
         }
 
-        this->m_renderTargets[i] = static_cast<ID3D11RenderTargetView*>(views->m_targetView);
-        this->m_numRenderTargets = i + 1;
+        this->m_renderTargets[i - GxBuffers_Color] = static_cast<ID3D11RenderTargetView*>(views->m_targetView);
+        this->m_numRenderTargets = i;
+
+        if (i == GxBuffers_Color) {
+            this->m_colorTargetFormat = this->m_textureTarget[i].m_texture->m_format;
+        }
 
         CGxTex* targetTex = this->m_textureTarget[i].m_texture;
 
-        if (i == GxBuffers_Color) {
-            this->m_colorTargetFormat = targetTex->m_format;
-        }
-
-        uint32_t multisample = targetTex->m_flags.m_bit8;
-
-        if (targetTex->m_width != this->m_format.m_size.x || targetTex->m_height != this->m_format.m_size.y || (!multisample && this->m_format.m_multisampleCount > 1) || (multisample && this->m_format.m_multisampleCount == 1)) {
+        if (targetTex->m_width != this->m_format.m_size.x || targetTex->m_height != this->m_format.m_size.y || (!targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount > 1) || (targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount == 1)) {
             this->m_curDepthView = NULL;
         }
     }
@@ -1242,9 +1247,7 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
     TexTargetViews* depthViews = static_cast<TexTargetViews*>(this->m_textureTarget[GxBuffers_Depth].m_apiSpecific);
 
     if (depthViews) {
-        CGxTex* depthTex = this->m_textureTarget[GxBuffers_Depth].m_texture;
-
-        if (this->m_textureTarget[GxBuffers_Color].m_texture || (depthTex->m_width == this->m_format.m_size.x && depthTex->m_height == this->m_format.m_size.y)) {
+        if (this->m_textureTarget[GxBuffers_Color].m_texture || (this->m_textureTarget[GxBuffers_Depth].m_texture->m_width == this->m_format.m_size.x && this->m_textureTarget[GxBuffers_Depth].m_texture->m_height == this->m_format.m_size.y)) {
             this->m_curDepthView = static_cast<ID3D11DepthStencilView*>(depthViews->m_targetView);
         } else {
             this->m_curDepthView = NULL;
@@ -1257,7 +1260,8 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
     this->m_scissorRectDirty = 1;
 }
 
-// OFFSET: %0x007B3640
+// PROVEN: 11628376 IDENTICAL/UNPROVEN
+// OFFSET: 0x00853590/0x140583170
 void CGxDeviceD3d11::DeviceResolveDepthBuffer(CGxTex* texture) {
     if ((texture->m_needsCreation || (!texture->m_apiSpecificData && !texture->m_apiSpecificData2)) && !this->ITexCreate(texture)) {
         return;
@@ -1673,8 +1677,8 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
     this->m_swapChain = NULL;
     this->m_d3dContext = NULL;
     this->m_backBufferViews = NULL;
+    this->m_depthViews = NULL;
     this->m_depthTexture = NULL;
-    this->m_depthView = NULL;
     this->m_resolveTexture = NULL;
     this->m_numRenderTargets = 0;
     this->m_hwndClass = 0;

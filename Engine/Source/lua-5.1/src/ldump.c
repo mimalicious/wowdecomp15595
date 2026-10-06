@@ -79,7 +79,8 @@ static void DumpString(const TString* s, DumpState* D)
 
 static void DumpFunction(const Proto* f, const TString* p, DumpState* D);
 
-// OFFSET: %0x0043A8E0
+// PROVEN: 7e1480ea IDENTICAL/UNPROVEN
+// OFFSET: 0x004304B0/0x1400386B0
 static void DumpConstants(const Proto* f, DumpState* D)
 {
  int i,n=f->sizek;
@@ -131,7 +132,8 @@ static void DumpDebug(const Proto* f, DumpState* D)
  for (i=0; i<n; i++) DumpString(f->upvalues[i],D);
 }
 
-// OFFSET: %0x0043AB80
+// PROVEN: 0ea6b8e5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00430750/0x140038A90
 static void DumpFunction(const Proto* f, const TString* p, DumpState* D)
 {
  DumpString((f->source==p || D->strip) ? NULL : f->source,D);
@@ -156,7 +158,8 @@ static void DumpHeader(DumpState* D)
 /*
 ** dump Lua function as precompiled chunk
 */
-// OFFSET: %0x0043ACE0
+// PROVEN: a4fd2c54 IDENTICAL/UNPROVEN
+// OFFSET: 0x004308B0/0x140038C20
 int luaU_dump (lua_State* L, const Proto* f, lua_Writer w, void* data, int strip)
 {
  DumpState D;

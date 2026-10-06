@@ -197,12 +197,14 @@ uint32_t M2GetVertexShaderID(uint32_t textureCount, uint16_t shader) {
     return (shader & 0x4000) ? 2 : 7;
 }
 
-// OFFSET: %0x0079FB80
+// PROVEN: df656fd0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00839770/0x140563BA0
 const char* M2GetPixelShaderName(uint32_t textureCount, uint16_t shader) {
     return s_modelPixelShaders[M2GetPixelShaderID(textureCount, shader)];
 }
 
-// OFFSET: %0x0079FBA0
+// PROVEN: e4e79864 IDENTICAL/DIFFERENT
+// OFFSET: 0x00839790/0x140563BC0
 const char* M2GetVertexShaderName(uint32_t textureCount, uint16_t shader) {
     return s_modelVertexShaders[M2GetVertexShaderID(textureCount, shader)];
 }

@@ -8,7 +8,7 @@
 // STATIC: %0x00C9DDCC
 static int32_t s_exitcode;
 
-// STATIC: #0x00CAE94C
+// STATIC: 0x00D9D540/0x140C7F664
 static int32_t s_exitcount;
 
 // PROVEN: 7422ad48 UNPROVEN/IDENTICAL

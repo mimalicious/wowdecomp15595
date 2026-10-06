@@ -211,7 +211,8 @@ uint32_t Blizzard::Patch::V2Patch::GetHeaderSize() {
     return this->m_headerSize;
 }
 
-// OFFSET: %0x0074BA90
+// PROVEN: c58f7eb2 IDENTICAL/UNPROVEN
+// OFFSET: 0x007E6400/0x1404EFE00
 bool Blizzard::Patch::V2Patch::Apply(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t destSize) {
     return ApplyTransform(this->m_transform, dest, destSize, source, sourceSize);
 }
@@ -392,7 +393,8 @@ Blizzard::Patch::Patch* Blizzard::Patch::Patch::GetPatch(const uint8_t* data, ui
     return CreatePatch(buffer, error);
 }
 
-// OFFSET: %0x00731A80
+// PROVEN: c7a65302 IDENTICAL/NONE
+// OFFSET: 0x007D0160
 bool Blizzard::Patch::Apply(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, uint8_t* source, uint32_t sourceSize, uint32_t flags) {
     bool result = false;
     Patch* instance = Patch::GetPatch(patch, patchSize);

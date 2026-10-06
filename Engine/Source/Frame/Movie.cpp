@@ -635,7 +635,8 @@ uint32_t CMovieStreamer::GetAudioBufferSize() {
     return this->m_audioBufferSize;
 }
 
-// OFFSET: %0x00522E30
+// PROVEN: 5da70f59 IDENTICAL/NONE
+// OFFSET: 0x00512380
 int32_t CMovieStreamer::ParseAVIFile() {
     SFile::EnableHash(false);
 

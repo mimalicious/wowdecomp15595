@@ -58,7 +58,8 @@ Closure *luaF_newLclosure (lua_State *L, int nelems, Table *e) {
 }
 
 
-// OFFSET: %0x004305D0
+// PROVEN: 41e069e4 IDENTICAL/UNPROVEN
+// OFFSET: 0x004260F0/0x14002BCC0
 UpVal *luaF_newupval (lua_State *L) {
   UpVal *uv = luaM_new(L, UpVal);
   luaC_link(L, obj2gco(uv), LUA_TUPVAL);
@@ -106,7 +107,8 @@ static void unlinkupval (UpVal *uv) {
 }
 
 
-// OFFSET: %0x004306C0
+// PROVEN: 56a90b18 IDENTICAL/UNPROVEN
+// OFFSET: 0x004261E0/0x14002BE10
 void luaF_freeupval (lua_State *L, UpVal *uv) {
   if (uv->v != &uv->u.value)  /* is it open? */
     unlinkupval(uv);  /* remove from open list */
@@ -134,7 +136,8 @@ void luaF_close (lua_State *L, StkId level) {
 }
 
 
-// OFFSET: %0x004307D0
+// PROVEN: 84fb8448 IDENTICAL/UNPROVEN
+// OFFSET: 0x004262F0/0x14002BF60
 Proto *luaF_newproto (lua_State *L) {
   Proto *f = luaM_new(L, Proto);
   luaC_link(L, obj2gco(f), LUA_TPROTO);
@@ -161,7 +164,8 @@ Proto *luaF_newproto (lua_State *L) {
 }
 
 
-// OFFSET: %0x00430840
+// PROVEN: a5a49611 IDENTICAL/UNPROVEN
+// OFFSET: 0x00426360/0x14002BFF0
 void luaF_freeproto (lua_State *L, Proto *f) {
   luaM_freearray(L, f->code, f->sizecode, Instruction);
   luaM_freearray(L, f->p, f->sizep, Proto *);
@@ -173,7 +177,8 @@ void luaF_freeproto (lua_State *L, Proto *f) {
 }
 
 
-// OFFSET: %0x004308E0
+// PROVEN: b938f05e IDENTICAL/DIFFERENT
+// OFFSET: 0x00426400/0x14002C0B0
 void luaF_freeclosure (lua_State *L, Closure *c) {
   int size = (c->c.isC) ? sizeCclosure(c->c.nupvalues) :
                           sizeLclosure(c->l.nupvalues);

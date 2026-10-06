@@ -8,7 +8,7 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BB41B8
+// STATIC: 0x00CA04D0/0x140B3C698
 static TSList<WNDREC> s_wndlist;
 
 // STATIC: %0x00CA6904

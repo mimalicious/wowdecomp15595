@@ -4,7 +4,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CD2E7C
+// STATIC: 0x00DD4388/0x140CBA628
 static CModelBlob* s_modelBlob;
 
 // STATIC: %0x00CD2E80

@@ -1,10 +1,10 @@
-#include "Engine/Source/Gx/CGxRenderTargetGroup.h"
+#include "Engine/Source/Gx/CGxFrameBuffer.h"
 
 // STATIC: 0x00D09498
-uint32_t CGxRenderTargetGroup::s_nextVersion;
+uint32_t CGxFrameBuffer::s_nextVersion;
 
 // OFFSET: 0x00856350
-CGxRenderTargetGroup::CGxRenderTargetGroup() {
+CGxFrameBuffer::CGxFrameBuffer() {
     this->m_version = 0;
     this->m_targets[0].m_texture = NULL;
     this->m_targets[0].m_plane = 0;
@@ -21,7 +21,7 @@ CGxRenderTargetGroup::CGxRenderTargetGroup() {
 }
 
 // OFFSET: 0x00856380
-int32_t CGxRenderTargetGroup::SetTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
+int32_t CGxFrameBuffer::Attach(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     this->m_targets[buffer].m_texture = texture;
     this->m_targets[buffer].m_plane = plane;
     int32_t count = buffer + 1;
@@ -40,11 +40,11 @@ int32_t CGxRenderTargetGroup::SetTarget(EGxBuffer buffer, CGxTex* texture, uint3
     return count;
 }
 
-// PROVEN: 4d17f8d8 IDENTICAL/NONE
+// PROVEN: b2b9910c IDENTICAL/NONE
 // OFFSET: 0x008563C0
-int32_t CGxRenderTargetGroup::Update() {
-    uint32_t version = CGxRenderTargetGroup::s_nextVersion;
+int32_t CGxFrameBuffer::Finalize() {
+    uint32_t version = CGxFrameBuffer::s_nextVersion;
     this->m_version = version;
-    CGxRenderTargetGroup::s_nextVersion = version + 1;
+    CGxFrameBuffer::s_nextVersion = version + 1;
     return 1;
 }

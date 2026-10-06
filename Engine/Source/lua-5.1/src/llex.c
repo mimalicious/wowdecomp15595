@@ -77,7 +77,8 @@ void luaX_init (lua_State *L) {
 #define MAXSRC          80
 
 
-// OFFSET: %0x00437500
+// PROVEN: 8b8c16ef IDENTICAL/UNPROVEN
+// OFFSET: 0x0042D0D0/0x140034730
 const char *luaX_token2str (LexState *ls, int token) {
   if (token < FIRST_RESERVED) {
     lua_assert(token == cast(unsigned char, token));
@@ -119,7 +120,8 @@ void luaX_syntaxerror (LexState *ls, const char *msg) {
 }
 
 
-// OFFSET: %0x00437620
+// PROVEN: e4e0ea22 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042D1F0/0x1400348F0
 TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
   lua_State *L = ls->L;
   TString *ts = luaS_newlstr(L, str, l);
@@ -130,7 +132,8 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
 }
 
 
-// OFFSET: %0x00437670
+// PROVEN: 675b55d0 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042D240/0x140034960
 static void inclinenumber (LexState *ls) {
   int old = ls->current;
   lua_assert(currIsNewline(ls));
@@ -142,7 +145,8 @@ static void inclinenumber (LexState *ls) {
 }
 
 
-// OFFSET: %0x00437700
+// PROVEN: 6ffcaf90 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042D2D0/0x140034A10
 void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
   ls->decpoint = '.';
   ls->L = L;
@@ -458,7 +462,8 @@ static int llex (LexState *ls, SemInfo *seminfo) {
 }
 
 
-// OFFSET: %0x00438870
+// PROVEN: 2d1bf8e7 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E440/0x140035DC0
 void luaX_next (LexState *ls) {
   ls->lastline = ls->linenumber;
   if (ls->lookahead.token != TK_EOS) {  /* is there a look-ahead token? */
@@ -470,7 +475,8 @@ void luaX_next (LexState *ls) {
 }
 
 
-// OFFSET: %0x004388C0
+// PROVEN: 51409dcf IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E490/0x140035E10
 void luaX_lookahead (LexState *ls) {
   lua_assert(ls->lookahead.token == TK_EOS);
   ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);

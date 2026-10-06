@@ -72,10 +72,10 @@ C3Vector CShaderEffect::s_sunSpec;
 // STATIC: %0x00C3CC58
 LocalLights CShaderEffect::s_localLights;
 
-// STATIC: %0x00C3CD08
+// STATIC: 0x00D382B8
 C4Vector CShaderEffect::s_fogColorAlphaRef;
 
-// STATIC: %0x00C3CD18
+// STATIC: 0x00D382C8
 C4Vector CShaderEffect::s_fogParams;
 
 // STATIC: %0x00C3CD48
@@ -84,7 +84,8 @@ C4Plane CShaderEffect::s_clipPlane;
 // STATIC: #0x00D43010
 uint32_t CShaderEffect::s_shadowValue;
 
-// OFFSET: %0x0043BFB0
+// PROVEN: 551677b8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00431D80/0x14003A550
 static void ReloadShadersCallback(const char* fileName) {
     g_theGxDevicePtr->ShaderReloadAll();
 }
@@ -236,7 +237,8 @@ void CShaderEffect::GetClipPlane(C4Plane& plane) {
     plane = CShaderEffect::s_clipPlane;
 }
 
-// OFFSET: %0x0043CBA0
+// PROVEN: b8b6f07e IDENTICAL/DIFFERENT
+// OFFSET: 0x00432960/0x14003B380
 void CShaderEffect::SetClipPlane(const C4Plane& plane) {
     CShaderEffect::s_clipPlane = plane;
 

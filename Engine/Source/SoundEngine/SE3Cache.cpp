@@ -67,17 +67,19 @@ void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
 }
 
-// OFFSET: %0x0067C0B0
+// PROVEN: fba01528 IDENTICAL/NONE
+// OFFSET: 0x007153E0
 void SE3::RegisterCacheEventCallback(void (*callback)(SE3CACHEEVENT, uint32_t)) {
     SE3::sm_fpCacheEventCallback = callback;
 }
 
-// OFFSET: %0x0067C0C0
+// PROVEN: 3b32313f IDENTICAL/NONE
+// OFFSET: 0x007153F0
 void SE3::RegisterWaveDataDoneLoadingCallback(FMOD_RESULT (*callback)(FMOD_SOUND*, FMOD_RESULT)) {
     SE3::sm_fpWaveDataDoneLoadingCallback = callback;
 }
 
-// PROVEN: 7ed7f0e6 UNPROVEN/IDENTICAL
+// PROVEN: 7ed7f0e6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00715400/0x1403E80E0
 static FMOD_RESULT F_CALLBACK DoneLoadingCallback(FMOD_SOUND* sound, FMOD_RESULT result) {
     SE3::sm_SE3ShuttingDown_CritSec.Enter();

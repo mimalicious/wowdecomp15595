@@ -78,7 +78,8 @@ static void errorlimit (FuncState *fs, int limit, const char *what) {
 }
 
 
-// OFFSET: %0x004309D0
+// PROVEN: d3e8601c IDENTICAL/NONE
+// OFFSET: 0x004264F0
 static int testnext (LexState *ls, int c) {
   if (ls->t.token == c) {
     luaX_next(ls);
@@ -133,13 +134,15 @@ static void init_exp (expdesc *e, expkind k, int i) {
 }
 
 
-// OFFSET: %0x00430A60
+// PROVEN: 05dc2a7f IDENTICAL/NONE
+// OFFSET: 0x00426580
 static void codestring (LexState *ls, expdesc *e, TString *s) {
   init_exp(e, VK, luaK_stringK(ls->fs, s));
 }
 
 
-// OFFSET: %0x00430A80
+// PROVEN: 8c24dba8 IDENTICAL/NONE
+// OFFSET: 0x004265A0
 static void checkname(LexState *ls, expdesc *e) {
   codestring(ls, e, str_checkname(ls));
 }
@@ -307,7 +310,8 @@ static void enterblock (FuncState *fs, BlockCnt *bl, lu_byte isbreakable) {
 }
 
 
-// OFFSET: %0x00430F20
+// PROVEN: e8b07dda IDENTICAL/DIFFERENT
+// OFFSET: 0x00426A40/0x14002C740
 static void leaveblock (FuncState *fs) {
   BlockCnt *bl = fs->bl;
   fs->bl = bl->previous;
@@ -322,7 +326,8 @@ static void leaveblock (FuncState *fs) {
 }
 
 
-// OFFSET: %0x00430F70
+// PROVEN: 0f9d36b7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00426A90/0x14002C7E0
 static void pushclosure (LexState *ls, FuncState *func, expdesc *v) {
   FuncState *fs = ls->fs;
   Proto *f = fs->f;
@@ -370,7 +375,8 @@ static void open_func (LexState *ls, FuncState *fs) {
 }
 
 
-// OFFSET: %0x00431130
+// PROVEN: 2787d858 IDENTICAL/UNPROVEN
+// OFFSET: 0x00426C50/0x14002CA50
 static void close_func (LexState *ls) {
   lua_State *L = ls->L;
   FuncState *fs = ls->fs;
@@ -434,7 +440,8 @@ static void field (LexState *ls, expdesc *v) {
 }
 
 
-// OFFSET: %0x00431310
+// PROVEN: 7a963db5 IDENTICAL/NONE
+// OFFSET: 0x00426E30
 static void yindex (LexState *ls, expdesc *v) {
   /* index -> '[' expr ']' */
   luaX_next(ls);  /* skip the '[' */
@@ -493,7 +500,8 @@ static void closelistfield (FuncState *fs, struct ConsControl *cc) {
 }
 
 
-// OFFSET: %0x00431430
+// PROVEN: cf03d1b6 IDENTICAL/NONE
+// OFFSET: 0x00426F50
 static void lastlistfield (FuncState *fs, struct ConsControl *cc) {
   if (cc->tostore == 0) return;
   if (hasmultret(cc->v.k)) {
@@ -563,7 +571,8 @@ static void constructor (LexState *ls, expdesc *t) {
 
 
 
-// OFFSET: %0x004316F0
+// PROVEN: 314377a8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00427210/0x14002D230
 static void parlist (LexState *ls) {
   /* parlist -> [ param { `,' param } ] */
   FuncState *fs = ls->fs;
@@ -618,7 +627,8 @@ static void body (LexState *ls, expdesc *e, int needself, int line) {
 }
 
 
-// OFFSET: %0x00431960
+// PROVEN: a7f28815 IDENTICAL/NONE
+// OFFSET: 0x00427480
 static int explist1 (LexState *ls, expdesc *v) {
   /* explist1 -> expr { `,' expr } */
   int n = 1;  /* at least one expression */
@@ -632,7 +642,8 @@ static int explist1 (LexState *ls, expdesc *v) {
 }
 
 
-// OFFSET: %0x004319A0
+// PROVEN: e8ae6ccf IDENTICAL/UNPROVEN
+// OFFSET: 0x004274C0/0x14002D4A0
 static void funcargs (LexState *ls, expdesc *f) {
   FuncState *fs = ls->fs;
   expdesc args;
@@ -910,7 +921,8 @@ static int block_follow (int token) {
 }
 
 
-// OFFSET: %0x004322C0
+// PROVEN: debe1e7e IDENTICAL/UNPROVEN
+// OFFSET: 0x00427DE0/0x14002DF60
 static void block (LexState *ls) {
   /* block -> chunk */
   FuncState *fs = ls->fs;
@@ -938,7 +950,8 @@ struct LHS_assign {
 ** local value in a safe place and use this safe copy in the previous
 ** assignment.
 */
-// OFFSET: %0x00432340
+// PROVEN: b2e28540 IDENTICAL/NONE
+// OFFSET: 0x00427E60
 static void check_conflict (LexState *ls, struct LHS_assign *lh, expdesc *v) {
   FuncState *fs = ls->fs;
   int extra = fs->freereg;  /* eventual position to save local variable */
@@ -1007,7 +1020,8 @@ static int cond (LexState *ls) {
 }
 
 
-// OFFSET: %0x004324F0
+// PROVEN: 9819459d IDENTICAL/UNPROVEN
+// OFFSET: 0x00428010/0x14002E290
 static void breakstat (LexState *ls) {
   FuncState *fs = ls->fs;
   BlockCnt *bl = fs->bl;
@@ -1024,7 +1038,8 @@ static void breakstat (LexState *ls) {
 }
 
 
-// OFFSET: %0x00432550
+// PROVEN: aa52a3c6 IDENTICAL/UNPROVEN
+// OFFSET: 0x00428070/0x14002E320
 static void whilestat (LexState *ls, int line) {
   /* whilestat -> WHILE cond DO block END */
   FuncState *fs = ls->fs;
@@ -1044,7 +1059,8 @@ static void whilestat (LexState *ls, int line) {
 }
 
 
-// OFFSET: %0x00432670
+// PROVEN: ed0bdf2c IDENTICAL/UNPROVEN
+// OFFSET: 0x00428190/0x14002E490
 static void repeatstat (LexState *ls, int line) {
   /* repeatstat -> REPEAT block UNTIL cond */
   int condexit;
@@ -1081,7 +1097,8 @@ static int exp1 (LexState *ls) {
 }
 
 
-// OFFSET: %0x004327B0
+// PROVEN: 6499de46 IDENTICAL/UNPROVEN
+// OFFSET: 0x004282D0/0x14002E5E0
 static void forbody (LexState *ls, int base, int line, int nvars, int isnum) {
   /* forbody -> DO block */
   BlockCnt bl;
@@ -1103,7 +1120,8 @@ static void forbody (LexState *ls, int base, int line, int nvars, int isnum) {
 }
 
 
-// OFFSET: %0x00432940
+// PROVEN: fb00410f IDENTICAL/UNPROVEN
+// OFFSET: 0x00428460/0x14002E800
 static void fornum (LexState *ls, TString *varname, int line) {
   /* fornum -> NAME = exp1,exp1[,exp1] forbody */
   FuncState *fs = ls->fs;
@@ -1169,7 +1187,8 @@ static void forstat (LexState *ls, int line) {
 }
 
 
-// OFFSET: %0x00432F00
+// PROVEN: 1216d4f2 IDENTICAL/UNPROVEN
+// OFFSET: 0x00428A20/0x14002ED50
 static int test_then_block (LexState *ls) {
   /* test_then_block -> [IF | ELSEIF] cond THEN block */
   int condexit;
@@ -1181,7 +1200,8 @@ static int test_then_block (LexState *ls) {
 }
 
 
-// OFFSET: %0x00432F80
+// PROVEN: a5042e06 IDENTICAL/UNPROVEN
+// OFFSET: 0x00428AA0/0x14002EE30
 static void ifstat (LexState *ls, int line) {
   /* ifstat -> IF cond THEN block {ELSEIF cond THEN block} [ELSE block] END */
   FuncState *fs = ls->fs;
@@ -1269,7 +1289,8 @@ static void funcstat (LexState *ls, int line) {
 }
 
 
-// OFFSET: %0x004333A0
+// PROVEN: 695ec930 IDENTICAL/NONE
+// OFFSET: 0x00428EC0
 static void exprstat (LexState *ls) {
   /* stat -> func | assignment */
   FuncState *fs = ls->fs;

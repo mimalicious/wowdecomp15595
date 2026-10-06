@@ -529,7 +529,8 @@ void CSimpleFrame::PreOnAnimUpdate() {
     }
 }
 
-// OFFSET: %0x005137B0
+// PROVEN: 0a6bee8e IDENTICAL/UNPROVEN
+// OFFSET: 0x00503680/0x140149840
 void CSimpleFrame::RunOnAttributeChangedScript(const char* name, int32_t luaRef) {
     if (!this->HasScript(this->m_onAttributeChanged)) {
         return;
@@ -621,7 +622,8 @@ void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     }
 }
 
-// OFFSET: %0x00512B30
+// PROVEN: 17241e87 IDENTICAL/NONE
+// OFFSET: 0x005029E0
 void CSimpleFrame::RunOnCharScript(const char* text) {
     if (this->HasScript(this->m_onChar)) {
         lua_State* L = FrameScript_GetContext();
@@ -630,7 +632,8 @@ void CSimpleFrame::RunOnCharScript(const char* text) {
     }
 }
 
-// OFFSET: %0x00512B80
+// PROVEN: 2a038d3e IDENTICAL/NONE
+// OFFSET: 0x00502A30
 void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     if (this->HasScript(this->m_onKeyDown)) {
         lua_State* L = FrameScript_GetContext();
@@ -639,7 +642,8 @@ void CSimpleFrame::RunOnKeyDownScript(const char* key) {
     }
 }
 
-// OFFSET: %0x00512BD0
+// PROVEN: dc54f6e2 IDENTICAL/NONE
+// OFFSET: 0x00502A80
 void CSimpleFrame::RunOnKeyUpScript(const char* key) {
     if (this->HasScript(this->m_onKeyUp)) {
         lua_State* L = FrameScript_GetContext();

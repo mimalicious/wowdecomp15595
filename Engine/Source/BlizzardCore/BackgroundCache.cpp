@@ -308,7 +308,8 @@ bool PatchOnDemand::Cache::ArchiveList::DirCallback(const Blizzard::File::Proces
     return true;
 }
 
-// OFFSET: %0x00706300
+// PROVEN: 2b3c0a20 IDENTICAL/UNPROVEN
+// OFFSET: 0x007A3710/0x14050C640
 bool PatchOnDemand::PoDWriteJob::WriteFile(System_SFile::ARCHIVEREC* archive, const char* name, const void* data, int64_t size, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Util::Digest<16> written;
     Blizzard::Mopaq::HSFILERecord* file = NULL;
@@ -631,7 +632,8 @@ void BackgroundCache::CacheManager::Pump() {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x00707720
+// PROVEN: a8f45e1e IDENTICAL/UNPROVEN
+// OFFSET: 0x007A44B0/0x14050D5B0
 void BackgroundCache::Pump() {
     s_cacheManager->Pump();
 }
@@ -719,14 +721,16 @@ void BackgroundCache::CacheManager::PatchCompleteCallback(const void* data, uint
     Blizzard::Log::Printf(0, "Logs/PatchOnDemand.log", "Failed to queue file '%s' for writing due to memory limit (%lld bytes available).\n\tFile size: %lld\n\tQueue Item Count: %d\n", name, available, size, static_cast<int32_t>(s_cacheManager->m_oggJobs.size() + s_cacheManager->m_writeJobs.size()));
 }
 
-// OFFSET: %0x00707F30
+// PROVEN: 2f5569d2 IDENTICAL/UNPROVEN
+// OFFSET: 0x007A4C80/0x14050DAE0
 void BackgroundCache::CacheManager::OggConvertCallback(const char* name) {
     if (s_cacheManager) {
         s_cacheManager->QueueOggConversion(name);
     }
 }
 
-// OFFSET: %0x00707F50
+// PROVEN: 66ff32ff IDENTICAL/NONE
+// OFFSET: 0x007A4CA0
 void PatchOnDemand::Cache::Init(int32_t memoryLimit) {
     BackgroundCache::InitManager(memoryLimit);
     Blizzard::Mopaq::SetPatchCompleteCallback(BackgroundCache::CacheManager::PatchCompleteCallback);

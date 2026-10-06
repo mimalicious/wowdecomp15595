@@ -5,7 +5,7 @@
 #include <cstring>
 #include <new>
 
-// STATIC: %0x00B40808
+// STATIC: 0x00C27680
 const uint8_t ComSat::Sound::CODECIPMR6000::s_invalidPlayer = 0xFF;
 
 // STATIC: #0x00A503A4
@@ -17,10 +17,10 @@ const int32_t ComSat::Sound::CODECIPMR6000::s_sampleRate = 8000;
 // STATIC: %0x00B40814
 const int32_t ComSat::Sound::CODECIPMR6000::s_bitsPerSample = 16;
 
-// STATIC: %0x00B40818
+// STATIC: 0x00C27690
 const int32_t ComSat::Sound::CODECIPMR6000::s_samplesPerFrame = 800;
 
-// STATIC: %0x00B4081C
+// STATIC: 0x00C27694
 const int32_t ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength = 360;
 
 // STATIC: #0x00A503B8
@@ -301,6 +301,7 @@ ComSat::Sound::CODECIPMR6000::~CODECIPMR6000() {
     this->Shutdown();
 }
 
+// PROVEN: 9adda6e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void ComSat::Sound::CODECIPMR6000::ApplyVoiceEffects(uint8_t player, uint8_t* pcm, uint32_t* size) {
 }

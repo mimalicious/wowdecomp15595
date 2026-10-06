@@ -1071,7 +1071,8 @@ void CSimpleTop::UnregisterForEvent(CSimpleFrame* frame, CSimpleEventType event,
     }
 }
 
-// OFFSET: %0x005112B0
+// PROVEN: 01adf7ec IDENTICAL/DIFFERENT
+// OFFSET: 0x005010F0/0x1401469C0
 void CSimpleTop::EnableEvents() {
     EventRegisterEx(EVENT_ID_CHAR, &CSimpleTop::OnChar, this, 1.0f);
     EventRegisterEx(EVENT_ID_IME, &CSimpleTop::OnIme, this, 1.0f);
@@ -1087,7 +1088,8 @@ void CSimpleTop::EnableEvents() {
     EventRegisterEx(EVENT_ID_FOCUS, &CSimpleTop::OnFocusChanged, this, 1.0f);
 }
 
-// OFFSET: %0x005113C0
+// PROVEN: e3e3d1c4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00501200/0x140146B20
 void CSimpleTop::DisableEvents() {
     EventUnregisterEx(EVENT_ID_CHAR, &CSimpleTop::OnChar, this, 0xFFFFFFFF);
     EventUnregisterEx(EVENT_ID_IME, &CSimpleTop::OnIme, this, 0xFFFFFFFF);

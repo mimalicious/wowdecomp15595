@@ -39,7 +39,8 @@ typedef struct LG {
   
 
 
-// OFFSET: %0x0043A350
+// PROVEN: 76cc2ac2 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042FF20/0x140037F70
 static void stack_init (lua_State *L1, lua_State *L) {
   /* initialize CallInfo array */
   L1->base_ci = luaM_newvector(L, BASIC_CI_SIZE, CallInfo);
@@ -68,7 +69,8 @@ static void freestack (lua_State *L, lua_State *L1) {
 /*
 ** open parts that may cause memory-allocation errors
 */
-// OFFSET: %0x0043A3E0
+// PROVEN: 3df29337 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042FFB0/0x140038030
 static void f_luaopen (lua_State *L, void *ud) {
   global_State *g = G(L);
   UNUSED(ud);
@@ -105,7 +107,8 @@ static void preinit_state (lua_State *L, global_State *g) {
 }
 
 
-// OFFSET: %0x0043A4C0
+// PROVEN: b72831d9 IDENTICAL/UNPROVEN
+// OFFSET: 0x00430090/0x140038100
 static void close_state (lua_State *L) {
   global_State *g = G(L);
   luaF_close(L, L->stack);  /* close all upvalues for this thread */
@@ -120,7 +123,8 @@ static void close_state (lua_State *L) {
 }
 
 
-// OFFSET: %0x0043A550
+// PROVEN: 03036d97 IDENTICAL/UNPROVEN
+// OFFSET: 0x00430120/0x1400381C0
 lua_State *luaE_newthread (lua_State *L) {
   lua_State *L1 = tostate(luaM_malloc(L, state_size(lua_State)));
   luaC_link(L, obj2gco(L1), LUA_TTHREAD);
@@ -136,7 +140,8 @@ lua_State *luaE_newthread (lua_State *L) {
 }
 
 
-// OFFSET: %0x0043A620
+// PROVEN: dd526491 IDENTICAL/UNPROVEN
+// OFFSET: 0x004301F0/0x1400382F0
 void luaE_freethread (lua_State *L, lua_State *L1) {
   luaF_close(L1, L1->stack);  /* close all upvalues for this thread */
   lua_assert(L1->openupval == NULL);
@@ -146,7 +151,8 @@ void luaE_freethread (lua_State *L, lua_State *L1) {
 }
 
 
-// OFFSET: %0x0043A680
+// PROVEN: e370f896 IDENTICAL/DIFFERENT
+// OFFSET: 0x00430250/0x140038360
 LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, int profile) {
   int i;
   lua_State *L;
@@ -201,14 +207,16 @@ LUA_API lua_State *lua_newstate (lua_Alloc f, void *ud, int profile) {
 }
 
 
-// OFFSET: %0x0043A7C0
+// PROVEN: 740aa906 IDENTICAL/UNPROVEN
+// OFFSET: 0x00430390/0x140038580
 static void callallgcTM (lua_State *L, void *ud) {
   UNUSED(ud);
   luaC_callGCTM(L);  /* call GC metamethods for all udata */
 }
 
 
-// OFFSET: %0x0043A7E0
+// PROVEN: ad067402 IDENTICAL/UNPROVEN
+// OFFSET: 0x004303B0/0x140038590
 LUA_API void lua_close (lua_State *L) {
   L = G(L)->mainthread;  /* only the main thread can be closed */
   lua_lock(L);

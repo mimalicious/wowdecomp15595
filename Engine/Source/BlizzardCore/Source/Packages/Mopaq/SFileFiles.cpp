@@ -155,7 +155,8 @@ bool Blizzard::Mopaq::SFileReadFile(HSFILERecord* file, void* buffer, uint32_t c
     return false;
 }
 
-// OFFSET: %0x0071B4D0
+// PROVEN: b0f44088 IDENTICAL/UNPROVEN
+// OFFSET: 0x007BA190/0x1404B1920
 bool Blizzard::Mopaq::SFileWriteFile(HSFILERecord* file, const void* data, uint32_t size) {
     int64_t position = file->m_handle ? file->m_handle->m_position : -1;
 
@@ -195,7 +196,8 @@ int64_t Blizzard::Mopaq::SFileSetFilePointer(HSFILERecord* file, int32_t distanc
     return position;
 }
 
-// OFFSET: %0x0071B4C0
+// PROVEN: 9404b712 IDENTICAL/UNPROVEN
+// OFFSET: 0x007BA180/0x1404B1910
 int64_t Blizzard::Mopaq::SFileGetFileSize(HSFILERecord* file, uint32_t* sizeHigh) {
     return file->GetFileSize();
 }

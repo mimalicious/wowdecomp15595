@@ -162,7 +162,8 @@ static int findindex (lua_State *L, Table *t, StkId key) {
 }
 
 
-// OFFSET: %0x00434D20
+// PROVEN: fb583e18 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042A870/0x140031700
 int luaH_next (lua_State *L, Table *t, StkId key) {
   int i = findindex(L, t, key);  /* find original element */
   for (i++; i < t->sizearray; i++) {  /* try first array part */
@@ -269,7 +270,8 @@ static int numusehash (const Table *t, int *nums, int *pnasize) {
 }
 
 
-// OFFSET: %0x00435070
+// PROVEN: ca3a416a IDENTICAL/UNPROVEN
+// OFFSET: 0x0042ABD0/0x1400319B0
 static void setarrayvector (lua_State *L, Table *t, int size) {
   int i;
   luaM_reallocvector(L, t->array, t->sizearray, size, TValue);
@@ -279,7 +281,8 @@ static void setarrayvector (lua_State *L, Table *t, int size) {
 }
 
 
-// OFFSET: %0x004350E0
+// PROVEN: 1c8dd89a IDENTICAL/UNPROVEN
+// OFFSET: 0x0042AC40/0x140031A40
 static void setnodevector (lua_State *L, Table *t, int size) {
   int lsize;
   if (size == 0) {  /* no elements to hash part? */
@@ -375,7 +378,8 @@ static void rehash (lua_State *L, Table *t, const TValue *ek) {
 */
 
 
-// OFFSET: %0x004351C0
+// PROVEN: ebac3427 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042AD20/0x140031B40
 Table *luaH_new (lua_State *L, int narray, int nhash) {
   Table *t = luaM_new(L, Table);
   luaC_link(L, obj2gco(t), LUA_TTABLE);
@@ -392,7 +396,8 @@ Table *luaH_new (lua_State *L, int narray, int nhash) {
 }
 
 
-// OFFSET: %0x00435220
+// PROVEN: 4006077f IDENTICAL/UNPROVEN
+// OFFSET: 0x0042AD80/0x140031BE0
 void luaH_free (lua_State *L, Table *t) {
   if (t->node != dummynode)
     luaM_freearray(L, t->node, sizenode(t), Node);
@@ -559,7 +564,8 @@ TValue *luaH_setstr (lua_State *L, Table *t, TString *key) {
 }
 
 
-// OFFSET: %0x004354D0
+// PROVEN: 17a2db6a IDENTICAL/NONE
+// OFFSET: 0x0042B050
 static int unbound_search (Table *t, unsigned int j) {
   unsigned int i = j;  /* i is zero or a present index */
   j++;
@@ -588,7 +594,8 @@ static int unbound_search (Table *t, unsigned int j) {
 ** Try to find a boundary in table `t'. A `boundary' is an integer index
 ** such that t[i] is non-nil and t[i+1] is nil (and 0 if t[1] is nil).
 */
-// OFFSET: %0x00435580
+// PROVEN: 2ec5f2c3 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042B100/0x1400320D0
 int luaH_getn (Table *t) {
   unsigned int j = t->sizearray;
   if (j > 0 && ttisnil(&t->array[j - 1])) {

@@ -68,7 +68,8 @@ void C3Spline_Bezier3::IVelParametric(float t, C3Vector& vel) {
     this->EvaluateDer1(seg, segT, vel);
 }
 
-// OFFSET: %0x004D0730
+// PROVEN: 7021593a IDENTICAL/NONE
+// OFFSET: 0x004CAA10
 void C3Spline_Bezier3::IVelArclength(float t, C3Vector& vel) {
     uint32_t seg;
     float segT;

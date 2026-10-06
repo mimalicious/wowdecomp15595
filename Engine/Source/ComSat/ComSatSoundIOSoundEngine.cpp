@@ -102,7 +102,8 @@ int32_t ComSat::Sound::IOSoundEngine::GetPlaybackBlockSize(uint8_t player) {
     return this->m_samplesPerFrame * this->m_bitsPerSample / 8;
 }
 
-// OFFSET: %0x0097AFA0
+// PROVEN: 8a119638 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A3AA60/0x1407E7440
 int32_t ComSat::Sound::IOSoundEngine::EnumerateOutputDevices(ComSat::DeviceInfo* devices, int32_t maxDevices) {
     int32_t count = SI2::VoiceChat_GetNumOutputDrivers();
     if (maxDevices < count) {
@@ -114,7 +115,8 @@ int32_t ComSat::Sound::IOSoundEngine::EnumerateOutputDevices(ComSat::DeviceInfo*
     return count;
 }
 
-// OFFSET: %0x0097B000
+// PROVEN: 1c7dc768 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A3AAC0/0x1407E74C0
 int32_t ComSat::Sound::IOSoundEngine::EnumerateCaptureDevices(ComSat::DeviceInfo* devices, int32_t maxDevices) {
     int32_t count = SE3::GetNumInputDrivers(SE3::sm_pChatSystem);
     if (maxDevices < count) {

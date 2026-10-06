@@ -239,7 +239,8 @@ CAaBox& CParticleEmitter2::WorldBounds() {
     return this->m_worldBounds;
 }
 
-// OFFSET: %0x00A515C0
+// PROVEN: 27cb204e IDENTICAL/DIFFERENT
+// OFFSET: 0x00B15230/0x1408DB0B0
 void CParticleEmitter2::SetMaterial(const CParticleMat& material, CTexture* texture) {
     if (texture) {
         TextureAddRef(texture);
@@ -254,7 +255,8 @@ void CParticleEmitter2::SetMaterial(const CParticleMat& material, CTexture* text
     this->m_params.m_materialFlags = material.m_flags;
 }
 
-// OFFSET: %0x00A51610
+// PROVEN: dd36dcb2 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B13F40/0x1408D9DA0
 void CParticleEmitter2::SetTexture(CTexture* texture) {
     if (texture) {
         TextureAddRef(texture);

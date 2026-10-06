@@ -1,5 +1,5 @@
-#ifndef ENGINE_SOURCE_GX_CGXRENDERTARGETGROUP_H
-#define ENGINE_SOURCE_GX_CGXRENDERTARGETGROUP_H
+#ifndef ENGINE_SOURCE_GX_CGXFRAMEBUFFER_H
+#define ENGINE_SOURCE_GX_CGXFRAMEBUFFER_H
 
 #include <cstddef>
 #include <cstdint>
@@ -7,7 +7,7 @@
 
 class CGxTex;
 
-class CGxRenderTargetGroup {
+class CGxFrameBuffer {
     public:
     struct Target {
         /* 0000 */ CGxTex* m_texture;
@@ -21,9 +21,9 @@ class CGxRenderTargetGroup {
 
     static uint32_t s_nextVersion;
 
-    CGxRenderTargetGroup();
-    int32_t SetTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
-    int32_t Update();
+    CGxFrameBuffer();
+    int32_t Attach(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
+    int32_t Finalize();
 };
 
 #endif

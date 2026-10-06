@@ -681,7 +681,7 @@ void ImageWriterSetFlags(int32_t flags) {
     s_flags = flags;
 }
 
-// PROVEN: b2ebac43 UNPROVEN/IDENTICAL
+// PROVEN: b2ebac43 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B39270/0x140905480
 void IWFree(void* ptr) {
     if (s_free) {
@@ -689,7 +689,8 @@ void IWFree(void* ptr) {
     }
 }
 
-// OFFSET: %0x00A6BA60
+// PROVEN: ffb1a5e9 IDENTICAL/NONE
+// OFFSET: 0x00B39290/0x140905460
 void* IWAlloc(size_t bytes) {
     if (s_alloc) {
         return s_alloc(bytes);
@@ -710,13 +711,15 @@ void IWDefaultFree(void* ptr) {
     free(ptr);
 }
 
-// OFFSET: %0x00A6BAC0
+// PROVEN: 98ec8b95 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B392C0/0x1409054D0
 void IWSetAllocator(void* (*allocFunc)(size_t bytes)) {
     s_alloc = allocFunc;
     jpeg_set_malloc(IWAlloc);
 }
 
-// OFFSET: %0x00A6BAE0
+// PROVEN: e7fc52e3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B392E0/0x1409054F0
 void IWSetDeallocator(void (*freeFunc)(void* ptr)) {
     s_free = freeFunc;
     jpeg_set_free(IWFree);

@@ -277,7 +277,8 @@ bool System_Mopaq::IOHandler::WriteData(IOHandler* handler, const void* buffer, 
     return handler->WriteData(static_cast<const uint8_t*>(buffer), offset, count);
 }
 
-// OFFSET: %0x00715A80
+// PROVEN: 7ead9b00 IDENTICAL/NONE
+// OFFSET: 0x007B36F0
 bool System_Mopaq::IOHandler::ReadData(void* buffer, int64_t offset, int32_t* count) {
     return this->m_base.Read(buffer, offset + this->m_baseOffset, *count, count);
 }
@@ -288,7 +289,8 @@ bool System_Mopaq::IOHandler::InitializeAndRead(void* buffer, int64_t offset, in
     return this->ReadData(buffer, offset, count);
 }
 
-// OFFSET: %0x00715AB0
+// PROVEN: 7197bd6f IDENTICAL/NONE
+// OFFSET: 0x007B3720
 bool System_Mopaq::IOHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     return this->m_base.Write(buffer, offset + this->m_baseOffset, count);
 }

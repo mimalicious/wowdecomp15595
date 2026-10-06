@@ -6,6 +6,8 @@
 #include "Engine/Source/Gx/CGxDevice/Types.h"
 #include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Gx/CGxTex.h"
+
+class CGxFrameBuffer;
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2iVector.h"
 
@@ -66,6 +68,8 @@ void GxBufUnlock(CGxBuf* buf, uint32_t size);
 void GxBufDestroy(CGxBuf* buf);
 void GxRenderTargetGet(EGxBuffer buffer, CGxTex*& texture);
 void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
+void GxFrameBufferSet(CGxFrameBuffer* frameBuffer);
+CGxFrameBuffer* GxFrameBufferCreate(CGxTex* depthTex, CGxTex* colorTex);
 void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset);
 CGxBuf* GxBufStream(EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount);
 void GxPrimIndexPtr(uint32_t indexCount, const uint16_t* indices);

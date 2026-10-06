@@ -159,7 +159,8 @@ void luaD_reallocstack (lua_State *L, int newsize) {
 }
 
 
-// OFFSET: %0x0042A780
+// PROVEN: e7e67df7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420270/0x1400248F0
 void luaD_reallocCI (lua_State *L, int newsize) {
   CallInfo *oldci = L->base_ci;
   luaM_reallocvector(L, L->base_ci, L->size_ci, newsize, CallInfo);
@@ -169,7 +170,8 @@ void luaD_reallocCI (lua_State *L, int newsize) {
 }
 
 
-// OFFSET: %0x0042A800
+// PROVEN: 193c4033 IDENTICAL/UNPROVEN
+// OFFSET: 0x004202F0/0x140024990
 void luaD_growstack (lua_State *L, int n) {
   if (n <= L->stacksize)  /* double size is enough? */
     luaD_reallocstack(L, 2*L->stacksize);
@@ -178,7 +180,8 @@ void luaD_growstack (lua_State *L, int n) {
 }
 
 
-// OFFSET: %0x0042AE50
+// PROVEN: 94c1f956 IDENTICAL/NONE
+// OFFSET: 0x00420940
 static CallInfo *growCI (lua_State *L) {
   if (L->size_ci > LUAI_MAXCALLS)  /* overflow while handling overflow? */
     luaD_throw(L, LUA_ERRERR);
@@ -191,7 +194,8 @@ static CallInfo *growCI (lua_State *L) {
 }
 
 
-// OFFSET: %0x0042A830
+// PROVEN: a5753631 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420320/0x1400249B0
 void luaD_callhook (lua_State *L, int event, int line) {
   lua_Hook hook = L->hook;
   if (hook && L->allowhook) {
@@ -465,7 +469,8 @@ int luaD_poscall (lua_State *L, StkId firstResult) {
 ** When returns, all the results are on the stack, starting at the original
 ** function position.
 */ 
-// OFFSET: %0x0042B280
+// PROVEN: 25c7c3a8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420D70/0x140025740
 void luaD_call (lua_State *L, StkId func, int nResults) {
   if (++L->nCcalls >= LUAI_MAXCCALLS) {
     if (L->nCcalls == LUAI_MAXCCALLS)
@@ -485,7 +490,8 @@ void luaD_call (lua_State *L, StkId func, int nResults) {
 }
 
 
-// OFFSET: %0x0042B340
+// PROVEN: bff281a4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420E30/0x140025820
 static void resume (lua_State *L, void *ud) {
   StkId firstArg = cast(StkId, ud);
   CallInfo *ci = L->ci;
@@ -519,7 +525,8 @@ static void resume (lua_State *L, void *ud) {
 }
 
 
-// OFFSET: %0x0042AC00
+// PROVEN: f1b8a6d6 IDENTICAL/UNPROVEN
+// OFFSET: 0x004206F0/0x140024E50
 static int resume_error (lua_State *L, const char *msg) {
   L->top = L->ci->base;
   setsvalue2s(L, L->top, luaS_new(L, msg));
@@ -529,7 +536,8 @@ static int resume_error (lua_State *L, const char *msg) {
 }
 
 
-// OFFSET: %0x0042B420
+// PROVEN: b541d1e8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420F10/0x140025920
 LUA_API int lua_resume (lua_State *L, int nargs) {
   int status;
   lua_lock(L);
@@ -556,7 +564,8 @@ LUA_API int lua_resume (lua_State *L, int nargs) {
 }
 
 
-// OFFSET: %0x0042AC70
+// PROVEN: e085d4f8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420760/0x140024EE0
 LUA_API int lua_yield (lua_State *L, int nresults) {
   luai_userstateyield(L, nresults);
   lua_lock(L);
@@ -614,7 +623,8 @@ struct SParser {  /* data to `f_parser' */
   const char *name;
 };
 
-// OFFSET: %0x0042ACB0
+// PROVEN: eac35bcf IDENTICAL/UNPROVEN
+// OFFSET: 0x004207A0/0x140024F30
 static void f_parser (lua_State *L, void *ud) {
   int i;
   Proto *tf;
@@ -631,7 +641,8 @@ static void f_parser (lua_State *L, void *ud) {
 }
 
 
-// OFFSET: %0x0042B5F0
+// PROVEN: d97fbd03 IDENTICAL/UNPROVEN
+// OFFSET: 0x004210E0/0x140025B50
 int luaD_protectedparser (lua_State *L, ZIO *z, const char *name) {
   struct SParser p;
   int status;

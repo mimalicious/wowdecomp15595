@@ -258,7 +258,7 @@ WowClientDB<FactionRec> g_factionDB;
 // STATIC: %0x00C992F8
 WowClientDB<FactionTemplateRec> g_factionTemplateDB;
 
-// STATIC: %0x00C99314
+// STATIC: 0x00D9912C
 WowClientDB<FileDataRec> g_fileDataDB;
 
 // STATIC: %0x00C99330

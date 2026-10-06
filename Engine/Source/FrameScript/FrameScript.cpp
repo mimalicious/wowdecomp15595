@@ -306,7 +306,8 @@ void FrameScript_UnregisterFunction(const char* name) {
     lua_setglobal(L, name);
 }
 
-// OFFSET: %0x007A14F0
+// PROVEN: 082ca460 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083B0B0/0x140565800
 int32_t FrameScript_GetVariable(const char* name, const char*& value) {
     lua_State* L = s_context;
     int32_t result = 0;
@@ -792,7 +793,8 @@ int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     return 1;
 }
 
-// OFFSET: %0x007A23B0
+// PROVEN: 47d8f14d IDENTICAL/NONE
+// OFFSET: 0x0083BFC0/0x1405668A0
 int32_t FrameScript_ExecuteBuffer(const char* buffer, size_t bytes, const char* bufferName, CStatus* status, const char* wrapper) {
     lua_State* L = s_context;
 
@@ -888,7 +890,8 @@ int32_t FrameScript_ExecuteFile(const char* filename, const char* wrapper, MD5_C
     return result;
 }
 
-// OFFSET: %0x007A24C0
+// PROVEN: ae667a40 IDENTICAL/DIFFERENT
+// OFFSET: 0x0083C0D0/0x140566A00
 int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const char* body, CStatus* status) {
     lua_State* L = s_context;
 
@@ -1081,7 +1084,8 @@ void FrameScript_PackVariable(lua_State* L, const char* name, int32_t depth, cha
     }
 }
 
-// OFFSET: %0x007A2F10
+// PROVEN: 9d2f43e4 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083CB70/0x1405677B0
 static int32_t FrameScript_HandleError(lua_State* L) {
     if (!lua_isstring(L, -1)) {
         lua_pushstring(L, "UNKNOWN ERROR");

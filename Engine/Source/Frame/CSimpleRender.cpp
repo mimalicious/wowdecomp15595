@@ -578,7 +578,8 @@ uint32_t CSimpleFontString::GetFontFlags() {
     return this->m_fontHandle ? TextBlockGetFontFlags(this->m_fontHandle) : 0;
 }
 
-// OFFSET: %0x00508BE0
+// PROVEN: 4ddf8995 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F8990/0x14013C1E0
 void CSimpleRender::Init() {
     CSimpleRender::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
 }
@@ -2103,7 +2104,8 @@ void CSimpleTextureImage::Free() {
     }
 }
 
-// OFFSET: %0x005088E0
+// PROVEN: 33cc0c8b IDENTICAL/UNPROVEN
+// OFFSET: 0x004F8690/0x14013BFC0
 void CTextureExtension::ReleaseMaskTexture() {
     if (this->m_maskTexture) {
         TextureRelease(this->m_maskTexture);
@@ -2119,7 +2121,8 @@ CTextureExtension::~CTextureExtension() {
     }
 }
 
-// OFFSET: %0x00507550
+// PROVEN: c86f960e IDENTICAL/UNPROVEN
+// OFFSET: 0x004F70D0/0x14013A7F0
 int32_t CSimpleTexture::SetTexture(CTexture* texture) {
     if (this->m_texture != texture) {
         if (texture) {
@@ -2211,7 +2214,8 @@ CGxShader* CSimpleTexture::GetImageModePixelShader(TextureImageMode mode) {
     return CSimpleTexture::s_imageModePixelShaders[mode];
 }
 
-// OFFSET: %0x00507790
+// PROVEN: a84c6227 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F7420/0x14013AB20
 CGxTex* CSimpleTexture::GetGxTex() {
     return this->m_texture ? TextureGetGxTexBlocking(this->m_texture) : NULL;
 }
@@ -2231,7 +2235,8 @@ void CSimpleTexture::AddAnimTranslation(CScriptRegion* region, const C2Vector& t
     this->OnRegionChanged();
 }
 
-// OFFSET: %0x005077F0
+// PROVEN: 6e2ea24a IDENTICAL/NONE
+// OFFSET: 0x004F7470
 void CSimpleTexture::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (region && region != this) {
         return;
@@ -2241,7 +2246,8 @@ void CSimpleTexture::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, c
     this->OnRegionChanged();
 }
 
-// OFFSET: %0x00507830
+// PROVEN: 355a86b9 IDENTICAL/NONE
+// OFFSET: 0x004F74B0
 void CSimpleTexture::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (region && region != this) {
         return;
@@ -2293,7 +2299,8 @@ int32_t CSimpleTexture::IsObjectLoaded() {
     return 1;
 }
 
-// OFFSET: %0x00508D30
+// PROVEN: 5c11580c IDENTICAL/UNPROVEN
+// OFFSET: 0x004F8B30/0x14013C390
 void CSimpleTexture::Init() {
     for (uint32_t i = 0; i < 2; i++) {
         if (CSimpleTexture::s_imageModePixelShaderNames[i]) {

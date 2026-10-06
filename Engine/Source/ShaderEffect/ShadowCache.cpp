@@ -38,7 +38,7 @@ uint32_t CShadowCache::s_shadowSize;
 // STATIC: %0x00C3CD8C
 EShadowMode CShadowCache::s_shadowMode;
 
-// STATIC: %0x00C3CD90
+// STATIC: 0x00D38360
 CTexture* CShadowCache::s_intDynShadow;
 
 // STATIC: %0x00C3CD94
@@ -65,7 +65,7 @@ int32_t CShadowCache::s_debugLevel;
 // STATIC: %0x00C3CDB0
 uint8_t CShadowCache::s_frameCounter;
 
-// STATIC: %0x00C3CDB8
+// STATIC: 0x00D38390
 CShadowBand CShadowCache::s_extDynShadow;
 
 // STATIC: %0x00C3CDF8
@@ -74,13 +74,13 @@ float CShadowCache::s_extDynShadowCullRect[4];
 // STATIC: %0x00C3CE08
 C3Vector CShadowCache::s_sunDir;
 
-// STATIC: %0x00C3CE14
+// STATIC: 0x00D383EC
 C4Vector CShadowCache::s_sunDirViewSpace;
 
-// STATIC: %0x00C3CE24
+// STATIC: 0x00D383FC
 C4Vector CShadowCache::s_cutoffPlane;
 
-// STATIC: %0x00C3CE34
+// STATIC: 0x00D3840C
 C4Vector CShadowCache::s_cutoffPlaneDefault;
 
 // STATIC: %0x00C3CE44
@@ -101,7 +101,7 @@ C4Vector CShadowCache::s_bandParams[6];
 // STATIC: %0x00C3CFA8
 C4Vector CShadowCache::s_pcfOffsets[8];
 
-// STATIC: %0x00C3D028
+// STATIC: 0x00D38600
 CShadowBand CShadowCache::s_extShadowBands[3];
 
 // OFFSET: %0x0043F770

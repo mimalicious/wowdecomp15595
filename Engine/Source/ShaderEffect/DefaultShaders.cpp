@@ -320,7 +320,8 @@ void DefaultShaders::SetFogEnabled(int32_t enabled) {
     }
 }
 
-// OFFSET: %0x0043BCE0
+// PROVEN: 86da6118 IDENTICAL/NONE
+// OFFSET: 0x004318B0
 static uint32_t CountTextures(uint32_t textureCount) {
     if (textureCount != 0xFFFFFFFF) {
         return textureCount;

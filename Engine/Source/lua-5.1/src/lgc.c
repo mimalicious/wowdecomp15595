@@ -25,7 +25,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 
 
-// STATIC: #0x00D413C8
+// STATIC: 0x00D380C0/0x140BF1B30
 static double divisor;
 
 #define GCSTEPSIZE	1024u
@@ -209,7 +209,8 @@ static int traversetable (global_State *g, Table *h) {
 ** All marks are conditional because a GC may happen while the
 ** prototype is still being created
 */
-// OFFSET: %0x00433B10
+// PROVEN: 374082bf IDENTICAL/UNPROVEN
+// OFFSET: 0x00429630/0x14002FCE0
 static void traverseproto (global_State *g, Proto *f) {
   int i;
   if (f->source) stringmark(f->source);
@@ -231,7 +232,8 @@ static void traverseproto (global_State *g, Proto *f) {
 
 
 
-// OFFSET: %0x00433BE0
+// PROVEN: 2d718d5c IDENTICAL/UNPROVEN
+// OFFSET: 0x00429700/0x14002FDE0
 static void traverseclosure (global_State *g, Closure *cl) {
   markobject(g, cl->c.env);
   if (cl->c.isC) {
@@ -264,7 +266,8 @@ static void checkstacksizes (lua_State *L, StkId max) {
 }
 
 
-// OFFSET: %0x00433C90
+// PROVEN: eb6241cd IDENTICAL/UNPROVEN
+// OFFSET: 0x004297B0/0x14002FF40
 static void traversestack (global_State *g, lua_State *l) {
   StkId o, lim;
   CallInfo *ci;
@@ -548,7 +551,8 @@ static void checkSizes (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434300
+// PROVEN: c90ff32d IDENTICAL/UNPROVEN
+// OFFSET: 0x00429E20/0x140030720
 static void GCTM (lua_State *L) {
   global_State *g = G(L);
   GCObject *o = g->tmudata->gch.next;  /* get first element */
@@ -581,7 +585,8 @@ static void GCTM (lua_State *L) {
 /*
 ** Call all GC tag methods
 */
-// OFFSET: %0x00434410
+// PROVEN: 87845091 IDENTICAL/UNPROVEN
+// OFFSET: 0x00429F30/0x140030880
 void luaC_callGCTM (lua_State *L) {
   while (G(L)->tmudata)
     GCTM(L);
@@ -608,7 +613,8 @@ void luaC_freeall (lua_State *L) {
   }
 }
 
-// OFFSET: %0x004344E0
+// PROVEN: 231ee3dc IDENTICAL/DIFFERENT
+// OFFSET: 0x0042A000/0x140030AF0
 void luaC_sizeall (lua_State *L) {
   global_State *g = G(L);
   GCUsage *u;
@@ -704,7 +710,8 @@ static void markroot (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434710
+// PROVEN: 5292ba16 IDENTICAL/NONE
+// OFFSET: 0x0042A230
 static void remarkupvals (global_State *g) {
   UpVal *uv;
   for (uv = g->uvhead.u.l.next; uv != &g->uvhead; uv = uv->u.l.next) {
@@ -802,7 +809,8 @@ static l_mem singlestep (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434950
+// PROVEN: 4ea1a623 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042A470/0x140031240
 void luaC_step (lua_State *L) {
   global_State *g = G(L);
   l_mem lim = (GCSTEPSIZE/100) * g->gcstepmul;
@@ -829,7 +837,8 @@ void luaC_step (lua_State *L) {
 }
 
 
-// OFFSET: %0x004349E0
+// PROVEN: aaf40889 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042A500/0x140031330
 void luaC_fullgc (lua_State *L) {
   global_State *g = G(L);
   if (g->gcstate <= GCSpropagate) {
@@ -856,7 +865,8 @@ void luaC_fullgc (lua_State *L) {
 }
 
 
-// OFFSET: %0x00434A50
+// PROVEN: fb5934a7 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042A570/0x1400313E0
 void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
   global_State *g = G(L);
   lua_assert(isblack(o) && iswhite(v) && !isdead(g, v) && !isdead(g, o));
@@ -895,7 +905,8 @@ void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
 }
 
 
-// OFFSET: %0x00434B00
+// PROVEN: a0cf3a37 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042A620/0x140031470
 void luaC_linkupval (lua_State *L, UpVal *uv) {
   global_State *g = G(L);
   GCObject *o = obj2gco(uv);

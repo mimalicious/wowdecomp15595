@@ -39,7 +39,8 @@ int32_t CSimpleModel::s_objectType;
 // STATIC: %0x00CD25A0
 CDataAllocator CSimpleModel::s_allocator(sizeof(CSimpleModel), 3);
 
-// OFFSET: %0x0052EFC0
+// PROVEN: f38dfe15 IDENTICAL/NONE
+// OFFSET: 0x0051F050
 static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (!interrupted) {
         CSimpleModel* simpleModel = reinterpret_cast<CSimpleModel*>(static_cast<uintptr_t>(param));
@@ -55,7 +56,8 @@ void CSimpleModel::operator delete(void* ptr) {
     CSimpleModel::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x0052EC00
+// PROVEN: d0b5eef9 IDENTICAL/UNPROVEN
+// OFFSET: 0x0051EC90/0x14016BDA0
 int32_t CSimpleModel::IsDrawable() {
     return this->m_model && this->m_model->IsDrawableRecursive();
 }

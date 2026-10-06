@@ -293,6 +293,7 @@ CScriptRegion::~CScriptRegion() {
 void CScriptRegion::PreOnAnimUpdate() {
 }
 
+// PROVEN: c64042c5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
 }
@@ -307,10 +308,12 @@ void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
 void CScriptRegion::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
 }
 
+// PROVEN: 026f6a8a IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
 }
 
+// PROVEN: 4414fe0c IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
 }

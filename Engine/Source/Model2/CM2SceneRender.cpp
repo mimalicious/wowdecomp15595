@@ -32,7 +32,7 @@ const uint32_t s_fogModes[7] = { 1, 1, 1, 2, 2, 3, 4 };
 // STATIC: %0x00AF94D4
 const uint32_t s_noLiquidFog[7] = { 0, 0, 0, 1, 1, 0, 0 };
 
-// STATIC: %0x00C0D2A8
+// STATIC: 0x00D07F20
 static C44Matrix s_identity;
 
 // OFFSET: %0x0078FE70
@@ -265,7 +265,8 @@ void CM2SceneRender::EndFixed() {
     world.m_mtx[world.m_level] = s_identity;
 }
 
-// OFFSET: %0x00790860
+// PROVEN: 886701ad IDENTICAL/UNPROVEN
+// OFFSET: 0x008280A0/0x140545FD0
 void CM2SceneRender::SetBatchVertices(int32_t sharedVertices) {
     if (CShaderEffect::s_enableShaders) {
         if (this->m_curType != this->m_prevType || this->m_curShared != this->m_prevShared) {

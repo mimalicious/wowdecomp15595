@@ -235,7 +235,8 @@ Blizzard::Streaming::Transport::Config* Blizzard::Streaming::Transport::GetConfi
     return &s_config;
 }
 
-// OFFSET: %0x00728C20
+// PROVEN: f9861b54 IDENTICAL/NONE
+// OFFSET: 0x007C7AC0
 bool Blizzard::Streaming::Transport::TransportHttpCallback::ShouldBlock() {
     return GetConfig()->m_shouldBlock;
 }

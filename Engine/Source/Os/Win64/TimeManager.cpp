@@ -8,7 +8,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C0FBB8
+// STATIC: 0x00D0A8C0/0x140BBC8F0
 static OsTimeManager s_OsTimeMgr;
 
 // INLINED

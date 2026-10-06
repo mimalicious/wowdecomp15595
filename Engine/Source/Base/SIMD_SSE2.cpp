@@ -125,7 +125,8 @@ static void CompressDXT1_SSE2(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     reinterpret_cast<uint32_t*>(dst)[1] = bits;
 }
 
-// OFFSET: %0x004995B0
+// PROVEN: 805cfd0b IDENTICAL/NONE
+// OFFSET: 0x00491740
 void SIMD::Init_SSE2(SIMD::FunctionTable* table) {
     table->CompressDXT1 = CompressDXT1_SSE2;
 }

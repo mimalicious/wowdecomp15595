@@ -126,7 +126,7 @@ static uint32_t s_noMiniDumps;
 // STATIC: #0x00CAD8C0
 static char s_logLastFile[MAX_PATH];
 
-// STATIC: #0x00C9BBD4
+// STATIC: 0x00D9B334
 static int32_t s_appPhase;
 
 // INLINED

@@ -48,7 +48,8 @@ const TValue *luaV_tonumber (const TValue *obj, TValue *n) {
 }
 
 
-// OFFSET: %0x0042B990
+// PROVEN: 3e3d0e20 IDENTICAL/UNPROVEN
+// OFFSET: 0x00421480/0x140025FC0
 int luaV_tostring (lua_State *L, StkId obj) {
   if (!ttisnumber(obj))
     return 0;
@@ -184,7 +185,8 @@ static int call_binTM (lua_State *L, const TValue *p1, const TValue *p2,
 }
 
 
-// OFFSET: %0x0042C080
+// PROVEN: 2ed5e7f7 IDENTICAL/UNPROVEN
+// OFFSET: 0x00421B70/0x140026870
 static const TValue *get_compTM (lua_State *L, Table *mt1, Table *mt2,
                                   TMS event) {
   const TValue *tm1 = fasttm(L, mt1, event);

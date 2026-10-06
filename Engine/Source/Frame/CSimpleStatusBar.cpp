@@ -107,7 +107,8 @@ void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// OFFSET: %0x0051F3D0
+// PROVEN: 07f92cae IDENTICAL/UNPROVEN
+// OFFSET: 0x0050F010/0x1401581C0
 void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer, int8_t subLevel) {
     if (texture == this->m_barTexture) {
         return;

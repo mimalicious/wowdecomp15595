@@ -26,7 +26,7 @@ static CGxShader* s_maskPixelShader;
 // STATIC: %0x00E457E4
 static CGxShader* s_maskVertexShader;
 
-// STATIC: %0x00E457E8
+// STATIC: 0x00F803B8/0x140E78228
 static CGxTex* s_gxTex[2];
 
 // STATIC: %0x00E457F0
@@ -96,7 +96,8 @@ void SunShafts::Destroy() {
     DepthCache::Release();
 }
 
-// OFFSET: %0x009710F0
+// PROVEN: 1fac55c6 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2EF10/0x1407D8990
 uint32_t SunShafts::ValidateMode(uint32_t mode) {
     if (!mode) {
         return 0;

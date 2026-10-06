@@ -637,7 +637,8 @@ FMOD_RESULT ChannelI::getRealChannel(ChannelReal **realchan, int *subchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009BC950
+// PROVEN: b6347482 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A7C120/0x140837590
 FMOD_RESULT ChannelI::calcVolumeAndPitchFor3D(int delta)
 {
     float pitch3d = 1.0f, vol3d = 1.0f, conevol = 1.0f;
@@ -934,7 +935,7 @@ ChannelI::ChannelI(int index, SystemI *system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 904f2ce9 DIFFERENT/IDENTICAL
+// PROVEN: 904f2ce9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7C710/0x140837C40
 FMOD_RESULT ChannelI::init()
 {

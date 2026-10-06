@@ -5,10 +5,10 @@
 #include <malloc.h>
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00ADE850
+// STATIC: 0x00C9F7B0/0x140B3B908
 static int32_t s_exitonfailure = 1;
 
-// STATIC: #0x00ADE854
+// STATIC: 0x00C9F7B4/0x140B3B90C
 static int32_t s_heaptracking = 1;
 
 // PROVEN: fa84e396 UNPROVEN/IDENTICAL

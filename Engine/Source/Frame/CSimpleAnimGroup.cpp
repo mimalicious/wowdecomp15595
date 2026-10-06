@@ -54,7 +54,8 @@ void CSimpleAnimGroup::LoadXML_Anim(linkObject* node, CStatus* status, CSimpleAn
     anim->LoadXML(node, status);
 }
 
-// OFFSET: %0x005370F0
+// PROVEN: 817da576 IDENTICAL/NONE
+// OFFSET: 0x00526CE0
 void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
 
@@ -163,7 +164,8 @@ void CSimpleAnimGroup::Finish() {
     }
 }
 
-// OFFSET: %0x00537CA0
+// PROVEN: 08b73b99 IDENTICAL/NONE
+// OFFSET: 0x00527C10
 void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     if (this->HasScript(this->m_onLoop)) {
         lua_State* L = FrameScript_GetContext();

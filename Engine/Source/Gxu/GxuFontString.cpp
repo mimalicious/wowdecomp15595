@@ -123,7 +123,8 @@ int32_t CGxString::CalculateVertsNeeded(int32_t texturePage) {
     return this->m_textLines[texturePage]->m_verts.m_count;
 }
 
-// OFFSET: %0x0062E8E0
+// PROVEN: ff6ef87e IDENTICAL/NONE
+// OFFSET: 0x0061E090
 void CGxString::SetStringPosition(const C3Vector& position) {
     this->m_position = position;
     this->InitializeViewTranslation();

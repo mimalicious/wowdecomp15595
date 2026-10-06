@@ -1451,6 +1451,7 @@ int32_t CLayoutFrame::IsObjectLoaded() {
 void CLayoutFrame::LoadObject() {
 }
 
+// PROVEN: 4b3e9b26 IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void CLayoutFrame::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
 }

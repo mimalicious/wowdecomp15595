@@ -31,7 +31,7 @@ static EGxApi s_requestedApi = GxApis_Last;
 // STATIC: %0x00D8BCC8
 static uint32_t s_maxFPSBk;
 
-// STATIC: %0x00D8BCCC
+// STATIC: 0x00EBF470
 static EGxPrim s_lockPrimType;
 
 // STATIC: %0x00D8BCD0
@@ -532,7 +532,8 @@ void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     buf->unk_001C = 1;
 }
 
-// OFFSET: %0x007A69B0
+// PROVEN: 46e6b5a1 IDENTICAL/NONE
+// OFFSET: 0x008408C0
 void GxDrawLockedElements() {
     if (!s_lockVertexCount) {
         return;
@@ -624,7 +625,8 @@ void GxTexUpdate(CGxTex* texId, int32_t minX, int32_t minY, int32_t maxX, int32_
     g_theGxDevicePtr->TexMarkForUpdate(texId, rect, immediate);
 }
 
-// OFFSET: %0x007A75E0
+// PROVEN: 07d313cf IDENTICAL/NONE
+// OFFSET: 0x00841540
 void GxPrimLockIndexPtr(EGxPrim primType, uint32_t indexCount, const uint16_t* indices) {
     s_lockPrimType = primType;
     s_lockIndexCount = indexCount;
@@ -947,10 +949,32 @@ void GxRenderTargetGet(EGxBuffer buffer, CGxTex*& texture) {
     g_theGxDevicePtr->DeviceGetRenderTarget(buffer, texture);
 }
 
-// OFFSET: %0x004412A0
+// PROVEN: cb66fab0 IDENTICAL/DIFFERENT
+// OFFSET: 0x004370B0/0x140040C90
 void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     GxRsSet(GxRs_ScissorTest, 0);
     g_theGxDevicePtr->DeviceSetRenderTarget(buffer, texture, plane);
+}
+
+// PROVEN: 096f35ac IDENTICAL/DIFFERENT
+// OFFSET: 0x004370B0/0x140040C90
+void GxFrameBufferSet(CGxFrameBuffer* frameBuffer) {
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->FrameBufferSet(frameBuffer);
+}
+
+// PROVEN: 727d0ff0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00435470/0x14003EB90
+CGxFrameBuffer* GxFrameBufferCreate(CGxTex* depthTex, CGxTex* colorTex) {
+    CGxFrameBuffer* frameBuffer = g_theGxDevicePtr->FrameBufferCreate();
+    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Depth, depthTex, 0);
+    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Color, colorTex, 0);
+
+    if (!g_theGxDevicePtr->FrameBufferFinalize(frameBuffer)) {
+        g_theGxDevicePtr->FrameBufferDelete(frameBuffer);
+    }
+
+    return frameBuffer;
 }
 
 // PROVEN: 41b44980 IDENTICAL/NONE

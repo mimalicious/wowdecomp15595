@@ -36,14 +36,15 @@ void Crypt::Panama::Reset() {
     this->m_state[17] = (OsGetProcessorFeatures() & 0x80) != 0;
 }
 
-// OFFSET: %0x0054E570
+// PROVEN: e2cde23b IDENTICAL/DIFFERENT
+// OFFSET: 0x00A1D230/0x1407C31E0
 Crypt::PanamaCypher::PanamaCypher() {
     this->m_leftOver = 0;
     this->m_bufferSize = 1024;
     this->m_buffer = reinterpret_cast<uint8_t*>((reinterpret_cast<uintptr_t>(this->m_bufferData) + 15) & ~static_cast<uintptr_t>(15));
 }
 
-// PROVEN: fb8b4914 UNPROVEN/IDENTICAL
+// PROVEN: fb8b4914 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A1D270/0x1407C3230
 Crypt::PanamaCypher::~PanamaCypher() {
     memset(this->m_bufferData, 0, sizeof(this->m_bufferData));

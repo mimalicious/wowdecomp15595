@@ -535,7 +535,8 @@ bool Insets::Load(float& left, float& right, float& top, float& bottom, CStatus*
     return false;
 }
 
-// OFFSET: %0x004FF720
+// PROVEN: 6ccead45 IDENTICAL/UNPROVEN
+// OFFSET: 0x004EF150/0x140133810
 int32_t LoadXML_Value(linkObject* node, float& value, CStatus* status) {
     return static_cast<Value*>(node)->Load(value, status) != 0;
 }
@@ -545,7 +546,8 @@ int32_t LoadXML_Dimensions(linkObject* node, float& x, float& y, CStatus* status
     return static_cast<Dimension*>(node)->Load(x, y, status);
 }
 
-// OFFSET: %0x004FF770
+// PROVEN: 3fd4757d IDENTICAL/UNPROVEN
+// OFFSET: 0x004EF1A0/0x140133850
 int32_t LoadXML_Insets(linkObject* node, float& left, float& right, float& top, float& bottom, CStatus* status) {
     return static_cast<Insets*>(node)->Load(left, right, top, bottom, status) != 0;
 }
@@ -604,12 +606,14 @@ int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     return 1;
 }
 
-// OFFSET: %0x004FFB80
+// PROVEN: 8bd70daf IDENTICAL/UNPROVEN
+// OFFSET: 0x004EF5B0/0x140133BC0
 int32_t LoadXML_Gradient(linkObject* node, ORIENTATION& orientation, CImVector& minColor, CImVector& maxColor, CStatus* status) {
     return static_cast<Gradient*>(node)->Load(orientation, minColor, maxColor, status) != 0;
 }
 
-// OFFSET: %0x004FFBB0
+// PROVEN: 9a30f9fb IDENTICAL/UNPROVEN
+// OFFSET: 0x004EF5E0/0x140133BF0
 int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset, CStatus* status) {
     Origin* origin = static_cast<Origin*>(node);
     point = FRAMEPOINT_CENTER;

@@ -768,7 +768,8 @@ int32_t CVar::IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_
     return 1;
 }
 
-// OFFSET: %0x0061CEF0
+// PROVEN: 7265b043 IDENTICAL/NONE
+// OFFSET: 0x00655D00
 int32_t CVar::SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags) {
     return CVar::IterateForArchive(category, excludeFlags, CVar::SaveCvar, file);
 }

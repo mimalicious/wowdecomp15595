@@ -214,7 +214,8 @@ void CGxDeviceD3d11::IUpdateInputLayout() {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x007CE750
+// PROVEN: 5ab286d1 IDENTICAL/UNPROVEN
+// OFFSET: 0x0086F650/0x1405A4F20
 void CGxDeviceD3d11::ISetInputLayout() {
     this->IUpdateInputLayout();
 
@@ -233,7 +234,8 @@ void CGxDeviceD3d11::ISetInputLayout() {
     }
 }
 
-// OFFSET: %0x007CE7B0
+// PROVEN: 8a5b7d54 IDENTICAL/UNPROVEN
+// OFFSET: 0x0086F6B0/0x1405A4F90
 void CGxDeviceD3d11::ISetInputLayoutInstanced() {
     this->IUpdateInputLayout();
 

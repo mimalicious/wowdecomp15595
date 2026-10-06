@@ -624,7 +624,8 @@ void FFX::Render() {
     g_theGxDevicePtr->Draw(batch);
 }
 
-// OFFSET: %0x00800280
+// PROVEN: ea1e1136 IDENTICAL/UNPROVEN
+// OFFSET: 0x0089BCA0/0x1405DBCD0
 void FFX::DoPass(uint32_t pass) {
     if (!FFX::s_cvarFFX->m_intValue) {
         return;

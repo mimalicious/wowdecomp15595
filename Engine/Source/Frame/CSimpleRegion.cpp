@@ -556,7 +556,8 @@ void ApplyRotationAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& o
     }
 }
 
-// OFFSET: %0x0053BFE0
+// PROVEN: 148452e7 IDENTICAL/NONE
+// OFFSET: 0x0052BD00
 void ApplyScaleAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     C2Vector center;
     GetOriginOffset(origin, positions, offset, center);

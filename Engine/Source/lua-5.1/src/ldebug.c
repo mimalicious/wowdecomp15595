@@ -628,7 +628,8 @@ int luaG_ordererror (lua_State *L, const TValue *p1, const TValue *p2) {
 }
 
 
-// OFFSET: %0x0042FEA0
+// PROVEN: 3862c189 IDENTICAL/UNPROVEN
+// OFFSET: 0x004259A0/0x14002B370
 static void addinfo (lua_State *L, const char *msg) {
   CallInfo *ci = L->ci;
   if (isLua(ci)) {  /* is Lua code? */

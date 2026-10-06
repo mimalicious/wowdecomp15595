@@ -75,7 +75,8 @@ void *luaM_toobig (lua_State *L) {
 /*
 ** generic allocation routine.
 */
-// OFFSET: %0x0042F320
+// PROVEN: 41324104 IDENTICAL/UNPROVEN
+// OFFSET: 0x00424E20/0x14002A540
 void *luaM_realloc_ (lua_State *L, void *block, size_t osize, size_t nsize) {
   global_State *g = G(L);
   lua_assert((osize == 0) == (block == NULL));

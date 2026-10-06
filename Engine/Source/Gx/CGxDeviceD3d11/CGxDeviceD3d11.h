@@ -86,8 +86,8 @@ class CGxDeviceD3d11 : public CGxDevice {
     /* 280C */ IDXGISwapChain* m_swapChain;
     /* 2810 */ ID3D11DeviceContext* m_d3dContext;
     /* 2814 */ TexTargetViews* m_backBufferViews;
-    /* 2818 */ ID3D11Texture2D* m_depthTexture;
-    /* 281C */ ID3D11DepthStencilView* m_depthView;
+    /* 2818 */ TexTargetViews* m_depthViews;
+    /* 281C */ ID3D11Texture2D* m_depthTexture;
     /* 2820 */ ID3D11Texture2D* m_resolveTexture;
     /* 2824 */ ID3D11Buffer* m_constantBuffers [GxShTargets_Last];
     /* 283C */ uint32_t m_numRenderTargets;

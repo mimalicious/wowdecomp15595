@@ -29,7 +29,7 @@ static const uint32_t s_glBytesPerPixel[GxTexFormats_Last] = { 0, 4, 4, 2, 2, 2,
 // STATIC: %0x00AFD548
 static const GLenum s_glCubeFaces[6] = { 0x8515, 0x8516, 0x8517, 0x8518, 0x8519, 0x851A };
 
-// STATIC: %0x00C0E910
+// STATIC: 0x00D096A0/0x140BBB510
 static GLenum s_glPrim[GxPrims_Last] = { GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_TRIANGLES, GL_TRIANGLE_STRIP };
 
 // PROVEN: d2465d58 IDENTICAL/NONE
@@ -139,7 +139,7 @@ void CGxDeviceOpenGl::XformSetView(const C44Matrix& matrix) {
     this->m_viewDirty = 1;
 }
 
-// PROVEN: e2773712 DIFFERENT/IDENTICAL
+// PROVEN: e2773712 IDENTICAL/IDENTICAL
 // OFFSET: 0x008697E0/0x14059D4A0
 void CGxDeviceOpenGl::DrawNonIndexed(const CGxBatch& batch) {
     if (this->m_intF5C) {
@@ -150,7 +150,7 @@ void CGxDeviceOpenGl::DrawNonIndexed(const CGxBatch& batch) {
     glDrawArrays(s_glPrim[batch.m_primType], batch.m_start, batch.m_count);
 }
 
-// PROVEN: 6be4ef3f DIFFERENT/IDENTICAL
+// PROVEN: 6be4ef3f IDENTICAL/IDENTICAL
 // OFFSET: 0x00869810/0x14059D4E0
 void CGxDeviceOpenGl::Draw(const CGxBatch& batch) {
     if (this->m_intF5C) {
@@ -178,7 +178,7 @@ void CGxDeviceOpenGl::BindTexture(CGxTex* texId, uint32_t tmu) {
     this->m_boundTexture = name;
 }
 
-// PROVEN: 21fd04a5 UNPROVEN/IDENTICAL
+// PROVEN: 21fd04a5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00868730/0x14059BDE0
 void CGxDeviceOpenGl::ITexSetFlags(CGxTex* texId) {
     GLenum target = s_glTexTarget[texId->m_target];

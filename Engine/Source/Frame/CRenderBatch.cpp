@@ -36,7 +36,8 @@ static int32_t SortByTexture(const void* elem1, const void* elem2) {
     return static_cast<int32_t>(reinterpret_cast<uintptr_t>(mesh1->m_shader) - reinterpret_cast<uintptr_t>(mesh2->m_shader));
 }
 
-// OFFSET: %0x0050AA20
+// PROVEN: ceaa3c78 IDENTICAL/NONE
+// OFFSET: 0x004FA6E0
 void CRenderBatch::Finish() {
     if (this->m_texturelist.Count() > 1) {
         qsort(this->m_texturelist.Ptr(), this->m_texturelist.Count(), sizeof(CSimpleBatchedMesh), &SortByTexture);

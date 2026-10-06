@@ -988,7 +988,8 @@ LPDIRECT3DVERTEXDECLARATION9 CGxDeviceD3d::IGetVertexDecl() {
     return decl;
 }
 
-// OFFSET: %0x007D3340
+// PROVEN: 354d9677 IDENTICAL/DIFFERENT
+// OFFSET: 0x00858940/0x140589E80
 void CGxDeviceD3d::ISetVertexDecl() {
     LPDIRECT3DVERTEXDECLARATION9 decl = this->IGetVertexDecl();
 
@@ -1007,7 +1008,8 @@ void CGxDeviceD3d::ISetVertexDecl() {
     }
 }
 
-// OFFSET: %0x007D33A0
+// PROVEN: 7f124c82 IDENTICAL/DIFFERENT
+// OFFSET: 0x008589A0/0x140589F00
 void CGxDeviceD3d::ISetVertexDeclInstanced() {
     LPDIRECT3DVERTEXDECLARATION9 decl = this->IGetVertexDecl();
 
@@ -1623,7 +1625,8 @@ void CGxDeviceD3d::IStateSyncLights() {
     }
 }
 
-// OFFSET: %0x007D4290
+// PROVEN: e9aaba2c IDENTICAL/DIFFERENT
+// OFFSET: 0x008597D0/0x14058AE90
 void CGxDeviceD3d::IStateSyncMaterial() {
     uint32_t emissiveSource;
 
@@ -2198,7 +2201,8 @@ int32_t CGxDeviceD3d::XformIsValidViewport(float minX, float maxX, float minY, f
     return width && height && minZ >= 0.0f && maxZ <= 1.0f && minZ <= maxZ && x + width <= window.maxX && y + height <= window.maxY;
 }
 
-// OFFSET: %0x007D5690
+// PROVEN: fb2905c7 IDENTICAL/IDENTICAL
+// OFFSET: 0x0085ACB0/0x14058C630
 void CGxDeviceD3d::IXformSetViewport() {
     const CRect& window = this->DeviceCurWindow();
     D3DVIEWPORT9 viewport;
@@ -2210,7 +2214,7 @@ void CGxDeviceD3d::IXformSetViewport() {
     viewport.MinZ = this->m_viewport.m_z.m_l;
     viewport.MaxZ = this->m_viewport.m_z.m_h;
 
-    if (this->m_textureTarget[GxBuffers_Color].m_apiSpecific || this->m_textureTarget[GxBuffers_Depth].m_apiSpecific) {
+    if (this->m_frameBuffer != g_theGxDevicePtr->BackBuffer()) {
         viewport.Y = static_cast<DWORD>(window.maxY * this->m_viewport.m_y.m_l);
     }
 
@@ -2218,7 +2222,8 @@ void CGxDeviceD3d::IXformSetViewport() {
     this->m_viewportDirty = 0;
 }
 
-// OFFSET: %0x007D5DD0
+// PROVEN: 882e7761 IDENTICAL/UNPROVEN
+// OFFSET: 0x0085B3E0/0x14058CED0
 void CGxDeviceD3d::IShaderConstantsFlush() {
     ShadowConstants& vs = CGxDevice::s_shadowConstants[GxSh_Vertex];
 
@@ -3031,9 +3036,13 @@ void CGxDeviceD3d::ISceneBegin() {
     }
 }
 
-// OFFSET: %0x007D46D0
+// OFFSET: 0x00859C10/0x14058B390
 void CGxDeviceD3d::IRetrieveNvDepthHandle() {
-    if (!this->m_d3dNVAPI) {
+    this->m_nvDepthSurfaceHandle = NULL;
+    this->unk_29DC = 0;
+    this->unk_29E0 = 0;
+
+    if (!this->m_context || !this->m_d3dNVAPI) {
         return;
     }
 
@@ -3203,8 +3212,9 @@ void CGxDeviceD3d::DrawInstanced(const CGxBatch& batch) {
     this->m_d3dDevice->DrawIndexedPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index, batch.m_minIndex, batch.m_maxIndex - batch.m_minIndex + 1, batch.m_start + this->m_primIndexBuf->m_index, this->PrimCalcCount(batch.m_primType, batch.m_count));
 }
 
-// OFFSET: %0x007D47B0
+// OFFSET: 0x00859D10/0x14058B4D0
 void CGxDeviceD3d::IStateSetD3DDefaults() {
+    this->m_hwMasterEnables = 511;
     this->m_d3dDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
     this->m_d3dDevice->SetRenderState(D3DRS_LOCALVIEWER, TRUE);
     this->m_d3dDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL);
@@ -3227,6 +3237,10 @@ void CGxDeviceD3d::IStateSetD3DDefaults() {
 
     this->m_d3dDevice->GetRenderTarget(0, &this->m_defColorSurface);
     this->m_d3dDevice->GetDepthStencilSurface(&this->m_defDepthSurface);
+    const CRect& rect = this->DeviceDefWindow();
+    this->ICreateBackBufferFB(static_cast<uint32_t>(rect.maxX - rect.minX), static_cast<uint32_t>(rect.maxY - rect.minY), this->m_defColorSurface, this->m_defDepthSurface);
+    memset(this->m_textureTarget, 0, sizeof(this->m_textureTarget));
+    GxFrameBufferSet(g_theGxDevicePtr->BackBuffer());
     this->InitLights();
     this->m_ambientOnlyMode = 0;
 
@@ -3234,12 +3248,7 @@ void CGxDeviceD3d::IStateSetD3DDefaults() {
         this->m_d3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, &this->m_eventQuery);
     }
 
-    this->m_nvDepthSurfaceHandle = NULL;
-
-    if (this->m_context) {
-        this->IRetrieveNvDepthHandle();
-    }
-
+    this->IRetrieveNvDepthHandle();
     this->ISceneBegin();
 }
 

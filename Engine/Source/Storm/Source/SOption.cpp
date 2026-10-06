@@ -8,7 +8,7 @@ static int32_t s_freecount;
 // STATIC: #0x00CAE954
 static int32_t s_alloccount;
 
-// STATIC: #0x00CAE958
+// STATIC: 0x00D9D54C
 _STORMOPTIONS g_opt;
 
 // OFFSET: %0x004BF200

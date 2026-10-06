@@ -2213,7 +2213,8 @@ bool Blizzard::Mopaq::SFileGetFileDetails(System_SFile::ARCHIVEREC* handle, cons
     return false;
 }
 
-// OFFSET: %0x0075BDE0
+// PROVEN: 9468c9b0 IDENTICAL/UNPROVEN
+// OFFSET: 0x007F9710/0x140509310
 bool Blizzard::Mopaq::SFileHasHigherPriority(const char* name, const char* other) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
     System_SFile::ARCHIVEREC* record = NULL;

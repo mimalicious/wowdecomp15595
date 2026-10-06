@@ -118,7 +118,8 @@ void CSimpleCheckbox::OnClick(const char* btn, int32_t down) {
     CSimpleButton::OnClick(btn, down);
 }
 
-// OFFSET: %0x00525C30
+// PROVEN: cb2e9252 IDENTICAL/UNPROVEN
+// OFFSET: 0x00515E60/0x140160540
 void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_checkedTexture) {
         return;
@@ -136,7 +137,8 @@ void CSimpleCheckbox::SetCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
-// OFFSET: %0x00525C80
+// PROVEN: 3b782e0a IDENTICAL/UNPROVEN
+// OFFSET: 0x00515EB0/0x1401605B0
 void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     if (texture == this->m_disabledCheckedTexture) {
         return;

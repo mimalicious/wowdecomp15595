@@ -266,7 +266,8 @@ BGLoading::BGLoadManager* BGLoading::BGLoadManager::Get() {
     return &s_manager;
 }
 
-// OFFSET: %0x00762300
+// PROVEN: 6608aa26 IDENTICAL/NONE
+// OFFSET: 0x007A1EA0
 void BGLoading::BGLoadManager::CloseBackgroundFiles() {
     this->AppendNewBGFiles();
 
@@ -453,7 +454,8 @@ stop:
     return 0;
 }
 
-// OFFSET: %0x00762A00
+// PROVEN: 9b7e116c IDENTICAL/NONE
+// OFFSET: 0x007A2780
 uint32_t BGLoading::BGLoadManager::RunBGLoadThread(void* param) {
     return static_cast<BGLoadManager*>(param)->BGLoadThread();
 }

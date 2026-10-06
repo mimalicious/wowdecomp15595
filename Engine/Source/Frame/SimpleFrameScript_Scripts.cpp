@@ -61,7 +61,8 @@ static int32_t Script_GetText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A5830
+// PROVEN: 4547cc46 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083F620/0x14056B1F0
 static int32_t Script_CreateFont(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: CreateFont(\"name\")");
@@ -78,7 +79,8 @@ static int32_t Script_CreateFont(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A58A0
+// PROVEN: aaa48d54 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083F690/0x14056B280
 static int32_t Script_GetCurrentKeyBoardFocus(lua_State* L) {
     CSimpleEditBox* focus = CSimpleEditBox::s_currentFocus;
 

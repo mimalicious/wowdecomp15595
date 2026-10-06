@@ -32,7 +32,8 @@ static int isnumeral(expdesc *e) {
 }
 
 
-// OFFSET: %0x00439260
+// PROVEN: ecb367d7 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042EE30/0x140036970
 void luaK_nil (FuncState *fs, int from, int n) {
   Instruction *previous;
   if (fs->pc > fs->lasttarget) {  /* no jumps to current position? */
@@ -57,7 +58,8 @@ void luaK_nil (FuncState *fs, int from, int n) {
 }
 
 
-// OFFSET: %0x00439300
+// PROVEN: fdb8ca4c IDENTICAL/UNPROVEN
+// OFFSET: 0x0042EED0/0x140036A10
 int luaK_jump (FuncState *fs) {
   int jpc = fs->jpc;  /* save list of jumps to here */
   int j;
@@ -68,13 +70,15 @@ int luaK_jump (FuncState *fs) {
 }
 
 
-// OFFSET: %0x00439340
+// PROVEN: df8a9244 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042EF10/0x140036AB0
 void luaK_ret (FuncState *fs, int first, int nret) {
   luaK_codeABC(fs, OP_RETURN, first, nret+1, 0);
 }
 
 
-// OFFSET: %0x00439370
+// PROVEN: 1f5f8c57 IDENTICAL/NONE
+// OFFSET: 0x0042EF40
 static int condjump (FuncState *fs, OpCode op, int A, int B, int C) {
   luaK_codeABC(fs, op, A, B, C);
   return luaK_jump(fs);
@@ -179,7 +183,8 @@ static void dischargejpc (FuncState *fs) {
 }
 
 
-// OFFSET: %0x0043A310
+// PROVEN: 70fbf42c IDENTICAL/UNPROVEN
+// OFFSET: 0x0042FEE0/0x140037EE0
 void luaK_patchlist (FuncState *fs, int list, int target) {
   if (target == fs->pc)
     luaK_patchtohere(fs, list);
@@ -190,7 +195,8 @@ void luaK_patchlist (FuncState *fs, int list, int target) {
 }
 
 
-// OFFSET: %0x004393D0
+// PROVEN: 2c1b5170 IDENTICAL/NONE
+// OFFSET: 0x0042EFA0
 void luaK_patchtohere (FuncState *fs, int list) {
   luaK_getlabel(fs);
   luaK_concat(fs, &fs->jpc, list);
@@ -212,7 +218,8 @@ void luaK_concat (FuncState *fs, int *l1, int l2) {
 }
 
 
-// OFFSET: %0x00438BE0
+// PROVEN: c2c2c961 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E7B0/0x1400361B0
 void luaK_checkstack (FuncState *fs, int n) {
   int newstack = fs->freereg + n;
   if (newstack > fs->f->maxstacksize) {
@@ -223,7 +230,8 @@ void luaK_checkstack (FuncState *fs, int n) {
 }
 
 
-// OFFSET: %0x00438C20
+// PROVEN: bc83117b IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E7F0/0x140036200
 void luaK_reserveregs (FuncState *fs, int n) {
   luaK_checkstack(fs, n);
   fs->freereg += n;
@@ -268,7 +276,8 @@ static int addk (FuncState *fs, TValue *k, TValue *v) {
 }
 
 
-// OFFSET: %0x00438DC0
+// PROVEN: 885958ed IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E990/0x1400363E0
 int luaK_stringK (FuncState *fs, TString *s) {
   TValue o;
   setsvalue(fs->L, &o, s);
@@ -276,7 +285,8 @@ int luaK_stringK (FuncState *fs, TString *s) {
 }
 
 
-// OFFSET: %0x00438E00
+// PROVEN: c291da2c IDENTICAL/UNPROVEN
+// OFFSET: 0x0042E9D0/0x140036420
 int luaK_numberK (FuncState *fs, lua_Number r) {
   TValue o;
   setnvalue(&o, r);
@@ -291,7 +301,8 @@ static int boolK (FuncState *fs, int b) {
 }
 
 
-// OFFSET: %0x00438E30
+// PROVEN: e353000d IDENTICAL/NONE
+// OFFSET: 0x0042EA00
 static int nilK (FuncState *fs) {
   TValue k, v;
   setnilvalue(&v);
@@ -301,7 +312,8 @@ static int nilK (FuncState *fs) {
 }
 
 
-// OFFSET: %0x00438E70
+// PROVEN: 256bc13f IDENTICAL/UNPROVEN
+// OFFSET: 0x0042EA40/0x140036460
 void luaK_setreturns (FuncState *fs, expdesc *e, int nresults) {
   if (e->k == VCALL) {  /* expression is an open function call? */
     SETARG_C(getcode(fs, e), nresults+1);
@@ -466,7 +478,8 @@ int luaK_exp2anyreg (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x00439870
+// PROVEN: f5a4e274 IDENTICAL/NONE
+// OFFSET: 0x0042F440
 void luaK_exp2val (FuncState *fs, expdesc *e) {
   if (hasjumps(e))
     luaK_exp2anyreg(fs, e);
@@ -536,7 +549,8 @@ void luaK_storevar (FuncState *fs, expdesc *var, expdesc *ex) {
 }
 
 
-// OFFSET: %0x00439A90
+// PROVEN: fe672ae4 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042F660/0x140037360
 void luaK_self (FuncState *fs, expdesc *e, expdesc *key) {
   int func;
   luaK_exp2anyreg(fs, e);
@@ -668,7 +682,8 @@ static void codenot (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x00439DC0
+// PROVEN: 8f45aed8 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042F990/0x1400378B0
 void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k) {
   t->u.s.aux = luaK_exp2RK(fs, k);
   t->k = VINDEXED;
@@ -861,7 +876,8 @@ static int luaK_code (FuncState *fs, Instruction i, int line) {
 }
 
 
-// OFFSET: %0x00439170
+// PROVEN: f33be13c IDENTICAL/UNPROVEN
+// OFFSET: 0x0042ED40/0x140036880
 int luaK_codeABC (FuncState *fs, OpCode o, int a, int b, int c) {
   lua_assert(getOpMode(o) == iABC);
   lua_assert(getBMode(o) != OpArgN || b == 0);
@@ -870,7 +886,8 @@ int luaK_codeABC (FuncState *fs, OpCode o, int a, int b, int c) {
 }
 
 
-// OFFSET: %0x004391A0
+// PROVEN: dbb34712 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042ED70/0x1400368B0
 int luaK_codeABx (FuncState *fs, OpCode o, int a, unsigned int bc) {
   lua_assert(getOpMode(o) == iABx || getOpMode(o) == iAsBx);
   lua_assert(getCMode(o) == OpArgN);
@@ -878,7 +895,8 @@ int luaK_codeABx (FuncState *fs, OpCode o, int a, unsigned int bc) {
 }
 
 
-// OFFSET: %0x004391D0
+// PROVEN: 0701ce6e IDENTICAL/UNPROVEN
+// OFFSET: 0x0042EDA0/0x1400368D0
 void luaK_setlist (FuncState *fs, int base, int nelems, int tostore) {
   int c =  (nelems - 1)/LFIELDS_PER_FLUSH + 1;
   int b = (tostore == LUA_MULTRET) ? 0 : tostore;

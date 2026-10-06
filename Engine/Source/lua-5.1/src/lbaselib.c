@@ -28,7 +28,8 @@
 ** model but changing `fputs' to put the strings at a proper place
 ** (a console window or a log file, for instance).
 */
-// OFFSET: %0x0096F3D0
+// PROVEN: 8a98aff3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2D360/0x1407D5E00
 static int luaB_tonumber (lua_State *L) {
   int base = luaL_optint(L, 2, 10);
   if (base == 10) {  /* standard conversion */
@@ -70,7 +71,8 @@ static int luaB_error (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F540
+// PROVEN: b3074aaa IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D4D0/0x1407D5FB0
 static int luaB_getmetatable (lua_State *L) {
   luaL_checkany(L, 1);
   if (!lua_getmetatable(L, 1)) {
@@ -82,7 +84,8 @@ static int luaB_getmetatable (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F590
+// PROVEN: f34eff20 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D520/0x1407D6010
 static int luaB_setmetatable (lua_State *L) {
   int t = lua_type(L, 2);
   luaL_checktype(L, 1, LUA_TTABLE);
@@ -96,7 +99,8 @@ static int luaB_setmetatable (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F610
+// PROVEN: 2953dc11 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2D5A0/0x1407D60B0
 static void getfunc (lua_State *L, int opt) {
   if (lua_isfunction(L, 1)) lua_pushvalue(L, 1);
   else {
@@ -113,7 +117,8 @@ static void getfunc (lua_State *L, int opt) {
 }
 
 
-// OFFSET: %0x0096F6C0
+// PROVEN: b30249f3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D650/0x1407D6190
 static int luaB_getfenv (lua_State *L) {
   getfunc(L, 1);
   if (lua_iscfunction(L, -1))  /* is a C function? */
@@ -125,7 +130,8 @@ static int luaB_getfenv (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F710
+// PROVEN: 52227f1c IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D6A0/0x1407D61F0
 static int luaB_setfenv (lua_State *L) {
   luaL_checktype(L, 2, LUA_TTABLE);
   getfunc(L, 0);
@@ -144,7 +150,8 @@ static int luaB_setfenv (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F7B0
+// PROVEN: eec5ec1a IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D740/0x1407D62B0
 static int luaB_rawequal (lua_State *L) {
   luaL_checkany(L, 1);
   luaL_checkany(L, 2);
@@ -153,7 +160,8 @@ static int luaB_rawequal (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F7F0
+// PROVEN: 40948499 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D780/0x1407D6300
 static int luaB_rawget (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   luaL_checkany(L, 2);
@@ -162,7 +170,8 @@ static int luaB_rawget (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096F830
+// PROVEN: ffdb9826 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D7C0/0x1407D6350
 static int luaB_rawset (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   luaL_checkany(L, 2);
@@ -173,14 +182,16 @@ static int luaB_rawset (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F870
+// PROVEN: a9fe6782 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2D800/0x1407D63B0
 static int luaB_gcinfo (lua_State *L) {
   lua_pushinteger(L, lua_getgccount(L));
   return 1;
 }
 
 
-// OFFSET: %0x0096F8A0
+// PROVEN: a3a56797 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D830/0x1407D63E0
 static int luaB_collectgarbage (lua_State *L) {
   static const char *const opts[] = {"stop", "restart", "collect",
     "count", "step", "setpause", "setstepmul", NULL};
@@ -207,7 +218,8 @@ static int luaB_collectgarbage (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F940
+// PROVEN: 5276f364 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D8D0/0x1407D64B0
 static int luaB_type (lua_State *L) {
   luaL_checkany(L, 1);
   lua_pushstring(L, luaL_typename(L, 1));
@@ -215,7 +227,8 @@ static int luaB_type (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F970
+// PROVEN: 518094af IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2D900/0x1407D64F0
 static int luaB_next (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_settop(L, 2);  /* create a 2nd argument if there isn't one */
@@ -228,7 +241,8 @@ static int luaB_next (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F9C0
+// PROVEN: e571cff1 IDENTICAL/NONE
+// OFFSET: 0x00A2D950
 static int luaB_pairs (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_pushvalue(L, lua_upvalueindex(1));  /* return generator, */
@@ -238,7 +252,8 @@ static int luaB_pairs (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FA00
+// PROVEN: 44ae837a IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2D990/0x1407D65A0
 static int ipairsaux (lua_State *L) {
   int i = luaL_checkint(L, 2);
   luaL_checktype(L, 1, LUA_TTABLE);
@@ -249,7 +264,8 @@ static int ipairsaux (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FA50
+// PROVEN: e7ca25b7 IDENTICAL/NONE
+// OFFSET: 0x00A2D9E0
 static int luaB_ipairs (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
   lua_pushvalue(L, lua_upvalueindex(1));  /* return generator, */
@@ -270,7 +286,8 @@ static int load_aux (lua_State *L, int status) {
 }
 
 
-// OFFSET: %0x0096FA90
+// PROVEN: ad9b1789 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DA20/0x1407D6660
 static int luaB_loadstring (lua_State *L) {
   size_t l;
   const char *s = luaL_checklstring(L, 1, &l);
@@ -285,7 +302,8 @@ static int luaB_loadstring (lua_State *L) {
 ** stack top. Instead, it keeps its resulting string in a
 ** reserved slot inside the stack.
 */
-// OFFSET: %0x0096FAF0
+// PROVEN: c0c1d556 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DA80/0x1407D66E0
 static int luaB_assert (lua_State *L) {
   luaL_checkany(L, 1);
   if (!lua_toboolean(L, 1))
@@ -311,7 +329,8 @@ static int luaB_unpack (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FBF0
+// PROVEN: 5d72e61e IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2DB80/0x1407D6830
 static int luaB_select (lua_State *L) {
   int n = lua_gettop(L);
   if (lua_type(L, 1) == LUA_TSTRING && *lua_tostring(L, 1) == '#') {
@@ -328,7 +347,8 @@ static int luaB_select (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FC70
+// PROVEN: c512b5e5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DC00/0x1407D68E0
 static int luaB_pcall (lua_State *L) {
   int status;
   luaL_checkany(L, 1);
@@ -339,7 +359,8 @@ static int luaB_pcall (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FCC0
+// PROVEN: 18a2550e IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DC50/0x1407D6940
 static int luaB_xpcall (lua_State *L) {
   int status;
   luaL_checkany(L, 2);
@@ -378,7 +399,8 @@ static int luaB_tostring (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FE10
+// PROVEN: dab6f69b IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DDA0/0x1407D6AF0
 static int luaB_newproxy (lua_State *L) {
   lua_settop(L, 1);
   lua_newuserdata(L, 0);  /* create proxy */
@@ -537,7 +559,8 @@ static int luaB_auxwrap (lua_State *L) {
 }
 
 
-// OFFSET: %0x00970170
+// PROVEN: a4862722 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2E100/0x1407D6F20
 static int luaB_cocreate (lua_State *L) {
   lua_State *NL = lua_newthread(L);
   luaL_argcheck(L, lua_isfunction(L, 1) && !lua_iscfunction(L, 1), 1,
@@ -548,7 +571,8 @@ static int luaB_cocreate (lua_State *L) {
 }
 
 
-// OFFSET: %0x009701D0
+// PROVEN: 8bcb929b IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2E160/0x1407D6FA0
 static int luaB_cowrap (lua_State *L) {
   luaB_cocreate(L);
   lua_pushcclosure(L, luaB_auxwrap, 1);
@@ -556,7 +580,8 @@ static int luaB_cowrap (lua_State *L) {
 }
 
 
-// OFFSET: %0x00970200
+// PROVEN: 8118c2d0 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2E190/0x1407D6FD0
 static int luaB_yield (lua_State *L) {
   return lua_yield(L, lua_gettop(L));
 }

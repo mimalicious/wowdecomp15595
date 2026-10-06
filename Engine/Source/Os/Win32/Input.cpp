@@ -256,7 +256,7 @@ typedef BOOL(WINAPI* LogicalToPhysicalPointProc)(HWND hwnd, POINT* point);
 // STATIC: %0x00D937A8
 static GetPhysicalCursorPosProc s_getPhysicalCursorPos;
 
-// STATIC: %0x00D937AC
+// STATIC: 0x00EC6CEC
 static SetPhysicalCursorPosProc s_setPhysicalCursorPos;
 
 // STATIC: %0x00D937B0
@@ -795,7 +795,8 @@ static int32_t ConvertButton(uint32_t message, uintptr_t wparam, MOUSEBUTTON* bu
     return 0;
 }
 
-// OFFSET: %0x007D93E0
+// PROVEN: 26fe573e IDENTICAL/NONE
+// OFFSET: 0x00873A70
 static void RestoreMouse() {
     POINT point;
     point.x = s_mousePos.x;
@@ -816,7 +817,8 @@ static void SaveMouse(HWND hwnd, const POINT& point) {
     s_mousePos.y = point.y;
 }
 
-// OFFSET: %0x007D9420
+// PROVEN: 471df457 IDENTICAL/NONE
+// OFFSET: 0x00873AB0
 void OsInputSetJoystickPollFcn(void (*pollFcn)(int32_t)) {
     s_joystickPollFcn = pollFcn;
 }
@@ -1466,7 +1468,8 @@ int32_t OsInputGet(OSINPUT* id, int32_t* param0, int32_t* param1, int32_t* param
     return 1;
 }
 
-// OFFSET: %0x007DA380
+// PROVEN: fedd68c9 IDENTICAL/NONE
+// OFFSET: 0x00874A10/0x1405AB420
 void OsInputSetMouseMode(OS_MOUSE_MODE mode) {
     if (mode >= OS_MOUSE_MODES) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -1515,7 +1518,8 @@ void OsInputGetMousePosition(int32_t* x, int32_t* y) {
     }
 }
 
-// OFFSET: %0x007DA480
+// PROVEN: a1b9c5da IDENTICAL/NONE
+// OFFSET: 0x00874B10
 void OsInputSetMousePosition(int32_t x, int32_t y) {
     HWND hwnd = static_cast<HWND>(OsGuiGetWindow(0));
 

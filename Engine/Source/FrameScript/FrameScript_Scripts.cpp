@@ -276,7 +276,8 @@ static int32_t Script_forceinsecure(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x007A03C0
+// PROVEN: 8e3467c4 IDENTICAL/DIFFERENT
+// OFFSET: 0x00839FA0/0x1405644E0
 static int32_t Script_securecall(lua_State* L) {
     ++lua_taintexpected;
     const char* taint = lua_tainted;
@@ -667,7 +668,8 @@ static int32_t Script_scrub(lua_State* L) {
     return top;
 }
 
-// OFFSET: %0x007A1100
+// PROVEN: 0d130d13 IDENTICAL/DIFFERENT
+// OFFSET: 0x0083ACC0/0x1405653D0
 static int32_t Script_strlenutf8(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: strlenutf8(string)");

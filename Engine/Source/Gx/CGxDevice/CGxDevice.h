@@ -12,7 +12,7 @@
 #include "Engine/Source/Gx/CGxGammaRamp.h"
 #include "Engine/Source/Gx/CGxLight.h"
 #include "Engine/Source/Gx/CGxMatrixStack.h"
-#include "Engine/Source/Gx/CGxRenderTargetGroup.h"
+#include "Engine/Source/Gx/CGxFrameBuffer.h"
 #include "Engine/Source/Gx/CGxShaderPermute.h"
 #include "Engine/Source/Gx/CGxTex.h"
 #include "Engine/Source/Gx/Types.h"
@@ -40,9 +40,10 @@ class CImVector;
 
 class ShadowConstants {
     public:
-    /* 0000 */ uint32_t dirtyMin;
-    /* 0004 */ uint32_t dirtyMax;
-    /* 0008 */ float constants[256 * 4];
+    /* 0000 */ float constants[256 * 4];
+    /* 1000 */ uint32_t dirtyMin;
+    /* 1004 */ uint32_t dirtyMax;
+    /* 1008 */ uint32_t unk_1008[2];
 };
 
 class CGxStateBom {
@@ -128,11 +129,11 @@ class CGxDevice {
     /* 274C */ TSFixedArray<CGxStateBom> m_hwRenderStates;
     /* 2758 */ TSGrowableArray<EGxRenderState> m_dirtyStates;
     /* 2768 */ CGxDevice::TextureTarget m_textureTarget [GxBuffers_Last];
-    /* 27A4 */ CGxTex* m_defaultColorTarget;
-    /* 27A8 */ CGxTex* m_defaultDepthTarget;
-    /* 27AC */ CGxRenderTargetGroup* m_defaultRenderTargetGroup;
-    /* 27B0 */ CGxRenderTargetGroup* m_renderTargetGroup;
-    /* 27B4 */ uint32_t m_renderTargetGroupVersion;
+    /* 27A4 */ CGxTex* m_backBufferColorTex;
+    /* 27A8 */ CGxTex* m_backBufferDepthTex;
+    /* 27AC */ CGxFrameBuffer* m_backBuffer;
+    /* 27B0 */ CGxFrameBuffer* m_frameBuffer;
+    /* 27B4 */ uint32_t m_frameBufferVersion;
     /* 27B8 */ TSExplicitList<CGxQuery, offsetof(CGxQuery, m_link)> m_queryList;
     /* 27C4 */ int32_t m_scrShotClick;
     /* 27C8 */ uint32_t m_scrShotWidth;
@@ -164,15 +165,15 @@ class CGxDevice {
     virtual void DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
     virtual void DeviceResolveDepthBuffer(CGxTex* texture);
     virtual void DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex* dest, uint32_t destPlane, uint32_t level);
-    virtual CGxRenderTargetGroup* RenderTargetGroupCreate();
-    virtual void RenderTargetGroupDestroy(CGxRenderTargetGroup*& group);
-    virtual int32_t RenderTargetGroupSetTarget(CGxRenderTargetGroup* group, EGxBuffer buffer, CGxTex* texture, uint32_t plane);
-    virtual int32_t RenderTargetGroupValidate(CGxRenderTargetGroup* group);
-    virtual CGxRenderTargetGroup* DeviceCurrentRenderTargetGroup();
-    virtual void DeviceSetRenderTargetGroup(CGxRenderTargetGroup* group);
-    virtual CGxTex* DeviceDefaultColorTarget();
-    virtual CGxTex* DeviceDefaultDepthTarget();
-    virtual CGxRenderTargetGroup* DeviceDefaultRenderTargetGroup();
+    virtual CGxFrameBuffer* FrameBufferCreate();
+    virtual void FrameBufferDelete(CGxFrameBuffer*& frameBuffer);
+    virtual int32_t FrameBufferAttach(CGxFrameBuffer* frameBuffer, EGxBuffer buffer, CGxTex* texture, uint32_t plane);
+    virtual int32_t FrameBufferFinalize(CGxFrameBuffer* frameBuffer);
+    virtual CGxFrameBuffer* FrameBufferGet();
+    virtual void FrameBufferSet(CGxFrameBuffer* frameBuffer);
+    virtual CGxTex* BackBufferColorTex();
+    virtual CGxTex* BackBufferDepthTex();
+    virtual CGxFrameBuffer* BackBuffer();
     virtual void DeviceOverride(EGxOverride override, uint32_t value);
     virtual void CapsWindowSize(CRect& rect) = 0;
     virtual void CapsWindowSizeInScreenCoords(CRect& rect) = 0;
@@ -325,6 +326,8 @@ class CGxDevice {
     void ClampRectToWindow(CiRect& rect);
     void Log(const CGxCaps& caps) const;
     void Log(const CGxFormat& format) const;
+    void ICreateBackBufferFB(uint32_t width, uint32_t height, void* colorApiData, void* depthApiData);
+    void IDeleteBackBufferFB(int32_t deleteTextures);
     void IRsDirty(EGxRenderState which);
     void IRsForceUpdate();
     void IRsForceUpdate(EGxRenderState which);

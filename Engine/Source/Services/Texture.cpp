@@ -438,7 +438,8 @@ void TextureFreeMippedImg(MipBits* bits) {
     }
 }
 
-// OFFSET: %0x005512E0
+// PROVEN: b2d930da IDENTICAL/DIFFERENT
+// OFFSET: 0x00540E40/0x1401939B0
 TEXFILETYPE TextureDiscoverFileType(const char* fileName) {
     const char* extension = OsPathFindExtensionWithDot(fileName);
 
@@ -540,7 +541,8 @@ int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }
 
-// OFFSET: %0x00551540
+// PROVEN: 73c03e4c IDENTICAL/DIFFERENT
+// OFFSET: 0x005410A0/0x140193CA0
 void TextureComputeLoadProgress(CTexture* texture, int64_t& loaded, int64_t& total) {
     char* extension = OsPathFindExtensionWithDot(texture->m_filename);
     strcpy(extension, ".blp");
@@ -1320,7 +1322,8 @@ CGxTex* TextureGetGxTex(CTexture* texture) {
     return texture->m_atlas->m_gxTex;
 }
 
-// OFFSET: %0x005528D0
+// PROVEN: 983e494a IDENTICAL/UNPROVEN
+// OFFSET: 0x005444E0/0x140198510
 CGxTex* TextureGetGxTexBlocking(CTexture* texture) {
     CGxTex* gxTex = TextureGetGxTex(texture);
 

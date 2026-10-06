@@ -151,7 +151,8 @@ void Report::Reset() {
     GetLogData().erase(GetLogData().begin(), GetLogData().end());
 }
 
-// OFFSET: %0x00764130
+// PROVEN: 7c7b2d1b IDENTICAL/NONE
+// OFFSET: 0x007FE3C0
 void Report::Shutdown() {
     Reset();
     s_initialized = false;

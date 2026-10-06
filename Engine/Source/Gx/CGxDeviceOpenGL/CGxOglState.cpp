@@ -475,7 +475,8 @@ void CGxDeviceOpenGl::IStateSyncIndexPtr() {
     this->m_indexPtr = reinterpret_cast<uintptr_t>(pool->m_apiSpecific) + buf->m_itemSize * buf->m_index;
 }
 
-// OFFSET: %0x007B9690
+// PROVEN: 0b438639 IDENTICAL/DIFFERENT
+// OFFSET: 0x0085CD60/0x14058EEE0
 void CGxDeviceOpenGl::IStateSyncVertexFormat() {
     EGxVertexBufferFormat format = this->m_primVertexFormats[0];
     CGxBuf* buf = this->m_primVertexBufs[0];

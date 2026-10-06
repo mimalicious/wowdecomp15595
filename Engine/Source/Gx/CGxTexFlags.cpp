@@ -3,9 +3,10 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/CGxTexFlags.h"
 
-// OFFSET: %0x007A62E0
+// PROVEN: 6391e0f9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00840230/0x14056C080
 CGxTexFlags::CGxTexFlags() {
-    *reinterpret_cast<uint32_t*>(this) = (*reinterpret_cast<uint32_t*>(this) & 0x100000) | 0x1001;
+    *reinterpret_cast<uint32_t*>(this) = 0x1001;
 }
 
 // INLINED

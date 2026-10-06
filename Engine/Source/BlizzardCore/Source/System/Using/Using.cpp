@@ -5,7 +5,7 @@
 // STATIC: #0x00B325E0
 char System_Using::s_UsingNames[STRINGPOOL_SIZE];
 
-// STATIC: #0x00B329E0
+// STATIC: 0x00EB4E40
 System_Using::Depends System_Using::s_Depends[DEPENDS_MAX];
 
 // STATIC: #0x00B32DE0
@@ -20,7 +20,7 @@ char* System_Using::s_UsingNamesTail;
 // STATIC: #0x00B382BC
 int16_t System_Using::s_NextUsingID;
 
-// STATIC: #0x00B382C0
+// STATIC: 0x00EBA654
 int32_t System_Using::s_NextDependsID;
 
 // STATIC: #0x00AB93F4

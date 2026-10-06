@@ -1,7 +1,7 @@
 #include <cmath>
 #include "Engine/Source/Base/Coordinate.h"
 
-// STATIC: #0x00AC0CB0
+// STATIC: 0x00D096B4/0x140BBB524
 static float s_aspectRatio = 4.0f / 3.0f;
 
 // STATIC: %0x00C0E9F8

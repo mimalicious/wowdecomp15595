@@ -19,7 +19,8 @@ static uint32_t PlaneMask_SSE41(int32_t count, const C4Plane* planes, const CAaB
     return mask ^ 0x3F;
 }
 
-// OFFSET: %0x00498F60
+// PROVEN: 46c85922 IDENTICAL/NONE
+// OFFSET: 0x004910F0
 void SIMD::Init_SSE41(SIMD::FunctionTable* table) {
     table->PlaneMask = PlaneMask_SSE41;
 }

@@ -26,7 +26,7 @@ static const CGxDeviceOpenGl::EDeviceState s_bufferState[GxPoolTargets_Last] = {
 // STATIC: %0x00AFBFAC
 static const GLenum s_glBufferUsage[3] = { GL_STATIC_DRAW_ARB, GL_DYNAMIC_DRAW_ARB, GL_STREAM_DRAW_ARB };
 
-// STATIC: %0x00AFC000
+// STATIC: 0x00BD4DC8/0x0009C9D70
 const GLenum s_glTexTarget[4] = { GL_TEXTURE_2D, GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_2D };
 
 // STATIC: %0x00AFC014
@@ -47,7 +47,7 @@ const GLenum s_glType[GxTexFormats_Last] = { 0, 0x8367, 0x8367, 0x8365, 0x8366, 
 // STATIC: %0x00D92EE0
 static bool s_dummyContextCreated;
 
-// STATIC: %0x00D92EE4
+// STATIC: 0x00EC66BC/0x140DB8824
 static int32_t s_deviceChanging;
 
 // STATIC: %0x00C0E904
@@ -1155,7 +1155,8 @@ void CGxDeviceOpenGl::IDevRemoveGlContext() {
     this->m_context = 0;
 }
 
-// OFFSET: %0x007B6EF0
+// PROVEN: dbd8dcb5 IDENTICAL/UNPROVEN
+// OFFSET: 0x00850B00/0x1405800B0
 void CGxDeviceOpenGl::DeviceDestroy() {
     CGxDevice::DeviceDestroy();
     this->DeviceDestroyPbuffer();
@@ -1304,38 +1305,40 @@ int32_t CGxDeviceOpenGl::IDevAttachGlContext(const CGxFormat& format) {
 
     this->m_hdc = GetDC(this->m_hwnd);
 
-    if (this->m_hdc && (this->m_hglrc = CreateGLContext(this->m_hdc, format)) != NULL) {
-        wglMakeCurrent(this->m_hdc, this->m_hglrc);
-        this->m_context = 1;
-
-        if (wglExtSwapControl) {
-            wglSwapIntervalEXT(format.m_vsync != 0);
-        }
-
-        if (!glExtClampToEdge) {
-            s_glWrapMode[1] = GL_REPEAT;
-        }
-
-        this->ISetCaps(format);
-        this->DeviceCreatePbuffer();
-        this->ICursorCreate(format);
-        this->IStateSetContextDefaults();
-        this->IRsSync(1);
-        this->IShaderConstantsClear();
-        this->m_glVendor = glGetString(GL_VENDOR);
-        this->m_glRenderer = glGetString(GL_RENDERER);
-        this->m_glVersion = glGetString(GL_VERSION);
-
-        if (s_firstAttach) {
-            this->CursorSetVisible(0);
-            s_firstAttach = 0;
-        }
-
-        return 1;
+    if (!this->m_hdc || (this->m_hglrc = CreateGLContext(this->m_hdc, format)) == NULL) {
+        this->IDevRemoveGlContext();
+        return 0;
     }
 
-    this->IDevRemoveGlContext();
-    return 0;
+    wglMakeCurrent(this->m_hdc, this->m_hglrc);
+    this->m_context = 1;
+
+    if (wglExtSwapControl) {
+        wglSwapIntervalEXT(format.m_vsync != 0);
+    }
+
+    if (!glExtClampToEdge) {
+        s_glWrapMode[1] = GL_REPEAT;
+    }
+
+    this->ISetCaps(format);
+    this->DeviceCreatePbuffer();
+    this->ICreateBackBufferFB(format.m_size.x, format.m_size.y, NULL, NULL);
+    GxFrameBufferSet(g_theGxDevicePtr->BackBuffer());
+    this->ICursorCreate(format);
+    this->IStateSetContextDefaults();
+    this->IRsSync(1);
+    this->IShaderConstantsClear();
+    this->m_glVendor = glGetString(GL_VENDOR);
+    this->m_glRenderer = glGetString(GL_RENDERER);
+    this->m_glVersion = glGetString(GL_VERSION);
+
+    if (s_firstAttach) {
+        this->CursorSetVisible(0);
+        s_firstAttach = 0;
+    }
+
+    return 1;
 }
 
 // OFFSET: %0x007B7350
