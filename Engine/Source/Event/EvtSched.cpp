@@ -59,7 +59,7 @@ namespace Event {
     SEvent s_shutdownEvent(1, 0);
 }
 
-// OFFSET: %0x008048C0
+// OFFSET: 0x008A00B0/0x1405E1280
 void CloseContext(EvtContext* context) {
     context->m_critsect.Enter();
 
@@ -104,7 +104,7 @@ void IEvtSchedulerShutdown() {
     Event::s_threadListCritsect.Leave();
 }
 
-// OFFSET: %0x008053A0
+// OFFSET: 0x008A0CD0/0x1405E2580
 int32_t SynthesizeInitialize(EvtContext* context) {
     if (context->m_schedFlags & 1) {
         return 0;
@@ -117,7 +117,7 @@ int32_t SynthesizeInitialize(EvtContext* context) {
     return 1;
 }
 
-// OFFSET: %0x00805420
+// OFFSET: 0x008A0D00/0x1405E25C0
 void SynthesizeIdle(EvtContext* context, uint32_t currTime, float elapsedSec) {
     context->m_critsect.Enter();
     int32_t closed = context->m_schedState == SCHEDSTATE_CLOSED;
@@ -136,7 +136,7 @@ void SynthesizeIdle(EvtContext* context, uint32_t currTime, float elapsedSec) {
     }
 }
 
-// OFFSET: %0x00805480
+// OFFSET: 0x008A0D60/0x1405E2650
 void SynthesizePoll(EvtContext* context) {
     context->m_critsect.Enter();
     int32_t closed = context->m_schedState == SCHEDSTATE_CLOSED;
@@ -147,7 +147,7 @@ void SynthesizePoll(EvtContext* context) {
     }
 }
 
-// OFFSET: %0x008054B0
+// OFFSET: 0x008A0D90/0x1405E26A0
 void SynthesizePaint(EvtContext* context) {
     context->m_critsect.Enter();
     int32_t closed = context->m_schedState == SCHEDSTATE_CLOSED;
@@ -165,7 +165,7 @@ int32_t IEvtSchedulerIsContextInteractive(EvtContext* context) {
     return (context->m_schedFlags >> 1) & 1;
 }
 
-// OFFSET: %0x00805500
+// OFFSET: 0x008A0DE0
 void EventForceIdleProcessing() {
     // STATIC: %0x00D95700
     static int32_t s_watchdogStarted;
@@ -197,7 +197,7 @@ void EventForceIdleProcessing() {
     SynthesizePaint(context);
 }
 
-// OFFSET: %0x00805710
+// OFFSET: 0x008A1090/0x1405E29B0
 void IEvtSchedulerDestroy() {
     if (!Event::s_threadSlotCount) {
         return;
@@ -250,7 +250,7 @@ void IEvtSchedulerDestroy() {
     Event::s_threadSlotCount = 0;
 }
 
-// OFFSET: %0x00805B70
+// OFFSET: 0x008A14F0/0x1405E2FE0
 void SynthesizeDestroy(EvtContext* context) {
     SynthesizeInitialize(context);
 
@@ -270,7 +270,7 @@ void SynthesizeDestroy(EvtContext* context) {
     OsCallResetContext(context->m_callContext);
     PropSelectContext(NULL);
 
-    int32_t findMask;
+    uint32_t findMask;
     TSingletonInstanceId<EvtContext, 8>::s_idTable.Ptr(context->m_id, 1, &findMask, 0, 1);
 
     delete context;
@@ -280,7 +280,7 @@ void SynthesizeDestroy(EvtContext* context) {
     }
 }
 
-// OFFSET: %0x00805E20
+// OFFSET: 0x008A18C0/0x1405E34E0
 EvtContext* GetNextContext(uint32_t hThread) {
     Event::s_threadSlotCritsects[hThread].Enter();
     EvtContext* context = Event::s_threadSlots[hThread]->m_contextQueue.Dequeue();
@@ -293,7 +293,7 @@ EvtContext* GetNextContext(uint32_t hThread) {
     return context;
 }
 
-// OFFSET: %0x008061A0
+// OFFSET: 0x008A20A0/0x1405E3EA0
 uint32_t InitializeSchedulerThread() {
     InterlockedIncrement(&Event::s_threadListContention);
     Event::s_threadListCritsect.Enter();
@@ -334,7 +334,7 @@ uint32_t InitializeSchedulerThread() {
     return slot;
 }
 
-// OFFSET: %0x00806300
+// OFFSET: 0x008A2200/0x1405E4060
 void DestroySchedulerThread(uint32_t hThread) {
     TSGrowableArray<EvtContext*> contexts;
 
@@ -375,7 +375,7 @@ void DestroySchedulerThread(uint32_t hThread) {
     }
 }
 
-// OFFSET: %0x008064A0
+// OFFSET: 0x008A17A0/0x1405E3380
 HEVENTCONTEXT AttachContextToThread(EvtContext* context) {
     HEVENTCONTEXT handle = NULL;
 
@@ -384,7 +384,7 @@ HEVENTCONTEXT AttachContextToThread(EvtContext* context) {
 
     EvtThread* found = NULL;
 
-    for (EvtThread* thread = Event::s_threadList.Head(); thread; thread = Event::s_threadList.Next(thread)) {
+    for (EvtThread* thread = Event::s_threadList.Head(); !Event::s_threadList.IsEnd(thread); thread = Event::s_threadList.RawNext(thread)) {
         if (!found || thread->m_weightTotal < found->m_weightTotal) {
             found = thread;
         }
@@ -414,7 +414,7 @@ HEVENTCONTEXT AttachContextToThread(EvtContext* context) {
     return handle;
 }
 
-// OFFSET: %0x008065C0
+// OFFSET: 0x008A0FC0/0x1405E28C0
 void DetachContextFromThread(uint32_t hThread, EvtContext* context) {
     InterlockedIncrement(&Event::s_threadListContention);
     Event::s_threadListCritsect.Enter();
@@ -430,7 +430,9 @@ void DetachContextFromThread(uint32_t hThread, EvtContext* context) {
             thread->m_weightAvg = 0;
         }
 
-        for (EvtThread* other = Event::s_threadList.Head(); other; other = Event::s_threadList.Next(other)) {
+        for (EvtThread* other = Event::s_threadList.Head(), * next; !Event::s_threadList.IsEnd(other); other = next) {
+            next = Event::s_threadList.RawNext(other);
+
             if (other != thread && other->m_weightAvg && other->m_weightTotal >= other->m_weightAvg + thread->m_weightTotal) {
                 other->m_rebalance += (other->m_weightTotal - thread->m_weightTotal) / other->m_weightAvg;
                 other->m_rebalance = other->m_rebalance < other->m_contextCount ? other->m_rebalance : other->m_contextCount;
@@ -442,7 +444,7 @@ void DetachContextFromThread(uint32_t hThread, EvtContext* context) {
     InterlockedDecrement(&Event::s_threadListContention);
 }
 
-// OFFSET: %0x00806680
+// OFFSET: 0x008A1920/0x1405E3570
 void PutContext(uint32_t nextWakeTime, uint32_t newSmoothWeight, EvtContext* context, uint32_t hThread) {
     context->m_schedNextWakeTime.SetVal(nextWakeTime);
 
@@ -471,7 +473,7 @@ void PutContext(uint32_t nextWakeTime, uint32_t newSmoothWeight, EvtContext* con
             EvtThread* found = thread;
             uint32_t foundWeight = thread->m_weightTotal;
 
-            for (EvtThread* other = Event::s_threadList.Head(); other; other = Event::s_threadList.Next(other)) {
+            for (EvtThread* other = Event::s_threadList.Head(); !Event::s_threadList.IsEnd(other); other = Event::s_threadList.RawNext(other)) {
                 if (other != thread && other->m_weightTotal + context->m_schedWeight < foundWeight) {
                     found = other;
                     foundWeight = other->m_weightTotal + context->m_schedWeight;
@@ -524,7 +526,7 @@ void PutContext(uint32_t nextWakeTime, uint32_t newSmoothWeight, EvtContext* con
     }
 }
 
-// OFFSET: %0x00806880
+// OFFSET: 0x008A1B30/0x1405E37D0
 int32_t SchedulerThreadProcProcess(uint32_t hThread, int32_t* watchdogStarted) {
     if (SGetCurrentThreadPriority() != Event::s_originalThreadPriority) {
         SSetCurrentThreadPriority(Event::s_originalThreadPriority);
@@ -639,7 +641,7 @@ int32_t SchedulerThreadProcProcess(uint32_t hThread, int32_t* watchdogStarted) {
     return 0;
 }
 
-// OFFSET: %0x00806AC0
+// OFFSET: 0x008A23A0/0x1405E4280
 uint32_t STORMAPI SchedulerThreadProc(void* mainThread) {
     uint32_t hThread;
 
@@ -667,14 +669,14 @@ uint32_t STORMAPI SchedulerThreadProc(void* mainThread) {
     return 0;
 }
 
-// OFFSET: %0x00806B60
+// OFFSET: 0x008A2440/0x1405E4310
 void IEvtSchedulerProcess() {
     Event::s_startEvent.Set();
     SchedulerThreadProc(reinterpret_cast<void*>(1));
     Event::s_mainThread = 0;
 }
 
-// OFFSET: %0x00806B80
+// OFFSET: 0x008A2460/0x1405E43B0
 void IEvtSchedulerInitialize(uint32_t threadCount, int32_t netServer) {
     if (Event::s_threadSlotCount) {
         DebugLog("IEvtScheduler already initialized");
@@ -717,7 +719,7 @@ void IEvtSchedulerInitialize(uint32_t threadCount, int32_t netServer) {
     }
 }
 
-// OFFSET: %0x00806E50
+// OFFSET: 0x008A2730/0x1405E46F0
 HEVENTCONTEXT IEvtSchedulerCreateContext(int32_t interactive, EVENTHANDLERFUNC initializeHandler, EVENTHANDLERFUNC destroyHandler, uint32_t idleTime, uint32_t debugFlags) {
     if (idleTime < 1) {
         idleTime = 1;

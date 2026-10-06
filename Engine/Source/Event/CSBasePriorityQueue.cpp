@@ -11,7 +11,7 @@ CSBasePriorityQueue::~CSBasePriorityQueue() {
     }
 }
 
-// OFFSET: %0x008059A0
+// OFFSET: 0x008A1320/0x1405E2D70
 void CSBasePriorityQueue::Enqueue(void* ptr) {
     uint32_t index = this->Count();
     this->New();
@@ -39,7 +39,7 @@ void CSBasePriorityQueue::Enqueue(void* ptr) {
     priority->m_queue = this;
 }
 
-// OFFSET: %0x00805A50
+// OFFSET: 0x008A13D0/0x1405E2E80
 void CSBasePriorityQueue::Remove(uint32_t index) {
     CSBasePriority* removed = this->Link(this->m_data[index]);
     removed->m_queue = NULL;

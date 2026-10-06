@@ -5,7 +5,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x008087E0
+// OFFSET: 0x008A4190/0x1405E6A80
 uint32_t IEvtTimerGetNextTime(EvtContext* context, uint32_t currTime) {
     if (!context) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -26,7 +26,7 @@ uint32_t IEvtTimerGetNextTime(EvtContext* context, uint32_t currTime) {
     return nextTime;
 }
 
-// OFFSET: %0x008088C0
+// OFFSET: 0x008A4270/0x1405E6BC0
 int32_t IEvtTimerDispatch(EvtContext* context) {
     if (!context) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -95,7 +95,7 @@ int32_t IEvtTimerDispatch(EvtContext* context) {
     return dispatched;
 }
 
-// OFFSET: %0x00808A50
+// OFFSET: 0x008A4400/0x1405E6DC0
 void IEvtTimerKill(EvtContext* context, uint32_t id, EVENTHANDLERFUNC handler, const char* name) {
     if (!context) {
         DebugValidate("context");
@@ -137,7 +137,7 @@ void IEvtTimerKill(EvtContext* context, uint32_t id, EVENTHANDLERFUNC handler, c
     context->m_critsect.Leave();
 }
 
-// OFFSET: %0x00808B50
+// OFFSET: 0x008A4500/0x1405E6F10
 uint32_t IEvtTimerSet(EvtContext* context, uint32_t delay, EVENTHANDLERFUNC handler, void* param, EVENTHANDLERGUIDFUNC guidHandler, uint64_t guidParam, void* guidParam2) {
     if (!context) {
         DebugValidate("context");

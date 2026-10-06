@@ -1,7 +1,7 @@
 #include "Engine/Source/Base/Coordinate.h"
 #include "Engine/Source/Event/CMouseEvent.h"
 
-// OFFSET: %0x0087CA20
+// OFFSET: 0x009214B0
 CMouseEvent::CMouseEvent() {
     this->m_data.m_mousePosition.x = 0.5f;
     this->m_data.m_mousePosition.y = 0.5f;

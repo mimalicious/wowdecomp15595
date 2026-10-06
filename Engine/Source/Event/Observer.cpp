@@ -19,7 +19,7 @@ static LockedDataAllocator s_dispatchRegAllocator(sizeof(EventReg::EVENTDISPATCH
 void InputObserverInitialize() {
 }
 
-// OFFSET: %0x008086C0
+// OFFSET: 0x008A4070
 void InputObserverDestroy() {
     if (s_inputObserver && --s_inputObserver->m_refcnt == 0) {
         s_inputObserver->DeleteSelf();

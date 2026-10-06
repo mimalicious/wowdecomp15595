@@ -43,7 +43,7 @@ int32_t IEvtConfirmClose() {
     return 1;
 }
 
-// OFFSET: %0x00807220
+// OFFSET: 0x008A2B00/0x1405E4D10
 void PostString(EvtContext* context, const uint16_t* string, int32_t length) {
     EVENT_DATA_CHAR data;
     data.m_metaKeyState = Input::s_metaKeyState;
@@ -55,7 +55,7 @@ void PostString(EvtContext* context, const uint16_t* string, int32_t length) {
     }
 }
 
-// OFFSET: %0x00807270
+// OFFSET: 0x008A2B50
 void IEvtDispatchKeyDown(EvtContext* context, KEY key, uint32_t repeat, uint32_t time) {
     if (static_cast<int32_t>(key) <= KEY_LASTMETAKEY) {
         uint32_t bit = 1 << key;
@@ -76,7 +76,7 @@ void IEvtDispatchKeyDown(EvtContext* context, KEY key, uint32_t repeat, uint32_t
     IEvtQueueDispatch(context, EVENT_ID_KEYDOWN, &data);
 }
 
-// OFFSET: %0x008072C0
+// OFFSET: 0x008A2BA0
 void IEvtDispatchKeyUp(EvtContext* context, KEY key, uint32_t repeat, uint32_t time) {
     if (static_cast<int32_t>(key) <= KEY_LASTMETAKEY) {
         uint32_t bit = 1 << key;
@@ -97,7 +97,7 @@ void IEvtDispatchKeyUp(EvtContext* context, KEY key, uint32_t repeat, uint32_t t
     IEvtQueueDispatch(context, EVENT_ID_KEYUP, &data);
 }
 
-// OFFSET: %0x00807310
+// OFFSET: 0x008A2BF0/0x1405E50A0
 void IEvtDispatchMouseMoveRelative(EvtContext* context, int32_t x, int32_t y, uint32_t time) {
     EVENT_DATA_MOUSE data;
     data.m_mode = Input::s_mouseMode;
@@ -112,7 +112,7 @@ void IEvtDispatchMouseMoveRelative(EvtContext* context, int32_t x, int32_t y, ui
     IEvtQueueDispatch(context, EVENT_ID_MOUSEMOVE_RELATIVE, &data);
 }
 
-// OFFSET: %0x00807380
+// OFFSET: 0x008A2C60
 void PostMouseModeChanged(EvtContext* context, MOUSEMODE mode) {
     EVENT_DATA_MOUSE data = {};
     data.m_buttonState = Input::s_buttonState;
@@ -126,7 +126,7 @@ void PostMouseModeChanged(EvtContext* context, MOUSEMODE mode) {
     IEvtQueueDispatch(context, EVENT_ID_MOUSEMODE_CHANGED, &data);
 }
 
-// OFFSET: %0x008073F0
+// OFFSET: 0x008A2CD0/0x1405E52A0
 void IEvtDispatchJoystickAxis(EvtContext* context, int32_t id, int32_t value, uint32_t time) {
     EVENT_DATA_JOYSTICK data;
     data.unk_0000 = 0;
@@ -151,7 +151,7 @@ void IEvtInputInitialize() {
     OsInputInitialize();
 }
 
-// OFFSET: %0x00807470
+// OFFSET: 0x008A2D50/0x1405E4DC0
 void IEvtInputSetMouseMode(EvtContext* context, MOUSEMODE mode, uint32_t holdButton) {
     if (!context) {
         DebugValidate("context");
@@ -178,7 +178,7 @@ void IEvtInputSetConfirmCloseCallback(int32_t (*callback)(void*), void* param) {
     s_confirmCloseParam = param;
 }
 
-// OFFSET: %0x00807500
+// OFFSET: 0x008A2DE0/0x1405E4EB0
 void ConvertPosition(int32_t x, int32_t y, float* outX, float* outY) {
     if (Input::s_boundingRect.maxX - Input::s_boundingRect.minX != 0.0f && Input::s_boundingRect.maxY - Input::s_boundingRect.minY != 0.0f) {
         C2Vector point;
@@ -210,7 +210,7 @@ void ConvertPosition(int32_t x, int32_t y, float* outX, float* outY) {
     *outY = 1.0f - static_cast<float>(y) / static_cast<float>(windowRect.bottom - windowRect.top);
 }
 
-// OFFSET: %0x00807640
+// OFFSET: 0x008A2F20
 void IEvtDispatchFocusChanged(EvtContext* context, int32_t focus) {
     Input::s_buttonState = 0;
     Input::s_metaKeyState = 0;
@@ -225,7 +225,7 @@ void IEvtDispatchFocusChanged(EvtContext* context, int32_t focus) {
     }
 }
 
-// OFFSET: %0x00807690
+// OFFSET: 0x008A2F70
 void IEvtDispatchMouseDown(EvtContext* context, MOUSEBUTTON button, int32_t x, int32_t y, uint32_t time) {
     Input::s_buttonState |= button;
 
@@ -241,7 +241,7 @@ void IEvtDispatchMouseDown(EvtContext* context, MOUSEBUTTON button, int32_t x, i
     IEvtQueueDispatch(context, EVENT_ID_MOUSEDOWN, &data);
 }
 
-// OFFSET: %0x00807700
+// OFFSET: 0x008A2FE0/0x1405E5010
 void IEvtDispatchMouseMove(EvtContext* context, int32_t x, int32_t y, uint32_t time) {
     EVENT_DATA_MOUSE data;
     data.m_mode = Input::s_mouseMode;
@@ -255,7 +255,7 @@ void IEvtDispatchMouseMove(EvtContext* context, int32_t x, int32_t y, uint32_t t
     IEvtQueueDispatch(context, EVENT_ID_MOUSEMOVE, &data);
 }
 
-// OFFSET: %0x00807770
+// OFFSET: 0x008A3050
 void IEvtDispatchMouseEvent(EvtContext* context, MOUSEBUTTON button, int32_t x, int32_t y, uint32_t flags, uint32_t time) {
     Input::s_buttonState &= ~button;
 
@@ -275,7 +275,7 @@ void IEvtDispatchMouseEvent(EvtContext* context, MOUSEBUTTON button, int32_t x, 
     }
 }
 
-// OFFSET: %0x00807810
+// OFFSET: 0x008A30F0/0x1405E5130
 void IEvtDispatchMouseWheel(EvtContext* context, int32_t wheelDistance, int32_t x, int32_t y, uint32_t time) {
     EVENT_DATA_MOUSE data;
     data.m_mode = Input::s_mouseMode;
@@ -290,7 +290,7 @@ void IEvtDispatchMouseWheel(EvtContext* context, int32_t wheelDistance, int32_t 
     IEvtQueueDispatch(context, EVENT_ID_MOUSEWHEEL, &data);
 }
 
-// OFFSET: %0x00807880
+// OFFSET: 0x008A3160/0x1405E5200
 void IEvtDispatchJoystickStick(EvtContext* context, int32_t id, int32_t x, int32_t y, uint32_t time) {
     float stickX = x < 0 ? -(x * -(1.0f / 32768.0f)) : x * (1.0f / 32767.0f);
     float stickY = y < 0 ? -(y * -(1.0f / 32768.0f)) : y * (1.0f / 32767.0f);
@@ -321,7 +321,7 @@ void IEvtInputGetMousePosition(float* x, float* y) {
     NDCToDDC(ndcX, ndcY, x, y);
 }
 
-// OFFSET: %0x00807980
+// OFFSET: 0x008A3260/0x1405B2500
 void IEvtDispatchMouseEvents(EvtContext* context, int32_t x, int32_t y) {
     while (Input::s_buttonState) {
         uint32_t button = Input::s_buttonState & (Input::s_buttonState ^ (Input::s_buttonState - 1));
@@ -329,7 +329,7 @@ void IEvtDispatchMouseEvents(EvtContext* context, int32_t x, int32_t y) {
     }
 }
 
-// OFFSET: %0x008079C0
+// OFFSET: 0x008A32A0/0x1405E53E0
 void IEvtDispatchInput(EvtContext* context, OSINPUT id, int32_t* param, int32_t* shutdown) {
     if (!context) {
         DebugValidate("context");
@@ -466,11 +466,20 @@ void IEvtDispatchInput(EvtContext* context, OSINPUT id, int32_t* param, int32_t*
     }
 }
 
-// OFFSET: %0x00807CA0
+// OFFSET: 0x008A3580/0x1405E5A00
 int32_t IEvtInputProcess(EvtContext* context, int32_t* shutdown) {
     if (!context) {
         DebugValidate("context");
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        return 0;
+    }
+
+    context->m_critsect.Enter();
+    int32_t closed = context->m_schedState == SCHEDSTATE_CLOSED;
+    context->m_critsect.Leave();
+
+    if (closed) {
+        *shutdown = 1;
         return 0;
     }
 

@@ -17,7 +17,7 @@ class TInstanceIdTable {
     TInstanceIdTable();
     ~TInstanceIdTable();
     uint32_t Insert(T* instance);
-    T* Ptr(uint32_t id, int32_t lockMode, int32_t* findMask, int32_t unused1, int32_t unused2);
+    T* Ptr(uint32_t id, int32_t lockMode, uint32_t* findMask, int32_t unused1, int32_t unused2);
     void Unlock(uint32_t slot, int32_t lockMode);
 
     private:
@@ -61,7 +61,7 @@ uint32_t TInstanceIdTable<T, slotCount>::Insert(T* instance) {
 
 // OFFSET: 0x008A00F0
 template <class T, int slotCount>
-T* TInstanceIdTable<T, slotCount>::Ptr(uint32_t id, int32_t lockMode, int32_t* findMask, int32_t unused1, int32_t unused2) {
+T* TInstanceIdTable<T, slotCount>::Ptr(uint32_t id, int32_t lockMode, uint32_t* findMask, int32_t unused1, int32_t unused2) {
     if (id) {
         uint32_t slot = id & (slotCount - 1);
         CSRWLock* idLock = &this->m_idLock[slot];

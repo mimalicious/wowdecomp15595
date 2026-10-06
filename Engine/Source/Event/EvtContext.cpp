@@ -5,7 +5,7 @@
 #include "Engine/Source/Os/OsCall.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// OFFSET: %0x00805F10
+// OFFSET: 0x008A1E00/0x1405E3B00
 EvtContext::EvtContext(uint32_t flags, uint32_t idleTime, uint32_t schedWeight, void* callContext, int32_t startWatchdog) : m_timerQueue(offsetof(EvtTimer, m_targetTime)) {
     this->m_currTime = 0;
     this->m_schedState = SCHEDSTATE_ACTIVE;

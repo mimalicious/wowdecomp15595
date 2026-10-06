@@ -12,7 +12,7 @@ static TExtraInstanceRecycler<EvtMessage> s_messageRecycler(64, 64, 256);
 void IEvtQueueInitialize() {
 }
 
-// OFFSET: %0x00807D80
+// OFFSET: 0x008A3690
 void IEvtQueueDestroy() {
     s_messageRecycler.Clear();
 }
@@ -28,7 +28,7 @@ int32_t IEvtQueueCheckSyncMouseState(EvtContext* context, MOUSEBUTTON button) {
     return (context->m_queueSyncButtonState & button) != 0;
 }
 
-// OFFSET: %0x00807DC0
+// OFFSET: 0x008A37E0/0x1405E5C60
 void IEvtQueueRegister(EvtContext* context, EVENTID id, EVENTHANDLERFUNC handler, void* param, float priority) {
     if (!context) {
         DebugValidate("context");
@@ -53,7 +53,7 @@ void IEvtQueueRegister(EvtContext* context, EVENTID id, EVENTHANDLERFUNC handler
     list.LinkNode(evtHandler, 2, existing);
 }
 
-// OFFSET: %0x00807F80
+// OFFSET: 0x008A39A0/0x1405E5EE0
 void IEvtQueuePost(EvtContext* context, EVENTID id, const void* data, uint32_t bytes) {
     if (!context) {
         DebugValidate("context");
@@ -73,21 +73,20 @@ void IEvtQueuePost(EvtContext* context, EVENTID id, const void* data, uint32_t b
     context->m_critsect.Leave();
 }
 
-// OFFSET: %0x00808190
+// OFFSET: 0x008A3BB0
 static void UpdateSyncKeyState(EvtContext* context, KEY key, EVENTID& id) {
     int32_t found = 0;
 
     context->m_critsect.Enter();
 
     TSExplicitList<EvtKeyDown, offsetof(EvtKeyDown, m_link)>& list = context->m_queueSyncKeyDownList;
-    EvtKeyDown* keyDown = list.Head();
 
-    while (keyDown) {
+    for (EvtKeyDown* keyDown = list.Head(), * next; !list.IsEnd(keyDown); keyDown = next) {
+        next = list.RawNext(keyDown);
+
         if (keyDown->m_key == key) {
             found = 1;
-            keyDown = list.DeleteNode(keyDown);
-        } else {
-            keyDown = list.Next(keyDown);
+            list.DeleteNode(keyDown);
         }
     }
 
@@ -103,7 +102,7 @@ static void UpdateSyncKeyState(EvtContext* context, KEY key, EVENTID& id) {
     context->m_critsect.Leave();
 }
 
-// OFFSET: %0x00808290
+// OFFSET: 0x008A3CB0
 static void UpdateSyncState(EvtContext* context, EVENTID& id, const void* data) {
     if (!context) {
         DebugValidate("context");
@@ -142,7 +141,7 @@ static void UpdateSyncState(EvtContext* context, EVENTID& id, const void* data) 
     }
 }
 
-// OFFSET: %0x00808340
+// OFFSET: 0x008A3760
 int32_t IEvtQueueCheckSyncKeyState(EvtContext* context, KEY key) {
     if (!context) {
         DebugValidate("context");
@@ -154,7 +153,9 @@ int32_t IEvtQueueCheckSyncKeyState(EvtContext* context, KEY key) {
 
     context->m_critsect.Enter();
 
-    for (EvtKeyDown* keyDown = context->m_queueSyncKeyDownList.Head(); keyDown; keyDown = context->m_queueSyncKeyDownList.Next(keyDown)) {
+    for (EvtKeyDown* keyDown = context->m_queueSyncKeyDownList.Head(), * next; !context->m_queueSyncKeyDownList.IsEnd(keyDown); keyDown = next) {
+        next = context->m_queueSyncKeyDownList.RawNext(keyDown);
+
         if (keyDown->m_key == key) {
             found = 1;
             break;
@@ -166,7 +167,7 @@ int32_t IEvtQueueCheckSyncKeyState(EvtContext* context, KEY key) {
     return found;
 }
 
-// OFFSET: %0x008083C0
+// OFFSET: 0x008A3D60/0x1405E6300
 void IEvtQueueDispatch(EvtContext* context, EVENTID id, const void* data) {
     if (!context) {
         DebugValidate("context");
@@ -205,7 +206,7 @@ void IEvtQueueDispatch(EvtContext* context, EVENTID id, const void* data) {
     list.UnlinkNode(&marker);
 }
 
-// OFFSET: %0x008084C0
+// OFFSET: 0x008A3E60/0x1405E6500
 void IEvtQueueDispatchAll(EvtContext* context) {
     if (!context) {
         DebugValidate("context");
@@ -227,7 +228,7 @@ void IEvtQueueDispatchAll(EvtContext* context) {
     }
 }
 
-// OFFSET: %0x00808620
+// OFFSET: 0x008A3FC0/0x1405E67D0
 void IEvtQueueUnregister(EvtContext* context, EVENTID id, EVENTHANDLERFUNC handler, void* param, uint32_t flags) {
     if (!context) {
         DebugValidate("context");
@@ -236,18 +237,15 @@ void IEvtQueueUnregister(EvtContext* context, EVENTID id, EVENTHANDLERFUNC handl
     }
 
     for (int32_t i = 0; i < EVENTIDS; i++) {
-        if ((flags & 1) && i != id) {
-            continue;
-        }
+        if (!(flags & 1) || i == id) {
+            TSExplicitList<EvtHandler, offsetof(EvtHandler, m_link)>& list = context->m_queueHandlerList[i];
 
-        TSExplicitList<EvtHandler, offsetof(EvtHandler, m_link)>& list = context->m_queueHandlerList[i];
-        EvtHandler* evtHandler = list.Head();
+            for (EvtHandler* evtHandler = list.Head(), * next; !list.IsEnd(evtHandler); evtHandler = next) {
+                next = list.RawNext(evtHandler);
 
-        while (evtHandler) {
-            if ((evtHandler->m_func != handler && (flags & 2)) || (evtHandler->m_param != param && (flags & 4)) || evtHandler->m_marker) {
-                evtHandler = list.Next(evtHandler);
-            } else {
-                evtHandler = list.DeleteNode(evtHandler);
+                if ((evtHandler->m_func == handler || !(flags & 2)) && (evtHandler->m_param == param || !(flags & 4)) && !evtHandler->m_marker) {
+                    list.DeleteNode(evtHandler);
+                }
             }
         }
     }
