@@ -408,11 +408,7 @@ void CM2Lighting::SetupGxFog() {
     float red = this->m_fogColor.x;
     red = red >= 0.0f ? (red >= 1.0f ? 1.0f : red) : 0.0f;
 
-    CImVector color;
-    color.b = static_cast<uint8_t>(static_cast<int32_t>(blue * 255.0f));
-    color.g = static_cast<uint8_t>(static_cast<int32_t>(green * 255.0f));
-    color.r = static_cast<uint8_t>(static_cast<int32_t>(red * 255.0f));
-    color.a = 0xFF;
+    CImVector color(static_cast<uint8_t>(static_cast<int32_t>(blue * 255.0f)), static_cast<uint8_t>(static_cast<int32_t>(green * 255.0f)), static_cast<uint8_t>(static_cast<int32_t>(red * 255.0f)), 0xFF);
 
     GxRsSet(GxRs_FogColor, *reinterpret_cast<int32_t*>(&color));
     GxRsSet(GxRs_Fog, 1);

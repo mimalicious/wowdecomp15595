@@ -205,14 +205,16 @@ static int32_t Script_Disable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549820
+// PROVEN: 3641c53c IDENTICAL/NONE
+// OFFSET: 0x00539C30
 void CSimpleSlider::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleSlider::s_metatable);
     CSimpleSlider::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x00549EE0
+// PROVEN: fb309834 IDENTICAL/NONE
+// OFFSET: 0x0053A260
 void CSimpleSlider::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleSlider::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleSlider::RegisterScriptMethods);

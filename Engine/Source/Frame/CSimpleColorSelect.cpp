@@ -278,17 +278,9 @@ void CSimpleColorSelect::SetColorValueTexture(CSimpleTexture* texture) {
         CTexture* valueTexture = TextureCreate(8, 8, GxTex_Argb8888, GxTex_Argb8888, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &this->m_valueColor, ValueTextureUpdate, "ValueTexture", 0);
         texture->SetTexture(valueTexture);
 
-        CImVector minColor;
-        minColor.b = 0;
-        minColor.g = 0;
-        minColor.r = 0;
-        minColor.a = 0xFF;
+        CImVector minColor(0, 0, 0, 0xFF);
 
-        CImVector maxColor;
-        maxColor.b = 0xFF;
-        maxColor.g = 0xFF;
-        maxColor.r = 0xFF;
-        maxColor.a = 0xFF;
+        CImVector maxColor(0xFF, 0xFF, 0xFF, 0xFF);
 
         texture->SetVertexGradient(ORIENTATION_VERTICAL, minColor, maxColor);
         texture->SetFrame(this, 2, 0, true);

@@ -85,11 +85,7 @@ int32_t CSimpleModelFFX::GetScriptMetaTable() {
 void CSimpleModelFFX::Render(void* arg) {
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(arg);
 
-    CImVector clearColor;
-    clearColor.b = 0x00;
-    clearColor.g = 0x00;
-    clearColor.r = 0x00;
-    clearColor.a = 0xFF;
+    CImVector clearColor(0x00, 0x00, 0x00, 0xFF);
     GxSceneClear(3, clearColor);
 
     int32_t params[3];

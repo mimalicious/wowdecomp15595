@@ -165,11 +165,7 @@ void CMapArea::LoadTerrainTexture(CMapAreaTexture* areaTexture, int32_t textureI
         if (!(flags & 0x1) || shaders) {
             areaTexture->m_texture = CMap::LoadTexture(areaTexture->m_textureName);
         } else {
-            CImVector color;
-            color.b = 0x00;
-            color.g = 0x00;
-            color.r = 0x00;
-            color.a = 0xFF;
+            CImVector color(0x00, 0x00, 0x00, 0xFF);
             areaTexture->m_texture = TextureCreateSolid(color);
         }
     } else {

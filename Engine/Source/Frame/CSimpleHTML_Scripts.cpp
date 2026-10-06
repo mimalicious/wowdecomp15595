@@ -215,14 +215,16 @@ static int32_t Script_GetHyperlinkFormat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054A0C0
+// PROVEN: be1ff7a8 IDENTICAL/NONE
+// OFFSET: 0x0053A460
 void CSimpleHTML::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleHTML::s_metatable);
     CSimpleHTML::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x0054A980
+// PROVEN: c97c98c3 IDENTICAL/NONE
+// OFFSET: 0x0053AC70
 void CSimpleHTML::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleHTML::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleHTML::RegisterScriptMethods);

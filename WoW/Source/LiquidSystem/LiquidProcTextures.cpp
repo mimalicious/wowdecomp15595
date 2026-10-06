@@ -246,11 +246,7 @@ void Liquid::ExtWaterDepthTexCallback(EGxTexCommand command, uint32_t width, uin
     CImVector* row = s_texels;
 
     for (uint32_t y = 0; y < height; y++) {
-        CImVector color;
-        color.b = blue >> 8;
-        color.g = green >> 8;
-        color.r = red >> 8;
-        color.a = alpha >> 8;
+        CImVector color(blue >> 8, green >> 8, red >> 8, alpha >> 8);
 
         if (y == height - 1 && type == 0) {
             C3Vector rgb(color);

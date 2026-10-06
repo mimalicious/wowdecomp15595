@@ -1910,11 +1910,7 @@ int32_t CGChat::OnUpdateInstance(void* param, NETMESSAGE msgId, uint32_t time, C
 
 // OFFSET: #0x00501800
 void ChatWindowInfo::Init() {
-    CImVector color;
-    color.b = 0;
-    color.g = 0;
-    color.r = 0;
-    color.a = 0x28;
+    CImVector color(0, 0, 0, 0x28);
 
     this->m_name[0] = 0;
     this->m_unkD0 = 0;

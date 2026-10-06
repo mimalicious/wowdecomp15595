@@ -1,9 +1,11 @@
 // INLINED
 inline CImVector::CImVector() {
-    this->b = 0;
-    this->g = 0;
-    this->r = 0;
-    this->a = 0;
+    *reinterpret_cast<uint32_t*>(this) = 0;
+}
+
+// INLINED
+inline CImVector::CImVector(uint32_t value) {
+    *reinterpret_cast<uint32_t*>(this) = value;
 }
 
 // INLINED

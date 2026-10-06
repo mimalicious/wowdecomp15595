@@ -3035,11 +3035,7 @@ void CGxDeviceD3d::IRetrieveNvDepthHandle() {
 
     this->ISceneBegin();
 
-    CImVector black;
-    black.b = 0x00;
-    black.g = 0x00;
-    black.r = 0x00;
-    black.a = 0xFF;
+    CImVector black(0x00, 0x00, 0x00, 0xFF);
     this->SceneClear(0x10, black);
 
     NvAPI_Status status = NvD3d9GetCurrentZBufferHandle(this->m_d3dDevice, &this->m_nvDepthSurfaceHandle);

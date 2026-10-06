@@ -11,13 +11,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0053E5F0
+// PROVEN: 0bb97f5c IDENTICAL/NONE
+// OFFSET: 0x0052E5C0
 void CSimpleFontString::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleFontString::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFontString::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0053C190
+// PROVEN: 9a066375 IDENTICAL/NONE
+// OFFSET: 0x0052BEB0
 void CSimpleFontString::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFontString::s_metatable);
@@ -51,7 +53,8 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053D260
+// PROVEN: 6593e9aa IDENTICAL/NONE
+// OFFSET: 0x0052D110
 static int32_t Script_GetDrawLayer(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     lua_pushstring(L, DrawLayerToString(string->m_drawLayer));
@@ -303,7 +306,8 @@ static int32_t Script_SetFont(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053DB70
+// PROVEN: 5d2e5468 IDENTICAL/UNPROVEN
+// OFFSET: 0x0052DA50/0x14017E6A0
 static int32_t Script_GetText(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     const char* text = string->m_text && *string->m_text ? string->m_text : NULL;

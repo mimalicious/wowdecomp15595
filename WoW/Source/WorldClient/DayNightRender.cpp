@@ -211,11 +211,7 @@ void DayNight::DNClouds::Render() {
     g_theGxDevicePtr->RsSet(GxRs_Texture0, gxTex);
 
     if (DayNight::s_lightFlags & 1) {
-        CImVector glow;
-        glow.b = 0xFF;
-        glow.g = 0xFF;
-        glow.r = 0xFF;
-        glow.a = static_cast<uint8_t>(CMath::fint_(DayNight::s_glowBlend * 255.0f));
+        CImVector glow(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(CMath::fint_(DayNight::s_glowBlend * 255.0f)));
         GxPrimVertexPtr(this->m_nVerts, this->m_verts.m_data, sizeof(C3Vector), NULL, 0, &glow, 0, this->m_texCoords.m_data, sizeof(C2Vector), NULL, 0);
     } else {
         GxPrimVertexPtr(this->m_nVerts, this->m_verts.m_data, sizeof(C3Vector), NULL, 0, this->m_colors.m_data, sizeof(CImVector), this->m_texCoords.m_data, sizeof(C2Vector), NULL, 0);

@@ -52,21 +52,24 @@ static int32_t Script_IsDone(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054B990
+// PROVEN: 29f807f1 IDENTICAL/NONE
+// OFFSET: 0x0053BC80
 static int32_t Script_IsPlaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->m_playState == 1);
     return 1;
 }
 
-// OFFSET: %0x0054B9E0
+// PROVEN: 5b096820 IDENTICAL/DIFFERENT
+// OFFSET: 0x0053BCD0/0x14018FAC0
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->m_playState == 2);
     return 1;
 }
 
-// OFFSET: %0x0054BA30
+// PROVEN: db88d1fa IDENTICAL/DIFFERENT
+// OFFSET: 0x0053BD20/0x14018FB10
 static int32_t Script_IsStopped(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->m_playState == 0);
@@ -229,7 +232,8 @@ static int32_t Script_SetSmoothing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054C150
+// PROVEN: 9033697f IDENTICAL/UNPROVEN
+// OFFSET: 0x0053C310/0x140190230
 static int32_t Script_GetSmoothing(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -358,13 +362,15 @@ static int32_t Script_HookScript(lua_State* L) {
     return anim ? anim->HookScript(L) : 0;
 }
 
-// OFFSET: %0x0054C5B0
+// PROVEN: c9389b1c IDENTICAL/NONE
+// OFFSET: 0x0053C780
 void CSimpleAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B580
+// PROVEN: fa82111e IDENTICAL/NONE
+// OFFSET: 0x0053B870
 void CSimpleAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleAnim::s_metatable);

@@ -138,13 +138,15 @@ static int32_t Script_CreateControlPoint(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D2E0
+// PROVEN: 9943457d IDENTICAL/NONE
+// OFFSET: 0x0053D4B0
 void CSimplePathAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimplePathAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimplePathAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B750
+// PROVEN: 213e571e IDENTICAL/NONE
+// OFFSET: 0x0053BA40
 void CSimplePathAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimplePathAnim::s_metatable);

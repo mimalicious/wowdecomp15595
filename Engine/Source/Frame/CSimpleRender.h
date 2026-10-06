@@ -95,7 +95,6 @@ class CSimpleFontString : public CSimpleRegion, public CSimpleFontable {
     virtual float GetWidth();
     virtual float GetHeight();
     virtual void OnFrameSizeChanged(const CRect& rect);
-    virtual void AnimData_Init();
     virtual void AnimData_ResetPositionData();
     virtual void FontObjectUpdated(CSimpleFontStringAttributes& attributes);
 

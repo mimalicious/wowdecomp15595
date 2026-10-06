@@ -732,11 +732,7 @@ void CShadowCache::ClearBandTextures() {
     float maxZ;
     GxXformViewport(minX, maxX, minY, maxY, minZ, maxZ);
 
-    CImVector clearColor;
-    clearColor.b = 0xFF;
-    clearColor.g = 0xFF;
-    clearColor.r = 0xFF;
-    clearColor.a = 0xFF;
+    CImVector clearColor(0xFF, 0xFF, 0xFF, 0xFF);
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 0);

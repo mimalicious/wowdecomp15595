@@ -68,7 +68,9 @@ class CSimpleAnimGroup : public CScriptObject {
     TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* FindAnimList(int32_t order);
     void Finish();
     int32_t GetMaxAnimOrder();
+    bool HasAlphaAnim();
     bool HasAnimOfType(int32_t type);
+    bool HasPositionAnim();
     bool IsDone();
     void LoadXML(linkObject* node, CStatus* status);
     void LoadXML_Anim(linkObject* node, CStatus* status, CSimpleAnim* anim);

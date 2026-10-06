@@ -443,11 +443,7 @@ void CSimpleModel::RenderModel(void* arg) {
 
     GxXformSetViewport(rect.minX * maxX, rect.maxX * maxX, rect.minY * maxY, rect.maxY * maxY, 0.0f, 1.0f);
 
-    CImVector clearColor;
-    clearColor.b = 0x00;
-    clearColor.g = 0x00;
-    clearColor.r = 0x00;
-    clearColor.a = 0xFF;
+    CImVector clearColor(0x00, 0x00, 0x00, 0xFF);
     GxSceneClear(0x10, clearColor);
 
     CShaderEffect::UpdateProjMatrix();

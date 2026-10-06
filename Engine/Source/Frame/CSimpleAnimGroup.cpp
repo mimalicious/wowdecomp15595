@@ -157,7 +157,7 @@ void CSimpleAnimGroup::RunOnUpdateScript(float elapsedSec) {
     }
 }
 
-// OFFSET: 0x00527BD0
+// OFFSET: 0x00527BD0/0x140176F00
 void CSimpleAnimGroup::Finish() {
     if (!this->IsDone() && this->m_loopState) {
         this->m_flags |= 2;
@@ -174,7 +174,8 @@ void CSimpleAnimGroup::RunOnLoopScript(SimpleAnimLoopState state) {
     }
 }
 
-// OFFSET: %0x00538170
+// PROVEN: 53e98988 IDENTICAL/DIFFERENT
+// OFFSET: 0x005280A0/0x1401774D0
 int32_t CSimpleAnimGroup::GetMaxAnimOrder() {
     if (!this->m_animLists.Count()) {
         return -1;
@@ -183,7 +184,8 @@ int32_t CSimpleAnimGroup::GetMaxAnimOrder() {
     return this->m_animLists[this->m_animLists.Count() - 1]->Head()->m_anim->m_order;
 }
 
-// OFFSET: %0x005381A0
+// PROVEN: 7e328cfa IDENTICAL/DIFFERENT
+// OFFSET: 0x005280D0/0x140177510
 TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::FindAnimList(int32_t order) {
     if (order == -1) {
         return NULL;
@@ -216,6 +218,24 @@ TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::FindAnimLi
 bool CSimpleAnimGroup::HasAnimOfType(int32_t type) {
     for (CSimpleAnim* anim = this->m_animations.Head(); anim; anim = this->m_animations.Next(anim)) {
         if (anim->IsA(type)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// PROVEN: 2b9aabf1 IDENTICAL/NONE
+// OFFSET: 0x00528FD0/0x1401787A0
+bool CSimpleAnimGroup::HasAlphaAnim() {
+    return this->HasAnimOfType(CSimpleAlphaAnim::GetObjectType());
+}
+
+// PROVEN: b176fe2b IDENTICAL/NONE
+// OFFSET: 0x00528FF0/0x1401787D0
+bool CSimpleAnimGroup::HasPositionAnim() {
+    for (CSimpleAnim* anim = this->m_animations.Head(); !this->m_animations.IsEnd(anim); anim = this->m_animations.RawNext(anim)) {
+        if (!anim->IsA(CSimpleAlphaAnim::GetObjectType())) {
             return true;
         }
     }
@@ -496,7 +516,7 @@ void CSimpleAnimGroup::Pause() {
     }
 }
 
-// OFFSET: 0x00528EB0
+// OFFSET: 0x00528EB0/0x140178620
 void CSimpleAnimGroup::Stop(bool requested) {
     if (!this->m_loopState || (this->m_flags & 0x8)) {
         return;

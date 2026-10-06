@@ -878,11 +878,7 @@ static void WaveTexCallback(EGxTexCommand command, uint32_t width, uint32_t heig
                             w = 255.0f;
                         }
 
-                        CImVector texel;
-                        texel.b = 0;
-                        texel.g = static_cast<uint8_t>(static_cast<int32_t>(w));
-                        texel.r = static_cast<uint8_t>(static_cast<int32_t>(u));
-                        texel.a = 0;
+                        CImVector texel(0, static_cast<uint8_t>(static_cast<int32_t>(w)), static_cast<uint8_t>(static_cast<int32_t>(u)), 0);
                         memcpy(&row[x], &texel, sizeof(texel));
                     }
 

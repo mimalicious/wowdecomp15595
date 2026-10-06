@@ -1044,11 +1044,7 @@ CMapEntity* CMap::ObjectCreate(CM2Model* model, MAP_OBJECT_FUNC func, void* func
     }
 
     C3Vector ambient = CMap::s_mapLight->m_light.m_ambColor;
-    CImVector color;
-    color.b = static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.g = static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.r = static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.a = 0xFF;
+    CImVector color(static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f)), 0xFF);
     entity->unk_00C0 = color;
     entity->m_m2AmbientColor = color;
 
@@ -3188,11 +3184,7 @@ void CWorldScene::RenderOccluders() {
     world.Translate(C3Vector(-CWorldScene::s_activeWorldView.x, -CWorldScene::s_activeWorldView.y, -CWorldScene::s_activeWorldView.z));
     g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
 
-    CImVector color;
-    color.b = 0x20;
-    color.g = 0x80;
-    color.r = 0xFF;
-    color.a = 0x8F;
+    CImVector color(0x20, 0x80, 0xFF, 0x8F);
 
     g_theGxDevicePtr->RsPush();
     GxRsSet(GxRs_DepthWrite, 0);
@@ -3300,11 +3292,7 @@ void CWorldScene::RenderDebugFrustum() {
     world.Translate(C3Vector(-CWorldScene::s_activeWorldView.x, -CWorldScene::s_activeWorldView.y, -CWorldScene::s_activeWorldView.z));
     g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
 
-    CImVector diffuse;
-    diffuse.b = 0x20;
-    diffuse.g = 0x80;
-    diffuse.r = 0xFF;
-    diffuse.a = 0x8F;
+    CImVector diffuse(0x20, 0x80, 0xFF, 0x8F);
 
     g_theGxDevicePtr->RsPush();
     GxRsSet(GxRs_DepthWrite, 0);
@@ -4603,11 +4591,7 @@ CMapEntity* CMap::ObjectCreateStatic(CM2Model* model, const C44Matrix& matrix, M
     entity->m_func = NULL;
     entity->unk_00B4 = 0;
     C3Vector ambient = CMap::s_mapLight->m_light.m_ambColor;
-    CImVector color;
-    color.b = static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.g = static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.r = static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.a = 0xFF;
+    CImVector color(static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f)), 0xFF);
     entity->unk_00C0 = color;
     entity->m_m2AmbientColor = color;
     entity->m_funcParam32 = param32;
@@ -4657,11 +4641,7 @@ CMapEntity* CMap::ObjectCreateStaticEx(CM2Model* model, const C44Matrix& matrix,
     entity->unk_00B4 = 0;
     entity->m_flags = MAPOBJ_FLAG_UNPLACED;
     C3Vector ambient = CMap::s_mapLight->m_light.m_ambColor;
-    CImVector color;
-    color.b = static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.g = static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.r = static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f));
-    color.a = 0xFF;
+    CImVector color(static_cast<uint8_t>(static_cast<int32_t>(ambient.z > 0.0f ? (ambient.z < 1.0f ? ambient.z * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.y > 0.0f ? (ambient.y < 1.0f ? ambient.y * 255.0f + 0.5f : 255.0f) : 0.0f)), static_cast<uint8_t>(static_cast<int32_t>(ambient.x > 0.0f ? (ambient.x < 1.0f ? ambient.x * 255.0f + 0.5f : 255.0f) : 0.0f)), 0xFF);
     entity->unk_00C0 = color;
     entity->m_m2AmbientColor = color;
     entity->m_flags = MAPOBJ_FLAG_UNPLACED;

@@ -155,7 +155,8 @@ bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     return true;
 }
 
-// OFFSET: %0x00537E70
+// PROVEN: 2a850839 IDENTICAL/DIFFERENT
+// OFFSET: 0x005282E0/0x14090C360
 CScriptObject* CSimpleControlPoint::GetScriptObjectParent() {
     return this->m_parent;
 }

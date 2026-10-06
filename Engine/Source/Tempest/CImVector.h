@@ -14,6 +14,7 @@ class CImVector {
     /* 0003 */ uint8_t a;
 
     CImVector();
+    CImVector(uint32_t value);
     CImVector(uint8_t b, uint8_t g, uint8_t r, uint8_t a);
     void InterpColor(int32_t t, const CImVector* src);
     void InterpColorRGB(uint32_t t, const CImVector* src);

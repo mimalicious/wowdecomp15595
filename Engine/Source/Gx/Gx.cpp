@@ -977,11 +977,7 @@ void GxBufDestroy(CGxBuf* buf) {
 // OFFSET: %0x0058E5C0
 void GxFormatColor(CImVector& color) {
     if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-        CImVector formatted;
-        formatted.b = color.r;
-        formatted.g = color.g;
-        formatted.r = color.b;
-        formatted.a = color.a;
+        CImVector formatted(color.r, color.g, color.b, color.a);
         color = formatted;
     }
 }

@@ -101,18 +101,10 @@ void __stdcall Rain::RealizePacket(Packet<RainParticleBuffer>* packet) {
         for (uint32_t j = 0; j < 3; j++) {
             vertices->p = drop.m_position;
             vertices->n = drop.m_velocity;
-            CImVector color;
-            color.b = 0;
-            color.g = 0;
-            color.r = 0;
-            color.a = static_cast<uint8_t>(j);
+            CImVector color(0, 0, 0, static_cast<uint8_t>(j));
 
             if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                CImVector swapped;
-                swapped.b = 0;
-                swapped.g = 0;
-                swapped.r = 0;
-                swapped.a = static_cast<uint8_t>(j);
+                CImVector swapped(0, 0, 0, static_cast<uint8_t>(j));
                 vertices->c = swapped;
             } else {
                 vertices->c = color;
@@ -136,18 +128,10 @@ void __stdcall Rain::RealizePacket(Packet<RainPatterParticleBuffer>* packet) {
 
         for (uint32_t j = 0; j < 3; j++) {
             vertices->p = patter.m_position;
-            CImVector color;
-            color.b = 0;
-            color.g = 0;
-            color.r = 0;
-            color.a = static_cast<uint8_t>(j);
+            CImVector color(0, 0, 0, static_cast<uint8_t>(j));
 
             if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                CImVector swapped;
-                swapped.b = 0;
-                swapped.g = 0;
-                swapped.r = 0;
-                swapped.a = static_cast<uint8_t>(j);
+                CImVector swapped(0, 0, 0, static_cast<uint8_t>(j));
                 vertices->c = swapped;
             } else {
                 vertices->c = color;

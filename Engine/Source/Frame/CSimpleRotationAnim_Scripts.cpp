@@ -83,13 +83,15 @@ static int32_t Script_GetRadians(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054CA70
+// PROVEN: 6091772f IDENTICAL/NONE
+// OFFSET: 0x0053CC40
 void CSimpleRotationAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleRotationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleRotationAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B640
+// PROVEN: e3adba13 IDENTICAL/NONE
+// OFFSET: 0x0053B930
 void CSimpleRotationAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleRotationAnim::s_metatable);

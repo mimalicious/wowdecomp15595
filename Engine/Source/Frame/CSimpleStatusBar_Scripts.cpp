@@ -9,13 +9,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00541160
+// PROVEN: c0968a67 IDENTICAL/NONE
+// OFFSET: 0x00531270
 void CSimpleStatusBar::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleStatusBar::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleStatusBar::RegisterScriptMethods);
 }
 
-// OFFSET: %0x00540960
+// PROVEN: 80f61908 IDENTICAL/NONE
+// OFFSET: 0x005309C0
 void CSimpleStatusBar::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleStatusBar::s_metatable);
@@ -231,7 +233,8 @@ static int32_t Script_SetRotatesTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x005311C0
+// PROVEN: fa7f0c5a IDENTICAL/NONE
+// OFFSET: 0x005311C0/0x140182730
 static int32_t Script_GetReverseFill(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -244,7 +247,8 @@ static int32_t Script_GetReverseFill(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00531220
+// PROVEN: cd8c3534 IDENTICAL/NONE
+// OFFSET: 0x00531220/0x140182790
 static int32_t Script_SetReverseFill(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 

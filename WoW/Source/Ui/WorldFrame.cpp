@@ -1501,11 +1501,7 @@ static void DrawSpellCursorShadow(uint32_t a1) {
     GxRsSet(GxRs_ColorOp1, 0);
     GxRsSet(GxRs_AlphaOp1, 0);
 
-    CImVector color;
-    color.b = 0xFF;
-    color.g = 0xFF;
-    color.r = 0xFF;
-    color.a = 0xFF;
+    CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
     ProjectTex::Render2d(box, color, NULL, 0.5f, a1, 5, 0.4f);
     g_theGxDevicePtr->RsPop();
 }
@@ -1637,11 +1633,7 @@ void CGWorldFrame::OnWorldRender() {
     CRect fullViewport = { 0.0f, 0.0f, 1.0f, 1.0f };
 
     if (this->m_viewportNDC != fullViewport) {
-        CImVector black;
-        black.b = 0x00;
-        black.g = 0x00;
-        black.r = 0x00;
-        black.a = 0xFF;
+        CImVector black(0x00, 0x00, 0x00, 0xFF);
         GxSceneClear(3, black);
     }
 

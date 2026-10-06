@@ -292,11 +292,7 @@ void Sand::RenderPackets() {
             vertices->p.z = grain.m_velocity.z * t + grain.m_position.z - camera.z;
 
             if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                CImVector swapped;
-                swapped.b = color.r;
-                swapped.g = color.g;
-                swapped.r = color.b;
-                swapped.a = static_cast<uint8_t>(alpha);
+                CImVector swapped(color.r, color.g, color.b, static_cast<uint8_t>(alpha));
                 vertices->c = swapped;
             } else {
                 vertices->c = color;

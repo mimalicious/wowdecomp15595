@@ -680,11 +680,7 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
     box.t.x = radius + impact.x;
     box.t.y = radius + impact.y;
     box.t.z = radius + impact.z;
-    CImVector color;
-    color.b = 0xFF;
-    color.g = 0xFF;
-    color.r = 0xFF;
-    color.a = static_cast<uint8_t>(s_trajectoryAlpha * 255.0f + 0.5f);
+    CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(s_trajectoryAlpha * 255.0f + 0.5f));
     C44Matrix rotation;
     rotation.RotateAroundZ(-facing);
     ProjectTex::Render2d(box, color, &rotation, 0.5f, 0x200122, 5, 0.039999999f);

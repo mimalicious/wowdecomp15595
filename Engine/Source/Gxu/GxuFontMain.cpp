@@ -321,11 +321,7 @@ void GxuFontSetTokenCallback(const char* (*callback)(uint32_t, uint32_t)) {
 
 // OFFSET: %0x00624020
 static void InitializeFrameGraph() {
-    CImVector red;
-    red.b = 0x00;
-    red.g = 0x00;
-    red.r = 0xFF;
-    red.a = 0xFF;
+    CImVector red(0x00, 0x00, 0xFF, 0xFF);
 
     float x = 0.01f;
 
@@ -342,11 +338,7 @@ static void InitializeFrameGraph() {
         x = x + 0.02f;
     }
 
-    CImVector yellow;
-    yellow.b = 0x00;
-    yellow.g = 0xFF;
-    yellow.r = 0xFF;
-    yellow.a = 0xFF;
+    CImVector yellow(0x00, 0xFF, 0xFF, 0xFF);
 
     x = 0.01f;
 
@@ -363,11 +355,7 @@ static void InitializeFrameGraph() {
         x = x + 0.02f;
     }
 
-    CImVector green;
-    green.b = 0x00;
-    green.g = 0xFF;
-    green.r = 0x00;
-    green.a = 0xFF;
+    CImVector green(0x00, 0xFF, 0x00, 0xFF);
 
     x = 0.01f;
 
@@ -525,11 +513,7 @@ QUOTEDCODE GxuDetermineQuotedCode(const char* text, int32_t& advance, CImVector*
             }
 
             if (color) {
-                CImVector value;
-                value.b = components[3];
-                value.g = components[2];
-                value.r = components[1];
-                value.a = 0xFF;
+                CImVector value(components[3], components[2], components[1], 0xFF);
                 *color = value;
             }
 

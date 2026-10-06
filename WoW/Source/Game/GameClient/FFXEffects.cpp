@@ -599,11 +599,7 @@ void PassDeathNVRC::Execute() {
     C44Matrix texMtx;
     FFX::SetupTexMtx(this->m_inputs[0]->m_size, this->m_inputs[0]->m_texSize, &texMtx, 1);
 
-    CImVector color;
-    color.b = 0xA8;
-    color.g = 0x93;
-    color.r = 0x53;
-    color.a = 0xFF;
+    CImVector color(0xA8, 0x93, 0x53, 0xFF);
     FFX::SetupVB_PCT(color, posMtx, texMtx);
     FFX::SetupIB();
 

@@ -254,7 +254,8 @@ static int32_t Script_IsShown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CAC0
+// PROVEN: 7e922500 IDENTICAL/UNPROVEN
+// OFFSET: 0x0052C970/0x14017D260
 static int32_t Script_GetTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     char buffer[260];
@@ -339,7 +340,8 @@ static int32_t Script_SetRotation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053CE30
+// PROVEN: b0c2a33d IDENTICAL/UNPROVEN
+// OFFSET: 0x0052CCE0/0x14017D6B0
 static int32_t Script_SetDesaturated(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     texture->SetDesaturated(StringToBOOL(L, 2, 1) != 0);
@@ -347,7 +349,8 @@ static int32_t Script_SetDesaturated(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CE90
+// PROVEN: d4133178 IDENTICAL/UNPROVEN
+// OFFSET: 0x0052CD40/0x14017D730
 static int32_t Script_IsDesaturated(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -474,13 +477,15 @@ static int32_t Script_SetTexCoord(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053D140
+// PROVEN: 95d0b485 IDENTICAL/NONE
+// OFFSET: 0x0052CFF0
 void CSimpleTexture::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleTexture::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTexture::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0053C110
+// PROVEN: 86973cd2 IDENTICAL/NONE
+// OFFSET: 0x0052BE30
 void CSimpleTexture::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTexture::s_metatable);

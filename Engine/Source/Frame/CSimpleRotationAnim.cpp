@@ -64,7 +64,8 @@ CSimpleRotationAnim::CSimpleRotationAnim(CSimpleAnimGroup* group) : CSimpleAnim(
     this->m_radians = 0.0f;
 }
 
-// OFFSET: %0x0053B360
+// PROVEN: 762dd731 IDENTICAL/DIFFERENT
+// OFFSET: 0x0052B2E0/0x14017B8E0
 void CSimpleRotationAnim::LoadXML(linkObject* node, CStatus* status) {
     VectorAnimation* animation = static_cast<VectorAnimation*>(node);
 

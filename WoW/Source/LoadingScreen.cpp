@@ -435,11 +435,7 @@ static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTextu
         vertices[2].z = 0.0f;
         vertices[3].z = 0.0f;
 
-        CImVector color;
-        color.b = 0xFF;
-        color.g = 0xFF;
-        color.r = 0xFF;
-        color.a = 0xFF;
+        CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
         GxPrimLockVertexPtrs(4, vertices, sizeof(C3Vector), NULL, 0, &color, 0, NULL, 0, s_texCoord, sizeof(C2Vector), NULL, 0);
         g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTexBlocking(textures[i]));
@@ -712,11 +708,7 @@ void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
         shadowOffset.x = 0.001f;
         shadowOffset.y = -0.001f;
 
-        CImVector shadowColor;
-        shadowColor.b = 0;
-        shadowColor.g = 0;
-        shadowColor.r = 0;
-        shadowColor.a = 0xFF;
+        CImVector shadowColor(0, 0, 0, 0xFF);
         GxuFontAddShadow(s_tipStr, shadowColor, shadowOffset);
 
         s_batch = GxuFontCreateBatch(false, false, false);

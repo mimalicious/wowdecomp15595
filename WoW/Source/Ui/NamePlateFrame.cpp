@@ -82,11 +82,7 @@ void CGNamePlateFrame::UpdateNameDisplay(const CGUnit_C* unit) {
 
 // OFFSET: #0x0098E5B0
 void CGNamePlateFrame::TriggerDamageFeedback() {
-    CImVector color;
-    color.b = 0;
-    color.g = 0;
-    color.r = 0xFF;
-    color.a = 0xFF;
+    CImVector color(0, 0, 0xFF, 0xFF);
     this->m_damageFeedbackTime = 5000;
     this->m_unitNameText->SetVertexColor(color);
 }

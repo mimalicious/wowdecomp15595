@@ -760,11 +760,7 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
             GxRenderTargetSet(GxBuffers_Depth, savedDepthTarget, 0);
         }
 
-        CImVector black;
-        black.b = 0;
-        black.g = 0;
-        black.r = 0;
-        black.a = 0xFF;
+        CImVector black(0, 0, 0, 0xFF);
         GxSceneClear(2, black);
     } else if (g_theGxDevicePtr->DeviceApi() != GxApi_D3d11) {
         CiRect rect;

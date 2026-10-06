@@ -370,13 +370,15 @@ int32_t CSimpleFont_SetIndentedWordWrap(const char* name, CSimpleFont* font, lua
     return 0;
 }
 
-// OFFSET: %0x00543BC0
+// PROVEN: 18e57d59 IDENTICAL/NONE
+// OFFSET: 0x00534790
 void CSimpleFont::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleFont::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFont::RegisterScriptMethods);
 }
 
-// OFFSET: %0x005429F0
+// PROVEN: f31e9219 IDENTICAL/NONE
+// OFFSET: 0x005335B0
 void CSimpleFont::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFont::s_metatable);

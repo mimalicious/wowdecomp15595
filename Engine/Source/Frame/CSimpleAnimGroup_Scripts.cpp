@@ -205,7 +205,8 @@ static int32_t Script_HookScript(lua_State* L) {
     return group ? group->HookScript(L) : 0;
 }
 
-// OFFSET: 0x0053DD30
+// PROVEN: d7fba91e IDENTICAL/NONE
+// OFFSET: 0x0053DD30/0x140192290
 static int32_t Script_SetIgnoreFramerateThrottle(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 
@@ -218,7 +219,8 @@ static int32_t Script_SetIgnoreFramerateThrottle(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053DD80
+// PROVEN: e61103bd IDENTICAL/NONE
+// OFFSET: 0x0053DD80/0x140192300
 static int32_t Script_GetIgnoreFramerateThrottle(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 
@@ -362,13 +364,15 @@ static int32_t Script_CreateAnimation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054DB70
+// PROVEN: 95ab418d IDENTICAL/NONE
+// OFFSET: 0x0053DDE0
 void CSimpleAnimGroup::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleAnimGroup::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAnimGroup::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B800
+// PROVEN: f98bad3a IDENTICAL/NONE
+// OFFSET: 0x0053BAF0
 void CSimpleAnimGroup::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleAnimGroup::s_metatable);

@@ -97,7 +97,8 @@ static int32_t Script_GetCurrentKeyBoardFocus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0083F6E0
+// PROVEN: d5778d0d IDENTICAL/NONE
+// OFFSET: 0x0083F6E0/0x14056B2E0
 static int32_t Script_SetMaxAnimFramerate(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetMaxFramerate(framesPerSec)");
@@ -108,7 +109,8 @@ static int32_t Script_SetMaxAnimFramerate(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0083F730
+// PROVEN: 0346a59f IDENTICAL/NONE
+// OFFSET: 0x0083F730/0x14056B340
 static int32_t Script_GetMaxAnimFramerate(lua_State* L) {
     lua_pushnumber(L, 1.0f / CSimpleAnim::s_frameInterval);
     return 1;

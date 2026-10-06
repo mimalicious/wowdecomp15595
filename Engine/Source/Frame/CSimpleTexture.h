@@ -97,6 +97,7 @@ class CSimpleTexture : public CSimpleRegion {
     virtual void AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale);
     virtual void AddAnimAlpha(CScriptRegion* region, int16_t alpha);
     virtual void Draw(CRenderBatch* batch);
+    virtual void StoreAnimPosition();
     virtual void LoadXML(linkObject* node, CStatus* status);
     virtual float GetWidth();
     virtual float GetHeight();
@@ -105,7 +106,6 @@ class CSimpleTexture : public CSimpleRegion {
     virtual void HideThis();
     virtual void ShowThis(bool loadPending);
     virtual void OnFrameSizeChanged(const CRect& rect);
-    virtual void AnimData_Init();
     virtual void AnimData_ResetPositionData();
 
     CSimpleTexture(CSimpleFrame* frame, uint32_t drawLayer, int8_t subLevel, bool show);

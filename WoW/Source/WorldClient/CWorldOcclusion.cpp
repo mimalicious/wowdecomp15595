@@ -887,11 +887,7 @@ void CWorldScene::RenderOcclusionVolumes() {
         return;
     }
 
-    CImVector color;
-    color.b = 0x20;
-    color.g = 0x80;
-    color.r = 0xFF;
-    color.a = 0x8F;
+    CImVector color(0x20, 0x80, 0xFF, 0x8F);
 
     C44Matrix world;
     world.Translate(C3Vector(-CWorldScene::s_activeWorldView.x, -CWorldScene::s_activeWorldView.y, -CWorldScene::s_activeWorldView.z));

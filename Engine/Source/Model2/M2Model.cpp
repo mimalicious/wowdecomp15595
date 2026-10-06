@@ -7553,11 +7553,7 @@ int32_t CM2Model::InitializeLoaded() {
             texCoords.maxX = 1.0f;
             texCoords.maxY = 1.0f;
 
-            CImVector color;
-            color.b = 0xFF;
-            color.g = 0xFF;
-            color.r = 0xFF;
-            color.a = 0xFF;
+            CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
             this->m_ribbonEmitters[i]->Initialize(ribbonData->m_edgesPerSecond, ribbonData->m_edgeLifetime, color, s_ribbonTextures, s_ribbonMaterials, s_ribbonTextureTypes, texCoords, ribbonData->m_textureRows, ribbonData->m_textureCols);
             this->m_ribbonEmitters[i]->SetGravity(ribbonData->m_gravity);

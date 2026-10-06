@@ -121,14 +121,16 @@ void CSimpleTop::StopMoveOrResizeFrame() {
     this->m_moveResizeFrame = NULL;
 }
 
-// OFFSET: %0x0050F2F0
+// PROVEN: 12f2bf1c IDENTICAL/DIFFERENT
+// OFFSET: 0x004FF140/0x140143F10
 void CSimpleTop::NotifyFrameLayerChanged(CSimpleFrame* frame, uint32_t drawLayer) {
     CFrameStrata* strata = this->m_strata[frame->m_strata];
     strata->m_levels[frame->m_level]->m_batchDirty |= 1 << drawLayer;
     strata->m_batchDirty = 1;
 }
 
-// OFFSET: %0x0050F330
+// PROVEN: 8d69f736 IDENTICAL/DIFFERENT
+// OFFSET: 0x004FF180/0x140148BF0
 void CSimpleTop::NotifyFrameDelayedLoad(CSimpleFrame* frame) {
     CFrameStrata* strata = this->m_strata[frame->m_strata];
     strata->m_levels[frame->m_level]->m_batchDirty |= 0x20;
@@ -999,7 +1001,8 @@ int32_t CSimpleTop::OnDisplaySizeChanged(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x005110E0
+// PROVEN: 8b249c1e IDENTICAL/DIFFERENT
+// OFFSET: 0x00500F20/0x1401466C0
 void CSimpleTop::NotifyFrameMovedOrResized(CSimpleFrame* frame) {
     this->m_strata[frame->m_strata]->m_levelsDirty = 1;
 
@@ -1010,7 +1013,8 @@ void CSimpleTop::NotifyFrameMovedOrResized(CSimpleFrame* frame) {
     this->m_checkFocus = 1;
 }
 
-// OFFSET: %0x00511130
+// PROVEN: ef5e7907 IDENTICAL/DIFFERENT
+// OFFSET: 0x00500F70/0x140146720
 void CSimpleTop::RegisterForEvent(CSimpleFrame* frame, CSimpleEventType event, int32_t a4, int32_t priority) {
     CSimpleSortedArray<FRAMEPRIORITY*>& queue = this->m_eventqueue[event][frame->m_strata];
 
@@ -1198,7 +1202,8 @@ CSimpleTop::CSimpleTop() {
     CSimpleTexture::Init();
 }
 
-// OFFSET: %0x00511780
+// PROVEN: c2171ee9 IDENTICAL/DIFFERENT
+// OFFSET: 0x005015C0/0x140147030
 void CSimpleTop::ShowFrame(CSimpleFrame* frame, int32_t a3) {
     this->m_strata[frame->m_strata]->AddFrame(frame);
     frame->RegisterForEvents(a3);

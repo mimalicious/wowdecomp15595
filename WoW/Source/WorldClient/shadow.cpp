@@ -178,11 +178,7 @@ static void ShadowModCallback(EGxTexCommand command, uint32_t width, uint32_t he
 
                     uint8_t value = static_cast<uint8_t>(CMath::fint_((1.0f - alpha) * 255.0f));
 
-                    CImVector color;
-                    color.b = value;
-                    color.g = value;
-                    color.r = value;
-                    color.a = value == 0xFF ? 0x00 : 0xFF;
+                    CImVector color(value, value, value, value == 0xFF ? 0x00 : 0xFF);
                     row[x] = color;
                 }
 
@@ -322,11 +318,7 @@ void CWorldScene::RenderStreamingRequestDecal(CM2Model* model, const CAaBox* box
         }
     }
 
-    CImVector color;
-    color.b = 0xFF;
-    color.g = 0xFF;
-    color.r = 0xFF;
-    color.a = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f + 0.5f));
+    CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f + 0.5f)));
     ProjectTex::Render2d(bounds, color, &projection, 0.5f, 0x220122, 0, scale);
     g_theGxDevicePtr->RsPop();
 }

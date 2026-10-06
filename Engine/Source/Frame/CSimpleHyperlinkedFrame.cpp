@@ -127,7 +127,8 @@ CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
     }
 }
 
-// OFFSET: %0x00546430
+// PROVEN: 6db8490c IDENTICAL/NONE
+// OFFSET: 0x00532D20
 void CSimpleHyperlinkedFrame::RunOnHyperlinkEnterScript(const char* link, const char* text) {
     this->m_inHyperlinkScript = 1;
 
@@ -141,7 +142,8 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkEnterScript(const char* link, const 
     this->m_inHyperlinkScript = 0;
 }
 
-// OFFSET: %0x00546490
+// PROVEN: 196e62f7 IDENTICAL/NONE
+// OFFSET: 0x00532D90
 void CSimpleHyperlinkedFrame::RunOnHyperlinkLeaveScript(const char* link, const char* text) {
     this->m_inHyperlinkScript = 1;
 
@@ -155,7 +157,8 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkLeaveScript(const char* link, const 
     this->m_inHyperlinkScript = 0;
 }
 
-// OFFSET: %0x005464F0
+// PROVEN: bfcce0da IDENTICAL/NONE
+// OFFSET: 0x00532E00
 void CSimpleHyperlinkedFrame::RunOnHyperlinkClickScript(const char* link, const char* text, const char* btn) {
     this->m_inHyperlinkScript = 1;
 
@@ -235,7 +238,7 @@ CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame(CSimpleFrame* parent) : CSimple
     this->m_hyperlinksDirty = 0;
 }
 
-// OFFSET: 0x005332B0
+// OFFSET: 0x005332B0/0x140185720
 void CSimpleHyperlinkedFrame::ClearHyperlinks() {
     CSimpleHyperlinkButton* button = this->m_hyperlinks.Head();
 

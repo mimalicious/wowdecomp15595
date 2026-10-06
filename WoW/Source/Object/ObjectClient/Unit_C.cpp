@@ -1743,11 +1743,7 @@ void CGUnit_C::UpdateBreathState(uint32_t time) {
 
 // OFFSET: #0x00720DB0
 void CGUnit_C::UpdateModelTint(uint32_t time) {
-    CImVector color;
-    color.b = 0xFF;
-    color.g = 0xFF;
-    color.r = 0xFF;
-    color.a = 0xFF;
+    CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
     if (!this->GetFlashColor(time, color) && this->m_procEffects) {
         color = this->m_procEffects->m_color;
@@ -2189,11 +2185,7 @@ void CGUnit_C::RenderAutoTrackCursor() {
     g_theGxDevicePtr->RsPush();
 
     if (this->SetCircleRenderStates()) {
-        CImVector color;
-        color.b = 0x7F;
-        color.g = 0xFF;
-        color.r = 0xFF;
-        color.a = 0xFF;
+        CImVector color(0x7F, 0xFF, 0xFF, 0xFF);
         ProjectTex::Render2d(box, color, &matrix, 0.5f, 0x200122, 1, 0.4f);
     }
 

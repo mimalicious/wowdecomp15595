@@ -254,11 +254,7 @@ void Mists::Render() {
             color.a = static_cast<uint8_t>(a);
 
             if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                CImVector swapped;
-                swapped.b = color.r;
-                swapped.g = color.g;
-                swapped.r = color.b;
-                swapped.a = static_cast<uint8_t>(a);
+                CImVector swapped(color.r, color.g, color.b, static_cast<uint8_t>(a));
                 vertices->c = swapped;
             } else {
                 vertices->c = color;

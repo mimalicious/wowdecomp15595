@@ -428,14 +428,10 @@ uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     return 0;
 }
 
-// PROVEN: 3b79a307 IDENTICAL/NONE
+// PROVEN: bfc33732 IDENTICAL/NONE
 // OFFSET: 0x005A5820/0x140216790
 int32_t CGItem_C::GetSelectionHighlightColor(CImVector* color) const {
-    CImVector white;
-    white.b = 0xFF;
-    white.g = 0xFF;
-    white.r = 0xFF;
-    white.a = 0xFF;
+    CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
     *color = white;
 
     return 1;

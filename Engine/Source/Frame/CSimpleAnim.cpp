@@ -36,6 +36,7 @@ CSimpleAnimSmoother::CSimpleAnimSmoother() {
 // STATIC: 0x00CA3840
 float CSimpleAnim::s_frameInterval = 1.0f / 30.0f;
 
+// PROVEN: e7006d69 IDENTICAL/IDENTICAL
 // OFFSET: 0x005275F0/0x140176960
 void CSimpleAnimSCurveSmoother::SetWeights(float in, float out) {
     this->m_in = in < 0.0f ? 0.0f : (in < 1.0f ? in : 1.0f);
@@ -59,7 +60,8 @@ float CSimpleAnimSCurveSmoother::GetSmoothProgress(float progress) {
     return progress;
 }
 
-// OFFSET: %0x00536CA0
+// PROVEN: f6a6534e IDENTICAL/DIFFERENT
+// OFFSET: 0x00526D30/0x1401760F0
 FrameScript_Object::ScriptIx* CSimpleAnim::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = this->FrameScript_Object::GetScriptByName(name, data);
 
@@ -96,7 +98,8 @@ FrameScript_Object::ScriptIx* CSimpleAnim::GetScriptByName(const char* name, Fra
     return NULL;
 }
 
-// OFFSET: %0x00536E50
+// PROVEN: 018eb404 IDENTICAL/NONE
+// OFFSET: 0x00526EE0
 void CSimpleAnim::GetScriptTime(lua_State* L, double* time, uint32_t* calls) {
     this->FrameScript_Object::GetScriptTime(L, this->m_onLoad, time, calls);
     this->FrameScript_Object::GetScriptTime(L, this->m_onPlay, time, calls);
@@ -106,12 +109,14 @@ void CSimpleAnim::GetScriptTime(lua_State* L, double* time, uint32_t* calls) {
     this->FrameScript_Object::GetScriptTime(L, this->m_onUpdate, time, calls);
 }
 
-// OFFSET: %0x00536EE0
+// PROVEN: 3736e17f IDENTICAL/DIFFERENT
+// OFFSET: 0x00526F60/0x1401762B0
 void CSimpleAnim::SetSmoothProgress(float progress) {
     this->m_smoothProgress = progress;
 }
 
-// OFFSET: %0x00536F50
+// PROVEN: ef1299d1 IDENTICAL/NONE
+// OFFSET: 0x00526F80
 void CSimpleAnim::SetSmoothing(float in, float out) {
     if ((in > 0.0f && in <= 1.0f) || (out > 0.0f && out <= 1.0f)) {
         if (!this->m_smoother) {
@@ -125,7 +130,8 @@ void CSimpleAnim::SetSmoothing(float in, float out) {
     }
 }
 
-// OFFSET: %0x00536FF0
+// PROVEN: a63a4375 IDENTICAL/DIFFERENT
+// OFFSET: 0x00527020/0x140176370
 bool CSimpleAnim::GetSmoothing(float& in, float& out) {
     CSimpleAnimSmoother* smoother = this->m_smoother;
 
@@ -161,14 +167,16 @@ void CSimpleAnim::RunOnStopScript(bool requested) {
     }
 }
 
-// OFFSET: %0x00537560
+// PROVEN: ba90a49c IDENTICAL/NONE
+// OFFSET: 0x005274D0
 void CSimpleAnim::RunOnFinishedScript() {
     if (this->HasScript(this->m_onFinished)) {
         this->RunScript(this->m_onFinished, 0, NULL);
     }
 }
 
-// OFFSET: %0x00537590
+// PROVEN: 84e83861 IDENTICAL/NONE
+// OFFSET: 0x00527500
 void CSimpleAnim::RunOnUpdateScript(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
         lua_State* L = FrameScript_GetContext();
@@ -177,7 +185,8 @@ void CSimpleAnim::RunOnUpdateScript(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x00537770
+// PROVEN: fbda7b67 IDENTICAL/NONE
+// OFFSET: 0x005276E0
 void CSimpleAnim::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags &= ~1;
 
@@ -186,7 +195,8 @@ void CSimpleAnim::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x005377A0
+// PROVEN: 84fdfb93 IDENTICAL/NONE
+// OFFSET: 0x00527710
 bool CSimpleAnim::Play() {
     if (this->m_targetName[0]) {
         this->m_target = static_cast<CScriptRegion*>(CScriptObject::GetScriptObjectByName(this->m_targetName, CScriptRegion::GetObjectType()));
@@ -203,7 +213,8 @@ bool CSimpleAnim::Play() {
     return true;
 }
 
-// OFFSET: %0x00537810
+// PROVEN: 618b9b25 IDENTICAL/NONE
+// OFFSET: 0x00527780
 void CSimpleAnim::Pause() {
     this->m_group->Pause();
 
@@ -263,7 +274,8 @@ bool CSimpleAnim::IsDelaying() {
     return total > this->m_elapsed;
 }
 
-// OFFSET: %0x00537950
+// PROVEN: fd12db21 IDENTICAL/DIFFERENT
+// OFFSET: 0x005278D0/0x140176C80
 CScriptRegion* CSimpleAnim::GetRegionParent() {
     return this->m_group ? this->m_group->m_region : NULL;
 }
@@ -406,7 +418,8 @@ CSimpleAnim::CSimpleAnim(CSimpleAnimGroup* group) {
     }
 }
 
-// OFFSET: %0x0053A8E0
+// PROVEN: 1c4670ab IDENTICAL/DIFFERENT
+// OFFSET: 0x00529290/0x140178BB0
 void CSimpleAnim::SetStartDelay(float delay, bool notify) {
     this->m_startDelay = delay;
 
@@ -419,7 +432,8 @@ void CSimpleAnim::SetStartDelay(float delay, bool notify) {
     }
 }
 
-// OFFSET: %0x0053A920
+// PROVEN: d65997a8 IDENTICAL/DIFFERENT
+// OFFSET: 0x005292C0/0x140178BF0
 void CSimpleAnim::SetEndDelay(float delay, bool notify) {
     this->m_endDelay = delay;
 
@@ -432,7 +446,8 @@ void CSimpleAnim::SetEndDelay(float delay, bool notify) {
     }
 }
 
-// OFFSET: %0x0053A960
+// PROVEN: 1b8fea6b IDENTICAL/DIFFERENT
+// OFFSET: 0x005292F0/0x140178C30
 void CSimpleAnim::SetDuration(float duration, bool notify) {
     this->m_duration = duration;
 
@@ -586,7 +601,8 @@ bool CSimpleAnim::ChangeParent(CSimpleAnimGroup* group) {
 void CSimpleAnim::Apply(float progress) {
 }
 
-// OFFSET: %0x00537E70
+// PROVEN: b05b8fdd IDENTICAL/DIFFERENT
+// OFFSET: 0x005282E0/0x14090C360
 CScriptObject* CSimpleAnim::GetScriptObjectParent() {
     return this->m_group;
 }

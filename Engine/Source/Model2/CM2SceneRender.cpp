@@ -1117,11 +1117,7 @@ void CM2SceneRender::Draw(M2PASS pass, M2Element* elements, uint32_t* indices, u
     GxRsSet(GxRs_PolygonOffset, 0);
     GxRsSet(GxRs_Lighting, 0);
 
-    CImVector fogColor;
-    fogColor.b = 0xFF;
-    fogColor.g = 0xFF;
-    fogColor.r = 0xFF;
-    fogColor.a = 0xFF;
+    CImVector fogColor(0xFF, 0xFF, 0xFF, 0xFF);
     CShaderEffect::SetFogParams(0.0f, 1000.0f, 1.0f, fogColor, 0.0f);
     GxRsSet(GxRs_Fog, 0);
 

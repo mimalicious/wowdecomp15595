@@ -223,11 +223,7 @@ int32_t ConsoleCommand_FontColor(const char* command, const char* arguments) {
         return 0;
     }
 
-    CImVector color;
-    color.b = blue;
-    color.g = green;
-    color.r = red;
-    color.a = 0xFF;
+    CImVector color(blue, green, red, 0xFF);
 
     if (colorType < NUM_COLORTYPES) {
         *reinterpret_cast<CImVector*>(&s_colorArray[colorType]) = color;

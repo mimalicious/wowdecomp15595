@@ -10,13 +10,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054B320
+// PROVEN: d0130ecb IDENTICAL/NONE
+// OFFSET: 0x0053B610
 void CSimpleColorSelect::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleColorSelect::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleColorSelect::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054A9C0
+// PROVEN: b29a7a01 IDENTICAL/NONE
+// OFFSET: 0x0053ACB0
 void CSimpleColorSelect::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleColorSelect::s_metatable);

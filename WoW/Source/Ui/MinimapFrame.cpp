@@ -1761,11 +1761,7 @@ void CGMinimapFrame::Render() {
     DayNight::DNInfo* info = DayNight::GetInfo();
     CImVector diffuse = info->m_light0.m_diffuse;
     CImVector ambient = info->m_light0.m_ambient;
-    CImVector white;
-    white.b = 0xFF;
-    white.g = 0xFF;
-    white.r = 0xFF;
-    white.a = 0xFF;
+    CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
     uint32_t luminance = static_cast<uint8_t>(ColorToLuminance(ambient)) + 96;
 
     if (luminance > 0xFF) {
@@ -1794,11 +1790,7 @@ void CGMinimapFrame::Render() {
             C3Vector local = TransformDirection(direction, s_indoor.m_invMatrix);
             direction = TransformDirection(local, s_indoor.m_matrix);
             float inv = 1.0f / s_indoor.m_radius;
-            CImVector color;
-            color.b = 0xFF;
-            color.g = 0xFF;
-            color.r = 0xFF;
-            color.a = diffuse.a;
+            CImVector color(0xFF, 0xFF, 0xFF, diffuse.a);
             C2Vector indoorCenter;
             indoorCenter.x = direction.x * inv * s_indoorTexScale + 0.5f;
             indoorCenter.y = inv * direction.y * s_indoorTexScale + 0.5f;
@@ -1838,11 +1830,7 @@ void CGMinimapFrame::Render() {
         }
     }
 
-    CImVector iconColor;
-    iconColor.b = 0xFF;
-    iconColor.g = 0xFF;
-    iconColor.r = 0xFF;
-    iconColor.a = 0xFF;
+    CImVector iconColor(0xFF, 0xFF, 0xFF, 0xFF);
     float viewRadius = MinimapGetViewRadius();
     C44Matrix rotation;
 
@@ -1955,11 +1943,7 @@ void CGMinimapFrame::Render() {
         param.m_frame = this;
         ClntObjMgrEnumVisibleObjects(CGMinimapFrame::ObjectEnumProc, &param);
 
-        CImVector vehicleColor;
-        vehicleColor.b = 0xFF;
-        vehicleColor.g = 0xFF;
-        vehicleColor.r = 0xFF;
-        vehicleColor.a = 0xAA;
+        CImVector vehicleColor(0xFF, 0xFF, 0xFF, 0xAA);
         CImVector* playerColor;
 
         if (param.m_player->m_vehiclePassenger && param.m_player->m_vehiclePassenger->m_state) {
@@ -2533,11 +2517,7 @@ void CGMinimapFrame::RenderOverlay(const C44Matrix& rotation) {
         }
 
         g_theGxDevicePtr->RsSet(GxRs_Texture0, gxTex);
-        CImVector color;
-        color.b = 0xFF;
-        color.g = 0xFF;
-        color.r = 0xFF;
-        color.a = 0xFF;
+        CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
         float facing = direction->m_facing;
         float cosine = std::cos(facing);
         float sine = std::sin(facing);

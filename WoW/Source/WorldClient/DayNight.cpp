@@ -1086,11 +1086,7 @@ void DayNight::SetLightColors() {
     info.m_light0.m_diffuse = bands.m_diffuse;
     info.m_light0.m_ambient = bands.m_ambient;
 
-    CImVector shadow;
-    shadow.b = static_cast<uint8_t>((85 * (bands.m_ambient.b + 3)) >> 8);
-    shadow.g = static_cast<uint8_t>((85 * (bands.m_ambient.g + 3)) >> 8);
-    shadow.r = static_cast<uint8_t>((85 * (bands.m_ambient.r + 3)) >> 8);
-    shadow.a = bands.m_ambient.a;
+    CImVector shadow(static_cast<uint8_t>((85 * (bands.m_ambient.b + 3)) >> 8), static_cast<uint8_t>((85 * (bands.m_ambient.g + 3)) >> 8), static_cast<uint8_t>((85 * (bands.m_ambient.r + 3)) >> 8), bands.m_ambient.a);
     info.m_shadowColor = shadow;
     info.m_shadowColor.a = bands.m_shadowOpacity.r;
     info.m_light0.m_mid1 = info.m_light1.m_mid1;

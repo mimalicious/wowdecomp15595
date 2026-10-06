@@ -45,7 +45,8 @@ int32_t CSimpleScaleAnim::GetScriptMetaTable() {
     return CSimpleScaleAnim::s_metatable;
 }
 
-// OFFSET: %0x00537030
+// PROVEN: 71c18766 IDENTICAL/DIFFERENT
+// OFFSET: 0x00527060/0x1401763A0
 void CSimpleScaleAnim::SetScale(const C2Vector& scale) {
     this->m_scaleChange.x = 1.0f - (scale.x >= 0.001f ? scale.x : 0.001f);
     this->m_scaleChange.y = 1.0f - (scale.y >= 0.001f ? scale.y : 0.001f);

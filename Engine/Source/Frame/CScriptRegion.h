@@ -38,8 +38,8 @@ class CScriptRegion : public CScriptObject, public CLayoutFrame {
     virtual void NotifyAnimBegin(CSimpleAnimGroup* group);
     virtual void NotifyAnimEnd(CSimpleAnimGroup* group);
     virtual void StopAnimating();
-    virtual void AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha);
-    virtual void AnimDeactivated(CSimpleAnimGroup* group, int32_t last);
+    virtual void AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position);
+    virtual void AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position);
     virtual void AddAnimTranslation(CScriptRegion* region, const C2Vector& translation);
     virtual void AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians);
     virtual void AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale);
@@ -49,9 +49,9 @@ class CScriptRegion : public CScriptObject, public CLayoutFrame {
     virtual CLayoutFrame* GetLayoutFrameByName(const char* name);
 
     CScriptRegion();
-    void GetActiveAnimInfo(int32_t type, int32_t& active, int32_t& activeOfType);
+    int32_t HasActiveAlphaAnim();
     int32_t HasActiveAnimGroup();
-    int32_t HasActiveAnimOfType(int32_t type);
+    int32_t HasActivePositionAnim();
     bool IsMouseOver(float top, float bottom, float left, float right);
     void LoadXML_Animations(linkObject* node, CStatus* status);
     bool ProtectedFunctionsAllowed();

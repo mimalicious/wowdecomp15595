@@ -1332,11 +1332,7 @@ void __stdcall CMapRenderChunk::RecreateAlphaBitsFixed8888Mip0(CImVector* dst, u
                 alpha = (178 * alpha) >> 8;
             }
 
-            CImVector color;
-            color.b = alpha;
-            color.g = alpha;
-            color.r = alpha;
-            color.a = alpha;
+            CImVector color(alpha, alpha, alpha, alpha);
             *dst = color;
             dst++;
         }
@@ -1374,11 +1370,7 @@ void __stdcall CMapRenderChunk::RecreateAlphaBitsFixed8888Mip1(CImVector* dst, u
                 alpha = (178 * alpha) >> 8;
             }
 
-            CImVector color;
-            color.b = alpha;
-            color.g = alpha;
-            color.r = alpha;
-            color.a = alpha;
+            CImVector color(alpha, alpha, alpha, alpha);
             *dst = color;
             dst++;
         }
@@ -1391,11 +1383,7 @@ void __stdcall CMapRenderChunk::RecreateAlphaBitsFixed8888Mip1(CImVector* dst, u
             alpha = (178 * alpha) >> 8;
         }
 
-        CImVector color;
-        color.b = alpha;
-        color.g = alpha;
-        color.r = alpha;
-        color.a = alpha;
+        CImVector color(alpha, alpha, alpha, alpha);
         *dst = color;
         dst++;
 
@@ -1442,11 +1430,7 @@ void CMapRenderChunk::UnpackAlphaBitsFixed8888Mip0(CImVector* dst, uint32_t size
                 alpha = (178 * alpha) >> 8;
             }
 
-            CImVector color;
-            color.b = alpha;
-            color.g = alpha;
-            color.r = alpha;
-            color.a = alpha;
+            CImVector color(alpha, alpha, alpha, alpha);
             *dst = color;
             dst++;
         }
@@ -1472,11 +1456,7 @@ void CMapRenderChunk::UnpackAlphaBitsFixed8888Mip1(CImVector* dst, uint32_t size
                 alpha = (178 * alpha) >> 8;
             }
 
-            CImVector color;
-            color.b = alpha;
-            color.g = alpha;
-            color.r = alpha;
-            color.a = alpha;
+            CImVector color(alpha, alpha, alpha, alpha);
             *dst = color;
             dst++;
         }
@@ -1489,11 +1469,7 @@ void CMapRenderChunk::UnpackAlphaBitsFixed8888Mip1(CImVector* dst, uint32_t size
             alpha = (178 * alpha) >> 8;
         }
 
-        CImVector color;
-        color.b = alpha;
-        color.g = alpha;
-        color.r = alpha;
-        color.a = alpha;
+        CImVector color(alpha, alpha, alpha, alpha);
         *dst = color;
         dst++;
 
@@ -2120,11 +2096,7 @@ void CMapRenderChunk::RenderMultiPassAdditive(CMapRenderChunk* renderChunk) {
             GxRsSet(GxRs_BlendingMode, GxBlend_NoAlphaAdd);
             GxUpdateAlphaRef(GxRs_AlphaRef);
 
-            CImVector black;
-            black.b = 0;
-            black.g = 0;
-            black.r = 0;
-            black.a = 0;
+            CImVector black(0, 0, 0, 0);
             GxRsSet(GxRs_FogColor, *reinterpret_cast<int32_t*>(&black));
         }
 
@@ -2278,11 +2250,7 @@ void CMapRenderChunk::RenderMultiPassPixelShaderBigAlpha(CMapRenderChunk* render
             GxUpdateAlphaRef(GxRs_AlphaRef);
 
             if (g_theGxDevicePtr->Caps().unk_02F8) {
-                CImVector black;
-                black.b = 0;
-                black.g = 0;
-                black.r = 0;
-                black.a = 0;
+                CImVector black(0, 0, 0, 0);
                 GxRsSet(GxRs_FogColor, *reinterpret_cast<int32_t*>(&black));
             } else {
                 C4Vector black;
@@ -2438,11 +2406,7 @@ void CMapRenderChunk::RenderMultiPassVertexPixelShaderBigAlpha(CMapRenderChunk* 
             GxUpdateAlphaRef(GxRs_AlphaRef);
 
             if (g_theGxDevicePtr->Caps().unk_02F8) {
-                CImVector black;
-                black.b = 0;
-                black.g = 0;
-                black.r = 0;
-                black.a = 0;
+                CImVector black(0, 0, 0, 0);
                 GxRsSet(GxRs_FogColor, *reinterpret_cast<int32_t*>(&black));
             } else {
                 C4Vector black;

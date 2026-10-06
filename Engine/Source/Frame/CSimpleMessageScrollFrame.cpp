@@ -57,7 +57,8 @@ CSimpleMessageScrollFrameLine::~CSimpleMessageScrollFrameLine() {
     }
 }
 
-// OFFSET: %0x0052CC20
+// PROVEN: 6eca27b5 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051CF20/0x140169750
 FrameScript_Object::ScriptIx* CSimpleMessageScrollFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleHyperlinkedFrame::GetScriptByName(name, data);
 
@@ -78,7 +79,8 @@ void CSimpleMessageScrollFrame::GetScriptTime(lua_State* L, double* time, uint32
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x0052CCC0
+// PROVEN: fc199e7a IDENTICAL/DIFFERENT
+// OFFSET: 0x0051CFC0/0x140169820
 int32_t CSimpleMessageScrollFrame::GetCurrentScroll() {
     if (!this->m_numMessages || this->m_currentLine == -1) {
         return 0;
@@ -102,7 +104,8 @@ void CSimpleFontStringRecord::operator delete(void* ptr) {
 CSimpleFontStringRecord::~CSimpleFontStringRecord() {
 }
 
-// OFFSET: %0x0052CF90
+// PROVEN: e0929a7b IDENTICAL/NONE
+// OFFSET: 0x0051D290
 void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
         CSimpleMessageScrollFrameLine* line = this->m_displayNodes[i].m_line;
@@ -115,7 +118,8 @@ void CSimpleMessageScrollFrame::SetTimeVisible(float seconds) {
     this->m_timeVisible = seconds;
 }
 
-// OFFSET: %0x0052CFE0
+// PROVEN: 93525626 IDENTICAL/NONE
+// OFFSET: 0x0051D2E0
 void CSimpleMessageScrollFrame::SetFadeDuration(float duration) {
     for (int32_t i = 0; i < this->m_numDisplayed; i++) {
         CSimpleMessageScrollFrameLine* line = this->m_displayNodes[i].m_line;
@@ -547,7 +551,8 @@ CSimpleMessageScrollFrame::CSimpleMessageScrollFrame(CSimpleFrame* parent, int32
     this->m_insertMode = 1;
 }
 
-// OFFSET: %0x0052DE50
+// PROVEN: 2ca01559 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E1E0/0x14016B000
 void CSimpleMessageScrollFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
         for (uint32_t i = 0; i < this->m_displayNodes.Count(); i++) {
@@ -625,7 +630,8 @@ void CSimpleMessageScrollFrame::UpdateColorByID(int32_t typeID, const CImVector&
     this->ScrollMessages(this->m_currentScroll);
 }
 
-// OFFSET: %0x0052E0E0
+// PROVEN: 29507efb IDENTICAL/NONE
+// OFFSET: 0x0051E490
 void CSimpleMessageScrollFrame::OnScreenSizeChanged() {
     CSimpleFrame::OnScreenSizeChanged();
     this->ScrollMessages(this->m_currentScroll);
@@ -656,13 +662,15 @@ void CSimpleMessageScrollFrame::UpdateRect() {
     }
 }
 
-// OFFSET: %0x0052E250
+// PROVEN: 49586a00 IDENTICAL/NONE
+// OFFSET: 0x0051E600
 void CSimpleMessageScrollFrame::OnLayerShow() {
     CSimpleFrame::OnLayerShow();
     this->ScrollMessages(this->m_currentScroll);
 }
 
-// OFFSET: %0x0052E3B0
+// PROVEN: 05db2248 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E620/0x14016B570
 int32_t CSimpleMessageScrollFrame::ScrollUp() {
     if (this->m_currentLine == -1) {
         return 0;
@@ -683,7 +691,8 @@ int32_t CSimpleMessageScrollFrame::ScrollUp() {
     return 1;
 }
 
-// OFFSET: %0x0052E3F0
+// PROVEN: 0575a781 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E660/0x14016B5C0
 int32_t CSimpleMessageScrollFrame::ScrollDown() {
     if (this->m_currentLine == -1) {
         return 0;
@@ -704,7 +713,8 @@ int32_t CSimpleMessageScrollFrame::ScrollDown() {
     return 1;
 }
 
-// OFFSET: %0x0052E430
+// PROVEN: ca133aa8 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E6A0/0x14016B610
 void CSimpleMessageScrollFrame::ScrollToTop() {
     if (this->m_currentLine == -1) {
         return;
@@ -723,7 +733,8 @@ void CSimpleMessageScrollFrame::ScrollToTop() {
     this->ScrollMessages(scroll);
 }
 
-// OFFSET: %0x0052E460
+// PROVEN: a750d269 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E6D0/0x14016B650
 void CSimpleMessageScrollFrame::ScrollToBottom() {
     if (this->m_currentLine == -1) {
         return;
@@ -761,7 +772,8 @@ void CSimpleMessageScrollFrame::SetScrollOffset(int32_t offset) {
     }
 }
 
-// OFFSET: %0x0052E6C0
+// PROVEN: 3adc2a40 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051E750/0x14016B6E0
 void CSimpleMessageScrollFrame::SetInsertMode(int32_t mode) {
     this->m_insertMode = mode;
     this->UpdateRect();

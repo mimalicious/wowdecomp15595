@@ -841,11 +841,7 @@ void CLightning::Render(uint32_t index, const C3Vector& cameraPos) {
     stack.m_flags[stack.m_level] &= ~CGxMatrixStack::F_Identity;
     stack.m_mtx[stack.m_level] = C44Matrix(texScale, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, -texOffset, 0.0f, 0.0f, 1.0f);
 
-    CImVector emissive;
-    emissive.b = this->m_color.b;
-    emissive.g = this->m_color.g;
-    emissive.r = this->m_color.r;
-    emissive.a = 0xFF;
+    CImVector emissive(this->m_color.b, this->m_color.g, this->m_color.r, 0xFF);
     g_theGxDevicePtr->RsSet(GxRs_MatEmissive, *reinterpret_cast<int32_t*>(&emissive));
     g_theGxDevicePtr->RsSet(GxRs_DepthWrite, static_cast<uint8_t>(this->m_chainEffects->m_blendMode) == 2);
     g_theGxDevicePtr->RsSet(GxRs_BlendingMode, static_cast<int32_t>(static_cast<uint8_t>(this->m_chainEffects->m_blendMode)));

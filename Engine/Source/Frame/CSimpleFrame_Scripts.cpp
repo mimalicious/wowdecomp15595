@@ -126,12 +126,10 @@ static int32_t Script_CreateTexture(lua_State* L) {
         texture->PostLoadXML(ref.m_node, &status);
     }
 
-    int32_t animating;
-    int32_t alphaAnimating;
-    texture->GetActiveAnimInfo(CSimpleAlphaAnim::GetObjectType(), animating, alphaAnimating);
-
-    if (animating) {
-        texture->AnimActivated(NULL, 1, alphaAnimating);
+    if (texture->HasActiveAnimGroup()) {
+        int32_t alpha = texture->HasActiveAlphaAnim();
+        int32_t position = texture->HasActivePositionAnim();
+        texture->AnimActivated(NULL, alpha, position);
     }
 
     if (!texture->m_luaRegistered) {
@@ -196,12 +194,10 @@ static int32_t Script_CreateFontString(lua_State* L) {
         string->PostLoadXML(ref.m_node, &status);
     }
 
-    int32_t animating;
-    int32_t alphaAnimating;
-    string->GetActiveAnimInfo(CSimpleAlphaAnim::GetObjectType(), animating, alphaAnimating);
-
-    if (animating) {
-        string->AnimActivated(NULL, 1, alphaAnimating);
+    if (string->HasActiveAnimGroup()) {
+        int32_t alpha = string->HasActiveAlphaAnim();
+        int32_t position = string->HasActivePositionAnim();
+        string->AnimActivated(NULL, alpha, position);
     }
 
     if (!string->m_luaRegistered) {
@@ -1107,7 +1103,7 @@ static int32_t Script_SetMaxResize(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 383d27c5 DIFFERENT/IDENTICAL
+// PROVEN: 383d27c5 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050CF20/0x140155970
 static int32_t Script_SetMovable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1116,7 +1112,8 @@ static int32_t Script_SetMovable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D2F0
+// PROVEN: 6e023cb9 IDENTICAL/UNPROVEN
+// OFFSET: 0x0050CF70/0x1401559E0
 static int32_t Script_IsMovable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1129,7 +1126,7 @@ static int32_t Script_IsMovable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: e1851ef9 DIFFERENT/IDENTICAL
+// PROVEN: e1851ef9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050CFD0/0x140155A50
 static int32_t Script_SetDontSavePosition(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1151,7 +1148,7 @@ static int32_t Script_GetDontSavePosition(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ce1aeefd DIFFERENT/IDENTICAL
+// PROVEN: ce1aeefd IDENTICAL/IDENTICAL
 // OFFSET: 0x0050D080/0x140155B30
 static int32_t Script_SetResizable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1160,7 +1157,8 @@ static int32_t Script_SetResizable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D450
+// PROVEN: f0df0bae IDENTICAL/UNPROVEN
+// OFFSET: 0x0050D0D0/0x140155BA0
 static int32_t Script_IsResizable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1269,7 +1267,8 @@ static int32_t Script_IsUserPlaced(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051D7D0
+// PROVEN: a7292620 IDENTICAL/UNPROVEN
+// OFFSET: 0x0050D450/0x140155FC0
 static int32_t Script_SetClampedToScreen(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1778,7 +1777,7 @@ static int32_t Script_IsIgnoringDepth(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ec30d630 DIFFERENT/IDENTICAL
+// PROVEN: ec30d630 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050E580/0x1401574E0
 static int32_t Script_SetPropagateKeyboardInput(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -1805,13 +1804,15 @@ static int32_t Script_GetPropagateKeyboardInput(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051E9D0
+// PROVEN: 14325063 IDENTICAL/NONE
+// OFFSET: 0x0050E650
 void CSimpleFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFrame::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0051B080
+// PROVEN: d8b12dd4 IDENTICAL/NONE
+// OFFSET: 0x0050B000
 void CSimpleFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFrame::s_metatable);

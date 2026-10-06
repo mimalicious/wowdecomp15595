@@ -883,11 +883,7 @@ void CMapObjGroup::FillTransparencyVB(CGxBuf* buf) {
         vertex->m_position = this->m_vertexList[i];
         vertex->m_normal = this->m_normalList[i];
 
-        CImVector gray;
-        gray.b = 0x7F;
-        gray.g = 0x7F;
-        gray.r = 0x7F;
-        gray.a = this->m_colorVertexList[i].a;
+        CImVector gray(0x7F, 0x7F, 0x7F, this->m_colorVertexList[i].a);
         CImVector color;
 
         if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {

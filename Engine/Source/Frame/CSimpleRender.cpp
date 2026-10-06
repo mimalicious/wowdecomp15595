@@ -752,11 +752,7 @@ void CSimpleRender::DrawBatch(CRenderBatch* batch) {
                     GxFormatColor(color);
                     vertices->c = color;
                 } else {
-                    CImVector white;
-                    white.b = 0xFF;
-                    white.g = 0xFF;
-                    white.r = 0xFF;
-                    white.a = 0xFF;
+                    CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
                     vertices->c = white;
                 }
 
@@ -1210,31 +1206,22 @@ void CSimpleFontString::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, c
     }
 }
 
-// OFFSET: %0x005087E0
+// PROVEN: 0e41d60a IDENTICAL/NONE
+// OFFSET: 0x004F85A0
 void CSimpleFontString::StoreAnimPosition() {
-    if (!this->m_animPosition) {
-        return;
-    }
-
-    C3Vector& position = this->m_animPosition->m_position[0];
-    position.x = this->m_justificationOffset.x * this->m_layoutScale + this->m_rect.minX;
-    position.y = this->m_justificationOffset.y * this->m_layoutScale + this->m_rect.minY;
-    position.z = this->m_layoutDepth;
-
-    if (this->m_string) {
-        TextBlockSetStringPos(this->m_string, this->m_animPosition->m_position[0]);
-    }
-}
-
-// OFFSET: %0x00508840
-void CSimpleFontString::AnimData_Init() {
-    CLayoutFrame::AnimData_Init();
     this->m_animBaseRotation = this->m_rotation;
     this->m_animBaseScale = this->m_scale;
-    this->StoreAnimPosition();
+    C3Vector* position = this->AnimData_GetPositionPtr();
+    float x = this->m_justificationOffset.x * this->m_layoutScale + this->m_rect.minX;
+    float y = this->m_justificationOffset.y * this->m_layoutScale + this->m_rect.minY;
+    float z = this->m_layoutDepth;
+    position->x = x;
+    position->y = y;
+    position->z = z;
+    this->AnimData_StorePosition(position);
 }
 
-// OFFSET: %0x0050A8F0
+// OFFSET: 0x004FA570/0x14013E2D0
 void CSimpleFontString::AnimData_ResetPositionData() {
     CLayoutFrame::AnimData_ResetPositionData();
     this->m_rotation = this->m_animBaseRotation;
@@ -1250,7 +1237,17 @@ void CSimpleFontString::AnimData_ResetPositionData() {
         }
     }
 
-    this->StoreAnimPosition();
+    C3Vector* position = this->AnimData_GetPositionPtr();
+    float x = this->m_justificationOffset.x * this->m_layoutScale + this->m_rect.minX;
+    float y = this->m_justificationOffset.y * this->m_layoutScale + this->m_rect.minY;
+    float z = this->m_layoutDepth;
+    position->x = x;
+    position->y = y;
+    position->z = z;
+
+    if (this->m_string) {
+        TextBlockSetStringPos(this->m_string, *position);
+    }
 }
 
 // PROVEN: 719c2258 IDENTICAL/DIFFERENT
@@ -1565,28 +1562,31 @@ bool CSimpleFontString::SetLayoutDepth(float depth, bool force) {
     return true;
 }
 
-// OFFSET: %0x0050A760
+// PROVEN: 60db96b8 IDENTICAL/NONE
+// OFFSET: 0x004FA380
 void CSimpleFontString::PreOnAnimUpdate() {
-    if (!this->m_animating) {
-        return;
-    }
-
-    if (this->m_string) {
-        TextBlockSetStringPos(this->m_string, this->m_animPosition->m_position[0]);
-    }
-
-    if (this->m_animAlpha) {
-        this->SetVertexAlpha(this->m_animSavedAlpha);
-    }
-
-    if (this->m_string) {
-        CGxString* string = TextBlockGetStringPtr(this->m_string);
-
-        if (string) {
-            GxuFontSetRotation(string, this->m_animBaseRotation);
-            GxuFontSetScale(string, this->m_animBaseScale);
-            GxuFontStringInvalidate(string);
+    if (this->AnimData_HasActivePosition()) {
+        if (this->m_string) {
+            TextBlockSetStringPos(this->m_string, *this->AnimData_GetPositionPtr());
         }
+
+        if (this->m_string) {
+            CGxString* string = TextBlockGetStringPtr(this->m_string);
+
+            if (string) {
+                GxuFontSetRotation(string, this->m_animBaseRotation);
+                GxuFontSetScale(string, this->m_animBaseScale);
+                GxuFontStringInvalidate(string);
+            }
+        }
+    }
+
+    if (this->AnimData_HasActiveAlpha()) {
+        uint8_t alpha = this->AnimData_GetAlpha();
+        CImVector color;
+        this->GetVertexColor(color);
+        color.a = alpha;
+        this->SetVertexColor(color);
     }
 }
 
@@ -1594,11 +1594,7 @@ void CSimpleFontString::PreOnAnimUpdate() {
 void CSimpleFontString::OnColorChanged(bool changed) {
     this->CSimpleRegion::OnColorChanged(changed);
 
-    CImVector color;
-    color.b = 0xFF;
-    color.g = 0xFF;
-    color.r = 0xFF;
-    color.a = 0xFF;
+    CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
     if (this->m_hasColor) {
         const CImVector* source = this->m_hasGradient ? this->Gradient()->m_colors : &this->m_color;
@@ -1661,11 +1657,7 @@ void CSimpleFontString::UpdateString() {
         const char* text = this->GetDisplayText(width, height);
         uint32_t styleFlags = this->m_styleFlags;
 
-        CImVector color;
-        color.b = 0xFF;
-        color.g = 0xFF;
-        color.r = 0xFF;
-        color.a = 0xFF;
+        CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
         if (!(styleFlags & 0x400)) {
             bool hasColorCode = false;
@@ -1708,8 +1700,9 @@ void CSimpleFontString::UpdateString() {
 
         this->RefreshEmbeddedTextures();
 
-        if (this->m_animating) {
-            this->m_animPosition->m_position[0] = position;
+        if (this->AnimData_HasActivePosition()) {
+            C3Vector positions[4] = { position };
+            this->AnimData_StorePosition(positions);
             TextBlockSetStringPos(this->m_string, position);
         }
     }
@@ -1735,12 +1728,13 @@ void CSimpleFontString::OnFrameSizeChanged(const CRect& rect) {
         this->UpdateString();
     }
 
-    if (this->m_animating) {
-        C3Vector& stored = this->m_animPosition->m_position[0];
+    if (this->AnimData_HasActivePosition()) {
+        C3Vector& stored = *this->AnimData_GetPositionPtr();
         C3Vector previous = stored;
         stored.x = this->m_justificationOffset.x * this->m_layoutScale + this->m_rect.minX;
         stored.y = this->m_justificationOffset.y * this->m_layoutScale + this->m_rect.minY;
         stored.z = this->m_layoutDepth;
+        this->AnimData_StorePosition(&stored);
 
         if (this->m_string) {
             C3Vector delta = stored - previous;
@@ -2377,7 +2371,7 @@ void CSimpleTexture::SetTexCoord(const CRect& texRect) {
 }
 
 // INLINED
-void CSimpleTexture::SetPosition(const CRect& rect, C3Vector* position) {
+inline void CSimpleTexture::SetPosition(const CRect& rect, C3Vector* position) {
     position[0].x = rect.minX;
     position[0].y = rect.maxY;
     position[0].z = this->m_layoutDepth;
@@ -2392,12 +2386,12 @@ void CSimpleTexture::SetPosition(const CRect& rect, C3Vector* position) {
     position[3].z = this->m_layoutDepth;
 }
 
-// OFFSET: %0x00508F30
+// OFFSET: 0x004F8C50
 void CSimpleTexture::OnFrameSizeChanged(const CRect& rect) {
     this->CLayoutFrame::OnFrameSizeChanged(rect);
 
-    if (this->m_animating) {
-        C3Vector* stored = this->m_animPosition->m_position;
+    if (this->AnimData_HasActivePosition()) {
+        C3Vector* stored = this->AnimData_GetPositionPtr();
         C3Vector positions[4];
         memcpy(positions, stored, sizeof(positions));
         this->SetPosition(this->m_rect, stored);
@@ -2428,25 +2422,30 @@ void CSimpleTexture::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: %0x00509210
+// OFFSET: 0x004F8F10
 void CSimpleTexture::PreOnAnimUpdate() {
-    if (this->m_animating) {
-        memcpy(this->m_positions, this->m_animPosition->m_position, sizeof(this->m_positions));
+    if (this->AnimData_HasActivePosition()) {
+        memcpy(this->m_positions, this->AnimData_GetPositionPtr(), sizeof(this->m_positions));
+    }
 
-        if (this->m_animAlpha) {
-            this->SetVertexAlpha(this->m_animSavedAlpha);
-        }
+    if (this->AnimData_HasActiveAlpha()) {
+        uint8_t alpha = this->AnimData_GetAlpha();
+        CImVector color;
+        this->GetVertexColor(color);
+        color.a = alpha;
+        this->SetVertexColor(color);
     }
 }
 
-// OFFSET: %0x00509270
-void CSimpleTexture::AnimData_Init() {
-    CLayoutFrame::AnimData_Init();
-    this->SetPosition(this->m_rect, this->m_animPosition->m_position);
-    memcpy(this->m_positions, this->m_animPosition->m_position, sizeof(this->m_positions));
+// OFFSET: 0x004F9030
+void CSimpleTexture::StoreAnimPosition() {
+    C3Vector positions[4];
+    this->SetPosition(this->m_rect, positions);
+    this->AnimData_StorePosition(positions);
+    memcpy(this->m_positions, positions, sizeof(this->m_positions));
 }
 
-// OFFSET: %0x00509300
+// OFFSET: 0x004F8F90
 void CSimpleTexture::AnimData_ResetPositionData() {
     CLayoutFrame::AnimData_ResetPositionData();
     this->SetPosition(this->m_rect, this->m_positions);
@@ -3096,11 +3095,7 @@ void CSimpleTexture::LoadXML(linkObject* node, CStatus* status) {
             const char* name = this->GetName();
             status->Add(STATUS_WARNING, "Texture %s: Unable to load texture file %s", name ? name : "<unnamed>", file);
 
-            CImVector missingColor;
-            missingColor.b = 0x00;
-            missingColor.g = 0xFF;
-            missingColor.r = 0x00;
-            missingColor.a = 0xFF;
+            CImVector missingColor(0x00, 0xFF, 0x00, 0xFF);
             this->SetTexture(missingColor);
         }
     }

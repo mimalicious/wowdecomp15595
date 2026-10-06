@@ -35,7 +35,8 @@ void CSimpleStatusBar::operator delete(void* ptr) {
     CSimpleStatusBar::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x0051F5B0
+// PROVEN: f9cea12a IDENTICAL/DIFFERENT
+// OFFSET: 0x0050F230/0x140158430
 void CSimpleStatusBar::RunOnMinMaxChangedScript() {
     if (this->HasScript(this->m_onMinMaxChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -69,7 +70,8 @@ int32_t CSimpleStatusBar::GetScriptMetaTable() {
     return CSimpleStatusBar::s_metatable;
 }
 
-// OFFSET: %0x0051F2A0
+// PROVEN: 0fec43d5 IDENTICAL/DIFFERENT
+// OFFSET: 0x0050EEE0/0x140158080
 FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
 
@@ -90,7 +92,8 @@ FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name
     return NULL;
 }
 
-// OFFSET: %0x0051F350
+// PROVEN: 9a450fd0 IDENTICAL/NONE
+// OFFSET: 0x0050EF90
 void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onMinMaxChanged, time, count);
@@ -130,13 +133,15 @@ void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer
     this->m_barTexture = texture;
 }
 
+// PROVEN: ebf163b1 IDENTICAL/NONE
 // OFFSET: 0x0050F0E0
 void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
     this->m_changed = 1;
 }
 
-// OFFSET: 0x0050F110
+// PROVEN: cf2e93ab IDENTICAL/NONE
+// OFFSET: 0x0050F110/0x140158320
 void CSimpleStatusBar::SetReverseFill(int32_t reverse) {
     this->m_reverseFill = reverse;
     this->m_changed = 1;
@@ -164,7 +169,8 @@ void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
     }
 }
 
-// OFFSET: %0x0051F560
+// PROVEN: f1af9da6 IDENTICAL/NONE
+// OFFSET: 0x0050F1E0
 void CSimpleStatusBar::RunOnValueChangedScript() {
     if (this->HasScript(this->m_onValueChanged)) {
         lua_State* L = FrameScript_GetContext();

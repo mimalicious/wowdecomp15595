@@ -5687,11 +5687,7 @@ void CMap::RenderFootprints() {
 
                 for (uint32_t k = 0; k < texture.unk_0004.Count(); k++) {
                     CMapFootprint* footprint = &footprints[texture.unk_0004.m_data[k]];
-                    CImVector color;
-                    color.b = 0xFF;
-                    color.g = 0xFF;
-                    color.r = 0xFF;
-                    color.a = static_cast<uint8_t>(footprint->m_alpha);
+                    CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(footprint->m_alpha));
 
                     for (uint32_t v = 0; v < footprint->m_vertices.Count(); v++) {
                         CGxVertexPT0T1& src = footprint->m_vertices.m_data[v];

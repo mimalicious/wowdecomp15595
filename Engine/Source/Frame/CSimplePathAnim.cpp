@@ -47,12 +47,14 @@ int32_t CSimplePathAnim::GetScriptMetaTable() {
     return CSimplePathAnim::s_metatable;
 }
 
-// OFFSET: %0x00537B60
+// PROVEN: f9eb47ca IDENTICAL/DIFFERENT
+// OFFSET: 0x00527AE0/0x140176E60
 CSimpleControlPoint* CSimplePathAnim::GetControlPoint(uint32_t index) {
     return index < this->m_sortedPoints.Count() ? this->m_sortedPoints[index] : NULL;
 }
 
-// OFFSET: %0x00537B90
+// PROVEN: c7c36dcd IDENTICAL/DIFFERENT
+// OFFSET: 0x00527B10/0x140176E80
 int32_t CSimplePathAnim::GetMaxControlPointOrder() {
     if (!this->m_sortedPoints.Count()) {
         return -1;
@@ -61,7 +63,8 @@ int32_t CSimplePathAnim::GetMaxControlPointOrder() {
     return this->m_sortedPoints[this->m_sortedPoints.Count() - 1]->m_order;
 }
 
-// OFFSET: %0x00537BB0
+// PROVEN: f1b8f7b7 IDENTICAL/NONE
+// OFFSET: 0x00527B30
 int32_t CSimplePathAnim::FindControlPoint(int32_t order) {
     if (order == -1) {
         return -1;

@@ -14,14 +14,22 @@ class CFramePoint;
 class CStatus;
 class linkObject;
 
-class CAnimationPosition {
+class CAnimationData {
     public:
-    static CDataAllocator s_allocator;
+    static CDataAllocator s_AnimationData;
 
     static void* operator new(size_t bytes);
     static void operator delete(void* ptr);
 
     /* 0000 */ C3Vector m_position[4];
+    /* 0030 */ uint8_t m_alpha;
+    /* 0034 */ uint32_t m_hasPosition : 1;
+    /* 0034 */ uint32_t m_hasAlpha : 1;
+
+    CAnimationData();
+    void ResetAlphaData();
+    void ResetPositionData();
+    void StorePosition(const C3Vector* position);
 };
 
 class CLayoutFrame {
@@ -37,15 +45,13 @@ class CLayoutFrame {
     /* 000C */ CFramePoint* m_framePoints[FRAMEPOINT_NUMPOINTS];
     /* 0030 */ TSList<CLayoutFrame::FRAMENODE, TSGetLink<CLayoutFrame::FRAMENODE> > m_resizeList;
     /* 003C */ uint32_t m_guard;
-    /* 0040 */ CAnimationPosition* m_animPosition;
+    /* 0040 */ CAnimationData* m_animData;
     /* 0044 */ uint32_t m_layoutFlags : 16;
     /* 0044 */ uint32_t m_resizeCounter : 8;
     /* 0044 */ uint32_t m_preload : 1;
     /* 0044 */ uint32_t m_shown : 1;
     /* 0044 */ uint32_t m_visible : 1;
     /* 0044 */ uint32_t m_loadPending : 1;
-    /* 0044 */ uint32_t m_animating : 1;
-    /* 0044 */ uint32_t m_animAlpha : 1;
     /* 0048 */ CRect m_rect;
     /* 0058 */ float m_width;
     /* 005C */ float m_height;
@@ -76,10 +82,17 @@ class CLayoutFrame {
     virtual void HideThis();
     virtual void ShowThis(bool loadPending);
     virtual void OnFrameSizeChanged(const CRect& rect);
-    virtual void AnimData_Init();
     virtual void AnimData_ResetPositionData();
+    virtual void AnimData_ResetAlphaData();
 
     CLayoutFrame();
+    uint8_t AnimData_GetAlpha();
+    C3Vector* AnimData_GetPositionPtr();
+    bool AnimData_HasActiveAlpha();
+    bool AnimData_HasActivePosition();
+    void AnimData_Init();
+    void AnimData_StoreAlpha(uint8_t alpha);
+    void AnimData_StorePosition(const C3Vector* position);
     void AddToResizeList();
     int32_t AreDependentsProtected(int32_t& deferred);
     float Bottom();

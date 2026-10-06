@@ -43,13 +43,15 @@ static int32_t Script_GetOffset(lua_State* L) {
 }
 
 
-// OFFSET: %0x0054C760
+// PROVEN: 4f1dd3c5 IDENTICAL/NONE
+// OFFSET: 0x0053C930
 void CSimpleTranslationAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleTranslationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTranslationAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B5E0
+// PROVEN: b3cb05b8 IDENTICAL/NONE
+// OFFSET: 0x0053B8D0
 void CSimpleTranslationAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTranslationAnim::s_metatable);

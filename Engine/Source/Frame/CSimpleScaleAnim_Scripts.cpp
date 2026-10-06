@@ -71,13 +71,15 @@ static int32_t Script_GetScale(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0054CD00
+// PROVEN: dd25caa4 IDENTICAL/NONE
+// OFFSET: 0x0053CED0
 void CSimpleScaleAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleScaleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScaleAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B6A0
+// PROVEN: 478b2a94 IDENTICAL/NONE
+// OFFSET: 0x0053B990
 void CSimpleScaleAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleScaleAnim::s_metatable);

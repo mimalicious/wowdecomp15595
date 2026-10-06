@@ -554,11 +554,7 @@ void CMapChunk::CreateVerticesLocal(CGxVertexPNC* v) {
                 CImVector color = *reinterpret_cast<CImVector*>(shading);
 
                 if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                    CImVector swapped;
-                    swapped.b = color.r;
-                    swapped.g = color.g;
-                    swapped.r = color.b;
-                    swapped.a = color.a;
+                    CImVector swapped(color.r, color.g, color.b, color.a);
                     v->m_color = swapped;
                 } else {
                     v->m_color = color;
@@ -588,11 +584,7 @@ void CMapChunk::CreateVerticesLocal(CGxVertexPNC* v) {
                     CImVector color = *reinterpret_cast<CImVector*>(shading);
 
                     if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
-                        CImVector swapped;
-                        swapped.b = color.r;
-                        swapped.g = color.g;
-                        swapped.r = color.b;
-                        swapped.a = color.a;
+                        CImVector swapped(color.r, color.g, color.b, color.a);
                         v->m_color = swapped;
                     } else {
                         v->m_color = color;

@@ -94,15 +94,14 @@ class CSimpleFrame : public CScriptRegion {
     /* 01E0 */ TSLink<CSimpleFrame> m_loadLink;
     /* 01E8 */ uint32_t m_alpha : 8;
     /* 01E8 */ uint32_t m_parentAlpha : 8;
-    /* 01E8 */ uint32_t m_animSavedAlpha : 8;
     /* 01E8 */ uint32_t m_drawLayerEnabled : 5;
     /* 01E8 */ uint32_t m_frameState : 2;
     /* 01E8 */ uint32_t m_isMouseDragging : 1;
-    /* 01EC */ uint32_t m_strata : 4;
-    /* 01EC */ uint32_t m_ignoreDepth : 1;
-    /* 01EC */ uint32_t m_highlightLocked : 1;
-    /* 01EC */ uint32_t m_isMouseDown : 1;
-    /* 01EC */ uint32_t m_isLoading : 1;
+    /* 01E8 */ uint32_t m_strata : 4;
+    /* 01E8 */ uint32_t m_ignoreDepth : 1;
+    /* 01E8 */ uint32_t m_highlightLocked : 1;
+    /* 01E8 */ uint32_t m_isMouseDown : 1;
+    /* 01E8 */ uint32_t m_isLoading : 1;
     /* 01EC */ uint32_t m_forceAlpha : 1;
 
     virtual ~CSimpleFrame();
@@ -115,8 +114,8 @@ class CSimpleFrame : public CScriptRegion {
     virtual bool IsDragging();
     virtual void PreOnAnimUpdate();
     virtual void StopAnimating();
-    virtual void AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha);
-    virtual void AnimDeactivated(CSimpleAnimGroup* group, int32_t last);
+    virtual void AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position);
+    virtual void AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position);
     virtual void OnLayerUpdate(float elapsedSec);
     virtual void AddAnimTranslation(CScriptRegion* region, const C2Vector& translation);
     virtual void AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians);

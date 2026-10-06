@@ -194,11 +194,7 @@ void CMap::RenderWaterRipples() {
             box.t.z = bucketRipple->m_position.z + 1.0f;
             ProjectTex2dMakeMatrices(texMatrix, fadeMatrix, box, &spin, 0.5f, 1);
 
-            CImVector color;
-            color.b = 0xFF;
-            color.g = 0xFF;
-            color.r = 0xFF;
-            color.a = static_cast<uint8_t>(static_cast<int32_t>(bucketRipple->m_alpha * 255.0f));
+            CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(static_cast<int32_t>(bucketRipple->m_alpha * 255.0f)));
 
             if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
                 CImVector swapped = color;

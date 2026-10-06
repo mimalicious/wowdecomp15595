@@ -9,13 +9,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x005461E0
+// PROVEN: 8881e07b IDENTICAL/NONE
+// OFFSET: 0x00536E70
 void CSimpleMessageFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleMessageFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleMessageFrame::RegisterScriptMethods);
 }
 
-// OFFSET: %0x00545670
+// PROVEN: b20eecad IDENTICAL/NONE
+// OFFSET: 0x00536300
 void CSimpleMessageFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleMessageFrame::s_metatable);
@@ -281,11 +283,7 @@ static int32_t Script_AddMessage(lua_State* L) {
         const char* text = lua_tolstring(L, 2, NULL);
 
         if (text && *text) {
-            CImVector color;
-            color.b = 0xFF;
-            color.g = 0xFF;
-            color.r = 0xFF;
-            color.a = 0xFF;
+            CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
 
             if (lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5)) {
                 FrameScript_GetColor(L, 3, color);

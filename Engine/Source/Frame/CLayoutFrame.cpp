@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <typeinfo>
 #include "Engine/Source/Frame/CLayoutFrame.h"
@@ -35,17 +36,50 @@ static const FRAMEPOINT s_topPoints[3] = { FRAMEPOINT_TOPLEFT, FRAMEPOINT_TOP, F
 // STATIC: %0x00BB8320
 static TSExplicitList<CLayoutFrame, offsetof(CLayoutFrame, m_resizeLink)> s_resizePendingList;
 
-// STATIC: %0x00CD12AC
-CDataAllocator CAnimationPosition::s_allocator(sizeof(CAnimationPosition), 5);
+// STATIC: 0x00DD3938
+CDataAllocator CAnimationData::s_AnimationData(sizeof(CAnimationData), 5);
 
 // INLINED
-void* CAnimationPosition::operator new(size_t bytes) {
-    return CAnimationPosition::s_allocator.GetData(0, typeid(CAnimationPosition).raw_name(), SLOG_OBJECT);
+void* CAnimationData::operator new(size_t bytes) {
+    return CAnimationData::s_AnimationData.GetData(0, typeid(CAnimationData).raw_name(), SLOG_OBJECT);
 }
 
 // INLINED
-void CAnimationPosition::operator delete(void* ptr) {
-    CAnimationPosition::s_allocator.PutData(ptr, NULL, 0);
+void CAnimationData::operator delete(void* ptr) {
+    CAnimationData::s_AnimationData.PutData(ptr, NULL, 0);
+}
+
+// INLINED
+CAnimationData::CAnimationData() {
+    this->ResetAlphaData();
+    this->ResetPositionData();
+}
+
+// INLINED
+void CAnimationData::ResetAlphaData() {
+    this->m_hasAlpha = 0;
+    this->m_alpha = 0xFF;
+}
+
+// INLINED
+void CAnimationData::ResetPositionData() {
+    this->m_hasPosition = 0;
+
+    for (int32_t i = 0; i < 4; i++) {
+        this->m_position[i].x = 0.0f;
+        this->m_position[i].y = 0.0f;
+        this->m_position[i].z = 0.0f;
+    }
+}
+
+// PROVEN: ddb8da15 IDENTICAL/NONE
+// OFFSET: 0x005072C0
+void CAnimationData::StorePosition(const C3Vector* position) {
+    this->m_hasPosition = 1;
+
+    for (int32_t i = 0; i < 4; i++) {
+        this->m_position[i] = position[i];
+    }
 }
 
 // INLINED
@@ -598,14 +632,12 @@ void CLayoutFrame::ResizePending() {
 
 // OFFSET: %0x005184D0
 CLayoutFrame::CLayoutFrame() {
-    this->m_animPosition = NULL;
+    this->m_animData = NULL;
     this->m_layoutFlags = 0;
     this->m_preload = 0;
     this->m_shown = 0;
     this->m_visible = 0;
     this->m_loadPending = 0;
-    this->m_animating = 0;
-    this->m_animAlpha = 0;
     this->m_rect.minY = 0.0f;
     this->m_rect.minX = 0.0f;
     this->m_rect.maxY = 0.0f;
@@ -1348,9 +1380,9 @@ void CLayoutFrame::DestroyLayout() {
 
 // OFFSET: [%0x0051A1E0, %0x0051A440]
 CLayoutFrame::~CLayoutFrame() {
-    if (this->m_animPosition) {
-        delete this->m_animPosition;
-        this->m_animPosition = NULL;
+    if (this->m_animData) {
+        delete this->m_animData;
+        this->m_animData = NULL;
     }
 
     this->DestroyLayout();
@@ -1466,20 +1498,83 @@ void CLayoutFrame::HideThis() {
 void CLayoutFrame::ShowThis(bool loadPending) {
 }
 
-// OFFSET: %0x005191C0
+// OFFSET: 0x00508C70/0x1401507C0
 void CLayoutFrame::AnimData_Init() {
     this->Resize(1);
-    this->m_animating = 1;
-    this->m_animAlpha = 0;
 
-    if (!this->m_animPosition) {
-        this->m_animPosition = new CAnimationPosition();
+    if (!this->m_animData) {
+        this->m_animData = new CAnimationData();
     }
 }
 
-// OFFSET: %0x005192D0
+// OFFSET: 0x00508DB0/0x140150960
 void CLayoutFrame::AnimData_ResetPositionData() {
-    this->m_animating = 0;
-    this->m_animAlpha = 0;
+    if (this->m_animData) {
+        this->m_animData->ResetPositionData();
+    }
+
     this->Resize(1);
+}
+
+// PROVEN: 51a9da86 IDENTICAL/NONE
+// OFFSET: 0x00507A40/0x14014EF00
+void CLayoutFrame::AnimData_ResetAlphaData() {
+    if (this->m_animData) {
+        this->m_animData->ResetAlphaData();
+    }
+}
+
+// PROVEN: e0115494 IDENTICAL/NONE
+// OFFSET: 0x00507A50
+bool CLayoutFrame::AnimData_HasActivePosition() {
+    if (this->m_animData) {
+        return this->m_animData->m_hasPosition;
+    }
+
+    return false;
+}
+
+// PROVEN: 0bbb489e IDENTICAL/NONE
+// OFFSET: 0x00507A70
+bool CLayoutFrame::AnimData_HasActiveAlpha() {
+    if (this->m_animData) {
+        return this->m_animData->m_hasAlpha;
+    }
+
+    return false;
+}
+
+// PROVEN: 5d34ab29 IDENTICAL/NONE
+// OFFSET: 0x00507A90
+void CLayoutFrame::AnimData_StorePosition(const C3Vector* position) {
+    if (this->m_animData) {
+        this->m_animData->StorePosition(position);
+    }
+}
+
+// PROVEN: 27f3b041 IDENTICAL/NONE
+// OFFSET: 0x00507AB0/0x14014EFD0
+C3Vector* CLayoutFrame::AnimData_GetPositionPtr() {
+    return this->m_animData->m_position;
+}
+
+// PROVEN: d0a44095 IDENTICAL/NONE
+// OFFSET: 0x00507AC0/0x14014EFE0
+void CLayoutFrame::AnimData_StoreAlpha(uint8_t alpha) {
+    CAnimationData* data = this->m_animData;
+
+    if (data) {
+        data->m_hasAlpha = 1;
+        data->m_alpha = alpha;
+    }
+}
+
+// PROVEN: 959e0ddf IDENTICAL/NONE
+// OFFSET: 0x00507AE0
+uint8_t CLayoutFrame::AnimData_GetAlpha() {
+    if (this->m_animData) {
+        return this->m_animData->m_alpha;
+    }
+
+    return 0xFF;
 }

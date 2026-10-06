@@ -27,13 +27,15 @@ static int32_t Script_GetChange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D3E0
+// PROVEN: 04a0287c IDENTICAL/NONE
+// OFFSET: 0x0053D5B0
 void CSimpleAlphaAnim::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleAlphaAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAlphaAnim::RegisterScriptMethods);
 }
 
-// OFFSET: %0x0054B7B0
+// PROVEN: 6e05b6b9 IDENTICAL/NONE
+// OFFSET: 0x0053BAA0
 void CSimpleAlphaAnim::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleAlphaAnim::s_metatable);

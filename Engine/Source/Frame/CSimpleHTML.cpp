@@ -44,14 +44,16 @@ void CSimpleHTML::operator delete(void* ptr) {
     }
 }
 
-// OFFSET: %0x005318B0
+// PROVEN: 65fa2917 IDENTICAL/NONE
+// OFFSET: 0x00521A20
 void CSimpleHTML::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
         this->m_hyperlinksDirty = 1;
     }
 }
 
-// OFFSET: %0x005318D0
+// PROVEN: 0716f04d IDENTICAL/DIFFERENT
+// OFFSET: 0x00521A40/0x14016F5A0
 void CSimpleHTML::SetHyperlinkFormat(const char* format) {
     if (this->m_hyperlinkFormat) {
         SMemFree(this->m_hyperlinkFormat, __FILE__, __LINE__, 0);
@@ -60,7 +62,8 @@ void CSimpleHTML::SetHyperlinkFormat(const char* format) {
     this->m_hyperlinkFormat = SStrDupA(format, __FILE__, __LINE__);
 }
 
-// OFFSET: %0x00531920
+// PROVEN: 844d1e5b IDENTICAL/DIFFERENT
+// OFFSET: 0x00521A90/0x14016F600
 void CSimpleHTML::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
 
@@ -375,7 +378,8 @@ void CSimpleHTML::RefreshHyperlinks() {
     }
 }
 
-// OFFSET: %0x00532960
+// PROVEN: a9a44334 IDENTICAL/NONE
+// OFFSET: 0x005219E0
 void CSimpleHTML::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 

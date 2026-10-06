@@ -162,11 +162,7 @@ void Liquid::CMaterialSettings::InitTexture() {
                 texture = TextureCacheGetTexture(name);
 
                 if (!texture) {
-                    CImVector color;
-                    color.b = 0x00;
-                    color.g = 0xFF;
-                    color.r = 0x00;
-                    color.a = 0xFF;
+                    CImVector color(0x00, 0xFF, 0x00, 0xFF);
                     texture = TextureCreateSolid(color);
                 }
             } else {

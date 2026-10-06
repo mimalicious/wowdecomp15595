@@ -18,7 +18,8 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0053EEB0
+// PROVEN: 5e353e6c IDENTICAL/UNPROVEN
+// OFFSET: 0x0052EF10/0x14017FDD0
 static int32_t Script_IsProtected(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -37,7 +38,8 @@ static int32_t Script_IsProtected(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0053EF40
+// PROVEN: abb85e3b IDENTICAL/UNPROVEN
+// OFFSET: 0x0052EFA0/0x14017FE70
 static int32_t Script_CanChangeProtectedState(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -600,14 +602,16 @@ static int32_t Script_StopAnimating(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005404B0
+// PROVEN: 78631107 IDENTICAL/UNPROVEN
+// OFFSET: 0x00530510/0x140181810
 static int32_t Script_IsDragging(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     lua_pushboolean(L, region->IsDragging());
     return 1;
 }
 
-// OFFSET: %0x00540500
+// PROVEN: bbfc40ce IDENTICAL/UNPROVEN
+// OFFSET: 0x00530560/0x140181860
 static int32_t Script_IsMouseOver(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     float top = lua_isnumber(L, 2) ? static_cast<float>(lua_tonumber(L, 2)) : 0.0f;

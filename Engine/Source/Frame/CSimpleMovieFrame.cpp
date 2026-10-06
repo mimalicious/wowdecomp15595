@@ -782,11 +782,7 @@ void CSimpleMovieFrame::Render() {
     GxXformViewport(minX, maxX, minY, maxY, minZ, maxZ);
     GxXformSetViewport(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
 
-    CImVector clearColor;
-    clearColor.b = 0;
-    clearColor.g = 0;
-    clearColor.r = 0;
-    clearColor.a = 0xFF;
+    CImVector clearColor(0, 0, 0, 0xFF);
     GxSceneClear(31, clearColor);
 
     C44Matrix view;

@@ -180,11 +180,7 @@ CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(p
         this->m_highlightTextures[i] = data ? new (data) CSimpleTexture(this, 2, 0, false) : NULL;
     }
 
-    CImVector highlightColor;
-    highlightColor.b = 0x60;
-    highlightColor.g = 0x60;
-    highlightColor.r = 0x60;
-    highlightColor.a = 0xFF;
+    CImVector highlightColor(0x60, 0x60, 0x60, 0xFF);
 
     for (uint32_t i = 0; i < 3; i++) {
         this->m_highlightTextures[i]->SetTexture(highlightColor);
@@ -194,11 +190,7 @@ CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(p
     this->m_cursorTexture = data ? new (data) CSimpleTexture(this, 3, 0, true) : NULL;
     this->m_cursorTexture->Hide();
 
-    CImVector cursorColor;
-    cursorColor.b = 0xFF;
-    cursorColor.g = 0xFF;
-    cursorColor.r = 0xFF;
-    cursorColor.a = 0xFF;
+    CImVector cursorColor(0xFF, 0xFF, 0xFF, 0xFF);
     this->m_cursorTexture->SetTexture(cursorColor);
 
     this->m_enterPressedCallback.m_handler = NULL;
@@ -284,7 +276,8 @@ void CSimpleEditBox::RunOnCursorChangedScript(float x, float y, float width, flo
     this->RunScript(this->m_onCursorChanged, 4, NULL);
 }
 
-// OFFSET: %0x00526F60
+// PROVEN: 6664f285 IDENTICAL/NONE
+// OFFSET: 0x005171C0
 void CSimpleEditBox::RunOnCharCompositionScript(const char* text) {
     if (!this->HasScript(this->m_onCharComposition)) {
         return;
@@ -295,7 +288,8 @@ void CSimpleEditBox::RunOnCharCompositionScript(const char* text) {
     this->RunScript(this->m_onCharComposition, 1, NULL);
 }
 
-// OFFSET: %0x00525F10
+// PROVEN: 8653e390 IDENTICAL/DIFFERENT
+// OFFSET: 0x00516140/0x140160950
 FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleHyperlinkedFrame::GetScriptByName(name, data);
 
@@ -354,7 +348,8 @@ FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, 
     return NULL;
 }
 
-// OFFSET: %0x00526200
+// PROVEN: 587751d6 IDENTICAL/NONE
+// OFFSET: 0x00516430
 void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEnterPressed, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onEscapePressed, time, count);
@@ -379,7 +374,8 @@ void CSimpleEditBox::SetAutoFocus(int32_t enable) {
     }
 }
 
-// OFFSET: %0x00526330
+// PROVEN: fb84e1f0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00516560/0x140160CB0
 void CSimpleEditBox::SetCountInvisibleLetters(int32_t enable) {
     if (enable) {
         this->m_editBoxFlags |= 0x20;
@@ -397,7 +393,8 @@ void CSimpleEditBox::SetNumeric(int32_t enable) {
     }
 }
 
-// OFFSET: %0x00526370
+// PROVEN: cb86e0ca IDENTICAL/DIFFERENT
+// OFFSET: 0x005165A0/0x140160CF0
 void CSimpleEditBox::SetPassword(int32_t enable) {
     if (enable) {
         this->m_editBoxFlags |= 0x8;
@@ -420,12 +417,14 @@ const char* CSimpleEditBox::GetInputLanguageString() {
     return CSimpleEditBox::s_inputLanguageNames[this->m_inputLanguage];
 }
 
-// OFFSET: %0x005263C0
+// PROVEN: e9bedebb IDENTICAL/DIFFERENT
+// OFFSET: 0x005165F0/0x140160D50
 void CSimpleEditBox::ToggleInputLanguage() {
     OsIMESetLanguageMode(this->m_inputLanguage == 0);
 }
 
-// OFFSET: %0x005263E0
+// PROVEN: 69207952 IDENTICAL/NONE
+// OFFSET: 0x00516610
 int32_t CSimpleEditBox::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     int32_t result = CSimpleFrame::OnLayerMouseUp(evt, btn);
 
@@ -548,7 +547,8 @@ int32_t CSimpleEditBox::GetNumToLen(int32_t offset, int32_t count, bool skipHype
     return length;
 }
 
-// OFFSET: %0x00526660
+// PROVEN: 133e362e IDENTICAL/DIFFERENT
+// OFFSET: 0x00516890/0x140160E80
 int32_t CSimpleEditBox::GetLenToNum(int32_t offset, int32_t length) {
     uint32_t* info = &this->m_textInfo[offset];
     int32_t count = 0;
@@ -762,7 +762,8 @@ void CSimpleEditBox::DeleteHighlight(int32_t script) {
     this->DeleteSubstring(left, right, script);
 }
 
-// OFFSET: %0x00526AB0
+// PROVEN: 1684e3c9 IDENTICAL/NONE
+// OFFSET: 0x00516D10
 void CSimpleEditBox::CopyToClipboard() {
     int32_t left = this->m_highlightLeft;
     int32_t right = this->m_highlightRight;
@@ -794,7 +795,8 @@ void CSimpleEditBox::SetCursorPosition(int32_t position) {
     this->m_dirtyBits |= 0x4;
 }
 
-// OFFSET: %0x00526BA0
+// PROVEN: 14211ad8 IDENTICAL/NONE
+// OFFSET: 0x00516E00
 void CSimpleEditBox::DisableIME() {
     if (this->m_candidatesFrame) {
         this->m_candidatesFrame->Hide();
@@ -813,11 +815,7 @@ void CSimpleEditBox::CreateClauseHighlight() {
     void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
     this->m_clauseHighlight = data ? new (data) CSimpleTexture(this, 3, 0, true) : NULL;
 
-    CImVector color;
-    color.b = 0x10;
-    color.g = 0x20;
-    color.r = 0x20;
-    color.a = 0xFF;
+    CImVector color(0x10, 0x20, 0x20, 0xFF);
     this->m_clauseHighlight->SetTexture(color);
     this->m_clauseHighlight->SetBlendMode(GxBlend_Add);
     this->m_clauseHighlight->SetHeight(this->m_fontString->GetFontHeight(true));
@@ -1028,7 +1026,8 @@ void CSimpleEditBox::DeleteBackwardWord(int32_t script) {
     }
 }
 
-// OFFSET: %0x00527750
+// PROVEN: ad1f3dd4 IDENTICAL/NONE
+// OFFSET: 0x005179B0
 void CSimpleEditBox::DeleteToStart(int32_t script) {
     int32_t count = this->GetLenToNum(0, this->m_cursorPos);
 
@@ -1037,7 +1036,8 @@ void CSimpleEditBox::DeleteToStart(int32_t script) {
     }
 }
 
-// OFFSET: %0x00527780
+// PROVEN: 650afc03 IDENTICAL/NONE
+// OFFSET: 0x005179E0
 void CSimpleEditBox::DeleteToEnd(int32_t script) {
     int32_t count = this->GetLenToNum(this->m_cursorPos, this->m_textLength - this->m_cursorPos);
 
@@ -1046,7 +1046,8 @@ void CSimpleEditBox::DeleteToEnd(int32_t script) {
     }
 }
 
-// OFFSET: %0x005277C0
+// PROVEN: 943b1dcf IDENTICAL/NONE
+// OFFSET: 0x00517A20
 void CSimpleEditBox::Move(int32_t count, int32_t highlight) {
     if (!count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -1077,7 +1078,8 @@ void CSimpleEditBox::Move(int32_t count, int32_t highlight) {
     this->m_dirtyBits |= 0x4;
 }
 
-// OFFSET: %0x00527870
+// PROVEN: 50fde6b9 IDENTICAL/NONE
+// OFFSET: 0x00517AD0
 void CSimpleEditBox::MoveForward(int32_t highlight) {
     int32_t cursor = this->m_cursorPos;
 
@@ -1169,7 +1171,8 @@ void CSimpleEditBox::MoveForwardWord(int32_t highlight) {
     }
 }
 
-// OFFSET: %0x00527AF0
+// PROVEN: a0a6f7f5 IDENTICAL/NONE
+// OFFSET: 0x00517D50
 void CSimpleEditBox::MoveBackward(int32_t highlight) {
     if (this->m_cursorPos > 0) {
         this->Move(-1, highlight);
@@ -1243,7 +1246,8 @@ void CSimpleEditBox::MoveBackwardWord(int32_t highlight) {
     }
 }
 
-// OFFSET: %0x00527CF0
+// PROVEN: fb0f3f54 IDENTICAL/NONE
+// OFFSET: 0x00517F50
 void CSimpleEditBox::MoveToLineStart(int32_t highlight) {
     while (this->m_cursorPos > 0) {
         int32_t cursor = this->m_cursorPos;
@@ -1278,7 +1282,8 @@ void CSimpleEditBox::MoveToLineStart(int32_t highlight) {
     }
 }
 
-// OFFSET: %0x00527DD0
+// PROVEN: 9207328a IDENTICAL/NONE
+// OFFSET: 0x00518030
 void CSimpleEditBox::MoveToLineEnd(int32_t highlight) {
     while (this->m_cursorPos < this->m_textLength) {
         int32_t cursor = this->m_cursorPos;
@@ -1313,7 +1318,8 @@ void CSimpleEditBox::MoveToLineEnd(int32_t highlight) {
     }
 }
 
-// OFFSET: %0x00527EB0
+// PROVEN: 9b3ac77a IDENTICAL/NONE
+// OFFSET: 0x00518110
 void CSimpleEditBox::MoveToStart(int32_t highlight) {
     while (this->m_cursorPos > 0) {
         int32_t cursor = this->m_cursorPos;
@@ -1343,7 +1349,8 @@ void CSimpleEditBox::MoveToStart(int32_t highlight) {
     }
 }
 
-// OFFSET: %0x00527F70
+// PROVEN: 7e62bdae IDENTICAL/NONE
+// OFFSET: 0x005181D0
 void CSimpleEditBox::MoveToEnd(int32_t highlight) {
     while (this->m_cursorPos < this->m_textLength) {
         int32_t cursor = this->m_cursorPos;
@@ -1448,7 +1455,8 @@ void CSimpleEditBox::AddHistoryLine(const char* text, const char* taint) {
     this->m_historyIndex = (this->m_historyIndex + 1) % this->m_historyLines;
 }
 
-// OFFSET: %0x00528220
+// PROVEN: f5091a4c IDENTICAL/DIFFERENT
+// OFFSET: 0x00518480/0x1401634B0
 void CSimpleEditBox::ClearHistory() {
     this->m_historyIndex = 0;
 
@@ -1549,7 +1557,8 @@ int32_t CSimpleEditBox::ConvertCoordinateToIndex(float x, float y, int32_t& inde
     return 1;
 }
 
-// OFFSET: %0x00528520
+// PROVEN: 8344ffc3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00518780/0x140163AB0
 void CSimpleEditBox::MakeTextVisible(int32_t position, float offset, float width) {
     if (this->m_editBoxFlags & 0x2) {
         return;
@@ -1735,7 +1744,8 @@ void CSimpleEditBox::UpdateHighlightArea(CSimpleRegion* region, int32_t left, in
     }
 }
 
-// OFFSET: %0x00528CF0
+// PROVEN: 4937c9dc IDENTICAL/DIFFERENT
+// OFFSET: 0x00518F50/0x140164690
 void CSimpleEditBox::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
         this->UpdateSizes();
@@ -1832,7 +1842,8 @@ void CSimpleEditBox::RunOnTextSetScript(const char* taint) {
     }
 }
 
-// OFFSET: %0x005291E0
+// PROVEN: 46a54e8a IDENTICAL/DIFFERENT
+// OFFSET: 0x00519480/0x140164CD0
 void CSimpleEditBox::SetEditTextInsets(float left, float right, float top, float bottom) {
     this->m_textInsets.minX = left;
     this->m_textInsets.maxX = right;
@@ -1841,7 +1852,8 @@ void CSimpleEditBox::SetEditTextInsets(float left, float right, float top, float
     this->UpdateSizes();
 }
 
-// OFFSET: %0x00529220
+// PROVEN: 76e92de6 IDENTICAL/DIFFERENT
+// OFFSET: 0x005194C0/0x140164D00
 void CSimpleEditBox::GetEditTextInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_textInsets.minX;
     right = this->m_textInsets.maxX;
@@ -1850,7 +1862,8 @@ void CSimpleEditBox::GetEditTextInsets(float& left, float& right, float& top, fl
     this->UpdateSizes();
 }
 
-// OFFSET: %0x00529260
+// PROVEN: 853899d7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00519500/0x140164D30
 void CSimpleEditBox::OnLayerShow() {
     CSimpleFrame::OnLayerShow();
 
@@ -1939,22 +1952,14 @@ void CSimpleEditBox::CreateCandidatesFrame() {
         background = new (data) CSimpleTexture(this->m_candidatesFrame, 0, 0, true);
     }
 
-    CImVector backgroundColor;
-    backgroundColor.b = 0x60;
-    backgroundColor.g = 0x60;
-    backgroundColor.r = 0x60;
-    backgroundColor.a = 0xFF;
+    CImVector backgroundColor(0x60, 0x60, 0x60, 0xFF);
     background->SetTexture(backgroundColor);
     background->SetAllPoints(this->m_candidatesFrame, 1);
 
     data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
     this->m_candidateHighlight = data ? new (data) CSimpleTexture(this->m_candidatesFrame, 2, 0, true) : NULL;
 
-    CImVector highlightColor;
-    highlightColor.b = 0x80;
-    highlightColor.g = 0x80;
-    highlightColor.r = 0x80;
-    highlightColor.a = 0xFF;
+    CImVector highlightColor(0x80, 0x80, 0x80, 0xFF);
     this->m_candidateHighlight->SetTexture(highlightColor);
 }
 
@@ -2109,7 +2114,8 @@ void CSimpleEditBox::Insert(const char* text, const char* taint, int32_t runScri
     this->RunOnSpacePressedScript();
 }
 
-// OFFSET: %0x00529970
+// PROVEN: 8da0ea58 IDENTICAL/NONE
+// OFFSET: 0x00519C10
 void CSimpleEditBox::Insert(uint32_t ch) {
     if (ch < 0x20 || ch == 0x7F) {
         if (ch == '\t') {
@@ -2396,7 +2402,8 @@ int32_t CSimpleEditBox::OnLayerIme(const CImeEvent& evt) {
     return 1;
 }
 
-// OFFSET: %0x0052A260
+// PROVEN: 152f92f8 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051A370/0x140166090
 void CSimpleEditBox::SetText(const char* text, const char* taint) {
     if (this->m_highlightLeft != this->m_highlightRight) {
         this->m_dirtyBits |= 0x2;
@@ -2642,7 +2649,8 @@ void CSimpleEditBox::UpdateDirtyBits() {
     }
 }
 
-// OFFSET: %0x00526B30
+// PROVEN: 44b103c1 IDENTICAL/NONE
+// OFFSET: 0x00516D90
 void CSimpleEditBox::SetHighlightColor(const CImVector& color) {
     for (uint32_t i = 0; i < 3; i++) {
         this->m_highlightTextures[i]->SetTexture(color);
@@ -3046,6 +3054,7 @@ int32_t CSimpleEditBox::OnLayerMouseDown(const CMouseEvent& evt, const char* btn
     return result;
 }
 
+// PROVEN: bd8733e2 IDENTICAL/NONE
 // OFFSET: 0x00516CE0
 void CSimpleEditBox::RefreshHyperlinks() {
     this->ClearHyperlinks();
@@ -3055,6 +3064,7 @@ void CSimpleEditBox::RefreshHyperlinks() {
     }
 }
 
+// PROVEN: aad21cb5 IDENTICAL/NONE
 // OFFSET: 0x00519CA0
 void CSimpleEditBox::Enable(int32_t enabled) {
     if (!enabled) {

@@ -172,14 +172,16 @@ static int32_t Script_UpdateScrollChildRect(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005491E0
+// PROVEN: 84fc49e4 IDENTICAL/NONE
+// OFFSET: 0x005395F0
 void CSimpleScrollFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleScrollFrame::s_metatable);
     CSimpleScrollFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x005497E0
+// PROVEN: 3b4eed99 IDENTICAL/NONE
+// OFFSET: 0x00539BF0
 void CSimpleScrollFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScrollFrame::RegisterScriptMethods);

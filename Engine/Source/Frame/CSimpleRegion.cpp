@@ -14,6 +14,9 @@
 #include <cmath>
 #include "Engine/Source/Tempest/CImVector.h"
 
+// STATIC: 0x00DD394C
+int32_t s_numRegions;
+
 // STATIC: %0x00CD12C0
 CDataAllocator CGradient::s_allocator(sizeof(CGradient), 5);
 
@@ -86,7 +89,8 @@ uint8_t CSimpleRegion::GetVertexAlpha() {
     return color.a;
 }
 
-// OFFSET: %0x00508A40
+// PROVEN: 74d0fb14 IDENTICAL/NONE
+// OFFSET: 0x004F87F0
 void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
     if (ignore != this->m_ignoreParentAlpha) {
         this->m_ignoreParentAlpha = ignore;
@@ -94,7 +98,8 @@ void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
     }
 }
 
-// OFFSET: %0x0050AF30
+// PROVEN: 9747124f IDENTICAL/DIFFERENT
+// OFFSET: 0x004FAA60/0x14013E7D0
 void CSimpleRegion::SetParent(CSimpleFrame* parent) {
     this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
 }
@@ -118,7 +123,8 @@ int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
     return frame->IsProtected() == 0;
 }
 
-// OFFSET: %0x0050AB90
+// PROVEN: b9f67c7d IDENTICAL/DIFFERENT
+// OFFSET: 0x004FA850/0x1401A1AA0
 void CSimpleRegion::GetBaseColor(CImVector& color) {
     const CImVector* source = this->m_hasGradient ? this->Gradient()->m_colors : (this->m_hasColor ? &this->m_color : NULL);
 
@@ -127,16 +133,14 @@ void CSimpleRegion::GetBaseColor(CImVector& color) {
     }
 }
 
-// OFFSET: %0x0051A490
+// PROVEN: 3c7c8b85 IDENTICAL/DIFFERENT
+// OFFSET: 0x0050A470/0x1401525F0
 void CSimpleRegion::GetVertexColor(CImVector& color) {
     if (this->m_hasColor) {
         color = this->m_color;
         color.a = this->m_vertexAlpha;
     } else {
-        color.b = 0xFF;
-        color.g = 0xFF;
-        color.r = 0xFF;
-        color.a = 0xFF;
+        color = CImVector(0xFFFFFFFF);
     }
 }
 
@@ -289,7 +293,8 @@ void CSimpleRegion::SetVertexColor(const CImVector& color) {
     this->OnColorChanged(changed);
 }
 
-// OFFSET: %0x0051A9C0
+// PROVEN: 64591d67 IDENTICAL/DIFFERENT
+// OFFSET: 0x0050A9A0/0x140152B80
 void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region && region != this) {
         return;
@@ -325,10 +330,7 @@ void CSimpleRegion::EnableGradient(bool enable) {
 
         this->m_hasGradient = 0;
         this->m_vertexAlpha = 0xFF;
-        this->m_color.b = 0xFF;
-        this->m_color.g = 0xFF;
-        this->m_color.r = 0xFF;
-        this->m_color.a = 0xFF;
+        this->m_color = CImVector(0xFFFFFFFF);
     }
 }
 
@@ -383,45 +385,52 @@ void CSimpleRegion::OnColorChanged(bool changed) {
     }
 }
 
-// OFFSET: %0x0051AD40
-void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
-    if (first && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+// PROVEN: a62151d3 IDENTICAL/NONE
+// OFFSET: 0x0050AD20
+void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
+    if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
         this->AnimData_Init();
     }
 
-    if (!this->m_animAlpha && hasAlpha) {
-        this->m_animAlpha = 1;
-        this->m_animSavedAlpha = this->GetVertexAlpha();
+    if (alpha) {
+        this->AnimData_StoreAlpha(this->GetVertexAlpha());
+    }
+
+    if (position) {
+        this->StoreAnimPosition();
     }
 }
 
-// OFFSET: %0x0051ADD0
-void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
-    if (this->m_animAlpha) {
-        this->m_animAlpha = this->HasActiveAnimOfType(CSimpleAlphaAnim::GetObjectType());
-
-        if (!this->m_animAlpha) {
-            this->SetVertexAlpha(this->m_animSavedAlpha);
-        }
+// PROVEN: 153a2cba IDENTICAL/NONE
+// OFFSET: 0x0050AD90
+void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
+    if (alpha) {
+        uint8_t value = this->AnimData_GetAlpha();
+        CImVector color;
+        this->GetVertexColor(color);
+        color.a = value;
+        this->SetVertexColor(color);
+        this->AnimData_ResetAlphaData();
     }
 
-    if (last && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+    if (position) {
         this->AnimData_ResetPositionData();
     }
 }
 
+// PROVEN: f4343a83 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void CSimpleRegion::StoreAnimPosition() {
+}
+
 // OFFSET: %0x0051AE80
-CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t subLevel, bool show) {
-    this->m_color.b = 0xFF;
-    this->m_color.g = 0xFF;
-    this->m_color.r = 0xFF;
-    this->m_color.a = 0xFF;
+CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t subLevel, bool show) : m_color(0xFFFFFFFF) {
     this->m_drawLayer = 0;
     this->m_hasGradient = 0;
     this->m_hasColor = 0;
     this->m_ignoreParentAlpha = 0;
-    this->m_animSavedAlpha = 0xFF;
     this->m_vertexAlpha = 0;
+    s_numRegions++;
 
     if (frame) {
         this->SetFrame(frame, drawLayer, subLevel, show);
@@ -432,6 +441,7 @@ CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t sub
 CSimpleRegion::~CSimpleRegion() {
     this->SetFrame(NULL, 1, 0, false);
     this->EnableGradient(false);
+    s_numRegions--;
 }
 
 // PROVEN: a61fca48 IDENTICAL/IDENTICAL

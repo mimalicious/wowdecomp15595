@@ -60,11 +60,7 @@ void CGSimpleHealthBar::SetValue(float value) {
 
     float percent = this->GetAnimValue();
 
-    CImVector color;
-    color.b = 0;
-    color.g = percent <= 0.2f ? 0 : 0xFF;
-    color.r = percent <= 0.2f ? 0xFF : 0;
-    color.a = 0xFF;
+    CImVector color(0, percent <= 0.2f ? 0 : 0xFF, percent <= 0.2f ? 0xFF : 0, 0xFF);
     this->SetStatusBarColor(color);
     this->m_autoColor = 1;
 }

@@ -9,13 +9,15 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00547F40
+// PROVEN: 4170c703 IDENTICAL/NONE
+// OFFSET: 0x005384F0
 void CSimpleMessageScrollFrame::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleMessageScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleMessageScrollFrame::RegisterScriptMethods);
 }
 
-// OFFSET: %0x005469F0
+// PROVEN: a22bd6bb IDENTICAL/NONE
+// OFFSET: 0x00536EB0
 void CSimpleMessageScrollFrame::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleMessageScrollFrame::s_metatable);
@@ -312,7 +314,8 @@ static int32_t Script_ScrollToBottom(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547640
+// PROVEN: 9ff129e2 IDENTICAL/UNPROVEN
+// OFFSET: 0x00537CB0/0x14018ACD0
 static int32_t Script_SetScrollOffset(lua_State* L) {
     if (lua_isnumber(L, 2)) {
         CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
@@ -377,7 +380,8 @@ static int32_t Script_GetNumLinesDisplayed(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005478C0
+// PROVEN: 34d572cb IDENTICAL/UNPROVEN
+// OFFSET: 0x00537F30/0x14018AF90
 static int32_t Script_GetCurrentScroll(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->GetCurrentScroll());

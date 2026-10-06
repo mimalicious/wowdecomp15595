@@ -117,11 +117,7 @@ void CWorldScene::Initialize() {
 
     CWorldOccluder::Initialize();
 
-    CImVector color;
-    color.b = 0x80;
-    color.g = 0x80;
-    color.r = 0x80;
-    color.a = 0xFF;
+    CImVector color(0x80, 0x80, 0x80, 0xFF);
     CWorldScene::s_defaultTexture = TextureCreateSolid(color);
 
     color.b = 0x00;

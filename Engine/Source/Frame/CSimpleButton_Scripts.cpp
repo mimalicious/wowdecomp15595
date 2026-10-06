@@ -329,7 +329,8 @@ static int32_t Script_SetText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541AD0
+// PROVEN: 721c730d IDENTICAL/UNPROVEN
+// OFFSET: 0x00531BE0/0x140183BF0
 static int32_t Script_SetFormattedText(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     char buffer[4096];
@@ -510,7 +511,8 @@ static int32_t Script_RegisterForClicks(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00542350
+// PROVEN: ec23ad4c IDENTICAL/UNPROVEN
+// OFFSET: 0x00532460/0x140184550
 static int32_t Script_Click(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     const char* btn = "LeftButton";
@@ -555,14 +557,16 @@ static int32_t Script_SetMotionScriptsWhileDisabled(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541210
+// PROVEN: f2d2378f IDENTICAL/NONE
+// OFFSET: 0x00531320
 void CSimpleButton::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     luaL_unref(L, LUA_REGISTRYINDEX, CSimpleButton::s_metatable);
     CSimpleButton::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x005424F0
+// PROVEN: 31a630fc IDENTICAL/NONE
+// OFFSET: 0x00532600
 void CSimpleButton::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleButton::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleButton::RegisterScriptMethods);

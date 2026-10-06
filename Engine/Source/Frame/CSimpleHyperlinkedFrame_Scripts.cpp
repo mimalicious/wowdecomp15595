@@ -7,7 +7,7 @@
 #include "Engine/Source/FrameXML/LoadXML.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: 0x005330B0
+// OFFSET: 0x005330B0/0x1401854A0
 static int32_t Script_SetHyperlinksEnabled(lua_State* L) {
     CSimpleHyperlinkedFrame* frame = static_cast<CSimpleHyperlinkedFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     bool enabled = StringToBOOL(L, 2, 1) != 0;
@@ -20,7 +20,8 @@ static int32_t Script_SetHyperlinksEnabled(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00533120
+// PROVEN: 5acff0d1 IDENTICAL/NONE
+// OFFSET: 0x00533120/0x140185530
 static int32_t Script_GetHyperlinksEnabled(lua_State* L) {
     CSimpleHyperlinkedFrame* frame = static_cast<CSimpleHyperlinkedFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -39,6 +40,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetHyperlinksEnabled", &Script_GetHyperlinksEnabled },
 };
 
+// PROVEN: 45946981 IDENTICAL/NONE
 // OFFSET: 0x00532D00
 void CSimpleHyperlinkedFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

@@ -197,7 +197,6 @@ CSimpleFrame::CSimpleFrame(CSimpleFrame* parent) {
     this->m_clampRectInsets.maxX = 0.0f;
     this->m_alpha = 0xFF;
     this->m_parentAlpha = 0xFF;
-    this->m_animSavedAlpha = 0xFF;
     this->m_frameState = 1;
     this->m_isMouseDragging = 0;
     this->m_strata = FRAME_STRATA_MEDIUM;
@@ -513,19 +512,32 @@ bool CSimpleFrame::IsDragging() {
     return this->m_isMouseDragging || (this->m_parent && this->m_parent->IsDragging());
 }
 
-// OFFSET: %0x00515260
+// PROVEN: 6126f2c3 IDENTICAL/NONE
+// OFFSET: 0x00504A10
 void CSimpleFrame::PreOnAnimUpdate() {
-    if (this->m_animAlpha && this->m_animSavedAlpha != this->m_alpha) {
-        this->m_alpha = this->m_animSavedAlpha;
-        this->UpdateAlpha();
+    if (this->AnimData_HasActiveAlpha()) {
+        uint8_t alpha = this->AnimData_GetAlpha();
+
+        if (alpha != this->m_alpha) {
+            this->m_alpha = alpha;
+            this->UpdateAlpha();
+        }
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    SIMPLEFRAMENODE* node = this->m_children.Head();
+
+    while (!this->m_children.IsEnd(node)) {
+        SIMPLEFRAMENODE* nextNode = this->m_children.RawNext(node);
         node->m_frame->PreOnAnimUpdate();
+        node = nextNode;
     }
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    CSimpleRegion* region = this->m_regions.Head();
+
+    while (!this->m_regions.IsEnd(region)) {
+        CSimpleRegion* nextRegion = this->m_regions.RawNext(region);
         region->PreOnAnimUpdate();
+        region = nextRegion;
     }
 }
 
@@ -1118,7 +1130,8 @@ void CSimpleFrame::NotifyDrawLayerChanged(uint32_t drawLayer) {
     this->NotifyScrollParent();
 }
 
-// OFFSET: %0x00513AF0
+// PROVEN: ae008c32 IDENTICAL/DIFFERENT
+// OFFSET: 0x005039C0/0x140149CA0
 void CSimpleFrame::OnLayerShow() {
     if (this->HasScript(this->m_onShow) && !this->m_isLoading) {
         this->RunScript(this->m_onShow, 0, NULL);
@@ -1127,7 +1140,8 @@ void CSimpleFrame::OnLayerShow() {
     this->NotifyScrollParent();
 }
 
-// OFFSET: %0x00513B30
+// PROVEN: ac25ec01 IDENTICAL/NONE
+// OFFSET: 0x00503A00
 void CSimpleFrame::OnLayerHide() {
     if (this->HasScript(this->m_onHide) && !this->m_isLoading) {
         this->RunScript(this->m_onHide, 0, NULL);
@@ -1189,17 +1203,17 @@ void CSimpleFrame::PostLoadXML(linkObject* node, CStatus* status) {
         }
     }
 
-    int32_t active;
-    int32_t activeAlpha;
-    this->GetActiveAnimInfo(CSimpleAlphaAnim::GetObjectType(), active, activeAlpha);
-
-    if (active) {
+    if (this->HasActiveAnimGroup()) {
+        int32_t alpha = this->HasActiveAlphaAnim();
+        int32_t position = this->HasActivePositionAnim();
         this->AnimData_Init();
-        this->m_animAlpha = activeAlpha;
-        this->m_animSavedAlpha = this->m_alpha * this->m_parentAlpha / 255;
+
+        if (alpha) {
+            this->AnimData_StoreAlpha(this->m_alpha * this->m_parentAlpha / 255);
+        }
 
         for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
-            region->AnimActivated(NULL, 1, activeAlpha);
+            region->AnimActivated(NULL, alpha, position);
         }
     }
 
@@ -1226,13 +1240,15 @@ void CSimpleFrame::SetBackdrop(CBackdropGenerator* backdrop) {
     this->m_backdropGenerator = backdrop;
 }
 
-// OFFSET: %0x00513DE0
+// PROVEN: 8b299b45 IDENTICAL/DIFFERENT
+// OFFSET: 0x005040A0/0x14014A600
 void CSimpleFrame::EnableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled |= 1 << drawLayer;
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// OFFSET: %0x00513E20
+// PROVEN: 3697ac9a IDENTICAL/DIFFERENT
+// OFFSET: 0x005040E0/0x14014A640
 void CSimpleFrame::DisableDrawLayer(uint32_t drawLayer) {
     this->m_drawLayerEnabled &= ~(1 << drawLayer);
     this->NotifyDrawLayerChanged(drawLayer);
@@ -1308,7 +1324,8 @@ void CSimpleFrame::OnScreenSizeChanged() {
     }
 }
 
-// OFFSET: %0x00514050
+// PROVEN: a6958dfb IDENTICAL/NONE
+// OFFSET: 0x005052A0
 void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     if (this->m_hoverFrame) {
         this->m_hoverFrame->Show();
@@ -1322,7 +1339,8 @@ void CSimpleFrame::OnLayerCursorEnter(int32_t a2) {
     this->RunOnEnterScript(a2);
 }
 
-// OFFSET: %0x005140D0
+// PROVEN: 75014645 IDENTICAL/NONE
+// OFFSET: 0x00505320
 void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_hoverFrame) {
         this->m_hoverFrame->Hide();
@@ -1341,7 +1359,8 @@ void CSimpleFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     this->RunOnLeaveScript(a2);
 }
 
-// OFFSET: %0x00514160
+// PROVEN: 7611dd38 IDENTICAL/DIFFERENT
+// OFFSET: 0x005053B0/0x14014BDD0
 void CSimpleFrame::LockHighlight(int32_t lock) {
     if (lock == this->m_highlightLocked) {
         return;
@@ -1756,47 +1775,66 @@ void CSimpleFrame::StopAnimating() {
     }
 }
 
-// OFFSET: %0x00515380
-void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
-    if (first && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+// PROVEN: b864c45b IDENTICAL/NONE
+// OFFSET: 0x00504B30
+void CSimpleFrame::AnimActivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
+    if (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head()) {
         this->AnimData_Init();
     }
 
-    if (!this->m_animAlpha && hasAlpha) {
-        this->m_animAlpha = 1;
-        this->m_animSavedAlpha = this->m_alpha * this->m_parentAlpha / 255;
+    if (alpha) {
+        this->AnimData_StoreAlpha(this->m_alpha);
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
-        node->m_frame->AnimActivated(group, first, hasAlpha);
+    SIMPLEFRAMENODE* node = this->m_children.Head();
+
+    while (!this->m_children.IsEnd(node)) {
+        SIMPLEFRAMENODE* nextNode = this->m_children.RawNext(node);
+        node->m_frame->AnimActivated(group, alpha, position);
+        node = nextNode;
     }
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
-        region->AnimActivated(group, first, hasAlpha);
+    CSimpleRegion* region = this->m_regions.Head();
+
+    while (!this->m_regions.IsEnd(region)) {
+        CSimpleRegion* nextRegion = this->m_regions.RawNext(region);
+        region->AnimActivated(group, alpha, position);
+        region = nextRegion;
     }
 }
 
-// OFFSET: %0x00515450
-void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
-    if (this->m_animAlpha) {
-        this->m_animAlpha = this->HasActiveAnimOfType(CSimpleAlphaAnim::GetObjectType());
+// PROVEN: db146ffa IDENTICAL/NONE
+// OFFSET: 0x00504C00
+void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32_t position) {
+    if (alpha) {
+        uint8_t value = this->AnimData_GetAlpha();
 
-        if (!this->m_animAlpha && this->m_animSavedAlpha != this->m_alpha) {
-            this->m_alpha = this->m_animSavedAlpha;
+        if (value != this->m_alpha) {
+            this->m_alpha = value;
             this->UpdateAlpha();
         }
+
+        this->AnimData_ResetAlphaData();
     }
 
-    if (last && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+    if (position) {
         this->AnimData_ResetPositionData();
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
-        node->m_frame->AnimDeactivated(group, last);
+    SIMPLEFRAMENODE* node = this->m_children.Head();
+
+    while (!this->m_children.IsEnd(node)) {
+        SIMPLEFRAMENODE* nextNode = this->m_children.RawNext(node);
+        node->m_frame->AnimDeactivated(group, alpha, position);
+        node = nextNode;
     }
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
-        region->AnimDeactivated(group, last);
+    CSimpleRegion* region = this->m_regions.Head();
+
+    while (!this->m_regions.IsEnd(region)) {
+        CSimpleRegion* nextRegion = this->m_regions.RawNext(region);
+        region->AnimDeactivated(group, alpha, position);
+        region = nextRegion;
     }
 }
 
