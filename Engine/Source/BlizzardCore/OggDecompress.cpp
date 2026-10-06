@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 
-// OFFSET: %0x007657A0
+// OFFSET: 0x007FEB00
 static int OggSeek(void* source, ogg_int64_t offset, int whence) {
     OggMemoryStream* stream = static_cast<OggMemoryStream*>(source);
     uint32_t position;
@@ -36,7 +36,7 @@ static ogg_int32_t OggTell(void* source) {
     return static_cast<OggMemoryStream*>(source)->m_position;
 }
 
-// OFFSET: %0x00765880
+// OFFSET: 0x007FEC30
 size_t OggMemoryStream::Read(void* buffer, size_t size, size_t count) {
     size_t left = this->m_size - this->m_position;
     size_t bytes = size * count;

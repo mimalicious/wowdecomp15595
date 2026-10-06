@@ -3,7 +3,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// OFFSET: %0x0070FF70
+// OFFSET: 0x007AD940
 const char* Blizzard::String::FindFilename(const char* str) {
     if (!str) {
         return "";
@@ -20,7 +20,7 @@ const char* Blizzard::String::FindFilename(const char* str) {
     return result;
 }
 
-// OFFSET: %0x0070FFC0
+// OFFSET: 0x007AD990
 const char* System_String::FindExtension(const char* str, int32_t offset) {
     if (!str) {
         return "";
@@ -70,7 +70,7 @@ char Blizzard::String::FirstPathSeparator(const char* str) {
     return '\\';
 }
 
-// OFFSET: %0x00711D90
+// OFFSET: 0x007AF780
 void Blizzard::String::MakeUnivPath(const char* src, char* dst, int32_t count) {
     if (!dst || count <= 0) {
         return;
@@ -97,7 +97,7 @@ void Blizzard::String::MakeUnivPath(const char* src, char* dst, int32_t count) {
     *dst = '\0';
 }
 
-// OFFSET: %0x00711DE0
+// OFFSET: 0x007AF7D0
 void Blizzard::String::MakeBackslashPath(const char* src, char* dst, int32_t count) {
     if (!dst || count <= 0) {
         return;
@@ -124,7 +124,7 @@ void Blizzard::String::MakeBackslashPath(const char* src, char* dst, int32_t cou
     *dst = '\0';
 }
 
-// OFFSET: %0x007173E0
+// OFFSET: 0x007B5A60
 char* Blizzard::String::MakeConsistentPath(const char* src, char* dst, int32_t count) {
     if (!dst || count <= 0) {
         return NULL;

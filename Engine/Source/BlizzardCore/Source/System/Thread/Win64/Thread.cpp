@@ -250,7 +250,7 @@ bool System_Thread::AllocateTLSSlot(Blizzard::Thread::TLSSlot* slot, Blizzard::T
     return slot->m_key || AllocateLocalStorage(slot, destructor);
 }
 
-// OFFSET: %0x00743150
+// OFFSET: 0x007E1C70
 void System_Thread::InitStackTraceEntryPoint() {
     void* entryPoint;
 
@@ -301,7 +301,7 @@ uint32_t System_Thread::ExternalTLSWatcher(void* param) {
     return 0;
 }
 
-// OFFSET: %0x00744CA0
+// OFFSET: 0x007E3900
 uint32_t __stdcall System_Thread::ThreadStarter(void* param) {
     Blizzard::Thread::ThreadRecord* thread = static_cast<Blizzard::Thread::ThreadRecord*>(param);
 

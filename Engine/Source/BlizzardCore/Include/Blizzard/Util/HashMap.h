@@ -52,7 +52,7 @@ Blizzard::Util::HashMap<K, V>::~HashMap() {
     }
 }
 
-// OFFSET: %0x0071F250
+// OFFSET: 0x007BD960
 template <class K, class V>
 bool Blizzard::Util::HashMap<K, V>::Find(const K& key, uint32_t* index) {
     if (!this->m_capacity) {
@@ -68,7 +68,7 @@ bool Blizzard::Util::HashMap<K, V>::Find(const K& key, uint32_t* index) {
     return false;
 }
 
-// OFFSET: %0x00722300
+// OFFSET: 0x007C0CE0
 template <class K, class V>
 bool Blizzard::Util::HashMap<K, V>::Get(const K& key, V* value) {
     uint32_t index;

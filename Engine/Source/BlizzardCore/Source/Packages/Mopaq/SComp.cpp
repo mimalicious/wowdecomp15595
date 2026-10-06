@@ -31,7 +31,7 @@ static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp:
 // STATIC: #0x009E6E10
 static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
 
-// OFFSET: %0x00765540
+// OFFSET: 0x007FCC60
 bool LzmaMemDecode(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t destSize, uint32_t* destProcessed, void* (*alloc)(uint32_t size), void (*free)(void* address)) {
     if (sourceSize < 14) {
         return false;
@@ -64,7 +64,7 @@ bool LzmaMemDecode(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, ui
     return true;
 }
 
-// OFFSET: %0x00713210
+// OFFSET: 0x007B0D80
 int32_t System_SComp::RLEZeroDecompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     uint8_t* output = static_cast<uint8_t*>(dest);
     const uint8_t* input = static_cast<const uint8_t*>(source);
@@ -100,7 +100,7 @@ int32_t System_SComp::RLEZeroDecompress(void* dest, uint32_t* destSize, const vo
     return 1;
 }
 
-// OFFSET: %0x00719E90
+// OFFSET: 0x007B8B80
 voidpf System_SComp::ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     ZlibAllocBuffer* buffer = static_cast<ZlibAllocBuffer*>(opaque);
     uint32_t bytes = items * size;
@@ -119,7 +119,7 @@ voidpf System_SComp::ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     return result;
 }
 
-// OFFSET: %0x00719EE0
+// OFFSET: 0x007B8BD0
 void System_SComp::ZlibFree(voidpf opaque, voidpf address) {
     ZlibAllocBuffer* buffer = static_cast<ZlibAllocBuffer*>(opaque);
 
@@ -128,7 +128,7 @@ void System_SComp::ZlibFree(voidpf opaque, voidpf address) {
     }
 }
 
-// OFFSET: %0x00719F10
+// OFFSET: 0x007B8C00
 bool __stdcall System_SComp::DecompressBlock(void* dst, uint32_t* dstSize, const void* src, uint32_t srcSize, Decompressor* decompressors) {
     uint32_t capacity = *dstSize;
 
@@ -180,7 +180,7 @@ bool __stdcall System_SComp::DecompressBlock(void* dst, uint32_t* dstSize, const
     return true;
 }
 
-// OFFSET: %0x00749AD0
+// OFFSET: 0x007E4330/0x1404EC280
 int System_SComp::zlib_decompress(uint8_t* dest, uint32_t* destLen, const uint8_t* source, uint32_t sourceLen) {
     z_stream stream;
     stream.next_in = const_cast<Bytef*>(source);
@@ -211,7 +211,7 @@ int System_SComp::zlib_decompress(uint8_t* dest, uint32_t* destLen, const uint8_
     return inflateEnd(&stream);
 }
 
-// OFFSET: %0x00749B70
+// OFFSET: 0x007E43D0
 int32_t System_SComp::ZlibDecompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     uint32_t size = *destSize;
 
@@ -223,7 +223,7 @@ int32_t System_SComp::ZlibDecompress(void* dest, uint32_t* destSize, const void*
     return 1;
 }
 
-// OFFSET: %0x00749BB0
+// OFFSET: 0x007E4410
 void* System_SComp::alloc_wrap(uint32_t size) {
     ZlibAllocBuffer* buffer = &static_cast<ZlibAllocBuffer&>(s_zlibAllocBuffer);
     uint32_t bytes = size;
@@ -242,7 +242,7 @@ void* System_SComp::alloc_wrap(uint32_t size) {
     return result;
 }
 
-// OFFSET: %0x00749C00
+// OFFSET: 0x007E4460
 void System_SComp::free_wrap(void* address) {
     ZlibAllocBuffer* buffer = &static_cast<ZlibAllocBuffer&>(s_zlibAllocBuffer);
 
@@ -251,7 +251,7 @@ void System_SComp::free_wrap(void* address) {
     }
 }
 
-// OFFSET: %0x00749C30
+// OFFSET: 0x007E4490
 int32_t System_SComp::LzmaDecompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     ZlibAllocBuffer* buffer = &static_cast<ZlibAllocBuffer&>(s_zlibAllocBuffer);
     buffer->m_next = buffer->m_buffer;
@@ -275,7 +275,7 @@ int System_SComp::PkwareBufferWrite(void* param, unsigned char* data, unsigned i
     return 0;
 }
 
-// OFFSET: %0x0070D8B0
+// OFFSET: 0x007AA9F0
 int32_t System_SComp::PkwareDecompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     PkwareBuffer buffer;
     buffer.m_output = static_cast<uint8_t*>(dest);
@@ -292,7 +292,7 @@ int32_t System_SComp::PkwareDecompress(void* dest, uint32_t* destSize, const voi
     return 1;
 }
 
-// OFFSET: %0x0074C050
+// OFFSET: 0x007E6990/0x1404F0640
 bool System_SComp::Decompress(void* dst, uint32_t* dstSize, const void* src, uint32_t srcSize) {
     if (*dstSize < srcSize || !srcSize) {
         Blizzard::String::QuickFormat<1024> message("%s - size error %u %u %u", "System_SComp::Decompress", *dstSize, srcSize, dstSize);
@@ -368,7 +368,7 @@ void System_SComp::Bzip2Compress(void* dest, uint32_t* destSize, const void* sou
     *hint = 0;
 }
 
-// OFFSET: %0x0070D960
+// OFFSET: 0x007AAAD0
 uint8_t* System_SComp::BufferPool::Alloc() {
     uint8_t* result = this->m_base;
     uint32_t end = 1 << this->m_count;
@@ -391,7 +391,7 @@ uint8_t* System_SComp::BufferPool::Alloc() {
     return result;
 }
 
-// OFFSET: %0x00712FE0
+// OFFSET: 0x007B0B50
 void System_SComp::RLEZeroCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     uint8_t* basedest = static_cast<uint8_t*>(dest);
     uint8_t* enddest = basedest + *destSize;
@@ -530,7 +530,7 @@ void System_SComp::RLEZeroCompress(void* dest, uint32_t* destSize, const void* s
     *destSize = static_cast<uint32_t>(currdest - basedest);
 }
 
-// OFFSET: %0x00749950
+// OFFSET: 0x007E41B0/0x1404EC0B0
 int System_SComp::zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t* source, uint32_t sourceLen, int level) {
     z_stream stream;
     stream.next_in = const_cast<Bytef*>(source);
@@ -579,7 +579,7 @@ int System_SComp::zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t*
     return deflateEnd(&stream);
 }
 
-// OFFSET: %0x00749A60
+// OFFSET: 0x007E42C0
 void System_SComp::ZlibCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int level2;
 
@@ -604,7 +604,7 @@ void System_SComp::ZlibCompress(void* dest, uint32_t* destSize, const void* sour
     *hint = 0;
 }
 
-// OFFSET: %0x0074BAF0
+// OFFSET: 0x007E6430
 bool System_SComp::Compress(void* dst, uint32_t* dstSize, bool* checksum, const void* src, uint32_t srcSize, uint32_t count, const Blizzard::Mopaq::CompressionAlgorithm* algorithms) {
     *checksum = false;
 

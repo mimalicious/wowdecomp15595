@@ -41,7 +41,7 @@ uint32_t Blizzard::Util::Hash32I(const char* str, uint32_t length) {
     return hash;
 }
 
-// OFFSET: %0x0070D0A0
+// OFFSET: 0x007AA1E0
 void Blizzard::Util::hashlittle2(const void* key, size_t length, uint32_t* pc, uint32_t* pb) {
     uint32_t a;
     uint32_t b;

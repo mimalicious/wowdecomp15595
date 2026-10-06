@@ -26,7 +26,7 @@ int32_t System_Using::s_NextDependsID;
 // STATIC: #0x00AB93F4
 static System_Using::UsingGlobalUse s_usingGlobalUse;
 
-// OFFSET: %0x00710D00
+// OFFSET: 0x007AE5A0
 uint32_t System_Using::UsingHashTable::Hash(const char* name) {
     uint32_t hash = 0x1000193;
 
@@ -37,7 +37,7 @@ uint32_t System_Using::UsingHashTable::Hash(const char* name) {
     return hash ? hash : 1;
 }
 
-// OFFSET: %0x00710D30
+// OFFSET: 0x007AE5D0
 bool System_Using::UsingHashTable::Find(const char* name, uint32_t& slot) {
     uint32_t hash = Hash(name);
     slot = hash & (HASH_SIZE - 1);
@@ -64,7 +64,7 @@ void System_Using::UsingHashTable::Insert(const char* name, uint16_t value) {
     }
 }
 
-// OFFSET: %0x00710DA0
+// OFFSET: 0x007AE640/0x1404A4240
 void System_Using::ShutdownUnused() {
     bool done;
 
@@ -98,7 +98,7 @@ void System_Using::ShutdownUnused() {
 void System_Using::RegisterNull() {
 }
 
-// OFFSET: %0x007179D0
+// OFFSET: 0x007B6230
 System_Using::UsingRec* System_Using::Intern(const char* name) {
     uint32_t slot;
 

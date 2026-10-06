@@ -45,7 +45,7 @@ bool RestorePointCopier::Read(void* buffer, int64_t offset, uint32_t size) {
     return result && count == static_cast<int32_t>(size);
 }
 
-// OFFSET: %0x00719BF0
+// OFFSET: 0x007B87A0
 bool RestorePointCopier::Write(const void* buffer, int64_t offset, uint32_t size) {
     if (this->m_targetArchive) {
         return this->m_targetArchive->Write(buffer, offset, size);
@@ -56,7 +56,7 @@ bool RestorePointCopier::Write(const void* buffer, int64_t offset, uint32_t size
     return Blizzard::File::Write(this->m_targetFile, buffer, offset, &count, 0) && count == static_cast<int32_t>(size);
 }
 
-// OFFSET: %0x00719CB0
+// OFFSET: 0x007B8890
 bool RestorePointCopier::Copy(int64_t source, int64_t target, uint32_t size) {
     this->m_buffer.Resize(size);
 
@@ -67,7 +67,7 @@ bool RestorePointCopier::Copy(int64_t source, int64_t target, uint32_t size) {
     return this->Write(this->m_buffer.m_data, target, size);
 }
 
-// OFFSET: %0x0071AC60
+// OFFSET: 0x007B9950
 static int64_t GetSpecialFileOffset(const char* name, System_SFile::ARCHIVEREC* archive) {
     uint32_t blockIndex;
 
@@ -95,7 +95,7 @@ static int64_t GetSpecialFileOffset(const char* name, System_SFile::ARCHIVEREC* 
     return archive->GetBlockEntry(blockIndex).m_offset;
 }
 
-// OFFSET: %0x0071AD10
+// OFFSET: 0x007B9A00
 static int64_t GetTailOffset(System_SFile::ARCHIVEREC* archive) {
     int64_t attributes = GetSpecialFileOffset("(attributes)", archive);
     int64_t listfile = GetSpecialFileOffset("(listfile)", archive);
@@ -201,7 +201,7 @@ bool ArchiveCheckpoint::CreateRestorePoint(const System_SFile::ARCHIVEREC* archi
     return result;
 }
 
-// OFFSET: %0x0072D240
+// OFFSET: 0x007CC050
 void ArchiveCheckpoint::DeleteRestorePoint(const char* path) {
     std::string backup(path);
     backup.append(s_extension, strlen(s_extension));

@@ -39,8 +39,9 @@ class Job : public RefCounted<Job> {
     /* 001C */ RefPtr<Job> unk_001C;
     /* 0020 */ RefPtr<Job> unk_0020;
     /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ bool m_result;
-    /* 0029 */ bool m_cancelled;
+    /* 0028 */ bool unk_0028;
+    /* 0029 */ bool m_result;
+    /* 002A */ bool m_cancelled;
 
     Job(int32_t dependencyCount);
     virtual ~Job();

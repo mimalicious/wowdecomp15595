@@ -14,7 +14,7 @@ bool Blizzard::Jobs::Job::IsReady() const {
     return true;
 }
 
-// OFFSET: %0x00712A60
+// OFFSET: 0x007B05D0
 uint32_t Blizzard::Jobs::WorkerPool::RunJobProc(void* param) {
     JobParam* jobParam = static_cast<JobParam*>(param);
     Job* job = jobParam->m_job;
@@ -40,9 +40,11 @@ void Blizzard::Jobs::WorkerPool::QueueJob(const RefPtr<Job>& job) {
     this->m_pImpl->m_pending++;
 }
 
-// OFFSET: %0x00719770
+// OFFSET: 0x007B82F0/0x1404AEC60
 Blizzard::Jobs::Job::Job(int32_t dependencyCount) {
     this->m_dependencyCount = dependencyCount;
+    this->unk_0024 = 0;
+    this->unk_0028 = false;
     this->m_result = true;
     this->m_cancelled = false;
 
@@ -51,7 +53,7 @@ Blizzard::Jobs::Job::Job(int32_t dependencyCount) {
     }
 }
 
-// OFFSET: %0x007197B0
+// OFFSET: 0x007B8340
 Blizzard::Jobs::Job::~Job() {
 }
 
@@ -120,13 +122,13 @@ bool Blizzard::Jobs::WorkerPool::Pump() {
     return this->m_pImpl->m_pending || this->m_pImpl->m_queued.Size() || this->m_pImpl->m_completed.Size();
 }
 
-// OFFSET: %0x00731940
+// OFFSET: 0x007D0020
 Blizzard::Jobs::WorkerPool::Impl::Impl() {
     this->m_pending = 0;
     this->m_shutdown = false;
 }
 
-// OFFSET: %0x007450B0
+// OFFSET: 0x007E3F90
 Blizzard::Jobs::WorkerPool::~WorkerPool() {
     if (this->m_pImpl->m_pool) {
         delete this->m_pImpl->m_pool;
@@ -141,7 +143,7 @@ Blizzard::Jobs::WorkerPool::~WorkerPool() {
     delete this->m_pImpl;
 }
 
-// OFFSET: %0x007466B0
+// OFFSET: 0x007EA850
 Blizzard::Jobs::WorkerPool::WorkerPool(int32_t threads) {
     this->m_pImpl = new Impl;
     this->m_threads = threads;

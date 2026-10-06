@@ -8,7 +8,7 @@
 // STATIC: #0x00B38338
 System_SFile::SignatureHashTable System_SFile::s_signatures;
 
-// OFFSET: %0x00717C40
+// OFFSET: 0x007B6530
 System_SFile::SignatureKey::SignatureKey(const char* name) {
     uint32_t pc = 2;
     uint32_t pb = 1;
@@ -19,7 +19,7 @@ System_SFile::SignatureKey::SignatureKey(const char* name) {
     this->m_hi = static_cast<uint32_t>(hash >> 32);
 }
 
-// OFFSET: %0x00723D70
+// OFFSET: 0x007C2E20
 bool System_SFile::SignatureHashTable::GetEntry(const char* name, Blizzard::Util::Digest<16>* md5) {
     if (!md5) {
         return false;
@@ -51,7 +51,7 @@ bool System_SFile::SignatureHashTable::AddEntry(const char* name, const Blizzard
     return this->Insert(key, md5);
 }
 
-// OFFSET: %0x0072D480
+// OFFSET: 0x007CC290
 bool System_SFile::SignatureHashTable::DelEntry(const char* name) {
     char lower[260];
     Blizzard::String::Copy(lower, name, sizeof(lower));

@@ -104,7 +104,7 @@ bool System_Thread::CreateDefaultPool() {
     return s_defaultPool != NULL;
 }
 
-// OFFSET: %0x00746370
+// OFFSET: 0x007EA4B0/0x1404EAFF0
 bool Blizzard::Thread::CreateFromPool(ThreadPoolRecord* pool, uint32_t (*function)(void*), void* param, ThreadRecord** thread, int32_t flags, int32_t stackSize) {
     if (!pool) {
         if (!System_Thread::s_defaultPool && !System_Thread::CreateDefaultPool()) {
@@ -148,7 +148,7 @@ bool Blizzard::Thread::CreateDetachedFromPool(ThreadPoolRecord* pool, uint32_t (
     return result;
 }
 
-// OFFSET: %0x00745300
+// OFFSET: 0x007E5B90/0x1404EF380
 void System_Thread::ShutdownThreadSystem() {
     if (s_mainThread) {
         RunTLSDestructors();

@@ -14,14 +14,14 @@
 // STATIC: %0x00D86B98
 MpqSystemList::Implementation* MpqSystemList::s_list;
 
-// OFFSET: %0x00714410
+// OFFSET: 0x007B2080
 MpqSystemList::Node::Node(int32_t flags) {
     this->m_flags = flags;
     this->m_next = NULL;
     memcpy(&this->m_system, &System_Mopaq::s_nullstack, sizeof(Blizzard::Mopaq::Mpqsystem));
 }
 
-// OFFSET: %0x00720B00
+// OFFSET: 0x007BF320/0x1404B81C0
 MpqSystemList::Node::~Node() {
     if (this->m_next) {
         this->m_next->~Node();
@@ -42,7 +42,7 @@ MpqSystemList::Node::~Node() {
     }
 }
 
-// OFFSET: %0x00720B50
+// OFFSET: 0x007BF370/0x1404B8240
 void MpqSystemList::Implementation::InitializeNewStackAtHead(Node* after, int32_t flags) {
     void* memory = SMemAlloc(sizeof(Node), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY);
     Node* node = memory ? new (memory) Node(flags) : NULL;
@@ -74,7 +74,7 @@ void MpqSystemList::Implementation::InitializeNewStackAtHead(Node* after, int32_
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x007241B0
+// OFFSET: 0x007C3260/0x1404BD810
 Blizzard::Mopaq::Mpqsystem* MpqSystemList::Implementation::GetStack(int32_t flags) {
     if (!this->m_head) {
         this->InitializeNewStackAtHead(NULL, flags);
@@ -107,7 +107,7 @@ Blizzard::Mopaq::Mpqsystem* MpqSystemList::Implementation::GetStack(int32_t flag
     return &node->m_system;
 }
 
-// OFFSET: %0x0072D610
+// OFFSET: 0x007CC420/0x1404C8890
 MpqSystemList::MpqSystemList() : Blizzard::Using::Use("System_Mopaq::IOStackManager") {
     System_Using::Intern(this->m_name)->shutdownproc = MpqSystemList::ShutdownProc;
 
@@ -124,7 +124,7 @@ MpqSystemList::MpqSystemList() : Blizzard::Using::Use("System_Mopaq::IOStackMana
     }
 }
 
-// OFFSET: %0x0072D5A0
+// OFFSET: 0x007CC3B0/0x1404C8800
 void MpqSystemList::ShutdownProc() {
     Implementation* list = s_list;
     list->m_head->~Node();
@@ -137,7 +137,7 @@ void MpqSystemList::ShutdownProc() {
     s_list = NULL;
 }
 
-// OFFSET: %0x0072D690
+// OFFSET: 0x007CC4A0
 Blizzard::Mopaq::Mpqsystem* System_Mopaq::FindIOStackManager(int32_t flags) {
     static MpqSystemList s_systemList;
     return MpqSystemList::s_list->GetStack(flags);
@@ -156,7 +156,7 @@ enum PreallocPart {
 }
 }
 
-// OFFSET: %0x0070DF10
+// OFFSET: 0x007AB050
 static uint32_t GetSectorTableSize(System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY* entry, uint32_t flags) {
     uint32_t size = 0;
 
@@ -179,7 +179,7 @@ static uint32_t GetSectorTableSize(System_SFile::ARCHIVEREC* archive, const Syst
     return size;
 }
 
-// OFFSET: %0x0070DF70
+// OFFSET: 0x007AB0B0
 static uint32_t GetHandlerSize(System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY* entry, uint32_t flags) {
     if (flags & 0x200) {
         if ((entry->m_flags & 0xFF00) && !(flags & 0x400)) {
@@ -208,7 +208,7 @@ static uint32_t GetHandlerSize(System_SFile::ARCHIVEREC* archive, const System_S
     return sizeof(System_Mopaq::SectorReadHandler);
 }
 
-// OFFSET: %0x0071B730
+// OFFSET: 0x007EEF50
 static Blizzard::Mopaq::MpqHandleRecord* GetPrealloc(const char* name, System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY* entry, uint32_t flags) {
     uint32_t nameLength = name ? strlen(name) : 0;
     uint32_t errorHandlerSize = ((flags >> 11) & 1) ? sizeof(Blizzard::Mopaq::MpqStandaloneRepairErrorHandler) : sizeof(Blizzard::Mopaq::MpqErrorHandler);
@@ -218,7 +218,7 @@ static Blizzard::Mopaq::MpqHandleRecord* GetPrealloc(const char* name, System_SF
     return static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(nameLength + handlerSize + sectorTableSize + errorHandlerSize + sizeof(Blizzard::Mopaq::MpqHandleRecord) + 1, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 }
 
-// OFFSET: %0x007149E0
+// OFFSET: 0x007B2650
 void System_Mopaq::InitializeHandle(Blizzard::Mopaq::MpqHandleRecord* handle, MpqParams* parms) {
     if (parms->m_flags & 0x10000) {
         return;
@@ -238,7 +238,7 @@ void System_Mopaq::InitializeHandle(Blizzard::Mopaq::MpqHandleRecord* handle, Mp
     memmove(name, parms->m_name, size);
 }
 
-// OFFSET: %0x007534B0
+// OFFSET: 0x007EABA0
 static void CreateHandler(bool sharedMemory, bool compressed, Blizzard::Mopaq::MpqHandleRecord* handle, void* memory, void* sectorTable, bool writable, bool inPlace) {
     if (inPlace) {
         if (compressed) {
@@ -285,7 +285,7 @@ static void CreateHandler(bool sharedMemory, bool compressed, Blizzard::Mopaq::M
     }
 }
 
-// OFFSET: %0x0073A670
+// OFFSET: 0x007D8F80
 static void CreateErrorHandler(Blizzard::Mopaq::MpqHandleRecord* handle, void* memory, bool standalone, bool repairOnDemand) {
     if (standalone) {
         handle->m_errorHandler = memory ? new (memory) Blizzard::Mopaq::MpqStandaloneRepairErrorHandler() : NULL;
@@ -326,7 +326,7 @@ bool System_Mopaq::mopaq_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return true;
 }
 
-// OFFSET: %0x0074A390
+// OFFSET: 0x007F1BC0/0x1404FEAB0
 bool System_Mopaq::mopaq_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     bool result = true;
@@ -355,7 +355,7 @@ bool System_Mopaq::mopaq_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: %0x0074DDE0
+// OFFSET: 0x007E76B0/0x1404F1800
 bool System_Mopaq::mopaq_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     int64_t offset = parms->m_offset;
@@ -390,7 +390,7 @@ bool System_Mopaq::mopaq_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return false;
 }
 
-// OFFSET: %0x0070DFF0
+// OFFSET: 0x007AB130/0x1404A12A0
 bool System_Mopaq::mopaq_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     bool result = handle->m_writeFunc(handle->m_handler, parms->m_buffer, handle->m_position, parms->m_count);
@@ -420,7 +420,7 @@ bool System_Mopaq::mopaq_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPara
     return true;
 }
 
-// OFFSET: %0x0070E090
+// OFFSET: 0x007AB1D0/0x1404A1340
 bool System_Mopaq::mopaq_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     uint64_t old = handle->m_blockEntry.m_fileSize;
@@ -433,7 +433,7 @@ bool System_Mopaq::mopaq_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPara
     return true;
 }
 
-// OFFSET: %0x0072D6D0
+// OFFSET: 0x007CC4E0
 static bool OpenMD5VerificationHandle(const System_SFile::BLOCKENTRY* entry, int32_t chunkSize, uint32_t flags, Blizzard::Mopaq::MpqHandleRecord** result) {
     Blizzard::Mopaq::MpqHandleRecord* handle = static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(sizeof(Blizzard::Mopaq::MpqHandleRecord), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 
@@ -475,7 +475,7 @@ static bool OpenMD5VerificationHandle(const System_SFile::BLOCKENTRY* entry, int
     return opened;
 }
 
-// OFFSET: %0x0072D7C0
+// OFFSET: 0x007EED00
 bool PrepareHandleForMD5Verification(Blizzard::Mopaq::MpqHandleRecord* handle, int32_t chunkSize, uint32_t flags) {
     Blizzard::Mopaq::MpqHandleRecord* verifyHandle = NULL;
 
@@ -488,7 +488,11 @@ bool PrepareHandleForMD5Verification(Blizzard::Mopaq::MpqHandleRecord* handle, i
     }
 
     verifyHandle->m_handler = new System_Mopaq::IOHandler(verifyHandle, handle->m_handler->m_base, handle->m_blockEntry.m_offset);
-    verifyHandle->m_errorHandler = new Blizzard::Mopaq::MpqRepairOnDemandErrorHandler();
+    if (System_MPQGlobals::GetMopaqGlobals()->m_disableRepair) {
+        verifyHandle->m_errorHandler = new Blizzard::Mopaq::MpqErrorHandler();
+    } else {
+        verifyHandle->m_errorHandler = new Blizzard::Mopaq::MpqRepairOnDemandErrorHandler();
+    }
 
     if (!verifyHandle->m_archive) {
         verifyHandle->m_archive = handle->m_archive;
@@ -535,7 +539,7 @@ static Blizzard::Mopaq::HSFILERecord* WrapHandle(Blizzard::Mopaq::MpqHandleRecor
     return record;
 }
 
-// OFFSET: %0x00759830
+// OFFSET: 0x007F7530
 void System_Mopaq::OpenArchiveFile(const char* name, System_SFile::ARCHIVEREC* logicalArchive, System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY& entry, uint32_t index, uint32_t flags, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));
@@ -671,7 +675,7 @@ void System_Mopaq::CreateArchiveFile(const char* name, System_SFile::ARCHIVEREC*
     }
 }
 
-// OFFSET: %0x0072D920
+// OFFSET: 0x007CC5E0/0x1404C8AF0
 void System_Mopaq::OpenDiskFile(const char* name, uint32_t flags, const char* path, System_SFile::ARCHIVEREC* archive, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));

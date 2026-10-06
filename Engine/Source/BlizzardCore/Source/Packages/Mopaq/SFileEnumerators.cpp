@@ -36,7 +36,7 @@ static void CopyBackslashName(char* name, uint32_t size, const char* source) {
     *name = '\0';
 }
 
-// OFFSET: %0x0074D090
+// OFFSET: 0x007F1500/0x1404FE280
 Blizzard::Mopaq::Enumerator::Enumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) {
     this->m_flags = flags;
     this->m_archive = System_SFile::GetArchivePtr(handle, true);
@@ -51,14 +51,14 @@ Blizzard::Mopaq::Enumerator::Enumerator(System_SFile::ARCHIVEREC* handle, const 
     this->m_path.assign(buffer, strlen(buffer));
 }
 
-// OFFSET: %0x0074A070
+// OFFSET: 0x007F1630
 Blizzard::Mopaq::Enumerator::~Enumerator() {
     if (this->m_archive) {
         this->m_archive->RemoveInternalArchiveRef();
     }
 }
 
-// OFFSET: %0x00735160
+// OFFSET: 0x007D3750
 bool Blizzard::Mopaq::OnDiskEnumerator::DoGlobCallback(const Blizzard::File::ProcessDirParms& parms) {
     OnDiskEnumerator* enumerator = *static_cast<OnDiskEnumerator**>(parms.m_cookie);
     std::deque<std::string>& list = parms.m_isDir ? enumerator->m_directories : enumerator->m_files;
@@ -68,15 +68,15 @@ bool Blizzard::Mopaq::OnDiskEnumerator::DoGlobCallback(const Blizzard::File::Pro
     return true;
 }
 
-// OFFSET: %0x0074D1F0
+// OFFSET: 0x007F16B0/0x1404FE420
 Blizzard::Mopaq::OnDiskEnumerator::OnDiskEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : Enumerator(handle, path, flags) {
 }
 
-// OFFSET: %0x0074D2A0
+// OFFSET: 0x007F29E0
 Blizzard::Mopaq::OnDiskEnumerator::~OnDiskEnumerator() {
 }
 
-// OFFSET: %0x007352D0
+// OFFSET: 0x007D38C0
 bool Blizzard::Mopaq::OnDiskEnumerator::Initialize() {
     if (Blizzard::File::Exists(System_File::Stacked::s_manager, this->m_path.c_str()) != 2) {
         return false;
@@ -87,7 +87,7 @@ bool Blizzard::Mopaq::OnDiskEnumerator::Initialize() {
     return Blizzard::File::ProcessDirFast(this->m_path.c_str(), &self, DoGlobCallback, true);
 }
 
-// OFFSET: %0x00735240
+// OFFSET: 0x007D3830
 bool Blizzard::Mopaq::OnDiskEnumerator::GlobDirectory(const std::string& path, bool* grew) {
     size_t count = this->m_directories.size();
     OnDiskEnumerator* self = this;
@@ -100,7 +100,7 @@ bool Blizzard::Mopaq::OnDiskEnumerator::GlobDirectory(const std::string& path, b
     return result;
 }
 
-// OFFSET: %0x007438B0
+// OFFSET: 0x007E2550
 int32_t Blizzard::Mopaq::OnDiskEnumerator::Enumerate(char* name, uint32_t size) {
     while (true) {
         while (!this->m_files.empty()) {
@@ -164,7 +164,7 @@ int32_t Blizzard::Mopaq::OnDiskEnumerator::Enumerate(char* name, uint32_t size) 
     }
 }
 
-// OFFSET: %0x0074D300
+// OFFSET: 0x007F1760/0x1404FE4D0
 Blizzard::Mopaq::MPQEnumerator::MPQEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : Enumerator(handle, path, flags) {
     this->m_complete = false;
 
@@ -199,7 +199,7 @@ bool Blizzard::Mopaq::MPQEnumerator::Initialize() {
     return complete;
 }
 
-// OFFSET: %0x00742500
+// OFFSET: 0x007E0ED0/0x1404E6F40
 std::string Blizzard::Mopaq::MPQEnumerator::SynthesizeDirectories(const char* path) {
     const char* separator = path ? strrchr(path, '\\') : NULL;
 
@@ -304,7 +304,7 @@ bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::BlockToList::operator<(const Bloc
     return this->m_blockIndex < other.m_blockIndex;
 }
 
-// OFFSET: %0x0074D420
+// OFFSET: 0x007F18B0/0x1404FE6D0
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::MPQEnumeratorBlockOrder(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : MPQEnumerator(handle, path, flags) {
 }
 
@@ -410,7 +410,7 @@ bool Blizzard::Mopaq::SFileFileIsDeleted(System_SFile::ARCHIVEREC* handle, const
     return GetFileBlockEntry(handle, name, md5, flags, NULL, NULL, NULL, NULL) == 4;
 }
 
-// OFFSET: %0x00752A50
+// OFFSET: 0x007F2A70/0x1404FFCA0
 bool Blizzard::Mopaq::SFileOpenArchiveEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags, Enumerator** result) {
     *result = NULL;
 

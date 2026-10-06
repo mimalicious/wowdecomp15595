@@ -29,13 +29,13 @@ static void ReserveBlockOffset(System_Mopaq::IOHandler* handler) {
     }
 }
 
-// OFFSET: %0x00731C20
+// OFFSET: 0x007D04B0
 System_Mopaq::MopaqReadWriteHandler::MopaqReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord*& handle) : MopaqReadHandler(handle) {
     this->m_written = 0;
     this->m_sizeBeforeDelta = 0;
 }
 
-// OFFSET: %0x007213F0
+// OFFSET: 0x007BFC10
 void System_Mopaq::MopaqReadWriteHandler::UpdateBlockEntry() {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
     handle->m_blockEntry.m_compressedSize = handle->m_blockEntry.m_fileSize;
@@ -48,7 +48,7 @@ void System_Mopaq::MopaqReadWriteHandler::UpdateBlockEntry() {
     }
 }
 
-// OFFSET: %0x00724380
+// OFFSET: 0x007C3430
 bool System_Mopaq::MopaqReadWriteHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     if (offset != this->m_written) {
         return false;
@@ -75,7 +75,7 @@ bool System_Mopaq::MopaqReadWriteHandler::WriteData(const uint8_t* buffer, int64
     return result;
 }
 
-// OFFSET: %0x00721430
+// OFFSET: 0x007BFC50
 bool System_Mopaq::MopaqReadWriteHandler::Flush() {
     if (!this->m_written) {
         Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
@@ -118,11 +118,11 @@ void System_Mopaq::MopaqReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size) 
     this->m_sizeBeforeDelta = size;
 }
 
-// OFFSET: %0x00731C60
+// OFFSET: 0x007D04F0
 System_Mopaq::MopaqInPlaceReadWriteHandler::MopaqInPlaceReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord*& handle) : MopaqReadWriteHandler(handle) {
 }
 
-// OFFSET: %0x00721500
+// OFFSET: 0x007BFD20
 bool System_Mopaq::MopaqInPlaceReadWriteHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     if (offset) {
         return false;
@@ -157,14 +157,14 @@ bool System_Mopaq::MopaqInPlaceReadWriteHandler::Flush() {
     return true;
 }
 
-// OFFSET: %0x0074F7E0
+// OFFSET: 0x007E8E60
 System_Mopaq::SectorReadWriteHandler::SectorReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, void* sectorTable, bool sharedMemory) : SectorReadHandler(handle, sectorTable, sharedMemory) {
     this->m_written = 0;
     this->m_sizeBeforeDelta = 0;
     this->m_reserved = false;
 }
 
-// OFFSET: %0x0072DEC0
+// OFFSET: 0x007CCA00
 System_Mopaq::SectorReadWriteHandler::~SectorReadWriteHandler() {
 }
 
@@ -177,7 +177,7 @@ void System_Mopaq::SectorReadWriteHandler::MarkSingleUnit() {
     this->m_handle->m_readFunc = IOHandler::ReadData;
 }
 
-// OFFSET: %0x007158B0
+// OFFSET: 0x007B3520/0x1404A8D90
 void System_Mopaq::SectorReadWriteHandler::ResetSectorCount() {
     uint32_t count = static_cast<uint32_t>((this->m_handle->m_blockEntry.m_fileSize - 1) / this->m_sectorSize + 1);
     this->m_sectorCount = count;
@@ -189,7 +189,7 @@ void System_Mopaq::SectorReadWriteHandler::ResetSectorCount() {
     }
 }
 
-// OFFSET: %0x0074F850
+// OFFSET: 0x007E8ED0
 bool System_Mopaq::SectorReadWriteHandler::PrepareSector(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t* destSize, uint32_t sector) {
     bool checksum = false;
     const Blizzard::Mopaq::CompressionAlgorithm* algorithms = this->m_compression.size() ? &this->m_compression[0] : NULL;
@@ -213,7 +213,7 @@ bool System_Mopaq::SectorReadWriteHandler::PrepareSector(const uint8_t* source, 
     return result;
 }
 
-// OFFSET: %0x0071C350
+// OFFSET: 0x007BAFC0/0x1404B2850
 void System_Mopaq::SectorReadWriteHandler::UpdateBlockHashTable() {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
     handle->m_blockEntry.m_compressedSize = this->m_sectorTable[static_cast<uint32_t>((handle->m_blockEntry.m_fileSize - 1) / this->m_sectorSize) + 2];
@@ -230,7 +230,7 @@ void System_Mopaq::SectorReadWriteHandler::UpdateBlockHashTable() {
     }
 }
 
-// OFFSET: %0x0071C430
+// OFFSET: 0x007BB0A0
 bool System_Mopaq::SectorReadWriteHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     if (offset != this->m_written) {
         return false;
@@ -306,7 +306,7 @@ bool System_Mopaq::SectorReadWriteHandler::WriteData(const uint8_t* buffer, int6
     return result;
 }
 
-// OFFSET: %0x00715950
+// OFFSET: 0x007B35C0/0x1404A8E40
 bool System_Mopaq::SectorReadWriteHandler::Flush() {
     uint32_t written = this->m_written;
 
@@ -343,7 +343,7 @@ bool System_Mopaq::SectorReadWriteHandler::Flush() {
     return this->FinalizeWrite();
 }
 
-// OFFSET: %0x00715910
+// OFFSET: 0x007B3580/0x1404A8DF0
 bool System_Mopaq::SectorReadWriteHandler::AdjustSectorTable() {
     if (this->m_written) {
         return false;
@@ -365,7 +365,7 @@ void System_Mopaq::SectorReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size)
     this->m_sizeBeforeDelta = size;
 }
 
-// OFFSET: %0x0074F920
+// OFFSET: 0x007E8FA0
 bool System_Mopaq::SectorReadWriteHandler::WriteChecksumTable() {
     uint32_t size = 0;
     uint32_t count = static_cast<uint32_t>((this->m_handle->m_blockEntry.m_fileSize - 1) / this->m_sectorSize + 1);
@@ -392,7 +392,7 @@ bool System_Mopaq::SectorReadWriteHandler::WriteChecksumTable() {
     return true;
 }
 
-// OFFSET: %0x0071C3D0
+// OFFSET: 0x007BB040/0x1404B28D0
 bool System_Mopaq::SectorReadWriteHandler::FinalizeWrite() {
     bool result = this->WriteChecksumTable();
 
@@ -409,7 +409,7 @@ bool System_Mopaq::SectorReadWriteHandler::FinalizeWrite() {
     return result;
 }
 
-// OFFSET: %0x007157F0
+// OFFSET: 0x007B3460/0x1404A8CE0
 bool System_Mopaq::SectorReadWriteHandler::PerformWrite(const uint8_t* buffer, int64_t offset, int32_t count) {
     if (this->m_baseOffset < 0) {
         System_SFile::ARCHIVEREC* archive = this->m_handle->m_archive;
@@ -428,7 +428,7 @@ bool System_Mopaq::SectorReadWriteHandler::PerformWrite(const uint8_t* buffer, i
     return this->m_base.Write(buffer, this->m_baseOffset + offset, count);
 }
 
-// OFFSET: %0x0074F9D0
+// OFFSET: 0x007E9050
 bool System_Mopaq::SectorReadWriteHandler::CompressAndWrite(const uint8_t* buffer, uint32_t sector, uint32_t count) {
     uint32_t first = sector;
     Blizzard::Memory::TempBuffer<uint8_t, 4096> output(0);
@@ -459,15 +459,15 @@ bool System_Mopaq::SectorReadWriteHandler::CompressAndWrite(const uint8_t* buffe
     return this->PerformWrite(output.m_data, this->m_sectorTable[first], outputSize);
 }
 
-// OFFSET: %0x00753390
+// OFFSET: 0x007EAA80
 System_Mopaq::SectorInPlaceReadWriteHandler::SectorInPlaceReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, void* sectorTable, bool sharedMemory) : SectorReadWriteHandler(handle, sectorTable, sharedMemory) {
 }
 
-// OFFSET: %0x00753250
+// OFFSET: 0x007EA940
 System_Mopaq::SectorInPlaceReadWriteHandler::~SectorInPlaceReadWriteHandler() {
 }
 
-// OFFSET: %0x00715A10
+// OFFSET: 0x007B3680/0x1404A8F30
 bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     if (offset) {
         return false;
@@ -524,7 +524,7 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteChecksumTable() {
     return true;
 }
 
-// OFFSET: %0x0071C600
+// OFFSET: 0x007BB270/0x1404B2B40
 bool System_Mopaq::SectorInPlaceReadWriteHandler::FinalizeWrite() {
     bool result = this->WriteChecksumTable();
 
@@ -538,7 +538,7 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::FinalizeWrite() {
     return result;
 }
 
-// OFFSET: %0x0074FB20
+// OFFSET: 0x007E91A0/0x1404F3B40
 bool System_Mopaq::SectorInPlaceReadWriteHandler::CompressAndWrite(const uint8_t* buffer, uint32_t sector, uint32_t count) {
     uint32_t first = sector;
     bool result = true;

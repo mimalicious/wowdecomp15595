@@ -37,7 +37,7 @@ bool Blizzard::Debug::ErrorStackRecord::FindCategory(int32_t category) {
     return found;
 }
 
-// OFFSET: %0x0070EEB0
+// OFFSET: 0x007AC430/0x1404A21B0
 const char* Blizzard::Debug::ErrorStackAsText(ErrorStackRecord* stack) {
     return stack ? stack->m_flattened : "";
 }
@@ -106,7 +106,7 @@ Blizzard::Debug::ErrorStackRecord* Blizzard::Debug::AddErrorToStack(ErrorStackRe
     return head;
 }
 
-// OFFSET: %0x0071E140
+// OFFSET: 0x007BC550/0x1404B44F0
 void Blizzard::Debug::FreeErrorStack(ErrorStackRecord* stack) {
     while (stack) {
         ErrorStackRecord* prev = stack->m_prev;

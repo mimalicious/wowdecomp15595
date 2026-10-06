@@ -132,7 +132,7 @@ static bool GetVersionInfo(const char* path, Blizzard::Version::FileVersion& ver
     return true;
 }
 
-// OFFSET: %0x0071F180
+// OFFSET: 0x007BD840
 bool Blizzard::Version::GetFileVersion(const char* path, FileVersion& version) {
     return GetVersionInfo(path, version, 1);
 }

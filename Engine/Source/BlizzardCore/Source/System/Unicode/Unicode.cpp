@@ -21,7 +21,7 @@ const uint8_t System_Unicode::s_bytesFromUTF8[256] = {
     3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6
 };
 
-// OFFSET: %0x007103B0
+// OFFSET: 0x007ADD40/0x1404A3900
 int32_t Blizzard::Unicode::ConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint16_t* src, int32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
     char* dstStart = dst;
     const uint16_t* srcStart = src;
@@ -124,7 +124,7 @@ int32_t Blizzard::Unicode::ConvertUTF16to8(char* dst, uint32_t dstmaxchars, cons
     return result;
 }
 
-// OFFSET: %0x00710570
+// OFFSET: 0x007ADF00/0x1404A3B40
 int32_t Blizzard::Unicode::ConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, int32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
     const uint8_t* source = reinterpret_cast<const uint8_t*>(src);
     uint16_t* dstStart = dst;

@@ -32,7 +32,7 @@ static const uint8_t s_defaultAuthModulus[256] = {
     0xB4, 0x1D, 0x98, 0x42, 0x8C, 0xF8, 0x27, 0x7E, 0xC8, 0x87, 0xF6, 0x24, 0xCE, 0x7E, 0x06, 0xB1,
 };
 
-// OFFSET: %0x007526F0
+// OFFSET: 0x007F2630/0x1404FF7E0
 bool Blizzard::Mopaq::SFileAuthenticateArchiveEx(System_SFile::ARCHIVEREC* handle, AuthResult* result, const uint8_t* modulus, uint32_t modulusSize, const uint8_t* exponent, uint32_t exponentSize, const char* salt) {
     if ((!modulus || !modulusSize) && (!exponent || !exponentSize)) {
         modulus = s_defaultAuthModulus;
@@ -74,7 +74,7 @@ bool Blizzard::Mopaq::SFileAuthenticateArchiveEx(System_SFile::ARCHIVEREC* handl
             uint32_t remaining = static_cast<uint32_t>(archive.m_archive->m_archiveEnd - pos);
             uint32_t size = remaining >= 0x10000 ? chunk : remaining;
 
-            if (!archive.m_archive->m_file->Read(buffer, pos, size, NULL)) {
+            if (!archive.m_archive->m_file->Read(buffer, pos - archive.m_archive->m_archiveOffset, size, NULL)) {
                 break;
             }
 
@@ -86,7 +86,7 @@ bool Blizzard::Mopaq::SFileAuthenticateArchiveEx(System_SFile::ARCHIVEREC* handl
     SSignatureVerifyStream_ProvideData(token, reinterpret_cast<const uint8_t*>(salt), salt ? static_cast<uint32_t>(strlen(salt)) : 0);
     uint32_t signatureSize = token->magicBufferSize;
 
-    if (!archive.m_archive->m_file->Read(buffer, archive.m_archive->m_archiveEnd, signatureSize, NULL)) {
+    if (!archive.m_archive->m_file->Read(buffer, archive.m_archive->m_archiveEnd - archive.m_archive->m_archiveOffset, signatureSize, NULL)) {
         SMemFree(buffer, __FILE__, __LINE__, 0);
         delete token;
         return false;

@@ -27,7 +27,7 @@ void Blizzard::Debug::SetAssertHandler(AssertCallback handler) {
     System_Debug::s_AssertCallback = handler;
 }
 
-// OFFSET: %0x0071EBC0
+// OFFSET: 0x007BD220/0x1404B58A0
 char* Blizzard::Debug::CanonicalStr(const char* src, char* dst, uint32_t maxchars) {
     char buffer[512];
     Blizzard::String::MakeUnivPath(src, buffer, sizeof(buffer));

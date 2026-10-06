@@ -22,7 +22,7 @@ System_Time::TimeInfo* System_Time::s_timeInfo;
 // STATIC: %0x00D87198
 uint64_t System_Time::s_tickCountHigh;
 
-// OFFSET: %0x007109D0
+// OFFSET: 0x007AE260
 Blizzard::Time::Timestamp Blizzard::Time::FromFileTime(uint64_t fileTime) {
     if (fileTime <= 0x0077A5D6AA8BF851) {
         return static_cast<Timestamp>(0x8000000000000000);
@@ -55,7 +55,7 @@ double System_Time::MeasureDrift(int64_t frequency, LARGE_INTEGER* counter, DWOR
     return fabs(counterSeconds - tickSeconds * 0.001) / counterSeconds;
 }
 
-// OFFSET: %0x00710AD0
+// OFFSET: 0x007AE370/0x1404A3F80
 uint64_t System_Time::GetTickCount64() {
     while (s_tickLock.Increment() != 1) {
         s_tickLock.Decrement();
@@ -74,7 +74,7 @@ uint64_t System_Time::GetTickCount64() {
     return s_tickCountHigh + s_lastTickCount;
 }
 
-// OFFSET: %0x00710B50
+// OFFSET: 0x007AE3F0/0x1404A4010
 void Blizzard::Time::BreakTime(Timestamp time, TimeRec& rec) {
     int32_t nanosecond = static_cast<int32_t>(time % 1000000000);
 
@@ -112,7 +112,7 @@ void Blizzard::Time::BreakTime(Timestamp time, TimeRec& rec) {
     }
 }
 
-// OFFSET: %0x00710C50
+// OFFSET: 0x007AE4F0/0x1404A4160
 Blizzard::Time::Timestamp Blizzard::Time::MakeTime(const TimeRec& rec) {
     SYSTEMTIME systemTime;
     systemTime.wYear = static_cast<WORD>(rec.year);
@@ -140,7 +140,7 @@ Blizzard::Time::Timestamp Blizzard::Time::MakeTime(const TimeRec& rec) {
     return result;
 }
 
-// OFFSET: %0x00717930
+// OFFSET: 0x007B6190/0x1404AC2A0
 bool System_Time::CalibrateFrequency(LARGE_INTEGER* frequency) {
     if (!QueryPerformanceFrequency(frequency) || !frequency->QuadPart) {
         return false;
@@ -186,7 +186,7 @@ bool System_Time::InitFrequency(LARGE_INTEGER* frequency) {
     return false;
 }
 
-// OFFSET: %0x00722030
+// OFFSET: 0x007C0A10
 System_Time::TimeInfo::TimeInfo() {
     LARGE_INTEGER frequency;
     this->m_usePerformanceCounter = InitFrequency(&frequency);
@@ -242,7 +242,7 @@ int64_t Blizzard::Time::Milliseconds() {
     return static_cast<int64_t>(static_cast<double>(counter.QuadPart) * System_Time::s_timeInfo->m_scaleMilliseconds);
 }
 
-// OFFSET: %0x007109B0
+// OFFSET: 0x007AE240
 uint32_t Blizzard::Time::GetTimeElapsed(uint32_t start, uint32_t end) {
     if (start <= end) {
         return end - start;
@@ -251,7 +251,7 @@ uint32_t Blizzard::Time::GetTimeElapsed(uint32_t start, uint32_t end) {
     return end - start - 1;
 }
 
-// OFFSET: %0x00722220
+// OFFSET: 0x007C0C00/0x1404BA950
 int64_t Blizzard::Time::Seconds() {
     if (!System_Time::GetTimeInfo()->m_usePerformanceCounter) {
         return System_Time::GetTickCount64() / 1000;

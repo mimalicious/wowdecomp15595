@@ -47,7 +47,7 @@ Blizzard::BigBuffer::BigBuffer() {
     this->m_offset = 0;
 }
 
-// OFFSET: %0x00738E50
+// OFFSET: 0x007D7500
 uint32_t& Blizzard::BigBuffer::operator[](uint32_t index) {
     this->GrowToFit(index);
     return this->m_data[index + this->m_offset];
@@ -579,7 +579,7 @@ void Blizzard::Crypt::RSA::Process(uint8_t* data, uint32_t length) {
     dst.ToBinaryBuffer(data, length);
 }
 
-// OFFSET: %0x00720A70
+// OFFSET: 0x007BF290
 void Blizzard::SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t modulusSize, uint32_t pubExponentSize) {
     *token = new SSignatureData;
     (*token)->modulusSize = modulusSize;

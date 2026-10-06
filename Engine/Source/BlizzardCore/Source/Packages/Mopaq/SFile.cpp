@@ -28,7 +28,7 @@ void STORMAPI SFile::CreateOverlapped(SOVERLAPPED* overlapped) {
 void STORMAPI SFile::DestroyOverlapped(SOVERLAPPED* overlapped) {
 }
 
-// OFFSET: %0x00751EA0
+// OFFSET: 0x007F23C0/0x1404FF5A0
 bool Blizzard::Mopaq::SFileGetArchiveName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size) {
     *name = '\0';
 
@@ -44,7 +44,7 @@ bool Blizzard::Mopaq::SFileGetArchiveName(System_SFile::ARCHIVEREC* handle, char
     return true;
 }
 
-// OFFSET: %0x00751F20
+// OFFSET: 0x007F2440/0x1404FF620
 bool Blizzard::Mopaq::SFileGetArchiveFullName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size) {
     *name = '\0';
 
@@ -72,7 +72,7 @@ bool Blizzard::Mopaq::SFileUnloadFile(void* data) {
     return true;
 }
 
-// OFFSET: %0x00756480
+// OFFSET: 0x007F7C00/0x140506DF0
 bool Blizzard::Mopaq::SFileLoadFile(System_SFile::ARCHIVEREC* handle, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags) {
     uint8_t* buffer = NULL;
     *data = NULL;
@@ -109,7 +109,7 @@ bool Blizzard::Mopaq::SFileLoadFile(System_SFile::ARCHIVEREC* handle, const char
     return *data != NULL;
 }
 
-// OFFSET: %0x0075A6C0
+// OFFSET: 0x007F7D20/0x140506F60
 bool Blizzard::Mopaq::SFileLoadFile(System_SFile::ARCHIVEREC* handle, const char* name, void* buffer, uint32_t* size, uint32_t extra, uint32_t flags) {
     bool result = false;
 

@@ -48,7 +48,7 @@ static inline void Round4(uint32_t a, uint32_t& b, uint32_t c, uint32_t d, uint3
 #define SHA1_R3(v, w, x, y, z, i) z += (((w | x) & y) | (w & x)) + SHA1_BLK(i) + 0x8F1BBCDC + SHA1_ROL(v, 5); w = SHA1_ROL(w, 30);
 #define SHA1_R4(v, w, x, y, z, i) z += (w ^ x ^ y) + SHA1_BLK(i) + 0xCA62C1D6 + SHA1_ROL(v, 5); w = SHA1_ROL(w, 30);
 
-// OFFSET: %0x00652800
+// OFFSET: 0x00657380/0x1402FA930
 void SHA1_Transform(uint32_t* state, uint8_t* buffer) {
     uint32_t* block = reinterpret_cast<uint32_t*>(buffer);
 
@@ -97,7 +97,7 @@ void SHA1_Init(SHA1_CONTEXT* context) {
     context->m_count[0] = context->m_count[1] = 0;
 }
 
-// OFFSET: %0x00653B00
+// OFFSET: 0x00658680/0x1402FBE30
 void SHA1_Update(SHA1_CONTEXT* context, const uint8_t* data, uint32_t length) {
     uint32_t i;
     uint32_t j = (context->m_count[0] >> 3) & 63;
@@ -265,7 +265,7 @@ void SHA1::Prepare() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
-// OFFSET: %0x0070CFB0
+// OFFSET: 0x007AA0F0/0x1404A04A0
 void SHA1::Process(const void* _data, uint32_t length) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);
     uint32_t index = (static_cast<uint32_t>(this->m_size) >> 3) & 0x3F;

@@ -25,7 +25,7 @@ bool Blizzard::Thread::Close(ThreadRecord* thread) {
     return true;
 }
 
-// OFFSET: %0x00717660
+// OFFSET: 0x007B5DE0/0x1404ABE50
 bool Blizzard::Thread::WaitForever(ThreadRecord* thread) {
     if (!thread || thread->m_state < 0) {
         return true;
@@ -45,7 +45,7 @@ bool Blizzard::Thread::WaitForever(ThreadRecord* thread) {
     return WaitForSingleObject(thread->m_handle, INFINITE) == WAIT_OBJECT_0;
 }
 
-// OFFSET: %0x00716F60
+// OFFSET: 0x007B53D0/0x1404AB250
 int32_t System_Thread::GetProcessorCount() {
     SYSTEM_INFO info;
     memset(&info, 0, sizeof(info));
@@ -57,7 +57,7 @@ int32_t System_Thread::GetProcessorCount() {
     return count >= static_cast<int32_t>(System_Hardware::s_processorFeatures.m_processorCount) ? count : static_cast<int32_t>(System_Hardware::s_processorFeatures.m_processorCount);
 }
 
-// OFFSET: %0x00717750
+// OFFSET: 0x007B5EE0/0x1404ABF60
 bool Blizzard::Thread::SetAffinity(ThreadRecord* thread, const ThreadAffinity& affinity) {
     if (affinity.m_mode == 0) {
         if (affinity.m_processor < 0 || affinity.m_processor >= System_Thread::GetProcessorCount()) {
@@ -83,7 +83,7 @@ bool Blizzard::Thread::SetAffinity(ThreadRecord* thread, const ThreadAffinity& a
     return true;
 }
 
-// OFFSET: %0x007177E0
+// OFFSET: 0x007B5F70/0x1404AC230
 bool Blizzard::Thread::GetAffinity(ThreadRecord* thread, ThreadAffinity* affinity) {
     if (thread->m_affinity.m_mode == 0) {
         if (thread->m_affinity.m_processor < 0 || thread->m_affinity.m_processor >= System_Thread::GetProcessorCount()) {

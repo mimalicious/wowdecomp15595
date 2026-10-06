@@ -16,7 +16,7 @@ Blizzard::Hardware::ProcessorFeatures System_Hardware::s_processorFeatures;
 // STATIC: %0x00D871A0
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_extendedFeatures;
 
-// OFFSET: %0x0070FA10
+// OFFSET: 0x007AD1B0/0x1404A2EB0
 bool System_Hardware::ReadCPUID(CPUIDInfo* info) {
     memset(info, 0, sizeof(CPUIDInfo));
 
@@ -75,7 +75,7 @@ bool System_Hardware::ReadCPUID(CPUIDInfo* info) {
     return true;
 }
 
-// OFFSET: %0x0070FBB0
+// OFFSET: 0x007AD350/0x1404A3000
 uint32_t System_Hardware::CountSetBits(uint32_t mask) {
     uint32_t count = 0;
 
@@ -88,7 +88,7 @@ uint32_t System_Hardware::CountSetBits(uint32_t mask) {
     return count;
 }
 
-// OFFSET: %0x0070FC30
+// OFFSET: 0x007AD3D0/0x1404A3090
 bool System_Hardware::ReadLogicalProcessorInformation() {
     typedef BOOL (WINAPI *GETLOGICALPROCESSORINFORMATION)(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, PDWORD);
 
@@ -122,7 +122,7 @@ bool System_Hardware::ReadLogicalProcessorInformation() {
     return true;
 }
 
-// OFFSET: %0x00716FD0
+// OFFSET: 0x007B5430/0x1404AB2C0
 uint32_t Blizzard::Hardware::GetProcessorFeatures() {
     SYSTEM_INFO systemInfo;
     memset(&systemInfo, 0, sizeof(systemInfo));
@@ -194,7 +194,7 @@ uint32_t Blizzard::Hardware::GetProcessorFeatures() {
     return features;
 }
 
-// OFFSET: %0x00721DF0
+// OFFSET: 0x007C0710
 bool Blizzard::Hardware::ExtendedProcessorFeatures(ProcessorFeatures& features) {
     System_Hardware::s_extendedFeatures.m_features = GetProcessorFeatures();
     System_Hardware::s_extendedFeatures.m_coreCount = GetCoreCount();
@@ -205,7 +205,7 @@ bool Blizzard::Hardware::ExtendedProcessorFeatures(ProcessorFeatures& features) 
     return true;
 }
 
-// OFFSET: %0x00765600
+// OFFSET: 0x007FE960
 void System_Hardware::GetMACAddress(uint8_t* address) {
     typedef RPC_STATUS (RPC_ENTRY *UUIDCREATE)(UUID*);
 
@@ -241,7 +241,7 @@ uint64_t System_Hardware::GetDiskCapacity() {
     return 0;
 }
 
-// OFFSET: %0x00765680
+// OFFSET: 0x007FE9E0
 void System_Hardware::CalcFingerprint(uint8_t* fingerprint) {
     char buffer[296];
     memset(buffer, 0, sizeof(buffer));
@@ -269,7 +269,7 @@ bool Blizzard::Hardware::GetFingerprint(Fingerprint* fingerprint) {
     return true;
 }
 
-// OFFSET: %0x0070FE20
+// OFFSET: 0x007AD5C0/0x1404A3220
 uint64_t Blizzard::Memory::GetPhysicalMemory() {
     typedef BOOL (WINAPI *GLOBALMEMORYSTATUSEX)(LPMEMORYSTATUSEX);
 

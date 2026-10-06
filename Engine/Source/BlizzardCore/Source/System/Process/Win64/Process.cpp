@@ -97,7 +97,7 @@ bool ToolhelpFunction::CallModuleW(HANDLE snapshot, char* path, uint32_t pathsiz
     return true;
 }
 
-// OFFSET: %0x0071FEC0
+// OFFSET: 0x007BE4C0
 static bool WINAPI Process32FirstA(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(entry);
@@ -111,7 +111,7 @@ static bool WINAPI Process32FirstA(HANDLE snapshot, uint32_t* pid, char* name, u
     return true;
 }
 
-// OFFSET: %0x0071FF20
+// OFFSET: 0x007BE520/0x1404B5C40
 static bool WINAPI Process32NextA(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     PROCESSENTRY32 entry;
     entry.dwSize = sizeof(entry);
@@ -125,7 +125,7 @@ static bool WINAPI Process32NextA(HANDLE snapshot, uint32_t* pid, char* name, ui
     return true;
 }
 
-// OFFSET: %0x0071FF80
+// OFFSET: 0x007BE580
 static bool WINAPI Module32FirstA(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32 entry;
     entry.dwSize = sizeof(entry);
@@ -138,7 +138,7 @@ static bool WINAPI Module32FirstA(HANDLE snapshot, char* path, uint32_t pathsize
     return true;
 }
 
-// OFFSET: %0x0071FFD0
+// OFFSET: 0x007BE5D0
 static bool WINAPI Module32NextA(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32 entry;
     entry.dwSize = sizeof(entry);
@@ -151,25 +151,25 @@ static bool WINAPI Module32NextA(HANDLE snapshot, char* path, uint32_t pathsize)
     return true;
 }
 
-// OFFSET: %0x00722D80
+// OFFSET: 0x007C1880/0x1404BF890
 bool ToolhelpFunction::ProcessFirst(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     this->Load("Process32FirstW");
     return this->m_proc ? this->CallProcessW(snapshot, pid, name, namesize) : Process32FirstA(snapshot, pid, name, namesize);
 }
 
-// OFFSET: %0x00722E10
+// OFFSET: 0x007C1910/0x1404BF520
 bool ToolhelpFunction::ProcessNext(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     this->Load("Process32NextW");
     return this->m_proc ? this->CallProcessW(snapshot, pid, name, namesize) : Process32NextA(snapshot, pid, name, namesize);
 }
 
-// OFFSET: %0x00722EA0
+// OFFSET: 0x007C19A0/0x1404BF650
 bool ToolhelpFunction::ModuleFirst(HANDLE snapshot, char* path, uint32_t pathsize) {
     this->Load("Module32FirstW");
     return this->m_proc ? this->CallModuleW(snapshot, path, pathsize) : Module32FirstA(snapshot, path, pathsize);
 }
 
-// OFFSET: %0x00722F20
+// OFFSET: 0x007C1A20/0x1404BF780
 bool ToolhelpFunction::ModuleNext(HANDLE snapshot, char* path, uint32_t pathsize) {
     this->Load("Module32NextW");
     return this->m_proc ? this->CallModuleW(snapshot, path, pathsize) : Module32NextA(snapshot, path, pathsize);
@@ -298,7 +298,7 @@ bool Blizzard::Process::LaunchChildProcessWithArguments(const char* path, const 
     return true;
 }
 
-// OFFSET: %0x00725BA0
+// OFFSET: 0x007C4B10
 bool Blizzard::Process::EnumProcessesByName(const char* name, void (*callback)(const char*, uint32_t, void*), void* param) {
     if (!name || !callback) {
         return false;

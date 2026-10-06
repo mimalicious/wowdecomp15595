@@ -35,12 +35,12 @@ inline uint32_t ToStormFlags(uint32_t flags) {
     return stormFlags;
 }
 
-// OFFSET: %0x00717300
+// OFFSET: 0x007B5810/0x1404AB7A0
 void* Blizzard::Memory::Allocate(uint32_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00717320
+// OFFSET: 0x007B5830
 void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags) {
     return SMemAlloc(bytes, __FILE__, __LINE__, ToStormFlags(flags));
 }

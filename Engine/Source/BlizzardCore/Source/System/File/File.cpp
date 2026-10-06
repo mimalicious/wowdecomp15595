@@ -371,7 +371,7 @@ int32_t Blizzard::File::Exists(Filesystem* fs, const char* path) {
     return 0;
 }
 
-// OFFSET: %0x0070F020
+// OFFSET: 0x007AC5F0/0x1404A2320
 bool Blizzard::File::GetFileInfo(const char* path, FileInfo* info) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -395,7 +395,7 @@ bool Blizzard::File::GetFileInfo(const char* path, FileInfo* info) {
     return false;
 }
 
-// OFFSET: %0x0070F0A0
+// OFFSET: 0x007AC670/0x1404A23E0
 Blizzard::File::FileInfo* Blizzard::File::GetFileInfo(StreamRecord* file) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -413,7 +413,7 @@ Blizzard::File::FileInfo* Blizzard::File::GetFileInfo(StreamRecord* file) {
     return const_cast<FileInfo*>(&System_File::s_noinfo);
 }
 
-// OFFSET: %0x0070F110
+// OFFSET: 0x007AC6E0/0x1404A2450
 bool Blizzard::File::GetFileInfo(StreamRecord* file, FileInfo* info) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -480,7 +480,7 @@ bool Blizzard::File::GetPos(StreamRecord* file, int64_t* offset) {
     return false;
 }
 
-// OFFSET: %0x0070F1F0
+// OFFSET: 0x007AC7C0
 int32_t Blizzard::File::GetRootChars(const char* path) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -577,7 +577,7 @@ bool Blizzard::File::Open(const char* filename, int32_t flags, StreamRecord*& fi
     return Blizzard::File::Open(System_File::Stacked::s_manager, filename, flags, file);
 }
 
-// OFFSET: %0x0070F3E0
+// OFFSET: 0x007AC9B0
 bool Blizzard::File::Open(Filesystem* fs, const char* filename, int32_t flags, StreamRecord*& file) {
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_open);
@@ -598,7 +598,7 @@ bool Blizzard::File::Open(Filesystem* fs, const char* filename, int32_t flags, S
     return false;
 }
 
-// OFFSET: %0x0070F460
+// OFFSET: 0x007ACA30/0x1404A27A0
 bool Blizzard::File::ProcessDirFast(const char* path, void* cookie, ProcessDirCallback callback, bool treatSymlinksAsFiles) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -639,7 +639,7 @@ bool Blizzard::File::Read(StreamRecord* file, void* data, int32_t* count) {
     return false;
 }
 
-// OFFSET: %0x0070F530
+// OFFSET: 0x007ACB00
 bool Blizzard::File::Read(StreamRecord* file, void* data, int64_t offset, int32_t* count, int32_t streamFlags) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -718,7 +718,7 @@ bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
     return false;
 }
 
-// OFFSET: %0x0070F660
+// OFFSET: 0x007ACC30
 bool Blizzard::File::SetEOF(StreamRecord* file, int64_t offset, int32_t whence) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -784,7 +784,7 @@ bool Blizzard::File::SupportsSparse(const char* path) {
     return parms.m_supportsSparse;
 }
 
-// OFFSET: %0x0070F6C0
+// OFFSET: 0x007ACD40
 bool Blizzard::File::SetPos(StreamRecord* file, int64_t offset, int32_t whence) {
     Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
@@ -873,7 +873,7 @@ bool Blizzard::File::IsFile(const char* path) {
     return Exists(path) == 1;
 }
 
-// OFFSET: %0x0070F930
+// OFFSET: 0x007AD0D0/0x1404A2DB0
 bool Blizzard::File::SimpleGlob(const char* name, const char* pattern) {
     char p = *pattern;
 
@@ -1001,7 +1001,7 @@ bool Blizzard::File::Flush(StreamRecord* file) {
     return false;
 }
 
-// OFFSET: %0x007168F0
+// OFFSET: 0x007B4C70/0x1404AA7D0
 void System_File::Shutdown() {
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Blizzard::File::Filesystem, m_verbs.m_shutdown);
@@ -1082,14 +1082,14 @@ bool System_File::Stacked::file_init(Blizzard::File::Filesystem* fs, FileParms* 
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(s_manager) + parms->m_verb))(s_manager, parms);
 }
 
-// OFFSET: %0x0074A5F0
+// OFFSET: 0x007E48C0/0x1404ED5E0
 Blizzard::Debug::ErrorStackRecord* Blizzard::File::GetLastErrorStack() {
     System_File::FileError& error = System_File::s_error;
 
     return error.m_errorStack;
 }
 
-// OFFSET: %0x0074A600
+// OFFSET: 0x007E48D0/0x1404ED600
 void Blizzard::File::SetLastErrorStack(Blizzard::Debug::ErrorStackRecord* stack) {
     System_File::FileError& error = System_File::s_error;
 
@@ -1100,7 +1100,7 @@ void Blizzard::File::SetLastErrorStack(Blizzard::Debug::ErrorStackRecord* stack)
     error.m_errorStack = stack;
 }
 
-// OFFSET: %0x0074A630
+// OFFSET: 0x007E4900/0x1404ED650
 void Blizzard::File::AddToLastErrorStack(int32_t errCode, const char* errStr, int32_t category) {
     System_File::FileError& error = System_File::s_error;
     Blizzard::Debug::ErrorStackRecord* stack = Blizzard::Debug::AddErrorToStack(error.m_errorStack, errCode, errStr ? errStr : "", category);
@@ -1110,13 +1110,13 @@ void Blizzard::File::AddToLastErrorStack(int32_t errCode, const char* errStr, in
     }
 }
 
-// OFFSET: %0x0074A5D0
+// OFFSET: 0x007E48A0/0x1404ED5C0
 void Blizzard::File::SetLastError(int32_t errorCode) {
     System_File::FileError& error = System_File::s_error;
     error.m_lastError = errorCode;
 }
 
-// OFFSET: %0x0071E190
+// OFFSET: 0x007BC5A0
 bool System_File::LoadFile(Blizzard::File::StreamRecord* file, void** data, uint32_t* bytes) {
     Blizzard::File::FileInfo info;
 
@@ -1167,7 +1167,7 @@ bool System_File::LoadFile(const char* filename, void** data, uint32_t* bytes, i
     return result;
 }
 
-// OFFSET: %0x0070E7F0
+// OFFSET: 0x007ABA50/0x1404A2CB0
 bool System_File::Stacked::PassThrough(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (!fs->m_next) {
         return false;
@@ -1176,7 +1176,7 @@ bool System_File::Stacked::PassThrough(Blizzard::File::Filesystem* fs, FileParms
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x007250B0
+// OFFSET: 0x007C40A0/0x1404BE8E0
 bool System_File::Stacked::throttle_read(Blizzard::File::Filesystem* fs, FileParms* parms) {
     Blizzard::Time::Timestamp start = Blizzard::Time::GetTimestamp();
     bool result = fs->m_next ? (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms) : false;

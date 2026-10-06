@@ -19,7 +19,7 @@ bool System_MPQGlobals::ArchiveLess::operator()(const System_SFile::ARCHIVEREC* 
     return a->m_priority > b->m_priority;
 }
 
-// OFFSET: %0x00745750
+// OFFSET: 0x007E6060
 System_MPQGlobals::Globals::Globals() {
     this->m_mopaq.m_directAccess = 0;
 
@@ -33,27 +33,27 @@ System_MPQGlobals::Globals::Globals() {
     this->m_mopaq.m_disableRepair = false;
 }
 
-// OFFSET: %0x00748670
+// OFFSET: 0x007EE190/0x1404FAB90
 System_MPQGlobals::ArchiveList* System_MPQGlobals::GetArchiveList() {
     return &s_globals.Get()->m_archives;
 }
 
-// OFFSET: %0x007486D0
+// OFFSET: 0x007EE1F0/0x1404FAC20
 Blizzard::Lock::RMutex* System_MPQGlobals::GetArchiveLock() {
     return &s_globals.Get()->m_archiveLock;
 }
 
-// OFFSET: %0x00748730
+// OFFSET: 0x007EE250/0x1404FACB0
 System_MPQGlobals::MopaqGlobals* System_MPQGlobals::GetMopaqGlobals() {
     return &s_globals.Get()->m_mopaq;
 }
 
-// OFFSET: %0x00748790
+// OFFSET: 0x007EE2B0
 Blizzard::Lock::RMutex* System_MPQGlobals::GetMopaqGlobalsLock() {
     return &s_globals.Get()->m_mopaqLock;
 }
 
-// OFFSET: %0x00749FB0
+// OFFSET: 0x007F1440/0x1404FE140
 System_SFile::ARCHIVEREC* Blizzard::Mopaq::SFileGetArchiveHandle(const char* name) {
     System_MPQGlobals::ArchiveList* archives = System_MPQGlobals::GetArchiveList();
 
@@ -66,18 +66,18 @@ System_SFile::ARCHIVEREC* Blizzard::Mopaq::SFileGetArchiveHandle(const char* nam
     return NULL;
 }
 
-// OFFSET: %0x00745500
+// OFFSET: 0x007E5E10/0x1404EF5C0
 System_MPQGlobals::Globals::~Globals() {
 }
 
-// OFFSET: %0x00745160
+// OFFSET: 0x007E4050
 System_MPQGlobals::WorkerPool::~WorkerPool() {
     for (std::vector<Worker*>::iterator it = this->m_workers.begin(); it != this->m_workers.end(); ++it) {
         delete *it;
     }
 }
 
-// OFFSET: %0x00742460
+// OFFSET: 0x007E0E30
 System_MPQGlobals::Worker::~Worker() {
     this->m_proc = NULL;
     Blizzard::Lock::EventSet(this->m_start.m_event);

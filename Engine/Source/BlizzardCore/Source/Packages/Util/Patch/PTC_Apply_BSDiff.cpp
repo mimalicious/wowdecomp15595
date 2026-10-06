@@ -3,7 +3,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/Patch/Patch.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x0070D660
+// OFFSET: 0x007AA7A0
 static int32_t ReadOffset(const uint32_t* value) {
     int32_t result = static_cast<int32_t>(*value);
 
@@ -14,7 +14,7 @@ static int32_t ReadOffset(const uint32_t* value) {
     return static_cast<int32_t>(0x80000000 - *value);
 }
 
-// OFFSET: %0x00712B20
+// OFFSET: 0x007B0690/0x1404A5450
 bool Blizzard::Patch::ApplyBSDiffPatch(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     if (patchSize < 32 || memcmp(patch, "BSDIFF40", 8)) {
         return false;
@@ -99,7 +99,7 @@ bool Blizzard::Patch::ApplyBSDiffPatch(const uint8_t* patch, uint32_t patchSize,
     return extra >= diffEnd + extraSize;
 }
 
-// OFFSET: %0x00712CF0
+// OFFSET: 0x007B0860
 uint8_t* BSDiff::DecodeRLE(const uint8_t* data, uint32_t* size, uint32_t skip) {
     uint32_t outSize = *reinterpret_cast<const uint32_t*>(data) - skip;
     uint8_t* result = static_cast<uint8_t*>(SMemAlloc(outSize, __FILE__, __LINE__, 0));
@@ -131,7 +131,7 @@ uint8_t* BSDiff::DecodeRLE(const uint8_t* data, uint32_t* size, uint32_t skip) {
     return result;
 }
 
-// OFFSET: %0x00719980
+// OFFSET: 0x007B8520
 bool Blizzard::Patch::ApplyRLEBSDiffPatch(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     uint8_t* decoded = BSDiff::DecodeRLE(patch, &patchSize, 0);
     bool result = ApplyBSDiffPatch(decoded, patchSize, dest, destSize, source, sourceSize);
@@ -140,7 +140,7 @@ bool Blizzard::Patch::ApplyRLEBSDiffPatch(const uint8_t* patch, uint32_t patchSi
     return result;
 }
 
-// OFFSET: %0x007199D0
+// OFFSET: 0x007B8570
 bool BSDiff::PTCApply_BSDiff(const uint8_t* patch, uint32_t patchSize, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     if (patchSize < 32) {
         return false;

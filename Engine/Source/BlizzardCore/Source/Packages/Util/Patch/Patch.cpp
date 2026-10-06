@@ -47,7 +47,7 @@ uint8_t* Blizzard::Patch::PatchBuffer::GetAll() {
     return this->m_data;
 }
 
-// OFFSET: %0x00712E40
+// OFFSET: 0x007B09A0
 bool Blizzard::Patch::PatchBuffer::Read(uint32_t offset, void* buffer, uint32_t size) {
     if (offset + size > this->m_size) {
         return false;
@@ -78,7 +78,7 @@ static void DeleteBuffer(Blizzard::Patch::PatchBuffer* buffer) {
 Blizzard::Patch::Patch::~Patch() {
 }
 
-// OFFSET: %0x00712F40
+// OFFSET: 0x007B0AB0
 bool Blizzard::Patch::Patch::CopyTransformData(uint8_t* dest) {
     uint32_t size = 0;
     const uint8_t* data = this->GetTransformData(&size);
@@ -87,7 +87,7 @@ bool Blizzard::Patch::Patch::CopyTransformData(uint8_t* dest) {
     return true;
 }
 
-// OFFSET: %0x00719A70
+// OFFSET: 0x007B8610/0x1404AF190
 Blizzard::Patch::LegacyPatch::~LegacyPatch() {
     DeleteBuffer(this->m_buffer);
 }
@@ -116,7 +116,7 @@ const char* Blizzard::Patch::LegacyPatch::GetTypeName() {
     return "legacy";
 }
 
-// OFFSET: %0x00719AC0
+// OFFSET: 0x007B8660
 const uint8_t* Blizzard::Patch::LegacyPatch::GetTransformData(uint32_t* size) {
     *size = this->m_buffer->m_size - sizeof(LegacyHeader);
     return this->m_buffer->Get(0, *size + sizeof(LegacyHeader)) + sizeof(LegacyHeader);
@@ -128,7 +128,7 @@ uint32_t Blizzard::Patch::LegacyPatch::GetHeaderSize() {
     return sizeof(LegacyHeader);
 }
 
-// OFFSET: %0x00719B10
+// OFFSET: 0x007B86B0/0x1404AF0B0
 bool Blizzard::Patch::LegacyPatch::Apply(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t destSize) {
     if (destSize < this->m_targetSize || this->m_sourceSize != sourceSize) {
         return false;
@@ -156,7 +156,7 @@ bool Blizzard::Patch::LegacyPatch::Apply(const uint8_t* source, uint32_t sourceS
     }
 }
 
-// OFFSET: %0x0072CAB0
+// OFFSET: 0x007CB770/0x1404C6EC0
 bool Blizzard::Patch::LegacyPatch::VerifySource(const uint8_t* source, uint32_t size, Error& error) {
     uint32_t crc = crc32(0, source, size);
     bool result = this->m_sourceCrc == crc;
@@ -169,7 +169,7 @@ bool Blizzard::Patch::LegacyPatch::VerifySource(const uint8_t* source, uint32_t 
     return result;
 }
 
-// OFFSET: %0x00719A70
+// OFFSET: 0x007B8610/0x1404AF190
 Blizzard::Patch::V2Patch::~V2Patch() {
     DeleteBuffer(this->m_buffer);
 }
@@ -217,7 +217,7 @@ bool Blizzard::Patch::V2Patch::Apply(const uint8_t* source, uint32_t sourceSize,
     return ApplyTransform(this->m_transform, dest, destSize, source, sourceSize);
 }
 
-// OFFSET: %0x0072CC90
+// OFFSET: 0x007CB950
 bool Blizzard::Patch::V2Patch::VerifySource(const uint8_t* source, uint32_t size, Error& error) {
     Blizzard::Util::MD5 md5;
     md5.Process(source, size);
@@ -240,7 +240,7 @@ bool Blizzard::Patch::V2Patch::VerifySource(const uint8_t* source, uint32_t size
     return result;
 }
 
-// OFFSET: %0x0070D680
+// OFFSET: 0x007AA7C0
 static uint32_t GetTransformType(uint8_t transform) {
     switch (transform) {
     case 1:
@@ -258,7 +258,7 @@ static uint32_t GetTransformType(uint8_t transform) {
     }
 }
 
-// OFFSET: %0x0072C940
+// OFFSET: 0x007CB600
 static bool ValidateLegacyHeader(const Blizzard::Patch::LegacyHeader& header, Blizzard::Patch::Error& error) {
     if (header.m_headerSize != sizeof(Blizzard::Patch::LegacyHeader)) {
         error.assign("Old style patch - header size mismatch");
@@ -277,7 +277,7 @@ static bool ValidateLegacyHeader(const Blizzard::Patch::LegacyHeader& header, Bl
     return error.empty();
 }
 
-// OFFSET: %0x0072C9B0
+// OFFSET: 0x007CB670
 static Blizzard::Patch::Patch* CreateLegacyPatch(Blizzard::Patch::PatchBuffer* buffer, Blizzard::Patch::Error& error) {
     if (buffer->m_size < sizeof(Blizzard::Patch::LegacyHeader)) {
         error.assign("Failed to read old-style header - too short?");
@@ -301,7 +301,7 @@ static Blizzard::Patch::Patch* CreateLegacyPatch(Blizzard::Patch::PatchBuffer* b
     return patch;
 }
 
-// OFFSET: %0x0072CB20
+// OFFSET: 0x007CB7E0/0x1404C6F40
 static Blizzard::Patch::Patch* CreateV2Patch(Blizzard::Patch::PatchBuffer* buffer, Blizzard::Patch::Error& error) {
     Blizzard::Patch::PatchStream<Blizzard::Patch::PatchBuffer> stream;
     stream.m_stream = buffer;
@@ -355,7 +355,7 @@ static Blizzard::Patch::Patch* CreateV2Patch(Blizzard::Patch::PatchBuffer* buffe
     return patch;
 }
 
-// OFFSET: %0x0072CD60
+// OFFSET: 0x007CBA20/0x1404CDE40
 Blizzard::Patch::Patch* Blizzard::Patch::Patch::CreatePatch(PatchBuffer* buffer, Error& error) {
     Patch* patch = CreateV2Patch(buffer, error);
 
@@ -380,7 +380,7 @@ Blizzard::Patch::Patch* Blizzard::Patch::Patch::CreatePatch(PatchBuffer* buffer,
     return NULL;
 }
 
-// OFFSET: %0x007319F0
+// OFFSET: 0x007D00D0
 Blizzard::Patch::Patch* Blizzard::Patch::Patch::GetPatch(const uint8_t* data, uint32_t size) {
     Error error;
     PatchBuffer* buffer = new PatchBuffer;
@@ -407,7 +407,7 @@ bool Blizzard::Patch::Apply(const uint8_t* patch, uint32_t patchSize, uint8_t* d
     return result;
 }
 
-// OFFSET: %0x0074B9B0
+// OFFSET: 0x007E6320/0x1404EFD00
 bool Blizzard::Patch::ApplyTransform(const TransformChunk* transform, uint8_t* dest, uint32_t destSize, const uint8_t* source, uint32_t sourceSize) {
     uint32_t type = transform->m_type;
     uint32_t size = transform->m_size - sizeof(TransformChunk);

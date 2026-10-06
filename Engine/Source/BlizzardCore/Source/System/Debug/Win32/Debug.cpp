@@ -24,7 +24,7 @@ static HMODULE s_dbgHelp;
 // STATIC: %0x00D86D5C
 static bool s_dbgHelpInitialized;
 
-// OFFSET: %0x004BB2F0
+// OFFSET: 0x007AC370
 void Blizzard::Debug::Breakpoint() {
     __try {
         __debugbreak();
@@ -32,7 +32,7 @@ void Blizzard::Debug::Breakpoint() {
     }
 }
 
-// OFFSET: %0x00724E30
+// OFFSET: 0x007C3E00/0x1404BE600
 void Blizzard::Debug::DefaultCallback(const char* expression, const char* message, const char* fileName, uint32_t lineNumber) {
     char text[2048];
     char path[512];

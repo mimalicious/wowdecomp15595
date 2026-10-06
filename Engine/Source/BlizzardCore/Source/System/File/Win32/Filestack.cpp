@@ -47,7 +47,7 @@ Blizzard::Lock::Mutex System_File::s_ioMutex;
 // STATIC: %0x00D8139C
 Blizzard::Lock::Mutex* System_File::s_ioLock;
 
-// OFFSET: %0x0070F840
+// OFFSET: 0x007ACEC0
 int32_t System_File::ToNativeAttributes(int32_t attributes) {
     int32_t result = (attributes & 0x1) != 0 ? FILE_ATTRIBUTE_READONLY : 0;
 
@@ -78,7 +78,7 @@ int32_t System_File::ToNativeAttributes(int32_t attributes) {
     return result;
 }
 
-// OFFSET: %0x0070F890
+// OFFSET: 0x007ACF10
 int32_t System_File::FromNativeAttributes(int32_t attributes) {
     int32_t result = (attributes & FILE_ATTRIBUTE_READONLY) != 0 ? 0x1 : 0;
 
@@ -1269,7 +1269,7 @@ bool System_File::write_locked(Blizzard::File::StreamRecord* file, void* buffer,
     return write_overlapped(file, buffer, NULL, count);
 }
 
-// OFFSET: %0x00751D80
+// OFFSET: 0x007EA600/0x1404F5B90
 void System_File::detect_io_mode() {
     OSVERSIONINFOA info;
     info.dwOSVersionInfoSize = sizeof(info);
@@ -1286,7 +1286,7 @@ void System_File::detect_io_mode() {
     }
 }
 
-// OFFSET: %0x007554D0
+// OFFSET: 0x007EC0B0/0x1404F8410
 bool System_File::read_first(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     if (!s_read_init) {
         if (s_readInitCount.Increment() == 1) {
@@ -1318,7 +1318,7 @@ bool System_File::write_first(Blizzard::File::StreamRecord* file, void* buffer, 
     return write_func(file, buffer, overlapped, count);
 }
 
-// OFFSET: %0x0071ED90
+// OFFSET: 0x007BD3F0
 void System_File::FromNativeName(char* buffer, uint32_t buffersize, const char* str) {
     uint32_t length = str ? static_cast<uint32_t>(strlen(str)) : 0;
     Blizzard::Memory::TempBuffer<uint16_t, 300> wide(length + 1);

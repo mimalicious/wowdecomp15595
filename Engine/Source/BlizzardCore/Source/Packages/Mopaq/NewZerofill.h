@@ -4,7 +4,7 @@
 #include <new>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00742220
+// OFFSET: 0x007DEB20
 template <class T>
 T* NewZerofill() {
     void* memory = SMemAlloc(sizeof(T), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY);

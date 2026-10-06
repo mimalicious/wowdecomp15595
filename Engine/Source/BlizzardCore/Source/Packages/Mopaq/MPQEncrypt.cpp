@@ -200,7 +200,7 @@ uint32_t System_MPQEncrypt::Hash(const char* str, uint32_t type) {
     return seed1;
 }
 
-// OFFSET: %0x0070D720
+// OFFSET: 0x007AA860/0x1404A0C30
 void System_MPQEncrypt::Decrypt(uint32_t* data, uint32_t size, uint32_t key) {
     uint32_t seed = 0xEEEEEEEE;
 
@@ -213,7 +213,7 @@ void System_MPQEncrypt::Decrypt(uint32_t* data, uint32_t size, uint32_t key) {
     }
 }
 
-// OFFSET: %0x0070D780
+// OFFSET: 0x007AA8C0
 void System_MPQEncrypt::Encrypt(uint32_t* data, uint32_t size, uint32_t key) {
     uint32_t seed = 0xEEEEEEEE;
 

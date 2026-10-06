@@ -35,7 +35,7 @@ uint32_t Blizzard::String::Copy(char* dst, const char* src, uint32_t maxchars) {
     return static_cast<uint32_t>(p - dst);
 }
 
-// OFFSET: %0x00710110
+// OFFSET: 0x007ADAE0/0x1404A3740
 uint32_t Blizzard::String::Append(char* dst, const char* src, uint32_t maxchars) {
     if (!maxchars || !dst) {
         return 0;
@@ -69,7 +69,7 @@ uint32_t Blizzard::String::Append(char* dst, const char* src, uint32_t maxchars)
     return static_cast<uint32_t>(p - dst);
 }
 
-// OFFSET: %0x007102B0
+// OFFSET: 0x007ADC40
 const char* Blizzard::String::FindFirstOf(const char* str, const char* chars, int32_t maxchars) {
     if (!str || !chars || !*chars || maxchars < 1 || !*str) {
         return NULL;
@@ -88,7 +88,7 @@ const char* Blizzard::String::FindFirstOf(const char* str, const char* chars, in
     return NULL;
 }
 
-// OFFSET: %0x00710310
+// OFFSET: 0x007ADCA0/0x1404A3860
 int32_t Blizzard::String::VFormat(char* dst, uint32_t maxchars, const char* format, va_list args) {
     if (!format) {
         if (maxchars) {
@@ -188,7 +188,7 @@ char* System_String::Duplicate(const char* str, const char* fileName, int32_t li
     return dst;
 }
 
-// OFFSET: %0x00717550
+// OFFSET: 0x007B5BD0/0x1404ABC30
 const char* Blizzard::String::Find(const char* str, const char* substr, uint32_t maxchars) {
     if (str && substr) {
         return System_String::Find(str, substr, maxchars);
@@ -197,7 +197,7 @@ const char* Blizzard::String::Find(const char* str, const char* substr, uint32_t
     return NULL;
 }
 
-// OFFSET: %0x00711EC0
+// OFFSET: 0x007AF8E0
 const char* System_String::FindReverse(const char* str, const char* substr, uint32_t maxchars) {
     uint32_t sublen = substr ? static_cast<uint32_t>(strlen(substr)) : 0;
     uint32_t length = str ? static_cast<uint32_t>(strlen(str)) : 0;
@@ -217,7 +217,7 @@ const char* System_String::FindReverse(const char* str, const char* substr, uint
     return p;
 }
 
-// OFFSET: %0x00717580
+// OFFSET: 0x007B5C30
 const char* Blizzard::String::FindReverse(const char* str, const char* substr, uint32_t maxchars) {
     if (str && substr) {
         return System_String::FindReverse(str, substr, maxchars);
@@ -265,17 +265,17 @@ int32_t Blizzard::String::Format(char* dst, uint32_t maxchars, const char* forma
     return result;
 }
 
-// OFFSET: %0x0071ED00
+// OFFSET: 0x007BD360/0x1404B5B00
 char* Blizzard::String::Duplicate(const char* str) {
     return System_String::Duplicate(str, __FILE__, __LINE__);
 }
 
-// OFFSET: %0x00710170
+// OFFSET: 0x007ADB40/0x1404A37A0
 bool Blizzard::String::Equal(const char* str1, const char* str2) {
     return str1 && str2 && !strcmp(str1, str2);
 }
 
-// OFFSET: %0x007101C0
+// OFFSET: 0x007ADB90/0x1404A37D0
 bool Blizzard::String::EqualI(const char* str1, const char* str2) {
     return str1 && str2 && !_stricmp(str1, str2);
 }
@@ -302,7 +302,7 @@ bool Blizzard::String::EqualI(const char* str1, const char* str2, uint32_t count
     return str1 && str2 && !_strnicmp(str1, str2, count);
 }
 
-// OFFSET: %0x00710260
+// OFFSET: 0x007ADBF0/0x1404A3830
 uint32_t Blizzard::String::Length(const char* str) {
     if (str) {
         return static_cast<uint32_t>(strlen(str));

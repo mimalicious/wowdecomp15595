@@ -50,7 +50,7 @@ uint32_t Blizzard::Mopaq::SFileGetLastError() {
     return System_SFile::s_lastError;
 }
 
-// OFFSET: %0x0070DAA0
+// OFFSET: 0x007AAB80/0x1404A0EA0
 void System_SFile::BitPacked::ReadBits(uint32_t start, uint32_t bits, uint8_t* out, uint32_t outSize) const {
     uint32_t byte = start >> 3;
     uint8_t shift = start & 7;
@@ -86,7 +86,7 @@ void System_SFile::BitPacked::ReadBits(uint32_t start, uint32_t bits, uint8_t* o
     }
 }
 
-// OFFSET: %0x0070DB80
+// OFFSET: 0x007AAC60/0x1404A0FB0
 bool System_SFile::BitPacked::WriteBits(uint32_t start, uint32_t bits, const uint8_t* in, uint32_t inSize) {
     if (start + bits > this->m_bitCount) {
         return false;
@@ -137,14 +137,14 @@ bool System_SFile::BitPacked::WriteBits(uint32_t start, uint32_t bits, const uin
     return true;
 }
 
-// OFFSET: %0x0070DD00
+// OFFSET: 0x007AADE0
 void System_SFile::HashEntryTable::SetHashBits(int32_t bits) {
     this->m_hashBits = bits;
     this->m_hashMask = (bits == 64 ? 0 : static_cast<uint64_t>(1) << bits) - 1;
     this->m_hashTopBit = static_cast<uint64_t>(1) << (bits - 1);
 }
 
-// OFFSET: %0x007132F0
+// OFFSET: 0x007B0E60/0x1404A5C80
 bool System_SFile::BlockEntryTable::UnpackEntry(uint32_t index, BLOCKENTRY* entry) {
     if (!this->m_entries) {
         return false;
@@ -184,7 +184,7 @@ bool System_SFile::BlockEntryTable::UnpackEntry(uint32_t index, BLOCKENTRY* entr
     return true;
 }
 
-// OFFSET: %0x00713450
+// OFFSET: 0x007B0FC0
 uint64_t System_SFile::HashEntryTable::CalculateHash(const char* name) {
     uint8_t buffer[260];
     uint32_t length = 0;
@@ -221,7 +221,7 @@ uint64_t System_SFile::HashEntryTable::CalculateHash(const char* name) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
 
-// OFFSET: %0x007134F0
+// OFFSET: 0x007B1060
 uint32_t System_SFile::HashEntryTable::GetEntry(const uint64_t& hash, BlockEntryTable* blocks) {
     uint64_t key = (hash & this->m_hashMask) | this->m_hashTopBit;
     uint32_t start = static_cast<uint32_t>(key % this->m_slotCount);
@@ -254,7 +254,7 @@ uint32_t System_SFile::HashEntryTable::GetEntry(const uint64_t& hash, BlockEntry
     return -1;
 }
 
-// OFFSET: %0x0071A0B0
+// OFFSET: 0x007B8DA0/0x1404AFAC0
 System_SFile::BitPacked::BitPacked(uint32_t bitCount, uint8_t fill) {
     this->m_data = static_cast<uint8_t*>(Blizzard::Memory::Allocate((bitCount + 7) / 8));
     memset(this->m_data, fill, (bitCount + 7) / 8);
@@ -266,7 +266,7 @@ System_SFile::BitPacked::~BitPacked() {
     Blizzard::Memory::Free(this->m_data);
 }
 
-// OFFSET: %0x0071A450
+// OFFSET: 0x007B9140/0x1404AFEF0
 void System_SFile::BlockEntryTable::InitializeHashCheckTable(int32_t bits) {
     int32_t hashBits = bits - 8;
 
@@ -284,7 +284,7 @@ void System_SFile::BlockEntryTable::InitializeHashCheckTable(int32_t bits) {
     this->m_hashes = new BitPacked(this->m_hashEntryBits * this->m_count, 0);
 }
 
-// OFFSET: %0x0071A6A0
+// OFFSET: 0x007B9390/0x1404B02C0
 System_SFile::HashEntryTable::HashEntryTable(uint32_t count, int32_t hashBits) {
     this->unk_0004 = 0;
     this->m_indexBits = 0;
@@ -307,7 +307,7 @@ System_SFile::HashEntryTable::HashEntryTable(uint32_t count, int32_t hashBits) {
     this->SetHashBits(hashBits);
 }
 
-// OFFSET: %0x0071A720
+// OFFSET: 0x007B9410/0x1404B0380
 System_SFile::HashEntryTable::~HashEntryTable() {
     if (this->m_indices) {
         delete this->m_indices;
@@ -322,7 +322,7 @@ System_SFile::HashEntryTable::~HashEntryTable() {
     }
 }
 
-// OFFSET: %0x0071A780
+// OFFSET: 0x007B9470
 bool System_SFile::HashEntryTable::AddEntry(const char* name, uint32_t blockIndex, BlockEntryTable* blocks) {
     if (!this->m_indices) {
         this->m_indices = new BitPacked(this->m_slotCount * this->m_entryBits, 0xFF);
@@ -371,7 +371,7 @@ bool System_SFile::HashEntryTable::AddEntry(const char* name, uint32_t blockInde
     return blocks->m_hashes->WriteBits(blockIndex * blocks->m_hashEntryBits, blocks->m_hashBits, reinterpret_cast<const uint8_t*>(&check), 8);
 }
 
-// OFFSET: %0x0072D320
+// OFFSET: 0x007CC130
 System_SFile::BlockEntryTable::~BlockEntryTable() {
     delete this->m_entries;
     this->m_entries = NULL;
@@ -381,7 +381,7 @@ System_SFile::BlockEntryTable::~BlockEntryTable() {
     this->m_md5Checks = NULL;
 }
 
-// OFFSET: %0x00723EC0
+// OFFSET: 0x007C2F70/0x1404BD420
 System_SFile::ArchiveBuffers::~ArchiveBuffers() {
     memset(this->unk_0000.m_data, 0, this->unk_0000.m_count);
     memset(this->unk_000C.m_data, 0, this->unk_000C.m_count);
@@ -434,14 +434,14 @@ System_SFile::ARCHIVEREC::ARCHIVEREC() {
     this->m_header.m_rawChunkSize = 0;
 }
 
-// OFFSET: %0x00749C70
+// OFFSET: 0x007F0800
 bool Blizzard::Mopaq::SFileEnableDirectAccess(uint32_t enable) {
     Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetMopaqGlobalsLock()->m_mutex);
     System_MPQGlobals::GetMopaqGlobals()->m_directAccess = enable;
     return true;
 }
 
-// OFFSET: %0x00749CD0
+// OFFSET: 0x007F0980/0x1404FD3F0
 bool System_SFile::ARCHIVEREC::RemoveInternalArchiveRef() {
     bool result = true;
 
@@ -475,7 +475,7 @@ bool System_SFile::ARCHIVEREC::RemoveInternalArchiveRef() {
     return result;
 }
 
-// OFFSET: %0x00749DF0
+// OFFSET: 0x007F1210
 bool System_SFile::OpenDirectPathAsArchive(const char* path, int32_t priority, uint32_t flags, ARCHIVEREC** result) {
     ARCHIVEREC* archive = NewZerofill<ARCHIVEREC>();
     archive->m_priority = priority;
@@ -510,7 +510,7 @@ bool System_SFile::OpenDirectPathAsArchive(const char* path, int32_t priority, u
     return true;
 }
 
-// OFFSET: %0x0074A170
+// OFFSET: 0x007F19A0
 void System_SFile::ConvertRelativePathName(const char* path, char* result) {
     Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetMopaqGlobalsLock()->m_mutex);
 
@@ -519,7 +519,7 @@ void System_SFile::ConvertRelativePathName(const char* path, char* result) {
     Blizzard::File::MakeAbsolutePath(joined, result, 260, false);
 }
 
-// OFFSET: %0x0074C1B0
+// OFFSET: 0x007F0860/0x1404FD270
 bool Blizzard::Mopaq::SFileSetBasePath(const char* path) {
     Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetMopaqGlobalsLock()->m_mutex);
     System_MPQGlobals::MopaqGlobals* globals = System_MPQGlobals::GetMopaqGlobals();
@@ -545,7 +545,7 @@ bool Blizzard::Mopaq::SFileSetBasePath(const char* path) {
     return true;
 }
 
-// OFFSET: %0x0074CF00
+// OFFSET: 0x007F10F0/0x1404FDCD0
 System_SFile::ARCHIVEREC* System_SFile::GetArchivePtr(ARCHIVEREC* handle, bool addRef) {
     ARCHIVEREC* archive = NULL;
 
@@ -602,7 +602,7 @@ bool Blizzard::Mopaq::SFileCloseArchive(System_SFile::ARCHIVEREC* handle) {
     return archive->RemoveInternalArchiveRef() && result;
 }
 
-// OFFSET: %0x00713B70
+// OFFSET: 0x007B16E0
 static bool ValidateHeaderMD5(const System_SFile::MPQHEADER* header) {
     Blizzard::Util::MD5 md5;
     md5.Process(header, offsetof(System_SFile::MPQHEADER, m_headerMd5));
@@ -613,7 +613,7 @@ static bool ValidateHeaderMD5(const System_SFile::MPQHEADER* header) {
     return digest == header->m_headerMd5;
 }
 
-// OFFSET: %0x00713BD0
+// OFFSET: 0x007B1740
 static void FixupOldHeader(System_SFile::MPQHEADER* header) {
     if (header->m_formatVersion == 0) {
         header->m_hiBlockTablePos = 0;
@@ -1048,7 +1048,7 @@ static uint32_t BitLength(uint64_t value) {
     return bits;
 }
 
-// OFFSET: %0x0071A230
+// OFFSET: 0x007B8F20
 void System_SFile::BlockEntryTable::SetLayout(BLOCKENTRY& maxima) {
     this->m_offsetBits = BitLength(maxima.m_offset);
     this->UpdateLayout();
@@ -1080,7 +1080,7 @@ void System_SFile::BlockEntryTable::SetLayout(BLOCKENTRY& maxima) {
     }
 }
 
-// OFFSET: %0x0071A100
+// OFFSET: 0x007B8DF0
 bool System_SFile::BlockEntryTable::PackEntry(uint32_t index, const BLOCKENTRY* entry) {
     if (!this->m_entries) {
         this->m_entries = new BitPacked(this->m_entryBits * this->m_count, 0);
@@ -1133,7 +1133,7 @@ void System_SFile::ARCHIVEREC::PackBlockTable() {
     }
 }
 
-// OFFSET: %0x00739B00
+// OFFSET: 0x007D81B0
 System_SFile::BlockEntryTable::BlockEntryTable(uint32_t count, uint32_t flags) {
     this->m_entryBits = 0;
     this->m_offsetBit = 0;
@@ -1175,7 +1175,7 @@ System_SFile::BlockEntryTable::BlockEntryTable(uint32_t count, uint32_t flags) {
     }
 }
 
-// OFFSET: %0x00739C50
+// OFFSET: 0x007D8300
 void System_SFile::BlockEntryTable::AddFlags(uint32_t flags) {
     for (std::vector<uint32_t>::iterator it = this->m_flagTable.begin(); it != this->m_flagTable.end(); ++it) {
         if (*it == flags) {
@@ -1186,7 +1186,7 @@ void System_SFile::BlockEntryTable::AddFlags(uint32_t flags) {
     this->m_flagTable.push_back(flags);
 }
 
-// OFFSET: %0x00739D40
+// OFFSET: 0x007D83F0
 System_SFile::BLOCKENTRY* System_SFile::BlockEntryTable::GetMaxima(BLOCKENTRY* maxima, const std::vector<BLOCKENTRY>& entries) {
     maxima->m_offset = 0;
     maxima->m_compressedSize = 0;
@@ -1212,7 +1212,7 @@ System_SFile::BLOCKENTRY* System_SFile::BlockEntryTable::GetMaxima(BLOCKENTRY* m
     return maxima;
 }
 
-// OFFSET: %0x0073A1C0
+// OFFSET: 0x007D8B20
 void System_SFile::ARCHIVEREC::ConvertToNewBlockTableFormat(bool clear) {
     this->m_blockEntryTable = new BlockEntryTable(static_cast<uint32_t>(this->m_blockTable.size()), this->m_flags);
 
@@ -1226,7 +1226,7 @@ void System_SFile::ARCHIVEREC::ConvertToNewBlockTableFormat(bool clear) {
     }
 }
 
-// OFFSET: %0x0073A510
+// OFFSET: 0x007D8E70
 bool System_SFile::ClearTables(ARCHIVEREC* archive, uint32_t hashCount) {
     std::vector<BLOCKENTRY>().swap(archive->m_blockTable);
     delete archive->m_blockEntryTable;
@@ -1259,7 +1259,7 @@ System_SFile::ArchivePtr::ArchivePtr(ARCHIVEREC* archive) {
     this->m_locked = false;
 }
 
-// OFFSET: %0x0074BAC0
+// OFFSET: 0x007F2390/0x1404FF4E0
 System_SFile::ArchivePtr::~ArchivePtr() {
     if (this->m_locked && this->m_archive) {
         Blizzard::Lock::MutexLeave(this->m_archive->m_mutex.m_mutex);
@@ -1272,7 +1272,7 @@ System_SFile::ArchivePtr::~ArchivePtr() {
     }
 }
 
-// OFFSET: %0x00756750
+// OFFSET: 0x007F5510/0x140503620
 void System_SFile::ARCHIVEREC::ConvertToNewHashTableFormat(char* listfile, int32_t size, bool clear) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -1294,7 +1294,7 @@ void System_SFile::ARCHIVEREC::ConvertToNewHashTableFormat(char* listfile, int32
     }
 }
 
-// OFFSET: %0x00739F10
+// OFFSET: 0x007D85C0
 System_SFile::BlockEntryTable* System_SFile::BlockEntryTable::CreateBlockTableFromBuffer(const char* buffer, uint32_t size, uint32_t flags) {
     if (!buffer || size < sizeof(BlockTableHeader)) {
         return NULL;
@@ -1339,7 +1339,7 @@ System_SFile::BlockEntryTable* System_SFile::BlockEntryTable::CreateBlockTableFr
     return table;
 }
 
-// OFFSET: %0x0071AA80
+// OFFSET: 0x007B9770
 System_SFile::HashEntryTable* System_SFile::HashEntryTable::CreateHashEntryTableFromBuffer(const char* buffer, uint32_t size) {
     if (!buffer || size < sizeof(HashTableHeader)) {
         return NULL;
@@ -1364,7 +1364,7 @@ System_SFile::HashEntryTable* System_SFile::HashEntryTable::CreateHashEntryTable
     return table;
 }
 
-// OFFSET: %0x00752070
+// OFFSET: 0x007F0AA0
 bool System_SFile::ARCHIVEREC::ReadTable(void* data, int64_t offset, uint32_t size, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Mopaq::HSFILERecord* file = this->m_file;
 
@@ -1397,7 +1397,7 @@ bool System_SFile::ARCHIVEREC::ReadTable(void* data, int64_t offset, uint32_t si
     return Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleLoadAndVerify(this->m_file, static_cast<uint8_t*>(data), offset, size, md5);
 }
 
-// OFFSET: %0x00752140
+// OFFSET: 0x007F0B80
 bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Memory::TempBuffer<char, 4096>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5) {
     if (diskSize == size) {
         bool result = archive->ReadTable(table, offset, size, md5);
@@ -1422,7 +1422,7 @@ bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Bl
     return System_SComp::Decompress(table, &size, buffer.m_data, diskSize);
 }
 
-// OFFSET: %0x007521E0
+// OFFSET: 0x007F0C20
 bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer) {
     uint32_t diskSize = this->m_header.m_blockTablePos - this->m_header.m_hashTablePos;
     uint32_t size = 16 * this->m_header.m_hashTableSize;
@@ -1449,7 +1449,7 @@ bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Memory::TempBuffer<cha
     return true;
 }
 
-// OFFSET: %0x00752330
+// OFFSET: 0x007F0D60
 bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer) {
     uint32_t diskSize;
 
@@ -1487,7 +1487,7 @@ bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<ch
     return true;
 }
 
-// OFFSET: %0x00752530
+// OFFSET: 0x007F0F40
 bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5) {
     if (size > buffer.m_count) {
         buffer.Resize(size);
@@ -1530,7 +1530,7 @@ bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Memory::
     return true;
 }
 
-// OFFSET: %0x007526A0
+// OFFSET: 0x007F10B0
 bool System_SFile::ARCHIVEREC::LoadBlockEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize) {
     return LoadTable(this, buffer, output, this->m_header.m_betTablePos, static_cast<uint32_t>(this->m_header.m_betTableSize64), data, dataSize, 0xEC83B3A3, 0x1A544542, this->m_header.m_betTableMd5);
 }
@@ -1551,7 +1551,7 @@ bool System_SFile::ARCHIVEREC::LoadHashEntryTable(Blizzard::Memory::TempBuffer<c
     return true;
 }
 
-// OFFSET: %0x0075AAD0
+// OFFSET: 0x007F8130/0x140507470
 bool System_SFile::ARCHIVEREC::InitializeTables() {
     if (this->m_tablesInitialized) {
         return true;
@@ -1565,13 +1565,20 @@ bool System_SFile::ARCHIVEREC::InitializeTables() {
 
     archive.m_locked = true;
 
+    if (this->m_parent) {
+        ArchivePtr parent(GetArchivePtr(this->m_parent, true));
+        this->m_tablesInitialized = parent.m_archive->InitializeTables();
+
+        return this->m_tablesInitialized;
+    }
+
     if (this->m_hashTable.size() || this->m_blockEntryTable) {
         return true;
     }
 
     if (!this->m_header.m_hashTableSize || !this->m_header.m_blockTableSize) {
         Blizzard::String::QuickFormat<1024> message("Unable to read archive hash/block table: \"%s\"\n", this->m_name);
-        fputs(message.m_buffer, stderr);
+        Blizzard::Debug::StderrOutput(message.m_buffer);
         ClearTables(this, 1);
         return false;
     }
@@ -1649,7 +1656,7 @@ attributes:
     return true;
 }
 
-// OFFSET: %0x00713660
+// OFFSET: 0x007B11D0/0x1404A5FD0
 System_SFile::BLOCKENTRY System_SFile::ARCHIVEREC::GetBlockEntry(uint32_t index) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -1680,7 +1687,7 @@ System_SFile::BLOCKENTRY System_SFile::ARCHIVEREC::GetBlockEntry(uint32_t index)
     return entry;
 }
 
-// OFFSET: %0x00713EB0
+// OFFSET: 0x007B19F0
 uint32_t System_SFile::SearchHashTable(ARCHIVEREC* archive, const char* name, bool matchNeutral) {
     archive->InitializeTables();
 
@@ -1725,7 +1732,7 @@ uint32_t System_SFile::SearchHashTable(ARCHIVEREC* archive, const char* name, bo
     }
 }
 
-// OFFSET: %0x0074A220
+// OFFSET: 0x007F1A50
 bool System_SFile::CheckFileExistsOnDisk(const char* name, uint32_t flags, char* result) {
     char buffer[260];
 
@@ -1758,7 +1765,7 @@ bool System_SFile::CheckFileExistsOnDisk(const char* name, uint32_t flags, char*
     return Blizzard::File::Exists(System_File::Stacked::s_manager, result) == 1;
 }
 
-// OFFSET: %0x00751FF0
+// OFFSET: 0x007F2510/0x1404FF700
 bool Blizzard::Mopaq::SFileSetChecksumFlags(System_SFile::ARCHIVEREC* handle, uint32_t flags) {
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
 
@@ -1777,9 +1784,9 @@ bool Blizzard::Mopaq::SFileSetChecksumFlags(System_SFile::ARCHIVEREC* handle, ui
     return true;
 }
 
-// OFFSET: %0x0071B2F0
+// OFFSET: 0x007B9FA0
 static bool WriteUserDataHeader(System_SFile::ARCHIVEREC** archive, uint32_t userDataSize) {
-    if (userDataSize && (*archive)->m_header.m_rawChunkSize < 512) {
+    if (userDataSize && (*archive)->m_header.m_rawChunkSize > 0 && (*archive)->m_header.m_rawChunkSize < 512) {
         return false;
     }
 
@@ -1790,7 +1797,7 @@ static bool WriteUserDataHeader(System_SFile::ARCHIVEREC** archive, uint32_t use
 
     int64_t chunkSize = (*archive)->m_header.m_rawChunkSize;
 
-    if ((*archive)->m_archiveOffset > chunkSize) {
+    if (chunkSize > 0 && (*archive)->m_archiveOffset > chunkSize) {
         size = userDataSize + static_cast<uint32_t>(16 * (((*archive)->m_archiveOffset - 1) / chunkSize)) + 16;
         (*archive)->m_archiveOffset = (size + 523) & 0xFFFFFE00;
     }
@@ -1805,7 +1812,7 @@ static bool WriteUserDataHeader(System_SFile::ARCHIVEREC** archive, uint32_t use
     return (*archive)->m_file->Write(header, 0, 12);
 }
 
-// OFFSET: %0x0071ADA0
+// OFFSET: 0x007B9A90
 bool System_SFile::ARCHIVEREC::WriteArchiveHeader() {
     uint32_t size;
 
@@ -1861,7 +1868,7 @@ static int64_t AddMD5Overhead(int32_t chunkSize, int64_t size) {
     return size + 16 * ((size - 1) / chunkSize + 1);
 }
 
-// OFFSET: %0x00714270
+// OFFSET: 0x007B1EE0
 int64_t System_SFile::ARCHIVEREC::RequestWriteReservation(int64_t size, bool raw) {
     Blizzard::Lock::MutexEnter(this->m_writeLock.m_mutex);
 
@@ -1875,7 +1882,7 @@ int64_t System_SFile::ARCHIVEREC::RequestWriteReservation(int64_t size, bool raw
     return offset;
 }
 
-// OFFSET: %0x007141D0
+// OFFSET: 0x007B1E40/0x1404A6E90
 void System_SFile::ARCHIVEREC::ReturnWriteReservation(int64_t offset, int64_t size, int64_t newSize, bool raw) {
     Blizzard::Lock::MutexEnter(this->m_writeLock.m_mutex);
 
@@ -1892,7 +1899,7 @@ void System_SFile::ARCHIVEREC::ReturnWriteReservation(int64_t offset, int64_t si
     Blizzard::Lock::MutexLeave(this->m_writeLock.m_mutex);
 }
 
-// OFFSET: %0x00714300
+// OFFSET: 0x007B1F70/0x1404A6FF0
 void System_SFile::ARCHIVEREC::CompleteWriteReservation(int64_t used, int64_t reserved) {
     int32_t chunkSize = this->m_header.m_rawChunkSize;
     this->m_writeReservationEnd += AddMD5Overhead(chunkSize, used);
@@ -1901,7 +1908,7 @@ void System_SFile::ARCHIVEREC::CompleteWriteReservation(int64_t used, int64_t re
     Blizzard::Lock::MutexLeave(this->m_writeLock.m_mutex);
 }
 
-// OFFSET: %0x00723F70
+// OFFSET: 0x007C3020
 void System_SFile::ARCHIVEREC::InitializeWriteReservations(int32_t headerSize) {
     Blizzard::Lock::MutexEnter(this->m_writeLock.m_mutex);
 
@@ -2035,7 +2042,7 @@ bool Blizzard::Mopaq::SFileCreateArchive(HSFILERecord* file, const char* name, i
     return true;
 }
 
-// OFFSET: %0x00759270
+// OFFSET: 0x007F6E70/0x140505BB0
 bool Blizzard::Mopaq::SFileCreateArchive(const char* path, int32_t priority, uint32_t userDataSize, System_SFile::ARCHIVEREC** result, const ArchiveOptions* options) {
     *result = NULL;
 
@@ -2069,7 +2076,7 @@ bool Blizzard::Mopaq::SFileCreateArchive(const char* path, int32_t priority, uin
     return false;
 }
 
-// OFFSET: %0x0071B400
+// OFFSET: 0x007BA0C0
 static bool PrefixDirectPath(const std::string& directPath, const char* name, char* buffer, int32_t size) {
     int32_t length = 0;
     bool prefixed = false;
@@ -2084,7 +2091,7 @@ static bool PrefixDirectPath(const std::string& directPath, const char* name, ch
     return prefixed;
 }
 
-// OFFSET: %0x0074A2C0
+// OFFSET: 0x007F1AF0
 static int32_t CheckDirectPath(System_SFile::ARCHIVEREC* archive, const char* name, bool prefixed, uint32_t flags, System_SFile::FileLookup* lookup) {
     if (archive->m_file) {
         if (prefixed && (flags & 1) && System_SFile::CheckFileExistsOnDisk(name, 1, lookup->m_path)) {
@@ -2108,7 +2115,7 @@ static int32_t CheckDirectPath(System_SFile::ARCHIVEREC* archive, const char* na
     return 0;
 }
 
-// OFFSET: %0x0075B9C0
+// OFFSET: 0x007F92D0
 int32_t FindFileInOneArchive(System_SFile::ARCHIVEREC* archive, const char* name, System_SFile::FileLookup* lookup, const uint64_t& hash, const Blizzard::Util::Digest<16>& md5, uint32_t flags) {
     if (!(flags & 0x10) && (archive->m_externalRefs.m_value <= 0 || static_cast<int32_t>(archive->unk_02E0) > 0)) {
         return 0;
@@ -2165,7 +2172,7 @@ int32_t FindFileInOneArchive(System_SFile::ARCHIVEREC* archive, const char* name
     return deleted ? 4 : 1;
 }
 
-// OFFSET: %0x0075BB40
+// OFFSET: 0x007F9450/0x140508EB0
 int32_t GetFileBlockEntry(System_SFile::ARCHIVEREC* handle, const char* name, const Blizzard::Util::Digest<16>& md5, uint32_t flags, System_SFile::ARCHIVEREC** archiveOut, System_SFile::ARCHIVEREC** recordOut, uint32_t* blockIndex, char* path) {
     int32_t result = 0;
 
@@ -2271,7 +2278,7 @@ int32_t GetFileBlockEntry(System_SFile::ARCHIVEREC* handle, const char* name, co
     return result;
 }
 
-// OFFSET: %0x0070DDA0
+// OFFSET: 0x007AAE80/0x1404A1190
 int32_t Blizzard::Mopaq::SFileFileExists(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags, System_SFile::ARCHIVEREC** archiveOut) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
     int32_t result = GetFileBlockEntry(handle, name, md5, flags, archiveOut, NULL, NULL, NULL);
@@ -2283,7 +2290,7 @@ int32_t Blizzard::Mopaq::SFileFileExists(System_SFile::ARCHIVEREC* handle, const
     return result;
 }
 
-// OFFSET: %0x0075BEE0
+// OFFSET: 0x007F9810
 bool Blizzard::Mopaq::SFileGetFileDetails(System_SFile::ARCHIVEREC* handle, const char* name, const Blizzard::Util::Digest<16>& md5, uint32_t flags, System_SFile::ARCHIVEREC** archiveOut, System_SFile::ARCHIVEREC*& record, System_SFile::BLOCKENTRY& entry) {
     uint32_t blockIndex;
 
@@ -2441,7 +2448,7 @@ static void AddIsLocalAmount(System_SFile::ARCHIVEREC* archive, const System_SFi
     total += size;
 }
 
-// OFFSET: %0x0075CEE0
+// OFFSET: 0x007FA8B0/0x14050A860
 bool Blizzard::Mopaq::SFileGetIsLocalAmount(const char* name, int64_t& local, int64_t& total) {
     System_SFile::ARCHIVEREC* record = NULL;
     uint32_t blockIndex;
@@ -2482,7 +2489,7 @@ bool Blizzard::Mopaq::IsArchiveStreamingComplete(System_SFile::ARCHIVEREC* handl
     return total > 0 && local == total;
 }
 
-// OFFSET: %0x00744C30
+// OFFSET: 0x007E37A0/0x1404EA4E0
 void Blizzard::Mopaq::SFileGetIsLocalAmount(HSFILERecord* file, int64_t& local, int64_t& total) {
     MpqHandleRecord* handle = file->m_handle;
     System_SFile::ARCHIVEREC* archive = handle->m_archive;
@@ -2510,7 +2517,7 @@ class DeltaCompletionCallback : public Blizzard::Streaming::CompletionCallback {
     virtual void Complete();
 };
 
-// OFFSET: %0x00716090
+// OFFSET: 0x007B41F0
 static bool GetArchiveStreamInfo(Blizzard::Mopaq::HSFILERecord* file, ArchiveStreamInfo* info) {
     Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
 
@@ -2535,7 +2542,7 @@ static bool GetArchiveStreamInfo(Blizzard::Mopaq::HSFILERecord* file, ArchiveStr
     return true;
 }
 
-// OFFSET: %0x0075C970
+// OFFSET: 0x007FA340
 static bool GetArchiveStreamInfo(System_SFile::ARCHIVEREC* handle, const char* name, const Blizzard::Util::Digest<16>& md5, uint32_t flags, ArchiveStreamInfo* info) {
     System_SFile::ARCHIVEREC* record = NULL;
 
@@ -2556,7 +2563,7 @@ static bool GetArchiveStreamInfo(System_SFile::ARCHIVEREC* handle, const char* n
     return true;
 }
 
-// OFFSET: %0x0075CAE0
+// OFFSET: 0x007FA3C0
 static int32_t NextDeltaBase(ArchiveStreamInfo* info, const char* name) {
     if (!info->m_entry.m_patch) {
         return 0;
@@ -2587,7 +2594,7 @@ DeltaCompletionCallback::DeltaCompletionCallback(const ArchiveStreamInfo& info, 
     this->m_name = name;
 }
 
-// OFFSET: %0x00729390
+// OFFSET: 0x007C81D0
 DeltaCompletionCallback::~DeltaCompletionCallback() {
 }
 
@@ -2654,7 +2661,7 @@ bool Blizzard::Mopaq::SFileMakeFileLocal(HSFILERecord* file, int32_t option, boo
     return MakeArchiveStreamLocal(&info, wait, option, file->m_handle ? file->m_handle->m_name : "", params);
 }
 
-// OFFSET: %0x00713930
+// OFFSET: 0x007B14A0
 void System_SFile::ARCHIVEREC::SetMD5Check(uint32_t index, bool enabled) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -2667,7 +2674,7 @@ void System_SFile::ARCHIVEREC::SetMD5Check(uint32_t index, bool enabled) {
     }
 }
 
-// OFFSET: %0x0071AB80
+// OFFSET: 0x007B9870/0x1404B0940
 void System_SFile::ARCHIVEREC::SetBlockEntry(uint32_t index, const BLOCKENTRY& entry) {
     this->m_blockTable[index] = entry;
 }
@@ -2729,7 +2736,7 @@ void System_SFile::ARCHIVEREC::SetBlockPatch(uint32_t index, bool patch) {
     }
 }
 
-// OFFSET: %0x0071ABD0
+// OFFSET: 0x007B98C0
 bool System_SFile::ARCHIVEREC::IncreaseHashBits(int32_t* hashBits) {
     if (*hashBits == 64) {
         return false;
@@ -2749,7 +2756,7 @@ bool System_SFile::ARCHIVEREC::IncreaseHashBits(int32_t* hashBits) {
     return true;
 }
 
-// OFFSET: %0x0075A7B0
+// OFFSET: 0x007F7E10/0x140507070
 bool System_SFile::ARCHIVEREC::ReadAdditionalAttributes() {
     Blizzard::Util::Digest<16> md5 = s_emptyMd5;
     Blizzard::Mopaq::HSFILERecord* file;
@@ -2833,12 +2840,16 @@ bool System_SFile::ARCHIVEREC::ReadAdditionalAttributes() {
     if (flags & 8) {
         static const uint8_t s_bits[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
-        for (uint32_t i = 0; i < count; i++) {
-            this->SetBlockPatch(i, (s_bits[i & 7] & *p) != 0);
+        if (count != 1) {
+            uint32_t i = 0;
 
-            if ((i & 7) == 7) {
-                p++;
-            }
+            do {
+                this->SetBlockPatch(i, (s_bits[i & 7] & *p) != 0);
+
+                if ((i & 7) == 7) {
+                    p++;
+                }
+            } while (++i < count - 1);
         }
     }
 
@@ -2849,7 +2860,7 @@ bool System_SFile::ARCHIVEREC::ReadAdditionalAttributes() {
     return true;
 }
 
-// OFFSET: %0x0075B6F0
+// OFFSET: 0x007F9000/0x140508920
 bool Blizzard::Mopaq::SFileOpenArchiveView(System_SFile::ARCHIVEREC* handle, const char* name, int32_t priority, System_SFile::ARCHIVEREC** result) {
     *result = NULL;
 
@@ -2910,7 +2921,7 @@ bool Blizzard::Mopaq::SFileOpenArchiveView(System_SFile::ARCHIVEREC* handle, con
     return true;
 }
 
-// OFFSET: %0x0075BFB0
+// OFFSET: 0x007F98E0/0x1405094F0
 void System_SFile::ClearAllFileFlags() {
     bool threadSafe = s_threadSafe;
     Blizzard::Lock::RMutex* mutex = System_MPQGlobals::GetArchiveLock();
@@ -3005,7 +3016,7 @@ void System_SFile::ARCHIVEREC::ReleaseListfile() {
     }
 }
 
-// OFFSET: %0x00751E40
+// OFFSET: 0x007F2330/0x1404FF520
 void System_SFile::ArchivePtr::Reset(ARCHIVEREC* handle) {
     bool locked = this->m_locked;
 
@@ -3377,7 +3388,7 @@ int64_t System_SFile::ARCHIVEREC::GetWriteReservationLimit() {
         - 0x10000;
 }
 
-// OFFSET: %0x00714150
+// OFFSET: 0x007B1DD0
 bool System_SFile::ARCHIVEREC::PreRequestWriteReservation(int64_t size) {
     Blizzard::Lock::MutexEnter(this->m_writeLock.m_mutex);
 
@@ -3394,7 +3405,7 @@ bool System_SFile::ARCHIVEREC::PreRequestWriteReservation(int64_t size) {
     return false;
 }
 
-// OFFSET: %0x00731AF0
+// OFFSET: 0x007D0380
 bool System_Mopaq::CreateDiskFile(Blizzard::Mopaq::HSFILERecord** result, const char* path, uint32_t flags) {
     char directory[260];
 
@@ -3417,7 +3428,7 @@ bool System_Mopaq::CreateDiskFile(Blizzard::Mopaq::HSFILERecord** result, const 
     return false;
 }
 
-// OFFSET: %0x00757A60
+// OFFSET: 0x007F5840/0x140503AB0
 bool Blizzard::Mopaq::SetupHashEntry(System_SFile::ArchivePtr& archive, const char* name, const System_SFile::BLOCKENTRY& entry, int32_t blockIndex) {
     uint32_t hash = System_MPQEncrypt::Hash(name, 0);
     bool rebuilt = false;
@@ -3585,7 +3596,7 @@ bool Blizzard::Mopaq::SFileCreateFile(System_SFile::ARCHIVEREC* handle, const ch
     return false;
 }
 
-// OFFSET: %0x0073A280
+// OFFSET: 0x007D8BE0
 void System_SFile::ARCHIVEREC::CompactBlockTable() {
     std::map<uint32_t, uint32_t> moved;
     uint32_t count = static_cast<uint32_t>(this->m_blockTable.size());
@@ -3670,7 +3681,7 @@ static bool WriteListfile(std::vector<char>& data, System_SFile::ARCHIVEREC* arc
     return result;
 }
 
-// OFFSET: %0x00758480
+// OFFSET: 0x007F5FF0/0x140504540
 static bool WriteAttributeFile(System_SFile::ARCHIVEREC* archive, bool result) {
     uint32_t count = static_cast<uint32_t>(archive->m_blockTable.size());
     uint32_t header[2];
@@ -3761,7 +3772,7 @@ static bool WriteAttributeFile(System_SFile::ARCHIVEREC* archive, bool result) {
     return result;
 }
 
-// OFFSET: %0x0071AF60
+// OFFSET: 0x007B9C20
 static bool WriteTableMD5s(Blizzard::Mopaq::HSFILERecord* file, Blizzard::Memory::TempBuffer<char, 1024>& buffer, int64_t offset, int64_t size, int64_t chunkSize) {
     int32_t chunks = static_cast<int32_t>((size - 1) / static_cast<int32_t>(chunkSize)) + 1;
     int32_t remaining = static_cast<int32_t>(size);
@@ -3782,7 +3793,7 @@ static bool WriteTableMD5s(Blizzard::Mopaq::HSFILERecord* file, Blizzard::Memory
     return file->Write(buffer.m_data, offset, 16 * chunks);
 }
 
-// OFFSET: %0x00713400
+// OFFSET: 0x007B0F70
 uint32_t System_SFile::BlockEntryTable::GetBufferSize() {
     uint32_t bitsSize;
 
@@ -3795,7 +3806,7 @@ uint32_t System_SFile::BlockEntryTable::GetBufferSize() {
     return 4 * static_cast<uint32_t>(this->m_flagTable.size()) + sizeof(BlockTableHeader) + bitsSize;
 }
 
-// OFFSET: %0x0071A4D0
+// OFFSET: 0x007B91C0
 bool System_SFile::BlockEntryTable::SaveBlockTableToBuffer(char* buffer, uint32_t size) {
     if (!buffer || size < this->GetBufferSize()) {
         return false;
@@ -3827,7 +3838,7 @@ bool System_SFile::BlockEntryTable::SaveBlockTableToBuffer(char* buffer, uint32_
     return true;
 }
 
-// OFFSET: %0x0071A930
+// OFFSET: 0x007B9620
 bool System_SFile::HashEntryTable::SaveHashEntryTableToBuffer(char* buffer, uint32_t size) {
     if (!buffer) {
         return false;
@@ -3856,7 +3867,7 @@ bool System_SFile::HashEntryTable::SaveHashEntryTableToBuffer(char* buffer, uint
     return true;
 }
 
-// OFFSET: %0x0074C2D0
+// OFFSET: 0x007E6AF0/0x1404F08A0
 bool System_SFile::ARCHIVEREC::WriteBitPackedHashTable() {
     Blizzard::Memory::TempBuffer<char, 1024> buffer;
     HashEntryTable* table = this->m_hashEntryTable;
@@ -3908,7 +3919,7 @@ bool System_SFile::ARCHIVEREC::WriteBitPackedHashTable() {
     return result;
 }
 
-// OFFSET: %0x0074C520
+// OFFSET: 0x007E6D40/0x1404F0BD0
 bool System_SFile::ARCHIVEREC::WriteBitPackedBlockTable() {
     Blizzard::Memory::TempBuffer<char, 1024> buffer;
     BlockEntryTable* table = this->m_blockEntryTable;
@@ -4082,7 +4093,7 @@ bool System_SFile::ARCHIVEREC::WriteBlockTable(bool& extended, bool reserve) {
     return result;
 }
 
-// OFFSET: %0x0071B0B0
+// OFFSET: 0x007B9D70/0x1404B13D0
 bool System_SFile::ARCHIVEREC::WriteExtendedBlockTable(bool reserve) {
     uint32_t count = static_cast<uint32_t>(this->m_blockTable.size());
     uint32_t size = 2 * count;
@@ -4095,7 +4106,7 @@ bool System_SFile::ARCHIVEREC::WriteExtendedBlockTable(bool reserve) {
     uint16_t* table = static_cast<uint16_t*>(Blizzard::Memory::Allocate(size));
 
     for (uint32_t i = 0; i < count; i++) {
-        table[i] = static_cast<uint16_t>((this->m_blockTable[i].m_offset - this->m_archiveOffset) >> 32);
+        table[i] = static_cast<uint16_t>(static_cast<int64_t>(this->m_blockTable[i].m_offset) >> 32);
     }
 
     int64_t available = static_cast<int64_t>(this->m_header.m_hiBlockTableSize64);
@@ -4238,7 +4249,7 @@ Blizzard::Mopaq::ArchiveOptions::ArchiveOptions() {
     this->m_minFileSize = 0;
 }
 
-// OFFSET: %0x00753040
+// OFFSET: 0x007F3140/0x140500450
 uint32_t Blizzard::Mopaq::SFileGetArchiveBlockCount(System_SFile::ARCHIVEREC* handle) {
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
 
@@ -4271,7 +4282,7 @@ uint32_t Blizzard::Mopaq::SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* han
     return size;
 }
 
-// OFFSET: %0x00755280
+// OFFSET: 0x007F4560/0x1405020C0
 bool Blizzard::Mopaq::IsArchiveComplete(System_SFile::ARCHIVEREC* handle) {
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
 
@@ -4300,7 +4311,7 @@ bool Blizzard::Mopaq::IsArchiveComplete(System_SFile::ARCHIVEREC* handle) {
     return Blizzard::Storage::PartialFile::FileIsCompletePartialFile(stream, archiveSize, fileSize);
 }
 
-// OFFSET: %0x0075CF70
+// OFFSET: 0x007FA940
 bool Blizzard::Mopaq::SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Memory::TempBuffer<char, 4096>& metadata) {
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
     bool result = false;
