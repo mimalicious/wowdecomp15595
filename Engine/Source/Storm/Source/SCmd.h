@@ -8,17 +8,17 @@
 struct CMDDEF : TSLinkedNode<CMDDEF> {
     /* 0008 */ uint32_t flags;
     /* 000C */ uint32_t id;
-    /* 0010 */ char name[16];
-    /* 0020 */ int32_t namelength;
-    /* 0024 */ uint32_t setvalue;
-    /* 0028 */ uint32_t setmask;
-    /* 002C */ void* variableptr;
-    /* 0030 */ uint32_t variablebytes;
-    /* 0034 */ int32_t (STORMAPI* callback)(_CMDPARAMS*, const char*);
-    /* 0038 */ int32_t found;
+    /* 0010 */ char name[24];
+    /* 0028 */ int32_t namelength;
+    /* 002C */ uint32_t setvalue;
+    /* 0030 */ uint32_t setmask;
+    /* 0034 */ void* variableptr;
+    /* 0038 */ uint32_t variablebytes;
+    /* 003C */ int32_t (STORMAPI* callback)(_CMDPARAMS*, const char*);
+    /* 0040 */ int32_t found;
     union {
-        /* 003C */ uint32_t currvalue;
-        /* 003C */ char* currvaluestr;
+        /* 0044 */ uint32_t currvalue;
+        /* 0044 */ char* currvaluestr;
     };
 };
 

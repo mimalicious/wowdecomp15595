@@ -83,11 +83,12 @@ void IOsSecureRandom(uint8_t* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: %0x007E1370
+// PROVEN: b678e2ba IDENTICAL
+// OFFSET: 0x0087BE20
 void OsSecureRandom(uint8_t* buffer, uint32_t size) {
     HCRYPTPROV provider;
 
-    if (CryptAcquireContextA(&provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
+    if (CryptAcquireContextW(&provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT)) {
         if (CryptGenRandom(provider, size, buffer)) {
             CryptReleaseContext(provider, 0);
             return;

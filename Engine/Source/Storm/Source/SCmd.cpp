@@ -43,7 +43,8 @@ static void ConvertBool(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// OFFSET: %0x004BD460
+// PROVEN: a322c91b IDENTICAL
+// OFFSET: 0x004B6670
 static void ConvertNumber(CMDDEF* ptr, const char* string, int32_t* datachars) {
     char* endptr = NULL;
 
@@ -355,8 +356,8 @@ int32_t STORMAPI SCmdRegisterArgument(uint32_t flags, uint32_t id, const char* n
 
     int32_t namelength = SStrLen(name);
 
-    if (namelength >= 16) {
-        DebugValidate("namelength < 16");
+    if (namelength >= 24) {
+        DebugValidate("namelength < 24");
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
@@ -409,7 +410,7 @@ int32_t STORMAPI SCmdRegisterArgument(uint32_t flags, uint32_t id, const char* n
     return 1;
 }
 
-// OFFSET: #0x00773590
+// OFFSET: 0x004B73A0
 int32_t STORMAPI SCmdRegisterArgList(const _ARGLIST* listptr, uint32_t numargs) {
     if (!listptr) {
         DebugValidate("listptr");

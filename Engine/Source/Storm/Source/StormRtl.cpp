@@ -1,9 +1,9 @@
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x004B9B00
+// PROVEN: 76b0704d IDENTICAL
+// OFFSET: 0x004B2CC0
 void StormRtlDestroy() {
     SErrSetLogCallback(NULL);
-    SMemDestroy();
     SErrDestroy();
     SLogDestroy();
 }
