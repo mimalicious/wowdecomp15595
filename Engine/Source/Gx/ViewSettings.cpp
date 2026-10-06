@@ -15,7 +15,7 @@ static float s_viewportFarClip = 0.94f;
 // STATIC: %0x00E45780
 static int32_t s_submerged;
 
-// STATIC: %0x00E45784
+// STATIC: 0x00F803F4
 static CAaRect s_viewExtents;
 
 struct ViewSettingsFog {
@@ -92,7 +92,7 @@ C4Vector ViewSettings::CalculateHomToScreen(float offsetX, float offsetY) {
     float scaleY;
     float y;
 
-    if (g_theGxDevicePtr->Caps().m_texelCenterOnEdge) {
+    if (g_theGxDevicePtr->m_caps.m_texelCenterOnEdge) {
         scaleY = (s_viewExtents.maxX - s_viewExtents.minX) * 0.5f;
         y = (s_viewExtents.minX + 1.0f) - (1.0f - s_viewExtents.maxY);
     } else {
@@ -102,7 +102,7 @@ C4Vector ViewSettings::CalculateHomToScreen(float offsetX, float offsetY) {
 
     y = y * 0.5f;
 
-    if (g_theGxDevicePtr->Caps().m_pixelCenterOnEdge) {
+    if (g_theGxDevicePtr->m_caps.m_pixelCenterOnEdge) {
         x = x + offsetX;
         y = y + offsetY;
     }
