@@ -52,6 +52,7 @@ class CGxTex {
 
     CGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, const char* name);
     ~CGxTex();
+    CGxTex& operator=(const CGxTex& source);
 };
 
 #endif

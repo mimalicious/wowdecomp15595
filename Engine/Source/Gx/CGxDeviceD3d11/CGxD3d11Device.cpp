@@ -328,8 +328,9 @@ int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
     return 1;
 }
 
-// OFFSET: 0x00852040
-void CGxDeviceD3d11::IReleaseTargets() {
+// PROVEN: a42031d8 IDENTICAL/NONE
+// OFFSET: 0x00851C10
+CGxDeviceD3d11::RenderTargets::RenderTargets() {
     this->m_numRenderTargets = 0;
 
     for (uint32_t i = 0; i < 8; i++) {
@@ -338,6 +339,11 @@ void CGxDeviceD3d11::IReleaseTargets() {
 
     this->m_curDepthView = NULL;
     this->m_colorTargetFormat = GxTex_Unknown;
+}
+
+// OFFSET: 0x00852040
+void CGxDeviceD3d11::IReleaseTargets() {
+    this->m_targets = RenderTargets();
 
     if (this->m_d3dContext) {
         this->m_d3dContext->OMSetRenderTargets(0, NULL, NULL);
@@ -1215,7 +1221,7 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     return 0;
 }
 
-// PROVEN: c409669f IDENTICAL/DIFFERENT
+// PROVEN: 3776b149 IDENTICAL/DIFFERENT
 // OFFSET: 0x00852FF0/0x140582CE0
 void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context) {
@@ -1249,17 +1255,17 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
             continue;
         }
 
-        this->m_renderTargets[i - GxBuffers_Color] = static_cast<ID3D11RenderTargetView*>(views->m_targetView);
-        this->m_numRenderTargets = i;
+        this->m_targets.m_renderTargets[i - GxBuffers_Color] = static_cast<ID3D11RenderTargetView*>(views->m_targetView);
+        this->m_targets.m_numRenderTargets = i;
 
         if (i == GxBuffers_Color) {
-            this->m_colorTargetFormat = this->m_textureTarget[i].m_texture->m_format;
+            this->m_targets.m_colorTargetFormat = this->m_textureTarget[i].m_texture->m_format;
         }
 
         CGxTex* targetTex = this->m_textureTarget[i].m_texture;
 
         if (targetTex->m_width != this->m_format.m_size.x || targetTex->m_height != this->m_format.m_size.y || (!targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount > 1) || (targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount == 1)) {
-            this->m_curDepthView = NULL;
+            this->m_targets.m_curDepthView = NULL;
         }
     }
 
@@ -1267,13 +1273,13 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
 
     if (depthViews) {
         if (this->m_textureTarget[GxBuffers_Color].m_texture || (this->m_textureTarget[GxBuffers_Depth].m_texture->m_width == this->m_format.m_size.x && this->m_textureTarget[GxBuffers_Depth].m_texture->m_height == this->m_format.m_size.y)) {
-            this->m_curDepthView = static_cast<ID3D11DepthStencilView*>(depthViews->m_targetView);
+            this->m_targets.m_curDepthView = static_cast<ID3D11DepthStencilView*>(depthViews->m_targetView);
         } else {
-            this->m_curDepthView = NULL;
+            this->m_targets.m_curDepthView = NULL;
         }
     }
 
-    this->m_d3dContext->OMSetRenderTargets(this->m_numRenderTargets, this->m_renderTargets, this->m_curDepthView);
+    this->m_d3dContext->OMSetRenderTargets(this->m_targets.m_numRenderTargets, this->m_targets.m_renderTargets, this->m_targets.m_curDepthView);
     GxXformSetViewport(this->m_viewport.m_x.m_l, this->m_viewport.m_x.m_h, this->m_viewport.m_y.m_l, this->m_viewport.m_y.m_h, this->m_viewport.m_z.m_l, this->m_viewport.m_z.m_h);
     this->m_viewportDirty = 1;
     this->m_scissorRectDirty = 1;
@@ -1814,15 +1820,7 @@ CGxDeviceD3d11::CGxDeviceD3d11() {
     this->m_depthViews = NULL;
     this->m_depthTexture = NULL;
     this->m_resolveTexture = NULL;
-    this->m_numRenderTargets = 0;
     this->m_hwndClass = 0;
-
-    for (uint32_t i = 0; i < 8; i++) {
-        this->m_renderTargets[i] = NULL;
-    }
-
-    this->m_curDepthView = NULL;
-    this->m_colorTargetFormat = GxTex_Unknown;
 
     for (uint32_t i = 0; i < GxShTargets_Last; i++) {
         this->m_constantBuffers[i] = NULL;

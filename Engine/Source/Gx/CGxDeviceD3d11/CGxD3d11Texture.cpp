@@ -957,18 +957,20 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
         delete views;
     }
 
-    CGxTex* savedTargets[5];
-    memset(savedTargets, 0, sizeof(savedTargets));
+    RenderTargets targets;
+    targets.m_numRenderTargets = 1;
+    targets.m_renderTargets[0] = rtv;
+    this->m_d3dContext->OMSetRenderTargets(1, targets.m_renderTargets, targets.m_curDepthView);
 
-    for (uint32_t i = 0; i < 5; i++) {
-        GxRenderTargetGet(static_cast<EGxBuffer>(i), savedTargets[i]);
-        GxRenderTargetSet(static_cast<EGxBuffer>(i), NULL, 0);
-    }
-
-    CGxTex* savedDepth = NULL;
-    this->DeviceGetRenderTarget(GxBuffers_Depth, savedDepth);
-    GxRenderTargetSet(GxBuffers_Color, dest, 0);
-    GxRenderTargetSet(GxBuffers_Depth, NULL, 0);
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    viewport.Width = static_cast<float>(dest->m_width);
+    viewport.Height = static_cast<float>(dest->m_height);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    this->m_viewportDirty = 0;
+    this->m_d3dContext->RSSetViewports(1, &viewport);
 
     g_theGxDevicePtr->RsPush();
 
@@ -994,8 +996,10 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
         GxRsSet(GxRs_Texture0, source);
     } else {
         // STATIC: %0x00D93148
-        static CGxTex s_backBufferTex(GxTex_2d, sourceWidth, sourceHeight, 1, GxTex_Abgr8888, GxTex_Abgr8888, CGxTexFlags(), NULL, ITexNullUserFunc, NULL);
+        CGxTexFlags flags;
+        static CGxTex s_backBufferTex(GxTex_2d, sourceWidth, sourceHeight, 1, GxTex_Abgr8888, GxTex_Abgr8888, flags, NULL, ITexNullUserFunc, NULL);
 
+        s_backBufferTex = CGxTex(GxTex_2d, sourceWidth, sourceHeight, 1, GxTex_Abgr8888, GxTex_Abgr8888, flags, NULL, ITexNullUserFunc, NULL);
         s_backBufferTex.m_apiSpecificData = this->m_backBufferViews;
         s_backBufferTex.m_needsCreation = 0;
         s_backBufferTex.m_needsUpdate = 0;
@@ -1012,11 +1016,8 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
     g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, polygonFill);
     g_theGxDevicePtr->RsPop();
 
-    for (uint32_t i = 0; i < 5; i++) {
-        GxRenderTargetSet(static_cast<EGxBuffer>(i), savedTargets[i], 0);
-    }
-
-    GxRenderTargetSet(GxBuffers_Depth, savedDepth, 0);
+    this->m_viewportDirty = 1;
+    this->m_d3dContext->OMSetRenderTargets(this->m_targets.m_numRenderTargets, this->m_targets.m_renderTargets, this->m_targets.m_curDepthView);
 
     return 1;
 }
@@ -1038,20 +1039,18 @@ int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
         return 1;
     }
 
-    CGxTex* savedTargets[5];
-    memset(savedTargets, 0, sizeof(savedTargets));
+    ID3D11RenderTargetView* targets[10];
+    memset(targets, 0, sizeof(targets));
+    targets[0] = static_cast<ID3D11RenderTargetView*>(static_cast<TexTargetViews*>(dest->m_apiSpecificData)->m_targetView);
+    this->m_d3dContext->OMSetRenderTargets(1, targets, NULL);
 
-    for (uint32_t i = 0; i < 5; i++) {
-        g_theGxDevicePtr->DeviceGetRenderTarget(static_cast<EGxBuffer>(i), savedTargets[i]);
-        GxRenderTargetSet(static_cast<EGxBuffer>(i), NULL, 0);
-    }
-
-    CGxTex* savedDepth = NULL;
-    g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Depth, savedDepth);
-    GxRenderTargetSet(GxBuffers_Color, dest, 0);
-    GxRenderTargetSet(GxBuffers_Depth, NULL, 0);
-
-    CBoundingBox viewport = g_theGxDevicePtr->m_viewport;
+    float minX = 0.0f;
+    float minY = 0.0f;
+    float minZ = 0.0f;
+    float maxX = 0.0f;
+    float maxY = 0.0f;
+    float maxZ = 0.0f;
+    GxXformViewport(minX, maxX, minY, maxY, minZ, maxZ);
     GxXformSetViewport(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
 
     g_theGxDevicePtr->RsPush();
@@ -1113,13 +1112,8 @@ int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, polygonFill);
     g_theGxDevicePtr->RsPop();
 
-    GxXformSetViewport(viewport.m_x.m_l, viewport.m_x.m_h, viewport.m_y.m_l, viewport.m_y.m_h, viewport.m_z.m_l, viewport.m_z.m_h);
-
-    for (uint32_t i = 0; i < 5; i++) {
-        GxRenderTargetSet(static_cast<EGxBuffer>(i), savedTargets[i], 0);
-    }
-
-    GxRenderTargetSet(GxBuffers_Depth, savedDepth, 0);
+    GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
+    this->m_d3dContext->OMSetRenderTargets(this->m_targets.m_numRenderTargets, this->m_targets.m_renderTargets, this->m_targets.m_curDepthView);
 
     return 1;
 }

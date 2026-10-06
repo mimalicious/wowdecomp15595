@@ -671,7 +671,7 @@ void CGxDeviceD3d11::CapsWindowSizeInScreenCoords(CRect& rect) {
     }
 }
 
-// PROVEN: 583922fa IDENTICAL/UNPROVEN
+// PROVEN: 6af847ed IDENTICAL/UNPROVEN
 // OFFSET: 0x00870250/0x1405A5DA0
 void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     CGxDevice::SceneClear(mask, color);
@@ -683,15 +683,15 @@ void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     if (mask & 0xF) {
         C4Vector clearColor(color);
 
-        for (uint32_t i = 0; i < this->m_numRenderTargets; i++) {
-            if (this->m_renderTargets[i] && ((1 << i) & mask)) {
-                this->m_d3dContext->ClearRenderTargetView(this->m_renderTargets[i], reinterpret_cast<const float*>(&clearColor));
+        for (uint32_t i = 0; i < this->m_targets.m_numRenderTargets; i++) {
+            if (this->m_targets.m_renderTargets[i] && ((1 << i) & mask)) {
+                this->m_d3dContext->ClearRenderTargetView(this->m_targets.m_renderTargets[i], reinterpret_cast<const float*>(&clearColor));
             }
         }
     }
 
-    if ((mask & 0x10) && this->m_curDepthView) {
-        this->m_d3dContext->ClearDepthStencilView(this->m_curDepthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    if ((mask & 0x10) && this->m_targets.m_curDepthView) {
+        this->m_d3dContext->ClearDepthStencilView(this->m_targets.m_curDepthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
     }
 }
 
@@ -750,8 +750,8 @@ void CGxDeviceD3d11::SceneClearToViewport(uint32_t mask, CImVector color) {
 
     uint32_t permute = 0;
 
-    for (uint32_t i = 0; i < this->m_numRenderTargets; i++) {
-        if (this->m_renderTargets[i] && ((1 << i) & mask)) {
+    for (uint32_t i = 0; i < this->m_targets.m_numRenderTargets; i++) {
+        if (this->m_targets.m_renderTargets[i] && ((1 << i) & mask)) {
             permute = i;
         }
     }
@@ -772,7 +772,7 @@ void CGxDeviceD3d11::SceneClearToViewport(uint32_t mask, CImVector color) {
 
     float constants[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
-    switch (this->m_colorTargetFormat) {
+    switch (this->m_targets.m_colorTargetFormat) {
         case GxTex_R16:
         case GxTex_Gr1616F:
         case GxTex_R24X8:

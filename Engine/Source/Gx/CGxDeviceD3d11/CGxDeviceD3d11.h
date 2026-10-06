@@ -22,6 +22,15 @@ class CGxDeviceD3d11 : public CGxDevice {
         /* 0008 */ ID3D11View* m_targetView;
     };
 
+    struct RenderTargets {
+        /* 0000 */ uint32_t m_numRenderTargets;
+        /* 0004 */ ID3D11RenderTargetView* m_renderTargets [8];
+        /* 0024 */ ID3D11DepthStencilView* m_curDepthView;
+        /* 0028 */ EGxTexFormat m_colorTargetFormat;
+
+        RenderTargets();
+    };
+
     struct ScratchTex {
         /* 0000 */ uint32_t m_frame;
         /* 0004 */ uint32_t m_size;
@@ -90,10 +99,7 @@ class CGxDeviceD3d11 : public CGxDevice {
     /* 281C */ ID3D11Texture2D* m_depthTexture;
     /* 2820 */ ID3D11Texture2D* m_resolveTexture;
     /* 2824 */ ID3D11Buffer* m_constantBuffers [GxShTargets_Last];
-    /* 283C */ uint32_t m_numRenderTargets;
-    /* 2840 */ ID3D11RenderTargetView* m_renderTargets [8];
-    /* 2860 */ ID3D11DepthStencilView* m_curDepthView;
-    /* 2864 */ EGxTexFormat m_colorTargetFormat;
+    /* 283C */ RenderTargets m_targets;
     /* 2868 */ ID3D11InputLayout* m_curInputLayout;
     /* 286C */ ID3D11Buffer* m_curIndexBuffer;
     /* 2870 */ ID3D11Buffer* m_curVertexBuffers [2];
