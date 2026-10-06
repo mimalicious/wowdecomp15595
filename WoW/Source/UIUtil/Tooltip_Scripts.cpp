@@ -1418,7 +1418,6 @@ static int32_t Script_TooltipSetTracking(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD2AE0
 // OFFSET: #0x0061D3D0
 static int32_t Script_SetAnchorType(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
@@ -2565,6 +2564,7 @@ static int32_t Script_SetLFGCompletionReward(lua_State* L) {
     return 0;
 }
 
+// STATIC: #0x00AD2AE0
 static FrameScript_Method s_ScriptMethods[] = {
     { "AddFontStrings", &Script_AddFontStrings },
     { "SetMinimumWidth", &Script_SetMinimumWidth },

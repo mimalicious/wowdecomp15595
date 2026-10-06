@@ -29,7 +29,7 @@ struct ChaserState {
     /* 0000 */ C3Vector m_position;
     /* 000C */ C3Vector m_velocity;
 
-    ChaserState() {}
+    ChaserState();
     ChaserState(const C3Vector& position, const C3Vector& velocity);
     void ChaserImplementation(const C3Vector& target, float stiffness, float elapsed);
 };
@@ -161,5 +161,7 @@ class CMissile {
     void CalcPosition(int32_t advance);
     void DeleteSelf();
 };
+
+#include "WoW/Source/Object/ObjectClient/Missile_C.inl"
 
 #endif

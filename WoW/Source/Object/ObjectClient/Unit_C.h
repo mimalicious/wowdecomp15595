@@ -1027,6 +1027,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool HandleTrackingFacing(float facing, float maxTurn, uint32_t time);
 };
 
+extern int32_t g_environmentalDamageVisualKits[6];
+
 void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 int32_t FactionTemplateReaction(const FactionTemplateRec* faction, const FactionTemplateRec* other);
 int32_t Packet_SMSG_MULTIPLE_PACKETS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -1087,7 +1089,6 @@ int32_t Packet_SplineMoveEffect(void* param, NETMESSAGE msgId, uint32_t time, CD
 int32_t Packet_SplineSpeedChange(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_ThreatUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 
-extern int32_t g_environmentalDamageVisualKits[6];
 int32_t GetAnimBehaviorId(uint32_t animId);
 int32_t IsBirthAnim(uint32_t animId);
 int32_t IsSubmergedDeathAnim(uint32_t animId);

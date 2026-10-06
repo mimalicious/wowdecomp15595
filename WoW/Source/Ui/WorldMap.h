@@ -110,14 +110,8 @@ class CGWorldMap {
 void WorldMapRegisterScriptFunctions();
 void WorldMapUnregisterScriptFunctions();
 
-// INLINED
-inline WorldMapContinentInfo::WorldMapContinentInfo() {
-    this->unk_10014 = 0.0f;
-    this->unk_10018 = 0.0f;
-    this->unk_1001C = 0.0f;
-    this->unk_10020 = 0.0f;
-}
-
 int32_t PlayerExploredZonesUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
+
+#include "WoW/Source/Ui/WorldMap.inl"
 
 #endif

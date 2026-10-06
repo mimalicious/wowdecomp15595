@@ -60,6 +60,18 @@ static const char* s_lfgTypeTokens[7] = {
 // STATIC: #0x00BEACD0
 static char s_rewardItemTexture[260];
 
+// STATIC: #0x00ACDD54
+static int32_t s_roleCheckCount = 2;
+
+// STATIC: #0x00BEABAC
+static float s_roleCheckTime;
+
+// STATIC: #0x00ACDD68
+static int32_t s_teleportCount = 2;
+
+// STATIC: #0x00BEABC0
+static float s_teleportTime;
+
 // PROVEN: a5d876ec IDENTICAL/NONE
 // OFFSET: 0x00981850/0x1406FC0F0
 static int32_t Script_GetLFGRoles(lua_State* L) {
@@ -1335,18 +1347,6 @@ static int32_t Script_SearchLFGLeave(lua_State* L) {
 
     return 0;
 }
-
-// STATIC: #0x00ACDD54
-static int32_t s_roleCheckCount = 2;
-
-// STATIC: #0x00BEABAC
-static float s_roleCheckTime;
-
-// STATIC: #0x00ACDD68
-static int32_t s_teleportCount = 2;
-
-// STATIC: #0x00BEABC0
-static float s_teleportTime;
 
 // OFFSET: #0x005529E0
 static int32_t AddLFGPlayerInfo(lua_State* L, LFGListPlayer* player) {

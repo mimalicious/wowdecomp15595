@@ -38,6 +38,9 @@
 // STATIC: #0x00AC7A48
 static const char* s_channelCategories[3] = { "CHANNEL_CATEGORY_GROUP", "CHANNEL_CATEGORY_WORLD", "CHANNEL_CATEGORY_CUSTOM" };
 
+// STATIC: #0x00AC7A40
+static const char* s_chatLogNames[2] = { "Logs\\WoWChatLog.txt", "Logs\\WoWCombatLog.txt" };
+
 // OFFSET: #0x0050D170
 static int32_t Script_SendChatMessage(lua_State* L) {
     if (!CGGameUI::CanPerformAction(10)) {
@@ -1422,9 +1425,6 @@ static int32_t Script_GetChannelRosterInfo(lua_State* L) {
 
     return 6;
 }
-
-// STATIC: #0x00AC7A40
-static const char* s_chatLogNames[2] = { "Logs\\WoWChatLog.txt", "Logs\\WoWCombatLog.txt" };
 
 // OFFSET: #0x004FBC60
 static int32_t EnableLogging(lua_State* L, int32_t index) {

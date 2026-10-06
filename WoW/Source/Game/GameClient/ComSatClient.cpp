@@ -164,6 +164,9 @@ static int32_t s_lastFoundSession;
 // STATIC: #0x00AF29B4
 int32_t s_currentSession = -1;
 
+// STATIC: #0x00ADC098
+const char* s_sessionTypeNames[3] = { "Battleground", "Party", "Raid" };
+
 // PROVEN: 9aaca926 IDENTICAL/NONE
 // OFFSET: 0x004DB600/0x1401199E0
 static int32_t ParseKeyNameToKeyCode(const char* name) {
@@ -716,9 +719,6 @@ void ComSatClient_DisableCurrentSession() {
 int32_t ComSatClient_IsTalkerSquelchedInCurrent(WOWGUID guid) {
     return ComSatClient_IsTalkerSquelched(guid, s_currentSession);
 }
-
-// STATIC: #0x00ADC098
-const char* s_sessionTypeNames[3] = { "Battleground", "Party", "Raid" };
 
 // OFFSET: #0x007DB860
 int32_t ComSatClient_DetermineSessionTypeFromName(const char* name) {

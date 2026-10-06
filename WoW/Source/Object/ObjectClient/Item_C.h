@@ -22,9 +22,9 @@ struct ITEMBYNAME : public TSHashObject<ITEMBYNAME, HASHKEY_UTF8I> {
     /* 0018 */ int32_t m_itemId;
 };
 
-int32_t GetItemIDByName(const char* name);
-
 extern const uint32_t s_inventoryTypeSlots[29];
+
+int32_t GetItemIDByName(const char* name);
 
 class CGItem_C : public CGObject_C, public CGItem {
     public:

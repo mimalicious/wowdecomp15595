@@ -267,12 +267,6 @@ class CGxQuery {
     CGxQuery(EGxQueryType type);
 };
 
-// INLINED
-inline CGxQuery::CGxQuery(EGxQueryType type) {
-    this->m_apiSpecific = NULL;
-    this->m_type = type;
-}
-
 enum EGxPoolTarget {
     GxPoolTarget_Vertex = 0,
     GxPoolTarget_Index = 1,
@@ -451,5 +445,7 @@ enum EGxuDrawListSorting {
     GxuSort_VtxStream = 1,
     GxuSorts_Last = 2,
 };
+
+#include "Engine/Source/Gx/Types.inl"
 
 #endif

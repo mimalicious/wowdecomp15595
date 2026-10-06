@@ -61,6 +61,9 @@ static TSList<MountTransitionObject> s_mountTransitions;
 // STATIC: #0x00D39758
 static TSGrowableArray<TSGrowableArray<const SpellVisualKitModelAttachRec*>*>* s_modelAttachLookup;
 
+// STATIC: #0x00D397AC
+static uint32_t s_shardEventCount;
+
 // INLINED
 LightningObject::LightningObject() : m_refCount(1) {
 }
@@ -718,9 +721,6 @@ void SpellVisualsTick() {
         transition = next;
     }
 }
-
-// STATIC: #0x00D397AC
-static uint32_t s_shardEventCount;
 
 // INLINED
 Shard::Shard() : m_model(NULL), m_started(0) {

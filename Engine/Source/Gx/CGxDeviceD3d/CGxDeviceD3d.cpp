@@ -18,44 +18,6 @@
 
 typedef IDirect3D9* (WINAPI* Direct3DCreate9Proc)(UINT sdkVersion);
 
-static void* NvQueryInterface(NvU32 id) {
-    typedef void* (__cdecl* QueryInterfaceProc)(NvU32 id);
-
-    HMODULE nvapi = GetModuleHandleA("nvapi.dll");
-
-    if (!nvapi) {
-        return NULL;
-    }
-
-    QueryInterfaceProc queryInterface = reinterpret_cast<QueryInterfaceProc>(GetProcAddress(nvapi, "nvapi_QueryInterface"));
-
-    return queryInterface ? queryInterface(id) : NULL;
-}
-
-static NvAPI_Status NvD3d9GetTextureHandle(IDirect3DBaseTexture9* texture, NVDX_ObjectHandle* handle) {
-    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DBaseTexture9*, NVDX_ObjectHandle*);
-
-    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xC7985ED5));
-
-    return proc ? proc(texture, handle) : NVAPI_NO_IMPLEMENTATION;
-}
-
-static NvAPI_Status NvD3d9GetCurrentZBufferHandle(IDirect3DDevice9* device, NVDX_ObjectHandle* handle) {
-    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DDevice9*, NVDX_ObjectHandle*);
-
-    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xB380F218));
-
-    return proc ? proc(device, handle) : NVAPI_NO_IMPLEMENTATION;
-}
-
-static NvAPI_Status NvD3d9StretchRect(IDirect3DDevice9* device, NVDX_ObjectHandle source, const RECT* sourceRect, NVDX_ObjectHandle dest, const RECT* destRect, D3DTEXTUREFILTERTYPE filter) {
-    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DDevice9*, NVDX_ObjectHandle, const RECT*, NVDX_ObjectHandle, const RECT*, D3DTEXTUREFILTERTYPE);
-
-    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xAEAECD41));
-
-    return proc ? proc(device, source, sourceRect, dest, destRect, filter) : NVAPI_NO_IMPLEMENTATION;
-}
-
 // STATIC: %0x00AFD658
 const D3DFORMAT CGxDeviceD3d::s_GxFormatToD3dFormat[CGxFormat::Formats_Last] = { D3DFMT_R5G6B5, D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8, D3DFMT_A2R10G10B10, D3DFMT_D16, D3DFMT_D24X8, D3DFMT_D24S8, D3DFMT_D32 };
 
@@ -118,6 +80,44 @@ static D3DLIGHT9 s_d3dLight;
 
 // STATIC: %0x00D93220
 static int32_t s_isIdent;
+
+static void* NvQueryInterface(NvU32 id) {
+    typedef void* (__cdecl* QueryInterfaceProc)(NvU32 id);
+
+    HMODULE nvapi = GetModuleHandleA("nvapi.dll");
+
+    if (!nvapi) {
+        return NULL;
+    }
+
+    QueryInterfaceProc queryInterface = reinterpret_cast<QueryInterfaceProc>(GetProcAddress(nvapi, "nvapi_QueryInterface"));
+
+    return queryInterface ? queryInterface(id) : NULL;
+}
+
+static NvAPI_Status NvD3d9GetTextureHandle(IDirect3DBaseTexture9* texture, NVDX_ObjectHandle* handle) {
+    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DBaseTexture9*, NVDX_ObjectHandle*);
+
+    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xC7985ED5));
+
+    return proc ? proc(texture, handle) : NVAPI_NO_IMPLEMENTATION;
+}
+
+static NvAPI_Status NvD3d9GetCurrentZBufferHandle(IDirect3DDevice9* device, NVDX_ObjectHandle* handle) {
+    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DDevice9*, NVDX_ObjectHandle*);
+
+    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xB380F218));
+
+    return proc ? proc(device, handle) : NVAPI_NO_IMPLEMENTATION;
+}
+
+static NvAPI_Status NvD3d9StretchRect(IDirect3DDevice9* device, NVDX_ObjectHandle source, const RECT* sourceRect, NVDX_ObjectHandle dest, const RECT* destRect, D3DTEXTUREFILTERTYPE filter) {
+    typedef NvAPI_Status (__cdecl* Proc)(IDirect3DDevice9*, NVDX_ObjectHandle, const RECT*, NVDX_ObjectHandle, const RECT*, D3DTEXTUREFILTERTYPE);
+
+    Proc proc = reinterpret_cast<Proc>(NvQueryInterface(0xAEAECD41));
+
+    return proc ? proc(device, source, sourceRect, dest, destRect, filter) : NVAPI_NO_IMPLEMENTATION;
+}
 
 // OFFSET: 0x0084CBC0/0x14057B560
 void CGxDeviceD3d::IBufUnlock(CGxBuf* buf) {

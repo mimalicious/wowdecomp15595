@@ -26,6 +26,9 @@
 #include "WoW/Source/Ui/QuestTextParser.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
+// STATIC: #0x00A1B788
+static const char s_difficultyNames[4][32] = { "optimal", "medium", "easy", "trivial" };
+
 // OFFSET: #0x005DA120
 static int32_t Script_GetNumTradeSkills(lua_State* L) {
     lua_pushnumber(L, CGTradeSkillInfo::m_filteredSkills);
@@ -92,9 +95,6 @@ static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     lua_pushnumber(L, count);
     return 1;
 }
-
-// STATIC: #0x00A1B788
-static const char s_difficultyNames[4][32] = { "optimal", "medium", "easy", "trivial" };
 
 // OFFSET: #0x005DA1B0
 static int32_t Script_GetTradeSkillSubClassFilter(lua_State* L) {

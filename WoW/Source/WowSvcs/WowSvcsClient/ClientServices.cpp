@@ -186,6 +186,9 @@ static bool s_cdKeyLoaded;
 // STATIC: #0x00AD93C0
 static const char* s_processorVendors[] = { "Unknown", "intel", "AMD", "PPC" };
 
+// STATIC: #0x00C79B40
+static char s_clientStamp[88];
+
 // OFFSET: #0x006B02C0
 static void LogConnectionStatus(WOWCS_OPS op, int32_t errorCode, int32_t initiating, int32_t result) {
     char opText[32];
@@ -865,9 +868,6 @@ void ClientServices::Logon(const char* username, const char* password) {
     const char* realmList = ClientServices::s_loginObj->GetLoginServerType() == 1 ? ClientServices::s_realmListBNVar->m_stringValue.m_str : ClientServices::s_realmListVar->m_stringValue.m_str;
     ClientServices::s_loginObj->Logon(realmList, portal);
 }
-
-// STATIC: #0x00C79B40
-static char s_clientStamp[88];
 
 // OFFSET: #0x006B1C70
 char* ClientServices::GetClientStamp() {

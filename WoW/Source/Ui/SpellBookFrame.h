@@ -97,12 +97,6 @@ class CGSpellBook {
     static int32_t CanStealAura(const CGUnit_C* unit, const AuraData* aura, const SpellRec* spell);
 };
 
-int32_t IsValidSpell(const char* name, int32_t* petSpell);
-int32_t GetSpellSlot(int32_t spellId, int32_t petSpell);
-int32_t GetSpellIdBySlot(int32_t slot, int32_t petSpell);
-bool HasSpell(int32_t spellId, int32_t petSpell);
-bool HasSpell(uint32_t spellId);
-void ClearPetSpellInfo();
 extern const char* s_companionTypes[2];
 extern TSGrowableArray<SpellUsableInfo> s_shapeshiftSpells;
 extern uint32_t s_numSkillInfos;
@@ -111,6 +105,17 @@ extern int32_t s_spellList[1024];
 extern uint32_t s_numSpells;
 extern uint32_t s_unkBE8D9C;
 extern TSGrowableArray<SpellBookSkillInfo*> s_skillInfos;
+extern TSGrowableArray<int32_t> s_trackingSpells;
+extern uint32_t s_petSpellList[1024];
+extern TSBitField<TSFixedArray<uint32_t> > s_knownSpellBits;
+extern TSGrowableArray<int32_t> s_openLockSpells;
+
+int32_t IsValidSpell(const char* name, int32_t* petSpell);
+int32_t GetSpellSlot(int32_t spellId, int32_t petSpell);
+int32_t GetSpellIdBySlot(int32_t slot, int32_t petSpell);
+bool HasSpell(int32_t spellId, int32_t petSpell);
+bool HasSpell(uint32_t spellId);
+void ClearPetSpellInfo();
 void PrefetchSpellVisuals(int32_t spellId);
 
 void SpellBookRegisterScriptFunctions();
@@ -123,17 +128,9 @@ int __cdecl SortSkillInfoByName(const void* a, const void* b);
 int __cdecl SortSpellsForDisplay(const void* a, const void* b);
 int __cdecl SortCompanions(const void* a, const void* b);
 
-extern TSGrowableArray<int32_t> s_trackingSpells;
-
-extern int32_t s_spellList[1024];
-extern uint32_t s_numSpells;
-extern uint32_t s_petSpellList[1024];
-extern TSBitField<TSFixedArray<uint32_t> > s_knownSpellBits;
-
 int32_t FindSpellSlotByName(const char* name, const char* subtext, int32_t* petSpell);
 int32_t GetSpellIdByName(const char* name, int32_t* petSpell);
 bool GetSlotFromLua(lua_State* L, uint32_t* slot, int32_t* petSpell, int32_t* type, int32_t allowName);
 bool HasPetSpell(int32_t spellId);
-extern TSGrowableArray<int32_t> s_openLockSpells;
 
 #endif

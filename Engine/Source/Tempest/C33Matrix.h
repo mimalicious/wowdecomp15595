@@ -23,7 +23,7 @@ class C33Matrix {
     /* 001C */ float c1;
     /* 0020 */ float c2;
 
-    C33Matrix() {}
+    C33Matrix();
     C33Matrix(float a0, float a1, float a2, float b0, float b1, float b2, float c0, float c1, float c2);
     C33Matrix(const C44Matrix& m);
     C33Matrix(const C4Quaternion& q);
@@ -42,5 +42,7 @@ class C33Matrix {
 C33Matrix operator*(const C33Matrix& l, const C33Matrix& r);
 C3Vector operator*(const C3Vector& v, const C33Matrix& m);
 C3Vector operator*=(C3Vector& v, const C33Matrix& m);
+
+#include "Engine/Source/Tempest/C33Matrix.inl"
 
 #endif

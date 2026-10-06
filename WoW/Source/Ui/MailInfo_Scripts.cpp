@@ -37,6 +37,9 @@ static char s_stationeryTexture[260];
 // STATIC: #0x00BEB318
 static char s_packageTexture[260];
 
+// STATIC: #0x00BEB420
+static char s_headerTexture[260];
+
 // OFFSET: #0x0056D5D0
 static int32_t Script_GetSendMailMoney(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_sendMoney);
@@ -327,7 +330,6 @@ static int32_t Script_GetSendMailPrice(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACE610
 // OFFSET: %0x008C6670
 static int32_t Script_ClearSendMail(lua_State* L) {
     CGMailInfo::ClearSendMail(true);
@@ -380,9 +382,6 @@ static int32_t Script_GetSendMailItemLink(lua_State* L) {
     lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item));
     return 1;
 }
-
-// STATIC: #0x00BEB420
-static char s_headerTexture[260];
 
 // OFFSET: #0x0056E520
 static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
@@ -1262,6 +1261,7 @@ static int32_t Script_GetNumStationeries(lua_State* L) {
     return 1;
 }
 
+// STATIC: #0x00ACE610
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseMail", &Script_CloseMail },
     { "ClearSendMail", &Script_ClearSendMail },

@@ -63,6 +63,9 @@ static CEffect* s_destroyedEffects;
 // STATIC: #0x00CA050C
 static int32_t s_specialUnitEffectIDs[sizeof(s_specialUnitEffectNames) / sizeof(s_specialUnitEffectNames[0])];
 
+// STATIC: #0x00A32AF4
+static const int32_t s_specialUnitEffectAttachments[] = { 50, 50, 17, 17, 19, 19, 19, 17, 19, 19, 34, 19 };
+
 // OFFSET: #0x006F7520
 static int32_t BuildSpecialUnitEffectTable() {
     memset(s_specialUnitEffectIDs, 0, sizeof(s_specialUnitEffectIDs));
@@ -520,9 +523,6 @@ void CEffect::AddAnimKitEffect(int32_t spellId, const SpellVisualKitRec* kit, co
     this->m_kitRec = kit;
     this->unk_00A0 = a5;
 }
-
-// STATIC: #0x00A32AF4
-static const int32_t s_specialUnitEffectAttachments[] = { 50, 50, 17, 17, 19, 19, 19, 17, 19, 19, 34, 19 };
 
 // OFFSET: #0x006F8F40
 void CEffect::ReleaseLightningRef() {

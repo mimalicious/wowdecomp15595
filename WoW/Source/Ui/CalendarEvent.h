@@ -22,18 +22,6 @@ struct EventInviteInfo {
     EventInviteInfo();
 };
 
-// INLINED
-inline EventInviteInfo::EventInviteInfo() {
-    this->m_inviteID = 0;
-    this->m_guid = WOWGUID();
-    this->m_responseTime = 0;
-    this->m_level = 0;
-    this->m_status = 0;
-    this->m_moderatorStatus = 0;
-    this->m_inviteType = 0;
-    this->m_notes[0] = '\0';
-}
-
 struct InviteSortCriterion {
     /* 0000 */ uint32_t m_criterion;
     /* 0004 */ uint8_t m_reverse;
@@ -110,5 +98,7 @@ class CGCalendarEvent {
 };
 
 const char* GetEventStatusString(uint32_t status);
+
+#include "WoW/Source/Ui/CalendarEvent.inl"
 
 #endif

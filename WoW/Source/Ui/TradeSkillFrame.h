@@ -82,9 +82,10 @@ class CGTradeSkillInfo {
     static void SetItemLevelFilter(int32_t minLevel, int32_t maxLevel);
 };
 
+extern const char* s_invSlotTokens[27];
+
 int32_t QSortSubClasses(const void* a, const void* b);
 int32_t QSortSkills(const void* a, const void* b);
-extern const char* s_invSlotTokens[27];
 
 const char* GetInventorySlotToken(int32_t slot);
 bool Profession_FilterSpell(int32_t spellId, int32_t minLevel, int32_t maxLevel, const char* name);

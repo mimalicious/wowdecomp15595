@@ -33,6 +33,24 @@ static int32_t s_joinAttempts;
 // STATIC: #0x00BEABC4
 static float s_lastJoinTime;
 
+// STATIC: #0x00AD87B0
+static const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
+
+// STATIC: #0x00ACDD58
+static int32_t s_proposalResponseCount = 2;
+
+// STATIC: #0x00BEABB0
+static float s_proposalResponseTime;
+
+// STATIC: #0x00ACDD5C
+static int32_t s_bootVoteCount = 2;
+
+// STATIC: #0x00BEABB4
+static float s_bootVoteTime;
+
+// STATIC: #0x00BEAA0C
+static uint32_t s_lastQueueSlot;
+
 // OFFSET: %0x008D75C0
 uint8_t CGLookingForGroup::GetClassRoles(uint32_t classID) {
     return s_classRoles[classID - 1];
@@ -192,24 +210,6 @@ void CGLookingForGroup::JoinLFG() {
     CGLookingForGroup::m_localInfo.unk_0003 = 0;
     ClientServices::Send2(&msg);
 }
-
-// STATIC: #0x00AD87B0
-static const char* s_roleTokens[3] = { "TANK", "HEALER", "DAMAGER" };
-
-// STATIC: #0x00ACDD58
-static int32_t s_proposalResponseCount = 2;
-
-// STATIC: #0x00BEABB0
-static float s_proposalResponseTime;
-
-// STATIC: #0x00ACDD5C
-static int32_t s_bootVoteCount = 2;
-
-// STATIC: #0x00BEABB4
-static float s_bootVoteTime;
-
-// STATIC: #0x00BEAA0C
-static uint32_t s_lastQueueSlot;
 
 // OFFSET: #0x00553AB0
 void CGLookingForGroup::LeaveLFG() {

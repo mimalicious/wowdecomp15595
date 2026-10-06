@@ -184,6 +184,9 @@ int32_t CGBattlefieldInfo::m_worldStateStats[8];
 // STATIC: #0x00BEA5D0
 C2Vector CGBattlefieldInfo::m_playerPositions[40];
 
+// STATIC: #0x00ACD310
+static const char* s_flagTokens[2] = { "AllianceFlag", "HordeFlag" };
+
 // INLINED
 static WorldPvPQueueStatus* FindWorldPvPQueue(int32_t queueID) {
     for (uint32_t i = 0; i < sizeof(((CGBattlefieldInfo*)0)->m_worldPvPQueues) / sizeof(CGBattlefieldInfo::m_worldPvPQueues[0]); i++) {
@@ -1518,9 +1521,6 @@ void CGBattlefieldInfo::OnArenaUnitOutOfRange(const WOWGUID& guid) {
         }
     }
 }
-
-// STATIC: #0x00ACD310
-static const char* s_flagTokens[2] = { "AllianceFlag", "HordeFlag" };
 
 // OFFSET: #0x0054D010
 const char* CGBattlefieldInfo::GetFlagToken(uint32_t index) {

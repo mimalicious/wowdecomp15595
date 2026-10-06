@@ -45,6 +45,9 @@ CVehiclePassenger_C* CVehiclePassenger_C::s_tailPassenger;
 // STATIC: #0x00CA1358
 TSGrowableArray<VehiclePassengerRescueTransition>* CVehiclePassenger_C::s_rescueTransitions;
 
+// STATIC: #0x00A2D3F0
+static const uint32_t s_seatAttachments[22] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 0 };
+
 // OFFSET: #0x00747900
 void CVehiclePassenger_C::ClearFlag8() {
     this->m_flags &= ~0x8;
@@ -908,9 +911,6 @@ void CVehiclePassenger_C::ExecutePendingRescueTransitions() {
     CVehiclePassenger_C::s_rescueTransitions->m_count = 0;
     CVehiclePassenger_C::s_pendingCount = 0;
 }
-
-// STATIC: #0x00A2D3F0
-static const uint32_t s_seatAttachments[22] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 0 };
 
 // PROVEN: a73a1a69 IDENTICAL/NONE
 // OFFSET: 0x005ACC20

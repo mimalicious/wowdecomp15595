@@ -128,6 +128,8 @@ class CGMailInfo {
     static void UpdateStationeryList();
 };
 
+extern MailSenderInfo s_recentSenders[3];
+
 void StationeryItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 
 void MailInfoRegisterScriptFunctions();
@@ -138,8 +140,6 @@ int32_t Packet_SMSG_MAIL_LIST_RESULT(void* param, NETMESSAGE msgId, uint32_t tim
 int32_t Packet_MSG_QUERY_NEXT_MAIL_TIME(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_RECEIVED_MAIL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_SHOW_MAILBOX(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-
-extern MailSenderInfo s_recentSenders[3];
 
 MailAttachmentInfo* GetFirstAttachment(MailboxMessageInfo* message);
 MailAttachmentInfo* GetAttachment(MailboxMessageInfo* message, uint32_t index);

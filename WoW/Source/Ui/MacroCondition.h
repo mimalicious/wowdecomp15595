@@ -16,10 +16,6 @@ class MacroCondition {
     void Parse(const char* start, const char* end);
 };
 
-// INLINED
-inline MacroCondition::MacroCondition() {
-    this->m_type = 0;
-    this->m_negate = 0;
-}
+#include "WoW/Source/Ui/MacroCondition.inl"
 
 #endif

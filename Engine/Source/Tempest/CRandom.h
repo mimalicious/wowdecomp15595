@@ -11,7 +11,7 @@ class CRndSeed {
     /* 0000 */ uint32_t rndacc;
     /* 0004 */ uint32_t rndvls;
 
-    CRndSeed() {}
+    CRndSeed();
     CRndSeed(uint32_t seed);
     void SetSeed(uint32_t seed);
 };
@@ -28,5 +28,7 @@ class CRandom {
 };
 
 extern CRndSeed g_rndSeed;
+
+#include "Engine/Source/Tempest/CRandom.inl"
 
 #endif

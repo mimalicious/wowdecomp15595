@@ -311,7 +311,6 @@ static int32_t Script_GetVoiceStatus(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AF29C0
 // OFFSET: #0x007DAF90
 static int32_t Script_VoiceGetCurrentOutputDevice(lua_State* L) {
     if (ComSatThread::s_comsat) {
@@ -358,6 +357,7 @@ static int32_t Script_SetActiveVoiceChannelBySessionID(lua_State* L) {
     return 1;
 }
 
+// STATIC: #0x00AF29C0
 static FrameScript_Method s_ScriptFunctions[] = {
     { "VoiceEnumerateOutputDevices", &Script_VoiceEnumerateOutputDevices },
     { "VoiceEnumerateCaptureDevices", &Script_VoiceEnumerateCaptureDevices },

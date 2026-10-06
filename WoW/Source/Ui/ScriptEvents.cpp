@@ -39,6 +39,12 @@ static char s_tokenBuffers[8][32];
 // STATIC: #0x00AD2780
 static char* s_tokenIDs[8] = { s_tokenBuffers[0], s_tokenBuffers[1], s_tokenBuffers[2], s_tokenBuffers[3], s_tokenBuffers[4], s_tokenBuffers[5], s_tokenBuffers[6], s_tokenBuffers[7] };
 
+// STATIC: #0x00C25B7C
+static char s_auraToken[32];
+
+// STATIC: #0x00C25B5C
+static char s_tokenFromGUID[32];
+
 // OFFSET: #0x00608880
 void ScriptEventsInitialize() {
 #define SCRIPT_EVENT_NAME(name, index) g_scriptEvents[SCRIPT_EVENT_##name] = #name;
@@ -327,7 +333,6 @@ void Script_SendUniqueSignals() {
     s_uniqueSignals.m_count = 0;
 }
 
-
 // PROVEN: 9dc2d163 IDENTICAL/NONE
 // OFFSET: 0x00450B20
 static int32_t UnitFieldChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -565,12 +570,6 @@ bool Script_GetGUIDFromString(const char** name, WOWGUID& guid) {
 
     return guid != WOWGUID();
 }
-
-// STATIC: #0x00C25B7C
-static char s_auraToken[32];
-
-// STATIC: #0x00C25B5C
-static char s_tokenFromGUID[32];
 
 // OFFSET: #0x0060B0B0
 const char* Script_GetTokenFromGUID(const WOWGUID* guid) {

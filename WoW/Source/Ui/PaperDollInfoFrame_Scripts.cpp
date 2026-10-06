@@ -469,7 +469,6 @@ static int32_t Script_PutItemInBag(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AD1270
 // OFFSET: #0x005E7640
 static void InspectArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -1030,6 +1029,7 @@ static int32_t Script_RequestInspectHonorData(lua_State* L) {
     return 0;
 }
 
+// STATIC: #0x00AD1270
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetInventorySlotInfo", &Script_GetInventorySlotInfo },
     { "GetInventoryItemsForSlot", &Script_GetInventoryItemsForSlot },

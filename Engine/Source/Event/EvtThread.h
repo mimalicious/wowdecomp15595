@@ -23,8 +23,6 @@ class EvtThread : public TSLinkedNode<EvtThread> {
     EvtThread();
 };
 
-// INLINED
-inline EvtThread::EvtThread() : m_wakeEvent(0, 0) {
-}
+#include "Engine/Source/Event/EvtThread.inl"
 
 #endif

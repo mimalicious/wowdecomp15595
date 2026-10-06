@@ -143,6 +143,9 @@ class Spell_C {
     static bool CastSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, bool confirmed);
 };
 
+extern PendingSpellCast* s_targetingSpell;
+extern uint32_t s_needTargets;
+
 int32_t Packet_Group_30(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CAST_FAILED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_SPELL_FAILURE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -188,8 +191,6 @@ bool Spell_C_CanTargetCorpse(const CGCorpse_C* corpse);
 bool Spell_C_CanTargetObject(const CGGameObject_C* object);
 bool Spell_C_IsTargeting();
 bool Spell_C_RangeCheckSelected(CGUnit_C* caster, const SpellRec* spell, WOWGUID target, uint8_t* inRange, bool report, PendingSpellCast* cast);
-extern PendingSpellCast* s_targetingSpell;
-extern uint32_t s_needTargets;
 int32_t Spell_C_IsCursorWorldObjectHousing();
 void Spell_C_CursorWorldObjectRotate();
 void Spell_C_CancelPlayerSpells();

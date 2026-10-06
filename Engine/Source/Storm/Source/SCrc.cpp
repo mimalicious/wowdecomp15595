@@ -38,45 +38,6 @@ static const uint32_t s_crcTable[256] = {
     0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D,
 };
 
-// PROVEN: 78a607b4 DIFFERENT/IDENTICAL
-// OFFSET: 0x004B9510/0x1400F1E50
-uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
-    uint32_t result = 0;
-
-    if (crc) {
-        result = *crc;
-    }
-
-    if (flags & SCRC_INITIALIZE) {
-        result = 0xFFFFFFFF;
-    }
-
-    if (flags & SCRC_PROCESS) {
-        const uint8_t* data = static_cast<const uint8_t*>(buffer);
-
-        for (uint32_t i = length; i; i--) {
-            result = s_crcTable[(result ^ *data) & 0xFF] ^ (result >> 8);
-            data++;
-        }
-    }
-
-    if (flags & SCRC_FINALIZE) {
-        result = ~result;
-    }
-
-    if (crc) {
-        *crc = result;
-    }
-
-    return result;
-}
-
-// PROVEN: ef255d8c IDENTICAL/IDENTICAL
-// OFFSET: 0x004B9570/0x1400F1EE0
-uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
-    return SCrcBuffer(buffer, length, crc, flags);
-}
-
 // STATIC: 0x00C9FC60
 static const uint64_t s_crc64Table[256] = {
     0x0000000000000000ULL, 0xB32E4CBE03A75F6FULL, 0xF4843657A840A05BULL, 0x47AA7AE9ABE7FF34ULL,
@@ -144,6 +105,45 @@ static const uint64_t s_crc64Table[256] = {
     0xDCD7181E300F9E5EULL, 0x6FF954A033A8C131ULL, 0x28532E49984F3E05ULL, 0x9B7D62F79BE8616AULL,
     0xA707DB9ACF80C06DULL, 0x14299724CC279F02ULL, 0x5383EDCD67C06036ULL, 0xE0ADA17364673F59ULL,
 };
+
+// PROVEN: 78a607b4 DIFFERENT/IDENTICAL
+// OFFSET: 0x004B9510/0x1400F1E50
+uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
+    uint32_t result = 0;
+
+    if (crc) {
+        result = *crc;
+    }
+
+    if (flags & SCRC_INITIALIZE) {
+        result = 0xFFFFFFFF;
+    }
+
+    if (flags & SCRC_PROCESS) {
+        const uint8_t* data = static_cast<const uint8_t*>(buffer);
+
+        for (uint32_t i = length; i; i--) {
+            result = s_crcTable[(result ^ *data) & 0xFF] ^ (result >> 8);
+            data++;
+        }
+    }
+
+    if (flags & SCRC_FINALIZE) {
+        result = ~result;
+    }
+
+    if (crc) {
+        *crc = result;
+    }
+
+    return result;
+}
+
+// PROVEN: ef255d8c IDENTICAL/IDENTICAL
+// OFFSET: 0x004B9570/0x1400F1EE0
+uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
+    return SCrcBuffer(buffer, length, crc, flags);
+}
 
 // OFFSET: 0x004B9590
 uint64_t SCrc64Buffer(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags) {

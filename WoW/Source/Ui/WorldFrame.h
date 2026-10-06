@@ -76,18 +76,9 @@ class CModelRecord : public TSLinkedNode<CModelRecord> {
     /* 0018 */ CGObject_C* m_object;
     /* 001C */ uint32_t unk_001C;
 
-    CModelRecord() {
-        this->m_model = NULL;
-        this->m_distance = std::numeric_limits<float>::infinity();
-        this->m_guid = WOWGUID();
-        this->m_object = NULL;
-    }
+    CModelRecord();
 
-    ~CModelRecord() {
-        if (this->m_model) {
-            this->m_model->Release();
-        }
-    }
+    ~CModelRecord();
 };
 
 struct HITTESTRESULT {
@@ -204,5 +195,7 @@ class CWorldClickEvent {
     /* 000C */ C3Vector m_segEnd;
     /* 0018 */ MOUSEBUTTON m_button;
 };
+
+#include "WoW/Source/Ui/WorldFrame.inl"
 
 #endif

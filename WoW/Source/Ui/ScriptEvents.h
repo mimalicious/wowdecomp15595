@@ -25,6 +25,8 @@ struct ScriptAuraInfo {
 };
 
 extern const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
+extern const int32_t s_unitSexValues[3];
+extern const char* s_vehicleSkinNames[2];
 
 CGUnit_C* GetUnitFromName(const char* token);
 WOWGUID GetGuidByKeyword(const char* token);
@@ -55,9 +57,5 @@ void ScriptEventsRegisterUnit(CGUnit_C* unit);
 void ScriptEventsUnregisterUnit(CGUnit_C* unit);
 
 void ClearUniqueSignals();
-
-extern const int32_t s_unitSexValues[3];
-
-extern const char* s_vehicleSkinNames[2];
 
 #endif

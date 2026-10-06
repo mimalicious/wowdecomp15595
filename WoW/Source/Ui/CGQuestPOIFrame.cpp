@@ -38,6 +38,9 @@ int32_t CGQuestPOIFrame::s_objectType;
 // STATIC: #0x00C0D7C8
 CDataAllocator CGQuestPOIFrame::s_questPOIHeap(sizeof(CGQuestPOIFrame), 5);
 
+// STATIC: #0x00ACF24C
+static int32_t s_highlightIndex = -1;
+
 // INLINED
 void CGQuestPOIFrame::operator delete(void* ptr) {
     CGQuestPOIFrame::s_questPOIHeap.PutData(ptr, NULL, 0);
@@ -171,9 +174,6 @@ void CGQuestPOIFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
         batch->QueueCallback(CGQuestPOIFrame::RenderCallback, this);
     }
 }
-
-// STATIC: #0x00ACF24C
-static int32_t s_highlightIndex = -1;
 
 // OFFSET: #0x0058E0D0
 void CGQuestPOIFrame::UpdateMouseOverPOI(float x, float y) {

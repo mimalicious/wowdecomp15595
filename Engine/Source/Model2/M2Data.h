@@ -25,7 +25,7 @@ class fixed16 {
     public:
     /* 0000 */ int16_t m_value;
 
-    fixed16() {}
+    fixed16();
     fixed16(float value);
 };
 
@@ -415,5 +415,7 @@ template <class T>
 inline void M2Array<T>::Set(const T* data) {
     this->m_offset = data ? static_cast<uint32_t>(reinterpret_cast<uintptr_t>(data) - reinterpret_cast<uintptr_t>(this)) : 0;
 }
+
+#include "Engine/Source/Model2/M2Data.inl"
 
 #endif

@@ -38,6 +38,15 @@ int32_t CGDressUpModelFrame::s_objectType;
 // STATIC: #0x00C0E500
 CDataAllocator CGDressUpModelFrame::s_dressUpModelHeap(sizeof(CGDressUpModelFrame), 5);
 
+// STATIC: #0x00C0E4F8
+static int32_t s_mainHandItemId;
+
+// STATIC: #0x00C0E4FC
+static int32_t s_offHandItemId;
+
+// STATIC: #0x00ACF548
+static int32_t s_nextHand = 15;
+
 // INLINED
 void CGDressUpModelFrame::operator delete(void* ptr) {
     CGDressUpModelFrame::s_dressUpModelHeap.PutData(ptr, NULL, 0);
@@ -105,15 +114,6 @@ void CGDressUpModelFrame::UpdateModel() {
         model->m_fFlags = (model->m_fFlags & ~0x10000u) | (ready << 16);
     }
 }
-
-// STATIC: #0x00C0E4F8
-static int32_t s_mainHandItemId;
-
-// STATIC: #0x00C0E4FC
-static int32_t s_offHandItemId;
-
-// STATIC: #0x00ACF548
-static int32_t s_nextHand = 15;
 
 // OFFSET: #0x00597BA0
 void CGDressUpModelFrame::Undress() {

@@ -11,6 +11,7 @@
 class ATTACKROUNDINFO;
 class CGUnit_C;
 class CDataStore;
+class SpellMechanicRec;
 class SpellRec;
 struct lua_State;
 struct PendingCombatLogData;
@@ -106,6 +107,8 @@ class CombatLog {
     static void QueueMissedSpellText(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell, int32_t missType, int32_t amount, uint32_t timeOffset);
 };
 
+extern const uint32_t s_environmentalDamageSchools[6];
+
 void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId);
 void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t missType, bool a5, bool a6, int32_t a7);
 void UnitCombatLogDamageShield(const WOWGUID& victimGuid, const WOWGUID& casterGuid, int32_t spellId, int32_t damage, uint32_t overkill, uint32_t schoolMask);
@@ -117,7 +120,6 @@ void SendCombatLogEvents();
 void QueueCombatLogEntry(CombatLogEntry* entry, uint32_t timeOffset);
 void UnitCombatLogBuildingDamage(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t damage, int32_t spellId);
 void UnitCombatLogBuildingHeal(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t amount, int32_t spellId);
-extern const uint32_t s_environmentalDamageSchools[6];
 bool ShouldShowFeedback(const ATTACKROUNDINFO& info);
 void UnitCombatLogInvalidateName(const char* name);
 char* GUIDToHexString(WOWGUID guid, char* buffer);
@@ -128,6 +130,12 @@ void UnitCombatLogUnitDead(CGUnit_C* unit);
 void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, int32_t spellId);
 void UnitCombatLogSpellFail(const WOWGUID& caster, int32_t spellId, const char* reason);
 class AuraData;
+extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
+extern WOWGUID s_combatTextActiveUnit;
+extern CombatLogEntry* s_currentEntry;
+extern CombatLogEntry* s_pendingEntries;
+extern const char* g_spellMissStrings[12];
+
 void UnitCombatLogAuraDose(CGUnit_C* unit, const AuraData* aura, int32_t spellId, int32_t oldStack, int32_t newStack, uint8_t a6);
 void UnitCombatLogAuraRefreshed(CGUnit_C* unit, const AuraData* aura, int32_t spellId, uint8_t a4);
 int32_t Packet_SMSG_PERIODICAURALOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -159,22 +167,11 @@ void UnitCombatLogSplitDamage(const WOWGUID& source, const WOWGUID& dest, int32_
 void UnitCombatLogSpellMechanic(const WOWGUID& guid, const AuraData* aura, const SpellRec* spell);
 bool SpellIsHiddenInCombatLog(const SpellRec* spell);
 bool SpellHasOpenLockEffect(const SpellRec* spell);
-class SpellMechanicRec;
 void DisplayMechanicEffect(const WOWGUID* unitGuid, const WOWGUID* sourceGuid, const SpellRec* spell, const SpellMechanicRec* mechanic);
 
 void UnitCombatLogRegisterScriptFunctions();
 void UnitCombatLogUnregisterScriptFunctions();
 
-// INLINED
-inline CombatLogFilter::CombatLogFilter() {
-    this->m_events.m_count = 50;
-    this->m_events.m_bits.SetCount(((50 - 1) >> 5) + 1);
-}
-
-extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
-extern WOWGUID s_combatTextActiveUnit;
-extern CombatLogEntry* s_currentEntry;
-extern CombatLogEntry* s_pendingEntries;
-extern const char* g_spellMissStrings[12];
+#include "WoW/Source/Object/ObjectClient/UnitCombatLog_C.inl"
 
 #endif

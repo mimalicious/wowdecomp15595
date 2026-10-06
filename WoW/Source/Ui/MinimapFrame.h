@@ -213,6 +213,14 @@ class CGMinimapFrame : public CSimpleFrame {
     void UpdateRotation(float facing);
 };
 
+extern CTexture* s_staticPOIArrowTexture;
+extern CTexture* s_corpseArrowTexture;
+extern CTexture* s_poiArrowTexture;
+extern CTexture* s_maskTexture;
+extern CTexture* s_classBlipTexture;
+extern CTexture* s_blipTexture;
+extern CTexture* s_iconTexture;
+
 void MinimapRegisterScriptFunctions();
 void MinimapUnregisterScriptFunctions();
 
@@ -230,14 +238,6 @@ void MinimapSetSpiritHealerPOI(float x, float y);
 
 int32_t MinimapGetZoom();
 int32_t MinimapGetZoomLevels();
-
-extern CTexture* s_staticPOIArrowTexture;
-extern CTexture* s_corpseArrowTexture;
-extern CTexture* s_poiArrowTexture;
-extern CTexture* s_maskTexture;
-extern CTexture* s_classBlipTexture;
-extern CTexture* s_blipTexture;
-extern CTexture* s_iconTexture;
 
 void MinimapSetZoom(uint32_t zoom);
 

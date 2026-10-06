@@ -1,0 +1,3 @@
+// INLINED
+inline ChaserState::ChaserState() {
+}

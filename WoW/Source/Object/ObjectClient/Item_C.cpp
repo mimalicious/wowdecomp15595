@@ -58,6 +58,12 @@ static TSHashTable<INVENTORYART, HASHKEY_NONE> s_inventoryArt;
 // STATIC: #0x00CA1168
 static TSHashTable<ITEMBYNAME, HASHKEY_UTF8I> s_itemByName;
 
+// STATIC: #0x00CA1128
+WOWGUID CGItem_C::s_bindOnUseTarget;
+
+// STATIC: #0x00CA1138
+WOWGUID CGItem_C::s_bindOnUseItem;
+
 // OFFSET: #0x00707720
 static int32_t OnUpdateStackCount(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -1410,12 +1416,6 @@ void CGItem_C::Unlock() {
         CGItem_C::SignalEvent(this, SCRIPT_EVENT_ITEM_UNLOCKED);
     }
 }
-
-// STATIC: #0x00CA1128
-WOWGUID CGItem_C::s_bindOnUseTarget;
-
-// STATIC: #0x00CA1138
-WOWGUID CGItem_C::s_bindOnUseItem;
 
 // OFFSET: #0x00708C20
 int32_t CGItem_C::UseItem(WOWGUID* target, int32_t a2) {

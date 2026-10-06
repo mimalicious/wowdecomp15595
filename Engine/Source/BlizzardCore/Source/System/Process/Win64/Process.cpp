@@ -51,6 +51,9 @@ static ToolhelpFunction s_module32First;
 // STATIC: #0x00D871D4
 static ToolhelpFunction s_module32Next;
 
+// STATIC: #0x00B38310
+static std::set<ChildProcess*> s_childProcesses;
+
 // INLINED
 inline void ToolhelpFunction::Load(const char* name) {
     if (!this->m_loaded) {
@@ -171,9 +174,6 @@ bool ToolhelpFunction::ModuleNext(HANDLE snapshot, char* path, uint32_t pathsize
     this->Load("Module32NextW");
     return this->m_proc ? this->CallModuleW(snapshot, path, pathsize) : Module32NextA(snapshot, path, pathsize);
 }
-
-// STATIC: #0x00B38310
-static std::set<ChildProcess*> s_childProcesses;
 
 // OFFSET: #0x0043DEC0
 static void CALLBACK TimerFunc(HWND hwnd, UINT message, UINT_PTR id, DWORD time) {

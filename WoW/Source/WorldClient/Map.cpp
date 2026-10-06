@@ -394,6 +394,31 @@ static const float s_flightBoundsOffsets[9][2] = {
 // STATIC: #0x00CD7768
 WOWGUID s_lastCollisionGUID;
 
+// STATIC: #0x00AEDF58
+static const uint32_t s_flightTriangles[8][3] = {
+    { 3, 0, 4 },
+    { 0, 1, 4 },
+    { 1, 2, 4 },
+    { 2, 5, 4 },
+    { 5, 8, 4 },
+    { 8, 7, 4 },
+    { 7, 6, 4 },
+    { 6, 3, 4 },
+};
+
+// STATIC: #0x00AEDFB8
+static const float s_flightVertices[9][2] = {
+    { 0.0f, 0.0f },
+    { 0.0f, -266.66666f },
+    { 0.0f, -533.33331f },
+    { -266.66666f, 0.0f },
+    { -266.66666f, -266.66666f },
+    { -266.66666f, -533.33331f },
+    { -533.33331f, 0.0f },
+    { -533.33331f, -266.66666f },
+    { -533.33331f, -533.33331f },
+};
+
 // OFFSET: #0x0079B440
 CMapArea* CMap::GetLoadedArea(int32_t areaX, int32_t areaY) {
     CMapArea* area = CMap::m_areaTable[64 * areaY + areaX];
@@ -825,7 +850,6 @@ void CMap::FootprintInitialize() {
     }
 }
 
-
 // OFFSET: #0x0079E4B0
 CGxShaderPermute* CMap::GetPixelShader(bool a1, bool a2, bool a3) {
     if (!a1)
@@ -1113,7 +1137,6 @@ void CMap::VectorIntersectDY(C3Vector& start, C3Vector& end, CiRect& cells) {
         CMap::scCollideList.m_data[CMap::cCount++] = cells.maxY;
     }
 }
-
 
 // OFFSET: #0x007A25A0
 World::ObjectCollisionData::ObjectCollisionData() {
@@ -1438,7 +1461,6 @@ bool CMap::VectorIntersectTerrain(C3Vector* start, C3Vector* end, float* distanc
     return CMap::VectorIntersectSubChunkList(start, end, distance, flags, hitChunk);
 }
 
-
 // OFFSET: #0x007A4270
 CFacet* CMap::BuildImpassableFacets(World::FacetData* facets, C3Vector* up, C3Vector* edge, C3Vector* normal, C3Vector* origin) {
     float d = -(normal->z * origin->z + normal->x * origin->x + normal->y * origin->y);
@@ -1495,7 +1517,6 @@ void CMap::CreateImpassableFacets(CMapChunk* chunk, CAaBox* box, World::FacetDat
         CMap::BuildImpassableFacets(facets, &up, &edge, &normal, &origin);
     }
 }
-
 
 // OFFSET: #0x007A4AF0
 void CMap::AppendMapObjFacets(CMapDoodadDef* def, CAaBox* box, World::FacetData* facets) {
@@ -2414,7 +2435,6 @@ int32_t CMap::SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint
 
     return 1;
 }
-
 
 // OFFSET: #0x007BD540
 void CMap::LoadTex() {
@@ -5329,31 +5349,6 @@ void CMap::QueryLiquidSounds(C3Vector* pos, float radius, TSGrowableArray<World:
         }
     }
 }
-
-// STATIC: #0x00AEDF58
-static const uint32_t s_flightTriangles[8][3] = {
-    { 3, 0, 4 },
-    { 0, 1, 4 },
-    { 1, 2, 4 },
-    { 2, 5, 4 },
-    { 5, 8, 4 },
-    { 8, 7, 4 },
-    { 7, 6, 4 },
-    { 6, 3, 4 },
-};
-
-// STATIC: #0x00AEDFB8
-static const float s_flightVertices[9][2] = {
-    { 0.0f, 0.0f },
-    { 0.0f, -266.66666f },
-    { 0.0f, -533.33331f },
-    { -266.66666f, 0.0f },
-    { -266.66666f, -266.66666f },
-    { -266.66666f, -533.33331f },
-    { -533.33331f, 0.0f },
-    { -533.33331f, -266.66666f },
-    { -533.33331f, -533.33331f },
-};
 
 // OFFSET: #0x007AD700
 int32_t CMap::GetFlightBounds(const C3Vector& pos, float* height, int32_t which) {

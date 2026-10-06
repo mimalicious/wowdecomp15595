@@ -176,6 +176,12 @@ static int32_t s_loadAddOnDepth;
 // STATIC: #0x00AC8074
 static const char* s_instanceTypeTokens[5] = { "none", "party", "raid", "pvp", "arena" };
 
+// STATIC: #0x00ACC600
+static int32_t s_setTitleCount = 10;
+
+// STATIC: #0x00BD0CB8
+static float s_setTitleTime;
+
 // OFFSET: #0x005109D0
 static int32_t Script_BeginTrade(lua_State* L) {
     Trade_C_BeginTrade();
@@ -5370,12 +5376,6 @@ static int32_t Script_PickupPlayerMoney(lua_State* L) {
 
     return 0;
 }
-
-// STATIC: #0x00ACC600
-static int32_t s_setTitleCount = 10;
-
-// STATIC: #0x00BD0CB8
-static float s_setTitleTime;
 
 // OFFSET: #0x00522E30
 static int32_t Script_SetCurrentTitle(lua_State* L) {

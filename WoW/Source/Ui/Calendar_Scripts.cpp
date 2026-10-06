@@ -39,6 +39,9 @@ static const char* s_monthNames[12] = { "MONTH_JANUARY", "MONTH_FEBRUARY", "MONT
 // STATIC: #0x00AD0014
 const char* s_weekdayNames[7] = { "WEEKDAY_SUNDAY", "WEEKDAY_MONDAY", "WEEKDAY_TUESDAY", "WEEKDAY_WEDNESDAY", "WEEKDAY_THURSDAY", "WEEKDAY_FRIDAY", "WEEKDAY_SATURDAY" };
 
+// STATIC: #0x00A18684
+static const int32_t s_expansionMaxLevels[3] = { 60, 70, 80 };
+
 // OFFSET: #0x005B8C10
 static int32_t Script_CalendarIsActionPending(lua_State* L) {
     lua_pushboolean(L, CGCalendar::m_actionPending);
@@ -82,9 +85,6 @@ static int32_t Script_CalendarGetNumPendingInvites(lua_State* L) {
     lua_pushnumber(L, CGCalendar::CountPendingInvites());
     return 1;
 }
-
-// STATIC: #0x00A18684
-static const int32_t s_expansionMaxLevels[3] = { 60, 70, 80 };
 
 // OFFSET: %0x008FFDD0
 static int32_t Script_CalendarGetMinDate(lua_State* L) {

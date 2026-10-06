@@ -364,7 +364,6 @@ static int32_t Script_GetPossessInfo(lua_State* L) {
     return 3;
 }
 
-// STATIC: #0x00AD0C30
 // OFFSET: #0x005D3B00
 static int32_t Script_GetPetHappiness(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -699,6 +698,7 @@ static int32_t Script_CastPetAction(lua_State* L) {
     return 0;
 }
 
+// STATIC: #0x00AD0C30
 static FrameScript_Method s_ScriptFunctions[] = {
     { "PetHasActionBar", &Script_PetHasActionBar },
     { "GetPetActionInfo", &Script_GetPetActionInfo },

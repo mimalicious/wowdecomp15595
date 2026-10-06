@@ -6,6 +6,9 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "ThirdParty/zlib/zlib.h"
 
+// STATIC: %0x00C0C74C
+static Blizzard::Patch::PatchReader s_memoryReader;
+
 // INLINED
 Blizzard::Patch::PatchReader::~PatchReader() {
 }
@@ -19,9 +22,6 @@ void Blizzard::Patch::PatchReader::Reset() {
 bool Blizzard::Patch::PatchReader::Load(uint32_t offset, uint8_t* dest, uint32_t size) {
     return false;
 }
-
-// STATIC: %0x00C0C74C
-static Blizzard::Patch::PatchReader s_memoryReader;
 
 // PROVEN: d95819bd IDENTICAL/NONE
 // OFFSET: 0x007B0930

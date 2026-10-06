@@ -13,9 +13,11 @@ class C4Vector {
     /* 0008 */ float z;
     /* 000C */ float w;
 
-    C4Vector() {}
+    C4Vector();
     C4Vector(const CImVector& color);
     void NormalizeSafe();
 };
+
+#include "Engine/Source/Tempest/C4Vector.inl"
 
 #endif

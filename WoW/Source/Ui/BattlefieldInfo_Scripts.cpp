@@ -31,6 +31,9 @@
 #include "WoW/Source/Ui/WorldMap.h"
 #include "WoW/Source/Ui/UILCD/LCD.h"
 
+// STATIC: #0x00AD6B14
+static const char* s_vehicleTypes[5] = { "Drive", "Fly", "Idle", "Airship Horde", "Airship Alliance" };
+
 // OFFSET: #0x00549E80
 static int32_t Script_GetNumBattlefieldScores(lua_State* L) {
     lua_pushnumber(L, CGBattlefieldInfo::m_numScores);
@@ -835,9 +838,6 @@ static int32_t Script_GetBattlefieldPosition(lua_State* L) {
 
     return 3;
 }
-
-// STATIC: #0x00AD6B14
-static const char* s_vehicleTypes[5] = { "Drive", "Fly", "Idle", "Airship Horde", "Airship Alliance" };
 
 // OFFSET: #0x0054C4D0
 static int32_t Script_GetBattlefieldVehicleInfo(lua_State* L) {

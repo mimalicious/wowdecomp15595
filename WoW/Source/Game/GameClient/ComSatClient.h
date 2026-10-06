@@ -97,13 +97,15 @@ extern int32_t s_currentOutputDevice;
 extern int32_t s_currentCaptureDevice;
 extern int32_t s_pushToTalkDown;
 extern int32_t s_localTalkerActive;
-bool ComSatClient_IsMutedPlayer(WOWGUID guid);
 extern int32_t s_pushToTalkKey;
 extern uint32_t s_pushToTalkModifiers;
 extern uint32_t s_pushToTalkMouseButton;
 extern int32_t s_voiceActivation;
 extern int32_t s_voiceChatWasEnabled;
 extern const char* s_sessionTypeNames[3];
+extern int32_t s_comsatDisabledByClient;
+
+bool ComSatClient_IsMutedPlayer(WOWGUID guid);
 
 void AddComSatEvent(uint32_t type, uint32_t value, uint64_t guid);
 void AddComSatCallback(uint32_t type, uint64_t a2, uint64_t a3);
@@ -130,8 +132,6 @@ void UpdatePushToTalkKey();
 int32_t VoiceChat_TickWrapper(const void* data, void* param);
 
 int32_t Script_GetVoiceSessionMemberInfoBySessionID(lua_State* L);
-
-extern int32_t s_comsatDisabledByClient;
 
 class SCritSect;
 extern SCritSect s_comsatDeviceLock;

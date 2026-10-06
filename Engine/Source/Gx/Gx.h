@@ -6,8 +6,6 @@
 #include "Engine/Source/Gx/CGxDevice/Types.h"
 #include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Gx/CGxTex.h"
-
-class CGxFrameBuffer;
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2iVector.h"
 
@@ -17,6 +15,7 @@ class C44Matrix;
 class CGxBatch;
 class CGxDevice;
 class CGxFormat;
+class CGxFrameBuffer;
 struct CGxBuf;
 class CGxQuery;
 class CGxShader;
@@ -51,6 +50,10 @@ class GxDrawListEntry {
 
     GxDrawListEntry();
 };
+
+extern const char* g_gxApiNames[GxApis_Last];
+extern const char* g_gxShaderTargetNames[GxShTargets_Last];
+extern const char* g_gxShaderModelNames[8];
 
 CGxDevice* CreateCGxDeviceD3d();
 CGxDevice* CreateCGxDeviceD3d11();
@@ -98,9 +101,6 @@ void GxDraw(const CGxBatch& batch);
 void GxDevDestroy();
 void GxDrawLockedElements();
 void GxDrawLockedElements(EGxPrim primType, uint32_t indexCount, const uint16_t* indices);
-extern const char* g_gxApiNames[GxApis_Last];
-extern const char* g_gxShaderTargetNames[GxShTargets_Last];
-extern const char* g_gxShaderModelNames[8];
 
 BlitFormat GxGetBlitFormat(EGxTexFormat format);
 uint32_t GxGetMaxFPS();

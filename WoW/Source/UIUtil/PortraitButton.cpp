@@ -67,6 +67,9 @@ static TSList<PORTRAITREQUEST, TSGetLink<PORTRAITREQUEST>> s_pendingPortraits;
 // STATIC: #0x00AD28F0
 static TSList<PORTRAITREQUEST, TSGetLink<PORTRAITREQUEST>> s_freePortraits;
 
+// STATIC: #0x00AD6628
+const char* s_sexNames[3] = { "Male", "Female", "NOSEX" };
+
 static void PortraitDepthTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
 }
 
@@ -211,9 +214,6 @@ void UpdateModelForUI(const WOWGUID& guid, uint32_t flags) {
         Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_MODEL_CHANGED);
     }
 }
-
-// STATIC: #0x00AD6628
-const char* s_sexNames[3] = { "Male", "Female", "NOSEX" };
 
 // OFFSET: #0x00616950
 static void PortraitCacheTouch(PORTRAITCACHE** head, PORTRAITCACHE* entry) {

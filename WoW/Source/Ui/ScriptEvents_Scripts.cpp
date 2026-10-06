@@ -148,6 +148,18 @@ const int32_t s_unitSexValues[3] = { 2, 3, 1 };
 // STATIC: #0x00AD21BC
 static const char* s_unitClassificationTokens[7] = { "normal", "elite", "rareelite", "worldboss", "rare", "trivial", NULL };
 
+// STATIC: #0x00AD8660
+extern const char* s_vehicleSkinNames[2] = { "Natural", "Mechanical" };
+
+// STATIC: #0x00C25A0C
+static int32_t s_vehicleUIIndicatorID;
+
+// STATIC: #0x00C25A10
+static const char* s_vehicleUIIndicatorTexture;
+
+// STATIC: #0x00C25A14
+static TSGrowableArray<VehicleUIIndSeatRec*> s_vehicleUIIndicatorSeats;
+
 // OFFSET: #0x0060FD40
 static int32_t Script_UnitRace(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -3282,7 +3294,6 @@ static int32_t Script_GetUnitHealthRegenRateFromSpirit(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AD2184
 // OFFSET: #0x006085D0
 static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summary) {
     float dps = summary->m_dps;
@@ -3913,9 +3924,6 @@ static int32_t Script_UnitTargetsVehicleInRaidUI(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AD8660
-extern const char* s_vehicleSkinNames[2] = { "Natural", "Mechanical" };
-
 // OFFSET: #0x006137D0
 static int32_t Script_UnitVehicleSkin(lua_State* L) {
     VehicleSeatRec* seat = GetVehicleSeatRecAsPassengerFromLua(L);
@@ -4041,15 +4049,6 @@ static int32_t Script_GetPlayerInfoByGUID(lua_State* L) {
     lua_pushstring(L, record->m_realmName);
     return 7;
 }
-
-// STATIC: #0x00C25A0C
-static int32_t s_vehicleUIIndicatorID;
-
-// STATIC: #0x00C25A10
-static const char* s_vehicleUIIndicatorTexture;
-
-// STATIC: #0x00C25A14
-static TSGrowableArray<VehicleUIIndSeatRec*> s_vehicleUIIndicatorSeats;
 
 // OFFSET: #0x00614D90
 static void CacheVehicleUIIndicatorRec(int32_t id) {
@@ -4190,6 +4189,7 @@ static int32_t Script_UnitSwitchToVehicleSeat(lua_State* L) {
     return 0;
 }
 
+// STATIC: #0x00AD2184
 static FrameScript_Method s_SystemFunctions[] = {
     { "GetTime", &Script_GetTime },
     { "GetGameTime", &Script_GetGameTime },

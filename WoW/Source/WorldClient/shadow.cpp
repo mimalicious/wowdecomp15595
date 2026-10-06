@@ -67,6 +67,12 @@ static CTexture* s_shadowAddTexture;
 // STATIC: #0x00D38044
 static CTexture* s_shadowBlobTexture;
 
+// STATIC: #0x00AF3E14
+static float s_decalDepthBelow = 1.6666666f;
+
+// STATIC: #0x00AF3E18
+static float s_decalDepthAbove = 1.0f;
+
 // OFFSET: #0x007E2C80
 void ShadowDestroy() {
     if (s_shadowBlobTexture) {
@@ -231,12 +237,6 @@ void CWorldScene::RequestModelStreaming(CM2Model* model, const CAaBox* box) {
         CWorldScene::RenderStreamingRequestDecal(model, box, 0.4f);
     }
 }
-
-// STATIC: #0x00AF3E14
-static float s_decalDepthBelow = 1.6666666f;
-
-// STATIC: #0x00AF3E18
-static float s_decalDepthAbove = 1.0f;
 
 // OFFSET: #0x007E4480
 void CWorldScene::RenderStreamingRequestDecal(CM2Model* model, const CAaBox* box, float scale) {

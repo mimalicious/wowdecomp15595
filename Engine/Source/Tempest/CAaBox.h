@@ -15,7 +15,7 @@ class CAaBox {
     /* 0000 */ C3Vector b;
     /* 000C */ C3Vector t;
 
-    CAaBox() {}
+    CAaBox();
     CAaBox(const C3Vector& b, const C3Vector& t);
     explicit CAaBox(const C3Vector& point);
     bool ContainsPoint(const C3Vector& point) const;

@@ -1245,6 +1245,33 @@ struct ItemPushData {
     /* 0024 */ uint32_t m_count;
 };
 
+// STATIC: #0x00BD08D8
+WOWGUID CGGameUI::m_lastItemSpellTarget;
+
+// STATIC: #0x00BD08E0
+int32_t CGGameUI::m_lastEnchantSpellID;
+
+// STATIC: #0x00BD08C8
+static uint32_t s_nearestIndex;
+
+// STATIC: #0x00BD08CC
+static uint32_t s_nearestSortTime;
+
+// STATIC: #0x00BD08D0
+static uint32_t s_nearestTargetTime;
+
+// STATIC: #0x00BD08D4
+static int32_t s_nearestType;
+
+// STATIC: #0x00BD0BFC
+static TSGrowableArray<NearestUnitData> s_nearestUnits;
+
+// STATIC: #0x00AC8050
+static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
+
+// STATIC: #0x00BD0BD4
+TSHashTable<CGGameUI::THREATMAP, CHashKeyGUID> CGGameUI::s_threatMap;
+
 // OFFSET: #0x00512570
 void CGGameUI::OpenGuildInvite(const char* inviter, const char* guild) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_INVITE_REQUEST, "%s%s", inviter, guild);
@@ -3737,7 +3764,6 @@ void CGGameUI::UnitModelUpdate(const WOWGUID& guid, uint32_t flags) {
     UpdateModelForUI(guid, flags);
 }
 
-
 // OFFSET: #0x0051FA50
 int32_t CGGameUI::FilterMouseDown(CMouseEvent* evt) {
     if (evt->m_id == 0x400500C8 && evt->m_data.m_button == 4) {
@@ -4552,32 +4578,11 @@ void CGGameUI::ShowCombatFeedback(const WOWGUID& guid, int32_t amount, uint32_t 
     CGGameUI::SignalUnitCombat(guid, "WOUND", amount, schoolMask, flags);
 }
 
-// STATIC: #0x00BD08D8
-WOWGUID CGGameUI::m_lastItemSpellTarget;
-
-// STATIC: #0x00BD08E0
-int32_t CGGameUI::m_lastEnchantSpellID;
-
 struct NearestUnitData {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ float m_distanceSq;
     /* 000C */ int32_t m_inFront;
 };
-
-// STATIC: #0x00BD08C8
-static uint32_t s_nearestIndex;
-
-// STATIC: #0x00BD08CC
-static uint32_t s_nearestSortTime;
-
-// STATIC: #0x00BD08D0
-static uint32_t s_nearestTargetTime;
-
-// STATIC: #0x00BD08D4
-static int32_t s_nearestType;
-
-// STATIC: #0x00BD0BFC
-static TSGrowableArray<NearestUnitData> s_nearestUnits;
 
 // OFFSET: #0x005210D0
 void CGGameUI::CastItemSpell(WOWGUID guid, int32_t confirmed) {
@@ -5126,9 +5131,6 @@ void TargetNearestEnemy(int32_t reverse, int32_t type) {
     }
 }
 
-// STATIC: #0x00AC8050
-static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY", "INTERRUPT", "BLOCK", "EVADE", "IMMUNE", "DEFLECT" };
-
 // OFFSET: #0x005133B0
 void CGGameUI::ShowCombatFeedbackAttackRoundInfo(const ATTACKROUNDINFO* info) {
     if (!info || info->m_victimState >= 9) {
@@ -5170,9 +5172,6 @@ void CGGameUI::BreakTarget(WOWGUID guid) {
         CGGameUI::m_directionalTarget = WOWGUID();
     }
 }
-
-// STATIC: #0x00BD0BD4
-TSHashTable<CGGameUI::THREATMAP, CHashKeyGUID> CGGameUI::s_threatMap;
 
 // OFFSET: #0x00519D50
 uint8_t CGGameUI::THREATMAP::ComputeMaxThreatLevel(const WOWGUID& guid) {

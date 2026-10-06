@@ -26,6 +26,9 @@
         c ^= b; c -= rot(b, 24); \
     }
 
+// STATIC: %0x00AF23E0
+static const char s_hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
 // OFFSET: #0x00425DA0
 uint32_t Blizzard::Util::Hash32I(const char* str, uint32_t length) {
     uint32_t hash = 2166136261u;
@@ -174,9 +177,6 @@ void Blizzard::Util::hashlittle2(const void* key, size_t length, uint32_t* pc, u
     *pc = c;
     *pb = b;
 }
-
-// STATIC: %0x00AF23E0
-static const char s_hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 // PROVEN: da5640b4 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA720/0x1404A0B60

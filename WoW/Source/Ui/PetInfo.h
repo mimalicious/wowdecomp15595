@@ -70,6 +70,8 @@ class CGPetInfo {
     static const char* GetOrdersToken(uint32_t order);
 };
 
+extern TSGrowableArray<WOWGUID> s_pets;
+
 void PetInfoRegisterScriptFunctions();
 void PetInfoUnregisterScriptFunctions();
 int32_t Packet_SMSG_PET_SPELLS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -80,7 +82,5 @@ int32_t Packet_SMSG_PET_BROKEN(void* param, NETMESSAGE msgId, uint32_t time, CDa
 int32_t Packet_SMSG_PET_RENAMEABLE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_PET_UPDATE_COMBO_POINTS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_PET_GUIDS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-
-extern TSGrowableArray<WOWGUID> s_pets;
 
 #endif

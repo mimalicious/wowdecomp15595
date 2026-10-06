@@ -14,9 +14,7 @@ struct HASHKEY_SKILLLINE {
     /* 0001 */ uint8_t m_class;
     /* 0004 */ int32_t m_spellId;
 
-    bool operator==(const HASHKEY_SKILLLINE& key) const {
-        return this->m_race == key.m_race && this->m_class == key.m_class && this->m_spellId == key.m_spellId;
-    }
+    bool operator==(const HASHKEY_SKILLLINE& key) const;
 };
 
 struct RACECLASSINFO : public TSHashObject<RACECLASSINFO, HASHKEY_NONE> {
@@ -46,5 +44,7 @@ bool SpellTableGetSkillLineLinkInfo(int32_t skillLine, const SkillLineAbilityRec
 const SkillRaceClassInfoRec* SpellTableLookupInfo(int32_t race, int32_t classId, int32_t skillId);
 SkillLineAbilityRec* SpellTableLookupAbility(int32_t race, int32_t classId, int32_t spellId);
 int32_t GetSkillTierCost(const SkillRaceClassInfoRec* info, uint32_t step);
+
+#include "WoW/Source/Magic/MagicClient/SpellTable.inl"
 
 #endif

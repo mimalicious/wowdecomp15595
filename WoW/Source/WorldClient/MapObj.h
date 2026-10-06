@@ -306,10 +306,6 @@ struct SMOMaterial {
     CTexture** Textures();
 };
 
-inline CTexture** SMOMaterial::Textures() {
-    return reinterpret_cast<CTexture**>(&this->m_runTimeData[4 - 2 * sizeof(CTexture*) / sizeof(uint32_t)]);
-}
-
 struct SMOPortal {
     /* 0000 */ uint16_t m_startVertex;
     /* 0002 */ uint16_t m_count;
@@ -323,6 +319,8 @@ struct SMOVisibleBlock {
 
 extern uint32_t s_portalStamp;
 extern CMapObjDef* s_stampedMapObjDef;
+
+#include "WoW/Source/WorldClient/MapObj.inl"
 
 #endif
 

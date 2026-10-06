@@ -425,6 +425,9 @@ static TSGrowableArray<int32_t> s_pendingChannelNumbers;
 // STATIC: #0x00BCFAE0
 TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
+// STATIC: #0x00AC7FB4
+static const char* s_exhaustionTokens[7] = { NULL, "COMBATLOG_XPGAIN_EXHAUSTION1", "COMBATLOG_XPGAIN_EXHAUSTION2", "NULL", "COMBATLOG_XPGAIN_EXHAUSTION4", "COMBATLOG_XPGAIN_EXHAUSTION5", "COMBATLOG_XPGAIN_EXHAUSTION1" };
+
 // PROVEN: 9df3b71f IDENTICAL/NONE
 // OFFSET: 0x008E62E0/0x140614570
 int32_t CGChat::IsVoiceChatAllowed() {
@@ -2960,9 +2963,6 @@ static void UnitCombatLogShowXPGained(CGUnit_C* unit, int32_t amount, float grou
 
     CGChat::AddChatMessage(text, 33, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 }
-
-// STATIC: #0x00AC7FB4
-static const char* s_exhaustionTokens[7] = { NULL, "COMBATLOG_XPGAIN_EXHAUSTION1", "COMBATLOG_XPGAIN_EXHAUSTION2", "NULL", "COMBATLOG_XPGAIN_EXHAUSTION4", "COMBATLOG_XPGAIN_EXHAUSTION5", "COMBATLOG_XPGAIN_EXHAUSTION1" };
 
 // OFFSET: #0x0050B300
 void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bonus, float groupMult, bool referAFriend) {

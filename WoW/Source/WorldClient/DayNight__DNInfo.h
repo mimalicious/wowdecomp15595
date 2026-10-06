@@ -90,12 +90,6 @@ CImVector LoadLightIntBand(int32_t time, const LightParamsRec* params, int32_t b
 void SetFlashColor(CImVector color, float blend);
 }
 
-// INLINED
-inline DNLightState::DNLightState() {
-    this->m_desatR = 0.0f;
-    this->m_desatG = 0.0f;
-    this->m_desatB = 0.0f;
-    this->m_desatA = 0.0f;
-}
+#include "WoW/Source/WorldClient/DayNight__DNInfo.inl"
 
 #endif

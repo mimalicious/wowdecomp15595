@@ -60,6 +60,12 @@ static const AuctionInvType s_auctionInvTypes[14] = {
     { 23, "INVTYPE_HOLDABLE", 1, 1 },
 };
 
+// STATIC: #0x00A15238
+static const uint32_t s_timeLeftThresholds[3] = { 1800000, 7200000, 43200000 };
+
+// STATIC: #0x00A15248
+static const uint32_t AUCTION_RUN_TIMES[3] = { 720, 1440, 2880 };
+
 // OFFSET: #0x0059B0B0
 static int32_t Script_SetAuctionsTabShowing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
@@ -281,12 +287,6 @@ static int32_t Script_GetNumAuctionItems(lua_State* L) {
     lua_pushnumber(L, total);
     return 2;
 }
-
-// STATIC: #0x00A15238
-static const uint32_t s_timeLeftThresholds[3] = { 1800000, 7200000, 43200000 };
-
-// STATIC: #0x00A15248
-static const uint32_t AUCTION_RUN_TIMES[3] = { 720, 1440, 2880 };
 
 // OFFSET: #0x0059AB90
 static int32_t Script_IsAuctionSortReversed(lua_State* L) {

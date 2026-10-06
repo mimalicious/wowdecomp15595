@@ -25,7 +25,7 @@ class C4Quaternion {
     /* 0008 */ float z;
     /* 000C */ float w;
 
-    C4Quaternion() {}
+    C4Quaternion();
     C4Quaternion(const C4QuaternionCompressed& compressed);
     void FromAngleAxis(float angle, const C3Vector& axis);
     void FromRotationMatrix(const C33Matrix& m);
@@ -34,5 +34,7 @@ class C4Quaternion {
 };
 
 C4Quaternion operator*(const C4Quaternion& l, const C4Quaternion& r);
+
+#include "Engine/Source/Tempest/C4Quaternion.inl"
 
 #endif

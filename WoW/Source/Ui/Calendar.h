@@ -32,16 +32,6 @@ struct CALENDARHOLIDAYNODE : public TSLinkedNode<CALENDARHOLIDAYNODE> {
     CALENDARHOLIDAYNODE();
 };
 
-// INLINED
-inline CALENDARHOLIDAYNODE::CALENDARHOLIDAYNODE() {
-    this->m_holiday = NULL;
-    this->m_index = 0;
-    this->m_startTime = 0;
-    this->m_endTime = 0;
-    this->m_duration = 0;
-    this->m_type = 4;
-}
-
 struct CALENDARRAIDRESETNODE : public TSLinkedNode<CALENDARRAIDRESETNODE> {
     /* 0008 */ int32_t m_mapID;
     /* 000C */ uint32_t m_startTime;
@@ -121,11 +111,6 @@ struct CalendarPendingInvite : public TSLinkedNode<CalendarPendingInvite> {
 
     CalendarPendingInvite();
 };
-
-// INLINED
-inline CalendarPendingInvite::CalendarPendingInvite() {
-    this->m_eventID = 0;
-}
 
 class CGCalendar {
     public:
@@ -229,6 +214,11 @@ class CGCalendar {
     static void InsertLockoutEvent(int32_t mapID, int32_t difficulty, uint64_t instanceID, uint32_t time);
 };
 
+extern const char* s_weekdayNames[7];
+extern CalendarEventData s_eventClipboard;
+extern TSHashTable<DYNAMICHOLIDAYHASH, HASHKEY_NONE> s_dynamicHolidays;
+extern TSFixedArray<int32_t> s_eventTextures[2];
+
 void CalendarRegisterScriptFunctions();
 void CalendarUnregisterScriptFunctions();
 const char* GetHolidayName(int32_t holidayId);
@@ -238,9 +228,6 @@ const char* GetHolidayDescription(int32_t holidayId);
 DYNAMICHOLIDAYHASH* CalendarGetHolidayInfo(int32_t holidayId);
 const char* GetEventRepeatString(uint32_t repeat);
 
-extern const char* s_weekdayNames[7];
-extern CalendarEventData s_eventClipboard;
-extern TSHashTable<DYNAMICHOLIDAYHASH, HASHKEY_NONE> s_dynamicHolidays;
-extern TSFixedArray<int32_t> s_eventTextures[2];
+#include "WoW/Source/Ui/Calendar.inl"
 
 #endif

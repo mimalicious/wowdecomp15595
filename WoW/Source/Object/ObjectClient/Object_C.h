@@ -46,21 +46,6 @@ class CHashKeyGUID {
     bool operator==(const CHashKeyGUID& key);
 };
 
-// INLINED
-inline CHashKeyGUID::CHashKeyGUID() {
-    this->m_guid.m_guid = 0;
-}
-
-// INLINED
-inline CHashKeyGUID::CHashKeyGUID(uint64_t guid) {
-    this->m_guid.m_guid = guid;
-}
-
-// INLINED
-inline bool CHashKeyGUID::operator==(const CHashKeyGUID& key) {
-    return this->m_guid == key.m_guid;
-}
-
 class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID> {
     public:
     struct InteractIcon {
@@ -227,5 +212,7 @@ namespace World {
     int32_t QueryObjectVisible(CMapEntity* entity);
     void TickObject(CMapEntity* entity);
 }
+
+#include "WoW/Source/Object/ObjectClient/Object_C.inl"
 
 #endif

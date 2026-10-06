@@ -34,9 +34,7 @@ class CommandManager {
     /* 0020 */ uint32_t m_count;
     /* 0024 */ ClientConnection* m_connection;
 
-    CommandManager() {
-        this->m_count = 0;
-    }
+    CommandManager();
 
     ~CommandManager();
     void InternalSend(CDataStore* msg);
@@ -50,5 +48,7 @@ int32_t CCommand_ToggleCloak(const char* command, const char* arguments);
 int32_t CCommand_ToggleHelm(const char* command, const char* arguments);
 int32_t CCommand_TogglePlayer(const char* command, const char* arguments);
 int32_t CCommand_WorldTeleport(const char* command, const char* arguments);
+
+#include "WoW/Source/GameClientCommands.inl"
 
 #endif

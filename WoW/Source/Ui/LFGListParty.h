@@ -45,8 +45,7 @@ class LFGListPlayer : public TSHashObject<LFGListPlayer, CHashKeyGUID> {
     /* 0198 */ uint64_t unk_0198;
     /* 01A0 */ uint32_t m_encounterMask;
 
-    LFGListPlayer() : m_index(-1), m_partyIndex(-1), m_party(NULL), m_leader(0) {
-    }
+    LFGListPlayer();
 
     LFGListPlayer(const LFGListPlayer& source);
 };
@@ -60,8 +59,7 @@ class LFGListParty : public TSHashObject<LFGListParty, CHashKeyGUID> {
     /* 0130 */ uint32_t m_encounterMask;
     /* 0134 */ TSGrowableArray<LFGListPlayer*> m_members;
 
-    LFGListParty() : m_index(-1) {
-    }
+    LFGListParty();
 
     LFGListParty(const LFGListParty& source);
     void AddPlayer(LFGListPlayer* player);
@@ -69,5 +67,7 @@ class LFGListParty : public TSHashObject<LFGListParty, CHashKeyGUID> {
     LFGListPlayer* GetMember(uint32_t index);
     uint32_t GetNumMembers();
 };
+
+#include "WoW/Source/Ui/LFGListParty.inl"
 
 #endif

@@ -32,8 +32,6 @@ void InputObserverInitialize();
 void ObserverDestroy();
 void ObserverInitialize();
 
-// INLINED
-inline LockedDataAllocator::LockedDataAllocator(uint32_t bytesPerData, uint32_t dataPerBlock) : m_allocator(bytesPerData, dataPerBlock) {
-}
+#include "Engine/Source/Event/Observer.inl"
 
 #endif

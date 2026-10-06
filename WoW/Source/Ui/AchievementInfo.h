@@ -76,10 +76,6 @@ class CGAchievementInfo {
     static void UpdateInspectCriteria(WOWGUID guid, int32_t id, uint64_t counter, WOWGUID player, uint32_t flags, WowTime date, uint32_t timer1, uint32_t timer2);
 };
 
-int32_t AddTrackedAchievement(int32_t id);
-void AchievementInfoRegisterScriptFunctions();
-void AchievementInfoUnregisterScriptFunctions();
-
 extern TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_criteria;
 extern TSList<CLIENT_ACHIEVEMENT_CRITERIA, TSGetLink<CLIENT_ACHIEVEMENT_CRITERIA>> s_recentCriteria;
 extern TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_completedAchievements;
@@ -89,5 +85,9 @@ extern TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_trackedAchi
 extern TSList<CLIENT_ACHIEVEMENTS, TSGetLink<CLIENT_ACHIEVEMENTS>> s_inspectAchievements;
 extern TSList<COMPLETED_QUESTS, TSGetLink<COMPLETED_QUESTS>> s_completedQuests;
 extern TSHashTable<ACHIEVEMENT, HASHKEY_NONE> s_achievements;
+
+int32_t AddTrackedAchievement(int32_t id);
+void AchievementInfoRegisterScriptFunctions();
+void AchievementInfoUnregisterScriptFunctions();
 
 #endif

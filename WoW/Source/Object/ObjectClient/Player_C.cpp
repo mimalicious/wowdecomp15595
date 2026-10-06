@@ -377,6 +377,30 @@ static int32_t s_zoneUpdateCounter;
 // STATIC: #0x00C9EC6C
 static bool s_dailyQuestsUntouched;
 
+// STATIC: #0x00AD9CD0
+static const DamageCalcLabel s_damageCalcLabels[41] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 0 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 0x3F000000, static_cast<int32_t>(0xFFFFDE00) } };
+
+// STATIC: #0x00C9D340
+static PlayerLootItem s_lootItems[18];
+
+// STATIC: #0x00ADA1AC
+static const UIErrors s_mountResultErrors[] = { ERR_MOUNT_INVALIDMOUNTEE, ERR_MOUNT_TOOFARAWAY, ERR_MOUNT_ALREADYMOUNTED, ERR_MOUNT_NOTMOUNTABLE, ERR_MOUNT_NOTYOURPET, ERR_MOUNT_OTHER, ERR_MOUNT_LOOTING, ERR_MOUNT_RACECANTMOUNT, ERR_MOUNT_SHAPESHIFTED, ERR_MOUNT_FORCEDDISMOUNT, ERR_MAX_VALUE };
+
+// STATIC: #0x00ADA1D8
+static const UIErrors s_dismountResultErrors[] = { ERR_DISMOUNT_NOPET, ERR_DISMOUNT_NOTMOUNTED, ERR_DISMOUNT_NOTYOURPET, ERR_MAX_VALUE };
+
+// STATIC: #0x00A32618
+static const UIErrors s_buyBankSlotErrors[] = { ERR_BANKSLOT_FAILED_TOO_MANY, ERR_BANKSLOT_INSUFFICIENT_FUNDS, ERR_BANKSLOT_NOTBANKER };
+
+// STATIC: #0x00ADA2E0
+static uint32_t s_textEmoteStandStates = 0x10B;
+
+// STATIC: #0x00ADBA74
+static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
+
+// STATIC: #0x00C9EB0C
+static uint32_t s_talentWipeCost;
+
 // PROVEN: 9c2024c4 IDENTICAL/NONE
 // OFFSET: 0x005537E0/0x1401AE720
 static int32_t OnUpdatePVPTitle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -2982,7 +3006,6 @@ void CGPlayer_C::PostInitActivePlayer() {
     }
 }
 
-
 // PROVEN: 55ad6dcf IDENTICAL/NONE
 // OFFSET: 0x005547F0/0x1401B0B50
 void CGPlayer_C::CancelGiftWrap() {
@@ -3470,9 +3493,6 @@ struct DamageCalcLabel {
     /* 0008 */ int32_t m_id;
     /* 000C */ int32_t m_flags;
 };
-
-// STATIC: #0x00AD9CD0
-static const DamageCalcLabel s_damageCalcLabels[41] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 0 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 0x3F000000, static_cast<int32_t>(0xFFFFDE00) } };
 
 // OFFSET: #0x006D3F10
 int32_t Packet_SMSG_DAMAGE_CALC_LOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
@@ -4636,7 +4656,6 @@ int32_t CGPlayer_C::IsXRayVisionActive() {
 
     return (player->m_auraEffectMask[0x22] >> 1) & 1;
 }
-
 
 // PROVEN: d05e3c2a IDENTICAL/NONE
 // OFFSET: 0x00554440/0x1401B0480
@@ -8120,9 +8139,6 @@ int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count,
     return 1;
 }
 
-// STATIC: #0x00C9D340
-static PlayerLootItem s_lootItems[18];
-
 // OFFSET: #0x006CEB80
 int32_t CGPlayer_C::GetLootItem(uint32_t slot) {
     if (slot >= 18) {
@@ -8633,15 +8649,6 @@ void CGPlayer_C::OpenLootItem(CGItem_C* item) {
     msg.Finalize();
     ClientServices::Send2(&msg);
 }
-
-// STATIC: #0x00ADA1AC
-static const UIErrors s_mountResultErrors[] = { ERR_MOUNT_INVALIDMOUNTEE, ERR_MOUNT_TOOFARAWAY, ERR_MOUNT_ALREADYMOUNTED, ERR_MOUNT_NOTMOUNTABLE, ERR_MOUNT_NOTYOURPET, ERR_MOUNT_OTHER, ERR_MOUNT_LOOTING, ERR_MOUNT_RACECANTMOUNT, ERR_MOUNT_SHAPESHIFTED, ERR_MOUNT_FORCEDDISMOUNT, ERR_MAX_VALUE };
-
-// STATIC: #0x00ADA1D8
-static const UIErrors s_dismountResultErrors[] = { ERR_DISMOUNT_NOPET, ERR_DISMOUNT_NOTMOUNTED, ERR_DISMOUNT_NOTYOURPET, ERR_MAX_VALUE };
-
-// STATIC: #0x00A32618
-static const UIErrors s_buyBankSlotErrors[] = { ERR_BANKSLOT_FAILED_TOO_MANY, ERR_BANKSLOT_INSUFFICIENT_FUNDS, ERR_BANKSLOT_NOTBANKER };
 
 // OFFSET: #0x006CEDF0
 static void __stdcall DisplayMountResult(uint32_t result) {
@@ -12795,9 +12802,6 @@ void CGPlayer_C::TogglePlayerFlag(uint32_t oldFlags) {
     }
 }
 
-// STATIC: #0x00ADA2E0
-static uint32_t s_textEmoteStandStates = 0x10B;
-
 // OFFSET: #0x006DD9E0
 void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
     if (!emote || (this->m_unit->m_unitFieldFlags & 0x1000000)) {
@@ -13314,9 +13318,6 @@ void CGPlayer_C::OnSpellEffectClear(CEffect* effect) {
     }
 }
 
-// STATIC: #0x00ADBA74
-static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
-
 // OFFSET: #0x007631A0
 void CGPlayer_C::PlayUnitSound(uint32_t soundType, int32_t force) {
     if (!force && static_cast<uint32_t>((static_cast<uint64_t>(CRandom::uint32_(g_rndSeed)) * 101) >> 32) > s_playerSoundChance[soundType]) {
@@ -13396,9 +13397,6 @@ void CGPlayer_C::PlayFoleySound() {
         }
     }
 }
-
-// STATIC: #0x00C9EB0C
-static uint32_t s_talentWipeCost;
 
 // OFFSET: #0x006CEFD0
 int32_t CGPlayer_C::OnSignedResults(CDataStore* msg) {

@@ -80,14 +80,15 @@ class CGUIMacros {
     static void CountActionBarSlots(MACRONODE* macro);
 };
 
+extern const char* s_macroIconPath;
+extern TSGrowableArray<char*> s_macroIcons;
+extern TSGrowableArray<char*> s_macroItemIcons;
+
 void UIMacrosRegisterScriptFunctions();
 void UIMacrosUnegisterScriptFunctions();
 
 const char* GetMacroIcon(uint32_t index);
 const char* GetMacroItemIcon(uint32_t index);
-extern const char* s_macroIconPath;
-extern TSGrowableArray<char*> s_macroIcons;
-extern TSGrowableArray<char*> s_macroItemIcons;
 uint32_t GetNumMacroIcons();
 
 #endif

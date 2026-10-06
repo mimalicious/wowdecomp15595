@@ -121,8 +121,7 @@ struct PENDINGCHAT {
     /* 00D0 */ ChatConversation* m_conversation;
     /* 00D4 */ uint32_t unk_00D4;
 
-    PENDINGCHAT() : m_text(NULL), m_senderName(NULL), m_conversation(NULL) {
-    }
+    PENDINGCHAT();
 
     ~PENDINGCHAT();
 };
@@ -196,8 +195,7 @@ struct PENDINGTEXTEMOTE {
     /* 0018 */ int32_t m_queued;
     /* 001C */ uint32_t m_emoteNum;
 
-    PENDINGTEXTEMOTE() : m_target(NULL) {
-    }
+    PENDINGTEXTEMOTE();
 
     ~PENDINGTEXTEMOTE();
 };
@@ -206,9 +204,7 @@ struct HASHKEY_LANGUAGE {
     /* 0000 */ uint32_t m_length;
     /* 0004 */ uint32_t m_unk04;
 
-    bool operator==(const HASHKEY_LANGUAGE& key) const {
-        return this->m_length == key.m_length && this->m_unk04 == key.m_unk04;
-    }
+    bool operator==(const HASHKEY_LANGUAGE& key) const;
 };
 
 class LanguageWordsRec;
@@ -406,6 +402,24 @@ class CGChat {
     static void UpdateGuildStatus();
 };
 
+extern int32_t s_activeDisplayChannelType;
+extern int32_t s_displayChannelMemberCount;
+extern TSGrowableArray<PENDINGUSERLIST> s_pendingUsers;
+extern uint32_t s_numDisplayChannels;
+extern uint32_t s_activeVoiceChannel;
+extern uint32_t s_numSavedInstances;
+extern uint8_t s_collapsedHeaders[3];
+extern ChatWindowInfo s_chatWindows[10];
+extern const ChatMessageGroup s_chatMessageGroups[46];
+extern ChatColorInfo s_chatColors[CHAT_MSG_MAX];
+extern TSGrowableArray<ChatColorInfo> s_channelColors;
+extern int32_t s_chatLogging[2];
+extern HSLOG s_chatLog[2];
+extern const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX];
+extern uint32_t s_activeDisplayChannelFlags;
+extern uint32_t s_joinedZoneChannels;
+extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
+
 int32_t StringToChatType(const char* string, int32_t* type);
 int32_t StringToLanguage(const char* string, uint32_t* language);
 ChatChannel* GetChannelByName(const char* name);
@@ -416,9 +430,6 @@ bool ProfanityFilter(char* text, bool cache, bool force);
 ChatRecord* GetChatRecord(int32_t index);
 void SetCurrentActiveDisplayChannel(const char* name, int32_t type);
 bool ChannelNamesEqual(const char* activeName, const char* name, int32_t activeType, int32_t type);
-extern int32_t s_activeDisplayChannelType;
-extern int32_t s_displayChannelMemberCount;
-extern TSGrowableArray<PENDINGUSERLIST> s_pendingUsers;
 ChatRecord* GetChatRecordEx(const char* name, const char* text, uint32_t lineID);
 void ComplainChat(const char* name, const char* text, uint32_t lineID);
 uint32_t BuildPartyDisplayList();
@@ -432,34 +443,6 @@ int32_t QuestParserParseText(const char* text, char* buffer, uint32_t size, cons
 void ChatRegisterScriptFunctions();
 void ChatUnregisterScriptFunctions();
 
-extern uint32_t s_numDisplayChannels;
-
-extern int32_t s_activeDisplayChannelType;
-
-extern uint32_t s_activeVoiceChannel;
-
-extern uint32_t s_numSavedInstances;
-
-extern uint8_t s_collapsedHeaders[3];
-
-extern ChatWindowInfo s_chatWindows[10];
-
-extern const ChatMessageGroup s_chatMessageGroups[46];
-
-extern ChatColorInfo s_chatColors[CHAT_MSG_MAX];
-
-extern TSGrowableArray<ChatColorInfo> s_channelColors;
-
-extern int32_t s_chatLogging[2];
-
-extern HSLOG s_chatLog[2];
-
-extern const ChatColorInfo s_chatTypeInfo[CHAT_MSG_MAX];
-
-extern uint32_t s_activeDisplayChannelFlags;
-
-extern uint32_t s_joinedZoneChannels;
-
-extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
+#include "WoW/Source/Ui/ChatFrame.inl"
 
 #endif

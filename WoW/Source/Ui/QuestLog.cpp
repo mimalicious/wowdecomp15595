@@ -95,6 +95,9 @@ static CVar* s_cvPOIShiftComplete;
 // STATIC: #0x00C23B00
 QuestPOIInfo CGQuestLog::m_questPOIs[25];
 
+// STATIC: #0x00AD1264
+static int32_t s_poiOverlapIterations = 20;
+
 // OFFSET: #0x005E6FA0
 void CGQuestLog::EnterWorld() {
     CDataStore msg;
@@ -2169,9 +2172,6 @@ void CGQuestLog::SaveTrackedQuests() {
         list.m_cvar->Set(list.m_buffer, true, false, false, true);
     }
 }
-
-// STATIC: #0x00AD1264
-static int32_t s_poiOverlapIterations = 20;
 
 // OFFSET: #0x005E2EB0
 void CGQuestLog::UpdatePOIIcons() {

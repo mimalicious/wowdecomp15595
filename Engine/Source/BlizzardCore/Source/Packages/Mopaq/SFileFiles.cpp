@@ -10,6 +10,9 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
+// STATIC: 0x00BCD74C
+static const uint32_t s_repairDelays[5] = { 100, 200, 500, 1000, 1000 };
+
 // PROVEN: b36c41a9 IDENTICAL/NONE
 // OFFSET: 0x007AB030
 void Blizzard::Mopaq::HSFILERecord::SetLogicalArchive(System_SFile::ARCHIVEREC* archive) {
@@ -100,9 +103,6 @@ bool Blizzard::Mopaq::SFileCloseFile(HSFILERecord* file) {
 
     return true;
 }
-
-// STATIC: 0x00BCD74C
-static const uint32_t s_repairDelays[5] = { 100, 200, 500, 1000, 1000 };
 
 // OFFSET: 0x007F4880/0x140502330
 bool Blizzard::Mopaq::SFileReadFile(HSFILERecord* file, void* buffer, uint32_t count, uint32_t* bytesRead) {

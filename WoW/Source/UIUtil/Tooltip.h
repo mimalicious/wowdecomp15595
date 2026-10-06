@@ -288,12 +288,11 @@ class CSimpleUI {
 
 extern uint32_t s_tooltipTitleColor;
 extern uint32_t s_tooltipTextColor;
+extern const char* s_socketColorNames[5];
+extern const char* s_itemModTokens[49];
 
 int32_t SetCompareItem(CGTooltip* tooltip, uint32_t itemId, int32_t offset, int32_t shift, CGTooltip* compare);
 int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info);
-
-extern const char* s_socketColorNames[5];
-extern const char* s_itemModTokens[49];
 
 #include "WoW/Source/UIUtil/Tooltip.inl"
 

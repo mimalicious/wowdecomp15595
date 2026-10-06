@@ -19,6 +19,18 @@ extern "C" {
 // STATIC: #0x00B38324
 Blizzard::Thread::LocalObject<System_SComp::ZlibAllocBuffer> System_SComp::s_zlibAllocBuffer;
 
+// STATIC: #0x009E6DF8
+static const System_SComp::COMPRESSOR s_rleCompressor = { 0x20, System_SComp::RLEZeroCompress };
+
+// STATIC: #0x009E6E00
+static const System_SComp::COMPRESSOR s_zlibCompressor = { 0x02, System_SComp::ZlibCompress };
+
+// STATIC: #0x009E6E08
+static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp::PkwareCompress };
+
+// STATIC: #0x009E6E10
+static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
+
 // OFFSET: %0x00765540
 bool LzmaMemDecode(const uint8_t* source, uint32_t sourceSize, uint8_t* dest, uint32_t destSize, uint32_t* destProcessed, void* (*alloc)(uint32_t size), void (*free)(void* address)) {
     if (sourceSize < 14) {
@@ -330,18 +342,6 @@ bool System_SComp::Decompress(void* dst, uint32_t* dstSize, const void* src, uin
 
     return DecompressBlock(dst, dstSize, static_cast<const uint8_t*>(src) + 1, srcSize - 1, decompressors);
 }
-
-// STATIC: #0x009E6DF8
-static const System_SComp::COMPRESSOR s_rleCompressor = { 0x20, System_SComp::RLEZeroCompress };
-
-// STATIC: #0x009E6E00
-static const System_SComp::COMPRESSOR s_zlibCompressor = { 0x02, System_SComp::ZlibCompress };
-
-// STATIC: #0x009E6E08
-static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp::PkwareCompress };
-
-// STATIC: #0x009E6E10
-static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
 
 // PROVEN: a6263b16 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AA980/0x1404A0D10

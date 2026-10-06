@@ -39,6 +39,9 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Glue/CSimpleModelFFX.h"
 
+// STATIC: 0x00DD3918
+const char* s_createFrameTaint;
+
 // OFFSET: %0x007A57A0
 static int32_t Script_GetText(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
@@ -168,9 +171,6 @@ static int32_t Script_GetNumFrames(lua_State* L) {
     lua_pushnumber(L, count);
     return 1;
 }
-
-// STATIC: 0x00DD3918
-const char* s_createFrameTaint;
 
 // OFFSET: 0x0083FB40/0x14056B7C0
 static int32_t Script_CreateFrame(lua_State* L) {

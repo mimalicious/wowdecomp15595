@@ -98,6 +98,39 @@ TSGrowableArray<uint32_t> CGLookingForGroup::m_roleCheckSlots;
 // STATIC: #0x00BEAA60
 TSGrowableArray<LFGRoleCheckMember> CGLookingForGroup::m_roleCheckMembers;
 
+// STATIC: #0x00ACDDA8
+static const LFGJoinResultError s_joinResultErrors[17] = {
+    { 1, ERR_LFG_ROLE_CHECK_FAILED },
+    { 2, ERR_LFG_GROUP_FULL },
+    { 4, ERR_LFG_NO_LFG_OBJECT },
+    { 5, ERR_LFG_NO_SLOTS_PLAYER },
+    { 6, ERR_LFG_NO_SLOTS_PARTY },
+    { 7, ERR_LFG_MISMATCHED_SLOTS },
+    { 8, ERR_LFG_PARTY_PLAYERS_FROM_DIFFERENT_REALMS },
+    { 9, ERR_LFG_MEMBERS_NOT_PRESENT },
+    { 10, ERR_LFG_GET_INFO_TIMEOUT },
+    { 11, ERR_LFG_INVALID_SLOT },
+    { 12, ERR_LFG_DESERTER_PLAYER },
+    { 13, ERR_LFG_DESERTER_PARTY },
+    { 14, ERR_LFG_RANDOM_COOLDOWN_PLAYER },
+    { 15, ERR_LFG_RANDOM_COOLDOWN_PARTY },
+    { 16, ERR_LFG_TOO_MANY_MEMBERS },
+    { 17, ERR_LFG_CANT_USE_DUNGEONS },
+    { 18, ERR_LFG_ROLE_CHECK_FAILED },
+};
+
+// STATIC: #0x00ACDD50
+static int32_t s_commentSendCount = 2;
+
+// STATIC: #0x00BEABA8
+static float s_commentSendTime;
+
+// STATIC: #0x00BEAA1C
+static uint32_t s_searchType;
+
+// STATIC: #0x00BEAA20
+static uint32_t s_searchID;
+
 // OFFSET: #0x00557260
 bool CGLookingForGroup::HasRaidDungeon(LFGInfo* info) {
     if (!info->m_joined) {
@@ -630,27 +663,6 @@ static void ClearSearchResults() {
     CGLookingForGroup::m_searchResults.Clear();
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
 }
-
-// STATIC: #0x00ACDDA8
-static const LFGJoinResultError s_joinResultErrors[17] = {
-    { 1, ERR_LFG_ROLE_CHECK_FAILED },
-    { 2, ERR_LFG_GROUP_FULL },
-    { 4, ERR_LFG_NO_LFG_OBJECT },
-    { 5, ERR_LFG_NO_SLOTS_PLAYER },
-    { 6, ERR_LFG_NO_SLOTS_PARTY },
-    { 7, ERR_LFG_MISMATCHED_SLOTS },
-    { 8, ERR_LFG_PARTY_PLAYERS_FROM_DIFFERENT_REALMS },
-    { 9, ERR_LFG_MEMBERS_NOT_PRESENT },
-    { 10, ERR_LFG_GET_INFO_TIMEOUT },
-    { 11, ERR_LFG_INVALID_SLOT },
-    { 12, ERR_LFG_DESERTER_PLAYER },
-    { 13, ERR_LFG_DESERTER_PARTY },
-    { 14, ERR_LFG_RANDOM_COOLDOWN_PLAYER },
-    { 15, ERR_LFG_RANDOM_COOLDOWN_PARTY },
-    { 16, ERR_LFG_TOO_MANY_MEMBERS },
-    { 17, ERR_LFG_CANT_USE_DUNGEONS },
-    { 18, ERR_LFG_ROLE_CHECK_FAILED },
-};
 
 // OFFSET: #0x0055B080
 void CGLookingForGroup::ParsePartyInfo(CDataStore* msg) {
@@ -1530,12 +1542,6 @@ void CGLookingForGroup::RequestLFGPartyInfo() {
     ClientServices::Send2(&msg);
 }
 
-// STATIC: #0x00ACDD50
-static int32_t s_commentSendCount = 2;
-
-// STATIC: #0x00BEABA8
-static float s_commentSendTime;
-
 // OFFSET: #0x005539A0
 void CGLookingForGroup::SetLFGComment(const char* comment) {
     char scrubbed[256];
@@ -1584,12 +1590,6 @@ void CGLookingForGroup::LeaveLFGSearch() {
     CGLookingForGroup::m_searchResults.Clear();
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_LFG_LIST, NULL);
 }
-
-// STATIC: #0x00BEAA1C
-static uint32_t s_searchType;
-
-// STATIC: #0x00BEAA20
-static uint32_t s_searchID;
 
 // OFFSET: #0x005528A0
 void LFGNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {

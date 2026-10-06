@@ -375,8 +375,6 @@ namespace Liquid {
     float WorldCoordScale();
 }
 
-// INLINED
-inline Liquid::IVertexData::~IVertexData() {
-}
+#include "WoW/Source/LiquidSystem/Liquid.inl"
 
 #endif

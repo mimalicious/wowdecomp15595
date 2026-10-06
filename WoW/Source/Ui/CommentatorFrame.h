@@ -23,13 +23,6 @@ struct CommentatorInstanceKey {
     void Read(CDataStore* msg);
 };
 
-// INLINED
-inline CommentatorInstanceKey::CommentatorInstanceKey() {
-    this->unk_0000 = 0;
-    this->unk_0004 = 13;
-    this->unk_0008 = 0;
-}
-
 class CGCommentator {
     public:
     struct PlayerInfo {
@@ -140,6 +133,8 @@ class Commentator {
     /* 0018 */ uint8_t unk_0018[40];
     /* 0040 */ uint32_t unk_0040;
 };
+
+#include "WoW/Source/Ui/CommentatorFrame.inl"
 
 
 #endif

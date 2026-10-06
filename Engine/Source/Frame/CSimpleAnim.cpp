@@ -26,15 +26,15 @@ int32_t CSimpleAnim::s_objectType;
 // STATIC: %0x00BB8BA8
 const char* CSimpleAnim::s_objectTypeName = "Animation";
 
+// PROVEN: e7006d69 IDENTICAL/IDENTICAL
+// STATIC: 0x00CA3840
+float CSimpleAnim::s_frameInterval = 1.0f / 30.0f;
+
 // INLINED
 CSimpleAnimSmoother::CSimpleAnimSmoother() {
     this->m_in = 0.0f;
     this->m_out = 0.0f;
 }
-
-// PROVEN: e7006d69 IDENTICAL/IDENTICAL
-// STATIC: 0x00CA3840
-float CSimpleAnim::s_frameInterval = 1.0f / 30.0f;
 
 // PROVEN: e7006d69 IDENTICAL/IDENTICAL
 // OFFSET: 0x005275F0/0x140176960

@@ -31,6 +31,9 @@ int32_t CGTabardModelFrame::s_objectType;
 // STATIC: #0x00C0E524
 CDataAllocator CGTabardModelFrame::s_tabardModelHeap(sizeof(CGTabardModelFrame), 1);
 
+// STATIC: #0x00A14908
+static const int32_t s_tabardVariationCounts[5] = { 170, 17, 6, 17, 51 };
+
 // INLINED
 void CGTabardModelFrame::operator delete(void* ptr) {
     CGTabardModelFrame::s_tabardModelHeap.PutData(ptr, NULL, 0);
@@ -100,9 +103,6 @@ void CGTabardModelFrame::Save() {
         player->SaveTabard(this->m_variations[0], this->m_variations[1], this->m_variations[2], this->m_variations[3], this->m_variations[4], CGGameUI::m_interactTarget);
     }
 }
-
-// STATIC: #0x00A14908
-static const int32_t s_tabardVariationCounts[5] = { 170, 17, 6, 17, 51 };
 
 // OFFSET: #0x00599470
 void CGTabardModelFrame::CycleVariation(uint32_t variation, int32_t delta) {

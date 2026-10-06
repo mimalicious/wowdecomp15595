@@ -169,6 +169,18 @@ static uint32_t s_smolVertCacheSize;
 // STATIC: #0x00D1BF00
 static SMOLiquidVert s_smolVertCache[64];
 
+// STATIC: #0x00D1C418
+uint32_t CMapObj::sMinimapTag;
+
+// STATIC: #0x00AEE00C
+static float s_minimapTexelSize = 0.5f;
+
+// STATIC: #0x00D1C47C
+static float s_minimapQuadSize = s_minimapTexelSize * 256.0f;
+
+// STATIC: #0x00CFBED8
+static uint16_t s_portalIndices[65536];
+
 // OFFSET: #0x007A6140
 World::TriData::Batch* World::TriData::AllocBatch() {
     if (World::TriData::nBatches + 1 >= 32) {
@@ -2200,12 +2212,6 @@ void CMapObj::ClearCache(int32_t a1) {
     }
 }
 
-
-
-
-
-
-
 // OFFSET: #0x007A8800
 void CMapObj::SetRenderModeLight() {
     CGxLight light;
@@ -2231,11 +2237,6 @@ void CMapObj::SetRenderModeLight() {
     GxRsSet(GxRs_Lighting, static_cast<int32_t>(1));
 }
 
-
-
-
-
-
 // OFFSET: #0x007AE140
 uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t a1) {
     uint32_t result = 0xEE;
@@ -2257,32 +2258,6 @@ uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t a1) {
     }
     return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // OFFSET: #0x0079BBF0
 void CMapObj::QueryLiquidSounds(uint32_t groupIndex, uint32_t fromGroup, uint32_t depth, uint32_t* minDepth, const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results) {
@@ -2780,15 +2755,6 @@ bool CMapObj::GetTris(const CWFrustum& frustum, uint32_t flags, World::TriData* 
     return result;
 }
 
-// STATIC: #0x00D1C418
-uint32_t CMapObj::sMinimapTag;
-
-// STATIC: #0x00AEE00C
-static float s_minimapTexelSize = 0.5f;
-
-// STATIC: #0x00D1C47C
-static float s_minimapQuadSize = s_minimapTexelSize * 256.0f;
-
 // OFFSET: #0x007AE1F0
 static uint32_t ComputeAaBoxOutcodeExact(const C3Vector* point, const CAaBox* box) {
     float delta[6];
@@ -3279,9 +3245,6 @@ bool CMapObj::VectorIntersect(C3Vector& start, C3Vector& end, uint32_t flags, ui
     *normalDot = *normalDot / length;
     return hit;
 }
-
-// STATIC: #0x00CFBED8
-static uint16_t s_portalIndices[65536];
 
 // OFFSET: #0x007A76C0
 void __stdcall CMapObj::RenderGroupCollidableFaces(CMapObjGroup* mapObjGroup) {

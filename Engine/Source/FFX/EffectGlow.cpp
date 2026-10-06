@@ -7,6 +7,9 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Storm/H/storm.h"
 
+// STATIC: %0x00D95500
+CVar* EffectGlow::s_cvarGlow;
+
 // PROVEN: 9a7d537c IDENTICAL/IDENTICAL
 // OFFSET: 0x0089DAE0/0x1405DE440
 bool EffectGlow::Valid() {
@@ -46,9 +49,6 @@ void EffectGlow::SetParameters(int32_t count, const int32_t* params) {
     static_cast<PassGlowBase*>(this->m_altPasses[2])->m_color = CImVector(params[2], params[2], params[2], params[1]);
     static_cast<PassGlowBase*>(this->m_passes[2])->m_color = CImVector(params[2], params[2], params[2], params[1]);
 }
-
-// STATIC: %0x00D95500
-CVar* EffectGlow::s_cvarGlow;
 
 // INLINED
 void EffectGlow::InitCVars() {

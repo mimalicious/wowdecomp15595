@@ -87,8 +87,6 @@ extern CVar* g_useUiScaleCVar;
 extern CVar* g_rotateMinimapCVar;
 extern CVar* g_cvAutoInteract;
 extern CVar* g_autoStandCVar;
-
-void SignalEvent_EVENT_PARTY_INVITE_REQUEST(const char* name);
 extern CVar* g_unitHighlightsCVar;
 extern CVar* g_stopAutoAttackOnTargetChangeCVar;
 extern CVar* g_autoDismountCVar;
@@ -110,6 +108,8 @@ extern CVar* g_autoSelfCastCVar;
 extern CVar* g_secureAbilityToggleCVar;
 extern CVar* g_predictedHealthCVar;
 extern const char* g_macroTaint;
+
+void SignalEvent_EVENT_PARTY_INVITE_REQUEST(const char* name);
 
 struct UIErrorInfo {
     /* 0000 */ const char* m_token;
@@ -516,6 +516,24 @@ struct TAINTEVENT : public TSHashObject<TAINTEVENT, HASHKEY_STR> {
     /* 0024 */ TSGrowableArray<TaintStackFrame> m_stack;
 };
 
+extern HSLOG s_taintLog;
+extern CVar* g_profanityFilterCVar;
+extern CVar* g_spamFilterCVar;
+extern CVar* g_serviceTypeFilterCVar;
+extern CVar* g_minimapZoomCVar;
+extern CVar* g_minimapInsideZoomCVar;
+extern CVar* g_minimapPortalMaxCVar;
+extern CVar* g_enablePVPNotifyAFKCVar;
+extern CVar* g_chatBubblesCVar;
+extern CVar* g_chatBubblesPartyCVar;
+extern CVar* s_cvLfgSelectedRoles;
+extern CVar* s_cvLfdCollapsedHeaders;
+extern CVar* s_cvLfdSelectedDungeons;
+extern float s_duelDistSq;
+extern float s_playerInteractDistSq;
+extern float s_inspectDistSq;
+extern float s_followDistSq;
+
 void LoadScriptFunctions();
 int32_t IsInFlyableArea();
 int32_t CanEquipInSlotCallback(const CGItem_C* item, void* param);
@@ -524,7 +542,6 @@ void UnloadScriptFunctions();
 void SavePlacedFrames(HOSFILE localFile, HOSFILE file, void* param);
 void SaveGameCVarsCallback(HOSFILE localFile, HOSFILE file, void* param);
 void DisableFadingScreen(float duration, void (*callback)(void*), void* param);
-extern HSLOG s_taintLog;
 bool GuildShowOfflineCallback(CVar* var, const char* oldValue, const char* value, void* arg);
 bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg);
 bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, void* arg);
@@ -545,33 +562,14 @@ int32_t Script_GetBillingTimeRested(lua_State* L);
 int32_t Script_GetMovieResolution(lua_State* L);
 int32_t Script_GetAccountExpansionLevel(lua_State* L);
 
-extern CVar* g_profanityFilterCVar;
-extern CVar* g_spamFilterCVar;
-extern CVar* g_serviceTypeFilterCVar;
-extern CVar* g_minimapZoomCVar;
-extern CVar* g_minimapInsideZoomCVar;
-extern CVar* g_minimapPortalMaxCVar;
-extern CVar* g_enablePVPNotifyAFKCVar;
-extern CVar* g_chatBubblesCVar;
-extern CVar* g_chatBubblesPartyCVar;
-
 void UpdateInstanceOwnershipPacket(int32_t owns);
 
 void UpdateModelForUI(const WOWGUID& guid, uint32_t flags);
-
-extern CVar* s_cvLfgSelectedRoles;
-extern CVar* s_cvLfdCollapsedHeaders;
-extern CVar* s_cvLfdSelectedDungeons;
 
 const char* MirrorTimerTypeToken(int32_t type);
 const char* GetMirrorTimerLabel(int32_t type, int32_t spellId);
 
 void BroadcastUIError(int32_t error, const char* name);
-
-extern float s_duelDistSq;
-extern float s_playerInteractDistSq;
-extern float s_inspectDistSq;
-extern float s_followDistSq;
 
 void OnGxRestartClearWorld();
 

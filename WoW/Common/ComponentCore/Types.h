@@ -170,16 +170,6 @@ struct TCTEXTUREINFO {
     /* 0004 */ uint32_t m_unused : 15;
 };
 
-// INLINED
-inline CharColorList::CharColorList() {
-    this->m_numColors = 0;
-    this->m_color = NULL;
-}
-
-// INLINED
-inline CharVariationList::CharVariationList() {
-    this->m_numVariations = 0;
-    this->m_variation = NULL;
-}
+#include "WoW/Common/ComponentCore/Types.inl"
 
 #endif

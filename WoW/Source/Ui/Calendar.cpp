@@ -82,6 +82,30 @@ int32_t CGCalendar::m_numInitialPending;
 // STATIC: #0x00C207F3
 uint8_t CGCalendar::m_actionPending;
 
+// STATIC: #0x00ACFFE4
+static const char* s_fullDateMonthNames[12] = { "FULLDATE_MONTH_JANUARY", "FULLDATE_MONTH_FEBRUARY", "FULLDATE_MONTH_MARCH", "FULLDATE_MONTH_APRIL", "FULLDATE_MONTH_MAY", "FULLDATE_MONTH_JUNE", "FULLDATE_MONTH_JULY", "FULLDATE_MONTH_AUGUST", "FULLDATE_MONTH_SEPTEMBER", "FULLDATE_MONTH_OCTOBER", "FULLDATE_MONTH_NOVEMBER", "FULLDATE_MONTH_DECEMBER" };
+
+// STATIC: #0x00ACFF8C
+int32_t CGCalendar::m_absMonth = -1;
+
+// STATIC: #0x00ACFF90
+int32_t CGCalendar::m_absYear = 4;
+
+// STATIC: #0x00C20800
+int32_t CGCalendar::m_absMonthDays;
+
+// STATIC: #0x00C20F78
+CalendarEventSelection CGCalendar::m_selectedEvent;
+
+// STATIC: #0x00C20F90
+CalendarEventSelection CGCalendar::m_contextEvent;
+
+// STATIC: #0x00C207F8
+uint32_t CGCalendar::m_lastInviteTime;
+
+// STATIC: #0x00ACFF94
+static CVar** s_eventFilters[8] = { NULL, NULL, &s_cvCalendarShowLockouts, &s_cvCalendarShowResets, NULL, &s_cvCalendarShowWeeklyHolidays, &s_cvCalendarShowDarkmoon, &s_cvCalendarShowBattlegrounds };
+
 // OFFSET: #0x005C4240
 void CGCalendar::InitializeGame() {
     CGCalendar::m_curEvent = NULL;
@@ -123,9 +147,6 @@ const char* GetHolidayName(int32_t holidayId) {
     HolidayNamesRec* name = g_holidayNamesDB.GetRecord(holiday->m_holidayNameID);
     return name ? name->m_name : NULL;
 }
-
-// STATIC: #0x00ACFFE4
-static const char* s_fullDateMonthNames[12] = { "FULLDATE_MONTH_JANUARY", "FULLDATE_MONTH_FEBRUARY", "FULLDATE_MONTH_MARCH", "FULLDATE_MONTH_APRIL", "FULLDATE_MONTH_MAY", "FULLDATE_MONTH_JUNE", "FULLDATE_MONTH_JULY", "FULLDATE_MONTH_AUGUST", "FULLDATE_MONTH_SEPTEMBER", "FULLDATE_MONTH_OCTOBER", "FULLDATE_MONTH_NOVEMBER", "FULLDATE_MONTH_DECEMBER" };
 
 // OFFSET: #0x005B7E50
 size_t CGCalendar::GetDateTimeText(char* buffer, uint32_t size, uint32_t time) {
@@ -485,21 +506,6 @@ void CGCalendar::UpdatePendingInvites(CDataStore* msg) {
     }
 }
 
-// STATIC: #0x00ACFF8C
-int32_t CGCalendar::m_absMonth = -1;
-
-// STATIC: #0x00ACFF90
-int32_t CGCalendar::m_absYear = 4;
-
-// STATIC: #0x00C20800
-int32_t CGCalendar::m_absMonthDays;
-
-// STATIC: #0x00C20F78
-CalendarEventSelection CGCalendar::m_selectedEvent;
-
-// STATIC: #0x00C20F90
-CalendarEventSelection CGCalendar::m_contextEvent;
-
 // OFFSET: #0x005B7A10
 int32_t CGCalendar::GetDaysInMonth(int32_t month, int32_t year, int32_t* days, int32_t* weekDay) {
     WowTime date;
@@ -653,9 +659,6 @@ bool CGCalendar::ComputeEventIndex(const CalendarEventSelection* selection, int3
     return false;
 }
 
-// STATIC: #0x00C207F8
-uint32_t CGCalendar::m_lastInviteTime;
-
 // OFFSET: #0x005B7A80
 bool GameCalendarGetMaxCreateDate(WowTime* date) {
     int32_t years = (g_clientGameTime.m_month + 13) / 12;
@@ -672,9 +675,6 @@ bool GameCalendarGetMaxCreateDate(WowTime* date) {
     date->m_year = year;
     return date->SetHourAndMinutes(23u, 59u);
 }
-
-// STATIC: #0x00ACFF94
-static CVar** s_eventFilters[8] = { NULL, NULL, &s_cvCalendarShowLockouts, &s_cvCalendarShowResets, NULL, &s_cvCalendarShowWeeklyHolidays, &s_cvCalendarShowDarkmoon, &s_cvCalendarShowBattlegrounds };
 
 // OFFSET: %0x008FF800
 CalendarDayEvent::CalendarDayEvent() {

@@ -18,6 +18,9 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/UIMacros.h"
 
+// STATIC: #0x00ACFB74
+static const char* s_equipmentSetIconPath = "Interface\\Icons\\";
+
 // OFFSET: #0x005AD770
 static int32_t Script_EquipmentManagerIgnoreSlotForSave(lua_State* L) {
     uint32_t slot = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -361,9 +364,6 @@ static int32_t Script_GetNumEquipmentSets(lua_State* L) {
     lua_pushnumber(L, count);
     return 1;
 }
-
-// STATIC: #0x00ACFB74
-static const char* s_equipmentSetIconPath = "Interface\\Icons\\";
 
 // OFFSET: #0x005AF120
 static int32_t Script_GetEquipmentSetInfo(lua_State* L) {

@@ -12,8 +12,6 @@ class EvtContextQueue : public TSPriorityQueue<EvtContext> {
     EvtContextQueue();
 };
 
-// INLINED
-inline EvtContextQueue::EvtContextQueue() : TSPriorityQueue<EvtContext>(offsetof(EvtContext, m_schedNextWakeTime)) {
-}
+#include "Engine/Source/Event/EvtContextQueue.inl"
 
 #endif
