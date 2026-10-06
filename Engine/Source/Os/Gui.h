@@ -151,6 +151,7 @@ class COsMenuBar {
 
 void OsGuiBeep();
 void* OsGuiGetWindow(int32_t type);
+void OsGuiSetGxDevWindowFcn(void* (*fcn)());
 int32_t OsGuiIsModifierKeyDown(int32_t key);
 int32_t OsGuiProcessMessage(void* message);
 int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title);

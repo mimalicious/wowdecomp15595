@@ -1767,6 +1767,7 @@ void BeginCloseGame() {
 
 // OFFSET: #0x00406C70
 int32_t CommonMain() {
+    OsGuiSetGxDevWindowFcn(GxDevWindow);
     StormInitialize();
     SErrCatchUnhandledExceptions();
     CreateNamedEventA("Blizzard Entertainment World of Warcraft", 0);

@@ -119,11 +119,21 @@ void OsGuiSetWindowTitle(void* window, const char* title) {
     SetWindowTextW(static_cast<HWND>(window), reinterpret_cast<const wchar_t*>(wideTitle));
 }
 
-// OFFSET: %0x007DC2E0
+// STATIC: 0x00EC6D80
+static void* (*s_gxDevWindowFcn)();
+
+// PROVEN: af1107a4 IDENTICAL
+// OFFSET: 0x00876530
+void OsGuiSetGxDevWindowFcn(void* (*fcn)()) {
+    s_gxDevWindowFcn = fcn;
+}
+
+// PROVEN: e65b8677 IDENTICAL
+// OFFSET: 0x00876540
 void* OsGuiGetWindow(int32_t type) {
     switch (type) {
         case 0:
-            return GxDevWindow();
+            return s_gxDevWindowFcn();
 
         case 1:
             return GetActiveWindow();
