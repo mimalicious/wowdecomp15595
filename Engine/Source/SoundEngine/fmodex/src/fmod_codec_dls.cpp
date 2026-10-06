@@ -618,7 +618,8 @@ FMOD_RESULT CodecDLS::parseChunk(char *parentchunk, unsigned int chunksize)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E6960
+// PROVEN: c5cf8e30 IDENTICAL
+// OFFSET: 0x00AA6320
 FMOD_RESULT CodecDLS::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT     result = FMOD_OK;
@@ -701,7 +702,8 @@ FMOD_RESULT CodecDLS::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E5960
+// PROVEN: a6206624 IDENTICAL
+// OFFSET: 0x00AA5320
 FMOD_RESULT CodecDLS::closeInternal()
 {
     if (waveformat)
@@ -769,7 +771,8 @@ FMOD_RESULT CodecDLS::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E5AE0
+// PROVEN: bbf8458d IDENTICAL
+// OFFSET: 0x00AA54A0
 FMOD_RESULT CodecDLS::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -881,7 +884,8 @@ FMOD_RESULT CodecDLS::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E6C50
+// PROVEN: 970d6d94 IDENTICAL
+// OFFSET: 0x00AA6610
 FMOD_RESULT F_CALLBACK CodecDLS::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecDLS *dls = (CodecDLS *)codec;    
@@ -906,7 +910,8 @@ FMOD_RESULT F_CALLBACK CodecDLS::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E5B40
+// PROVEN: 2723428d IDENTICAL
+// OFFSET: 0x00AA5500
 FMOD_RESULT F_CALLBACK CodecDLS::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecDLS *dls = (CodecDLS *)codec;    
@@ -931,7 +936,8 @@ FMOD_RESULT F_CALLBACK CodecDLS::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E5B70
+// PROVEN: cff379b6 IDENTICAL
+// OFFSET: 0x00AA5530
 FMOD_RESULT F_CALLBACK CodecDLS::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecDLS *dls = (CodecDLS *)codec;    
@@ -955,7 +961,8 @@ FMOD_RESULT F_CALLBACK CodecDLS::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E6C90
+// PROVEN: 38d0dc13 IDENTICAL
+// OFFSET: 0x00AA6650
 FMOD_RESULT F_CALLBACK CodecDLS::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecDLS *dls = (CodecDLS *)codec;    

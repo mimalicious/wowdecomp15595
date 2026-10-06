@@ -49,7 +49,8 @@ static int CompareRefreshRates(const void* a, const void* b) {
     return right < left;
 }
 
-// OFFSET: %0x0093B020
+// PROVEN: 92285cc9 IDENTICAL
+// OFFSET: 0x009F8D10
 static int32_t Script_GetGamma(lua_State* L) {
     CVar* gamma = CVar::Lookup("gamma");
     lua_pushnumber(L, 1.0 - gamma->m_floatValue);

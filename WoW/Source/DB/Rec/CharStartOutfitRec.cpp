@@ -3,7 +3,8 @@
 // STATIC: %0x00B43F14
 const DBCMeta CharStartOutfitRec::s_meta = { "DBFilesClient\\CharStartOutfit.dbc", 10, 304, CharStartOutfitRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 90cc02d7 IDENTICAL
+// OFFSET: 0x00401000
 void CharStartOutfitRec::FixupStrings(void* record, const char* strings) {
 }
 

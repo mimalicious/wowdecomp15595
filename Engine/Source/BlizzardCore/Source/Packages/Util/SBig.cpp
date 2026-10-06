@@ -170,7 +170,8 @@ static int32_t Compare(const Blizzard::BigBuffer& a, const Blizzard::BigBuffer& 
     return result;
 }
 
-// OFFSET: %0x00719E10
+// PROVEN: 8f48d1b1 IDENTICAL
+// OFFSET: 0x007B8B00
 static uint32_t HighBitPos(const Blizzard::BigBuffer& a) {
     uint32_t index = a.Count();
 

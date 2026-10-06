@@ -3,7 +3,8 @@
 // STATIC: %0x00B454C4
 const DBCMeta SkillTiersRec::s_meta = { "DBFilesClient\\SkillTiers.dbc", 3, 132, SkillTiersRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 95f2390d IDENTICAL
+// OFFSET: 0x00401000
 void SkillTiersRec::FixupStrings(void* record, const char* strings) {
 }
 

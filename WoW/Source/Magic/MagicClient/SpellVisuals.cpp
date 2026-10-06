@@ -319,7 +319,8 @@ void SpellVisualsBlizzardStop(BlizzardObject** object) {
     *object = NULL;
 }
 
-// OFFSET: %0x0081EF60
+// PROVEN: 484ab884 IDENTICAL
+// OFFSET: 0x008BC190
 int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition) {
     return (transition->m_flags >> 1) & 1;
 }
@@ -329,12 +330,14 @@ void SpellVisualsRender() {
     s_lightningManager->Render(CGWorldFrame::GetActiveCamera()->m_position);
 }
 
-// OFFSET: %0x0081EEF0
+// PROVEN: b0403c10 IDENTICAL
+// OFFSET: 0x008BC120
 float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition) {
     return transition->m_height;
 }
 
-// OFFSET: %0x0081EF50
+// PROVEN: 54548d21 IDENTICAL
+// OFFSET: 0x008BC180
 void SpellVisualsFlagMountTransitionFinished(MountTransitionObject* transition) {
     transition->m_flags |= 0x2;
 }
@@ -609,7 +612,8 @@ void SpellVisualsCancelMountTransition(MountTransitionObject* transition) {
     }
 }
 
-// OFFSET: %0x00820590
+// PROVEN: 356e42a8 IDENTICAL
+// OFFSET: 0x008BDAD0
 const SpellVisualKitModelAttachRec* SpellVisualsGetModelAttachRec(uint32_t kitId, uint32_t index) {
     return s_modelAttachLookup->m_data[kitId]->m_data[index];
 }
@@ -647,12 +651,14 @@ void SpellVisualsHandleEclipse(const CImVector* color, float fadeIn, const Spell
     s_eclipse.m_end = now + castTime + 100;
 }
 
-// OFFSET: %0x0081EF00
+// PROVEN: d81d3c7b IDENTICAL
+// OFFSET: 0x008BC130
 float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transition) {
     return transition->m_alpha;
 }
 
-// OFFSET: %0x0081EF10
+// PROVEN: 5fe23a2a IDENTICAL
+// OFFSET: 0x008BC140
 void SpellVisualsGetMountTransitionTransform(const MountTransitionObject* transition, C3Vector* position, C3Vector* up, float* facing) {
     *position = transition->m_position;
     *up = transition->m_groundNormal;
@@ -838,7 +844,8 @@ void BlizzardObject::Render(int32_t visible) {
     }
 }
 
-// OFFSET: %0x00820B70
+// PROVEN: 6ca4cbc1 IDENTICAL
+// OFFSET: 0x008BE2F0
 int32_t BlizzardObject::WorldObjectRender(void* param, uint32_t flags, uint64_t param64, uintptr_t param32) {
     static_cast<BlizzardObject*>(param)->Render(flags & 1);
     return 1;

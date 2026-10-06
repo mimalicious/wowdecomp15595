@@ -407,12 +407,14 @@ bool System_Mopaq::mopaq_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: %0x0070E050
+// PROVEN: af674117 IDENTICAL
+// OFFSET: 0x007AB190
 bool System_Mopaq::mopaq_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return parms->m_handle->m_handler->Flush();
 }
 
-// OFFSET: %0x0070E070
+// PROVEN: 35a1195f IDENTICAL
+// OFFSET: 0x007AB1B0
 bool System_Mopaq::mopaq_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_blockEntry.m_fileSize;
     return true;

@@ -3,7 +3,8 @@
 // STATIC: %0x00B471D0
 const DBCMeta AreaTriggerRec::s_meta = { "DBFilesClient\\AreaTrigger.dbc", 11, 52, AreaTriggerRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 9a7beaa9 IDENTICAL
+// OFFSET: 0x00401000
 void AreaTriggerRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -20,7 +20,8 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
 
-// OFFSET: %0x00916E30
+// PROVEN: c743b4d7 IDENTICAL
+// OFFSET: 0x009C3D10
 static int32_t Script_StopMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(3)) {
         CGUIMacros::m_macroButton = NULL;
@@ -43,7 +44,8 @@ static int32_t Script_GetNumMacros(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x00916EB0
+// PROVEN: 8930a63a IDENTICAL
+// OFFSET: 0x009C3D90
 static int32_t Script_GetRunningMacro(lua_State* L) {
     uint32_t id;
 
@@ -433,7 +435,8 @@ static int32_t Script_GetMacroItem(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x00918C50
+// PROVEN: 943130eb IDENTICAL
+// OFFSET: 0x009C5C00
 static int32_t Script_PickupMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(14)) {
         MACRONODE* macro = GetMacroFromLua(L);

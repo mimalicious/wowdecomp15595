@@ -2,7 +2,8 @@
 #include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00A6D400
+// PROVEN: 5f8f4ae3 IDENTICAL
+// OFFSET: 0x00B3AC00
 BigData* BigIntegerFromInt(uint32_t value) {
     BigData* num;
     SBigNew(&num);
@@ -11,7 +12,8 @@ BigData* BigIntegerFromInt(uint32_t value) {
     return num;
 }
 
-// OFFSET: %0x00A6D430
+// PROVEN: 40ef6b16 IDENTICAL
+// OFFSET: 0x00B3AC30
 BigData* BigIntegerFromBytes(const void* data, uint32_t bytes) {
     BigData* num;
     SBigNew(&num);
@@ -20,7 +22,8 @@ BigData* BigIntegerFromBytes(const void* data, uint32_t bytes) {
     return num;
 }
 
-// OFFSET: %0x00A6D460
+// PROVEN: 052f2bd8 IDENTICAL
+// OFFSET: 0x00B3AC60
 uint32_t BigIntegerToBytes(BigData* a, uint8_t* data, uint32_t maxBytes) {
     uint32_t bytes;
     SBigToBinaryBuffer(a, data, maxBytes, &bytes);
@@ -32,12 +35,14 @@ uint32_t BigIntegerToBytes(BigData* a, uint8_t* data, uint32_t maxBytes) {
     return bytes;
 }
 
-// OFFSET: %0x00A6D4A0
+// PROVEN: b25209d7 IDENTICAL
+// OFFSET: 0x00B3ACA0
 int32_t BigIntegerCmp(BigData* a, BigData* b) {
     return SBigCompare(a, b);
 }
 
-// OFFSET: %0x00A6D4C0
+// PROVEN: c4e96369 IDENTICAL
+// OFFSET: 0x00B3ACC0
 int32_t BigIntegerCmpInt(BigData* a, uint32_t value) {
     BigData* num;
     SBigNew(&num);
@@ -49,12 +54,14 @@ int32_t BigIntegerCmpInt(BigData* a, uint32_t value) {
     return result;
 }
 
-// OFFSET: %0x00A6D500
+// PROVEN: 9029ae02 IDENTICAL
+// OFFSET: 0x00B3AD00
 void BigIntegerAdd(BigData* a, BigData* b, BigData* c) {
     SBigAdd(a, b, c);
 }
 
-// OFFSET: %0x00A6D520
+// PROVEN: 70ca5ff7 IDENTICAL
+// OFFSET: 0x00B3AD20
 void BigIntegerAddInt(BigData* a, BigData* b, uint32_t value) {
     BigData* num;
     SBigNew(&num);
@@ -63,32 +70,38 @@ void BigIntegerAddInt(BigData* a, BigData* b, uint32_t value) {
     SBigDel(num);
 }
 
-// OFFSET: %0x00A6D560
+// PROVEN: 5354d0f5 IDENTICAL
+// OFFSET: 0x00B3AD60
 void BigIntegerSub(BigData* a, BigData* b, BigData* c) {
     SBigSub(a, b, c);
 }
 
-// OFFSET: %0x00A6D580
+// PROVEN: f5e27b17 IDENTICAL
+// OFFSET: 0x00B3AD80
 void BigIntegerMul(BigData* a, BigData* b, BigData* c) {
     SBigMul(a, b, c);
 }
 
-// OFFSET: %0x00A6D5A0
+// PROVEN: 37c96a45 IDENTICAL
+// OFFSET: 0x00B3ADA0
 void BigIntegerMod(BigData* a, BigData* b, BigData* c) {
     SBigMod(a, b, c);
 }
 
-// OFFSET: %0x00A6D5C0
+// PROVEN: 574f0641 IDENTICAL
+// OFFSET: 0x00B3ADC0
 void BigIntegerModExp(BigData* a, BigData* b, BigData* c, BigData* d) {
     SBigPowMod(a, b, c, d);
 }
 
-// OFFSET: %0x00A6D5E0
+// PROVEN: 92851f68 IDENTICAL
+// OFFSET: 0x00B3ADE0
 void BigIntegerFree(BigData* a) {
     SBigDel(a);
 }
 
-// OFFSET: %0x00A6D5F0
+// PROVEN: e6a6ea0a IDENTICAL
+// OFFSET: 0x00B3ADF0
 uint32_t BigIntegerBitLen(BigData* a) {
     uint32_t bits;
     SBigBitLen(a, &bits);

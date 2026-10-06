@@ -127,7 +127,8 @@ static int32_t Script_GetRewardArenaPoints(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0089E6A0
+// PROVEN: 2a112e5c IDENTICAL
+// OFFSET: 0x00944C80
 static int32_t Script_QuestGetAutoAccept(lua_State* L) {
     if (CGQuestInfo::m_questFlags & 0x80000) {
         lua_pushnumber(L, 1.0);
@@ -138,7 +139,8 @@ static int32_t Script_QuestGetAutoAccept(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0089E7C0
+// PROVEN: e2814cca IDENTICAL
+// OFFSET: 0x00944DA0
 static int32_t Script_QuestIsDaily(lua_State* L) {
     if (CGQuestInfo::m_questFlags & 0x1000) {
         lua_pushnumber(L, 1.0);
@@ -149,7 +151,8 @@ static int32_t Script_QuestIsDaily(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0089E800
+// PROVEN: a81be9ce IDENTICAL
+// OFFSET: 0x00944DE0
 static int32_t Script_QuestIsWeekly(lua_State* L) {
     if (CGQuestInfo::m_questFlags & 0x8000) {
         lua_pushnumber(L, 1.0);
@@ -160,7 +163,8 @@ static int32_t Script_QuestIsWeekly(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0089E650
+// PROVEN: 4837c60d IDENTICAL
+// OFFSET: 0x00944C30
 static int32_t Script_QuestFlagsPVP(lua_State* L) {
     if (s_isPvPRealm || !(CGQuestInfo::m_questFlags & 0x2000)) {
         lua_pushnil(L);

@@ -224,13 +224,15 @@ static bool EnableMusicHandler(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// OFFSET: %0x0063FF90
+// PROVEN: d5ec65ef IDENTICAL
+// OFFSET: 0x00630B00
 static bool MaxCacheSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheSizeInBytes(SStrToInt(value));
     return true;
 }
 
-// OFFSET: %0x0063FFB0
+// PROVEN: 67d4f5cc IDENTICAL
+// OFFSET: 0x00630B20
 static bool MaxCacheableSizeInBytesHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     SE3::SetMaxCacheableSizeInBytes(SStrToInt(value));
     return true;

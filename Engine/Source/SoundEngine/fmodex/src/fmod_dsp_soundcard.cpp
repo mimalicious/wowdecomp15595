@@ -29,7 +29,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A17E50
+// PROVEN: 4ac89bf8 IDENTICAL
+// OFFSET: 0x00AD7E30
 FMOD_RESULT DSPSoundCard::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 {
     FMOD_RESULT result;
@@ -128,7 +129,8 @@ FMOD_RESULT DSPSoundCard::execute(void *inbuffer, void **outbuffer, unsigned int
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A17EE0
+// PROVEN: 90ffdf40 IDENTICAL
+// OFFSET: 0x00AD7EC0
 FMOD_RESULT DSPSoundCard::release(bool freethis)
 {
     if (mConvertBufferMemory)

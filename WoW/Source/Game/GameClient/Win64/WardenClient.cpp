@@ -73,13 +73,15 @@ CDataStore& operator>>(CDataStore& msg, CWardenKey& key) {
     return msg;
 }
 
-// OFFSET: %0x004DEAD0
+// PROVEN: 39095c57 IDENTICAL
+// OFFSET: 0x00704C50
 WardenCachedModule::WardenCachedModule() {
     this->m_size = 0;
     this->m_data = NULL;
 }
 
-// OFFSET: %0x004DEAE0
+// PROVEN: 177e2fab IDENTICAL
+// OFFSET: 0x004D8960
 WardenCachedModule::~WardenCachedModule() {
     if (this->m_data) {
         SMemFree(this->m_data, __FILE__, __LINE__, 0);

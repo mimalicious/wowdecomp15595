@@ -5,7 +5,8 @@
 ComSat::Network::Socket::~Socket() {
 }
 
-// OFFSET: %0x0097BC10
+// PROVEN: 097251a7 IDENTICAL
+// OFFSET: 0x00A3B6D0
 ComSat::Network::Socket* ComSat::Network::Socket::Create(ComSat::Allocator& allocator) {
     return new (allocator.Alloc(sizeof(ComSat::Network::SocketPosix))) ComSat::Network::SocketPosix();
 }

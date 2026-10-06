@@ -2,7 +2,8 @@
 #include "Engine/Source/Os/Time.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// OFFSET: %0x007DE290
+// PROVEN: 1a813b49 IDENTICAL
+// OFFSET: 0x0087E8C0
 float OsGetAsyncTimeSec() {
     return static_cast<float>(OsGetAsyncTimeMs()) * 0.001f;
 }
@@ -12,6 +13,7 @@ void OsTimeStartup(OsTimeManager::TimingMethod method) {
     OsTimeManagerCreate(method);
 }
 
-// OFFSET: %0x007DE2D0
+// PROVEN: 6d280427 IDENTICAL
+// OFFSET: 0x00871FE0
 void OsTimeShutdown() {
 }

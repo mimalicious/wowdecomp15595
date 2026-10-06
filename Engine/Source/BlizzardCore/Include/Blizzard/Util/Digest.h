@@ -58,7 +58,8 @@ bool Blizzard::Util::Digest<N>::operator==(const Digest& other) const {
     return memcmp(this->m_data, other.m_data, N) == 0;
 }
 
-// OFFSET: %0x00706040
+// PROVEN: 42860e12 IDENTICAL
+// OFFSET: 0x007A33A0
 template <int N>
 bool Blizzard::Util::Digest<N>::operator!=(const Digest& other) const {
     return memcmp(this->m_data, other.m_data, N) != 0;

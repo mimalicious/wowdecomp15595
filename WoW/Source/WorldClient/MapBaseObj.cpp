@@ -11,10 +11,12 @@ CMapBaseObj::CMapBaseObj() {
     this->m_flags = static_cast<MapObjFlag>(0);
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: a8266a2d IDENTICAL
+// OFFSET: 0x00847950
 void CMapBaseObj::SelectLights(CM2Lighting* lighting) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: e2a6c90a IDENTICAL
+// OFFSET: 0x00847950
 void CMapBaseObj::SelectUnderwater(CM2Lighting* lighting) {
 }

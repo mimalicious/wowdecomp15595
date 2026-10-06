@@ -337,7 +337,8 @@ static const char* s_cameraTerrainTiltStateDefaults[5][10][3] = {
     },
 };
 
-// OFFSET: %0x00444D60
+// PROVEN: 669754d9 IDENTICAL
+// OFFSET: 0x0043A5E0
 static bool ValidateCameraView(CVar* var, const char* oldValue, const char* value, void* arg) {
     float view = SStrToFloat(value);
 
@@ -349,7 +350,8 @@ static bool ValidateCameraView(CVar* var, const char* oldValue, const char* valu
     return false;
 }
 
-// OFFSET: %0x00444DC0
+// PROVEN: 45d370ca IDENTICAL
+// OFFSET: 0x0043A640
 static bool ValidateCameraDistance(CVar* var, const char* oldValue, const char* value, void* arg) {
     float distance = SStrToFloat(value);
 
@@ -361,7 +363,8 @@ static bool ValidateCameraDistance(CVar* var, const char* oldValue, const char* 
     return false;
 }
 
-// OFFSET: %0x00444E20
+// PROVEN: d4087f33 IDENTICAL
+// OFFSET: 0x0043A6A0
 static bool ValidateCameraPitch(CVar* var, const char* oldValue, const char* value, void* arg) {
     float minPitch = MIN_PITCH_ANGLE * 57.29578f;
     float maxPitch = MAX_PITCH_ANGLE * 57.29578f;
@@ -375,7 +378,8 @@ static bool ValidateCameraPitch(CVar* var, const char* oldValue, const char* val
     return false;
 }
 
-// OFFSET: %0x00444EA0
+// PROVEN: e44386eb IDENTICAL
+// OFFSET: 0x0043A720
 static bool ValidateCameraTime(CVar* var, const char* oldValue, const char* value, void* arg) {
     float time = SStrToFloat(value);
 
@@ -411,7 +415,8 @@ static bool ValidateCameraAngularSpeed(CVar* var, const char* oldValue, const ch
     return false;
 }
 
-// OFFSET: %0x00444FC0
+// PROVEN: 09493d2b IDENTICAL
+// OFFSET: 0x0043A840
 static bool ValidateCameraLinearSpeed(CVar* var, const char* oldValue, const char* value, void* arg) {
     float speed = SStrToFloat(value);
 
@@ -423,7 +428,8 @@ static bool ValidateCameraLinearSpeed(CVar* var, const char* oldValue, const cha
     return false;
 }
 
-// OFFSET: %0x00445020
+// PROVEN: 30fce973 IDENTICAL
+// OFFSET: 0x0043A8A0
 static bool ValidateCameraSmoothStyle(CVar* var, const char* oldValue, const char* value, void* arg) {
     float style = SStrToFloat(value);
 

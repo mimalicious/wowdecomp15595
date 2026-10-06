@@ -15,20 +15,23 @@ CLCDPage::CLCDPage() : m_dwStartTime(0), m_dwEllapsedTime(0), m_dwExpirationTime
 CLCDPage::~CLCDPage() {
 }
 
-// OFFSET: %0x00A724F0
+// PROVEN: e14fb471 IDENTICAL
+// OFFSET: 0x00B40200
 void CLCDPage::OnUpdate(uint32_t timestamp) {
     this->m_dwEllapsedTime = timestamp - this->m_dwStartTime;
     CLCDCollection::OnUpdate(timestamp);
 }
 
-// OFFSET: %0x00A72510
+// PROVEN: 773af577 IDENTICAL
+// OFFSET: 0x00B40220
 void CLCDPage::SetExpiration(DWORD milliseconds) {
     this->m_dwStartTime = GetTickCount();
     this->m_dwEllapsedTime = 0;
     this->m_dwExpirationTime = milliseconds;
 }
 
-// OFFSET: %0x00A72540
+// PROVEN: 71f67c8b IDENTICAL
+// OFFSET: 0x00B40250
 int32_t CLCDPage::HasExpired() {
     if (this->m_dwStartTime && this->m_dwExpirationTime && this->m_dwEllapsedTime < this->m_dwExpirationTime) {
         return 0;
@@ -37,15 +40,18 @@ int32_t CLCDPage::HasExpired() {
     return 1;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 4f88c1c3 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDPage::OnLCDButtonDown(int32_t button) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: a2e85a41 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDPage::OnLCDButtonUp(int32_t button) {
 }
 
-// OFFSET: %0x00A72560
+// PROVEN: f5e39fac IDENTICAL
+// OFFSET: 0x00B40270
 void CLCDPage::SetPageBackground(COLORREF color) {
     this->m_crPageBackground = color;
     this->m_bUseColorBackground = 1;

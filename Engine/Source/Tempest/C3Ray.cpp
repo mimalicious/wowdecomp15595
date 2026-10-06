@@ -1,7 +1,8 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C3Ray.h"
 
-// OFFSET: %0x0069C0F0
+// PROVEN: 0bad2190 IDENTICAL
+// OFFSET: 0x00585390
 C3Ray::C3Ray(const C3Vector& origin, const C3Vector& dir) {
     this->origin = origin;
     this->dir = dir;

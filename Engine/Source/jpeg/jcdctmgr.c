@@ -50,7 +50,8 @@ typedef my_fdct_controller * my_fdct_ptr;
  * first scan.  Hence all components should be examined here.
  */
 
-// OFFSET: %0x00A94A80
+// PROVEN: 0cded44d IDENTICAL
+// OFFSET: 0x00B62830
 static void start_pass_fdctmgr(j_compress_ptr cinfo) {
   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;
   int ci, qtblno, i;
@@ -178,7 +179,8 @@ static void start_pass_fdctmgr(j_compress_ptr cinfo) {
  */
 
 /* This version is used for integer DCT implementations. */
-// OFFSET: %0x00A94D70
+// PROVEN: 6b33cc4d IDENTICAL
+// OFFSET: 0x00B62B20
 static void forward_DCT(j_compress_ptr cinfo, jpeg_component_info * compptr, JSAMPARRAY sample_data, JBLOCKROW coef_blocks, JDIMENSION start_row, JDIMENSION start_col, JDIMENSION num_blocks) {
   /* This routine is heavily used, so it's worth coding it tightly. */
   my_fdct_ptr fdct = (my_fdct_ptr) cinfo->fdct;
@@ -334,7 +336,8 @@ static void forward_DCT_float(j_compress_ptr cinfo, jpeg_component_info * comppt
  * Initialize FDCT manager.
  */
 
-// OFFSET: %0x00A95630
+// PROVEN: a63e7c27 IDENTICAL
+// OFFSET: 0x00B633E0
 void jinit_forward_dct(j_compress_ptr cinfo) {
   my_fdct_ptr fdct;
   int i;

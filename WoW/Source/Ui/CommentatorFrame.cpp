@@ -186,7 +186,8 @@ void CGCommentator::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_COMMENTATOR_SKIRMISH_QUEUE_RESULT2);
 }
 
-// OFFSET: %0x008837D0
+// PROVEN: 1e6fb3f6 IDENTICAL
+// OFFSET: 0x009280A0
 void CommentatorInstanceKey::Write(CDataStore* msg) const {
     msg->Put(this->unk_0000);
     msg->Put(static_cast<uint16_t>(this->unk_0008));
@@ -213,7 +214,8 @@ int32_t CGCommentator::OnSkirmishPlayersModeState(void* param, NETMESSAGE msgId,
     return 1;
 }
 
-// OFFSET: %0x00883940
+// PROVEN: 83187496 IDENTICAL
+// OFFSET: 0x00928210
 void CGCommentator::SetPosYawPitch(const C3Vector& position, float facing, float pitch) {
     if (!CGWorldFrame::s_currentWorldFrame) {
         return;

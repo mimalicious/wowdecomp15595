@@ -302,13 +302,15 @@ void Script_SendUniqueSignalToAllUnits(int32_t signal) {
     }
 }
 
-// OFFSET: %0x00464770
+// PROVEN: 0db9253a IDENTICAL
+// OFFSET: 0x0045AB10
 void Script_SendUniqueSignal(int32_t signal) {
     WOWGUID guid = WOWGUID();
     Script_SendUniqueSignal(guid, signal);
 }
 
-// OFFSET: %0x00463D70
+// PROVEN: def28bb6 IDENTICAL
+// OFFSET: 0x004598F0
 void Script_SendUniqueSignals() {
     uint32_t count = s_uniqueSignals.Count();
 
@@ -326,7 +328,8 @@ void Script_SendUniqueSignals() {
 }
 
 
-// OFFSET: %0x0045ADD0
+// PROVEN: 9dc2d163 IDENTICAL
+// OFFSET: 0x00450B20
 static int32_t UnitFieldChangedHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     Script_SendUnitSignal(guid, fieldOffset >> 2);
     return 1;
@@ -394,7 +397,8 @@ void ScriptEventsUnregisterUnit(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: %0x00456550
+// PROVEN: 64f52559 IDENTICAL
+// OFFSET: 0x0044BE10
 void UnitNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGGameUI::UnitNameUpdate(guid);
@@ -922,7 +926,8 @@ char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
     return s_tokenIDs;
 }
 
-// OFFSET: %0x0045A9E0
+// PROVEN: 3e530f3f IDENTICAL
+// OFFSET: 0x00450760
 void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal) {
     int32_t count;
     char** tokens = Script_GetTokenIDsFromGUID(guid, &count);

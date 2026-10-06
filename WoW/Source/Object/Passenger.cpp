@@ -3,7 +3,8 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 
-// OFFSET: %0x0041FD90
+// PROVEN: 78fb98d5 IDENTICAL
+// OFFSET: 0x0041F8E0
 CPassenger::CPassenger(const WOWGUID& transportGuid, const C3Vector& position, const WOWGUID& ownerGuid) : m_transportGuid(transportGuid), m_position(position) {
     this->m_facing = 0.0f;
     this->m_pitch = 0.0f;

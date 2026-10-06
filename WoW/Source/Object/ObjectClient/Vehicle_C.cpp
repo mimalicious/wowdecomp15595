@@ -30,7 +30,8 @@ uint32_t CVehicle_C::IsSpecialBoneAnimPlaying() const {
     return this->m_playingBoneAnims[0] & 0x4000000;
 }
 
-// OFFSET: %0x005F6160
+// PROVEN: 22662041 IDENTICAL
+// OFFSET: 0x005E9A40
 int32_t CVehicle_C::InstallBoneAnimListener(WOWGUID guid, uint32_t boneId, void (*callback)(CGUnit_C* unit, int32_t& a2, TSGrowableArray<CVehiclePassenger_C*>& passengers)) {
     if (boneId >= 35) {
         boneId = 26;
@@ -59,7 +60,8 @@ void CVehicle_C::UninstallBoneAnimListener(WOWGUID guid) {
     }
 }
 
-// OFFSET: %0x005F6200
+// PROVEN: 381dbad4 IDENTICAL
+// OFFSET: 0x005E9AE0
 void CVehicle_C::SetBoneAnimForceFacing(WOWGUID guid, uint32_t boneId) {
     if (boneId >= 35) {
         boneId = 26;
@@ -124,7 +126,8 @@ int32_t CVehicle_C::IsSuppressingCameraPitchWhileMouseAiming() const {
     return 0;
 }
 
-// OFFSET: %0x005F6120
+// PROVEN: 91856d3a IDENTICAL
+// OFFSET: 0x005E9A00
 uint32_t CVehicle_C::IsBoneAnimPlaying(uint32_t bone) const {
     if (bone == 26) {
         return 0;
@@ -440,7 +443,8 @@ void CVehicle_C::UpdateFreeSeatMask() {
     }
 }
 
-// OFFSET: %0x005F71C0
+// PROVEN: 2f5ccded IDENTICAL
+// OFFSET: 0x005EADB0
 int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeat(int32_t virtualSeat, const CVehicle_C*& vehicle, uint8_t& seat) const {
     return this->GetVehicleAndSeatFromVirtualSeatsRemaining(virtualSeat, vehicle, seat);
 }

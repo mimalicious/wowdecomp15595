@@ -388,7 +388,8 @@ uint32_t CBitOutput::GetTotalBytes() {
     return static_cast<uint32_t>(this->m_currdest - this->m_basedest);
 }
 
-// OFFSET: %0x004BFDF0
+// PROVEN: 1c521f65 IDENTICAL
+// OFFSET: 0x004B9630
 void CBitOutput::OutputBits(uint32_t value, uint32_t count) {
     this->m_rack |= value << this->m_rackbits;
     this->m_rackbits += count;
@@ -404,7 +405,8 @@ void CBitOutput::OutputBits(uint32_t value, uint32_t count) {
     }
 }
 
-// OFFSET: %0x004BFE40
+// PROVEN: 310e6f34 IDENTICAL
+// OFFSET: 0x004B9680
 void CBitOutput::Pad() {
     while (this->m_rackbits) {
         if (this->m_bytesleft) {
@@ -713,7 +715,8 @@ uint32_t ImaAdpcmDecompress(int16_t* dest, uint32_t destsize, const uint8_t* sou
 
 }
 
-// OFFSET: %0x004BFE80
+// PROVEN: 02937410 IDENTICAL
+// OFFSET: 0x004B96C0
 void CHuffmanEncoder::EncodeSymbol(CBitOutput* output, int32_t symbol) {
     HUFFNODE* node = this->m_symbol[symbol];
     uint32_t value = 0;
@@ -748,7 +751,8 @@ static voidpf ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     return result;
 }
 
-// OFFSET: %0x004C0380
+// PROVEN: 9498b4a3 IDENTICAL
+// OFFSET: 0x004B9BC0
 static void ZlibFree(voidpf opaque, voidpf address) {
     ZLIBBUFFER* buffer = static_cast<ZLIBBUFFER*>(opaque);
 
@@ -848,7 +852,8 @@ int32_t STORMAPI zlib_uncompress(uint8_t* dest, uint32_t* destLen, const uint8_t
     return inflateEnd(&stream);
 }
 
-// OFFSET: %0x004C05C0
+// PROVEN: e8068f5c IDENTICAL
+// OFFSET: 0x004B9E00
 int32_t ZlibDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     uint32_t size = *destsize;
 
@@ -1051,7 +1056,8 @@ void Bzip2Compress(void* dest, uint32_t* destsize, const void* source, uint32_t 
     *hint = 0;
 }
 
-// OFFSET: %0x004C0990
+// PROVEN: 80e13332 IDENTICAL
+// OFFSET: 0x007AAAA0
 int32_t Bzip2Decompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     return BZ2_bzBuffToBuffDecompress(static_cast<char*>(dest), destsize, static_cast<char*>(const_cast<void*>(source)), sourcesize, 0, 0) == BZ_OK;
 }
@@ -1377,7 +1383,8 @@ uint32_t CHuffmanEncoder::Compress(CBitOutput* output, const void* source, uint3
     return output->GetTotalBytes();
 }
 
-// OFFSET: %0x004C1210
+// PROVEN: 174ee4de IDENTICAL
+// OFFSET: 0x004BAAD0
 CHuffman::CHuffman() {
     this->m_changesequence = 1;
     this->m_nodesused = 0;
@@ -1390,7 +1397,8 @@ CHuffmanDecoder::CHuffmanDecoder() {
     }
 }
 
-// OFFSET: %0x004C1680
+// PROVEN: 3a074d68 IDENTICAL
+// OFFSET: 0x004BAF40
 int32_t HuffmanDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     CBitInput input(source);
     CHuffmanDecoder decoder;

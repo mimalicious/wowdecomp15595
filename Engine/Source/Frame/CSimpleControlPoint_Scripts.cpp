@@ -142,7 +142,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetOrder", &Script_GetOrder },
 };
 
-// OFFSET: %0x0054B6D0
+// PROVEN: 0bc37aac IDENTICAL
+// OFFSET: 0x0053B9C0
 void CSimpleControlPoint::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

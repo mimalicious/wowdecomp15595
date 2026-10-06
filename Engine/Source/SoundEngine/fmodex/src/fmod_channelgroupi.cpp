@@ -61,7 +61,8 @@ FMOD_RESULT ChannelGroupI::validate(ChannelGroup *channelgroup, ChannelGroupI **
 ]
 */
 
-// OFFSET: %0x009CFDE0
+// PROVEN: 1ec93af0 IDENTICAL
+// OFFSET: 0x00A8F760
 FMOD_RESULT ChannelGroupI::release()
 {  
     if (this == mSystem->mChannelGroup)
@@ -87,7 +88,8 @@ FMOD_RESULT ChannelGroupI::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFCB0
+// PROVEN: 396c0375 IDENTICAL
+// OFFSET: 0x00A8F630
 FMOD_RESULT ChannelGroupI::releaseInternal()
 {
     /*
@@ -201,7 +203,8 @@ FMOD_RESULT ChannelGroupI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFB40
+// PROVEN: 1e06f163 IDENTICAL
+// OFFSET: 0x00A8F4C0
 FMOD_RESULT ChannelGroupI::setVolume(float volume)
 {
     FMOD_RESULT result;
@@ -1414,7 +1417,8 @@ FMOD_RESULT ChannelGroupI::getName(char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFB20
+// PROVEN: 858901ce IDENTICAL
+// OFFSET: 0x00A8F4A0
 FMOD_RESULT ChannelGroupI::getNumChannels(int *numchannels)
 {
     if (!numchannels)

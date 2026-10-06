@@ -105,7 +105,8 @@ typedef my_marker_writer * my_marker_ptr;
  */
 
 /* Emit a byte */
-// OFFSET: %0x00A91500
+// PROVEN: 89a0e368 IDENTICAL
+// OFFSET: 0x00B5F2B0
 static void emit_byte(j_compress_ptr cinfo, int val) {
   struct jpeg_destination_mgr * dest = cinfo->dest;
 
@@ -118,7 +119,8 @@ static void emit_byte(j_compress_ptr cinfo, int val) {
 
 
 /* Emit a marker code */
-// OFFSET: %0x00A91540
+// PROVEN: feb37b43 IDENTICAL
+// OFFSET: 0x00B5F2F0
 static void emit_marker(j_compress_ptr cinfo, JPEG_MARKER mark) {
   emit_byte(cinfo, 0xFF);
   if (cinfo->error_flag)
@@ -552,7 +554,8 @@ static void write_marker_header(j_compress_ptr cinfo, int marker, unsigned int d
 }
 
 /* Emit one byte of marker parameters following write_marker_header */
-// OFFSET: %0x00A91F20
+// PROVEN: d713666b IDENTICAL
+// OFFSET: 0x00B5FCD0
 static void write_marker_byte(j_compress_ptr cinfo, int val) {
   emit_byte(cinfo, val);
 }
@@ -714,7 +717,8 @@ static void write_scan_header(j_compress_ptr cinfo) {
  * Write datastream trailer.
  */
 
-// OFFSET: %0x00A921D0
+// PROVEN: aef8bcac IDENTICAL
+// OFFSET: 0x00B5FF80
 static void write_file_trailer(j_compress_ptr cinfo) {
   emit_marker(cinfo, M_EOI);
 }

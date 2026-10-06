@@ -27,7 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3B800
+// PROVEN: 7f196b5a IDENTICAL
+// OFFSET: 0x00AFAD20
 FMOD_RESULT OutputOpenAL::setPropertiesEAX2(const FMOD_REVERB_PROPERTIES *prop)
 {
     GUID                   bufferGUID;

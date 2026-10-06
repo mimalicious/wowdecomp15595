@@ -127,7 +127,8 @@ FMOD_RESULT OutputSoftware::init(int maxchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A07DB0
+// PROVEN: 241d07d6 IDENTICAL
+// OFFSET: 0x00AC7DA0
 FMOD_RESULT OutputSoftware::release()
 {
     if (mChannelPool)

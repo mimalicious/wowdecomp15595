@@ -70,7 +70,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetDrawEdge", &Script_GetDrawEdge },
 };
 
-// OFFSET: %0x0093F510
+// PROVEN: 7131e6d6 IDENTICAL
+// OFFSET: 0x009FE920
 void CGCooldown::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

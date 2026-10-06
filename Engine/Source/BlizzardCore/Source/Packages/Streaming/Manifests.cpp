@@ -31,7 +31,8 @@ Blizzard::Streaming::ManifestInfo* Blizzard::Streaming::ManifestInfo::s_instance
 // STATIC: #0x00B38660
 static Blizzard::Streaming::Manifests::ServerItem s_serverItem;
 
-// OFFSET: %0x005A3BF0
+// PROVEN: fab8fff7 IDENTICAL
+// OFFSET: 0x006705F0
 bool Blizzard::Streaming::Manifests::ManifestItem::HandleTag(const char* tag, const char* value) {
     return false;
 }
@@ -213,7 +214,8 @@ Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 Blizzard::Streaming::Manifests::ParameterItem::ParameterItem() {
 }
 
-// OFFSET: %0x00726E20
+// PROVEN: f733ec05 IDENTICAL
+// OFFSET: 0x007C6030
 int32_t Blizzard::Streaming::Manifests::ServerItem::GetUsage(Blizzard::Time::Timestamp time) {
     int32_t usage = 0;
 
@@ -400,7 +402,8 @@ bool Blizzard::Streaming::FileManifest::SplitServerItem(char* line, std::string&
     return true;
 }
 
-// OFFSET: %0x0071C8A0
+// PROVEN: f41f98f2 IDENTICAL
+// OFFSET: 0x007BB4B0
 int32_t Blizzard::Streaming::Manifests::FileItem::GetContentId() {
     return atoi(this->m_fileVersion.c_str());
 }
@@ -477,7 +480,8 @@ void Blizzard::Streaming::Manifests::ServerItem::InsertUsageSlot(UsageSlot& slot
     }
 }
 
-// OFFSET: %0x0073B0A0
+// PROVEN: d3f26c76 IDENTICAL
+// OFFSET: 0x007D9AF0
 void Blizzard::Streaming::Manifests::ServerItem::InsertTimeslot(TimeslotItem* timeslot) {
     UsageSlot slot;
 
@@ -817,7 +821,8 @@ Blizzard::Streaming::ManifestInfo::~ManifestInfo() {
 Blizzard::Streaming::ManifestRandomNumberGenerator::~ManifestRandomNumberGenerator() {
 }
 
-// OFFSET: %0x0070E730
+// PROVEN: 35575275 IDENTICAL
+// OFFSET: 0x007AB950
 int32_t Blizzard::Streaming::ManifestRandomNumberGenerator::RandomGenerator(int32_t range) {
     return rand() % range;
 }
@@ -1603,7 +1608,8 @@ int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// OFFSET: %0x00724C90
+// PROVEN: d6978e4c IDENTICAL
+// OFFSET: 0x007C3BD0
 void System_Streaming::HttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }
@@ -1618,7 +1624,8 @@ bool System_Streaming::HttpCallback::ReceivedData(const void* data, int32_t size
     return true;
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: ebd8079b IDENTICAL
+// OFFSET: 0x00A3AA30
 bool System_Streaming::HttpCallback::ShouldBlock() {
     return true;
 }

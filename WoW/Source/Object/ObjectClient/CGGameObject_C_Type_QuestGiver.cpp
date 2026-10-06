@@ -8,7 +8,8 @@ CGGameObject_C_Type_QuestGiver::CGGameObject_C_Type_QuestGiver(CGGameObject_C* o
     this->m_interactDistance = 5.5555553f;
 }
 
-// OFFSET: %0x005A87E0
+// PROVEN: 829d01df IDENTICAL
+// OFFSET: 0x0059FD70
 int32_t CGGameObject_C_Type_QuestGiver::CanChangeCursor() const {
     int32_t cursor = this->m_owner->GetQuestGiverCursor(!this->CanUseNow(NULL, NULL, NULL));
 

@@ -65,7 +65,8 @@ bool Blizzard::Mopaq::SFileGetArchiveFullName(System_SFile::ARCHIVEREC* handle, 
     return true;
 }
 
-// OFFSET: %0x007132D0
+// PROVEN: d9c6f75e IDENTICAL
+// OFFSET: 0x007B0E40
 bool Blizzard::Mopaq::SFileUnloadFile(void* data) {
     SMemFree(data, __FILE__, __LINE__, 0);
     return true;

@@ -311,7 +311,8 @@ bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const cha
     return true;
 }
 
-// OFFSET: %0x00825E30
+// PROVEN: 8ddd94c5 IDENTICAL
+// OFFSET: 0x008C4260
 bool GuildShowOfflineCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGuildInfo::SetShowOffline(StringToBOOL(value));
     return true;
@@ -323,7 +324,8 @@ bool CVarHandler_guildRecruitmentChannel(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: %0x00825E70
+// PROVEN: 72e8cfdc IDENTICAL
+// OFFSET: 0x008C4280
 bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!oldValue || SStrToInt(oldValue) != SStrToInt(value)) {
         CGUnit_C::NamePlateUpdateColor(true);
@@ -332,7 +334,8 @@ bool ShowClassColorInNameplateCallback(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// OFFSET: %0x00825EB0
+// PROVEN: 4625f6c8 IDENTICAL
+// OFFSET: 0x008C42C0
 bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (CGGameUI::m_initialized) {
         CGCalendar::SetFilter(var, SStrToInt(value));
@@ -431,7 +434,8 @@ bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// OFFSET: %0x00830EF0
+// PROVEN: 09d7d072 IDENTICAL
+// OFFSET: 0x008CF190
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGameUI::UpdateThreatWarningEnabled(SStrToInt(value));
     return true;

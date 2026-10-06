@@ -15,7 +15,8 @@ CiRect operator&(const CiRect& l, const CiRect& r) {
     return result;
 }
 
-// OFFSET: %0x006DD660
+// PROVEN: 38ae961a IDENTICAL
+// OFFSET: 0x0077CE60
 CiRect CiRect::operator&=(const CiRect& r) {
     *this = *this & r;
     return *this;

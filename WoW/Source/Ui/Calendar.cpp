@@ -1550,7 +1550,8 @@ CalendarDayEvent::~CalendarDayEvent() {
     }
 }
 
-// OFFSET: %0x008FF9C0
+// PROVEN: c0e438d6 IDENTICAL
+// OFFSET: 0x009AAB10
 static uint32_t EncodeDate(int32_t month, int32_t monthDay, int32_t year) {
     WowTime date;
     date.m_month = month;
@@ -3067,7 +3068,8 @@ void CGCalendar::GuildChanged() {
     CGCalendar::UpdateDisplayList(true);
 }
 
-// OFFSET: %0x0090A820
+// PROVEN: 979af840 IDENTICAL
+// OFFSET: 0x009B5B70
 void CGCalendar::InsertLockoutEvent(int32_t mapID, int32_t difficulty, uint64_t instanceID, uint32_t time) {
     void* mem = SMemAlloc(sizeof(CalendarDayEvent), __FILE__, __LINE__, 0);
     CalendarDayEvent* event = mem ? new (mem) CalendarDayEvent() : NULL;
@@ -3594,6 +3596,7 @@ void CGCalendar::ProcessEventUpdatedAlert(CDataStore* msg, uint8_t* clearPending
     }
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 8e83d321 IDENTICAL
+// OFFSET: 0x00401000
 void CGCalendar::LeaveWorld() {
 }

@@ -2,19 +2,22 @@
 #include <cstdint>
 #include "Engine/Source/Base/BitArray.h"
 
-// OFFSET: %0x007D8060
+// PROVEN: b4353a35 IDENTICAL
+// OFFSET: 0x00872CF0
 CBitArray::CBitArray() {
     this->m_array = NULL;
     this->m_size = 0;
     this->unk_0008 = false;
 }
 
-// OFFSET: %0x007D8070
+// PROVEN: 29a84aa2 IDENTICAL
+// OFFSET: 0x00872D00
 int32_t CBitArray::Get(uint32_t bitIdx) const {
     return (this->m_array[bitIdx >> 3] & (1 << (bitIdx & 7))) != 0;
 }
 
-// OFFSET: %0x007D80A0
+// PROVEN: a7b251e8 IDENTICAL
+// OFFSET: 0x00872D30
 void CBitArray::Set(uint32_t bitIdx, bool value) {
     char* byte = &this->m_array[bitIdx >> 3];
     char mask = 1 << (bitIdx & 7);

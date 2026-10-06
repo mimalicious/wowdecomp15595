@@ -108,7 +108,8 @@ bool VoiceActivationSensitivityHandler(CVar* var, const char* oldValue, const ch
     return true;
 }
 
-// OFFSET: %0x004E2AD0
+// PROVEN: bc07ee84 IDENTICAL
+// OFFSET: 0x004DCA40
 bool PushToTalkButtonHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     AddComSatEvent(10, 0u, 0);
 

@@ -148,7 +148,8 @@ static bool MouseSpeedCallback(CVar* var, const char* oldValue, const char* valu
     return true;
 }
 
-// OFFSET: %0x004015E0
+// PROVEN: fccc02c2 IDENTICAL
+// OFFSET: 0x00401420
 static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enable = SStrToInt(value);
 
@@ -165,7 +166,8 @@ static bool ErrorDisplayCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: %0x00401630
+// PROVEN: 98de87a0 IDENTICAL
+// OFFSET: 0x00401470
 static bool ErrorDisplayShowCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t show = SStrToInt(value);
 
@@ -340,7 +342,8 @@ static int32_t ErrorDisplaySetFilter(const char* filter) {
     return 1;
 }
 
-// OFFSET: %0x00403FF0
+// PROVEN: 14ea5daa IDENTICAL
+// OFFSET: 0x00403C90
 static bool ErrorDisplayFilterCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!ErrorDisplaySetFilter(value)) {
         return false;
@@ -538,7 +541,8 @@ bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg)
     return true;
 }
 
-// OFFSET: %0x00401D50
+// PROVEN: b4b329b6 IDENTICAL
+// OFFSET: 0x00401AB0
 bool TextureCacheSizeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t size = SStrToInt(value) << 20;
     int32_t maxSize = TextureCacheGetMaxSize();

@@ -45,7 +45,8 @@ extern "C"
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A103E0
+// PROVEN: b19aa2d5 IDENTICAL
+// OFFSET: 0x00AD03D0
 FMOD_RESULT DSPConnectionI::init(DSP_LEVEL_TYPE * &levelmemory, int maxoutputlevels, int maxinputlevels)
 {  
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -183,7 +184,8 @@ FMOD_RESULT DSPConnectionI::getOutput(DSPI **output)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A10460
+// PROVEN: 5570d6e3 IDENTICAL
+// OFFSET: 0x00AD0450
 FMOD_RESULT DSPConnectionI::reset()
 {
     int count, count2;
@@ -223,7 +225,8 @@ FMOD_RESULT DSPConnectionI::reset()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A10500
+// PROVEN: ad644c9b IDENTICAL
+// OFFSET: 0x00AD04F0
 FMOD_RESULT DSPConnectionI::setUnity()
 {
     int count, count2;
@@ -1377,7 +1380,8 @@ FMOD_RESULT DSPConnectionI::mixAndRamp(float * FMOD_RESTRICT outbuffer, float * 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A106D0
+// PROVEN: d44f9259 IDENTICAL
+// OFFSET: 0x00AD06C0
 FMOD_RESULT DSPConnectionI::rampTo()
 {
     int   count;
@@ -1453,7 +1457,8 @@ FMOD_RESULT DSPConnectionI::rampTo()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A108C0
+// PROVEN: 6c537c29 IDENTICAL
+// OFFSET: 0x00AD08B0
 FMOD_RESULT DSPConnectionI::checkUnity(int outchannels, int inchannels)
 {
     int count, count2;
@@ -1891,7 +1896,8 @@ FMOD_RESULT DSPConnectionI::setPan(float pan, int outchannels, int inchannels, F
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A10F90
+// PROVEN: c1545346 IDENTICAL
+// OFFSET: 0x00AD0F80
 FMOD_RESULT DSPConnectionI::setLevels(float *levels, int numinputlevels)
 {
     int count, count2;
@@ -1975,7 +1981,8 @@ FMOD_RESULT DSPConnectionI::setLevels(float *levels, int numinputlevels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A110E0
+// PROVEN: 28c176d5 IDENTICAL
+// OFFSET: 0x00AD10D0
 FMOD_RESULT DSPConnectionI::getLevels(float *levels, int numinputlevels)
 {
     int count, count2;
@@ -2022,7 +2029,8 @@ FMOD_RESULT DSPConnectionI::getLevels(float *levels, int numinputlevels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A10F40
+// PROVEN: 806c74ff IDENTICAL
+// OFFSET: 0x00AD0F30
 FMOD_RESULT DSPConnectionI::setMix(float volume)
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -2201,7 +2209,8 @@ FMOD_RESULT DSPConnectionI::getLevels(FMOD_SPEAKER speaker, float *levels, int n
 ]
 */
 #ifdef FMOD_SUPPORT_SOFTWARE
-// OFFSET: %0x00A11170
+// PROVEN: 01527c06 IDENTICAL
+// OFFSET: 0x00AD1160
 FMOD_RESULT DSPConnectionI::copy(DSPConnectionI *source)
 {
     int count, count2;

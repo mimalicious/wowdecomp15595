@@ -3,7 +3,8 @@
 // STATIC: %0x00B43BD8
 const DBCMeta GuildColorBackgroundRec::s_meta = { "DBFilesClient\\GuildColorBackground.dbc", 4, 8, GuildColorBackgroundRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 3380f664 IDENTICAL
+// OFFSET: 0x00401000
 void GuildColorBackgroundRec::FixupStrings(void* record, const char* strings) {
 }
 

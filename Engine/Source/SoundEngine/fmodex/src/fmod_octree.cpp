@@ -209,7 +209,8 @@ Octree::~Octree()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A142D0
+// PROVEN: cef61f68 IDENTICAL
+// OFFSET: 0x00AD42C0
 void Octree::insertItem(OctreeNode* item)
 {
 //    checkTree(mRoot);
@@ -265,7 +266,8 @@ void Octree::insertItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A14420
+// PROVEN: 9a5c00b4 IDENTICAL
+// OFFSET: 0x00AD4410
 void Octree::deleteItem(OctreeNode* item)
 {
     checkTree(mRoot);
@@ -422,7 +424,8 @@ void Octree::deleteItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A145B0
+// PROVEN: 6f079d7c IDENTICAL
+// OFFSET: 0x00AD45A0
 void Octree::updateItem(OctreeNode* item)
 {
     // this function must be called if an items aabb has been changed.
@@ -464,7 +467,8 @@ void Octree::updateItem(OctreeNode* item)
     insertItem(item);
 }
 
-// OFFSET: %0x00A132B0
+// PROVEN: 47deab8a IDENTICAL
+// OFFSET: 0x00AD32A0
 void Octree::getAABB(FMOD_AABB* aabb)
 {
     if (mRoot)
@@ -485,7 +489,8 @@ void Octree::getAABB(FMOD_AABB* aabb)
     }
 }
 
-// OFFSET: %0x00A13E40
+// PROVEN: dfa9bf7f IDENTICAL
+// OFFSET: 0x00AD3E30
 void Octree::addInternalNode(OctreeNode* item)
 {
     ASSERT(item);
@@ -1437,7 +1442,8 @@ OctreeNode* Octree::getFreeNode()
     return node;
 }
 
-// OFFSET: %0x00A133B0
+// PROVEN: d80f1c2b IDENTICAL
+// OFFSET: 0x00AD33A0
 void Octree::adjustAABBs(OctreeNode* node)
 {
     while (node)
@@ -1508,7 +1514,8 @@ void Octree::removeListItem(OctreeNode* node)
     node->flags &= ~OCTREE_FLAG_EXTRA_NODE;
 }
 
-// OFFSET: %0x00A13670
+// PROVEN: 63addc32 IDENTICAL
+// OFFSET: 0x00AD3660
 void Octree::addListItem(OctreeNode* list, OctreeNode* node)
 {
     // add to list, sorted by extent

@@ -9,7 +9,8 @@ PassGlowBase::PassGlowBase(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, 
     this->m_color = CImVector(0, 0, 0, 0);
 }
 
-// OFFSET: %0x008031C0
+// PROVEN: bd74b2a8 IDENTICAL
+// OFFSET: 0x0089EA90
 void PassGlowFade::BeginFadeOut() {
     this->m_fadingOut = true;
 }

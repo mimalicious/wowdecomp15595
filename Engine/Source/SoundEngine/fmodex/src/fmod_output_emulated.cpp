@@ -27,7 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F5D0
+// PROVEN: b0f0449f IDENTICAL
+// OFFSET: 0x00ACF5B0
 OutputEmulated::OutputEmulated()
 {
     FMOD_memset(&mDescription, 0, sizeof(FMOD_OUTPUT_DESCRIPTION_EX));
@@ -116,7 +117,8 @@ FMOD_RESULT OutputEmulated::init(int maxchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F6F0
+// PROVEN: 89ed0ff1 IDENTICAL
+// OFFSET: 0x00ACF6D0
 FMOD_RESULT OutputEmulated::release()
 {
     if (mChannelPool)

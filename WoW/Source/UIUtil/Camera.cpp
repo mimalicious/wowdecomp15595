@@ -1409,7 +1409,8 @@ void CGCamera::UpdateYaw(float delta) {
     this->m_yaw = UnwrapAngleToward(this->m_smoothYaw.m_target, CMath::normalizeangle0to2pi_(this->m_yaw + delta), -3.1415927f, 3.1415927f);
 }
 
-// OFFSET: %0x00445E50
+// PROVEN: 8a746399 IDENTICAL
+// OFFSET: 0x0043AA00
 int32_t CGCamera::CCommand_PitchLimit(const char* command, const char* arguments) {
     MAX_PITCH_ANGLE = SStrToFloat(arguments) * 0.017453292f;
     MIN_PITCH_ANGLE = SStrToFloat(arguments) * -0.017453292f;
@@ -1421,7 +1422,8 @@ uint32_t CGCamera::GetCollisionQueryFlags() {
     return s_cameraWaterCollision->m_intValue ? 0x120171 : 0x100171;
 }
 
-// OFFSET: %0x00446070
+// PROVEN: 71800b93 IDENTICAL
+// OFFSET: 0x0043ACA0
 float CGCamera::GetDefaultZoomMaxDistance() {
     return 50.0f;
 }
@@ -1824,7 +1826,8 @@ void CGCamera::SetDesiredVehiclePitchOffset(float offset, uint32_t startTime, ui
     }
 }
 
-// OFFSET: %0x00446480
+// PROVEN: 0837dc8b IDENTICAL
+// OFFSET: 0x0043B120
 void CGCamera::SetDesiredVehicleYawOffset(float offset, uint32_t startTime, uint32_t endTime) {
     this->m_vehicleYawStartTime = startTime;
     this->m_vehicleYawEndTime = endTime;
@@ -4126,7 +4129,8 @@ void CGCamera::RestoreSavedDistancePitch() {
     this->m_smoothPitch.m_target = pitch;
 }
 
-// OFFSET: %0x006CDE50
+// PROVEN: 0207e58d IDENTICAL
+// OFFSET: 0x0076CA20
 float CGCamera::GetDefaultZoomMinDistance() {
     return 0.0f;
 }
@@ -4145,7 +4149,8 @@ float CameraEaseInOut(float t) {
     return 0.5f - CMath::cos_(t * 3.1415927f) * 0.5f;
 }
 
-// OFFSET: %0x00448920
+// PROVEN: 98f91ed2 IDENTICAL
+// OFFSET: 0x0043E280
 void CGCamera::UpdateVehicleYawOffset(uint32_t time) {
     float t = static_cast<float>(time - this->m_vehicleYawStartTime) / static_cast<float>(this->m_vehicleYawEndTime - this->m_vehicleYawStartTime);
 

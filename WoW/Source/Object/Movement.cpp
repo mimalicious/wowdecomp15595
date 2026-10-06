@@ -174,7 +174,8 @@ void CPlayerMoveQueue::UnlinkEventById(MoveEventId eventId) {
 ClipPolygon::ClipPolygon() {
 }
 
-// OFFSET: %0x0060BED0
+// PROVEN: fb9c34ce IDENTICAL
+// OFFSET: 0x00601860
 ClipPolygon::ClipPolygon(const ClipPolygon& source) {
     this->m_count = source.m_count;
     memcpy(this->m_v, source.m_v, sizeof(C3Vector) * source.m_count);
@@ -1537,7 +1538,8 @@ int32_t CMovement_C::OnWalkSpeedChange(float value) {
     return this->ChangeWalkSpeed(value);
 }
 
-// OFFSET: %0x00580900
+// PROVEN: 7506c665 IDENTICAL
+// OFFSET: 0x00571940
 void CMovement_C::OnFeatherFall(int32_t enable) {
     this->FeatherFall(enable);
     this->PostFeatherFall();
@@ -1590,7 +1592,8 @@ void CMovement_C::SnapToSpline(const C3Vector& position, int32_t force) {
     this->ValidateWorldPosition(CPassenger::GetPosition(this->m_position));
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: bec49cf6 IDENTICAL
+// OFFSET: 0x00847950
 void CMovement_C::ValidateWorldPosition(const C3Vector& position) const {
 }
 
@@ -1774,7 +1777,8 @@ void CMovement_C::Launch(const C2Vector& direction, float speed, float verticalS
     this->m_flags = (this->m_flags & ~MOVEMENTFLAG_BACKWARD) | MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_PENDING_STOP;
 }
 
-// OFFSET: %0x00583A30
+// PROVEN: a4b44cf0 IDENTICAL
+// OFFSET: 0x00577C20
 void CMovement_C::SplineToggleEnableFlying(int32_t enable) {
     if (enable) {
         if (this->StartFlight()) {
@@ -2483,7 +2487,8 @@ static void IntersectPlanes(const C4Plane& plane0, const C4Plane& plane1, const 
     point.z = d1 * inverse.c1 + d2 * inverse.c2 + d0 * inverse.c0;
 }
 
-// OFFSET: %0x0060F2A0
+// PROVEN: 3faa2d96 IDENTICAL
+// OFFSET: 0x00604CC0
 static int32_t CheckFallingConditions(const C4Plane* planes, uint32_t count) {
     for (uint32_t i = 0; i < count; i++) {
         if (fabs(planes[i].n.z - 1.0f) < 0.00000095367432f) {
@@ -6266,7 +6271,8 @@ void CMovement_C::OnSplineUnRoot() {
     this->m_unit->UnRootEffects();
 }
 
-// OFFSET: %0x005837D0
+// PROVEN: 02accae2 IDENTICAL
+// OFFSET: 0x00576AC0
 int32_t CMovement_C::OnSplineEnableGravity(int32_t enable) {
     if (!this->EnableGravity(enable)) {
         return 0;
@@ -6276,7 +6282,8 @@ int32_t CMovement_C::OnSplineEnableGravity(int32_t enable) {
     return 1;
 }
 
-// OFFSET: %0x00583B50
+// PROVEN: 6162b1ed IDENTICAL
+// OFFSET: 0x00578F40
 void CMovement_C::OnSplineStartSwim() {
     this->StartSwim();
     this->HandlePendingActions();

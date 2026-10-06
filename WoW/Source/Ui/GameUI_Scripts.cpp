@@ -417,7 +417,8 @@ static int32_t Script_DropCursorMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00456830
+// PROVEN: ffacd99c IDENTICAL
+// OFFSET: 0x0080C320
 static int32_t Script_GetWaterDetail(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
@@ -3571,7 +3572,8 @@ static int32_t Script_IsAddOnLoadOnDemand(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 67f3440e IDENTICAL
+// OFFSET: 0x00401000
 static void VoicePushToTalkNoop() {
 }
 
@@ -3822,7 +3824,8 @@ static int32_t Script_GetInstanceLockTimeRemainingEncounter(lua_State* L) {
     return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 10a9e962 IDENTICAL
+// OFFSET: 0x00401000
 static void SummonConfirmNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
@@ -5804,57 +5807,68 @@ static int32_t Script_InteractUnit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: f51454e9 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_GetDebugStats(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: bb028e9b IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_GetExtendedItemInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 5e9564d9 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_ResetPerformanceValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: d8cb255d IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_ToggleCollision(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: e567a066 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_ToggleCollisionDisplay(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: c6ad3ca4 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TogglePerformanceDisplay(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 76ca55f6 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TogglePerformancePause(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 19aff168 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TogglePerformanceValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: ad89f463 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TogglePlayerBounds(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 16dc2e2a IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TogglePortals(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 7750e8f7 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_ToggleTris(lua_State* L) {
     return 0;
 }

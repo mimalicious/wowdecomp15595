@@ -3,7 +3,8 @@
 // STATIC: %0x00B4517C
 const DBCMeta SpellDifficultyRec::s_meta = { "DBFilesClient\\SpellDifficulty.dbc", 2, 20, SpellDifficultyRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 52c001bf IDENTICAL
+// OFFSET: 0x00401000
 void SpellDifficultyRec::FixupStrings(void* record, const char* strings) {
 }
 

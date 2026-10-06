@@ -451,7 +451,8 @@ void DayNight::CalcColors(int32_t time, CurrentLight* light, const LightParamsRe
     }
 }
 
-// OFFSET: %0x004F2B40
+// PROVEN: 42668219 IDENTICAL
+// OFFSET: 0x0064D270
 void DayNight::DNClouds::Callback_GxTex(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch && !level) {
         texelStrideInBytes = 4 * width;
@@ -838,7 +839,8 @@ void DayNight::DNClouds::SetSharpness(float sharpness) {
     }
 }
 
-// OFFSET: %0x004F3D50
+// PROVEN: fdaa1a21 IDENTICAL
+// OFFSET: 0x00650D10
 void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t* vertCount, uint32_t* indexCount) {
     static C3Vector s_verts[6] = { C3Vector(0.0f, -0.5f, 0.5f), C3Vector(0.0f, 0.5f, 0.5f), C3Vector(0.0f, -0.5f, -0.5f), C3Vector(0.0f, 0.5f, -0.5f), C3Vector(0.0f, -0.5f, 99.0f), C3Vector(0.0f, 0.5f, 99.0f) };
     static C2Vector s_texCoords[6] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f), C2Vector(0.0f, 99.0f), C2Vector(1.0f, 99.0f) };

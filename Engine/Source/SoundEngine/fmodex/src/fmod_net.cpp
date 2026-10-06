@@ -100,7 +100,8 @@ FMOD_RESULT FMOD_Net_ParseHTTPStatus(char *buf, int buflen, int *version, int *s
 */
 #define CHECK_LENGTH if (out_cnt == outbuflen) { return FMOD_ERR_INVALID_PARAM; }
 
-// OFFSET: %0x00A07B70
+// PROVEN: 134fe3b4 IDENTICAL
+// OFFSET: 0x00AC7B60
 FMOD_RESULT FMOD_Net_EncodeBase64(char *inbuf, char *outbuf, int outbuflen)
 {
     int bits = 0, char_count = 0, out_cnt = 0, c;

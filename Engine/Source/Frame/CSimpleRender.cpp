@@ -542,32 +542,38 @@ const char* LanguageProcess(const char* text) {
     }
 }
 
-// OFFSET: %0x0050C000
+// PROVEN: 5733db64 IDENTICAL
+// OFFSET: 0x004FBE30
 bool CSimpleFontString::IsA(int32_t type) {
     return type == CSimpleFontString::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x0050C030
+// PROVEN: 8be38cd3 IDENTICAL
+// OFFSET: 0x004FBE60
 bool CSimpleFontString::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFontString::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// OFFSET: %0x0050C090
+// PROVEN: 1ecc490c IDENTICAL
+// OFFSET: 0x004FBEC0
 const char* CSimpleFontString::GetObjectTypeName() {
     return CSimpleFontString::s_objectTypeName;
 }
 
-// OFFSET: %0x0050C0A0
+// PROVEN: d216810a IDENTICAL
+// OFFSET: 0x004FBED0
 int32_t CSimpleFontString::GetScriptMetaTable() {
     return CSimpleFontString::s_metatable;
 }
 
-// OFFSET: %0x00508210
+// PROVEN: 7140aebe IDENTICAL
+// OFFSET: 0x004F7FD0
 const char* CSimpleFontString::GetFontName() {
     return this->m_fontHandle ? TextBlockGetFontName(this->m_fontHandle) : NULL;
 }
 
-// OFFSET: %0x005082A0
+// PROVEN: 526e6201 IDENTICAL
+// OFFSET: 0x004F8060
 uint32_t CSimpleFontString::GetFontFlags() {
     return this->m_fontHandle ? TextBlockGetFontFlags(this->m_fontHandle) : 0;
 }
@@ -799,7 +805,8 @@ void CSimpleRender::DrawBatch(CRenderBatch* batch) {
     }
 }
 
-// OFFSET: %0x005081A0
+// PROVEN: e0d2364d IDENTICAL
+// OFFSET: 0x004F7E60
 void CSimpleFontString::RemoveShadow() {
     if (this->m_styleFlags & 0x100) {
         this->m_styleFlags &= ~0x100u;
@@ -810,7 +817,8 @@ void CSimpleFontString::RemoveShadow() {
     }
 }
 
-// OFFSET: %0x00508230
+// PROVEN: aa2f921a IDENTICAL
+// OFFSET: 0x004F7FF0
 float CSimpleFontString::GetFontHeight(bool recalculate) {
     float fontHeight = this->m_fontHeight;
 
@@ -933,7 +941,8 @@ void CSimpleFontString::QueueTextures(CRenderBatch* batch) {
     }
 }
 
-// OFFSET: %0x0050CA70
+// PROVEN: c69419c8 IDENTICAL
+// OFFSET: 0x004FBEE0
 void CSimpleFontString::Draw(CRenderBatch* batch) {
     if (this->m_fontHandle && this->m_text && *this->m_text) {
         batch->QueueFontString(this);
@@ -1035,7 +1044,8 @@ CSimpleFontString::~CSimpleFontString() {
     s_fontStringCount--;
 }
 
-// OFFSET: %0x00507990
+// PROVEN: 09a65cd4 IDENTICAL
+// OFFSET: 0x004F7630
 void CSimpleFontString::SetTextLength(uint32_t length) {
     if (length == this->m_textMaxSize) {
         return;
@@ -1064,14 +1074,16 @@ bool CSimpleFontString::SetAlphaGradient(int32_t start, int32_t length) {
     return !this->m_string || TextBlockSetGradient(this->m_string, start, length) < 2;
 }
 
-// OFFSET: %0x005082C0
+// PROVEN: 424e4fda IDENTICAL
+// OFFSET: 0x004F8080
 void CSimpleFontString::SetWidth(float width) {
     this->CLayoutFrame::SetWidth(width);
     this->m_textWidth = 0.0f;
     this->m_textHeight = 0.0f;
 }
 
-// OFFSET: %0x005082F0
+// PROVEN: f662e189 IDENTICAL
+// OFFSET: 0x004F80B0
 void CSimpleFontString::SetHeight(float height) {
     this->CLayoutFrame::SetHeight(height);
     this->m_textWidth = 0.0f;
@@ -1134,14 +1146,16 @@ uint32_t CSimpleFontString::GetNumCharsWithinWidthFromEnd(const char* text, uint
     return TextBlockGetMaxCharsWithinWidthFromEnd(this->m_fontHandle, text, this->m_layoutScale * this->GetFontHeight(true), this->m_layoutScale * maxWidth, numBytes, &extent, this->m_shadowOffset.x * this->m_layoutScale, this->m_layoutScale, 0.0f, this->m_styleFlags);
 }
 
-// OFFSET: %0x00508760
+// PROVEN: d1ad3519 IDENTICAL
+// OFFSET: 0x004F8520
 void CSimpleFontString::OnScreenSizeChanged() {
     this->m_textWidth = 0.0f;
     this->m_textHeight = 0.0f;
     this->Resize(0);
 }
 
-// OFFSET: %0x00508780
+// PROVEN: 79139458 IDENTICAL
+// OFFSET: 0x004F8540
 void CSimpleFontString::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
     if (region && region != this) {
         return;
@@ -1155,7 +1169,8 @@ void CSimpleFontString::AddAnimTranslation(CScriptRegion* region, const C2Vector
     }
 }
 
-// OFFSET: %0x0050A810
+// PROVEN: 26cb9431 IDENTICAL
+// OFFSET: 0x004FA440
 void CSimpleFontString::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (region && region != this) {
         return;
@@ -1174,7 +1189,8 @@ void CSimpleFontString::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin
     }
 }
 
-// OFFSET: %0x0050A880
+// PROVEN: a6036cbc IDENTICAL
+// OFFSET: 0x004FA4B0
 void CSimpleFontString::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (region && region != this) {
         return;
@@ -1236,7 +1252,8 @@ void CSimpleFontString::AnimData_ResetPositionData() {
     this->StoreAnimPosition();
 }
 
-// OFFSET: %0x00508B70
+// PROVEN: 719c2258 IDENTICAL
+// OFFSET: 0x004F8920
 void CSimpleFontString::ClearString() {
     this->m_textWidth = 0.0f;
     this->m_textHeight = 0.0f;
@@ -1265,7 +1282,8 @@ void CSimpleFontString::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x005096C0
+// PROVEN: 66a90242 IDENTICAL
+// OFFSET: 0x004F93E0
 int32_t CSimpleFontString::SetFont(const char* fontName, float fontHeight, uint32_t fontFlags, bool force) {
     if (!force) {
         const char* currentName = this->GetFontName();
@@ -1439,7 +1457,8 @@ float CSimpleFontString::GetTextBlockHeight() {
     return height;
 }
 
-// OFFSET: %0x0050A1A0
+// PROVEN: 5af701b0 IDENTICAL
+// OFFSET: 0x004F9DC0
 float CSimpleFontString::GetStringWidth() {
     if (this->m_textWidth == 0.0f && this->m_fontHandle) {
         const char* text = this->GetDisplayText(this->CLayoutFrame::GetWidth() * this->m_layoutScale, this->CLayoutFrame::GetHeight() * this->m_layoutScale);
@@ -1485,7 +1504,8 @@ float CSimpleFontString::GetWrappedWidth() {
     return this->GetWrappedWidth(this->GetWidth());
 }
 
-// OFFSET: %0x0050A300
+// PROVEN: 75ee4951 IDENTICAL
+// OFFSET: 0x004F9F20
 float CSimpleFontString::GetWidth() {
     float width = this->CLayoutFrame::GetWidth();
 
@@ -1496,7 +1516,8 @@ float CSimpleFontString::GetWidth() {
     return width > NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f)) ? width : NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f));
 }
 
-// OFFSET: %0x0050A380
+// PROVEN: b6ba25f1 IDENTICAL
+// OFFSET: 0x004F9FA0
 float CSimpleFontString::GetStringHeight() {
     if (this->m_textHeight == 0.0f && this->m_fontHandle) {
         const char* text = this->GetDisplayText(this->CLayoutFrame::GetWidth() * this->m_layoutScale, this->CLayoutFrame::GetHeight() * this->m_layoutScale);
@@ -1512,7 +1533,8 @@ float CSimpleFontString::GetStringHeight() {
     return this->m_textHeight / this->m_layoutScale;
 }
 
-// OFFSET: %0x0050A4A0
+// PROVEN: f2f96f72 IDENTICAL
+// OFFSET: 0x004FA0C0
 float CSimpleFontString::GetHeight() {
     float height = this->CLayoutFrame::GetHeight();
 
@@ -1523,7 +1545,8 @@ float CSimpleFontString::GetHeight() {
     return height > NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f)) ? height : NDCToDDCWidth(1.0f / (CoordinateGetAspectCompensation() * 1024.0f));
 }
 
-// OFFSET: %0x005086E0
+// PROVEN: e8d3ef7b IDENTICAL
+// OFFSET: 0x004F84A0
 bool CSimpleFontString::SetLayoutDepth(float depth, bool force) {
     if (!this->CLayoutFrame::SetLayoutDepth(depth, force)) {
         return false;
@@ -1729,7 +1752,8 @@ void CSimpleFontString::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: %0x0050E810
+// PROVEN: a03f5185 IDENTICAL
+// OFFSET: 0x004FE570
 void CSimpleFontString::SetStyleFlags(uint32_t styleFlags) {
     uint32_t flags = (styleFlags & this->m_settableStyleFlags) | (this->m_styleFlags & ~this->m_settableStyleFlags);
 
@@ -1797,7 +1821,8 @@ void CSimpleFontString::SetJustifyV(uint8_t justify) {
     }
 }
 
-// OFFSET: %0x0050E960
+// PROVEN: a5c64e3b IDENTICAL
+// OFFSET: 0x004FE6C0
 void CSimpleFontString::SetNonWordWrap(int32_t noWrap) {
     this->m_settableStyleFlags &= ~0x40u;
     uint32_t styleFlags = noWrap ? this->m_styleFlags | 0x40 : this->m_styleFlags & ~0x40u;
@@ -1811,7 +1836,8 @@ void CSimpleFontString::SetNonWordWrap(int32_t noWrap) {
     }
 }
 
-// OFFSET: %0x0050E9A0
+// PROVEN: c6e2cf7b IDENTICAL
+// OFFSET: 0x004FE700
 void CSimpleFontString::SetNonSpaceWrap(int32_t wrap) {
     this->m_settableStyleFlags &= ~0x1000u;
     uint32_t styleFlags = wrap ? this->m_styleFlags | 0x1000 : this->m_styleFlags & ~0x1000u;
@@ -1825,7 +1851,8 @@ void CSimpleFontString::SetNonSpaceWrap(int32_t wrap) {
     }
 }
 
-// OFFSET: %0x0050E9F0
+// PROVEN: f8b2fcfe IDENTICAL
+// OFFSET: 0x004FE750
 void CSimpleFontString::SetIndented(int32_t indented) {
     this->m_settableStyleFlags &= ~0x20000u;
     uint32_t styleFlags = indented ? this->m_styleFlags | 0x20000 : this->m_styleFlags & ~0x20000u;
@@ -2018,12 +2045,14 @@ void CSimpleFontString::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x0050F050
+// PROVEN: daa9d731 IDENTICAL
+// OFFSET: 0x004FEDB0
 void CSimpleFontString::FontObjectUpdated(CSimpleFontStringAttributes& attributes) {
     attributes.Update(this, this->m_fontableFlags);
 }
 
-// OFFSET: %0x0048A2B0
+// PROVEN: bfc87778 IDENTICAL
+// OFFSET: 0x004F8B90
 static void TextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command != GxTex_Latch || !userArg) {
         return;
@@ -2059,7 +2088,8 @@ int32_t CSimpleTextureImage::Load(const char* fileName, int32_t a3) {
     return this->m_bits != NULL;
 }
 
-// OFFSET: %0x0050ABD0
+// PROVEN: 56bd9566 IDENTICAL
+// OFFSET: 0x004FA890
 void CSimpleTextureImage::Free() {
     if (this->m_flags & 1) {
         this->m_flags &= ~1u;
@@ -2137,7 +2167,8 @@ int32_t CSimpleTexture::GetTexture(char* buffer, uint32_t bufferLen) {
     return 1;
 }
 
-// OFFSET: %0x00507670
+// PROVEN: dc325804 IDENTICAL
+// OFFSET: 0x004F71F0
 void CSimpleTexture::SetBlendMode(EGxBlend blend) {
     if (blend != this->m_alphaMode) {
         this->m_alphaMode = blend;
@@ -2145,7 +2176,8 @@ void CSimpleTexture::SetBlendMode(EGxBlend blend) {
     }
 }
 
-// OFFSET: %0x00507690
+// PROVEN: 7488c7fa IDENTICAL
+// OFFSET: 0x004F7320
 void CSimpleTexture::GetTexCoord(CRect& texRect) {
     texRect.minX = this->m_texCoords[0].x;
     texRect.maxX = this->m_texCoords[2].x;
@@ -2153,7 +2185,8 @@ void CSimpleTexture::GetTexCoord(CRect& texRect) {
     texRect.maxY = this->m_texCoords[1].y;
 }
 
-// OFFSET: %0x005076C0
+// PROVEN: 835bdc57 IDENTICAL
+// OFFSET: 0x004F7350
 void CSimpleTexture::SetTexCoord(const C2Vector* texCoords) {
     this->m_texCoords[0] = texCoords[0];
     this->m_texCoords[1] = texCoords[1];
@@ -2161,7 +2194,8 @@ void CSimpleTexture::SetTexCoord(const C2Vector* texCoords) {
     this->m_texCoords[3] = texCoords[3];
 }
 
-// OFFSET: %0x00507720
+// PROVEN: 0206c6e5 IDENTICAL
+// OFFSET: 0x004F73B0
 void CSimpleTexture::GetTexCoord(C2Vector* texCoords) {
     texCoords[0] = this->m_texCoords[0];
     texCoords[1] = this->m_texCoords[1];
@@ -2169,7 +2203,8 @@ void CSimpleTexture::GetTexCoord(C2Vector* texCoords) {
     texCoords[3] = this->m_texCoords[3];
 }
 
-// OFFSET: %0x00507780
+// PROVEN: 5bf2c801 IDENTICAL
+// OFFSET: 0x004F7410
 CGxShader* CSimpleTexture::GetImageModePixelShader(TextureImageMode mode) {
     return CSimpleTexture::s_imageModePixelShaders[mode];
 }
@@ -2214,7 +2249,8 @@ void CSimpleTexture::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, cons
     this->OnRegionChanged();
 }
 
-// OFFSET: %0x00507870
+// PROVEN: b568ad96 IDENTICAL
+// OFFSET: 0x004F74F0
 float CSimpleTexture::GetWidth() {
     float width = this->CLayoutFrame::GetWidth();
 
@@ -2229,7 +2265,8 @@ float CSimpleTexture::GetWidth() {
     return width;
 }
 
-// OFFSET: %0x005078F0
+// PROVEN: f6691c78 IDENTICAL
+// OFFSET: 0x004F7570
 float CSimpleTexture::GetHeight() {
     float height = this->CLayoutFrame::GetHeight();
 
@@ -2244,7 +2281,8 @@ float CSimpleTexture::GetHeight() {
     return height;
 }
 
-// OFFSET: %0x00507970
+// PROVEN: 0c25116a IDENTICAL
+// OFFSET: 0x004F75F0
 int32_t CSimpleTexture::IsObjectLoaded() {
     if (this->m_texture && !TextureIsLoaded(this->m_texture)) {
         return 0;
@@ -2476,7 +2514,8 @@ void CSimpleTexture::DumpInfo(int32_t depth, void (*print)(char*, void*), void* 
     print(buffer, param);
 }
 
-// OFFSET: %0x0050AC10
+// PROVEN: e65a0a8c IDENTICAL
+// OFFSET: 0x004F8AE0
 void CSimpleTexture::ResetTexCoord() {
     this->m_texCoords[0].x = 0.0f;
     this->m_texCoords[0].y = 0.0f;
@@ -2502,22 +2541,26 @@ CSimpleTexture::CSimpleTexture(CSimpleFrame* frame, uint32_t drawLayer, int8_t s
     this->ResetTexCoord();
 }
 
-// OFFSET: %0x0050AF70
+// PROVEN: 61640e76 IDENTICAL
+// OFFSET: 0x004FAAA0
 bool CSimpleTexture::IsA(int32_t type) {
     return type == CSimpleTexture::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x0050AFA0
+// PROVEN: 19f1512d IDENTICAL
+// OFFSET: 0x004FAAD0
 bool CSimpleTexture::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleTexture::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// OFFSET: %0x0050B000
+// PROVEN: ded9c6d1 IDENTICAL
+// OFFSET: 0x004FAB30
 const char* CSimpleTexture::GetObjectTypeName() {
     return CSimpleTexture::s_objectTypeName;
 }
 
-// OFFSET: %0x0050B010
+// PROVEN: be51787e IDENTICAL
+// OFFSET: 0x004FAB40
 int32_t CSimpleTexture::GetScriptMetaTable() {
     return CSimpleTexture::s_metatable;
 }
@@ -2541,7 +2584,8 @@ void CSimpleTexture::AllocateExtension() {
     }
 }
 
-// OFFSET: %0x0050BCD0
+// PROVEN: ced4ac0e IDENTICAL
+// OFFSET: 0x004FB3C0
 void CSimpleTexture::Draw(CRenderBatch* batch) {
     if (this->m_texture) {
         batch->QueueTexture(this);

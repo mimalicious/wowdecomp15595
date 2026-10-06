@@ -25,7 +25,8 @@
  * responsibility.
  */
 
-// OFFSET: %0x00A91430
+// PROVEN: c28456d5 IDENTICAL
+// OFFSET: 0x00B5F1E0
 void jpeg_abort(j_common_ptr cinfo) {
   int pool;
 
@@ -64,7 +65,8 @@ void jpeg_abort(j_common_ptr cinfo) {
  * responsibility.
  */
 
-// OFFSET: %0x00A91470
+// PROVEN: 2d3725da IDENTICAL
+// OFFSET: 0x00B5F220
 void jpeg_destroy(j_common_ptr cinfo) {
   /* We need only tell the memory manager to release everything. */
   /* NB: mem pointer is NULL if memory mgr failed to initialize. */
@@ -91,7 +93,8 @@ JQUANT_TBL * jpeg_alloc_quant_table(j_common_ptr cinfo) {
 }
 
 
-// OFFSET: %0x00A914D0
+// PROVEN: f1166e9e IDENTICAL
+// OFFSET: 0x00B5F280
 JHUFF_TBL * jpeg_alloc_huff_table(j_common_ptr cinfo) {
   JHUFF_TBL *tbl;
 

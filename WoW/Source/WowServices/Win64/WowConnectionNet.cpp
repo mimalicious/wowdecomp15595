@@ -137,7 +137,8 @@ void WowConnectionNet::PlatformRun() {
     } while (!this->m_stop);
 }
 
-// OFFSET: %0x00560560
+// PROVEN: 34a5c2ac IDENTICAL
+// OFFSET: 0x005509A0
 void WowConnectionNet::PlatformInit(bool useEngine) {
     WSADATA data;
 
@@ -154,7 +155,8 @@ void WowConnectionNet::PlatformDestruct(WowConnection* connection) {
     }
 }
 
-// OFFSET: %0x005605F0
+// PROVEN: 707e3f8c IDENTICAL
+// OFFSET: 0x00550A30
 void WowConnectionNet::PlatformWorkerReady() {
     SetEvent(this->m_event);
 }
@@ -171,12 +173,14 @@ void WowConnectionNet::PlatformAdd(WowConnection* connection) {
     SetEvent(this->m_event);
 }
 
-// OFFSET: %0x00560650
+// PROVEN: 63b0ea27 IDENTICAL
+// OFFSET: 0x00550A90
 void WowConnectionNet::PlatformRemove(WowConnection* connection) {
     SetEvent(this->m_event);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 9306efd9 IDENTICAL
+// OFFSET: 0x00401000
 void WowConnectionNet::PlatformStop() {
 }
 

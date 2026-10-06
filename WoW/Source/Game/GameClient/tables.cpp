@@ -68,7 +68,8 @@ void GameTablesInitialize() {
     }
 }
 
-// OFFSET: %0x004F09E0
+// PROVEN: efa079a9 IDENTICAL
+// OFFSET: 0x004EAE10
 float GetGameTableValue(int32_t table, int32_t index, int32_t a3) {
     return s_gameTables[table]->EvaluateTable(index, a3);
 }

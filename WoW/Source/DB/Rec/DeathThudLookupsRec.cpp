@@ -3,7 +3,8 @@
 // STATIC: %0x00B46D90
 const DBCMeta DeathThudLookupsRec::s_meta = { "DBFilesClient\\DeathThudLookups.dbc", 5, 20, DeathThudLookupsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: d0a3cad0 IDENTICAL
+// OFFSET: 0x00401000
 void DeathThudLookupsRec::FixupStrings(void* record, const char* strings) {
 }
 

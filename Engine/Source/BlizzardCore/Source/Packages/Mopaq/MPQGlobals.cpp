@@ -84,7 +84,8 @@ System_MPQGlobals::Worker::~Worker() {
     Blizzard::Thread::Close(this->m_thread);
 }
 
-// OFFSET: %0x00747210
+// PROVEN: b0ef04b2 IDENTICAL
+// OFFSET: 0x007EC360
 void System_MPQGlobals::RegisterGlobalStorage::Shutdown() {
     if (s_globals.m_constructed) {
         reinterpret_cast<Globals*>(s_globals.m_storage)->~Globals();

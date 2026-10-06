@@ -22,22 +22,26 @@ CLCDBase::CLCDBase() {
 CLCDBase::~CLCDBase() {
 }
 
-// OFFSET: %0x00A70D40
+// PROVEN: 1cbcee76 IDENTICAL
+// OFFSET: 0x00B3EA70
 int32_t CLCDBase::GetWidth() {
     return this->GetSize().cx;
 }
 
-// OFFSET: %0x00A70D50
+// PROVEN: ddcffe65 IDENTICAL
+// OFFSET: 0x00B3EA80
 int32_t CLCDBase::GetHeight() {
     return this->GetSize().cy;
 }
 
-// OFFSET: %0x00A72E10
+// PROVEN: 72bd74c8 IDENTICAL
+// OFFSET: 0x00B40B00
 SIZE& CLCDBase::GetSize() {
     return this->m_Size;
 }
 
-// OFFSET: %0x00A72EE0
+// PROVEN: 15d0d827 IDENTICAL
+// OFFSET: 0x00B40BE0
 void CLCDBase::SetBackgroundMode(int32_t mode) {
     this->m_nBkMode = mode;
 }
@@ -47,7 +51,8 @@ POINT& CLCDBase::GetOrigin() {
     return this->m_Origin;
 }
 
-// OFFSET: %0x00A72D70
+// PROVEN: 0c492444 IDENTICAL
+// OFFSET: 0x005DC200
 void CLCDBase::SetOriginXY(int32_t x, int32_t y) {
     this->m_Origin.x = x;
     this->m_Origin.y = y;
@@ -58,13 +63,15 @@ void CLCDBase::SetOrigin(POINT pt) {
     this->SetOriginXY(pt.x, pt.y);
 }
 
-// OFFSET: %0x00A72DB0
+// PROVEN: 2d9ea9b1 IDENTICAL
+// OFFSET: 0x00B40AA0
 void CLCDBase::SetSize(SIZE& size) {
     this->m_Size = size;
     this->SetLogicalSize(this->m_Size);
 }
 
-// OFFSET: %0x00A72DE0
+// PROVEN: 2a38be98 IDENTICAL
+// OFFSET: 0x00B40AD0
 void CLCDBase::SetSizeWH(int32_t width, int32_t height) {
     SIZE size;
     size.cx = width;
@@ -72,57 +79,68 @@ void CLCDBase::SetSizeWH(int32_t width, int32_t height) {
     this->SetSize(size);
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 92c0c96f IDENTICAL
+// OFFSET: 0x00842700
 int32_t CLCDBase::Initialize() {
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 0838d01f IDENTICAL
+// OFFSET: 0x00401000
 void CLCDBase::Shutdown() {
 }
 
-// OFFSET: %0x00A72EB0
+// PROVEN: d4c4046a IDENTICAL
+// OFFSET: 0x00B40BB0
 void CLCDBase::Show(int32_t show) {
     this->m_bVisible = show;
 }
 
-// OFFSET: %0x00A72EC0
+// PROVEN: 0aa0efb7 IDENTICAL
+// OFFSET: 0x00B40BC0
 int32_t CLCDBase::IsVisible() {
     return this->m_bVisible;
 }
 
-// OFFSET: %0x00A72ED0
+// PROVEN: fbd388ba IDENTICAL
+// OFFSET: 0x00B40BD0
 void CLCDBase::Invert(int32_t enable) {
     this->m_bInverted = enable;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: e32c4efe IDENTICAL
+// OFFSET: 0x00401000
 void CLCDBase::ResetUpdate() {
 }
 
-// OFFSET: %0x00A72E40
+// PROVEN: ba1eb1d5 IDENTICAL
+// OFFSET: 0x00B40B30
 void CLCDBase::SetLogicalOriginXY(int32_t x, int32_t y) {
     this->m_ptLogical.x = x;
     this->m_ptLogical.y = y;
 }
 
-// OFFSET: %0x00A72E20
+// PROVEN: babf4c5e IDENTICAL
+// OFFSET: 0x00B40B10
 void CLCDBase::SetLogicalOrigin(POINT& pt) {
     this->m_ptLogical = pt;
 }
 
-// OFFSET: %0x00A72E60
+// PROVEN: 71b82343 IDENTICAL
+// OFFSET: 0x00B40B50
 POINT& CLCDBase::GetLogicalOrigin() {
     return this->m_ptLogical;
 }
 
-// OFFSET: %0x00A72E90
+// PROVEN: 5c8f26e7 IDENTICAL
+// OFFSET: 0x00B40B80
 void CLCDBase::SetLogicalSizeWH(int32_t width, int32_t height) {
     this->m_sizeLogical.cx = width;
     this->m_sizeLogical.cy = height;
 }
 
-// OFFSET: %0x00A72E70
+// PROVEN: a489128c IDENTICAL
+// OFFSET: 0x00B40B60
 void CLCDBase::SetLogicalSize(SIZE& size) {
     this->m_sizeLogical = size;
 }
@@ -132,44 +150,53 @@ SIZE& CLCDBase::GetLogicalSize() {
     return this->m_sizeLogical;
 }
 
-// OFFSET: %0x00A714F0
+// PROVEN: eb116ba4 IDENTICAL
+// OFFSET: 0x00B3F210
 int32_t CLCDBase::GetBackgroundMode() {
     return this->m_nBkMode;
 }
 
-// OFFSET: %0x00A72EF0
+// PROVEN: ade52db1 IDENTICAL
+// OFFSET: 0x00B40BF0
 void CLCDBase::SetObjectType(int32_t type) {
     this->m_nObjectType = type;
 }
 
-// OFFSET: %0x00973490
+// PROVEN: f3fddfb2 IDENTICAL
+// OFFSET: 0x00A32F60
 void CLCDBase::SetForegroundColor(COLORREF color) {
     this->m_crForegroundColor = color;
 }
 
-// OFFSET: %0x00A72F00
+// PROVEN: d493bddd IDENTICAL
+// OFFSET: 0x00B40C00
 void CLCDBase::SetBackgroundColor(COLORREF color) {
     this->m_crBackgroundColor = color;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 71834d28 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDBase::OnPrepareDraw(CLCDGfxBase& gfx) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: f6a9d580 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDBase::OnDraw(CLCDGfxBase& gfx) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 6fe5f9a0 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDBase::OnUpdate(uint32_t timestamp) {
 }
 
-// OFFSET: %0x00A70D60
+// PROVEN: e790525e IDENTICAL
+// OFFSET: 0x00B3EA90
 void CLCDBase::SetUserData(int32_t data) {
     this->m_nUserData = data;
 }
 
-// OFFSET: %0x00A70D70
+// PROVEN: 42bb6951 IDENTICAL
+// OFFSET: 0x00B3EAA0
 int32_t CLCDBase::GetUserData() {
     return this->m_nUserData;
 }

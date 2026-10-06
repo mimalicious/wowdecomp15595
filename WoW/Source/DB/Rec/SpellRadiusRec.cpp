@@ -3,7 +3,8 @@
 // STATIC: %0x00B44DF8
 const DBCMeta SpellRadiusRec::s_meta = { "DBFilesClient\\SpellRadius.dbc", 4, 16, SpellRadiusRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: ff33f4ef IDENTICAL
+// OFFSET: 0x00401000
 void SpellRadiusRec::FixupStrings(void* record, const char* strings) {
 }
 

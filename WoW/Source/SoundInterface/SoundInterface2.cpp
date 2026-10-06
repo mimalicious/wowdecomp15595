@@ -206,7 +206,8 @@ int32_t SI2::Set3DPosition(SE2SoundKitObject* object, const C3Vector* position) 
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 56358c3c IDENTICAL
+// OFFSET: 0x00401000
 void SI2::SetVolume(uint32_t handle, float volume) {
 }
 
@@ -888,7 +889,8 @@ static void PosToWorldChunkCoords(const C3Vector& position, uint32_t* x, uint32_
     *y = static_cast<uint32_t>(((chunkX & 0xF) + 16 * ((static_cast<uint32_t>(chunkX) >> 4) & 0x3F)) >> 2);
 }
 
-// OFFSET: %0x0063E420
+// PROVEN: 7b31778d IDENTICAL
+// OFFSET: 0x0062F9E0
 static int32_t GetDayProgression() {
     return static_cast<int32_t>(g_clientGameTime.GameTimeGetDayProgression() * 86400000.0);
 }

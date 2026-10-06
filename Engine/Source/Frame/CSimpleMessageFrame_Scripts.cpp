@@ -335,7 +335,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "Clear", &Script_Clear },
 };
 
-// OFFSET: %0x00545650
+// PROVEN: b6166b97 IDENTICAL
+// OFFSET: 0x005362E0
 void CSimpleMessageFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

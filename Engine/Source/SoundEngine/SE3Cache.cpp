@@ -55,12 +55,14 @@ SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 // STATIC: %0x00D0E20C
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
-// OFFSET: %0x0067C090
+// PROVEN: 9329de35 IDENTICAL
+// OFFSET: 0x007153C0
 void SE3::SetMaxCacheSizeInBytes(int32_t size) {
     SE3::sm_nMaxCacheSizeInBytes = size;
 }
 
-// OFFSET: %0x0067C0A0
+// PROVEN: a622bc94 IDENTICAL
+// OFFSET: 0x007153D0
 void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
 }
@@ -106,7 +108,8 @@ static FMOD_RESULT F_CALLBACK SEReadCallback(void* handle, void* buffer, unsigne
     return SErrGetLastError() == 38 ? FMOD_ERR_FILE_EOF : FMOD_ERR_INTERNAL;
 }
 
-// OFFSET: %0x0067C1A0
+// PROVEN: 9c458ad0 IDENTICAL
+// OFFSET: 0x00715730
 static FMOD_RESULT F_CALLBACK SESeekCallback(void* handle, unsigned int pos, void* userdata) {
     SFile::SetFilePointer(static_cast<SFileImpl*>(handle), pos, NULL, 0);
     return FMOD_OK;
@@ -529,41 +532,48 @@ void SE3::ProcessWaveDataNodeDeleteList(int32_t elapsed, int32_t force) {
     }
 }
 
-// OFFSET: %0x0067D0B0
+// PROVEN: 1bd576ea IDENTICAL
+// OFFSET: 0x00716BF0
 void SE3::SetReverb(const SE3_REVERB_PROPERTIES* properties) {
     if (SE3::sm_pGameSystem) {
         SE3::sm_pGameSystem->setReverbProperties(properties);
     }
 }
 
-// OFFSET: %0x0067D0D0
+// PROVEN: 6ce5932a IDENTICAL
+// OFFSET: 0x00716C10
 FMOD_RESULT SE3::CreateDSPByType(SE3_DSP_TYPE type, void** dsp) {
     return SE3::sm_pGameSystem->createDSPByType(type, reinterpret_cast<FMOD::DSP**>(dsp));
 }
 
-// OFFSET: %0x0067D0F0
+// PROVEN: ab383207 IDENTICAL
+// OFFSET: 0x00716C30
 FMOD_RESULT SE3::SetDspParam(void* dsp, int32_t index, float value) {
     return static_cast<FMOD::DSP*>(dsp)->setParameter(index, value);
 }
 
-// OFFSET: %0x0067D110
+// PROVEN: 8ea572e5 IDENTICAL
+// OFFSET: 0x00716C50
 FMOD_RESULT SE3::BypassDsp(void* dsp, bool bypass) {
     return static_cast<FMOD::DSP*>(dsp)->setBypass(bypass);
 }
 
-// OFFSET: %0x0067D130
+// PROVEN: ec08a0ca IDENTICAL
+// OFFSET: 0x00716C70
 FMOD_RESULT SE3::EnableDSP(void* dsp, bool active) {
     return static_cast<FMOD::DSP*>(dsp)->setActive(active);
 }
 
-// OFFSET: %0x0067D150
+// PROVEN: eada81e0 IDENTICAL
+// OFFSET: 0x00716C90
 FMOD_RESULT SE3::DspDestroy(void* dsp) {
     static_cast<FMOD::DSP*>(dsp)->remove();
     static_cast<FMOD::DSP*>(dsp)->release();
     return FMOD_OK;
 }
 
-// OFFSET: %0x0067D170
+// PROVEN: eec84d60 IDENTICAL
+// OFFSET: 0x00716CB0
 FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     FMOD::DSP* head;
     FMOD::DSP* output;
@@ -577,31 +587,36 @@ FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     return FMOD_OK;
 }
 
-// OFFSET: %0x0067D1C0
+// PROVEN: 206719e8 IDENTICAL
+// OFFSET: 0x00716D00
 int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     int numChannels = 0;
     static_cast<FMOD::ChannelGroup*>(channelGroup)->getNumChannels(&numChannels);
     return numChannels;
 }
 
-// OFFSET: %0x0067D1E0
+// PROVEN: e0d5fdfc IDENTICAL
+// OFFSET: 0x00716D20
 void* SE3::CreateChannelGroup(const char* name) {
     FMOD::ChannelGroup* channelGroup = NULL;
     SE3::sm_pGameSystem->createChannelGroup(name, &channelGroup);
     return channelGroup;
 }
 
-// OFFSET: %0x0067D210
+// PROVEN: 238dcca3 IDENTICAL
+// OFFSET: 0x00716D50
 FMOD_RESULT SE3::DestroyChannelGroup(void* channelGroup) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->release();
 }
 
-// OFFSET: %0x0067D220
+// PROVEN: 40960923 IDENTICAL
+// OFFSET: 0x00716D60
 FMOD_RESULT SE3::AddChannelToChannelGroup(void* channel, void* channelGroup) {
     return static_cast<FMOD::Channel*>(channel)->setChannelGroup(static_cast<FMOD::ChannelGroup*>(channelGroup));
 }
 
-// OFFSET: %0x0067D240
+// PROVEN: 2823cd42 IDENTICAL
+// OFFSET: 0x00716D80
 FMOD_RESULT SE3::SetFMODChannelGroupVolume(void* channelGroup, float volume) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->setVolume(volume);
 }

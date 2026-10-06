@@ -383,7 +383,8 @@ TSLink<T>* TSGetExplicitLink<T>::Link(T* nodeptr, ptrdiff_t linkoffset) {
     return reinterpret_cast<TSLink<T>*>(reinterpret_cast<uint8_t*>(nodeptr) + linkoffset);
 }
 
-// OFFSET: %0x00401030
+// PROVEN: aaadd5d6 IDENTICAL
+// OFFSET: 0x00401050
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsEnd(T* ptr) {
     return (reinterpret_cast<uintptr_t>(ptr) & 1) || !ptr;
@@ -456,7 +457,8 @@ int32_t TSList<T, TGetLink>::IsEmpty() {
     return this->Head() == NULL;
 }
 
-// OFFSET: %0x00518190
+// PROVEN: 9b79e303 IDENTICAL
+// OFFSET: 0x005080D0
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsLinked(T* ptr) {
     return this->Link(ptr)->IsLinked();
@@ -657,7 +659,8 @@ T* TSBaseArray<T>::Ptr() {
     return this->m_data;
 }
 
-// OFFSET: %0x004C23B0
+// PROVEN: 0184908c IDENTICAL
+// OFFSET: 0x004BBC80
 template <class T>
 T* TSBaseArray<T>::Top() {
     return this->m_count ? &this->m_data[this->m_count - 1] : NULL;
@@ -701,7 +704,8 @@ void TSFixedArray<T>::Clear() {
     this->m_data = NULL;
 }
 
-// OFFSET: [%0x0048F550<CObjectHeap>]
+// PROVEN: f5436f46 IDENTICAL
+// OFFSET: [0x00486890<CObjectHeap>]
 template <class T>
 void TSFixedArray<T>::ReallocAndClearData(uint32_t count) {
     for (uint32_t i = 0; i < this->m_count; i++) {
@@ -745,7 +749,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
     }
 }
 
-// OFFSET: [#0x00409470, #0x004C4B10<C3Vector>, %0x0048F8F0, #0x0056B7C0<CGCommentator::InstanceInfo>, #0x0058EB60, #0x0058EBD0<C2Vector>, #0x00591250<TaxiPathRec*>, #0x005912C0<TAXIROUTELINE>, #0x005C5F00<TalentGroupTier_C*>, #0x005E0800, #0x005EF6A0<MacroSubstring>, #0x006EAAB0<float>, #0x006FF5C0<SpellCastTargetPoint>, #0x006FF630, #0x00700C80, #0x0077AC80, #0x007F8240, #0x0097FE80<CRibbonMat>]
+// OFFSET: [#0x00409470, #0x004C4B10<C3Vector>, 0x00486A60, #0x0056B7C0<CGCommentator::InstanceInfo>, #0x0058EB60, #0x0058EBD0<C2Vector>, #0x00591250<TaxiPathRec*>, #0x005912C0<TAXIROUTELINE>, #0x005C5F00<TalentGroupTier_C*>, #0x005E0800, #0x005EF6A0<MacroSubstring>, #0x006EAAB0<float>, #0x006FF5C0<SpellCastTargetPoint>, #0x006FF630, #0x00700C80, #0x0077AC80, #0x007F8240, #0x0097FE80<CRibbonMat>]
 template <class T>
 void TSFixedArray<T>::Set(uint32_t count, const T* data) {
     this->ReallocAndClearData(count);
@@ -1527,7 +1531,7 @@ void TSBitField<T>::Load(const void* data, uint32_t bytes, int32_t bits) {
     memcpy(this->m_bits.m_data, data, bytes);
 }
 
-// OFFSET: [%0x0040A2B0, %0x0080D8F0]
+// OFFSET: [0x00409800, %0x0080D8F0]
 template <class T>
 TSStackArray<T>::TSStackArray(T* data, uint32_t count, int32_t construct) {
     this->m_data = data;
@@ -1571,7 +1575,7 @@ TSCGrowableArray<T, N>::~TSCGrowableArray() {
     }
 }
 
-// OFFSET: [%0x005B42F0, #0x007917B0]
+// OFFSET: [0x005AC6A0, #0x007917B0]
 template <class T, uint32_t N>
 T& TSCGrowableArray<T, N>::operator[](uint32_t index) {
     if (this->m_count == 0xFFFFFFFF) {

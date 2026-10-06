@@ -3,7 +3,8 @@
 // STATIC: %0x00B43CE4
 const DBCMeta FactionTemplateRec::s_meta = { "DBFilesClient\\FactionTemplate.dbc", 8, 56, FactionTemplateRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: c85fd199 IDENTICAL
+// OFFSET: 0x00401000
 void FactionTemplateRec::FixupStrings(void* record, const char* strings) {
 }
 

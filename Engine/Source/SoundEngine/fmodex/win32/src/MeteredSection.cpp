@@ -22,7 +22,8 @@ void ReleaseMeteredSectionLock(LPMETERED_SECTION lpMetSect);
 /*
  * CreateMeteredSection
  */
-// OFFSET: %0x00A14A90
+// PROVEN: b3e59072 IDENTICAL
+// OFFSET: 0x00AD4A80
 LPMETERED_SECTION CreateMeteredSection(LONG lInitialCount, 
       LONG lMaximumCount, LPCTSTR lpName)
 {
@@ -85,7 +86,8 @@ LPMETERED_SECTION OpenMeteredSection(LPCTSTR lpName)
 /*
  * EnterMeteredSection
  */
-// OFFSET: %0x00A14910
+// PROVEN: e53fea3c IDENTICAL
+// OFFSET: 0x00AD4900
 DWORD EnterMeteredSection(LPMETERED_SECTION lpMetSect, 
       DWORD dwMilliseconds)
 {
@@ -117,7 +119,8 @@ DWORD EnterMeteredSection(LPMETERED_SECTION lpMetSect,
 /*
  * LeaveMeteredSection
  */
-// OFFSET: %0x00A149A0
+// PROVEN: c13bee6b IDENTICAL
+// OFFSET: 0x00AD4990
 BOOL LeaveMeteredSection(LPMETERED_SECTION lpMetSect, LONG lReleaseCount, 
          LPLONG lpPreviousCount)
 {
@@ -160,7 +163,8 @@ BOOL LeaveMeteredSection(LPMETERED_SECTION lpMetSect, LONG lReleaseCount,
 /*
  * CloseMeteredSection
  */
-// OFFSET: %0x00A14730
+// PROVEN: 0f08c5bd IDENTICAL
+// OFFSET: 0x00AD4720
 void CloseMeteredSection(LPMETERED_SECTION lpMetSect)
 {
     if (lpMetSect)
@@ -312,7 +316,8 @@ BOOL CreateMetSectFileView(LPMETERED_SECTION lpMetSect,
 /*
  * GetMeteredSectionLock
  */
-// OFFSET: %0x00A148D0
+// PROVEN: 51a99aa7 IDENTICAL
+// OFFSET: 0x00AD48C0
 void GetMeteredSectionLock(LPMETERED_SECTION lpMetSect)
 {
 #ifdef FILEMAPPING

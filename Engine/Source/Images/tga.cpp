@@ -262,7 +262,8 @@ int32_t CTgaFile::SetTopDown(int32_t topDown) {
     return 1;
 }
 
-// OFFSET: %0x00644C70
+// PROVEN: 06166cab IDENTICAL
+// OFFSET: 0x006385E0
 const uint8_t* CTgaFile::Image() const {
     if (!this->m_image) {
         SErrSetLastError(0xF720007F);
@@ -272,7 +273,8 @@ const uint8_t* CTgaFile::Image() const {
     return this->m_image;
 }
 
-// OFFSET: %0x00644C70
+// PROVEN: d5cd2d67 IDENTICAL
+// OFFSET: 0x006385E0
 uint8_t* CTgaFile::Image() {
     if (!this->m_image) {
         SErrSetLastError(0xF720007F);

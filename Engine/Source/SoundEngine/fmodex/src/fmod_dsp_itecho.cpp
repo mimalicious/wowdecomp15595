@@ -165,7 +165,8 @@ FMOD_RESULT DSPITEcho::createInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D60D0
+// PROVEN: 9c576624 IDENTICAL
+// OFFSET: 0x00A95A50
 FMOD_RESULT DSPITEcho::releaseInternal()
 {
     int count;
@@ -200,7 +201,8 @@ FMOD_RESULT DSPITEcho::releaseInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D6120
+// PROVEN: 669670f6 IDENTICAL
+// OFFSET: 0x00A95AA0
 FMOD_RESULT DSPITEcho::resetInternal()
 {
     mEchoPosition[0] = 0;
@@ -237,7 +239,8 @@ FMOD_RESULT DSPITEcho::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D6180
+// PROVEN: f3d1b801 IDENTICAL
+// OFFSET: 0x00A95B00
 FMOD_RESULT DSPITEcho::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;
@@ -573,7 +576,8 @@ FMOD_RESULT F_CALLBACK DSPITEcho::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D6750
+// PROVEN: 91d201bf IDENTICAL
+// OFFSET: 0x00A960D0
 FMOD_RESULT F_CALLBACK DSPITEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPITEcho *echo = (DSPITEcho *)dsp;
@@ -598,7 +602,8 @@ FMOD_RESULT F_CALLBACK DSPITEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D6780
+// PROVEN: 92d39991 IDENTICAL
+// OFFSET: 0x00A96100
 FMOD_RESULT F_CALLBACK DSPITEcho::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPITEcho *echo = (DSPITEcho *)dsp;
@@ -624,7 +629,8 @@ FMOD_RESULT F_CALLBACK DSPITEcho::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D67B0
+// PROVEN: dc988851 IDENTICAL
+// OFFSET: 0x00A96130
 FMOD_RESULT F_CALLBACK DSPITEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPITEcho *echo = (DSPITEcho *)dsp;
@@ -650,7 +656,8 @@ FMOD_RESULT F_CALLBACK DSPITEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D67E0
+// PROVEN: e9190091 IDENTICAL
+// OFFSET: 0x00A96160
 FMOD_RESULT F_CALLBACK DSPITEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPITEcho *echo = (DSPITEcho *)dsp;
@@ -675,7 +682,8 @@ FMOD_RESULT F_CALLBACK DSPITEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D6820
+// PROVEN: 9f00741c IDENTICAL
+// OFFSET: 0x00A961A0
 FMOD_RESULT F_CALLBACK DSPITEcho::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPITEcho *echo = (DSPITEcho *)dsp;

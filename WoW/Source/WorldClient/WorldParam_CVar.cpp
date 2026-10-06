@@ -321,7 +321,8 @@ bool CWorldParam::WorldPoolUsageCallback(CVar* var, const char* oldValue, const 
     return true;
 }
 
-// OFFSET: %0x006CCDE0
+// PROVEN: babf5274 IDENTICAL
+// OFFSET: 0x0076BA20
 bool CWorldParam::TerrainAlphaBitDepthCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t depth = SStrToInt(value);
 

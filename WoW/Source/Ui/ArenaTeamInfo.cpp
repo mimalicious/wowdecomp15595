@@ -56,7 +56,8 @@ void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
     }
 }
 
-// OFFSET: %0x008FE200
+// PROVEN: 439683be IDENTICAL
+// OFFSET: 0x009A9390
 ArenaTeamMember* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index) {
     if (team >= 3 || index >= CGArenaTeamInfo::m_arenaTeams[team].m_numMembers) {
         CGArenaTeamInfo::m_selectedMember = WOWGUID();
@@ -470,7 +471,8 @@ void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     }
 }
 
-// OFFSET: %0x008FF3F0
+// PROVEN: f5f35875 IDENTICAL
+// OFFSET: 0x009AA590
 void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);
 }

@@ -78,7 +78,8 @@ IOWin32FileUnit::IOWin32FileUnit(void* handle) {
     this->Seek(0);
 }
 
-// OFFSET: %0x00A99A10
+// PROVEN: 8510ea14 IDENTICAL
+// OFFSET: 0x00B677D0
 bool IOWin32FileUnit::Seek(int64_t offset) {
     if (this->m_position != offset) {
         LONG high = static_cast<LONG>(offset >> 32);
@@ -125,7 +126,8 @@ bool IOWin32FileUnit::Read(void* buffer, int64_t offset, uint32_t count, uint32_
     return false;
 }
 
-// OFFSET: %0x00A99B60
+// PROVEN: d35ba1bd IDENTICAL
+// OFFSET: 0x00B67920
 bool IOWin32FileUnit::Write(const void* buffer, int64_t offset, uint32_t count) {
     DWORD written = 0;
 
@@ -143,12 +145,14 @@ bool IOWin32FileUnit::Write(const void* buffer, int64_t offset, uint32_t count) 
     return false;
 }
 
-// OFFSET: %0x00A99BD0
+// PROVEN: b33cd840 IDENTICAL
+// OFFSET: 0x00B67990
 bool IOWin32FileUnit::Flush() {
     return FlushFileBuffers(this->m_handle) != 0;
 }
 
-// OFFSET: %0x00A99BF0
+// PROVEN: e4e5c7bc IDENTICAL
+// OFFSET: 0x00B679B0
 bool IOWin32FileUnit::GetFileSize(int64_t* size) {
     DWORD high;
     DWORD low = ::GetFileSize(this->m_handle, &high);
@@ -163,7 +167,8 @@ bool IOWin32FileUnit::GetFileSize(int64_t* size) {
     return true;
 }
 
-// OFFSET: %0x00A99C50
+// PROVEN: 66944dc9 IDENTICAL
+// OFFSET: 0x00B67A10
 bool IOWin32FileUnit::SetFileSize(int64_t size) {
     if (!this->Seek(size)) {
         return false;
@@ -172,7 +177,8 @@ bool IOWin32FileUnit::SetFileSize(int64_t size) {
     return SetEndOfFile(this->m_handle) != 0;
 }
 
-// OFFSET: %0x00712F20
+// PROVEN: 31d7f26b IDENTICAL
+// OFFSET: 0x007B0A80
 void* IOWin32FileUnit::Win32Handle() {
     return this->m_handle;
 }
@@ -266,7 +272,8 @@ bool IOUnbufferedFileUnit::Write(const void* buffer, int64_t offset, uint32_t co
     return result;
 }
 
-// OFFSET: %0x00A99EE0
+// PROVEN: 17b65677 IDENTICAL
+// OFFSET: 0x00B67CA0
 bool IOUnbufferedFileUnit::Flush() {
     return this->m_unit->Flush();
 }
@@ -278,7 +285,8 @@ bool IOUnbufferedFileUnit::SetFileSize(int64_t size) {
     return this->m_unit->SetFileSize((size + this->m_alignMask) & ~this->m_alignMask);
 }
 
-// OFFSET: %0x00A99F30
+// PROVEN: ea7631d7 IDENTICAL
+// OFFSET: 0x00B67CF0
 bool IOUnbufferedFileUnit::GetFileSize(int64_t* size) {
     *size = this->m_size;
 
@@ -318,7 +326,8 @@ IOUnbufferedFileUnit::IOUnbufferedFileUnit(void* handle, const IOFileParam* para
     }
 }
 
-// OFFSET: %0x00A9A140
+// PROVEN: 283fc9cb IDENTICAL
+// OFFSET: 0x00B67F00
 void* IOUnbufferedFileUnit::Win32Handle() {
     return this->m_unit->Win32Handle();
 }

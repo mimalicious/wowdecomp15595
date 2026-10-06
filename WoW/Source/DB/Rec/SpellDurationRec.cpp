@@ -3,7 +3,8 @@
 // STATIC: %0x00B4510C
 const DBCMeta SpellDurationRec::s_meta = { "DBFilesClient\\SpellDuration.dbc", 4, 16, SpellDurationRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 0cfcc569 IDENTICAL
+// OFFSET: 0x00401000
 void SpellDurationRec::FixupStrings(void* record, const char* strings) {
 }
 

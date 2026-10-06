@@ -105,13 +105,15 @@ void Login::GetFileStatus(const char* fileName, uint64_t size, const uint8_t* md
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_DOWNLOADFILE, LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: %0x004CB860
+// PROVEN: 9d6f7337 IDENTICAL
+// OFFSET: 0x004C4F70
 bool Login::OnlineIdle() {
     this->m_online = true;
     return true;
 }
 
-// OFFSET: %0x004CBB10
+// PROVEN: cd701cfd IDENTICAL
+// OFFSET: 0x004C5250
 void Login::SetLogonCreds(const char* accountName, const char* password) {
     SStrCopy(this->m_username, accountName, sizeof(this->m_username));
 
@@ -199,7 +201,8 @@ bool LoginResponse::GetCdKeys(Grunt::CdKey& cdKey) {
 void LoginResponse::FileData(const uint8_t* data, uint32_t size) {
 }
 
-// OFFSET: %0x004CB870
+// PROVEN: 93153f2a IDENTICAL
+// OFFSET: 0x004C4F80
 bool Login::GetCdKeys(Grunt::CdKey& cdKey) {
     return this->m_loginResponse->GetCdKeys(cdKey);
 }
@@ -346,7 +349,8 @@ void Login::RealmListResult(CDataStore* msg) {
     }
 }
 
-// OFFSET: %0x004CB890
+// PROVEN: 34d2314c IDENTICAL
+// OFFSET: 0x004C4FA0
 void Login::FileData(const uint8_t* data, uint32_t size) {
     this->m_loginResponse->FileData(data, size);
 }

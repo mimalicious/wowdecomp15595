@@ -2,7 +2,8 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x004A2050
+// PROVEN: 1dd4e454 IDENTICAL
+// OFFSET: 0x0049B1F0
 NPCText::~NPCText() {
     for (int32_t i = 0; i < 8; i++) {
         if (this->m_text[i][0]) {
@@ -15,7 +16,8 @@ NPCText::~NPCText() {
     }
 }
 
-// OFFSET: %0x00964C70
+// PROVEN: bf6e499b IDENTICAL
+// OFFSET: 0x00A28DE0
 void NPCText::Pack(CDataStore* msg) {
     for (uint32_t i = 0; i < 8; i++) {
         msg->Put(this->m_probability[i]);

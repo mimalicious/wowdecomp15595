@@ -40,28 +40,32 @@ static uint32_t s_first;
 // STATIC: #0x00B30770
 static SYSMESSAGE s_messages[10];
 
-// OFFSET: %0x0040CE70
+// PROVEN: 5b3651a7 IDENTICAL
+// OFFSET: 0x0040DE00
 void WowSysMessageOutput::Enable() {
     if (!s_enabled && s_initialized && s_layer) {
         s_enabled = true;
     }
 }
 
-// OFFSET: %0x0040CEA0
+// PROVEN: a282cc5f IDENTICAL
+// OFFSET: 0x0040DE30
 void WowSysMessageOutput::Disable() {
     if (s_enabled) {
         s_enabled = false;
     }
 }
 
-// OFFSET: %0x0040CEC0
+// PROVEN: fa7671f8 IDENTICAL
+// OFFSET: 0x0040DE50
 void WowSysMessageOutput::Show() {
     if (s_hidden) {
         s_hidden = false;
     }
 }
 
-// OFFSET: %0x0040CEE0
+// PROVEN: 71ccff6a IDENTICAL
+// OFFSET: 0x0040DE70
 void WowSysMessageOutput::Hide() {
     if (!s_hidden) {
         s_hidden = true;

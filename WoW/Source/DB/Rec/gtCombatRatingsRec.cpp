@@ -3,7 +3,8 @@
 // STATIC: %0x00B46748
 const DBCMeta gtCombatRatingsRec::s_meta = { "DBFilesClient\\gtCombatRatings.dbc", 1, 8, gtCombatRatingsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 13741388 IDENTICAL
+// OFFSET: 0x00401000
 void gtCombatRatingsRec::FixupStrings(void* record, const char* strings) {
 }
 

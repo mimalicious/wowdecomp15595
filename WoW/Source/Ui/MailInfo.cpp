@@ -1214,7 +1214,8 @@ void CGMailInfo::ReceivedMail(float delay) {
     }
 }
 
-// OFFSET: %0x008CB240
+// PROVEN: 8585ab24 IDENTICAL
+// OFFSET: 0x00972710
 void StationeryItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!--CGMailInfo::m_pendingStationeryCallbacks) {
         CGMailInfo::UpdateStationeryList();
@@ -1254,7 +1255,8 @@ void CGMailInfo::EnterWorld() {
     CGMailInfo::m_autoLooting = 0;
 }
 
-// OFFSET: %0x008C6330
+// PROVEN: 3e722487 IDENTICAL
+// OFFSET: 0x0096D5D0
 void CGMailInfo::SetSendItem(uint32_t index, WOWGUID item, WOWGUID container, uint8_t slot) {
     if (index >= 12) {
         return;
@@ -1295,7 +1297,8 @@ WOWGUID CGMailInfo::GetSendItemGuid(uint32_t index) {
     return CGMailInfo::m_sendItems[index].m_guid;
 }
 
-// OFFSET: %0x008C6430
+// PROVEN: 0c95f03f IDENTICAL
+// OFFSET: 0x0096D6D0
 uint32_t CGMailInfo::GetNumSendItems() {
     uint32_t count = 0;
 

@@ -3,7 +3,8 @@
 // STATIC: %0x00B45D94
 const DBCMeta LightFloatBandRec::s_meta = { "DBFilesClient\\LightFloatBand.dbc", 4, 136, LightFloatBandRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 6e037d49 IDENTICAL
+// OFFSET: 0x00401000
 void LightFloatBandRec::FixupStrings(void* record, const char* strings) {
 }
 

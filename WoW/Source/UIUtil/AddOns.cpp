@@ -122,7 +122,8 @@ const char* AddOnSecurityToken(int32_t security) {
     return s_addOnLoadableTokens[UIADDON_SECURE + security];
 }
 
-// OFFSET: %0x004653A0
+// PROVEN: af912694 IDENTICAL
+// OFFSET: 0x0045B770
 static int32_t DeleteInterfaceAddOns(OS_FILE_DATA& data, void* param) {
     char path[260];
     SStrPrintf(path, sizeof(path), "%s%s\\%s.toc", "Interface\\AddOns\\", data.fileName, data.fileName);
@@ -140,7 +141,8 @@ static int32_t DeleteInterfaceAddOns(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// OFFSET: %0x00465450
+// PROVEN: a0de687c IDENTICAL
+// OFFSET: 0x0045B820
 void DeleteInterfaceFiles() {
     bool deleted = false;
     const char* directories[] = { "Interface\\GlueXML", "Interface\\FrameXML" };
@@ -184,7 +186,8 @@ static void ReadPublicKey(bool* hasKey, uint8_t* key, const char* path) {
     SFile::Unload(data);
 }
 
-// OFFSET: %0x00465150
+// PROVEN: e19f2017 IDENTICAL
+// OFFSET: 0x0045B520
 static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
     HOSFILE file = OsCreateFile(path, OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 
@@ -239,7 +242,8 @@ ADDONSTATELIST::~ADDONSTATELIST() {
     this->m_states.Clear();
 }
 
-// OFFSET: %0x00465240
+// PROVEN: f6fa3da3 IDENTICAL
+// OFFSET: 0x0045B610
 static void WriteURL(const char* path, const char* url) {
     if (!url || !*url) {
         OsDeleteFile(path);
@@ -1703,7 +1707,8 @@ void SaveAddOnEnableState() {
     }
 }
 
-// OFFSET: %0x00465790
+// PROVEN: 3883429c IDENTICAL
+// OFFSET: 0x0045BB90
 bool IsAddonVersionCheckEnabled() {
     return g_checkAddonVersionVar->m_intValue != 0;
 }

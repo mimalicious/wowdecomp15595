@@ -908,7 +908,8 @@ FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate, bool for
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A357F0
+// PROVEN: 09f1de3d IDENTICAL
+// OFFSET: 0x00AE2C50
 FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate)
 {
     return stop(ignoreenddelay, resetstate, false);
@@ -1332,7 +1333,8 @@ FMOD_RESULT ChannelSoftware::updateReverbMix(ReverbI* reverb, float volume)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A22320
+// PROVEN: fe161f82 IDENTICAL
+// OFFSET: 0x00AE1DF0
 FMOD_RESULT ChannelSoftware::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     if (!prop)
@@ -1359,7 +1361,8 @@ FMOD_RESULT ChannelSoftware::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A22350
+// PROVEN: 1efa19b1 IDENTICAL
+// OFFSET: 0x00AE1E20
 FMOD_RESULT ChannelSoftware::set3DOcclusion(float directOcclusion, float reverbOcclusion)
 {
     FMOD_RESULT    result;
@@ -1423,7 +1426,8 @@ FMOD_RESULT ChannelSoftware::set3DOcclusion(float directOcclusion, float reverbO
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A22400
+// PROVEN: c10fcdd0 IDENTICAL
+// OFFSET: 0x00AE1ED0
 FMOD_RESULT ChannelSoftware::setVolume(float volume)
 {
     FMOD_RESULT    result;
@@ -1567,7 +1571,8 @@ FMOD_RESULT ChannelSoftware::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A225F0
+// PROVEN: 6e426dfb IDENTICAL
+// OFFSET: 0x00AE20C0
 FMOD_RESULT ChannelSoftware::setPan(float lrpan, float fbpan)
 {
     int numchannels;
@@ -2179,7 +2184,8 @@ FMOD_RESULT ChannelSoftware::isPlaying(bool *isplaying, bool includethreadlatenc
     FMOD_DSP_FFT_WINDOW
 ]
 */
-// OFFSET: %0x00A22BD0
+// PROVEN: fa02ca8e IDENTICAL
+// OFFSET: 0x00AE26A0
 FMOD_RESULT ChannelSoftware::getSpectrum(float *spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype)
 {
 #ifdef FMOD_SUPPORT_GETSPECTRUM
@@ -2285,7 +2291,8 @@ FMOD_RESULT ChannelSoftware::getSpectrum(float *spectrumarray, int numvalues, in
     FMOD_DSP_FFT_WINDOW
 ]
 */
-// OFFSET: %0x00A22D10
+// PROVEN: cb62762e IDENTICAL
+// OFFSET: 0x00AE27E0
 FMOD_RESULT ChannelSoftware::getWaveData(float *wavearray, int numvalues, int channeloffset)
 {
     FMOD_RESULT     result;
@@ -2370,7 +2377,8 @@ FMOD_RESULT ChannelSoftware::getWaveData(float *wavearray, int numvalues, int ch
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A22E90
+// PROVEN: 4a5ee7f5 IDENTICAL
+// OFFSET: 0x00AE2960
 FMOD_RESULT ChannelSoftware::getDSPHead(DSPI **dsp)
 {
     *dsp = mDSPHead;

@@ -15,14 +15,16 @@ void CGxString::RemoveShadow() {
     this->m_flags &= ~1;
 }
 
-// OFFSET: %0x0062E180
+// PROVEN: 2373ed27 IDENTICAL
+// OFFSET: 0x0061D930
 void CGxString::TexturePageEvicted(uint32_t texturePage) {
     if (this->m_texturePagesUsed & (1 << texturePage)) {
         this->m_textureEvicted = 1;
     }
 }
 
-// OFFSET: %0x0062E1A0
+// PROVEN: bebe930a IDENTICAL
+// OFFSET: 0x0061D950
 void CGxString::WriteGeometry(CGxVertexPCT* buf, int32_t texturePage, int32_t vertIndex, int32_t numVerts) const {
     TEXTLINETEXTURE* textLine = this->m_textLines[texturePage];
 
@@ -111,7 +113,8 @@ void CGxString::InitializeViewTranslation() {
     this->m_viewTranslation.y = floor(y);
 }
 
-// OFFSET: %0x0062E8B0
+// PROVEN: b26b0e41 IDENTICAL
+// OFFSET: 0x0061E060
 int32_t CGxString::CalculateVertsNeeded(int32_t texturePage) {
     if (this->m_flags & 1) {
         return 2 * this->m_textLines[texturePage]->m_verts.m_count;
@@ -173,14 +176,16 @@ void CGxString::ClearInstanceData() {
     }
 }
 
-// OFFSET: %0x0062F180
+// PROVEN: 6a3f2483 IDENTICAL
+// OFFSET: 0x0061E930
 void CGxString::Tick() {
     if (this->m_numLines && this->m_idleTicks++ > 30) {
         this->ClearInstanceData();
     }
 }
 
-// OFFSET: %0x0062F1B0
+// PROVEN: 0b6be846 IDENTICAL
+// OFFSET: 0x0061E960
 void CGxString::SetColor(const CImVector& color) {
     if (*reinterpret_cast<const uint32_t*>(&color) == *reinterpret_cast<const uint32_t*>(&this->m_fontColor)) {
         return;
@@ -570,7 +575,8 @@ void CGxString::InitializeTextLine(const char* text, uint32_t numBytes, CImVecto
     parseInfo.m_hyperlink.m_right = x + pos.x;
 }
 
-// OFFSET: %0x0062FD40
+// PROVEN: b7dc8b51 IDENTICAL
+// OFFSET: 0x0061F4F0
 void CGxString::AddShadow(const C2Vector& offset, const CImVector& color) {
     this->m_shadowColor = color;
     this->m_shadowColor.a = color.a < this->m_fontColor.a ? color.a : this->m_fontColor.a;
@@ -582,7 +588,8 @@ void CGxString::AddShadow(const C2Vector& offset, const CImVector& color) {
     }
 }
 
-// OFFSET: %0x0062FD80
+// PROVEN: 6ce9b217 IDENTICAL
+// OFFSET: 0x0061F530
 int32_t CGxString::CheckGeometry() {
     if (this->m_textureEvicted) {
         if (!this->m_currentFace->CheckStringGlyphs(this->m_text)) {
@@ -929,7 +936,8 @@ void CGxString::CreateGeometry() {
     }
 }
 
-// OFFSET: %0x00630A30
+// PROVEN: 22b145cd IDENTICAL
+// OFFSET: 0x006201C0
 uint32_t CGxString::GetHyperLinkInfo(const GXUFONTHYPERLINKINFO*& info) {
     this->CreateGeometry();
 
@@ -944,7 +952,8 @@ uint32_t CGxString::GetHyperLinkInfo(const GXUFONTHYPERLINKINFO*& info) {
     return count;
 }
 
-// OFFSET: %0x00630A70
+// PROVEN: 1686d1d6 IDENTICAL
+// OFFSET: 0x00620200
 uint32_t CGxString::GetEmbeddedTextureInfo(const GXUEMBEDDEDTEXTUREINFO*& info) {
     this->CreateGeometry();
 

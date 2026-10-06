@@ -52,7 +52,8 @@ template <class T>
 IOsVersionHashCallback2<T>::IOsVersionHashCallback2(T* object) : m_object(object) {
 }
 
-// OFFSET: %0x00A49180
+// PROVEN: cb476f3f IDENTICAL
+// OFFSET: 0x00B09FA0
 template <class T>
 void IOsVersionHashCallback2<T>::Process(const void* data, uint32_t size) {
     this->m_object->Process(data, size);

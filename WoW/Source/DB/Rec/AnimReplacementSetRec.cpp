@@ -3,7 +3,8 @@
 // STATIC: %0x00B440C0
 const DBCMeta AnimReplacementSetRec::s_meta = { "DBFilesClient\\AnimReplacementSet.dbc", 2, 8, AnimReplacementSetRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 28906208 IDENTICAL
+// OFFSET: 0x00401000
 void AnimReplacementSetRec::FixupStrings(void* record, const char* strings) {
 }
 

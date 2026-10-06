@@ -166,7 +166,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetDisabledCheckedTexture", &Script_SetDisabledCheckedTexture },
 };
 
-// OFFSET: %0x00542510
+// PROVEN: 95e82c38 IDENTICAL
+// OFFSET: 0x00532620
 void CSimpleCheckbox::RegisterScriptMethods(lua_State* L) {
     CSimpleButton::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

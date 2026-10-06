@@ -3,7 +3,8 @@
 // STATIC: %0x00B46D58
 const DBCMeta DestructibleModelDataRec::s_meta = { "DBFilesClient\\DestructibleModelData.dbc", 24, 96, DestructibleModelDataRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: c6859269 IDENTICAL
+// OFFSET: 0x00401000
 void DestructibleModelDataRec::FixupStrings(void* record, const char* strings) {
 }
 

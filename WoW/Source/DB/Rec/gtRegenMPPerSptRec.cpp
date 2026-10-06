@@ -3,7 +3,8 @@
 // STATIC: %0x00B4652C
 const DBCMeta gtRegenMPPerSptRec::s_meta = { "DBFilesClient\\gtRegenMPPerSpt.dbc", 1, 8, gtRegenMPPerSptRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: c4ebab3d IDENTICAL
+// OFFSET: 0x00401000
 void gtRegenMPPerSptRec::FixupStrings(void* record, const char* strings) {
 }
 

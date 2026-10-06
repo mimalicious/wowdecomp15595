@@ -303,12 +303,14 @@ int32_t CGxDevice::BufUnlock(CGxBuf* buf, uint32_t size) {
     return 1;
 }
 
-// OFFSET: %0x007A8180
+// PROVEN: dfcff1e2 IDENTICAL
+// OFFSET: 0x00842230
 void CGxDevice::CursorSetVisible(int32_t visible) {
     CGxDevice::s_cursorVisible = visible;
 }
 
-// OFFSET: %0x007A8190
+// PROVEN: 9027fb46 IDENTICAL
+// OFFSET: 0x00842240
 uint32_t* CGxDevice::CursorLock() {
     return CGxDevice::s_cursor;
 }
@@ -361,21 +363,24 @@ void CGxDevice::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_
     }
 }
 
-// OFFSET: %0x007A9390
+// PROVEN: c3f242b0 IDENTICAL
+// OFFSET: 0x00843540
 void CGxDevice::NotifyOnDeviceRestored() {
     for (uint32_t i = 0; i < CGxDevice::s_deviceRestoredCallbacks.Count(); i++) {
         CGxDevice::s_deviceRestoredCallbacks[i]();
     }
 }
 
-// OFFSET: %0x007A93C0
+// PROVEN: 48c49a9a IDENTICAL
+// OFFSET: 0x00843570
 void CGxDevice::NotifyOnTextureRecreation() {
     for (uint32_t i = 0; i < CGxDevice::s_textureRecreationCallbacks.Count(); i++) {
         CGxDevice::s_textureRecreationCallbacks[i]();
     }
 }
 
-// OFFSET: %0x007A93F0
+// PROVEN: e53110bc IDENTICAL
+// OFFSET: 0x008435A0
 void CGxDevice::NotifyOnDisplayChange(uint32_t value) {
     for (uint32_t i = 0; i < CGxDevice::s_displayChangeCallbacks.Count(); i++) {
         CGxDevice::s_displayChangeCallbacks[i](value);
@@ -679,7 +684,8 @@ void CGxDevice::XformPush(EGxXform xf) {
     stack.m_dirty = 1;
 }
 
-// OFFSET: %0x007A7920
+// PROVEN: 64320f83 IDENTICAL
+// OFFSET: 0x008418D0
 EGxApi CGxDevice::DeviceApi() {
     return this->m_api;
 }
@@ -750,12 +756,14 @@ int32_t CGxDevice::IDevIsWindowed() {
     return this->m_format.m_window;
 }
 
-// OFFSET: %0x007A7900
+// PROVEN: a2009c37 IDENTICAL
+// OFFSET: 0x008418B0
 const CGxFormat& CGxDevice::DeviceFormat() {
     return this->m_format;
 }
 
-// OFFSET: %0x007A7970
+// PROVEN: db8a7e2a IDENTICAL
+// OFFSET: 0x00841A10
 const CRect& CGxDevice::DeviceCurWindow() {
     return this->m_curWindowRect;
 }
@@ -765,7 +773,8 @@ const CRect& CGxDevice::DeviceDefWindow() {
     return this->m_defWindowRect;
 }
 
-// OFFSET: %0x007A7980
+// PROVEN: 4a55d6d2 IDENTICAL
+// OFFSET: 0x00841A20
 void CGxDevice::DeviceSetCurWindow(const CRect& rect) {
     this->m_curWindowRect = rect;
 }
@@ -796,7 +805,8 @@ EGxVertexBufferFormat CGxDevice::PrimVertexFormat() {
     return this->m_primVertexFormat;
 }
 
-// OFFSET: %0x007A7BD0
+// PROVEN: b27b0f1d IDENTICAL
+// OFFSET: 0x00841C80
 uint32_t CGxDevice::PrimCalcCount(EGxPrim primType, uint32_t indexCount) {
     uint32_t perPrim = s_primVertsPerPrim[primType];
     return (perPrim == 1 ? indexCount : indexCount / perPrim) - s_primVertsExtra[primType];
@@ -823,7 +833,8 @@ int32_t CGxDevice::NeedsUpdate(uint32_t app, uint32_t hw, uint32_t appDisables, 
     return enable != ((hw & (1 << flagPos) & ~hwDisables) != 0);
 }
 
-// OFFSET: %0x007A7DC0
+// PROVEN: 9ab6648d IDENTICAL
+// OFFSET: 0x00841E70
 void CGxDevice::BufSizeSet(CGxBuf* buf, uint32_t itemSize, uint32_t itemCount) {
     buf->m_itemSize = itemSize;
     buf->m_itemCount = itemCount;
@@ -831,28 +842,33 @@ void CGxDevice::BufSizeSet(CGxBuf* buf, uint32_t itemSize, uint32_t itemCount) {
     buf->unk_001C = 0;
 }
 
-// OFFSET: %0x007A7DE0
+// PROVEN: f539d674 IDENTICAL
+// OFFSET: 0x00841E90
 int32_t CGxDevice::TexIsReadyNow(CGxTex* texId) {
     return texId->m_apiSpecificData && !texId->m_needsUpdate && !texId->m_needsCreation;
 }
 
-// OFFSET: %0x007A7E10
+// PROVEN: 8f95cf3c IDENTICAL
+// OFFSET: 0x00841EC0
 int32_t CGxDevice::TexCanUpdate(CGxTex* texId) {
     return texId->m_userFunc != NULL;
 }
 
-// OFFSET: %0x007A8090
+// PROVEN: 39c1e56c IDENTICAL
+// OFFSET: 0x00842140
 void CGxDevice::TexSetCannotUpdate(CGxTex* texId) {
     texId->m_userFunc = NULL;
     texId->m_userArg = NULL;
 }
 
-// OFFSET: %0x007A80B0
+// PROVEN: 0c5033e6 IDENTICAL
+// OFFSET: 0x00842160
 void CGxDevice::TexSetDataFormat(CGxTex* texId, EGxTexFormat dataFormat) {
     texId->m_dataFormat = dataFormat;
 }
 
-// OFFSET: %0x007A80C0
+// PROVEN: ec5df957 IDENTICAL
+// OFFSET: 0x00842170
 void CGxDevice::TexParameters(const CGxTex* texId, CGxTexParms& parms) {
     parms.m_target = texId->m_target;
     parms.m_width = texId->m_width;
@@ -948,7 +964,8 @@ void CGxDevice::ICursorDestroy() {
     }
 }
 
-// OFFSET: %0x007A8160
+// PROVEN: 0474d4fb IDENTICAL
+// OFFSET: 0x00842210
 void CGxDevice::ICursorUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
         texelStrideInBytes = 32 * sizeof(uint32_t);
@@ -1007,7 +1024,8 @@ void CGxDevice::DeviceScreenShot() {
     this->DeviceReadPixels(rect, this->m_scrShotPixels);
 }
 
-// OFFSET: %0x007A92F0
+// PROVEN: c13a4fa4 IDENTICAL
+// OFFSET: 0x008434A0
 void CGxDevice::DeviceSetDefWindow(const CRect& rect) {
     this->m_defWindowRect = rect;
     this->m_curWindowRect = rect;
@@ -1464,7 +1482,8 @@ void CGxDevice::XformSetView(const C44Matrix& matrix) {
     }
 }
 
-// OFFSET: %0x007A81C0
+// PROVEN: 4ea4330d IDENTICAL
+// OFFSET: 0x00842270
 void CGxDevice::LogOpen() {
     if (!CGxDevice::m_log) {
         OsCreateDirectory("Logs", 0);
@@ -1473,7 +1492,8 @@ void CGxDevice::LogOpen() {
     }
 }
 
-// OFFSET: %0x007A8200
+// PROVEN: e356c77a IDENTICAL
+// OFFSET: 0x008422B0
 void CGxDevice::LogClose() {
     if (CGxDevice::m_log) {
         SLogClose(CGxDevice::m_log);
@@ -1519,7 +1539,8 @@ void CGxDevice::ClampRectRightByAspect(CiRect& windowRect) {
     }
 }
 
-// OFFSET: %0x007A8220
+// PROVEN: 0a9f0e4f IDENTICAL
+// OFFSET: 0x008422D0
 void CGxDevice::LogV(const char* format, va_list args) {
     if (!CGxDevice::m_log) {
         return;
@@ -1534,7 +1555,8 @@ void CGxDevice::LogV(const char* format, va_list args) {
     }
 }
 
-// OFFSET: %0x007A82A0
+// PROVEN: 6a94f89b IDENTICAL
+// OFFSET: 0x00842350
 void CGxDevice::Log(const char* format, ...) {
     va_list args;
     va_start(args, format);
@@ -2206,7 +2228,8 @@ void CGxDevice::ChooseShaderModel(int32_t shaderModel) {
     }
 }
 
-// OFFSET: %0x007A8110
+// PROVEN: f9f1b9a4 IDENTICAL
+// OFFSET: 0x008421C0
 void CGxDevice::TexFlags(const CGxTex* texId, CGxTexFlags& flags) {
     flags = texId->m_flags;
 }
@@ -2305,7 +2328,8 @@ int32_t CGxDevice::AdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     return formats.Count() != 0;
 }
 
-// OFFSET: %0x007A77D0
+// PROVEN: 8b253a62 IDENTICAL
+// OFFSET: 0x00841780
 int32_t CGxDevice::AdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo) {
     return CGxDevice::DeviceAdapterID(vendorID, deviceID, driverVersionHi, driverVersionLo) != 0;
 }
@@ -2315,7 +2339,8 @@ int32_t CGxDevice::AdapterInfer(uint16_t& deviceID) {
     return CGxDevice::D3d11AdapterInfer(deviceID) || CGxDevice::DeviceAdapterInfer(deviceID) != 0;
 }
 
-// OFFSET: %0x007AAB30
+// PROVEN: 02beb802 IDENTICAL
+// OFFSET: 0x00844E60
 void CGxDevice::AdapterResetMonitors() {
     CGxDevice::s_monitorsInit = 0;
     CGxDevice::s_monitors.m_count = 0;

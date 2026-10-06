@@ -20,7 +20,8 @@
 void CMapArea::Destroy() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 2c619432 IDENTICAL
+// OFFSET: 0x00401000
 void CMapArea::Initialize() {
 }
 

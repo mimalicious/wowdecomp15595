@@ -132,7 +132,8 @@ FMOD_CODEC_DESCRIPTION_EX *CodecTag::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A012B0
+// PROVEN: 338184d1 IDENTICAL
+// OFFSET: 0x00AC0C70
 FMOD_RESULT CodecTag::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     FMOD_RESULT  result = FMOD_OK;
@@ -232,7 +233,8 @@ FMOD_RESULT CodecTag::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01000
+// PROVEN: 98376319 IDENTICAL
+// OFFSET: 0x00AC09C0
 FMOD_RESULT CodecTag::readTags()
 {
     FMOD_RESULT  result = FMOD_OK;
@@ -441,7 +443,8 @@ FMOD_RESULT CodecTag::readTags()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A000C0
+// PROVEN: 6f182b06 IDENTICAL
+// OFFSET: 0x00ABFA80
 FMOD_RESULT CodecTag::readID3v1()
 {
     FMOD_RESULT  result;
@@ -785,7 +788,8 @@ FMOD_RESULT CodecTag::readID3v2()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A007F0
+// PROVEN: 01bec8b7 IDENTICAL
+// OFFSET: 0x00AC01B0
 FMOD_RESULT CodecTag::readID3v2FromFooter()
 {
     FMOD_RESULT     result;
@@ -1212,7 +1216,8 @@ FMOD_RESULT CodecTag::readASF()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01370
+// PROVEN: 300e21c2 IDENTICAL
+// OFFSET: 0x00AC0D30
 FMOD_RESULT F_CALLBACK CodecTag::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecTag *tag = (CodecTag *)codec;

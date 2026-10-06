@@ -1,4 +1,5 @@
-// OFFSET: %0x004CEF90
+// PROVEN: 140401a9 IDENTICAL
+// OFFSET: 0x004C9270
 inline C3Vector& C3Spline::Point(uint32_t index) {
     if (index < 25) {
         return this->m_points[index];

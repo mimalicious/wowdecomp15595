@@ -64,7 +64,7 @@ bool ComSat::Vector<T>::Find(const T& value, uint32_t& index) const {
     return true;
 }
 
-// OFFSET: [%0x00974170<unsigned __int64>, %0x009741E0<ComSat::Network::Endpoint*>, %0x00979900<ComSat::Network::Session::LocalTalker>]
+// OFFSET: [0x00A33C40<unsigned __int64>, 0x00A38990<ComSat::Network::Endpoint*>, %0x00979900<ComSat::Network::Session::LocalTalker>]
 template <class T>
 bool ComSat::Vector<T>::Reserve(uint32_t size) {
     if (size < this->m_used) {

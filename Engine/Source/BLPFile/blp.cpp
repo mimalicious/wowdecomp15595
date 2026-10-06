@@ -48,7 +48,8 @@ static BlitFormat GetBlitFormat(PIXEL_FORMAT format) {
     return blitFmt[format];
 }
 
-// OFFSET: %0x0048A120
+// PROVEN: 7093a14c IDENTICAL
+// OFFSET: 0x00481D70
 CBLPFile::CBLPFile() {
     this->m_images = NULL;
     this->m_quality = 100;
@@ -75,7 +76,8 @@ int32_t CBLPFile::IsValidMip(uint32_t mipLevel) const {
     return !mipLevel || (this->HasMips() && mipLevel < this->m_numLevels);
 }
 
-// OFFSET: %0x004C9D00
+// PROVEN: 5d5c269a IDENTICAL
+// OFFSET: 0x004C3A50
 void CBLPFile::Close() {
     this->m_inMemoryImage = NULL;
 
@@ -86,7 +88,8 @@ void CBLPFile::Close() {
     this->m_images = NULL;
 }
 
-// OFFSET: %0x004C9D30
+// PROVEN: 2b8061f6 IDENTICAL
+// OFFSET: 0x004C3A80
 int32_t CBLPFile::ValidateHeader(const BLPHeader& header) {
     return header.m_magic == 0x32504C42 && header.m_formatVersion == 1;
 }
@@ -600,7 +603,8 @@ uint32_t CBLPFile::Height(uint32_t mipLevel) const {
     return height > 1 ? height : 1;
 }
 
-// OFFSET: %0x004CAC50
+// PROVEN: 725efc82 IDENTICAL
+// OFFSET: 0x004C4960
 uint32_t CBLPFile::Pixels(uint32_t mipLevel) const {
     return this->Height(mipLevel) * this->Width(mipLevel);
 }
@@ -906,7 +910,8 @@ int32_t CBLPFile::Open(const char* fileName, int32_t flags) {
     return this->Source(s_blpFileLoadBuffer.Ptr());
 }
 
-// OFFSET: %0x004CB700
+// PROVEN: 5b2e3004 IDENTICAL
+// OFFSET: 0x004C4F20
 int32_t CBLPFile::OpenAddBlp(const char* fileName, int32_t flags) {
     char path[260];
     SStrPrintf(path, sizeof(path), "%s.blp", fileName);

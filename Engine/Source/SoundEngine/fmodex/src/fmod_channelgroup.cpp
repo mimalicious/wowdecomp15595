@@ -11,7 +11,8 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// OFFSET: %0x009BC610
+// PROVEN: b42273bc IDENTICAL
+// OFFSET: 0x00A7BDE0
 FMOD_RESULT ChannelGroup::release()
 {
     FMOD_RESULT result;
@@ -46,7 +47,8 @@ FMOD_RESULT ChannelGroup::getSystemObject(System **system)
 }
 
 
-// OFFSET: %0x009BC640
+// PROVEN: b64d367b IDENTICAL
+// OFFSET: 0x00A7BE10
 FMOD_RESULT ChannelGroup::setVolume(float volume)
 {
     FMOD_RESULT result;
@@ -456,7 +458,8 @@ FMOD_RESULT ChannelGroup::getName(char *name, int namelen)
 }
 
 
-// OFFSET: %0x009BC6A0
+// PROVEN: 44771a11 IDENTICAL
+// OFFSET: 0x00A7BE70
 FMOD_RESULT ChannelGroup::getNumChannels(int *numchannels)
 {
     FMOD_RESULT result;

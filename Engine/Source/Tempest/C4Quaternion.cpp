@@ -9,7 +9,7 @@
 // STATIC: #0x00AA2E4C
 static const uint32_t s_nextAxis[3] = { 1, 2, 0 };
 
-// OFFSET: [#0x009826A0, %0x004D1BC0]
+// OFFSET: [#0x009826A0, 0x004CBBD0]
 template <uint32_t N>
 static void FromRotationMatrixImpl(float trace, C4Quaternion& q, const float* m) {
     float* out = &q.x;
@@ -145,7 +145,8 @@ static void FromTransposedRotationMatrix(C4Quaternion& q, const C44Matrix& trans
     FromRotationMatrixImpl<4>(transposed.c2 + transposed.b1 + transposed.a0, q, &transposed.a0);
 }
 
-// OFFSET: %0x004D1D90
+// PROVEN: 0de85930 IDENTICAL
+// OFFSET: 0x004CBDA0
 void C4Quaternion::FromRotationMatrix(const C44Matrix& m) {
     FromTransposedRotationMatrix(*this, m.Transpose());
 }

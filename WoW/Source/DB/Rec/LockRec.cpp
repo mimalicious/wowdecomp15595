@@ -3,7 +3,8 @@
 // STATIC: %0x00B45CE8
 const DBCMeta LockRec::s_meta = { "DBFilesClient\\Lock.dbc", 5, 132, LockRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 52812e8c IDENTICAL
+// OFFSET: 0x00401000
 void LockRec::FixupStrings(void* record, const char* strings) {
 }
 

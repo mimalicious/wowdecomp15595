@@ -13,7 +13,8 @@ static TSFixedArray<IMPACTSOUNDARRAY> s_impactSounds;
 // STATIC: #0x00B4AE88
 static int32_t s_swingSounds[3][2];
 
-// OFFSET: %0x004DEAD0
+// PROVEN: 939e3a79 IDENTICAL
+// OFFSET: 0x00704C50
 IMPACTSOUND::IMPACTSOUND() {
     this->m_soundId = 0;
     this->m_critSoundId = 0;

@@ -732,7 +732,8 @@ bool FMOD_OS_CDDA_IsDriveLetter(char *name)
 }
 
 
-// OFFSET: %0x00A03CD0
+// PROVEN: 33ce9fc0 IDENTICAL
+// OFFSET: 0x00AC3CB0
 bool FMOD_OS_CDDA_IsDeviceName(char *name)
 {
     if (!name)
@@ -1267,7 +1268,8 @@ FMOD_RESULT FMOD_OS_CDDA_CloseDevice(FMOD_CDDA_DEVICE *device)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A04850
+// PROVEN: 8a4b856e IDENTICAL
+// OFFSET: 0x00AC4830
 FMOD_RESULT FMOD_OS_CDDA_ReadSectors(FMOD_CDDA_DEVICE *device, char *buf, unsigned int start_sector, unsigned int num_sectors)
 {
     unsigned char cmd[12];
@@ -1315,7 +1317,8 @@ FMOD_RESULT FMOD_OS_CDDA_ReadSectors(FMOD_CDDA_DEVICE *device, char *buf, unsign
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A03DD0
+// PROVEN: 73e46646 IDENTICAL
+// OFFSET: 0x00AC3DB0
 static unsigned int FMOD_OS_CDDA_hmsf_to_lba(unsigned char hours, unsigned char minutes, unsigned char seconds, unsigned char frames)
 {
     return (hours * 1053696) + (minutes * 60 * 75) + (seconds * 75) + frames;
@@ -1335,7 +1338,8 @@ static unsigned int FMOD_OS_CDDA_hmsf_to_lba(unsigned char hours, unsigned char 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A03E00
+// PROVEN: 753f3451 IDENTICAL
+// OFFSET: 0x00AC3DE0
 void FMOD_CDDA_AddUserTocEntry(FMOD_CDDA_DEVICE *device, unsigned int sector)
 {
     device->usertoc.min[device->usertoc.numtracks]   = sector / (60 * 75);
@@ -1632,7 +1636,8 @@ FMOD_RESULT FMOD_OS_CDDA_ReadTocRaw(FMOD_CDDA_DEVICE *device, FMOD_CDDA_TOC *toc
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A04CA0
+// PROVEN: 6c1a489e IDENTICAL
+// OFFSET: 0x00AC4C80
 FMOD_RESULT FMOD_OS_CDDA_ReadToc(FMOD_CDDA_DEVICE *device, FMOD_CDDA_TOC *toc)
 {
     int           num_tracks, i;
@@ -1922,7 +1927,8 @@ int FMOD_CDDA_IssueScsiCmd(FMOD_CDDA_DEVICE *cdrom, int flags, unsigned char *cd
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A04E90
+// PROVEN: 6b0aafa0 IDENTICAL
+// OFFSET: 0x00AC4E70
 FMOD_RESULT FMOD_CDDA_Close(FMOD_CDDA_DEVICE *cdrom)
 {
     if (!cdrom)
@@ -2078,7 +2084,8 @@ bool FMOD_CDDA_InquiryCommand(unsigned char adapter_id, unsigned char target_id,
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A03FD0
+// PROVEN: 8155b954 IDENTICAL
+// OFFSET: 0x00AC3FB0
 bool FMOD_OS_CDDA_TestUnitReady(FMOD_CDDA_DEVICE *device)
 {
     unsigned char cmd[6];
@@ -2155,7 +2162,8 @@ bool FMOD_CDDA_PreventMediaRemoval(FMOD_CDDA_DEVICE *cdrom, bool prevent)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A04030
+// PROVEN: f8138a37 IDENTICAL
+// OFFSET: 0x00AC4010
 FMOD_RESULT FMOD_OS_CDDA_SetSpeed(FMOD_CDDA_DEVICE *cdrom, int speed)
 {
     int cmd_size = 10;
@@ -2254,7 +2262,8 @@ int FMOD_CDDA_NTSCSI_GetNumAdapters()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A04160
+// PROVEN: af14153d IDENTICAL
+// OFFSET: 0x00AC4140
 HANDLE FMOD_CDDA_NTSCSI_GetFileHandle(int i)
 {
     char            buf[12];
@@ -2616,7 +2625,8 @@ DWORD FMOD_CDDA_NTSCSI_HAInquiry(SRB_HAInquiry *srb)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A045C0
+// PROVEN: ccbd82ee IDENTICAL
+// OFFSET: 0x00AC45A0
 DWORD FMOD_CDDA_NTSCSI_GetDeviceType(SRB_GDEVBlock *srb)
 {
     srb->SRB_Status = SS_NO_DEVICE;

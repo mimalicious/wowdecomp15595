@@ -122,7 +122,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPCompressor::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D58D0
+// PROVEN: 7288ee4f IDENTICAL
+// OFFSET: 0x00A95250
 FMOD_RESULT DSPCompressor::createInternal()
 {
     init();
@@ -164,7 +165,8 @@ FMOD_RESULT DSPCompressor::createInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D5990
+// PROVEN: ad6af4c0 IDENTICAL
+// OFFSET: 0x00A95310
 FMOD_RESULT DSPCompressor::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int sample;
@@ -425,7 +427,8 @@ FMOD_RESULT DSPCompressor::getParameterInternal(int index, float *value, char *v
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D5F20
+// PROVEN: 0904b569 IDENTICAL
+// OFFSET: 0x00A958A0
 FMOD_RESULT F_CALLBACK DSPCompressor::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPCompressor *compressor = (DSPCompressor *)dsp;
@@ -451,7 +454,8 @@ FMOD_RESULT F_CALLBACK DSPCompressor::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D5F50
+// PROVEN: 10da2b90 IDENTICAL
+// OFFSET: 0x00A958D0
 FMOD_RESULT F_CALLBACK DSPCompressor::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPCompressor *compressor = (DSPCompressor *)dsp;
@@ -502,7 +506,8 @@ FMOD_RESULT F_CALLBACK DSPCompressor::setParameterCallback(FMOD_DSP_STATE *dsp, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D5FC0
+// PROVEN: 4ff29e9e IDENTICAL
+// OFFSET: 0x00A95940
 FMOD_RESULT F_CALLBACK DSPCompressor::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPCompressor *compressor = (DSPCompressor *)dsp;

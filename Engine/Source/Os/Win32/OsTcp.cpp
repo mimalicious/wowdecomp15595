@@ -186,12 +186,14 @@ void OsNet::NETCONN::CompleteRead(NETOVERLAP* overlap, uint32_t bytes) {
 void OsNet::SLTCPCONN::StartRead() {
 }
 
-// OFFSET: %0x007E2010
+// PROVEN: 2eb617a0 IDENTICAL
+// OFFSET: 0x0087CA60
 int32_t OsNet::NETSELSOCK::IsClosed() {
     return this->m_sock == INVALID_SOCKET;
 }
 
-// OFFSET: %0x007E2020
+// PROVEN: 65b2c0f3 IDENTICAL
+// OFFSET: 0x0087CA70
 void OsNet::NETSELECTSETS::AddToSet(NETSELSOCK* selsock, SELECTSET selectSet) {
     FD_SET(selsock->m_sock, &this->m_sets[selectSet]);
 }
@@ -261,7 +263,8 @@ void OsNet::TCPCONN::CloseAndUnlock() {
     this->m_lock.Leave();
 }
 
-// OFFSET: %0x007E2190
+// PROVEN: 245ef04e IDENTICAL
+// OFFSET: 0x0087CBF0
 void OsNet::TCPCONN::SetNagle(int32_t enable) {
     BOOL noDelay = !enable;
     setsockopt(this->m_sock, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<const char*>(&noDelay), sizeof(noDelay));
@@ -336,12 +339,14 @@ void OsNet::IOTCPCONN::StartRead() {
     this->DecIo();
 }
 
-// OFFSET: %0x007E2580
+// PROVEN: 2db8c2b2 IDENTICAL
+// OFFSET: 0x0087D020
 void OsNet::IOTCPCONN::AddToSelectSets(NETSELECTSETS* selectSets) {
     OsNet::TCPNET::LogWrite("%s 11", OsNet::OSNETERR_INTERNAL);
 }
 
-// OFFSET: %0x007E25A0
+// PROVEN: c1b00cf4 IDENTICAL
+// OFFSET: 0x0087D040
 void OsNet::IOTCPCONN::Selected(TCPNET* net, SELECTSET selectSet) {
     OsNet::TCPNET::LogWrite("%s 12", OsNet::OSNETERR_INTERNAL);
 }
@@ -382,7 +387,8 @@ void OsNetAddrMake(uint32_t address, uint16_t port, NETADDR* addr) {
     *reinterpret_cast<uint32_t*>(&in->sin_zero[4]) = 0;
 }
 
-// OFFSET: %0x007E2480
+// PROVEN: eb933899 IDENTICAL
+// OFFSET: 0x0087CF00
 uint32_t OsNetAddrGetAddress(const NETADDR* addr, uint16_t* port) {
     const sockaddr_in* in = reinterpret_cast<const sockaddr_in*>(addr);
 
@@ -393,7 +399,8 @@ uint32_t OsNetAddrGetAddress(const NETADDR* addr, uint16_t* port) {
     return in->sin_addr.s_addr;
 }
 
-// OFFSET: %0x007E24B0
+// PROVEN: 65510d02 IDENTICAL
+// OFFSET: 0x0087CF30
 const char* OsNetAddrToStr(const NETADDR* addr, char* buffer, uint32_t size) {
     const sockaddr_in* in = reinterpret_cast<const sockaddr_in*>(addr);
     SStrPrintf(buffer, size, "%s:%u", inet_ntoa(in->sin_addr), ntohs(in->sin_port));
@@ -606,7 +613,8 @@ void OsNet::SLTCPCONN::ContinueWrite() {
     this->m_lock.Leave();
 }
 
-// OFFSET: %0x007E2AD0
+// PROVEN: c527eaa3 IDENTICAL
+// OFFSET: 0x0087D570
 void OsNet::SLTCPCONN::Selected(TCPNET* net, SELECTSET selectSet) {
     if (selectSet == SELECTSET_R) {
         this->ContinueRead();
@@ -865,7 +873,8 @@ OsNet::SLTCPCONN::SLTCPCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, vo
     }
 }
 
-// OFFSET: %0x007E36D0
+// PROVEN: 3c4398b6 IDENTICAL
+// OFFSET: 0x0087E130
 void OsNet::TCPNET::TcpMakeConn(SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes) {
     if (this->m_port) {
         new (SMemAlloc(sizeof(IOTCPCONN), __FILE__, __LINE__, 0)) IOTCPCONN(this, this->m_port, sock, eventProc, user, connAddr, data, bytes);
@@ -970,7 +979,8 @@ void OsNet::TCPNET::Pump(uint32_t timeout) {
     }
 }
 
-// OFFSET: %0x007E3A90
+// PROVEN: 53020ed3 IDENTICAL
+// OFFSET: 0x0087E4F0
 void OsNetPump(uint32_t timeout) {
     if (OsNet::TCPNET::s_pnet) {
         OsNet::TCPNET::s_pnet->Pump(timeout);

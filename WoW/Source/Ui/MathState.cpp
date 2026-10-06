@@ -79,7 +79,8 @@ static uint8_t LookupMathVariable(const char* name) {
     return 0;
 }
 
-// OFFSET: %0x008E9670
+// PROVEN: 6083d9fe IDENTICAL
+// OFFSET: 0x00992400
 uint32_t MathState::AddIntArg(int32_t value) {
     uint32_t index = this->m_numIntArgs;
     this->m_intArgs[index] = value;
@@ -251,7 +252,8 @@ int32_t MathState::CompilePrimary(int32_t pos) {
     return pos;
 }
 
-// OFFSET: %0x008EA900
+// PROVEN: fdb5aef4 IDENTICAL
+// OFFSET: 0x00993900
 int32_t MathState::CompilePower(int32_t pos) {
     pos = this->CompilePrimary(pos);
 
@@ -297,7 +299,8 @@ int32_t MathState::CompileProduct(int32_t pos) {
     return pos;
 }
 
-// OFFSET: %0x008EAA00
+// PROVEN: ddf5b05c IDENTICAL
+// OFFSET: 0x00993A00
 int32_t MathState::CompileSum(int32_t pos) {
     pos = this->CompileProduct(pos);
 

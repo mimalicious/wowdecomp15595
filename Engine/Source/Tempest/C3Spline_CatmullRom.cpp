@@ -18,7 +18,8 @@ C3Spline_CatmullRom::C3Spline_CatmullRom() {
     this->m_splineMode = 1;
 }
 
-// OFFSET: %0x0040B260
+// PROVEN: cb1b7b35 IDENTICAL
+// OFFSET: 0x0040BED0
 uint32_t C3Spline_CatmullRom::GetSplineMode() {
     return this->m_splineMode;
 }
@@ -77,12 +78,14 @@ void C3Spline_CatmullRom::ParametricSegT(float t, uint32_t& seg, float& segT) {
     segT = (t - 1.0f / segCount * seg) * segCount;
 }
 
-// OFFSET: %0x004CFE30
+// PROVEN: 38927d52 IDENTICAL
+// OFFSET: 0x004CA110
 float C3Spline_CatmullRom::ILength() {
     return C3Spline::ILength(this->m_pointCount - 3);
 }
 
-// OFFSET: %0x004CFE40
+// PROVEN: ef8cc2b3 IDENTICAL
+// OFFSET: 0x004CA120
 void C3Spline_CatmullRom::IValidateCache() {
     uint32_t segCount = this->m_pointCount - 3;
 

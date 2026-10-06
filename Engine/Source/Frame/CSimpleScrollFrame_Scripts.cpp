@@ -195,7 +195,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UpdateScrollChildRect", &Script_UpdateScrollChildRect },
 };
 
-// OFFSET: %0x005491C0
+// PROVEN: 23c95563 IDENTICAL
+// OFFSET: 0x005395D0
 void CSimpleScrollFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

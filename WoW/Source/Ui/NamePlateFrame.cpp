@@ -69,7 +69,8 @@ void CGNamePlateFrame::operator delete(void* ptr) {
     CGNamePlateFrame::s_namePlateHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x005B3D90
+// PROVEN: c903ef18 IDENTICAL
+// OFFSET: 0x009E72E0
 CGNamePlateFrame* CGNamePlateFrame::GetNamePlateFocus() {
     return CGUnit_C::s_namePlateFocus;
 }
@@ -90,7 +91,8 @@ void CGNamePlateFrame::TriggerDamageFeedback() {
     this->m_unitNameText->SetVertexColor(color);
 }
 
-// OFFSET: %0x00932890
+// PROVEN: 930fe4f4 IDENTICAL
+// OFFSET: 0x009E7C40
 static const CImVector* GetDifficultyColor(int32_t level, int32_t playerLevel) {
     static CImVector s_difficultyColors[5] = {
         CImVector(0x19, 0x19, 0xFF, 0xFF),

@@ -106,7 +106,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPDistortion::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DAEA0
+// PROVEN: 19c3ac1c IDENTICAL
+// OFFSET: 0x00A9A820
 FMOD_RESULT DSPDistortion::createInternal()
 {
     int count;
@@ -342,7 +343,8 @@ FMOD_RESULT DSPDistortion::getParameterInternal(int index, float *value, char *v
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DB080
+// PROVEN: b9e5c5f7 IDENTICAL
+// OFFSET: 0x00A9AA00
 FMOD_RESULT F_CALLBACK DSPDistortion::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;
@@ -440,7 +442,8 @@ FMOD_RESULT F_CALLBACK DSPDistortion::readCallback(FMOD_DSP_STATE *dsp, float *i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DB0E0
+// PROVEN: c7142aac IDENTICAL
+// OFFSET: 0x00A9AA70
 FMOD_RESULT F_CALLBACK DSPDistortion::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;
@@ -465,7 +468,8 @@ FMOD_RESULT F_CALLBACK DSPDistortion::setParameterCallback(FMOD_DSP_STATE *dsp, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DB120
+// PROVEN: 275015ee IDENTICAL
+// OFFSET: 0x00A9AAB0
 FMOD_RESULT F_CALLBACK DSPDistortion::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;

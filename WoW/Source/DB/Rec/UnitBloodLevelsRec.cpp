@@ -3,7 +3,8 @@
 // STATIC: %0x00B44804
 const DBCMeta UnitBloodLevelsRec::s_meta = { "DBFilesClient\\UnitBloodLevels.dbc", 2, 16, UnitBloodLevelsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: f2a7833a IDENTICAL
+// OFFSET: 0x00401000
 void UnitBloodLevelsRec::FixupStrings(void* record, const char* strings) {
 }
 

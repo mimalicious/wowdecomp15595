@@ -140,22 +140,26 @@ bool Anchor::GetAnchor(FRAMEPOINT& point, FRAMEPOINT& relativePoint, float& offs
     return static_cast<Dimension*>(offset)->Load(offsetX, offsetY, status);
 }
 
-// OFFSET: %0x00517430
+// PROVEN: 8abab33f IDENTICAL
+// OFFSET: 0x00507260
 uint32_t CLayoutFrame::IsResizePending() {
     return this->m_layoutFlags & 4;
 }
 
-// OFFSET: %0x00517440
+// PROVEN: ad50406e IDENTICAL
+// OFFSET: 0x00507270
 float CLayoutFrame::GetHeight() {
     return this->m_height;
 }
 
-// OFFSET: %0x00517450
+// PROVEN: 78ad4b4f IDENTICAL
+// OFFSET: 0x00507280
 float CLayoutFrame::GetWidth() {
     return this->m_width;
 }
 
-// OFFSET: %0x00517460
+// PROVEN: bc6d0e03 IDENTICAL
+// OFFSET: 0x00507290
 void CLayoutFrame::GetClampRectInsets(float& left, float& right, float& top, float& bottom) {
     bottom = 0.0f;
     top = 0.0f;
@@ -163,7 +167,8 @@ void CLayoutFrame::GetClampRectInsets(float& left, float& right, float& top, flo
     left = 0.0f;
 }
 
-// OFFSET: %0x00517490
+// PROVEN: fec1b118 IDENTICAL
+// OFFSET: 0x00507320
 CFramePoint* CLayoutFrame::GetFramePoint(FRAMEPOINT point) {
     CFramePoint* framePoint = this->m_framePoints[point];
 
@@ -324,7 +329,8 @@ float CLayoutFrame::Bottom() {
     return y;
 }
 
-// OFFSET: %0x00517B10
+// PROVEN: 89aecdeb IDENTICAL
+// OFFSET: 0x005079A0
 void CLayoutFrame::ProtectFramepoints(uint32_t flag) {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
         CFramePoint* framePoint = this->m_framePoints[i];
@@ -362,7 +368,8 @@ int32_t CLayoutFrame::IsResizeDependency(CLayoutFrame* frame) {
     return 0;
 }
 
-// OFFSET: %0x00517BB0
+// PROVEN: e2c20946 IDENTICAL
+// OFFSET: 0x00507AF0
 int32_t CLayoutFrame::GetRect(CRect* rect) {
     if (!(this->m_layoutFlags & 0x1)) {
         return 0;
@@ -509,7 +516,8 @@ int32_t CLayoutFrame::OnFrameResize() {
     return this->m_layoutFlags & 1;
 }
 
-// OFFSET: %0x005181C0
+// PROVEN: 528c53c0 IDENTICAL
+// OFFSET: 0x00508100
 void CLayoutFrame::SetProtected() {
     this->m_layoutFlags &= ~0x600u;
     this->m_layoutFlags |= 0x100;
@@ -517,7 +525,8 @@ void CLayoutFrame::SetProtected() {
     this->ProtectFramepoints(0x200);
 }
 
-// OFFSET: %0x00518200
+// PROVEN: 83d7fb2f IDENTICAL
+// OFFSET: 0x00508140
 void CLayoutFrame::SetProtectFlag(uint32_t flag) {
     if (this->m_layoutFlags & 0x900) {
         return;
@@ -617,12 +626,14 @@ CLayoutFrame::CLayoutFrame() {
     this->m_guard = 0;
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: 7b077510 IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CLayoutFrame::AreChildrenProtected(int32_t& deferred) {
     return 0;
 }
 
-// OFFSET: %0x00518570
+// PROVEN: 01536278 IDENTICAL
+// OFFSET: 0x00508620
 void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x400) {
         frame->SetProtectFlag(0x400);
@@ -633,7 +644,8 @@ void CLayoutFrame::OnProtectedAttach(CLayoutFrame* frame) {
     }
 }
 
-// OFFSET: %0x005185B0
+// PROVEN: 4cdd0eda IDENTICAL
+// OFFSET: 0x00508660
 void CLayoutFrame::OnProtectedDetach(CLayoutFrame* frame) {
     if (this->m_layoutFlags & 0x700) {
         frame->SetProtectFlag(0x400);
@@ -653,7 +665,8 @@ int32_t CLayoutFrame::AreDependentsProtected(int32_t& deferred) {
     return 0;
 }
 
-// OFFSET: %0x00518720
+// PROVEN: 90001b19 IDENTICAL
+// OFFSET: 0x005081F0
 uint32_t CLayoutFrame::IsProtected() {
     if (this->m_layoutFlags & 0x400) {
         this->m_layoutFlags |= 0x800;
@@ -769,7 +782,8 @@ bool CLayoutFrame::SetLayoutScale(float scale, bool force) {
     return false;
 }
 
-// OFFSET: %0x00518AC0
+// PROVEN: 0e34334e IDENTICAL
+// OFFSET: 0x005087A0
 bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_layoutDepth) < 0.00000023841858f) {
         return false;
@@ -786,14 +800,16 @@ bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     return true;
 }
 
-// OFFSET: %0x00518B20
+// PROVEN: 2b3f4d39 IDENTICAL
+// OFFSET: 0x00508800
 void CLayoutFrame::SetWidth(float width) {
     this->m_layoutFlags &= ~0x8u;
     this->m_width = width;
     this->Resize(0);
 }
 
-// OFFSET: %0x00518B50
+// PROVEN: 1fdf5f53 IDENTICAL
+// OFFSET: 0x00508830
 void CLayoutFrame::SetHeight(float height) {
     this->m_layoutFlags &= ~0x8u;
     this->m_height = height;
@@ -827,7 +843,8 @@ void CLayoutFrame::GetSize(float& width, float& height, int32_t ignoreRect) {
     }
 }
 
-// OFFSET: %0x00518CE0
+// PROVEN: d51564a2 IDENTICAL
+// OFFSET: 0x005089A0
 void CLayoutFrame::SetClampedToScreen(int32_t clamped) {
     if (clamped) {
         this->m_layoutFlags |= 0x10;
@@ -1423,24 +1440,29 @@ CLayoutFrame* CLayoutFrame::GetLayoutFrameByName(const char* name) {
     return NULL;
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: a9b2f1df IDENTICAL
+// OFFSET: 0x009FCE20
 int32_t CLayoutFrame::IsObjectLoaded() {
     return 1;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: cba41c6f IDENTICAL
+// OFFSET: 0x00401000
 void CLayoutFrame::LoadObject() {
 }
 
-// OFFSET: %0x00511BF0
+// PROVEN: 4b3e9b26 IDENTICAL
+// OFFSET: 0x00627990
 void CLayoutFrame::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 520a98c3 IDENTICAL
+// OFFSET: 0x00401000
 void CLayoutFrame::HideThis() {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 3f7df67e IDENTICAL
+// OFFSET: 0x00847950
 void CLayoutFrame::ShowThis(bool loadPending) {
 }
 

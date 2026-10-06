@@ -388,7 +388,8 @@ bool IsAlphaChinese(uint16_t c) {
     return (c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DFF) || static_cast<uint16_t>(c + 0x700) <= 0x1FF;
 }
 
-// OFFSET: %0x004EC7F0
+// PROVEN: 60696c7d IDENTICAL
+// OFFSET: 0x004E67E0
 bool IsAlphaRussian(uint16_t c) {
     return (c >= 0x410 && c <= 0x44F) || c == 0x401 || c == 0x451;
 }
@@ -566,7 +567,8 @@ int32_t ValidateName(uint32_t language, const uint16_t* allowed, const char* nam
     return 0;
 }
 
-// OFFSET: %0x004ED640
+// PROVEN: 1efd769f IDENTICAL
+// OFFSET: 0x004E77E0
 int32_t ValidateCharacterNameConst(uint32_t language, const char* name, bool profanity, bool chatProfanity, bool reserved, bool english, int32_t extraLength) {
     uint32_t length;
     int32_t charset;
@@ -608,7 +610,8 @@ int32_t ValidatePetName(uint32_t language, const char* name, bool profanity, boo
     return result;
 }
 
-// OFFSET: %0x004ED710
+// PROVEN: 0343ee59 IDENTICAL
+// OFFSET: 0x004E78B0
 int32_t ValidateGuildName(uint32_t language, const char* name) {
     uint16_t allowed[2] = { 32, 0 };
     uint32_t length;
@@ -779,7 +782,8 @@ bool TruncateNewLines(char* text) {
     return false;
 }
 
-// OFFSET: %0x004EC680
+// PROVEN: 675be0b0 IDENTICAL
+// OFFSET: 0x004E6670
 bool IsNumeric(uint16_t c) {
     return static_cast<uint16_t>(c - '0') <= 9;
 }
@@ -1080,7 +1084,8 @@ int32_t NameNeedsDeclensions(int32_t locale, const char* name) {
     return locale == 8 && RussianNameNeedsDeclensions(name);
 }
 
-// OFFSET: %0x00971B00
+// PROVEN: 74b7e0fc IDENTICAL
+// OFFSET: 0x00A312C0
 uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex) {
     if (locale == 8) {
         return GetNumRussianNameDeclensionSets(name, sex);
@@ -1089,7 +1094,8 @@ uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex)
     return 0;
 }
 
-// OFFSET: %0x00971B20
+// PROVEN: 74e43113 IDENTICAL
+// OFFSET: 0x00A312E0
 int32_t GetNameDeclensions(int32_t locale, char* declensions, const char* name, int32_t sex, uint32_t set) {
     if (locale == 8) {
         return GetRussianNameDeclensions(declensions, name, sex, set);
@@ -1381,7 +1387,8 @@ bool IsRussianDeclensionValid(const char* name, const char* declension) {
     return i - stem <= 5;
 }
 
-// OFFSET: %0x004EC7D0
+// PROVEN: 8db9a0d0 IDENTICAL
+// OFFSET: 0x004E67C0
 bool IsRussian(uint16_t c) {
     return static_cast<uint16_t>(c - 0x400) <= 0xFF;
 }

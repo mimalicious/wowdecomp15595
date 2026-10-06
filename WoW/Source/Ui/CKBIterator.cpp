@@ -13,7 +13,8 @@ void CKBIterator::GoToFirst() {
     this->m_index = 0;
 }
 
-// OFFSET: %0x0093C8A0
+// PROVEN: e5f77eaf IDENTICAL
+// OFFSET: 0x009FAF70
 void CKBIterator::GoToNext() {
     if (!this->m_node) {
         return;
@@ -65,7 +66,8 @@ void CKBIterator::GoTo(int32_t index) {
     this->m_node = node;
 }
 
-// OFFSET: %0x0093C920
+// PROVEN: eacca35d IDENTICAL
+// OFFSET: 0x009FAFF0
 void CKBIterator::GoToFirstChild() {
     if (!this->m_node) {
         return;
@@ -75,7 +77,8 @@ void CKBIterator::GoToFirstChild() {
     this->m_index = 0;
 }
 
-// OFFSET: %0x0093DF80
+// PROVEN: e2a535a9 IDENTICAL
+// OFFSET: 0x009FC5F0
 void CKBIterator::GoToChild(const char* name) {
     if (!this->m_node) {
         return;

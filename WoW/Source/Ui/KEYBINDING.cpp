@@ -6,7 +6,8 @@ KEYBINDING::KEYBINDING() : m_flags(0) {
     memset(this->m_data, 0, sizeof(this->m_data));
 }
 
-// OFFSET: %0x0087CE70
+// PROVEN: 0a6d9761 IDENTICAL
+// OFFSET: 0x00921700
 KEYBINDING& KEYBINDING::operator=(const KEYBINDING& source) {
     this->m_flags = source.m_flags;
 

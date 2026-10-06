@@ -2,7 +2,8 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x004A11F0
+// PROVEN: 819c4892 IDENTICAL
+// OFFSET: 0x00496A50
 CGPetition::CGPetition() {
     this->m_id = 0;
     this->m_ownerGuid = WOWGUID();
@@ -56,7 +57,8 @@ CGPetition& CGPetition::operator=(const CGPetition& source) {
     return *this;
 }
 
-// OFFSET: %0x009642F0
+// PROVEN: a79c9a1d IDENTICAL
+// OFFSET: 0x00A283B0
 void CGPetition::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
     msg->Put(this->m_ownerGuid.m_guid);
@@ -82,7 +84,8 @@ void CGPetition::Pack(CDataStore* msg) {
     msg->Put(this->m_staticType);
 }
 
-// OFFSET: %0x00964410
+// PROVEN: 16c8d30a IDENTICAL
+// OFFSET: 0x00A284D0
 void CGPetition::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));
     msg->Get(this->m_ownerGuid.m_guid);

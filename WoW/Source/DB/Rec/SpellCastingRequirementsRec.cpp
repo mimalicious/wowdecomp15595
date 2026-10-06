@@ -3,7 +3,8 @@
 // STATIC: %0x00B45374
 const DBCMeta SpellCastingRequirementsRec::s_meta = { "DBFilesClient\\SpellCastingRequirements.dbc", 7, 28, SpellCastingRequirementsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 3d22d34c IDENTICAL
+// OFFSET: 0x00401000
 void SpellCastingRequirementsRec::FixupStrings(void* record, const char* strings) {
 }
 

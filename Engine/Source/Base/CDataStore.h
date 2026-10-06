@@ -86,7 +86,8 @@ CDataStoreCache<size>::~CDataStoreCache() {
     }
 }
 
-// OFFSET: [%0x00A44170, %0x00A44300]
+// PROVEN: b9cec5af IDENTICAL
+// OFFSET: [0x00B04110, 0x00B04200]
 template <uint32_t size>
 void CDataStoreCache<size>::InternalInitialize(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     data = this->m_cache;
@@ -139,7 +140,8 @@ int32_t CDataStoreCache<size>::InternalFetchWrite(uint32_t pos, uint32_t bytes, 
     return 1;
 }
 
-// OFFSET: %0x00A44320
+// PROVEN: adb2817f IDENTICAL
+// OFFSET: 0x00B04130
 template <uint32_t size>
 void CDataStoreCache<size>::DetachBuffer(void** data, uint32_t* size_, uint32_t* alloc) {
     void* detachedData;

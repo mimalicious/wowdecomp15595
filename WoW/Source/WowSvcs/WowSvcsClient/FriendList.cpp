@@ -54,7 +54,8 @@ static CVar* s_whoListLimit;
 // STATIC: #0x00C7BFEC
 int32_t FriendList::s_whoToUI;
 
-// OFFSET: %0x004D8620
+// PROVEN: 8a5ae815 IDENTICAL
+// OFFSET: 0x004D2660
 FriendInfo* FriendList::GetFriend(WOWGUID guid) {
     if (!guid) {
         return NULL;
@@ -69,7 +70,8 @@ FriendInfo* FriendList::GetFriend(WOWGUID guid) {
     return NULL;
 }
 
-// OFFSET: %0x004D85B0
+// PROVEN: c696cd41 IDENTICAL
+// OFFSET: 0x004D25F0
 uint32_t FriendList::GetNumFriends() {
     uint32_t count = 0;
 
@@ -109,7 +111,8 @@ FriendList::FriendList() {
     this->m_selectedMute = WOWGUID();
 }
 
-// OFFSET: %0x004D8350
+// PROVEN: 2f86035c IDENTICAL
+// OFFSET: 0x004D2390
 FriendList::~FriendList() {
 }
 
@@ -312,7 +315,8 @@ int32_t Packet_SMSG_CONTACT_LIST(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: %0x004D8730
+// PROVEN: 58cda3fe IDENTICAL
+// OFFSET: 0x004D2770
 uint32_t FriendList::GetNumIgnores() {
     uint32_t count = 0;
 
@@ -423,7 +427,8 @@ void FriendList::Destroy() {
     FriendList::s_friendList = NULL;
 }
 
-// OFFSET: %0x004D8800
+// PROVEN: 47318e70 IDENTICAL
+// OFFSET: 0x004D2840
 bool FriendList::IsComplained(WOWGUID guid) {
     if (!guid) {
         return false;
@@ -1040,7 +1045,8 @@ bool FriendList::IsMuted(WOWGUID guid) {
     return CGChat::m_complaintsSystemStatus == 2 && this->IsComplained(guid);
 }
 
-// OFFSET: %0x004DA400
+// PROVEN: 9d953431 IDENTICAL
+// OFFSET: 0x004D4380
 bool FriendList::IsIgnoredOrMuted(WOWGUID guid) {
     if (!guid) {
         return false;
@@ -1064,7 +1070,8 @@ bool FriendList::GetFriendDeleted(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: %0x004D89D0
+// PROVEN: 79b84f8f IDENTICAL
+// OFFSET: 0x004D2A10
 void FriendList::SetFriendDeleted(WOWGUID guid, uint8_t deleted) {
     for (uint32_t i = 0; i < 100; i++) {
         if (this->m_friends[i].m_guid == guid) {
@@ -1128,7 +1135,8 @@ uint32_t FriendList::GetFriendIndexByGuid(WOWGUID guid) {
     return empty;
 }
 
-// OFFSET: %0x004D8D70
+// PROVEN: c26f7dab IDENTICAL
+// OFFSET: 0x004D2DB0
 void FriendList::SetName(WOWGUID guid, const char* name) {
     for (uint32_t i = 0; i < 100; i++) {
         if (this->m_friends[i].m_guid == guid) {
@@ -1142,7 +1150,8 @@ void FriendList::SetName(WOWGUID guid, const char* name) {
     }
 }
 
-// OFFSET: %0x004D8DF0
+// PROVEN: ba0b03c2 IDENTICAL
+// OFFSET: 0x004D2E30
 void FriendList::SetConnected(WOWGUID guid, uint8_t connected) {
     for (uint32_t i = 0; i < 100; i++) {
         if (this->m_friends[i].m_guid == guid) {
@@ -1212,7 +1221,8 @@ bool FriendList::GetIgnoreDeleted(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: %0x004D8F80
+// PROVEN: a8aa576b IDENTICAL
+// OFFSET: 0x004D2FC0
 void FriendList::SetIgnoreDeleted(WOWGUID guid, uint8_t deleted) {
     for (uint32_t i = 0; i < 50; i++) {
         if (this->m_ignores[i].m_guid == guid) {
@@ -1233,7 +1243,8 @@ bool FriendList::GetMuteDeleted(WOWGUID guid) {
     return false;
 }
 
-// OFFSET: %0x004D9020
+// PROVEN: b293e7f5 IDENTICAL
+// OFFSET: 0x004D3060
 void FriendList::SetMuteDeleted(WOWGUID guid, uint8_t deleted) {
     for (uint32_t i = 0; i < 50; i++) {
         if (this->m_mutes[i].m_guid == guid) {
@@ -1885,7 +1896,8 @@ int32_t Packet_SMSG_FRIEND_STATUS(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: %0x004D8A20
+// PROVEN: c695d25d IDENTICAL
+// OFFSET: 0x004D2A60
 bool FriendList::IsFriend(WOWGUID guid) {
     for (uint32_t i = 0; i < 100; i++) {
         if (this->m_friends[i].m_guid == guid) {
@@ -1938,7 +1950,8 @@ int32_t Packet_SMSG_RWHOIS(void* param, NETMESSAGE msgId, uint32_t time, CDataSt
     return 1;
 }
 
-// OFFSET: %0x004D8680
+// PROVEN: c6aeac86 IDENTICAL
+// OFFSET: 0x004D26C0
 FriendInfo* FriendList::GetFriendInfoByName(const char* name) {
     if (!name) {
         return NULL;
@@ -1953,7 +1966,8 @@ FriendInfo* FriendList::GetFriendInfoByName(const char* name) {
     return NULL;
 }
 
-// OFFSET: %0x004D86F0
+// PROVEN: cb7053bd IDENTICAL
+// OFFSET: 0x004D2730
 int32_t FriendList::GetFriendSelectionIndex() {
     if (!this->m_selectedFriend) {
         return -1;
@@ -1968,7 +1982,8 @@ int32_t FriendList::GetFriendSelectionIndex() {
     return -1;
 }
 
-// OFFSET: %0x004D8780
+// PROVEN: d62f3e8a IDENTICAL
+// OFFSET: 0x004D27C0
 uint32_t FriendList::GetNumMutes() {
     uint32_t count = 0;
 
@@ -1979,7 +1994,8 @@ uint32_t FriendList::GetNumMutes() {
     return count;
 }
 
-// OFFSET: %0x004D87D0
+// PROVEN: 4557b996 IDENTICAL
+// OFFSET: 0x004D2810
 uint64_t FriendList::GetIgnore(uint32_t index) {
     if (index > 50) {
         return 0;
@@ -1988,7 +2004,8 @@ uint64_t FriendList::GetIgnore(uint32_t index) {
     return this->m_ignores[index].m_guid.m_guid;
 }
 
-// OFFSET: %0x004D8900
+// PROVEN: eedb5d5d IDENTICAL
+// OFFSET: 0x004D2940
 int32_t FriendList::GetIgnoreSelectionIndex() {
     if (!this->m_selectedIgnore) {
         return -1;
@@ -2003,7 +2020,8 @@ int32_t FriendList::GetIgnoreSelectionIndex() {
     return -1;
 }
 
-// OFFSET: %0x004D8940
+// PROVEN: bc72f12e IDENTICAL
+// OFFSET: 0x004D2980
 int32_t FriendList::GetMuteSelectionIndex() {
     if (!this->m_selectedMute) {
         return -1;

@@ -28,7 +28,8 @@ static C4Vector s_fogParams;
 // STATIC: %0x00C3CBDC
 static C4Vector s_fogColor;
 
-// OFFSET: %0x0043AD90
+// PROVEN: cdcf0ac9 IDENTICAL
+// OFFSET: 0x00430960
 void DefaultShaders::GetFogColor(CImVector& color) {
     color.r = static_cast<uint8_t>(s_fogColor.x * 255.0f);
     color.g = static_cast<uint8_t>(s_fogColor.y * 255.0f);

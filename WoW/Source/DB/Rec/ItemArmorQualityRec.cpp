@@ -3,7 +3,8 @@
 // STATIC: %0x00B463E4
 const DBCMeta ItemArmorQualityRec::s_meta = { "DBFilesClient\\ItemArmorQuality.dbc", 3, 36, ItemArmorQualityRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 87d92419 IDENTICAL
+// OFFSET: 0x00401000
 void ItemArmorQualityRec::FixupStrings(void* record, const char* strings) {
 }
 

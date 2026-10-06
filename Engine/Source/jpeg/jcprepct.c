@@ -74,7 +74,8 @@ typedef my_prep_controller * my_prep_ptr;
  * Initialize for a processing pass.
  */
 
-// OFFSET: %0x00A956C0
+// PROVEN: bab56465 IDENTICAL
+// OFFSET: 0x00B63470
 static void start_pass_prep(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
 
@@ -122,7 +123,8 @@ static void expand_bottom_edge(JSAMPARRAY image_data, JDIMENSION num_cols, int i
  * input rows.
  */
 
-// OFFSET: %0x00A95710
+// PROVEN: 0c619802 IDENTICAL
+// OFFSET: 0x00B634C0
 static void pre_process_data(j_compress_ptr cinfo, JSAMPARRAY input_buf, JDIMENSION *in_row_ctr, JDIMENSION in_rows_avail, JSAMPIMAGE output_buf, JDIMENSION *out_row_group_ctr, JDIMENSION out_row_groups_avail) {
   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
   int numrows, ci;
@@ -184,7 +186,8 @@ static void pre_process_data(j_compress_ptr cinfo, JSAMPARRAY input_buf, JDIMENS
  * Process some data in the context case.
  */
 
-// OFFSET: %0x00A958F0
+// PROVEN: 24e2b2b5 IDENTICAL
+// OFFSET: 0x00B636A0
 static void pre_process_context(j_compress_ptr cinfo, JSAMPARRAY input_buf, JDIMENSION *in_row_ctr, JDIMENSION in_rows_avail, JSAMPIMAGE output_buf, JDIMENSION *out_row_group_ctr, JDIMENSION out_row_groups_avail) {
   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
   int numrows, ci;
@@ -251,7 +254,8 @@ static void pre_process_context(j_compress_ptr cinfo, JSAMPARRAY input_buf, JDIM
  * Create the wrapped-around downsampling input buffer needed for context mode.
  */
 
-// OFFSET: %0x00A95AD0
+// PROVEN: 8108f152 IDENTICAL
+// OFFSET: 0x00B63880
 static void create_context_buffer(j_compress_ptr cinfo) {
   my_prep_ptr prep = (my_prep_ptr) cinfo->prep;
   int rgroup_height = cinfo->max_v_samp_factor;
@@ -298,7 +302,8 @@ static void create_context_buffer(j_compress_ptr cinfo) {
  * Initialize preprocessing controller.
  */
 
-// OFFSET: %0x00A95BF0
+// PROVEN: 2dccb804 IDENTICAL
+// OFFSET: 0x00B639A0
 void jinit_c_prep_controller(j_compress_ptr cinfo, boolean need_full_buffer) {
   my_prep_ptr prep;
   int ci;

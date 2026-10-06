@@ -69,7 +69,8 @@ void SignatureNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
-// OFFSET: %0x0092A9C0
+// PROVEN: 3b87c374 IDENTICAL
+// OFFSET: 0x009E0330
 void PetitionQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGPetitionInfo::SetPetitionStats(id);

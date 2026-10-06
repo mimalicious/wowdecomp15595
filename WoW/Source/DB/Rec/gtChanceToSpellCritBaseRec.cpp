@@ -3,7 +3,8 @@
 // STATIC: %0x00B46658
 const DBCMeta gtChanceToSpellCritBaseRec::s_meta = { "DBFilesClient\\gtChanceToSpellCritBase.dbc", 1, 8, gtChanceToSpellCritBaseRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: e7dff06a IDENTICAL
+// OFFSET: 0x00401000
 void gtChanceToSpellCritBaseRec::FixupStrings(void* record, const char* strings) {
 }
 

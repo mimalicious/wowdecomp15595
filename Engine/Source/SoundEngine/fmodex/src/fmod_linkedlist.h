@@ -42,7 +42,8 @@ namespace FMOD
             mNodePrev = mNodeNext = this; 
             mNodeData = 0;
         }
-        // OFFSET: %0x009BC6D0
+        // PROVEN: c8223bb3 IDENTICAL
+        // OFFSET: 0x00A7BEA0
         inline void removeNode()     
         { 
             mNodePrev->mNodeNext = mNodeNext; 

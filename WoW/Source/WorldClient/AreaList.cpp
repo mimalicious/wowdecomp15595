@@ -257,7 +257,8 @@ void AreaListRegisterLocation(int32_t mapId, CMapEntity* entity) {
     CGGameUI::NewZoneFeedback(zone->m_id, subzoneId, s_wmoGroupID, zoneText, subZoneText, realZoneText, World::QueryObjectInside(entity));
 }
 
-// OFFSET: %0x004DFDA0
+// PROVEN: e58fcd82 IDENTICAL
+// OFFSET: 0x004D9980
 void AreaListShutdown() {
     s_lastAreaID = -1;
     s_lastSubAreaID = -1;

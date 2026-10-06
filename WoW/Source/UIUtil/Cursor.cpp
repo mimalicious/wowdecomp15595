@@ -97,7 +97,8 @@ static uint32_t s_cursorMode;
 // STATIC: #0x00C26DF0
 static uint32_t s_cursorImages[54][1024];
 
-// OFFSET: %0x0048E9B0
+// PROVEN: 80f3c29c IDENTICAL
+// OFFSET: 0x00486580
 void CursorDropItem() {
     if (s_cursorItemType) {
         s_cursorItemType = 0;
@@ -105,12 +106,14 @@ void CursorDropItem() {
     }
 }
 
-// OFFSET: %0x0048E430
+// PROVEN: c792b4e5 IDENTICAL
+// OFFSET: 0x00486000
 uint32_t CursorGetResetMode() {
     return s_cursorResetMode;
 }
 
-// OFFSET: %0x0048E440
+// PROVEN: 5d9b37c6 IDENTICAL
+// OFFSET: 0x00486010
 void CursorSetResetMode(uint32_t mode) {
     s_cursorResetMode = mode;
 }
@@ -212,7 +215,8 @@ void CursorInitialize() {
     UpdateCursor();
 }
 
-// OFFSET: %0x0048E450
+// PROVEN: 69c795fc IDENTICAL
+// OFFSET: 0x00486020
 uint32_t CursorGetModeFromName(const char* name) {
     for (uint32_t i = 1; i < 53; i++) {
         if (!SStrCmpI(name, s_cursorNames[i], STORM_MAX_STR)) {
@@ -387,7 +391,8 @@ void CursorGrabSpell(const char* texture) {
     CursorReleaseItemMips();
 }
 
-// OFFSET: %0x0048E3F0
+// PROVEN: e9dc305e IDENTICAL
+// OFFSET: 0x00485FC0
 void CursorDestroy() {
     if (!s_cursorItemMips) {
         return;

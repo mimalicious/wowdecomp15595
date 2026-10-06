@@ -12,7 +12,8 @@
 // ******************************************************************
 // Local Functions 
 // ******************************************************************
-// OFFSET: %0x00A3E370
+// PROVEN: a92c9b2e IDENTICAL
+// OFFSET: 0x00AFDD30
 static LONG findDrvPath (char *clsidstr,char *dllpath,int dllpathsize)
 {
 	HKEY			hkEnum,hksub,hkpath;
@@ -132,7 +133,8 @@ static LPASIODRVSTRUCT getDrvStruct (int drvID,LPASIODRVSTRUCT lpdrv)
 // ******************************************************************
 //	AsioDriverList
 // ******************************************************************
-// OFFSET: %0x00A3E750
+// PROVEN: 5e36a440 IDENTICAL
+// OFFSET: 0x00AFE110
 AsioDriverList::AsioDriverList ()
 {
 	HKEY			hkEnum = 0;
@@ -164,7 +166,8 @@ AsioDriverList::AsioDriverList ()
 }
 
 
-// OFFSET: %0x00A3E800
+// PROVEN: 2ba10ddc IDENTICAL
+// OFFSET: 0x00AFE1C0
 bool AsioDriverList::close()
 {
 	if (numdrv) {
@@ -176,14 +179,16 @@ bool AsioDriverList::close()
 }
 
 
-// OFFSET: %0x00A3E820
+// PROVEN: 1fac0189 IDENTICAL
+// OFFSET: 0x007B0A90
 LONG AsioDriverList::asioGetNumDev (VOID)
 {
 	return (LONG)numdrv;
 }
 
 
-// OFFSET: %0x00A3E830
+// PROVEN: 9643a5f0 IDENTICAL
+// OFFSET: 0x00AFE1E0
 LONG AsioDriverList::asioOpenDriver (int drvID,LPVOID *asiodrv)
 {
 	LPASIODRVSTRUCT	lpdrv = 0;
@@ -209,7 +214,8 @@ LONG AsioDriverList::asioOpenDriver (int drvID,LPVOID *asiodrv)
 }
 
 
-// OFFSET: %0x00A3E8B0
+// PROVEN: 4df879b3 IDENTICAL
+// OFFSET: 0x00AFE260
 LONG AsioDriverList::asioCloseDriver (int drvID)
 {
 	LPASIODRVSTRUCT	lpdrv = 0;
@@ -226,7 +232,8 @@ LONG AsioDriverList::asioCloseDriver (int drvID)
 	return 0;
 }
 
-// OFFSET: %0x00A3E900
+// PROVEN: 84183e4d IDENTICAL
+// OFFSET: 0x00AFE2B0
 LONG AsioDriverList::asioGetDriverName (int drvID,char *drvname,int drvnamesize)
 {	
 	LPASIODRVSTRUCT			lpdrv = 0;

@@ -1371,11 +1371,13 @@ void ClientRealmResponseAdapter::GameServerResult(RealmConnection* connection, c
 void ClientRealmResponseAdapter::LoginServerResult(LOGIN_STATE state, LOGIN_RESULT result, const char* message1, const char* message2, const char* message3) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 851669dd IDENTICAL
+// OFFSET: 0x00847950
 void ClientRealmResponseAdapter::RealmListReceived(TSFixedArray<REALM_INFO>& realms) {
 }
 
-// OFFSET: %0x007C8240
+// PROVEN: af92e680 IDENTICAL
+// OFFSET: 0x00841AE0
 void ClientRealmResponseAdapter::MessageReceived(RealmConnection* connection, uint32_t message) {
 }
 
@@ -1391,15 +1393,18 @@ void ClientRealmResponseAdapter::OnAccountOnline(RealmConnection* connection, in
 void ClientRealmResponseAdapter::OnAFKMonitorInfoResponse(RealmConnection* connection, WOWGUID guid, int32_t a3, int32_t a4, int32_t a5, int32_t a6) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: a13283da IDENTICAL
+// OFFSET: 0x00847950
 void ClientRealmResponseAdapter::HandleConnect(RealmConnection* connection) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: be0ed1e5 IDENTICAL
+// OFFSET: 0x00847950
 void ClientRealmResponseAdapter::HandleDisconnect(RealmConnection* connection) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: bbda4733 IDENTICAL
+// OFFSET: 0x00847950
 void ClientRealmResponseAdapter::HandleCantConnect(RealmConnection* connection) {
 }
 

@@ -425,7 +425,8 @@ static TSGrowableArray<int32_t> s_pendingChannelNumbers;
 // STATIC: #0x00BCFAE0
 TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
-// OFFSET: %0x00847310
+// PROVEN: 9df3b71f IDENTICAL
+// OFFSET: 0x008E62E0
 int32_t CGChat::IsVoiceChatAllowed() {
     return CGChat::m_voiceChatSystemStatus && !ComSatClient_IsComsatDisabledByClient();
 }
@@ -528,7 +529,8 @@ void CGChat::RecordWhisperSource(WOWGUID guid) {
     CGChat::m_whisperSrcHistory[0] = guid;
 }
 
-// OFFSET: %0x00847040
+// PROVEN: 11483268 IDENTICAL
+// OFFSET: 0x008E6010
 int32_t CGChat::IsInWhisperHistory(WOWGUID guid) {
     if (!guid) {
         return 0;
@@ -566,7 +568,8 @@ void CGChat::RecordWhisperDest(WOWGUID guid) {
     CGChat::m_whisperDstHistory[0] = guid;
 }
 
-// OFFSET: %0x00847150
+// PROVEN: 8c239c17 IDENTICAL
+// OFFSET: 0x008E6120
 int32_t CGChat::IsWhisperThrottled(uint32_t time) {
     uint32_t last = s_whisperThrottleTimes[s_whisperThrottleIndex];
     return last && static_cast<int32_t>(time - last - 10000) < 0;
@@ -578,7 +581,8 @@ void CGChat::AddWhisperThrottled(uint32_t time) {
     s_whisperThrottleIndex = (s_whisperThrottleIndex + 1) % (sizeof(s_whisperThrottleTimes) / sizeof(s_whisperThrottleTimes[0]));
 }
 
-// OFFSET: %0x00848250
+// PROVEN: 8d9e7242 IDENTICAL
+// OFFSET: 0x008E72B0
 static void UpdateVoiceMemberFlags(PENDINGUSERLIST* user, uint8_t flags, WOWGUID guid, int32_t type, const char* name) {
     if (!user) {
         return;
@@ -2149,7 +2153,8 @@ void CGChat::LeftChannel(uint32_t id, const char* name) {
     CGChat::OnChannelsUpdated();
 }
 
-// OFFSET: %0x00853C80
+// PROVEN: 9b6e1c3c IDENTICAL
+// OFFSET: 0x008F42A0
 void CGChat::ResetChannel(uint32_t id, const char* name) {
     ChatChannel* channel = id ? CGChat::GetChannelByChatChannelID(id) : GetChannelByName(name);
 
@@ -4010,7 +4015,8 @@ void CGChat::LogFactionChanged(int32_t faction, int32_t delta, int32_t generic, 
     SendToCombatText(36, rec->m_name, delta);
 }
 
-// OFFSET: %0x00846C40
+// PROVEN: 044877b6 IDENTICAL
+// OFFSET: 0x008E5BB0
 int32_t CGChat::IsChatLogging(int32_t type) {
     return s_chatLogging[type];
 }
@@ -4863,7 +4869,8 @@ int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, boo
     return 0;
 }
 
-// OFFSET: %0x00855A00
+// PROVEN: 794c883d IDENTICAL
+// OFFSET: 0x008F5DF0
 void CGChat::LoadChatSettings() {
     LoadAccountData(7, CGChat::LoadChatSettingsCallback, NULL);
 }
@@ -4948,7 +4955,8 @@ CImVector CGChat::GetChatColor(int32_t type) {
     return color;
 }
 
-// OFFSET: %0x00847270
+// PROVEN: bf1feaaf IDENTICAL
+// OFFSET: 0x008E6200
 int32_t FormatTime(char* buffer, uint32_t size, int32_t seconds) {
     int32_t days = seconds / 86400;
     int32_t hours = seconds % 86400 / 3600;
@@ -5268,13 +5276,15 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
     }
 }
 
-// OFFSET: %0x0084BB30
+// PROVEN: 9c9b64e9 IDENTICAL
+// OFFSET: 0x008EAFC0
 void CGChat::SaveChatSettings() {
     s_chatSettingsDirty = 0;
     SaveAccountData(7, CGChat::SaveChatSettingsCallback, NULL);
 }
 
-// OFFSET: %0x00847330
+// PROVEN: 36ea1e10 IDENTICAL
+// OFFSET: 0x008E6300
 int32_t CGChat::GetActiveVoiceSession() {
     return s_activeVoiceChannel;
 }
@@ -5549,21 +5559,24 @@ ChatRecord* GetChatRecordEx(const char* name, const char* text, uint32_t lineID)
     return best;
 }
 
-// OFFSET: %0x008471B0
+// PROVEN: e023e7de IDENTICAL
+// OFFSET: 0x008E6180
 static void LogFeedPetCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGChat::LogFeedPet(guid, id);
     }
 }
 
-// OFFSET: %0x008471D0
+// PROVEN: 1b42bbda IDENTICAL
+// OFFSET: 0x008E61A0
 static void LogTradeSkillCreateCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGChat::LogTradeSkillCreate(guid, id);
     }
 }
 
-// OFFSET: %0x00849DB0
+// PROVEN: 01b94acb IDENTICAL
+// OFFSET: 0x008E62A0
 int32_t CGChat::IsVoiceChatEnabled() {
     int32_t enabled = s_cvarEnableVoiceChat && s_cvarEnableVoiceChat->m_intValue;
     int32_t disabled = ComSatClient_IsComsatDisabledByClient();

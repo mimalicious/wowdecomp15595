@@ -23,7 +23,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0EFB0
+// PROVEN: 40da6ea5 IDENTICAL
+// OFFSET: 0x00ACEF90
 Listener::Listener()
 {
     mPosition.x = 0;

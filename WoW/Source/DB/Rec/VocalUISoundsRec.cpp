@@ -3,7 +3,8 @@
 // STATIC: %0x00B44690
 const DBCMeta VocalUISoundsRec::s_meta = { "DBFilesClient\\VocalUISounds.dbc", 5, 28, VocalUISoundsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 4871e926 IDENTICAL
+// OFFSET: 0x00401000
 void VocalUISoundsRec::FixupStrings(void* record, const char* strings) {
 }
 

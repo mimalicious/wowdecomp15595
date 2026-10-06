@@ -63,14 +63,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetWorldStateUIInfo", &Script_GetWorldStateUIInfo },
 };
 
-// OFFSET: %0x0091C800
+// PROVEN: 0694f211 IDENTICAL
+// OFFSET: 0x009CD4B0
 void WorldStateInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x0091C830
+// PROVEN: 76f2f4d6 IDENTICAL
+// OFFSET: 0x009CD4E0
 void WorldStateInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

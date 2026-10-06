@@ -334,7 +334,8 @@ int32_t CGWorldMap::GetZoneID(uint32_t continent, uint32_t zone) {
     return entry.m_zones.m_data[zone];
 }
 
-// OFFSET: %0x00875BD0
+// PROVEN: 8af60fb7 IDENTICAL
+// OFFSET: 0x00919930
 int32_t CGWorldMap::GetCurrentDungeonMap() {
     if (CGWorldMap::m_currentOrphanZone != -1) {
         return CGWorldMap::m_currentDungeonMap;
@@ -1234,7 +1235,8 @@ void CGWorldMap::RefreshCurrentMap() {
     }
 }
 
-// OFFSET: %0x00875C20
+// PROVEN: 543cc20c IDENTICAL
+// OFFSET: 0x00919CA0
 void CGWorldMap::ClearArrowFrames() {
     if (CGWorldMap::m_playerArrowFrame) {
         delete CGWorldMap::m_playerArrowFrame;

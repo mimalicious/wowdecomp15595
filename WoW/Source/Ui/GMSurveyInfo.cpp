@@ -124,7 +124,8 @@ void CGGMSurveyInfo::Submit() {
     CGGMSurveyInfo::FreeAnswers();
 }
 
-// OFFSET: %0x00401000
+// PROVEN: cd4c7b4d IDENTICAL
+// OFFSET: 0x00401000
 void CGGMSurveyInfo::InitializeGame() {
 }
 
@@ -179,7 +180,8 @@ void CGGMSurveyInfo::SetComment(const char* comment) {
     }
 }
 
-// OFFSET: %0x009474F0
+// PROVEN: 7999596e IDENTICAL
+// OFFSET: 0x009E5BF0
 void CGGMSurveyInfo::ShutdownGame() {
     CGGMSurveyInfo::FreeAnswers();
 }

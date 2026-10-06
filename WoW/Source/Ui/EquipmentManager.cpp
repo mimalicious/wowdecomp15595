@@ -41,7 +41,8 @@ int32_t CGEquipmentManager::m_ignoredSlots[19];
 // STATIC: #0x00ACFC00
 TSList<EQUIPMENT_SET_NODE> CGEquipmentManager::s_equipmentSets;
 
-// OFFSET: %0x008F6620
+// PROVEN: b695294d IDENTICAL
+// OFFSET: 0x009A1280
 void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_swapPending = 0;
     CGEquipmentManager::m_lastCanUseEquipmentSetsValue = 0;
@@ -111,7 +112,8 @@ void CGEquipmentManager::CreateEquipmentSet(const char* name, const char* icon) 
     set->unk_0230 = 1;
 }
 
-// OFFSET: %0x008F8860
+// PROVEN: 62cfdeb7 IDENTICAL
+// OFFSET: 0x009A2F50
 void CGEquipmentManager::SaveSetByName(const char* name, const char* icon) {
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByName(name);
 
@@ -347,7 +349,8 @@ int32_t Packet_SMSG_EQUIPMENT_SET_LIST(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: %0x008F6670
+// PROVEN: 243b4596 IDENTICAL
+// OFFSET: 0x009A12D0
 void CGEquipmentManager::ClearIgnoredSlots() {
     for (uint32_t i = 0; i < 19; i++) {
         CGEquipmentManager::m_ignoredSlots[i] = 0;

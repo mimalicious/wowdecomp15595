@@ -11,7 +11,8 @@ ComSat::Network::Address::Address() {
     this->m_family = 2;
 }
 
-// OFFSET: %0x00979750
+// PROVEN: 4cf7e8a6 IDENTICAL
+// OFFSET: 0x00A39440
 bool ComSat::Network::Address::operator==(const ComSat::Network::Address& other) const {
     return this->m_length == other.m_length && this->m_family == other.m_family && this->m_port == other.m_port && this->m_ip == other.m_ip;
 }

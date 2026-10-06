@@ -3,7 +3,8 @@
 // STATIC: %0x00B47024
 const DBCMeta CastableRaidBuffsRec::s_meta = { "DBFilesClient\\CastableRaidBuffs.dbc", 3, 12, CastableRaidBuffsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 7cf93d9b IDENTICAL
+// OFFSET: 0x00401000
 void CastableRaidBuffsRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -27,7 +27,8 @@ LinkedListNode           AsyncThread::gAsyncHead;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F380
+// PROVEN: 5cb21c0c IDENTICAL
+// OFFSET: 0x00ACF360
 void asyncThreadFunc(void *data)
 {
     AsyncThread *asyncThread = (AsyncThread *)data;
@@ -297,7 +298,8 @@ FMOD_RESULT AsyncThread::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F020
+// PROVEN: 186667ea IDENTICAL
+// OFFSET: 0x00ACF000
 FMOD_RESULT AsyncThread::reallyRelease()
 {
     FMOD_OS_CriticalSection_Enter(mCrit);
@@ -405,7 +407,8 @@ FMOD_RESULT AsyncThread::update()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F140
+// PROVEN: 431ee7a9 IDENTICAL
+// OFFSET: 0x00ACF120
 FMOD_RESULT AsyncThread::threadFunc()
 {
     FMOD_RESULT     result = FMOD_OK;

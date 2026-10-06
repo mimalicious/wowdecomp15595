@@ -35,12 +35,14 @@ static CTexture* s_tex[2];
 // STATIC: %0x00E457F8
 static uint32_t s_mode;
 
-// OFFSET: %0x00970F20
+// PROVEN: 2201f9d8 IDENTICAL
+// OFFSET: 0x00A2ED00
 int32_t SunShafts::IsEnabled() {
     return s_mode > 0;
 }
 
-// OFFSET: %0x00970F30
+// PROVEN: a4c1905c IDENTICAL
+// OFFSET: 0x00A2ED10
 CGxTex* SunShafts::GetBuffer() {
     return s_gxTex[1];
 }

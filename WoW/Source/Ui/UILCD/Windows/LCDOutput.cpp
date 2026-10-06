@@ -37,17 +37,20 @@ void CLCDOutput::Shutdown() {
     this->Close();
 }
 
-// OFFSET: %0x00A70D80
+// PROVEN: afa37274 IDENTICAL
+// OFFSET: 0x00B3EAB0
 void CLCDOutput::SetGfx(CLCDGfxBase* gfx) {
     this->m_pGfx = gfx;
 }
 
-// OFFSET: %0x00A70DC0
+// PROVEN: 18bc7044 IDENTICAL
+// OFFSET: 0x00B3EAF0
 void CLCDOutput::SetGlobalPage(CLCDPage* page) {
     this->m_pGlobalPage = page;
 }
 
-// OFFSET: %0x00A70DD0
+// PROVEN: 8a0be9c0 IDENTICAL
+// OFFSET: 0x00B3EB00
 int32_t CLCDOutput::IsOpened() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
@@ -78,19 +81,22 @@ HRESULT CLCDOutput::HandleErrorFromAPI(DWORD result) {
     return static_cast<HRESULT>(result | 0x80000000);
 }
 
-// OFFSET: %0x005A33B0
+// PROVEN: 91010f88 IDENTICAL
+// OFFSET: 0x005EB640
 int32_t CLCDOutput::DoesBitmapNeedUpdate(lgLcdBitmapHeader* bitmap) {
     return 1;
 }
 
-// OFFSET: %0x00A70E50
+// PROVEN: 0b53931f IDENTICAL
+// OFFSET: 0x00B3EB80
 void CLCDOutput::OnLCDButtonDown(int32_t button) {
     if (this->m_pActivePage) {
         this->m_pActivePage->OnLCDButtonDown(button);
     }
 }
 
-// OFFSET: %0x00A70E70
+// PROVEN: 713f8e8c IDENTICAL
+// OFFSET: 0x00B3EBA0
 void CLCDOutput::OnLCDButtonUp(int32_t button) {
     if (this->m_pActivePage) {
         this->m_pActivePage->OnLCDButtonUp(button);
@@ -102,12 +108,14 @@ int32_t CLCDOutput::GetDeviceId() {
     return this->m_hDevice;
 }
 
-// OFFSET: %0x00A70EA0
+// PROVEN: 9a34be3a IDENTICAL
+// OFFSET: 0x00B3EBC0
 void CLCDOutput::ResetDeviceType() {
     this->m_OpenByTypeContext.deviceType = 0;
 }
 
-// OFFSET: %0x00A70EB0
+// PROVEN: b0477467 IDENTICAL
+// OFFSET: 0x00B3EBD0
 int32_t CLCDOutput::HasDeviceType() {
     return this->m_OpenByTypeContext.deviceType != 0;
 }
@@ -187,7 +195,8 @@ int32_t CLCDOutput::Draw() {
     return this->m_hDevice != LGLCD_INVALID_DEVICE;
 }
 
-// OFFSET: %0x00A71090
+// PROVEN: 6a0d9e2e IDENTICAL
+// OFFSET: 0x00B3EDB0
 void CLCDOutput::OnSoftButtonEvent(uint32_t buttons) {
     if (this->m_pGfx->GetFamily() == LGLCD_DEVICE_FAMILY_QVGA_BASIC) {
         if ((this->m_dwButtonState & LGLCDBUTTON_LEFT) && !(buttons & LGLCDBUTTON_LEFT)) {
@@ -322,22 +331,27 @@ void CLCDOutput::OnUpdate(uint32_t timestamp) {
     }
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 1030497a IDENTICAL
+// OFFSET: 0x00847950
 void CLCDOutput::OnPageShown(CLCDCollection* page) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 68dde66a IDENTICAL
+// OFFSET: 0x00847950
 void CLCDOutput::OnPageExpired(CLCDCollection* page) {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 7b8ed439 IDENTICAL
+// OFFSET: 0x00401000
 void CLCDOutput::OnEnteringIdle() {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 5eda7916 IDENTICAL
+// OFFSET: 0x00847950
 void CLCDOutput::OnClosingDevice(int32_t device) {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 16a5474d IDENTICAL
+// OFFSET: 0x00847950
 void CLCDOutput::OnOpenedDevice(int32_t device) {
 }

@@ -158,7 +158,8 @@ void __stdcall CGWorldFrame::CursorTrackObject(CGGameObject_C* object) {
     }
 }
 
-// OFFSET: %0x00840270
+// PROVEN: 190ea79a IDENTICAL
+// OFFSET: 0x008DEBE0
 int32_t CGWorldFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     int32_t result = CSimpleFrame::OnLayerTrackUpdate(evt);
 
@@ -171,7 +172,8 @@ int32_t CGWorldFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// OFFSET: %0x008403F0
+// PROVEN: 95e3b746 IDENTICAL
+// OFFSET: 0x008DED60
 void CGWorldFrame::OnMouseModeNormal() {
     this->m_worldFlags &= ~0x2;
 }
@@ -1175,7 +1177,8 @@ int32_t CGWorldFrame::HitTestPoint(float x, float y, int32_t a3, HITTESTRESULT* 
     return kind;
 }
 
-// OFFSET: %0x00845930
+// PROVEN: 17dd596a IDENTICAL
+// OFFSET: 0x008E2CB0
 void CGWorldFrame::UnitClear() {
     this->MoveToFreeList(&this->m_modelList);
     this->MoveToFreeList(&this->m_hitModelList);
@@ -2061,7 +2064,8 @@ void CGWorldFrame::RenderWorld(void* param) {
     CShaderEffect::UpdateProjMatrix();
 }
 
-// OFFSET: %0x00846800
+// PROVEN: 072ef2d8 IDENTICAL
+// OFFSET: 0x008E5740
 void CGWorldFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
 

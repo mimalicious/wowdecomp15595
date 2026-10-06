@@ -131,7 +131,8 @@ void GeometryI::calculateMatrix()
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A06C90
+// PROVEN: e449da16 IDENTICAL
+// OFFSET: 0x00AC6C80
 void GeometryI::updateSpatialData()
 {
     // find world aabb
@@ -219,7 +220,8 @@ void GeometryI::setToBeUpdated()
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A06EC0
+// PROVEN: cf493057 IDENTICAL
+// OFFSET: 0x00AC6EB0
 bool GeometryI::octreeLineTestCallback(OctreeNode* item, void* data)
 {
     LineTestData        *lineTestData = (LineTestData*)data;
@@ -890,7 +892,8 @@ FMOD_RESULT GeometryI::getPolygonAttributes(int polygonIndex, float *directOcclu
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A07520
+// PROVEN: 2deea4ce IDENTICAL
+// OFFSET: 0x00AC7510
 FMOD_RESULT GeometryI::flush()
 {
     /*
@@ -1699,7 +1702,8 @@ FMOD_RESULT GeometryI::getUserData(void **userdata)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A078C0
+// PROVEN: 20ef04ca IDENTICAL
+// OFFSET: 0x00AC78B0
 bool GeometryI::lineTest(LineTestData* lineTestData)
 {
     FMOD_VECTOR startBck = lineTestData->start;

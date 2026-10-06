@@ -46,7 +46,8 @@ namespace FMOD
 
       public:
 
-        // OFFSET: %0x009C3560
+        // PROVEN: 948f53b8 IDENTICAL
+        // OFFSET: 0x00A82CD0
         ChannelGroupI() 
         {
             mVolume = mRealVolume = 1;

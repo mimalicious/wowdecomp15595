@@ -190,7 +190,8 @@ static void ReserveInputSpace(CONSOLELINE* line, uint32_t chars) {
     line->m_buffer = buffer;
 }
 
-// OFFSET: %0x00618090
+// PROVEN: 68b147ca IDENTICAL
+// OFFSET: 0x0060DE70
 static void ResetHighlight() {
     s_highlightState = 0;
     s_hRect.right = 0.0f;
@@ -356,17 +357,20 @@ static int32_t OnKeyUp(const void* data, void* param) {
     return !s_active;
 }
 
-// OFFSET: %0x00618490
+// PROVEN: be85f722 IDENTICAL
+// OFFSET: 0x0060E220
 const char* GetConsoleMessage() {
     return s_consoleMessage;
 }
 
-// OFFSET: %0x006184A0
+// PROVEN: ae794803 IDENTICAL
+// OFFSET: 0x0060E230
 void SetConsoleMessage(const char* message) {
     s_consoleMessage = message;
 }
 
-// OFFSET: %0x006185D0
+// PROVEN: adb5bf75 IDENTICAL
+// OFFSET: 0x0060E380
 static int32_t EventCloseCallback(void* param) {
     EventPostCloseEx(EventGetCurrentContext());
 
@@ -1262,12 +1266,14 @@ void ConsoleScreenDestroy() {
     s_inputString = NULL;
 }
 
-// OFFSET: %0x006184B0
+// PROVEN: 7dbc3ed8 IDENTICAL
+// OFFSET: 0x0060E240
 void SetConsoleKey(KEY key) {
     s_consoleHotKey = key;
 }
 
-// OFFSET: %0x006184C0
+// PROVEN: 8d2eeaa6 IDENTICAL
+// OFFSET: 0x0060E250
 void ConsolePostClose() {
     EventPostCloseEx(EventGetCurrentContext());
 }

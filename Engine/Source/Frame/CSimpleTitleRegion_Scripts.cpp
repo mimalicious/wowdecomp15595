@@ -7,7 +7,8 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0051B020
+// PROVEN: 972105ca IDENTICAL
+// OFFSET: 0x0050AFA0
 void CSimpleTitleRegion::RegisterScriptMethods(lua_State* L) {
     CScriptRegion::RegisterScriptMethods(L);
 }

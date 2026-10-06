@@ -30,7 +30,8 @@ static int OggSeek(void* source, ogg_int64_t offset, int whence) {
     return 0;
 }
 
-// OFFSET: %0x0097E230
+// PROVEN: 46d005c6 IDENTICAL
+// OFFSET: 0x004E1ED0
 static ogg_int32_t OggTell(void* source) {
     return static_cast<OggMemoryStream*>(source)->m_position;
 }
@@ -52,7 +53,8 @@ static size_t OggRead(void* buffer, size_t size, size_t count, void* source) {
     return static_cast<OggMemoryStream*>(source)->Read(buffer, size, count);
 }
 
-// OFFSET: %0x00408910
+// PROVEN: bea9c96d IDENTICAL
+// OFFSET: 0x00842700
 static int OggClose(void* source) {
     return 0;
 }

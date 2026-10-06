@@ -3,7 +3,8 @@
 // STATIC: %0x00B46C78
 const DBCMeta DurabilityCostsRec::s_meta = { "DBFilesClient\\DurabilityCosts.dbc", 3, 120, DurabilityCostsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 0500123f IDENTICAL
+// OFFSET: 0x00401000
 void DurabilityCostsRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -27,7 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A0C0
+// PROVEN: 367aeb2c IDENTICAL
+// OFFSET: 0x00ACA0A0
 FMOD_RESULT TagNode::init(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype)
 {
     int memsize;
@@ -80,7 +81,8 @@ FMOD_RESULT TagNode::init(FMOD_TAGTYPE type, const char *name, void *data, unsig
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A160
+// PROVEN: dcaec584 IDENTICAL
+// OFFSET: 0x00ACA140
 FMOD_RESULT TagNode::release()
 {
     if (mName)
@@ -119,7 +121,8 @@ FMOD_RESULT TagNode::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A1D0
+// PROVEN: de2ab548 IDENTICAL
+// OFFSET: 0x00ACA1B0
 FMOD_RESULT TagNode::update(void *data, unsigned int datalen)
 {
     //AJS double-buffered stuff!!!!!!!!!!1
@@ -170,7 +173,8 @@ FMOD_RESULT TagNode::update(void *data, unsigned int datalen)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A2B0
+// PROVEN: 8e472158 IDENTICAL
+// OFFSET: 0x00ACA290
 FMOD_RESULT Metadata::release()
 {
     TagNode *node = (TagNode *)mList.getNext();
@@ -205,7 +209,8 @@ FMOD_RESULT Metadata::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A360
+// PROVEN: 978d234d IDENTICAL
+// OFFSET: 0x00ACA340
 FMOD_RESULT Metadata::getNumTags(int *numtags, int *numtagsupdated)
 {
     TagNode *node;
@@ -253,7 +258,8 @@ FMOD_RESULT Metadata::getNumTags(int *numtags, int *numtagsupdated)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A3A0
+// PROVEN: b6eccb2c IDENTICAL
+// OFFSET: 0x00ACA380
 FMOD_RESULT Metadata::getTag(const char *name, int index, FMOD_TAG *tag)
 {
     int i;
@@ -371,7 +377,8 @@ FMOD_RESULT Metadata::getTag(const char *name, int index, FMOD_TAG *tag)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A4B0
+// PROVEN: d82f7776 IDENTICAL
+// OFFSET: 0x00ACA490
 FMOD_RESULT Metadata::add(Metadata *metadata)
 {
     TagNode *node = (TagNode *)metadata->mList.getNext();
@@ -464,7 +471,8 @@ FMOD_RESULT Metadata::addTag(TagNode *node)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A550
+// PROVEN: a86ebc3d IDENTICAL
+// OFFSET: 0x00ACA530
 FMOD_RESULT Metadata::addTag(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, bool unique)
 {
     FMOD_RESULT     result;

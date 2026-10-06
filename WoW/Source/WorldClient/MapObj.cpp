@@ -1780,7 +1780,8 @@ void CMapObj::AsyncFailedCallback(void* param, CAsyncObject* object) {
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x006A5C00
+// PROVEN: b7d5a221 IDENTICAL
+// OFFSET: 0x00745B60
 void CMapObj::ReadGroup(uint32_t index) {
     this->ReadGroup(index, false);
 }

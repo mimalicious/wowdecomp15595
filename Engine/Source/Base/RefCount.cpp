@@ -5,7 +5,8 @@ TRefCnt::TRefCnt() {
     this->m_refcnt = 0;
 }
 
-// OFFSET: %0x00408B90
+// PROVEN: 75e498ac IDENTICAL
+// OFFSET: 0x004093D0
 void TRefCnt::DeleteSelf() {
     delete this;
 }

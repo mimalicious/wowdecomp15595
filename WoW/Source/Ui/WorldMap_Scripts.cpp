@@ -327,13 +327,15 @@ static int32_t Script_IsZoomOutAvailable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00456830
+// PROVEN: 9f0de39d IDENTICAL
+// OFFSET: 0x0080C320
 static int32_t Script_GetNumMapDebugObjects(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: d2109180 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_HasDebugZoneMap(lua_State* L) {
     return 0;
 }
@@ -840,7 +842,8 @@ static int32_t Script_InitWorldMapPing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00876210
+// PROVEN: 1f07a6dc IDENTICAL
+// OFFSET: 0x0091A2C0
 static int32_t Script_CanQueueForWintergrasp(lua_State* L) {
     if (GetWorldState(4375)) {
         lua_pushnumber(L, 1.0);
@@ -1104,17 +1107,20 @@ static int32_t Script_SetDungeonMapLevel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 1c66de1a IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_GetMapDebugObjectInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 58a2461a IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_TeleportToDebugObject(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 721de051 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_GetDebugZoneMap(lua_State* L) {
     return 0;
 }

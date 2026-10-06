@@ -78,7 +78,8 @@ void jpeg_start_compress(j_compress_ptr cinfo, boolean write_all_tables) {
  * when using a multiple-scanline buffer.
  */
 
-// OFFSET: %0x00A8FA00
+// PROVEN: 1f3480a6 IDENTICAL
+// OFFSET: 0x00B5D7B0
 JDIMENSION jpeg_write_scanlines(j_compress_ptr cinfo, JSAMPARRAY scanlines, JDIMENSION num_lines) {
   JDIMENSION row_ctr, rows_left;
 

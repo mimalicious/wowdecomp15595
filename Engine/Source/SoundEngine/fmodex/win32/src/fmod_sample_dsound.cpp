@@ -28,7 +28,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A41E30
+// PROVEN: 25025950 IDENTICAL
+// OFFSET: 0x00B017E0
 SampleDSound::SampleDSound()
 {
     mBuffer = 0;
@@ -53,7 +54,8 @@ SampleDSound::SampleDSound()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A41E50
+// PROVEN: 41200dd2 IDENTICAL
+// OFFSET: 0x00B01800
 FMOD_RESULT SampleDSound::release(bool freethis)
 {  
     FMOD_RESULT result;
@@ -115,7 +117,8 @@ FMOD_RESULT SampleDSound::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A41F00
+// PROVEN: 9b9616c4 IDENTICAL
+// OFFSET: 0x00B018B0
 FMOD_RESULT SampleDSound::lockInternal(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
 	HRESULT hr;
@@ -174,7 +177,8 @@ FMOD_RESULT SampleDSound::lockInternal(unsigned int offset, unsigned int length,
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A41FB0
+// PROVEN: 342c7258 IDENTICAL
+// OFFSET: 0x00B01960
 FMOD_RESULT SampleDSound::unlockInternal(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
 	HRESULT hr;

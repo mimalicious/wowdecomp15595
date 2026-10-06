@@ -47,7 +47,8 @@ void CGContainer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_containerMirror = saved + CGItem::TotalFieldsSaved();
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 0f5f4e76 IDENTICAL
+// OFFSET: 0x00401000
 void CGContainer_C::Initialize() {
 }
 

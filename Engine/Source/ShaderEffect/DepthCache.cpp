@@ -37,17 +37,20 @@ void __fastcall DepthCache::Reset() {
     s_needsCreate = 1;
 }
 
-// OFFSET: %0x009708B0
+// PROVEN: 3239f9e4 IDENTICAL
+// OFFSET: 0x00A2F850
 bool DepthCache::IsValid() {
     return s_depthMode != DM_Unknown;
 }
 
-// OFFSET: %0x009708C0
+// PROVEN: 3fd63246 IDENTICAL
+// OFFSET: 0x00A2F870
 CTexture* DepthCache::GetDepthSR() {
     return s_depthResolveTex ? s_depthResolveTex : s_depthTex;
 }
 
-// OFFSET: %0x009708D0
+// PROVEN: 49770cf6 IDENTICAL
+// OFFSET: 0x00A2F880
 DepthCache::EDepthMode DepthCache::GetDepthMode() {
     return s_depthMode;
 }

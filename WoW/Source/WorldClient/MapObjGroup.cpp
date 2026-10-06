@@ -115,14 +115,16 @@ int32_t CMapObjGroup::GetLiquidType() const {
     return this->m_liquidType;
 }
 
-// OFFSET: %0x006DD540
+// PROVEN: 741ba07f IDENTICAL
+// OFFSET: 0x0077CC50
 void SpanRasterizer::VisitRange(int32_t x0, int32_t x1, int32_t y) {
     if (x0 <= x1) {
         this->VisitSpan(x0, x1, y);
     }
 }
 
-// OFFSET: %0x006DD6C0
+// PROVEN: adc895d0 IDENTICAL
+// OFFSET: 0x0077CEC0
 SpanRange SpanRange::Merge(const SpanRange& other) {
     int32_t maximum = this->m_max > other.m_max ? this->m_max : other.m_max;
     int32_t minimum = this->m_min < other.m_min ? this->m_min : other.m_min;

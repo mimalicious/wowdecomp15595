@@ -11,7 +11,8 @@ CVar* CCharacterComponent::g_componentThreadVar;
 // STATIC: #0x00B2F9F4
 CVar* CCharacterComponent::g_componentCompressVar;
 
-// OFFSET: %0x004E0850
+// PROVEN: 0c306dc8 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool ComponentVarHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     return true;
 }

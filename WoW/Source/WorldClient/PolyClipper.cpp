@@ -2,11 +2,13 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C4Plane.h"
 
-// OFFSET: %0x00401000
+// PROVEN: d86786f4 IDENTICAL
+// OFFSET: 0x00401000
 PolyClipper::~PolyClipper() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 63910cce IDENTICAL
+// OFFSET: 0x00401000
 PCResultsIterator::~PCResultsIterator() {
 }
 
@@ -19,7 +21,8 @@ void* PolyClipper::PCDataProxy::GetData(void* (*lerp)(const void*, const void*, 
     return this->m_data;
 }
 
-// OFFSET: %0x00704270
+// PROVEN: 20939842 IDENTICAL
+// OFFSET: 0x0079E730
 void PolyClipper::AddVertex(const C3Vector& pos, const void* data) {
     PCVertex& vertex = this->m_verts[this->m_vertCount];
     vertex.m_pos = pos;
@@ -49,7 +52,8 @@ void PolyClipper::Begin() {
     }
 }
 
-// OFFSET: %0x00704330
+// PROVEN: 181d354b IDENTICAL
+// OFFSET: 0x0079E7F0
 void PolyClipper::End() {
     for (this->m_firstEdge = 0; this->m_firstEdge < this->m_edgeCount; this->m_firstEdge++) {
         if (!this->m_edges[this->m_firstEdge].m_clipped) {
@@ -102,7 +106,8 @@ void PCResultsIterator::Next() {
     }
 }
 
-// OFFSET: %0x007044A0
+// PROVEN: b993f5e7 IDENTICAL
+// OFFSET: 0x0079E960
 bool PCResultsIterator::HasFinished() const {
     return this->m_finished;
 }
@@ -195,12 +200,14 @@ int32_t PolyClipper::Clip(const C4Plane& plane, int32_t side) {
     return 2;
 }
 
-// OFFSET: %0x007047A0
+// PROVEN: 834d2bc2 IDENTICAL
+// OFFSET: 0x0079EC60
 PCResultsIterator PolyClipper::GetResults(void* (*lerp)(const void*, const void*, float)) const {
     return PCResultsIterator(this, lerp);
 }
 
-// OFFSET: %0x007047C0
+// PROVEN: 3d567ceb IDENTICAL
+// OFFSET: 0x0079EC80
 PolyClipper::PolyClipper() {
     this->m_vertCount = 0;
     this->m_edgeCount = 0;

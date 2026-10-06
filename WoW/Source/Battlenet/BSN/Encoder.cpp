@@ -5,7 +5,8 @@
 BSN::Encoder::~Encoder() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 9e566c27 IDENTICAL
+// OFFSET: 0x00401000
 void BSN::Encoder::Flush() {
 }
 
@@ -175,7 +176,8 @@ int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
 BSN::Decoder::~Decoder() {
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 2bf34764 IDENTICAL
+// OFFSET: 0x00842700
 int32_t BSN::Decoder::Fill() {
     return BSN::CODEC_VALID;
 }

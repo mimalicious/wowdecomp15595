@@ -43,7 +43,8 @@ typedef my_comp_master * my_master_ptr;
  */
 
 /* Do computations that are needed before master selection phase */
-// OFFSET: %0x00A96C30
+// PROVEN: 13807af3 IDENTICAL
+// OFFSET: 0x00B649E0
 static void initial_setup(j_compress_ptr cinfo) {
   int ci;
   jpeg_component_info *compptr;
@@ -298,7 +299,8 @@ static void validate_script(j_compress_ptr cinfo) {
 
 
 /* Set up the scan parameters for the current scan */
-// OFFSET: %0x00A971C0
+// PROVEN: fe5e598f IDENTICAL
+// OFFSET: 0x00B64F70
 static void select_scan_parameters(j_compress_ptr cinfo) {
   int ci;
 
@@ -341,7 +343,8 @@ static void select_scan_parameters(j_compress_ptr cinfo) {
 
 /* Do computations that are needed before processing a JPEG scan */
 /* cinfo->comps_in_scan and cinfo->cur_comp_info[] are already set */
-// OFFSET: %0x00A972B0
+// PROVEN: 8b1e7037 IDENTICAL
+// OFFSET: 0x00B65060
 static void per_scan_setup(j_compress_ptr cinfo) {
   int ci, mcublks, tmp;
   jpeg_component_info *compptr;
@@ -435,7 +438,8 @@ static void per_scan_setup(j_compress_ptr cinfo) {
  * required.
  */
 
-// OFFSET: %0x00A97490
+// PROVEN: 9c13a844 IDENTICAL
+// OFFSET: 0x00B65240
 static void prepare_for_pass(j_compress_ptr cinfo) {
   my_master_ptr master = (my_master_ptr) cinfo->master;
 
@@ -562,7 +566,8 @@ static void prepare_for_pass(j_compress_ptr cinfo) {
  * In multi-pass processing, this routine is not used.
  */
 
-// OFFSET: %0x00A97710
+// PROVEN: da96919c IDENTICAL
+// OFFSET: 0x00B654C0
 static void pass_startup(j_compress_ptr cinfo) {
   cinfo->master->call_pass_startup = FALSE; /* reset flag so call only once */
 
@@ -577,7 +582,8 @@ static void pass_startup(j_compress_ptr cinfo) {
  * Finish up at end of pass.
  */
 
-// OFFSET: %0x00A97750
+// PROVEN: da95f1b4 IDENTICAL
+// OFFSET: 0x00B65500
 static void finish_pass_master(j_compress_ptr cinfo) {
   my_master_ptr master = (my_master_ptr) cinfo->master;
 

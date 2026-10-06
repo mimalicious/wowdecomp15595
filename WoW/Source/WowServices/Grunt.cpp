@@ -91,7 +91,8 @@ void Grunt::ClientLink::Send(CDataStore& msg) {
     this->m_lock.Leave();
 }
 
-// OFFSET: %0x00A42E40
+// PROVEN: b8ecb3b5 IDENTICAL
+// OFFSET: 0x00B02B50
 void Grunt::ClientLink::Shutdown() {
     this->m_lock.Enter();
 
@@ -105,7 +106,8 @@ void Grunt::ClientLink::Shutdown() {
     this->m_lock.Leave();
 }
 
-// OFFSET: %0x00A42E90
+// PROVEN: 3b6b35fc IDENTICAL
+// OFFSET: 0x00B02BA0
 void Grunt::ClientLink::Disconnect() {
     this->m_lock.Enter();
 
@@ -116,7 +118,8 @@ void Grunt::ClientLink::Disconnect() {
     this->m_lock.Leave();
 }
 
-// OFFSET: %0x00A42ED0
+// PROVEN: 6d4ccb6c IDENTICAL
+// OFFSET: 0x00B02BD0
 void Grunt::ClientLink::SetState(int32_t state) {
     this->m_lock.Enter();
     this->m_state = state;
@@ -154,7 +157,8 @@ void Grunt::ClientLink::WCConnected(WowConnection* connection, WowConnection* in
     }
 }
 
-// OFFSET: %0x00A43F70
+// PROVEN: ac8b6023 IDENTICAL
+// OFFSET: 0x00B03F10
 void Grunt::ClientLink::WCDisconnected(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_lock.Enter();
     this->Shutdown();
@@ -166,7 +170,8 @@ void Grunt::ClientLink::WCDisconnected(WowConnection* connection, uint32_t timeS
     }
 }
 
-// OFFSET: %0x00A43FD0
+// PROVEN: a570d718 IDENTICAL
+// OFFSET: 0x00B03F70
 void Grunt::ClientLink::WCCantConnect(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_lock.Enter();
     this->Shutdown();
@@ -178,7 +183,8 @@ void Grunt::ClientLink::WCCantConnect(WowConnection* connection, uint32_t timeSt
     }
 }
 
-// OFFSET: %0x00A44030
+// PROVEN: e0112b34 IDENTICAL
+// OFFSET: 0x00B03FD0
 void Grunt::ClientLink::PackLogon(CDataStore& msg, const Grunt::ClientLink::Logon& logon) {
     uint32_t start = msg.m_size;
 
@@ -398,7 +404,8 @@ Grunt::ClientLink::~ClientLink() {
     this->Shutdown();
 }
 
-// OFFSET: %0x00A46C00
+// PROVEN: cba58ced IDENTICAL
+// OFFSET: 0x00B05E40
 uint32_t STORMAPI Grunt::Timer::ThreadProc(void* param) {
     Grunt::Timer* timer = static_cast<Grunt::Timer*>(param);
     uint32_t timeout;
@@ -410,7 +417,8 @@ uint32_t STORMAPI Grunt::Timer::ThreadProc(void* param) {
     return 1;
 }
 
-// OFFSET: %0x00A46C30
+// PROVEN: 3c5de0b8 IDENTICAL
+// OFFSET: 0x00B06B80
 Grunt::Timer::Timer() : m_event(0, 0) {
     SThread::Create(Grunt::Timer::ThreadProc, this, this->m_thread, const_cast<char*>("GruntTimerEvt"), 0);
 }
@@ -1073,7 +1081,8 @@ int32_t Grunt::ServerLink::CmdGruntKick(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: %0x00A43080
+// PROVEN: c087cbb4 IDENTICAL
+// OFFSET: 0x00B02EC0
 int32_t Grunt::ServerLink::CmdGruntPcWarning(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 16)) {
         return 0;
@@ -1121,7 +1130,8 @@ int32_t Grunt::ServerLink::CmdGruntAuthVerify(CDataStore& msg) {
     return msg.m_read > msg.m_size ? 1 : 2;
 }
 
-// OFFSET: %0x00A43240
+// PROVEN: 9976c18e IDENTICAL
+// OFFSET: 0x00B03080
 int32_t Grunt::ServerLink::CmdGruntConnPong(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 4)) {
         return 0;

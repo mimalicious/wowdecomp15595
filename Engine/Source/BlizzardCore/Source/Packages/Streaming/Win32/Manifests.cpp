@@ -7,7 +7,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// OFFSET: %0x00716070
+// PROVEN: c44cf23e IDENTICAL
+// OFFSET: 0x007B41D0
 void System_Streaming::HttpCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
     SetEvent(this->m_event);

@@ -2,7 +2,8 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/Jobs/WorkerPool.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 
-// OFFSET: %0x0070D600
+// PROVEN: f620d273 IDENTICAL
+// OFFSET: 0x007AA740
 bool Blizzard::Jobs::Job::IsReady() const {
     for (int32_t i = 0; i < this->m_dependencyCount; i++) {
         if (!this->m_dependencies[i].Get()) {

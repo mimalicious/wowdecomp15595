@@ -3,7 +3,8 @@
 // STATIC: %0x00B453E8
 const DBCMeta SpellAuraOptionsRec::s_meta = { "DBFilesClient\\SpellAuraOptions.dbc", 5, 20, SpellAuraOptionsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 3f176059 IDENTICAL
+// OFFSET: 0x00401000
 void SpellAuraOptionsRec::FixupStrings(void* record, const char* strings) {
 }
 

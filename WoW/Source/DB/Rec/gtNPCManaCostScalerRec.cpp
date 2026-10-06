@@ -3,7 +3,8 @@
 // STATIC: %0x00B46618
 const DBCMeta gtNPCManaCostScalerRec::s_meta = { "DBFilesClient\\gtNPCManaCostScaler.dbc", 1, 8, gtNPCManaCostScalerRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 41825844 IDENTICAL
+// OFFSET: 0x00401000
 void gtNPCManaCostScalerRec::FixupStrings(void* record, const char* strings) {
 }
 

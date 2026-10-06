@@ -268,14 +268,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "RenamePetition", &Script_RenamePetition },
 };
 
-// OFFSET: %0x0092A850
+// PROVEN: e3481e2c IDENTICAL
+// OFFSET: 0x009E0200
 void PetitionInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x0092A880
+// PROVEN: 7fcecd32 IDENTICAL
+// OFFSET: 0x009E0230
 void PetitionInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

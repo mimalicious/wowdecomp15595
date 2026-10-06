@@ -9,14 +9,16 @@
 #include "Engine/Source/Os/OsVersionHash.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00A74660
+// PROVEN: a18e8f81 IDENTICAL
+// OFFSET: 0x00B42390
 OsVersionHash::~OsVersionHash() {
     if (this->m_entries) {
         SMemFree(this->m_entries, __FILE__, __LINE__, 0);
     }
 }
 
-// OFFSET: %0x00A74680
+// PROVEN: 8e6c75b7 IDENTICAL
+// OFFSET: 0x00B423B0
 bool OsVersionHash::AddEntry(const OsVersionHashEntry& entry) {
     if (!this->m_entries) {
         return false;
@@ -37,7 +39,8 @@ bool OsVersionHash::AddEntry(const OsVersionHashEntry& entry) {
     return true;
 }
 
-// OFFSET: %0x00A746F0
+// PROVEN: 60678595 IDENTICAL
+// OFFSET: 0x00B42420
 static int __cdecl CompareEntries(const void* a, const void* b) {
     const OsVersionHashEntry* entryA = static_cast<const OsVersionHashEntry*>(a);
     const OsVersionHashEntry* entryB = static_cast<const OsVersionHashEntry*>(b);
@@ -296,7 +299,8 @@ static int32_t HashSection(IOsVersionHashCallback& callback, OsVersionHash& hash
     return 1;
 }
 
-// OFFSET: %0x00A74D20
+// PROVEN: a05be798 IDENTICAL
+// OFFSET: 0x00B42A50
 OsVersionHash::OsVersionHash() : m_entries(NULL) {
     this->m_entries = static_cast<OsVersionHashEntry*>(SMemAlloc(256 * sizeof(OsVersionHashEntry), __FILE__, __LINE__, 0));
     this->m_count = 0;

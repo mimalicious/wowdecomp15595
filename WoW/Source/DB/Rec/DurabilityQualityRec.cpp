@@ -3,7 +3,8 @@
 // STATIC: %0x00B46C40
 const DBCMeta DurabilityQualityRec::s_meta = { "DBFilesClient\\DurabilityQuality.dbc", 2, 8, DurabilityQualityRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 53e9c4e7 IDENTICAL
+// OFFSET: 0x00401000
 void DurabilityQualityRec::FixupStrings(void* record, const char* strings) {
 }
 

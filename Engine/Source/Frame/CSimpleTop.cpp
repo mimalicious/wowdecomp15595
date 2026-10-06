@@ -105,7 +105,8 @@ CSimpleTop* CSimpleTop::GetInstance() {
     return CSimpleTop::s_instance;
 }
 
-// OFFSET: %0x0046E370
+// PROVEN: 0e6a22e0 IDENTICAL
+// OFFSET: 0x00464880
 void CSimpleTop::GetCursorPosition(C2Vector& position) {
     NDCToDDC(this->m_mousePosition.m_x, this->m_mousePosition.m_y, &position.x, &position.y);
 }
@@ -1240,11 +1241,13 @@ CSimpleTop::~CSimpleTop() {
     CSimpleTop::s_instance = NULL;
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: b2ac43a5 IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CSimpleTop::LowerFrame(CSimpleFrame* frame) {
     return 0;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 0cc3f3ae IDENTICAL
+// OFFSET: 0x00847950
 void CSimpleTop::ValidateDeletedFrame(CSimpleFrame* frame) {
 }

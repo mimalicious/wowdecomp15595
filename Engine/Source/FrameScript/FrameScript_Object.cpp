@@ -11,14 +11,16 @@
 // STATIC: %0x00D8B760
 int32_t FrameScript_Object::s_objectTypes;
 
-// OFFSET: %0x0046E7A0
+// PROVEN: 79bbec07 IDENTICAL
+// OFFSET: 0x00464DE0
 const char* FrameScript_Object::GetDisplayName() {
     const char* name = this->GetName();
 
     return name ? name : "<unnamed>";
 }
 
-// OFFSET: %0x0046E7C0
+// PROVEN: fa4179ba IDENTICAL
+// OFFSET: 0x00464E00
 int32_t FrameScript_Object::GetLuaObjectRef() {
     if (!this->m_luaRegistered) {
         this->RegisterScriptObject(NULL);
@@ -169,7 +171,8 @@ void FrameScript_Object::UnregisterScriptObject(const char* name) {
     }
 }
 
-// OFFSET: %0x007A3230
+// PROVEN: 9ea68b8e IDENTICAL
+// OFFSET: 0x0083CE90
 FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     char lower[128];
     SStrCopy(lower, name, sizeof(lower));
@@ -183,7 +186,8 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByName(const char* na
     return NULL;
 }
 
-// OFFSET: %0x007A32D0
+// PROVEN: 818d87f4 IDENTICAL
+// OFFSET: 0x0083CF30
 FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const char* name, FrameScript_Object::ScriptData& data) {
     char lower[128];
     SStrCopy(lower, name, sizeof(lower));

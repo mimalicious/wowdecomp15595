@@ -327,6 +327,7 @@ bool CGDanceStudio::HasDance(const char* name) {
     return s_knownDances.Ptr(name) != NULL;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 1b286450 IDENTICAL
+// OFFSET: 0x00401000
 void CGDanceStudio::LeaveWorld() {
 }

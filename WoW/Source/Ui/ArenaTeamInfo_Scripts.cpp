@@ -134,13 +134,15 @@ static int32_t Script_GetArenaTeam(lua_State* L) {
     return 22;
 }
 
-// OFFSET: %0x008FE0B0
+// PROVEN: a3c5e1a7 IDENTICAL
+// OFFSET: 0x009A9240
 static int32_t Script_GetCurrentArenaSeason(lua_State* L) {
     lua_pushnumber(L, GetWorldState(3191));
     return 1;
 }
 
-// OFFSET: %0x008FE0E0
+// PROVEN: 2b38f31c IDENTICAL
+// OFFSET: 0x009A9270
 static int32_t Script_GetPreviousArenaSeason(lua_State* L) {
     lua_pushnumber(L, GetWorldState(3901));
     return 1;
@@ -282,7 +284,8 @@ static int32_t Script_SetArenaTeamRosterShowOffline(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: d1bb6cad IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_CloseArenaTeamRoster(lua_State* L) {
     return 0;
 }
@@ -316,14 +319,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetPreviousArenaSeason", &Script_GetPreviousArenaSeason },
 };
 
-// OFFSET: %0x008FE110
+// PROVEN: 063d5bf3 IDENTICAL
+// OFFSET: 0x009A92A0
 void ArenaTeamInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x008FE140
+// PROVEN: 4cade410 IDENTICAL
+// OFFSET: 0x009A92D0
 void ArenaTeamInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

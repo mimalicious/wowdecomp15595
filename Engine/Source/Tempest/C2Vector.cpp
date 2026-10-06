@@ -3,7 +3,8 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 
-// OFFSET: %0x004CEF40
+// PROVEN: 1b6ababf IDENTICAL
+// OFFSET: 0x004C9220
 void C2Vector::NormalizeSafe() {
     float length = this->y * this->y + this->x * this->x;
 
@@ -14,19 +15,22 @@ void C2Vector::NormalizeSafe() {
     }
 }
 
-// OFFSET: %0x004D1210
+// PROVEN: b257d2b3 IDENTICAL
+// OFFSET: 0x004CB510
 C2Vector::C2Vector(const C3Vector& v) {
     this->x = v.x;
     this->y = v.y;
 }
 
-// OFFSET: %0x004D1210
+// PROVEN: 06dda673 IDENTICAL
+// OFFSET: 0x004CB510
 C2Vector::C2Vector(const C4Vector& v) {
     this->x = v.x;
     this->y = v.y;
 }
 
-// OFFSET: %0x005938B0
+// PROVEN: 677f5fd4 EQUIVALENT
+// OFFSET: 0x00586610
 void C2Vector::Normalize() {
     float scale = 1.0f / sqrt(this->x * this->x + this->y * this->y);
     this->x = this->x * scale;

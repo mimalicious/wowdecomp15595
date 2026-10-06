@@ -3,7 +3,8 @@
 // STATIC: %0x00B43F80
 const DBCMeta CharHairGeosetsRec::s_meta = { "DBFilesClient\\CharHairGeosets.dbc", 6, 24, CharHairGeosetsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: a21b8b23 IDENTICAL
+// OFFSET: 0x00401000
 void CharHairGeosetsRec::FixupStrings(void* record, const char* strings) {
 }
 

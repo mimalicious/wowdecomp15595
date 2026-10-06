@@ -22,12 +22,14 @@ CGxTexFlags::CGxTexFlags(EGxTexFilter filter, uint32_t wrapU, uint32_t wrapV, ui
     this->m_bit15 = bit15;
 }
 
-// OFFSET: %0x007A8A40
+// PROVEN: d5f3f0a2 IDENTICAL
+// OFFSET: 0x00842B30
 bool CGxTexFlags::operator!=(const CGxTexFlags& flags) const {
     return memcmp(this, &flags, sizeof(CGxTexFlags)) != 0;
 }
 
-// OFFSET: %0x005515E0
+// PROVEN: f58a0011 IDENTICAL
+// OFFSET: 0x00541160
 bool CGxTexFlags::operator==(const CGxTexFlags& flags) const {
     return memcmp(this, &flags, sizeof(CGxTexFlags)) == 0;
 }

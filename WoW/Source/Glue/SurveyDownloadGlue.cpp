@@ -54,7 +54,8 @@ uint8_t* CGlueMgr::m_surveyData;
 // STATIC: #0x00B6B258
 uint16_t CGlueMgr::m_surveyDataSize;
 
-// OFFSET: %0x00775D90
+// PROVEN: 5ad1976d IDENTICAL
+// OFFSET: 0x0080FF00
 void CGlueMgr::SurveyDownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_surveyDownload) {
         CGlueMgr::m_surveyDownload->Proceed(data, size);

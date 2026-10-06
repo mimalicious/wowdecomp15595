@@ -89,7 +89,7 @@ void* BSN::Adapter::Array::SetLength(void* data, uint32_t length) {
     return elements;
 }
 
-// OFFSET: [#0x008BE470<40>, #0x008BE480<16>, #0x008BE490<4>, #0x008BE4A0<2>, #0x008BE4B0<64>, %0x0097A300<32>]
+// OFFSET: [#0x008BE470<40>, #0x008BE480<16>, #0x008BE490<4>, #0x008BE4A0<2>, #0x008BE4B0<64>, 0x00A39FF0<32>]
 template <uint32_t N>
 uint32_t BSN::Adapter::FixedBlob::GetLength(const void* data) {
     return N;

@@ -27,7 +27,8 @@ namespace FMOD
         static FMOD_FILE_READCALLBACK  gReadCallback;
         static FMOD_FILE_SEEKCALLBACK  gSeekCallback;
         
-        // OFFSET: %0x009C0A90
+        // PROVEN: 718aac52 IDENTICAL
+        // OFFSET: 0x00A80260
         UserFile() 
         {
             mHandle = 0;

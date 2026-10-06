@@ -6,7 +6,8 @@
 // STATIC: %0x00D9332C
 static uint32_t s_tlsIndex;
 
-// OFFSET: %0x007D7750
+// PROVEN: c94601bd IDENTICAL
+// OFFSET: 0x00872B80
 void PropInitialize() {
     s_tlsIndex = OsTlsAlloc();
     OsTlsSetValue(s_tlsIndex, NULL);
@@ -17,23 +18,27 @@ void PropDestroy() {
     OsTlsFree(s_tlsIndex);
 }
 
-// OFFSET: %0x007D7780
+// PROVEN: 746ee1dd IDENTICAL
+// OFFSET: 0x00872BB0
 void PropSelectContext(HPROPCONTEXT context) {
     OsTlsSetValue(s_tlsIndex, context);
 }
 
-// OFFSET: %0x007D77A0
+// PROVEN: d1adbcd8 IDENTICAL
+// OFFSET: 0x00872BD0
 HPROPCONTEXT PropGetSelectedContext() {
     return static_cast<HPROPCONTEXT>(OsTlsGetValue(s_tlsIndex));
 }
 
-// OFFSET: %0x007D77B0
+// PROVEN: 5d86df0c IDENTICAL
+// OFFSET: 0x00872BE0
 void* PropGet(PROPERTY id) {
     void** context = static_cast<void**>(OsTlsGetValue(s_tlsIndex));
     return context ? context[id] : NULL;
 }
 
-// OFFSET: %0x007D77E0
+// PROVEN: b70e4a28 IDENTICAL
+// OFFSET: 0x00872C10
 void PropSet(PROPERTY id, void* value) {
     void** context = static_cast<void**>(OsTlsGetValue(s_tlsIndex));
 
@@ -42,7 +47,8 @@ void PropSet(PROPERTY id, void* value) {
     }
 }
 
-// OFFSET: %0x007D7800
+// PROVEN: fc1a4f8d IDENTICAL
+// OFFSET: 0x00872C30
 HPROPCONTEXT PropCreateContext() {
     return static_cast<HPROPCONTEXT>(SMemAlloc(PROPERTIES * sizeof(void*), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 }

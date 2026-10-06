@@ -55,7 +55,8 @@ revmodel::revmodel()
 	mute();
 }
 
-// OFFSET: %0x00A174E0
+// PROVEN: fecbe000 IDENTICAL
+// OFFSET: 0x00AD74C0
 void revmodel::mute()
 {
 	int i;
@@ -75,7 +76,8 @@ void revmodel::mute()
 	}
 }
 
-// OFFSET: %0x00A16E20
+// PROVEN: bce099b3 IDENTICAL
+// OFFSET: 0x00AD6E00
 void revmodel::processreplace(float *inputL, float *inputR, float *outputL, float *outputR, long numsamples, int skip)
 {
 	float outL,outR,input;
@@ -148,7 +150,8 @@ void revmodel::processmix(float *inputL, float *inputR, float *outputL, float *o
 	}
 }
 
-// OFFSET: %0x00A172B0
+// PROVEN: e28e1735 IDENTICAL
+// OFFSET: 0x00AD7290
 void revmodel::update()
 {
 // Recalculate internal values after parameter change
@@ -189,78 +192,90 @@ void revmodel::update()
 // because as you develop the reverb model, you may
 // wish to take dynamic action when they are called.
 
-// OFFSET: %0x00A173A0
+// PROVEN: 0f3792f2 IDENTICAL
+// OFFSET: 0x00AD7380
 void revmodel::setroomsize(float value)
 {
 	roomsize = (value*scaleroom) + offsetroom;
 	update();
 }
 
-// OFFSET: %0x00A173D0
+// PROVEN: f52b1539 IDENTICAL
+// OFFSET: 0x00AD73B0
 float revmodel::getroomsize()
 {
 	return (roomsize-offsetroom)/scaleroom;
 }
 
-// OFFSET: %0x00A173E0
+// PROVEN: 01a8adb3 IDENTICAL
+// OFFSET: 0x00AD73C0
 void revmodel::setdamp(float value)
 {
 	damp = value*scaledamp;
 	update();
 }
 
-// OFFSET: %0x00A17400
+// PROVEN: 078adc5e IDENTICAL
+// OFFSET: 0x00AD73E0
 float revmodel::getdamp()
 {
 	return damp/scaledamp;
 }
 
-// OFFSET: %0x00A17410
+// PROVEN: e3cdeece IDENTICAL
+// OFFSET: 0x00AD73F0
 void revmodel::setwet(float value)
 {
 	wet = value*scalewet;
 	update();
 }
 
-// OFFSET: %0x00A17430
+// PROVEN: 53c69a51 IDENTICAL
+// OFFSET: 0x00AD7410
 float revmodel::getwet()
 {
 	return wet/scalewet;
 }
 
-// OFFSET: %0x00A17440
+// PROVEN: 662859fd IDENTICAL
+// OFFSET: 0x00AD7420
 void revmodel::setdry(float value)
 {
 	dry = value*scaledry;
 }
 
-// OFFSET: %0x00A17460
+// PROVEN: bc7ec611 IDENTICAL
+// OFFSET: 0x00AD7440
 float revmodel::getdry()
 {
 	return dry/scaledry;
 }
 
-// OFFSET: %0x00A17470
+// PROVEN: 6009eb56 IDENTICAL
+// OFFSET: 0x00AD7450
 void revmodel::setwidth(float value)
 {
 	width = value;
 	update();
 }
 
-// OFFSET: %0x00A17490
+// PROVEN: 4f5ecfcb IDENTICAL
+// OFFSET: 0x00AD7470
 float revmodel::getwidth()
 {
 	return width;
 }
 
-// OFFSET: %0x00A174A0
+// PROVEN: 70d1fc13 IDENTICAL
+// OFFSET: 0x00AD7480
 void revmodel::setmode(float value)
 {
 	mode = value;
 	update();
 }
 
-// OFFSET: %0x00A174C0
+// PROVEN: a49e4cd6 IDENTICAL
+// OFFSET: 0x00AD74A0
 float revmodel::getmode()
 {
 	if (mode >= freezemode)

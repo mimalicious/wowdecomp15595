@@ -31,7 +31,8 @@ bool gFXslot3set = false;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A40C50
+// PROVEN: 1e8862a0 IDENTICAL
+// OFFSET: 0x00B00600
 bool OutputDSound::querySupportEAX4(FMOD_GUID guid, unsigned long ulProperty)
 {
     HRESULT       hr;
@@ -75,7 +76,8 @@ bool OutputDSound::querySupportEAX4(FMOD_GUID guid, unsigned long ulProperty)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A40CB0
+// PROVEN: e703a9e5 IDENTICAL
+// OFFSET: 0x00B00660
 bool OutputDSound::initEAX4()
 {
     FMOD_RESULT             result;
@@ -184,7 +186,8 @@ bool OutputDSound::initEAX4()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A40F40
+// PROVEN: 2ec666dd IDENTICAL
+// OFFSET: 0x00B008F0
 FMOD_RESULT OutputDSound::closeEAX4()
 {
     GUID guid;

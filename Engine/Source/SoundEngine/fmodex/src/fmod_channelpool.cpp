@@ -27,7 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3B00
+// PROVEN: e14280a8 IDENTICAL
+// OFFSET: 0x00A934A0
 ChannelPool::ChannelPool()
 {
     mChannel      = 0;
@@ -53,7 +54,8 @@ ChannelPool::ChannelPool()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3B20
+// PROVEN: d7788da8 IDENTICAL
+// OFFSET: 0x00A934C0
 FMOD_RESULT ChannelPool::init(SystemI *system, Output *output, int numchannels)
 {
     if (numchannels < 0)
@@ -93,7 +95,8 @@ FMOD_RESULT ChannelPool::init(SystemI *system, Output *output, int numchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3B80
+// PROVEN: 7d9eefe8 IDENTICAL
+// OFFSET: 0x00A93520
 FMOD_RESULT ChannelPool::release()
 {
     int count;
@@ -132,7 +135,8 @@ FMOD_RESULT ChannelPool::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3BF0
+// PROVEN: 56e634e4 IDENTICAL
+// OFFSET: 0x00A93590
 FMOD_RESULT ChannelPool::allocateChannel(ChannelReal **realchannel, int index, int numchannels, int *found_out)
 {
     int count;
@@ -234,7 +238,8 @@ FMOD_RESULT ChannelPool::allocateChannel(ChannelReal **realchannel, int index, i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3D50
+// PROVEN: 5a97e310 IDENTICAL
+// OFFSET: 0x00A936F0
 FMOD_RESULT ChannelPool::getNumChannels(int *numchannels)
 {
     if (!numchannels)
@@ -263,7 +268,8 @@ FMOD_RESULT ChannelPool::getNumChannels(int *numchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3D70
+// PROVEN: 643955d9 IDENTICAL
+// OFFSET: 0x00A93710
 FMOD_RESULT ChannelPool::getChannelsUsed(int *numchannels)
 {
     if (!numchannels)
@@ -292,7 +298,8 @@ FMOD_RESULT ChannelPool::getChannelsUsed(int *numchannels)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3D90
+// PROVEN: 0a6ea6d7 IDENTICAL
+// OFFSET: 0x00A93730
 FMOD_RESULT ChannelPool::setChannel(int index, ChannelReal *channel, DSPI *dspmixtarget)
 {
     if (!channel || index < 0 || index >= mNumChannels)
@@ -322,7 +329,8 @@ FMOD_RESULT ChannelPool::setChannel(int index, ChannelReal *channel, DSPI *dspmi
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3DE0
+// PROVEN: 0df481f3 IDENTICAL
+// OFFSET: 0x00A93780
 FMOD_RESULT ChannelPool::getChannel(int index, ChannelReal **channel)
 {
     if (!channel || index < 0 || index >= mNumChannels)

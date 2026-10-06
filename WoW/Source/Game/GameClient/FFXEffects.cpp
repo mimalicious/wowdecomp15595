@@ -282,7 +282,8 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
     this->m_fade = 0.0f;
 }
 
-// OFFSET: %0x00A4DAC0
+// PROVEN: f38723fb IDENTICAL
+// OFFSET: 0x00B0C2E0
 void EffectNetherWorld::End() {
     if (this->m_passes.Count() >= 2) {
         static_cast<PassNetherCombine*>(this->m_passes[1])->m_fade = 0.0f;
@@ -351,7 +352,8 @@ void EffectUnconscious::SetParameters(int32_t count, const int32_t* params) {
     pass->m_fadeOutTime = fadeOutTime;
 }
 
-// OFFSET: %0x00A4DD70
+// PROVEN: 63c90148 IDENTICAL
+// OFFSET: 0x00B0C5B0
 void EffectUnconscious::SetGlowBlur(uint8_t glow, uint8_t blur) {
     static_cast<PassGlowFade*>(this->m_passes[2])->m_color = CImVector(blur, blur, blur, glow);
 }
@@ -621,7 +623,8 @@ void PassDeathNVRC::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00A4EEF0
+// PROVEN: b3eebdea IDENTICAL
+// OFFSET: 0x00B0D7C0
 bool PassNetherBlur::Valid() {
     return this->m_vertexShader && this->m_vertexShader->m_permutes[0].Valid() && this->m_pixelShader && this->m_pixelShader->m_permutes[this->m_permute].Valid();
 }

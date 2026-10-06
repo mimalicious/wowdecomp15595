@@ -62,7 +62,8 @@ int32_t CM2Lighting::GetPointLight(uint32_t index, C3Vector& pos, C3Vector& colo
     return 1;
 }
 
-// OFFSET: %0x00779880
+// PROVEN: 4d2f8cda IDENTICAL
+// OFFSET: 0x00812E60
 CM2Light::CM2Light() {
     this->m_scene = NULL;
     this->m_stamp = 0;
@@ -162,7 +163,8 @@ void CM2Light::Link() {
     }
 }
 
-// OFFSET: %0x00779C10
+// PROVEN: 37e8d2e6 IDENTICAL
+// OFFSET: 0x008131F0
 void CM2Lighting::AddAmbient(const C3Vector& color) {
     this->m_sunAmbient += color;
 }
@@ -331,7 +333,8 @@ void CM2Lighting::SetupGxLights(const C3Vector* origin) {
     }
 }
 
-// OFFSET: %0x0077A550
+// PROVEN: 17b6ddcc IDENTICAL
+// OFFSET: 0x00813910
 int32_t CM2Lighting::GetSunLight(C3Vector& dir, C3Vector& ambient, C3Vector& diffuse, C3Vector& specular) {
     this->SetupSunlight();
 

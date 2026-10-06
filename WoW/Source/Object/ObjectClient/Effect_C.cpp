@@ -177,14 +177,16 @@ void CEffect::LinkTo(CEffect** head) {
     }
 }
 
-// OFFSET: %0x0058EBC0
+// PROVEN: d24b62de IDENTICAL
+// OFFSET: 0x00580C10
 void CEffect::DetachFromParent() {
     if (this->m_model && this->m_model->m_attachParent) {
         this->m_model->DetachFromParent();
     }
 }
 
-// OFFSET: %0x0058EBE0
+// PROVEN: e2dc8e9b IDENTICAL
+// OFFSET: 0x00580C30
 void CEffect::SetEnabled(int32_t enabled) {
     if (!this->m_model) {
         return;

@@ -3,7 +3,8 @@
 // STATIC: %0x00B44E68
 const DBCMeta SpellMissileRec::s_meta = { "DBFilesClient\\SpellMissile.dbc", 15, 60, SpellMissileRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: fe6a3b17 IDENTICAL
+// OFFSET: 0x00401000
 void SpellMissileRec::FixupStrings(void* record, const char* strings) {
 }
 

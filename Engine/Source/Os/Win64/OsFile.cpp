@@ -7,7 +7,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Os/OsFile.h"
 
-// OFFSET: %0x0070B390
+// PROVEN: b5de032f IDENTICAL
+// OFFSET: 0x007A8D40
 bool OsCloseFile(HOSFILE file) {
     return Blizzard::File::Close(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
 }

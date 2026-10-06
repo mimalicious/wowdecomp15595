@@ -65,7 +65,8 @@ CRect operator/(const CRect& l, const CRect& r) {
     return result;
 }
 
-// OFFSET: %0x0078E510
+// PROVEN: d95b3d05 IDENTICAL
+// OFFSET: 0x00828420
 bool operator!=(const CRect& l, const CRect& r) {
     return l.minY != r.minY || l.minX != r.minX || l.maxY != r.maxY || l.maxX != r.maxX;
 }

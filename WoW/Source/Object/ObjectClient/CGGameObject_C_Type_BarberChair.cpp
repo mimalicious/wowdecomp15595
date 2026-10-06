@@ -8,7 +8,8 @@
 CGGameObject_C_Type_BarberChair::CGGameObject_C_Type_BarberChair(CGGameObject_C* owner) : CGGameObject_C_Type_Chair(owner) {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: 5da0a073 IDENTICAL
+// OFFSET: 0x009FCE20
 uint32_t CGGameObject_C_Type_BarberChair::GetNumSlots() const {
     return 1;
 }

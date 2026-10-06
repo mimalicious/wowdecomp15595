@@ -20,7 +20,8 @@ void SServerInitialize() {
     }
 }
 
-// OFFSET: %0x004C7FB0
+// PROVEN: 9ac34f1a IDENTICAL
+// OFFSET: 0x004C17A0
 void SServerDestroy() {
     if (s_kernel32lib) {
         FreeLibrary(s_kernel32lib);

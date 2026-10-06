@@ -399,7 +399,8 @@ CObjectEffect::~CObjectEffect() {
     }
 }
 
-// OFFSET: %0x005A33C0
+// PROVEN: 08b6ded6 IDENTICAL
+// OFFSET: 0x00599E20
 float CObjectEffectModifier::InputNone(CObjectEffectManager* manager) {
     return -1.0f;
 }
@@ -409,7 +410,8 @@ float CObjectEffectModifier::InputSpeed(CObjectEffectManager* manager) {
     return manager->m_owner->GetSpeed();
 }
 
-// OFFSET: %0x005ED1D0
+// PROVEN: ea9cdb28 IDENTICAL
+// OFFSET: 0x008A0A40
 float CObjectEffectModifier::MapNone(float input, const float* params) {
     return input;
 }
@@ -427,7 +429,8 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
     return (input - params[0]) / (params[1] - params[0]) * (params[3] - params[2]) + params[2];
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 8e9ba7cd IDENTICAL
+// OFFSET: 0x00401000
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 

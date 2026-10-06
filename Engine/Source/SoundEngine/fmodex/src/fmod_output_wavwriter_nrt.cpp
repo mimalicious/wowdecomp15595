@@ -316,7 +316,8 @@ FMOD_RESULT OutputWavWriter_NRT::update()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01AF0
+// PROVEN: 48d323af IDENTICAL
+// OFFSET: 0x00AC1500
 FMOD_RESULT OutputWavWriter_NRT::writeWavHeader()
 {
     if (!mFP)
@@ -575,7 +576,8 @@ FMOD_RESULT OutputWavWriter_NRT::getDriverCapsCallback(FMOD_OUTPUT_STATE *output
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A020F0
+// PROVEN: 897447a8 IDENTICAL
+// OFFSET: 0x00AC1B20
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;
@@ -600,7 +602,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::initCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01D00
+// PROVEN: c362a666 IDENTICAL
+// OFFSET: 0x00AC1730
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::closeCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;
@@ -625,7 +628,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::closeCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01D50
+// PROVEN: e66e72f6 IDENTICAL
+// OFFSET: 0x00AC1780
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::startCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;
@@ -650,7 +654,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::startCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01DA0
+// PROVEN: a1d31268 IDENTICAL
+// OFFSET: 0x00AC17D0
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::stopCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;
@@ -675,7 +680,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::stopCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01DE0
+// PROVEN: 33759571 IDENTICAL
+// OFFSET: 0x00AC1810
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::updateCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;
@@ -700,7 +706,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::updateCallback(FMOD_OUTPUT_STATE *ou
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A01E40
+// PROVEN: 712ad571 IDENTICAL
+// OFFSET: 0x00AC1870
 FMOD_RESULT F_CALLBACK OutputWavWriter_NRT::getHandleCallback(FMOD_OUTPUT_STATE *output, void **handle)
 {
     OutputWavWriter_NRT *wavwriter = (OutputWavWriter_NRT *)output;

@@ -86,7 +86,8 @@ void SHA1_Transform(uint32_t* state, uint8_t* buffer) {
     state[4] += e;
 }
 
-// OFFSET: %0x00653AC0
+// PROVEN: 5304e961 IDENTICAL
+// OFFSET: 0x00658640
 void SHA1_Init(SHA1_CONTEXT* context) {
     context->m_state[0] = 0x67452301;
     context->m_state[1] = 0xEFCDAB89;
@@ -124,7 +125,8 @@ void SHA1_Update(SHA1_CONTEXT* context, const uint8_t* data, uint32_t length) {
     memcpy(&context->m_buffer[j], &data[i], length - i);
 }
 
-// OFFSET: %0x00653BC0
+// PROVEN: 0f2c1954 IDENTICAL
+// OFFSET: 0x00658740
 void SHA1_Final(uint8_t* digest, SHA1_CONTEXT* context) {
     uint8_t finalcount[8];
 
@@ -145,7 +147,8 @@ void SHA1_Final(uint8_t* digest, SHA1_CONTEXT* context) {
     }
 }
 
-// OFFSET: %0x00653C90
+// PROVEN: 71e4effe IDENTICAL
+// OFFSET: 0x00658810
 uint8_t* SHA1_InterleaveHash(uint8_t* out, const uint8_t* in, uint32_t length) {
     while (length && !*in) {
         in++;
@@ -294,12 +297,14 @@ void SHA1::Process(const void* _data, uint32_t length) {
     }
 }
 
-// OFFSET: %0x006527D0
+// PROVEN: ee69ef76 IDENTICAL
+// OFFSET: 0x00658EE0
 void SHA1::Process(const char* string) {
     this->Process(string, static_cast<uint32_t>(strlen(string)));
 }
 
-// OFFSET: %0x007128E0
+// PROVEN: 9cb94932 IDENTICAL
+// OFFSET: 0x007B0450
 void SHA1::Finish(SHA1::Digest& digest) {
     uint8_t size[8];
     uint64_t bits = this->m_size;
@@ -322,7 +327,8 @@ void SHA1::Finish(SHA1::Digest& digest) {
     }
 }
 
-// OFFSET: %0x007129A0
+// PROVEN: 79560787 IDENTICAL
+// OFFSET: 0x007B0510
 void SHA1::Hash(SHA1::Digest& digest, const void* data, uint32_t length) {
     SHA1 sha;
     sha.Prepare();

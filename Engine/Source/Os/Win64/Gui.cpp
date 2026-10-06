@@ -37,7 +37,8 @@ int32_t COsDialog::OnEvent(int32_t itemId, int32_t notifyCode, int32_t code) {
     return 1;
 }
 
-// OFFSET: %0x007DC160
+// PROVEN: 030d3e09 IDENTICAL
+// OFFSET: 0x008763B0
 int32_t COsControl::SendEvent(int32_t event, int32_t code) {
     if (this->OnEvent(this->m_id, event, code)) {
         return 1;
@@ -253,7 +254,8 @@ int32_t COsDialog::IsInFront() {
     return this->m_handle == OsGuiGetWindow(2);
 }
 
-// OFFSET: %0x007DC4A0
+// PROVEN: d24c45ef IDENTICAL
+// OFFSET: 0x00876690
 COsControl* COsDialog::FindControl(void* handle) {
     for (uint32_t i = 0; i < this->m_controls.Count(); i++) {
         if (this->m_controls[i]->IsHandleFromControl(handle)) {

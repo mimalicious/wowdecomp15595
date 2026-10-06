@@ -143,36 +143,43 @@ ComSat::Sound::CODEC::~CODEC() {
 ComSat::Sound::CODEC::CODEC(ComSat::Allocator& allocator) : m_allocator(&allocator) {
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: c10502f8 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool ComSat::Sound::CODEC::Init() {
     return true;
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: be321a10 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool ComSat::Sound::CODEC::Reset() {
     return true;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: c46dc152 IDENTICAL
+// OFFSET: 0x00401000
 void ComSat::Sound::CODEC::Shutdown() {
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: e94cd971 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool ComSat::Sound::CODEC::CanBitpackFrames() {
     return true;
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: 54a73a9e IDENTICAL
+// OFFSET: 0x00A3AA30
 bool ComSat::Sound::CODEC::IsEncodedBitrateVariable() {
     return true;
 }
 
-// OFFSET: %0x0097A300
+// PROVEN: 3d548fe8 IDENTICAL
+// OFFSET: 0x00A39FF0
 uint32_t ComSat::Sound::CODEC::MinimumSafeFramesBetweenResets() {
     return 32;
 }
 
-// OFFSET: %0x0097A670
+// PROVEN: a496d725 IDENTICAL
+// OFFSET: 0x00A3A360
 bool ComSat::Sound::CODECIPMR6000::Init() {
     if (this->m_initialized) {
         this->Shutdown();
@@ -184,12 +191,14 @@ bool ComSat::Sound::CODECIPMR6000::Init() {
     return true;
 }
 
-// OFFSET: %0x0097A6A0
+// PROVEN: 3100d447 IDENTICAL
+// OFFSET: 0x00A3A390
 bool ComSat::Sound::CODECIPMR6000::Reset() {
     return this->Init();
 }
 
-// OFFSET: %0x0097A6B0
+// PROVEN: 61551b6b IDENTICAL
+// OFFSET: 0x00A3A3A0
 void ComSat::Sound::CODECIPMR6000::GenerateSilence(uint8_t* pcm, uint32_t size) {
     memset(pcm, 0, size);
 }
@@ -292,6 +301,7 @@ ComSat::Sound::CODECIPMR6000::~CODECIPMR6000() {
     this->Shutdown();
 }
 
-// OFFSET: %0x00511BF0
+// PROVEN: 9adda6e6 IDENTICAL
+// OFFSET: 0x00627990
 void ComSat::Sound::CODECIPMR6000::ApplyVoiceEffects(uint8_t player, uint8_t* pcm, uint32_t* size) {
 }

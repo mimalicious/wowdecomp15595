@@ -37,7 +37,8 @@ CHARCODEDESC::CHARCODEDESC() {
     this->m_glyphEndPixel = 0;
 }
 
-// OFFSET: %0x00630AE0
+// PROVEN: 138b9a83 IDENTICAL
+// OFFSET: 0x00620270
 void GLYPHBITMAPDATA::CopyFrom(GLYPHBITMAPDATA* source) {
     if (this == source) {
         return;
@@ -52,7 +53,8 @@ void GLYPHBITMAPDATA::CopyFrom(GLYPHBITMAPDATA* source) {
     source->m_data = NULL;
 }
 
-// OFFSET: %0x00630AB0
+// PROVEN: 7741fba4 IDENTICAL
+// OFFSET: 0x00620240
 GLYPHBITMAPDATA::GLYPHBITMAPDATA() {
     this->m_data = NULL;
     this->m_dataSize = 0;
@@ -62,7 +64,8 @@ GLYPHBITMAPDATA::GLYPHBITMAPDATA() {
     this->m_textureCoords.maxX = 0.0f;
 }
 
-// OFFSET: %0x00630C40
+// PROVEN: 65ee6576 IDENTICAL
+// OFFSET: 0x006203D0
 GLYPHBITMAPDATA::~GLYPHBITMAPDATA() {
     if (this->m_data) {
         SMemFree(this->m_data, __FILE__, __LINE__, 0);
@@ -209,7 +212,8 @@ void TEXTLINETEXTURE::WriteGeometry(CGxVertexPCT* buf, const CImVector& fontColo
     }
 }
 
-// OFFSET: %0x006310C0
+// PROVEN: 73c2d8b5 IDENTICAL
+// OFFSET: 0x00620870
 void BATCHEDRENDERFONTDESC::Initialize() {
     BATCHEDRENDERFONTDESC::s_indexPool = g_theGxDevicePtr->PoolCreate(GxPoolTarget_Index, GxPoolUsage_Static, 6144, GxPoolHintBit_Unk0, "BATCHEDRENDERFONTDESC_idx");
     BATCHEDRENDERFONTDESC::s_indexBuf = g_theGxDevicePtr->BufCreate(BATCHEDRENDERFONTDESC::s_indexPool, sizeof(uint16_t), 3072, 0);

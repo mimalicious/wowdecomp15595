@@ -95,7 +95,8 @@ void CGGossipInfo::ClearOptions() {
     }
 }
 
-// OFFSET: %0x0092BD60
+// PROVEN: fa272b00 IDENTICAL
+// OFFSET: 0x009E16E0
 static void GossipTextCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGGossipInfo::SetGossipText(id);
@@ -263,7 +264,8 @@ int32_t Packet_SMSG_GOSSIP_MESSAGE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: %0x0092B6A0
+// PROVEN: 99747931 IDENTICAL
+// OFFSET: 0x009E1020
 int32_t CGGossipInfo::GetNumAvailableQuests() {
     int32_t count = 0;
 
@@ -280,7 +282,8 @@ int32_t CGGossipInfo::GetNumAvailableQuests() {
     return count;
 }
 
-// OFFSET: %0x0092B720
+// PROVEN: a78655d8 IDENTICAL
+// OFFSET: 0x009E10A0
 GossipQuestInfo* CGGossipInfo::GetAvailableQuest(int32_t index) {
     int32_t found = 0;
 
@@ -301,7 +304,8 @@ GossipQuestInfo* CGGossipInfo::GetAvailableQuest(int32_t index) {
     return NULL;
 }
 
-// OFFSET: %0x0092B780
+// PROVEN: 42acb29d IDENTICAL
+// OFFSET: 0x009E1100
 int32_t CGGossipInfo::GetNumActiveQuests() {
     int32_t count = 0;
 
@@ -318,7 +322,8 @@ int32_t CGGossipInfo::GetNumActiveQuests() {
     return count;
 }
 
-// OFFSET: %0x0092B800
+// PROVEN: f1b844b8 IDENTICAL
+// OFFSET: 0x009E1180
 GossipQuestInfo* CGGossipInfo::GetActiveQuest(int32_t index) {
     int32_t found = 0;
 
@@ -479,7 +484,8 @@ int32_t Packet_SMSG_GOSSIP_POI(void* param, NETMESSAGE msgId, uint32_t time, CDa
     return 1;
 }
 
-// OFFSET: %0x0092BDE0
+// PROVEN: 6acaf639 IDENTICAL
+// OFFSET: 0x009E1760
 void CGGossipInfo::LeaveWorld() {
     CGGossipInfo::SetGossip(WOWGUID::Make(0));
     CGGossipInfo::ClearOptions();

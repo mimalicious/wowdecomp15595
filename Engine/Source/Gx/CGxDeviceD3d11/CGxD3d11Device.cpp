@@ -58,7 +58,8 @@ static CreateDXGIFactory1Proc s_CreateDXGIFactory1;
 // STATIC: %0x00C0E6F0
 static int32_t s_hideCursorOnCreate = 1;
 
-// OFFSET: %0x00408910
+// PROVEN: efce7aba IDENTICAL
+// OFFSET: 0x00842700
 static int32_t D3d11DebugLevel() {
     return 0;
 }
@@ -179,7 +180,8 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_pointScaleMax = 0.0f;
 }
 
-// OFFSET: %0x007B1C10
+// PROVEN: 164422a7 IDENTICAL
+// OFFSET: 0x00851FD0
 uint32_t CGxDeviceD3d11::IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel) {
     switch (featureLevel) {
         case D3D_FEATURE_LEVEL_9_1:
@@ -560,7 +562,8 @@ void* CGxDeviceD3d11::DeviceWindow() {
     return this->m_hwnd;
 }
 
-// OFFSET: %0x007B2550
+// PROVEN: 1694e031 IDENTICAL
+// OFFSET: 0x008526C0
 void CGxDeviceD3d11::DeviceOverride(EGxOverride override, uint32_t value) {
     CGxDevice::DeviceOverride(override, value);
 }
@@ -614,7 +617,8 @@ void CGxDeviceD3d11::PoolSizeSet(CGxPool* pool, uint32_t size) {
     this->CreatePoolAPI(pool);
 }
 
-// OFFSET: %0x007B2630
+// PROVEN: 62ba927f IDENTICAL
+// OFFSET: 0x008527A0
 void CGxDeviceD3d11::PoolDestroy(CGxPool* pool) {
     if (!pool) {
         return;
@@ -831,7 +835,8 @@ int32_t CGxDeviceD3d11::QueryGetData(CGxQuery* query, uint32_t* data) {
     return 1;
 }
 
-// OFFSET: %0x007C80A0
+// PROVEN: f57c6dfb IDENTICAL
+// OFFSET: 0x00852AC0
 void CGxDeviceD3d11::QueryDestroy(CGxQuery*& query) {
     CGxQuery* gxQuery = query;
 
@@ -1923,43 +1928,52 @@ void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     }
 }
 
-// OFFSET: %0x007DE2D0
+// PROVEN: 8fabf828 IDENTICAL
+// OFFSET: 0x00871FE0
 void CGxDeviceD3d11::DeviceEvictResources() {
     CGxDevice::DeviceEvictResources();
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: ee17afde IDENTICAL
+// OFFSET: 0x00847950
 void CGxDeviceD3d11::StereoSetConvergence(float convergence) {
 }
 
-// OFFSET: %0x00629F00
+// PROVEN: b3f15edd IDENTICAL
+// OFFSET: 0x00599E10
 float CGxDeviceD3d11::StereoGetConvergence() {
     return 1.0f;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 51e0f0a7 IDENTICAL
+// OFFSET: 0x00847950
 void CGxDeviceD3d11::StereoSetSeparation(float separation) {
 }
 
-// OFFSET: %0x006CDE50
+// PROVEN: 9fec1b8c IDENTICAL
+// OFFSET: 0x0076CA20
 float CGxDeviceD3d11::StereoGetSeparation() {
     return 0.0f;
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: 36ea16fe IDENTICAL
+// OFFSET: 0x00B06D20
 bool CGxDeviceD3d11::StereoEnabled() {
     return false;
 }
 
-// OFFSET: %0x007C8240
+// PROVEN: 842c353c IDENTICAL
+// OFFSET: 0x00841AE0
 void CGxDeviceD3d11::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 6ebcfa39 IDENTICAL
+// OFFSET: 0x00401000
 void CGxDeviceD3d11::DebugGroupEnd() {
 }
 
-// OFFSET: %0x007C8240
+// PROVEN: bc9fcbbd IDENTICAL
+// OFFSET: 0x00841AE0
 void CGxDeviceD3d11::DebugEvent(const char* name, char* buffer) {
 }
 

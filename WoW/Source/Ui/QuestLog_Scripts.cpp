@@ -423,7 +423,8 @@ static int32_t Script_GetQuestLogRequiredMoney(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008BACD0
+// PROVEN: 7c377ff0 IDENTICAL
+// OFFSET: 0x00961390
 static int32_t Script_GetQuestLogGroupNum(lua_State* L) {
     lua_pushnumber(L, GetQuestSuggestedPlayers(CGQuestLog::GetSelectedLogEntry()));
     return 1;
@@ -1459,7 +1460,8 @@ static int32_t Script_SortQuestWatches(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008C07E0
+// PROVEN: 7f6279b4 IDENTICAL
+// OFFSET: 0x009648A0
 static int32_t Script_GetQuestResetTime(lua_State* L) {
     int32_t now = static_cast<int32_t>(time(NULL));
 
@@ -1630,7 +1632,8 @@ static int32_t Script_GetQuestPOILeaderBoard(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 411aadc1 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_QuestPOIUpdateTexture(lua_State* L) {
     return 0;
 }

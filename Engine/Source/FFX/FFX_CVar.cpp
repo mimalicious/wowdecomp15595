@@ -11,7 +11,8 @@ CVar* FFX::s_cvarFFXRectangle;
 // STATIC: %0x00D95218
 CVar* FFX::s_cvarFFX;
 
-// OFFSET: %0x00801470
+// PROVEN: 2d04aead IDENTICAL
+// OFFSET: 0x0089CCF0
 bool FFX::CVarCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t enabled = atoi(value);
     ConsoleWrite(var->m_key.m_str, DEFAULT_COLOR);

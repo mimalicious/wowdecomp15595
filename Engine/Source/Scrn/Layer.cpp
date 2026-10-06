@@ -57,12 +57,14 @@ static const char* s_screenshotFileName;
 // STATIC: %0x00D879B4
 static HSRGN s_layerRgn;
 
-// OFFSET: %0x00765E50
+// PROVEN: 6f7db3fc IDENTICAL
+// OFFSET: 0x007FF270
 static void* LAYER_MemAlloc(size_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00765E70
+// PROVEN: 261b3ba9 IDENTICAL
+// OFFSET: 0x007FF290
 static void LAYER_MemFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
@@ -74,7 +76,8 @@ static int32_t OnIdle(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x00766210
+// PROVEN: 6c72d12e IDENTICAL
+// OFFSET: 0x007FF5E0
 void ScrnSetScreenshotFormat(const char* format) {
     SStrCopy(s_screenshotFormat, format, sizeof(s_screenshotFormat));
 }
@@ -90,17 +93,20 @@ void ScrnSetScreenshotQuality(uint32_t quality) {
     s_screenshotQuality = static_cast<uint32_t>(quality * 5.5f + 45.0f);
 }
 
-// OFFSET: %0x00765F20
+// PROVEN: 9c64b476 IDENTICAL
+// OFFSET: 0x007FF2E0
 void ScrnLayerSetRect(HLAYER layer, const RECTF* rect) {
     reinterpret_cast<CILayer*>(layer)->m_rect = *rect;
 }
 
-// OFFSET: %0x00765F50
+// PROVEN: d8a00afa IDENTICAL
+// OFFSET: 0x007FF310
 uint32_t ScrnLayerGetFlags(HLAYER layer) {
     return reinterpret_cast<CILayer*>(layer)->m_flags;
 }
 
-// OFFSET: %0x00765F60
+// PROVEN: 355afda5 IDENTICAL
+// OFFSET: 0x007FF320
 void ScrnLayerSetFlags(HLAYER layer, uint32_t flags) {
     reinterpret_cast<CILayer*>(layer)->m_flags = flags;
 }
@@ -277,7 +283,8 @@ void ILayerInitialize() {
     EventRegister(EVENT_ID_PAINT, OnPaint);
 }
 
-// OFFSET: %0x007667F0
+// PROVEN: c6c19202 IDENTICAL
+// OFFSET: 0x007FFC30
 static void ILayerPaint() {
     OnPaint(NULL, NULL);
 }

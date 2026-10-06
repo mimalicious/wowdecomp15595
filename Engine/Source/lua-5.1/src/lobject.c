@@ -32,7 +32,8 @@ const TValue luaO_nilobject_ = {{NULL}, LUA_TNIL};
 ** (eeeeexxx), where the real value is (1xxx) * 2^(eeeee - 1) if
 ** eeeee != 0 and (xxx) otherwise.
 */
-// OFFSET: %0x00429F50
+// PROVEN: 8417b76b IDENTICAL
+// OFFSET: 0x0041FA40
 int luaO_int2fb (unsigned int x) {
   int e = 0;  /* expoent */
   while (x >= 16) {
@@ -91,7 +92,8 @@ int luaO_rawequalObj (const TValue *t1, const TValue *t2) {
 }
 
 
-// OFFSET: %0x0042A030
+// PROVEN: 246baf53 IDENTICAL
+// OFFSET: 0x0041FB20
 int luaO_str2d (const char *s, lua_Number *result) {
   char *endptr;
   *result = lua_str2number(s, &endptr);
@@ -188,7 +190,8 @@ const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
 }
 
 
-// OFFSET: %0x0042A400
+// PROVEN: fb322692 IDENTICAL
+// OFFSET: 0x0041FEF0
 void luaO_chunkid (char *out, const char *source, size_t bufflen) {
   if (*source == '=') {
     strncpy(out, source+1, bufflen);  /* remove first char */

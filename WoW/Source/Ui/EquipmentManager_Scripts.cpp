@@ -610,14 +610,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CanUseEquipmentSets", &Script_CanUseEquipmentSets },
 };
 
-// OFFSET: %0x008F6810
+// PROVEN: 6dc9ab12 IDENTICAL
+// OFFSET: 0x009A1470
 void EquipmentManagerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x008F6840
+// PROVEN: 546a0550 IDENTICAL
+// OFFSET: 0x009A14A0
 void EquipmentManagerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

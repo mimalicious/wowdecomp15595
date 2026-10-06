@@ -213,7 +213,8 @@ static void print_mem_stats(j_common_ptr cinfo, int pool_id) {
 
 /* Report an out-of-memory error and stop execution */
 /* If we compiled MEM_STATS support, report alloc requests before dying */
-// OFFSET: %0x00A90790
+// PROVEN: a3c17b14 IDENTICAL
+// OFFSET: 0x00B5E540
 static void out_of_memory(j_common_ptr cinfo, int which) {
 #ifdef MEM_STATS
   cinfo->err->trace_level = 2;	/* force self_destruct to report stats */
@@ -761,7 +762,8 @@ static void do_barray_io(j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writi
 /* Access the part of a virtual sample array starting at start_row */
 /* and extending for num_rows rows.  writable is true if  */
 /* caller intends to modify the accessed area. */
-// OFFSET: %0x00A90F00
+// PROVEN: 1794d8b0 IDENTICAL
+// OFFSET: 0x00B5ECB0
 static JSAMPARRAY access_virt_sarray(j_common_ptr cinfo, jvirt_sarray_ptr ptr, JDIMENSION start_row, JDIMENSION num_rows, boolean writable) {
   JDIMENSION end_row = start_row + num_rows;
   JDIMENSION undef_row;
@@ -851,7 +853,8 @@ static JSAMPARRAY access_virt_sarray(j_common_ptr cinfo, jvirt_sarray_ptr ptr, J
 /* Access the part of a virtual block array starting at start_row */
 /* and extending for num_rows rows.  writable is true if  */
 /* caller intends to modify the accessed area. */
-// OFFSET: %0x00A91060
+// PROVEN: 888d1fd2 IDENTICAL
+// OFFSET: 0x00B5EE10
 static JBLOCKARRAY access_virt_barray(j_common_ptr cinfo, jvirt_barray_ptr ptr, JDIMENSION start_row, JDIMENSION num_rows, boolean writable) {
   JDIMENSION end_row = start_row + num_rows;
   JDIMENSION undef_row;

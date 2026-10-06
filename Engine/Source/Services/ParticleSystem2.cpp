@@ -233,7 +233,8 @@ void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     }
 }
 
-// OFFSET: %0x00862B70
+// PROVEN: 9226a371 IDENTICAL
+// OFFSET: 0x00903F20
 CAaBox& CParticleEmitter2::WorldBounds() {
     return this->m_worldBounds;
 }
@@ -285,7 +286,8 @@ void CParticleEmitter2::SetTextureDimensions(uint32_t rows, uint32_t cols) {
     this->m_textureCellHeight = 1.0f / rows;
 }
 
-// OFFSET: %0x00A516E0
+// PROVEN: 2991d213 IDENTICAL
+// OFFSET: 0x00B141A0
 void CParticleEmitter2::SetParticleStyle(int32_t head, int32_t tail, float tailLength, int32_t clampTail) {
     if (head) {
         this->m_flags |= 0x4;
@@ -320,7 +322,8 @@ void CParticleEmitter2::SetParticleStyle(int32_t head, int32_t tail, float tailL
     }
 }
 
-// OFFSET: %0x00A51900
+// PROVEN: 9c0ba018 IDENTICAL
+// OFFSET: 0x00B14240
 void CParticleEmitter2::SetZsource(float zsource) {
     this->m_params.m_zsource = zsource;
 
@@ -344,7 +347,8 @@ void CParticleEmitter2::SetFollowParams(float speed1, float scale1, float speed2
     this->m_followIntercept = scale1 - speed1 * slope;
 }
 
-// OFFSET: %0x00A519A0
+// PROVEN: d815f24e IDENTICAL
+// OFFSET: 0x00B142E0
 void CParticleEmitter2::SetChooseRandomTexture(int32_t choose) {
     if (this->m_textureRows * this->m_textureCols > 1 && choose) {
         this->m_flags |= 0x100000;
@@ -353,7 +357,8 @@ void CParticleEmitter2::SetChooseRandomTexture(int32_t choose) {
     }
 }
 
-// OFFSET: %0x00A519E0
+// PROVEN: 6a30d9a2 IDENTICAL
+// OFFSET: 0x00B14320
 CParticleEmitter2* CParticleEmitter2::AddRef() {
     this->m_refCount++;
 
@@ -982,13 +987,15 @@ void CParticleEmitter2::GetReplacementColors(CImVector& color0, CImVector& color
     color2.b = static_cast<uint8_t>(CMath::fint_(this->m_params.m_replacementColors[2].z));
 }
 
-// OFFSET: %0x00A551E0
+// PROVEN: d45dc428 IDENTICAL
+// OFFSET: 0x00B15370
 void CParticleEmitter2::SetTwinkleScale(const CRange& scale) {
     this->m_twinkleScaleBase = scale.m_l;
     this->m_twinkleScaleSpan = scale.m_h - scale.m_l;
 }
 
-// OFFSET: %0x00A55210
+// PROVEN: 2ded3c5e IDENTICAL
+// OFFSET: 0x00B153A0
 void CParticleEmitter2::UpdateXform(const C44Matrix& transform, const C3Vector& viewPos, const C44Matrix* frameOfReference) {
     this->m_viewPos = viewPos;
 
@@ -2642,7 +2649,8 @@ CParticleEmitter2::CParticleEmitter2(const CParticleEmitter2& source, int32_t co
     }
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 7bb8d416 IDENTICAL
+// OFFSET: 0x00847950
 void CParticleEmitter2::DestroyParticle(CParticle2& particle) {
 }
 
@@ -2756,22 +2764,26 @@ CPlaneParticleEmitter::CPlaneParticleEmitter(const CPlaneParticleEmitter& source
     this->m_longitude = source.m_longitude;
 }
 
-// OFFSET: %0x00A5B040
+// PROVEN: c14c8f1d IDENTICAL
+// OFFSET: 0x00B27210
 void CPlaneParticleEmitter::SetWidth(float width) {
     this->m_width = width;
 }
 
-// OFFSET: %0x00A5B060
+// PROVEN: 7b4240fb IDENTICAL
+// OFFSET: 0x00B27230
 void CPlaneParticleEmitter::SetHeight(float height) {
     this->m_height = height;
 }
 
-// OFFSET: %0x00A5B080
+// PROVEN: 3b916f09 IDENTICAL
+// OFFSET: 0x00B27250
 void CPlaneParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// OFFSET: %0x00A5B0A0
+// PROVEN: e51bd20e IDENTICAL
+// OFFSET: 0x00B27370
 void CPlaneParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
@@ -2794,47 +2806,55 @@ CSphereParticleEmitter::CSphereParticleEmitter(const CSphereParticleEmitter& sou
     this->m_radiusSpan = source.m_radiusSpan;
 }
 
-// OFFSET: %0x00A5B160
+// PROVEN: 5f90bd03 IDENTICAL
+// OFFSET: 0x00B27310
 void CSphereParticleEmitter::SetWidth(float width) {
     this->m_minRadius = width;
     this->m_radiusSpan = this->m_maxRadius - width;
 }
 
-// OFFSET: %0x00A5B190
+// PROVEN: 46d3a505 IDENTICAL
+// OFFSET: 0x00B27340
 void CSphereParticleEmitter::SetHeight(float height) {
     this->m_maxRadius = height;
     this->m_radiusSpan = height - this->m_minRadius;
 }
 
-// OFFSET: %0x00A5B0A0
+// PROVEN: 4a09dccc IDENTICAL
+// OFFSET: 0x00B27370
 void CSphereParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// OFFSET: %0x00A5B1C0
+// PROVEN: a1921b28 IDENTICAL
+// OFFSET: 0x00B27390
 void CSphereParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
 
-// OFFSET: %0x00A5B1E0
+// PROVEN: 43da2e20 IDENTICAL
+// OFFSET: 0x00B273B0
 void CSplineParticleEmitter::SetEmissionRate(float rate) {
     this->m_ratePerUnit = rate;
     this->m_params.m_emissionRate = rate * this->m_end;
 }
 
-// OFFSET: %0x00A5B210
+// PROVEN: cc428db1 IDENTICAL
+// OFFSET: 0x00B273E0
 void CSplineParticleEmitter::SetSpline(const C3Vector* points, uint32_t count) {
     this->m_spline.SetPoints(points, count);
 }
 
-// OFFSET: %0x00A5B220
+// PROVEN: 0ec91914 IDENTICAL
+// OFFSET: 0x00B273F0
 CParticleEmitter2* CPlaneParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CPlaneParticleEmitter), __FILE__, __LINE__, 0);
 
     return mem ? new (mem) CPlaneParticleEmitter(*this, copyParticles) : NULL;
 }
 
-// OFFSET: %0x00A5B260
+// PROVEN: f1267c0b IDENTICAL
+// OFFSET: 0x00B27430
 CParticleEmitter2* CSphereParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CSphereParticleEmitter), __FILE__, __LINE__, 0);
 
@@ -3017,12 +3037,14 @@ void CSplineParticleEmitter::SetHeight(float height) {
     }
 }
 
-// OFFSET: %0x00A5B0A0
+// PROVEN: 30258723 IDENTICAL
+// OFFSET: 0x00B27370
 void CSplineParticleEmitter::SetLatitude(float latitude) {
     this->m_latitude = latitude;
 }
 
-// OFFSET: %0x00A5B1C0
+// PROVEN: f55f2b60 IDENTICAL
+// OFFSET: 0x00B27390
 void CSplineParticleEmitter::SetLongitude(float longitude) {
     this->m_longitude = longitude;
 }
@@ -3135,7 +3157,8 @@ CSplineParticleEmitter::CSplineParticleEmitter(const CSplineParticleEmitter& sou
     this->m_spline = source.m_spline;
 }
 
-// OFFSET: %0x00A5C560
+// PROVEN: 24447780 IDENTICAL
+// OFFSET: 0x00B28820
 CParticleEmitter2* CSplineParticleEmitter::Clone(int32_t copyParticles) {
     void* mem = SMemAlloc(sizeof(CSplineParticleEmitter), __FILE__, __LINE__, 0);
 

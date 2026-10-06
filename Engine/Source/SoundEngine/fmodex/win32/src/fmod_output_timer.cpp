@@ -170,7 +170,8 @@ FMOD_RESULT OutputTimer::timerFunc()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3B700
+// PROVEN: bf623ea3 IDENTICAL
+// OFFSET: 0x00AFAC20
 FMOD_RESULT OutputTimer::start()
 {
     FMOD_RESULT   result       = FMOD_OK;
@@ -248,7 +249,8 @@ FMOD_RESULT OutputTimer::start()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3B1F0
+// PROVEN: f056110b IDENTICAL
+// OFFSET: 0x00AFA710
 FMOD_RESULT OutputTimer::stop()
 {
     FMOD_RESULT fResult = FMOD_OK;
@@ -295,7 +297,8 @@ FMOD_RESULT OutputTimer::stop()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3B6C0
+// PROVEN: 138d5496 IDENTICAL
+// OFFSET: 0x00AFABE0
 void CALLBACK OutputTimer::timerFuncCallback(UINT uTimerID, UINT uMsg, UINT_PTR dwUser, UINT_PTR dw1, UINT_PTR dw2)
 {
     OutputTimer *outputTimer = (OutputTimer *)dwUser;

@@ -3,7 +3,8 @@
 // STATIC: %0x00B438C4
 const DBCMeta MovieFileDataRec::s_meta = { "DBFilesClient\\MovieFileData.dbc", 2, 8, MovieFileDataRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 9faf1e1c IDENTICAL
+// OFFSET: 0x00401000
 void MovieFileDataRec::FixupStrings(void* record, const char* strings) {
 }
 

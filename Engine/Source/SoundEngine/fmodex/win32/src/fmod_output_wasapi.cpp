@@ -403,7 +403,8 @@ FMOD_RESULT OutputWASAPI::getNumDrivers(int *numdrivers)
 }
 
 
-// OFFSET: %0x00A26E30
+// PROVEN: 19682a90 IDENTICAL
+// OFFSET: 0x00AE6920
 FMOD_RESULT OutputWASAPI::getDriverName(int id, char *name, int namelen)
 {
     FMOD_RESULT result;
@@ -686,7 +687,8 @@ Exit:
 }
 
 
-// OFFSET: %0x00A27460
+// PROVEN: ef10b7a6 IDENTICAL
+// OFFSET: 0x00AE6F50
 FMOD_RESULT OutputWASAPI::close()
 {
     int i;
@@ -990,7 +992,8 @@ FMOD_RESULT OutputWASAPI::recordUpdate()
 }
 
 
-// OFFSET: %0x00A278B0
+// PROVEN: e5c15b9a IDENTICAL
+// OFFSET: 0x00AE73A0
 void CALLBACK OutputWASAPI::recordTimerCallback(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)dwUser;
@@ -1022,7 +1025,8 @@ FMOD_RESULT OutputWASAPI::recordGetNumDrivers(int *numdrivers)
 }
 
 
-// OFFSET: %0x00A278F0
+// PROVEN: 51eb9548 IDENTICAL
+// OFFSET: 0x00AE73E0
 FMOD_RESULT OutputWASAPI::recordGetDriverInfo(int id, char *name, int namelen)
 {
     FMOD_RESULT result;
@@ -1288,7 +1292,8 @@ Exit:
 }
 
 
-// OFFSET: %0x00A27F20
+// PROVEN: fb34a0f4 IDENTICAL
+// OFFSET: 0x00AE7A10
 FMOD_RESULT OutputWASAPI::recordStop()
 {
     if (mCaptureAudioClient)
@@ -1371,7 +1376,8 @@ FMOD_RESULT OutputWASAPI::recordLock(unsigned int offset, unsigned int length, v
 #endif
 
 
-// OFFSET: %0x00A28090
+// PROVEN: 19f7f609 IDENTICAL
+// OFFSET: 0x00AE7B80
 FMOD_RESULT F_CALLBACK OutputWASAPI::getNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1380,7 +1386,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::getNumDriversCallback(FMOD_OUTPUT_STATE *ou
 }
 
 
-// OFFSET: %0x00A280D0
+// PROVEN: 504199db IDENTICAL
+// OFFSET: 0x00AE7BC0
 FMOD_RESULT F_CALLBACK OutputWASAPI::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1389,7 +1396,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::getDriverNameCallback(FMOD_OUTPUT_STATE *ou
 }
 
 
-// OFFSET: %0x00A28100
+// PROVEN: 5caa4aa9 IDENTICAL
+// OFFSET: 0x00AE7BF0
 FMOD_RESULT F_CALLBACK OutputWASAPI::getDriverCapsExCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency, FMOD_SPEAKERMODE *controlpanelspeakermode)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1398,7 +1406,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::getDriverCapsExCallback(FMOD_OUTPUT_STATE *
 }
 
 
-// OFFSET: %0x00A28130
+// PROVEN: 2e1c3b6a IDENTICAL
+// OFFSET: 0x00AE7C20
 FMOD_RESULT F_CALLBACK OutputWASAPI::initExCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, FMOD_SPEAKERMODE *speakermode, int dspbufferlength, int dspnumbuffers, int max2dchannels, int max3dchannels, void *extradriverdata)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1407,7 +1416,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::initExCallback(FMOD_OUTPUT_STATE *output, i
 }
 
 
-// OFFSET: %0x00A28180
+// PROVEN: 5ea3bcb3 IDENTICAL
+// OFFSET: 0x00AE7C70
 FMOD_RESULT F_CALLBACK OutputWASAPI::closeCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1416,7 +1426,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::closeCallback(FMOD_OUTPUT_STATE *output)
 }
 
 
-// OFFSET: %0x00A281B0
+// PROVEN: c3e5e8ce IDENTICAL
+// OFFSET: 0x00AE7CA0
 FMOD_RESULT F_CALLBACK OutputWASAPI::startCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1442,7 +1453,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::getHandleCallback(FMOD_OUTPUT_STATE *output
 }
 
 
-// OFFSET: %0x00A28240
+// PROVEN: dbeced8b IDENTICAL
+// OFFSET: 0x00AE7D30
 FMOD_RESULT F_CALLBACK OutputWASAPI::getPositionCallback(FMOD_OUTPUT_STATE *output, unsigned int *pcm)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1451,7 +1463,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::getPositionCallback(FMOD_OUTPUT_STATE *outp
 }
 
 
-// OFFSET: %0x00A28770
+// PROVEN: 854762ae IDENTICAL
+// OFFSET: 0x00AE8260
 FMOD_RESULT F_CALLBACK OutputWASAPI::lockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1460,7 +1473,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::lockCallback(FMOD_OUTPUT_STATE *output, uns
 }
 
 
-// OFFSET: %0x00A287B0
+// PROVEN: d47338d2 IDENTICAL
+// OFFSET: 0x00AE82A0
 FMOD_RESULT F_CALLBACK OutputWASAPI::unlockCallback(FMOD_OUTPUT_STATE *output, void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1471,7 +1485,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::unlockCallback(FMOD_OUTPUT_STATE *output, v
 
 #ifdef FMOD_SUPPORT_RECORDING
 
-// OFFSET: %0x00A282A0
+// PROVEN: b56889b3 IDENTICAL
+// OFFSET: 0x00AE7D90
 FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1480,7 +1495,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetNumDriversCallback(FMOD_OUTPUT_STA
 }
 
 
-// OFFSET: %0x00A282E0
+// PROVEN: f0fb5308 IDENTICAL
+// OFFSET: 0x00AE7DD0
 FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetDriverInfoCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1489,7 +1505,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetDriverInfoCallback(FMOD_OUTPUT_STA
 }
 
 
-// OFFSET: %0x00A28310
+// PROVEN: 03a31926 IDENTICAL
+// OFFSET: 0x00AE7E00
 FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetDriverCapsCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1498,7 +1515,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::recordGetDriverCapsCallback(FMOD_OUTPUT_STA
 }
 
 
-// OFFSET: %0x00A28340
+// PROVEN: 452087d9 IDENTICAL
+// OFFSET: 0x00AE7E30
 FMOD_RESULT F_CALLBACK OutputWASAPI::recordStartCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_SOUND *sound, int loop)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;
@@ -1507,7 +1525,8 @@ FMOD_RESULT F_CALLBACK OutputWASAPI::recordStartCallback(FMOD_OUTPUT_STATE *outp
 }
 
 
-// OFFSET: %0x00A28370
+// PROVEN: 82dae910 IDENTICAL
+// OFFSET: 0x00AE7E60
 FMOD_RESULT F_CALLBACK OutputWASAPI::recordStopCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWASAPI *wasapi = (OutputWASAPI *)output;

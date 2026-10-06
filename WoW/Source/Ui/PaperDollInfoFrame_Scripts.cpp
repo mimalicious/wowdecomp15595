@@ -350,7 +350,8 @@ static int32_t Script_PickupInventoryItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008D5C70
+// PROVEN: 9bfc15f6 IDENTICAL
+// OFFSET: 0x0097D9D0
 static int32_t Script_PutItemInBackpack(lua_State* L) {
     if (CGCharacterInfo::PutItemInBackpack(0xFF)) {
         lua_pushnumber(L, 1.0);

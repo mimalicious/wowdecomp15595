@@ -205,7 +205,8 @@ template <class T, class P>
 BSN::BSNEncodedObject<T, P>::~BSNEncodedObject() {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: d72b77e6 IDENTICAL
+// OFFSET: 0x009FCE20
 template <class T, class P>
 uint32_t BSN::BSNEncodedObject<T, P>::GetEncodingType() const {
     return 1;
@@ -217,13 +218,13 @@ const BSN::PrimitiveEncoder* BSN::BSNEncodedObject<T, P>::GetEncoder() const {
     return &this->m_encoder;
 }
 
-// OFFSET: [#0x005329A0<Battlenet::Presence::BlockList, Protocol>, #0x00532A10<Battlenet::Friends::FriendInvite, Protocol>, #0x00532C70<Battlenet::Presence::FieldUpdate, Protocol>, #0x00532D20<Battlenet::Toon::FullName, Protocol>, #0x00532DC0<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537AE0<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x00714230<Battlenet::Chat::MemberList, Protocol>, #0x008C6C30<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6F20<Battlenet::Event::Larva::Invoke, Protocol>, %0x00862B70<Battlenet::Presence::FieldVal, Protocol>, #0x009C2590<Battlenet::Event::Header, Protocol>]
+// OFFSET: [#0x005329A0<Battlenet::Presence::BlockList, Protocol>, #0x00532A10<Battlenet::Friends::FriendInvite, Protocol>, #0x00532C70<Battlenet::Presence::FieldUpdate, Protocol>, #0x00532D20<Battlenet::Toon::FullName, Protocol>, #0x00532DC0<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537AE0<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x00714230<Battlenet::Chat::MemberList, Protocol>, #0x008C6C30<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6F20<Battlenet::Event::Larva::Invoke, Protocol>, 0x00903F20<Battlenet::Presence::FieldVal, Protocol>, #0x009C2590<Battlenet::Event::Header, Protocol>]
 template <class T, class P>
 BSN::EncodeContext* BSN::BSNEncodedObject<T, P>::GetContext() {
     return &this->m_context;
 }
 
-// OFFSET: [#0x005329A0<Battlenet::Presence::BlockList, Protocol>, #0x00532A10<Battlenet::Friends::FriendInvite, Protocol>, #0x00532C70<Battlenet::Presence::FieldUpdate, Protocol>, #0x00532D20<Battlenet::Toon::FullName, Protocol>, #0x00532DC0<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537AE0<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x00714230<Battlenet::Chat::MemberList, Protocol>, #0x008C6C30<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6F20<Battlenet::Event::Larva::Invoke, Protocol>, %0x00862B70<Battlenet::Presence::FieldVal, Protocol>, #0x009C2590<Battlenet::Event::Header, Protocol>]
+// OFFSET: [#0x005329A0<Battlenet::Presence::BlockList, Protocol>, #0x00532A10<Battlenet::Friends::FriendInvite, Protocol>, #0x00532C70<Battlenet::Presence::FieldUpdate, Protocol>, #0x00532D20<Battlenet::Toon::FullName, Protocol>, #0x00532DC0<Battlenet::Friends::FriendsOfFriendList, Protocol>, #0x00537AE0<Battlenet::Friends::FriendInviteContainer, Protocol>, #0x00714230<Battlenet::Chat::MemberList, Protocol>, #0x008C6C30<Battlenet::Event::Update::Invoke, Protocol>, #0x008C6F20<Battlenet::Event::Larva::Invoke, Protocol>, 0x00903F20<Battlenet::Presence::FieldVal, Protocol>, #0x009C2590<Battlenet::Event::Header, Protocol>]
 template <class T, class P>
 const BSN::EncodeContext* BSN::BSNEncodedObject<T, P>::GetContext() const {
     return &this->m_context;
@@ -249,7 +250,8 @@ template <class T, class P, int32_t ON_STACK>
 BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::~BSNEncodedObjectPtr() {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: 539fa59e IDENTICAL
+// OFFSET: 0x009FCE20
 template <class T, class P, int32_t ON_STACK>
 uint32_t BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::GetEncodingType() const {
     return 1;

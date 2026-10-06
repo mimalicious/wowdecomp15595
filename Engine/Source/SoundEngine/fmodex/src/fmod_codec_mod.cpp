@@ -100,7 +100,8 @@ FMOD_CODEC_DESCRIPTION_EX *CodecMOD::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F87F0
+// PROVEN: ceae9ada IDENTICAL
+// OFFSET: 0x00AB81D0
 FMOD_RESULT CodecMOD::calculateLength()
 {
     waveformat[0].lengthpcm = 0;
@@ -156,7 +157,8 @@ int CodecMOD::getAmigaPeriod(int note, int middlec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F7430
+// PROVEN: b971c39b IDENTICAL
+// OFFSET: 0x00AB3F10
 FMOD_RESULT MusicChannelMOD::portamento()
 {
 	MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1137,7 +1139,8 @@ FMOD_RESULT CodecMOD::updateEffects()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F83D0
+// PROVEN: 8f0b9976 IDENTICAL
+// OFFSET: 0x00AB7DB0
 FMOD_RESULT CodecMOD::update(bool audible)
 {
 	if (mTick == 0)									/* new note */
@@ -1956,7 +1959,8 @@ FMOD_RESULT CodecMOD::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F8510
+// PROVEN: 9dbf6429 IDENTICAL
+// OFFSET: 0x00AB7EF0
 FMOD_RESULT CodecMOD::closeInternal()
 {
     int count;
@@ -2145,7 +2149,8 @@ FMOD_RESULT CodecMOD::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F86F0
+// PROVEN: d5bc9c7c IDENTICAL
+// OFFSET: 0x00AB80D0
 FMOD_RESULT CodecMOD::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     if (postype == FMOD_TIMEUNIT_MODORDER)
@@ -2211,7 +2216,8 @@ FMOD_RESULT CodecMOD::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F9B60
+// PROVEN: 23655340 IDENTICAL
+// OFFSET: 0x00AB9520
 FMOD_RESULT F_CALLBACK CodecMOD::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecMOD *cmod = (CodecMOD *)codec;
@@ -2235,7 +2241,8 @@ FMOD_RESULT F_CALLBACK CodecMOD::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F8790
+// PROVEN: c0ac77d0 IDENTICAL
+// OFFSET: 0x00AB8170
 FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecMOD *cmod = (CodecMOD *)codec;
@@ -2259,7 +2266,8 @@ FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F8C00
+// PROVEN: 33e93be4 IDENTICAL
+// OFFSET: 0x00AB85E0
 FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecMOD *cmod = (CodecMOD *)codec;
@@ -2283,7 +2291,8 @@ FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F87C0
+// PROVEN: a121cd5b IDENTICAL
+// OFFSET: 0x00AB81A0
 FMOD_RESULT F_CALLBACK CodecMOD::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {
     CodecMOD *cmod = (CodecMOD *)codec;

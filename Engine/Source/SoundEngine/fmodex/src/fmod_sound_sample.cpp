@@ -22,7 +22,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A082B0
+// PROVEN: fcb9358c IDENTICAL
+// OFFSET: 0x00AC82A0
 Sample::Sample()
 {
     mNumSubSamples = 0;
@@ -612,7 +613,8 @@ FMOD_RESULT Sample::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A08300
+// PROVEN: c10f2e08 IDENTICAL
+// OFFSET: 0x00AC82F0
 FMOD_RESULT Sample::release(bool freethis)
 {
     int count;
@@ -656,7 +658,8 @@ FMOD_RESULT Sample::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A08390
+// PROVEN: f58d852e IDENTICAL
+// OFFSET: 0x00AC8380
 FMOD_RESULT Sample::setDefaults(float frequency, float volume, float pan, int priority)
 {
     FMOD_RESULT result;
@@ -692,7 +695,8 @@ FMOD_RESULT Sample::setDefaults(float frequency, float volume, float pan, int pr
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A08410
+// PROVEN: 80159514 IDENTICAL
+// OFFSET: 0x00AC8400
 FMOD_RESULT Sample::setVariations(float frequencyvar, float volumevar, float panvar)
 {
     FMOD_RESULT result;
@@ -728,7 +732,8 @@ FMOD_RESULT Sample::setVariations(float frequencyvar, float volumevar, float pan
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A08480
+// PROVEN: 25a7ca19 IDENTICAL
+// OFFSET: 0x00AC8470
 FMOD_RESULT Sample::set3DMinMaxDistance(float min, float max)
 {
     FMOD_RESULT result;
@@ -765,7 +770,8 @@ FMOD_RESULT Sample::set3DMinMaxDistance(float min, float max)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A084E0
+// PROVEN: 65986e58 IDENTICAL
+// OFFSET: 0x00AC84D0
 FMOD_RESULT Sample::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
     FMOD_RESULT result;
@@ -802,7 +808,8 @@ FMOD_RESULT Sample::set3DConeSettings(float insideconeangle, float outsideconean
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A08550
+// PROVEN: 9fb536de IDENTICAL
+// OFFSET: 0x00AC8540
 FMOD_RESULT  Sample::setMode(FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -839,7 +846,8 @@ FMOD_RESULT  Sample::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A085A0
+// PROVEN: f4a561a4 IDENTICAL
+// OFFSET: 0x00AC8590
 FMOD_RESULT  Sample::setLoopCount(int loopcount)
 {
     FMOD_RESULT result;
@@ -875,7 +883,8 @@ FMOD_RESULT  Sample::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A085F0
+// PROVEN: febec16a IDENTICAL
+// OFFSET: 0x00AC85E0
 FMOD_RESULT Sample::setLoopPoints(unsigned int loopstart, FMOD_TIMEUNIT loopstarttype, unsigned int loopend, FMOD_TIMEUNIT loopendtype)
 {
     FMOD_RESULT result;

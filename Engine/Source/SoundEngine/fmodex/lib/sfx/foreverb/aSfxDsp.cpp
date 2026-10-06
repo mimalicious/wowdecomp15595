@@ -15,7 +15,8 @@
 
 //-----------------------------------------------------------------------------
 
-// OFFSET: %0x00A16840
+// PROVEN: a079c865 IDENTICAL
+// OFFSET: 0x00AD6820
 int ASfxDsp::init(float rate)
 {
 	int delayLine;
@@ -109,7 +110,8 @@ int ASfxDsp::init(float rate)
 	return 0;
 }
 
-// OFFSET: %0x00A15470
+// PROVEN: 6ca90e73 IDENTICAL
+// OFFSET: 0x00AD5450
 void ASfxDsp::close()
 {
 	if (mInBuff)
@@ -125,7 +127,8 @@ void ASfxDsp::close()
 }
 
 
-// OFFSET: %0x00A15510
+// PROVEN: 50b17985 IDENTICAL
+// OFFSET: 0x00AD54F0
 int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate)
 {
 	int delaySamples;
@@ -161,7 +164,8 @@ int ASfxDsp::AllocateLateDelays(int numDelays, float *delaySec, float sampleRate
 	return 0;
 }
 
-// OFFSET: %0x00A15640
+// PROVEN: e0932c68 IDENTICAL
+// OFFSET: 0x00AD5620
 int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 {
 	// Allocate it to the max Ref & Rev delays, so we don't have to reallocate it if the delays change.
@@ -187,7 +191,8 @@ int ASfxDsp::AllocateEarlyLateDelay(float *delaySec, float sampleRate)
 	return 0;
 }
 
-// OFFSET: %0x00A15710
+// PROVEN: 3d5bf7cf IDENTICAL
+// OFFSET: 0x00AD56F0
 int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleRate)
 {
 	int		delaySamples;
@@ -222,7 +227,8 @@ int ASfxDsp::AllocateAllpassDelays(int numDelays, float *delaySec, float sampleR
 	return 0;
 }
 
-// OFFSET: %0x00A15840
+// PROVEN: 4dd5a29c IDENTICAL
+// OFFSET: 0x00AD5820
 int ASfxDsp::AllocateEarlyDelay(float delaySec, float sampleRate)
 {
 	int delaySamples = (int)(delaySec * sampleRate) + 1;
@@ -250,7 +256,8 @@ int	ASfxDsp::NextPowerOf2(int delaySamples)
 }
 
 
-// OFFSET: %0x00A14FC0
+// PROVEN: 630f70a9 IDENTICAL
+// OFFSET: 0x00AD4FA0
 void ASfxDsp::DeallocateLateDelays()
 {
 	if (mLateDelays)
@@ -271,7 +278,8 @@ void ASfxDsp::DeallocateLateDelays()
 	mLateDelays = NULL;
 }
 
-// OFFSET: %0x00A15040
+// PROVEN: ead0aec2 IDENTICAL
+// OFFSET: 0x00AD5020
 void ASfxDsp::DeallocateAllpassDelays()
 {
 	if (mAllpassDelays)
@@ -314,7 +322,8 @@ void ASfxDsp::DeallocateEarlyLateDelay()
 
 //-----------------------------------------------------------------------------
 //#pragma export(UpdateBufferSize)
-// OFFSET: %0x00A150C0
+// PROVEN: 753933a7 IDENTICAL
+// OFFSET: 0x00AD50A0
 bool ASfxDsp::UpdateBufferSize(int newMaxBlockSize)
 {
 	// nothing to do if the maximum number of samples per processing block hasn't changed
@@ -339,7 +348,8 @@ bool ASfxDsp::UpdateBufferSize(int newMaxBlockSize)
 
 //-----------------------------------------------------------------------------
 //#pragma export (ASfxDsp::ClearBuffers)
-// OFFSET: %0x00A15900
+// PROVEN: 5f8efd85 IDENTICAL
+// OFFSET: 0x00AD58E0
 void ASfxDsp::ClearBuffers()
 {
 	ClearInBuff();
@@ -362,7 +372,8 @@ void ASfxDsp::ClearInBuff()
 
 
 //-----------------------------------------------------------------------------
-// OFFSET: %0x00A15130
+// PROVEN: bc46f1e4 IDENTICAL
+// OFFSET: 0x00AD5110
 void ASfxDsp::ClearReverbInternalBuffers()
 {
 	int delayLine;
@@ -880,7 +891,8 @@ void ASfxDsp::BlockProcessInput(unsigned int sampframes, int channels, float *in
 
 
 
-// OFFSET: %0x00A15360
+// PROVEN: eb7e447d IDENTICAL
+// OFFSET: 0x00AD5340
 void ASfxDsp::SetLate_EarlyLateDelayTaps(float refPlusRevDelaySec, float nextLengthSec, float delayRatio, float rate)	
 {
     mEarlyLateSec[kNumEarly_EarlyLateDelayTaps] = refPlusRevDelaySec;       // Tap 1 = Ref+Rev delay
@@ -926,7 +938,8 @@ void ASfxDsp::SetEarlyDelay(float nextLengthSec, float delayRatio, float rate)
 	}
 }
 
-// OFFSET: %0x00A153D0
+// PROVEN: cb4322f4 IDENTICAL
+// OFFSET: 0x00AD53B0
 void ASfxDsp::SetLateDelays(float nextLengthSec, float delayRatio, float nextLengthBSec, float delayRatioB, float rate)
 {
 	float	nextLengthSamples;

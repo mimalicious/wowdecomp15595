@@ -118,7 +118,8 @@ void Liquid::ClearWaveManagers() {
     Liquid::s_waveManagerAllocator.Clear(".?AVCWaveManager@Liquid@@", SLOG_OBJECT, 1);
 }
 
-// OFFSET: %0x00860F00
+// PROVEN: d8e79390 IDENTICAL
+// OFFSET: 0x00627270
 void Liquid::CWaveManager::AddRef() {
     this->m_refCount++;
 }

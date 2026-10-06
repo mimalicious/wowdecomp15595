@@ -9,7 +9,8 @@ namespace FMOD
 {
 
 #ifndef PLATFORM_PS3_SPU
-// OFFSET: %0x00A0A640
+// PROVEN: f93484d6 IDENTICAL
+// OFFSET: 0x00ACA620
 bool Codec::readyForRelease()
 {
     if (mFile && !mFile->readyForClose())
@@ -36,7 +37,8 @@ bool Codec::readyForRelease()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A660
+// PROVEN: ae5188d0 IDENTICAL
+// OFFSET: 0x00ACA640
 FMOD_RESULT Codec::release()
 {
     FMOD_RESULT result;
@@ -98,7 +100,8 @@ FMOD_RESULT Codec::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0B0C0
+// PROVEN: 12611afb IDENTICAL
+// OFFSET: 0x00ACB0A0
 FMOD_RESULT Codec::read(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -196,7 +199,8 @@ FMOD_RESULT Codec::read(void *buffer, unsigned int sizebytes, unsigned int *byte
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0B040
+// PROVEN: a9b69fa0 IDENTICAL
+// OFFSET: 0x00ACB020
 FMOD_RESULT Codec::getMetadataFromFile()
 {
     FMOD_RESULT  result = FMOD_OK;
@@ -239,7 +243,8 @@ FMOD_RESULT Codec::getMetadataFromFile()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A700
+// PROVEN: 616a18ca IDENTICAL
+// OFFSET: 0x00ACA6E0
 FMOD_RESULT Codec::getLength(unsigned int *length, FMOD_TIMEUNIT lengthtype)
 {
     FMOD_RESULT result;
@@ -399,7 +404,8 @@ FMOD_RESULT Codec::setPosition(int subsound, unsigned int position, FMOD_TIMEUNI
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0A770
+// PROVEN: da80e459 IDENTICAL
+// OFFSET: 0x00ACA750
 FMOD_RESULT Codec::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -457,7 +463,8 @@ FMOD_RESULT Codec::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
     FMOD_TAGDATATYPE
 ]
 */
-// OFFSET: %0x00A0AFA0
+// PROVEN: 7a38add3 IDENTICAL
+// OFFSET: 0x00ACAF80
 FMOD_RESULT Codec::metaData(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, bool unique)
 {
     if (!mMetadata)

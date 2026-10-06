@@ -187,7 +187,8 @@ void luaF_freeclosure (lua_State *L, Closure *c) {
 ** Look for n-th local variable at line `line' in function `func'.
 ** Returns NULL if not found.
 */
-// OFFSET: %0x00430930
+// PROVEN: 38a7b6c1 IDENTICAL
+// OFFSET: 0x00426450
 const char *luaF_getlocalname (const Proto *f, int local_number, int pc) {
   int i;
   for (i = 0; i<f->sizelocvars && f->locvars[i].startpc <= pc; i++) {

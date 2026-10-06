@@ -53,7 +53,8 @@ CSimpleFrame* CGQuestPOIFrame::Create(CSimpleFrame* parent) {
     return data ? new (data) CGQuestPOIFrame(parent) : NULL;
 }
 
-// OFFSET: %0x00941080
+// PROVEN: 766b947d IDENTICAL
+// OFFSET: 0x00A007D0
 CGQuestPOIFrame::QuestPOIRenderData::~QuestPOIRenderData() {
 }
 

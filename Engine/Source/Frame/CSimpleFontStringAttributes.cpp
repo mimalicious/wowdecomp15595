@@ -46,7 +46,8 @@ int32_t CSimpleFontStringAttributes::SetFont(const char* fontName, float fontHei
     return 1;
 }
 
-// OFFSET: %0x00508B20
+// PROVEN: db980aab IDENTICAL
+// OFFSET: 0x004F88D0
 void CSimpleFontStringAttributes::SetShadow(const CImVector& color, const C2Vector& offset) {
     if (*reinterpret_cast<const uint32_t*>(&color) != *reinterpret_cast<uint32_t*>(&this->m_shadowColor) || offset.x != this->m_shadowOffset.x || offset.y != this->m_shadowOffset.y || !(this->m_flags & 0x800)) {
         this->m_shadowColor = color;
@@ -55,7 +56,8 @@ void CSimpleFontStringAttributes::SetShadow(const CImVector& color, const C2Vect
     }
 }
 
-// OFFSET: %0x00542A20
+// PROVEN: d6762166 IDENTICAL
+// OFFSET: 0x005335E0
 void CSimpleFontStringAttributes::SetShadowOffset(const C2Vector& offset) {
     this->SetShadow(this->m_shadowColor, offset);
 }

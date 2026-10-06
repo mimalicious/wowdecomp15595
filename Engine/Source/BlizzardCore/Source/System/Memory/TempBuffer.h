@@ -36,7 +36,8 @@ Blizzard::Memory::TempBuffer<T, N>::TempBuffer(uint32_t count) {
     this->m_data = count > N ? new T[count] : this->m_buffer;
 }
 
-// OFFSET: %0x00709480
+// PROVEN: b4f5ce5a IDENTICAL
+// OFFSET: 0x007B6800
 template <class T, uint32_t N>
 Blizzard::Memory::TempBuffer<T, N>::~TempBuffer() {
     if (this->m_data != this->m_buffer) {

@@ -241,7 +241,8 @@ static VehicleSeatRec* GetVehicleSeatRec(const WOWGUID* guid) {
     return NULL;
 }
 
-// OFFSET: %0x0094C5F0
+// PROVEN: de650eae IDENTICAL
+// OFFSET: 0x00A0DA30
 int32_t EvaluateVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     WOWGUID guid = ClntObjMgrGetActivePlayer();
     VehicleSeatRec* seat = GetVehicleSeatRec(&guid);
@@ -253,7 +254,8 @@ int32_t EvaluateVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstr
     return 0;
 }
 
-// OFFSET: %0x0094C630
+// PROVEN: 474e025c IDENTICAL
+// OFFSET: 0x00A0DA70
 int32_t EvaluateUnitHasVehicleUI(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>* args) {
     VehicleSeatRec* seat = GetVehicleSeatRec(unit);
 

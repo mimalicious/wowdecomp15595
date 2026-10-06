@@ -75,7 +75,8 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     this->LoadRecords(meta, data, header[1], rows, header[4], reinterpret_cast<const char*>(&rows[header[1] * meta->m_rowSize]));
 }
 
-// OFFSET: %0x00492C40
+// PROVEN: 1e707c58 IDENTICAL
+// OFFSET: 0x0048AC70
 void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->Free();
     this->m_numRecords = 0;
@@ -223,7 +224,8 @@ void WowClientDB_RLE_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint3
     }
 }
 
-// OFFSET: %0x0049E5B0
+// PROVEN: 070f929c IDENTICAL
+// OFFSET: 0x0048AEB0
 uint8_t* DecompressRow(const uint8_t* src, uint32_t size, uint8_t* dst) {
     uint8_t* end = &dst[size];
     *dst = *src;

@@ -19,7 +19,8 @@ CLCDGfxBase::~CLCDGfxBase() {
     this->Shutdown();
 }
 
-// OFFSET: %0x00A73C30
+// PROVEN: 82a42512 IDENTICAL
+// OFFSET: 0x00B41930
 HRESULT CLCDGfxBase::Initialize() {
     this->m_hDC = CreateCompatibleDC(NULL);
 
@@ -55,7 +56,8 @@ void CLCDGfxBase::Shutdown() {
     this->m_nWidth = 0;
 }
 
-// OFFSET: %0x00A73DB0
+// PROVEN: 38476198 IDENTICAL
+// OFFSET: 0x00B41AC0
 HRESULT CLCDGfxBase::CreateBitmap(uint16_t bitCount) {
     this->m_pBitmapInfo = reinterpret_cast<BITMAPINFO*>(new (__FILE__, __LINE__) uint8_t[sizeof(BITMAPINFO) + 256 * sizeof(RGBQUAD)]);
 
@@ -96,13 +98,15 @@ HRESULT CLCDGfxBase::CreateBitmap(uint16_t bitCount) {
     return S_OK;
 }
 
-// OFFSET: %0x00A73C60
+// PROVEN: dae91d09 IDENTICAL
+// OFFSET: 0x00B41960
 void CLCDGfxBase::ClearScreen() {
     RECT rect = { 0, 0, this->m_nWidth, this->m_nHeight };
     FillRect(this->m_hDC, &rect, static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
 }
 
-// OFFSET: %0x00A73CA0
+// PROVEN: a63538b8 IDENTICAL
+// OFFSET: 0x00B419A0
 void CLCDGfxBase::BeginDraw() {
     if (!this->m_hPrevBitmap) {
         this->m_hPrevBitmap = static_cast<HBITMAP>(SelectObject(this->m_hDC, this->m_hBitmap));
@@ -111,7 +115,8 @@ void CLCDGfxBase::BeginDraw() {
     }
 }
 
-// OFFSET: %0x00A73CE0
+// PROVEN: 6cde81ca IDENTICAL
+// OFFSET: 0x00B419E0
 void CLCDGfxBase::EndDraw() {
     if (this->m_hPrevBitmap) {
         GdiFlush();
@@ -120,12 +125,14 @@ void CLCDGfxBase::EndDraw() {
     }
 }
 
-// OFFSET: %0x00A72EC0
+// PROVEN: 5d76ee5e IDENTICAL
+// OFFSET: 0x00B40BC0
 HDC CLCDGfxBase::GetHDC() {
     return this->m_hDC;
 }
 
-// OFFSET: %0x00A73D10
+// PROVEN: b2aa2441 IDENTICAL
+// OFFSET: 0x00B41A10
 lgLcdBitmapHeader* CLCDGfxBase::GetLCDScreen() {
     if (this->m_pLCDScreen) {
         memcpy(this->m_pLCDScreen + 1, this->m_pBitmapBits, 4 * this->m_nWidth * this->m_nHeight);
@@ -134,17 +141,20 @@ lgLcdBitmapHeader* CLCDGfxBase::GetLCDScreen() {
     return this->m_pLCDScreen;
 }
 
-// OFFSET: %0x00A73D40
+// PROVEN: 90a331a4 IDENTICAL
+// OFFSET: 0x00B41A40
 BITMAPINFO* CLCDGfxBase::GetBitmapInfo() {
     return this->m_pBitmapInfo;
 }
 
-// OFFSET: %0x00A73D50
+// PROVEN: fc78ba6e IDENTICAL
+// OFFSET: 0x00B41A50
 HBITMAP CLCDGfxBase::GetHBITMAP() {
     return this->m_hBitmap;
 }
 
-// OFFSET: %0x009795C0
+// PROVEN: 4908a79b IDENTICAL
+// OFFSET: 0x00B41A60
 int32_t CLCDGfxBase::GetWidth() {
     return this->m_nWidth;
 }

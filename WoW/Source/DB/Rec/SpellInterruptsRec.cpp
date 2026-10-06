@@ -3,7 +3,8 @@
 // STATIC: %0x00B44F88
 const DBCMeta SpellInterruptsRec::s_meta = { "DBFilesClient\\SpellInterrupts.dbc", 4, 24, SpellInterruptsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: a816a06e IDENTICAL
+// OFFSET: 0x00401000
 void SpellInterruptsRec::FixupStrings(void* record, const char* strings) {
 }
 

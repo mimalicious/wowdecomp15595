@@ -58,7 +58,8 @@ static int32_t Script_CanMerchantRepair(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008C1020
+// PROVEN: b8396488 IDENTICAL
+// OFFSET: 0x00967DD0
 static int32_t Script_InRepairMode(lua_State* L) {
     if (CursorGetResetMode() == 17) {
         lua_pushnumber(L, 1.0);
@@ -169,7 +170,8 @@ static int32_t Script_GetMerchantItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008C1000
+// PROVEN: 5551c8c7 IDENTICAL
+// OFFSET: 0x00967DB0
 static int32_t Script_HideRepairCursor(lua_State* L) {
     if (CursorGetResetMode() == 17) {
         CursorSetResetMode(1);

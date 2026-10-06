@@ -89,7 +89,8 @@ static void LoadInteractIcons(int32_t load) {
     }
 }
 
-// OFFSET: %0x005E9D50
+// PROVEN: 05a9c7de IDENTICAL
+// OFFSET: 0x005DD0B0
 static int32_t UpdateAllWorldObjectsCallback(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -111,7 +112,8 @@ static int32_t UpdateAllObjectEffectManagersCallback(WOWGUID guid, void* param) 
     return 1;
 }
 
-// OFFSET: %0x005EAB50
+// PROVEN: b29b1188 IDENTICAL
+// OFFSET: 0x005DE070
 static int32_t ScaleUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -485,16 +487,19 @@ void CGObject_C::LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t se
 CGObject_C::CGObject_C() {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 7adf9979 IDENTICAL
+// OFFSET: 0x00847950
 void CGObject_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: de779f0b IDENTICAL
+// OFFSET: 0x009FCE20
 int32_t CGObject_C::ShouldFadeout() {
     return 1;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: b5a67297 IDENTICAL
+// OFFSET: 0x00847950
 void CGObject_C::UpdateDisplayInfo(int32_t a2) {
 }
 
@@ -509,32 +514,38 @@ C3Vector CGObject_C::GetNamePosition() const {
     return position;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 3e538a10 IDENTICAL
+// OFFSET: 0x00842700
 const CGBag_C* CGObject_C::GetBag() const {
     return NULL;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 420f1f3f IDENTICAL
+// OFFSET: 0x00842700
 CGBag_C* CGObject_C::GetBag() {
     return NULL;
 }
 
-// OFFSET: %0x004974E0
+// PROVEN: 318a75ac IDENTICAL
+// OFFSET: 0x0048F710
 C3Vector CGObject_C::GetPosition() const {
     return C3Vector(0.0f, 0.0f, 0.0f);
 }
 
-// OFFSET: %0x00497500
+// PROVEN: c6ae701e IDENTICAL
+// OFFSET: 0x0048F730
 C3Vector CGObject_C::GetRawPosition() const {
     return this->GetPosition();
 }
 
-// OFFSET: %0x006CDE50
+// PROVEN: 79ed4052 IDENTICAL
+// OFFSET: 0x0076CA20
 float CGObject_C::GetFacing() const {
     return 0.0f;
 }
 
-// OFFSET: %0x00497520
+// PROVEN: fd340554 IDENTICAL
+// OFFSET: 0x0048F800
 float CGObject_C::GetRawFacing() const {
     return this->GetFacing();
 }
@@ -544,7 +555,8 @@ float CGObject_C::GetScale() const {
     return this->m_obj->m_scale;
 }
 
-// OFFSET: %0x00497540
+// PROVEN: cb76c4c3 IDENTICAL
+// OFFSET: 0x0048F760
 uint64_t CGObject_C::GetTransportGUID() const {
     return 0;
 }
@@ -576,12 +588,14 @@ void CGObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// OFFSET: %0x00408910
+// PROVEN: ce1c9987 IDENTICAL
+// OFFSET: 0x00842700
 int32_t CGObject_C::IsQuestGiver() const {
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 5fa3d028 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::RefreshInteractIcon() {
 }
 
@@ -602,32 +616,39 @@ void CGObject_C::UpdateInteractIconAttach() {
     }
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: a0248792 IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CGObject_C::GetModelFileName(const char** name) const {
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: a13063c0 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::ScaleChangeUpdate() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 93da7744 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::ScaleChangeFinished() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 67768697 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::RenderTargetSelection() const {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: adf0f9a2 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::RenderPetTargetSelection() const {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 2932844c IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::Render() {
 }
 
-// OFFSET: %0x004975B0
+// PROVEN: 75bd5403 IDENTICAL
+// OFFSET: 0x0048F7D0
 int32_t CGObject_C::GetSelectionHighlightColor(CImVector* color) const {
     *reinterpret_cast<uint32_t*>(color) = 0xFFFFFFFF;
     return 1;
@@ -671,52 +692,62 @@ int32_t CGObject_C::Animate(float elapsed) {
     return 1;
 }
 
-// OFFSET: %0x005E8C90
+// PROVEN: 18c76c1b IDENTICAL
+// OFFSET: 0x005DBF30
 void CGObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     if (!(flags & 0x1)) {
         render = 1;
     }
 }
 
-// OFFSET: %0x00497520
+// PROVEN: d033a6fc IDENTICAL
+// OFFSET: 0x0048F800
 float CGObject_C::GetRenderFacing() const {
     return this->GetFacing();
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 5c1e2d9f IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::OnSpecialMountAnim() {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: bb2ea966 IDENTICAL
+// OFFSET: 0x009FCE20
 int32_t CGObject_C::IsSolidSelectable() const {
     return 1;
 }
 
-// OFFSET: %0x005A33B0
+// PROVEN: a4a14a96 IDENTICAL
+// OFFSET: 0x005EB640
 int32_t CGObject_C::IsCollidable(int32_t a1) const {
     return 1;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 4bc73cc2 IDENTICAL
+// OFFSET: 0x00842700
 int32_t CGObject_C::CanHighlight() const {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 9a25a0a5 IDENTICAL
+// OFFSET: 0x00842700
 int32_t CGObject_C::CanBeTargetted() const {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 2a12800f IDENTICAL
+// OFFSET: 0x00842700
 int32_t CGObject_C::FloatingTooltip() const {
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 6d451c6e IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::OnRightClick() {
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 569ddc38 IDENTICAL
+// OFFSET: 0x00842700
 int32_t CGObject_C::IsHighlightSuppressed() const {
     return 0;
 }
@@ -751,46 +782,55 @@ CM2Model* CGObject_C::GetObjectModel() const {
     return this->m_worldModel;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: df8f4393 IDENTICAL
+// OFFSET: 0x00842700
 const char* CGObject_C::GetObjectName() const {
     return NULL;
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: 1b63d1ec IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CGObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     return 0;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 98c12193 IDENTICAL
+// OFFSET: 0x00401000
 void CGObject_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
 }
 
-// OFFSET: %0x004B98A0
+// PROVEN: 4c24fcbb IDENTICAL
+// OFFSET: 0x009FCE20
 int32_t CGObject_C::ShouldFadeIn() const {
     return 1;
 }
 
-// OFFSET: %0x00629F00
+// PROVEN: fae4e40c IDENTICAL
+// OFFSET: 0x00599E10
 float CGObject_C::GetBaseAlpha() const {
     return 1.0f;
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: d99ff856 IDENTICAL
+// OFFSET: 0x00B06D20
 bool CGObject_C::IsTransport() const {
     return false;
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: 8fef785f IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CGObject_C::IsPointInside(const C3Vector& point) const {
     return 0;
 }
 
-// OFFSET: %0x00497660
+// PROVEN: 9f089fd9 IDENTICAL
+// OFFSET: 0x00873190
 int32_t CGObject_C::AddPassenger(CPassenger* passenger, int32_t a2) {
     return 1;
 }
 
-// OFFSET: %0x005A33C0
+// PROVEN: 9716fafd IDENTICAL
+// OFFSET: 0x00599E20
 float CGObject_C::GetSpeed() const {
     return -1.0f;
 }
@@ -1196,7 +1236,8 @@ int32_t CGObject_C::UpdateAllWorldObjects() {
     return ClntObjMgrEnumVisibleObjects(&UpdateAllWorldObjectsCallback, NULL);
 }
 
-// OFFSET: %0x005E9DE0
+// PROVEN: 87f4c961 IDENTICAL
+// OFFSET: 0x005DD150
 int32_t CGObject_C::UpdateAllObjectEffectManagers() {
     return ClntObjMgrEnumVisibleObjects(&UpdateAllObjectEffectManagersCallback, NULL);
 }
@@ -1319,7 +1360,8 @@ CGObject_C* CGObject_C::GetFocusObject() {
     return target ? target : object;
 }
 
-// OFFSET: %0x005E8BA0
+// PROVEN: 1928cbac IDENTICAL
+// OFFSET: 0x005DBE60
 void CGObject_C::AuraDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (!interrupted) {
         reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param))->MoveToDestroyList();
@@ -1342,7 +1384,8 @@ void CGObject_C::OnSpellEffectClear(CEffect* effect) {
     effect->MoveToDestroyList();
 }
 
-// OFFSET: %0x005E8F20
+// PROVEN: 4c06bc30 IDENTICAL
+// OFFSET: 0x005DC1A0
 void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 

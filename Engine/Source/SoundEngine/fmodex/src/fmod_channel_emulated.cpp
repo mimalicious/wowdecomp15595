@@ -53,7 +53,8 @@ ChannelEmulated::ChannelEmulated()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A35810
+// PROVEN: 239bcf0a IDENTICAL
+// OFFSET: 0x00AF4D40
 FMOD_RESULT ChannelEmulated::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
     ChannelReal::init(index, system, output, dspmixtarget);
@@ -101,7 +102,8 @@ FMOD_RESULT ChannelEmulated::init(int index, SystemI *system, Output *output, DS
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A35510
+// PROVEN: 9edcf9d3 IDENTICAL
+// OFFSET: 0x00AF4A50
 FMOD_RESULT ChannelEmulated::alloc()
 {
     FMOD_RESULT result;
@@ -225,7 +227,8 @@ FMOD_RESULT ChannelEmulated::stop(bool ignoreenddelay, bool resetstate)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A35600
+// PROVEN: 7d4d1629 IDENTICAL
+// OFFSET: 0x00AF4B40
 FMOD_RESULT ChannelEmulated::close()
 {
     FMOD_RESULT result;
@@ -347,7 +350,8 @@ FMOD_RESULT ChannelEmulated::update(int delta)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A35760
+// PROVEN: 4da83d69 IDENTICAL
+// OFFSET: 0x00AF4CA0
 FMOD_RESULT ChannelEmulated::isVirtual(bool *isvirtual)
 {
     if (!isvirtual)
@@ -376,7 +380,8 @@ FMOD_RESULT ChannelEmulated::isVirtual(bool *isvirtual)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A35780
+// PROVEN: 6db26084 IDENTICAL
+// OFFSET: 0x00AF4CC0
 FMOD_RESULT ChannelEmulated::getDSPHead(DSPI **dsp)
 {
     if (!dsp)

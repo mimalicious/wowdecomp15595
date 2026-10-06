@@ -149,7 +149,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "AddPetLight", &Script_AddPetLight },
 };
 
-// OFFSET: %0x007785F0
+// PROVEN: a3a295a5 IDENTICAL
+// OFFSET: 0x008119F0
 void CSimpleModelFFX::RegisterScriptMethods(lua_State* L) {
     CSimpleModel::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

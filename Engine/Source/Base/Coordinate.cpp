@@ -27,12 +27,14 @@ float CoordinateGetAspectRatio() {
     return s_aspectRatio;
 }
 
-// OFFSET: %0x007D6F70
+// PROVEN: 203f7196 IDENTICAL
+// OFFSET: 0x008723A0
 float CoordinateGetAspectCompensation() {
     return s_aspectCompensation;
 }
 
-// OFFSET: %0x007D6F80
+// PROVEN: d4e4ae8d IDENTICAL
+// OFFSET: 0x008723B0
 void NDCToDDC(float ndcx, float ndcy, float* ddcx, float* ddcy) {
     if (ddcx) {
         *ddcx = s_ddcWidthScale * ndcx;
@@ -43,7 +45,8 @@ void NDCToDDC(float ndcx, float ndcy, float* ddcx, float* ddcy) {
     }
 }
 
-// OFFSET: %0x007D6FC0
+// PROVEN: d388163b IDENTICAL
+// OFFSET: 0x008723F0
 void DDCToNDC(float ddcx, float ddcy, float* ndcx, float* ndcy) {
     if (ndcx) {
         *ndcx = ddcx / s_ddcWidthScale;
@@ -54,22 +57,26 @@ void DDCToNDC(float ddcx, float ddcy, float* ndcx, float* ndcy) {
     }
 }
 
-// OFFSET: %0x007D7000
+// PROVEN: 40f9d7c4 IDENTICAL
+// OFFSET: 0x00872430
 float DDCToNDCWidth(float ddcx) {
     return ddcx / s_ddcWidthScale;
 }
 
-// OFFSET: %0x007D7010
+// PROVEN: a20c1a5f IDENTICAL
+// OFFSET: 0x00872440
 float DDCToNDCHeight(float ddcy) {
     return ddcy / s_ddcHeightScale;
 }
 
-// OFFSET: %0x007D7020
+// PROVEN: 0e4869d2 IDENTICAL
+// OFFSET: 0x00872450
 float NDCToDDCWidth(float ndcx) {
     return s_ddcWidthScale * ndcx;
 }
 
-// OFFSET: %0x007D7030
+// PROVEN: f869149e IDENTICAL
+// OFFSET: 0x00872460
 float NDCToDDCHeight(float ndcy) {
     return s_ddcHeightScale * ndcy;
 }

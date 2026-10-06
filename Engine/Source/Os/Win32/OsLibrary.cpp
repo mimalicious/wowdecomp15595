@@ -3,12 +3,14 @@
 #include <windows.h>
 #include "Engine/Source/Os/OsLibrary.h"
 
-// OFFSET: %0x007DE250
+// PROVEN: 7c87b7e5 IDENTICAL
+// OFFSET: 0x0087EED0
 void* OsLoadLibrary(const char* fileName) {
     return LoadLibraryA(fileName);
 }
 
-// OFFSET: %0x007DE260
+// PROVEN: dc5ea56e IDENTICAL
+// OFFSET: 0x0087EEE0
 void OsFreeLibrary(void* module) {
     FreeLibrary(static_cast<HMODULE>(module));
 }

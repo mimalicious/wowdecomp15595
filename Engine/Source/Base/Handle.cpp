@@ -30,7 +30,8 @@ void HandleClose(HOBJECT handle) {
     }
 }
 
-// OFFSET: %0x007D6ED0
+// PROVEN: a817df09 IDENTICAL
+// OFFSET: 0x00872300
 HOBJECT HandleCreate(CHandleObject* ptr, const char* handleName) {
     if (!ptr) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

@@ -3,7 +3,8 @@
 // STATIC: %0x00B45C24
 const DBCMeta MaterialRec::s_meta = { "DBFilesClient\\Material.dbc", 5, 20, MaterialRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 7c2127f5 IDENTICAL
+// OFFSET: 0x00401000
 void MaterialRec::FixupStrings(void* record, const char* strings) {
 }
 

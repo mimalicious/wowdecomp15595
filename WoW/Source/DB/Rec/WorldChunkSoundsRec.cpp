@@ -3,7 +3,8 @@
 // STATIC: %0x00B442F0
 const DBCMeta WorldChunkSoundsRec::s_meta = { "DBFilesClient\\WorldChunkSounds.dbc", 9, 40, WorldChunkSoundsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: c8dbc3be IDENTICAL
+// OFFSET: 0x00401000
 void WorldChunkSoundsRec::FixupStrings(void* record, const char* strings) {
 }
 

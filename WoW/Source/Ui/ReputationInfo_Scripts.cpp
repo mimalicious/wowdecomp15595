@@ -9,13 +9,15 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// OFFSET: %0x008FCD80
+// PROVEN: 0d136467 IDENTICAL
+// OFFSET: 0x009A7F00
 static int32_t Script_CollapseAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 1);
     return 0;
 }
 
-// OFFSET: %0x008FCDA0
+// PROVEN: 6b771ead IDENTICAL
+// OFFSET: 0x009A7F20
 static int32_t Script_ExpandAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 0);
     return 0;

@@ -6,28 +6,32 @@
 
 #include "comb.h"
 
-// OFFSET: %0x00A35E30
+// PROVEN: 6e73cd74 IDENTICAL
+// OFFSET: 0x00AF5350
 comb::comb()
 {
 	filterstore = 0;
 	bufidx = 0;
 }
 
-// OFFSET: %0x00A35E50
+// PROVEN: faaeedb9 IDENTICAL
+// OFFSET: 0x00AF5370
 void comb::setbuffer(float *buf, int size) 
 {
 	buffer = buf; 
 	bufsize = size;
 }
 
-// OFFSET: %0x00A35E70
+// PROVEN: 8905e1bc IDENTICAL
+// OFFSET: 0x00AF5390
 void comb::mute()
 {
 	for (int i=0; i<bufsize; i++)
 		buffer[i]=0;
 }
 
-// OFFSET: %0x00A35E90
+// PROVEN: 83d40f34 IDENTICAL
+// OFFSET: 0x00AF53B0
 void comb::setdamp(float val) 
 {
 	damp1 = val; 

@@ -9,22 +9,26 @@ void Blizzard::Lock::EventCreate(Event& event) {
     event = CreateEventW(NULL, FALSE, FALSE, NULL);
 }
 
-// OFFSET: %0x0070FCF0
+// PROVEN: 3756e437 IDENTICAL
+// OFFSET: 0x007AD490
 void Blizzard::Lock::EventDestroy(Event& event) {
     CloseHandle(event);
 }
 
-// OFFSET: %0x0070FD10
+// PROVEN: c7ce5a2d IDENTICAL
+// OFFSET: 0x007AD4B0
 void Blizzard::Lock::EventSet(Event& event) {
     SetEvent(event);
 }
 
-// OFFSET: %0x0070FD30
+// PROVEN: 3df34236 IDENTICAL
+// OFFSET: 0x007AD4D0
 void Blizzard::Lock::EventWaitForever(Event& event) {
     WaitForSingleObject(event, INFINITE);
 }
 
-// OFFSET: %0x0070FD50
+// PROVEN: fc9d1b3a IDENTICAL
+// OFFSET: 0x007AD4F0
 Blizzard::Lock::Event* Blizzard::Lock::EventWait(uint32_t timeout, Event& event) {
     return WaitForSingleObject(event, timeout) == WAIT_OBJECT_0 ? &event : NULL;
 }

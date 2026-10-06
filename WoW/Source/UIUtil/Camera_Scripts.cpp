@@ -277,14 +277,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "VehicleCameraZoomOut", &Script_VehicleCameraZoomOut },
 };
 
-// OFFSET: %0x00445D50
+// PROVEN: 91c7a965 IDENTICAL
+// OFFSET: 0x0043A900
 void CameraRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x00445D80
+// PROVEN: 03e90b12 IDENTICAL
+// OFFSET: 0x0043A930
 void CameraUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

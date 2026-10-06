@@ -203,7 +203,8 @@ Blizzard::Storage::PartialFile::~PartialFile() {
     delete this->m_partialBlocks;
 }
 
-// OFFSET: %0x00A3E820
+// PROVEN: 6b66d99c IDENTICAL
+// OFFSET: 0x007B0A90
 int32_t Blizzard::Storage::PartialFile::GetChunkSize() const {
     return this->m_chunkSize;
 }

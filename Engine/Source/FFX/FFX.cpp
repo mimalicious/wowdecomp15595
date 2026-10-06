@@ -235,7 +235,8 @@ FFX::PortalEffect::PortalEffect() {
     this->m_batch.m_maxIndex = 0;
 }
 
-// OFFSET: %0x007FE390
+// PROVEN: fc004bde IDENTICAL
+// OFFSET: 0x00899D40
 C44Matrix* FFX::GetOldViewMtx() {
     return &FFX::s_oldViewMtx;
 }
@@ -251,7 +252,8 @@ int32_t FFX::EffectIsSet(Effect* effect) {
     return 0;
 }
 
-// OFFSET: %0x007FE3D0
+// PROVEN: 360fcc7c IDENTICAL
+// OFFSET: 0x00899DA0
 void FFX::SetEffect(uint32_t index, Effect* effect) {
     Effect* previous = FFX::s_effect[index];
     FFX::s_effect[index] = effect;
@@ -661,7 +663,8 @@ C44Matrix FFX::GetWaveMtx(const C2iVector& size) {
     return matrix;
 }
 
-// OFFSET: %0x00800430
+// PROVEN: 4c8faa73 IDENTICAL
+// OFFSET: 0x0089BE50
 C4Vector FFX::GetWaveAmplitude(const C2Vector& texelSize, float amplitude) {
     C4Vector result;
 
@@ -769,7 +772,8 @@ bool FFX::Effect::Valid() {
     return valid;
 }
 
-// OFFSET: %0x00800710
+// PROVEN: 38ef06f9 IDENTICAL
+// OFFSET: 0x0089C100
 void FFX::Effect::Execute() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         this->m_passes[i]->Execute();
@@ -1100,14 +1104,17 @@ void FFX::SetupGx(Tex* target, int32_t depth) {
     GxXformSetViewport(0.0f, static_cast<float>(target->m_size.x) / target->m_texSize.x, 0.0f, static_cast<float>(target->m_size.y) / target->m_texSize.y, 0.0f, s_viewportMaxZ);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 606608f5 IDENTICAL
+// OFFSET: 0x00401000
 void FFX::Effect::Begin() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: ef2a8af8 IDENTICAL
+// OFFSET: 0x00401000
 void FFX::Effect::End() {
 }
 
-// OFFSET: %0x007C8240
+// PROVEN: 787a0f92 IDENTICAL
+// OFFSET: 0x00841AE0
 void FFX::Effect::SetParameters(int32_t count, const int32_t* params) {
 }

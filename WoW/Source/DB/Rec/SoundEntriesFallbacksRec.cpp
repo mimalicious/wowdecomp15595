@@ -3,7 +3,8 @@
 // STATIC: %0x00B40A24
 const DBCMeta SoundEntriesFallbacksRec::s_meta = { "DBFilesClient\\SoundEntriesFallbacks.dbc", 3, 12, SoundEntriesFallbacksRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 1d63464e IDENTICAL
+// OFFSET: 0x00401000
 void SoundEntriesFallbacksRec::FixupStrings(void* record, const char* strings) {
 }
 

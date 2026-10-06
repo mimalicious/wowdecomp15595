@@ -3,7 +3,8 @@
 // STATIC: %0x00B46CE4
 const DBCMeta DungeonMapRec::s_meta = { "DBFilesClient\\DungeonMap.dbc", 6, 32, DungeonMapRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 865a23a8 IDENTICAL
+// OFFSET: 0x00401000
 void DungeonMapRec::FixupStrings(void* record, const char* strings) {
 }
 

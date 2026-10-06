@@ -72,7 +72,8 @@ static uint32_t ConvertStringFlags(uint32_t flags) {
     return result;
 }
 
-// OFFSET: %0x00559170
+// PROVEN: bc41331f IDENTICAL
+// OFFSET: 0x005490D0
 int32_t TextBlockSetGradient(HTEXTBLOCK string, int32_t start, int32_t length) {
     return GxuFontStringSetGradient(reinterpret_cast<TEXTBLOCK*>(string)->m_string, start, length);
 }
@@ -82,7 +83,8 @@ TEXTBLOCK::~TEXTBLOCK() {
     GxuFontDestroyString(this->m_string);
 }
 
-// OFFSET: %0x005591D0
+// PROVEN: 8655f769 IDENTICAL
+// OFFSET: 0x00549130
 const char* TextBlockGetFontName(HTEXTFONT font) {
     if (!font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -113,7 +115,8 @@ uint32_t TextBlockGetFontFlags(HTEXTFONT font) {
     return flags;
 }
 
-// OFFSET: %0x00559240
+// PROVEN: 8f9a1985 IDENTICAL
+// OFFSET: 0x005491A0
 CGxFont* TextBlockGetFontPtr(HTEXTFONT font) {
     if (!font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -123,7 +126,8 @@ CGxFont* TextBlockGetFontPtr(HTEXTFONT font) {
     return reinterpret_cast<FONTHASHOBJ*>(font)->m_font;
 }
 
-// OFFSET: %0x00559260
+// PROVEN: 8c92b288 IDENTICAL
+// OFFSET: 0x005491C0
 CGxString* TextBlockGetStringPtr(HTEXTBLOCK string) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -145,7 +149,8 @@ void TextBlockAddShadow(HTEXTBLOCK string, CImVector color, const C2Vector& offs
     GxuFontAddShadow(reinterpret_cast<TEXTBLOCK*>(string)->m_string, color, ndcOffset);
 }
 
-// OFFSET: %0x005592E0
+// PROVEN: ea224b5b IDENTICAL
+// OFFSET: 0x00549240
 void TextBlockRemoveShadow(HTEXTBLOCK string) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -189,7 +194,8 @@ HTEXTBLOCK TextBlockCreate(HTEXTFONT font, const char* text, const CImVector& co
     return reinterpret_cast<HTEXTBLOCK>(HandleCreate(textBlock, "HTEXTBLOCK"));
 }
 
-// OFFSET: %0x00559470
+// PROVEN: a72a5dd2 IDENTICAL
+// OFFSET: 0x005493D0
 void TextBlockSetStringPos(HTEXTBLOCK string, const C3Vector& position) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -201,7 +207,8 @@ void TextBlockSetStringPos(HTEXTBLOCK string, const C3Vector& position) {
     GxuFontSetStringPosition(reinterpret_cast<TEXTBLOCK*>(string)->m_string, ndcPosition);
 }
 
-// OFFSET: %0x005594E0
+// PROVEN: 2b0f4035 IDENTICAL
+// OFFSET: 0x00549440
 C3Vector TextBlockGetStringPos(HTEXTBLOCK string) {
     C3Vector ndcPosition = GxuFontGetStringPosition(reinterpret_cast<TEXTBLOCK*>(string)->m_string);
     C3Vector position(0.0f, 0.0f, ndcPosition.z);
@@ -210,7 +217,8 @@ C3Vector TextBlockGetStringPos(HTEXTBLOCK string) {
     return position;
 }
 
-// OFFSET: %0x00559540
+// PROVEN: 64c23b90 IDENTICAL
+// OFFSET: 0x005494A0
 void TextBlockUpdateColor(HTEXTBLOCK string, const CImVector& color) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

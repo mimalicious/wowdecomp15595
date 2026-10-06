@@ -45,7 +45,8 @@ void CGWorldStateInfo::InitializeGame() {
     CGWorldStateInfo::m_nextUITimeUpdate = 0;
 }
 
-// OFFSET: %0x0091C920
+// PROVEN: cab1ad26 IDENTICAL
+// OFFSET: 0x009CD5D0
 int32_t CGWorldStateInfo::GetUITime() {
     return CGWorldStateInfo::m_UITimeOffset + static_cast<int32_t>(time(NULL));
 }
@@ -127,7 +128,8 @@ bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value) {
     return true;
 }
 
-// OFFSET: %0x0091C900
+// PROVEN: d4dff9de IDENTICAL
+// OFFSET: 0x009CD5B0
 void CGWorldStateInfo::OnUITime(uint32_t time) {
     CGWorldStateInfo::m_UITimeOffset = time - static_cast<uint32_t>(::time(NULL));
 }

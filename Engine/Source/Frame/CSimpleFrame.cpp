@@ -277,27 +277,32 @@ CSimpleFrame::~CSimpleFrame() {
     CSimpleFrame::s_frameCount--;
 }
 
-// OFFSET: %0x00472F20
+// PROVEN: 7167ddb4 IDENTICAL
+// OFFSET: 0x004694D0
 bool CSimpleFrame::IsA(int32_t type) {
     return type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x00472F50
+// PROVEN: 5e83dbf6 IDENTICAL
+// OFFSET: 0x00469500
 bool CSimpleFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFrame::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// OFFSET: %0x005162D0
+// PROVEN: 88105321 IDENTICAL
+// OFFSET: 0x00506120
 const char* CSimpleFrame::GetObjectTypeName() {
     return CSimpleFrame::s_objectTypeName;
 }
 
-// OFFSET: %0x005162E0
+// PROVEN: f9cb8c7f IDENTICAL
+// OFFSET: 0x00506130
 int32_t CSimpleFrame::GetScriptMetaTable() {
     return CSimpleFrame::s_metatable;
 }
 
-// OFFSET: %0x00511E60
+// PROVEN: 41141b61 IDENTICAL
+// OFFSET: 0x00501D20
 FrameScript_Object::ScriptIx* CSimpleFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = FrameScript_Object::GetScriptByName(name, data);
 
@@ -405,12 +410,14 @@ FrameScript_Object::ScriptIx* CSimpleFrame::GetScriptByName(const char* name, Fr
 }
 
 
-// OFFSET: %0x00508BC0
+// PROVEN: 12f982a1 IDENTICAL
+// OFFSET: 0x004F8970
 uint8_t CSimpleFrame::GetEffectiveAlpha() {
     return this->m_alpha * this->m_parentAlpha / 255;
 }
 
-// OFFSET: %0x005123D0
+// PROVEN: 8330e518 IDENTICAL
+// OFFSET: 0x00502290
 void CSimpleFrame::SetFrameFlag(uint32_t flag, int32_t set) {
     if (set) {
         this->m_frameFlags |= flag;
@@ -419,29 +426,34 @@ void CSimpleFrame::SetFrameFlag(uint32_t flag, int32_t set) {
     }
 }
 
-// OFFSET: %0x00512400
+// PROVEN: e79ef268 IDENTICAL
+// OFFSET: 0x005022C0
 void CSimpleFrame::Raise() {
     this->m_simpleTop->RaiseFrame(this, 1);
 }
 
-// OFFSET: %0x00512410
+// PROVEN: 4b152c86 IDENTICAL
+// OFFSET: 0x005022D0
 int32_t CSimpleFrame::Lower() {
     return this->m_simpleTop->LowerFrame(this);
 }
 
-// OFFSET: %0x00512420
+// PROVEN: 648274f4 IDENTICAL
+// OFFSET: 0x005022E0
 int32_t CSimpleFrame::DragBy(float offsetX, float offsetY, FRAMEPOINT point) {
     return CLayoutFrame::DragBy(this->m_simpleTop, offsetX, offsetY, point);
 }
 
-// OFFSET: %0x00512450
+// PROVEN: 54410507 IDENTICAL
+// OFFSET: 0x00502310
 void CSimpleFrame::PropagateProtectFlagToParent(uint32_t flag) {
     if (this->m_parent) {
         this->m_parent->SetProtectFlag(flag);
     }
 }
 
-// OFFSET: %0x005124C0
+// PROVEN: c963bbce IDENTICAL
+// OFFSET: 0x00502380
 void CSimpleFrame::SetFrameAlpha(uint8_t alpha) {
     if (alpha != this->m_alpha) {
         this->m_alpha = alpha;
@@ -449,7 +461,8 @@ void CSimpleFrame::SetFrameAlpha(uint8_t alpha) {
     }
 }
 
-// OFFSET: %0x00512540
+// PROVEN: 6d03452e IDENTICAL
+// OFFSET: 0x00502400
 void CSimpleFrame::RegisterForEvents(int32_t a2) {
     for (uint32_t i = 0; i < NUM_SIMPLE_EVENTS; i++) {
         if ((1 << i) & this->m_enabledEventsBitmask) {
@@ -458,7 +471,8 @@ void CSimpleFrame::RegisterForEvents(int32_t a2) {
     }
 }
 
-// OFFSET: %0x00512580
+// PROVEN: dd4bb26e IDENTICAL
+// OFFSET: 0x00502440
 void CSimpleFrame::UnregisterForEvents(int32_t a2) {
     for (uint32_t i = 0; i < NUM_SIMPLE_EVENTS; i++) {
         if ((1 << i) & this->m_enabledEventsBitmask) {
@@ -467,7 +481,8 @@ void CSimpleFrame::UnregisterForEvents(int32_t a2) {
     }
 }
 
-// OFFSET: %0x005125C0
+// PROVEN: b842938f IDENTICAL
+// OFFSET: 0x00502480
 void CSimpleFrame::GetHitRectInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_hitRectInsets.minX;
     right = this->m_hitRectInsets.maxX;
@@ -475,7 +490,8 @@ void CSimpleFrame::GetHitRectInsets(float& left, float& right, float& top, float
     bottom = this->m_hitRectInsets.minY;
 }
 
-// OFFSET: %0x00512600
+// PROVEN: f24e823b IDENTICAL
+// OFFSET: 0x005024C0
 void CSimpleFrame::SetClampRectInsets(float left, float right, float top, float bottom) {
     this->m_clampRectInsets.minX = left;
     this->m_clampRectInsets.maxX = right;
@@ -483,7 +499,8 @@ void CSimpleFrame::SetClampRectInsets(float left, float right, float top, float 
     this->m_clampRectInsets.minY = bottom;
 }
 
-// OFFSET: %0x00512640
+// PROVEN: ad4021d8 IDENTICAL
+// OFFSET: 0x00502500
 void CSimpleFrame::GetClampRectInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_clampRectInsets.minX;
     right = this->m_clampRectInsets.maxX;
@@ -542,7 +559,8 @@ void CSimpleFrame::RunOnAttributeChangedScript(const char* name, int32_t luaRef)
     }
 }
 
-// OFFSET: %0x005126B0
+// PROVEN: f3dfa27e IDENTICAL
+// OFFSET: 0x00502570
 void CSimpleFrame::AllowAttributeChanges(int32_t allow) {
     if (allow) {
         this->m_frameFlags |= 0x8000;
@@ -573,7 +591,8 @@ void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
     }
 }
 
-// OFFSET: %0x00512A40
+// PROVEN: 1816dafe IDENTICAL
+// OFFSET: 0x005028F0
 void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorEnter)) {
         lua_State* L = FrameScript_GetContext();
@@ -582,7 +601,8 @@ void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     }
 }
 
-// OFFSET: %0x00512A90
+// PROVEN: 55499e11 IDENTICAL
+// OFFSET: 0x00502940
 void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorExit)) {
         lua_State* L = FrameScript_GetContext();
@@ -591,7 +611,8 @@ void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     }
 }
 
-// OFFSET: %0x00512AE0
+// PROVEN: f096a446 IDENTICAL
+// OFFSET: 0x00502990
 void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     if (this->HasScript(this->m_onMouseWheel)) {
         lua_State* L = FrameScript_GetContext();
@@ -670,7 +691,8 @@ void CSimpleFrame::NotifyDelayedLoad() {
     }
 }
 
-// OFFSET: %0x00512470
+// PROVEN: 53f175c2 IDENTICAL
+// OFFSET: 0x00502330
 bool CSimpleFrame::SetFrameScale(float scale, bool force) {
     if ((!force && fabs(scale - this->m_frameScale) < 0.00000023841858f) || scale == 0.0f) {
         return false;
@@ -680,7 +702,8 @@ bool CSimpleFrame::SetFrameScale(float scale, bool force) {
     return this->UpdateScale(force);
 }
 
-// OFFSET: %0x005124F0
+// PROVEN: 941257b8 IDENTICAL
+// OFFSET: 0x005023B0
 bool CSimpleFrame::SetFrameDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_depth) < 0.00000023841858f) {
         return false;
@@ -775,7 +798,8 @@ int32_t CSimpleFrame::TestHitRect(const C2Vector& pt) {
     return clip.minX <= pt.x && clip.maxX >= pt.x && clip.minY <= pt.y && clip.maxY >= pt.y;
 }
 
-// OFFSET: %0x00513090
+// PROVEN: a63b17dc IDENTICAL
+// OFFSET: 0x00502F50
 void CSimpleFrame::SetHitRectInsets(float left, float right, float top, float bottom) {
     this->m_hitRectInsets.minX = left;
     this->m_hitRectInsets.maxX = right;
@@ -877,12 +901,14 @@ void CSimpleFrame::OnFrameSizeChanged(const CRect& rect) {
     this->m_simpleTop->NotifyFrameMovedOrResized(this);
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: b5db8ef9 IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CSimpleFrame::OnLayerIme(const CImeEvent& evt) {
     return 0;
 }
 
-// OFFSET: %0x0050AF20
+// PROVEN: 08408449 IDENTICAL
+// OFFSET: 0x00A9AA30
 int32_t CSimpleFrame::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     return 0;
 }
@@ -1012,14 +1038,16 @@ void CSimpleFrame::OnDragStart(const CMouseEvent& evt) {
     }
 }
 
-// OFFSET: %0x00513750
+// PROVEN: 75fdaf5b IDENTICAL
+// OFFSET: 0x00503620
 void CSimpleFrame::OnDragStop(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onDragStop)) {
         this->RunScript(this->m_onDragStop, 0, NULL);
     }
 }
 
-// OFFSET: %0x00513780
+// PROVEN: 8b0c6d16 IDENTICAL
+// OFFSET: 0x00503650
 void CSimpleFrame::OnReceiveDrag(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onReceiveDrag)) {
         this->RunScript(this->m_onReceiveDrag, 0, NULL);
@@ -1104,7 +1132,8 @@ void CSimpleFrame::OnLayerHide() {
     this->NotifyScrollParent();
 }
 
-// OFFSET: %0x00513B70
+// PROVEN: d496d9cb IDENTICAL
+// OFFSET: 0x00503A40
 void CSimpleFrame::OnFrameSizeChanged(float width, float height) {
     this->RunOnSizeChangedScript(width, height);
     this->NotifyScrollParent();
@@ -2183,7 +2212,8 @@ void CSimpleFrame::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00512980
+// PROVEN: 17362775 IDENTICAL
+// OFFSET: 0x00502830
 void CSimpleFrame::SetTitleRegion(CScriptRegion* region) {
     this->m_titleRegion = region;
 

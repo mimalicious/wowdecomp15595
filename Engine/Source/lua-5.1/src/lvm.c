@@ -34,7 +34,8 @@
 #define MAXTAGLOOP	100
 
 
-// OFFSET: %0x0042B940
+// PROVEN: a1a91f07 IDENTICAL
+// OFFSET: 0x00421430
 const TValue *luaV_tonumber (const TValue *obj, TValue *n) {
   lua_Number num;
   if (ttisnumber(obj)) return obj;
@@ -212,7 +213,8 @@ static int call_orderTM (lua_State *L, const TValue *p1, const TValue *p2,
 }
 
 
-// OFFSET: %0x0042C190
+// PROVEN: 414d54dc IDENTICAL
+// OFFSET: 0x00421C80
 static int l_strcmp (const TString *ls, const TString *rs) {
   const char *l = getstr(ls);
   size_t ll = ls->tsv.len;

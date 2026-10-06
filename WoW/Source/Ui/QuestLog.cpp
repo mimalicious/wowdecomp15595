@@ -650,7 +650,8 @@ bool CGQuestLog::GetQuestPOIIcon(int32_t questId, bool* complete, int32_t* mapId
     return false;
 }
 
-// OFFSET: %0x008B61C0
+// PROVEN: 84c84734 IDENTICAL
+// OFFSET: 0x0095C5D0
 void CGQuestLog::ShiftQuestWatches(uint32_t from, uint32_t to) {
     int32_t step;
 
@@ -2147,7 +2148,8 @@ bool CGQuestLog::IsPOIVisibleOnDungeonMap(const int32_t* point, int32_t mapId, i
     return !fequalz(fabs(x * y), 0.0f, 0.001f);
 }
 
-// OFFSET: %0x008BA040
+// PROVEN: 2691a13d IDENTICAL
+// OFFSET: 0x00960700
 void CGQuestLog::SaveTrackedQuests() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("trackedQuests");
@@ -2843,6 +2845,7 @@ void CGQuestLog::UpdateQuestPOIFromUserServer() {
     CGQuestLog::Update(1);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 0cb67ed4 IDENTICAL
+// OFFSET: 0x00401000
 void CGQuestLog::LeaveWorld() {
 }

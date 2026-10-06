@@ -3,7 +3,8 @@
 // STATIC: %0x00B46944
 const DBCMeta GlyphPropertiesRec::s_meta = { "DBFilesClient\\GlyphProperties.dbc", 4, 16, GlyphPropertiesRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: b9193c7d IDENTICAL
+// OFFSET: 0x00401000
 void GlyphPropertiesRec::FixupStrings(void* record, const char* strings) {
 }
 

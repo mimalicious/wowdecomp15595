@@ -39,7 +39,8 @@ DanceCache& DanceCache::operator=(const DanceCache& source) {
     return *this;
 }
 
-// OFFSET: %0x00964610
+// PROVEN: f5394072 IDENTICAL
+// OFFSET: 0x00A286D0
 void DanceCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
     *msg << static_cast<const SmartGUID&>(this->m_guid);

@@ -170,9 +170,11 @@ namespace FMOD
         FMOD_RESULT             isStarving(bool *starving) { if (!starving) return FMOD_ERR_INVALID_PARAM; *starving = mStarving; return FMOD_OK; }
         bool                    readyForClose();
 
-        // OFFSET: %0x009C09E0
+        // PROVEN: db9c9067 IDENTICAL
+        // OFFSET: 0x00A801B0
         virtual FMOD_RESULT     getMetadata(Metadata **metadata) { return FMOD_ERR_TAGNOTFOUND; }
-        // OFFSET: %0x009C09F0
+        // PROVEN: 34b6c102 IDENTICAL
+        // OFFSET: 0x00A801C0
         virtual FMOD_RESULT     getSize(unsigned int *size) { *size = mLength; return FMOD_OK; }
         virtual FMOD_RESULT     reallyOpen(const char *name_or_data, unsigned int *filesize) = 0;
         virtual FMOD_RESULT     reallyClose() = 0;

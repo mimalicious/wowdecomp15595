@@ -32,7 +32,8 @@ static const GLenum s_glCubeFaces[6] = { 0x8515, 0x8516, 0x8517, 0x8518, 0x8519,
 // STATIC: %0x00C0E910
 static GLenum s_glPrim[GxPrims_Last] = { GL_POINTS, GL_LINES, GL_LINE_STRIP, GL_TRIANGLES, GL_TRIANGLE_STRIP };
 
-// OFFSET: %0x007C5AB0
+// PROVEN: d2465d58 IDENTICAL
+// OFFSET: 0x008691D0
 void CGxDeviceOpenGl::IShaderConstantsClear() {
     this->ShaderConstantsClear();
     this->IShaderConstantsReset();
@@ -172,7 +173,8 @@ void CGxDeviceOpenGl::BindTexture(CGxTex* texId, uint32_t tmu) {
     this->m_boundTexture = name;
 }
 
-// OFFSET: %0x007C5010
+// PROVEN: 21fd04a5 IDENTICAL
+// OFFSET: 0x00868730
 void CGxDeviceOpenGl::ITexSetFlags(CGxTex* texId) {
     GLenum target = s_glTexTarget[texId->m_target];
     glTexParameteri(target, GL_TEXTURE_MAG_FILTER, s_glMagFilter[texId->m_flags.m_filter]);
@@ -187,7 +189,8 @@ void CGxDeviceOpenGl::ITexSetFlags(CGxTex* texId) {
     texId->m_needsFlagUpdate = 0;
 }
 
-// OFFSET: %0x007C50B0
+// PROVEN: 4a90de58 IDENTICAL
+// OFFSET: 0x008687D0
 void CGxDeviceOpenGl::TexDestroy(CGxTex* texId) {
     if (texId->m_apiSpecificData) {
         glDeleteTextures(1, reinterpret_cast<GLuint*>(&texId->m_apiSpecificData));
@@ -230,7 +233,8 @@ int32_t CGxDeviceOpenGl::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& 
     return 1;
 }
 
-// OFFSET: %0x007C51C0
+// PROVEN: 0fe72bb7 IDENTICAL
+// OFFSET: 0x008688E0
 int32_t CGxDeviceOpenGl::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     return 0;
 }

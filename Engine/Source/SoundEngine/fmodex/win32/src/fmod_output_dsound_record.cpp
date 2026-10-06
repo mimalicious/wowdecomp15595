@@ -87,7 +87,8 @@ BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A42110
+// PROVEN: 16224d98 IDENTICAL
+// OFFSET: 0x00B01AC0
 FMOD_RESULT OutputDSound::recordEnumerate()
 {
     FMOD_RESULT result;
@@ -134,7 +135,8 @@ FMOD_RESULT OutputDSound::recordEnumerate()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A42190
+// PROVEN: 0a512762 IDENTICAL
+// OFFSET: 0x00B01B40
 FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 {
     FMOD_RESULT result;
@@ -173,7 +175,8 @@ FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A421C0
+// PROVEN: c5bbf187 IDENTICAL
+// OFFSET: 0x00B01B70
 FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 {
     FMOD_RESULT result;
@@ -314,7 +317,8 @@ FMOD_RESULT OutputDSound::recordStart(int id, Sound *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A423F0
+// PROVEN: b24ace48 IDENTICAL
+// OFFSET: 0x00B01DA0
 FMOD_RESULT OutputDSound::recordStop()
 {
 	if (mDirectSoundCaptureBuffer)
@@ -351,7 +355,8 @@ FMOD_RESULT OutputDSound::recordStop()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A42440
+// PROVEN: 9d48e5b4 IDENTICAL
+// OFFSET: 0x00B01DF0
 FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 {
     FMOD_RESULT         result;
@@ -419,7 +424,8 @@ FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A424E0
+// PROVEN: d5856928 IDENTICAL
+// OFFSET: 0x00B01E90
 FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     mDirectSoundCaptureBuffer->Lock(offset, length, ptr1, (DWORD *)len1, ptr2, (DWORD *)len2, 0);
@@ -445,7 +451,8 @@ FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, v
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A42520
+// PROVEN: b77f6b4d IDENTICAL
+// OFFSET: 0x00B01ED0
 FMOD_RESULT OutputDSound::recordUnlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     mDirectSoundCaptureBuffer->Unlock(ptr1, len1, ptr2, len2);

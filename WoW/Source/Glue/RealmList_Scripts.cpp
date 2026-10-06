@@ -430,14 +430,16 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "IsInvalidLocale", &Script_IsInvalidLocale },
 };
 
-// OFFSET: %0x0076E2C0
+// PROVEN: 745fcfb5 IDENTICAL
+// OFFSET: 0x00807F50
 void RealmListRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x0076E2F0
+// PROVEN: 9616674b IDENTICAL
+// OFFSET: 0x00807F80
 void RealmListUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_scriptFunctions[i].m_name);

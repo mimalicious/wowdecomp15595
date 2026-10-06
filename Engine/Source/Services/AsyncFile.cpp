@@ -81,13 +81,15 @@ SCritSect g_queueLock;
 // STATIC: %0x00CD28E4
 static TSGrowableArray<CStreamingObj> s_streamingObjects;
 
-// OFFSET: %0x0054F380
+// PROVEN: e75ee842 IDENTICAL
+// OFFSET: 0x0053EA10
 void AsyncFileReadProgressCallback(void (*callback)(float, void*), void* param) {
     s_asyncProgressCallback = callback;
     s_asyncProgressCallbackParams = param;
 }
 
-// OFFSET: %0x0054F3A0
+// PROVEN: 416eeef9 IDENTICAL
+// OFFSET: 0x0053EA30
 void AsyncFileReadIngameProgressCallback(void (*startCallback)(), void (*progressCallback)(float, int32_t)) {
     s_ingameStartCallback = startCallback;
     s_ingameProgressCallback = progressCallback;
@@ -107,7 +109,8 @@ CAsyncObject* AsyncFileReadGetCurrentObject(int32_t queue) {
     return NULL;
 }
 
-// OFFSET: %0x0054F400
+// PROVEN: 84343944 IDENTICAL
+// OFFSET: 0x0053EAD0
 void AsyncFileReadEnterQueueLock() {
     if (!s_queueLockCount) {
         g_queueLock.Enter();
@@ -116,7 +119,8 @@ void AsyncFileReadEnterQueueLock() {
     s_queueLockCount++;
 }
 
-// OFFSET: %0x0054F420
+// PROVEN: fb0d39ff IDENTICAL
+// OFFSET: 0x0053EAF0
 void AsyncFileReadLeaveQueueLock() {
     if (!--s_queueLockCount) {
         g_queueLock.Leave();

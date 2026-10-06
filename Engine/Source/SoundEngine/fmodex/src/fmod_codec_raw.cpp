@@ -284,7 +284,8 @@ FMOD_RESULT CodecRaw::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E2140
+// PROVEN: ee47e7d6 IDENTICAL
+// OFFSET: 0x00AA1AD0
 FMOD_RESULT CodecRaw::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -349,7 +350,8 @@ FMOD_RESULT CodecRaw::canPointInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E2520
+// PROVEN: 6e4feb02 IDENTICAL
+// OFFSET: 0x00AA1EB0
 FMOD_RESULT F_CALLBACK CodecRaw::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecRaw *raw = (CodecRaw *)codec;
@@ -399,7 +401,8 @@ FMOD_RESULT F_CALLBACK CodecRaw::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E21A0
+// PROVEN: 938d74f5 IDENTICAL
+// OFFSET: 0x00AA1B30
 FMOD_RESULT F_CALLBACK CodecRaw::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecRaw *raw = (CodecRaw *)codec;
@@ -424,7 +427,8 @@ FMOD_RESULT F_CALLBACK CodecRaw::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E2210
+// PROVEN: ae39e35d IDENTICAL
+// OFFSET: 0x00AA1BA0
 FMOD_RESULT F_CALLBACK CodecRaw::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecRaw *raw = (CodecRaw *)codec;

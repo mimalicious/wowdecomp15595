@@ -178,7 +178,8 @@ FMOD_RESULT FMOD_OS_File_Open(const char *name, char *mode, int unicode, unsigne
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1450
+// PROVEN: 2430baaf IDENTICAL
+// OFFSET: 0x00A90DD0
 FMOD_RESULT FMOD_OS_File_Close(void *handle)
 {
     if (handle == INVALID_HANDLE_VALUE)
@@ -220,7 +221,8 @@ FMOD_RESULT FMOD_OS_File_Cancel(void *handle)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1470
+// PROVEN: 13958cba IDENTICAL
+// OFFSET: 0x00A90DF0
 FMOD_RESULT FMOD_OS_File_Read(void *handle, void *buf, unsigned int count, unsigned int *read)
 {
     DWORD rd;
@@ -254,7 +256,8 @@ FMOD_RESULT FMOD_OS_File_Read(void *handle, void *buf, unsigned int count, unsig
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D14C0
+// PROVEN: a6924d99 IDENTICAL
+// OFFSET: 0x00A90E40
 FMOD_RESULT FMOD_OS_File_Seek(void *handle, unsigned int offset)
 {
     DWORD retval;
@@ -302,7 +305,8 @@ FMOD_RESULT FMOD_OS_Debug_OutputStr(const char *s)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D14F0
+// PROVEN: 048a190b IDENTICAL
+// OFFSET: 0x00A90E70
 FMOD_RESULT FMOD_OS_Time_GetNs(unsigned int *ns)
 {
 	LARGE_INTEGER	val,freq;
@@ -337,7 +341,8 @@ FMOD_RESULT FMOD_OS_Time_GetNs(unsigned int *ns)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1560
+// PROVEN: 8cd7bc41 IDENTICAL
+// OFFSET: 0x00A90EE0
 FMOD_RESULT FMOD_OS_Time_GetMs(unsigned int *ms)
 {
     *ms = timeGetTime();
@@ -357,7 +362,8 @@ FMOD_RESULT FMOD_OS_Time_GetMs(unsigned int *ms)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1580
+// PROVEN: d901b522 IDENTICAL
+// OFFSET: 0x00A90F00
 FMOD_RESULT FMOD_OS_Time_Sleep(unsigned int ms)
 {
     Sleep(ms);
@@ -377,7 +383,8 @@ FMOD_RESULT FMOD_OS_Time_Sleep(unsigned int ms)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D15A0
+// PROVEN: 8ad0869c IDENTICAL
+// OFFSET: 0x00A90F20
 FMOD_RESULT FMOD_OS_Thread_GetCurrentID(FMOD_UINT_NATIVE *id)
 {
 	*id = GetCurrentThreadId();
@@ -487,7 +494,8 @@ FMOD_RESULT FMOD_OS_Thread_Create(const char *name, THREAD_RETURNTYPE (THREAD_CA
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D15C0
+// PROVEN: 2d61b6c1 IDENTICAL
+// OFFSET: 0x00A90F40
 FMOD_RESULT FMOD_OS_Thread_Destroy(void *handle)
 {
     CloseHandle(handle);
@@ -578,7 +586,8 @@ FMOD_RESULT FMOD_OS_CriticalSection_Free(FMOD_OS_CRITICALSECTION *crit)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1680
+// PROVEN: 400e22cf IDENTICAL
+// OFFSET: 0x00A91000
 FMOD_RESULT FMOD_OS_CriticalSection_Enter(FMOD_OS_CRITICALSECTION *crit)
 {
     if (!crit)
@@ -603,7 +612,8 @@ FMOD_RESULT FMOD_OS_CriticalSection_Enter(FMOD_OS_CRITICALSECTION *crit)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D16A0
+// PROVEN: 319dfffd IDENTICAL
+// OFFSET: 0x00A91020
 FMOD_RESULT FMOD_OS_CriticalSection_Leave(FMOD_OS_CRITICALSECTION *crit)
 {
     if (!crit)
@@ -628,7 +638,8 @@ FMOD_RESULT FMOD_OS_CriticalSection_Leave(FMOD_OS_CRITICALSECTION *crit)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D16C0
+// PROVEN: 9f7c77aa IDENTICAL
+// OFFSET: 0x00A91040
 FMOD_RESULT FMOD_OS_Semaphore_Create(FMOD_OS_SEMAPHORE **sema)
 {
     if (!sema)
@@ -657,7 +668,8 @@ FMOD_RESULT FMOD_OS_Semaphore_Create(FMOD_OS_SEMAPHORE **sema)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D16F0
+// PROVEN: 9382f102 IDENTICAL
+// OFFSET: 0x00A91070
 FMOD_RESULT FMOD_OS_Semaphore_Free(FMOD_OS_SEMAPHORE *sema)
 {
     if (!sema)
@@ -686,7 +698,8 @@ FMOD_RESULT FMOD_OS_Semaphore_Free(FMOD_OS_SEMAPHORE *sema)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1710
+// PROVEN: 219d6fac IDENTICAL
+// OFFSET: 0x00A91090
 FMOD_RESULT FMOD_OS_Semaphore_Wait(FMOD_OS_SEMAPHORE *sema)
 {
     if (!sema)
@@ -715,7 +728,8 @@ FMOD_RESULT FMOD_OS_Semaphore_Wait(FMOD_OS_SEMAPHORE *sema)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1730
+// PROVEN: 6fdb903b IDENTICAL
+// OFFSET: 0x00A910B0
 FMOD_RESULT FMOD_OS_Semaphore_Signal(FMOD_OS_SEMAPHORE *sema, bool interrupt)
 {
     if (!sema)
@@ -744,7 +758,8 @@ FMOD_RESULT FMOD_OS_Semaphore_Signal(FMOD_OS_SEMAPHORE *sema, bool interrupt)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D1760
+// PROVEN: 21d62936 IDENTICAL
+// OFFSET: 0x00A910E0
 FMOD_RESULT FMOD_OS_Library_Load(const char *dllname, FMOD_OS_LIBRARY **handle)
 {
     if (!dllname || !handle)
@@ -804,7 +819,8 @@ FMOD_RESULT FMOD_OS_Library_GetProcAddress(FMOD_OS_LIBRARY *handle, const char *
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D17E0
+// PROVEN: 0e5a622c IDENTICAL
+// OFFSET: 0x00A91160
 FMOD_RESULT FMOD_OS_Library_Free(FMOD_OS_LIBRARY *handle)
 {
     if (!handle)

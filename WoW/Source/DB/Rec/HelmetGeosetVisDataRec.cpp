@@ -3,7 +3,8 @@
 // STATIC: %0x00B43B2C
 const DBCMeta HelmetGeosetVisDataRec::s_meta = { "DBFilesClient\\HelmetGeosetVisData.dbc", 2, 32, HelmetGeosetVisDataRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 938efb8d IDENTICAL
+// OFFSET: 0x00401000
 void HelmetGeosetVisDataRec::FixupStrings(void* record, const char* strings) {
 }
 

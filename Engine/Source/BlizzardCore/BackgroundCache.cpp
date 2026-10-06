@@ -31,7 +31,8 @@ const char* PatchOnDemand::Cache::s_oldWorldSuffix = "";
 // STATIC: %0x00C0AC94
 PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL, false };
 
-// OFFSET: %0x00705A10
+// PROVEN: 4e1947ad IDENTICAL
+// OFFSET: 0x007A2DB0
 void BackgroundCache::SetLocale(const char* locale) {
     Blizzard::String::Copy(CacheManager::s_locale, locale, sizeof(CacheManager::s_locale));
 }
@@ -224,7 +225,8 @@ int32_t PatchOnDemand::Cache::EnumerateArchives(int32_t (*callback)(const char* 
     return s_archiveList.EnumerateArchives(callback, param);
 }
 
-// OFFSET: %0x00705F60
+// PROVEN: 9602b60e IDENTICAL
+// OFFSET: 0x007A32C0
 void PatchOnDemand::Cache::Shutdown() {
     Blizzard::Mopaq::SetPatchCompleteCallback(NULL);
 }
@@ -246,7 +248,8 @@ uint32_t OggToWavConversion::OggConverterJob::GetClassId() const {
     return 'ogww';
 }
 
-// OFFSET: %0x00706010
+// PROVEN: 8653ed5a IDENTICAL
+// OFFSET: 0x007A3370
 int64_t OggToWavConversion::OggConverterJob::EstimateCost() const {
     return 520;
 }
@@ -467,12 +470,14 @@ PatchOnDemand::PoDWriteJob::PoDWriteJob(const void* data, int64_t size, System_S
     }
 }
 
-// OFFSET: %0x00706BA0
+// PROVEN: 2d710dac IDENTICAL
+// OFFSET: 0x007A3DA0
 uint32_t PatchOnDemand::PoDWriteJob::GetClassId() const {
     return 'mpqw';
 }
 
-// OFFSET: %0x00706BB0
+// PROVEN: cbef2ec1 IDENTICAL
+// OFFSET: 0x007A3DB0
 int64_t PatchOnDemand::PoDWriteJob::EstimateCost() const {
     return this->m_size;
 }
@@ -739,7 +744,8 @@ bool OggToWavConversion::InitCache(DECOMPRESSOGGCALLBACK callback) {
     return true;
 }
 
-// OFFSET: %0x00707FA0
+// PROVEN: 0278f2ee IDENTICAL
+// OFFSET: 0x007A4EB0
 void OggToWavConversion::SetCallback(CONVERTOGGCALLBACK callback) {
     s_ConvertOggCallback = callback;
 }

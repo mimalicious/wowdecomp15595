@@ -23,7 +23,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A103C0
+// PROVEN: df9cf900 IDENTICAL
+// OFFSET: 0x00AD03B0
 FMOD_RESULT Plugin::release()
 {
     FLOG((FMOD_DEBUG_LEVEL_LOG, __FILE__, __LINE__, "Plugin::release", "(%p)\n", this));

@@ -3,7 +3,8 @@
 // STATIC: %0x00B44C4C
 const DBCMeta SpellTargetRestrictionsRec::s_meta = { "DBFilesClient\\SpellTargetRestrictions.dbc", 5, 20, SpellTargetRestrictionsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: cbe75b3d IDENTICAL
+// OFFSET: 0x00401000
 void SpellTargetRestrictionsRec::FixupStrings(void* record, const char* strings) {
 }
 

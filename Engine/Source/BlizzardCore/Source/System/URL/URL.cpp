@@ -6,38 +6,46 @@
 Blizzard::URL::DownloadCallback::~DownloadCallback() {
 }
 
-// OFFSET: %0x00408910
+// PROVEN: b74c9f97 IDENTICAL
+// OFFSET: 0x00842700
 const char* Blizzard::URL::DownloadCallback::WantIfModifiedSince() {
     return NULL;
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: a6c56ab6 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool Blizzard::URL::DownloadCallback::WantData() {
     return true;
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: deafea3c IDENTICAL
+// OFFSET: 0x00847950
 void Blizzard::URL::DownloadCallback::GetLastModified(const char* lastModified) {
 }
 
-// OFFSET: %0x007C8240
+// PROVEN: 21209c1c IDENTICAL
+// OFFSET: 0x00841AE0
 void Blizzard::URL::DownloadCallback::GetContentLength(int64_t length) {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 1d4642d1 IDENTICAL
+// OFFSET: 0x00401000
 void Blizzard::URL::DownloadCallback::ConnectedOK() {
 }
 
-// OFFSET: %0x00A42EC0
+// PROVEN: abe175a0 IDENTICAL
+// OFFSET: 0x00847950
 void Blizzard::URL::DownloadCallback::GetHTTPStatusCode(int32_t code) {
 }
 
-// OFFSET: %0x0070BAB0
+// PROVEN: 217020cf IDENTICAL
+// OFFSET: 0x007A4D00
 int32_t Blizzard::URL::DownloadCallback::GetTimeout() {
     return 60000;
 }
 
-// OFFSET: %0x0070BAC0
+// PROVEN: f438aba5 IDENTICAL
+// OFFSET: 0x007A4D10
 Blizzard::URL::DownloadCallback::ByteRange Blizzard::URL::DownloadCallback::GetByteRange() {
     ByteRange range;
     range.m_start = -1;
@@ -45,27 +53,32 @@ Blizzard::URL::DownloadCallback::ByteRange Blizzard::URL::DownloadCallback::GetB
     return range;
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: de849c14 IDENTICAL
+// OFFSET: 0x00B06D20
 bool Blizzard::URL::DownloadCallback::Stop() {
     return false;
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: 34678b26 IDENTICAL
+// OFFSET: 0x00B06D20
 bool Blizzard::URL::DownloadCallback::ShouldBlock() {
     return false;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: ba9c6c50 IDENTICAL
+// OFFSET: 0x00842700
 const char* Blizzard::URL::DownloadCallback::GetPostData() {
     return NULL;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 58d31dfe IDENTICAL
+// OFFSET: 0x00842700
 const char* Blizzard::URL::DownloadCallback::GetPostContentType() {
     return NULL;
 }
 
-// OFFSET: %0x0070BAE0
+// PROVEN: 18329adf IDENTICAL
+// OFFSET: 0x007A4D30
 Blizzard::URL::DownloadCallback::Cookie Blizzard::URL::DownloadCallback::GetCookie() {
     Cookie cookie;
     cookie.m_name = NULL;

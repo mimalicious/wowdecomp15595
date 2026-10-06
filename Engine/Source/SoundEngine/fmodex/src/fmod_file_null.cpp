@@ -20,7 +20,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3E10
+// PROVEN: 9e24e2aa IDENTICAL
+// OFFSET: 0x00A937B0
 FMOD_RESULT NullFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
 	mPosition = 0;
@@ -63,7 +64,8 @@ FMOD_RESULT NullFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3E30
+// PROVEN: df80dd1e IDENTICAL
+// OFFSET: 0x00A937D0
 FMOD_RESULT NullFile::reallyRead(void *buffer, unsigned int size, unsigned int *read)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -96,7 +98,8 @@ FMOD_RESULT NullFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D3E70
+// PROVEN: 71d54def IDENTICAL
+// OFFSET: 0x00A92BA0
 FMOD_RESULT NullFile::reallySeek(unsigned int pos)
 {
     mPosition = pos;

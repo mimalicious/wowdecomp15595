@@ -3,7 +3,8 @@
 // STATIC: %0x00B44D5C
 const DBCMeta SpellReagentsRec::s_meta = { "DBFilesClient\\SpellReagents.dbc", 3, 68, SpellReagentsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 539b9cc5 IDENTICAL
+// OFFSET: 0x00401000
 void SpellReagentsRec::FixupStrings(void* record, const char* strings) {
 }
 

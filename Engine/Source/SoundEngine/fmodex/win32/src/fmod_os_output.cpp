@@ -27,7 +27,8 @@
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A029C0
+// PROVEN: dcaced78 IDENTICAL
+// OFFSET: 0x00AC2380
 FMOD_RESULT FMOD_OS_Output_Register(FMOD::PluginFactory *pluginfactory)
 {
 #ifdef FMOD_USE_PLUGINS
@@ -77,7 +78,8 @@ FMOD_RESULT FMOD_OS_Output_Register(FMOD::PluginFactory *pluginfactory)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A02A30
+// PROVEN: 83d7e254 IDENTICAL
+// OFFSET: 0x00AC23F0
 FMOD_RESULT FMOD_OS_Output_GetDefault(FMOD_OUTPUTTYPE *outputtype)
 {
     OSVERSIONINFOA versioninfo;

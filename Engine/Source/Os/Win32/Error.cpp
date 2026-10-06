@@ -10,7 +10,8 @@ char* OsGetLastErrorStr() {
     return buffer;
 }
 
-// OFFSET: %0x007E3EA0
+// PROVEN: 8e8e682a IDENTICAL
+// OFFSET: 0x0087BCB0
 void OsFreeLastErrorStr(char* str) {
     LocalFree(str);
 }

@@ -147,22 +147,26 @@ uint32_t GxuFontGetFontFlags(CGxFont* face) {
     return face->m_fontFlags;
 }
 
-// OFFSET: %0x00623C70
+// PROVEN: afceb100 IDENTICAL
+// OFFSET: 0x00613190
 void GxuFontStringInvalidate(CGxString* string) {
     string->ClearInstanceData();
 }
 
-// OFFSET: %0x00623C80
+// PROVEN: 7da8142e IDENTICAL
+// OFFSET: 0x006131A0
 void GxuFontSetScale(CGxString* string, float scale) {
     string->m_stringScale = scale;
 }
 
-// OFFSET: %0x00623CA0
+// PROVEN: ecce4d4c IDENTICAL
+// OFFSET: 0x006131C0
 void GxuFontSetRotation(CGxString* string, float rotation) {
     string->m_rotation = rotation;
 }
 
-// OFFSET: %0x00623CC0
+// PROVEN: e904ffe3 IDENTICAL
+// OFFSET: 0x006131E0
 int32_t GxuFontAddToBatch(CGxStringBatch* batch, CGxString* string) {
     if (!batch || !string) {
         return 0;
@@ -173,14 +177,16 @@ int32_t GxuFontAddToBatch(CGxStringBatch* batch, CGxString* string) {
     return 1;
 }
 
-// OFFSET: %0x00623CF0
+// PROVEN: c8365c46 IDENTICAL
+// OFFSET: 0x00613210
 void GxuFontRenderBatch(CGxStringBatch* batch) {
     if (batch) {
         batch->RenderBatch();
     }
 }
 
-// OFFSET: %0x00623D10
+// PROVEN: 31e7312f IDENTICAL
+// OFFSET: 0x00613230
 void GxuFontGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, float fontHeight, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     InternalGetTextExtent(face, text, numBytes, fontHeight, extent, flags, shadowWidth, scale);
 }
@@ -238,7 +244,8 @@ float GxuFontGetOneToOneHeight(CGxFont* face) {
     return static_cast<float>(face->GetPixelSize()) / static_cast<float>(g_heightPixels);
 }
 
-// OFFSET: %0x00623F20
+// PROVEN: 7187bd93 IDENTICAL
+// OFFSET: 0x00613440
 int32_t GxuFontSetStringColor(CGxString* string, const CImVector& color) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -250,7 +257,8 @@ int32_t GxuFontSetStringColor(CGxString* string, const CImVector& color) {
     return 1;
 }
 
-// OFFSET: %0x00623F50
+// PROVEN: ef47656c IDENTICAL
+// OFFSET: 0x00613470
 void GxuFontSetStringPosition(CGxString* string, const C3Vector& position) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -260,7 +268,8 @@ void GxuFontSetStringPosition(CGxString* string, const C3Vector& position) {
     string->SetStringPosition(position);
 }
 
-// OFFSET: %0x00623F70
+// PROVEN: e76eb389 IDENTICAL
+// OFFSET: 0x00613490
 void GxuFontAddShadow(CGxString* string, const CImVector& color, const C2Vector& offset) {
     if (string && !(string->m_flags & 0x80)) {
         string->AddShadow(offset, color);
@@ -274,7 +283,8 @@ void GxuFontRemoveShadow(CGxString* string) {
     }
 }
 
-// OFFSET: %0x00623FB0
+// PROVEN: 6eeb3917 IDENTICAL
+// OFFSET: 0x006134D0
 uint32_t GxuFontStringHyperLinkInfo(CGxString* string, const GXUFONTHYPERLINKINFO*& info) {
     if (!string) {
         return 0;
@@ -283,7 +293,8 @@ uint32_t GxuFontStringHyperLinkInfo(CGxString* string, const GXUFONTHYPERLINKINF
     return string->GetHyperLinkInfo(info);
 }
 
-// OFFSET: %0x00623FD0
+// PROVEN: a5166fe2 IDENTICAL
+// OFFSET: 0x006134F0
 uint32_t GxuFontStringEmbeddedTextureInfo(CGxString* string, const GXUEMBEDDEDTEXTUREINFO*& info) {
     if (!string) {
         return 0;
@@ -292,7 +303,8 @@ uint32_t GxuFontStringEmbeddedTextureInfo(CGxString* string, const GXUEMBEDDEDTE
     return string->GetEmbeddedTextureInfo(info);
 }
 
-// OFFSET: %0x00623FF0
+// PROVEN: 2148a718 IDENTICAL
+// OFFSET: 0x00613510
 int32_t GxuFontStringSetGradient(CGxString* string, int32_t start, int32_t length) {
     if (!string) {
         return -1;
@@ -1053,7 +1065,8 @@ int32_t GxuFontCreateFont(const char* name, float fontHeight, CGxFont*& face, ui
     return result;
 }
 
-// OFFSET: %0x006250E0
+// PROVEN: 1b953a36 IDENTICAL
+// OFFSET: 0x00614600
 void GxuFontDestroyFont(CGxFont*& face) {
     if (face) {
         CGxFont* ptr = face;

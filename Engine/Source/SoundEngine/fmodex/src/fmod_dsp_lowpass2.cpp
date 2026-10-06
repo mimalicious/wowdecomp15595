@@ -120,7 +120,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPLowPass2::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DF070
+// PROVEN: 459665b4 IDENTICAL
+// OFFSET: 0x00A9EAA0
 FMOD_RESULT DSPLowPass2::createInternal()
 {
     int count;
@@ -198,7 +199,8 @@ FMOD_RESULT DSPLowPass2::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DE7C0
+// PROVEN: fc7867bc IDENTICAL
+// OFFSET: 0x00A9E150
 FMOD_RESULT DSPLowPass2::updateCoefficients(float resonance, float cutoff)
 {
     int   outputrate;
@@ -564,7 +566,8 @@ FMOD_RESULT DSPLowPass2::getParameterInternal(int index, float *value, char *val
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DF130
+// PROVEN: fac52758 IDENTICAL
+// OFFSET: 0x00A9EB60
 FMOD_RESULT F_CALLBACK DSPLowPass2::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPLowPass2 *lowpass2 = (DSPLowPass2 *)dsp;
@@ -589,7 +592,8 @@ FMOD_RESULT F_CALLBACK DSPLowPass2::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DEFB0
+// PROVEN: 16db5271 IDENTICAL
+// OFFSET: 0x00A9E9B0
 FMOD_RESULT F_CALLBACK DSPLowPass2::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPLowPass2 *lowpass2 = (DSPLowPass2 *)dsp;
@@ -641,7 +645,8 @@ FMOD_RESULT F_CALLBACK DSPLowPass2::readCallback(FMOD_DSP_STATE *dsp, float *inb
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DF020
+// PROVEN: cab77fb3 IDENTICAL
+// OFFSET: 0x00A9EA20
 FMOD_RESULT F_CALLBACK DSPLowPass2::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPLowPass2 *lowpass2 = (DSPLowPass2 *)dsp;

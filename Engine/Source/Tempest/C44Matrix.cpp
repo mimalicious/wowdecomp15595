@@ -5,7 +5,8 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/C4Quaternion.h"
 
-// OFFSET: %0x005B24E0
+// PROVEN: be022127 IDENTICAL
+// OFFSET: 0x005AA4C0
 C44Matrix::C44Matrix(float scale) {
     this->a0 = scale;
     this->a1 = 0.0f;
@@ -85,7 +86,8 @@ C44Matrix::C44Matrix() {
     this->d3 = 1.0f;
 }
 
-// OFFSET: %0x00408DD0
+// PROVEN: 924b82a2 IDENTICAL
+// OFFSET: 0x00409A60
 C44Matrix& C44Matrix::operator=(const C44Matrix& m) {
     this->a0 = m.a0;
     this->a1 = m.a1;
@@ -106,7 +108,8 @@ C44Matrix& C44Matrix::operator=(const C44Matrix& m) {
     return *this;
 }
 
-// OFFSET: %0x004EE200
+// PROVEN: 32b2aef8 IDENTICAL
+// OFFSET: 0x004E82F0
 bool operator!=(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 != r.a0 || l.a1 != r.a1 || l.a2 != r.a2 || l.a3 != r.a3 || l.b0 != r.b0 || l.b1 != r.b1 || l.b2 != r.b2 || l.b3 != r.b3 || l.c0 != r.c0 || l.c1 != r.c1 || l.c2 != r.c2 || l.c3 != r.c3 || l.d0 != r.d0 || l.d1 != r.d1 || l.d2 != r.d2 || l.d3 != r.d3;
 }
@@ -133,14 +136,16 @@ float C44Matrix::Determinant() const {
     return result - (c1 * b0 * d2 + c2 * b1 * d0 + b2 * c0 * d1 - b2 * c1 * d0 - d2 * (c0 * b1) - b0 * c2 * d1) * this->a3;
 }
 
-// OFFSET: %0x004CCEB0
+// PROVEN: 085b5f42 IDENTICAL
+// OFFSET: 0x004C7200
 void C44Matrix::Translate(const C3Vector& move) {
     this->d0 = this->c0 * move.z + this->b0 * move.y + move.x * this->a0 + this->d0;
     this->d1 = this->c1 * move.z + this->b1 * move.y + this->a1 * move.x + this->d1;
     this->d2 = this->c2 * move.z + this->b2 * move.y + this->a2 * move.x + this->d2;
 }
 
-// OFFSET: %0x004CCF50
+// PROVEN: 22ea500d IDENTICAL
+// OFFSET: 0x004C72A0
 void C44Matrix::Scale(const C3Vector& scale) {
     this->a0 = scale.x * this->a0;
     this->a1 = this->a1 * scale.x;
@@ -153,7 +158,8 @@ void C44Matrix::Scale(const C3Vector& scale) {
     this->c2 = this->c2 * scale.z;
 }
 
-// OFFSET: %0x004CCFE0
+// PROVEN: fdb47380 IDENTICAL
+// OFFSET: 0x004C7330
 void C44Matrix::Scale(float scale) {
     this->a0 = this->a0 * scale;
     this->a1 = this->a1 * scale;
@@ -212,7 +218,8 @@ C44Matrix::C44Matrix(const C33Matrix& m) {
     this->d3 = 1.0f;
 }
 
-// OFFSET: %0x004CD110
+// PROVEN: 72d9859f IDENTICAL
+// OFFSET: 0x004C73F0
 C44Matrix::C44Matrix(const C4Quaternion& q) {
     this->a3 = 0.0f;
     this->b3 = 0.0f;
@@ -246,7 +253,8 @@ C44Matrix operator+(const C44Matrix& l, const C44Matrix& r) {
     return result;
 }
 
-// OFFSET: %0x00408E40
+// PROVEN: bdb0ff7c IDENTICAL
+// OFFSET: 0x00409AD0
 C44Matrix operator*(const C44Matrix& l, const C44Matrix& r) {
     C44Matrix result;
     result.a0 = l.a0 * r.a0 + l.a1 * r.b0 + l.a2 * r.c0 + l.a3 * r.d0;
@@ -290,7 +298,8 @@ C44Matrix operator*(const C44Matrix& l, float s) {
     return result;
 }
 
-// OFFSET: %0x0041F1F0
+// PROVEN: 74d50525 IDENTICAL
+// OFFSET: 0x0041EF40
 C3Vector operator*(const C3Vector& v, const C44Matrix& m) {
     C3Vector result;
     result.x = m.c0 * v.z + m.b0 * v.y + v.x * m.a0 + m.d0;
@@ -309,7 +318,8 @@ C4Vector operator*(const C4Vector& v, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: %0x0041F290
+// PROVEN: 258c073c IDENTICAL
+// OFFSET: 0x0041EFE0
 C3Vector operator*=(C3Vector& v, const C44Matrix& m) {
     float y = m.c1 * v.z + m.b1 * v.y + m.a1 * v.x + m.d1;
     float z = m.c2 * v.z + m.b2 * v.y + m.a2 * v.x + m.d2;
@@ -319,7 +329,8 @@ C3Vector operator*=(C3Vector& v, const C44Matrix& m) {
     return v;
 }
 
-// OFFSET: %0x004CD390
+// PROVEN: ae67771f IDENTICAL
+// OFFSET: 0x004C7670
 C44Matrix& C44Matrix::operator*=(const C44Matrix& m) {
     *this = *this * m;
     return *this;
@@ -331,7 +342,8 @@ C44Matrix& C44Matrix::operator*=(float s) {
     return *this;
 }
 
-// OFFSET: %0x004CD4C0
+// PROVEN: ce905afe IDENTICAL
+// OFFSET: 0x004C77A0
 C44Matrix C44Matrix::Transpose() const {
     C44Matrix result;
     result.a0 = this->a0;
@@ -426,7 +438,8 @@ C44Matrix C44Matrix::AffineInverse() const {
     return result;
 }
 
-// OFFSET: %0x004CE850
+// PROVEN: 5c609503 IDENTICAL
+// OFFSET: 0x004C8B30
 void C44Matrix::InvertTranslation() {
     float x = -this->d0;
     float y = -this->d1;
@@ -527,7 +540,8 @@ C44Matrix C44Matrix::RotationAroundY(float angle) {
     return result;
 }
 
-// OFFSET: %0x004CE7B0
+// PROVEN: 25767a34 IDENTICAL
+// OFFSET: 0x004C8A90
 C44Matrix C44Matrix::RotationAroundZ(float angle) {
     float c;
     float s;
@@ -553,27 +567,32 @@ C44Matrix C44Matrix::RotationAroundZ(float angle) {
     return result;
 }
 
-// OFFSET: %0x004CE8F0
+// PROVEN: d778a6bd IDENTICAL
+// OFFSET: 0x004C8BD0
 void C44Matrix::RotateAroundX(float angle) {
     *this = RotationAroundX(angle) * *this;
 }
 
-// OFFSET: %0x004CE9B0
+// PROVEN: 04082aa3 IDENTICAL
+// OFFSET: 0x004C8C90
 void C44Matrix::RotateAroundY(float angle) {
     *this = RotationAroundY(angle) * *this;
 }
 
-// OFFSET: %0x004CEA70
+// PROVEN: 1763a98e IDENTICAL
+// OFFSET: 0x004C8D50
 void C44Matrix::RotateAroundZ(float angle) {
     *this = RotationAroundZ(angle) * *this;
 }
 
-// OFFSET: %0x004CEB30
+// PROVEN: ebbf4bde IDENTICAL
+// OFFSET: 0x004C8E10
 void C44Matrix::Rotate(const C4Quaternion& q) {
     *this = C44Matrix(q) * *this;
 }
 
-// OFFSET: %0x004CED90
+// PROVEN: 92f75560 IDENTICAL
+// OFFSET: 0x004C9070
 C44Matrix C44Matrix::Rotation(float angle, const C3Vector& axis, bool normalized) {
     C3Vector v = axis;
 
@@ -623,12 +642,14 @@ C3Vector TransformDirection(const C3Vector& v, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: %0x006CDF90
+// PROVEN: befca4a3 IDENTICAL
+// OFFSET: 0x0076CC90
 bool operator==(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 == r.a0 && l.a1 == r.a1 && l.a2 == r.a2 && l.a3 == r.a3 && l.b0 == r.b0 && l.b1 == r.b1 && l.b2 == r.b2 && l.b3 == r.b3 && l.c0 == r.c0 && l.c1 == r.c1 && l.c2 == r.c2 && l.c3 == r.c3 && l.d0 == r.d0 && l.d1 == r.d1 && l.d2 == r.d2 && l.d3 == r.d3;
 }
 
-// OFFSET: %0x004CD250
+// PROVEN: 71e5f822 IDENTICAL
+// OFFSET: 0x004C7530
 C44Matrix& C44Matrix::operator=(const C4Quaternion& q) {
     FromQuaternion(q, *this);
     this->a3 = 0.0f;
@@ -650,7 +671,8 @@ C3Vector operator*(const C44Matrix& m, const C3Vector& v) {
     return result;
 }
 
-// OFFSET: %0x006D79E0
+// PROVEN: 34b4327c IDENTICAL
+// OFFSET: 0x00777110
 C44Matrix::C44Matrix(const C3Vector& x, const C3Vector& y, const C3Vector& z, const C3Vector& w) {
     this->a0 = x.x;
     this->a1 = x.y;

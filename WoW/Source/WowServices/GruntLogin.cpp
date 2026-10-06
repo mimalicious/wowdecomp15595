@@ -126,7 +126,8 @@ GruntLogin::~GruntLogin() {
     }
 }
 
-// OFFSET: %0x00636820
+// PROVEN: f11f5dac IDENTICAL
+// OFFSET: 0x00626240
 void GruntLogin::Init(LoginResponse* loginResponse) {
     this->m_loginResponse = loginResponse;
     this->m_clientLink = new (__FILE__, __LINE__) Grunt::ClientLink(*this);
@@ -141,7 +142,8 @@ GruntLogin::GruntLogin() {
     this->m_matrixCommitted = new (__FILE__, __LINE__) GruntLogin::MATRIXINPUT();
 }
 
-// OFFSET: %0x00636920
+// PROVEN: 742ce170 IDENTICAL
+// OFFSET: 0x00626340
 void GruntLogin::Logoff() {
     if (this->m_loggedOn) {
         this->m_clientLink->Disconnect();
@@ -310,20 +312,23 @@ void GruntLogin::SetPinInfo(bool enabled, uint32_t seed, const uint8_t* salt) {
     }
 }
 
-// OFFSET: %0x00636130
+// PROVEN: 99ca216a IDENTICAL
+// OFFSET: 0x00625F00
 void GruntLogin::GetPinInfo(bool* enabled, uint8_t** salt, uint8_t** hash) {
     *enabled = this->m_pinEnabled;
     *salt = this->m_pinClientSalt;
     *hash = this->m_pinHash;
 }
 
-// OFFSET: %0x00636160
+// PROVEN: 103cf58c IDENTICAL
+// OFFSET: 0x00625F30
 void GruntLogin::GetMatrixProof(bool* enabled, const uint8_t** proof) const {
     *enabled = this->m_matrixEnabled;
     *proof = this->m_matrixProof;
 }
 
-// OFFSET: %0x00636180
+// PROVEN: 36ec3fff IDENTICAL
+// OFFSET: 0x00625F50
 void GruntLogin::SetTokenInfo(bool enabled, uint8_t required) {
     this->m_tokenEnabled = enabled;
     this->m_tokenRequired = required;
@@ -363,18 +368,21 @@ LOGIN_STATE GruntLogin::NextSecurityState(LOGIN_STATE state) {
     return LOGIN_STATE_CHECKINGVERSIONS;
 }
 
-// OFFSET: %0x00636420
+// PROVEN: 21ce9a1f IDENTICAL
+// OFFSET: 0x00626070
 void GruntLogin::Reconnect() {
     this->m_reconnect = true;
     this->m_clientLink->Connect(this->m_loginResponse->GetLoginServer());
 }
 
-// OFFSET: %0x00636450
+// PROVEN: 751f2b5f IDENTICAL
+// OFFSET: 0x006260A0
 void GruntLogin::GetRealmList() {
     this->m_clientLink->GetRealmList();
 }
 
-// OFFSET: %0x00636670
+// PROVEN: c96abf01 IDENTICAL
+// OFFSET: 0x006260F0
 void GruntLogin::CommitMatrix() {
     GruntLogin::MATRIXINPUT* committed = this->m_matrixCommitted;
     GruntLogin::MATRIXINPUT* input = this->m_matrixInput;
@@ -384,32 +392,38 @@ void GruntLogin::CommitMatrix() {
     memcpy(&input->m_key, &committed->m_key, sizeof(input->m_key));
 }
 
-// OFFSET: %0x006368F0
+// PROVEN: a00d5c6f IDENTICAL
+// OFFSET: 0x00626310
 int32_t GruntLogin::GetServerId() {
     return this->m_clientLink->m_serverId;
 }
 
-// OFFSET: %0x00636900
+// PROVEN: 19a33ba4 IDENTICAL
+// OFFSET: 0x00626320
 const uint8_t* GruntLogin::GetVersionChallenge() {
     return this->m_versionChallenge;
 }
 
-// OFFSET: %0x00636770
+// PROVEN: 300bfca6 IDENTICAL
+// OFFSET: 0x006261F0
 bool GruntLogin::IsTrialAccount() {
     return (this->m_clientLink->m_accountFlags >> 3) & 1;
 }
 
-// OFFSET: %0x00636790
+// PROVEN: 068fadf7 IDENTICAL
+// OFFSET: 0x00626210
 bool GruntLogin::IsProPassAccount() {
     return (this->m_clientLink->m_accountFlags >> 23) & 1;
 }
 
-// OFFSET: %0x006367B0
+// PROVEN: e3a959e0 IDENTICAL
+// OFFSET: 0x00626230
 bool GruntLogin::IsGMAccount() {
     return this->m_clientLink->m_accountFlags & 1;
 }
 
-// OFFSET: %0x00636910
+// PROVEN: 04220472 IDENTICAL
+// OFFSET: 0x00626330
 const uint8_t* GruntLogin::GetKeyMap() {
     return this->m_keyMap;
 }
@@ -478,12 +492,14 @@ void GruntLogin::SetMatrixInfo(bool enabled, uint8_t width, uint8_t height, uint
     memset(this->m_matrixProof, 0, sizeof(this->m_matrixProof));
 }
 
-// OFFSET: %0x006362A0
+// PROVEN: a17f7803 IDENTICAL
+// OFFSET: 0x00626030
 int32_t GruntLogin::GetSurveyId() {
     return this->m_clientLink->m_surveyId;
 }
 
-// OFFSET: %0x00636630
+// PROVEN: 675c3cc7 IDENTICAL
+// OFFSET: 0x006260B0
 void GruntLogin::RevertMatrix() {
     GruntLogin::MATRIXINPUT* input = this->m_matrixInput;
     GruntLogin::MATRIXINPUT* committed = this->m_matrixCommitted;
@@ -499,7 +515,8 @@ void GruntLogin::EnterToken(const char* token) {
     this->m_loginResponse->UpdateLoginStatus(state, LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: %0x006366B0
+// PROVEN: 0d7cd5dd IDENTICAL
+// OFFSET: 0x00626130
 bool GruntLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* minDigits, uint32_t* maxDigits, bool* flipCoords, uint32_t* challengeCount) {
     if (!this->m_matrixEnabled) {
         return false;
@@ -514,7 +531,8 @@ bool GruntLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* minD
     return true;
 }
 
-// OFFSET: %0x00636710
+// PROVEN: 712fbc37 IDENTICAL
+// OFFSET: 0x00626190
 bool GruntLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t* y) {
     if (!this->m_matrixEnabled || !this->m_matrixCoordinates || index >= this->m_matrixChallengeCount) {
         return false;
@@ -526,7 +544,8 @@ bool GruntLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t* y) 
     return true;
 }
 
-// OFFSET: %0x004CBA30
+// PROVEN: f9ba067d IDENTICAL
+// OFFSET: 0x004C5170
 void GruntLogin::MATRIXINPUT::Finish(SHA1::Digest& digest) {
     this->m_hmac.Finish(digest);
     this->m_valid = false;
@@ -550,22 +569,26 @@ static void ProcessMatrixRC4(uint8_t* data, uint32_t length, SARC4Key* key) {
     key->m_y = y;
 }
 
-// OFFSET: %0x00636230
+// PROVEN: 9fb3d337 IDENTICAL
+// OFFSET: 0x00625FC0
 void GruntLogin::FileAccept(bool accept, uint64_t offset) {
     this->m_clientLink->FileStatus(accept, offset);
 }
 
-// OFFSET: %0x006362B0
+// PROVEN: 97dba191 IDENTICAL
+// OFFSET: 0x00626040
 void GruntLogin::SendSurveyData(uint16_t size, uint8_t* data) {
     this->m_clientLink->SendSurveyData(size, data);
 }
 
-// OFFSET: %0x006362C0
+// PROVEN: dee73f5a IDENTICAL
+// OFFSET: 0x00626050
 void GruntLogin::SendSurveyFailed() {
     this->m_clientLink->SendSurveyFailed();
 }
 
-// OFFSET: %0x006362D0
+// PROVEN: 9f68111c IDENTICAL
+// OFFSET: 0x00626060
 void GruntLogin::FileComplete(bool success) {
     this->m_clientLink->FileComplete();
 }

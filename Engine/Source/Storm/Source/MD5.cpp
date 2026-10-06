@@ -34,7 +34,8 @@
 // STATIC: #0x00ADE968
 static uint8_t PADDING[64] = { 0x80 };
 
-// OFFSET: %0x004BAD20
+// PROVEN: c8128402 IDENTICAL
+// OFFSET: 0x004B8400
 uint8_t* MD5::ToArray(uint8_t* array) const {
     if (array) {
         memcpy(array, this->val, sizeof(this->val));
@@ -101,7 +102,8 @@ void MD5Init(MD5_CTX* context) {
     context->state[3] = 0x10325476;
 }
 
-// OFFSET: %0x004BF490
+// PROVEN: 79c8543e IDENTICAL
+// OFFSET: 0x004B8CD0
 static void MD5Transform(uint32_t state[4], const uint8_t block[64]) {
     uint32_t a = state[0];
     uint32_t b = state[1];

@@ -210,7 +210,8 @@ int32_t CGReputationInfo::GetFactionStandingReaction(int32_t faction) {
     return standing >= -6000;
 }
 
-// OFFSET: %0x008FAF80
+// PROVEN: 4466791a IDENTICAL
+// OFFSET: 0x009A60D0
 bool CGReputationInfo::GetForcedReaction(int32_t faction, int32_t* reaction) {
     for (uint32_t i = 0; i < CGReputationInfo::m_forcedReactions.m_count; i++) {
         if (faction == CGReputationInfo::m_forcedReactions.m_data[i].m_factionId) {

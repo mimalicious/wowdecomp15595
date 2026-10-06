@@ -8,27 +8,32 @@ ComSat::SessionCallback::~SessionCallback() {
 ComSat::Network::Session::Callback::~Callback() {
 }
 
-// OFFSET: %0x009795B0
+// PROVEN: 445d5124 IDENTICAL
+// OFFSET: 0x007A95B0
 void ComSat::Session::SetNetworkSession(ComSat::Network::Session* session) {
     this->m_networkSession = session;
 }
 
-// OFFSET: %0x009795C0
+// PROVEN: f19f84bd IDENTICAL
+// OFFSET: 0x00B41A60
 ComSat::Network::Session* ComSat::Session::GetNetworkSession() {
     return this->m_networkSession;
 }
 
-// OFFSET: %0x009795D0
+// PROVEN: 97a6b7a8 IDENTICAL
+// OFFSET: 0x00A392C0
 bool ComSat::Session::LocalAdd(uint64_t talker) {
     return this->m_networkSession && this->m_networkSession->LocalAdd(talker);
 }
 
-// OFFSET: %0x00979600
+// PROVEN: a55c7efe IDENTICAL
+// OFFSET: 0x00A392F0
 bool ComSat::Session::Add(uint64_t talker, uint8_t networkId, const uint8_t (&key)[16], const ComSat::Network::Address& address) {
     return this->m_networkSession && this->m_networkSession->Add(talker, networkId, key, address);
 }
 
-// OFFSET: %0x00979640
+// PROVEN: 076ad1c5 IDENTICAL
+// OFFSET: 0x00A39330
 void ComSat::Session::Remove(uint64_t talker) {
     if (this->m_networkSession) {
         this->m_networkSession->Remove(talker);
@@ -40,7 +45,8 @@ bool ComSat::Session::Send(uint64_t talker, const uint8_t* data, uint32_t size) 
     return this->m_networkSession && this->m_networkSession->Send(talker, data, size);
 }
 
-// OFFSET: %0x009796A0
+// PROVEN: e73ec9e1 IDENTICAL
+// OFFSET: 0x00A39390
 void ComSat::Session::Recv(uint64_t talker, const uint8_t* data, uint32_t size) {
     if (data && size) {
         this->m_callback->IncomingVoiceData(this->m_id, talker, data, size);

@@ -103,7 +103,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPEcho::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBBF0
+// PROVEN: cad4e9a5 IDENTICAL
+// OFFSET: 0x00A9B580
 FMOD_RESULT DSPEcho::createInternal()
 {
     int count;
@@ -202,7 +203,8 @@ FMOD_RESULT DSPEcho::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBC40
+// PROVEN: 58516ce3 IDENTICAL
+// OFFSET: 0x00A9B5D0
 FMOD_RESULT DSPEcho::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     unsigned int count;
@@ -536,7 +538,8 @@ FMOD_RESULT DSPEcho::getParameterInternal(int index, float *value, char *valuest
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC6C0
+// PROVEN: 821f4ec8 IDENTICAL
+// OFFSET: 0x00A9C050
 FMOD_RESULT F_CALLBACK DSPEcho::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPEcho *echo = (DSPEcho *)dsp;
@@ -561,7 +564,8 @@ FMOD_RESULT F_CALLBACK DSPEcho::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC6F0
+// PROVEN: 14515f80 IDENTICAL
+// OFFSET: 0x00A9C080
 FMOD_RESULT F_CALLBACK DSPEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPEcho *echo = (DSPEcho *)dsp;
@@ -586,7 +590,8 @@ FMOD_RESULT F_CALLBACK DSPEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC740
+// PROVEN: 08e786c7 IDENTICAL
+// OFFSET: 0x00A9C0D0
 FMOD_RESULT F_CALLBACK DSPEcho::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPEcho *echo = (DSPEcho *)dsp;
@@ -611,7 +616,8 @@ FMOD_RESULT F_CALLBACK DSPEcho::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC780
+// PROVEN: 3c587bac IDENTICAL
+// OFFSET: 0x00A9C110
 FMOD_RESULT F_CALLBACK DSPEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPEcho *echo = (DSPEcho *)dsp;
@@ -636,7 +642,8 @@ FMOD_RESULT F_CALLBACK DSPEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuffe
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC7B0
+// PROVEN: ed50c3bf IDENTICAL
+// OFFSET: 0x00A9C140
 FMOD_RESULT F_CALLBACK DSPEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPEcho *echo = (DSPEcho *)dsp;
@@ -661,7 +668,8 @@ FMOD_RESULT F_CALLBACK DSPEcho::setParameterCallback(FMOD_DSP_STATE *dsp, int in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC7F0
+// PROVEN: 015dcef9 IDENTICAL
+// OFFSET: 0x00A9C180
 FMOD_RESULT F_CALLBACK DSPEcho::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPEcho *echo = (DSPEcho *)dsp;

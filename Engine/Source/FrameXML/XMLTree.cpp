@@ -16,7 +16,8 @@ static XMLNode* s_freeNodes;
 // STATIC: %0x00CC9198
 CDataAllocator XMLNode::s_allocator(sizeof(XMLNode), 1170);
 
-// OFFSET: %0x004FE670
+// PROVEN: 914a8ef0 IDENTICAL
+// OFFSET: 0x004EBA10
 static void end_element(void* userData, const char* name) {
     XMLTree* tree = static_cast<XMLTree*>(userData);
     tree->m_current = tree->m_current->m_parent;
@@ -75,7 +76,8 @@ void XMLNode::Init(XMLNode* parent, const char* name) {
     }
 }
 
-// OFFSET: %0x004FE770
+// PROVEN: 6a443163 IDENTICAL
+// OFFSET: 0x004EBB70
 XMLNode* XMLNode::GetChildByName(const char* name) {
     for (XMLNode* child = this->m_child; child; child = child->m_next) {
         if (!SStrCmpI(child->m_name.m_str, name, STORM_MAX_STR)) {
@@ -86,7 +88,8 @@ XMLNode* XMLNode::GetChildByName(const char* name) {
     return NULL;
 }
 
-// OFFSET: %0x004FE7B0
+// PROVEN: c4f5b8f4 IDENTICAL
+// OFFSET: 0x004EBBB0
 const char* XMLNode::GetAttributeByName(const char* name) {
     uint32_t count = this->m_attributes.Count();
 
@@ -237,7 +240,8 @@ void XMLNode::Recycle() {
     s_freeNodes = this;
 }
 
-// OFFSET: %0x004FEDA0
+// PROVEN: a98ce437 IDENTICAL
+// OFFSET: 0x004EC1A0
 void XMLTree_Free(XMLTree* tree) {
     if (tree->m_root) {
         tree->m_root->Recycle();
@@ -269,7 +273,8 @@ XMLTree* XMLTree_Load(const char* data, uint32_t size) {
     return NULL;
 }
 
-// OFFSET: %0x00A61430
+// PROVEN: 23d682c3 IDENTICAL
+// OFFSET: 0x00B2DD50
 XMLNode* XMLTree_GetRoot(XMLTree* tree) {
     return tree->m_root;
 }
@@ -278,6 +283,7 @@ XMLNode* XMLTree_GetRoot(XMLTree* tree) {
 XMLNodeData::~XMLNodeData() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 7981ca12 IDENTICAL
+// OFFSET: 0x00401000
 void XMLNodeData::Release() {
 }

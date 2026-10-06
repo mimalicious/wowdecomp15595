@@ -6,7 +6,8 @@
 // STATIC: %0x00BB8348
 int32_t CSimpleTitleRegion::s_metatable = LUA_NOREF;
 
-// OFFSET: %0x00512970
+// PROVEN: b7bf3d42 IDENTICAL
+// OFFSET: 0x00502820
 int32_t CSimpleTitleRegion::GetScriptMetaTable() {
     return CSimpleTitleRegion::s_metatable;
 }

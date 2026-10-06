@@ -16,7 +16,8 @@ void CGGameObject_C_Type_Text::StartInteraction() {
     this->UpdateAnimState(2);
 }
 
-// OFFSET: %0x005A2B90
+// PROVEN: e7bc6bee IDENTICAL
+// OFFSET: 0x005994D0
 int32_t CGGameObject_C_Type_Text::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 7 : 33;
 }

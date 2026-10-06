@@ -170,7 +170,8 @@ bool Blizzard::Streaming::ScanDirectoryForManifest(const Blizzard::File::Process
     return true;
 }
 
-// OFFSET: %0x0070EC10
+// PROVEN: 14c027df IDENTICAL
+// OFFSET: 0x007ABF30
 bool Blizzard::Streaming::IsStreamingMode() {
     return Blizzard::Streaming::s_streamingReady;
 }
@@ -274,7 +275,8 @@ int32_t Blizzard::Streaming::StreamingX::GetLowCommandIntervalStep() {
     return step;
 }
 
-// OFFSET: %0x0070ECC0
+// PROVEN: 9c1c3fbf IDENTICAL
+// OFFSET: 0x007ABF50
 void Blizzard::Streaming::DownloadProgress::Sample(uint32_t time) {
     if (++this->m_index >= 51) {
         this->m_index = 0;

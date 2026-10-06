@@ -3,7 +3,8 @@
 // STATIC: %0x00B44130
 const DBCMeta AnimKitSegmentRec::s_meta = { "DBFilesClient\\AnimKitSegment.dbc", 16, 64, AnimKitSegmentRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: ee1aba6e IDENTICAL
+// OFFSET: 0x00401000
 void AnimKitSegmentRec::FixupStrings(void* record, const char* strings) {
 }
 

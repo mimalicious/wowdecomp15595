@@ -217,14 +217,16 @@ void CGAuctionHouse::EnterWorld() {
     CGAuctionHouse::m_selectedBidItem = -1;
 }
 
-// OFFSET: %0x008CB6F0
+// PROVEN: dd2d6960 IDENTICAL
+// OFFSET: 0x00972BF0
 void CGAuctionHouse::SetSellItem(WOWGUID item, WOWGUID container, uint8_t slot) {
     CGAuctionHouse::m_sellItem = item;
     CGAuctionHouse::m_sellItemContainer = container;
     CGAuctionHouse::m_sellItemSlot = slot;
 }
 
-// OFFSET: %0x008CB720
+// PROVEN: 0849d7ac IDENTICAL
+// OFFSET: 0x00972C20
 void CGAuctionHouse::GetSellItem(WOWGUID* item, WOWGUID* container, uint8_t* slot) {
     *item = CGAuctionHouse::m_sellItem;
     *container = CGAuctionHouse::m_sellItemContainer;
@@ -380,7 +382,8 @@ void CGAuctionHouse::SetBrowseSortCriteria(int32_t column, bool reverse) {
     CGAuctionHouse::m_listSortCriteria[0].m_valid = 1;
 }
 
-// OFFSET: %0x008CBAD0
+// PROVEN: 03a1fb14 IDENTICAL
+// OFFSET: 0x00972FD0
 void CGAuctionHouse::ClearOwnedSortCriteria() {
     for (uint32_t i = 0; i < 12; i++) {
         CGAuctionHouse::m_ownedSortCriteria[i].m_valid = 0;
@@ -477,7 +480,8 @@ const char* CGAuctionHouse::SortTypeToName(int32_t column) {
     }
 }
 
-// OFFSET: %0x008CBCC0
+// PROVEN: 8149b516 IDENTICAL
+// OFFSET: 0x009731C0
 bool AuctionSortToColumnIndex(const char* name, int32_t* column) {
     if (!SStrCmpI(name, "quality", STORM_MAX_STR)) {
         *column = 1;
@@ -537,7 +541,8 @@ bool AuctionSortToColumnIndex(const char* name, int32_t* column) {
     return false;
 }
 
-// OFFSET: %0x008CBE30
+// PROVEN: 6245c74e IDENTICAL
+// OFFSET: 0x00973330
 bool CGAuctionHouse::TableNameToType(const char* name, int32_t* type) {
     if (!SStrCmpI(name, "list", STORM_MAX_STR)) {
         *type = 0;
@@ -572,14 +577,16 @@ bool CGAuctionHouse::IsItemForSell(WOWGUID item) {
     return false;
 }
 
-// OFFSET: %0x008CBEF0
+// PROVEN: 7ee93247 IDENTICAL
+// OFFSET: 0x009733F0
 void CGAuctionHouse::LockAllSellItems() {
     for (uint32_t i = 0; i < CGAuctionHouse::m_numSellItems; i++) {
         CGGameUI::LockItem(CGAuctionHouse::m_sellItems[i].m_guid);
     }
 }
 
-// OFFSET: %0x008CBF20
+// PROVEN: e0f2bfee IDENTICAL
+// OFFSET: 0x00973420
 void CGAuctionHouse::UnlockAllSellItems() {
     for (uint32_t i = 0; i < CGAuctionHouse::m_numSellItems; i++) {
         CGGameUI::UnlockItem(CGAuctionHouse::m_sellItems[i].m_guid);
@@ -2162,7 +2169,8 @@ void CGAuctionHouse::ShutdownGame() {
     CGAuctionHouse::m_numOutbidItems = 0;
 }
 
-// OFFSET: %0x00972D60
+// PROVEN: b1a85e75 IDENTICAL
+// OFFSET: 0x00A325A0
 uint32_t CalculateAuctionDeposit(uint32_t depositRate, uint32_t sellPrice, uint32_t runTime) {
     for (uint32_t i = 0; i < 3; i++) {
         if (runTime == s_depositRunTimes[i]) {

@@ -82,7 +82,8 @@ int32_t ComponentGetNumVariations(st_race* lookup, int32_t raceID, int32_t sexID
     return list.m_numVariations;
 }
 
-// OFFSET: %0x0066C7A0
+// PROVEN: adea3a2c IDENTICAL
+// OFFSET: 0x00704DD0
 int32_t ComponentGetNumColors(st_race* lookup, int32_t raceID, int32_t sexID, COMPONENT_VARIATIONS variation, int32_t variationIndex) {
     CharVariationList& list = lookup[raceID * 2 + sexID].m_variation[variation];
 

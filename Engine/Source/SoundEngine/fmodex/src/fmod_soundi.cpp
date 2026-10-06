@@ -84,7 +84,8 @@ FMOD_RESULT SoundI::validate(Sound *sound, SoundI **soundi)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA3A0
+// PROVEN: 13eb3875 IDENTICAL
+// OFFSET: 0x00A89CF0
 SoundI::SoundI()
 {
     mMode                    = FMOD_DEFAULT;
@@ -148,7 +149,8 @@ SoundI::SoundI()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CCA70
+// PROVEN: 08649dfb IDENTICAL
+// OFFSET: 0x00A8C3C0
 FMOD_RESULT SoundI::loadSubSound(int index, FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -384,7 +386,8 @@ FMOD_RESULT SoundI::read(unsigned int offset, unsigned int numsamples, unsigned 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C95E0
+// PROVEN: 382eb939 IDENTICAL
+// OFFSET: 0x00A88F40
 FMOD_RESULT SoundI::seek(int subsound, unsigned int position)
 {
     FMOD_RESULT result;
@@ -761,7 +764,8 @@ bool SoundI::readyForRelease()
 }
 
 
-// OFFSET: %0x009C9680
+// PROVEN: fa3c1b9d IDENTICAL
+// OFFSET: 0x00A88FE0
 FMOD_RESULT SoundI::getSystemObject(System **system)
 {
     if (!system)
@@ -790,7 +794,8 @@ FMOD_RESULT SoundI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C96B0
+// PROVEN: a1df404e IDENTICAL
+// OFFSET: 0x00A89010
 FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     return FMOD_ERR_BADCOMMAND;
@@ -812,7 +817,8 @@ FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C96C0
+// PROVEN: 35cb548a IDENTICAL
+// OFFSET: 0x00A89020
 FMOD_RESULT SoundI::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     return FMOD_ERR_BADCOMMAND;
@@ -834,7 +840,8 @@ FMOD_RESULT SoundI::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned i
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C96D0
+// PROVEN: e2b9a9b7 IDENTICAL
+// OFFSET: 0x00A89030
 FMOD_RESULT SoundI::setDefaults(float frequency, float volume, float pan, int priority)
 {
     if (volume > 1)
@@ -886,7 +893,8 @@ FMOD_RESULT SoundI::setDefaults(float frequency, float volume, float pan, int pr
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9750
+// PROVEN: ff519eff IDENTICAL
+// OFFSET: 0x00A890B0
 FMOD_RESULT SoundI::getDefaults(float *frequency, float *volume, float *pan, int *priority)
 {
     if (frequency)
@@ -925,7 +933,8 @@ FMOD_RESULT SoundI::getDefaults(float *frequency, float *volume, float *pan, int
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9790
+// PROVEN: b94e4749 IDENTICAL
+// OFFSET: 0x00A890F0
 FMOD_RESULT SoundI::setVariations(float frequencyvar, float volumevar, float panvar)
 {
     if (frequencyvar >= 0)
@@ -960,7 +969,8 @@ FMOD_RESULT SoundI::setVariations(float frequencyvar, float volumevar, float pan
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C97D0
+// PROVEN: 07b5dff5 IDENTICAL
+// OFFSET: 0x00A89130
 FMOD_RESULT SoundI::getVariations(float *frequencyvar, float *volumevar, float *panvar)
 {
 	if (frequencyvar) 
@@ -997,7 +1007,8 @@ FMOD_RESULT SoundI::getVariations(float *frequencyvar, float *volumevar, float *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9800
+// PROVEN: 2037a1ca IDENTICAL
+// OFFSET: 0x00A89160
 FMOD_RESULT SoundI::set3DMinMaxDistance(float min, float max)
 {
     if (min < 0 || max < 0 || max < min)
@@ -1028,7 +1039,8 @@ FMOD_RESULT SoundI::set3DMinMaxDistance(float min, float max)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9840
+// PROVEN: c5abb91d IDENTICAL
+// OFFSET: 0x00A891A0
 FMOD_RESULT SoundI::get3DMinMaxDistance(float *min, float *max)
 {
     if (min)
@@ -1061,7 +1073,8 @@ FMOD_RESULT SoundI::get3DMinMaxDistance(float *min, float *max)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9870
+// PROVEN: 9590c89d IDENTICAL
+// OFFSET: 0x00A891D0
 FMOD_RESULT SoundI::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
     if (insideconeangle < 0)
@@ -1113,7 +1126,8 @@ FMOD_RESULT SoundI::set3DConeSettings(float insideconeangle, float outsideconean
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C98E0
+// PROVEN: 39c7920f IDENTICAL
+// OFFSET: 0x00A89240
 FMOD_RESULT SoundI::get3DConeSettings(float *insideconeangle, float *outsideconeangle, float *outsidevolume)
 {
     if (insideconeangle)
@@ -1150,7 +1164,8 @@ FMOD_RESULT SoundI::get3DConeSettings(float *insideconeangle, float *outsidecone
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9910
+// PROVEN: 790b7a22 IDENTICAL
+// OFFSET: 0x00A89270
 FMOD_RESULT  SoundI::set3DCustomRolloff(FMOD_VECTOR *points, int numpoints)
 {
     if (numpoints < 0)
@@ -1197,7 +1212,8 @@ FMOD_RESULT  SoundI::set3DCustomRolloff(FMOD_VECTOR *points, int numpoints)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9980
+// PROVEN: efbb8b74 IDENTICAL
+// OFFSET: 0x00A892E0
 FMOD_RESULT SoundI::get3DCustomRolloff(FMOD_VECTOR **points, int *numpoints)
 {
     if (points)
@@ -1572,7 +1588,8 @@ FMOD_RESULT SoundI::setSubSoundSentence(int *subsoundlist, int numsubsounds)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9D70
+// PROVEN: db650006 IDENTICAL
+// OFFSET: 0x00A896D0
 FMOD_RESULT SoundI::getName(char *name, int namelen)
 {
     if (!name)
@@ -1792,7 +1809,8 @@ FMOD_RESULT SoundI::getNumSubSounds(int *numsubsounds)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9E00
+// PROVEN: 9993892a IDENTICAL
+// OFFSET: 0x00A89730
 FMOD_RESULT SoundI::getNumTags(int *numtags, int *numtagsupdated)
 {
     if (!numtags && !numtagsupdated)
@@ -1833,7 +1851,8 @@ FMOD_RESULT SoundI::getNumTags(int *numtags, int *numtagsupdated)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9E50
+// PROVEN: f7e00af4 IDENTICAL
+// OFFSET: 0x00A89780
 FMOD_RESULT SoundI::getTag(const char *name, int index, FMOD_TAG *tag)
 {
     if (!tag)
@@ -1865,7 +1884,8 @@ FMOD_RESULT SoundI::getTag(const char *name, int index, FMOD_TAG *tag)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9EA0
+// PROVEN: 71e1a77c IDENTICAL
+// OFFSET: 0x00A897D0
 FMOD_RESULT SoundI::getOpenState(FMOD_OPENSTATE *openstate, unsigned int *percentbuffered, bool *starving)
 {
     if (openstate)
@@ -2078,7 +2098,8 @@ FMOD_RESULT SoundI::readData(void *buffer, unsigned int numbytes, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009C9F40
+// PROVEN: d4316a77 IDENTICAL
+// OFFSET: 0x00A89870
 FMOD_RESULT SoundI::seekData(unsigned int position)
 {
     if (mCodec)
@@ -2144,7 +2165,8 @@ FMOD_RESULT SoundI::setSoundGroup(SoundGroupI *soundgroup)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA080
+// PROVEN: e65f5dc6 IDENTICAL
+// OFFSET: 0x00A899B0
 FMOD_RESULT SoundI::getSoundGroup(SoundGroupI **soundgroup)
 {
     if (!soundgroup)
@@ -2173,7 +2195,8 @@ FMOD_RESULT SoundI::getSoundGroup(SoundGroupI **soundgroup)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA0B0
+// PROVEN: 425c9268 IDENTICAL
+// OFFSET: 0x00A899E0
 FMOD_RESULT SoundI::getNumSyncPoints(int *numsyncpoints)
 {
     if (!numsyncpoints)
@@ -2202,7 +2225,8 @@ FMOD_RESULT SoundI::getNumSyncPoints(int *numsyncpoints)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA0E0
+// PROVEN: 43c6f467 IDENTICAL
+// OFFSET: 0x00A89A10
 FMOD_RESULT SoundI::getSyncPoint(int index, FMOD_SYNCPOINT **point)
 {
     SyncPoint *current;
@@ -2361,7 +2385,8 @@ FMOD_RESULT SoundI::addSyncPoint(unsigned int offset, FMOD_TIMEUNIT offsettype, 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA120
+// PROVEN: e5d2761c IDENTICAL
+// OFFSET: 0x00A89A50
 FMOD_RESULT SoundI::deleteSyncPoint(FMOD_SYNCPOINT *point)
 {
     SyncPoint *spoint = (SyncPoint *)point;
@@ -2508,7 +2533,8 @@ FMOD_RESULT SoundI::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA2B0
+// PROVEN: 954b99b6 IDENTICAL
+// OFFSET: 0x00A89BE0
 FMOD_RESULT SoundI::getMode(FMOD_MODE *mode)
 {
     if (!mode)
@@ -2576,7 +2602,8 @@ FMOD_RESULT SoundI::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA310
+// PROVEN: 6512bc4e IDENTICAL
+// OFFSET: 0x00A89C40
 FMOD_RESULT SoundI::getLoopCount(int *loopcount)
 {
     if (!loopcount)
@@ -2820,7 +2847,8 @@ FMOD_RESULT SoundI::getPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA330
+// PROVEN: 5665b423 IDENTICAL
+// OFFSET: 0x00A89C80
 FMOD_RESULT SoundI::setUserData(void *userdata)
 {
     mUserData = userdata;
@@ -2844,7 +2872,8 @@ FMOD_RESULT SoundI::setUserData(void *userdata)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CA350
+// PROVEN: 99d208ec IDENTICAL
+// OFFSET: 0x00A89CA0
 FMOD_RESULT SoundI::getUserData(void **userdata)
 {
     if (!userdata)

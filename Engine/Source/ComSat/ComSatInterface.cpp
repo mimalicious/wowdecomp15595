@@ -18,7 +18,8 @@ ComSat::Allocator::~Allocator() {
 ComSat::Interface::Callback::~Callback() {
 }
 
-// OFFSET: %0x00974650
+// PROVEN: 2e8733bd IDENTICAL
+// OFFSET: 0x00A340C0
 void ComSat::Interface::Destroy(ComSat::Interface* comsat, ComSat::Allocator& allocator) {
     if (comsat) {
         comsat->~Interface();
@@ -40,7 +41,8 @@ void ComSat::Interface::Destroy(ComSat::Interface* comsat, ComSat::Allocator& al
     }
 }
 
-// OFFSET: %0x00974A40
+// PROVEN: a6adbfbd IDENTICAL
+// OFFSET: 0x00A344B0
 ComSat::Interface* ComSat::Interface::Create(const ComSat::Initialization& init, ComSat::Allocator& allocator) {
     s_soundManager = new (allocator.Alloc(sizeof(ComSat::Sound::Manager))) ComSat::Sound::Manager(init, allocator);
     s_networkManager = new (allocator.Alloc(sizeof(ComSat::Network::Manager))) ComSat::Network::Manager(init, allocator);

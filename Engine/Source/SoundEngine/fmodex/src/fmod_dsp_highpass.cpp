@@ -119,7 +119,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPHighPass::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DDB50
+// PROVEN: 35d4f4c1 IDENTICAL
+// OFFSET: 0x00A9D4E0
 FMOD_RESULT DSPHighPass::createInternal()
 {
     int count;
@@ -198,7 +199,8 @@ FMOD_RESULT DSPHighPass::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DC8D0
+// PROVEN: 325aad9d IDENTICAL
+// OFFSET: 0x00A9C260
 FMOD_RESULT DSPHighPass::updateCoefficients(float resonance, float cutoff)
 {
     int   outputrate;
@@ -417,7 +419,8 @@ FMOD_RESULT DSPHighPass::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DD9C0
+// PROVEN: 7dbc731d IDENTICAL
+// OFFSET: 0x00A9D350
 FMOD_RESULT DSPHighPass::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)
@@ -485,7 +488,8 @@ FMOD_RESULT DSPHighPass::getParameterInternal(int index, float *value, char *val
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DDC90
+// PROVEN: d812895c IDENTICAL
+// OFFSET: 0x00A9D620
 FMOD_RESULT F_CALLBACK DSPHighPass::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;
@@ -509,7 +513,8 @@ FMOD_RESULT F_CALLBACK DSPHighPass::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DDA30
+// PROVEN: e9f0213a IDENTICAL
+// OFFSET: 0x00A9D3C0
 FMOD_RESULT F_CALLBACK DSPHighPass::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;
@@ -559,7 +564,8 @@ FMOD_RESULT F_CALLBACK DSPHighPass::readCallback(FMOD_DSP_STATE *dsp, float *inb
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DDAB0
+// PROVEN: ffdae55c IDENTICAL
+// OFFSET: 0x00A9D440
 FMOD_RESULT F_CALLBACK DSPHighPass::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;
@@ -583,7 +589,8 @@ FMOD_RESULT F_CALLBACK DSPHighPass::setParameterCallback(FMOD_DSP_STATE *dsp, in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DDB20
+// PROVEN: f59f1ad0 IDENTICAL
+// OFFSET: 0x00A9D4B0
 FMOD_RESULT F_CALLBACK DSPHighPass::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;

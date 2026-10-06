@@ -249,7 +249,8 @@ void M2GetFixedFunctionFallback(uint16_t shader, EGxTexOp* colorOp, EGxTexOp* al
     }
 }
 
-// OFFSET: %0x0079FCC0
+// PROVEN: c04f6b0c IDENTICAL
+// OFFSET: 0x00839890
 void M2GetCombinerOps(uint16_t shader, uint32_t textureCount, EGxTexOp* colorOps, EGxTexOp* alphaOps) {
     uint32_t ops[2];
     ops[0] = (shader >> 4) & 7;

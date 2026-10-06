@@ -3,7 +3,8 @@
 // STATIC: %0x00B43FE8
 const DBCMeta Cfg_ConfigsRec::s_meta = { "DBFilesClient\\Cfg_Configs.dbc", 4, 20, Cfg_ConfigsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: b6023f3b IDENTICAL
+// OFFSET: 0x00401000
 void Cfg_ConfigsRec::FixupStrings(void* record, const char* strings) {
 }
 

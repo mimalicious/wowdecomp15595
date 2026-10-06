@@ -53,12 +53,14 @@ const char* CSimpleEditBox::s_inputLanguageNames[4] = { "ROMAN", "KOREAN", "CHIN
 // STATIC: %0x00CD2558
 CDataAllocator CSimpleEditBox::s_allocator(sizeof(CSimpleEditBox), 5);
 
-// OFFSET: %0x00526D00
+// PROVEN: 9be4407c IDENTICAL
+// OFFSET: 0x00516F60
 static int32_t IsShiftDown() {
     return EventIsKeyDown(KEY_LSHIFT) || EventIsKeyDown(KEY_RSHIFT);
 }
 
-// OFFSET: %0x00526D30
+// PROVEN: 4fc44b64 IDENTICAL
+// OFFSET: 0x00516F90
 static int32_t IsControlDown() {
     return EventIsKeyDown(KEY_LCONTROL) || EventIsKeyDown(KEY_RCONTROL);
 }
@@ -87,7 +89,8 @@ CSimpleFontedFrameFont::CSimpleFontedFrameFont(CSimpleFontedFrame* frame) {
     this->m_frame = frame;
 }
 
-// OFFSET: %0x00526E10
+// PROVEN: 7fe1a6ff IDENTICAL
+// OFFSET: 0x00517060
 void CSimpleFontedFrameFont::UpdateObjects() {
     uint32_t flags = this->m_attributes.m_flags;
 
@@ -1884,7 +1887,8 @@ int32_t CSimpleEditBox::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// OFFSET: %0x00529370
+// PROVEN: 8d36811b IDENTICAL
+// OFFSET: 0x00519610
 void CSimpleEditBox::OnFrameSizeChanged(float width, float height) {
     CSimpleFrame::OnFrameSizeChanged(width, height);
     this->UpdateSizes();
@@ -2570,22 +2574,26 @@ void CSimpleEditBox::UpdateVisibleText() {
     }
 }
 
-// OFFSET: %0x0052AC40
+// PROVEN: 11f220f0 IDENTICAL
+// OFFSET: 0x0051AF60
 const char* CSimpleEditBox::GetObjectTypeName() {
     return CSimpleEditBox::s_objectTypeName;
 }
 
-// OFFSET: %0x0052AC50
+// PROVEN: 7631cdcb IDENTICAL
+// OFFSET: 0x0051AF70
 int32_t CSimpleEditBox::GetScriptMetaTable() {
     return CSimpleEditBox::s_metatable;
 }
 
-// OFFSET: %0x0052AC70
+// PROVEN: 2b93855e IDENTICAL
+// OFFSET: 0x0051AF90
 bool CSimpleEditBox::IsA(int32_t type) {
     return type == CSimpleEditBox::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x0052ACB0
+// PROVEN: 116577dc IDENTICAL
+// OFFSET: 0x0051AFD0
 bool CSimpleEditBox::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleEditBox::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

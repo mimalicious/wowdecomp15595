@@ -3,7 +3,8 @@
 // STATIC: %0x00B44ED0
 const DBCMeta SpellLevelsRec::s_meta = { "DBFilesClient\\SpellLevels.dbc", 4, 16, SpellLevelsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 6426bab5 IDENTICAL
+// OFFSET: 0x00401000
 void SpellLevelsRec::FixupStrings(void* record, const char* strings) {
 }
 

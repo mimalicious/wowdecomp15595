@@ -35,27 +35,32 @@ SIMPLEFONT::~SIMPLEFONT() {
     delete this->m_font;
 }
 
-// OFFSET: %0x00526D60
+// PROVEN: 0d737466 IDENTICAL
+// OFFSET: 0x007ABA80
 const char* CSimpleFont::GetName() {
     return this->m_name;
 }
 
-// OFFSET: %0x00526DB0
+// PROVEN: cd230c82 IDENTICAL
+// OFFSET: 0x00517000
 bool CSimpleFont::IsA(int32_t type) {
     return type == CSimpleFont::s_objectType;
 }
 
-// OFFSET: %0x00526DD0
+// PROVEN: f451c3fd IDENTICAL
+// OFFSET: 0x00517020
 bool CSimpleFont::IsA(const char* typeName) {
     return SStrCmpI(typeName, CSimpleFont::s_objectTypeName, STORM_MAX_STR) == 0;
 }
 
-// OFFSET: %0x00526DF0
+// PROVEN: e129b122 IDENTICAL
+// OFFSET: 0x00517040
 const char* CSimpleFont::GetObjectTypeName() {
     return CSimpleFont::s_objectTypeName;
 }
 
-// OFFSET: %0x00526E00
+// PROVEN: 369a3955 IDENTICAL
+// OFFSET: 0x00517050
 int32_t CSimpleFont::GetScriptMetaTable() {
     return CSimpleFont::s_metatable;
 }

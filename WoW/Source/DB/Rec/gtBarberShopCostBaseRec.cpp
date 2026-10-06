@@ -3,7 +3,8 @@
 // STATIC: %0x00B46784
 const DBCMeta gtBarberShopCostBaseRec::s_meta = { "DBFilesClient\\gtBarberShopCostBase.dbc", 1, 8, gtBarberShopCostBaseRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: a2266275 IDENTICAL
+// OFFSET: 0x00401000
 void gtBarberShopCostBaseRec::FixupStrings(void* record, const char* strings) {
 }
 

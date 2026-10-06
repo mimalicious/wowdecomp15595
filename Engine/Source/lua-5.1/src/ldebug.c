@@ -41,7 +41,8 @@ static int currentpc (lua_State *L, CallInfo *ci) {
 }
 
 
-// OFFSET: %0x0042F440
+// PROVEN: caf49d15 IDENTICAL
+// OFFSET: 0x00424F40
 static int currentline (lua_State *L, CallInfo *ci) {
   int pc = currentpc(L, ci);
   if (pc < 0)
@@ -82,7 +83,8 @@ LUA_API int lua_gethookcount (lua_State *L) {
 }
 
 
-// OFFSET: %0x0042F490
+// PROVEN: 26179b29 IDENTICAL
+// OFFSET: 0x00424F90
 LUA_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
   int status;
   CallInfo *ci;
@@ -151,7 +153,8 @@ LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
 }
 
 
-// OFFSET: %0x0042F5D0
+// PROVEN: bc24d66e IDENTICAL
+// OFFSET: 0x004250D0
 static void funcinfo (lua_Debug *ar, Closure *cl) {
   if (cl->c.isC) {
     ar->source = "=[C]";
@@ -295,7 +298,8 @@ static int precheck (const Proto *pt) {
 
 #define checkopenop(pt,pc)	luaG_checkopenop((pt)->code[(pc)+1])
 
-// OFFSET: %0x0042F760
+// PROVEN: 83d46679 IDENTICAL
+// OFFSET: 0x00425260
 int luaG_checkopenop (Instruction i) {
   switch (GET_OPCODE(i)) {
     case OP_CALL:
@@ -497,7 +501,8 @@ int luaG_checkcode (const Proto *pt) {
 }
 
 
-// OFFSET: %0x0042FC50
+// PROVEN: 9668e1f7 IDENTICAL
+// OFFSET: 0x00425750
 static const char *kname (Proto *p, int c) {
   if (ISK(c) && ttisstring(&p->k[INDEXK(c)]))
     return svalue(&p->k[INDEXK(c)]);

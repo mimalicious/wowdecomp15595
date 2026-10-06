@@ -20,7 +20,8 @@ CVehicleCameraHeap* CVehicleCamera_C::s_cameraPool;
 // STATIC: #0x00CA165C
 uint32_t CVehicleCamera_C::s_cameraCount;
 
-// OFFSET: %0x005F3900
+// PROVEN: 938b63ad IDENTICAL
+// OFFSET: 0x005E71C0
 int32_t CVehicleCamera_C::ConvertFromRawToWorld(float& facing, CGObject_C* relativeTo) {
     if (!relativeTo) {
         return 0;
@@ -1022,7 +1023,8 @@ void CVehicleCamera_C::BeginTransition(uint32_t time) {
     this->m_flags |= 0x20;
 }
 
-// OFFSET: %0x005F5B10
+// PROVEN: 07a6c06a IDENTICAL
+// OFFSET: 0x005E8900
 void CVehicleCamera_C::OnPassengerTransitionMotionBegin(uint32_t time, uint32_t duration) {
     if (this->m_flags & 0x1) {
         return;

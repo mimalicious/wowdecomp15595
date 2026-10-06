@@ -158,17 +158,20 @@ void SE3::CaptureWork() {
     s_heartBeatCritSect.Leave();
 }
 
-// OFFSET: %0x00679370
+// PROVEN: 422455fa IDENTICAL
+// OFFSET: 0x007126B0
 void SE3::SetUserMonitorDSPCallback(void (*callback)(float*, uint32_t)) {
     s_userMonitorDSPCallback = callback;
 }
 
-// OFFSET: %0x00679380
+// PROVEN: 7d0c9594 IDENTICAL
+// OFFSET: 0x007126C0
 FMOD_RESULT SE3::AttachMonitorDSP(FMOD::Channel* channel) {
     return channel->addDSP(s_monitorDSP);
 }
 
-// OFFSET: %0x006793A0
+// PROVEN: f375c512 IDENTICAL
+// OFFSET: 0x007126E0
 static FMOD_RESULT F_CALLBACK MonitorDSPCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     memcpy(outBuffer, inBuffer, length * sizeof(float));
 
@@ -291,36 +294,42 @@ void SE3::StartCapture() {
     SE3_ERRCHECK(result);
 }
 
-// OFFSET: %0x00679640
+// PROVEN: 65a94e21 IDENTICAL
+// OFFSET: 0x007128F0
 void SE3::SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_primaryCaptureCallbacks = callbacks;
 }
 
-// OFFSET: %0x00679650
+// PROVEN: 2e04463d IDENTICAL
+// OFFSET: 0x00712900
 void SE3::SetAlternateCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_alternateCaptureCallbacks = callbacks;
 }
 
-// OFFSET: %0x00679660
+// PROVEN: 3c77d607 IDENTICAL
+// OFFSET: 0x00712910
 void SE3::ActivateAlternateCaptureCallback() {
     s_heartBeatCritSect.Enter();
     s_captureCallbacks = s_alternateCaptureCallbacks;
     s_heartBeatCritSect.Leave();
 }
 
-// OFFSET: %0x00679680
+// PROVEN: 3cd00168 IDENTICAL
+// OFFSET: 0x00712930
 bool SE3::AlternateCaptureCallbackIsActive() {
     return s_captureCallbacks == s_alternateCaptureCallbacks;
 }
 
-// OFFSET: %0x006796A0
+// PROVEN: 49a86223 IDENTICAL
+// OFFSET: 0x00712950
 void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Enter();
     s_captureCallbacks = s_primaryCaptureCallbacks;
     s_heartBeatCritSect.Leave();
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 2593c197 IDENTICAL
+// OFFSET: 0x00401000
 void SE3StreamCallbacks::Delete() {
 }
 

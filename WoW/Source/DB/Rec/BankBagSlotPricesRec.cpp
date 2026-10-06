@@ -3,7 +3,8 @@
 // STATIC: %0x00B47134
 const DBCMeta BankBagSlotPricesRec::s_meta = { "DBFilesClient\\BankBagSlotPrices.dbc", 2, 8, BankBagSlotPricesRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: de6b52f9 IDENTICAL
+// OFFSET: 0x00401000
 void BankBagSlotPricesRec::FixupStrings(void* record, const char* strings) {
 }
 

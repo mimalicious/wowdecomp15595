@@ -122,7 +122,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPParamEq::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DA6B0
+// PROVEN: 4dfaa1f8 IDENTICAL
+// OFFSET: 0x00A9A030
 FMOD_RESULT DSPParamEq::createInternal()
 {
     int count;
@@ -207,7 +208,8 @@ FMOD_RESULT DSPParamEq::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009D9670
+// PROVEN: a7058de5 IDENTICAL
+// OFFSET: 0x00A98FF0
 FMOD_RESULT DSPParamEq::updateCoefficients(float center, float bandwidth, float gain)
 {
     int outputrate;
@@ -607,7 +609,8 @@ FMOD_RESULT DSPParamEq::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DA4E0
+// PROVEN: 8b6cc9e5 IDENTICAL
+// OFFSET: 0x00A99E60
 FMOD_RESULT DSPParamEq::getParameterInternal(int index, float *value, char *valuestr)
 {
     switch (index)
@@ -681,7 +684,8 @@ FMOD_RESULT DSPParamEq::getParameterInternal(int index, float *value, char *valu
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DA820
+// PROVEN: 92db4c82 IDENTICAL
+// OFFSET: 0x00A9A1A0
 FMOD_RESULT F_CALLBACK DSPParamEq::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPParamEq *parameq = (DSPParamEq *)dsp;
@@ -706,7 +710,8 @@ FMOD_RESULT F_CALLBACK DSPParamEq::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DA570
+// PROVEN: 76c49c10 IDENTICAL
+// OFFSET: 0x00A99EF0
 FMOD_RESULT F_CALLBACK DSPParamEq::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPParamEq *parameq = (DSPParamEq *)dsp;
@@ -783,7 +788,8 @@ FMOD_RESULT F_CALLBACK DSPParamEq::setParameterCallback(FMOD_DSP_STATE *dsp, int
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DA680
+// PROVEN: c30883f0 IDENTICAL
+// OFFSET: 0x00A9A000
 FMOD_RESULT F_CALLBACK DSPParamEq::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPParamEq *parameq = (DSPParamEq *)dsp;

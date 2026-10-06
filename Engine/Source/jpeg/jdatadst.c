@@ -39,7 +39,8 @@ typedef my_destination_mgr * my_dest_ptr;
  * before any data is actually written.
  */
 
-// OFFSET: %0x00A8FAD0
+// PROVEN: b18321cb IDENTICAL
+// OFFSET: 0x00B5D880
 static void init_destination(j_compress_ptr cinfo) {
   my_dest_ptr dest = (my_dest_ptr) cinfo->dest;
 

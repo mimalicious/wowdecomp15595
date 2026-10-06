@@ -3,7 +3,8 @@
 // STATIC: %0x00B44D90
 const DBCMeta SpellPowerRec::s_meta = { "DBFilesClient\\SpellPower.dbc", 7, 28, SpellPowerRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 444a9020 IDENTICAL
+// OFFSET: 0x00401000
 void SpellPowerRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -37,7 +37,8 @@ CMoveSpline::CMoveSpline() {
 CMoveSpline::~CMoveSpline() {
 }
 
-// OFFSET: %0x00401180
+// PROVEN: dd44802f IDENTICAL
+// OFFSET: 0x004010A0
 CDataStore& operator>>(CDataStore& msg, C3Vector& vector) {
     msg.Get(vector.x);
     msg.Get(vector.y);

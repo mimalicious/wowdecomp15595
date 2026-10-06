@@ -25,14 +25,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "PlayDance", &Script_PlayDance },
 };
 
-// OFFSET: %0x0090CA20
+// PROVEN: 574e2ad8 IDENTICAL
+// OFFSET: 0x009B7CF0
 void CGDanceStudio::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x0090CA40
+// PROVEN: fd7a5340 IDENTICAL
+// OFFSET: 0x009B7D10
 void CGDanceStudio::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

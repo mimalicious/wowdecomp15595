@@ -2884,7 +2884,8 @@ int scale[] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A20540
+// PROVEN: 8da77a81 IDENTICAL
+// OFFSET: 0x00AE0000
 FMOD_RESULT CodecMPEG::decodeLayer3(void *pcm_sample, unsigned int *outlen)
 {
     FMOD_RESULT result;

@@ -6,7 +6,8 @@
 
 using namespace FMOD;
      
-// OFFSET: %0x00A03910
+// PROVEN: 3a03a450 IDENTICAL
+// OFFSET: 0x00AC32D0
 int FMOD_strlen(const char * s)
 {
     const char *sc;
@@ -16,7 +17,8 @@ int FMOD_strlen(const char * s)
     return (int)(sc - s);
 }
 
-// OFFSET: %0x00A03930
+// PROVEN: 20a99f43 IDENTICAL
+// OFFSET: 0x00AC32F0
 char * FMOD_strcpy(char * dest,const char *src)
 {
     char *tmp = dest;
@@ -26,7 +28,8 @@ char * FMOD_strcpy(char * dest,const char *src)
     return tmp;
 }
 
-// OFFSET: %0x00A03950
+// PROVEN: 6b155366 IDENTICAL
+// OFFSET: 0x00AC3310
 char * FMOD_strncpy(char * dest, const char *src, int count)
 {
     char *tmp = dest;
@@ -37,7 +40,8 @@ char * FMOD_strncpy(char * dest, const char *src, int count)
 }
 
 
-// OFFSET: %0x00A03980
+// PROVEN: 3f5200b2 IDENTICAL
+// OFFSET: 0x00AC3340
 char * FMOD_strcat(char * dest, const char * src)
 {
     char *tmp = dest;
@@ -48,7 +52,8 @@ char * FMOD_strcat(char * dest, const char * src)
     return tmp;
 }
 
-// OFFSET: %0x00A039B0
+// PROVEN: d5e1d4ed IDENTICAL
+// OFFSET: 0x00AC3370
 char * FMOD_strncat(char *dest, const char *src, int count)
 {
     char *tmp = dest;
@@ -80,7 +85,8 @@ char FMOD_tolower(char in)
     return in;
 }
 
-// OFFSET: %0x00A03A00
+// PROVEN: ef5ce90d IDENTICAL
+// OFFSET: 0x00AC33C0
 char *FMOD_strupr(char *string)
 {
     char * cp;
@@ -186,7 +192,8 @@ char * FMOD_strchr(const char * s1, int c)
     return (char *)0;
 }
 
-// OFFSET: %0x00A03C50
+// PROVEN: 4e0e61df IDENTICAL
+// OFFSET: 0x00AC3610
 char * FMOD_strstr(const char * s1,const char * s2)
 {
     int l1, l2;
@@ -225,7 +232,8 @@ int FMOD_memcmp(const void * cs,const void * ct, int count)
 }
 
 
-// OFFSET: %0x00A03B70
+// PROVEN: 781c5c27 IDENTICAL
+// OFFSET: 0x00AC3530
 void * FMOD_memmove(void * dest,const void *src, int count)
 {
     char *tmp, *s;
@@ -247,7 +255,8 @@ void * FMOD_memmove(void * dest,const void *src, int count)
 }
 
 
-// OFFSET: %0x00A03BD0
+// PROVEN: 0f32b136 IDENTICAL
+// OFFSET: 0x00AC3590
 char *FMOD_strdup(const char * src)
 {
     char *ret = 0;
@@ -262,7 +271,8 @@ char *FMOD_strdup(const char * src)
 }
 
 
-// OFFSET: %0x00A03C20
+// PROVEN: 0c6270d4 IDENTICAL
+// OFFSET: 0x00AC35E0
 char *FMOD_eatwhite(const char *string)
 {
     for (;*string && FMOD_isspace(*string);string++) ;

@@ -3,7 +3,8 @@
 // STATIC: %0x00B442B8
 const DBCMeta PhaseShiftZoneSoundsRec::s_meta = { "DBFilesClient\\PhaseShiftZoneSounds.dbc", 14, 56, PhaseShiftZoneSoundsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 1fa5b74e IDENTICAL
+// OFFSET: 0x00401000
 void PhaseShiftZoneSoundsRec::FixupStrings(void* record, const char* strings) {
 }
 

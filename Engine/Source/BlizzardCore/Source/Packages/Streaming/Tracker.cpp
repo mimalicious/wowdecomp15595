@@ -34,7 +34,8 @@ static char s_peerId[21];
 // STATIC: %0x00D87970
 static char s_key[9];
 
-// OFFSET: %0x00762B50
+// PROVEN: e4cc653f IDENTICAL
+// OFFSET: 0x007A4D90
 void Tracker::TrackerHttpDataDownloadCallBack::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
 }
@@ -63,7 +64,8 @@ char* Tracker::GetPeerID() {
     return s_peerId;
 }
 
-// OFFSET: %0x00762B10
+// PROVEN: 99e03d51 IDENTICAL
+// OFFSET: 0x007FCDD0
 char* Tracker::GetKey() {
     if (!s_key[0]) {
         for (int32_t i = 0; i < 8; i++) {
@@ -76,7 +78,8 @@ char* Tracker::GetKey() {
     return s_key;
 }
 
-// OFFSET: %0x0070BB00
+// PROVEN: 8c7278d9 IDENTICAL
+// OFFSET: 0x007FB3C0
 const char* Tracker::GetTrackerAddress(const char* locale) {
     if (!Blizzard::String::Equal(locale, "enUS") || !Blizzard::String::Equal(locale, "esMX")) {
         return "http://us.tracker.worldofwarcraft.com:3724/announce";
@@ -89,7 +92,8 @@ const char* Tracker::GetTrackerAddress(const char* locale) {
     return NULL;
 }
 
-// OFFSET: %0x0070BB90
+// PROVEN: fbb71344 IDENTICAL
+// OFFSET: 0x007FB450
 void Tracker::SetLocale(const char* locale) {
     s_localeTrackerAddress = GetTrackerAddress(locale);
     Blizzard::String::Copy(s_locale, locale, sizeof(s_locale));
@@ -124,7 +128,8 @@ Tracker::TrackerHttpDataDownloadCallBack::TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// OFFSET: %0x007E43B0
+// PROVEN: 1e8a1346 IDENTICAL
+// OFFSET: 0x007FD0B0
 int32_t Tracker::TrackerHttpDataDownloadCallBack::GetTimeout() {
     return this->m_timeout;
 }
@@ -134,7 +139,8 @@ bool Tracker::TrackerHttpDataDownloadCallBack::ShouldBlock() {
     return this->m_shouldBlock;
 }
 
-// OFFSET: %0x00762E10
+// PROVEN: 6d8dcf79 IDENTICAL
+// OFFSET: 0x007FD0D0
 void Tracker::TrackerHttpDataDownloadCallBack::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }

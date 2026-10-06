@@ -1,7 +1,8 @@
 #include "ArenaTeamCache.h"
 #include "Engine/Source/Base/CDataStore.h"
 
-// OFFSET: %0x00964530
+// PROVEN: 12678121 IDENTICAL
+// OFFSET: 0x00A285F0
 void ArenaTeamCache::Pack(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(this->m_id));
     msg->PutString(this->m_name);
@@ -13,7 +14,8 @@ void ArenaTeamCache::Pack(CDataStore* msg) {
     msg->Put(this->m_borderColor);
 }
 
-// OFFSET: %0x009645A0
+// PROVEN: 1a87af08 IDENTICAL
+// OFFSET: 0x00A28660
 void ArenaTeamCache::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));
     msg->GetString(this->m_name, sizeof(this->m_name));

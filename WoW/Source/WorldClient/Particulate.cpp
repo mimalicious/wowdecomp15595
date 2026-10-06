@@ -70,7 +70,8 @@ static float s_sinkSpeed = -0.02f;
 // STATIC: #0x00ADFBC0
 static float s_riseSpeed = 0.02f;
 
-// OFFSET: %0x006DD590
+// PROVEN: 1a6c7bd6 IDENTICAL
+// OFFSET: 0x0077CCA0
 void Particulate::SetScale(float scale) {
     this->m_particleSize = scale;
 }

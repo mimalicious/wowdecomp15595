@@ -28,7 +28,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0EB90
+// PROVEN: 2777bc7c IDENTICAL
+// OFFSET: 0x00ACEB70
 CddaFile::CddaFile()
 {
     mDevice           = 0;
@@ -51,7 +52,8 @@ CddaFile::CddaFile()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E310
+// PROVEN: e7adda68 IDENTICAL
+// OFFSET: 0x00ACE2F0
 FMOD_RESULT CddaFile::init(bool force_aspi, bool jitter_correction)
 {
     mJitterCorrection = jitter_correction;
@@ -92,7 +94,8 @@ FMOD_RESULT CddaFile::shutDown()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E880
+// PROVEN: 8938d9ef IDENTICAL
+// OFFSET: 0x00ACE860
 FMOD_RESULT CddaFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
     int numtracks;
@@ -204,7 +207,8 @@ FMOD_RESULT CddaFile::reallyOpen(const char *name_or_data, unsigned int *filesiz
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E340
+// PROVEN: 9922065b IDENTICAL
+// OFFSET: 0x00ACE320
 FMOD_RESULT CddaFile::reallyClose()
 {
     FMOD_RESULT result = FMOD_OK;
@@ -244,7 +248,8 @@ FMOD_RESULT CddaFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0EA40
+// PROVEN: 13a7e87e IDENTICAL
+// OFFSET: 0x00ACEA20
 FMOD_RESULT CddaFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
     int          bytestocopy, count;
@@ -344,7 +349,8 @@ FMOD_RESULT CddaFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E3D0
+// PROVEN: 75b2b36f IDENTICAL
+// OFFSET: 0x00ACE3B0
 FMOD_RESULT CddaFile::doJitterCorrection(unsigned int sectors_to_read)
 {
     if (!mJitterBufEmpty)
@@ -436,7 +442,8 @@ FMOD_RESULT CddaFile::doJitterCorrection(unsigned int sectors_to_read)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E5D0
+// PROVEN: 2a5c56ae IDENTICAL
+// OFFSET: 0x00ACE5B0
 FMOD_RESULT CddaFile::reallySeek(unsigned int pos)
 {
     unsigned int num_sectors;
@@ -473,7 +480,8 @@ FMOD_RESULT CddaFile::reallySeek(unsigned int pos)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E660
+// PROVEN: e098cbca IDENTICAL
+// OFFSET: 0x00ACE640
 FMOD_RESULT CddaFile::getNumTracks(int *numtracks)
 {
     if (!numtracks || !mDevice)
@@ -504,7 +512,8 @@ FMOD_RESULT CddaFile::getNumTracks(int *numtracks)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E6A0
+// PROVEN: 1d77c25c IDENTICAL
+// OFFSET: 0x00ACE680
 FMOD_RESULT CddaFile::getTrackLength(unsigned int track, unsigned int *tracklength)
 {
     if (!tracklength || !mDevice || (track >= (mDevice->toc.num_tracks - 1)))
@@ -531,7 +540,8 @@ FMOD_RESULT CddaFile::getTrackLength(unsigned int track, unsigned int *trackleng
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E6E0
+// PROVEN: 4cc187ef IDENTICAL
+// OFFSET: 0x00ACE6C0
 FMOD_RESULT CddaFile::openTrack(unsigned int track)
 {
     unsigned int starttime, thistime;
@@ -588,7 +598,8 @@ FMOD_RESULT CddaFile::openTrack(unsigned int track)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0E810
+// PROVEN: 5d0b04c0 IDENTICAL
+// OFFSET: 0x00ACE7F0
 FMOD_RESULT CddaFile::getMetadata(Metadata **metadata)
 {
     if (!mDevice || !metadata)

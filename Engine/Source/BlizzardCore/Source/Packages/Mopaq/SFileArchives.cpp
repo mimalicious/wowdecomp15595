@@ -42,7 +42,8 @@ Blizzard::Util::Digest<16> System_SFile::s_emptyMd5;
 // STATIC: %0x00C0C250
 bool System_SFile::s_threadSafe = true;
 
-// OFFSET: %0x0070D9E0
+// PROVEN: 0078f922 IDENTICAL
+// OFFSET: 0x007AAB40
 uint32_t Blizzard::Mopaq::SFileGetLastError() {
     return System_SFile::s_lastError;
 }
@@ -579,7 +580,8 @@ System_SFile::ARCHIVEREC* System_SFile::GetArchivePtr(ARCHIVEREC* handle, bool a
     return archive;
 }
 
-// OFFSET: %0x0074D020
+// PROVEN: 717688b9 IDENTICAL
+// OFFSET: 0x007F13D0
 bool Blizzard::Mopaq::SFileCloseArchive(System_SFile::ARCHIVEREC* handle) {
     bool result = true;
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, false);
@@ -1041,7 +1043,8 @@ bool System_SFile::BlockEntryTable::SetMD5Check(uint32_t index, bool enabled) {
     return this->m_md5Checks->WriteBits(this->m_md5CheckBit + index * this->m_md5CheckEntryBits, this->m_md5CheckBits, &bit, 1);
 }
 
-// OFFSET: %0x00723E10
+// PROVEN: 4421cabe IDENTICAL
+// OFFSET: 0x007C2EC0
 void System_SFile::ARCHIVEREC::PackBlockTable() {
     uint32_t index = 0;
 
@@ -1163,7 +1166,8 @@ bool System_SFile::ClearTables(ARCHIVEREC* archive, uint32_t hashCount) {
     return true;
 }
 
-// OFFSET: %0x0072D510
+// PROVEN: 2def239b IDENTICAL
+// OFFSET: 0x007CC320
 void System_SFile::ClearNewBlockHashTables(ARCHIVEREC* archive) {
     delete archive->m_blockEntryTable;
     delete archive->m_hashEntryTable;
@@ -1763,7 +1767,8 @@ bool System_SFile::ARCHIVEREC::WriteArchiveHeader() {
     return this->m_file->Write(&header, this->m_archiveOffset, size);
 }
 
-// OFFSET: %0x0070DE00
+// PROVEN: 5b840513 IDENTICAL
+// OFFSET: 0x007AAEE0
 static int64_t AddMD5Overhead(int32_t chunkSize, int64_t size) {
     if (chunkSize <= 0 || size <= 0) {
         return size;
@@ -2557,7 +2562,8 @@ void System_SFile::ARCHIVEREC::SetBlockEntry(uint32_t index, const BLOCKENTRY& e
     this->m_blockTable[index] = entry;
 }
 
-// OFFSET: %0x007137E0
+// PROVEN: 4e4e93b8 IDENTICAL
+// OFFSET: 0x007B1350
 void System_SFile::ARCHIVEREC::SetBlockFileTime(uint32_t index, uint64_t fileTime) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -2570,7 +2576,8 @@ void System_SFile::ARCHIVEREC::SetBlockFileTime(uint32_t index, uint64_t fileTim
     }
 }
 
-// OFFSET: %0x00713870
+// PROVEN: 41f84187 IDENTICAL
+// OFFSET: 0x007B13E0
 void System_SFile::ARCHIVEREC::SetBlockMd5(uint32_t index, const Blizzard::Util::Digest<16>& md5) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -2583,7 +2590,8 @@ void System_SFile::ARCHIVEREC::SetBlockMd5(uint32_t index, const Blizzard::Util:
     }
 }
 
-// OFFSET: %0x007139D0
+// PROVEN: ffa6d034 IDENTICAL
+// OFFSET: 0x007B1540
 void System_SFile::ARCHIVEREC::SetBlockCrc(uint32_t index, uint32_t crc) {
     BlockEntryTable* blocks = this->m_blockEntryTable;
 
@@ -2824,12 +2832,14 @@ void System_SFile::ClearAllFileFlags() {
     }
 }
 
-// OFFSET: %0x0074A350
+// PROVEN: 621e9913 IDENTICAL
+// OFFSET: 0x007F1B80
 void Blizzard::Mopaq::SetSignatureCheckMode(uint32_t mode) {
     System_MPQGlobals::GetMopaqGlobals()->m_md5Mode = mode;
 }
 
-// OFFSET: %0x0074A370
+// PROVEN: a7561424 IDENTICAL
+// OFFSET: 0x007F1BA0
 void Blizzard::Mopaq::SetSignatureErrorCallback(void (*callback)(const char* name, const char* message)) {
     System_MPQGlobals::GetMopaqGlobals()->m_signatureErrorCallback = callback;
 }
@@ -2869,7 +2879,8 @@ bool Blizzard::Mopaq::SetFileSignature(const char* name, const Blizzard::Util::D
     return result;
 }
 
-// OFFSET: %0x007173C0
+// PROVEN: 9a199608 IDENTICAL
+// OFFSET: 0x007B5A40
 char* System_SFile::BackslashPath(const char* path, char* buffer, uint32_t size) {
     Blizzard::String::MakeBackslashPath(path, buffer, size);
     return buffer;
@@ -3497,7 +3508,8 @@ void System_SFile::ARCHIVEREC::CompactBlockTable() {
     }
 }
 
-// OFFSET: %0x00713B10
+// PROVEN: c2cadee7 IDENTICAL
+// OFFSET: 0x007B1680
 static uint32_t GetHashTableSize(System_SFile::ARCHIVEREC* archive) {
     uint32_t count = static_cast<uint32_t>(archive->m_blockTable.size());
 
@@ -4107,7 +4119,8 @@ bool System_SFile::ARCHIVEREC::InitPatchMetadata() {
     return true;
 }
 
-// OFFSET: %0x0070D9F0
+// PROVEN: 154b4f84 IDENTICAL
+// OFFSET: 0x007AAB50
 Blizzard::Mopaq::ArchiveOptions::ArchiveOptions() {
     this->m_sectorSize = 0x4000;
     this->unk_0004 = 0;

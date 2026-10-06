@@ -323,7 +323,8 @@ static int32_t Script_VoiceGetCurrentOutputDevice(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x004E0E80
+// PROVEN: 645851d3 IDENTICAL
+// OFFSET: 0x004DAB90
 static int32_t Script_SetActiveVoiceChannelBySessionID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         lua_pushnil(L);

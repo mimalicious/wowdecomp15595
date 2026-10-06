@@ -48,7 +48,8 @@ void CGradient::Set(ORIENTATION orientation, const CImVector& minColor, const CI
     }
 }
 
-// OFFSET: %0x0051A830
+// PROVEN: 309df4a1 IDENTICAL
+// OFFSET: 0x0050A810
 void CGradient::ApplyAlpha(uint8_t alpha) {
     for (uint32_t i = this->m_colorCount; i; ) {
         i--;
@@ -56,7 +57,8 @@ void CGradient::ApplyAlpha(uint8_t alpha) {
     }
 }
 
-// OFFSET: %0x0051A880
+// PROVEN: ec65a0ae IDENTICAL
+// OFFSET: 0x0050A860
 bool CGradient::IsWhite() {
     for (uint32_t i = this->m_colorCount; i; ) {
         i--;
@@ -97,7 +99,8 @@ void CSimpleRegion::SetParent(CSimpleFrame* parent) {
     this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
 }
 
-// OFFSET: %0x0050BFA0
+// PROVEN: a1cb9dc6 IDENTICAL
+// OFFSET: 0x004FBDD0
 void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
     char buffer[128];
 
@@ -109,7 +112,8 @@ void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* p
     print(buffer, param);
 }
 
-// OFFSET: %0x0051A470
+// PROVEN: 3265573d IDENTICAL
+// OFFSET: 0x0050A450
 int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
     return frame->IsProtected() == 0;
 }
@@ -147,7 +151,8 @@ void CSimpleRegion::MarkDirty() {
     this->m_visible = 1;
 }
 
-// OFFSET: %0x0051A520
+// PROVEN: 75b95c58 IDENTICAL
+// OFFSET: 0x0050A500
 void CSimpleRegion::SignalLoaded() {
     this->m_loadPending = 0;
 }
@@ -429,7 +434,8 @@ CSimpleRegion::~CSimpleRegion() {
     this->EnableGradient(false);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: a61fca48 IDENTICAL
+// OFFSET: 0x00401000
 void CSimpleRegion::OnScreenSizeChanged() {
 }
 
@@ -440,7 +446,8 @@ void CSimpleRegion::SetVertexColorRGBA(float r, float g, float b, float a) {
     this->SetVertexColor(color);
 }
 
-// OFFSET: %0x0053BB70
+// PROVEN: 862fa581 IDENTICAL
+// OFFSET: 0x0052B890
 C3Vector& ApplyTranslationAnim(C3Vector& position, const C2Vector& translation) {
     position.x = position.x + translation.x;
     position.y = translation.y + position.y;

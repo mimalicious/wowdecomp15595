@@ -24,7 +24,8 @@ static FMOD_RESULT F_CALLBACK MemorySoundEndedCallback(FMOD_CHANNEL* channel, FM
     return FMOD_OK;
 }
 
-// OFFSET: %0x0067B540
+// PROVEN: 22c4140d IDENTICAL
+// OFFSET: 0x00714830
 void SE3MemorySoundProperties::ResetToDefaults() {
     this->m_bus = SE3BUS_SFX;
     this->m_volume = 1.0f;

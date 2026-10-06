@@ -57,7 +57,8 @@ static uint32_t PathGetRootChars(const char* path) {
     return curr ? static_cast<uint32_t>(curr - path) : length;
 }
 
-// OFFSET: %0x004C4380
+// PROVEN: 2c36920b IDENTICAL
+// OFFSET: 0x004BDD70
 static void FlushLog(_LOG* logptr) {
     if (logptr->bufferused) {
         DWORD byteswritten;
@@ -68,7 +69,8 @@ static void FlushLog(_LOG* logptr) {
     }
 }
 
-// OFFSET: %0x004C43D0
+// PROVEN: 69c7054c IDENTICAL
+// OFFSET: 0x004BDDC0
 static _LOG* LockLog(HSLOG log, HLOCKEDLOG* lockedhandle, int32_t createifnecessary) {
     if (!log) {
         *lockedhandle = reinterpret_cast<HLOCKEDLOG>(-1);
@@ -114,7 +116,8 @@ static _LOG* LockLog(HSLOG log, HLOCKEDLOG* lockedhandle, int32_t createifnecess
     return logptr;
 }
 
-// OFFSET: %0x004C4490
+// PROVEN: c5a12319 IDENTICAL
+// OFFSET: 0x004BDE80
 static void OutputIndent(_LOG* logptr) {
     int32_t indent = logptr->indent;
 
@@ -135,7 +138,8 @@ static void OutputReturn(_LOG* logptr) {
     logptr->bufferused += 2;
 }
 
-// OFFSET: %0x004C44E0
+// PROVEN: 6e052f51 IDENTICAL
+// OFFSET: 0x004BDED0
 static void OutputTime(_LOG* logptr, int32_t show) {
     // STATIC: #0x00CB7400
     static uint32_t lasttime;
@@ -169,7 +173,8 @@ static void OutputTime(_LOG* logptr, int32_t show) {
     logptr->bufferused += timestrlen;
 }
 
-// OFFSET: %0x004C45D0
+// PROVEN: 8601719c IDENTICAL
+// OFFSET: 0x004BDFC0
 static void UnlockDeleteLog(_LOG* logptr, HLOCKEDLOG lockedhandle) {
     uintptr_t index = reinterpret_cast<uintptr_t>(lockedhandle);
     _LOG** prevptr = &s_loghead[index];
@@ -221,7 +226,8 @@ static const char* PrependDefaultDir(char* newfilename, uint32_t newfilenamesize
     return newfilename;
 }
 
-// OFFSET: %0x004C4630
+// PROVEN: bf8499cd IDENTICAL
+// OFFSET: 0x004BE020
 void STORMAPI SLogClose(HSLOG log) {
     if (!s_logsysteminit) {
         return;
@@ -242,7 +248,8 @@ void STORMAPI SLogClose(HSLOG log) {
     UnlockDeleteLog(logptr, lockedhandle);
 }
 
-// OFFSET: %0x004C4690
+// PROVEN: 8cd34439 IDENTICAL
+// OFFSET: 0x004BE080
 void STORMAPI SLogFlush(HSLOG log) {
     HLOCKEDLOG lockedhandle;
     _LOG* logptr = LockLog(log, &lockedhandle, 0);
@@ -464,7 +471,8 @@ void STORMAPI SLogVWrite(HSLOG log, const char* format, va_list arglist) {
     UnlockLog(lockedhandle);
 }
 
-// OFFSET: %0x004C4ED0
+// PROVEN: 1e7f5ed8 IDENTICAL
+// OFFSET: 0x004BE8C0
 void SLogWrite(HSLOG log, const char* format, ...) {
     va_list arglist;
     va_start(arglist, format);

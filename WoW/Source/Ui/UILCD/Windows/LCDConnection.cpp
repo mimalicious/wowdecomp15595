@@ -102,12 +102,14 @@ void CLCDConnection::Shutdown() {
     this->m_pSoftbuttonsChangedCtx = NULL;
 }
 
-// OFFSET: %0x00A714E0
+// PROVEN: 02e1b70c IDENTICAL
+// OFFSET: 0x00B3F200
 int32_t CLCDConnection::IsConnected() {
     return this->m_hConnection != LGLCD_INVALID_CONNECTION;
 }
 
-// OFFSET: %0x00A714A0
+// PROVEN: ea9fc070 IDENTICAL
+// OFFSET: 0x00B3F1C0
 void CLCDConnection::Disconnect() {
     if (this->m_pColorOutput) {
         this->m_pColorOutput->Close();
@@ -133,12 +135,14 @@ CLCDOutput* CLCDConnection::AllocColorOutput() {
     return new CLCDOutput();
 }
 
-// OFFSET: %0x00A71510
+// PROVEN: 44a25712 IDENTICAL
+// OFFSET: 0x00B3F220
 CLCDOutput* CLCDConnection::MonoOutput() {
     return this->m_pMonoOutput;
 }
 
-// OFFSET: %0x00A71500
+// PROVEN: 46da3199 IDENTICAL
+// OFFSET: 0x00529DA0
 CLCDOutput* CLCDConnection::ColorOutput() {
     return this->m_pColorOutput;
 }
@@ -158,7 +162,8 @@ void CLCDConnection::ConnectEx() {
     }
 }
 
-// OFFSET: %0x00A714F0
+// PROVEN: 60a692cf IDENTICAL
+// OFFSET: 0x00B3F210
 int32_t CLCDConnection::GetConnectionId() {
     return this->m_hConnection;
 }
@@ -215,7 +220,8 @@ void CLCDConnection::OnSoftButtonEvent(int32_t device, uint32_t buttons) {
     }
 }
 
-// OFFSET: %0x00A71620
+// PROVEN: fca4e27e IDENTICAL
+// OFFSET: 0x00B3F330
 void CLCDConnection::FreeMonoOutput() {
     if (this->m_pMonoOutput) {
         delete this->m_pMonoOutput;
@@ -223,7 +229,8 @@ void CLCDConnection::FreeMonoOutput() {
     }
 }
 
-// OFFSET: %0x00A71640
+// PROVEN: cfb52040 IDENTICAL
+// OFFSET: 0x00B3F350
 void CLCDConnection::FreeColorOutput() {
     if (this->m_pColorOutput) {
         delete this->m_pColorOutput;
@@ -249,19 +256,23 @@ int32_t CLCDConnection::Initialize(lgLcdConnectContext& connectContext, lgLcdSof
     return this->InitializeConnection(connectContextEx, softbuttonsChangedContext);
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 7857dcee IDENTICAL
+// OFFSET: 0x00401000
 void CLCDConnection::OnAppletEnabled() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 7480ab95 IDENTICAL
+// OFFSET: 0x00401000
 void CLCDConnection::OnAppletDisabled() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 840872af IDENTICAL
+// OFFSET: 0x00401000
 void CLCDConnection::OnConfigure() {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 2b1b6a6a IDENTICAL
+// OFFSET: 0x00401000
 void CLCDConnection::OnCallbackEvent() {
 }
 

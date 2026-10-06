@@ -16,7 +16,8 @@ int32_t OsGetTimeZone() {
     return -information.Bias;
 }
 
-// OFFSET: %0x007DE320
+// PROVEN: d8340f34 IDENTICAL
+// OFFSET: 0x0087E930
 void OsGetTimeStamp(char* buffer, uint32_t size) {
     __time32_t now;
     _time32(&now);

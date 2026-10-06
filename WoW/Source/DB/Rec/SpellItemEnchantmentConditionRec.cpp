@@ -3,7 +3,8 @@
 // STATIC: %0x00B44F14
 const DBCMeta SpellItemEnchantmentConditionRec::s_meta = { "DBFilesClient\\SpellItemEnchantmentCondition.dbc", 7, 72, SpellItemEnchantmentConditionRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 43b47d34 IDENTICAL
+// OFFSET: 0x00401000
 void SpellItemEnchantmentConditionRec::FixupStrings(void* record, const char* strings) {
 }
 

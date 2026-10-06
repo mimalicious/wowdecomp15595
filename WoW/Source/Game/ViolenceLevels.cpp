@@ -1,6 +1,7 @@
 #include "ViolenceLevels.h"
 
-// OFFSET: %0x00A4CB70
+// PROVEN: f2765b83 IDENTICAL
+// OFFSET: 0x00B11570
 int32_t ViolenceGetLevel() {
     return s_violenceLevel;
 }

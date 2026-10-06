@@ -50,7 +50,8 @@ void CLightning::SetTexture(CTexture* texture) {
     this->m_texture = texture;
 }
 
-// OFFSET: %0x00A5C5E0
+// PROVEN: 696f84d8 IDENTICAL
+// OFFSET: 0x00B28890
 uint32_t CLightning::DecodeChainEffectsID(uint32_t id) {
     uint32_t bits = id & 0xFEFEFEFE;
     uint32_t high = (bits >> 7) & 0x200000;
@@ -216,7 +217,8 @@ void CLightning::ApplyPulsingToVertexData(int32_t& start, int32_t& count) {
     count = i - start;
 }
 
-// OFFSET: %0x00A5D170
+// PROVEN: f8be89da IDENTICAL
+// OFFSET: 0x00B294D0
 void CLightning::SetSrcPos(const C3Vector& pos) {
     this->m_srcPos = pos;
 }

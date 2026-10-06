@@ -27,7 +27,8 @@ CurrencyCategoryInfo CGCurrencyTypes::m_categories[32];
 // STATIC: #0x00C1F448
 int32_t CGCurrencyTypes::m_numCategories;
 
-// OFFSET: %0x008F4F20
+// PROVEN: 5aaa0656 IDENTICAL
+// OFFSET: 0x0099F770
 int32_t CGCurrencyTypes::CurrencyCategorySortCallback(const void* a, const void* b) {
     const CurrencyCategoryInfo* categoryA = static_cast<const CurrencyCategoryInfo*>(a);
     const CurrencyCategoryInfo* categoryB = static_cast<const CurrencyCategoryInfo*>(b);
@@ -311,7 +312,8 @@ CurrencyTypesRec* CGCurrencyTypes::GetBackpackCurrencyInfo(int32_t index) {
     return NULL;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 6cfe7d42 IDENTICAL
+// OFFSET: 0x00401000
 void CGCurrencyTypes::ShutdownGame() {
 }
 
@@ -438,6 +440,7 @@ int32_t SignalKnownCurrencyTypesUpdate(WOWGUID guid, uint32_t offset, uint32_t c
     return 1;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: e1912fc6 IDENTICAL
+// OFFSET: 0x00401000
 void CGCurrencyTypes::LeaveWorld() {
 }

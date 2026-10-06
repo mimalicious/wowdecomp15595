@@ -96,7 +96,8 @@ inline C3Vector C3Vector::Max(const C3Vector& a, const C3Vector& b) {
     return C3Vector(a.x > b.x ? a.x : b.x, a.y > b.y ? a.y : b.y, a.z > b.z ? a.z : b.z);
 }
 
-// OFFSET: %0x0043CD00
+// PROVEN: a0b58707 EQUIVALENT
+// OFFSET: 0x00431D10
 inline void C3Vector::Normalize() {
     float scale = 1.0f / sqrt(this->z * this->z + this->y * this->y + this->x * this->x);
     this->x = this->x * scale;

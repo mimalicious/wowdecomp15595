@@ -40,7 +40,8 @@ void STORMAPI StormDestroy() {
     atexit(StormAtExit);
 }
 
-// OFFSET: %0x004BF1D0
+// PROVEN: 6ac4be0e IDENTICAL
+// OFFSET: 0x004B89E0
 HINSTANCE STORMAPI StormGetInstance() {
     return GetModuleHandleA(NULL);
 }

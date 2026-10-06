@@ -121,7 +121,8 @@ FMOD_RESULT DSPConnectionPool::init(SystemI *system, int numconnections, int num
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0F740
+// PROVEN: f46771cf IDENTICAL
+// OFFSET: 0x00ACF720
 FMOD_RESULT DSPConnectionPool::close()
 {
     int i;
@@ -286,7 +287,8 @@ FMOD_RESULT DSPConnectionPool::alloc(DSPConnectionI **connection)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A0FA70
+// PROVEN: 5509868f IDENTICAL
+// OFFSET: 0x00ACFA60
 FMOD_RESULT DSPConnectionPool::free(DSPConnectionI *connection)
 {
     LocalCriticalSection crit(mSystem->mDSPConnectionCrit);

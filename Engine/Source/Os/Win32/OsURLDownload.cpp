@@ -214,7 +214,8 @@ bool OsUrlDownload::DownloadString(const char* url, OsURLDownloadCallback callba
     return false;
 }
 
-// OFFSET: %0x007E1A50
+// PROVEN: 81faf5bb IDENTICAL
+// OFFSET: 0x0087EEB0
 bool OsURLDownload(const char* url, OsURLDownloadCallback callback, void* param) {
     return OsUrlDownload::DownloadString(url, callback, param, 5000);
 }

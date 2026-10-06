@@ -27,17 +27,20 @@ CLCDBitmap::CLCDBitmap() {
 CLCDBitmap::~CLCDBitmap() {
 }
 
-// OFFSET: %0x00A71E80
+// PROVEN: 302a8fad IDENTICAL
+// OFFSET: 0x00B3FB90
 void CLCDBitmap::SetBitmap(HBITMAP bitmap) {
     this->m_hBitmap = bitmap;
 }
 
-// OFFSET: %0x00A71E90
+// PROVEN: 4d42703e IDENTICAL
+// OFFSET: 0x00B3FBA0
 void CLCDBitmap::SetAlpha(int32_t alpha) {
     this->m_bAlpha = alpha;
 }
 
-// OFFSET: %0x0070E6A0
+// PROVEN: 0064655e IDENTICAL
+// OFFSET: 0x007AB8C0
 void CLCDBitmap::SetBitmapSize(int32_t width, int32_t height) {
     this->m_nBitmapWidth = width;
     this->m_nBitmapHeight = height;

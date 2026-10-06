@@ -3,7 +3,8 @@
 // STATIC: %0x00B43698
 const DBCMeta ParticleColorRec::s_meta = { "DBFilesClient\\ParticleColor.dbc", 4, 40, ParticleColorRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: ab3598b8 IDENTICAL
+// OFFSET: 0x00401000
 void ParticleColorRec::FixupStrings(void* record, const char* strings) {
 }
 

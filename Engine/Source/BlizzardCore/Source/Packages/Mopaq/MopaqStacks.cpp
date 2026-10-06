@@ -221,7 +221,8 @@ bool System_Mopaq::CallNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms
     return (*reinterpret_cast<Blizzard::Mopaq::Mpqfunc*>(reinterpret_cast<uint8_t*>(next) + parms->m_verb))(next, parms);
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: 7cfb7190 IDENTICAL
+// OFFSET: 0x00B06D20
 bool System_Mopaq::null_func(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return false;
 }
@@ -401,7 +402,8 @@ bool System_Mopaq::base_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return System_File::Stacked::s_manager->m_verbs.m_flush(System_File::Stacked::s_manager, &fileParms);
 }
 
-// OFFSET: %0x007148F0
+// PROVEN: 18e51b58 IDENTICAL
+// OFFSET: 0x007B2560
 bool System_Mopaq::base_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = Blizzard::File::GetFileInfo(parms->m_handle->m_file)->m_size;
     return true;
@@ -566,18 +568,21 @@ bool System_Mopaq::memory_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return true;
 }
 
-// OFFSET: %0x004E0850
+// PROVEN: bf8dc270 IDENTICAL
+// OFFSET: 0x00A3AA30
 bool System_Mopaq::memory_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return true;
 }
 
-// OFFSET: %0x00714F00
+// PROVEN: 0526e835 IDENTICAL
+// OFFSET: 0x007B2B70
 bool System_Mopaq::memory_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_memory->m_array->m_count;
     return true;
 }
 
-// OFFSET: %0x0071BB10
+// PROVEN: c8180205 IDENTICAL
+// OFFSET: 0x007BA760
 bool System_Mopaq::memory_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (parms->m_offset > 0xFFFFFFFFLL) {
         return false;
@@ -1092,7 +1097,8 @@ void System_Mopaq::VerifyData::ChecksumTable::SetChecksum(uint32_t index, uint32
     this->m_entries[entry].m_checksums[index & 0x1F] = checksum;
 }
 
-// OFFSET: %0x00715420
+// PROVEN: df145a72 IDENTICAL
+// OFFSET: 0x007B3090
 void System_Mopaq::VerifyData::ChecksumTable::ClearChecksum(uint32_t index) {
     this->m_entries[index >> 5].m_valid &= ~(0x80000000 >> (index & 0x1F));
 }

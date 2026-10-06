@@ -15,7 +15,8 @@ struct HMAC {
     void Process(const void* data, uint32_t length);
 };
 
-// OFFSET: %0x0055D5B0
+// PROVEN: c6bdeb7c IDENTICAL
+// OFFSET: 0x004878E0
 template <class T>
 void HMAC<T>::Init(const uint8_t* key, uint32_t length) {
     memset(this->m_innerPad, 0x36, sizeof(this->m_innerPad));

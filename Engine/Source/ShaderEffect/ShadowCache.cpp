@@ -113,7 +113,8 @@ const char* CShadowCache::GetShadowModeDesc(uint32_t mode) {
     return CShadowCache::s_shadowModeDescs[mode];
 }
 
-// OFFSET: %0x0043F790
+// PROVEN: 1f17a06c IDENTICAL
+// OFFSET: 0x004352C0
 uint32_t CShadowCache::ValidateTextureSize(uint32_t size) {
     if (size == 1024 || size == 2048) {
         return 0;
@@ -122,7 +123,8 @@ uint32_t CShadowCache::ValidateTextureSize(uint32_t size) {
     return 2;
 }
 
-// OFFSET: %0x0043F7B0
+// PROVEN: 534e6e2d IDENTICAL
+// OFFSET: 0x004352E0
 EShadowMode CShadowCache::GetShadowMode() {
     return CShadowCache::s_shadowMode;
 }
@@ -139,27 +141,32 @@ int32_t CShadowCache::SetTextureSize(uint32_t size) {
     return 1;
 }
 
-// OFFSET: %0x0043F7F0
+// PROVEN: ddab60bb IDENTICAL
+// OFFSET: 0x00435320
 void CShadowCache::SetMatrixCallback(ShadowMatrixCallback callback) {
     CShadowCache::s_matrixCallback = callback;
 }
 
-// OFFSET: %0x0043F800
+// PROVEN: e756de25 IDENTICAL
+// OFFSET: 0x00435330
 void CShadowCache::SetFrustumCallback(ShadowFrustumCallback callback) {
     CShadowCache::s_frustumCallback = callback;
 }
 
-// OFFSET: %0x0043F810
+// PROVEN: 8e88f2c1 IDENTICAL
+// OFFSET: 0x00435340
 void CShadowCache::SetQueryCallback(ShadowQueryCallback callback) {
     CShadowCache::s_queryCallback = callback;
 }
 
-// OFFSET: %0x0043F820
+// PROVEN: f1b0ee5f IDENTICAL
+// OFFSET: 0x00435350
 void CShadowCache::SetRenderCallback(ShadowRenderCallback callback) {
     CShadowCache::s_renderCallback = callback;
 }
 
-// OFFSET: %0x0043F830
+// PROVEN: 4ad01d7c IDENTICAL
+// OFFSET: 0x00435360
 void __fastcall CShadowCache::NotifyTexturesRecreate() {
     CShadowCache::s_recreateTextures = 1;
 }
@@ -174,13 +181,15 @@ uint32_t CShadowCache::GetShadowValue() {
     return CShadowCache::GetShadowMode();
 }
 
-// OFFSET: %0x0043F840
+// PROVEN: 1aebd967 IDENTICAL
+// OFFSET: 0x004353E0
 void CShadowCache::SetDebugParams(float aspect, int32_t level) {
     CShadowCache::s_debugAspect = aspect;
     CShadowCache::s_debugLevel = level;
 }
 
-// OFFSET: %0x0043F860
+// PROVEN: cf2b43f4 IDENTICAL
+// OFFSET: 0x00435400
 void CShadowCache::SetShadowScale(float scale) {
     CShadowCache::s_shadowScale = scale;
 }

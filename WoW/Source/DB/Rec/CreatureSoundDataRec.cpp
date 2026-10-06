@@ -3,7 +3,8 @@
 // STATIC: %0x00B46ED4
 const DBCMeta CreatureSoundDataRec::s_meta = { "DBFilesClient\\CreatureSoundData.dbc", 33, 160, CreatureSoundDataRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: bbc7c4c0 IDENTICAL
+// OFFSET: 0x00401000
 void CreatureSoundDataRec::FixupStrings(void* record, const char* strings) {
 }
 

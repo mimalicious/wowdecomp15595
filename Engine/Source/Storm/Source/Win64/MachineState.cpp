@@ -133,7 +133,8 @@ inline void CDbgHelpDll::Unload() {
     --this->loadCount;
 }
 
-// OFFSET: %0x004C60B0
+// PROVEN: d0d70864 IDENTICAL
+// OFFSET: 0x004BEFE0
 static void sLogSeparatorLine(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, char character, int32_t longLine) {
     char line[80];
     uint32_t length = longLine ? 78 : 40;
@@ -142,7 +143,8 @@ static void sLogSeparatorLine(void (*logLineProc)(void*, const char*, ...), void
     logLineProc(logLineProcParam, "%s", line);
 }
 
-// OFFSET: %0x004C60F0
+// PROVEN: 2c874ace IDENTICAL
+// OFFSET: 0x004BF020
 static void sLogHeader(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam, const char* headerString) {
     logLineProc(logLineProcParam, "");
     sLogSeparatorLine(logLineProc, logLineProcParam, '-', 0);
@@ -223,7 +225,8 @@ static const char* sGetPathLeaf(const char* path) {
     return leaf ? leaf + 1 : path;
 }
 
-// OFFSET: %0x004C6390
+// PROVEN: 03ee05e1 IDENTICAL
+// OFFSET: 0x004BF2C0
 static void sLogExeFile(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char exeFullPath[MAX_PATH];
     GetModuleFileNameA(NULL, exeFullPath, sizeof(exeFullPath));
@@ -244,7 +247,8 @@ static void sLogDateTimeString(void (*logLineProc)(void*, const char*, ...), voi
     logLineProc(logLineProcParam, "%-10s%3s %2d, %4d %2d:%02d:%02d.%03d %cM", "Time:", s_monthNames[time->wMonth - 1], time->wDay, time->wYear, hour, time->wMinute, time->wSecond, time->wMilliseconds, ampm);
 }
 
-// OFFSET: %0x004C6440
+// PROVEN: 00a12d9d IDENTICAL
+// OFFSET: 0x004BF370
 static void sLogUserName(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char userName[MAX_PATH];
     DWORD size = 257;
@@ -256,7 +260,8 @@ static void sLogUserName(void (*logLineProc)(void*, const char*, ...), void* log
     logLineProc(logLineProcParam, "%-10s%s", "User:", userName);
 }
 
-// OFFSET: %0x004C64B0
+// PROVEN: 8953dba4 IDENTICAL
+// OFFSET: 0x004BF3E0
 static void sLogComputerName(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     char computerName[16];
     DWORD size = sizeof(computerName);
@@ -289,7 +294,8 @@ static void sLogMemory(uint32_t logOptions, void (*logLineProc)(void*, const cha
     }
 }
 
-// OFFSET: %0x004C65C0
+// PROVEN: b826b12b IDENTICAL
+// OFFSET: 0x004BF4F0
 static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
     const LOADEDMODULE* module1 = static_cast<const LOADEDMODULE*>(elem1);
     const LOADEDMODULE* module2 = static_cast<const LOADEDMODULE*>(elem2);
@@ -301,7 +307,8 @@ static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
     return module1->base < module2->base ? -1 : 0;
 }
 
-// OFFSET: %0x004C65F0
+// PROVEN: e482edb6 IDENTICAL
+// OFFSET: 0x004BF520
 static const char* GetFileNameFromPath(const char* path, size_t maxchars) {
     if (!memchr(path, 0, maxchars)) {
         return "";
@@ -339,7 +346,8 @@ static void sReadCodeViewInfo(MODULEDEBUGINFO* info, uint32_t size, uint32_t typ
     }
 }
 
-// OFFSET: %0x004C6640
+// PROVEN: 674825ca IDENTICAL
+// OFFSET: 0x004BF570
 static void sGetLogicalAddress(void* addr, char* moduleName, uint32_t moduleNameSize, uint32_t* section, uint32_t* offset) {
     lstrcpynA(moduleName, "<unknown>", moduleNameSize);
     *offset = 0;
@@ -499,13 +507,15 @@ static BOOL sSymInitialize(HANDLE process) {
     return sgDbgHelpDll.SymInitialize(process, path, TRUE);
 }
 
-// OFFSET: %0x004C67A0
+// PROVEN: 7fc2c220 IDENTICAL
+// OFFSET: 0x004BF6F0
 static void STORMAPI CmdMemOutput(void* hOutput, const MEMREPORTENTRY* entry) {
     MEMDUMP* dump = static_cast<MEMDUMP*>(hOutput);
     dump->logLineProc(dump->logLineProcParam, "%5d %5d %s(%d)", entry->unk_0010, entry->unk_0014, entry->unk_0024, entry->unk_0020 >> 1);
 }
 
-// OFFSET: %0x004C67D0
+// PROVEN: e56e3960 IDENTICAL
+// OFFSET: 0x004BF720
 static void sShowOutOfMemory(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     if (!g_memFullError) {
         return;
@@ -523,7 +533,8 @@ void SMemGenerateReport(SMEMREPORTTYPE type, void (STORMAPI* callback)(void*, co
     StormCallService(STORM_SERVICE_GENERATEREPORT, type, callback, context);
 }
 
-// OFFSET: %0x004C68D0
+// PROVEN: 58205597 IDENTICAL
+// OFFSET: 0x004BF820
 static void sEnumerateThreads(DWORD* threads, uint32_t maxThreads, uint32_t* numThreads, uint32_t* totalThreads) {
     *numThreads = 0;
     *totalThreads = 0;
@@ -748,7 +759,8 @@ void LoadMachineStateSymbols() {
     sgDbgHelpDll.Load();
 }
 
-// OFFSET: %0x004C6C80
+// PROVEN: cb396cd5 IDENTICAL
+// OFFSET: 0x004BFD10
 void UnloadMachineStateSymbols() {
     sgDbgHelpDll.Unload();
 }
@@ -853,7 +865,8 @@ static DWORD WINAPI MiniDumpThreadProc(void* param) {
     return 0;
 }
 
-// OFFSET: %0x004C6EC0
+// PROVEN: a4a1432f IDENTICAL
+// OFFSET: 0x004BFF60
 int32_t LogMiniDump(void* logfile, EXCEPTION_POINTERS* exceptionpointers, uint32_t count, const char** strings) {
     int32_t result = 0;
     DWORD threadId = 0;
@@ -1054,7 +1067,8 @@ static void sLogLoadedModules(void (*logLineProc)(void*, const char*, ...), void
     }
 }
 
-// OFFSET: %0x004C6820
+// PROVEN: e783bbd4 IDENTICAL
+// OFFSET: 0x004BF770
 static void sLogMemoryStatus(void (*logLineProc)(void*, const char*, ...), void* logLineProcParam) {
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);

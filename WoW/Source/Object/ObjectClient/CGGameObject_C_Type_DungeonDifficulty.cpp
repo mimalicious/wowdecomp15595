@@ -23,7 +23,8 @@ CGGameObject_C_Type_DungeonDifficulty::~CGGameObject_C_Type_DungeonDifficulty() 
     SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
 }
 
-// OFFSET: %0x005A4510
+// PROVEN: 678a7c58 IDENTICAL
+// OFFSET: 0x00B06D20
 bool CGGameObject_C_Type_DungeonDifficulty::CanUse() const {
     return false;
 }

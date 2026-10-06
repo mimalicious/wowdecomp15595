@@ -22,12 +22,14 @@ CArgb1555::CArgb1555() {
 CArgb4444::CArgb4444() {
 }
 
-// OFFSET: %0x00645F40
+// PROVEN: 8d541cca IDENTICAL
+// OFFSET: 0x00639700
 uint8_t Dxt3A4(uint32_t alpha) {
     return alpha;
 }
 
-// OFFSET: %0x00645DE0
+// PROVEN: e5be4fb3 IDENTICAL
+// OFFSET: 0x006395A0
 uint8_t Dxt3A8(uint32_t alpha) {
     return alpha << 4;
 }
@@ -54,12 +56,14 @@ void Dxt5AlphaTable(uint8_t* alphas) {
     }
 }
 
-// OFFSET: %0x00645F30
+// PROVEN: 16b0dfb7 IDENTICAL
+// OFFSET: 0x006396F0
 uint8_t Dxt5A4(uint32_t alpha) {
     return alpha >> 4;
 }
 
-// OFFSET: %0x00645F40
+// PROVEN: a20b8f97 IDENTICAL
+// OFFSET: 0x00639700
 uint8_t Dxt5A8(uint32_t alpha) {
     return alpha;
 }

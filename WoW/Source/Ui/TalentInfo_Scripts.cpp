@@ -563,7 +563,8 @@ static int32_t Script_AddPreviewTalentPoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008EF510
+// PROVEN: c38e45bd IDENTICAL
+// OFFSET: 0x00999D10
 static int32_t Script_GetActiveTalentGroup(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
     int32_t pet = StringToBOOL(L, 2, 0);

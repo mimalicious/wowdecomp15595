@@ -30,7 +30,8 @@ int32_t CDataStore::FetchWrite(uint32_t pos, uint32_t bytes, const char* fileNam
     return this->InternalFetchWrite(pos, bytes, this->m_data, this->m_base, this->m_alloc, fileName, lineNumber) ? 1 : 0;
 }
 
-// OFFSET: %0x004010D0
+// PROVEN: 606d939b IDENTICAL
+// OFFSET: 0x004084E0
 int32_t CDataStore::IsRead() {
     return this->m_read == this->m_size;
 }
@@ -47,7 +48,8 @@ void CDataStore::Reset() {
     this->m_size = 0;
 }
 
-// OFFSET: %0x00701870
+// PROVEN: 06a8a2cf IDENTICAL
+// OFFSET: 0x00408540
 void CDataStore::Finalize() {
     this->m_read = 0;
 }
@@ -63,7 +65,8 @@ CDataStore::~CDataStore() {
 void CDataStore::InternalInitialize(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
 }
 
-// OFFSET: %0x007D6030
+// PROVEN: 20a3ebdd IDENTICAL
+// OFFSET: 0x00871680
 void CDataStore::GetBufferParams(const void** data, uint32_t* size, uint32_t* alloc) {
     if (data) {
         *data = this->m_data;
@@ -78,7 +81,8 @@ void CDataStore::GetBufferParams(const void** data, uint32_t* size, uint32_t* al
     }
 }
 
-// OFFSET: %0x007D6060
+// PROVEN: b02da87b IDENTICAL
+// OFFSET: 0x008716B0
 void CDataStore::DetachBuffer(void** data, uint32_t* size, uint32_t* alloc) {
     if (data) {
         *data = this->m_data;
@@ -97,7 +101,8 @@ void CDataStore::DetachBuffer(void** data, uint32_t* size, uint32_t* alloc) {
     this->Reset();
 }
 
-// OFFSET: %0x007D60A0
+// PROVEN: 6bae70d8 IDENTICAL
+// OFFSET: 0x008716F0
 void CDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     if (alloc && data) {
         SMemFree(data, __FILE__, __LINE__, 0);
@@ -122,7 +127,8 @@ int32_t CDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
     return 1;
 }
 
-// OFFSET: %0x007D6140
+// PROVEN: 65c61212 IDENTICAL
+// OFFSET: 0x00871790
 CDataStore& CDataStore::Set(uint32_t pos, uint8_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
     this->m_data[pos - this->m_base] = val;
@@ -130,7 +136,8 @@ CDataStore& CDataStore::Set(uint32_t pos, uint8_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D6190
+// PROVEN: 20c42974 IDENTICAL
+// OFFSET: 0x008717E0
 CDataStore& CDataStore::Set(uint32_t pos, uint16_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
     *reinterpret_cast<uint16_t*>(&this->m_data[pos - this->m_base]) = val;
@@ -138,7 +145,8 @@ CDataStore& CDataStore::Set(uint32_t pos, uint16_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D61E0
+// PROVEN: 28f7316a IDENTICAL
+// OFFSET: 0x00871830
 CDataStore& CDataStore::Set(uint32_t pos, uint32_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
     *reinterpret_cast<uint32_t*>(&this->m_data[pos - this->m_base]) = val;
@@ -146,7 +154,8 @@ CDataStore& CDataStore::Set(uint32_t pos, uint32_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D6230
+// PROVEN: acf51dc3 IDENTICAL
+// OFFSET: 0x00871880
 CDataStore& CDataStore::Put(uint8_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
     this->m_data[this->m_size - this->m_base] = val;
@@ -155,7 +164,8 @@ CDataStore& CDataStore::Put(uint8_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D6290
+// PROVEN: 12d078c0 IDENTICAL
+// OFFSET: 0x008718E0
 CDataStore& CDataStore::Put(uint16_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
     *reinterpret_cast<uint16_t*>(&this->m_data[this->m_size - this->m_base]) = val;
@@ -164,7 +174,8 @@ CDataStore& CDataStore::Put(uint16_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D62F0
+// PROVEN: 4cc7d2dd IDENTICAL
+// OFFSET: 0x00871940
 CDataStore& CDataStore::Put(uint32_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
     *reinterpret_cast<uint32_t*>(&this->m_data[this->m_size - this->m_base]) = val;
@@ -173,7 +184,8 @@ CDataStore& CDataStore::Put(uint32_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D6350
+// PROVEN: 3cb7ac0b IDENTICAL
+// OFFSET: 0x008719A0
 CDataStore& CDataStore::Put(uint64_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
     *reinterpret_cast<uint64_t*>(&this->m_data[this->m_size - this->m_base]) = val;
@@ -182,7 +194,8 @@ CDataStore& CDataStore::Put(uint64_t val) {
     return *this;
 }
 
-// OFFSET: %0x007D63B0
+// PROVEN: 7d515d5d IDENTICAL
+// OFFSET: 0x00871A00
 CDataStore& CDataStore::Put(float val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
     *reinterpret_cast<float*>(&this->m_data[this->m_size - this->m_base]) = val;
@@ -225,7 +238,8 @@ CDataStore& CDataStore::PutArray(const uint8_t* pval, uint32_t count) {
     return *this;
 }
 
-// OFFSET: %0x007D64D0
+// PROVEN: 7bcb16b1 IDENTICAL
+// OFFSET: 0x00871B20
 CDataStore& CDataStore::PutData(const void* data, uint32_t bytes) {
     return this->PutArray(static_cast<const uint8_t*>(data), bytes);
 }
@@ -260,7 +274,8 @@ CDataStore& CDataStore::PutString(const char* string) {
     return *this;
 }
 
-// OFFSET: %0x007D6590
+// PROVEN: 05c1f76b IDENTICAL
+// OFFSET: 0x00871BE0
 CDataStore& CDataStore::Get(uint8_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = this->m_data[this->m_read - this->m_base];
@@ -270,7 +285,8 @@ CDataStore& CDataStore::Get(uint8_t& val) {
     return *this;
 }
 
-// OFFSET: %0x007D65C0
+// PROVEN: 6f074cef IDENTICAL
+// OFFSET: 0x00871C10
 CDataStore& CDataStore::Get(uint16_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = *reinterpret_cast<uint16_t*>(&this->m_data[this->m_read - this->m_base]);
@@ -280,7 +296,8 @@ CDataStore& CDataStore::Get(uint16_t& val) {
     return *this;
 }
 
-// OFFSET: %0x007D6600
+// PROVEN: 7330006c IDENTICAL
+// OFFSET: 0x00871C50
 CDataStore& CDataStore::Get(uint32_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = *reinterpret_cast<uint32_t*>(&this->m_data[this->m_read - this->m_base]);
@@ -290,7 +307,8 @@ CDataStore& CDataStore::Get(uint32_t& val) {
     return *this;
 }
 
-// OFFSET: %0x007D6640
+// PROVEN: a4a5d97b IDENTICAL
+// OFFSET: 0x00871C90
 CDataStore& CDataStore::Get(uint64_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = *reinterpret_cast<uint64_t*>(&this->m_data[this->m_read - this->m_base]);
@@ -300,7 +318,8 @@ CDataStore& CDataStore::Get(uint64_t& val) {
     return *this;
 }
 
-// OFFSET: %0x007D6680
+// PROVEN: d5708ecc IDENTICAL
+// OFFSET: 0x00871CD0
 CDataStore& CDataStore::Get(float& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
         val = *reinterpret_cast<float*>(&this->m_data[this->m_read - this->m_base]);
@@ -434,12 +453,14 @@ CDataStore& CDataStore::GetArray(uint32_t* pval, uint32_t count) {
     return *this;
 }
 
-// OFFSET: %0x007D68D0
+// PROVEN: 26817864 IDENTICAL
+// OFFSET: 0x00871F20
 CDataStore& CDataStore::GetData(void* data, uint32_t bytes) {
     return this->GetArray(static_cast<uint8_t*>(data), bytes);
 }
 
-// OFFSET: %0x007D68E0
+// PROVEN: 4974bc47 IDENTICAL
+// OFFSET: 0x00871F30
 CDataStore& CDataStore::GetDataInSitu(void*& data, uint32_t bytes) {
     data = NULL;
 

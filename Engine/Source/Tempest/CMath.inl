@@ -1,4 +1,5 @@
-// OFFSET: %0x00447E00
+// PROVEN: c4b9e9fd IDENTICAL
+// OFFSET: 0x0043D420
 inline float CMath::cos_(float x) {
     float frac;
     int32_t whole;
@@ -49,12 +50,14 @@ inline void CMath::fsincos_(float x, float* s, float* c) {
 #endif
 }
 
-// OFFSET: %0x0041F1C0
+// PROVEN: ac7f9f2d IDENTICAL
+// OFFSET: 0x0041EE10
 inline bool fequal(float a, float b) {
     return fabsf(a - b) < 0.00000023841858f;
 }
 
-// OFFSET: %0x004CD070
+// PROVEN: b214ffcc IDENTICAL
+// OFFSET: 0x004C73C0
 inline bool CMath::fequal(float a, float b) {
     return fabsf(a - b) < 0.00000095367432f;
 }

@@ -237,17 +237,20 @@ static float s_speakerMixLFE;
 // STATIC: %0x00D0DC28
 SE3SoundBus SE3::sm_aSoundBus[SE3BUS_LAST];
 
-// OFFSET: %0x0066CEB0
+// PROVEN: 1e5dc8b5 IDENTICAL
+// OFFSET: 0x00705520
 static void* F_CALLBACK FSoundAllocCallback(unsigned int size, FMOD_MEMORY_TYPE type) {
     return SMemAlloc(size, "FMod FSoundAllocCallback", 0, 0);
 }
 
-// OFFSET: %0x0066CED0
+// PROVEN: 0b897dc7 IDENTICAL
+// OFFSET: 0x00705540
 static void* F_CALLBACK FSoundReallocCallback(void* ptr, unsigned int size, FMOD_MEMORY_TYPE type) {
     return SMemReAlloc(ptr, size, "FMod FSoundReallocCallback", 0, 0);
 }
 
-// OFFSET: %0x0066CEF0
+// PROVEN: 30c4582c IDENTICAL
+// OFFSET: 0x00705560
 static void F_CALLBACK FSoundFreeCallback(void* ptr, FMOD_MEMORY_TYPE type) {
     SMemFree(ptr, "FMod FSoundFreeCallback", 0, 0);
 }
@@ -276,7 +279,8 @@ static float F_CALLBACK RolloffCallback(FMOD_CHANNEL* channel, float distance) {
     return rolloff;
 }
 
-// OFFSET: %0x0066CFC0
+// PROVEN: 85d8f425 IDENTICAL
+// OFFSET: 0x00705630
 void SE3::CleanUpFMODGameSystem() {
     FMOD::System* system = SE3::sm_pGameSystem;
 
@@ -287,14 +291,16 @@ void SE3::CleanUpFMODGameSystem() {
     }
 }
 
-// OFFSET: %0x0066CFF0
+// PROVEN: fc528699 IDENTICAL
+// OFFSET: 0x00705660
 void SE3::SetListenerAttributes(const C3Vector& position, const C3Vector& forward, const C3Vector& up, const C3Vector* velocity) {
     if (SE3::sm_pGameSystem) {
         SE3::sm_pGameSystem->set3DListenerAttributes(0, reinterpret_cast<const FMOD_VECTOR*>(&position), reinterpret_cast<const FMOD_VECTOR*>(velocity), reinterpret_cast<const FMOD_VECTOR*>(&forward), reinterpret_cast<const FMOD_VECTOR*>(&up));
     }
 }
 
-// OFFSET: %0x0066D020
+// PROVEN: 7146445b IDENTICAL
+// OFFSET: 0x00705690
 FMOD_RESULT SE3::GetListenerPosition(C3Vector* position) {
     return SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(position), NULL, NULL, NULL);
 }
@@ -416,7 +422,8 @@ void SE3SoundKitObject::Set3DPosition(const C3Vector& position) {
     }
 }
 
-// OFFSET: %0x0066D430
+// PROVEN: f7a93af2 IDENTICAL
+// OFFSET: 0x00705B40
 int32_t SE3SoundKitObject::IsPlaying() {
     bool playing = false;
 
@@ -499,7 +506,8 @@ uint32_t SE3::GetModeFlags(const C3Vector* position, const SE3SoundKitDef* def, 
     return mode;
 }
 
-// OFFSET: %0x0066D5B0
+// PROVEN: becf80a0 IDENTICAL
+// OFFSET: 0x00705CA0
 int32_t SE3::GetNumOutputDrivers_Cached(FMOD::System* system) {
     int32_t numDrivers = 0;
 
@@ -592,7 +600,8 @@ int32_t SE3::GetInputDriverName_Cached(int32_t index, char* name, int32_t nameLe
     return SE3::GetInputDriverName(index, name, nameLength, system);
 }
 
-// OFFSET: %0x0066D7E0
+// PROVEN: f6c72a34 IDENTICAL
+// OFFSET: 0x00705ED0
 int32_t SE3::IsChatSoundInitialized() {
     return SE3::sm_bCaptureInitialized;
 }
@@ -619,7 +628,8 @@ float SE3ChatSound::GetScaledVolume() {
     return SE3::SoundBusGetSuppressedVolumeScalar(this->m_bus, this->m_uUID) * this->m_volume;
 }
 
-// OFFSET: %0x0066D890
+// PROVEN: 7d56e6d4 IDENTICAL
+// OFFSET: 0x00705FA0
 char* SE3::GetCurrentGameOutputDeviceName() {
     return s_gameOutputDeviceName;
 }
@@ -1013,7 +1023,8 @@ int32_t SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, 
     return SE3_ERR_NO_FILE;
 }
 
-// OFFSET: %0x0066E2C0
+// PROVEN: 0342c584 IDENTICAL
+// OFFSET: 0x00706850
 SE3SoundKitDef* SE3::GetSoundKitDef(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count()) || soundKitID <= 0) {
         return NULL;
@@ -4168,7 +4179,8 @@ void SE3::ShutDown() {
     SE3::Log_Write(" - Shutting Down SE3 COMPLETE.");
 }
 
-// OFFSET: %0x00678E60
+// PROVEN: 62bd6cfe IDENTICAL
+// OFFSET: 0x007121A0
 void SE3::SetFocusScalar(float scalar) {
     SE3::sm_fFocusScalar = scalar;
 }
@@ -4212,12 +4224,14 @@ void SE3::SoundBusSetVolume(SE3BUS bus, float volume) {
     SE3::sm_aSoundBus[bus].m_volume = volume;
 }
 
-// OFFSET: %0x00678F70
+// PROVEN: 9de60e68 IDENTICAL
+// OFFSET: 0x007122B0
 void SE3::SoundBusMute(SE3BUS bus, int32_t mute) {
     SE3::sm_aSoundBus[bus].m_muted = mute;
 }
 
-// OFFSET: %0x00678F90
+// PROVEN: 71189bee IDENTICAL
+// OFFSET: 0x007122D0
 void SE3::SoundBusEnable(SE3BUS bus, int32_t enable) {
     SE3::sm_aSoundBus[bus].m_enabled = enable;
 }

@@ -43,7 +43,8 @@ void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags, const char* fil
     return SMemAlloc(bytes, fileName, lineNumber, ToStormFlags(flags));
 }
 
-// OFFSET: %0x00717360
+// PROVEN: a77536bd IDENTICAL
+// OFFSET: 0x007B5870
 void Blizzard::Memory::Free(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
@@ -53,7 +54,8 @@ void Blizzard::Memory::Free(void* ptr, uint32_t flags, const char* fileName, int
     SMemFree(ptr, fileName, lineNumber, ToStormFlags(flags));
 }
 
-// OFFSET: %0x00401000
+// PROVEN: 343a02cf IDENTICAL
+// OFFSET: 0x00401000
 void System_Memory::ShutdownProc() {
 }
 

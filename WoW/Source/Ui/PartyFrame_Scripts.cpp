@@ -243,7 +243,8 @@ static int32_t Script_GetPartyAssignment(lua_State* L) {
     return CGPartyInfo::GetPartyAssignments(L, 1);
 }
 
-// OFFSET: %0x0085D0E0
+// PROVEN: 732c9a85 IDENTICAL
+// OFFSET: 0x008FDD40
 static int32_t Script_CanChangePlayerDifficulty(lua_State* L) {
     lua_pushboolean(L, CGGameUI::CanChangePlayerDifficulty());
     bool cooldown = CGPartyInfo::m_nextDifficultyChange && static_cast<int32_t>(static_cast<uint32_t>(::time(NULL)) - CGPartyInfo::m_nextDifficultyChange) < 0;

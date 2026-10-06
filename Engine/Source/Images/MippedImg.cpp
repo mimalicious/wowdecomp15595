@@ -51,7 +51,8 @@ uint32_t CalcLevelSize(uint32_t level, uint32_t width, uint32_t height, uint32_t
     return (levelHeight * levelWidth * GetBitDepth(format)) >> 3;
 }
 
-// OFFSET: %0x00645990
+// PROVEN: 3f5f40b7 IDENTICAL
+// OFFSET: 0x006393A0
 uint32_t CalcLevelOffset(uint32_t level, uint32_t width, uint32_t height, uint32_t format) {
     uint32_t offset = 0;
 
@@ -79,7 +80,8 @@ uint32_t CalcLevelCount(uint32_t width, uint32_t height) {
     return levels;
 }
 
-// OFFSET: %0x00645A30
+// PROVEN: ee9100fb IDENTICAL
+// OFFSET: 0x00639440
 MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const char* fileName, int32_t lineNumber) {
     uint32_t levelCount = CalcLevelCount(width, height);
     MipBits* images = static_cast<MipBits*>(SMemAlloc(CalcLevelOffset(levelCount, width, height, format) + levelCount * sizeof(MipBits) + 16, fileName, lineNumber, 0));
@@ -94,13 +96,15 @@ MipBits* MippedImgAllocA(uint32_t format, uint32_t width, uint32_t height, const
     return images;
 }
 
-// OFFSET: %0x00645AB0
+// PROVEN: 57394fb9 IDENTICAL
+// OFFSET: 0x006394C0
 uint32_t MippedImgCalcSize(uint32_t format, uint32_t width, uint32_t height) {
     uint32_t levelCount = CalcLevelCount(width, height);
     return CalcLevelOffset(levelCount, width, height, format) + levelCount * sizeof(MipBits);
 }
 
-// OFFSET: %0x00645AE0
+// PROVEN: fcdb5fa1 IDENTICAL
+// OFFSET: 0x006394F0
 void MippedImgSet(uint32_t format, uint32_t width, uint32_t height, MipBits* images) {
     uint32_t levelCount = CalcLevelCount(width, height);
     uint32_t offset = 0;

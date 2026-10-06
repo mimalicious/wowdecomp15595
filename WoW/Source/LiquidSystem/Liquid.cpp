@@ -82,7 +82,8 @@ void Liquid::CInstance::AddRef() {
     this->m_refCount++;
 }
 
-// OFFSET: %0x00682260
+// PROVEN: 259e5a12 IDENTICAL
+// OFFSET: 0x0071BE00
 void Liquid::CInstance::Purge() {
     this->m_geomFactory->Purge();
 }

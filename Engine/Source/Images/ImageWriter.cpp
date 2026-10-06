@@ -675,7 +675,8 @@ static void* s_scratch;
 // STATIC: %0x00ECF4B8
 static uint32_t s_scratchSize;
 
-// OFFSET: %0x00A6BA50
+// PROVEN: aa091d19 IDENTICAL
+// OFFSET: 0x00B39260
 void ImageWriterSetFlags(int32_t flags) {
     s_flags = flags;
 }
@@ -696,12 +697,14 @@ void* IWAlloc(size_t bytes) {
     return NULL;
 }
 
-// OFFSET: %0x00A6BAA0
+// PROVEN: 877594e0 IDENTICAL
+// OFFSET: 0x00B392B0
 void* IWDefaultAlloc(size_t bytes) {
     return malloc(bytes);
 }
 
-// OFFSET: %0x00A6BAB0
+// PROVEN: b2e89822 IDENTICAL
+// OFFSET: 0x00A90D40
 void IWDefaultFree(void* ptr) {
     free(ptr);
 }
@@ -718,7 +721,8 @@ void IWSetDeallocator(void (*freeFunc)(void* ptr)) {
     jpeg_set_free(IWFree);
 }
 
-// OFFSET: %0x00A6CB00
+// PROVEN: 4cf7a6f3 IDENTICAL
+// OFFSET: 0x00B3A300
 int32_t IWBitMatrix::ResetScratch() {
     s_scratch = NULL;
     s_scratchSize = 0;
@@ -735,7 +739,8 @@ void IWBitMatrix::FreeScratch() {
     s_scratchSize = 0;
 }
 
-// OFFSET: %0x00A6CB50
+// PROVEN: 60d1bb10 IDENTICAL
+// OFFSET: 0x00B3A350
 IWBitMatrix::IWBitMatrix() {
     this->m_columns = 0;
     this->m_rows = 0;
@@ -793,7 +798,8 @@ int32_t IWBitMatrix::Initialize(uint32_t size, const char* name, const uint8_t* 
     return 1;
 }
 
-// OFFSET: %0x00A6CC40
+// PROVEN: 58aa18cf IDENTICAL
+// OFFSET: 0x00B3A440
 IWEncoder::IWEncoder() {
     this->m_data = NULL;
     this->m_dataSize = 0;
@@ -856,7 +862,8 @@ void IWLdpcEncoder::Reset() {
     IWEncoder::Reset();
 }
 
-// OFFSET: %0x00A6B380
+// PROVEN: fe345264 IDENTICAL
+// OFFSET: 0x00B38B90
 uint32_t IWLdpcEncoder::GetEncodedSize(uint32_t size) {
     uint32_t copies = this->m_repeat + 1;
     return (copies * this->m_codeBits * ((copies * (this->m_codeBits + 16 * size) - 1) / (this->m_codeBits * copies)) + 7) >> 3;

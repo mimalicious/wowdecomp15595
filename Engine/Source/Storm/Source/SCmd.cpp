@@ -444,7 +444,8 @@ int32_t ProcessString(const char** stringptr, _PROCESSING* processing, CMDDEF** 
     return **stringptr == 0;
 }
 
-// OFFSET: %0x004BE2A0
+// PROVEN: 4cf24d18 IDENTICAL
+// OFFSET: 0x004B7140
 int32_t STORMAPI SCmdGetBool(uint32_t id) {
     return SCmdGetNum(id) != 0;
 }

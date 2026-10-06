@@ -3,7 +3,8 @@
 // STATIC: %0x00B436D8
 const DBCMeta ObjectEffectPackageElemRec::s_meta = { "DBFilesClient\\ObjectEffectPackageElem.dbc", 4, 16, ObjectEffectPackageElemRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 09e361ca IDENTICAL
+// OFFSET: 0x00401000
 void ObjectEffectPackageElemRec::FixupStrings(void* record, const char* strings) {
 }
 

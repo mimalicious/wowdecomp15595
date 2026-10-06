@@ -1,4 +1,5 @@
-// OFFSET: %0x00446AC0
+// PROVEN: 50d4481f IDENTICAL
+// OFFSET: 0x0043B6C0
 inline C44Matrix::C44Matrix(const C34Matrix& m) {
     this->a0 = m.a0;
     this->a1 = m.a1;
@@ -18,7 +19,8 @@ inline C44Matrix::C44Matrix(const C34Matrix& m) {
     this->d3 = 1.0f;
 }
 
-// OFFSET: %0x0043F880
+// PROVEN: ae04ebbd IDENTICAL
+// OFFSET: 0x00435440
 inline C44Matrix C44Matrix::Inverse() const {
     return this->Inverse(this->Determinant());
 }

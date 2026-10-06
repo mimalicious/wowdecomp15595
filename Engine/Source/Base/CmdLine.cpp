@@ -22,12 +22,14 @@ static const _ARGLIST s_argList[] = {
     { SCMD_TYPE_BOOL, CMD_NO_WARNINGS, "nowarnings", NULL },
 };
 
-// OFFSET: %0x007D6920
+// PROVEN: 2ca58742 IDENTICAL
+// OFFSET: 0x00871F70
 int32_t CmdLineGetBool(CMDOPT opt) {
     return SCmdGetBool(opt);
 }
 
-// OFFSET: %0x007D6930
+// PROVEN: ed2ac2bb IDENTICAL
+// OFFSET: 0x00871F80
 const char* CmdLineGetString(CMDOPT opt) {
     // STATIC: %0x00D93228
     static char buffer[260];

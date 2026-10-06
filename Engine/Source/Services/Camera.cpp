@@ -106,7 +106,8 @@ void CameraSetupScreenProjection(const CRect& rect, const C2Vector& offset, floa
     GxXformSetView(view);
 }
 
-// OFFSET: %0x0055AE50
+// PROVEN: 1bf5d399 IDENTICAL
+// OFFSET: 0x0054AE00
 void CameraSetupWorldProjection(CCamera* camera, const CRect& rect, uint32_t flags) {
     if (!camera) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

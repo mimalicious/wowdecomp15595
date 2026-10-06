@@ -65,7 +65,8 @@ METHODDEF(void) process_data_buffer_main
  * Initialize for a processing pass.
  */
 
-// OFFSET: %0x00A925D0
+// PROVEN: 75418d6d IDENTICAL
+// OFFSET: 0x00B60380
 static void start_pass_main(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
   my_main_ptr main = (my_main_ptr) cinfo->main;
 
@@ -108,7 +109,8 @@ static void start_pass_main(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
  * where we have only a strip buffer.
  */
 
-// OFFSET: %0x00A92520
+// PROVEN: 0b0269b8 IDENTICAL
+// OFFSET: 0x00B602D0
 static void process_data_simple_main(j_compress_ptr cinfo, JSAMPARRAY input_buf, JDIMENSION *in_row_ctr, JDIMENSION in_rows_avail) {
   my_main_ptr main = (my_main_ptr) cinfo->main;
 
@@ -236,7 +238,8 @@ static void process_data_buffer_main(j_compress_ptr cinfo, JSAMPARRAY input_buf,
  * Initialize main buffer controller.
  */
 
-// OFFSET: %0x00A92620
+// PROVEN: d4fc946b IDENTICAL
+// OFFSET: 0x00B603D0
 void jinit_c_main_controller(j_compress_ptr cinfo, boolean need_full_buffer) {
   my_main_ptr main;
   int ci;

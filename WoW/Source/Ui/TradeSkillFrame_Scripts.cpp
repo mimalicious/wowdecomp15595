@@ -72,7 +72,8 @@ static int32_t Script_CloseTradeSkill(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008E4780
+// PROVEN: a9940870 IDENTICAL
+// OFFSET: 0x0098D510
 static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     uint32_t count;
 
@@ -937,7 +938,8 @@ static int32_t Script_ExpandTradeSkillSubClass(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008E8BB0
+// PROVEN: bc5925d2 IDENTICAL
+// OFFSET: 0x00991940
 static void TradeSkillItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGTradeSkillInfo::RefreshList(0);

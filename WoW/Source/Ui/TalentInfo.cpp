@@ -59,7 +59,8 @@ TSFixedArray<TalentTabInfo*> CGTalentInfo_Inspect::m_tabs;
 // STATIC: #0x00C21138
 CGTalentGroup_C CGTalentInfo_Inspect::m_talentGroups[2];
 
-// OFFSET: %0x008EF480
+// PROVEN: 2e1f5e89 IDENTICAL
+// OFFSET: 0x00999C80
 void CGTalentInfo_Inspect::EnterWorld() {
     CGTalentInfo_Inspect::m_inspectTarget = WOWGUID::Make(0);
 }
@@ -102,7 +103,8 @@ void CGTalentInfo::RecalculatePreviewPoints(int32_t pet) {
     }
 }
 
-// OFFSET: %0x008EF460
+// PROVEN: 05d4d10e IDENTICAL
+// OFFSET: 0x00999C60
 uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
@@ -188,7 +190,8 @@ int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet
     return unit->IsSpellKnown(spellId) || unit->IsSpellSuperceded(spellId);
 }
 
-// OFFSET: %0x008EF420
+// PROVEN: ba4ef104 IDENTICAL
+// OFFSET: 0x00B48BD0
 static int TierCompare(const void* a, const void* b) {
     return (*static_cast<TalentGroupTier_C* const*>(a))->m_tier - (*static_cast<TalentGroupTier_C* const*>(b))->m_tier;
 }
@@ -248,7 +251,8 @@ int32_t CGTalentInfo::IsTalentAvailableForPet(CGUnit_C* pet, const TalentRec* ta
     return category < 0 || (talent->m_categoryMask[word] & (1 << bit)) != 0;
 }
 
-// OFFSET: %0x008EF7B0
+// PROVEN: 6162e3b2 IDENTICAL
+// OFFSET: 0x00999FB0
 TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     int32_t low = 0;
     int32_t high = this->m_tiers.m_count - 1;
@@ -271,7 +275,8 @@ TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
     return NULL;
 }
 
-// OFFSET: %0x008EF7F0
+// PROVEN: 52684b7b IDENTICAL
+// OFFSET: 0x00999FF0
 TalentGroupTab_C* CGTalentGroup_C::GetTab(uint32_t index) {
     return index < this->m_tabs.m_count ? &this->m_tabs.m_data[index] : NULL;
 }
@@ -1078,7 +1083,8 @@ void CGTalentInfo::ShutdownGame() {
     CGTalentInfo::m_petTalentGroup.Reset();
 }
 
-// OFFSET: %0x008F4CA0
+// PROVEN: 3e27dd4f IDENTICAL
+// OFFSET: 0x0099F4F0
 void CGTalentInfo::UpdatePetTabInfo(int32_t family) {
     if (family) {
         if (CGTalentInfo::m_petTalentTab != family) {
@@ -1133,7 +1139,8 @@ void CGTalentInfo::UpdatePetTalentData(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_PET_TALENT_UPDATE, NULL);
 }
 
-// OFFSET: %0x008F4E10
+// PROVEN: 9b609a31 IDENTICAL
+// OFFSET: 0x0099F660
 void CGTalentInfo_Inspect::ShutdownGame() {
     CGTalentInfo_Inspect::ResetTabInfo();
     CGTalentInfo_Inspect::Reset();

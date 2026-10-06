@@ -127,7 +127,8 @@ static const char* s_compatLua =
     "str.join = strjoin\n"
     "str.replace = strreplace\n";
 
-// OFFSET: %0x0079FD30
+// PROVEN: c58de60e IDENTICAL
+// OFFSET: 0x00839900
 static int32_t IsNotFinite(double value) {
     return !std::isfinite(value);
 }
@@ -219,7 +220,8 @@ void SetDecimalConversion(int32_t convert) {
     lua_setdecimalconversion(convert);
 }
 
-// OFFSET: %0x007A1240
+// PROVEN: d891cbfe IDENTICAL
+// OFFSET: 0x0083AE00
 lua_State* FrameScript_GetContext() {
     return s_context;
 }
@@ -960,7 +962,8 @@ double FrameScript_GetScriptCPUUsage() {
     return s_scriptTimeUsed * s_scriptTimeDivisor;
 }
 
-// OFFSET: %0x007A2710
+// PROVEN: dc3886b2 IDENTICAL
+// OFFSET: 0x0083C320
 int32_t FrameScript_GetErrorHandlerReference() {
     return s_errorHandlerRef;
 }
@@ -1498,7 +1501,8 @@ TSList<EVENTLISTENERNODE>* FrameScript_GetEventListeners(const char* name) {
     return event ? &event->m_listeners : NULL;
 }
 
-// OFFSET: %0x007A55A0
+// PROVEN: 4eab4056 IDENTICAL
+// OFFSET: 0x0083F3A0
 void FrameScript_SignalEvent(uint32_t index, const char* format, ...) {
     va_list args;
     va_start(args, format);

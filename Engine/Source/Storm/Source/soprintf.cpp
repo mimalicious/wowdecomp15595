@@ -280,7 +280,8 @@ int32_t vsnoprintf(char* out, size_t outSize, const char* format, va_list argume
     return dest - out;
 }
 
-// OFFSET: %0x004C53C0
+// PROVEN: 23dc5186 IDENTICAL
+// OFFSET: 0x004BEDB0
 int32_t vsoprintf(char* out, const char* format, va_list argumentList) {
     return vsnoprintf(out, UNBOUNDED_OUTPUT_SIZE, format, argumentList);
 }

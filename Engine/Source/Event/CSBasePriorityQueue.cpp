@@ -1,7 +1,8 @@
 #include <cstdint>
 #include "Engine/Source/Event/CSBasePriorityQueue.h"
 
-// OFFSET: %0x00805670
+// PROVEN: e79ac660 IDENTICAL
+// OFFSET: 0x008A0F20
 CSBasePriorityQueue::~CSBasePriorityQueue() {
     for (uint32_t i = 0; i < this->Count(); i++) {
         CSBasePriority* priority = this->Link(this->m_data[i]);

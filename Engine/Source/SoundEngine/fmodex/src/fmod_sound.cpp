@@ -10,7 +10,8 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// OFFSET: %0x009BC300
+// PROVEN: 932a3a57 IDENTICAL
+// OFFSET: 0x00A7BA90
 FMOD_RESULT Sound::readyForRelease(bool *ready)
 {
     FMOD_RESULT result;
@@ -30,7 +31,8 @@ FMOD_RESULT Sound::readyForRelease(bool *ready)
 }
 
 
-// OFFSET: %0x009BC330
+// PROVEN: a6dd3c9f IDENTICAL
+// OFFSET: 0x00A7BAC0
 FMOD_RESULT Sound::release()
 {
     FMOD_RESULT result;
@@ -65,7 +67,8 @@ FMOD_RESULT Sound::getSystemObject(System **system)
 }
 
 
-// OFFSET: %0x009BC360
+// PROVEN: b03ca9ac IDENTICAL
+// OFFSET: 0x00A7BAF0
 FMOD_RESULT Sound::lock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     FMOD_RESULT result;
@@ -87,7 +90,8 @@ FMOD_RESULT Sound::lock(unsigned int offset, unsigned int length, void **ptr1, v
 }
 
 
-// OFFSET: %0x009BC3B0
+// PROVEN: c5bb22f9 IDENTICAL
+// OFFSET: 0x00A7BB40
 FMOD_RESULT Sound::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     FMOD_RESULT result;
@@ -410,7 +414,8 @@ FMOD_RESULT Sound::getName(char *name, int namelen)
 }
 
 
-// OFFSET: %0x009BC400
+// PROVEN: a178ac90 IDENTICAL
+// OFFSET: 0x00A7BB90
 FMOD_RESULT Sound::getLength(unsigned int *length, FMOD_TIMEUNIT lengthtype)
 {
     FMOD_RESULT result;

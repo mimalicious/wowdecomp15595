@@ -36,17 +36,20 @@ namespace FMOD
         //
         // Non-implemented methods of IStream
         //
-        // OFFSET: %0x009E4D40
+        // PROVEN: 455c9990 IDENTICAL
+        // OFFSET: 0x00AA4700
         HRESULT STDMETHODCALLTYPE Write( void const *pv, ULONG cb, ULONG *pcbWritten )
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: %0x009E4D50
+        // PROVEN: 6afa201e IDENTICAL
+        // OFFSET: 0x00AA4710
         HRESULT STDMETHODCALLTYPE SetSize( ULARGE_INTEGER libNewSize )
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: %0x009E4D70
+        // PROVEN: c5abe36a IDENTICAL
+        // OFFSET: 0x00AA4740
         HRESULT STDMETHODCALLTYPE CopyTo( IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten )
         {
             return( E_NOTIMPL );
@@ -55,7 +58,8 @@ namespace FMOD
         {
             return( E_NOTIMPL );
         }
-        // OFFSET: %0x009E4D60
+        // PROVEN: 5c5f673d IDENTICAL
+        // OFFSET: 0x00AA4730
         HRESULT STDMETHODCALLTYPE Revert()
         {
             return( E_NOTIMPL );

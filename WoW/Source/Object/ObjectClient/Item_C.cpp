@@ -428,7 +428,8 @@ uint32_t CGItem_C::GetEnchantmentTimeLeft(int32_t slot) const {
     return 0;
 }
 
-// OFFSET: %0x005AD720
+// PROVEN: 3b79a307 IDENTICAL
+// OFFSET: 0x005A5820
 int32_t CGItem_C::GetSelectionHighlightColor(CImVector* color) const {
     CImVector white;
     white.b = 0xFF;
@@ -850,7 +851,8 @@ int32_t CGItem_C::GetRandomPropertyPoints() const {
     }
 }
 
-// OFFSET: %0x005ADCD0
+// PROVEN: 07c61422 IDENTICAL
+// OFFSET: 0x005A5DD0
 int32_t CGItem_C::HasOnUseEnchant() const {
     return this->GetSpellItemEnchantmentId() != 0;
 }
@@ -943,7 +945,8 @@ int32_t CGItem_C::GetNumSockets() {
     return sockets + this->GetPrismaticSocketCount();
 }
 
-// OFFSET: %0x005AE1D0
+// PROVEN: 195b6a47 IDENTICAL
+// OFFSET: 0x005A62D0
 bool CGItem_C::IsBoundForTrade() {
     return this->IsPermanentlyBoundForTrade() || this->HasSoulboundEnchant();
 }
@@ -1326,12 +1329,14 @@ int32_t CGItem_C::GetRandomPropertyValue(int32_t slot) {
     return CGItem_C::GetRandomPropertyValue(slot, this->m_item->m_itemFieldRandomPropertiesId, this->GetRandomPropertyPoints());
 }
 
-// OFFSET: %0x005B0830
+// PROVEN: ad527087 IDENTICAL
+// OFFSET: 0x005A89E0
 int32_t CGItem_C::CanBeUsed() {
     return this->GetEnchantmentSpell(0) != 0;
 }
 
-// OFFSET: %0x00456420
+// PROVEN: 9aeca405 IDENTICAL
+// OFFSET: 0x0044BC80
 static int32_t FindItemCallback(const CGItem_C* item, void* param) {
     return item == param;
 }

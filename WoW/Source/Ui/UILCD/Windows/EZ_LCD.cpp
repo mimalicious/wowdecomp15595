@@ -6,7 +6,8 @@
 #include "WoW/Source/Ui/UILCD/Windows/LCDOutput.h"
 #include "WoW/Source/Ui/UILCD/Windows/LCDText.h"
 
-// OFFSET: %0x00A701D0
+// PROVEN: 4a15468b IDENTICAL
+// OFFSET: 0x00B3DF00
 DWORD WINAPI CEzLcd::OnSoftButtonCB(int device, DWORD dwButtons, const PVOID pContext) {
     static_cast<CEzLcd*>(pContext)->OnSoftButtons(dwButtons);
     return 0;
@@ -76,7 +77,8 @@ CEzLcd::~CEzLcd() {
     DeleteCriticalSection(&this->m_buttonLock);
 }
 
-// OFFSET: %0x00A701F0
+// PROVEN: 30b1127a IDENTICAL
+// OFFSET: 0x00B3DF20
 void CEzLcd::OnSoftButtons(uint32_t buttons) {
     EnterCriticalSection(&this->m_buttonLock);
     this->m_buttonsPending |= buttons;
@@ -164,7 +166,8 @@ int32_t CEzLcd::Initialize(const char* friendlyName, int32_t lcdType, int32_t is
     return S_OK;
 }
 
-// OFFSET: %0x00A70130
+// PROVEN: ef24fb16 IDENTICAL
+// OFFSET: 0x00B3DE60
 void CEzLcd::Update() {
     if (this->m_initialized) {
         this->m_connection.Update();
@@ -177,7 +180,8 @@ void CEzLcd::Update() {
     }
 }
 
-// OFFSET: %0x00A70260
+// PROVEN: e5d5bdb4 IDENTICAL
+// OFFSET: 0x00B3DF90
 int32_t CEzLcd::IsConnected() {
     return this->m_connection.IsConnected();
 }
@@ -210,7 +214,8 @@ void CEzLcd::ModifyDisplay(int32_t display) {
     }
 }
 
-// OFFSET: %0x00A6FED0
+// PROVEN: 5b8f8e68 IDENTICAL
+// OFFSET: 0x00B3DC00
 HRESULT CEzLcd::SetText(void* handle, const WCHAR* text) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
 
@@ -228,7 +233,8 @@ HRESULT CEzLcd::SetText(void* handle, const WCHAR* text) {
     return E_FAIL;
 }
 
-// OFFSET: %0x00A6FF30
+// PROVEN: 909d1803 IDENTICAL
+// OFFSET: 0x00B3DC60
 HRESULT CEzLcd::SetTextWordWrap(void* handle, bool enable) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
 
@@ -240,7 +246,8 @@ HRESULT CEzLcd::SetTextWordWrap(void* handle, bool enable) {
     return S_OK;
 }
 
-// OFFSET: %0x00A6FF70
+// PROVEN: 9492012a IDENTICAL
+// OFFSET: 0x00B3DCA0
 HRESULT CEzLcd::SetSize(void* handle, int32_t width, int32_t height) {
     CLCDBase* object = static_cast<CLCDBase*>(handle);
 
@@ -252,7 +259,8 @@ HRESULT CEzLcd::SetSize(void* handle, int32_t width, int32_t height) {
     return S_OK;
 }
 
-// OFFSET: %0x00A6FFA0
+// PROVEN: ded0cc63 IDENTICAL
+// OFFSET: 0x00B3DCD0
 HRESULT CEzLcd::SetBitmap(void* handle, HBITMAP bitmap) {
     if (!bitmap || !handle) {
         return E_FAIL;
@@ -327,7 +335,8 @@ int32_t CEzLcd::ButtonReleased(int32_t button) {
     }
 }
 
-// OFFSET: %0x00A70190
+// PROVEN: 94a17579 IDENTICAL
+// OFFSET: 0x00B3DEC0
 void CEzLcd::SetCurrentPage(CEzLcdPage* page) {
     if (this->m_connection.MonoOutput() == this->m_output) {
         this->m_currentMonoPage = page;
@@ -336,7 +345,8 @@ void CEzLcd::SetCurrentPage(CEzLcdPage* page) {
     }
 }
 
-// OFFSET: %0x00A70220
+// PROVEN: 564474ed IDENTICAL
+// OFFSET: 0x00B3DF50
 void CEzLcd::ShowSubscreen(int32_t subscreen) {
     CEzLcdPage* page;
 
@@ -484,7 +494,8 @@ CLCDBitmap* CEzLcd::AddBitmap(int32_t width, int32_t height, int32_t bitmapWidth
     return this->m_currentColorPage->AddBitmap(width, height, bitmapWidth, bitmapHeight);
 }
 
-// OFFSET: %0x00A707F0
+// PROVEN: 5ce0fb91 IDENTICAL
+// OFFSET: 0x00B3E520
 CEzLcdPage* CEzLcd::GetGlobalPage() {
     if (this->m_output == this->m_connection.MonoOutput()) {
         if (!this->m_monoGlobalPage) {

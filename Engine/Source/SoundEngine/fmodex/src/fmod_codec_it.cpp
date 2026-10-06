@@ -104,7 +104,8 @@ FMOD_CODEC_DESCRIPTION_EX *CodecIT::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EDE00
+// PROVEN: c17e815e IDENTICAL
+// OFFSET: 0x00AAD7C0
 FMOD_RESULT CodecIT::calculateLength()
 {
     waveformat[0].lengthpcm = 0;
@@ -142,7 +143,8 @@ FMOD_RESULT CodecIT::calculateLength()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EA230
+// PROVEN: 881bf61e IDENTICAL
+// OFFSET: 0x00AA9BF0
 FMOD_RESULT CodecIT::readBits(unsigned char b, unsigned int *result)	/* reads b bits from the stream */
 {
 	unsigned int value,value2;
@@ -216,7 +218,8 @@ FMOD_RESULT CodecIT::readBits(unsigned char b, unsigned int *result)	/* reads b 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EA2D0
+// PROVEN: 152ba062 IDENTICAL
+// OFFSET: 0x00AA9C90
 FMOD_RESULT CodecIT::readBlock(signed char **buff)  /* gets block of compressed data from file */
 {
 	unsigned short size;
@@ -283,7 +286,8 @@ FMOD_RESULT CodecIT::freeBlock()            /* frees that block again */
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EA370
+// PROVEN: 2b2eecdd IDENTICAL
+// OFFSET: 0x00AA9D30
 FMOD_RESULT CodecIT::decompress8(void **src, void *dst, int len, bool it215, int channels)
 { 
 	signed char		*destbuf;   /* the destination buffer which will be returned */
@@ -417,7 +421,8 @@ FMOD_RESULT CodecIT::decompress8(void **src, void *dst, int len, bool it215, int
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EA570
+// PROVEN: cc521ec8 IDENTICAL
+// OFFSET: 0x00AA9F30
 FMOD_RESULT CodecIT::decompress16(void **src, void *dst, int len, bool it215, int channels)
 {
 	short			*destbuf;   /* the destination buffer which will be returned */
@@ -557,7 +562,8 @@ FMOD_RESULT CodecIT::decompress16(void **src, void *dst, int len, bool it215, in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EA770
+// PROVEN: 57b61dac IDENTICAL
+// OFFSET: 0x00AAA130
 FMOD_RESULT MusicChannelIT::volumeSlide() 
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -672,7 +678,8 @@ You just add to the speed +1 if there are 2.  There is a flag you have to set li
 
 
 */
-// OFFSET: %0x009EA7D0
+// PROVEN: ebf57b15 IDENTICAL
+// OFFSET: 0x00AAA190
 FMOD_RESULT MusicChannelIT::portamento()
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1092,7 +1099,8 @@ FMOD_RESULT MusicChannelIT::panbrello()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EAC20
+// PROVEN: bf5be7fa IDENTICAL
+// OFFSET: 0x00AAA5E0
 FMOD_RESULT CodecIT::processEnvelope(MusicEnvelopeState *env, MusicVirtualChannel *vcptr, int Inumpoints, MusicEnvelopeNode *v, int type, int mLoopStart, int loopend, int susmLoopStart, int susloopend, unsigned char control)
 {
 	if (env->mPosition < Inumpoints) 
@@ -1474,7 +1482,8 @@ FMOD_RESULT CodecIT::sampleVibrato(MusicVirtualChannel *vcptr)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EB430
+// PROVEN: 27667790 IDENTICAL
+// OFFSET: 0x00AAADF0
 FMOD_RESULT MusicChannelIT::processVolumeByte(MusicNote *current, bool newrow)
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1725,7 +1734,8 @@ FMOD_RESULT MusicChannelIT::processVolumeByte(MusicNote *current, bool newrow)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EB670
+// PROVEN: 31a012bf IDENTICAL
+// OFFSET: 0x00AAB030
 FMOD_RESULT CodecIT::unpackRow() 
 {
 	unsigned char	channelvariable;
@@ -3913,7 +3923,8 @@ FMOD_RESULT CodecIT::updateRow(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009ED790
+// PROVEN: e4366856 IDENTICAL
+// OFFSET: 0x00AAD150
 FMOD_RESULT CodecIT::update(bool audible)
 {
 	if (mTick == 0)		/* new note */
@@ -4055,7 +4066,8 @@ FMOD_RESULT CodecIT::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009ED980
+// PROVEN: eaef775f IDENTICAL
+// OFFSET: 0x00AAD340
 FMOD_RESULT CodecIT::play()
 {
     MusicSong::play();
@@ -6190,7 +6202,8 @@ FMOD_RESULT CodecIT::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *us
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009ED9F0
+// PROVEN: 9be91340 IDENTICAL
+// OFFSET: 0x00AAD3B0
 FMOD_RESULT CodecIT::closeInternal()
 {
     int count;
@@ -6430,7 +6443,8 @@ FMOD_RESULT CodecIT::readInternal(void *buffer, unsigned int sizebytes, unsigned
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EDD00
+// PROVEN: 59f6acaf IDENTICAL
+// OFFSET: 0x00AAD6C0
 FMOD_RESULT CodecIT::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     if (postype == FMOD_TIMEUNIT_MODORDER)
@@ -6497,7 +6511,8 @@ FMOD_RESULT CodecIT::setPositionInternal(int subsound, unsigned int position, FM
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009F0850
+// PROVEN: ee3b6199 IDENTICAL
+// OFFSET: 0x00AB0230
 FMOD_RESULT F_CALLBACK CodecIT::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecIT *cit = (CodecIT *)codec;
@@ -6522,7 +6537,8 @@ FMOD_RESULT F_CALLBACK CodecIT::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EDDA0
+// PROVEN: b9e8dad2 IDENTICAL
+// OFFSET: 0x00AAD760
 FMOD_RESULT F_CALLBACK CodecIT::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecIT *cit = (CodecIT *)codec;
@@ -6547,7 +6563,8 @@ FMOD_RESULT F_CALLBACK CodecIT::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EE210
+// PROVEN: af1a0998 IDENTICAL
+// OFFSET: 0x00AADBF0
 FMOD_RESULT F_CALLBACK CodecIT::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecIT *cit = (CodecIT *)codec;
@@ -6571,7 +6588,8 @@ FMOD_RESULT F_CALLBACK CodecIT::readCallback(FMOD_CODEC_STATE *codec, void *buff
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009EDDD0
+// PROVEN: fa682fe6 IDENTICAL
+// OFFSET: 0x00AAD790
 FMOD_RESULT F_CALLBACK CodecIT::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecIT *cit = (CodecIT *)codec;

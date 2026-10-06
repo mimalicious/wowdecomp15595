@@ -3,7 +3,8 @@
 // STATIC: %0x00B458A4
 const DBCMeta QuestPOIPointRec::s_meta = { "DBFilesClient\\QuestPOIPoint.dbc", 4, 16, QuestPOIPointRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 252a672a IDENTICAL
+// OFFSET: 0x00401000
 void QuestPOIPointRec::FixupStrings(void* record, const char* strings) {
 }
 

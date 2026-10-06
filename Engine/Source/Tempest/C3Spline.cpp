@@ -5,7 +5,8 @@
 #include "Engine/Source/Tempest/C3Spline.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// OFFSET: %0x0040B1C0
+// PROVEN: 90162197 IDENTICAL
+// OFFSET: 0x0040BE30
 C3Spline::C3Spline() {
     this->m_pointCount = 0;
     this->m_segCount = 0;
@@ -24,7 +25,8 @@ float C3Spline::LengthBeforePoint(uint32_t index) {
     return length;
 }
 
-// OFFSET: %0x004CF0B0
+// PROVEN: 05f44a3b IDENTICAL
+// OFFSET: 0x004C9390
 void C3Spline::SetPoints(const C3Vector* points, uint32_t count) {
     this->ISetPoints(points, count);
 
@@ -34,7 +36,8 @@ void C3Spline::SetPoints(const C3Vector* points, uint32_t count) {
     }
 }
 
-// OFFSET: %0x004CF0F0
+// PROVEN: 6dbf296a IDENTICAL
+// OFFSET: 0x004C93D0
 void C3Spline::Pos(float t, C3Vector& pos, EvalType type) {
     if (t <= 0.0f) {
         pos = this->Point(1);
@@ -65,7 +68,8 @@ void C3Spline::Pos(float t, C3Vector& pos, EvalType type) {
     }
 }
 
-// OFFSET: %0x004CF1C0
+// PROVEN: b5449f64 IDENTICAL
+// OFFSET: 0x004C94A0
 void C3Spline::Vel(float t, C3Vector& vel, EvalType type) {
     t = t < 0.0f ? 0.0f : (t < 1.0f ? t : 1.0f);
 
@@ -79,7 +83,8 @@ void C3Spline::Vel(float t, C3Vector& vel, EvalType type) {
     }
 }
 
-// OFFSET: %0x004CF220
+// PROVEN: c0831d77 IDENTICAL
+// OFFSET: 0x004C9500
 void C3Spline::Frame(float t, C44Matrix& frame, EvalType type) {
     t = t < 0.0f ? 0.0f : (t < 1.0f ? t : 1.0f);
 
@@ -150,7 +155,8 @@ float C3Spline::SegLength(uint32_t seg, const C44Matrix& basis) {
     return length;
 }
 
-// OFFSET: %0x004CF4E0
+// PROVEN: 45d2715b IDENTICAL
+// OFFSET: 0x004C97C0
 void C3Spline::ArclengthSegT(float t, const C44Matrix& basis, uint32_t segCount, uint32_t& seg, float& segT) {
     if (segCount <= 1) {
         seg = 0;
@@ -184,7 +190,8 @@ float C3Spline::ILength(uint32_t segCount) {
     return length;
 }
 
-// OFFSET: %0x004CF690
+// PROVEN: 74f45b4e IDENTICAL
+// OFFSET: 0x004C9970
 void C3Spline::GetPoints(C3Vector* points, uint32_t count) {
     uint32_t n = count >= this->m_pointCount ? this->m_pointCount : count;
 
@@ -220,7 +227,8 @@ void C3Spline::ISetPoints(const C3Vector* points, uint32_t count) {
     }
 }
 
-// OFFSET: %0x00583A60
+// PROVEN: c99cf3a6 IDENTICAL
+// OFFSET: 0x00B286B0
 C3Spline& C3Spline::operator=(const C3Spline& source) {
     this->m_length = source.m_length;
 
@@ -241,12 +249,14 @@ C3Spline& C3Spline::operator=(const C3Spline& source) {
     return *this;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 0ef93d77 IDENTICAL
+// OFFSET: 0x00842700
 uint32_t C3Spline::GetSplineMode() {
     return 0;
 }
 
-// OFFSET: %0x00A14BD0
+// PROVEN: 4aafe0d0 IDENTICAL
+// OFFSET: 0x00AF4CF0
 uint32_t C3Spline::IGetPoints(float t, C3Vector* points, uint32_t count) {
     return 0;
 }

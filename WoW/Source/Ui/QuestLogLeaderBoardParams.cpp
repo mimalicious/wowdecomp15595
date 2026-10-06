@@ -1,7 +1,8 @@
 #include "QuestLogLeaderBoardParams.h"
 #include "WoW/Source/Ui/QuestLog.h"
 
-// OFFSET: %0x008BB3A0
+// PROVEN: 476dae72 IDENTICAL
+// OFFSET: 0x00961A20
 QuestLogLeaderBoardParams::QuestLogLeaderBoardParams() {
     this->m_index = -1;
     this->m_requireLogEntry = 0;

@@ -46,7 +46,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E0EC0
+// PROVEN: 2efca11a IDENTICAL
+// OFFSET: 0x00AA0850
 PluginFactory::PluginFactory()
 {
     mSystem = 0;
@@ -156,7 +157,8 @@ FMOD_RESULT PluginFactory::release()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E0660
+// PROVEN: 4cc292e0 IDENTICAL
+// OFFSET: 0x00A9FFF0
 FMOD_RESULT PluginFactory::setSystem(SystemI *system)  
 { 
     mSystem = system;  
@@ -202,7 +204,8 @@ FMOD_RESULT PluginFactory::getSystem(SystemI **system)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E0680
+// PROVEN: bd070f0a IDENTICAL
+// OFFSET: 0x00AA0010
 FMOD_RESULT PluginFactory::setPluginPath(const char *path)
 {
     if (FMOD_strlen(path) >= FMOD_STRING_MAXPATHLEN)
@@ -644,7 +647,8 @@ FMOD_RESULT PluginFactory::unloadPlugin(FMOD_PLUGINTYPE plugintype, int handle)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E06C0
+// PROVEN: fc3eb8fe IDENTICAL
+// OFFSET: 0x00AA0050
 FMOD_RESULT PluginFactory::registerCodec(FMOD_CODEC_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
     FMOD_CODEC_DESCRIPTION_EX *newdesc;
@@ -771,7 +775,8 @@ FMOD_RESULT PluginFactory::registerCodec(FMOD_CODEC_DESCRIPTION *description, FM
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E07C0
+// PROVEN: 749bf5f9 IDENTICAL
+// OFFSET: 0x00AA0150
 FMOD_RESULT PluginFactory::registerDSP(FMOD_DSP_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
     FMOD_DSP_DESCRIPTION_EX *newdesc;
@@ -912,7 +917,8 @@ FMOD_RESULT PluginFactory::registerDSP(FMOD_DSP_DESCRIPTION *description, FMOD_P
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E08F0
+// PROVEN: ebf5e0b8 IDENTICAL
+// OFFSET: 0x00AA0280
 FMOD_RESULT PluginFactory::registerOutput(FMOD_OUTPUT_DESCRIPTION_EX *description, FMOD_PLUGINTYPE *plugintype, int *handle)
 {
     FMOD_OUTPUT_DESCRIPTION_EX *newdesc;
@@ -1312,7 +1318,8 @@ FMOD_RESULT PluginFactory::getOutput(int handle, FMOD_OUTPUT_DESCRIPTION_EX **ou
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E1130
+// PROVEN: 30da6afb IDENTICAL
+// OFFSET: 0x00AA0AC0
 FMOD_RESULT PluginFactory::createCodec(FMOD_CODEC_DESCRIPTION_EX *codecdesc, Codec **codec)
 {
     Codec *newcodec;
@@ -1549,7 +1556,8 @@ FMOD_RESULT PluginFactory::createDSP(FMOD_DSP_DESCRIPTION_EX *dspdesc, DSPI **ds
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009E0D50
+// PROVEN: a7f36d40 IDENTICAL
+// OFFSET: 0x00AA06E0
 FMOD_RESULT PluginFactory::createOutput(FMOD_OUTPUT_DESCRIPTION_EX *outputdesc, Output **output)
 {
     Output *newoutput;

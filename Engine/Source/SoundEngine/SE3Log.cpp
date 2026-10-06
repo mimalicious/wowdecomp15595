@@ -16,11 +16,13 @@ static uint32_t s_logFlags;
 // STATIC: %0x00D0E178
 static int32_t s_errorCount;
 
-// OFFSET: %0x00401000
+// PROVEN: 2d9dcdfa IDENTICAL
+// OFFSET: 0x00401000
 void SE3::SoundKitObjectLog(SE3SoundKitObject* sko, const char* file, int32_t line, const char* format, ...) {
 }
 
-// OFFSET: %0x0067B270
+// PROVEN: d4085eca IDENTICAL
+// OFFSET: 0x00714570
 void SE3::Log_Init() {
     OsCreateDirectory("Logs", 0);
     SLogCreate("Logs\\Sound.log", s_logFlags, &SE3::sm_log);

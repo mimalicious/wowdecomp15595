@@ -3,7 +3,8 @@
 // STATIC: %0x00B461E8
 const DBCMeta ItemDamageThrownRec::s_meta = { "DBFilesClient\\ItemDamageThrown.dbc", 3, 36, ItemDamageThrownRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: a975068d IDENTICAL
+// OFFSET: 0x00401000
 void ItemDamageThrownRec::FixupStrings(void* record, const char* strings) {
 }
 

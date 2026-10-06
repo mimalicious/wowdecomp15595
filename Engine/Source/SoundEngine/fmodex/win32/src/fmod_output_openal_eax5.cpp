@@ -33,7 +33,8 @@ bool gEAX5LockedOALFxSlot3 = false;
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3ABA0
+// PROVEN: 672755ea IDENTICAL
+// OFFSET: 0x00AFA0D0
 FMOD_RESULT	OutputOpenAL::setupSessionEAX5()
 {
     GUID                  guid;
@@ -167,7 +168,8 @@ FMOD_RESULT OutputOpenAL::getSpeakerModeEAX5(FMOD_SPEAKERMODE *speakerMode)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A3AD60
+// PROVEN: bad750af IDENTICAL
+// OFFSET: 0x00AFA290
 FMOD_RESULT OutputOpenAL::lockSlotEAX5(GUID &slotGUID)
 {
     int                  slotIsLocked;

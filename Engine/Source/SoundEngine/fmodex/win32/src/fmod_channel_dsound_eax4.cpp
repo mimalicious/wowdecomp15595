@@ -28,7 +28,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A40580
+// PROVEN: af8700ac IDENTICAL
+// OFFSET: 0x00AFFF30
 FMOD_RESULT ChannelDSoundEAX4::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     HRESULT             hr;
@@ -174,7 +175,8 @@ FMOD_RESULT ChannelDSoundEAX4::setReverbProperties(const FMOD_REVERB_CHANNELPROP
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A40910
+// PROVEN: 117c41c1 IDENTICAL
+// OFFSET: 0x00B002C0
 FMOD_RESULT ChannelDSoundEAX4::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     HRESULT             hr;

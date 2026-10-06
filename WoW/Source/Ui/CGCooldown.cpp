@@ -603,7 +603,8 @@ void CGCooldown::UpdateAlpha() {
     this->UpdateColors();
 }
 
-// OFFSET: %0x00940140
+// PROVEN: 7366d7b8 IDENTICAL
+// OFFSET: 0x009FF580
 void CGCooldown::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);
     this->ResetVerts();

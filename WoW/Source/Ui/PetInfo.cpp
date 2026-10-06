@@ -64,7 +64,8 @@ uint32_t CGPetInfo::m_petBarState;
 // STATIC: #0x00C23530
 static TSGrowableArray<PetAction> s_petSpellActions;
 
-// OFFSET: %0x008AA1F0
+// PROVEN: 9c7fd35f IDENTICAL
+// OFFSET: 0x00950220
 void PetAction::SetAutocast(bool enable) {
     if (enable) {
         this->m_data |= 0x40000000;
@@ -903,7 +904,8 @@ int32_t Packet_SMSG_PET_RENAMEABLE(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: %0x008AA130
+// PROVEN: 97502d5f IDENTICAL
+// OFFSET: 0x00950160
 static int32_t PetTempActionBarCallback(uint32_t index, const void* data) {
     return index < 10 ? index | 0x10000000 : 0;
 }
@@ -1120,7 +1122,8 @@ void CGPetInfo::SetPet(WOWGUID pet, uint32_t expiration, int32_t family) {
     }
 }
 
-// OFFSET: %0x008AB9F0
+// PROVEN: 6fe52823 IDENTICAL
+// OFFSET: 0x00951980
 void CGPetInfo::PetAttackTarget(const WOWGUID& target, int32_t a2) {
     PetAction action;
     action.m_data = 0x7000002;

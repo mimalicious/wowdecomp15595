@@ -3,7 +3,8 @@
 // STATIC: %0x00B452C4
 const DBCMeta SpellCategoryRec::s_meta = { "DBFilesClient\\SpellCategory.dbc", 2, 8, SpellCategoryRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: f4838ce3 IDENTICAL
+// OFFSET: 0x00401000
 void SpellCategoryRec::FixupStrings(void* record, const char* strings) {
 }
 

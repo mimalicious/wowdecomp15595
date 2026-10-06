@@ -21,22 +21,26 @@ int32_t CSimpleRotationAnim::s_objectType;
 // STATIC: %0x00BB8BB0
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
-// OFFSET: %0x005385A0
+// PROVEN: 03507ea6 IDENTICAL
+// OFFSET: 0x005284E0
 bool CSimpleRotationAnim::IsA(int32_t type) {
     return type == CSimpleRotationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x005385D0
+// PROVEN: 25fa666a IDENTICAL
+// OFFSET: 0x00528510
 bool CSimpleRotationAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleRotationAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// OFFSET: %0x00538630
+// PROVEN: a77f96ee IDENTICAL
+// OFFSET: 0x00528570
 const char* CSimpleRotationAnim::GetObjectTypeName() {
     return CSimpleRotationAnim::s_objectTypeName;
 }
 
-// OFFSET: %0x00538640
+// PROVEN: 2b67fd3a IDENTICAL
+// OFFSET: 0x00528580
 int32_t CSimpleRotationAnim::GetScriptMetaTable() {
     return CSimpleRotationAnim::s_metatable;
 }

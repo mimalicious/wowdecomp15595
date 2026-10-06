@@ -9,7 +9,8 @@
 namespace FMOD
 {
 
-// OFFSET: %0x00A0EBF0
+// PROVEN: ae74c4ee IDENTICAL
+// OFFSET: 0x00ACEBD0
 DSPNet::DSPNet()
 {
     mInitialized         = false;
@@ -26,7 +27,8 @@ DSPNet::DSPNet()
 }
 
 
-// OFFSET: %0x00A0ED40
+// PROVEN: 01114152 IDENTICAL
+// OFFSET: 0x00ACED20
 FMOD_RESULT DSPNet::init()
 {
     FMOD_RESULT result;
@@ -71,7 +73,8 @@ FMOD_RESULT DSPNet::init()
 }
 
 
-// OFFSET: %0x00A0ECB0
+// PROVEN: 5e8b50e5 IDENTICAL
+// OFFSET: 0x00ACEC90
 FMOD_RESULT DSPNet::release()
 {
     if (mInitialized)

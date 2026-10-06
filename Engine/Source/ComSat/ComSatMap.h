@@ -62,7 +62,8 @@ ComSat::MapKey<T>::MapKey() {
     this->m_hash = 0;
 }
 
-// OFFSET: [%0x00974FB0<unsigned __int64>]
+// PROVEN: 7b6ecb44 IDENTICAL
+// OFFSET: [0x00A34A20<unsigned __int64>]
 template <class T>
 ComSat::MapKey<T>::MapKey(const T& value) {
     this->m_hash = ComSat::Hash32(&value, sizeof(T), 0x811C9DC5) | 0x80000000;
@@ -113,7 +114,7 @@ ComSat::Map<K, V>::~Map() {
     this->Clear();
 }
 
-// OFFSET: [%0x00975100<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975150<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// OFFSET: [0x00A34BD0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975150<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
 template <class K, class V>
 void ComSat::Map<K, V>::Clear() {
     for (uint32_t i = 0; i < this->m_capacity; i++) {

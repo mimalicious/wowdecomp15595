@@ -198,7 +198,8 @@ static const double s_log2AddTable[64] = {
     0.965784284662087, 0.9772799234999164, 0.9886846867721658
 };
 
-// OFFSET: %0x004D1230
+// PROVEN: b011d98a IDENTICAL
+// OFFSET: 0x004C6940
 uint32_t CMath::sqrt_(uint32_t n) {
     uint32_t x;
 
@@ -221,7 +222,8 @@ uint32_t CMath::sqrt_(uint32_t n) {
     return x;
 }
 
-// OFFSET: %0x004D12B0
+// PROVEN: 067db470 IDENTICAL
+// OFFSET: 0x004C69C0
 double CMath::log2_(double x) {
     double mantissa = x;
     uint32_t hi = reinterpret_cast<uint32_t*>(&mantissa)[1];
@@ -294,7 +296,8 @@ bool CMath::solvequad_(float a, float b, float c, float& r0, float& r1) {
     return true;
 }
 
-// OFFSET: %0x004D14F0
+// PROVEN: 590b9b74 IDENTICAL
+// OFFSET: 0x004C6BF0
 float CMath::normalizeangle0to2pi_(float angle) {
     float result = static_cast<float>(fmod(static_cast<double>(angle), 6.2831854820251465));
 
@@ -305,7 +308,8 @@ float CMath::normalizeangle0to2pi_(float angle) {
     return result;
 }
 
-// OFFSET: %0x004D1530
+// PROVEN: 67a8475e IDENTICAL
+// OFFSET: 0x004C6C30
 float CMath::normalizeAngleNegPiToPi_(float angle) {
     float result = static_cast<float>(fmod(static_cast<double>(angle), 6.2831854820251465));
 
@@ -323,17 +327,20 @@ int32_t IsNaN(double value) {
     return _isnan(value);
 }
 
-// OFFSET: %0x0041F1A0
+// PROVEN: 495853f5 IDENTICAL
+// OFFSET: 0x0041EDF0
 int32_t fequalz(float a, float b, float z) {
     return fabsf(a - b) < z;
 }
 
-// OFFSET: %0x0046E2C0
+// PROVEN: 4518de1d IDENTICAL
+// OFFSET: 0x004647D0
 uint32_t CeilToInt64(float value) {
     return static_cast<uint32_t>(value + 0.99995f);
 }
 
-// OFFSET: %0x00408C00
+// PROVEN: 3917d9de IDENTICAL
+// OFFSET: 0x004093E0
 int32_t FloatToInt64(float value) {
     if (value > 0.0f) {
         return static_cast<uint32_t>(value);
@@ -342,12 +349,14 @@ int32_t FloatToInt64(float value) {
     return static_cast<uint32_t>(value);
 }
 
-// OFFSET: %0x00446030
+// PROVEN: f8043ecc IDENTICAL
+// OFFSET: 0x0043AA80
 bool fnotequal(float a, float b) {
     return !fequal(a, b);
 }
 
-// OFFSET: %0x0046E2F0
+// PROVEN: 6bbb003a IDENTICAL
+// OFFSET: 0x00464800
 uint32_t CMath::fuint_pi(float f) {
     if (f > 0.0f) {
         return static_cast<uint32_t>(f + 0.99995f);
@@ -361,7 +370,8 @@ int32_t CMath::ftrunc(float f) {
     return static_cast<int32_t>(f);
 }
 
-// OFFSET: %0x00560980
+// PROVEN: 082592de IDENTICAL
+// OFFSET: 0x00550DD0
 int32_t CMath::fint_n(float f) {
     if (f > 0.0f) {
         return static_cast<uint32_t>(f + 0.5f);
@@ -388,7 +398,8 @@ float fclamp(float value, float min, float max) {
     return value;
 }
 
-// OFFSET: %0x004563E0
+// PROVEN: 0df33fdd IDENTICAL
+// OFFSET: 0x0044BBB0
 int32_t RoundToInt64(float value) {
     return static_cast<uint32_t>(value + 0.5f);
 }
@@ -398,7 +409,8 @@ void ClampInPlace(float& value, float min, float max) {
     value = min > value ? min : (max <= value ? max : value);
 }
 
-// OFFSET: %0x004D3830
+// PROVEN: 4db04bd7 IDENTICAL
+// OFFSET: 0x004CD5C0
 bool CMath::fnotequal(float a, float b) {
     return !CMath::fequal(a, b);
 }
@@ -421,7 +433,8 @@ double CMath::exp_(float x) {
     return CMath::exp2_(x * 1.442695f);
 }
 
-// OFFSET: %0x007D7BA0
+// PROVEN: 5657e8d9 IDENTICAL
+// OFFSET: 0x00B2ED80
 uint32_t __fastcall CSoftFloat::CountLeadingZeros(uint32_t value) {
 #if defined(_M_IX86)
     __asm {
@@ -633,17 +646,20 @@ static CSoftFloat SoftDivide(const CSoftFloat& num, const CSoftFloat& den) {
     return result;
 }
 
-// OFFSET: %0x007D8000
+// PROVEN: 924066d0 IDENTICAL
+// OFFSET: 0x00B2F180
 CSoftFloat CSoftFloat::FromRatio(int32_t numerator, int32_t denominator) {
     return SoftDivide(CSoftFloat::FromInt(numerator), CSoftFloat::FromInt(denominator));
 }
 
-// OFFSET: %0x007D7F10
+// PROVEN: 2e308567 IDENTICAL
+// OFFSET: 0x00B2F0F0
 CSoftFloat CSoftFloat::Round(const CSoftFloat& value) {
     return CSoftFloat::Floor(value + s_softHalf);
 }
 
-// OFFSET: %0x007D7F40
+// PROVEN: 7c75407b IDENTICAL
+// OFFSET: 0x00B2F120
 CSoftFloat CSoftFloat::FromInt(int32_t value) {
     CSoftFloat result;
 
@@ -668,7 +684,8 @@ CSoftFloat CSoftFloat::FromInt(int32_t value) {
     return result;
 }
 
-// OFFSET: %0x00446250
+// PROVEN: 40842103 IDENTICAL
+// OFFSET: 0x0043ABA0
 void CMath::split_(float x, float* frac, int32_t* whole) {
     if (x > 0.0f) {
         *whole = static_cast<uint32_t>(x);
@@ -690,7 +707,8 @@ float CMath::sin_(float x) {
     return (whole & 1) ? -result : result;
 }
 
-// OFFSET: %0x004CC8E0
+// PROVEN: 822cd8b6 IDENTICAL
+// OFFSET: 0x004C5D20
 float OrganicSmooth(float from, float to, float t) {
     return from + (to - from) * ((1.0f - cosf(t * 3.1415927f)) * 0.5f);
 }

@@ -205,7 +205,8 @@ int32_t CSimpleScriptManager::Execute(const char* script, const char* name) {
     return 1;
 }
 
-// OFFSET: %0x00615B30
+// PROVEN: 2f060677 IDENTICAL
+// OFFSET: 0x0060B640
 uint32_t CSimpleScriptManager::FindFunction(int32_t id) {
     uint32_t bucketIndex = id & this->m_hashMask;
     TSGrowableArray<SimpleScriptFunction>& bucket = this->m_buckets[bucketIndex];

@@ -3,7 +3,8 @@
 // STATIC: %0x00B472A8
 const DBCMeta AreaGroupRec::s_meta = { "DBFilesClient\\AreaGroup.dbc", 3, 32, AreaGroupRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: c030281e IDENTICAL
+// OFFSET: 0x00401000
 void AreaGroupRec::FixupStrings(void* record, const char* strings) {
 }
 

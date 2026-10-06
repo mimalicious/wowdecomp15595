@@ -3,7 +3,8 @@
 // STATIC: %0x00B43E34
 const DBCMeta ChrRacesRec::s_meta = { "DBFilesClient\\ChrRaces.dbc", 23, 96, ChrRacesRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C0A0
+// PROVEN: fc0c3538 IDENTICAL
+// OFFSET: 0x00A2E890
 void ChrRacesRec::FixupStrings(void* record, const char* strings) {
     ChrRacesRec* rec = static_cast<ChrRacesRec*>(record);
     rec->m_clientPrefix = &strings[reinterpret_cast<uintptr_t>(rec->m_clientPrefix)];

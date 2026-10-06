@@ -62,7 +62,8 @@ uint32_t CCharacterSelection::s_raceRestrictions[10];
 // STATIC: #0x00B6B238
 TSGrowableArray<CharacterSelectionDisplay> CCharacterSelection::s_characterList;
 
-// OFFSET: %0x00401000
+// PROVEN: ef583a6e IDENTICAL
+// OFFSET: 0x00401000
 void CCharacterSelection::Initialize() {
 }
 

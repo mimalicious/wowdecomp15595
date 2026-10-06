@@ -56,7 +56,8 @@ SampleSoftware::SampleSoftware()
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A2CC40
+// PROVEN: ceb89a3c IDENTICAL
+// OFFSET: 0x00AF2FB0
 FMOD_RESULT SampleSoftware::release(bool freethis)
 {
     FMOD_RESULT result;

@@ -35,7 +35,8 @@ Blizzard::Time::Timestamp Blizzard::Time::FromFileTime(uint64_t fileTime) {
     return 0x7FFFFFFFFFFFFFFF;
 }
 
-// OFFSET: %0x00710A40
+// PROVEN: a1ec127e IDENTICAL
+// OFFSET: 0x007AE2E0
 double System_Time::MeasureDrift(int64_t frequency, LARGE_INTEGER* counter, DWORD* tickCount) {
     DWORD tick;
     LARGE_INTEGER now;

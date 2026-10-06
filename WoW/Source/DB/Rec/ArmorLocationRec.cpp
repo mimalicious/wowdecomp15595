@@ -3,7 +3,8 @@
 // STATIC: %0x00B4719C
 const DBCMeta ArmorLocationRec::s_meta = { "DBFilesClient\\ArmorLocation.dbc", 6, 24, ArmorLocationRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 708698ed IDENTICAL
+// OFFSET: 0x00401000
 void ArmorLocationRec::FixupStrings(void* record, const char* strings) {
 }
 

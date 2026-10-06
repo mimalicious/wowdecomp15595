@@ -453,12 +453,14 @@ bool Blizzard::Mopaq::SFileOpenArchiveEnumerator(System_SFile::ARCHIVEREC* handl
     return false;
 }
 
-// OFFSET: %0x0070DD60
+// PROVEN: 7b7aef82 IDENTICAL
+// OFFSET: 0x007AAE40
 int32_t Blizzard::Mopaq::SFileEnumerateArchive(Enumerator* enumerator, char* name, uint32_t size) {
     return enumerator->Enumerate(name, size);
 }
 
-// OFFSET: %0x0070DD80
+// PROVEN: 2958584f IDENTICAL
+// OFFSET: 0x007AAE60
 bool Blizzard::Mopaq::SFileCloseArchiveEnumerator(Enumerator* enumerator) {
     delete enumerator;
     return true;

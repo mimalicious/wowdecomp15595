@@ -3,7 +3,8 @@
 // STATIC: %0x00B46F4C
 const DBCMeta CinematicSequencesRec::s_meta = { "DBFilesClient\\CinematicSequences.dbc", 3, 40, CinematicSequencesRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: a392b303 IDENTICAL
+// OFFSET: 0x00401000
 void CinematicSequencesRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -445,7 +445,8 @@ static const luaL_Reg base_funcs[] = {
 static const char *const statnames[] =
     {"running", "suspended", "normal", "dead"};
 
-// OFFSET: %0x0096FEF0
+// PROVEN: 1386d109 IDENTICAL
+// OFFSET: 0x00A2DE80
 static int costatus (lua_State *L, lua_State *co) {
   if (L == co) return CO_RUN;
   switch (lua_status(co)) {

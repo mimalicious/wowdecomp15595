@@ -3,7 +3,8 @@
 // STATIC: %0x00B44A24
 const DBCMeta TalentTreePrimarySpellsRec::s_meta = { "DBFilesClient\\TalentTreePrimarySpells.dbc", 4, 16, TalentTreePrimarySpellsRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 1f3fdbf7 IDENTICAL
+// OFFSET: 0x00401000
 void TalentTreePrimarySpellsRec::FixupStrings(void* record, const char* strings) {
 }
 

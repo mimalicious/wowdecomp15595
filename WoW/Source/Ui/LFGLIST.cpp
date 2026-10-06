@@ -3,7 +3,8 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 
-// OFFSET: %0x008D80A0
+// PROVEN: 004b53c3 IDENTICAL
+// OFFSET: 0x0097FA10
 void LFGLIST::Reindex() {
     for (uint32_t i = 0; i < this->m_playerList.Count(); i++) {
         this->m_playerList.m_data[i]->m_index = i;

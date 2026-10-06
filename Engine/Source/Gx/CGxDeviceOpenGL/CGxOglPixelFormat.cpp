@@ -157,7 +157,8 @@ static int32_t SetupPixelFormat(HDC dc, const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007D0820
+// PROVEN: f8393034 IDENTICAL
+// OFFSET: 0x0086AC60
 BOOL WglDestroyContext(HGLRC context) {
     wglMakeCurrent(NULL, NULL);
     return wglDeleteContext(context);

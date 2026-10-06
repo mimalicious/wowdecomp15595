@@ -88,7 +88,8 @@ GeometryMgr* GeometryMgr::sThis = 0;
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFE00
+// PROVEN: 416392d2 IDENTICAL
+// OFFSET: 0x00A8F780
 GeometryMgr::GeometryMgr()
 {
     mSystem = 0;
@@ -204,7 +205,8 @@ void GeometryMgr::releaseMainOctree()
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFE20
+// PROVEN: bf4a3288 IDENTICAL
+// OFFSET: 0x00A8F7A0
 bool GeometryMgr::mainOctreeLineTestCallback(OctreeNode* item, void* data)
 {
     GeometryI::SpatialData* spatialdata = (GeometryI::SpatialData*)item;
@@ -290,7 +292,8 @@ FMOD_RESULT GeometryMgr::setWorldSize(float worldSize)
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFE80
+// PROVEN: 6b162515 IDENTICAL
+// OFFSET: 0x00A8F800
 FMOD_RESULT GeometryMgr::lineTestAll(const FMOD_VECTOR* start, const FMOD_VECTOR* end, float* directOcclusion, float* reverbOcclusion)
 {
     flushAll();
@@ -330,7 +333,8 @@ FMOD_RESULT GeometryMgr::lineTestAll(const FMOD_VECTOR* start, const FMOD_VECTOR
     [SEE_ALSO]
 ]
 */
-// OFFSET: %0x009CFE40
+// PROVEN: 88b17ffd IDENTICAL
+// OFFSET: 0x00A8F7C0
 FMOD_RESULT GeometryMgr::flushAll()
 {    
     GeometryI* geometryI = mFirstUpdateItem;

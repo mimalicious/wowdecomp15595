@@ -20,24 +20,28 @@
 
 extern "C"
 {
-    // OFFSET: %0x009C9230
+    // PROVEN: b7be5090 IDENTICAL
+    // OFFSET: 0x00A88B90
     void *FMOD_Memory_allocC(int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->alloc(len, file, line);
     }
-    // OFFSET: %0x009C9260
+    // PROVEN: dd69ee7c IDENTICAL
+    // OFFSET: 0x00A88BC0
     void *FMOD_Memory_callocC(int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->calloc(len, file, line);
     }
 
-    // OFFSET: %0x009C9290
+    // PROVEN: 4e307aee IDENTICAL
+    // OFFSET: 0x00A88BF0
     void *FMOD_Memory_reallocC(void *ptr, int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->realloc(ptr, len, file, line);
     }
 
-    // OFFSET: %0x009C92C0
+    // PROVEN: 7bbc1007 IDENTICAL
+    // OFFSET: 0x00A88C20
     void FMOD_Memory_freeC(void *ptr, const char *file, const int line)
     {
         FMOD::gGlobal->gSystemPool->free(ptr, file, line);
@@ -49,7 +53,8 @@ namespace FMOD
 {
 
 
-// OFFSET: %0x009C92E0
+// PROVEN: 185ad721 IDENTICAL
+// OFFSET: 0x00A88C40
 void *MemSingleton::alloc(int len, const char *file, const int line)
 {
     if (!mRefCount)
@@ -62,7 +67,8 @@ void *MemSingleton::alloc(int len, const char *file, const int line)
     return mBuffer;
 }
 
-// OFFSET: %0x009C9320
+// PROVEN: 60af6e5b IDENTICAL
+// OFFSET: 0x00A88C80
 void MemSingleton::free(const char *file, const int line)
 {
     if (mRefCount)
@@ -92,7 +98,8 @@ void MemSingleton::free(const char *file, const int line)
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C8A70
+// PROVEN: caae630b IDENTICAL
+// OFFSET: 0x00A883D0
 LocalMemoryCounter::LocalMemoryCounter()
 {
     mUsageAtStart = gGlobal->gSystemPool->getCurrentAllocated(gGlobal->gSystemPool->getCurrentThreadID());
@@ -110,7 +117,8 @@ LocalMemoryCounter::LocalMemoryCounter()
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C8AA0
+// PROVEN: 612ab878 IDENTICAL
+// OFFSET: 0x00A88400
 int LocalMemoryCounter::getMemoryUsed()
 {
     return gGlobal->gSystemPool->getCurrentAllocated(gGlobal->gSystemPool->getCurrentThreadID()) - mUsageAtStart;
@@ -198,7 +206,8 @@ MemPool::~MemPool()
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C9400
+// PROVEN: 854e50e8 IDENTICAL
+// OFFSET: 0x00A88D60
 FMOD_RESULT MemPool::init(void *poolmem, int poolsize, int blocksize)
 {
     void *oldpoolmem = poolmem;
@@ -335,7 +344,8 @@ FMOD_RESULT MemPool::initCustom(void *poolmem, int poolsize, int blocksize)
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C9360
+// PROVEN: 4c68573f IDENTICAL
+// OFFSET: 0x00A88CC0
 void MemPool::close()
 {
     int count;
@@ -386,7 +396,8 @@ void MemPool::close()
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C8C40
+// PROVEN: a0ff10d1 IDENTICAL
+// OFFSET: 0x00A885A0
 void MemPool::set(int blockoffset, int value, int numblocks)
 {
     #ifdef FMOD_MEMORY_USEBITS
@@ -700,7 +711,8 @@ void *MemPool::alloc(int len, const char *file, const int line, FMOD_MEMORY_TYPE
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C8F50
+// PROVEN: 36b9e031 IDENTICAL
+// OFFSET: 0x00A888B0
 void MemPool::free(void *ptr, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
 	MemBlockHeader *block = (MemBlockHeader *)ptr;
@@ -759,7 +771,8 @@ void MemPool::free(void *ptr, const char *file, const int line, FMOD_MEMORY_TYPE
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C9010
+// PROVEN: c290231f IDENTICAL
+// OFFSET: 0x00A88970
 void *MemPool::calloc(int len, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
 	void *ptr;
@@ -781,7 +794,8 @@ void *MemPool::calloc(int len, const char *file, const int line, FMOD_MEMORY_TYP
 	[REMARKS]
 ]
 */
-// OFFSET: %0x009C9030
+// PROVEN: cd9c0c10 IDENTICAL
+// OFFSET: 0x00A88990
 void *MemPool::realloc(void *ptr, int len, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
 	MemBlockHeader *block = (MemBlockHeader *)ptr;

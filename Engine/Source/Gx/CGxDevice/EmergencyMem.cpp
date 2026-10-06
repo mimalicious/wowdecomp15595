@@ -4,7 +4,8 @@
 EmergencyMem::EmergencyMem() : m_lock(false) {
 }
 
-// OFFSET: %0x007A7830
+// PROVEN: 7522c4ca IDENTICAL
+// OFFSET: 0x008417E0
 void EmergencyMem::Unlock() {
     this->m_lock = false;
 }

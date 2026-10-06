@@ -4,22 +4,26 @@
 #include <windows.h>
 #include "Engine/Source/Os/Tls.h"
 
-// OFFSET: %0x007E3EB0
+// PROVEN: 4bd1fb00 IDENTICAL
+// OFFSET: 0x0087EF10
 uint32_t OsTlsAlloc() {
     return TlsAlloc();
 }
 
-// OFFSET: %0x007E3EC0
+// PROVEN: 75e469b8 IDENTICAL
+// OFFSET: 0x0087EF20
 void OsTlsFree(uint32_t index) {
     TlsFree(index);
 }
 
-// OFFSET: %0x007E3ED0
+// PROVEN: 69cfc0ee IDENTICAL
+// OFFSET: 0x0087EF30
 void* OsTlsGetValue(uint32_t index) {
     return TlsGetValue(index);
 }
 
-// OFFSET: %0x007E3EE0
+// PROVEN: 33f06d92 IDENTICAL
+// OFFSET: 0x0087EF40
 int32_t OsTlsSetValue(uint32_t index, void* value) {
     return TlsSetValue(index, value);
 }

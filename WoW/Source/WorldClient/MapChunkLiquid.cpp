@@ -60,7 +60,8 @@ void CChunkLiquid::GetAaBox(CAaBox& box) const {
     box.t.z = this->m_height.y;
 }
 
-// OFFSET: %0x006FBA90
+// PROVEN: ce75919f IDENTICAL
+// OFFSET: 0x00796320
 bool CMapChunkLiquidBuf::Valid() const {
     return this->m_vertexBuf && this->m_vertexBuf->unk_001C && this->m_vertexBuf->unk_001D && this->m_indexBuf && this->m_indexBuf->unk_001C && this->m_indexBuf->unk_001D;
 }

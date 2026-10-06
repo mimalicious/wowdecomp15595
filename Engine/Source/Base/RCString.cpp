@@ -16,7 +16,8 @@ RCString::RCString() {
 RCString::~RCString() {
 }
 
-// OFFSET: %0x007D78C0
+// PROVEN: bca1a0cc IDENTICAL
+// OFFSET: 0x00872000
 void RCString::Copy(const RCString& source) {
     this->m_str = source.m_str;
 }
@@ -78,7 +79,8 @@ const char* CStringManager::Add(const char* str) {
     return entry + sizeof(char*);
 }
 
-// OFFSET: %0x007D7AB0
+// PROVEN: bb1b8802 IDENTICAL
+// OFFSET: 0x008721F0
 CStringManager::CStringManager() {
     memset(this->unk_0000, 0, sizeof(this->unk_0000));
 }

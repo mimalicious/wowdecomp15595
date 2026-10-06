@@ -260,7 +260,8 @@ void CTextureBlob::HashTexture(SBlobTexture* texture) {
     blobTexture->m_texture = texture;
 }
 
-// OFFSET: %0x0055CE40
+// PROVEN: ef99e261 IDENTICAL
+// OFFSET: 0x0054C3B0
 void CTextureBlob::HashTextures() {
     SBlobTexture* texture = this->m_textures;
 

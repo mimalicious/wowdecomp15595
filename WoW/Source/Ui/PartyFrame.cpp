@@ -128,7 +128,8 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_LEADER_CHANGED);
 }
 
-// OFFSET: %0x0085BD10
+// PROVEN: 6b80e4f8 IDENTICAL
+// OFFSET: 0x008FC650
 uint32_t CGPartyInfo::GetNumPartyMembers() {
     uint32_t count = 0;
 
@@ -161,7 +162,8 @@ WOWGUID GetPartyPetGUID(uint32_t index) {
     return WOWGUID();
 }
 
-// OFFSET: %0x004E0830
+// PROVEN: ec05f649 IDENTICAL
+// OFFSET: 0x004DA4A0
 bool CGPartyInfo::InParty() {
     return CGPartyInfo::m_members[0].m_guid != 0;
 }
@@ -202,7 +204,8 @@ static void PartyMemberNameCallback(int32_t id, const WOWGUID& guid, void* param
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
 }
 
-// OFFSET: %0x0085C7A0
+// PROVEN: ab72033d IDENTICAL
+// OFFSET: 0x008FD3E0
 int32_t CGPartyInfo::IsMember(const WOWGUID& guid) {
     if (!guid) {
         return 0;
@@ -221,7 +224,8 @@ int32_t CGPartyInfo::IsMember(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: %0x0085BD60
+// PROVEN: a0c63dee IDENTICAL
+// OFFSET: 0x008FC6A0
 void CGPartyInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 4) {
         CGPartyInfo::m_realNumMembers = count;
@@ -846,7 +850,8 @@ CGPartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: %0x0085C030
+// PROVEN: e833e10c IDENTICAL
+// OFFSET: 0x008FC970
 void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     info->m_guid = WOWGUID();
     info->m_pending = 0;
@@ -859,7 +864,8 @@ void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     }
 }
 
-// OFFSET: %0x0085C080
+// PROVEN: 683a6f92 IDENTICAL
+// OFFSET: 0x008FC9C0
 void CGPartyInfo::SetReadyCheckInfo(const PartyReadyCheckInfo* info, uint32_t index) {
     if (index < 4 && CGPartyInfo::m_members[index] == info->m_guid) {
         CGRaidInfo::m_partyReadyCheckPending[index] = info->m_pending;

@@ -239,7 +239,8 @@ static void PortraitCacheTouch(PORTRAITCACHE** head, PORTRAITCACHE* entry) {
     *head = entry;
 }
 
-// OFFSET: %0x0048A2B0
+// PROVEN: bfc87778 IDENTICAL
+// OFFSET: 0x004F8B90
 static void TextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command != GxTex_Latch || !userArg) {
         return;

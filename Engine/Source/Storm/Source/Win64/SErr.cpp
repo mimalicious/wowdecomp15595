@@ -362,7 +362,8 @@ static HANDLE CreateErrorLog(const char* suffix, const char* message, const SYST
     return logfile;
 }
 
-// OFFSET: %0x004BB460
+// PROVEN: 1f2a6b53 IDENTICAL
+// OFFSET: 0x004B4080
 static void LogProcessCallback(const char* name, uint32_t pid, void* param) {
     if (!name || !param) {
         return;
@@ -382,7 +383,8 @@ static void LogRunningProcesses(HANDLE logfile, const char* appname) {
     }
 }
 
-// OFFSET: %0x004BB620
+// PROVEN: ee876cc7 IDENTICAL
+// OFFSET: 0x004B4110
 static void TerminateApplication(uint32_t exitcode) {
     DWORD processexitcode;
 
@@ -590,12 +592,14 @@ static void GetExceptionNameWin32(uint32_t exceptioncode, char* buffer, uint32_t
     }
 }
 
-// OFFSET: %0x004BB670
+// PROVEN: cee0d698 IDENTICAL
+// OFFSET: 0x004B4260
 uint32_t STORMAPI SErrGetLastError() {
     return s_lasterror;
 }
 
-// OFFSET: %0x004BB680
+// PROVEN: ceac784c IDENTICAL
+// OFFSET: 0x004B4270
 int32_t STORMAPI SErrIsDisplayingError() {
     return s_displaying;
 }
@@ -614,7 +618,8 @@ int32_t SErrGetAppPhase() {
     return s_appPhase;
 }
 
-// OFFSET: %0x004BB710
+// PROVEN: 910ad9c3 IDENTICAL
+// OFFSET: 0x004B4300
 void STORMAPI SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
     SetLastError(errorcode);

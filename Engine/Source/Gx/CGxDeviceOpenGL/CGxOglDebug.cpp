@@ -1,9 +1,11 @@
 #include "Engine/Source/Gx/CGxDeviceOpenGL/CGxDeviceOpenGl.h"
 
-// OFFSET: %0x00A42EC0
+// PROVEN: 25717e36 IDENTICAL
+// OFFSET: 0x00847950
 void CGxDeviceOpenGl::IResourceTouch(const void* resource) {
 }
 
-// OFFSET: %0x00401000
+// PROVEN: e8970777 IDENTICAL
+// OFFSET: 0x00401000
 void CGxDeviceOpenGl::IShaderConstantsReset() {
 }

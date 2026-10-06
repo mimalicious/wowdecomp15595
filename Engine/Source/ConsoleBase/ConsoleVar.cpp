@@ -405,7 +405,8 @@ int32_t CVar::LogCvar(const char* name, const char* value, void* arg) {
     return 1;
 }
 
-// OFFSET: %0x0061C560
+// PROVEN: 3b0a414c IDENTICAL
+// OFFSET: 0x006551F0
 void CVar::SetReadOnly(bool readOnly) {
     if (readOnly) {
         this->m_flags |= 0x4;
@@ -514,7 +515,8 @@ bool CVar::Set(const char* value, bool setValue, bool setReset, bool setDefault,
     return true;
 }
 
-// OFFSET: %0x0061C870
+// PROVEN: d63d05b9 IDENTICAL
+// OFFSET: 0x006554C0
 bool CVar::Set(int32_t value, bool setValue, bool setReset, bool setDefault, bool setNeedsSave) {
     char buffer[32];
     SStrPrintf(buffer, sizeof(buffer), "%d", value);
@@ -794,7 +796,8 @@ int32_t CVar::SaveAll() {
     return result;
 }
 
-// OFFSET: %0x0061D000
+// PROVEN: 90586ca4 IDENTICAL
+// OFFSET: 0x00655E20
 int32_t CVar::LogAll(char* buffer, uint32_t size, uint32_t category, uint32_t excludeFlags) {
     CVarLogBuffer log;
     log.m_buffer = buffer;

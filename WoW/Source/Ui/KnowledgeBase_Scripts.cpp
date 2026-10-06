@@ -343,14 +343,16 @@ static FrameScript_Method s_apMethodMap[] = {
     { "KBSystem_GetServerNotice", &Script_KBSystem_GetServerNotice },
 };
 
-// OFFSET: %0x0093DEC0
+// PROVEN: dca7a4a1 IDENTICAL
+// OFFSET: 0x009FC5A0
 void KnowledgeBase_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
         FrameScript_RegisterFunction(s_apMethodMap[i].m_name, s_apMethodMap[i].m_method);
     }
 }
 
-// OFFSET: %0x0093DEF0
+// PROVEN: a5646998 IDENTICAL
+// OFFSET: 0x009FC5D0
 void KnowledgeBase_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
         FrameScript_UnregisterFunction(s_apMethodMap[i].m_name);

@@ -7,7 +7,8 @@
 // STATIC: %0x00CE456C
 TSHashTable<FACEDATA, HASHKEY_STRI> s_faceHash;
 
-// OFFSET: %0x00632C90
+// PROVEN: 9e2e24b1 IDENTICAL
+// OFFSET: 0x006224E0
 FT_Face FontFaceGetFace(HFACE handle) {
     if (!handle) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -35,7 +36,8 @@ void FontFaceCloseHandle(HFACE handle) {
     }
 }
 
-// OFFSET: %0x00632CF0
+// PROVEN: 5197b9a6 IDENTICAL
+// OFFSET: 0x00622540
 const char* FontFaceGetFontName(HFACE handle) {
     if (!handle) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

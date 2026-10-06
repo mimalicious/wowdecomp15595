@@ -49,19 +49,22 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 
-// OFFSET: %0x0051F260
+// PROVEN: 09570588 IDENTICAL
+// OFFSET: 0x0050EEA0
 void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
         this->m_barTexture->SetVertexColor(color);
     }
 }
 
-// OFFSET: %0x0051F280
+// PROVEN: 95543938 IDENTICAL
+// OFFSET: 0x0050EEC0
 const char* CSimpleStatusBar::GetObjectTypeName() {
     return CSimpleStatusBar::s_objectTypeName;
 }
 
-// OFFSET: %0x0051F290
+// PROVEN: 4459af13 IDENTICAL
+// OFFSET: 0x0050EED0
 int32_t CSimpleStatusBar::GetScriptMetaTable() {
     return CSimpleStatusBar::s_metatable;
 }
@@ -94,7 +97,8 @@ void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x0051F3A0
+// PROVEN: 245976ac IDENTICAL
+// OFFSET: 0x0050EFE0
 void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_barTexture) {
         this->m_barTexture = NULL;
@@ -183,7 +187,8 @@ void CSimpleStatusBar::SetValue(float value) {
     this->RunOnValueChangedScript();
 }
 
-// OFFSET: %0x0051F510
+// PROVEN: 0132627d IDENTICAL
+// OFFSET: 0x0050F190
 void CSimpleStatusBar::SetWidth(float width) {
     CSimpleFrame::SetWidth(width);
     float value = this->m_value;
@@ -191,7 +196,8 @@ void CSimpleStatusBar::SetWidth(float width) {
     this->SetValue(value);
 }
 
-// OFFSET: %0x0051F4C0
+// PROVEN: 6eee3274 IDENTICAL
+// OFFSET: 0x0050F140
 float CSimpleStatusBar::GetAnimValue() const {
     float range = this->m_maxValue - this->m_minValue;
 
@@ -202,12 +208,14 @@ float CSimpleStatusBar::GetAnimValue() const {
     return 0.0f;
 }
 
-// OFFSET: %0x0051F610
+// PROVEN: 9a365044 IDENTICAL
+// OFFSET: 0x0050F290
 bool CSimpleStatusBar::IsA(int32_t type) {
     return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x0051F650
+// PROVEN: f2b20eb7 IDENTICAL
+// OFFSET: 0x0050F2D0
 bool CSimpleStatusBar::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleStatusBar::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

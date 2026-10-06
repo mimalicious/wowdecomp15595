@@ -39,7 +39,8 @@ namespace S_Thread {
     CInitCritSect s_threadCrit;
 }
 
-// OFFSET: %0x004BE3E0
+// PROVEN: f0a6838f IDENTICAL
+// OFFSET: 0x004B7600
 uint32_t STORMAPI SGetCurrentThreadId() {
     return GetCurrentThreadId();
 }
@@ -49,17 +50,20 @@ uint32_t STORMAPI SGetCurrentProcessId() {
     return GetCurrentProcessId();
 }
 
-// OFFSET: %0x004BE400
+// PROVEN: c23c7efc IDENTICAL
+// OFFSET: 0x004B7620
 int32_t STORMAPI SGetCurrentThreadPriority() {
     return GetThreadPriority(GetCurrentThread());
 }
 
-// OFFSET: %0x004BE410
+// PROVEN: df7db9ec IDENTICAL
+// OFFSET: 0x004B7630
 int32_t STORMAPI SSetCurrentThreadPriority(int32_t priority) {
     return SetThreadPriority(GetCurrentThread(), priority);
 }
 
-// OFFSET: %0x004BE430
+// PROVEN: 9009f299 IDENTICAL
+// OFFSET: 0x004B7650
 int32_t STORMAPI SSetCurrentProcessAffinityMask(size_t mask) {
     return SetProcessAffinityMask(GetCurrentProcess(), mask);
 }

@@ -390,14 +390,16 @@ static int32_t Script_hooksecurefunc(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x007A07C0
+// PROVEN: 9e315221 IDENTICAL
+// OFFSET: 0x0083A3A0
 static int32_t Script_debugprofilestart(lua_State* L) {
     s_debugProfileStart = OsGetAsyncTimeClocks();
 
     return 0;
 }
 
-// OFFSET: %0x007A07E0
+// PROVEN: 66c47298 IDENTICAL
+// OFFSET: 0x0083A3C0
 static int32_t Script_debugprofilestop(lua_State* L) {
     lua_pushnumber(L, (static_cast<int64_t>(OsGetAsyncTimeClocks()) - s_debugProfileStart) * s_scriptTimeDivisor);
 
@@ -712,37 +714,44 @@ static int32_t Script_debuglocals(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 4eefd445 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debugload(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: fb936623 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debuginfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: f8ab9dc4 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debugprint(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 170149b4 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debugdump(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 435cee3b IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debugbreak(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 4f83db2f IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debughook(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00408910
+// PROVEN: 01177d56 IDENTICAL
+// OFFSET: 0x00842700
 static int32_t Script_debugtimestamp(lua_State* L) {
     return 0;
 }

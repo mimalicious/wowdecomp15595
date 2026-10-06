@@ -4,24 +4,28 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// OFFSET: %0x004095D0
+// PROVEN: 528faad5 IDENTICAL
+// OFFSET: 0x0040A260
 void C3Vector::Zero() {
     this->x = 0.0f;
     this->y = 0.0f;
     this->z = 0.0f;
 }
 
-// OFFSET: %0x004E65D0
+// PROVEN: 48c17e2e IDENTICAL
+// OFFSET: 0x004E0560
 bool operator==(const C3Vector& l, const C3Vector& r) {
     return l.x == r.x && l.y == r.y && l.z == r.z;
 }
 
-// OFFSET: %0x004466D0
+// PROVEN: 7a09fa8f IDENTICAL
+// OFFSET: 0x0043B090
 bool operator!=(const C3Vector& l, const C3Vector& r) {
     return l.x != r.x || l.y != r.y || l.z != r.z;
 }
 
-// OFFSET: %0x00446580
+// PROVEN: a4f9112a IDENTICAL
+// OFFSET: 0x0043B020
 void C3Vector::NormalizeSafe() {
     float length = this->z * this->z + this->y * this->y + this->x * this->x;
 
@@ -33,7 +37,8 @@ void C3Vector::NormalizeSafe() {
     }
 }
 
-// OFFSET: %0x004469B0
+// PROVEN: d95f8ea2 IDENTICAL
+// OFFSET: 0x0043B1B0
 C3Vector C3Vector::Cross(const C3Vector& a, const C3Vector& b) {
     C3Vector result;
     result.x = b.z * a.y - a.z * b.y;
@@ -42,21 +47,24 @@ C3Vector C3Vector::Cross(const C3Vector& a, const C3Vector& b) {
     return result;
 }
 
-// OFFSET: %0x004D3390
+// PROVEN: 1f5f3e1f IDENTICAL
+// OFFSET: 0x004CD1C0
 C3Vector::C3Vector(const C4Vector& v) {
     this->x = v.x;
     this->y = v.y;
     this->z = v.z;
 }
 
-// OFFSET: %0x004D33B0
+// PROVEN: 5f199b6f IDENTICAL
+// OFFSET: 0x004CD1E0
 C3Vector::C3Vector(const CImVector& color) {
     this->x = color.r * 0.0039215689f;
     this->y = color.g * 0.0039215689f;
     this->z = 0.0039215689f * color.b;
 }
 
-// OFFSET: %0x004D3400
+// PROVEN: 3a5eb7bb IDENTICAL
+// OFFSET: 0x004CD230
 C3Vector::EAxis C3Vector::MajorAxis() const {
     float x = fabs(this->x);
     float y = fabs(this->y);
@@ -73,7 +81,8 @@ C3Vector::EAxis C3Vector::MajorAxis() const {
     return AXIS_Z;
 }
 
-// OFFSET: %0x004D3450
+// PROVEN: 8365ef80 IDENTICAL
+// OFFSET: 0x004CD280
 C3Vector::EAxis C3Vector::MinorAxis() const {
     float x = fabs(this->x);
     float y = fabs(this->y);
@@ -99,7 +108,8 @@ C3Vector operator%(const C3Vector& l, const C2Vector& r) {
     return result;
 }
 
-// OFFSET: %0x00446A90
+// PROVEN: 56611fbb IDENTICAL
+// OFFSET: 0x0043B690
 float C3Vector::Distance(const C3Vector& a, const C3Vector& b) {
     return sqrt((a - b).SquaredMag());
 }
@@ -114,7 +124,8 @@ void C3Vector::Maximize(const C3Vector& v) {
     *this = C3Vector::Max(*this, v);
 }
 
-// OFFSET: %0x00A512E0
+// PROVEN: e5827dc1 IDENTICAL
+// OFFSET: 0x00B147B0
 void C3Vector::FlushDenormals() {
     if (this->x != 0.0f && fabs(this->x) < 0.0000000099999999f) {
         this->x = 0.0f;

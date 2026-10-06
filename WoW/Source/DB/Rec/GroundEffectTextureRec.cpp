@@ -3,7 +3,8 @@
 // STATIC: %0x00B467C0
 const DBCMeta GroundEffectTextureRec::s_meta = { "DBFilesClient\\GroundEffectTexture.dbc", 5, 44, GroundEffectTextureRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: fcd7636a IDENTICAL
+// OFFSET: 0x00401000
 void GroundEffectTextureRec::FixupStrings(void* record, const char* strings) {
 }
 

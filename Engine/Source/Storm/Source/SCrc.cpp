@@ -70,7 +70,8 @@ uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t
     return result;
 }
 
-// OFFSET: %0x004BFD30
+// PROVEN: ef255d8c IDENTICAL
+// OFFSET: 0x004B9570
 uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
     return SCrcBuffer(buffer, length, crc, flags);
 }

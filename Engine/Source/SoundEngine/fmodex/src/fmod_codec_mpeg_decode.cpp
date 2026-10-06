@@ -57,7 +57,8 @@ int CodecMPEG::gFreqs[9] =
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1A520
+// PROVEN: 1a6f5e07 IDENTICAL
+// OFFSET: 0x00AD9FA0
 unsigned int CodecMPEG::getBits(int number_of_bits)
 {
 	unsigned int rval;
@@ -97,7 +98,8 @@ unsigned int CodecMPEG::getBits(int number_of_bits)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1A5A0
+// PROVEN: 7db8f617 IDENTICAL
+// OFFSET: 0x00ADA020
 unsigned int CodecMPEG::getBitsFast(int number_of_bits)
 {
 	unsigned int rval;
@@ -473,7 +475,8 @@ FMOD_RESULT CodecMPEG::decodeHeader(void *in, int *samplerate, int *channels, in
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1A950
+// PROVEN: cc709773 IDENTICAL
+// OFFSET: 0x00ADA3D0
 FMOD_RESULT CodecMPEG::decodeXingHeader(unsigned char *in, unsigned char *toc, unsigned int *numframes)
 {
     int i, flags = 0;
@@ -571,7 +574,8 @@ FMOD_RESULT CodecMPEG::decodeXingHeader(unsigned char *in, unsigned char *toc, u
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1AA50
+// PROVEN: bc8e5eab IDENTICAL
+// OFFSET: 0x00ADA4D0
 FMOD_RESULT CodecMPEG::decodeFrame(unsigned char *in, void *out, unsigned int *outlen)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -650,7 +654,8 @@ FMOD_RESULT CodecMPEG::decodeFrame(unsigned char *in, void *out, unsigned int *o
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1AB50
+// PROVEN: bfe02811 IDENTICAL
+// OFFSET: 0x00ADA5D0
 FMOD_RESULT CodecMPEG::resetFrame()
 {
     if (mMemoryBlock)
@@ -1137,7 +1142,8 @@ FMOD_RESULT CodecMPEG::synthC(float *b0, int bo1, int channelskip, signed short 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x00A1BB50
+// PROVEN: 8de51b4f IDENTICAL
+// OFFSET: 0x00ADB5D0
 FMOD_RESULT CodecMPEG::synth(void *samples, float *bandPtr, int channels, int channelskip)
 {	
 	int		count;

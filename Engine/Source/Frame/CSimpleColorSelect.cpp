@@ -68,17 +68,20 @@ void CSimpleColorSelect::operator delete(void* ptr) {
     CSimpleColorSelect::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x00532E60
+// PROVEN: f39610ef IDENTICAL
+// OFFSET: 0x00522D60
 const char* CSimpleColorSelect::GetObjectTypeName() {
     return CSimpleColorSelect::s_objectTypeName;
 }
 
-// OFFSET: %0x00532E70
+// PROVEN: 84ef293d IDENTICAL
+// OFFSET: 0x00522D70
 int32_t CSimpleColorSelect::GetScriptMetaTable() {
     return CSimpleColorSelect::s_metatable;
 }
 
-// OFFSET: %0x00532E80
+// PROVEN: 196d9f95 IDENTICAL
+// OFFSET: 0x00522D80
 FrameScript_Object::ScriptIx* CSimpleColorSelect::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
 
@@ -94,13 +97,15 @@ FrameScript_Object::ScriptIx* CSimpleColorSelect::GetScriptByName(const char* na
     return NULL;
 }
 
-// OFFSET: %0x00532EF0
+// PROVEN: 27e58956 IDENTICAL
+// OFFSET: 0x00522DF0
 void CSimpleColorSelect::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onColorSelect, time, count);
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x00532F30
+// PROVEN: c26b8b50 IDENTICAL
+// OFFSET: 0x00522E30
 void CSimpleColorSelect::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_wheelTexture) {
         this->m_wheelTexture = NULL;
@@ -121,14 +126,16 @@ void CSimpleColorSelect::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// OFFSET: %0x00532F80
+// PROVEN: 85c8ff06 IDENTICAL
+// OFFSET: 0x00522E80
 void CSimpleColorSelect::OnLayerHide() {
     this->m_wheelTracking = false;
     this->m_valueTracking = false;
     CSimpleFrame::OnLayerHide();
 }
 
-// OFFSET: %0x00532FA0
+// PROVEN: 633126a5 IDENTICAL
+// OFFSET: 0x00522EA0
 int32_t CSimpleColorSelect::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     this->m_wheelTracking = false;
     this->m_valueTracking = false;
@@ -156,12 +163,14 @@ void CSimpleColorSelect::RunOnColorSelectScript() {
     this->RunScript(this->m_onColorSelect, 3, NULL);
 }
 
-// OFFSET: %0x005330B0
+// PROVEN: 37ad039a IDENTICAL
+// OFFSET: 0x00522FB0
 bool CSimpleColorSelect::IsA(int32_t type) {
     return type == CSimpleColorSelect::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x005330F0
+// PROVEN: 897e1693 IDENTICAL
+// OFFSET: 0x00522FF0
 bool CSimpleColorSelect::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleColorSelect::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
@@ -209,7 +218,8 @@ void CSimpleColorSelect::RepositionWheelThumb() {
     this->m_wheelThumbTexture->SetPoint(FRAMEPOINT_CENTER, this->m_wheelTexture, FRAMEPOINT_CENTER, -offset.x, -offset.y, 1);
 }
 
-// OFFSET: %0x00533400
+// PROVEN: d302d544 IDENTICAL
+// OFFSET: 0x00523300
 void CSimpleColorSelect::RepositionValueThumb() {
     if (!this->m_valueTexture || !this->m_valueThumbTexture) {
         return;
@@ -311,7 +321,8 @@ void CSimpleColorSelect::SetColorValueThumbTexture(CSimpleTexture* texture) {
     this->RepositionValueThumb();
 }
 
-// OFFSET: %0x00533660
+// PROVEN: 180b9319 IDENTICAL
+// OFFSET: 0x00523560
 void CSimpleColorSelect::UpdateColor() {
     this->UpdateValueTexture();
     this->RepositionWheelThumb();

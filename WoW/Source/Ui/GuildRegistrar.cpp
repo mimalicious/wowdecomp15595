@@ -17,7 +17,8 @@ WOWGUID CGGuildRegistrar::m_registrar;
 // STATIC: #0x00C0E558
 GuildPetitionInfo CGGuildRegistrar::m_petition;
 
-// OFFSET: %0x0092FE00
+// PROVEN: afa1f090 IDENTICAL
+// OFFSET: 0x009EB550
 void CGGuildRegistrar::EnterWorld() {
     CGGuildRegistrar::m_petition.m_index = 0;
     CGGuildRegistrar::m_petition.m_itemID = 0;
@@ -52,7 +53,8 @@ void CGGuildRegistrar::CloseRegistrar() {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_REGISTRAR_CLOSED, NULL);
 }
 
-// OFFSET: %0x0092FF00
+// PROVEN: 60b1028f IDENTICAL
+// OFFSET: 0x009EB650
 int32_t CGGuildRegistrar::ValidateAndReportGuildName(const char* name) {
     int32_t error = ValidateGuildName(s_locale, name);
 

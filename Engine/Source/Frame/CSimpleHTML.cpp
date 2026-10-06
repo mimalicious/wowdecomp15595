@@ -82,22 +82,26 @@ CSimpleHTML::CSimpleHTML(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent)
     this->m_hyperlinksEnabled = true;
 }
 
-// OFFSET: %0x00531AA0
+// PROVEN: 7590d339 IDENTICAL
+// OFFSET: 0x00521C40
 const char* CSimpleHTML::GetObjectTypeName() {
     return CSimpleHTML::s_objectTypeName;
 }
 
-// OFFSET: %0x00531AB0
+// PROVEN: 2a773a72 IDENTICAL
+// OFFSET: 0x00521C50
 int32_t CSimpleHTML::GetScriptMetaTable() {
     return CSimpleHTML::s_metatable;
 }
 
-// OFFSET: %0x00531AD0
+// PROVEN: 6673e8d4 IDENTICAL
+// OFFSET: 0x00521C70
 bool CSimpleHTML::IsA(int32_t type) {
     return type == CSimpleHTML::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x00531B10
+// PROVEN: 73949285 IDENTICAL
+// OFFSET: 0x00521CB0
 bool CSimpleHTML::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleHTML::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

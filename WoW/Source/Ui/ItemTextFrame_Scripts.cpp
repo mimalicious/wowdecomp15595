@@ -39,7 +39,8 @@ static int32_t Script_ItemTextGetText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x009286C0
+// PROVEN: ed2b2a8b IDENTICAL
+// OFFSET: 0x009DE020
 static int32_t Script_ItemTextHasNextPage(lua_State* L) {
     if (CGItemText::m_hasItemText || !CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1]) {
         lua_pushnil(L);
@@ -112,7 +113,8 @@ static int32_t Script_ItemTextPrevPage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00928BA0
+// PROVEN: bc4af6ca IDENTICAL
+// OFFSET: 0x009DE500
 static int32_t Script_ItemTextNextPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1] > 0) {
         CGItemText::m_currentPage++;
@@ -122,7 +124,8 @@ static int32_t Script_ItemTextNextPage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00928E50
+// PROVEN: 2de55c44 IDENTICAL
+// OFFSET: 0x009DE7B0
 static int32_t Script_CloseItemText(lua_State* L) {
     WOWGUID none = WOWGUID();
     CGItemText::SetItem(none, 0);
@@ -142,14 +145,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseItemText", &Script_CloseItemText },
 };
 
-// OFFSET: %0x00928620
+// PROVEN: 3ce033f1 IDENTICAL
+// OFFSET: 0x009DDF80
 void ItemTextRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x00928650
+// PROVEN: 566df76a IDENTICAL
+// OFFSET: 0x009DDFB0
 void ItemTextUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

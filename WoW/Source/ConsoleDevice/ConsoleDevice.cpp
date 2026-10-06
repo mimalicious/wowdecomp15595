@@ -150,7 +150,8 @@ void ConsoleGxOverride(const char* list) {
     }
 }
 
-// OFFSET: %0x00401000
+// PROVEN: fdeed0b4 IDENTICAL
+// OFFSET: 0x00401000
 void DisplayChangeCallback(uint32_t value) {
 }
 
@@ -159,7 +160,8 @@ Hardware* ConsoleGetHardware() {
     return s_hardwareDetected ? &s_hardware : NULL;
 }
 
-// OFFSET: %0x0061EFD0
+// PROVEN: b3fc94d1 IDENTICAL
+// OFFSET: 0x00635950
 int32_t ConsoleDeviceHardwareChanged() {
     return s_hwDetect || s_hwChanged;
 }

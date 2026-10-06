@@ -181,7 +181,8 @@ FMOD_INLINE const float DSPFlange::sine(float x)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DB210
+// PROVEN: 224f404d IDENTICAL
+// OFFSET: 0x00A9ABA0
 FMOD_RESULT DSPFlange::createInternal()
 {
     FMOD_RESULT  result;
@@ -559,7 +560,8 @@ FMOD_RESULT DSPFlange::getParameterInternal(int index, float *value, char *value
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DB9E0
+// PROVEN: ee6960ac IDENTICAL
+// OFFSET: 0x00A9B370
 FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -584,7 +586,8 @@ FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBA10
+// PROVEN: ca10ccf9 IDENTICAL
+// OFFSET: 0x00A9B3A0
 FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -609,7 +612,8 @@ FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBA60
+// PROVEN: 795088fd IDENTICAL
+// OFFSET: 0x00A9B3F0
 FMOD_RESULT F_CALLBACK DSPFlange::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -661,7 +665,8 @@ FMOD_RESULT F_CALLBACK DSPFlange::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBAD0
+// PROVEN: 13d65f72 IDENTICAL
+// OFFSET: 0x00A9B460
 FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -686,7 +691,8 @@ FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// OFFSET: %0x009DBB10
+// PROVEN: 0672e551 IDENTICAL
+// OFFSET: 0x00A9B4A0
 FMOD_RESULT F_CALLBACK DSPFlange::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPFlange *flange = (DSPFlange *)dsp;

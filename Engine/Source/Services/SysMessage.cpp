@@ -19,7 +19,8 @@ static uint32_t s_categoryFilter = 0xFFFFFFFF;
 // STATIC: %0x00CD285C
 static int32_t s_minSeverity;
 
-// OFFSET: %0x0054F1B0
+// PROVEN: 31ecab71 IDENTICAL
+// OFFSET: 0x0053E840
 void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, float& blue) {
     red = s_severities[severity].m_red * 0.0039215689f;
     green = s_severities[severity].m_green * 0.0039215689f;
@@ -84,12 +85,14 @@ int32_t SysMsgPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, .
     return 0;
 }
 
-// OFFSET: %0x0054F120
+// PROVEN: 910dc464 IDENTICAL
+// OFFSET: 0x0053E7B0
 void SysMsgEnable(int32_t enable) {
     s_enabled = enable;
 }
 
-// OFFSET: %0x0054F130
+// PROVEN: 7ac02aa2 IDENTICAL
+// OFFSET: 0x0053E7C0
 void SysMsgSetMinDisplayLevel(int32_t level) {
     s_minSeverity = level;
 
@@ -98,7 +101,8 @@ void SysMsgSetMinDisplayLevel(int32_t level) {
     }
 }
 
-// OFFSET: %0x0054F150
+// PROVEN: b3910be8 IDENTICAL
+// OFFSET: 0x0053E7E0
 void SysMsgSetMaxDisplayLevel(int32_t level) {
     s_maxSeverity = level;
 
@@ -107,27 +111,32 @@ void SysMsgSetMaxDisplayLevel(int32_t level) {
     }
 }
 
-// OFFSET: %0x0054F170
+// PROVEN: b0437edb IDENTICAL
+// OFFSET: 0x0053E800
 int32_t SysMsgGetMinDisplayLevel() {
     return s_minSeverity;
 }
 
-// OFFSET: %0x0054F180
+// PROVEN: abf5a958 IDENTICAL
+// OFFSET: 0x0053E810
 int32_t SysMsgGetMaxDisplayLevel() {
     return s_maxSeverity;
 }
 
-// OFFSET: %0x0054F190
+// PROVEN: 95b1318a IDENTICAL
+// OFFSET: 0x0053E820
 void SysMsgSetFilter(uint32_t filter) {
     s_categoryFilter = filter;
 }
 
-// OFFSET: %0x0054F1A0
+// PROVEN: 6017db40 IDENTICAL
+// OFFSET: 0x0053E830
 uint32_t SysMsgGetFilter() {
     return s_categoryFilter;
 }
 
-// OFFSET: %0x0054F210
+// PROVEN: 76051731 IDENTICAL
+// OFFSET: 0x0053E8A0
 void SysMsgInitialize() {
     s_enabled = 1;
     s_minSeverity = 0;
@@ -135,7 +144,8 @@ void SysMsgInitialize() {
     s_categoryFilter = 0xFFFFFFFF;
 }
 
-// OFFSET: %0x00401000
+// PROVEN: f92a5b55 IDENTICAL
+// OFFSET: 0x00401000
 void SysMsgSetCallback(void (*callback)(const char* text, STATUS_TYPE severity)) {
 }
 

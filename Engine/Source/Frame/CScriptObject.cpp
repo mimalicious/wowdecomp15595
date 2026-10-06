@@ -11,17 +11,20 @@ int32_t CScriptObject::s_objectType;
 // STATIC: %0x00BB8630
 const char* CScriptObject::s_objectTypeName = "Object";
 
-// OFFSET: %0x00472E50
+// PROVEN: 543c32af IDENTICAL
+// OFFSET: 0x00469400
 const char* CScriptObject::GetName() {
     return this->m_name.m_str;
 }
 
-// OFFSET: %0x00472E60
+// PROVEN: ceb63d24 IDENTICAL
+// OFFSET: 0x00469410
 bool CScriptObject::IsA(int32_t type) {
     return type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x00472E80
+// PROVEN: 93faf8f9 IDENTICAL
+// OFFSET: 0x00469430
 bool CScriptObject::IsA(const char* typeName) {
     return SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR) == 0;
 }
@@ -74,12 +77,14 @@ CScriptObject* CScriptObject::GetScriptObjectByName(const char* name, int32_t ty
 CScriptObject::CScriptObject() {
 }
 
-// OFFSET: %0x00520860
+// PROVEN: c28fced4 IDENTICAL
+// OFFSET: 0x005104B0
 const char* CScriptObject::GetObjectTypeName() {
     return CScriptObject::s_objectTypeName;
 }
 
-// OFFSET: %0x00520980
+// PROVEN: da12d2fa IDENTICAL
+// OFFSET: 0x005105D0
 void CScriptObject::SetName(const char* name) {
     if (this->m_name.m_str) {
         this->UnregisterScriptObject(this->m_name.m_str);

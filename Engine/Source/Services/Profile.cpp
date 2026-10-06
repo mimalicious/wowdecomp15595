@@ -44,7 +44,8 @@ int32_t ProfileInternal::PrfStrToInt(const char* str) {
     return result;
 }
 
-// OFFSET: %0x005576F0
+// PROVEN: b05f1083 IDENTICAL
+// OFFSET: 0x00544F50
 void ProfileClose(void* profile) {
     if (profile) {
         delete static_cast<ProfileInternal::PROFILE*>(profile);

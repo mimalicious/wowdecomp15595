@@ -5056,7 +5056,8 @@ const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint16_t liquidTyp
     return g_liquidTypeDB.GetRecord(liquidType);
 }
 
-// OFFSET: %0x00A42B00
+// PROVEN: 7d7b6951 IDENTICAL
+// OFFSET: 0x00B024B0
 static int32_t CompareWMOAreaRec(const void* a, const void* b) {
     const WMOAreaTableRec* ra = static_cast<const WMOAreaTableRec*>(a);
     const WMOAreaTableRec* rb = static_cast<const WMOAreaTableRec*>(b);

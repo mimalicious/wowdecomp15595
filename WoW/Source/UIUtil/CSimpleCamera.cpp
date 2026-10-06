@@ -13,17 +13,20 @@ float CSimpleCamera::FOV() const {
     return this->m_fov;
 }
 
-// OFFSET: %0x00446E40
+// PROVEN: 49e00a28 IDENTICAL
+// OFFSET: 0x0043BA40
 C3Vector CSimpleCamera::Forward() const {
     return C3Vector(this->m_facing.a0, this->m_facing.a1, this->m_facing.a2);
 }
 
-// OFFSET: %0x00446E60
+// PROVEN: 8529d28e IDENTICAL
+// OFFSET: 0x0043BA60
 C3Vector CSimpleCamera::Right() const {
     return C3Vector(this->m_facing.b0, this->m_facing.b1, this->m_facing.b2);
 }
 
-// OFFSET: %0x00446E80
+// PROVEN: 15ef82d6 IDENTICAL
+// OFFSET: 0x0043BA80
 C3Vector CSimpleCamera::Up() const {
     return C3Vector(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
 }
@@ -54,7 +57,8 @@ CSimpleCamera::~CSimpleCamera() {
     }
 }
 
-// OFFSET: %0x00450690
+// PROVEN: 1ffddff3 IDENTICAL
+// OFFSET: 0x00445E60
 CM2Scene* CSimpleCamera::GetScene() {
     if (!this->m_scene) {
         this->m_scene = M2CreateScene();
@@ -63,7 +67,8 @@ CM2Scene* CSimpleCamera::GetScene() {
     return this->m_scene;
 }
 
-// OFFSET: %0x00450660
+// PROVEN: c48d9a8a IDENTICAL
+// OFFSET: 0x00445E30
 void CSimpleCamera::SetFacing(float yaw, float pitch, float roll) {
     this->m_facing.FromEulerAnglesZYX(yaw, pitch, roll);
 }

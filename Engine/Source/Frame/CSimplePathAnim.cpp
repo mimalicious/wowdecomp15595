@@ -23,22 +23,26 @@ int32_t CSimplePathAnim::s_objectType;
 // STATIC: %0x00BB8BBC
 const char* CSimplePathAnim::s_objectTypeName = "Path";
 
-// OFFSET: %0x00539100
+// PROVEN: 223a23c0 IDENTICAL
+// OFFSET: 0x005294D0
 bool CSimplePathAnim::IsA(int32_t type) {
     return type == CSimplePathAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// OFFSET: %0x00539130
+// PROVEN: 08ccd230 IDENTICAL
+// OFFSET: 0x00529500
 bool CSimplePathAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimplePathAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// OFFSET: %0x00539190
+// PROVEN: 590ea702 IDENTICAL
+// OFFSET: 0x00529560
 const char* CSimplePathAnim::GetObjectTypeName() {
     return CSimplePathAnim::s_objectTypeName;
 }
 
-// OFFSET: %0x005391A0
+// PROVEN: 7496bc25 IDENTICAL
+// OFFSET: 0x00529570
 int32_t CSimplePathAnim::GetScriptMetaTable() {
     return CSimplePathAnim::s_metatable;
 }
@@ -425,7 +429,8 @@ void CSimplePathAnim::NotifyControlPointAdded(CSimpleControlPoint* point) {
     }
 }
 
-// OFFSET: %0x00539970
+// PROVEN: 91598126 IDENTICAL
+// OFFSET: 0x00529C90
 void CSimplePathAnim::NotifyControlPointRemoved(CSimpleControlPoint* point) {
     if (point && this->FindControlPoint(point->m_order) >= 0) {
         this->BuildSpline();

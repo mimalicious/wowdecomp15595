@@ -3,7 +3,8 @@
 // STATIC: %0x00B46298
 const DBCMeta ItemDamageOneHandRec::s_meta = { "DBFilesClient\\ItemDamageOneHand.dbc", 3, 36, ItemDamageOneHandRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 0fb8b618 IDENTICAL
+// OFFSET: 0x00401000
 void ItemDamageOneHandRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -18,7 +18,8 @@ namespace FMOD
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D34B0
+// PROVEN: 42b0dadf IDENTICAL
+// OFFSET: 0x00A92E50
 TimeStamp::TimeStamp()
 {
     mIn = 0;
@@ -45,7 +46,8 @@ TimeStamp::TimeStamp()
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D34E0
+// PROVEN: cf9b725e IDENTICAL
+// OFFSET: 0x00A92E80
 FMOD_RESULT TimeStamp::stampIn()
 {
 	FMOD_OS_Time_GetNs(&mIn);
@@ -67,7 +69,8 @@ FMOD_RESULT TimeStamp::stampIn()
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D3500
+// PROVEN: 12e586d0 IDENTICAL
+// OFFSET: 0x00A92EA0
 FMOD_RESULT TimeStamp::stampOut(int damppercentage)
 {
 	unsigned int  val;
@@ -159,7 +162,8 @@ FMOD_RESULT TimeStamp::getCPUUsage(FMOD_UFLOAT *cpuusage)
 
 	[SEE_ALSO]
 */
-// OFFSET: %0x009D35F0
+// PROVEN: cc26ad86 IDENTICAL
+// OFFSET: 0x00A92F90
 FMOD_RESULT TimeStamp::setPaused(bool paused)
 {
     if (!mTiming)

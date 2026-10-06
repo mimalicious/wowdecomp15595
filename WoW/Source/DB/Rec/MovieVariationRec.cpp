@@ -3,7 +3,8 @@
 // STATIC: %0x00B43890
 const DBCMeta MovieVariationRec::s_meta = { "DBFilesClient\\MovieVariation.dbc", 3, 12, MovieVariationRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: bbc864c4 IDENTICAL
+// OFFSET: 0x00401000
 void MovieVariationRec::FixupStrings(void* record, const char* strings) {
 }
 

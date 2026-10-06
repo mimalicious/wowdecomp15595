@@ -3,7 +3,8 @@
 // STATIC: %0x00B46F10
 const DBCMeta CreatureMovementInfoRec::s_meta = { "DBFilesClient\\CreatureMovementInfo.dbc", 2, 8, CreatureMovementInfoRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: 4ca884c1 IDENTICAL
+// OFFSET: 0x00401000
 void CreatureMovementInfoRec::FixupStrings(void* record, const char* strings) {
 }
 

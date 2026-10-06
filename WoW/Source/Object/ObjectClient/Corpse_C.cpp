@@ -333,7 +333,8 @@ void CGCorpse_C::OnDynamicFlagChanged(uint32_t oldFlags) {
     }
 }
 
-// OFFSET: %0x005A1EC0
+// PROVEN: d336bac1 IDENTICAL
+// OFFSET: 0x005987D0
 int32_t CorpseFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
 
@@ -344,7 +345,8 @@ int32_t CorpseFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     return 1;
 }
 
-// OFFSET: %0x005A1F00
+// PROVEN: a2431141 IDENTICAL
+// OFFSET: 0x00598810
 int32_t CorpseDynamicFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGCorpse_C* corpse = static_cast<CGCorpse_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CORPSE, __FILE__, __LINE__));
 

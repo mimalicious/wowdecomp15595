@@ -3,7 +3,8 @@
 // STATIC: %0x00B459E4
 const DBCMeta PhaseXPhaseGroupRec::s_meta = { "DBFilesClient\\PhaseXPhaseGroup.dbc", 3, 12, PhaseXPhaseGroupRec::FixupStrings, 0 };
 
-// OFFSET: %0x00401000
+// PROVEN: aa38a3d7 IDENTICAL
+// OFFSET: 0x00401000
 void PhaseXPhaseGroupRec::FixupStrings(void* record, const char* strings) {
 }
 

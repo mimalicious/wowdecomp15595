@@ -415,7 +415,8 @@ void CGItemStatsSummary::AddStatMods(const ItemStats_C* stats) {
     }
 }
 
-// OFFSET: %0x0046FBA0
+// PROVEN: 58d0cfe9 IDENTICAL
+// OFFSET: 0x00465CA0
 void CGItemStatsSummary::MakeStatNamesPretty(int32_t stat, const int32_t* group, uint32_t count, int32_t merge) {
     int32_t value = this->m_stats[stat];
     int32_t previous = 0;
@@ -738,7 +739,8 @@ void CGTooltip::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x0046E8B0
+// PROVEN: 476d7a82 IDENTICAL
+// OFFSET: 0x00464CD0
 const CImVector* CGTooltip::GetItemQualityColor(uint32_t quality) {
     if (quality >= sizeof(s_itemQualityColors) / sizeof(s_itemQualityColors[0])) {
         quality = 1;
@@ -747,7 +749,8 @@ const CImVector* CGTooltip::GetItemQualityColor(uint32_t quality) {
     return reinterpret_cast<const CImVector*>(&s_itemQualityColors[quality]);
 }
 
-// OFFSET: %0x0046E8D0
+// PROVEN: c6683b2a IDENTICAL
+// OFFSET: 0x00464CF0
 const char* CGTooltip::GetItemQualityColorString(uint32_t quality) {
     if (quality >= sizeof(s_itemQualityColorStrings) / sizeof(s_itemQualityColorStrings[0])) {
         quality = 1;
@@ -804,7 +807,8 @@ void CGTooltip::ResetPosition(int32_t force) {
     }
 }
 
-// OFFSET: %0x0046F7B0
+// PROVEN: 4a3f42d4 IDENTICAL
+// OFFSET: 0x004658B0
 void CGTooltip::FadeOut() {
     if (this->m_anchorType == ANCHOR_CURSOR || this->m_anchorType == ANCHOR_CURSOR_RIGHT) {
         this->HideThis();
@@ -1102,7 +1106,8 @@ const char* CGTooltip::GetObjectTypeName() {
     return CGTooltip::s_objectTypeName;
 }
 
-// OFFSET: %0x00472E40
+// PROVEN: f4d4043b IDENTICAL
+// OFFSET: 0x004693F0
 int32_t CGTooltip::GetScriptMetaTable() {
     return CGTooltip::s_metatable;
 }
@@ -1150,7 +1155,8 @@ void CGTooltip::SetOwner(CSimpleFrame* owner, TOOLTIP_ANCHORPOINT anchorType, fl
     this->ResetPosition(1);
 }
 
-// OFFSET: %0x00473580
+// PROVEN: 6868dd86 IDENTICAL
+// OFFSET: 0x00469B30
 void CGTooltip::HideThis() {
     this->SetOwner(NULL, ANCHOR_LEFT, 0.0f, 0.0f);
     CSimpleFrame::HideThis();
@@ -3268,7 +3274,8 @@ void CGTooltip::AddMoney(int32_t money, int32_t maxMoney) {
     this->RunScript(this->m_onTooltipAddMoney, 2, NULL);
 }
 
-// OFFSET: %0x00470390
+// PROVEN: 3696c42e IDENTICAL
+// OFFSET: 0x00466200
 static const char* GetColorblindSuffix(int32_t index) {
     CVar* colorblindMode = CVar::Lookup("colorblindMode");
 
@@ -3506,7 +3513,8 @@ void CGTooltip::GetItemDurationString(char* buffer, uint32_t size, uint64_t time
     SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), text);
 }
 
-// OFFSET: %0x0046FA30
+// PROVEN: a78fb364 IDENTICAL
+// OFFSET: 0x00465B30
 void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     int32_t length = strlen(text);
     const char* processed = LanguageProcess(text);
@@ -6772,7 +6780,8 @@ void CGTooltip::SetTalent(const TalentRec* talent, CGTalentGroup_C* group, int32
     this->Show();
 }
 
-// OFFSET: %0x00474890
+// PROVEN: 94bb7ffa IDENTICAL
+// OFFSET: 0x0046AFC0
 void CGTooltip::AddLine(const char* left, const char* right, int32_t wrap) {
     const CImVector& titleColor = *reinterpret_cast<const CImVector*>(&s_tooltipTitleColor);
     this->AddLine(left, right, titleColor, titleColor, wrap);
@@ -7127,7 +7136,8 @@ int32_t SetCompareItem(CGTooltip* tooltip, uint32_t itemId, int32_t offset, int3
     return 1;
 }
 
-// OFFSET: %0x0046E950
+// PROVEN: e6f9b035 IDENTICAL
+// OFFSET: 0x00464ED0
 static int32_t QSortFrameStack(const void* a, const void* b) {
     const FrameStackInfo* infoA = static_cast<const FrameStackInfo*>(a);
     const FrameStackInfo* infoB = static_cast<const FrameStackInfo*>(b);
