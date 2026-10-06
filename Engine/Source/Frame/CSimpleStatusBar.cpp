@@ -293,6 +293,10 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
     }
 
     uint32_t textureFlags = this->m_barTexture->m_textureFlags;
+    float right = 0.0f;
+    float left = 0.0f;
+    float bottom = 0.0f;
+    float top = 0.0f;
 
     if (this->m_orientation == ORIENTATION_VERTICAL) {
         if (!((textureFlags >> 2) & 1) && !((textureFlags >> 3) & 1)) {
@@ -313,11 +317,11 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
             }
         }
 
-        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, 0.0f, 0.0f, 1);
-        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, 0.0f, 0.0f, 1);
-        value = 1.0f - value;
-        this->m_barTexture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, 0.0f, -(value * height), 1);
-        this->m_barTexture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, 0.0f, -(value * height), 1);
+        if (this->m_reverseFill) {
+            bottom = (1.0f - value) * height;
+        } else {
+            top = -((1.0f - value) * height);
+        }
     } else {
         if (!((textureFlags >> 2) & 1) && !((textureFlags >> 3) & 1)) {
             if (this->m_rotatesTexture) {
@@ -337,13 +341,17 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
             }
         }
 
-        this->m_barTexture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, 0.0f, 0.0f, 1);
-        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, 0.0f, 0.0f, 1);
-        value = 1.0f - value;
-        this->m_barTexture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, -(value * width), 0.0f, 1);
-        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, -(value * width), 0.0f, 1);
+        if (this->m_reverseFill) {
+            left = (1.0f - value) * width;
+        } else {
+            right = -((1.0f - value) * width);
+        }
     }
 
+    this->m_barTexture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, left, top, 1);
+    this->m_barTexture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, right, top, 1);
+    this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, left, bottom, 1);
+    this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, right, bottom, 1);
     this->m_changed = 0;
 }
 

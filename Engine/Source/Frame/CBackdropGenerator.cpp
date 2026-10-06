@@ -193,7 +193,7 @@ void CBackdropGenerator::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00520EB0
+// OFFSET: 0x00510B00
 void CBackdropGenerator::Generate(const CRect* rect) {
     if (!rect) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -202,80 +202,74 @@ void CBackdropGenerator::Generate(const CRect* rect) {
 
     C2Vector texCoords[4];
 
-    float width = rect->maxX - rect->minX;
-    float scale = 1.0f / this->m_edgeSize;
-    float tilesX = scale * width - 2.0f;
-    float height = rect->maxY - rect->minY;
-    float tilesY = scale * height - 2.0f;
+    float tilesX;
+    float tilesY;
 
-    if (tilesX < 0.0f) {
-        tilesX = 0.0f;
-    }
+    if (fabs(this->m_edgeSize) < 0.00000023841858f) {
+        tilesX = 1.0f;
+        tilesY = 1.0f;
+    } else {
+        tilesX = (rect->maxX - rect->minX) * (1.0f / this->m_edgeSize) - 2.0f;
+        tilesY = (rect->maxY - rect->minY) * (1.0f / this->m_edgeSize) - 2.0f;
 
-    if (tilesY < 0.0f) {
-        tilesY = 0.0f;
+        if (tilesX < 0.0f) {
+            tilesX = 0.0f;
+        }
+
+        if (tilesY < 0.0f) {
+            tilesY = 0.0f;
+        }
     }
 
     if (this->m_bgFile.m_str && *this->m_bgFile.m_str && this->m_tile) {
-        float u = width / (this->m_tileSize != 0.0f ? this->m_tileSize : this->m_edgeSize);
-        float v = height / (this->m_tileSize != 0.0f ? this->m_tileSize : this->m_edgeSize);
+        float tileSize = this->m_tileSize != 0.0f ? this->m_tileSize : this->m_edgeSize;
+        float u;
+        float v;
 
-        texCoords[0].x = 0.0f;
-        texCoords[0].y = 0.0f;
-        texCoords[1].x = 0.0f;
-        texCoords[1].y = v;
-        texCoords[2].x = u;
-        texCoords[2].y = 0.0f;
-        texCoords[3].x = u;
-        texCoords[3].y = v;
+        if (fabs(tileSize) < 0.00000023841858f) {
+            u = 1.0f;
+            v = 1.0f;
+        } else {
+            u = (rect->maxX - rect->minX) * (1.0f / tileSize);
+            v = (rect->maxY - rect->minY) * (1.0f / tileSize);
+        }
+
+        texCoords[0] = C2Vector(0.0f, 0.0f);
+        texCoords[1] = C2Vector(0.0f, v);
+        texCoords[2] = C2Vector(u, 0.0f);
+        texCoords[3] = C2Vector(u, v);
         this->m_backgroundTexture->SetTexCoord(texCoords);
     }
 
     if (this->m_pieces & 0x1) {
-        texCoords[0].x = 0.0078125f;
-        texCoords[0].y = 0.0625f;
-        texCoords[1].x = 0.0078125f;
-        texCoords[1].y = tilesY - 0.0625f;
-        texCoords[2].x = 0.1171875f;
-        texCoords[2].y = 0.0625f;
-        texCoords[3].x = 0.1171875f;
-        texCoords[3].y = tilesY - 0.0625f;
+        texCoords[0] = C2Vector(0.0078125f, 0.0625f);
+        texCoords[1] = C2Vector(0.0078125f, tilesY - 0.0625f);
+        texCoords[2] = C2Vector(0.1171875f, 0.0625f);
+        texCoords[3] = C2Vector(0.1171875f, tilesY - 0.0625f);
         this->m_leftTexture->SetTexCoord(texCoords);
     }
 
     if (this->m_pieces & 0x2) {
-        texCoords[0].x = 0.1328125f;
-        texCoords[0].y = 0.0625f;
-        texCoords[1].x = 0.1328125f;
-        texCoords[1].y = tilesY - 0.0625f;
-        texCoords[2].x = 0.2421875f;
-        texCoords[2].y = 0.0625f;
-        texCoords[3].x = 0.2421875f;
-        texCoords[3].y = tilesY - 0.0625f;
+        texCoords[0] = C2Vector(0.1328125f, 0.0625f);
+        texCoords[1] = C2Vector(0.1328125f, tilesY - 0.0625f);
+        texCoords[2] = C2Vector(0.2421875f, 0.0625f);
+        texCoords[3] = C2Vector(0.2421875f, tilesY - 0.0625f);
         this->m_rightTexture->SetTexCoord(texCoords);
     }
 
     if (this->m_pieces & 0x4) {
-        texCoords[0].x = 0.2578125f;
-        texCoords[0].y = tilesX - 0.0625f;
-        texCoords[1].x = 0.3671875f;
-        texCoords[1].y = tilesX - 0.0625f;
-        texCoords[2].x = 0.2578125f;
-        texCoords[2].y = 0.0625f;
-        texCoords[3].x = 0.3671875f;
-        texCoords[3].y = 0.0625f;
+        texCoords[0] = C2Vector(0.2578125f, tilesX - 0.0625f);
+        texCoords[1] = C2Vector(0.3671875f, tilesX - 0.0625f);
+        texCoords[2] = C2Vector(0.2578125f, 0.0625f);
+        texCoords[3] = C2Vector(0.3671875f, 0.0625f);
         this->m_topTexture->SetTexCoord(texCoords);
     }
 
     if (this->m_pieces & 0x8) {
-        texCoords[0].x = 0.3828125f;
-        texCoords[0].y = tilesX - 0.0625f;
-        texCoords[1].x = 0.4921875f;
-        texCoords[1].y = tilesX - 0.0625f;
-        texCoords[2].x = 0.3828125f;
-        texCoords[2].y = 0.0625f;
-        texCoords[3].x = 0.4921875f;
-        texCoords[3].y = 0.0625f;
+        texCoords[0] = C2Vector(0.3828125f, tilesX - 0.0625f);
+        texCoords[1] = C2Vector(0.4921875f, tilesX - 0.0625f);
+        texCoords[2] = C2Vector(0.3828125f, 0.0625f);
+        texCoords[3] = C2Vector(0.4921875f, 0.0625f);
         this->m_bottomTexture->SetTexCoord(texCoords);
     }
 
