@@ -642,7 +642,7 @@ static int explist1 (LexState *ls, expdesc *v) {
 }
 
 
-// PROVEN: e8ae6ccf IDENTICAL/UNPROVEN
+// PROVEN: 605c7c7f IDENTICAL/UNPROVEN
 // OFFSET: 0x004274C0/0x14002D4A0
 static void funcargs (LexState *ls, expdesc *f) {
   FuncState *fs = ls->fs;

@@ -656,7 +656,8 @@ void CGxDeviceD3d11::CapsWindowSizeInScreenCoords(CRect& rect) {
     }
 }
 
-// OFFSET: %0x007CF260
+// PROVEN: 583922fa IDENTICAL/UNPROVEN
+// OFFSET: 0x00870250/0x1405A5DA0
 void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     CGxDevice::SceneClear(mask, color);
 
@@ -935,7 +936,7 @@ void CGxDeviceD3d11::DrawNonIndexed(const CGxBatch& batch) {
         this->m_d3dContext->IASetPrimitiveTopology(s_primitiveTopology[batch.m_primType]);
     }
 
-    this->m_d3dContext->Draw(batch.m_count, this->m_primVertexBufs[0]->m_index);
+    this->m_d3dContext->Draw(batch.m_count, this->m_primVertexBufs[0]->m_index + batch.m_start);
 }
 
 // OFFSET: %0x007CFF50

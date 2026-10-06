@@ -139,10 +139,10 @@ int32_t CGxDevice::s_monitorsInit;
 // STATIC: %0x00D92E90
 TSGrowableArray<void*> CGxDevice::s_monitors;
 
-// STATIC: %0x00D92D28
+// STATIC: 0x00EC6500/0x140DB7578
 uint32_t CGxDevice::s_cursorHotspotX;
 
-// STATIC: %0x00D91D24
+// STATIC: 0x00EBF49C/0x140DB150C
 uint32_t CGxDevice::s_cursorHotspotY;
 
 // STATIC: %0x00D91D28
@@ -1202,10 +1202,11 @@ void CGxDevice::ICursorCreate(const CGxFormat& format) {
     }
 }
 
-// OFFSET: %0x007A9BC0
+// PROVEN: 26910fc1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00843D40/0x1405702A0
 void CGxDevice::CursorUnlock(uint32_t x, uint32_t y) {
-    CGxDevice::s_cursorHotspotY = y;
     CGxDevice::s_cursorHotspotX = x;
+    CGxDevice::s_cursorHotspotY = y;
 
     if (this->m_cursorTexture) {
         CiRect rect;
@@ -1762,7 +1763,17 @@ CGxDevice::CGxDevice() : m_defWindowRect(), m_curWindowRect(), m_viewport(), m_s
     this->m_intF5C = 0;
     this->m_windowVisible = 0;
     this->m_windowFocus = 0;
+    this->m_backBufferColorTex = NULL;
+    this->m_backBufferDepthTex = NULL;
+    this->m_backBuffer = NULL;
+    this->m_frameBuffer = NULL;
+    this->m_frameBufferVersion = 0;
     this->ShaderConstantsClear();
+}
+
+// PROVEN: 33d6dde8 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void CGxDevice::IShaderBind(CGxShaderPermute* permute) {
 }
 
 // PROVEN: 36b582c1 IDENTICAL/DIFFERENT
@@ -2440,8 +2451,10 @@ int32_t CGxDevice::AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     switch (api) {
         case GxApi_OpenGl:
         case GxApi_D3d9:
-        case GxApi_D3d11:
             return CGxDevice::WinAdapterDesktopMode(monitor, mode);
+
+        case GxApi_D3d11:
+            return CGxDevice::D3d11AdapterDesktopMode(monitor, mode);
 
         default:
             return 0;

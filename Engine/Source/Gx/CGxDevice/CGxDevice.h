@@ -274,6 +274,7 @@ class CGxDevice {
     static int32_t AdjustWindowRectToWorkArea(uint32_t monitor, float aspectRatio, C2iVector* adjust, tagRECT* rect);
     static int32_t D3d11AdapterInfer(uint16_t& deviceID);
     static int32_t D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
+    static int32_t D3d11AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
     static int32_t D3d11EnumMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
     static int32_t WinAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
     static int32_t WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
@@ -328,6 +329,7 @@ class CGxDevice {
     void Log(const CGxFormat& format) const;
     void ICreateBackBufferFB(uint32_t width, uint32_t height, void* colorApiData, void* depthApiData);
     void IDeleteBackBufferFB(int32_t deleteTextures);
+    void IShaderBind(CGxShaderPermute* permute);
     void IRsDirty(EGxRenderState which);
     void IRsForceUpdate();
     void IRsForceUpdate(EGxRenderState which);

@@ -2665,11 +2665,6 @@ void CGxDeviceD3d::IReleaseD3dResources(int32_t freeTextures) {
         this->m_defDepthSurface = NULL;
     }
 
-    if (this->m_defDepthStencilSurface) {
-        this->m_defDepthStencilSurface->Release();
-        this->m_defDepthStencilSurface = NULL;
-    }
-
     if (this->m_readbackSurface) {
         this->m_readbackSurface->Release();
         this->m_readbackSurface = NULL;
@@ -3171,7 +3166,7 @@ void CGxDeviceD3d::DrawNonIndexed(const CGxBatch& batch) {
     this->IStateSync();
     this->ISetVertexDecl();
     this->ISetVertexStream();
-    this->m_d3dDevice->DrawPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index, this->PrimCalcCount(batch.m_primType, batch.m_count));
+    this->m_d3dDevice->DrawPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index + batch.m_start, this->PrimCalcCount(batch.m_primType, batch.m_count));
 }
 
 // OFFSET: %0x007D2E50
@@ -3836,7 +3831,7 @@ void CGxDeviceD3d::ICreateDepthStencilSurface(uint32_t width, uint32_t height) {
     }
 }
 
-// OFFSET: %0x007C9870
+// OFFSET: 0x0084D9D0
 CGxDeviceD3d::CGxDeviceD3d() {
     this->m_d3dStereoConvergence = 1.0f;
     this->m_api = GxApi_D3d9;
@@ -4297,11 +4292,16 @@ void CGxDeviceD3d::ITexReleaseD3dTexture(CGxTex* texId) {
         return;
     }
 
-    if (!texId->m_flags.m_renderTarget) {
-        this->m_texCacheUsed -= this->ITexBitsSize(texId, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+    if (texId->m_target == GxTex_6) {
+        texture->Release();
+    } else {
+        if (!texId->m_flags.m_renderTarget) {
+            this->m_texCacheUsed -= this->ITexBitsSize(texId, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+        }
+
+        texture->Release();
     }
 
-    texture->Release();
     texId->m_apiSpecificData = NULL;
     texId->m_link2.Unlink();
 }

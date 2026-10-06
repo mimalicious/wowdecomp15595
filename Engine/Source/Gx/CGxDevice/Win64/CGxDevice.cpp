@@ -694,7 +694,8 @@ LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lpa
     return DefWindowProcA(hwnd, message, wparam, lparam);
 }
 
-// OFFSET: %0x007B61D0
+// PROVEN: 551048cb IDENTICAL/UNPROVEN
+// OFFSET: 0x0084A6B0/0x140578470
 uint16_t CGxDevice::IWindowClassCreate() {
     HINSTANCE instance = GetModuleHandleA(NULL);
 
@@ -706,11 +707,7 @@ uint16_t CGxDevice::IWindowClassCreate() {
     windowClass.hInstance = instance;
     windowClass.lpszClassName = "GxWindowClass";
     windowClass.hIcon = static_cast<HICON>(LoadImageA(instance, "BlizzardIcon.ico", IMAGE_ICON, 0, 0, LR_DEFAULTSIZE));
-    windowClass.hCursor = LoadCursorA(instance, "BlizzardCursor.cur");
-
-    if (!windowClass.hCursor) {
-        windowClass.hCursor = LoadCursorA(instance, IDC_ARROW);
-    }
+    windowClass.hCursor = NULL;
 
     return RegisterClassExA(&windowClass);
 }

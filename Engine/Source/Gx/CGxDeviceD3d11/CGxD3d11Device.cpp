@@ -37,7 +37,7 @@ const uint32_t CGxDeviceD3d11::s_maxAnisotropy[6] = { 2, 16, 16, 16, 16, 16 };
 // STATIC: %0x00AFC45C
 const uint32_t CGxDeviceD3d11::s_numRenderTargets[6] = { 1, 1, 4, 8, 8, 8 };
 
-// STATIC: %0x00AFC474
+// STATIC: 0x00BD53DC
 const D3D11_QUERY CGxDeviceD3d11::s_queryTypes[1] = { D3D11_QUERY_OCCLUSION };
 
 // STATIC: 0x00EC66C0/0x140DB8828
@@ -724,12 +724,15 @@ char* CGxDeviceD3d11::BufLock(CGxBuf* buf) {
     return this->IBufLock(buf);
 }
 
-// OFFSET: %0x007B2810
+// PROVEN: 5aed507e IDENTICAL/NONE
+// OFFSET: 0x00852980
 void CGxDeviceD3d11::ICursorCreate(const CGxFormat& format) {
     CGxDevice::ICursorCreate(format);
 
     if (this->m_hwCursor) {
         this->IWindowCursorCreate(this->m_hwnd, &this->m_cursor);
+    } else {
+        SetCursor(NULL);
     }
 }
 
@@ -757,7 +760,8 @@ void CGxDeviceD3d11::IQueryCreateApi(CGxQuery* query) {
     }
 }
 
-// OFFSET: %0x007B28C0
+// PROVEN: 2197b17b IDENTICAL/NONE
+// OFFSET: 0x00852A60
 void CGxDeviceD3d11::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     CGxDevice::QueryCreate(query, type);
 
@@ -1301,12 +1305,15 @@ void CGxDeviceD3d11::DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex*
     }
 }
 
-// OFFSET: %0x007B37A0
+// PROVEN: c6eb9add IDENTICAL/NONE
+// OFFSET: 0x008536F0
 void CGxDeviceD3d11::CursorUnlock(uint32_t x, uint32_t y) {
     CGxDevice::CursorUnlock(x, y);
 
     if (this->m_hwCursor) {
         this->IWindowCursorCreate(this->m_hwnd, &this->m_cursor);
+    } else {
+        SetCursor(NULL);
     }
 }
 
@@ -1426,13 +1433,93 @@ int32_t CGxDeviceD3d11::BufUnlock(CGxBuf* buf, uint32_t size) {
     return 1;
 }
 
-// OFFSET: %0x007B3B40
+// PROVEN: ed22d1e4 IDENTICAL/NONE
+// OFFSET: 0x00853E90
 void CGxDeviceD3d11::BufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     CGxDevice::BufData(buf, data, size, offset);
 
     char* bufData = this->IBufLock(buf);
     memcpy(&bufData[offset], data, size);
     this->IBufUnlock(buf, size);
+}
+
+// OFFSET: 0x00852D30/0x140582970
+int32_t CGxDevice::D3d11AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
+    if (!CGxDeviceD3d11::ILoadD3dLib()) {
+        return 0;
+    }
+
+    IDXGIFactory* factory = NULL;
+    IDXGIAdapter* adapter = NULL;
+    s_CreateDXGIFactory1(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&factory));
+
+    if (factory && SUCCEEDED(factory->EnumAdapters(0, &adapter))) {
+        IDXGIOutput* output = CGxDeviceD3d11::IGetOutputForMonitor(adapter, monitor);
+
+        if (output) {
+            HMONITOR hmonitor = static_cast<HMONITOR>(CGxDevice::AdapterGetMonitorHandle(monitor));
+            MONITORINFOEXA info;
+            DEVMODEA devMode;
+            DXGI_MODE_DESC desc;
+            DXGI_MODE_DESC closest;
+
+            info.cbSize = sizeof(info);
+
+            if (hmonitor && GetMonitorInfoA(hmonitor, &info)) {
+                memset(&devMode, 0, sizeof(devMode));
+                devMode.dmSize = sizeof(devMode);
+
+                if (EnumDisplaySettingsA(info.szDevice, ENUM_CURRENT_SETTINGS, &devMode)) {
+                    desc.Width = devMode.dmPelsWidth;
+                    desc.Height = devMode.dmPelsHeight;
+                    desc.RefreshRate.Numerator = 0;
+                    desc.RefreshRate.Denominator = 0;
+                    desc.Format = devMode.dmBitsPerPel == 16 ? DXGI_FORMAT_B5G6R5_UNORM : DXGI_FORMAT_R8G8B8A8_UNORM;
+                    desc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+                    desc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+                    if (SUCCEEDED(output->FindClosestMatchingMode(&desc, &closest, NULL))) {
+                        mode.m_size.x = closest.Width;
+                        mode.m_size.y = closest.Height;
+                        mode.m_bpp = closest.Format == DXGI_FORMAT_B5G6R5_UNORM ? 16 : 32;
+                        mode.m_refreshRate = closest.RefreshRate.Numerator;
+                        mode.m_refreshRateDenom = closest.RefreshRate.Denominator;
+                        mode.m_scanlineOrdering = closest.ScanlineOrdering;
+                        mode.m_scaling = closest.Scaling;
+                        output->Release();
+
+                        if (adapter) {
+                            adapter->Release();
+                            adapter = NULL;
+                        }
+
+                        if (factory) {
+                            factory->Release();
+                            factory = NULL;
+                        }
+
+                        CGxDeviceD3d11::IUnloadD3dLib();
+                        return 1;
+                    }
+                }
+            }
+
+            output->Release();
+        }
+    }
+
+    if (adapter) {
+        adapter->Release();
+        adapter = NULL;
+    }
+
+    if (factory) {
+        factory->Release();
+        factory = NULL;
+    }
+
+    CGxDeviceD3d11::IUnloadD3dLib();
+    return 0;
 }
 
 // OFFSET: %0x007B3BF0
@@ -1482,9 +1569,11 @@ int32_t CGxDevice::D3d11EnumMonitorModes(uint32_t monitor, TSGrowableArray<CGxMo
                         CGxMonitorMode* mode = modes.New();
                         mode->m_size.x = desc.Width;
                         mode->m_size.y = desc.Height;
+                        mode->m_bpp = bpp[i];
                         mode->m_refreshRate = desc.RefreshRate.Numerator;
                         mode->m_refreshRateDenom = desc.RefreshRate.Denominator;
-                        mode->m_bpp = bpp[i];
+                        mode->m_scanlineOrdering = desc.ScanlineOrdering;
+                        mode->m_scaling = desc.Scaling;
                     }
                 }
 
@@ -1941,6 +2030,7 @@ void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     }
 }
 
+// PROVEN: 8fabf828 IDENTICAL/DIFFERENT
 // OFFSET: 0x00871FE0/0x140581DE0
 void CGxDeviceD3d11::DeviceEvictResources() {
     CGxDevice::DeviceEvictResources();

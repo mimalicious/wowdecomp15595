@@ -1270,6 +1270,15 @@ void CGxDeviceOpenGl::IRsSendToHw(EGxRenderState which) {
             GLfloat color[4];
             ColorToFloats(color, reinterpret_cast<const CImVector&>(value.m_data.u[0]));
             glFogfv(GL_FOG_COLOR, color);
+
+            if (this->m_deviceStates[Ds_VertexProgram] == 1) {
+                glDisable(GL_VERTEX_PROGRAM_ARB);
+                glEnable(GL_VERTEX_PROGRAM_ARB);
+            } else {
+                glEnable(GL_VERTEX_PROGRAM_ARB);
+                glDisable(GL_VERTEX_PROGRAM_ARB);
+            }
+
             break;
         }
 

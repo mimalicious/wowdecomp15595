@@ -15,6 +15,7 @@ void BaseDestroyGlobal() {
     CStringManager::DestroyManager();
 }
 
+// PROVEN: 8e59252c IDENTICAL/DIFFERENT
 // OFFSET: 0x00871FE0/0x140581DE0
 void BaseInitializeContext() {
     HandleInitialize();

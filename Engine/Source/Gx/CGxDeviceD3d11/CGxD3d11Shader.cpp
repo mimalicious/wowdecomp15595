@@ -72,8 +72,11 @@ void CGxDeviceD3d11::IShaderDestroy(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// OFFSET: %0x007D02D0
+// PROVEN: 4bdcadf9 IDENTICAL/NONE
+// OFFSET: 0x00871360
 void CGxDeviceD3d11::IBindVertexShader(CGxShaderPermute* permute) {
+    this->IShaderBind(permute);
+
     if (!permute->m_loaded) {
         this->IShaderCreate(permute);
 
@@ -82,65 +85,82 @@ void CGxDeviceD3d11::IBindVertexShader(CGxShaderPermute* permute) {
         }
     }
 
-    this->m_d3dContext->VSSetShader(static_cast<ID3D11VertexShader*>(permute->m_apiSpecific), NULL, 0);
+    if (permute->Valid()) {
+        this->m_d3dContext->VSSetShader(static_cast<ID3D11VertexShader*>(permute->m_apiSpecific), NULL, 0);
+    }
 }
 
-// OFFSET: %0x007D0320
+// PROVEN: d16ed578 IDENTICAL/NONE
+// OFFSET: 0x008713B0
 void CGxDeviceD3d11::IBindHullShader(CGxShaderPermute* permute) {
-    if (!permute) {
+    this->IShaderBind(permute);
+
+    if (permute) {
+        if (!permute->m_loaded) {
+            this->IShaderCreate(permute);
+
+            if (!permute->m_loaded) {
+                return;
+            }
+        }
+
+        if (permute->Valid()) {
+            this->m_d3dContext->HSSetShader(static_cast<ID3D11HullShader*>(permute->m_apiSpecific), NULL, 0);
+        }
+    } else {
         this->m_d3dContext->HSSetShader(NULL, NULL, 0);
-        return;
     }
-
-    if (!permute->m_loaded) {
-        this->IShaderCreate(permute);
-
-        if (!permute->m_loaded) {
-            return;
-        }
-    }
-
-    this->m_d3dContext->HSSetShader(static_cast<ID3D11HullShader*>(permute->m_apiSpecific), NULL, 0);
 }
 
-// OFFSET: %0x007D0390
+// PROVEN: 6e3c6127 IDENTICAL/NONE
+// OFFSET: 0x00871430
 void CGxDeviceD3d11::IBindDomainShader(CGxShaderPermute* permute) {
-    if (!permute) {
+    this->IShaderBind(permute);
+
+    if (permute) {
+        if (!permute->m_loaded) {
+            this->IShaderCreate(permute);
+
+            if (!permute->m_loaded) {
+                return;
+            }
+        }
+
+        if (permute->Valid()) {
+            this->m_d3dContext->DSSetShader(static_cast<ID3D11DomainShader*>(permute->m_apiSpecific), NULL, 0);
+        }
+    } else {
         this->m_d3dContext->DSSetShader(NULL, NULL, 0);
-        return;
     }
-
-    if (!permute->m_loaded) {
-        this->IShaderCreate(permute);
-
-        if (!permute->m_loaded) {
-            return;
-        }
-    }
-
-    this->m_d3dContext->DSSetShader(static_cast<ID3D11DomainShader*>(permute->m_apiSpecific), NULL, 0);
 }
 
-// OFFSET: %0x007D0400
+// PROVEN: 7304175c IDENTICAL/NONE
+// OFFSET: 0x008714B0
 void CGxDeviceD3d11::IBindGeometryShader(CGxShaderPermute* permute) {
-    if (!permute) {
-        this->m_d3dContext->GSSetShader(NULL, NULL, 0);
-        return;
-    }
+    this->IShaderBind(permute);
 
-    if (!permute->m_loaded) {
-        this->IShaderCreate(permute);
-
+    if (permute) {
         if (!permute->m_loaded) {
-            return;
-        }
-    }
+            this->IShaderCreate(permute);
 
-    this->m_d3dContext->GSSetShader(static_cast<ID3D11GeometryShader*>(permute->m_apiSpecific), NULL, 0);
+            if (!permute->m_loaded) {
+                return;
+            }
+        }
+
+        if (permute->Valid()) {
+            this->m_d3dContext->GSSetShader(static_cast<ID3D11GeometryShader*>(permute->m_apiSpecific), NULL, 0);
+        }
+    } else {
+        this->m_d3dContext->GSSetShader(NULL, NULL, 0);
+    }
 }
 
-// OFFSET: %0x007D0470
+// PROVEN: 831316e5 IDENTICAL/NONE
+// OFFSET: 0x00871520
 void CGxDeviceD3d11::IBindPixelShader(CGxShaderPermute* permute) {
+    this->IShaderBind(permute);
+
     if (!permute->m_loaded) {
         this->IShaderCreate(permute);
 
@@ -149,7 +169,9 @@ void CGxDeviceD3d11::IBindPixelShader(CGxShaderPermute* permute) {
         }
     }
 
-    this->m_d3dContext->PSSetShader(static_cast<ID3D11PixelShader*>(permute->m_apiSpecific), NULL, 0);
+    if (permute->Valid()) {
+        this->m_d3dContext->PSSetShader(static_cast<ID3D11PixelShader*>(permute->m_apiSpecific), NULL, 0);
+    }
 }
 
 // PROVEN: f389d5c8 IDENTICAL/DIFFERENT

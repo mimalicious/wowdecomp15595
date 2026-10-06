@@ -37,6 +37,8 @@ class CGxMonitorMode {
     /* 0008 */ uint32_t m_bpp;
     /* 000C */ uint32_t m_refreshRate;
     /* 0010 */ uint32_t m_refreshRateDenom;
+    /* 0014 */ uint32_t m_scanlineOrdering;
+    /* 0018 */ uint32_t m_scaling;
 
     CGxMonitorMode();
 };
@@ -82,6 +84,7 @@ enum EGxTexTarget {
     GxTex_NonPow2 = 3,
     GxTex_Volume = 4,
     GxTex_5 = 5,
+    GxTex_6 = 6,
     GxTexTargets_Last = 5,
 };
 

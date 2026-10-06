@@ -819,8 +819,8 @@ void CGxDeviceOpenGl::IDeviceSetRenderTargetFBO(EGxBuffer buffer, CGxTex* textur
         this->DeviceSetCurWindow(this->DeviceDefWindow());
         this->m_textureTarget[buffer].m_apiSpecific = NULL;
 
-        for (uint32_t i = 0; !this->m_textureTarget[i].m_apiSpecific; i++) {
-            if (i + 1 > 4) {
+        for (uint32_t i = GxBuffers_Color; !this->m_textureTarget[i].m_apiSpecific; i++) {
+            if (i + 1 >= GxBuffers_Last) {
                 glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
                 this->m_boundFbo = 0;
                 break;
@@ -832,12 +832,21 @@ void CGxDeviceOpenGl::IDeviceSetRenderTargetFBO(EGxBuffer buffer, CGxTex* textur
     g_theGxDevicePtr->XformSetProjection(this->m_projection);
 }
 
-// OFFSET: %0x007B0B90
+// PROVEN: bc59d12d IDENTICAL/NONE
+// OFFSET: 0x0084F740
 void CGxDeviceOpenGl::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
-    if (this->m_renderTargetMode == 0) {
-        this->IDeviceSetRenderTargetCopy(buffer, texture, plane);
-    } else if (this->m_renderTargetMode == 1) {
-        this->IDeviceSetRenderTargetFBO(buffer, texture, plane);
+    if (texture == this->m_backBufferColorTex || texture == this->m_backBufferDepthTex) {
+        texture = NULL;
+    }
+
+    switch (this->m_renderTargetMode) {
+        case 0:
+            this->IDeviceSetRenderTargetCopy(buffer, texture, plane);
+            break;
+
+        case 1:
+            this->IDeviceSetRenderTargetFBO(buffer, texture, plane);
+            break;
     }
 
     this->m_viewportDirty = 1;
