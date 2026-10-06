@@ -8,13 +8,13 @@ class WeaponImpactSoundsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_weaponSubClassID;
     /* 0008 */ int32_t m_parrySoundType;
     /* 000C */ int32_t m_impactSoundID [10];
     /* 0034 */ int32_t m_critImpactSoundID [10];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

@@ -8,6 +8,8 @@ class WorldStateZoneSoundsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_worldStateID;
     /* 0008 */ int32_t m_worldStateValue;
@@ -17,8 +19,6 @@ class WorldStateZoneSoundsRec {
     /* 0018 */ int32_t m_zoneMusicID;
     /* 001C */ int32_t m_soundAmbienceID;
     /* 0020 */ int32_t m_soundProviderPreferencesID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

@@ -8,6 +8,8 @@ class MapDifficultyRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_difficulty;
@@ -15,8 +17,6 @@ class MapDifficultyRec {
     /* 0010 */ int32_t m_raidDuration;
     /* 0014 */ int32_t m_maxPlayers;
     /* 0018 */ DBCString m_difficultystring;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

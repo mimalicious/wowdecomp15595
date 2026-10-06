@@ -8,6 +8,8 @@ class CreatureModelDataRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
     /* 0008 */ DBCString m_modelName;
@@ -39,8 +41,6 @@ class CreatureModelDataRec {
     /* 0070 */ float unk_0070;
     /* 0074 */ float unk_0074;
     /* 0078 */ float unk_0078;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

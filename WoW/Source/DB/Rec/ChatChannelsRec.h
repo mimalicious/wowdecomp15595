@@ -8,13 +8,13 @@ class ChatChannelsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
     /* 0008 */ int32_t m_factionGroup;
     /* 000C */ DBCString m_name;
     /* 0010 */ DBCString m_shortcut;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

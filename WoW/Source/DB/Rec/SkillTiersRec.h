@@ -8,11 +8,11 @@ class SkillTiersRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_cost [16];
     /* 0044 */ int32_t m_value [16];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

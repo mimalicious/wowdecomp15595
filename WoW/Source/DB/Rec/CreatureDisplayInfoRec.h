@@ -8,6 +8,8 @@ class CreatureDisplayInfoRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_modelID;
     /* 0008 */ int32_t m_soundID;
@@ -23,8 +25,6 @@ class CreatureDisplayInfoRec {
     /* 0038 */ int32_t m_creatureGeosetData;
     /* 003C */ int32_t m_objectEffectPackageID;
     /* 0040 */ int32_t unk_0040;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

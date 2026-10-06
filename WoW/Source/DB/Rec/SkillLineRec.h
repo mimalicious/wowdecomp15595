@@ -8,6 +8,8 @@ class SkillLineRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_categoryID;
     /* 0008 */ DBCString m_displayName;
@@ -15,8 +17,6 @@ class SkillLineRec {
     /* 0010 */ int32_t m_spellIconID;
     /* 0014 */ DBCString m_alternateVerb;
     /* 0018 */ int32_t m_canLink;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

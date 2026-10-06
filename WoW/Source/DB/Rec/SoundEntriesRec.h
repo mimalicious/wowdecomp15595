@@ -8,6 +8,8 @@ class SoundEntriesRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_soundType;
     /* 0008 */ DBCString m_name;
@@ -25,8 +27,6 @@ class SoundEntriesRec {
     /* 0080 */ float m_pitchVariationPlus;
     /* 0084 */ float m_pitchVariationMinus;
     /* 0088 */ int32_t unk_0088;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

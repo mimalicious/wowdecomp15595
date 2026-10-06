@@ -8,6 +8,8 @@ class SpellEffectRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ float unk_0008;
@@ -35,8 +37,6 @@ class SpellEffectRec {
     /* 0060 */ int32_t unk_0060;
     /* 0064 */ int32_t unk_0064;
     /* 0068 */ int32_t unk_0068;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

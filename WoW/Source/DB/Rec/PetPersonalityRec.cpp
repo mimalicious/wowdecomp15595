@@ -1,7 +1,7 @@
 #include "WoW/Source/DB/Rec/PetPersonalityRec.h"
 
 // STATIC: %0x00B45A48
-const DBCMeta PetPersonalityRec::s_meta = { "DBFilesClient\\PetPersonality.dbc", 4, 32, PetPersonalityRec::FixupStrings, 0 };
+const DBCMeta PetPersonalityRec::s_meta = { "DBFilesClient\\PetPersonality.dbc", 4, 32, PetPersonalityRec::FixupStrings, 0, NULL, NULL, NULL };
 
 // OFFSET: %0x0097C040
 void PetPersonalityRec::FixupStrings(void* record, const char* strings) {

@@ -8,6 +8,8 @@ class WorldMapOverlayRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapAreaID;
     /* 0008 */ int32_t m_areaID [4];
@@ -20,8 +22,6 @@ class WorldMapOverlayRec {
     /* 0030 */ int32_t unk_0030;
     /* 0034 */ int32_t unk_0034;
     /* 0038 */ int32_t unk_0038;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

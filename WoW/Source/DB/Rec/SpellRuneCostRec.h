@@ -8,13 +8,13 @@ class SpellRuneCostRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_blood;
     /* 0008 */ int32_t m_unholy;
     /* 000C */ int32_t m_frost;
     /* 0010 */ int32_t m_runicPower;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

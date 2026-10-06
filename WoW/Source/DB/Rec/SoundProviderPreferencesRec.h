@@ -8,6 +8,8 @@ class SoundProviderPreferencesRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_description;
     /* 0008 */ int32_t m_flags;
@@ -32,8 +34,6 @@ class SoundProviderPreferencesRec {
     /* 0054 */ float m_eax3ModulationDepth;
     /* 0058 */ float m_eax3Hfreference;
     /* 005C */ float m_eax3Lfreference;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

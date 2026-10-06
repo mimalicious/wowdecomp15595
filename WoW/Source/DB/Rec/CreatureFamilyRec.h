@@ -8,6 +8,8 @@ class CreatureFamilyRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ float m_minScale;
     /* 0008 */ int32_t m_minScaleLevel;
@@ -19,8 +21,6 @@ class CreatureFamilyRec {
     /* 0024 */ int32_t m_categoryEnumID;
     /* 0028 */ DBCString m_name;
     /* 002C */ DBCString m_iconFile;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

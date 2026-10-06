@@ -8,6 +8,8 @@ class CharStartOutfitRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int8_t m_raceID;
     /* 0005 */ int8_t m_classID;
@@ -18,8 +20,6 @@ class CharStartOutfitRec {
     /* 00C8 */ int32_t m_inventoryType [24];
     /* 0128 */ int32_t unk_0128;
     /* 012C */ int32_t unk_012C;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

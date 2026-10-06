@@ -8,6 +8,8 @@ class ScalingStatValuesRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
@@ -55,8 +57,6 @@ class ScalingStatValuesRec {
     /* 00B0 */ int32_t unk_00B0;
     /* 00B4 */ int32_t unk_00B4;
     /* 00B8 */ int32_t unk_00B8;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

@@ -8,6 +8,8 @@ class DungeonMapRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_floorIndex;
@@ -16,8 +18,6 @@ class DungeonMapRec {
     /* 0014 */ float m_maxX;
     /* 0018 */ float m_maxY;
     /* 001C */ int32_t m_parentWorldMapID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

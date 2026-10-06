@@ -8,6 +8,8 @@ class CharSectionsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_raceID;
     /* 0008 */ int32_t m_sexID;
@@ -16,8 +18,6 @@ class CharSectionsRec {
     /* 001C */ int32_t m_flags;
     /* 0020 */ int32_t m_variationIndex;
     /* 0024 */ int32_t m_colorIndex;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

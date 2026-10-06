@@ -8,6 +8,8 @@ class ScreenEffectRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_effect;
@@ -16,8 +18,6 @@ class ScreenEffectRec {
     /* 0020 */ int32_t m_soundAmbienceID;
     /* 0024 */ int32_t m_zoneMusicID;
     /* 0028 */ int32_t unk_0028;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

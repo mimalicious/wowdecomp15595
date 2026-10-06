@@ -8,6 +8,8 @@ class SpellChainEffectsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ float m_avgSegLen;
     /* 0008 */ float m_width;
@@ -56,8 +58,6 @@ class SpellChainEffectsRec {
     /* 00A8 */ int32_t m_renderLayer;
     /* 00AC */ float m_textureLength;
     /* 00B0 */ float m_wavePhase;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

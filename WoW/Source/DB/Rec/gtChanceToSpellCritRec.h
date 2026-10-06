@@ -8,10 +8,10 @@ class gtChanceToSpellCritRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ float m_data;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

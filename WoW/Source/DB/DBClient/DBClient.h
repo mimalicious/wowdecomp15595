@@ -653,13 +653,14 @@ extern WowClientDB<gtRegenMPPerSptRec> g_gtRegenMPPerSptDB;
 extern WowClientDB<gtSpellScalingRec> g_gtSpellScalingDB;
 
 extern const char* g_localeNames[12];
+extern int32_t g_clientDBWorldTablesLoaded;
+extern int32_t g_clientDBGlueTablesLoaded;
+
 MapDifficultyRec* GetMapDifficultyEntryByMapIdAndDifficulty(int32_t mapId, uint32_t difficulty, int32_t* a3);
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty);
 int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty);
 int32_t ClientDBGetNumWeaponSubClasses();
 int32_t ClientDBGetUnarmedWeapon();
-extern int32_t g_clientDBWorldTablesLoaded;
-extern int32_t g_clientDBGlueTablesLoaded;
 
 void ClientDBInitialize();
 void ClientDBInitializeGlue();

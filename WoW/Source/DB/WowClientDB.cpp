@@ -67,6 +67,7 @@ WowClientDB_Common::WowClientDB_Common() {
     this->m_minID = 0;
 }
 
+// PROVEN: d4f4dd99 IDENTICAL/NONE
 // OFFSET: 0x0048AB40/0x1400ADBA0
 void WowClientDB_Common::Load(const DBCMeta* meta) {
     char error[256];
@@ -163,7 +164,8 @@ void WowClientDB_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t 
     }
 }
 
-// OFFSET: %0x00492DD0
+// PROVEN: 0d82be0b IDENTICAL/NONE
+// OFFSET: 0x0048AE00/0x1400ADEF0
 WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_data = NULL;
     this->m_strings = NULL;
@@ -171,7 +173,8 @@ WowClientDB_RLE_Base::WowClientDB_RLE_Base() {
     this->m_recordsById = NULL;
 }
 
-// OFFSET: %0x00492E00
+// PROVEN: 8ce3b1ac IDENTICAL/NONE
+// OFFSET: 0x0048AE30/0x1400ADF20
 void WowClientDB_RLE_Base::Free() {
     if (this->m_data) {
         SMemFree(this->m_data, __FILE__, __LINE__, 0);
@@ -194,8 +197,9 @@ void WowClientDB_RLE_Base::Free() {
     }
 }
 
-// OFFSET: %0x00492E80
+// OFFSET: 0x0048AF10/0x1400AE040
 void WowClientDB_RLE_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t numRecords, uint8_t* rows, uint32_t stringSize, const char* strings) {
+    this->m_meta = meta;
     this->m_data = NULL;
     this->m_records = NULL;
     this->m_recordsById = NULL;
@@ -212,27 +216,23 @@ void WowClientDB_RLE_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint3
     memcpy(this->m_strings, strings, stringSize);
 
     for (int32_t i = 0; i < this->m_numRecords; i++) {
-        uint8_t* row = &rows[i * meta->m_rowSize];
-        meta->m_fixupStrings(row, this->m_strings);
-
-        int32_t id = *reinterpret_cast<int32_t*>(&row[meta->m_idOffset]);
+        int32_t id = *reinterpret_cast<int32_t*>(&rows[i * meta->m_rowSize + meta->m_idOffset]);
         this->m_maxID = id > this->m_maxID ? id : this->m_maxID;
         this->m_minID = id < this->m_minID ? id : this->m_minID;
     }
 
     this->m_records = static_cast<uint8_t**>(SMemAlloc(sizeof(uint8_t*) * this->m_numRecords, __FILE__, __LINE__, 0));
-    this->m_recordsById = static_cast<uint8_t**>(SMemAlloc(sizeof(uint8_t*) * (this->m_maxID - this->m_minID + 1), __FILE__, __LINE__, 8));
+    this->m_recordsById = static_cast<uint8_t**>(SMemAlloc(sizeof(uint8_t*) * (this->m_maxID - this->m_minID) + sizeof(uint8_t*), __FILE__, __LINE__, 8));
 
     if (g_clientDbPerformCompress) {
         uint32_t size = 0;
 
         for (int32_t i = 0; i < this->m_numRecords; i++) {
-            uint8_t* row = &rows[i * meta->m_rowSize];
-            size += CompressRow(row, meta->m_rowSize, NULL);
+            size += CompressRow(&rows[i * meta->m_rowSize], meta->m_rowSize, NULL);
         }
 
-        this->m_data = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
-        uint8_t* dst = this->m_data;
+        uint8_t* dst = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
+        this->m_data = dst;
 
         for (int32_t i = 0; i < this->m_numRecords; i++) {
             uint8_t* row = &rows[i * meta->m_rowSize];
@@ -251,6 +251,64 @@ void WowClientDB_RLE_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint3
             int32_t id = *reinterpret_cast<int32_t*>(&row[meta->m_idOffset]);
             this->m_records[i] = row;
             this->m_recordsById[id - this->m_minID] = row;
+        }
+    }
+}
+
+// OFFSET: 0x0048B0E0/0x1400AE280
+void WowClientDB_RLE_Base::CopyRecord(void* rec, const uint8_t* row, uint8_t* buffer) const {
+    uint8_t* dst = static_cast<uint8_t*>(rec);
+    uint32_t offset = 0;
+
+    if (g_clientDbPerformCompress) {
+        DecompressRow(row, this->m_meta->m_rowSize, buffer);
+        row = buffer;
+    }
+
+    for (uint32_t i = 0; i < static_cast<uint32_t>(this->m_meta->m_numColumns); i++) {
+        const uint8_t* src = &row[this->m_meta->m_fieldOffsets[i]];
+        int32_t count = this->m_meta->m_fieldSizes[i] / 4;
+
+        switch (this->m_meta->m_fieldTypes[i]) {
+            case 0:
+                for (; count; count--) {
+                    offset += -offset & (sizeof(int32_t) - 1);
+                    *reinterpret_cast<int32_t*>(&dst[offset]) = *reinterpret_cast<const int32_t*>(src);
+                    offset += sizeof(int32_t);
+                    src += sizeof(int32_t);
+                }
+
+                break;
+
+            case 1:
+                for (; count; count--) {
+                    offset += -offset & (sizeof(int64_t) - 1);
+                    *reinterpret_cast<int64_t*>(&dst[offset]) = *reinterpret_cast<const int64_t*>(src);
+                    offset += sizeof(int64_t);
+                    src += sizeof(int64_t);
+                }
+
+                break;
+
+            case 2:
+                for (; count; count--) {
+                    offset += -offset & (sizeof(const char*) - 1);
+                    *reinterpret_cast<const char**>(&dst[offset]) = &this->m_strings[*reinterpret_cast<const uint32_t*>(src)];
+                    offset += sizeof(const char*);
+                    src += sizeof(uint32_t);
+                }
+
+                break;
+
+            case 3:
+                for (int32_t k = 0; k < count; k++) {
+                    offset += -offset & (sizeof(float) - 1);
+                    *reinterpret_cast<float*>(&dst[offset]) = *reinterpret_cast<const float*>(src);
+                    offset += sizeof(float);
+                    src += sizeof(float);
+                }
+
+                break;
         }
     }
 }

@@ -8,6 +8,8 @@ class VehicleSeatRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
     /* 0008 */ int32_t m_attachmentID;
@@ -72,8 +74,6 @@ class VehicleSeatRec {
     /* 00FC */ int32_t unk_00FC;
     /* 0100 */ int32_t unk_0100;
     /* 0104 */ int32_t unk_0104;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

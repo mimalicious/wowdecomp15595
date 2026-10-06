@@ -8,6 +8,8 @@ class ObjectEffectRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_objectEffectGroupID;
@@ -18,8 +20,6 @@ class ObjectEffectRec {
     /* 001C */ int32_t m_attachment;
     /* 0020 */ float m_offset [3];
     /* 002C */ int32_t m_objectEffectModifierID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

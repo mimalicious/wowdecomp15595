@@ -8,6 +8,8 @@ class LiquidTypeRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_flags;
@@ -27,8 +29,6 @@ class LiquidTypeRec {
     /* 0054 */ int32_t m_color [2];
     /* 005C */ float m_float [18];
     /* 00A4 */ int32_t m_int [4];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

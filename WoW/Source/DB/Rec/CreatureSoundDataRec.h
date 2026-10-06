@@ -8,6 +8,8 @@ class CreatureSoundDataRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_soundExertionID;
     /* 0008 */ int32_t m_soundExertionCriticalID;
@@ -41,8 +43,6 @@ class CreatureSoundDataRec {
     /* 0094 */ int32_t unk_0094;
     /* 0098 */ int32_t unk_0098;
     /* 009C */ int32_t unk_009C;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

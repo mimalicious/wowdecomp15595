@@ -8,6 +8,8 @@ class AchievementRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_faction;
     /* 0008 */ int32_t m_instanceID;
@@ -22,8 +24,6 @@ class AchievementRec {
     /* 002C */ DBCString m_reward;
     /* 0030 */ int32_t m_minimumCriteria;
     /* 0034 */ int32_t m_sharesCriteria;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

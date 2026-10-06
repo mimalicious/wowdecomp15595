@@ -8,6 +8,8 @@ class SpellItemEnchantmentRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_charges;
     /* 0008 */ int32_t m_effect [3];
@@ -23,8 +25,6 @@ class SpellItemEnchantmentRec {
     /* 0050 */ int32_t m_requiredSkillRank;
     /* 0054 */ int32_t m_minLevel;
     /* 0058 */ int32_t unk_0058;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

@@ -102,18 +102,10 @@ void DBCacheWriteKey(CDataStore& msg, const CWardenKey& key);
 bool DBCacheIsNullKey(int32_t key);
 bool DBCacheIsNullKey(uint64_t key);
 bool DBCacheIsNullKey(const CWardenKey& key);
+uint32_t DBCacheHashKey(int32_t key);
+uint32_t DBCacheHashKey(uint64_t key);
 uint32_t DBCacheHashKey(const CWardenKey& key);
 void GetCacheDirectory(char* path);
-
-// INLINED
-inline uint32_t DBCacheHashKey(int32_t key) {
-    return key;
-}
-
-// INLINED
-inline uint32_t DBCacheHashKey(uint64_t key) {
-    return static_cast<uint32_t>(key);
-}
 
 // INLINED
 template <class TKey>
@@ -690,5 +682,7 @@ void DBCache<T, TKey, THashKey>::Idle() {
         }
     }
 }
+
+#include "WoW/Source/DB/DBClient/DBCache.inl"
 
 #endif

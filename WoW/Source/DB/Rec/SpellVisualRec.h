@@ -8,6 +8,8 @@ class SpellVisualRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_precastKit;
     /* 0008 */ int32_t m_castKit;
@@ -37,8 +39,6 @@ class SpellVisualRec {
     /* 0068 */ float m_missileCastOffset [3];
     /* 0074 */ float m_missileImpactOffset [3];
     /* 0080 */ int32_t unk_0080;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

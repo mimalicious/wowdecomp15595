@@ -8,6 +8,8 @@ class ExhaustionRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_xp;
     /* 0008 */ float m_factor;
@@ -15,8 +17,6 @@ class ExhaustionRec {
     /* 0010 */ float m_innHours;
     /* 0014 */ DBCString m_name;
     /* 0018 */ float m_threshold;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

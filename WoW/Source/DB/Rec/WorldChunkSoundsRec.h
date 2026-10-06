@@ -8,6 +8,8 @@ class WorldChunkSoundsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_generatedID;
     /* 0004 */ int32_t m_id;
     /* 0008 */ int32_t m_chunkX;
@@ -18,8 +20,6 @@ class WorldChunkSoundsRec {
     /* 001C */ int32_t m_zoneMusicID;
     /* 0020 */ int32_t m_soundAmbienceID;
     /* 0024 */ int32_t m_soundProviderPreferencesID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

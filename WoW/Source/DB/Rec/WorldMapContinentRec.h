@@ -8,6 +8,8 @@ class WorldMapContinentRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_leftBoundary;
@@ -19,8 +21,6 @@ class WorldMapContinentRec {
     /* 0024 */ float m_taxiMin [2];
     /* 002C */ float m_taxiMax [2];
     /* 0034 */ int32_t m_worldMapID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

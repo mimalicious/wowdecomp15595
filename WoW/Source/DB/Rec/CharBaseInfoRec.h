@@ -8,11 +8,11 @@ class CharBaseInfoRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int8_t m_raceID;
     /* 0005 */ int8_t m_classID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

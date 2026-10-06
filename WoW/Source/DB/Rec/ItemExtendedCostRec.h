@@ -8,6 +8,8 @@ class ItemExtendedCostRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
@@ -39,8 +41,6 @@ class ItemExtendedCostRec {
     /* 0070 */ int32_t unk_0070;
     /* 0074 */ int32_t unk_0074;
     /* 0078 */ int32_t unk_0078;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

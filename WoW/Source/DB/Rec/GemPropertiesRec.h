@@ -8,14 +8,14 @@ class GemPropertiesRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_enchantID;
     /* 0008 */ int32_t m_maxcountInv;
     /* 000C */ int32_t m_maxcountItem;
     /* 0010 */ int32_t unk_0010;
     /* 0014 */ int32_t unk_0014;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

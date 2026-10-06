@@ -8,6 +8,8 @@ class GlueScreenEmoteRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
@@ -16,8 +18,6 @@ class GlueScreenEmoteRec {
     /* 0014 */ int32_t unk_0014;
     /* 0018 */ int32_t unk_0018;
     /* 001C */ int32_t unk_001C;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

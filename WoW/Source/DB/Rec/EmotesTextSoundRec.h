@@ -8,13 +8,13 @@ class EmotesTextSoundRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_emotesTextID;
     /* 0008 */ int32_t m_raceID;
     /* 000C */ int32_t m_sexID;
     /* 0010 */ int32_t m_soundID;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

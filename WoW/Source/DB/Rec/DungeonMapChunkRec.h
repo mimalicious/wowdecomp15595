@@ -8,13 +8,13 @@ class DungeonMapChunkRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_wmogroupID;
     /* 000C */ int32_t m_dungeonMapID;
     /* 0010 */ float m_minZ;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

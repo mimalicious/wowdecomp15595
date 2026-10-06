@@ -20,11 +20,6 @@ class ItemDisplayInfoRec {
     /* 003C */ const char* m_texture [8];
     /* 005C */ int32_t m_itemVisual;
     /* 0060 */ int32_t m_particleColorID;
-
-    static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemDisplayInfoRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

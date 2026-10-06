@@ -8,12 +8,12 @@ class StationeryRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_itemID;
     /* 0008 */ DBCString m_texture;
     /* 000C */ int32_t m_flags;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

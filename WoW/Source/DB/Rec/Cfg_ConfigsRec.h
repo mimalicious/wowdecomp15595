@@ -8,13 +8,13 @@ class Cfg_ConfigsRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_generatedID;
     /* 0004 */ int32_t m_id;
     /* 0008 */ int32_t m_realmType;
     /* 000C */ int32_t m_playerKillingAllowed;
     /* 0010 */ int32_t m_roleplaying;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

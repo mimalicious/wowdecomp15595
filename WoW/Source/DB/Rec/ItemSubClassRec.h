@@ -8,6 +8,8 @@ class ItemSubClassRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_classID;
     /* 0008 */ int32_t m_subClassID;
@@ -21,8 +23,6 @@ class ItemSubClassRec {
     /* 0028 */ int32_t m_weaponSwingSize;
     /* 002C */ DBCString m_displayName;
     /* 0030 */ DBCString m_verboseName;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

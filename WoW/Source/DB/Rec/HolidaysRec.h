@@ -8,6 +8,8 @@ class HolidaysRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_duration [10];
     /* 002C */ int32_t m_date [26];
@@ -20,8 +22,6 @@ class HolidaysRec {
     /* 00D0 */ int32_t m_priority;
     /* 00D4 */ int32_t m_calendarFilterType;
     /* 00D8 */ int32_t m_flags;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

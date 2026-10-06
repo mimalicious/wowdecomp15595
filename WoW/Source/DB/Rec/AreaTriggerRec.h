@@ -8,6 +8,8 @@ class AreaTriggerRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_continentID;
     /* 0008 */ float m_pos [3];
@@ -19,8 +21,6 @@ class AreaTriggerRec {
     /* 0028 */ float m_boxWidth;
     /* 002C */ float m_boxHeight;
     /* 0030 */ float m_boxYaw;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

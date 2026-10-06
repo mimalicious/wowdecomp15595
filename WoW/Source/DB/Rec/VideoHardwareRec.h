@@ -8,6 +8,8 @@ class VideoHardwareRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_vendorID;
     /* 0008 */ int32_t m_deviceID;
@@ -31,8 +33,6 @@ class VideoHardwareRec {
     /* 0050 */ int32_t m_fixLag;
     /* 0054 */ int32_t m_multisample;
     /* 0058 */ int32_t m_atlasdisable;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

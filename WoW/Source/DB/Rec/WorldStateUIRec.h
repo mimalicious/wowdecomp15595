@@ -8,6 +8,8 @@ class WorldStateUIRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_areaID;
@@ -23,8 +25,6 @@ class WorldStateUIRec {
     /* 0030 */ DBCString m_dynamicTooltip;
     /* 0034 */ DBCString m_extendedUi;
     /* 0038 */ int32_t m_extendedUistateVariable [3];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

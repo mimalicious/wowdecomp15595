@@ -8,6 +8,8 @@ class VehicleRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
     /* 0008 */ float m_turnSpeed;
@@ -37,8 +39,6 @@ class VehicleRec {
     /* 008C */ float m_msslTrgtImpactTexRadius;
     /* 0090 */ int32_t m_vehicleUiindicatorID;
     /* 0094 */ int32_t m_powerDisplayID [3];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

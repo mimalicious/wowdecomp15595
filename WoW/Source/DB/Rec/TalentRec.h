@@ -8,6 +8,8 @@ class TalentRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_tabID;
     /* 0008 */ int32_t m_tierID;
@@ -18,8 +20,6 @@ class TalentRec {
     /* 003C */ int32_t m_flags;
     /* 0040 */ int32_t m_requiredSpellID;
     /* 0044 */ int32_t m_categoryMask [2];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

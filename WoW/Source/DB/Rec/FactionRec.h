@@ -8,6 +8,8 @@ class FactionRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_reputationIndex;
     /* 0008 */ int32_t m_reputationRaceMask [4];
@@ -20,8 +22,6 @@ class FactionRec {
     /* 005C */ DBCString m_name;
     /* 0060 */ DBCString m_description;
     /* 0064 */ int32_t unk_0064;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

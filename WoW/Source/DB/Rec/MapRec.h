@@ -8,6 +8,8 @@ class MapRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_directory;
     /* 0008 */ int32_t m_instanceType;
@@ -27,8 +29,6 @@ class MapRec {
     /* 0044 */ int32_t m_raidOffset;
     /* 0048 */ int32_t m_maxPlayers;
     /* 004C */ int32_t unk_004C;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

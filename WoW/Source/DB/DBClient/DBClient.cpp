@@ -1309,6 +1309,15 @@ static ClientDBTable s_clientDBGlueTables[] = {
     { NULL, NULL },
 };
 
+// STATIC: 0x00D97E94
+static uint32_t s_hotfixTime;
+
+// STATIC: 0x00EBB998
+int32_t g_clientDBWorldTablesLoaded;
+
+// STATIC: 0x00EBB99C
+int32_t g_clientDBGlueTablesLoaded;
+
 // PROVEN: 7350848c IDENTICAL/NONE
 // OFFSET: 0x00494A60/0x1400BA230
 int32_t GetPhysicalDamageClassID() {
@@ -1399,15 +1408,6 @@ void InitTerrainTypeFlags() {
     }
 }
 
-// STATIC: 0x00D97E94
-static uint32_t s_hotfixTime;
-
-// STATIC: 0x00EBB998
-int32_t g_clientDBWorldTablesLoaded;
-
-// STATIC: 0x00EBB99C
-int32_t g_clientDBGlueTablesLoaded;
-
 // OFFSET: 0x00494A90/0x1400BA260
 static void ClientDBLoadTables() {
     char path[260];
@@ -1461,6 +1461,7 @@ static void ClientDBLoadTables() {
     }
 }
 
+// PROVEN: 3474e97d IDENTICAL/NONE
 // OFFSET: 0x00494D60
 void ClientDBInitializeGlue() {
     for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {

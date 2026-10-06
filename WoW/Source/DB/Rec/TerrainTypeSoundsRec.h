@@ -8,9 +8,9 @@ class TerrainTypeSoundsRec {
     public:
     static const DBCMeta s_meta;
 
-    /* 0000 */ int32_t m_id;
-
     static void FixupStrings(void* record, const char* strings);
+
+    /* 0000 */ int32_t m_id;
 };
 
 #endif

@@ -8,14 +8,14 @@ class LightRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_continentID;
     /* 0008 */ float m_gameCoords [3];
     /* 0014 */ float m_gameFalloffStart;
     /* 0018 */ float m_gameFalloffEnd;
     /* 001C */ int32_t m_lightParamsID [8];
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

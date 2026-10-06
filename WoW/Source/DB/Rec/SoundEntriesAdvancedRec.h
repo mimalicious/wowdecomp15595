@@ -8,6 +8,8 @@ class SoundEntriesAdvancedRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_soundEntryID;
     /* 0008 */ float m_innerRadius2d;
@@ -34,8 +36,6 @@ class SoundEntriesAdvancedRec {
     /* 005C */ int32_t unk_005C;
     /* 0060 */ int32_t unk_0060;
     /* 0064 */ float unk_0064;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

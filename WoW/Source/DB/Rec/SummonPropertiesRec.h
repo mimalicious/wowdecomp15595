@@ -8,14 +8,14 @@ class SummonPropertiesRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_control;
     /* 0008 */ int32_t m_faction;
     /* 000C */ int32_t m_title;
     /* 0010 */ int32_t m_slot;
     /* 0014 */ int32_t m_flags;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

@@ -8,6 +8,8 @@ class UnitPowerBarRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
@@ -35,8 +37,6 @@ class UnitPowerBarRec {
     /* 0060 */ DBCString unk_0060;
     /* 0064 */ float unk_0064;
     /* 0068 */ float unk_0068;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif

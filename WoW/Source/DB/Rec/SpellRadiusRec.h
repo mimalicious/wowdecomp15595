@@ -8,12 +8,12 @@ class SpellRadiusRec {
     public:
     static const DBCMeta s_meta;
 
+    static void FixupStrings(void* record, const char* strings);
+
     /* 0000 */ int32_t m_id;
     /* 0004 */ float m_radius;
     /* 0008 */ float m_radiusPerLevel;
     /* 000C */ float m_radiusMax;
-
-    static void FixupStrings(void* record, const char* strings);
 };
 
 #endif
