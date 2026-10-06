@@ -241,7 +241,7 @@ double CMath::log2_(double x) {
     return t * (t2 * ((0.2883070248990067 - 0.22949900023246153 * t) * t2 + (0.48089833404997356 - 0.36067132973951144 * t)) + (1.442695040888937 - 0.7213475204127876 * t)) + (exponent + *reinterpret_cast<const double*>(reinterpret_cast<const uint8_t*>(s_log2AddTable) + offset));
 }
 
-// OFFSET: %0x004D1360
+// OFFSET: 0x004C6A70
 double CMath::exp2_(double x) {
     double biased = x + 1023.0;
     int32_t exponent = static_cast<int32_t>(biased) - 1;
@@ -262,8 +262,7 @@ double CMath::exp2_(double x) {
             return HUGE_VAL;
         }
 
-        float zero = 0.0f;
-        return zero;
+        return 0.0;
     }
 
     return t * (f2 * ((fraction * 0.0026811946517564956 + 0.005830032491308937) * f2 + (fraction * 0.06087614283854009 + 0.23603244393034895)) + (fraction * 0.6948749415195616 + 0.9997052445684839));

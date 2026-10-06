@@ -67,12 +67,12 @@ System_SFile2::FileHash System_SFile2::s_fileHash;
 // STATIC: %0x00D73930
 Blizzard::Thread::LocalObject<System_SFile2::SFileFatalInfo> System_SFile2::s_fatalInfo;
 
-// PROVEN: 4aee979d IDENTICAL
 // OFFSET: 0x00627990
 void SFile::LogFileAccess(SFileImpl* file, int32_t mode, bool flag) {
 }
 
-// OFFSET: %0x00707FB0
+// PROVEN: 16424743 IDENTICAL
+// OFFSET: 0x007A4EC0
 static void BlizzardAssertCallback(const char* expression, const char* message, const char* fileName, uint32_t lineNumber) {
     if (!*message) {
         SErrDisplayError(0, fileName, lineNumber, expression, 0, 1, 2, 0x11111111);

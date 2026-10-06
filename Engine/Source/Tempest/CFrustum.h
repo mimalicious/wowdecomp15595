@@ -14,13 +14,6 @@ class CFrustum {
     public:
     /* 0000 */ C4Plane planes[6];
     /* 0060 */ C3Vector corners[8];
-    /* 00C0 */ C3Vector lookPos;
-    /* 00CC */ C3Vector lookAt;
-    /* 00D8 */ C3Vector lookUp;
-    /* 00E4 */ float fovy;
-    /* 00E8 */ float aspect;
-    /* 00EC */ float minz;
-    /* 00F0 */ float maxz;
 
     CFrustum();
     CFrustum(const C3Vector* corners);

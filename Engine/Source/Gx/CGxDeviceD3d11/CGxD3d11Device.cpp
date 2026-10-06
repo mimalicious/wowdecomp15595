@@ -1928,7 +1928,6 @@ void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     }
 }
 
-// PROVEN: 8fabf828 IDENTICAL
 // OFFSET: 0x00871FE0
 void CGxDeviceD3d11::DeviceEvictResources() {
     CGxDevice::DeviceEvictResources();

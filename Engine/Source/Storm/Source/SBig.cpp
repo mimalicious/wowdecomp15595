@@ -91,7 +91,8 @@ int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
 
-// OFFSET: %0x004C2650
+// PROVEN: 11441f7a IDENTICAL
+// OFFSET: 0x004BBF60
 BigStack::~BigStack() {
 }
 

@@ -69,8 +69,8 @@ CGxShader* FFX::s_passThrough_PCT;
 // STATIC: %0x00D9525C
 FFX::PortalEffect* FFX::s_portalEffect;
 
-// STATIC: %0x00D95260
-FFX::Effect* FFX::s_effect[2];
+// STATIC: 0x00EC7038
+FFX::Effect* FFX::s_effect[3];
 
 // STATIC: %0x00D95268
 uint32_t FFX::s_curTimeMs;
@@ -241,9 +241,10 @@ C44Matrix* FFX::GetOldViewMtx() {
     return &FFX::s_oldViewMtx;
 }
 
-// OFFSET: %0x007FE3A0
+// PROVEN: 3eb4e803 IDENTICAL
+// OFFSET: 0x00899D50
 int32_t FFX::EffectIsSet(Effect* effect) {
-    for (uint32_t i = 0; i < 2; i++) {
+    for (uint32_t i = 0; i < 3; i++) {
         if (FFX::s_effect[i] == effect) {
             return 1;
         }
@@ -799,6 +800,7 @@ void FFX::Init() {
 
     FFX::s_effect[0] = NULL;
     FFX::s_effect[1] = NULL;
+    FFX::s_effect[2] = NULL;
 
     FFX::s_useRECT = GetTexTarget() == GxTex_Rectangle;
 }
@@ -978,7 +980,7 @@ void FFX::Start() {
 
     bool active = false;
 
-    for (uint32_t i = 0; i < 2; i++) {
+    for (uint32_t i = 0; i < 3; i++) {
         if (FFX::s_effect[i] && FFX::s_effect[i]->Valid()) {
             active = true;
             break;

@@ -4326,12 +4326,10 @@ void CCharacterComponent::UpdateItemHA(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: 48c37d5b IDENTICAL
 // OFFSET: 0x00627990
 void CCharacterComponent::UpdateItemHU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
 }
 
-// PROVEN: 00cdc5bc IDENTICAL
 // OFFSET: 0x00627990
 void CCharacterComponent::UpdateItemHL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
 }

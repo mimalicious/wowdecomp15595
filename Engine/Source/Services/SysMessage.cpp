@@ -19,7 +19,6 @@ static uint32_t s_categoryFilter = 0xFFFFFFFF;
 // STATIC: %0x00CD285C
 static int32_t s_minSeverity;
 
-// PROVEN: 31ecab71 IDENTICAL
 // OFFSET: 0x0053E840
 void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, float& blue) {
     red = s_severities[severity].m_red * 0.0039215689f;

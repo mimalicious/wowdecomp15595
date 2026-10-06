@@ -15,7 +15,8 @@ void OsFreeLibrary(void* module) {
     FreeLibrary(static_cast<HMODULE>(module));
 }
 
-// OFFSET: %0x007DE270
+// PROVEN: f455e7fb IDENTICAL
+// OFFSET: 0x0087EEF0
 void* OsGetLibraryEntryPoint(void* module, const char* name) {
     return reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(module), name));
 }

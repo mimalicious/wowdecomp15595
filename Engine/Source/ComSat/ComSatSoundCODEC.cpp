@@ -301,7 +301,6 @@ ComSat::Sound::CODECIPMR6000::~CODECIPMR6000() {
     this->Shutdown();
 }
 
-// PROVEN: 9adda6e6 IDENTICAL
 // OFFSET: 0x00627990
 void ComSat::Sound::CODECIPMR6000::ApplyVoiceEffects(uint8_t player, uint8_t* pcm, uint32_t* size) {
 }

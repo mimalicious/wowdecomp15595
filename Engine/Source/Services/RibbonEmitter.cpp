@@ -362,7 +362,8 @@ static void DuplicateTextures(const TSGrowableArray<CTexture*>& source, TSGrowab
     }
 }
 
-// OFFSET: %0x00A5A550
+// PROVEN: e8398ad1 IDENTICAL
+// OFFSET: 0x00B26720
 CRibbonEmitter::~CRibbonEmitter() {
     this->CloseTextureHandles();
     this->m_flags &= ~0x2;

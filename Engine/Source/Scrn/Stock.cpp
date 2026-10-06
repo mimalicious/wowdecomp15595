@@ -35,7 +35,6 @@ HTEXTFONT ScrnGetStockFont(SCRNSTOCK stockID) {
     return s_stockObjects[stockID];
 }
 
-// PROVEN: f534407a IDENTICAL
 // OFFSET: 0x007FFE70
 float ScrnGetStockFontHeight(SCRNSTOCK stockID) {
     if (stockID >= SCRNSTOCKOBJECTS) {

@@ -133,7 +133,8 @@ static int32_t IsNotFinite(double value) {
     return !std::isfinite(value);
 }
 
-// OFFSET: %0x007A04E0
+// PROVEN: ce873ede IDENTICAL
+// OFFSET: 0x0083A0C0
 int32_t FrameScript_HookWrapper(lua_State* L) {
     int32_t top = lua_gettop(L);
 
@@ -176,7 +177,8 @@ int32_t FrameScript_HookWrapper(lua_State* L) {
     return results;
 }
 
-// OFFSET: %0x007A1170
+// PROVEN: 0610bf15 IDENTICAL
+// OFFSET: 0x0083AD30
 void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
 }
@@ -226,7 +228,8 @@ lua_State* FrameScript_GetContext() {
     return s_context;
 }
 
-// OFFSET: %0x007A1250
+// PROVEN: a2414502 IDENTICAL
+// OFFSET: 0x0083AE10
 int32_t FrameScript_GetTotalMemoryUsed() {
     return lua_gc(s_context, LUA_GCCOUNT, 0);
 }
@@ -287,14 +290,16 @@ char* FrameScript_GetCurrentFunction(lua_State* L, char* buffer, uint32_t buffer
     return buffer;
 }
 
-// OFFSET: %0x007A1470
+// PROVEN: 940ef983 IDENTICAL
+// OFFSET: 0x0083B030
 void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_State* L = s_context;
     lua_pushcfunction(L, function);
     lua_setglobal(L, name);
 }
 
-// OFFSET: %0x007A14B0
+// PROVEN: 3c25bed1 IDENTICAL
+// OFFSET: 0x0083B070
 void FrameScript_UnregisterFunction(const char* name) {
     lua_State* L = s_context;
     lua_pushnil(L);
@@ -684,7 +689,8 @@ static void PrintVariable(HOSFILE file, lua_State* L, int32_t index, int32_t dep
     OsWriteFile(file, s_printBuffer, SStrLen(s_printBuffer), &written);
 }
 
-// OFFSET: %0x007A20B0
+// PROVEN: 05fa48bd IDENTICAL
+// OFFSET: 0x0083BCB0
 int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     lua_State* L = s_context;
 
@@ -920,12 +926,14 @@ int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const
     return function;
 }
 
-// OFFSET: %0x007A2600
+// PROVEN: 987adb75 IDENTICAL
+// OFFSET: 0x0083C210
 void FrameScript_ReleaseFunction(int32_t function) {
     luaL_unref(s_context, LUA_REGISTRYINDEX, function);
 }
 
-// OFFSET: %0x007A2620
+// PROVEN: 17bf5c05 IDENTICAL
+// OFFSET: 0x0083C230
 void FrameScript_Execute(const char* source, const char* filename, const char* taint) {
     const char* savedTaint = lua_tainted;
 
@@ -1241,7 +1249,8 @@ bool FrameScript_ShouldSignalEvent(uint32_t index) {
     return event && event->m_listeners.Head();
 }
 
-// OFFSET: %0x007A4150
+// PROVEN: 4faa3e58 IDENTICAL
+// OFFSET: 0x0083DE40
 void FrameScript_Execute(int32_t function, FrameScript_Object* object, int32_t argCount, const char* taint, FrameScript_EventObject* event) {
     lua_State* L = s_context;
     int64_t start = 0;

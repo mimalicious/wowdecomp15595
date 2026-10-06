@@ -29,7 +29,8 @@ int32_t FrameScript_Object::GetLuaObjectRef() {
     return this->m_luaObjectRef;
 }
 
-// OFFSET: %0x0079FD80
+// PROVEN: fca8cbd8 IDENTICAL
+// OFFSET: 0x00839A90
 int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerFunc)(lua_State*)) {
     lua_newtable(L);
     lua_pushstring(L, "__index");
@@ -40,7 +41,8 @@ int32_t FrameScript_Object::CreateScriptMetaTable(lua_State* L, void (*registerF
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-// OFFSET: %0x0079FDD0
+// PROVEN: 11be704c IDENTICAL
+// OFFSET: 0x00839AE0
 void FrameScript_Object::FillScriptMethodTable(lua_State* L, FrameScript_Method* methods, int32_t count) {
     for (int32_t i = 0; i < count; i++) {
         lua_pushstring(L, methods[i].m_name);
@@ -55,7 +57,8 @@ FrameScript_Object::FrameScript_Object() : m_scripts(NULL), m_scriptCapacity(0),
     this->m_luaObjectRef = LUA_NOREF;
 }
 
-// OFFSET: %0x007A2D90
+// PROVEN: 9e5edcf2 IDENTICAL
+// OFFSET: 0x0083C9F0
 int32_t FrameScript_Object::SetScriptFunction(FrameScript_Object::ScriptIx& script, int32_t function, const char* taint) {
     int32_t previous = 0;
 
@@ -102,7 +105,8 @@ FrameScript_Object::~FrameScript_Object() {
     }
 }
 
-// OFFSET: %0x007A3050
+// PROVEN: ddfe8be9 IDENTICAL
+// OFFSET: 0x0083CCB0
 void FrameScript_Object::RegisterScriptObject(const char* name) {
     lua_State* L = s_context;
 
@@ -151,7 +155,8 @@ void FrameScript_Object::RegisterScriptObject(const char* name) {
     }
 }
 
-// OFFSET: %0x007A3190
+// PROVEN: 41081439 IDENTICAL
+// OFFSET: 0x0083CDF0
 void FrameScript_Object::UnregisterScriptObject(const char* name) {
     lua_State* L = s_context;
 

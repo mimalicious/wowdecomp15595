@@ -468,7 +468,8 @@ int32_t IOsParseProcessorFrequency(const char* brand) {
     return 1;
 }
 
-// OFFSET: %0x007DB310
+// PROVEN: 878a6637 IDENTICAL
+// OFFSET: 0x008759B0
 int32_t IOsGetPowerProfFrequency() {
     typedef LONG (WINAPI* CallNtPowerInformationFunc)(int32_t level, void* inputBuffer, ULONG inputBufferLength, void* outputBuffer, ULONG outputBufferLength);
 

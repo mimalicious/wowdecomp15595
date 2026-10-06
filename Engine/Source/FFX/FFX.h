@@ -91,7 +91,7 @@ namespace FFX {
     extern CGxShader* s_passThrough_PCT2;
     extern CGxShader* s_passThrough_PCT;
     extern PortalEffect* s_portalEffect;
-    extern Effect* s_effect[2];
+    extern Effect* s_effect[3];
     extern uint32_t s_curTimeMs;
     extern float s_tickTimeSec;
     extern CGxTex* s_oldFrameBuffer;

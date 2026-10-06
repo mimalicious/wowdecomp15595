@@ -535,7 +535,8 @@ int32_t IOsVersionChecksum(IOsVersionHashCallback& callback, const char* path, i
     return result;
 }
 
-// OFFSET: %0x00A752A0
+// PROVEN: 4053bedf IDENTICAL
+// OFFSET: 0x00B42FE0
 OsFileVersionInfo::OsFileVersionInfo(const char* filename) : m_fileVersion(), m_productVersion() {
     char path[MAX_PATH];
     if (!filename) {

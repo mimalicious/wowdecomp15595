@@ -1574,7 +1574,6 @@ void ComSatClientCallback::NotifyTalkerStop(uint8_t localTalker, uint64_t sessio
     }
 }
 
-// PROVEN: 05ae74ae IDENTICAL
 // OFFSET: 0x00627990
 void ComSatClientCallback::NotifyLocalTalkerVoiceLevel(uint8_t localTalker, float level, bool talking) {
 }

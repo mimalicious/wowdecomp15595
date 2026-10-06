@@ -2169,7 +2169,6 @@ void CGAuctionHouse::ShutdownGame() {
     CGAuctionHouse::m_numOutbidItems = 0;
 }
 
-// PROVEN: b1a85e75 IDENTICAL
 // OFFSET: 0x00A325A0
 uint32_t CalculateAuctionDeposit(uint32_t depositRate, uint32_t sellPrice, uint32_t runTime) {
     for (uint32_t i = 0; i < 3; i++) {

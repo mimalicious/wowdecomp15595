@@ -873,7 +873,6 @@ OsNet::SLTCPCONN::SLTCPCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, vo
     }
 }
 
-// PROVEN: 3c4398b6 IDENTICAL
 // OFFSET: 0x0087E130
 void OsNet::TCPNET::TcpMakeConn(SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes) {
     if (this->m_port) {

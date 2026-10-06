@@ -91,7 +91,6 @@ void CGNamePlateFrame::TriggerDamageFeedback() {
     this->m_unitNameText->SetVertexColor(color);
 }
 
-// PROVEN: 930fe4f4 IDENTICAL
 // OFFSET: 0x009E7C40
 static const CImVector* GetDifficultyColor(int32_t level, int32_t playerLevel) {
     static CImVector s_difficultyColors[5] = {

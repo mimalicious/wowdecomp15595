@@ -13,7 +13,6 @@ void OsTimeStartup(OsTimeManager::TimingMethod method) {
     OsTimeManagerCreate(method);
 }
 
-// PROVEN: 6d280427 IDENTICAL
 // OFFSET: 0x00871FE0
 void OsTimeShutdown() {
 }

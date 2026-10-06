@@ -403,7 +403,8 @@ int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t
     return !this->m_complete;
 }
 
-// OFFSET: %0x0075BF50
+// PROVEN: 364abc74 IDENTICAL
+// OFFSET: 0x007F9880
 bool Blizzard::Mopaq::SFileFileIsDeleted(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
     return GetFileBlockEntry(handle, name, md5, flags, NULL, NULL, NULL, NULL) == 4;

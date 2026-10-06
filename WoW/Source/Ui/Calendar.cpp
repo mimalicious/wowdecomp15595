@@ -3068,7 +3068,6 @@ void CGCalendar::GuildChanged() {
     CGCalendar::UpdateDisplayList(true);
 }
 
-// PROVEN: 979af840 IDENTICAL
 // OFFSET: 0x009B5B70
 void CGCalendar::InsertLockoutEvent(int32_t mapID, int32_t difficulty, uint64_t instanceID, uint32_t time) {
     void* mem = SMemAlloc(sizeof(CalendarDayEvent), __FILE__, __LINE__, 0);

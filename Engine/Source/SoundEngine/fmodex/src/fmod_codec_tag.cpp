@@ -233,7 +233,6 @@ FMOD_RESULT CodecTag::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 98376319 IDENTICAL
 // OFFSET: 0x00AC09C0
 FMOD_RESULT CodecTag::readTags()
 {

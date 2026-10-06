@@ -534,7 +534,6 @@ Battlenet::ApplicationFile* BattlenetApplication::OpenApplicationFile(const char
 void BattlenetApplication::CloseApplicationFile(Battlenet::ApplicationFile* file) {
 }
 
-// PROVEN: 5b409c1d IDENTICAL
 // OFFSET: 0x00627990
 void BattlenetApplication::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
 }
