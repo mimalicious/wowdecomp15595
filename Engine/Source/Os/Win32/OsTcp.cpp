@@ -284,7 +284,8 @@ void OsNet::TCPCONN::SetRecvTimeout(uint32_t timeout) {
     setsockopt(this->m_sock, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char*>(&timeout), sizeof(timeout));
 }
 
-// OFFSET: %0x007E2250
+// PROVEN: cb1ea2f0 IDENTICAL
+// OFFSET: 0x0087CCB0
 void OsNet::IOTCPCONN::IncIo() {
     InterlockedIncrement(&this->m_ioCount.m_value);
 }
@@ -456,8 +457,8 @@ SOCKET OsNet::TCPACCEPT::Complete(NETCONNADDR* connAddr, int32_t makeSock) {
         sockaddr* peerAddr;
         int peerSize;
         OsNet::TCPNET::s_GetAcceptExSockaddrs(this->m_addr, 0, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, &selfAddr, &selfSize, &peerAddr, &peerSize);
-        connAddr->peerAddr = *reinterpret_cast<NETADDR*>(peerAddr);
-        connAddr->selfAddr = *reinterpret_cast<NETADDR*>(selfAddr);
+        memcpy(&connAddr->peerAddr, peerAddr, sizeof(sockaddr_in));
+        memcpy(&connAddr->selfAddr, selfAddr, sizeof(sockaddr_in));
         setsockopt(sock, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, reinterpret_cast<const char*>(&this->m_listen->m_sock), sizeof(this->m_listen->m_sock));
     } else {
         closesocket(sock);
@@ -873,6 +874,7 @@ OsNet::SLTCPCONN::SLTCPCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, vo
     }
 }
 
+// PROVEN: 3c4398b6 IDENTICAL
 // OFFSET: 0x0087E130
 void OsNet::TCPNET::TcpMakeConn(SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes) {
     if (this->m_port) {

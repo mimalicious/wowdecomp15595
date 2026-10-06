@@ -5,12 +5,12 @@
 #include "Engine/Source/Storm/H/Types.h"
 
 union NETADDR {
-    /* 0000 */ uint8_t data[16];
+    /* 0000 */ uint8_t data[32];
 };
 
 struct NETCONNADDR {
     /* 0000 */ NETADDR peerAddr;
-    /* 0010 */ NETADDR selfAddr;
+    /* 0020 */ NETADDR selfAddr;
 };
 
 struct HNETCONN__ {

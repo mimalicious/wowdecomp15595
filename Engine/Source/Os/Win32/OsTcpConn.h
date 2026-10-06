@@ -115,12 +115,12 @@ struct __declspec(align(8)) NETCONN : public NETSELSOCK {
     /* 0012 */ uint16_t m_reserved;
     /* 0014 */ LOCKEDLONG m_refCount;
     /* 0018 */ NETCONNADDR m_connAddr;
-    /* 0038 */ int32_t m_eventProcUserLock;
-    /* 003C */ NETEVENTPROC m_eventProc;
-    /* 0040 */ void* m_user;
-    /* 0044 */ CCritSect m_lock;
-    /* 005C */ uint32_t m_time;
-    /* 0060 */ TCPNET* m_net;
+    /* 0058 */ int32_t m_eventProcUserLock;
+    /* 005C */ NETEVENTPROC m_eventProc;
+    /* 0060 */ void* m_user;
+    /* 0064 */ CCritSect m_lock;
+    /* 007C */ uint32_t m_time;
+    /* 0080 */ TCPNET* m_net;
 
     NETCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr);
     virtual void CloseAndUnlock() = 0;
@@ -148,9 +148,9 @@ struct NETCONNFULL : public NETCONN {
 };
 
 struct TCPCONN : public NETCONNFULL {
-    /* 0068 */ TSList<OUTPUT, TSGetLink<OUTPUT> > m_outputList;
-    /* 0074 */ uint32_t m_bytes;
-    /* 0078 */ uint8_t m_data[1460];
+    /* 0088 */ TSList<OUTPUT, TSGetLink<OUTPUT> > m_outputList;
+    /* 0094 */ uint32_t m_bytes;
+    /* 0098 */ uint8_t m_data[1460];
 
     TCPCONN(TCPNET* net, SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr);
     virtual void CloseAndUnlock();
@@ -168,8 +168,8 @@ struct TCPCONN : public NETCONNFULL {
 };
 
 struct IOTCPCONN : public TCPCONN {
-    /* 0630 */ LOCKEDLONG m_ioCount;
-    /* 0634 */ NETOVERLAP m_readOverlap;
+    /* 0650 */ LOCKEDLONG m_ioCount;
+    /* 0654 */ NETOVERLAP m_readOverlap;
 
     IOTCPCONN(TCPNET* net, HANDLE port, SOCKET sock, NETEVENTPROC eventProc, void* user, const NETCONNADDR* connAddr, const void* data, uint32_t bytes);
     virtual void Selected(TCPNET* net, SELECTSET selectSet);
