@@ -507,7 +507,7 @@ FMOD_RESULT F_CALLBACK DSPCompressor::setParameterCallback(FMOD_DSP_STATE *dsp, 
 ]
 */
 // PROVEN: 4ff29e9e IDENTICAL/NONE
-// OFFSET: 0x00A95940
+// OFFSET: 0x00A95940/0x140855A40
 FMOD_RESULT F_CALLBACK DSPCompressor::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPCompressor *compressor = (DSPCompressor *)dsp;

@@ -26,7 +26,7 @@ ComSat::Sound::Manager::RemoteTalker::RemoteTalker(ComSat::Allocator& allocator)
 }
 
 // PROVEN: a501f64c IDENTICAL/NONE
-// OFFSET: 0x00A34830
+// OFFSET: 0x00A34830/0x1407DF0B0
 void ComSat::Sound::Manager::SetCallback(ComSat::Sound::Manager::Callback* callback) {
     this->m_callback = callback;
 }
@@ -87,7 +87,7 @@ bool ComSat::Sound::Manager::IsUsingVariableBitrateCodec() {
 }
 
 // PROVEN: f39f7dba IDENTICAL/NONE
-// OFFSET: 0x00A34900
+// OFFSET: 0x00A34900/0x1407DF180
 int32_t ComSat::Sound::Manager::GetMinEncodedFrameLength() {
     return ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength;
 }
@@ -1055,7 +1055,7 @@ void ComSat::Sound::Manager::PlayScheduledVoiceData() {
 }
 
 // PROVEN: 94385192 IDENTICAL/NONE
-// OFFSET: 0x00A38530
+// OFFSET: 0x00A38530/0x1407E4590
 void ComSat::Sound::Manager::Work(uint32_t time) {
     this->m_currentTime = time;
     if (this->m_io) {

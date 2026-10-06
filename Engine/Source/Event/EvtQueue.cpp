@@ -17,8 +17,8 @@ void IEvtQueueDestroy() {
     s_messageRecycler.Clear();
 }
 
-// PROVEN: a8dcebd2 IDENTICAL/NONE
-// OFFSET: 0x008A36A0
+// PROVEN: a8dcebd2 IDENTICAL/DIFFERENT
+// OFFSET: 0x008A36A0/0x1405E5B80
 int32_t IEvtQueueCheckSyncMouseState(EvtContext* context, MOUSEBUTTON button) {
     if (!context) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

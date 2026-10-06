@@ -313,7 +313,7 @@ void CM2Model::SetSequenceCallback(void* callback, uint64_t param) {
 }
 
 // PROVEN: 07858334 IDENTICAL/NONE
-// OFFSET: 0x00814760
+// OFFSET: 0x00814760/0x14052C720
 void CM2Model::SetSequenceStartCallback(M2SequenceStartCallback callback, uint64_t param) {
     this->m_sequenceStartCallback = callback;
     this->m_sequenceStartCallbackParam = param;
@@ -823,7 +823,7 @@ void CM2Model::UpdateLoaded() {
 }
 
 // PROVEN: 2d03403e IDENTICAL/NONE
-// OFFSET: 0x008144D0
+// OFFSET: 0x008144D0/0x14052C430
 void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) {
     this->m_loadedCallback = callback;
     this->m_loadedArg = arg;

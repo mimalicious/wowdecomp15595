@@ -23,7 +23,7 @@ int32_t CSimpleControlPoint::s_objectType;
 const char* CSimpleControlPoint::s_objectTypeName = "ControlPoint";
 
 // PROVEN: 1e3c45e4 IDENTICAL/NONE
-// OFFSET: 0x00527DB0
+// OFFSET: 0x00527DB0/0x140177140
 bool CSimpleControlPoint::IsA(int32_t type) {
     return type == CSimpleControlPoint::s_objectType || type == CScriptObject::s_objectType;
 }

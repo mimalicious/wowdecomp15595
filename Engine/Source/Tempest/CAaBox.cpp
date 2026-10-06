@@ -36,8 +36,8 @@ bool CAaBox::ContainsPoint(const C3Vector& point) const {
     return this->b.x <= point.x && this->b.y <= point.y && this->b.z <= point.z && this->t.x >= point.x && this->t.y >= point.y && this->t.z >= point.z;
 }
 
-// PROVEN: 493ccb24 IDENTICAL/NONE
-// OFFSET: 0x0072C990
+// PROVEN: 493ccb24 IDENTICAL/DIFFERENT
+// OFFSET: 0x0072C990/0x14004CEC0
 bool CAaBox::Intersects(const CAaBox& box) const {
     return this->t.x >= box.b.x && this->t.y >= box.b.y && this->t.z >= box.b.z && this->b.x <= box.t.x && this->b.y <= box.t.y && this->b.z <= box.t.z;
 }

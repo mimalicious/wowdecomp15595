@@ -312,8 +312,8 @@ CurrencyTypesRec* CGCurrencyTypes::GetBackpackCurrencyInfo(int32_t index) {
     return NULL;
 }
 
-// PROVEN: 6cfe7d42 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 6cfe7d42 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGCurrencyTypes::ShutdownGame() {
 }
 
@@ -440,7 +440,7 @@ int32_t SignalKnownCurrencyTypesUpdate(WOWGUID guid, uint32_t offset, uint32_t c
     return 1;
 }
 
-// PROVEN: e1912fc6 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: e1912fc6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGCurrencyTypes::LeaveWorld() {
 }

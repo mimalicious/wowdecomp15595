@@ -192,7 +192,7 @@ bool CSimpleSlider::IsA(int32_t type) {
 }
 
 // PROVEN: ef82c992 IDENTICAL/NONE
-// OFFSET: 0x005212A0
+// OFFSET: 0x005212A0/0x14016ECB0
 bool CSimpleSlider::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleSlider::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

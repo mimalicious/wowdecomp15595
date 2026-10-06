@@ -177,8 +177,8 @@ int32_t FrameScript_HookWrapper(lua_State* L) {
     return results;
 }
 
-// PROVEN: 0610bf15 IDENTICAL/NONE
-// OFFSET: 0x0083AD30
+// PROVEN: 0610bf15 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083AD30/0x140565440
 void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
 }
@@ -228,8 +228,8 @@ lua_State* FrameScript_GetContext() {
     return s_context;
 }
 
-// PROVEN: a2414502 IDENTICAL/NONE
-// OFFSET: 0x0083AE10
+// PROVEN: a2414502 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083AE10/0x140565520
 int32_t FrameScript_GetTotalMemoryUsed() {
     return lua_gc(s_context, LUA_GCCOUNT, 0);
 }

@@ -284,7 +284,7 @@ void ILayerInitialize() {
 }
 
 // PROVEN: c6c19202 IDENTICAL/NONE
-// OFFSET: 0x007FFC30
+// OFFSET: 0x007FFC30/0x140513950
 static void ILayerPaint() {
     OnPaint(NULL, NULL);
 }

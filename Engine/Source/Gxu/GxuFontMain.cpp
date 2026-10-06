@@ -148,19 +148,19 @@ uint32_t GxuFontGetFontFlags(CGxFont* face) {
 }
 
 // PROVEN: afceb100 IDENTICAL/NONE
-// OFFSET: 0x00613190
+// OFFSET: 0x00613190/0x14029E6C0
 void GxuFontStringInvalidate(CGxString* string) {
     string->ClearInstanceData();
 }
 
 // PROVEN: 7da8142e IDENTICAL/NONE
-// OFFSET: 0x006131A0
+// OFFSET: 0x006131A0/0x140455010
 void GxuFontSetScale(CGxString* string, float scale) {
     string->m_stringScale = scale;
 }
 
 // PROVEN: ecce4d4c IDENTICAL/NONE
-// OFFSET: 0x006131C0
+// OFFSET: 0x006131C0/0x14029E6D0
 void GxuFontSetRotation(CGxString* string, float rotation) {
     string->m_rotation = rotation;
 }

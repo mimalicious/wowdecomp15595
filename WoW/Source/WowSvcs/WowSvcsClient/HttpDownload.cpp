@@ -10,7 +10,7 @@ DownloadFileCallback::DownloadFileCallback() {
 }
 
 // PROVEN: b4813b58 IDENTICAL/NONE
-// OFFSET: 0x00B3CF20
+// OFFSET: 0x00B3CF20/0x140909E80
 void DownloadFileCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     if (this->m_state) {
         this->m_state->m_done = true;
@@ -20,7 +20,7 @@ void DownloadFileCallback::Completed(Blizzard::URL::DownloadCallback::Status sta
 }
 
 // PROVEN: 7905a82a IDENTICAL/NONE
-// OFFSET: 0x00B3CF40
+// OFFSET: 0x00B3CF40/0x140909EA0
 void DownloadFileCallback::GetContentLength(int64_t length) {
     if (this->m_state) {
         this->m_state->m_size = length;
@@ -81,8 +81,8 @@ bool DownloadFileCallback::Stop() {
     return this->m_stop;
 }
 
-// PROVEN: 67004f4a IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 67004f4a IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool DownloadFileCallback::ShouldBlock() {
     return false;
 }

@@ -40,7 +40,7 @@ CMovementGlobals* MovementGetGlobals() {
 }
 
 // PROVEN: fbafa5c1 IDENTICAL/NONE
-// OFFSET: 0x005E6B80
+// OFFSET: 0x005E6B80/0x1402674E0
 void MovementSetGlobals(CMovementGlobals* globals) {
     ClntObjMgrSetMovementGlobals(globals);
 }
@@ -142,8 +142,8 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
     }
 }
 
-// PROVEN: 06762f05 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 06762f05 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void MovementNotifyZoneMgr(WOWGUID guid) {
 }
 

@@ -509,7 +509,7 @@ FMOD_RESULT ChannelI::getChannelInfo(FMOD_CHANNEL_INFO *info)
 ]
 */
 // PROVEN: 1414182a IDENTICAL/NONE
-// OFFSET: 0x00A7F0C0
+// OFFSET: 0x00A7F0C0/0x14083AD50
 FMOD_RESULT ChannelI::setChannelInfo(FMOD_CHANNEL_INFO *info)
 {
     int count;
@@ -1160,7 +1160,7 @@ FMOD_RESULT ChannelI::play(SoundI *sound, bool paused, bool reset, bool startmut
 ]
 */
 // PROVEN: 100e215f IDENTICAL/NONE
-// OFFSET: 0x00A7F490
+// OFFSET: 0x00A7F490/0x14083B280
 FMOD_RESULT ChannelI::play(DSPI *dsp, bool paused, bool reset, bool startmuted)
 {
     FMOD_RESULT result;
@@ -2468,7 +2468,7 @@ FMOD_RESULT ChannelI::getPan(float *pan)
 ]
 */
 // PROVEN: 2682c957 IDENTICAL/NONE
-// OFFSET: 0x00A7D0E0
+// OFFSET: 0x00A7D0E0/0x140838710
 FMOD_RESULT ChannelI::setDelay(unsigned int startdelay, unsigned int enddelay)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -4158,7 +4158,7 @@ FMOD_RESULT ChannelI::setChannelGroupInternal(ChannelGroupI *channelgroup, bool 
 ]
 */
 // PROVEN: f6d986eb IDENTICAL/NONE
-// OFFSET: 0x00A7DDC0
+// OFFSET: 0x00A7DDC0/0x140839670
 FMOD_RESULT ChannelI::setChannelGroup(ChannelGroupI *channelgroup)
 {
     return setChannelGroupInternal(channelgroup, true);
@@ -5030,7 +5030,7 @@ FMOD_RESULT ChannelI::addDSPChain(DSPI *dsp)
 ]
 */
 // PROVEN: 7437a222 IDENTICAL/NONE
-// OFFSET: 0x00A7FF40
+// OFFSET: 0x00A7FF40/0x14083C5C0
 FMOD_RESULT ChannelI::setMode(FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -5195,7 +5195,7 @@ FMOD_RESULT ChannelI::getMode(FMOD_MODE *mode)
 ]
 */
 // PROVEN: 90fd7579 IDENTICAL/NONE
-// OFFSET: 0x00A7E3C0
+// OFFSET: 0x00A7E3C0/0x140839C70
 FMOD_RESULT ChannelI::setLoopCount(int loopcount)
 {
     FMOD_RESULT result = FMOD_OK;

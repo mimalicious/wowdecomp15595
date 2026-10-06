@@ -909,7 +909,7 @@ FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate, bool for
 ]
 */
 // PROVEN: 09f1de3d IDENTICAL/NONE
-// OFFSET: 0x00AE2C50
+// OFFSET: 0x00AE2C50/0x1408ADF60
 FMOD_RESULT ChannelSoftware::stop(bool ignoreenddelay, bool resetstate)
 {
     return stop(ignoreenddelay, resetstate, false);

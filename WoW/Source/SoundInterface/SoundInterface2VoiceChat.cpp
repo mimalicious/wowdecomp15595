@@ -84,7 +84,7 @@ void SI2::VoiceChat_DestroyChatSystem() {
 }
 
 // PROVEN: a99efdd2 IDENTICAL/NONE
-// OFFSET: 0x00630110
+// OFFSET: 0x00630110/0x1402C4BA0
 int32_t SI2::VoiceChat_IsVoiceChatInitialized() {
     return SE3::IsChatSoundInitialized();
 }
@@ -136,7 +136,7 @@ static void ComputeAverageLevel(float* data, uint32_t count) {
 }
 
 // PROVEN: 19e34e6e IDENTICAL/NONE
-// OFFSET: 0x00630360
+// OFFSET: 0x00630360/0x1402C4EF0
 int32_t SI2::VoiceChat_GetCurrentMicrophoneSignalLevel() {
     return SE3::IsChatSoundInitialized() != 0 ? s_microphoneSignalLevel : 0;
 }
@@ -248,7 +248,7 @@ void SI2::VoiceChat_InitCapture(float sampleRate) {
 }
 
 // PROVEN: 49ff57ae IDENTICAL/NONE
-// OFFSET: 0x00630550
+// OFFSET: 0x00630550/0x1402C51C0
 void SI2::VoiceChat_SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     if (SE3::IsChatSoundInitialized()) {
         SE3::SetPrimaryCaptureCallback(callbacks);
@@ -298,7 +298,7 @@ bool SI2::VoiceChat_IsRecordingLoopbackSound() {
 }
 
 // PROVEN: 5003db86 IDENTICAL/NONE
-// OFFSET: 0x00630700
+// OFFSET: 0x00630700/0x1402C5400
 void SI2::VoiceChat_ActivatePrimaryCaptureCallback() {
     if (SE3::IsChatSoundInitialized()) {
         SE3::ActivatePrimaryCaptureCallback();
@@ -306,7 +306,7 @@ void SI2::VoiceChat_ActivatePrimaryCaptureCallback() {
 }
 
 // PROVEN: cfa2b2de IDENTICAL/NONE
-// OFFSET: 0x00630710
+// OFFSET: 0x00630710/0x1402C5420
 void SI2::VoiceChat_StopRecordingLoopbackSound() {
     if (SE3::IsChatSoundInitialized()) {
         SI2::VoiceChat_ActivatePrimaryCaptureCallback();

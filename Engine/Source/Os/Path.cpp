@@ -3,8 +3,8 @@
 #include "Engine/Source/Os/Path.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: f3eaac43 IDENTICAL/NONE
-// OFFSET: 0x00876000
+// PROVEN: f3eaac43 IDENTICAL/DIFFERENT
+// OFFSET: 0x00876000/0x1405ACF80
 uint32_t OsPathGetRootChars(const char* path) {
     uint32_t length = static_cast<uint32_t>(strlen(path));
 

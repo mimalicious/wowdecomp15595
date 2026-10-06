@@ -189,8 +189,8 @@ void CShadowCache::SetDebugParams(float aspect, int32_t level) {
     CShadowCache::s_debugLevel = level;
 }
 
-// PROVEN: cf2b43f4 IDENTICAL/NONE
-// OFFSET: 0x00435400
+// PROVEN: cf2b43f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00435400/0x14003EB80
 void CShadowCache::SetShadowScale(float scale) {
     CShadowCache::s_shadowScale = scale;
 }

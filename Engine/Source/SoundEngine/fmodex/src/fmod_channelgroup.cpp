@@ -12,7 +12,7 @@ namespace FMOD
 
 
 // PROVEN: b42273bc IDENTICAL/NONE
-// OFFSET: 0x00A7BDE0
+// OFFSET: 0x00A7BDE0/0x140837240
 FMOD_RESULT ChannelGroup::release()
 {
     FMOD_RESULT result;
@@ -48,7 +48,7 @@ FMOD_RESULT ChannelGroup::getSystemObject(System **system)
 
 
 // PROVEN: b64d367b IDENTICAL/NONE
-// OFFSET: 0x00A7BE10
+// OFFSET: 0x00A7BE10/0x140837270
 FMOD_RESULT ChannelGroup::setVolume(float volume)
 {
     FMOD_RESULT result;

@@ -18,7 +18,7 @@ WOWGUID CGGuildRegistrar::m_registrar;
 GuildPetitionInfo CGGuildRegistrar::m_petition;
 
 // PROVEN: afa1f090 IDENTICAL/NONE
-// OFFSET: 0x009EB550
+// OFFSET: 0x009EB550/0x14077D4D0
 void CGGuildRegistrar::EnterWorld() {
     CGGuildRegistrar::m_petition.m_index = 0;
     CGGuildRegistrar::m_petition.m_itemID = 0;

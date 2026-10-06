@@ -295,7 +295,7 @@ void SE3::StartCapture() {
 }
 
 // PROVEN: 65a94e21 IDENTICAL/NONE
-// OFFSET: 0x007128F0
+// OFFSET: 0x007128F0/0x1403E4630
 void SE3::SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_primaryCaptureCallbacks = callbacks;
 }
@@ -321,15 +321,15 @@ bool SE3::AlternateCaptureCallbackIsActive() {
 }
 
 // PROVEN: 49a86223 IDENTICAL/NONE
-// OFFSET: 0x00712950
+// OFFSET: 0x00712950/0x1403E46A0
 void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Enter();
     s_captureCallbacks = s_primaryCaptureCallbacks;
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 2593c197 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 2593c197 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SE3StreamCallbacks::Delete() {
 }
 

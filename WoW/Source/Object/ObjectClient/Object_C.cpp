@@ -90,7 +90,7 @@ static void LoadInteractIcons(int32_t load) {
 }
 
 // PROVEN: 05a9c7de IDENTICAL/NONE
-// OFFSET: 0x005DD0B0
+// OFFSET: 0x005DD0B0/0x1402595A0
 static int32_t UpdateAllWorldObjectsCallback(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -527,7 +527,7 @@ CGBag_C* CGObject_C::GetBag() {
 }
 
 // PROVEN: 318a75ac IDENTICAL/NONE
-// OFFSET: 0x0048F710
+// OFFSET: 0x0048F710/0x1400B3EC0
 C3Vector CGObject_C::GetPosition() const {
     return C3Vector(0.0f, 0.0f, 0.0f);
 }
@@ -594,8 +594,8 @@ int32_t CGObject_C::IsQuestGiver() const {
     return 0;
 }
 
-// PROVEN: 5fa3d028 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 5fa3d028 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RefreshInteractIcon() {
 }
 
@@ -622,28 +622,28 @@ int32_t CGObject_C::GetModelFileName(const char** name) const {
     return 0;
 }
 
-// PROVEN: a13063c0 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: a13063c0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::ScaleChangeUpdate() {
 }
 
-// PROVEN: 93da7744 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 93da7744 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::ScaleChangeFinished() {
 }
 
-// PROVEN: 67768697 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 67768697 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RenderTargetSelection() const {
 }
 
-// PROVEN: adf0f9a2 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: adf0f9a2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::RenderPetTargetSelection() const {
 }
 
-// PROVEN: 2932844c IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 2932844c IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::Render() {
 }
 
@@ -706,8 +706,8 @@ float CGObject_C::GetRenderFacing() const {
     return this->GetFacing();
 }
 
-// PROVEN: 5c1e2d9f IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 5c1e2d9f IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::OnSpecialMountAnim() {
 }
 
@@ -741,8 +741,8 @@ int32_t CGObject_C::FloatingTooltip() const {
     return 0;
 }
 
-// PROVEN: 6d451c6e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 6d451c6e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::OnRightClick() {
 }
 
@@ -794,8 +794,8 @@ int32_t CGObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void
     return 0;
 }
 
-// PROVEN: 98c12193 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 98c12193 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGObject_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
 }
 
@@ -806,13 +806,13 @@ int32_t CGObject_C::ShouldFadeIn() const {
 }
 
 // PROVEN: fae4e40c IDENTICAL/NONE
-// OFFSET: 0x00599E10
+// OFFSET: 0x00599E10/0x1402082B0
 float CGObject_C::GetBaseAlpha() const {
     return 1.0f;
 }
 
-// PROVEN: d99ff856 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: d99ff856 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGObject_C::IsTransport() const {
     return false;
 }
@@ -824,7 +824,7 @@ int32_t CGObject_C::IsPointInside(const C3Vector& point) const {
 }
 
 // PROVEN: 9f089fd9 IDENTICAL/NONE
-// OFFSET: 0x00873190
+// OFFSET: 0x00873190/0x14025E5A0
 int32_t CGObject_C::AddPassenger(CPassenger* passenger, int32_t a2) {
     return 1;
 }

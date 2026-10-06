@@ -293,7 +293,7 @@ void CGlueMgr::QuitGameAndRunLauncher() {
 }
 
 // PROVEN: 80a87352 IDENTICAL/NONE
-// OFFSET: 0x00800AE0
+// OFFSET: 0x00800AE0/0x140514B00
 void CGlueMgr::DownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {
         CGlueMgr::PatchDownloadFeed(data, size);
@@ -823,7 +823,7 @@ void CGlueMgr::UpdateCurrentScreen(const char* screen) {
 }
 
 // PROVEN: cf9b85bf IDENTICAL/NONE
-// OFFSET: 0x00801000
+// OFFSET: 0x00801000/0x1405150A0
 void CGlueMgr::HandleScreenshot(int32_t success) {
     if (success) {
         FrameScript_SignalEvent(GLUE_EVENT_GLUE_SCREENSHOT_SUCCEEDED, NULL);
@@ -1874,7 +1874,7 @@ CharacterSelectionDisplay* GetCharacterInfo(int32_t index) {
 }
 
 // PROVEN: 6ad9eaea IDENTICAL/NONE
-// OFFSET: 0x00802670
+// OFFSET: 0x00802670/0x140516B70
 void CGlueMgr::CancelLogin() {
     if (CGlueMgr::m_idleState == IDLE_LOGIN_SERVER_LOGIN) {
         CGlueMgr::StatusDialogClick();
@@ -2120,7 +2120,7 @@ void CGlueMgr::DisplayLoginStatus() {
 }
 
 // PROVEN: 1dc21140 IDENTICAL/NONE
-// OFFSET: 0x008009B0
+// OFFSET: 0x008009B0/0x140514990
 void CGlueMgr::QuitGame() {
     ClientPostClose(0);
 }

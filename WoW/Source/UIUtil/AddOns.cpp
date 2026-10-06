@@ -1708,7 +1708,7 @@ void SaveAddOnEnableState() {
 }
 
 // PROVEN: 3883429c IDENTICAL/NONE
-// OFFSET: 0x0045BB90
+// OFFSET: 0x0045BB90/0x14006D940
 bool IsAddonVersionCheckEnabled() {
     return g_checkAddonVersionVar->m_intValue != 0;
 }

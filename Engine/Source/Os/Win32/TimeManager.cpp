@@ -236,8 +236,8 @@ void OsTimeManagerCreate(OsTimeManager::TimingMethod method) {
     new (&s_OsTimeMgr) OsTimeManager(method);
 }
 
-// PROVEN: d3396581 IDENTICAL/NONE
-// OFFSET: 0x008755D0
+// PROVEN: d3396581 IDENTICAL/IDENTICAL
+// OFFSET: 0x008755D0/0x1405AC2B0
 void OsSleep(uint32_t milliseconds) {
     Sleep(milliseconds);
 }

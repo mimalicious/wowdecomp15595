@@ -129,7 +129,7 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
 }
 
 // PROVEN: 6b80e4f8 IDENTICAL/NONE
-// OFFSET: 0x008FC650
+// OFFSET: 0x008FC650/0x1406539A0
 uint32_t CGPartyInfo::GetNumPartyMembers() {
     uint32_t count = 0;
 

@@ -321,8 +321,8 @@ static WorldOccluderData s_worldOccluders[5] = {
     WorldOccluderData(571, -100.0f, s_worldOccluderVerts4, 22)
 };
 
-// PROVEN: f52cc1f6 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: f52cc1f6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CWorldOccluder::Initialize() {
 }
 

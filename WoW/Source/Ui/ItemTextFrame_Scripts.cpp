@@ -40,7 +40,7 @@ static int32_t Script_ItemTextGetText(lua_State* L) {
 }
 
 // PROVEN: ed2b2a8b IDENTICAL/NONE
-// OFFSET: 0x009DE020
+// OFFSET: 0x009DE020/0x140774130
 static int32_t Script_ItemTextHasNextPage(lua_State* L) {
     if (CGItemText::m_hasItemText || !CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1]) {
         lua_pushnil(L);
@@ -114,7 +114,7 @@ static int32_t Script_ItemTextPrevPage(lua_State* L) {
 }
 
 // PROVEN: bc4af6ca IDENTICAL/NONE
-// OFFSET: 0x009DE500
+// OFFSET: 0x009DE500/0x1407746D0
 static int32_t Script_ItemTextNextPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1] > 0) {
         CGItemText::m_currentPage++;
@@ -125,7 +125,7 @@ static int32_t Script_ItemTextNextPage(lua_State* L) {
 }
 
 // PROVEN: 2de55c44 IDENTICAL/NONE
-// OFFSET: 0x009DE7B0
+// OFFSET: 0x009DE7B0/0x1407749E0
 static int32_t Script_CloseItemText(lua_State* L) {
     WOWGUID none = WOWGUID();
     CGItemText::SetItem(none, 0);
@@ -146,7 +146,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 3ce033f1 IDENTICAL/NONE
-// OFFSET: 0x009DDF80
+// OFFSET: 0x009DDF80/0x140774040
 void ItemTextRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -154,7 +154,7 @@ void ItemTextRegisterScriptFunctions() {
 }
 
 // PROVEN: 566df76a IDENTICAL/NONE
-// OFFSET: 0x009DDFB0
+// OFFSET: 0x009DDFB0/0x140774090
 void ItemTextUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

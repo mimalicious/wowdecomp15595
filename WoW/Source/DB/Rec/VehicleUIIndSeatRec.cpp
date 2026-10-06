@@ -3,8 +3,8 @@
 // STATIC: %0x00B446C8
 const DBCMeta VehicleUIIndSeatRec::s_meta = { "DBFilesClient\\VehicleUIIndSeat.dbc", 5, 20, VehicleUIIndSeatRec::FixupStrings, 0 };
 
-// PROVEN: 80d4e2ed IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 80d4e2ed IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void VehicleUIIndSeatRec::FixupStrings(void* record, const char* strings) {
 }
 

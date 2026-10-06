@@ -481,7 +481,7 @@ size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
 }
 
 // PROVEN: 4b88d369 IDENTICAL/NONE
-// OFFSET: 0x004B3460
+// OFFSET: 0x004B3460/0x1400EA0C0
 size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }

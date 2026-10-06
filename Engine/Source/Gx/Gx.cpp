@@ -50,7 +50,7 @@ static bool s_drawListBusy;
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 
 // PROVEN: e358aa38 IDENTICAL/NONE
-// OFFSET: 0x006128D0
+// OFFSET: 0x006128D0/0x14029DB60
 static void DrawListPreprocessB2F(GxDrawListEntry* entry, const C3Vector& viewPos) {
     entry->m_depth = entry->m_item->GetDepth(viewPos);
 }
@@ -68,13 +68,13 @@ static int DrawListSorterB2F(const void* a, const void* b) {
 }
 
 // PROVEN: fa45fcf0 IDENTICAL/NONE
-// OFFSET: 0x00612930
+// OFFSET: 0x00612930/0x14029DBB0
 static void DrawListPreprocessVtxStream(GxDrawListEntry* entry, const C3Vector& viewPos) {
     entry->m_vtxStream = entry->m_item->GetVtxStream();
 }
 
 // PROVEN: 7349a485 IDENTICAL/NONE
-// OFFSET: 0x00612950
+// OFFSET: 0x00612950/0x14029DBD0
 static int DrawListSorterVtxStream(const void* a, const void* b) {
     uint32_t streamA = static_cast<const GxDrawListEntry*>(a)->m_vtxStream;
     uint32_t streamB = static_cast<const GxDrawListEntry*>(b)->m_vtxStream;
@@ -154,7 +154,7 @@ uint32_t GxAdapterMonitorCount() {
 }
 
 // PROVEN: 3e28b123 IDENTICAL/NONE
-// OFFSET: 0x0083FFD0
+// OFFSET: 0x0083FFD0/0x14056BDC0
 int32_t GxAdapterMonitorName(uint32_t monitor, char* name, uint32_t size) {
     return CGxDevice::AdapterMonitorName(monitor, name, size);
 }

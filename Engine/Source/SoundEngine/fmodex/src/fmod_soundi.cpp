@@ -150,7 +150,7 @@ SoundI::SoundI()
 ]
 */
 // PROVEN: 08649dfb IDENTICAL/NONE
-// OFFSET: 0x00A8C3C0
+// OFFSET: 0x00A8C3C0/0x14084AFE0
 FMOD_RESULT SoundI::loadSubSound(int index, FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -2848,7 +2848,7 @@ FMOD_RESULT SoundI::getPosition(unsigned int *pcm)
 ]
 */
 // PROVEN: 5665b423 IDENTICAL/NONE
-// OFFSET: 0x00A89C80
+// OFFSET: 0x00A89C80/0x140848390
 FMOD_RESULT SoundI::setUserData(void *userdata)
 {
     mUserData = userdata;

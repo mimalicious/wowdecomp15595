@@ -158,8 +158,8 @@ CKBPage::~CKBPage() {
     }
 }
 
-// PROVEN: 14b81430 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 14b81430 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_ComputeCachedData() {
 }
 
@@ -448,13 +448,13 @@ void CKBSetup::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: f1e62326 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: f1e62326 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_SendSuccessEvent() {
 }
 
-// PROVEN: 5d3a5e30 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 5d3a5e30 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::_SendFailureEvent() {
 }
 
@@ -475,8 +475,8 @@ CKBSetup::CKBSetup() {
     this->m_articleHeaders.m_index = 0;
 }
 
-// PROVEN: 1b2d7a48 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 1b2d7a48 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CKBPage::Initialize() {
 }
 

@@ -44,8 +44,8 @@ void CGChatBubbleFrame::operator delete(void* ptr) {
     CGChatBubbleFrame::s_chatBubbleHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 20523c8e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 20523c8e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGChatBubbleFrame::InitializeGame() {
 }
 

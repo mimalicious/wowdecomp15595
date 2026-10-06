@@ -530,7 +530,7 @@ void CGChat::RecordWhisperSource(WOWGUID guid) {
 }
 
 // PROVEN: 11483268 IDENTICAL/NONE
-// OFFSET: 0x008E6010
+// OFFSET: 0x008E6010/0x140614320
 int32_t CGChat::IsInWhisperHistory(WOWGUID guid) {
     if (!guid) {
         return 0;
@@ -582,7 +582,7 @@ void CGChat::AddWhisperThrottled(uint32_t time) {
 }
 
 // PROVEN: 8d9e7242 IDENTICAL/NONE
-// OFFSET: 0x008E72B0
+// OFFSET: 0x008E72B0/0x140615660
 static void UpdateVoiceMemberFlags(PENDINGUSERLIST* user, uint8_t flags, WOWGUID guid, int32_t type, const char* name) {
     if (!user) {
         return;
@@ -4870,7 +4870,7 @@ int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, boo
 }
 
 // PROVEN: 794c883d IDENTICAL/NONE
-// OFFSET: 0x008F5DF0
+// OFFSET: 0x008F5DF0/0x140627EA0
 void CGChat::LoadChatSettings() {
     LoadAccountData(7, CGChat::LoadChatSettingsCallback, NULL);
 }
@@ -5277,7 +5277,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 }
 
 // PROVEN: 9c9b64e9 IDENTICAL/NONE
-// OFFSET: 0x008EAFC0
+// OFFSET: 0x008EAFC0/0x140619F10
 void CGChat::SaveChatSettings() {
     s_chatSettingsDirty = 0;
     SaveAccountData(7, CGChat::SaveChatSettingsCallback, NULL);

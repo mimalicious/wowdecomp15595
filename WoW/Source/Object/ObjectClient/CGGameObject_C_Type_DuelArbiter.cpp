@@ -10,8 +10,8 @@ bool CGGameObject_C_Type_DuelArbiter::CanHighlight() const {
     return true;
 }
 
-// PROVEN: 82631c17 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 82631c17 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_DuelArbiter::CanUse() const {
     return false;
 }

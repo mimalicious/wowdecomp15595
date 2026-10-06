@@ -1781,7 +1781,7 @@ void CMapObj::AsyncFailedCallback(void* param, CAsyncObject* object) {
 }
 
 // PROVEN: b7d5a221 IDENTICAL/NONE
-// OFFSET: 0x00745B60
+// OFFSET: 0x00745B60/0x140423A70
 void CMapObj::ReadGroup(uint32_t index) {
     this->ReadGroup(index, false);
 }

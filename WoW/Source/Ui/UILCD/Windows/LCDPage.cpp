@@ -16,7 +16,7 @@ CLCDPage::~CLCDPage() {
 }
 
 // PROVEN: e14fb471 IDENTICAL/NONE
-// OFFSET: 0x00B40200
+// OFFSET: 0x00B40200/0x14090DF50
 void CLCDPage::OnUpdate(uint32_t timestamp) {
     this->m_dwEllapsedTime = timestamp - this->m_dwStartTime;
     CLCDCollection::OnUpdate(timestamp);

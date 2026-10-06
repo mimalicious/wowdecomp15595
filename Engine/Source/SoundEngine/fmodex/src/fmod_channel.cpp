@@ -549,7 +549,7 @@ FMOD_RESULT Channel::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
     }
 }
 // PROVEN: 484cfc06 IDENTICAL/NONE
-// OFFSET: 0x00A7AB30
+// OFFSET: 0x00A7AB30/0x140835CD0
 FMOD_RESULT Channel::setChannelGroup(ChannelGroup *channelgroup)
 {
     FMOD_RESULT result;

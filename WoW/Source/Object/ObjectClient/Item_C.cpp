@@ -852,7 +852,7 @@ int32_t CGItem_C::GetRandomPropertyPoints() const {
 }
 
 // PROVEN: 07c61422 IDENTICAL/NONE
-// OFFSET: 0x005A5DD0
+// OFFSET: 0x005A5DD0/0x140216EC0
 int32_t CGItem_C::HasOnUseEnchant() const {
     return this->GetSpellItemEnchantmentId() != 0;
 }

@@ -59,7 +59,7 @@ const char* GetEventRepeatString(uint32_t repeat) {
 }
 
 // PROVEN: 629657d7 IDENTICAL/NONE
-// OFFSET: 0x00A0AED0
+// OFFSET: 0x00A0AED0/0x1407AC120
 void CGCalendarEvent::Clear() {
     this->m_eventID = 0;
     this->m_numInvites = 0;
@@ -94,7 +94,7 @@ void CGCalendarEvent::Clear() {
 }
 
 // PROVEN: 2ecb9e7d IDENTICAL/NONE
-// OFFSET: 0x00A0AF90
+// OFFSET: 0x00A0AF90/0x1407AC1F0
 void CGCalendarEvent::SetTitle(const char* title) {
     if (title && SStrCmp(title, this->m_title, STORM_MAX_STR)) {
         ScrubString(title, this->m_title, 32, sizeof(this->m_title), 1);
@@ -103,7 +103,7 @@ void CGCalendarEvent::SetTitle(const char* title) {
 }
 
 // PROVEN: e202e12e IDENTICAL/NONE
-// OFFSET: 0x00A0AFF0
+// OFFSET: 0x00A0AFF0/0x1407AC250
 void CGCalendarEvent::SetDescription(const char* description) {
     if (description && SStrCmp(description, this->m_description, STORM_MAX_STR)) {
         ScrubString(description, this->m_description, 256, sizeof(this->m_description), 0);
@@ -128,7 +128,7 @@ void CGCalendarEvent::SetRepeatOption(uint32_t repeatOption) {
 }
 
 // PROVEN: 6854125b IDENTICAL/NONE
-// OFFSET: 0x00A0B0C0
+// OFFSET: 0x00A0B0C0/0x1407AC300
 void CGCalendarEvent::SetSize(uint32_t size) {
     if (!(this->m_flags & 0x440) && size > 1 && size != this->m_maxSize) {
         this->m_maxSize = size;
@@ -194,7 +194,7 @@ void CGCalendarEvent::SetTextureID(int32_t textureID) {
 }
 
 // PROVEN: 63139ea3 IDENTICAL/NONE
-// OFFSET: 0x00A0B240
+// OFFSET: 0x00A0B240/0x1407AC430
 void CGCalendarEvent::SetFlag(uint32_t flag) {
     if (!(this->m_flags & flag)) {
         this->m_flags |= flag;
@@ -203,7 +203,7 @@ void CGCalendarEvent::SetFlag(uint32_t flag) {
 }
 
 // PROVEN: f156b076 IDENTICAL/NONE
-// OFFSET: 0x00A0B270
+// OFFSET: 0x00A0B270/0x1407AC450
 void CGCalendarEvent::ClearFlag(uint32_t flag) {
     if (this->m_flags & flag) {
         this->m_flags &= ~flag;

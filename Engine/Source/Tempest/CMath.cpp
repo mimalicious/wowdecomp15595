@@ -651,14 +651,14 @@ CSoftFloat CSoftFloat::FromRatio(int32_t numerator, int32_t denominator) {
     return SoftDivide(CSoftFloat::FromInt(numerator), CSoftFloat::FromInt(denominator));
 }
 
-// PROVEN: 2e308567 IDENTICAL/NONE
-// OFFSET: 0x00B2F0F0
+// PROVEN: 2e308567 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B2F0F0/0x1408F7BD0
 CSoftFloat CSoftFloat::Round(const CSoftFloat& value) {
     return CSoftFloat::Floor(value + s_softHalf);
 }
 
-// PROVEN: 7c75407b IDENTICAL/NONE
-// OFFSET: 0x00B2F120
+// PROVEN: 7c75407b IDENTICAL/DIFFERENT
+// OFFSET: 0x00B2F120/0x1408F7C00
 CSoftFloat CSoftFloat::FromInt(int32_t value) {
     CSoftFloat result;
 

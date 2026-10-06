@@ -599,7 +599,7 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: fbf0740c IDENTICAL/NONE
-// OFFSET: 0x00A9DE50
+// OFFSET: 0x00A9DE50/0x14085E900
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;

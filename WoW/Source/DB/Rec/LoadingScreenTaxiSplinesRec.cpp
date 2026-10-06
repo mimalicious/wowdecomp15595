@@ -3,8 +3,8 @@
 // STATIC: %0x00B45D28
 const DBCMeta LoadingScreenTaxiSplinesRec::s_meta = { "DBFilesClient\\LoadingScreenTaxiSplines.dbc", 5, 76, LoadingScreenTaxiSplinesRec::FixupStrings, 0 };
 
-// PROVEN: c72bd4ab IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: c72bd4ab IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void LoadingScreenTaxiSplinesRec::FixupStrings(void* record, const char* strings) {
 }
 

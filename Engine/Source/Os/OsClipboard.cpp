@@ -7,8 +7,8 @@ char* OsClipboardGetString() {
     return IOsClipboardGetString(GxDevWindow());
 }
 
-// PROVEN: 8449d367 IDENTICAL/NONE
-// OFFSET: 0x0087C8D0
+// PROVEN: 8449d367 IDENTICAL/UNPROVEN
+// OFFSET: 0x0087C8D0/0x1405B4D60
 int32_t OsClipboardPutString(const char* string) {
     return IOsClipboardPutString(string, GxDevWindow());
 }

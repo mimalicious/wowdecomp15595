@@ -143,7 +143,7 @@ int32_t CTgaFile::HasNonBlackZeroAlphaPixels() const {
     return 0;
 }
 
-// OFFSET: 0x00638060
+// OFFSET: 0x00638060/0x1402D01B0
 int32_t CTgaFile::SetToData(uint8_t* data, uint32_t size) {
     if (!data) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -195,7 +195,7 @@ int32_t CTgaFile::SetToData(uint8_t* data, uint32_t size) {
     return 1;
 }
 
-// PROVEN: e5ce2bb1 IDENTICAL/UNPROVEN
+// PROVEN: e5ce2bb1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00638130/0x1402CF470
 int32_t CTgaFile::ValidateColorDepth() {
     if (this->m_header->m_bPixelDepth - this->m_header->m_desc.m_bAlphaChannelBits == 24) {
@@ -349,7 +349,7 @@ int32_t CTgaFile::SetTopDown(int32_t topDown) {
     return 1;
 }
 
-// PROVEN: 06166cab IDENTICAL/UNPROVEN
+// PROVEN: 06166cab IDENTICAL/DIFFERENT
 // OFFSET: 0x006385E0/0x1402CFA60
 const uint8_t* CTgaFile::Image() const {
     if (!this->m_image) {
@@ -360,7 +360,7 @@ const uint8_t* CTgaFile::Image() const {
     return this->m_image;
 }
 
-// PROVEN: d5cd2d67 IDENTICAL/UNPROVEN
+// PROVEN: d5cd2d67 IDENTICAL/DIFFERENT
 // OFFSET: 0x006385E0/0x1402CFA60
 uint8_t* CTgaFile::Image() {
     if (!this->m_image) {
@@ -371,7 +371,7 @@ uint8_t* CTgaFile::Image() {
     return this->m_image;
 }
 
-// PROVEN: 263c0bc6 IDENTICAL/UNPROVEN
+// PROVEN: 263c0bc6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00638600/0x1402CFA80
 const TGA32Pixel* CTgaFile::ImageBGRA32Pixel() const {
     if (!this->m_image) {
@@ -387,7 +387,7 @@ const TGA32Pixel* CTgaFile::ImageBGRA32Pixel() const {
     return reinterpret_cast<const TGA32Pixel*>(this->m_image);
 }
 
-// PROVEN: 44fb3ed6 IDENTICAL/UNPROVEN
+// PROVEN: 44fb3ed6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00638600/0x1402CFA80
 TGA32Pixel* CTgaFile::ImageBGRA32Pixel() {
     if (!this->m_image) {
@@ -777,7 +777,7 @@ int32_t CTgaFile::AddAlphaChannel(const void* alpha) {
     return 1;
 }
 
-// PROVEN: 62fa6b3d IDENTICAL/UNPROVEN
+// PROVEN: 62fa6b3d IDENTICAL/DIFFERENT
 // OFFSET: 0x00639130/0x1402D09F0
 int32_t CTgaFile::ReadColorMappedImage(uint32_t flags) {
     if (!this->m_header->m_bColorMapType) {

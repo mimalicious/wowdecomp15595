@@ -1463,7 +1463,7 @@ FMOD_RESULT CodecPlaylist::closeInternal()
 ]
 */
 // PROVEN: 832f56c9 IDENTICAL/NONE
-// OFFSET: 0x00AA4390
+// OFFSET: 0x00AA4390/0x140865B20
 FMOD_RESULT F_CALLBACK CodecPlaylist::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecPlaylist *playlist = (CodecPlaylist *)codec;

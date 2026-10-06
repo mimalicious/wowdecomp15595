@@ -840,7 +840,7 @@ void DayNight::DNClouds::SetSharpness(float sharpness) {
 }
 
 // PROVEN: fdaa1a21 IDENTICAL/NONE
-// OFFSET: 0x00650D10
+// OFFSET: 0x00650D10/0x1402F0710
 void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t* vertCount, uint32_t* indexCount) {
     static C3Vector s_verts[6] = { C3Vector(0.0f, -0.5f, 0.5f), C3Vector(0.0f, 0.5f, 0.5f), C3Vector(0.0f, -0.5f, -0.5f), C3Vector(0.0f, 0.5f, -0.5f), C3Vector(0.0f, -0.5f, 99.0f), C3Vector(0.0f, 0.5f, 99.0f) };
     static C2Vector s_texCoords[6] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f), C2Vector(0.0f, 99.0f), C2Vector(1.0f, 99.0f) };

@@ -342,7 +342,7 @@ static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
 }
 
 // PROVEN: e482edb6 IDENTICAL/NONE
-// OFFSET: 0x004BF520
+// OFFSET: 0x004BF520/0x1407B59DC
 static const char* GetFileNameFromPath(const char* path, size_t maxchars) {
     if (!memchr(path, 0, maxchars)) {
         return "";

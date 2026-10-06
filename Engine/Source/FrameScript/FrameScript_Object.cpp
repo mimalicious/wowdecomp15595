@@ -192,8 +192,8 @@ FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByName(const char* na
     return NULL;
 }
 
-// PROVEN: 818d87f4 IDENTICAL/NONE
-// OFFSET: 0x0083CF30
+// PROVEN: 818d87f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x0083CF30/0x140567C80
 FrameScript_Object::ScriptIx* FrameScript_Object::GetScriptByNameCamelCase(const char* name, FrameScript_Object::ScriptData& data) {
     char lower[128];
     SStrCopy(lower, name, sizeof(lower));

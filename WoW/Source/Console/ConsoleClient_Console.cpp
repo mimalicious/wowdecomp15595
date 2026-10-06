@@ -332,7 +332,7 @@ int32_t ConsoleCommand_HighLightColor(const char* command, const char* arguments
 }
 
 // PROVEN: 5c7fc97b IDENTICAL/NONE
-// OFFSET: 0x006108C0
+// OFFSET: 0x006108C0/0x14029ADD0
 int32_t ConsoleCommand_AppendLogToFile(const char* command, const char* arguments) {
     ConsoleWrite("Access Denied", ERROR_COLOR);
 

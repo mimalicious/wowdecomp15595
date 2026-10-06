@@ -16,8 +16,8 @@ static uint32_t s_logFlags;
 // STATIC: %0x00D0E178
 static int32_t s_errorCount;
 
-// PROVEN: 2d9dcdfa IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 2d9dcdfa IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SE3::SoundKitObjectLog(SE3SoundKitObject* sko, const char* file, int32_t line, const char* format, ...) {
 }
 

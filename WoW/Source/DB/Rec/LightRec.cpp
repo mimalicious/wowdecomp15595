@@ -3,8 +3,8 @@
 // STATIC: %0x00B439E8
 const DBCMeta LightRec::s_meta = { "DBFilesClient\\Light.dbc", 6, 60, LightRec::FixupStrings, 0 };
 
-// PROVEN: 12f22067 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 12f22067 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void LightRec::FixupStrings(void* record, const char* strings) {
 }
 

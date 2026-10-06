@@ -49,8 +49,8 @@ void Blizzard::Streaming::Transport::TransportHttpCallback::SetByteRange(int64_t
     this->m_rangeEnd = end;
 }
 
-// PROVEN: d4f1202e IDENTICAL/NONE
-// OFFSET: 0x007ABAB0
+// PROVEN: d4f1202e IDENTICAL/IDENTICAL
+// OFFSET: 0x007ABAB0/0x1404A1AE0
 void Blizzard::Streaming::Transport::TransportHttpCallback::SetTimeOutValue(uint32_t timeout) {
     this->m_timeout = timeout;
 }
@@ -184,8 +184,8 @@ Blizzard::Streaming::Transport::TransportHttpCallback::~TransportHttpCallback() 
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// PROVEN: 9e670bcf IDENTICAL/NONE
-// OFFSET: 0x007C3680
+// PROVEN: 9e670bcf IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3680/0x1404BDD00
 Blizzard::URL::DownloadCallback::ByteRange Blizzard::Streaming::Transport::TransportHttpCallback::GetByteRange() {
     ByteRange range;
     range.m_start = this->m_rangeStart;

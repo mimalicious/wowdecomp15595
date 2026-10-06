@@ -31,8 +31,8 @@ const char* PatchOnDemand::Cache::s_oldWorldSuffix = "";
 // STATIC: %0x00C0AC94
 PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL, false };
 
-// PROVEN: 4e1947ad IDENTICAL/NONE
-// OFFSET: 0x007A2DB0
+// PROVEN: 4e1947ad IDENTICAL/IDENTICAL
+// OFFSET: 0x007A2DB0/0x14050B8D0
 void BackgroundCache::SetLocale(const char* locale) {
     Blizzard::String::Copy(CacheManager::s_locale, locale, sizeof(CacheManager::s_locale));
 }

@@ -1267,7 +1267,7 @@ int32_t CGRaidInfo::ProcessReadyCheckTimer(const void* data, void* param) {
     return 1;
 }
 
-// PROVEN: c54805fa IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: c54805fa IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGRaidInfo::LeaveWorld() {
 }

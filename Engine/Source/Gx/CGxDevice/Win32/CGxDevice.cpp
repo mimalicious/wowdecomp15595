@@ -231,7 +231,7 @@ int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
 }
 
 // PROVEN: 2c8ce512 IDENTICAL/NONE
-// OFFSET: 0x00849900
+// OFFSET: 0x00849900/0x140577A20
 static int CGxMonitorModeSort(const void* a, const void* b) {
     const CGxMonitorMode* modeA = static_cast<const CGxMonitorMode*>(a);
     const CGxMonitorMode* modeB = static_cast<const CGxMonitorMode*>(b);

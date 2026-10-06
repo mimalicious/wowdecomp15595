@@ -910,7 +910,7 @@ FMOD_RESULT F_CALLBACK DSPLowPass::setParameterCallback(FMOD_DSP_STATE *dsp, int
 ]
 */
 // PROVEN: dee3629d IDENTICAL/NONE
-// OFFSET: 0x00A9EA70
+// OFFSET: 0x00A9EA70/0x14085F890
 FMOD_RESULT F_CALLBACK DSPLowPass::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPLowPass *lowpass = (DSPLowPass *)dsp;

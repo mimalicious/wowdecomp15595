@@ -16,8 +16,8 @@ bool CGGameObject_C_Type_CapturePoint::CanHighlight() const {
     return highlight != 0;
 }
 
-// PROVEN: a6e33d75 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: a6e33d75 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_CapturePoint::CanUse() const {
     return false;
 }

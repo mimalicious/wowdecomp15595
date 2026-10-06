@@ -49,7 +49,7 @@ void WowSysMessageOutput::Enable() {
 }
 
 // PROVEN: a282cc5f IDENTICAL/NONE
-// OFFSET: 0x0040DE30
+// OFFSET: 0x0040DE30/0x1400115B0
 void WowSysMessageOutput::Disable() {
     if (s_enabled) {
         s_enabled = false;
@@ -57,7 +57,7 @@ void WowSysMessageOutput::Disable() {
 }
 
 // PROVEN: fa7671f8 IDENTICAL/NONE
-// OFFSET: 0x0040DE50
+// OFFSET: 0x0040DE50/0x1400115C0
 void WowSysMessageOutput::Show() {
     if (s_hidden) {
         s_hidden = false;

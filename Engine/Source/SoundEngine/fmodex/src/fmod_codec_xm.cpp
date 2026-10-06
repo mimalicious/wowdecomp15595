@@ -3714,7 +3714,7 @@ FMOD_RESULT CodecXM::readInternal(void *buffer, unsigned int sizebytes, unsigned
 ]
 */
 // PROVEN: d36620e0 IDENTICAL/NONE
-// OFFSET: 0x00AB2570
+// OFFSET: 0x00AB2570/0x1408779C0
 FMOD_RESULT CodecXM::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     if (postype == FMOD_TIMEUNIT_MODORDER)
@@ -3781,7 +3781,7 @@ FMOD_RESULT CodecXM::setPositionInternal(int subsound, unsigned int position, FM
 ]
 */
 // PROVEN: 8c2bbd76 IDENTICAL/NONE
-// OFFSET: 0x00AB3DE0
+// OFFSET: 0x00AB3DE0/0x1408797A0
 FMOD_RESULT F_CALLBACK CodecXM::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecXM *cxm = (CodecXM *)codec;
@@ -3831,7 +3831,7 @@ FMOD_RESULT F_CALLBACK CodecXM::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: 1bafa9a9 IDENTICAL/NONE
-// OFFSET: 0x00AB2A80
+// OFFSET: 0x00AB2A80/0x140877F70
 FMOD_RESULT F_CALLBACK CodecXM::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecXM *cxm = (CodecXM *)codec;
@@ -3856,7 +3856,7 @@ FMOD_RESULT F_CALLBACK CodecXM::readCallback(FMOD_CODEC_STATE *codec, void *buff
 ]
 */
 // PROVEN: d6e740fa IDENTICAL/NONE
-// OFFSET: 0x00AB2640
+// OFFSET: 0x00AB2640/0x140877AA0
 FMOD_RESULT F_CALLBACK CodecXM::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {
     CodecXM *cxm = (CodecXM *)codec;

@@ -3,7 +3,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 
 // PROVEN: 819c4892 IDENTICAL/NONE
-// OFFSET: 0x00496A50
+// OFFSET: 0x00496A50/0x1400BCC30
 CGPetition::CGPetition() {
     this->m_id = 0;
     this->m_ownerGuid = WOWGUID();

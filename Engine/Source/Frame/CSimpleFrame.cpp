@@ -284,7 +284,7 @@ bool CSimpleFrame::IsA(int32_t type) {
 }
 
 // PROVEN: 5e83dbf6 IDENTICAL/NONE
-// OFFSET: 0x00469500
+// OFFSET: 0x00469500/0x1401712D0
 bool CSimpleFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleFrame::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
@@ -417,7 +417,7 @@ uint8_t CSimpleFrame::GetEffectiveAlpha() {
 }
 
 // PROVEN: 8330e518 IDENTICAL/NONE
-// OFFSET: 0x00502290
+// OFFSET: 0x00502290/0x140147CF0
 void CSimpleFrame::SetFrameFlag(uint32_t flag, int32_t set) {
     if (set) {
         this->m_frameFlags |= flag;
@@ -433,7 +433,7 @@ void CSimpleFrame::Raise() {
 }
 
 // PROVEN: 4b152c86 IDENTICAL/NONE
-// OFFSET: 0x005022D0
+// OFFSET: 0x005022D0/0x140147D30
 int32_t CSimpleFrame::Lower() {
     return this->m_simpleTop->LowerFrame(this);
 }
@@ -482,7 +482,7 @@ void CSimpleFrame::UnregisterForEvents(int32_t a2) {
 }
 
 // PROVEN: b842938f IDENTICAL/NONE
-// OFFSET: 0x00502480
+// OFFSET: 0x00502480/0x140147F10
 void CSimpleFrame::GetHitRectInsets(float& left, float& right, float& top, float& bottom) {
     left = this->m_hitRectInsets.minX;
     right = this->m_hitRectInsets.maxX;
@@ -592,7 +592,7 @@ void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
 }
 
 // PROVEN: 1816dafe IDENTICAL/NONE
-// OFFSET: 0x005028F0
+// OFFSET: 0x005028F0/0x140148780
 void CSimpleFrame::RunOnEnterScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorEnter)) {
         lua_State* L = FrameScript_GetContext();
@@ -602,7 +602,7 @@ void CSimpleFrame::RunOnEnterScript(int32_t motion) {
 }
 
 // PROVEN: 55499e11 IDENTICAL/NONE
-// OFFSET: 0x00502940
+// OFFSET: 0x00502940/0x1401487F0
 void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
     if (this->HasScript(this->m_onCursorExit)) {
         lua_State* L = FrameScript_GetContext();
@@ -612,7 +612,7 @@ void CSimpleFrame::RunOnLeaveScript(int32_t motion) {
 }
 
 // PROVEN: f096a446 IDENTICAL/NONE
-// OFFSET: 0x00502990
+// OFFSET: 0x00502990/0x140148860
 void CSimpleFrame::RunOnMouseWheelScript(int32_t delta) {
     if (this->HasScript(this->m_onMouseWheel)) {
         lua_State* L = FrameScript_GetContext();
@@ -1039,7 +1039,7 @@ void CSimpleFrame::OnDragStart(const CMouseEvent& evt) {
 }
 
 // PROVEN: 75fdaf5b IDENTICAL/NONE
-// OFFSET: 0x00503620
+// OFFSET: 0x00503620/0x1401497C0
 void CSimpleFrame::OnDragStop(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onDragStop)) {
         this->RunScript(this->m_onDragStop, 0, NULL);
@@ -1047,7 +1047,7 @@ void CSimpleFrame::OnDragStop(const CMouseEvent& evt) {
 }
 
 // PROVEN: 8b0c6d16 IDENTICAL/NONE
-// OFFSET: 0x00503650
+// OFFSET: 0x00503650/0x140149800
 void CSimpleFrame::OnReceiveDrag(const CMouseEvent& evt) {
     if (this->HasScript(this->m_onReceiveDrag)) {
         this->RunScript(this->m_onReceiveDrag, 0, NULL);

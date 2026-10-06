@@ -257,7 +257,7 @@ FMOD_RESULT FMOD_OS_File_Read(void *handle, void *buf, unsigned int count, unsig
 	[SEE_ALSO]
 */
 // PROVEN: a6924d99 IDENTICAL/NONE
-// OFFSET: 0x00A90E40
+// OFFSET: 0x00A90E40/0x140850770
 FMOD_RESULT FMOD_OS_File_Seek(void *handle, unsigned int offset)
 {
     DWORD retval;

@@ -3,8 +3,8 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// PROVEN: 6423c91f IDENTICAL/NONE
-// OFFSET: 0x00464E50
+// PROVEN: 6423c91f IDENTICAL/DIFFERENT
+// OFFSET: 0x00464E50/0x140152A90
 void CImVector::Set(float a, float r, float g, float b) {
     uint32_t value = static_cast<uint8_t>(CMath::ftol_round_0_255_(a));
     value = (value << 8) | static_cast<uint8_t>(CMath::ftol_round_0_255_(r));

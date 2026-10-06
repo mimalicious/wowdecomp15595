@@ -2,13 +2,13 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C4Plane.h"
 
-// PROVEN: d86786f4 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: d86786f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 PolyClipper::~PolyClipper() {
 }
 
-// PROVEN: 63910cce IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 63910cce IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 PCResultsIterator::~PCResultsIterator() {
 }
 

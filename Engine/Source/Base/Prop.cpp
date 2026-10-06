@@ -7,7 +7,7 @@
 static uint32_t s_tlsIndex;
 
 // PROVEN: c94601bd IDENTICAL/NONE
-// OFFSET: 0x00872B80
+// OFFSET: 0x00872B80/0x1405A91A0
 void PropInitialize() {
     s_tlsIndex = OsTlsAlloc();
     OsTlsSetValue(s_tlsIndex, NULL);
@@ -19,7 +19,7 @@ void PropDestroy() {
 }
 
 // PROVEN: 746ee1dd IDENTICAL/NONE
-// OFFSET: 0x00872BB0
+// OFFSET: 0x00872BB0/0x1405A91D0
 void PropSelectContext(HPROPCONTEXT context) {
     OsTlsSetValue(s_tlsIndex, context);
 }

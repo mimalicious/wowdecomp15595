@@ -278,7 +278,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 91c7a965 IDENTICAL/NONE
-// OFFSET: 0x0043A900
+// OFFSET: 0x0043A900/0x140045790
 void CameraRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -286,7 +286,7 @@ void CameraRegisterScriptFunctions() {
 }
 
 // PROVEN: 03e90b12 IDENTICAL/NONE
-// OFFSET: 0x0043A930
+// OFFSET: 0x0043A930/0x1400457E0
 void CameraUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

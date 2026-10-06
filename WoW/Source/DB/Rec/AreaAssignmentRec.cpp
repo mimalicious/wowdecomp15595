@@ -3,8 +3,8 @@
 // STATIC: %0x00B47208
 const DBCMeta AreaAssignmentRec::s_meta = { "DBFilesClient\\AreaAssignment.dbc", 4, 20, AreaAssignmentRec::FixupStrings, 0 };
 
-// PROVEN: 15a4a205 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 15a4a205 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void AreaAssignmentRec::FixupStrings(void* record, const char* strings) {
 }
 

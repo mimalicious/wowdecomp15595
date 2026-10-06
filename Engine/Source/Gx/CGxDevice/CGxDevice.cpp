@@ -304,7 +304,7 @@ int32_t CGxDevice::BufUnlock(CGxBuf* buf, uint32_t size) {
 }
 
 // PROVEN: dfcff1e2 IDENTICAL/NONE
-// OFFSET: 0x00842230
+// OFFSET: 0x00842230/0x14056E520
 void CGxDevice::CursorSetVisible(int32_t visible) {
     CGxDevice::s_cursorVisible = visible;
 }
@@ -1556,7 +1556,7 @@ void CGxDevice::LogV(const char* format, va_list args) {
 }
 
 // PROVEN: 6a94f89b IDENTICAL/NONE
-// OFFSET: 0x00842350
+// OFFSET: 0x00842350/0x14056E640
 void CGxDevice::Log(const char* format, ...) {
     va_list args;
     va_start(args, format);

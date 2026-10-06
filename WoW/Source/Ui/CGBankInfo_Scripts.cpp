@@ -117,7 +117,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 410eade9 IDENTICAL/NONE
-// OFFSET: 0x009EE840
+// OFFSET: 0x009EE840/0x140787E60
 void BankRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -125,7 +125,7 @@ void BankRegisterScriptFunctions() {
 }
 
 // PROVEN: 60e6f56f IDENTICAL/NONE
-// OFFSET: 0x009EE870
+// OFFSET: 0x009EE870/0x140787EB0
 void BankUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

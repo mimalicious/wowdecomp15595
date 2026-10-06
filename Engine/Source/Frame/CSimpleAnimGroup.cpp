@@ -308,7 +308,7 @@ CScriptObject* CSimpleAnimGroup::GetScriptObjectParent() {
 }
 
 // PROVEN: 2b6c35aa IDENTICAL/NONE
-// OFFSET: 0x00529DC0
+// OFFSET: 0x00529DC0/0x140179BD0
 bool CSimpleAnimGroup::IsA(int32_t type) {
     return type == CSimpleAnimGroup::s_objectType || type == CScriptObject::s_objectType;
 }

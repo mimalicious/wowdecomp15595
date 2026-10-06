@@ -3,8 +3,8 @@
 // STATIC: %0x00B4491C
 const DBCMeta TerrainTypeSoundsRec::s_meta = { "DBFilesClient\\TerrainTypeSounds.dbc", 1, 4, TerrainTypeSoundsRec::FixupStrings, 0 };
 
-// PROVEN: 89654c27 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 89654c27 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void TerrainTypeSoundsRec::FixupStrings(void* record, const char* strings) {
 }
 

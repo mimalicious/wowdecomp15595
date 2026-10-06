@@ -190,7 +190,7 @@ static void ReserveInputSpace(CONSOLELINE* line, uint32_t chars) {
     line->m_buffer = buffer;
 }
 
-// PROVEN: 68b147ca IDENTICAL/NONE
+// PROVEN: 68b147ca IDENTICAL/UNPROVEN
 // OFFSET: 0x0060DE70/0x1405B4D60
 static void ResetHighlight() {
     s_highlightState = 0;
@@ -1267,7 +1267,7 @@ void ConsoleScreenDestroy() {
 }
 
 // PROVEN: 7dbc3ed8 IDENTICAL/NONE
-// OFFSET: 0x0060E240
+// OFFSET: 0x0060E240/0x140297FC0
 void SetConsoleKey(KEY key) {
     s_consoleHotKey = key;
 }

@@ -209,7 +209,7 @@ float CSimpleStatusBar::GetAnimValue() const {
 }
 
 // PROVEN: 9a365044 IDENTICAL/NONE
-// OFFSET: 0x0050F290
+// OFFSET: 0x0050F290/0x1401584C0
 bool CSimpleStatusBar::IsA(int32_t type) {
     return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }

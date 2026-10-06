@@ -3,8 +3,8 @@
 // STATIC: %0x00B44BD8
 const DBCMeta SpellVisualRec::s_meta = { "DBFilesClient\\SpellVisual.dbc", 28, 128, SpellVisualRec::FixupStrings, 0 };
 
-// PROVEN: 9742ae4a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 9742ae4a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SpellVisualRec::FixupStrings(void* record, const char* strings) {
 }
 

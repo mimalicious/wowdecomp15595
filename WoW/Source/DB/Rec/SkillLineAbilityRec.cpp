@@ -3,8 +3,8 @@
 // STATIC: %0x00B455E4
 const DBCMeta SkillLineAbilityRec::s_meta = { "DBFilesClient\\SkillLineAbility.dbc", 14, 56, SkillLineAbilityRec::FixupStrings, 0 };
 
-// PROVEN: e3e386b0 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: e3e386b0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SkillLineAbilityRec::FixupStrings(void* record, const char* strings) {
 }
 

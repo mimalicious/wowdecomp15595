@@ -45,8 +45,8 @@ C33Matrix::C33Matrix(const C44Matrix& m) {
     this->c2 = m.c2;
 }
 
-// PROVEN: e5d44559 IDENTICAL/NONE
-// OFFSET: 0x004CD430
+// PROVEN: e5d44559 IDENTICAL/DIFFERENT
+// OFFSET: 0x004CD430/0x14028B250
 float C33Matrix::Determinant() const {
     return this->c0 * this->a1 * this->b2 + this->a2 * this->b0 * this->c1 + this->c2 * this->a0 * this->b1 - this->c0 * this->a2 * this->b1 - this->c2 * this->a1 * this->b0 - this->a0 * this->c1 * this->b2;
 }
@@ -238,8 +238,8 @@ void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     this->c2 = product.c2;
 }
 
-// PROVEN: 0798e9ee IDENTICAL/NONE
-// OFFSET: 0x004CDF00
+// PROVEN: 0798e9ee IDENTICAL/DIFFERENT
+// OFFSET: 0x004CDF00/0x140109D80
 C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized) {
     C3Vector v = axis;
 

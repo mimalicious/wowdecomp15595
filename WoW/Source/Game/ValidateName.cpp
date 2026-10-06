@@ -783,7 +783,7 @@ bool TruncateNewLines(char* text) {
 }
 
 // PROVEN: 675be0b0 IDENTICAL/NONE
-// OFFSET: 0x004E6670
+// OFFSET: 0x004E6670/0x140128610
 bool IsNumeric(uint16_t c) {
     return static_cast<uint16_t>(c - '0') <= 9;
 }
@@ -1085,7 +1085,7 @@ int32_t NameNeedsDeclensions(int32_t locale, const char* name) {
 }
 
 // PROVEN: 74b7e0fc IDENTICAL/NONE
-// OFFSET: 0x00A312C0
+// OFFSET: 0x00A312C0/0x1407DB180
 uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex) {
     if (locale == 8) {
         return GetNumRussianNameDeclensionSets(name, sex);
@@ -1095,7 +1095,7 @@ uint32_t GetNumNameDeclensionSets(int32_t locale, const char* name, int32_t sex)
 }
 
 // PROVEN: 74e43113 IDENTICAL/NONE
-// OFFSET: 0x00A312E0
+// OFFSET: 0x00A312E0/0x1407DB1A0
 int32_t GetNameDeclensions(int32_t locale, char* declensions, const char* name, int32_t sex, uint32_t set) {
     if (locale == 8) {
         return GetRussianNameDeclensions(declensions, name, sex, set);
@@ -1388,7 +1388,7 @@ bool IsRussianDeclensionValid(const char* name, const char* declension) {
 }
 
 // PROVEN: 8db9a0d0 IDENTICAL/NONE
-// OFFSET: 0x004E67C0
+// OFFSET: 0x004E67C0/0x1401286C0
 bool IsRussian(uint16_t c) {
     return static_cast<uint16_t>(c - 0x400) <= 0xFF;
 }

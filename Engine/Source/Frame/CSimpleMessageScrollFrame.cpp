@@ -352,13 +352,13 @@ int32_t CSimpleMessageScrollFrame::GetScriptMetaTable() {
 }
 
 // PROVEN: 0071eba8 IDENTICAL/NONE
-// OFFSET: 0x0051DC50
+// OFFSET: 0x0051DC50/0x14016A7F0
 bool CSimpleMessageScrollFrame::IsA(int32_t type) {
     return type == CSimpleMessageScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
 // PROVEN: 94984024 IDENTICAL/NONE
-// OFFSET: 0x0051DC90
+// OFFSET: 0x0051DC90/0x14016A7E0
 bool CSimpleMessageScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

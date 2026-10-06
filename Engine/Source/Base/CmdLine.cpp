@@ -23,13 +23,13 @@ static const _ARGLIST s_argList[] = {
 };
 
 // PROVEN: 2ca58742 IDENTICAL/NONE
-// OFFSET: 0x00871F70
+// OFFSET: 0x00871F70/0x1405A8250
 int32_t CmdLineGetBool(CMDOPT opt) {
     return SCmdGetBool(opt);
 }
 
 // PROVEN: ed2ac2bb IDENTICAL/NONE
-// OFFSET: 0x00871F80
+// OFFSET: 0x00871F80/0x1405A8260
 const char* CmdLineGetString(CMDOPT opt) {
     // STATIC: %0x00D93228
     static char buffer[260];

@@ -3,8 +3,8 @@
 // STATIC: %0x00B45E3C
 const DBCMeta LfgDungeonExpansionRec::s_meta = { "DBFilesClient\\LfgDungeonExpansion.dbc", 8, 32, LfgDungeonExpansionRec::FixupStrings, 0 };
 
-// PROVEN: 0bbc8ea2 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 0bbc8ea2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void LfgDungeonExpansionRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -482,8 +482,8 @@ static float s_horizonMinZ = 0.998046875f;
 // STATIC: #0x00ADEEEC
 static float s_horizonMaxZ = 0.9990234375f;
 
-// PROVEN: 8564474b IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8564474b IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void World::SetTexLodBias(float bias) {
 }
 
@@ -1695,7 +1695,7 @@ void CWorld::Initialize() {
 }
 
 // PROVEN: db66a356 IDENTICAL/NONE
-// OFFSET: 0x007245B0
+// OFFSET: 0x007245B0/0x1403FB280
 bool World::IsValidPosition(const C3Vector& position, float a4) {
     return World::IsValidPosition(position.x, position.y, position.z, a4);
 }
@@ -4513,7 +4513,7 @@ int32_t World::QueryMapObjSubzoneName(CMapEntity* entity, const char** subzoneNa
 }
 
 // PROVEN: 637e4ae9 IDENTICAL/NONE
-// OFFSET: 0x00721E30
+// OFFSET: 0x00721E30/0x1403F83A0
 bool World::QueryMapObjIDs(CMapEntity* entity, int32_t* wmoId, int32_t* wmoHash, int32_t* groupNum) {
     if (!entity) {
         return false;
@@ -4704,7 +4704,7 @@ CMapEntity* CMap::ObjectCreateStaticEx(CM2Model* model, const C44Matrix& matrix,
 }
 
 // PROVEN: c6da014c IDENTICAL/NONE
-// OFFSET: 0x00721DE0
+// OFFSET: 0x00721DE0/0x1403F8360
 int32_t World::QueryMapObjFileName(CMapEntity* entity, const char** fileName) {
     if (!entity) {
         return 0;

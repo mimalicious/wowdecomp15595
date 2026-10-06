@@ -356,7 +356,7 @@ FMOD_RESULT CodecVAG::setPositionInternal(int subsound, unsigned int position, F
 ]
 */
 // PROVEN: 22ac5ff9 IDENTICAL/NONE
-// OFFSET: 0x00ABCB50
+// OFFSET: 0x00ABCB50/0x140884270
 FMOD_RESULT F_CALLBACK CodecVAG::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecVAG *vag = (CodecVAG *)codec;
@@ -430,7 +430,7 @@ FMOD_RESULT F_CALLBACK CodecVAG::readCallback(FMOD_CODEC_STATE *codec, void *buf
 ]
 */
 // PROVEN: 220683b5 IDENTICAL/NONE
-// OFFSET: 0x00ABCC60
+// OFFSET: 0x00ABCC60/0x140884370
 FMOD_RESULT F_CALLBACK CodecVAG::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecVAG *vag = (CodecVAG *)codec;

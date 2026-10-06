@@ -310,7 +310,7 @@ void Script_SendUniqueSignal(int32_t signal) {
 }
 
 // PROVEN: def28bb6 IDENTICAL/NONE
-// OFFSET: 0x004598F0
+// OFFSET: 0x004598F0/0x1400698E0
 void Script_SendUniqueSignals() {
     uint32_t count = s_uniqueSignals.Count();
 

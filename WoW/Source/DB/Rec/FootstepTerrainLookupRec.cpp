@@ -3,8 +3,8 @@
 // STATIC: %0x00B46A5C
 const DBCMeta FootstepTerrainLookupRec::s_meta = { "DBFilesClient\\FootstepTerrainLookup.dbc", 5, 20, FootstepTerrainLookupRec::FixupStrings, 0 };
 
-// PROVEN: 4a49423a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 4a49423a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void FootstepTerrainLookupRec::FixupStrings(void* record, const char* strings) {
 }
 

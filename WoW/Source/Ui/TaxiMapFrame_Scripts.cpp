@@ -221,7 +221,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 0bd5850d IDENTICAL/NONE
-// OFFSET: 0x009E2340
+// OFFSET: 0x009E2340/0x1407794D0
 void CGTaxiMap::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -229,7 +229,7 @@ void CGTaxiMap::RegisterScriptFunctions() {
 }
 
 // PROVEN: d4c51fa2 IDENTICAL/NONE
-// OFFSET: 0x009E2370
+// OFFSET: 0x009E2370/0x140779520
 void CGTaxiMap::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

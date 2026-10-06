@@ -328,7 +328,7 @@ void GruntLogin::GetMatrixProof(bool* enabled, const uint8_t** proof) const {
 }
 
 // PROVEN: 36ec3fff IDENTICAL/NONE
-// OFFSET: 0x00625F50
+// OFFSET: 0x00625F50/0x1402B7B20
 void GruntLogin::SetTokenInfo(bool enabled, uint8_t required) {
     this->m_tokenEnabled = enabled;
     this->m_tokenRequired = required;
@@ -570,7 +570,7 @@ static void ProcessMatrixRC4(uint8_t* data, uint32_t length, SARC4Key* key) {
 }
 
 // PROVEN: 9fb3d337 IDENTICAL/NONE
-// OFFSET: 0x00625FC0
+// OFFSET: 0x00625FC0/0x1402B7B80
 void GruntLogin::FileAccept(bool accept, uint64_t offset) {
     this->m_clientLink->FileStatus(accept, offset);
 }

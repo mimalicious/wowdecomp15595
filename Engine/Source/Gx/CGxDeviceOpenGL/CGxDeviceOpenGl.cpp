@@ -1171,7 +1171,7 @@ void CGxDeviceOpenGl::DeviceDestroy() {
 }
 
 // PROVEN: dd7e1d2e IDENTICAL/NONE
-// OFFSET: 0x00850BA0
+// OFFSET: 0x00850BA0/0x140580180
 void CGxDeviceOpenGl::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation();
     CGxDevice::DeviceSetBaseMipLevel(level);
@@ -1858,7 +1858,7 @@ void CGxDeviceOpenGl::StereoSetConvergence(float convergence) {
 }
 
 // PROVEN: 35b1a782 IDENTICAL/NONE
-// OFFSET: 0x00599E10
+// OFFSET: 0x00599E10/0x1402082B0
 float CGxDeviceOpenGl::StereoGetConvergence() {
     return 1.0f;
 }
@@ -1874,8 +1874,8 @@ float CGxDeviceOpenGl::StereoGetSeparation() {
     return 0.0f;
 }
 
-// PROVEN: f71ea9a2 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: f71ea9a2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGxDeviceOpenGl::StereoEnabled() {
     return false;
 }
@@ -1885,8 +1885,8 @@ bool CGxDeviceOpenGl::StereoEnabled() {
 void CGxDeviceOpenGl::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// PROVEN: 4ea2707c IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 4ea2707c IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGxDeviceOpenGl::DebugGroupEnd() {
 }
 

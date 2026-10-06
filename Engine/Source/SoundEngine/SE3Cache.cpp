@@ -56,13 +56,13 @@ SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
 // PROVEN: 9329de35 IDENTICAL/NONE
-// OFFSET: 0x007153C0
+// OFFSET: 0x007153C0/0x1403E80A0
 void SE3::SetMaxCacheSizeInBytes(int32_t size) {
     SE3::sm_nMaxCacheSizeInBytes = size;
 }
 
 // PROVEN: a622bc94 IDENTICAL/NONE
-// OFFSET: 0x007153D0
+// OFFSET: 0x007153D0/0x1403E80B0
 void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
 }
@@ -547,19 +547,19 @@ FMOD_RESULT SE3::CreateDSPByType(SE3_DSP_TYPE type, void** dsp) {
 }
 
 // PROVEN: ab383207 IDENTICAL/NONE
-// OFFSET: 0x00716C30
+// OFFSET: 0x00716C30/0x1403EA110
 FMOD_RESULT SE3::SetDspParam(void* dsp, int32_t index, float value) {
     return static_cast<FMOD::DSP*>(dsp)->setParameter(index, value);
 }
 
 // PROVEN: 8ea572e5 IDENTICAL/NONE
-// OFFSET: 0x00716C50
+// OFFSET: 0x00716C50/0x1403EA120
 FMOD_RESULT SE3::BypassDsp(void* dsp, bool bypass) {
     return static_cast<FMOD::DSP*>(dsp)->setBypass(bypass);
 }
 
 // PROVEN: ec08a0ca IDENTICAL/NONE
-// OFFSET: 0x00716C70
+// OFFSET: 0x00716C70/0x1403EA130
 FMOD_RESULT SE3::EnableDSP(void* dsp, bool active) {
     return static_cast<FMOD::DSP*>(dsp)->setActive(active);
 }
@@ -604,19 +604,19 @@ void* SE3::CreateChannelGroup(const char* name) {
 }
 
 // PROVEN: 238dcca3 IDENTICAL/NONE
-// OFFSET: 0x00716D50
+// OFFSET: 0x00716D50/0x1403EA210
 FMOD_RESULT SE3::DestroyChannelGroup(void* channelGroup) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->release();
 }
 
 // PROVEN: 40960923 IDENTICAL/NONE
-// OFFSET: 0x00716D60
+// OFFSET: 0x00716D60/0x1403EA220
 FMOD_RESULT SE3::AddChannelToChannelGroup(void* channel, void* channelGroup) {
     return static_cast<FMOD::Channel*>(channel)->setChannelGroup(static_cast<FMOD::ChannelGroup*>(channelGroup));
 }
 
 // PROVEN: 2823cd42 IDENTICAL/NONE
-// OFFSET: 0x00716D80
+// OFFSET: 0x00716D80/0x1403EA230
 FMOD_RESULT SE3::SetFMODChannelGroupVolume(void* channelGroup, float volume) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->setVolume(volume);
 }

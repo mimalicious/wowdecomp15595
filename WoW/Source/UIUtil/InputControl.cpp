@@ -1275,7 +1275,7 @@ void CGInputControl::ToggleControlBit(uint32_t bit, int32_t enable, uint32_t tim
 }
 
 // PROVEN: c7904511 IDENTICAL/NONE
-// OFFSET: 0x0044A330
+// OFFSET: 0x0044A330/0x1400571C0
 void CGInputControl::StopMovementAndTurning(uint32_t time) {
     uint32_t bits = this->m_flags & 0x1330;
     this->ToggleControlBit(bits, 0, time, 0);
@@ -1284,7 +1284,7 @@ void CGInputControl::StopMovementAndTurning(uint32_t time) {
 }
 
 // PROVEN: 06a904b6 IDENTICAL/NONE
-// OFFSET: 0x004478E0
+// OFFSET: 0x004478E0/0x140054100
 uint32_t GetJoystick() {
     return s_joystick;
 }

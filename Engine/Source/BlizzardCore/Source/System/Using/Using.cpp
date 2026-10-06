@@ -125,12 +125,14 @@ System_Using::UsingRec* System_Using::Intern(const char* name) {
     return rec;
 }
 
-// OFFSET: %0x0071EF20
+// PROVEN: 498fd223 DIFFERENT/IDENTICAL
+// OFFSET: 0x007BD5E0/0x1404B5DC0
 void Blizzard::Using::StartUsing(const char* name) {
     System_Using::Intern(name)->refCount++;
 }
 
-// OFFSET: %0x0071EF40
+// PROVEN: 226809d5 DIFFERENT/IDENTICAL
+// OFFSET: 0x007BD600/0x1404B5DE0
 void Blizzard::Using::StopUsing(const char* name) {
     System_Using::Intern(name)->refCount--;
     System_Using::ShutdownUnused();

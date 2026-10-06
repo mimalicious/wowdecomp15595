@@ -96,7 +96,7 @@ void CGGossipInfo::ClearOptions() {
 }
 
 // PROVEN: fa272b00 IDENTICAL/NONE
-// OFFSET: 0x009E16E0
+// OFFSET: 0x009E16E0/0x1407785C0
 static void GossipTextCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGGossipInfo::SetGossipText(id);
@@ -485,7 +485,7 @@ int32_t Packet_SMSG_GOSSIP_POI(void* param, NETMESSAGE msgId, uint32_t time, CDa
 }
 
 // PROVEN: 6acaf639 IDENTICAL/NONE
-// OFFSET: 0x009E1760
+// OFFSET: 0x009E1760/0x140778680
 void CGGossipInfo::LeaveWorld() {
     CGGossipInfo::SetGossip(WOWGUID::Make(0));
     CGGossipInfo::ClearOptions();

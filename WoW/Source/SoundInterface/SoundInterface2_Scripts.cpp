@@ -191,7 +191,7 @@ static int32_t Script_VoiceChat_StopPlayingLoopbackSound(lua_State* L) {
 }
 
 // PROVEN: 6aa4d188 IDENTICAL/NONE
-// OFFSET: 0x00B34CF0
+// OFFSET: 0x00B34CF0/0x1408FFD70
 static int32_t Script_VoiceChat_IsRecordingLoopbackSound(lua_State* L) {
     lua_pushnumber(L, SI2::VoiceChat_IsRecordingLoopbackSound());
     return 1;
@@ -216,7 +216,7 @@ static int32_t Script_VoiceChat_ActivatePrimaryCaptureCallback(lua_State* L) {
 }
 
 // PROVEN: a0a8ceb4 IDENTICAL/NONE
-// OFFSET: 0x00B35060
+// OFFSET: 0x00B35060/0x140900160
 static int32_t Script_VoiceChat_StartCapture(lua_State* L) {
     static CVar* s_enableMicrophone = CVar::Lookup("EnableMicrophone");
     static CVar* s_enableVoiceChat = CVar::Lookup("EnableVoiceChat");

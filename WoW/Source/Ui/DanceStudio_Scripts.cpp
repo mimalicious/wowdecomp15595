@@ -26,7 +26,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 574e2ad8 IDENTICAL/NONE
-// OFFSET: 0x009B7CF0
+// OFFSET: 0x009B7CF0/0x140742260
 void CGDanceStudio::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -34,7 +34,7 @@ void CGDanceStudio::RegisterScriptFunctions() {
 }
 
 // PROVEN: fd7a5340 IDENTICAL/NONE
-// OFFSET: 0x009B7D10
+// OFFSET: 0x009B7D10/0x140742280
 void CGDanceStudio::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

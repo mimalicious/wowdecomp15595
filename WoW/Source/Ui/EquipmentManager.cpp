@@ -42,7 +42,7 @@ int32_t CGEquipmentManager::m_ignoredSlots[19];
 TSList<EQUIPMENT_SET_NODE> CGEquipmentManager::s_equipmentSets;
 
 // PROVEN: b695294d IDENTICAL/NONE
-// OFFSET: 0x009A1280
+// OFFSET: 0x009A1280/0x140725A20
 void CGEquipmentManager::EnterWorld() {
     CGEquipmentManager::m_swapPending = 0;
     CGEquipmentManager::m_lastCanUseEquipmentSetsValue = 0;

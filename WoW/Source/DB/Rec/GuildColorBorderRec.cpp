@@ -3,8 +3,8 @@
 // STATIC: %0x00B43B9C
 const DBCMeta GuildColorBorderRec::s_meta = { "DBFilesClient\\GuildColorBorder.dbc", 4, 8, GuildColorBorderRec::FixupStrings, 0 };
 
-// PROVEN: 7c943553 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 7c943553 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void GuildColorBorderRec::FixupStrings(void* record, const char* strings) {
 }
 

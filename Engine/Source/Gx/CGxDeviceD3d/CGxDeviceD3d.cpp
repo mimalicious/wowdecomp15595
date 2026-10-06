@@ -693,8 +693,8 @@ int32_t CGxDeviceD3d::QueryGetData(CGxQuery* query, uint32_t* data) {
 void CGxDeviceD3d::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// PROVEN: b39cee7c IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: b39cee7c IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGxDeviceD3d::DebugGroupEnd() {
 }
 

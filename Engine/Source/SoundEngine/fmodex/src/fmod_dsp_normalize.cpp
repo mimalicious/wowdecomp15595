@@ -508,7 +508,7 @@ FMOD_RESULT F_CALLBACK DSPNormalize::readCallback(FMOD_DSP_STATE *dsp, float *in
 ]
 */
 // PROVEN: 71a2609d IDENTICAL/NONE
-// OFFSET: 0x00A9A700
+// OFFSET: 0x00A9A700/0x14085AEB0
 FMOD_RESULT F_CALLBACK DSPNormalize::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPNormalize *normalize = (DSPNormalize *)dsp;

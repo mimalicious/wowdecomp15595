@@ -95,7 +95,7 @@ int32_t CSimpleHTML::GetScriptMetaTable() {
 }
 
 // PROVEN: 6673e8d4 IDENTICAL/NONE
-// OFFSET: 0x00521C70
+// OFFSET: 0x00521C70/0x14016F870
 bool CSimpleHTML::IsA(int32_t type) {
     return type == CSimpleHTML::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }

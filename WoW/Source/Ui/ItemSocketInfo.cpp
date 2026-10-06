@@ -166,7 +166,7 @@ void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool
 }
 
 // PROVEN: c13384ac IDENTICAL/NONE
-// OFFSET: 0x0097A1D0
+// OFFSET: 0x0097A1D0/0x1406F3750
 void CGItemSocketInfo::EnterWorld() {
     CGItemSocketInfo::m_socketItem = WOWGUID::Make(0);
     CGItemSocketInfo::m_socketItemStats = NULL;

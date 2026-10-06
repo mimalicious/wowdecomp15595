@@ -347,7 +347,7 @@ FMOD_RESULT Thread::getCurrentThreadID(FMOD_UINT_NATIVE *id)
 ]
 */
 // PROVEN: ca4e72af IDENTICAL/NONE
-// OFFSET: 0x00A915F0
+// OFFSET: 0x00A915F0/0x140850F50
 FMOD_RESULT Thread::wakeupThread(bool frominterrupt)
 {
     if (mSema)

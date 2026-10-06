@@ -330,7 +330,7 @@ CSimpleAnim::~CSimpleAnim() {
 }
 
 // PROVEN: defe0283 IDENTICAL/NONE
-// OFFSET: 0x005282F0
+// OFFSET: 0x005282F0/0x140177900
 bool CSimpleAnim::IsA(int32_t type) {
     return type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }

@@ -303,7 +303,7 @@ bool Spell_C_HasEffect(const SpellRec* spell, int32_t effect) {
 }
 
 // PROVEN: 31a91915 IDENTICAL/NONE
-// OFFSET: 0x008A6020
+// OFFSET: 0x008A6020/0x1405E8C90
 int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec) {
     for (uint32_t i = 0; i < sizeof(rec->m_spells) / sizeof(rec->m_spells[0]); i++) {
         if (rec->m_spells[i] == spellId) {
@@ -2508,7 +2508,7 @@ bool Spell_C_CanTargetEnemies() {
 }
 
 // PROVEN: efc1f18e IDENTICAL/NONE
-// OFFSET: 0x008A55B0
+// OFFSET: 0x008A55B0/0x1405E80F0
 bool Spell_C_CanTargetAlive() {
     return (s_needTargets & 0x8600) == 0;
 }
@@ -2519,19 +2519,19 @@ bool Spell_C_CanTargetFriendCorpses() {
 }
 
 // PROVEN: 3fe1043c IDENTICAL/NONE
-// OFFSET: 0x008A55C0
+// OFFSET: 0x008A55C0/0x1405E8100
 bool Spell_C_CanTargetEnemyCorpses() {
     return (s_needTargets >> 9) & 1;
 }
 
 // PROVEN: a87bb30b IDENTICAL/NONE
-// OFFSET: 0x008A55D0
+// OFFSET: 0x008A55D0/0x1405E8110
 bool Spell_C_CanTargetObjects() {
     return (s_needTargets & 0x4800) != 0;
 }
 
 // PROVEN: 47565330 IDENTICAL/NONE
-// OFFSET: 0x008A5660
+// OFFSET: 0x008A5660/0x1405E8190
 bool Spell_C_CanTargetNonCombatPet() {
     return (s_needTargets >> 16) & 1;
 }

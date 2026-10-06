@@ -13,7 +13,7 @@
 #include "Engine/Source/Tempest/CRect.h"
 
 // PROVEN: 4955e577 IDENTICAL/NONE
-// OFFSET: 0x005106C0
+// OFFSET: 0x005106C0/0x140159EB0
 void CBackdropGenerator::SetVertexColor(const CImVector& color) {
     this->m_backgroundColor.a = color.a;
     this->m_backgroundColor.r = color.r;

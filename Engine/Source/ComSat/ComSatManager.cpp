@@ -13,26 +13,26 @@ ComSat::Manager::LocalTalker::LocalTalker(ComSat::Allocator& allocator) : m_guid
 }
 
 // PROVEN: e137e543 IDENTICAL/NONE
-// OFFSET: 0x00A32F30
+// OFFSET: 0x00A32F30/0x1407DD430
 void ComSat::Manager::Work(uint32_t elapsed) {
     this->m_networkManager->Work(elapsed);
     this->m_soundManager->Work(elapsed);
 }
 
 // PROVEN: f7caa0a8 IDENTICAL/NONE
-// OFFSET: 0x00A32F70
+// OFFSET: 0x00A32F70/0x1407DF030
 void ComSat::Manager::CallbackClear() {
     this->m_callback = NULL;
 }
 
 // PROVEN: e47eb668 IDENTICAL/NONE
-// OFFSET: 0x00A32F60
+// OFFSET: 0x00A32F60/0x14090EB30
 void ComSat::Manager::CallbackSet(ComSat::Interface::Callback& callback) {
     this->m_callback = &callback;
 }
 
 // PROVEN: 042fb9e6 IDENTICAL/NONE
-// OFFSET: 0x00A32F80
+// OFFSET: 0x00A32F80/0x1407DD530
 bool ComSat::Manager::LocalTalkerChangeOutputDevice(uint8_t localTalker, int32_t device) {
     return this->m_soundManager->LocalTalkerChangeOutputDevice(localTalker, device);
 }
@@ -44,7 +44,7 @@ bool ComSat::Manager::LocalTalkerChangeCaptureDevice(uint8_t localTalker, int32_
 }
 
 // PROVEN: b07f4f6b IDENTICAL/NONE
-// OFFSET: 0x00A32FA0
+// OFFSET: 0x00A32FA0/0x1407DD5C0
 int32_t ComSat::Manager::LocalTalkerGetCurrentOutputDeviceIndex(uint8_t localTalker) {
     return this->m_soundManager->LocalTalkerGetCurrentOutputDeviceIndex(localTalker);
 }
@@ -62,7 +62,7 @@ bool ComSat::Manager::LocalTalkerEnable(uint8_t localTalker, bool enable) {
 }
 
 // PROVEN: c5e2a601 IDENTICAL/NONE
-// OFFSET: 0x00A32FD0
+// OFFSET: 0x00A32FD0/0x1407DD470
 bool ComSat::Manager::LocalTalkerThreshold(uint8_t localTalker, float threshold) {
     if (threshold < 0.0f || threshold > 1.0f) {
         return false;
@@ -71,7 +71,7 @@ bool ComSat::Manager::LocalTalkerThreshold(uint8_t localTalker, float threshold)
 }
 
 // PROVEN: d83eb312 IDENTICAL/NONE
-// OFFSET: 0x00A33010
+// OFFSET: 0x00A33010/0x1407DD480
 bool ComSat::Manager::LocalTalkerEnableVoiceLevelCallback(uint8_t localTalker, bool enable) {
     if (localTalker >= this->m_maxLocalPlayers) {
         return false;
@@ -81,13 +81,13 @@ bool ComSat::Manager::LocalTalkerEnableVoiceLevelCallback(uint8_t localTalker, b
 }
 
 // PROVEN: 77892de6 IDENTICAL/NONE
-// OFFSET: 0x00A33040
+// OFFSET: 0x00A33040/0x1407DD4B0
 bool ComSat::Manager::LocalTalkerSetRemoteTalkerVolume(uint8_t localTalker, uint64_t talker, float volume) {
     return this->m_soundManager->LocalTalkerSetRemoteTalkerVolume(localTalker, talker, volume);
 }
 
 // PROVEN: 6f63545b IDENTICAL/NONE
-// OFFSET: 0x00A33070
+// OFFSET: 0x00A33070/0x1407DD4C0
 bool ComSat::Manager::LocalTalkerSetSessionVolume(uint8_t localTalker, uint64_t session, float volume) {
     return this->m_soundManager->LocalTalkerSetSessionVolume(localTalker, session, volume);
 }
@@ -99,7 +99,7 @@ int32_t ComSat::Manager::SessionNumMembers(uint64_t session) {
 }
 
 // PROVEN: 856e4889 IDENTICAL/NONE
-// OFFSET: 0x00A330C0
+// OFFSET: 0x00A330C0/0x1407DD540
 bool ComSat::Manager::SessionGetTalkerByIndex(uint64_t session, int32_t index, uint64_t& talker, uint8_t& localTalker) {
     if (!this->m_soundManager->SessionGetTalkerByIndex(session, index, talker, localTalker)) {
         return false;
@@ -124,7 +124,7 @@ bool ComSat::Manager::SessionSetTalkerPriority(uint64_t session, uint64_t talker
 }
 
 // PROVEN: de3e26e4 IDENTICAL/NONE
-// OFFSET: 0x00A33150
+// OFFSET: 0x00A33150/0x1407DD4A0
 bool ComSat::Manager::LocalTalkerSetSessionPriority(uint8_t localTalker, uint64_t session, uint8_t priority) {
     return this->m_soundManager->SetPlaybackPriorityForSession(session, localTalker, priority);
 }
@@ -138,7 +138,7 @@ bool ComSat::Manager::IsTalkerMuted(uint8_t localTalker, uint64_t talker) {
 }
 
 // PROVEN: 73f42a30 IDENTICAL/NONE
-// OFFSET: 0x00A331A0
+// OFFSET: 0x00A331A0/0x1407DD4E0
 bool ComSat::Manager::MuteTalker(uint8_t localTalker, uint64_t talker, ComSat::MuteSetting setting) {
     return this->m_soundManager->SetTalkerMuted(localTalker, talker, setting);
 }
@@ -152,7 +152,7 @@ bool ComSat::Manager::MuteSession(uint8_t localTalker, uint64_t session, ComSat:
 }
 
 // PROVEN: 723c4e63 IDENTICAL/NONE
-// OFFSET: 0x00A33200
+// OFFSET: 0x00A33200/0x1407DD510
 bool ComSat::Manager::IsSessionMuted(uint8_t localTalker, uint64_t session) {
     return this->m_soundManager->IsSessionMuted(localTalker, session);
 }
@@ -187,7 +187,7 @@ bool ComSat::Manager::DoesLocalPlayerHaveHeadset(uint8_t localTalker) {
 }
 
 // PROVEN: 68a20b79 IDENTICAL/NONE
-// OFFSET: 0x00A332D0
+// OFFSET: 0x00A332D0/0x1407DD6C0
 int32_t ComSat::Manager::EnumerateOutputDevices(ComSat::DeviceInfo* devices, int32_t maxDevices) {
     return this->m_soundManager->EnumerateOutputDevices(devices, maxDevices);
 }
@@ -380,7 +380,7 @@ bool ComSat::Manager::PackStableBitrateData(uint8_t player, uint8_t* buffer, int
 }
 
 // PROVEN: 005e1cb8 IDENTICAL/NONE
-// OFFSET: 0x00A33920
+// OFFSET: 0x00A33920/0x1407DDEC0
 void ComSat::Manager::SendVoiceDataToCurrentSession(uint8_t player) {
     if (player >= this->m_maxLocalPlayers) {
         return;
@@ -449,7 +449,7 @@ void ComSat::Manager::LocalChatDataReady(uint8_t player, uint8_t* data, uint32_t
 }
 
 // PROVEN: e306a7c8 IDENTICAL/NONE
-// OFFSET: 0x00A33AF0
+// OFFSET: 0x00A33AF0/0x1407DE0F0
 void ComSat::Manager::RemotePlayerTalkNotifyStart(uint8_t player, uint64_t talker, uint64_t session) {
     if (this->m_callback) {
         this->m_callback->NotifyTalkerStart(player, session, talker);
@@ -457,7 +457,7 @@ void ComSat::Manager::RemotePlayerTalkNotifyStart(uint8_t player, uint64_t talke
 }
 
 // PROVEN: 0cc4dbcc IDENTICAL/NONE
-// OFFSET: 0x00A33B20
+// OFFSET: 0x00A33B20/0x1407DE120
 void ComSat::Manager::RemotePlayerTalkNotifyStop(uint8_t player, uint64_t talker, uint64_t session) {
     if (this->m_callback) {
         this->m_callback->NotifyTalkerStop(player, session, talker);
@@ -465,7 +465,7 @@ void ComSat::Manager::RemotePlayerTalkNotifyStop(uint8_t player, uint64_t talker
 }
 
 // PROVEN: 3b2928bc IDENTICAL/NONE
-// OFFSET: 0x00A33B50
+// OFFSET: 0x00A33B50/0x1407DE150
 void ComSat::Manager::LocalTalkerVoiceLevel(uint8_t player, float level, bool talking) {
     if (this->m_callback) {
         this->m_callback->NotifyLocalTalkerVoiceLevel(player, level, talking);
@@ -473,7 +473,7 @@ void ComSat::Manager::LocalTalkerVoiceLevel(uint8_t player, float level, bool ta
 }
 
 // PROVEN: ea19a555 IDENTICAL/NONE
-// OFFSET: 0x00A33B80
+// OFFSET: 0x00A33B80/0x1407DE170
 void ComSat::Manager::DeviceError(uint8_t player) {
     if (this->m_callback && player < this->m_maxLocalPlayers) {
         LocalTalker* localTalker = this->m_localTalkers[player];
@@ -490,13 +490,13 @@ void ComSat::Manager::MicrophoneStatusUpdate(uint8_t player, ComSat::Sound::Head
 }
 
 // PROVEN: 55e2d48f IDENTICAL/NONE
-// OFFSET: 0x00A33BD0
+// OFFSET: 0x00A33BD0/0x1407DD620
 void ComSat::Manager::DebugSetSequenceDelay(int32_t delay) {
     this->m_soundManager->DebugSetSequenceDelay(delay);
 }
 
 // PROVEN: 314d120d IDENTICAL/NONE
-// OFFSET: 0x00A33BE0
+// OFFSET: 0x00A33BE0/0x1407DD650
 void ComSat::Manager::DebugSetSoundOutputDelay(uint8_t localTalker, int32_t delay) {
     this->m_soundManager->DebugSetSoundOutputDelay(localTalker, delay);
 }
@@ -518,7 +518,7 @@ bool ComSat::Manager::LocalTalkerCreate(uint8_t localTalker, uint64_t talker, fl
 }
 
 // PROVEN: 2f3c8b0c IDENTICAL/NONE
-// OFFSET: 0x00A33D20
+// OFFSET: 0x00A33D20/0x1407DE2D0
 bool ComSat::Manager::LocalTalkerDestroy(uint8_t localTalker) {
     LocalTalker* local = this->m_localTalkers[localTalker];
     if (!local || !local->m_guid) {
@@ -568,7 +568,7 @@ bool ComSat::Manager::SessionDestroy(uint64_t session) {
 }
 
 // PROVEN: f843bb9a IDENTICAL/NONE
-// OFFSET: 0x00A33EB0
+// OFFSET: 0x00A33EB0/0x1407DE1E0
 ComSat::Session* ComSat::Manager::FindSession(uint64_t id) {
     for (uint32_t i = 0; i < this->m_sessions.Count(); i++) {
         if (this->m_sessions[i]->m_id == id) {
@@ -579,7 +579,7 @@ ComSat::Session* ComSat::Manager::FindSession(uint64_t id) {
 }
 
 // PROVEN: 975bd9d1 IDENTICAL/NONE
-// OFFSET: 0x00A33F10
+// OFFSET: 0x00A33F10/0x1407DE4A0
 bool ComSat::Manager::SessionAddRemote(uint64_t session, uint64_t talker, uint8_t networkId, const uint8_t (&key)[16], const char* address) {
     ComSat::Session* current = this->FindSession(session);
     if (!current) {
@@ -600,7 +600,7 @@ bool ComSat::Manager::SessionAddRemote(uint64_t session, uint64_t talker, uint8_
 }
 
 // PROVEN: aa607609 IDENTICAL/NONE
-// OFFSET: 0x00A33FE0
+// OFFSET: 0x00A33FE0/0x1407DE5B0
 bool ComSat::Manager::SessionSetTalkerNetworkIdLocal(uint64_t session, uint64_t talker, uint8_t networkId) {
     ComSat::Session* current = this->FindSession(session);
     if (!current) {
@@ -663,7 +663,7 @@ ComSat::Manager::~Manager() {
 }
 
 // PROVEN: 6b9d4e0b IDENTICAL/NONE
-// OFFSET: 0x00A34240
+// OFFSET: 0x00A34240/0x1407DD6D0
 bool ComSat::Manager::SessionSetNetworkId(uint64_t session, uint16_t networkId) {
     ComSat::Session* current = this->FindSession(session);
     if (!current) {

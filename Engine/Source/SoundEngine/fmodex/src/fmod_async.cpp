@@ -28,7 +28,7 @@ LinkedListNode           AsyncThread::gAsyncHead;
 ]
 */
 // PROVEN: 5cb21c0c IDENTICAL/NONE
-// OFFSET: 0x00ACF360
+// OFFSET: 0x00ACF360/0x140899AD0
 void asyncThreadFunc(void *data)
 {
     AsyncThread *asyncThread = (AsyncThread *)data;
@@ -408,7 +408,7 @@ FMOD_RESULT AsyncThread::update()
 ]
 */
 // PROVEN: 431ee7a9 IDENTICAL/NONE
-// OFFSET: 0x00ACF120
+// OFFSET: 0x00ACF120/0x140899860
 FMOD_RESULT AsyncThread::threadFunc()
 {
     FMOD_RESULT     result = FMOD_OK;

@@ -3,7 +3,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SHA1.h"
 
 // PROVEN: b5578251 IDENTICAL/NONE
-// OFFSET: 0x00B3AAE0
+// OFFSET: 0x00B3AAE0/0x140907780
 SRP6_Random::SRP6_Random(const void* seed, uint32_t seedLength) {
     SHA1_CONTEXT context;
     SHA1_Init(&context);

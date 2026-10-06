@@ -41,7 +41,7 @@ static int32_t Script_GetBindingKey(lua_State* L) {
 }
 
 // PROVEN: 4d74a8db IDENTICAL/NONE
-// OFFSET: 0x009213D0
+// OFFSET: 0x009213D0/0x140683BC0
 static int32_t Script_GetNumBindings(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_numCommands);
     return 1;
@@ -643,7 +643,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 4be9aead IDENTICAL/NONE
-// OFFSET: 0x00921460
+// OFFSET: 0x00921460/0x140683C50
 void UIBindingsRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -651,7 +651,7 @@ void UIBindingsRegisterScriptFunctions() {
 }
 
 // PROVEN: e5537092 IDENTICAL/NONE
-// OFFSET: 0x00921490
+// OFFSET: 0x00921490/0x140683CA0
 void UIBindingsUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

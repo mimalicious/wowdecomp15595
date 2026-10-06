@@ -218,7 +218,7 @@ void CLightning::ApplyPulsingToVertexData(int32_t& start, int32_t& count) {
 }
 
 // PROVEN: f8be89da IDENTICAL/NONE
-// OFFSET: 0x00B294D0
+// OFFSET: 0x00B294D0/0x1408F1F80
 void CLightning::SetSrcPos(const C3Vector& pos) {
     this->m_srcPos = pos;
 }

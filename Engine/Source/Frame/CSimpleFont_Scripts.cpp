@@ -299,7 +299,7 @@ int32_t CSimpleFont_GetJustifyV(const char* name, CSimpleFont* font, lua_State* 
 }
 
 // PROVEN: 9a35d03c IDENTICAL/NONE
-// OFFSET: 0x00533F60
+// OFFSET: 0x00533F60/0x1401866D0
 int32_t CSimpleFont_GetIndentedWordWrap(const char* name, CSimpleFont* font, lua_State* L) {
     if (font->m_attributes.m_styleFlags & 0x20000) {
         lua_pushnumber(L, 1.0);

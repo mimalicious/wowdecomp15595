@@ -21,7 +21,7 @@ namespace FMOD
 ]
 */
 // PROVEN: 9e24e2aa IDENTICAL/NONE
-// OFFSET: 0x00A937B0
+// OFFSET: 0x00A937B0/0x140853680
 FMOD_RESULT NullFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
 	mPosition = 0;

@@ -41,7 +41,7 @@ static int32_t Script_MakeMinigameMove(lua_State* L) {
 }
 
 // PROVEN: 41062e9b IDENTICAL/NONE
-// OFFSET: 0x00A0A0C0
+// OFFSET: 0x00A0A0C0/0x1407AB0E0
 static int32_t Script_GetMinigameState(lua_State* L) {
     return CGMinigameInfo::m_minigame ? CGMinigameInfo::m_minigame->PushStateToLua(L) : 0;
 }
@@ -54,7 +54,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 16239436 IDENTICAL/NONE
-// OFFSET: 0x00A0A0E0
+// OFFSET: 0x00A0A0E0/0x1407AB100
 void MinigameInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -62,7 +62,7 @@ void MinigameInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: fc4c8156 IDENTICAL/NONE
-// OFFSET: 0x00A0A110
+// OFFSET: 0x00A0A110/0x1407AB150
 void MinigameInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

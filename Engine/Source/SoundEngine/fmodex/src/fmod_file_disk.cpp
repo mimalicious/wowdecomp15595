@@ -170,7 +170,7 @@ FMOD_RESULT DiskFile::reallyRead(void *buffer, unsigned int size, unsigned int *
 ]
 */
 // PROVEN: aeef6329 IDENTICAL/NONE
-// OFFSET: 0x00A92D20
+// OFFSET: 0x00A92D20/0x140852960
 FMOD_RESULT DiskFile::reallySeek(unsigned int pos)
 {   
 	return FMOD_OS_File_Seek(mHandle, pos);

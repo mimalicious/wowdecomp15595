@@ -215,14 +215,14 @@ bool Blizzard::Mopaq::MpqErrorHandler::HandleReadMPQFileError(MpqHandleRecord* h
     return false;
 }
 
-// PROVEN: 42aabd43 IDENTICAL/NONE
-// OFFSET: 0x007AB6C0
+// PROVEN: 42aabd43 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB6C0/0x1404A0E40
 bool Blizzard::Mopaq::MpqErrorHandler::HandleWriteFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset) {
     return false;
 }
 
-// PROVEN: 42815344 IDENTICAL/NONE
-// OFFSET: 0x007AAB30
+// PROVEN: 42815344 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAB30/0x1404C2CD0
 bool Blizzard::Mopaq::MpqErrorHandler::HandleMD5BlockError(MpqHandleRecord* handle, uint8_t* buffer, int64_t fileSize, uint32_t block, int32_t blockSize, uint32_t size, uint8_t* md5) {
     return false;
 }
@@ -344,8 +344,8 @@ bool System_Mopaq::MopaqReadHandler::ReadData(void* buffer, int64_t offset, int3
     return this->m_handle->m_errorHandler->HandleNonStreamableFileError(this->m_handle, static_cast<uint8_t*>(buffer), offset, *count);
 }
 
-// PROVEN: 698c968f IDENTICAL/NONE
-// OFFSET: 0x007AB6C0
+// PROVEN: 698c968f IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB6C0/0x1404A0E40
 bool System_Mopaq::MopaqReadHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     return false;
 }

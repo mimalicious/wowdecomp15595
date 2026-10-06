@@ -80,8 +80,8 @@ static int32_t s_checkedPowerProfInfo;
 
 static const char s_vendorIds[] = "GenuineIntel" "AuthenticAMD" "CyrixInstead" "CentaurHauls";
 
-// PROVEN: 642ef6f1 IDENTICAL/NONE
-// OFFSET: 0x00875240
+// PROVEN: 642ef6f1 IDENTICAL/DIFFERENT
+// OFFSET: 0x00875240/0x1405ABF20
 int32_t IOsGetProcessorFeatures(CpuIdInfo* info) {
     memset(info, 0, sizeof(CpuIdInfo));
 
@@ -311,8 +311,8 @@ uint32_t OsGetOsId() {
     return 0x57696E;
 }
 
-// PROVEN: 74809024 IDENTICAL/NONE
-// OFFSET: 0x008757B0
+// PROVEN: 74809024 IDENTICAL/IDENTICAL
+// OFFSET: 0x008757B0/0x1405AC4A0
 int32_t OsGetComputerName(char* buffer, uint32_t* size) {
     return GetComputerNameA(buffer, reinterpret_cast<DWORD*>(size));
 }
@@ -667,7 +667,7 @@ uint32_t OsGetProcessorFeaturesEx(int32_t& vendor) {
     return s_processorFeatures;
 }
 
-// PROVEN: 184abb90 IDENTICAL/UNPROVEN
+// PROVEN: 184abb90 IDENTICAL/IDENTICAL
 // OFFSET: 0x00875F70/0x1405ACEB0
 uint64_t OsGetProcessorTicksPerSecond() {
     if (!s_cpuTicksPerSecond) {

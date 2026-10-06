@@ -430,7 +430,7 @@ void CSimplePathAnim::NotifyControlPointAdded(CSimpleControlPoint* point) {
 }
 
 // PROVEN: 91598126 IDENTICAL/NONE
-// OFFSET: 0x00529C90
+// OFFSET: 0x00529C90/0x1401799D0
 void CSimplePathAnim::NotifyControlPointRemoved(CSimpleControlPoint* point) {
     if (point && this->FindControlPoint(point->m_order) >= 0) {
         this->BuildSpline();

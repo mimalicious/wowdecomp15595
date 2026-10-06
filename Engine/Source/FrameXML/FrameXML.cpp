@@ -76,7 +76,7 @@ XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
 }
 
 // PROVEN: 776ab6cf IDENTICAL/NONE
-// OFFSET: 0x004EC440
+// OFFSET: 0x004EC440/0x14012F9A0
 void FrameXML_SetDebugLevel(int32_t level) {
     s_debugLevel = level;
 }
@@ -186,7 +186,7 @@ CSimpleFrame* Create_SimpleMovieFrame(CSimpleFrame* parent) {
 }
 
 // PROVEN: 72f7d3fe IDENTICAL/NONE
-// OFFSET: 0x004EC7B0
+// OFFSET: 0x004EC7B0/0x14012FDC0
 void FrameXML_RegisterLoadProgressCallback(void (*callback)(float progress, void* param), void* param, uint32_t total) {
     s_progressCallback = callback;
     s_progressParam = param;

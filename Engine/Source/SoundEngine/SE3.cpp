@@ -280,7 +280,7 @@ static float F_CALLBACK RolloffCallback(FMOD_CHANNEL* channel, float distance) {
 }
 
 // PROVEN: 85d8f425 IDENTICAL/NONE
-// OFFSET: 0x00705630
+// OFFSET: 0x00705630/0x1403D26E0
 void SE3::CleanUpFMODGameSystem() {
     FMOD::System* system = SE3::sm_pGameSystem;
 
@@ -629,7 +629,7 @@ float SE3ChatSound::GetScaledVolume() {
 }
 
 // PROVEN: 7d56e6d4 IDENTICAL/NONE
-// OFFSET: 0x00705FA0
+// OFFSET: 0x00705FA0/0x1403D3430
 char* SE3::GetCurrentGameOutputDeviceName() {
     return s_gameOutputDeviceName;
 }
@@ -4180,7 +4180,7 @@ void SE3::ShutDown() {
 }
 
 // PROVEN: 62bd6cfe IDENTICAL/NONE
-// OFFSET: 0x007121A0
+// OFFSET: 0x007121A0/0x1403E4010
 void SE3::SetFocusScalar(float scalar) {
     SE3::sm_fFocusScalar = scalar;
 }

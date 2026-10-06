@@ -105,7 +105,7 @@ namespace FMOD
         // OFFSET: 0x00A9FF70/0x1408606B0
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultFileRead     (void *handle, void *buffer, unsigned int size, unsigned int *read, void *userdata) { return ((File *)handle)->read(buffer, 1, size, read); }
         // PROVEN: 3a34e12d IDENTICAL/NONE
-        // OFFSET: 0x00A9FF90
+        // OFFSET: 0x00A9FF90/0x1408606D0
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultFileSeek     (void *handle, unsigned int pos, void *userdata) { return ((File *)handle)->seek(pos, SEEK_SET); }
 #ifndef PLATFORM_PS3_SPU
         // PROVEN: 0c5ed76c IDENTICAL/NONE

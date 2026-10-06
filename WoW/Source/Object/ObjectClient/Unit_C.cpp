@@ -5366,7 +5366,7 @@ void CGUnit_C::Shutdown() {
 }
 
 // PROVEN: f73cb84f IDENTICAL/NONE
-// OFFSET: 0x005ABD90
+// OFFSET: 0x005ABD90/0x14021E220
 const char* CGUnit_C::GetDisplayRaceNameFromRecord(const ChrRacesRec* rec, int32_t sex, int32_t* displaySex) {
     if (displaySex) {
         *displaySex = sex;
@@ -5600,7 +5600,7 @@ void CGUnit_C::PitchMissileTrajectoryTargetingNextFrame() {
 }
 
 // PROVEN: 606268f1 IDENTICAL/NONE
-// OFFSET: 0x0057CDA0
+// OFFSET: 0x0057CDA0/0x1401E2F60
 void CGUnit_C::SetMissileTrajectoryTargetingSpell(uint32_t spellId) {
     s_missileTrajectoryTargetingSpell = spellId;
 }
@@ -5789,7 +5789,7 @@ void CGUnit_C::RotateFacing(float delta) {
 }
 
 // PROVEN: f184d2ce IDENTICAL/NONE
-// OFFSET: 0x009E72F0
+// OFFSET: 0x009E72F0/0x14077FCB0
 void CGUnit_C::NamePlateSetResortAll(bool enable) {
     if (enable) {
         s_namePlateFlags |= 0x1;
@@ -5809,7 +5809,7 @@ void CGUnit_C::NamePlateUpdateLevels(bool enable) {
 }
 
 // PROVEN: 8c91925f IDENTICAL/NONE
-// OFFSET: 0x009E7330
+// OFFSET: 0x009E7330/0x14077FCF0
 void CGUnit_C::NamePlateUpdateColor(bool enable) {
     if (enable) {
         s_namePlateFlags |= 0x4;
@@ -5976,8 +5976,8 @@ uint32_t CGUnit_C::GetTrackingType() {
     return s_trackingType;
 }
 
-// PROVEN: 7d26eb92 IDENTICAL/NONE
-// OFFSET: 0x005AC2F0
+// PROVEN: 7d26eb92 IDENTICAL/DIFFERENT
+// OFFSET: 0x005AC2F0/0x140101EF0
 float CGUnit_C::GetTrackingTurn() {
     return s_trackingFacing;
 }
@@ -10739,8 +10739,8 @@ void CGUnit_C::Disable() {
     }
 }
 
-// PROVEN: b83e445a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: b83e445a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void WeaponTrailsInitialize() {
 }
 
@@ -20692,8 +20692,8 @@ int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char
 }
 
 // STATIC
-// PROVEN: f5c49047 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: f5c49047 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 static void ObjectNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
@@ -21949,8 +21949,8 @@ void CGUnit_C::CreateProceduralEffect(const SpellRec* spell, const SpellVisualRe
     }
 }
 
-// PROVEN: 368c1cc8 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 368c1cc8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 static void CritterDisplayCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
@@ -23347,7 +23347,7 @@ int32_t CGUnit_C::CanPlayEmoteAnim() {
 }
 
 // PROVEN: ee3ea77b IDENTICAL/NONE
-// OFFSET: 0x005B2720
+// OFFSET: 0x005B2720/0x140225C20
 int32_t CGUnit_C::GetAbilitySkillLine(int32_t spellId) {
     SkillLineAbilityRec* ability = this->LookupAbility(spellId);
     return ability ? ability->m_skillLine : 0;

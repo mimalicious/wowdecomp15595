@@ -301,7 +301,7 @@ static BOOL OsSetPhysicalCursorPos(int32_t x, int32_t y) {
 }
 
 // PROVEN: ce240a15 IDENTICAL/NONE
-// OFFSET: 0x00873190
+// OFFSET: 0x00873190/0x14025E5A0
 static BOOL WINAPI LogicalToPhysicalPointNop(HWND hwnd, POINT* point) {
     return TRUE;
 }
@@ -1375,7 +1375,7 @@ static void HandleMouseWheel(HWND hwnd, uintptr_t wparam) {
 }
 
 // PROVEN: f6e2631d IDENTICAL/NONE
-// OFFSET: 0x00874310
+// OFFSET: 0x00874310/0x1405AAD90
 void OsInputSetEventPollProc(void (*pollProc)()) {
     s_eventPollProc = pollProc;
 }

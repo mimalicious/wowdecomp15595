@@ -642,8 +642,8 @@ C3Vector TransformDirection(const C3Vector& v, const C44Matrix& m) {
     return result;
 }
 
-// PROVEN: befca4a3 IDENTICAL/NONE
-// OFFSET: 0x0076CC90
+// PROVEN: befca4a3 IDENTICAL/IDENTICAL
+// OFFSET: 0x0076CC90/0x140455310
 bool operator==(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 == r.a0 && l.a1 == r.a1 && l.a2 == r.a2 && l.a3 == r.a3 && l.b0 == r.b0 && l.b1 == r.b1 && l.b2 == r.b2 && l.b3 == r.b3 && l.c0 == r.c0 && l.c1 == r.c1 && l.c2 == r.c2 && l.c3 == r.c3 && l.d0 == r.d0 && l.d1 == r.d1 && l.d2 == r.d2 && l.d3 == r.d3;
 }

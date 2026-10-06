@@ -718,7 +718,7 @@ static void write_scan_header(j_compress_ptr cinfo) {
  */
 
 // PROVEN: aef8bcac IDENTICAL/NONE
-// OFFSET: 0x00B5FF80
+// OFFSET: 0x00B5FF80/0x140929440
 static void write_file_trailer(j_compress_ptr cinfo) {
   emit_marker(cinfo, M_EOI);
 }

@@ -64,7 +64,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 0694f211 IDENTICAL/NONE
-// OFFSET: 0x009CD4B0
+// OFFSET: 0x009CD4B0/0x14075DB90
 void WorldStateInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -72,7 +72,7 @@ void WorldStateInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: 76f2f4d6 IDENTICAL/NONE
-// OFFSET: 0x009CD4E0
+// OFFSET: 0x009CD4E0/0x14075DBE0
 void WorldStateInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

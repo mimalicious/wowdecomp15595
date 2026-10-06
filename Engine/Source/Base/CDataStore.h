@@ -141,7 +141,7 @@ int32_t CDataStoreCache<size>::InternalFetchWrite(uint32_t pos, uint32_t bytes, 
 }
 
 // PROVEN: adb2817f IDENTICAL/NONE
-// OFFSET: 0x00B04130
+// OFFSET: 0x00B04130/0x1408C6700
 template <uint32_t size>
 void CDataStoreCache<size>::DetachBuffer(void** data, uint32_t* size_, uint32_t* alloc) {
     void* detachedData;

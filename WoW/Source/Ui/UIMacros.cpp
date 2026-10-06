@@ -253,7 +253,7 @@ void CGUIMacros::Initialize() {
 }
 
 // PROVEN: 8b1765db IDENTICAL/NONE
-// OFFSET: 0x009C7050
+// OFFSET: 0x009C7050/0x140755840
 void CGUIMacros::LoadMacros() {
     s_pendingLoads = 0x30000;
     LoadAccountData(4, CGUIMacros::LoadMacrosCallback, reinterpret_cast<void*>(static_cast<uintptr_t>(s_initCounter | 0x10000)));
@@ -1081,7 +1081,7 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
 }
 
 // PROVEN: d712a366 IDENTICAL/NONE
-// OFFSET: 0x009C5300
+// OFFSET: 0x009C5300/0x140752E90
 void CGUIMacros::SaveMacros() {
     if (!CGUIMacros::m_saveMacros) {
         return;

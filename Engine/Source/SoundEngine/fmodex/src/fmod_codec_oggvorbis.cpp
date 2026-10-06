@@ -125,7 +125,7 @@ size_t FMOD_OggVorbis_ReadCallback(void *ptr, size_t size, size_t nmemb, void *d
 ]
 */
 // PROVEN: 240d57d7 IDENTICAL/NONE
-// OFFSET: 0x00ABAC30
+// OFFSET: 0x00ABAC30/0x140881D60
 int FMOD_OggVorbis_SeekCallback(void *datasource, ogg_int64_t offset, int whence)
 {
 	File *fp = (File *)datasource;
@@ -637,7 +637,7 @@ FMOD_RESULT CodecOggVorbis::readVorbisComments()
 ]
 */
 // PROVEN: 5001ec34 IDENTICAL/NONE
-// OFFSET: 0x00ABB390
+// OFFSET: 0x00ABB390/0x1408826E0
 FMOD_RESULT F_CALLBACK CodecOggVorbis::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecOggVorbis *ogg = (CodecOggVorbis *)codec;
@@ -686,7 +686,7 @@ FMOD_RESULT F_CALLBACK CodecOggVorbis::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: a4e0958d IDENTICAL/NONE
-// OFFSET: 0x00ABAEF0
+// OFFSET: 0x00ABAEF0/0x140882110
 FMOD_RESULT F_CALLBACK CodecOggVorbis::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecOggVorbis *ogg = (CodecOggVorbis *)codec;

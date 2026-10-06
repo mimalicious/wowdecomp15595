@@ -5,8 +5,8 @@
 BSN::Encoder::~Encoder() {
 }
 
-// PROVEN: 9e566c27 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 9e566c27 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void BSN::Encoder::Flush() {
 }
 

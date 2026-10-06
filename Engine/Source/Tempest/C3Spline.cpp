@@ -155,8 +155,8 @@ float C3Spline::SegLength(uint32_t seg, const C44Matrix& basis) {
     return length;
 }
 
-// PROVEN: 45d2715b IDENTICAL/NONE
-// OFFSET: 0x004C97C0
+// PROVEN: 45d2715b IDENTICAL/DIFFERENT
+// OFFSET: 0x004C97C0/0x140104400
 void C3Spline::ArclengthSegT(float t, const C44Matrix& basis, uint32_t segCount, uint32_t& seg, float& segT) {
     if (segCount <= 1) {
         seg = 0;
@@ -227,8 +227,8 @@ void C3Spline::ISetPoints(const C3Vector* points, uint32_t count) {
     }
 }
 
-// PROVEN: c99cf3a6 IDENTICAL/NONE
-// OFFSET: 0x00B286B0
+// PROVEN: c99cf3a6 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B286B0/0x1408F0DE0
 C3Spline& C3Spline::operator=(const C3Spline& source) {
     this->m_length = source.m_length;
 

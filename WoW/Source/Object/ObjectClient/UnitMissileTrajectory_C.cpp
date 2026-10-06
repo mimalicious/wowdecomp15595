@@ -221,7 +221,7 @@ CMissileCollision* CMissileCollision::Alloc() {
 }
 
 // PROVEN: d1e36231 IDENTICAL/NONE
-// OFFSET: 0x0057D8A0
+// OFFSET: 0x0057D8A0/0x1401E3B30
 void CMissileCollision::MaybeAddUnitToSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
         if (collision->ComputeUnitRank(unit) == -1.0f) {

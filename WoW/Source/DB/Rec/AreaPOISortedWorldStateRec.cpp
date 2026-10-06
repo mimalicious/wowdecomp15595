@@ -3,8 +3,8 @@
 // STATIC: %0x00B47248
 const DBCMeta AreaPOISortedWorldStateRec::s_meta = { "DBFilesClient\\AreaPOISortedWorldState.dbc", 3, 12, AreaPOISortedWorldStateRec::FixupStrings, 0 };
 
-// PROVEN: a0d3284a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: a0d3284a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void AreaPOISortedWorldStateRec::FixupStrings(void* record, const char* strings) {
 }
 

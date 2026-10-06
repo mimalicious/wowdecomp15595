@@ -81,7 +81,7 @@ bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, 
 }
 
 // PROVEN: 38bccc48 IDENTICAL/NONE
-// OFFSET: 0x007BD0C0
+// OFFSET: 0x007BD0C0/0x1404B5C40
 bool ToolhelpFunction::CallModuleW(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32W entry;
     entry.dwSize = sizeof(entry);

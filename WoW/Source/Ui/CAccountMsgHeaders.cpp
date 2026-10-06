@@ -10,14 +10,14 @@
 // STATIC: #0x00BEA750
 CAccountMsgHeaders g_accountMsgHeaders;
 
-// PROVEN: 8cf57339 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 8cf57339 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 static bool AccountMsgReadCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     return false;
 }
 
 // PROVEN: 73c0db07 IDENTICAL/NONE
-// OFFSET: 0x009FA090
+// OFFSET: 0x009FA090/0x140797550
 void CAccountMsgHeaders::_SendFailureEvent() {
     this->m_iterator.m_node = NULL;
     this->m_count = 0;

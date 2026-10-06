@@ -222,7 +222,7 @@ static WorldPvPQueueStatus* SetWorldPvPQueue(int32_t queueID, int32_t status, in
 }
 
 // PROVEN: 657aade7 IDENTICAL/NONE
-// OFFSET: 0x0044BC10
+// OFFSET: 0x0044BC10/0x140059270
 uint32_t GetArenaPetGUIDCount() {
     uint32_t count = 0;
 

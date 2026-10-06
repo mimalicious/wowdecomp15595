@@ -39,8 +39,8 @@ bool OsVersionHash::AddEntry(const OsVersionHashEntry& entry) {
     return true;
 }
 
-// PROVEN: 60678595 IDENTICAL/NONE
-// OFFSET: 0x00B42420
+// PROVEN: 60678595 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B42420/0x140910BD0
 static int __cdecl CompareEntries(const void* a, const void* b) {
     const OsVersionHashEntry* entryA = static_cast<const OsVersionHashEntry*>(a);
     const OsVersionHashEntry* entryB = static_cast<const OsVersionHashEntry*>(b);

@@ -3,8 +3,8 @@
 // STATIC: %0x00B45220
 const DBCMeta SpellCooldownsRec::s_meta = { "DBFilesClient\\SpellCooldowns.dbc", 4, 16, SpellCooldownsRec::FixupStrings, 0 };
 
-// PROVEN: 1e47ea09 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 1e47ea09 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SpellCooldownsRec::FixupStrings(void* record, const char* strings) {
 }
 

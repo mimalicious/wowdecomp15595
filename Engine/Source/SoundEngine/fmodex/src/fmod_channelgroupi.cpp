@@ -204,7 +204,7 @@ FMOD_RESULT ChannelGroupI::getSystemObject(System **system)
 ]
 */
 // PROVEN: 1e06f163 IDENTICAL/NONE
-// OFFSET: 0x00A8F4C0
+// OFFSET: 0x00A8F4C0/0x14084EAC0
 FMOD_RESULT ChannelGroupI::setVolume(float volume)
 {
     FMOD_RESULT result;

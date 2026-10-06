@@ -2718,7 +2718,7 @@ void CMapRenderChunk::SetShaders(int32_t a1, int32_t a2) {
     }
 }
 
-// PROVEN: dba386e8 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: dba386e8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapRenderChunk::RenderZoneDebug() {
 }

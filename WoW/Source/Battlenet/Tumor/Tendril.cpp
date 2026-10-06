@@ -55,7 +55,7 @@ Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Servic
 Battlenet::Tendril::~Tendril() {
 }
 
-// PROVEN: 84c27b8e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 84c27b8e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void Battlenet::Tendril::DoSubscriptions() {
 }

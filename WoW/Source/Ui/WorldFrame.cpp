@@ -173,7 +173,7 @@ int32_t CGWorldFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
 }
 
 // PROVEN: 95e3b746 IDENTICAL/NONE
-// OFFSET: 0x008DED60
+// OFFSET: 0x008DED60/0x14060BA90
 void CGWorldFrame::OnMouseModeNormal() {
     this->m_worldFlags &= ~0x2;
 }

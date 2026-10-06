@@ -221,8 +221,8 @@ bool System_Mopaq::CallNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms
     return (*reinterpret_cast<Blizzard::Mopaq::Mpqfunc*>(reinterpret_cast<uint8_t*>(next) + parms->m_verb))(next, parms);
 }
 
-// PROVEN: 7cfb7190 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 7cfb7190 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool System_Mopaq::null_func(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return false;
 }

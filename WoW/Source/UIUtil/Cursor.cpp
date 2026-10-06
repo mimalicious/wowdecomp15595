@@ -113,7 +113,7 @@ uint32_t CursorGetResetMode() {
 }
 
 // PROVEN: 5d9b37c6 IDENTICAL/NONE
-// OFFSET: 0x00486010
+// OFFSET: 0x00486010/0x1400A6D30
 void CursorSetResetMode(uint32_t mode) {
     s_cursorResetMode = mode;
 }
@@ -392,7 +392,7 @@ void CursorGrabSpell(const char* texture) {
 }
 
 // PROVEN: e9dc305e IDENTICAL/NONE
-// OFFSET: 0x00485FC0
+// OFFSET: 0x00485FC0/0x1400A6CE0
 void CursorDestroy() {
     if (!s_cursorItemMips) {
         return;

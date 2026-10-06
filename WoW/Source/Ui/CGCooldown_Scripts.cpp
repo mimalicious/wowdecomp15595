@@ -71,7 +71,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: 7131e6d6 IDENTICAL/NONE
-// OFFSET: 0x009FE920
+// OFFSET: 0x009FE920/0x14079CE40
 void CGCooldown::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

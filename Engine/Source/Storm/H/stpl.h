@@ -383,7 +383,7 @@ TSLink<T>* TSGetExplicitLink<T>::Link(T* nodeptr, ptrdiff_t linkoffset) {
     return reinterpret_cast<TSLink<T>*>(reinterpret_cast<uint8_t*>(nodeptr) + linkoffset);
 }
 
-// PROVEN: aaadd5d6 IDENTICAL/NONE
+// PROVEN: aaadd5d6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00401050/0x140001020
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsEnd(T* ptr) {

@@ -107,7 +107,7 @@ uint32_t M2GetCacheFlags() {
 }
 
 // PROVEN: 0c5cecc6 IDENTICAL/NONE
-// OFFSET: 0x008120F0
+// OFFSET: 0x008120F0/0x140529A20
 void M2SetCacheFlags(uint32_t flags) {
     s_cache.m_flags = flags;
 }

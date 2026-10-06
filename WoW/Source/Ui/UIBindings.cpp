@@ -625,7 +625,7 @@ void CGUIBindings::SaveBindings() {
 }
 
 // PROVEN: 0d8d2942 IDENTICAL/NONE
-// OFFSET: 0x00921F20
+// OFFSET: 0x00921F20/0x1406851E0
 void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     BINDING_SET set = static_cast<BINDING_SET>(reinterpret_cast<uintptr_t>(param));
 

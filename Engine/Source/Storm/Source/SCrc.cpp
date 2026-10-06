@@ -38,7 +38,8 @@ static const uint32_t s_crcTable[256] = {
     0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D,
 };
 
-// OFFSET: %0x004BFCD0
+// PROVEN: 78a607b4 DIFFERENT/IDENTICAL
+// OFFSET: 0x004B9510/0x1400F1E50
 uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
     uint32_t result = 0;
 
@@ -70,8 +71,8 @@ uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t
     return result;
 }
 
-// PROVEN: ef255d8c IDENTICAL/NONE
-// OFFSET: 0x004B9570
+// PROVEN: ef255d8c IDENTICAL/IDENTICAL
+// OFFSET: 0x004B9570/0x1400F1EE0
 uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags) {
     return SCrcBuffer(buffer, length, crc, flags);
 }

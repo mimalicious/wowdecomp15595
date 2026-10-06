@@ -472,7 +472,7 @@ void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
 }
 
 // PROVEN: f5f35875 IDENTICAL/NONE
-// OFFSET: 0x009AA590
+// OFFSET: 0x009AA590/0x1407318A0
 void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);
 }

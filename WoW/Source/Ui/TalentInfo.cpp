@@ -104,7 +104,7 @@ void CGTalentInfo::RecalculatePreviewPoints(int32_t pet) {
 }
 
 // PROVEN: 05d4d10e IDENTICAL/NONE
-// OFFSET: 0x00999C60
+// OFFSET: 0x00999C60/0x14071BA00
 uint32_t CGTalentInfo::GetActiveTalentGroup(int32_t pet) {
     return pet == 0 ? CGTalentInfo::m_activeTalentGroup : 0;
 }
@@ -191,7 +191,7 @@ int32_t TalentInfoIsSpellKnown(int32_t spellId, int32_t isInspect, int32_t isPet
 }
 
 // PROVEN: ba4ef104 IDENTICAL/NONE
-// OFFSET: 0x00B48BD0
+// OFFSET: 0x00B48BD0/0x140918680
 static int TierCompare(const void* a, const void* b) {
     return (*static_cast<TalentGroupTier_C* const*>(a))->m_tier - (*static_cast<TalentGroupTier_C* const*>(b))->m_tier;
 }
@@ -276,7 +276,7 @@ TalentGroupTier_C* TalentGroupTab_C::FindTier(int32_t tier) {
 }
 
 // PROVEN: 52684b7b IDENTICAL/NONE
-// OFFSET: 0x00999FF0
+// OFFSET: 0x00999FF0/0x14071E410
 TalentGroupTab_C* CGTalentGroup_C::GetTab(uint32_t index) {
     return index < this->m_tabs.m_count ? &this->m_tabs.m_data[index] : NULL;
 }
@@ -1084,7 +1084,7 @@ void CGTalentInfo::ShutdownGame() {
 }
 
 // PROVEN: 3e27dd4f IDENTICAL/NONE
-// OFFSET: 0x0099F4F0
+// OFFSET: 0x0099F4F0/0x1407232E0
 void CGTalentInfo::UpdatePetTabInfo(int32_t family) {
     if (family) {
         if (CGTalentInfo::m_petTalentTab != family) {

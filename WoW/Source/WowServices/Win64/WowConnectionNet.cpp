@@ -179,8 +179,8 @@ void WowConnectionNet::PlatformRemove(WowConnection* connection) {
     SetEvent(this->m_event);
 }
 
-// PROVEN: 9306efd9 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 9306efd9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void WowConnectionNet::PlatformStop() {
 }
 

@@ -28,13 +28,13 @@ CScriptObject* CScriptRegion::GetScriptObjectParent() {
 }
 
 // PROVEN: 70c65224 IDENTICAL/NONE
-// OFFSET: 0x00469460
+// OFFSET: 0x00469460/0x14007D680
 bool CScriptRegion::IsA(int32_t type) {
     return type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
 // PROVEN: b3363a79 IDENTICAL/NONE
-// OFFSET: 0x00469490
+// OFFSET: 0x00469490/0x1401531B0
 bool CScriptRegion::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
@@ -288,12 +288,12 @@ CScriptRegion::~CScriptRegion() {
     }
 }
 
-// PROVEN: 4d845176 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 4d845176 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CScriptRegion::PreOnAnimUpdate() {
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
 }
 
@@ -307,11 +307,11 @@ void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
 void CScriptRegion::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void CScriptRegion::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
 }
 

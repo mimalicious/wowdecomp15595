@@ -1107,13 +1107,13 @@ void FFX::SetupGx(Tex* target, int32_t depth) {
     GxXformSetViewport(0.0f, static_cast<float>(target->m_size.x) / target->m_texSize.x, 0.0f, static_cast<float>(target->m_size.y) / target->m_texSize.y, 0.0f, s_viewportMaxZ);
 }
 
-// PROVEN: 606608f5 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 606608f5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void FFX::Effect::Begin() {
 }
 
-// PROVEN: ef2a8af8 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: ef2a8af8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void FFX::Effect::End() {
 }
 

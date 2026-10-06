@@ -726,7 +726,7 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::lockCallback(FMOD_OUTPUT_STATE *output, 
 ]
 */
 // PROVEN: 5a82cf84 IDENTICAL/NONE
-// OFFSET: 0x00AC1F30
+// OFFSET: 0x00AC1F30/0x140889470
 FMOD_RESULT F_CALLBACK OutputWavWriter::unlockCallback(FMOD_OUTPUT_STATE *output, void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     OutputWavWriter *wavwriter = (OutputWavWriter *)output;

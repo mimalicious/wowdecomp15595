@@ -418,7 +418,7 @@ static int32_t Script_DropCursorMoney(lua_State* L) {
 }
 
 // PROVEN: ffacd99c IDENTICAL/NONE
-// OFFSET: 0x0080C320
+// OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_GetWaterDetail(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
@@ -3572,8 +3572,8 @@ static int32_t Script_IsAddOnLoadOnDemand(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 67f3440e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 67f3440e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 static void VoicePushToTalkNoop() {
 }
 
@@ -3824,8 +3824,8 @@ static int32_t Script_GetInstanceLockTimeRemainingEncounter(lua_State* L) {
     return PushDungeonEncounterInfo(L, 0, 0, 0, 0);
 }
 
-// PROVEN: 10a9e962 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 10a9e962 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 static void SummonConfirmNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 

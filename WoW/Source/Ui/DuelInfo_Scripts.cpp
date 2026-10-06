@@ -42,7 +42,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: db9065e7 IDENTICAL/NONE
-// OFFSET: 0x009F0650
+// OFFSET: 0x009F0650/0x14078A480
 void DuelInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -50,7 +50,7 @@ void DuelInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: 8fefd220 IDENTICAL/NONE
-// OFFSET: 0x009F0680
+// OFFSET: 0x009F0680/0x14078A4D0
 void DuelInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

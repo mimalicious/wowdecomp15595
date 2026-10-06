@@ -974,7 +974,7 @@ FMOD_RESULT System::getWaveData(float *wavearray, int numvalues, int channeloffs
 
 
 // PROVEN: 6253f5e8 IDENTICAL/NONE
-// OFFSET: 0x00A7B410
+// OFFSET: 0x00A7B410/0x140836660
 FMOD_RESULT System::createSound(const char *name_or_data, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO *exinfo, Sound **sound)
 {
     FMOD_RESULT result;

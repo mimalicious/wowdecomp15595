@@ -2217,7 +2217,7 @@ FMOD_RESULT CodecMOD::setPositionInternal(int subsound, unsigned int position, F
 ]
 */
 // PROVEN: 23655340 IDENTICAL/NONE
-// OFFSET: 0x00AB9520
+// OFFSET: 0x00AB9520/0x140880340
 FMOD_RESULT F_CALLBACK CodecMOD::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecMOD *cmod = (CodecMOD *)codec;
@@ -2267,7 +2267,7 @@ FMOD_RESULT F_CALLBACK CodecMOD::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: 33e93be4 IDENTICAL/NONE
-// OFFSET: 0x00AB85E0
+// OFFSET: 0x00AB85E0/0x14087F080
 FMOD_RESULT F_CALLBACK CodecMOD::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecMOD *cmod = (CodecMOD *)codec;

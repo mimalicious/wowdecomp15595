@@ -1043,8 +1043,8 @@ bool System_SFile::BlockEntryTable::SetMD5Check(uint32_t index, bool enabled) {
     return this->m_md5Checks->WriteBits(this->m_md5CheckBit + index * this->m_md5CheckEntryBits, this->m_md5CheckBits, &bit, 1);
 }
 
-// PROVEN: 4421cabe IDENTICAL/NONE
-// OFFSET: 0x007C2EC0
+// PROVEN: 4421cabe IDENTICAL/IDENTICAL
+// OFFSET: 0x007C2EC0/0x1404BD340
 void System_SFile::ARCHIVEREC::PackBlockTable() {
     uint32_t index = 0;
 
@@ -1767,8 +1767,8 @@ bool System_SFile::ARCHIVEREC::WriteArchiveHeader() {
     return this->m_file->Write(&header, this->m_archiveOffset, size);
 }
 
-// PROVEN: 5b840513 IDENTICAL/NONE
-// OFFSET: 0x007AAEE0
+// PROVEN: 5b840513 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAEE0/0x1404A6D50
 static int64_t AddMD5Overhead(int32_t chunkSize, int64_t size) {
     if (chunkSize <= 0 || size <= 0) {
         return size;

@@ -45,7 +45,7 @@ void Liquid::CMeshGeomFactory::Purge() {
 }
 
 // PROVEN: e317597c IDENTICAL/NONE
-// OFFSET: 0x0076CB40
+// OFFSET: 0x0076CB40/0x140455140
 void Liquid::CChunkGeomFactory::Purge() {
     if (this->m_buf) {
         CMapChunkLiquidBuf::Free(this->m_buf);
@@ -70,7 +70,7 @@ void Liquid::CChunkGeomFactory::Release() {
 }
 
 // PROVEN: 2e86dee9 IDENTICAL/NONE
-// OFFSET: 0x0076D470
+// OFFSET: 0x0076D470/0x140455CD0
 bool Liquid::CChunkGeomFactory::SetTransform(C44Matrix* transform) {
     if (this->m_transform == *transform) {
         return true;

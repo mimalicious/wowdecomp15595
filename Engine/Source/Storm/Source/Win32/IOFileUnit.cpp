@@ -126,8 +126,8 @@ bool IOWin32FileUnit::Read(void* buffer, int64_t offset, uint32_t count, uint32_
     return false;
 }
 
-// PROVEN: d35ba1bd IDENTICAL/NONE
-// OFFSET: 0x00B67920
+// PROVEN: d35ba1bd IDENTICAL/IDENTICAL
+// OFFSET: 0x00B67920/0x140931A50
 bool IOWin32FileUnit::Write(const void* buffer, int64_t offset, uint32_t count) {
     DWORD written = 0;
 
@@ -145,8 +145,8 @@ bool IOWin32FileUnit::Write(const void* buffer, int64_t offset, uint32_t count) 
     return false;
 }
 
-// PROVEN: b33cd840 IDENTICAL/NONE
-// OFFSET: 0x00B67990
+// PROVEN: b33cd840 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B67990/0x140931B00
 bool IOWin32FileUnit::Flush() {
     return FlushFileBuffers(this->m_handle) != 0;
 }
@@ -167,8 +167,8 @@ bool IOWin32FileUnit::GetFileSize(int64_t* size) {
     return true;
 }
 
-// PROVEN: 66944dc9 IDENTICAL/NONE
-// OFFSET: 0x00B67A10
+// PROVEN: 66944dc9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B67A10/0x140931B80
 bool IOWin32FileUnit::SetFileSize(int64_t size) {
     if (!this->Seek(size)) {
         return false;
@@ -285,8 +285,8 @@ bool IOUnbufferedFileUnit::SetFileSize(int64_t size) {
     return this->m_unit->SetFileSize((size + this->m_alignMask) & ~this->m_alignMask);
 }
 
-// PROVEN: ea7631d7 IDENTICAL/NONE
-// OFFSET: 0x00B67CF0
+// PROVEN: ea7631d7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B67CF0/0x140931F10
 bool IOUnbufferedFileUnit::GetFileSize(int64_t* size) {
     *size = this->m_size;
 

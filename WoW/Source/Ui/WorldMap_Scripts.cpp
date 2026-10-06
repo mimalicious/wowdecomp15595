@@ -328,7 +328,7 @@ static int32_t Script_IsZoomOutAvailable(lua_State* L) {
 }
 
 // PROVEN: 9f0de39d IDENTICAL/NONE
-// OFFSET: 0x0080C320
+// OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_GetNumMapDebugObjects(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;
@@ -843,7 +843,7 @@ static int32_t Script_InitWorldMapPing(lua_State* L) {
 }
 
 // PROVEN: 1f07a6dc IDENTICAL/NONE
-// OFFSET: 0x0091A2C0
+// OFFSET: 0x0091A2C0/0x14067B330
 static int32_t Script_CanQueueForWintergrasp(lua_State* L) {
     if (GetWorldState(4375)) {
         lua_pushnumber(L, 1.0);

@@ -68,7 +68,7 @@ FMOD_RESULT DSPWaveTable::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 ]
 */
 // PROVEN: 70017531 IDENTICAL/NONE
-// OFFSET: 0x00AC36E0
+// OFFSET: 0x00AC36E0/0x14088C040
 FMOD_RESULT DSPWaveTable::addInput(DSPI *target)
 {
     return DSPI::addInput(target);
@@ -494,7 +494,7 @@ FMOD_RESULT F_CALLBACK DSPWaveTable::setPositionCallback(FMOD_DSP_STATE *dsp, un
 ]
 */
 // PROVEN: 93adc05e IDENTICAL/NONE
-// OFFSET: 0x00AC3BB0
+// OFFSET: 0x00AC3BB0/0x14088C5B0
 FMOD_RESULT F_CALLBACK DSPWaveTable::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPWaveTable *wavetable = (DSPWaveTable *)dsp;

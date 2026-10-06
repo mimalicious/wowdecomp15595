@@ -284,7 +284,7 @@ static int32_t Script_GetNumDisplayChannels(lua_State* L) {
 }
 
 // PROVEN: e591e05f IDENTICAL/NONE
-// OFFSET: 0x008E6570
+// OFFSET: 0x008E6570/0x1406148C0
 static int32_t Script_GetActiveVoiceChannel(lua_State* L) {
     if (s_activeVoiceChannel) {
         lua_pushnumber(L, s_activeVoiceChannel + 1);
@@ -1043,7 +1043,7 @@ static int32_t Script_GetChannelName(lua_State* L) {
 }
 
 // PROVEN: b0b603a5 IDENTICAL/NONE
-// OFFSET: 0x008E74A0
+// OFFSET: 0x008E74A0/0x1406157C0
 static int32_t Script_IsVoiceChatAllowed(lua_State* L) {
     if (!CGChat::m_voiceChatSystemStatus || ComSatClient_IsComsatDisabledByClient()) {
         lua_pushnil(L);
@@ -1055,7 +1055,7 @@ static int32_t Script_IsVoiceChatAllowed(lua_State* L) {
 }
 
 // PROVEN: 9c610585 IDENTICAL/NONE
-// OFFSET: 0x008E7430
+// OFFSET: 0x008E7430/0x140615740
 static int32_t Script_IsVoiceChatEnabled(lua_State* L) {
     int32_t enabled = s_cvarEnableVoiceChat && s_cvarEnableVoiceChat->m_intValue;
     int32_t disabledByClient = ComSatClient_IsComsatDisabledByClient();
@@ -1267,7 +1267,7 @@ static int32_t Script_GetChannelDisplayInfo(lua_State* L) {
 }
 
 // PROVEN: 88b61d4c IDENTICAL/NONE
-// OFFSET: 0x008EACF0
+// OFFSET: 0x008EACF0/0x140619C30
 static int32_t Script_GetSelectedDisplayChannel(lua_State* L) {
     int32_t index = CGChat::FindDisplayChannelIndex(CGChat::s_activeDisplayChannelName, s_activeDisplayChannelType);
 
@@ -1450,13 +1450,13 @@ static int32_t EnableLogging(lua_State* L, int32_t index) {
 }
 
 // PROVEN: 128a3e1e IDENTICAL/NONE
-// OFFSET: 0x008E6530
+// OFFSET: 0x008E6530/0x1406148A0
 static int32_t Script_LoggingChat(lua_State* L) {
     return EnableLogging(L, 0);
 }
 
 // PROVEN: faba59c7 IDENTICAL/NONE
-// OFFSET: 0x008E6550
+// OFFSET: 0x008E6550/0x1406148B0
 static int32_t Script_LoggingCombat(lua_State* L) {
     return EnableLogging(L, 1);
 }

@@ -77,8 +77,8 @@ int32_t SSignatureVerifyStream_Finish(SSignatureData* token, const uint8_t* modu
     return result;
 }
 
-// PROVEN: a2fa32dc IDENTICAL/NONE
-// OFFSET: 0x004B8910
+// PROVEN: a2fa32dc IDENTICAL/DIFFERENT
+// OFFSET: 0x004B8910/0x1400F0F40
 int32_t SSignatureVerify(const uint8_t* data, uint32_t size, const uint8_t* modulus, uint32_t modulusSize, const uint8_t* pubExponent, uint32_t pubExponentSize) {
     SSignatureData* token;
     SSignatureVerifyStream_Begin(&token, modulusSize, pubExponentSize);

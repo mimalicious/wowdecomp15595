@@ -256,23 +256,23 @@ int32_t CLCDConnection::Initialize(lgLcdConnectContext& connectContext, lgLcdSof
     return this->InitializeConnection(connectContextEx, softbuttonsChangedContext);
 }
 
-// PROVEN: 7857dcee IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 7857dcee IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLCDConnection::OnAppletEnabled() {
 }
 
-// PROVEN: 7480ab95 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 7480ab95 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLCDConnection::OnAppletDisabled() {
 }
 
-// PROVEN: 840872af IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 840872af IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLCDConnection::OnConfigure() {
 }
 
-// PROVEN: 2b1b6a6a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 2b1b6a6a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLCDConnection::OnCallbackEvent() {
 }
 

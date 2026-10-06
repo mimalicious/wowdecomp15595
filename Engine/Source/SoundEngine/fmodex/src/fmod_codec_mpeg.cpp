@@ -963,7 +963,7 @@ FMOD_RESULT CodecMPEG::closeInternal()
 ]
 */
 // PROVEN: 728fd970 IDENTICAL/NONE
-// OFFSET: 0x00AA26D0
+// OFFSET: 0x00AA26D0/0x140863660
 FMOD_RESULT CodecMPEG::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     int channel;
@@ -1275,7 +1275,7 @@ FMOD_RESULT CodecMPEG::setPositionInternal(int subsound, unsigned int position, 
 ]
 */
 // PROVEN: 2ed4ba51 IDENTICAL/NONE
-// OFFSET: 0x00AA2B60
+// OFFSET: 0x00AA2B60/0x140863B50
 FMOD_RESULT CodecMPEG::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
     SoundI *s = (SoundI *)sound;
@@ -1314,7 +1314,7 @@ FMOD_RESULT CodecMPEG::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 ]
 */
 // PROVEN: 6b4bd4fb IDENTICAL/NONE
-// OFFSET: 0x00AA34B0
+// OFFSET: 0x00AA34B0/0x140864650
 FMOD_RESULT F_CALLBACK CodecMPEG::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;
@@ -1366,7 +1366,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: f2f2a9a4 IDENTICAL/NONE
-// OFFSET: 0x00AA2C20
+// OFFSET: 0x00AA2C20/0x140863C50
 FMOD_RESULT F_CALLBACK CodecMPEG::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;    
@@ -1394,7 +1394,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::soundCreateCallback(FMOD_CODEC_STATE *codec, i
 ]
 */
 // PROVEN: edcaf4b7 IDENTICAL/NONE
-// OFFSET: 0x00AA2C60
+// OFFSET: 0x00AA2C60/0x140863C70
 FMOD_RESULT F_CALLBACK CodecMPEG::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;
@@ -1419,7 +1419,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::readCallback(FMOD_CODEC_STATE *codec, void *bu
 ]
 */
 // PROVEN: be7ac06f IDENTICAL/NONE
-// OFFSET: 0x00AA2C90
+// OFFSET: 0x00AA2C90/0x140863C90
 FMOD_RESULT F_CALLBACK CodecMPEG::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;

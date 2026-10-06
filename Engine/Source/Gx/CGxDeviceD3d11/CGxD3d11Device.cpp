@@ -1939,7 +1939,7 @@ void CGxDeviceD3d11::StereoSetConvergence(float convergence) {
 }
 
 // PROVEN: b3f15edd IDENTICAL/NONE
-// OFFSET: 0x00599E10
+// OFFSET: 0x00599E10/0x1402082B0
 float CGxDeviceD3d11::StereoGetConvergence() {
     return 1.0f;
 }
@@ -1955,8 +1955,8 @@ float CGxDeviceD3d11::StereoGetSeparation() {
     return 0.0f;
 }
 
-// PROVEN: 36ea16fe IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 36ea16fe IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGxDeviceD3d11::StereoEnabled() {
     return false;
 }
@@ -1966,8 +1966,8 @@ bool CGxDeviceD3d11::StereoEnabled() {
 void CGxDeviceD3d11::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// PROVEN: 6ebcfa39 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 6ebcfa39 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGxDeviceD3d11::DebugGroupEnd() {
 }
 

@@ -10,8 +10,8 @@ bool CGGameObject_C_Type_SpellFocus::CanHighlight() const {
     return true;
 }
 
-// PROVEN: 1c111db4 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 1c111db4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_SpellFocus::CanUse() const {
     return false;
 }

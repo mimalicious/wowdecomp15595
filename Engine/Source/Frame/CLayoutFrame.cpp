@@ -159,7 +159,7 @@ float CLayoutFrame::GetWidth() {
 }
 
 // PROVEN: bc6d0e03 IDENTICAL/NONE
-// OFFSET: 0x00507290
+// OFFSET: 0x00507290/0x14014E7F0
 void CLayoutFrame::GetClampRectInsets(float& left, float& right, float& top, float& bottom) {
     bottom = 0.0f;
     top = 0.0f;
@@ -330,7 +330,7 @@ float CLayoutFrame::Bottom() {
 }
 
 // PROVEN: 89aecdeb IDENTICAL/NONE
-// OFFSET: 0x005079A0
+// OFFSET: 0x005079A0/0x14014F7E0
 void CLayoutFrame::ProtectFramepoints(uint32_t flag) {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
         CFramePoint* framePoint = this->m_framePoints[i];
@@ -783,7 +783,7 @@ bool CLayoutFrame::SetLayoutScale(float scale, bool force) {
 }
 
 // PROVEN: 0e34334e IDENTICAL/NONE
-// OFFSET: 0x005087A0
+// OFFSET: 0x005087A0/0x14014FF80
 bool CLayoutFrame::SetLayoutDepth(float depth, bool force) {
     if (!force && fabs(depth - this->m_layoutDepth) < 0.00000023841858f) {
         return false;
@@ -1446,17 +1446,17 @@ int32_t CLayoutFrame::IsObjectLoaded() {
     return 1;
 }
 
-// PROVEN: cba41c6f IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: cba41c6f IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLayoutFrame::LoadObject() {
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void CLayoutFrame::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
 }
 
-// PROVEN: 520a98c3 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 520a98c3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLayoutFrame::HideThis() {
 }
 

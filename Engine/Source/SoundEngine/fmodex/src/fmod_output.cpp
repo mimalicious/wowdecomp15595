@@ -563,7 +563,7 @@ FMOD_RESULT Output::getFreeChannel(FMOD_MODE mode, ChannelReal **realchannel, in
 ]
 */
 // PROVEN: 9efa5305 IDENTICAL/NONE
-// OFFSET: 0x00AC3230
+// OFFSET: 0x00AC3230/0x14088BB20
 FMOD_RESULT F_CALLBACK Output::mixCallback(FMOD_OUTPUT_STATE *output, void *buffer, unsigned int length)
 {
     Output *out = (Output *)output;

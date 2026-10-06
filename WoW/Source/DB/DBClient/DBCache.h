@@ -658,7 +658,7 @@ void DBCache<T, TKey, THashKey>::SetTemporary(TKey key) {
 }
 
 // PROVEN: 0c278f98 IDENTICAL/NONE
-// OFFSET: 0x0049B360
+// OFFSET: 0x0049B360/0x1400C7060
 template <class T, class TKey, class THashKey>
 bool DBCache<T, TKey, THashKey>::QueryLimitReached() {
     return this->m_maxQueriesPerPump && this->m_queriesSent >= this->m_maxQueriesPerPump;

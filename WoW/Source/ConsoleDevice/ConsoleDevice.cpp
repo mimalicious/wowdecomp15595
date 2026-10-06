@@ -150,8 +150,8 @@ void ConsoleGxOverride(const char* list) {
     }
 }
 
-// PROVEN: fdeed0b4 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: fdeed0b4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void DisplayChangeCallback(uint32_t value) {
 }
 

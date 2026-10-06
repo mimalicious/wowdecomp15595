@@ -359,8 +359,8 @@ bool System_Mopaq::SectorReadWriteHandler::AdjustSectorTable() {
     return true;
 }
 
-// PROVEN: 6e12d975 IDENTICAL/NONE
-// OFFSET: 0x007AB8C0
+// PROVEN: 6e12d975 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB8C0/0x14090D710
 void System_Mopaq::SectorReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size) {
     this->m_sizeBeforeDelta = size;
 }
@@ -496,7 +496,8 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteData(const uint8_t* buffe
     return result;
 }
 
-// OFFSET: %0x0074FC90
+// PROVEN: 56e45eac DIFFERENT/IDENTICAL
+// OFFSET: 0x007E9310/0x1404F3CD0
 bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteChecksumTable() {
     uint32_t size = 0;
     uint32_t count = static_cast<uint32_t>((this->m_handle->m_blockEntry.m_fileSize - 1) / this->m_sectorSize + 1);

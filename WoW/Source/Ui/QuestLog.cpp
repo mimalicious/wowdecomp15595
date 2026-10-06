@@ -2149,7 +2149,7 @@ bool CGQuestLog::IsPOIVisibleOnDungeonMap(const int32_t* point, int32_t mapId, i
 }
 
 // PROVEN: 2691a13d IDENTICAL/NONE
-// OFFSET: 0x00960700
+// OFFSET: 0x00960700/0x1406D0C50
 void CGQuestLog::SaveTrackedQuests() {
     CVarIntListWrapper list;
     list.m_cvar = CVar::Lookup("trackedQuests");
@@ -2845,7 +2845,7 @@ void CGQuestLog::UpdateQuestPOIFromUserServer() {
     CGQuestLog::Update(1);
 }
 
-// PROVEN: 0cb67ed4 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 0cb67ed4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGQuestLog::LeaveWorld() {
 }

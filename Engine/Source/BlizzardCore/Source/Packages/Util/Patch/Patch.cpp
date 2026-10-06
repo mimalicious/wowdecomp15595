@@ -122,8 +122,8 @@ const uint8_t* Blizzard::Patch::LegacyPatch::GetTransformData(uint32_t* size) {
     return this->m_buffer->Get(0, *size + sizeof(LegacyHeader)) + sizeof(LegacyHeader);
 }
 
-// PROVEN: 065e8797 IDENTICAL/NONE
-// OFFSET: 0x007B0AA0
+// PROVEN: 065e8797 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0AA0/0x1402A6B60
 uint32_t Blizzard::Patch::LegacyPatch::GetHeaderSize() {
     return sizeof(LegacyHeader);
 }

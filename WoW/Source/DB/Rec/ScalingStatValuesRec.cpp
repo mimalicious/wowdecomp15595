@@ -3,8 +3,8 @@
 // STATIC: %0x00B456C0
 const DBCMeta ScalingStatValuesRec::s_meta = { "DBFilesClient\\ScalingStatValues.dbc", 23, 188, ScalingStatValuesRec::FixupStrings, 0 };
 
-// PROVEN: 18d315ec IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 18d315ec IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void ScalingStatValuesRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -8,7 +8,7 @@ void CCombat::SetAttacking(WOWGUID guid) {
 }
 
 // PROVEN: 6a129a29 IDENTICAL/NONE
-// OFFSET: 0x00A29170
+// OFFSET: 0x00A29170/0x1407D0E20
 void CCombatClient::SetAttackSent(WOWGUID guid) {
     this->m_attacking = guid;
     this->m_attackSent = 1;

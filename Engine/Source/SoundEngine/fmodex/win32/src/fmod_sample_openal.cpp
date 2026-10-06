@@ -266,7 +266,7 @@ FMOD_RESULT SampleOpenAL::unlockInternal(void *ptr1, void *ptr2, unsigned int le
 ]
 */        
 // PROVEN: bfcff788 IDENTICAL/NONE
-// OFFSET: 0x00AFB920
+// OFFSET: 0x00AFB920/0x1408BBD90
 FMOD_RESULT SampleOpenAL::setBufferData(void *data) 
 { 
     mBuffer = data; 

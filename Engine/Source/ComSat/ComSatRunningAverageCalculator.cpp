@@ -21,7 +21,7 @@ ComSat::RunningAverageCalculator::~RunningAverageCalculator() {
 }
 
 // PROVEN: 028b1a69 IDENTICAL/NONE
-// OFFSET: 0x00A39E40
+// OFFSET: 0x00A39E40/0x1407E62C0
 void ComSat::RunningAverageCalculator::Init(double value, uint32_t count) {
     if (this->m_values) {
         this->m_allocator->Free(this->m_values);
@@ -49,7 +49,7 @@ void ComSat::RunningAverageCalculator::SubmitData(double value) {
 }
 
 // PROVEN: f0094b4f IDENTICAL/NONE
-// OFFSET: 0x00A39F40
+// OFFSET: 0x00A39F40/0x1407E6420
 double ComSat::RunningAverageCalculator::GetCurrentAverage() {
     return this->m_sum / this->m_count;
 }

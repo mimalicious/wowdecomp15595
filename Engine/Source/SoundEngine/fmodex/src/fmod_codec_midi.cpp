@@ -3519,7 +3519,7 @@ FMOD_RESULT CodecMIDI::setPositionInternal(int subsound, unsigned int position, 
 ]
 */
 // PROVEN: b5d3941b IDENTICAL/NONE
-// OFFSET: 0x00AA9B30
+// OFFSET: 0x00AA9B30/0x14086C400
 FMOD_RESULT F_CALLBACK CodecMIDI::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecMIDI *cmidi = (CodecMIDI *)codec;
@@ -3569,7 +3569,7 @@ FMOD_RESULT F_CALLBACK CodecMIDI::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: fd3a718f IDENTICAL/NONE
-// OFFSET: 0x00AA8FF0
+// OFFSET: 0x00AA8FF0/0x14086B6A0
 FMOD_RESULT F_CALLBACK CodecMIDI::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecMIDI *cmidi = (CodecMIDI *)codec;

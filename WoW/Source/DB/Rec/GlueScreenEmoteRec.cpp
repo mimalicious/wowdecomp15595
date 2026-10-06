@@ -3,8 +3,8 @@
 // STATIC: %0x00B43C4C
 const DBCMeta GlueScreenEmoteRec::s_meta = { "DBFilesClient\\GlueScreenEmote.dbc", 8, 32, GlueScreenEmoteRec::FixupStrings, 0 };
 
-// PROVEN: 3d296330 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 3d296330 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void GlueScreenEmoteRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -406,7 +406,7 @@ int32_t CVar::LogCvar(const char* name, const char* value, void* arg) {
 }
 
 // PROVEN: 3b0a414c IDENTICAL/NONE
-// OFFSET: 0x006551F0
+// OFFSET: 0x006551F0/0x1402F5F80
 void CVar::SetReadOnly(bool readOnly) {
     if (readOnly) {
         this->m_flags |= 0x4;
@@ -797,7 +797,7 @@ int32_t CVar::SaveAll() {
 }
 
 // PROVEN: 90586ca4 IDENTICAL/NONE
-// OFFSET: 0x00655E20
+// OFFSET: 0x00655E20/0x1402F7290
 int32_t CVar::LogAll(char* buffer, uint32_t size, uint32_t category, uint32_t excludeFlags) {
     CVarLogBuffer log;
     log.m_buffer = buffer;

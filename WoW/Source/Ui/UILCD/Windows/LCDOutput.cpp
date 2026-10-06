@@ -44,7 +44,7 @@ void CLCDOutput::SetGfx(CLCDGfxBase* gfx) {
 }
 
 // PROVEN: 18bc7044 IDENTICAL/NONE
-// OFFSET: 0x00B3EAF0
+// OFFSET: 0x00B3EAF0/0x14090C290
 void CLCDOutput::SetGlobalPage(CLCDPage* page) {
     this->m_pGlobalPage = page;
 }
@@ -115,7 +115,7 @@ void CLCDOutput::ResetDeviceType() {
 }
 
 // PROVEN: b0477467 IDENTICAL/NONE
-// OFFSET: 0x00B3EBD0
+// OFFSET: 0x00B3EBD0/0x14090C440
 int32_t CLCDOutput::HasDeviceType() {
     return this->m_OpenByTypeContext.deviceType != 0;
 }
@@ -341,8 +341,8 @@ void CLCDOutput::OnPageShown(CLCDCollection* page) {
 void CLCDOutput::OnPageExpired(CLCDCollection* page) {
 }
 
-// PROVEN: 7b8ed439 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 7b8ed439 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CLCDOutput::OnEnteringIdle() {
 }
 

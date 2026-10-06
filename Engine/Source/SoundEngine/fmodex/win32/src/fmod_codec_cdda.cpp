@@ -295,7 +295,7 @@ FMOD_RESULT CodecCDDA::setPositionInternal(int subsound, unsigned int position, 
 ]
 */
 // PROVEN: 8b7babd8 IDENTICAL/NONE
-// OFFSET: 0x00ABF9C0
+// OFFSET: 0x00ABF9C0/0x1408876A0
 FMOD_RESULT F_CALLBACK CodecCDDA::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecCDDA *cdda = (CodecCDDA *)codec;
@@ -372,7 +372,7 @@ FMOD_RESULT F_CALLBACK CodecCDDA::readCallback(FMOD_CODEC_STATE *codec, void *bu
 ]
 */
 // PROVEN: 27457845 IDENTICAL/NONE
-// OFFSET: 0x00ABF810
+// OFFSET: 0x00ABF810/0x1408874C0
 FMOD_RESULT F_CALLBACK CodecCDDA::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecCDDA *cdda = (CodecCDDA *)codec;

@@ -157,7 +157,7 @@ LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
 
 
 // PROVEN: 4459bded IDENTICAL/NONE
-// OFFSET: 0x0042B940
+// OFFSET: 0x0042B940/0x140032B30
 LUA_API void lua_setlevel (lua_State *from, lua_State *to) {
   to->nCcalls = from->nCcalls;
 }
@@ -1007,7 +1007,7 @@ LUA_API int lua_dump (lua_State *L, lua_Writer writer, void *data) {
 
 
 // PROVEN: a804eaad IDENTICAL/NONE
-// OFFSET: 0x0042CB40
+// OFFSET: 0x0042CB40/0x140034000
 LUA_API int  lua_status (lua_State *L) {
   return L->status;
 }
@@ -1180,7 +1180,7 @@ LUA_API void lua_concat (lua_State *L, int n) {
 }
 
 // PROVEN: 0b62d654 IDENTICAL/NONE
-// OFFSET: 0x0042CE10
+// OFFSET: 0x0042CE10/0x1400343D0
 LUA_API void lua_setdecimalconversion (int convert) {
   lua_decimalconvert = (convert != 0);
 }
@@ -1270,7 +1270,7 @@ static const char *aux_upvalue (StkId fi, int n, TValue **val) {
 
 
 // PROVEN: e1770c0d IDENTICAL/NONE
-// OFFSET: 0x0042CF40
+// OFFSET: 0x0042CF40/0x140034520
 LUA_API const char *lua_getupvalue (lua_State *L, int funcindex, int n) {
   const char *name;
   TValue *val;

@@ -452,7 +452,7 @@ FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, v
 ]
 */
 // PROVEN: b77f6b4d IDENTICAL/NONE
-// OFFSET: 0x00B01ED0
+// OFFSET: 0x00B01ED0/0x1408C3ED0
 FMOD_RESULT OutputDSound::recordUnlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     mDirectSoundCaptureBuffer->Unlock(ptr1, len1, ptr2, len2);

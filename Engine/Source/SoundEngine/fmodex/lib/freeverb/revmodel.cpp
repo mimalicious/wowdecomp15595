@@ -216,7 +216,7 @@ void revmodel::setdamp(float value)
 }
 
 // PROVEN: 078adc5e IDENTICAL/NONE
-// OFFSET: 0x00AD73E0
+// OFFSET: 0x00AD73E0/0x1408A2670
 float revmodel::getdamp()
 {
 	return damp/scaledamp;
@@ -260,7 +260,7 @@ void revmodel::setwidth(float value)
 }
 
 // PROVEN: 4f5ecfcb IDENTICAL/NONE
-// OFFSET: 0x00AD7470
+// OFFSET: 0x00AD7470/0x1408A26E0
 float revmodel::getwidth()
 {
 	return width;
@@ -275,7 +275,7 @@ void revmodel::setmode(float value)
 }
 
 // PROVEN: a49e4cd6 IDENTICAL/NONE
-// OFFSET: 0x00AD74A0
+// OFFSET: 0x00AD74A0/0x1408A2700
 float revmodel::getmode()
 {
 	if (mode >= freezemode)

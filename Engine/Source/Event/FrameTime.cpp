@@ -46,8 +46,8 @@ float FrameTime::GetTickTimeSec() {
     return FrameTime::s_tickTimeSec;
 }
 
-// PROVEN: 16c4d999 IDENTICAL/NONE
-// OFFSET: 0x008A09F0
+// PROVEN: 16c4d999 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A09F0/0x1405E21E0
 uint32_t FrameTime::GetSessionTimeMs() {
     return FrameTime::s_curTimeMs - FrameTime::s_sessionStartMs;
 }

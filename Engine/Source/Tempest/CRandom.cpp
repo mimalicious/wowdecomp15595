@@ -71,8 +71,8 @@ void CRndSeed::SetSeed(uint32_t seed) {
     this->rndacc = seed;
 }
 
-// PROVEN: a17b9c7b IDENTICAL/NONE
-// OFFSET: 0x004C67C0
+// PROVEN: a17b9c7b IDENTICAL/DIFFERENT
+// OFFSET: 0x004C67C0/0x1403FA3F0
 float CRandom::ufloat_(CRndSeed& seed) {
     uint32_t bits = (CRandom::uint32_(seed) & 0x7FFFFF) | 0x3F800000;
 

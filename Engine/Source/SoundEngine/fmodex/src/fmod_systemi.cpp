@@ -299,7 +299,7 @@ FMOD_RESULT SystemI::validate(System *system, SystemI **systemi)
 ]
 */
 // PROVEN: 3472c434 IDENTICAL/NONE
-// OFFSET: 0x00A82D20
+// OFFSET: 0x00A82D20/0x14083FF00
 void SystemI::streamThread(void *data)
 {
     SystemI *system = (SystemI *)data;
@@ -6148,7 +6148,7 @@ FMOD_RESULT SystemI::set3DListenerAttributes(int listener, const FMOD_VECTOR *po
 ]
 */
 // PROVEN: a86ef888 IDENTICAL/NONE
-// OFFSET: 0x00A81FF0
+// OFFSET: 0x00A81FF0/0x14083F020
 FMOD_RESULT SystemI::set3DRolloffCallback(FMOD_3D_ROLLOFFCALLBACK callback)
 {
     mRolloffCallback = callback;
@@ -7027,7 +7027,7 @@ FMOD_RESULT SystemI::createSound(const char *name_or_data, FMOD_MODE mode_in, FM
 ]
 */
 // PROVEN: b6ca0e15 IDENTICAL/NONE
-// OFFSET: 0x00A872A0
+// OFFSET: 0x00A872A0/0x1408450F0
 FMOD_RESULT SystemI::createStream(const char *name_or_data, FMOD_MODE mode_in, FMOD_CREATESOUNDEXINFO *exinfo, SoundI **sound)
 {
 #ifdef FMOD_SUPPORT_STREAMING
@@ -7698,7 +7698,7 @@ FMOD_RESULT SystemI::playSound(FMOD_CHANNELINDEX channelid, SoundI *sound, bool 
 ]
 */
 // PROVEN: 4889547f IDENTICAL/NONE
-// OFFSET: 0x00A822A0
+// OFFSET: 0x00A822A0/0x14083F300
 FMOD_RESULT SystemI::playDSP(FMOD_CHANNELINDEX channelid, DSPI *dsp, bool paused, ChannelI **channel)
 {
     FMOD_RESULT  result;
@@ -8020,7 +8020,7 @@ unsigned int SystemI::count3DVirtualReverbs()
 ]
 */
 // PROVEN: 2723b954 IDENTICAL/NONE
-// OFFSET: 0x00A82460
+// OFFSET: 0x00A82460/0x14083F510
 FMOD_RESULT SystemI::set3DReverbActive(bool state)
 {
     mReverb3DActive = state;
@@ -8403,7 +8403,7 @@ FMOD_RESULT SystemI::addDSP(DSPI *dsp)
 ]
 */
 // PROVEN: 6c72e30e IDENTICAL/NONE
-// OFFSET: 0x00A82690
+// OFFSET: 0x00A82690/0x14083F760
 FMOD_RESULT SystemI::lockDSP()
 {
 #ifdef FMOD_SUPPORT_SOFTWARE
@@ -8432,7 +8432,7 @@ FMOD_RESULT SystemI::lockDSP()
 ]
 */
 // PROVEN: 19d236fc IDENTICAL/NONE
-// OFFSET: 0x00A826B0
+// OFFSET: 0x00A826B0/0x14083F780
 FMOD_RESULT SystemI::unlockDSP()
 {
 #ifdef FMOD_SUPPORT_SOFTWARE

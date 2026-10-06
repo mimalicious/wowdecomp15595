@@ -1574,7 +1574,7 @@ void ComSatClientCallback::NotifyTalkerStop(uint8_t localTalker, uint64_t sessio
     }
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void ComSatClientCallback::NotifyLocalTalkerVoiceLevel(uint8_t localTalker, float level, bool talking) {
 }
 

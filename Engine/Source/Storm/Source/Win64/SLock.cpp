@@ -238,7 +238,8 @@ SSyncObject::SSyncObject() {
     this->m_opaqueData = NULL;
 }
 
-// OFFSET: %0x004C1B80
+// PROVEN: 547093eb DIFFERENT/IDENTICAL
+// OFFSET: 0x004BB440/0x1400F4970
 void CSRWLock::Leave(int32_t fromwriting) {
     SRWLock::SURWLockLeave(&this->m_opaqueData, fromwriting);
 }
@@ -249,8 +250,8 @@ int32_t SSyncObject::Valid() {
     return this->m_opaqueData != NULL;
 }
 
-// PROVEN: aa98d2fe IDENTICAL/NONE
-// OFFSET: 0x004BB4A0
+// PROVEN: aa98d2fe IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB4A0/0x1400F42B0
 uint32_t SSyncObject::Wait(uint32_t timeout) {
     return WaitForSingleObject(this->m_opaqueData, timeout);
 }
@@ -586,8 +587,8 @@ void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     }
 }
 
-// PROVEN: 1055bb99 IDENTICAL/NONE
-// OFFSET: 0x004BBC60
+// PROVEN: 1055bb99 IDENTICAL/UNPROVEN
+// OFFSET: 0x004BBC60/0x1400F5150
 void CSRWLock::Enter(int32_t forwriting) {
     SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);
 }

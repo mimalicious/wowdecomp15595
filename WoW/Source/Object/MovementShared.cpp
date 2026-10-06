@@ -1978,7 +1978,7 @@ void CMovementShared::Teleport(const C3Vector& position, float facing, int32_t r
 }
 
 // PROVEN: be94fad9 IDENTICAL/NONE
-// OFFSET: 0x00A266C0
+// OFFSET: 0x00A266C0/0x1407CDC10
 float CMovementShared::RemoveFromTransport(C44Matrix* matrix) {
     C3Vector oldPosition = this->m_position;
     float facing = CPassenger::RemoveFromTransport(matrix);

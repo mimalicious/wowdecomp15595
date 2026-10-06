@@ -191,7 +191,7 @@ const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
 
 
 // PROVEN: fb322692 IDENTICAL/NONE
-// OFFSET: 0x0041FEF0
+// OFFSET: 0x0041FEF0/0x1400243F0
 void luaO_chunkid (char *out, const char *source, size_t bufflen) {
   if (*source == '=') {
     strncpy(out, source+1, bufflen);  /* remove first char */

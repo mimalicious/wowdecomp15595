@@ -42,7 +42,7 @@ const char* CSimpleFont::GetName() {
 }
 
 // PROVEN: cd230c82 IDENTICAL/NONE
-// OFFSET: 0x00517000
+// OFFSET: 0x00517000/0x140161610
 bool CSimpleFont::IsA(int32_t type) {
     return type == CSimpleFont::s_objectType;
 }

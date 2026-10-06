@@ -331,7 +331,7 @@ void SpellVisualsRender() {
 }
 
 // PROVEN: b0403c10 IDENTICAL/NONE
-// OFFSET: 0x008BC120
+// OFFSET: 0x008BC120/0x140604CF0
 float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition) {
     return transition->m_height;
 }
@@ -658,7 +658,7 @@ float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transitio
 }
 
 // PROVEN: 5fe23a2a IDENTICAL/NONE
-// OFFSET: 0x008BC140
+// OFFSET: 0x008BC140/0x140604D10
 void SpellVisualsGetMountTransitionTransform(const MountTransitionObject* transition, C3Vector* position, C3Vector* up, float* facing) {
     *position = transition->m_position;
     *up = transition->m_groundNormal;

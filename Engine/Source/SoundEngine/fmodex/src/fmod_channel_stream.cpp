@@ -819,7 +819,7 @@ FMOD_RESULT ChannelStream::setDelay(unsigned int startdelay, unsigned int enddel
 ]
 */
 // PROVEN: 8fa9e61c IDENTICAL/NONE
-// OFFSET: 0x00ACBF60
+// OFFSET: 0x00ACBF60/0x140896460
 FMOD_RESULT ChannelStream::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
     FMOD_RESULT result = FMOD_OK;

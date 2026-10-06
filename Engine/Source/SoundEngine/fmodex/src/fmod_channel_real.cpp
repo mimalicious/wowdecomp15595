@@ -289,7 +289,7 @@ FMOD_RESULT ChannelReal::start()
 ]
 */
 // PROVEN: 618f0acd IDENTICAL/NONE
-// OFFSET: 0x00ACB8C0
+// OFFSET: 0x00ACB8C0/0x140895B10
 FMOD_RESULT ChannelReal::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     return stop(ignoreenddelay, resetstate);
@@ -479,7 +479,7 @@ FMOD_RESULT ChannelReal::setPan(float pan, float fbpan)
 ]
 */
 // PROVEN: 117bc3a3 IDENTICAL/NONE
-// OFFSET: 0x00AF3800
+// OFFSET: 0x00AF3800/0x1408BCC30
 FMOD_RESULT ChannelReal::setDelay(unsigned int startdelay, unsigned int enddelay)
 {
     mDelayStart = startdelay;

@@ -429,8 +429,8 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
     return (input - params[0]) / (params[1] - params[0]) * (params[3] - params[2]) + params[2];
 }
 
-// PROVEN: 8e9ba7cd IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8e9ba7cd IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 

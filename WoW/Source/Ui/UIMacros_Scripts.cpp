@@ -21,7 +21,7 @@
 #include "Engine/Source/FrameXML/LoadXML.h"
 
 // PROVEN: c743b4d7 IDENTICAL/NONE
-// OFFSET: 0x009C3D10
+// OFFSET: 0x009C3D10/0x1407510D0
 static int32_t Script_StopMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(3)) {
         CGUIMacros::m_macroButton = NULL;
@@ -45,7 +45,7 @@ static int32_t Script_GetNumMacros(lua_State* L) {
 }
 
 // PROVEN: 8930a63a IDENTICAL/NONE
-// OFFSET: 0x009C3D90
+// OFFSET: 0x009C3D90/0x140751140
 static int32_t Script_GetRunningMacro(lua_State* L) {
     uint32_t id;
 
@@ -436,7 +436,7 @@ static int32_t Script_GetMacroItem(lua_State* L) {
 }
 
 // PROVEN: 943130eb IDENTICAL/NONE
-// OFFSET: 0x009C5C00
+// OFFSET: 0x009C5C00/0x140753B70
 static int32_t Script_PickupMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(14)) {
         MACRONODE* macro = GetMacroFromLua(L);

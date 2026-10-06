@@ -9,14 +9,14 @@ void* OsLoadLibrary(const char* fileName) {
     return LoadLibraryA(fileName);
 }
 
-// PROVEN: dc5ea56e IDENTICAL/NONE
-// OFFSET: 0x0087EEE0
+// PROVEN: dc5ea56e IDENTICAL/IDENTICAL
+// OFFSET: 0x0087EEE0/0x1405B8060
 void OsFreeLibrary(void* module) {
     FreeLibrary(static_cast<HMODULE>(module));
 }
 
-// PROVEN: f455e7fb IDENTICAL/NONE
-// OFFSET: 0x0087EEF0
+// PROVEN: f455e7fb IDENTICAL/IDENTICAL
+// OFFSET: 0x0087EEF0/0x1405B8070
 void* OsGetLibraryEntryPoint(void* module, const char* name) {
     return reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(module), name));
 }

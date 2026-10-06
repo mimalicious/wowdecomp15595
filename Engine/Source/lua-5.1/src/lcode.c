@@ -97,7 +97,7 @@ static void fixjump (FuncState *fs, int pc, int dest) {
 ** optimizations with consecutive instructions not in the same basic block).
 */
 // PROVEN: 65b7437e IDENTICAL/NONE
-// OFFSET: 0x0042E500
+// OFFSET: 0x0042E500/0x140035EA0
 int luaK_getlabel (FuncState *fs) {
   fs->lasttarget = fs->pc;
   return fs->pc;

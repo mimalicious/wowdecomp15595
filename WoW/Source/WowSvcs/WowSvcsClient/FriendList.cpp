@@ -55,7 +55,7 @@ static CVar* s_whoListLimit;
 int32_t FriendList::s_whoToUI;
 
 // PROVEN: 8a5ae815 IDENTICAL/NONE
-// OFFSET: 0x004D2660
+// OFFSET: 0x004D2660/0x14010F940
 FriendInfo* FriendList::GetFriend(WOWGUID guid) {
     if (!guid) {
         return NULL;
@@ -112,7 +112,7 @@ FriendList::FriendList() {
 }
 
 // PROVEN: 2f86035c IDENTICAL/NONE
-// OFFSET: 0x004D2390
+// OFFSET: 0x004D2390/0x14010F8B0
 FriendList::~FriendList() {
 }
 
@@ -316,7 +316,7 @@ int32_t Packet_SMSG_CONTACT_LIST(void* param, NETMESSAGE msgId, uint32_t time, C
 }
 
 // PROVEN: 58cda3fe IDENTICAL/NONE
-// OFFSET: 0x004D2770
+// OFFSET: 0x004D2770/0x14010FA60
 uint32_t FriendList::GetNumIgnores() {
     uint32_t count = 0;
 
@@ -1046,7 +1046,7 @@ bool FriendList::IsMuted(WOWGUID guid) {
 }
 
 // PROVEN: 9d953431 IDENTICAL/NONE
-// OFFSET: 0x004D4380
+// OFFSET: 0x004D4380/0x1401115E0
 bool FriendList::IsIgnoredOrMuted(WOWGUID guid) {
     if (!guid) {
         return false;

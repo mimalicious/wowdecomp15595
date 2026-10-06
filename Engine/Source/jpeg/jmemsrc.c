@@ -41,8 +41,8 @@ static void start_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
   cinfo->image_height = sinfo->height;
 }
 
-// PROVEN: 5b982c5e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 5b982c5e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 static void finish_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
 }
 

@@ -3,8 +3,8 @@
 // STATIC: %0x00B4483C
 const DBCMeta TransportRotationRec::s_meta = { "DBFilesClient\\TransportRotation.dbc", 4, 28, TransportRotationRec::FixupStrings, 0 };
 
-// PROVEN: 0b1f474d IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 0b1f474d IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void TransportRotationRec::FixupStrings(void* record, const char* strings) {
 }
 

@@ -514,7 +514,7 @@ FMOD_RESULT F_CALLBACK DSPHighPass::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: e9f0213a IDENTICAL/NONE
-// OFFSET: 0x00A9D3C0
+// OFFSET: 0x00A9D3C0/0x14085DF40
 FMOD_RESULT F_CALLBACK DSPHighPass::resetCallback(FMOD_DSP_STATE *dsp)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;
@@ -590,7 +590,7 @@ FMOD_RESULT F_CALLBACK DSPHighPass::setParameterCallback(FMOD_DSP_STATE *dsp, in
 ]
 */
 // PROVEN: f59f1ad0 IDENTICAL/NONE
-// OFFSET: 0x00A9D4B0
+// OFFSET: 0x00A9D4B0/0x14085DE10
 FMOD_RESULT F_CALLBACK DSPHighPass::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPHighPass *highpass = (DSPHighPass *)dsp;

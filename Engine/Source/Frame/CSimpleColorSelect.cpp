@@ -170,7 +170,7 @@ bool CSimpleColorSelect::IsA(int32_t type) {
 }
 
 // PROVEN: 897e1693 IDENTICAL/NONE
-// OFFSET: 0x00522FF0
+// OFFSET: 0x00522FF0/0x140170F90
 bool CSimpleColorSelect::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleColorSelect::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
@@ -322,7 +322,7 @@ void CSimpleColorSelect::SetColorValueThumbTexture(CSimpleTexture* texture) {
 }
 
 // PROVEN: 180b9319 IDENTICAL/NONE
-// OFFSET: 0x00523560
+// OFFSET: 0x00523560/0x140171810
 void CSimpleColorSelect::UpdateColor() {
     this->UpdateValueTexture();
     this->RepositionWheelThumb();

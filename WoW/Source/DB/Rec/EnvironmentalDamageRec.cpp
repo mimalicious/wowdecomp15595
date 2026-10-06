@@ -3,8 +3,8 @@
 // STATIC: %0x00B46B34
 const DBCMeta EnvironmentalDamageRec::s_meta = { "DBFilesClient\\EnvironmentalDamage.dbc", 3, 12, EnvironmentalDamageRec::FixupStrings, 0 };
 
-// PROVEN: 20f306ec IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 20f306ec IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void EnvironmentalDamageRec::FixupStrings(void* record, const char* strings) {
 }
 

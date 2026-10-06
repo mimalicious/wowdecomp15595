@@ -351,7 +351,7 @@ FMOD_RESULT CodecRaw::canPointInternal()
 ]
 */
 // PROVEN: 6e4feb02 IDENTICAL/NONE
-// OFFSET: 0x00AA1EB0
+// OFFSET: 0x00AA1EB0/0x140862C90
 FMOD_RESULT F_CALLBACK CodecRaw::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecRaw *raw = (CodecRaw *)codec;

@@ -780,8 +780,8 @@ void CGLootInfo::OnLootSlotChanged(uint8_t slot) {
     }
 }
 
-// PROVEN: 29eb8814 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 29eb8814 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGLootInfo::ShutdownGame() {
 }
 

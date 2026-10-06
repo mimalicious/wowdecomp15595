@@ -25,7 +25,7 @@ static int32_t Script_SpellIsTargeting(lua_State* L) {
 }
 
 // PROVEN: 0c6e96e2 IDENTICAL/NONE
-// OFFSET: 0x008A5AA0
+// OFFSET: 0x008A5AA0/0x1405E86A0
 static int32_t Script_SpellCanTargetItem(lua_State* L) {
     if (s_targetingSpell && (s_needTargets & 0x4010)) {
         lua_pushnumber(L, 1.0);
@@ -282,7 +282,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: db7bed79 IDENTICAL/NONE
-// OFFSET: 0x005F3B70
+// OFFSET: 0x005F3B70/0x140276820
 void SpellRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -290,7 +290,7 @@ void SpellRegisterScriptFunctions() {
 }
 
 // PROVEN: 56a174da IDENTICAL/NONE
-// OFFSET: 0x005F3BA0
+// OFFSET: 0x005F3BA0/0x140276870
 void SpellUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

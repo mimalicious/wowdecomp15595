@@ -995,7 +995,7 @@ bool CGGameObject_C_Type_FishingNode::CanUse() const {
 }
 
 // PROVEN: 85a39f49 IDENTICAL/NONE
-// OFFSET: 0x00599900
+// OFFSET: 0x00599900/0x140207C90
 int32_t CGGameObject_C_Type_GuildBank::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 3 : 29;
 }
@@ -1608,8 +1608,8 @@ int32_t CGGameObject_C_TypeBase::IsHighlightSuppressed() const {
 void CGGameObject_C_TypeBase::OnUpdateFlags(uint32_t changed) {
 }
 
-// PROVEN: 296b109d IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 296b109d IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::OnUpdateAnimProgress() {
 }
 
@@ -1624,12 +1624,12 @@ int32_t CGGameObject_C_TypeBase::Animate(float elapsed) {
     return 1;
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void CGGameObject_C_TypeBase::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
 }
 
 // PROVEN: ec8d926d IDENTICAL/NONE
-// OFFSET: 0x00599E10
+// OFFSET: 0x00599E10/0x1402082B0
 float CGGameObject_C_TypeBase::GetBaseAlpha() const {
     return 1.0f;
 }
@@ -1644,8 +1644,8 @@ int32_t CGGameObject_C_TypeBase::HandleAnimInterrupted() {
     return 1;
 }
 
-// PROVEN: d522ab25 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: d522ab25 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::HandleAnimFinished() {
 }
 
@@ -1688,23 +1688,23 @@ CMapBaseObj* CGGameObject_C_TypeBase::GetMapObjectTransportID() const {
 void CGGameObject_C_TypeBase::PostInit(bool a1) {
 }
 
-// PROVEN: 8b5d6ada IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8b5d6ada IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::PostInitWithStats() {
 }
 
-// PROVEN: d0d1bd54 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: d0d1bd54 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::Reenable() {
 }
 
-// PROVEN: 97ab290a IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 97ab290a IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::Disable() {
 }
 
-// PROVEN: 8e070758 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8e070758 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::PostReenable() {
 }
 
@@ -1724,18 +1724,18 @@ void CGGameObject_C_TypeBase::UpdateMovement(uint32_t time, uint32_t elapsed) {
 void CGGameObject_C_TypeBase::UpdateDisplay(uint32_t time) {
 }
 
-// PROVEN: 9289b4b5 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 9289b4b5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::UpdateDisabled() {
 }
 
-// PROVEN: 9690f15d IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 9690f15d IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::StartInteraction() {
 }
 
-// PROVEN: abeac73c IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: abeac73c IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::CloseInteraction() {
 }
 
@@ -1756,8 +1756,8 @@ uint32_t CGGameObject_C_TypeBase::GetTransportUpdateTime() const {
     return 0;
 }
 
-// PROVEN: a6eb848b IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: a6eb848b IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_Null::CanUse() const {
     return false;
 }
@@ -1952,20 +1952,20 @@ CGGameObject_C_Type_WorldObj::~CGGameObject_C_Type_WorldObj() {
     }
 }
 
-// PROVEN: 6bd1342c IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 6bd1342c IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_WorldObj::CanBeSolid() const {
     return false;
 }
 
-// PROVEN: 86c2c3fc IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 86c2c3fc IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_WorldObj::CanHighlight() const {
     return false;
 }
 
-// PROVEN: 06ad81e6 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 06ad81e6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_WorldObj::CanUse() const {
     return false;
 }
@@ -2450,13 +2450,13 @@ void CGGameObject_C_Type_DestructibleBuilding::HandleAnimEvent(uint32_t eventId,
     GameObject_C_ProcessAnimEvent(eventId, this->m_owner->m_gameObject->m_displayID, data, position, &this->m_sound);
 }
 
-// PROVEN: 427d6342 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 427d6342 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_Type_DestructibleBuilding::CreateWorldObj() {
 }
 
-// PROVEN: 3411ab45 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 3411ab45 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_Type_DestructibleBuilding::DestroyWorldObj() {
 }
 

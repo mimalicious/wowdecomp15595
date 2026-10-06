@@ -103,7 +103,7 @@ void ComSat::MD5::ProcessBlock(const uint8_t* block) {
 }
 
 // PROVEN: 7983d879 IDENTICAL/NONE
-// OFFSET: 0x00B3D9D0
+// OFFSET: 0x00B3D9D0/0x14090AB30
 void ComSat::MD5::Prepare() {
     this->m_count[1] = 0;
     this->m_count[0] = 0;
@@ -150,7 +150,7 @@ void ComSat::MD5::Process(const void* data, uint32_t size) {
 }
 
 // PROVEN: f93071d2 IDENTICAL/NONE
-// OFFSET: 0x00B3DAE0
+// OFFSET: 0x00B3DAE0/0x14090AC60
 void ComSat::MD5::Finish(uint8_t (&digest)[16]) {
     uint8_t length[8];
     for (int32_t i = 0; i < 8; i++) {

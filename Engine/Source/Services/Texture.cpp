@@ -131,8 +131,8 @@ CMipBitsCache::~CMipBitsCache() {
     }
 }
 
-// PROVEN: c74642f9 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: c74642f9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void GxTexNullUserFunc(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
 }
 
@@ -284,8 +284,8 @@ uint32_t TextureGetMaxAnisotropy() {
     return s_maxAnisotropy;
 }
 
-// PROVEN: e3fbcd12 IDENTICAL/NONE
-// OFFSET: 0x00540BD0
+// PROVEN: e3fbcd12 IDENTICAL/IDENTICAL
+// OFFSET: 0x00540BD0/0x140193650
 void TextureEnableAtlas(int32_t enable) {
     s_atlasEnable = enable;
 }
@@ -302,7 +302,7 @@ CGxTexFlags TextureMakeTexFlags(CGxTexFlags texFlags, int32_t defaultFilter) {
     return texFlags;
 }
 
-// PROVEN: 53f3bc6c IDENTICAL/UNPROVEN
+// PROVEN: 53f3bc6c IDENTICAL/DIFFERENT
 // OFFSET: 0x00540BE0/0x140193660
 void TextureAddRef(CTexture* texture) {
     if (!texture) {
@@ -336,8 +336,8 @@ int32_t TextureIsSame(CTexture* texture, const char* fileName) {
     return SStrCmpI(name, texture->m_filename, sizeof(texture->m_filename)) == 0;
 }
 
-// PROVEN: a0a0409b IDENTICAL/NONE
-// OFFSET: 0x00540C80
+// PROVEN: a0a0409b IDENTICAL/DIFFERENT
+// OFFSET: 0x00540C80/0x140193790
 void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg) {
     if (!texture) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -486,7 +486,7 @@ TEXFILETYPE TexturePickAlternateFilename(const char* fileName, TEXFILETYPE type,
     return type;
 }
 
-// PROVEN: 7f3e27ce IDENTICAL/UNPROVEN
+// PROVEN: 7f3e27ce IDENTICAL/DIFFERENT
 // OFFSET: 0x00540FD0/0x140193BC0
 const char* TextureGetFilename(CTexture* texture) {
     if (!texture) {
@@ -534,8 +534,8 @@ int32_t TextureLoadBlob(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Load(fileName, data, size);
 }
 
-// PROVEN: 4ddb0b42 IDENTICAL/NONE
-// OFFSET: 0x00541070
+// PROVEN: 4ddb0b42 IDENTICAL/IDENTICAL
+// OFFSET: 0x00541070/0x140193C60
 int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }

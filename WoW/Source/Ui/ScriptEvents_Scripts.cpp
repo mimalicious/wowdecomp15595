@@ -1071,7 +1071,7 @@ static int32_t Script_IsLoggedIn(lua_State* L) {
 }
 
 // PROVEN: a65fb5b9 IDENTICAL/NONE
-// OFFSET: 0x0044C0F0
+// OFFSET: 0x0044C0F0/0x140059730
 static int32_t Script_CanSwitchVehicleSeat(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::GetActive();
 
@@ -1201,7 +1201,7 @@ static int32_t Script_GetPetSpellBonusDamage(lua_State* L) {
 }
 
 // PROVEN: 51a82bdd IDENTICAL/NONE
-// OFFSET: 0x00456A50
+// OFFSET: 0x00456A50/0x140066250
 static int32_t Script_IsIndoors(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2821,7 +2821,7 @@ static int32_t Script_GetPVPRankInfo(lua_State* L) {
 }
 
 // PROVEN: 107dbf5a IDENTICAL/NONE
-// OFFSET: 0x0080C320
+// OFFSET: 0x0080C320/0x1405229B0
 static int32_t Script_GetPVPRankProgress(lua_State* L) {
     lua_pushnumber(L, 0.0);
     return 1;

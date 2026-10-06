@@ -555,7 +555,7 @@ bool CSimpleFontString::IsA(const char* typeName) {
 }
 
 // PROVEN: 1ecc490c IDENTICAL/NONE
-// OFFSET: 0x004FBEC0
+// OFFSET: 0x004FBEC0/0x140159090
 const char* CSimpleFontString::GetObjectTypeName() {
     return CSimpleFontString::s_objectTypeName;
 }
@@ -567,13 +567,13 @@ int32_t CSimpleFontString::GetScriptMetaTable() {
 }
 
 // PROVEN: 7140aebe IDENTICAL/NONE
-// OFFSET: 0x004F7FD0
+// OFFSET: 0x004F7FD0/0x14013B840
 const char* CSimpleFontString::GetFontName() {
     return this->m_fontHandle ? TextBlockGetFontName(this->m_fontHandle) : NULL;
 }
 
 // PROVEN: 526e6201 IDENTICAL/NONE
-// OFFSET: 0x004F8060
+// OFFSET: 0x004F8060/0x14013B8D0
 uint32_t CSimpleFontString::GetFontFlags() {
     return this->m_fontHandle ? TextBlockGetFontFlags(this->m_fontHandle) : 0;
 }
@@ -1253,7 +1253,7 @@ void CSimpleFontString::AnimData_ResetPositionData() {
 }
 
 // PROVEN: 719c2258 IDENTICAL/NONE
-// OFFSET: 0x004F8920
+// OFFSET: 0x004F8920/0x1405A8700
 void CSimpleFontString::ClearString() {
     this->m_textWidth = 0.0f;
     this->m_textHeight = 0.0f;
@@ -1852,7 +1852,7 @@ void CSimpleFontString::SetNonSpaceWrap(int32_t wrap) {
 }
 
 // PROVEN: f8b2fcfe IDENTICAL/NONE
-// OFFSET: 0x004FE750
+// OFFSET: 0x004FE750/0x1401432D0
 void CSimpleFontString::SetIndented(int32_t indented) {
     this->m_settableStyleFlags &= ~0x20000u;
     uint32_t styleFlags = indented ? this->m_styleFlags | 0x20000 : this->m_styleFlags & ~0x20000u;
@@ -2186,7 +2186,7 @@ void CSimpleTexture::GetTexCoord(CRect& texRect) {
 }
 
 // PROVEN: 835bdc57 IDENTICAL/NONE
-// OFFSET: 0x004F7350
+// OFFSET: 0x004F7350/0x14013AAE0
 void CSimpleTexture::SetTexCoord(const C2Vector* texCoords) {
     this->m_texCoords[0] = texCoords[0];
     this->m_texCoords[1] = texCoords[1];
@@ -2204,7 +2204,7 @@ void CSimpleTexture::GetTexCoord(C2Vector* texCoords) {
 }
 
 // PROVEN: 5bf2c801 IDENTICAL/NONE
-// OFFSET: 0x004F7410
+// OFFSET: 0x004F7410/0x14013AB10
 CGxShader* CSimpleTexture::GetImageModePixelShader(TextureImageMode mode) {
     return CSimpleTexture::s_imageModePixelShaders[mode];
 }

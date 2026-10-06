@@ -92,7 +92,7 @@ void Grunt::ClientLink::Send(CDataStore& msg) {
 }
 
 // PROVEN: b8ecb3b5 IDENTICAL/NONE
-// OFFSET: 0x00B02B50
+// OFFSET: 0x00B02B50/0x1408C4AA0
 void Grunt::ClientLink::Shutdown() {
     this->m_lock.Enter();
 
@@ -119,7 +119,7 @@ void Grunt::ClientLink::Disconnect() {
 }
 
 // PROVEN: 6d4ccb6c IDENTICAL/NONE
-// OFFSET: 0x00B02BD0
+// OFFSET: 0x00B02BD0/0x1408C4B50
 void Grunt::ClientLink::SetState(int32_t state) {
     this->m_lock.Enter();
     this->m_state = state;
@@ -158,7 +158,7 @@ void Grunt::ClientLink::WCConnected(WowConnection* connection, WowConnection* in
 }
 
 // PROVEN: ac8b6023 IDENTICAL/NONE
-// OFFSET: 0x00B03F10
+// OFFSET: 0x00B03F10/0x1408C64E0
 void Grunt::ClientLink::WCDisconnected(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_lock.Enter();
     this->Shutdown();
@@ -171,7 +171,7 @@ void Grunt::ClientLink::WCDisconnected(WowConnection* connection, uint32_t timeS
 }
 
 // PROVEN: a570d718 IDENTICAL/NONE
-// OFFSET: 0x00B03F70
+// OFFSET: 0x00B03F70/0x1408C6560
 void Grunt::ClientLink::WCCantConnect(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_lock.Enter();
     this->Shutdown();
@@ -1082,7 +1082,7 @@ int32_t Grunt::ServerLink::CmdGruntKick(CDataStore& msg) {
 }
 
 // PROVEN: c087cbb4 IDENTICAL/NONE
-// OFFSET: 0x00B02EC0
+// OFFSET: 0x00B02EC0/0x1408C4F10
 int32_t Grunt::ServerLink::CmdGruntPcWarning(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 16)) {
         return 0;
@@ -1131,7 +1131,7 @@ int32_t Grunt::ServerLink::CmdGruntAuthVerify(CDataStore& msg) {
 }
 
 // PROVEN: 9976c18e IDENTICAL/NONE
-// OFFSET: 0x00B03080
+// OFFSET: 0x00B03080/0x1408C5140
 int32_t Grunt::ServerLink::CmdGruntConnPong(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 4)) {
         return 0;

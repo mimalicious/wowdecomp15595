@@ -53,7 +53,7 @@ CddaFile::CddaFile()
 ]
 */
 // PROVEN: e7adda68 IDENTICAL/NONE
-// OFFSET: 0x00ACE2F0
+// OFFSET: 0x00ACE2F0/0x140898CD0
 FMOD_RESULT CddaFile::init(bool force_aspi, bool jitter_correction)
 {
     mJitterCorrection = jitter_correction;

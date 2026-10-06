@@ -346,7 +346,7 @@ void CEzLcd::SetCurrentPage(CEzLcdPage* page) {
 }
 
 // PROVEN: 564474ed IDENTICAL/NONE
-// OFFSET: 0x00B3DF50
+// OFFSET: 0x00B3DF50/0x14090B320
 void CEzLcd::ShowSubscreen(int32_t subscreen) {
     CEzLcdPage* page;
 

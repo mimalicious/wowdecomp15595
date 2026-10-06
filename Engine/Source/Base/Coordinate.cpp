@@ -33,7 +33,7 @@ float CoordinateGetAspectCompensation() {
     return s_aspectCompensation;
 }
 
-// PROVEN: d4e4ae8d IDENTICAL/NONE
+// PROVEN: d4e4ae8d IDENTICAL/DIFFERENT
 // OFFSET: 0x008723B0/0x1405A87D0
 void NDCToDDC(float ndcx, float ndcy, float* ddcx, float* ddcy) {
     if (ddcx) {

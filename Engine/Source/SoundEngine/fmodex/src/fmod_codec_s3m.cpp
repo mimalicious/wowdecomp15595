@@ -2703,7 +2703,7 @@ FMOD_RESULT CodecS3M::readInternal(void *buffer, unsigned int sizebytes, unsigne
 ]
 */
 // PROVEN: 964267d0 IDENTICAL/NONE
-// OFFSET: 0x00AB5620
+// OFFSET: 0x00AB5620/0x14087B4A0
 FMOD_RESULT CodecS3M::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     if (postype == FMOD_TIMEUNIT_MODORDER)
@@ -2771,7 +2771,7 @@ FMOD_RESULT CodecS3M::setPositionInternal(int subsound, unsigned int position, F
 ]
 */
 // PROVEN: c937950c IDENTICAL/NONE
-// OFFSET: 0x00AB6DB0
+// OFFSET: 0x00AB6DB0/0x14087D120
 FMOD_RESULT F_CALLBACK CodecS3M::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecS3M *cs3m = (CodecS3M *)codec;
@@ -2823,7 +2823,7 @@ FMOD_RESULT F_CALLBACK CodecS3M::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: fa3ea5ce IDENTICAL/NONE
-// OFFSET: 0x00AB5B30
+// OFFSET: 0x00AB5B30/0x14087BA50
 FMOD_RESULT F_CALLBACK CodecS3M::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecS3M *cs3m = (CodecS3M *)codec;
@@ -2848,7 +2848,7 @@ FMOD_RESULT F_CALLBACK CodecS3M::readCallback(FMOD_CODEC_STATE *codec, void *buf
 ]
 */
 // PROVEN: 9342b890 IDENTICAL/NONE
-// OFFSET: 0x00AB56F0
+// OFFSET: 0x00AB56F0/0x14087B580
 FMOD_RESULT F_CALLBACK CodecS3M::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype   )
 {
     CodecS3M *cs3m = (CodecS3M *)codec;

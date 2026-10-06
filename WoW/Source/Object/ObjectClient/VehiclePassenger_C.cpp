@@ -66,7 +66,7 @@ int32_t CVehiclePassenger_C::IsWaitingForVehicleTransitionAnimGrabEvent(uint32_t
 }
 
 // PROVEN: 07d224a2 IDENTICAL/NONE
-// OFFSET: 0x005ED180
+// OFFSET: 0x005ED180/0x14026EB00
 void CVehiclePassenger_C::OnVehicleRideLoopAnimEnd(CGUnit_C* unit, int32_t& done, TSGrowableArray<CVehiclePassenger_C*>& passengers) {
     done = 1;
 }

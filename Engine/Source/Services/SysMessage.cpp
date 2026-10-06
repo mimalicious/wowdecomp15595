@@ -85,8 +85,8 @@ int32_t SysMsgPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, .
     return 0;
 }
 
-// PROVEN: 910dc464 IDENTICAL/NONE
-// OFFSET: 0x0053E7B0
+// PROVEN: 910dc464 IDENTICAL/IDENTICAL
+// OFFSET: 0x0053E7B0/0x140192FA0
 void SysMsgEnable(int32_t enable) {
     s_enabled = enable;
 }
@@ -123,8 +123,8 @@ int32_t SysMsgGetMaxDisplayLevel() {
     return s_maxSeverity;
 }
 
-// PROVEN: 95b1318a IDENTICAL/NONE
-// OFFSET: 0x0053E820
+// PROVEN: 95b1318a IDENTICAL/IDENTICAL
+// OFFSET: 0x0053E820/0x140193010
 void SysMsgSetFilter(uint32_t filter) {
     s_categoryFilter = filter;
 }
@@ -144,8 +144,8 @@ void SysMsgInitialize() {
     s_categoryFilter = 0xFFFFFFFF;
 }
 
-// PROVEN: f92a5b55 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: f92a5b55 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void SysMsgSetCallback(void (*callback)(const char* text, STATUS_TYPE severity)) {
 }
 

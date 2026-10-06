@@ -344,7 +344,7 @@ static FrameScript_Method s_apMethodMap[] = {
 };
 
 // PROVEN: dca7a4a1 IDENTICAL/NONE
-// OFFSET: 0x009FC5A0
+// OFFSET: 0x009FC5A0/0x14079A090
 void KnowledgeBase_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
         FrameScript_RegisterFunction(s_apMethodMap[i].m_name, s_apMethodMap[i].m_method);
@@ -352,7 +352,7 @@ void KnowledgeBase_RegisterScriptFunctions() {
 }
 
 // PROVEN: a5646998 IDENTICAL/NONE
-// OFFSET: 0x009FC5D0
+// OFFSET: 0x009FC5D0/0x14079A0E0
 void KnowledgeBase_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
         FrameScript_UnregisterFunction(s_apMethodMap[i].m_name);

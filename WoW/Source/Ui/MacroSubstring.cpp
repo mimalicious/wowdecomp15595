@@ -59,7 +59,7 @@ void MacroSubstring::GetText(char* buffer, uint32_t size) {
 }
 
 // PROVEN: f39b0927 IDENTICAL/NONE
-// OFFSET: 0x00A0D2C0
+// OFFSET: 0x00A0D2C0/0x1407AED30
 int32_t MacroSubstring::ToNumber() {
     int32_t value = 0;
 

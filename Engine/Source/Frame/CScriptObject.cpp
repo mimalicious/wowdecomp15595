@@ -18,7 +18,7 @@ const char* CScriptObject::GetName() {
 }
 
 // PROVEN: ceb63d24 IDENTICAL/NONE
-// OFFSET: 0x00469410
+// OFFSET: 0x00469410/0x14007D640
 bool CScriptObject::IsA(int32_t type) {
     return type == CScriptObject::s_objectType;
 }

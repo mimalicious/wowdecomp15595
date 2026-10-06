@@ -139,7 +139,7 @@ static int32_t Script_ConfirmReadyCheck(lua_State* L) {
 }
 
 // PROVEN: 68a52d7b IDENTICAL/NONE
-// OFFSET: 0x0092E300
+// OFFSET: 0x0092E300/0x140695720
 static int32_t Script_IsRaidOfficer(lua_State* L) {
     CGRaidMember* member = CGRaidInfo::FindMemberByGuid(ClntObjMgrGetActivePlayer());
 

@@ -73,7 +73,7 @@ static int32_t Script_CloseTradeSkill(lua_State* L) {
 }
 
 // PROVEN: a9940870 IDENTICAL/NONE
-// OFFSET: 0x0098D510
+// OFFSET: 0x0098D510/0x14070B9C0
 static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     uint32_t count;
 

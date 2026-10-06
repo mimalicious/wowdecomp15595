@@ -2587,13 +2587,13 @@ int32_t CSimpleEditBox::GetScriptMetaTable() {
 }
 
 // PROVEN: 2b93855e IDENTICAL/NONE
-// OFFSET: 0x0051AF90
+// OFFSET: 0x0051AF90/0x140166F50
 bool CSimpleEditBox::IsA(int32_t type) {
     return type == CSimpleEditBox::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
 // PROVEN: 116577dc IDENTICAL/NONE
-// OFFSET: 0x0051AFD0
+// OFFSET: 0x0051AFD0/0x140166F40
 bool CSimpleEditBox::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleEditBox::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }

@@ -132,7 +132,7 @@ void Liquid::CRenderer::Flush(const C3Vector& cameraPos, uint32_t pass) {
     }
 }
 
-// PROVEN: 520282aa IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 520282aa IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void Liquid::CRenderer::Validate() {
 }

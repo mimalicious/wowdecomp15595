@@ -283,7 +283,7 @@ PassNetherCombine::PassNetherCombine(FFX::Tex** inputs, uint32_t count, FFX::Tex
 }
 
 // PROVEN: f38723fb IDENTICAL/NONE
-// OFFSET: 0x00B0C2E0
+// OFFSET: 0x00B0C2E0/0x1408D0320
 void EffectNetherWorld::End() {
     if (this->m_passes.Count() >= 2) {
         static_cast<PassNetherCombine*>(this->m_passes[1])->m_fade = 0.0f;

@@ -3595,7 +3595,7 @@ void CGCalendar::ProcessEventUpdatedAlert(CDataStore* msg, uint8_t* clearPending
     }
 }
 
-// PROVEN: 8e83d321 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8e83d321 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGCalendar::LeaveWorld() {
 }

@@ -143,7 +143,7 @@ CSimpleScrollFrame::~CSimpleScrollFrame() {
 }
 
 // PROVEN: 5468ca43 IDENTICAL/NONE
-// OFFSET: 0x00520330
+// OFFSET: 0x00520330/0x14016DA80
 bool CSimpleScrollFrame::IsA(int32_t type) {
     return type == CSimpleScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }

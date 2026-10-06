@@ -849,8 +849,8 @@ void PlayerClientInitialize() {
     AreaTriggersInitialize(ClntObjMgrGetMapID());
 }
 
-// PROVEN: f3fc01f5 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: f3fc01f5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void PlayerInitializeSounds() {
 }
 
@@ -1124,7 +1124,7 @@ uint64_t CGPlayer_C::GetFarSightGuid() const {
 }
 
 // PROVEN: d2a98841 IDENTICAL/NONE
-// OFFSET: 0x005692D0
+// OFFSET: 0x005692D0/0x1401C8490
 void CGPlayer_C::SetFarSightFocus(CGObject_C* object) {
     this->ToggleFarSight(object);
 }
@@ -5702,7 +5702,7 @@ InspectItem* CGPlayer_C::GetInspectedItem(int32_t slot) {
 }
 
 // PROVEN: 49ebd1d0 IDENTICAL/NONE
-// OFFSET: 0x00563780
+// OFFSET: 0x00563780/0x1401C1500
 static void CountGemsItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -10784,8 +10784,8 @@ uint32_t GetVisibleAuraEffectFlags() {
     return s_unk_C9EAB4;
 }
 
-// PROVEN: 07b73796 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 07b73796 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void PlayerShutdownSounds() {
 }
 
@@ -12931,7 +12931,7 @@ void CGPlayer_C::DanceMoveComplete() {
 }
 
 // PROVEN: 7eb2a76f IDENTICAL/NONE
-// OFFSET: 0x005639E0
+// OFFSET: 0x005639E0/0x1401C17D0
 static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(guid), TYPEMASK_PLAYER, __FILE__, __LINE__));
 

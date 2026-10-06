@@ -124,8 +124,8 @@ void CGGMSurveyInfo::Submit() {
     CGGMSurveyInfo::FreeAnswers();
 }
 
-// PROVEN: cd4c7b4d IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: cd4c7b4d IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGMSurveyInfo::InitializeGame() {
 }
 

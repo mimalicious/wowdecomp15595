@@ -338,7 +338,7 @@ FMOD_RESULT OutputNoSound::lock(unsigned int offset, unsigned int length, void *
 ]
 */
 // PROVEN: 79bb83c5 IDENTICAL/NONE
-// OFFSET: 0x00AC16F0
+// OFFSET: 0x00AC16F0/0x140889AA0
 FMOD_RESULT F_CALLBACK OutputNoSound::getNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
     OutputNoSound *nosound = (OutputNoSound *)output;
@@ -500,7 +500,7 @@ FMOD_RESULT F_CALLBACK OutputNoSound::getPositionCallback(FMOD_OUTPUT_STATE *out
 ]
 */
 // PROVEN: 78b412a2 IDENTICAL/NONE
-// OFFSET: 0x00AC1230
+// OFFSET: 0x00AC1230/0x1408894E0
 FMOD_RESULT F_CALLBACK OutputNoSound::lockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     OutputNoSound *nosound = (OutputNoSound *)output;

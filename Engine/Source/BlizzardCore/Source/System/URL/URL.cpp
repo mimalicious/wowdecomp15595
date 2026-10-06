@@ -29,8 +29,8 @@ void Blizzard::URL::DownloadCallback::GetLastModified(const char* lastModified) 
 void Blizzard::URL::DownloadCallback::GetContentLength(int64_t length) {
 }
 
-// PROVEN: 1d4642d1 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 1d4642d1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void Blizzard::URL::DownloadCallback::ConnectedOK() {
 }
 
@@ -54,14 +54,14 @@ Blizzard::URL::DownloadCallback::ByteRange Blizzard::URL::DownloadCallback::GetB
     return range;
 }
 
-// PROVEN: de849c14 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: de849c14 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool Blizzard::URL::DownloadCallback::Stop() {
     return false;
 }
 
-// PROVEN: 34678b26 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 34678b26 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool Blizzard::URL::DownloadCallback::ShouldBlock() {
     return false;
 }
@@ -78,8 +78,8 @@ const char* Blizzard::URL::DownloadCallback::GetPostContentType() {
     return NULL;
 }
 
-// PROVEN: 18329adf IDENTICAL/NONE
-// OFFSET: 0x007A4D30
+// PROVEN: 18329adf IDENTICAL/IDENTICAL
+// OFFSET: 0x007A4D30/0x140499970
 Blizzard::URL::DownloadCallback::Cookie Blizzard::URL::DownloadCallback::GetCookie() {
     Cookie cookie;
     cookie.m_name = NULL;

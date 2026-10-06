@@ -10,8 +10,8 @@ bool CGGameObject_C_Type_AuraGenerator::CanHighlight() const {
     return true;
 }
 
-// PROVEN: 3aeab986 IDENTICAL/NONE
-// OFFSET: 0x00B06D20
+// PROVEN: 3aeab986 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B06D20/0x140317F90
 bool CGGameObject_C_Type_AuraGenerator::CanUse() const {
     return false;
 }

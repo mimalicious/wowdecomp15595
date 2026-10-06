@@ -1347,7 +1347,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: 84576b2a IDENTICAL/NONE
-// OFFSET: 0x00A94420
+// OFFSET: 0x00A94420/0x140855250
 FMOD_RESULT F_CALLBACK DSPSfxReverb::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPSfxReverb *sfxreverb = (DSPSfxReverb *)dsp;
@@ -1400,7 +1400,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::resetCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: 0c18b3b7 IDENTICAL/NONE
-// OFFSET: 0x00A95170
+// OFFSET: 0x00A95170/0x140854360
 FMOD_RESULT F_CALLBACK DSPSfxReverb::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPSfxReverb *sfxreverb = (DSPSfxReverb *)dsp;
@@ -1452,7 +1452,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::setParameterCallback(FMOD_DSP_STATE *dsp, i
 ]
 */
 // PROVEN: 349d82c8 IDENTICAL/NONE
-// OFFSET: 0x00A944F0
+// OFFSET: 0x00A944F0/0x140854420
 FMOD_RESULT F_CALLBACK DSPSfxReverb::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPSfxReverb *sfxreverb = (DSPSfxReverb *)dsp;

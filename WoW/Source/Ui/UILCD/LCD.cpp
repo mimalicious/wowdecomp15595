@@ -197,7 +197,7 @@ void CGLCD::Shutdown() {
 }
 
 // PROVEN: de8493ca IDENTICAL/NONE
-// OFFSET: 0x00B312A0
+// OFFSET: 0x00B312A0/0x1408FAC80
 void CGLCD::OnWhisper(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::PushAlert(name, 1);
@@ -237,7 +237,7 @@ void CGLCD::AuctionWon(const char* name) {
 }
 
 // PROVEN: 5ef735e4 IDENTICAL/NONE
-// OFFSET: 0x00B2F770
+// OFFSET: 0x00B2F770/0x1408F8390
 void CGLCD::HideBattlefieldAlert() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && s_currentScreen == 2) {
         CGLCD::SetScreen(s_previousScreen);
@@ -270,7 +270,7 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatus* status) {
 }
 
 // PROVEN: 5d57db41 IDENTICAL/NONE
-// OFFSET: 0x00B2F890
+// OFFSET: 0x00B2F890/0x1408F8570
 void CGLCD::EnterWorld() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::m_inWorld = 1;
@@ -363,7 +363,7 @@ void CGLCD::SetScreen(int32_t screen) {
 }
 
 // PROVEN: 228f97f3 IDENTICAL/NONE
-// OFFSET: 0x00B2F600
+// OFFSET: 0x00B2F600/0x1408F81E0
 void CGLCD::Logout() {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable()) {
         return;

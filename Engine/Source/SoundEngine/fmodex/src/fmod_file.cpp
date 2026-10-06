@@ -683,7 +683,7 @@ FMOD_RESULT F_API File::close()
 ]
 */
 // PROVEN: 51c7cf46 IDENTICAL/NONE
-// OFFSET: 0x00A91A10
+// OFFSET: 0x00A91A10/0x140851400
 FMOD_RESULT F_API File::cancel()
 {
     mExit = true;
@@ -1742,7 +1742,7 @@ FMOD_RESULT File::setStartOffset(unsigned int offset)
 ]
 */
 // PROVEN: 3946c1cd IDENTICAL/NONE
-// OFFSET: 0x00A925A0
+// OFFSET: 0x00A925A0/0x1408520B0
 FMOD_RESULT File::getStartOffset(unsigned int *offset)
 {
     if (!offset)

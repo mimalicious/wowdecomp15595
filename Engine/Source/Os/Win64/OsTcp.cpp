@@ -389,7 +389,7 @@ void OsNetAddrMake(uint32_t address, uint16_t port, NETADDR* addr) {
 }
 
 // PROVEN: eb933899 IDENTICAL/NONE
-// OFFSET: 0x0087CF00
+// OFFSET: 0x0087CF00/0x1405B54D0
 uint32_t OsNetAddrGetAddress(const NETADDR* addr, uint16_t* port) {
     const sockaddr_in* in = reinterpret_cast<const sockaddr_in*>(addr);
 

@@ -1265,7 +1265,7 @@ FMOD_RESULT OutputWinMM::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, int id
 ]
 */
 // PROVEN: c5130244 IDENTICAL/NONE
-// OFFSET: 0x00AE9720
+// OFFSET: 0x00AE9720/0x1408B11E0
 FMOD_RESULT F_CALLBACK OutputWinMM::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
     OutputWinMM *winmm = (OutputWinMM *)output;
@@ -1319,7 +1319,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::closeCallback(FMOD_OUTPUT_STATE *output)
 ]
 */
 // PROVEN: 2eee2b1f IDENTICAL/NONE
-// OFFSET: 0x00AE9080
+// OFFSET: 0x00AE9080/0x1408B1970
 FMOD_RESULT F_CALLBACK OutputWinMM::startCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWinMM *winmm = (OutputWinMM *)output;
@@ -1373,7 +1373,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::stopCallback(FMOD_OUTPUT_STATE *output)
 ]
 */
 // PROVEN: 481fbec1 IDENTICAL/NONE
-// OFFSET: 0x00AE90F0
+// OFFSET: 0x00AE90F0/0x1408B1420
 FMOD_RESULT F_CALLBACK OutputWinMM::getHandleCallback(FMOD_OUTPUT_STATE *output, void **handle)
 {
     OutputWinMM *winmm = (OutputWinMM *)output;
@@ -1400,7 +1400,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::getHandleCallback(FMOD_OUTPUT_STATE *output,
 ]
 */
 // PROVEN: 2164d653 IDENTICAL/NONE
-// OFFSET: 0x00AE9130
+// OFFSET: 0x00AE9130/0x1408B1220
 FMOD_RESULT F_CALLBACK OutputWinMM::getPositionCallback(FMOD_OUTPUT_STATE *output, unsigned int *pcm)
 {
     OutputWinMM *winmm = (OutputWinMM *)output;
@@ -1508,7 +1508,7 @@ FMOD_RESULT F_CALLBACK OutputWinMM::recordGetDriverInfoCallback(FMOD_OUTPUT_STAT
 ]
 */
 // PROVEN: 5bf467b3 IDENTICAL/NONE
-// OFFSET: 0x00AE9220
+// OFFSET: 0x00AE9220/0x1408B12B0
 FMOD_RESULT F_CALLBACK OutputWinMM::recordStartCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_SOUND *sound, int loop)
 {
     OutputWinMM *winmm = (OutputWinMM *)output;

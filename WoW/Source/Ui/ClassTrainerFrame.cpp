@@ -56,8 +56,8 @@ TSGrowableArray<TrainerServiceInfo*> CGClassTrainer::m_services;
 // STATIC: #0x00C0E4C4
 TSGrowableArray<TrainerSkillLineInfo*> CGClassTrainer::m_skillLines;
 
-// PROVEN: 03233b9e IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 03233b9e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGClassTrainer::InitializeGame() {
 }
 

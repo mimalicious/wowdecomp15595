@@ -58,7 +58,7 @@ CSimpleCamera::~CSimpleCamera() {
 }
 
 // PROVEN: 1ffddff3 IDENTICAL/NONE
-// OFFSET: 0x00445E60
+// OFFSET: 0x00445E60/0x140051EB0
 CM2Scene* CSimpleCamera::GetScene() {
     if (!this->m_scene) {
         this->m_scene = M2CreateScene();

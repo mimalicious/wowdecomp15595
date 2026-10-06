@@ -113,8 +113,8 @@ void Blizzard::String::MemCopy(void* dst, const void* src, int32_t bytes) {
     }
 }
 
-// PROVEN: 77cb646b IDENTICAL/NONE
-// OFFSET: 0x007ADD20
+// PROVEN: 77cb646b IDENTICAL/IDENTICAL
+// OFFSET: 0x007ADD20/0x1404A38F0
 void Blizzard::String::MemFill(void* dst, uint32_t bytes, uint8_t value) {
     memset(dst, value, bytes);
 }

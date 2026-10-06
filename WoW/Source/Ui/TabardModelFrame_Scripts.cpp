@@ -247,7 +247,7 @@ static FrameScript_Method s_ScriptMethods[] = {
 };
 
 // PROVEN: 3e29c68b IDENTICAL/NONE
-// OFFSET: 0x00A05F00
+// OFFSET: 0x00A05F00/0x1407A5A90
 void CGTabardModelFrame::RegisterScriptMethods(lua_State* L) {
     CGCharacterModelBase::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

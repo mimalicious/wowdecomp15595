@@ -48,7 +48,7 @@ int luaZ_lookahead (ZIO *z) {
 
 
 // PROVEN: 3f2ae27a IDENTICAL/NONE
-// OFFSET: 0x0042B6D0
+// OFFSET: 0x0042B6D0/0x140032810
 void luaZ_init (lua_State *L, ZIO *z, lua_Reader reader, void *data) {
   z->L = L;
   z->reader = reader;

@@ -42,7 +42,7 @@ void ComSat::Interface::Destroy(ComSat::Interface* comsat, ComSat::Allocator& al
 }
 
 // PROVEN: a6adbfbd IDENTICAL/NONE
-// OFFSET: 0x00A344B0
+// OFFSET: 0x00A344B0/0x1407DEB80
 ComSat::Interface* ComSat::Interface::Create(const ComSat::Initialization& init, ComSat::Allocator& allocator) {
     s_soundManager = new (allocator.Alloc(sizeof(ComSat::Sound::Manager))) ComSat::Sound::Manager(init, allocator);
     s_networkManager = new (allocator.Alloc(sizeof(ComSat::Network::Manager))) ComSat::Network::Manager(init, allocator);

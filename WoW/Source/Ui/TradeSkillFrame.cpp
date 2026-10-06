@@ -191,7 +191,7 @@ void CGTradeSkillInfo::CommitPendingRecast(int32_t spellId) {
 }
 
 // PROVEN: f044a112 IDENTICAL/NONE
-// OFFSET: 0x0098D200
+// OFFSET: 0x0098D200/0x14070B6D0
 static void TradeSkillListItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGTradeSkillInfo::m_itemsPending && !--CGTradeSkillInfo::m_itemsPending) {
         CGTradeSkillInfo::RefreshList(1);

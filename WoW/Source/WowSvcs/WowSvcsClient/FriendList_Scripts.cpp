@@ -19,7 +19,7 @@
 #include "WoW/Source/Ui/Types.h"
 
 // PROVEN: a4bcdc11 IDENTICAL/NONE
-// OFFSET: 0x004D2580
+// OFFSET: 0x004D2580/0x14010F800
 static int32_t Script_SetWhoToUI(lua_State* L) {
     FriendList::s_whoToUI = StringToBOOL(L, 1, 0);
     return 0;

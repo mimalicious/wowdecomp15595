@@ -159,7 +159,7 @@ void jcopy_block_row(JBLOCKROW input_row, JBLOCKROW output_row, JDIMENSION num_b
 /* Zero out a chunk of FAR memory. */
 /* This might be sample-array data, block-array data, or alloc_large data. */
 // PROVEN: 59b81b5d IDENTICAL/NONE
-// OFFSET: 0x00B602B0
+// OFFSET: 0x00B602B0/0x1409297B0
 void jzero_far(void FAR * target, size_t bytestozero) {
 #ifdef FMEMZERO
   FMEMZERO(target, bytestozero);

@@ -215,7 +215,7 @@ void CMovieStreamer::Cleanup() {
 }
 
 // PROVEN: 5dc6ffd5 IDENTICAL/NONE
-// OFFSET: 0x00511A50
+// OFFSET: 0x00511A50/0x14015B8D0
 void CMovieStreamer::GetVideoInfo(MovieInfo& info) {
     info = this->m_info;
 }

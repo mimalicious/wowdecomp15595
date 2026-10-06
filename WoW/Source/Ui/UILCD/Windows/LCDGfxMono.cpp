@@ -38,7 +38,7 @@ void CLCDGfxMono::ClearScreen() {
 }
 
 // PROVEN: 20d2502b IDENTICAL/NONE
-// OFFSET: 0x00B40CA0
+// OFFSET: 0x00B40CA0/0x14090EC10
 lgLcdBitmapHeader* CLCDGfxMono::GetLCDScreen() {
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_160x43x1;
     memcpy(this->m_lcdBitmap.pixels, this->m_pBitmapBits, this->m_nWidth * this->m_nHeight);

@@ -72,8 +72,8 @@ static uint32_t ConvertStringFlags(uint32_t flags) {
     return result;
 }
 
-// PROVEN: bc41331f IDENTICAL/NONE
-// OFFSET: 0x005490D0
+// PROVEN: bc41331f IDENTICAL/DIFFERENT
+// OFFSET: 0x005490D0/0x1401A19B0
 int32_t TextBlockSetGradient(HTEXTBLOCK string, int32_t start, int32_t length) {
     return GxuFontStringSetGradient(reinterpret_cast<TEXTBLOCK*>(string)->m_string, start, length);
 }
@@ -83,7 +83,7 @@ TEXTBLOCK::~TEXTBLOCK() {
     GxuFontDestroyString(this->m_string);
 }
 
-// PROVEN: 8655f769 IDENTICAL/UNPROVEN
+// PROVEN: 8655f769 IDENTICAL/DIFFERENT
 // OFFSET: 0x00549130/0x1401A1A20
 const char* TextBlockGetFontName(HTEXTFONT font) {
     if (!font) {
@@ -115,8 +115,8 @@ uint32_t TextBlockGetFontFlags(HTEXTFONT font) {
     return flags;
 }
 
-// PROVEN: 8f9a1985 IDENTICAL/NONE
-// OFFSET: 0x005491A0
+// PROVEN: 8f9a1985 IDENTICAL/DIFFERENT
+// OFFSET: 0x005491A0/0x1401A1AA0
 CGxFont* TextBlockGetFontPtr(HTEXTFONT font) {
     if (!font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -126,7 +126,7 @@ CGxFont* TextBlockGetFontPtr(HTEXTFONT font) {
     return reinterpret_cast<FONTHASHOBJ*>(font)->m_font;
 }
 
-// PROVEN: 8c92b288 IDENTICAL/UNPROVEN
+// PROVEN: 8c92b288 IDENTICAL/DIFFERENT
 // OFFSET: 0x005491C0/0x1401A1AD0
 CGxString* TextBlockGetStringPtr(HTEXTBLOCK string) {
     if (!string) {
@@ -149,7 +149,7 @@ void TextBlockAddShadow(HTEXTBLOCK string, CImVector color, const C2Vector& offs
     GxuFontAddShadow(reinterpret_cast<TEXTBLOCK*>(string)->m_string, color, ndcOffset);
 }
 
-// PROVEN: ea224b5b IDENTICAL/UNPROVEN
+// PROVEN: ea224b5b IDENTICAL/DIFFERENT
 // OFFSET: 0x00549240/0x1401A1B60
 void TextBlockRemoveShadow(HTEXTBLOCK string) {
     if (!string) {
@@ -194,7 +194,7 @@ HTEXTBLOCK TextBlockCreate(HTEXTFONT font, const char* text, const CImVector& co
     return reinterpret_cast<HTEXTBLOCK>(HandleCreate(textBlock, "HTEXTBLOCK"));
 }
 
-// PROVEN: a72a5dd2 IDENTICAL/UNPROVEN
+// PROVEN: a72a5dd2 IDENTICAL/DIFFERENT
 // OFFSET: 0x005493D0/0x1401A1DF0
 void TextBlockSetStringPos(HTEXTBLOCK string, const C3Vector& position) {
     if (!string) {
@@ -207,7 +207,7 @@ void TextBlockSetStringPos(HTEXTBLOCK string, const C3Vector& position) {
     GxuFontSetStringPosition(reinterpret_cast<TEXTBLOCK*>(string)->m_string, ndcPosition);
 }
 
-// PROVEN: 2b0f4035 IDENTICAL/IDENTICAL
+// PROVEN: 2b0f4035 IDENTICAL/UNPROVEN
 // OFFSET: 0x00549440/0x1401A1E60
 C3Vector TextBlockGetStringPos(HTEXTBLOCK string) {
     C3Vector ndcPosition = GxuFontGetStringPosition(reinterpret_cast<TEXTBLOCK*>(string)->m_string);

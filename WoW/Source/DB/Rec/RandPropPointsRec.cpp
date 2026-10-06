@@ -3,8 +3,8 @@
 // STATIC: %0x00B45738
 const DBCMeta RandPropPointsRec::s_meta = { "DBFilesClient\\RandPropPoints.dbc", 4, 64, RandPropPointsRec::FixupStrings, 0 };
 
-// PROVEN: 847b9dd3 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 847b9dd3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void RandPropPointsRec::FixupStrings(void* record, const char* strings) {
 }
 

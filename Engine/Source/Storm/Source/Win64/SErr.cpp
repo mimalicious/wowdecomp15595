@@ -618,8 +618,8 @@ int32_t SErrGetAppPhase() {
     return s_appPhase;
 }
 
-// PROVEN: 910ad9c3 IDENTICAL/NONE
-// OFFSET: 0x004B4300
+// PROVEN: 910ad9c3 IDENTICAL/DIFFERENT
+// OFFSET: 0x004B4300/0x140001020
 void STORMAPI SErrSetLastError(uint32_t errorcode) {
     s_lasterror = errorcode;
     SetLastError(errorcode);

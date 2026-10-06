@@ -590,7 +590,7 @@ FMOD_RESULT F_CALLBACK DSPChorus::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: 00b908d9 IDENTICAL/NONE
-// OFFSET: 0x00A97140
+// OFFSET: 0x00A97140/0x1408572D0
 FMOD_RESULT F_CALLBACK DSPChorus::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPChorus *chorus = (DSPChorus *)dsp;
@@ -664,7 +664,7 @@ FMOD_RESULT F_CALLBACK DSPChorus::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 ]
 */
 // PROVEN: 5cbad7a5 IDENTICAL/NONE
-// OFFSET: 0x00A97200
+// OFFSET: 0x00A97200/0x1408573C0
 FMOD_RESULT F_CALLBACK DSPChorus::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPChorus *chorus = (DSPChorus *)dsp;
@@ -689,7 +689,7 @@ FMOD_RESULT F_CALLBACK DSPChorus::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 ]
 */
 // PROVEN: ea72dad1 IDENTICAL/NONE
-// OFFSET: 0x00A97240
+// OFFSET: 0x00A97240/0x1408573E0
 FMOD_RESULT F_CALLBACK DSPChorus::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPChorus *chorus = (DSPChorus *)dsp;

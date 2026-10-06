@@ -70,7 +70,7 @@ void CloseContext(EvtContext* context) {
     context->m_critsect.Leave();
 }
 
-// PROVEN: 59127436 IDENTICAL/UNPROVEN
+// PROVEN: 59127436 IDENTICAL/IDENTICAL
 // OFFSET: 0x008A0AF0/0x1405E22D0
 uint32_t STORMAPI WaitPumpingNetwork(void* param) {
     SSyncObject* event = static_cast<SSyncObject*>(param);
@@ -159,8 +159,8 @@ void SynthesizePaint(EvtContext* context) {
     }
 }
 
-// PROVEN: c2d2af92 IDENTICAL/NONE
-// OFFSET: 0x008A0DD0
+// PROVEN: c2d2af92 IDENTICAL/DIFFERENT
+// OFFSET: 0x008A0DD0/0x1405E2700
 int32_t IEvtSchedulerIsContextInteractive(EvtContext* context) {
     return (context->m_schedFlags >> 1) & 1;
 }

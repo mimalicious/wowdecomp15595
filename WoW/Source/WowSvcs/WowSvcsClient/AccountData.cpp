@@ -234,7 +234,7 @@ void LoadAccountData(int32_t type, ACCOUNTDATALOADFUNC func, void* param) {
 }
 
 // PROVEN: a3281402 IDENTICAL/NONE
-// OFFSET: 0x004D79A0
+// OFFSET: 0x004D79A0/0x140115F40
 void SetClearConfigData(int32_t clear) {
     unk_C7BFF8 = clear;
     unk_C7BFFC = clear;
@@ -575,7 +575,7 @@ void AccountDataInitialize(bool global) {
 }
 
 // PROVEN: 673c4585 IDENTICAL/NONE
-// OFFSET: 0x004D8320
+// OFFSET: 0x004D8320/0x140116BB0
 void AccountDataFlush() {
     for (int32_t i = 0; i < static_cast<int32_t>(sizeof(s_accountData) / sizeof(s_accountData[0])); i++) {
         if (s_accountData[i].unk_0020) {

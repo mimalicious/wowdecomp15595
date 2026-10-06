@@ -443,7 +443,7 @@ FMOD_RESULT F_CALLBACK DSPDistortion::readCallback(FMOD_DSP_STATE *dsp, float *i
 ]
 */
 // PROVEN: c7142aac IDENTICAL/NONE
-// OFFSET: 0x00A9AA70
+// OFFSET: 0x00A9AA70/0x14085B2A0
 FMOD_RESULT F_CALLBACK DSPDistortion::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPDistortion *distortion = (DSPDistortion *)dsp;

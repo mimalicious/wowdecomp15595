@@ -46,7 +46,7 @@ static int32_t Script_GetGuildBankWithdrawMoney(lua_State* L) {
 }
 
 // PROVEN: 5f8cb174 IDENTICAL/NONE
-// OFFSET: 0x0093DA00
+// OFFSET: 0x0093DA00/0x1406A93A0
 static int32_t Script_GetNumGuildBankTabs(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_numTabs);
     return 1;

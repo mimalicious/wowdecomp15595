@@ -31,7 +31,7 @@ int32_t CDataStore::FetchWrite(uint32_t pos, uint32_t bytes, const char* fileNam
 }
 
 // PROVEN: 606d939b IDENTICAL/NONE
-// OFFSET: 0x004084E0
+// OFFSET: 0x004084E0/0x1405A7550
 int32_t CDataStore::IsRead() {
     return this->m_read == this->m_size;
 }
@@ -102,7 +102,7 @@ void CDataStore::DetachBuffer(void** data, uint32_t* size, uint32_t* alloc) {
 }
 
 // PROVEN: 6bae70d8 IDENTICAL/NONE
-// OFFSET: 0x008716F0
+// OFFSET: 0x008716F0/0x1405A75C0
 void CDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     if (alloc && data) {
         SMemFree(data, __FILE__, __LINE__, 0);
@@ -128,7 +128,7 @@ int32_t CDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
 }
 
 // PROVEN: 65c61212 IDENTICAL/NONE
-// OFFSET: 0x00871790
+// OFFSET: 0x00871790/0x1405A7680
 CDataStore& CDataStore::Set(uint32_t pos, uint8_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
     this->m_data[pos - this->m_base] = val;
@@ -239,7 +239,7 @@ CDataStore& CDataStore::PutArray(const uint8_t* pval, uint32_t count) {
 }
 
 // PROVEN: 7bcb16b1 IDENTICAL/NONE
-// OFFSET: 0x00871B20
+// OFFSET: 0x00871B20/0x1405A7C00
 CDataStore& CDataStore::PutData(const void* data, uint32_t bytes) {
     return this->PutArray(static_cast<const uint8_t*>(data), bytes);
 }
@@ -454,7 +454,7 @@ CDataStore& CDataStore::GetArray(uint32_t* pval, uint32_t count) {
 }
 
 // PROVEN: 26817864 IDENTICAL/NONE
-// OFFSET: 0x00871F20
+// OFFSET: 0x00871F20/0x1405A81F0
 CDataStore& CDataStore::GetData(void* data, uint32_t bytes) {
     return this->GetArray(static_cast<uint8_t*>(data), bytes);
 }

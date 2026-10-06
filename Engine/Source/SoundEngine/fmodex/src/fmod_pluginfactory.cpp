@@ -158,7 +158,7 @@ FMOD_RESULT PluginFactory::release()
 ]
 */
 // PROVEN: 4cc292e0 IDENTICAL/NONE
-// OFFSET: 0x00A9FFF0
+// OFFSET: 0x00A9FFF0/0x140860720
 FMOD_RESULT PluginFactory::setSystem(SystemI *system)  
 { 
     mSystem = system;  

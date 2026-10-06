@@ -220,13 +220,13 @@ int32_t CSimpleMessageFrame::GetScriptMetaTable() {
 }
 
 // PROVEN: d8d3130b IDENTICAL/NONE
-// OFFSET: 0x0051C5C0
+// OFFSET: 0x0051C5C0/0x140168BA0
 bool CSimpleMessageFrame::IsA(int32_t type) {
     return type == CSimpleMessageFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
 // PROVEN: 296d233d IDENTICAL/NONE
-// OFFSET: 0x0051C600
+// OFFSET: 0x0051C600/0x140168B90
 bool CSimpleMessageFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
@@ -398,7 +398,7 @@ void CSimpleMessageFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_t flag
 }
 
 // PROVEN: 353a5c15 IDENTICAL/NONE
-// OFFSET: 0x0051CCA0
+// OFFSET: 0x0051CCA0/0x140169400
 void CSimpleMessageFrame::SetInsertMode(int32_t mode) {
     this->m_insertMode = mode;
     this->UpdateRect();

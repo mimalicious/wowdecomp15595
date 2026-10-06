@@ -274,7 +274,7 @@ XMLTree* XMLTree_Load(const char* data, uint32_t size) {
 }
 
 // PROVEN: 23d682c3 IDENTICAL/NONE
-// OFFSET: 0x00B2DD50
+// OFFSET: 0x00B2DD50/0x1408F69E0
 XMLNode* XMLTree_GetRoot(XMLTree* tree) {
     return tree->m_root;
 }
@@ -283,7 +283,7 @@ XMLNode* XMLTree_GetRoot(XMLTree* tree) {
 XMLNodeData::~XMLNodeData() {
 }
 
-// PROVEN: 7981ca12 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 7981ca12 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void XMLNodeData::Release() {
 }

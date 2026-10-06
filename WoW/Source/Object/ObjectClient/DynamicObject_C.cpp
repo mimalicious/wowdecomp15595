@@ -155,8 +155,8 @@ void CGDynamicObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_dynamicObjectMirror = saved + CGObject::TotalFieldsSaved();
 }
 
-// PROVEN: 549672d7 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 549672d7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGDynamicObject_C::Initialize() {
 }
 

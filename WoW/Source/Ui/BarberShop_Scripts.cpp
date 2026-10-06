@@ -12,7 +12,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
 // PROVEN: fe191053 IDENTICAL/NONE
-// OFFSET: 0x008FF630
+// OFFSET: 0x008FF630/0x1406570B0
 static int32_t Script_CanAlterSkin(lua_State* L) {
     lua_pushboolean(L, CGBarberShop::m_currentSkinColor != 0);
     return 1;

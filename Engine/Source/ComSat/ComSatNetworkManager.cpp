@@ -33,7 +33,7 @@ uint32_t ComSat::Network::ComputeSignature(const uint8_t (&key)[16], const uint8
 }
 
 // PROVEN: 0925cf84 IDENTICAL/NONE
-// OFFSET: 0x00A38B50
+// OFFSET: 0x00A38B50/0x1407E4D60
 ComSat::Network::Manager::Manager(const ComSat::Initialization& init, ComSat::Allocator& allocator) : m_allocator(&allocator), m_sessions(allocator) {
     this->m_socket = ComSat::Network::Socket::Create(allocator);
     this->m_socket->Bind(init.m_port);
@@ -96,7 +96,7 @@ void ComSat::Network::Manager::DestroySession(ComSat::Network::Session* session)
 }
 
 // PROVEN: 69705a4b IDENTICAL/NONE
-// OFFSET: 0x00A38D50
+// OFFSET: 0x00A38D50/0x1407E4FF0
 bool ComSat::Network::Manager::Send(uint16_t networkId, uint8_t talker, const uint8_t (&key)[16], const ComSat::Network::Address& address, const uint8_t* data, uint32_t size) {
     ComSat::Network::Packet packet;
     uint32_t length = size + 7;
@@ -112,7 +112,7 @@ bool ComSat::Network::Manager::Send(uint16_t networkId, uint8_t talker, const ui
 }
 
 // PROVEN: 690c8828 IDENTICAL/NONE
-// OFFSET: 0x00A38E90
+// OFFSET: 0x00A38E90/0x1407E5180
 ComSat::Network::Session* ComSat::Network::Manager::CreateSession(uint64_t id, ComSat::Network::Session::Callback& callback) {
     ComSat::Network::Session* session = new (this->m_allocator->Alloc(sizeof(ComSat::Network::Session))) ComSat::Network::Session(*this, id, callback);
     this->m_sessions.PushBack(session);

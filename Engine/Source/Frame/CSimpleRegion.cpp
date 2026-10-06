@@ -434,8 +434,8 @@ CSimpleRegion::~CSimpleRegion() {
     this->EnableGradient(false);
 }
 
-// PROVEN: a61fca48 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: a61fca48 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CSimpleRegion::OnScreenSizeChanged() {
 }
 

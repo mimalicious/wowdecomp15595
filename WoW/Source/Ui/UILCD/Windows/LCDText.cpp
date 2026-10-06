@@ -219,7 +219,7 @@ void CLCDText::CalculateExtent(int32_t singleLine) {
 }
 
 // PROVEN: 20b4d1f2 IDENTICAL/NONE
-// OFFSET: 0x00B410B0
+// OFFSET: 0x00B410B0/0x14090F0D0
 void CLCDText::SetLeftMargin(int32_t margin) {
     this->m_dtp.iLeftMargin = margin;
 }
@@ -231,7 +231,7 @@ int32_t CLCDText::GetLeftMargin() {
 }
 
 // PROVEN: 2903197f IDENTICAL/NONE
-// OFFSET: 0x00B410C0
+// OFFSET: 0x00B410C0/0x14090F0E0
 void CLCDText::SetRightMargin(int32_t margin) {
     this->m_dtp.iRightMargin = margin;
 }

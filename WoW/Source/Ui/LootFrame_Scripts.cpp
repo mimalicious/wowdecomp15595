@@ -241,7 +241,7 @@ static int32_t Script_GetLootSlotLink(lua_State* L) {
 }
 
 // PROVEN: ad916c90 IDENTICAL/NONE
-// OFFSET: 0x00959DC0
+// OFFSET: 0x00959DC0/0x1406CC320
 static int32_t Script_CloseLoot(lua_State* L) {
     CGGameUI::CloseLoot(true, false, StringToBOOL(L, 1, 0) != 0);
     return 0;

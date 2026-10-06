@@ -114,7 +114,7 @@ ComSat::Map<K, V>::~Map() {
     this->Clear();
 }
 
-// OFFSET: [0x00A34BD0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975150<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// OFFSET: [0x00A34BD0/0x1407E72F0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975150<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
 template <class K, class V>
 void ComSat::Map<K, V>::Clear() {
     for (uint32_t i = 0; i < this->m_capacity; i++) {

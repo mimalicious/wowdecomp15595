@@ -299,8 +299,8 @@ bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* coold
     return true;
 }
 
-// PROVEN: 31a366a2 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 31a366a2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::ShutdownGame() {
 }
 
@@ -419,7 +419,7 @@ void CGRuneInfo::AddRunePower(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_UPDATE_COOLDOWN, NULL);
 }
 
-// PROVEN: 59e48eda IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 59e48eda IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGRuneInfo::LeaveWorld() {
 }

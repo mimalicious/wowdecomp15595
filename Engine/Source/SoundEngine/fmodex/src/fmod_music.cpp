@@ -886,7 +886,7 @@ FMOD_RESULT MusicSong::getPositionInternal(unsigned int *position, FMOD_TIMEUNIT
 ]
 */
 // PROVEN: 7d123e51 IDENTICAL/NONE
-// OFFSET: 0x00AE41E0
+// OFFSET: 0x00AE41E0/0x14087EBB0
 FMOD_RESULT F_CALLBACK MusicSong::getLengthCallback(FMOD_CODEC_STATE *codec, unsigned int *length, FMOD_TIMEUNIT lengthtype)
 {
     MusicSong *cmusic = (MusicSong *)codec;

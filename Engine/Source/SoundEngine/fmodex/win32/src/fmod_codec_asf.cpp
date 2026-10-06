@@ -662,7 +662,7 @@ FMOD_RESULT CodecASF::readInternal(void *buffer, unsigned int sizebytes, unsigne
 ]
 */
 // PROVEN: d7a2c312 IDENTICAL/NONE
-// OFFSET: 0x00AA4690
+// OFFSET: 0x00AA4690/0x140865EE0
 FMOD_RESULT CodecASF::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     HRESULT hr;
@@ -952,7 +952,7 @@ HRESULT CROStream::QueryInterface( REFIID riid, void **ppv )
 ]
 */
 // PROVEN: 9d97dfce IDENTICAL/NONE
-// OFFSET: 0x00AA48B0
+// OFFSET: 0x00AA48B0/0x140866120
 ULONG CROStream::AddRef()
 {
     return( InterlockedIncrement( &m_cRefs ) );
@@ -976,7 +976,7 @@ ULONG CROStream::AddRef()
 ]
 */
 // PROVEN: ca1a52af IDENTICAL/NONE
-// OFFSET: 0x00AA48D0
+// OFFSET: 0x00AA48D0/0x140866130
 ULONG CROStream::Release()
 {
     if( 0 == InterlockedDecrement( &m_cRefs ) )
@@ -1007,7 +1007,7 @@ ULONG CROStream::Release()
 ]
 */
 // PROVEN: a3b315e9 IDENTICAL/NONE
-// OFFSET: 0x00AA4910
+// OFFSET: 0x00AA4910/0x140866180
 FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
     SoundI *s = (SoundI *)sound;
@@ -1046,7 +1046,7 @@ FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 ]
 */
 // PROVEN: 63a27712 IDENTICAL/NONE
-// OFFSET: 0x00AA5260
+// OFFSET: 0x00AA5260/0x140866C70
 FMOD_RESULT F_CALLBACK CodecASF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecASF *asf = (CodecASF *)codec;
@@ -1098,7 +1098,7 @@ FMOD_RESULT F_CALLBACK CodecASF::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: 488a7a63 IDENTICAL/NONE
-// OFFSET: 0x00AA49D0
+// OFFSET: 0x00AA49D0/0x140866280
 FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecASF *asf = (CodecASF *)codec;
@@ -1124,7 +1124,7 @@ FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buf
 ]
 */
 // PROVEN: 590de3b4 IDENTICAL/NONE
-// OFFSET: 0x00AA4A00
+// OFFSET: 0x00AA4A00/0x1408662A0
 FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
     CodecASF *asf = (CodecASF *)codec;
@@ -1150,7 +1150,7 @@ FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, in
 ]
 */
 // PROVEN: 3925e391 IDENTICAL/NONE
-// OFFSET: 0x00AA4A30
+// OFFSET: 0x00AA4A30/0x1408662C0
 FMOD_RESULT F_CALLBACK CodecASF::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {
     CodecASF *asf = (CodecASF *)codec;    

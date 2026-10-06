@@ -221,7 +221,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: ce311808 IDENTICAL/NONE
-// OFFSET: 0x009E1690
+// OFFSET: 0x009E1690/0x140778530
 void GossipInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -229,7 +229,7 @@ void GossipInfoRegisterScriptFunctions() {
 }
 
 // PROVEN: a367cf61 IDENTICAL/NONE
-// OFFSET: 0x009E16C0
+// OFFSET: 0x009E16C0/0x140778580
 void GossipInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

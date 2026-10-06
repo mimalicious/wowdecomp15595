@@ -48,7 +48,7 @@ int32_t CSimpleCheckbox::GetScriptMetaTable() {
 }
 
 // PROVEN: 259c2cc6 IDENTICAL/NONE
-// OFFSET: 0x00515C70
+// OFFSET: 0x00515C70/0x14015EC70
 void CSimpleCheckbox::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_checkedTexture) {
         this->m_checkedTexture = NULL;

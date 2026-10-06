@@ -92,7 +92,7 @@ extern "C" {
 ]
 */
 // PROVEN: 2dd56e73 IDENTICAL/NONE
-// OFFSET: 0x00AB96A0
+// OFFSET: 0x00AB96A0/0x140880700
 static FLAC__StreamDecoderReadStatus FMOD_FLAC_ReadCallback(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], size_t *bytes, void *client_data)
 {
     FMOD_RESULT result;
@@ -165,7 +165,7 @@ static FLAC__StreamDecoderWriteStatus FMOD_FLAC_WriteCallback(const FLAC__Stream
 
 
 // PROVEN: 6a3f0e83 IDENTICAL/NONE
-// OFFSET: 0x00AB97B0
+// OFFSET: 0x00AB97B0/0x140880520
 static FLAC__StreamDecoderSeekStatus FMOD_FLAC_SeekCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
 {
     CodecFLAC *codec;
@@ -184,7 +184,7 @@ static FLAC__StreamDecoderSeekStatus FMOD_FLAC_SeekCallback(const FLAC__StreamDe
 
 
 // PROVEN: 3798adbb IDENTICAL/NONE
-// OFFSET: 0x00AB97D0
+// OFFSET: 0x00AB97D0/0x140880740
 static FLAC__StreamDecoderTellStatus FMOD_FLAC_TellCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
 {
     unsigned int pos;
@@ -205,7 +205,7 @@ static FLAC__StreamDecoderTellStatus FMOD_FLAC_TellCallback(const FLAC__StreamDe
 
 
 // PROVEN: 1a6e5ec5 IDENTICAL/NONE
-// OFFSET: 0x00AB9810
+// OFFSET: 0x00AB9810/0x140880690
 static FLAC__StreamDecoderLengthStatus FMOD_FLAC_LengthCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
 {
     unsigned int len;
@@ -657,7 +657,7 @@ FMOD_RESULT CodecFLAC::setPositionInternal(int subsound, unsigned int position, 
 ]
 */
 // PROVEN: 1ca27e4a IDENTICAL/NONE
-// OFFSET: 0x00AB9E90
+// OFFSET: 0x00AB9E90/0x140880E70
 FMOD_RESULT F_CALLBACK CodecFLAC::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
     CodecFLAC *flac = (CodecFLAC *)codec;
@@ -709,7 +709,7 @@ FMOD_RESULT F_CALLBACK CodecFLAC::closeCallback(FMOD_CODEC_STATE *codec)
 ]
 */
 // PROVEN: a46fc43c IDENTICAL/NONE
-// OFFSET: 0x00AB9B00
+// OFFSET: 0x00AB9B00/0x140880A50
 FMOD_RESULT F_CALLBACK CodecFLAC::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
     CodecFLAC *flac = (CodecFLAC *)codec;

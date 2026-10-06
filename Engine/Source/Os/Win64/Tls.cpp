@@ -10,14 +10,14 @@ uint32_t OsTlsAlloc() {
     return TlsAlloc();
 }
 
-// PROVEN: 75e469b8 IDENTICAL/NONE
-// OFFSET: 0x0087EF20
+// PROVEN: 75e469b8 IDENTICAL/IDENTICAL
+// OFFSET: 0x0087EF20/0x1405B8090
 void OsTlsFree(uint32_t index) {
     TlsFree(index);
 }
 
-// PROVEN: 69cfc0ee IDENTICAL/NONE
-// OFFSET: 0x0087EF30
+// PROVEN: 69cfc0ee IDENTICAL/IDENTICAL
+// OFFSET: 0x0087EF30/0x1405B80A0
 void* OsTlsGetValue(uint32_t index) {
     return TlsGetValue(index);
 }

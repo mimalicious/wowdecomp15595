@@ -83,7 +83,7 @@ void CDrawBowString::DrawBowString(CM2Model* model, const CM2Lighting* lighting,
 }
 
 // PROVEN: 3f3b1784 IDENTICAL/NONE
-// OFFSET: 0x00B119B0
+// OFFSET: 0x00B119B0/0x1408D7380
 void CDrawBowString::GlueDrawBowStringCB(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     CDrawBowString::DrawBowString(model, lighting, NULL);
 }
@@ -112,7 +112,7 @@ bool GuildGetGuildTabard(WOWGUID guid, int32_t guildID, void (*callback)(int32_t
 }
 
 // PROVEN: 89c41c35 IDENTICAL/NONE
-// OFFSET: 0x00B119A0
+// OFFSET: 0x00B119A0/0x1408D7370
 void CDrawBowString::UnitDrawBowStringCB(CM2Model* model, const CM2Lighting* lighting, void* arg) {
     CDrawBowString::DrawBowString(model, lighting, static_cast<CGUnit_C*>(arg));
 }

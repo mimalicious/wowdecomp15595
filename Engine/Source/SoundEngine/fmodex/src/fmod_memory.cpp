@@ -795,7 +795,7 @@ void *MemPool::calloc(int len, const char *file, const int line, FMOD_MEMORY_TYP
 ]
 */
 // PROVEN: cd9c0c10 IDENTICAL/NONE
-// OFFSET: 0x00A88990
+// OFFSET: 0x00A88990/0x140846C10
 void *MemPool::realloc(void *ptr, int len, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
 	MemBlockHeader *block = (MemBlockHeader *)ptr;

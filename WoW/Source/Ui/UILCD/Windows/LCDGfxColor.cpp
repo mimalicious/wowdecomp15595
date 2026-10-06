@@ -12,7 +12,7 @@ CLCDGfxColor::~CLCDGfxColor() {
 }
 
 // PROVEN: 3559c00b IDENTICAL/NONE
-// OFFSET: 0x00B40D50
+// OFFSET: 0x00B40D50/0x14090ED10
 HRESULT CLCDGfxColor::Initialize() {
     this->Shutdown();
 
@@ -31,7 +31,7 @@ HRESULT CLCDGfxColor::Initialize() {
 }
 
 // PROVEN: f2f2ae42 IDENTICAL/NONE
-// OFFSET: 0x00B40D90
+// OFFSET: 0x00B40D90/0x14090ED60
 lgLcdBitmapHeader* CLCDGfxColor::GetLCDScreen() {
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
     memcpy(this->m_lcdBitmap.pixels, this->m_pBitmapBits, 4 * this->m_nWidth * this->m_nHeight);

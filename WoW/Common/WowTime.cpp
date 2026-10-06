@@ -488,7 +488,7 @@ bool WowTime::operator<=(const WowTime& time) const {
 }
 
 // PROVEN: 330e443b IDENTICAL/NONE
-// OFFSET: 0x00A31000
+// OFFSET: 0x00A31000/0x1407DAEA0
 bool WowTime::operator>=(const WowTime& time) const {
     return *this == time || *this > time;
 }

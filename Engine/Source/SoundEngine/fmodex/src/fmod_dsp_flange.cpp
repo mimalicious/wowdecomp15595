@@ -587,7 +587,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: ca10ccf9 IDENTICAL/NONE
-// OFFSET: 0x00A9B3A0
+// OFFSET: 0x00A9B3A0/0x14085BC60
 FMOD_RESULT F_CALLBACK DSPFlange::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -666,7 +666,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::readCallback(FMOD_DSP_STATE *dsp, float *inbuf
 ]
 */
 // PROVEN: 13d65f72 IDENTICAL/NONE
-// OFFSET: 0x00A9B460
+// OFFSET: 0x00A9B460/0x14085BD50
 FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPFlange *flange = (DSPFlange *)dsp;
@@ -692,7 +692,7 @@ FMOD_RESULT F_CALLBACK DSPFlange::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 ]
 */
 // PROVEN: 0672e551 IDENTICAL/NONE
-// OFFSET: 0x00A9B4A0
+// OFFSET: 0x00A9B4A0/0x14085BD70
 FMOD_RESULT F_CALLBACK DSPFlange::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPFlange *flange = (DSPFlange *)dsp;

@@ -2455,7 +2455,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::createCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: a2dcea55 IDENTICAL/NONE
-// OFFSET: 0x00A97DC0
+// OFFSET: 0x00A97DC0/0x1408581C0
 FMOD_RESULT F_CALLBACK DSPPitchShift::releaseCallback(FMOD_DSP_STATE *dsp)
 {
     DSPPitchShift *pitchshift = (DSPPitchShift *)dsp;
@@ -2507,7 +2507,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::resetCallback(FMOD_DSP_STATE *dsp)
 ]
 */
 // PROVEN: c0865956 IDENTICAL/NONE
-// OFFSET: 0x00A98F10
+// OFFSET: 0x00A98F10/0x1408581E0
 FMOD_RESULT F_CALLBACK DSPPitchShift::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPPitchShift *pitchshift = (DSPPitchShift *)dsp;
@@ -2534,7 +2534,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::readCallback(FMOD_DSP_STATE *dsp, float *i
 ]
 */
 // PROVEN: c006927a IDENTICAL/NONE
-// OFFSET: 0x00A97E40
+// OFFSET: 0x00A97E40/0x140858260
 FMOD_RESULT F_CALLBACK DSPPitchShift::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPPitchShift *pitchshift = (DSPPitchShift *)dsp;
@@ -2560,7 +2560,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::setParameterCallback(FMOD_DSP_STATE *dsp, 
 ]
 */
 // PROVEN: 08ad1354 IDENTICAL/NONE
-// OFFSET: 0x00A97E80
+// OFFSET: 0x00A97E80/0x140858280
 FMOD_RESULT F_CALLBACK DSPPitchShift::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPPitchShift *pitchshift = (DSPPitchShift *)dsp;

@@ -10,8 +10,8 @@
 #include "Engine/Source/Os/Input.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: bcb8d168 IDENTICAL/NONE
-// OFFSET: 0x008A0000
+// PROVEN: bcb8d168 IDENTICAL/UNPROVEN
+// OFFSET: 0x008A0000/0x1405E11B0
 void EventInitialize(uint32_t threadCount, int32_t netServer) {
     ObserverInitialize();
     InputObserverInitialize();
@@ -52,8 +52,8 @@ HEVENTCONTEXT EventCreateContextEx(int32_t interactive, EVENTHANDLERFUNC initial
     return IEvtSchedulerCreateContext(interactive, initializeHandler, destroyHandler, idleTime, debugFlags);
 }
 
-// PROVEN: 5c26ca08 IDENTICAL/NONE
-// OFFSET: 0x008A00A0
+// PROVEN: 5c26ca08 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A00A0/0x1405E1270
 void EventSetConfirmCloseCallback(int32_t (*callback)(void*), void* param) {
     IEvtInputSetConfirmCloseCallback(callback, param);
 }
@@ -291,14 +291,14 @@ void EventPostClose() {
     EventPostCloseEx(NULL);
 }
 
-// PROVEN: 7591e3ba IDENTICAL/NONE
-// OFFSET: 0x008A07D0
+// PROVEN: 7591e3ba IDENTICAL/IDENTICAL
+// OFFSET: 0x008A07D0/0x1405E1F10
 void EventRegister(EVENTID id, EVENTHANDLERFUNC handler) {
     EventRegisterEx(id, handler, NULL, 0.0f);
 }
 
-// PROVEN: e018d798 IDENTICAL/NONE
-// OFFSET: 0x008A07F0
+// PROVEN: e018d798 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A07F0/0x1405E1F20
 void EventUnregister(EVENTID id, EVENTHANDLERFUNC handler) {
     EventUnregisterEx(id, handler, NULL, 0xFFFFFFFF);
 }

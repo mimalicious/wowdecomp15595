@@ -534,7 +534,7 @@ Battlenet::ApplicationFile* BattlenetApplication::OpenApplicationFile(const char
 void BattlenetApplication::CloseApplicationFile(Battlenet::ApplicationFile* file) {
 }
 
-// OFFSET: 0x00627990
+// OFFSET: 0x00627990/0x140693B10
 void BattlenetApplication::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
 }
 
@@ -1797,8 +1797,8 @@ const uint8_t* BattlenetLogin::GetVersionChallenge() {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// PROVEN: 6aac27e5 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 6aac27e5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void BattlenetLogin::Reconnect() {
 }
 

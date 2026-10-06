@@ -1215,7 +1215,7 @@ void CGMailInfo::ReceivedMail(float delay) {
 }
 
 // PROVEN: 8585ab24 IDENTICAL/NONE
-// OFFSET: 0x00972710
+// OFFSET: 0x00972710/0x1406EA540
 void StationeryItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!--CGMailInfo::m_pendingStationeryCallbacks) {
         CGMailInfo::UpdateStationeryList();

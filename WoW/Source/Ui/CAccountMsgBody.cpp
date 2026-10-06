@@ -56,7 +56,7 @@ int32_t CAccountMsgBody::LoadBody(int32_t messageId) {
 }
 
 // PROVEN: 41581364 IDENTICAL/NONE
-// OFFSET: 0x009FA1A0
+// OFFSET: 0x009FA1A0/0x140797600
 void CAccountMsgBody::_SendSuccessEvent() {
     if (CGlueMgr::AreScriptFunctionsLoaded()) {
         FrameScript_SignalEvent(GLUE_EVENT_ACCOUNT_MESSAGES_BODY_LOADED, NULL);
@@ -64,7 +64,7 @@ void CAccountMsgBody::_SendSuccessEvent() {
 }
 
 // PROVEN: 90d7d011 IDENTICAL/NONE
-// OFFSET: 0x009FA1C0
+// OFFSET: 0x009FA1C0/0x14095F320
 void CAccountMsgBody::_SendFailureEvent() {
     this->m_iterator.m_node = NULL;
 }

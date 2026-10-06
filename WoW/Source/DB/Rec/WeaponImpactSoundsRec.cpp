@@ -3,8 +3,8 @@
 // STATIC: %0x00B445F0
 const DBCMeta WeaponImpactSoundsRec::s_meta = { "DBFilesClient\\WeaponImpactSounds.dbc", 5, 92, WeaponImpactSoundsRec::FixupStrings, 0 };
 
-// PROVEN: 67adb663 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 67adb663 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void WeaponImpactSoundsRec::FixupStrings(void* record, const char* strings) {
 }
 

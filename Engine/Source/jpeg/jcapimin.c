@@ -90,7 +90,7 @@ void jpeg_CreateCompress(j_compress_ptr cinfo, int version, size_t structsize) {
  */
 
 // PROVEN: 7f71c312 IDENTICAL/NONE
-// OFFSET: 0x00B5D4B0
+// OFFSET: 0x00B5D4B0/0x140925F00
 void jpeg_destroy_compress(j_compress_ptr cinfo) {
   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
 }

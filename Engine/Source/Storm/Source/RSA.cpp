@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "RSA.h"
 
-// PROVEN: 339184ab IDENTICAL/UNPROVEN
+// PROVEN: 339184ab IDENTICAL/IDENTICAL
 // OFFSET: 0x004BDC10/0x1400F7680
 void Crypt::RSA::Prepare(const void* modulus, uint32_t mLength, const void* exponent, uint32_t eLength) {
     this->m_modulus.FromBinary(modulus, mLength);

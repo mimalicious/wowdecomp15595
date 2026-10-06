@@ -699,7 +699,7 @@ void* IWAlloc(size_t bytes) {
 }
 
 // PROVEN: 877594e0 IDENTICAL/NONE
-// OFFSET: 0x00B392B0
+// OFFSET: 0x00B392B0/0x1407DA240
 void* IWDefaultAlloc(size_t bytes) {
     return malloc(bytes);
 }
@@ -740,8 +740,8 @@ void IWBitMatrix::FreeScratch() {
     s_scratchSize = 0;
 }
 
-// PROVEN: 60d1bb10 IDENTICAL/NONE
-// OFFSET: 0x00B3A350
+// PROVEN: 60d1bb10 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B3A350/0x140906EB0
 IWBitMatrix::IWBitMatrix() {
     this->m_columns = 0;
     this->m_rows = 0;
@@ -799,8 +799,8 @@ int32_t IWBitMatrix::Initialize(uint32_t size, const char* name, const uint8_t* 
     return 1;
 }
 
-// PROVEN: 58aa18cf IDENTICAL/NONE
-// OFFSET: 0x00B3A440
+// PROVEN: 58aa18cf IDENTICAL/IDENTICAL
+// OFFSET: 0x00B3A440/0x140906FA0
 IWEncoder::IWEncoder() {
     this->m_data = NULL;
     this->m_dataSize = 0;

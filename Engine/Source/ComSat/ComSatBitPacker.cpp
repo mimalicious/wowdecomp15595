@@ -14,7 +14,7 @@ ComSat::BitPacker::~BitPacker() {
 }
 
 // PROVEN: 398fe42b IDENTICAL/NONE
-// OFFSET: 0x00A390A0
+// OFFSET: 0x00A390A0/0x1407E53F0
 uint32_t ComSat::BitPacker::Finalize() {
     if (this->m_bitOffset) {
         this->m_buffer[this->m_byteOffset] &= (1 << this->m_bitOffset) - 1;

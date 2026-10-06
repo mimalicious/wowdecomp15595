@@ -176,7 +176,7 @@ static int32_t __stdcall SlotMatchesSearchFlags(uint32_t slot, uint32_t flags) {
 }
 
 // PROVEN: 03246b7e IDENTICAL/NONE
-// OFFSET: 0x005F20F0
+// OFFSET: 0x005F20F0/0x140274AC0
 static int32_t FindItemFullNameCallback(const CGItem_C* item, void* param) {
     char fullName[1024];
     item->GetFullItemName(fullName, sizeof(fullName));
@@ -581,7 +581,7 @@ CGItem_C* CGBag_C::FindItemOfType(int32_t itemId, uint32_t flags) {
 }
 
 // PROVEN: a4f3aaf6 IDENTICAL/NONE
-// OFFSET: 0x005F2E60
+// OFFSET: 0x005F2E60/0x140275A30
 CGItem_C* CGBag_C::FindItemOfType(int32_t itemId, WOWGUID& container, uint32_t& slot, uint32_t flags) {
     return this->FindItem(FindItemIDCallback, &itemId, container, slot, flags);
 }
@@ -603,7 +603,7 @@ int32_t CGBag_C::GetItemTypeCount(int32_t itemId, uint32_t flags) {
 }
 
 // PROVEN: 4adf5fcf IDENTICAL/NONE
-// OFFSET: 0x005F3120
+// OFFSET: 0x005F3120/0x140275FE0
 int32_t CGBag_C::GetItemTypeCharges(int32_t itemId, uint32_t flags) {
     ItemTypeCountParam param;
     param.m_itemId = itemId;
@@ -688,7 +688,7 @@ static int32_t FindItemLinkCallback(const CGItem_C* item, void* param) {
 }
 
 // PROVEN: cacc67c8 IDENTICAL/NONE
-// OFFSET: 0x005F20A0
+// OFFSET: 0x005F20A0/0x140274A50
 static int32_t FindItemNameCallback(const CGItem_C* item, void* param) {
     const char* name = static_cast<const char*>(param);
     int32_t length = SStrLenUTF8(name);
@@ -749,7 +749,7 @@ CGItem_C* CGBag_C::FindItemByFullName(const char* name, uint32_t flags) {
 }
 
 // PROVEN: d9f705aa IDENTICAL/NONE
-// OFFSET: 0x005F30A0
+// OFFSET: 0x005F30A0/0x140275F60
 CGItem_C* CGBag_C::FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, uint32_t flags) {
     WOWGUID container;
     return this->FindItem(callback, param, container, flags, flags);

@@ -808,7 +808,7 @@ void CGTooltip::ResetPosition(int32_t force) {
 }
 
 // PROVEN: 4a3f42d4 IDENTICAL/NONE
-// OFFSET: 0x004658B0
+// OFFSET: 0x004658B0/0x140078E80
 void CGTooltip::FadeOut() {
     if (this->m_anchorType == ANCHOR_CURSOR || this->m_anchorType == ANCHOR_CURSOR_RIGHT) {
         this->HideThis();
@@ -3275,7 +3275,7 @@ void CGTooltip::AddMoney(int32_t money, int32_t maxMoney) {
 }
 
 // PROVEN: 3696c42e IDENTICAL/NONE
-// OFFSET: 0x00466200
+// OFFSET: 0x00466200/0x1400798A0
 static const char* GetColorblindSuffix(int32_t index) {
     CVar* colorblindMode = CVar::Lookup("colorblindMode");
 
@@ -3514,7 +3514,7 @@ void CGTooltip::GetItemDurationString(char* buffer, uint32_t size, uint64_t time
 }
 
 // PROVEN: a78fb364 IDENTICAL/NONE
-// OFFSET: 0x00465B30
+// OFFSET: 0x00465B30/0x140079140
 void __stdcall CGTooltip::FormatStringForXML(const char* text, char* buffer) {
     int32_t length = strlen(text);
     const char* processed = LanguageProcess(text);

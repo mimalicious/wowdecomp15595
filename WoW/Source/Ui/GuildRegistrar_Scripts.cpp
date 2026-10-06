@@ -88,7 +88,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
 };
 
 // PROVEN: 58ada4cf IDENTICAL/NONE
-// OFFSET: 0x009EB700
+// OFFSET: 0x009EB700/0x14077D640
 void GuildRegistrarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -96,7 +96,7 @@ void GuildRegistrarRegisterScriptFunctions() {
 }
 
 // PROVEN: 16af8920 IDENTICAL/NONE
-// OFFSET: 0x009EB730
+// OFFSET: 0x009EB730/0x14077D690
 void GuildRegistrarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

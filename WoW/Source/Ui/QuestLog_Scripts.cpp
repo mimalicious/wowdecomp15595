@@ -1461,7 +1461,7 @@ static int32_t Script_SortQuestWatches(lua_State* L) {
 }
 
 // PROVEN: 7f6279b4 IDENTICAL/NONE
-// OFFSET: 0x009648A0
+// OFFSET: 0x009648A0/0x1406D9E60
 static int32_t Script_GetQuestResetTime(lua_State* L) {
     int32_t now = static_cast<int32_t>(time(NULL));
 

@@ -63,7 +63,7 @@ int32_t CM2Lighting::GetPointLight(uint32_t index, C3Vector& pos, C3Vector& colo
 }
 
 // PROVEN: 4d2f8cda IDENTICAL/NONE
-// OFFSET: 0x00812E60
+// OFFSET: 0x00812E60/0x14052ABF0
 CM2Light::CM2Light() {
     this->m_scene = NULL;
     this->m_stamp = 0;

@@ -10,14 +10,14 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
 // PROVEN: 0d136467 IDENTICAL/NONE
-// OFFSET: 0x009A7F00
+// OFFSET: 0x009A7F00/0x14072EB50
 static int32_t Script_CollapseAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 1);
     return 0;
 }
 
 // PROVEN: 6b771ead IDENTICAL/NONE
-// OFFSET: 0x009A7F20
+// OFFSET: 0x009A7F20/0x14072EB70
 static int32_t Script_ExpandAllFactionHeaders(lua_State* L) {
     CGReputationInfo::CollapseHeader(CGReputationInfo::m_numFactions, 0);
     return 0;

@@ -3,8 +3,8 @@
 // STATIC: %0x00B444A4
 const DBCMeta WorldMapTransformsRec::s_meta = { "DBFilesClient\\WorldMapTransforms.dbc", 8, 44, WorldMapTransformsRec::FixupStrings, 0 };
 
-// PROVEN: c3931a06 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: c3931a06 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void WorldMapTransformsRec::FixupStrings(void* record, const char* strings) {
 }
 

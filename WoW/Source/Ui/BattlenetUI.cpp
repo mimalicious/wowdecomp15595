@@ -755,13 +755,13 @@ void BattlenetUI::FriendInviteSentCB::Call(int32_t argc, const GeneralFunction::
     DebugLog("BNUI: Friend Invite Send Result: %s", result ? "failure" : "success");
 }
 
-// PROVEN: 0926afe1 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 0926afe1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void BattlenetUI::FriendInviteSentCB::Destroy() const {
 }
 
-// PROVEN: 4c0454a7 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 4c0454a7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void BattlenetUI::IgnoredFieldCB(void* param, int32_t argc, const GeneralFunction::Arg* args) {
 }
 

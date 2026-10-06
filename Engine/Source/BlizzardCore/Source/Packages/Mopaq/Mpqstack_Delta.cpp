@@ -61,8 +61,8 @@ bool Blizzard::Patch::MemoryStream::Read(uint32_t offset, void* buffer, uint32_t
     return true;
 }
 
-// PROVEN: 816b3f0a IDENTICAL/NONE
-// OFFSET: 0x007AB220
+// PROVEN: 816b3f0a IDENTICAL/DIFFERENT
+// OFFSET: 0x007AB220/0x1404A1370
 System_Mopaq::DeltaData::DeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, const MpqDeltaMetadata* metadata) {
     this->m_deltaSize = metadata ? metadata->m_deltaSize : 0;
     this->m_fileSize = handle->m_blockEntry.m_fileSize;

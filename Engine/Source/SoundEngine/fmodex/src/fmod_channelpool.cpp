@@ -269,7 +269,7 @@ FMOD_RESULT ChannelPool::getNumChannels(int *numchannels)
 ]
 */
 // PROVEN: 643955d9 IDENTICAL/NONE
-// OFFSET: 0x00A93710
+// OFFSET: 0x00A93710/0x1408535D0
 FMOD_RESULT ChannelPool::getChannelsUsed(int *numchannels)
 {
     if (!numchannels)

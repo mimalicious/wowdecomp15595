@@ -109,8 +109,8 @@ WORLDTEXTSTRING::~WORLDTEXTSTRING() {
     }
 }
 
-// PROVEN: 2f4b2d6e IDENTICAL/NONE
-// OFFSET: 0x004E1ED0
+// PROVEN: 2f4b2d6e IDENTICAL/IDENTICAL
+// OFFSET: 0x004E1ED0/0x140511EA0
 uint32_t WorldTextGetType(WORLDTEXTSTRING* text) {
     return text->m_type;
 }
@@ -122,7 +122,7 @@ float WORLDTEXTSTRING::CalculateAscendOffset(uint32_t elapsed) {
 }
 
 // PROVEN: 908329e4 IDENTICAL/NONE
-// OFFSET: 0x004E1EE0
+// OFFSET: 0x004E1EE0/0x140122AF0
 float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
 }

@@ -182,7 +182,7 @@ static void adjustlocalvars (LexState *ls, int nvars) {
 
 
 // PROVEN: 148b3d6b IDENTICAL/NONE
-// OFFSET: 0x004266F0
+// OFFSET: 0x004266F0/0x14002C740
 static void removevars (LexState *ls, int tolevel) {
   FuncState *fs = ls->fs;
   while (fs->nactvar > tolevel)

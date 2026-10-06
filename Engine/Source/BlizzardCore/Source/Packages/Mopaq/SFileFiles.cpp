@@ -228,8 +228,8 @@ bool Blizzard::Mopaq::SFileGetFileMD5(HSFILERecord* file, Blizzard::Util::Digest
     return *md5 != System_SFile::s_emptyMd5;
 }
 
-// PROVEN: f5b74e59 IDENTICAL/NONE
-// OFFSET: 0x007B2910
+// PROVEN: f5b74e59 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B2910/0x1404C87A0
 bool Blizzard::Mopaq::SFileGetDeltaDigests(HSFILERecord* file, Blizzard::Util::Digest<16>& source, Blizzard::Util::Digest<16>& target) {
     if (!file || !file->m_handle || !file->m_handle->m_delta) {
         return false;

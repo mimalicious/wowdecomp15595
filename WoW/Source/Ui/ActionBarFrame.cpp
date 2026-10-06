@@ -494,7 +494,7 @@ int32_t CGActionBar::IsSpell(uint32_t slot) {
 }
 
 // PROVEN: 7e12b449 IDENTICAL/NONE
-// OFFSET: 0x0094FEB0
+// OFFSET: 0x0094FEB0/0x1405E8860
 uint32_t CGPetInfo::GetPetMode() {
     if (CGPetInfo::m_petMode & 0x8000000) {
         return 0;
@@ -941,7 +941,7 @@ void CGActionBar::SlotChanged(int32_t slot, int32_t sendToServer, int32_t silent
 }
 
 // PROVEN: e2c92266 IDENTICAL/NONE
-// OFFSET: 0x00958950
+// OFFSET: 0x00958950/0x1406CAA70
 void ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGActionBar::UpdateItem(id);
@@ -1400,7 +1400,7 @@ void CGActionBar::UpdateBonusBar() {
 }
 
 // PROVEN: 245edc1b IDENTICAL/NONE
-// OFFSET: 0x00959930
+// OFFSET: 0x00959930/0x1406CBF50
 void CGActionBar::EnterWorld() {
     CGActionBar::UpdateUsable();
     CGActionBar::UpdateShapeShiftBar();
@@ -1685,7 +1685,7 @@ void CGActionBar::UpdateMacro(uint32_t macroId) {
 }
 
 // PROVEN: 299cac77 IDENTICAL/NONE
-// OFFSET: 0x009543E0
+// OFFSET: 0x009543E0/0x1406C5250
 void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     if (enable) {
         CGActionBar::m_tempPageActiveFlags |= flags;
@@ -1695,7 +1695,7 @@ void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
 }
 
 // PROVEN: 7fc56e8b IDENTICAL/NONE
-// OFFSET: 0x00959050
+// OFFSET: 0x00959050/0x1406CB3C0
 void CGActionBar::UpdateTemporaryActionBar(int32_t (*getSpell)(uint32_t index, const void* data), const void* data) {
     if (!getSpell) {
         return;
@@ -1975,8 +1975,8 @@ void CGActionBar::PickupAction(uint32_t slot) {
     }
 }
 
-// PROVEN: 01a1fb58 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 01a1fb58 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGActionBar::ShutdownGame() {
 }
 
@@ -2061,7 +2061,7 @@ void CGActionBar::UpdateCritter(int32_t critter) {
     }
 }
 
-// PROVEN: 8b8940d1 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 8b8940d1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGActionBar::LeaveWorld() {
 }

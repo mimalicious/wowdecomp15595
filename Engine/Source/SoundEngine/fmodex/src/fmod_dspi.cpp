@@ -188,7 +188,7 @@ FMOD_RESULT DSPI::alloc(FMOD_DSP_DESCRIPTION_EX *description)
 ]
 */
 // PROVEN: 135893ea IDENTICAL/NONE
-// OFFSET: 0x00A8E460
+// OFFSET: 0x00A8E460/0x14084D5A0
 FMOD_RESULT DSPI::getInput(int index, DSPConnectionI **input, DSPI **inputdsp)
 {
     LocalCriticalSection crit(mSystem->mDSPConnectionCrit);
@@ -250,7 +250,7 @@ FMOD_RESULT DSPI::getInput(int index, DSPConnectionI **input, DSPI **inputdsp)
 ]
 */
 // PROVEN: 46b04f32 IDENTICAL/NONE
-// OFFSET: 0x00A8E8B0
+// OFFSET: 0x00A8E8B0/0x14084DB50
 FMOD_RESULT DSPI::getInput(int index, DSPI **inputdsp)
 {
     return getInput(index, 0, inputdsp);
@@ -273,7 +273,7 @@ FMOD_RESULT DSPI::getInput(int index, DSPI **inputdsp)
 ]
 */
 // PROVEN: d3cb8b20 IDENTICAL/NONE
-// OFFSET: 0x00A8E500
+// OFFSET: 0x00A8E500/0x14084D670
 FMOD_RESULT DSPI::getOutput(int index, DSPConnectionI **output, DSPI **outputdsp)
 {
     LocalCriticalSection crit(mSystem->mDSPConnectionCrit);
@@ -335,7 +335,7 @@ FMOD_RESULT DSPI::getOutput(int index, DSPConnectionI **output, DSPI **outputdsp
 ]
 */
 // PROVEN: b5528dd5 IDENTICAL/NONE
-// OFFSET: 0x00A8E8D0
+// OFFSET: 0x00A8E8D0/0x14084DB60
 FMOD_RESULT DSPI::getOutput(int index, DSPI **outputdsp)
 {
     return getOutput(index, 0, outputdsp);
@@ -381,7 +381,7 @@ FMOD_RESULT DSPI::execute(float *inbuffer, float **outbuffer, unsigned int *leng
 ]
 */
 // PROVEN: a9479bd8 IDENTICAL/NONE
-// OFFSET: 0x00A8C5A0
+// OFFSET: 0x00A8C5A0/0x14084B230
 FMOD_RESULT DSPI::execute(void *inbuffer, void **outbuffer, unsigned int *length, int inchannels, int *outchannels, FMOD_SPEAKERMODE speakermode)
 {
     return execute((float *)inbuffer, (float **)outbuffer, length, inchannels, outchannels, speakermode);
@@ -2006,7 +2006,7 @@ FMOD_RESULT DSPI::disconnectFromQueued(DSPI *target)
 ]
 */
 // PROVEN: cb893410 IDENTICAL/NONE
-// OFFSET: 0x00A8E890
+// OFFSET: 0x00A8E890/0x14084DB30
 FMOD_RESULT DSPI::disconnectFrom(DSPI *target)
 {
     return disconnectFromQueued(target);
@@ -2169,7 +2169,7 @@ FMOD_RESULT DSPI::disconnectAllQueued(bool inputs, bool outputs)
 ]
 */
 // PROVEN: fd0a86f9 IDENTICAL/NONE
-// OFFSET: 0x00A8E8A0
+// OFFSET: 0x00A8E8A0/0x14084DB40
 FMOD_RESULT DSPI::disconnectAll(bool inputs, bool outputs)
 {
     return disconnectAllQueued(inputs, outputs);
@@ -2831,7 +2831,7 @@ FMOD_RESULT DSPI::getDefaults(float *frequency, float *volume, float *pan, int *
 ]
 */
 // PROVEN: 5a82c98d IDENTICAL/NONE
-// OFFSET: 0x00A8E360
+// OFFSET: 0x00A8E360/0x14084D4B0
 FMOD_RESULT DSPI::setUserData(void *userdata)
 {
 #ifndef PLATFORM_PS3_SPU

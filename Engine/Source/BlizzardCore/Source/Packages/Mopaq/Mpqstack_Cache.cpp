@@ -32,7 +32,8 @@ void System_Mopaq::Cache::AllocateBuffer(CacheData* data) {
     }
 }
 
-// OFFSET: %0x007152B0
+// PROVEN: 0da5c4dc DIFFERENT/IDENTICAL
+// OFFSET: 0x007B2F20/0x1404A8540
 void System_Mopaq::Cache::MoveToBack(CacheData* data, uint32_t index) {
     uint32_t count = data->m_blocks.m_count;
 

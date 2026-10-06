@@ -12,8 +12,8 @@ CKBArticle g_KnowledgeBaseArticle;
 CKBArticle::CKBArticle() {
 }
 
-// PROVEN: 431409c4 IDENTICAL/NONE
-// OFFSET: 0x00401000
+// PROVEN: 431409c4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CKBArticle::_ComputeCachedData() {
 }
 

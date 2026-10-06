@@ -61,19 +61,19 @@ int32_t CSimpleModel::IsDrawable() {
 }
 
 // PROVEN: 1eb733db IDENTICAL/NONE
-// OFFSET: 0x0051EFD0
+// OFFSET: 0x0051EFD0/0x14016C1C0
 bool CSimpleModel::IsA(int32_t type) {
     return type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
 // PROVEN: f621db32 IDENTICAL/NONE
-// OFFSET: 0x0051F010
+// OFFSET: 0x0051F010/0x140528A70
 bool CSimpleModel::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
 // PROVEN: 3029ebd5 IDENTICAL/NONE
-// OFFSET: 0x0051ECB0
+// OFFSET: 0x0051ECB0/0x140528780
 const char* CSimpleModel::GetObjectTypeName() {
     return CSimpleModel::s_objectTypeName;
 }

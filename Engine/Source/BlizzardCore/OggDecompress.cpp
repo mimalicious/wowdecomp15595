@@ -30,8 +30,8 @@ static int OggSeek(void* source, ogg_int64_t offset, int whence) {
     return 0;
 }
 
-// PROVEN: 46d005c6 IDENTICAL/NONE
-// OFFSET: 0x004E1ED0
+// PROVEN: 46d005c6 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E1ED0/0x140511EA0
 static ogg_int32_t OggTell(void* source) {
     return static_cast<OggMemoryStream*>(source)->m_position;
 }
