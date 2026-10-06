@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <windows.h>
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
@@ -153,7 +154,7 @@ void System_Thread::ShutdownThreadSystem() {
         RunTLSDestructors();
         Blizzard::Thread::ThreadRecord* thread = s_mainThread;
         RemoveFromRegistry(thread);
-        free(thread);
+        Blizzard::Memory::Free(thread, 0, __FILE__, __LINE__);
         s_mainThread = NULL;
     }
 

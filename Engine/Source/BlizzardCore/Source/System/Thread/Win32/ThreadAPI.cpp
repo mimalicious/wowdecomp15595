@@ -28,7 +28,7 @@ bool Blizzard::Thread::Close(ThreadRecord* thread) {
 
 // OFFSET: %0x00717660
 bool Blizzard::Thread::WaitForever(ThreadRecord* thread) {
-    if (thread->m_state < 0) {
+    if (!thread || thread->m_state < 0) {
         return true;
     }
 

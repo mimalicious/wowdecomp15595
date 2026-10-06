@@ -7,6 +7,7 @@
 #include <process.h>
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
@@ -162,7 +163,7 @@ void System_Thread::AddToRegistry(Blizzard::Thread::ThreadRecord* thread) {
     Blizzard::Lock::ScopedMutex lock(s_registryMutex);
 
     if (!s_ThreadRegistry) {
-        void* memory = malloc(sizeof(*s_ThreadRegistry));
+        void* memory = Blizzard::Memory::Allocate(sizeof(*s_ThreadRegistry), 0, __FILE__, __LINE__);
         s_ThreadRegistry = memory ? new (memory) std::set<Blizzard::Thread::ThreadRecord*, std::less<Blizzard::Thread::ThreadRecord*>, Blizzard::Memory::AllocSTL_raw<Blizzard::Thread::ThreadRecord*>>() : NULL;
     }
 
@@ -176,7 +177,7 @@ Blizzard::Thread::ThreadRecord* System_Thread::NewThread(uint32_t (*function)(vo
     }
 
     uint32_t length = static_cast<uint32_t>(strlen(name));
-    Blizzard::Thread::ThreadRecord* thread = static_cast<Blizzard::Thread::ThreadRecord*>(malloc(sizeof(Blizzard::Thread::ThreadRecord) + length + 1));
+    Blizzard::Thread::ThreadRecord* thread = static_cast<Blizzard::Thread::ThreadRecord*>(Blizzard::Memory::Allocate(sizeof(Blizzard::Thread::ThreadRecord) + length + 1, 0, __FILE__, __LINE__));
     memset(thread, 0, sizeof(Blizzard::Thread::ThreadRecord));
     thread->m_param = param;
     thread->m_function = function;
@@ -201,7 +202,7 @@ void System_Thread::RemoveFromRegistry(Blizzard::Thread::ThreadRecord* thread) {
     if (s_ThreadRegistry->empty()) {
         typedef std::set<Blizzard::Thread::ThreadRecord*, std::less<Blizzard::Thread::ThreadRecord*>, Blizzard::Memory::AllocSTL_raw<Blizzard::Thread::ThreadRecord*>> Registry;
         s_ThreadRegistry->~Registry();
-        free(s_ThreadRegistry);
+        Blizzard::Memory::Free(s_ThreadRegistry, 0, __FILE__, __LINE__);
         s_ThreadRegistry = NULL;
     }
 }
