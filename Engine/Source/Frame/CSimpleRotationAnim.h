@@ -22,9 +22,9 @@ class CSimpleRotationAnim : public CSimpleAnim {
     static void DestroyScriptMetaTable();
     static void RegisterScriptMethods(lua_State* L);
 
-    /* 00B8 */ FRAMEPOINT m_origin;
-    /* 00BC */ C2Vector m_originOffset;
-    /* 00C4 */ float m_radians;
+    /* 00A8 */ FRAMEPOINT m_origin;
+    /* 00AC */ C2Vector m_originOffset;
+    /* 00B4 */ float m_radians;
 
     virtual ~CSimpleRotationAnim();
     virtual int32_t GetScriptMetaTable();

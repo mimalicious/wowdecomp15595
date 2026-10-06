@@ -27,12 +27,15 @@ int32_t CSimpleAnim::s_objectType;
 const char* CSimpleAnim::s_objectTypeName = "Animation";
 
 // INLINED
-CSimpleAnimSCurveSmoother::CSimpleAnimSCurveSmoother() {
+CSimpleAnimSmoother::CSimpleAnimSmoother() {
     this->m_in = 0.0f;
     this->m_out = 0.0f;
 }
 
 // PROVEN: e7006d69 IDENTICAL/IDENTICAL
+// STATIC: 0x00CA3840
+float CSimpleAnim::s_frameInterval = 1.0f / 30.0f;
+
 // OFFSET: 0x005275F0/0x140176960
 void CSimpleAnimSCurveSmoother::SetWeights(float in, float out) {
     this->m_in = in < 0.0f ? 0.0f : (in < 1.0f ? in : 1.0f);
@@ -108,17 +111,6 @@ void CSimpleAnim::SetSmoothProgress(float progress) {
     this->m_smoothProgress = progress;
 }
 
-// OFFSET: %0x00536F00
-void CSimpleAnim::SetMaxFramerate(float framerate) {
-    if (framerate > 0.0001f) {
-        this->m_maxFramerate = framerate;
-        this->m_frameInterval = 1.0f / framerate;
-    } else {
-        this->m_maxFramerate = 0.0f;
-        this->m_frameInterval = 0.0f;
-    }
-}
-
 // OFFSET: %0x00536F50
 void CSimpleAnim::SetSmoothing(float in, float out) {
     if ((in > 0.0f && in <= 1.0f) || (out > 0.0f && out <= 1.0f)) {
@@ -135,9 +127,11 @@ void CSimpleAnim::SetSmoothing(float in, float out) {
 
 // OFFSET: %0x00536FF0
 bool CSimpleAnim::GetSmoothing(float& in, float& out) {
-    if (this->m_smoother) {
-        in = this->m_smoother->m_in;
-        out = this->m_smoother->m_out;
+    CSimpleAnimSmoother* smoother = this->m_smoother;
+
+    if (smoother) {
+        in = smoother->m_in;
+        out = smoother->m_out;
         return true;
     }
 
@@ -185,7 +179,7 @@ void CSimpleAnim::RunOnUpdateScript(float elapsedSec) {
 
 // OFFSET: %0x00537770
 void CSimpleAnim::PostLoadXML(linkObject* node, CStatus* status) {
-    this->m_flags ^= 1;
+    this->m_flags &= ~1;
 
     if (this->HasScript(this->m_onLoad)) {
         this->RunScript(this->m_onLoad, 0, NULL);
@@ -295,7 +289,7 @@ float CSimpleAnim::UpdateProgress(float elapsedSec) {
         } else {
             this->m_frameElapsed += elapsedSec;
 
-            if (this->m_frameElapsed >= this->m_frameInterval) {
+            if ((this->m_group->m_flags & 0x10) || this->m_frameElapsed >= CSimpleAnim::s_frameInterval) {
                 float delay = this->m_loopState == ANIM_LOOPSTATE_REVERSE ? this->m_orderPadding + this->m_endDelay : this->m_startDelay;
                 this->m_progress = (elapsed - delay) / this->m_duration;
 
@@ -386,28 +380,29 @@ bool CSimpleAnim::OnUpdate(float elapsedSec, float& consumed) {
 
 // OFFSET: %0x00539560
 CSimpleAnim::CSimpleAnim(CSimpleAnimGroup* group) {
-    this->m_group = NULL;
-    this->m_target = NULL;
-    this->unk_0070 = 0;
-    this->m_order = -1;
-    this->m_flags = 0;
-    this->m_playState = 0;
-    this->m_loopState = 0;
     this->m_startDelay = 0.0f;
     this->m_endDelay = 0.0f;
     this->m_duration = 0.0f;
-    this->m_maxFramerate = 0.0f;
-    this->m_frameInterval = 0.0f;
     this->m_frameElapsed = 0.0f;
     this->m_elapsed = 0.0f;
     this->m_progressWithDelay = 0.0f;
     this->m_progress = 0.0f;
+    this->m_group = NULL;
+    this->m_target = NULL;
     this->m_smoother = NULL;
+    this->m_order = -1;
+    this->m_flags = 0;
+    this->m_playState = 0;
+    this->m_loopState = 0;
     this->m_targetName[0] = 0;
 
     if (group) {
         this->m_group = group;
         group->m_animations.LinkToTail(this);
+
+        if (group->AddAnimListNode(group->RegisterAnimList(this->m_order), this)) {
+            group->ComputeDuration();
+        }
     }
 }
 
@@ -536,10 +531,6 @@ void CSimpleAnim::LoadXML(linkObject* node, CStatus* status) {
 
     if (animation->m_animFlags & 8) {
         this->m_duration = animation->m_duration;
-    }
-
-    if (animation->m_animFlags & 0x10) {
-        this->SetMaxFramerate(animation->m_maxFramerate);
     }
 
     if (animation->m_hasSmoothing) {

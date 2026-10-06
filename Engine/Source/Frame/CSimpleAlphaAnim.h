@@ -20,7 +20,7 @@ class CSimpleAlphaAnim : public CSimpleAnim {
     static void DestroyScriptMetaTable();
     static void RegisterScriptMethods(lua_State* L);
 
-    /* 00B8 */ int16_t m_change;
+    /* 00A8 */ int16_t m_change;
 
     virtual ~CSimpleAlphaAnim();
     virtual int32_t GetScriptMetaTable();

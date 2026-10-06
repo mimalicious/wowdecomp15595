@@ -40,16 +40,17 @@ class CSimpleAnimGroup : public CScriptObject {
     /* 0055 */ FrameScript_Object::ScriptIx m_onUpdate;
     /* 0056 */ FrameScript_Object::ScriptIx m_onLoop;
     /* 0057 */ uint8_t unk_0057;
-    /* 0058 */ uint16_t m_flags;
+    /* 0058 */ int8_t m_loopType;
+    /* 0059 */ int8_t m_loopState;
     /* 005A */ uint8_t unk_005A[2];
-    /* 005C */ int32_t unk_005C : 1;
-    /* 005C */ int32_t m_loopType : 8;
-    /* 005C */ int32_t m_loopState : 8;
-    /* 0060 */ int32_t m_currentOrder;
-    /* 0064 */ float m_elapsed;
-    /* 0068 */ float m_duration;
-    /* 006C */ float m_progress;
-    /* 0070 */ C2Vector m_initialOffset;
+    /* 005C */ uint8_t m_flags;
+    /* 005D */ uint8_t unk_005D[3];
+    /* 0060 */ int32_t unk_005C : 1;
+    /* 0064 */ int32_t m_currentOrder;
+    /* 0068 */ float m_elapsed;
+    /* 006C */ float m_duration;
+    /* 0070 */ float m_progress;
+    /* 0074 */ C2Vector m_initialOffset;
 
     virtual ~CSimpleAnimGroup();
     virtual int32_t GetScriptMetaTable();

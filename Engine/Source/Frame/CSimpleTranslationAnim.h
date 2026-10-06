@@ -21,7 +21,7 @@ class CSimpleTranslationAnim : public CSimpleAnim {
     static void DestroyScriptMetaTable();
     static void RegisterScriptMethods(lua_State* L);
 
-    /* 00B8 */ C2Vector m_offset;
+    /* 00A8 */ C2Vector m_offset;
 
     virtual ~CSimpleTranslationAnim();
     virtual int32_t GetScriptMetaTable();

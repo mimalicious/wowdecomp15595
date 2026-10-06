@@ -22,9 +22,9 @@ class CSimplePathAnim : public CSimpleAnim {
     static void DestroyScriptMetaTable();
     static void RegisterScriptMethods(lua_State* L);
 
-    /* 00B8 */ TSExplicitList<CSimpleControlPoint, offsetof(CSimpleControlPoint, m_link)> m_controlPoints;
-    /* 00C4 */ TSGrowableArray<CSimpleControlPoint*> m_sortedPoints;
-    /* 00D4 */ int8_t m_curve;
+    /* 00A8 */ TSExplicitList<CSimpleControlPoint, offsetof(CSimpleControlPoint, m_link)> m_controlPoints;
+    /* 00B4 */ TSGrowableArray<CSimpleControlPoint*> m_sortedPoints;
+    /* 00C4 */ int8_t m_curve;
 
     virtual ~CSimplePathAnim();
     virtual int32_t GetScriptMetaTable();

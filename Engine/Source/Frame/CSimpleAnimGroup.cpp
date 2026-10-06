@@ -284,12 +284,13 @@ TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::RegisterAn
 CSimpleAnimGroup::CSimpleAnimGroup(CScriptRegion* owner) {
     this->m_region = NULL;
     this->unk_005C = 0;
+    this->m_flags = 0;
     this->m_loopType = ANIM_LOOPTYPE_NONE;
     this->m_duration = 0.0f;
     this->m_initialOffset.x = 0.0f;
     this->m_initialOffset.y = 0.0f;
     this->m_loopState = ANIM_LOOPSTATE_NONE;
-    this->m_flags = 0;
+    this->m_flags &= 0xF0;
     this->m_currentOrder = -1;
     this->m_elapsed = 0.0f;
     this->m_progress = 0.0f;
@@ -494,11 +495,11 @@ void CSimpleAnimGroup::Pause() {
 
 // OFFSET: %0x0053A4A0
 void CSimpleAnimGroup::Stop(bool requested) {
-    if (!this->m_loopState || (this->m_flags & 0x20)) {
+    if (!this->m_loopState || (this->m_flags & 0x8)) {
         return;
     }
 
-    this->m_flags |= 0x20;
+    this->m_flags |= 0x8;
 
     TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list = this->m_animLists[this->m_currentOrder];
 
@@ -514,8 +515,8 @@ void CSimpleAnimGroup::Stop(bool requested) {
 
     this->m_region->NotifyAnimEnd(this);
 
+    this->m_flags &= 0xF0;
     this->m_loopState = ANIM_LOOPSTATE_NONE;
-    this->m_flags = 0;
     this->m_currentOrder = -1;
     this->m_elapsed = 0.0f;
     this->m_progress = 0.0f;
@@ -639,7 +640,7 @@ bool CSimpleAnimGroup::AdvanceLoopState(float elapsedSec, float remaining) {
 void CSimpleAnimGroup::SortAnimations() {
     if (!this->m_loopState || (this->m_flags & 0x4)) {
         this->m_loopState = ANIM_LOOPSTATE_NONE;
-        this->m_flags = 0;
+        this->m_flags &= 0xF0;
         this->m_currentOrder = -1;
         this->m_elapsed = 0.0f;
         this->m_progress = 0.0f;
@@ -783,7 +784,7 @@ bool CSimpleAnimGroup::RemoveAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPL
 
 // OFFSET: %0x0053B770
 void CSimpleAnimGroup::PostLoadXML(linkObject* node, CStatus* status) {
-    this->m_flags ^= 1;
+    this->m_flags &= ~1;
 
     for (CSimpleAnim* anim = this->m_animations.Head(); anim; anim = this->m_animations.Next(anim)) {
         anim->PostLoadXML(node, status);
@@ -811,7 +812,7 @@ bool CSimpleAnimGroup::OnUpdate(float elapsedSec) {
 
         bool requested = (this->m_flags & 0x2) != 0;
         this->m_loopState = ANIM_LOOPSTATE_NONE;
-        this->m_flags = 0;
+        this->m_flags &= 0xF0;
         this->m_currentOrder = -1;
         this->m_elapsed = 0.0f;
         this->m_progress = 0.0f;
@@ -846,7 +847,7 @@ bool CSimpleAnimGroup::Play(bool reverse) {
     if (this->m_flags & 0x4) {
         this->m_flags &= ~0x4;
     } else {
-        this->m_flags = 0;
+        this->m_flags &= 0xF0;
         this->m_loopState = ANIM_LOOPSTATE_NONE;
         this->m_currentOrder = reverse ? 0x7FFF : -1;
         this->m_elapsed = 0.0f;

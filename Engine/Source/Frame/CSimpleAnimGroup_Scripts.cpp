@@ -68,14 +68,14 @@ static int32_t Script_IsDone(lua_State* L) {
 // OFFSET: %0x0054D5C0
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
-    lua_pushboolean(L, (group->m_flags & 0x4) != 0);
+    lua_pushboolean(L, (group->m_flags >> 2) & 1);
     return 1;
 }
 
 // OFFSET: %0x0054D610
 static int32_t Script_IsPendingFinish(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
-    lua_pushboolean(L, (group->m_flags & 0x2) != 0);
+    lua_pushboolean(L, (group->m_flags >> 1) & 1);
     return 1;
 }
 
@@ -203,6 +203,32 @@ static int32_t Script_SetScript(lua_State* L) {
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->HookScript(L) : 0;
+}
+
+// OFFSET: 0x0053DD30
+static int32_t Script_SetIgnoreFramerateThrottle(lua_State* L) {
+    CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
+
+    if (StringToBOOL(L, 2, 0)) {
+        group->m_flags |= 0x10;
+    } else {
+        group->m_flags &= ~0x10;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0053DD80
+static int32_t Script_GetIgnoreFramerateThrottle(lua_State* L) {
+    CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
+
+    if (group->m_flags & 0x10) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
 }
 
 // OFFSET: %0x0054DC50
@@ -373,6 +399,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetScript", &Script_GetScript },
     { "SetScript", &Script_SetScript },
     { "HookScript", &Script_HookScript },
+    { "SetIgnoreFramerateThrottle", &Script_SetIgnoreFramerateThrottle },
+    { "GetIgnoreFramerateThrottle", &Script_GetIgnoreFramerateThrottle },
 };
 
 // OFFSET: %0x0054B7E0

@@ -178,27 +178,6 @@ static int32_t Script_GetProgressWithDelay(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BEA0
-static int32_t Script_SetMaxFramerate(lua_State* L) {
-    CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
-
-    if (!lua_isnumber(L, 2)) {
-        const char* name = anim->GetName();
-        luaL_error(L, "Usage: %s:SetMaxFramerate(framesPerSec)", name ? name : "<unnamed>");
-        return 0;
-    }
-
-    anim->SetMaxFramerate(lua_tonumber(L, 2));
-    return 0;
-}
-
-// OFFSET: %0x0054BF20
-static int32_t Script_GetMaxFramerate(lua_State* L) {
-    CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
-    lua_pushnumber(L, anim->m_maxFramerate);
-    return 1;
-}
-
 // OFFSET: %0x0054BF70
 static int32_t Script_GetElapsed(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -413,8 +392,6 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetSmoothProgress", &Script_SetSmoothProgress },
     { "GetProgress", &Script_GetProgress },
     { "GetProgressWithDelay", &Script_GetProgressWithDelay },
-    { "SetMaxFramerate", &Script_SetMaxFramerate },
-    { "GetMaxFramerate", &Script_GetMaxFramerate },
     { "SetOrder", &Script_SetOrder },
     { "GetOrder", &Script_GetOrder },
     { "SetSmoothing", &Script_SetSmoothing },
