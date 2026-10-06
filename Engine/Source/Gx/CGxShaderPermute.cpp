@@ -16,7 +16,7 @@ int32_t CGxShaderPermute::Valid() {
     return this->m_valid;
 }
 
-// OFFSET: %0x007AE5D0
+// OFFSET: 0x008489F0/0x1405764F0
 uint8_t* CGxShaderPermute::Load() {
     CGxShader* shader = this->m_shader;
     uint32_t start = shader->m_permuteOffsets[this->m_index];

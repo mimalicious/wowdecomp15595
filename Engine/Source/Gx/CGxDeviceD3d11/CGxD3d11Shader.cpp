@@ -5,7 +5,7 @@
 #include "Engine/Source/Gx/CGxShaderPermute.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007D0190
+// OFFSET: 0x00871220/0x1405A7050
 void CGxDeviceD3d11::IShaderCreate(CGxShaderPermute* permute) {
     permute->m_valid = 0;
 
@@ -210,7 +210,7 @@ void CGxDeviceD3d11::IShaderConstantsFlush() {
     }
 }
 
-// OFFSET: %0x007AED20
+// OFFSET: 0x00849180/0x140576EA0
 void CGxDeviceD3d11::IReleaseD3dShaders(int32_t freeShaders) {
     if (!freeShaders) {
         return;

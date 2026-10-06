@@ -13,7 +13,7 @@ CGxLight::CGxLight() {
     this->m_quadraticAttenuation = 0.03f;
 }
 
-// OFFSET: %0x007A9630
+// OFFSET: 0x008437B0/0x14056FCA0
 CGxApiLight& CGxApiLight::operator=(const CGxLight& light) {
     if (light.m_constantAttenuation != this->m_constantAttenuation) {
         this->m_flags |= 0x20;

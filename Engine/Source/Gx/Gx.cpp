@@ -70,7 +70,7 @@ static void DrawListPreprocessB2F(GxDrawListEntry* entry, const C3Vector& viewPo
     entry->m_depth = entry->m_item->GetDepth(viewPos);
 }
 
-// OFFSET: %0x006233D0
+// OFFSET: 0x006128F0/0x14029DB80
 static int DrawListSorterB2F(const void* a, const void* b) {
     float depthA = static_cast<const GxDrawListEntry*>(a)->m_depth;
     float depthB = static_cast<const GxDrawListEntry*>(b)->m_depth;
@@ -252,7 +252,7 @@ int32_t GxTexResolve(CGxTex* dest, CGxTex* source) {
     return g_theGxDevicePtr->TexResolve(dest, source);
 }
 
-// OFFSET: %0x007A6640
+// OFFSET: 0x00840580
 int32_t GxXformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     float cleanMinX = minX > 0.0f ? minX : 0.0f;
     float cleanMaxX = maxX < 1.0f ? maxX : 1.0f;
@@ -277,7 +277,7 @@ int32_t GxVertexHasAttrib(EGxVertexBufferFormat format, EGxVertexAttrib attrib) 
     return Buffer::s_vertexBufDesc[format].attribPtrs[attrib] != NULL;
 }
 
-// OFFSET: %0x007A6190
+// OFFSET: 0x008400E0
 int32_t CreateGxDevice(EGxApi api, GxWindowProc windowProc, const CGxFormat& format) {
     CGxDevice* device;
 
@@ -385,7 +385,7 @@ void GxXformViewProjNative(C44Matrix& matrix) {
     matrix = view * proj;
 }
 
-// OFFSET: %0x00409400
+// OFFSET: 0x0040A090
 void GxXformViewProjNativeTranspose(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
     C44Matrix view;
@@ -481,12 +481,12 @@ void GxXformScale(EGxXform xf, const C3Vector& scale) {
     stack.m_mtx[stack.m_level].Scale(scale);
 }
 
-// OFFSET: %0x00409290
+// OFFSET: 0x00409F20
 int32_t GxHasContext() {
     return g_theGxDevicePtr ? g_theGxDevicePtr->CapsHasContext(-1) : 0;
 }
 
-// OFFSET: %0x00409270
+// OFFSET: 0x00409F00
 int32_t GxIsWindowVisible() {
     return g_theGxDevicePtr ? g_theGxDevicePtr->CapsIsWindowVisible(-1) : 0;
 }
@@ -586,7 +586,7 @@ BlitFormat GxGetBlitFormat(EGxTexFormat format) {
     return s_blitFormats[format];
 }
 
-// OFFSET: %0x007A67A0
+// OFFSET: 0x008406B0
 void CGxDevice::XformSetViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     if (minX == this->m_viewport.m_x.m_l && maxX == this->m_viewport.m_x.m_h && minY == this->m_viewport.m_y.m_l && maxY == this->m_viewport.m_y.m_h && minZ == this->m_viewport.m_z.m_l && maxZ == this->m_viewport.m_z.m_h) {
         return;
@@ -775,7 +775,7 @@ void GxPrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     g_theGxDevicePtr->PrimVertexPtr(buf, format);
 }
 
-// OFFSET: %0x007A6A00
+// OFFSET: 0x00840910/0x14056C670
 void GxPrimVertexPtr(uint32_t vertexCount, const C3Vector* pos, uint32_t posStride, const C3Vector* normal, uint32_t normalStride, const CImVector* color, uint32_t colorStride, const C2Vector* tex0, uint32_t tex0Stride, const C2Vector* tex1, uint32_t tex1Stride) {
     EGxVertexBufferFormat format = GxVBF_PN;
 
@@ -908,7 +908,7 @@ void GxRsSet(EGxRenderState which, CGxShader* shader, uint32_t permute) {
     g_theGxDevicePtr->RsSet(which, &shader->m_permutes[permute]);
 }
 
-// OFFSET: %0x0040A440
+// OFFSET: 0x0040B010
 int32_t GxShaderValid(CGxShader* shader, uint32_t permute) {
     return shader ? shader->m_permutes[permute].Valid() : 0;
 }
@@ -928,7 +928,7 @@ void GxRsSet(EGxRenderState which, int32_t value) {
     }
 }
 
-// OFFSET: %0x0040A4D0
+// OFFSET: 0x0040B0A0/0x14000D9A0
 void GxUpdateAlphaRef(EGxRenderState which) {
     if (which != GxRs_AlphaRef || !g_theGxDevicePtr->m_context) {
         return;
@@ -943,7 +943,7 @@ void GxUpdateAlphaRef(EGxRenderState which) {
     }
 }
 
-// OFFSET: %0x0043B050
+// OFFSET: 0x00430C20
 void GxRsSet(EGxRenderState which, float value) {
     if (!g_theGxDevicePtr->m_context) {
         return;
@@ -1036,7 +1036,7 @@ void GxBufDestroy(CGxBuf* buf) {
     }
 }
 
-// OFFSET: %0x0058E5C0
+// OFFSET: 0x00740630
 void GxFormatColor(CImVector& color) {
     if (g_theGxDevicePtr->Caps().m_colorFormat == GxCF_rgba) {
         CImVector formatted(color.r, color.g, color.b, color.a);
@@ -1140,14 +1140,14 @@ void GxDrawLockedElements(EGxPrim primType, uint32_t indexCount, const uint16_t*
     g_theGxDevicePtr->Draw(batch);
 }
 
-// OFFSET: %0x006234B0
+// OFFSET: 0x006129D0/0x14029DC40
 static void GxuPreprocessDrawList(EGxuDrawListCategory category, EGxuDrawListSorting sorting, const C3Vector& viewPos) {
     for (uint32_t i = 0; i < s_drawLists[category].Count(); i++) {
         s_drawListPreprocess[sorting](&s_drawLists[category][i], viewPos);
     }
 }
 
-// OFFSET: %0x00623500
+// OFFSET: 0x00612A20/0x14029DCD0
 void GxuSortDrawList(EGxuDrawListCategory category, EGxuDrawListSorting sorting, const C3Vector& viewPos) {
     GxuPreprocessDrawList(category, sorting, viewPos);
     qsort(s_drawLists[category].Ptr(), s_drawLists[category].Count(), sizeof(GxDrawListEntry), s_drawListSorters[sorting]);
@@ -1221,7 +1221,7 @@ GxDrawListEntry::GxDrawListEntry() {
     this->m_vtxStream = 0;
 }
 
-// OFFSET: %0x004E5C50
+// OFFSET: 0x004DFBE0
 CImVector GxSwizzleColor(const CImVector& color) {
     CImVector result;
 

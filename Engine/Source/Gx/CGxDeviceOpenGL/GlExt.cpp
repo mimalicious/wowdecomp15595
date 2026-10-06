@@ -341,7 +341,7 @@ void UnbindGlExtensions() {
     s_wglExtensions = NULL;
 }
 
-// OFFSET: %0x007B7F80
+// OFFSET: 0x0085B650/0x14058D210
 static bool ScanString(const char* extensions, const char* name) {
     size_t length = strlen(name);
 
@@ -366,7 +366,7 @@ static bool ScanString(const char* extensions, const char* name) {
     return true;
 }
 
-// OFFSET: %0x007B7FE0
+// OFFSET: 0x0085B6B0
 bool FindGlExt(const char* name) {
     const char* value = getenv(name);
 
@@ -395,7 +395,7 @@ bool HasWGLExtension(const char* name) {
     return ScanString(s_wglExtensions, name);
 }
 
-// OFFSET: %0x007B8070
+// OFFSET: 0x0085B740/0x14058D300
 void BindGlExtensions() {
     int32_t major = -1;
     int32_t minor = -1;

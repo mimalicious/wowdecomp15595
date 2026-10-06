@@ -65,7 +65,7 @@ void CGxDeviceOpenGl::SceneClear(uint32_t mask, CImVector color) {
     this->DsSet(Ds_ColorMask, colorMask, 0);
 }
 
-// OFFSET: %0x007C5BA0
+// OFFSET: 0x008692E0/0x14059CDD0
 void CGxDeviceOpenGl::ScenePresent(void* window) {
     int32_t screenShot = this->m_scrShotClick;
     CGxDevice::ScenePresent(window);
@@ -86,7 +86,7 @@ void CGxDeviceOpenGl::ScenePresent(void* window) {
     this->IShaderConstantsClear();
 }
 
-// OFFSET: %0x007C5C10
+// OFFSET: 0x00869350
 void CGxDeviceOpenGl::IXformSetProjection(const C44Matrix& matrix) {
     C44Matrix projection(matrix.a0, matrix.a1, matrix.a2, matrix.a3, matrix.b0, matrix.b1, matrix.b2, matrix.b3, -matrix.c0, -matrix.c1, -matrix.c2, -matrix.c3, matrix.d0, matrix.d1, matrix.d2, matrix.d3);
 
@@ -112,12 +112,12 @@ void CGxDeviceOpenGl::IXformSetProjection(const C44Matrix& matrix) {
     this->m_projNative = projection;
 }
 
-// OFFSET: %0x007C5E30
+// OFFSET: 0x00869570/0x14059D200
 void CGxDeviceOpenGl::IXformGLModelView(const C44Matrix& view, C44Matrix& world) {
     world = C44Matrix(view.a0, view.a1, -view.a2, view.a3, view.b0, view.b1, -view.b2, view.b3, view.c0, view.c1, -view.c2, view.c3, view.d0, view.d1, -view.d2, view.d3);
 }
 
-// OFFSET: %0x007C5F00
+// OFFSET: 0x00869640
 void CGxDeviceOpenGl::IXformSetModelView(const C44Matrix& matrix) {
     C44Matrix modelView;
     this->IXformGLModelView(matrix, modelView);
@@ -166,7 +166,7 @@ void CGxDeviceOpenGl::Draw(const CGxBatch& batch) {
     }
 }
 
-// OFFSET: %0x007C4FC0
+// OFFSET: 0x008686E0/0x14059BD70
 void CGxDeviceOpenGl::BindTexture(CGxTex* texId, uint32_t tmu) {
     if (tmu == 0xFFFFFFFF) {
         this->DsSet(Ds_ActiveTexture, 0, 0);
@@ -205,7 +205,7 @@ void CGxDeviceOpenGl::TexDestroy(CGxTex* texId) {
     CGxDevice::TexDestroy(texId);
 }
 
-// OFFSET: %0x007C50F0
+// OFFSET: 0x00868810/0x14059BF10
 int32_t CGxDeviceOpenGl::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const C2iVector& sourcePos, const C2iVector& size, uint32_t level, uint32_t plane) {
     if (!this->m_context) {
         return 0;
@@ -244,7 +244,7 @@ int32_t CGxDeviceOpenGl::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* 
     return 0;
 }
 
-// OFFSET: %0x007C51D0
+// OFFSET: 0x008688F0/0x14059C080
 void CGxDeviceOpenGl::ITexForceRecreation() {
     for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = texId->m_link.Next()) {
         if (!texId->m_apiSpecificData) {
@@ -269,7 +269,7 @@ void CGxDeviceOpenGl::ITexForceRecreation() {
     this->NotifyOnTextureRecreation();
 }
 
-// OFFSET: %0x007C52B0
+// OFFSET: 0x008689D0/0x14059C1B0
 void CGxDeviceOpenGl::ITexDownload(CGxTex* texId, uint32_t width, uint32_t height, uint32_t face, uint32_t mip, uint32_t baseMip, uint32_t stride, const void* texels) {
     // STATIC: %0x00D93120
     static TSGrowableArray<uint8_t> s_buffer;
@@ -435,7 +435,7 @@ void CGxDeviceOpenGl::ITexDownload(CGxTex* texId, uint32_t width, uint32_t heigh
     }
 }
 
-// OFFSET: %0x007C5800
+// OFFSET: 0x00868F20/0x14059C920
 void CGxDeviceOpenGl::ITexMarkAsUpdated(CGxTex* texId, uint32_t tmu) {
     if (!this->m_context) {
         return;
@@ -551,7 +551,7 @@ void CGxDeviceOpenGl::ITexMarkAsUpdated(CGxTex* texId, uint32_t tmu) {
     CGxDevice::ITexMarkAsUpdated(texId);
 }
 
-// OFFSET: %0x007C5A90
+// OFFSET: 0x008691B0
 void CGxDeviceOpenGl::ITexMarkAsUpdated(CGxTex* texId) {
     this->ITexMarkAsUpdated(texId, 0xFFFFFFFF);
 }

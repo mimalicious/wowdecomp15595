@@ -61,7 +61,7 @@ void ViewSettings::SetFog(uint32_t index, float start, float end, float density,
     s_fog[index].m_color = color;
 }
 
-// OFFSET: %0x00970E10
+// OFFSET: 0x00A30230/0x1407DA0F0
 void ViewSettings::GetFog(uint32_t index, float& start, float& end, float& density, CImVector& color) {
     start = s_fog[index].m_start;
     end = s_fog[index].m_end;
@@ -86,7 +86,7 @@ C4Vector ViewSettings::CalculateParams() {
     return params;
 }
 
-// OFFSET: %0x00970E40
+// OFFSET: 0x00A30260
 C4Vector ViewSettings::CalculateHomToScreen(float offsetX, float offsetY) {
     float x = ((s_viewExtents.minY + 1.0f) - (1.0f - s_viewExtents.maxY)) * 0.5f;
     float scaleY;

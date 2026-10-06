@@ -27,7 +27,7 @@ CGxFormat::CGxFormat() {
     this->m_pos.y = 0;
 }
 
-// OFFSET: %0x007A68E0
+// OFFSET: 0x008407F0/0x14056C560
 CGxFormat::CGxFormat(bool window, const C2iVector& size, CGxFormat::Format colorFormat, CGxFormat::Format depthFormat, uint32_t refreshRate, uint32_t refreshRateDenom, uint32_t vsync, bool hwTnL, bool fixLag, bool hwCursor, bool aspect, int32_t maximize, int32_t monitor) {
     this->m_hwTnL = hwTnL;
     this->m_fixLag = fixLag;

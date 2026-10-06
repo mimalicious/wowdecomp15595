@@ -119,7 +119,7 @@ static D3DLIGHT9 s_d3dLight;
 // STATIC: %0x00D93220
 static int32_t s_isIdent;
 
-// OFFSET: %0x007C9020
+// OFFSET: 0x0084CBC0/0x14057B560
 void CGxDeviceD3d::IBufUnlock(CGxBuf* buf) {
     CGxPool* pool = buf->m_pool;
     EmergencyMem& emergencyMem = this->m_emergencyMem[pool->m_target];
@@ -158,7 +158,7 @@ int32_t CGxDeviceD3d::BufUnlock(CGxBuf* buf, uint32_t size) {
     return 1;
 }
 
-// OFFSET: %0x007C90D0
+// OFFSET: 0x0084CC70/0x14057B610
 char* CGxDeviceD3d::IBufLock(CGxBuf* buf) {
     CGxPool* pool = buf->m_pool;
 
@@ -308,7 +308,7 @@ void CGxDeviceD3d::IReleaseD3dPool(CGxPool* pool) {
     }
 }
 
-// OFFSET: %0x007C77A0
+// OFFSET: 0x0084B390/0x1405799D0
 void CGxDeviceD3d::DeviceEvictResources() {
     if (!this->m_context || !this->m_d3dDevice) {
         return;
@@ -379,7 +379,7 @@ void CGxDeviceD3d::CursorUnlock(uint32_t x, uint32_t y) {
     this->m_hwCursorDirty = 1;
 }
 
-// OFFSET: %0x007C7E30
+// OFFSET: 0x0084BA20/0x14057A1C0
 void CGxDeviceD3d::ICursorDraw() {
     if (!this->m_hwCursor) {
         this->ISceneBegin();
@@ -428,13 +428,13 @@ void CGxDeviceD3d::ICursorCreate(const CGxFormat& format) {
     }
 }
 
-// OFFSET: %0x007C7FE0
+// OFFSET: 0x0084BBD0
 void CGxDeviceD3d::StereoSetConvergence(float convergence) {
     this->m_d3dStereoDirty = 1;
     this->m_d3dStereoConvergence = convergence;
 }
 
-// OFFSET: %0x007C8010
+// OFFSET: 0x0084BC00
 void CGxDeviceD3d::StereoSetSeparation(float separation) {
     this->m_d3dStereoDirty = 1;
     this->m_d3dStereoSeparation = separation;
@@ -502,7 +502,7 @@ int32_t CGxDeviceD3d::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint32
     }
 }
 
-// OFFSET: %0x007C8250
+// OFFSET: 0x0084BE00/0x14057A690
 int32_t CGxDeviceD3d::ILoadD3dLib(HINSTANCE& d3dLib, LPDIRECT3D9& d3d) {
     d3dLib = NULL;
     d3d = NULL;
@@ -676,7 +676,7 @@ void CGxDeviceD3d::QueryDestroy(CGxQuery*& query) {
     CGxDevice::QueryDestroy(query);
 }
 
-// OFFSET: %0x007C8150
+// OFFSET: 0x0084BD10
 int32_t CGxDeviceD3d::QueryEnd(CGxQuery* query) {
     if (!this->m_context || !query->m_apiSpecific) {
         return 0;
@@ -691,7 +691,7 @@ int32_t CGxDeviceD3d::QueryEnd(CGxQuery* query) {
     return hr == D3D_OK;
 }
 
-// OFFSET: %0x007C81F0
+// OFFSET: 0x0084BDB0
 int32_t CGxDeviceD3d::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context || !query->m_apiSpecific) {
         return 0;
@@ -722,7 +722,7 @@ void CGxDeviceD3d::DebugGroupEnd() {
 void CGxDeviceD3d::DebugEvent(const char* name, char* buffer) {
 }
 
-// OFFSET: %0x007D2A00
+// OFFSET: 0x00858000/0x1405892E0
 void CGxDeviceD3d::ISceneEnd() {
     if (!this->m_inScene) {
         return;
@@ -765,7 +765,7 @@ void CGxDeviceD3d::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
 }
 
-// OFFSET: %0x007D5E60
+// OFFSET: 0x0085B470/0x14058CF90
 void CGxDeviceD3d::IShaderCreate(CGxShaderPermute* permute) {
     permute->m_valid = 0;
 
@@ -820,7 +820,7 @@ void CGxDeviceD3d::IShaderDestroy(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// OFFSET: %0x007D5440
+// OFFSET: 0x0085AA60
 void CGxDeviceD3d::CapsWindowSizeInScreenCoords(CRect& rect) {
     if (this->IDevIsWindowed()) {
         const CRect& window = this->DeviceCurWindow();
@@ -839,7 +839,7 @@ void CGxDeviceD3d::CapsWindowSizeInScreenCoords(CRect& rect) {
     }
 }
 
-// OFFSET: %0x007D5800
+// OFFSET: 0x0085AE10
 void CGxDeviceD3d::XformSetProjection(const C44Matrix& matrix) {
     CGxDevice::XformSetProjection(matrix);
 
@@ -957,7 +957,7 @@ void CGxDeviceD3d::IStateSyncScissorRect() {
     this->m_scissorRectDirty = 0;
 }
 
-// OFFSET: %0x007D3240
+// OFFSET: 0x00858840/0x140589D40
 LPDIRECT3DVERTEXDECLARATION9 CGxDeviceD3d::IGetVertexDecl() {
     LPDIRECT3DVERTEXDECLARATION9 decl = this->m_d3dVertexDecl[this->m_primVertexFormat];
 
@@ -1076,7 +1076,7 @@ void CGxDeviceD3d::ISetVertexStreams() {
     }
 }
 
-// OFFSET: %0x007D35E0
+// OFFSET: 0x00858B20/0x14058A120
 void CGxDeviceD3d::DsSet(EDeviceState state, uint32_t value) {
     if (this->m_deviceStates[state] == value) {
         return;
@@ -1434,7 +1434,7 @@ void CGxDeviceD3d::DsSet(EDeviceState state, uint32_t value) {
     this->m_deviceStates[state] = value;
 }
 
-// OFFSET: %0x007D3C60
+// OFFSET: 0x008591A0/0x14058A790
 void CGxDeviceD3d::ISetTexCoordIndex(uint32_t tmu, int32_t texGen, uint32_t coord) {
     EDeviceState state = static_cast<EDeviceState>(Ds_TssTexCoordIndex0 + tmu);
 
@@ -1483,7 +1483,7 @@ void CGxDeviceD3d::ISetAlphaOp(uint32_t tmu, uint32_t op) {
     }
 }
 
-// OFFSET: %0x007D3B70
+// OFFSET: 0x008590B0/0x14058A660
 void CGxDeviceD3d::ISetVertexTexture(uint32_t tmu, CGxTex* texId) {
     if (!texId) {
         this->m_d3dDevice->SetTexture(D3DVERTEXTEXTURESAMPLER0 + tmu, NULL);
@@ -1533,7 +1533,7 @@ void CGxDeviceD3d::ISetMaterial(CImVector diffuse, CImVector emissive, CImVector
     this->m_d3dDevice->SetMaterial(&material);
 }
 
-// OFFSET: %0x007D3F00
+// OFFSET: 0x00859440/0x14058AAA0
 void CGxDeviceD3d::IStateSyncLights() {
     if (this->m_appRenderStates[GxRs_Lighting].m_value.m_data.i[0]) {
         if (this->m_ambientOnlyMode) {
@@ -1672,7 +1672,7 @@ void CGxDeviceD3d::IStateSyncXforms() {
     }
 }
 
-// OFFSET: %0x007D4490
+// OFFSET: 0x008599D0/0x14058B100
 void CGxDeviceD3d::ISetTexture(uint32_t tmu, CGxTex* texId) {
     if (texId) {
         bool upload = false;
@@ -1736,7 +1736,7 @@ void CGxDeviceD3d::ISetTexCoord(uint32_t tmu, uint32_t coord) {
     }
 }
 
-// OFFSET: %0x007D4900
+// OFFSET: 0x00859F20/0x14058B710
 void CGxDeviceD3d::ISetTexGen(uint32_t tmu, int32_t texGen) {
     if (tmu >= static_cast<uint32_t>(this->m_caps.m_numTmus)) {
         return;
@@ -1771,7 +1771,7 @@ void CGxDeviceD3d::ISetTexGen(uint32_t tmu, int32_t texGen) {
     stack.m_mtx[stack.m_level] = matrix;
 }
 
-// OFFSET: %0x007D4B70
+// OFFSET: 0x0085A190/0x14058BA70
 void CGxDeviceD3d::IRsSendToHw(EGxRenderState which) {
     CGxStateBom& value = this->m_appRenderStates[which].m_value;
 
@@ -2111,7 +2111,7 @@ void CGxDeviceD3d::IXformSetWorld() {
     s_isIdent = isIdent;
 }
 
-// OFFSET: %0x007D5BA0
+// OFFSET: 0x0085B1B0/0x14058CC50
 void CGxDeviceD3d::IXformSetTex(uint32_t tmu) {
     uint32_t flags = D3DTTFF_DISABLE;
     D3DTRANSFORMSTATETYPE state = static_cast<D3DTRANSFORMSTATETYPE>(D3DTS_TEXTURE0 + tmu);
@@ -2161,7 +2161,7 @@ void CGxDeviceD3d::IXformSetTex(uint32_t tmu) {
     texGen.m_dirty = 0;
 }
 
-// OFFSET: %0x007D5F40
+// OFFSET: 0x0085B550/0x14058D0C0
 void CGxDeviceD3d::IBindPixelShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -2190,7 +2190,7 @@ void CGxDeviceD3d::IBindPixelShader(CGxShaderPermute* permute) {
     }
 }
 
-// OFFSET: %0x007D5500
+// OFFSET: 0x0085AB20/0x14058C4F0
 int32_t CGxDeviceD3d::XformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     const CRect& window = this->DeviceCurWindow();
     uint32_t x = static_cast<uint32_t>(minX * window.maxX + 0.5f);
@@ -2246,7 +2246,7 @@ void CGxDeviceD3d::IShaderConstantsFlush() {
     }
 }
 
-// OFFSET: %0x007D5D70
+// OFFSET: 0x0085B380/0x14058CE70
 void CGxDeviceD3d::IBindVertexShader(CGxShaderPermute* permute) {
     this->IShaderBind(permute);
 
@@ -2262,7 +2262,7 @@ void CGxDeviceD3d::IBindVertexShader(CGxShaderPermute* permute) {
     this->m_d3dDevice->SetVertexShader(static_cast<LPDIRECT3DVERTEXSHADER9>(permute->m_apiSpecific));
 }
 
-// OFFSET: %0x007C7590
+// OFFSET: 0x0084B180/0x1405797C0
 void CGxDeviceD3d::ISetPresentParms(uint32_t adapter, D3DDEVTYPE deviceType, D3DPRESENT_PARAMETERS& d3dpp, const CGxFormat& format) {
     memset(&d3dpp, 0, sizeof(d3dpp));
 
@@ -2331,7 +2331,7 @@ void CGxDeviceD3d::ISetPresentParms(uint32_t adapter, D3DDEVTYPE deviceType, D3D
     d3dpp.MultiSampleQuality = static_cast<DWORD>((qualityLevels - 1) * format.m_multisampleQuality);
 }
 
-// OFFSET: %0x007C82F0
+// OFFSET: 0x0084BEF0/0x14057A7F0
 void CGxDeviceD3d::ISetCaps(uint32_t adapter, const CGxFormat& format) {
     this->m_caps.m_numTmus = this->m_d3dCaps.MaxTextureBlendStages >= 8 ? 8 : this->m_d3dCaps.MaxTextureBlendStages;
     this->m_caps.m_numVertexTmus = 0;
@@ -2545,7 +2545,7 @@ void CGxDeviceD3d::ISetCaps(uint32_t adapter, const CGxFormat& format) {
     this->m_caps.m_deviceId = adapterIdentifier.DeviceId;
 }
 
-// OFFSET: %0x007C8990
+// OFFSET: 0x0084C630/0x14057AED0
 int32_t CGxDeviceD3d::ICreateD3dDevice(const CGxFormat& format) {
     bool hwTnL = format.m_hwTnL;
 
@@ -2681,7 +2681,7 @@ void CGxDeviceD3d::IReleaseD3dResources(int32_t freeTextures) {
     }
 }
 
-// OFFSET: %0x007C9CC0
+// OFFSET: 0x0084D000
 int32_t CGxDeviceD3d::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     switch (wm) {
         case GxWM_Size:
@@ -2739,7 +2739,7 @@ int32_t CGxDeviceD3d::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     return 0;
 }
 
-// OFFSET: %0x007C9E40
+// OFFSET: 0x0084D180/0x14057BC40
 void CGxDeviceD3d::IDestroyD3d() {
     if (CGxDevice::s_uiVertexShader) {
         g_theGxDevicePtr->ShaderRelease(CGxDevice::s_uiVertexShader);
@@ -2785,7 +2785,7 @@ void CGxDeviceD3d::IDestroyD3d() {
     }
 }
 
-// OFFSET: %0x007C9F30
+// OFFSET: 0x0084D270/0x14057BD50
 int32_t CGxDeviceD3d::DeviceSetFormat(const CGxFormat& format) {
     CGxDevice::Log("CGxDeviceD3d::DeviceSetFormat():");
     this->Log(format);
@@ -2838,7 +2838,7 @@ void CGxDeviceD3d::DeviceDestroy() {
     }
 }
 
-// OFFSET: %0x007CA0B0
+// OFFSET: 0x0084DC40/0x14057C870
 int32_t CGxDeviceD3d::ICreateD3d(uint32_t monitor) {
     if (CGxDeviceD3d::ILoadD3dLib(this->m_d3dLib, this->m_d3d)) {
         uint32_t adapter = this->IGetAdapterIndex(monitor);
@@ -2872,7 +2872,7 @@ int32_t CGxDeviceD3d::ICreateD3d(uint32_t monitor) {
     return 0;
 }
 
-// OFFSET: %0x007CA190
+// OFFSET: 0x0084DD20/0x14057C960
 int32_t CGxDeviceD3d::DeviceCreate(GxWindowProc windowProc, const CGxFormat& format) {
     this->m_ownhwnd = 1;
 
@@ -2902,7 +2902,7 @@ int32_t CGxDeviceD3d::DeviceCreate(GxWindowProc windowProc, const CGxFormat& for
     return 0;
 }
 
-// OFFSET: %0x007CA270
+// OFFSET: 0x0084DE00/0x14057CA60
 int32_t CGxDeviceD3d::DeviceCreate(void* window, const CGxFormat& format) {
     this->m_ownhwnd = 0;
     CGxDevice::DeviceCreate(window, format);
@@ -2916,7 +2916,7 @@ int32_t CGxDeviceD3d::DeviceCreate(void* window, const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007B3850
+// OFFSET: 0x008537B0
 void CGxDeviceD3d::IReleaseD3dQueries() {
     for (CGxQuery* query = this->m_queryList.Head(); query; query = this->m_queryList.Next(query)) {
         if (query->m_apiSpecific) {
@@ -2927,7 +2927,7 @@ void CGxDeviceD3d::IReleaseD3dQueries() {
     }
 }
 
-// OFFSET: %0x007C9B60
+// OFFSET: 0x0084CEB0/0x14057B8B0
 void CGxDeviceD3d::IReleaseD3dPools(int32_t freePools) {
     for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
         next = CGxDevice::s_poolList.RawNext(pool);
@@ -2938,7 +2938,7 @@ void CGxDeviceD3d::IReleaseD3dPools(int32_t freePools) {
     }
 }
 
-// OFFSET: %0x007D1D00
+// OFFSET: 0x00857480
 void CGxDeviceD3d::TexDestroy(CGxTex* texId) {
     texId->m_link2.Unlink();
 
@@ -2962,7 +2962,7 @@ void CGxDeviceD3d::TexDestroy(CGxTex* texId) {
     CGxDevice::TexDestroy(texId);
 }
 
-// OFFSET: %0x007D24D0
+// OFFSET: 0x00857AF0/0x140588C00
 void CGxDeviceD3d::ITexCreate(CGxTex* texId) {
     texId->m_format = s_GxTexFormatToUse[texId->m_format];
 
@@ -3002,7 +3002,7 @@ void CGxDeviceD3d::ITexMarkAsUpdated(CGxTex* texId) {
     }
 }
 
-// OFFSET: %0x007D2870
+// OFFSET: 0x00857E90/0x140589100
 void CGxDeviceD3d::ISceneBegin() {
     if (!this->m_context) {
         if (this->m_d3dDevice->TestCooperativeLevel() == D3DERR_DEVICENOTRESET) {
@@ -3135,13 +3135,13 @@ void CGxDeviceD3d::ScenePresent(void* window) {
     this->ISceneBegin();
 }
 
-// OFFSET: %0x007D2CE0
+// OFFSET: 0x008582E0
 void CGxDeviceD3d::SetInstanceCount(uint32_t count) {
     this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | count));
     this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1));
 }
 
-// OFFSET: %0x007D2D30
+// OFFSET: 0x00858330
 void CGxDeviceD3d::ResetInstancing() {
     this->m_primVertexFormat = GxVertexBufferFormats_Last;
     this->m_primVertexFormats[1] = GxVertexBufferFormats_Last;
@@ -3156,7 +3156,7 @@ void CGxDeviceD3d::ResetInstancing() {
     this->ICheckResult(this->m_d3dDevice->SetStreamSource(1, NULL, 0, 0));
 }
 
-// OFFSET: %0x007D2DD0
+// OFFSET: 0x008583D0
 void CGxDeviceD3d::DrawNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -3168,7 +3168,7 @@ void CGxDeviceD3d::DrawNonIndexed(const CGxBatch& batch) {
     this->m_d3dDevice->DrawPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index + batch.m_start, this->PrimCalcCount(batch.m_primType, batch.m_count));
 }
 
-// OFFSET: %0x007D2E50
+// OFFSET: 0x00858450
 void CGxDeviceD3d::Draw(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -3181,7 +3181,7 @@ void CGxDeviceD3d::Draw(const CGxBatch& batch) {
     this->m_d3dDevice->DrawIndexedPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index, batch.m_minIndex, batch.m_maxIndex - batch.m_minIndex + 1, batch.m_start + this->m_primIndexBuf->m_index, this->PrimCalcCount(batch.m_primType, batch.m_count));
 }
 
-// OFFSET: %0x007D2F00
+// OFFSET: 0x00858500
 void CGxDeviceD3d::DrawInstancedNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -3193,7 +3193,7 @@ void CGxDeviceD3d::DrawInstancedNonIndexed(const CGxBatch& batch) {
     this->m_d3dDevice->DrawPrimitive(s_primitiveConversion[batch.m_primType], this->m_primVertexBufs[0]->m_index, this->PrimCalcCount(batch.m_primType, batch.m_count));
 }
 
-// OFFSET: %0x007D2F80
+// OFFSET: 0x00858580
 void CGxDeviceD3d::DrawInstanced(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -3257,7 +3257,7 @@ void CGxDeviceD3d::IReleaseD3dVertexDecl() {
     }
 }
 
-// OFFSET: %0x007AED20
+// OFFSET: 0x00849180/0x140576EA0
 void CGxDeviceD3d::IReleaseD3dShaders(int32_t freeShaders) {
     if (!freeShaders) {
         return;
@@ -3276,7 +3276,7 @@ void CGxDeviceD3d::IReleaseD3dShaders(int32_t freeShaders) {
     }
 }
 
-// OFFSET: %0x007D2950
+// OFFSET: 0x00857F70/0x1405891F0
 void CGxDeviceD3d::SceneClear(uint32_t mask, CImVector color) {
     CGxDevice::SceneClear(mask, color);
 
@@ -3310,7 +3310,7 @@ void CGxDeviceD3d::DeviceSetBaseMipLevel(uint32_t level) {
     CGxDevice::DeviceSetBaseMipLevel(level);
 }
 
-// OFFSET: %0x007C7940
+// OFFSET: 0x0084B530/0x140579BA0
 void CGxDeviceD3d::LogCrashInfo(char* buffer, uint32_t size) {
     char line[260];
 
@@ -3345,7 +3345,7 @@ void CGxDeviceD3d::LogCrashInfo(char* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: %0x007C8CE0
+// OFFSET: 0x0084C8C0/0x14057B1D0
 void CGxDeviceD3d::ICreateReadbackSurface() {
     if (this->m_readbackSurface) {
         return;
@@ -3369,7 +3369,7 @@ void CGxDeviceD3d::ICreateReadbackSurface() {
     this->m_d3dDevice->CreateRenderTarget(static_cast<UINT>(window.maxX - window.minX), static_cast<UINT>(window.maxY - window.minY), format, D3DMULTISAMPLE_NONE, 0, TRUE, &this->m_readbackSurface, NULL);
 }
 
-// OFFSET: %0x007C8DB0
+// OFFSET: 0x0084C990
 void CGxDeviceD3d::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context) {
         return;
@@ -3410,7 +3410,7 @@ void CGxDeviceD3d::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint
     this->m_scissorRectDirty = 1;
 }
 
-// OFFSET: %0x007C96A0
+// OFFSET: 0x0084D780/0x14057C370
 void CGxDeviceD3d::DeviceResolveDepthBuffer(CGxTex* texture) {
     if (!this->m_context) {
         return;
@@ -3543,7 +3543,7 @@ LPDIRECT3DSURFACE9 CGxDeviceD3d::ITexGetSurface(CGxTex* texId, uint32_t level, u
 CGxDeviceD3d::~CGxDeviceD3d() {
 }
 
-// OFFSET: %0x007C9310
+// OFFSET: 0x0084D370
 void CGxDeviceD3d::DeviceReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
     this->ClampRectToWindow(rect);
 
@@ -3658,7 +3658,7 @@ int32_t CGxDeviceD3d::ICheckDepthStencilFormat(D3DFORMAT format) {
     return SUCCEEDED(this->m_d3d->CheckDeviceFormat(this->m_d3dCaps.AdapterOrdinal, this->m_d3dCaps.DeviceType, this->m_devAdapterFormat, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, format)) && SUCCEEDED(this->m_d3d->CheckDepthStencilMatch(this->m_d3dCaps.AdapterOrdinal, this->m_d3dCaps.DeviceType, this->m_devAdapterFormat, this->m_devAdapterFormat, format));
 }
 
-// OFFSET: %0x007C7310
+// OFFSET: 0x0084AF80/0x140579630
 uint32_t CGxDeviceD3d::IGetAdapterIndex(uint32_t monitor) {
     HMONITOR handle = static_cast<HMONITOR>(CGxDevice::AdapterGetMonitorHandle(monitor));
 
@@ -3681,7 +3681,7 @@ uint32_t CGxDeviceD3d::IGetAdapterIndex(uint32_t monitor) {
     return adapter;
 }
 
-// OFFSET: %0x007C9580
+// OFFSET: 0x0084D5E0
 void CGxDeviceD3d::DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& depths) {
     this->ClampRectToWindow(rect);
 
@@ -3690,7 +3690,7 @@ void CGxDeviceD3d::DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& depths
     memset(depths.Ptr(), 0, sizeof(float) * count);
 }
 
-// OFFSET: %0x007D25B0
+// OFFSET: 0x00857BD0/0x140588D30
 int32_t CGxDeviceD3d::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const C2iVector& sourcePos, const C2iVector& size, uint32_t level, uint32_t plane) {
     if (!this->m_context) {
         return 0;
@@ -3734,7 +3734,7 @@ int32_t CGxDeviceD3d::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& des
     return SUCCEEDED(result);
 }
 
-// OFFSET: %0x007D26D0
+// OFFSET: 0x00857CF0/0x140588EB0
 int32_t CGxDeviceD3d::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     if (!this->m_context) {
         return 0;
@@ -4010,7 +4010,7 @@ void CGxDeviceD3d::ITexUploadBox(CGxTex* texId, uint32_t level, const D3DBOX* bo
     scratch->Release();
 }
 
-// OFFSET: %0x007D0FF0
+// OFFSET: 0x00856850/0x140587690
 void CGxDeviceD3d::ITexUploadRect(CGxTex* texId, uint32_t face, uint32_t level, const RECT* rect, const void* bits, uint32_t pitch) {
     LPDIRECT3DSURFACE9 scratchSurface = NULL;
     LPDIRECT3DSURFACE9 surface = NULL;
@@ -4047,7 +4047,7 @@ void CGxDeviceD3d::ITexUploadRect(CGxTex* texId, uint32_t face, uint32_t level, 
     }
 }
 
-// OFFSET: %0x007D1100
+// OFFSET: 0x00856980/0x140587820
 void CGxDeviceD3d::ITexUploadAll(CGxTex* texId) {
     uint32_t width;
     uint32_t height;
@@ -4121,7 +4121,7 @@ void CGxDeviceD3d::ITexUploadAll(CGxTex* texId) {
     }
 }
 
-// OFFSET: %0x007D12A0
+// OFFSET: 0x00856B20/0x140587AB0
 void CGxDeviceD3d::ITexUpload(CGxTex* texId) {
     uint32_t texelStrideInBytes;
     const void* texels = NULL;
@@ -4274,7 +4274,7 @@ void CGxDeviceD3d::ITexUpload(CGxTex* texId) {
     texId->m_userFunc(GxTex_Unlock, texId->m_width, texId->m_height, texId->m_depth, 0, texId->m_userArg, texelStrideInBytes, texels);
 }
 
-// OFFSET: %0x007D1700
+// OFFSET: 0x00856F80/0x140588190
 void CGxDeviceD3d::ITexTakeD3dTexture(CGxTex* dest, CGxTex* source) {
     dest->m_apiSpecificData = source->m_apiSpecificData;
     source->m_apiSpecificData = NULL;
@@ -4285,7 +4285,7 @@ void CGxDeviceD3d::ITexTakeD3dTexture(CGxTex* dest, CGxTex* source) {
     }
 }
 
-// OFFSET: %0x007D1770
+// OFFSET: 0x00856FF0/0x140588210
 void CGxDeviceD3d::ITexUnlinkBound() {
     for (uint32_t i = GxRs_VertexTexture0; i <= GxRs_VertexTexture3; i++) {
         CGxTex* texId = static_cast<CGxTex*>(this->m_appRenderStates[i].m_value.m_data.p);
@@ -4304,7 +4304,7 @@ void CGxDeviceD3d::ITexUnlinkBound() {
     }
 }
 
-// OFFSET: %0x007D1A00
+// OFFSET: 0x00857280/0x140588330
 void CGxDeviceD3d::ITexReleaseD3dTexture(CGxTex* texId) {
     IDirect3DBaseTexture9* texture = static_cast<IDirect3DBaseTexture9*>(texId->m_apiSpecificData);
 
@@ -4394,7 +4394,7 @@ int32_t CGxDeviceD3d::ITexEvictFor(CGxTex* texId, uint32_t size) {
     return 0;
 }
 
-// OFFSET: %0x007D1F20
+// OFFSET: 0x00857610
 void CGxDeviceD3d::ITexLinkBound() {
     for (uint32_t i = GxRs_VertexTexture0; i <= GxRs_VertexTexture3; i++) {
         CGxTex* texId = static_cast<CGxTex*>(this->m_appRenderStates[i].m_value.m_data.p);
@@ -4468,7 +4468,7 @@ void CGxDeviceD3d::ITexAcquire(CGxTex* texId) {
     }
 }
 
-// OFFSET: %0x007D2490
+// OFFSET: 0x00857AB0/0x140588BC0
 void CGxDeviceD3d::ITexTouch(CGxTex* texId) {
     if (!texId->m_flags.m_renderTarget && texId->m_apiSpecificData && texId->unk_0050 != static_cast<uint32_t>(this->m_frameCount)) {
         texId->unk_0050 = this->m_frameCount;

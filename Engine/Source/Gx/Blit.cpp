@@ -34,7 +34,7 @@ uint8_t Dxt3A8(uint32_t alpha) {
     return alpha << 4;
 }
 
-// OFFSET: %0x00645DF0
+// OFFSET: 0x006395B0
 void Dxt5AlphaTable(uint8_t* alphas) {
     int32_t a0 = alphas[0];
     int32_t a1 = alphas[1];
@@ -68,7 +68,7 @@ uint8_t Dxt5A8(uint32_t alpha) {
     return alpha;
 }
 
-// OFFSET: %0x00645F50
+// OFFSET: 0x00639710
 void ConvertTexels3216(const uint8_t* in, void* out, const C2iVector& size, uint32_t inStride, uint32_t outStride, uint8_t aShr, uint8_t rShr, uint8_t gShr, uint8_t bShr, uint8_t aShl, uint8_t rShl, uint8_t gShl, uint8_t bShl) {
     if (size.x < 2) {
         uint16_t* out16 = static_cast<uint16_t*>(out);
@@ -97,17 +97,17 @@ void ConvertTexels3216(const uint8_t* in, void* out, const C2iVector& size, uint
     }
 }
 
-// OFFSET: %0x00646130
+// OFFSET: 0x006398F0
 static void Blit_Argb8888_Argb4444(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     ConvertTexels3216(static_cast<const uint8_t*>(in), out, size, inStride, outStride, 4, 4, 4, 4, 12, 8, 4, 0);
 }
 
-// OFFSET: %0x00646160
+// OFFSET: 0x00639920
 static void Blit_Argb8888_Argb1555(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     ConvertTexels3216(static_cast<const uint8_t*>(in), out, size, inStride, outStride, 7, 3, 3, 3, 15, 10, 5, 0);
 }
 
-// OFFSET: %0x00646190
+// OFFSET: 0x00639950
 static void Blit_Argb8888_Rgb565(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     ConvertTexels3216(static_cast<const uint8_t*>(in), out, size, inStride, outStride, 8, 3, 2, 3, 0, 11, 5, 0);
 }
@@ -153,7 +153,7 @@ static void Blit_Argb8888_Abgr8888(const C2iVector& size, const void* in, uint32
     }
 }
 
-// OFFSET: %0x006462F0
+// OFFSET: 0x00639AB0
 static void Blit_Argb8888_Argb8888_A1(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     const uint8_t* src = static_cast<const uint8_t*>(in);
     uint8_t* dst = static_cast<uint8_t*>(out);
@@ -223,7 +223,7 @@ static void Blit_Dxt35_Dxt35(const C2iVector& size, const void* in, uint32_t inS
     }
 }
 
-// OFFSET: %0x00646460
+// OFFSET: 0x00639C20
 uint32_t CalcRowStride(BlitFormat format, uint32_t width, uint32_t height) {
     // STATIC: %0x00BDDF08
     static uint32_t BYTES_PER_BLOCK[BlitFormats_Last] = { 0, 4, 4, 2, 2, 2, 2, 8, 16, 16, 4, 8, 4, 4, 0, 0 };
@@ -276,7 +276,7 @@ void CopyGeneric16(const C2iVector& size, const void* in, uint32_t inStride, voi
     }
 }
 
-// OFFSET: %0x006465A0
+// OFFSET: 0x00639D60
 void CopyGeneric64(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     if (size.x * 8 == inStride && size.x * 8 == outStride) {
         memcpy(out, in, size.y * size.x * 8);
@@ -293,7 +293,7 @@ void CopyGeneric64(const C2iVector& size, const void* in, uint32_t inStride, voi
     }
 }
 
-// OFFSET: %0x00646620
+// OFFSET: 0x00639DE0
 void CopyGeneric128(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     if (size.x * 16 == inStride && size.x * 16 == outStride) {
         memcpy(out, in, size.y * size.x * 16);
@@ -310,7 +310,7 @@ void CopyGeneric128(const C2iVector& size, const void* in, uint32_t inStride, vo
     }
 }
 
-// OFFSET: %0x00646690
+// OFFSET: 0x00639E50
 template <>
 void DxtMakeTable<CImVector>(const DxtColorBlock* block, CImVector* colors) {
     const DxtColorBlock::Tables& t = DxtColorBlock::s_tables;
@@ -466,7 +466,7 @@ static void Blit_generic32_generic32(const C2iVector& size, const void* in, uint
     CopyGeneric32(size, in, inStride, out, outStride);
 }
 
-// OFFSET: %0x00647010
+// OFFSET: 0x0063A7D0
 static void Blit_Argb8888_Argb8888_A8(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     const uint8_t* src = static_cast<const uint8_t*>(in);
     uint8_t* dst = static_cast<uint8_t*>(out);
@@ -504,7 +504,7 @@ static void Blit_generic128_generic128(const C2iVector& size, const void* in, ui
     CopyGeneric128(size, in, inStride, out, outStride);
 }
 
-// OFFSET: %0x006470C0
+// OFFSET: 0x0063A880
 void DxtDecodeBlock(const Dxt3Block* block, CImVector** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
     // STATIC: #0x00C6082C
     static CImVector colors[4];
@@ -531,7 +531,7 @@ void DxtDecodeBlock(const Dxt3Block* block, CImVector** rows, const DxtRect& rec
     }
 }
 
-// OFFSET: %0x006471E0
+// OFFSET: 0x0063A9A0
 void DxtDecodeBlock(const Dxt3Block* block, CArgb4444** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
     // STATIC: #0x00C60840
     static CArgb4444 colors[4];
@@ -552,7 +552,7 @@ void DxtDecodeBlock(const Dxt3Block* block, CArgb4444** rows, const DxtRect& rec
     }
 }
 
-// OFFSET: %0x006472D0
+// OFFSET: 0x0063AA90
 void DxtDecodeBlock(const Dxt5Block* block, CImVector** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
     // STATIC: #0x00C6084C
     static CImVector colors[4];
@@ -589,7 +589,7 @@ void DxtDecodeBlock(const Dxt5Block* block, CImVector** rows, const DxtRect& rec
     }
 }
 
-// OFFSET: %0x00647420
+// OFFSET: 0x0063ABE0
 void DxtDecodeBlock(const Dxt5Block* block, CArgb4444** rows, const DxtRect& rect, uint8_t (*alpha)(uint32_t)) {
     // STATIC: #0x00C60860
     static CArgb4444 colors[4];
@@ -619,7 +619,7 @@ void DxtDecodeBlock(const Dxt5Block* block, CArgb4444** rows, const DxtRect& rec
     }
 }
 
-// OFFSET: %0x00647560
+// OFFSET: 0x0063AD20
 void DxtDecodeBlock(const Dxt1Block* block, CRgb565** rows, const DxtRect& rect) {
     // STATIC: #0x00C6086C
     static CRgb565 colors[4];
@@ -657,7 +657,7 @@ void DxtDecodeBlock(const Dxt1Block* block, CArgb1555** rows, const DxtRect& rec
     }
 }
 
-// OFFSET: %0x006476A0
+// OFFSET: 0x0063AE60
 void DxtDecodeBlock(const Dxt1Block* block, CImVector** rows, const DxtRect& rect) {
     // STATIC: #0x00C60884
     static CImVector colors[4];

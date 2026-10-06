@@ -10,7 +10,7 @@ void EmergencyMem::Unlock() {
     this->m_lock = false;
 }
 
-// OFFSET: %0x007AAC80
+// OFFSET: 0x00844FB0/0x140571E40
 void* EmergencyMem::Lock(uint32_t size) {
     if (this->m_data.Count() < size) {
         this->m_data.SetCount(size);

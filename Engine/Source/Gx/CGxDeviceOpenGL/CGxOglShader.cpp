@@ -19,7 +19,7 @@ void NvCombinerStage::Apply(GLenum stage, GLenum portion) {
     glCombinerOutputNV(stage, portion, this->m_abOutput, this->m_cdOutput, this->m_sumOutput, this->m_scale, this->m_bias, this->m_abDotProduct, this->m_cdDotProduct, this->m_muxSum);
 }
 
-// OFFSET: %0x007C61D0
+// OFFSET: 0x00869910/0x14059D650
 void NvPixelShader::SetupRegisterCombiners() {
     glCombinerParameteriNV(GL_NUM_GENERAL_COMBINERS_NV, this->m_numGeneralCombiners);
     glCombinerParameteriNV(GL_COLOR_SUM_CLAMP_NV, this->m_colorSumClamp);
@@ -71,7 +71,7 @@ void NvTextureShader::Apply() {
     }
 }
 
-// OFFSET: %0x007C63B0
+// OFFSET: 0x00869AF0
 void CGxDeviceOpenGl::IVertexShaderPatch(char* code, uint32_t size) {
     uint32_t numConstants = this->m_caps.m_shaderConstants[GxSh_Vertex];
     uint32_t paramSize;
@@ -236,7 +236,7 @@ void CGxDeviceOpenGl::IShaderDestroyVertex(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// OFFSET: %0x007C6850
+// OFFSET: 0x00869F90
 void CGxDeviceOpenGl::IShaderDestroyPixel(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
         int32_t target = this->m_caps.m_shaderTargets[GxSh_Pixel];
@@ -270,7 +270,7 @@ void CGxDeviceOpenGl::IShaderDestroy(CGxShaderPermute* permute) {
     }
 }
 
-// OFFSET: %0x007C68E0
+// OFFSET: 0x0086A020
 void CGxDeviceOpenGl::ShaderConstantsSet(EGxShTarget target, uint32_t index, const float* constants, uint32_t count) {
     if (target == GxSh_Vertex) {
         ShadowConstants& shadow = CGxDevice::s_shadowConstants[GxSh_Vertex];
@@ -337,7 +337,7 @@ void CGxDeviceOpenGl::ShaderConstantsSet(EGxShTarget target, uint32_t index, con
     }
 }
 
-// OFFSET: %0x007C6AA0
+// OFFSET: 0x0086A1E0
 void CGxDeviceOpenGl::IShaderCreatePixel(CGxShaderPermute* permute) {
     permute->m_valid = 0;
     permute->m_loaded = 1;
@@ -381,7 +381,7 @@ void CGxDeviceOpenGl::IShaderCreatePixel(CGxShaderPermute* permute) {
     }
 }
 
-// OFFSET: %0x007C6BD0
+// OFFSET: 0x0086A310
 void CGxDeviceOpenGl::IShaderCreateVertex(CGxShaderPermute* permute) {
     permute->m_valid = 0;
     permute->m_loaded = 1;
@@ -456,7 +456,7 @@ void CGxDeviceOpenGl::IShaderCreate(CGxShaderPermute* permute) {
     }
 }
 
-// OFFSET: %0x007C6D80
+// OFFSET: 0x0086A4C0
 void CGxDeviceOpenGl::IShaderConstantsSend(EGxShTarget target, uint32_t index, const float* constants, uint32_t count) {
     if (!this->m_caps.m_shaderTargets[target]) {
         return;
@@ -575,7 +575,7 @@ void CGxDeviceOpenGl::IShaderConstantsFlush() {
     pixel.dirtyMin = 255;
 }
 
-// OFFSET: %0x007C7060
+// OFFSET: 0x0086A7A0/0x14059E670
 void CGxDeviceOpenGl::IBindPixelShader(CGxShaderPermute* permute) {
     this->IResourceTouch(permute);
 

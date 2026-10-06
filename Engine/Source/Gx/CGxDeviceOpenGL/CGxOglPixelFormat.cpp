@@ -17,7 +17,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007D05D0
+// OFFSET: 0x0086AA10/0x14059E870
 static int32_t SetupPixelFormat(HDC dc, const CGxFormat& format) {
     if (format.m_multisampleCount > 1) {
         return 0;
@@ -164,7 +164,7 @@ BOOL WglDestroyContext(HGLRC context) {
     return wglDeleteContext(context);
 }
 
-// OFFSET: %0x007D0840
+// OFFSET: 0x0086AC80/0x14059EB90
 static int32_t SetupPixelFormatWGL(HDC dc, const CGxFormat& format) {
     int32_t* attributes = static_cast<int32_t*>(alloca(512));
     attributes[0] = WGL_DRAW_TO_WINDOW_ARB;
@@ -331,7 +331,7 @@ static int32_t SetupPixelFormatWGL(HDC dc, const CGxFormat& format) {
     return SetPixelFormat(dc, pixelFormat, &pfd);
 }
 
-// OFFSET: %0x007D0C10
+// OFFSET: 0x0086B050/0x14059F010
 HGLRC CreateGLContext(HDC dc, const CGxFormat& format) {
     int32_t result;
 

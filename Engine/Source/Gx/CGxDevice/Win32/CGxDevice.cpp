@@ -31,7 +31,7 @@ static D3DFORMAT s_d3d9ExDepthFormats[4] = { D3DFMT_D16, D3DFMT_D24X8, D3DFMT_D2
 // STATIC: #0x00AD8D5C
 static D3DFORMAT s_d3d9ExAdapterFormats[3] = { D3DFMT_R5G6B5, D3DFMT_X8R8G8B8, D3DFMT_A8R8G8B8 };
 
-// OFFSET: %0x007A9DE0
+// OFFSET: 0x00843F60
 int32_t CGxDevice::AdjustWindowRectToWorkArea(uint32_t monitor, float aspectRatio, C2iVector* adjust, tagRECT* rect) {
     MONITORINFO info;
     info.cbSize = sizeof(info);
@@ -122,7 +122,7 @@ int32_t CGxDevice::AdjustWindowRectToWorkArea(uint32_t monitor, float aspectRati
     return 1;
 }
 
-// OFFSET: %0x007B0FF0
+// OFFSET: 0x0084FBB0
 static uint16_t HToI(const char* h, int32_t count) {
     uint16_t value = 0;
 
@@ -271,7 +271,7 @@ static int CGxMonitorModeSort(const void* a, const void* b) {
     return refreshB < refreshA;
 }
 
-// OFFSET: %0x007B5C00
+// OFFSET: 0x0084A0E0/0x140577DD0
 int32_t CGxDevice::WinAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     HMONITOR handle = static_cast<HMONITOR>(CGxDevice::AdapterGetMonitorHandle(monitor));
 
@@ -308,7 +308,7 @@ struct MonitorEnumData {
     TSGrowableArray<void*>* monitors;
 };
 
-// OFFSET: %0x007B6540
+// OFFSET: 0x0084AAB0/0x140578FC0
 static BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC dc, LPRECT rect, LPARAM param) {
     MonitorEnumData* data = reinterpret_cast<MonitorEnumData*>(param);
 
@@ -333,7 +333,7 @@ static BOOL CALLBACK MonitorEnumProc(HMONITOR monitor, HDC dc, LPRECT rect, LPAR
     return TRUE;
 }
 
-// OFFSET: %0x007B66A0
+// OFFSET: 0x0084AC80/0x140579240
 int32_t CGxDevice::D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     modes.SetCount(0);
 
@@ -346,7 +346,7 @@ int32_t CGxDevice::D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CG
     return modes.Count() != 0;
 }
 
-// OFFSET: %0x007B66F0
+// OFFSET: 0x0084ACD0/0x1405792A0
 int32_t CGxDevice::WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     modes.SetCount(0);
 
@@ -383,7 +383,7 @@ int32_t CGxDevice::WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxM
     return modes.Count() != 0;
 }
 
-// OFFSET: %0x007B6800
+// OFFSET: 0x0084ADE0/0x140579420
 void CGxDevice::AdapterInitMonitors() {
     CGxDevice::s_monitors.Clear();
 
@@ -431,7 +431,7 @@ void CGxDevice::IWindowDestroy(void* window) {
     hwnd = NULL;
 }
 
-// OFFSET: %0x007B5A60
+// OFFSET: 0x008499D0
 void CGxDevice::IWindowCursorCreate(void* window, void* icon) {
     HWND hwnd = static_cast<HWND>(window);
     HICON& cursor = *static_cast<HICON*>(icon);
@@ -565,7 +565,7 @@ void CGxDevice::AdapterLogCrashInfo(char* buffer, uint32_t size) {
     delete[] info;
 }
 
-// OFFSET: %0x007B5CA0
+// OFFSET: 0x0084A180
 LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
     CGxDevice* device = reinterpret_cast<CGxDevice*>(GetWindowLongA(hwnd, GWL_USERDATA));
 
@@ -786,7 +786,7 @@ uint16_t CGxDevice::IWindowClassCreate() {
     return RegisterClassExA(&windowClass);
 }
 
-// OFFSET: %0x007B6260
+// OFFSET: 0x0084A720/0x140578510
 int32_t CGxDevice::IWindowCreate(void* window, CGxFormat& format, int32_t show) {
     HWND& hwnd = *static_cast<HWND*>(window);
     HINSTANCE instance = GetModuleHandleA(NULL);

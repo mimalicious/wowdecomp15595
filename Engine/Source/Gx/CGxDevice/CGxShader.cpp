@@ -2,12 +2,12 @@
 #include "Engine/Source/Gx/CGxDevice/CGxShader.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007AE9F0
+// OFFSET: 0x00848E30/0x140576A30
 CGxShader::~CGxShader() {
     SMemFree(this->m_data, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x007AEA30
+// OFFSET: 0x00848E70/0x140576A90
 bool CGxShader::Load(uint8_t* data, uint32_t size) {
     this->m_data = data;
 

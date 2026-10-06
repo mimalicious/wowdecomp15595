@@ -54,7 +54,7 @@ inline bool CGxDeviceD3d11::InputLayoutKey::operator==(const InputLayoutKey& key
     return this->m_format == key.m_format && this->m_mask == key.m_mask;
 }
 
-// OFFSET: %0x007CC610
+// OFFSET: 0x0086D510/0x1405A1E40
 void CGxDeviceD3d11::IStateReset() {
     this->m_curInputLayout = NULL;
     this->m_curIndexBuffer = NULL;
@@ -151,7 +151,7 @@ void CGxDeviceD3d11::IStateSyncScissorRect() {
     this->m_scissorRectDirty = 0;
 }
 
-// OFFSET: %0x007CE580
+// OFFSET: 0x0086F480/0x1405A4C40
 void CGxDeviceD3d11::IUpdateInputLayout() {
     if (!(this->m_stateDirty & StateDirty_InputLayout)) {
         return;
@@ -263,7 +263,7 @@ void CGxDeviceD3d11::ISetInputLayoutInstanced() {
     }
 }
 
-// OFFSET: %0x007CE840
+// OFFSET: 0x0086F740/0x1405A5030
 void CGxDeviceD3d11::IStateSyncRasterizer() {
     if (this->m_stateDirty & StateDirty_Rasterizer) {
         this->m_stateDirty &= ~StateDirty_Rasterizer;
@@ -319,7 +319,7 @@ apply:
     }
 }
 
-// OFFSET: %0x007CE9C0
+// OFFSET: 0x0086F8C0/0x1405A5240
 void CGxDeviceD3d11::IStateSyncBlend() {
     if (this->m_stateDirty & StateDirty_Blend) {
         this->m_stateDirty &= ~StateDirty_Blend;
@@ -379,7 +379,7 @@ void CGxDeviceD3d11::IStateSyncBlend() {
     }
 }
 
-// OFFSET: %0x007CEB70
+// OFFSET: 0x0086FA90/0x1405A5490
 void CGxDeviceD3d11::IStateSyncDepth() {
     if (this->m_stateDirty & StateDirty_Depth) {
         this->m_stateDirty &= ~StateDirty_Depth;
@@ -652,7 +652,7 @@ void CGxDeviceD3d11::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
 }
 
-// OFFSET: %0x007CF1A0
+// OFFSET: 0x00870190
 void CGxDeviceD3d11::CapsWindowSizeInScreenCoords(CRect& rect) {
     if (this->IDevIsWindowed()) {
         const CRect& window = this->DeviceCurWindow();
@@ -736,7 +736,7 @@ void CGxDeviceD3d11::ScenePresent(void* window) {
     }
 }
 
-// OFFSET: %0x007CF380
+// OFFSET: 0x00870400
 void CGxDeviceD3d11::SceneClearToViewport(uint32_t mask, CImVector color) {
     CGxDevice::SceneClearToViewport(mask, color);
 
@@ -832,7 +832,7 @@ void CGxDeviceD3d11::SceneClearToViewport(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: %0x007CF810
+// OFFSET: 0x00870890
 int32_t CGxDeviceD3d11::XformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     const CRect& window = this->DeviceCurWindow();
     float x = static_cast<float>(static_cast<int32_t>(window.maxX * minX + 0.5f));
@@ -876,7 +876,7 @@ void CGxDeviceD3d11::IXformSetViewport() {
     this->m_viewportDirty = 0;
 }
 
-// OFFSET: %0x007CFAD0
+// OFFSET: 0x00870B50
 void CGxDeviceD3d11::XformSetProjection(const C44Matrix& matrix) {
     CGxDevice::XformSetProjection(matrix);
 
@@ -923,7 +923,7 @@ void CGxDeviceD3d11::SetInstanceCount(uint32_t count) {
     this->m_instanceCount = count;
 }
 
-// OFFSET: %0x007CFDF0
+// OFFSET: 0x00870E70
 void CGxDeviceD3d11::ResetInstancing() {
     if (this->m_curVertexBuffers[1]) {
         this->m_curVertexBuffers[1] = NULL;
@@ -958,7 +958,7 @@ void CGxDeviceD3d11::PrimVertexPtrs(CGxBuf** bufs, const EGxVertexBufferFormat* 
     CGxDevice::PrimVertexPtrs(bufs, formats, format);
 }
 
-// OFFSET: %0x007CFEC0
+// OFFSET: 0x00870F40
 void CGxDeviceD3d11::DrawNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -977,7 +977,7 @@ void CGxDeviceD3d11::DrawNonIndexed(const CGxBatch& batch) {
     this->m_d3dContext->Draw(batch.m_count, this->m_primVertexBufs[0]->m_index + batch.m_start);
 }
 
-// OFFSET: %0x007CFF50
+// OFFSET: 0x00870FE0
 void CGxDeviceD3d11::Draw(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -997,7 +997,7 @@ void CGxDeviceD3d11::Draw(const CGxBatch& batch) {
     this->m_d3dContext->DrawIndexed(batch.m_count, batch.m_start + this->m_primIndexBuf->m_index, this->m_primVertexBufs[0]->m_index);
 }
 
-// OFFSET: %0x007D0000
+// OFFSET: 0x00871090
 void CGxDeviceD3d11::DrawInstancedNonIndexed(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;
@@ -1016,7 +1016,7 @@ void CGxDeviceD3d11::DrawInstancedNonIndexed(const CGxBatch& batch) {
     this->m_d3dContext->DrawInstanced(batch.m_count, this->m_instanceCount, this->m_primVertexBufs[0]->m_index, this->m_primVertexBufs[1] ? this->m_primVertexBufs[1]->m_index : 0);
 }
 
-// OFFSET: %0x007D00C0
+// OFFSET: 0x00871150
 void CGxDeviceD3d11::DrawInstanced(const CGxBatch& batch) {
     if (!this->m_context || this->m_intF5C) {
         return;

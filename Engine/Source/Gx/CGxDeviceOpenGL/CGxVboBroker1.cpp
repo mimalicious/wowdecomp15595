@@ -2,11 +2,11 @@
 #include "Engine/Source/Gx/CGxDeviceOpenGL/CGxVboBroker1.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007B0130
+// OFFSET: 0x0084ECC0/0x14057DB00
 CGxVboBroker::~CGxVboBroker() {
 }
 
-// OFFSET: %0x007AF430
+// OFFSET: 0x0084DF60/0x14057CC50
 CGxVboBroker1::CGxVboBroker1(GLenum target, uint32_t maxBits, CGxDeviceOpenGl* device) {
     this->m_target = target;
     this->m_maxBits = maxBits;
@@ -61,7 +61,7 @@ CGxVboBroker1::~CGxVboBroker1() {
     }
 }
 
-// OFFSET: %0x007AF600
+// OFFSET: 0x0084E130/0x14057CEB0
 void CGxVboBroker1::SelectVbo(uint32_t size, GLuint& vbo, uint32_t& offset) {
     uint32_t bits = 1;
 

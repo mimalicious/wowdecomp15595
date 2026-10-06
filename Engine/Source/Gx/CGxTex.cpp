@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "Engine/Source/Gx/CGxTex.h"
 
-// OFFSET: %0x007AA1C0
+// OFFSET: 0x00844340/0x140570D80
 CGxTex::CGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, const char* name) {
     if (!depth) {
         depth = 1;
@@ -30,7 +30,7 @@ CGxTex::CGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t de
     this->m_char5D = 1;
 }
 
-// OFFSET: %0x007AAAB0
+// OFFSET: 0x00844580/0x140571100
 CGxTex::~CGxTex() {
 }
 

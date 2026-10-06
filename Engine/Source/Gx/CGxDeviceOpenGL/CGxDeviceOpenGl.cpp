@@ -59,7 +59,7 @@ static int32_t s_firstAttach = 1;
 // STATIC: %0x00D92EA4
 static EmergencyMem s_emergencyMem[GxPoolTargets_Last];
 
-// OFFSET: %0x007B0190
+// OFFSET: 0x0084ED20
 CGxDevice* CreateCGxDeviceOpenGl() {
     void* mem = SMemAlloc(sizeof(CGxDeviceOpenGl), __FILE__, __LINE__, 0);
 
@@ -70,7 +70,7 @@ CGxDevice* CreateCGxDeviceOpenGl() {
     return new (mem) CGxDeviceOpenGl();
 }
 
-// OFFSET: %0x007AF690
+// OFFSET: 0x0084E1C0/0x14057CF30
 CGxDeviceOpenGl::CGxDeviceOpenGl() {
     this->m_api = GxApi_OpenGl;
     this->m_hwnd = NULL;
@@ -111,7 +111,7 @@ CGxDeviceOpenGl::CGxDeviceOpenGl() {
     this->m_glVersion = NULL;
 }
 
-// OFFSET: %0x007B01C0
+// OFFSET: 0x0084ED50
 CGxDeviceOpenGl::~CGxDeviceOpenGl() {
     this->m_glVendor = NULL;
     this->m_glRenderer = NULL;
@@ -172,7 +172,7 @@ void CGxDeviceOpenGl::DeviceOverride(EGxOverride override, uint32_t value) {
     }
 }
 
-// OFFSET: %0x007B0210
+// OFFSET: 0x0084EDA0/0x14057DC30
 void CGxDeviceOpenGl::LogCrashInfo(char* buffer, uint32_t size) {
     char line[260];
 
@@ -192,7 +192,7 @@ void CGxDeviceOpenGl::LogCrashInfo(char* buffer, uint32_t size) {
     }
 }
 
-// OFFSET: %0x007AF870
+// OFFSET: 0x0084E3A0/0x14057D1B0
 void CGxDeviceOpenGl::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_numTmus = glMaxTextureUnits >= 8 ? 8 : glMaxTextureUnits;
     this->m_caps.m_numVertexTmus = 0;
@@ -397,7 +397,7 @@ void CGxDeviceOpenGl::ISetCaps(const CGxFormat& format) {
     this->Log(this->m_caps);
 }
 
-// OFFSET: %0x007AFDD0
+// OFFSET: 0x0084E970/0x14057D720
 void CGxDeviceOpenGl::DestroyPoolAPI(CGxPool* pool) {
     if (!pool) {
         return;
@@ -581,7 +581,7 @@ int32_t CGxDeviceOpenGl::QueryGetData(CGxQuery* query, uint32_t* data) {
     return error == GL_NO_ERROR;
 }
 
-// OFFSET: %0x007B0370
+// OFFSET: 0x0084EF00
 void CGxDeviceOpenGl::CreatePoolAPI(CGxPool* pool) {
     if (glARBVertexBufferObject) {
         if (this->m_useVboBroker[pool->m_target][pool->m_usage]) {
@@ -644,7 +644,7 @@ void CGxDeviceOpenGl::PoolSizeSet(CGxPool* pool, uint32_t size) {
     pool->m_size = size;
 }
 
-// OFFSET: %0x007B0540
+// OFFSET: 0x0084F0F0
 char* CGxDeviceOpenGl::BufLock(CGxBuf* buf) {
     CGxDevice::BufLock(buf);
 
@@ -712,7 +712,7 @@ char* CGxDeviceOpenGl::BufLock(CGxBuf* buf) {
     return NULL;
 }
 
-// OFFSET: %0x007B0720
+// OFFSET: 0x0084F2D0
 void CGxDeviceOpenGl::BufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     CGxDevice::BufData(buf, data, size, offset);
 
@@ -763,7 +763,7 @@ void CGxDeviceOpenGl::BufData(CGxBuf* buf, const void* data, uint32_t size, uint
     }
 }
 
-// OFFSET: %0x007B08F0
+// OFFSET: 0x0084F4A0/0x14057E450
 void CGxDeviceOpenGl::IQueryRelease() {
     for (CGxQuery* query = this->m_queryList.Head(); query; query = this->m_queryList.Next(query)) {
         if (query->m_apiSpecific) {
@@ -774,7 +774,7 @@ void CGxDeviceOpenGl::IQueryRelease() {
     }
 }
 
-// OFFSET: %0x007AED20
+// OFFSET: 0x00849180/0x140576EA0
 void CGxDeviceOpenGl::IReleaseShaders(int32_t freeShaders) {
     if (!freeShaders) {
         return;
@@ -793,7 +793,7 @@ void CGxDeviceOpenGl::IReleaseShaders(int32_t freeShaders) {
     }
 }
 
-// OFFSET: %0x007B0950
+// OFFSET: 0x0084F500/0x14057E4B0
 void CGxDeviceOpenGl::IDeviceSetRenderTargetFBO(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     CGxDevice::DeviceSetRenderTarget(buffer, texture, plane);
 
@@ -877,7 +877,7 @@ void CGxDeviceOpenGl::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, u
     this->m_scissorRectDirty = 1;
 }
 
-// OFFSET: %0x007B0C00
+// OFFSET: 0x0084F7C0/0x14057E7D0
 int32_t CGxDeviceOpenGl::BufUnlock(CGxBuf* buf, uint32_t size) {
     CGxDevice::BufUnlock(buf, size);
 
@@ -921,7 +921,7 @@ int32_t CGxDeviceOpenGl::BufUnlock(CGxBuf* buf, uint32_t size) {
     return result;
 }
 
-// OFFSET: %0x007B0D50
+// OFFSET: 0x0084F940
 void CGxDeviceOpenGl::DeviceReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
     this->ClampRectToWindow(rect);
 
@@ -951,7 +951,7 @@ void CGxDeviceOpenGl::DeviceReadPixels(CiRect& rect, TSGrowableArray<CImVector>&
     }
 }
 
-// OFFSET: %0x007B0E40
+// OFFSET: 0x0084FA30
 void CGxDeviceOpenGl::DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& depths) {
     this->ClampRectToWindow(rect);
 
@@ -977,7 +977,7 @@ void CGxDeviceOpenGl::DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& dep
     }
 }
 
-// OFFSET: %0x007B0FC0
+// OFFSET: 0x0084F910/0x14057E930
 void CGxDeviceOpenGl::DeviceDestroyPoolAPI() {
     for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
         next = CGxDevice::s_poolList.RawNext(pool);
@@ -1011,7 +1011,7 @@ void BindWglExtensions() {
     }
 }
 
-// OFFSET: %0x007B69D0
+// OFFSET: 0x008505E0/0x14057FA50
 static void CreateDummyContext() {
     if (s_dummyContextCreated) {
         return;
@@ -1090,7 +1090,7 @@ void CGxDeviceOpenGl::DeviceDestroyPbuffer() {
     this->m_pbufferRC = NULL;
 }
 
-// OFFSET: %0x007B6BC0
+// OFFSET: 0x008507D0/0x14057FCF0
 void CGxDeviceOpenGl::IDevSetFocus(int32_t focus, CGxFormat& format) {
     this->m_windowFocus = focus;
 
@@ -1130,7 +1130,7 @@ void CGxDeviceOpenGl::IDevSetFocus(int32_t focus, CGxFormat& format) {
     }
 }
 
-// OFFSET: %0x007B6D20
+// OFFSET: 0x00850930
 int32_t CGxDeviceOpenGl::SetFormatMode(CGxFormat& format) {
     if (format.m_window) {
         format.m_apiSpecificModeID = 0;
@@ -1287,7 +1287,7 @@ void CGxDeviceOpenGl::ICursorDestroy() {
     this->IWindowCursorDestroy(&this->m_cursor);
 }
 
-// OFFSET: %0x007B7100
+// OFFSET: 0x00850D60/0x140580300
 void CGxDeviceOpenGl::DeviceCreatePbuffer() {
     if (!wglArbPbuffer) {
         return;
@@ -1340,7 +1340,7 @@ void CGxDevice::OpenGlApiQuery(int32_t& supported, int32_t& selectable) {
     selectable = 0;
 }
 
-// OFFSET: %0x007B7230
+// OFFSET: 0x00851320/0x140580A40
 int32_t CGxDeviceOpenGl::IDevAttachGlContext(const CGxFormat& format) {
     CreateDummyContext();
 
@@ -1382,7 +1382,7 @@ int32_t CGxDeviceOpenGl::IDevAttachGlContext(const CGxFormat& format) {
     return 1;
 }
 
-// OFFSET: %0x007B7350
+// OFFSET: 0x00850E90/0x140580490
 int32_t CGxDeviceOpenGl::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     switch (wm) {
         case GxWM_Size:
@@ -1453,7 +1453,7 @@ int32_t CGxDeviceOpenGl::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) 
     return 0;
 }
 
-// OFFSET: %0x007B7580
+// OFFSET: 0x00851460/0x140580BD0
 int32_t CGxDeviceOpenGl::DeviceCreate(void* window, const CGxFormat& format) {
     s_deviceChanging = 1;
     this->m_ownhwnd = 0;
@@ -1481,7 +1481,7 @@ int32_t CGxDeviceOpenGl::DeviceCreate(void* window, const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007B7640
+// OFFSET: 0x00851520/0x140580CC0
 int32_t CGxDeviceOpenGl::DeviceSetFormat(const CGxFormat& format) {
     CGxDevice::Log("CGxDeviceOpenGl::DeviceSetFormat():");
     CGxDevice::Log(format);
@@ -1509,7 +1509,7 @@ int32_t CGxDeviceOpenGl::DeviceSetFormat(const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007B7720
+// OFFSET: 0x008510C0/0x140580750
 void CGxDeviceOpenGl::IDeviceSetRenderTargetCopy(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context || !this->m_windowVisible) {
         return;
@@ -1568,7 +1568,7 @@ void CGxDeviceOpenGl::IDeviceSetRenderTargetCopy(EGxBuffer buffer, CGxTex* textu
     g_theGxDevicePtr->XformSetProjection(this->m_projection);
 }
 
-// OFFSET: %0x007B78C0
+// OFFSET: 0x00851260
 void CGxDeviceOpenGl::CapsWindowSizeInScreenCoords(CRect& rect) {
     if (this->IDevIsWindowed()) {
         const CRect& window = this->DeviceCurWindow();
@@ -1593,7 +1593,7 @@ void CGxDeviceOpenGl::CapsWindowSizeInScreenCoords(CRect& rect) {
     }
 }
 
-// OFFSET: %0x007B74E0
+// OFFSET: 0x00851020
 int32_t CGxDeviceOpenGl::DeviceCreate(GxWindowProc windowProc, const CGxFormat& format) {
     this->m_ownhwnd = 1;
 
@@ -1615,7 +1615,7 @@ int32_t CGxDeviceOpenGl::DeviceCreate(GxWindowProc windowProc, const CGxFormat& 
     return 0;
 }
 
-// OFFSET: %0x007B7980
+// OFFSET: 0x00851600/0x140580DC0
 static void WglAdapterFormats(HDC dc, TSGrowableArray<CGxFormat>& formats) {
     wglGetPixelFormatAttribivARB = reinterpret_cast<PFNWGLGETPIXELFORMATATTRIBIVARBPROC>(wglGetProcAddress("wglGetPixelFormatAttribivARB"));
 
@@ -1732,7 +1732,7 @@ static void WglAdapterFormats(HDC dc, TSGrowableArray<CGxFormat>& formats) {
     }
 }
 
-// OFFSET: %0x007B7C00
+// OFFSET: 0x00851890/0x140581170
 static void PfdAdapterFormats(HDC dc, TSGrowableArray<CGxFormat>& formats) {
     PIXELFORMATDESCRIPTOR pfd;
     memset(&pfd.dwFlags, 0, sizeof(pfd) - offsetof(PIXELFORMATDESCRIPTOR, dwFlags));
@@ -1811,7 +1811,7 @@ static void PfdAdapterFormats(HDC dc, TSGrowableArray<CGxFormat>& formats) {
     }
 }
 
-// OFFSET: %0x007B7D90
+// OFFSET: 0x00851A30/0x140581360
 int32_t CGxDevice::OpenGlAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     HINSTANCE instance = GetModuleHandleA(NULL);
 

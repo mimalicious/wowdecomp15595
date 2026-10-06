@@ -68,7 +68,7 @@ void CGxDeviceOpenGl::DsInit() {
     this->m_deviceStates[Ds_ColorMask] = 1;
 }
 
-// OFFSET: %0x007B8ED0
+// OFFSET: 0x0085C5A0/0x14058E5F0
 void CGxDeviceOpenGl::DsSet(EDeviceState state, uint32_t value, int32_t force) {
     uint32_t current = this->m_deviceStates[state];
 
@@ -434,7 +434,7 @@ static void ColorToFloats(GLfloat* out, const CImVector& color) {
     out[3] = color.a * (1.0f / 255.0f);
 }
 
-// OFFSET: %0x007B95B0
+// OFFSET: 0x0085CC80/0x14058EE10
 void CGxDeviceOpenGl::IStateSyncIndexPtr() {
     CGxBuf* buf = this->m_primIndexBuf;
 
@@ -509,7 +509,7 @@ void CGxDeviceOpenGl::IStateSyncVertexFormat() {
     this->m_curVertexFormat = this->m_primVertexFormats[0];
 }
 
-// OFFSET: %0x007B9760
+// OFFSET: 0x0085CE30
 int32_t CGxDeviceOpenGl::XformIsValidViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     const CRect& window = this->DeviceCurWindow();
     float height = window.maxY;
@@ -529,7 +529,7 @@ int32_t CGxDeviceOpenGl::XformIsValidViewport(float minX, float maxX, float minY
     return right - left > 0 && bottom - top > 0 && minZ >= 0.0f && maxZ <= 1.0f && minZ <= maxZ && left >= 0 && top >= 0 && static_cast<float>(right) <= width && static_cast<float>(bottom) <= height;
 }
 
-// OFFSET: %0x007B9870
+// OFFSET: 0x0085CF40/0x14058F120
 void CGxDeviceOpenGl::IStateSyncViewport() {
     const CRect& window = this->DeviceCurWindow();
 
@@ -552,7 +552,7 @@ void CGxDeviceOpenGl::IStateSyncViewport() {
     this->m_viewportDirty = 0;
 }
 
-// OFFSET: %0x007B9970
+// OFFSET: 0x0085D040/0x14058F210
 void CGxDeviceOpenGl::IStateSyncEnables() {
     if (this->m_appMasterEnables == this->m_hwMasterEnables) {
         return;
@@ -592,7 +592,7 @@ void CGxDeviceOpenGl::IStateSyncClipPlanes() {
     this->m_clipPlaneMask = 0;
 }
 
-// OFFSET: %0x007B9A60
+// OFFSET: 0x0085D130/0x14058F340
 void CGxDeviceOpenGl::IStateSyncScissorRect() {
     if (!this->m_scissorRectDirty) {
         return;
@@ -619,7 +619,7 @@ void CGxDeviceOpenGl::IStateSyncScissorRect() {
     this->m_scissorRectDirty = 0;
 }
 
-// OFFSET: %0x007B9B50
+// OFFSET: 0x0085D220/0x14058F430
 void CGxDeviceOpenGl::ISetTexture(uint32_t tmu, CGxTex* texId) {
     if (tmu >= static_cast<uint32_t>(this->m_caps.m_numShaderTmus)) {
         return;
@@ -637,7 +637,7 @@ void CGxDeviceOpenGl::ISetTexture(uint32_t tmu, CGxTex* texId) {
     }
 }
 
-// OFFSET: %0x007BA820
+// OFFSET: 0x0085DEF0/0x140590240
 void CGxDeviceOpenGl::ISetColorOp(uint32_t tmu, uint32_t op) {
     if (tmu >= static_cast<uint32_t>(this->m_caps.m_numTmus)) {
         return;
@@ -647,7 +647,7 @@ void CGxDeviceOpenGl::ISetColorOp(uint32_t tmu, uint32_t op) {
     this->DsSet(static_cast<EDeviceState>(Ds_ColorOp0 + tmu), op, 0);
 }
 
-// OFFSET: %0x007BAF40
+// OFFSET: 0x0085E610/0x140590A50
 void CGxDeviceOpenGl::ISetAlphaOp(uint32_t tmu, uint32_t op) {
     if (tmu >= static_cast<uint32_t>(this->m_caps.m_numTmus)) {
         return;
@@ -657,7 +657,7 @@ void CGxDeviceOpenGl::ISetAlphaOp(uint32_t tmu, uint32_t op) {
     this->DsSet(static_cast<EDeviceState>(Ds_AlphaOp0 + tmu), op, 0);
 }
 
-// OFFSET: %0x007BB660
+// OFFSET: 0x0085ED30/0x140591260
 void CGxDeviceOpenGl::IStateSyncVertexPtrs() {
     if (!this->m_attribDirty) {
         return;
@@ -831,7 +831,7 @@ void CGxDeviceOpenGl::IStateSyncVertexPtrs() {
     this->m_attribDirty = 0;
 }
 
-// OFFSET: %0x007BCCA0
+// OFFSET: 0x00860370/0x140592FE0
 void CGxDeviceOpenGl::IStateSyncLights() {
     if (this->m_appRenderStates[GxRs_Lighting].m_value.m_data.i[0]) {
         if (this->m_ambientOnlyMode) {
@@ -968,7 +968,7 @@ void CGxDeviceOpenGl::IStateSyncLights() {
     }
 }
 
-// OFFSET: %0x007BD060
+// OFFSET: 0x00860730/0x140593440
 void CGxDeviceOpenGl::IStateSyncMaterial() {
     int32_t colorMaterial = this->m_appRenderStates[GxRs_ColorMaterial].m_value.m_data.i[0];
 
@@ -1023,7 +1023,7 @@ void CGxDeviceOpenGl::IStateSyncMaterial() {
     this->m_materialDirty = 0;
 }
 
-// OFFSET: %0x007BD290
+// OFFSET: 0x00860960/0x1405936D0
 void CGxDeviceOpenGl::IStateSyncXforms() {
     if (this->m_viewDirty) {
         CGxMatrixStack& world = this->m_xforms[GxXform_World];
@@ -1070,7 +1070,7 @@ void CGxDeviceOpenGl::IStateSyncXforms() {
     this->DsSet(Ds_MatrixMode, GL_MODELVIEW, 0);
 }
 
-// OFFSET: %0x007BD580
+// OFFSET: 0x00860C50/0x140593AC0
 void CGxDeviceOpenGl::IStateSetContextDefaults() {
     this->DsInit();
 
@@ -1125,7 +1125,7 @@ void CGxDeviceOpenGl::IStateSetContextDefaults() {
     glFogf(GL_FOG_DENSITY, 0.0f);
 }
 
-// OFFSET: %0x007BD840
+// OFFSET: 0x00860F20/0x140593DD0
 void CGxDeviceOpenGl::ISetTexGen(uint32_t tmu, int32_t texGen) {
     if (tmu >= static_cast<uint32_t>(this->m_caps.m_numTmus)) {
         return;
@@ -1195,7 +1195,7 @@ void CGxDeviceOpenGl::ISetTexGen(uint32_t tmu, int32_t texGen) {
     }
 }
 
-// OFFSET: %0x007C47D0
+// OFFSET: 0x00867EB0/0x14059B5C0
 void CGxDeviceOpenGl::IRsSendToHw(EGxRenderState which) {
     const CGxStateBom& value = this->m_appRenderStates[which].m_value;
 
@@ -1498,7 +1498,7 @@ void CGxDeviceOpenGl::IRsSendToHw(EGxRenderState which) {
     }
 }
 
-// OFFSET: %0x007BD7C0
+// OFFSET: 0x00860E90/0x140593D40
 void CGxDeviceOpenGl::IStateSync() {
     this->m_viewDirty |= this->m_xforms[GxXform_World].m_dirty | this->m_xforms[GxXform_View].m_dirty;
     this->IStateSyncVertexFormat();

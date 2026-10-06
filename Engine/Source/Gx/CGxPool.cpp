@@ -5,7 +5,7 @@
 CGxPool::CGxPool(EGxPoolTarget target, EGxPoolUsage usage, int32_t size, EGxPoolHintBits hint, const char* name) : m_target(target), m_usage(usage), m_size(size), m_apiSpecific(NULL), unk_001C(0), m_hint(hint), m_name(name) {
 }
 
-// OFFSET: %0x007A7640
+// OFFSET: 0x008415A0/0x14056D8E0
 CGxPool::~CGxPool() {
 }
 
@@ -29,7 +29,7 @@ void CGxPool::Discard() {
     this->unk_001C = 0;
 }
 
-// OFFSET: %0x007AA890
+// OFFSET: 0x00844BE0/0x140571930
 void CGxPool::UnlinkBuf(CGxBuf* buf) {
     this->m_bufList.UnlinkNode(buf);
     buf->m_pool = NULL;

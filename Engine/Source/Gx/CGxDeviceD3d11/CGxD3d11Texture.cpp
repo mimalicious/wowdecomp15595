@@ -51,7 +51,7 @@ void D3d11Error(const char* file, int32_t line, const char* format, ...) {
     va_end(args);
 }
 
-// OFFSET: %0x007CA2E0
+// OFFSET: 0x0086B0C0/0x14059F070
 int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     uint32_t width;
     uint32_t height;
@@ -296,7 +296,7 @@ void CGxDeviceD3d11::ITexScratchClear() {
     }
 }
 
-// OFFSET: %0x007CA810
+// OFFSET: 0x0086B760
 void CGxDeviceD3d11::ITexCalcOffset(EGxTexFormat format, uint32_t pitch, uint32_t height, const RECT& rect, uint32_t& offset, uint32_t& size) {
     if (static_cast<uint32_t>(format - GxTex_Dxt1) > 2) {
         offset = pitch * rect.top + ((rect.left * CGxDevice::s_texFormatBitDepth[format]) >> 3);
@@ -307,7 +307,7 @@ void CGxDeviceD3d11::ITexCalcOffset(EGxTexFormat format, uint32_t pitch, uint32_
     }
 }
 
-// OFFSET: %0x007CA880
+// OFFSET: 0x0086B7D0
 void CGxDeviceD3d11::ITexRectToBox(EGxTexFormat format, const RECT& rect, D3D11_BOX& box) {
     box.left = 0;
     box.top = 0;
@@ -322,7 +322,7 @@ void CGxDeviceD3d11::ITexRectToBox(EGxTexFormat format, const RECT& rect, D3D11_
     }
 }
 
-// OFFSET: %0x007CA8E0
+// OFFSET: 0x0086B830/0x14059F870
 int32_t CGxDeviceD3d11::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const C2iVector& sourcePos, const C2iVector& size, uint32_t level, uint32_t plane) {
     if (!this->m_context) {
         return 0;
@@ -377,7 +377,7 @@ int32_t CGxDeviceD3d11::TexCopy(CGxTex* source, CGxTex* dest, const C2iVector& d
     return 1;
 }
 
-// OFFSET: %0x007CAAA0
+// OFFSET: 0x0086BA90/0x14059FAB0
 void CGxDeviceD3d11::ITexReleaseD3dTexture(CGxTex* texId) {
     TexViews* views = static_cast<TexViews*>(texId->m_apiSpecificData);
 
@@ -435,13 +435,13 @@ void CGxDeviceD3d11::TexDestroy(CGxTex* texId) {
     CGxDevice::TexDestroy(texId);
 }
 
-// OFFSET: %0x007CABA0
+// OFFSET: 0x0086BB90
 void CGxDeviceD3d11::ITexScratchRelease(ScratchTex* scratch) {
     uint32_t sizeClass = ScratchSizeClass(scratch->m_size);
     this->m_scratchTextures[13 * sizeClass + scratch->m_format - 1].LinkToTail(scratch);
 }
 
-// OFFSET: %0x007CABF0
+// OFFSET: 0x0086BBE0
 void CGxDeviceD3d11::ITexScratchAlloc(EGxTexFormat format, uint32_t count) {
     DXGI_FORMAT dxgiFormat = s_GxTexFormatToDxgiFormat[format];
 
@@ -480,7 +480,7 @@ void CGxDeviceD3d11::ITexScratchAlloc(EGxTexFormat format, uint32_t count) {
     }
 }
 
-// OFFSET: %0x007CAD60
+// OFFSET: 0x0086BD60
 CGxDeviceD3d11::ScratchTex* CGxDeviceD3d11::ITexScratchGet(uint32_t frame, uint32_t size, EGxTexFormat format, int32_t& reused) {
     ScratchTex* found;
 
@@ -528,7 +528,7 @@ CGxDeviceD3d11::ScratchTex* CGxDeviceD3d11::ITexScratchGet(uint32_t frame, uint3
     return found;
 }
 
-// OFFSET: %0x007CAE90
+// OFFSET: 0x0086BE90/0x14059FF80
 void CGxDeviceD3d11::ITexScratchDestroy() {
     for (uint32_t i = 0; i < 78; i++) {
         TSExplicitList<ScratchTex, offsetof(ScratchTex, m_link)>& list = this->m_scratchTextures[i];
@@ -554,7 +554,7 @@ void CGxDeviceD3d11::ITexScratchDestroy() {
     }
 }
 
-// OFFSET: %0x007CAFF0
+// OFFSET: 0x0086BFF0/0x1405A00F0
 void CGxDeviceD3d11::ITexUploadRect(uint32_t size, CGxTex* texId, const void* bits, uint32_t pitch, uint32_t height, const RECT& rect, uint32_t plane, uint32_t subresource) {
     uint32_t frame = g_theGxDevicePtr->m_frameCount;
     uint32_t offset = 0;
@@ -596,7 +596,7 @@ void CGxDeviceD3d11::ITexUploadRect(uint32_t size, CGxTex* texId, const void* bi
     this->ITexScratchRelease(scratch);
 }
 
-// OFFSET: %0x007CB210
+// OFFSET: 0x0086C210/0x1405A0450
 void CGxDeviceD3d11::ITexUpload(CGxTex* texId) {
     uint32_t texelStrideInBytes;
     const void* texels = NULL;
@@ -751,7 +751,7 @@ void CGxDeviceD3d11::ITexMarkAsUpdated(CGxTex* texId) {
     CGxDevice::ITexMarkAsUpdated(texId);
 }
 
-// OFFSET: %0x007CB560
+// OFFSET: 0x0086C590/0x1405A0A00
 void CGxDeviceD3d11::ITexForceRecreation(int32_t all) {
     this->ITexScratchDestroy();
 
@@ -798,7 +798,7 @@ static void StretchQuad(CGxBuf*& vertexBuf, CGxBuf*& indexBuf, float u, float v)
     GxBufUnlock(indexBuf, 0);
 }
 
-// OFFSET: %0x007CB650
+// OFFSET: 0x0086C680
 int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     if (!this->m_context) {
         return 0;
@@ -1022,7 +1022,7 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
     return 1;
 }
 
-// OFFSET: %0x007CBE30
+// OFFSET: 0x0086CEB0
 int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     if ((source->m_needsCreation || (!source->m_apiSpecificData && !source->m_apiSpecificData2)) && !this->ITexCreate(source)) {
         return 0;
