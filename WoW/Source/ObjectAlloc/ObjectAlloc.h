@@ -16,10 +16,7 @@ class CObjectHeapList {
     /* 001C */ uint32_t m_hasEmptyHeaps;
     /* 0020 */ uint32_t m_deleteCount;
     /* 0024 */ uint32_t m_fullestHeap;
-    /* 0028 */ char m_heapName[80];
-    /* 0078 */ uint64_t m_numAllocs;
-    /* 0080 */ uint32_t m_uint80;
-    /* 0084 */ uint8_t m_freeEmptyHeaps;
+    /* 0028 */ uint8_t m_freeEmptyHeaps;
 
     CObjectHeapList();
     uint32_t BlocksAllocated();

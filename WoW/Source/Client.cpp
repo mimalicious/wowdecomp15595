@@ -80,7 +80,6 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/Trade_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
-#include "WoW/Source/ObjectAlloc/HeapUsage.h"
 #include "WoW/Source/ObjectAlloc/ObjectAlloc.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SoundInterface2.h"
@@ -1051,7 +1050,6 @@ static void InitializeClient() {
 // OFFSET: #0x004047E0
 int32_t InitializeEngineCallback(const void* data, void* param) {
     BaseInitializeContext();
-    HeapUsageInitialize();
     AsyncFileReadRegisterCVars();
     TextureInitialize();
     ModelBlobLoad("world\\model.blob");
@@ -1614,7 +1612,6 @@ int32_t DestroyEngineCallback(const void* data, void* param) {
     TextureDestroy();
     AsyncFileReadDestroy();
     GxuLightShutdown();
-    HeapUsageDestroy();
     ObjectAllocDestroy();
     BaseDestroyContext();
 

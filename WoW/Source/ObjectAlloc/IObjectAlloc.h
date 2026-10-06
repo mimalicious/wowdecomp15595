@@ -13,9 +13,9 @@ class CObjectHeap {
     CObjectHeap();
     CObjectHeap(const CObjectHeap& source);
     ~CObjectHeap();
-    bool Allocate(uint32_t objSize, uint32_t count, const char* name);
+    bool Allocate(uint32_t objSize, uint32_t count);
     void Delete(uint32_t index, uint32_t objSize, uint32_t count);
-    int32_t New(uint32_t objSize, uint32_t count, uint32_t* index, const char* name, void** ptr, bool zero);
+    int32_t New(uint32_t objSize, uint32_t count, uint32_t* index, void** ptr, bool zero);
     void* Ptr(uint32_t index, uint32_t objSize, uint32_t count);
 };
 

@@ -5,10 +5,10 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: #0x00B4AFC0
+// STATIC: 0x00D73258
 static OBJALLOCGLOBALS s_globals;
 
-// STATIC: #0x00B4AFD0
+// STATIC: 0x00D73268
 static SCritSect s_globalsLock;
 
 // INLINED
@@ -54,14 +54,12 @@ CObjectHeapList::CObjectHeapList() {
     this->m_hasEmptyHeaps = 0;
     this->m_deleteCount = 0;
     this->m_fullestHeap = 0;
-    this->m_numAllocs = 0;
-    this->m_uint80 = 0;
     this->m_freeEmptyHeaps = 1;
 }
 
-// OFFSET: #0x004D2AA0
-bool CObjectHeap::Allocate(uint32_t objSize, uint32_t count, const char* name) {
-    this->m_obj = SMemAlloc(count * (objSize + sizeof(uint32_t)), name, 0, 0x2000000);
+// OFFSET: 0x00486710
+bool CObjectHeap::Allocate(uint32_t objSize, uint32_t count) {
+    this->m_obj = SMemAlloc(count * (objSize + sizeof(uint32_t)), __FILE__, __LINE__, 0x2000000);
 
     if (!this->m_obj) {
         return false;
@@ -90,7 +88,7 @@ void ReleaseObjAllocGlobals() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: #0x004D2B30
+// OFFSET: 0x00486910
 void CObjectHeapList::FreeEmptyHeaps() {
     uint32_t count = this->m_heaps.Count();
     uint32_t allocated = 0;
@@ -181,14 +179,14 @@ uint32_t CObjectHeapList::PercentUsed() {
     return capacity ? 100 * allocated / capacity : 0;
 }
 
-// OFFSET: %0x0048F7C0
-int32_t CObjectHeap::New(uint32_t objSize, uint32_t count, uint32_t* index, const char* name, void** ptr, bool zero) {
+// INLINED
+int32_t CObjectHeap::New(uint32_t objSize, uint32_t count, uint32_t* index, void** ptr, bool zero) {
     if (this->m_allocated >= count) {
         return 0;
     }
 
     if (!this->m_obj) {
-        this->Allocate(objSize, count, name);
+        this->Allocate(objSize, count);
     }
 
     *index = this->m_indexStack[this->m_allocated++];
@@ -216,7 +214,7 @@ void* ObjectPtr(uint32_t heapId, uint32_t memHandle) {
     return ptr;
 }
 
-// OFFSET: #0x004D2F00
+// OFFSET: 0x00486AC0
 void CObjectHeapList::Delete(uint32_t index) {
     uint32_t heapIndex = index / this->m_objsPerBlock;
     CObjectHeap& heap = this->m_heaps[heapIndex];
@@ -240,7 +238,7 @@ void CObjectHeapList::Delete(uint32_t index) {
     }
 }
 
-// OFFSET: #0x004D2F90
+// OFFSET: 0x00486B40
 static void HeapUse() {
     s_globalsLock.Enter();
 
@@ -253,7 +251,7 @@ static void HeapUse() {
     for (uint32_t i = 0; i < count; i++) {
         CObjectHeapList& list = s_globals.objects[i];
 
-        DebugLog("    \"%24s\" %3u blocks, %5u objs per block (%6u bytes per obj): %6u objs allocated (%2d%%)\n", list.m_heapName, list.TotalHeaps(), list.m_objsPerBlock, list.m_objSize, list.BlocksAllocated(), list.PercentUsed());
+        DebugLog("    Heap %2u: %3u blocks, %5u objs per block (%6u bytes per obj): %6u objs allocated (%2d%%)\n", i, list.TotalHeaps(), list.m_objsPerBlock, list.m_objSize, list.BlocksAllocated(), list.PercentUsed());
 
         used += s_globals.objects[i].m_objSize * s_globals.objects[i].BlocksAllocated();
         allocated += s_globals.objects[i].TotalHeaps() * s_globals.objects[i].m_objSize * s_globals.objects[i].m_objsPerBlock;
@@ -264,14 +262,14 @@ static void HeapUse() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: %0x0048FBD0
+// OFFSET: 0x00486D40
 void ObjectFree(uint32_t heapId, uint32_t memHandle) {
     s_globalsLock.Enter();
     s_globals.objects[heapId].Delete(memHandle);
     s_globalsLock.Leave();
 }
 
-// OFFSET: #0x004D3250
+// OFFSET: 0x00486DE0
 int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
     CObjectHeap* heap = NULL;
     uint32_t count = this->m_heaps.Count();
@@ -282,7 +280,7 @@ int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
         this->m_fullestHeap = count;
         heap = this->m_heaps.New();
 
-        if (!heap->Allocate(this->m_objSize, this->m_objsPerBlock, this->m_heapName)) {
+        if (!heap->Allocate(this->m_objSize, this->m_objsPerBlock)) {
             return 0;
         }
     } else {
@@ -298,7 +296,7 @@ int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
         }
     }
 
-    if (!heap->New(this->m_objSize, this->m_objsPerBlock, index, this->m_heapName, ptr, zero)) {
+    if (!heap->New(this->m_objSize, this->m_objsPerBlock, index, ptr, zero)) {
         return 0;
     }
 
@@ -308,42 +306,39 @@ int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
         this->m_numFullHeaps++;
     }
 
-    this->m_numAllocs++;
-
     return 1;
 }
 
-// OFFSET: #0x004D3330
+// OFFSET: 0x00486F00
 int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool zero) {
-    if (!memHandle) {
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
+    if (memHandle) {
+        *memHandle = 0;
+        s_globalsLock.Enter();
+
+        if (heapId < s_globals.objects.Count()) {
+            uint32_t handle;
+            void* ptr;
+
+            if (s_globals.objects[heapId].New(&handle, &ptr, zero)) {
+                if (objectPtr) {
+                    *objectPtr = ptr;
+                }
+
+                s_globalsLock.Leave();
+                *memHandle = handle;
+
+                return 1;
+            }
+
+            s_globalsLock.Leave();
+
+            return 0;
+        }
     }
 
-    *memHandle = 0;
-    s_globalsLock.Enter();
+    SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
 
-    if (heapId >= s_globals.objects.Count()) {
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    uint32_t handle;
-    void* ptr;
-
-    if (!s_globals.objects[heapId].New(&handle, &ptr, zero)) {
-        s_globalsLock.Leave();
-        return 0;
-    }
-
-    if (objectPtr) {
-        *objectPtr = ptr;
-    }
-
-    s_globalsLock.Leave();
-    *memHandle = handle;
-
-    return 1;
+    return 0;
 }
 
 // PROVEN: bae5ef52 IDENTICAL/NONE
@@ -356,23 +351,23 @@ void ObjectAllocDestroy() {
     s_globalsLock.Leave();
 }
 
-// OFFSET: #0x004D3650
+// OFFSET: 0x004871D0
 uint32_t ObjectAllocAddHeap(uint32_t objectSize, uint32_t objectsPerBlock, const char* name, bool freeEmptyHeaps) {
-    if (!objectSize) {
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
+    if (objectSize) {
+        s_globalsLock.Enter();
+
+        uint32_t heapId = s_globals.objects.Count();
+        CObjectHeapList* list = s_globals.objects.New();
+        list->m_objsPerBlock = objectsPerBlock;
+        list->m_objSize = objectSize;
+        list->m_freeEmptyHeaps = freeEmptyHeaps;
+
+        s_globalsLock.Leave();
+
+        return heapId;
     }
 
-    s_globalsLock.Enter();
+    SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
 
-    uint32_t heapId = s_globals.objects.Count();
-    CObjectHeapList* list = s_globals.objects.New();
-    list->m_objSize = objectSize;
-    list->m_objsPerBlock = objectsPerBlock;
-    SStrCopy(list->m_heapName, name, sizeof(list->m_heapName));
-    list->m_freeEmptyHeaps = freeEmptyHeaps;
-
-    s_globalsLock.Leave();
-
-    return heapId;
+    return 0;
 }
