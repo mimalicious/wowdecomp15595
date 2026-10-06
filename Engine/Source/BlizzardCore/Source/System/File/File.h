@@ -140,7 +140,9 @@ bool SetAttributes(Blizzard::File::Filesystem* fs, System_File::Stacked::FilePar
 bool SetCacheMode(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
 bool SetEOF(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
 bool SetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
+bool SetSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
 bool SetWorkingDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
+bool SupportsSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
 bool ToCreateFlags(uint32_t flags, DWORD* sharemode, DWORD* desiredaccess, DWORD* creationdisposition, DWORD* flagsandattributes);
 int32_t ToNativeAttributes(int32_t attributes);
 void Shutdown();
@@ -150,6 +152,7 @@ bool write_first(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* o
 bool write_locked(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count);
 bool write_overlapped(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count);
 bool WriteP(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
+bool ZeroRange(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms);
 
 }
 
@@ -166,6 +169,29 @@ extern int64_t s_throttleDebt;
 extern int32_t s_throttleDelay;
 
 bool file_init(Blizzard::File::Filesystem* fs, FileParms* parms);
+bool CreateDirectory(FileParms* parms);
+bool Delete(FileParms* parms);
+bool Exists(FileParms* parms);
+bool GetFileInfo(FileParms* parms);
+bool GetFreeSpace(FileParms* parms);
+bool GetPos(FileParms* parms);
+bool GetRootChars(FileParms* parms);
+bool GetWorkingDirectory(FileParms* parms);
+bool IsAbsolutePath(FileParms* parms);
+bool IsReadOnly(FileParms* parms);
+bool MakeAbsolutePath(FileParms* parms);
+bool Move(FileParms* parms);
+bool Open(FileParms* parms);
+bool ProcessDirFast(FileParms* parms);
+bool RemoveDirectory(FileParms* parms);
+bool SetAttributes(FileParms* parms);
+bool SetCacheMode(FileParms* parms);
+bool SetEOF(FileParms* parms);
+bool SetPos(FileParms* parms);
+bool SetSparse(FileParms* parms);
+bool SetWorkingDirectory(FileParms* parms);
+bool SupportsSparse(FileParms* parms);
+bool ZeroRange(FileParms* parms);
 void HoistAll();
 bool PassThrough(Blizzard::File::Filesystem* fs, FileParms* parms);
 bool stream_read(Blizzard::File::Filesystem* fs, FileParms* parms);

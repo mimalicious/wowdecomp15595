@@ -19,11 +19,12 @@
 // STATIC: %0x00C0C252
 static bool s_StreamingFlush = true;
 
-// STATIC: %0x00C0C4A8
+// STATIC: 0x00D070F0
 Blizzard::File::Filesystem System_File::Stacked::s_streamstack = {
     &System_File::Stacked::s_streamstack,
     NULL,
     {
+        System_File::Stacked::PassThrough,
         System_File::Stacked::PassThrough,
         System_File::Stacked::stream_close,
         System_File::Stacked::PassThrough,
@@ -44,6 +45,8 @@ Blizzard::File::Filesystem System_File::Stacked::s_streamstack = {
         System_File::Stacked::stream_open,
         System_File::Stacked::stream_read,
         System_File::Stacked::stream_readp,
+        System_File::Stacked::PassThrough,
+        System_File::Stacked::PassThrough,
         System_File::Stacked::PassThrough,
         System_File::Stacked::PassThrough,
         System_File::Stacked::PassThrough,

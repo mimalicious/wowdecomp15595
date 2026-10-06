@@ -620,7 +620,8 @@ int32_t STORMAPI SFile::Unload(void* data) {
     return 1;
 }
 
-// OFFSET: %0x00708B70
+// PROVEN: 3f66fe39 IDENTICAL/DIFFERENT
+// OFFSET: 0x007A5820/0x14049A540
 int32_t System_SFile2::OldFindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type) {
     Blizzard::File::FileInfo info;
 

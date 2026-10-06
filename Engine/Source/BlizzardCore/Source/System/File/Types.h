@@ -26,14 +26,15 @@ struct FileInfo {
     /* 0000 */ char* m_path;
     /* 0004 */ uint32_t unk_0004;
     /* 0008 */ int64_t m_size;
-    /* 0010 */ int32_t m_attributes;
-    /* 0014 */ uint8_t unk_0014[4];
-    /* 0018 */ Blizzard::Time::Timestamp m_createTime;
-    /* 0020 */ Blizzard::Time::Timestamp m_modTime;
-    /* 0028 */ Blizzard::Time::Timestamp m_accessTime;
-    /* 0030 */ int32_t m_existence;
-    /* 0034 */ bool m_regularFile;
-    /* 0035 */ uint8_t unk_0035[3];
+    /* 0010 */ int64_t m_compressedSize;
+    /* 0018 */ int32_t m_attributes;
+    /* 001C */ uint8_t unk_001C[4];
+    /* 0020 */ Blizzard::Time::Timestamp m_createTime;
+    /* 0028 */ Blizzard::Time::Timestamp m_modTime;
+    /* 0030 */ Blizzard::Time::Timestamp m_accessTime;
+    /* 0038 */ int32_t m_existence;
+    /* 003C */ bool m_regularFile;
+    /* 003D */ uint8_t unk_003D[3];
 };
 }
 }
@@ -56,35 +57,38 @@ typedef bool (*FileFunc)(Blizzard::File::Filesystem* fs, System_File::Stacked::F
 namespace Blizzard {
 namespace File {
 struct Functions {
-    /* 0000 */ System_File::Stacked::FileFunc m_cd;
-    /* 0004 */ System_File::Stacked::FileFunc m_close;
-    /* 0008 */ System_File::Stacked::FileFunc m_create;
-    /* 000C */ System_File::Stacked::FileFunc m_cwd;
-    /* 0010 */ System_File::Stacked::FileFunc m_dirwalk;
-    /* 0014 */ System_File::Stacked::FileFunc m_exists;
-    /* 0018 */ System_File::Stacked::FileFunc m_flush;
-    /* 001C */ System_File::Stacked::FileFunc m_getfileinfo;
-    /* 0020 */ System_File::Stacked::FileFunc m_getfreespace;
-    /* 0024 */ System_File::Stacked::FileFunc m_getpos;
-    /* 0028 */ System_File::Stacked::FileFunc m_getrootchars;
-    /* 002C */ System_File::Stacked::FileFunc m_isabspath;
-    /* 0030 */ System_File::Stacked::FileFunc m_isreadonly;
-    /* 0034 */ System_File::Stacked::FileFunc m_makeabspath;
-    /* 0038 */ System_File::Stacked::FileFunc m_mkdir;
-    /* 003C */ System_File::Stacked::FileFunc m_move;
-    /* 0040 */ System_File::Stacked::FileFunc m_copy;
-    /* 0044 */ System_File::Stacked::FileFunc m_open;
-    /* 0048 */ System_File::Stacked::FileFunc m_read;
-    /* 004C */ System_File::Stacked::FileFunc m_readp;
-    /* 0050 */ System_File::Stacked::FileFunc m_rmdir;
-    /* 0054 */ System_File::Stacked::FileFunc m_setcachemode;
-    /* 0058 */ System_File::Stacked::FileFunc m_seteof;
-    /* 005C */ System_File::Stacked::FileFunc m_setfileinfo;
-    /* 0060 */ System_File::Stacked::FileFunc m_setpos;
-    /* 0064 */ System_File::Stacked::FileFunc m_unlink;
-    /* 0068 */ System_File::Stacked::FileFunc m_write;
-    /* 006C */ System_File::Stacked::FileFunc m_writep;
-    /* 0070 */ System_File::Stacked::FileFunc m_shutdown;
+    /* 0000 */ System_File::Stacked::FileFunc m_supportssparse;
+    /* 0004 */ System_File::Stacked::FileFunc m_cd;
+    /* 0008 */ System_File::Stacked::FileFunc m_close;
+    /* 000C */ System_File::Stacked::FileFunc m_create;
+    /* 0010 */ System_File::Stacked::FileFunc m_cwd;
+    /* 0014 */ System_File::Stacked::FileFunc m_dirwalk;
+    /* 0018 */ System_File::Stacked::FileFunc m_exists;
+    /* 001C */ System_File::Stacked::FileFunc m_flush;
+    /* 0020 */ System_File::Stacked::FileFunc m_getfileinfo;
+    /* 0024 */ System_File::Stacked::FileFunc m_getfreespace;
+    /* 0028 */ System_File::Stacked::FileFunc m_getpos;
+    /* 002C */ System_File::Stacked::FileFunc m_getrootchars;
+    /* 0030 */ System_File::Stacked::FileFunc m_isabspath;
+    /* 0034 */ System_File::Stacked::FileFunc m_isreadonly;
+    /* 0038 */ System_File::Stacked::FileFunc m_makeabspath;
+    /* 003C */ System_File::Stacked::FileFunc m_mkdir;
+    /* 0040 */ System_File::Stacked::FileFunc m_move;
+    /* 0044 */ System_File::Stacked::FileFunc m_copy;
+    /* 0048 */ System_File::Stacked::FileFunc m_open;
+    /* 004C */ System_File::Stacked::FileFunc m_read;
+    /* 0050 */ System_File::Stacked::FileFunc m_readp;
+    /* 0054 */ System_File::Stacked::FileFunc m_rmdir;
+    /* 0058 */ System_File::Stacked::FileFunc m_setcachemode;
+    /* 005C */ System_File::Stacked::FileFunc m_seteof;
+    /* 0060 */ System_File::Stacked::FileFunc m_setfileinfo;
+    /* 0064 */ System_File::Stacked::FileFunc m_setpos;
+    /* 0068 */ System_File::Stacked::FileFunc m_setsparse;
+    /* 006C */ System_File::Stacked::FileFunc m_zerorange;
+    /* 0070 */ System_File::Stacked::FileFunc m_unlink;
+    /* 0074 */ System_File::Stacked::FileFunc m_write;
+    /* 0078 */ System_File::Stacked::FileFunc m_writep;
+    /* 007C */ System_File::Stacked::FileFunc m_shutdown;
 };
 }
 }
@@ -126,8 +130,8 @@ struct StreamRecord {
     /* 0009 */ uint8_t unk_0009[3];
     /* 000C */ uint32_t unk_000C;
     /* 0010 */ Blizzard::File::FileInfo m_info;
-    /* 0048 */ Blizzard::File::StreamingInfo* m_streaming;
-    /* 004C */ char* m_pathname;
+    /* 0050 */ Blizzard::File::StreamingInfo* m_streaming;
+    /* 0054 */ char* m_pathname;
 };
 }
 }
