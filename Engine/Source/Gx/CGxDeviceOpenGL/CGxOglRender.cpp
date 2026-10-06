@@ -39,7 +39,8 @@ void CGxDeviceOpenGl::IShaderConstantsClear() {
     this->IShaderConstantsReset();
 }
 
-// OFFSET: %0x007C5AC0
+// PROVEN: 18fe02d3 IDENTICAL/IDENTICAL
+// OFFSET: 0x008691E0/0x14059CCC0
 void CGxDeviceOpenGl::SceneClear(uint32_t mask, CImVector color) {
     glClearColor(color.r * (1.0f / 255.0f), color.g * (1.0f / 255.0f), color.b * (1.0f / 255.0f), color.a * (1.0f / 255.0f));
 
@@ -124,19 +125,22 @@ void CGxDeviceOpenGl::IXformSetModelView(const C44Matrix& matrix) {
     glLoadMatrixf(&modelView.a0);
 }
 
-// OFFSET: %0x007C6050
+// PROVEN: 14593c6e IDENTICAL/NONE
+// OFFSET: 0x00869790
 void CGxDeviceOpenGl::XformSetProjection(const C44Matrix& matrix) {
     this->m_projection = matrix;
     this->IXformSetProjection(matrix);
 }
 
-// OFFSET: %0x007C6080
+// PROVEN: 2c044fa7 IDENTICAL/NONE
+// OFFSET: 0x008697C0
 void CGxDeviceOpenGl::XformSetView(const C44Matrix& matrix) {
     CGxDevice::XformSetView(matrix);
     this->m_viewDirty = 1;
 }
 
-// OFFSET: %0x007C60A0
+// PROVEN: e2773712 DIFFERENT/IDENTICAL
+// OFFSET: 0x008697E0/0x14059D4A0
 void CGxDeviceOpenGl::DrawNonIndexed(const CGxBatch& batch) {
     if (this->m_intF5C) {
         return;
@@ -146,7 +150,8 @@ void CGxDeviceOpenGl::DrawNonIndexed(const CGxBatch& batch) {
     glDrawArrays(s_glPrim[batch.m_primType], batch.m_start, batch.m_count);
 }
 
-// OFFSET: %0x007C60D0
+// PROVEN: 6be4ef3f DIFFERENT/IDENTICAL
+// OFFSET: 0x00869810/0x14059D4E0
 void CGxDeviceOpenGl::Draw(const CGxBatch& batch) {
     if (this->m_intF5C) {
         return;

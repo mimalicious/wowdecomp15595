@@ -69,7 +69,8 @@ void CGxDeviceD3d11::IStateReset() {
     this->m_stateDirty = (this->m_stateDirty & 0xFFFFFF00) | 0x3F;
 }
 
-// OFFSET: %0x007CC670
+// PROVEN: 4c6bafa7 IDENTICAL/NONE
+// OFFSET: 0x0086D570
 void CGxDeviceD3d11::ISetIndexBuffer() {
     ID3D11Buffer* indexBuffer = static_cast<ID3D11Buffer*>(this->m_primIndexBuf->m_pool->m_apiSpecific);
 
@@ -79,7 +80,8 @@ void CGxDeviceD3d11::ISetIndexBuffer() {
     }
 }
 
-// OFFSET: %0x007CC6B0
+// PROVEN: 2ce63dde IDENTICAL/NONE
+// OFFSET: 0x0086D5B0
 void CGxDeviceD3d11::ISetVertexBuffer() {
     ID3D11Buffer* vertexBuffer = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
     UINT offset = 0;
@@ -90,7 +92,8 @@ void CGxDeviceD3d11::ISetVertexBuffer() {
     }
 }
 
-// OFFSET: %0x007CC700
+// PROVEN: d6040b1d IDENTICAL/NONE
+// OFFSET: 0x0086D600
 void CGxDeviceD3d11::ISetVertexBuffers() {
     ID3D11Buffer* vertexBuffer0 = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
     ID3D11Buffer* vertexBuffer1 = this->m_primVertexBufs[1] ? static_cast<ID3D11Buffer*>(this->m_primVertexBufs[1]->m_pool->m_apiSpecific) : NULL;
@@ -103,7 +106,8 @@ void CGxDeviceD3d11::ISetVertexBuffers() {
     }
 }
 
-// OFFSET: %0x007CC780
+// PROVEN: 5555e689 IDENTICAL/IDENTICAL
+// OFFSET: 0x0086D680/0x1405A1FF0
 void CGxDeviceD3d11::IStateSyncScissorRect() {
     if (!this->m_scissorRectDirty) {
         return;
@@ -599,7 +603,8 @@ void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
     }
 }
 
-// OFFSET: %0x007CF0F0
+// PROVEN: 7597b02f IDENTICAL/UNPROVEN
+// OFFSET: 0x008700E0/0x1405A5C10
 void CGxDeviceD3d11::IStateSync() {
     this->IRsSync(0);
     this->IShaderConstantsFlush();
@@ -871,7 +876,8 @@ void CGxDeviceD3d11::XformSetView(const C44Matrix& matrix) {
     CGxDevice::XformSetView(matrix);
 }
 
-// OFFSET: %0x007CFDE0
+// PROVEN: 59923c7e IDENTICAL/NONE
+// OFFSET: 0x00870E60
 void CGxDeviceD3d11::SetInstanceCount(uint32_t count) {
     this->m_instanceCount = count;
 }
@@ -891,7 +897,8 @@ void CGxDeviceD3d11::ResetInstancing() {
     this->m_primVertexBufs[1] = NULL;
 }
 
-// OFFSET: %0x007CFE60
+// PROVEN: b630f6a5 IDENTICAL/NONE
+// OFFSET: 0x00870EE0
 void CGxDeviceD3d11::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     if (this->m_primVertexFormat != format) {
         this->m_stateDirty |= StateDirty_InputLayout;
@@ -900,7 +907,8 @@ void CGxDeviceD3d11::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     CGxDevice::PrimVertexPtr(buf, format);
 }
 
-// OFFSET: %0x007CFE90
+// PROVEN: 6782ea7f IDENTICAL/NONE
+// OFFSET: 0x00870F10
 void CGxDeviceD3d11::PrimVertexPtrs(CGxBuf** bufs, const EGxVertexBufferFormat* formats, EGxVertexBufferFormat format) {
     if (this->m_primVertexFormat != format) {
         this->m_stateDirty |= StateDirty_InputLayout;

@@ -33,14 +33,17 @@ class CGxFormat {
     /* 0020 */ uint32_t m_backBufferCount;
     /* 0024 */ uint32_t m_multisampleCount;
     /* 0028 */ float m_multisampleQuality;
-    /* 002C */ CGxFormat::Format m_colorFormat;
-    /* 0030 */ uint32_t m_refreshRate;
-    /* 0034 */ uint32_t m_refreshRateDenom;
-    /* 0038 */ uint32_t m_vsync;
-    /* 003C */ bool m_stereoEnabled;
-    /* 003D */ uint8_t unk_003D[3];
-    /* 0040 */ int32_t m_shaderModel;
-    /* 0044 */ C2iVector m_pos;
+    /* 002C */ int32_t unk_002C;
+    /* 0030 */ CGxFormat::Format m_colorFormat;
+    /* 0034 */ uint32_t m_refreshRate;
+    /* 0038 */ uint32_t m_refreshRateDenom;
+    /* 003C */ int32_t unk_003C;
+    /* 0040 */ int32_t unk_0040;
+    /* 0044 */ uint32_t m_vsync;
+    /* 0048 */ bool m_stereoEnabled;
+    /* 0049 */ uint8_t unk_003D[3];
+    /* 004C */ int32_t m_shaderModel;
+    /* 0050 */ C2iVector m_pos;
 
     CGxFormat();
     CGxFormat(bool window, const C2iVector& size, CGxFormat::Format colorFormat, CGxFormat::Format depthFormat, uint32_t refreshRate, uint32_t refreshRateDenom, uint32_t vsync, bool hwTnL, bool fixLag, bool hwCursor, bool aspect, int32_t maximize, int32_t monitor);

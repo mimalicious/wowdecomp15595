@@ -60,7 +60,8 @@ static GLenum s_glDepthFunc[4] = { GL_LEQUAL, GL_EQUAL, GL_GEQUAL, GL_LESS };
 // STATIC: %0x00C0E8E8
 static GLenum s_glColorMaterial[3] = { GL_AMBIENT_AND_DIFFUSE, GL_SPECULAR, GL_EMISSION };
 
-// OFFSET: %0x007B8EA0
+// PROVEN: 6d58ef19 IDENTICAL/IDENTICAL
+// OFFSET: 0x0085C570/0x14058E5B0
 void CGxDeviceOpenGl::DsInit() {
     memset(this->m_deviceStates, 0, sizeof(this->m_deviceStates));
     this->m_deviceStates[Ds_DepthMask] = 1;
@@ -569,7 +570,8 @@ void CGxDeviceOpenGl::IStateSyncEnables() {
     this->m_hwMasterEnables = this->m_appMasterEnables;
 }
 
-// OFFSET: %0x007B99E0
+// PROVEN: a87f1cd3 IDENTICAL/IDENTICAL
+// OFFSET: 0x0085D0B0/0x14058F290
 void CGxDeviceOpenGl::IStateSyncClipPlanes() {
     if (!this->m_clipPlaneMask) {
         return;

@@ -255,7 +255,8 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     return 1;
 }
 
-// OFFSET: %0x007CA770
+// PROVEN: bbd6c235 IDENTICAL/NONE
+// OFFSET: 0x0086B6C0
 void CGxDeviceD3d11::ITexScratchClear() {
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
         this->m_scratchCount[i] = 0;
@@ -682,7 +683,8 @@ void CGxDeviceD3d11::ITexUpload(CGxTex* texId) {
     texId->m_userFunc(GxTex_Unlock, texId->m_width, texId->m_height, 0, 0, texId->m_userArg, texelStrideInBytes, texels);
 }
 
-// OFFSET: %0x007CB500
+// PROVEN: 1c651d90 IDENTICAL/UNPROVEN
+// OFFSET: 0x0086C530/0x1405A0980
 void CGxDeviceD3d11::ITexMarkAsUpdated(CGxTex* texId) {
     if (!texId->m_needsUpdate || !this->m_context) {
         return;

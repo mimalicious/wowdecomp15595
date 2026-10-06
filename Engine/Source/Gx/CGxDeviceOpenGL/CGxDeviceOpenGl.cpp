@@ -459,7 +459,8 @@ void CGxDeviceOpenGl::QueryDestroy(CGxQuery*& query) {
     CGxDevice::QueryDestroy(query);
 }
 
-// OFFSET: %0x007AFF60
+// PROVEN: 29563168 IDENTICAL/NONE
+// OFFSET: 0x0084EB00
 int32_t CGxDeviceOpenGl::QueryBegin(CGxQuery* query) {
     if (!this->m_context) {
         return 0;
@@ -481,7 +482,8 @@ int32_t CGxDeviceOpenGl::QueryBegin(CGxQuery* query) {
     return glGetError() == GL_NO_ERROR;
 }
 
-// OFFSET: %0x007AFFE0
+// PROVEN: 933d8e32 IDENTICAL/NONE
+// OFFSET: 0x0084EB70
 int32_t CGxDeviceOpenGl::QueryEnd(CGxQuery* query) {
     if (!this->m_context) {
         return 0;
@@ -495,7 +497,8 @@ int32_t CGxDeviceOpenGl::QueryEnd(CGxQuery* query) {
     return glGetError() == GL_NO_ERROR;
 }
 
-// OFFSET: %0x007B0020
+// PROVEN: f906afd0 IDENTICAL/NONE
+// OFFSET: 0x0084EBB0
 int32_t CGxDeviceOpenGl::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -539,7 +542,8 @@ int32_t CGxDeviceOpenGl::QueryGetParam(CGxQuery* query, EGxQueryParam param, uin
     return error == GL_NO_ERROR;
 }
 
-// OFFSET: %0x007B00D0
+// PROVEN: ae17b8a1 IDENTICAL/NONE
+// OFFSET: 0x0084EC60
 int32_t CGxDeviceOpenGl::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -1039,7 +1043,8 @@ static void CreateDummyContext() {
     UnregisterClassA(reinterpret_cast<LPCSTR>(static_cast<uintptr_t>(atom)), instance);
 }
 
-// OFFSET: %0x007B6B70
+// PROVEN: 13e0859e IDENTICAL/NONE
+// OFFSET: 0x00850780
 void CGxDeviceOpenGl::DeviceDestroyPbuffer() {
     if (this->m_pbuffer) {
         wglReleasePbufferDCARB(this->m_pbuffer, this->m_pbufferDC);
@@ -1125,7 +1130,8 @@ int32_t CGxDeviceOpenGl::SetFormatMode(CGxFormat& format) {
     return 1;
 }
 
-// OFFSET: %0x007B6E20
+// PROVEN: 7c6b421f IDENTICAL/DIFFERENT
+// OFFSET: 0x00850A30/0x14057FFD0
 void CGxDeviceOpenGl::IDevRemoveGlContext() {
     this->DeviceDestroyPbuffer();
 
@@ -1177,7 +1183,8 @@ void CGxDeviceOpenGl::DeviceSetBaseMipLevel(uint32_t level) {
     CGxDevice::DeviceSetBaseMipLevel(level);
 }
 
-// OFFSET: %0x007B6FB0
+// PROVEN: 3cce8327 IDENTICAL/IDENTICAL
+// OFFSET: 0x00850BC0/0x1405801B0
 void CGxDeviceOpenGl::DeviceSetGamma(float gamma) {
     CGxDevice::DeviceSetGamma(gamma);
 
@@ -1186,7 +1193,8 @@ void CGxDeviceOpenGl::DeviceSetGamma(float gamma) {
     }
 }
 
-// OFFSET: %0x007B6FF0
+// PROVEN: eda780ed IDENTICAL/IDENTICAL
+// OFFSET: 0x00850C00/0x1405801E0
 void CGxDeviceOpenGl::DeviceSetGamma(const CGxGammaRamp& ramp) {
     CGxDevice::DeviceSetGamma(ramp);
 
@@ -1195,12 +1203,14 @@ void CGxDeviceOpenGl::DeviceSetGamma(const CGxGammaRamp& ramp) {
     }
 }
 
-// OFFSET: %0x007B7020
+// PROVEN: eefb30c2 IDENTICAL/NONE
+// OFFSET: 0x00850C30
 void* CGxDeviceOpenGl::DeviceWindow() {
     return this->m_hwnd;
 }
 
-// OFFSET: %0x007B7030
+// PROVEN: a516afd1 IDENTICAL/UNPROVEN
+// OFFSET: 0x00850C60/0x1405824B0
 void CGxDeviceOpenGl::CursorSetVisible(int32_t visible) {
     if (visible == CGxDevice::s_cursorVisible) {
         return;
@@ -1213,26 +1223,30 @@ void CGxDeviceOpenGl::CursorSetVisible(int32_t visible) {
     }
 }
 
-// OFFSET: %0x007B7070
+// PROVEN: 0c49ede9 IDENTICAL/NONE
+// OFFSET: 0x00850CA0
 void CGxDeviceOpenGl::CursorUnlock(uint32_t x, uint32_t y) {
     CGxDevice::CursorUnlock(x, y);
     this->IHwCursorCreate();
 }
 
-// OFFSET: %0x007B70A0
+// PROVEN: 7d2814df IDENTICAL/NONE
+// OFFSET: 0x00850CD0
 void CGxDeviceOpenGl::IHwCursorCreate() {
     if (this->m_hwCursor) {
         this->IWindowCursorCreate(this->m_hwnd, &this->m_cursor);
     }
 }
 
-// OFFSET: %0x007B70C0
+// PROVEN: e7d188f5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00850CF0/0x140580280
 void CGxDeviceOpenGl::ICursorCreate(const CGxFormat& format) {
     CGxDevice::ICursorCreate(format);
     this->IHwCursorCreate();
 }
 
-// OFFSET: %0x007B70E0
+// PROVEN: 5cac136f IDENTICAL/NONE
+// OFFSET: 0x00850D10
 void CGxDeviceOpenGl::ICursorDestroy() {
     CGxDevice::ICursorDestroy();
     this->IWindowCursorDestroy(&this->m_cursor);
@@ -1268,7 +1282,8 @@ void CGxDeviceOpenGl::DeviceCreatePbuffer() {
     this->m_pbufferRC = wglGetCurrentContext();
 }
 
-// OFFSET: %0x007B71F0
+// PROVEN: ce162643 IDENTICAL/DIFFERENT
+// OFFSET: 0x00850E50/0x14057FCA0
 void CGxDeviceOpenGl::DeviceQueryPbuffer() {
     if (!this->m_pbuffer) {
         return;
@@ -1832,7 +1847,8 @@ void CGxDeviceOpenGl::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
 }
 
-// OFFSET: %0x007D29E0
+// PROVEN: 1ac188a5 IDENTICAL/NONE
+// OFFSET: 0x008692C0
 void CGxDeviceOpenGl::SceneClearToViewport(uint32_t mask, CImVector color) {
     this->SceneClear(mask, color);
 }

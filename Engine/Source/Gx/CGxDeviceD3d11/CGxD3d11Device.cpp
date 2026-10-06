@@ -469,7 +469,8 @@ void CGxDeviceD3d11::ISetWindowFocus(int32_t focus) {
     }
 }
 
-// OFFSET: %0x007B2260
+// PROVEN: 64e8d289 IDENTICAL/NONE
+// OFFSET: 0x008523D0
 void CGxDeviceD3d11::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation(1);
     CGxDevice::DeviceSetBaseMipLevel(level);
@@ -557,7 +558,8 @@ void CGxDeviceD3d11::DeviceSetGamma(const CGxGammaRamp& ramp) {
     }
 }
 
-// OFFSET: %0x007B2540
+// PROVEN: e4b79b11 IDENTICAL/NONE
+// OFFSET: 0x008526B0
 void* CGxDeviceD3d11::DeviceWindow() {
     return this->m_hwnd;
 }
@@ -600,7 +602,8 @@ int32_t CGxDeviceD3d11::CreatePoolAPI(CGxPool* pool) {
     return 1;
 }
 
-// OFFSET: %0x007B25E0
+// PROVEN: c0afe6a4 IDENTICAL/UNPROVEN
+// OFFSET: 0x00852750/0x140582200
 void CGxDeviceD3d11::PoolSizeSet(CGxPool* pool, uint32_t size) {
     if (pool->m_usage == GxPoolUsage_Stream) {
         pool->unk_001C = 0;
@@ -698,7 +701,8 @@ char* CGxDeviceD3d11::IBufLock(CGxBuf* buf) {
     return static_cast<char*>(mapped.pData) + buf->m_itemSize * buf->m_index;
 }
 
-// OFFSET: %0x007B27F0
+// PROVEN: 2bd988f1 IDENTICAL/NONE
+// OFFSET: 0x00852960
 char* CGxDeviceD3d11::BufLock(CGxBuf* buf) {
     CGxDevice::BufLock(buf);
     return this->IBufLock(buf);
@@ -713,7 +717,8 @@ void CGxDeviceD3d11::ICursorCreate(const CGxFormat& format) {
     }
 }
 
-// OFFSET: %0x007B2850
+// PROVEN: e4475157 IDENTICAL/NONE
+// OFFSET: 0x008529C0
 void CGxDeviceD3d11::ICursorDestroy() {
     CGxDevice::ICursorDestroy();
     this->IWindowCursorDestroy(&this->m_cursor);
@@ -813,7 +818,8 @@ int32_t CGxDeviceD3d11::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint
     return 0;
 }
 
-// OFFSET: %0x007B2A30
+// PROVEN: b9cc1e3d IDENTICAL/NONE
+// OFFSET: 0x00852C00
 int32_t CGxDeviceD3d11::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -1408,7 +1414,8 @@ void CGxDeviceD3d11::IBufUnlock(CGxBuf* buf, uint32_t size) {
     buf->unk_001D = 1;
 }
 
-// OFFSET: %0x007B3B10
+// PROVEN: c1b36077 IDENTICAL/UNPROVEN
+// OFFSET: 0x00853E60/0x140583B60
 int32_t CGxDeviceD3d11::BufUnlock(CGxBuf* buf, uint32_t size) {
     CGxDevice::BufUnlock(buf, size);
     this->IBufUnlock(buf, size);
@@ -1878,7 +1885,8 @@ void CGxDeviceD3d11::IDestroyD3d() {
     this->m_context = 0;
 }
 
-// OFFSET: %0x007B58A0
+// PROVEN: e84993fa IDENTICAL/UNPROVEN
+// OFFSET: 0x00855150/0x140585530
 void CGxDeviceD3d11::DeviceDestroy() {
     CGxDevice::DeviceDestroy();
 
@@ -1915,7 +1923,8 @@ int32_t CGxDeviceD3d11::DeviceSetFormat(const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007B7030
+// PROVEN: 0ba8f282 IDENTICAL/UNPROVEN
+// OFFSET: 0x00850C60/0x1405824B0
 void CGxDeviceD3d11::CursorSetVisible(int32_t visible) {
     if (visible == CGxDevice::s_cursorVisible) {
         return;

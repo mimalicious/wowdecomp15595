@@ -490,12 +490,14 @@ static void Blit_generic16_generic16(const C2iVector& size, const void* in, uint
     CopyGeneric16(size, in, inStride, out, outStride);
 }
 
-// OFFSET: %0x006470A0
+// PROVEN: fe8795ba IDENTICAL/NONE
+// OFFSET: 0x0063A860
 static void Blit_generic64_generic64(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric64(size, in, inStride, out, outStride);
 }
 
-// OFFSET: %0x006470B0
+// PROVEN: ab72ccc9 IDENTICAL/NONE
+// OFFSET: 0x0063A870
 static void Blit_generic128_generic128(const C2iVector& size, const void* in, uint32_t inStride, void* out, uint32_t outStride) {
     CopyGeneric128(size, in, inStride, out, outStride);
 }

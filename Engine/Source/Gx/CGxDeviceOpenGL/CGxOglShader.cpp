@@ -197,7 +197,8 @@ void CGxDeviceOpenGl::IVertexShaderPatch(char* code, uint32_t size) {
     }
 }
 
-// OFFSET: %0x007C6780
+// PROVEN: 573fcfd5 IDENTICAL/DIFFERENT
+// OFFSET: 0x00869EC0/0x14059DCE0
 void CGxDeviceOpenGl::IPixelShaderPatch(char* code, uint32_t size) {
     if (this->m_caps.m_shaderTargets[GxSh_Pixel] != GxShProfile_Arbfp1) {
         return;
@@ -251,7 +252,8 @@ void CGxDeviceOpenGl::IShaderDestroyPixel(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// OFFSET: %0x007C68B0
+// PROVEN: b36674fb IDENTICAL/NONE
+// OFFSET: 0x00869FF0
 void CGxDeviceOpenGl::IShaderDestroy(CGxShaderPermute* permute) {
     switch (permute->m_target) {
         case GxSh_Vertex:
@@ -436,7 +438,8 @@ void CGxDeviceOpenGl::IShaderCreateVertex(CGxShaderPermute* permute) {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x007C6D50
+// PROVEN: ea5651ed IDENTICAL/NONE
+// OFFSET: 0x0086A490
 void CGxDeviceOpenGl::IShaderCreate(CGxShaderPermute* permute) {
     switch (permute->m_target) {
         case GxSh_Vertex:

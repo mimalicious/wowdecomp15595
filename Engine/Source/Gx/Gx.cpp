@@ -132,7 +132,8 @@ int32_t GxAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>&
     return CGxDevice::AdapterMonitorModes(monitor, modes);
 }
 
-// OFFSET: %0x007A60D0
+// PROVEN: 552dc9b1 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083FFF0/0x14056BDE0
 int32_t GxAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     return CGxDevice::AdapterDesktopMode(monitor, mode);
 }
@@ -148,7 +149,8 @@ void GxSetRequestedApi(EGxApi api) {
     s_requestedApi = api;
 }
 
-// OFFSET: %0x007A60A0
+// PROVEN: ee09dcee IDENTICAL/UNPROVEN
+// OFFSET: 0x0083FFC0/0x14056BDB0
 uint32_t GxAdapterMonitorCount() {
     return CGxDevice::AdapterMonitorCount();
 }
@@ -159,7 +161,8 @@ int32_t GxAdapterMonitorName(uint32_t monitor, char* name, uint32_t size) {
     return CGxDevice::AdapterMonitorName(monitor, name, size);
 }
 
-// OFFSET: %0x007A60E0
+// PROVEN: fb768403 IDENTICAL/NONE
+// OFFSET: 0x00840000
 int32_t GxAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     return CGxDevice::AdapterFormats(formats);
 }
@@ -191,7 +194,8 @@ void GxPrimUnlockIndexPtr() {
     s_lockIndexCount = 0;
 }
 
-// OFFSET: %0x007A62C0
+// PROVEN: 1034c42e IDENTICAL/NONE
+// OFFSET: 0x00840210
 void GxSceneClearToViewport(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->SceneClearToViewport(mask, color);
 }
@@ -202,12 +206,14 @@ void GxTexFlags(const CGxTex* texId, CGxTexFlags& flags) {
     g_theGxDevicePtr->TexFlags(texId, flags);
 }
 
-// OFFSET: %0x007A6420
+// PROVEN: 10a32010 IDENTICAL/DIFFERENT
+// OFFSET: 0x00840360/0x14056C1A0
 void GxTexSetFilterMode(EGxTexFilter filter, uint32_t maxAnisotropy) {
     g_theGxDevicePtr->TexSetFilterMode(filter, maxAnisotropy);
 }
 
-// OFFSET: %0x007A64B0
+// PROVEN: 63aa73e2 IDENTICAL/NONE
+// OFFSET: 0x008403F0
 int32_t GxTexResolve(CGxTex* dest, CGxTex* source) {
     return g_theGxDevicePtr->TexResolve(dest, source);
 }
@@ -283,17 +289,20 @@ uint32_t GxCalcTexelStrideInBytes(EGxTexFormat format, uint32_t width) {
     return s_texelSize[format] * ((width + 3) & ~3u);
 }
 
-// OFFSET: %0x004092B0
+// PROVEN: 6089bcec IDENTICAL/NONE
+// OFFSET: 0x00409F40
 void GxXformSetProjection(const C44Matrix& matrix) {
     g_theGxDevicePtr->XformSetProjection(matrix);
 }
 
-// OFFSET: %0x004092D0
+// PROVEN: ac265db2 IDENTICAL/NONE
+// OFFSET: 0x00409F60
 void GxXformSetView(const C44Matrix& matrix) {
     g_theGxDevicePtr->XformSetView(matrix);
 }
 
-// OFFSET: %0x004092F0
+// PROVEN: 942fef9b IDENTICAL/NONE
+// OFFSET: 0x00409F80
 void GxXformViewport(float& minX, float& maxX, float& minY, float& maxY, float& minZ, float& maxZ) {
     minX = g_theGxDevicePtr->m_viewport.m_x.m_l;
     maxX = g_theGxDevicePtr->m_viewport.m_x.m_h;
@@ -303,7 +312,8 @@ void GxXformViewport(float& minX, float& maxX, float& minY, float& maxY, float& 
     maxZ = g_theGxDevicePtr->m_viewport.m_z.m_h;
 }
 
-// OFFSET: %0x004093D0
+// PROVEN: 36c76efb IDENTICAL/NONE
+// OFFSET: 0x0040A060
 void GxXformView(C44Matrix& matrix) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[GxXform_View];
     matrix = stack.m_mtx[stack.m_level];
@@ -328,25 +338,29 @@ void GxXformViewProjNativeTranspose(C44Matrix& matrix) {
     matrix = (view * proj).Transpose();
 }
 
-// OFFSET: %0x00409580
+// PROVEN: f8ee56a9 IDENTICAL/NONE
+// OFFSET: 0x0040A210
 void GxShaderConstantsSet(EGxShTarget target, uint32_t index, const float* constants, uint32_t count) {
     if (constants) {
         g_theGxDevicePtr->ShaderConstantsSet(target, index, constants, count);
     }
 }
 
-// OFFSET: %0x004E5BA0
+// PROVEN: 26b19640 IDENTICAL/NONE
+// OFFSET: 0x004DFB30
 char* GxBufLock(CGxBuf* buf) {
     return g_theGxDevicePtr->BufLock(buf);
 }
 
-// OFFSET: %0x004E5BC0
+// PROVEN: c9925058 IDENTICAL/NONE
+// OFFSET: 0x004DFB50
 void GxBufUnlock(CGxBuf* buf, uint32_t size) {
     g_theGxDevicePtr->BufUnlock(buf, size);
     buf->unk_001C = 1;
 }
 
-// OFFSET: %0x004E5C30
+// PROVEN: 9401f9b0 IDENTICAL/NONE
+// OFFSET: 0x004DFBC0
 void GxDrawNonIndexed(const CGxBatch& batch) {
     g_theGxDevicePtr->DrawNonIndexed(batch);
 }
@@ -356,12 +370,14 @@ void GxDraw(const CGxBatch& batch) {
     g_theGxDevicePtr->Draw(batch);
 }
 
-// OFFSET: %0x0048A0B0
+// PROVEN: bf0ce24b IDENTICAL/NONE
+// OFFSET: 0x00481CB0
 void GxCapsWindowSizeInScreenCoords(CRect& rect) {
     g_theGxDevicePtr->CapsWindowSizeInScreenCoords(rect);
 }
 
-// OFFSET: %0x0048A100
+// PROVEN: d9f7e9b6 IDENTICAL/NONE
+// OFFSET: 0x00481D00
 void GxXformProjection(C44Matrix& matrix) {
     matrix = g_theGxDevicePtr->m_projection;
 }
@@ -371,7 +387,8 @@ void GxXformPush(EGxXform xf) {
     g_theGxDevicePtr->XformPush(xf);
 }
 
-// OFFSET: %0x0048A0D0
+// PROVEN: a6e192f0 DIFFERENT/IDENTICAL
+// OFFSET: 0x00481CD0/0x1400A0A80
 void GxXformPop(EGxXform xf) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];
     stack.m_dirty = 1;
@@ -381,7 +398,8 @@ void GxXformPop(EGxXform xf) {
     }
 }
 
-// OFFSET: %0x0058B670
+// PROVEN: a75ed2d4 IDENTICAL/NONE
+// OFFSET: 0x0057D0C0
 void GxXformTranslate(EGxXform xf, const C3Vector& move) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];
     stack.m_dirty = 1;
@@ -412,22 +430,26 @@ int32_t GxMasterEnable(EGxMasterEnables state) {
     return g_theGxDevicePtr->MasterEnable(state);
 }
 
-// OFFSET: %0x004011E0
+// PROVEN: 5063f738 IDENTICAL/NONE
+// OFFSET: 0x00401120
 void GxMasterEnableSet(EGxMasterEnables state, int32_t enable) {
     g_theGxDevicePtr->MasterEnableSet(state, enable);
 }
 
-// OFFSET: %0x007A62A0
+// PROVEN: a27e24db IDENTICAL/IDENTICAL
+// OFFSET: 0x008401F0/0x14056C020
 void GxSceneClear(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->SceneClear(mask, color);
 }
 
-// OFFSET: %0x007A63A0
+// PROVEN: d0acf498 IDENTICAL/IDENTICAL
+// OFFSET: 0x008402E0/0x14056C120
 void GxTexDestroy(CGxTex* texId) {
     g_theGxDevicePtr->TexDestroy(texId);
 }
 
-// OFFSET: %0x007A6440
+// PROVEN: 73d0112e IDENTICAL/IDENTICAL
+// OFFSET: 0x00840380/0x14056C1C0
 int32_t GxTexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const C2iVector& sourcePos, const C2iVector& size, uint32_t level, uint32_t plane) {
     return g_theGxDevicePtr->TexCopy(source, dest, destPos, sourcePos, size, level, plane);
 }
@@ -444,12 +466,14 @@ int32_t GxTexReusable(CGxTexParms& parms) {
     return !parms.m_flags.m_renderTarget && parms.m_target == GxTex_2d && parms.m_format <= GxTex_Dxt5;
 }
 
-// OFFSET: %0x007A6570
+// PROVEN: 50fdde8c IDENTICAL/IDENTICAL
+// OFFSET: 0x008404B0/0x14056C2F0
 void GxQueryCreate(CGxQuery*& query, EGxQueryType type) {
     g_theGxDevicePtr->QueryCreate(query, type);
 }
 
-// OFFSET: %0x007A6590
+// PROVEN: 07b2b081 IDENTICAL/NONE
+// OFFSET: 0x008404D0
 void GxQueryDestroy(CGxQuery*& query) {
     g_theGxDevicePtr->QueryDestroy(query);
 }
@@ -497,7 +521,8 @@ void CGxDevice::XformSetViewport(float minX, float maxX, float minY, float maxY,
     this->m_viewport.m_z.m_h = maxZ;
 }
 
-// OFFSET: %0x007A6970
+// PROVEN: 81cb2df0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00840880/0x14056C5E0
 void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
     if (!size) {
         size = buf->m_itemSize * buf->m_itemCount;
@@ -522,7 +547,8 @@ void GxDrawLockedElements() {
     g_theGxDevicePtr->Draw(batch);
 }
 
-// OFFSET: %0x007A6FA0
+// PROVEN: ebd53e0f IDENTICAL/DIFFERENT
+// OFFSET: 0x00840EB0/0x14056CE90
 void GxXformSetViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ) {
     float cleanMinX = minX > 0.0f ? minX : 0.0f;
     float cleanMaxX = maxX < 1.0f ? maxX : 1.0f;
@@ -560,7 +586,8 @@ void GxTexSetCannotUpdate(CGxTex* texId) {
     g_theGxDevicePtr->TexSetCannotUpdate(texId);
 }
 
-// OFFSET: %0x007A6340
+// PROVEN: a2bdc28c IDENTICAL/NONE
+// OFFSET: 0x00840280
 void GxTexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* userArg) {
     g_theGxDevicePtr->TexSetUserData(texId, userFunc, userArg);
 }
@@ -577,7 +604,8 @@ void GxTexSetDataFormat(CGxTex* texId, EGxTexFormat dataFormat) {
     g_theGxDevicePtr->TexSetDataFormat(texId, dataFormat);
 }
 
-// OFFSET: %0x007A6D30
+// PROVEN: 9917479e IDENTICAL/IDENTICAL
+// OFFSET: 0x00840C40/0x14056CB20
 void GxPrimIndexPtr(uint32_t indexCount, const uint16_t* indices) {
     CGxBuf* buf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), indexCount);
     g_theGxDevicePtr->BufData(buf, indices, buf->m_itemSize * buf->m_itemCount, 0);
@@ -802,7 +830,8 @@ int32_t GxShaderValid(CGxShader* shader, uint32_t permute) {
     return shader ? shader->m_permutes[permute].Valid() : 0;
 }
 
-// OFFSET: %0x0040A460
+// PROVEN: 2f443e3a IDENTICAL/DIFFERENT
+// OFFSET: 0x0040B030/0x14000DA10
 void GxRsSet(EGxRenderState which, int32_t value) {
     if (!g_theGxDevicePtr->m_context) {
         return;
@@ -924,7 +953,8 @@ void GxRenderTargetSet(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     g_theGxDevicePtr->DeviceSetRenderTarget(buffer, texture, plane);
 }
 
-// OFFSET: %0x0043BF00
+// PROVEN: 41b44980 IDENTICAL/NONE
+// OFFSET: 0x00431C60
 void GxXformSet(EGxXform xf, const C44Matrix& matrix) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];
     stack.m_dirty = 1;
@@ -938,32 +968,38 @@ void GxReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
     g_theGxDevicePtr->DeviceReadPixels(rect, pixels);
 }
 
-// OFFSET: %0x007A6480
+// PROVEN: d7f158e1 IDENTICAL/NONE
+// OFFSET: 0x008403C0
 int32_t GxTexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     return g_theGxDevicePtr->TexStretch(source, dest, destRect, sourceRect, level, face);
 }
 
-// OFFSET: %0x007A65B0
+// PROVEN: 14e624c4 IDENTICAL/NONE
+// OFFSET: 0x008404F0
 int32_t GxQueryBegin(CGxQuery* query) {
     return g_theGxDevicePtr->QueryBegin(query);
 }
 
-// OFFSET: %0x007A65D0
+// PROVEN: f82379f0 IDENTICAL/NONE
+// OFFSET: 0x00840510
 int32_t GxQueryEnd(CGxQuery* query) {
     return g_theGxDevicePtr->QueryEnd(query);
 }
 
-// OFFSET: %0x007A65F0
+// PROVEN: 66f16c38 IDENTICAL/NONE
+// OFFSET: 0x00840530
 int32_t GxQueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetParam(query, param, data);
 }
 
-// OFFSET: %0x007A6620
+// PROVEN: 8b269a24 IDENTICAL/NONE
+// OFFSET: 0x00840560
 int32_t GxQueryGetData(CGxQuery* query, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetData(query, data);
 }
 
-// OFFSET: %0x007A7580
+// PROVEN: 8c922b3d IDENTICAL/IDENTICAL
+// OFFSET: 0x008414E0/0x14056D850
 void GxDrawLockedElements(EGxPrim primType, uint32_t indexCount, const uint16_t* indices) {
     if (!s_lockVertexCount) {
         return;
@@ -1033,7 +1069,8 @@ void GxuFlushDrawList(EGxuDrawListCategory category, const C3Vector& viewPos) {
     GxuClearDrawList(category);
 }
 
-// OFFSET: %0x007A6280
+// PROVEN: e22774e3 IDENTICAL/IDENTICAL
+// OFFSET: 0x008401D0/0x14056C000
 void GxScenePresent(void* window) {
     g_theGxDevicePtr->ScenePresent(window);
 }

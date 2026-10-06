@@ -6,7 +6,8 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "ThirdParty/zlib/zlib.h"
 
-// OFFSET: %0x007AE760
+// PROVEN: c10ec8e4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00848B80/0x1405766C0
 int32_t CGxShaderPermute::Valid() {
     if (!this->m_loaded) {
         g_theGxDevicePtr->IShaderCreate(this);

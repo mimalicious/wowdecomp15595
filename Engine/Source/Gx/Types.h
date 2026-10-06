@@ -89,11 +89,11 @@ enum EGxVertexBufferFormat {
 };
 
 enum EGxBuffer {
-    GxBuffers_Color = 0,
-    GxBuffers_Color1 = 1,
-    GxBuffers_Color2 = 2,
-    GxBuffers_Color3 = 3,
-    GxBuffers_Depth = 4,
+    GxBuffers_Depth = 0,
+    GxBuffers_Color = 1,
+    GxBuffers_Color1 = 2,
+    GxBuffers_Color2 = 3,
+    GxBuffers_Color3 = 4,
     GxBuffers_Last = 5,
 };
 
@@ -220,39 +220,46 @@ class CGxCaps {
     /* 001C */ int32_t unk_001C;
     /* 0020 */ uint32_t m_maxIndex;
     /* 0024 */ int32_t m_texTarget [5];
-    /* 0038 */ uint32_t m_texNonPow2;
-    /* 003C */ uint32_t m_texMaxSize [5];
-    /* 0050 */ int32_t m_vertexTexFmt [24];
-    /* 00B0 */ int32_t m_texFmt [24];
-    /* 0110 */ int32_t m_rttFormat [24];
-    /* 0170 */ int32_t m_pcfFormat [24];
-    /* 01D0 */ uint32_t unk_01D0;
-    /* 01D4 */ uint32_t m_numRenderTargets;
-    /* 01D8 */ int32_t m_shaderModel;
-    /* 01DC */ int32_t m_shaderProfiles [38];
-    /* 0274 */ int32_t m_shaderTargets [6];
-    /* 028C */ uint32_t m_shaderConstants [6];
-    /* 02A4 */ int32_t m_texFilterTrilinear;
-    /* 02A8 */ int32_t m_texFilterAnisotropic;
-    /* 02AC */ uint32_t m_maxTexAnisotropy;
-    /* 02B0 */ int32_t m_depthBias;
-    /* 02B4 */ int32_t m_colorWrite;
-    /* 02B8 */ int32_t m_maxClipPlanes;
-    /* 02BC */ int32_t unk_02BC;
-    /* 02C0 */ int32_t m_hwCursor;
-    /* 02C4 */ int32_t m_occlusionQuery;
-    /* 02C8 */ int32_t m_pointParameters;
-    /* 02CC */ float m_pointScaleMax;
-    /* 02D0 */ int32_t m_pointSprite;
-    /* 02D4 */ uint32_t m_blendFactor;
-    /* 02D8 */ uint32_t unk_02D8 [5];
-    /* 02EC */ int32_t m_oglRtAlpha;
-    /* 02F0 */ int32_t m_stereoAvailable;
-    /* 02F4 */ int32_t unk_02F4;
-    /* 02F8 */ int32_t unk_02F8;
-    /* 02FC */ int32_t unk_02FC;
-    /* 0300 */ int32_t unk_0300;
-    /* 0304 */ int32_t unk_0304;
+    /* 0038 */ int32_t unk_0038;
+    /* 003C */ int32_t unk_003C;
+    /* 0040 */ uint32_t m_texNonPow2;
+    /* 0044 */ uint32_t m_texMaxSize [5];
+    /* 0058 */ int32_t unk_0058;
+    /* 005C */ int32_t unk_005C;
+    /* 0060 */ int32_t m_vertexTexFmt [24];
+    /* 00C0 */ int32_t m_texFmt [24];
+    /* 0120 */ int32_t m_rttFormat [24];
+    /* 0180 */ int32_t m_pcfFormat [24];
+    /* 01E0 */ uint32_t unk_01D0;
+    /* 01E4 */ uint32_t m_numRenderTargets;
+    /* 01E8 */ int32_t m_shaderModel;
+    /* 01EC */ int32_t m_shaderProfiles [38];
+    /* 0284 */ int32_t m_shaderTargets [6];
+    /* 029C */ uint32_t m_shaderConstants [6];
+    /* 02B4 */ int32_t m_texFilterTrilinear;
+    /* 02B8 */ int32_t m_texFilterAnisotropic;
+    /* 02BC */ uint32_t m_maxTexAnisotropy;
+    /* 02C0 */ int32_t m_depthBias;
+    /* 02C4 */ int32_t m_colorWrite;
+    /* 02C8 */ int32_t m_maxClipPlanes;
+    /* 02CC */ int32_t unk_02BC;
+    /* 02D0 */ int32_t m_hwCursor;
+    /* 02D4 */ int32_t m_occlusionQuery;
+    /* 02D8 */ int32_t m_pointParameters;
+    /* 02DC */ float m_pointScaleMax;
+    /* 02E0 */ int32_t m_pointSprite;
+    /* 02E4 */ uint32_t m_blendFactor;
+    /* 02E8 */ uint32_t unk_02D8 [5];
+    /* 02FC */ int32_t m_oglRtAlpha;
+    /* 0300 */ int32_t m_stereoAvailable;
+    /* 0304 */ int32_t unk_02F4;
+    /* 0308 */ int32_t unk_02F8;
+    /* 030C */ int32_t unk_02FC;
+    /* 0310 */ int32_t unk_0300;
+    /* 0314 */ int32_t unk_0304;
+    /* 0318 */ int32_t unk_0318;
+    /* 031C */ uint32_t m_vendorId;
+    /* 0320 */ uint32_t m_deviceId;
 };
 
 class CGxQuery {
