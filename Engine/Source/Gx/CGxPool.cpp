@@ -9,16 +9,20 @@ CGxPool::CGxPool(EGxPoolTarget target, EGxPoolUsage usage, int32_t size, EGxPool
 CGxPool::~CGxPool() {
 }
 
-// OFFSET: %0x007AE080
+// PROVEN: 45b12417 IDENTICAL/DIFFERENT
+// OFFSET: 0x00844C40/0x140571990
 void CGxPool::Invalidate() {
-    for (CGxBuf* buf = this->m_bufList.Head(); buf; buf = this->m_bufList.Next(buf)) {
+    for (CGxBuf* buf = this->m_bufList.Head(), * nextBuf; !this->m_bufList.IsEnd(buf); buf = nextBuf) {
+        nextBuf = this->m_bufList.RawNext(buf);
         buf->unk_001C = 0;
     }
 }
 
-// OFFSET: %0x007AE0B0
+// PROVEN: 5caf4158 IDENTICAL/NONE
+// OFFSET: 0x00844C70
 void CGxPool::Discard() {
-    for (CGxBuf* buf = this->m_bufList.Head(); buf; buf = this->m_bufList.Next(buf)) {
+    for (CGxBuf* buf = this->m_bufList.Head(), * nextBuf; !this->m_bufList.IsEnd(buf); buf = nextBuf) {
+        nextBuf = this->m_bufList.RawNext(buf);
         buf->unk_001C = 0;
     }
 

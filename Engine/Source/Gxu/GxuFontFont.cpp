@@ -126,9 +126,11 @@ float CGxFont::GetGlyphBearing(const CHARCODEDESC* desc, bool scaled, float heig
     return scale * desc->m_bitmapData.m_glyphBearing;
 }
 
-// OFFSET: %0x0062C520
+// PROVEN: 94414b78 IDENTICAL/NONE
+// OFFSET: 0x0061BCA0
 void CGxFont::RegisterEvictNotice(uint32_t texturePage) {
-    for (CGxString* string = this->m_strings.Head(); string; string = this->m_strings.Next(string)) {
+    for (CGxString* string = this->m_strings.Head(), * nextString; !this->m_strings.IsEnd(string); string = nextString) {
+        nextString = this->m_strings.RawNext(string);
         string->TexturePageEvicted(texturePage);
     }
 }
@@ -176,12 +178,14 @@ void CGxFont::ClearGlyphs() {
     this->m_kernInfo.Clear();
 }
 
-// OFFSET: %0x0062D900
+// PROVEN: c5b09f48 IDENTICAL/DIFFERENT
+// OFFSET: 0x0061D050/0x1402AB420
 void CGxFont::HandleScreenSizeChange() {
     this->ClearGlyphs();
     this->UpdateDimensions();
 
-    for (CGxString* string = this->m_strings.Head(); string; string = this->m_strings.Next(string)) {
+    for (CGxString* string = this->m_strings.Head(), * nextString; !this->m_strings.IsEnd(string); string = nextString) {
+        nextString = this->m_strings.RawNext(string);
         string->HandleScreenSizeChange();
     }
 }
