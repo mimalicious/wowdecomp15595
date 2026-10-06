@@ -33,12 +33,13 @@ class CGxFormat {
     /* 0020 */ uint32_t m_backBufferCount;
     /* 0024 */ uint32_t m_multisampleCount;
     /* 0028 */ float m_multisampleQuality;
-    /* 002C */ int32_t unk_002C;
+    /* 002C */ bool unk_002C;
+    /* 002D */ uint8_t unk_002D[3];
     /* 0030 */ CGxFormat::Format m_colorFormat;
     /* 0034 */ uint32_t m_refreshRate;
     /* 0038 */ uint32_t m_refreshRateDenom;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
+    /* 003C */ uint32_t m_scanlineOrdering;
+    /* 0040 */ uint32_t m_scaling;
     /* 0044 */ uint32_t m_vsync;
     /* 0048 */ bool m_stereoEnabled;
     /* 0049 */ uint8_t unk_003D[3];

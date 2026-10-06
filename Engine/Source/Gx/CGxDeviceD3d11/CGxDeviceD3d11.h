@@ -223,7 +223,6 @@ class CGxDeviceD3d11 : public CGxDevice {
     CGxDeviceD3d11();
     void ISetCaps(const CGxFormat& format);
     uint32_t IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel);
-    int32_t IQueryDxgi();
     int32_t ICreateTargets(const C2iVector& size);
     void IReleaseTargets();
     void ISetWindowFocus(int32_t focus);

@@ -224,45 +224,6 @@ uint32_t CGxDeviceD3d11::IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel) {
     }
 }
 
-// OFFSET: %0x007B1C80
-int32_t CGxDeviceD3d11::IQueryDxgi() {
-    IDXGIAdapter* adapter = NULL;
-
-    this->m_dxgiDevice = NULL;
-    this->m_dxgiAdapter = NULL;
-    this->m_dxgiFactory = NULL;
-
-    if (SUCCEEDED(this->m_d3dDevice->QueryInterface(__uuidof(IDXGIDevice1), reinterpret_cast<void**>(&this->m_dxgiDevice))) && SUCCEEDED(this->m_dxgiDevice->GetAdapter(&adapter)) && SUCCEEDED(adapter->QueryInterface(__uuidof(IDXGIAdapter1), reinterpret_cast<void**>(&this->m_dxgiAdapter))) && SUCCEEDED(this->m_dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&this->m_dxgiFactory)))) {
-        if (adapter) {
-            adapter->Release();
-        }
-
-        return 1;
-    }
-
-    if (this->m_dxgiFactory) {
-        this->m_dxgiFactory->Release();
-        this->m_dxgiFactory = NULL;
-    }
-
-    if (this->m_dxgiAdapter) {
-        this->m_dxgiAdapter->Release();
-        this->m_dxgiAdapter = NULL;
-    }
-
-    if (adapter) {
-        adapter->Release();
-        adapter = NULL;
-    }
-
-    if (this->m_dxgiDevice) {
-        this->m_dxgiDevice->Release();
-        this->m_dxgiDevice = NULL;
-    }
-
-    return 0;
-}
-
 // PROVEN: 0f08fa78 IDENTICAL/UNPROVEN
 // OFFSET: 0x008538D0/0x140583460
 int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
@@ -895,15 +856,38 @@ void CGxDeviceD3d11::QueryDestroy(CGxQuery*& query) {
 int32_t CGxDeviceD3d11::ICreateD3dDevice(const CGxFormat& format) {
     D3DPERF_SetOptions(1);
 
+    if (FAILED(s_CreateDXGIFactory1(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&this->m_dxgiFactory)))) {
+        return 0;
+    }
+
+    if (FAILED(this->m_dxgiFactory->EnumAdapters1(0, &this->m_dxgiAdapter))) {
+        return 0;
+    }
+
     UINT flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
     if (D3d11DebugLevel()) {
         flags = D3D11_CREATE_DEVICE_SINGLETHREADED | D3D11_CREATE_DEVICE_DEBUG;
     }
 
+    D3D_FEATURE_LEVEL featureLevels[3] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
     D3D_FEATURE_LEVEL featureLevel;
 
-    if (FAILED(s_D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, flags, NULL, 0, D3D11_SDK_VERSION, &this->m_d3dDevice, &featureLevel, &this->m_d3dContext)) || featureLevel < D3D_FEATURE_LEVEL_10_0) {
+    if (FAILED(s_D3D11CreateDevice(this->m_dxgiAdapter, D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, featureLevels, 3, D3D11_SDK_VERSION, &this->m_d3dDevice, &featureLevel, &this->m_d3dContext))) {
+        return 0;
+    }
+
+    if (featureLevel == D3D_FEATURE_LEVEL_10_0 && format.unk_002C && format.m_multisampleCount > 1) {
+        if (this->m_d3dDevice) {
+            this->m_d3dDevice->Release();
+            this->m_d3dDevice = NULL;
+        }
+
+        if (this->m_d3dContext) {
+            this->m_d3dContext->Release();
+            this->m_d3dContext = NULL;
+        }
+
         return 0;
     }
 
@@ -929,10 +913,6 @@ int32_t CGxDeviceD3d11::ICreateD3dDevice(const CGxFormat& format) {
     }
 
     this->m_featureLevel = this->IFeatureLevelIndex(featureLevel);
-
-    if (!this->IQueryDxgi()) {
-        return 0;
-    }
 
     DXGI_SWAP_CHAIN_DESC desc;
     memset(&desc, 0, sizeof(desc));
@@ -963,8 +943,8 @@ int32_t CGxDeviceD3d11::ICreateD3dDevice(const CGxFormat& format) {
     desc.BufferDesc.RefreshRate.Numerator = format.m_refreshRate;
     desc.BufferDesc.RefreshRate.Denominator = format.m_refreshRateDenom;
     desc.BufferDesc.Format = colorFormat;
-    desc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    desc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+    desc.BufferDesc.ScanlineOrdering = static_cast<DXGI_MODE_SCANLINE_ORDER>(format.m_scanlineOrdering);
+    desc.BufferDesc.Scaling = static_cast<DXGI_MODE_SCALING>(format.m_scaling);
     desc.SampleDesc.Count = sampleCount;
     desc.SampleDesc.Quality = sampleQuality;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -975,20 +955,20 @@ int32_t CGxDeviceD3d11::ICreateD3dDevice(const CGxFormat& format) {
 
     desc.BufferCount = format.m_vsync ? format.m_backBufferCount : 1;
     desc.OutputWindow = this->m_hwnd;
-    desc.Windowed = TRUE;
     desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+    if (!format.m_window) {
+        desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+    }
+
+    desc.Windowed = format.m_window != 0;
 
     if (FAILED(this->m_dxgiFactory->CreateSwapChain(this->m_d3dDevice, &desc, &this->m_swapChain))) {
         return 0;
     }
 
-    if (!format.m_window && FAILED(this->m_swapChain->SetFullscreenState(TRUE, NULL))) {
-        return 0;
-    }
-
-    if (format.m_fixLag && FAILED(this->m_dxgiDevice->SetMaximumFrameLatency(1))) {
-        return 0;
+    if (format.m_fixLag && SUCCEEDED(this->m_d3dDevice->QueryInterface(__uuidof(IDXGIDevice1), reinterpret_cast<void**>(&this->m_dxgiDevice)))) {
+        this->m_dxgiDevice->SetMaximumFrameLatency(1);
     }
 
     this->m_context = 1;
