@@ -730,7 +730,7 @@ int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     void* data;
     uint32_t bytes;
 
-    if (!SFile::ReadFile(NULL, filename, &data, &bytes, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, filename, &data, &bytes, 0, 1)) {
         if (status) {
             status->Add(STATUS_ERROR, "Error loading %s", filename);
         }
@@ -872,7 +872,7 @@ int32_t FrameScript_ExecuteFile(const char* filename, const char* wrapper, MD5_C
     void* data;
     uint32_t bytes;
 
-    if (!SFile::ReadFile(NULL, path, &data, &bytes, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, path, &data, &bytes, 0, 1)) {
         if (status) {
             status->Add(STATUS_ERROR, "Error loading %s", path);
         }

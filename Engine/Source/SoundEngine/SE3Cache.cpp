@@ -99,7 +99,7 @@ static FMOD_RESULT F_CALLBACK SEReadCallback(void* handle, void* buffer, unsigne
     uint32_t read = 0;
 
     SFile::SetReadFatal(false);
-    int32_t success = SFileReadFile(static_cast<SFileImpl*>(handle), buffer, sizebytes, &read, NULL, 0);
+    int32_t success = SFile::Read(static_cast<SFileImpl*>(handle), buffer, sizebytes, &read);
     SFile::SetReadFatal(true);
 
     *bytesread = read;

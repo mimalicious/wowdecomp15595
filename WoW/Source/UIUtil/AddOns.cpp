@@ -46,7 +46,7 @@ static bool s_addOnsInitialized;
 static void ReadDataInterfaceVersion() {
     void* data;
 
-    if (!SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &data, NULL, 1, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &data, NULL, 1, 1)) {
         return;
     }
 
@@ -174,7 +174,7 @@ static void ReadPublicKey(bool* hasKey, uint8_t* key, const char* path) {
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(NULL, path, &data, &size, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, path, &data, &size, 0, 1)) {
         return;
     }
 
@@ -205,7 +205,7 @@ static void WritePublicKey(bool hasKey, const uint8_t* key, const char* path) {
 static void ReadURL(const char* path, char** url) {
     void* data;
 
-    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1)) {
         return;
     }
 
@@ -1100,7 +1100,7 @@ static void LoadAddOnInfo(const char* name) {
 
     void* data;
 
-    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1)) {
         return;
     }
 
@@ -1446,10 +1446,10 @@ void LoadAddOnEnableState(const char* character) {
 
     void* data;
 
-    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1)) {
         SStrPrintf(path, sizeof(path), "WTF\\Account\\%s\\AddOns.txt", s_addOnAccountName);
 
-        if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1, NULL)) {
+        if (!SFile::ReadFile(NULL, path, &data, NULL, 1, 1)) {
             return;
         }
 

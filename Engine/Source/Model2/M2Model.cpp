@@ -958,7 +958,7 @@ int32_t CM2Model::TexturesAreLocal() {
     for (uint32_t i = 0; i < this->m_shared->m_data->m_textures.m_count; i++) {
         M2Texture* texture = &this->m_shared->m_data->m_textures[i];
 
-        if (!texture->m_type && SFile::FileIsLocal(texture->m_filename.Data(), 6) != 1) {
+        if (!texture->m_type && !SFile::FileIsLocal(texture->m_filename.Data())) {
             return 0;
         }
     }
@@ -976,9 +976,6 @@ void CM2Model::MakeTexturesLocal() {
         for (uint32_t i = 0; i < this->m_shared->m_data->m_textures.m_count; i++) {
             M2Texture* texture = &this->m_shared->m_data->m_textures[i];
 
-            if (!texture->m_type) {
-                SFile::MakeFileLocal(texture->m_filename.Data(), 6, false, -1, NULL);
-            }
         }
 
         return;

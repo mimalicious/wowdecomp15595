@@ -110,7 +110,7 @@ void CLCDText::SetFontFaceName(const char* faceName) {
     void* data;
     uint32_t size;
 
-    if (SFile::LoadFile(fontFile, &data, &size, 0, NULL)) {
+    if (SFile::LoadFile(fontFile, &data, &size, 0)) {
         DWORD numFonts = 0;
         ADDFONTMEMRESOURCEEXPROC addFontMemResourceEx = reinterpret_cast<ADDFONTMEMRESOURCEEXPROC>(GetProcAddress(LoadLibraryA("gdi32.dll"), "AddFontMemResourceEx"));
 

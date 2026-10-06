@@ -240,7 +240,7 @@ XMLTree* LoadJoystickConfig(XMLNode*& config) {
     void* buffer;
     uint32_t bytes;
 
-    if (!SFile::ReadFile(NULL, "Interface\\Joystick\\JoystickConfig.xml", &buffer, &bytes, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, "Interface\\Joystick\\JoystickConfig.xml", &buffer, &bytes, 0, 1)) {
         return NULL;
     }
 

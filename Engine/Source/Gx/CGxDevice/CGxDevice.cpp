@@ -2316,7 +2316,7 @@ bool CGxDevice::IShaderLoad(CGxShader* shader, EGxShTarget target, const char* n
             uint32_t size = SFileGetFileSize(file, NULL);
             uint8_t* data = static_cast<uint8_t*>(SMemAlloc(size, "CGxShader.cpp", 203, 0));
 
-            if (SFileReadFile(file, data, size, NULL, NULL, 0) && shader->Load(data, size)) {
+            if (SFile::Read(file, data, size, NULL) && shader->Load(data, size)) {
                 loaded = true;
             }
 

@@ -984,7 +984,7 @@ static int32_t Script_GetCreditsText(lua_State* L) {
 
     void* text;
 
-    if (SFile::ReadFile(NULL, filename, &text, NULL, 1, 1, NULL)) {
+    if (SFile::ReadFile(NULL, filename, &text, NULL, 1, 1)) {
         lua_pushstring(L, static_cast<const char*>(text));
         SFile::Unload(text);
     }

@@ -906,7 +906,7 @@ int32_t CBLPFile::Open(const char* fileName, int32_t flags) {
     s_blpFileLoadBuffer.SetCount(SFileGetFileSize(file, NULL));
 
     uint32_t bytesRead;
-    SFileReadFile(file, s_blpFileLoadBuffer.Ptr(), s_blpFileLoadBuffer.Count(), &bytesRead, NULL, 0);
+    SFile::Read(file, s_blpFileLoadBuffer.Ptr(), s_blpFileLoadBuffer.Count(), &bytesRead);
     SFileCloseFile(file);
 
     return this->Source(s_blpFileLoadBuffer.Ptr());

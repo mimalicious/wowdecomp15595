@@ -326,7 +326,7 @@ static int32_t MyFileIsLocal(char* filename, int32_t priority) {
         OsPathReplaceExtension(filename, 260, filename, "ogg");
     }
 
-    int32_t isLocal = SFile::FileIsLocal(filename, priority);
+    int32_t isLocal = SFile::FileIsLocal(filename);
     return isLocal && isLocal != 2;
 }
 
@@ -901,7 +901,7 @@ int32_t SE3SoundKitDef::SelectLocalFile(const SE3SoundKitProperties* properties,
             OsPathReplaceExtension(path, 260, path, "ogg");
         }
 
-        int32_t isLocal = SFile::FileIsLocal(path, priority);
+        int32_t isLocal = SFile::FileIsLocal(path);
 
         if (isLocal && isLocal != 2) {
             if (index) {

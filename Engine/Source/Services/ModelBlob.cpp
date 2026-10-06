@@ -120,7 +120,7 @@ void CModelBlob::Load(const char* fileName) {
     SStrCopy(this->m_filename, fileName, sizeof(this->m_filename));
     uint32_t size = SFileGetFileSize(file, NULL);
     this->m_data = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
-    SFileReadFile(file, this->m_data, size, NULL, NULL, 0);
+    SFile::Read(file, this->m_data, size, NULL);
     SFileCloseFile(file);
 
     uint8_t* chunk = this->m_data + *reinterpret_cast<uint32_t*>(this->m_data + 4) + 8;

@@ -1744,7 +1744,7 @@ void CGGameUI::InitializeFrameXML() {
     uint32_t numFiles = 0;
     void* toc;
 
-    if (SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &toc, NULL, 1, 1, NULL)) {
+    if (SFile::ReadFile(NULL, "Interface\\FrameXML\\FrameXML.toc", &toc, NULL, 1, 1)) {
         numFiles = FrameXML_GuessNumFiles(static_cast<const char*>(toc));
         SFile::Unload(toc);
     }

@@ -80,7 +80,7 @@ HFACE FontFaceGetHandle(const char* fileName, FT_Library library) {
     void* data = NULL;
     uint32_t size;
 
-    if (SFile::ReadFile(NULL, fileName, &data, &size, 0, 3, NULL)) {
+    if (SFile::ReadFile(NULL, fileName, &data, &size, 0, 3)) {
         if (!data) {
             return handle;
         }

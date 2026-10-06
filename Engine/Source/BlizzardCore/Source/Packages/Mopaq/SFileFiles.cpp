@@ -202,6 +202,29 @@ int64_t Blizzard::Mopaq::SFileGetFileSize(HSFILERecord* file, uint32_t* sizeHigh
     return file->GetFileSize();
 }
 
+// OFFSET: 0x007B1B30
+int32_t Blizzard::Mopaq::SFileGetFilePointer(HSFILERecord* file) {
+    if (!file->m_handle) {
+        return -1;
+    }
+
+    return static_cast<int32_t>(file->m_handle->m_position);
+}
+
+// OFFSET: 0x007B1B60
+uint32_t Blizzard::Mopaq::SFileGetFileCompressedSize(HSFILERecord* file, uint32_t* sizeHigh) {
+    if (!file->m_handle) {
+        return 0xFFFFFFFF;
+    }
+
+    return static_cast<uint32_t>(file->m_handle->m_blockEntry.m_compressedSize);
+}
+
+// OFFSET: 0x007B1C50
+bool Blizzard::Mopaq::SFileIsFileCompressed(HSFILERecord* file) {
+    return file->m_handle && (file->m_handle->m_blockEntry.m_flags & 0x200) == 0x200;
+}
+
 // PROVEN: 81522587 IDENTICAL/DIFFERENT
 // OFFSET: 0x007B1C20/0x1404A6CE0
 bool Blizzard::Mopaq::SFileGetFileName(HSFILERecord* file, char* name, uint32_t size) {
@@ -293,4 +316,13 @@ int32_t Blizzard::Mopaq::SFileFileIsLocal(HSFILERecord* file, int32_t option) {
     }
 
     return 1;
+}
+
+// OFFSET: 0x007AC110
+bool Blizzard::Mopaq::SFileIsPatchFile(HSFILERecord* file) {
+    if (!file->m_handle) {
+        return false;
+    }
+
+    return file->m_handle->m_blockEntry.m_patch;
 }

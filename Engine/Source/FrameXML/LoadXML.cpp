@@ -855,7 +855,7 @@ int32_t ProcessFileForMakeSign(MD5_CTX* md5, const char* filename, const char* b
 
     void* data;
     uint32_t size;
-    int32_t result = SFile::ReadFile(NULL, path, &data, &size, 1, 1, NULL);
+    int32_t result = SFile::ReadFile(NULL, path, &data, &size, 1, 1);
 
     if (!result) {
         return result;
@@ -887,7 +887,7 @@ static void CalculateSignatureMD5(const char* tocFile, const char* extraFile, ui
     void* data;
     uint32_t size;
 
-    if (extraFile && SFile::ReadFile(NULL, extraFile, &data, &size, 1, 1, NULL)) {
+    if (extraFile && SFile::ReadFile(NULL, extraFile, &data, &size, 1, 1)) {
         MD5Update(&context, static_cast<const uint8_t*>(data), size);
         SFile::Unload(data);
     }
@@ -925,7 +925,7 @@ int32_t FrameXML_CheckSignature(const char* tocFile, const char* extraFile, cons
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(NULL, sigFile, &data, &size, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, sigFile, &data, &size, 0, 1)) {
         return 0;
     }
 

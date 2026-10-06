@@ -507,7 +507,7 @@ void CSimpleHTML::LoadXML(linkObject* node, CStatus* status) {
 
     void* data;
 
-    if ((html->m_htmlFlags & 1) && SFile::ReadFile(NULL, html->m_file.m_string, &data, NULL, 1, 1, NULL)) {
+    if ((html->m_htmlFlags & 1) && SFile::ReadFile(NULL, html->m_file.m_string, &data, NULL, 1, 1)) {
         this->SetText(static_cast<const char*>(data), NULL);
         SFile::Unload(data);
     }

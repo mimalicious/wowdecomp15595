@@ -573,7 +573,7 @@ int32_t CSimpleMovieFrame::OpenCaptions() {
     void* data;
     uint32_t size;
 
-    if (SFile::LoadFile(path, &data, &size, 1, NULL)) {
+    if (SFile::LoadFile(path, &data, &size, 1)) {
         const char* text = static_cast<const char*>(data);
         uint32_t magic = *static_cast<uint32_t*>(data);
         char* decoded = NULL;

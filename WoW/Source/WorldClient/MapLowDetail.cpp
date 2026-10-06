@@ -125,7 +125,7 @@ void CMapLowDetail::Load(const char* mapPath, const char* mapName) {
 
     uint32_t size = SFileGetFileSize(file, NULL);
     this->m_data = static_cast<char*>(SMemAlloc(size, __FILE__, __LINE__, 0));
-    SFileReadFile(file, this->m_data, size, NULL, NULL, 0);
+    SFile::Read(file, this->m_data, size, NULL);
     SFileCloseFile(file);
 
     uint32_t* chunk = reinterpret_cast<uint32_t*>(this->m_data + reinterpret_cast<uint32_t*>(this->m_data)[1] + 8);

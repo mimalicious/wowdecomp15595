@@ -457,7 +457,7 @@ char* CGUIBindings::KeyEventToString(const CKeyEvent& evt, char* binding, int32_
 void CGUIBindings::LoadBindings() {
     void* data;
 
-    if (SFile::ReadFile(NULL, "WTF\\DefaultBindings.wtf", &data, NULL, 1, 1, NULL)) {
+    if (SFile::ReadFile(NULL, "WTF\\DefaultBindings.wtf", &data, NULL, 1, 1)) {
         CGUIBindings::LoadBindings(BINDING_SET_DEFAULT, static_cast<const char*>(data));
         SFile::Unload(data);
 
@@ -1402,7 +1402,7 @@ int32_t CGUIBindings::Load(const char* file, MD5_CTX* md5, CStatus* status) {
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(NULL, file, &data, &size, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, file, &data, &size, 0, 1)) {
         status->Add(STATUS_ERROR, "Couldn't open %s", file);
         return 0;
     }

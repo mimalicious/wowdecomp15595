@@ -189,7 +189,7 @@ void CGWorldMap::InitializeGame() {
         SFileImpl* file;
 
         if (SFileOpenFile(fileName, &file)) {
-            SFileReadFile(file, continent->m_zoneMap, sizeof(continent->m_zoneMap), NULL, NULL, 0);
+            SFile::Read(file, continent->m_zoneMap, sizeof(continent->m_zoneMap), NULL);
             SFileCloseFile(file);
 
             for (uint32_t y = 0; y < 128; y++) {

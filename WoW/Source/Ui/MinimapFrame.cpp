@@ -910,7 +910,7 @@ static void LoadMD5Names() {
     SStrPrintf(path, sizeof(path), "%s\\md5translate.trs", s_minimapTexturePath);
     void* data;
 
-    if (!SFile::LoadFile(path, &data, NULL, 1, NULL)) {
+    if (!SFile::LoadFile(path, &data, NULL, 1)) {
         return;
     }
 

@@ -41,14 +41,6 @@ struct SFileLock {
     ~SFileLock();
 };
 
-struct SFileStreamingStatus {
-    /* 0000 */ bool m_enabled;
-    /* 0001 */ bool m_initialized;
-    /* 0002 */ bool m_flag2;
-    /* 0003 */ bool m_flag3;
-    /* 0004 */ uint32_t m_build;
-};
-
 class SFileImpl {
     public:
     /* 0000 */ int32_t m_type;
@@ -57,10 +49,9 @@ class SFileImpl {
     /* 000C */ SArchive* m_archive;
     /* 0010 */ char* m_name;
     /* 0014 */ char* m_actualName;
-    /* 0018 */ uint32_t m_async;
-    /* 001C */ uint32_t unk_001C;
-    /* 0020 */ SFileLock* m_lock;
-    /* 0024 */ uint8_t m_lockData[sizeof(SFileLock)];
+    /* 0018 */ uint32_t m_size;
+    /* 001C */ SFileLock* m_lock;
+    /* 0020 */ uint8_t m_lockData[sizeof(SFileLock)];
 
     SFileImpl(int32_t type);
     ~SFileImpl();
@@ -76,6 +67,7 @@ class SFile {
     static void STORMAPI ConvertOggToWavInBackground(const char* name);
     static int32_t STORMAPI CreateArchive(const char* path, int32_t priority, SArchive** archive);
     static void STORMAPI CreateOverlapped(SOVERLAPPED* overlapped);
+    static bool STORMAPI DeleteArchive(const char* path);
     static void Destroy();
     static void STORMAPI DestroyOverlapped(SOVERLAPPED* overlapped);
     static void DisableSFileCheckDisk();
@@ -87,12 +79,16 @@ class SFile {
     static bool STORMAPI FileGetIsLocalAmount(const char* name, int64_t& local, int64_t& total);
     static void STORMAPI FileGetIsLocalAmount(SFileImpl* file, int64_t& local, int64_t& total);
     static int32_t STORMAPI FileHasHigherPriority(const char* name, const char* extension, uint32_t size);
-    static int32_t STORMAPI FileIsLocal(const char* name, int32_t queue);
-    static int32_t STORMAPI FileIsLocal(SFileImpl* file, int32_t queue);
+    static int32_t STORMAPI FileIsLocal(const char* name);
+    static int32_t STORMAPI FileIsLocal(SFileImpl* file, int64_t offset, uint32_t size);
     static int32_t STORMAPI FileRangeIsLocal(SFileImpl* file, int64_t offset, uint32_t size);
     static int32_t STORMAPI GetActualFileName(SFileImpl* file, char* buffer, uint32_t size);
     static int32_t STORMAPI GetBasePath(char* path, uint32_t size);
     static float GetBGStreamingDownloadedPercentage();
+    static uint32_t STORMAPI GetFileCompressedSize(SFileImpl* file, uint32_t* sizeHigh);
+    static int32_t STORMAPI GetFilePointer(SFileImpl* file);
+    static void GetStreamingStatus(bool* mfilReady, bool* dataReady, bool* disabled, uint32_t* build);
+    static const char* GetStreamingStatusText();
     static const char* GetDataPath();
     static const char* GetErrorDetails();
     static float GetStreamingBandwidth();
@@ -101,12 +97,16 @@ class SFile {
     static int32_t STORMAPI InitializeStreaming(const char* mfilPath);
     static int32_t STORMAPI IsArchiveComplete(SArchive* archive);
     static int32_t IsBackgroundStreamingInProgress();
+    static int32_t STORMAPI IsPatchFile(const char* name);
+    static int32_t STORMAPI IsPatchFile(SFileImpl* file);
+    static bool IsStreamingDataReady();
+    static bool IsStreamingDisabled();
+    static bool IsStreamingMfilReady();
     static int32_t IsStreamingMode();
     static int32_t IsTrial();
     static int32_t STORMAPI List(SArchive* archive, int32_t (*callback)(const char* fileName, void* param), void* param);
     static void LogFileAccess(SFileImpl* file, int32_t mode, bool flag);
-    static int32_t STORMAPI LoadFile(const char* name, void** data, uint32_t* size, uint32_t extra, SOVERLAPPED* overlapped);
-    static int32_t STORMAPI MakeFileLocal(const char* name, int32_t queue, bool wait, int64_t budget, int32_t* status);
+    static int32_t STORMAPI LoadFile(const char* name, void** data, uint32_t* size, uint32_t extra);
     static int32_t STORMAPI MakeFileLocal(SFileImpl* file, int32_t queue, bool wait, int64_t budget, int32_t* status);
     static int32_t STORMAPI MakeFileRangeLocal(SFileImpl* file, int32_t queue, bool wait, int64_t offset, uint32_t size);
     static int32_t STORMAPI OpenArchive(const char* path, int32_t priority, uint32_t flags, SArchive** archive);
@@ -115,14 +115,14 @@ class SFile {
     static void STORMAPI PauseBackgroundStreaming(bool pause);
     static int32_t STORMAPI Read(SFileImpl* file, void* buffer, uint32_t count, uint32_t* bytesRead);
     static int32_t STORMAPI ReadAtPosition(SFileImpl* file, void* buffer, uint32_t offset, uint32_t count, uint32_t* bytesRead);
-    static int32_t STORMAPI ReadFile(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags, SOVERLAPPED* overlapped);
+    static int32_t STORMAPI ReadFile(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags);
     static void RebuildHash();
     static int32_t STORMAPI SetBasePath(const char* path);
     static int32_t STORMAPI SetDataPath(const char* path);
     static int32_t STORMAPI SetDataPathAlternate(const char* path);
     static int32_t STORMAPI SetFilePointer(SFileImpl* file, int32_t distance, int32_t* distanceHigh, uint32_t method);
     static void STORMAPI SetReadFatal(bool fatal);
-    static void STORMAPI SetStreamingStatus(bool enabled, bool initialized, bool flag2, bool flag3, uint32_t build);
+    static void SetStreamingStatus(bool mfilReady, bool dataReady, bool disabled, uint32_t build, const char* text);
     static void STORMAPI SetTrial(bool trial);
     static void ShutdownStreaming();
     static int32_t STORMAPI Unload(void* data);
@@ -168,9 +168,12 @@ extern bool s_fileHashBuilt;
 extern Blizzard::Lock::RMutex s_fileHashLock;
 extern FileHash s_fileHash;
 extern Blizzard::Thread::LocalObject<SFileFatalInfo> s_fatalInfo;
+extern int32_t (*s_findFileCallback)(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type, uint32_t* fileSize, void* param);
+extern void* s_findFileParam;
 
 void BuildFileSystemHash();
-int32_t FindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type, System_SFile::ARCHIVEREC** archive);
+int32_t FindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type, uint32_t* fileSize, System_SFile::ARCHIVEREC** archive);
+int32_t HashFindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type);
 int32_t OldFindFile(const char* name, char* path, uint32_t size, uint32_t flags, int32_t* type);
 bool ScanDirForFileSystemHash(const char* directory);
 
@@ -184,7 +187,6 @@ int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** dat
 int32_t STORMAPI SFileOpenArchive(const char* path, int32_t priority, uint32_t flags, SArchive** archive);
 int32_t STORMAPI SFileUnloadFile(void* data);
 int32_t STORMAPI SFileOpenFile(const char* name, SFileImpl** result);
-int32_t STORMAPI SFileReadFile(SFileImpl* file, void* buffer, uint32_t count, uint32_t* bytesRead, SOVERLAPPED* overlapped, uint32_t unused);
 
 class MD5;
 

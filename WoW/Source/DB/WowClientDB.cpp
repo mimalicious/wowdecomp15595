@@ -54,7 +54,7 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     uint32_t size = SFileGetFileSize(file, NULL);
     uint8_t* data = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
 
-    if (!SFileReadFile(file, data, size, NULL, NULL, 0)) {
+    if (!SFile::Read(file, data, size, NULL)) {
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
         SErrDisplayAppFatal("Unable to read data for %s: %s", meta->m_filename, error);
     }

@@ -1092,7 +1092,7 @@ CGxTex* TextureForceLoadForDiskOnly(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
 
     if (!object->m_buffer) {
-        int32_t local = SFile::FileIsLocal(object->m_file, 6);
+        int32_t local = SFile::FileIsLocal(object->m_file, 0, 0);
 
         if (!local || local == 2) {
             return NULL;
@@ -2116,7 +2116,7 @@ int32_t CreateBlpSync(CTexture* texture, const char* fileName, uint32_t flags, C
     uint32_t size = SFileGetFileSize(file, NULL);
     void* data = SMemAlloc(size, __FILE__, __LINE__, 0);
 
-    if (!SFileReadFile(file, data, size, NULL, NULL, 0)) {
+    if (!SFile::Read(file, data, size, NULL)) {
         DebugLog("CreateBlpTexture() failed read: %s.\n", fileName);
     }
 

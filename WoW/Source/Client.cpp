@@ -673,7 +673,7 @@ static void LoadMopaqFileSigningData(const char* locale) {
     char* data;
     uint32_t size;
 
-    if (!SFile::LoadFile("signaturefile", reinterpret_cast<void**>(&data), &size, 0, NULL)) {
+    if (!SFile::LoadFile("signaturefile", reinterpret_cast<void**>(&data), &size, 0)) {
         SErrPrepareAppFatal(__FILE__, __LINE__);
         SErrDisplayAppFatalCustom(2, "file: %s", "signaturefile");
     }
@@ -846,7 +846,7 @@ static void LoadMFIL(const char* file) {
         InitOggDecompression();
     }
 
-    SFile::SetStreamingStatus(s_streamingDiag & 1, (s_streamingDiag >> 1) & 1, (s_streamingDiag >> 2) & 1, (s_streamingDiag >> 3) & 1, 12340);
+    SFile::SetStreamingStatus(s_streamingDiag & 1, (s_streamingDiag >> 1) & 1, false, 15595, s_streamingError);
 }
 
 // OFFSET: %0x00403150

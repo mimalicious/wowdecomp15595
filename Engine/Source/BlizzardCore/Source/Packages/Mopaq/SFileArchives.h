@@ -386,6 +386,8 @@ int32_t SFileDeleteFile(System_SFile::ARCHIVEREC* handle, const char* name, uint
 bool SFileCreateArchive(HSFILERecord* file, const char* name, int32_t priority, uint32_t userDataSize, System_SFile::ARCHIVEREC** result, const ArchiveOptions* options);
 bool SFileCreateArchive(const char* path, int32_t priority, uint32_t userDataSize, System_SFile::ARCHIVEREC** result, const ArchiveOptions* options);
 bool IsArchiveComplete(System_SFile::ARCHIVEREC* handle);
+bool IsArchiveStreamingComplete(System_SFile::ARCHIVEREC* handle);
+void SFileGetIsLocalAmount(System_SFile::ARCHIVEREC* handle, int64_t& local, int64_t& total);
 bool SFileEnableDirectAccess(uint32_t enable);
 uint32_t SFileGetArchiveBlockCount(System_SFile::ARCHIVEREC* handle);
 bool SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Memory::TempBuffer<char, 4096>& metadata);

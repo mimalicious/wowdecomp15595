@@ -42,6 +42,10 @@ bool SFileCreateFile(System_SFile::ARCHIVEREC* handle, const char* name, uint32_
 bool SFileGetArchiveFullName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size);
 bool SFileGetArchiveName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size);
 int32_t SFileFileIsLocal(HSFILERecord* file, int32_t option);
+uint32_t SFileGetFileCompressedSize(HSFILERecord* file, uint32_t* sizeHigh);
+int32_t SFileGetFilePointer(HSFILERecord* file);
+bool SFileIsFileCompressed(HSFILERecord* file);
+bool SFileIsPatchFile(HSFILERecord* file);
 bool SFileGetFileName(HSFILERecord* file, char* name, uint32_t size);
 bool SFileGetFileMD5(HSFILERecord* file, Blizzard::Util::Digest<16>* md5);
 bool SFileGetLogicalArchive(HSFILERecord* file, System_SFile::ARCHIVEREC** archive);

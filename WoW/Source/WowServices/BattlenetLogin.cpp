@@ -291,7 +291,7 @@ static uint32_t GetWowLangVersion(const char* locale) {
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(archive, fileName, &data, &size, 0, 0, NULL) || !data) {
+    if (!SFile::ReadFile(archive, fileName, &data, &size, 0, 0) || !data) {
         if (archive) {
             SFile::CloseArchive(archive);
         }

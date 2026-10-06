@@ -57,7 +57,7 @@ void CShaderEffectManager::AddEffectFile(const char* fileName) {
 
     uint32_t size = SFileGetFileSize(file, NULL);
     char* data = static_cast<char*>(SMemAlloc(size + 1, __FILE__, __LINE__, 0));
-    SFileReadFile(file, data, size, NULL, NULL, 0);
+    SFile::Read(file, data, size, NULL);
     SFileCloseFile(file);
 
     CShaderEffectParser::ParseEffectFile(data, size, CShaderEffectManager::ParseEffectCallback, NULL);

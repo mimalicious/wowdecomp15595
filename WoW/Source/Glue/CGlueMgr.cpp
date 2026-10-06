@@ -942,7 +942,7 @@ void ProcessAgreement(SFileImpl* file, const char* name, CVar* cvar, bool locali
 
     uint32_t read = 0;
 
-    if (!SFileReadFile(file, data, size, &read, NULL, 0)) {
+    if (!SFile::Read(file, data, size, &read)) {
         SMemFree(data, __FILE__, __LINE__, 0);
 
         if (existing) {

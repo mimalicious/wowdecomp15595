@@ -391,7 +391,7 @@ int32_t ProfileInternal::IReadFile(PROFILE* profile, const char* path) {
     uint32_t bytes = 0;
     void* buffer = NULL;
 
-    if (!SFile::LoadFile(name, &buffer, &bytes, 1, NULL)) {
+    if (!SFile::LoadFile(name, &buffer, &bytes, 1)) {
         return 0;
     }
 

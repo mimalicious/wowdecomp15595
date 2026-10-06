@@ -425,7 +425,7 @@ void ClientServices::LoadCDKey() {
     void* data;
     uint32_t size = sizeof(s_cdKey.m_key);
 
-    if (SFile::ReadFile(archive, "telemetry.dat", &data, &size, 0, 0, NULL) && data) {
+    if (SFile::ReadFile(archive, "telemetry.dat", &data, &size, 0, 0) && data) {
         if (size == sizeof(s_cdKey.m_key)) {
             s_cdKeyLoaded = true;
             s_cdKey.m_length = 20;

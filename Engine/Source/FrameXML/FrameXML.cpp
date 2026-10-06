@@ -57,7 +57,7 @@ XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(NULL, filename, &data, &size, 0, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, filename, &data, &size, 0, 1)) {
         status->Add(STATUS_ERROR, "Couldn't open %s", filename);
         return NULL;
     }
@@ -593,7 +593,7 @@ int32_t FrameXML_CreateFrames(const char* tocFile, const char* wrapper, MD5_CTX*
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(NULL, tocFile, &data, &size, 1, 1, NULL)) {
+    if (!SFile::ReadFile(NULL, tocFile, &data, &size, 1, 1)) {
         status->Add(STATUS_ERROR, "Couldn't open %s", tocFile);
         return 0;
     }

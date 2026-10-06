@@ -330,7 +330,7 @@ int32_t NetQueuePromoteLocalFiles(const void* data, void* param) {
             while (!s_asyncQueues[i]->m_readList.IsEnd(object)) {
                 CAsyncObject* next = s_asyncQueues[i]->m_readList.RawNext(object);
 
-                if (!object->m_isCurrent && SFile::FileIsLocal(object->m_file, 6) == 1) {
+                if (!object->m_isCurrent && SFile::FileIsLocal(object->m_file, 0, 0) == 1) {
                     s_asyncQueues[0]->m_readList.LinkToTail(object);
                     object->m_queue = s_asyncQueues[0];
                 }
@@ -479,7 +479,7 @@ uint32_t STORMAPI AsyncFileReadThread(void* param) {
 
                 if (!status) {
                     for (int32_t retries = 10; ; ) {
-                        if (!object->m_buffer || SFileReadFile(object->m_file, object->m_buffer, object->m_size, NULL, NULL, 0)) {
+                        if (!object->m_buffer || SFile::Read(object->m_file, object->m_buffer, object->m_size, NULL)) {
                             succeeded = 1;
                             break;
                         }
@@ -619,7 +619,7 @@ void AsyncFileReadObject(CAsyncObject* object, int32_t urgent) {
     CAsyncQueue* queue = s_asyncQueues[0];
 
     if (SFile::IsStreamingMode()) {
-        int32_t local = SFile::FileIsLocal(object->m_file, 6);
+        int32_t local = SFile::FileIsLocal(object->m_file, 0, 0);
 
         if (!local || local == 2) {
             SFile::PauseBackgroundStreaming(true);

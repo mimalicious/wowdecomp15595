@@ -2403,7 +2403,7 @@ int32_t CMap::SafeOpen(const char* fileName, SFileImpl** file) {
 int32_t CMap::SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint32_t size) {
     int32_t tries = 10;
 
-    while (!SFileReadFile(file, buffer, size, NULL, NULL, 0)) {
+    while (!SFile::Read(file, buffer, size, NULL)) {
         DebugLog("CMap::SafeRead() failed %s\n");
 
         if (!--tries) {
@@ -2830,21 +2830,21 @@ void CMap::LoadWdt() {
     iffChunk.m_token = 0;
     iffChunk.m_size = 0;
 
-    SFileReadFile(file, &iffChunk, offsetof(SIffChunk, m_data), NULL, NULL, 0);
-    SFileReadFile(file, &CMap::version, sizeof(CMap::version), NULL, NULL, 0);
-    SFileReadFile(file, &iffChunk, offsetof(SIffChunk, m_data), NULL, NULL, 0);
-    SFileReadFile(file, &CMap::header, sizeof(CMap::header), NULL, NULL, 0);
-    SFileReadFile(file, &iffChunk, offsetof(SIffChunk, m_data), NULL, NULL, 0);
-    SFileReadFile(file, CMap::m_areaInfo, sizeof(((CMap*)0)->m_areaInfo), NULL, NULL, 0);
+    SFile::Read(file, &iffChunk, offsetof(SIffChunk, m_data), NULL);
+    SFile::Read(file, &CMap::version, sizeof(CMap::version), NULL);
+    SFile::Read(file, &iffChunk, offsetof(SIffChunk, m_data), NULL);
+    SFile::Read(file, &CMap::header, sizeof(CMap::header), NULL);
+    SFile::Read(file, &iffChunk, offsetof(SIffChunk, m_data), NULL);
+    SFile::Read(file, CMap::m_areaInfo, sizeof(((CMap*)0)->m_areaInfo), NULL);
 
     if (CMap::header.m_flags & 1) {
         char fileName[256];
-        SFileReadFile(file, &iffChunk, offsetof(SIffChunk, m_data), NULL, NULL, 0);
-        SFileReadFile(file, fileName, iffChunk.m_size, NULL, NULL, 0);
-        SFileReadFile(file, &iffChunk, offsetof(SIffChunk, m_data), NULL, NULL, 0);
+        SFile::Read(file, &iffChunk, offsetof(SIffChunk, m_data), NULL);
+        SFile::Read(file, fileName, iffChunk.m_size, NULL);
+        SFile::Read(file, &iffChunk, offsetof(SIffChunk, m_data), NULL);
 
         SMMapObjDef def;
-        SFileReadFile(file, &def, sizeof(def), NULL, NULL, 0);
+        SFile::Read(file, &def, sizeof(def), NULL);
         def.m_uniqueId = CMap::uniqueId--;
 
         CMapObjDef* mapObjDef = CMap::mapObjDefHash.Ptr(def.m_uniqueId, CMap::s_mapObjDefHashKey);

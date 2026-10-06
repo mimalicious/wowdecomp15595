@@ -2373,6 +2373,29 @@ bool Blizzard::Mopaq::SFileGetIsLocalAmount(const char* name, int64_t& local, in
     return result == 1;
 }
 
+// OFFSET: 0x007F4790
+void Blizzard::Mopaq::SFileGetIsLocalAmount(System_SFile::ARCHIVEREC* handle, int64_t& local, int64_t& total) {
+    local = 0;
+    total = 0;
+
+    System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
+
+    if (archive) {
+        local = Blizzard::Streaming::GetIsLocalAmount(archive->m_name, 0, static_cast<uint32_t>(archive->m_header.m_archiveSize64));
+        total = archive->m_header.m_archiveSize64;
+        archive->RemoveInternalArchiveRef();
+    }
+}
+
+// OFFSET: 0x007F4830
+bool Blizzard::Mopaq::IsArchiveStreamingComplete(System_SFile::ARCHIVEREC* handle) {
+    int64_t local;
+    int64_t total;
+    SFileGetIsLocalAmount(handle, local, total);
+
+    return total > 0 && local == total;
+}
+
 // OFFSET: %0x00744C30
 void Blizzard::Mopaq::SFileGetIsLocalAmount(HSFILERecord* file, int64_t& local, int64_t& total) {
     MpqHandleRecord* handle = file->m_handle;

@@ -305,7 +305,7 @@ int32_t CTextureBlob::Load(const char* fileName) {
 
     uint32_t size = SFileGetFileSize(file, NULL);
     blob->m_data = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
-    SFileReadFile(file, blob->m_data, size, NULL, NULL, 0);
+    SFile::Read(file, blob->m_data, size, NULL);
     SFileCloseFile(file);
 
     return CTextureBlob::Parse(blob, size);

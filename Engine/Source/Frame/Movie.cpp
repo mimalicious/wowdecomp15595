@@ -62,7 +62,7 @@ static void StartPreload(MoviePreload* preload, const char* path, uint8_t priori
 
     SFile::EnableHash(true);
 
-    if (SFile::FileIsLocal(file, 6)) {
+    if (SFile::FileIsLocal(file, 0, 0)) {
         SFileCloseFile(file);
         return;
     }
@@ -335,7 +335,7 @@ int32_t CMovieStreamer::AdvanceAudioFrame() {
 // OFFSET: %0x005223F0
 void CMovieStreamer::ReadVideoFrame(int32_t index, uint8_t* buffer) {
     SFile::SetFilePointer(this->m_aviFile, this->m_index[index].m_offset + this->m_moviOffset + 4, NULL, 0);
-    SFileReadFile(this->m_aviFile, buffer + 4, this->m_index[index].m_size, NULL, NULL, 0);
+    SFile::Read(this->m_aviFile, buffer + 4, this->m_index[index].m_size, NULL);
 
     if (this->m_videoCodec == MOVIE_CODEC_PIVX) {
         this->m_cypher.ProcessBuffer(buffer, this->m_index[index].m_size + 4);
@@ -345,7 +345,7 @@ void CMovieStreamer::ReadVideoFrame(int32_t index, uint8_t* buffer) {
 // OFFSET: %0x00522480
 void CMovieStreamer::ReadAudioFrame(int32_t index, uint8_t* buffer) {
     SFile::SetFilePointer(this->m_aviFile, this->m_index[index].m_offset + this->m_moviOffset + 4, NULL, 0);
-    SFileReadFile(this->m_aviFile, buffer, this->m_index[index].m_size, NULL, NULL, 0);
+    SFile::Read(this->m_aviFile, buffer, this->m_index[index].m_size, NULL);
     this->m_index[index].m_flags &= ~MOVIE_CHUNK_PREFETCHING;
     this->m_index[index].m_flags |= MOVIE_CHUNK_LOCAL;
 
@@ -456,15 +456,15 @@ int32_t CMovieStreamer::ParseAVIHeader() {
     uint32_t headerSize = 0;
     char chunk[12];
 
-    if (!SFileReadFile(this->m_aviFile, chunk, 12, NULL, NULL, 0) || SStrCmpI(&chunk[0], "RIFF", 4) || SStrCmpI(&chunk[8], "AVI ", 4)) {
+    if (!SFile::Read(this->m_aviFile, chunk, 12, NULL) || SStrCmpI(&chunk[0], "RIFF", 4) || SStrCmpI(&chunk[8], "AVI ", 4)) {
         return 0;
     }
 
-    while (SFileReadFile(this->m_aviFile, chunk, 8, NULL, NULL, 0)) {
+    while (SFile::Read(this->m_aviFile, chunk, 8, NULL)) {
         uint32_t size = *reinterpret_cast<uint32_t*>(&chunk[4]);
 
         if (!SStrCmpI(&chunk[0], "LIST", 4)) {
-            if (!SFileReadFile(this->m_aviFile, chunk, 4, NULL, NULL, 0)) {
+            if (!SFile::Read(this->m_aviFile, chunk, 4, NULL)) {
                 break;
             }
 
@@ -474,7 +474,7 @@ int32_t CMovieStreamer::ParseAVIHeader() {
                 headerSize = size;
                 header = static_cast<char*>(alloca(size));
 
-                if (!SFileReadFile(this->m_aviFile, header, size, NULL, NULL, 0)) {
+                if (!SFile::Read(this->m_aviFile, header, size, NULL)) {
                     break;
                 }
 
@@ -490,19 +490,19 @@ int32_t CMovieStreamer::ParseAVIHeader() {
             this->m_indexCount = size >> 4;
             this->m_index = static_cast<AVIINDEXENTRY*>(SMemAlloc(size, __FILE__, __LINE__, 0));
 
-            if (!SFileReadFile(this->m_aviFile, this->m_index, size, NULL, NULL, 0)) {
+            if (!SFile::Read(this->m_aviFile, this->m_index, size, NULL)) {
                 break;
             }
         } else if (!SStrCmpI(&chunk[0], "pviv", 4)) {
             this->m_videoIV = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
 
-            if (!SFileReadFile(this->m_aviFile, this->m_videoIV, size, NULL, NULL, 0)) {
+            if (!SFile::Read(this->m_aviFile, this->m_videoIV, size, NULL)) {
                 break;
             }
         } else if (!SStrCmpI(&chunk[0], "paiv", 4)) {
             this->m_audioIV = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
 
-            if (!SFileReadFile(this->m_aviFile, this->m_audioIV, size, NULL, NULL, 0)) {
+            if (!SFile::Read(this->m_aviFile, this->m_audioIV, size, NULL)) {
                 break;
             }
         } else {
@@ -606,7 +606,7 @@ int32_t CMovieStreamer::ReadStandaloneAudio() {
     this->m_audioBufferSize = SFileGetFileSize(this->m_audioFile, &sizeHigh);
     this->m_audioBuffer = static_cast<uint8_t*>(SMemAlloc(this->m_audioBufferSize, __FILE__, __LINE__, 0));
 
-    if (!SFileReadFile(this->m_audioFile, this->m_audioBuffer, this->m_audioBufferSize, NULL, NULL, 0)) {
+    if (!SFile::Read(this->m_audioFile, this->m_audioBuffer, this->m_audioBufferSize, NULL)) {
         return 0;
     }
 
@@ -783,7 +783,7 @@ int32_t MovieStreaming::FindBestMovieResolutionFileDataID(int32_t movieID, bool 
                 continue;
             }
 
-            int32_t local = SFile::FileIsLocal(handle, 6);
+            int32_t local = SFile::FileIsLocal(handle, 0, 0);
             SFileCloseFile(handle);
 
             if (local != 1) {
