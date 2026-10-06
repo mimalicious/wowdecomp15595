@@ -412,7 +412,7 @@ class CGxDeviceD3d : public CGxDevice {
     int32_t ITexAllocD3dTexture(CGxTex* texId);
     void ITexCreate(CGxTex* texId);
     int32_t ITexEvictFor(CGxTex* texId, uint32_t size);
-    LPDIRECT3DTEXTURE9 ITexGetScratch(EGxTexFormat format);
+    LPDIRECT3DTEXTURE9 ITexGetScratch(EGxTexFormat format, uint32_t width, uint32_t height);
     void ITexLinkBound();
     void ITexReleaseD3dTexture(CGxTex* texId);
     void ITexTakeD3dTexture(CGxTex* dest, CGxTex* source);
@@ -423,6 +423,8 @@ class CGxDeviceD3d : public CGxDevice {
     void ITexUploadBox(CGxTex* texId, uint32_t level, const D3DBOX* box, const void* bits, uint32_t pitch);
     void ITexForceRecreation(int32_t all);
     void ITexUpload(CGxTex* texId);
+    void IResourceTouch(const void* resource);
+    void ICheckResult(HRESULT result);
     void IXformSetTex(uint32_t tmu);
     void IXformSetViewport();
     void IXformSetWorld();

@@ -263,7 +263,7 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     TexViews* views = NULL;
 
     if (viewType == 0) {
-        views = new TexViews;
+        views = static_cast<TexViews*>(SMemAlloc(sizeof(TexViews), __FILE__, __LINE__, 0));
         views->m_type = 0;
         views->m_srv = srv;
     } else if (viewType == 2) {
@@ -283,6 +283,7 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     texId->m_apiSpecificData = views;
     texId->m_apiSpecificData2 = resource;
     texId->m_needsCreation = 0;
+    this->IResourceTouch(texId);
 
     return 1;
 }
@@ -381,26 +382,37 @@ void CGxDeviceD3d11::ITexReleaseD3dTexture(CGxTex* texId) {
     TexViews* views = static_cast<TexViews*>(texId->m_apiSpecificData);
 
     if (views) {
-        if (views->m_type == 0) {
-            if (views->m_srv) {
-                views->m_srv->Release();
-                views->m_srv = NULL;
-            }
-        } else if (views->m_type - 1 <= 1) {
-            TexTargetViews* targetViews = static_cast<TexTargetViews*>(views);
+        switch (views->m_type) {
+            case 0:
+                if (views->m_srv) {
+                    views->m_srv->Release();
+                    views->m_srv = NULL;
+                }
 
-            if (targetViews->m_srv) {
-                targetViews->m_srv->Release();
-                targetViews->m_srv = NULL;
+                break;
+
+            case 1:
+            case 2: {
+                TexTargetViews* targetViews = static_cast<TexTargetViews*>(views);
+
+                if (targetViews->m_srv) {
+                    targetViews->m_srv->Release();
+                    targetViews->m_srv = NULL;
+                }
+
+                if (targetViews->m_targetView) {
+                    targetViews->m_targetView->Release();
+                    targetViews->m_targetView = NULL;
+                }
+
+                break;
             }
 
-            if (targetViews->m_targetView) {
-                targetViews->m_targetView->Release();
-                targetViews->m_targetView = NULL;
-            }
+            default:
+                break;
         }
 
-        delete views;
+        SMemFree(views, "delete", -1, 0);
         texId->m_apiSpecificData = NULL;
     }
 
@@ -410,12 +422,14 @@ void CGxDeviceD3d11::ITexReleaseD3dTexture(CGxTex* texId) {
     }
 
     texId->m_link2.Unlink();
+    this->IResourceTouch(texId);
 }
 
-// OFFSET: %0x007CAB70
+// PROVEN: 4d5b64e7 IDENTICAL/DIFFERENT
+// OFFSET: 0x0086BB60/0x14059FBC0
 void CGxDeviceD3d11::TexDestroy(CGxTex* texId) {
     if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
-        CGxDeviceD3d11::ITexReleaseD3dTexture(texId);
+        this->ITexReleaseD3dTexture(texId);
     }
 
     CGxDevice::TexDestroy(texId);
@@ -741,9 +755,9 @@ void CGxDeviceD3d11::ITexMarkAsUpdated(CGxTex* texId) {
 void CGxDeviceD3d11::ITexForceRecreation(int32_t all) {
     this->ITexScratchDestroy();
 
-    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = CGxDevice::s_textureList.Next(texId)) {
+    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = texId->m_link.Next()) {
         if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
-            CGxDeviceD3d11::ITexReleaseD3dTexture(texId);
+            this->ITexReleaseD3dTexture(texId);
         }
 
         if (all || texId->m_flags.m_renderTarget) {
@@ -1108,4 +1122,9 @@ int32_t CGxDeviceD3d11::TexResolve(CGxTex* source, CGxTex* dest) {
     GxRenderTargetSet(GxBuffers_Depth, savedDepth, 0);
 
     return 1;
+}
+
+// PROVEN: b6cfa536 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void CGxDeviceD3d11::IResourceTouch(const void* resource) {
 }

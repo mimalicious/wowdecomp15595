@@ -246,7 +246,7 @@ int32_t CGxDeviceOpenGl::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* 
 
 // OFFSET: %0x007C51D0
 void CGxDeviceOpenGl::ITexForceRecreation() {
-    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = CGxDevice::s_textureList.Next(texId)) {
+    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = texId->m_link.Next()) {
         if (!texId->m_apiSpecificData) {
             continue;
         }

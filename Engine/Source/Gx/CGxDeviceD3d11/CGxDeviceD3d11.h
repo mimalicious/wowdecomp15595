@@ -219,7 +219,8 @@ class CGxDeviceD3d11 : public CGxDevice {
     static IDXGIOutput* IGetOutputForMonitor(IDXGIAdapter* adapter, uint32_t monitor);
     static void ITexCalcOffset(EGxTexFormat format, uint32_t pitch, uint32_t height, const RECT& rect, uint32_t& offset, uint32_t& size);
     static void ITexRectToBox(EGxTexFormat format, const RECT& rect, D3D11_BOX& box);
-    static void ITexReleaseD3dTexture(CGxTex* texId);
+    void ITexReleaseD3dTexture(CGxTex* texId);
+    void IResourceTouch(const void* resource);
 
     CGxDeviceD3d11();
     void ISetCaps(const CGxFormat& format);

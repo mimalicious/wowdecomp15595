@@ -430,7 +430,7 @@ void CGxDeviceD3d11::IStateSyncDepth() {
     }
 }
 
-// OFFSET: %0x007CECC0
+// OFFSET: 0x0086FBF0
 ID3D11SamplerState* CGxDeviceD3d11::IGetSamplerState(CGxTexFlags flags) {
     uint32_t bits = *reinterpret_cast<uint32_t*>(&flags);
     uint32_t hashval = (bits & 0xCF) | (16 * (bits & 0x30)) | (((bits & 0x1F000) | ((bits >> 2) & 0xC0)) >> 2);
@@ -471,58 +471,73 @@ ID3D11SamplerState* CGxDeviceD3d11::IGetSamplerState(CGxTexFlags flags) {
     return state;
 }
 
-// OFFSET: %0x007CEE00
+// PROVEN: 0ddfcbd6 IDENTICAL/NONE
+// OFFSET: 0x0086FD30
 void CGxDeviceD3d11::ISetVertexTexture(uint32_t slot, CGxTex* texId) {
-    ID3D11ShaderResourceView* srv;
-    ID3D11SamplerState* sampler = NULL;
-
     if (texId) {
+        this->IResourceTouch(texId);
         this->ITexMarkAsUpdated(texId);
-        srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
-        sampler = this->IGetSamplerState(texId->m_flags);
-    } else {
-        srv = NULL;
+
+        if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
+            ID3D11ShaderResourceView* srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
+            ID3D11SamplerState* sampler = this->IGetSamplerState(texId->m_flags);
+            this->m_d3dContext->VSSetShaderResources(slot, 1, &srv);
+            this->m_d3dContext->VSSetSamplers(slot, 1, &sampler);
+            return;
+        }
     }
 
+    ID3D11ShaderResourceView* srv = NULL;
+    ID3D11SamplerState* sampler = NULL;
     this->m_d3dContext->VSSetShaderResources(slot, 1, &srv);
     this->m_d3dContext->VSSetSamplers(slot, 1, &sampler);
 }
 
-// OFFSET: %0x007CEE80
+// PROVEN: dab9c8ba IDENTICAL/NONE
+// OFFSET: 0x0086FDF0
 void CGxDeviceD3d11::ISetDomainTexture(uint32_t slot, CGxTex* texId) {
-    ID3D11ShaderResourceView* srv;
-    ID3D11SamplerState* sampler = NULL;
-
     if (texId) {
+        this->IResourceTouch(texId);
         this->ITexMarkAsUpdated(texId);
-        srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
-        sampler = this->IGetSamplerState(texId->m_flags);
-    } else {
-        srv = NULL;
+
+        if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
+            ID3D11ShaderResourceView* srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
+            ID3D11SamplerState* sampler = this->IGetSamplerState(texId->m_flags);
+            this->m_d3dContext->DSSetShaderResources(slot, 1, &srv);
+            this->m_d3dContext->DSSetSamplers(slot, 1, &sampler);
+        }
     }
 
+    ID3D11ShaderResourceView* srv = NULL;
+    ID3D11SamplerState* sampler = NULL;
     this->m_d3dContext->DSSetShaderResources(slot, 1, &srv);
     this->m_d3dContext->DSSetSamplers(slot, 1, &sampler);
 }
 
-// OFFSET: %0x007CEF00
+// PROVEN: 488472fd IDENTICAL/NONE
+// OFFSET: 0x0086FEB0
 void CGxDeviceD3d11::ISetTexture(uint32_t slot, CGxTex* texId) {
-    ID3D11ShaderResourceView* srv;
-    ID3D11SamplerState* sampler = NULL;
-
     if (texId) {
+        this->IResourceTouch(texId);
         this->ITexMarkAsUpdated(texId);
-        srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
-        sampler = this->IGetSamplerState(texId->m_flags);
-    } else {
-        srv = NULL;
+
+        if (!texId->m_needsCreation && (texId->m_apiSpecificData || texId->m_apiSpecificData2)) {
+            ID3D11ShaderResourceView* srv = static_cast<TexViews*>(texId->m_apiSpecificData)->m_srv;
+            ID3D11SamplerState* sampler = this->IGetSamplerState(texId->m_flags);
+            this->m_d3dContext->PSSetShaderResources(slot, 1, &srv);
+            this->m_d3dContext->PSSetSamplers(slot, 1, &sampler);
+            return;
+        }
     }
 
+    ID3D11ShaderResourceView* srv = NULL;
+    ID3D11SamplerState* sampler = NULL;
     this->m_d3dContext->PSSetShaderResources(slot, 1, &srv);
     this->m_d3dContext->PSSetSamplers(slot, 1, &sampler);
 }
 
-// OFFSET: %0x007CEF80
+// PROVEN: 2ccc60ae IDENTICAL/NONE
+// OFFSET: 0x0086FF70
 void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
     CGxStateBom& value = this->m_appRenderStates[which].m_value;
 
@@ -680,7 +695,8 @@ void CGxDeviceD3d11::SceneClear(uint32_t mask, CImVector color) {
     }
 }
 
-// OFFSET: %0x007CF320
+// PROVEN: 326b57a2 IDENTICAL/NONE
+// OFFSET: 0x00870310/0x1405A5E80
 void CGxDeviceD3d11::ScenePresent(void* window) {
     if (!this->m_context) {
         return;
@@ -696,7 +712,28 @@ void CGxDeviceD3d11::ScenePresent(void* window) {
     }
 
     this->WaitForFPSCap();
-    this->m_swapChain->Present(this->m_format.m_vsync, 0);
+
+    HRESULT result = this->m_swapChain->Present(this->m_format.m_vsync, 0);
+
+    if (FAILED(result)) {
+        GxLog("Present Error: 0x%08X\n", result);
+
+        if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET) {
+            CGxFormat format = this->m_format;
+            GxWindowProc windowProc = this->m_windowProc;
+            HWND hwnd = this->m_hwnd;
+
+            this->DeviceDestroy();
+
+            if (this->m_ownhwnd) {
+                this->DeviceCreate(windowProc, format);
+            } else {
+                this->DeviceCreate(hwnd, format);
+            }
+
+            this->NotifyOnDeviceRestored();
+        }
+    }
 }
 
 // OFFSET: %0x007CF380

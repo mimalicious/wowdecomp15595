@@ -328,7 +328,7 @@ int32_t CGxDeviceD3d11::ICreateTargets(const C2iVector& size) {
     return 1;
 }
 
-// OFFSET: %0x007B2000
+// OFFSET: 0x00852040
 void CGxDeviceD3d11::IReleaseTargets() {
     this->m_numRenderTargets = 0;
 
@@ -445,21 +445,40 @@ IDXGIOutput* CGxDeviceD3d11::IGetOutputForMonitor(IDXGIAdapter* adapter, uint32_
     }
 }
 
-// OFFSET: %0x007B21F0
+// PROVEN: 17bde1ee IDENTICAL/NONE
+// OFFSET: 0x00852310
 void CGxDeviceD3d11::ISetWindowFocus(int32_t focus) {
-    this->m_windowFocus = focus;
+    RECT rect;
 
-    if (!focus || this->m_format.m_window) {
+    if (!this->m_format.m_window && focus) {
+        GetWindowRect(this->m_hwnd, &rect);
+        ClipCursor(&rect);
+    }
+
+    if (this->m_windowFocus == focus) {
         return;
     }
 
-    RECT rect;
-    GetWindowRect(this->m_hwnd, &rect);
-    ClipCursor(&rect);
+    this->m_windowFocus = focus;
 
-    if (this->m_swapChain) {
-        this->m_swapChain->SetFullscreenState(TRUE, NULL);
-        this->DeviceSetGamma(this->m_gammaRamp);
+    if (this->m_format.m_window) {
+        return;
+    }
+
+    if (focus) {
+        if (this->m_swapChain) {
+            this->m_swapChain->SetFullscreenState(TRUE, NULL);
+            this->DeviceSetGamma(this->m_gammaRamp);
+        }
+
+        GetWindowRect(this->m_hwnd, &rect);
+        ClipCursor(&rect);
+    } else {
+        if (this->m_swapChain) {
+            this->m_swapChain->SetFullscreenState(FALSE, NULL);
+        }
+
+        ShowWindow(this->m_hwnd, SW_MINIMIZE);
     }
 }
 
@@ -1140,7 +1159,7 @@ int32_t CGxDeviceD3d11::DeviceCreate(void* window, const CGxFormat& format) {
     return 0;
 }
 
-// OFFSET: %0x007B3210
+// OFFSET: 0x00853B80
 int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     switch (wm) {
         case GxWM_Size:
@@ -1160,13 +1179,12 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
                 DXGI_SWAP_CHAIN_DESC desc;
                 this->m_swapChain->GetDesc(&desc);
 
-                UINT height = static_cast<UINT>(static_cast<int64_t>(rect.maxY - rect.minY));
                 UINT width = static_cast<UINT>(static_cast<int64_t>(rect.maxX - rect.minX));
+                UINT height = static_cast<UINT>(static_cast<int64_t>(rect.maxY - rect.minY));
                 this->m_swapChain->ResizeBuffers(desc.BufferCount, width, height, desc.BufferDesc.Format, desc.Flags);
 
                 C2iVector size;
                 this->ICreateTargets(size);
-                this->ISetWindowFocus(1);
                 this->NotifyOnDeviceRestored();
             }
 
@@ -1183,7 +1201,7 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
 
         case GxWM_Destroy:
         case GxWM_KillFocus:
-            this->m_windowFocus = 0;
+            this->ISetWindowFocus(0);
             break;
 
         case GxWM_SetFocus:

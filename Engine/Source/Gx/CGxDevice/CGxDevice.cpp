@@ -2337,7 +2337,7 @@ bool CGxDevice::IShaderLoad(CGxShader* shader, EGxShTarget target, const char* n
     }
 }
 
-// OFFSET: %0x007AEBC0
+// OFFSET: 0x00849000/0x140576CA0
 void CGxDevice::ShaderRelease(CGxShader* shader) {
     if (--shader->m_refCount) {
         return;

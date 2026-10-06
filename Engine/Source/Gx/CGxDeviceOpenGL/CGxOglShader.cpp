@@ -553,7 +553,7 @@ void CGxDeviceOpenGl::IShaderConstantsSend(EGxShTarget target, uint32_t index, c
     }
 }
 
-// OFFSET: %0x007C6FE0
+// OFFSET: 0x0086A780
 void CGxDeviceOpenGl::IShaderConstantsFlush() {
     ShadowConstants& vertex = CGxDevice::s_shadowConstants[GxSh_Vertex];
 

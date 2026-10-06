@@ -1497,6 +1497,7 @@ void CGxDeviceD3d::ISetVertexTexture(uint32_t tmu, CGxTex* texId) {
         acquired = true;
     }
 
+    this->IResourceTouch(texId);
     this->ITexMarkAsUpdated(texId);
 
     if (acquired) {
@@ -1684,6 +1685,7 @@ void CGxDeviceD3d::ISetTexture(uint32_t tmu, CGxTex* texId) {
             }
         }
 
+        this->IResourceTouch(texId);
         this->ITexMarkAsUpdated(texId);
 
         if (upload) {
@@ -2161,6 +2163,8 @@ void CGxDeviceD3d::IXformSetTex(uint32_t tmu) {
 
 // OFFSET: %0x007D5F40
 void CGxDeviceD3d::IBindPixelShader(CGxShaderPermute* permute) {
+    this->IShaderBind(permute);
+
     if (permute) {
         if (!permute->m_loaded) {
             this->IShaderCreate(permute);
@@ -2244,6 +2248,8 @@ void CGxDeviceD3d::IShaderConstantsFlush() {
 
 // OFFSET: %0x007D5D70
 void CGxDeviceD3d::IBindVertexShader(CGxShaderPermute* permute) {
+    this->IShaderBind(permute);
+
     if (!permute) {
         this->m_d3dDevice->SetVertexShader(NULL);
         return;
@@ -2640,7 +2646,8 @@ int32_t CGxDeviceD3d::ICreateD3dDevice(const CGxFormat& format) {
     return 1;
 }
 
-// OFFSET: %0x007C9BE0
+// PROVEN: 5ac7bc07 IDENTICAL/DIFFERENT
+// OFFSET: 0x0084CF40/0x14057B960
 void CGxDeviceD3d::IReleaseD3dResources(int32_t freeTextures) {
     this->ITexForceRecreation(freeTextures);
     this->IReleaseD3dShaders(freeTextures);
@@ -2922,7 +2929,9 @@ void CGxDeviceD3d::IReleaseD3dQueries() {
 
 // OFFSET: %0x007C9B60
 void CGxDeviceD3d::IReleaseD3dPools(int32_t freePools) {
-    for (CGxPool* pool = CGxDevice::s_poolList.Head(); pool; pool = CGxDevice::s_poolList.Next(pool)) {
+    for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
+        next = CGxDevice::s_poolList.RawNext(pool);
+
         if (freePools || pool->m_usage == GxPoolUsage_Stream || pool->m_usage == GxPoolUsage_Dynamic) {
             this->IReleaseD3dPool(pool);
         }
@@ -2936,8 +2945,9 @@ void CGxDeviceD3d::TexDestroy(CGxTex* texId) {
     if (texId->m_format == GxTex_Intz || texId->m_format == GxTex_Rawz) {
         texId->m_apiSpecificData2 = NULL;
     } else if (texId->m_apiSpecificData2) {
-        delete[] static_cast<uint8_t*>(texId->m_apiSpecificData2);
+        SMemFree(texId->m_apiSpecificData2, __FILE__, __LINE__, 0);
         texId->m_apiSpecificData2 = NULL;
+        this->IResourceTouch(texId);
     }
 
     if (texId->m_apiSpecificData) {
@@ -2959,6 +2969,7 @@ void CGxDeviceD3d::ITexCreate(CGxTex* texId) {
     if (!texId->m_flags.m_renderTarget) {
         if (texId->m_format != GxTex_Intz && texId->m_format != GxTex_Rawz) {
             texId->m_apiSpecificData2 = SMemAlloc(this->ITexBitsSize(texId, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF), __FILE__, __LINE__, 0);
+            this->IResourceTouch(texId);
         }
 
         texId->m_needsCreation = 0;
@@ -3126,8 +3137,8 @@ void CGxDeviceD3d::ScenePresent(void* window) {
 
 // OFFSET: %0x007D2CE0
 void CGxDeviceD3d::SetInstanceCount(uint32_t count) {
-    this->m_d3dDevice->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | count);
-    this->m_d3dDevice->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+    this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | count));
+    this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(1, D3DSTREAMSOURCE_INSTANCEDATA | 1));
 }
 
 // OFFSET: %0x007D2D30
@@ -3140,9 +3151,9 @@ void CGxDeviceD3d::ResetInstancing() {
     this->m_d3dVertexStreamBuf[1] = NULL;
     this->m_d3dVertexStreamStride[0] = 0;
     this->m_d3dVertexStreamStride[1] = 0;
-    this->m_d3dDevice->SetStreamSourceFreq(0, 1);
-    this->m_d3dDevice->SetStreamSourceFreq(1, 1);
-    this->m_d3dDevice->SetStreamSource(1, NULL, 0, 0);
+    this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(0, 1));
+    this->ICheckResult(this->m_d3dDevice->SetStreamSourceFreq(1, 1));
+    this->ICheckResult(this->m_d3dDevice->SetStreamSource(1, NULL, 0, 0));
 }
 
 // OFFSET: %0x007D2DD0
@@ -3292,7 +3303,8 @@ void CGxDeviceD3d::SceneClearToViewport(uint32_t mask, CImVector color) {
     this->SceneClear(mask, color);
 }
 
-// OFFSET: %0x007C7840
+// PROVEN: 331fc6eb IDENTICAL/UNPROVEN
+// OFFSET: 0x0084B430/0x140579A80
 void CGxDeviceD3d::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation(1);
     CGxDevice::DeviceSetBaseMipLevel(level);
@@ -3842,7 +3854,7 @@ CGxDeviceD3d::CGxDeviceD3d() {
     this->DeviceCreateStreamBufs();
 }
 
-// OFFSET: %0x007D0C60
+// OFFSET: 0x008563E0
 int32_t CGxDeviceD3d::ITexAllocD3dTexture(CGxTex* texId) {
     uint32_t width;
     uint32_t height;
@@ -3854,7 +3866,15 @@ int32_t CGxDeviceD3d::ITexAllocD3dTexture(CGxTex* texId) {
     DWORD usage = 0;
 
     if (texId->m_flags.m_renderTarget) {
-        usage = CGxDevice::s_texFormatIsDepth[texId->m_format] ? D3DUSAGE_DEPTHSTENCIL : D3DUSAGE_RENDERTARGET;
+        if (CGxDevice::s_texFormatIsDepth[texId->m_format]) {
+            usage = D3DUSAGE_DEPTHSTENCIL;
+
+            if (!this->m_caps.m_rttFormat[texId->m_format]) {
+                texId->m_target = GxTex_6;
+            }
+        } else {
+            usage = D3DUSAGE_RENDERTARGET;
+        }
     }
 
     switch (texId->m_target) {
@@ -3892,6 +3912,17 @@ int32_t CGxDeviceD3d::ITexAllocD3dTexture(CGxTex* texId) {
             break;
         }
 
+        case GxTex_6: {
+            LPDIRECT3DSURFACE9 surface = NULL;
+
+            if (FAILED(this->m_d3dDevice->CreateDepthStencilSurface(width, height, s_GxTexFmtToD3dFmt[texId->m_format], D3DMULTISAMPLE_NONE, 0, TRUE, &surface, NULL))) {
+                return 0;
+            }
+
+            texId->m_apiSpecificData = surface;
+            break;
+        }
+
         default:
             break;
     }
@@ -3909,15 +3940,37 @@ void CGxDeviceD3d::TexSetCacheSize(int32_t size) {
     this->m_texCacheSize = size;
 }
 
-// OFFSET: %0x007D0E30
-LPDIRECT3DTEXTURE9 CGxDeviceD3d::ITexGetScratch(EGxTexFormat format) {
-    LPDIRECT3DTEXTURE9 texture = this->m_scratchTextures[format];
+// OFFSET: 0x00856630/0x1405873A0
+LPDIRECT3DTEXTURE9 CGxDeviceD3d::ITexGetScratch(EGxTexFormat format, uint32_t width, uint32_t height) {
+    LPDIRECT3DTEXTURE9 texture;
+    int32_t cache;
 
-    if (!texture) {
-        if (FAILED(this->m_d3dDevice->CreateTexture(1024, 1024, 10, 0, s_GxTexFmtToD3dFmt[format], D3DPOOL_SYSTEMMEM, &texture, NULL))) {
-            return NULL;
+    if (width > 1024 || height > 1024) {
+        cache = 0;
+    } else {
+        texture = this->m_scratchTextures[format];
+        cache = 1;
+
+        if (texture) {
+            texture->AddRef();
+            return texture;
         }
+    }
 
+    if (width < 1024) {
+        width = 1024;
+    }
+
+    if (height < 1024) {
+        height = 1024;
+    }
+
+    if (FAILED(this->m_d3dDevice->CreateTexture(width, height, 0, 0, s_GxTexFmtToD3dFmt[format], D3DPOOL_SYSTEMMEM, &texture, NULL))) {
+        return NULL;
+    }
+
+    if (cache) {
+        texture->AddRef();
         this->m_scratchTextures[format] = texture;
     }
 
@@ -3961,24 +4014,28 @@ void CGxDeviceD3d::ITexUploadBox(CGxTex* texId, uint32_t level, const D3DBOX* bo
 void CGxDeviceD3d::ITexUploadRect(CGxTex* texId, uint32_t face, uint32_t level, const RECT* rect, const void* bits, uint32_t pitch) {
     LPDIRECT3DSURFACE9 scratchSurface = NULL;
     LPDIRECT3DSURFACE9 surface = NULL;
-    LPDIRECT3DTEXTURE9 scratch = this->ITexGetScratch(texId->m_format);
+    LPDIRECT3DTEXTURE9 scratch = this->ITexGetScratch(texId->m_format, texId->m_width, texId->m_height);
 
-    if (scratch && SUCCEEDED(scratch->GetSurfaceLevel(level, &scratchSurface))) {
-        surface = this->ITexGetSurface(texId, level, face);
+    if (scratch) {
+        if (SUCCEEDED(scratch->GetSurfaceLevel(level, &scratchSurface))) {
+            surface = this->ITexGetSurface(texId, level, face);
 
-        D3DLOCKED_RECT lockedRect;
+            D3DLOCKED_RECT lockedRect;
 
-        if (SUCCEEDED(scratchSurface->LockRect(&lockedRect, rect, 0))) {
-            C2iVector size;
-            size.x = rect->right - rect->left;
-            size.y = rect->bottom - rect->top;
-            Blit(size, BlitAlpha_0, bits, pitch, GxGetBlitFormat(texId->m_format), lockedRect.pBits, lockedRect.Pitch, GxGetBlitFormat(texId->m_format));
+            if (SUCCEEDED(scratchSurface->LockRect(&lockedRect, rect, 0))) {
+                C2iVector size;
+                size.x = rect->right - rect->left;
+                size.y = rect->bottom - rect->top;
+                Blit(size, BlitAlpha_0, bits, pitch, GxGetBlitFormat(texId->m_format), lockedRect.pBits, lockedRect.Pitch, GxGetBlitFormat(texId->m_format));
 
-            scratchSurface->UnlockRect();
+                scratchSurface->UnlockRect();
 
-            POINT point = { rect->left, rect->top };
-            this->m_d3dDevice->UpdateSurface(scratchSurface, rect, surface, &point);
+                POINT point = { rect->left, rect->top };
+                this->m_d3dDevice->UpdateSurface(scratchSurface, rect, surface, &point);
+            }
         }
+
+        scratch->Release();
     }
 
     if (scratchSurface) {
@@ -4269,7 +4326,7 @@ void CGxDeviceD3d::ITexReleaseD3dTexture(CGxTex* texId) {
     texId->m_link2.Unlink();
 }
 
-// OFFSET: %0x007D1A80
+// OFFSET: 0x00857310/0x1405883E0
 void CGxDeviceD3d::ITexForceRecreation(int32_t all) {
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
         if (this->m_scratchTextures[i]) {
@@ -4286,15 +4343,16 @@ void CGxDeviceD3d::ITexForceRecreation(int32_t all) {
         CGxDevice::TexDestroy(texId);
     }
 
-    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = CGxDevice::s_textureList.Next(texId)) {
+    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = texId->m_link.Next()) {
         this->ITexReleaseD3dTexture(texId);
 
         if (all || texId->m_flags.m_renderTarget) {
             if (texId->m_format == GxTex_Intz || texId->m_format == GxTex_Rawz) {
                 texId->m_apiSpecificData2 = NULL;
             } else if (texId->m_apiSpecificData2) {
-                delete[] static_cast<uint8_t*>(texId->m_apiSpecificData2);
+                SMemFree(texId->m_apiSpecificData2, __FILE__, __LINE__, 0);
                 texId->m_apiSpecificData2 = NULL;
+                this->IResourceTouch(texId);
             }
 
             // STATIC: %0x00D931A4
@@ -4314,7 +4372,7 @@ void CGxDeviceD3d::ITexForceRecreation(int32_t all) {
     }
 }
 
-// OFFSET: %0x007D1DC0
+// OFFSET: 0x00857540
 int32_t CGxDeviceD3d::ITexEvictFor(CGxTex* texId, uint32_t size) {
     for (CGxTex* cached = this->m_texCacheList.Tail(); cached && cached->unk_0050 == static_cast<uint32_t>(this->m_frameCount); cached = this->m_texCacheList.Prev(cached)) {
         if (texId->m_flags.m_filter == cached->m_flags.m_filter && texId->m_flags.m_renderTarget == cached->m_flags.m_renderTarget && texId->m_format == cached->m_format && texId->m_target == cached->m_target && texId->m_width == cached->m_width && texId->m_height == cached->m_height) {
@@ -4357,7 +4415,7 @@ void CGxDeviceD3d::ITexLinkBound() {
     }
 }
 
-// OFFSET: %0x007D2190
+// OFFSET: 0x00857880/0x1405888D0
 void CGxDeviceD3d::ITexAcquire(CGxTex* texId) {
     texId->unk_0050 = this->m_frameCount - 1;
 
@@ -4416,4 +4474,14 @@ void CGxDeviceD3d::ITexTouch(CGxTex* texId) {
         texId->unk_0050 = this->m_frameCount;
         this->m_texCacheList.LinkToTail(texId);
     }
+}
+
+// PROVEN: c7453a99 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void CGxDeviceD3d::IResourceTouch(const void* resource) {
+}
+
+// PROVEN: d5c5efe1 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void CGxDeviceD3d::ICheckResult(HRESULT result) {
 }

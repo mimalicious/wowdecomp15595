@@ -135,7 +135,8 @@ int32_t GxAdapterInfer(uint16_t& deviceID) {
     return CGxDevice::AdapterInfer(deviceID);
 }
 
-// OFFSET: %0x007A60C0
+// PROVEN: ca432153 IDENTICAL/NONE
+// OFFSET: 0x0083FFE0/0x14056BDD0
 int32_t GxAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes) {
     return CGxDevice::AdapterMonitorModes(monitor, modes);
 }
@@ -930,12 +931,14 @@ void GxTexSetWrap(CGxTex* texId, EGxTexWrapMode wrapU, EGxTexWrapMode wrapV) {
     g_theGxDevicePtr->TexSetWrap(texId, wrapU, wrapV);
 }
 
-// OFFSET: %0x007A6760
+// PROVEN: 89f4259f IDENTICAL/NONE
+// OFFSET: 0x00840670
 void GxLogOpen() {
     CGxDevice::LogOpen();
 }
 
-// OFFSET: %0x007A6770
+// PROVEN: c00a984f IDENTICAL/NONE
+// OFFSET: 0x00840680/0x14056C4A0
 void GxLogClose() {
     CGxDevice::LogClose();
 }
@@ -982,7 +985,7 @@ void GxFormatColor(CImVector& color) {
     }
 }
 
-// OFFSET: %0x0043F8B0
+// OFFSET: 0x004DFBA0
 void GxRenderTargetGet(EGxBuffer buffer, CGxTex*& texture) {
     g_theGxDevicePtr->DeviceGetRenderTarget(buffer, texture);
 }
