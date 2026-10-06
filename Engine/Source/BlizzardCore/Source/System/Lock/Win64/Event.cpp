@@ -9,7 +9,7 @@ void Blizzard::Lock::EventCreate(Event& event) {
     event = CreateEventW(NULL, FALSE, FALSE, NULL);
 }
 
-// PROVEN: 3756e437 IDENTICAL/IDENTICAL
+// PROVEN: 3756e437 IDENTICAL/NONE
 // OFFSET: 0x007AD490/0x1404A3190
 void Blizzard::Lock::EventDestroy(Event& event) {
     CloseHandle(event);

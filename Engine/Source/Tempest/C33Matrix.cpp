@@ -4,8 +4,8 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/C4Quaternion.h"
 
-// PROVEN: 212934b3 IDENTICAL/NONE
-// OFFSET: 0x004CD2E0
+// PROVEN: 212934b3 IDENTICAL/IDENTICAL
+// OFFSET: 0x004CD2E0/0x140109040
 C33Matrix::C33Matrix(const C4Quaternion& q) {
     float x2 = q.x * 2.0f;
     float y2 = q.y * 2.0f;
@@ -91,8 +91,8 @@ void C33Matrix::Scale(const C3Vector& scale) {
     this->c2 = this->c2 * scale.z;
 }
 
-// PROVEN: 12ec340e IDENTICAL/NONE
-// OFFSET: 0x004CD600
+// PROVEN: 12ec340e IDENTICAL/IDENTICAL
+// OFFSET: 0x004CD600/0x140109390
 C33Matrix operator*(const C33Matrix& l, const C33Matrix& r) {
     C33Matrix result;
     result.a0 = l.a0 * r.a0 + l.a1 * r.b0 + l.a2 * r.c0;
@@ -273,8 +273,8 @@ C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized
     return result;
 }
 
-// PROVEN: b1ea7faf IDENTICAL/NONE
-// OFFSET: 0x004CE070
+// PROVEN: b1ea7faf IDENTICAL/UNPROVEN
+// OFFSET: 0x004CE070/0x140109F50
 void C33Matrix::Rotate(float angle, const C3Vector& axis, bool normalized) {
     *this = Rotation(angle, axis, normalized) * *this;
 }

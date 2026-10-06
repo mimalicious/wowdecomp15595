@@ -22,7 +22,7 @@ void ReleaseMeteredSectionLock(LPMETERED_SECTION lpMetSect);
 /*
  * CreateMeteredSection
  */
-// PROVEN: b3e59072 IDENTICAL/NONE
+// PROVEN: b3e59072 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AD4A80/0x14089F5F0
 LPMETERED_SECTION CreateMeteredSection(LONG lInitialCount, 
       LONG lMaximumCount, LPCTSTR lpName)
@@ -86,8 +86,8 @@ LPMETERED_SECTION OpenMeteredSection(LPCTSTR lpName)
 /*
  * EnterMeteredSection
  */
-// PROVEN: e53fea3c IDENTICAL/NONE
-// OFFSET: 0x00AD4900
+// PROVEN: e53fea3c IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD4900/0x14089F3A0
 DWORD EnterMeteredSection(LPMETERED_SECTION lpMetSect, 
       DWORD dwMilliseconds)
 {
@@ -119,8 +119,8 @@ DWORD EnterMeteredSection(LPMETERED_SECTION lpMetSect,
 /*
  * LeaveMeteredSection
  */
-// PROVEN: c13bee6b IDENTICAL/NONE
-// OFFSET: 0x00AD4990
+// PROVEN: c13bee6b IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD4990/0x14089F450
 BOOL LeaveMeteredSection(LPMETERED_SECTION lpMetSect, LONG lReleaseCount, 
          LPLONG lpPreviousCount)
 {
@@ -163,7 +163,7 @@ BOOL LeaveMeteredSection(LPMETERED_SECTION lpMetSect, LONG lReleaseCount,
 /*
  * CloseMeteredSection
  */
-// PROVEN: 0f08c5bd IDENTICAL/NONE
+// PROVEN: 0f08c5bd IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD4720/0x14089F1E0
 void CloseMeteredSection(LPMETERED_SECTION lpMetSect)
 {

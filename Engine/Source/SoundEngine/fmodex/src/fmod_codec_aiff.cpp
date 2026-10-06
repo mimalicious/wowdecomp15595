@@ -81,7 +81,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecAIFF::getDescriptionEx()
 /****************************************************************
  * Extended precision IEEE floating-point conversion routine.
  ****************************************************************/
-// PROVEN: 14450fe4 IDENTICAL/NONE
+// PROVEN: 14450fe4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB9F50/0x140880F30
 float ConvertFromIeeeExtended(unsigned char *bytes)
 {
@@ -551,7 +551,7 @@ FMOD_RESULT CodecAIFF::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 20ca495c IDENTICAL/NONE
+// PROVEN: 20ca495c IDENTICAL/IDENTICAL
 // OFFSET: 0x00ABA030/0x140881040
 FMOD_RESULT CodecAIFF::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {

@@ -47,7 +47,7 @@ void ViewSettings::SetSubmerged(int32_t submerged) {
     s_submerged = submerged;
 }
 
-// PROVEN: b2b601e4 IDENTICAL/NONE
+// PROVEN: b2b601e4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A30160/0x1407DA030
 int32_t ViewSettings::GetSubmerged() {
     return s_submerged;
@@ -74,7 +74,7 @@ void ViewSettings::SetViewExtents(const CAaRect& extents) {
     s_viewExtents = extents;
 }
 
-// PROVEN: 6c7ea212 IDENTICAL/NONE
+// PROVEN: 6c7ea212 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A301A0/0x1407DA070
 C4Vector ViewSettings::CalculateParams() {
     C4Vector params;

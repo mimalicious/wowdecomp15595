@@ -298,7 +298,7 @@ int32_t CSimpleFont_GetJustifyV(const char* name, CSimpleFont* font, lua_State* 
     return 1;
 }
 
-// PROVEN: 9a35d03c IDENTICAL/NONE
+// PROVEN: 9a35d03c IDENTICAL/UNPROVEN
 // OFFSET: 0x00533F60/0x1401866D0
 int32_t CSimpleFont_GetIndentedWordWrap(const char* name, CSimpleFont* font, lua_State* L) {
     if (font->m_attributes.m_styleFlags & 0x20000) {
@@ -618,7 +618,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetIndentedWordWrap", &Script_GetIndentedWordWrap },
 };
 
-// PROVEN: bab6f1cf IDENTICAL/NONE
+// PROVEN: bab6f1cf IDENTICAL/UNPROVEN
 // OFFSET: 0x00533590/0x140185B40
 void CSimpleFont::RegisterScriptMethods(lua_State* L) {
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

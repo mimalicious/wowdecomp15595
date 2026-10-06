@@ -215,8 +215,8 @@ void CShaderEffectParser::ParseEffect(char* data, uint32_t size, uint32_t& pos, 
     }
 }
 
-// PROVEN: c174027d IDENTICAL/NONE
-// OFFSET: 0x00438C00
+// PROVEN: c174027d IDENTICAL/DIFFERENT
+// OFFSET: 0x00438C00/0x140042F00
 void CShaderEffectParser::ParseEffectFile(char* data, uint32_t size, void (*callback)(const ParsedEffect&, void*), void* param) {
     char args[16][64];
     ParsedEffect effect;

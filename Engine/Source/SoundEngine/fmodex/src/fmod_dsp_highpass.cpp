@@ -488,7 +488,7 @@ FMOD_RESULT DSPHighPass::getParameterInternal(int index, float *value, char *val
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d812895c IDENTICAL/NONE
+// PROVEN: d812895c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9D620/0x14085DD40
 FMOD_RESULT F_CALLBACK DSPHighPass::createCallback(FMOD_DSP_STATE *dsp)
 {

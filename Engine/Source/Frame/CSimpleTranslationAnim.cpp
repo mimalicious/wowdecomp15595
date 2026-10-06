@@ -21,25 +21,25 @@ int32_t CSimpleTranslationAnim::s_objectType;
 // STATIC: %0x00BB8BAC
 const char* CSimpleTranslationAnim::s_objectTypeName = "Translation";
 
-// PROVEN: 16876655 IDENTICAL/NONE
+// PROVEN: 16876655 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528430/0x140177980
 bool CSimpleTranslationAnim::IsA(int32_t type) {
     return type == CSimpleTranslationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: bd46feb1 IDENTICAL/NONE
+// PROVEN: bd46feb1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528460/0x1401779A0
 bool CSimpleTranslationAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleTranslationAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: eff1da0f IDENTICAL/NONE
+// PROVEN: eff1da0f IDENTICAL/IDENTICAL
 // OFFSET: 0x005284C0/0x140177A00
 const char* CSimpleTranslationAnim::GetObjectTypeName() {
     return CSimpleTranslationAnim::s_objectTypeName;
 }
 
-// PROVEN: 1b7686a6 IDENTICAL/NONE
+// PROVEN: 1b7686a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x005284D0/0x140177A10
 int32_t CSimpleTranslationAnim::GetScriptMetaTable() {
     return CSimpleTranslationAnim::s_metatable;

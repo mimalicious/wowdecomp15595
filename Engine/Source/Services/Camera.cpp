@@ -106,7 +106,7 @@ void CameraSetupScreenProjection(const CRect& rect, const C2Vector& offset, floa
     GxXformSetView(view);
 }
 
-// PROVEN: 1bf5d399 IDENTICAL/DIFFERENT
+// PROVEN: 1bf5d399 IDENTICAL/UNPROVEN
 // OFFSET: 0x0054AE00/0x1401A3FF0
 void CameraSetupWorldProjection(CCamera* camera, const CRect& rect, uint32_t flags) {
     if (!camera) {

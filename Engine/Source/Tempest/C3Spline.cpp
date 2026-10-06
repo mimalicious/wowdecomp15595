@@ -83,8 +83,8 @@ void C3Spline::Vel(float t, C3Vector& vel, EvalType type) {
     }
 }
 
-// PROVEN: c0831d77 IDENTICAL/NONE
-// OFFSET: 0x004C9500
+// PROVEN: c0831d77 IDENTICAL/IDENTICAL
+// OFFSET: 0x004C9500/0x1401043D0
 void C3Spline::Frame(float t, C44Matrix& frame, EvalType type) {
     t = t < 0.0f ? 0.0f : (t < 1.0f ? t : 1.0f);
 

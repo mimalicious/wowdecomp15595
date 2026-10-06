@@ -21,19 +21,19 @@ int32_t CScriptRegion::s_objectType;
 // STATIC: %0x00BB860C
 const char* CScriptRegion::s_objectTypeName = "Region";
 
-// PROVEN: e23865aa IDENTICAL/NONE
+// PROVEN: e23865aa IDENTICAL/DIFFERENT
 // OFFSET: 0x00469450/0x14013FFC0
 CScriptObject* CScriptRegion::GetScriptObjectParent() {
     return this->m_parent;
 }
 
-// PROVEN: 70c65224 IDENTICAL/NONE
+// PROVEN: 70c65224 IDENTICAL/IDENTICAL
 // OFFSET: 0x00469460/0x14007D680
 bool CScriptRegion::IsA(int32_t type) {
     return type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: b3363a79 IDENTICAL/NONE
+// PROVEN: b3363a79 IDENTICAL/DIFFERENT
 // OFFSET: 0x00469490/0x1401531B0
 bool CScriptRegion::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
@@ -52,8 +52,8 @@ CScriptRegion::CScriptRegion() {
     this->m_playingAnimGroups = NULL;
 }
 
-// PROVEN: 17d84e01 IDENTICAL/NONE
-// OFFSET: 0x0050FBA0
+// PROVEN: 17d84e01 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050FBA0/0x140158F50
 bool CScriptRegion::IsDragging() {
     return this->m_parent ? this->m_parent->IsDragging() : false;
 }
@@ -82,14 +82,14 @@ void CScriptRegion::LoadXML_Animations(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 92f1b045 IDENTICAL/NONE
+// PROVEN: 92f1b045 IDENTICAL/DIFFERENT
 // OFFSET: 0x0050FCA0/0x140159090
 CLayoutFrame* CScriptRegion::GetLayoutParent() {
     CLayoutFrame* parent = this->m_parent;
     return parent ? parent : CSimpleTop::s_instance;
 }
 
-// PROVEN: d8e36992 IDENTICAL/NONE
+// PROVEN: d8e36992 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050FCC0/0x1401590B0
 CLayoutFrame* CScriptRegion::GetLayoutFrameByName(const char* name) {
     char fullName[1024];
@@ -165,7 +165,7 @@ void CScriptRegion::LoadXML(linkObject* node, CStatus* status) {
     this->LoadXML_Animations(node, status);
 }
 
-// PROVEN: 89deea3a IDENTICAL/NONE
+// PROVEN: 89deea3a IDENTICAL/IDENTICAL
 // OFFSET: 0x0050FF30/0x1401593D0
 int32_t CScriptRegion::HasActiveAnimGroup() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {

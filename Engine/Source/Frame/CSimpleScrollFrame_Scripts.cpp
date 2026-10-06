@@ -163,7 +163,8 @@ static int32_t Script_GetVerticalScrollRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005497A0
+// PROVEN: a68dcdf6 DIFFERENT/IDENTICAL
+// OFFSET: 0x00539BB0/0x14018D250
 static int32_t Script_UpdateScrollChildRect(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -195,7 +196,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "UpdateScrollChildRect", &Script_UpdateScrollChildRect },
 };
 
-// PROVEN: 23c95563 IDENTICAL/NONE
+// PROVEN: 23c95563 IDENTICAL/UNPROVEN
 // OFFSET: 0x005395D0/0x14018CB00
 void CSimpleScrollFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

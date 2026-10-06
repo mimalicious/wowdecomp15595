@@ -327,8 +327,8 @@ void SHA1::Finish(SHA1::Digest& digest) {
     }
 }
 
-// PROVEN: 79560787 IDENTICAL/NONE
-// OFFSET: 0x007B0510
+// PROVEN: 79560787 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0510/0x1404A5270
 void SHA1::Hash(SHA1::Digest& digest, const void* data, uint32_t length) {
     SHA1 sha;
     sha.Prepare();

@@ -659,7 +659,7 @@ T* TSBaseArray<T>::Ptr() {
     return this->m_data;
 }
 
-// PROVEN: 0184908c IDENTICAL/DIFFERENT
+// PROVEN: 0184908c IDENTICAL/NONE
 // OFFSET: 0x004BBC80/0x1400F5160
 template <class T>
 T* TSBaseArray<T>::Top() {

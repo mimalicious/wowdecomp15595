@@ -21,8 +21,8 @@ void SServerInitialize() {
     }
 }
 
-// PROVEN: 9ac34f1a IDENTICAL/NONE
-// OFFSET: 0x004C17A0
+// PROVEN: 9ac34f1a IDENTICAL/IDENTICAL
+// OFFSET: 0x004C17A0/0x1400FC070
 void SServerDestroy() {
     if (s_kernel32lib) {
         FreeLibrary(s_kernel32lib);

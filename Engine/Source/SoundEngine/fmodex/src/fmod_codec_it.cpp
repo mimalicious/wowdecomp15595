@@ -104,7 +104,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecIT::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c17e815e IDENTICAL/NONE
+// PROVEN: c17e815e IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD7C0/0x1408719F0
 FMOD_RESULT CodecIT::calculateLength()
 {
@@ -562,7 +562,7 @@ FMOD_RESULT CodecIT::decompress16(void **src, void *dst, int len, bool it215, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 57b61dac IDENTICAL/NONE
+// PROVEN: 57b61dac IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAA130/0x14086CBC0
 FMOD_RESULT MusicChannelIT::volumeSlide() 
 {
@@ -678,7 +678,7 @@ You just add to the speed +1 if there are 2.  There is a flag you have to set li
 
 
 */
-// PROVEN: ebf57b15 IDENTICAL/NONE
+// PROVEN: ebf57b15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAA190/0x14086CDD0
 FMOD_RESULT MusicChannelIT::portamento()
 {
@@ -1099,8 +1099,8 @@ FMOD_RESULT MusicChannelIT::panbrello()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bf5be7fa IDENTICAL/NONE
-// OFFSET: 0x00AAA5E0
+// PROVEN: bf5be7fa IDENTICAL/IDENTICAL
+// OFFSET: 0x00AAA5E0/0x14086D0C0
 FMOD_RESULT CodecIT::processEnvelope(MusicEnvelopeState *env, MusicVirtualChannel *vcptr, int Inumpoints, MusicEnvelopeNode *v, int type, int mLoopStart, int loopend, int susmLoopStart, int susloopend, unsigned char control)
 {
 	if (env->mPosition < Inumpoints) 
@@ -1482,8 +1482,8 @@ FMOD_RESULT CodecIT::sampleVibrato(MusicVirtualChannel *vcptr)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 27667790 IDENTICAL/NONE
-// OFFSET: 0x00AAADF0
+// PROVEN: 27667790 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AAADF0/0x14086D8C0
 FMOD_RESULT MusicChannelIT::processVolumeByte(MusicNote *current, bool newrow)
 {
     MusicVirtualChannel *vcptr = (MusicVirtualChannel *)mVirtualChannelHead.getNext();
@@ -1734,7 +1734,7 @@ FMOD_RESULT MusicChannelIT::processVolumeByte(MusicNote *current, bool newrow)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 31a012bf IDENTICAL/NONE
+// PROVEN: 31a012bf IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAB030/0x14086DB40
 FMOD_RESULT CodecIT::unpackRow() 
 {
@@ -3923,7 +3923,7 @@ FMOD_RESULT CodecIT::updateRow(bool audible)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e4366856 IDENTICAL/NONE
+// PROVEN: e4366856 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD150/0x140871260
 FMOD_RESULT CodecIT::update(bool audible)
 {
@@ -4066,7 +4066,7 @@ FMOD_RESULT CodecIT::update(bool audible)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: eaef775f IDENTICAL/NONE
+// PROVEN: eaef775f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD340/0x140871490
 FMOD_RESULT CodecIT::play()
 {
@@ -6202,7 +6202,7 @@ FMOD_RESULT CodecIT::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *us
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9be91340 IDENTICAL/NONE
+// PROVEN: 9be91340 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD3B0/0x140871530
 FMOD_RESULT CodecIT::closeInternal()
 {
@@ -6443,7 +6443,7 @@ FMOD_RESULT CodecIT::readInternal(void *buffer, unsigned int sizebytes, unsigned
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 59f6acaf IDENTICAL/NONE
+// PROVEN: 59f6acaf IDENTICAL/IDENTICAL
 // OFFSET: 0x00AAD6C0/0x1408718F0
 FMOD_RESULT CodecIT::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -6511,7 +6511,7 @@ FMOD_RESULT CodecIT::setPositionInternal(int subsound, unsigned int position, FM
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ee3b6199 IDENTICAL/NONE
+// PROVEN: ee3b6199 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB0230/0x140874F40
 FMOD_RESULT F_CALLBACK CodecIT::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {

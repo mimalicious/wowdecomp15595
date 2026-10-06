@@ -684,7 +684,7 @@ FMOD_RESULT DSPParamEq::getParameterInternal(int index, float *value, char *valu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 92db4c82 IDENTICAL/NONE
+// PROVEN: 92db4c82 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9A1A0/0x14085A7A0
 FMOD_RESULT F_CALLBACK DSPParamEq::createCallback(FMOD_DSP_STATE *dsp)
 {

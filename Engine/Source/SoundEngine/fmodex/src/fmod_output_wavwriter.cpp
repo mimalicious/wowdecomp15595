@@ -241,7 +241,7 @@ FMOD_RESULT OutputWavWriter::init(int selecteddriver, FMOD_INITFLAGS flags, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 740e6c57 IDENTICAL/NONE
+// PROVEN: 740e6c57 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC2200/0x14088A720
 FMOD_RESULT OutputWavWriter::close()
 {
@@ -365,8 +365,8 @@ FMOD_RESULT OutputWavWriter::lock(unsigned int offset, unsigned int length, void
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1229b193 IDENTICAL/NONE
-// OFFSET: 0x00AC1CA0
+// PROVEN: 1229b193 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AC1CA0/0x14088A390
 FMOD_RESULT OutputWavWriter::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
     if (ptr1 && len1)
@@ -424,7 +424,7 @@ FMOD_RESULT OutputWavWriter::getHandle(void **handle)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4f983362 IDENTICAL/NONE
+// PROVEN: 4f983362 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AC1D00/0x14088A050
 FMOD_RESULT OutputWavWriter::writeWavHeader()
 {
@@ -571,7 +571,7 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::getNumDriversCallback(FMOD_OUTPUT_STATE 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 37f78fd5 IDENTICAL/NONE
+// PROVEN: 37f78fd5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AC1710/0x14088A280
 FMOD_RESULT F_CALLBACK OutputWavWriter::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -621,7 +621,7 @@ FMOD_RESULT OutputWavWriter::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8010ea33 IDENTICAL/NONE
+// PROVEN: 8010ea33 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AC2260/0x14088A2A0
 FMOD_RESULT F_CALLBACK OutputWavWriter::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
@@ -647,8 +647,8 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::initCallback(FMOD_OUTPUT_STATE *output, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bbda2ce1 IDENTICAL/NONE
-// OFFSET: 0x00AC22A0
+// PROVEN: bbda2ce1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AC22A0/0x14088A7F0
 FMOD_RESULT F_CALLBACK OutputWavWriter::closeCallback(FMOD_OUTPUT_STATE *output)
 {
     OutputWavWriter *wavwriter = (OutputWavWriter *)output;
@@ -698,7 +698,7 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::getPositionCallback(FMOD_OUTPUT_STATE *o
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 09440727 IDENTICAL/NONE
+// PROVEN: 09440727 IDENTICAL/DIFFERENT
 // OFFSET: 0x00AC1EF0/0x14088A390
 FMOD_RESULT F_CALLBACK OutputWavWriter::lockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -751,7 +751,7 @@ FMOD_RESULT F_CALLBACK OutputWavWriter::unlockCallback(FMOD_OUTPUT_STATE *output
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fcce5419 IDENTICAL/NONE
+// PROVEN: fcce5419 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE7E90/0x14088A410
 FMOD_RESULT F_CALLBACK OutputWavWriter::getHandleCallback(FMOD_OUTPUT_STATE *output, void **handle)
 {

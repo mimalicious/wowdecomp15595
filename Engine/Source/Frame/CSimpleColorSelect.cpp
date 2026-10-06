@@ -74,13 +74,13 @@ const char* CSimpleColorSelect::GetObjectTypeName() {
     return CSimpleColorSelect::s_objectTypeName;
 }
 
-// PROVEN: 84ef293d IDENTICAL/NONE
+// PROVEN: 84ef293d IDENTICAL/IDENTICAL
 // OFFSET: 0x00522D70/0x140170E10
 int32_t CSimpleColorSelect::GetScriptMetaTable() {
     return CSimpleColorSelect::s_metatable;
 }
 
-// PROVEN: 196d9f95 IDENTICAL/NONE
+// PROVEN: 196d9f95 IDENTICAL/UNPROVEN
 // OFFSET: 0x00522D80/0x140170E20
 FrameScript_Object::ScriptIx* CSimpleColorSelect::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -97,15 +97,15 @@ FrameScript_Object::ScriptIx* CSimpleColorSelect::GetScriptByName(const char* na
     return NULL;
 }
 
-// PROVEN: 27e58956 IDENTICAL/NONE
-// OFFSET: 0x00522DF0
+// PROVEN: 27e58956 IDENTICAL/IDENTICAL
+// OFFSET: 0x00522DF0/0x140170E90
 void CSimpleColorSelect::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onColorSelect, time, count);
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: c26b8b50 IDENTICAL/NONE
-// OFFSET: 0x00522E30
+// PROVEN: c26b8b50 IDENTICAL/IDENTICAL
+// OFFSET: 0x00522E30/0x140170F00
 void CSimpleColorSelect::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_wheelTexture) {
         this->m_wheelTexture = NULL;
@@ -163,13 +163,13 @@ void CSimpleColorSelect::RunOnColorSelectScript() {
     this->RunScript(this->m_onColorSelect, 3, NULL);
 }
 
-// PROVEN: 37ad039a IDENTICAL/NONE
+// PROVEN: 37ad039a IDENTICAL/IDENTICAL
 // OFFSET: 0x00522FB0/0x1401710A0
 bool CSimpleColorSelect::IsA(int32_t type) {
     return type == CSimpleColorSelect::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 897e1693 IDENTICAL/NONE
+// PROVEN: 897e1693 IDENTICAL/DIFFERENT
 // OFFSET: 0x00522FF0/0x140170F90
 bool CSimpleColorSelect::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleColorSelect::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -218,7 +218,7 @@ void CSimpleColorSelect::RepositionWheelThumb() {
     this->m_wheelThumbTexture->SetPoint(FRAMEPOINT_CENTER, this->m_wheelTexture, FRAMEPOINT_CENTER, -offset.x, -offset.y, 1);
 }
 
-// PROVEN: d302d544 IDENTICAL/NONE
+// PROVEN: d302d544 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523300/0x1401714D0
 void CSimpleColorSelect::RepositionValueThumb() {
     if (!this->m_valueTexture || !this->m_valueThumbTexture) {
@@ -321,7 +321,7 @@ void CSimpleColorSelect::SetColorValueThumbTexture(CSimpleTexture* texture) {
     this->RepositionValueThumb();
 }
 
-// PROVEN: 180b9319 IDENTICAL/NONE
+// PROVEN: 180b9319 IDENTICAL/IDENTICAL
 // OFFSET: 0x00523560/0x140171810
 void CSimpleColorSelect::UpdateColor() {
     this->UpdateValueTexture();

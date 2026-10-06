@@ -523,7 +523,7 @@ uint64_t BattlenetApplication::GetCurrentTime() const {
 void BattlenetApplication::LogLevel(const char* message, int32_t level) {
 }
 
-// PROVEN: 8684c62b IDENTICAL/NONE
+// PROVEN: 8684c62b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 Battlenet::ApplicationFile* BattlenetApplication::OpenApplicationFile(const char* name) {
     return NULL;
@@ -1837,7 +1837,7 @@ void BattlenetLogin::SendSurveyFailed() {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// PROVEN: cb179714 IDENTICAL/NONE
+// PROVEN: cb179714 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t BattlenetLogin::GetLoginServerType() {
     return 1;

@@ -46,8 +46,8 @@ Blizzard::File::StreamRecord* Blizzard::Mopaq::HSFILERecord::GetFileStream() {
     return this->m_handle ? this->m_handle->m_file : NULL;
 }
 
-// PROVEN: 4ab43a64 IDENTICAL/NONE
-// OFFSET: 0x007AB020
+// PROVEN: 4ab43a64 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AB020/0x1404A1210
 const char* Blizzard::Mopaq::HSFILERecord::GetFileName() {
     return this->m_handle ? this->m_handle->m_name : "";
 }
@@ -221,7 +221,7 @@ bool Blizzard::Mopaq::MpqErrorHandler::HandleWriteFileError(MpqHandleRecord* han
     return false;
 }
 
-// PROVEN: 42815344 IDENTICAL/DIFFERENT
+// PROVEN: 42815344 IDENTICAL/IDENTICAL
 // OFFSET: 0x007AAB30/0x1404C2CD0
 bool Blizzard::Mopaq::MpqErrorHandler::HandleMD5BlockError(MpqHandleRecord* handle, uint8_t* buffer, int64_t fileSize, uint32_t block, int32_t blockSize, uint32_t size, uint8_t* md5) {
     return false;
@@ -260,8 +260,8 @@ System_Mopaq::IOHandler::~IOHandler() {
     }
 }
 
-// PROVEN: 535c6124 IDENTICAL/NONE
-// OFFSET: 0x007AB8E0
+// PROVEN: 535c6124 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AB8E0/0x1404C2CC0
 bool System_Mopaq::IOHandler::ReadData(IOHandler* handler, void* buffer, int64_t offset, int32_t* count) {
     return handler->ReadData(buffer, offset, count);
 }
@@ -307,8 +307,8 @@ int32_t System_Mopaq::IOHandler::TrimRead(int32_t count, System_SFile::BLOCKENTR
     return amount > 0 ? amount : 0;
 }
 
-// PROVEN: 0a5c3582 IDENTICAL/NONE
-// OFFSET: 0x007C7A50
+// PROVEN: 0a5c3582 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C7A50/0x1404C2CD0
 void System_Mopaq::IOHandler::UpdateBaseOffset() {
     this->m_baseOffset = this->m_handle->m_blockEntry.m_offset;
 }
@@ -802,7 +802,8 @@ bool System_Mopaq::SectorReadHandler::ChecksumDecompress(SectorReadHandler* hand
     return handler->m_decompress(dest, &size, source, sourceSize) && size == destSize;
 }
 
-// OFFSET: %0x0070E600
+// PROVEN: aeb2d994 DIFFERENT/IDENTICAL
+// OFFSET: 0x007AB820/0x1404A1900
 bool System_Mopaq::SectorReadHandler::Decompress(SectorReadHandler* handler, uint8_t* source, uint8_t* dest, uint32_t sourceSize, uint32_t destSize, uint32_t sector) {
     uint32_t size = destSize;
     return handler->m_decompress(dest, &size, source, sourceSize) && size == destSize;

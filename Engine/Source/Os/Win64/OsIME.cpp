@@ -148,8 +148,8 @@ int32_t OsIMEGetClauseInfo(uint32_t& clauseStart, uint32_t& clauseEnd, uint32_t&
     return 1;
 }
 
-// PROVEN: 11fe8bd0 IDENTICAL/NONE
-// OFFSET: 0x0087B820
+// PROVEN: 11fe8bd0 IDENTICAL/DIFFERENT
+// OFFSET: 0x0087B820/0x1405B36B0
 void OsIMEEnable(int32_t enable) {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
 

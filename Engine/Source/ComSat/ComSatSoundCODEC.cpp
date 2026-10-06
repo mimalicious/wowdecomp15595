@@ -172,13 +172,13 @@ bool ComSat::Sound::CODEC::IsEncodedBitrateVariable() {
     return true;
 }
 
-// PROVEN: 3d548fe8 IDENTICAL/NONE
+// PROVEN: 3d548fe8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t ComSat::Sound::CODEC::MinimumSafeFramesBetweenResets() {
     return 32;
 }
 
-// PROVEN: a496d725 IDENTICAL/NONE
+// PROVEN: a496d725 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3A360/0x1407E6780
 bool ComSat::Sound::CODECIPMR6000::Init() {
     if (this->m_initialized) {
@@ -197,7 +197,7 @@ bool ComSat::Sound::CODECIPMR6000::Reset() {
     return this->Init();
 }
 
-// PROVEN: 61551b6b IDENTICAL/NONE
+// PROVEN: 61551b6b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3A3A0/0x1407E67A0
 void ComSat::Sound::CODECIPMR6000::GenerateSilence(uint8_t* pcm, uint32_t size) {
     memset(pcm, 0, size);

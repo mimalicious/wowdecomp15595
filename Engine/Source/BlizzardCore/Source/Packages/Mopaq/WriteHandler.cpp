@@ -496,7 +496,6 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteData(const uint8_t* buffe
     return result;
 }
 
-// PROVEN: 56e45eac DIFFERENT/IDENTICAL
 // OFFSET: 0x007E9310/0x1404F3CD0
 bool System_Mopaq::SectorInPlaceReadWriteHandler::WriteChecksumTable() {
     uint32_t size = 0;

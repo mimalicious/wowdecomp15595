@@ -172,8 +172,8 @@ void CRibbonEmitter::SetColor(float r, float g, float b) {
     this->m_color.Set(this->m_color.a * 255.0f, r, g, b);
 }
 
-// PROVEN: a59571db IDENTICAL/NONE
-// OFFSET: 0x00B25A70
+// PROVEN: a59571db IDENTICAL/IDENTICAL
+// OFFSET: 0x00B25A70/0x1408EDB30
 void CRibbonEmitter::SetAlpha(float alpha) {
     this->m_color.a = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f + 0.5f));
 }

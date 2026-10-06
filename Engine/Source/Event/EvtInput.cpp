@@ -307,6 +307,7 @@ void IEvtDispatchJoystickStick(EvtContext* context, int32_t id, int32_t x, int32
     IEvtQueueDispatch(context, EVENT_ID_17, &data);
 }
 
+// PROVEN: e00efd1e DIFFERENT/IDENTICAL
 // OFFSET: 0x008A3210/0x1405E5380
 void IEvtInputGetMousePosition(float* x, float* y) {
     int32_t mouseX;

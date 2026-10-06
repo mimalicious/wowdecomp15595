@@ -1,8 +1,8 @@
 #include <cstdlib>
 #include "Engine/Source/Tempest/C2iVector.h"
 
-// PROVEN: 104e39ad IDENTICAL/NONE
-// OFFSET: 0x00B09B40
+// PROVEN: 104e39ad IDENTICAL/IDENTICAL
+// OFFSET: 0x00B09B40/0x1408CD280
 uint32_t C2iVector::MajorAxis() const {
     return abs(this->x) <= abs(this->y);
 }

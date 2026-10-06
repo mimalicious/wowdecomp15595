@@ -1241,7 +1241,7 @@ CSimpleTop::~CSimpleTop() {
     CSimpleTop::s_instance = NULL;
 }
 
-// PROVEN: b2ac43a5 IDENTICAL/NONE
+// PROVEN: b2ac43a5 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CSimpleTop::LowerFrame(CSimpleFrame* frame) {
     return 0;

@@ -25,7 +25,7 @@ ShipPath::ShipPath() {
 }
 
 // PROVEN: 00482bd1 IDENTICAL/NONE
-// OFFSET: 0x00B11420
+// OFFSET: 0x00B11420/0x1408D6D10
 void ShipPath::Init(uint32_t taxiPathId, float moveSpeed, float accelRate, const TransportPhysicsRec* physics) {
     this->m_moveSpeed = moveSpeed;
     this->m_taxiPathId = taxiPathId;
@@ -36,7 +36,7 @@ void ShipPath::Init(uint32_t taxiPathId, float moveSpeed, float accelRate, const
 }
 
 // PROVEN: 7b3abdcb IDENTICAL/NONE
-// OFFSET: 0x00B0FDB0
+// OFFSET: 0x00B0FDB0/0x1408D50F0
 void ShipPath::SetTotalPathTime(uint32_t time) {
     this->m_totalPathTime = time;
 

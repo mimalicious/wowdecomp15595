@@ -38,7 +38,7 @@ lgLcdBitmapHeader* CLCDGfxColor::GetLCDScreen() {
     return this->m_pLCDScreen;
 }
 
-// PROVEN: 9c0ded8d IDENTICAL/NONE
+// PROVEN: 9c0ded8d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t CLCDGfxColor::GetFamily() {
     return LGLCD_DEVICE_FAMILY_QVGA_BASIC;

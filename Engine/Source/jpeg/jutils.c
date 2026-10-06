@@ -70,7 +70,7 @@ const int jpeg_natural_order[DCTSIZE2+16] = {
 
 /* Compute a/b rounded up to next integer, ie, ceil(a/b) */
 /* Assumes a >= 0, b > 0 */
-// PROVEN: 471edfa2 IDENTICAL/NONE
+// PROVEN: 471edfa2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B60220/0x140929710
 long jdiv_round_up(long a, long b) {
   return (a + b - 1L) / b;
@@ -79,7 +79,7 @@ long jdiv_round_up(long a, long b) {
 
 /* Compute a rounded up to next multiple of b, ie, ceil(a/b)*b */
 /* Assumes a >= 0, b > 0 */
-// PROVEN: deb00be9 IDENTICAL/NONE
+// PROVEN: deb00be9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B60240/0x140929720
 long jround_up(long a, long b) {
   a += b - 1L;

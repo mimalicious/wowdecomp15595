@@ -21,25 +21,25 @@ int32_t CSimpleAlphaAnim::s_objectType;
 // STATIC: %0x00BB8BC0
 const char* CSimpleAlphaAnim::s_objectTypeName = "Alpha";
 
-// PROVEN: 224a22a3 IDENTICAL/NONE
+// PROVEN: 224a22a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528D50/0x140178490
 bool CSimpleAlphaAnim::IsA(int32_t type) {
     return type == CSimpleAlphaAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 18f43c30 IDENTICAL/NONE
+// PROVEN: 18f43c30 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528D80/0x1401784B0
 bool CSimpleAlphaAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleAlphaAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 960bec46 IDENTICAL/NONE
+// PROVEN: 960bec46 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528DE0/0x140178510
 const char* CSimpleAlphaAnim::GetObjectTypeName() {
     return CSimpleAlphaAnim::s_objectTypeName;
 }
 
-// PROVEN: 1743e0a6 IDENTICAL/NONE
+// PROVEN: 1743e0a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528DF0/0x140178520
 int32_t CSimpleAlphaAnim::GetScriptMetaTable() {
     return CSimpleAlphaAnim::s_metatable;

@@ -290,7 +290,7 @@ char* FrameScript_GetCurrentFunction(lua_State* L, char* buffer, uint32_t buffer
     return buffer;
 }
 
-// PROVEN: 940ef983 IDENTICAL/UNPROVEN
+// PROVEN: 940ef983 IDENTICAL/NONE
 // OFFSET: 0x0083B030/0x140565760
 void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_State* L = s_context;

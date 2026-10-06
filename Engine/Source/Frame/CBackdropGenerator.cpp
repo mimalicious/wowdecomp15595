@@ -12,7 +12,7 @@
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// PROVEN: 4955e577 IDENTICAL/NONE
+// PROVEN: 4955e577 IDENTICAL/IDENTICAL
 // OFFSET: 0x005106C0/0x140159EB0
 void CBackdropGenerator::SetVertexColor(const CImVector& color) {
     this->m_backgroundColor.a = color.a;
@@ -25,7 +25,7 @@ void CBackdropGenerator::SetVertexColor(const CImVector& color) {
     }
 }
 
-// PROVEN: 20a35a4b IDENTICAL/NONE
+// PROVEN: 20a35a4b IDENTICAL/IDENTICAL
 // OFFSET: 0x00510700/0x140159EF0
 void CBackdropGenerator::SetBorderVertexColor(const CImVector& color) {
     this->m_borderColor.a = color.a;
@@ -66,7 +66,7 @@ void CBackdropGenerator::SetBorderVertexColor(const CImVector& color) {
     }
 }
 
-// PROVEN: 4d3ece45 IDENTICAL/NONE
+// PROVEN: 4d3ece45 IDENTICAL/IDENTICAL
 // OFFSET: 0x005107A0/0x140159FC0
 void CBackdropGenerator::DestroyTextures() {
     if (this->m_backgroundTexture) {

@@ -153,7 +153,7 @@ HBITMAP CLCDGfxBase::GetHBITMAP() {
     return this->m_hBitmap;
 }
 
-// PROVEN: 4908a79b IDENTICAL/NONE
+// PROVEN: 4908a79b IDENTICAL/DIFFERENT
 // OFFSET: 0x00B41A60/0x14090EBB0
 int32_t CLCDGfxBase::GetWidth() {
     return this->m_nWidth;

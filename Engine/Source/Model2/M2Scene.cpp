@@ -131,7 +131,7 @@ void CM2Scene::EndDraw() {
     this->m_drawing = 0;
 }
 
-// PROVEN: 118a4d83 IDENTICAL/NONE
+// PROVEN: 118a4d83 IDENTICAL/IDENTICAL
 // OFFSET: 0x00827640/0x140545590
 void CM2Scene::PurgeModelCache() {
     if (this->m_cache) {
@@ -870,7 +870,7 @@ int32_t CM2Scene::SortDoodadKey(uint32_t a, uint32_t b, const void* param) {
     return keyB < keyA;
 }
 
-// PROVEN: dc83df4f IDENTICAL/NONE
+// PROVEN: dc83df4f IDENTICAL/IDENTICAL
 // OFFSET: 0x00828080/0x140545FB0
 int32_t CM2Scene::SortSortKey(uint32_t a, uint32_t b, const void* param) {
     const M2Element* elements = static_cast<const M2Element*>(param);

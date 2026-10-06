@@ -309,7 +309,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetColorRGB", &Script_GetColorRGB },
 };
 
-// PROVEN: 6d01ae7b IDENTICAL/NONE
+// PROVEN: 6d01ae7b IDENTICAL/UNPROVEN
 // OFFSET: 0x0053AC90/0x14018E770
 void CSimpleColorSelect::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

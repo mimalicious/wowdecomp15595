@@ -103,7 +103,7 @@ FMOD_RESULT NetFile::shutDown()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 83bb6124 IDENTICAL/NONE
+// PROVEN: 83bb6124 IDENTICAL/UNPROVEN
 // OFFSET: 0x00ACCD50/0x140897500
 FMOD_RESULT NetFile::parseUrl(char *url, char *host, int hostlen, char *auth, int authlen, unsigned short *port, char *file, const int filelen, bool *mms)
 {
@@ -757,7 +757,7 @@ FMOD_RESULT NetFile::openAsMMS(const char *name_or_data, char *host, char *file,
 ]
 */
 
-// PROVEN: b3b225e6 IDENTICAL/NONE
+// PROVEN: b3b225e6 IDENTICAL/UNPROVEN
 // OFFSET: 0x00ACDBF0/0x140898480
 FMOD_RESULT NetFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
@@ -805,7 +805,7 @@ FMOD_RESULT NetFile::reallyOpen(const char *name_or_data, unsigned int *filesize
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c01ba36a IDENTICAL/NONE
+// PROVEN: c01ba36a IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACDCB0/0x140898590
 FMOD_RESULT NetFile::reallyClose()
 {
@@ -844,7 +844,7 @@ FMOD_RESULT NetFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 015da06a IDENTICAL/NONE
+// PROVEN: 015da06a IDENTICAL/UNPROVEN
 // OFFSET: 0x00ACDD10/0x140898600
 FMOD_RESULT NetFile::reallyRead(void *buffer, unsigned int size, unsigned int *rd)
 {
@@ -1062,7 +1062,7 @@ AGAIN:
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 022efed1 IDENTICAL/NONE
+// PROVEN: 022efed1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACE050/0x1408989D0
 FMOD_RESULT NetFile::reallySeek(unsigned int pos)
 {
@@ -1211,7 +1211,7 @@ FMOD_RESULT NetFile::reallyCancel()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 09552d34 IDENTICAL/NONE
+// PROVEN: 09552d34 IDENTICAL/IDENTICAL
 // OFFSET: 0x00ACE230/0x140898C00
 FMOD_RESULT NetFile::getMetadata(Metadata **metadata)
 {

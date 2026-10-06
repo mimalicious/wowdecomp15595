@@ -117,8 +117,8 @@ FMOD_RESULT OutputEmulated::init(int maxchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 89ed0ff1 IDENTICAL/NONE
-// OFFSET: 0x00ACF6D0
+// PROVEN: 89ed0ff1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00ACF6D0/0x140899F50
 FMOD_RESULT OutputEmulated::release()
 {
     if (mChannelPool)

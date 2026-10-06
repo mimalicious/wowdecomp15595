@@ -4129,7 +4129,7 @@ void CGCamera::RestoreSavedDistancePitch() {
     this->m_smoothPitch.m_target = pitch;
 }
 
-// PROVEN: 0207e58d IDENTICAL/NONE
+// PROVEN: 0207e58d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGCamera::GetDefaultZoomMinDistance() {
     return 0.0f;

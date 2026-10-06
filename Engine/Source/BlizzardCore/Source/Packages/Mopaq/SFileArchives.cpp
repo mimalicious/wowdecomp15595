@@ -1043,7 +1043,7 @@ bool System_SFile::BlockEntryTable::SetMD5Check(uint32_t index, bool enabled) {
     return this->m_md5Checks->WriteBits(this->m_md5CheckBit + index * this->m_md5CheckEntryBits, this->m_md5CheckBits, &bit, 1);
 }
 
-// PROVEN: 4421cabe IDENTICAL/IDENTICAL
+// PROVEN: 4421cabe IDENTICAL/UNPROVEN
 // OFFSET: 0x007C2EC0/0x1404BD340
 void System_SFile::ARCHIVEREC::PackBlockTable() {
     uint32_t index = 0;
@@ -2880,8 +2880,8 @@ bool Blizzard::Mopaq::SetFileSignature(const char* name, const Blizzard::Util::D
     return result;
 }
 
-// PROVEN: 9a199608 IDENTICAL/NONE
-// OFFSET: 0x007B5A40
+// PROVEN: 9a199608 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B5A40/0x1404ABA60
 char* System_SFile::BackslashPath(const char* path, char* buffer, uint32_t size) {
     Blizzard::String::MakeBackslashPath(path, buffer, size);
     return buffer;

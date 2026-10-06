@@ -27,7 +27,7 @@ WDataStore::~WDataStore() {
     }
 }
 
-// PROVEN: 4e102741 IDENTICAL/NONE
+// PROVEN: 4e102741 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C5D50/0x14000A800
 void WDataStore::InternalInitialize(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     this->m_bufferObj = NULL;

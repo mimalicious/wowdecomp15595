@@ -421,7 +421,7 @@ FMOD_RESULT MusicSong::play()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 31d28ee5 IDENTICAL/NONE
+// PROVEN: 31d28ee5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE3BB0/0x1408AF0C0
 FMOD_RESULT MusicSong::spawnNewVirtualChannel(MusicChannel *cptr, MusicSample *sptr, MusicVirtualChannel **newvcptr)
 {
@@ -499,7 +499,7 @@ FMOD_RESULT MusicSong::spawnNewVirtualChannel(MusicChannel *cptr, MusicSample *s
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0e7be51b IDENTICAL/NONE
+// PROVEN: 0e7be51b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE3CB0/0x1408AF1C0
 FMOD_RESULT MusicVirtualChannel::cleanUp()
 {
@@ -538,7 +538,7 @@ FMOD_RESULT MusicVirtualChannel::cleanUp()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 101f3379 IDENTICAL/NONE
+// PROVEN: 101f3379 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE3D20/0x1408AF240
 FMOD_RESULT MusicSong::setBPM(int bpm)
 {
@@ -588,7 +588,7 @@ FMOD_RESULT MusicSong::setBPM(int bpm)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d4d130a7 IDENTICAL/NONE
+// PROVEN: d4d130a7 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AE3D80/0x1408AF290
 FMOD_RESULT MusicSong::stop()
 {
@@ -667,7 +667,7 @@ FMOD_RESULT MusicSong::stop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 526644ac IDENTICAL/NONE
+// PROVEN: 526644ac IDENTICAL/IDENTICAL
 // OFFSET: 0x00AE3EC0/0x1408AF430
 FMOD_RESULT MusicSong::playSound(MusicSample *sample, MusicVirtualChannel *vcptr, bool addfilter, SNDMIXPLUGIN *plugin)
 {
@@ -910,8 +910,8 @@ FMOD_RESULT F_CALLBACK MusicSong::getLengthCallback(FMOD_CODEC_STATE *codec, uns
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d6944a7b IDENTICAL/NONE
-// OFFSET: 0x00AE4220
+// PROVEN: d6944a7b IDENTICAL/IDENTICAL
+// OFFSET: 0x00AE4220/0x1408AF740
 FMOD_RESULT F_CALLBACK MusicSong::getPositionCallback(FMOD_CODEC_STATE *codec, unsigned int *position, FMOD_TIMEUNIT postype)
 {
     MusicSong *cmusic = (MusicSong *)codec;

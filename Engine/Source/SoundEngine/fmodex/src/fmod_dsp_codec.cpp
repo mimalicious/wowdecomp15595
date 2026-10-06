@@ -120,7 +120,7 @@ FMOD_RESULT DSPCodec::createInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ecdf237b IDENTICAL/NONE
+// PROVEN: ecdf237b IDENTICAL/IDENTICAL
 // OFFSET: 0x00AD4B10/0x14089F6D0
 FMOD_RESULT DSPCodec::release(bool freethis)
 {
@@ -491,8 +491,8 @@ FMOD_RESULT F_CALLBACK DSPCodec::readCallback(FMOD_DSP_STATE *dsp, float *inbuff
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 950e8a30 IDENTICAL/NONE
-// OFFSET: 0x00AD4B90
+// PROVEN: 950e8a30 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AD4B90/0x14089F770
 FMOD_RESULT F_CALLBACK DSPCodec::setPositionCallback(FMOD_DSP_STATE *dsp, unsigned int pos)
 {
     DSPCodec *dspcodec = (DSPCodec *)dsp;

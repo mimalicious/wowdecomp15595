@@ -233,7 +233,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "IsEnabled", &Script_IsEnabled },
 };
 
-// PROVEN: ce56b102 IDENTICAL/NONE
+// PROVEN: ce56b102 IDENTICAL/UNPROVEN
 // OFFSET: 0x00539C10/0x14018D2C0
 void CSimpleSlider::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

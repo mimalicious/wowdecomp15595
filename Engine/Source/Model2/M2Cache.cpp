@@ -47,8 +47,8 @@ void CM2Cache::ClearSharedHash() {
     }
 }
 
-// PROVEN: f2690dfd IDENTICAL/NONE
-// OFFSET: 0x00811FB0
+// PROVEN: f2690dfd IDENTICAL/IDENTICAL
+// OFFSET: 0x00811FB0/0x1405298D0
 void CM2Cache::BeginThread(void (*func)(void*), void* param) {
     this->m_threadFunc = func;
     this->m_threadParam = param;
@@ -80,7 +80,7 @@ uint32_t STORMAPI CM2Cache::ThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: 952e6bfa IDENTICAL/NONE
+// PROVEN: 952e6bfa IDENTICAL/IDENTICAL
 // OFFSET: 0x00812070/0x140529990
 void M2SetGlobalOptFlags(uint32_t flags) {
     s_cache.m_flags |= flags & 0xE000;
@@ -100,13 +100,13 @@ CM2Scene* M2CreateScene() {
     return scene;
 }
 
-// PROVEN: d5d0b06f IDENTICAL/NONE
+// PROVEN: d5d0b06f IDENTICAL/IDENTICAL
 // OFFSET: 0x008120E0/0x140529A10
 uint32_t M2GetCacheFlags() {
     return s_cache.m_flags;
 }
 
-// PROVEN: 0c5cecc6 IDENTICAL/NONE
+// PROVEN: 0c5cecc6 IDENTICAL/IDENTICAL
 // OFFSET: 0x008120F0/0x140529A20
 void M2SetCacheFlags(uint32_t flags) {
     s_cache.m_flags = flags;

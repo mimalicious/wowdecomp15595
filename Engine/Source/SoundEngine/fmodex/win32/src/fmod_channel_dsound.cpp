@@ -86,8 +86,8 @@ typedef enum {
 	[SEE_ALSO]
 ]
 */
-// PROVEN: be519a96 IDENTICAL/NONE
-// OFFSET: 0x00AFE4C0
+// PROVEN: be519a96 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFE4C0/0x1408BFED0
 FMOD_RESULT ChannelDSound::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
     FMOD_RESULT result;
@@ -272,8 +272,8 @@ FMOD_RESULT ChannelDSound::alloc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e6bced45 IDENTICAL/NONE
-// OFFSET: 0x00AFE780
+// PROVEN: e6bced45 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFE780/0x1408C01C0
 FMOD_RESULT ChannelDSound::start()
 {
     SampleDSound   *sampledsound;
@@ -365,8 +365,8 @@ FMOD_RESULT ChannelDSound::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d2c8f8f4 IDENTICAL/NONE
-// OFFSET: 0x00AFE800
+// PROVEN: d2c8f8f4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFE800/0x1408C0270
 FMOD_RESULT ChannelDSound::stop(bool ignoreenddelay, bool resetstate)
 {
     bool releasebuffers = true;
@@ -617,8 +617,8 @@ FMOD_RESULT ChannelDSound::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 102b4362 IDENTICAL/NONE
-// OFFSET: 0x00AFEAA0
+// PROVEN: 102b4362 IDENTICAL/IDENTICAL
+// OFFSET: 0x00AFEAA0/0x1408C0550
 FMOD_RESULT ChannelDSound::setFrequency(float frequency)
 {
     if (mSound && !mOutputDSound)
@@ -1201,8 +1201,8 @@ FMOD_RESULT ChannelDSound::isPlaying(bool *isplaying, bool includethreadlatency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8db625f9 IDENTICAL/NONE
-// OFFSET: 0x00AFF1A0
+// PROVEN: 8db625f9 IDENTICAL/DIFFERENT
+// OFFSET: 0x00AFF1A0/0x1408C0D40
 FMOD_RESULT ChannelDSound::setMode(FMOD_MODE mode)
 {
     int deferred = DS3D_IMMEDIATE;

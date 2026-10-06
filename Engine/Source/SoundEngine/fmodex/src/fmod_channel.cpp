@@ -32,7 +32,7 @@ FMOD_RESULT Channel::getSystemObject(System **system)
 }
 
 
-// PROVEN: 56601f87 IDENTICAL/NONE
+// PROVEN: 56601f87 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7A8D0/0x1408359E0
 FMOD_RESULT Channel::stop()
 {
@@ -90,7 +90,7 @@ FMOD_RESULT Channel::getPaused(bool *paused)
 }
 
 
-// PROVEN: a8ac643d IDENTICAL/NONE
+// PROVEN: a8ac643d IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7A930/0x140835A40
 FMOD_RESULT Channel::setVolume(float volume)
 {
@@ -251,7 +251,7 @@ FMOD_RESULT Channel::getDelay(unsigned int *startdelay, unsigned int *enddelay)
 }
 
 
-// PROVEN: 4a177c92 IDENTICAL/NONE
+// PROVEN: 4a177c92 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7A9D0/0x140835B00
 FMOD_RESULT Channel::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
@@ -491,8 +491,8 @@ FMOD_RESULT Channel::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 }
 
 
-// PROVEN: c7cb4153 IDENTICAL/NONE
-// OFFSET: 0x00A7AA90
+// PROVEN: c7cb4153 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A7AA90/0x140835C20
 FMOD_RESULT Channel::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -548,7 +548,7 @@ FMOD_RESULT Channel::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
         return channeli->getReverbProperties(prop);
     }
 }
-// PROVEN: 484cfc06 IDENTICAL/NONE
+// PROVEN: 484cfc06 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7AB30/0x140835CD0
 FMOD_RESULT Channel::setChannelGroup(ChannelGroup *channelgroup)
 {
@@ -650,7 +650,7 @@ FMOD_RESULT Channel::get3DAttributes(FMOD_VECTOR *pos, FMOD_VECTOR *vel)
 }
 
 
-// PROVEN: 485e6d60 IDENTICAL/NONE
+// PROVEN: 485e6d60 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7ABC0/0x140835D90
 FMOD_RESULT Channel::set3DMinMaxDistance(float mindistance, float maxdistance)
 {
@@ -1002,7 +1002,7 @@ FMOD_RESULT Channel::getDSPHead(DSP **dsp)
 }
 
 
-// PROVEN: 16bcdaee IDENTICAL/NONE
+// PROVEN: 16bcdaee IDENTICAL/IDENTICAL
 // OFFSET: 0x00A7ACF0/0x140835F10
 FMOD_RESULT Channel::addDSP(DSP *dsp)
 {

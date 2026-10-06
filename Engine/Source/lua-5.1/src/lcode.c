@@ -96,7 +96,7 @@ static void fixjump (FuncState *fs, int pc, int dest) {
 ** returns current `pc' and marks it as a jump target (to avoid wrong
 ** optimizations with consecutive instructions not in the same basic block).
 */
-// PROVEN: 65b7437e IDENTICAL/NONE
+// PROVEN: 65b7437e IDENTICAL/IDENTICAL
 // OFFSET: 0x0042E500/0x140035EA0
 int luaK_getlabel (FuncState *fs) {
   fs->lasttarget = fs->pc;
@@ -126,7 +126,8 @@ static Instruction *getjumpcontrol (FuncState *fs, int pc) {
 ** check whether list has any jump that do not produce a value
 ** (or produce an inverted value)
 */
-// OFFSET: %0x00438940
+// PROVEN: 2717c897 UNPROVEN/IDENTICAL
+// OFFSET: 0x0042E510/0x140035EB0
 static int need_value (FuncState *fs, int list) {
   for (; list != NO_JUMP; list = getjump(fs, list)) {
     Instruction i = *getjumpcontrol(fs, list);
@@ -150,7 +151,8 @@ static int patchtestreg (FuncState *fs, int node, int reg) {
 }
 
 
-// OFFSET: %0x00438A20
+// PROVEN: 9586e014 UNPROVEN/IDENTICAL
+// OFFSET: 0x0042E5F0/0x140035F10
 static void removevalues (FuncState *fs, int list) {
   for (; list != NO_JUMP; list = getjump(fs, list))
       patchtestreg(fs, list, NO_REG);
@@ -312,7 +314,7 @@ void luaK_setreturns (FuncState *fs, expdesc *e, int nresults) {
 }
 
 
-// PROVEN: 6268a8dc IDENTICAL/NONE
+// PROVEN: 6268a8dc IDENTICAL/IDENTICAL
 // OFFSET: 0x0042EAD0/0x1400364F0
 void luaK_setoneret (FuncState *fs, expdesc *e) {
   if (e->k == VCALL) {  /* expression is an open function call? */
@@ -548,7 +550,8 @@ void luaK_self (FuncState *fs, expdesc *e, expdesc *key) {
 }
 
 
-// OFFSET: %0x00438F60
+// PROVEN: 6385151c UNPROVEN/IDENTICAL
+// OFFSET: 0x0042EB30/0x140036550
 static void invertjump (FuncState *fs, expdesc *e) {
   Instruction *pc = getjumpcontrol(fs, e->u.s.info);
   lua_assert(testTMode(GET_OPCODE(*pc)) && GET_OPCODE(*pc) != OP_TESTSET &&
@@ -835,7 +838,7 @@ void luaK_posfix (FuncState *fs, BinOpr op, expdesc *e1, expdesc *e2) {
 }
 
 
-// PROVEN: e217569a IDENTICAL/NONE
+// PROVEN: e217569a IDENTICAL/IDENTICAL
 // OFFSET: 0x0042EC80/0x140036770
 void luaK_fixline (FuncState *fs, int line) {
   fs->f->lineinfo[fs->pc - 1] = line;

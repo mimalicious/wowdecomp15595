@@ -41,25 +41,25 @@ const char* CSimpleFont::GetName() {
     return this->m_name;
 }
 
-// PROVEN: cd230c82 IDENTICAL/NONE
+// PROVEN: cd230c82 IDENTICAL/IDENTICAL
 // OFFSET: 0x00517000/0x140161610
 bool CSimpleFont::IsA(int32_t type) {
     return type == CSimpleFont::s_objectType;
 }
 
-// PROVEN: f451c3fd IDENTICAL/NONE
+// PROVEN: f451c3fd IDENTICAL/IDENTICAL
 // OFFSET: 0x00517020/0x140161620
 bool CSimpleFont::IsA(const char* typeName) {
     return SStrCmpI(typeName, CSimpleFont::s_objectTypeName, STORM_MAX_STR) == 0;
 }
 
-// PROVEN: e129b122 IDENTICAL/NONE
+// PROVEN: e129b122 IDENTICAL/IDENTICAL
 // OFFSET: 0x00517040/0x140161640
 const char* CSimpleFont::GetObjectTypeName() {
     return CSimpleFont::s_objectTypeName;
 }
 
-// PROVEN: 369a3955 IDENTICAL/NONE
+// PROVEN: 369a3955 IDENTICAL/IDENTICAL
 // OFFSET: 0x00517050/0x140161650
 int32_t CSimpleFont::GetScriptMetaTable() {
     return CSimpleFont::s_metatable;
@@ -127,7 +127,8 @@ void CSimpleFont::RemoveFontable(CSimpleFontable* fontable) {
     this->m_fontableList.UnlinkNode(fontable);
 }
 
-// OFFSET: %0x00535C90
+// PROVEN: b83da24c DIFFERENT/IDENTICAL
+// OFFSET: 0x00525D20/0x140161640
 void CSimpleFont::UpdateObjects() {
     if (!this->m_attributes.m_flags) {
         return;

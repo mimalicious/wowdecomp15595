@@ -51,7 +51,7 @@ static CGxuLightQueue s_lightQueue(s_lightQueueSize);
 static void GxuLightInitializeImpl() {
 }
 
-// PROVEN: 64e038cf IDENTICAL/NONE
+// PROVEN: 64e038cf IDENTICAL/DIFFERENT
 // OFFSET: 0x006109C0/0x14029AF40
 static CGxLight* GxuLightLockImpl(CGxuLight* light) {
     light->m_lockCount++;
@@ -74,7 +74,7 @@ static int32_t GxuLightGetEnabledImpl(CGxuLight* light) {
     return enabled;
 }
 
-// PROVEN: 6761747e IDENTICAL/NONE
+// PROVEN: 6761747e IDENTICAL/DIFFERENT
 // OFFSET: 0x00610A30/0x14029AFB0
 static void GxuLightSetMaxLightsImpl(uint32_t maxLights) {
     s_maxLights = maxLights;

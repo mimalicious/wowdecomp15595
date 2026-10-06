@@ -492,7 +492,7 @@ LUALIB_API void luaL_addvalue (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 6d21ba44 IDENTICAL/NONE
+// PROVEN: 6d21ba44 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A297A0/0x1407D15F0
 LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
   B->L = L;

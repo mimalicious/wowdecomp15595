@@ -305,8 +305,8 @@ int32_t STORMAPI SFile::FileHasHigherPriority(const char* name, const char* exte
     return Blizzard::Mopaq::SFileHasHigherPriority(name, buffer) != 0;
 }
 
-// PROVEN: b04b438a IDENTICAL/NONE
-// OFFSET: 0x007A5100
+// PROVEN: b04b438a IDENTICAL/DIFFERENT
+// OFFSET: 0x007A5100/0x140499D90
 int32_t STORMAPI SFile::GetActualFileName(SFileImpl* file, char* buffer, uint32_t size) {
     const char* name = file->m_actualName;
 
@@ -709,7 +709,7 @@ int32_t System_SFile2::OldFindFile(const char* name, char* path, uint32_t size, 
     return false;
 }
 
-// PROVEN: 5ebfbe9f IDENTICAL/DIFFERENT
+// PROVEN: 5ebfbe9f IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5A40/0x14049A7F0
 int32_t STORMAPI SFileAuthenticateArchiveEx(SArchive* archive, uint32_t* result, const uint8_t* modulus, uint32_t modulusSize, const uint8_t* exponent, uint32_t exponentSize) {
     Blizzard::Mopaq::AuthResult authResult;
@@ -745,7 +745,7 @@ int32_t STORMAPI SFile::FileExistsInArchives(const char* name) {
     return result;
 }
 
-// PROVEN: 1ededb30 IDENTICAL/DIFFERENT
+// PROVEN: 1ededb30 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5AF0/0x14049A8C0
 int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags, SOVERLAPPED* overlapped) {
     bool result = Blizzard::Mopaq::SFileLoadFile(reinterpret_cast<System_SFile::ARCHIVEREC*>(archive), name, data, size, extra, flags);
@@ -757,7 +757,7 @@ int32_t STORMAPI SFileLoadFileEx(SArchive* archive, const char* name, void** dat
     return result != 0;
 }
 
-// PROVEN: bb1edc7e IDENTICAL/DIFFERENT
+// PROVEN: bb1edc7e IDENTICAL/IDENTICAL
 // OFFSET: 0x007A5B40/0x14049A900
 int32_t STORMAPI SFileOpenArchive(const char* path, int32_t priority, uint32_t flags, SArchive** archive) {
     System_SFile::ARCHIVEREC* result;
@@ -1097,8 +1097,8 @@ bool System_SFile2::ScanDirForFileSystemHash(const char* directory) {
     return Blizzard::File::ProcessDirFast(path, &cookie, Blizzard::Streaming::ScanDirectoryForManifest, false);
 }
 
-// PROVEN: e855b34d IDENTICAL/NONE
-// OFFSET: 0x007A8350
+// PROVEN: e855b34d IDENTICAL/DIFFERENT
+// OFFSET: 0x007A8350/0x14049DDA0
 void System_SFile2::BuildFileSystemHash() {
     Blizzard::String::Copy(s_hashedBasePath, SFile::m_basePath, sizeof(s_hashedBasePath));
 

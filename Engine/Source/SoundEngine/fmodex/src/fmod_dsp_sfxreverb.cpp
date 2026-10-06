@@ -230,8 +230,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPSfxReverb::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 75ca39e7 IDENTICAL/NONE
-// OFFSET: 0x00A94AB0
+// PROVEN: 75ca39e7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A94AB0/0x140854AB0
 FMOD_RESULT DSPSfxReverb::createInternal()
 {
     FMOD_RESULT result;
@@ -385,8 +385,8 @@ FMOD_RESULT DSPSfxReverb::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ec996dca IDENTICAL/NONE
-// OFFSET: 0x00A94E70
+// PROVEN: ec996dca IDENTICAL/UNPROVEN
+// OFFSET: 0x00A94E70/0x140854F30
 FMOD_RESULT DSPSfxReverb::readInternal(float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     if (mUpdate)
@@ -761,8 +761,8 @@ FMOD_RESULT DSPSfxReverb::getParameterInternal(int index, float *value, char *va
 }
 
 // Adjust intensity level for the room effect (i.e. both the early reflections and the late reverberation).
-// PROVEN: 27baae84 IDENTICAL/NONE
-// OFFSET: 0x00A94580
+// PROVEN: 27baae84 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94580/0x140854440
 bool DSPSfxReverb::SetRoom(I3DL2_LISTENERPROPERTIES *pProps)					    // [-10000, 0]      default: -10000 mB
 {
 	if (pProps->lRoom < I3DL2LISTENER_MINROOM)
@@ -779,8 +779,8 @@ bool DSPSfxReverb::SetRoom(I3DL2_LISTENERPROPERTIES *pProps)					    // [-10000,
 
 // Adjust low-pass filter for the room effect (i.e. both the early reflections and the late reverberation).
 // Room_HF is defined as the attenuation at high frequencies relative to the intensity at low frequencies.
-// PROVEN: 6f455529 IDENTICAL/NONE
-// OFFSET: 0x00A945D0
+// PROVEN: 6f455529 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A945D0/0x1408544A0
 bool DSPSfxReverb::SetRoomHF(I3DL2_LISTENERPROPERTIES *pProps)						// [-10000, 0]      default: 0 mB
 {	
 	if (pProps->lRoomHF  < I3DL2LISTENER_MINROOMHF)
@@ -802,8 +802,8 @@ bool DSPSfxReverb::SetRoomHF(I3DL2_LISTENERPROPERTIES *pProps)						// [-10000, 
 	return err;
 }
 
-// PROVEN: 1ca45724 IDENTICAL/NONE
-// OFFSET: 0x00A94030
+// PROVEN: 1ca45724 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A94030/0x140853F30
 bool DSPSfxReverb::Calculate1stOrderLowpassCoeff(float gain, float cutoff, float sampleRate, float *pK)
 {
 
@@ -849,8 +849,8 @@ bool DSPSfxReverb::Calculate1stOrderLowpassCoeff(float gain, float cutoff, float
 
 // Adjust low-pass filter for the room effect (i.e. both the early reflections and the late reverberation).
 // Room_HF is defined as the attenuation at high frequencies relative to the intensity at low frequencies.
-// PROVEN: 4eac4108 IDENTICAL/NONE
-// OFFSET: 0x00A94660
+// PROVEN: 4eac4108 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94660/0x140854560
 bool DSPSfxReverb::SetRoomLF(int roomLF)						// [-10000, 0]      default: 0 mB
 {
 	if (roomLF < FMODLISTENER_MINROOMLF)
@@ -872,8 +872,8 @@ bool DSPSfxReverb::SetRoomLF(int roomLF)						// [-10000, 0]      default: 0 mB
 }
 
 
-// PROVEN: bfe7bca3 IDENTICAL/NONE
-// OFFSET: 0x00A94100
+// PROVEN: bfe7bca3 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A94100/0x140854030
 bool DSPSfxReverb::CalculateShelfCoeffs(float gain, float cutoff, float sampleRate, float *a0, float *a1, float *a2, float *b1, float *b2)
 {
     float t1, t2, g1, g2;
@@ -906,8 +906,8 @@ bool DSPSfxReverb::SetRoomRolloffFactor(I3DL2_LISTENERPROPERTIES *pProps)     //
 #define	NEW_MAX_DECAY_TIME	10000	// Change this to match the I3DL2 spec.
 	
 // Reverberation decay time
-// PROVEN: d89a275d IDENTICAL/NONE
-// OFFSET: 0x00A946E0
+// PROVEN: d89a275d IDENTICAL/IDENTICAL
+// OFFSET: 0x00A946E0/0x140854600
 bool DSPSfxReverb::SetDecayTime(I3DL2_LISTENERPROPERTIES *pProps)				// [0.1, 20.0]      default: 1.0 s
 {
 	float K;
@@ -975,8 +975,8 @@ Calculate1stOrderLowpassCoeff(0.000037, 5000.000000, 48000.000000)
 #define	SHORT_DELAY_LINE_RATIO					(1.61f)
 */
 
-// PROVEN: 7a24453d IDENTICAL/NONE
-// OFFSET: 0x00A94840
+// PROVEN: 7a24453d IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94840/0x140854810
 bool DSPSfxReverb::SetDelayLineLengths(I3DL2_LISTENERPROPERTIES *pProps)
 {
 	/*
@@ -1046,8 +1046,8 @@ bool DSPSfxReverb::SetDecayHFRatio(I3DL2_LISTENERPROPERTIES *pProps)		// [0.1, 2
 }
 
 // Adjusts intensity level of early reflections (relative to Room value)
-// PROVEN: 0c5a7ba5 IDENTICAL/NONE
-// OFFSET: 0x00A94210
+// PROVEN: 0c5a7ba5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94210/0x140854150
 bool DSPSfxReverb::SetReflectionsLevel(I3DL2_LISTENERPROPERTIES *pProps)		// [-10000, 1000]   default: -10000 mB
 {
 	if (pProps->lReflections < I3DL2LISTENER_MINREFLECTIONS)
@@ -1069,8 +1069,8 @@ bool DSPSfxReverb::SetReflectionsLevel(I3DL2_LISTENERPROPERTIES *pProps)		// [-1
 }
 
 // Delay time of the first reflection (relative to the direct path)
-// PROVEN: d6f6e969 IDENTICAL/NONE
-// OFFSET: 0x00A948E0
+// PROVEN: d6f6e969 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A948E0/0x1408548C0
 bool DSPSfxReverb::SetReflectionsDelay(I3DL2_LISTENERPROPERTIES *pProps)	// [0.0, 0.3]       default: 0.02 s
 {
 	if (pProps->flReflectionsDelay < I3DL2LISTENER_MINREFLECTIONSDELAY)
@@ -1098,8 +1098,8 @@ bool DSPSfxReverb::SetReflectionsDelay(I3DL2_LISTENERPROPERTIES *pProps)	// [0.0
 // Adjusts intensity of late reverberation (relative to Room value)
 // Note: Reverb and Decay_time are independent. If the application adjusts Decay_time without changing
 // Reverb, the driver must keep the intensity of the late reverberation constant.
-// PROVEN: bd87c9b1 IDENTICAL/NONE
-// OFFSET: 0x00A94290
+// PROVEN: bd87c9b1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94290/0x1408541D0
 bool DSPSfxReverb::SetReverbLevel(I3DL2_LISTENERPROPERTIES *pProps)					// [-10000, 2000]   default: -10000 mB
 {
 	if (pProps->lReverb < I3DL2LISTENER_MINREVERB)
@@ -1157,8 +1157,8 @@ bool DSPSfxReverb::SetReverbLevel(I3DL2_LISTENERPROPERTIES *pProps)					// [-100
 
 // Defines the time limit between the early reflections and the late reverberation (relative to the time
 // of the first reflection).
-// PROVEN: df49938e IDENTICAL/NONE
-// OFFSET: 0x00A943A0
+// PROVEN: df49938e IDENTICAL/IDENTICAL
+// OFFSET: 0x00A943A0/0x1408542E0
 bool DSPSfxReverb::SetReverbDelay(I3DL2_LISTENERPROPERTIES *pProps)				// [0.0, 0.1]       default: 0.04 s
 {
 	if (pProps->flReverbDelay < I3DL2LISTENER_MINREVERBDELAY)
@@ -1176,8 +1176,8 @@ bool DSPSfxReverb::SetReverbDelay(I3DL2_LISTENERPROPERTIES *pProps)				// [0.0, 
 }
 
 // Controls the echo density in the late reverberation decay. 0% = minimum, 100% = maximum.
-// PROVEN: d32f338f IDENTICAL/NONE
-// OFFSET: 0x00A949D0
+// PROVEN: d32f338f IDENTICAL/UNPROVEN
+// OFFSET: 0x00A949D0/0x140854950
 bool DSPSfxReverb::SetDiffusion(I3DL2_LISTENERPROPERTIES *pProps)					// [0.0, 100.0]     default: 100.0 %
 {
 	if (pProps->flDiffusion < I3DL2LISTENER_MINDIFFUSION)
@@ -1240,8 +1240,8 @@ bool DSPSfxReverb::SetDensity(I3DL2_LISTENERPROPERTIES *pProps)						// [0.0, 10
 }
 
 // Reference high frequency.
-// PROVEN: 3ae13123 IDENTICAL/NONE
-// OFFSET: 0x00A94A50
+// PROVEN: 3ae13123 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A94A50/0x140854A40
 bool DSPSfxReverb::SetHFReference(I3DL2_LISTENERPROPERTIES *pProps)				// [20.0, 20000.0]  default: 5000.0 Hz
 {
 	if (pProps->flHFReference < I3DL2LISTENER_MINHFREFERENCE)
@@ -1320,7 +1320,7 @@ bool DSPSfxReverb::SetLFReference(float lfReference)				// [20.0, 20000.0]  defa
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 64fa179c IDENTICAL/NONE
+// PROVEN: 64fa179c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A95140/0x1408543C0
 FMOD_RESULT F_CALLBACK DSPSfxReverb::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -1372,7 +1372,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::releaseCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cff2e0a8 IDENTICAL/NONE
+// PROVEN: cff2e0a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A94470/0x140855270
 FMOD_RESULT F_CALLBACK DSPSfxReverb::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -1399,7 +1399,7 @@ FMOD_RESULT F_CALLBACK DSPSfxReverb::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0c18b3b7 IDENTICAL/NONE
+// PROVEN: 0c18b3b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A95170/0x140854360
 FMOD_RESULT F_CALLBACK DSPSfxReverb::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {

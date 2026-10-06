@@ -114,7 +114,7 @@ void luaD_throw (lua_State *L, int errcode) {
 }
 
 
-// PROVEN: 3f105da9 IDENTICAL/NONE
+// PROVEN: 3f105da9 IDENTICAL/IDENTICAL
 // OFFSET: 0x00420110/0x140024660
 int luaD_rawrunprotected (lua_State *L, Pfunc f, void *ud) {
   struct lua_longjmp lj;
@@ -220,8 +220,8 @@ void luaD_callhook (lua_State *L, int event, int line) {
 }
 
 
-// PROVEN: 4c68354e IDENTICAL/NONE
-// OFFSET: 0x00420400
+// PROVEN: 4c68354e IDENTICAL/IDENTICAL
+// OFFSET: 0x00420400/0x140024AD0
 static StkId adjust_varargs (lua_State *L, Proto *p, int actual) {
   int i;
   int nfixargs = p->numparams;

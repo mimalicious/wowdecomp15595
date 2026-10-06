@@ -41,7 +41,7 @@ static int currentpc (lua_State *L, CallInfo *ci) {
 }
 
 
-// PROVEN: caf49d15 IDENTICAL/NONE
+// PROVEN: caf49d15 IDENTICAL/IDENTICAL
 // OFFSET: 0x00424F40/0x14002A6A0
 static int currentline (lua_State *L, CallInfo *ci) {
   int pc = currentpc(L, ci);
@@ -83,7 +83,7 @@ LUA_API int lua_gethookcount (lua_State *L) {
 }
 
 
-// PROVEN: 26179b29 IDENTICAL/NONE
+// PROVEN: 26179b29 IDENTICAL/IDENTICAL
 // OFFSET: 0x00424F90/0x14002A6F0
 LUA_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
   int status;
@@ -153,7 +153,7 @@ LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
 }
 
 
-// PROVEN: bc24d66e IDENTICAL/NONE
+// PROVEN: bc24d66e IDENTICAL/UNPROVEN
 // OFFSET: 0x004250D0/0x14002A8B0
 static void funcinfo (lua_Debug *ar, Closure *cl) {
   if (cl->c.isC) {
@@ -298,8 +298,8 @@ static int precheck (const Proto *pt) {
 
 #define checkopenop(pt,pc)	luaG_checkopenop((pt)->code[(pc)+1])
 
-// PROVEN: 83d46679 IDENTICAL/NONE
-// OFFSET: 0x00425260
+// PROVEN: 83d46679 IDENTICAL/IDENTICAL
+// OFFSET: 0x00425260/0x14002AA30
 int luaG_checkopenop (Instruction i) {
   switch (GET_OPCODE(i)) {
     case OP_CALL:
@@ -314,7 +314,8 @@ int luaG_checkopenop (Instruction i) {
 }
 
 
-// OFFSET: %0x0042F790
+// PROVEN: e3a0b847 DIFFERENT/IDENTICAL
+// OFFSET: 0x00425290/0x14002AA60
 static int checkArgMode (const Proto *pt, int r, enum OpArgMask mode) {
   switch (mode) {
     case OpArgN: check(r == 0); break;

@@ -100,7 +100,7 @@ FMOD_CODEC_DESCRIPTION_EX *CodecXM::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8e0fb612 IDENTICAL/NONE
+// PROVEN: 8e0fb612 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2670/0x140877AC0
 FMOD_RESULT CodecXM::calculateLength()
 {
@@ -187,7 +187,7 @@ FMOD_RESULT CodecXM::spawnNewChannel(MusicChannel *cptr, MusicVirtualChannel *ol
 	[SEE_ALSO]
 ]
 */
-// PROVEN: df751eb7 IDENTICAL/NONE
+// PROVEN: df751eb7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB0340/0x140875020
 FMOD_RESULT CodecXM::updateFlags(MusicVirtualChannel *vcptr, MusicSample *sptr)
 {   
@@ -294,7 +294,7 @@ FMOD_RESULT CodecXM::updateFlags(MusicVirtualChannel *vcptr, MusicSample *sptr)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ab33bb53 IDENTICAL/NONE
+// PROVEN: ab33bb53 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB04B0/0x1408751C0
 FMOD_RESULT MusicChannelXM::portamento()
 {
@@ -483,7 +483,7 @@ FMOD_RESULT MusicChannelXM::tremolo()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8c8fd718 IDENTICAL/NONE
+// PROVEN: 8c8fd718 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB06C0/0x1408753F0
 FMOD_RESULT CodecXM::processEnvelope(MusicEnvelopeState *env, MusicVirtualChannel *vcptr, int Inumpoints, unsigned short *points, int type, int loopstart, int loopend, unsigned char ISustain, unsigned char control)
 {
@@ -808,7 +808,7 @@ FMOD_RESULT CodecXM::getAmigaPeriod(int note, int finetune, int *period)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6a86350a IDENTICAL/NONE
+// PROVEN: 6a86350a IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB0AD0/0x1408757F0
 FMOD_RESULT CodecXM::processNote(MusicNote *current, MusicChannelXM *cptr, MusicVirtualChannel *vcptr, MusicInstrument *iptr, MusicSample *sptr)
 {
@@ -2111,7 +2111,7 @@ FMOD_RESULT CodecXM::updateEffects()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8cabc40f IDENTICAL/NONE
+// PROVEN: 8cabc40f IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2200/0x1408775D0
 FMOD_RESULT CodecXM::update(bool audible)
 {
@@ -3510,7 +3510,7 @@ FMOD_RESULT CodecXM::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *us
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d07f4a6 IDENTICAL/NONE
+// PROVEN: 9d07f4a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2340/0x140877700
 FMOD_RESULT CodecXM::closeInternal()
 {
@@ -3713,7 +3713,7 @@ FMOD_RESULT CodecXM::readInternal(void *buffer, unsigned int sizebytes, unsigned
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d36620e0 IDENTICAL/NONE
+// PROVEN: d36620e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2570/0x1408779C0
 FMOD_RESULT CodecXM::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -3780,7 +3780,7 @@ FMOD_RESULT CodecXM::setPositionInternal(int subsound, unsigned int position, FM
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8c2bbd76 IDENTICAL/NONE
+// PROVEN: 8c2bbd76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB3DE0/0x1408797A0
 FMOD_RESULT F_CALLBACK CodecXM::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -3805,7 +3805,7 @@ FMOD_RESULT F_CALLBACK CodecXM::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8db18573 IDENTICAL/NONE
+// PROVEN: 8db18573 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AB2610/0x140877A80
 FMOD_RESULT F_CALLBACK CodecXM::closeCallback(FMOD_CODEC_STATE *codec)
 {

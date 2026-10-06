@@ -14,7 +14,7 @@ void Blizzard::Lock::MutexEnter(Mutex& mutex) {
     EnterCriticalSection(&mutex);
 }
 
-// PROVEN: 381b11c5 IDENTICAL/DIFFERENT
+// PROVEN: 381b11c5 IDENTICAL/NONE
 // OFFSET: 0x007AD530/0x140495980
 void Blizzard::Lock::MutexLeave(Mutex& mutex) {
     LeaveCriticalSection(&mutex);

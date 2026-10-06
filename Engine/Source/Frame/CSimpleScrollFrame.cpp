@@ -65,7 +65,7 @@ void CSimpleScrollFrame::RunOnScrollRangeChangedScript() {
     }
 }
 
-// PROVEN: 620d4f07 IDENTICAL/NONE
+// PROVEN: 620d4f07 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051FF60/0x14016DA80
 void CSimpleScrollFrame::UnparentFrame(CSimpleFrame* child) {
     if (child == this->m_scrollChild) {
@@ -81,13 +81,13 @@ const char* CSimpleScrollFrame::GetObjectTypeName() {
     return CSimpleScrollFrame::s_objectTypeName;
 }
 
-// PROVEN: 3759fa8b IDENTICAL/NONE
+// PROVEN: 3759fa8b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051FFA0/0x14016D660
 int32_t CSimpleScrollFrame::GetScriptMetaTable() {
     return CSimpleScrollFrame::s_metatable;
 }
 
-// PROVEN: 8a6fe960 IDENTICAL/NONE
+// PROVEN: 8a6fe960 IDENTICAL/UNPROVEN
 // OFFSET: 0x0051FFB0/0x14016D670
 FrameScript_Object::ScriptIx* CSimpleScrollFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -114,8 +114,8 @@ FrameScript_Object::ScriptIx* CSimpleScrollFrame::GetScriptByName(const char* na
     return NULL;
 }
 
-// PROVEN: 68923b0e IDENTICAL/NONE
-// OFFSET: 0x005200B0
+// PROVEN: 68923b0e IDENTICAL/IDENTICAL
+// OFFSET: 0x005200B0/0x14016D730
 void CSimpleScrollFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onHorizontalScroll, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onVerticalScroll, time, count);
@@ -131,8 +131,8 @@ void CSimpleScrollFrame::UpdateScrollChild() {
     }
 }
 
-// PROVEN: 72c1d12a IDENTICAL/NONE
-// OFFSET: 0x00520170
+// PROVEN: 72c1d12a IDENTICAL/IDENTICAL
+// OFFSET: 0x00520170/0x14016D840
 void CSimpleScrollFrame::OnFrameSizeChanged(float width, float height) {
     CSimpleFrame::OnFrameSizeChanged(width, height);
     this->m_scrollChildUpdate = 1;
@@ -142,7 +142,7 @@ void CSimpleScrollFrame::OnFrameSizeChanged(float width, float height) {
 CSimpleScrollFrame::~CSimpleScrollFrame() {
 }
 
-// PROVEN: 5468ca43 IDENTICAL/NONE
+// PROVEN: 5468ca43 IDENTICAL/IDENTICAL
 // OFFSET: 0x00520330/0x14016DA80
 bool CSimpleScrollFrame::IsA(int32_t type) {
     return type == CSimpleScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;

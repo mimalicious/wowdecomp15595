@@ -30,7 +30,7 @@ int32_t CDataStore::FetchWrite(uint32_t pos, uint32_t bytes, const char* fileNam
     return this->InternalFetchWrite(pos, bytes, this->m_data, this->m_base, this->m_alloc, fileName, lineNumber) ? 1 : 0;
 }
 
-// PROVEN: 606d939b IDENTICAL/NONE
+// PROVEN: 606d939b IDENTICAL/IDENTICAL
 // OFFSET: 0x004084E0/0x1405A7550
 int32_t CDataStore::IsRead() {
     return this->m_read == this->m_size;
@@ -48,7 +48,7 @@ void CDataStore::Reset() {
     this->m_size = 0;
 }
 
-// PROVEN: 06a8a2cf IDENTICAL/NONE
+// PROVEN: 06a8a2cf IDENTICAL/IDENTICAL
 // OFFSET: 0x00408540/0x14000A870
 void CDataStore::Finalize() {
     this->m_read = 0;
@@ -65,7 +65,7 @@ CDataStore::~CDataStore() {
 void CDataStore::InternalInitialize(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
 }
 
-// PROVEN: 20a3ebdd IDENTICAL/NONE
+// PROVEN: 20a3ebdd IDENTICAL/IDENTICAL
 // OFFSET: 0x00871680/0x1405A7550
 void CDataStore::GetBufferParams(const void** data, uint32_t* size, uint32_t* alloc) {
     if (data) {
@@ -81,8 +81,8 @@ void CDataStore::GetBufferParams(const void** data, uint32_t* size, uint32_t* al
     }
 }
 
-// PROVEN: b02da87b IDENTICAL/NONE
-// OFFSET: 0x008716B0
+// PROVEN: b02da87b IDENTICAL/IDENTICAL
+// OFFSET: 0x008716B0/0x1405A7580
 void CDataStore::DetachBuffer(void** data, uint32_t* size, uint32_t* alloc) {
     if (data) {
         *data = this->m_data;
@@ -101,7 +101,7 @@ void CDataStore::DetachBuffer(void** data, uint32_t* size, uint32_t* alloc) {
     this->Reset();
 }
 
-// PROVEN: 6bae70d8 IDENTICAL/NONE
+// PROVEN: 6bae70d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x008716F0/0x1405A75C0
 void CDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     if (alloc && data) {
@@ -127,7 +127,7 @@ int32_t CDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
     return 1;
 }
 
-// PROVEN: 65c61212 IDENTICAL/NONE
+// PROVEN: 65c61212 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871790/0x1405A7680
 CDataStore& CDataStore::Set(uint32_t pos, uint8_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
@@ -136,7 +136,7 @@ CDataStore& CDataStore::Set(uint32_t pos, uint8_t val) {
     return *this;
 }
 
-// PROVEN: 20c42974 IDENTICAL/NONE
+// PROVEN: 20c42974 IDENTICAL/IDENTICAL
 // OFFSET: 0x008717E0/0x1405A7710
 CDataStore& CDataStore::Set(uint32_t pos, uint16_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
@@ -145,7 +145,7 @@ CDataStore& CDataStore::Set(uint32_t pos, uint16_t val) {
     return *this;
 }
 
-// PROVEN: 28f7316a IDENTICAL/NONE
+// PROVEN: 28f7316a IDENTICAL/IDENTICAL
 // OFFSET: 0x00871830/0x1405A77A0
 CDataStore& CDataStore::Set(uint32_t pos, uint32_t val) {
     this->FetchWrite(pos, sizeof(val), NULL, 0);
@@ -154,7 +154,7 @@ CDataStore& CDataStore::Set(uint32_t pos, uint32_t val) {
     return *this;
 }
 
-// PROVEN: acf51dc3 IDENTICAL/NONE
+// PROVEN: acf51dc3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871880/0x1405A7830
 CDataStore& CDataStore::Put(uint8_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
@@ -164,7 +164,7 @@ CDataStore& CDataStore::Put(uint8_t val) {
     return *this;
 }
 
-// PROVEN: 12d078c0 IDENTICAL/NONE
+// PROVEN: 12d078c0 IDENTICAL/IDENTICAL
 // OFFSET: 0x008718E0/0x1405A78B0
 CDataStore& CDataStore::Put(uint16_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
@@ -174,7 +174,7 @@ CDataStore& CDataStore::Put(uint16_t val) {
     return *this;
 }
 
-// PROVEN: 4cc7d2dd IDENTICAL/NONE
+// PROVEN: 4cc7d2dd IDENTICAL/IDENTICAL
 // OFFSET: 0x00871940/0x1405A7930
 CDataStore& CDataStore::Put(uint32_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
@@ -184,7 +184,7 @@ CDataStore& CDataStore::Put(uint32_t val) {
     return *this;
 }
 
-// PROVEN: 3cb7ac0b IDENTICAL/NONE
+// PROVEN: 3cb7ac0b IDENTICAL/IDENTICAL
 // OFFSET: 0x008719A0/0x1405A79B0
 CDataStore& CDataStore::Put(uint64_t val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
@@ -194,7 +194,7 @@ CDataStore& CDataStore::Put(uint64_t val) {
     return *this;
 }
 
-// PROVEN: 7d515d5d IDENTICAL/NONE
+// PROVEN: 7d515d5d IDENTICAL/IDENTICAL
 // OFFSET: 0x00871A00/0x1405A7A30
 CDataStore& CDataStore::Put(float val) {
     this->FetchWrite(this->m_size, sizeof(val), NULL, 0);
@@ -238,7 +238,7 @@ CDataStore& CDataStore::PutArray(const uint8_t* pval, uint32_t count) {
     return *this;
 }
 
-// PROVEN: 7bcb16b1 IDENTICAL/NONE
+// PROVEN: 7bcb16b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871B20/0x1405A7C00
 CDataStore& CDataStore::PutData(const void* data, uint32_t bytes) {
     return this->PutArray(static_cast<const uint8_t*>(data), bytes);
@@ -274,7 +274,7 @@ CDataStore& CDataStore::PutString(const char* string) {
     return *this;
 }
 
-// PROVEN: 05c1f76b IDENTICAL/NONE
+// PROVEN: 05c1f76b IDENTICAL/IDENTICAL
 // OFFSET: 0x00871BE0/0x1405A7CE0
 CDataStore& CDataStore::Get(uint8_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
@@ -285,7 +285,7 @@ CDataStore& CDataStore::Get(uint8_t& val) {
     return *this;
 }
 
-// PROVEN: 6f074cef IDENTICAL/NONE
+// PROVEN: 6f074cef IDENTICAL/IDENTICAL
 // OFFSET: 0x00871C10/0x1405A7D30
 CDataStore& CDataStore::Get(uint16_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
@@ -296,7 +296,7 @@ CDataStore& CDataStore::Get(uint16_t& val) {
     return *this;
 }
 
-// PROVEN: 7330006c IDENTICAL/NONE
+// PROVEN: 7330006c IDENTICAL/IDENTICAL
 // OFFSET: 0x00871C50/0x1405A7DD0
 CDataStore& CDataStore::Get(uint32_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
@@ -307,7 +307,7 @@ CDataStore& CDataStore::Get(uint32_t& val) {
     return *this;
 }
 
-// PROVEN: a4a5d97b IDENTICAL/NONE
+// PROVEN: a4a5d97b IDENTICAL/IDENTICAL
 // OFFSET: 0x00871C90/0x1405A7D80
 CDataStore& CDataStore::Get(uint64_t& val) {
     if (this->FetchRead(this->m_read, sizeof(val))) {
@@ -453,13 +453,13 @@ CDataStore& CDataStore::GetArray(uint32_t* pval, uint32_t count) {
     return *this;
 }
 
-// PROVEN: 26817864 IDENTICAL/NONE
+// PROVEN: 26817864 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F20/0x1405A81F0
 CDataStore& CDataStore::GetData(void* data, uint32_t bytes) {
     return this->GetArray(static_cast<uint8_t*>(data), bytes);
 }
 
-// PROVEN: 4974bc47 IDENTICAL/NONE
+// PROVEN: 4974bc47 IDENTICAL/IDENTICAL
 // OFFSET: 0x00871F30/0x1405A8200
 CDataStore& CDataStore::GetDataInSitu(void*& data, uint32_t bytes) {
     data = NULL;

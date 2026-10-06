@@ -140,13 +140,13 @@ static int32_t ConsoleCommand_SetMap(const char* command, const char* arguments)
     return 1;
 }
 
-// PROVEN: 7dae32a2 IDENTICAL/NONE
+// PROVEN: 7dae32a2 IDENTICAL/IDENTICAL
 // OFFSET: 0x00653950/0x1402F3F20
 const char* ConsoleCommandHistory(uint32_t index) {
     return g_commandHistory[(g_commandHistoryIndex - index - 1) & 31];
 }
 
-// PROVEN: ab7b4dc7 IDENTICAL/NONE
+// PROVEN: ab7b4dc7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t ConsoleCommandHistoryDepth() {
     return sizeof(g_commandHistory) / sizeof(g_commandHistory[0]);
@@ -244,7 +244,7 @@ int32_t ConsoleCommandComplete(const char* partial, const char** previous, int32
     return 0;
 }
 
-// PROVEN: 5b479189 IDENTICAL/NONE
+// PROVEN: 5b479189 IDENTICAL/IDENTICAL
 // OFFSET: 0x00654450/0x1402F4CC0
 void ConsoleCommandWriteHelp(const char* command) {
     ConsoleCommand_Help("help", command);
@@ -310,7 +310,7 @@ int32_t AddLineToExecFile(const char* line) {
     return 0;
 }
 
-// PROVEN: 36217e95 IDENTICAL/NONE
+// PROVEN: 36217e95 IDENTICAL/DIFFERENT
 // OFFSET: 0x00656F70/0x1402F8AE0
 void AddToHistory(const char* command) {
     SStrCopy(g_commandHistory[g_commandHistoryIndex], command, sizeof(g_commandHistory[0]));

@@ -64,7 +64,7 @@ void* CDataAllocator::GetData(int32_t zero, const char* fileName, int32_t lineNu
     return data;
 }
 
-// PROVEN: 5515cf3d IDENTICAL/NONE
+// PROVEN: 5515cf3d IDENTICAL/IDENTICAL
 // OFFSET: 0x00872B20/0x1405A9130
 void CDataAllocator::PutData(void* data, const char* fileName, int32_t lineNumber) {
     Data* node = static_cast<Data*>(data);

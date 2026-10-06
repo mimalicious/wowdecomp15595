@@ -88,13 +88,13 @@ const char* CSimpleHTML::GetObjectTypeName() {
     return CSimpleHTML::s_objectTypeName;
 }
 
-// PROVEN: 2a773a72 IDENTICAL/NONE
+// PROVEN: 2a773a72 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521C50/0x14016F850
 int32_t CSimpleHTML::GetScriptMetaTable() {
     return CSimpleHTML::s_metatable;
 }
 
-// PROVEN: 6673e8d4 IDENTICAL/NONE
+// PROVEN: 6673e8d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x00521C70/0x14016F870
 bool CSimpleHTML::IsA(int32_t type) {
     return type == CSimpleHTML::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;

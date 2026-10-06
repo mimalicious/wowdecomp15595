@@ -27,7 +27,8 @@ void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, floa
     blue = s_severities[severity].m_blue * 0.0039215689f;
 }
 
-// OFFSET: %0x0054F240
+// PROVEN: c35867f2 DIFFERENT/IDENTICAL
+// OFFSET: 0x0053E8D0/0x1401930C0
 int32_t SysMsgAdd(const char* text, STATUS_TYPE severity) {
     if (!text || severity >= STATUS_NUMTYPES) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

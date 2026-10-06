@@ -492,7 +492,8 @@ void CM2Model::ChangeFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// OFFSET: %0x0077B560
+// PROVEN: e23199ec DIFFERENT/IDENTICAL
+// OFFSET: 0x00814CF0/0x14052CE30
 void CM2Model::LinkToCallbackListTail() {
     CM2Shared* shared = this->m_shared;
     this->m_callbackPrev = shared->m_callbackListTail;
@@ -822,7 +823,7 @@ void CM2Model::UpdateLoaded() {
     } while (model);
 }
 
-// PROVEN: 2d03403e IDENTICAL/NONE
+// PROVEN: 2d03403e IDENTICAL/IDENTICAL
 // OFFSET: 0x008144D0/0x14052C430
 void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) {
     this->m_loadedCallback = callback;
@@ -2351,7 +2352,7 @@ C3Vector CM2Model::GetAttachmentPivot(uint32_t id) {
     return data->m_attachments[index].m_position;
 }
 
-// PROVEN: b26e3e23 IDENTICAL/NONE
+// PROVEN: b26e3e23 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814790/0x14052C730
 void CM2Model::DetachFromParent() {
     if (this->m_attachPrev) {
@@ -7997,7 +7998,8 @@ void CM2Model::AttachToScene(CM2Scene* scene) {
     }
 }
 
-// OFFSET: %0x0078D430
+// PROVEN: 15641812 DIFFERENT/IDENTICAL
+// OFFSET: 0x008254E0/0x140542870
 void CM2Model::AttachToSceneRecursive(CM2Scene* scene) {
     this->AttachToScene(scene);
 

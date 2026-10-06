@@ -36,7 +36,7 @@ namespace FMOD
         //
         // Non-implemented methods of IStream
         //
-        // PROVEN: 455c9990 IDENTICAL/NONE
+        // PROVEN: 455c9990 IDENTICAL/IDENTICAL
         // OFFSET: 0x00AA4700/0x140865F60
         HRESULT STDMETHODCALLTYPE Write( void const *pv, ULONG cb, ULONG *pcbWritten )
         {

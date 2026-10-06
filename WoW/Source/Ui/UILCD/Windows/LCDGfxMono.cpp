@@ -45,7 +45,7 @@ lgLcdBitmapHeader* CLCDGfxMono::GetLCDScreen() {
     return this->m_pLCDScreen;
 }
 
-// PROVEN: 314490ba IDENTICAL/NONE
+// PROVEN: 314490ba IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 uint32_t CLCDGfxMono::GetFamily() {
     return LGLCD_DEVICE_FAMILY_BW_160x43_GAMING;

@@ -49,8 +49,8 @@ void CSimpleStatusBar::RunOnMinMaxChangedScript() {
 CSimpleStatusBar::~CSimpleStatusBar() {
 }
 
-// PROVEN: 09570588 IDENTICAL/NONE
-// OFFSET: 0x0050EEA0
+// PROVEN: 09570588 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050EEA0/0x140158040
 void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
     if (this->m_barTexture) {
         this->m_barTexture->SetVertexColor(color);
@@ -63,7 +63,7 @@ const char* CSimpleStatusBar::GetObjectTypeName() {
     return CSimpleStatusBar::s_objectTypeName;
 }
 
-// PROVEN: 4459af13 IDENTICAL/NONE
+// PROVEN: 4459af13 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050EED0/0x140158070
 int32_t CSimpleStatusBar::GetScriptMetaTable() {
     return CSimpleStatusBar::s_metatable;
@@ -97,8 +97,8 @@ void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: 245976ac IDENTICAL/NONE
-// OFFSET: 0x0050EFE0
+// PROVEN: 245976ac IDENTICAL/IDENTICAL
+// OFFSET: 0x0050EFE0/0x1401581A0
 void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_barTexture) {
         this->m_barTexture = NULL;
@@ -135,7 +135,8 @@ void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
 }
 
-// OFFSET: %0x0051F820
+// PROVEN: 9af81927 DIFFERENT/IDENTICAL
+// OFFSET: 0x0050F490/0x140158740
 void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
     if (minValue > maxValue) {
         minValue = maxValue;
@@ -187,7 +188,7 @@ void CSimpleStatusBar::SetValue(float value) {
     this->RunOnValueChangedScript();
 }
 
-// PROVEN: 0132627d IDENTICAL/NONE
+// PROVEN: 0132627d IDENTICAL/UNPROVEN
 // OFFSET: 0x0050F190/0x140158370
 void CSimpleStatusBar::SetWidth(float width) {
     CSimpleFrame::SetWidth(width);
@@ -196,8 +197,8 @@ void CSimpleStatusBar::SetWidth(float width) {
     this->SetValue(value);
 }
 
-// PROVEN: 6eee3274 IDENTICAL/NONE
-// OFFSET: 0x0050F140
+// PROVEN: 6eee3274 IDENTICAL/IDENTICAL
+// OFFSET: 0x0050F140/0x140158340
 float CSimpleStatusBar::GetAnimValue() const {
     float range = this->m_maxValue - this->m_minValue;
 
@@ -208,7 +209,7 @@ float CSimpleStatusBar::GetAnimValue() const {
     return 0.0f;
 }
 
-// PROVEN: 9a365044 IDENTICAL/NONE
+// PROVEN: 9a365044 IDENTICAL/IDENTICAL
 // OFFSET: 0x0050F290/0x1401584C0
 bool CSimpleStatusBar::IsA(int32_t type) {
     return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;

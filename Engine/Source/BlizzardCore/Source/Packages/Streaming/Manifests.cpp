@@ -214,7 +214,7 @@ Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 Blizzard::Streaming::Manifests::ParameterItem::ParameterItem() {
 }
 
-// PROVEN: f733ec05 IDENTICAL/IDENTICAL
+// PROVEN: f733ec05 IDENTICAL/NONE
 // OFFSET: 0x007C6030/0x1404C1080
 int32_t Blizzard::Streaming::Manifests::ServerItem::GetUsage(Blizzard::Time::Timestamp time) {
     int32_t usage = 0;

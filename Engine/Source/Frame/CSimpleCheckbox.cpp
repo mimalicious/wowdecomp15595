@@ -47,7 +47,7 @@ int32_t CSimpleCheckbox::GetScriptMetaTable() {
     return CSimpleCheckbox::s_metatable;
 }
 
-// PROVEN: 259c2cc6 IDENTICAL/NONE
+// PROVEN: 259c2cc6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00515C70/0x14015EC70
 void CSimpleCheckbox::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_checkedTexture) {
@@ -75,7 +75,8 @@ bool CSimpleCheckbox::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleCheckbox::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleButton::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x00525B50
+// PROVEN: 705be243 DIFFERENT/IDENTICAL
+// OFFSET: 0x00515D80/0x140160430
 void CSimpleCheckbox::SetChecked(int32_t checked, int32_t force) {
     if (!force && checked == this->m_checked) {
         return;
@@ -110,8 +111,8 @@ void CSimpleCheckbox::SetChecked(int32_t checked, int32_t force) {
     texture->Show();
 }
 
-// PROVEN: 5929d662 IDENTICAL/NONE
-// OFFSET: 0x00515E30
+// PROVEN: 5929d662 IDENTICAL/IDENTICAL
+// OFFSET: 0x00515E30/0x1401604F0
 void CSimpleCheckbox::OnClick(const char* btn, int32_t down) {
     this->SetChecked(this->m_checked == 0, 0);
     CSimpleButton::OnClick(btn, down);

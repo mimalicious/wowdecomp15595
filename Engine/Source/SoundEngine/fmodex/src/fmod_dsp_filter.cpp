@@ -32,7 +32,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fc139f10 IDENTICAL/NONE
+// PROVEN: fc139f10 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC6C30/0x1408902C0
 FMOD_RESULT DSPFilter::release(bool freethis)
 {
@@ -283,7 +283,7 @@ FMOD_RESULT DSPFilter::execute(float *inbuffer, float **outbuffer, unsigned int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0b2ab6ed IDENTICAL/NONE
+// PROVEN: 0b2ab6ed IDENTICAL/DIFFERENT
 // OFFSET: 0x00AC6B50/0x1408901C0
 FMOD_RESULT DSPFilter::startBuffering(unsigned int historylength)
 {
@@ -329,7 +329,7 @@ FMOD_RESULT DSPFilter::startBuffering(unsigned int historylength)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 56e9c3dc IDENTICAL/NONE
+// PROVEN: 56e9c3dc IDENTICAL/IDENTICAL
 // OFFSET: 0x00AC6BF0/0x140890290
 FMOD_RESULT DSPFilter::getHistoryBuffer(float **buffer, unsigned int *position, unsigned int *length)
 {

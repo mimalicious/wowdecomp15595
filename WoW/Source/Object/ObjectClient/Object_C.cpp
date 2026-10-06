@@ -492,7 +492,7 @@ CGObject_C::CGObject_C() {
 void CGObject_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
 }
 
-// PROVEN: de779f0b IDENTICAL/NONE
+// PROVEN: de779f0b IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CGObject_C::ShouldFadeout() {
     return 1;
@@ -538,7 +538,7 @@ C3Vector CGObject_C::GetRawPosition() const {
     return this->GetPosition();
 }
 
-// PROVEN: 79ed4052 IDENTICAL/NONE
+// PROVEN: 79ed4052 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGObject_C::GetFacing() const {
     return 0.0f;
@@ -616,7 +616,7 @@ void CGObject_C::UpdateInteractIconAttach() {
     }
 }
 
-// PROVEN: a0248792 IDENTICAL/NONE
+// PROVEN: a0248792 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::GetModelFileName(const char** name) const {
     return 0;
@@ -648,7 +648,7 @@ void CGObject_C::Render() {
 }
 
 // PROVEN: 75bd5403 IDENTICAL/NONE
-// OFFSET: 0x0048F7D0
+// OFFSET: 0x0048F7D0/0x1400B3F60
 int32_t CGObject_C::GetSelectionHighlightColor(CImVector* color) const {
     *reinterpret_cast<uint32_t*>(color) = 0xFFFFFFFF;
     return 1;
@@ -711,7 +711,7 @@ float CGObject_C::GetRenderFacing() const {
 void CGObject_C::OnSpecialMountAnim() {
 }
 
-// PROVEN: bb2ea966 IDENTICAL/NONE
+// PROVEN: bb2ea966 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CGObject_C::IsSolidSelectable() const {
     return 1;
@@ -788,7 +788,7 @@ const char* CGObject_C::GetObjectName() const {
     return NULL;
 }
 
-// PROVEN: 1b63d1ec IDENTICAL/NONE
+// PROVEN: 1b63d1ec IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     return 0;
@@ -799,13 +799,13 @@ int32_t CGObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void
 void CGObject_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
 }
 
-// PROVEN: 4c24fcbb IDENTICAL/NONE
+// PROVEN: 4c24fcbb IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CGObject_C::ShouldFadeIn() const {
     return 1;
 }
 
-// PROVEN: fae4e40c IDENTICAL/NONE
+// PROVEN: fae4e40c IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGObject_C::GetBaseAlpha() const {
     return 1.0f;
@@ -817,7 +817,7 @@ bool CGObject_C::IsTransport() const {
     return false;
 }
 
-// PROVEN: 8fef785f IDENTICAL/NONE
+// PROVEN: 8fef785f IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGObject_C::IsPointInside(const C3Vector& point) const {
     return 0;

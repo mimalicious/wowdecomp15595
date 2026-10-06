@@ -7,7 +7,8 @@
 
 typedef int (WSAAPI* WSAIOCTLPROC)(SOCKET, DWORD, LPVOID, DWORD, LPVOID, DWORD, LPDWORD, LPWSAOVERLAPPED, LPWSAOVERLAPPED_COMPLETION_ROUTINE);
 
-// OFFSET: %0x0097BA20
+// PROVEN: 3988c2b0 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A3B4E0/0x1407E8240
 static void DisableConnectionReset(ComSat::Network::SocketPosix* socket) {
     HMODULE library = LoadLibraryA("ws2_32.dll");
     if (library) {
@@ -21,7 +22,8 @@ static void DisableConnectionReset(ComSat::Network::SocketPosix* socket) {
     }
 }
 
-// OFFSET: %0x0097BB80
+// PROVEN: 75f276c6 DIFFERENT/IDENTICAL
+// OFFSET: 0x00A3B640/0x1407E8410
 ComSat::Network::SocketPosix::SocketPosix() {
     this->m_socket = socket(AF_INET, SOCK_DGRAM, 0);
     DisableConnectionReset(this);
@@ -45,13 +47,13 @@ bool ComSat::Network::SocketPosix::Bind(int32_t port) {
     return bind(this->m_socket, reinterpret_cast<const sockaddr*>(&address.m_family), address.m_length) != SOCKET_ERROR;
 }
 
-// PROVEN: d2a74cb7 IDENTICAL/NONE
+// PROVEN: d2a74cb7 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B5B0/0x1407E8350
 int32_t ComSat::Network::SocketPosix::SendTo(const ComSat::Network::Address& address, const uint8_t* data, uint32_t size) {
     return sendto(this->m_socket, reinterpret_cast<const char*>(data), size, 0, reinterpret_cast<const sockaddr*>(&address.m_family), address.m_length);
 }
 
-// PROVEN: f0c4061c IDENTICAL/NONE
+// PROVEN: f0c4061c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A3B5E0/0x1407E8390
 bool ComSat::Network::SocketPosix::RecvFrom(ComSat::Network::Address& address, uint8_t* data, uint32_t& size) {
     memset(data, 0, size);

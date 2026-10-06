@@ -172,7 +172,7 @@ FMOD_RESULT ReverbI::init(SystemI* system, bool is_3d, FMOD_REVERB_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a3fc3f34 IDENTICAL/NONE
+// PROVEN: a3fc3f34 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A907A0/0x14084FF50
 FMOD_RESULT ReverbI::release(bool freethis)
 {
@@ -346,7 +346,7 @@ FMOD_RESULT ReverbI::releaseDSP()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0a0e285a IDENTICAL/NONE
+// PROVEN: 0a0e285a IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8F980/0x14084F160
 FMOD_RESULT ReverbI::getChanProperties(const int index, FMOD_REVERB_CHANNELPROPERTIES *props, DSPConnectionI **connection)
 {
@@ -382,7 +382,7 @@ FMOD_RESULT ReverbI::getChanProperties(const int index, FMOD_REVERB_CHANNELPROPE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 370fd536 IDENTICAL/NONE
+// PROVEN: 370fd536 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A8F9E0/0x14084F1F0
 FMOD_RESULT ReverbI::setChanProperties(const int index, const FMOD_REVERB_CHANNELPROPERTIES *props, DSPConnectionI *connection)
 {
@@ -521,7 +521,7 @@ FMOD_RESULT ReverbI::set3DAttributes(const FMOD_VECTOR *position, float mindista
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8cd6740d IDENTICAL/NONE
+// PROVEN: 8cd6740d IDENTICAL/UNPROVEN
 // OFFSET: 0x00A8FA40/0x14089E9A0
 FMOD_RESULT ReverbI::get3DAttributes(FMOD_VECTOR *position, float *mindistance, float *maxdistance)
 { 
@@ -783,8 +783,8 @@ FMOD_RESULT ReverbI::setProperties(const FMOD_REVERB_PROPERTIES* prop_source)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6046d6bf IDENTICAL/NONE
-// OFFSET: 0x00A90140
+// PROVEN: 6046d6bf IDENTICAL/UNPROVEN
+// OFFSET: 0x00A90140/0x14084F930
 FMOD_RESULT ReverbI::getProperties(FMOD_REVERB_PROPERTIES* properties)
 {
     if (!properties)
@@ -835,7 +835,7 @@ FMOD_RESULT ReverbI::setActive(bool active)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 18925fd1 IDENTICAL/NONE
+// PROVEN: 18925fd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A90170/0x14084F960
 FMOD_RESULT ReverbI::getActive(bool *active)
 { 
@@ -940,7 +940,7 @@ void ReverbI::setDisableIfNoEnvironment(bool dis)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ea384d49 IDENTICAL/NONE
+// PROVEN: ea384d49 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A901A0/0x14084F980
 void ReverbI::calculateDistanceGain(FMOD_VECTOR *p, float *linear_gain, float *linear_coeff)
 {
@@ -1022,7 +1022,7 @@ void ReverbI::calculateDistanceGain(FMOD_VECTOR *p, float *linear_gain, float *l
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 228d0c28 IDENTICAL/NONE
+// PROVEN: 228d0c28 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A902B0/0x14084F280
 FMOD_RESULT ReverbI::setPresenceGain(int index, float lingain)
 {
@@ -1051,7 +1051,7 @@ FMOD_RESULT ReverbI::setPresenceGain(int index, float lingain)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 56d30fce IDENTICAL/NONE
+// PROVEN: 56d30fce IDENTICAL/DIFFERENT
 // OFFSET: 0x00A902F0/0x14084FAD0
 FMOD_RESULT ReverbI::getPresenceGain(int index, float *lingain)
 {
@@ -1081,8 +1081,8 @@ FMOD_RESULT ReverbI::getPresenceGain(int index, float *lingain)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f4aa0434 IDENTICAL/NONE
-// OFFSET: 0x00A90330
+// PROVEN: f4aa0434 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A90330/0x14084FB10
 void ReverbI::sumRoomProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROPERTIES *addprops, float factor)
 {
     if (accprops && addprops)
@@ -1107,8 +1107,8 @@ void ReverbI::sumRoomProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROP
 	[SEE_ALSO]
 ]
 */
-// PROVEN: aff1153d IDENTICAL/NONE
-// OFFSET: 0x00A90370
+// PROVEN: aff1153d IDENTICAL/UNPROVEN
+// OFFSET: 0x00A90370/0x14084FB60
 void ReverbI::sumProps(FMOD_REVERB_STDPROPERTIES *accprops, FMOD_REVERB_PROPERTIES *addprops, float factor)
 {
     if (accprops && addprops)

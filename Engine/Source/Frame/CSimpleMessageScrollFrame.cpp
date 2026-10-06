@@ -345,19 +345,19 @@ const char* CSimpleMessageScrollFrame::GetObjectTypeName() {
     return CSimpleMessageScrollFrame::s_objectTypeName;
 }
 
-// PROVEN: cef11aed IDENTICAL/NONE
+// PROVEN: cef11aed IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DC30/0x14016A7D0
 int32_t CSimpleMessageScrollFrame::GetScriptMetaTable() {
     return CSimpleMessageScrollFrame::s_metatable;
 }
 
-// PROVEN: 0071eba8 IDENTICAL/NONE
+// PROVEN: 0071eba8 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051DC50/0x14016A7F0
 bool CSimpleMessageScrollFrame::IsA(int32_t type) {
     return type == CSimpleMessageScrollFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 94984024 IDENTICAL/NONE
+// PROVEN: 94984024 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051DC90/0x14016A7E0
 bool CSimpleMessageScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -851,7 +851,7 @@ void CSimpleMessageScrollFrame::AddMessage(const char* text, const CImVector& co
     }
 }
 
-// PROVEN: f8cb949f IDENTICAL/NONE
+// PROVEN: f8cb949f IDENTICAL/IDENTICAL
 // OFFSET: 0x0051E8B0/0x14016B880
 void CSimpleMessageScrollFrame::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);

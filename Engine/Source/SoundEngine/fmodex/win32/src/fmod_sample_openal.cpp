@@ -106,7 +106,7 @@ FMOD_RESULT SampleOpenAL::release(bool freethis)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 92bd0077 IDENTICAL/NONE
+// PROVEN: 92bd0077 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AFBBE0/0x1408BC720
 FMOD_RESULT SampleOpenAL::setMode(FMOD_MODE mode)
 {
@@ -234,7 +234,7 @@ FMOD_RESULT SampleOpenAL::lockInternal(unsigned int offset, unsigned int length,
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0b25fa02 IDENTICAL/NONE
+// PROVEN: 0b25fa02 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF3630/0x1408BCA70
 FMOD_RESULT SampleOpenAL::unlockInternal(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
@@ -265,7 +265,7 @@ FMOD_RESULT SampleOpenAL::unlockInternal(void *ptr1, void *ptr2, unsigned int le
 	[SEE_ALSO]
 ]
 */        
-// PROVEN: bfcff788 IDENTICAL/NONE
+// PROVEN: bfcff788 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AFB920/0x1408BBD90
 FMOD_RESULT SampleOpenAL::setBufferData(void *data) 
 { 

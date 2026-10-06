@@ -241,8 +241,8 @@ C44Matrix* FFX::GetOldViewMtx() {
     return &FFX::s_oldViewMtx;
 }
 
-// PROVEN: 3eb4e803 IDENTICAL/NONE
-// OFFSET: 0x00899D50
+// PROVEN: 3eb4e803 IDENTICAL/IDENTICAL
+// OFFSET: 0x00899D50/0x1405D9460
 int32_t FFX::EffectIsSet(Effect* effect) {
     for (uint32_t i = 0; i < 3; i++) {
         if (FFX::s_effect[i] == effect) {

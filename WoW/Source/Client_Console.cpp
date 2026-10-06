@@ -26,7 +26,7 @@ int32_t CCommand_ReloadUI(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: c48a482f IDENTICAL/NONE
+// PROVEN: c48a482f IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CCommand_Perf(const char* command, const char* arguments) {
     return 1;

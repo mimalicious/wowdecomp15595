@@ -312,7 +312,7 @@ static boolean dump_buffer(working_state * state) {
 
 INLINE
 /* Emit some bits; return TRUE if successful, FALSE if must suspend */
-// PROVEN: 4012a62f IDENTICAL/NONE
+// PROVEN: 4012a62f IDENTICAL/IDENTICAL
 // OFFSET: 0x00B60EC0/0x14092A680
 static boolean emit_bits(working_state * state, unsigned int code, int size) {
   /* This routine is heavily used, so it's worth coding tightly. */
@@ -460,7 +460,7 @@ static boolean encode_one_block(working_state * state, JCOEFPTR block, int last_
  * Emit a restart marker & resynchronize predictions.
  */
 
-// PROVEN: e788fee5 IDENTICAL/NONE
+// PROVEN: e788fee5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00B61150/0x14092A950
 static boolean emit_restart(working_state * state, int restart_num) {
   int ci;

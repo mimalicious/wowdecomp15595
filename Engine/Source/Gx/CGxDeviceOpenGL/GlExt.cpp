@@ -334,7 +334,7 @@ int32_t glExtCVA;
 // STATIC: %0x00D930B8
 uint32_t glVersion;
 
-// PROVEN: d6c7ee57 IDENTICAL/NONE
+// PROVEN: d6c7ee57 IDENTICAL/IDENTICAL
 // OFFSET: 0x0085B640/0x14058D1F0
 void UnbindGlExtensions() {
     s_glExtensions = NULL;
@@ -381,7 +381,8 @@ bool FindGlExt(const char* name) {
     return ScanString(s_glExtensions, name);
 }
 
-// OFFSET: %0x007B8030
+// PROVEN: 35fad743 DIFFERENT/IDENTICAL
+// OFFSET: 0x0085B700/0x14058D2B0
 bool HasWGLExtension(const char* name) {
     if (!wglGetExtensionsStringARB) {
         return false;

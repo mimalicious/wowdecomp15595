@@ -37,7 +37,7 @@ namespace FMOD
         // OFFSET: 0x00AC82D0/0x140891D00
         virtual FMOD_RESULT  lockInternal(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2) { return FMOD_ERR_SUBSOUNDS; } 
         virtual FMOD_RESULT  unlockInternal(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2) { return FMOD_OK; } 
-        // PROVEN: a6a7968b IDENTICAL/NONE
+        // PROVEN: a6a7968b IDENTICAL/IDENTICAL
         // OFFSET: 0x00AC82E0/0x1408BD2D0
         virtual FMOD_RESULT  setBufferData(void *data) { return FMOD_ERR_NEEDSSOFTWARE; }
         virtual FMOD_RESULT  setMode(FMOD_MODE mode);

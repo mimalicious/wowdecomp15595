@@ -11,7 +11,7 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// PROVEN: b42273bc IDENTICAL/NONE
+// PROVEN: b42273bc IDENTICAL/UNPROVEN
 // OFFSET: 0x00A7BDE0/0x140837240
 FMOD_RESULT ChannelGroup::release()
 {

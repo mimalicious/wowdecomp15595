@@ -108,8 +108,8 @@ C44Matrix& C44Matrix::operator=(const C44Matrix& m) {
     return *this;
 }
 
-// PROVEN: 32b2aef8 IDENTICAL/NONE
-// OFFSET: 0x004E82F0
+// PROVEN: 32b2aef8 IDENTICAL/IDENTICAL
+// OFFSET: 0x004E82F0/0x14012A900
 bool operator!=(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 != r.a0 || l.a1 != r.a1 || l.a2 != r.a2 || l.a3 != r.a3 || l.b0 != r.b0 || l.b1 != r.b1 || l.b2 != r.b2 || l.b3 != r.b3 || l.c0 != r.c0 || l.c1 != r.c1 || l.c2 != r.c2 || l.c3 != r.c3 || l.d0 != r.d0 || l.d1 != r.d1 || l.d2 != r.d2 || l.d3 != r.d3;
 }
@@ -218,8 +218,8 @@ C44Matrix::C44Matrix(const C33Matrix& m) {
     this->d3 = 1.0f;
 }
 
-// PROVEN: 72d9859f IDENTICAL/NONE
-// OFFSET: 0x004C73F0
+// PROVEN: 72d9859f IDENTICAL/DIFFERENT
+// OFFSET: 0x004C73F0/0x1401028E0
 C44Matrix::C44Matrix(const C4Quaternion& q) {
     this->a3 = 0.0f;
     this->b3 = 0.0f;
@@ -298,8 +298,8 @@ C44Matrix operator*(const C44Matrix& l, float s) {
     return result;
 }
 
-// PROVEN: 74d50525 IDENTICAL/NONE
-// OFFSET: 0x0041EF40
+// PROVEN: 74d50525 IDENTICAL/IDENTICAL
+// OFFSET: 0x0041EF40/0x140022C90
 C3Vector operator*(const C3Vector& v, const C44Matrix& m) {
     C3Vector result;
     result.x = m.c0 * v.z + m.b0 * v.y + v.x * m.a0 + m.d0;
@@ -648,8 +648,8 @@ bool operator==(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 == r.a0 && l.a1 == r.a1 && l.a2 == r.a2 && l.a3 == r.a3 && l.b0 == r.b0 && l.b1 == r.b1 && l.b2 == r.b2 && l.b3 == r.b3 && l.c0 == r.c0 && l.c1 == r.c1 && l.c2 == r.c2 && l.c3 == r.c3 && l.d0 == r.d0 && l.d1 == r.d1 && l.d2 == r.d2 && l.d3 == r.d3;
 }
 
-// PROVEN: 71e5f822 IDENTICAL/NONE
-// OFFSET: 0x004C7530
+// PROVEN: 71e5f822 IDENTICAL/DIFFERENT
+// OFFSET: 0x004C7530/0x140102920
 C44Matrix& C44Matrix::operator=(const C4Quaternion& q) {
     FromQuaternion(q, *this);
     this->a3 = 0.0f;

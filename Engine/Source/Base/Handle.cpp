@@ -30,7 +30,7 @@ void HandleClose(HOBJECT handle) {
     }
 }
 
-// PROVEN: a817df09 IDENTICAL/NONE
+// PROVEN: a817df09 IDENTICAL/IDENTICAL
 // OFFSET: 0x00872300/0x1405A8720
 HOBJECT HandleCreate(CHandleObject* ptr, const char* handleName) {
     if (!ptr) {

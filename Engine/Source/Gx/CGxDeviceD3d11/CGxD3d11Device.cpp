@@ -180,7 +180,7 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_pointScaleMax = 0.0f;
 }
 
-// PROVEN: 164422a7 IDENTICAL/NONE
+// PROVEN: 164422a7 IDENTICAL/IDENTICAL
 // OFFSET: 0x00851FD0/0x140581A00
 uint32_t CGxDeviceD3d11::IFeatureLevelIndex(D3D_FEATURE_LEVEL featureLevel) {
     switch (featureLevel) {
@@ -617,8 +617,8 @@ void CGxDeviceD3d11::PoolSizeSet(CGxPool* pool, uint32_t size) {
     this->CreatePoolAPI(pool);
 }
 
-// PROVEN: 62ba927f IDENTICAL/NONE
-// OFFSET: 0x008527A0
+// PROVEN: 62ba927f IDENTICAL/IDENTICAL
+// OFFSET: 0x008527A0/0x140582270
 void CGxDeviceD3d11::PoolDestroy(CGxPool* pool) {
     if (!pool) {
         return;
@@ -1938,7 +1938,7 @@ void CGxDeviceD3d11::DeviceEvictResources() {
 void CGxDeviceD3d11::StereoSetConvergence(float convergence) {
 }
 
-// PROVEN: b3f15edd IDENTICAL/NONE
+// PROVEN: b3f15edd IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGxDeviceD3d11::StereoGetConvergence() {
     return 1.0f;
@@ -1949,7 +1949,7 @@ float CGxDeviceD3d11::StereoGetConvergence() {
 void CGxDeviceD3d11::StereoSetSeparation(float separation) {
 }
 
-// PROVEN: 9fec1b8c IDENTICAL/NONE
+// PROVEN: 9fec1b8c IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGxDeviceD3d11::StereoGetSeparation() {
     return 0.0f;

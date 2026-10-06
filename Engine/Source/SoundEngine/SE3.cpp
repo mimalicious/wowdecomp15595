@@ -423,7 +423,7 @@ void SE3SoundKitObject::Set3DPosition(const C3Vector& position) {
 }
 
 // PROVEN: f7a93af2 IDENTICAL/NONE
-// OFFSET: 0x00705B40
+// OFFSET: 0x00705B40/0x140835F40
 int32_t SE3SoundKitObject::IsPlaying() {
     bool playing = false;
 

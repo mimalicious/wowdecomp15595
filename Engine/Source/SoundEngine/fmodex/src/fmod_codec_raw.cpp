@@ -401,7 +401,7 @@ FMOD_RESULT F_CALLBACK CodecRaw::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 938d74f5 IDENTICAL/NONE
+// PROVEN: 938d74f5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA1B30/0x1408628B0
 FMOD_RESULT F_CALLBACK CodecRaw::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -427,7 +427,7 @@ FMOD_RESULT F_CALLBACK CodecRaw::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ae39e35d IDENTICAL/NONE
+// PROVEN: ae39e35d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA1BA0/0x140862910
 FMOD_RESULT F_CALLBACK CodecRaw::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {

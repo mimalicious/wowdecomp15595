@@ -295,7 +295,7 @@ static void sLogMemory(uint32_t logOptions, void (*logLineProc)(void*, const cha
 }
 
 // PROVEN: b826b12b IDENTICAL/NONE
-// OFFSET: 0x004BF4F0
+// OFFSET: 0x004BF4F0/0x1400F95C0
 static int __cdecl sModuleCompareProc(const void* elem1, const void* elem2) {
     const LOADEDMODULE* module1 = static_cast<const LOADEDMODULE*>(elem1);
     const LOADEDMODULE* module2 = static_cast<const LOADEDMODULE*>(elem2);

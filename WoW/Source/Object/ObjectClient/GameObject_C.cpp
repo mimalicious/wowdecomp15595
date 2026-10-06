@@ -1018,14 +1018,14 @@ float CGGameObject_C_Type_TransportBase::GetSpeed() const {
     return this->m_speed;
 }
 
-// PROVEN: 797c7138 IDENTICAL/NONE
+// PROVEN: 797c7138 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EAA0/0x140902360
 uint32_t CGGameObject_C_Type_TransportBase::GetTransportUpdateTime() const {
     return this->m_transportUpdateTime;
 }
 
-// PROVEN: 97f39fea IDENTICAL/NONE
-// OFFSET: 0x005A21E0
+// PROVEN: 97f39fea IDENTICAL/DIFFERENT
+// OFFSET: 0x005A21E0/0x1402123D0
 void CGGameObject_C_Type_MapObjTransport::AddPassenger(CPassenger* passenger, int32_t a2) {
     CGGameObject_C_Type_TransportBase::AddPassenger(passenger, a2);
 }
@@ -1628,7 +1628,7 @@ int32_t CGGameObject_C_TypeBase::Animate(float elapsed) {
 void CGGameObject_C_TypeBase::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
 }
 
-// PROVEN: ec8d926d IDENTICAL/NONE
+// PROVEN: ec8d926d IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGGameObject_C_TypeBase::GetBaseAlpha() const {
     return 1.0f;
@@ -1638,7 +1638,7 @@ float CGGameObject_C_TypeBase::GetBaseAlpha() const {
 void CGGameObject_C_TypeBase::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time) {
 }
 
-// PROVEN: a39997f5 IDENTICAL/NONE
+// PROVEN: a39997f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CGGameObject_C_TypeBase::HandleAnimInterrupted() {
     return 1;
@@ -1671,7 +1671,7 @@ float CGGameObject_C_TypeBase::GetSpeed() const {
 void CGGameObject_C_TypeBase::AddPassenger(CPassenger* passenger, int32_t a2) {
 }
 
-// PROVEN: eeb2d21c IDENTICAL/NONE
+// PROVEN: eeb2d21c IDENTICAL/DIFFERENT
 // OFFSET: 0x00A9AA30/0x1402123D0
 int32_t CGGameObject_C_TypeBase::IsPointInside(const C3Vector& point) const {
     return 0;
@@ -1744,7 +1744,7 @@ void CGGameObject_C_TypeBase::CloseInteraction() {
 void CGGameObject_C_TypeBase::AddToolTipInfo(CGTooltip* tooltip) {
 }
 
-// PROVEN: 16b161da IDENTICAL/NONE
+// PROVEN: 16b161da IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E30/0x1402082B0
 uint32_t CGGameObject_C_TypeBase::GetSequenceTimeFromRealTime(uint32_t time) const {
     return time;
@@ -3399,7 +3399,7 @@ void CGGameObject_C_Type_MapObjTransport::UpdateMovement(uint32_t time, uint32_t
 }
 
 // PROVEN: f4264bef IDENTICAL/NONE
-// OFFSET: 0x005A45D0
+// OFFSET: 0x005A45D0/0x140215140
 uint32_t CGGameObject_C_Type_MapObjTransport::GetSequenceTimeFromRealTime(uint32_t time) const {
     return this->m_shipPath.GetPathTime(time);
 }

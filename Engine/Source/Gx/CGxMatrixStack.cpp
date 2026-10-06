@@ -1,7 +1,7 @@
 #include <cstdint>
 #include "Engine/Source/Gx/CGxMatrixStack.h"
 
-// PROVEN: 31ca35e1 IDENTICAL/NONE
+// PROVEN: 31ca35e1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00431B40/0x14003A410
 void CGxMatrixStack::Identity() {
     if (this->m_flags[this->m_level] & F_Identity) {

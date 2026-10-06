@@ -715,8 +715,8 @@ uint32_t ImaAdpcmDecompress(int16_t* dest, uint32_t destsize, const uint8_t* sou
 
 }
 
-// PROVEN: 02937410 IDENTICAL/NONE
-// OFFSET: 0x004B96C0
+// PROVEN: 02937410 IDENTICAL/IDENTICAL
+// OFFSET: 0x004B96C0/0x1400F1F80
 void CHuffmanEncoder::EncodeSymbol(CBitOutput* output, int32_t symbol) {
     HUFFNODE* node = this->m_symbol[symbol];
     uint32_t value = 0;
@@ -751,7 +751,7 @@ static voidpf ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     return result;
 }
 
-// PROVEN: 9498b4a3 IDENTICAL/IDENTICAL
+// PROVEN: 9498b4a3 IDENTICAL/NONE
 // OFFSET: 0x004B9BC0/0x1400F2390
 static void ZlibFree(voidpf opaque, voidpf address) {
     ZLIBBUFFER* buffer = static_cast<ZLIBBUFFER*>(opaque);
@@ -852,8 +852,8 @@ int32_t STORMAPI zlib_uncompress(uint8_t* dest, uint32_t* destLen, const uint8_t
     return inflateEnd(&stream);
 }
 
-// PROVEN: e8068f5c IDENTICAL/NONE
-// OFFSET: 0x004B9E00
+// PROVEN: e8068f5c IDENTICAL/IDENTICAL
+// OFFSET: 0x004B9E00/0x1400F2630
 int32_t ZlibDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     uint32_t size = *destsize;
 

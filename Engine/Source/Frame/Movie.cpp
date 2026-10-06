@@ -214,7 +214,7 @@ void CMovieStreamer::Cleanup() {
     }
 }
 
-// PROVEN: 5dc6ffd5 IDENTICAL/NONE
+// PROVEN: 5dc6ffd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00511A50/0x14015B8D0
 void CMovieStreamer::GetVideoInfo(MovieInfo& info) {
     info = this->m_info;
@@ -261,8 +261,8 @@ uint8_t* CMovieStreamer::CurrentVideoFrameBuffer() {
     return this->m_frameBuffers + this->m_currentBuffer * (this->m_maxFrameSize + 4);
 }
 
-// PROVEN: d2fc8143 IDENTICAL/NONE
-// OFFSET: 0x00511B40
+// PROVEN: d2fc8143 IDENTICAL/IDENTICAL
+// OFFSET: 0x00511B40/0x14015B9B0
 uint32_t CMovieStreamer::CurrentVideoFrameSize() {
     return this->m_index[this->m_videoIndex].m_size;
 }
@@ -928,7 +928,7 @@ CMovieStreamer::~CMovieStreamer() {
     this->Cleanup();
 }
 
-// PROVEN: a8f7ce67 IDENTICAL/NONE
+// PROVEN: a8f7ce67 IDENTICAL/DIFFERENT
 // OFFSET: 0x00513BF0/0x14015E3B0
 void CMovieStreamer::Initialize(const char* movieName, const char* aviPath, const uint8_t* key) {
     this->Reset();

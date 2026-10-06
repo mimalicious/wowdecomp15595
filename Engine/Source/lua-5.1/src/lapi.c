@@ -73,7 +73,7 @@ const char lua_ident[] =
 
 
 
-// PROVEN: 75b5aa28 IDENTICAL/NONE
+// PROVEN: 75b5aa28 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B760/0x1400328B0
 static TValue *index2adr (lua_State *L, int idx) {
   if (idx > 0) {
@@ -115,7 +115,7 @@ static Table *getcurrenv (lua_State *L) {
 }
 
 
-// PROVEN: 353b28bc IDENTICAL/NONE
+// PROVEN: 353b28bc IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B7F0/0x140032980
 void luaA_pushobject (lua_State *L, const TValue *o) {
   setobj2s(L, L->top, o);
@@ -139,7 +139,7 @@ LUA_API int lua_checkstack (lua_State *L, int size) {
 }
 
 
-// PROVEN: 79689a46 IDENTICAL/NONE
+// PROVEN: 79689a46 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B8C0/0x140032AA0
 LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
   int i;
@@ -156,7 +156,7 @@ LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
 }
 
 
-// PROVEN: 4459bded IDENTICAL/NONE
+// PROVEN: 4459bded IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B940/0x140032B30
 LUA_API void lua_setlevel (lua_State *from, lua_State *to) {
   to->nCcalls = from->nCcalls;
@@ -193,14 +193,14 @@ LUA_API lua_State *lua_newthread (lua_State *L) {
 */
 
 
-// PROVEN: c90c9be6 IDENTICAL/NONE
+// PROVEN: c90c9be6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B9A0/0x140032B90
 LUA_API int lua_gettop (lua_State *L) {
   return cast_int(L->top - L->base);
 }
 
 
-// PROVEN: e77bd3b1 IDENTICAL/NONE
+// PROVEN: e77bd3b1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042B9C0/0x140032BC0
 LUA_API void lua_settop (lua_State *L, int idx) {
   lua_lock(L);
@@ -218,7 +218,7 @@ LUA_API void lua_settop (lua_State *L, int idx) {
 }
 
 
-// PROVEN: 25eab14b IDENTICAL/NONE
+// PROVEN: 25eab14b IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BA20/0x140032C30
 LUA_API void lua_remove (lua_State *L, int idx) {
   StkId p;
@@ -231,7 +231,7 @@ LUA_API void lua_remove (lua_State *L, int idx) {
 }
 
 
-// PROVEN: aec01f84 IDENTICAL/NONE
+// PROVEN: aec01f84 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BA90/0x140032CB0
 LUA_API void lua_insert (lua_State *L, int idx) {
   StkId p;
@@ -271,7 +271,7 @@ LUA_API void lua_replace (lua_State *L, int idx) {
 }
 
 
-// PROVEN: b2ad9f52 IDENTICAL/NONE
+// PROVEN: b2ad9f52 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BC20/0x140032E90
 LUA_API void lua_pushvalue (lua_State *L, int idx) {
   lua_lock(L);
@@ -287,7 +287,7 @@ LUA_API void lua_pushvalue (lua_State *L, int idx) {
 */
 
 
-// PROVEN: 2fe26524 IDENTICAL/NONE
+// PROVEN: 2fe26524 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BC80/0x140032F00
 LUA_API int lua_type (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
@@ -295,14 +295,15 @@ LUA_API int lua_type (lua_State *L, int idx) {
 }
 
 
-// OFFSET: %0x00436110
+// PROVEN: 2b656b13 UNPROVEN/IDENTICAL
+// OFFSET: 0x0042BCA0/0x140032F30
 LUA_API const char *lua_typename (lua_State *L, int t) {
   UNUSED(L);
   return (t == LUA_TNONE) ? "no value" : luaT_typenames[t];
 }
 
 
-// PROVEN: 4140e4c0 IDENTICAL/NONE
+// PROVEN: 4140e4c0 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BCC0/0x140032F50
 LUA_API int lua_iscfunction (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
@@ -310,7 +311,7 @@ LUA_API int lua_iscfunction (lua_State *L, int idx) {
 }
 
 
-// PROVEN: 565186be IDENTICAL/NONE
+// PROVEN: 565186be IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BCF0/0x140032F80
 LUA_API int lua_isnumber (lua_State *L, int idx) {
   TValue n;
@@ -319,7 +320,7 @@ LUA_API int lua_isnumber (lua_State *L, int idx) {
 }
 
 
-// PROVEN: d7d7c9d4 IDENTICAL/NONE
+// PROVEN: d7d7c9d4 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BD30/0x140032FB0
 LUA_API int lua_isstring (lua_State *L, int idx) {
   int t = lua_type(L, idx);
@@ -369,7 +370,7 @@ LUA_API int lua_lessthan (lua_State *L, int index1, int index2) {
 
 
 
-// PROVEN: 0f203ec0 IDENTICAL/NONE
+// PROVEN: 0f203ec0 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BE00/0x140033090
 LUA_API lua_Number lua_tonumber (lua_State *L, int idx) {
   TValue n;
@@ -396,7 +397,7 @@ LUA_API lua_Integer lua_tointeger (lua_State *L, int idx) {
 }
 
 
-// PROVEN: 412c8952 IDENTICAL/NONE
+// PROVEN: 412c8952 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BEC0/0x140033130
 LUA_API int lua_toboolean (lua_State *L, int idx) {
   const TValue *o = index2adr(L, idx);
@@ -448,7 +449,7 @@ LUA_API lua_CFunction lua_tocfunction (lua_State *L, int idx) {
 }
 
 
-// PROVEN: 2e18e3ab IDENTICAL/NONE
+// PROVEN: 2e18e3ab IDENTICAL/UNPROVEN
 // OFFSET: 0x0042BFD0/0x140033280
 LUA_API void *lua_touserdata (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
@@ -460,7 +461,7 @@ LUA_API void *lua_touserdata (lua_State *L, int idx) {
 }
 
 
-// PROVEN: 6c309c24 IDENTICAL/NONE
+// PROVEN: 6c309c24 IDENTICAL/UNPROVEN
 // OFFSET: 0x0042C000/0x1400332C0
 LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
@@ -489,7 +490,7 @@ LUA_API const void *lua_topointer (lua_State *L, int idx) {
 */
 
 
-// PROVEN: fa26e4aa IDENTICAL/NONE
+// PROVEN: fa26e4aa IDENTICAL/IDENTICAL
 // OFFSET: 0x0042C090/0x140033350
 LUA_API void lua_pushnil (lua_State *L) {
   lua_lock(L);
@@ -499,7 +500,7 @@ LUA_API void lua_pushnil (lua_State *L) {
 }
 
 
-// PROVEN: 6c6ac64d IDENTICAL/NONE
+// PROVEN: 6c6ac64d IDENTICAL/IDENTICAL
 // OFFSET: 0x0042C0B0/0x140033370
 LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
   lua_lock(L);
@@ -509,7 +510,7 @@ LUA_API void lua_pushnumber (lua_State *L, lua_Number n) {
 }
 
 
-// PROVEN: 52131ab0 IDENTICAL/NONE
+// PROVEN: 52131ab0 IDENTICAL/DIFFERENT
 // OFFSET: 0x0042C0E0/0x140033390
 LUA_API void lua_pushinteger (lua_State *L, lua_Integer n) {
   lua_lock(L);
@@ -582,7 +583,7 @@ LUA_API void lua_pushcclosure (lua_State *L, lua_CFunction fn, int n) {
 }
 
 
-// PROVEN: 708b2723 IDENTICAL/NONE
+// PROVEN: 708b2723 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042C2E0/0x140033650
 LUA_API void lua_pushboolean (lua_State *L, int b) {
   lua_lock(L);
@@ -592,7 +593,7 @@ LUA_API void lua_pushboolean (lua_State *L, int b) {
 }
 
 
-// PROVEN: 2bceac9f IDENTICAL/NONE
+// PROVEN: 2bceac9f IDENTICAL/IDENTICAL
 // OFFSET: 0x0042C310/0x140033680
 LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
   lua_lock(L);
@@ -602,7 +603,7 @@ LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
 }
 
 
-// PROVEN: 7e1a3d59 IDENTICAL/NONE
+// PROVEN: 7e1a3d59 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042C340/0x1400336A0
 LUA_API int lua_pushthread (lua_State *L) {
   lua_lock(L);
@@ -677,7 +678,7 @@ LUA_API void lua_createtable (lua_State *L, int narray, int nrec) {
 }
 
 
-// PROVEN: cc1286fc IDENTICAL/NONE
+// PROVEN: cc1286fc IDENTICAL/UNPROVEN
 // OFFSET: 0x0042C530/0x1400338F0
 LUA_API int lua_getmetatable (lua_State *L, int objindex) {
   const TValue *obj;
@@ -1006,7 +1007,7 @@ LUA_API int lua_dump (lua_State *L, lua_Writer writer, void *data) {
 }
 
 
-// PROVEN: a804eaad IDENTICAL/NONE
+// PROVEN: a804eaad IDENTICAL/IDENTICAL
 // OFFSET: 0x0042CB40/0x140034000
 LUA_API int  lua_status (lua_State *L) {
   return L->status;
@@ -1102,7 +1103,8 @@ LUA_API double lua_gcgettime (lua_State *L, const char *tag) {
 }
 
 
-// OFFSET: %0x004370C0
+// PROVEN: 2127bf6c UNPROVEN/IDENTICAL
+// OFFSET: 0x0042CC90/0x1400341F0
 LUA_API void lua_gcgetfunctiontime (lua_State *L, double *time, double *totaltime, int *calls) {
   TValue *o = L->top - 1;
   if (G(L)->profile && ttisfunction(o)) {
@@ -1179,7 +1181,7 @@ LUA_API void lua_concat (lua_State *L, int n) {
   lua_unlock(L);
 }
 
-// PROVEN: 0b62d654 IDENTICAL/NONE
+// PROVEN: 0b62d654 IDENTICAL/IDENTICAL
 // OFFSET: 0x0042CE10/0x1400343D0
 LUA_API void lua_setdecimalconversion (int convert) {
   lua_decimalconvert = (convert != 0);
@@ -1210,7 +1212,7 @@ LUA_API void lua_convertdecimal (char *s) {
 }
 
 
-// PROVEN: 39f9b6fc IDENTICAL/NONE
+// PROVEN: 39f9b6fc IDENTICAL/UNPROVEN
 // OFFSET: 0x0042CEC0/0x140034480
 LUA_API void lua_settaint (lua_State *L, int idx, const char *taint) {
   index2adr(L, idx)->taint = taint;
@@ -1269,7 +1271,7 @@ static const char *aux_upvalue (StkId fi, int n, TValue **val) {
 }
 
 
-// PROVEN: e1770c0d IDENTICAL/NONE
+// PROVEN: e1770c0d IDENTICAL/UNPROVEN
 // OFFSET: 0x0042CF40/0x140034520
 LUA_API const char *lua_getupvalue (lua_State *L, int funcindex, int n) {
   const char *name;

@@ -60,19 +60,19 @@ int32_t CSimpleModel::IsDrawable() {
     return this->m_model && this->m_model->IsDrawableRecursive();
 }
 
-// PROVEN: 1eb733db IDENTICAL/NONE
+// PROVEN: 1eb733db IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EFD0/0x14016C1C0
 bool CSimpleModel::IsA(int32_t type) {
     return type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: f621db32 IDENTICAL/NONE
+// PROVEN: f621db32 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051F010/0x140528A70
 bool CSimpleModel::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 3029ebd5 IDENTICAL/NONE
+// PROVEN: 3029ebd5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0051ECB0/0x140528780
 const char* CSimpleModel::GetObjectTypeName() {
     return CSimpleModel::s_objectTypeName;
@@ -83,7 +83,7 @@ const char* CSimpleModel::GetObjectTypeName() {
 void CSimpleModel::SetGlow(float glow) {
 }
 
-// PROVEN: ae2b9613 IDENTICAL/NONE
+// PROVEN: ae2b9613 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 int32_t CSimpleModel::AdvanceTime() {
     return 1;
@@ -104,13 +104,13 @@ CSimpleModel::~CSimpleModel() {
     }
 }
 
-// PROVEN: 7069b78b IDENTICAL/NONE
+// PROVEN: 7069b78b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051ECC0/0x14016BDE0
 int32_t CSimpleModel::GetScriptMetaTable() {
     return CSimpleModel::s_metatable;
 }
 
-// PROVEN: 8e977b6b IDENTICAL/NONE
+// PROVEN: 8e977b6b IDENTICAL/UNPROVEN
 // OFFSET: 0x0051ECD0/0x14016BDF0
 FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
@@ -130,15 +130,15 @@ FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, Fr
     return NULL;
 }
 
-// PROVEN: 884591cb IDENTICAL/NONE
-// OFFSET: 0x0051ED70
+// PROVEN: 884591cb IDENTICAL/IDENTICAL
+// OFFSET: 0x0051ED70/0x14016BE70
 void CSimpleModel::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onUpdateModel, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onAnimFinished, time, count);
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: a2860510 IDENTICAL/NONE
+// PROVEN: a2860510 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EDC0/0x14016BEF0
 void CSimpleModel::ModelLoaded(CM2Model* model, void* arg) {
     static_cast<CSimpleModel*>(arg)->OnModelLoaded(model);
@@ -182,7 +182,7 @@ void CSimpleModel::SetCameraByID(uint32_t id) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// PROVEN: 0533821c IDENTICAL/NONE
+// PROVEN: 0533821c IDENTICAL/UNPROVEN
 // OFFSET: 0x0051EEB0/0x14016C020
 void CSimpleModel::SetLight(const CM2Light& light) {
     this->m_light = light;
@@ -204,7 +204,7 @@ int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     return 1;
 }
 
-// PROVEN: f2dad3f3 IDENTICAL/NONE
+// PROVEN: f2dad3f3 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051EF40/0x14016C100
 CM2Scene* CSimpleModel::GetScene() {
     if (!this->m_scene) {

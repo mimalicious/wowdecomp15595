@@ -13,7 +13,7 @@ ComSat::BitPacker::BitPacker(uint8_t* buffer, uint32_t bitLength) {
 ComSat::BitPacker::~BitPacker() {
 }
 
-// PROVEN: 398fe42b IDENTICAL/NONE
+// PROVEN: 398fe42b IDENTICAL/DIFFERENT
 // OFFSET: 0x00A390A0/0x1407E53F0
 uint32_t ComSat::BitPacker::Finalize() {
     if (this->m_bitOffset) {

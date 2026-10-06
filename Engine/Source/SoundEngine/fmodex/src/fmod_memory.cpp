@@ -20,27 +20,27 @@
 
 extern "C"
 {
-    // PROVEN: b7be5090 IDENTICAL/NONE
+    // PROVEN: b7be5090 IDENTICAL/IDENTICAL
     // OFFSET: 0x00A88B90/0x1408471B0
     void *FMOD_Memory_allocC(int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->alloc(len, file, line);
     }
-    // PROVEN: dd69ee7c IDENTICAL/NONE
+    // PROVEN: dd69ee7c IDENTICAL/IDENTICAL
     // OFFSET: 0x00A88BC0/0x1408471E0
     void *FMOD_Memory_callocC(int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->calloc(len, file, line);
     }
 
-    // PROVEN: 4e307aee IDENTICAL/NONE
+    // PROVEN: 4e307aee IDENTICAL/IDENTICAL
     // OFFSET: 0x00A88BF0/0x140847210
     void *FMOD_Memory_reallocC(void *ptr, int len, const char *file, const int line)
     {
         return FMOD::gGlobal->gSystemPool->realloc(ptr, len, file, line);
     }
 
-    // PROVEN: 7bbc1007 IDENTICAL/NONE
+    // PROVEN: 7bbc1007 IDENTICAL/IDENTICAL
     // OFFSET: 0x00A88C20/0x140847240
     void FMOD_Memory_freeC(void *ptr, const char *file, const int line)
     {
@@ -53,7 +53,7 @@ namespace FMOD
 {
 
 
-// PROVEN: 185ad721 IDENTICAL/NONE
+// PROVEN: 185ad721 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A88C40/0x140847270
 void *MemSingleton::alloc(int len, const char *file, const int line)
 {
@@ -67,7 +67,7 @@ void *MemSingleton::alloc(int len, const char *file, const int line)
     return mBuffer;
 }
 
-// PROVEN: 60af6e5b IDENTICAL/NONE
+// PROVEN: 60af6e5b IDENTICAL/IDENTICAL
 // OFFSET: 0x00A88C80/0x1408472C0
 void MemSingleton::free(const char *file, const int line)
 {
@@ -344,7 +344,7 @@ FMOD_RESULT MemPool::initCustom(void *poolmem, int poolsize, int blocksize)
 	[REMARKS]
 ]
 */
-// PROVEN: 4c68573f IDENTICAL/NONE
+// PROVEN: 4c68573f IDENTICAL/UNPROVEN
 // OFFSET: 0x00A88CC0/0x140847320
 void MemPool::close()
 {
@@ -711,7 +711,7 @@ void *MemPool::alloc(int len, const char *file, const int line, FMOD_MEMORY_TYPE
 	[REMARKS]
 ]
 */
-// PROVEN: 36b9e031 IDENTICAL/NONE
+// PROVEN: 36b9e031 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A888B0/0x140846A30
 void MemPool::free(void *ptr, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
@@ -771,7 +771,7 @@ void MemPool::free(void *ptr, const char *file, const int line, FMOD_MEMORY_TYPE
 	[REMARKS]
 ]
 */
-// PROVEN: c290231f IDENTICAL/NONE
+// PROVEN: c290231f IDENTICAL/IDENTICAL
 // OFFSET: 0x00A88970/0x140846BF0
 void *MemPool::calloc(int len, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {
@@ -794,7 +794,7 @@ void *MemPool::calloc(int len, const char *file, const int line, FMOD_MEMORY_TYP
 	[REMARKS]
 ]
 */
-// PROVEN: cd9c0c10 IDENTICAL/NONE
+// PROVEN: cd9c0c10 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A88990/0x140846C10
 void *MemPool::realloc(void *ptr, int len, const char *file, const int line, FMOD_MEMORY_TYPE type)
 {

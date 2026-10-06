@@ -32,7 +32,7 @@ CSimpleAnimSCurveSmoother::CSimpleAnimSCurveSmoother() {
     this->m_out = 0.0f;
 }
 
-// PROVEN: e7006d69 IDENTICAL/NONE
+// PROVEN: e7006d69 IDENTICAL/IDENTICAL
 // OFFSET: 0x005275F0/0x140176960
 void CSimpleAnimSCurveSmoother::SetWeights(float in, float out) {
     this->m_in = in < 0.0f ? 0.0f : (in < 1.0f ? in : 1.0f);
@@ -329,25 +329,25 @@ CSimpleAnim::~CSimpleAnim() {
     delete this->m_smoother;
 }
 
-// PROVEN: defe0283 IDENTICAL/NONE
+// PROVEN: defe0283 IDENTICAL/IDENTICAL
 // OFFSET: 0x005282F0/0x140177900
 bool CSimpleAnim::IsA(int32_t type) {
     return type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: bf32b965 IDENTICAL/NONE
+// PROVEN: bf32b965 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528320/0x140177920
 bool CSimpleAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: e7d1a958 IDENTICAL/NONE
+// PROVEN: e7d1a958 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528360/0x140177960
 const char* CSimpleAnim::GetObjectTypeName() {
     return CSimpleAnim::s_objectTypeName;
 }
 
-// PROVEN: 8f49d2c3 IDENTICAL/NONE
+// PROVEN: 8f49d2c3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00528370/0x140177970
 int32_t CSimpleAnim::GetScriptMetaTable() {
     return CSimpleAnim::s_metatable;

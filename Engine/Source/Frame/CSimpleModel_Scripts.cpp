@@ -474,7 +474,8 @@ static int32_t Script_GetFogFar(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005490D0
+// PROVEN: 4d81ba55 DIFFERENT/IDENTICAL
+// OFFSET: 0x005394E0/0x14018C9E0
 static int32_t Script_ClearFog(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -529,7 +530,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetGlow", &Script_SetGlow },
 };
 
-// PROVEN: e79860c5 IDENTICAL/NONE
+// PROVEN: e79860c5 IDENTICAL/UNPROVEN
 // OFFSET: 0x00538540/0x14018B610
 void CSimpleModel::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

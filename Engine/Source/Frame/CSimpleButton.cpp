@@ -38,7 +38,7 @@ void CSimpleButton::operator delete(void* ptr) {
     CSimpleButton::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 01d45272 IDENTICAL/NONE
+// PROVEN: 01d45272 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514CA0/0x14015F060
 bool CSimpleButton::IsA(int32_t type) {
     return type == CSimpleButton::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
@@ -50,7 +50,7 @@ bool CSimpleButton::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleButton::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 597fa702 IDENTICAL/NONE
+// PROVEN: 597fa702 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514B30/0x14015EE90
 void CSimpleButton::LockHighlight(int32_t lock) {
     CSimpleFrame::LockHighlight(lock);
@@ -67,7 +67,8 @@ int32_t CSimpleButton::GetMotionScriptsWhileDisabled() {
     return this->m_motionScriptsWhileDisabled;
 }
 
-// OFFSET: %0x00523EC0
+// PROVEN: 02d02cec DIFFERENT/IDENTICAL
+// OFFSET: 0x00513ED0/0x140182820
 uint64_t MouseButtonStringToBitmask(const char* string) {
     if (!string || !*string) {
         return 0;
@@ -375,7 +376,7 @@ const char* CSimpleButton::GetObjectTypeName() {
     return CSimpleButton::s_objectTypeName;
 }
 
-// PROVEN: d0011f78 IDENTICAL/NONE
+// PROVEN: d0011f78 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514580/0x14015EAB0
 int32_t CSimpleButton::GetScriptMetaTable() {
     return CSimpleButton::s_metatable;
@@ -412,7 +413,8 @@ FrameScript_Object::ScriptIx* CSimpleButton::GetScriptByName(const char* name, F
     return NULL;
 }
 
-// OFFSET: %0x005246C0
+// PROVEN: 332a90d0 DIFFERENT/IDENTICAL
+// OFFSET: 0x005146D0/0x14015EBB0
 void CSimpleButton::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onPreClick, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onClick, time, count);
@@ -488,7 +490,7 @@ void CSimpleButton::OnDragStart(const CMouseEvent& evt) {
     }
 }
 
-// PROVEN: a199b399 IDENTICAL/NONE
+// PROVEN: a199b399 IDENTICAL/IDENTICAL
 // OFFSET: 0x00514880/0x14015EDE0
 void CSimpleButton::SetClickAction(uint64_t action) {
     this->m_clickAction = action;
@@ -829,7 +831,7 @@ int32_t CSimpleButton::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return 1;
 }
 
-// PROVEN: 3f118c53 IDENTICAL/NONE
+// PROVEN: 3f118c53 IDENTICAL/UNPROVEN
 // OFFSET: 0x00515310/0x14015F760
 void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     if (this->m_state != BUTTONSTATE_DISABLED) {
@@ -847,7 +849,7 @@ void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     }
 }
 
-// PROVEN: b98223ee IDENTICAL/NONE
+// PROVEN: b98223ee IDENTICAL/UNPROVEN
 // OFFSET: 0x00515370/0x14015F7D0
 void CSimpleButton::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_state != BUTTONSTATE_DISABLED) {

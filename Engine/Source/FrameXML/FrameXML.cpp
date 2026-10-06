@@ -75,13 +75,13 @@ XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
     return tree;
 }
 
-// PROVEN: 776ab6cf IDENTICAL/NONE
+// PROVEN: 776ab6cf IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC440/0x14012F9A0
 void FrameXML_SetDebugLevel(int32_t level) {
     s_debugLevel = level;
 }
 
-// PROVEN: 04e22556 IDENTICAL/NONE
+// PROVEN: 04e22556 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC450/0x14012F9B0
 int32_t FrameXML_GetDebugLevel() {
     return s_debugLevel;
@@ -185,7 +185,7 @@ CSimpleFrame* Create_SimpleMovieFrame(CSimpleFrame* parent) {
     return data ? new (data) CSimpleMovieFrame(parent) : NULL;
 }
 
-// PROVEN: 72f7d3fe IDENTICAL/NONE
+// PROVEN: 72f7d3fe IDENTICAL/IDENTICAL
 // OFFSET: 0x004EC7B0/0x14012FDC0
 void FrameXML_RegisterLoadProgressCallback(void (*callback)(float progress, void* param), void* param, uint32_t total) {
     s_progressCallback = callback;

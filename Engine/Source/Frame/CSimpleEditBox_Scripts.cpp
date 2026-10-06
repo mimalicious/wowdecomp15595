@@ -406,14 +406,16 @@ static int32_t Script_GetTextInsets(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x00544F70
+// PROVEN: ebf9e141 DIFFERENT/IDENTICAL
+// OFFSET: 0x00535B30/0x1401887E0
 static int32_t Script_SetFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleEditBox::SetKeyboardFocus(editBox);
     return 0;
 }
 
-// OFFSET: %0x00544FB0
+// PROVEN: b6daba8c DIFFERENT/IDENTICAL
+// OFFSET: 0x00535B70/0x140188820
 static int32_t Script_ClearFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     CSimpleEditBox::ClearKeyboardFocus(editBox, true);

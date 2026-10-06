@@ -103,8 +103,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPEcho::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cad4e9a5 IDENTICAL/NONE
-// OFFSET: 0x00A9B580
+// PROVEN: cad4e9a5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A9B580/0x14085BE60
 FMOD_RESULT DSPEcho::createInternal()
 {
     int count;
@@ -564,7 +564,7 @@ FMOD_RESULT F_CALLBACK DSPEcho::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 14515f80 IDENTICAL/NONE
+// PROVEN: 14515f80 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9C080/0x14085CA20
 FMOD_RESULT F_CALLBACK DSPEcho::releaseCallback(FMOD_DSP_STATE *dsp)
 {
@@ -616,7 +616,7 @@ FMOD_RESULT F_CALLBACK DSPEcho::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3c587bac IDENTICAL/NONE
+// PROVEN: 3c587bac IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9C110/0x14085CA40
 FMOD_RESULT F_CALLBACK DSPEcho::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {

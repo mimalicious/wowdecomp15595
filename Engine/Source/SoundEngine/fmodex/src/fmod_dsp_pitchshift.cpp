@@ -2506,7 +2506,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c0865956 IDENTICAL/NONE
+// PROVEN: c0865956 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A98F10/0x1408581E0
 FMOD_RESULT F_CALLBACK DSPPitchShift::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -2533,7 +2533,7 @@ FMOD_RESULT F_CALLBACK DSPPitchShift::readCallback(FMOD_DSP_STATE *dsp, float *i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c006927a IDENTICAL/NONE
+// PROVEN: c006927a IDENTICAL/IDENTICAL
 // OFFSET: 0x00A97E40/0x140858260
 FMOD_RESULT F_CALLBACK DSPPitchShift::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {

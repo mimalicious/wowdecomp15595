@@ -259,7 +259,8 @@ const char* OrientationToString(ORIENTATION orientation) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF3D0
+// PROVEN: 8bd59284 DIFFERENT/IDENTICAL
+// OFFSET: 0x004EEDF0/0x140133330
 uint32_t StringToFontFlags(const char* string) {
     uint32_t flags = 0;
 
@@ -400,7 +401,8 @@ static int32_t StringToBOOL(const char* string, int32_t defaultValue) {
     return defaultValue;
 }
 
-// OFFSET: %0x004FF670
+// PROVEN: 9460201f DIFFERENT/IDENTICAL
+// OFFSET: 0x004EF0A0/0x140133740
 int32_t StringToBOOL(const char* string) {
     return StringToBOOL(string, 0);
 }
@@ -564,8 +566,8 @@ static uint32_t PackColor(float r, float g, float b, float a) {
     return static_cast<uint8_t>(static_cast<int32_t>(b * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(g * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(r * 255.0f + 0.5f)) | (static_cast<uint8_t>(static_cast<int32_t>(a * 255.0f + 0.5f)) << 8)) << 8)) << 8);
 }
 
-// PROVEN: 90fad40e IDENTICAL/NONE
-// OFFSET: 0x004EF230
+// PROVEN: 90fad40e IDENTICAL/IDENTICAL
+// OFFSET: 0x004EF230/0x140133910
 bool Color::GetColor(CImVector& color, CStatus* status) {
     if (this->m_colorFlags & 1) {
         reinterpret_cast<uint32_t&>(color) = PackColor(this->m_r, this->m_g, this->m_b, this->m_a);
@@ -593,7 +595,7 @@ bool Gradient::Load(ORIENTATION& orientation, CImVector& minColor, CImVector& ma
     return true;
 }
 
-// PROVEN: db749763 IDENTICAL/NONE
+// PROVEN: db749763 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EF520/0x140133B30
 int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     Color* colorNode = static_cast<Color*>(node);

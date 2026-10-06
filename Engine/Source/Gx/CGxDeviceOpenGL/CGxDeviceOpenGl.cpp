@@ -424,8 +424,8 @@ void CGxDeviceOpenGl::DestroyPoolAPI(CGxPool* pool) {
     pool->m_apiSpecific = NULL;
 }
 
-// PROVEN: d1bae711 IDENTICAL/NONE
-// OFFSET: 0x0084EA60
+// PROVEN: d1bae711 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084EA60/0x14057D830
 void CGxDeviceOpenGl::PoolDestroy(CGxPool* pool) {
     this->DestroyPoolAPI(pool);
     CGxDevice::PoolDestroy(pool);
@@ -445,8 +445,8 @@ void CGxDeviceOpenGl::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     }
 }
 
-// PROVEN: 58d0af76 IDENTICAL/NONE
-// OFFSET: 0x0084EAC0
+// PROVEN: 58d0af76 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084EAC0/0x14057D8A0
 void CGxDeviceOpenGl::QueryDestroy(CGxQuery*& query) {
     CGxQuery* destroyed = query;
 
@@ -947,7 +947,7 @@ void CGxDeviceOpenGl::DeviceDestroyPoolAPI() {
     }
 }
 
-// PROVEN: 46618c12 IDENTICAL/NONE
+// PROVEN: 46618c12 IDENTICAL/IDENTICAL
 // OFFSET: 0x00850510/0x14057F940
 void BindWglExtensions() {
     wglGetExtensionsStringARB = reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(wglGetProcAddress("wglGetExtensionsStringARB"));
@@ -1170,7 +1170,7 @@ void CGxDeviceOpenGl::DeviceDestroy() {
     s_deviceChanging = 0;
 }
 
-// PROVEN: dd7e1d2e IDENTICAL/NONE
+// PROVEN: dd7e1d2e IDENTICAL/IDENTICAL
 // OFFSET: 0x00850BA0/0x140580180
 void CGxDeviceOpenGl::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation();
@@ -1857,7 +1857,7 @@ void CGxDeviceOpenGl::SetInstanceCount(uint32_t count) {
 void CGxDeviceOpenGl::StereoSetConvergence(float convergence) {
 }
 
-// PROVEN: 35b1a782 IDENTICAL/NONE
+// PROVEN: 35b1a782 IDENTICAL/IDENTICAL
 // OFFSET: 0x00599E10/0x1402082B0
 float CGxDeviceOpenGl::StereoGetConvergence() {
     return 1.0f;
@@ -1868,7 +1868,7 @@ float CGxDeviceOpenGl::StereoGetConvergence() {
 void CGxDeviceOpenGl::StereoSetSeparation(float separation) {
 }
 
-// PROVEN: 1fabd306 IDENTICAL/NONE
+// PROVEN: 1fabd306 IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGxDeviceOpenGl::StereoGetSeparation() {
     return 0.0f;

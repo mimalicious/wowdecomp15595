@@ -78,7 +78,7 @@ char* Tracker::GetKey() {
     return s_key;
 }
 
-// PROVEN: 8c7278d9 IDENTICAL/UNPROVEN
+// PROVEN: 8c7278d9 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FB3C0/0x14050DBF0
 const char* Tracker::GetTrackerAddress(const char* locale) {
     if (!Blizzard::String::Equal(locale, "enUS") || !Blizzard::String::Equal(locale, "esMX")) {

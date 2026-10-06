@@ -156,13 +156,13 @@ int32_t CLCDBase::GetBackgroundMode() {
     return this->m_nBkMode;
 }
 
-// PROVEN: ade52db1 IDENTICAL/NONE
+// PROVEN: ade52db1 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B40BF0/0x14090EB20
 void CLCDBase::SetObjectType(int32_t type) {
     this->m_nObjectType = type;
 }
 
-// PROVEN: f3fddfb2 IDENTICAL/NONE
+// PROVEN: f3fddfb2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A32F60/0x14090EB30
 void CLCDBase::SetForegroundColor(COLORREF color) {
     this->m_crForegroundColor = color;
@@ -195,7 +195,7 @@ void CLCDBase::SetUserData(int32_t data) {
     this->m_nUserData = data;
 }
 
-// PROVEN: 42bb6951 IDENTICAL/NONE
+// PROVEN: 42bb6951 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B3EAA0/0x140902360
 int32_t CLCDBase::GetUserData() {
     return this->m_nUserData;

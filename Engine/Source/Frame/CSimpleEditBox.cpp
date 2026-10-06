@@ -53,14 +53,14 @@ const char* CSimpleEditBox::s_inputLanguageNames[4] = { "ROMAN", "KOREAN", "CHIN
 // STATIC: %0x00CD2558
 CDataAllocator CSimpleEditBox::s_allocator(sizeof(CSimpleEditBox), 5);
 
-// PROVEN: 9be4407c IDENTICAL/NONE
-// OFFSET: 0x00516F60
+// PROVEN: 9be4407c IDENTICAL/IDENTICAL
+// OFFSET: 0x00516F60/0x140161560
 static int32_t IsShiftDown() {
     return EventIsKeyDown(KEY_LSHIFT) || EventIsKeyDown(KEY_RSHIFT);
 }
 
-// PROVEN: 4fc44b64 IDENTICAL/NONE
-// OFFSET: 0x00516F90
+// PROVEN: 4fc44b64 IDENTICAL/IDENTICAL
+// OFFSET: 0x00516F90/0x140161590
 static int32_t IsControlDown() {
     return EventIsKeyDown(KEY_LCONTROL) || EventIsKeyDown(KEY_RCONTROL);
 }
@@ -89,7 +89,7 @@ CSimpleFontedFrameFont::CSimpleFontedFrameFont(CSimpleFontedFrame* frame) {
     this->m_frame = frame;
 }
 
-// PROVEN: 7fe1a6ff IDENTICAL/NONE
+// PROVEN: 7fe1a6ff IDENTICAL/DIFFERENT
 // OFFSET: 0x00517060/0x140161660
 void CSimpleFontedFrameFont::UpdateObjects() {
     uint32_t flags = this->m_attributes.m_flags;
@@ -1887,8 +1887,8 @@ int32_t CSimpleEditBox::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// PROVEN: 8d36811b IDENTICAL/NONE
-// OFFSET: 0x00519610
+// PROVEN: 8d36811b IDENTICAL/IDENTICAL
+// OFFSET: 0x00519610/0x140164E20
 void CSimpleEditBox::OnFrameSizeChanged(float width, float height) {
     CSimpleFrame::OnFrameSizeChanged(width, height);
     this->UpdateSizes();
@@ -2580,19 +2580,19 @@ const char* CSimpleEditBox::GetObjectTypeName() {
     return CSimpleEditBox::s_objectTypeName;
 }
 
-// PROVEN: 7631cdcb IDENTICAL/NONE
+// PROVEN: 7631cdcb IDENTICAL/IDENTICAL
 // OFFSET: 0x0051AF70/0x140166F30
 int32_t CSimpleEditBox::GetScriptMetaTable() {
     return CSimpleEditBox::s_metatable;
 }
 
-// PROVEN: 2b93855e IDENTICAL/NONE
+// PROVEN: 2b93855e IDENTICAL/IDENTICAL
 // OFFSET: 0x0051AF90/0x140166F50
 bool CSimpleEditBox::IsA(int32_t type) {
     return type == CSimpleEditBox::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 116577dc IDENTICAL/NONE
+// PROVEN: 116577dc IDENTICAL/DIFFERENT
 // OFFSET: 0x0051AFD0/0x140166F40
 bool CSimpleEditBox::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleEditBox::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);

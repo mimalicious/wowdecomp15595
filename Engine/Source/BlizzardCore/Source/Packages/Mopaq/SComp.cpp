@@ -343,15 +343,15 @@ static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp:
 // STATIC: #0x009E6E10
 static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
 
-// PROVEN: a6263b16 IDENTICAL/NONE
-// OFFSET: 0x007AA980
+// PROVEN: a6263b16 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AA980/0x1404A0D10
 void System_SComp::PkwareCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     *destSize = sourceSize;
     *hint = 0;
 }
 
-// PROVEN: 09c99054 IDENTICAL/NONE
-// OFFSET: 0x007AAA50
+// PROVEN: 09c99054 IDENTICAL/UNPROVEN
+// OFFSET: 0x007AAA50/0x1404A0DC0
 void System_SComp::Bzip2Compress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int32_t result = BZ2_bzBuffToBuffCompress(static_cast<char*>(dest), destSize, static_cast<char*>(const_cast<void*>(source)), sourceSize, 9, 0, 0);
 

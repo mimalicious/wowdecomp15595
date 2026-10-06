@@ -55,13 +55,13 @@ SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 // STATIC: %0x00D0E20C
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
-// PROVEN: 9329de35 IDENTICAL/NONE
+// PROVEN: 9329de35 IDENTICAL/IDENTICAL
 // OFFSET: 0x007153C0/0x1403E80A0
 void SE3::SetMaxCacheSizeInBytes(int32_t size) {
     SE3::sm_nMaxCacheSizeInBytes = size;
 }
 
-// PROVEN: a622bc94 IDENTICAL/NONE
+// PROVEN: a622bc94 IDENTICAL/IDENTICAL
 // OFFSET: 0x007153D0/0x1403E80B0
 void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
@@ -77,7 +77,8 @@ void SE3::RegisterWaveDataDoneLoadingCallback(FMOD_RESULT (*callback)(FMOD_SOUND
     SE3::sm_fpWaveDataDoneLoadingCallback = callback;
 }
 
-// OFFSET: %0x0067C0D0
+// PROVEN: 7ed7f0e6 UNPROVEN/IDENTICAL
+// OFFSET: 0x00715400/0x1403E80E0
 static FMOD_RESULT F_CALLBACK DoneLoadingCallback(FMOD_SOUND* sound, FMOD_RESULT result) {
     SE3::sm_SE3ShuttingDown_CritSec.Enter();
     FMOD_RESULT r = SE3::sm_fpWaveDataDoneLoadingCallback(sound, result);
@@ -108,7 +109,7 @@ static FMOD_RESULT F_CALLBACK SEReadCallback(void* handle, void* buffer, unsigne
     return SErrGetLastError() == 38 ? FMOD_ERR_FILE_EOF : FMOD_ERR_INTERNAL;
 }
 
-// PROVEN: 9c458ad0 IDENTICAL/NONE
+// PROVEN: 9c458ad0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00715730/0x1403E8480
 static FMOD_RESULT F_CALLBACK SESeekCallback(void* handle, unsigned int pos, void* userdata) {
     SFile::SetFilePointer(static_cast<SFileImpl*>(handle), pos, NULL, 0);
@@ -546,25 +547,25 @@ FMOD_RESULT SE3::CreateDSPByType(SE3_DSP_TYPE type, void** dsp) {
     return SE3::sm_pGameSystem->createDSPByType(type, reinterpret_cast<FMOD::DSP**>(dsp));
 }
 
-// PROVEN: ab383207 IDENTICAL/NONE
+// PROVEN: ab383207 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716C30/0x1403EA110
 FMOD_RESULT SE3::SetDspParam(void* dsp, int32_t index, float value) {
     return static_cast<FMOD::DSP*>(dsp)->setParameter(index, value);
 }
 
-// PROVEN: 8ea572e5 IDENTICAL/NONE
+// PROVEN: 8ea572e5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716C50/0x1403EA120
 FMOD_RESULT SE3::BypassDsp(void* dsp, bool bypass) {
     return static_cast<FMOD::DSP*>(dsp)->setBypass(bypass);
 }
 
-// PROVEN: ec08a0ca IDENTICAL/NONE
+// PROVEN: ec08a0ca IDENTICAL/IDENTICAL
 // OFFSET: 0x00716C70/0x1403EA130
 FMOD_RESULT SE3::EnableDSP(void* dsp, bool active) {
     return static_cast<FMOD::DSP*>(dsp)->setActive(active);
 }
 
-// PROVEN: eada81e0 IDENTICAL/NONE
+// PROVEN: eada81e0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716C90/0x1403EA140
 FMOD_RESULT SE3::DspDestroy(void* dsp) {
     static_cast<FMOD::DSP*>(dsp)->remove();
@@ -572,7 +573,7 @@ FMOD_RESULT SE3::DspDestroy(void* dsp) {
     return FMOD_OK;
 }
 
-// PROVEN: eec84d60 IDENTICAL/NONE
+// PROVEN: eec84d60 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716CB0/0x1403EA160
 FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     FMOD::DSP* head;
@@ -595,27 +596,27 @@ int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     return numChannels;
 }
 
-// PROVEN: e0d5fdfc IDENTICAL/NONE
-// OFFSET: 0x00716D20
+// PROVEN: e0d5fdfc IDENTICAL/IDENTICAL
+// OFFSET: 0x00716D20/0x1403EA1E0
 void* SE3::CreateChannelGroup(const char* name) {
     FMOD::ChannelGroup* channelGroup = NULL;
     SE3::sm_pGameSystem->createChannelGroup(name, &channelGroup);
     return channelGroup;
 }
 
-// PROVEN: 238dcca3 IDENTICAL/NONE
+// PROVEN: 238dcca3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716D50/0x1403EA210
 FMOD_RESULT SE3::DestroyChannelGroup(void* channelGroup) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->release();
 }
 
-// PROVEN: 40960923 IDENTICAL/NONE
+// PROVEN: 40960923 IDENTICAL/IDENTICAL
 // OFFSET: 0x00716D60/0x1403EA220
 FMOD_RESULT SE3::AddChannelToChannelGroup(void* channel, void* channelGroup) {
     return static_cast<FMOD::Channel*>(channel)->setChannelGroup(static_cast<FMOD::ChannelGroup*>(channelGroup));
 }
 
-// PROVEN: 2823cd42 IDENTICAL/NONE
+// PROVEN: 2823cd42 IDENTICAL/UNPROVEN
 // OFFSET: 0x00716D80/0x1403EA230
 FMOD_RESULT SE3::SetFMODChannelGroupVolume(void* channelGroup, float volume) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->setVolume(volume);

@@ -546,8 +546,8 @@ FMOD_RESULT F_CALLBACK DSPReverb::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6698dc50 IDENTICAL/NONE
-// OFFSET: 0x00A966F0
+// PROVEN: 6698dc50 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A966F0/0x1408567B0
 FMOD_RESULT F_CALLBACK DSPReverb::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPReverb *reverb = (DSPReverb *)dsp;

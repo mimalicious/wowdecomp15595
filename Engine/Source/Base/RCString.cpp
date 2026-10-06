@@ -16,7 +16,7 @@ RCString::RCString() {
 RCString::~RCString() {
 }
 
-// PROVEN: bca1a0cc IDENTICAL/NONE
+// PROVEN: bca1a0cc IDENTICAL/IDENTICAL
 // OFFSET: 0x00872000/0x1405A8300
 void RCString::Copy(const RCString& source) {
     this->m_str = source.m_str;

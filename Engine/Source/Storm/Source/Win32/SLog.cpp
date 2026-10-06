@@ -248,7 +248,7 @@ void STORMAPI SLogClose(HSLOG log) {
     UnlockDeleteLog(logptr, lockedhandle);
 }
 
-// PROVEN: 8cd34439 IDENTICAL/DIFFERENT
+// PROVEN: 8cd34439 IDENTICAL/NONE
 // OFFSET: 0x004BE080/0x1403E6CA0
 void STORMAPI SLogFlush(HSLOG log) {
     HLOCKEDLOG lockedhandle;

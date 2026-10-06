@@ -205,7 +205,7 @@ template <class T, class P>
 BSN::BSNEncodedObject<T, P>::~BSNEncodedObject() {
 }
 
-// PROVEN: d72b77e6 IDENTICAL/NONE
+// PROVEN: d72b77e6 IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 template <class T, class P>
 uint32_t BSN::BSNEncodedObject<T, P>::GetEncodingType() const {
@@ -250,7 +250,7 @@ template <class T, class P, int32_t ON_STACK>
 BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::~BSNEncodedObjectPtr() {
 }
 
-// PROVEN: 539fa59e IDENTICAL/NONE
+// PROVEN: 539fa59e IDENTICAL/DIFFERENT
 // OFFSET: 0x009FCE20/0x14090FD50
 template <class T, class P, int32_t ON_STACK>
 uint32_t BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::GetEncodingType() const {

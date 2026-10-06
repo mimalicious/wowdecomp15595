@@ -141,7 +141,7 @@ CLCDOutput* CLCDConnection::MonoOutput() {
     return this->m_pMonoOutput;
 }
 
-// PROVEN: 46da3199 IDENTICAL/DIFFERENT
+// PROVEN: 46da3199 IDENTICAL/IDENTICAL
 // OFFSET: 0x00529DA0/0x140512ED0
 CLCDOutput* CLCDConnection::ColorOutput() {
     return this->m_pColorOutput;

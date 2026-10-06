@@ -173,6 +173,7 @@ void CGxDeviceOpenGl::BindTexture(CGxTex* texId, uint32_t tmu) {
     this->m_boundTexture = name;
 }
 
+// PROVEN: 21fd04a5 UNPROVEN/IDENTICAL
 // OFFSET: 0x00868730/0x14059BDE0
 void CGxDeviceOpenGl::ITexSetFlags(CGxTex* texId) {
     GLenum target = s_glTexTarget[texId->m_target];
@@ -188,7 +189,7 @@ void CGxDeviceOpenGl::ITexSetFlags(CGxTex* texId) {
     texId->m_needsFlagUpdate = 0;
 }
 
-// PROVEN: 4a90de58 IDENTICAL/NONE
+// PROVEN: 4a90de58 IDENTICAL/UNPROVEN
 // OFFSET: 0x008687D0/0x14059BEC0
 void CGxDeviceOpenGl::TexDestroy(CGxTex* texId) {
     if (texId->m_apiSpecificData) {

@@ -147,25 +147,25 @@ uint32_t GxuFontGetFontFlags(CGxFont* face) {
     return face->m_fontFlags;
 }
 
-// PROVEN: afceb100 IDENTICAL/NONE
+// PROVEN: afceb100 IDENTICAL/IDENTICAL
 // OFFSET: 0x00613190/0x14029E6C0
 void GxuFontStringInvalidate(CGxString* string) {
     string->ClearInstanceData();
 }
 
-// PROVEN: 7da8142e IDENTICAL/NONE
+// PROVEN: 7da8142e IDENTICAL/IDENTICAL
 // OFFSET: 0x006131A0/0x140455010
 void GxuFontSetScale(CGxString* string, float scale) {
     string->m_stringScale = scale;
 }
 
-// PROVEN: ecce4d4c IDENTICAL/NONE
+// PROVEN: ecce4d4c IDENTICAL/IDENTICAL
 // OFFSET: 0x006131C0/0x14029E6D0
 void GxuFontSetRotation(CGxString* string, float rotation) {
     string->m_rotation = rotation;
 }
 
-// PROVEN: e904ffe3 IDENTICAL/NONE
+// PROVEN: e904ffe3 IDENTICAL/IDENTICAL
 // OFFSET: 0x006131E0/0x14029E6E0
 int32_t GxuFontAddToBatch(CGxStringBatch* batch, CGxString* string) {
     if (!batch || !string) {
@@ -177,7 +177,7 @@ int32_t GxuFontAddToBatch(CGxStringBatch* batch, CGxString* string) {
     return 1;
 }
 
-// PROVEN: c8365c46 IDENTICAL/NONE
+// PROVEN: c8365c46 IDENTICAL/IDENTICAL
 // OFFSET: 0x00613210/0x14029E710
 void GxuFontRenderBatch(CGxStringBatch* batch) {
     if (batch) {
@@ -185,7 +185,7 @@ void GxuFontRenderBatch(CGxStringBatch* batch) {
     }
 }
 
-// PROVEN: 31e7312f IDENTICAL/NONE
+// PROVEN: 31e7312f IDENTICAL/IDENTICAL
 // OFFSET: 0x00613230/0x14029E730
 void GxuFontGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, float fontHeight, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     InternalGetTextExtent(face, text, numBytes, fontHeight, extent, flags, shadowWidth, scale);
@@ -244,7 +244,7 @@ float GxuFontGetOneToOneHeight(CGxFont* face) {
     return static_cast<float>(face->GetPixelSize()) / static_cast<float>(g_heightPixels);
 }
 
-// PROVEN: 7187bd93 IDENTICAL/NONE
+// PROVEN: 7187bd93 IDENTICAL/IDENTICAL
 // OFFSET: 0x00613440/0x14029E980
 int32_t GxuFontSetStringColor(CGxString* string, const CImVector& color) {
     if (!string) {
@@ -257,7 +257,7 @@ int32_t GxuFontSetStringColor(CGxString* string, const CImVector& color) {
     return 1;
 }
 
-// PROVEN: ef47656c IDENTICAL/NONE
+// PROVEN: ef47656c IDENTICAL/DIFFERENT
 // OFFSET: 0x00613470/0x14029E9B0
 void GxuFontSetStringPosition(CGxString* string, const C3Vector& position) {
     if (!string) {
@@ -268,7 +268,7 @@ void GxuFontSetStringPosition(CGxString* string, const C3Vector& position) {
     string->SetStringPosition(position);
 }
 
-// PROVEN: e76eb389 IDENTICAL/NONE
+// PROVEN: e76eb389 IDENTICAL/IDENTICAL
 // OFFSET: 0x00613490/0x14029E9D0
 void GxuFontAddShadow(CGxString* string, const CImVector& color, const C2Vector& offset) {
     if (string && !(string->m_flags & 0x80)) {
@@ -283,8 +283,8 @@ void GxuFontRemoveShadow(CGxString* string) {
     }
 }
 
-// PROVEN: 6eeb3917 IDENTICAL/NONE
-// OFFSET: 0x006134D0
+// PROVEN: 6eeb3917 IDENTICAL/IDENTICAL
+// OFFSET: 0x006134D0/0x14029EA20
 uint32_t GxuFontStringHyperLinkInfo(CGxString* string, const GXUFONTHYPERLINKINFO*& info) {
     if (!string) {
         return 0;
@@ -293,8 +293,8 @@ uint32_t GxuFontStringHyperLinkInfo(CGxString* string, const GXUFONTHYPERLINKINF
     return string->GetHyperLinkInfo(info);
 }
 
-// PROVEN: a5166fe2 IDENTICAL/NONE
-// OFFSET: 0x006134F0
+// PROVEN: a5166fe2 IDENTICAL/IDENTICAL
+// OFFSET: 0x006134F0/0x14029EA30
 uint32_t GxuFontStringEmbeddedTextureInfo(CGxString* string, const GXUEMBEDDEDTEXTUREINFO*& info) {
     if (!string) {
         return 0;
@@ -313,7 +313,8 @@ int32_t GxuFontStringSetGradient(CGxString* string, int32_t start, int32_t lengt
     return string->SetGradient(start, length);
 }
 
-// OFFSET: %0x00624010
+// PROVEN: 9aac0737 UNPROVEN/IDENTICAL
+// OFFSET: 0x00613530/0x14029EA50
 void GxuFontSetTokenCallback(const char* (*callback)(uint32_t, uint32_t)) {
     s_tokenCallback = callback;
 }
@@ -1065,7 +1066,7 @@ int32_t GxuFontCreateFont(const char* name, float fontHeight, CGxFont*& face, ui
     return result;
 }
 
-// PROVEN: 1b953a36 IDENTICAL/NONE
+// PROVEN: 1b953a36 IDENTICAL/UNPROVEN
 // OFFSET: 0x00614600/0x14029FF40
 void GxuFontDestroyFont(CGxFont*& face) {
     if (face) {

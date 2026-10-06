@@ -732,7 +732,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "IsMouseOver", &Script_IsMouseOver },
 };
 
-// PROVEN: 8196f779 IDENTICAL/NONE
+// PROVEN: 8196f779 IDENTICAL/UNPROVEN
 // OFFSET: 0x0052EE60/0x14017FDA0
 void CScriptRegion::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);

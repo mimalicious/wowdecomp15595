@@ -566,7 +566,7 @@ FMOD_RESULT DSPLowPass2::getParameterInternal(int index, float *value, char *val
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fac52758 IDENTICAL/NONE
+// PROVEN: fac52758 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9EB60/0x14085F1C0
 FMOD_RESULT F_CALLBACK DSPLowPass2::createCallback(FMOD_DSP_STATE *dsp)
 {
@@ -645,7 +645,7 @@ FMOD_RESULT F_CALLBACK DSPLowPass2::readCallback(FMOD_DSP_STATE *dsp, float *inb
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cab77fb3 IDENTICAL/NONE
+// PROVEN: cab77fb3 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A9EA20/0x14085F230
 FMOD_RESULT F_CALLBACK DSPLowPass2::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {

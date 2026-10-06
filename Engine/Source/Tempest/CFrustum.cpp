@@ -73,8 +73,8 @@ uint32_t CFrustum::Cull(const CAaSphere& sphere) {
     return 3;
 }
 
-// PROVEN: 9f10b196 IDENTICAL/NONE
-// OFFSET: 0x004CC580
+// PROVEN: 9f10b196 IDENTICAL/IDENTICAL
+// OFFSET: 0x004CC580/0x1401082C0
 void CFrustum::Cull(const C3Vector& point, uint8_t& outside) const {
     outside = 0;
 

@@ -312,7 +312,7 @@ FMOD_RESULT FMOD_OS_Net_Accept(const void *listenhandle, void **clienthandle)
 
 	[SEE_ALSO]
 */
-// PROVEN: d4790e65 IDENTICAL/NONE
+// PROVEN: d4790e65 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AF4890/0x1408BDD10
 FMOD_RESULT FMOD_OS_Net_Close(const void *handle)
 {
@@ -338,7 +338,7 @@ FMOD_RESULT FMOD_OS_Net_Close(const void *handle)
 
 	[SEE_ALSO]
 */
-// PROVEN: b90ce294 IDENTICAL/NONE
+// PROVEN: b90ce294 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AF48B0/0x1408BDD30
 FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigned int len, unsigned int *byteswritten)
 {
@@ -390,7 +390,7 @@ FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8e2b215d IDENTICAL/NONE
+// PROVEN: 8e2b215d IDENTICAL/UNPROVEN
 // OFFSET: 0x00AF4920/0x1408BDDD0
 FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int len, unsigned int *bytesread)
 {
@@ -457,7 +457,7 @@ FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int l
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b1549ee0 IDENTICAL/NONE
+// PROVEN: b1549ee0 IDENTICAL/UNPROVEN
 // OFFSET: 0x00AF49B0/0x1408BDE80
 FMOD_RESULT FMOD_OS_Net_ReadLine(const void *handle, char *buf, const unsigned int len)
 {

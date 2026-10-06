@@ -225,7 +225,7 @@ static int countint (const TValue *key, int *nums) {
 }
 
 
-// PROVEN: bc544fe9 IDENTICAL/NONE
+// PROVEN: bc544fe9 IDENTICAL/DIFFERENT
 // OFFSET: 0x0042AA80/0x1400318A0
 static int numusearray (const Table *t, int *nums) {
   int lg;
@@ -476,7 +476,7 @@ const TValue *luaH_getnum (Table *t, int key) {
 /*
 ** search function for strings
 */
-// PROVEN: f112f8b1 IDENTICAL/NONE
+// PROVEN: f112f8b1 IDENTICAL/DIFFERENT
 // OFFSET: 0x0042AE80/0x140031C60
 const TValue *luaH_getstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);

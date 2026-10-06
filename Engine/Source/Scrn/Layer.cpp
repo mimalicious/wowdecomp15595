@@ -63,20 +63,21 @@ static void* LAYER_MemAlloc(size_t bytes) {
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 261b3ba9 IDENTICAL/NONE
+// PROVEN: 261b3ba9 IDENTICAL/DIFFERENT
 // OFFSET: 0x007FF290/0x140512E70
 static void LAYER_MemFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00765E90
+// PROVEN: b7ec33c5 NONE/IDENTICAL
+// OFFSET: 0x007FF2B0/0x140512E90
 static int32_t OnIdle(const void* data, void* param) {
     s_elapsedSec += static_cast<const EVENT_DATA_IDLE*>(data)->m_elapsedSec;
 
     return 1;
 }
 
-// PROVEN: 6c72d12e IDENTICAL/NONE
+// PROVEN: 6c72d12e IDENTICAL/DIFFERENT
 // OFFSET: 0x007FF5E0/0x140513230
 void ScrnSetScreenshotFormat(const char* format) {
     SStrCopy(s_screenshotFormat, format, sizeof(s_screenshotFormat));
@@ -93,25 +94,26 @@ void ScrnSetScreenshotQuality(uint32_t quality) {
     s_screenshotQuality = static_cast<uint32_t>(quality * 5.5f + 45.0f);
 }
 
-// PROVEN: 9c64b476 IDENTICAL/NONE
+// PROVEN: 9c64b476 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FF2E0/0x140512EB0
 void ScrnLayerSetRect(HLAYER layer, const RECTF* rect) {
     reinterpret_cast<CILayer*>(layer)->m_rect = *rect;
 }
 
-// PROVEN: d8a00afa IDENTICAL/NONE
-// OFFSET: 0x007FF310
+// PROVEN: d8a00afa IDENTICAL/IDENTICAL
+// OFFSET: 0x007FF310/0x140512ED0
 uint32_t ScrnLayerGetFlags(HLAYER layer) {
     return reinterpret_cast<CILayer*>(layer)->m_flags;
 }
 
-// PROVEN: 355afda5 IDENTICAL/NONE
-// OFFSET: 0x007FF320
+// PROVEN: 355afda5 IDENTICAL/IDENTICAL
+// OFFSET: 0x007FF320/0x14090EB20
 void ScrnLayerSetFlags(HLAYER layer, uint32_t flags) {
     reinterpret_cast<CILayer*>(layer)->m_flags = flags;
 }
 
-// OFFSET: %0x00765F70
+// PROVEN: 10d2d3e5 UNPROVEN/IDENTICAL
+// OFFSET: 0x007FF330/0x140512EE0
 void ScrnScreenshot(void (*callback)(int32_t success), uint8_t* data, uint32_t size, const char* directory, const char* fileName) {
     s_screenshotCallback = callback;
     s_screenshotData = data;
@@ -283,7 +285,7 @@ void ILayerInitialize() {
     EventRegister(EVENT_ID_PAINT, OnPaint);
 }
 
-// PROVEN: c6c19202 IDENTICAL/NONE
+// PROVEN: c6c19202 IDENTICAL/IDENTICAL
 // OFFSET: 0x007FFC30/0x140513950
 static void ILayerPaint() {
     OnPaint(NULL, NULL);

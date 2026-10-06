@@ -45,7 +45,8 @@ static void FromRotationMatrixImpl(float trace, C4Quaternion& q, const float* m)
     out[k] = (m[i * N + k] + m[k * N + i]) * s;
 }
 
-// OFFSET: %0x004D1590
+// PROVEN: 8f6cfd43 DIFFERENT/IDENTICAL
+// OFFSET: 0x004CB5A0/0x1401071F0
 C4Quaternion::C4Quaternion(const C4QuaternionCompressed& compressed) {
     this->x = 0.0f;
     this->y = 0.0f;

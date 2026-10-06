@@ -42,7 +42,7 @@ SpeakerLevelsPool::SpeakerLevelsPool()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 997903ed IDENTICAL/NONE
+// PROVEN: 997903ed IDENTICAL/DIFFERENT
 // OFFSET: 0x00A90B30/0x1408503B0
 FMOD_RESULT SpeakerLevelsPool::alloc(float **levels)
 {
@@ -124,7 +124,7 @@ FMOD_RESULT SpeakerLevelsPool::alloc(float **levels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c43476da IDENTICAL/NONE
+// PROVEN: c43476da IDENTICAL/DIFFERENT
 // OFFSET: 0x00A90C70/0x140850510
 FMOD_RESULT SpeakerLevelsPool::free(float *levels)
 {
@@ -159,7 +159,7 @@ FMOD_RESULT SpeakerLevelsPool::free(float *levels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4970b0db IDENTICAL/NONE
+// PROVEN: 4970b0db IDENTICAL/DIFFERENT
 // OFFSET: 0x00A90CB0/0x140850560
 FMOD_RESULT SpeakerLevelsPool::release()
 {

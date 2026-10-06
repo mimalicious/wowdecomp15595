@@ -26,7 +26,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c3b88d9f IDENTICAL/NONE
+// PROVEN: c3b88d9f IDENTICAL/UNPROVEN
 // OFFSET: 0x00B00D70/0x1408C2E30
 bool OutputDSound::querySupportEAX3(unsigned int ulQuery)
 {
@@ -191,7 +191,7 @@ bool OutputDSound::initEAX3()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 48284b6d IDENTICAL/NONE
+// PROVEN: 48284b6d IDENTICAL/UNPROVEN
 // OFFSET: 0x00B01100/0x1408C3250
 FMOD_RESULT OutputDSound::closeEAX3()
 {

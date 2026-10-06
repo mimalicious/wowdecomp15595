@@ -230,7 +230,7 @@ int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
     return result;
 }
 
-// PROVEN: 2c8ce512 IDENTICAL/NONE
+// PROVEN: 2c8ce512 IDENTICAL/DIFFERENT
 // OFFSET: 0x00849900/0x140577A20
 static int CGxMonitorModeSort(const void* a, const void* b) {
     const CGxMonitorMode* modeA = static_cast<const CGxMonitorMode*>(a);
@@ -411,14 +411,14 @@ int32_t CGxDevice::AdapterMonitorName(uint32_t monitor, char* name, uint32_t siz
     return 0;
 }
 
-// PROVEN: 20389cc0 IDENTICAL/NONE
+// PROVEN: 20389cc0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849960/0x140577A80
 void CGxDevice::IWindowClassDestroy(uint16_t* windowClass) {
     UnregisterClassA(reinterpret_cast<LPCSTR>(*windowClass), GetModuleHandleA(NULL));
     *windowClass = 0;
 }
 
-// PROVEN: a56170a8 IDENTICAL/NONE
+// PROVEN: a56170a8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00849990/0x140577AB0
 void CGxDevice::IWindowDestroy(void* window) {
     HWND& hwnd = *static_cast<HWND*>(window);
@@ -480,7 +480,7 @@ void CGxDevice::IWindowCursorCreate(void* window, void* icon) {
     DeleteObject(color);
 }
 
-// PROVEN: 4e0bebef IDENTICAL/NONE
+// PROVEN: 4e0bebef IDENTICAL/IDENTICAL
 // OFFSET: 0x00849B50/0x140577CD0
 void CGxDevice::IWindowCursorDestroy(void* icon) {
     HICON& cursor = *static_cast<HICON*>(icon);

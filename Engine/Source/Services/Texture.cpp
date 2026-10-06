@@ -302,7 +302,7 @@ CGxTexFlags TextureMakeTexFlags(CGxTexFlags texFlags, int32_t defaultFilter) {
     return texFlags;
 }
 
-// PROVEN: 53f3bc6c IDENTICAL/DIFFERENT
+// PROVEN: 53f3bc6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00540BE0/0x140193660
 void TextureAddRef(CTexture* texture) {
     if (!texture) {
@@ -336,7 +336,7 @@ int32_t TextureIsSame(CTexture* texture, const char* fileName) {
     return SStrCmpI(name, texture->m_filename, sizeof(texture->m_filename)) == 0;
 }
 
-// PROVEN: a0a0409b IDENTICAL/DIFFERENT
+// PROVEN: a0a0409b IDENTICAL/NONE
 // OFFSET: 0x00540C80/0x140193790
 void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg) {
     if (!texture) {
@@ -347,8 +347,8 @@ void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg
     GxTexSetUserData(texture->m_gxTex, userFunc, userArg);
 }
 
-// PROVEN: 39642d4a IDENTICAL/NONE
-// OFFSET: 0x00540CB0
+// PROVEN: 39642d4a IDENTICAL/IDENTICAL
+// OFFSET: 0x00540CB0/0x1401937E0
 int32_t TextureOnAtlas(CTexture* texture) {
     if (!texture) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -486,7 +486,7 @@ TEXFILETYPE TexturePickAlternateFilename(const char* fileName, TEXFILETYPE type,
     return type;
 }
 
-// PROVEN: 7f3e27ce IDENTICAL/DIFFERENT
+// PROVEN: 7f3e27ce IDENTICAL/IDENTICAL
 // OFFSET: 0x00540FD0/0x140193BC0
 const char* TextureGetFilename(CTexture* texture) {
     if (!texture) {

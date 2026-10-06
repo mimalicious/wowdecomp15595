@@ -192,12 +192,14 @@ void* FreeTypeRealloc(FT_Memory memory, long curSize, long newSize, void* block)
     return SMemReAlloc(block, newSize, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00627FB0
+// PROVEN: 311b1b94 DIFFERENT/IDENTICAL
+// OFFSET: 0x00617740/0x1402A46E0
 float PixelToScreenHeight(int32_t height) {
     return static_cast<float>(height) / static_cast<float>(g_heightPixels);
 }
 
-// OFFSET: %0x00627FE0
+// PROVEN: 4a8c5821 DIFFERENT/IDENTICAL
+// OFFSET: 0x00617770/0x1402A4700
 float GetMaxScreenHeight() {
     return 32.0f / static_cast<float>(g_heightPixels);
 }
@@ -223,7 +225,7 @@ void InternalWipeUntilNameTokenStop(char* text) {
     } while (*text);
 }
 
-// PROVEN: 94d175ba IDENTICAL/NONE
+// PROVEN: 94d175ba IDENTICAL/DIFFERENT
 // OFFSET: 0x00617800/0x1402A47A0
 GXUEMBEDDEDTEXTUREINFO::GXUEMBEDDEDTEXTUREINFO() {
     this->m_lineHeight = 0.0f;

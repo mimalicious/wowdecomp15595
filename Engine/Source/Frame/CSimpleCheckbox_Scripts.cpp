@@ -8,7 +8,8 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00542560
+// PROVEN: bf9a51c2 DIFFERENT/IDENTICAL
+// OFFSET: 0x00532690/0x1401847C0
 static int32_t Script_SetChecked(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
 
@@ -166,7 +167,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetDisabledCheckedTexture", &Script_SetDisabledCheckedTexture },
 };
 
-// PROVEN: 95e82c38 IDENTICAL/NONE
+// PROVEN: 95e82c38 IDENTICAL/UNPROVEN
 // OFFSET: 0x00532620/0x140184760
 void CSimpleCheckbox::RegisterScriptMethods(lua_State* L) {
     CSimpleButton::RegisterScriptMethods(L);

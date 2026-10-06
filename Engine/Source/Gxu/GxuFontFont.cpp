@@ -30,7 +30,7 @@ const char* CGxFont::GetName() {
     return FontFaceGetFontName(this->m_fontFaceHandle);
 }
 
-// PROVEN: 5507014c IDENTICAL/NONE
+// PROVEN: 5507014c IDENTICAL/IDENTICAL
 // OFFSET: 0x0061B910/0x1402A95C0
 uint32_t CGxFont::GetPixelSize() {
     return this->m_pixelSize;
@@ -200,7 +200,7 @@ CGxFont::~CGxFont() {
     this->ClearGlyphs();
 }
 
-// PROVEN: 476ad0d8 IDENTICAL/NONE
+// PROVEN: 476ad0d8 IDENTICAL/UNPROVEN
 // OFFSET: 0x0061D3A0/0x1402AB900
 int32_t CGxFont::Initialize(const char* name, uint32_t fontFlags, float fontHeight) {
     SStrPrintf(this->m_fontName, sizeof(this->m_fontName), "%s", name);

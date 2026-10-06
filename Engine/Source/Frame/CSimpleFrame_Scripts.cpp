@@ -492,7 +492,8 @@ static int32_t Script_IsEventRegistered(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051BCE0
+// PROVEN: eb2e490e DIFFERENT/IDENTICAL
+// OFFSET: 0x0050B950/0x140153F90
 static int32_t Script_AllowAttributeChanges(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1106,7 +1107,8 @@ static int32_t Script_SetMaxResize(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D2A0
+// PROVEN: 383d27c5 DIFFERENT/IDENTICAL
+// OFFSET: 0x0050CF20/0x140155970
 static int32_t Script_SetMovable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1127,7 +1129,8 @@ static int32_t Script_IsMovable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051D350
+// PROVEN: e1851ef9 DIFFERENT/IDENTICAL
+// OFFSET: 0x0050CFD0/0x140155A50
 static int32_t Script_SetDontSavePosition(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1148,7 +1151,8 @@ static int32_t Script_GetDontSavePosition(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051D400
+// PROVEN: ce1aeefd DIFFERENT/IDENTICAL
+// OFFSET: 0x0050D080/0x140155B30
 static int32_t Script_SetResizable(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1225,7 +1229,8 @@ static int32_t Script_StartSizing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D6A0
+// PROVEN: 1d7e6624 DIFFERENT/IDENTICAL
+// OFFSET: 0x0050D320/0x140155E50
 static int32_t Script_StopMovingOrSizing(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CSimpleTop* top = frame->m_simpleTop;
@@ -1773,7 +1778,8 @@ static int32_t Script_IsIgnoringDepth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051E900
+// PROVEN: ec30d630 DIFFERENT/IDENTICAL
+// OFFSET: 0x0050E580/0x1401574E0
 static int32_t Script_SetPropagateKeyboardInput(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1901,7 +1907,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetPropagateKeyboardInput", &Script_GetPropagateKeyboardInput },
 };
 
-// PROVEN: ce1d91d3 IDENTICAL/NONE
+// PROVEN: ce1d91d3 IDENTICAL/UNPROVEN
 // OFFSET: 0x0050AFE0/0x140153420
 void CSimpleFrame::RegisterScriptMethods(lua_State* L) {
     CScriptRegion::RegisterScriptMethods(L);

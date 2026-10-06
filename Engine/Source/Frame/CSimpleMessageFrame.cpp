@@ -34,8 +34,8 @@ void CSimpleMessageFrame::operator delete(void* ptr) {
     }
 }
 
-// PROVEN: 7f10a87e IDENTICAL/NONE
-// OFFSET: 0x0051BC80
+// PROVEN: 7f10a87e IDENTICAL/IDENTICAL
+// OFFSET: 0x0051BC80/0x140167F70
 void CSimpleMessageFrame::SetTimeVisible(float seconds) {
     for (uint32_t i = 0; i < this->m_rows; i++) {
         CSimpleMessageFrameLineNode* node = this->m_lines[i].m_node;
@@ -48,8 +48,8 @@ void CSimpleMessageFrame::SetTimeVisible(float seconds) {
     this->m_timeVisible = seconds;
 }
 
-// PROVEN: 798953fc IDENTICAL/NONE
-// OFFSET: 0x0051BCE0
+// PROVEN: 798953fc IDENTICAL/IDENTICAL
+// OFFSET: 0x0051BCE0/0x140167FB0
 void CSimpleMessageFrame::SetFadeDuration(float duration) {
     for (uint32_t i = 0; i < this->m_rows; i++) {
         CSimpleMessageFrameLineNode* node = this->m_lines[i].m_node;
@@ -213,19 +213,19 @@ const char* CSimpleMessageFrame::GetObjectTypeName() {
     return CSimpleMessageFrame::s_objectTypeName;
 }
 
-// PROVEN: d1c5a2a9 IDENTICAL/NONE
+// PROVEN: d1c5a2a9 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051C5A0/0x140168B80
 int32_t CSimpleMessageFrame::GetScriptMetaTable() {
     return CSimpleMessageFrame::s_metatable;
 }
 
-// PROVEN: d8d3130b IDENTICAL/NONE
+// PROVEN: d8d3130b IDENTICAL/IDENTICAL
 // OFFSET: 0x0051C5C0/0x140168BA0
 bool CSimpleMessageFrame::IsA(int32_t type) {
     return type == CSimpleMessageFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 296d233d IDENTICAL/NONE
+// PROVEN: 296d233d IDENTICAL/DIFFERENT
 // OFFSET: 0x0051C600/0x140168B90
 bool CSimpleMessageFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
@@ -243,7 +243,7 @@ void CSimpleMessageFrame::AddMessage(const char* text, const CImVector& color) {
     message->m_color = color;
 }
 
-// PROVEN: 947f428e IDENTICAL/NONE
+// PROVEN: 947f428e IDENTICAL/UNPROVEN
 // OFFSET: 0x0051C1B0/0x140168690
 void CSimpleMessageFrame::ClearPending() {
     for (uint32_t i = this->m_pendingMessages.Count(); i;) {
@@ -389,7 +389,7 @@ CSimpleMessageFrame::~CSimpleMessageFrame() {
     delete this->m_font;
 }
 
-// PROVEN: 1f0a1847 IDENTICAL/NONE
+// PROVEN: 1f0a1847 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051CC80/0x1401693E0
 void CSimpleMessageFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_t flags) {
     if (flags & 0x11) {
@@ -397,14 +397,14 @@ void CSimpleMessageFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_t flag
     }
 }
 
-// PROVEN: 353a5c15 IDENTICAL/NONE
+// PROVEN: 353a5c15 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051CCA0/0x140169400
 void CSimpleMessageFrame::SetInsertMode(int32_t mode) {
     this->m_insertMode = mode;
     this->UpdateRect();
 }
 
-// PROVEN: a9d8f2a6 IDENTICAL/NONE
+// PROVEN: a9d8f2a6 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051C6D0/0x140168D00
 void CSimpleMessageFrame::Clear() {
     for (uint32_t i = 0; i < this->m_rows; i++) {
@@ -414,7 +414,7 @@ void CSimpleMessageFrame::Clear() {
     this->ClearPending();
 }
 
-// PROVEN: 43780c91 IDENTICAL/NONE
+// PROVEN: 43780c91 IDENTICAL/IDENTICAL
 // OFFSET: 0x0051CCC0/0x140169410
 void CSimpleMessageFrame::OnFrameSizeChanged(const CRect& rect) {
     CSimpleFrame::OnFrameSizeChanged(rect);

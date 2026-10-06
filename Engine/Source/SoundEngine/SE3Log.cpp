@@ -21,7 +21,7 @@ static int32_t s_errorCount;
 void SE3::SoundKitObjectLog(SE3SoundKitObject* sko, const char* file, int32_t line, const char* format, ...) {
 }
 
-// PROVEN: d4085eca IDENTICAL/NONE
+// PROVEN: d4085eca IDENTICAL/IDENTICAL
 // OFFSET: 0x00714570/0x1403E6C50
 void SE3::Log_Init() {
     OsCreateDirectory("Logs", 0);

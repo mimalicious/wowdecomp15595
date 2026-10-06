@@ -198,8 +198,8 @@ static const double s_log2AddTable[64] = {
     0.965784284662087, 0.9772799234999164, 0.9886846867721658
 };
 
-// PROVEN: b011d98a IDENTICAL/NONE
-// OFFSET: 0x004C6940
+// PROVEN: b011d98a IDENTICAL/IDENTICAL
+// OFFSET: 0x004C6940/0x140101BB0
 uint32_t CMath::sqrt_(uint32_t n) {
     uint32_t x;
 
@@ -651,7 +651,7 @@ CSoftFloat CSoftFloat::FromRatio(int32_t numerator, int32_t denominator) {
     return SoftDivide(CSoftFloat::FromInt(numerator), CSoftFloat::FromInt(denominator));
 }
 
-// PROVEN: 2e308567 IDENTICAL/UNPROVEN
+// PROVEN: 2e308567 IDENTICAL/IDENTICAL
 // OFFSET: 0x00B2F0F0/0x1408F7BD0
 CSoftFloat CSoftFloat::Round(const CSoftFloat& value) {
     return CSoftFloat::Floor(value + s_softHalf);

@@ -149,8 +149,8 @@ void CGxDeviceD3d::IBufUnlock(CGxBuf* buf) {
     buf->unk_001D = SUCCEEDED(result);
 }
 
-// PROVEN: f1fc1769 IDENTICAL/NONE
-// OFFSET: 0x0084CC40
+// PROVEN: f1fc1769 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084CC40/0x14057B5E0
 int32_t CGxDeviceD3d::BufUnlock(CGxBuf* buf, uint32_t size) {
     CGxDevice::BufUnlock(buf, size);
     this->IBufUnlock(buf);
@@ -232,7 +232,8 @@ char* CGxDeviceD3d::IBufLock(CGxBuf* buf) {
     return data;
 }
 
-// OFFSET: %0x007C92A0
+// PROVEN: 93c0b8b7 NONE/IDENTICAL
+// OFFSET: 0x0084CE40/0x14057B800
 char* CGxDeviceD3d::BufLock(CGxBuf* buf) {
     CGxDevice::BufLock(buf);
 
@@ -249,7 +250,7 @@ void CGxDeviceD3d::BufData(CGxBuf* buf, const void* data, uint32_t size, uint32_
     this->IBufUnlock(buf);
 }
 
-// PROVEN: 4edf6dd1 IDENTICAL/NONE
+// PROVEN: 4edf6dd1 IDENTICAL/IDENTICAL
 // OFFSET: 0x0084AF40/0x1405795E0
 void CGxDeviceD3d::IUnloadD3dLib(HINSTANCE& d3dLib, LPDIRECT3D9& d3d) {
     if (d3d) {

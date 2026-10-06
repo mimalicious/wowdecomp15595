@@ -230,8 +230,8 @@ void CShaderEffect::SetUsePcfFiltering(uint32_t usePcfFiltering) {
     CShaderEffect::s_usePcfFiltering = 0;
 }
 
-// PROVEN: 3dda5674 IDENTICAL/NONE
-// OFFSET: 0x00431A70
+// PROVEN: 3dda5674 IDENTICAL/UNPROVEN
+// OFFSET: 0x00431A70/0x14003A330
 void CShaderEffect::GetClipPlane(C4Plane& plane) {
     plane = CShaderEffect::s_clipPlane;
 }
@@ -788,8 +788,8 @@ CShaderEffect::~CShaderEffect() {
     }
 }
 
-// PROVEN: 52e2fe92 IDENTICAL/NONE
-// OFFSET: 0x00434610
+// PROVEN: 52e2fe92 IDENTICAL/IDENTICAL
+// OFFSET: 0x00434610/0x14003D6F0
 CShaderEffect::CShaderEffect() {
     this->m_refCount = 1;
 }

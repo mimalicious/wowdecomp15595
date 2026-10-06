@@ -351,7 +351,8 @@ static int32_t Script_GetText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00541D80
+// PROVEN: 917c10dd DIFFERENT/IDENTICAL
+// OFFSET: 0x00531E90/0x140183EF0
 static int32_t Script_SetNormalTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_NORMAL, "SetNormalTexture");
 }
@@ -361,17 +362,20 @@ static int32_t Script_GetNormalTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_NORMAL);
 }
 
-// OFFSET: %0x00541DC0
+// PROVEN: f1e2e764 DIFFERENT/IDENTICAL
+// OFFSET: 0x00531ED0/0x140183F20
 static int32_t Script_SetPushedTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_PUSHED, "SetPushedTexture");
 }
 
-// OFFSET: %0x00541DE0
+// PROVEN: 9d673401 DIFFERENT/IDENTICAL
+// OFFSET: 0x00531EF0/0x140183F40
 static int32_t Script_GetPushedTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_PUSHED);
 }
 
-// OFFSET: %0x00541E00
+// PROVEN: 7fd27451 DIFFERENT/IDENTICAL
+// OFFSET: 0x00531F10/0x140183F50
 static int32_t Script_SetDisabledTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_DISABLED, "SetDisabledTexture");
 }
@@ -600,7 +604,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetMotionScriptsWhileDisabled", &Script_SetMotionScriptsWhileDisabled },
 };
 
-// PROVEN: 9e0c3615 IDENTICAL/NONE
+// PROVEN: 9e0c3615 IDENTICAL/UNPROVEN
 // OFFSET: 0x00531300/0x140183110
 void CSimpleButton::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

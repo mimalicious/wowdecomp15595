@@ -9,8 +9,8 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: d24cdf26 IDENTICAL/NONE
-// OFFSET: 0x00869890
+// PROVEN: d24cdf26 IDENTICAL/IDENTICAL
+// OFFSET: 0x00869890/0x14059D580
 void NvCombinerStage::Apply(GLenum stage, GLenum portion) {
     for (uint32_t i = 0; i <= 3; i++) {
         glCombinerInputNV(stage, portion, GL_VARIABLE_A_NV + i, this->m_inputs[i].m_input, this->m_inputs[i].m_mapping, this->m_inputs[i].m_componentUsage);
@@ -43,7 +43,7 @@ void NvPixelShader::SetupRegisterCombiners() {
     }
 }
 
-// PROVEN: ad033c45 IDENTICAL/NONE
+// PROVEN: ad033c45 IDENTICAL/DIFFERENT
 // OFFSET: 0x00869A00/0x14059D780
 void NvTextureShaderStage::Apply(uint32_t tmu) {
     glTexEnvi(GL_TEXTURE_SHADER_NV, GL_SHADER_OPERATION_NV, this->m_shaderOperation);
@@ -62,8 +62,8 @@ void NvTextureShaderStage::Apply(uint32_t tmu) {
     }
 }
 
-// PROVEN: 012ecb6e IDENTICAL/NONE
-// OFFSET: 0x00869AC0
+// PROVEN: 012ecb6e IDENTICAL/IDENTICAL
+// OFFSET: 0x00869AC0/0x14059D830
 void NvTextureShader::Apply() {
     for (uint32_t tmu = 0; tmu < 4; tmu++) {
         static_cast<CGxDeviceOpenGl*>(g_theGxDevicePtr)->DsSet(CGxDeviceOpenGl::Ds_ActiveTexture, tmu, 0);

@@ -25,7 +25,7 @@ ComSat::Sound::Manager::RemoteTalker::RemoteTalker(ComSat::Allocator& allocator)
     this->m_packets = static_cast<VoicePacket*>(allocator.Alloc(sizeof(VoicePacket) * s_jitterBufferSize));
 }
 
-// PROVEN: a501f64c IDENTICAL/NONE
+// PROVEN: a501f64c IDENTICAL/IDENTICAL
 // OFFSET: 0x00A34830/0x1407DF0B0
 void ComSat::Sound::Manager::SetCallback(ComSat::Sound::Manager::Callback* callback) {
     this->m_callback = callback;
@@ -86,7 +86,7 @@ bool ComSat::Sound::Manager::IsUsingVariableBitrateCodec() {
     return ComSat::Sound::CODEC::IsEncodedBitrateVariable();
 }
 
-// PROVEN: f39f7dba IDENTICAL/NONE
+// PROVEN: f39f7dba IDENTICAL/DIFFERENT
 // OFFSET: 0x00A34900/0x1407DF180
 int32_t ComSat::Sound::Manager::GetMinEncodedFrameLength() {
     return ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength;
@@ -144,8 +144,8 @@ void ComSat::Sound::Manager::DebugSetSequenceDelay(int32_t delay) {
     this->m_sequenceDelay = this->m_jitterDelay + delay;
 }
 
-// PROVEN: 10aca37f IDENTICAL/NONE
-// OFFSET: 0x00A34A00
+// PROVEN: 10aca37f IDENTICAL/IDENTICAL
+// OFFSET: 0x00A34A00/0x1407DF2B0
 void ComSat::Sound::Manager::DebugSetSoundOutputDelay(uint8_t player, int32_t delay) {
     if (this->m_io) {
         this->m_io->DebugSetSoundOutputDelay(player, delay);
@@ -157,8 +157,8 @@ ComSat::Sound::Manager::RemoteTalker::~RemoteTalker() {
     this->m_allocator->Free(this->m_packets);
 }
 
-// PROVEN: b4173bb3 IDENTICAL/NONE
-// OFFSET: 0x00A35270
+// PROVEN: b4173bb3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A35270/0x1407DF7C0
 ComSat::Sound::Manager::LocalPlayer::~LocalPlayer() {
 }
 
@@ -1054,7 +1054,7 @@ void ComSat::Sound::Manager::PlayScheduledVoiceData() {
     }
 }
 
-// PROVEN: 94385192 IDENTICAL/NONE
+// PROVEN: 94385192 IDENTICAL/DIFFERENT
 // OFFSET: 0x00A38530/0x1407E4590
 void ComSat::Sound::Manager::Work(uint32_t time) {
     this->m_currentTime = time;

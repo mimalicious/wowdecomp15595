@@ -518,7 +518,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetVertTile", &Script_GetVertTile },
 };
 
-// PROVEN: 6549dd2d IDENTICAL/NONE
+// PROVEN: 6549dd2d IDENTICAL/UNPROVEN
 // OFFSET: 0x0052BE10/0x14017C710
 void CSimpleTexture::RegisterScriptMethods(lua_State* L) {
     CScriptRegion::RegisterScriptMethods(L);

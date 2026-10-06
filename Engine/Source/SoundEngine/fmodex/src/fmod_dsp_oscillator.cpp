@@ -547,7 +547,7 @@ FMOD_RESULT F_CALLBACK DSPOscillator::setParameterCallback(FMOD_DSP_STATE *dsp, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 058d296d IDENTICAL/NONE
+// PROVEN: 058d296d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA1A00/0x1408627C0
 FMOD_RESULT F_CALLBACK DSPOscillator::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

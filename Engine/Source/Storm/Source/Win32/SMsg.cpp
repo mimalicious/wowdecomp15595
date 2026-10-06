@@ -67,8 +67,8 @@ int32_t STORMAPI SMsgDestroy() {
     return 1;
 }
 
-// PROVEN: 0c5f8d8e IDENTICAL/NONE
-// OFFSET: 0x004C1070
+// PROVEN: 0c5f8d8e IDENTICAL/UNPROVEN
+// OFFSET: 0x004C1070/0x1400FB910
 void SDebugPrintf(const char* format, ...) {
     char buffer[4096];
     va_list arglist;

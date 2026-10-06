@@ -536,8 +536,8 @@ FMOD_RESULT CodecWav::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 48ffafc5 IDENTICAL/NONE
-// OFFSET: 0x00ABBC70
+// PROVEN: 48ffafc5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00ABBC70/0x1408830B0
 FMOD_RESULT CodecWav::closeInternal()
 {
 	if (mSrcFormat && mSrcFormat != &mSrcFormatMemory)
@@ -899,8 +899,8 @@ FMOD_RESULT CodecWav::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0f6b2599 IDENTICAL/NONE
-// OFFSET: 0x00ABC200
+// PROVEN: 0f6b2599 IDENTICAL/IDENTICAL
+// OFFSET: 0x00ABC200/0x1408836C0
 FMOD_RESULT CodecWav::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
     SoundI *s = (SoundI *)sound;

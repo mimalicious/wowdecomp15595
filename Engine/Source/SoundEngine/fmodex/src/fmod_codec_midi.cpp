@@ -691,7 +691,7 @@ float CodecMIDISubChannel::getTimeCentsFromlScale(int lScale)
 }
 
 
-// PROVEN: 31e64536 IDENTICAL/NONE
+// PROVEN: 31e64536 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA6AE0/0x140868900
 FMOD_RESULT CodecMIDISubChannel::setUpArticulators()
 {
@@ -877,7 +877,7 @@ FMOD_RESULT CodecMIDISubChannel::setUpArticulators()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 33b0c181 IDENTICAL/NONE
+// PROVEN: 33b0c181 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA6F50/0x140868EA0
 FMOD_RESULT CodecMIDISubChannel::stop()
 {
@@ -1231,7 +1231,7 @@ FMOD_RESULT CodecMIDISubChannel::updatePitch()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0614eb1d IDENTICAL/NONE
+// PROVEN: 0614eb1d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA75A0/0x140869620
 FMOD_RESULT CodecMIDISubChannel::updatePan()
 {                                
@@ -1264,7 +1264,7 @@ FMOD_RESULT CodecMIDISubChannel::updatePan()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7160ebd5 IDENTICAL/NONE
+// PROVEN: 7160ebd5 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA75E0/0x140869660
 FMOD_RESULT CodecMIDIChannel::getSound(int key, SoundI **sound, CodecDLSInstrument **instrument, int *unitynote, int *finetune, int *sampleattenuation, bool *duplicateallowed, int *keygroup, int *numarticulators, DLS_CONNECTIONBLOCK **articulators)
 {
@@ -2190,7 +2190,7 @@ FMOD_RESULT CodecMIDIChannel::process(unsigned char event, bool reuse, unsigned 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f3c4fa13 IDENTICAL/NONE
+// PROVEN: f3c4fa13 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA77E0/0x1408698B0
 FMOD_RESULT CodecMIDIChannel::update()
 {
@@ -2754,7 +2754,7 @@ FMOD_RESULT CodecMIDITrack::process(bool calledfromopen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28df8440 IDENTICAL/NONE
+// PROVEN: 28df8440 IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA8BD0/0x14086B1F0
 FMOD_RESULT CodecMIDI::update(bool audible)
 {
@@ -3308,7 +3308,7 @@ FMOD_RESULT CodecMIDI::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f6de371d IDENTICAL/NONE
+// PROVEN: f6de371d IDENTICAL/IDENTICAL
 // OFFSET: 0x00AA7C10/0x140869D40
 FMOD_RESULT CodecMIDI::closeInternal()
 {
