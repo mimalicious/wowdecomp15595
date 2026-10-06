@@ -47,7 +47,7 @@ int32_t CSimpleEditBox::s_objectType;
 // STATIC: %0x00BB86B8
 const char* CSimpleEditBox::s_objectTypeName = "EditBox";
 
-// STATIC: %0x00BB86BC
+// STATIC: 0x00CA3350
 const char* CSimpleEditBox::s_inputLanguageNames[4] = { "ROMAN", "KOREAN", "CHINESE", "JAPANESE" };
 
 // STATIC: %0x00CD2558

@@ -1857,7 +1857,9 @@ CGxDeviceD3d11::~CGxDeviceD3d11() {
 
 // OFFSET: %0x007B52E0
 void CGxDeviceD3d11::IReleaseD3dPools(int32_t freePools) {
-    for (CGxPool* pool = CGxDevice::s_poolList.Head(); pool; pool = CGxDevice::s_poolList.Next(pool)) {
+    for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
+        next = CGxDevice::s_poolList.RawNext(pool);
+
         if (!freePools && pool->m_usage != GxPoolUsage_Stream && pool->m_usage != GxPoolUsage_Dynamic) {
             continue;
         }

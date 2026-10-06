@@ -615,12 +615,14 @@ void CGxDeviceOpenGl::CreatePoolAPI(CGxPool* pool) {
     pool->m_apiSpecific = SMemAlloc(pool->m_size, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x007B0480
+// PROVEN: 3d600ffa IDENTICAL/NONE
+// OFFSET: 0x0084F010
 void CGxDeviceOpenGl::PoolSizeSet(CGxPool* pool, uint32_t size) {
     if (glARBVertexBufferObject) {
         if (this->m_useVboBroker[pool->m_target][pool->m_usage]) {
-            pool->Invalidate();
+            this->DestroyPoolAPI(pool);
             pool->m_size = size;
+            this->CreatePoolAPI(pool);
             return;
         }
 
@@ -977,7 +979,8 @@ void CGxDeviceOpenGl::DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& dep
 
 // OFFSET: %0x007B0FC0
 void CGxDeviceOpenGl::DeviceDestroyPoolAPI() {
-    for (CGxPool* pool = CGxDevice::s_poolList.Head(); pool; pool = CGxDevice::s_poolList.Next(pool)) {
+    for (CGxPool* pool = CGxDevice::s_poolList.Head(), * next; !CGxDevice::s_poolList.IsEnd(pool); pool = next) {
+        next = CGxDevice::s_poolList.RawNext(pool);
         this->DestroyPoolAPI(pool);
     }
 }

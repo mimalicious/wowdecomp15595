@@ -211,7 +211,8 @@ void CGxDeviceOpenGl::IPixelShaderPatch(char* code, uint32_t size) {
     }
 }
 
-// OFFSET: %0x007C67E0
+// PROVEN: 4f54f945 IDENTICAL/NONE
+// OFFSET: 0x00869F20
 void CGxDeviceOpenGl::IShaderDestroyVertex(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
         switch (this->m_caps.m_shaderTargets[GxSh_Vertex]) {
@@ -641,7 +642,8 @@ void CGxDeviceOpenGl::IBindPixelShader(CGxShaderPermute* permute) {
     }
 }
 
-// OFFSET: %0x007C71E0
+// PROVEN: 95e0e67f IDENTICAL/UNPROVEN
+// OFFSET: 0x0086A920/0x14059E7C0
 void CGxDeviceOpenGl::IBindVertexShader(CGxShaderPermute* permute) {
     this->IResourceTouch(permute);
 
