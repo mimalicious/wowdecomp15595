@@ -99,6 +99,8 @@ void GxDevDestroy();
 void GxDrawLockedElements();
 void GxDrawLockedElements(EGxPrim primType, uint32_t indexCount, const uint16_t* indices);
 extern const char* g_gxApiNames[GxApis_Last];
+extern const char* g_gxShaderTargetNames[GxShTargets_Last];
+extern const char* g_gxShaderModelNames[8];
 
 BlitFormat GxGetBlitFormat(EGxTexFormat format);
 uint32_t GxGetMaxFPS();
@@ -148,6 +150,8 @@ void GxXformTranslate(EGxXform xf, const C3Vector& move);
 void GxXformView(C44Matrix& matrix);
 void GxXformViewport(float& minX, float& maxX, float& minY, float& maxY, float& minZ, float& maxZ);
 void GxXformViewProj(C44Matrix& matrix);
+void GxXformProjNative(C44Matrix& matrix);
+void GxXformViewProjNative(C44Matrix& matrix);
 void GxXformViewProjNativeTranspose(C44Matrix& matrix);
 int32_t GxApiSupported(EGxApi api);
 int32_t GxApiSelectable(EGxApi api);

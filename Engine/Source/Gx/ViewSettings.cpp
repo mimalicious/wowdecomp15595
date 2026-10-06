@@ -53,7 +53,7 @@ int32_t ViewSettings::GetSubmerged() {
     return s_submerged;
 }
 
-// INLINED
+// OFFSET: 0x00A301F0
 void ViewSettings::SetFog(uint32_t index, float start, float end, float density, const CImVector& color) {
     s_fog[index].m_start = start;
     s_fog[index].m_end = end;
@@ -69,7 +69,7 @@ void ViewSettings::GetFog(uint32_t index, float& start, float& end, float& densi
     color = s_fog[index].m_color;
 }
 
-// INLINED
+// OFFSET: 0x00A30170/0x1407DA040
 void ViewSettings::SetViewExtents(const CAaRect& extents) {
     s_viewExtents = extents;
 }

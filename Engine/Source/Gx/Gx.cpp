@@ -25,6 +25,12 @@ static BlitFormat s_blitFormats[GxTexFormats_Last] = {
 // STATIC: %0x00C0D86C
 const char* g_gxApiNames[GxApis_Last] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 
+// STATIC: 0x00D0853C
+const char* g_gxShaderTargetNames[GxShTargets_Last] = { "Vertex", "Hull", "Domain", "Geometry", "Pixel", "Compute" };
+
+// STATIC: 0x00D08554
+const char* g_gxShaderModelNames[8] = { "ff", "nvrc", "ff_ps", "1_1", "2_0", "3_0", "4_0", "5_0" };
+
 // STATIC: %0x00C0DBA0
 static EGxApi s_requestedApi = GxApis_Last;
 
@@ -345,6 +351,38 @@ void GxXformViewport(float& minX, float& maxX, float& minY, float& maxY, float& 
 void GxXformView(C44Matrix& matrix) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[GxXform_View];
     matrix = stack.m_mtx[stack.m_level];
+}
+
+// OFFSET: 0x00409FF0
+void GxXformProjNative(C44Matrix& matrix) {
+    CGxDevice* device = g_theGxDevicePtr;
+    matrix = device->m_projNative;
+
+    if (device->DeviceApi() == GxApi_OpenGl) {
+        matrix.c0 = matrix.c0 * -1.0f;
+        matrix.c1 = matrix.c1 * -1.0f;
+        matrix.c2 = matrix.c2 * -1.0f;
+        matrix.c3 = matrix.c3 * -1.0f;
+    }
+}
+
+// OFFSET: 0x00841070
+void GxXformViewProjNative(C44Matrix& matrix) {
+    CGxDevice* device = g_theGxDevicePtr;
+    C44Matrix view;
+    C44Matrix proj;
+
+    view = device->m_xforms[GxXform_View].m_mtx[device->m_xforms[GxXform_View].m_level];
+    proj = device->m_projNative;
+
+    if (device->DeviceApi() == GxApi_OpenGl) {
+        proj.c0 = proj.c0 * -1.0f;
+        proj.c1 = proj.c1 * -1.0f;
+        proj.c2 = proj.c2 * -1.0f;
+        proj.c3 = proj.c3 * -1.0f;
+    }
+
+    matrix = view * proj;
 }
 
 // OFFSET: %0x00409400
@@ -952,19 +990,40 @@ void GxLog(const char* format, ...) {
     va_end(args);
 }
 
-// INLINED
+// OFFSET: 0x008411D0/0x14056D3E0
 void GxLogCrashInfo(char* buffer, uint32_t size) {
-    if (!g_theGxDevicePtr) {
-        return;
-    }
-
     SStrPack(buffer, "\r\n----------------------------------------\r\n", STORM_MAX_STR);
     SStrPack(buffer, "               GxInfo\r\n", STORM_MAX_STR);
     SStrPack(buffer, "----------------------------------------\r\n", STORM_MAX_STR);
 
+    if (!g_theGxDevicePtr) {
+        SStrPack(buffer, "No GX Device Created\r\n", size);
+        CGxDevice::AdapterLogCrashInfo(buffer, size);
+        return;
+    }
+
+    const CGxCaps& caps = g_theGxDevicePtr->m_caps;
+
     char line[260];
     SStrPrintf(line, sizeof(line), "GxApi: %s\r\n", g_gxApiNames[g_theGxDevicePtr->DeviceApi()]);
     SStrPack(buffer, line, size);
+
+    const char* model = "Unknown";
+
+    if (static_cast<uint32_t>(caps.m_shaderModel) <= 7) {
+        model = g_gxShaderModelNames[caps.m_shaderModel];
+    }
+
+    SStrPrintf(line, sizeof(line), "Shader Model: %s\r\n", model);
+    SStrPack(buffer, line, size);
+
+    for (uint32_t i = 0; i < GxShTargets_Last; i++) {
+        if (static_cast<uint32_t>(caps.m_shaderTargets[i] - 1) <= GxShProfiles_Last - 2) {
+            SStrPrintf(line, sizeof(line), "  %s: %s\r\n", g_gxShaderTargetNames[i], CGxDevice::s_shaderProfileNames[caps.m_shaderTargets[i]]);
+            SStrPack(buffer, line, size);
+        }
+    }
+
     g_theGxDevicePtr->LogCrashInfo(buffer, size);
     SStrPack(buffer, "\r\n", size);
 }

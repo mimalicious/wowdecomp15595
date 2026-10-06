@@ -178,6 +178,8 @@ class CGxDevice {
     virtual void CapsWindowSize(CRect& rect) = 0;
     virtual void CapsWindowSizeInScreenCoords(CRect& rect) = 0;
     virtual void LogCrashInfo(char* buffer, uint32_t size);
+    static int32_t AdapterIsPresent();
+    static void AdapterLogCrashInfo(char* buffer, uint32_t size);
     virtual void ScenePresent(void* window);
     virtual void SceneClear(uint32_t mask, CImVector color);
     virtual void SceneClearToViewport(uint32_t mask, CImVector color);

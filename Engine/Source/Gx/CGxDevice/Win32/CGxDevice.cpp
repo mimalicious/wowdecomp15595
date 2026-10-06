@@ -11,6 +11,7 @@
 #include "Engine/Source/Gx/CGxDevice/Win32/GxWindow.h"
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Gx/CGxDeviceD3d/CGxDeviceD3d.h"
+#include "Engine/Source/Storm/H/storm.h"
 
 // STATIC: #0x00AD8CE8
 static D3DMULTISAMPLE_TYPE s_d3dMultisampleTypes[9] = { D3DMULTISAMPLE_NONE, D3DMULTISAMPLE_2_SAMPLES, D3DMULTISAMPLE_4_SAMPLES, D3DMULTISAMPLE_6_SAMPLES, D3DMULTISAMPLE_8_SAMPLES, D3DMULTISAMPLE_10_SAMPLES, D3DMULTISAMPLE_12_SAMPLES, D3DMULTISAMPLE_14_SAMPLES, D3DMULTISAMPLE_16_SAMPLES };
@@ -489,6 +490,79 @@ void CGxDevice::IWindowCursorDestroy(void* icon) {
         DestroyIcon(cursor);
         cursor = NULL;
     }
+}
+
+// PROVEN: e26dae05 IDENTICAL/NONE
+// OFFSET: 0x00849B70/0x140577D00
+int32_t CGxDevice::AdapterIsPresent() {
+    DISPLAY_DEVICEA device;
+    memset(&device, 0, sizeof(device));
+    device.cb = sizeof(device);
+
+    for (DWORD i = 0; EnumDisplayDevicesA(NULL, i, &device, 0); i++) {
+        if ((device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) && device.DeviceID[0] && strcmp(device.DeviceString, "Standard VGA Graphics Adapter")) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00849C30/0x140578890
+void CGxDevice::AdapterLogCrashInfo(char* buffer, uint32_t size) {
+    DISPLAY_DEVICEA device;
+    memset(&device, 0, sizeof(device));
+    device.cb = sizeof(device);
+
+    SStrPack(buffer, "Desktop Display List:\r\n", size);
+
+    char line[260];
+
+    for (DWORD i = 0; EnumDisplayDevicesA(NULL, i, &device, 0); i++) {
+        if (device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) {
+            SStrPrintf(line, sizeof(line), "Device Name: %s\r\n", device.DeviceName);
+            SStrPack(buffer, line, size);
+            SStrPrintf(line, sizeof(line), "Device String: %s\r\n", device.DeviceString);
+            SStrPack(buffer, line, size);
+            SStrPrintf(line, sizeof(line), "State Flags: 0x%08X\r\n", device.StateFlags);
+            SStrPack(buffer, line, size);
+            SStrPrintf(line, sizeof(line), "Device ID: %s\r\n", device.DeviceID);
+            SStrPack(buffer, line, size);
+            SStrPack(buffer, "\r\n", size);
+        }
+    }
+
+    DWORD handle = 0;
+    SStrPack(buffer, "Installed DX9 Version:\r\n", size);
+
+    DWORD infoSize = GetFileVersionInfoSizeA("d3d9.dll", &handle);
+
+    if (!infoSize) {
+        SStrPack(buffer, "Unable to find d3d9.dll\r\n\r\n", size);
+        return;
+    }
+
+    uint8_t* info = new uint8_t[infoSize];
+
+    if (GetFileVersionInfoA("d3d9.dll", handle, infoSize, info)) {
+        VS_FIXEDFILEINFO* fixed;
+        UINT length;
+
+        if (VerQueryValueA(info, "\\", reinterpret_cast<void**>(&fixed), &length)) {
+            if (length == sizeof(VS_FIXEDFILEINFO)) {
+                SStrPrintf(line, sizeof(line), "File Version: %d.%d.%d.%d\r\n", HIWORD(fixed->dwFileVersionMS), LOWORD(fixed->dwFileVersionMS), HIWORD(fixed->dwFileVersionLS), LOWORD(fixed->dwFileVersionLS));
+                SStrPack(buffer, line, size);
+            } else {
+                SStrPack(buffer, "Unexpected version record from d3d9.dll\r\n\r\n", size);
+            }
+        } else {
+            SStrPack(buffer, "Unable to query version information from d3d9.dll\r\n\r\n", size);
+        }
+    } else {
+        SStrPack(buffer, "Unable to read version information from d3d9.dll\r\n\r\n", size);
+    }
+
+    delete[] info;
 }
 
 // OFFSET: %0x007B5CA0
