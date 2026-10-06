@@ -393,7 +393,8 @@ static void cleartable (GCObject *l) {
 }
 
 
-// OFFSET: %0x00433F90
+// PROVEN: 2ae2ad9a IDENTICAL/NONE
+// OFFSET: 0x00429AB0
 static void freeobj (lua_State *L, GCObject *o) {
   switch (o->gch.tt) {
     case LUA_TPROTO: luaF_freeproto(L, gco2p(o)); break;

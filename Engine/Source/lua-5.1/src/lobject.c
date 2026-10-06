@@ -74,7 +74,7 @@ int luaO_log2 (unsigned int x) {
 }
 
 
-// PROVEN: 3e6e496a DIFFERENT/IDENTICAL
+// PROVEN: 3e6e496a IDENTICAL/IDENTICAL
 // OFFSET: 0x0041FAC0/0x140023D60
 int luaO_rawequalObj (const TValue *t1, const TValue *t2) {
   if (ttype(t1) != ttype(t2)) return 0;
@@ -120,7 +120,8 @@ static void pushstr (lua_State *L, const char *str) {
 
 
 /* this function handles only `%d', `%c', %f, %p, and `%s' formats */
-// OFFSET: %0x0042A130
+// PROVEN: 5d852929 IDENTICAL/DIFFERENT
+// OFFSET: 0x0041FC20/0x140023F20
 const char *luaO_pushvfstring (lua_State *L, const char *fmt, va_list argp) {
   int n = 1;
   pushstr(L, "");

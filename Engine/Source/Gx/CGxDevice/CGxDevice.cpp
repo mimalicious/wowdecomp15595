@@ -1692,7 +1692,8 @@ void CGxDevice::Log(const CGxCaps& caps) const {
     CGxDevice::Log("\tNPTNoDependentReads - %s", this->m_caps.m_texNonPow2 ? "true" : "false");
 }
 
-// OFFSET: %0x007A8520
+// PROVEN: ffa278b7 IDENTICAL/DIFFERENT
+// OFFSET: 0x008425F0/0x14056E910
 void CGxDevice::Log(const CGxFormat& format) const {
     if (format.m_window) {
         CGxDevice::Log("\tFormat: %d x %d Window, %s, multisample %d", format.m_size.x, format.m_size.y, s_formatNames[format.m_depthFormat], format.m_multisampleCount);

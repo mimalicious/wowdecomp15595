@@ -198,7 +198,7 @@ bool OsFileList_Internal::Callback(const Blizzard::File::ProcessDirParms& parms)
     return !list->m_callback(data, list->m_param);
 }
 
-// PROVEN: 6dbab928 DIFFERENT/IDENTICAL
+// PROVEN: 6dbab928 IDENTICAL/IDENTICAL
 // OFFSET: 0x007A9230/0x14049EFA0
 uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t createDisposition) {
     uint32_t mode = 0;

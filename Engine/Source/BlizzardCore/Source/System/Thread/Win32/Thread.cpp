@@ -53,7 +53,8 @@ bool Blizzard::Thread::IsRunning(ThreadRecord* thread) {
     return thread->m_state >= 0;
 }
 
-// OFFSET: %0x00710710
+// PROVEN: 7a87b31c IDENTICAL/DIFFERENT
+// OFFSET: 0x007AE0B0/0x1404A3D80
 bool System_Thread::SetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t level) {
     switch (level) {
         case 0:
@@ -75,7 +76,8 @@ bool System_Thread::SetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int
     }
 }
 
-// OFFSET: %0x007107E0
+// PROVEN: 19237535 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AE180/0x1404A3E70
 bool System_Thread::GetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t* level) {
     switch (GetThreadPriority(thread->m_handle)) {
         case THREAD_PRIORITY_IDLE:

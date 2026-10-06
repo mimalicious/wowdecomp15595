@@ -315,7 +315,8 @@ void CShadowCache::InitPcfOffsets() {
     CShadowCache::s_pcfOffsets[7].w = 0.0f;
 }
 
-// OFFSET: %0x0043FEA0
+// PROVEN: 29f5640c IDENTICAL/NONE
+// OFFSET: 0x00435B60
 void CShadowCache::SetShadowMapGenericGlobal() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -334,7 +335,8 @@ void CShadowCache::SetShadowMapGenericGlobal() {
     }
 }
 
-// OFFSET: %0x0043FFA0
+// PROVEN: 3d779f43 IDENTICAL/NONE
+// OFFSET: 0x00435C60
 void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -355,7 +357,8 @@ void CShadowCache::SetShadowMapGenericInterior(int32_t interior) {
     g_theGxDevicePtr->RsSet(GxRs_Texture4, texture);
 }
 
-// OFFSET: %0x00440030
+// PROVEN: 463fda19 IDENTICAL/NONE
+// OFFSET: 0x00435CF0
 void CShadowCache::SetShadowMapTerrain() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;
@@ -374,7 +377,8 @@ void CShadowCache::SetShadowMapTerrain() {
     }
 }
 
-// OFFSET: %0x00440140
+// PROVEN: 5bcef6c4 IDENTICAL/NONE
+// OFFSET: 0x00435E00
 void CShadowCache::SetShadowMapDetailDoodad() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;

@@ -935,7 +935,8 @@ static void sReadDebugDirectory(const T* ntHeaders, MODULEDEBUGINFO* info, const
     }
 }
 
-// OFFSET: %0x004C7800
+// PROVEN: 43405277 IDENTICAL/NONE
+// OFFSET: 0x004C08F0
 static void sReadModuleDebugInfo(MODULEDEBUGINFO* info, const uint8_t* base) {
     memset(info, 0, sizeof(*info));
 

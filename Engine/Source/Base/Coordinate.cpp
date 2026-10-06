@@ -13,7 +13,8 @@ static float s_ddcHeightScale = 0.6f;
 // STATIC: %0x00C0EA00
 static float s_aspectCompensation = 1.0f;
 
-// OFFSET: %0x007D6F10
+// PROVEN: 98cbafae IDENTICAL/UNPROVEN
+// OFFSET: 0x00872340/0x1405A8760
 void CoordinateSetAspectRatio(float aspect) {
     s_aspectRatio = aspect;
     s_aspectCompensation = aspect * 0.75f;

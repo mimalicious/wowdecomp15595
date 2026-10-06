@@ -269,7 +269,8 @@ static const char *classend (MatchState *ms, const char *p) {
 }
 
 
-// OFFSET: %0x0096DD60
+// PROVEN: 5f5a8cbc IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2BCF0/0x1407D43B0
 static int match_class (int c, int cl) {
   int res;
   switch (tolower(cl)) {
@@ -766,7 +767,8 @@ static int str_gsub (lua_State *L) {
 #define MAX_FORMAT	(sizeof(FLAGS) + sizeof(LUA_INTFRMLEN) + 10)
 
 
-// OFFSET: %0x0096EDD0
+// PROVEN: e2c5a91e IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2CD60/0x1407D57B0
 static void addquoted (lua_State *L, luaL_Buffer *b, int arg) {
   size_t l;
   const char *s = luaL_checklstring(L, arg, &l);

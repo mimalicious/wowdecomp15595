@@ -200,7 +200,8 @@ inline void InternalLeaveCriticalSection(CRITICAL_SECTION* critsect) {
     LeaveCriticalSection(critsect);
 }
 
-// OFFSET: %0x004BB3A0
+// PROVEN: c0042fd3 IDENTICAL/UNPROVEN
+// OFFSET: 0x004B3FC0/0x1400EB0E0
 void SErrInitialize() {
     g_opt.serrleaksilentwarning = 1;
     SRegLoadValue("Internal", "No Minidumps", 0, &s_noMiniDumps);
@@ -613,7 +614,8 @@ void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// OFFSET: %0x004BB700
+// PROVEN: cbe74499 IDENTICAL/NONE
+// OFFSET: 0x004B42F0
 int32_t SErrGetAppPhase() {
     return s_appPhase;
 }

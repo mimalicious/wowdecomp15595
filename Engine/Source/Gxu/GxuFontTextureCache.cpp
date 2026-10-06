@@ -405,7 +405,8 @@ void TEXTURECACHE::TextureCallback(EGxTexCommand command, uint32_t width, uint32
     texels = s_textureData.m_data;
 }
 
-// OFFSET: %0x00634D20
+// PROVEN: 071c8737 IDENTICAL/UNPROVEN
+// OFFSET: 0x00624410/0x1402B5A80
 void TEXTURECACHE::CreateTexture(int32_t filter) {
     CGxTexFlags flags;
     flags.m_filter = filter != 0;

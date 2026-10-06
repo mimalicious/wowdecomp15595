@@ -373,7 +373,8 @@ static int luaB_xpcall (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FD10
+// PROVEN: 524cdb96 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A2DCA0/0x1407D69B0
 static int luaB_tostring (lua_State *L) {
   luaL_checkany(L, 1);
   if (luaL_callmeta(L, 1, "__tostring"))  /* is there a metafield? */

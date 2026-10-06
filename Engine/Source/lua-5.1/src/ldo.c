@@ -51,7 +51,8 @@ struct lua_longjmp {
 };
 
 
-// OFFSET: %0x0042A550
+// PROVEN: 7b91f0d2 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420040/0x140024550
 void luaD_seterrorobj (lua_State *L, int errcode, StkId oldtop) {
   switch (errcode) {
     case LUA_ERRMEM: {

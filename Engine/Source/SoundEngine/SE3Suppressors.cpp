@@ -7,7 +7,8 @@
 // STATIC: %0x00C05BA8
 static TSList<SuppressorSound, TSGetLink<SuppressorSound> > s_suppressors;
 
-// OFFSET: %0x0067D260
+// PROVEN: 1e007cf1 IDENTICAL/DIFFERENT
+// OFFSET: 0x00716DA0/0x1403EA240
 int32_t SE3::SuppressorIsPresent() {
     return s_suppressors.Head() != NULL;
 }

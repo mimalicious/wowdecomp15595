@@ -11,7 +11,7 @@ static int32_t s_exitcode;
 // STATIC: 0x00D9D540/0x140C7F664
 static int32_t s_exitcount;
 
-// PROVEN: 7422ad48 UNPROVEN/IDENTICAL
+// PROVEN: 7422ad48 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B8950/0x1400F1000
 static void StormAtExit() {
     if (s_exitcount++ == 0) {

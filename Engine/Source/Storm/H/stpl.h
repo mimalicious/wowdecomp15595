@@ -1045,7 +1045,8 @@ T* TSHashTable<T, TKey>::DeleteNode(T* ptr) {
     return next;
 }
 
-// OFFSET: [%0x0061CE00<CVar, HASHKEY_STRI>]
+// PROVEN: ed33007e IDENTICAL/NONE
+// OFFSET: [0x00653A00<CVar, HASHKEY_STRI>]
 template <class T, class TKey>
 T* TSHashTable<T, TKey>::Next(T* ptr) {
     return this->m_fulllist.Next(ptr);

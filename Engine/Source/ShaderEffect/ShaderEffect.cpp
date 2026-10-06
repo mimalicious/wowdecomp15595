@@ -255,7 +255,8 @@ int32_t CShaderEffect::GetClipEnabled() {
     return CShaderEffect::s_clipEnabled;
 }
 
-// OFFSET: %0x0043CC10
+// PROVEN: 9554c981 IDENTICAL/DIFFERENT
+// OFFSET: 0x004329C0/0x14003B3F0
 void CShaderEffect::FlushFogParams() {
     if (!g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog) || !CShaderEffect::s_enableShaders) {
         return;

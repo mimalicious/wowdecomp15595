@@ -183,7 +183,8 @@ void UpdateBlobTexture(EGxTexCommand command, uint32_t width, uint32_t height, u
     }
 }
 
-// OFFSET: %0x0055C5E0
+// PROVEN: 2b28394c IDENTICAL/DIFFERENT
+// OFFSET: 0x0054B8A0/0x1401A4EC0
 void CTextureBlob::UnloadAll() {
     for (CTextureBlob* blob = s_textureBlobList.Head(); !s_textureBlobList.IsEnd(blob); ) {
         CTextureBlob* next = s_textureBlobList.RawNext(blob);

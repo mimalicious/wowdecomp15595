@@ -340,7 +340,8 @@ void luaK_setoneret (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x004393F0
+// PROVEN: e195fb8a IDENTICAL/DIFFERENT
+// OFFSET: 0x0042EFC0/0x140036B30
 void luaK_dischargevars (FuncState *fs, expdesc *e) {
   switch (e->k) {
     case VLOCAL: {
@@ -488,7 +489,8 @@ void luaK_exp2val (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x004398A0
+// PROVEN: 790b7459 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042F470/0x140037100
 int luaK_exp2RK (FuncState *fs, expdesc *e) {
   luaK_exp2val(fs, e);
   switch (e->k) {
@@ -646,7 +648,8 @@ static void luaK_goiffalse (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x00439D00
+// PROVEN: 3118cb9b IDENTICAL/NONE
+// OFFSET: 0x0042F8D0
 static void codenot (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   switch (e->k) {
@@ -690,7 +693,8 @@ void luaK_indexed (FuncState *fs, expdesc *t, expdesc *k) {
 }
 
 
-// OFFSET: %0x00438FB0
+// PROVEN: fa4c38ad IDENTICAL/DIFFERENT
+// OFFSET: 0x0042EB80/0x1400365A0
 static int constfolding (OpCode op, expdesc *e1, expdesc *e2) {
   lua_Number v1, v2, r;
   if (!isnumeral(e1) || !isnumeral(e2)) return 0;

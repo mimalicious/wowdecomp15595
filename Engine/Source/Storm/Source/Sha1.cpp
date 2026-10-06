@@ -161,7 +161,7 @@ void Sha1::Append(const void* _data, uint32_t size) {
     }
 }
 
-// PROVEN: 52a31caa UNPROVEN/IDENTICAL
+// PROVEN: 52a31caa IDENTICAL/IDENTICAL
 // OFFSET: 0x004C16B0/0x1400FBF60
 void Sha1::Finalize(uint8_t* const hash) {
     uint8_t size[8];

@@ -35,7 +35,8 @@ void CStatus::Add(const CStatus& source) {
     }
 }
 
-// OFFSET: %0x007D70A0
+// PROVEN: 564bdf23 IDENTICAL/DIFFERENT
+// OFFSET: 0x008724D0/0x1405A88E0
 int32_t CStatus::IsEmpty() {
     return this->m_statusList.Head() == NULL;
 }

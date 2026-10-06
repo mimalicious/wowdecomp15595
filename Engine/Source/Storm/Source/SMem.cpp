@@ -11,7 +11,7 @@ static int32_t s_exitonfailure = 1;
 // STATIC: 0x00C9F7B4/0x140B3B90C
 static int32_t s_heaptracking = 1;
 
-// PROVEN: fa84e396 UNPROVEN/IDENTICAL
+// PROVEN: fa84e396 IDENTICAL/IDENTICAL
 // OFFSET: 0x004B2A10/0x1400E95F0
 void STORMAPI SMemSetDebugFlags(uint32_t flags, uint8_t changeMask) {
     if (changeMask & SMEM_DEBUG_NOEXITONFAILURE) {

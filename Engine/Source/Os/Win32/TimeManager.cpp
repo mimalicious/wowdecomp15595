@@ -110,13 +110,13 @@ uint32_t OsTimeGetTestError() {
     return s_OsTimeMgr.m_timingTestError;
 }
 
-// PROVEN: 53bd9f74 UNPROVEN/IDENTICAL
+// PROVEN: 53bd9f74 IDENTICAL/IDENTICAL
 // OFFSET: 0x00879430/0x1405B23E0
 OsTimeManager::TimingMethod OsTimeGetTimingMethod() {
     return s_OsTimeMgr.m_timingMethod;
 }
 
-// PROVEN: 6a504ed0 DIFFERENT/IDENTICAL
+// PROVEN: 6a504ed0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00879440/0x1405B23F0
 const char* GetTimingMethodName(OsTimeManager::TimingMethod method) {
     switch (method) {

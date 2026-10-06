@@ -914,7 +914,8 @@ bool MovieStreaming::GetMovieDownloadProgress(int32_t movieID, int64_t& local, i
     return preloading;
 }
 
-// OFFSET: %0x00523770
+// PROVEN: 719b0323 IDENTICAL/UNPROVEN
+// OFFSET: 0x00512910/0x14015CA00
 bool MovieStreaming::IsMovieLocal(int32_t movieID) {
     return g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, true)) != NULL;
 }

@@ -136,7 +136,8 @@ void Blizzard::Using::StopUsing(const char* name) {
     System_Using::ShutdownUnused();
 }
 
-// OFFSET: %0x0071EF60
+// PROVEN: b46b5f5c IDENTICAL/DIFFERENT
+// OFFSET: 0x007BD620/0x1404AC500
 void Blizzard::Using::DependsOn(const char* me, const char* dependsOn) {
     System_Using::UsingRec* rec = System_Using::Intern(me);
     System_Using::UsingRec* dep = System_Using::Intern(dependsOn);

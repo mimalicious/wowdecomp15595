@@ -281,7 +281,8 @@ static BOOL OsGetPhysicalCursorPos(POINT* point) {
     return s_getPhysicalCursorPos(point);
 }
 
-// OFFSET: %0x007D8AC0
+// PROVEN: 79ca20e3 IDENTICAL/NONE
+// OFFSET: 0x00873140/0x1405A9840
 static BOOL OsSetPhysicalCursorPos(int32_t x, int32_t y) {
     if (!s_setPhysicalCursorPos) {
         HMODULE user32 = GetModuleHandleA("user32.dll");

@@ -826,7 +826,8 @@ static UnOpr getunopr (int op) {
 }
 
 
-// OFFSET: %0x00432000
+// PROVEN: 776c534d IDENTICAL/NONE
+// OFFSET: 0x00427B20
 static BinOpr getbinopr (int op) {
   switch (op) {
     case '+': return OPR_ADD;
@@ -1305,7 +1306,8 @@ static void exprstat (LexState *ls) {
 }
 
 
-// OFFSET: %0x00433400
+// PROVEN: 7f4b7a12 IDENTICAL/UNPROVEN
+// OFFSET: 0x00428F20/0x14002F3D0
 static void retstat (LexState *ls) {
   /* stat -> RETURN explist */
   FuncState *fs = ls->fs;
@@ -1394,7 +1396,8 @@ static int statement (LexState *ls) {
 }
 
 
-// OFFSET: %0x00433660
+// PROVEN: 8e65674a IDENTICAL/UNPROVEN
+// OFFSET: 0x00429180/0x14002F700
 static void chunk (LexState *ls) {
   /* chunk -> { stat [`;'] } */
   int islast = 0;

@@ -428,7 +428,8 @@ LUA_API const char *lua_tolstring (lua_State *L, int idx, size_t *len) {
 }
 
 
-// OFFSET: %0x00436390
+// PROVEN: da146b34 IDENTICAL/UNPROVEN
+// OFFSET: 0x0042BF60/0x140033200
 LUA_API size_t lua_objlen (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
   switch (ttype(o)) {
@@ -473,7 +474,8 @@ LUA_API lua_State *lua_tothread (lua_State *L, int idx) {
 }
 
 
-// OFFSET: %0x00436450
+// PROVEN: 3d09cfbd IDENTICAL/UNPROVEN
+// OFFSET: 0x0042C020/0x1400332E0
 LUA_API const void *lua_topointer (lua_State *L, int idx) {
   StkId o = index2adr(L, idx);
   switch (ttype(o)) {
@@ -1042,7 +1044,8 @@ LUA_API int  lua_status (lua_State *L) {
 ** Garbage-collection function
 */
 
-// OFFSET: %0x00436F80
+// PROVEN: 6b872847 IDENTICAL/DIFFERENT
+// OFFSET: 0x0042CB50/0x140034010
 LUA_API int lua_gc (lua_State *L, int what, int data) {
   int res = 0;
   global_State *g;
@@ -1127,7 +1130,7 @@ LUA_API double lua_gcgettime (lua_State *L, const char *tag) {
 }
 
 
-// PROVEN: 2127bf6c UNPROVEN/IDENTICAL
+// PROVEN: 2127bf6c IDENTICAL/IDENTICAL
 // OFFSET: 0x0042CC90/0x1400341F0
 LUA_API void lua_gcgetfunctiontime (lua_State *L, double *time, double *totaltime, int *calls) {
   TValue *o = L->top - 1;

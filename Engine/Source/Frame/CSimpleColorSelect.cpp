@@ -465,7 +465,8 @@ void CSimpleColorSelect::SetColorWheelTexture(CSimpleTexture* texture) {
     this->m_wheelTexture = texture;
 }
 
-// OFFSET: %0x00533B70
+// PROVEN: 073fc542 IDENTICAL/DIFFERENT
+// OFFSET: 0x00523A70/0x140171FC0
 void CSimpleColorSelect::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

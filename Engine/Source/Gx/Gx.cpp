@@ -643,7 +643,7 @@ void GxTexUpdate(CGxTex* texId, CiRect& updateRect, int32_t immediate) {
     g_theGxDevicePtr->TexMarkForUpdate(texId, updateRect, immediate);
 }
 
-// OFFSET: 0x00840C90
+// OFFSET: 0x00840C90/0x14056CB90
 int32_t GxTexCreate(uint32_t width, uint32_t height, EGxTexFormat format, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, CGxTex*& texId) {
     texId = NULL;
 
@@ -655,7 +655,7 @@ int32_t GxTexCreate(uint32_t width, uint32_t height, EGxTexFormat format, CGxTex
     return g_theGxDevicePtr->TexCreate(GxTex_2d, width, height, 0, format, format, flags, userArg, userFunc, "Unknown", texId);
 }
 
-// OFFSET: 0x00840D30
+// OFFSET: 0x00840D30/0x14056CC80
 int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, const char* name, CGxTex*& texId) {
     texId = NULL;
 
@@ -684,7 +684,7 @@ int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32
     return g_theGxDevicePtr->TexCreate(target, width, height, depth, format, dataFormat, flags, userArg, userFunc, name, texId);
 }
 
-// OFFSET: 0x00840E30
+// OFFSET: 0x00840E30/0x14056CDF0
 int32_t GxTexCreate(const CGxTexParms& parms, CGxTex*& texId) {
     return GxTexCreate(parms.m_target, parms.m_width, parms.m_height, parms.m_depth, parms.m_format, parms.m_dataFormat, parms.m_flags, parms.m_userArg, parms.m_userFunc, "", texId);
 }
@@ -1053,7 +1053,8 @@ void GxuSortDrawList(EGxuDrawListCategory category, EGxuDrawListSorting sorting,
     qsort(s_drawLists[category].Ptr(), s_drawLists[category].Count(), sizeof(GxDrawListEntry), s_drawListSorters[sorting]);
 }
 
-// OFFSET: %0x00623A60
+// PROVEN: e52cfee1 IDENTICAL/NONE
+// OFFSET: 0x00612F80
 void GxuClearDrawList(EGxuDrawListCategory category) {
     s_drawListBusy = true;
 

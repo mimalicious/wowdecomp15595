@@ -818,7 +818,8 @@ int32_t CGxDeviceD3d11::XformIsValidViewport(float minX, float maxX, float minY,
     return height > 0.0f && minZ >= 0.0f && maxZ <= 1.0f && minZ <= maxZ && x >= 0.0f && viewY >= 0.0f && width + x <= window.maxX && height + viewY <= window.maxY;
 }
 
-// OFFSET: %0x007CF980
+// PROVEN: 5e0d7ba8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00870A00/0x1405A6670
 void CGxDeviceD3d11::IXformSetViewport() {
     const CRect& window = this->DeviceCurWindow();
     D3D11_VIEWPORT viewport;

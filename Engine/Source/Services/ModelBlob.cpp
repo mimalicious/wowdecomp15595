@@ -78,7 +78,7 @@ int32_t CModelBlob::Query(const char* modelName, C3Vector& min, C3Vector& max) {
     return 1;
 }
 
-// PROVEN: 5498a7ac UNPROVEN/IDENTICAL
+// PROVEN: 5498a7ac IDENTICAL/IDENTICAL
 // OFFSET: 0x005483B0/0x1401A0640
 int32_t ModelBlobQuery(const char* modelName, C3Vector& min, C3Vector& max) {
     if (!s_modelBlob) {

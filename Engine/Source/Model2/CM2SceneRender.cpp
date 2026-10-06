@@ -254,7 +254,8 @@ void CM2SceneRender::SetupBillboardView(const C3Vector& position) {
     world.m_mtx[world.m_level] = s_identity;
 }
 
-// OFFSET: %0x00790810
+// PROVEN: e87bee13 IDENTICAL/NONE
+// OFFSET: 0x008290A0
 void CM2SceneRender::EndFixed() {
     g_theGxDevicePtr->RsPop();
     g_theGxDevicePtr->XformSetView(s_identity);
