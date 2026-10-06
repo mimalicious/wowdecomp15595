@@ -1330,6 +1330,13 @@ void CGxDeviceOpenGl::DeviceQueryPbuffer() {
     }
 }
 
+// PROVEN: e2a62890 IDENTICAL/NONE
+// OFFSET: 0x00850C40
+void CGxDevice::OpenGlApiQuery(int32_t& supported, int32_t& selectable) {
+    supported = 1;
+    selectable = 0;
+}
+
 // OFFSET: %0x007B7230
 int32_t CGxDeviceOpenGl::IDevAttachGlContext(const CGxFormat& format) {
     CreateDummyContext();

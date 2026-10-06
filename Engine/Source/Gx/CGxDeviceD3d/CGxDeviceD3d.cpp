@@ -411,7 +411,7 @@ void CGxDeviceD3d::ICursorDraw() {
     this->m_hwCursorDirty = 0;
 }
 
-// PROVEN: 9efc0c8d IDENTICAL/DIFFERENT
+// PROVEN: 9efc0c8d IDENTICAL/IDENTICAL
 // OFFSET: 0x0084BB00/0x14057A300
 void CGxDeviceD3d::ICursorCreate(const CGxFormat& format) {
     CGxDevice::ICursorCreate(format);
@@ -531,7 +531,7 @@ int32_t CGxDeviceD3d::ILoadD3dLib(HINSTANCE& d3dLib, LPDIRECT3D9& d3d) {
     return 0;
 }
 
-// PROVEN: 4d0a11d4 IDENTICAL/DIFFERENT
+// PROVEN: 4d0a11d4 IDENTICAL/IDENTICAL
 // OFFSET: 0x0084B3E0/0x140579A40
 void CGxDeviceD3d::ISetWindowFocus(int32_t focus) {
     this->m_windowFocus = focus;
@@ -629,7 +629,7 @@ void CGxDeviceD3d::PoolSizeSet(CGxPool* pool, uint32_t size) {
     }
 }
 
-// PROVEN: 2ba96d2f IDENTICAL/DIFFERENT
+// PROVEN: 2ba96d2f IDENTICAL/IDENTICAL
 // OFFSET: 0x0084BB80/0x14057A3B0
 void CGxDeviceD3d::ICursorDestroy() {
     CGxDevice::ICursorDestroy();
@@ -988,7 +988,7 @@ LPDIRECT3DVERTEXDECLARATION9 CGxDeviceD3d::IGetVertexDecl() {
     return decl;
 }
 
-// PROVEN: 354d9677 IDENTICAL/DIFFERENT
+// PROVEN: 354d9677 IDENTICAL/UNPROVEN
 // OFFSET: 0x00858940/0x140589E80
 void CGxDeviceD3d::ISetVertexDecl() {
     LPDIRECT3DVERTEXDECLARATION9 decl = this->IGetVertexDecl();
@@ -1008,7 +1008,7 @@ void CGxDeviceD3d::ISetVertexDecl() {
     }
 }
 
-// PROVEN: 7f124c82 IDENTICAL/DIFFERENT
+// PROVEN: 7f124c82 IDENTICAL/UNPROVEN
 // OFFSET: 0x008589A0/0x140589F00
 void CGxDeviceD3d::ISetVertexDeclInstanced() {
     LPDIRECT3DVERTEXDECLARATION9 decl = this->IGetVertexDecl();
@@ -1048,7 +1048,7 @@ void CGxDeviceD3d::ISetIndexBuffer() {
     }
 }
 
-// PROVEN: 03a2fd7b IDENTICAL/DIFFERENT
+// PROVEN: 03a2fd7b IDENTICAL/IDENTICAL
 // OFFSET: 0x00858A60/0x14058A000
 void CGxDeviceD3d::ISetVertexStream() {
     LPDIRECT3DVERTEXBUFFER9 vertexBuffer = static_cast<LPDIRECT3DVERTEXBUFFER9>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
@@ -3026,8 +3026,8 @@ void CGxDeviceD3d::ISceneBegin() {
 // OFFSET: 0x00859C10/0x14058B390
 void CGxDeviceD3d::IRetrieveNvDepthHandle() {
     this->m_nvDepthSurfaceHandle = NULL;
-    this->unk_29DC = 0;
-    this->unk_29E0 = 0;
+    this->m_nvDepthTextureHandle = NULL;
+    this->m_nvDepthTexture = NULL;
 
     if (!this->m_context || !this->m_d3dNVAPI) {
         return;
@@ -3417,12 +3417,24 @@ void CGxDeviceD3d::DeviceResolveDepthBuffer(CGxTex* texture) {
     }
 
     if (this->m_d3dNVAPI) {
-        NVDX_ObjectHandle textureHandle;
+        if (!this->m_nvDepthSurfaceHandle) {
+            return;
+        }
 
-        if (this->m_nvDepthSurfaceHandle && NvD3d9GetTextureHandle(static_cast<IDirect3DBaseTexture9*>(texture->m_apiSpecificData), &textureHandle) == NVAPI_OK) {
-            NvAPI_Status status = NvD3d9StretchRect(this->m_d3dDevice, this->m_nvDepthSurfaceHandle, NULL, textureHandle, NULL, D3DTEXF_POINT);
+        if (!this->m_nvDepthTextureHandle || this->m_nvDepthTexture != texture->m_apiSpecificData || !GxGetDepthResolveHandleCaching()) {
+            this->m_nvDepthTextureHandle = NULL;
+            this->m_nvDepthTexture = texture->m_apiSpecificData;
+
+            if (NvD3d9GetTextureHandle(static_cast<IDirect3DBaseTexture9*>(texture->m_apiSpecificData), &this->m_nvDepthTextureHandle) != NVAPI_OK) {
+                return;
+            }
+        }
+
+        if (this->m_nvDepthTextureHandle) {
+            NvAPI_Status status = NvD3d9StretchRect(this->m_d3dDevice, this->m_nvDepthSurfaceHandle, NULL, this->m_nvDepthTextureHandle, NULL, D3DTEXF_POINT);
 
             if (status != NVAPI_OK) {
+                this->m_nvDepthTextureHandle = NULL;
                 DebugLog("NVAPI Error: NvAPI_D3D9_StretchRect - %x(%d)\n", status, status);
             }
         }
@@ -3808,8 +3820,8 @@ CGxDeviceD3d::CGxDeviceD3d() {
     this->m_defColorSurface = NULL;
     this->m_defDepthSurface = NULL;
     this->m_nvDepthSurfaceHandle = NULL;
-    this->unk_29DC = 0;
-    this->unk_29E0 = 0;
+    this->m_nvDepthTextureHandle = NULL;
+    this->m_nvDepthTexture = NULL;
     this->m_readbackSurface = NULL;
     this->m_eventQuery = NULL;
     this->m_hwCursorDirty = 1;

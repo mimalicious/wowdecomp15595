@@ -252,8 +252,8 @@ class CGxDeviceD3d : public CGxDevice {
     /* 29D0 */ LPDIRECT3DSURFACE9 m_defColorSurface;
     /* 29D4 */ LPDIRECT3DSURFACE9 m_defDepthSurface;
     /* 29D8 */ NVDX_ObjectHandle m_nvDepthSurfaceHandle;
-    /* 29DC */ int32_t unk_29DC;
-    /* 29E0 */ int32_t unk_29E0;
+    /* 29DC */ NVDX_ObjectHandle m_nvDepthTextureHandle;
+    /* 29E0 */ void* m_nvDepthTexture;
     /* 29E4 */ LPDIRECT3DSURFACE9 m_readbackSurface;
     /* 29E8 */ LPDIRECT3DQUERY9 m_eventQuery;
     /* 29EC */ int32_t m_hwCursorDirty;

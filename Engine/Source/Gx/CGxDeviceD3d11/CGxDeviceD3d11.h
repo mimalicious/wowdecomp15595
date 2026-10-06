@@ -213,6 +213,7 @@ class CGxDeviceD3d11 : public CGxDevice {
     static const D3D11_PRIMITIVE_TOPOLOGY s_primitiveTopology[5];
     static const D3D11_PRIMITIVE_TOPOLOGY s_patchTopology[5];
 
+    static int32_t IHardwareSupported();
     static int32_t ILoadD3dLib();
     static void IUnloadD3dLib();
     static IDXGIOutput* IGetOutputForMonitor(IDXGIAdapter* adapter, uint32_t monitor);

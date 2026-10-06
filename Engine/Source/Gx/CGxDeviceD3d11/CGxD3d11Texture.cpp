@@ -1,3 +1,4 @@
+#include <cstdarg>
 #include <cstdint>
 #include <cstring>
 #include <new>
@@ -41,6 +42,15 @@ static uint32_t ScratchSizeClass(uint32_t size) {
     return sizeClass;
 }
 
+// PROVEN: 97f614d9 IDENTICAL/UNPROVEN
+// OFFSET: 0x0086B0A0/0x14059F050
+void D3d11Error(const char* file, int32_t line, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    CGxDevice::LogV(format, args);
+    va_end(args);
+}
+
 // OFFSET: %0x007CA2E0
 int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
     uint32_t width;
@@ -78,8 +88,15 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
         }
 
         ID3D11Texture3D* texture;
+        HRESULT hr = this->m_d3dDevice->CreateTexture3D(&desc, NULL, &texture);
 
-        if (FAILED(this->m_d3dDevice->CreateTexture3D(&desc, NULL, &texture))) {
+        if (FAILED(hr) || !texture) {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED) {
+                GxLog("Device removed error when trying to create 3D texture:  Reason = 0x%08X\n", this->m_d3dDevice->GetDeviceRemovedReason());
+            } else {
+                D3d11Error(__FILE__, __LINE__, "Failed to Create API 3D Texture:\nHRESULT hr = 0x%08X\nName = %s\nGx Target = %d\nGx Format = %d\nGx Flags  = 0x%08X\nWidth = %d\nHeight = %d\nDepth = %d\nMip Levels = %d\nFormat = 0x%X\nUsage = %d\nBind Flags = %d\n", hr, "<Unknown>", texId->m_target, texId->m_format, texId->m_flags, desc.Width, desc.Height, desc.Depth, desc.MipLevels, desc.Format, desc.Usage, desc.BindFlags);
+            }
+
             return 0;
         }
 
@@ -119,8 +136,15 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
         }
 
         ID3D11Texture2D* texture;
+        HRESULT hr = this->m_d3dDevice->CreateTexture2D(&desc, NULL, &texture);
 
-        if (FAILED(this->m_d3dDevice->CreateTexture2D(&desc, NULL, &texture))) {
+        if (FAILED(hr) || !texture) {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED) {
+                GxLog("Device removed error when trying to create 2D texture:  Reason = 0x%08X\n", this->m_d3dDevice->GetDeviceRemovedReason());
+            } else {
+                D3d11Error(__FILE__, __LINE__, "Failed to Create API 2D Texture:\nHRESULT hr = 0x%08X\nName = %s\nGx Target = %d\nGx Format = %d\nGx Flags  = 0x%08X\nWidth = %d\nHeight = %d\nMip Levels = %d\nFormat = 0x%X\nUsage = %d\nBind Flags = %d\n", hr, "<Unknown>", texId->m_target, texId->m_format, texId->m_flags, desc.Width, desc.Height, desc.MipLevels, desc.Format, desc.Usage, desc.BindFlags);
+            }
+
             return 0;
         }
 
@@ -154,7 +178,15 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
         srvDesc.Texture2D.MipLevels = mips;
     }
 
-    if (FAILED(this->m_d3dDevice->CreateShaderResourceView(resource, &srvDesc, &srv))) {
+    HRESULT srvResult = this->m_d3dDevice->CreateShaderResourceView(resource, &srvDesc, &srv);
+
+    if (FAILED(srvResult)) {
+        if (srvResult == DXGI_ERROR_DEVICE_REMOVED) {
+            GxLog("Device removed error when trying to create shader resource view:  Reason = 0x%08X\n", this->m_d3dDevice->GetDeviceRemovedReason());
+        } else {
+            D3d11Error(__FILE__, __LINE__, "Failed to Create Shader Resource View:\nHRESULT hr = 0x%08X\nName = %s\nViewDimension = %d\nFormat = 0x%X\n", srvResult, "<Unknown>", srvDesc.ViewDimension, srvDesc.Format);
+        }
+
         if (resource) {
             resource->Release();
         }

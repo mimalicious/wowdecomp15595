@@ -67,7 +67,7 @@ int32_t s_streamIndexPoolSize = 0x40000;
 // STATIC: #0x00AD8BB4
 C3Vector CGxDevice::s_pointScaleAttenuation(1.0f, 0.0f, 0.0f);
 
-// STATIC: 0x00D09028
+// STATIC: 0x00D09028/0x140BBAD30
 static const char* s_formatNames[CGxFormat::Formats_Last] = { "Rgb565", "ArgbX888", "Argb8888", "Argb2101010", "Ds160", "Ds24X", "Ds248", "Ds320" };
 
 // STATIC: %0x00C0E360
@@ -649,6 +649,11 @@ void CGxDevice::ICursorDraw() {
             ortho.d3 = 1.0f;
         }
 
+        if (this->m_caps.m_texelCenterOnEdge) {
+            ortho.b1 *= -1.0f;
+            ortho.d1 *= -1.0f;
+        }
+
         GxXformSetProjection(ortho);
         GxRsSet(GxRs_VertexShader, s_uiVertexShader, stereo != 0);
         GxRsSet(GxRs_PixelShader, s_uiPixelShader, 0);
@@ -660,6 +665,13 @@ void CGxDevice::ICursorDraw() {
         float alphaRef[4] = { 0.0f, 0.0f, 0.0f, static_cast<float>(CGxDevice::s_alphaRef[GxBlend_AlphaKey]) * (1.0f / 255.0f) };
         GxShaderConstantsSet(GxSh_Pixel, 0, alphaRef, 1);
     } else {
+        if (this->m_caps.m_texelCenterOnEdge) {
+            C44Matrix flipped = projection;
+            flipped.b1 *= -1.0f;
+            flipped.d1 *= -1.0f;
+            GxXformSetProjection(flipped);
+        }
+
         GxRsSet(GxRs_VertexShader, 0);
         GxRsSet(GxRs_PixelShader, 0);
     }
@@ -1692,7 +1704,7 @@ void CGxDevice::Log(const CGxCaps& caps) const {
     CGxDevice::Log("\tNPTNoDependentReads - %s", this->m_caps.m_texNonPow2 ? "true" : "false");
 }
 
-// PROVEN: ffa278b7 IDENTICAL/DIFFERENT
+// PROVEN: ffa278b7 IDENTICAL/IDENTICAL
 // OFFSET: 0x008425F0/0x14056E910
 void CGxDevice::Log(const CGxFormat& format) const {
     if (format.m_window) {
@@ -2448,6 +2460,31 @@ int32_t CGxDevice::AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMoni
 
         default:
             return 0;
+    }
+}
+
+// PROVEN: f80de932 IDENTICAL/NONE
+// OFFSET: 0x00841730
+void CGxDevice::ApiQuery(EGxApi api, int32_t& supported, int32_t& selectable) {
+    supported = 0;
+    selectable = 0;
+
+    switch (api) {
+        case GxApi_OpenGl:
+            CGxDevice::OpenGlApiQuery(supported, selectable);
+            break;
+
+        case GxApi_D3d9:
+            supported = 1;
+            selectable = 1;
+            break;
+
+        case GxApi_D3d11:
+            CGxDevice::D3d11ApiQuery(supported, selectable);
+            break;
+
+        default:
+            break;
     }
 }
 

@@ -28,13 +28,22 @@ const char* g_gxApiNames[GxApis_Last] = { "OpenGL", "D3D9", "D3D11", "GLL" };
 // STATIC: %0x00C0DBA0
 static EGxApi s_requestedApi = GxApis_Last;
 
-// STATIC: %0x00D8BCC8
+// STATIC: 0x00EC6680/0x140DB87C8
 static uint32_t s_maxFPSBk;
+
+// STATIC: 0x00EC667C/0x140DB87C4
+static int32_t s_depthResolveHandleCaching;
+
+// STATIC: 0x00EC668C/0x140DB87D4
+static uint32_t s_apiSupported;
+
+// STATIC: 0x00EC6688/0x140DB87D0
+static uint32_t s_apiSelectable;
 
 // STATIC: 0x00EBF470
 static EGxPrim s_lockPrimType;
 
-// STATIC: %0x00D8BCD0
+// STATIC: 0x00EC6684/0x140DB87CC
 static uint32_t s_maxFPS;
 
 // STATIC: %0x00D8BCD4
@@ -98,17 +107,16 @@ EGxApi GxDefaultApi() {
     return GxApi_D3d9;
 }
 
-// OFFSET: %0x007A6040
+// PROVEN: d0349537 IDENTICAL/IDENTICAL
+// OFFSET: 0x0083FF20/0x14056BD30
 int32_t GxApiSupported(EGxApi api) {
-    switch (api) {
-        case GxApi_OpenGl:
-        case GxApi_D3d9:
-        case GxApi_D3d11:
-            return 1;
+    return (1 << api) & s_apiSupported;
+}
 
-        default:
-            return 0;
-    }
+// PROVEN: 579d984d IDENTICAL/IDENTICAL
+// OFFSET: 0x0083FF40/0x14056BD40
+int32_t GxApiSelectable(EGxApi api) {
+    return (1 << api) & s_apiSelectable;
 }
 
 // PROVEN: 499fbf97 IDENTICAL/UNPROVEN
@@ -167,13 +175,32 @@ int32_t GxAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     return CGxDevice::AdapterFormats(formats);
 }
 
-// OFFSET: %0x007A6150
+// PROVEN: 873aa4cf IDENTICAL/NONE
+// OFFSET: 0x00840050
 void GxStartUp() {
     CGxDevice::s_cursorVisible = 1;
     CGxDevice::s_cursorHotspotX = 0;
     CGxDevice::s_cursorHotspotY = 0;
     memset(CGxDevice::s_cursor, 0, sizeof(CGxDevice::s_cursor));
     CGxDevice::s_cursor[0] = 0x1000000;
+    s_apiSupported = 0;
+    s_apiSelectable = 0;
+
+    for (uint32_t api = 0; api < GxApis_Last; api++) {
+        int32_t supported;
+        int32_t selectable;
+        CGxDevice::ApiQuery(static_cast<EGxApi>(api), supported, selectable);
+
+        if (supported) {
+            s_apiSupported |= 1 << api;
+        }
+
+        if (selectable) {
+            s_apiSelectable |= 1 << api;
+        }
+    }
+
+    GxCVarInitialize();
 }
 
 // PROVEN: 8aa14420 IDENTICAL/IDENTICAL
@@ -478,7 +505,8 @@ void GxQueryDestroy(CGxQuery*& query) {
     g_theGxDevicePtr->QueryDestroy(query);
 }
 
-// OFFSET: %0x007A6710
+// PROVEN: 6875628b IDENTICAL/NONE
+// OFFSET: 0x0084AEE0
 void GxSetMaxFPS(uint32_t maxFPS) {
     s_maxFPS = maxFPS;
 }
@@ -489,7 +517,8 @@ uint32_t GxGetMaxFPS() {
     return s_maxFPS;
 }
 
-// OFFSET: %0x007A6730
+// PROVEN: 849b2a79 IDENTICAL/NONE
+// OFFSET: 0x0084AF00
 void GxSetMaxFPSBk(uint32_t maxFPSBk) {
     s_maxFPSBk = maxFPSBk;
 }
@@ -498,6 +527,18 @@ void GxSetMaxFPSBk(uint32_t maxFPSBk) {
 // OFFSET: 0x0084AF10/0x1405795B0
 uint32_t GxGetMaxFPSBk() {
     return s_maxFPSBk;
+}
+
+// PROVEN: 194b7604 IDENTICAL/NONE
+// OFFSET: 0x0084AF20
+void GxSetDepthResolveHandleCaching(int32_t enable) {
+    s_depthResolveHandleCaching = enable;
+}
+
+// PROVEN: 80b22173 IDENTICAL/IDENTICAL
+// OFFSET: 0x0084AF30/0x1405795D0
+int32_t GxGetDepthResolveHandleCaching() {
+    return s_depthResolveHandleCaching;
 }
 
 // PROVEN: cd178014 IDENTICAL/IDENTICAL
@@ -643,6 +684,7 @@ void GxTexUpdate(CGxTex* texId, CiRect& updateRect, int32_t immediate) {
     g_theGxDevicePtr->TexMarkForUpdate(texId, updateRect, immediate);
 }
 
+// PROVEN: 2ae29a11 DIFFERENT/IDENTICAL
 // OFFSET: 0x00840C90/0x14056CB90
 int32_t GxTexCreate(uint32_t width, uint32_t height, EGxTexFormat format, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, CGxTex*& texId) {
     texId = NULL;

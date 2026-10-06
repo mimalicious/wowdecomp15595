@@ -1440,6 +1440,36 @@ void CGxDeviceD3d11::BufData(CGxBuf* buf, const void* data, uint32_t size, uint3
     this->IBufUnlock(buf, size);
 }
 
+// OFFSET: 0x00852210
+int32_t CGxDeviceD3d11::IHardwareSupported() {
+    UINT flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
+
+    if (D3d11DebugLevel()) {
+        flags = D3D11_CREATE_DEVICE_SINGLETHREADED | D3D11_CREATE_DEVICE_DEBUG;
+    }
+
+    D3D_FEATURE_LEVEL featureLevels[3] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
+    D3D_FEATURE_LEVEL featureLevel;
+
+    if (FAILED(s_D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, flags, featureLevels, 3, D3D11_SDK_VERSION, NULL, &featureLevel, NULL))) {
+        return 0;
+    }
+
+    return featureLevel >= D3D_FEATURE_LEVEL_10_0;
+}
+
+// PROVEN: d97b73ff IDENTICAL/NONE
+// OFFSET: 0x00850270
+void CGxDevice::D3d11ApiQuery(int32_t& supported, int32_t& selectable) {
+    if (!CGxDeviceD3d11::ILoadD3dLib()) {
+        return;
+    }
+
+    supported = 1;
+    selectable = CGxDeviceD3d11::IHardwareSupported();
+    CGxDeviceD3d11::IUnloadD3dLib();
+}
+
 // OFFSET: 0x00852D30/0x140582970
 int32_t CGxDevice::D3d11AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     if (!CGxDeviceD3d11::ILoadD3dLib()) {

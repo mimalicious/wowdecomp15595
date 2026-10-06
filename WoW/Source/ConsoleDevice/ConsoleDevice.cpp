@@ -293,6 +293,7 @@ void RemoveConsoleDeviceDefaultCallback(void (*callback)(OPTION_PAGE page)) {
 
 // OFFSET: #0x0076AB80
 void ConsoleDeviceInitialize(const char* title, bool a2, bool a3) {
+    GxStartUp();
     GxLogOpen();
 
     s_cvHwDetect = CVar::Register("hwDetect", "do hardware detection", 1, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);

@@ -262,6 +262,7 @@ class CGxDevice {
     static TSGrowableArray<void*> s_monitors;
 
     static int32_t AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
+    static void ApiQuery(EGxApi api, int32_t& supported, int32_t& selectable);
     static int32_t AdapterFormats(TSGrowableArray<CGxFormat>& formats);
     static int32_t AdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo);
     static int32_t AdapterInfer(uint16_t& deviceID);
@@ -275,6 +276,8 @@ class CGxDevice {
     static int32_t D3d11AdapterInfer(uint16_t& deviceID);
     static int32_t D3d11AdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
     static int32_t D3d11AdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
+    static void D3d11ApiQuery(int32_t& supported, int32_t& selectable);
+    static void OpenGlApiQuery(int32_t& supported, int32_t& selectable);
     static int32_t D3d11EnumMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
     static int32_t WinAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
     static int32_t WinAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);

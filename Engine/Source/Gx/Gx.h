@@ -150,6 +150,10 @@ void GxXformViewport(float& minX, float& maxX, float& minY, float& maxY, float& 
 void GxXformViewProj(C44Matrix& matrix);
 void GxXformViewProjNativeTranspose(C44Matrix& matrix);
 int32_t GxApiSupported(EGxApi api);
+int32_t GxApiSelectable(EGxApi api);
+void GxCVarInitialize();
+void GxSetDepthResolveHandleCaching(int32_t enable);
+int32_t GxGetDepthResolveHandleCaching();
 EGxApi GxGetRequestedApi();
 void GxSetRequestedApi(EGxApi api);
 uint32_t GxAdapterMonitorCount();

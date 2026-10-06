@@ -46,9 +46,6 @@ static CVar* s_cvGxOverride;
 // STATIC: #0x00CABAC0
 CVar* s_cvGxFixLag;
 
-// STATIC: #0x00CABAC4
-static CVar* s_cvMaxFPS;
-
 // STATIC: #0x00CABAEC
 static CVar* s_cvGxVSync;
 
@@ -57,9 +54,6 @@ CVar* s_cvVideoOptionsVersion;
 
 // STATIC: #0x00CABB34
 static CVar* s_cvGxStereoConvergence;
-
-// STATIC: #0x00CABB6C
-static CVar* s_cvMaxFPSBk;
 
 // STATIC: #0x00CABB70
 static CVar* s_cvGxTripleBuffer;
@@ -260,32 +254,6 @@ static bool CVGxFixLagCallback(CVar* var, const char* oldValue, const char* valu
 // OFFSET: %0x0061E950
 static bool CVGxOverrideCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleGxOverride(value);
-    return true;
-}
-
-// OFFSET: #0x00769830
-static bool CVGxMaxFPSCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    uint32_t maxFPS = SStrToInt(value);
-
-    if (maxFPS - 1 <= 6) {
-        maxFPS = 8;
-    }
-
-    GxSetMaxFPS(maxFPS);
-
-    return true;
-}
-
-// OFFSET: #0x00769860
-static bool CVGxMaxFPSBkCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    uint32_t maxFPSBk = SStrToInt(value);
-
-    if (maxFPSBk - 1 <= 6) {
-        maxFPSBk = 8;
-    }
-
-    GxSetMaxFPSBk(maxFPSBk);
-
     return true;
 }
 
@@ -544,8 +512,6 @@ void RegisterGxCVars() {
 
     s_cvGxStereoEnabled = CVar::Register("gxStereoEnabled", "Enable stereoscopic rendering", 1, "0", CVGxStereoEnabledCallback, CATEGORY_GRAPHICS, false, NULL, false);
     s_cvGxOverride = CVar::Register("gxOverride", "gx overrides", 1, "", CVGxOverrideCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvMaxFPS = CVar::Register("maxFPS", "Set FPS limit", 1, "200", CVGxMaxFPSCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvMaxFPSBk = CVar::Register("maxFPSBk", "Set background FPS limit", 1, "30", CVGxMaxFPSBkCallback, CATEGORY_GRAPHICS, false, NULL, false);
     s_cvVideoOptionsVersion = CVar::Register("videoOptionsVersion", "Video options version", 3, "0", CVVideoOptionsVersionCallback, CATEGORY_GRAPHICS, false, NULL, false);
     s_cvWindowResizeLock = CVar::Register("windowResizeLock", "prevent resizing in windowed mode", 1, "0", CVGxWindowResizeLockCallback, CATEGORY_GRAPHICS, false, NULL, false);
     s_cvFixedFunction = CVar::Register("fixedFunction", "Force fixed function rendering", 3, "0", NULL, CATEGORY_GRAPHICS, false, NULL, false);
