@@ -438,6 +438,7 @@ static bool OpenMD5VerificationHandle(const System_SFile::BLOCKENTRY* entry, int
     Blizzard::Mopaq::MpqHandleRecord* handle = static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(sizeof(Blizzard::Mopaq::MpqHandleRecord), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 
     if (handle) {
+        handle->m_baseOffset = 0;
         handle->m_refCount.m_value = 0;
         handle->m_signatureFailed = false;
     }
@@ -548,6 +549,7 @@ void System_Mopaq::OpenArchiveFile(const char* name, System_SFile::ARCHIVEREC* l
     Blizzard::Mopaq::MpqHandleRecord* handle = GetPrealloc(name, archive, &entry, flags);
 
     if (handle) {
+        handle->m_baseOffset = 0;
         handle->m_refCount.m_value = 0;
         handle->m_signatureFailed = false;
     }
@@ -617,6 +619,7 @@ void System_Mopaq::CreateArchiveFile(const char* name, System_SFile::ARCHIVEREC*
     Blizzard::Mopaq::MpqHandleRecord* handle = GetPrealloc(name, archive, &entry, flags | 0x4);
 
     if (handle) {
+        handle->m_baseOffset = 0;
         handle->m_refCount.m_value = 0;
         handle->m_signatureFailed = false;
     }
@@ -679,6 +682,7 @@ void System_Mopaq::OpenDiskFile(const char* name, uint32_t flags, const char* pa
     Blizzard::Mopaq::MpqHandleRecord* handle = static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(sizeof(Blizzard::Mopaq::MpqHandleRecord), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 
     if (handle) {
+        handle->m_baseOffset = 0;
         handle->m_refCount.m_value = 0;
         handle->m_signatureFailed = false;
     }
@@ -723,6 +727,7 @@ void System_Mopaq::CreateDiskFile(const char* name, uint32_t flags, const char* 
     Blizzard::Mopaq::MpqHandleRecord* handle = static_cast<Blizzard::Mopaq::MpqHandleRecord*>(SMemAlloc(sizeof(Blizzard::Mopaq::MpqHandleRecord), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 
     if (handle) {
+        handle->m_baseOffset = 0;
         handle->m_refCount.m_value = 0;
         handle->m_signatureFailed = false;
     }

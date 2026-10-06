@@ -30,6 +30,7 @@ System_MPQGlobals::Globals::Globals() {
     this->m_mopaq.m_md5Mode = 0;
     this->m_mopaq.m_disableAttributes = false;
     this->m_mopaq.m_disableRawRead = false;
+    this->m_mopaq.m_disableRepair = false;
 }
 
 // OFFSET: %0x00748670

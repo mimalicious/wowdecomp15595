@@ -9,6 +9,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQEncrypt.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQGlobals.h"
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Mpqstack_Delta.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/NewZerofill.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SComp.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFile.h"
@@ -23,6 +24,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Debug/Debug.h"
 #include "Engine/Source/BlizzardCore/Source/System/Debug/ErrorStack.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
+#include "Engine/Source/BlizzardCore/Source/System/Log/Log.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
@@ -718,53 +720,78 @@ static bool ValidateHeader(System_SFile::ARCHIVEREC* archive, int64_t fileSize) 
     return true;
 }
 
-// OFFSET: %0x0075AF70
+// INLINED
+static bool HasHttpError() {
+    System_File::FileError& fileError = System_File::s_error;
+    Blizzard::Debug::ErrorStackRecord* stack = fileError.m_errorStack;
+
+    return stack && stack->FindCategory(21);
+}
+
+// OFFSET: 0x007F8620/0x140507C60
 bool System_SFile::s_OpenArchive(ARCHIVEREC* archive, uint32_t flags, ARCHIVEREC** result) {
     Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetArchiveLock()->m_mutex);
 
     int64_t bufferPos = 0;
     uint32_t bufferSize = 0;
+    uint32_t readSize = 0;
     int64_t candidate = 0;
     bool haveCandidate = false;
     bool scan = (flags & 0x20) != 0;
+    uint32_t repairs = 0;
     int64_t fileSize = archive->m_file->GetFileSize();
     uint8_t buffer[4096];
     uint8_t* header;
+    bool valid;
     const char* error;
 
     for (;;) {
         for (;;) {
-            while (archive->m_archiveOffset >= bufferPos + bufferSize) {
-                int32_t read = 0;
+            if (archive->m_archiveOffset >= bufferPos + bufferSize) {
                 bufferPos = archive->m_archiveOffset;
+                readSize = 0;
 
-                if (archive->m_file->Read(buffer, archive->m_archiveOffset, sizeof(buffer), &read)) {
-                    if (static_cast<uint32_t>(read) >= 0x2C && archive->m_archiveOffset + 44 <= fileSize) {
-                        bufferSize = read;
-                        break;
-                    }
-                } else {
-                    System_File::FileError& fileError = System_File::s_error;
+                int32_t read = 0;
 
-                    if (fileError.m_errorStack && fileError.m_errorStack->FindCategory(21)) {
-                        error = "OpenArchive - HTTP error - %s";
-                        goto fail;
+                if (archive->m_file->m_handle && archive->m_file->Read(buffer, archive->m_archiveOffset, sizeof(buffer), &read)) {
+                    readSize = read;
+
+                    if (readSize >= 0x2C && archive->m_archiveOffset + 44 <= fileSize) {
+                        bufferSize = readSize;
+                        goto parse;
                     }
+                } else if (HasHttpError()) {
+                    s_lastError = STORM_ERROR_NETWORK_READ;
+
+                    Blizzard::String::QuickFormat<1024> message("OpenArchive - HTTP error - %s", archive->m_name);
+                    Blizzard::File::AddToLastErrorStack(STORM_ERROR_NETWORK_READ, message.m_buffer, 4);
+
+                    goto fail;
                 }
 
                 if (!(flags & 0x20) || !haveCandidate) {
-                    error = "OpenArchive - SFILE_ERROR_NOT_ARCHIVE - %s";
-                    goto fail;
+                    if (HasHttpError()) {
+                        s_lastError = STORM_ERROR_NETWORK_READ;
+                        error = "OpenArchive -  MPQ signature not found and HTTP error - %s";
+                    } else {
+                        error = "OpenArchive - MPQ signature not found - %s";
+                        s_lastError = STORM_ERROR_NOT_ARCHIVE;
+                    }
+
+                    goto report;
                 }
 
                 archive->m_archiveOffset = candidate;
                 bufferPos = 0;
                 bufferSize = 0;
                 scan = false;
+                continue;
             }
 
+        parse:
             header = buffer + static_cast<uint32_t>(archive->m_archiveOffset - bufferPos);
             uint32_t magic = *reinterpret_cast<uint32_t*>(header);
+            valid = false;
 
             if (magic == 0x1A51504D) {
                 break;
@@ -787,30 +814,62 @@ bool System_SFile::s_OpenArchive(ARCHIVEREC* archive, uint32_t flags, ARCHIVEREC
                 MPQHEADER check;
                 memcpy(&check, header, sizeof(check));
 
-                if (!ValidateHeaderMD5(&check) && !Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMPQHeaderV3Error(archive->m_file, header, bufferPos, bufferSize)) {
-                    goto next;
+                if (!ValidateHeaderMD5(&check)) {
+                    Blizzard::String::QuickFormat<1024> message("%s - Failed to validate archive header hash - %s", "System_SFile::s_OpenArchive", archive->m_name);
+                    Blizzard::File::AddToLastErrorStack(STORM_ERROR_NOT_ARCHIVE, message.m_buffer, 4);
+
+                    if (System_MPQGlobals::GetMopaqGlobals()->m_disableRepair || !Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMPQHeaderV3Error(archive->m_file, header, bufferPos, readSize)) {
+                        valid = false;
+                        goto next;
+                    }
                 }
             }
 
             memcpy(&archive->m_header, header, sizeof(MPQHEADER));
 
-            if (ValidateHeader(archive, fileSize)) {
-                haveCandidate = true;
-                candidate = archive->m_archiveOffset;
+            valid = ValidateHeader(archive, fileSize);
 
-                if (!scan) {
-                    break;
-                }
+            if (!valid) {
+                goto next;
             }
+
+            haveCandidate = true;
+            candidate = archive->m_archiveOffset;
+
+            if (!scan) {
+                break;
+            }
+
+            archive->m_archiveOffset = (archive->m_archiveEnd + 511) & ~static_cast<int64_t>(511);
         }
 
     next:
         if (flags & 8) {
-            error = "OpenArchive - SFILE_ERROR_NOT_ARCHIVE - %s";
-            goto fail;
-        }
+            if (repairs++ >= 3) {
+                goto missing;
+            }
 
-        archive->m_archiveOffset += 512;
+            Blizzard::Mopaq::HSFILERecord* file = archive->m_file;
+            Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected Mopaq signature error: offset = %lld, length = %d\n", bufferPos, 4096);
+
+            Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
+            Blizzard::File::StreamRecord* stream = handle ? handle->m_file : NULL;
+
+            if (!stream || !stream->m_streaming || !stream->m_streaming->m_unit) {
+                Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Could not repair because the storage file is not streamed.\n");
+                goto missing;
+            }
+
+            if (!Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleArchiveSignatureError(file, bufferPos)) {
+                goto missing;
+            }
+
+            bufferPos = 0;
+            archive->m_archiveOffset = 0;
+            bufferSize = 0;
+        } else if (!valid) {
+            archive->m_archiveOffset += 512;
+        }
     }
 
     archive->m_sectorSize = 512 << archive->m_header.m_sectorSizeShift;
@@ -835,29 +894,46 @@ bool System_SFile::s_OpenArchive(ARCHIVEREC* archive, uint32_t flags, ARCHIVEREC
         System_MPQGlobals::GetArchiveList()->insert(archive);
     }
 
-    if ((flags & 0x800) && !archive->InitializeTables()) {
-        error = "OpenArchive - INIT TABLE ERROR - %s";
-        goto fail;
+    archive->m_file->m_handle->m_baseOffset = archive->m_archiveOffset;
+
+    if (!(flags & 0x800) || archive->InitializeTables()) {
+        *result = archive;
+        return true;
     }
 
-    *result = archive;
-    return true;
+    if (HasHttpError()) {
+        s_lastError = STORM_ERROR_NETWORK_READ;
+        error = "OpenArchive - INIT TABLE ERROR - %s with HTTP error";
+    } else {
+        s_lastError = STORM_ERROR_NOT_ARCHIVE;
+        error = "OpenArchive - INIT TABLE ERROR - %s";
+    }
 
-fail:
-    s_lastError = 108;
+    goto report;
 
+missing:
+    if (HasHttpError()) {
+        s_lastError = STORM_ERROR_NETWORK_READ;
+        error = "OpenArchive - MPQ signature missing from the beginning of %s with HTTP error";
+    } else {
+        s_lastError = STORM_ERROR_NOT_ARCHIVE;
+        error = "OpenArchive - MPQ signature missing from the beginning of %s";
+    }
+
+report:
     {
         Blizzard::String::QuickFormat<1024> message(error, archive->m_name);
-        Blizzard::File::AddToLastErrorStack(108, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_NOT_ARCHIVE, message.m_buffer, 4);
     }
 
+fail:
     archive->m_externalRefs.Decrement();
     archive->RemoveInternalArchiveRef();
 
     return false;
 }
 
-// OFFSET: %0x0075B480
+// OFFSET: 0x007F8D40
 bool Blizzard::Mopaq::SFileOpenArchive(HSFILERecord* file, const char* name, int32_t priority, uint32_t flags, System_SFile::ARCHIVEREC** result) {
     System_SFile::ARCHIVEREC* archive = NewZerofill<System_SFile::ARCHIVEREC>();
     archive->m_priority = priority;
@@ -882,7 +958,7 @@ bool Blizzard::Mopaq::SFileOpenArchive(HSFILERecord* file, const char* name, int
     return System_SFile::s_OpenArchive(archive, flags, result);
 }
 
-// OFFSET: %0x0075B550
+// OFFSET: 0x007F8E10/0x140508670
 bool Blizzard::Mopaq::SFileOpenArchive(const char* path, int32_t priority, uint32_t flags, System_SFile::ARCHIVEREC** result) {
     const char* name = path;
     char converted[260];
@@ -917,11 +993,15 @@ bool Blizzard::Mopaq::SFileOpenArchive(const char* path, int32_t priority, uint3
 
         if (fileError.m_errorStack->FindCategoryCode(1, 4)) {
             System_SFile::s_lastError = 5;
+            Blizzard::String::QuickFormat<1024> message("SFileOpenArchive - STORM_ERROR_ACCESS_DENIED - %s", name);
+            Blizzard::File::AddToLastErrorStack(2, message.m_buffer, 4);
             return false;
         }
 
         if (fileError.m_errorStack->FindCategoryCode(22, 11)) {
             System_SFile::s_lastError = 112;
+            Blizzard::String::QuickFormat<1024> message("SFileOpenArchive - STORM_ERROR_DISK_FULL - %s", name);
+            Blizzard::File::AddToLastErrorStack(2, message.m_buffer, 4);
             return false;
         }
     } else if (exists == 2) {
@@ -1310,6 +1390,10 @@ bool System_SFile::ARCHIVEREC::ReadTable(void* data, int64_t offset, uint32_t si
         return true;
     }
 
+    if (System_MPQGlobals::GetMopaqGlobals()->m_disableRepair) {
+        return false;
+    }
+
     return Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleLoadAndVerify(this->m_file, static_cast<uint8_t*>(data), offset, size, md5);
 }
 
@@ -1342,7 +1426,7 @@ bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Bl
 bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer) {
     uint32_t diskSize = this->m_header.m_blockTablePos - this->m_header.m_hashTablePos;
     uint32_t size = 16 * this->m_header.m_hashTableSize;
-    int64_t offset = ((static_cast<int64_t>(this->m_header.m_hashTablePosHi) << 32) | this->m_header.m_hashTablePos) + this->m_archiveOffset;
+    int64_t offset = (static_cast<int64_t>(this->m_header.m_hashTablePosHi) << 32) | this->m_header.m_hashTablePos;
 
     if (!LoadOldTable(this, &this->m_hashTable[0], buffer, diskSize, size, offset, 0xC3AF3770, this->m_header.m_hashTableMd5)) {
         return false;
@@ -1376,7 +1460,7 @@ bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<ch
     }
 
     uint32_t size = 16 * this->m_header.m_blockTableSize;
-    int64_t offset = ((static_cast<int64_t>(this->m_header.m_blockTablePosHi) << 32) | this->m_header.m_blockTablePos) + this->m_archiveOffset;
+    int64_t offset = (static_cast<int64_t>(this->m_header.m_blockTablePosHi) << 32) | this->m_header.m_blockTablePos;
 
     if (!LoadOldTable(this, &this->m_blockTable[0], buffer, diskSize, size, offset, 0xEC83B3A3, this->m_header.m_blockTableMd5)) {
         return false;
@@ -1384,14 +1468,13 @@ bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<ch
 
     const uint32_t* raw = reinterpret_cast<const uint32_t*>(reinterpret_cast<const uint8_t*>(&this->m_blockTable[0]) + 16 * this->m_header.m_blockTableSize - 16);
     BLOCKENTRY* first = &this->m_blockTable[0];
-    int64_t archiveOffset = this->m_archiveOffset;
 
     for (BLOCKENTRY* entry = &this->m_blockTable[this->m_header.m_blockTableSize - 1]; entry >= first; entry--, raw -= 4) {
         uint32_t fileSize = raw[2];
         uint32_t flags = raw[3];
         uint32_t offsetLo = raw[0];
         entry->m_compressedSize = raw[1];
-        entry->m_offset = offsetLo + archiveOffset;
+        entry->m_offset = offsetLo;
         entry->m_fileSize = fileSize;
         entry->m_flags = flags;
         entry->m_fileTime = 0;
@@ -1449,14 +1532,15 @@ bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Memory::
 
 // OFFSET: %0x007526A0
 bool System_SFile::ARCHIVEREC::LoadBlockEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize) {
-    return LoadTable(this, buffer, output, this->m_header.m_betTablePos + this->m_archiveOffset, static_cast<uint32_t>(this->m_header.m_betTableSize64), data, dataSize, 0xEC83B3A3, 0x1A544542, this->m_header.m_betTableMd5);
+    return LoadTable(this, buffer, output, this->m_header.m_betTablePos, static_cast<uint32_t>(this->m_header.m_betTableSize64), data, dataSize, 0xEC83B3A3, 0x1A544542, this->m_header.m_betTableMd5);
 }
 
-// OFFSET: %0x00752630
+// PROVEN: a33644c2 IDENTICAL/NONE
+// OFFSET: 0x007F1040
 bool System_SFile::ARCHIVEREC::LoadHashEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize) {
     uint32_t size = static_cast<uint32_t>(this->m_header.m_hetTableSize64);
 
-    if (!LoadTable(this, buffer, output, this->m_header.m_hetTablePos + this->m_archiveOffset, size, data, dataSize, 0xC3AF3770, 0x1A544548, this->m_header.m_hetTableMd5)) {
+    if (!LoadTable(this, buffer, output, this->m_header.m_hetTablePos, size, data, dataSize, 0xC3AF3770, 0x1A544548, this->m_header.m_hetTableMd5)) {
         return false;
     }
 
@@ -1536,7 +1620,7 @@ bool System_SFile::ARCHIVEREC::InitializeTables() {
     if (this->m_header.m_hiBlockTablePos) {
         HeapArray<uint16_t> hiBlockTable(this->m_header.m_blockTableSize);
 
-        if (!this->ReadTable(hiBlockTable.m_data, this->m_archiveOffset + this->m_header.m_hiBlockTablePos, 2 * this->m_header.m_blockTableSize, this->m_header.m_hiBlockTableMd5)) {
+        if (!this->ReadTable(hiBlockTable.m_data, this->m_header.m_hiBlockTablePos, 2 * this->m_header.m_blockTableSize, this->m_header.m_hiBlockTableMd5)) {
             Blizzard::String::QuickFormat<1024> message("Unable to read extended block table: \"%s\"\n", this->m_name);
             Blizzard::Debug::StderrOutput(message.m_buffer);
             ClearTables(this, 1);
@@ -1751,12 +1835,12 @@ bool System_SFile::ARCHIVEREC::WriteArchiveHeader() {
 
     header.m_magic = 0x1A51504D;
     header.m_headerSize = size;
-    header.m_archiveSize = static_cast<uint32_t>(this->m_header.m_archiveSize64) - static_cast<uint32_t>(this->m_archiveOffset);
+    header.m_archiveSize = static_cast<uint32_t>(this->m_header.m_archiveSize64);
     header.m_sectorSizeShift = shift;
-    header.m_hiBlockTablePos = this->m_header.m_hiBlockTablePos - this->m_archiveOffset;
-    header.m_archiveSize64 = this->m_header.m_archiveSize64 - this->m_archiveOffset;
-    header.m_hetTablePos = this->m_header.m_hetTablePos - this->m_archiveOffset;
-    header.m_betTablePos = this->m_header.m_betTablePos - this->m_archiveOffset;
+    header.m_hiBlockTablePos = this->m_header.m_hiBlockTablePos;
+    header.m_archiveSize64 = this->m_header.m_archiveSize64;
+    header.m_hetTablePos = this->m_header.m_hetTablePos;
+    header.m_betTablePos = this->m_header.m_betTablePos;
 
     if (header.m_formatVersion >= 2) {
         Blizzard::Util::MD5 md5;
@@ -1764,7 +1848,7 @@ bool System_SFile::ARCHIVEREC::WriteArchiveHeader() {
         md5.Finish(header.m_headerMd5.m_data);
     }
 
-    return this->m_file->Write(&header, this->m_archiveOffset, size);
+    return this->m_file->Write(&header, 0, size);
 }
 
 // PROVEN: 5b840513 IDENTICAL/DIFFERENT
@@ -2100,6 +2184,8 @@ int32_t GetFileBlockEntry(System_SFile::ARCHIVEREC* handle, const char* name, co
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
 
     if (handle && !archive.m_archive) {
+        Blizzard::String::QuickFormat<1024> message("%s - Null archive handle", "GetFileBlockEntry");
+        Blizzard::File::AddToLastErrorStack(0, message.m_buffer, 4);
         return 0;
     }
 
@@ -4112,36 +4198,32 @@ bool System_SFile::ARCHIVEREC::WriteArchiveChanges(ARCHIVEREC* archive) {
     return result;
 }
 
-// OFFSET: %0x0075C360
+// OFFSET: 0x007F9D00/0x1405099F0
 bool System_SFile::ARCHIVEREC::InitPatchMetadata() {
     Blizzard::Lock::ScopedMutex lock(this->m_patchLock.m_mutex);
 
-    if (this->m_patchMetadataLoaded) {
-        return true;
+    if (!this->m_patchMetadataLoaded) {
+        this->InitializeTables();
+
+        Blizzard::Util::Digest<16> md5 = s_emptyMd5;
+        Blizzard::Mopaq::HSFILERecord* file = NULL;
+
+        if (Blizzard::Mopaq::SFileOpenFileEx(this, "(patch_metadata)", md5, 16, &file)) {
+            uint32_t size = static_cast<uint32_t>(file->GetFileSize());
+            this->m_patchMetadata.SetCount(size + 1);
+
+            if (Blizzard::Mopaq::SFileReadFile(file, this->m_patchMetadata.m_data, size, NULL)) {
+                this->m_patchMetadata.m_data[size] = 0;
+                this->m_patchMetadataLoaded = true;
+            } else {
+                this->m_patchMetadata.SetCount(0);
+            }
+
+            System_Mopaq::CloseFileRecord(file);
+        }
     }
 
-    this->InitializeTables();
-
-    Blizzard::Util::Digest<16> md5 = s_emptyMd5;
-    Blizzard::Mopaq::HSFILERecord* file;
-
-    if (!Blizzard::Mopaq::SFileOpenFileEx(this, "(patch_metadata)", md5, 16, &file)) {
-        return false;
-    }
-
-    uint32_t size = static_cast<uint32_t>(file->GetFileSize());
-    this->m_patchMetadata.SetCount(size + 1);
-
-    if (!Blizzard::Mopaq::SFileReadFile(file, this->m_patchMetadata.m_data, size, NULL)) {
-        this->m_patchMetadata.SetCount(0);
-        return false;
-    }
-
-    Blizzard::Mopaq::SFileCloseFile(file);
-    this->m_patchMetadata.m_data[size] = 0;
-    this->m_patchMetadataLoaded = true;
-
-    return true;
+    return this->m_patchMetadataLoaded;
 }
 
 // PROVEN: 154b4f84 IDENTICAL/IDENTICAL

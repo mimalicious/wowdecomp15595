@@ -12,6 +12,7 @@ static void* DefaultAllocHook(size_t bytes) {
     return malloc(bytes);
 }
 
+// PROVEN: a77d3da9 IDENTICAL/NONE
 // OFFSET: 0x00A30330
 static void DefaultFreeHook(void* ptr, size_t bytes) {
     free(ptr);

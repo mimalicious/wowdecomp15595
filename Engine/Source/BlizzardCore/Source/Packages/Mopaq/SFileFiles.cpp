@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <cstring>
+#include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQGlobals.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Mpqstack_Delta.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFile.h"
@@ -17,14 +18,14 @@ void Blizzard::Mopaq::HSFILERecord::SetLogicalArchive(System_SFile::ARCHIVEREC* 
     }
 }
 
-// OFFSET: %0x00759D40
+// OFFSET: 0x007F7700/0x140506750
 int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const char* name, const Blizzard::Util::Digest<16>& md5, uint32_t flags, HSFILERecord** result) {
     *result = NULL;
 
     System_SFile::ARCHIVEREC* record = NULL;
     System_SFile::ARCHIVEREC* archive = NULL;
     int32_t opened = 0;
-    uint32_t error = 104;
+    uint32_t error = STORM_ERROR_FILE_READ;
     uint32_t blockIndex;
     char path[260];
 
@@ -80,13 +81,13 @@ int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const
     return 0;
 }
 
-// OFFSET: %0x00759EC0
+// OFFSET: 0x007F7880/0x140506970
 int32_t Blizzard::Mopaq::SFileOpenFileEx(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags, HSFILERecord** result) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
     return SFileOpenFileEx(handle, name, md5, flags, result);
 }
 
-// OFFSET: %0x0072D550
+// OFFSET: 0x007CC360/0x1404C87A0
 bool Blizzard::Mopaq::SFileCloseFile(HSFILERecord* file) {
     if (file) {
         if (file->m_handle && !file->m_handle->Release()) {
@@ -100,15 +101,28 @@ bool Blizzard::Mopaq::SFileCloseFile(HSFILERecord* file) {
     return true;
 }
 
-// OFFSET: %0x00755520
+// STATIC: 0x00BCD74C
+static const uint32_t s_repairDelays[5] = { 100, 200, 500, 1000, 1000 };
+
+// OFFSET: 0x007F4880/0x140502330
 bool Blizzard::Mopaq::SFileReadFile(HSFILERecord* file, void* buffer, uint32_t count, uint32_t* bytesRead) {
     int32_t read = 0;
     int64_t position = file->m_handle ? file->m_handle->m_position : -1;
     bool result = file->Read(buffer, position, count, &read);
 
     if (!result) {
-        if (file->Repair()) {
-            result = file->Read(buffer, position, count, &read);
+        if (System_Mopaq::RepairFile(file)) {
+            const uint32_t* delay = s_repairDelays;
+
+            do {
+                result = file->Read(buffer, position, count, &read);
+
+                if (!result) {
+                    Blizzard::Process::Sleep(*delay);
+                }
+
+                delay++;
+            } while (delay < s_repairDelays + 5 && !result && System_Mopaq::RepairFile(file));
         } else if (!System_MPQGlobals::GetMopaqGlobals()->m_disableRawRead) {
             static_cast<System_SFile::RawReadInfo&>(System_SFile::s_rawReadInfo).m_retryNative = true;
             result = file->Read(buffer, position, count, &read);
@@ -171,7 +185,7 @@ bool Blizzard::Mopaq::SFileWriteFile(HSFILERecord* file, const void* data, uint3
     return true;
 }
 
-// OFFSET: %0x0071B450
+// OFFSET: 0x007BA110/0x1404B1890
 int64_t Blizzard::Mopaq::SFileSetFilePointer(HSFILERecord* file, int32_t distance, int32_t* distanceHigh, uint32_t method) {
     int64_t base = 0;
 
@@ -232,7 +246,7 @@ bool Blizzard::Mopaq::SFileGetFileName(HSFILERecord* file, char* name, uint32_t 
     return true;
 }
 
-// OFFSET: %0x00713FF0
+// OFFSET: 0x007B1B90
 bool Blizzard::Mopaq::SFileGetLogicalArchive(HSFILERecord* file, System_SFile::ARCHIVEREC** archive) {
     MpqHandleRecord* handle = file->m_handle;
 
@@ -318,7 +332,7 @@ int32_t Blizzard::Mopaq::SFileFileIsLocal(HSFILERecord* file, int32_t option) {
     return 1;
 }
 
-// OFFSET: 0x007AC110
+// OFFSET: 0x007AC110/0x1404A1F50
 bool Blizzard::Mopaq::SFileIsPatchFile(HSFILERecord* file) {
     if (!file->m_handle) {
         return false;

@@ -24,6 +24,7 @@ class MpqErrorHandler {
 
 class MpqRepairOnDemandErrorHandler : public MpqErrorHandler {
     public:
+    static bool HandleArchiveSignatureError(HSFILERecord* file, int64_t offset);
     static bool HandleLoadAndVerify(HSFILERecord* file, uint8_t* buffer, int64_t offset, uint32_t size, const Blizzard::Util::Digest<16>& md5);
     static bool HandleMPQHeaderV3Error(HSFILERecord* file, uint8_t* buffer, int64_t offset, uint32_t size);
 

@@ -619,7 +619,7 @@ void AsyncFileReadObject(CAsyncObject* object, int32_t urgent) {
     CAsyncQueue* queue = s_asyncQueues[0];
 
     if (SFile::IsStreamingMode()) {
-        int32_t local = SFile::FileIsLocal(object->m_file, 0, 0);
+        int32_t local = SFile::FileIsLocal(object->m_file, 6, 0);
 
         if (!local || local == 2) {
             SFile::PauseBackgroundStreaming(true);

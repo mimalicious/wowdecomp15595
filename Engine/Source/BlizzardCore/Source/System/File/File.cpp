@@ -350,6 +350,7 @@ bool Blizzard::File::Delete(const char* path) {
     return false;
 }
 
+// PROVEN: 07b945b3 IDENTICAL/NONE
 // OFFSET: 0x007AC5D0
 int32_t Blizzard::File::Exists(const char* path) {
     return Blizzard::File::Exists(System_File::Stacked::s_manager, path);

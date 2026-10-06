@@ -73,8 +73,10 @@ class MpqHandleRecord {
     /* 0088 */ System_Mopaq::VerifyData* m_verify;
     /* 008C */ System_Mopaq::DeltaData* m_delta;
     /* 0090 */ System_Mopaq::MD5VerifyData* m_md5Verify;
-    /* 0094 */ bool m_signatureFailed;
-    /* 0095 */ uint8_t unk_0095[3];
+    /* 0094 */ uint32_t unk_0094;
+    /* 0098 */ int64_t m_baseOffset;
+    /* 00A0 */ bool m_signatureFailed;
+    /* 00A1 */ uint8_t unk_00A1[7];
 
     int32_t Release();
 };
@@ -256,6 +258,10 @@ bool md5verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool md5verify_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool md5verify_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool md5verify_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
+bool offset_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
+bool offset_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
+bool offset_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
+bool offset_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 
 extern Blizzard::Mopaq::Mpqsystem s_nullstack;
 extern Blizzard::Mopaq::Mpqsystem s_basestack;
@@ -269,6 +275,7 @@ extern Blizzard::Mopaq::Mpqsystem s_alignstack;
 extern Blizzard::Mopaq::Mpqsystem s_cachestack;
 extern Blizzard::Mopaq::Mpqsystem s_verifystack;
 extern Blizzard::Mopaq::Mpqsystem s_md5verifystack;
+extern Blizzard::Mopaq::Mpqsystem s_offsetstack;
 
 }
 

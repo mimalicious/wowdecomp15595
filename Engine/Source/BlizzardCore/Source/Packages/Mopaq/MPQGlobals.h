@@ -26,7 +26,8 @@ struct MopaqGlobals {
     /* 010C */ void (*m_signatureErrorCallback)(const char* name, const char* message);
     /* 0110 */ bool m_disableAttributes;
     /* 0111 */ bool m_disableRawRead;
-    /* 0112 */ uint8_t unk_0112[2];
+    /* 0112 */ bool m_disableRepair;
+    /* 0113 */ uint8_t unk_0113;
 };
 
 class Worker {

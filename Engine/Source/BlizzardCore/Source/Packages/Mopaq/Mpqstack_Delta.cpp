@@ -3,6 +3,7 @@
 #include <cstring>
 #include <new>
 #include <vector>
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQGlobals.h"
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/MD5.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Mpqstack_Delta.h"
@@ -34,7 +35,7 @@ static void ComputeMD5(Blizzard::Util::Digest<16>* digest, const void* buffer, u
     md5.Finish(digest->m_data);
 }
 
-// OFFSET: %0x00714A70
+// OFFSET: 0x007B26E0
 bool MpqPatchStream::Read(uint32_t offset, void* buffer, uint32_t size) {
     System_Mopaq::MpqParams parms;
     memset(&parms, 0, sizeof(parms));
@@ -51,7 +52,7 @@ bool MpqPatchStream::Read(uint32_t offset, void* buffer, uint32_t size) {
     return this->m_system->m_read(this->m_system, &parms);
 }
 
-// OFFSET: %0x00712EC0
+// OFFSET: 0x007B0A20
 bool Blizzard::Patch::MemoryStream::Read(uint32_t offset, void* buffer, uint32_t size) {
     if (offset + size > this->m_size) {
         return false;
@@ -79,7 +80,7 @@ System_Mopaq::DeltaData::DeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, con
     this->m_md5 = metadata ? metadata->m_md5 : System_SFile::s_emptyMd5;
 }
 
-// OFFSET: %0x0072DD50
+// OFFSET: 0x007CC890/0x1404C8E60
 System_Mopaq::DeltaData::~DeltaData() {
     Blizzard::Memory::Free(this->m_appliedBuffer);
 
@@ -98,7 +99,7 @@ System_Mopaq::DeltaData::~DeltaData() {
     }
 }
 
-// OFFSET: %0x0074E170
+// OFFSET: 0x007E77F0/0x1404F1990
 bool System_Mopaq::DeltaData::AdjustHandleBlockEntry() {
     if (!this->m_deltaSize) {
         Blizzard::String::QuickFormat<1024> message("%s - m_deltaSize is 0", "System_Mopaq::DeltaData::AdjustHandleBlockEntry");
@@ -117,7 +118,7 @@ bool System_Mopaq::DeltaData::AdjustHandleBlockEntry() {
     return true;
 }
 
-// OFFSET: %0x0074E240
+// OFFSET: 0x007E7880
 bool System_Mopaq::InitializeDeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, const MpqDeltaMetadata* metadata) {
     void* memory = Blizzard::Memory::Allocate(sizeof(DeltaData));
     handle->m_delta = static_cast<DeltaData*>(memory);
@@ -130,13 +131,13 @@ bool System_Mopaq::InitializeDeltaData(Blizzard::Mopaq::MpqHandleRecord* handle,
     return true;
 }
 
-// OFFSET: %0x0070E1A0
+// OFFSET: 0x007AB2E0
 bool System_Mopaq::DeltaData::IsLargeDelta(uint32_t sectorSize) {
     uint32_t deltaSize = this->m_deltaSize;
     return deltaSize > this->m_fileSize && deltaSize >= sectorSize && deltaSize / sectorSize > static_cast<uint32_t>(this->m_fileSize) / static_cast<uint64_t>(sectorSize);
 }
 
-// OFFSET: %0x00720CB0
+// OFFSET: 0x007BF4D0/0x1404B8490
 bool System_Mopaq::DeltaData::InitMd5s(Blizzard::Mopaq::Mpqsystem* system) {
     if (this->m_sourceMd5 != System_SFile::s_emptyMd5) {
         return true;
@@ -164,7 +165,7 @@ bool System_Mopaq::DeltaData::InitMd5s(Blizzard::Mopaq::Mpqsystem* system) {
     return false;
 }
 
-// OFFSET: %0x00759F10
+// OFFSET: 0x007F78D0/0x1405069B0
 bool System_Mopaq::DeltaData::OpenSrcFile() {
     if (this->m_baseFile) {
         return true;
@@ -180,12 +181,12 @@ bool System_Mopaq::DeltaData::OpenSrcFile() {
         return true;
     }
 
-    Blizzard::String::QuickFormat<1024> message("%s - fail to open ", "System_Mopaq::DeltaData::OpenSrcFile");
+    Blizzard::String::QuickFormat<1024> message("%s - fail to open %s - %s ", "System_Mopaq::DeltaData::OpenSrcFile", this->m_handle->m_name, this->m_handle->m_archive->m_name);
     Blizzard::File::AddToLastErrorStack(1006, message.m_buffer, 4);
     return false;
 }
 
-// OFFSET: %0x0074E200
+// OFFSET: 0x007EF3B0/0x1404FB6E0
 bool System_Mopaq::DeltaData::InitializeBaseMetadata() {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_baseFile->m_handle;
 
@@ -216,7 +217,7 @@ bool System_Mopaq::DeltaData::InitializeBaseMetadata() {
     return false;
 }
 
-// OFFSET: %0x00714BF0
+// OFFSET: 0x007B2860
 bool System_Mopaq::DeltaData::VerifyMd5(const void* buffer, uint32_t size, int32_t which) {
     Blizzard::Util::Digest<16> md5;
     ComputeMD5(&md5, buffer, size);
@@ -233,7 +234,7 @@ bool System_Mopaq::DeltaData::VerifyMd5(const void* buffer, uint32_t size, int32
     return false;
 }
 
-// OFFSET: %0x0072D550
+// OFFSET: 0x007CC360/0x1404C87A0
 bool System_Mopaq::CloseFileRecord(Blizzard::Mopaq::HSFILERecord* file) {
     if (file) {
         if (file->m_handle && !file->m_handle->Release()) {
@@ -252,9 +253,9 @@ bool System_Mopaq::CloseFileRecord(Blizzard::Mopaq::HSFILERecord* file) {
     return true;
 }
 
-// OFFSET: %0x007531B0
+// OFFSET: 0x007F3450
 bool System_Mopaq::RepairFile(Blizzard::Mopaq::HSFILERecord* file) {
-    if (!file->m_handle) {
+    if (!file->m_handle || System_MPQGlobals::GetMopaqGlobals()->m_disableRepair) {
         return false;
     }
 
@@ -270,8 +271,13 @@ bool System_Mopaq::RepairFile(Blizzard::Mopaq::HSFILERecord* file) {
     Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
     Blizzard::Mopaq::HSFILERecord* fresh = NULL;
     const char* name = handle ? handle->m_name : "";
+    System_SFile::ARCHIVEREC* archive = NULL;
 
-    if (!Blizzard::Mopaq::SFileOpenFileEx(handle->m_archive, name, handle->m_blockEntry.m_md5, 0x1000, &fresh)) {
+    if (handle) {
+        archive = handle->m_logicalArchive ? handle->m_logicalArchive : handle->m_archive;
+    }
+
+    if (!Blizzard::Mopaq::SFileOpenFileEx(archive, name, handle->m_blockEntry.m_md5, 0x1000, &fresh)) {
         return false;
     }
 
@@ -283,7 +289,7 @@ bool System_Mopaq::RepairFile(Blizzard::Mopaq::HSFILERecord* file) {
     return true;
 }
 
-// OFFSET: %0x00753980
+// OFFSET: 0x007F37F0/0x140500B20
 bool System_Mopaq::DeltaData::ReadSource(void* buffer, uint32_t size) {
     Blizzard::Mopaq::MpqHandleRecord* handle = this->m_baseFile->m_handle;
 
@@ -306,13 +312,14 @@ bool System_Mopaq::DeltaData::ReadSource(void* buffer, uint32_t size) {
         }
     }
 
-    Blizzard::String::QuickFormat<1024> message("%s - Read source error %u", "System_Mopaq::DeltaData::ReadSource", size);
-    Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+    Blizzard::Mopaq::MpqHandleRecord* baseHandle = this->m_baseFile->m_handle;
+    Blizzard::String::QuickFormat<1024> message("%s - Read source error %s - %s %u", "System_Mopaq::DeltaData::ReadSource", baseHandle->m_name, baseHandle->m_archive->m_name, size);
+    Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
     return RepairFile(this->m_baseFile) && this->m_baseFile->Read(buffer, 0, size, NULL) && this->VerifyMd5(buffer, size, 0);
 }
 
-// OFFSET: %0x007536A0
+// OFFSET: 0x007F3510/0x140500880
 bool System_Mopaq::DeltaData::PatchLevel(Blizzard::Mopaq::Mpqsystem* system, uint8_t* dest, uint8_t* source) {
     uint8_t* delta = static_cast<uint8_t*>(Blizzard::Memory::Allocate(this->m_deltaSize));
 
@@ -334,7 +341,7 @@ bool System_Mopaq::DeltaData::PatchLevel(Blizzard::Mopaq::Mpqsystem* system, uin
 
     if (!valid) {
         Blizzard::String::QuickFormat<1024> message("%s - Read delta error %lld %u", "System_Mopaq::DeltaData::PatchLevel", this->m_offset, this->m_deltaSize);
-        Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
         Blizzard::Mopaq::HSFILERecord file;
         file.m_handle = this->m_handle;
@@ -375,7 +382,7 @@ bool System_Mopaq::DeltaData::PatchLevel(Blizzard::Mopaq::Mpqsystem* system, uin
     return result;
 }
 
-// OFFSET: %0x0073A700
+// OFFSET: 0x007D9010
 void System_Mopaq::DeltaData::CollectLevels(std::vector<DeltaData*>& levels) {
     levels.push_back(this);
 
@@ -395,7 +402,7 @@ void System_Mopaq::DeltaData::CollectLevels(std::vector<DeltaData*>& levels) {
     }
 }
 
-// OFFSET: %0x00753AA0
+// OFFSET: 0x007F3930/0x140500D10
 bool System_Mopaq::DeltaData::PatchIntoBuffer(Blizzard::Mopaq::Mpqsystem* system, uint8_t* dest) {
     std::vector<DeltaData*> levels;
     this->CollectLevels(levels);
@@ -428,7 +435,7 @@ bool System_Mopaq::DeltaData::PatchIntoBuffer(Blizzard::Mopaq::Mpqsystem* system
 
             if (!level->PatchLevel(system, patched, static_cast<uint8_t*>(source))) {
                 Blizzard::String::QuickFormat<1024> message("%s - PatchLevel error", "System_Mopaq::DeltaData::PatchIntoBuffer");
-                Blizzard::File::AddToLastErrorStack(131, message.m_buffer, 4);
+                Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_CORRUPTED, message.m_buffer, 4);
                 Blizzard::Memory::Free(patched);
                 Blizzard::Memory::Free(source);
                 return false;
@@ -474,7 +481,7 @@ bool System_Mopaq::DeltaData::PatchIntoBuffer(Blizzard::Mopaq::Mpqsystem* system
     return result;
 }
 
-// OFFSET: %0x00714B70
+// OFFSET: 0x007B27E0/0x1404A7AB0
 bool System_Mopaq::DeltaData::CopyFromApplied(void* buffer, int64_t offset, int32_t count) {
     if (offset + count > static_cast<int32_t>(this->m_appliedSize) || offset < 0) {
         return false;
@@ -484,7 +491,7 @@ bool System_Mopaq::DeltaData::CopyFromApplied(void* buffer, int64_t offset, int3
     return true;
 }
 
-// OFFSET: %0x007569D0
+// OFFSET: 0x007F5EF0/0x1405043D0
 bool System_Mopaq::DeltaData::Read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     if (parms->m_handle->m_archive->m_flags & 0x2000) {
         if (!system) {
@@ -504,7 +511,7 @@ bool System_Mopaq::DeltaData::Read(Blizzard::Mopaq::Mpqsystem* system, MpqParams
 
         if (!this->PatchIntoBuffer(system, this->m_appliedBuffer)) {
             Blizzard::String::QuickFormat<1024> message("%s - PatchIntoAppliedBuffer error %lld %d %llu", "System_Mopaq::DeltaData::Read", parms->m_offset, parms->m_count, this->m_fileSize);
-            Blizzard::File::AddToLastErrorStack(131, message.m_buffer, 4);
+            Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_CORRUPTED, message.m_buffer, 4);
             return false;
         }
     }
@@ -512,7 +519,7 @@ bool System_Mopaq::DeltaData::Read(Blizzard::Mopaq::Mpqsystem* system, MpqParams
     return this->CopyFromApplied(parms->m_buffer, parms->m_offset, parms->m_count);
 }
 
-// OFFSET: %0x00714AE0
+// OFFSET: 0x007B2750/0x1404A79B0
 void System_Mopaq::DeltaData::ReserveDeltaSpace(int64_t size) {
     if (this->m_offset < 0) {
         this->m_offset = this->m_handle->m_archive->RequestWriteReservation(size + 28, false);
@@ -531,7 +538,7 @@ void System_Mopaq::DeltaData::ReserveDeltaSpace(int64_t size) {
     }
 }
 
-// OFFSET: %0x00720D60
+// OFFSET: 0x007BF580/0x1404B8690
 bool System_Mopaq::DeltaData::ProcessPatchHeader(const void* buffer, int32_t size) {
     Blizzard::Patch::MemoryStream stream;
     stream.m_data = static_cast<const uint8_t*>(buffer);
@@ -575,7 +582,7 @@ bool System_Mopaq::DeltaData::ProcessPatchHeader(const void* buffer, int32_t siz
     return true;
 }
 
-// OFFSET: %0x00731CA0
+// OFFSET: 0x007D0530/0x1404CE490
 bool System_Mopaq::ReleaseDeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, System_SFile::ArchivePtr& archive) {
     DeltaData* delta = handle->m_delta;
 
@@ -610,7 +617,7 @@ bool System_Mopaq::ReleaseDeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, Sy
     return true;
 }
 
-// OFFSET: %0x00759F80
+// OFFSET: 0x007F7960/0x140506A60
 bool System_Mopaq::delta_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     bool result;
@@ -626,13 +633,13 @@ bool System_Mopaq::delta_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
         }
 
         Blizzard::String::QuickFormat<1024> message("%s - stack open error", "System_Mopaq::delta_open");
-        Blizzard::File::AddToLastErrorStack(131, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_CORRUPTED, message.m_buffer, 4);
     } else {
         result = InitializeDeltaData(handle, static_cast<const MpqDeltaMetadata*>(parms->m_buffer));
 
         if (!result) {
             Blizzard::String::QuickFormat<1024> message("%s - InitializeDeltaData error", "System_Mopaq::delta_open");
-            Blizzard::File::AddToLastErrorStack(131, message.m_buffer, 4);
+            Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_CORRUPTED, message.m_buffer, 4);
         } else {
             if (handle->m_delta->IsLargeDelta(handle->m_archive->m_sectorSize)) {
                 parms->m_flags |= 0x20000;
@@ -663,7 +670,7 @@ bool System_Mopaq::delta_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     }
 
     Blizzard::String::QuickFormat<1024> message("%s - error and close", "System_Mopaq::delta_open");
-    Blizzard::File::AddToLastErrorStack(131, message.m_buffer, 4);
+    Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_CORRUPTED, message.m_buffer, 4);
 
     MpqParams close;
     memset(&close, 0, sizeof(close));
@@ -678,7 +685,7 @@ bool System_Mopaq::delta_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return result;
 }
 
-// OFFSET: %0x00753EF0
+// OFFSET: 0x007F3D80/0x140501360
 bool System_Mopaq::delta_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(parms->m_handle->m_archive, true));
     bool result = false;
@@ -707,7 +714,7 @@ bool System_Mopaq::delta_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return parms->m_handle->m_delta->Read(system->m_next, parms);
 }
 
-// OFFSET: %0x00720E50
+// OFFSET: 0x007BF670/0x1404B8820
 bool System_Mopaq::delta_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     DeltaData* delta = parms->m_handle->m_delta;
 
@@ -720,7 +727,7 @@ bool System_Mopaq::delta_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: %0x0070E200
+// OFFSET: 0x007AB340
 bool System_Mopaq::delta_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     DeltaData* delta = handle->m_delta;

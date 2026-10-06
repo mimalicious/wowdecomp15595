@@ -210,6 +210,22 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_md5verifystack = {
     NULL
 };
 
+// STATIC: 0x00D070C0
+Blizzard::Mopaq::Mpqsystem System_Mopaq::s_offsetstack = {
+    0x8000,
+    NULL,
+    NULL,
+    NULL,
+    System_Mopaq::offset_read,
+    System_Mopaq::offset_write,
+    NULL,
+    System_Mopaq::offset_getfilesize,
+    System_Mopaq::offset_setfilesize,
+    NULL,
+    NULL,
+    NULL
+};
+
 // INLINED
 bool System_Mopaq::CallNext(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::Mpqsystem* next = system->m_next;
@@ -268,6 +284,10 @@ void System_Mopaq::InitStack(Blizzard::Mopaq::Mpqsystem& system, int32_t flags) 
         Push(system, &s_memorystack);
     } else if (flags & 0x1) {
         Push(system, &s_basestack);
+    }
+
+    if (!(flags & 0x8000)) {
+        Push(system, &s_offsetstack);
     }
 
     if (flags & 0x400) {
@@ -1245,4 +1265,40 @@ bool System_Mopaq::verify_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPar
     }
 
     return CallNext(system, parms);
+}
+
+// OFFSET: 0x007AB640
+bool System_Mopaq::offset_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
+    if (!system->m_next) {
+        return false;
+    }
+
+    bool result = CallNext(system, parms);
+
+    if (result) {
+        parms->m_offset -= parms->m_handle->m_baseOffset;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007AB680
+bool System_Mopaq::offset_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
+    parms->m_offset += parms->m_handle->m_baseOffset;
+
+    return system->m_next ? CallNext(system, parms) : false;
+}
+
+// OFFSET: 0x007AB680
+bool System_Mopaq::offset_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
+    parms->m_offset += parms->m_handle->m_baseOffset;
+
+    return system->m_next ? CallNext(system, parms) : false;
+}
+
+// OFFSET: 0x007AB680
+bool System_Mopaq::offset_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
+    parms->m_offset += parms->m_handle->m_baseOffset;
+
+    return system->m_next ? CallNext(system, parms) : false;
 }

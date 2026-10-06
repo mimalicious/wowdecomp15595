@@ -14,12 +14,17 @@
 static bool IsStreamedFile(System_SFile::ARCHIVEREC* archive) {
     Blizzard::Mopaq::MpqHandleRecord* archiveHandle = archive->m_file->m_handle;
     Blizzard::File::StreamRecord* file = archiveHandle ? archiveHandle->m_file : NULL;
+
+    if (!file) {
+        return false;
+    }
+
     Blizzard::File::StreamingInfo* streaming = file->m_streaming;
 
     return streaming && streaming->m_unit;
 }
 
-// OFFSET: %0x00724210
+// OFFSET: 0x007C32C0/0x1404BD8A0
 int32_t Blizzard::Mopaq::MpqHandleRecord::Release() {
     int32_t result = this->m_refCount.Decrement();
 
@@ -52,7 +57,7 @@ const char* Blizzard::Mopaq::HSFILERecord::GetFileName() {
     return this->m_handle ? this->m_handle->m_name : "";
 }
 
-// OFFSET: %0x007144A0
+// OFFSET: 0x007B20E0
 bool Blizzard::Mopaq::HSFILERecord::Read(void* buffer, int64_t offset, int32_t count, int32_t* amount) {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -81,7 +86,7 @@ bool Blizzard::Mopaq::HSFILERecord::Read(void* buffer, int64_t offset, int32_t c
     return result;
 }
 
-// OFFSET: %0x00714650
+// OFFSET: 0x007B22C0/0x1404A7360
 int64_t Blizzard::Mopaq::HSFILERecord::GetFileSize() {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -99,7 +104,7 @@ int64_t Blizzard::Mopaq::HSFILERecord::GetFileSize() {
     return -1;
 }
 
-// OFFSET: %0x007145E0
+// OFFSET: 0x007B2220
 bool Blizzard::Mopaq::HSFILERecord::SetFileSize(int64_t size) {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -120,7 +125,7 @@ bool Blizzard::Mopaq::HSFILERecord::SetFileSize(int64_t size) {
     return handle->m_stack->m_setfilesize(handle->m_stack, &parms);
 }
 
-// OFFSET: %0x00714590
+// OFFSET: 0x007B21D0
 bool Blizzard::Mopaq::HSFILERecord::Flush() {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -140,7 +145,7 @@ bool Blizzard::Mopaq::HSFILERecord::Flush() {
     return handle->m_stack->m_flush(handle->m_stack, &parms);
 }
 
-// OFFSET: %0x00714520
+// OFFSET: 0x007B2160/0x1404A71D0
 bool Blizzard::Mopaq::HSFILERecord::Write(const void* buffer, int64_t offset, int32_t count) {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -163,11 +168,11 @@ bool Blizzard::Mopaq::HSFILERecord::Write(const void* buffer, int64_t offset, in
     return handle->m_stack->m_write(handle->m_stack, &parms);
 }
 
-// OFFSET: %0x00714470
+// OFFSET: 0x007AAFE0
 Blizzard::Mopaq::MpqErrorHandler::~MpqErrorHandler() {
 }
 
-// OFFSET: %0x00714470
+// OFFSET: 0x007AAFE0
 Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::~MpqRepairOnDemandErrorHandler() {
 }
 
@@ -175,17 +180,17 @@ Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::~MpqRepairOnDemandErrorHandler()
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::MpqStandaloneRepairErrorHandler() {
 }
 
-// OFFSET: %0x007353E0
+// OFFSET: 0x007D4560
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::~MpqStandaloneRepairErrorHandler() {
 }
 
-// OFFSET: %0x0073A650
+// OFFSET: 0x007D8F60
 bool Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::HandleDecompressSectorError(uint32_t sector) {
     this->m_badSectors.push_back(sector);
     return true;
 }
 
-// OFFSET: %0x00735370
+// OFFSET: 0x007D44F0
 bool Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::GetBadSectorList(std::vector<uint32_t>& sectors) {
     sectors = this->m_badSectors;
     return true;
@@ -239,7 +244,7 @@ bool Blizzard::Mopaq::MpqErrorHandler::GetBadSectorList(std::vector<uint32_t>& s
     return false;
 }
 
-// OFFSET: %0x00728B40
+// OFFSET: 0x007C79E0
 System_Mopaq::IOHandler::IOHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, Blizzard::Mopaq::HSFILERecord& base, int64_t baseOffset) {
     this->m_handle = handle;
     this->m_base.m_handle = base.m_handle;
@@ -253,7 +258,7 @@ System_Mopaq::IOHandler::IOHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, Bl
     this->m_handle->m_writeFunc = IOHandler::WriteData;
 }
 
-// OFFSET: %0x0072DE80
+// OFFSET: 0x007CC9C0
 System_Mopaq::IOHandler::~IOHandler() {
     if (this->m_base.m_handle && !this->m_base.m_handle->Release()) {
         this->m_base.m_handle = NULL;
@@ -266,13 +271,13 @@ bool System_Mopaq::IOHandler::ReadData(IOHandler* handler, void* buffer, int64_t
     return handler->ReadData(buffer, offset, count);
 }
 
-// OFFSET: %0x0070E6E0
+// OFFSET: 0x007AB900/0x1404A19E0
 bool System_Mopaq::IOHandler::InitializeAndRead(IOHandler* handler, void* buffer, int64_t offset, int32_t* count) {
     handler->m_handle->m_readFunc = IOHandler::ReadData;
     return handler->InitializeAndRead(buffer, offset, count);
 }
 
-// OFFSET: %0x0070E710
+// OFFSET: 0x007AB930
 bool System_Mopaq::IOHandler::WriteData(IOHandler* handler, const void* buffer, int64_t offset, int32_t count) {
     return handler->WriteData(static_cast<const uint8_t*>(buffer), offset, count);
 }
@@ -301,7 +306,7 @@ bool System_Mopaq::IOHandler::Flush() {
     return true;
 }
 
-// OFFSET: %0x00715AE0
+// OFFSET: 0x007B3750
 int32_t System_Mopaq::IOHandler::TrimRead(int32_t count, System_SFile::BLOCKENTRY& entry, int64_t offset) {
     int64_t available = static_cast<int64_t>(entry.m_fileSize) - offset;
     int32_t amount = static_cast<int32_t>(available >= count ? count : available);
@@ -326,20 +331,22 @@ bool System_Mopaq::IOHandler::AdjustSectorTable() {
 void System_Mopaq::IOHandler::SetSizeFileBeforeDelta(uint64_t size) {
 }
 
-// OFFSET: %0x0072DDB0
+// OFFSET: 0x007CC8F0
 System_Mopaq::MopaqReadHandler::MopaqReadHandler(Blizzard::Mopaq::MpqHandleRecord*& handle) : IOHandler(handle, *handle->m_archive->m_file, handle->m_blockEntry.m_offset) {
 }
 
-// OFFSET: %0x0074EE20
+// OFFSET: 0x007E8470/0x1404F2B70
 bool System_Mopaq::MopaqReadHandler::ReadData(void* buffer, int64_t offset, int32_t* count) {
     if (this->PerformRead(buffer, offset, *count)) {
         return true;
     }
 
     Blizzard::String::QuickFormat<1024> message("%s - PerformRead error %lld %d", "System_Mopaq::MopaqReadHandler::ReadData", offset, *count);
-    Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+    Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
-    if (IsStreamedFile(this->m_handle->m_archive)) {
+    System_SFile::ARCHIVEREC* archive = this->m_handle->m_archive;
+
+    if (!archive || IsStreamedFile(archive)) {
         return false;
     }
 
@@ -352,7 +359,7 @@ bool System_Mopaq::MopaqReadHandler::WriteData(const uint8_t* buffer, int64_t of
     return false;
 }
 
-// OFFSET: %0x007156D0
+// OFFSET: 0x007B3340
 int32_t System_Mopaq::MopaqReadHandler::TrimRead(int32_t count, System_SFile::BLOCKENTRY& entry, int64_t offset) {
     int64_t available = static_cast<int64_t>(entry.m_compressedSize) - offset;
     int32_t amount = static_cast<int32_t>(available >= count ? count : available);
@@ -360,19 +367,19 @@ int32_t System_Mopaq::MopaqReadHandler::TrimRead(int32_t count, System_SFile::BL
     return amount > 0 ? amount : 0;
 }
 
-// OFFSET: %0x00715650
+// OFFSET: 0x007B32C0/0x1404A8B30
 bool System_Mopaq::MopaqReadHandler::PerformRead(void* buffer, int64_t offset, int32_t count) {
     return this->m_base.Read(buffer, offset + this->m_baseOffset, count, NULL);
 }
 
-// OFFSET: %0x0071B520
+// OFFSET: 0x007BA1E0
 System_Mopaq::SectorReadHandler::SectorCache::SectorCache(uint32_t size) {
     this->m_data = NULL;
     this->m_sector = -1;
     this->m_data = static_cast<uint8_t*>(Blizzard::Memory::Allocate(size));
 }
 
-// OFFSET: %0x0074EED0
+// OFFSET: 0x007E8530
 System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRecord*& handle, void* sectorTable, bool sharedMemory) : MopaqReadHandler(handle) {
     this->m_sectorSize = handle->m_archive->m_sectorSize;
     this->m_key = 0;
@@ -418,7 +425,7 @@ System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRec
     }
 }
 
-// OFFSET: %0x0072DE10
+// OFFSET: 0x007CC950
 System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     delete[] this->m_checksums;
 
@@ -433,7 +440,7 @@ System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     }
 }
 
-// OFFSET: %0x00715730
+// OFFSET: 0x007B33A0
 void System_Mopaq::SectorReadHandler::AllocateSectorTable() {
     if (!this->m_sectorTableState) {
         delete[] this->m_sectorTable;
@@ -444,7 +451,7 @@ void System_Mopaq::SectorReadHandler::AllocateSectorTable() {
     this->m_sectorTableState = 0;
 }
 
-// OFFSET: %0x0074F180
+// OFFSET: 0x007E87E0/0x1404F3000
 bool System_Mopaq::SectorReadHandler::ValidateSectorTable() {
     uint32_t count = this->m_sectorCount;
     uint64_t compressedSize = this->m_handle->m_blockEntry.m_compressedSize;
@@ -457,7 +464,7 @@ bool System_Mopaq::SectorReadHandler::ValidateSectorTable() {
         if (this->m_sectorTable[i] <= this->m_sectorTable[i - 1] || this->m_sectorTable[i] > compressedSize) {
             System_SFile::BLOCKENTRY& entry = this->m_handle->m_blockEntry;
             Blizzard::String::QuickFormat<1024> message("%s - fail to validate %u %u %u entry: %lld %llu %llu %u %d", "System_Mopaq::SectorReadHandler::ValidateSectorTable", i, this->m_sectorTable[i], this->m_sectorTable[i - 1], entry.m_offset, entry.m_compressedSize, entry.m_fileSize, entry.m_flags, this->m_handle->m_blockIndex);
-            Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+            Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
             return false;
         }
     }
@@ -465,7 +472,7 @@ bool System_Mopaq::SectorReadHandler::ValidateSectorTable() {
     return true;
 }
 
-// OFFSET: %0x0074EFE0
+// OFFSET: 0x007E8640/0x1404F2E10
 bool System_Mopaq::SectorReadHandler::InitializeChecksumTable() {
     uint32_t tableSize = 4 * this->m_sectorCount;
 
@@ -483,7 +490,7 @@ bool System_Mopaq::SectorReadHandler::InitializeChecksumTable() {
 
     if (size > tableSize) {
         Blizzard::String::QuickFormat<1024> message("%s - fail to validate checksum %u %u", "System_Mopaq::SectorReadHandler::InitializeChecksumTable", size, tableSize);
-        Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
         if (!this->m_handle->m_errorHandler->HandleReadChecksumError(this->m_handle)) {
             return false;
@@ -497,7 +504,7 @@ bool System_Mopaq::SectorReadHandler::InitializeChecksumTable() {
         this->m_checksums = NULL;
 
         Blizzard::String::QuickFormat<1024> message("%s - fail to read checksum %u %u", "System_Mopaq::SectorReadHandler::InitializeChecksumTable", start, size);
-        Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
         if (!this->m_handle->m_errorHandler->HandleReadChecksumError(this->m_handle)) {
             return false;
@@ -525,7 +532,7 @@ bool System_Mopaq::SectorReadHandler::InitializeChecksumTable() {
     return true;
 }
 
-// OFFSET: %0x00754750
+// OFFSET: 0x007EB170/0x1404F7B90
 bool System_Mopaq::SectorReadHandler::InitializeSectorTable() {
     this->m_sectorCount = static_cast<uint32_t>((this->m_handle->m_blockEntry.m_fileSize - 1) / this->m_sectorSize + 1);
 
@@ -536,10 +543,16 @@ bool System_Mopaq::SectorReadHandler::InitializeSectorTable() {
     uint32_t size = 4 * this->m_sectorCount + 8;
 
     if (!this->PerformRead(this->m_sectorTable, 0, size)) {
-        bool streamed = IsStreamedFile(this->m_handle->m_archive);
+        System_SFile::ARCHIVEREC* archive = this->m_handle->m_archive;
+
+        if (!archive) {
+            return false;
+        }
+
+        bool streamed = IsStreamedFile(archive);
 
         Blizzard::String::QuickFormat<1024> message("%s - fail to read sector table of size:%u, streaming:%d", "System_Mopaq::SectorReadHandler::InitializeSectorTable", size, streamed);
-        Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+        Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
 
         if (!streamed || !this->m_handle->m_errorHandler->HandleInitSectorTableError(this->m_handle, reinterpret_cast<uint8_t*>(this->m_sectorTable), 0, size)) {
             return false;
@@ -557,7 +570,7 @@ bool System_Mopaq::SectorReadHandler::InitializeSectorTable() {
     return this->InitializeChecksumTable();
 }
 
-// OFFSET: %0x0074F280
+// OFFSET: 0x007E88F0/0x1404F3140
 bool System_Mopaq::SectorReadHandler::ProcessSectors(uint8_t* source, uint8_t* dest, const int32_t* range) {
     for (uint32_t sector = this->m_firstSector; sector < this->m_lastSector + 1; sector++) {
         uint32_t sourceSize = this->m_sectorTable[sector + 1] - this->m_sectorTable[sector];
@@ -588,7 +601,7 @@ bool System_Mopaq::SectorReadHandler::ProcessSectors(uint8_t* source, uint8_t* d
     return true;
 }
 
-// OFFSET: %0x0074F3D0
+// OFFSET: 0x007E8A40/0x1404F32F0
 bool System_Mopaq::SectorReadHandler::ReadAndDecompressData(uint8_t* dest, const int32_t* range) {
     uint32_t sectorSize = this->m_sectorSize;
     this->m_firstSector = range[0] / sectorSize;
@@ -616,17 +629,17 @@ bool System_Mopaq::SectorReadHandler::ReadAndDecompressData(uint8_t* dest, const
 
     System_SFile::BLOCKENTRY& entry = this->m_handle->m_blockEntry;
     Blizzard::String::QuickFormat<1024> message("%s - PerformRead error %u %u %u %u entry: %lld %llu %llu %u %d", "System_Mopaq::SectorReadHandler::ReadAndDecompressData", range[0], start, size, total, entry.m_offset, entry.m_compressedSize, entry.m_fileSize, entry.m_flags, this->m_handle->m_blockIndex);
-    Blizzard::File::AddToLastErrorStack(104, message.m_buffer, 4);
+    Blizzard::File::AddToLastErrorStack(STORM_ERROR_FILE_READ, message.m_buffer, 4);
     return false;
 }
 
-// OFFSET: %0x0074F4F0
+// OFFSET: 0x007E8B60
 bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t* range) {
     uint32_t sectorSize = this->m_sectorSize;
     uint32_t head = range[0] % sectorSize;
     uint32_t remaining = range[1];
     uint32_t end = range[0] + remaining;
-    bool toEnd = (end == this->m_handle->m_blockEntry.m_fileSize) || !(end % sectorSize);
+    bool toEnd = end == this->m_handle->m_blockEntry.m_fileSize || !(end % sectorSize);
 
     if (!this->m_sectorCache) {
         this->m_sectorCache = new SectorCache(this->m_sectorSize);
@@ -651,8 +664,12 @@ bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t
         read[1] = size;
 
         if (this->m_sectorCache->m_sector != sector) {
-            this->m_sectorCache->m_sector = sector;
             result = this->ReadAndDecompressData(this->m_sectorCache->m_data, read);
+            this->m_sectorCache->m_sector = result ? sector : -1;
+
+            if (!result) {
+                return result;
+            }
         }
 
         uint32_t amount = static_cast<int32_t>(size - head) >= static_cast<int32_t>(remaining) ? remaining : size - head;
@@ -661,10 +678,6 @@ bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t
         dest += amount;
         position += head + amount;
         read[0] = position;
-
-        if (!result) {
-            return result;
-        }
     }
 
     if (static_cast<int32_t>(remaining) >= static_cast<int32_t>(this->m_sectorSize)) {
@@ -676,13 +689,18 @@ bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t
 
         read[1] = size;
         result = this->ReadAndDecompressData(dest, read);
+
+        if (!result) {
+            return result;
+        }
+
         remaining -= size;
         dest += size;
         position += size;
         read[0] = position;
     }
 
-    if (result && remaining) {
+    if (remaining) {
         uint32_t sectorSize = this->m_sectorSize;
         int32_t sector = position / sectorSize;
 
@@ -691,18 +709,22 @@ bool System_Mopaq::SectorReadHandler::UnalignedRead(uint8_t* dest, const int32_t
         }
 
         if (this->m_sectorCache->m_sector != sector) {
-            this->m_sectorCache->m_sector = sector;
             result = this->ReadAndDecompressData(this->m_sectorCache->m_data, read);
+
+            if (!result) {
+                sector = -1;
+            }
+
+            this->m_sectorCache->m_sector = sector;
         }
 
         memcpy(dest, this->m_sectorCache->m_data, remaining);
-        return result;
     }
 
     return result;
 }
 
-// OFFSET: %0x0074F6F0
+// OFFSET: 0x007E8D70/0x1404F36C0
 bool System_Mopaq::SectorReadHandler::ReadData(void* buffer, int64_t offset, int32_t* count) {
     int32_t range[2];
     range[0] = static_cast<int32_t>(offset);
@@ -721,7 +743,9 @@ bool System_Mopaq::SectorReadHandler::ReadData(void* buffer, int64_t offset, int
         return true;
     }
 
-    if (!IsStreamedFile(this->m_handle->m_archive)) {
+    System_SFile::ARCHIVEREC* archive = this->m_handle->m_archive;
+
+    if (archive && !IsStreamedFile(archive)) {
         if (this->m_handle->m_errorHandler->HandleNonStreamableFileError(this->m_handle, static_cast<uint8_t*>(buffer), offset, *count)) {
             return true;
         }
@@ -733,7 +757,7 @@ bool System_Mopaq::SectorReadHandler::ReadData(void* buffer, int64_t offset, int
     return false;
 }
 
-// OFFSET: %0x00754870
+// OFFSET: 0x007EB2A0/0x1404F7D00
 bool System_Mopaq::SectorReadHandler::InitializeAndRead(void* buffer, int64_t offset, int32_t* count) {
     if (this->InitializeSectorTable() && this->ReadData(buffer, offset, count)) {
         return true;
@@ -746,7 +770,7 @@ bool System_Mopaq::SectorReadHandler::InitializeAndRead(void* buffer, int64_t of
     return false;
 }
 
-// OFFSET: %0x00715790
+// OFFSET: 0x007B3400/0x1404A8C90
 int32_t System_Mopaq::SectorReadHandler::TrimRead(int32_t count, System_SFile::BLOCKENTRY& entry, int64_t offset) {
     int64_t available = static_cast<int64_t>(entry.m_fileSize) - offset;
     int64_t amount = available >= count ? count : available;
@@ -754,7 +778,7 @@ int32_t System_Mopaq::SectorReadHandler::TrimRead(int32_t count, System_SFile::B
     return amount > 0 ? static_cast<int32_t>(amount) : 0;
 }
 
-// OFFSET: %0x0070E4B0
+// OFFSET: 0x007AB6D0
 bool System_Mopaq::SectorReadHandler::DecryptChecksumDecompress(SectorReadHandler* handler, uint8_t* source, uint8_t* dest, uint32_t sourceSize, uint32_t destSize, uint32_t sector) {
     System_MPQEncrypt::Decrypt(reinterpret_cast<uint32_t*>(source), sourceSize & ~3u, sector + handler->m_key);
 
@@ -776,7 +800,7 @@ bool System_Mopaq::SectorReadHandler::DecryptChecksumDecompress(SectorReadHandle
     return handler->m_decompress(dest, &size, source, sourceSize) && size == destSize;
 }
 
-// OFFSET: %0x0070E530
+// OFFSET: 0x007AB750
 bool System_Mopaq::SectorReadHandler::DecryptDecompress(SectorReadHandler* handler, uint8_t* source, uint8_t* dest, uint32_t sourceSize, uint32_t destSize, uint32_t sector) {
     System_MPQEncrypt::Decrypt(reinterpret_cast<uint32_t*>(source), sourceSize & ~3u, sector + handler->m_key);
 
@@ -784,7 +808,7 @@ bool System_Mopaq::SectorReadHandler::DecryptDecompress(SectorReadHandler* handl
     return handler->m_decompress(dest, &size, source, sourceSize) && size == destSize;
 }
 
-// OFFSET: %0x0070E590
+// OFFSET: 0x007AB7B0
 bool System_Mopaq::SectorReadHandler::ChecksumDecompress(SectorReadHandler* handler, uint8_t* source, uint8_t* dest, uint32_t sourceSize, uint32_t destSize, uint32_t sector) {
     uint32_t expected = handler->m_checksums[sector];
 
@@ -811,7 +835,7 @@ bool System_Mopaq::SectorReadHandler::Decompress(SectorReadHandler* handler, uin
     return handler->m_decompress(dest, &size, source, sourceSize) && size == destSize;
 }
 
-// OFFSET: %0x0070E640
+// OFFSET: 0x007AB860
 bool System_Mopaq::SectorReadHandler::PkwareDecompressWrapper(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize) {
     if (sourceSize != *destSize) {
         return System_SComp::PkwareDecompress(dest, destSize, source, sourceSize) != 0;
@@ -824,7 +848,7 @@ bool System_Mopaq::SectorReadHandler::PkwareDecompressWrapper(void* dest, uint32
     return true;
 }
 
-// OFFSET: %0x00726D50
+// OFFSET: 0x007C5F50
 void Blizzard::Mopaq::HSFILERecord::Assign(const HSFILERecord& other) {
     MpqHandleRecord* handle = other.m_handle;
     MpqHandleRecord* old = this->m_handle;
