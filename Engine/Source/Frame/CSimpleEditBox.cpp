@@ -131,7 +131,7 @@ void CSimpleEditBox::ClearKeyboardFocus(CSimpleEditBox* editBox, bool runScript)
 }
 
 // OFFSET: %0x0052A8A0
-CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleFrame(parent) {
+CSimpleEditBox::CSimpleEditBox(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent) {
     this->m_cursorBlinkSpeed = 0.5f;
     this->m_blinkElapsedTime = 0.0f;
     this->m_textTaint = NULL;
@@ -297,7 +297,7 @@ void CSimpleEditBox::RunOnCharCompositionScript(const char* text) {
 
 // OFFSET: %0x00525F10
 FrameScript_Object::ScriptIx* CSimpleEditBox::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
-    FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
+    FrameScript_Object::ScriptIx* script = CSimpleHyperlinkedFrame::GetScriptByName(name, data);
 
     if (script) {
         return script;
@@ -367,7 +367,7 @@ void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, 
     FrameScript_Object::GetScriptTime(L, this->m_onEditFocusGained, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onEditFocusLost, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onCharComposition, time, count);
-    CSimpleFrame::GetScriptTime(L, time, count, recurse);
+    CSimpleHyperlinkedFrame::GetScriptTime(L, time, count, recurse);
 }
 
 // OFFSET: %0x00526310
@@ -3044,4 +3044,22 @@ int32_t CSimpleEditBox::OnLayerMouseDown(const CMouseEvent& evt, const char* btn
 
     CSimpleEditBox::SetKeyboardFocus(this);
     return result;
+}
+
+// OFFSET: 0x00516CE0
+void CSimpleEditBox::RefreshHyperlinks() {
+    this->ClearHyperlinks();
+
+    if (this->m_hyperlinksEnabled) {
+        this->AddHyperlinks(this->m_fontString);
+    }
+}
+
+// OFFSET: 0x00519CA0
+void CSimpleEditBox::Enable(int32_t enabled) {
+    if (!enabled) {
+        CSimpleEditBox::ClearKeyboardFocus(this, true);
+    }
+
+    this->RunOnEnableScript(enabled == 0);
 }

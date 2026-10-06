@@ -1126,7 +1126,7 @@ void CSimpleButton::Enable(int32_t enabled) {
 }
 
 // OFFSET: %0x00525340
-void CSimpleButton::RunOnEnableScript(int32_t disabled) {
+void CSimpleFrame::RunOnEnableScript(int32_t disabled) {
     this->SetFrameFlag(0x400, disabled);
 
     FrameScript_Object::ScriptIx& script = disabled ? this->m_onDisable : this->m_onEnable;

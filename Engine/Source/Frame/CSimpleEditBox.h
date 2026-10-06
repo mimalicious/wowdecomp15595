@@ -6,6 +6,7 @@
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Frame/CSimpleFontedFrame.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
+#include "Engine/Source/Frame/CSimpleHyperlinkedFrame.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/CRect.h"
 
@@ -15,7 +16,7 @@ class CSimpleFontString;
 class CSimpleMessageFrame;
 class CSimpleTexture;
 
-class CSimpleEditBox : public CSimpleFrame, public CSimpleFontedFrame {
+class CSimpleEditBox : public CSimpleHyperlinkedFrame, public CSimpleFontedFrame {
     public:
     struct EditHistory {
         /* 0000 */ char* m_text;
@@ -55,57 +56,57 @@ class CSimpleEditBox : public CSimpleFrame, public CSimpleFontedFrame {
     static void RegisterScriptMethods(lua_State* L);
     static void SetKeyboardFocus(CSimpleEditBox* editBox);
 
-    /* 01F4 */ uint32_t m_editBoxFlags;
-    /* 01F8 */ uint32_t m_dirtyBits;
-    /* 01FC */ const char* m_textTaint;
-    /* 0200 */ CSimpleFontedFrameFont* m_font;
-    /* 0204 */ CSimpleFontString* m_fontString;
-    /* 0208 */ char* m_text;
-    /* 020C */ uint32_t* m_textInfo;
-    /* 0210 */ char* m_textHidden;
-    /* 0214 */ int32_t m_textLength;
-    /* 0218 */ int32_t m_textMaxLength;
-    /* 021C */ int32_t m_textMaxLetters;
-    /* 0220 */ uint32_t m_textSize;
-    /* 0224 */ int32_t m_visiblePosition;
-    /* 0228 */ int32_t m_visibleLength;
-    /* 022C */ CSimpleTexture* m_highlightTextures[3];
-    /* 0238 */ int32_t m_highlightLeft;
-    /* 023C */ int32_t m_highlightRight;
-    /* 0240 */ int32_t m_highlightDrag;
-    /* 0244 */ CSimpleTexture* m_cursorTexture;
-    /* 0248 */ int32_t m_cursorPos;
-    /* 024C */ float m_cursorBlinkSpeed;
-    /* 0250 */ float m_blinkElapsedTime;
-    /* 0254 */ TSGrowableArray<uint32_t> m_visibleLines;
-    /* 0264 */ int32_t m_historyLines;
-    /* 0268 */ int32_t m_historyIndex;
-    /* 026C */ TSFixedArray<CSimpleEditBox::EditHistory> m_history;
-    /* 0278 */ CSimpleEditBox::EventCallback m_enterPressedCallback;
-    /* 0280 */ CSimpleEditBox::EventCallback m_escapePressedCallback;
-    /* 0288 */ CSimpleEditBox::EventCallback m_spacePressedCallback;
-    /* 0290 */ CSimpleEditBox::EventCallback m_tabPressedCallback;
-    /* 0298 */ CSimpleEditBox::EventCallback m_textChangedCallback;
-    /* 02A0 */ CSimpleEditBox::EventCallback m_textSetCallback;
-    /* 02A8 */ int32_t m_imeComposition;
-    /* 02AC */ int32_t m_inputLanguage;
-    /* 02B0 */ CSimpleTexture* m_clauseHighlight;
-    /* 02B4 */ int32_t m_clauseStart;
-    /* 02B8 */ int32_t m_clauseEnd;
-    /* 02BC */ CSimpleMessageFrame* m_candidatesFrame;
-    /* 02C0 */ CSimpleTexture* m_candidateHighlight;
-    /* 02C4 */ CRect m_textInsets;
-    /* 02D4 */ FrameScript_Object::ScriptIx m_onEnterPressed;
-    /* 02D5 */ FrameScript_Object::ScriptIx m_onEscapePressed;
-    /* 02D6 */ FrameScript_Object::ScriptIx m_onSpacePressed;
-    /* 02D7 */ FrameScript_Object::ScriptIx m_onTabPressed;
-    /* 02D8 */ FrameScript_Object::ScriptIx m_onTextChanged;
-    /* 02D9 */ FrameScript_Object::ScriptIx m_onTextSet;
-    /* 02DA */ FrameScript_Object::ScriptIx m_onCursorChanged;
-    /* 02DB */ FrameScript_Object::ScriptIx m_onInputLanguageChanged;
-    /* 02DC */ FrameScript_Object::ScriptIx m_onEditFocusGained;
-    /* 02DD */ FrameScript_Object::ScriptIx m_onEditFocusLost;
-    /* 02DE */ FrameScript_Object::ScriptIx m_onCharComposition;
+    /* 0204 */ uint32_t m_editBoxFlags;
+    /* 0208 */ uint32_t m_dirtyBits;
+    /* 020C */ const char* m_textTaint;
+    /* 0210 */ CSimpleFontedFrameFont* m_font;
+    /* 0214 */ CSimpleFontString* m_fontString;
+    /* 0218 */ char* m_text;
+    /* 021C */ uint32_t* m_textInfo;
+    /* 0220 */ char* m_textHidden;
+    /* 0224 */ int32_t m_textLength;
+    /* 0228 */ int32_t m_textMaxLength;
+    /* 022C */ int32_t m_textMaxLetters;
+    /* 0230 */ uint32_t m_textSize;
+    /* 0234 */ int32_t m_visiblePosition;
+    /* 0238 */ int32_t m_visibleLength;
+    /* 023C */ CSimpleTexture* m_highlightTextures[3];
+    /* 0248 */ int32_t m_highlightLeft;
+    /* 024C */ int32_t m_highlightRight;
+    /* 0250 */ int32_t m_highlightDrag;
+    /* 0254 */ CSimpleTexture* m_cursorTexture;
+    /* 0258 */ int32_t m_cursorPos;
+    /* 025C */ float m_cursorBlinkSpeed;
+    /* 0260 */ float m_blinkElapsedTime;
+    /* 0264 */ TSGrowableArray<uint32_t> m_visibleLines;
+    /* 0274 */ int32_t m_historyLines;
+    /* 0278 */ int32_t m_historyIndex;
+    /* 027C */ TSFixedArray<CSimpleEditBox::EditHistory> m_history;
+    /* 0288 */ CSimpleEditBox::EventCallback m_enterPressedCallback;
+    /* 0290 */ CSimpleEditBox::EventCallback m_escapePressedCallback;
+    /* 0298 */ CSimpleEditBox::EventCallback m_spacePressedCallback;
+    /* 02A0 */ CSimpleEditBox::EventCallback m_tabPressedCallback;
+    /* 02A8 */ CSimpleEditBox::EventCallback m_textChangedCallback;
+    /* 02B0 */ CSimpleEditBox::EventCallback m_textSetCallback;
+    /* 02B8 */ int32_t m_imeComposition;
+    /* 02BC */ int32_t m_inputLanguage;
+    /* 02C0 */ CSimpleTexture* m_clauseHighlight;
+    /* 02C4 */ int32_t m_clauseStart;
+    /* 02C8 */ int32_t m_clauseEnd;
+    /* 02CC */ CSimpleMessageFrame* m_candidatesFrame;
+    /* 02D0 */ CSimpleTexture* m_candidateHighlight;
+    /* 02D4 */ CRect m_textInsets;
+    /* 02E4 */ FrameScript_Object::ScriptIx m_onEnterPressed;
+    /* 02E5 */ FrameScript_Object::ScriptIx m_onEscapePressed;
+    /* 02E6 */ FrameScript_Object::ScriptIx m_onSpacePressed;
+    /* 02E7 */ FrameScript_Object::ScriptIx m_onTabPressed;
+    /* 02E8 */ FrameScript_Object::ScriptIx m_onTextChanged;
+    /* 02E9 */ FrameScript_Object::ScriptIx m_onTextSet;
+    /* 02EA */ FrameScript_Object::ScriptIx m_onCursorChanged;
+    /* 02EB */ FrameScript_Object::ScriptIx m_onInputLanguageChanged;
+    /* 02EC */ FrameScript_Object::ScriptIx m_onEditFocusGained;
+    /* 02ED */ FrameScript_Object::ScriptIx m_onEditFocusLost;
+    /* 02EE */ FrameScript_Object::ScriptIx m_onCharComposition;
 
     virtual ~CSimpleEditBox();
     virtual int32_t GetScriptMetaTable();
@@ -128,6 +129,8 @@ class CSimpleEditBox : public CSimpleFrame, public CSimpleFontedFrame {
     virtual int32_t OnLayerMouseUp(const CMouseEvent& evt, const char* btn);
     virtual void LoadXML(linkObject* node, CStatus* status);
     virtual void FontUpdated(CSimpleFontedFrameFont* font, int32_t flags);
+    virtual void RefreshHyperlinks();
+    virtual void Enable(int32_t enabled);
 
     CSimpleEditBox(CSimpleFrame* parent);
     void AddHistoryLine(const char* text, const char* taint);

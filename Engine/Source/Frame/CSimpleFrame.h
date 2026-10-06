@@ -191,6 +191,7 @@ class CSimpleFrame : public CScriptRegion {
     void RemoveFrameRegion(CSimpleRegion* region, uint32_t drawLayer);
     void RunOnAttributeChangedScript(const char* name, int32_t luaRef);
     void RunOnCharScript(const char* text);
+    void RunOnEnableScript(int32_t disabled);
     void RunOnEnterScript(int32_t motion);
     void RunOnKeyDownScript(const char* key);
     void RunOnKeyUpScript(const char* key);

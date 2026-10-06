@@ -290,14 +290,7 @@ void CSimpleMessageScrollFrame::Clear() {
 
 // OFFSET: %0x0052DA50
 void CSimpleMessageScrollFrame::RefreshHyperlinks() {
-    CSimpleHyperlinkButton* button = this->m_hyperlinks.Head();
-
-    while (!TSList<CSimpleHyperlinkButton, TSGetExplicitLink<CSimpleHyperlinkButton> >::IsEnd(button)) {
-        CSimpleHyperlinkButton* next = this->m_hyperlinks.RawNext(button);
-        this->m_hyperlinks.UnlinkNode(button);
-        delete button;
-        button = next;
-    }
+    this->ClearHyperlinks();
 
     if (!this->m_hyperlinksEnabled) {
         return;
@@ -306,18 +299,8 @@ void CSimpleMessageScrollFrame::RefreshHyperlinks() {
     for (int32_t i = this->m_numDisplayed - 1; i != -1; i--) {
         CSimpleMessageScrollFrameDisplayNode& node = this->m_displayNodes[i];
 
-        if (!node.m_line->m_isVisible) {
-            continue;
-        }
-
-        const GXUFONTHYPERLINKINFO* info;
-        uint32_t count = GxuFontStringHyperLinkInfo(node.m_string->m_string ? TextBlockGetStringPtr(node.m_string->m_string) : NULL, info);
-
-        for (uint32_t j = 0; j < count; j++) {
-            void* data = CSimpleHyperlinkButton::s_allocator.GetData(0, typeid(CSimpleHyperlinkButton).raw_name(), SLOG_OBJECT);
-            CSimpleHyperlinkButton* link = data ? new (data) CSimpleHyperlinkButton(this) : NULL;
-            this->m_hyperlinks.LinkToTail(link);
-            link->SetHyperlink(node.m_string, &info[j]);
+        if (node.m_line->m_isVisible) {
+            this->AddHyperlinks(node.m_string);
         }
     }
 }

@@ -1,8 +1,12 @@
 #include <cstddef>
 #include <cstdint>
+#include <new>
+#include <typeinfo>
 #include "Engine/Source/Frame/CSimpleHyperlinkedFrame.h"
 #include "Engine/Source/Base/Coordinate.h"
 #include "Engine/Source/Frame/CSimpleRender.h"
+#include "Engine/Source/Gxu/GxuFont.h"
+#include "Engine/Source/Services/TextBlock.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
@@ -229,4 +233,39 @@ CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame(CSimpleFrame* parent) : CSimple
     this->m_inHyperlinkScript = 0;
     this->m_hyperlinksEnabled = 0;
     this->m_hyperlinksDirty = 0;
+}
+
+// OFFSET: 0x005332B0
+void CSimpleHyperlinkedFrame::ClearHyperlinks() {
+    CSimpleHyperlinkButton* button = this->m_hyperlinks.Head();
+
+    while (!TSList<CSimpleHyperlinkButton, TSGetExplicitLink<CSimpleHyperlinkButton> >::IsEnd(button)) {
+        CSimpleHyperlinkButton* next = this->m_hyperlinks.RawNext(button);
+        this->m_hyperlinks.UnlinkNode(button);
+        delete button;
+        button = next;
+    }
+}
+
+// OFFSET: 0x00533340
+void CSimpleHyperlinkedFrame::AddHyperlinks(CSimpleFontString* string) {
+    if (!string->m_string) {
+        return;
+    }
+
+    CGxString* text = TextBlockGetStringPtr(string->m_string);
+
+    if (!text) {
+        return;
+    }
+
+    const GXUFONTHYPERLINKINFO* info;
+    uint32_t count = GxuFontStringHyperLinkInfo(text, info);
+
+    for (uint32_t i = 0; i < count; i++) {
+        void* data = CSimpleHyperlinkButton::s_allocator.GetData(0, typeid(CSimpleHyperlinkButton).raw_name(), SLOG_OBJECT);
+        CSimpleHyperlinkButton* link = data ? new (data) CSimpleHyperlinkButton(this) : NULL;
+        this->m_hyperlinks.LinkToTail(link);
+        link->SetHyperlink(string, &info[i]);
+    }
 }

@@ -358,36 +358,20 @@ void CSimpleHTML::RefreshHyperlinks() {
         return;
     }
 
-    CSimpleHyperlinkButton* button = this->m_hyperlinks.Head();
-
-    while (!TSList<CSimpleHyperlinkButton, TSGetExplicitLink<CSimpleHyperlinkButton> >::IsEnd(button)) {
-        CSimpleHyperlinkButton* next = this->m_hyperlinks.RawNext(button);
-        this->m_hyperlinks.UnlinkNode(button);
-        delete button;
-        button = next;
-    }
+    this->ClearHyperlinks();
 
     if (!this->m_hyperlinksEnabled) {
         return;
     }
 
-    CONTENTNODE* content = this->m_content.Head();
+    CONTENTNODE* next;
 
-    while (!TSList<CONTENTNODE, TSGetLink<CONTENTNODE> >::IsEnd(content)) {
+    for (CONTENTNODE* content = this->m_content.Head(); content; content = next) {
+        next = this->m_content.Next(content);
+
         if (content->m_type == 1) {
-            CSimpleFontString* string = static_cast<CSimpleFontString*>(content->m_region);
-            const GXUFONTHYPERLINKINFO* info;
-            uint32_t count = GxuFontStringHyperLinkInfo(string->m_string ? TextBlockGetStringPtr(string->m_string) : NULL, info);
-
-            for (uint32_t i = 0; i < count; i++) {
-                void* data = CSimpleHyperlinkButton::s_allocator.GetData(0, typeid(CSimpleHyperlinkButton).raw_name(), SLOG_OBJECT);
-                CSimpleHyperlinkButton* link = data ? new (data) CSimpleHyperlinkButton(this) : NULL;
-                this->m_hyperlinks.LinkToTail(link);
-                link->SetHyperlink(string, &info[i]);
-            }
+            this->AddHyperlinks(static_cast<CSimpleFontString*>(content->m_region));
         }
-
-        content = this->m_content.RawNext(content);
     }
 }
 

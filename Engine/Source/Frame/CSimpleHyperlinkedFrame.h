@@ -60,6 +60,8 @@ class CSimpleHyperlinkedFrame : public CSimpleFrame {
     static void RegisterScriptMethods(lua_State* L);
 
     CSimpleHyperlinkedFrame(CSimpleFrame* parent);
+    void AddHyperlinks(CSimpleFontString* string);
+    void ClearHyperlinks();
     void RunOnHyperlinkClickScript(const char* link, const char* text, const char* btn);
     void RunOnHyperlinkEnterScript(const char* link, const char* text);
     void RunOnHyperlinkLeaveScript(const char* link, const char* text);

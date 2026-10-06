@@ -78,7 +78,6 @@ class CSimpleButton : public CSimpleFrame {
 
     CSimpleButton(CSimpleFrame* parent);
     void RunOnClickScript(const char* btn, int32_t down);
-    void RunOnEnableScript(int32_t disabled);
     void RunOnDoubleClickScript(const char* btn);
     void SetClickAction(uint64_t action);
     void SetDisabledFontColor(const CImVector& color);

@@ -585,6 +585,27 @@ void CSimpleEditBox::CreateScriptMetaTable() {
     CSimpleEditBox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleEditBox::RegisterScriptMethods);
 }
 
+// OFFSET: 0x005361F0
+static int32_t Script_Enable(lua_State* L) {
+    CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
+    editBox->Enable(1);
+    return 0;
+}
+
+// OFFSET: 0x00536230
+static int32_t Script_Disable(lua_State* L) {
+    CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
+    editBox->Enable(0);
+    return 0;
+}
+
+// OFFSET: 0x00536270
+static int32_t Script_IsEnabled(lua_State* L) {
+    CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
+    lua_pushboolean(L, ~(editBox->m_frameFlags >> 10) & 1);
+    return 1;
+}
+
 // STATIC: %0x00BB9230
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
@@ -645,10 +666,13 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetCursorPosition", &Script_SetCursorPosition },
     { "GetCursorPosition", &Script_GetCursorPosition },
     { "GetUTF8CursorPosition", &Script_GetUTF8CursorPosition },
+    { "Enable", &Script_Enable },
+    { "Disable", &Script_Disable },
+    { "IsEnabled", &Script_IsEnabled },
 };
 
 // OFFSET: %0x00543E50
 void CSimpleEditBox::RegisterScriptMethods(lua_State* L) {
-    CSimpleFrame::RegisterScriptMethods(L);
+    CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }
