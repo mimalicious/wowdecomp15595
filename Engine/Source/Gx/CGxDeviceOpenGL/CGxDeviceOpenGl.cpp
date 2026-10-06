@@ -247,6 +247,10 @@ void CGxDeviceOpenGl::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_texTarget[GxTex_NonPow2] = glARBTextureNonPowerOfTwo;
     this->m_caps.m_texMaxSize[GxTex_Volume] = 256;
     this->m_caps.m_texTarget[GxTex_Volume] = 0;
+    this->m_caps.m_texTarget[GxTex_5] = 0;
+    this->m_caps.m_texMaxSize[GxTex_5] = this->m_caps.m_texMaxSize[GxTex_2d];
+    this->m_caps.m_texTarget[GxTex_6] = 0;
+    this->m_caps.m_texMaxSize[GxTex_6] = 0;
 
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
         this->m_caps.m_vertexTexFmt[i] = 0;
@@ -376,7 +380,20 @@ void CGxDeviceOpenGl::ISetCaps(const CGxFormat& format) {
     this->m_caps.unk_02F4 = 1;
     this->m_caps.unk_02F8 = 1;
     this->m_caps.unk_0300 = 0;
+    this->m_caps.unk_0314 = 0;
     this->m_caps.unk_0304 = 0;
+
+    uint16_t vendorID = 0;
+    uint16_t deviceID = 0;
+    uint32_t driverVersionHi;
+    uint32_t driverVersionLo;
+
+    if (!CGxDevice::AdapterID(vendorID, deviceID, driverVersionHi, driverVersionLo)) {
+        CGxDevice::Log("Failed to determine vendor and device id");
+    }
+
+    this->m_caps.m_vendorId = vendorID;
+    this->m_caps.m_deviceId = deviceID;
     this->Log(this->m_caps);
 }
 

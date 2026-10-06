@@ -180,7 +180,7 @@ static void CreateTextures() {
 
         CGxTexFlags flags;
 
-        if (!g_theGxDevicePtr->m_caps.unk_0300) {
+        if (!g_theGxDevicePtr->m_caps.unk_0314) {
             flags.m_renderTarget = 1;
         }
 

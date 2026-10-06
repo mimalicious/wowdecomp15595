@@ -2326,7 +2326,7 @@ void CGxDeviceD3d::ISetPresentParms(uint32_t adapter, D3DDEVTYPE deviceType, D3D
 }
 
 // OFFSET: %0x007C82F0
-void CGxDeviceD3d::ISetCaps(const CGxFormat& format) {
+void CGxDeviceD3d::ISetCaps(uint32_t adapter, const CGxFormat& format) {
     this->m_caps.m_numTmus = this->m_d3dCaps.MaxTextureBlendStages >= 8 ? 8 : this->m_d3dCaps.MaxTextureBlendStages;
     this->m_caps.m_numVertexTmus = 0;
     this->m_caps.m_numShaderTmus = this->m_d3dCaps.MaxSimultaneousTextures >= 16 ? 16 : this->m_d3dCaps.MaxSimultaneousTextures;
@@ -2339,6 +2339,8 @@ void CGxDeviceD3d::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_texMaxSize[GxTex_Rectangle] = maxTextureSize >= 256 ? maxTextureSize : 256;
     this->m_caps.m_texMaxSize[GxTex_NonPow2] = maxTextureSize >= 256 ? maxTextureSize : 256;
     this->m_caps.m_texMaxSize[GxTex_Volume] = this->m_d3dCaps.MaxVolumeExtent >= 256 ? this->m_d3dCaps.MaxVolumeExtent : 256;
+    this->m_caps.m_texMaxSize[GxTex_5] = this->m_caps.m_texMaxSize[GxTex_2d];
+    this->m_caps.m_texMaxSize[GxTex_6] = this->m_caps.m_texMaxSize[GxTex_2d];
     this->m_caps.m_maxIndex = this->m_d3dCaps.MaxVertexIndex;
 
     uint32_t filterCaps = this->m_d3dCaps.TextureFilterCaps;
@@ -2486,6 +2488,8 @@ void CGxDeviceD3d::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_texTarget[GxTex_Rectangle] = 0;
     this->m_caps.m_texTarget[GxTex_NonPow2] = (textureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) || !(textureCaps & D3DPTEXTURECAPS_POW2);
     this->m_caps.m_texTarget[GxTex_Volume] = (textureCaps & D3DPTEXTURECAPS_VOLUMEMAP) != 0;
+    this->m_caps.m_texTarget[GxTex_5] = 0;
+    this->m_caps.m_texTarget[GxTex_6] = 0;
     this->m_caps.m_texNonPow2 = 1;
 
     if (this->m_caps.m_texTarget[GxTex_NonPow2]) {
@@ -2513,11 +2517,26 @@ void CGxDeviceD3d::ISetCaps(const CGxFormat& format) {
     this->m_caps.unk_02D8[2] = 0;
     this->m_caps.unk_02D8[3] = 0;
     this->m_caps.unk_02D8[4] = 0;
-    this->m_caps.unk_0300 = 0;
     this->m_caps.unk_02F4 = 1;
     this->m_caps.unk_02F8 = this->m_caps.m_shaderTargets[GxSh_Pixel] != GxShProfile_Ps30;
     this->m_caps.unk_02FC = this->m_caps.m_shaderTargets[GxSh_Pixel] != GxShProfile_Ps30;
+
+    int32_t depthReadback = this->m_d3dNVAPI || this->m_caps.m_texFmt[GxTex_Resz];
+    this->m_caps.unk_0300 = depthReadback;
+    this->m_caps.unk_0314 = depthReadback;
     this->m_caps.unk_0304 = this->m_caps.m_shaderTargets[GxSh_Vertex] == GxShProfile_Vs30;
+    this->m_caps.m_vendorId = 0;
+    this->m_caps.m_deviceId = 0;
+
+    D3DADAPTER_IDENTIFIER9 adapterIdentifier;
+
+    if (FAILED(this->m_d3d->GetAdapterIdentifier(adapter, 0, &adapterIdentifier))) {
+        CGxDevice::Log("Failed to get adapter identifier");
+        return;
+    }
+
+    this->m_caps.m_vendorId = adapterIdentifier.VendorId;
+    this->m_caps.m_deviceId = adapterIdentifier.DeviceId;
 }
 
 // OFFSET: %0x007C8990
@@ -2533,72 +2552,45 @@ int32_t CGxDeviceD3d::ICreateD3dDevice(const CGxFormat& format) {
     if (NvAPI_Initialize() == NVAPI_OK) {
         CGxDevice::Log("Detected NvAPI and checking if it's valid...");
 
-        NvPhysicalGpuHandle gpus[NVAPI_MAX_PHYSICAL_GPUS];
-        NvU32 gpuCount = 0;
-        bool hasGpus = NvAPI_EnumPhysicalGPUs(gpus, &gpuCount) == NVAPI_OK && gpuCount;
-        int32_t nvDisplay = 0;
+        D3DADAPTER_IDENTIFIER9 identifier;
 
-        if (hasGpus) {
-            CGxDevice::Log("    Detected %d Nvidia Physical GPU(s)", gpuCount);
-            CGxDevice::Log("    Using D3D adapter %d", adapter);
+        if (SUCCEEDED(this->m_d3d->GetAdapterIdentifier(adapter, 0, &identifier)) && identifier.VendorId == 0x10DE) {
+            this->m_d3dNVAPI = 1;
+            this->m_d3dStereoEnabled = 0;
 
-            D3DADAPTER_IDENTIFIER9 identifier;
-            this->m_d3d->GetAdapterIdentifier(adapter, 0, &identifier);
-            CGxDevice::Log("    Adapter Identifier DeviceName: %s", identifier.DeviceName);
+            NvU8 stereoEnabled;
 
-            NvDisplayHandle display;
+            switch (NvAPI_Stereo_IsEnabled(&stereoEnabled)) {
+                case NVAPI_NOT_SUPPORTED:
+                    CGxDevice::Log("No stereoscopic device present.");
+                    break;
 
-            if (NvAPI_GetAssociatedNvidiaDisplayHandle(identifier.DeviceName, &display) == NVAPI_OK) {
-                CGxDevice::Log("    Nvidia associated display handle GPUs detected");
+                case NVAPI_NO_IMPLEMENTATION:
+                    CGxDevice::Log("No stereoscopic driver present.");
+                    break;
 
-                if (NvAPI_GetPhysicalGPUsFromDisplay(display, gpus, &gpuCount) != NVAPI_OK || !gpuCount) {
-                    nvDisplay = 0;
-                } else {
-                    nvDisplay = 1;
-                    CGxDevice::Log("    Display driven by %d Nvidia GPU(s)", gpuCount);
-                }
-            }
+                case NVAPI_OK:
+                    this->m_d3dStereoRestore = this->m_d3dStereoEnabled;
+                    this->m_caps.m_stereoAvailable = 1;
 
-            NvAPI_EnumPhysicalGPUs(gpus, &gpuCount);
+                    if (format.m_stereoEnabled) {
+                        if (!stereoEnabled) {
+                            NvAPI_Status status = NvAPI_Stereo_Enable();
 
-            if (nvDisplay) {
-                this->m_d3dNVAPI = 1;
-                this->m_d3dStereoEnabled = 0;
-
-                NvU8 stereoEnabled;
-
-                switch (NvAPI_Stereo_IsEnabled(&stereoEnabled)) {
-                    case NVAPI_NOT_SUPPORTED:
-                        CGxDevice::Log("No stereoscopic device present.");
-                        break;
-
-                    case NVAPI_NO_IMPLEMENTATION:
-                        CGxDevice::Log("No stereoscopic driver present.");
-                        break;
-
-                    case NVAPI_OK:
-                        this->m_d3dStereoRestore = this->m_d3dStereoEnabled;
-                        this->m_caps.m_stereoAvailable = 1;
-
-                        if (format.m_stereoEnabled) {
-                            if (!stereoEnabled) {
-                                NvAPI_Status status = NvAPI_Stereo_Enable();
-
-                                if (status != NVAPI_OK) {
-                                    NvAPI_ShortString message;
-                                    NvAPI_GetErrorMessage(status, message);
-                                    CGxDevice::Log("Failed to enable stereoscopic mode: %s", message);
-                                }
+                            if (status != NVAPI_OK) {
+                                NvAPI_ShortString message;
+                                NvAPI_GetErrorMessage(status, message);
+                                CGxDevice::Log("Failed to enable stereoscopic mode: %s", message);
                             }
-                        } else if (stereoEnabled) {
-                            NvAPI_Stereo_Disable();
                         }
+                    } else if (stereoEnabled) {
+                        NvAPI_Stereo_Disable();
+                    }
 
-                        break;
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
     }
@@ -2634,7 +2626,7 @@ int32_t CGxDeviceD3d::ICreateD3dDevice(const CGxFormat& format) {
     this->m_context = 1;
     this->m_devDepthFormat = d3dpp.AutoDepthStencilFormat;
 
-    this->ISetCaps(format);
+    this->ISetCaps(adapter, format);
     this->Log(this->m_caps);
     CGxDevice::Log("NVAPI: %d", this->m_d3dNVAPI);
 

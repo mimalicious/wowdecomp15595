@@ -381,7 +381,7 @@ class CGxDeviceD3d : public CGxDevice {
     void IRetrieveNvDepthHandle();
     void ISceneEnd();
     void ISetAlphaOp(uint32_t tmu, uint32_t op);
-    void ISetCaps(const CGxFormat& format);
+    void ISetCaps(uint32_t adapter, const CGxFormat& format);
     void ISetColorOp(uint32_t tmu, uint32_t op);
     void ISetPresentParms(uint32_t adapter, D3DDEVTYPE deviceType, D3DPRESENT_PARAMETERS& d3dpp, const CGxFormat& format);
     uint32_t IGetAdapterIndex(uint32_t monitor);

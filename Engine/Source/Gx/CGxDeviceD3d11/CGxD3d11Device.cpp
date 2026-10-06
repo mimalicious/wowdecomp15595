@@ -79,6 +79,8 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_texMaxSize[2] = s_texMaxSize2d[featureLevel];
     this->m_caps.m_texMaxSize[3] = s_texMaxSize2d[featureLevel];
     this->m_caps.m_texMaxSize[4] = s_texMaxSizeVolume[featureLevel];
+    this->m_caps.m_texMaxSize[5] = this->m_caps.m_texMaxSize[0];
+    this->m_caps.m_texMaxSize[6] = 0;
     this->m_caps.m_maxIndex = s_maxIndex[featureLevel];
     this->m_caps.m_texFilterTrilinear = 1;
     this->m_caps.m_texFilterAnisotropic = 1;
@@ -137,8 +139,11 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_texTarget[1] = 1;
     this->m_caps.m_texTarget[3] = 1;
     this->m_caps.m_texTarget[4] = 1;
+    this->m_caps.m_texTarget[5] = 0;
+    this->m_caps.m_texTarget[6] = 0;
     this->m_caps.m_blendFactor = 1;
     this->m_caps.unk_0300 = 1;
+    this->m_caps.unk_0314 = this->m_featureLevel >= 4;
     this->m_caps.unk_0304 = 1;
     this->m_caps.m_maxClipPlanes = 0;
     this->m_caps.m_texTarget[2] = 0;
@@ -178,6 +183,18 @@ void CGxDeviceD3d11::ISetCaps(const CGxFormat& format) {
     this->m_caps.m_rttFormat[GxTex_Abgr32323232F] = fl10;
     this->m_caps.m_occlusionQuery = fl91;
     this->m_caps.m_pointScaleMax = 0.0f;
+    this->m_caps.m_vendorId = 0;
+    this->m_caps.m_deviceId = 0;
+
+    DXGI_ADAPTER_DESC desc;
+
+    if (FAILED(this->m_dxgiAdapter->GetDesc(&desc))) {
+        CGxDevice::Log("Failed to get DXGI Adapter Description");
+        return;
+    }
+
+    this->m_caps.m_vendorId = desc.VendorId;
+    this->m_caps.m_deviceId = desc.DeviceId;
 }
 
 // PROVEN: 164422a7 IDENTICAL/IDENTICAL

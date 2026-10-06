@@ -252,8 +252,8 @@ class CGxCaps {
     /* 0308 */ int32_t unk_02F8;
     /* 030C */ int32_t unk_02FC;
     /* 0310 */ int32_t unk_0300;
-    /* 0314 */ int32_t unk_0304;
-    /* 0318 */ int32_t unk_0318;
+    /* 0314 */ int32_t unk_0314;
+    /* 0318 */ int32_t unk_0304;
     /* 031C */ uint32_t m_vendorId;
     /* 0320 */ uint32_t m_deviceId;
 };
