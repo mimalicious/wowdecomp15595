@@ -16,7 +16,7 @@ UNINITIALIZEDIVXDECODER g_unInitializeDivxDecoder;
 // STATIC: %0x00CD2854
 static void* s_divxModule;
 
-// OFFSET: %0x0054F020
+// OFFSET: 0x00657240
 void UnloadDivxDecoder() {
     if (s_divxModule) {
         OsFreeLibrary(s_divxModule);
@@ -28,7 +28,7 @@ void UnloadDivxDecoder() {
     }
 }
 
-// OFFSET: %0x0054F060
+// OFFSET: 0x006572C0
 int32_t LoadDivxDecoder() {
     s_divxModule = OsLoadLibrary("DivxDecoder.dll");
 

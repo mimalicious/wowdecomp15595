@@ -549,6 +549,7 @@ int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }
 
+// PROVEN: 2f536430 IDENTICAL/NONE
 // OFFSET: 0x00541080/0x140193C70
 const char* TextureGetObjectName(CTexture* texture) {
     if (!texture) {
@@ -586,6 +587,7 @@ int32_t TextureIsStreaming(CTexture* texture) {
     return texture->m_asyncObject && texture->m_asyncObject->m_isStreamed;
 }
 
+// PROVEN: 56119f1f IDENTICAL/NONE
 // OFFSET: 0x00541140/0x140193D70
 int32_t TextureGetAsyncRenderStatus(CTexture* texture) {
     if (texture->m_asyncObject) {

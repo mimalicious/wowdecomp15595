@@ -41,7 +41,7 @@ CModelBlob::CModelBlob(const char* fileName) {
     this->Load(fileName);
 }
 
-// OFFSET: %0x005557C0
+// OFFSET: 0x005483E0/0x1401A1840
 CModelBlob::~CModelBlob() {
     if (this->m_data) {
         SMemFree(this->m_data, __FILE__, __LINE__, 0);
@@ -61,7 +61,7 @@ void ModelBlobDestroy() {
     }
 }
 
-// OFFSET: %0x00555B70
+// OFFSET: 0x00548340/0x1401A0530
 int32_t CModelBlob::Query(const char* modelName, C3Vector& min, C3Vector& max) {
     uint32_t hashval = SStrHashHT(modelName);
     HASHKEY_MODELBLOBFILE key;
@@ -88,7 +88,7 @@ int32_t ModelBlobQuery(const char* modelName, C3Vector& min, C3Vector& max) {
     return s_modelBlob->Query(modelName, min, max);
 }
 
-// OFFSET: %0x00556270
+// OFFSET: 0x00548DE0
 void CModelBlob::HashBlobEntry(SEntry* entry) {
     const char* name = this->m_stringTable + entry->m_filenameOffset;
     uint32_t hashval = SStrHashHT(name);
@@ -104,7 +104,7 @@ void CModelBlob::HashBlobEntry(SEntry* entry) {
     hashEntry->m_entry = entry;
 }
 
-// OFFSET: %0x00556330
+// OFFSET: 0x00548EA0
 void CModelBlob::Load(const char* fileName) {
     SFileImpl* file = NULL;
     SErrSetLastError(0);
@@ -136,7 +136,7 @@ void CModelBlob::Load(const char* fileName) {
     }
 }
 
-// OFFSET: %0x00556440
+// OFFSET: 0x00548FB0
 int32_t ModelBlobLoad(const char* fileName) {
     if (s_modelBlob) {
         delete s_modelBlob;

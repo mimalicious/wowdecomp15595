@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00557660
+// OFFSET: 0x00544EC0
 static void StrTrimTrailingSpace(char* str) {
     char* ptr = str + SStrLen(str) - 1;
 
@@ -20,7 +20,7 @@ static void StrTrimTrailingSpace(char* str) {
     }
 }
 
-// OFFSET: %0x005576B0
+// OFFSET: 0x00544F10
 int32_t ProfileInternal::PrfStrToInt(const char* str) {
     int32_t result = 0;
 
@@ -57,7 +57,7 @@ char* ProfileInternal::STRINGBLOCK::Data() {
     return reinterpret_cast<char*>(this + 1);
 }
 
-// OFFSET: %0x00557710
+// OFFSET: 0x00544FF0
 ProfileInternal::STRINGBLOCK* ProfileInternal::STRINGBLOCK::AllocBlock(uint32_t size) {
     uint32_t bytes = size <= 4 ? 4 : size;
     STRINGBLOCK* block = new (SMemAlloc(bytes + sizeof(STRINGBLOCK), __FILE__, __LINE__, 0)) STRINGBLOCK;
@@ -68,7 +68,7 @@ ProfileInternal::STRINGBLOCK* ProfileInternal::STRINGBLOCK::AllocBlock(uint32_t 
     return block;
 }
 
-// OFFSET: %0x00557A50
+// OFFSET: 0x00545050
 char* ProfileInternal::STRINGBLOCK::AllocString(TSList<STRINGBLOCK, TSGetLink<STRINGBLOCK> >& list, const char* str, int32_t reuse) {
     if (!str) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -76,7 +76,7 @@ char* ProfileInternal::STRINGBLOCK::AllocString(TSList<STRINGBLOCK, TSGetLink<ST
     }
 
     if (reuse) {
-        for (STRINGBLOCK* block = list.Head(); block; block = list.Next(block)) {
+        for (STRINGBLOCK* block = list.Head(); !list.IsEnd(block); block = list.RawNext(block)) {
             if (str >= block->Data() && str < block->Data() + block->m_size) {
                 block->m_refs++;
                 return const_cast<char*>(str);
@@ -100,7 +100,7 @@ char* ProfileInternal::STRINGBLOCK::AllocString(TSList<STRINGBLOCK, TSGetLink<ST
     return dest;
 }
 
-// OFFSET: %0x00557B20
+// OFFSET: 0x00544F80
 void ProfileInternal::STRINGBLOCK::FreeString(TSList<STRINGBLOCK, TSGetLink<STRINGBLOCK> >& list, char* str) {
     if (!str) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -109,7 +109,7 @@ void ProfileInternal::STRINGBLOCK::FreeString(TSList<STRINGBLOCK, TSGetLink<STRI
 
     STRINGBLOCK* found = NULL;
 
-    for (STRINGBLOCK* block = list.Head(); block; block = list.Next(block)) {
+    for (STRINGBLOCK* block = list.Head(); !list.IsEnd(block); block = list.RawNext(block)) {
         if (str >= block->Data() && str < block->Data() + block->m_size) {
             found = block;
             break;
@@ -128,7 +128,7 @@ ProfileInternal::PROFILE::~PROFILE() {
     this->m_strings.Clear();
 }
 
-// OFFSET: %0x00558980
+// OFFSET: 0x00546250
 void* ProfileCreate() {
     return new (SMemAlloc(sizeof(ProfileInternal::PROFILE), __FILE__, __LINE__, 0)) ProfileInternal::PROFILE;
 }
@@ -223,7 +223,7 @@ int32_t ProfileGetValue(void* profile, const char* section, const char* key, cha
     return 1;
 }
 
-// OFFSET: %0x00558C90
+// OFFSET: 0x00546420
 char* ProfileInternal::AddValue(PROFILE* profile, const char* section, const char* key, const char* value, int32_t replace, int32_t reuse) {
     SECTION* sect = profile->m_sections.Ptr(section);
 
@@ -253,7 +253,7 @@ char* ProfileInternal::AddValue(PROFILE* profile, const char* section, const cha
     return *slot;
 }
 
-// OFFSET: %0x00558DD0
+// OFFSET: 0x00546560
 void ProfileInternal::TokenizeStringValues(PROFILE* profile, const char* section, const char* key, char* values) {
     if (!section || !key || !values || !*values) {
         return;
@@ -298,7 +298,7 @@ void ProfileInternal::TokenizeStringValues(PROFILE* profile, const char* section
     } while (*ptr);
 }
 
-// OFFSET: %0x00558E50
+// OFFSET: 0x005465E0
 int32_t ProfileInternal::IReadBuffer(PROFILE* profile, const void* data, uint32_t size) {
     STRINGBLOCK* block = STRINGBLOCK::AllocBlock(size + 1);
     char* text = block->Data();
@@ -382,7 +382,7 @@ int32_t ProfileInternal::IReadBuffer(PROFILE* profile, const void* data, uint32_
     return 1;
 }
 
-// OFFSET: %0x00559010
+// OFFSET: 0x005467A0/0x14019DF60
 int32_t ProfileInternal::IReadFile(PROFILE* profile, const char* path) {
     char name[260];
     SStrCopy(name, path, sizeof(name));
@@ -401,7 +401,7 @@ int32_t ProfileInternal::IReadFile(PROFILE* profile, const char* path) {
     return result;
 }
 
-// OFFSET: %0x005590B0
+// OFFSET: 0x00546840/0x14019E080
 int32_t ProfileReadFile(void* profile, const char* path) {
     if (!path) {
         DebugValidate("path");

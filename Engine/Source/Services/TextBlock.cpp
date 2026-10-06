@@ -21,7 +21,7 @@ FONTHASHOBJ::FONTHASHOBJ() {
     this->m_font = NULL;
 }
 
-// OFFSET: %0x005590E0
+// OFFSET: 0x00549040/0x1401A1930
 static uint32_t ConvertStringFlags(uint32_t flags) {
     uint32_t result = (flags & 0x100) != 0;
 
@@ -78,7 +78,7 @@ int32_t TextBlockSetGradient(HTEXTBLOCK string, int32_t start, int32_t length) {
     return GxuFontStringSetGradient(reinterpret_cast<TEXTBLOCK*>(string)->m_string, start, length);
 }
 
-// OFFSET: %0x00559190
+// OFFSET: 0x005490F0/0x1401A19C0
 TEXTBLOCK::~TEXTBLOCK() {
     GxuFontDestroyString(this->m_string);
 }
@@ -94,7 +94,7 @@ const char* TextBlockGetFontName(HTEXTFONT font) {
     return GxuFontGetFontName(reinterpret_cast<FONTHASHOBJ*>(font)->m_font);
 }
 
-// OFFSET: %0x00559200
+// OFFSET: 0x00549160/0x1401A1A50
 uint32_t TextBlockGetFontFlags(HTEXTFONT font) {
     if (!font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -137,7 +137,7 @@ CGxString* TextBlockGetStringPtr(HTEXTBLOCK string) {
     return reinterpret_cast<TEXTBLOCK*>(string)->m_string;
 }
 
-// OFFSET: %0x00559280
+// OFFSET: 0x005491E0/0x1401A1B00
 void TextBlockAddShadow(HTEXTBLOCK string, CImVector color, const C2Vector& offset) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -160,7 +160,7 @@ void TextBlockRemoveShadow(HTEXTBLOCK string) {
     GxuFontRemoveShadow(reinterpret_cast<TEXTBLOCK*>(string)->m_string);
 }
 
-// OFFSET: %0x00559310
+// OFFSET: 0x00549270/0x1401A1B80
 HTEXTBLOCK TextBlockCreate(HTEXTFONT font, const char* text, const CImVector& color, const C3Vector& position, float fontHeight, float blockWidth, float blockHeight, uint32_t flags, float charSpacing, float lineSpacing, float scale, float stringScale, float rotation) {
     if (!font || !text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -228,7 +228,7 @@ void TextBlockUpdateColor(HTEXTBLOCK string, const CImVector& color) {
     GxuFontSetStringColor(reinterpret_cast<TEXTBLOCK*>(string)->m_string, color);
 }
 
-// OFFSET: %0x00559570
+// OFFSET: 0x005494D0/0x1401A1ED0
 void TextBlockGetTextExtent(HTEXTFONT font, const char* text, uint32_t numBytes, float fontHeight, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !extent) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -248,7 +248,7 @@ void TextBlockGetTextExtent(HTEXTFONT font, const char* text, uint32_t numBytes,
     NDCToDDC(*extent, 0.0f, extent, NULL);
 }
 
-// OFFSET: %0x00559620
+// OFFSET: 0x00549580
 float TextBlockGetWrappedTextHeight(HTEXTFONT font, const char* text, float fontHeight, float blockWidth, const C2Vector& shadowOffset, float scale, float spacing, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -263,7 +263,7 @@ float TextBlockGetWrappedTextHeight(HTEXTFONT font, const char* text, float font
     return NDCToDDCHeight(height);
 }
 
-// OFFSET: %0x005596E0
+// OFFSET: 0x00549640
 uint32_t TextBlockGetMaxCharsWithinWidth(HTEXTFONT font, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -276,7 +276,7 @@ uint32_t TextBlockGetMaxCharsWithinWidth(HTEXTFONT font, const char* text, float
     return numChars;
 }
 
-// OFFSET: %0x00559790
+// OFFSET: 0x005496F0
 uint32_t TextBlockGetMaxCharsWithinWidthAndHeight(HTEXTFONT font, const char* text, float fontHeight, float blockWidth, float blockHeight, uint32_t numBytes, float shadowWidth, float scale, float spacing, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -286,7 +286,7 @@ uint32_t TextBlockGetMaxCharsWithinWidthAndHeight(HTEXTFONT font, const char* te
     return GxuFontGetMaxCharsWithinWidthAndHeight(reinterpret_cast<FONTHASHOBJ*>(font)->m_font, text, DDCToNDCHeight(fontHeight), DDCToNDCWidth(blockWidth), DDCToNDCHeight(blockHeight), numBytes, DDCToNDCWidth(shadowWidth), scale, DDCToNDCHeight(spacing), ConvertStringFlags(flags));
 }
 
-// OFFSET: %0x00559830
+// OFFSET: 0x00549790
 uint32_t TextBlockGetMaxCharsWithinWidthFromEnd(HTEXTFONT font, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -299,7 +299,7 @@ uint32_t TextBlockGetMaxCharsWithinWidthFromEnd(HTEXTFONT font, const char* text
     return numChars;
 }
 
-// OFFSET: %0x005598E0
+// OFFSET: 0x00549840/0x1401A2500
 uint32_t TextBlockWrapText(HTEXTFONT font, const char* text, float fontHeight, float blockWidth, uint32_t* lineStarts, uint32_t maxLines, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!font || !text || !reinterpret_cast<FONTHASHOBJ*>(font)->m_font) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -309,14 +309,14 @@ uint32_t TextBlockWrapText(HTEXTFONT font, const char* text, float fontHeight, f
     return GxuFontWrapText(reinterpret_cast<FONTHASHOBJ*>(font)->m_font, text, SStrLen(text), DDCToNDCHeight(fontHeight), DDCToNDCWidth(blockWidth), lineStarts, maxLines, DDCToNDCWidth(shadowWidth), scale, DDCToNDCWidth(unused), ConvertStringFlags(flags));
 }
 
-// OFFSET: %0x00559DE0
+// OFFSET: 0x00549DD0
 FONTHASHOBJ::~FONTHASHOBJ() {
     if (this->m_font) {
         GxuFontDestroyFont(this->m_font);
     }
 }
 
-// OFFSET: %0x0055A2A0
+// OFFSET: 0x0054A280/0x1401A3170
 HTEXTFONT TextBlockGenerateFont(const char* fontName, uint32_t fontFlags, float fontHeight) {
     if (!fontName) {
         DebugValidate("fontName");

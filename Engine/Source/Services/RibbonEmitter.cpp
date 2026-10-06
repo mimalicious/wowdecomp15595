@@ -47,7 +47,7 @@ void CRibbonEmitter::SetDataEnabled(int32_t enabled) {
     }
 }
 
-// OFFSET: 0x00B252F0
+// OFFSET: 0x00B252F0/0x1408ED290
 void CRibbonEmitter::SetUserEnabled(uint32_t enabled) {
     this->m_flags ^= (this->m_flags ^ (8 * enabled)) & 0x8;
 
@@ -150,7 +150,7 @@ void CRibbonEmitter::SetPos(const C44Matrix& transform, const C3Vector& position
     this->m_currUp = C3Vector(matrix.b0, matrix.b1, matrix.b2);
 }
 
-// OFFSET: 0x00B25900
+// OFFSET: 0x00B25900/0x1408ED980
 int32_t CRibbonEmitter::ReplaceTexture(uint32_t type, CTexture* texture) {
     int32_t replaced = 0;
 
@@ -169,6 +169,7 @@ int32_t CRibbonEmitter::ReplaceTexture(uint32_t type, CTexture* texture) {
     return replaced;
 }
 
+// PROVEN: dbf80e55 IDENTICAL/NONE
 // OFFSET: 0x00B25980
 void CRibbonEmitter::SetTexture(uint32_t index, CTexture* texture) {
     if (texture) {
@@ -193,7 +194,7 @@ void CRibbonEmitter::SetAlpha(float alpha) {
     this->m_color.a = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f + 0.5f));
 }
 
-// OFFSET: 0x00B25AA0
+// OFFSET: 0x00B25AA0/0x1408EDB50
 void CRibbonEmitter::ChangeFrameOfReference(const C44Matrix* matrix) {
     const C44Matrix& m = *matrix;
 
@@ -384,7 +385,7 @@ CRibbonEmitter::~CRibbonEmitter() {
     this->m_flags &= ~0x2;
 }
 
-// OFFSET: 0x00B26800
+// OFFSET: 0x00B26800/0x1408EE9E0
 CRibbonEmitter::CRibbonEmitter() {
     this->m_refCount = 1;
     this->m_texSlotCoords.minX = 0.0f;
@@ -404,7 +405,7 @@ CRibbonEmitter::CRibbonEmitter() {
     this->m_flags &= ~0x12;
 }
 
-// OFFSET: 0x00B26AE0
+// OFFSET: 0x00B26AE0/0x1408EED10
 void CRibbonEmitter::Initialize(float edgesPerSecond, float edgeLifetime, const CImVector& color, const TSGrowableArray<CTexture*>& textures, const TSGrowableArray<CRibbonMat>& materials, const TSGrowableArray<uint32_t>& textureTypes, const CAaRect& texCoords, uint32_t rows, uint32_t cols) {
     float edgesPerSec = ceil(edgesPerSecond);
 

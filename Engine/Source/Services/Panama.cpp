@@ -30,7 +30,7 @@ Crypt::Panama::~Panama() {
     memset(this->m_stateData, 0, sizeof(this->m_stateData));
 }
 
-// OFFSET: %0x0054E540
+// OFFSET: 0x00A1D200
 void Crypt::Panama::Reset() {
     memset(this->m_state, 0, this->m_stateSize);
     this->m_state[17] = (OsGetProcessorFeatures() & 0x80) != 0;
@@ -50,13 +50,13 @@ Crypt::PanamaCypher::~PanamaCypher() {
     memset(this->m_bufferData, 0, sizeof(this->m_bufferData));
 }
 
-// OFFSET: %0x0054E950
+// OFFSET: 0x00A1D610/0x1407C3270
 void Crypt::PanamaCypher::Reset() {
     Crypt::Panama::Reset();
     this->m_leftOver = 0;
 }
 
-// OFFSET: %0x0054E990
+// OFFSET: 0x00A1D650/0x1407C32B0
 void __stdcall Crypt::PanamaCypher::xorbuf(uint8_t* buf, const uint8_t* mask, uint32_t count) {
     if (!(reinterpret_cast<uintptr_t>(buf) & 3) && !(reinterpret_cast<uintptr_t>(mask) & 3)) {
         if (!(reinterpret_cast<uintptr_t>(buf) & 7) && !(reinterpret_cast<uintptr_t>(mask) & 7)) {
@@ -96,7 +96,7 @@ void __stdcall Crypt::PanamaCypher::xorbuf(uint8_t* buf, const uint8_t* mask, ui
     }
 }
 
-// OFFSET: %0x0054EA70
+// OFFSET: 0x00A1D730/0x1407C33A0
 void Crypt::Panama::Iterate(uint32_t count, const uint32_t* p, uint32_t* z) {
     uint32_t* const aPtr = this->m_state;
     uint32_t bstart = aPtr[17];
@@ -196,7 +196,7 @@ void Crypt::Panama::Iterate(uint32_t count, const uint32_t* p, uint32_t* z) {
     aPtr[17] = bstart;
 }
 
-// OFFSET: %0x0054EED0
+// OFFSET: 0x00A1DB90/0x1407C3990
 void Crypt::Panama::SetKey(const uint8_t* key, const uint8_t* iv) {
     this->Reset();
     this->Iterate(1, reinterpret_cast<const uint32_t*>(key), NULL);
@@ -210,7 +210,7 @@ void Crypt::Panama::SetKey(const uint8_t* key, const uint8_t* iv) {
     this->Iterate(32, NULL, NULL);
 }
 
-// OFFSET: %0x0054EF40
+// OFFSET: 0x00A1DC00/0x1407C3A00
 void Crypt::PanamaCypher::ProcessBuffer(uint8_t* buffer, uint32_t size) {
     uint32_t count = this->m_leftOver < size ? this->m_leftOver : size;
 

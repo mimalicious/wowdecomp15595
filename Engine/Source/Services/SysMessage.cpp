@@ -38,7 +38,7 @@ int32_t SysMsgAdd(const char* text, STATUS_TYPE severity) {
     return 1;
 }
 
-// OFFSET: %0x0054F270
+// OFFSET: 0x0053E900/0x1401930F0
 int32_t SysMsgAdd(CStatus* status) {
     if (status->IsEmpty()) {
         return 1;
@@ -51,7 +51,7 @@ int32_t SysMsgAdd(CStatus* status) {
     return result;
 }
 
-// OFFSET: %0x0054F2D0
+// OFFSET: 0x0053E960/0x140193170
 int32_t SysMsgVPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, va_list args) {
     char buffer[256];
     _vsnprintf(buffer, sizeof(buffer), format, args);
@@ -66,7 +66,7 @@ int32_t SysMsgVPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, 
     return 0;
 }
 
-// OFFSET: %0x0054F320
+// OFFSET: 0x0053E9B0/0x1401931C0
 int32_t SysMsgPrintf(STATUS_TYPE severity, uint32_t flags, const char* format, ...) {
     va_list args;
     va_start(args, format);

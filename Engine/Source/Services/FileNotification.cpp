@@ -10,7 +10,7 @@ static TSHashTable<FileNotification::DeferredFile, HASHKEY_NONE> s_deferredFiles
 // STATIC: %0x00CD2EE4
 static TSHashTable<FileNotification::Manifest, HASHKEY_NONE> s_manifests;
 
-// OFFSET: %0x005564D0
+// OFFSET: 0x00547160/0x14019EC60
 void FileNotification::RegisterSingleFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
     SStrCopy(info->m_extension, extension, sizeof(info->m_extension));
@@ -18,7 +18,7 @@ void FileNotification::RegisterSingleFile(const char* extension, Callback callba
     info->m_callback = callback;
 }
 
-// OFFSET: %0x005565B0
+// OFFSET: 0x00547240/0x14019ED70
 void FileNotification::RegisterManifestFile(const char* extension, Callback callback) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
     SStrCopy(info->m_extension, extension, sizeof(info->m_extension));
@@ -26,7 +26,7 @@ void FileNotification::RegisterManifestFile(const char* extension, Callback call
     info->m_isManifest = 1;
 }
 
-// OFFSET: %0x00556AF0
+// OFFSET: 0x005476A0
 void FileNotification::Destroy() {
     FileNotification::Manifest* manifest = s_manifests.Head();
 
@@ -42,7 +42,7 @@ void FileNotification::Destroy() {
     s_manifests.Clear();
 }
 
-// OFFSET: %0x005574C0
+// OFFSET: 0x00548130/0x1401A0170
 static void AddDeferredFile(const char* fileName) {
     uint32_t hashval = SStrHash(fileName, 0, 0);
 
@@ -54,7 +54,7 @@ static void AddDeferredFile(const char* fileName) {
     SStrCopy(file->m_filename, fileName, sizeof(file->m_filename));
 }
 
-// OFFSET: %0x00557590
+// OFFSET: 0x00548200/0x1401A0390
 void FileNotification::RegisterDeferredFile(const char* extension) {
     FileNotification::CallbackInfo* info = s_callbacks.NewNode(2, 0, 0);
     SStrCopy(info->m_extension, extension, sizeof(info->m_extension));
