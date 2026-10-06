@@ -157,7 +157,7 @@ void CSimpleAnimGroup::RunOnUpdateScript(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x00537C50
+// OFFSET: 0x00527BD0
 void CSimpleAnimGroup::Finish() {
     if (!this->IsDone() && this->m_loopState) {
         this->m_flags |= 2;
@@ -484,7 +484,10 @@ void CSimpleAnimGroup::Pause() {
 
     TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list = this->m_animLists[this->m_currentOrder];
 
-    for (SIMPLEANIMNODE* node = list->Head(); node; node = list->Next(node)) {
+    SIMPLEANIMNODE* next;
+
+    for (SIMPLEANIMNODE* node = list->Head(); node; node = next) {
+        next = list->Next(node);
         node->m_anim->Pause();
     }
 
@@ -493,7 +496,7 @@ void CSimpleAnimGroup::Pause() {
     }
 }
 
-// OFFSET: %0x0053A4A0
+// OFFSET: 0x00528EB0
 void CSimpleAnimGroup::Stop(bool requested) {
     if (!this->m_loopState || (this->m_flags & 0x8)) {
         return;
@@ -503,14 +506,11 @@ void CSimpleAnimGroup::Stop(bool requested) {
 
     TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list = this->m_animLists[this->m_currentOrder];
 
-    for (SIMPLEANIMNODE* node = list->Head(); node; node = list->Next(node)) {
-        node->m_anim->Stop(requested);
-    }
+    SIMPLEANIMNODE* next;
 
-    if (this->HasScript(this->m_onStop)) {
-        lua_State* L = FrameScript_GetContext();
-        lua_pushboolean(L, requested);
-        this->RunScript(this->m_onStop, 1, NULL);
+    for (SIMPLEANIMNODE* node = list->Head(); node; node = next) {
+        next = list->Next(node);
+        node->m_anim->Stop(requested);
     }
 
     this->m_region->NotifyAnimEnd(this);
@@ -520,6 +520,12 @@ void CSimpleAnimGroup::Stop(bool requested) {
     this->m_currentOrder = -1;
     this->m_elapsed = 0.0f;
     this->m_progress = 0.0f;
+
+    if (this->HasScript(this->m_onStop)) {
+        lua_State* L = FrameScript_GetContext();
+        lua_pushboolean(L, requested);
+        this->RunScript(this->m_onStop, 1, NULL);
+    }
 }
 
 // OFFSET: %0x0053A5E0
