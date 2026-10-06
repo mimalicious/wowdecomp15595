@@ -3995,6 +3995,7 @@ CM2Model::CM2Model() {
     this->m_drawNext = NULL;
     this->m_loops = NULL;
     this->m_loopOrigin = 0;
+    this->unk_0078 = 1.0f;
     this->m_sequenceCallback = NULL;
     this->m_sequenceCallbackParam = 0;
     this->m_sequenceStartCallback = NULL;
@@ -4992,7 +4993,7 @@ void CM2Model::AnimateMTSimple(const C44Matrix* view, const C3Vector& diffuse, c
         uint32_t time = 0;
 
         if (length) {
-            time = (this->m_scene->m_time - this->m_loopOrigin) % length;
+            time = static_cast<uint32_t>(static_cast<float>(this->m_scene->m_time - this->m_loopOrigin) * this->unk_0078) % length;
         }
 
         this->m_loops[i] = time;
@@ -5345,7 +5346,7 @@ void CM2Model::AnimateMT(const C44Matrix* view, const C3Vector& diffuse, const C
         uint32_t time = 0;
 
         if (length) {
-            time = (this->m_scene->m_time - this->m_loopOrigin) % length;
+            time = static_cast<uint32_t>(static_cast<float>(this->m_scene->m_time - this->m_loopOrigin) * this->unk_0078) % length;
         }
 
         this->m_loops[i] = time;

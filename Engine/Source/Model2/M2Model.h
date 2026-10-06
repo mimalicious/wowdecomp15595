@@ -171,8 +171,8 @@ class CM2Model {
     /* 006C */ CM2Model* m_drawNext;
     /* 0070 */ int32_t* m_loops;
     /* 0074 */ uint32_t m_loopOrigin;
-    /* 0078 */ void* m_sequenceCallback;
-    /* 007C */ uint32_t unk_007C;
+    /* 0078 */ float unk_0078;
+    /* 007C */ void* m_sequenceCallback;
     /* 0080 */ uint64_t m_sequenceCallbackParam;
     /* 0088 */ M2SequenceStartCallback m_sequenceStartCallback;
     /* 0090 */ uint64_t m_sequenceStartCallbackParam;
