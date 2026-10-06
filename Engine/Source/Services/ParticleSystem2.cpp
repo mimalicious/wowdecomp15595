@@ -225,7 +225,7 @@ static inline void AddVertex(CAaBox& bounds, CParticleEmitter2::ParticleVertex& 
 void CParticleEmitter2::SetModel(CM2Scene* scene, const char* name) {
     if (scene && name && *name) {
         this->m_scene = scene;
-        this->m_model = scene->CreateModel(name, 0);
+        this->m_model = scene->CreateModel(name, 0, 3);
 
         if (this->m_model) {
             this->m_params.m_hasModel = 1;
@@ -553,7 +553,7 @@ void CParticleEmitter2::CreateParticle(CParticle2_Model& particle, float time, c
     }
 
     if (!particle.m_model) {
-        particle.m_model = this->m_scene->CreateModel(this->m_model->m_shared->m_fileName, 0);
+        particle.m_model = this->m_scene->CreateModel(this->m_model->m_shared->m_fileName, 0, 3);
     }
 }
 
@@ -1079,7 +1079,7 @@ void CParticleEmitter2::CreateChildEmittersFromModel(CM2Scene* scene, const char
         return;
     }
 
-    this->m_childModel = scene->CreateModel(name, 0);
+    this->m_childModel = scene->CreateModel(name, 0, 3);
 
     if (this->m_childModel) {
         this->m_childModel->SetLoadedCallback(RecursiveEmitterModelLoaded, this);

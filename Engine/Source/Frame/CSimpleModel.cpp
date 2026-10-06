@@ -193,14 +193,14 @@ void CSimpleModel::SetLight(const CM2Light& light) {
 // OFFSET: %0x0052EE40
 void CSimpleModel::SetSequence(uint32_t sequence) {
     if (this->m_model) {
-        this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0);
+        this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0, 0, 0);
     }
 }
 
 // OFFSET: %0x0052EE70
 int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     if (this->m_model) {
-        this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, time, 1.0f, 0, 1, 0);
+        this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, time, 1.0f, 0, 1, 0, 0, 0);
     }
 
     return 1;
@@ -295,7 +295,7 @@ void CSimpleModel::SetModel(const char* fileName) {
     CM2Model* model = NULL;
 
     if (fileName && *fileName) {
-        model = this->GetScene()->CreateModel(fileName, 1);
+        model = this->GetScene()->CreateModel(fileName, 1, 2);
     }
 
     this->SetModel(model);

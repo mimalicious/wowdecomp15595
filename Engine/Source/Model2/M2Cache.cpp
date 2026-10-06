@@ -31,7 +31,8 @@ static CM2Cache s_cache;
 // STATIC: %0x00ECDEA0
 static float s_randomTable[128];
 
-// OFFSET: %0x007789B0
+// PROVEN: b0fcfeec IDENTICAL/NONE
+// OFFSET: 0x00811F60
 void CM2Cache::ClearSharedHash() {
     for (uint32_t i = 0; i < sizeof(this->m_shared) / sizeof(this->m_shared[0]); i++) {
         CM2Shared* shared = this->m_shared[i];
@@ -61,21 +62,22 @@ void CM2Cache::WaitThread() {
     this->m_threadDone.Wait(0xFFFFFFFF);
 }
 
-// OFFSET: %0x00778A40
+// PROVEN: 6aaae644 IDENTICAL/DIFFERENT
+// OFFSET: 0x00811FF0/0x140529900
 uint32_t STORMAPI CM2Cache::ThreadProc(void* param) {
     CM2Cache* cache = static_cast<CM2Cache*>(param);
 
     PropSelectContext(cache->m_propContext);
-    cache->m_flags |= 0x400;
+    cache->m_flags |= 0x100;
     cache->m_threadStart.Wait(0xFFFFFFFF);
 
-    while (!(cache->m_flags & 0x800)) {
+    while (!(cache->m_flags & 0x200)) {
         cache->m_threadFunc(cache->m_threadParam);
         cache->m_threadDone.Set();
         cache->m_threadStart.Wait(0xFFFFFFFF);
     }
 
-    cache->m_flags &= ~0x400u;
+    cache->m_flags &= ~0x100u;
 
     return 0;
 }
@@ -86,7 +88,8 @@ void M2SetGlobalOptFlags(uint32_t flags) {
     s_cache.m_flags |= flags & 0xE000;
 }
 
-// OFFSET: %0x00778AE0
+// PROVEN: 73ae4d5d IDENTICAL/DIFFERENT
+// OFFSET: 0x00812090/0x1405299A0
 CM2Scene* M2CreateScene() {
     CM2Scene* scene = new (SMemAlloc(sizeof(CM2Scene), __FILE__, __LINE__, 0)) CM2Scene(&s_cache);
     scene->m_scenePrev = &s_cache.m_sceneList;
@@ -112,7 +115,7 @@ void M2SetCacheFlags(uint32_t flags) {
     s_cache.m_flags = flags;
 }
 
-// OFFSET: %0x00778B50
+// OFFSET: 0x00812100/0x140529A30
 void CM2Cache::UpdateShaderFlags() {
     uint32_t requested = this->m_requestedFlags;
 
@@ -123,9 +126,9 @@ void CM2Cache::UpdateShaderFlags() {
     }
 
     if ((this->m_flags & 8) || (CM2Cache::s_processorFeatures & 4)) {
-        this->m_flags &= ~0x40u;
+        this->m_flags &= ~0x20u;
     } else {
-        this->m_flags |= 0x40;
+        this->m_flags |= 0x20;
     }
 
     if ((requested & 2) && (g_theGxDevicePtr->m_caps.m_maxClipPlanes || (g_theGxDevicePtr->m_caps.unk_02BC && (this->m_flags & 8)))) {
@@ -135,7 +138,8 @@ void CM2Cache::UpdateShaderFlags() {
     }
 }
 
-// OFFSET: %0x00779000
+// PROVEN: 39e9ba7f IDENTICAL/NONE
+// OFFSET: 0x008124D0/0x140529F60
 CM2Shared* CM2Cache::ReloadShared(const char* name) {
     for (uint32_t i = 0; i < sizeof(this->m_shared) / sizeof(this->m_shared[0]); i++) {
         for (CM2Shared* shared = this->m_shared[i]; shared; ) {
@@ -157,7 +161,7 @@ CM2Shared* CM2Cache::ReloadShared(const char* name) {
                     this->m_shared[i] = next;
                 }
 
-                return this->CreateShared(shared->m_fileName, 0);
+                return this->CreateShared(shared->m_fileName, 0, 2);
             }
 
             shared = next;
@@ -167,10 +171,8 @@ CM2Shared* CM2Cache::ReloadShared(const char* name) {
     return NULL;
 }
 
-// OFFSET: %0x007790C0
+// OFFSET: 0x00812590/0x14052A050
 static void ReloadModelCallback(const char* name) {
-    SFile::RebuildHash();
-
     CM2Shared* shared = s_cache.ReloadShared(name);
 
     if (!shared) {
@@ -192,7 +194,7 @@ static void ReloadModelCallback(const char* name) {
     shared->Release();
 }
 
-// OFFSET: %0x00779150
+// OFFSET: 0x00812610/0x14052A100
 void CM2Cache::OnShaderModelChanged(void* param) {
     CM2Cache* cache = static_cast<CM2Cache*>(param);
     cache->UpdateShaderFlags();
@@ -201,7 +203,7 @@ void CM2Cache::OnShaderModelChanged(void* param) {
     for (CM2Scene* scene = cache->m_sceneList; scene; scene = scene->m_sceneNext) {
         for (CM2Model* model = scene->m_modelList; model; ) {
             CM2Model* next = model->m_sceneNext;
-            CM2Shared* shared = cache->CreateShared(model->m_shared->m_fileName, 0);
+            CM2Shared* shared = cache->CreateShared(model->m_shared->m_fileName, 0, 2);
             scene->ReloadModel(model, shared);
             shared->Release();
             model = next;
@@ -209,7 +211,7 @@ void CM2Cache::OnShaderModelChanged(void* param) {
     }
 }
 
-// OFFSET: %0x007791D0
+// OFFSET: 0x00812690/0x14052A1F0
 int32_t CM2Cache::Initialize(uint32_t flags) {
     if (this->m_initialized) {
         DebugLog("Model2: M2Initialize called more than once\n");
@@ -224,7 +226,7 @@ int32_t CM2Cache::Initialize(uint32_t flags) {
     }
 
     if (this->m_flags & 4) {
-        this->m_flags &= ~0xC00u;
+        this->m_flags &= ~0x300u;
         this->m_threadStart.Reset();
         this->m_threadDone.Reset();
         this->m_propContext = PropGetSelectedContext();
@@ -236,7 +238,7 @@ int32_t CM2Cache::Initialize(uint32_t flags) {
     }
 
     this->UpdateShaderFlags();
-    this->m_flags |= flags & 0x21A0;
+    this->m_flags |= flags & 0x4D0;
 
     uint32_t high = rand() << 16;
     CRndSeed seed(high | static_cast<uint16_t>(rand()));
@@ -257,14 +259,12 @@ int32_t CM2Cache::Initialize(uint32_t flags) {
     return 1;
 }
 
-// OFFSET: %0x00778BC0
+// OFFSET: 0x00812170/0x140529AA0
 void CM2Cache::GarbageCollect(int32_t force) {
-    uint32_t now = OsGetAsyncTimeMs();
-
     while (this->m_freeList) {
         CM2Shared* shared = this->m_freeList;
 
-        if (!force && static_cast<int32_t>(now - shared->m_freeTime) < 100) {
+        if (!force && this->m_updateTime - shared->m_freeTime < 100) {
             break;
         }
 
@@ -282,12 +282,12 @@ void CM2Cache::GarbageCollect(int32_t force) {
     }
 }
 
-// OFFSET: %0x00779350
+// OFFSET: 0x00812810
 void CM2Cache::Destroy() {
     g_theGxDevicePtr->RemoveShaderModelChangeCallback(CM2Cache::OnShaderModelChanged, this);
 
     if (this->m_flags & 4) {
-        this->m_flags |= 0x800;
+        this->m_flags |= 0x200;
         this->m_threadStart.Set();
         this->m_thread.Wait(0xFFFFFFFF);
     }
@@ -315,27 +315,59 @@ void CM2Cache::Destroy() {
     this->m_initialized = 0;
 }
 
-// OFFSET: %0x00778C30
-CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
-    char path[260];
-    SStrCopy(path, name, sizeof(path));
-    _strlwr(path);
+// OFFSET: 0x00811E50/0x1405297F0
+int32_t M2ConvertModelFileName(const char* name, char* result, uint32_t size, uint32_t flags) {
+    SStrCopy(result, name, size);
+    _strlwr(result);
 
-    char* ext = OsPathFindExtensionWithDot(path);
+    char* ext = OsPathFindExtensionWithDot(result);
 
-    if (!(flags & 0x1000)) {
-        if (!*ext) {
-            DebugLog("Model2: Invalid file extension: %s\n", path);
-            return NULL;
-        }
+    if (flags & 0x200) {
+        return 1;
+    }
 
+    if (*ext) {
         if (!strcmp(ext, ".mdl") || !strcmp(ext, ".mdx")) {
             strcpy(ext, ".m2");
-        } else if (strcmp(ext, ".m2")) {
-            DebugLog("Model2: Invalid file extension: %s\n", path);
-            return NULL;
+            return 1;
+        }
+
+        if (!strcmp(ext, ".m2")) {
+            return 1;
         }
     }
+
+    DebugLog("Model2: Invalid file extension: %s\n", result);
+
+    return 0;
+}
+
+// OFFSET: 0x00811DB0
+SFileImpl* CM2Cache::OpenModelFile(const char* name, uint32_t flags, int32_t* errorCube) {
+    SFileImpl* file;
+    *errorCube = 0;
+
+    if (SFile::OpenEx(NULL, name, (flags >> 1) & 1, &file)) {
+        return file;
+    }
+
+    *errorCube = 1;
+    DebugLog("Model2: File not found: %s\n", name);
+
+    char errorCubeName[] = "Spells\\ErrorCube.m2";
+
+    return SFile::OpenEx(NULL, errorCubeName, 0, &file) ? file : NULL;
+}
+
+// OFFSET: 0x008121E0/0x140529B50
+CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags, uint8_t priority) {
+    char path[260];
+
+    if (!M2ConvertModelFileName(name, path, sizeof(path), flags)) {
+        return NULL;
+    }
+
+    char* ext = OsPathFindExtensionWithDot(path);
 
     if (ext) {
         *ext = '\0';
@@ -354,7 +386,7 @@ CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
         *ext = '.';
     }
 
-    uint32_t fullPath = flags & 0x10;
+    int32_t fullPath = flags & 8;
     char* key;
 
     if (fullPath) {
@@ -406,10 +438,14 @@ CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
         return *link;
     }
 
-    SFileImpl* file;
+    if (flags & 0x100) {
+        return NULL;
+    }
 
-    if (!SFile::OpenEx(NULL, path, (flags >> 2) & 1, &file)) {
-        DebugLog("Model2: File not found: %s\n", path);
+    int32_t errorCube;
+    SFileImpl* file = CM2Cache::OpenModelFile(path, flags, &errorCube);
+
+    if (!file) {
         return NULL;
     }
 
@@ -420,7 +456,11 @@ CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
         return NULL;
     }
 
-    if (!shared->Load(file, flags & 4, boundingBox)) {
+    if (errorCube) {
+        shared->m_flags |= 0x80;
+    }
+
+    if (!shared->Load(file, flags & 2, boundingBox, priority)) {
         SFileCloseFile(file);
         delete shared;
         return NULL;
@@ -443,7 +483,7 @@ CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
         }
     }
 
-    if (!(flags & 8)) {
+    if (!(flags & 4)) {
         shared->m_previous = link;
         shared->m_next = *link;
 
@@ -454,14 +494,15 @@ CM2Shared* CM2Cache::CreateShared(const char* name, uint32_t flags) {
         *link = shared;
     }
 
-    if (flags & 0x40) {
+    if (flags & 0x20) {
         shared->m_flags |= 0x40;
     }
 
     return shared;
 }
 
-// OFFSET: %0x007793F0
+
+// OFFSET: 0x00812AD0/0x14052A6E0
 void M2Initialize(uint32_t flags, uint32_t modelCount) {
     s_cache.Initialize(flags);
 
@@ -469,15 +510,17 @@ void M2Initialize(uint32_t flags, uint32_t modelCount) {
         modelCount = 1024;
     }
 
-    g_modelPool = new (SMemAlloc(sizeof(CM2ModelHeap), __FILE__, __LINE__, 0)) CM2ModelHeap;
+    void* memory = SMemAlloc(sizeof(CM2ModelHeap), __FILE__, __LINE__, 0);
+    g_modelPool = memory ? new (memory) CM2ModelHeap("CM2Model", modelCount) : NULL;
 
-    if (g_modelPool) {
-        g_modelPool->m_heapId = ObjectAllocAddHeap(sizeof(CM2Model), modelCount, "CM2Model", true);
+    if (flags & 0x800) {
+        CM2Model::ErrorSetAppFatal(0);
     }
 }
 
-// OFFSET: %0x00779460
+// OFFSET: 0x00812B70
 void M2Destroy() {
+    CM2Model::ErrorClear();
     s_cache.Destroy();
     ParticleSystemManager::Destroy();
     RibbonManager::Destroy();
@@ -485,11 +528,11 @@ void M2Destroy() {
     g_modelPool = NULL;
 }
 
-// OFFSET: %0x007794A0
+// OFFSET: 0x008128B0/0x14052A4E0
 void CM2Cache::UpdateShared() {
     this->m_updateTime = OsGetAsyncTimeMs();
 
-    if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11) {
+    if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11 || g_theGxDevicePtr->DeviceApi() == GxApi_GLL) {
         return;
     }
 
@@ -508,7 +551,7 @@ void CM2Cache::UpdateShared() {
     }
 }
 
-// OFFSET: %0x00779560
+// OFFSET: 0x00812980
 void CM2Cache::LinkToSharedUpdateList(CM2Shared* shared) {
     shared->m_lastUsedTime = this->m_updateTime;
     this->m_sharedUpdateList.LinkToTail(shared);
@@ -521,7 +564,8 @@ CM2Cache::~CM2Cache() {
     }
 }
 
-// OFFSET: %0x00779620
+// PROVEN: 62c9713b IDENTICAL/NONE
+// OFFSET: 0x00812A40
 CM2Cache::CM2Cache() : m_threadStart(0, 0), m_threadDone(0, 0) {
     this->m_freeList = NULL;
     this->m_freeListTail = &this->m_freeList;

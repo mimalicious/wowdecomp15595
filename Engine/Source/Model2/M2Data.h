@@ -380,7 +380,6 @@ class M2Data {
     /* 0118 */ M2Array<uint16_t> m_cameraIndicesById;
     /* 0120 */ M2Array<M2Ribbon> m_ribbons;
     /* 0128 */ M2Array<M2Particle> m_particles;
-    /* 0130 */ M2Array<uint16_t> m_textureCombinerCombos;
 };
 
 class M2SkinProfile {
@@ -403,7 +402,11 @@ inline T& M2Array<T>::operator[](uint32_t index) const {
 
 template <class T>
 inline T* M2Array<T>::Data() const {
-    return reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(this) + static_cast<intptr_t>(static_cast<int32_t>(this->m_offset)));
+    if (sizeof(void*) == sizeof(uint32_t)) {
+        return reinterpret_cast<T*>(static_cast<uintptr_t>(this->m_offset));
+    }
+
+    return this->m_offset ? reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(this) + static_cast<intptr_t>(static_cast<int32_t>(this->m_offset))) : NULL;
 }
 
 template <class T>
@@ -413,6 +416,11 @@ inline void M2Array<T>::Relocate(const void* base) {
 
 template <class T>
 inline void M2Array<T>::Set(const T* data) {
+    if (sizeof(void*) == sizeof(uint32_t)) {
+        this->m_offset = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(data));
+        return;
+    }
+
     this->m_offset = data ? static_cast<uint32_t>(reinterpret_cast<uintptr_t>(data) - reinterpret_cast<uintptr_t>(this)) : 0;
 }
 

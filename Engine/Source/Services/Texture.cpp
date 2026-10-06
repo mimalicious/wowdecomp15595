@@ -549,6 +549,16 @@ int32_t TextureUnloadBlob(const char* fileName) {
     return CTextureBlob::Unload(fileName);
 }
 
+// OFFSET: 0x00541080/0x140193C70
+const char* TextureGetObjectName(CTexture* texture) {
+    if (!texture) {
+        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        return NULL;
+    }
+
+    return texture->GetObjectName();
+}
+
 // PROVEN: 73c03e4c IDENTICAL/DIFFERENT
 // OFFSET: 0x005410A0/0x140193CA0
 void TextureComputeLoadProgress(CTexture* texture, int64_t& loaded, int64_t& total) {
@@ -574,6 +584,15 @@ int32_t TextureIsBlob(CTexture* texture) {
 // OFFSET: 0x00541120/0x140193D50
 int32_t TextureIsStreaming(CTexture* texture) {
     return texture->m_asyncObject && texture->m_asyncObject->m_isStreamed;
+}
+
+// OFFSET: 0x00541140/0x140193D70
+int32_t TextureGetAsyncRenderStatus(CTexture* texture) {
+    if (texture->m_asyncObject) {
+        return texture->m_gxTex != NULL;
+    }
+
+    return 2;
 }
 
 // OFFSET: 0x005411C0/0x140193D90

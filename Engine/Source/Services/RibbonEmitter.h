@@ -93,6 +93,7 @@ class CRibbonEmitter {
     void SetGravity(float gravity);
     void SetPos(const C44Matrix& transform, const C3Vector& position, const C44Matrix* frameOfReference);
     void SetTexSlot(uint32_t slot);
+    void SetTexture(uint32_t index, CTexture* texture);
     void SetUserEnabled(uint32_t enabled);
     void Update(float deltaTime, int32_t suppressNewEdges);
 };

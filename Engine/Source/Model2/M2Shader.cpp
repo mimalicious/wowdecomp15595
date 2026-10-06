@@ -114,16 +114,10 @@ static EGxTexOp s_alphaOps[8] = { static_cast<EGxTexOp>(3), static_cast<EGxTexOp
 // STATIC: %0x00C0D6D0
 static EGxTexOp s_colorOps[8] = { static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(4), static_cast<EGxTexOp>(2), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(5), static_cast<EGxTexOp>(1), static_cast<EGxTexOp>(2) };
 
-// OFFSET: %0x0079FA00
+// OFFSET: 0x00839600/0x140563A60
 uint32_t M2GetPixelShaderID(uint32_t textureCount, uint16_t shader) {
     if (shader & 0x8000) {
-        uint32_t shaderID = shader & 0x7FFF;
-
-        if (shaderID >= 29) {
-            return 0;
-        }
-
-        return s_shaderEffects[shaderID].m_pixelShader;
+        return s_shaderEffects[shader & 0x7FFF].m_pixelShader;
     }
 
     uint32_t op0 = (shader >> 4) & 7;
@@ -164,16 +158,10 @@ uint32_t M2GetPixelShaderID(uint32_t textureCount, uint16_t shader) {
     }
 }
 
-// OFFSET: %0x0079FAF0
+// OFFSET: 0x008396F0/0x140563B20
 uint32_t M2GetVertexShaderID(uint32_t textureCount, uint16_t shader) {
     if (shader & 0x8000) {
-        uint32_t shaderID = shader & 0x7FFF;
-
-        if (shaderID >= 29) {
-            return 0;
-        }
-
-        return s_shaderEffects[shaderID].m_vertexShader;
+        return s_shaderEffects[shader & 0x7FFF].m_vertexShader;
     }
 
     uint32_t env0 = (shader >> 4) & 8;
@@ -209,40 +197,28 @@ const char* M2GetVertexShaderName(uint32_t textureCount, uint16_t shader) {
     return s_modelVertexShaders[M2GetVertexShaderID(textureCount, shader)];
 }
 
-// OFFSET: %0x0079FBC0
+// OFFSET: 0x008397B0/0x140563BE0
 const char* M2GetHullShaderName(uint32_t textureCount, uint16_t shader) {
-    if (!(shader & 0x8000)) {
-        return s_modelHullShaders[textureCount != 1];
+    if (shader & 0x8000) {
+        return s_modelHullShaders[s_shaderEffects[shader & ~0x8000].m_hullShader];
     }
 
-    uint32_t shaderID = shader & 0x7FFF;
-
-    if (shaderID >= 29) {
-        return s_modelHullShaders[0];
-    }
-
-    return s_modelHullShaders[s_shaderEffects[shaderID].m_hullShader];
+    return s_modelHullShaders[textureCount != 1];
 }
 
-// OFFSET: %0x0079FC10
+// OFFSET: 0x008397F0/0x140563C30
 const char* M2GetDomainShaderName(uint32_t textureCount, uint16_t shader) {
-    if (!(shader & 0x8000)) {
-        return s_modelDomainShaders[textureCount != 1];
+    if (shader & 0x8000) {
+        return s_modelDomainShaders[s_shaderEffects[shader & ~0x8000].m_domainShader];
     }
 
-    uint32_t shaderID = shader & 0x7FFF;
-
-    if (shaderID >= 29) {
-        return s_modelDomainShaders[0];
-    }
-
-    return s_modelDomainShaders[s_shaderEffects[shaderID].m_domainShader];
+    return s_modelDomainShaders[textureCount != 1];
 }
 
-// OFFSET: %0x0079FC60
+// OFFSET: 0x00839830/0x140563C80
 void M2GetFixedFunctionFallback(uint16_t shader, EGxTexOp* colorOp, EGxTexOp* alphaOp) {
     if (shader & 0x8000) {
-        uint32_t shaderID = shader & 0x7FFF;
+        uint32_t shaderID = shader & ~0x8000;
         *colorOp = s_shaderEffects[shaderID].m_colorOp;
         *alphaOp = s_shaderEffects[shaderID].m_alphaOp;
     } else {

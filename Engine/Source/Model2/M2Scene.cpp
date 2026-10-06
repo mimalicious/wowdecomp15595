@@ -15,6 +15,10 @@
 #include "Engine/Source/Model2/M2Shared.h"
 #include "Engine/Source/Model2/CM2SceneRender.h"
 #include "Engine/Source/Base/Status.h"
+#include "Engine/Source/BlizzardCore/SFile2-Core.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
+#include "Engine/Source/Os/Path.h"
+#include "Engine/Source/Services/AsyncFile.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/ShaderEffect/ShaderEffectManager.h"
 #include "Engine/Source/Services/GfxSingletonManager.h"
@@ -42,7 +46,8 @@ static float s_lightGridScale = 0.05f;
 // STATIC: %0x00D89EB0
 static uint32_t s_doodadHash[1571];
 
-// OFFSET: %0x0078DB80
+// PROVEN: a9db6533 IDENTICAL/DIFFERENT
+// OFFSET: 0x00827570/0x1405454E0
 void CM2Scene::SetTime(uint32_t time) {
     this->m_time = time;
     this->m_cache->UpdateShared();
@@ -55,7 +60,7 @@ void CM2Scene::ReloadModel(CM2Model* model, CM2Shared* shared) {
     model->Reload(this, shared);
 }
 
-// OFFSET: %0x00795590
+// OFFSET: 0x0082F300/0x14054FB50
 void CM2Scene::AdvanceTime(uint32_t delta) {
     if (!this->m_litSphereTexture) {
         CGxTexFlags texFlags;
@@ -88,7 +93,7 @@ void CM2Scene::SetFloat18(float value) {
     this->m_float18 = value;
 }
 
-// OFFSET: %0x0078DBB0
+// OFFSET: 0x008275A0/0x140545510
 uint32_t ParticleBlendToM2Blend(uint32_t blend) {
     switch (blend) {
         case 1:
@@ -108,7 +113,7 @@ uint32_t ParticleBlendToM2Blend(uint32_t blend) {
     }
 }
 
-// OFFSET: %0x0078DC10
+// OFFSET: 0x00827600
 uint32_t ParticleFlagsToM2Flags(uint32_t flags) {
     uint32_t result = 4;
 
@@ -127,7 +132,8 @@ uint32_t ParticleFlagsToM2Flags(uint32_t flags) {
     return result;
 }
 
-// OFFSET: %0x0078DC40
+// PROVEN: 5955f780 IDENTICAL/NONE
+// OFFSET: 0x00827630
 void CM2Scene::EndDraw() {
     this->m_drawing = 0;
 }
@@ -140,12 +146,14 @@ void CM2Scene::PurgeModelCache() {
     }
 }
 
-// OFFSET: %0x0078DC60
+// PROVEN: 3d78f649 IDENTICAL/DIFFERENT
+// OFFSET: 0x00827650/0x1405455B0
 void CM2Scene::BeginHitTest() {
     this->m_flags |= 2;
 }
 
-// OFFSET: %0x0078DC70
+// PROVEN: 75b851aa IDENTICAL/NONE
+// OFFSET: 0x00827660
 void CM2Scene::ClearHitTestList() {
     for (CM2Model* model = this->m_hitTestList; model; model = model->m_hitTestNext) {
         *model->m_hitTestPrev = NULL;
@@ -155,7 +163,7 @@ void CM2Scene::ClearHitTestList() {
     this->m_flags &= ~2u;
 }
 
-// OFFSET: %0x0078DCA0
+// OFFSET: 0x00827690/0x140545600
 void CM2Scene::AllocateSpaceForHitList() {
     uint32_t count = 0;
 
@@ -182,7 +190,7 @@ void CM2Scene::AllocateSpaceForHitList() {
     this->m_hitOrder = new (__FILE__, __LINE__) uint32_t[this->m_hitCapacity];
 }
 
-// OFFSET: %0x0078DD90
+// OFFSET: 0x00827950/0x140545990
 int32_t CM2Scene::SortHitNear(uint32_t a, uint32_t b, const void* param) {
     const M2HitRec* recs = static_cast<const M2HitRec*>(param);
     const M2HitRec* recA = &recs[a];
@@ -211,20 +219,21 @@ int32_t CM2Scene::SortHitNear(uint32_t a, uint32_t b, const void* param) {
     return b < a;
 }
 
-// OFFSET: %0x0078DE00
+// PROVEN: 6a5aa96f IDENTICAL/NONE
+// OFFSET: 0x00827B50/0x140545C20
 void CM2Scene::SetProjectTextureCallback(void (*callback)(const CAaBox&, const CImVector&, int32_t, void*, int32_t), void* param) {
     this->m_projectTextureCallback = callback;
     this->m_projectTextureParam = param;
 }
 
-// OFFSET: %0x0078DE20
+// OFFSET: 0x00827BA0/0x140545C50
 static uint32_t __stdcall HashDoodadElement(const M2Element* element) {
     const CM2Model* model = element->m_model;
     const CM2Lighting* lighting = model->m_currentLighting;
     uint32_t colorIndex = element->m_batch->m_colorIndex;
 
     const uint32_t* light = reinterpret_cast<const uint32_t*>(lighting);
-    uint32_t hash = light[23] + 19 * (light[22] + 19 * (light[21] + 19 * (light[26] + 19 * (light[25] + 19 * (19 * (light[48] + 19 * (light[47] + 19 * (19 * (light[43] + 19 * (light[42] + 19 * (element->m_index + 19 * static_cast<uint32_t>(reinterpret_cast<uintptr_t>(model->m_shared))))) + light[46]))) + light[24])))));
+    uint32_t hash = light[23] + 19 * (light[22] + 19 * (light[21] + 19 * (light[26] + 19 * (light[25] + 19 * (19 * (light[46] + 19 * (light[45] + 19 * (19 * (light[41] + 19 * (light[40] + 19 * (element->m_index + 19 * static_cast<uint32_t>(reinterpret_cast<uintptr_t>(model->m_shared))))) + light[44]))) + light[24])))));
 
     if (colorIndex < model->m_shared->m_data->m_colors.m_count) {
         const uint32_t* color = reinterpret_cast<const uint32_t*>(&model->m_colors[colorIndex].m_colorTrack.m_currentValue);
@@ -237,22 +246,9 @@ static uint32_t __stdcall HashDoodadElement(const M2Element* element) {
     return reinterpret_cast<const uint32_t*>(&model->unk_01D0)[0] + 19 * (emissive[2] + 19 * (emissive[1] + 19 * (19 * (diffuse[2] + 19 * (diffuse[1] + 19 * (19 * hash + diffuse[0]))) + emissive[0])));
 }
 
-// OFFSET: %0x0078E3D0
-CM2Model* CM2ModelHeap::New() {
-    uint32_t handle;
-    void* memory = NULL;
 
-    if (!ObjectAlloc(this->m_heapId, &handle, &memory, false)) {
-        return NULL;
-    }
-
-    CM2Model* model = memory ? new (memory) CM2Model() : NULL;
-    model->m_handle = handle;
-
-    return model;
-}
-
-// OFFSET: %0x0078E560
+// PROVEN: 055bdfe9 IDENTICAL/DIFFERENT
+// OFFSET: 0x00828470/0x1405462A0
 static void AnimateThread(void* param) {
     CM2Scene* scene = static_cast<CM2Scene*>(param);
 
@@ -275,7 +271,7 @@ static void AnimateThread(void* param) {
     }
 }
 
-// OFFSET: %0x0078E8E0
+// OFFSET: 0x008287F0/0x140546850
 int32_t CM2Scene::ComputeRayDirAndLen(const C3Vector& start, const C3Vector& end, float t, float* length, C3Vector* dir) {
     if (t >= 0.0000099999997f) {
         float dx = end.x - start.x;
@@ -303,7 +299,7 @@ int32_t CM2Scene::ComputeRayDirAndLen(const C3Vector& start, const C3Vector& end
     return 0;
 }
 
-// OFFSET: %0x0078E9D0
+// OFFSET: 0x00829210/0x140547540
 uint32_t CM2Scene::SphereTestModels(const C3Vector& start, const C3Vector& dir, float length, int32_t frameCheck) {
     uint32_t count = 0;
 
@@ -388,7 +384,7 @@ uint32_t CM2Scene::SphereTestModels(const C3Vector& start, const C3Vector& dir, 
     return count;
 }
 
-// OFFSET: %0x0078ED30
+// OFFSET: 0x00827780/0x140545720
 M2HitRec* CM2Scene::IntersectHitTestTriangles(const uint16_t* indices, const uint16_t* end, uint32_t vertexStart, const C3Vector& start, uint32_t pass, M2HitRec* rec, float& t, M2HitRec* best) {
     for (; indices < end; indices += 3) {
         const C3Vector& v0 = this->m_hitVerts[indices[0] - vertexStart];
@@ -436,7 +432,7 @@ M2HitRec* CM2Scene::IntersectHitTestTriangles(const uint16_t* indices, const uin
     return best;
 }
 
-// OFFSET: %0x0078EF00
+// OFFSET: 0x00829570/0x140547A10
 M2HitRec* CM2Scene::HitTestGeometry(const CM2Model* model, uint32_t pass, const C3Vector& dir, float d, const C3Vector& start, M2HitRec* rec, float& t, M2HitRec* best) {
     M2SkinProfile* skinData = model->m_shared->m_skinData;
     M2Data* data = model->m_shared->m_data;
@@ -505,7 +501,7 @@ M2HitRec* CM2Scene::HitTestGeometry(const CM2Model* model, uint32_t pass, const 
     return best;
 }
 
-// OFFSET: %0x0078F180
+// OFFSET: 0x008297F0/0x140547EB0
 M2HitRec* CM2Scene::HitTestCollision(const CM2Model* model, uint32_t pass, const C3Vector& dir, float d, const C3Vector& start, M2HitRec* rec, float& t, M2HitRec* best) {
     M2Data* data = model->m_shared->m_data;
 
@@ -537,7 +533,7 @@ M2HitRec* CM2Scene::HitTestCollision(const CM2Model* model, uint32_t pass, const
     return this->IntersectHitTestTriangles(indices, indices + data->m_collisionIndices.m_count, 0, start, pass, rec, t, best);
 }
 
-// OFFSET: %0x0078F3E0
+// OFFSET: 0x00829A50/0x1405481B0
 void* CM2Scene::EndHitTest(const C3Vector& start, const C3Vector& end, float& t, int32_t twoPass) {
     C3Vector dir(0.0f, 0.0f, 0.0f);
     float length;
@@ -608,7 +604,7 @@ void* CM2Scene::EndHitTest(const C3Vector& start, const C3Vector& end, float& t,
     return owner;
 }
 
-// OFFSET: %0x0078F600
+// OFFSET: 0x00829C70/0x1405484B0
 void* CM2Scene::EndHitTestCollisionWorld(const C3Vector& start, const C3Vector& end, float& t) {
     C3Vector dir(0.0f, 0.0f, 0.0f);
     float length;
@@ -688,10 +684,22 @@ void* CM2Scene::EndHitTestCollisionWorld(const C3Vector& start, const C3Vector& 
 
     t = tMax / length;
 
-    return best->m_model->m_hitTestOwner;
+    void* owner = NULL;
+
+    for (CM2Model* model = best->m_model; model; model = model->m_attachParent) {
+        if (model->m_hitTestOwner != reinterpret_cast<void*>(static_cast<intptr_t>(-1))) {
+            owner = model->m_hitTestOwner;
+            break;
+        }
+    }
+
+    this->m_lastHit = *best;
+    this->m_lastHitOwner = owner;
+
+    return owner;
 }
 
-// OFFSET: %0x0078FB30
+// OFFSET: 0x008279C0/0x1405459F0
 void CM2Scene::SelectLights(CM2Lighting* lighting) {
     for (CM2Light* light = this->m_lightList; light; light = light->m_lightNext) {
         lighting->AddLight(light);
@@ -702,14 +710,14 @@ void CM2Scene::SelectLights(CM2Lighting* lighting) {
     }
 
     const CAaSphere& sphere = lighting->m_sphere4;
-    uint32_t maxX = static_cast<int32_t>(floorf((sphere.c.x + sphere.r) * s_lightGridScale + 0.5f)) & 0x3F;
-    uint32_t minY = static_cast<int32_t>(floorf((sphere.c.y - sphere.r) * s_lightGridScale - 0.5f)) & 0x3F;
-    uint32_t maxY = static_cast<int32_t>(floorf((sphere.r + sphere.c.y) * s_lightGridScale + 0.5f)) & 0x3F;
-    uint32_t minX = static_cast<int32_t>(floorf((sphere.c.x - sphere.r) * s_lightGridScale - 0.5f)) & 0x3F;
+    uint32_t maxX = static_cast<int32_t>(floorf((sphere.c.x + sphere.r) * s_lightGridScale + 0.5f)) & 0x1F;
+    uint32_t minY = static_cast<int32_t>(floorf((sphere.c.y - sphere.r) * s_lightGridScale - 0.5f)) & 0x1F;
+    uint32_t maxY = static_cast<int32_t>(floorf((sphere.r + sphere.c.y) * s_lightGridScale + 0.5f)) & 0x1F;
+    uint32_t minX = static_cast<int32_t>(floorf((sphere.c.x - sphere.r) * s_lightGridScale - 0.5f)) & 0x1F;
 
-    for (uint32_t x = minX; ; x = (x + 1) & 0x3F) {
-        for (uint32_t y = minY; ; y = (y + 1) & 0x3F) {
-            CM2Light* light = this->m_lightGrid[x + 64 * y];
+    for (uint32_t x = minX; ; x = (x + 1) & 0x1F) {
+        for (uint32_t y = minY; ; y = (y + 1) & 0x1F) {
+            CM2Light* light = this->m_lightGrid[x + 32 * y];
 
             while (light) {
                 CM2Light* next = light->m_lightNext;
@@ -734,7 +742,8 @@ void CM2Scene::SelectLights(CM2Lighting* lighting) {
     }
 }
 
-// OFFSET: %0x0078FCC0
+// PROVEN: 39cefc36 IDENTICAL/DIFFERENT
+// OFFSET: 0x00827B70/0x140545C30
 void CM2Scene::SetProjectPositionCallback(int32_t (*callback)(const C3Vector&, float&, void*), void* param) {
     this->m_projectPositionCallback = callback;
     this->m_projectPositionParam = param;
@@ -742,7 +751,7 @@ void CM2Scene::SetProjectPositionCallback(int32_t (*callback)(const C3Vector&, f
     ParticleSystemManager::sm_projectParam = param;
 }
 
-// OFFSET: %0x0078DF20
+// OFFSET: 0x00827CA0/0x140545D60
 int32_t CM2Scene::SortDoodad(uint32_t a, uint32_t b, const void* param) {
     const M2Element* elements = static_cast<const M2Element*>(param);
     const M2Element* elementA = &elements[a];
@@ -858,7 +867,7 @@ int32_t CM2Scene::SortDoodad(uint32_t a, uint32_t b, const void* param) {
     return modelA->unk_01D0 > modelB->unk_01D0;
 }
 
-// OFFSET: %0x0078E2D0
+// OFFSET: 0x00828050/0x140545F80
 int32_t CM2Scene::SortDoodadKey(uint32_t a, uint32_t b, const void* param) {
     const M2Element* elements = static_cast<const M2Element*>(param);
     uint32_t keyA = elements[a].m_doodadKey;
@@ -879,7 +888,7 @@ int32_t CM2Scene::SortSortKey(uint32_t a, uint32_t b, const void* param) {
     return elements[a].m_typeKey - elements[b].m_typeKey;
 }
 
-// OFFSET: %0x0078FCF0
+// OFFSET: 0x0082A400
 int32_t CM2Scene::SortOpaqueRibbons(M2Element* a, M2Element* b) {
     M2Ribbon* ribbonA = &a->m_model->m_shared->m_data->m_ribbons[a->m_index];
     M2Ribbon* ribbonB = &b->m_model->m_shared->m_data->m_ribbons[b->m_index];
@@ -913,7 +922,7 @@ int32_t CM2Scene::SortOpaqueRibbons(M2Element* a, M2Element* b) {
     return static_cast<uint32_t>(b->m_index) < static_cast<uint32_t>(a->m_index);
 }
 
-// OFFSET: %0x0078FDD0
+// OFFSET: 0x008288E0
 int32_t CM2Scene::SortOpaqueParticles(M2Element* a, M2Element* b) {
     CParticleEmitter2* emitterA = a->m_emitter;
     CParticleEmitter2* emitterB = b->m_emitter;
@@ -938,14 +947,14 @@ int32_t CM2Scene::SortOpaqueParticles(M2Element* a, M2Element* b) {
     return flagsA > flagsB || emitterA->m_texture < emitterB->m_texture;
 }
 
-// OFFSET: %0x00790AA0
+// OFFSET: 0x0082A1A0
 int32_t CM2Scene::SortOpaqueGeoBatches(M2Element* a, M2Element* b) {
     M2Data* dataA = a->m_model->m_shared->m_data;
     M2Batch* batchA = a->m_batch;
     M2Data* dataB = b->m_model->m_shared->m_data;
     M2Batch* batchB = b->m_batch;
 
-    if (!(a->m_typeKey & 0xE0000000)) {
+    if ((a->m_typeKey & 0xE0000000) == 0x20000000) {
         if (batchA->m_materialLayer < batchB->m_materialLayer) {
             return -1;
         }
@@ -1067,7 +1076,7 @@ int32_t CM2Scene::SortOpaqueGeoBatches(M2Element* a, M2Element* b) {
     return batchB < batchA;
 }
 
-// OFFSET: %0x00790CF0
+// OFFSET: 0x0082A4E0
 int32_t CM2Scene::SortOpaque(uint32_t a, uint32_t b, const void* param) {
     M2Element* elements = const_cast<M2Element*>(static_cast<const M2Element*>(param));
     M2Element* elementA = &elements[a];
@@ -1096,11 +1105,22 @@ int32_t CM2Scene::SortOpaque(uint32_t a, uint32_t b, const void* param) {
     }
 }
 
-// OFFSET: %0x00790D80
+// OFFSET: 0x0082A570
 int32_t CM2Scene::SortTransparent(uint32_t a, uint32_t b, const void* param) {
     M2Element* elements = const_cast<M2Element*>(static_cast<const M2Element*>(param));
     M2Element* elementA = &elements[a];
     M2Element* elementB = &elements[b];
+    uint32_t typeA = elementA->m_typeKey >> 29;
+
+    if (!typeA && (elementB->m_typeKey & 0xE0000000)) {
+        return -1;
+    }
+
+    uint32_t typeB = elementB->m_typeKey >> 29;
+
+    if (!typeB && typeA) {
+        return 1;
+    }
 
     if (elementA->m_sortDepth > elementB->m_sortDepth) {
         return -1;
@@ -1150,7 +1170,7 @@ int32_t CM2Scene::SortTransparent(uint32_t a, uint32_t b, const void* param) {
 
     uint32_t shaderSort = CM2Scene::s_optFlags & 0x4000;
 
-    if (shaderSort && (((elementA->m_typeKey ^ elementB->m_typeKey) & 0xE0000000) || elementA->m_model != elementB->m_model) && elementA->m_effect && elementB->m_effect) {
+    if (shaderSort && (typeA != typeB || elementA->m_model != elementB->m_model) && elementA->m_effect && elementB->m_effect) {
         CGxShaderPermute* vertexA = elementA->m_effect->GetVertexPermute(elementA->m_vertexPermute);
         CGxShaderPermute* vertexB = elementB->m_effect->GetVertexPermute(elementB->m_vertexPermute);
         CGxShaderPermute* pixelA = elementA->m_effect->GetPixelPermute(elementA->m_pixelPermute);
@@ -1180,9 +1200,6 @@ int32_t CM2Scene::SortTransparent(uint32_t a, uint32_t b, const void* param) {
     if (elementA->m_model > elementB->m_model) {
         return 1;
     }
-
-    uint32_t typeA = elementA->m_typeKey >> 29;
-    uint32_t typeB = elementB->m_typeKey >> 29;
 
     if (typeA < typeB) {
         return -1;
@@ -1230,7 +1247,7 @@ int32_t CM2Scene::SortTransparent(uint32_t a, uint32_t b, const void* param) {
     return CM2Scene::SortOpaque(a, b, param);
 }
 
-// OFFSET: %0x00790F80
+// OFFSET: 0x0082A780
 int32_t CM2Scene::SortAdditiveParticles(uint32_t a, uint32_t b, const void* param) {
     M2Element* elements = const_cast<M2Element*>(static_cast<const M2Element*>(param));
     M2Element* elementA = &elements[a];
@@ -1289,7 +1306,7 @@ int32_t CM2Scene::SortAdditiveParticles(uint32_t a, uint32_t b, const void* para
     return emitterA->m_texture < emitterB->m_texture;
 }
 
-// OFFSET: %0x00791070
+// OFFSET: 0x0082A870/0x140549530
 void CM2Scene::ComputeElementShaders(M2Element* element) {
     CM2Model* model = element->m_model;
     CM2Lighting* lighting = model->m_currentLighting;
@@ -1336,7 +1353,7 @@ void CM2Scene::ComputeElementShaders(M2Element* element) {
                     shadow = 1;
                 }
 
-                if (type == 1) {
+                if (type == 0) {
                     shadow = 0;
                 }
             }
@@ -1360,31 +1377,429 @@ void CM2Scene::ComputeElementShaders(M2Element* element) {
     element->m_typeKey ^= (element->m_typeKey ^ hash) & 0x3FFFFFF;
 }
 
-// OFFSET: %0x0078D610
-void CM2ModelHeap::Delete(CM2Model* model) {
-    model->~CM2Model();
-    ObjectFree(this->m_heapId, model->m_handle);
+// PROVEN: 0c827297 IDENTICAL/NONE
+// OFFSET: 0x00827450
+void M2PreloadRecord::Set(CM2Scene* scene, const char* fileName, const uint64_t& key, TSGrowableArray<CAsyncObject*>* waitList) {
+    this->m_scene = scene;
+    this->m_key = key;
+    this->m_waitList = waitList;
+    SStrCopy(this->m_fileName, fileName, sizeof(this->m_fileName));
 }
 
-// OFFSET: %0x007909B0
-CM2Model* CM2Scene::CreateModel(const char* fileName, uint32_t flags) {
+// OFFSET: 0x00828260
+void M2PreloadMap::Iterator::Next() {
+    if (this->m_node && (this->m_node = this->m_node->m_next)) {
+        return;
+    }
+
+    for (this->m_bucket++; this->m_bucket < this->m_end; this->m_bucket++) {
+        this->m_node = *this->m_bucket;
+
+        if (this->m_node) {
+            break;
+        }
+    }
+}
+
+// INLINED
+M2PreloadMap::M2PreloadMap() {
+    this->m_bucketCount = 8;
+    this->m_count = 0;
+    this->m_buckets = static_cast<Node**>(Blizzard::Memory::s_allocHook(sizeof(Node*) * 8));
+
+    for (uint32_t i = 0; i < 8; i++) {
+        this->m_buckets[i] = NULL;
+    }
+
+    this->m_maxLoadFactor = 1.0f;
+}
+
+// PROVEN: 69d486a2 IDENTICAL/NONE
+// OFFSET: 0x00829100/0x140547390
+M2PreloadMap::~M2PreloadMap() {
+    for (uint32_t i = 0; i < this->m_bucketCount; i++) {
+        for (Node* node = this->m_buckets[i]; node; ) {
+            Node* next = node->m_next;
+            Blizzard::Memory::s_freeHook(node, sizeof(Node));
+            node = next;
+        }
+    }
+
+    Blizzard::Memory::s_freeHook(this->m_buckets, sizeof(Node*) * this->m_bucketCount);
+}
+
+// INLINED
+M2PreloadMap::Iterator M2PreloadMap::Begin() {
+    Iterator it;
+    it.m_node = *this->m_buckets;
+    it.m_bucket = this->m_buckets;
+    it.m_end = &this->m_buckets[this->m_bucketCount];
+
+    if (!it.m_node) {
+        it.Next();
+    }
+
+    return it;
+}
+
+// INLINED
+M2PreloadMap::Iterator M2PreloadMap::End() {
+    Iterator it;
+    it.m_node = NULL;
+    it.m_bucket = &this->m_buckets[this->m_bucketCount];
+    it.m_end = it.m_bucket;
+
+    return it;
+}
+
+// OFFSET: 0x0082C9E0
+M2PreloadMap::Iterator M2PreloadMap::Erase(Iterator where) {
+    Node** link = where.m_bucket;
+
+    for (Node* node = *link; node; link = &node->m_next, node = node->m_next) {
+        if (node != where.m_node) {
+            continue;
+        }
+
+        Iterator next;
+        next.m_node = node;
+        next.m_bucket = where.m_bucket;
+        next.m_end = &this->m_buckets[this->m_bucketCount];
+        next.Next();
+
+        Node* following = node->m_next;
+        Blizzard::Memory::s_freeHook(node, sizeof(Node));
+        *link = following;
+        this->m_count--;
+
+        return next;
+    }
+
+    return this->End();
+}
+
+// OFFSET: 0x0082D230
+int32_t M2PreloadMap::Erase(const uint64_t& key) {
+    Node** link = &this->m_buckets[static_cast<uint32_t>(key) & (this->m_bucketCount - 1)];
+
+    for (Node* node = *link; node; link = &node->m_next, node = node->m_next) {
+        if (node->m_key != key) {
+            continue;
+        }
+
+        Node* next = node->m_next;
+        Blizzard::Memory::s_freeHook(node, sizeof(Node));
+        *link = next;
+        this->m_count--;
+
+        return 1;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0082CA80
+M2PreloadMap::Iterator M2PreloadMap::Find(const uint64_t& key) {
+    Node** bucket = &this->m_buckets[static_cast<uint32_t>(key) & (this->m_bucketCount - 1)];
+
+    for (Node* node = *bucket; node; node = node->m_next) {
+        if (node->m_key == key) {
+            Iterator it;
+            it.m_node = node;
+            it.m_end = &this->m_buckets[this->m_bucketCount];
+            it.m_bucket = bucket;
+
+            return it;
+        }
+    }
+
+    return this->End();
+}
+
+// OFFSET: 0x0082D120
+M2PreloadMap::InsertResult M2PreloadMap::Insert(const Value& value) {
+    Node** bucket = &this->m_buckets[static_cast<uint32_t>(value.m_key) & (this->m_bucketCount - 1)];
+    Node** link = bucket;
+    InsertResult result;
+
+    for (Node* node = *bucket; node; link = &node->m_next, node = node->m_next) {
+        if (node->m_key == value.m_key) {
+            result.m_where.m_node = node;
+            result.m_where.m_bucket = bucket;
+            result.m_inserted = false;
+            result.m_where.m_end = &this->m_buckets[this->m_bucketCount];
+
+            return result;
+        }
+    }
+
+    Node* node = static_cast<Node*>(Blizzard::Memory::s_allocHook(sizeof(Node)));
+
+    if (node) {
+        node->m_next = NULL;
+        node->m_key = value.m_key;
+        node->m_record = value.m_record;
+    }
+
+    *link = node;
+    this->m_count++;
+
+    if (static_cast<double>(this->m_count) / static_cast<double>(this->m_bucketCount) > this->m_maxLoadFactor) {
+        this->Rehash(2 * this->m_bucketCount);
+        bucket = &this->m_buckets[static_cast<uint32_t>(value.m_key) & (this->m_bucketCount - 1)];
+    }
+
+    result.m_where.m_node = node;
+    result.m_where.m_bucket = bucket;
+    result.m_inserted = true;
+    result.m_where.m_end = &this->m_buckets[this->m_bucketCount];
+
+    return result;
+}
+
+// OFFSET: 0x00829160
+void M2PreloadMap::Rehash(uint32_t bucketCount) {
+    uint32_t count = 8;
+
+    while (count < bucketCount) {
+        count *= 2;
+    }
+
+    Node** buckets = static_cast<Node**>(Blizzard::Memory::s_allocHook(sizeof(Node*) * count));
+
+    if (count) {
+        memset(buckets, 0, sizeof(Node*) * count);
+    }
+
+    for (uint32_t i = 0; i < this->m_bucketCount; i++) {
+        for (Node* node = this->m_buckets[i]; node; ) {
+            Node* next = node->m_next;
+            uint32_t index = static_cast<uint32_t>(node->m_key) & (count - 1);
+            node->m_next = buckets[index];
+            buckets[index] = node;
+            node = next;
+        }
+    }
+
+    Blizzard::Memory::s_freeHook(this->m_buckets, sizeof(Node*) * this->m_bucketCount);
+    this->m_bucketCount = count;
+    this->m_buckets = buckets;
+}
+
+// OFFSET: 0x008283D0
+uint64_t M2HashFileName(const char* fileName, uint32_t length) {
+    uint64_t hash = 0xCBF29CE484222325ULL;
+
+    for (const uint8_t* c = reinterpret_cast<const uint8_t*>(fileName); length; length--, c++) {
+        hash = *c ^ (0x100000001B3ULL * hash);
+    }
+
+    return hash;
+}
+
+// OFFSET: 0x008274B0
+int32_t CM2Scene::GetSkinProfileName(uint32_t numSkinProfiles, uint32_t useShaders, const char* fileName, char* result, uint32_t size) {
+    uint32_t profile = 0;
+
+    if (useShaders) {
+        profile = CM2Shared::GetSkinProfileIndex(numSkinProfiles);
+
+        if (profile == 0xFFFFFFFF) {
+            return 0;
+        }
+    }
+
+    SStrCopy(result, fileName, size);
+    *const_cast<char*>(OsPathFindExtensionWithDot(result)) = '\0';
+    uint32_t length = strlen(result);
+    SStrPrintf(&result[length], size - length, "%02d.skin", profile);
+
+    return 1;
+}
+
+// OFFSET: 0x0082D4A0
+int32_t CM2Scene::AsyncLoad(const char* fileName, uint8_t priority, int32_t allocBuffer, TSGrowableArray<CAsyncObject*>* waitList, void (*succeeded)(CAsyncObject*), void (*failed)(CAsyncObject*), CM2Scene* scene) {
+    SFileImpl* file;
+
+    if (!SFile::OpenEx(NULL, fileName, 0, &file)) {
+        return 0;
+    }
+
+    void* buffer = NULL;
+
+    if (allocBuffer) {
+        buffer = SIMD::AllocA16(SFileGetFileSize(file, NULL));
+    }
+
+    uint64_t key = M2HashFileName(fileName, strlen(fileName));
+    M2PreloadMap::Iterator it = scene->m_preloads.Find(key);
+
+    if (it.m_node || it.m_bucket != &scene->m_preloads.m_buckets[scene->m_preloads.m_bucketCount]) {
+        if (buffer) {
+            SIMD::FreeA16(buffer);
+        }
+
+        if (waitList && !it.m_node->m_record.m_waitList) {
+            waitList->Add(1, &it.m_node->m_record.m_object);
+            it.m_node->m_record.m_waitList = waitList;
+        }
+
+        SFileCloseFile(file);
+
+        return 1;
+    }
+
+    M2PreloadMap::Value value;
+    memset(&value.m_record, 0, sizeof(value.m_record));
+    value.m_key = key;
+    M2PreloadRecord* record = &scene->m_preloads.Insert(value).m_where.m_node->m_record;
+    record->Set(scene, fileName, key, waitList);
+    AsyncFileReadCreateObject(file, priority, 1, &record->m_object, buffer, record, succeeded, failed, 0, 0, 0);
+
+    if (!record->m_object) {
+        scene->m_preloads.Erase(key);
+        return 0;
+    }
+
+    if (waitList) {
+        waitList->Add(1, &record->m_object);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0082D650/0x14054D300
+void CM2Scene::PreloadCommonCallback(CAsyncObject* object) {
+    if (object->m_buffer) {
+        SIMD::FreeA16(object->m_buffer);
+    }
+
+    M2PreloadRecord* record = static_cast<M2PreloadRecord*>(object->m_userArg);
+
+    if (record->m_waitList) {
+        for (uint32_t i = 0; i < record->m_waitList->Count(); i++) {
+            if ((*record->m_waitList)[i] == object) {
+                (*record->m_waitList)[i] = NULL;
+            }
+        }
+    }
+
+    object->m_buffer = NULL;
+    object->m_userArg = NULL;
+    DefaultAsyncObjectCleanupCallback(object);
+    record->m_scene->m_preloads.Erase(record->m_key);
+}
+
+// OFFSET: 0x0082D6D0
+void CM2Scene::ModelLoadSucceededCallback(CAsyncObject* object) {
+    M2Data* data = static_cast<M2Data*>(object->m_buffer);
+    M2PreloadRecord* record = static_cast<M2PreloadRecord*>(object->m_userArg);
+    char name[260];
+
+    for (uint32_t i = 0; i < data->m_textures.m_count; i++) {
+        const M2Texture* texture = reinterpret_cast<const M2Texture*>(reinterpret_cast<const uint8_t*>(data) + data->m_textures.m_offset) + i;
+        SStrCopy(name, reinterpret_cast<const char*>(data) + texture->m_filename.m_offset, sizeof(name));
+        _strlwr(name);
+
+        if (name[0]) {
+            CM2Scene::AsyncLoad(name, object->m_priority, 0, NULL, CM2Scene::PreloadCommonCallback, CM2Scene::PreloadCommonCallback, record->m_scene);
+        }
+    }
+
+    if (CM2Scene::GetSkinProfileName(data->m_numSkinProfiles, record->m_scene->m_cache->m_flags & 8, record->m_fileName, name, sizeof(name))) {
+        CM2Scene::AsyncLoad(name, object->m_priority, 0, record->m_waitList, CM2Scene::PreloadCommonCallback, CM2Scene::PreloadCommonCallback, record->m_scene);
+    }
+
+    CM2Scene::PreloadCommonCallback(object);
+}
+
+// OFFSET: 0x0082D800/0x14054D5D0
+void CM2Scene::PreloadModel(const char* fileName, uint8_t priority, int32_t wait) {
+    if (!fileName) {
+        return;
+    }
+
+    CM2Shared* shared = this->m_cache->CreateShared(fileName, 0x100, priority);
+
+    if (shared) {
+        if (wait) {
+            if (shared->m_asyncObject) {
+                AsyncFileReadWait(shared->m_asyncObject);
+            }
+
+            if (shared->m_asyncObject) {
+                AsyncFileReadWait(shared->m_asyncObject);
+            }
+        }
+
+        shared->Release();
+
+        return;
+    }
+
+    char path[260];
+
+    if (!M2ConvertModelFileName(fileName, path, sizeof(path), 0)) {
+        return;
+    }
+
+    TSGrowableArray<CAsyncObject*> waitList;
+
+    if (CM2Scene::AsyncLoad(path, priority, 1, wait ? &waitList : NULL, CM2Scene::ModelLoadSucceededCallback, CM2Scene::PreloadCommonCallback, this) && wait) {
+        for (uint32_t i = 0; i < waitList.Count(); i++) {
+            if (waitList[i]) {
+                AsyncFileReadWait(waitList[i]);
+            }
+        }
+
+        waitList.SetCount(0);
+    }
+}
+
+// OFFSET: 0x00830F00/0x140552380
+int32_t CM2Scene::PrefetchModel(const char* fileName, uint8_t priority) {
+    SFileImpl* file = NULL;
+    int32_t local = 1;
+
+    if (SFile::FileIsLocal(fileName) != 1 || !SFile::OpenEx(NULL, fileName, 0, &file)) {
+        this->PreloadModel(fileName, priority, 0);
+        return 0;
+    }
+
+    M2Data header;
+    SFile::ReadAtPosition(file, &header, 0, sizeof(header), NULL);
+
+    for (uint32_t i = 0; i < header.m_textures.m_count; i++) {
+        M2Texture texture;
+        char name[260];
+        SFile::ReadAtPosition(file, &texture, header.m_textures.m_offset + sizeof(M2Texture) * i, sizeof(texture), NULL);
+        SFile::ReadAtPosition(file, name, texture.m_filename.m_offset, texture.m_filename.m_count, NULL);
+
+        if (name[0] && SFile::FileIsLocal(name) != 1) {
+            AsyncFileReadCreateObject(name, priority, 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
+            local = 0;
+        }
+    }
+
+    SFileCloseFile(file);
+
+    return local;
+}
+
+// OFFSET: 0x0082CF00/0x14054C7E0
+CM2Model* CM2Scene::CreateModel(const char* fileName, uint32_t flags, uint8_t priority) {
     if (!fileName) {
         return NULL;
     }
 
-    CM2Shared* shared = this->m_cache->CreateShared(fileName, flags);
-
-    if (!shared) {
-        shared = this->m_cache->CreateShared("Spells\\ErrorCube.mdx", 0);
-    }
-
+    CM2Shared* shared = this->m_cache->CreateShared(fileName, flags, priority);
     CM2Model* model = NULL;
 
     if (shared) {
-        model = g_modelPool->New();
+        model = g_modelPool->New(__FILE__, __LINE__);
 
         if (model && !model->Initialize(this, shared, NULL, flags)) {
-            g_modelPool->Delete(model);
+            g_modelPool->Delete(model, __FILE__, __LINE__);
             model = NULL;
         }
 
@@ -1394,32 +1809,30 @@ CM2Model* CM2Scene::CreateModel(const char* fileName, uint32_t flags) {
     return model;
 }
 
-// OFFSET: %0x00790A30
+// OFFSET: 0x0082CF80/0x14054C880
 CM2Model* CM2Scene::DuplicateModel(CM2Model* source, uint32_t flags) {
     if (!source) {
         return NULL;
     }
 
-    CM2Model* model = g_modelPool->New();
+    CM2Model* model = g_modelPool->New(__FILE__, __LINE__);
 
     if (model && !model->Initialize(this, source->m_shared, source, flags)) {
-        CM2ModelHeap* heap = g_modelPool;
-        model->~CM2Model();
-        ObjectFree(heap->m_heapId, model->m_handle);
+        g_modelPool->Delete(model, __FILE__, __LINE__);
         return NULL;
     }
 
     return model;
 }
 
-// OFFSET: %0x00790970
+// OFFSET: 0x0082CEB0
 void CM2Scene::GarbageCollectModels() {
     while (this->m_recycleList) {
-        g_modelPool->Delete(this->m_recycleList);
+        g_modelPool->Delete(this->m_recycleList, __FILE__, __LINE__);
     }
 }
 
-// OFFSET: %0x00792F70
+// OFFSET: 0x0082CBF0/0x14054C470
 CM2Scene::CM2Scene(CM2Cache* cache) {
     this->m_refCount = 1;
     this->m_float18 = 0.0f;
@@ -1453,12 +1866,25 @@ CM2Scene::CM2Scene(CM2Cache* cache) {
     this->m_drawing = 0;
 }
 
-// OFFSET: %0x007931D0
+// OFFSET: 0x0082D290/0x14054CCF0
 CM2Scene::~CM2Scene() {
     while (this->m_modelList) {
         CM2Model* model = this->m_modelList;
 
         while (model->Release()) {
+        }
+    }
+
+    if (this->m_preloads.m_count) {
+        for (M2PreloadMap::Iterator it = this->m_preloads.Begin(); it.m_node || it.m_bucket != &this->m_preloads.m_buckets[this->m_preloads.m_bucketCount]; ) {
+            CAsyncObject* object = it.m_node->m_record.m_object;
+
+            if (object->m_buffer) {
+                SIMD::FreeA16(object->m_buffer);
+            }
+
+            AsyncFileReadCancel(object, DefaultAsyncObjectCleanupCallback);
+            it = this->m_preloads.Erase(it);
         }
     }
 
@@ -1475,7 +1901,7 @@ CM2Scene::~CM2Scene() {
     }
 }
 
-// OFFSET: %0x00793320
+// OFFSET: 0x0082CFE0
 void CM2Scene::SortAdditiveParticleElements(uint32_t pass) {
     TSGrowableArray<uint32_t>& list = this->m_passElements[pass];
     uint32_t group = 0;
@@ -1516,7 +1942,7 @@ void CM2Scene::SortAdditiveParticleElements(uint32_t pass) {
     M2HeapSort(&CM2Scene::SortAdditiveParticles, list.m_data, list.m_count, this->m_elements.m_data);
 }
 
-// OFFSET: %0x00793440
+// OFFSET: 0x0082D930/0x14054D750
 void CM2Scene::AddParticleElement(CParticleEmitter2* emitter, CM2Model* model, float depth, float alpha, int32_t above, int32_t below, uint32_t& index, uint32_t& additiveCount) {
     if (!emitter->HasLiveParticles() || emitter->m_params.m_hasModel == 1) {
         return;
@@ -1550,7 +1976,7 @@ void CM2Scene::AddParticleElement(CParticleEmitter2* emitter, CM2Model* model, f
     }
 
     if (blend <= 1 && alpha >= 0.99998999f) {
-        if (model->m_flags & 0x80) {
+        if (model->m_flags & 0x40) {
             this->m_passElements[0].New(index);
         } else {
             this->m_passElements[1].New(index);
@@ -1585,7 +2011,7 @@ void CM2Scene::AddParticleElement(CParticleEmitter2* emitter, CM2Model* model, f
     index++;
 }
 
-// OFFSET: %0x0078E640
+// OFFSET: 0x00828550/0x1405463E0
 void CM2Scene::Animate(const C3Vector& cameraPos) {
     this->m_frameStamp++;
 
@@ -1652,7 +2078,7 @@ void CM2Scene::Animate(const C3Vector& cameraPos) {
     }
 }
 
-// OFFSET: %0x00793590
+// OFFSET: 0x0082DA80/0x14054D8C0
 int32_t CM2Scene::BeginDraw() {
     this->m_drawing = 1;
     this->m_doodadElements.m_count = 0;
@@ -1721,10 +2147,6 @@ int32_t CM2Scene::BeginDraw() {
                 }
             }
 
-            if (batch->m_shader == 0x801D) {
-                continue;
-            }
-
             float alpha = model->m_alpha;
             float alpha3 = model->m_alpha3;
 
@@ -1736,7 +2158,7 @@ int32_t CM2Scene::BeginDraw() {
                 alpha *= model->m_textureWeights[data->m_textureWeightCombos[batch->m_textureWeightComboIndex]].m_currentValue;
             }
 
-            if (alpha < 0.000099999997f || (alpha3 > 0.0f && batch->m_materialLayer)) {
+            if (alpha < 0.000099999997f || (alpha3 > 0.0f && (batch->m_materialLayer || section->m_indexCount <= 6))) {
                 continue;
             }
 
@@ -1748,7 +2170,7 @@ int32_t CM2Scene::BeginDraw() {
             if (baseMaterial->m_blendMode > 1 || alpha < 0.99998999f || alpha3 > 0.0000099999997f) {
                 pass = 2;
             } else {
-                pass = (model->m_flags & 0x80) ? 0 : 1;
+                pass = (model->m_flags & 0x40) ? 0 : 1;
             }
 
             CShaderEffect* effect = optimized ? model->m_optGeo->m_effects[i] : model->m_shared->m_effects[i];
@@ -1766,10 +2188,10 @@ int32_t CM2Scene::BeginDraw() {
             uint32_t kind;
 
             if (projected) {
-                kind = 1;
+                kind = 0;
                 alpha3 = 0.0f;
             } else if (!model->IsBatchDoodadCompatible(batch) || pass) {
-                kind = 0;
+                kind = 1;
             } else {
                 kind = 2;
             }
@@ -1795,7 +2217,7 @@ int32_t CM2Scene::BeginDraw() {
 
             float sortDepth;
 
-            if (model->m_flags & 0x100) {
+            if (model->m_flags & 0x80) {
                 pass = 4;
             }
 
@@ -1998,7 +2420,7 @@ int32_t CM2Scene::BeginDraw() {
                 element->m_pixelPermute = 0xFFFFFFFF;
                 element->m_shadowValue = 0;
 
-                uint32_t callbackPass = (model->m_fFlags >> 23) & 7;
+                uint32_t callbackPass = model->m_drawFlags & 7;
 
                 if (!callbackPass) {
                     this->m_passElements[0].New(elementIndex);
@@ -2127,7 +2549,7 @@ int32_t CM2Scene::BeginDraw() {
         }
 
         if (j - i <= 1) {
-            this->m_elements.m_data[index].m_typeKey &= 0x1FFFFFFF;
+            this->m_elements.m_data[index].m_typeKey = (this->m_elements.m_data[index].m_typeKey & 0x1FFFFFFF) | 0x20000000;
             this->ComputeElementShaders(&this->m_elements.m_data[index]);
             this->m_passElements[0].New(index);
             out--;
@@ -2148,7 +2570,7 @@ int32_t CM2Scene::BeginDraw() {
         M2HeapSort(&CM2Scene::SortTransparent, this->m_passElements[3].m_data, this->m_passElements[3].m_count, this->m_elements.m_data);
     }
 
-    if ((this->m_cache->m_flags & 0x80) && additiveCount > 1) {
+    if ((this->m_cache->m_flags & 0x40) && additiveCount > 1) {
         this->SortAdditiveParticleElements(2);
         this->SortAdditiveParticleElements(3);
     }
@@ -2156,7 +2578,7 @@ int32_t CM2Scene::BeginDraw() {
     return 1;
 }
 
-// OFFSET: %0x00794BF0
+// OFFSET: 0x0082F1B0/0x14054F880
 int32_t CM2Scene::Release() {
     if (this->m_refCount-- != 1) {
         return this->m_refCount;
@@ -2177,7 +2599,7 @@ int32_t CM2Scene::Release() {
     return 0;
 }
 
-// OFFSET: %0x007954D0
+// OFFSET: 0x0082FB60/0x140550690
 void CM2Scene::Draw(M2PASS pass) {
     if (!((1 << pass) & this->m_passMask)) {
         return;

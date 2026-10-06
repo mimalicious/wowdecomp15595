@@ -14,7 +14,8 @@
 // STATIC: %0x00C0D1CC
 static float s_lightGridScale = 0.05f;
 
-// OFFSET: %0x007796B0
+// PROVEN: d77917a8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00812C90/0x14052A8E0
 void CM2Light::Initialize(CM2Scene* scene) {
     this->m_scene = scene;
     this->m_stamp = scene ? scene->m_frameStamp - 1 : 0;
@@ -85,7 +86,7 @@ CM2Light::~CM2Light() {
     this->Unlink();
 }
 
-// OFFSET: %0x007796D0
+// OFFSET: 0x00812CB0/0x14052A900
 void CM2Light::Unlink() {
     if (this->m_lightPrev) {
         *this->m_lightPrev = this->m_lightNext;
@@ -99,13 +100,13 @@ void CM2Light::Unlink() {
     this->m_lightPrev = NULL;
 }
 
-// OFFSET: %0x00779920
+// OFFSET: 0x00812F00/0x14052AD10
 void CM2Light::SetDirection(const C3Vector& dir) {
     this->m_dir = dir;
     this->m_dir.NormalizeSafe();
 }
 
-// OFFSET: %0x007799B0
+// OFFSET: 0x00812F90/0x14052ADF0
 void CM2Light::GxLightSet(uint32_t index) {
     CGxLight light;
     light.m_flags = (light.m_flags & ~1u) | (this->m_visible & 1);
@@ -131,7 +132,7 @@ void CM2Light::GxLightSet(uint32_t index) {
     g_theGxDevicePtr->LightEnable(index, 1);
 }
 
-// OFFSET: %0x00779AF0
+// OFFSET: 0x008130D0/0x14052A930
 void CM2Light::Link() {
     if (!this->m_visible || !this->m_scene) {
         return;
@@ -139,13 +140,13 @@ void CM2Light::Link() {
 
     if (this->m_type == M2LIGHT_POINT) {
         if (!this->m_scene->m_lightGrid) {
-            this->m_scene->m_lightGrid = static_cast<CM2Light**>(SMemAlloc(sizeof(CM2Light*) * 64 * 64, __FILE__, __LINE__, 0));
-            memset(this->m_scene->m_lightGrid, 0, sizeof(CM2Light*) * 64 * 64);
+            this->m_scene->m_lightGrid = static_cast<CM2Light**>(SMemAlloc(sizeof(CM2Light*) * 32 * 32, __FILE__, __LINE__, 0));
+            memset(this->m_scene->m_lightGrid, 0, sizeof(CM2Light*) * 32 * 32);
         }
 
-        int32_t y = static_cast<int32_t>(floor(this->m_pos.y * s_lightGridScale)) & 63;
-        int32_t x = static_cast<int32_t>(floor(this->m_pos.x * s_lightGridScale)) & 63;
-        CM2Light** head = &this->m_scene->m_lightGrid[y * 64 + x];
+        int32_t y = static_cast<int32_t>(floor(this->m_pos.y * s_lightGridScale)) & 0x1F;
+        int32_t x = static_cast<int32_t>(floor(this->m_pos.x * s_lightGridScale)) & 0x1F;
+        CM2Light** head = &this->m_scene->m_lightGrid[y * 32 + x];
 
         this->m_lightPrev = head;
         this->m_lightNext = *head;
@@ -173,7 +174,7 @@ void CM2Lighting::AddAmbient(const C3Vector& color) {
     this->m_sunAmbient += color;
 }
 
-// OFFSET: %0x00779C50
+// OFFSET: 0x00813230/0x14052AFC0
 void CM2Lighting::AddDiffuse(const C3Vector& color, const C3Vector& dir) {
     C3Vector viewDir = dir;
 
@@ -206,7 +207,7 @@ void CM2Lighting::AddDiffuse(const C3Vector& color, const C3Vector& dir) {
     this->m_sunDiffuse = color;
 }
 
-// OFFSET: %0x00779EC0
+// OFFSET: 0x008134A0/0x14052B220
 void CM2Lighting::AddLight(CM2Light* light) {
     if (!light->m_visible) {
         return;
@@ -248,7 +249,7 @@ void CM2Lighting::AddLight(CM2Light* light) {
     }
 }
 
-// OFFSET: %0x0077A030
+// OFFSET: 0x00813610/0x14052B380
 void CM2Lighting::CameraSpace() {
     if (this->m_flags & 1) {
         return;
@@ -267,7 +268,7 @@ void CM2Lighting::CameraSpace() {
     this->m_flags |= 1;
 }
 
-// OFFSET: %0x0077A150
+// OFFSET: 0x00813730/0x14052B4D0
 void CM2Lighting::SetupSunlight() {
     if (this->m_flags & 2) {
         return;
@@ -291,7 +292,7 @@ void CM2Lighting::SetupSunlight() {
     this->m_flags |= 2;
 }
 
-// OFFSET: %0x0077A330
+// OFFSET: 0x00813980
 void CM2Lighting::SetupGxLights(const C3Vector* origin) {
     CGxLight light;
     light.m_flags |= 1;
@@ -350,7 +351,7 @@ int32_t CM2Lighting::GetSunLight(C3Vector& dir, C3Vector& ambient, C3Vector& dif
     return 1;
 }
 
-// OFFSET: %0x0077A5C0
+// OFFSET: 0x00813BB0/0x14052AC60
 void CM2Light::SetLightType(M2LIGHTTYPE type) {
     if (this->m_type == type) {
         return;
@@ -364,7 +365,7 @@ void CM2Light::SetLightType(M2LIGHTTYPE type) {
     }
 }
 
-// OFFSET: %0x0077A610
+// OFFSET: 0x00813C00/0x14052ACB0
 void CM2Light::SetPosition(const C3Vector& pos) {
     this->m_pos = pos;
 
@@ -374,7 +375,7 @@ void CM2Light::SetPosition(const C3Vector& pos) {
     }
 }
 
-// OFFSET: %0x0077A670
+// OFFSET: 0x00813C60/0x14052AD90
 void CM2Light::SetVisible(int32_t visible) {
     if (!this->m_visible == !visible) {
         return;
@@ -393,17 +394,20 @@ void CM2Light::SetVisible(int32_t visible) {
     }
 }
 
-// OFFSET: %0x0077A6D0
+// OFFSET: 0x00813CC0
 void CM2Lighting::SetupGxFog() {
+    int32_t fixedFog = g_theGxDevicePtr->m_caps.unk_02FC;
+
     if (fabs(this->m_fogScale) < 0.00000023841858f) {
-        GxRsSet(GxRs_Fog, 0);
+        if (fixedFog) {
+            GxRsSet(GxRs_Fog, 0);
+        }
+
         return;
     }
 
-    if (!CShaderEffect::s_enableShaders) {
-        GxRsSet(GxRs_FogStart, this->m_fogStart);
-        GxRsSet(GxRs_FogEnd, this->m_fogEnd);
-    }
+    GxRsSet(GxRs_FogStart, this->m_fogStart);
+    GxRsSet(GxRs_FogEnd, this->m_fogEnd);
 
     float blue = this->m_fogColor.z;
     blue = blue >= 0.0f ? (blue >= 1.0f ? 1.0f : blue) : 0.0f;
@@ -415,5 +419,8 @@ void CM2Lighting::SetupGxFog() {
     CImVector color(static_cast<uint8_t>(static_cast<int32_t>(blue * 255.0f)), static_cast<uint8_t>(static_cast<int32_t>(green * 255.0f)), static_cast<uint8_t>(static_cast<int32_t>(red * 255.0f)), 0xFF);
 
     GxRsSet(GxRs_FogColor, *reinterpret_cast<int32_t*>(&color));
-    GxRsSet(GxRs_Fog, 1);
+
+    if (fixedFog) {
+        GxRsSet(GxRs_Fog, 1);
+    }
 }

@@ -169,6 +169,19 @@ int32_t CRibbonEmitter::ReplaceTexture(uint32_t type, CTexture* texture) {
     return replaced;
 }
 
+// OFFSET: 0x00B25980
+void CRibbonEmitter::SetTexture(uint32_t index, CTexture* texture) {
+    if (texture) {
+        TextureAddRef(texture);
+    }
+
+    if (this->m_textures[index]) {
+        TextureRelease(this->m_textures[index]);
+    }
+
+    this->m_textures[index] = texture;
+}
+
 // OFFSET: %0x00A59810
 void CRibbonEmitter::SetColor(float r, float g, float b) {
     this->m_color.Set(this->m_color.a * 255.0f, r, g, b);

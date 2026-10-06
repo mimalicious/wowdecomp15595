@@ -28,6 +28,7 @@ class CM2ModelCall {
     /* 000C */ uintptr_t m_args [17];
 
     CM2ModelCall();
+    ~CM2ModelCall();
 };
 
 #endif

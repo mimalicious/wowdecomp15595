@@ -53,13 +53,14 @@ class M2ModelTextureTransform;
 
 typedef void (*M2EventCallback)(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
 typedef void (*M2SequenceCallback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t unk);
-typedef void (*M2SequenceStartCallback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t time, uint64_t param, int32_t primary);
+typedef void (*M2SequenceStartCallback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary);
 
 class CModelBatch {
     public:
-    /* 0000 */ CM2Model* m_model;
-    /* 0004 */ uint32_t m_batchIndex;
-    /* 0008 */ uint32_t m_count;
+    /* 0000 */ uint32_t m_key;
+    /* 0004 */ uint16_t m_batchIndex;
+    /* 0006 */ uint16_t m_count;
+    /* 0008 */ CM2Model* m_model;
 };
 
 class CModelBatchList {
@@ -67,8 +68,9 @@ class CModelBatchList {
     /* 0000 */ CModelBatch* m_batches;
     /* 0004 */ uint32_t m_count;
     /* 0008 */ uint32_t m_maxCount;
+    /* 000C */ uint16_t m_optimizedCount;
 
-    void Add(CM2Model* model, uint32_t batchIndex);
+    void Add(CM2Model* model, uint16_t batchIndex);
     void Optimize();
 };
 
@@ -145,8 +147,8 @@ class CM2Model {
     /* 0008 */ uint32_t m_refCount;
     /* 000C */ uint32_t m_flags;
     /* 0010 */ uint32_t m_fFlags;
-    /* 0014 */ uint16_t m_animListHead;
-    /* 0016 */ uint16_t unk_0016;
+    /* 0014 */ uint16_t m_drawFlags;
+    /* 0016 */ uint16_t m_animListHead;
     /* 0018 */ CM2Model** m_callbackPrev;
     /* 001C */ CM2Model* m_callbackNext;
     /* 0020 */ void (*m_loadedCallback)(CM2Model*, void*);
@@ -232,10 +234,18 @@ class CM2Model {
     /* 0308 */ uint32_t m_handle;
     /* 030C */ uint32_t unk_0314;
 
+    static int32_t s_errorAppFatal;
+    static const char* s_errorFile;
+    static uint32_t s_errorLine;
+    static char* s_errorString;
     static TSGrowableArray<M2ModelCallback> s_sequenceCallbacks;
     static TSGrowableArray<C3Vector> s_collisionPositions;
     static TSGrowableArray<uint32_t> s_collisionCodes;
 
+    static void ErrorClear();
+    static void ErrorSet(const char* format, ...);
+    static void ErrorSetAppFatal(int32_t appFatal);
+    static void ErrorSetFileLine(const char* file, uint32_t line);
     static int32_t __stdcall SequenceCallback(void* callback, CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint32_t sequenceIndex, uint32_t startTime, uint64_t param);
     static void RenderModelBatchesShadowMap(const CModelBatchList& untextured, const CModelBatchList& textured);
     static void RenderModelBatchListShadowMap(int32_t untextured, const CModelBatchList& list);
@@ -259,6 +269,11 @@ class CM2Model {
     void GetCombinedBounds(CAaBox& box, CAaSphere& sphere);
     C3Vector GetEventPivot(uint32_t id);
     uint32_t GetEventSequenceTime(uint32_t sequenceId, uint32_t eventId);
+    uint32_t GetSequenceFlags(uint32_t id, uint32_t variation);
+    int32_t GetAsyncRenderStatus();
+    int32_t GetAsyncRenderStatusRecursive();
+    const char* GetTextureObjectName(uint32_t index);
+    int32_t IsBoundingBoxValid();
     uint32_t GetSequenceDuration(uint32_t id, uint32_t variation);
     int32_t HasAttachment(uint32_t id);
     int32_t HasEvent(uint32_t id);
@@ -317,8 +332,8 @@ class CM2Model {
     void CancelAllDeferredSequences();
     void CancelDeferredSequences(uint16_t boneIndex, bool primary);
     int32_t ProcessCallbacks();
-    void SetBoneSequence(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions);
-    void SetBoneSequenceDeferred(uint16_t sequenceIndex, M2Data* data, uint16_t boneIndex, uint32_t time, float speed, M2SequenceFallback fallback, int32_t blend, int32_t primary, int32_t pickRandom, uint32_t repetitions);
+    void SetBoneSequence(uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
+    void SetBoneSequenceDeferred(uint16_t sequenceIndex, M2Data* data, uint16_t boneIndex, uint32_t time, float speed, M2SequenceFallback fallback, int32_t blend, int32_t primary, int32_t pickRandom, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
     void UnsetBoneSequence(uint32_t boneId, int32_t blend, int32_t primary);
     void AnimateSM();
     void AttachToParent(CM2Model* parent, uint32_t id, const C3Vector* position, int32_t attachToRoot);
@@ -357,10 +372,12 @@ class CM2Model {
     int32_t HasLiveParticles();
     int32_t HasLiveRibbons();
     void IncreaseTexturePriority();
-    void LinkToAsyncHead(int32_t textures);
-    void LinkToAsyncHeadRecursive(int32_t textures);
+    void LinkToAsyncHead();
+    void LinkToAsyncHeadRecursive();
     void ReplaceParticleColor(uint32_t id, CImVector color0, CImVector color1, CImVector color2);
     void ReplaceTexture(uint32_t type, CTexture* texture);
+    void SetAnimationSpeed(float speed);
+    void ReplaceTextureByIndex(uint32_t index, CTexture* texture);
     void SetAnimating(int32_t animating);
     void SetEventCallback(void* callback, uint64_t param);
     void SetLightEnabled(uint32_t index, uint32_t enabled);
@@ -386,12 +403,12 @@ class CM2Model {
     int32_t IsBatchDoodadCompatible(M2Batch* batch);
     void LinkToCallbackListTail();
     int32_t OnSequenceInterrupted(uint32_t boneId, uint16_t boneIndex);
-    void ProcessCallbacksRecursive();
+    int32_t ProcessCallbacksRecursive();
     void RenderBatchShadowMap(int32_t untextured, M2ShadowBatch* batch, const CModelBatchList& list, uint32_t index, M2SkinSection* section, M2SkinSection* prevSection);
     void RenderModelBatchesForProjectedTexture();
     int32_t Release();
     int32_t SetIndices();
-    void SetPrimaryBoneSequence(uint16_t sequenceIndex, uint16_t boneIndex, M2SequenceFallback fallback, uint32_t time, float speed, int32_t blend, uint32_t repetitions);
+    void SetPrimaryBoneSequence(uint16_t sequenceIndex, uint16_t boneIndex, M2SequenceFallback fallback, uint32_t time, float speed, int32_t blend, uint32_t repetitions, uint8_t blendTimeMode, uint16_t blendTime);
     void SetSecondaryBoneSequence(uint16_t sequenceIndex, uint16_t boneIndex, M2SequenceFallback fallback, uint32_t time, float speed, uint32_t repetitions);
     void SetupLighting();
     int32_t SetVertices(int32_t optimized, M2SkinSection* section, uint32_t texCoord);
@@ -404,6 +421,7 @@ class M2SequenceFallback {
     /* 0000 */ uint16_t m_id;
     /* 0002 */ uint8_t m_mode;
     /* 0003 */ uint8_t m_flags;
+    /* 0004 */ uint8_t m_usedDefault;
 };
 
 class CM2SequencePlayBack : public TSLinkedNode<CM2SequencePlayBack> {
@@ -415,6 +433,8 @@ class CM2SequencePlayBack : public TSLinkedNode<CM2SequencePlayBack> {
     /* 0010 */ uint32_t m_time;
     /* 0014 */ float m_speed;
     /* 0018 */ M2SequenceFallback m_fallback;
+    /* 001E */ uint16_t m_blendTime;
+    /* 0020 */ uint8_t m_blendTimeMode;
 };
 
 class M2ModelBoneSeq {

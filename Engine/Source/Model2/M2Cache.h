@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/Base/Prop.h"
 #include "Engine/Source/Model2/M2Shared.h"
 #include "Engine/Source/Storm/H/stpl.h"
@@ -11,13 +12,7 @@
 
 class CM2Scene;
 
-class CM2ModelHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
-
-    void Delete(CM2Model* model);
-    CM2Model* New();
-};
+typedef TSObjectAllocPool<CM2Model> CM2ModelHeap;
 
 class CM2Cache {
     public:
@@ -48,7 +43,9 @@ class CM2Cache {
     ~CM2Cache();
     void BeginThread(void (*func)(void*), void* param);
     void ClearSharedHash();
-    CM2Shared* CreateShared(const char* name, uint32_t flags);
+    static SFileImpl* OpenModelFile(const char* name, uint32_t flags, int32_t* errorCube);
+
+    CM2Shared* CreateShared(const char* name, uint32_t flags, uint8_t priority);
     void Destroy();
     void GarbageCollect(int32_t force);
     int32_t Initialize(uint32_t flags);
@@ -61,6 +58,7 @@ class CM2Cache {
 
 extern CM2ModelHeap* g_modelPool;
 
+int32_t M2ConvertModelFileName(const char* name, char* result, uint32_t size, uint32_t flags);
 CM2Scene* M2CreateScene();
 void M2Destroy();
 uint32_t M2GetCacheFlags();
