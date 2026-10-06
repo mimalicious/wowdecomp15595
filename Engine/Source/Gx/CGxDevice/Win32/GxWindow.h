@@ -1,0 +1,8 @@
+#ifndef ENGINE_SOURCE_GX_CGXDEVICE_WIN32_GXWINDOW_H
+#define ENGINE_SOURCE_GX_CGXDEVICE_WIN32_GXWINDOW_H
+
+#include <windows.h>
+
+LRESULT CALLBACK WindowProcGx(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
+
+#endif

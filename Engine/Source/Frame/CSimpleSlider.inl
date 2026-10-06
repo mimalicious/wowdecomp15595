@@ -1,0 +1,13 @@
+#ifndef ENGINE_SOURCE_FRAME_CSIMPLESLIDER_INL
+#define ENGINE_SOURCE_FRAME_CSIMPLESLIDER_INL
+
+// INLINED
+inline int32_t CSimpleSlider::GetObjectType() {
+    if (!CSimpleSlider::s_objectType) {
+        CSimpleSlider::s_objectType = ++FrameScript_Object::s_objectTypes;
+    }
+
+    return CSimpleSlider::s_objectType;
+}
+
+#endif

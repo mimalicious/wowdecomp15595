@@ -1,0 +1,28 @@
+#ifndef WOW_SOURCE_DB_REC_TALENTREC_H
+#define WOW_SOURCE_DB_REC_TALENTREC_H
+
+#include <cstdint>
+#include "WoW/Source/DB/WowClientDB.h"
+
+class TalentRec {
+    public:
+    static const DBCMeta s_meta;
+
+    /* 0000 */ int32_t m_id;
+    /* 0004 */ int32_t m_tabID;
+    /* 0008 */ int32_t m_tierID;
+    /* 000C */ int32_t m_columnIndex;
+    /* 0010 */ int32_t m_spellRank [9];
+    /* 0034 */ int32_t unk_0034;
+    /* 0038 */ int32_t unk_0038;
+    /* 003C */ int32_t m_flags;
+    /* 0040 */ int32_t m_requiredSpellID;
+    /* 0044 */ int32_t m_categoryMask [2];
+
+    static void FixupStrings(void* record, const char* strings);
+#if defined(WOWDECOMP_ARCH_64)
+    static void ConvertRow(TalentRec* rec, const uint8_t* row, const char* strings);
+#endif
+};
+
+#endif

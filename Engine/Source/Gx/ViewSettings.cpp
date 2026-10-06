@@ -1,0 +1,112 @@
+#include <cstdint>
+#include "Engine/Source/Gx/ViewSettings.h"
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/Gx.h"
+
+// STATIC: %0x00C20400
+static float s_zFar = 946.0f;
+
+// STATIC: %0x00C20404
+static float s_zNear = 0.2f;
+
+// STATIC: %0x00C20408
+static float s_viewportFarClip = 0.94f;
+
+// STATIC: %0x00E45780
+static int32_t s_submerged;
+
+// STATIC: %0x00E45784
+static CAaRect s_viewExtents;
+
+struct ViewSettingsFog {
+    float m_start;
+    float m_end;
+    float m_density;
+    CImVector m_color;
+};
+
+// STATIC: %0x00E45798
+static ViewSettingsFog s_fog[4];
+
+// OFFSET: %0x00970CF0
+void ViewSettings::SetZNearFar(float zNear, float zFar) {
+    s_zNear = zNear;
+    s_zFar = zFar;
+}
+
+// OFFSET: %0x00970D10
+void ViewSettings::SetViewportFarClip(float farClip) {
+    s_viewportFarClip = farClip;
+}
+
+// OFFSET: %0x00970D30
+void ViewSettings::SetSubmerged(int32_t submerged) {
+    s_submerged = submerged;
+}
+
+// OFFSET: %0x00970D40
+int32_t ViewSettings::GetSubmerged() {
+    return s_submerged;
+}
+
+// INLINED
+void ViewSettings::SetFog(uint32_t index, float start, float end, float density, const CImVector& color) {
+    s_fog[index].m_start = start;
+    s_fog[index].m_end = end;
+    s_fog[index].m_density = density;
+    s_fog[index].m_color = color;
+}
+
+// OFFSET: %0x00970E10
+void ViewSettings::GetFog(uint32_t index, float& start, float& end, float& density, CImVector& color) {
+    start = s_fog[index].m_start;
+    end = s_fog[index].m_end;
+    density = s_fog[index].m_density;
+    color = s_fog[index].m_color;
+}
+
+// INLINED
+void ViewSettings::SetViewExtents(const CAaRect& extents) {
+    s_viewExtents = extents;
+}
+
+// OFFSET: %0x00970D80
+C4Vector ViewSettings::CalculateParams() {
+    C4Vector params;
+    params.x = s_zNear;
+    params.y = s_zFar;
+    params.z = (1.0f / s_zFar - 1.0f / s_zNear) / s_viewportFarClip;
+    params.w = 1.0f / s_zNear;
+
+    return params;
+}
+
+// OFFSET: %0x00970E40
+C4Vector ViewSettings::CalculateHomToScreen(float offsetX, float offsetY) {
+    float x = ((s_viewExtents.minY + 1.0f) - (1.0f - s_viewExtents.maxY)) * 0.5f;
+    float scaleY;
+    float y;
+
+    if (g_theGxDevicePtr->Caps().m_texelCenterOnEdge) {
+        scaleY = (s_viewExtents.maxX - s_viewExtents.minX) * 0.5f;
+        y = (s_viewExtents.minX + 1.0f) - (1.0f - s_viewExtents.maxY);
+    } else {
+        scaleY = (s_viewExtents.maxX - s_viewExtents.minX) * -0.5f;
+        y = ((1.0f - s_viewExtents.maxX) + 1.0f) - s_viewExtents.minX;
+    }
+
+    y = y * 0.5f;
+
+    if (g_theGxDevicePtr->Caps().m_pixelCenterOnEdge) {
+        x = x + offsetX;
+        y = y + offsetY;
+    }
+
+    C4Vector result;
+    result.x = (s_viewExtents.maxY - s_viewExtents.minY) * 0.5f;
+    result.y = scaleY;
+    result.z = x;
+    result.w = y;
+
+    return result;
+}

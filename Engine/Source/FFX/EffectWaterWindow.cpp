@@ -1,0 +1,31 @@
+#include "Engine/Source/FFX/EffectWaterWindow.h"
+#include "Engine/Source/FFX/PassWaterWindow.h"
+#include "Engine/Source/Storm/H/storm.h"
+
+// OFFSET: %0x00802170
+EffectWaterWindow::EffectWaterWindow(uint32_t type) {
+    FFX::Tex* inputs[] = { &FFX::s_full[0] };
+    FFX::Pass* pass = new (__FILE__, __LINE__) PassWaterWindow(type, 0, inputs, 1, &FFX::s_screen, GxBlend_Opaque);
+    this->m_passes.New(pass);
+}
+
+// OFFSET: [%0x00A4FDB0, %0x00A50430]
+EffectWaterWindow::~EffectWaterWindow() {
+    for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
+        delete this->m_passes[i];
+    }
+}
+
+// OFFSET: %0x008021E0
+EffectSubmarineWindow::EffectSubmarineWindow(uint32_t type) {
+    FFX::Tex* inputs[] = { &FFX::s_full[0] };
+    FFX::Pass* pass = new (__FILE__, __LINE__) PassWaterWindow(type, 1, inputs, 1, &FFX::s_screen, GxBlend_Opaque);
+    this->m_passes.New(pass);
+}
+
+// OFFSET: [%0x00A4FDB0, %0x00A50430]
+EffectSubmarineWindow::~EffectSubmarineWindow() {
+    for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
+        delete this->m_passes[i];
+    }
+}

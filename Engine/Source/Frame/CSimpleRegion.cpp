@@ -1,0 +1,568 @@
+#include <cstddef>
+#include <cstdint>
+#include <cstring>
+#include "Engine/Source/Frame/CSimpleRegion.h"
+#include "Engine/Source/Frame/CSimpleAlphaAnim.h"
+#include "Engine/Source/Frame/CSimpleAnimGroup.h"
+#include "Engine/Source/Frame/CSimpleFrame.h"
+#include "Engine/Source/FrameXML/BinaryXML.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include <new>
+#include <typeinfo>
+#include "Engine/Source/Tempest/C2Vector.h"
+#include "Engine/Source/Tempest/C3Vector.h"
+#include <cmath>
+#include "Engine/Source/Tempest/CImVector.h"
+
+// STATIC: %0x00CD12C0
+CDataAllocator CGradient::s_allocator(sizeof(CGradient), 5);
+
+// OFFSET: %0x0051AA30
+CGradient::CGradient() {
+    this->m_alphaCount = 4;
+    this->m_colorCount = 4;
+    memset(this->m_colors, 0, this->m_colorCount * sizeof(CImVector));
+    memset(this->m_alphas, 0, this->m_alphaCount);
+}
+
+// OFFSET: %0x0051A7B0
+void CGradient::Set(ORIENTATION orientation, const CImVector& minColor, const CImVector& maxColor) {
+    if (orientation) {
+        this->m_alphas[1] = minColor.a;
+        this->m_colors[1] = minColor;
+        this->m_alphas[3] = minColor.a;
+        this->m_colors[3] = minColor;
+        this->m_alphas[0] = maxColor.a;
+        this->m_colors[0] = maxColor;
+        this->m_alphas[2] = maxColor.a;
+        this->m_colors[2] = maxColor;
+    } else {
+        this->m_alphas[0] = minColor.a;
+        this->m_colors[0] = minColor;
+        this->m_alphas[1] = minColor.a;
+        this->m_colors[1] = minColor;
+        this->m_alphas[2] = maxColor.a;
+        this->m_colors[2] = maxColor;
+        this->m_alphas[3] = maxColor.a;
+        this->m_colors[3] = maxColor;
+    }
+}
+
+// OFFSET: %0x0051A830
+void CGradient::ApplyAlpha(uint8_t alpha) {
+    for (uint32_t i = this->m_colorCount; i; ) {
+        i--;
+        this->m_colors[i].a = alpha * this->m_alphas[i] / 255;
+    }
+}
+
+// OFFSET: %0x0051A880
+bool CGradient::IsWhite() {
+    for (uint32_t i = this->m_colorCount; i; ) {
+        i--;
+
+        if (this->m_alphas[i] < 0xFE || this->m_colors[i].r != 0xFF || this->m_colors[i].g != 0xFF || this->m_colors[i].b != 0xFF) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: %0x005089F0
+void CSimpleRegion::SetVertexAlpha(uint8_t alpha) {
+    CImVector color;
+    this->GetVertexColor(color);
+    color.a = alpha;
+    this->SetVertexColor(color);
+}
+
+// OFFSET: %0x00508A20
+uint8_t CSimpleRegion::GetVertexAlpha() {
+    CImVector color;
+    this->GetVertexColor(color);
+    return color.a;
+}
+
+// OFFSET: %0x00508A40
+void CSimpleRegion::SetIgnoreParentAlpha(bool ignore) {
+    if (ignore != this->m_ignoreParentAlpha) {
+        this->m_ignoreParentAlpha = ignore;
+        this->OnColorChanged(false);
+    }
+}
+
+// OFFSET: %0x0050AF30
+void CSimpleRegion::SetParent(CSimpleFrame* parent) {
+    this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
+}
+
+// OFFSET: %0x0050BFA0
+void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
+    char buffer[128];
+
+    if (depth) {
+        memset(buffer, '.', depth);
+    }
+
+    SStrPrintf(&buffer[depth], sizeof(buffer) - depth, "Region %p\n", this);
+    print(buffer, param);
+}
+
+// OFFSET: %0x0051A470
+int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
+    return frame->IsProtected() == 0;
+}
+
+// OFFSET: %0x0050AB90
+void CSimpleRegion::GetBaseColor(CImVector& color) {
+    const CImVector* source = this->m_hasGradient ? this->Gradient()->m_colors : (this->m_hasColor ? &this->m_color : NULL);
+
+    if (source) {
+        color = *source;
+    }
+}
+
+// OFFSET: %0x0051A490
+void CSimpleRegion::GetVertexColor(CImVector& color) {
+    if (this->m_hasColor) {
+        color = this->m_color;
+        color.a = this->m_vertexAlpha;
+    } else {
+        color.b = 0xFF;
+        color.g = 0xFF;
+        color.r = 0xFF;
+        color.a = 0xFF;
+    }
+}
+
+// OFFSET: %0x0051A4D0
+void CSimpleRegion::MarkDirty() {
+    if (!this->m_visible) {
+        return;
+    }
+
+    this->m_parent->RemoveFrameRegion(this, this->m_drawLayer);
+    this->m_parent->AddFrameRegion(this, this->m_drawLayer);
+    this->m_visible = 1;
+}
+
+// OFFSET: %0x0051A520
+void CSimpleRegion::SignalLoaded() {
+    this->m_loadPending = 0;
+}
+
+// OFFSET: %0x0051A530
+void CSimpleRegion::HideThis() {
+    if (!this->m_visible || !this->m_parent) {
+        return;
+    }
+
+    if (!this->m_parent->m_isLoading) {
+        this->SetDeferredResize(1);
+    }
+
+    this->m_parent->RemoveFrameRegion(this, this->m_drawLayer);
+    this->m_visible = 0;
+}
+
+// OFFSET: %0x0051A580
+void CSimpleRegion::ShowThis(bool loadPending) {
+    if (!this->m_shown || !this->m_parent || !this->m_parent->m_visible || this->m_visible) {
+        return;
+    }
+
+    if (!this->m_parent->m_isLoading) {
+        this->SetDeferredResize(0);
+    }
+
+    this->m_loadPending = loadPending;
+    this->m_parent->AddFrameRegion(this, this->m_drawLayer);
+    this->m_visible = 1;
+}
+
+// OFFSET: %0x0051A600
+void CSimpleRegion::SetFrame(CSimpleFrame* frame, uint32_t drawLayer, int8_t subLevel, bool show) {
+    if (this->m_parent == frame) {
+        if (this->m_drawLayer == drawLayer && this->m_subLevel == subLevel) {
+            if (show != (this->m_shown != 0)) {
+                if (show) {
+                    this->Show();
+                } else {
+                    this->Hide();
+                }
+            }
+
+            return;
+        }
+
+        if (this->m_shown) {
+            this->Hide();
+        }
+
+        this->m_subLevel = subLevel;
+        this->m_drawLayer = drawLayer;
+
+        if (show) {
+            this->Show();
+        }
+
+        return;
+    }
+
+    if (this->m_parent) {
+        this->HideThis();
+        this->m_parent->UnregisterRegion(this);
+    }
+
+    this->m_parent = frame;
+    this->m_subLevel = subLevel;
+    this->m_drawLayer = drawLayer;
+
+    if (!frame) {
+        return;
+    }
+
+    frame->RegisterRegion(this);
+    this->SetDeferredResize(this->m_parent->m_layoutFlags & 2);
+    this->OnColorChanged(false);
+
+    if (show) {
+        this->Show();
+    } else {
+        this->Hide();
+    }
+}
+
+// OFFSET: %0x0051A760
+void CSimpleRegion::OnRegionChanged() {
+    if (this->m_visible && this->m_parent) {
+        this->m_parent->NotifyDrawLayerChanged(this->m_drawLayer);
+    }
+}
+
+// OFFSET: %0x0051A790
+void CSimpleRegion::NotifyDelayedLoad() {
+    if (this->m_visible && this->m_parent) {
+        this->m_parent->NotifyDelayedLoad();
+    }
+}
+
+// OFFSET: %0x0051A8C0
+bool CSimpleRegion::IsColorWhite() {
+    return this->m_vertexAlpha >= 0xFE && this->m_color.r == 0xFF && this->m_color.g == 0xFF && this->m_color.b == 0xFF;
+}
+
+// OFFSET: %0x0051A8F0
+void CSimpleRegion::SetVertexColor(const CImVector& color) {
+    bool changed = this->m_hasGradient || !this->m_hasColor;
+
+    if (!this->m_hasColor && !this->m_hasGradient && color.a >= 0xFE && color.r == 0xFF && color.g == 0xFF && color.b == 0xFF) {
+        return;
+    }
+
+    if (this->m_hasColor) {
+        if (this->m_vertexAlpha == color.a && this->m_color.r == color.r && this->m_color.g == color.g && this->m_color.b == color.b) {
+            return;
+        }
+    } else {
+        this->EnableGradient(false);
+
+        if (!this->m_hasColor) {
+            this->m_vertexAlpha = 0xFF;
+            this->m_color.b = 0xFF;
+            this->m_color.g = 0xFF;
+            this->m_color.r = 0xFF;
+            this->m_color.a = 0xFF;
+        }
+
+        this->m_hasColor = 1;
+    }
+
+    this->m_vertexAlpha = color.a;
+    this->m_color = color;
+    this->OnColorChanged(changed);
+}
+
+// OFFSET: %0x0051A9C0
+void CSimpleRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
+    if (region && region != this) {
+        return;
+    }
+
+    CImVector color;
+    this->GetVertexColor(color);
+
+    int16_t value = alpha + color.a;
+
+    if (value > 255) {
+        color.a = 255;
+    } else {
+        color.a = value < 0 ? 0 : value;
+    }
+
+    this->SetVertexColor(color);
+}
+
+// OFFSET: %0x0051AA70
+void CSimpleRegion::EnableGradient(bool enable) {
+    if (enable) {
+        if (!this->m_hasGradient) {
+            this->m_hasColor = 0;
+            void* mem = CGradient::s_allocator.GetData(0, typeid(CGradient).raw_name(), SLOG_OBJECT);
+            this->Gradient() = mem ? new (mem) CGradient() : NULL;
+            this->m_hasGradient = 1;
+        }
+    } else if (this->m_hasGradient) {
+        if (this->Gradient()) {
+            CGradient::s_allocator.PutData(this->Gradient(), NULL, 0);
+        }
+
+        this->m_hasGradient = 0;
+        this->m_vertexAlpha = 0xFF;
+        this->m_color.b = 0xFF;
+        this->m_color.g = 0xFF;
+        this->m_color.r = 0xFF;
+        this->m_color.a = 0xFF;
+    }
+}
+
+// OFFSET: %0x0051AB20
+void CSimpleRegion::SetVertexGradient(ORIENTATION orientation, const CImVector& minColor, const CImVector& maxColor) {
+    bool changed = !this->m_hasGradient;
+
+    if (!this->m_hasGradient) {
+        this->m_hasColor = 0;
+        void* mem = CGradient::s_allocator.GetData(0, typeid(CGradient).raw_name(), SLOG_OBJECT);
+        this->Gradient() = mem ? new (mem) CGradient() : NULL;
+        this->m_hasGradient = 1;
+    }
+
+    this->Gradient()->Set(orientation, minColor, maxColor);
+    this->OnColorChanged(changed);
+}
+
+// OFFSET: %0x0051ABB0
+void CSimpleRegion::OnColorChanged(bool changed) {
+    if (this->m_parent) {
+        if (!this->m_hasColor && !this->m_hasGradient) {
+            this->m_hasColor = 1;
+            this->m_vertexAlpha = 0xFF;
+            this->m_color.b = 0xFF;
+            this->m_color.g = 0xFF;
+            this->m_color.r = 0xFF;
+            this->m_color.a = 0xFF;
+            changed = true;
+        } else if (this->m_parent->GetEffectiveAlpha() >= 0xFE) {
+            if (this->m_hasColor) {
+                if (this->IsColorWhite()) {
+                    this->m_hasColor = 0;
+                    changed = true;
+                }
+            } else if (this->m_hasGradient && this->Gradient()->IsWhite()) {
+                this->EnableGradient(false);
+                changed = true;
+            }
+        }
+
+        if (this->m_hasColor) {
+            uint8_t alpha = this->m_ignoreParentAlpha ? 0xFF : this->m_parent->GetEffectiveAlpha();
+            this->m_color.a = alpha * this->m_vertexAlpha / 255;
+        } else if (this->m_hasGradient) {
+            this->Gradient()->ApplyAlpha(this->m_ignoreParentAlpha ? 0xFF : this->m_parent->GetEffectiveAlpha());
+        }
+    }
+
+    if (changed) {
+        this->OnRegionChanged();
+    }
+}
+
+// OFFSET: %0x0051AD40
+void CSimpleRegion::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
+    if (first && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+        this->AnimData_Init();
+    }
+
+    if (!this->m_animAlpha && hasAlpha) {
+        this->m_animAlpha = 1;
+        this->m_animSavedAlpha = this->GetVertexAlpha();
+    }
+}
+
+// OFFSET: %0x0051ADD0
+void CSimpleRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
+    if (this->m_animAlpha) {
+        this->m_animAlpha = this->HasActiveAnimOfType(CSimpleAlphaAnim::GetObjectType());
+
+        if (!this->m_animAlpha) {
+            this->SetVertexAlpha(this->m_animSavedAlpha);
+        }
+    }
+
+    if (last && (!this->m_playingAnimGroups || !this->m_playingAnimGroups->Head())) {
+        this->AnimData_ResetPositionData();
+    }
+}
+
+// OFFSET: %0x0051AE80
+CSimpleRegion::CSimpleRegion(CSimpleFrame* frame, uint32_t drawLayer, int8_t subLevel, bool show) {
+    this->m_color.b = 0xFF;
+    this->m_color.g = 0xFF;
+    this->m_color.r = 0xFF;
+    this->m_color.a = 0xFF;
+    this->m_drawLayer = 0;
+    this->m_hasGradient = 0;
+    this->m_hasColor = 0;
+    this->m_ignoreParentAlpha = 0;
+    this->m_animSavedAlpha = 0xFF;
+    this->m_vertexAlpha = 0;
+
+    if (frame) {
+        this->SetFrame(frame, drawLayer, subLevel, show);
+    }
+}
+
+// OFFSET: [%0x0051AF10, %0x0051AF00, %0x0051AFF0]
+CSimpleRegion::~CSimpleRegion() {
+    this->SetFrame(NULL, 1, 0, false);
+    this->EnableGradient(false);
+}
+
+// OFFSET: %0x00401000
+void CSimpleRegion::OnScreenSizeChanged() {
+}
+
+// OFFSET: %0x00932B20
+void CSimpleRegion::SetVertexColorRGBA(float r, float g, float b, float a) {
+    CImVector color;
+    color.Set(a, r, g, b);
+    this->SetVertexColor(color);
+}
+
+// OFFSET: %0x0053BB70
+C3Vector& ApplyTranslationAnim(C3Vector& position, const C2Vector& translation) {
+    position.x = position.x + translation.x;
+    position.y = translation.y + position.y;
+
+    return position;
+}
+
+// OFFSET: %0x0053BAF0
+void ApplyTranslationAnim(C3Vector* positions, const C2Vector& translation) {
+    for (uint32_t i = 0; i < 4; i++) {
+        positions[i].x = positions[i].x + translation.x;
+        positions[i].y = translation.y + positions[i].y;
+    }
+}
+
+// INLINED
+static C2Vector LerpPoint(float t, const C2Vector& a, const C2Vector& b) {
+    C2Vector result;
+    result.x = (b.x - a.x) * t + a.x;
+    result.y = (b.y - a.y) * t + a.y;
+
+    return result;
+}
+
+// OFFSET: %0x0053BBA0
+static void GetOriginOffset(FRAMEPOINT origin, const C3Vector* positions, const C2Vector& offset, C2Vector& result) {
+    switch (origin) {
+        case FRAMEPOINT_TOPLEFT:
+            result.x = positions[0].x;
+            result.y = positions[0].y;
+            break;
+
+        case FRAMEPOINT_TOP:
+            result = LerpPoint(0.5f, C2Vector(positions[0]), C2Vector(positions[2]));
+            break;
+
+        case FRAMEPOINT_TOPRIGHT:
+            result.x = positions[2].x;
+            result.y = positions[2].y;
+            break;
+
+        case FRAMEPOINT_LEFT:
+            result = LerpPoint(0.5f, C2Vector(positions[0]), C2Vector(positions[1]));
+            break;
+
+        case FRAMEPOINT_CENTER:
+            result = LerpPoint(0.5f, C2Vector(positions[0]), C2Vector(positions[3]));
+            break;
+
+        case FRAMEPOINT_RIGHT:
+            result = LerpPoint(0.5f, C2Vector(positions[2]), C2Vector(positions[3]));
+            break;
+
+        case FRAMEPOINT_BOTTOMLEFT:
+            result.x = positions[1].x;
+            result.y = positions[1].y;
+            break;
+
+        case FRAMEPOINT_BOTTOM:
+            result = LerpPoint(0.5f, C2Vector(positions[1]), C2Vector(positions[3]));
+            break;
+
+        case FRAMEPOINT_BOTTOMRIGHT:
+            result.x = positions[3].x;
+            result.y = positions[3].y;
+            break;
+
+        default:
+            result.x = 0.0f;
+            result.y = 0.0f;
+            break;
+    }
+
+    if (offset.x * offset.x + offset.y * offset.y > 0.00000011920929f) {
+        C3Vector edge;
+        edge.x = positions[3].x - positions[1].x;
+        edge.y = positions[3].y - positions[1].y;
+        edge.z = positions[3].z - positions[1].z;
+        C2Vector direction(edge);
+        float length = direction.y * direction.y + direction.x * direction.x;
+
+        if (length > 0.00000023841858f) {
+            float scale = 1.0f / sqrt(length);
+            direction.x = direction.x * scale;
+            direction.y = direction.y * scale;
+        }
+
+        result.x = offset.x * direction.x - offset.y * direction.y + result.x;
+        result.y = offset.y * direction.x + offset.x * direction.y + result.y;
+    }
+}
+
+// OFFSET: %0x0053BE70
+void ApplyRotationAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, float radians) {
+    C2Vector center;
+    GetOriginOffset(origin, positions, offset, center);
+
+    float c = cos(radians);
+    float s = sin(radians);
+
+    for (uint32_t i = 0; i < 4; i++) {
+        float x = positions[i].x - center.x;
+        float y = positions[i].y - center.y;
+        positions[i].x = x * c - y * s + center.x;
+        positions[i].y = x * s + y * c + center.y;
+    }
+}
+
+// OFFSET: %0x0053BFE0
+void ApplyScaleAnim(C3Vector* positions, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
+    C2Vector center;
+    GetOriginOffset(origin, positions, offset, center);
+
+    for (uint32_t i = 0; i < 4; i++) {
+        positions[i].x = (center.x - positions[i].x) * scale.x + positions[i].x;
+        positions[i].y = (center.y - positions[i].y) * scale.y + positions[i].y;
+    }
+}
+
+// OFFSET: %0x00507530
+void CSimpleRegion::PreLoadXML(linkObject* node, CStatus* status) {
+    if (node->m_flags & 0x1000000) {
+        this->SetName(node->m_name.m_string);
+    }
+}

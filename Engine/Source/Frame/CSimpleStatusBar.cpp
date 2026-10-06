@@ -1,0 +1,398 @@
+#include <cstddef>
+#include <cstdint>
+#include <new>
+#include <typeinfo>
+#include "Engine/Source/Frame/CSimpleStatusBar.h"
+#include "Engine/Source/Base/Status.h"
+#include "Engine/Source/Frame/CScriptObject.h"
+#include "Engine/Source/Frame/CScriptRegion.h"
+#include "Engine/Source/Frame/CSimpleFrame.h"
+#include "Engine/Source/Frame/CSimpleTexture.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
+#include "Engine/Source/FrameXML/LoadXML.h"
+#include "Engine/Source/FrameXML/BinaryXML.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "Engine/Source/Tempest/C2Vector.h"
+#include "Engine/Source/Tempest/CImVector.h"
+#include "Engine/Source/Tempest/CRect.h"
+#include "Engine/Source/lua-5.1/src/lauxlib.h"
+#include "Engine/Source/lua-5.1/src/lua.h"
+
+// STATIC: %0x00BB9018
+int32_t CSimpleStatusBar::s_metatable = LUA_NOREF;
+
+// STATIC: %0x00CD12D4
+int32_t CSimpleStatusBar::s_objectType;
+
+// STATIC: %0x00BB8608
+const char* CSimpleStatusBar::s_objectTypeName = "StatusBar";
+
+// STATIC: %0x00CD12D8
+CDataAllocator CSimpleStatusBar::s_allocator(sizeof(CSimpleStatusBar), 5);
+
+// INLINED
+void CSimpleStatusBar::operator delete(void* ptr) {
+    CSimpleStatusBar::s_allocator.PutData(ptr, NULL, 0);
+}
+
+// OFFSET: %0x0051F5B0
+void CSimpleStatusBar::RunOnMinMaxChangedScript() {
+    if (this->HasScript(this->m_onMinMaxChanged)) {
+        lua_State* L = FrameScript_GetContext();
+        lua_pushnumber(L, this->m_minValue);
+        lua_pushnumber(L, this->m_maxValue);
+        this->RunScript(this->m_onMinMaxChanged, 2, NULL);
+    }
+}
+
+// OFFSET: [%0x0051F550, %0x0051F700, %0x0051F240]
+CSimpleStatusBar::~CSimpleStatusBar() {
+}
+
+// OFFSET: %0x0051F260
+void CSimpleStatusBar::SetStatusBarColor(const CImVector& color) {
+    if (this->m_barTexture) {
+        this->m_barTexture->SetVertexColor(color);
+    }
+}
+
+// OFFSET: %0x0051F280
+const char* CSimpleStatusBar::GetObjectTypeName() {
+    return CSimpleStatusBar::s_objectTypeName;
+}
+
+// OFFSET: %0x0051F290
+int32_t CSimpleStatusBar::GetScriptMetaTable() {
+    return CSimpleStatusBar::s_metatable;
+}
+
+// OFFSET: %0x0051F2A0
+FrameScript_Object::ScriptIx* CSimpleStatusBar::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
+    FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
+
+    if (script) {
+        return script;
+    }
+
+    if (!SStrCmp(name, "onvaluechanged", STORM_MAX_STR)) {
+        data.m_wrapper = "return function(self,value) %s end";
+        return &this->m_onValueChanged;
+    }
+
+    if (!SStrCmp(name, "onminmaxchanged", STORM_MAX_STR)) {
+        data.m_wrapper = "return function(self,min,max) %s end";
+        return &this->m_onMinMaxChanged;
+    }
+
+    return NULL;
+}
+
+// OFFSET: %0x0051F350
+void CSimpleStatusBar::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
+    FrameScript_Object::GetScriptTime(L, this->m_onValueChanged, time, count);
+    FrameScript_Object::GetScriptTime(L, this->m_onMinMaxChanged, time, count);
+    CSimpleFrame::GetScriptTime(L, time, count, recurse);
+}
+
+// OFFSET: %0x0051F3A0
+void CSimpleStatusBar::UnregisterRegion(CSimpleRegion* region) {
+    if (region == this->m_barTexture) {
+        this->m_barTexture = NULL;
+    }
+
+    CSimpleFrame::UnregisterRegion(region);
+}
+
+// OFFSET: %0x0051F3D0
+void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer, int8_t subLevel) {
+    if (texture == this->m_barTexture) {
+        return;
+    }
+
+    if (this->m_barTexture) {
+        delete this->m_barTexture;
+    }
+
+    if (texture) {
+        texture->SetFrame(this, drawLayer, subLevel, true);
+        texture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, 0.0f, 0.0f, 1);
+        texture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, 0.0f, 0.0f, 1);
+        texture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, 0.0f, 0.0f, 1);
+        texture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, 0.0f, 0.0f, 1);
+    }
+
+    this->m_changed = 1;
+    this->m_barTexture = texture;
+}
+
+// OFFSET: %0x0051F4A0
+void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
+    this->m_changed = 1;
+    this->m_orientation = orientation;
+}
+
+// OFFSET: %0x0051F820
+void CSimpleStatusBar::SetMinMaxValues(float minValue, float maxValue) {
+    if (minValue > maxValue) {
+        minValue = maxValue;
+    }
+
+    if (this->m_rangeSet && this->m_minValue == minValue && this->m_maxValue == maxValue) {
+        return;
+    }
+
+    this->m_minValue = minValue;
+    this->m_changed = 1;
+    this->m_rangeSet = 1;
+    this->m_maxValue = maxValue;
+    this->RunOnMinMaxChangedScript();
+
+    if (this->m_valueSet) {
+        this->SetValue(this->m_value);
+    }
+}
+
+// OFFSET: %0x0051F560
+void CSimpleStatusBar::RunOnValueChangedScript() {
+    if (this->HasScript(this->m_onValueChanged)) {
+        lua_State* L = FrameScript_GetContext();
+        lua_pushnumber(L, this->m_value);
+        this->RunScript(this->m_onValueChanged, 1, NULL);
+    }
+}
+
+// OFFSET: %0x0051F8B0
+void CSimpleStatusBar::SetValue(float value) {
+    if (!this->m_rangeSet) {
+        return;
+    }
+
+    if (value > this->m_maxValue) {
+        value = this->m_maxValue;
+    } else if (value < this->m_minValue) {
+        value = this->m_minValue;
+    }
+
+    if (this->m_valueSet && this->m_value == value) {
+        return;
+    }
+
+    this->m_value = value;
+    this->m_changed = 1;
+    this->m_valueSet = 1;
+    this->RunOnValueChangedScript();
+}
+
+// OFFSET: %0x0051F510
+void CSimpleStatusBar::SetWidth(float width) {
+    CSimpleFrame::SetWidth(width);
+    float value = this->m_value;
+    this->m_value = this->m_minValue;
+    this->SetValue(value);
+}
+
+// OFFSET: %0x0051F4C0
+float CSimpleStatusBar::GetAnimValue() const {
+    float range = this->m_maxValue - this->m_minValue;
+
+    if (range > 0.0f) {
+        return (this->m_value - this->m_minValue) / range;
+    }
+
+    return 0.0f;
+}
+
+// OFFSET: %0x0051F610
+bool CSimpleStatusBar::IsA(int32_t type) {
+    return type == CSimpleStatusBar::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
+}
+
+// OFFSET: %0x0051F650
+bool CSimpleStatusBar::IsA(const char* typeName) {
+    return !SStrCmpI(typeName, CSimpleStatusBar::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
+}
+
+// OFFSET: %0x0051F690
+CSimpleStatusBar::CSimpleStatusBar(CSimpleFrame* parent) : CSimpleFrame(parent) {
+    this->m_changed = 0;
+    this->m_rangeSet = 0;
+    this->m_valueSet = 0;
+    this->m_rotatesTexture = 0;
+    this->m_minValue = 0.0f;
+    this->m_maxValue = 0.0f;
+    this->m_barTexture = NULL;
+    this->m_value = 0.0f;
+    this->m_orientation = ORIENTATION_HORIZONTAL;
+}
+
+// OFFSET: %0x0051F740
+int32_t CSimpleStatusBar::SetBarTexture(const char* fileName, uint32_t drawLayer, int8_t subLevel) {
+    CSimpleTexture* texture = this->m_barTexture;
+
+    if (texture) {
+        texture->SetTexture(fileName, (texture->m_textureFlags >> 2) & 1, (texture->m_textureFlags >> 3) & 1, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
+        this->SetBarTexture(texture, drawLayer, subLevel);
+        return 1;
+    }
+
+    void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
+    texture = data ? new (data) CSimpleTexture(NULL, 2, 0, true) : NULL;
+
+    if (!texture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal)) {
+        if (texture) {
+            delete texture;
+        }
+
+        return 0;
+    }
+
+    this->SetBarTexture(texture, drawLayer, subLevel);
+    return 1;
+}
+
+// OFFSET: %0x0051F910
+void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
+    CSimpleFrame::OnLayerUpdate(elapsedSec);
+
+    if (!this->m_changed || !this->m_barTexture || !this->m_rangeSet || !this->m_valueSet) {
+        return;
+    }
+
+    float value = this->GetAnimValue();
+    float width;
+    float height;
+    this->GetSize(width, height, 0);
+
+    if (value > 0.0f) {
+        this->m_barTexture->Show();
+    } else {
+        this->m_barTexture->Hide();
+    }
+
+    uint32_t textureFlags = this->m_barTexture->m_textureFlags;
+
+    if (this->m_orientation == ORIENTATION_VERTICAL) {
+        if (!((textureFlags >> 2) & 1) && !((textureFlags >> 3) & 1)) {
+            if (this->m_rotatesTexture) {
+                C2Vector texCoords[4];
+                texCoords[0].x = value;
+                texCoords[0].y = 0.0f;
+                texCoords[1].x = 0.0f;
+                texCoords[1].y = 0.0f;
+                texCoords[2].x = value;
+                texCoords[2].y = 1.0f;
+                texCoords[3].x = 0.0f;
+                texCoords[3].y = 1.0f;
+                this->m_barTexture->SetTexCoord(texCoords);
+            } else {
+                CRect texRect = { 1.0f - value, 0.0f, 1.0f, 1.0f };
+                this->m_barTexture->SetTexCoord(texRect);
+            }
+        }
+
+        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, 0.0f, 0.0f, 1);
+        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, 0.0f, 0.0f, 1);
+        value = 1.0f - value;
+        this->m_barTexture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, 0.0f, -(value * height), 1);
+        this->m_barTexture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, 0.0f, -(value * height), 1);
+    } else {
+        if (!((textureFlags >> 2) & 1) && !((textureFlags >> 3) & 1)) {
+            if (this->m_rotatesTexture) {
+                C2Vector texCoords[4];
+                texCoords[0].x = 0.0f;
+                texCoords[0].y = 1.0f;
+                texCoords[1].x = 1.0f;
+                texCoords[1].y = 1.0f;
+                texCoords[2].x = 0.0f;
+                texCoords[2].y = 1.0f - value;
+                texCoords[3].x = 1.0f;
+                texCoords[3].y = 1.0f - value;
+                this->m_barTexture->SetTexCoord(texCoords);
+            } else {
+                CRect texRect = { 0.0f, 0.0f, 1.0f, value };
+                this->m_barTexture->SetTexCoord(texRect);
+            }
+        }
+
+        this->m_barTexture->SetPoint(FRAMEPOINT_TOPLEFT, this, FRAMEPOINT_TOPLEFT, 0.0f, 0.0f, 1);
+        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMLEFT, this, FRAMEPOINT_BOTTOMLEFT, 0.0f, 0.0f, 1);
+        value = 1.0f - value;
+        this->m_barTexture->SetPoint(FRAMEPOINT_TOPRIGHT, this, FRAMEPOINT_TOPRIGHT, -(value * width), 0.0f, 1);
+        this->m_barTexture->SetPoint(FRAMEPOINT_BOTTOMRIGHT, this, FRAMEPOINT_BOTTOMRIGHT, -(value * width), 0.0f, 1);
+    }
+
+    this->m_changed = 0;
+}
+
+// OFFSET: %0x0051FC80
+void CSimpleStatusBar::SetRotatesTexture(int32_t rotates) {
+    if (rotates) {
+        C2Vector texCoords[4];
+        texCoords[0].x = 1.0f;
+        texCoords[0].y = 0.0f;
+        texCoords[1].x = 0.0f;
+        texCoords[1].y = 0.0f;
+        texCoords[2].x = 1.0f;
+        texCoords[2].y = 1.0f;
+        texCoords[3].x = 0.0f;
+        texCoords[3].y = 1.0f;
+        this->m_barTexture->SetTexCoord(texCoords);
+    } else {
+        CRect texRect = { 0.0f, 0.0f, 1.0f, 1.0f };
+        this->m_barTexture->SetTexCoord(texRect);
+    }
+
+    this->m_rotatesTexture = rotates;
+    this->m_changed = 1;
+}
+
+// OFFSET: %0x0051FD60
+void CSimpleStatusBar::LoadXML(linkObject* node, CStatus* status) {
+    CSimpleFrame::LoadXML(node, status);
+
+    if (!(node->m_flags & 0x80)) {
+        return;
+    }
+
+    StatusBar* statusBar = static_cast<StatusBar*>(node);
+    uint32_t drawLayer = statusBar->m_drawLayer;
+
+    for (linkObject* child = node->m_child; child; child = child->m_next) {
+        if (child->m_element == XML_BARCOLOR) {
+            CImVector color(0, 0, 0, 0);
+
+            if (LoadXML_Color(child, color, status)) {
+                this->SetStatusBarColor(color);
+            }
+        } else if (child->m_element == XML_BARTEXTURE) {
+            this->SetBarTexture(LoadXML_Texture(child, this, status), drawLayer, 0);
+        }
+    }
+
+    if ((statusBar->m_valueFlags & 0x2) && (statusBar->m_valueFlags & 0x4)) {
+        float minValue = statusBar->m_minValue;
+        float maxValue = statusBar->m_maxValue;
+
+        if (minValue < -1.0e12 || minValue > 1.0e12 || maxValue < -1.0e12 || maxValue > 1.0e12) {
+            const char* name = this->GetName();
+            status->Add(STATUS_ERROR, "Frame %s: Min or Max out of range", name ? name : "<unnamed>");
+        } else if (maxValue - minValue > 1.0e12) {
+            status->Add(STATUS_ERROR, "Frame %s: Min and Max too far apart", this->GetDisplayName());
+        } else {
+            this->SetMinMaxValues(minValue, maxValue);
+        }
+
+        if (statusBar->m_valueFlags & 0x8) {
+            this->SetValue(statusBar->m_defaultValue);
+        }
+    }
+
+    if (statusBar->m_valueFlags & 0x1) {
+        this->m_changed = 1;
+        this->m_orientation = static_cast<ORIENTATION>(statusBar->m_orientation);
+    }
+
+    if (statusBar->m_valueFlags & 0x20) {
+        this->SetRotatesTexture((statusBar->m_valueFlags >> 6) & 1);
+    }
+}
