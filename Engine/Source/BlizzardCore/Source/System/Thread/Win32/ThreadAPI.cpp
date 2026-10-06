@@ -6,8 +6,10 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
+#include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00740D70
+// PROVEN: c853f4f5 IDENTICAL
+// OFFSET: 0x007DF450
 bool Blizzard::Thread::Close(ThreadRecord* thread) {
     if (thread->m_refCount.Decrement() > 0) {
         return true;
@@ -19,7 +21,7 @@ bool Blizzard::Thread::Close(ThreadRecord* thread) {
     }
 
     System_Thread::RemoveFromRegistry(thread);
-    free(thread);
+    SMemFree(thread, __FILE__, __LINE__, 0);
 
     return true;
 }

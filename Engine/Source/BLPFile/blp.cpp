@@ -609,10 +609,12 @@ uint32_t CBLPFile::Pixels(uint32_t mipLevel) const {
     return this->Height(mipLevel) * this->Width(mipLevel);
 }
 
-// OFFSET: %0x004CAC90
+// PROVEN: 201141ed IDENTICAL
+// OFFSET: 0x004C49A0
 int32_t CBLPFile::Unlock(uint32_t mipLevel) {
     if (this->m_lockDecompMem) {
         SMemFree(this->m_lockDecompMem, __FILE__, __LINE__, 0);
+        this->m_lockDecompMem = NULL;
     }
 
     return this->IsValidMip(mipLevel);

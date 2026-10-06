@@ -4,21 +4,22 @@
 #include "Engine/Source/Services/SysMessage.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BB9BF4
-static const SYSMSGSEVERITY s_severities[4] = { { 0xFF, 0xFF, 0xFF, 0, 10.0f }, { 0xFF, 0xFF, 0x7F, 0, 15.0f }, { 0xFF, 0x7F, 0x7F, 0, 15.0f }, { 0x7F, 0xFF, 0xFF, 0, 20.0f } };
+// STATIC: 0x00CA48C0
+static const SYSMSGSEVERITY s_severities[4] = { { 0xFF, 0xFF, 0xFF, 0, 10.0f }, { 0xFF, 0xFF, 0x7F, 0, 15.0f }, { 0xFF, 0xA5, 0x00, 0, 20.0f }, { 0xFF, 0x7F, 0x7F, 0, 30.0f } };
 
-// STATIC: %0x00BB9C14
+// STATIC: 0x00CA48E0
 static int32_t s_enabled = 1;
 
-// STATIC: %0x00BB9C18
+// STATIC: 0x00CA48E4
 static int32_t s_maxSeverity = 3;
 
-// STATIC: %0x00BB9C1C
+// STATIC: 0x00CA48E8
 static uint32_t s_categoryFilter = 0xFFFFFFFF;
 
-// STATIC: %0x00CD285C
+// STATIC: 0x00DD3CFC
 static int32_t s_minSeverity;
 
+// PROVEN: 31ecab71 IDENTICAL
 // OFFSET: 0x0053E840
 void SysMsgGetSeverityColor(STATUS_TYPE severity, float& red, float& green, float& blue) {
     red = s_severities[severity].m_red * 0.0039215689f;

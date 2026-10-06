@@ -7,7 +7,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 
-// OFFSET: %0x00740D70
+// PROVEN: 09ef75de IDENTICAL
+// OFFSET: 0x007DF450
 bool Blizzard::Thread::Close(ThreadRecord* thread) {
     if (thread->m_refCount.Decrement() > 0) {
         return true;
