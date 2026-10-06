@@ -15,25 +15,25 @@
 #include <string.h>
 
 
-// PROVEN: 4ab28066 IDENTICAL
+// PROVEN: 4ab28066 IDENTICAL/NONE
 // OFFSET: 0x00ABAC80
 void * FMOD_OggVorbis_Malloc(int size)
 {
     return FMOD_Memory_Alloc(size);
 }
-// PROVEN: d28aaf69 IDENTICAL
+// PROVEN: d28aaf69 IDENTICAL/NONE
 // OFFSET: 0x00ABACB0
 void * FMOD_OggVorbis_Calloc(int count, int size)
 {
     return FMOD_Memory_Calloc(count * size);
 }
-// PROVEN: 5cc9c5d5 IDENTICAL
+// PROVEN: 5cc9c5d5 IDENTICAL/NONE
 // OFFSET: 0x00ABACE0
 void * FMOD_OggVorbis_ReAlloc(void *ptr, int size)
 {
     return FMOD_Memory_ReAlloc(ptr, size);
 }
-// PROVEN: 39e8b8ed IDENTICAL
+// PROVEN: 39e8b8ed IDENTICAL/NONE
 // OFFSET: 0x00ABAD10
 void   FMOD_OggVorbis_Free(void *ptr)
 {
@@ -89,8 +89,8 @@ bool            CodecOggVorbis::gInitialized = false;
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2880324a IDENTICAL
-// OFFSET: 0x00ABAC00
+// PROVEN: 2880324a IDENTICAL/NONE
+// OFFSET: 0x00ABAC00/0x140881D20
 size_t FMOD_OggVorbis_ReadCallback(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
     FMOD_RESULT result;
@@ -124,7 +124,7 @@ size_t FMOD_OggVorbis_ReadCallback(void *ptr, size_t size, size_t nmemb, void *d
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 240d57d7 IDENTICAL
+// PROVEN: 240d57d7 IDENTICAL/NONE
 // OFFSET: 0x00ABAC30
 int FMOD_OggVorbis_SeekCallback(void *datasource, ogg_int64_t offset, int whence)
 {
@@ -156,8 +156,8 @@ int FMOD_OggVorbis_SeekCallback(void *datasource, ogg_int64_t offset, int whence
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4d5c11c0 IDENTICAL
-// OFFSET: 0x00ABAC60
+// PROVEN: 4d5c11c0 IDENTICAL/NONE
+// OFFSET: 0x00ABAC60/0x140881D80
 ogg_int32_t FMOD_OggVorbis_TellCallback(void *datasource)
 {
 	File *fp = (File *)datasource;
@@ -582,8 +582,8 @@ FMOD_RESULT CodecOggVorbis::setPositionInternal(int subsound, unsigned int posit
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 003c645a IDENTICAL
-// OFFSET: 0x00ABAE30
+// PROVEN: 003c645a IDENTICAL/NONE
+// OFFSET: 0x00ABAE30/0x140881FF0
 FMOD_RESULT CodecOggVorbis::readVorbisComments()
 {
     FMOD_RESULT result;
@@ -636,7 +636,7 @@ FMOD_RESULT CodecOggVorbis::readVorbisComments()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5001ec34 IDENTICAL
+// PROVEN: 5001ec34 IDENTICAL/NONE
 // OFFSET: 0x00ABB390
 FMOD_RESULT F_CALLBACK CodecOggVorbis::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -685,7 +685,7 @@ FMOD_RESULT F_CALLBACK CodecOggVorbis::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a4e0958d IDENTICAL
+// PROVEN: a4e0958d IDENTICAL/NONE
 // OFFSET: 0x00ABAEF0
 FMOD_RESULT F_CALLBACK CodecOggVorbis::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {

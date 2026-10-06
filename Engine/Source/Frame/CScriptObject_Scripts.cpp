@@ -95,8 +95,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetParent", &Script_GetParent },
 };
 
-// PROVEN: a252f575 IDENTICAL
-// OFFSET: 0x0053E5B0
+// PROVEN: a252f575 IDENTICAL/NONE
+// OFFSET: 0x0053E5B0/0x140192D50
 void CScriptObject::RegisterScriptMethods(lua_State* L) {
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }

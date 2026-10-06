@@ -10,7 +10,7 @@ Liquid::CRenderer::DrawListSorter Liquid::CRenderer::s_drawListSorter[2] = {
     Liquid::CRenderer::CompareTransparent
 };
 
-// PROVEN: 3d910c8b IDENTICAL
+// PROVEN: 3d910c8b IDENTICAL/NONE
 // OFFSET: 0x00B3C4B0
 Liquid::CRenderer::~CRenderer() {
 }
@@ -132,7 +132,7 @@ void Liquid::CRenderer::Flush(const C3Vector& cameraPos, uint32_t pass) {
     }
 }
 
-// PROVEN: 520282aa IDENTICAL
+// PROVEN: 520282aa IDENTICAL/NONE
 // OFFSET: 0x00401000
 void Liquid::CRenderer::Validate() {
 }

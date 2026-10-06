@@ -3,7 +3,7 @@
 // STATIC: %0x00B45428
 const DBCMeta SpellActivationOverlayRec::s_meta = { "DBFilesClient\\SpellActivationOverlay.dbc", 8, 40, SpellActivationOverlayRec::FixupStrings, 0 };
 
-// PROVEN: aab4ed50 IDENTICAL
+// PROVEN: aab4ed50 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellActivationOverlayRec::FixupStrings(void* record, const char* strings) {
 }

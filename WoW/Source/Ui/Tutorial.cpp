@@ -28,7 +28,7 @@ int32_t CGTutorial::OnTutorialFlags(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: fc48c140 IDENTICAL
+// PROVEN: fc48c140 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGTutorial::InitializeGame() {
 }
@@ -170,7 +170,7 @@ void CGTutorial::LoadFlaggedTutorials() {
     }
 }
 
-// PROVEN: 01796b88 IDENTICAL
+// PROVEN: 01796b88 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGTutorial::ShutdownGame() {
 }

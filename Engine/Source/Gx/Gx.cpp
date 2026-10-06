@@ -49,7 +49,7 @@ static bool s_drawListBusy;
 // STATIC: %0x00CE3110
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 
-// PROVEN: e358aa38 IDENTICAL
+// PROVEN: e358aa38 IDENTICAL/NONE
 // OFFSET: 0x006128D0
 static void DrawListPreprocessB2F(GxDrawListEntry* entry, const C3Vector& viewPos) {
     entry->m_depth = entry->m_item->GetDepth(viewPos);
@@ -67,13 +67,13 @@ static int DrawListSorterB2F(const void* a, const void* b) {
     return depthB > depthA;
 }
 
-// PROVEN: fa45fcf0 IDENTICAL
+// PROVEN: fa45fcf0 IDENTICAL/NONE
 // OFFSET: 0x00612930
 static void DrawListPreprocessVtxStream(GxDrawListEntry* entry, const C3Vector& viewPos) {
     entry->m_vtxStream = entry->m_item->GetVtxStream();
 }
 
-// PROVEN: 7349a485 IDENTICAL
+// PROVEN: 7349a485 IDENTICAL/NONE
 // OFFSET: 0x00612950
 static int DrawListSorterVtxStream(const void* a, const void* b) {
     uint32_t streamA = static_cast<const GxDrawListEntry*>(a)->m_vtxStream;
@@ -92,8 +92,8 @@ static void (*s_drawListPreprocess[GxuSorts_Last])(GxDrawListEntry*, const C3Vec
 // STATIC: %0x00BBD4BC
 static int (*s_drawListSorters[GxuSorts_Last])(const void*, const void*) = { DrawListSorterB2F, DrawListSorterVtxStream };
 
-// PROVEN: d10f29a8 IDENTICAL
-// OFFSET: 0x009FCE20
+// PROVEN: d10f29a8 IDENTICAL/NONE
+// OFFSET: 0x009FCE20/0x14090FD50
 EGxApi GxDefaultApi() {
     return GxApi_D3d9;
 }
@@ -111,8 +111,8 @@ int32_t GxApiSupported(EGxApi api) {
     }
 }
 
-// PROVEN: 499fbf97 IDENTICAL
-// OFFSET: 0x00840010
+// PROVEN: 499fbf97 IDENTICAL/NONE
+// OFFSET: 0x00840010/0x14056BE00
 uint32_t GxVertexSize(EGxVertexBufferFormat format) {
     return Buffer::s_vertexBufDesc[format].size;
 }
@@ -137,8 +137,8 @@ int32_t GxAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode) {
     return CGxDevice::AdapterDesktopMode(monitor, mode);
 }
 
-// PROVEN: 9ff17c0c IDENTICAL
-// OFFSET: 0x0083FF60
+// PROVEN: 9ff17c0c IDENTICAL/NONE
+// OFFSET: 0x0083FF60/0x14056BD50
 EGxApi GxGetRequestedApi() {
     return s_requestedApi;
 }
@@ -153,7 +153,7 @@ uint32_t GxAdapterMonitorCount() {
     return CGxDevice::AdapterMonitorCount();
 }
 
-// PROVEN: 3e28b123 IDENTICAL
+// PROVEN: 3e28b123 IDENTICAL/NONE
 // OFFSET: 0x0083FFD0
 int32_t GxAdapterMonitorName(uint32_t monitor, char* name, uint32_t size) {
     return CGxDevice::AdapterMonitorName(monitor, name, size);
@@ -173,19 +173,19 @@ void GxStartUp() {
     CGxDevice::s_cursor[0] = 0x1000000;
 }
 
-// PROVEN: 8aa14420 IDENTICAL
-// OFFSET: 0x00840190
+// PROVEN: 8aa14420 IDENTICAL/NONE
+// OFFSET: 0x00840190/0x14056BFC0
 bool GxDevExists() {
     return g_theGxDevicePtr != NULL;
 }
 
-// PROVEN: 7a80fc4f IDENTICAL
-// OFFSET: 0x008401A0
+// PROVEN: 7a80fc4f IDENTICAL/NONE
+// OFFSET: 0x008401A0/0x14056BFD0
 void* GxDevWindow() {
     return g_theGxDevicePtr->DeviceWindow();
 }
 
-// PROVEN: 1e2e22aa IDENTICAL
+// PROVEN: 1e2e22aa IDENTICAL/NONE
 // OFFSET: 0x008401C0
 void GxPrimUnlockIndexPtr() {
     s_lockIndexCount = 0;
@@ -196,8 +196,8 @@ void GxSceneClearToViewport(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->SceneClearToViewport(mask, color);
 }
 
-// PROVEN: 4e9baa2f IDENTICAL
-// OFFSET: 0x00840340
+// PROVEN: 4e9baa2f IDENTICAL/NONE
+// OFFSET: 0x00840340/0x14056C180
 void GxTexFlags(const CGxTex* texId, CGxTexFlags& flags) {
     g_theGxDevicePtr->TexFlags(texId, flags);
 }
@@ -231,7 +231,7 @@ uint32_t GxVertexAttribOffset(EGxVertexBufferFormat format, EGxVertexAttrib attr
     return Buffer::s_vertexBufDesc[format].attribPtrs[attrib]->m_offset;
 }
 
-// PROVEN: 279d59d0 IDENTICAL
+// PROVEN: 279d59d0 IDENTICAL/NONE
 // OFFSET: 0x00840030
 int32_t GxVertexHasAttrib(EGxVertexBufferFormat format, EGxVertexAttrib attrib) {
     return Buffer::s_vertexBufDesc[format].attribPtrs[attrib] != NULL;
@@ -432,14 +432,14 @@ int32_t GxTexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const 
     return g_theGxDevicePtr->TexCopy(source, dest, destPos, sourcePos, size, level, plane);
 }
 
-// PROVEN: 667a2867 IDENTICAL
-// OFFSET: 0x00840410
+// PROVEN: 667a2867 IDENTICAL/NONE
+// OFFSET: 0x00840410/0x14056C270
 int32_t GxTexReusable(CGxTex* texId) {
     return texId && texId->m_char5D && !texId->m_flags.m_renderTarget && texId->m_target == GxTex_2d && texId->m_format <= GxTex_Dxt5;
 }
 
-// PROVEN: 9a55cb5d IDENTICAL
-// OFFSET: 0x00840440
+// PROVEN: 9a55cb5d IDENTICAL/NONE
+// OFFSET: 0x00840440/0x14056C2A0
 int32_t GxTexReusable(CGxTexParms& parms) {
     return !parms.m_flags.m_renderTarget && parms.m_target == GxTex_2d && parms.m_format <= GxTex_Dxt5;
 }
@@ -459,8 +459,8 @@ void GxSetMaxFPS(uint32_t maxFPS) {
     s_maxFPS = maxFPS;
 }
 
-// PROVEN: 2bd4c84f IDENTICAL
-// OFFSET: 0x0084AEF0
+// PROVEN: 2bd4c84f IDENTICAL/NONE
+// OFFSET: 0x0084AEF0/0x140579590
 uint32_t GxGetMaxFPS() {
     return s_maxFPS;
 }
@@ -470,14 +470,14 @@ void GxSetMaxFPSBk(uint32_t maxFPSBk) {
     s_maxFPSBk = maxFPSBk;
 }
 
-// PROVEN: 25b261fc IDENTICAL
-// OFFSET: 0x0084AF10
+// PROVEN: 25b261fc IDENTICAL/NONE
+// OFFSET: 0x0084AF10/0x1405795B0
 uint32_t GxGetMaxFPSBk() {
     return s_maxFPSBk;
 }
 
-// PROVEN: cd178014 IDENTICAL
-// OFFSET: 0x00840660
+// PROVEN: cd178014 IDENTICAL/NONE
+// OFFSET: 0x00840660/0x14056C480
 BlitFormat GxGetBlitFormat(EGxTexFormat format) {
     return s_blitFormats[format];
 }
@@ -543,7 +543,7 @@ void GxXformViewProj(C44Matrix& matrix) {
     matrix = view * proj;
 }
 
-// PROVEN: 67242db9 IDENTICAL
+// PROVEN: 67242db9 IDENTICAL/NONE
 // OFFSET: 0x004DFB80
 CGxBuf* GxBufStream(EGxPoolTarget target, uint32_t itemSize, uint32_t itemCount) {
     return g_theGxDevicePtr->BufStream(target, itemSize, itemCount);
@@ -554,8 +554,8 @@ void GxXformPush(EGxXform xf, const C44Matrix& matrix) {
     g_theGxDevicePtr->XformPushAndSet(xf, matrix);
 }
 
-// PROVEN: 6ed57f00 IDENTICAL
-// OFFSET: 0x00840260
+// PROVEN: 6ed57f00 IDENTICAL/NONE
+// OFFSET: 0x00840260/0x14056C0B0
 void GxTexSetCannotUpdate(CGxTex* texId) {
     g_theGxDevicePtr->TexSetCannotUpdate(texId);
 }
@@ -565,14 +565,14 @@ void GxTexSetUserData(CGxTex* texId, GxTexUserFunc userFunc, void* userArg) {
     g_theGxDevicePtr->TexSetUserData(texId, userFunc, userArg);
 }
 
-// PROVEN: 7f5a64e7 IDENTICAL
-// OFFSET: 0x00840300
+// PROVEN: 7f5a64e7 IDENTICAL/NONE
+// OFFSET: 0x00840300/0x14056C140
 void GxTexParameters(const CGxTex* texId, CGxTexParms& parms) {
     g_theGxDevicePtr->TexParameters(texId, parms);
 }
 
-// PROVEN: 8f86faee IDENTICAL
-// OFFSET: 0x00840320
+// PROVEN: 8f86faee IDENTICAL/NONE
+// OFFSET: 0x00840320/0x14056C0C0
 void GxTexSetDataFormat(CGxTex* texId, EGxTexFormat dataFormat) {
     g_theGxDevicePtr->TexSetDataFormat(texId, dataFormat);
 }
@@ -585,8 +585,8 @@ void GxPrimIndexPtr(uint32_t indexCount, const uint16_t* indices) {
     g_theGxDevicePtr->PrimIndexPtr(buf);
 }
 
-// PROVEN: bafaed16 IDENTICAL
-// OFFSET: 0x00840E70
+// PROVEN: bafaed16 IDENTICAL/NONE
+// OFFSET: 0x00840E70/0x14056CE50
 void GxTexUpdate(CGxTex* texId, int32_t minX, int32_t minY, int32_t maxX, int32_t maxY, int32_t immediate) {
     CiRect rect;
     rect.minY = minY;
@@ -607,8 +607,8 @@ void GxPrimLockIndexPtr(EGxPrim primType, uint32_t indexCount, const uint16_t* i
     g_theGxDevicePtr->PrimIndexPtr(buf);
 }
 
-// PROVEN: 1a91e93b IDENTICAL
-// OFFSET: 0x00840240
+// PROVEN: 1a91e93b IDENTICAL/NONE
+// OFFSET: 0x00840240/0x14056C090
 void GxTexUpdate(CGxTex* texId, CiRect& updateRect, int32_t immediate) {
     g_theGxDevicePtr->TexMarkForUpdate(texId, updateRect, immediate);
 }
@@ -778,20 +778,20 @@ void GxPrimVertexPtr(uint32_t vertexCount, const C3Vector* pos, uint32_t posStri
     g_theGxDevicePtr->PrimVertexPtr(buf, format);
 }
 
-// PROVEN: ac687f8c IDENTICAL
-// OFFSET: 0x008414A0
+// PROVEN: ac687f8c IDENTICAL/NONE
+// OFFSET: 0x008414A0/0x14056D7E0
 void GxPrimLockVertexPtrs(uint32_t vertexCount, const C3Vector* pos, uint32_t posStride, const C3Vector* normal, uint32_t normalStride, const CImVector* color, uint32_t colorStride, const uint8_t* bone, uint32_t boneStride, const C2Vector* tex0, uint32_t tex0Stride, const C2Vector* tex1, uint32_t tex1Stride) {
     s_lockVertexCount = vertexCount;
     GxPrimVertexPtr(vertexCount, pos, posStride, normal, normalStride, color, colorStride, tex0, tex0Stride, tex1, tex1Stride);
 }
 
-// PROVEN: c0677a59 IDENTICAL
+// PROVEN: c0677a59 IDENTICAL/NONE
 // OFFSET: 0x0040A240
 void GxRsSet(EGxRenderState which, void* value) {
     g_theGxDevicePtr->RsSet(which, value);
 }
 
-// PROVEN: 6e1bbc79 IDENTICAL
+// PROVEN: 6e1bbc79 IDENTICAL/NONE
 // OFFSET: 0x0040B070
 void GxRsSet(EGxRenderState which, CGxShader* shader, uint32_t permute) {
     g_theGxDevicePtr->RsSet(which, &shader->m_permutes[permute]);
@@ -845,14 +845,14 @@ void GxRsSet(EGxRenderState which, float value) {
     }
 }
 
-// PROVEN: 3f48e3a1 IDENTICAL
-// OFFSET: 0x008402A0
+// PROVEN: 3f48e3a1 IDENTICAL/NONE
+// OFFSET: 0x008402A0/0x14056C0E0
 void GxTexSetFlags(CGxTex* texId, CGxTexFlags flags) {
     g_theGxDevicePtr->TexSetFlags(texId, flags);
 }
 
-// PROVEN: 26292652 IDENTICAL
-// OFFSET: 0x008402C0
+// PROVEN: 26292652 IDENTICAL/NONE
+// OFFSET: 0x008402C0/0x14056C100
 void GxTexSetWrap(CGxTex* texId, EGxTexWrapMode wrapU, EGxTexWrapMode wrapV) {
     g_theGxDevicePtr->TexSetWrap(texId, wrapU, wrapV);
 }
@@ -867,8 +867,8 @@ void GxLogClose() {
     CGxDevice::LogClose();
 }
 
-// PROVEN: ba2cc9bf IDENTICAL
-// OFFSET: 0x00840690
+// PROVEN: ba2cc9bf IDENTICAL/NONE
+// OFFSET: 0x00840690/0x14056C4B0
 void GxLog(const char* format, ...) {
     va_list args;
     va_start(args, format);
@@ -931,7 +931,7 @@ void GxXformSet(EGxXform xf, const C44Matrix& matrix) {
     stack.m_mtx[stack.m_level] = matrix;
 }
 
-// PROVEN: 70dce4f2 IDENTICAL
+// PROVEN: 70dce4f2 IDENTICAL/NONE
 // OFFSET: 0x00481C90
 void GxReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
     g_theGxDevicePtr->DeviceReadPixels(rect, pixels);
@@ -1004,8 +1004,8 @@ void GxuClearDrawList(EGxuDrawListCategory category) {
     s_drawListBusy = false;
 }
 
-// PROVEN: 67a59497 IDENTICAL
-// OFFSET: 0x00613040
+// PROVEN: 67a59497 IDENTICAL/NONE
+// OFFSET: 0x00613040/0x14029E570
 void GxuFlushDrawList(EGxuDrawListCategory category, const C3Vector& viewPos) {
     GxuDrawListState* current = NULL;
 
@@ -1037,16 +1037,16 @@ void GxScenePresent(void* window) {
     g_theGxDevicePtr->ScenePresent(window);
 }
 
-// PROVEN: d1f6e7b8 IDENTICAL
-// OFFSET: 0x00840160
+// PROVEN: d1f6e7b8 IDENTICAL/NONE
+// OFFSET: 0x00840160/0x14056BF80
 void GxDevDestroy() {
     g_theGxDevicePtr->DeviceDestroy();
     delete g_theGxDevicePtr;
     g_theGxDevicePtr = NULL;
 }
 
-// PROVEN: 373b8e21 IDENTICAL
-// OFFSET: 0x008401B0
+// PROVEN: 373b8e21 IDENTICAL/NONE
+// OFFSET: 0x008401B0/0x14056BFE0
 void GxPrimUnlockVertexPtrs() {
     s_lockVertexCount = 0;
 }

@@ -3,7 +3,7 @@
 // STATIC: %0x00B40A58
 const DBCMeta SoundEntriesRec::s_meta = { "DBFilesClient\\SoundEntries.dbc", 16, 136, SoundEntriesRec::FixupStrings, 0 };
 
-// PROVEN: d7c0fcc1 IDENTICAL
+// PROVEN: d7c0fcc1 IDENTICAL/NONE
 // OFFSET: 0x00A3B770
 void SoundEntriesRec::FixupStrings(void* record, const char* strings) {
     SoundEntriesRec* rec = static_cast<SoundEntriesRec*>(record);

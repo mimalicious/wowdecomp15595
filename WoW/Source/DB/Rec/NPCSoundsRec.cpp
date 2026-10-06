@@ -3,7 +3,7 @@
 // STATIC: %0x00B45B8C
 const DBCMeta NPCSoundsRec::s_meta = { "DBFilesClient\\NPCSounds.dbc", 2, 20, NPCSoundsRec::FixupStrings, 0 };
 
-// PROVEN: 954e42c9 IDENTICAL
+// PROVEN: 954e42c9 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void NPCSoundsRec::FixupStrings(void* record, const char* strings) {
 }

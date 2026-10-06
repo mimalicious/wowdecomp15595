@@ -170,8 +170,8 @@ bool Blizzard::Streaming::ScanDirectoryForManifest(const Blizzard::File::Process
     return true;
 }
 
-// PROVEN: 14c027df IDENTICAL
-// OFFSET: 0x007ABF30
+// PROVEN: 14c027df IDENTICAL/IDENTICAL
+// OFFSET: 0x007ABF30/0x1404A1E00
 bool Blizzard::Streaming::IsStreamingMode() {
     return Blizzard::Streaming::s_streamingReady;
 }
@@ -275,7 +275,7 @@ int32_t Blizzard::Streaming::StreamingX::GetLowCommandIntervalStep() {
     return step;
 }
 
-// PROVEN: 9c1c3fbf IDENTICAL
+// PROVEN: 9c1c3fbf IDENTICAL/NONE
 // OFFSET: 0x007ABF50
 void Blizzard::Streaming::DownloadProgress::Sample(uint32_t time) {
     if (++this->m_index >= 51) {

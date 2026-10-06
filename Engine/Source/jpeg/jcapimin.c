@@ -89,7 +89,7 @@ void jpeg_CreateCompress(j_compress_ptr cinfo, int version, size_t structsize) {
  * Destruction of a JPEG compression object
  */
 
-// PROVEN: 7f71c312 IDENTICAL
+// PROVEN: 7f71c312 IDENTICAL/NONE
 // OFFSET: 0x00B5D4B0
 void jpeg_destroy_compress(j_compress_ptr cinfo) {
   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
@@ -118,8 +118,8 @@ void jpeg_abort_compress(j_compress_ptr cinfo) {
  * jcparam.o would be linked whether the application used it or not.
  */
 
-// PROVEN: 264ea700 IDENTICAL
-// OFFSET: 0x00B5D4C0
+// PROVEN: 264ea700 IDENTICAL/NONE
+// OFFSET: 0x00B5D4C0/0x140925F10
 void jpeg_suppress_tables(j_compress_ptr cinfo, boolean suppress) {
   int i;
   JQUANT_TBL * qtbl;
@@ -146,8 +146,8 @@ void jpeg_suppress_tables(j_compress_ptr cinfo, boolean suppress) {
  * work including most of the actual output.
  */
 
-// PROVEN: 988ec165 IDENTICAL
-// OFFSET: 0x00B5D530
+// PROVEN: 988ec165 IDENTICAL/NONE
+// OFFSET: 0x00B5D530/0x140925F70
 void jpeg_finish_compress(j_compress_ptr cinfo) {
   JDIMENSION iMCU_row;
 
@@ -207,8 +207,8 @@ void jpeg_finish_compress(j_compress_ptr cinfo) {
  * first call to jpeg_write_scanlines() or jpeg_write_raw_data().
  */
 
-// PROVEN: 9359e134 IDENTICAL
-// OFFSET: 0x00B5D690
+// PROVEN: 9359e134 IDENTICAL/NONE
+// OFFSET: 0x00B5D690/0x1409260D0
 void jpeg_write_marker(j_compress_ptr cinfo, int marker, const JOCTET *dataptr, unsigned int datalen) {
   JMETHOD(void, write_marker_byte, (j_compress_ptr info, int val));
 

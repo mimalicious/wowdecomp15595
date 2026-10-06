@@ -208,32 +208,32 @@ void SRWLock::SURWLockLeave(volatile SURWLOCK* surwlock, int32_t fromwriting) {
     }
 }
 
-// PROVEN: b5ed1be4 IDENTICAL
-// OFFSET: 0x004BB400
+// PROVEN: b5ed1be4 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB400/0x1400F4220
 SCritSect::SCritSect() {
     InitializeCriticalSection(&this->m_critsect);
 }
 
-// PROVEN: 8df3408f IDENTICAL
-// OFFSET: 0x004BB410
+// PROVEN: 8df3408f IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB410/0x1400F4240
 SCritSect::~SCritSect() {
     DeleteCriticalSection(&this->m_critsect);
 }
 
-// PROVEN: eb88a18d IDENTICAL
-// OFFSET: 0x004BB420
+// PROVEN: eb88a18d IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB420/0x1400F4250
 void SCritSect::Enter() {
     EnterCriticalSection(&this->m_critsect);
 }
 
-// PROVEN: 57b9e440 IDENTICAL
-// OFFSET: 0x004BB430
+// PROVEN: 57b9e440 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB430/0x1400F4260
 void SCritSect::Leave() {
     LeaveCriticalSection(&this->m_critsect);
 }
 
-// PROVEN: b04316f3 IDENTICAL
-// OFFSET: 0x004BB460
+// PROVEN: b04316f3 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB460/0x1402C71C0
 SSyncObject::SSyncObject() {
     this->m_opaqueData = NULL;
 }
@@ -243,13 +243,13 @@ void CSRWLock::Leave(int32_t fromwriting) {
     SRWLock::SURWLockLeave(&this->m_opaqueData, fromwriting);
 }
 
-// PROVEN: 439612b1 IDENTICAL
-// OFFSET: 0x004BB470
+// PROVEN: 439612b1 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB470/0x1400F4270
 int32_t SSyncObject::Valid() {
     return this->m_opaqueData != NULL;
 }
 
-// PROVEN: aa98d2fe IDENTICAL
+// PROVEN: aa98d2fe IDENTICAL/NONE
 // OFFSET: 0x004BB4A0
 uint32_t SSyncObject::Wait(uint32_t timeout) {
     return WaitForSingleObject(this->m_opaqueData, timeout);
@@ -274,27 +274,28 @@ uint32_t STORMAPI SSyncObject::WaitMultiplePtr(uint32_t count, SSyncObject** obj
     return WaitForMultipleObjects(handleCount, handles, waitAll, timeout);
 }
 
-// PROVEN: 9a1fa5ca IDENTICAL
-// OFFSET: 0x004BB520
+// PROVEN: 9a1fa5ca IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB520/0x1404A31A0
 int32_t SEvent::Set() {
     return SetEvent(this->m_opaqueData);
 }
 
-// PROVEN: 215eee52 IDENTICAL
-// OFFSET: 0x004BB530
+// PROVEN: 215eee52 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB530/0x1400F4330
 int32_t SEvent::Reset() {
     return ResetEvent(this->m_opaqueData);
 }
 
-// PROVEN: 470f00f2 IDENTICAL
-// OFFSET: 0x004BB540
+// PROVEN: 470f00f2 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB540/0x1400F4340
 int32_t SThread::Create(uint32_t (STORMAPI* threadProc)(void*), void* param, SThread& thread, char* threadName, uint32_t stackSize) {
     uint32_t threadId;
     thread.m_opaqueData = SCreateThread(threadProc, param, &threadId, NULL, NULL, stackSize);
     return thread.m_opaqueData != NULL;
 }
 
-// OFFSET: %0x004C1CA0
+// PROVEN: ab2fa1bd DIFFERENT/IDENTICAL
+// OFFSET: 0x004BB570/0x1400F4380
 int32_t SThread::SetPriority(int32_t priority) {
     static const int32_t priorities[] = { THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL, THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST, THREAD_PRIORITY_TIME_CRITICAL };
 
@@ -305,8 +306,8 @@ int32_t SThread::SetPriority(int32_t priority) {
     return 0;
 }
 
-// PROVEN: 0415e2d9 IDENTICAL
-// OFFSET: 0x004BB5A0
+// PROVEN: 0415e2d9 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB5A0/0x1400F43A0
 int32_t SSemaphore::Signal(uint32_t count) {
     return ReleaseSemaphore(this->m_opaqueData, count, NULL);
 }
@@ -325,8 +326,8 @@ void SMutex::Create(int32_t initialOwner, const char* name) {
     }
 }
 
-// PROVEN: a7d7ca2a IDENTICAL
-// OFFSET: 0x004BB610
+// PROVEN: a7d7ca2a IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB610/0x1400F43B0
 int32_t SMutex::Release() {
     return ReleaseMutex(this->m_opaqueData);
 }
@@ -389,8 +390,8 @@ CSRWLock::~CSRWLock() {
     SRWLock::IOsRWLockDecRef();
 }
 
-// PROVEN: 9fdf7b70 IDENTICAL
-// OFFSET: 0x004BB480
+// PROVEN: 9fdf7b70 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB480/0x1400F4280
 SSyncObject::~SSyncObject() {
     if (this->m_opaqueData) {
         CloseHandle(this->m_opaqueData);
@@ -414,8 +415,8 @@ SEvent::SEvent(int32_t manualReset, int32_t initialState) {
     }
 }
 
-// PROVEN: 7fed7c6a IDENTICAL
-// OFFSET: 0x004BB720
+// PROVEN: 7fed7c6a IDENTICAL/IDENTICAL
+// OFFSET: 0x004BB720/0x1400F49C0
 SSemaphore::SSemaphore(int32_t initialCount, int32_t maximumCount) {
     this->m_opaqueData = CreateSemaphoreA(NULL, initialCount, maximumCount, NULL);
 }
@@ -585,7 +586,7 @@ void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     }
 }
 
-// PROVEN: 1055bb99 IDENTICAL
+// PROVEN: 1055bb99 IDENTICAL/NONE
 // OFFSET: 0x004BBC60
 void CSRWLock::Enter(int32_t forwriting) {
     SRWLock::SURWLockEnter(&this->m_opaqueData, forwriting);

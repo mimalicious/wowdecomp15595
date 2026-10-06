@@ -23,7 +23,7 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 40da6ea5 IDENTICAL
+// PROVEN: 40da6ea5 IDENTICAL/NONE
 // OFFSET: 0x00ACEF90
 Listener::Listener()
 {

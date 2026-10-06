@@ -4,7 +4,7 @@
 GxuScene::~GxuScene() {
 }
 
-// PROVEN: 30d1ff52 IDENTICAL
+// PROVEN: 30d1ff52 IDENTICAL/NONE
 // OFFSET: 0x00612E10
 void GxuScene::Clear() {
     for (uint32_t i = 0; i < this->m_objects.Count(); i++) {
@@ -53,8 +53,8 @@ void GxuScene::Update(uint32_t time) {
     this->m_lastUpdateTime = time;
 }
 
-// PROVEN: 6ba8406f IDENTICAL
-// OFFSET: 0x00612970
+// PROVEN: 6ba8406f IDENTICAL/NONE
+// OFFSET: 0x00612970/0x14029DBF0
 void GxuScene::Render() {
     for (uint32_t i = 0; i < this->m_objects.Count(); i++) {
         this->m_objects[i]->Render();

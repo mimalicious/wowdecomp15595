@@ -60,7 +60,7 @@ static const char* s_lfgTypeTokens[7] = {
 // STATIC: #0x00BEACD0
 static char s_rewardItemTexture[260];
 
-// PROVEN: a5d876ec IDENTICAL
+// PROVEN: a5d876ec IDENTICAL/NONE
 // OFFSET: 0x00981850
 static int32_t Script_GetLFGRoles(lua_State* L) {
     if (s_cvLfgSelectedRoles) {

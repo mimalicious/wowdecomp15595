@@ -36,15 +36,15 @@ void Liquid::ClearGeomFactories() {
     Liquid::s_chunkGeomFactoryAllocator.Clear(".?AVCChunkGeomFactory@Liquid@@", SLOG_OBJECT, 1);
 }
 
-// PROVEN: b7f72e2d IDENTICAL
-// OFFSET: 0x0076CA30
+// PROVEN: b7f72e2d IDENTICAL/NONE
+// OFFSET: 0x0076CA30/0x140455020
 void Liquid::CMeshGeomFactory::Purge() {
     if (this->m_mapObjGroup) {
         this->m_mapObjGroup->FreeLiquidVB();
     }
 }
 
-// PROVEN: e317597c IDENTICAL
+// PROVEN: e317597c IDENTICAL/NONE
 // OFFSET: 0x0076CB40
 void Liquid::CChunkGeomFactory::Purge() {
     if (this->m_buf) {
@@ -69,7 +69,7 @@ void Liquid::CChunkGeomFactory::Release() {
     }
 }
 
-// PROVEN: 2e86dee9 IDENTICAL
+// PROVEN: 2e86dee9 IDENTICAL/NONE
 // OFFSET: 0x0076D470
 bool Liquid::CChunkGeomFactory::SetTransform(C44Matrix* transform) {
     if (this->m_transform == *transform) {
@@ -335,8 +335,8 @@ void Liquid::CChunkGeomFactory::GetBuffers(EGxVertexBufferFormat format, CGxBuf*
     this->m_dirty = 0;
 }
 
-// PROVEN: ff32c215 IDENTICAL
-// OFFSET: 0x007AAB20
+// PROVEN: ff32c215 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAB20/0x1402B9E40
 bool Liquid::CMeshGeomFactory::SetTransform(C44Matrix* transform) {
     return false;
 }

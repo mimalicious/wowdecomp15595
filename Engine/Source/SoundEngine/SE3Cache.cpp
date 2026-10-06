@@ -55,13 +55,13 @@ SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 // STATIC: %0x00D0E20C
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
-// PROVEN: 9329de35 IDENTICAL
+// PROVEN: 9329de35 IDENTICAL/NONE
 // OFFSET: 0x007153C0
 void SE3::SetMaxCacheSizeInBytes(int32_t size) {
     SE3::sm_nMaxCacheSizeInBytes = size;
 }
 
-// PROVEN: a622bc94 IDENTICAL
+// PROVEN: a622bc94 IDENTICAL/NONE
 // OFFSET: 0x007153D0
 void SE3::SetMaxCacheableSizeInBytes(uint32_t size) {
     SE3::sm_uMaxCacheableSize = size;
@@ -108,8 +108,8 @@ static FMOD_RESULT F_CALLBACK SEReadCallback(void* handle, void* buffer, unsigne
     return SErrGetLastError() == 38 ? FMOD_ERR_FILE_EOF : FMOD_ERR_INTERNAL;
 }
 
-// PROVEN: 9c458ad0 IDENTICAL
-// OFFSET: 0x00715730
+// PROVEN: 9c458ad0 IDENTICAL/NONE
+// OFFSET: 0x00715730/0x1403E8480
 static FMOD_RESULT F_CALLBACK SESeekCallback(void* handle, unsigned int pos, void* userdata) {
     SFile::SetFilePointer(static_cast<SFileImpl*>(handle), pos, NULL, 0);
     return FMOD_OK;
@@ -532,7 +532,7 @@ void SE3::ProcessWaveDataNodeDeleteList(int32_t elapsed, int32_t force) {
     }
 }
 
-// PROVEN: 1bd576ea IDENTICAL
+// PROVEN: 1bd576ea IDENTICAL/NONE
 // OFFSET: 0x00716BF0
 void SE3::SetReverb(const SE3_REVERB_PROPERTIES* properties) {
     if (SE3::sm_pGameSystem) {
@@ -540,40 +540,40 @@ void SE3::SetReverb(const SE3_REVERB_PROPERTIES* properties) {
     }
 }
 
-// PROVEN: 6ce5932a IDENTICAL
+// PROVEN: 6ce5932a IDENTICAL/NONE
 // OFFSET: 0x00716C10
 FMOD_RESULT SE3::CreateDSPByType(SE3_DSP_TYPE type, void** dsp) {
     return SE3::sm_pGameSystem->createDSPByType(type, reinterpret_cast<FMOD::DSP**>(dsp));
 }
 
-// PROVEN: ab383207 IDENTICAL
+// PROVEN: ab383207 IDENTICAL/NONE
 // OFFSET: 0x00716C30
 FMOD_RESULT SE3::SetDspParam(void* dsp, int32_t index, float value) {
     return static_cast<FMOD::DSP*>(dsp)->setParameter(index, value);
 }
 
-// PROVEN: 8ea572e5 IDENTICAL
+// PROVEN: 8ea572e5 IDENTICAL/NONE
 // OFFSET: 0x00716C50
 FMOD_RESULT SE3::BypassDsp(void* dsp, bool bypass) {
     return static_cast<FMOD::DSP*>(dsp)->setBypass(bypass);
 }
 
-// PROVEN: ec08a0ca IDENTICAL
+// PROVEN: ec08a0ca IDENTICAL/NONE
 // OFFSET: 0x00716C70
 FMOD_RESULT SE3::EnableDSP(void* dsp, bool active) {
     return static_cast<FMOD::DSP*>(dsp)->setActive(active);
 }
 
-// PROVEN: eada81e0 IDENTICAL
-// OFFSET: 0x00716C90
+// PROVEN: eada81e0 IDENTICAL/NONE
+// OFFSET: 0x00716C90/0x1403EA140
 FMOD_RESULT SE3::DspDestroy(void* dsp) {
     static_cast<FMOD::DSP*>(dsp)->remove();
     static_cast<FMOD::DSP*>(dsp)->release();
     return FMOD_OK;
 }
 
-// PROVEN: eec84d60 IDENTICAL
-// OFFSET: 0x00716CB0
+// PROVEN: eec84d60 IDENTICAL/NONE
+// OFFSET: 0x00716CB0/0x1403EA160
 FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     FMOD::DSP* head;
     FMOD::DSP* output;
@@ -587,7 +587,7 @@ FMOD_RESULT SE3::ConnectDspToChannelGroup(void* dsp, void* channelGroup) {
     return FMOD_OK;
 }
 
-// PROVEN: 206719e8 IDENTICAL
+// PROVEN: 206719e8 IDENTICAL/NONE
 // OFFSET: 0x00716D00
 int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     int numChannels = 0;
@@ -595,7 +595,7 @@ int32_t SE3::GetChannelGroupNumChannels(void* channelGroup) {
     return numChannels;
 }
 
-// PROVEN: e0d5fdfc IDENTICAL
+// PROVEN: e0d5fdfc IDENTICAL/NONE
 // OFFSET: 0x00716D20
 void* SE3::CreateChannelGroup(const char* name) {
     FMOD::ChannelGroup* channelGroup = NULL;
@@ -603,19 +603,19 @@ void* SE3::CreateChannelGroup(const char* name) {
     return channelGroup;
 }
 
-// PROVEN: 238dcca3 IDENTICAL
+// PROVEN: 238dcca3 IDENTICAL/NONE
 // OFFSET: 0x00716D50
 FMOD_RESULT SE3::DestroyChannelGroup(void* channelGroup) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->release();
 }
 
-// PROVEN: 40960923 IDENTICAL
+// PROVEN: 40960923 IDENTICAL/NONE
 // OFFSET: 0x00716D60
 FMOD_RESULT SE3::AddChannelToChannelGroup(void* channel, void* channelGroup) {
     return static_cast<FMOD::Channel*>(channel)->setChannelGroup(static_cast<FMOD::ChannelGroup*>(channelGroup));
 }
 
-// PROVEN: 2823cd42 IDENTICAL
+// PROVEN: 2823cd42 IDENTICAL/NONE
 // OFFSET: 0x00716D80
 FMOD_RESULT SE3::SetFMODChannelGroupVolume(void* channelGroup, float volume) {
     return static_cast<FMOD::ChannelGroup*>(channelGroup)->setVolume(volume);

@@ -22,8 +22,8 @@ static void CopyMd5(uint8_t* dest, const uint8_t* source) {
     }
 }
 
-// PROVEN: 4ea3e41b IDENTICAL
-// OFFSET: 0x00446400
+// PROVEN: 4ea3e41b IDENTICAL/NONE
+// OFFSET: 0x00446400/0x1400523E0
 BannedAddOnCache::BannedAddOnCache() {
     this->m_id = 0;
     this->m_lastModified = 0;
@@ -31,8 +31,8 @@ BannedAddOnCache::BannedAddOnCache() {
     memcpy(this->m_versionMd5, s_emptyMd5, sizeof(this->m_versionMd5));
 }
 
-// PROVEN: 9e983ba2 IDENTICAL
-// OFFSET: 0x00446460
+// PROVEN: 9e983ba2 IDENTICAL/NONE
+// OFFSET: 0x00446460/0x140052420
 BannedAddOnCache& BannedAddOnCache::operator=(const BannedAddOnCache& source) {
     this->m_id = source.m_id;
     memcpy(this->m_nameMd5, source.m_nameMd5, sizeof(this->m_nameMd5));
@@ -197,8 +197,8 @@ BannedAddOnCache* FindBannedAddOn(const char* name, const char* version) {
     return NULL;
 }
 
-// PROVEN: 31447c10 IDENTICAL
-// OFFSET: 0x00446BC0
+// PROVEN: 31447c10 IDENTICAL/NONE
+// OFFSET: 0x00446BC0/0x140052CB0
 bool IsBannedAddOn(const char* name, const char* version) {
     return FindBannedAddOn(name, version) != NULL;
 }
@@ -316,8 +316,8 @@ static int32_t LoadCache() {
     return 1;
 }
 
-// PROVEN: 03e00bcb IDENTICAL
-// OFFSET: 0x004478A0
+// PROVEN: 03e00bcb IDENTICAL/NONE
+// OFFSET: 0x004478A0/0x1400540B0
 int32_t LoadBannedAddOns() {
     LoadDatabase();
 

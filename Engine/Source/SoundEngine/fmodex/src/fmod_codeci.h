@@ -101,19 +101,19 @@ namespace FMOD
         bool                        mXMASeekable;
         #endif
 
-        // PROVEN: 44ade573 IDENTICAL
-        // OFFSET: 0x00A9FF70
+        // PROVEN: 44ade573 IDENTICAL/NONE
+        // OFFSET: 0x00A9FF70/0x1408606B0
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultFileRead     (void *handle, void *buffer, unsigned int size, unsigned int *read, void *userdata) { return ((File *)handle)->read(buffer, 1, size, read); }
-        // PROVEN: 3a34e12d IDENTICAL
+        // PROVEN: 3a34e12d IDENTICAL/NONE
         // OFFSET: 0x00A9FF90
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultFileSeek     (void *handle, unsigned int pos, void *userdata) { return ((File *)handle)->seek(pos, SEEK_SET); }
 #ifndef PLATFORM_PS3_SPU
-        // PROVEN: 0c5ed76c IDENTICAL
-        // OFFSET: 0x00A9FFB0
+        // PROVEN: 0c5ed76c IDENTICAL/NONE
+        // OFFSET: 0x00A9FFB0/0x1408606E0
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultMetaData     (FMOD_CODEC_STATE *codec, FMOD_TAGTYPE type, char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, int unique) { return ((Codec *)codec)->metaData(type, name, data, datalen, datatype, unique == 1 ? true : false); }
 #endif
-        // PROVEN: 5f367937 IDENTICAL
-        // OFFSET: 0x00A93000
+        // PROVEN: 5f367937 IDENTICAL/NONE
+        // OFFSET: 0x00A93000/0x140852C70
         static FMOD_INLINE FMOD_RESULT F_CALLBACK defaultGetWaveFormat(FMOD_CODEC_STATE *codec, int index, FMOD_CODEC_WAVEFORMAT *waveformat_out)
         {
             if (!codec->waveformat)
@@ -177,8 +177,8 @@ namespace FMOD
             }
         }
 #endif
-        // PROVEN: b21df468 IDENTICAL
-        // OFFSET: 0x00A80200
+        // PROVEN: b21df468 IDENTICAL/NONE
+        // OFFSET: 0x00A80200/0x14083C8C0
         FMOD_RESULT reset() 
         { 
             mPCMBufferOffsetBytes = 0; 

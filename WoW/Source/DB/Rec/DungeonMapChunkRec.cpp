@@ -3,7 +3,7 @@
 // STATIC: %0x00B46CB0
 const DBCMeta DungeonMapChunkRec::s_meta = { "DBFilesClient\\DungeonMapChunk.dbc", 5, 20, DungeonMapChunkRec::FixupStrings, 0 };
 
-// PROVEN: cc8cc2c5 IDENTICAL
+// PROVEN: cc8cc2c5 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void DungeonMapChunkRec::FixupStrings(void* record, const char* strings) {
 }

@@ -116,7 +116,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseBankFrame", &Script_CloseBankFrame },
 };
 
-// PROVEN: 410eade9 IDENTICAL
+// PROVEN: 410eade9 IDENTICAL/NONE
 // OFFSET: 0x009EE840
 void BankRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -124,7 +124,7 @@ void BankRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 60e6f56f IDENTICAL
+// PROVEN: 60e6f56f IDENTICAL/NONE
 // OFFSET: 0x009EE870
 void BankUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

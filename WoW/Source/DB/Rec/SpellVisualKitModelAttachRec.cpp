@@ -3,7 +3,7 @@
 // STATIC: %0x00B44B64
 const DBCMeta SpellVisualKitModelAttachRec::s_meta = { "DBFilesClient\\SpellVisualKitModelAttach.dbc", 12, 56, SpellVisualKitModelAttachRec::FixupStrings, 0 };
 
-// PROVEN: 0f032cef IDENTICAL
+// PROVEN: 0f032cef IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellVisualKitModelAttachRec::FixupStrings(void* record, const char* strings) {
 }

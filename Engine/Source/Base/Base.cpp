@@ -15,7 +15,7 @@ void BaseDestroyGlobal() {
     CStringManager::DestroyManager();
 }
 
-// OFFSET: 0x00871FE0
+// OFFSET: 0x00871FE0/0x140581DE0
 void BaseInitializeContext() {
     HandleInitialize();
 }

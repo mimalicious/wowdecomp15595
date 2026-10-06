@@ -3,7 +3,7 @@
 // STATIC: %0x00B465DC
 const DBCMeta gtOCTClassCombatRatingScalarRec::s_meta = { "DBFilesClient\\gtOCTClassCombatRatingScalar.dbc", 2, 8, gtOCTClassCombatRatingScalarRec::FixupStrings, 0 };
 
-// PROVEN: b180743c IDENTICAL
+// PROVEN: b180743c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void gtOCTClassCombatRatingScalarRec::FixupStrings(void* record, const char* strings) {
 }

@@ -492,8 +492,8 @@ LUALIB_API void luaL_addvalue (luaL_Buffer *B) {
 }
 
 
-// PROVEN: 6d21ba44 IDENTICAL
-// OFFSET: 0x00A297A0
+// PROVEN: 6d21ba44 IDENTICAL/NONE
+// OFFSET: 0x00A297A0/0x1407D15F0
 LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
   B->L = L;
   B->p = B->buffer;
@@ -638,8 +638,8 @@ typedef struct LoadS {
 } LoadS;
 
 
-// PROVEN: 6848fa7b IDENTICAL
-// OFFSET: 0x00A29930
+// PROVEN: 6848fa7b IDENTICAL/NONE
+// OFFSET: 0x00A29930/0x1407D17E0
 static const char *getS (lua_State *L, void *ud, size_t *size) {
   LoadS *ls = (LoadS *)ud;
   (void)L;

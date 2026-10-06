@@ -69,7 +69,7 @@ void CKBSystem::CacheServerMessage(const char* text, int32_t id) {
     FrameScript_SignalEvent(SCRIPT_EVENT_KNOWLEDGE_BASE_SERVER_MESSAGE, NULL);
 }
 
-// PROVEN: 687699c0 IDENTICAL
+// PROVEN: 687699c0 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBSystem::LeaveWorld() {
 }

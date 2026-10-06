@@ -18,14 +18,14 @@ ParticleSystemManager* ParticleSystemManager::s_instance;
 // STATIC: %0x00ECE0E0
 RibbonManager* RibbonManager::s_instance;
 
-// PROVEN: 9a00f6d5 IDENTICAL
+// PROVEN: 9a00f6d5 IDENTICAL/NONE
 // OFFSET: 0x00B13AD0
 float ParticleSystemManager::GetScaler() {
     return s_scaler;
 }
 
-// PROVEN: 263f2615 IDENTICAL
-// OFFSET: 0x00B13B80
+// PROVEN: 263f2615 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B13B80/0x1408D98D0
 void ParticleSystemManager::SetScaler(float scaler) {
     if (scaler < 0.0f) {
         s_scaler = 0.0f;

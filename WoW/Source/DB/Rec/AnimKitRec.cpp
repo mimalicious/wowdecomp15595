@@ -3,7 +3,7 @@
 // STATIC: %0x00B44208
 const DBCMeta AnimKitRec::s_meta = { "DBFilesClient\\AnimKit.dbc", 3, 12, AnimKitRec::FixupStrings, 0 };
 
-// PROVEN: b770d67c IDENTICAL
+// PROVEN: b770d67c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void AnimKitRec::FixupStrings(void* record, const char* strings) {
 }

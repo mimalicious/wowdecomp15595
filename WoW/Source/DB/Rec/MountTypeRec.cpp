@@ -3,7 +3,7 @@
 // STATIC: %0x00B45BBC
 const DBCMeta MountTypeRec::s_meta = { "DBFilesClient\\MountType.dbc", 2, 100, MountTypeRec::FixupStrings, 0 };
 
-// PROVEN: 64849ff8 IDENTICAL
+// PROVEN: 64849ff8 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void MountTypeRec::FixupStrings(void* record, const char* strings) {
 }

@@ -1901,8 +1901,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetPropagateKeyboardInput", &Script_GetPropagateKeyboardInput },
 };
 
-// PROVEN: ce1d91d3 IDENTICAL
-// OFFSET: 0x0050AFE0
+// PROVEN: ce1d91d3 IDENTICAL/NONE
+// OFFSET: 0x0050AFE0/0x140153420
 void CSimpleFrame::RegisterScriptMethods(lua_State* L) {
     CScriptRegion::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

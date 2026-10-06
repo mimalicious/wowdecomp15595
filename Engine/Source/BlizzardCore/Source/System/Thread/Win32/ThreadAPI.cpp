@@ -8,7 +8,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: c853f4f5 IDENTICAL
+// PROVEN: c853f4f5 IDENTICAL/NONE
 // OFFSET: 0x007DF450
 bool Blizzard::Thread::Close(ThreadRecord* thread) {
     if (thread->m_refCount.Decrement() > 0) {

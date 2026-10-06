@@ -65,7 +65,7 @@ int32_t CVehiclePassenger_C::IsWaitingForVehicleTransitionAnimGrabEvent(uint32_t
     return (flags & 0x200) && !(flags & 0x80) && (flags & 0x100) && (index == '0' || this->m_transitionAnimSeat == index - '0' - 1);
 }
 
-// PROVEN: 07d224a2 IDENTICAL
+// PROVEN: 07d224a2 IDENTICAL/NONE
 // OFFSET: 0x005ED180
 void CVehiclePassenger_C::OnVehicleRideLoopAnimEnd(CGUnit_C* unit, int32_t& done, TSGrowableArray<CVehiclePassenger_C*>& passengers) {
     done = 1;
@@ -86,7 +86,7 @@ void CVehiclePassenger_C::UpdateSmoothFacing() {
     this->m_smoothFacing = (1.0f - this->m_facingBlend) * this->m_startFacing + this->m_targetFacing * this->m_facingBlend;
 }
 
-// PROVEN: 567f5348 IDENTICAL
+// PROVEN: 567f5348 IDENTICAL/NONE
 // OFFSET: 0x005ED270
 void CVehiclePassenger_C::PostRenderUpdateAll() {
     for (CVehiclePassenger_C* passenger = s_headPassenger; passenger; passenger = passenger->m_next) {
@@ -459,8 +459,8 @@ int32_t CVehiclePassenger_C::GetLowerAnim(const VehicleSeatRec* seat) const {
     return anim;
 }
 
-// PROVEN: a6d42859 IDENTICAL
-// OFFSET: 0x005ED940
+// PROVEN: a6d42859 IDENTICAL/NONE
+// OFFSET: 0x005ED940/0x14026F350
 CGUnit_C* CVehiclePassenger_C::GetStoredRootVehicleUnit() const {
     if (this->m_state) {
         return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_rootVehicleGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -730,7 +730,7 @@ int32_t CVehiclePassenger_C::OverridesModelAnimation() const {
     return (this->m_flags & 0x800) && this->m_unit->m_unit->m_unitFieldHealth > 0;
 }
 
-// PROVEN: 9a7a9282 IDENTICAL
+// PROVEN: 9a7a9282 IDENTICAL/NONE
 // OFFSET: 0x005ED150
 void CVehiclePassenger_C::StartAddingPendingRescueTransitions() {
     CVehiclePassenger_C::s_pendingCount = 1;
@@ -912,13 +912,13 @@ void CVehiclePassenger_C::ExecutePendingRescueTransitions() {
 // STATIC: #0x00A2D3F0
 static const uint32_t s_seatAttachments[22] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 0 };
 
-// PROVEN: a73a1a69 IDENTICAL
+// PROVEN: a73a1a69 IDENTICAL/NONE
 // OFFSET: 0x005ACC20
 int32_t CVehiclePassenger_C::IsInTransitionMotion() const {
     return this->m_state == 2 || this->m_state == 5;
 }
 
-// PROVEN: 53d64a55 IDENTICAL
+// PROVEN: 53d64a55 IDENTICAL/NONE
 // OFFSET: 0x005EB710
 int32_t CVehiclePassenger_C::IsEntering() const {
     return this->m_state == 1 || this->m_state == 2;

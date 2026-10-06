@@ -127,14 +127,14 @@ static const char* s_compatLua =
     "str.join = strjoin\n"
     "str.replace = strreplace\n";
 
-// PROVEN: c58de60e IDENTICAL
+// PROVEN: c58de60e IDENTICAL/NONE
 // OFFSET: 0x00839900
 static int32_t IsNotFinite(double value) {
     return !std::isfinite(value);
 }
 
-// PROVEN: ce873ede IDENTICAL
-// OFFSET: 0x0083A0C0
+// PROVEN: ce873ede IDENTICAL/DIFFERENT
+// OFFSET: 0x0083A0C0/0x140564620
 int32_t FrameScript_HookWrapper(lua_State* L) {
     int32_t top = lua_gettop(L);
 
@@ -177,7 +177,7 @@ int32_t FrameScript_HookWrapper(lua_State* L) {
     return results;
 }
 
-// PROVEN: 0610bf15 IDENTICAL
+// PROVEN: 0610bf15 IDENTICAL/NONE
 // OFFSET: 0x0083AD30
 void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
@@ -222,13 +222,13 @@ void SetDecimalConversion(int32_t convert) {
     lua_setdecimalconversion(convert);
 }
 
-// PROVEN: d891cbfe IDENTICAL
-// OFFSET: 0x0083AE00
+// PROVEN: d891cbfe IDENTICAL/IDENTICAL
+// OFFSET: 0x0083AE00/0x140565510
 lua_State* FrameScript_GetContext() {
     return s_context;
 }
 
-// PROVEN: a2414502 IDENTICAL
+// PROVEN: a2414502 IDENTICAL/NONE
 // OFFSET: 0x0083AE10
 int32_t FrameScript_GetTotalMemoryUsed() {
     return lua_gc(s_context, LUA_GCCOUNT, 0);
@@ -290,16 +290,16 @@ char* FrameScript_GetCurrentFunction(lua_State* L, char* buffer, uint32_t buffer
     return buffer;
 }
 
-// PROVEN: 940ef983 IDENTICAL
-// OFFSET: 0x0083B030
+// PROVEN: 940ef983 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083B030/0x140565760
 void FrameScript_RegisterFunction(const char* name, lua_CFunction function) {
     lua_State* L = s_context;
     lua_pushcfunction(L, function);
     lua_setglobal(L, name);
 }
 
-// PROVEN: 3c25bed1 IDENTICAL
-// OFFSET: 0x0083B070
+// PROVEN: 3c25bed1 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083B070/0x1405657B0
 void FrameScript_UnregisterFunction(const char* name) {
     lua_State* L = s_context;
     lua_pushnil(L);
@@ -689,8 +689,8 @@ static void PrintVariable(HOSFILE file, lua_State* L, int32_t index, int32_t dep
     OsWriteFile(file, s_printBuffer, SStrLen(s_printBuffer), &written);
 }
 
-// PROVEN: 05fa48bd IDENTICAL
-// OFFSET: 0x0083BCB0
+// PROVEN: 05fa48bd IDENTICAL/UNPROVEN
+// OFFSET: 0x0083BCB0/0x1405664C0
 int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     lua_State* L = s_context;
 
@@ -926,14 +926,14 @@ int32_t FrameScript_CompileFunction(const char* name, const char* wrapper, const
     return function;
 }
 
-// PROVEN: 987adb75 IDENTICAL
-// OFFSET: 0x0083C210
+// PROVEN: 987adb75 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083C210/0x140566BA0
 void FrameScript_ReleaseFunction(int32_t function) {
     luaL_unref(s_context, LUA_REGISTRYINDEX, function);
 }
 
-// PROVEN: 17bf5c05 IDENTICAL
-// OFFSET: 0x0083C230
+// PROVEN: 17bf5c05 IDENTICAL/DIFFERENT
+// OFFSET: 0x0083C230/0x140566BC0
 void FrameScript_Execute(const char* source, const char* filename, const char* taint) {
     const char* savedTaint = lua_tainted;
 
@@ -970,8 +970,8 @@ double FrameScript_GetScriptCPUUsage() {
     return s_scriptTimeUsed * s_scriptTimeDivisor;
 }
 
-// PROVEN: dc3886b2 IDENTICAL
-// OFFSET: 0x0083C320
+// PROVEN: dc3886b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0083C320/0x140566CF0
 int32_t FrameScript_GetErrorHandlerReference() {
     return s_errorHandlerRef;
 }
@@ -1249,8 +1249,8 @@ bool FrameScript_ShouldSignalEvent(uint32_t index) {
     return event && event->m_listeners.Head();
 }
 
-// PROVEN: 4faa3e58 IDENTICAL
-// OFFSET: 0x0083DE40
+// PROVEN: 4faa3e58 IDENTICAL/UNPROVEN
+// OFFSET: 0x0083DE40/0x140569140
 void FrameScript_Execute(int32_t function, FrameScript_Object* object, int32_t argCount, const char* taint, FrameScript_EventObject* event) {
     lua_State* L = s_context;
     int64_t start = 0;
@@ -1510,8 +1510,8 @@ TSList<EVENTLISTENERNODE>* FrameScript_GetEventListeners(const char* name) {
     return event ? &event->m_listeners : NULL;
 }
 
-// PROVEN: 4eab4056 IDENTICAL
-// OFFSET: 0x0083F3A0
+// PROVEN: 4eab4056 IDENTICAL/IDENTICAL
+// OFFSET: 0x0083F3A0/0x14056AE10
 void FrameScript_SignalEvent(uint32_t index, const char* format, ...) {
     va_list args;
     va_start(args, format);

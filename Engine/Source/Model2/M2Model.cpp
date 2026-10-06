@@ -284,7 +284,7 @@ int32_t CM2Model::TexturesAllLoaded() {
     return 1;
 }
 
-// PROVEN: 23595902 IDENTICAL
+// PROVEN: 23595902 IDENTICAL/NONE
 // OFFSET: 0x00814690
 static int32_t BatchesMatch(const M2Batch* a, const M2Batch* b, const M2SkinSection* sectionA, const M2SkinSection* sectionB) {
     return a->m_colorIndex == b->m_colorIndex && a->m_materialIndex == b->m_materialIndex && a->m_textureComboIndex == b->m_textureComboIndex && a->m_textureWeightComboIndex == b->m_textureWeightComboIndex && a->m_textureTransformComboIndex == b->m_textureTransformComboIndex && sectionA->m_boneComboIndex == sectionB->m_boneComboIndex;
@@ -312,7 +312,7 @@ void CM2Model::SetSequenceCallback(void* callback, uint64_t param) {
     }
 }
 
-// PROVEN: 07858334 IDENTICAL
+// PROVEN: 07858334 IDENTICAL/NONE
 // OFFSET: 0x00814760
 void CM2Model::SetSequenceStartCallback(M2SequenceStartCallback callback, uint64_t param) {
     this->m_sequenceStartCallback = callback;
@@ -581,7 +581,7 @@ M2ModelLight::M2ModelLight() {
     this->m_enabled = 1;
 }
 
-// PROVEN: 1c8f3e9f IDENTICAL
+// PROVEN: 1c8f3e9f IDENTICAL/NONE
 // OFFSET: 0x00815270
 M2ModelParticle::M2ModelParticle() {
     this->m_emitting = 1;
@@ -822,7 +822,7 @@ void CM2Model::UpdateLoaded() {
     } while (model);
 }
 
-// PROVEN: 2d03403e IDENTICAL
+// PROVEN: 2d03403e IDENTICAL/NONE
 // OFFSET: 0x008144D0
 void CM2Model::SetLoadedCallback(void (*callback)(CM2Model*, void*), void* arg) {
     this->m_loadedCallback = callback;
@@ -2351,8 +2351,8 @@ C3Vector CM2Model::GetAttachmentPivot(uint32_t id) {
     return data->m_attachments[index].m_position;
 }
 
-// PROVEN: b26e3e23 IDENTICAL
-// OFFSET: 0x00814790
+// PROVEN: b26e3e23 IDENTICAL/NONE
+// OFFSET: 0x00814790/0x14052C730
 void CM2Model::DetachFromParent() {
     if (this->m_attachPrev) {
         *this->m_attachPrev = this->m_attachNext;
@@ -8196,7 +8196,7 @@ void CM2Model::Reload(CM2Scene* scene, CM2Shared* shared) {
     this->m_worldTransform = worldTransform;
 }
 
-// PROVEN: 8271314f IDENTICAL
+// PROVEN: 8271314f IDENTICAL/NONE
 // OFFSET: 0x0043B930
 void CM2Model::SetWorldTransform(const C44Matrix& matrix) {
     this->m_fFlags |= 0x4000;

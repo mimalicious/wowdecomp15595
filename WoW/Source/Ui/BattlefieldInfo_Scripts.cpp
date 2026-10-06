@@ -762,7 +762,7 @@ static int32_t Script_GetBattlefieldScore(lua_State* L) {
     return 12;
 }
 
-// PROVEN: b5812a08 IDENTICAL
+// PROVEN: b5812a08 IDENTICAL/NONE
 // OFFSET: 0x0093F560
 static int32_t Script_SetBattlefieldScoreFaction(lua_State* L) {
     int32_t faction = -1;

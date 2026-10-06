@@ -3,7 +3,7 @@
 // STATIC: %0x00B43988
 const DBCMeta LightParamsRec::s_meta = { "DBFilesClient\\LightParams.dbc", 10, 40, LightParamsRec::FixupStrings, 0 };
 
-// PROVEN: ff8f362a IDENTICAL
+// PROVEN: ff8f362a IDENTICAL/NONE
 // OFFSET: 0x00401000
 void LightParamsRec::FixupStrings(void* record, const char* strings) {
 }

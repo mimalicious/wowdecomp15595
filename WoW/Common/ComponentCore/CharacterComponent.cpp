@@ -684,8 +684,8 @@ int32_t CCharacterComponent::GetNumFacesForSkin(int32_t raceID, int32_t sexID, i
     return count;
 }
 
-// PROVEN: ee105df0 IDENTICAL
-// OFFSET: 0x006F9380
+// PROVEN: ee105df0 IDENTICAL/NONE
+// OFFSET: 0x006F9380/0x1403C2390
 int32_t CCharacterComponent::GetNumFacialFeaturesForHairColor(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairColorID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_FACIAL_HAIR);
@@ -4385,8 +4385,8 @@ void CCharacterComponent::UpdateItemLU(ITEM_SLOT itemSlot, const ItemDisplayInfo
     }
 }
 
-// PROVEN: f28fa65e IDENTICAL
-// OFFSET: 0x006FBE90
+// PROVEN: f28fa65e IDENTICAL/NONE
+// OFFSET: 0x006FBE90/0x1403C6820
 void CCharacterComponent::UpdateItemLL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
     this->UpdateItem(itemSlot, SECTION_LEG_LOWER, displayRec, apply);
 }

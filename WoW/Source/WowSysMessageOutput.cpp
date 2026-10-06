@@ -40,15 +40,15 @@ static uint32_t s_first;
 // STATIC: #0x00B30770
 static SYSMESSAGE s_messages[10];
 
-// PROVEN: 5b3651a7 IDENTICAL
-// OFFSET: 0x0040DE00
+// PROVEN: 5b3651a7 IDENTICAL/NONE
+// OFFSET: 0x0040DE00/0x140011580
 void WowSysMessageOutput::Enable() {
     if (!s_enabled && s_initialized && s_layer) {
         s_enabled = true;
     }
 }
 
-// PROVEN: a282cc5f IDENTICAL
+// PROVEN: a282cc5f IDENTICAL/NONE
 // OFFSET: 0x0040DE30
 void WowSysMessageOutput::Disable() {
     if (s_enabled) {
@@ -56,7 +56,7 @@ void WowSysMessageOutput::Disable() {
     }
 }
 
-// PROVEN: fa7671f8 IDENTICAL
+// PROVEN: fa7671f8 IDENTICAL/NONE
 // OFFSET: 0x0040DE50
 void WowSysMessageOutput::Show() {
     if (s_hidden) {
@@ -64,8 +64,8 @@ void WowSysMessageOutput::Show() {
     }
 }
 
-// PROVEN: 71ccff6a IDENTICAL
-// OFFSET: 0x0040DE70
+// PROVEN: 71ccff6a IDENTICAL/NONE
+// OFFSET: 0x0040DE70/0x1400115D0
 void WowSysMessageOutput::Hide() {
     if (!s_hidden) {
         s_hidden = true;

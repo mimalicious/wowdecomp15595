@@ -40,7 +40,7 @@ static int32_t Script_GetBindingKey(lua_State* L) {
     return count;
 }
 
-// PROVEN: 4d74a8db IDENTICAL
+// PROVEN: 4d74a8db IDENTICAL/NONE
 // OFFSET: 0x009213D0
 static int32_t Script_GetNumBindings(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_numCommands);
@@ -642,7 +642,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetClickFrame", &Script_GetClickFrame },
 };
 
-// PROVEN: 4be9aead IDENTICAL
+// PROVEN: 4be9aead IDENTICAL/NONE
 // OFFSET: 0x00921460
 void UIBindingsRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -650,7 +650,7 @@ void UIBindingsRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: e5537092 IDENTICAL
+// PROVEN: e5537092 IDENTICAL/NONE
 // OFFSET: 0x00921490
 void UIBindingsUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

@@ -495,8 +495,8 @@ static bool CVGxRefreshCallback(CVar* var, const char* oldValue, const char* val
     return true;
 }
 
-// PROVEN: 59edf2bd IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 59edf2bd IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 static bool CVVideoOptionsVersionCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     return true;
 }

@@ -9,8 +9,8 @@
 // STATIC: #0x00AB909D
 bool Blizzard::Debug::g_ErrorStackEnabled = true;
 
-// PROVEN: 0c981958 IDENTICAL
-// OFFSET: 0x007AC3D0
+// PROVEN: 0c981958 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC3D0/0x1404ED5E0
 bool Blizzard::Debug::ErrorStackRecord::FindCategoryCode(int32_t category, int32_t code) {
     bool found = false;
 
@@ -23,8 +23,8 @@ bool Blizzard::Debug::ErrorStackRecord::FindCategoryCode(int32_t category, int32
     return found;
 }
 
-// PROVEN: ae5b3135 IDENTICAL
-// OFFSET: 0x007AC400
+// PROVEN: ae5b3135 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC400/0x1404A2150
 bool Blizzard::Debug::ErrorStackRecord::FindCategory(int32_t category) {
     bool found = false;
 

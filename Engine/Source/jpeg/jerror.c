@@ -66,8 +66,8 @@ const char * const jpeg_std_message_table[] = {
  * or jpeg_destroy) at some point.
  */
 
-// PROVEN: 7100d97b IDENTICAL
-// OFFSET: 0x00B5E390
+// PROVEN: 7100d97b IDENTICAL/NONE
+// OFFSET: 0x00B5E390/0x140927260
 static void error_exit(j_common_ptr cinfo) {
   /* Always display the message */
   (*cinfo->err->output_message) (cinfo);
@@ -94,8 +94,8 @@ static void error_exit(j_common_ptr cinfo) {
  * not just not use this routine.
  */
 
-// PROVEN: 1a211dab IDENTICAL
-// OFFSET: 0x00B5E3B0
+// PROVEN: 1a211dab IDENTICAL/NONE
+// OFFSET: 0x00B5E3B0/0x140927290
 static void output_message(j_common_ptr cinfo) {
   char buffer[JMSG_LENGTH_MAX];
 
@@ -115,8 +115,8 @@ static void output_message(j_common_ptr cinfo) {
  * or change the policy about which messages to display.
  */
 
-// PROVEN: 65d478bf IDENTICAL
-// OFFSET: 0x00B5E3E0
+// PROVEN: 65d478bf IDENTICAL/NONE
+// OFFSET: 0x00B5E3E0/0x1409272B0
 static void emit_message(j_common_ptr cinfo, int msg_level) {
   struct jpeg_error_mgr * err = cinfo->err;
 
@@ -144,8 +144,8 @@ static void emit_message(j_common_ptr cinfo, int msg_level) {
  * Few applications should need to override this method.
  */
 
-// PROVEN: 4476a6c6 IDENTICAL
-// OFFSET: 0x00B5E420
+// PROVEN: 4476a6c6 IDENTICAL/NONE
+// OFFSET: 0x00B5E420/0x1409272F0
 static void format_message(j_common_ptr cinfo, char * buffer) {
   struct jpeg_error_mgr * err = cinfo->err;
   int msg_code = err->msg_code;
@@ -199,8 +199,8 @@ static void format_message(j_common_ptr cinfo, char * buffer) {
  * this method if it has additional error processing state.
  */
 
-// PROVEN: c2c42f40 IDENTICAL
-// OFFSET: 0x00B5E4D0
+// PROVEN: c2c42f40 IDENTICAL/NONE
+// OFFSET: 0x00B5E4D0/0x1409273D0
 static void reset_error_mgr(j_common_ptr cinfo) {
   cinfo->err->num_warnings = 0;
   /* trace_level is not reset since it is an application-supplied parameter */

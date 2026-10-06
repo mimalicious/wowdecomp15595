@@ -10,7 +10,7 @@
 #include "Engine/Source/Os/Input.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: bcb8d168 IDENTICAL
+// PROVEN: bcb8d168 IDENTICAL/NONE
 // OFFSET: 0x008A0000
 void EventInitialize(uint32_t threadCount, int32_t netServer) {
     ObserverInitialize();
@@ -41,8 +41,8 @@ void EventDoMessageLoop() {
     IEvtSchedulerProcess();
 }
 
-// PROVEN: 20ab3ec1 IDENTICAL
-// OFFSET: 0x008A0080
+// PROVEN: 20ab3ec1 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A0080/0x1405E1240
 void EventInitiateShutdown() {
     IEvtSchedulerShutdown();
 }
@@ -52,14 +52,14 @@ HEVENTCONTEXT EventCreateContextEx(int32_t interactive, EVENTHANDLERFUNC initial
     return IEvtSchedulerCreateContext(interactive, initializeHandler, destroyHandler, idleTime, debugFlags);
 }
 
-// PROVEN: 5c26ca08 IDENTICAL
+// PROVEN: 5c26ca08 IDENTICAL/NONE
 // OFFSET: 0x008A00A0
 void EventSetConfirmCloseCallback(int32_t (*callback)(void*), void* param) {
     IEvtInputSetConfirmCloseCallback(callback, param);
 }
 
-// PROVEN: c8016dbf IDENTICAL
-// OFFSET: 0x008A00E0
+// PROVEN: c8016dbf IDENTICAL/IDENTICAL
+// OFFSET: 0x008A00E0/0x1405E12C0
 HEVENTCONTEXT EventGetCurrentContext() {
     return static_cast<HEVENTCONTEXT>(PropGet(PROP_EVENTCONTEXT));
 }
@@ -291,13 +291,13 @@ void EventPostClose() {
     EventPostCloseEx(NULL);
 }
 
-// PROVEN: 7591e3ba IDENTICAL
+// PROVEN: 7591e3ba IDENTICAL/NONE
 // OFFSET: 0x008A07D0
 void EventRegister(EVENTID id, EVENTHANDLERFUNC handler) {
     EventRegisterEx(id, handler, NULL, 0.0f);
 }
 
-// PROVEN: e018d798 IDENTICAL
+// PROVEN: e018d798 IDENTICAL/NONE
 // OFFSET: 0x008A07F0
 void EventUnregister(EVENTID id, EVENTHANDLERFUNC handler) {
     EventUnregisterEx(id, handler, NULL, 0xFFFFFFFF);

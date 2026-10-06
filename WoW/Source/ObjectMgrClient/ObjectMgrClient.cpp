@@ -585,7 +585,7 @@ static void DestroyRemovedObject(CGObject_C* object) {
     }
 }
 
-// PROVEN: 5e07f643 IDENTICAL
+// PROVEN: 5e07f643 IDENTICAL/NONE
 // OFFSET: 0x0048D8E0
 static void SkipSetOfObjects(CDataStore* msg) {
     uint32_t count;

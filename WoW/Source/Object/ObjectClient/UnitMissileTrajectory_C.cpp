@@ -220,7 +220,7 @@ CMissileCollision* CMissileCollision::Alloc() {
     return collision;
 }
 
-// PROVEN: d1e36231 IDENTICAL
+// PROVEN: d1e36231 IDENTICAL/NONE
 // OFFSET: 0x0057D8A0
 void CMissileCollision::MaybeAddUnitToSystem(CGUnit_C* unit) {
     for (CMissileCollision* collision = CMissileCollision::s_head; collision; collision = collision->m_next) {
@@ -691,8 +691,8 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
     g_theGxDevicePtr->RsPop();
 }
 
-// PROVEN: 21a15950 IDENTICAL
-// OFFSET: 0x0057CDB0
+// PROVEN: 21a15950 IDENTICAL/NONE
+// OFFSET: 0x0057CDB0/0x1401E2F70
 void CGUnit_C::GetMissileCollisionSphere(CAaSphere* sphere, const C2Vector& direction) const {
     sphere->c = this->BuildSmoothPosition();
     CreatureModelDataRec* modelData = this->GetModelData();

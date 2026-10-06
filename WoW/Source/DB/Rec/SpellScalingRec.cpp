@@ -3,7 +3,7 @@
 // STATIC: %0x00B44CF4
 const DBCMeta SpellScalingRec::s_meta = { "DBFilesClient\\SpellScaling.dbc", 10, 64, SpellScalingRec::FixupStrings, 0 };
 
-// PROVEN: b62f4f38 IDENTICAL
+// PROVEN: b62f4f38 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellScalingRec::FixupStrings(void* record, const char* strings) {
 }

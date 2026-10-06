@@ -70,8 +70,8 @@ const int jpeg_natural_order[DCTSIZE2+16] = {
 
 /* Compute a/b rounded up to next integer, ie, ceil(a/b) */
 /* Assumes a >= 0, b > 0 */
-// PROVEN: 471edfa2 IDENTICAL
-// OFFSET: 0x00B60220
+// PROVEN: 471edfa2 IDENTICAL/NONE
+// OFFSET: 0x00B60220/0x140929710
 long jdiv_round_up(long a, long b) {
   return (a + b - 1L) / b;
 }
@@ -79,8 +79,8 @@ long jdiv_round_up(long a, long b) {
 
 /* Compute a rounded up to next multiple of b, ie, ceil(a/b)*b */
 /* Assumes a >= 0, b > 0 */
-// PROVEN: deb00be9 IDENTICAL
-// OFFSET: 0x00B60240
+// PROVEN: deb00be9 IDENTICAL/NONE
+// OFFSET: 0x00B60240/0x140929720
 long jround_up(long a, long b) {
   a += b - 1L;
   return a - (a % b);
@@ -112,8 +112,8 @@ long jround_up(long a, long b) {
  * to output_array[dest_row++]; these areas may overlap for duplication.
  * The source and destination arrays must be at least as wide as num_cols.
  */
-// PROVEN: e8389b8c IDENTICAL
-// OFFSET: 0x00B60260
+// PROVEN: e8389b8c IDENTICAL/NONE
+// OFFSET: 0x00B60260/0x140929740
 void jcopy_sample_rows(JSAMPARRAY input_array, int source_row, JSAMPARRAY output_array, int dest_row, int num_rows, JDIMENSION num_cols) {
   register JSAMPROW inptr, outptr;
 #ifdef FMEMCOPY
@@ -158,7 +158,7 @@ void jcopy_block_row(JBLOCKROW input_row, JBLOCKROW output_row, JDIMENSION num_b
 
 /* Zero out a chunk of FAR memory. */
 /* This might be sample-array data, block-array data, or alloc_large data. */
-// PROVEN: 59b81b5d IDENTICAL
+// PROVEN: 59b81b5d IDENTICAL/NONE
 // OFFSET: 0x00B602B0
 void jzero_far(void FAR * target, size_t bytestozero) {
 #ifdef FMEMZERO

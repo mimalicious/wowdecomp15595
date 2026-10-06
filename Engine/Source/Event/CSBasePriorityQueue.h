@@ -95,8 +95,8 @@ template <class T>
 TSTimerPriority<T>::TSTimerPriority() : m_val(0) {
 }
 
-// PROVEN: 671b3751 IDENTICAL
-// OFFSET: 0x008A1780
+// PROVEN: 671b3751 IDENTICAL/IDENTICAL
+// OFFSET: 0x008A1780/0x1405E3360
 template <class T>
 int32_t TSTimerPriority<T>::Compare(CSBasePriority* a) const {
     return static_cast<int32_t>(this->m_val - static_cast<TSTimerPriority<T>*>(a)->m_val) <= 0;

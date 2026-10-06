@@ -125,7 +125,7 @@ FMOD_DSP_DESCRIPTION_EX *DSPLowPassSimple::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ddceee32 IDENTICAL
+// PROVEN: ddceee32 IDENTICAL/NONE
 // OFFSET: 0x00A9DF40
 FMOD_RESULT DSPLowPassSimple::createInternal()
 {
@@ -204,8 +204,8 @@ FMOD_RESULT DSPLowPassSimple::resetInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4b883534 IDENTICAL
-// OFFSET: 0x00A9D6F0
+// PROVEN: 4b883534 IDENTICAL/NONE
+// OFFSET: 0x00A9D6F0/0x14085E020
 FMOD_RESULT DSPLowPassSimple::updateCoefficients(float cutoffhz)
 {
     /*
@@ -572,8 +572,8 @@ FMOD_RESULT DSPLowPassSimple::getParameterInternal(int index, float *value, char
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cd541153 IDENTICAL
-// OFFSET: 0x00A9E080
+// PROVEN: cd541153 IDENTICAL/NONE
+// OFFSET: 0x00A9E080/0x14085E770
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;
@@ -598,7 +598,7 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::createCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fbf0740c IDENTICAL
+// PROVEN: fbf0740c IDENTICAL/NONE
 // OFFSET: 0x00A9DE50
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::resetCallback(FMOD_DSP_STATE *dsp)
 {
@@ -651,8 +651,8 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::readCallback(FMOD_DSP_STATE *dsp, float
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0692b975 IDENTICAL
-// OFFSET: 0x00A9DEC0
+// PROVEN: 0692b975 IDENTICAL/NONE
+// OFFSET: 0x00A9DEC0/0x14085E7E0
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;
@@ -677,8 +677,8 @@ FMOD_RESULT F_CALLBACK DSPLowPassSimple::setParameterCallback(FMOD_DSP_STATE *ds
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fb8ca2ab IDENTICAL
-// OFFSET: 0x00A9DEF0
+// PROVEN: fb8ca2ab IDENTICAL/NONE
+// OFFSET: 0x00A9DEF0/0x14085E800
 FMOD_RESULT F_CALLBACK DSPLowPassSimple::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {
     DSPLowPassSimple *lowpass_simple = (DSPLowPassSimple *)dsp;

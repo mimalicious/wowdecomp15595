@@ -26,8 +26,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c3b88d9f IDENTICAL
-// OFFSET: 0x00B00D70
+// PROVEN: c3b88d9f IDENTICAL/NONE
+// OFFSET: 0x00B00D70/0x1408C2E30
 bool OutputDSound::querySupportEAX3(unsigned int ulQuery)
 {
     unsigned long ulSupport = 0;
@@ -73,8 +73,8 @@ bool OutputDSound::querySupportEAX3(unsigned int ulQuery)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bec78e7a IDENTICAL
-// OFFSET: 0x00B00DF0
+// PROVEN: bec78e7a IDENTICAL/NONE
+// OFFSET: 0x00B00DF0/0x1408C2EC0
 bool OutputDSound::initEAX3()
 {
     FMOD_RESULT             result;
@@ -191,8 +191,8 @@ bool OutputDSound::initEAX3()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 48284b6d IDENTICAL
-// OFFSET: 0x00B01100
+// PROVEN: 48284b6d IDENTICAL/NONE
+// OFFSET: 0x00B01100/0x1408C3250
 FMOD_RESULT OutputDSound::closeEAX3()
 {
 	if (mBufferReverb)
@@ -237,7 +237,7 @@ FMOD_RESULT OutputDSound::closeEAX3()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ccfff874 IDENTICAL
+// PROVEN: ccfff874 IDENTICAL/NONE
 // OFFSET: 0x00B011A0
 FMOD_RESULT OutputDSound::setPropertiesEAX3(const FMOD_REVERB_PROPERTIES *prop)
 {

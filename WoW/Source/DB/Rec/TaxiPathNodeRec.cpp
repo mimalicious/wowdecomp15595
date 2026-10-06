@@ -3,7 +3,7 @@
 // STATIC: %0x00B449B4
 const DBCMeta TaxiPathNodeRec::s_meta = { "DBFilesClient\\TaxiPathNode.dbc", 9, 44, TaxiPathNodeRec::FixupStrings, 0 };
 
-// PROVEN: 5bacbe39 IDENTICAL
+// PROVEN: 5bacbe39 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void TaxiPathNodeRec::FixupStrings(void* record, const char* strings) {
 }

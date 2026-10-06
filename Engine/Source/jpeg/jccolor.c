@@ -82,7 +82,7 @@ typedef my_color_converter * my_cconvert_ptr;
  * Initialize for RGB->YCC colorspace conversion.
  */
 
-// PROVEN: 2184c538 IDENTICAL
+// PROVEN: 2184c538 IDENTICAL/NONE
 // OFFSET: 0x00B64390
 static void rgb_ycc_start(j_compress_ptr cinfo) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -126,7 +126,7 @@ static void rgb_ycc_start(j_compress_ptr cinfo) {
  * offset required on that side.
  */
 
-// PROVEN: a1e6b377 IDENTICAL
+// PROVEN: a1e6b377 IDENTICAL/NONE
 // OFFSET: 0x00B64460
 static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -216,7 +216,7 @@ static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIM
  * We assume rgb_ycc_start has been called.
  */
 
-// PROVEN: 99e3db5d IDENTICAL
+// PROVEN: 99e3db5d IDENTICAL/NONE
 // OFFSET: 0x00B64600
 static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
@@ -295,7 +295,7 @@ static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  * We assume input_components == num_components.
  */
 
-// PROVEN: da8dad0d IDENTICAL
+// PROVEN: da8dad0d IDENTICAL/NONE
 // OFFSET: 0x00B647B0
 static void null_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;

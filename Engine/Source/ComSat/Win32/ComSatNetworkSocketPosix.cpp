@@ -45,14 +45,14 @@ bool ComSat::Network::SocketPosix::Bind(int32_t port) {
     return bind(this->m_socket, reinterpret_cast<const sockaddr*>(&address.m_family), address.m_length) != SOCKET_ERROR;
 }
 
-// PROVEN: d2a74cb7 IDENTICAL
-// OFFSET: 0x00A3B5B0
+// PROVEN: d2a74cb7 IDENTICAL/NONE
+// OFFSET: 0x00A3B5B0/0x1407E8350
 int32_t ComSat::Network::SocketPosix::SendTo(const ComSat::Network::Address& address, const uint8_t* data, uint32_t size) {
     return sendto(this->m_socket, reinterpret_cast<const char*>(data), size, 0, reinterpret_cast<const sockaddr*>(&address.m_family), address.m_length);
 }
 
-// PROVEN: f0c4061c IDENTICAL
-// OFFSET: 0x00A3B5E0
+// PROVEN: f0c4061c IDENTICAL/NONE
+// OFFSET: 0x00A3B5E0/0x1407E8390
 bool ComSat::Network::SocketPosix::RecvFrom(ComSat::Network::Address& address, uint8_t* data, uint32_t& size) {
     memset(data, 0, size);
     int32_t received = recvfrom(this->m_socket, reinterpret_cast<char*>(data), size, 0, reinterpret_cast<sockaddr*>(&address.m_family), &address.m_length);

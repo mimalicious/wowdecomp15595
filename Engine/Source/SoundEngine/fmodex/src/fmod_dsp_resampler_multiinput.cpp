@@ -233,7 +233,7 @@ FMOD_RESULT DSPResamplerMultiInput::execute(float *inbuffer, float **outbuffer, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b2ce37b8 IDENTICAL
+// PROVEN: b2ce37b8 IDENTICAL/NONE
 // OFFSET: 0x00AD7DE0
 FMOD_RESULT DSPResamplerMultiInput::addInput(DSPI *target)
 {

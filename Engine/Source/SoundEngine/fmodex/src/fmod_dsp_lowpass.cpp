@@ -121,8 +121,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPLowPass::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fa3e6b95 IDENTICAL
-// OFFSET: 0x00A9EFB0
+// PROVEN: fa3e6b95 IDENTICAL/NONE
+// OFFSET: 0x00A9EFB0/0x14085F8F0
 FMOD_RESULT DSPLowPass::createInternal()
 {
     int count;
@@ -675,7 +675,7 @@ FMOD_RESULT DSPLowPass::setParameterInternal(int index, float value)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a89b0a44 IDENTICAL
+// PROVEN: a89b0a44 IDENTICAL/NONE
 // OFFSET: 0x00A9E940
 FMOD_RESULT DSPLowPass::getParameterInternal(int index, float *value, char *valuestr)
 {
@@ -717,8 +717,8 @@ FMOD_RESULT DSPLowPass::getParameterInternal(int index, float *value, char *valu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 777f0bf2 IDENTICAL
-// OFFSET: 0x00A9EE00
+// PROVEN: 777f0bf2 IDENTICAL/NONE
+// OFFSET: 0x00A9EE00/0x14085F5C0
 FMOD_RESULT DSPLowPass::updateState(float resonance, float cutoff)
 {
     FMOD_RESULT result;
@@ -830,8 +830,8 @@ FMOD_RESULT DSPLowPass::updateState(float resonance, float cutoff)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fafcc7f2 IDENTICAL
-// OFFSET: 0x00A9FE50
+// PROVEN: fafcc7f2 IDENTICAL/NONE
+// OFFSET: 0x00A9FE50/0x1408605B0
 FMOD_RESULT F_CALLBACK DSPLowPass::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPLowPass *lowpass = (DSPLowPass *)dsp;
@@ -883,8 +883,8 @@ FMOD_RESULT F_CALLBACK DSPLowPass::readCallback(FMOD_DSP_STATE *dsp, float *inbu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 28da3553 IDENTICAL
-// OFFSET: 0x00A9EF60
+// PROVEN: 28da3553 IDENTICAL/NONE
+// OFFSET: 0x00A9EF60/0x14085F860
 FMOD_RESULT F_CALLBACK DSPLowPass::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
     DSPLowPass *lowpass = (DSPLowPass *)dsp;
@@ -909,7 +909,7 @@ FMOD_RESULT F_CALLBACK DSPLowPass::setParameterCallback(FMOD_DSP_STATE *dsp, int
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dee3629d IDENTICAL
+// PROVEN: dee3629d IDENTICAL/NONE
 // OFFSET: 0x00A9EA70
 FMOD_RESULT F_CALLBACK DSPLowPass::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

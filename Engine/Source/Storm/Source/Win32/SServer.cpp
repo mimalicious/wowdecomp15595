@@ -9,7 +9,8 @@ static BOOL (WINAPI* s_tryEnterPtr)(LPCRITICAL_SECTION);
 // STATIC: %0x00CA691C
 static HMODULE s_kernel32lib;
 
-// OFFSET: %0x004C7F80
+// PROVEN: c353344c DIFFERENT/IDENTICAL
+// OFFSET: 0x004C1770/0x1400FC020
 void SServerInitialize() {
     if (!s_tryEnterPtr) {
         s_kernel32lib = LoadLibraryA("kernel32.dll");
@@ -20,7 +21,7 @@ void SServerInitialize() {
     }
 }
 
-// PROVEN: 9ac34f1a IDENTICAL
+// PROVEN: 9ac34f1a IDENTICAL/NONE
 // OFFSET: 0x004C17A0
 void SServerDestroy() {
     if (s_kernel32lib) {

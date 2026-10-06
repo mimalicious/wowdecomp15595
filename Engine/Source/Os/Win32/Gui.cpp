@@ -37,8 +37,8 @@ int32_t COsDialog::OnEvent(int32_t itemId, int32_t notifyCode, int32_t code) {
     return 1;
 }
 
-// PROVEN: 030d3e09 IDENTICAL
-// OFFSET: 0x008763B0
+// PROVEN: 030d3e09 IDENTICAL/IDENTICAL
+// OFFSET: 0x008763B0/0x1405AD3A0
 int32_t COsControl::SendEvent(int32_t event, int32_t code) {
     if (this->OnEvent(this->m_id, event, code)) {
         return 1;
@@ -119,17 +119,17 @@ void OsGuiSetWindowTitle(void* window, const char* title) {
     SetWindowTextW(static_cast<HWND>(window), reinterpret_cast<const wchar_t*>(wideTitle));
 }
 
-// STATIC: 0x00EC6D80
+// STATIC: 0x00EC6D80/0x140DB9110
 static void* (*s_gxDevWindowFcn)();
 
-// PROVEN: af1107a4 IDENTICAL
-// OFFSET: 0x00876530
+// PROVEN: af1107a4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00876530/0x1405AD5A0
 void OsGuiSetGxDevWindowFcn(void* (*fcn)()) {
     s_gxDevWindowFcn = fcn;
 }
 
-// PROVEN: e65b8677 IDENTICAL
-// OFFSET: 0x00876540
+// PROVEN: e65b8677 IDENTICAL/IDENTICAL
+// OFFSET: 0x00876540/0x1405AD5B0
 void* OsGuiGetWindow(int32_t type) {
     switch (type) {
         case 0:
@@ -208,7 +208,8 @@ int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, 
     }
 }
 
-// OFFSET: %0x007DC450
+// PROVEN: 80ea6ed0 DIFFERENT/IDENTICAL
+// OFFSET: 0x00876640/0x1405AD6A0
 int32_t OsGuiIsModifierKeyDown(int32_t key) {
     switch (key) {
         case 0:
@@ -264,8 +265,8 @@ int32_t COsDialog::IsInFront() {
     return this->m_handle == OsGuiGetWindow(2);
 }
 
-// PROVEN: d24c45ef IDENTICAL
-// OFFSET: 0x00876690
+// PROVEN: d24c45ef IDENTICAL/IDENTICAL
+// OFFSET: 0x00876690/0x1405AD6F0
 COsControl* COsDialog::FindControl(void* handle) {
     for (uint32_t i = 0; i < this->m_controls.Count(); i++) {
         if (this->m_controls[i]->IsHandleFromControl(handle)) {
@@ -276,7 +277,8 @@ COsControl* COsDialog::FindControl(void* handle) {
     return NULL;
 }
 
-// OFFSET: %0x007DC4E0
+// PROVEN: 73a5983e DIFFERENT/IDENTICAL
+// OFFSET: 0x008766D0/0x1405AD770
 int32_t COsDialog::OnCancel() {
     if (!this->m_cancelButton || this->m_cancelButton->OnEvent(this->m_cancelButton->m_id, 0, 0)) {
         return 1;

@@ -21,26 +21,26 @@ int32_t CSimpleScaleAnim::s_objectType;
 // STATIC: %0x00BB8BB4
 const char* CSimpleScaleAnim::s_objectTypeName = "Scale";
 
-// PROVEN: 62d528f7 IDENTICAL
-// OFFSET: 0x00528590
+// PROVEN: 62d528f7 IDENTICAL/NONE
+// OFFSET: 0x00528590/0x140177AC0
 bool CSimpleScaleAnim::IsA(int32_t type) {
     return type == CSimpleScaleAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: a03c1b4a IDENTICAL
-// OFFSET: 0x005285C0
+// PROVEN: a03c1b4a IDENTICAL/NONE
+// OFFSET: 0x005285C0/0x140177AE0
 bool CSimpleScaleAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleScaleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: 52b370e9 IDENTICAL
-// OFFSET: 0x00528620
+// PROVEN: 52b370e9 IDENTICAL/NONE
+// OFFSET: 0x00528620/0x140177B40
 const char* CSimpleScaleAnim::GetObjectTypeName() {
     return CSimpleScaleAnim::s_objectTypeName;
 }
 
-// PROVEN: 7a8fad18 IDENTICAL
-// OFFSET: 0x00528630
+// PROVEN: 7a8fad18 IDENTICAL/NONE
+// OFFSET: 0x00528630/0x140177B50
 int32_t CSimpleScaleAnim::GetScriptMetaTable() {
     return CSimpleScaleAnim::s_metatable;
 }

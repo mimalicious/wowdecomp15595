@@ -391,7 +391,7 @@ static int32_t Script_CameraOrSelectOrMoveStop(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9f989108 IDENTICAL
+// PROVEN: 9f989108 IDENTICAL/NONE
 // OFFSET: 0x0044ACF0
 static int32_t Script_MouselookStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -406,7 +406,7 @@ static int32_t Script_MouselookStop(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 8447b888 IDENTICAL
+// PROVEN: 8447b888 IDENTICAL/NONE
 // OFFSET: 0x0044B000
 static int32_t Script_MouselookStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -431,7 +431,7 @@ static int32_t Script_VehicleAimGetNormPower(lua_State* L) {
     return 1;
 }
 
-// PROVEN: acace478 IDENTICAL
+// PROVEN: acace478 IDENTICAL/NONE
 // OFFSET: 0x004480B0
 static int32_t Script_IsMouselooking(lua_State* L) {
     if (CGInputControl::s_inputControl->m_flags & 0x2000001) {
@@ -649,7 +649,7 @@ static int32_t Script_VehicleAimRequestNormAngle(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 6d45b25d IDENTICAL
+// PROVEN: 6d45b25d IDENTICAL/NONE
 // OFFSET: 0x00448360
 static int32_t Script_DetectWowMouse(lua_State* L) {
     CGInputControl::s_inputControl->DetectWowMouse();
@@ -718,7 +718,7 @@ static int32_t Script_VehicleAimDecrement(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 42d39f95 IDENTICAL
+// PROVEN: 42d39f95 IDENTICAL/NONE
 // OFFSET: 0x0044ABE0
 static int32_t Script_MoveAndSteerStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -814,7 +814,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "DetectWowMouse", &Script_DetectWowMouse },
 };
 
-// PROVEN: d152bd3f IDENTICAL
+// PROVEN: d152bd3f IDENTICAL/NONE
 // OFFSET: 0x00447920
 void InputControlRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -822,7 +822,7 @@ void InputControlRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: ccaeca04 IDENTICAL
+// PROVEN: ccaeca04 IDENTICAL/NONE
 // OFFSET: 0x00447950
 void InputControlUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

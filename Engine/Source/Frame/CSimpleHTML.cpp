@@ -82,25 +82,25 @@ CSimpleHTML::CSimpleHTML(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent)
     this->m_hyperlinksEnabled = true;
 }
 
-// PROVEN: 7590d339 IDENTICAL
+// PROVEN: 7590d339 IDENTICAL/NONE
 // OFFSET: 0x00521C40
 const char* CSimpleHTML::GetObjectTypeName() {
     return CSimpleHTML::s_objectTypeName;
 }
 
-// PROVEN: 2a773a72 IDENTICAL
-// OFFSET: 0x00521C50
+// PROVEN: 2a773a72 IDENTICAL/NONE
+// OFFSET: 0x00521C50/0x14016F850
 int32_t CSimpleHTML::GetScriptMetaTable() {
     return CSimpleHTML::s_metatable;
 }
 
-// PROVEN: 6673e8d4 IDENTICAL
+// PROVEN: 6673e8d4 IDENTICAL/NONE
 // OFFSET: 0x00521C70
 bool CSimpleHTML::IsA(int32_t type) {
     return type == CSimpleHTML::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 73949285 IDENTICAL
+// PROVEN: 73949285 IDENTICAL/NONE
 // OFFSET: 0x00521CB0
 bool CSimpleHTML::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleHTML::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);

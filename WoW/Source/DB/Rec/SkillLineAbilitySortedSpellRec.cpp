@@ -3,7 +3,7 @@
 // STATIC: %0x00B455AC
 const DBCMeta SkillLineAbilitySortedSpellRec::s_meta = { "DBFilesClient\\SkillLineAbilitySortedSpell.dbc", 2, 8, SkillLineAbilitySortedSpellRec::FixupStrings, 0 };
 
-// PROVEN: 32de84f7 IDENTICAL
+// PROVEN: 32de84f7 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SkillLineAbilitySortedSpellRec::FixupStrings(void* record, const char* strings) {
 }

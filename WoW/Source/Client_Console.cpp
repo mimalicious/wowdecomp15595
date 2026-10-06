@@ -26,14 +26,14 @@ int32_t CCommand_ReloadUI(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: c48a482f IDENTICAL
-// OFFSET: 0x009FCE20
+// PROVEN: c48a482f IDENTICAL/NONE
+// OFFSET: 0x009FCE20/0x14090FD50
 int32_t CCommand_Perf(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: e51f46e2 IDENTICAL
-// OFFSET: 0x00402660
+// PROVEN: e51f46e2 IDENTICAL/NONE
+// OFFSET: 0x00402660/0x140005500
 int32_t CCommand_TimingInfo(const char* command, const char* arguments) {
     int32_t desired = CVar::LookupRegistered("timingMethod")->m_intValue;
     OsTimeManager::TimingMethod selected = OsTimeGetTimingMethod();
@@ -46,8 +46,8 @@ int32_t CCommand_TimingInfo(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: 76c6b35a IDENTICAL
-// OFFSET: 0x00408550
+// PROVEN: 76c6b35a IDENTICAL/NONE
+// OFFSET: 0x00408550/0x14000A880
 int32_t CCommand_TogglePlayer(const char* command, const char* arguments) {
     if (CGWorldFrame::s_currentWorldFrame) {
         ConsoleWrite(Player_C_TogglePlayerRender() ? "player visible" : "player hidden", DEFAULT_COLOR);
@@ -56,7 +56,7 @@ int32_t CCommand_TogglePlayer(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: ef925efd IDENTICAL
+// PROVEN: ef925efd IDENTICAL/NONE
 // OFFSET: 0x0041EE40
 CDataStore& operator<<(CDataStore& msg, const C3Vector& vec) {
     msg.Put(vec.x);

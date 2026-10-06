@@ -243,7 +243,7 @@ FMOD_RESULT CodecUser::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fd5ee18b IDENTICAL
+// PROVEN: fd5ee18b IDENTICAL/NONE
 // OFFSET: 0x00A93A30
 FMOD_RESULT F_CALLBACK CodecUser::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -293,7 +293,7 @@ FMOD_RESULT F_CALLBACK CodecUser::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 091c64b5 IDENTICAL
+// PROVEN: 091c64b5 IDENTICAL/NONE
 // OFFSET: 0x00A93810
 FMOD_RESULT F_CALLBACK CodecUser::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {

@@ -9,7 +9,7 @@ DownloadFileCallback::DownloadFileCallback() {
     this->m_stop = false;
 }
 
-// PROVEN: b4813b58 IDENTICAL
+// PROVEN: b4813b58 IDENTICAL/NONE
 // OFFSET: 0x00B3CF20
 void DownloadFileCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     if (this->m_state) {
@@ -19,7 +19,7 @@ void DownloadFileCallback::Completed(Blizzard::URL::DownloadCallback::Status sta
     delete this;
 }
 
-// PROVEN: 7905a82a IDENTICAL
+// PROVEN: 7905a82a IDENTICAL/NONE
 // OFFSET: 0x00B3CF40
 void DownloadFileCallback::GetContentLength(int64_t length) {
     if (this->m_state) {
@@ -27,8 +27,8 @@ void DownloadFileCallback::GetContentLength(int64_t length) {
     }
 }
 
-// PROVEN: d8570886 IDENTICAL
-// OFFSET: 0x00B3CF60
+// PROVEN: d8570886 IDENTICAL/NONE
+// OFFSET: 0x00B3CF60/0x140909EB0
 bool HttpDownload::Done() {
     return !this->m_requested || this->m_state->m_done;
 }
@@ -43,14 +43,14 @@ bool HttpDownload::Cancel() {
     return false;
 }
 
-// PROVEN: 59d0958c IDENTICAL
-// OFFSET: 0x00B3CFA0
+// PROVEN: 59d0958c IDENTICAL/NONE
+// OFFSET: 0x00B3CFA0/0x140909EF0
 uint8_t* HttpDownload::GetBytes() {
     return this->m_state->m_data;
 }
 
-// PROVEN: ba25c1b3 IDENTICAL
-// OFFSET: 0x00B3CFB0
+// PROVEN: ba25c1b3 IDENTICAL/NONE
+// OFFSET: 0x00B3CFB0/0x140909F00
 int64_t HttpDownload::Size() {
     if (this->m_state->m_done) {
         this->m_state->m_size = this->m_state->m_received;
@@ -63,25 +63,25 @@ int64_t HttpDownload::Size() {
     return this->m_state->m_size;
 }
 
-// PROVEN: 96cdb03d IDENTICAL
-// OFFSET: 0x00B3D000
+// PROVEN: 96cdb03d IDENTICAL/NONE
+// OFFSET: 0x00B3D000/0x140909F40
 int64_t HttpDownload::Progress() {
     return this->m_state->m_received;
 }
 
-// PROVEN: 49878bdd IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 49878bdd IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool DownloadFileCallback::WantData() {
     return true;
 }
 
-// PROVEN: 7d316299 IDENTICAL
-// OFFSET: 0x00B3D010
+// PROVEN: 7d316299 IDENTICAL/NONE
+// OFFSET: 0x00B3D010/0x140909F50
 bool DownloadFileCallback::Stop() {
     return this->m_stop;
 }
 
-// PROVEN: 67004f4a IDENTICAL
+// PROVEN: 67004f4a IDENTICAL/NONE
 // OFFSET: 0x00B06D20
 bool DownloadFileCallback::ShouldBlock() {
     return false;
@@ -125,8 +125,8 @@ bool DownloadFileCallback::ReceivedData(const void* data, int32_t size) {
     return true;
 }
 
-// PROVEN: 6ad6c62a IDENTICAL
-// OFFSET: 0x00B3D110
+// PROVEN: 6ad6c62a IDENTICAL/NONE
+// OFFSET: 0x00B3D110/0x14090A0B0
 const char* HttpDownload::TargetName() {
     return this->m_state->m_targetName.c_str();
 }

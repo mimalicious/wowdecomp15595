@@ -52,17 +52,17 @@ void SIMD::FreeA16(void* ptr) {
     }
 }
 
-// PROVEN: 3e8552cc IDENTICAL
+// PROVEN: 3e8552cc IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SIMD::Init_SSE3(SIMD::FunctionTable* table) {
 }
 
-// PROVEN: 0b701b9a IDENTICAL
+// PROVEN: 0b701b9a IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SIMD::Init_SSSE3(SIMD::FunctionTable* table) {
 }
 
-// PROVEN: 1b111dc8 IDENTICAL
+// PROVEN: 1b111dc8 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SIMD::Init_AVX(SIMD::FunctionTable* table) {
 }

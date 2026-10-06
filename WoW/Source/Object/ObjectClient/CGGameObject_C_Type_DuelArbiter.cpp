@@ -4,13 +4,13 @@
 CGGameObject_C_Type_DuelArbiter::CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
 }
 
-// PROVEN: 33ae85df IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 33ae85df IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool CGGameObject_C_Type_DuelArbiter::CanHighlight() const {
     return true;
 }
 
-// PROVEN: 82631c17 IDENTICAL
+// PROVEN: 82631c17 IDENTICAL/NONE
 // OFFSET: 0x00B06D20
 bool CGGameObject_C_Type_DuelArbiter::CanUse() const {
     return false;

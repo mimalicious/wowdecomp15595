@@ -43,7 +43,8 @@ Crypt::PanamaCypher::PanamaCypher() {
     this->m_buffer = reinterpret_cast<uint8_t*>((reinterpret_cast<uintptr_t>(this->m_bufferData) + 15) & ~static_cast<uintptr_t>(15));
 }
 
-// OFFSET: %0x0054E5B0
+// PROVEN: fb8b4914 UNPROVEN/IDENTICAL
+// OFFSET: 0x00A1D270/0x1407C3230
 Crypt::PanamaCypher::~PanamaCypher() {
     memset(this->m_bufferData, 0, sizeof(this->m_bufferData));
 }

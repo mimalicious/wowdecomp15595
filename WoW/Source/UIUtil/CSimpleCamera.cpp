@@ -13,20 +13,20 @@ float CSimpleCamera::FOV() const {
     return this->m_fov;
 }
 
-// PROVEN: 49e00a28 IDENTICAL
-// OFFSET: 0x0043BA40
+// PROVEN: 49e00a28 IDENTICAL/NONE
+// OFFSET: 0x0043BA40/0x140046470
 C3Vector CSimpleCamera::Forward() const {
     return C3Vector(this->m_facing.a0, this->m_facing.a1, this->m_facing.a2);
 }
 
-// PROVEN: 8529d28e IDENTICAL
-// OFFSET: 0x0043BA60
+// PROVEN: 8529d28e IDENTICAL/NONE
+// OFFSET: 0x0043BA60/0x140046490
 C3Vector CSimpleCamera::Right() const {
     return C3Vector(this->m_facing.b0, this->m_facing.b1, this->m_facing.b2);
 }
 
-// PROVEN: 15ef82d6 IDENTICAL
-// OFFSET: 0x0043BA80
+// PROVEN: 15ef82d6 IDENTICAL/NONE
+// OFFSET: 0x0043BA80/0x1400464B0
 C3Vector CSimpleCamera::Up() const {
     return C3Vector(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
 }
@@ -57,7 +57,7 @@ CSimpleCamera::~CSimpleCamera() {
     }
 }
 
-// PROVEN: 1ffddff3 IDENTICAL
+// PROVEN: 1ffddff3 IDENTICAL/NONE
 // OFFSET: 0x00445E60
 CM2Scene* CSimpleCamera::GetScene() {
     if (!this->m_scene) {
@@ -67,8 +67,8 @@ CM2Scene* CSimpleCamera::GetScene() {
     return this->m_scene;
 }
 
-// PROVEN: c48d9a8a IDENTICAL
-// OFFSET: 0x00445E30
+// PROVEN: c48d9a8a IDENTICAL/NONE
+// OFFSET: 0x00445E30/0x14004CDA0
 void CSimpleCamera::SetFacing(float yaw, float pitch, float roll) {
     this->m_facing.FromEulerAnglesZYX(yaw, pitch, roll);
 }

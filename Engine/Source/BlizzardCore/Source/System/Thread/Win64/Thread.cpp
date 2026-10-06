@@ -41,8 +41,8 @@ System_Thread::ExternalTLSRecord System_Thread::s_externalTLS[32];
 // STATIC: #0x00B382B0
 int32_t System_Thread::s_externalTLSCount;
 
-// PROVEN: bb135620 IDENTICAL
-// OFFSET: 0x007AD6E0
+// PROVEN: bb135620 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AD6E0/0x1404A3370
 bool Blizzard::Thread::Sleep(uint32_t milliseconds) {
     ::Sleep(milliseconds);
     return true;

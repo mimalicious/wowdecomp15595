@@ -69,8 +69,8 @@ void CGNamePlateFrame::operator delete(void* ptr) {
     CGNamePlateFrame::s_namePlateHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: c903ef18 IDENTICAL
-// OFFSET: 0x009E72E0
+// PROVEN: c903ef18 IDENTICAL/NONE
+// OFFSET: 0x009E72E0/0x14077FCA0
 CGNamePlateFrame* CGNamePlateFrame::GetNamePlateFocus() {
     return CGUnit_C::s_namePlateFocus;
 }

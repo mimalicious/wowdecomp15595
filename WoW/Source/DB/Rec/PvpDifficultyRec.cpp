@@ -3,7 +3,7 @@
 // STATIC: %0x00B45978
 const DBCMeta PvpDifficultyRec::s_meta = { "DBFilesClient\\PvpDifficulty.dbc", 6, 24, PvpDifficultyRec::FixupStrings, 0 };
 
-// PROVEN: b210418e IDENTICAL
+// PROVEN: b210418e IDENTICAL/NONE
 // OFFSET: 0x00401000
 void PvpDifficultyRec::FixupStrings(void* record, const char* strings) {
 }

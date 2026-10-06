@@ -1,7 +1,7 @@
 #include "ClipInfo.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 
-// PROVEN: 8e45f62d IDENTICAL
+// PROVEN: 8e45f62d IDENTICAL/NONE
 // OFFSET: 0x00726C00
 void World::CLIPINFO::Set(const C3Vector& ndc) {
     this->d[0] = ndc.x;

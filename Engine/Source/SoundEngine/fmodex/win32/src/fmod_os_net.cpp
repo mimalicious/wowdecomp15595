@@ -213,7 +213,7 @@ FMOD_RESULT FMOD_OS_Net_Connect(const char *host, const unsigned short port, voi
 
 	[SEE_ALSO]
 */
-// PROVEN: d90569b5 IDENTICAL
+// PROVEN: d90569b5 IDENTICAL/NONE
 // OFFSET: 0x00AF47A0
 FMOD_RESULT FMOD_OS_Net_Listen(const unsigned short port, void **listenhandle)
 {
@@ -269,7 +269,7 @@ FMOD_RESULT FMOD_OS_Net_Listen(const unsigned short port, void **listenhandle)
 
 	[SEE_ALSO]
 */
-// PROVEN: 3fa5a42e IDENTICAL
+// PROVEN: 3fa5a42e IDENTICAL/NONE
 // OFFSET: 0x00AF4840
 FMOD_RESULT FMOD_OS_Net_Accept(const void *listenhandle, void **clienthandle)
 {
@@ -312,8 +312,8 @@ FMOD_RESULT FMOD_OS_Net_Accept(const void *listenhandle, void **clienthandle)
 
 	[SEE_ALSO]
 */
-// PROVEN: d4790e65 IDENTICAL
-// OFFSET: 0x00AF4890
+// PROVEN: d4790e65 IDENTICAL/NONE
+// OFFSET: 0x00AF4890/0x1408BDD10
 FMOD_RESULT FMOD_OS_Net_Close(const void *handle)
 {
     SOCKET sock = (SOCKET)handle;
@@ -338,8 +338,8 @@ FMOD_RESULT FMOD_OS_Net_Close(const void *handle)
 
 	[SEE_ALSO]
 */
-// PROVEN: b90ce294 IDENTICAL
-// OFFSET: 0x00AF48B0
+// PROVEN: b90ce294 IDENTICAL/NONE
+// OFFSET: 0x00AF48B0/0x1408BDD30
 FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigned int len, unsigned int *byteswritten)
 {
     SOCKET sock = (SOCKET)handle;
@@ -390,8 +390,8 @@ FMOD_RESULT FMOD_OS_Net_Write(const void *handle, const char *buf, const unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8e2b215d IDENTICAL
-// OFFSET: 0x00AF4920
+// PROVEN: 8e2b215d IDENTICAL/NONE
+// OFFSET: 0x00AF4920/0x1408BDDD0
 FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int len, unsigned int *bytesread)
 {
     SOCKET sock = (SOCKET)handle;
@@ -457,8 +457,8 @@ FMOD_RESULT FMOD_OS_Net_Read(const void *handle, char *buf, const unsigned int l
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b1549ee0 IDENTICAL
-// OFFSET: 0x00AF49B0
+// PROVEN: b1549ee0 IDENTICAL/NONE
+// OFFSET: 0x00AF49B0/0x1408BDE80
 FMOD_RESULT FMOD_OS_Net_ReadLine(const void *handle, char *buf, const unsigned int len)
 {
     unsigned int pos, read;

@@ -47,7 +47,7 @@ int32_t CSimpleCheckbox::GetScriptMetaTable() {
     return CSimpleCheckbox::s_metatable;
 }
 
-// PROVEN: 259c2cc6 IDENTICAL
+// PROVEN: 259c2cc6 IDENTICAL/NONE
 // OFFSET: 0x00515C70
 void CSimpleCheckbox::UnregisterRegion(CSimpleRegion* region) {
     if (region == this->m_checkedTexture) {
@@ -110,7 +110,7 @@ void CSimpleCheckbox::SetChecked(int32_t checked, int32_t force) {
     texture->Show();
 }
 
-// PROVEN: 5929d662 IDENTICAL
+// PROVEN: 5929d662 IDENTICAL/NONE
 // OFFSET: 0x00515E30
 void CSimpleCheckbox::OnClick(const char* btn, int32_t down) {
     this->SetChecked(this->m_checked == 0, 0);

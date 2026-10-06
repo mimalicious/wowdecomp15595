@@ -117,7 +117,7 @@ System_Mopaq::MD5VerifyData::IoOperationType System_Mopaq::MD5VerifyData::Prepar
     return IO_MULTIPLE_BLOCKS;
 }
 
-// PROVEN: 08c4682a IDENTICAL
+// PROVEN: 08c4682a IDENTICAL/NONE
 // OFFSET: 0x007AB5F0
 bool System_Mopaq::MD5VerifyData::ReadAligned(int64_t offset) {
     int32_t count = this->m_size;

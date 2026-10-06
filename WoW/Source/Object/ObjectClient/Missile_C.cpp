@@ -554,7 +554,7 @@ void CMissile::ClearTargetingEffects() {
     this->m_targetingUnit = WOWGUID();
 }
 
-// PROVEN: 7599236b IDENTICAL
+// PROVEN: 7599236b IDENTICAL/NONE
 // OFFSET: 0x00586660
 void CMissile::SetReadyToFire(CMissile** list) {
     this->Link(list);
@@ -1135,8 +1135,8 @@ void CMissile::ClearInFlightMissilesWithTarget(WOWGUID target) {
     }
 }
 
-// PROVEN: 18217234 IDENTICAL
-// OFFSET: 0x0058B7B0
+// PROVEN: 18217234 IDENTICAL/NONE
+// OFFSET: 0x0058B7B0/0x1401F4DC0
 void CMissile::ScriptManagerCallback(uint32_t event) {
     if (event == 1) {
         CMissile::RemoveMissiles();

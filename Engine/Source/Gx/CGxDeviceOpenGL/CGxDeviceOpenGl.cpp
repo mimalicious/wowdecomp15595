@@ -424,14 +424,14 @@ void CGxDeviceOpenGl::DestroyPoolAPI(CGxPool* pool) {
     pool->m_apiSpecific = NULL;
 }
 
-// PROVEN: d1bae711 IDENTICAL
+// PROVEN: d1bae711 IDENTICAL/NONE
 // OFFSET: 0x0084EA60
 void CGxDeviceOpenGl::PoolDestroy(CGxPool* pool) {
     this->DestroyPoolAPI(pool);
     CGxDevice::PoolDestroy(pool);
 }
 
-// PROVEN: 3ab52cc6 IDENTICAL
+// PROVEN: 3ab52cc6 IDENTICAL/NONE
 // OFFSET: 0x0084EA80
 void CGxDeviceOpenGl::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     CGxDevice::QueryCreate(query, type);
@@ -445,7 +445,7 @@ void CGxDeviceOpenGl::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     }
 }
 
-// PROVEN: 58d0af76 IDENTICAL
+// PROVEN: 58d0af76 IDENTICAL/NONE
 // OFFSET: 0x0084EAC0
 void CGxDeviceOpenGl::QueryDestroy(CGxQuery*& query) {
     CGxQuery* destroyed = query;
@@ -947,8 +947,8 @@ void CGxDeviceOpenGl::DeviceDestroyPoolAPI() {
     }
 }
 
-// PROVEN: 46618c12 IDENTICAL
-// OFFSET: 0x00850510
+// PROVEN: 46618c12 IDENTICAL/NONE
+// OFFSET: 0x00850510/0x14057F940
 void BindWglExtensions() {
     wglGetExtensionsStringARB = reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(wglGetProcAddress("wglGetExtensionsStringARB"));
 
@@ -1170,7 +1170,7 @@ void CGxDeviceOpenGl::DeviceDestroy() {
     s_deviceChanging = 0;
 }
 
-// PROVEN: dd7e1d2e IDENTICAL
+// PROVEN: dd7e1d2e IDENTICAL/NONE
 // OFFSET: 0x00850BA0
 void CGxDeviceOpenGl::DeviceSetBaseMipLevel(uint32_t level) {
     this->ITexForceRecreation();
@@ -1826,7 +1826,7 @@ int32_t CGxDevice::OpenGlAdapterFormats(TSGrowableArray<CGxFormat>& formats) {
     return formats.Count() != 0;
 }
 
-// PROVEN: c3594285 IDENTICAL
+// PROVEN: c3594285 IDENTICAL/NONE
 // OFFSET: 0x00870160
 void CGxDeviceOpenGl::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
@@ -1837,60 +1837,60 @@ void CGxDeviceOpenGl::SceneClearToViewport(uint32_t mask, CImVector color) {
     this->SceneClear(mask, color);
 }
 
-// PROVEN: b426fc55 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: b426fc55 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceOpenGl::DrawInstancedNonIndexed(const CGxBatch& batch) {
 }
 
-// PROVEN: cb2eacae IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: cb2eacae IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceOpenGl::DrawInstanced(const CGxBatch& batch) {
 }
 
-// PROVEN: e97dae37 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: e97dae37 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceOpenGl::SetInstanceCount(uint32_t count) {
 }
 
-// PROVEN: e4f62a13 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: e4f62a13 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceOpenGl::StereoSetConvergence(float convergence) {
 }
 
-// PROVEN: 35b1a782 IDENTICAL
+// PROVEN: 35b1a782 IDENTICAL/NONE
 // OFFSET: 0x00599E10
 float CGxDeviceOpenGl::StereoGetConvergence() {
     return 1.0f;
 }
 
-// PROVEN: fcfaab51 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: fcfaab51 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CGxDeviceOpenGl::StereoSetSeparation(float separation) {
 }
 
-// PROVEN: 1fabd306 IDENTICAL
-// OFFSET: 0x0076CA20
+// PROVEN: 1fabd306 IDENTICAL/NONE
+// OFFSET: 0x0076CA20/0x140586E10
 float CGxDeviceOpenGl::StereoGetSeparation() {
     return 0.0f;
 }
 
-// PROVEN: f71ea9a2 IDENTICAL
+// PROVEN: f71ea9a2 IDENTICAL/NONE
 // OFFSET: 0x00B06D20
 bool CGxDeviceOpenGl::StereoEnabled() {
     return false;
 }
 
-// PROVEN: 5e33e863 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 5e33e863 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void CGxDeviceOpenGl::DebugGroupBegin(const char* name, char* buffer) {
 }
 
-// PROVEN: 4ea2707c IDENTICAL
+// PROVEN: 4ea2707c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGxDeviceOpenGl::DebugGroupEnd() {
 }
 
-// PROVEN: b06a92be IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: b06a92be IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void CGxDeviceOpenGl::DebugEvent(const char* name, char* buffer) {
 }

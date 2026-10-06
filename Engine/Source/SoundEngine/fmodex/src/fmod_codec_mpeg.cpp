@@ -362,8 +362,8 @@ FMOD_RESULT CodecMPEG::closeAll()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 50d072d8 IDENTICAL
-// OFFSET: 0x00AA2490
+// PROVEN: 50d072d8 IDENTICAL/NONE
+// OFFSET: 0x00AA2490/0x140863380
 FMOD_RESULT CodecMPEG::getPCMLength() 
 {
     FMOD_RESULT     result;
@@ -915,8 +915,8 @@ FMOD_RESULT CodecMPEG::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fc8c78f6 IDENTICAL
-// OFFSET: 0x00AA2610
+// PROVEN: fc8c78f6 IDENTICAL/NONE
+// OFFSET: 0x00AA2610/0x140863560
 FMOD_RESULT CodecMPEG::closeInternal()
 {
     if (mPCMBufferMemory)
@@ -962,7 +962,7 @@ FMOD_RESULT CodecMPEG::closeInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 728fd970 IDENTICAL
+// PROVEN: 728fd970 IDENTICAL/NONE
 // OFFSET: 0x00AA26D0
 FMOD_RESULT CodecMPEG::readInternal(void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1274,7 +1274,7 @@ FMOD_RESULT CodecMPEG::setPositionInternal(int subsound, unsigned int position, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2ed4ba51 IDENTICAL
+// PROVEN: 2ed4ba51 IDENTICAL/NONE
 // OFFSET: 0x00AA2B60
 FMOD_RESULT CodecMPEG::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
@@ -1313,7 +1313,7 @@ FMOD_RESULT CodecMPEG::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6b4bd4fb IDENTICAL
+// PROVEN: 6b4bd4fb IDENTICAL/NONE
 // OFFSET: 0x00AA34B0
 FMOD_RESULT F_CALLBACK CodecMPEG::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -1339,8 +1339,8 @@ FMOD_RESULT F_CALLBACK CodecMPEG::openCallback(FMOD_CODEC_STATE *codec, FMOD_MOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3f8e7737 IDENTICAL
-// OFFSET: 0x00AA2BF0
+// PROVEN: 3f8e7737 IDENTICAL/NONE
+// OFFSET: 0x00AA2BF0/0x140863C30
 FMOD_RESULT F_CALLBACK CodecMPEG::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;
@@ -1365,7 +1365,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f2f2a9a4 IDENTICAL
+// PROVEN: f2f2a9a4 IDENTICAL/NONE
 // OFFSET: 0x00AA2C20
 FMOD_RESULT F_CALLBACK CodecMPEG::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {
@@ -1393,7 +1393,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::soundCreateCallback(FMOD_CODEC_STATE *codec, i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: edcaf4b7 IDENTICAL
+// PROVEN: edcaf4b7 IDENTICAL/NONE
 // OFFSET: 0x00AA2C60
 FMOD_RESULT F_CALLBACK CodecMPEG::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1418,7 +1418,7 @@ FMOD_RESULT F_CALLBACK CodecMPEG::readCallback(FMOD_CODEC_STATE *codec, void *bu
 	[SEE_ALSO]
 ]
 */
-// PROVEN: be7ac06f IDENTICAL
+// PROVEN: be7ac06f IDENTICAL/NONE
 // OFFSET: 0x00AA2C90
 FMOD_RESULT F_CALLBACK CodecMPEG::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -1443,8 +1443,8 @@ FMOD_RESULT F_CALLBACK CodecMPEG::setPositionCallback(FMOD_CODEC_STATE *codec, i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 01e74aa2 IDENTICAL
-// OFFSET: 0x00AA2CC0
+// PROVEN: 01e74aa2 IDENTICAL/NONE
+// OFFSET: 0x00AA2CC0/0x140863CB0
 FMOD_RESULT F_CALLBACK CodecMPEG::resetCallback(FMOD_CODEC_STATE *codec)
 {
     CodecMPEG *mpeg = (CodecMPEG *)codec;    

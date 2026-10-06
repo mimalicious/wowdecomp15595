@@ -3,7 +3,7 @@
 // STATIC: %0x00B47058
 const DBCMeta CameraShakesRec::s_meta = { "DBFilesClient\\CameraShakes.dbc", 8, 32, CameraShakesRec::FixupStrings, 0 };
 
-// PROVEN: 2b4e458b IDENTICAL
+// PROVEN: 2b4e458b IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CameraShakesRec::FixupStrings(void* record, const char* strings) {
 }

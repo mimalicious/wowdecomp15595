@@ -220,7 +220,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ForceGossip", &Script_ForceGossip },
 };
 
-// PROVEN: ce311808 IDENTICAL
+// PROVEN: ce311808 IDENTICAL/NONE
 // OFFSET: 0x009E1690
 void GossipInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -228,7 +228,7 @@ void GossipInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a367cf61 IDENTICAL
+// PROVEN: a367cf61 IDENTICAL/NONE
 // OFFSET: 0x009E16C0
 void GossipInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

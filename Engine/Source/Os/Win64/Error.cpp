@@ -3,16 +3,16 @@
 #include <windows.h>
 #include "Engine/Source/Os/Error.h"
 
-// PROVEN: 36634056 IDENTICAL
-// OFFSET: 0x0087BC70
+// PROVEN: 36634056 IDENTICAL/DIFFERENT
+// OFFSET: 0x0087BC70/0x1405B3240
 char* OsGetLastErrorStr() {
     char* buffer;
     FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<char*>(&buffer), 0, NULL);
     return buffer;
 }
 
-// PROVEN: 8e8e682a IDENTICAL
-// OFFSET: 0x0087BCB0
+// PROVEN: 8e8e682a IDENTICAL/IDENTICAL
+// OFFSET: 0x0087BCB0/0x1405B3290
 void OsFreeLastErrorStr(char* str) {
     LocalFree(str);
 }

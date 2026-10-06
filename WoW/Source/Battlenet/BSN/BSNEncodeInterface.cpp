@@ -39,8 +39,8 @@ BSN::EncodeContext* BSN::BSNPrimitiveEncoder::ConstructContext(void* memory) con
     return context;
 }
 
-// PROVEN: 2b1d3d87 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 2b1d3d87 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void BSN::BSNPrimitiveEncoder::DestroyContext(EncodeContext* context) const {
 }
 
@@ -893,8 +893,8 @@ bool BSN::EncodedObject::WalkAndSet(EncodedObject* target) const {
     return encoder->WalkAndSet(target->GetEncoder(), target->GetContext(), this->GetContext());
 }
 
-// PROVEN: 998c1941 IDENTICAL
-// OFFSET: 0x00627270
+// PROVEN: 998c1941 IDENTICAL/NONE
+// OFFSET: 0x00627270/0x1402B9280
 void BSN::EncodedObject::IncRef() const {
     const_cast<EncodedObject*>(this)->m_refCount++;
 }

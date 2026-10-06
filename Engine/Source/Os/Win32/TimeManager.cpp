@@ -110,12 +110,14 @@ uint32_t OsTimeGetTestError() {
     return s_OsTimeMgr.m_timingTestError;
 }
 
-// OFFSET: %0x007DBB70
+// PROVEN: 53bd9f74 UNPROVEN/IDENTICAL
+// OFFSET: 0x00879430/0x1405B23E0
 OsTimeManager::TimingMethod OsTimeGetTimingMethod() {
     return s_OsTimeMgr.m_timingMethod;
 }
 
-// OFFSET: %0x007DBB80
+// PROVEN: 6a504ed0 DIFFERENT/IDENTICAL
+// OFFSET: 0x00879440/0x1405B23F0
 const char* GetTimingMethodName(OsTimeManager::TimingMethod method) {
     switch (method) {
         case OsTimeManager::NotSet:
@@ -234,7 +236,7 @@ void OsTimeManagerCreate(OsTimeManager::TimingMethod method) {
     new (&s_OsTimeMgr) OsTimeManager(method);
 }
 
-// PROVEN: d3396581 IDENTICAL
+// PROVEN: d3396581 IDENTICAL/NONE
 // OFFSET: 0x008755D0
 void OsSleep(uint32_t milliseconds) {
     Sleep(milliseconds);

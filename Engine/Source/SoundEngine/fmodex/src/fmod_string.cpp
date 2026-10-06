@@ -6,8 +6,8 @@
 
 using namespace FMOD;
      
-// PROVEN: 3a03a450 IDENTICAL
-// OFFSET: 0x00AC32D0
+// PROVEN: 3a03a450 IDENTICAL/NONE
+// OFFSET: 0x00AC32D0/0x14088BBE0
 int FMOD_strlen(const char * s)
 {
     const char *sc;
@@ -17,8 +17,8 @@ int FMOD_strlen(const char * s)
     return (int)(sc - s);
 }
 
-// PROVEN: 20a99f43 IDENTICAL
-// OFFSET: 0x00AC32F0
+// PROVEN: 20a99f43 IDENTICAL/NONE
+// OFFSET: 0x00AC32F0/0x14088BC00
 char * FMOD_strcpy(char * dest,const char *src)
 {
     char *tmp = dest;
@@ -28,8 +28,8 @@ char * FMOD_strcpy(char * dest,const char *src)
     return tmp;
 }
 
-// PROVEN: 6b155366 IDENTICAL
-// OFFSET: 0x00AC3310
+// PROVEN: 6b155366 IDENTICAL/NONE
+// OFFSET: 0x00AC3310/0x14088BC30
 char * FMOD_strncpy(char * dest, const char *src, int count)
 {
     char *tmp = dest;
@@ -40,8 +40,8 @@ char * FMOD_strncpy(char * dest, const char *src, int count)
 }
 
 
-// PROVEN: 3f5200b2 IDENTICAL
-// OFFSET: 0x00AC3340
+// PROVEN: 3f5200b2 IDENTICAL/NONE
+// OFFSET: 0x00AC3340/0x14088BC60
 char * FMOD_strcat(char * dest, const char * src)
 {
     char *tmp = dest;
@@ -52,8 +52,8 @@ char * FMOD_strcat(char * dest, const char * src)
     return tmp;
 }
 
-// PROVEN: d5e1d4ed IDENTICAL
-// OFFSET: 0x00AC3370
+// PROVEN: d5e1d4ed IDENTICAL/NONE
+// OFFSET: 0x00AC3370/0x14088BCA0
 char * FMOD_strncat(char *dest, const char *src, int count)
 {
     char *tmp = dest;
@@ -85,8 +85,8 @@ char FMOD_tolower(char in)
     return in;
 }
 
-// PROVEN: ef5ce90d IDENTICAL
-// OFFSET: 0x00AC33C0
+// PROVEN: ef5ce90d IDENTICAL/NONE
+// OFFSET: 0x00AC33C0/0x14088BCF0
 char *FMOD_strupr(char *string)
 {
     char * cp;
@@ -192,8 +192,8 @@ char * FMOD_strchr(const char * s1, int c)
     return (char *)0;
 }
 
-// PROVEN: 4e0e61df IDENTICAL
-// OFFSET: 0x00AC3610
+// PROVEN: 4e0e61df IDENTICAL/NONE
+// OFFSET: 0x00AC3610/0x14088BF60
 char * FMOD_strstr(const char * s1,const char * s2)
 {
     int l1, l2;
@@ -232,7 +232,7 @@ int FMOD_memcmp(const void * cs,const void * ct, int count)
 }
 
 
-// PROVEN: 781c5c27 IDENTICAL
+// PROVEN: 781c5c27 IDENTICAL/NONE
 // OFFSET: 0x00AC3530
 void * FMOD_memmove(void * dest,const void *src, int count)
 {
@@ -255,8 +255,8 @@ void * FMOD_memmove(void * dest,const void *src, int count)
 }
 
 
-// PROVEN: 0f32b136 IDENTICAL
-// OFFSET: 0x00AC3590
+// PROVEN: 0f32b136 IDENTICAL/NONE
+// OFFSET: 0x00AC3590/0x14088BEC0
 char *FMOD_strdup(const char * src)
 {
     char *ret = 0;
@@ -271,8 +271,8 @@ char *FMOD_strdup(const char * src)
 }
 
 
-// PROVEN: 0c6270d4 IDENTICAL
-// OFFSET: 0x00AC35E0
+// PROVEN: 0c6270d4 IDENTICAL/NONE
+// OFFSET: 0x00AC35E0/0x14088BF40
 char *FMOD_eatwhite(const char *string)
 {
     for (;*string && FMOD_isspace(*string);string++) ;

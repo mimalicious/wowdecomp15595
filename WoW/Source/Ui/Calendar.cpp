@@ -1550,7 +1550,7 @@ CalendarDayEvent::~CalendarDayEvent() {
     }
 }
 
-// PROVEN: c0e438d6 IDENTICAL
+// PROVEN: c0e438d6 IDENTICAL/NONE
 // OFFSET: 0x009AAB10
 static uint32_t EncodeDate(int32_t month, int32_t monthDay, int32_t year) {
     WowTime date;
@@ -3595,7 +3595,7 @@ void CGCalendar::ProcessEventUpdatedAlert(CDataStore* msg, uint8_t* clearPending
     }
 }
 
-// PROVEN: 8e83d321 IDENTICAL
+// PROVEN: 8e83d321 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGCalendar::LeaveWorld() {
 }

@@ -21,25 +21,25 @@ int32_t CScriptRegion::s_objectType;
 // STATIC: %0x00BB860C
 const char* CScriptRegion::s_objectTypeName = "Region";
 
-// PROVEN: e23865aa IDENTICAL
-// OFFSET: 0x00469450
+// PROVEN: e23865aa IDENTICAL/NONE
+// OFFSET: 0x00469450/0x14013FFC0
 CScriptObject* CScriptRegion::GetScriptObjectParent() {
     return this->m_parent;
 }
 
-// PROVEN: 70c65224 IDENTICAL
+// PROVEN: 70c65224 IDENTICAL/NONE
 // OFFSET: 0x00469460
 bool CScriptRegion::IsA(int32_t type) {
     return type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: b3363a79 IDENTICAL
+// PROVEN: b3363a79 IDENTICAL/NONE
 // OFFSET: 0x00469490
 bool CScriptRegion::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CScriptRegion::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: ba11daed IDENTICAL
+// PROVEN: ba11daed IDENTICAL/NONE
 // OFFSET: 0x005025F0
 const char* CScriptRegion::GetObjectTypeName() {
     return CScriptRegion::s_objectTypeName;
@@ -52,13 +52,13 @@ CScriptRegion::CScriptRegion() {
     this->m_playingAnimGroups = NULL;
 }
 
-// PROVEN: 17d84e01 IDENTICAL
+// PROVEN: 17d84e01 IDENTICAL/NONE
 // OFFSET: 0x0050FBA0
 bool CScriptRegion::IsDragging() {
     return this->m_parent ? this->m_parent->IsDragging() : false;
 }
 
-// PROVEN: 95f2f5a3 IDENTICAL
+// PROVEN: 95f2f5a3 IDENTICAL/NONE
 // OFFSET: 0x005025E0
 void CScriptRegion::SetParent(CSimpleFrame* parent) {
     this->m_parent = parent;
@@ -82,15 +82,15 @@ void CScriptRegion::LoadXML_Animations(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 92f1b045 IDENTICAL
-// OFFSET: 0x0050FCA0
+// PROVEN: 92f1b045 IDENTICAL/NONE
+// OFFSET: 0x0050FCA0/0x140159090
 CLayoutFrame* CScriptRegion::GetLayoutParent() {
     CLayoutFrame* parent = this->m_parent;
     return parent ? parent : CSimpleTop::s_instance;
 }
 
-// PROVEN: d8e36992 IDENTICAL
-// OFFSET: 0x0050FCC0
+// PROVEN: d8e36992 IDENTICAL/NONE
+// OFFSET: 0x0050FCC0/0x1401590B0
 CLayoutFrame* CScriptRegion::GetLayoutFrameByName(const char* name) {
     char fullName[1024];
     this->CreateName(name, fullName, sizeof(fullName));
@@ -165,8 +165,8 @@ void CScriptRegion::LoadXML(linkObject* node, CStatus* status) {
     this->LoadXML_Animations(node, status);
 }
 
-// PROVEN: 89deea3a IDENTICAL
-// OFFSET: 0x0050FF30
+// PROVEN: 89deea3a IDENTICAL/NONE
+// OFFSET: 0x0050FF30/0x1401593D0
 int32_t CScriptRegion::HasActiveAnimGroup() {
     for (CScriptRegion* region = this; region; region = region->m_parent) {
         if (region->m_playingAnimGroups && region->m_playingAnimGroups->Head()) {
@@ -288,7 +288,7 @@ CScriptRegion::~CScriptRegion() {
     }
 }
 
-// PROVEN: 4d845176 IDENTICAL
+// PROVEN: 4d845176 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CScriptRegion::PreOnAnimUpdate() {
 }
@@ -297,13 +297,13 @@ void CScriptRegion::PreOnAnimUpdate() {
 void CScriptRegion::AnimActivated(CSimpleAnimGroup* group, int32_t first, int32_t hasAlpha) {
 }
 
-// PROVEN: 83a5621b IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 83a5621b IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void CScriptRegion::AnimDeactivated(CSimpleAnimGroup* group, int32_t last) {
 }
 
-// PROVEN: 520f3671 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 520f3671 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CScriptRegion::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
 }
 
@@ -315,7 +315,7 @@ void CScriptRegion::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, co
 void CScriptRegion::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
 }
 
-// PROVEN: 7108781d IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 7108781d IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CScriptRegion::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
 }

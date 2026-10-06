@@ -88,14 +88,14 @@ void AsioDrivers::removeCurrentDriver()
 
 extern IASIO* theAsioDriver;
 
-// PROVEN: 1934e6d3 IDENTICAL
+// PROVEN: 1934e6d3 IDENTICAL/NONE
 // OFFSET: 0x00AFE340
 AsioDrivers::AsioDrivers() : AsioDriverList()
 {
 	curIndex = -1;
 }
 
-// PROVEN: 7ea342f6 IDENTICAL
+// PROVEN: 7ea342f6 IDENTICAL/NONE
 // OFFSET: 0x00AFE360
 bool AsioDrivers::close()
 {
@@ -149,7 +149,7 @@ bool AsioDrivers::loadDriver(char *name)
 	return false;
 }
 
-// PROVEN: 8d480093 IDENTICAL
+// PROVEN: 8d480093 IDENTICAL/NONE
 // OFFSET: 0x00AFE370
 void AsioDrivers::removeCurrentDriver()
 {

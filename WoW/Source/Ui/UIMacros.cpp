@@ -231,7 +231,7 @@ MACRONODE* CGUIMacros::FindMacro(const char* name) {
     return NULL;
 }
 
-// PROVEN: 73046a93 IDENTICAL
+// PROVEN: 73046a93 IDENTICAL/NONE
 // OFFSET: 0x008A4660
 bool CGUIMacros::IsActionAllowed(uint32_t action) {
     return !CGUIMacros::m_macroButton || ((1 << action) & CGUIMacros::m_state);
@@ -252,7 +252,7 @@ void CGUIMacros::Initialize() {
     CGUIMacros::LoadIcons();
 }
 
-// PROVEN: 8b1765db IDENTICAL
+// PROVEN: 8b1765db IDENTICAL/NONE
 // OFFSET: 0x009C7050
 void CGUIMacros::LoadMacros() {
     s_pendingLoads = 0x30000;
@@ -363,8 +363,8 @@ static int32_t IconListDirectoryCallback(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// PROVEN: 6ee8c901 IDENTICAL
-// OFFSET: 0x009C4680
+// PROVEN: 6ee8c901 IDENTICAL/NONE
+// OFFSET: 0x009C4680/0x140751E20
 static int32_t IconListCustomCallback(OS_FILE_DATA& data, void* param) {
     if (!(data.flags & OS_FILE_ATTRIBUTE_DIRECTORY)) {
         AddMacroIcon(data.fileName);
@@ -1080,7 +1080,7 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// PROVEN: d712a366 IDENTICAL
+// PROVEN: d712a366 IDENTICAL/NONE
 // OFFSET: 0x009C5300
 void CGUIMacros::SaveMacros() {
     if (!CGUIMacros::m_saveMacros) {

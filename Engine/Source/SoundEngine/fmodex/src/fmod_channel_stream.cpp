@@ -75,8 +75,8 @@ FMOD_RESULT ChannelStream::setRealChannel(ChannelReal *realchan)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8f546df6 IDENTICAL
-// OFFSET: 0x00ACB8E0
+// PROVEN: 8f546df6 IDENTICAL/NONE
+// OFFSET: 0x00ACB8E0/0x140895B20
 FMOD_RESULT ChannelStream::set2DFreqVolumePanFor3D()
 {
     FMOD_RESULT result = FMOD_OK;
@@ -106,8 +106,8 @@ FMOD_RESULT ChannelStream::set2DFreqVolumePanFor3D()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e22d77d9 IDENTICAL
-// OFFSET: 0x00ACB910
+// PROVEN: e22d77d9 IDENTICAL/NONE
+// OFFSET: 0x00ACB910/0x140895B80
 FMOD_RESULT ChannelStream::moveChannelGroup(ChannelGroupI *oldchannelgroup, ChannelGroupI *newchannelgroup)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -137,8 +137,8 @@ FMOD_RESULT ChannelStream::moveChannelGroup(ChannelGroupI *oldchannelgroup, Chan
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4e33922a IDENTICAL
-// OFFSET: 0x00ACB950
+// PROVEN: 4e33922a IDENTICAL/NONE
+// OFFSET: 0x00ACB950/0x140895BF0
 FMOD_RESULT ChannelStream::alloc()
 {
     FMOD_RESULT result;
@@ -227,8 +227,8 @@ FMOD_RESULT ChannelStream::alloc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3472d202 IDENTICAL
-// OFFSET: 0x00ACBAF0
+// PROVEN: 3472d202 IDENTICAL/NONE
+// OFFSET: 0x00ACBAF0/0x140895DF0
 FMOD_RESULT ChannelStream::start()
 {
     FMOD_RESULT result;
@@ -272,8 +272,8 @@ FMOD_RESULT ChannelStream::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0893ac8e IDENTICAL
-// OFFSET: 0x00ACBB50
+// PROVEN: 0893ac8e IDENTICAL/NONE
+// OFFSET: 0x00ACBB50/0x140895E80
 FMOD_RESULT ChannelStream::update(int delta)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -303,8 +303,8 @@ FMOD_RESULT ChannelStream::update(int delta)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a1d072c6 IDENTICAL
-// OFFSET: 0x00ACC260
+// PROVEN: a1d072c6 IDENTICAL/NONE
+// OFFSET: 0x00ACC260/0x140896980
 FMOD_RESULT ChannelStream::updateStream()
 {
     FMOD_RESULT result = FMOD_OK;
@@ -496,8 +496,8 @@ FMOD_RESULT ChannelStream::updateStream()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 717336ce IDENTICAL
-// OFFSET: 0x00ACBB90
+// PROVEN: 717336ce IDENTICAL/NONE
+// OFFSET: 0x00ACBB90/0x140895EF0
 FMOD_RESULT ChannelStream::setMode(FMOD_MODE mode)
 {
     FMOD_RESULT result;
@@ -539,8 +539,8 @@ FMOD_RESULT ChannelStream::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 13f76987 IDENTICAL
-// OFFSET: 0x00ACBBF0
+// PROVEN: 13f76987 IDENTICAL/NONE
+// OFFSET: 0x00ACBBF0/0x140895F70
 FMOD_RESULT ChannelStream::stop(bool ignoreenddelay, bool resetstate, bool force)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -626,8 +626,8 @@ FMOD_RESULT ChannelStream::stop(bool ignoreenddelay, bool resetstate, bool force
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c34fd786 IDENTICAL
-// OFFSET: 0x00ACBDA0
+// PROVEN: c34fd786 IDENTICAL/NONE
+// OFFSET: 0x00ACBDA0/0x140895B10
 FMOD_RESULT ChannelStream::stop(bool ignoreenddelay, bool resetstate)
 {
     return stop(ignoreenddelay, resetstate);
@@ -649,8 +649,8 @@ FMOD_RESULT ChannelStream::stop(bool ignoreenddelay, bool resetstate)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a22ada9c IDENTICAL
-// OFFSET: 0x00ACBDB0
+// PROVEN: a22ada9c IDENTICAL/NONE
+// OFFSET: 0x00ACBDB0/0x140896190
 FMOD_RESULT ChannelStream::setPaused(bool paused)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -680,8 +680,8 @@ FMOD_RESULT ChannelStream::setPaused(bool paused)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9689ec5f IDENTICAL
-// OFFSET: 0x00ACBDF0
+// PROVEN: 9689ec5f IDENTICAL/NONE
+// OFFSET: 0x00ACBDF0/0x140896200
 FMOD_RESULT ChannelStream::setVolume(float volume)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -721,8 +721,8 @@ FMOD_RESULT ChannelStream::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 431b6e09 IDENTICAL
-// OFFSET: 0x00ACBE60
+// PROVEN: 431b6e09 IDENTICAL/NONE
+// OFFSET: 0x00ACBE60/0x1408962A0
 FMOD_RESULT ChannelStream::setFrequency(float frequency)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -787,8 +787,8 @@ FMOD_RESULT ChannelStream::setPan(float pan, float fbpan)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 469cef2d IDENTICAL
-// OFFSET: 0x00ACBF20
+// PROVEN: 469cef2d IDENTICAL/NONE
+// OFFSET: 0x00ACBF20/0x1408963F0
 FMOD_RESULT ChannelStream::setDelay(unsigned int startdelay, unsigned int enddelay)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -818,7 +818,7 @@ FMOD_RESULT ChannelStream::setDelay(unsigned int startdelay, unsigned int enddel
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8fa9e61c IDENTICAL
+// PROVEN: 8fa9e61c IDENTICAL/NONE
 // OFFSET: 0x00ACBF60
 FMOD_RESULT ChannelStream::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
@@ -849,8 +849,8 @@ FMOD_RESULT ChannelStream::setSpeakerMix(float frontleft, float frontright, floa
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 246b4092 IDENTICAL
-// OFFSET: 0x00ACBFD0
+// PROVEN: 246b4092 IDENTICAL/NONE
+// OFFSET: 0x00ACBFD0/0x140896590
 FMOD_RESULT ChannelStream::setSpeakerLevels(int speaker, float *levels, int numlevels)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1166,8 +1166,8 @@ FMOD_RESULT ChannelStream::getPosition(unsigned int *position, FMOD_TIMEUNIT pos
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 927ff71e IDENTICAL
-// OFFSET: 0x00ACC010
+// PROVEN: 927ff71e IDENTICAL/NONE
+// OFFSET: 0x00ACC010/0x140896600
 FMOD_RESULT ChannelStream::setLoopPoints(unsigned int loopstart, unsigned int looplength)
 {
     if (ChannelReal::setLoopPoints(loopstart, looplength) == FMOD_OK)
@@ -1194,8 +1194,8 @@ FMOD_RESULT ChannelStream::setLoopPoints(unsigned int loopstart, unsigned int lo
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ff0597b6 IDENTICAL
-// OFFSET: 0x00ACC050
+// PROVEN: ff0597b6 IDENTICAL/NONE
+// OFFSET: 0x00ACC050/0x140896660
 FMOD_RESULT ChannelStream::setLoopCount(int loopcount)
 {
     if (ChannelReal::setLoopCount(loopcount) == FMOD_OK)
@@ -1222,8 +1222,8 @@ FMOD_RESULT ChannelStream::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d1f9e291 IDENTICAL
-// OFFSET: 0x00ACC080
+// PROVEN: d1f9e291 IDENTICAL/NONE
+// OFFSET: 0x00ACC080/0x1408966A0
 FMOD_RESULT ChannelStream::set3DAttributes()
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1253,8 +1253,8 @@ FMOD_RESULT ChannelStream::set3DAttributes()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9de16a77 IDENTICAL
-// OFFSET: 0x00ACC0B0
+// PROVEN: 9de16a77 IDENTICAL/NONE
+// OFFSET: 0x00ACC0B0/0x140896700
 FMOD_RESULT ChannelStream::set3DMinMaxDistance()
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1284,8 +1284,8 @@ FMOD_RESULT ChannelStream::set3DMinMaxDistance()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fb3a361a IDENTICAL
-// OFFSET: 0x00ACC0E0
+// PROVEN: fb3a361a IDENTICAL/NONE
+// OFFSET: 0x00ACC0E0/0x140896760
 FMOD_RESULT ChannelStream::set3DOcclusion(float directocclusion, float reverbocclusion)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1315,8 +1315,8 @@ FMOD_RESULT ChannelStream::set3DOcclusion(float directocclusion, float reverbocc
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 605672e8 IDENTICAL
-// OFFSET: 0x00ACC120
+// PROVEN: 605672e8 IDENTICAL/NONE
+// OFFSET: 0x00ACC120/0x1408967D0
 FMOD_RESULT ChannelStream::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1346,8 +1346,8 @@ FMOD_RESULT ChannelStream::setReverbProperties(const FMOD_REVERB_CHANNELPROPERTI
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 85fa73c8 IDENTICAL
-// OFFSET: 0x00ACC160
+// PROVEN: 85fa73c8 IDENTICAL/NONE
+// OFFSET: 0x00ACC160/0x140896850
 FMOD_RESULT ChannelStream::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *prop)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1377,8 +1377,8 @@ FMOD_RESULT ChannelStream::getReverbProperties(FMOD_REVERB_CHANNELPROPERTIES *pr
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 54c952fa IDENTICAL
-// OFFSET: 0x00ACC1A0
+// PROVEN: 54c952fa IDENTICAL/NONE
+// OFFSET: 0x00ACC1A0/0x1408968C0
 FMOD_RESULT ChannelStream::isPlaying(bool *isplaying, bool includethreadlatency)
 {
     *isplaying = !mFinished;
@@ -1402,8 +1402,8 @@ FMOD_RESULT ChannelStream::isPlaying(bool *isplaying, bool includethreadlatency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 93e81896 IDENTICAL
-// OFFSET: 0x00ACC1C0
+// PROVEN: 93e81896 IDENTICAL/NONE
+// OFFSET: 0x00ACC1C0/0x1408968E0
 FMOD_RESULT ChannelStream::getSpectrum(float *spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype)
 {
     return mRealChannel[0]->getSpectrum(spectrumarray, numvalues, channeloffset, windowtype);
@@ -1425,8 +1425,8 @@ FMOD_RESULT ChannelStream::getSpectrum(float *spectrumarray, int numvalues, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ba13cdff IDENTICAL
-// OFFSET: 0x00ACC1E0
+// PROVEN: ba13cdff IDENTICAL/NONE
+// OFFSET: 0x00ACC1E0/0x140896900
 FMOD_RESULT ChannelStream::getWaveData(float *wavearray, int numvalues, int channeloffset)
 {
     return mRealChannel[0]->getWaveData(wavearray, numvalues, channeloffset);
@@ -1448,8 +1448,8 @@ FMOD_RESULT ChannelStream::getWaveData(float *wavearray, int numvalues, int chan
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c8fe3107 IDENTICAL
-// OFFSET: 0x00ACC200
+// PROVEN: c8fe3107 IDENTICAL/NONE
+// OFFSET: 0x00ACC200/0x140896910
 FMOD_RESULT ChannelStream::getDSPHead(DSPI **dsp)
 {
     return mRealChannel[0]->getDSPHead(dsp);

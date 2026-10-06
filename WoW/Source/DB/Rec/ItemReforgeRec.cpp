@@ -3,7 +3,7 @@
 // STATIC: %0x00B45F3C
 const DBCMeta ItemReforgeRec::s_meta = { "DBFilesClient\\ItemReforge.dbc", 5, 20, ItemReforgeRec::FixupStrings, 0 };
 
-// PROVEN: 225f83aa IDENTICAL
+// PROVEN: 225f83aa IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ItemReforgeRec::FixupStrings(void* record, const char* strings) {
 }

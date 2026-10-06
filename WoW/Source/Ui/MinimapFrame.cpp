@@ -424,8 +424,8 @@ const char* CGMinimapFrame::GetObjectTypeName() {
     return CGMinimapFrame::s_objectTypeName;
 }
 
-// PROVEN: 59736c8c IDENTICAL
-// OFFSET: 0x009D3C80
+// PROVEN: 59736c8c IDENTICAL/NONE
+// OFFSET: 0x009D3C80/0x140765610
 int32_t CGMinimapFrame::GetScriptMetaTable() {
     return CGMinimapFrame::s_metatable;
 }
@@ -480,7 +480,7 @@ void CGMinimapFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// PROVEN: 0371142e IDENTICAL
+// PROVEN: 0371142e IDENTICAL/NONE
 // OFFSET: 0x009D05D0
 void CGMinimapFrame::OnLayerCursorExit(int32_t a2, int32_t a3) {
     CGGameUI::m_gameTooltip->Hide();
@@ -535,7 +535,7 @@ CGMinimapFrame::~CGMinimapFrame() {
     }
 }
 
-// PROVEN: d9f90a6e IDENTICAL
+// PROVEN: d9f90a6e IDENTICAL/NONE
 // OFFSET: 0x009DDED0
 void CGMinimapFrame::RenderCallback(void* param) {
     if (param) {
@@ -543,7 +543,7 @@ void CGMinimapFrame::RenderCallback(void* param) {
     }
 }
 
-// PROVEN: da772788 IDENTICAL
+// PROVEN: da772788 IDENTICAL/NONE
 // OFFSET: 0x009DDEF0
 void CGMinimapFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
@@ -1150,7 +1150,7 @@ void CGMinimapFrame::UpdateQuads(const C2Vector& center, float scale) {
     }
 }
 
-// PROVEN: 0e12e837 IDENTICAL
+// PROVEN: 0e12e837 IDENTICAL/NONE
 // OFFSET: 0x004E8680
 TSGrowableArray<AreaPOIRec*>* MinimapGetPOI(int32_t* changed) {
     *changed = s_poisChanged;

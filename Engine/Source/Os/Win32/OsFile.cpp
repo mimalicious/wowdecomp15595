@@ -7,7 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Os/OsFile.h"
 
-// PROVEN: b5de032f IDENTICAL
+// PROVEN: b5de032f IDENTICAL/NONE
 // OFFSET: 0x007A8D40
 bool OsCloseFile(HOSFILE file) {
     return Blizzard::File::Close(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
@@ -198,7 +198,8 @@ bool OsFileList_Internal::Callback(const Blizzard::File::ProcessDirParms& parms)
     return !list->m_callback(data, list->m_param);
 }
 
-// OFFSET: %0x0070B7A0
+// PROVEN: 6dbab928 DIFFERENT/IDENTICAL
+// OFFSET: 0x007A9230/0x14049EFA0
 uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t createDisposition) {
     uint32_t mode = 0;
 

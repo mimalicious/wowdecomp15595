@@ -38,19 +38,19 @@ void CSimpleButton::operator delete(void* ptr) {
     CSimpleButton::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 01d45272 IDENTICAL
+// PROVEN: 01d45272 IDENTICAL/NONE
 // OFFSET: 0x00514CA0
 bool CSimpleButton::IsA(int32_t type) {
     return type == CSimpleButton::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 95cfd9b9 IDENTICAL
+// PROVEN: 95cfd9b9 IDENTICAL/NONE
 // OFFSET: 0x00514CE0
 bool CSimpleButton::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleButton::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 597fa702 IDENTICAL
+// PROVEN: 597fa702 IDENTICAL/NONE
 // OFFSET: 0x00514B30
 void CSimpleButton::LockHighlight(int32_t lock) {
     CSimpleFrame::LockHighlight(lock);
@@ -369,14 +369,14 @@ void CSimpleButton::RunOnDoubleClickScript(const char* btn) {
 CSimpleButton::~CSimpleButton() {
 }
 
-// PROVEN: ace7fb86 IDENTICAL
+// PROVEN: ace7fb86 IDENTICAL/NONE
 // OFFSET: 0x00514570
 const char* CSimpleButton::GetObjectTypeName() {
     return CSimpleButton::s_objectTypeName;
 }
 
-// PROVEN: d0011f78 IDENTICAL
-// OFFSET: 0x00514580
+// PROVEN: d0011f78 IDENTICAL/NONE
+// OFFSET: 0x00514580/0x14015EAB0
 int32_t CSimpleButton::GetScriptMetaTable() {
     return CSimpleButton::s_metatable;
 }
@@ -488,7 +488,7 @@ void CSimpleButton::OnDragStart(const CMouseEvent& evt) {
     }
 }
 
-// PROVEN: a199b399 IDENTICAL
+// PROVEN: a199b399 IDENTICAL/NONE
 // OFFSET: 0x00514880
 void CSimpleButton::SetClickAction(uint64_t action) {
     this->m_clickAction = action;
@@ -829,7 +829,7 @@ int32_t CSimpleButton::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return 1;
 }
 
-// PROVEN: 3f118c53 IDENTICAL
+// PROVEN: 3f118c53 IDENTICAL/NONE
 // OFFSET: 0x00515310
 void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     if (this->m_state != BUTTONSTATE_DISABLED) {
@@ -847,7 +847,7 @@ void CSimpleButton::OnLayerCursorEnter(int32_t a2) {
     }
 }
 
-// PROVEN: b98223ee IDENTICAL
+// PROVEN: b98223ee IDENTICAL/NONE
 // OFFSET: 0x00515370
 void CSimpleButton::OnLayerCursorExit(int32_t a2, int32_t a3) {
     if (this->m_state != BUTTONSTATE_DISABLED) {

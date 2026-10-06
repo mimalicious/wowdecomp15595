@@ -39,8 +39,8 @@ float __stdcall CMovementShared::CalcFallDistance(float time, int32_t safeFall, 
     return time * (velocity + time * 9.6455526f);
 }
 
-// PROVEN: d849e60d IDENTICAL
-// OFFSET: 0x00A20610
+// PROVEN: d849e60d IDENTICAL/NONE
+// OFFSET: 0x00A20610/0x1407C6650
 void CMovementShared::StopAllLogging() {
     CMovementGlobals* globals = MovementGetGlobals();
 
@@ -1348,19 +1348,19 @@ void CMovementShared::WalkOnWater(int32_t enable) {
     }
 }
 
-// PROVEN: 8271adee IDENTICAL
+// PROVEN: 8271adee IDENTICAL/NONE
 // OFFSET: 0x0056E040
 C3Vector CMovementShared::GetPosition() const {
     return CPassenger::GetPosition(this->m_position);
 }
 
-// PROVEN: f4b9308e IDENTICAL
-// OFFSET: 0x00A20D20
+// PROVEN: f4b9308e IDENTICAL/NONE
+// OFFSET: 0x00A20D20/0x1407C6DD0
 uint32_t CMovementShared::PlotUnitMovement(uint32_t time, C3Vector* move) {
     return this->PlotUnitMovement(time, move, &this->m_facing, &this->m_pitch);
 }
 
-// PROVEN: c32470d7 IDENTICAL
+// PROVEN: c32470d7 IDENTICAL/NONE
 // OFFSET: 0x00A201F0
 float CMovementShared::RelDistanceFallen(uint32_t time) const {
     return this->RelDistanceFallen(time, this->m_position.z);
@@ -1977,7 +1977,7 @@ void CMovementShared::Teleport(const C3Vector& position, float facing, int32_t r
     }
 }
 
-// PROVEN: be94fad9 IDENTICAL
+// PROVEN: be94fad9 IDENTICAL/NONE
 // OFFSET: 0x00A266C0
 float CMovementShared::RemoveFromTransport(C44Matrix* matrix) {
     C3Vector oldPosition = this->m_position;

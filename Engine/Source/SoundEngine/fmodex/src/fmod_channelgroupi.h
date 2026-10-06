@@ -46,7 +46,7 @@ namespace FMOD
 
       public:
 
-        // PROVEN: 948f53b8 IDENTICAL
+        // PROVEN: 948f53b8 IDENTICAL/NONE
         // OFFSET: 0x00A82CD0
         ChannelGroupI() 
         {

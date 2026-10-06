@@ -123,7 +123,7 @@ static uint32_t SmartScreenRectClampToScreen(CRect* out, CRect rect, int32_t tes
     return flags;
 }
 
-// PROVEN: 5a066354 IDENTICAL
+// PROVEN: 5a066354 IDENTICAL/NONE
 // OFFSET: 0x00460810
 static uint32_t SmartScreenRectGridPos(const CRect& rect) {
     float screenWidth = NDCToDDCWidth(1.0f);

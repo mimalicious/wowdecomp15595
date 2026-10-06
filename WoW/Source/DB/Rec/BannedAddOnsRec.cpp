@@ -3,7 +3,7 @@
 // STATIC: %0x00B44054
 const DBCMeta BannedAddOnsRec::s_meta = { "DBFilesClient\\BannedAddOns.dbc", 5, 44, BannedAddOnsRec::FixupStrings, 0 };
 
-// PROVEN: daa07007 IDENTICAL
+// PROVEN: daa07007 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void BannedAddOnsRec::FixupStrings(void* record, const char* strings) {
 }

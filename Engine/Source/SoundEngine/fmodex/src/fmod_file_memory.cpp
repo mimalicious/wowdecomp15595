@@ -21,8 +21,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 96a9bd58 IDENTICAL
-// OFFSET: 0x00A92B30
+// PROVEN: 96a9bd58 IDENTICAL/NONE
+// OFFSET: 0x00A92B30/0x140852700
 FMOD_RESULT MemoryFile::reallyOpen(const char *name_or_data, unsigned int *filesize)
 {
 	mMem             = (signed char *)name_or_data;
@@ -64,8 +64,8 @@ FMOD_RESULT MemoryFile::reallyClose()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 50f1f12e IDENTICAL
-// OFFSET: 0x00A92B50
+// PROVEN: 50f1f12e IDENTICAL/NONE
+// OFFSET: 0x00A92B50/0x140852720
 FMOD_RESULT MemoryFile::reallyRead(void *buffer, unsigned int size, unsigned int *read)
 {
     FMOD_RESULT result = FMOD_OK;

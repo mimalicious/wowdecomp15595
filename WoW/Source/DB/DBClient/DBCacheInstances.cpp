@@ -363,8 +363,8 @@ static int32_t ReceiveDance(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// PROVEN: 2b008480 IDENTICAL
-// OFFSET: 0x00496F20
+// PROVEN: 2b008480 IDENTICAL/NONE
+// OFFSET: 0x00496F20/0x1400BD250
 void DBCache_Initialize() {
     LoadDBCaches();
 }

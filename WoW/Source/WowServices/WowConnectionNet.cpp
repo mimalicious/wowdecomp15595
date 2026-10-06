@@ -3,8 +3,8 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: dcd6c1c3 IDENTICAL
-// OFFSET: 0x00550330
+// PROVEN: dcd6c1c3 IDENTICAL/NONE
+// OFFSET: 0x00550330/0x1401AAF40
 static uint32_t STORMAPI NetworkThreadProc(void* param) {
     WowConnectionNet* network = static_cast<WowConnectionNet*>(param);
     network->PlatformRun();
@@ -13,8 +13,8 @@ static uint32_t STORMAPI NetworkThreadProc(void* param) {
     return 0;
 }
 
-// PROVEN: d6518a0d IDENTICAL
-// OFFSET: 0x005505D0
+// PROVEN: d6518a0d IDENTICAL/NONE
+// OFFSET: 0x005505D0/0x1401AB2A0
 static uint32_t STORMAPI WorkerThreadProc(void* param) {
     WowConnectionNet::WORKER* worker = static_cast<WowConnectionNet::WORKER*>(param);
     worker->m_owner->RunWorker(worker->m_index);

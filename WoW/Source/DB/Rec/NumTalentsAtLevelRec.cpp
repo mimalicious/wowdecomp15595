@@ -3,7 +3,7 @@
 // STATIC: %0x00B45B5C
 const DBCMeta NumTalentsAtLevelRec::s_meta = { "DBFilesClient\\NumTalentsAtLevel.dbc", 2, 8, NumTalentsAtLevelRec::FixupStrings, 0 };
 
-// PROVEN: cd3bd790 IDENTICAL
+// PROVEN: cd3bd790 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void NumTalentsAtLevelRec::FixupStrings(void* record, const char* strings) {
 }

@@ -3,7 +3,7 @@
 // STATIC: %0x00B458D8
 const DBCMeta QuestPOIBlobRec::s_meta = { "DBFilesClient\\QuestPOIBlob.dbc", 4, 16, QuestPOIBlobRec::FixupStrings, 0 };
 
-// PROVEN: db36192a IDENTICAL
+// PROVEN: db36192a IDENTICAL/NONE
 // OFFSET: 0x00401000
 void QuestPOIBlobRec::FixupStrings(void* record, const char* strings) {
 }

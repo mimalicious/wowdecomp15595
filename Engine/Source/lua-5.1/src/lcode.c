@@ -96,7 +96,7 @@ static void fixjump (FuncState *fs, int pc, int dest) {
 ** returns current `pc' and marks it as a jump target (to avoid wrong
 ** optimizations with consecutive instructions not in the same basic block).
 */
-// PROVEN: 65b7437e IDENTICAL
+// PROVEN: 65b7437e IDENTICAL/NONE
 // OFFSET: 0x0042E500
 int luaK_getlabel (FuncState *fs) {
   fs->lasttarget = fs->pc;
@@ -236,7 +236,7 @@ static void freereg (FuncState *fs, int reg) {
 }
 
 
-// PROVEN: eae9b0ff IDENTICAL
+// PROVEN: eae9b0ff IDENTICAL/NONE
 // OFFSET: 0x0042E840
 static void freeexp (FuncState *fs, expdesc *e) {
   if (e->k == VNONRELOC)
@@ -312,8 +312,8 @@ void luaK_setreturns (FuncState *fs, expdesc *e, int nresults) {
 }
 
 
-// PROVEN: 6268a8dc IDENTICAL
-// OFFSET: 0x0042EAD0
+// PROVEN: 6268a8dc IDENTICAL/NONE
+// OFFSET: 0x0042EAD0/0x1400364F0
 void luaK_setoneret (FuncState *fs, expdesc *e) {
   if (e->k == VCALL) {  /* expression is an open function call? */
     e->k = VNONRELOC;
@@ -835,8 +835,8 @@ void luaK_posfix (FuncState *fs, BinOpr op, expdesc *e1, expdesc *e2) {
 }
 
 
-// PROVEN: e217569a IDENTICAL
-// OFFSET: 0x0042EC80
+// PROVEN: e217569a IDENTICAL/NONE
+// OFFSET: 0x0042EC80/0x140036770
 void luaK_fixline (FuncState *fs, int line) {
   fs->f->lineinfo[fs->pc - 1] = line;
 }

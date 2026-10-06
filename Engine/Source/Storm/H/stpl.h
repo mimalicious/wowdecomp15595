@@ -383,8 +383,8 @@ TSLink<T>* TSGetExplicitLink<T>::Link(T* nodeptr, ptrdiff_t linkoffset) {
     return reinterpret_cast<TSLink<T>*>(reinterpret_cast<uint8_t*>(nodeptr) + linkoffset);
 }
 
-// PROVEN: aaadd5d6 IDENTICAL
-// OFFSET: 0x00401050
+// PROVEN: aaadd5d6 IDENTICAL/NONE
+// OFFSET: 0x00401050/0x140001020
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsEnd(T* ptr) {
     return (reinterpret_cast<uintptr_t>(ptr) & 1) || !ptr;
@@ -457,7 +457,7 @@ int32_t TSList<T, TGetLink>::IsEmpty() {
     return this->Head() == NULL;
 }
 
-// PROVEN: 9b79e303 IDENTICAL
+// PROVEN: 9b79e303 IDENTICAL/NONE
 // OFFSET: 0x005080D0
 template <class T, class TGetLink>
 int32_t TSList<T, TGetLink>::IsLinked(T* ptr) {
@@ -659,8 +659,8 @@ T* TSBaseArray<T>::Ptr() {
     return this->m_data;
 }
 
-// PROVEN: 0184908c IDENTICAL
-// OFFSET: 0x004BBC80
+// PROVEN: 0184908c IDENTICAL/DIFFERENT
+// OFFSET: 0x004BBC80/0x1400F5160
 template <class T>
 T* TSBaseArray<T>::Top() {
     return this->m_count ? &this->m_data[this->m_count - 1] : NULL;
@@ -704,7 +704,7 @@ void TSFixedArray<T>::Clear() {
     this->m_data = NULL;
 }
 
-// PROVEN: f5436f46 IDENTICAL
+// PROVEN: f5436f46 IDENTICAL/NONE
 // OFFSET: [0x00486890<CObjectHeap>]
 template <class T>
 void TSFixedArray<T>::ReallocAndClearData(uint32_t count) {
@@ -1531,7 +1531,7 @@ void TSBitField<T>::Load(const void* data, uint32_t bytes, int32_t bits) {
     memcpy(this->m_bits.m_data, data, bytes);
 }
 
-// OFFSET: [0x00409800, %0x0080D8F0]
+// OFFSET: [0x00409800/0x14000BF30, %0x0080D8F0]
 template <class T>
 TSStackArray<T>::TSStackArray(T* data, uint32_t count, int32_t construct) {
     this->m_data = data;

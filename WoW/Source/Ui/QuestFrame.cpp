@@ -213,7 +213,7 @@ void CGQuestInfo::ClearState() {
     CGQuestInfo::m_questFlags = 0;
 }
 
-// PROVEN: 23d18e6d IDENTICAL
+// PROVEN: 23d18e6d IDENTICAL/NONE
 // OFFSET: 0x009441F0
 void CGQuestInfo::ClearQuestItems() {
     for (int32_t i = 0; i < 6; i++) {
@@ -391,7 +391,7 @@ void CGQuestInfo::InitRewRepFields(uint32_t index, int32_t faction, int32_t valu
     }
 }
 
-// PROVEN: 65c03fc0 IDENTICAL
+// PROVEN: 65c03fc0 IDENTICAL/NONE
 // OFFSET: 0x009444B0
 void CGQuestInfo::InitRewRepShowMask(uint32_t mask) {
     CGQuestInfo::m_rewardFactionMask = mask;
@@ -594,7 +594,7 @@ void CGQuestInfo::AddItemRequest(const char* title, const uint32_t* itemIds, con
     FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_PROGRESS, NULL);
 }
 
-// PROVEN: d7199a37 IDENTICAL
+// PROVEN: d7199a37 IDENTICAL/NONE
 // OFFSET: 0x009444C0
 int32_t CGQuestInfo::GetNumQuestChoices() {
     int32_t count = 0;

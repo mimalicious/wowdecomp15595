@@ -135,7 +135,7 @@ static bool IsLCDAvailable() {
     }
 }
 
-// PROVEN: e2157151 IDENTICAL
+// PROVEN: e2157151 IDENTICAL/NONE
 // OFFSET: 0x00B2F540
 void CGLCD::ShowBattlefieldScreen() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -144,7 +144,7 @@ void CGLCD::ShowBattlefieldScreen() {
     }
 }
 
-// PROVEN: 35f0d838 IDENTICAL
+// PROVEN: 35f0d838 IDENTICAL/NONE
 // OFFSET: 0x00B2F580
 void CGLCD::ClearWaitQueueScreen() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -166,7 +166,7 @@ void CGLCD::Initialize() {
     EventRegister(EVENT_ID_IDLE, CGLCD::Update);
 }
 
-// PROVEN: 9b3811b6 IDENTICAL
+// PROVEN: 9b3811b6 IDENTICAL/NONE
 // OFFSET: 0x00B31450
 void CGLCD::OnBattlefieldActive() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -196,7 +196,7 @@ void CGLCD::Shutdown() {
     CGLCD::m_chatAlertLines = 0;
 }
 
-// PROVEN: de8493ca IDENTICAL
+// PROVEN: de8493ca IDENTICAL/NONE
 // OFFSET: 0x00B312A0
 void CGLCD::OnWhisper(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -204,7 +204,7 @@ void CGLCD::OnWhisper(const char* name) {
     }
 }
 
-// PROVEN: 4a6f5ef5 IDENTICAL
+// PROVEN: 4a6f5ef5 IDENTICAL/NONE
 // OFFSET: 0x00B31320
 void CGLCD::AuctionOutbid(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -212,7 +212,7 @@ void CGLCD::AuctionOutbid(const char* name) {
     }
 }
 
-// PROVEN: 523c9259 IDENTICAL
+// PROVEN: 523c9259 IDENTICAL/NONE
 // OFFSET: 0x00B31360
 void CGLCD::AuctionExpired(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
@@ -220,7 +220,7 @@ void CGLCD::AuctionExpired(const char* name) {
     }
 }
 
-// PROVEN: 9eb1b045 IDENTICAL
+// PROVEN: 9eb1b045 IDENTICAL/NONE
 // OFFSET: 0x00B313B0
 void CGLCD::AuctionSold(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
@@ -228,7 +228,7 @@ void CGLCD::AuctionSold(const char* name) {
     }
 }
 
-// PROVEN: c0f64b96 IDENTICAL
+// PROVEN: c0f64b96 IDENTICAL/NONE
 // OFFSET: 0x00B31400
 void CGLCD::AuctionWon(const char* name) {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && CGLCD::m_lcd->IsDeviceAvailable(1)) {
@@ -236,7 +236,7 @@ void CGLCD::AuctionWon(const char* name) {
     }
 }
 
-// PROVEN: 5ef735e4 IDENTICAL
+// PROVEN: 5ef735e4 IDENTICAL/NONE
 // OFFSET: 0x00B2F770
 void CGLCD::HideBattlefieldAlert() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete && s_currentScreen == 2) {
@@ -269,7 +269,7 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatus* status) {
     }
 }
 
-// PROVEN: 5d57db41 IDENTICAL
+// PROVEN: 5d57db41 IDENTICAL/NONE
 // OFFSET: 0x00B2F890
 void CGLCD::EnterWorld() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
@@ -278,8 +278,8 @@ void CGLCD::EnterWorld() {
     }
 }
 
-// PROVEN: 903ae8cf IDENTICAL
-// OFFSET: 0x00B2F470
+// PROVEN: 903ae8cf IDENTICAL/NONE
+// OFFSET: 0x00B2F470/0x1408F7FD0
 void CGLCD::LeaveWorld() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::m_inWorld = 0;
@@ -341,16 +341,16 @@ void CGLCD::Login() {
     CGLCD::m_lcd->SetText(CGLCD::GetHandle("BF_NOT_IN"), text);
 }
 
-// PROVEN: 0bb578e0 IDENTICAL
-// OFFSET: 0x00B2F4B0
+// PROVEN: 0bb578e0 IDENTICAL/NONE
+// OFFSET: 0x00B2F4B0/0x1408F8040
 HRESULT CEzLcd::SetText(void* handle, const char* text) {
     uint16_t buffer[1024];
     ConvertUTF8toUTF16(buffer, 1024, text, 0x7FFFFFFF, NULL, NULL);
     return CGLCD::m_lcd->SetText(handle, reinterpret_cast<const WCHAR*>(buffer));
 }
 
-// PROVEN: 5582db5a IDENTICAL
-// OFFSET: 0x00B2F500
+// PROVEN: 5582db5a IDENTICAL/NONE
+// OFFSET: 0x00B2F500/0x1408F8090
 void CGLCD::SetScreen(int32_t screen) {
     if (screen == s_currentScreen) {
         return;
@@ -362,7 +362,7 @@ void CGLCD::SetScreen(int32_t screen) {
     CGLCD::m_lcd->HideGlobals();
 }
 
-// PROVEN: 228f97f3 IDENTICAL
+// PROVEN: 228f97f3 IDENTICAL/NONE
 // OFFSET: 0x00B2F600
 void CGLCD::Logout() {
     if (!CGLCD::m_lcd || !CGLCD::m_lcd->IsConnected() || !IsLCDAvailable()) {
@@ -378,8 +378,8 @@ void CGLCD::Logout() {
     }
 }
 
-// PROVEN: 89582a2b IDENTICAL
-// OFFSET: 0x00B2F5F0
+// PROVEN: 89582a2b IDENTICAL/NONE
+// OFFSET: 0x00B2F5F0/0x1408F81D0
 void LCDHANDLE::SetText(const char* text) {
     this->m_text.Copy(text);
 }
@@ -1140,8 +1140,8 @@ void CGLCD::PushAlert(const char* text, int32_t a2) {
     CGLCD::SetAlertText();
 }
 
-// PROVEN: df3d1a61 IDENTICAL
-// OFFSET: 0x00B312E0
+// PROVEN: df3d1a61 IDENTICAL/NONE
+// OFFSET: 0x00B312E0/0x1408FACF0
 void CGLCD::IdleDisconnectWarning() {
     if (CGLCD::m_lcd && CGLCD::m_lcd->IsConnected() && IsLCDAvailable() && CGLCD::initComplete) {
         CGLCD::PushAlert("", 2);
@@ -1644,7 +1644,7 @@ bool CGLCD::LoadLCDElement(int32_t screen, XMLNode* node, CStatus* status, int32
     return false;
 }
 
-// PROVEN: 0c555a71 IDENTICAL
+// PROVEN: 0c555a71 IDENTICAL/NONE
 // OFFSET: 0x00B34130
 bool CGLCD::LoadGlobals(XMLNode* node, CStatus* status) {
     for (XMLNode* child = node->m_child; child; child = child->m_next) {

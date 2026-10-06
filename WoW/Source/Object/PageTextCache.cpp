@@ -9,8 +9,8 @@ PageTextCache::~PageTextCache() {
     }
 }
 
-// PROVEN: 15ea4fd7 IDENTICAL
-// OFFSET: 0x00A290C0
+// PROVEN: 15ea4fd7 IDENTICAL/NONE
+// OFFSET: 0x00A290C0/0x1407D0D80
 void PageTextCache::Pack(CDataStore* msg) {
     if (this->m_text) {
         msg->PutString(this->m_text);
@@ -21,8 +21,8 @@ void PageTextCache::Pack(CDataStore* msg) {
     msg->Put(this->m_nextPage);
 }
 
-// PROVEN: cb0bc2da IDENTICAL
-// OFFSET: 0x00A29100
+// PROVEN: cb0bc2da IDENTICAL/NONE
+// OFFSET: 0x00A29100/0x1407D0DC0
 void PageTextCache_C::Unpack(CDataStore* msg) {
     char buffer[4000];
 

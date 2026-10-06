@@ -31,8 +31,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ef0da6c7 IDENTICAL
-// OFFSET: 0x00AC9800
+// PROVEN: ef0da6c7 IDENTICAL/NONE
+// OFFSET: 0x00AC9800/0x1408936F0
 DSPResampler::DSPResampler()
 {
     mResampleBufferMemory    = 0;
@@ -63,8 +63,8 @@ DSPResampler::DSPResampler()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5eb2ef4e IDENTICAL
-// OFFSET: 0x00AC9700
+// PROVEN: 5eb2ef4e IDENTICAL/NONE
+// OFFSET: 0x00AC9700/0x1408935C0
 FMOD_RESULT DSPResampler::release(bool freethis)
 {
     DSPI::release(false);
@@ -501,8 +501,8 @@ FMOD_RESULT DSPResampler::addInput(DSPI *target)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fd8d42ac IDENTICAL
-// OFFSET: 0x00AC9760
+// PROVEN: fd8d42ac IDENTICAL/NONE
+// OFFSET: 0x00AC9760/0x140893660
 FMOD_RESULT DSPResampler::setFrequency(float frequency)
 {
     mFrequency = frequency;
@@ -555,8 +555,8 @@ FMOD_RESULT DSPResampler::getFrequency(float *frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 47cc34ac IDENTICAL
-// OFFSET: 0x00AC97A0
+// PROVEN: 47cc34ac IDENTICAL/NONE
+// OFFSET: 0x00AC97A0/0x140893690
 FMOD_RESULT DSPResampler::setPosition(unsigned int position, bool processinputs)
 {
     FMOD_RESULT result;

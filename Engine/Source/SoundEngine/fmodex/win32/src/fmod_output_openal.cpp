@@ -113,8 +113,8 @@ FMOD_OUTPUT_DESCRIPTION_EX *OutputOpenAL::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c52f72f3 IDENTICAL
-// OFFSET: 0x00AD9430
+// PROVEN: c52f72f3 IDENTICAL/NONE
+// OFFSET: 0x00AD9430/0x14089A700
 OutputOpenAL::OutputOpenAL()
 {
     mDLLInitialised  = false;
@@ -336,7 +336,7 @@ FMOD_RESULT OutputOpenAL::getNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c48c0e27 IDENTICAL
+// PROVEN: c48c0e27 IDENTICAL/NONE
 // OFFSET: 0x00AD8300
 FMOD_RESULT OutputOpenAL::getDriverName(int driver, char *name, int namelen)
 {
@@ -382,7 +382,7 @@ FMOD_RESULT OutputOpenAL::getDriverName(int driver, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f21b0f6c IDENTICAL
+// PROVEN: f21b0f6c IDENTICAL/NONE
 // OFFSET: 0x00AD8360
 FMOD_RESULT OutputOpenAL::getDriverCapsEx(int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency, FMOD_SPEAKERMODE *controlpanelspeakermode, int *num2dchannels, int *num3dchannels, int *totalchannels)
 {
@@ -509,7 +509,7 @@ FMOD_RESULT OutputOpenAL::getDriverCapsEx(int id, FMOD_CAPS *caps, int *minfrequ
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b992cafc IDENTICAL
+// PROVEN: b992cafc IDENTICAL/NONE
 // OFFSET: 0x00AD8580
 FMOD_RESULT OutputOpenAL::initEAX()
 {
@@ -886,7 +886,7 @@ FMOD_RESULT OutputOpenAL::init(int selecteddriver, FMOD_INITFLAGS flags, int *ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8dd59420 IDENTICAL
+// PROVEN: 8dd59420 IDENTICAL/NONE
 // OFFSET: 0x00AD86A0
 FMOD_RESULT OutputOpenAL::close()
 { 
@@ -966,7 +966,7 @@ FMOD_RESULT OutputOpenAL::close()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9ca124a6 IDENTICAL
+// PROVEN: 9ca124a6 IDENTICAL/NONE
 // OFFSET: 0x00AD8890
 FMOD_RESULT OutputOpenAL::start()
 {
@@ -1026,7 +1026,7 @@ FMOD_RESULT OutputOpenAL::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 834731d8 IDENTICAL
+// PROVEN: 834731d8 IDENTICAL/NONE
 // OFFSET: 0x00AD8A00
 FMOD_RESULT OutputOpenAL::stop()
 {
@@ -1105,7 +1105,7 @@ FMOD_RESULT OutputOpenAL::getHandle(void **handle)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f4becc6e IDENTICAL
+// PROVEN: f4becc6e IDENTICAL/NONE
 // OFFSET: 0x00AD8A90
 FMOD_RESULT OutputOpenAL::update()
 {
@@ -1258,7 +1258,7 @@ FMOD_RESULT OutputOpenAL::update()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8c859535 IDENTICAL
+// PROVEN: 8c859535 IDENTICAL/NONE
 // OFFSET: 0x00AD8DC0
 FMOD_RESULT OutputOpenAL::postMix()
 {
@@ -1317,7 +1317,7 @@ FMOD_RESULT OutputOpenAL::postMix()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 852d86eb IDENTICAL
+// PROVEN: 852d86eb IDENTICAL/NONE
 // OFFSET: 0x00AD8E40
 FMOD_RESULT OutputOpenAL::getPosition(unsigned int *pcm)
 {
@@ -1395,7 +1395,7 @@ FMOD_RESULT OutputOpenAL::lock(unsigned int offset, unsigned int length, void **
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ebd53aa3 IDENTICAL
+// PROVEN: ebd53aa3 IDENTICAL/NONE
 // OFFSET: 0x00AD8EE0
 FMOD_RESULT OutputOpenAL::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
@@ -1786,7 +1786,7 @@ FMOD_RESULT OutputOpenAL::getFreeChannel(FMOD_MODE mode, ChannelReal **realchann
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a1a4ae2c IDENTICAL
+// PROVEN: a1a4ae2c IDENTICAL/NONE
 // OFFSET: 0x00AD9150
 FMOD_RESULT F_CALLBACK OutputOpenAL::getNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
@@ -1813,7 +1813,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::getNumDriversCallback(FMOD_OUTPUT_STATE *ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e9622054 IDENTICAL
+// PROVEN: e9622054 IDENTICAL/NONE
 // OFFSET: 0x00AD9190
 FMOD_RESULT F_CALLBACK OutputOpenAL::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -1840,7 +1840,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::getDriverNameCallback(FMOD_OUTPUT_STATE *ou
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 930d1c9d IDENTICAL
+// PROVEN: 930d1c9d IDENTICAL/NONE
 // OFFSET: 0x00AD91C0
 FMOD_RESULT OutputOpenAL::getDriverCapsExCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_CAPS *caps, int *minfrequency, int *maxfrequency, FMOD_SPEAKERMODE *controlpanelspeakermode, int *num2dchannels, int *num3dchannels, int *totalchannels)
 {
@@ -1867,7 +1867,7 @@ FMOD_RESULT OutputOpenAL::getDriverCapsExCallback(FMOD_OUTPUT_STATE *output, int
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fa704d2d IDENTICAL
+// PROVEN: fa704d2d IDENTICAL/NONE
 // OFFSET: 0x00AD9E50
 FMOD_RESULT F_CALLBACK OutputOpenAL::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
@@ -1894,7 +1894,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::initCallback(FMOD_OUTPUT_STATE *output, int
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 125940a7 IDENTICAL
+// PROVEN: 125940a7 IDENTICAL/NONE
 // OFFSET: 0x00AD9200
 FMOD_RESULT F_CALLBACK OutputOpenAL::closeCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -1921,7 +1921,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::closeCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1e7766e5 IDENTICAL
+// PROVEN: 1e7766e5 IDENTICAL/NONE
 // OFFSET: 0x00AD9230
 FMOD_RESULT F_CALLBACK OutputOpenAL::startCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -1948,7 +1948,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::startCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0bfef0fd IDENTICAL
+// PROVEN: 0bfef0fd IDENTICAL/NONE
 // OFFSET: 0x00AD9260
 FMOD_RESULT F_CALLBACK OutputOpenAL::stopCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -1975,7 +1975,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::stopCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e1224852 IDENTICAL
+// PROVEN: e1224852 IDENTICAL/NONE
 // OFFSET: 0x00AD9290
 FMOD_RESULT F_CALLBACK OutputOpenAL::updateCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -2027,7 +2027,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::getHandleCallback(FMOD_OUTPUT_STATE *output
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f13269da IDENTICAL
+// PROVEN: f13269da IDENTICAL/NONE
 // OFFSET: 0x00AD92C0
 FMOD_RESULT F_CALLBACK OutputOpenAL::getPositionCallback(FMOD_OUTPUT_STATE *output, unsigned int *pcm)
 {
@@ -2054,7 +2054,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::getPositionCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 48f4a37b IDENTICAL
+// PROVEN: 48f4a37b IDENTICAL/NONE
 // OFFSET: 0x00AD92F0
 FMOD_RESULT F_CALLBACK OutputOpenAL::lockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -2081,7 +2081,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::lockCallback(FMOD_OUTPUT_STATE *output, uns
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d23db3fe IDENTICAL
+// PROVEN: d23db3fe IDENTICAL/NONE
 // OFFSET: 0x00AD9340
 FMOD_RESULT F_CALLBACK OutputOpenAL::unlockCallback(FMOD_OUTPUT_STATE *output, void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
@@ -2108,7 +2108,7 @@ FMOD_RESULT F_CALLBACK OutputOpenAL::unlockCallback(FMOD_OUTPUT_STATE *output, v
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d6d35e44 IDENTICAL
+// PROVEN: d6d35e44 IDENTICAL/NONE
 // OFFSET: 0x00AD9E90
 FMOD_RESULT F_CALLBACK OutputOpenAL::createSampleCallback(FMOD_OUTPUT_STATE *output, FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT *waveformat, Sample **sample)
 {
@@ -2186,7 +2186,7 @@ int F_CALLBACK OutputOpenAL::getSampleMaxChannelsCallback(FMOD_OUTPUT_STATE *out
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b397f458 IDENTICAL
+// PROVEN: b397f458 IDENTICAL/NONE
 // OFFSET: 0x00AD93E0
 FMOD_RESULT F_CALLBACK OutputOpenAL::postMixCallback(FMOD_OUTPUT_STATE *output)
 {

@@ -564,7 +564,7 @@ static uint32_t PackColor(float r, float g, float b, float a) {
     return static_cast<uint8_t>(static_cast<int32_t>(b * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(g * 255.0f + 0.5f)) | ((static_cast<uint8_t>(static_cast<int32_t>(r * 255.0f + 0.5f)) | (static_cast<uint8_t>(static_cast<int32_t>(a * 255.0f + 0.5f)) << 8)) << 8)) << 8);
 }
 
-// PROVEN: 90fad40e IDENTICAL
+// PROVEN: 90fad40e IDENTICAL/NONE
 // OFFSET: 0x004EF230
 bool Color::GetColor(CImVector& color, CStatus* status) {
     if (this->m_colorFlags & 1) {
@@ -593,8 +593,8 @@ bool Gradient::Load(ORIENTATION& orientation, CImVector& minColor, CImVector& ma
     return true;
 }
 
-// PROVEN: db749763 IDENTICAL
-// OFFSET: 0x004EF520
+// PROVEN: db749763 IDENTICAL/NONE
+// OFFSET: 0x004EF520/0x140133B30
 int32_t LoadXML_Color(linkObject* node, CImVector& color, CStatus* status) {
     Color* colorNode = static_cast<Color*>(node);
     reinterpret_cast<uint32_t&>(color) = PackColor(colorNode->m_r, colorNode->m_g, colorNode->m_b, colorNode->m_a);
@@ -652,7 +652,7 @@ CSimpleFontString* LoadXML_String(linkObject* node, CSimpleFrame* frame, CStatus
     return string;
 }
 
-// PROVEN: 6d9f9abd IDENTICAL
+// PROVEN: 6d9f9abd IDENTICAL/NONE
 // OFFSET: 0x004EF730
 static void ProcessTocForMakeSign(MD5_CTX* md5, const char* text, const char* basePath) {
     const char* current = text;

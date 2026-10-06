@@ -39,7 +39,7 @@ static int32_t Script_ItemTextGetText(lua_State* L) {
     return 1;
 }
 
-// PROVEN: ed2b2a8b IDENTICAL
+// PROVEN: ed2b2a8b IDENTICAL/NONE
 // OFFSET: 0x009DE020
 static int32_t Script_ItemTextHasNextPage(lua_State* L) {
     if (CGItemText::m_hasItemText || !CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1]) {
@@ -113,7 +113,7 @@ static int32_t Script_ItemTextPrevPage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: bc4af6ca IDENTICAL
+// PROVEN: bc4af6ca IDENTICAL/NONE
 // OFFSET: 0x009DE500
 static int32_t Script_ItemTextNextPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_pages.m_data[CGItemText::m_currentPage + 1] > 0) {
@@ -124,7 +124,7 @@ static int32_t Script_ItemTextNextPage(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 2de55c44 IDENTICAL
+// PROVEN: 2de55c44 IDENTICAL/NONE
 // OFFSET: 0x009DE7B0
 static int32_t Script_CloseItemText(lua_State* L) {
     WOWGUID none = WOWGUID();
@@ -145,7 +145,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseItemText", &Script_CloseItemText },
 };
 
-// PROVEN: 3ce033f1 IDENTICAL
+// PROVEN: 3ce033f1 IDENTICAL/NONE
 // OFFSET: 0x009DDF80
 void ItemTextRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -153,7 +153,7 @@ void ItemTextRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 566df76a IDENTICAL
+// PROVEN: 566df76a IDENTICAL/NONE
 // OFFSET: 0x009DDFB0
 void ItemTextUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

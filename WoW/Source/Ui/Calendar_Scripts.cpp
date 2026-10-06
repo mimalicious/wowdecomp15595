@@ -67,7 +67,7 @@ static int32_t Script_CalendarGetWeekdayNames(lua_State* L) {
     return 7;
 }
 
-// PROVEN: 71769826 IDENTICAL
+// PROVEN: 71769826 IDENTICAL/NONE
 // OFFSET: 0x009AAEE0
 static int32_t Script_CalendarGetDate(lua_State* L) {
     lua_pushnumber(L, g_clientGameTime.m_weekDay + 1);
@@ -327,7 +327,7 @@ static const char* GetSequenceLabel(uint32_t type, uint32_t index, uint32_t leng
     return "ONGOING";
 }
 
-// PROVEN: 389896e7 IDENTICAL
+// PROVEN: 389896e7 IDENTICAL/NONE
 // OFFSET: 0x009AAE00
 static const char* GetInviteRoleLabel(uint32_t flags) {
     if (flags & 0x4) {
@@ -361,7 +361,7 @@ static int32_t Script_CalendarGetMaxDate(lua_State* L) {
     return 4;
 }
 
-// PROVEN: 92e68404 IDENTICAL
+// PROVEN: 92e68404 IDENTICAL/NONE
 // OFFSET: 0x009AB080
 static int32_t Script_CalendarGetMinHistoryDate(lua_State* L) {
     WowTime date;
@@ -510,7 +510,7 @@ static int32_t Script_CalendarEventClearModerator(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 61dec677 IDENTICAL
+// PROVEN: 61dec677 IDENTICAL/NONE
 // OFFSET: 0x009AB610
 static int32_t Script_CalendarEventIsModerator(lua_State* L) {
     lua_pushboolean(L, CGCalendar::m_curEvent ? CGCalendar::m_curEvent->IsModerator() : false);
@@ -529,7 +529,7 @@ static int32_t Script_CalendarEventCanModerate(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 09fa7e18 IDENTICAL
+// PROVEN: 09fa7e18 IDENTICAL/NONE
 // OFFSET: 0x009AB7C0
 static int32_t Script_CalendarEventHaveSettingsChanged(lua_State* L) {
     if (CGCalendar::m_curEvent) {
@@ -1423,7 +1423,7 @@ static int32_t Script_CalendarEventGetTextures(lua_State* L) {
     return 4 * count;
 }
 
-// PROVEN: 5bd04f09 IDENTICAL
+// PROVEN: 5bd04f09 IDENTICAL/NONE
 // OFFSET: 0x009AEB70
 static int32_t Script_CalendarEventGetSelectedInvite(lua_State* L) {
     if (CGCalendar::m_curEvent) {
@@ -1737,7 +1737,7 @@ static int32_t Script_CalendarEventAvailable(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d8d082fe IDENTICAL
+// PROVEN: d8d082fe IDENTICAL/NONE
 // OFFSET: 0x009B0A80
 static int32_t Script_CalendarEventTentative(lua_State* L) {
     CGCalendar::InviteRSVP(8);
@@ -1763,7 +1763,7 @@ static int32_t Script_CalendarEventSignUp(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 12a0a0b9 IDENTICAL
+// PROVEN: 12a0a0b9 IDENTICAL/NONE
 // OFFSET: 0x009AEC90
 static int32_t Script_OpenCalendar(lua_State* L) {
     if (!CGCalendar::m_openedCalendar) {
@@ -1858,7 +1858,7 @@ static int32_t Script_CalendarGetEventInfo(lua_State* L) {
     return 25;
 }
 
-// PROVEN: 1df50f6e IDENTICAL
+// PROVEN: 1df50f6e IDENTICAL/NONE
 // OFFSET: 0x009B10A0
 static int32_t Script_CalendarEventHasPendingInvite(lua_State* L) {
     if (CGCalendar::m_curEvent) {

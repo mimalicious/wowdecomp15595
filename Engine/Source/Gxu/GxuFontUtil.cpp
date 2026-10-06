@@ -179,7 +179,7 @@ void* FreeTypeAlloc(FT_Memory memory, long size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 57edaa45 IDENTICAL
+// PROVEN: 57edaa45 IDENTICAL/NONE
 // OFFSET: 0x00617700
 void FreeTypeFree(FT_Memory memory, void* block) {
     if (block) {
@@ -223,8 +223,8 @@ void InternalWipeUntilNameTokenStop(char* text) {
     } while (*text);
 }
 
-// PROVEN: 94d175ba IDENTICAL
-// OFFSET: 0x00617800
+// PROVEN: 94d175ba IDENTICAL/NONE
+// OFFSET: 0x00617800/0x1402A47A0
 GXUEMBEDDEDTEXTUREINFO::GXUEMBEDDEDTEXTUREINFO() {
     this->m_lineHeight = 0.0f;
     this->m_left = 0.0f;

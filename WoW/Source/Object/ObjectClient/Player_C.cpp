@@ -377,8 +377,8 @@ static int32_t s_zoneUpdateCounter;
 // STATIC: #0x00C9EC6C
 static bool s_dailyQuestsUntouched;
 
-// PROVEN: 9c2024c4 IDENTICAL
-// OFFSET: 0x005537E0
+// PROVEN: 9c2024c4 IDENTICAL/NONE
+// OFFSET: 0x005537E0/0x1401AE720
 static int32_t OnUpdatePVPTitle(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameUI::UnitNameUpdate(guid);
 
@@ -441,8 +441,8 @@ static int32_t GuildRankUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32
     return 1;
 }
 
-// PROVEN: cb1c0921 IDENTICAL
-// OFFSET: 0x00556F10
+// PROVEN: cb1c0921 IDENTICAL/NONE
+// OFFSET: 0x00556F10/0x1401B3CF0
 static int32_t DuelTeamUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -676,8 +676,8 @@ static int32_t GuildUpdateHandler(WOWGUID guid, void* param) {
     return 1;
 }
 
-// PROVEN: d2a46619 IDENTICAL
-// OFFSET: 0x0055F160
+// PROVEN: d2a46619 IDENTICAL/NONE
+// OFFSET: 0x0055F160/0x1401BCA50
 static void GuildTimestampChanged(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         ClntObjMgrEnumVisibleObjects(GuildUpdateHandler, reinterpret_cast<void*>(id));
@@ -706,8 +706,8 @@ static int32_t GuildIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// PROVEN: 85b4f868 IDENTICAL
-// OFFSET: 0x005676C0
+// PROVEN: 85b4f868 IDENTICAL/NONE
+// OFFSET: 0x005676C0/0x1401C6040
 static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -849,7 +849,7 @@ void PlayerClientInitialize() {
     AreaTriggersInitialize(ClntObjMgrGetMapID());
 }
 
-// PROVEN: f3fc01f5 IDENTICAL
+// PROVEN: f3fc01f5 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void PlayerInitializeSounds() {
 }
@@ -1123,7 +1123,7 @@ uint64_t CGPlayer_C::GetFarSightGuid() const {
     return this->m_player->m_playerFarsight.m_guid;
 }
 
-// PROVEN: d2a98841 IDENTICAL
+// PROVEN: d2a98841 IDENTICAL/NONE
 // OFFSET: 0x005692D0
 void CGPlayer_C::SetFarSightFocus(CGObject_C* object) {
     this->ToggleFarSight(object);
@@ -1221,7 +1221,7 @@ int32_t OnUpdatePlayerScriptEvent(WOWGUID guid, uint32_t offset, uint32_t count,
     return 1;
 }
 
-// PROVEN: dd2e236b IDENTICAL
+// PROVEN: dd2e236b IDENTICAL/NONE
 // OFFSET: 0x00553AD0
 uint32_t CGPlayer_C::GetProficiency(uint8_t itemClass) {
     if (itemClass >= sizeof(s_proficiency) / sizeof(s_proficiency[0])) {
@@ -1243,8 +1243,8 @@ int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time
     return 1;
 }
 
-// PROVEN: 471fba9c IDENTICAL
-// OFFSET: 0x00554450
+// PROVEN: 471fba9c IDENTICAL/NONE
+// OFFSET: 0x00554450/0x1401B0490
 bool CGPlayer_C::CanDualWield() {
     return s_dualWieldSpell != 0;
 }
@@ -1299,7 +1299,7 @@ int32_t CGPlayer_C::CanLoot(const CGObject_C* object) {
     return !this->IsDeadOrGhost() && !(this->m_movement->m_flags & 0x1000) && !(this->m_unit->m_unitFieldFlags & 0x40000) && this->IsLocalClientControlled();
 }
 
-// PROVEN: 84de2510 IDENTICAL
+// PROVEN: 84de2510 IDENTICAL/NONE
 // OFFSET: 0x005545C0
 int32_t __stdcall CGPlayer_C::OnLootItemNotify(CDataStore* msg) {
     WOWGUID guid;
@@ -1316,15 +1316,15 @@ int32_t __stdcall CGPlayer_C::OnLootItemNotify(CDataStore* msg) {
     return 1;
 }
 
-// PROVEN: 82a1b839 IDENTICAL
-// OFFSET: 0x005546E0
+// PROVEN: 82a1b839 IDENTICAL/NONE
+// OFFSET: 0x005546E0/0x1401B09A0
 int32_t Player_C_TogglePlayerRender() {
     s_playerRenderDisabled = s_playerRenderDisabled == 0;
 
     return s_playerRenderDisabled;
 }
 
-// PROVEN: 2c9ecf30 IDENTICAL
+// PROVEN: 2c9ecf30 IDENTICAL/NONE
 // OFFSET: 0x00554750
 void CGPlayer_C::SaveBindPoint(CDataStore* msg) {
     msg->Get(s_bindPosition.x);
@@ -1335,8 +1335,8 @@ void CGPlayer_C::SaveBindPoint(CDataStore* msg) {
     s_bindPointSet = 1;
 }
 
-// PROVEN: 31c86582 IDENTICAL
-// OFFSET: 0x005547A0
+// PROVEN: 31c86582 IDENTICAL/NONE
+// OFFSET: 0x005547A0/0x1401B0AE0
 uint32_t CGPlayer_C::GetBindAreaID() {
     return s_bindAreaId;
 }
@@ -2421,8 +2421,8 @@ void __stdcall CGPlayer_C::BuyPetition(const WOWGUID& vendor, CGPetition* petiti
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 5fb285f0 IDENTICAL
-// OFFSET: 0x0055D3C0
+// PROVEN: 5fb285f0 IDENTICAL/NONE
+// OFFSET: 0x0055D3C0/0x1401BA6D0
 const char* CGPlayer_C::GetPVPRankString(int32_t rank) const {
     char token[32];
     SStrPrintf(token, sizeof(token), "PVP_RANK_%d_%d", rank, this->GetPVPFactionIndex());
@@ -2874,8 +2874,8 @@ static int32_t TrackingMaskUpdateProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// PROVEN: d7964a29 IDENTICAL
-// OFFSET: 0x0055D610
+// PROVEN: d7964a29 IDENTICAL/NONE
+// OFFSET: 0x0055D610/0x1401B1130
 static int32_t AuraVisionUpdateHandler(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2983,8 +2983,8 @@ void CGPlayer_C::PostInitActivePlayer() {
 }
 
 
-// PROVEN: 55ad6dcf IDENTICAL
-// OFFSET: 0x005547F0
+// PROVEN: 55ad6dcf IDENTICAL/NONE
+// OFFSET: 0x005547F0/0x1401B0B50
 void CGPlayer_C::CancelGiftWrap() {
     CGGameUI::UnlockItem(s_giftWrapItem);
     s_giftWrapItem = WOWGUID();
@@ -4638,8 +4638,8 @@ int32_t CGPlayer_C::IsXRayVisionActive() {
 }
 
 
-// PROVEN: d05e3c2a IDENTICAL
-// OFFSET: 0x00554440
+// PROVEN: d05e3c2a IDENTICAL/NONE
+// OFFSET: 0x00554440/0x1401B0480
 int32_t CGPlayer_C::GetNewContinentID() {
     return ClntObjMgrGetMapID();
 }
@@ -5701,7 +5701,7 @@ InspectItem* CGPlayer_C::GetInspectedItem(int32_t slot) {
     return &s_emptyInspectItem;
 }
 
-// PROVEN: 49ebd1d0 IDENTICAL
+// PROVEN: 49ebd1d0 IDENTICAL/NONE
 // OFFSET: 0x00563780
 static void CountGemsItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
@@ -10405,8 +10405,8 @@ int32_t InventoryUpdate(WOWGUID guid, uint32_t offset, uint32_t count, const voi
     return 1;
 }
 
-// PROVEN: 18d55527 IDENTICAL
-// OFFSET: 0x00557070
+// PROVEN: 18d55527 IDENTICAL/NONE
+// OFFSET: 0x00557070/0x1401B3E60
 void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -10784,7 +10784,7 @@ uint32_t GetVisibleAuraEffectFlags() {
     return s_unk_C9EAB4;
 }
 
-// PROVEN: 07b73796 IDENTICAL
+// PROVEN: 07b73796 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void PlayerShutdownSounds() {
 }
@@ -11741,8 +11741,8 @@ int32_t OnUpdateShapeshiftForm(WOWGUID guid, uint32_t offset, uint32_t count, co
     return 1;
 }
 
-// PROVEN: 1722fa35 IDENTICAL
-// OFFSET: 0x00553830
+// PROVEN: 1722fa35 IDENTICAL/NONE
+// OFFSET: 0x00553830/0x1401AE780
 int32_t OnArenaTeamsChanged(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGArenaTeamInfo::UpdateTeams(1);
     return 1;
@@ -11755,8 +11755,8 @@ int32_t SignalCombatRatingUpdate(WOWGUID guid, uint32_t offset, uint32_t count, 
     return 1;
 }
 
-// PROVEN: 5cff6dfb IDENTICAL
-// OFFSET: 0x005538D0
+// PROVEN: 5cff6dfb IDENTICAL/NONE
+// OFFSET: 0x005538D0/0x1401AE840
 int32_t OnUpdatePlayerNoReagentCost(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGSpellBook::UpdateUsable();
     return 1;
@@ -11891,8 +11891,8 @@ int32_t OnUpdateRestState(WOWGUID guid, uint32_t offset, uint32_t count, const v
     return 1;
 }
 
-// PROVEN: 949ee31d IDENTICAL
-// OFFSET: 0x0055FB10
+// PROVEN: 949ee31d IDENTICAL/NONE
+// OFFSET: 0x0055FB10/0x1401B3E40
 int32_t OnUpdatePlayerTrackingMask(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     ClntObjMgrEnumVisibleObjects(TrackingMaskUpdateProc, NULL);
     return 1;
@@ -12930,7 +12930,7 @@ void CGPlayer_C::DanceMoveComplete() {
     this->Dance();
 }
 
-// PROVEN: 7eb2a76f IDENTICAL
+// PROVEN: 7eb2a76f IDENTICAL/NONE
 // OFFSET: 0x005639E0
 static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(guid), TYPEMASK_PLAYER, __FILE__, __LINE__));

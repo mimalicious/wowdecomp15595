@@ -131,8 +131,8 @@ static void marktmu (global_State *g) {
 
 
 /* move `dead' udata that need finalization to list `tmudata' */
-// PROVEN: b9c05e24 IDENTICAL
-// OFFSET: 0x004293D0
+// PROVEN: b9c05e24 IDENTICAL/NONE
+// OFFSET: 0x004293D0/0x14002FA20
 size_t luaC_separateudata (lua_State *L, int all) {
   global_State *g = G(L);
   size_t deadmem = 0;
@@ -657,7 +657,7 @@ double luaC_gettime (lua_State *L, const char *tag) {
 }
 
 
-// PROVEN: caef1f5c IDENTICAL
+// PROVEN: caef1f5c IDENTICAL/NONE
 // OFFSET: 0x0042A130
 void luaC_timereset (lua_State *L) {
   global_State *g = G(L);
@@ -869,8 +869,8 @@ void luaC_barrierf (lua_State *L, GCObject *o, GCObject *v) {
 }
 
 
-// PROVEN: 62118aed IDENTICAL
-// OFFSET: 0x0042A5B0
+// PROVEN: 62118aed IDENTICAL/NONE
+// OFFSET: 0x0042A5B0/0x140031410
 void luaC_barrierback (lua_State *L, Table *t) {
   global_State *g = G(L);
   GCObject *o = obj2gco(t);
@@ -882,8 +882,8 @@ void luaC_barrierback (lua_State *L, Table *t) {
 }
 
 
-// PROVEN: d36b8490 IDENTICAL
-// OFFSET: 0x0042A5D0
+// PROVEN: d36b8490 IDENTICAL/NONE
+// OFFSET: 0x0042A5D0/0x140031430
 void luaC_link (lua_State *L, GCObject *o, lu_byte tt) {
   global_State *g = G(L);
   o->gch.next = g->rootgc;

@@ -190,8 +190,8 @@ static int32_t SStrCmpGetNextTextUpper(const char** string, uint32_t* code, uint
     return bytes;
 }
 
-// PROVEN: 418746e1 IDENTICAL
-// OFFSET: 0x004B2F90
+// PROVEN: 418746e1 IDENTICAL/NONE
+// OFFSET: 0x004B2F90/0x1400E9C30
 int32_t SStrCmpUTF8I(const char* string1, const char* string2, size_t maxchars) {
     while ((*string1 || *string2) && maxchars--) {
         uint32_t code1;
@@ -251,7 +251,7 @@ static uint32_t GetSortChar(uint32_t ch) {
     return ch;
 }
 
-// PROVEN: 55eb0c3e IDENTICAL
+// PROVEN: 55eb0c3e IDENTICAL/NONE
 // OFFSET: 0x004B3090
 static uint32_t GetNextSortChar(const char* string, int32_t* bytes) {
     uint32_t code;
@@ -329,8 +329,8 @@ static bool CompareSortChars(uint32_t upper1, uint32_t upper2, const char** stri
     return true;
 }
 
-// PROVEN: d92703d6 IDENTICAL
-// OFFSET: 0x004B31C0
+// PROVEN: d92703d6 IDENTICAL/NONE
+// OFFSET: 0x004B31C0/0x1400E9EF0
 int32_t SStrSortUTF8I(const char* string1, const char* string2, size_t maxchars) {
     int32_t result = 0;
 
@@ -387,8 +387,8 @@ size_t SStrCopyUTF8(char* dest, const char* source, size_t destsize, size_t maxc
     return curr - dest;
 }
 
-// PROVEN: 53d1f9aa IDENTICAL
-// OFFSET: 0x004B3320
+// PROVEN: 53d1f9aa IDENTICAL/NONE
+// OFFSET: 0x004B3320/0x1400EA940
 size_t SStrLenUTF8(const char* string) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -406,8 +406,8 @@ size_t SStrLenUTF8(const char* string) {
     return length;
 }
 
-// PROVEN: 8ccb8482 IDENTICAL
-// OFFSET: 0x004B3360
+// PROVEN: 8ccb8482 IDENTICAL/NONE
+// OFFSET: 0x004B3360/0x1400EA980
 size_t SStrLenUTF8(const char* string, size_t maxchars) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -425,8 +425,8 @@ size_t SStrLenUTF8(const char* string, size_t maxchars) {
     return length;
 }
 
-// PROVEN: e24f86fb IDENTICAL
-// OFFSET: 0x004B33A0
+// PROVEN: e24f86fb IDENTICAL/NONE
+// OFFSET: 0x004B33A0/0x1400EA9E0
 const char* SStrAdvanceCharsUTF8(const char* string, size_t chars) {
     if (!string) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -472,15 +472,15 @@ static size_t ISStrVPrintf(char* dest, size_t maxchars, const char* format, va_l
     return result;
 }
 
-// PROVEN: c2e600fc IDENTICAL
-// OFFSET: 0x004B3440
+// PROVEN: c2e600fc IDENTICAL/NONE
+// OFFSET: 0x004B3440/0x1400EA0A0
 size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...) {
     va_list arglist;
     va_start(arglist, format);
     return ISStrVPrintf(dest, maxchars, format, arglist);
 }
 
-// PROVEN: 4b88d369 IDENTICAL
+// PROVEN: 4b88d369 IDENTICAL/NONE
 // OFFSET: 0x004B3460
 size_t SStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
     return ISStrVPrintf(dest, maxchars, format, arglist);
@@ -522,8 +522,8 @@ uint32_t SStrToUnsigned(const char* string) {
     return result;
 }
 
-// PROVEN: 93c4c655 IDENTICAL
-// OFFSET: 0x004B3510
+// PROVEN: 93c4c655 IDENTICAL/NONE
+// OFFSET: 0x004B3510/0x1400EA170
 uint32_t SStrToUnsigned(const char** string) {
     uint32_t result = 0;
 
@@ -706,8 +706,8 @@ char* SStrStrI(const char* string, const char* search) {
     return NULL;
 }
 
-// PROVEN: 885202df IDENTICAL
-// OFFSET: 0x004B3A00
+// PROVEN: 885202df IDENTICAL/NONE
+// OFFSET: 0x004B3A00/0x1400EAB60
 const char* SStrStrUTF8I(const char* string, const char* search) {
     size_t length = SStrLenUTF8(search);
 
@@ -726,7 +726,7 @@ const char* SStrStrUTF8I(const char* string, const char* search) {
     return NULL;
 }
 
-// PROVEN: 12052d81 IDENTICAL
+// PROVEN: 12052d81 IDENTICAL/NONE
 // OFFSET: 0x004B3A80
 char* Int64ToString(int64_t num, char* buf, size_t destsize) {
     char nbuf[32];
@@ -781,8 +781,8 @@ static void InitializeFloatDigits() {
     }
 }
 
-// PROVEN: c0f4fc8c IDENTICAL
-// OFFSET: 0x004B3260
+// PROVEN: c0f4fc8c IDENTICAL/NONE
+// OFFSET: 0x004B3260/0x1400E9FB0
 char* SStrDupA(const char* string, const char* filename, int32_t linenumber) {
     size_t length = SStrLen(string) + 1;
     char* result = static_cast<char*>(SMemAlloc(length, filename, linenumber, 0));

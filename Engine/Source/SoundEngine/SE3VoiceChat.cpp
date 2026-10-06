@@ -158,20 +158,20 @@ void SE3::CaptureWork() {
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 422455fa IDENTICAL
-// OFFSET: 0x007126B0
+// PROVEN: 422455fa IDENTICAL/NONE
+// OFFSET: 0x007126B0/0x1403E4510
 void SE3::SetUserMonitorDSPCallback(void (*callback)(float*, uint32_t)) {
     s_userMonitorDSPCallback = callback;
 }
 
-// PROVEN: 7d0c9594 IDENTICAL
-// OFFSET: 0x007126C0
+// PROVEN: 7d0c9594 IDENTICAL/NONE
+// OFFSET: 0x007126C0/0x1403E4520
 FMOD_RESULT SE3::AttachMonitorDSP(FMOD::Channel* channel) {
     return channel->addDSP(s_monitorDSP);
 }
 
-// PROVEN: f375c512 IDENTICAL
-// OFFSET: 0x007126E0
+// PROVEN: f375c512 IDENTICAL/NONE
+// OFFSET: 0x007126E0/0x1403E4530
 static FMOD_RESULT F_CALLBACK MonitorDSPCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     memcpy(outBuffer, inBuffer, length * sizeof(float));
 
@@ -294,33 +294,33 @@ void SE3::StartCapture() {
     SE3_ERRCHECK(result);
 }
 
-// PROVEN: 65a94e21 IDENTICAL
+// PROVEN: 65a94e21 IDENTICAL/NONE
 // OFFSET: 0x007128F0
 void SE3::SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_primaryCaptureCallbacks = callbacks;
 }
 
-// PROVEN: 2e04463d IDENTICAL
-// OFFSET: 0x00712900
+// PROVEN: 2e04463d IDENTICAL/NONE
+// OFFSET: 0x00712900/0x1403E4640
 void SE3::SetAlternateCaptureCallback(SE3CaptureCallbacks* callbacks) {
     s_alternateCaptureCallbacks = callbacks;
 }
 
-// PROVEN: 3c77d607 IDENTICAL
-// OFFSET: 0x00712910
+// PROVEN: 3c77d607 IDENTICAL/NONE
+// OFFSET: 0x00712910/0x1403E4650
 void SE3::ActivateAlternateCaptureCallback() {
     s_heartBeatCritSect.Enter();
     s_captureCallbacks = s_alternateCaptureCallbacks;
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 3cd00168 IDENTICAL
-// OFFSET: 0x00712930
+// PROVEN: 3cd00168 IDENTICAL/NONE
+// OFFSET: 0x00712930/0x1403E4680
 bool SE3::AlternateCaptureCallbackIsActive() {
     return s_captureCallbacks == s_alternateCaptureCallbacks;
 }
 
-// PROVEN: 49a86223 IDENTICAL
+// PROVEN: 49a86223 IDENTICAL/NONE
 // OFFSET: 0x00712950
 void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Enter();
@@ -328,7 +328,7 @@ void SE3::ActivatePrimaryCaptureCallback() {
     s_heartBeatCritSect.Leave();
 }
 
-// PROVEN: 2593c197 IDENTICAL
+// PROVEN: 2593c197 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SE3StreamCallbacks::Delete() {
 }

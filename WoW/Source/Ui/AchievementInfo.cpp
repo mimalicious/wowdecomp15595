@@ -927,7 +927,7 @@ void CGAchievementInfo::ReleaseInspect() {
     }
 }
 
-// PROVEN: 011d99d0 IDENTICAL
+// PROVEN: 011d99d0 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGAchievementInfo::LeaveWorld() {
 }

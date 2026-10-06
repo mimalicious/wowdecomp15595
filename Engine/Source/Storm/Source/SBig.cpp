@@ -42,8 +42,8 @@ inline uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
 
-// PROVEN: 093d80b3 IDENTICAL
-// OFFSET: 0x004BBDF0
+// PROVEN: 093d80b3 IDENTICAL/IDENTICAL
+// OFFSET: 0x004BBDF0/0x1400F5300
 uint32_t BigBuffer::operator[](uint32_t index) const {
     return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
 }
@@ -61,7 +61,7 @@ static int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     return result;
 }
 
-// PROVEN: bc98e27a IDENTICAL
+// PROVEN: bc98e27a IDENTICAL/NONE
 // OFFSET: 0x004BBEC0
 static uint32_t HighBitPos(const BigBuffer& a) {
     uint32_t index = a.Count();
@@ -85,13 +85,13 @@ static uint32_t HighBitPos(const BigBuffer& a) {
     return 0;
 }
 
-// PROVEN: e3f3c02e IDENTICAL
+// PROVEN: e3f3c02e IDENTICAL/NONE
 // OFFSET: 0x004BBF40
 int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
     return Compare(a->Primary(), b->Primary());
 }
 
-// PROVEN: 11441f7a IDENTICAL
+// PROVEN: 11441f7a IDENTICAL/NONE
 // OFFSET: 0x004BBF60
 BigStack::~BigStack() {
 }
@@ -113,8 +113,8 @@ void BigBuffer::Trim() const {
     }
 }
 
-// PROVEN: 7ca23af1 IDENTICAL
-// OFFSET: 0x004BC200
+// PROVEN: 7ca23af1 IDENTICAL/DIFFERENT
+// OFFSET: 0x004BC200/0x1400F6590
 BigStack::BigStack() {
     this->m_used = 0;
 }
@@ -297,7 +297,7 @@ void STORMAPI SBigFromBinary(BigData* num, const void* data, uint32_t bytes) {
     FromBinary(num->Primary(), data, bytes);
 }
 
-// PROVEN: eb044316 IDENTICAL
+// PROVEN: eb044316 IDENTICAL/NONE
 // OFFSET: 0x004BCCD0
 void STORMAPI SBigFromUnsigned(BigData* num, uint32_t val) {
     FromUnsigned(num->Primary(), val);
@@ -368,7 +368,7 @@ static void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer&
     stack.Free(allocCount);
 }
 
-// PROVEN: 9997af6f IDENTICAL
+// PROVEN: 9997af6f IDENTICAL/NONE
 // OFFSET: 0x004BD120
 void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     uint32_t allocCount = 0;
@@ -377,8 +377,8 @@ void STORMAPI SBigMod(BigData* a, const BigData* b, const BigData* c) {
     a->Stack().Free(allocCount);
 }
 
-// PROVEN: dd3e4ef2 IDENTICAL
-// OFFSET: 0x004BD160
+// PROVEN: dd3e4ef2 IDENTICAL/UNPROVEN
+// OFFSET: 0x004BD160/0x1400F6B40
 void STORMAPI SBigNew(BigData** num) {
     *num = new (SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0)) BigData;
 }
@@ -452,7 +452,7 @@ void STORMAPI SBigDel(BigData* num) {
     delete num;
 }
 
-// PROVEN: daae2b31 IDENTICAL
+// PROVEN: daae2b31 IDENTICAL/NONE
 // OFFSET: 0x004BD900
 void STORMAPI SBigMul(BigData* a, const BigData* b, const BigData* c) {
     Mul(a->Primary(), b->Primary(), c->Primary(), a->Stack());
@@ -467,8 +467,8 @@ inline void MulMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: f09e324a IDENTICAL
-// OFFSET: 0x004BD920
+// PROVEN: f09e324a IDENTICAL/UNPROVEN
+// OFFSET: 0x004BD920/0x1400F7350
 static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
 
@@ -521,8 +521,8 @@ static void PowMod(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, const B
     stack.Free(allocCount);
 }
 
-// PROVEN: dca765ab IDENTICAL
-// OFFSET: 0x004BDB70
+// PROVEN: dca765ab IDENTICAL/IDENTICAL
+// OFFSET: 0x004BDB70/0x1400F7660
 void STORMAPI SBigPowMod(BigData* a, const BigData* b, const BigData* c, const BigData* d) {
     PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
 }

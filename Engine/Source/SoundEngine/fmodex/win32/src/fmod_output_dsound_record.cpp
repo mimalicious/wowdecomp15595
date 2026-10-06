@@ -87,7 +87,7 @@ BOOL CALLBACK FMOD_Output_DSound_RecordEnumProc(LPGUID lpGUID, LPCSTR lpszDesc, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 16224d98 IDENTICAL
+// PROVEN: 16224d98 IDENTICAL/NONE
 // OFFSET: 0x00B01AC0
 FMOD_RESULT OutputDSound::recordEnumerate()
 {
@@ -135,7 +135,7 @@ FMOD_RESULT OutputDSound::recordEnumerate()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0a512762 IDENTICAL
+// PROVEN: 0a512762 IDENTICAL/NONE
 // OFFSET: 0x00B01B40
 FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 {
@@ -175,7 +175,7 @@ FMOD_RESULT OutputDSound::recordGetNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c5bbf187 IDENTICAL
+// PROVEN: c5bbf187 IDENTICAL/NONE
 // OFFSET: 0x00B01B70
 FMOD_RESULT OutputDSound::recordGetDriverInfo(int id, char *name, int namelen)
 {
@@ -317,7 +317,7 @@ FMOD_RESULT OutputDSound::recordStart(int id, Sound *sound, bool loop)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b24ace48 IDENTICAL
+// PROVEN: b24ace48 IDENTICAL/NONE
 // OFFSET: 0x00B01DA0
 FMOD_RESULT OutputDSound::recordStop()
 {
@@ -355,7 +355,7 @@ FMOD_RESULT OutputDSound::recordStop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d48e5b4 IDENTICAL
+// PROVEN: 9d48e5b4 IDENTICAL/NONE
 // OFFSET: 0x00B01DF0
 FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 {
@@ -424,7 +424,7 @@ FMOD_RESULT OutputDSound::recordGetPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d5856928 IDENTICAL
+// PROVEN: d5856928 IDENTICAL/NONE
 // OFFSET: 0x00B01E90
 FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
@@ -451,7 +451,7 @@ FMOD_RESULT OutputDSound::recordLock(unsigned int offset, unsigned int length, v
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b77f6b4d IDENTICAL
+// PROVEN: b77f6b4d IDENTICAL/NONE
 // OFFSET: 0x00B01ED0
 FMOD_RESULT OutputDSound::recordUnlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {

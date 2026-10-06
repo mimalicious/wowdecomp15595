@@ -250,16 +250,16 @@ void LoadingScreenInitialize() {
     BuildTiles();
 }
 
-// PROVEN: b1ef4bb2 IDENTICAL
-// OFFSET: 0x00409520
+// PROVEN: b1ef4bb2 IDENTICAL/NONE
+// OFFSET: 0x00409520/0x14000BC20
 static int32_t SizeEvent(const void* data, void* param) {
     memcpy(&s_sizeEvent, data, sizeof(s_sizeEvent));
     s_sizeEventPosted = 1;
     return 0;
 }
 
-// PROVEN: e96252b2 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: e96252b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }
@@ -307,8 +307,8 @@ static void InitializeProgressBarEvents() {
     s_sizeEventPosted = 0;
 }
 
-// PROVEN: 268e3a50 IDENTICAL
-// OFFSET: 0x004096C0
+// PROVEN: 268e3a50 IDENTICAL/NONE
+// OFFSET: 0x004096C0/0x14000BDE0
 void LoadingScreenSetTip(const char* tip) {
     s_gameTip = tip;
 }
@@ -325,8 +325,8 @@ void LoadingScreenSetScreenTipForRaceData(bool show) {
     }
 }
 
-// PROVEN: 01c1912d IDENTICAL
-// OFFSET: 0x00409740
+// PROVEN: 01c1912d IDENTICAL/NONE
+// OFFSET: 0x00409740/0x14000BE50
 bool LoadingScreenDrawing() {
     return s_loadingScreenLayer != NULL;
 }

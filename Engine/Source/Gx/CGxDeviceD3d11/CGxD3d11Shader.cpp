@@ -61,7 +61,7 @@ void CGxDeviceD3d11::IShaderCreate(CGxShaderPermute* permute) {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
 
-// PROVEN: 95e90cd5 IDENTICAL
+// PROVEN: 95e90cd5 IDENTICAL/NONE
 // OFFSET: 0x00871330
 void CGxDeviceD3d11::IShaderDestroy(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {

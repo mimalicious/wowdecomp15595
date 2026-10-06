@@ -3,7 +3,7 @@
 // STATIC: %0x00B44168
 const DBCMeta AnimKitPriorityRec::s_meta = { "DBFilesClient\\AnimKitPriority.dbc", 2, 8, AnimKitPriorityRec::FixupStrings, 0 };
 
-// PROVEN: 80b60700 IDENTICAL
+// PROVEN: 80b60700 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void AnimKitPriorityRec::FixupStrings(void* record, const char* strings) {
 }

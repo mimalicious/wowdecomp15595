@@ -219,8 +219,8 @@ GeneralFunction::SimpleCallback::SimpleCallback(SimpleCallbackFunc func, void* p
 GeneralFunction::Callback::~Callback() {
 }
 
-// PROVEN: 429efe43 IDENTICAL
-// OFFSET: 0x00627270
+// PROVEN: 429efe43 IDENTICAL/NONE
+// OFFSET: 0x00627270/0x1402B9280
 void GeneralFunction::Callback::IncRef() const {
     const_cast<Callback*>(this)->m_refCount++;
 }

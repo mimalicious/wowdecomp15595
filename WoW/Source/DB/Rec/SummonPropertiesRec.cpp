@@ -3,7 +3,7 @@
 // STATIC: %0x00B44ABC
 const DBCMeta SummonPropertiesRec::s_meta = { "DBFilesClient\\SummonProperties.dbc", 6, 24, SummonPropertiesRec::FixupStrings, 0 };
 
-// PROVEN: 8c994a57 IDENTICAL
+// PROVEN: 8c994a57 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SummonPropertiesRec::FixupStrings(void* record, const char* strings) {
 }

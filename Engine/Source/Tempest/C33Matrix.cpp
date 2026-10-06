@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/C4Quaternion.h"
 
-// PROVEN: 212934b3 IDENTICAL
+// PROVEN: 212934b3 IDENTICAL/NONE
 // OFFSET: 0x004CD2E0
 C33Matrix::C33Matrix(const C4Quaternion& q) {
     float x2 = q.x * 2.0f;
@@ -31,8 +31,8 @@ C33Matrix::C33Matrix(const C4Quaternion& q) {
     this->c2 = 1.0f - (xx + yy);
 }
 
-// PROVEN: 6ee1216e IDENTICAL
-// OFFSET: 0x004CD3F0
+// PROVEN: 6ee1216e IDENTICAL/IDENTICAL
+// OFFSET: 0x004CD3F0/0x140109190
 C33Matrix::C33Matrix(const C44Matrix& m) {
     this->a0 = m.a0;
     this->a1 = m.a1;
@@ -45,14 +45,14 @@ C33Matrix::C33Matrix(const C44Matrix& m) {
     this->c2 = m.c2;
 }
 
-// PROVEN: e5d44559 IDENTICAL
+// PROVEN: e5d44559 IDENTICAL/NONE
 // OFFSET: 0x004CD430
 float C33Matrix::Determinant() const {
     return this->c0 * this->a1 * this->b2 + this->a2 * this->b0 * this->c1 + this->c2 * this->a0 * this->b1 - this->c0 * this->a2 * this->b1 - this->c2 * this->a1 * this->b0 - this->a0 * this->c1 * this->b2;
 }
 
-// PROVEN: 245adc3b IDENTICAL
-// OFFSET: 0x004CD4A0
+// PROVEN: 245adc3b IDENTICAL/IDENTICAL
+// OFFSET: 0x004CD4A0/0x140109280
 void C33Matrix::Scale(float scale) {
     this->a0 = this->a0 * scale;
     this->a1 = this->a1 * scale;
@@ -91,7 +91,7 @@ void C33Matrix::Scale(const C3Vector& scale) {
     this->c2 = this->c2 * scale.z;
 }
 
-// PROVEN: 12ec340e IDENTICAL
+// PROVEN: 12ec340e IDENTICAL/NONE
 // OFFSET: 0x004CD600
 C33Matrix operator*(const C33Matrix& l, const C33Matrix& r) {
     C33Matrix result;
@@ -238,7 +238,7 @@ void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     this->c2 = product.c2;
 }
 
-// PROVEN: 0798e9ee IDENTICAL
+// PROVEN: 0798e9ee IDENTICAL/NONE
 // OFFSET: 0x004CDF00
 C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized) {
     C3Vector v = axis;
@@ -273,7 +273,7 @@ C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized
     return result;
 }
 
-// PROVEN: b1ea7faf IDENTICAL
+// PROVEN: b1ea7faf IDENTICAL/NONE
 // OFFSET: 0x004CE070
 void C33Matrix::Rotate(float angle, const C3Vector& axis, bool normalized) {
     *this = Rotation(angle, axis, normalized) * *this;
@@ -320,7 +320,7 @@ C3Vector operator*(const C3Vector& v, const C33Matrix& m) {
     return result;
 }
 
-// PROVEN: 3c0f5380 IDENTICAL
+// PROVEN: 3c0f5380 IDENTICAL/NONE
 // OFFSET: 0x005853E0
 C3Vector operator*=(C3Vector& v, const C33Matrix& m) {
     float y = m.c1 * v.z + m.b1 * v.y + m.a1 * v.x;

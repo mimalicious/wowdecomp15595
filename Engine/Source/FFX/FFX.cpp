@@ -69,7 +69,7 @@ CGxShader* FFX::s_passThrough_PCT;
 // STATIC: %0x00D9525C
 FFX::PortalEffect* FFX::s_portalEffect;
 
-// STATIC: 0x00EC7038
+// STATIC: 0x00EC7038/0x140DB9488
 FFX::Effect* FFX::s_effect[3];
 
 // STATIC: %0x00D95268
@@ -235,13 +235,13 @@ FFX::PortalEffect::PortalEffect() {
     this->m_batch.m_maxIndex = 0;
 }
 
-// PROVEN: fc004bde IDENTICAL
+// PROVEN: fc004bde IDENTICAL/NONE
 // OFFSET: 0x00899D40
 C44Matrix* FFX::GetOldViewMtx() {
     return &FFX::s_oldViewMtx;
 }
 
-// PROVEN: 3eb4e803 IDENTICAL
+// PROVEN: 3eb4e803 IDENTICAL/NONE
 // OFFSET: 0x00899D50
 int32_t FFX::EffectIsSet(Effect* effect) {
     for (uint32_t i = 0; i < 3; i++) {
@@ -253,8 +253,8 @@ int32_t FFX::EffectIsSet(Effect* effect) {
     return 0;
 }
 
-// PROVEN: 360fcc7c IDENTICAL
-// OFFSET: 0x00899DA0
+// PROVEN: 360fcc7c IDENTICAL/IDENTICAL
+// OFFSET: 0x00899DA0/0x1405D94C0
 void FFX::SetEffect(uint32_t index, Effect* effect) {
     Effect* previous = FFX::s_effect[index];
     FFX::s_effect[index] = effect;
@@ -664,8 +664,8 @@ C44Matrix FFX::GetWaveMtx(const C2iVector& size) {
     return matrix;
 }
 
-// PROVEN: 4c8faa73 IDENTICAL
-// OFFSET: 0x0089BE50
+// PROVEN: 4c8faa73 IDENTICAL/IDENTICAL
+// OFFSET: 0x0089BE50/0x1405DBED0
 C4Vector FFX::GetWaveAmplitude(const C2Vector& texelSize, float amplitude) {
     C4Vector result;
 
@@ -773,8 +773,8 @@ bool FFX::Effect::Valid() {
     return valid;
 }
 
-// PROVEN: 38ef06f9 IDENTICAL
-// OFFSET: 0x0089C100
+// PROVEN: 38ef06f9 IDENTICAL/IDENTICAL
+// OFFSET: 0x0089C100/0x1405DC260
 void FFX::Effect::Execute() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         this->m_passes[i]->Execute();
@@ -1052,7 +1052,8 @@ void FFX::AddPortalEffect(Effect* effect, const C44Matrix& matrix, const C3Vecto
     portalEffect->m_tangent = tangent;
 }
 
-// OFFSET: %0x00801B60
+// PROVEN: 13d8b6bf UNPROVEN/IDENTICAL
+// OFFSET: 0x0089D440/0x1405DD9A0
 FFX::Effect::Effect() : m_cvar(NULL) {
 }
 
@@ -1106,17 +1107,17 @@ void FFX::SetupGx(Tex* target, int32_t depth) {
     GxXformSetViewport(0.0f, static_cast<float>(target->m_size.x) / target->m_texSize.x, 0.0f, static_cast<float>(target->m_size.y) / target->m_texSize.y, 0.0f, s_viewportMaxZ);
 }
 
-// PROVEN: 606608f5 IDENTICAL
+// PROVEN: 606608f5 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void FFX::Effect::Begin() {
 }
 
-// PROVEN: ef2a8af8 IDENTICAL
+// PROVEN: ef2a8af8 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void FFX::Effect::End() {
 }
 
-// PROVEN: 787a0f92 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 787a0f92 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void FFX::Effect::SetParameters(int32_t count, const int32_t* params) {
 }

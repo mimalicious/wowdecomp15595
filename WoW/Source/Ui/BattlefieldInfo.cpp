@@ -221,7 +221,7 @@ static WorldPvPQueueStatus* SetWorldPvPQueue(int32_t queueID, int32_t status, in
     return queue;
 }
 
-// PROVEN: 657aade7 IDENTICAL
+// PROVEN: 657aade7 IDENTICAL/NONE
 // OFFSET: 0x0044BC10
 uint32_t GetArenaPetGUIDCount() {
     uint32_t count = 0;
@@ -1469,8 +1469,8 @@ void BattlefieldNameCacheCallback() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_BATTLEFIELD_SCORE, NULL);
 }
 
-// PROVEN: 4b1dca02 IDENTICAL
-// OFFSET: 0x0093E640
+// PROVEN: 4b1dca02 IDENTICAL/NONE
+// OFFSET: 0x0093E640/0x1406AA150
 void CGBattlefieldInfo::AddVehicle(const WOWGUID& guid) {
     if (!guid || CGBattlefieldInfo::m_numVehicles >= 40) {
         return;
@@ -1898,7 +1898,7 @@ void CGBattlefieldInfo::AddArenaOpponent(const WOWGUID& guid) {
     }
 }
 
-// PROVEN: 2cb23a20 IDENTICAL
+// PROVEN: 2cb23a20 IDENTICAL/NONE
 // OFFSET: 0x00940500
 void CGBattlefieldInfo::AddArenaOpponentPet(const WOWGUID& petGuid, const WOWGUID& ownerGuid) {
     for (uint32_t i = 0; i < 5; i++) {

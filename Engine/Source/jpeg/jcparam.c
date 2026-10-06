@@ -19,8 +19,8 @@
  * Quantization table setup routines
  */
 
-// PROVEN: ba9dd85a IDENTICAL
-// OFFSET: 0x00B5D9D0
+// PROVEN: ba9dd85a IDENTICAL/NONE
+// OFFSET: 0x00B5D9D0/0x140926490
 void jpeg_add_quant_table(j_compress_ptr cinfo, int which_tbl, const int *basic_table, boolean force_baseline) {
   JQUANT_TBL ** qtblptr;
   int i;
@@ -61,7 +61,7 @@ void jpeg_add_quant_table(j_compress_ptr cinfo, int which_tbl, const int *basic_
  */
 
 /* Define a Huffman table */
-// PROVEN: 498b58ac IDENTICAL
+// PROVEN: 498b58ac IDENTICAL/NONE
 // OFFSET: 0x00B5DB40
 static void add_huff_table(j_compress_ptr cinfo, JHUFF_TBL **htblptr, const UINT8 *bits, const UINT8 *val) {
   int nsymbols, len;
@@ -93,7 +93,7 @@ static void add_huff_table(j_compress_ptr cinfo, JHUFF_TBL **htblptr, const UINT
 
 /* Set up the standard Huffman tables (cf. JPEG standard section K.3) */
 /* IMPORTANT: these are only valid for 8-bit data precision! */
-// PROVEN: a1db6d13 IDENTICAL
+// PROVEN: a1db6d13 IDENTICAL/NONE
 // OFFSET: 0x00B5DC10
 static void std_huff_tables(j_compress_ptr cinfo) {
   static const UINT8 bits_dc_luminance[17] =

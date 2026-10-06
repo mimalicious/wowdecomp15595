@@ -3,7 +3,7 @@
 // STATIC: %0x00B45944
 const DBCMeta QuestFactionRewardRec::s_meta = { "DBFilesClient\\QuestFactionReward.dbc", 2, 44, QuestFactionRewardRec::FixupStrings, 0 };
 
-// PROVEN: 75b84850 IDENTICAL
+// PROVEN: 75b84850 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void QuestFactionRewardRec::FixupStrings(void* record, const char* strings) {
 }

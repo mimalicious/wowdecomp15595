@@ -7,8 +7,8 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 9a7d537c IDENTICAL
-// OFFSET: 0x0089DAE0
+// PROVEN: 9a7d537c IDENTICAL/IDENTICAL
+// OFFSET: 0x0089DAE0/0x1405DE440
 bool EffectGlow::Valid() {
     bool valid = this->m_cvar->m_intValue != 0;
 
@@ -25,8 +25,8 @@ bool EffectGlow::Valid() {
     return valid;
 }
 
-// PROVEN: 6705acc2 IDENTICAL
-// OFFSET: 0x0089DB40
+// PROVEN: 6705acc2 IDENTICAL/IDENTICAL
+// OFFSET: 0x0089DB40/0x1405DE4E0
 void EffectGlow::Execute() {
     if (this->m_mode) {
         for (uint32_t i = 0; i < this->m_altPasses.Count(); i++) {

@@ -52,7 +52,7 @@ char* System_Log::s_stringPool;
 // STATIC: #0x00B33C98
 System_Log::LogFile System_Log::s_logs[16];
 
-// PROVEN: e10f01d8 IDENTICAL
+// PROVEN: e10f01d8 IDENTICAL/NONE
 // OFFSET: 0x007AD560
 char* System_Log::GetPreamble(int32_t logClass) {
     char* (*preamble)() = s_Prefs[logClass].m_preamble;
@@ -60,7 +60,7 @@ char* System_Log::GetPreamble(int32_t logClass) {
     return preamble ? preamble() : s_Prefs[0].m_preamble();
 }
 
-// PROVEN: 2d5edc19 IDENTICAL
+// PROVEN: 2d5edc19 IDENTICAL/NONE
 // OFFSET: 0x007AD590
 char* System_Log::GetDayHeader(int32_t logClass) {
     char* (*dayHeader)() = s_Prefs[logClass].m_dayHeader;
@@ -68,8 +68,8 @@ char* System_Log::GetDayHeader(int32_t logClass) {
     return dayHeader ? dayHeader() : s_Prefs[0].m_dayHeader();
 }
 
-// PROVEN: a980d848 IDENTICAL
-// OFFSET: 0x007B5660
+// PROVEN: a980d848 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B5660/0x1404AB5C0
 void System_Log::PrintTimestamp(FILE* file, Blizzard::Time::Timestamp time) {
     Blizzard::Time::TimeRec rec;
     Blizzard::Time::BreakTime(time, rec);

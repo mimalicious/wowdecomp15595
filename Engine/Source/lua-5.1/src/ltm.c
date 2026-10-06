@@ -48,8 +48,8 @@ void luaT_init (lua_State *L) {
 ** function to be used with macro "fasttm": optimized for absence of
 ** tag methods
 */
-// PROVEN: 546fb1a6 IDENTICAL
-// OFFSET: 0x00425F30
+// PROVEN: 546fb1a6 IDENTICAL/NONE
+// OFFSET: 0x00425F30/0x14002BAB0
 const TValue *luaT_gettm (Table *events, TMS event, TString *ename) {
   const TValue *tm = luaH_getstr(events, ename);
   lua_assert(event <= TM_EQ);
@@ -61,8 +61,8 @@ const TValue *luaT_gettm (Table *events, TMS event, TString *ename) {
 }
 
 
-// PROVEN: 32afaad7 IDENTICAL
-// OFFSET: 0x00425F60
+// PROVEN: 32afaad7 IDENTICAL/NONE
+// OFFSET: 0x00425F60/0x14002BAF0
 const TValue *luaT_gettmbyobj (lua_State *L, const TValue *o, TMS event) {
   Table *mt;
   switch (ttype(o)) {

@@ -3,7 +3,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// PROVEN: 6423c91f IDENTICAL
+// PROVEN: 6423c91f IDENTICAL/NONE
 // OFFSET: 0x00464E50
 void CImVector::Set(float a, float r, float g, float b) {
     uint32_t value = static_cast<uint8_t>(CMath::ftol_round_0_255_(a));
@@ -13,8 +13,8 @@ void CImVector::Set(float a, float r, float g, float b) {
     *reinterpret_cast<uint32_t*>(this) = value;
 }
 
-// PROVEN: 8f7b43c8 IDENTICAL
-// OFFSET: 0x005AD230
+// PROVEN: 8f7b43c8 IDENTICAL/IDENTICAL
+// OFFSET: 0x005AD230/0x14021F6C0
 void CImVector::InterpColor(int32_t t, const CImVector* src) {
     uint32_t& value = *reinterpret_cast<uint32_t*>(this);
 

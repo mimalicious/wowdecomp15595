@@ -1238,20 +1238,20 @@ static ClientDBTable s_clientDBTables[] = {
     { NULL, NULL },
 };
 
-// PROVEN: 7350848c IDENTICAL
-// OFFSET: 0x00494A60
+// PROVEN: 7350848c IDENTICAL/NONE
+// OFFSET: 0x00494A60/0x1400BA230
 int32_t GetPhysicalDamageClassID() {
     return s_physicalDamageClassID;
 }
 
-// PROVEN: c401089c IDENTICAL
-// OFFSET: 0x00494A70
+// PROVEN: c401089c IDENTICAL/NONE
+// OFFSET: 0x00494A70/0x1400BA240
 uint32_t GetPhysicalDamageClassMask() {
     return 1 << s_physicalDamageClassID;
 }
 
-// PROVEN: f05eb75b IDENTICAL
-// OFFSET: 0x00494A80
+// PROVEN: f05eb75b IDENTICAL/NONE
+// OFFSET: 0x00494A80/0x1400BA250
 int32_t ClientDBGetUnarmedWeapon() {
     return s_unarmedWeapon->m_subClassID;
 }
@@ -1274,7 +1274,7 @@ int32_t ClientDBGetNumWeaponSubClasses() {
     return s_weaponSubclasses.Count();
 }
 
-// PROVEN: 836efa84 IDENTICAL
+// PROVEN: 836efa84 IDENTICAL/NONE
 // OFFSET: 0x00495350
 int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(mapId, difficulty, NULL);
@@ -1498,8 +1498,8 @@ int32_t LocaleNameToIndex(const char* locale) {
     return 2;
 }
 
-// PROVEN: 9dcd0762 IDENTICAL
-// OFFSET: 0x00495030
+// PROVEN: 9dcd0762 IDENTICAL/NONE
+// OFFSET: 0x00495030/0x1400BA9A0
 const char* ClientDBStringLookup(uint32_t lookup) {
     StringLookupsRec* rec = g_stringLookupsDB.GetRecord(lookup);
     return rec ? rec->m_string : NULL;
@@ -1534,7 +1534,7 @@ MapDifficultyRec* GetMapDifficultyEntryByMapIdAndDifficulty(int32_t mapId, uint3
     return NULL;
 }
 
-// PROVEN: be1740d5 IDENTICAL
+// PROVEN: be1740d5 IDENTICAL/NONE
 // OFFSET: 0x00495380
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(map->m_id, difficulty, NULL);

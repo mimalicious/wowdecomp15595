@@ -482,7 +482,7 @@ static float s_horizonMinZ = 0.998046875f;
 // STATIC: #0x00ADEEEC
 static float s_horizonMaxZ = 0.9990234375f;
 
-// PROVEN: 8564474b IDENTICAL
+// PROVEN: 8564474b IDENTICAL/NONE
 // OFFSET: 0x00401000
 void World::SetTexLodBias(float bias) {
 }
@@ -492,8 +492,8 @@ bool World::MapIsDungeon() {
     return CMap::bDungeon != 0;
 }
 
-// PROVEN: dab2445f IDENTICAL
-// OFFSET: 0x00721CC0
+// PROVEN: dab2445f IDENTICAL/NONE
+// OFFSET: 0x00721CC0/0x1403F82C0
 void World::SetLoadProgressCallback(CALLBACK_FUNC callback, void* param) {
     World::s_loadProgressCallback = callback;
     World::s_loadProgressParam = param;
@@ -1694,7 +1694,7 @@ void CWorld::Initialize() {
     ZonesInitialize();
 }
 
-// PROVEN: db66a356 IDENTICAL
+// PROVEN: db66a356 IDENTICAL/NONE
 // OFFSET: 0x007245B0
 bool World::IsValidPosition(const C3Vector& position, float a4) {
     return World::IsValidPosition(position.x, position.y, position.z, a4);
@@ -4502,7 +4502,7 @@ int32_t World::QueryMapObjZoneName(CMapEntity* entity, const char** zoneName) {
     return entity->QueryMapObjZoneName(zoneName);
 }
 
-// PROVEN: a84132ce IDENTICAL
+// PROVEN: a84132ce IDENTICAL/NONE
 // OFFSET: 0x00721DC0
 int32_t World::QueryMapObjSubzoneName(CMapEntity* entity, const char** subzoneName, int32_t* areaId) {
     if (!entity) {
@@ -4512,7 +4512,7 @@ int32_t World::QueryMapObjSubzoneName(CMapEntity* entity, const char** subzoneNa
     return entity->QueryMapObjSubzoneName(subzoneName, areaId);
 }
 
-// PROVEN: 637e4ae9 IDENTICAL
+// PROVEN: 637e4ae9 IDENTICAL/NONE
 // OFFSET: 0x00721E30
 bool World::QueryMapObjIDs(CMapEntity* entity, int32_t* wmoId, int32_t* wmoHash, int32_t* groupNum) {
     if (!entity) {
@@ -4703,7 +4703,7 @@ CMapEntity* CMap::ObjectCreateStaticEx(CM2Model* model, const C44Matrix& matrix,
     return entity;
 }
 
-// PROVEN: c6da014c IDENTICAL
+// PROVEN: c6da014c IDENTICAL/NONE
 // OFFSET: 0x00721DE0
 int32_t World::QueryMapObjFileName(CMapEntity* entity, const char** fileName) {
     if (!entity) {
@@ -4713,7 +4713,7 @@ int32_t World::QueryMapObjFileName(CMapEntity* entity, const char** fileName) {
     return entity->QueryMapObjFileName(fileName);
 }
 
-// PROVEN: b7705592 IDENTICAL
+// PROVEN: b7705592 IDENTICAL/NONE
 // OFFSET: 0x00721E00
 bool World::QueryMapObjMinimap(CMapEntity* entity, CAaBox* box, TSStackArray<MINIMAPQUADINFO>* quads, uint32_t maxQuads, int32_t inside, uint8_t indoorArea) {
     if (!entity) {
@@ -4723,7 +4723,7 @@ bool World::QueryMapObjMinimap(CMapEntity* entity, CAaBox* box, TSStackArray<MIN
     return entity->QueryMapObjMinimap(box, quads, maxQuads, inside, indoorArea);
 }
 
-// PROVEN: 5e3a3ca3 IDENTICAL
+// PROVEN: 5e3a3ca3 IDENTICAL/NONE
 // OFFSET: 0x00721E60
 bool World::QueryMapObjMatrix(CMapEntity* entity, C44Matrix* matrix, C44Matrix* invMatrix) {
     if (!entity) {
@@ -4912,8 +4912,8 @@ void World::UpdateObjectFadeouts() {
     }
 }
 
-// PROVEN: 57211440 IDENTICAL
-// OFFSET: 0x00722B50
+// PROVEN: 57211440 IDENTICAL/NONE
+// OFFSET: 0x00722B50/0x1403F9210
 void World::ObjectSetMoveable(CMapEntity* entity, int32_t moveable) {
     if (moveable) {
         entity->m_flags = static_cast<MapObjFlag>(entity->m_flags | 0x1000);

@@ -37,20 +37,20 @@ void __fastcall DepthCache::Reset() {
     s_needsCreate = 1;
 }
 
-// PROVEN: 3239f9e4 IDENTICAL
-// OFFSET: 0x00A2F850
+// PROVEN: 3239f9e4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A2F850/0x1407D9540
 bool DepthCache::IsValid() {
     return s_depthMode != DM_Unknown;
 }
 
-// PROVEN: 3fd63246 IDENTICAL
-// OFFSET: 0x00A2F870
+// PROVEN: 3fd63246 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A2F870/0x1407D9560
 CTexture* DepthCache::GetDepthSR() {
     return s_depthResolveTex ? s_depthResolveTex : s_depthTex;
 }
 
-// PROVEN: 49770cf6 IDENTICAL
-// OFFSET: 0x00A2F880
+// PROVEN: 49770cf6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A2F880/0x1407D9580
 DepthCache::EDepthMode DepthCache::GetDepthMode() {
     return s_depthMode;
 }

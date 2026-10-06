@@ -319,8 +319,8 @@ void SpellVisualsBlizzardStop(BlizzardObject** object) {
     *object = NULL;
 }
 
-// PROVEN: 484ab884 IDENTICAL
-// OFFSET: 0x008BC190
+// PROVEN: 484ab884 IDENTICAL/NONE
+// OFFSET: 0x008BC190/0x140604D50
 int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition) {
     return (transition->m_flags >> 1) & 1;
 }
@@ -330,14 +330,14 @@ void SpellVisualsRender() {
     s_lightningManager->Render(CGWorldFrame::GetActiveCamera()->m_position);
 }
 
-// PROVEN: b0403c10 IDENTICAL
+// PROVEN: b0403c10 IDENTICAL/NONE
 // OFFSET: 0x008BC120
 float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition) {
     return transition->m_height;
 }
 
-// PROVEN: 54548d21 IDENTICAL
-// OFFSET: 0x008BC180
+// PROVEN: 54548d21 IDENTICAL/NONE
+// OFFSET: 0x008BC180/0x140604D40
 void SpellVisualsFlagMountTransitionFinished(MountTransitionObject* transition) {
     transition->m_flags |= 0x2;
 }
@@ -612,8 +612,8 @@ void SpellVisualsCancelMountTransition(MountTransitionObject* transition) {
     }
 }
 
-// PROVEN: 356e42a8 IDENTICAL
-// OFFSET: 0x008BDAD0
+// PROVEN: 356e42a8 IDENTICAL/NONE
+// OFFSET: 0x008BDAD0/0x140606C80
 const SpellVisualKitModelAttachRec* SpellVisualsGetModelAttachRec(uint32_t kitId, uint32_t index) {
     return s_modelAttachLookup->m_data[kitId]->m_data[index];
 }
@@ -651,13 +651,13 @@ void SpellVisualsHandleEclipse(const CImVector* color, float fadeIn, const Spell
     s_eclipse.m_end = now + castTime + 100;
 }
 
-// PROVEN: d81d3c7b IDENTICAL
+// PROVEN: d81d3c7b IDENTICAL/NONE
 // OFFSET: 0x008BC130
 float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transition) {
     return transition->m_alpha;
 }
 
-// PROVEN: 5fe23a2a IDENTICAL
+// PROVEN: 5fe23a2a IDENTICAL/NONE
 // OFFSET: 0x008BC140
 void SpellVisualsGetMountTransitionTransform(const MountTransitionObject* transition, C3Vector* position, C3Vector* up, float* facing) {
     *position = transition->m_position;
@@ -844,7 +844,7 @@ void BlizzardObject::Render(int32_t visible) {
     }
 }
 
-// PROVEN: 6ca4cbc1 IDENTICAL
+// PROVEN: 6ca4cbc1 IDENTICAL/NONE
 // OFFSET: 0x008BE2F0
 int32_t BlizzardObject::WorldObjectRender(void* param, uint32_t flags, uint64_t param64, uintptr_t param32) {
     static_cast<BlizzardObject*>(param)->Render(flags & 1);

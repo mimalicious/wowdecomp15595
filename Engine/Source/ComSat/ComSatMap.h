@@ -62,7 +62,7 @@ ComSat::MapKey<T>::MapKey() {
     this->m_hash = 0;
 }
 
-// PROVEN: 7b6ecb44 IDENTICAL
+// PROVEN: 7b6ecb44 IDENTICAL/NONE
 // OFFSET: [0x00A34A20<unsigned __int64>]
 template <class T>
 ComSat::MapKey<T>::MapKey(const T& value) {

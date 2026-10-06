@@ -369,7 +369,7 @@ void CGSkillInfo::ShutdownGame() {
     }
 }
 
-// PROVEN: 0141b453 IDENTICAL
+// PROVEN: 0141b453 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGSkillInfo::LeaveWorld() {
 }

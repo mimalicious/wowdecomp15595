@@ -33,8 +33,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a6a72c4d IDENTICAL
-// OFFSET: 0x00AC3270
+// PROVEN: a6a72c4d IDENTICAL/NONE
+// OFFSET: 0x00AC3270/0x14088BB40
 Output::Output()
 {
     mEnumerated             = false;
@@ -66,8 +66,8 @@ Output::Output()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 17ade216 IDENTICAL
-// OFFSET: 0x00AC2450
+// PROVEN: 17ade216 IDENTICAL/NONE
+// OFFSET: 0x00AC2450/0x14088A950
 FMOD_RESULT Output::release()
 {
     FMOD_Memory_Free(this);
@@ -178,8 +178,8 @@ FMOD_RESULT Output::recordRead(float *inbuffer, float *outbuffer, unsigned int l
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 57d080b0 IDENTICAL
-// OFFSET: 0x00AC2950
+// PROVEN: 57d080b0 IDENTICAL/NONE
+// OFFSET: 0x00AC2950/0x14088AFE0
 FMOD_RESULT F_CALLBACK Output::recordResamplerReadCallback(FMOD_DSP_STATE *dsp_state, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
     DSPResampler  *resampler  = (DSPResampler *)dsp_state;
@@ -321,7 +321,7 @@ FMOD_RESULT Output::recordFill(unsigned int length)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c5d26141 IDENTICAL
+// PROVEN: c5d26141 IDENTICAL/NONE
 // OFFSET: 0x00AC2EE0
 FMOD_RESULT Output::recordUpdate()
 {
@@ -503,8 +503,8 @@ FMOD_RESULT Output::mix(void *buffer, unsigned int numsamples)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ba9093ab IDENTICAL
-// OFFSET: 0x00AC2470
+// PROVEN: ba9093ab IDENTICAL/NONE
+// OFFSET: 0x00AC2470/0x14088A990
 FMOD_RESULT Output::getFreeChannel(FMOD_MODE mode, ChannelReal **realchannel, int numchannels, int numsoundchannels, int *found)
 {
     FMOD_RESULT result;
@@ -562,7 +562,7 @@ FMOD_RESULT Output::getFreeChannel(FMOD_MODE mode, ChannelReal **realchannel, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9efa5305 IDENTICAL
+// PROVEN: 9efa5305 IDENTICAL/NONE
 // OFFSET: 0x00AC3230
 FMOD_RESULT F_CALLBACK Output::mixCallback(FMOD_OUTPUT_STATE *output, void *buffer, unsigned int length)
 {

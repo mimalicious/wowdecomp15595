@@ -42,8 +42,8 @@ SpeakerLevelsPool::SpeakerLevelsPool()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 997903ed IDENTICAL
-// OFFSET: 0x00A90B30
+// PROVEN: 997903ed IDENTICAL/NONE
+// OFFSET: 0x00A90B30/0x1408503B0
 FMOD_RESULT SpeakerLevelsPool::alloc(float **levels)
 {
     int freepos           = mSystem->mNumChannels;
@@ -124,8 +124,8 @@ FMOD_RESULT SpeakerLevelsPool::alloc(float **levels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c43476da IDENTICAL
-// OFFSET: 0x00A90C70
+// PROVEN: c43476da IDENTICAL/NONE
+// OFFSET: 0x00A90C70/0x140850510
 FMOD_RESULT SpeakerLevelsPool::free(float *levels)
 {
     if (mLevelsPool)
@@ -159,8 +159,8 @@ FMOD_RESULT SpeakerLevelsPool::free(float *levels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4970b0db IDENTICAL
-// OFFSET: 0x00A90CB0
+// PROVEN: 4970b0db IDENTICAL/NONE
+// OFFSET: 0x00A90CB0/0x140850560
 FMOD_RESULT SpeakerLevelsPool::release()
 {
     if (mLevelsPool)

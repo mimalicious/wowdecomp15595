@@ -312,8 +312,8 @@ static boolean dump_buffer(working_state * state) {
 
 INLINE
 /* Emit some bits; return TRUE if successful, FALSE if must suspend */
-// PROVEN: 4012a62f IDENTICAL
-// OFFSET: 0x00B60EC0
+// PROVEN: 4012a62f IDENTICAL/NONE
+// OFFSET: 0x00B60EC0/0x14092A680
 static boolean emit_bits(working_state * state, unsigned int code, int size) {
   /* This routine is heavily used, so it's worth coding tightly. */
   register INT32 put_buffer = (INT32) code;
@@ -460,8 +460,8 @@ static boolean encode_one_block(working_state * state, JCOEFPTR block, int last_
  * Emit a restart marker & resynchronize predictions.
  */
 
-// PROVEN: e788fee5 IDENTICAL
-// OFFSET: 0x00B61150
+// PROVEN: e788fee5 IDENTICAL/NONE
+// OFFSET: 0x00B61150/0x14092A950
 static boolean emit_restart(working_state * state, int restart_num) {
   int ci;
 
@@ -541,8 +541,8 @@ static boolean encode_mcu_huff(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * Finish up at the end of a Huffman-compressed scan.
  */
 
-// PROVEN: 134ba6d9 IDENTICAL
-// OFFSET: 0x00B61360
+// PROVEN: 134ba6d9 IDENTICAL/NONE
+// OFFSET: 0x00B61360/0x14092ABE0
 static void finish_pass_huff(j_compress_ptr cinfo) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   working_state state;
@@ -718,8 +718,8 @@ static boolean encode_mcu_gather(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
  * So the extra complexity of an optimal algorithm doesn't seem worthwhile.
  */
 
-// PROVEN: 936f2f17 IDENTICAL
-// OFFSET: 0x00B615D0
+// PROVEN: 936f2f17 IDENTICAL/NONE
+// OFFSET: 0x00B615D0/0x14092AEE0
 void jpeg_gen_optimal_table(j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[]) {
 #define MAX_CLEN 32		/* assumed maximum initial code length */
   UINT8 bits[MAX_CLEN+1];	/* bits[k] = # of symbols with code length k */
@@ -861,8 +861,8 @@ void jpeg_gen_optimal_table(j_compress_ptr cinfo, JHUFF_TBL * htbl, long freq[])
  * Finish up a statistics-gathering pass and create the new Huffman tables.
  */
 
-// PROVEN: 95af066c IDENTICAL
-// OFFSET: 0x00B61820
+// PROVEN: 95af066c IDENTICAL/NONE
+// OFFSET: 0x00B61820/0x14092B1F0
 static void finish_pass_gather(j_compress_ptr cinfo) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   int ci, dctbl, actbl;

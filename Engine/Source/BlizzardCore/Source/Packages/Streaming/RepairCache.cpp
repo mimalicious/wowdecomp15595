@@ -34,7 +34,7 @@ void Blizzard::Repair::SetRepairReportCallbacks(REPAIRFAILCALLBACK fail, REPAIRS
     s_repairSuccessCallback = success;
 }
 
-// PROVEN: fcecb849 IDENTICAL
+// PROVEN: fcecb849 IDENTICAL/NONE
 // OFFSET: 0x007AAF80
 void Blizzard::Repair::ReportRepairSuccess(const char* name, int64_t offset, uint32_t size) {
     if (s_repairSuccessCallback) {
@@ -42,7 +42,7 @@ void Blizzard::Repair::ReportRepairSuccess(const char* name, int64_t offset, uin
     }
 }
 
-// PROVEN: 312a9ccb IDENTICAL
+// PROVEN: 312a9ccb IDENTICAL/NONE
 // OFFSET: 0x007AAFB0
 void Blizzard::Repair::ReportRepairFail(const char* name, int64_t offset, uint32_t size, const char* error) {
     if (s_repairFailCallback) {

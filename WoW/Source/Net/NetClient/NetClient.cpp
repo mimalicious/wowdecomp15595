@@ -117,8 +117,8 @@ void NetClient::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CD
     }
 }
 
-// PROVEN: debe5c24 IDENTICAL
-// OFFSET: 0x0048A190
+// PROVEN: debe5c24 IDENTICAL/NONE
+// OFFSET: 0x0048A190/0x1400AC650
 NETEVENTQUEUE::NETEVENTQUEUE(NetClient* client) {
     this->m_client = client;
 }
@@ -186,8 +186,8 @@ void NETEVENTQUEUE::Poll() {
     this->m_critSect.Leave();
 }
 
-// PROVEN: 8f67d674 IDENTICAL
-// OFFSET: 0x00487370
+// PROVEN: 8f67d674 IDENTICAL/NONE
+// OFFSET: 0x00487370/0x1400A8750
 static void InitializePropContext() {
     if (PropGetSelectedContext() != s_propContext) {
         PropSelectContext(s_propContext);
@@ -242,8 +242,8 @@ void NetClient::SetLoginData(LoginData* loginData) {
     memcpy(&this->m_loginData, loginData, sizeof(this->m_loginData));
 }
 
-// PROVEN: a91c0b00 IDENTICAL
-// OFFSET: 0x004873C0
+// PROVEN: a91c0b00 IDENTICAL/NONE
+// OFFSET: 0x004873C0/0x1400A87C0
 uint8_t* NetClient::GetSessionKey() {
     return this->m_loginData.m_sessionKey;
 }

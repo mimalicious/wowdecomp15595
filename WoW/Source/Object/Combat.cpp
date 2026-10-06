@@ -1,13 +1,13 @@
 #include "Combat.h"
 #include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
 
-// PROVEN: 97f53222 IDENTICAL
+// PROVEN: 97f53222 IDENTICAL/NONE
 // OFFSET: 0x00A29150
 void CCombat::SetAttacking(WOWGUID guid) {
     this->m_attacking = guid;
 }
 
-// PROVEN: 6a129a29 IDENTICAL
+// PROVEN: 6a129a29 IDENTICAL/NONE
 // OFFSET: 0x00A29170
 void CCombatClient::SetAttackSent(WOWGUID guid) {
     this->m_attacking = guid;

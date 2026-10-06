@@ -55,8 +55,8 @@ void CGActionBar::HideGrid() {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_HIDEGRID, NULL);
 }
 
-// PROVEN: 19d316e3 IDENTICAL
-// OFFSET: 0x00464530
+// PROVEN: 19d316e3 IDENTICAL/NONE
+// OFFSET: 0x00464530/0x140077F00
 int32_t CGActionBar::IsMacro(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x40000000;
@@ -73,8 +73,8 @@ uint32_t CGActionBar::GetMacroID(uint32_t slot) {
     return 0;
 }
 
-// PROVEN: 9bcd55b7 IDENTICAL
-// OFFSET: 0x00464500
+// PROVEN: 9bcd55b7 IDENTICAL/NONE
+// OFFSET: 0x00464500/0x140077ED0
 int32_t CGActionBar::IsItem(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && (action & 0xF0000000) == 0x80000000;
@@ -486,14 +486,14 @@ int32_t CGActionBar::GetMacroSpell(uint32_t slot, int32_t& petSpell) {
     return macro->m_spellID;
 }
 
-// PROVEN: 2e75b45b IDENTICAL
+// PROVEN: 2e75b45b IDENTICAL/NONE
 // OFFSET: 0x004644D0
 int32_t CGActionBar::IsSpell(uint32_t slot) {
     uint32_t action = CGActionBar::m_slotActions[slot];
     return action && !(action & 0xF0000000);
 }
 
-// PROVEN: 7e12b449 IDENTICAL
+// PROVEN: 7e12b449 IDENTICAL/NONE
 // OFFSET: 0x0094FEB0
 uint32_t CGPetInfo::GetPetMode() {
     if (CGPetInfo::m_petMode & 0x8000000) {
@@ -503,8 +503,8 @@ uint32_t CGPetInfo::GetPetMode() {
     return static_cast<uint8_t>(CGPetInfo::m_petMode);
 }
 
-// PROVEN: 85398456 IDENTICAL
-// OFFSET: 0x00464710
+// PROVEN: 85398456 IDENTICAL/NONE
+// OFFSET: 0x00464710/0x1400780A0
 PetAction* GetPetAction(uint32_t index) {
     if (CGPetInfo::GetPet(0) && index < sizeof(((CGPetInfo*)0)->m_actions) / sizeof(CGPetInfo::m_actions[0])) {
         return &CGPetInfo::m_actions[index];
@@ -940,7 +940,7 @@ void CGActionBar::SlotChanged(int32_t slot, int32_t sendToServer, int32_t silent
     }
 }
 
-// PROVEN: e2c92266 IDENTICAL
+// PROVEN: e2c92266 IDENTICAL/NONE
 // OFFSET: 0x00958950
 void ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
@@ -1399,7 +1399,7 @@ void CGActionBar::UpdateBonusBar() {
     }
 }
 
-// PROVEN: 245edc1b IDENTICAL
+// PROVEN: 245edc1b IDENTICAL/NONE
 // OFFSET: 0x00959930
 void CGActionBar::EnterWorld() {
     CGActionBar::UpdateUsable();
@@ -1684,7 +1684,7 @@ void CGActionBar::UpdateMacro(uint32_t macroId) {
     }
 }
 
-// PROVEN: 299cac77 IDENTICAL
+// PROVEN: 299cac77 IDENTICAL/NONE
 // OFFSET: 0x009543E0
 void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     if (enable) {
@@ -1694,7 +1694,7 @@ void CGActionBar::SetTemporaryActionBarFlags(uint32_t flags, int32_t enable) {
     }
 }
 
-// PROVEN: 7fc56e8b IDENTICAL
+// PROVEN: 7fc56e8b IDENTICAL/NONE
 // OFFSET: 0x00959050
 void CGActionBar::UpdateTemporaryActionBar(int32_t (*getSpell)(uint32_t index, const void* data), const void* data) {
     if (!getSpell) {
@@ -1975,7 +1975,7 @@ void CGActionBar::PickupAction(uint32_t slot) {
     }
 }
 
-// PROVEN: 01a1fb58 IDENTICAL
+// PROVEN: 01a1fb58 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGActionBar::ShutdownGame() {
 }
@@ -2061,7 +2061,7 @@ void CGActionBar::UpdateCritter(int32_t critter) {
     }
 }
 
-// PROVEN: 8b8940d1 IDENTICAL
+// PROVEN: 8b8940d1 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGActionBar::LeaveWorld() {
 }

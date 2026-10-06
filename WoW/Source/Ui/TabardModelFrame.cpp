@@ -74,8 +74,8 @@ bool CGTabardModelFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGTabardModelFrame::s_objectTypeName, STORM_MAX_STR) || CGCharacterModelBase::IsA(typeName);
 }
 
-// PROVEN: 5e061413 IDENTICAL
-// OFFSET: 0x00A05FF0
+// PROVEN: 5e061413 IDENTICAL/NONE
+// OFFSET: 0x00A05FF0/0x140171140
 void EmblemTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
         texelStrideInBytes = 4 * width;

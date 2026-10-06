@@ -3,7 +3,7 @@
 // STATIC: %0x00B44CC0
 const DBCMeta SpellShapeshiftRec::s_meta = { "DBFilesClient\\SpellShapeshift.dbc", 4, 24, SpellShapeshiftRec::FixupStrings, 0 };
 
-// PROVEN: 7a07c7b6 IDENTICAL
+// PROVEN: 7a07c7b6 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellShapeshiftRec::FixupStrings(void* record, const char* strings) {
 }

@@ -33,13 +33,13 @@ int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t
     return object->AddPassenger(passenger, reason);
 }
 
-// PROVEN: 8e5bc963 IDENTICAL
-// OFFSET: 0x005E6B90
+// PROVEN: 8e5bc963 IDENTICAL/NONE
+// OFFSET: 0x005E6B90/0x1402674F0
 CMovementGlobals* MovementGetGlobals() {
     return ClntObjMgrGetMovementGlobals();
 }
 
-// PROVEN: fbafa5c1 IDENTICAL
+// PROVEN: fbafa5c1 IDENTICAL/NONE
 // OFFSET: 0x005E6B80
 void MovementSetGlobals(CMovementGlobals* globals) {
     ClntObjMgrSetMovementGlobals(globals);
@@ -142,7 +142,7 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
     }
 }
 
-// PROVEN: 06762f05 IDENTICAL
+// PROVEN: 06762f05 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void MovementNotifyZoneMgr(WOWGUID guid) {
 }

@@ -654,7 +654,7 @@ ASIOTime * OutputASIO::bufferSwitchTimeInfo(ASIOTime* params, long doubleBufferI
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 52cf2881 IDENTICAL
+// PROVEN: 52cf2881 IDENTICAL/NONE
 // OFFSET: 0x00AE5190
 FMOD_RESULT OutputASIO::getNumDrivers(int *numdrivers)
 {
@@ -695,7 +695,7 @@ FMOD_RESULT OutputASIO::getNumDrivers(int *numdrivers)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1760014b IDENTICAL
+// PROVEN: 1760014b IDENTICAL/NONE
 // OFFSET: 0x00AE5200
 FMOD_RESULT OutputASIO::getDriverName(int driver, char *name, int namelen)
 {
@@ -733,7 +733,7 @@ FMOD_RESULT OutputASIO::getDriverName(int driver, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 245b2b9f IDENTICAL
+// PROVEN: 245b2b9f IDENTICAL/NONE
 // OFFSET: 0x00AE5270
 FMOD_RESULT OutputASIO::getDriverCaps(int id, FMOD_CAPS *caps)
 {
@@ -997,7 +997,7 @@ FMOD_RESULT OutputASIO::init(int selecteddriver, FMOD_INITFLAGS flags, int *outp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a7f0f4a6 IDENTICAL
+// PROVEN: a7f0f4a6 IDENTICAL/NONE
 // OFFSET: 0x00AE52E0
 FMOD_RESULT OutputASIO::close()
 {
@@ -1150,7 +1150,7 @@ FMOD_RESULT OutputASIO::stop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 348a3b4c IDENTICAL
+// PROVEN: 348a3b4c IDENTICAL/NONE
 // OFFSET: 0x00AE53E0
 FMOD_RESULT OutputASIO::recordGetNumDrivers(int *numdrivers)
 {
@@ -1236,7 +1236,7 @@ FMOD_RESULT OutputASIO::recordGetDriverInfo(int id, char *name, int namelen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3663838e IDENTICAL
+// PROVEN: 3663838e IDENTICAL/NONE
 // OFFSET: 0x00AE5CF0
 FMOD_RESULT OutputASIO::recordStart(int id, Sound *sound, bool loop)
 {
@@ -1437,7 +1437,7 @@ FMOD_RESULT OutputASIO::recordUnlock(void *ptr1, void *ptr2, unsigned int len1, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: fa94ad1d IDENTICAL
+// PROVEN: fa94ad1d IDENTICAL/NONE
 // OFFSET: 0x00AE54F0
 FMOD_RESULT F_CALLBACK OutputASIO::getNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
@@ -1464,7 +1464,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::getNumDriversCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f8af1084 IDENTICAL
+// PROVEN: f8af1084 IDENTICAL/NONE
 // OFFSET: 0x00AE5520
 FMOD_RESULT F_CALLBACK OutputASIO::getDriverNameCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -1491,7 +1491,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::getDriverNameCallback(FMOD_OUTPUT_STATE *outp
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 540f298c IDENTICAL
+// PROVEN: 540f298c IDENTICAL/NONE
 // OFFSET: 0x00AE5550
 FMOD_RESULT OutputASIO::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_CAPS *caps)
 {
@@ -1518,7 +1518,7 @@ FMOD_RESULT OutputASIO::getDriverCapsCallback(FMOD_OUTPUT_STATE *output, int id,
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e119250b IDENTICAL
+// PROVEN: e119250b IDENTICAL/NONE
 // OFFSET: 0x00AE5F70
 FMOD_RESULT F_CALLBACK OutputASIO::initCallback(FMOD_OUTPUT_STATE *output, int selecteddriver, FMOD_INITFLAGS flags, int *outputrate, int outputchannels, FMOD_SOUND_FORMAT *outputformat, int dspbufferlength, int dspnumbuffers, void *extradriverdata)
 {
@@ -1545,7 +1545,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::initCallback(FMOD_OUTPUT_STATE *output, int s
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 34c5f032 IDENTICAL
+// PROVEN: 34c5f032 IDENTICAL/NONE
 // OFFSET: 0x00AE5590
 FMOD_RESULT F_CALLBACK OutputASIO::closeCallback(FMOD_OUTPUT_STATE *output)
 {
@@ -1624,7 +1624,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::stopCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c63224ae IDENTICAL
+// PROVEN: c63224ae IDENTICAL/NONE
 // OFFSET: 0x00AE55E0
 FMOD_RESULT F_CALLBACK OutputASIO::getHandleCallback(FMOD_OUTPUT_STATE *output, void **handle)
 {
@@ -1652,7 +1652,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::getHandleCallback(FMOD_OUTPUT_STATE *output, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cd19a202 IDENTICAL
+// PROVEN: cd19a202 IDENTICAL/NONE
 // OFFSET: 0x00AE5620
 FMOD_RESULT F_CALLBACK OutputASIO::recordGetNumDriversCallback(FMOD_OUTPUT_STATE *output, int *numdrivers)
 {
@@ -1679,7 +1679,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::recordGetNumDriversCallback(FMOD_OUTPUT_STATE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2b2aac83 IDENTICAL
+// PROVEN: 2b2aac83 IDENTICAL/NONE
 // OFFSET: 0x00AE5650
 FMOD_RESULT F_CALLBACK OutputASIO::recordGetDriverInfoCallback(FMOD_OUTPUT_STATE *output, int id, char *name, int namelen)
 {
@@ -1706,7 +1706,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::recordGetDriverInfoCallback(FMOD_OUTPUT_STATE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 98177cda IDENTICAL
+// PROVEN: 98177cda IDENTICAL/NONE
 // OFFSET: 0x00AE5FB0
 FMOD_RESULT F_CALLBACK OutputASIO::recordStartCallback(FMOD_OUTPUT_STATE *output, int id, FMOD_SOUND *sound, int loop)
 {
@@ -1758,7 +1758,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::recordStopCallback(FMOD_OUTPUT_STATE *output)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d3e48f78 IDENTICAL
+// PROVEN: d3e48f78 IDENTICAL/NONE
 // OFFSET: 0x00AE5680
 FMOD_RESULT F_CALLBACK OutputASIO::recordGetPositionCallback(FMOD_OUTPUT_STATE *output, unsigned int *pcm)
 {
@@ -1785,7 +1785,7 @@ FMOD_RESULT F_CALLBACK OutputASIO::recordGetPositionCallback(FMOD_OUTPUT_STATE *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7a00f3bb IDENTICAL
+// PROVEN: 7a00f3bb IDENTICAL/NONE
 // OFFSET: 0x00AE5FE0
 FMOD_RESULT F_CALLBACK OutputASIO::recordLockCallback(FMOD_OUTPUT_STATE *output, unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {

@@ -193,8 +193,8 @@ static int32_t SpellParserPluralConditional(char* buffer, uint32_t size, int32_t
     return 1;
 }
 
-// PROVEN: 0f83756a IDENTICAL
-// OFFSET: 0x00992AD0
+// PROVEN: 0f83756a IDENTICAL/NONE
+// OFFSET: 0x00992AD0/0x1407123C0
 static void SpellParserSkipParenthesis(const char** cursor, const char* end) {
     int32_t depth = 1;
 

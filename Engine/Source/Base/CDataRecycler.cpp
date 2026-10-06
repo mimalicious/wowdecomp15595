@@ -17,7 +17,7 @@ CDataRecycler::CDataRecycler(uint32_t nodesPerBlock, int32_t maxNodes) {
 CDataRecycler::~CDataRecycler() {
 }
 
-// PROVEN: e47da066 IDENTICAL
+// PROVEN: e47da066 IDENTICAL/NONE
 // OFFSET: 0x00B41C90
 void* CDataRecycler::AllocData(uint32_t allocBytes, uint32_t* bytes, const char* fileName, int32_t lineNumber) {
     void* data = SMemAlloc(allocBytes, fileName, lineNumber, 0);
@@ -29,7 +29,7 @@ void* CDataRecycler::AllocData(uint32_t allocBytes, uint32_t* bytes, const char*
     return data;
 }
 
-// PROVEN: 1b779ff1 IDENTICAL
+// PROVEN: 1b779ff1 IDENTICAL/NONE
 // OFFSET: 0x00B41CC0
 void* CDataRecycler::ReallocData(void* data, uint32_t allocBytes, uint32_t* bytes, const char* fileName, int32_t lineNumber) {
     void* result = SMemReAlloc(data, allocBytes, fileName, lineNumber, 0);
@@ -41,7 +41,7 @@ void* CDataRecycler::ReallocData(void* data, uint32_t allocBytes, uint32_t* byte
     return result;
 }
 
-// PROVEN: 72bb87a1 IDENTICAL
+// PROVEN: 72bb87a1 IDENTICAL/NONE
 // OFFSET: 0x00B41CF0
 void CDataRecycler::FreeData(void* data, const char* fileName, int32_t lineNumber) {
     SMemFree(data, fileName, lineNumber, 0);

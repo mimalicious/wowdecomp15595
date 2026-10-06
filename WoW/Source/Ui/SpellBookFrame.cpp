@@ -1743,7 +1743,7 @@ int32_t IsValidSpell(const char* name, int32_t* petSpell) {
     return GetSpellSlot(GetSpellIdByName(name, petSpell), *petSpell);
 }
 
-// PROVEN: d123f581 IDENTICAL
+// PROVEN: d123f581 IDENTICAL/NONE
 // OFFSET: 0x00919860
 void CGSpellBook::ReplaceSpell(int32_t oldSpell, int32_t newSpell) {
     CGSpellBook::DelKnownSpell(oldSpell, 1);

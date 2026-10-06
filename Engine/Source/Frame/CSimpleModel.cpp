@@ -60,31 +60,31 @@ int32_t CSimpleModel::IsDrawable() {
     return this->m_model && this->m_model->IsDrawableRecursive();
 }
 
-// PROVEN: 1eb733db IDENTICAL
+// PROVEN: 1eb733db IDENTICAL/NONE
 // OFFSET: 0x0051EFD0
 bool CSimpleModel::IsA(int32_t type) {
     return type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: f621db32 IDENTICAL
+// PROVEN: f621db32 IDENTICAL/NONE
 // OFFSET: 0x0051F010
 bool CSimpleModel::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// PROVEN: 3029ebd5 IDENTICAL
+// PROVEN: 3029ebd5 IDENTICAL/NONE
 // OFFSET: 0x0051ECB0
 const char* CSimpleModel::GetObjectTypeName() {
     return CSimpleModel::s_objectTypeName;
 }
 
-// PROVEN: 504a298c IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 504a298c IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void CSimpleModel::SetGlow(float glow) {
 }
 
-// PROVEN: ae2b9613 IDENTICAL
-// OFFSET: 0x009FCE20
+// PROVEN: ae2b9613 IDENTICAL/NONE
+// OFFSET: 0x009FCE20/0x14090FD50
 int32_t CSimpleModel::AdvanceTime() {
     return 1;
 }
@@ -104,14 +104,14 @@ CSimpleModel::~CSimpleModel() {
     }
 }
 
-// PROVEN: 7069b78b IDENTICAL
-// OFFSET: 0x0051ECC0
+// PROVEN: 7069b78b IDENTICAL/NONE
+// OFFSET: 0x0051ECC0/0x14016BDE0
 int32_t CSimpleModel::GetScriptMetaTable() {
     return CSimpleModel::s_metatable;
 }
 
-// PROVEN: 8e977b6b IDENTICAL
-// OFFSET: 0x0051ECD0
+// PROVEN: 8e977b6b IDENTICAL/NONE
+// OFFSET: 0x0051ECD0/0x14016BDF0
 FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
 
@@ -130,7 +130,7 @@ FrameScript_Object::ScriptIx* CSimpleModel::GetScriptByName(const char* name, Fr
     return NULL;
 }
 
-// PROVEN: 884591cb IDENTICAL
+// PROVEN: 884591cb IDENTICAL/NONE
 // OFFSET: 0x0051ED70
 void CSimpleModel::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onUpdateModel, time, count);
@@ -138,8 +138,8 @@ void CSimpleModel::GetScriptTime(lua_State* L, double* time, uint32_t* count, in
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// PROVEN: a2860510 IDENTICAL
-// OFFSET: 0x0051EDC0
+// PROVEN: a2860510 IDENTICAL/NONE
+// OFFSET: 0x0051EDC0/0x14016BEF0
 void CSimpleModel::ModelLoaded(CM2Model* model, void* arg) {
     static_cast<CSimpleModel*>(arg)->OnModelLoaded(model);
 }
@@ -182,8 +182,8 @@ void CSimpleModel::SetCameraByID(uint32_t id) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// PROVEN: 0533821c IDENTICAL
-// OFFSET: 0x0051EEB0
+// PROVEN: 0533821c IDENTICAL/NONE
+// OFFSET: 0x0051EEB0/0x14016C020
 void CSimpleModel::SetLight(const CM2Light& light) {
     this->m_light = light;
 }
@@ -204,8 +204,8 @@ int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     return 1;
 }
 
-// PROVEN: f2dad3f3 IDENTICAL
-// OFFSET: 0x0051EF40
+// PROVEN: f2dad3f3 IDENTICAL/NONE
+// OFFSET: 0x0051EF40/0x14016C100
 CM2Scene* CSimpleModel::GetScene() {
     if (!this->m_scene) {
         this->m_scene = M2CreateScene();
@@ -352,7 +352,7 @@ float CSimpleModel::GetHeight() {
     return height;
 }
 
-// PROVEN: f4cdf815 IDENTICAL
+// PROVEN: f4cdf815 IDENTICAL/NONE
 // OFFSET: 0x0051F570
 void CSimpleModel::UpdateAlpha() {
     this->CSimpleFrame::UpdateAlpha();
@@ -522,7 +522,7 @@ void CSimpleModel::OnModelLoaded(CM2Model* model) {
     this->Resize(0);
 }
 
-// PROVEN: cc13c90d IDENTICAL
+// PROVEN: cc13c90d IDENTICAL/NONE
 // OFFSET: 0x0051FDD0
 void CSimpleModel::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
@@ -572,7 +572,7 @@ void CSimpleModel::ReplaceTexture(uint32_t type, const char* fileName) {
     }
 }
 
-// PROVEN: bb4dc5e6 IDENTICAL
+// PROVEN: bb4dc5e6 IDENTICAL/NONE
 // OFFSET: 0x00538510
 void CSimpleModel::SetPosition(const C3Vector& position) {
     this->m_position = position;

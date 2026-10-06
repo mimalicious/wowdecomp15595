@@ -59,7 +59,7 @@ namespace FMOD
         FMOD_RESULT  isPlaying            (bool *isplaying, bool includethreadlatency = false);
         FMOD_RESULT  getSpectrum          (float *spectrumarray, int numentries, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype);
         FMOD_RESULT  getWaveData          (float *wavearray, int numentries, int channeloffset);
-        // PROVEN: c4050ca3 IDENTICAL
+        // PROVEN: c4050ca3 IDENTICAL/NONE
         // OFFSET: 0x00AD7FD0
         FMOD_RESULT  getDSPHead           (DSPI **dsp)      { *dsp = mDSPHead; return FMOD_OK; }
         FMOD_RESULT  setReverbProperties  (const FMOD_REVERB_CHANNELPROPERTIES *prop);

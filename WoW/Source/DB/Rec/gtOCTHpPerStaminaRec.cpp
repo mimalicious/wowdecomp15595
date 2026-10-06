@@ -3,7 +3,7 @@
 // STATIC: %0x00B46598
 const DBCMeta gtOCTHpPerStaminaRec::s_meta = { "DBFilesClient\\gtOCTHpPerStamina.dbc", 1, 8, gtOCTHpPerStaminaRec::FixupStrings, 0 };
 
-// PROVEN: 00304d14 IDENTICAL
+// PROVEN: 00304d14 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void gtOCTHpPerStaminaRec::FixupStrings(void* record, const char* strings) {
 }

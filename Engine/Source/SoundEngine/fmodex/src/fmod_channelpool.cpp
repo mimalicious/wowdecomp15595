@@ -27,8 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e14280a8 IDENTICAL
-// OFFSET: 0x00A934A0
+// PROVEN: e14280a8 IDENTICAL/NONE
+// OFFSET: 0x00A934A0/0x140853250
 ChannelPool::ChannelPool()
 {
     mChannel      = 0;
@@ -54,8 +54,8 @@ ChannelPool::ChannelPool()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d7788da8 IDENTICAL
-// OFFSET: 0x00A934C0
+// PROVEN: d7788da8 IDENTICAL/NONE
+// OFFSET: 0x00A934C0/0x140853270
 FMOD_RESULT ChannelPool::init(SystemI *system, Output *output, int numchannels)
 {
     if (numchannels < 0)
@@ -95,8 +95,8 @@ FMOD_RESULT ChannelPool::init(SystemI *system, Output *output, int numchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7d9eefe8 IDENTICAL
-// OFFSET: 0x00A93520
+// PROVEN: 7d9eefe8 IDENTICAL/NONE
+// OFFSET: 0x00A93520/0x140853300
 FMOD_RESULT ChannelPool::release()
 {
     int count;
@@ -135,8 +135,8 @@ FMOD_RESULT ChannelPool::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 56e634e4 IDENTICAL
-// OFFSET: 0x00A93590
+// PROVEN: 56e634e4 IDENTICAL/NONE
+// OFFSET: 0x00A93590/0x1408533B0
 FMOD_RESULT ChannelPool::allocateChannel(ChannelReal **realchannel, int index, int numchannels, int *found_out)
 {
     int count;
@@ -238,8 +238,8 @@ FMOD_RESULT ChannelPool::allocateChannel(ChannelReal **realchannel, int index, i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5a97e310 IDENTICAL
-// OFFSET: 0x00A936F0
+// PROVEN: 5a97e310 IDENTICAL/NONE
+// OFFSET: 0x00A936F0/0x1408535B0
 FMOD_RESULT ChannelPool::getNumChannels(int *numchannels)
 {
     if (!numchannels)
@@ -268,7 +268,7 @@ FMOD_RESULT ChannelPool::getNumChannels(int *numchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 643955d9 IDENTICAL
+// PROVEN: 643955d9 IDENTICAL/NONE
 // OFFSET: 0x00A93710
 FMOD_RESULT ChannelPool::getChannelsUsed(int *numchannels)
 {
@@ -298,8 +298,8 @@ FMOD_RESULT ChannelPool::getChannelsUsed(int *numchannels)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0a6ea6d7 IDENTICAL
-// OFFSET: 0x00A93730
+// PROVEN: 0a6ea6d7 IDENTICAL/NONE
+// OFFSET: 0x00A93730/0x1408BCA80
 FMOD_RESULT ChannelPool::setChannel(int index, ChannelReal *channel, DSPI *dspmixtarget)
 {
     if (!channel || index < 0 || index >= mNumChannels)
@@ -329,7 +329,7 @@ FMOD_RESULT ChannelPool::setChannel(int index, ChannelReal *channel, DSPI *dspmi
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0df481f3 IDENTICAL
+// PROVEN: 0df481f3 IDENTICAL/NONE
 // OFFSET: 0x00A93780
 FMOD_RESULT ChannelPool::getChannel(int index, ChannelReal **channel)
 {

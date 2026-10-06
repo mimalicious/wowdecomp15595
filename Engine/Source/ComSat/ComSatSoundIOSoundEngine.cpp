@@ -14,7 +14,7 @@ ComSat::Sound::IOCallback::~IOCallback() {
 ComSat::Sound::IO::~IO() {
 }
 
-// PROVEN: 8a7536ad IDENTICAL
+// PROVEN: 8a7536ad IDENTICAL/NONE
 // OFFSET: 0x00A3B3D0
 ComSat::Sound::IO* ComSat::Sound::IO::Create(const ComSat::Initialization& init, ComSat::Sound::IOCallback& callback, ComSat::Allocator& allocator) {
     return new (allocator.Alloc(sizeof(ComSat::Sound::IOSoundEngine))) ComSat::Sound::IOSoundEngine(init, callback, allocator);
@@ -47,7 +47,7 @@ bool ComSat::Sound::OutputChannel::GetSamples(uint32_t position, uint32_t count,
     return this->m_buffer.Read(buffer, count) != 0;
 }
 
-// PROVEN: cf0eb99b IDENTICAL
+// PROVEN: cf0eb99b IDENTICAL/NONE
 // OFFSET: 0x00A3AEE0
 void ComSat::Sound::OutputChannel::Delete() {
     ComSat::Delete(*this->m_allocator, this);
@@ -68,35 +68,35 @@ ComSat::Sound::IOSoundEngine::~IOSoundEngine() {
     this->ShutDownCapture();
 }
 
-// PROVEN: d85ef02b IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: d85ef02b IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool ComSat::Sound::IOSoundEngine::Init() {
     return true;
 }
 
-// PROVEN: 5996f1c6 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 5996f1c6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void ComSat::Sound::IOSoundEngine::Work(uint32_t time) {
 }
 
-// PROVEN: 27bc5b3f IDENTICAL
+// PROVEN: 27bc5b3f IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ComSat::Sound::IOSoundEngine::Shutdown() {
 }
 
-// PROVEN: 93b819e0 IDENTICAL
+// PROVEN: 93b819e0 IDENTICAL/NONE
 // OFFSET: 0x00A332C0
 bool ComSat::Sound::IOSoundEngine::DestroyLocalPlayer(uint8_t player) {
     return true;
 }
 
-// PROVEN: 465b08f6 IDENTICAL
+// PROVEN: 465b08f6 IDENTICAL/NONE
 // OFFSET: 0x00A3AA40
 int32_t ComSat::Sound::IOSoundEngine::GetInputBlockSize(uint8_t player) {
     return this->m_samplesPerFrame * this->m_bitsPerSample / 8;
 }
 
-// PROVEN: 697947b9 IDENTICAL
+// PROVEN: 697947b9 IDENTICAL/NONE
 // OFFSET: 0x00A3AA40
 int32_t ComSat::Sound::IOSoundEngine::GetPlaybackBlockSize(uint8_t player) {
     return this->m_samplesPerFrame * this->m_bitsPerSample / 8;
@@ -126,13 +126,13 @@ int32_t ComSat::Sound::IOSoundEngine::EnumerateCaptureDevices(ComSat::DeviceInfo
     return count;
 }
 
-// PROVEN: a4101061 IDENTICAL
+// PROVEN: a4101061 IDENTICAL/NONE
 // OFFSET: 0x00A3AB20
 int32_t ComSat::Sound::IOSoundEngine::LocalPlayerGetCurrentOutputDeviceIndex(uint8_t player) {
     return this->m_outputDevice;
 }
 
-// PROVEN: 9d957f5f IDENTICAL
+// PROVEN: 9d957f5f IDENTICAL/NONE
 // OFFSET: 0x00A3AB30
 int32_t ComSat::Sound::IOSoundEngine::LocalPlayerGetCurrentCaptureDeviceIndex(uint8_t player) {
     return this->m_captureDevice;
@@ -150,7 +150,7 @@ void ComSat::Sound::IOSoundEngine::ShutDownCapture() {
     SI2::VoiceChat_CleanUpLoopbackSound();
 }
 
-// PROVEN: 16e26fa7 IDENTICAL
+// PROVEN: 16e26fa7 IDENTICAL/NONE
 // OFFSET: 0x00A3AE80
 void ComSat::Sound::IOSoundEngine::SetPlayerPlaybackVolume(uint8_t player, int32_t channel, float volume) {
     SI2::SetVolume(this->m_channels[channel]->m_handle, volume);
@@ -176,7 +176,7 @@ bool ComSat::Sound::IOSoundEngine::PlayDataForPlayer(uint8_t player, int32_t cha
     return true;
 }
 
-// PROVEN: 142452c9 IDENTICAL
+// PROVEN: 142452c9 IDENTICAL/NONE
 // OFFSET: 0x00A3B220
 int32_t ComSat::Sound::IOSoundEngine::GetRemainingPlaybackBytes(uint8_t player, int32_t channel) {
     return 2 * this->m_channels[channel]->m_buffer.Count();
@@ -187,7 +187,7 @@ int32_t ComSat::Sound::IOSoundEngine::ReadDataForPlayer(uint8_t player, uint8_t*
     return 2 * this->m_captureChannel.m_buffer.Read(reinterpret_cast<int16_t*>(data), static_cast<uint32_t>(size) >> 1);
 }
 
-// PROVEN: ab778835 IDENTICAL
+// PROVEN: ab778835 IDENTICAL/NONE
 // OFFSET: 0x00A3B270
 int32_t ComSat::Sound::IOSoundEngine::GetAvailableDataBytes(uint8_t player) {
     return 2 * this->m_captureChannel.m_buffer.Count();
@@ -216,7 +216,7 @@ void ComSat::Sound::IOSoundEngine::InitCapture() {
     }
 }
 
-// PROVEN: 38601996 IDENTICAL
+// PROVEN: 38601996 IDENTICAL/NONE
 // OFFSET: 0x00A3B050
 bool ComSat::Sound::IOSoundEngine::InitLocalPlayer(uint8_t player, int32_t outputDevice, int32_t captureDevice, int32_t sampleRate, int32_t bitsPerSample, int32_t samplesPerFrame) {
     this->m_outputDevice = outputDevice;
@@ -248,7 +248,7 @@ bool ComSat::Sound::IOSoundEngine::LocalPlayerChangeCaptureDevice(uint8_t player
     return true;
 }
 
-// PROVEN: 0f8734c7 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 0f8734c7 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void ComSat::Sound::IOSoundEngine::DebugSetSoundOutputDelay(uint8_t player, int32_t delay) {
 }

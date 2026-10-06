@@ -96,8 +96,8 @@ int32_t ProcessFile(const char* filename, _PROCESSING* processing, CMDDEF** next
     return result;
 }
 
-// PROVEN: 0a965328 IDENTICAL
-// OFFSET: 0x004B7270
+// PROVEN: 0a965328 IDENTICAL/IDENTICAL
+// OFFSET: 0x004B7270/0x1400EF150
 int32_t STORMAPI SCmdProcessCommandLine(int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     return SCmdProcess(GetCommandLineA(), 1, extracallback, errorcallback);
 }

@@ -45,7 +45,8 @@ static int32_t FindScope(const char* data, uint32_t start, uint32_t end, uint32_
     return 0;
 }
 
-// OFFSET: %0x004428A0
+// PROVEN: 88015094 DIFFERENT/IDENTICAL
+// OFFSET: 0x00438800/0x140042820
 static EGxTexOp LookupTexOp(const char* name) {
     for (uint32_t i = 0; i < GxTexOps_Last; i++) {
         if (!SStrCmpI(name, CShaderEffectParser::s_gxTexOpNames[i], STORM_MAX_STR)) {
@@ -214,7 +215,7 @@ void CShaderEffectParser::ParseEffect(char* data, uint32_t size, uint32_t& pos, 
     }
 }
 
-// PROVEN: c174027d IDENTICAL
+// PROVEN: c174027d IDENTICAL/NONE
 // OFFSET: 0x00438C00
 void CShaderEffectParser::ParseEffectFile(char* data, uint32_t size, void (*callback)(const ParsedEffect&, void*), void* param) {
     char args[16][64];

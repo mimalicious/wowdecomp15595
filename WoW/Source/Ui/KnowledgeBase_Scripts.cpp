@@ -343,7 +343,7 @@ static FrameScript_Method s_apMethodMap[] = {
     { "KBSystem_GetServerNotice", &Script_KBSystem_GetServerNotice },
 };
 
-// PROVEN: dca7a4a1 IDENTICAL
+// PROVEN: dca7a4a1 IDENTICAL/NONE
 // OFFSET: 0x009FC5A0
 void KnowledgeBase_RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {
@@ -351,7 +351,7 @@ void KnowledgeBase_RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: a5646998 IDENTICAL
+// PROVEN: a5646998 IDENTICAL/NONE
 // OFFSET: 0x009FC5D0
 void KnowledgeBase_UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_apMethodMap) / sizeof(s_apMethodMap[0]); i++) {

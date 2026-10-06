@@ -220,7 +220,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumRoutes", &Script_GetNumRoutes },
 };
 
-// PROVEN: 0bd5850d IDENTICAL
+// PROVEN: 0bd5850d IDENTICAL/NONE
 // OFFSET: 0x009E2340
 void CGTaxiMap::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -228,7 +228,7 @@ void CGTaxiMap::RegisterScriptFunctions() {
     }
 }
 
-// PROVEN: d4c51fa2 IDENTICAL
+// PROVEN: d4c51fa2 IDENTICAL/NONE
 // OFFSET: 0x009E2370
 void CGTaxiMap::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

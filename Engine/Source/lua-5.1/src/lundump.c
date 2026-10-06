@@ -207,8 +207,8 @@ Proto* luaU_undump (lua_State* L, ZIO* Z, Mbuffer* buff, const char* name)
 /*
 * make header
 */
-// PROVEN: 43e515ad IDENTICAL
-// OFFSET: 0x00430920
+// PROVEN: 43e515ad IDENTICAL/NONE
+// OFFSET: 0x00430920/0x140038CA0
 void luaU_header (char* h)
 {
  int x=1;

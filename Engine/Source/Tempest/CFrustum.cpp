@@ -4,14 +4,14 @@
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 
-// PROVEN: 8a404508 IDENTICAL
+// PROVEN: 8a404508 IDENTICAL/NONE
 // OFFSET: 0x004CBEA0
 void CFrustum::Extents(CAaBox& box) {
     box = CAaBox::Bounding(this->corners, 8);
 }
 
-// PROVEN: 194f6653 IDENTICAL
-// OFFSET: 0x004CBEF0
+// PROVEN: 194f6653 IDENTICAL/DIFFERENT
+// OFFSET: 0x004CBEF0/0x140107C60
 uint32_t CFrustum::Cull(const CAaBox& box) {
     const C3Vector* extremes[2] = { &box.t, &box.b };
 
@@ -73,7 +73,7 @@ uint32_t CFrustum::Cull(const CAaSphere& sphere) {
     return 3;
 }
 
-// PROVEN: 9f10b196 IDENTICAL
+// PROVEN: 9f10b196 IDENTICAL/NONE
 // OFFSET: 0x004CC580
 void CFrustum::Cull(const C3Vector& point, uint8_t& outside) const {
     outside = 0;
@@ -100,7 +100,7 @@ void CFrustum::CalcPlanesFromCorners() {
     this->planes[5].d = -((this->corners[2].z * n.z + this->corners[2].y * n.y) + this->corners[2].x * n.x);
 }
 
-// OFFSET: 0x004CC8F0
+// OFFSET: 0x004CC8F0/0x140108670
 void CFrustum::Transform(const C44Matrix& m) {
     for (uint32_t i = 0; i < 8; i++) {
         this->corners[i] *= m;
@@ -117,12 +117,12 @@ uint32_t CFrustum::Cull(const C3Vector& center, float radius) {
     return this->Cull(sphere);
 }
 
-// PROVEN: 4b4e948b IDENTICAL
-// OFFSET: 0x00437100
+// PROVEN: 4b4e948b IDENTICAL/IDENTICAL
+// OFFSET: 0x00437100/0x140040D00
 CFrustum::CFrustum() {
 }
 
-// OFFSET: 0x004CCD90
+// OFFSET: 0x004CCD90/0x140108B00
 CFrustum::CFrustum(const C3Vector* corners) {
     for (uint32_t i = 0; i < 8; i++) {
         this->corners[i] = corners[i];
@@ -140,8 +140,8 @@ void CFrustum::CalcPlanesFromCorners(const C3Vector* corners) {
     this->CalcPlanesFromCorners();
 }
 
-// PROVEN: 299ec294 IDENTICAL
-// OFFSET: 0x00435110
+// PROVEN: 299ec294 IDENTICAL/IDENTICAL
+// OFFSET: 0x00435110/0x14003E850
 CFrustum& CFrustum::operator=(const CFrustum& source) {
     if (this != &source) {
         for (uint32_t i = 0; i < 6; i++) {
@@ -156,8 +156,8 @@ CFrustum& CFrustum::operator=(const CFrustum& source) {
     return *this;
 }
 
-// PROVEN: 2693512a IDENTICAL
-// OFFSET: 0x004354F0
+// PROVEN: 2693512a IDENTICAL/IDENTICAL
+// OFFSET: 0x004354F0/0x14003EC40
 void CFrustum::InvertPlanes() {
     for (uint32_t i = 0; i < 6; i++) {
         this->planes[i].n = -this->planes[i].n;
@@ -165,8 +165,8 @@ void CFrustum::InvertPlanes() {
     }
 }
 
-// PROVEN: 647b9f24 IDENTICAL
-// OFFSET: 0x00768BE0
+// PROVEN: 647b9f24 IDENTICAL/IDENTICAL
+// OFFSET: 0x00768BE0/0x14044FEA0
 void CFrustum::SwapCorners() {
     C3Vector corner = this->corners[0];
     this->corners[0] = this->corners[3];

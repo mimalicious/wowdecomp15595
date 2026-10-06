@@ -34,7 +34,7 @@ ComponentData::ComponentData() {
     this->m_geosets[18] = 1801;
 }
 
-// PROVEN: 84146c69 IDENTICAL
+// PROVEN: 84146c69 IDENTICAL/NONE
 // OFFSET: 0x006F9C80
 void ComponentData::SetPreferences(const CharacterPreferences* preferences) {
     if (!preferences) {

@@ -4,13 +4,13 @@
 CGGameObject_C_Type_AuraGenerator::CGGameObject_C_Type_AuraGenerator(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
 }
 
-// PROVEN: 40e17f90 IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 40e17f90 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool CGGameObject_C_Type_AuraGenerator::CanHighlight() const {
     return true;
 }
 
-// PROVEN: 3aeab986 IDENTICAL
+// PROVEN: 3aeab986 IDENTICAL/NONE
 // OFFSET: 0x00B06D20
 bool CGGameObject_C_Type_AuraGenerator::CanUse() const {
     return false;

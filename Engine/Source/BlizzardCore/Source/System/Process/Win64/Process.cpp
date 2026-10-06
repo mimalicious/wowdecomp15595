@@ -65,7 +65,7 @@ inline void ToolhelpFunction::Load(const char* name) {
     }
 }
 
-// PROVEN: ce8ceef8 IDENTICAL
+// PROVEN: ce8ceef8 IDENTICAL/NONE
 // OFFSET: 0x007BD060
 bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, uint32_t namesize) {
     PROCESSENTRY32W entry;
@@ -80,7 +80,7 @@ bool ToolhelpFunction::CallProcessW(HANDLE snapshot, uint32_t* pid, char* name, 
     return true;
 }
 
-// PROVEN: 38bccc48 IDENTICAL
+// PROVEN: 38bccc48 IDENTICAL/NONE
 // OFFSET: 0x007BD0C0
 bool ToolhelpFunction::CallModuleW(HANDLE snapshot, char* path, uint32_t pathsize) {
     MODULEENTRY32W entry;

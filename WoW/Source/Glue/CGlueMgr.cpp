@@ -274,8 +274,8 @@ static SCritSect s_connectionStatusLock;
 // STATIC: #0x00DD2010
 static __declspec(thread) WOWGUID s_activeCharacterGuid;
 
-// PROVEN: d31889d0 IDENTICAL
-// OFFSET: 0x007FFF30
+// PROVEN: d31889d0 IDENTICAL/NONE
+// OFFSET: 0x007FFF30/0x1405191E0
 static void WriteConnectionLog(const char* text) {
     if (!s_connectionLog) {
         OsCreateDirectory("Logs", 0);
@@ -292,7 +292,7 @@ void CGlueMgr::QuitGameAndRunLauncher() {
     SCreateProcess("Launcher.exe", NULL, NULL, NULL);
 }
 
-// PROVEN: 80a87352 IDENTICAL
+// PROVEN: 80a87352 IDENTICAL/NONE
 // OFFSET: 0x00800AE0
 void CGlueMgr::DownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {
@@ -533,8 +533,8 @@ static void RequestLatestAgreements() {
     }
 }
 
-// PROVEN: d7d34f06 IDENTICAL
-// OFFSET: 0x007FFF10
+// PROVEN: d7d34f06 IDENTICAL/NONE
+// OFFSET: 0x007FFF10/0x140513D50
 bool CGlueMgr::AreScriptFunctionsLoaded() {
     return CGlueMgr::s_scriptFunctionsLoaded;
 }
@@ -822,7 +822,7 @@ void CGlueMgr::UpdateCurrentScreen(const char* screen) {
     }
 }
 
-// PROVEN: cf9b85bf IDENTICAL
+// PROVEN: cf9b85bf IDENTICAL/NONE
 // OFFSET: 0x00801000
 void CGlueMgr::HandleScreenshot(int32_t success) {
     if (success) {
@@ -1848,8 +1848,8 @@ bool CGlueMgr::RenameCharacter(WOWGUID guid, const char* name) {
     return true;
 }
 
-// PROVEN: 8265971e IDENTICAL
-// OFFSET: 0x00802890
+// PROVEN: 8265971e IDENTICAL/NONE
+// OFFSET: 0x00802890/0x140516FA0
 void CGlueMgr::SetUIDepth(float depth) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(CScriptObject::GetScriptObjectByName("GlueParent", CSimpleFrame::GetObjectType()));
 
@@ -1873,7 +1873,7 @@ CharacterSelectionDisplay* GetCharacterInfo(int32_t index) {
     return &CCharacterSelection::s_characterList[index];
 }
 
-// PROVEN: 6ad9eaea IDENTICAL
+// PROVEN: 6ad9eaea IDENTICAL/NONE
 // OFFSET: 0x00802670
 void CGlueMgr::CancelLogin() {
     if (CGlueMgr::m_idleState == IDLE_LOGIN_SERVER_LOGIN) {
@@ -2049,7 +2049,7 @@ void CGlueMgr::GetRealmList(int32_t showDialog) {
     ClientServices::GetRealmList();
 }
 
-// PROVEN: b699dacc IDENTICAL
+// PROVEN: b699dacc IDENTICAL/NONE
 // OFFSET: 0x004CE7B0
 void CGlueMgr::ResetQueueState() {
     memset(CGlueMgr::m_queuePosition, 0, sizeof(((CGlueMgr*)0)->m_queuePosition));
@@ -2119,7 +2119,7 @@ void CGlueMgr::DisplayLoginStatus() {
     }
 }
 
-// PROVEN: 1dc21140 IDENTICAL
+// PROVEN: 1dc21140 IDENTICAL/NONE
 // OFFSET: 0x008009B0
 void CGlueMgr::QuitGame() {
     ClientPostClose(0);

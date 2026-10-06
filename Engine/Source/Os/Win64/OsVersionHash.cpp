@@ -9,7 +9,7 @@
 #include "Engine/Source/Os/OsVersionHash.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: a18e8f81 IDENTICAL
+// PROVEN: a18e8f81 IDENTICAL/NONE
 // OFFSET: 0x00B42390
 OsVersionHash::~OsVersionHash() {
     if (this->m_entries) {
@@ -17,7 +17,7 @@ OsVersionHash::~OsVersionHash() {
     }
 }
 
-// PROVEN: 8e6c75b7 IDENTICAL
+// PROVEN: 8e6c75b7 IDENTICAL/NONE
 // OFFSET: 0x00B423B0
 bool OsVersionHash::AddEntry(const OsVersionHashEntry& entry) {
     if (!this->m_entries) {
@@ -39,7 +39,7 @@ bool OsVersionHash::AddEntry(const OsVersionHashEntry& entry) {
     return true;
 }
 
-// PROVEN: 60678595 IDENTICAL
+// PROVEN: 60678595 IDENTICAL/NONE
 // OFFSET: 0x00B42420
 static int __cdecl CompareEntries(const void* a, const void* b) {
     const OsVersionHashEntry* entryA = static_cast<const OsVersionHashEntry*>(a);
@@ -299,7 +299,7 @@ static int32_t HashSection(IOsVersionHashCallback& callback, OsVersionHash& hash
     return 1;
 }
 
-// PROVEN: a05be798 IDENTICAL
+// PROVEN: a05be798 IDENTICAL/NONE
 // OFFSET: 0x00B42A50
 OsVersionHash::OsVersionHash() : m_entries(NULL) {
     this->m_entries = static_cast<OsVersionHashEntry*>(SMemAlloc(256 * sizeof(OsVersionHashEntry), __FILE__, __LINE__, 0));
@@ -535,8 +535,8 @@ int32_t IOsVersionChecksum(IOsVersionHashCallback& callback, const char* path, i
     return result;
 }
 
-// PROVEN: 4053bedf IDENTICAL
-// OFFSET: 0x00B42FE0
+// PROVEN: 4053bedf IDENTICAL/UNPROVEN
+// OFFSET: 0x00B42FE0/0x1405B30F0
 OsFileVersionInfo::OsFileVersionInfo(const char* filename) : m_fileVersion(), m_productVersion() {
     char path[MAX_PATH];
     if (!filename) {

@@ -30,7 +30,7 @@ bool gEAX4LockedOALFxSlot3 = false;
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b8f8d9b3 IDENTICAL
+// PROVEN: b8f8d9b3 IDENTICAL/NONE
 // OFFSET: 0x00AFB100
 FMOD_RESULT OutputOpenAL::lockSlotEAX4(GUID &slotGUID)
 {

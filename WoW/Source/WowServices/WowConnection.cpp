@@ -90,7 +90,7 @@ void WowConnection::SetEncryptionKey(const uint8_t* key, uint8_t keyLength, uint
     SARC4ProcessBuffer(s_arc4drop1024Key, sizeof(s_arc4drop1024Key), &this->m_receiveKey, &this->m_receiveKey);
 }
 
-// PROVEN: 2975dc81 IDENTICAL
+// PROVEN: 2975dc81 IDENTICAL/NONE
 // OFFSET: 0x0054D9F0
 void WowConnection::IDBITS::Or(const WowConnection::IDBITS& source) {
     for (int32_t i = 0; i < static_cast<int32_t>(source.m_bits.m_count); i++) {
@@ -193,7 +193,7 @@ void WowConnection::ReleaseResponseRef() {
     this->m_responseLock.Leave();
 }
 
-// PROVEN: 46811325 IDENTICAL
+// PROVEN: 46811325 IDENTICAL/NONE
 // OFFSET: 0x0054D3C0
 void WowConnection::SetState(WOW_CONN_STATE state) {
     WOW_CONN_STATE oldState = this->m_connState;

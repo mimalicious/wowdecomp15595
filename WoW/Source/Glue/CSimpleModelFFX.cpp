@@ -69,14 +69,14 @@ CSimpleModelFFX::CSimpleModelFFX(CSimpleFrame* parent) : CSimpleModel(parent) {
     this->m_lightArray3[1].m_modelFrame = this;
 }
 
-// PROVEN: 42e8c4ae IDENTICAL
+// PROVEN: 42e8c4ae IDENTICAL/NONE
 // OFFSET: 0x00811210
 void CSimpleModelFFX::SetGlow(float glow) {
     this->m_glow = glow;
 }
 
-// PROVEN: 180241f1 IDENTICAL
-// OFFSET: 0x00811230
+// PROVEN: 180241f1 IDENTICAL/NONE
+// OFFSET: 0x00811230/0x140528A60
 int32_t CSimpleModelFFX::GetScriptMetaTable() {
     return CSimpleModelFFX::s_metatable;
 }

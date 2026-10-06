@@ -36,8 +36,8 @@ CLCDText::~CLCDText() {
     }
 }
 
-// PROVEN: d99c6c2e IDENTICAL
-// OFFSET: 0x00B40E90
+// PROVEN: d99c6c2e IDENTICAL/NONE
+// OFFSET: 0x00B40E90/0x14090EE90
 int32_t CLCDText::Initialize() {
     if (this->m_hFont) {
         return S_OK;
@@ -47,8 +47,8 @@ int32_t CLCDText::Initialize() {
     return this->m_hFont ? S_OK : E_OUTOFMEMORY;
 }
 
-// PROVEN: 855b2053 IDENTICAL
-// OFFSET: 0x00B40ED0
+// PROVEN: 855b2053 IDENTICAL/NONE
+// OFFSET: 0x00B40ED0/0x14090EED0
 void CLCDText::SetFont(LOGFONTA& font) {
     if (this->m_hFont) {
         DeleteObject(this->m_hFont);
@@ -128,8 +128,8 @@ void CLCDText::SetFontFaceName(const char* faceName) {
     }
 }
 
-// PROVEN: bb5982bc IDENTICAL
-// OFFSET: 0x00B40F20
+// PROVEN: bb5982bc IDENTICAL/NONE
+// OFFSET: 0x00B40F20/0x14090EF40
 void CLCDText::SetFontPointSize(int32_t pointSize) {
     LOGFONTA font;
     memset(&font, 0, sizeof(font));
@@ -138,8 +138,8 @@ void CLCDText::SetFontPointSize(int32_t pointSize) {
     this->SetFont(font);
 }
 
-// PROVEN: 1ab7d2e9 IDENTICAL
-// OFFSET: 0x00B40F80
+// PROVEN: 1ab7d2e9 IDENTICAL/NONE
+// OFFSET: 0x00B40F80/0x14090EFB0
 void CLCDText::SetFontWeight(int32_t weight) {
     LOGFONTA font;
     memset(&font, 0, sizeof(font));
@@ -148,8 +148,8 @@ void CLCDText::SetFontWeight(int32_t weight) {
     this->SetFont(font);
 }
 
-// PROVEN: d5b89b27 IDENTICAL
-// OFFSET: 0x00B40FD0
+// PROVEN: d5b89b27 IDENTICAL/NONE
+// OFFSET: 0x00B40FD0/0x14090F010
 void CLCDText::SetFontColor(COLORREF color) {
     this->SetForegroundColor(color);
 }
@@ -172,8 +172,8 @@ const WCHAR* CLCDText::GetText() {
     return this->m_szText;
 }
 
-// PROVEN: f620730c IDENTICAL
-// OFFSET: 0x00B41080
+// PROVEN: f620730c IDENTICAL/NONE
+// OFFSET: 0x00B41080/0x14090F0B0
 void CLCDText::SetWordWrap(int32_t enable) {
     this->m_bRecalcExtent = 1;
 
@@ -218,26 +218,26 @@ void CLCDText::CalculateExtent(int32_t singleLine) {
     DeleteDC(dc);
 }
 
-// PROVEN: 20b4d1f2 IDENTICAL
+// PROVEN: 20b4d1f2 IDENTICAL/NONE
 // OFFSET: 0x00B410B0
 void CLCDText::SetLeftMargin(int32_t margin) {
     this->m_dtp.iLeftMargin = margin;
 }
 
-// PROVEN: 5fa10ef7 IDENTICAL
-// OFFSET: 0x00B410D0
+// PROVEN: 5fa10ef7 IDENTICAL/NONE
+// OFFSET: 0x00B410D0/0x14090F0F0
 int32_t CLCDText::GetLeftMargin() {
     return this->m_dtp.iLeftMargin;
 }
 
-// PROVEN: 2903197f IDENTICAL
+// PROVEN: 2903197f IDENTICAL/NONE
 // OFFSET: 0x00B410C0
 void CLCDText::SetRightMargin(int32_t margin) {
     this->m_dtp.iRightMargin = margin;
 }
 
-// PROVEN: 323fbe8e IDENTICAL
-// OFFSET: 0x00B410E0
+// PROVEN: 323fbe8e IDENTICAL/NONE
+// OFFSET: 0x00B410E0/0x14090F100
 int32_t CLCDText::GetRightMargin() {
     return this->m_dtp.iRightMargin;
 }

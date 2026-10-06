@@ -12,13 +12,13 @@ CKBArticle g_KnowledgeBaseArticle;
 CKBArticle::CKBArticle() {
 }
 
-// PROVEN: 431409c4 IDENTICAL
+// PROVEN: 431409c4 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBArticle::_ComputeCachedData() {
 }
 
-// PROVEN: 52ec8010 IDENTICAL
-// OFFSET: 0x009FB9B0
+// PROVEN: 52ec8010 IDENTICAL/NONE
+// OFFSET: 0x009FB9B0/0x140799050
 int32_t CKBArticle::BeginLoading(int32_t articleId, int32_t searchType) {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;

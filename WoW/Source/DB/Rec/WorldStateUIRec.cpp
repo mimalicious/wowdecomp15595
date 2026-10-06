@@ -3,7 +3,7 @@
 // STATIC: %0x00B44434
 const DBCMeta WorldStateUIRec::s_meta = { "DBFilesClient\\WorldStateUI.dbc", 15, 68, WorldStateUIRec::FixupStrings, 0 };
 
-// PROVEN: 9a3b6380 IDENTICAL
+// PROVEN: 9a3b6380 IDENTICAL/NONE
 // OFFSET: 0x00A2E900
 void WorldStateUIRec::FixupStrings(void* record, const char* strings) {
     WorldStateUIRec* rec = static_cast<WorldStateUIRec*>(record);

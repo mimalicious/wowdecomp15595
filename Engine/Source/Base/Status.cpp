@@ -20,8 +20,8 @@ void CStatus::Clear() {
     this->m_highestSeverity = STATUS_INFO;
 }
 
-// PROVEN: b83ebdf0 IDENTICAL
-// OFFSET: 0x00872470
+// PROVEN: b83ebdf0 IDENTICAL/NONE
+// OFFSET: 0x00872470/0x1405A8870
 CStatus& GetGlobalStatusObj() {
     return s_errorList;
 }

@@ -47,7 +47,7 @@ static GuildRankFlag s_guildRankFlags[17] = {
 // STATIC: #0x00AD07AC
 static uint32_t s_guildBankTabPermissionFlags[3] = { 1, 2, 4 };
 
-// PROVEN: e2c92a9f IDENTICAL
+// PROVEN: e2c92a9f IDENTICAL/NONE
 // OFFSET: 0x00931BB0
 static int32_t Script_SetGuildRosterShowOffline(lua_State* L) {
     g_guildShowOfflineCVar->Set(StringToBOOL(L, 1, 1), true, false, false, true);
@@ -938,8 +938,8 @@ static int32_t Script_GetGuildEventInfo(lua_State* L) {
     return 8;
 }
 
-// PROVEN: c693fadb IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: c693fadb IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_CloseGuildRoster(lua_State* L) {
     return 0;
 }

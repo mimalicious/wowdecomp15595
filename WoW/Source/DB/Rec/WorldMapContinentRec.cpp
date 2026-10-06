@@ -3,7 +3,7 @@
 // STATIC: %0x00B44514
 const DBCMeta WorldMapContinentRec::s_meta = { "DBFilesClient\\WorldMapContinent.dbc", 11, 56, WorldMapContinentRec::FixupStrings, 0 };
 
-// PROVEN: fde269c0 IDENTICAL
+// PROVEN: fde269c0 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void WorldMapContinentRec::FixupStrings(void* record, const char* strings) {
 }

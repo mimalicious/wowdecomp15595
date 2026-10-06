@@ -35,8 +35,8 @@ PetNameCache& PetNameCache::operator=(const PetNameCache& source) {
     return *this;
 }
 
-// PROVEN: 3fd02c18 IDENTICAL
-// OFFSET: 0x004EB900
+// PROVEN: 3fd02c18 IDENTICAL/NONE
+// OFFSET: 0x004EB900/0x14012EA50
 void PetNameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_petNumber);
     msg->PutString(this->m_name);
@@ -54,8 +54,8 @@ void PetNameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_timestamp);
 }
 
-// PROVEN: 4cf79465 IDENTICAL
-// OFFSET: 0x004EB980
+// PROVEN: 4cf79465 IDENTICAL/NONE
+// OFFSET: 0x004EB980/0x14012EAF0
 void PetNameCache::Unpack(CDataStore* msg) {
     uint8_t hasDeclinedNames;
     msg->Get(this->m_petNumber);

@@ -3,7 +3,7 @@
 // STATIC: %0x00B44A84
 const DBCMeta TalentRec::s_meta = { "DBFilesClient\\Talent.dbc", 10, 76, TalentRec::FixupStrings, 0 };
 
-// PROVEN: bc046477 IDENTICAL
+// PROVEN: bc046477 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void TalentRec::FixupStrings(void* record, const char* strings) {
 }

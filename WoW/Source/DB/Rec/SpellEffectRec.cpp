@@ -3,7 +3,7 @@
 // STATIC: %0x00B43590
 const DBCMeta SpellEffectRec::s_meta = { "DBFilesClient\\SpellEffect.dbc", 21, 104, SpellEffectRec::FixupStrings, 0 };
 
-// PROVEN: 2618e038 IDENTICAL
+// PROVEN: 2618e038 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellEffectRec::FixupStrings(void* record, const char* strings) {
 }

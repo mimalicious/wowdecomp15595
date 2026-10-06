@@ -99,7 +99,7 @@ void CGUnit::GetResistanceAndBuffs(int32_t school, int32_t* baseValue, int32_t* 
     }
 }
 
-// PROVEN: 92d0d591 IDENTICAL
+// PROVEN: 92d0d591 IDENTICAL/NONE
 // OFFSET: 0x0044E350
 const WOWGUID* CGUnit::GetCharmerOrCreatorGuid() const {
     CGUnitData* unit = this->m_unit;
@@ -170,8 +170,8 @@ int32_t CGUnit::TotalFields() {
     return CGObject::TotalFieldsSaved() + 123;
 }
 
-// PROVEN: 4fb188ef IDENTICAL
-// OFFSET: 0x00447B30
+// PROVEN: 4fb188ef IDENTICAL/NONE
+// OFFSET: 0x00447B30/0x14026EC00
 float CGUnit::GetFacing(float facing) const {
     return this->m_movement->GetFacing(facing);
 }
@@ -205,13 +205,13 @@ bool CGUnit::IsPossessedBy(const WOWGUID& guid) const {
     return (this->m_unit->m_unitFieldFlags & 0x1000000) && *this->GetCharmerOrCreatorGuid() == guid;
 }
 
-// PROVEN: 0ce1f4fb IDENTICAL
+// PROVEN: 0ce1f4fb IDENTICAL/NONE
 // OFFSET: 0x005AC900
 bool CGUnit::HasCreator() const {
     return this->m_unit->m_unitFieldCreatedby.m_guid != 0;
 }
 
-// PROVEN: 57e9bf7a IDENTICAL
+// PROVEN: 57e9bf7a IDENTICAL/NONE
 // OFFSET: 0x005AC8E0
 bool CGUnit::HasSummoner() const {
     return this->m_unit->m_unitFieldSummonedby.m_guid != 0;

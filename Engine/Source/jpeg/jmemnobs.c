@@ -52,25 +52,25 @@ void jpeg_free_large(j_common_ptr cinfo, void* object, size_t sizeofobject) {
     }
 }
 
-// PROVEN: 0b3e45f9 IDENTICAL
+// PROVEN: 0b3e45f9 IDENTICAL/NONE
 // OFFSET: 0x00B5D3A0
 long jpeg_mem_available(j_common_ptr cinfo, long min_bytes_needed, long max_bytes_needed, long already_allocated) {
     return max_bytes_needed;
 }
 
-// PROVEN: ee28f001 IDENTICAL
+// PROVEN: ee28f001 IDENTICAL/NONE
 // OFFSET: 0x00B5D3B0
 void jpeg_open_backing_store(j_common_ptr cinfo, backing_store_ptr info, long total_bytes_needed) {
     ERREXIT(cinfo, JERR_NO_BACKING_STORE);
 }
 
-// PROVEN: 78e85b40 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 78e85b40 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 long jpeg_mem_init(j_common_ptr cinfo) {
     return 0;
 }
 
-// PROVEN: 61e9e9d9 IDENTICAL
+// PROVEN: 61e9e9d9 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void jpeg_mem_term(j_common_ptr cinfo) {
 }

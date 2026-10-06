@@ -27,8 +27,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 367aeb2c IDENTICAL
-// OFFSET: 0x00ACA0A0
+// PROVEN: 367aeb2c IDENTICAL/NONE
+// OFFSET: 0x00ACA0A0/0x140894100
 FMOD_RESULT TagNode::init(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype)
 {
     int memsize;
@@ -81,8 +81,8 @@ FMOD_RESULT TagNode::init(FMOD_TAGTYPE type, const char *name, void *data, unsig
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dcaec584 IDENTICAL
-// OFFSET: 0x00ACA140
+// PROVEN: dcaec584 IDENTICAL/NONE
+// OFFSET: 0x00ACA140/0x1408941E0
 FMOD_RESULT TagNode::release()
 {
     if (mName)
@@ -121,8 +121,8 @@ FMOD_RESULT TagNode::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: de2ab548 IDENTICAL
-// OFFSET: 0x00ACA1B0
+// PROVEN: de2ab548 IDENTICAL/NONE
+// OFFSET: 0x00ACA1B0/0x140894280
 FMOD_RESULT TagNode::update(void *data, unsigned int datalen)
 {
     //AJS double-buffered stuff!!!!!!!!!!1
@@ -173,8 +173,8 @@ FMOD_RESULT TagNode::update(void *data, unsigned int datalen)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8e472158 IDENTICAL
-// OFFSET: 0x00ACA290
+// PROVEN: 8e472158 IDENTICAL/NONE
+// OFFSET: 0x00ACA290/0x140894360
 FMOD_RESULT Metadata::release()
 {
     TagNode *node = (TagNode *)mList.getNext();
@@ -209,7 +209,7 @@ FMOD_RESULT Metadata::release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 978d234d IDENTICAL
+// PROVEN: 978d234d IDENTICAL/NONE
 // OFFSET: 0x00ACA340
 FMOD_RESULT Metadata::getNumTags(int *numtags, int *numtagsupdated)
 {
@@ -258,8 +258,8 @@ FMOD_RESULT Metadata::getNumTags(int *numtags, int *numtagsupdated)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b6eccb2c IDENTICAL
-// OFFSET: 0x00ACA380
+// PROVEN: b6eccb2c IDENTICAL/NONE
+// OFFSET: 0x00ACA380/0x140894430
 FMOD_RESULT Metadata::getTag(const char *name, int index, FMOD_TAG *tag)
 {
     int i;
@@ -377,8 +377,8 @@ FMOD_RESULT Metadata::getTag(const char *name, int index, FMOD_TAG *tag)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d82f7776 IDENTICAL
-// OFFSET: 0x00ACA490
+// PROVEN: d82f7776 IDENTICAL/NONE
+// OFFSET: 0x00ACA490/0x140894560
 FMOD_RESULT Metadata::add(Metadata *metadata)
 {
     TagNode *node = (TagNode *)metadata->mList.getNext();
@@ -471,8 +471,8 @@ FMOD_RESULT Metadata::addTag(TagNode *node)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a86ebc3d IDENTICAL
-// OFFSET: 0x00ACA530
+// PROVEN: a86ebc3d IDENTICAL/NONE
+// OFFSET: 0x00ACA530/0x140894650
 FMOD_RESULT Metadata::addTag(FMOD_TAGTYPE type, const char *name, void *data, unsigned int datalen, FMOD_TAGDATATYPE datatype, bool unique)
 {
     FMOD_RESULT     result;

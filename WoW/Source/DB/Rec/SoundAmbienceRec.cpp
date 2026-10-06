@@ -3,7 +3,7 @@
 // STATIC: %0x00B45490
 const DBCMeta SoundAmbienceRec::s_meta = { "DBFilesClient\\SoundAmbience.dbc", 2, 12, SoundAmbienceRec::FixupStrings, 0 };
 
-// PROVEN: 643bad45 IDENTICAL
+// PROVEN: 643bad45 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SoundAmbienceRec::FixupStrings(void* record, const char* strings) {
 }

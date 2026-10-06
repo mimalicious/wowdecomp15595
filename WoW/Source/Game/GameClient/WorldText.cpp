@@ -109,19 +109,19 @@ WORLDTEXTSTRING::~WORLDTEXTSTRING() {
     }
 }
 
-// PROVEN: 2f4b2d6e IDENTICAL
+// PROVEN: 2f4b2d6e IDENTICAL/NONE
 // OFFSET: 0x004E1ED0
 uint32_t WorldTextGetType(WORLDTEXTSTRING* text) {
     return text->m_type;
 }
 
-// PROVEN: 4f7bd00a IDENTICAL
+// PROVEN: 4f7bd00a IDENTICAL/NONE
 // OFFSET: 0x004E1E80
 float WORLDTEXTSTRING::CalculateAscendOffset(uint32_t elapsed) {
     return static_cast<float>(elapsed) / static_cast<float>(s_worldTextTypes[this->m_type].m_duration) * s_worldTextTypes[this->m_type].m_ascendDistance;
 }
 
-// PROVEN: 908329e4 IDENTICAL
+// PROVEN: 908329e4 IDENTICAL/NONE
 // OFFSET: 0x004E1EE0
 float WorldTextGetAscendDistance(uint32_t type) {
     return s_worldTextTypes[type].m_ascendDistance;
@@ -226,8 +226,8 @@ void WorldTextShutdown() {
     }
 }
 
-// PROVEN: a706bdb7 IDENTICAL
-// OFFSET: 0x004E23F0
+// PROVEN: a706bdb7 IDENTICAL/NONE
+// OFFSET: 0x004E23F0/0x1401231D0
 void WorldTextDelete(WORLDTEXTSTRING* text) {
     text->~WORLDTEXTSTRING();
     s_freeStrings.PutData(text, NULL, 0);
@@ -451,7 +451,7 @@ bool WorldTextUpdate(WORLDTEXTSTRING* text, uint32_t time) {
     return text->Update(time);
 }
 
-// PROVEN: 23ca9f77 IDENTICAL
+// PROVEN: 23ca9f77 IDENTICAL/NONE
 // OFFSET: 0x004E2FD0
 void WorldTextAddIcon(WORLDTEXTSTRING* text) {
     if (text) {

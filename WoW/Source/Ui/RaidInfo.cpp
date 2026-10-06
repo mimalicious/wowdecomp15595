@@ -76,7 +76,7 @@ static void RaidMemberRemovedNameCallback(int32_t id, const WOWGUID& guid, void*
     }
 }
 
-// PROVEN: e4cec15d IDENTICAL
+// PROVEN: e4cec15d IDENTICAL/NONE
 // OFFSET: 0x0092CBB0
 void CGRaidInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 40) {
@@ -167,8 +167,8 @@ int32_t CGRaidInfo::GetSelectedMemberIndex() {
     return i;
 }
 
-// PROVEN: b44723de IDENTICAL
-// OFFSET: 0x0092CD60
+// PROVEN: b44723de IDENTICAL/NONE
+// OFFSET: 0x0092CD60/0x140693CA0
 int32_t IsGuidInMyRaid(const WOWGUID& guid) {
     if (!guid) {
         return 0;
@@ -183,8 +183,8 @@ int32_t IsGuidInMyRaid(const WOWGUID& guid) {
     return 0;
 }
 
-// PROVEN: a66e6444 IDENTICAL
-// OFFSET: 0x0092CDB0
+// PROVEN: a66e6444 IDENTICAL/NONE
+// OFFSET: 0x0092CDB0/0x140693CE0
 int32_t CGRaidInfo::IsPlayerRaidOfficer(const WOWGUID& guid) {
     if (!guid) {
         return 0;
@@ -199,8 +199,8 @@ int32_t CGRaidInfo::IsPlayerRaidOfficer(const WOWGUID& guid) {
     return 0;
 }
 
-// PROVEN: b8e75bb9 IDENTICAL
-// OFFSET: 0x0092D650
+// PROVEN: b8e75bb9 IDENTICAL/NONE
+// OFFSET: 0x0092D650/0x140694720
 void CGRaidInfo::SetRaidTarget(uint32_t index, const WOWGUID& guid) {
     CGUnit_C* previous = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGRaidInfo::m_raidTargets[index], TYPEMASK_UNIT, __FILE__, __LINE__));
     CGRaidInfo::m_raidTargets[index] = guid;
@@ -898,7 +898,7 @@ void CGRaidInfo::InitializeGame() {
     CGRaidInfo::m_readyCheckTimer = 0;
 }
 
-// PROVEN: b809d5f5 IDENTICAL
+// PROVEN: b809d5f5 IDENTICAL/NONE
 // OFFSET: 0x0044BB40
 int32_t CGRaidInfo::GetMemberIndexByGuid(WOWGUID guid) {
     for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
@@ -910,7 +910,7 @@ int32_t CGRaidInfo::GetMemberIndexByGuid(WOWGUID guid) {
     return -1;
 }
 
-// PROVEN: 72f38f33 IDENTICAL
+// PROVEN: 72f38f33 IDENTICAL/NONE
 // OFFSET: 0x004E8290
 CGRaidMember* CGRaidInfo::GetMember(uint32_t index) {
     if (index >= CGRaidInfo::m_numMembers) {
@@ -920,8 +920,8 @@ CGRaidMember* CGRaidInfo::GetMember(uint32_t index) {
     return CGRaidInfo::m_members[index];
 }
 
-// PROVEN: f108baec IDENTICAL
-// OFFSET: 0x0044BAF0
+// PROVEN: f108baec IDENTICAL/NONE
+// OFFSET: 0x0044BAF0/0x140059210
 CGRaidMember* CGRaidInfo::FindMemberByGuid(WOWGUID guid) {
     for (uint32_t i = 0; i < CGRaidInfo::m_numMembers; i++) {
         if (CGRaidInfo::m_members[i]->m_guid == guid) {
@@ -1259,15 +1259,15 @@ void CGRaidInfo::ShutdownGame() {
     }
 }
 
-// PROVEN: 3c2c0e63 IDENTICAL
-// OFFSET: 0x0092DED0
+// PROVEN: 3c2c0e63 IDENTICAL/NONE
+// OFFSET: 0x0092DED0/0x1406951E0
 int32_t CGRaidInfo::ProcessReadyCheckTimer(const void* data, void* param) {
     CGRaidInfo::m_readyCheckTimer = 0;
     CGRaidInfo::CheckReadyCheckTime();
     return 1;
 }
 
-// PROVEN: c54805fa IDENTICAL
+// PROVEN: c54805fa IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGRaidInfo::LeaveWorld() {
 }

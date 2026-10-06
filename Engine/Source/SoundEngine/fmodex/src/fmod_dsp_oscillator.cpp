@@ -444,8 +444,8 @@ FMOD_RESULT DSPOscillator::getParameterInternal(int index, float *value, char *v
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3874c344 IDENTICAL
-// OFFSET: 0x00A960A0
+// PROVEN: 3874c344 IDENTICAL/NONE
+// OFFSET: 0x00A960A0/0x140862730
 FMOD_RESULT F_CALLBACK DSPOscillator::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPOscillator *osc = (DSPOscillator *)dsp;
@@ -521,7 +521,7 @@ FMOD_RESULT F_CALLBACK DSPOscillator::readCallback(FMOD_DSP_STATE *dsp, float *i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4d9ee2da IDENTICAL
+// PROVEN: 4d9ee2da IDENTICAL/NONE
 // OFFSET: 0x00AA1990
 FMOD_RESULT F_CALLBACK DSPOscillator::setParameterCallback(FMOD_DSP_STATE *dsp, int index, float value)
 {
@@ -547,7 +547,7 @@ FMOD_RESULT F_CALLBACK DSPOscillator::setParameterCallback(FMOD_DSP_STATE *dsp, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 058d296d IDENTICAL
+// PROVEN: 058d296d IDENTICAL/NONE
 // OFFSET: 0x00AA1A00
 FMOD_RESULT F_CALLBACK DSPOscillator::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

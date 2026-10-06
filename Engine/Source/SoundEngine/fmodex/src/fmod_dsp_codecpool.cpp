@@ -206,8 +206,8 @@ FMOD_RESULT DSPCodecPool::init(FMOD_DSP_CATEGORY category, int resamplerpcmblock
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3d276517 IDENTICAL
-// OFFSET: 0x00A93060
+// PROVEN: 3d276517 IDENTICAL/NONE
+// OFFSET: 0x00A93060/0x140852CD0
 FMOD_RESULT DSPCodecPool::close()
 {
     if (mPool)

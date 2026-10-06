@@ -8,20 +8,20 @@ void Blizzard::Lock::MutexCreate(Mutex& mutex) {
     InitializeCriticalSection(&mutex);
 }
 
-// PROVEN: a2f7d514 IDENTICAL
+// PROVEN: a2f7d514 IDENTICAL/NONE
 // OFFSET: 0x007AD520
 void Blizzard::Lock::MutexEnter(Mutex& mutex) {
     EnterCriticalSection(&mutex);
 }
 
-// PROVEN: 381b11c5 IDENTICAL
+// PROVEN: 381b11c5 IDENTICAL/NONE
 // OFFSET: 0x007AD530
 void Blizzard::Lock::MutexLeave(Mutex& mutex) {
     LeaveCriticalSection(&mutex);
 }
 
-// PROVEN: dee200ef IDENTICAL
-// OFFSET: 0x007AD540
+// PROVEN: dee200ef IDENTICAL/IDENTICAL
+// OFFSET: 0x007AD540/0x1404A3200
 void Blizzard::Lock::MutexDestroy(Mutex& mutex) {
     DeleteCriticalSection(&mutex);
     mutex.DebugInfo = NULL;

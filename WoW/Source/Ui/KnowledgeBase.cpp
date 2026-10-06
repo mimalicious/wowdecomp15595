@@ -106,8 +106,8 @@ bool CKBPage::LoadingCallback(void* param, const char* data, uint32_t size, bool
     return true;
 }
 
-// PROVEN: 58ea4a4d IDENTICAL
-// OFFSET: 0x009FB390
+// PROVEN: 58ea4a4d IDENTICAL/NONE
+// OFFSET: 0x009FB390/0x140798B70
 int32_t CKBSetup::BeginLoading(int32_t numArticles, int32_t pageNumber) {
     if (this->m_state == 1 || this->m_inQueue) {
         return 0;
@@ -158,13 +158,13 @@ CKBPage::~CKBPage() {
     }
 }
 
-// PROVEN: 14b81430 IDENTICAL
+// PROVEN: 14b81430 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBPage::_ComputeCachedData() {
 }
 
-// PROVEN: 054e076b IDENTICAL
-// OFFSET: 0x009FB0F0
+// PROVEN: 054e076b IDENTICAL/NONE
+// OFFSET: 0x009FB0F0/0x140798900
 int32_t CKBPage::_BeginLoading() {
     this->m_state = 1;
     this->m_loadingNext = CKBPage::s_pLoadingQueue_Head;
@@ -392,8 +392,8 @@ void CKBSetup::_ComputeCachedData() {
     }
 }
 
-// PROVEN: 5fe67e59 IDENTICAL
-// OFFSET: 0x009FB7B0
+// PROVEN: 5fe67e59 IDENTICAL/NONE
+// OFFSET: 0x009FB7B0/0x140798EB0
 void CKBSetup::GetCategory(int32_t category) {
     this->m_subCategories.m_node = NULL;
     this->m_subCategories.m_index = 0;
@@ -448,12 +448,12 @@ void CKBSetup::_SendSuccessEvent() {
     }
 }
 
-// PROVEN: f1e62326 IDENTICAL
+// PROVEN: f1e62326 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBPage::_SendSuccessEvent() {
 }
 
-// PROVEN: 5d3a5e30 IDENTICAL
+// PROVEN: 5d3a5e30 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBPage::_SendFailureEvent() {
 }
@@ -475,7 +475,7 @@ CKBSetup::CKBSetup() {
     this->m_articleHeaders.m_index = 0;
 }
 
-// PROVEN: 1b2d7a48 IDENTICAL
+// PROVEN: 1b2d7a48 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CKBPage::Initialize() {
 }
@@ -506,8 +506,8 @@ const char* KnowledgeBaseGetURLForLocale() {
     }
 }
 
-// PROVEN: 89dddaee IDENTICAL
-// OFFSET: 0x009FB010
+// PROVEN: 89dddaee IDENTICAL/NONE
+// OFFSET: 0x009FB010/0x1407987D0
 void CKBPage::UpdateLoadingQueue() {
     CKBPage* prev = NULL;
     CKBPage* page = CKBPage::s_pLoadingQueue_Head;

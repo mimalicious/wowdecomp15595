@@ -68,8 +68,8 @@ bool CGRuneInfo::IsRuneIndexValid(int32_t index) {
     return index < 8;
 }
 
-// PROVEN: 4cf7ce2d IDENTICAL
-// OFFSET: 0x0093C460
+// PROVEN: 4cf7ce2d IDENTICAL/NONE
+// OFFSET: 0x0093C460/0x1406A7B10
 int32_t CGRuneInfo::GetRuneTypeByIndex(int32_t index, bool base) {
     if (base) {
         return CGRuneInfo::m_baseRunes[index];
@@ -299,13 +299,13 @@ bool CGRuneInfo::ComputeRuneSpellCooldown(const SpellRec* spell, uint32_t* coold
     return true;
 }
 
-// PROVEN: 31a366a2 IDENTICAL
+// PROVEN: 31a366a2 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGRuneInfo::ShutdownGame() {
 }
 
-// PROVEN: 656c969a IDENTICAL
-// OFFSET: 0x0093C410
+// PROVEN: 656c969a IDENTICAL/NONE
+// OFFSET: 0x0093C410/0x1406A7AD0
 void CGRuneInfo::SetRuneLastUsedTime(int32_t index, uint32_t time) {
     CGRuneInfo::m_runeLastUsed[index] = time;
 }
@@ -419,7 +419,7 @@ void CGRuneInfo::AddRunePower(CDataStore* msg) {
     FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_UPDATE_COOLDOWN, NULL);
 }
 
-// PROVEN: 59e48eda IDENTICAL
+// PROVEN: 59e48eda IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGRuneInfo::LeaveWorld() {
 }

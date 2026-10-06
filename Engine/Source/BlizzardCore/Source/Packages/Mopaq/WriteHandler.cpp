@@ -112,7 +112,7 @@ bool System_Mopaq::MopaqReadWriteHandler::Flush() {
     return true;
 }
 
-// PROVEN: e224d580 IDENTICAL
+// PROVEN: e224d580 IDENTICAL/NONE
 // OFFSET: 0x007AB8A0
 void System_Mopaq::MopaqReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size) {
     this->m_sizeBeforeDelta = size;
@@ -151,8 +151,8 @@ bool System_Mopaq::MopaqInPlaceReadWriteHandler::WriteData(const uint8_t* buffer
     return result;
 }
 
-// PROVEN: d4714a81 IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: d4714a81 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_Mopaq::MopaqInPlaceReadWriteHandler::Flush() {
     return true;
 }
@@ -168,7 +168,7 @@ System_Mopaq::SectorReadWriteHandler::SectorReadWriteHandler(Blizzard::Mopaq::Mp
 System_Mopaq::SectorReadWriteHandler::~SectorReadWriteHandler() {
 }
 
-// PROVEN: 1c59874c IDENTICAL
+// PROVEN: 1c59874c IDENTICAL/NONE
 // OFFSET: 0x007B34F0
 void System_Mopaq::SectorReadWriteHandler::MarkSingleUnit() {
     this->m_sectorTable[0] = 0;
@@ -359,7 +359,7 @@ bool System_Mopaq::SectorReadWriteHandler::AdjustSectorTable() {
     return true;
 }
 
-// PROVEN: 6e12d975 IDENTICAL
+// PROVEN: 6e12d975 IDENTICAL/NONE
 // OFFSET: 0x007AB8C0
 void System_Mopaq::SectorReadWriteHandler::SetSizeFileBeforeDelta(uint64_t size) {
     this->m_sizeBeforeDelta = size;

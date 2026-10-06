@@ -529,8 +529,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetGlow", &Script_SetGlow },
 };
 
-// PROVEN: e79860c5 IDENTICAL
-// OFFSET: 0x00538540
+// PROVEN: e79860c5 IDENTICAL/NONE
+// OFFSET: 0x00538540/0x14018B610
 void CSimpleModel::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

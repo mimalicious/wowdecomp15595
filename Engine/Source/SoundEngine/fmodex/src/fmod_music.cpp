@@ -421,8 +421,8 @@ FMOD_RESULT MusicSong::play()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 31d28ee5 IDENTICAL
-// OFFSET: 0x00AE3BB0
+// PROVEN: 31d28ee5 IDENTICAL/NONE
+// OFFSET: 0x00AE3BB0/0x1408AF0C0
 FMOD_RESULT MusicSong::spawnNewVirtualChannel(MusicChannel *cptr, MusicSample *sptr, MusicVirtualChannel **newvcptr)
 {
     MusicVirtualChannel *vcptr = 0;
@@ -499,8 +499,8 @@ FMOD_RESULT MusicSong::spawnNewVirtualChannel(MusicChannel *cptr, MusicSample *s
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0e7be51b IDENTICAL
-// OFFSET: 0x00AE3CB0
+// PROVEN: 0e7be51b IDENTICAL/NONE
+// OFFSET: 0x00AE3CB0/0x1408AF1C0
 FMOD_RESULT MusicVirtualChannel::cleanUp()
 {
     bool playing = false;
@@ -538,8 +538,8 @@ FMOD_RESULT MusicVirtualChannel::cleanUp()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 101f3379 IDENTICAL
-// OFFSET: 0x00AE3D20
+// PROVEN: 101f3379 IDENTICAL/NONE
+// OFFSET: 0x00AE3D20/0x1408AF240
 FMOD_RESULT MusicSong::setBPM(int bpm)
 {
 	float hz;
@@ -588,8 +588,8 @@ FMOD_RESULT MusicSong::setBPM(int bpm)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d4d130a7 IDENTICAL
-// OFFSET: 0x00AE3D80
+// PROVEN: d4d130a7 IDENTICAL/NONE
+// OFFSET: 0x00AE3D80/0x1408AF290
 FMOD_RESULT MusicSong::stop()
 {
     int count;
@@ -667,8 +667,8 @@ FMOD_RESULT MusicSong::stop()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 526644ac IDENTICAL
-// OFFSET: 0x00AE3EC0
+// PROVEN: 526644ac IDENTICAL/NONE
+// OFFSET: 0x00AE3EC0/0x1408AF430
 FMOD_RESULT MusicSong::playSound(MusicSample *sample, MusicVirtualChannel *vcptr, bool addfilter, SNDMIXPLUGIN *plugin)
 {
     FMOD_RESULT result;
@@ -799,7 +799,7 @@ FMOD_RESULT MusicSong::fineTune2Hz(unsigned char ft, unsigned int *hz)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3c447240 IDENTICAL
+// PROVEN: 3c447240 IDENTICAL/NONE
 // OFFSET: 0x00AE4120
 FMOD_RESULT MusicSong::getLengthInternal(unsigned int *length, FMOD_TIMEUNIT lengthtype)
 {
@@ -841,7 +841,7 @@ FMOD_RESULT MusicSong::getLengthInternal(unsigned int *length, FMOD_TIMEUNIT len
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5fcd7e8b IDENTICAL
+// PROVEN: 5fcd7e8b IDENTICAL/NONE
 // OFFSET: 0x00AE4180
 FMOD_RESULT MusicSong::getPositionInternal(unsigned int *position, FMOD_TIMEUNIT postype)
 {
@@ -885,7 +885,7 @@ FMOD_RESULT MusicSong::getPositionInternal(unsigned int *position, FMOD_TIMEUNIT
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7d123e51 IDENTICAL
+// PROVEN: 7d123e51 IDENTICAL/NONE
 // OFFSET: 0x00AE41E0
 FMOD_RESULT F_CALLBACK MusicSong::getLengthCallback(FMOD_CODEC_STATE *codec, unsigned int *length, FMOD_TIMEUNIT lengthtype)
 {
@@ -910,7 +910,7 @@ FMOD_RESULT F_CALLBACK MusicSong::getLengthCallback(FMOD_CODEC_STATE *codec, uns
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d6944a7b IDENTICAL
+// PROVEN: d6944a7b IDENTICAL/NONE
 // OFFSET: 0x00AE4220
 FMOD_RESULT F_CALLBACK MusicSong::getPositionCallback(FMOD_CODEC_STATE *codec, unsigned int *position, FMOD_TIMEUNIT postype)
 {

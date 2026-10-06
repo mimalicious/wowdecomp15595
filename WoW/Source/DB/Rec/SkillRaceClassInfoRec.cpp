@@ -3,7 +3,7 @@
 // STATIC: %0x00B45500
 const DBCMeta SkillRaceClassInfoRec::s_meta = { "DBFilesClient\\SkillRaceClassInfo.dbc", 9, 36, SkillRaceClassInfoRec::FixupStrings, 0 };
 
-// PROVEN: 9013b2aa IDENTICAL
+// PROVEN: 9013b2aa IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SkillRaceClassInfoRec::FixupStrings(void* record, const char* strings) {
 }

@@ -403,7 +403,7 @@ int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t
     return !this->m_complete;
 }
 
-// PROVEN: 364abc74 IDENTICAL
+// PROVEN: 364abc74 IDENTICAL/NONE
 // OFFSET: 0x007F9880
 bool Blizzard::Mopaq::SFileFileIsDeleted(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags) {
     Blizzard::Util::Digest<16> md5 = System_SFile::s_emptyMd5;
@@ -454,14 +454,14 @@ bool Blizzard::Mopaq::SFileOpenArchiveEnumerator(System_SFile::ARCHIVEREC* handl
     return false;
 }
 
-// PROVEN: 7b7aef82 IDENTICAL
+// PROVEN: 7b7aef82 IDENTICAL/NONE
 // OFFSET: 0x007AAE40
 int32_t Blizzard::Mopaq::SFileEnumerateArchive(Enumerator* enumerator, char* name, uint32_t size) {
     return enumerator->Enumerate(name, size);
 }
 
-// PROVEN: 2958584f IDENTICAL
-// OFFSET: 0x007AAE60
+// PROVEN: 2958584f IDENTICAL/IDENTICAL
+// OFFSET: 0x007AAE60/0x1404A1170
 bool Blizzard::Mopaq::SFileCloseArchiveEnumerator(Enumerator* enumerator) {
     delete enumerator;
     return true;

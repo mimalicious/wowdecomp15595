@@ -170,7 +170,7 @@ static void new_localvar (LexState *ls, TString *name, int n) {
 }
 
 
-// PROVEN: 36296269 IDENTICAL
+// PROVEN: 36296269 IDENTICAL/NONE
 // OFFSET: 0x004266B0
 static void adjustlocalvars (LexState *ls, int nvars) {
   FuncState *fs = ls->fs;
@@ -181,7 +181,7 @@ static void adjustlocalvars (LexState *ls, int nvars) {
 }
 
 
-// PROVEN: 148b3d6b IDENTICAL
+// PROVEN: 148b3d6b IDENTICAL/NONE
 // OFFSET: 0x004266F0
 static void removevars (LexState *ls, int tolevel) {
   FuncState *fs = ls->fs;

@@ -211,14 +211,14 @@ void Spell_C_CancelChannelSpell(int32_t spellId) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: ba715f88 IDENTICAL
-// OFFSET: 0x008A5500
+// PROVEN: ba715f88 IDENTICAL/NONE
+// OFFSET: 0x008A5500/0x1405E8060
 bool Spell_C_IsTargeting() {
     return s_targetingSpell != NULL;
 }
 
-// PROVEN: cbfa403b IDENTICAL
-// OFFSET: 0x008A5BE0
+// PROVEN: cbfa403b IDENTICAL/NONE
+// OFFSET: 0x008A5BE0/0x1405E8810
 int32_t Spell_C_GetAutoRepeatingSpell() {
     return s_autoRepeatingSpell;
 }
@@ -238,8 +238,8 @@ void Spell_C_SetAutoRangedCombatSpell(int32_t spellId) {
     }
 }
 
-// PROVEN: eadd0aef IDENTICAL
-// OFFSET: 0x008A5C30
+// PROVEN: eadd0aef IDENTICAL/NONE
+// OFFSET: 0x008A5C30/0x1405E8860
 int32_t Spell_C_GetAutoRangedCombatSpell() {
     return s_autoRangedCombatSpell;
 }
@@ -302,7 +302,7 @@ bool Spell_C_HasEffect(const SpellRec* spell, int32_t effect) {
     return false;
 }
 
-// PROVEN: 31a91915 IDENTICAL
+// PROVEN: 31a91915 IDENTICAL/NONE
 // OFFSET: 0x008A6020
 int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec) {
     for (uint32_t i = 0; i < sizeof(rec->m_spells) / sizeof(rec->m_spells[0]); i++) {
@@ -2433,8 +2433,8 @@ void PendingSpellCast::OnSpellGo(CDataStore* msg) {
     }
 }
 
-// PROVEN: 60f49463 IDENTICAL
-// OFFSET: 0x008A5BC0
+// PROVEN: 60f49463 IDENTICAL/NONE
+// OFFSET: 0x008A5BC0/0x1405E87F0
 uint32_t Spell_C_GetPowerDisplayMod(uint32_t powerType) {
     if (static_cast<int32_t>(powerType) < 0) {
         return 1;
@@ -2465,8 +2465,8 @@ const SpellVisualRec* GetSpellVisual(const SpellRec* spell) {
     return g_spellVisualDB.GetRecord(visualId);
 }
 
-// PROVEN: eac9ea42 IDENTICAL
-// OFFSET: 0x008A5630
+// PROVEN: eac9ea42 IDENTICAL/NONE
+// OFFSET: 0x008A5630/0x1405E8170
 bool Spell_C_CanTargetTerrain() {
     return (s_needTargets & 0x60) != 0;
 }
@@ -2481,8 +2481,8 @@ void SpellSetFeedPetSpell(int32_t spellId) {
     s_feedPetSpell = spellId;
 }
 
-// PROVEN: 518e1d22 IDENTICAL
-// OFFSET: 0x008A5550
+// PROVEN: 518e1d22 IDENTICAL/NONE
+// OFFSET: 0x008A5550/0x1405E80A0
 bool Spell_C_CanTargetUnits() {
     return (s_needTargets & 0x1878E) != 0;
 }
@@ -2507,7 +2507,7 @@ bool Spell_C_CanTargetEnemies() {
     return (s_needTargets & 0x480) != 0;
 }
 
-// PROVEN: efc1f18e IDENTICAL
+// PROVEN: efc1f18e IDENTICAL/NONE
 // OFFSET: 0x008A55B0
 bool Spell_C_CanTargetAlive() {
     return (s_needTargets & 0x8600) == 0;
@@ -2518,19 +2518,19 @@ bool Spell_C_CanTargetFriendCorpses() {
     return (s_needTargets >> 15) & 1;
 }
 
-// PROVEN: 3fe1043c IDENTICAL
+// PROVEN: 3fe1043c IDENTICAL/NONE
 // OFFSET: 0x008A55C0
 bool Spell_C_CanTargetEnemyCorpses() {
     return (s_needTargets >> 9) & 1;
 }
 
-// PROVEN: a87bb30b IDENTICAL
+// PROVEN: a87bb30b IDENTICAL/NONE
 // OFFSET: 0x008A55D0
 bool Spell_C_CanTargetObjects() {
     return (s_needTargets & 0x4800) != 0;
 }
 
-// PROVEN: 47565330 IDENTICAL
+// PROVEN: 47565330 IDENTICAL/NONE
 // OFFSET: 0x008A5660
 bool Spell_C_CanTargetNonCombatPet() {
     return (s_needTargets >> 16) & 1;
@@ -3783,8 +3783,8 @@ int32_t Spell_C_GetMinMaxPoints(const SpellRec* spell, uint32_t effectIndex, int
     return 0;
 }
 
-// PROVEN: 5d713ce6 IDENTICAL
-// OFFSET: 0x008A5510
+// PROVEN: 5d713ce6 IDENTICAL/NONE
+// OFFSET: 0x008A5510/0x1405E8070
 int32_t Spell_C_GetTargetingSpell() {
     return s_targetingSpell ? s_targetingSpell->m_data.m_spellId : 0;
 }
@@ -4196,13 +4196,13 @@ PendingSpellCast* Spell_C_GetTargetingSpellCast() {
     return s_targetingSpell;
 }
 
-// PROVEN: 1e0b9fd9 IDENTICAL
-// OFFSET: 0x008A5640
+// PROVEN: 1e0b9fd9 IDENTICAL/NONE
+// OFFSET: 0x008A5640/0x1405E8180
 int32_t Spell_C_CanTargetItems() {
     return (s_needTargets & 0x4010) != 0;
 }
 
-// PROVEN: 8ec4b65b IDENTICAL
+// PROVEN: 8ec4b65b IDENTICAL/NONE
 // OFFSET: 0x008A5670
 CM2Model* Spell_C_GetCursorWorldObjectModel() {
     return s_spellWorldModel;
@@ -4473,8 +4473,8 @@ bool Spell_C_CancelsAuraEffect(const CGUnit_C* unit, const SpellRec* spell, int3
     return found;
 }
 
-// PROVEN: 441e5fff IDENTICAL
-// OFFSET: 0x008AB390
+// PROVEN: 441e5fff IDENTICAL/NONE
+// OFFSET: 0x008AB390/0x1405EF1A0
 bool Spell_C_CancelsStun(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4483,8 +4483,8 @@ bool Spell_C_CancelsStun(const CGUnit_C* unit, const SpellRec* spell, int32_t* r
     return Spell_C_CancelsAuraEffect(unit, spell, 12, reason);
 }
 
-// PROVEN: 7e1cda84 IDENTICAL
-// OFFSET: 0x008AB3C0
+// PROVEN: 7e1cda84 IDENTICAL/NONE
+// OFFSET: 0x008AB3C0/0x1405EF1C0
 bool Spell_C_CancelsSilence(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4493,8 +4493,8 @@ bool Spell_C_CancelsSilence(const CGUnit_C* unit, const SpellRec* spell, int32_t
     return Spell_C_CancelsAuraEffect(unit, spell, 27, reason) || Spell_C_CancelsAuraEffect(unit, spell, 60, reason);
 }
 
-// PROVEN: 954c4495 IDENTICAL
-// OFFSET: 0x008AB410
+// PROVEN: 954c4495 IDENTICAL/NONE
+// OFFSET: 0x008AB410/0x1405EF230
 bool Spell_C_CancelsPacify(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4521,8 +4521,8 @@ bool Spell_C_CancelsConfuse(const CGUnit_C* unit, const SpellRec* spell, int32_t
     return Spell_C_CancelsAuraEffect(unit, spell, 5, reason);
 }
 
-// PROVEN: 5adf21d0 IDENTICAL
-// OFFSET: 0x008AB4F0
+// PROVEN: 5adf21d0 IDENTICAL/NONE
+// OFFSET: 0x008AB4F0/0x1405EF300
 bool Spell_C_CancelsCharm(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -7123,7 +7123,7 @@ void Spell_C_StopCasting() {
     }
 }
 
-// PROVEN: 28edb524 IDENTICAL
+// PROVEN: 28edb524 IDENTICAL/NONE
 // OFFSET: 0x008B4550
 void Spell_C_CancelPlayerSpells() {
     WOWGUID player = ClntObjMgrGetActivePlayer();
@@ -7752,8 +7752,8 @@ void Spell_C::SendPendingCast(PendingSpellCast* cast, bool hideVisuals) {
     Spell_C_StartSpellCooldown(&spell, caster);
 }
 
-// PROVEN: 48a743fe IDENTICAL
-// OFFSET: 0x00B3AE10
+// PROVEN: 48a743fe IDENTICAL/NONE
+// OFFSET: 0x00B3AE10/0x140907B00
 void PendingSpellCastData::WriteTargetInfo(const PendingSpellCastData* data, CDataStore* msg) {
     msg->Put(data->m_targetFlags);
 
@@ -9232,8 +9232,8 @@ void Spell_C_PlayDestLocVisualsWithoutCaster(NotifyDestLocSpellCastData* data) {
     }
 }
 
-// PROVEN: e3d50817 IDENTICAL
-// OFFSET: 0x008A5D00
+// PROVEN: e3d50817 IDENTICAL/NONE
+// OFFSET: 0x008A5D00/0x1405E8930
 PendingSpellCast* Spell_C_GetDelayedTrajectoryCast() {
     return s_delayedTrajectoryCast;
 }

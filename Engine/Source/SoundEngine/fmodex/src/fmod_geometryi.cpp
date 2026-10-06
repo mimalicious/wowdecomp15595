@@ -131,7 +131,7 @@ void GeometryI::calculateMatrix()
     [SEE_ALSO]
 ]
 */
-// PROVEN: e449da16 IDENTICAL
+// PROVEN: e449da16 IDENTICAL/NONE
 // OFFSET: 0x00AC6C80
 void GeometryI::updateSpatialData()
 {
@@ -220,7 +220,7 @@ void GeometryI::setToBeUpdated()
     [SEE_ALSO]
 ]
 */
-// PROVEN: cf493057 IDENTICAL
+// PROVEN: cf493057 IDENTICAL/NONE
 // OFFSET: 0x00AC6EB0
 bool GeometryI::octreeLineTestCallback(OctreeNode* item, void* data)
 {
@@ -892,7 +892,7 @@ FMOD_RESULT GeometryI::getPolygonAttributes(int polygonIndex, float *directOcclu
     [SEE_ALSO]
 ]
 */
-// PROVEN: 2deea4ce IDENTICAL
+// PROVEN: 2deea4ce IDENTICAL/NONE
 // OFFSET: 0x00AC7510
 FMOD_RESULT GeometryI::flush()
 {
@@ -1702,7 +1702,7 @@ FMOD_RESULT GeometryI::getUserData(void **userdata)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 20ef04ca IDENTICAL
+// PROVEN: 20ef04ca IDENTICAL/NONE
 // OFFSET: 0x00AC78B0
 bool GeometryI::lineTest(LineTestData* lineTestData)
 {

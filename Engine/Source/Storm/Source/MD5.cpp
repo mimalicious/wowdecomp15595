@@ -34,8 +34,8 @@
 // STATIC: #0x00ADE968
 static uint8_t PADDING[64] = { 0x80 };
 
-// PROVEN: c8128402 IDENTICAL
-// OFFSET: 0x004B8400
+// PROVEN: c8128402 IDENTICAL/IDENTICAL
+// OFFSET: 0x004B8400/0x1400F09D0
 uint8_t* MD5::ToArray(uint8_t* array) const {
     if (array) {
         memcpy(array, this->val, sizeof(this->val));
@@ -93,7 +93,8 @@ static void Encode(uint8_t* output, const uint32_t* input, uint32_t len) {
     }
 }
 
-// OFFSET: %0x004BF460
+// PROVEN: 72a2be74 DIFFERENT/IDENTICAL
+// OFFSET: 0x004B8CA0/0x1400F1410
 void MD5Init(MD5_CTX* context) {
     context->count[0] = context->count[1] = 0;
     context->state[0] = 0x67452301;
@@ -102,8 +103,8 @@ void MD5Init(MD5_CTX* context) {
     context->state[3] = 0x10325476;
 }
 
-// PROVEN: 79c8543e IDENTICAL
-// OFFSET: 0x004B8CD0
+// PROVEN: 79c8543e IDENTICAL/IDENTICAL
+// OFFSET: 0x004B8CD0/0x1400F1440
 static void MD5Transform(uint32_t state[4], const uint8_t block[64]) {
     uint32_t a = state[0];
     uint32_t b = state[1];
@@ -218,7 +219,8 @@ void MD5Update(MD5_CTX* context, const uint8_t* input, uint32_t inputLen) {
     memcpy(&context->buffer[index], &input[i], inputLen - i);
 }
 
-// OFFSET: %0x004BFC10
+// PROVEN: 84a83962 DIFFERENT/IDENTICAL
+// OFFSET: 0x004B9450/0x1400F1D60
 void MD5Final(uint8_t digest[16], MD5_CTX* context) {
     uint8_t bits[8];
     Encode(bits, context->count, 8);

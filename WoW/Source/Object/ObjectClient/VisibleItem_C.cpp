@@ -8,7 +8,7 @@
 #include "WoW/Source/Object/ItemStats.h"
 
 // STATIC
-// PROVEN: 9c793a34 IDENTICAL
+// PROVEN: 9c793a34 IDENTICAL/NONE
 // OFFSET: 0x00401000
 static void VisibleItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }

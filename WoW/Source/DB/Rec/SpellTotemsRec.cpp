@@ -3,7 +3,7 @@
 // STATIC: %0x00B44C0C
 const DBCMeta SpellTotemsRec::s_meta = { "DBFilesClient\\SpellTotems.dbc", 3, 20, SpellTotemsRec::FixupStrings, 0 };
 
-// PROVEN: c4949a0c IDENTICAL
+// PROVEN: c4949a0c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellTotemsRec::FixupStrings(void* record, const char* strings) {
 }

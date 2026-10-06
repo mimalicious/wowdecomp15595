@@ -8,8 +8,8 @@ Battlenet::Service::Interface::Interface(TumorManager& manager) {
     this->m_tendrilId = 0;
 }
 
-// PROVEN: 71c346c6 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 71c346c6 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void Battlenet::Service::Interface::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
 }
 
@@ -55,7 +55,7 @@ Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Servic
 Battlenet::Tendril::~Tendril() {
 }
 
-// PROVEN: 84c27b8e IDENTICAL
+// PROVEN: 84c27b8e IDENTICAL/NONE
 // OFFSET: 0x00401000
 void Battlenet::Tendril::DoSubscriptions() {
 }

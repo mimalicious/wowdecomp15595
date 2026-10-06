@@ -100,8 +100,8 @@ FMOD_DSP_DESCRIPTION_EX *DSPReverb::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 66b61afe IDENTICAL
-// OFFSET: 0x00A96280
+// PROVEN: 66b61afe IDENTICAL/NONE
+// OFFSET: 0x00A96280/0x140856410
 FMOD_RESULT DSPReverb::createInternal()
 {
     int count;
@@ -426,8 +426,8 @@ FMOD_RESULT DSPReverb::getParameterInternal(int index, float *value, char *value
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3c2714bc IDENTICAL
-// OFFSET: 0x00A96610
+// PROVEN: 3c2714bc IDENTICAL/NONE
+// OFFSET: 0x00A96610/0x140856760
 FMOD_RESULT F_CALLBACK DSPReverb::createCallback(FMOD_DSP_STATE *dsp)
 {
     DSPReverb *reverb = (DSPReverb *)dsp;
@@ -497,7 +497,7 @@ FMOD_RESULT F_CALLBACK DSPReverb::resetCallback(FMOD_DSP_STATE *dsp)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 634c4841 IDENTICAL
+// PROVEN: 634c4841 IDENTICAL/NONE
 // OFFSET: 0x00A96640
 FMOD_RESULT F_CALLBACK DSPReverb::readCallback(FMOD_DSP_STATE *dsp, float *inbuffer, float *outbuffer, unsigned int length, int inchannels, int outchannels)
 {
@@ -546,7 +546,7 @@ FMOD_RESULT F_CALLBACK DSPReverb::setParameterCallback(FMOD_DSP_STATE *dsp, int 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6698dc50 IDENTICAL
+// PROVEN: 6698dc50 IDENTICAL/NONE
 // OFFSET: 0x00A966F0
 FMOD_RESULT F_CALLBACK DSPReverb::getParameterCallback(FMOD_DSP_STATE *dsp, int index, float *value, char *valuestr)
 {

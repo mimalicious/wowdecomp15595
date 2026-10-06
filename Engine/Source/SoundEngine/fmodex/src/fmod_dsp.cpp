@@ -9,8 +9,8 @@ namespace FMOD
 /*$ preserve end $*/
 
 
-// PROVEN: b0108691 IDENTICAL
-// OFFSET: 0x00A7BC10
+// PROVEN: b0108691 IDENTICAL/NONE
+// OFFSET: 0x00A7BC10/0x140837040
 FMOD_RESULT DSP::release()
 {
     FMOD_RESULT result;
@@ -45,8 +45,8 @@ FMOD_RESULT DSP::getSystemObject(System **system)
 }
 
 
-// PROVEN: 914d4ad2 IDENTICAL
-// OFFSET: 0x00A7BC40
+// PROVEN: 914d4ad2 IDENTICAL/NONE
+// OFFSET: 0x00A7BC40/0x140837070
 FMOD_RESULT DSP::addInput(DSP *target)
 {
     FMOD_RESULT result;
@@ -81,8 +81,8 @@ FMOD_RESULT DSP::disconnectFrom(DSP *target)
 }
 
 
-// PROVEN: bf08f757 IDENTICAL
-// OFFSET: 0x00A7BC70
+// PROVEN: bf08f757 IDENTICAL/NONE
+// OFFSET: 0x00A7BC70/0x1408370A0
 FMOD_RESULT DSP::disconnectAll(bool inputs, bool outputs)
 {
     FMOD_RESULT result;
@@ -100,8 +100,8 @@ FMOD_RESULT DSP::disconnectAll(bool inputs, bool outputs)
 }
 
 
-// PROVEN: fbcf5c3f IDENTICAL
-// OFFSET: 0x00A7BCA0
+// PROVEN: fbcf5c3f IDENTICAL/NONE
+// OFFSET: 0x00A7BCA0/0x1408370E0
 FMOD_RESULT DSP::remove()
 {
     FMOD_RESULT result;
@@ -170,8 +170,8 @@ FMOD_RESULT DSP::getInput(int index, DSP **input)
 }
 
 
-// PROVEN: db4f0341 IDENTICAL
-// OFFSET: 0x00A7BCD0
+// PROVEN: db4f0341 IDENTICAL/NONE
+// OFFSET: 0x00A7BCD0/0x140837110
 FMOD_RESULT DSP::getOutput(int index, DSP **output)
 {
     FMOD_RESULT result;
@@ -325,7 +325,7 @@ FMOD_RESULT DSP::getOutputLevels(int index, FMOD_SPEAKER speaker, float *levels,
 }
 
 
-// PROVEN: 6e9b69c6 IDENTICAL
+// PROVEN: 6e9b69c6 IDENTICAL/NONE
 // OFFSET: 0x00A7BD00
 FMOD_RESULT DSP::setActive(bool active)
 {
@@ -361,7 +361,7 @@ FMOD_RESULT DSP::getActive(bool *active)
 }
 
 
-// PROVEN: 878c134d IDENTICAL
+// PROVEN: 878c134d IDENTICAL/NONE
 // OFFSET: 0x00A7BD40
 FMOD_RESULT DSP::setBypass(bool bypass)
 {
@@ -412,7 +412,7 @@ FMOD_RESULT DSP::reset()
 }
 
 
-// PROVEN: 0e8ec2ac IDENTICAL
+// PROVEN: 0e8ec2ac IDENTICAL/NONE
 // OFFSET: 0x00A7BD80
 FMOD_RESULT DSP::setParameter(int index, float value)
 {
@@ -584,7 +584,7 @@ FMOD_RESULT DSP::setUserData(void *_userdata)
 }
 
 
-// PROVEN: 9b6701ec IDENTICAL
+// PROVEN: 9b6701ec IDENTICAL/NONE
 // OFFSET: 0x00A7BDB0
 FMOD_RESULT DSP::getUserData(void **_userdata)
 {

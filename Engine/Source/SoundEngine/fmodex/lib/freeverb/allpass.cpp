@@ -6,14 +6,14 @@
 
 #include "allpass.h"
 
-// PROVEN: fa2b1f93 IDENTICAL
+// PROVEN: fa2b1f93 IDENTICAL/NONE
 // OFFSET: 0x00AF53E0
 allpass::allpass()
 {
 	bufidx = 0;
 }
 
-// PROVEN: 628ab753 IDENTICAL
+// PROVEN: 628ab753 IDENTICAL/NONE
 // OFFSET: 0x00AF53F0
 void allpass::setbuffer(float *buf, int size) 
 {
@@ -21,7 +21,7 @@ void allpass::setbuffer(float *buf, int size)
 	bufsize = size;
 }
 
-// PROVEN: 298165f3 IDENTICAL
+// PROVEN: 298165f3 IDENTICAL/NONE
 // OFFSET: 0x00AF5410
 void allpass::mute()
 {

@@ -11,7 +11,8 @@ static int32_t s_exitonfailure = 1;
 // STATIC: #0x00ADE854
 static int32_t s_heaptracking = 1;
 
-// OFFSET: %0x004B98B0
+// PROVEN: fa84e396 UNPROVEN/IDENTICAL
+// OFFSET: 0x004B2A10/0x1400E95F0
 void STORMAPI SMemSetDebugFlags(uint32_t flags, uint8_t changeMask) {
     if (changeMask & SMEM_DEBUG_NOEXITONFAILURE) {
         s_exitonfailure = (flags & SMEM_DEBUG_NOEXITONFAILURE) == 0;
@@ -34,8 +35,8 @@ static void FatalError(size_t bytes, const char* filename, int32_t linenumber) {
     }
 }
 
-// PROVEN: 68317da4 IDENTICAL
-// OFFSET: 0x004B2AC0
+// PROVEN: 68317da4 IDENTICAL/NONE
+// OFFSET: 0x004B2AC0/0x1400E96C0
 void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     size_t size = (bytes + 7) & ~static_cast<size_t>(7);
     void* ptr = (flags & SMEM_FLAG_ZEROMEMORY) ? calloc(1, size) : malloc(size);
@@ -50,8 +51,8 @@ void* STORMAPI SMemAlloc(size_t bytes, const char* filename, int32_t linenumber,
     return ptr;
 }
 
-// PROVEN: 1034874b IDENTICAL
-// OFFSET: 0x004B2C20
+// PROVEN: 1034874b IDENTICAL/IDENTICAL
+// OFFSET: 0x004B2C20/0x1400E98A0
 int32_t STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, uint32_t flags) {
     if (ptr) {
         _msize(ptr);
@@ -61,7 +62,7 @@ int32_t STORMAPI SMemFree(void* ptr, const char* filename, int32_t linenumber, u
     return 1;
 }
 
-// PROVEN: d0f8bf51 IDENTICAL
+// PROVEN: d0f8bf51 IDENTICAL/NONE
 // OFFSET: 0x004B2C50
 int32_t STORMAPI SMemIsValidPointer(void* ptr, size_t bytes, uint32_t flags) {
     return 1;

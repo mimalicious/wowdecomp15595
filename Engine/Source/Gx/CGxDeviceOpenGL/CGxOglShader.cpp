@@ -9,7 +9,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: d24cdf26 IDENTICAL
+// PROVEN: d24cdf26 IDENTICAL/NONE
 // OFFSET: 0x00869890
 void NvCombinerStage::Apply(GLenum stage, GLenum portion) {
     for (uint32_t i = 0; i <= 3; i++) {
@@ -43,8 +43,8 @@ void NvPixelShader::SetupRegisterCombiners() {
     }
 }
 
-// PROVEN: ad033c45 IDENTICAL
-// OFFSET: 0x00869A00
+// PROVEN: ad033c45 IDENTICAL/NONE
+// OFFSET: 0x00869A00/0x14059D780
 void NvTextureShaderStage::Apply(uint32_t tmu) {
     glTexEnvi(GL_TEXTURE_SHADER_NV, GL_SHADER_OPERATION_NV, this->m_shaderOperation);
 
@@ -62,7 +62,7 @@ void NvTextureShaderStage::Apply(uint32_t tmu) {
     }
 }
 
-// PROVEN: 012ecb6e IDENTICAL
+// PROVEN: 012ecb6e IDENTICAL/NONE
 // OFFSET: 0x00869AC0
 void NvTextureShader::Apply() {
     for (uint32_t tmu = 0; tmu < 4; tmu++) {

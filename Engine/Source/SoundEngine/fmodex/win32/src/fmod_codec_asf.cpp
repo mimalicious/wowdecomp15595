@@ -102,8 +102,8 @@ FMOD_CODEC_DESCRIPTION_EX *CodecASF::getDescriptionEx()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b76f5601 IDENTICAL
-// OFFSET: 0x00AA4450
+// PROVEN: b76f5601 IDENTICAL/NONE
+// OFFSET: 0x00AA4450/0x140865BE0
 FMOD_RESULT CodecASF::getStreamNumbers(IWMProfile* pProfile)
 {
     HRESULT          hr = S_OK;
@@ -562,8 +562,8 @@ FMOD_RESULT CodecASF::openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *u
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8a850190 IDENTICAL
-// OFFSET: 0x00AA4560
+// PROVEN: 8a850190 IDENTICAL/NONE
+// OFFSET: 0x00AA4560/0x140865D60
 FMOD_RESULT CodecASF::closeInternal()
 {   
     if (mReader)
@@ -661,7 +661,7 @@ FMOD_RESULT CodecASF::readInternal(void *buffer, unsigned int sizebytes, unsigne
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d7a2c312 IDENTICAL
+// PROVEN: d7a2c312 IDENTICAL/NONE
 // OFFSET: 0x00AA4690
 FMOD_RESULT CodecASF::setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -782,8 +782,8 @@ HRESULT CROStream::Open( LPCTSTR ptszURL )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: bac2ef7c IDENTICAL
-// OFFSET: 0x00AA4750
+// PROVEN: bac2ef7c IDENTICAL/NONE
+// OFFSET: 0x00AA4750/0x140865F70
 HRESULT CROStream::Read( void *pv, ULONG cb, ULONG *pcbRead )
 {
     FMOD_RESULT result;
@@ -815,8 +815,8 @@ HRESULT CROStream::Read( void *pv, ULONG cb, ULONG *pcbRead )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d134e493 IDENTICAL
-// OFFSET: 0x00AA4780
+// PROVEN: d134e493 IDENTICAL/NONE
+// OFFSET: 0x00AA4780/0x140865FA0
 HRESULT CROStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
 {
     FMOD_RESULT result;
@@ -876,8 +876,8 @@ HRESULT CROStream::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8d917d61 IDENTICAL
-// OFFSET: 0x00AA4800
+// PROVEN: 8d917d61 IDENTICAL/NONE
+// OFFSET: 0x00AA4800/0x140866030
 HRESULT CROStream::Stat( STATSTG *pstatstg, DWORD grfStatFlag )
 {
     FMOD_RESULT result;
@@ -951,7 +951,7 @@ HRESULT CROStream::QueryInterface( REFIID riid, void **ppv )
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9d97dfce IDENTICAL
+// PROVEN: 9d97dfce IDENTICAL/NONE
 // OFFSET: 0x00AA48B0
 ULONG CROStream::AddRef()
 {
@@ -975,7 +975,7 @@ ULONG CROStream::AddRef()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ca1a52af IDENTICAL
+// PROVEN: ca1a52af IDENTICAL/NONE
 // OFFSET: 0x00AA48D0
 ULONG CROStream::Release()
 {
@@ -1006,7 +1006,7 @@ ULONG CROStream::Release()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a3b315e9 IDENTICAL
+// PROVEN: a3b315e9 IDENTICAL/NONE
 // OFFSET: 0x00AA4910
 FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 {
@@ -1045,7 +1045,7 @@ FMOD_RESULT CodecASF::soundCreateInternal(int subsound, FMOD_SOUND *sound)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 63a27712 IDENTICAL
+// PROVEN: 63a27712 IDENTICAL/NONE
 // OFFSET: 0x00AA5260
 FMOD_RESULT F_CALLBACK CodecASF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -1071,8 +1071,8 @@ FMOD_RESULT F_CALLBACK CodecASF::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 85ab09f7 IDENTICAL
-// OFFSET: 0x00AA49A0
+// PROVEN: 85ab09f7 IDENTICAL/NONE
+// OFFSET: 0x00AA49A0/0x140866260
 FMOD_RESULT F_CALLBACK CodecASF::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecASF *asf = (CodecASF *)codec;
@@ -1097,7 +1097,7 @@ FMOD_RESULT F_CALLBACK CodecASF::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 488a7a63 IDENTICAL
+// PROVEN: 488a7a63 IDENTICAL/NONE
 // OFFSET: 0x00AA49D0
 FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1123,7 +1123,7 @@ FMOD_RESULT F_CALLBACK CodecASF::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 590de3b4 IDENTICAL
+// PROVEN: 590de3b4 IDENTICAL/NONE
 // OFFSET: 0x00AA4A00
 FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -1149,7 +1149,7 @@ FMOD_RESULT F_CALLBACK CodecASF::setPositionCallback(FMOD_CODEC_STATE *codec, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3925e391 IDENTICAL
+// PROVEN: 3925e391 IDENTICAL/NONE
 // OFFSET: 0x00AA4A30
 FMOD_RESULT F_CALLBACK CodecASF::soundCreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {

@@ -3,7 +3,7 @@
 #include "Engine/Source/Os/Path.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: f3eaac43 IDENTICAL
+// PROVEN: f3eaac43 IDENTICAL/NONE
 // OFFSET: 0x00876000
 uint32_t OsPathGetRootChars(const char* path) {
     uint32_t length = static_cast<uint32_t>(strlen(path));
@@ -127,8 +127,8 @@ void OsPathReplaceExtension(char* dest, uint32_t size, const char* path, const c
     }
 }
 
-// PROVEN: de1f7629 IDENTICAL
-// OFFSET: 0x00876270
+// PROVEN: de1f7629 IDENTICAL/UNPROVEN
+// OFFSET: 0x00876270/0x1405AD200
 void OsBuildFontFilePath(const char* fontName, char* path, uint32_t size) {
     SStrPrintf(path, size, "%s\\%s", "Fonts", fontName);
 }

@@ -58,8 +58,8 @@ static void DumpVector(const void* b, int n, size_t size, DumpState* D)
  DumpMem(b,n,size,D);
 }
 
-// PROVEN: ba547bab IDENTICAL
-// OFFSET: 0x00430420
+// PROVEN: ba547bab IDENTICAL/NONE
+// OFFSET: 0x00430420/0x140038620
 static void DumpString(const TString* s, DumpState* D)
 {
  if (s==NULL || getstr(s)==NULL)
@@ -111,7 +111,7 @@ static void DumpConstants(const Proto* f, DumpState* D)
  for (i=0; i<n; i++) DumpFunction(f->p[i],f->source,D);
 }
 
-// PROVEN: 94e12637 IDENTICAL
+// PROVEN: 94e12637 IDENTICAL/NONE
 // OFFSET: 0x004305E0
 static void DumpDebug(const Proto* f, DumpState* D)
 {

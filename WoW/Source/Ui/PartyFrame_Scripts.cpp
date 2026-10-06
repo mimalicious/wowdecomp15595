@@ -243,7 +243,7 @@ static int32_t Script_GetPartyAssignment(lua_State* L) {
     return CGPartyInfo::GetPartyAssignments(L, 1);
 }
 
-// PROVEN: 732c9a85 IDENTICAL
+// PROVEN: 732c9a85 IDENTICAL/NONE
 // OFFSET: 0x008FDD40
 static int32_t Script_CanChangePlayerDifficulty(lua_State* L) {
     lua_pushboolean(L, CGGameUI::CanChangePlayerDifficulty());

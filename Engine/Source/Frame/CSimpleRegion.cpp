@@ -48,7 +48,7 @@ void CGradient::Set(ORIENTATION orientation, const CImVector& minColor, const CI
     }
 }
 
-// PROVEN: 309df4a1 IDENTICAL
+// PROVEN: 309df4a1 IDENTICAL/NONE
 // OFFSET: 0x0050A810
 void CGradient::ApplyAlpha(uint8_t alpha) {
     for (uint32_t i = this->m_colorCount; i; ) {
@@ -57,7 +57,7 @@ void CGradient::ApplyAlpha(uint8_t alpha) {
     }
 }
 
-// PROVEN: ec65a0ae IDENTICAL
+// PROVEN: ec65a0ae IDENTICAL/NONE
 // OFFSET: 0x0050A860
 bool CGradient::IsWhite() {
     for (uint32_t i = this->m_colorCount; i; ) {
@@ -99,8 +99,8 @@ void CSimpleRegion::SetParent(CSimpleFrame* parent) {
     this->SetFrame(parent, this->m_drawLayer, this->m_subLevel, this->m_shown);
 }
 
-// PROVEN: a1cb9dc6 IDENTICAL
-// OFFSET: 0x004FBDD0
+// PROVEN: a1cb9dc6 IDENTICAL/NONE
+// OFFSET: 0x004FBDD0/0x14013FFE0
 void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
     char buffer[128];
 
@@ -112,8 +112,8 @@ void CSimpleRegion::DumpInfo(int32_t depth, void (*print)(char*, void*), void* p
     print(buffer, param);
 }
 
-// PROVEN: 3265573d IDENTICAL
-// OFFSET: 0x0050A450
+// PROVEN: 3265573d IDENTICAL/NONE
+// OFFSET: 0x0050A450/0x1401525D0
 int32_t CSimpleRegion::CanBeAnchorFor(CLayoutFrame* frame) {
     return frame->IsProtected() == 0;
 }
@@ -151,7 +151,7 @@ void CSimpleRegion::MarkDirty() {
     this->m_visible = 1;
 }
 
-// PROVEN: 75b95c58 IDENTICAL
+// PROVEN: 75b95c58 IDENTICAL/NONE
 // OFFSET: 0x0050A500
 void CSimpleRegion::SignalLoaded() {
     this->m_loadPending = 0;
@@ -434,7 +434,7 @@ CSimpleRegion::~CSimpleRegion() {
     this->EnableGradient(false);
 }
 
-// PROVEN: a61fca48 IDENTICAL
+// PROVEN: a61fca48 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CSimpleRegion::OnScreenSizeChanged() {
 }
@@ -446,7 +446,7 @@ void CSimpleRegion::SetVertexColorRGBA(float r, float g, float b, float a) {
     this->SetVertexColor(color);
 }
 
-// PROVEN: 862fa581 IDENTICAL
+// PROVEN: 862fa581 IDENTICAL/NONE
 // OFFSET: 0x0052B890
 C3Vector& ApplyTranslationAnim(C3Vector& position, const C2Vector& translation) {
     position.x = position.x + translation.x;

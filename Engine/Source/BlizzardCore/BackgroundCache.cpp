@@ -31,7 +31,7 @@ const char* PatchOnDemand::Cache::s_oldWorldSuffix = "";
 // STATIC: %0x00C0AC94
 PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL, false };
 
-// PROVEN: 4e1947ad IDENTICAL
+// PROVEN: 4e1947ad IDENTICAL/NONE
 // OFFSET: 0x007A2DB0
 void BackgroundCache::SetLocale(const char* locale) {
     Blizzard::String::Copy(CacheManager::s_locale, locale, sizeof(CacheManager::s_locale));
@@ -225,8 +225,8 @@ int32_t PatchOnDemand::Cache::EnumerateArchives(int32_t (*callback)(const char* 
     return s_archiveList.EnumerateArchives(callback, param);
 }
 
-// PROVEN: 9602b60e IDENTICAL
-// OFFSET: 0x007A32C0
+// PROVEN: 9602b60e IDENTICAL/DIFFERENT
+// OFFSET: 0x007A32C0/0x14050C390
 void PatchOnDemand::Cache::Shutdown() {
     Blizzard::Mopaq::SetPatchCompleteCallback(NULL);
 }
@@ -248,8 +248,8 @@ uint32_t OggToWavConversion::OggConverterJob::GetClassId() const {
     return 'ogww';
 }
 
-// PROVEN: 8653ed5a IDENTICAL
-// OFFSET: 0x007A3370
+// PROVEN: 8653ed5a IDENTICAL/IDENTICAL
+// OFFSET: 0x007A3370/0x14050C450
 int64_t OggToWavConversion::OggConverterJob::EstimateCost() const {
     return 520;
 }
@@ -470,14 +470,14 @@ PatchOnDemand::PoDWriteJob::PoDWriteJob(const void* data, int64_t size, System_S
     }
 }
 
-// PROVEN: 2d710dac IDENTICAL
-// OFFSET: 0x007A3DA0
+// PROVEN: 2d710dac IDENTICAL/IDENTICAL
+// OFFSET: 0x007A3DA0/0x14050CFE0
 uint32_t PatchOnDemand::PoDWriteJob::GetClassId() const {
     return 'mpqw';
 }
 
-// PROVEN: cbef2ec1 IDENTICAL
-// OFFSET: 0x007A3DB0
+// PROVEN: cbef2ec1 IDENTICAL/DIFFERENT
+// OFFSET: 0x007A3DB0/0x14090CAF0
 int64_t PatchOnDemand::PoDWriteJob::EstimateCost() const {
     return this->m_size;
 }
@@ -744,8 +744,8 @@ bool OggToWavConversion::InitCache(DECOMPRESSOGGCALLBACK callback) {
     return true;
 }
 
-// PROVEN: 0278f2ee IDENTICAL
-// OFFSET: 0x007A4EB0
+// PROVEN: 0278f2ee IDENTICAL/NONE
+// OFFSET: 0x007A4EB0/0x140499B30
 void OggToWavConversion::SetCallback(CONVERTOGGCALLBACK callback) {
     s_ConvertOggCallback = callback;
 }

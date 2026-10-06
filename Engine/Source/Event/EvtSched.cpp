@@ -70,8 +70,8 @@ void CloseContext(EvtContext* context) {
     context->m_critsect.Leave();
 }
 
-// PROVEN: 59127436 IDENTICAL
-// OFFSET: 0x008A0AF0
+// PROVEN: 59127436 IDENTICAL/UNPROVEN
+// OFFSET: 0x008A0AF0/0x1405E22D0
 uint32_t STORMAPI WaitPumpingNetwork(void* param) {
     SSyncObject* event = static_cast<SSyncObject*>(param);
 
@@ -82,7 +82,8 @@ uint32_t STORMAPI WaitPumpingNetwork(void* param) {
     return 0;
 }
 
-// OFFSET: %0x00805200
+// PROVEN: 623af5ef UNPROVEN/IDENTICAL
+// OFFSET: 0x008A0B30/0x1405E2310
 void IEvtSchedulerShutdown() {
     Event::s_shutdownEvent.Set();
 
@@ -158,7 +159,7 @@ void SynthesizePaint(EvtContext* context) {
     }
 }
 
-// PROVEN: c2d2af92 IDENTICAL
+// PROVEN: c2d2af92 IDENTICAL/NONE
 // OFFSET: 0x008A0DD0
 int32_t IEvtSchedulerIsContextInteractive(EvtContext* context) {
     return (context->m_schedFlags >> 1) & 1;

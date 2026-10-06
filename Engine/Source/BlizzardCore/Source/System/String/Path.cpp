@@ -43,13 +43,13 @@ const char* System_String::FindExtension(const char* str, int32_t offset) {
     }
 }
 
-// PROVEN: cb8c3331 IDENTICAL
+// PROVEN: cb8c3331 IDENTICAL/NONE
 // OFFSET: 0x007ADA50
 const char* Blizzard::String::FindExtension(const char* str) {
     return System_String::FindExtension(str, 1);
 }
 
-// PROVEN: 1912b7d3 IDENTICAL
+// PROVEN: 1912b7d3 IDENTICAL/NONE
 // OFFSET: 0x007ADA70
 const char* Blizzard::String::FindExtensionWithLeadingDot(const char* str) {
     return System_String::FindExtension(str, 0);
@@ -203,8 +203,8 @@ void Blizzard::String::ForceTrailingSeparator(char* dst, int32_t count, char sep
     dst[len + 1] = '\0';
 }
 
-// PROVEN: 11c06754 IDENTICAL
-// OFFSET: 0x007B5D60
+// PROVEN: 11c06754 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B5D60/0x1404ABDC0
 char* Blizzard::String::FindPathSeparatorReverse(char* str, uint32_t maxchars) {
     char* result = NULL;
 
@@ -219,7 +219,7 @@ char* Blizzard::String::FindPathSeparatorReverse(char* str, uint32_t maxchars) {
     return result;
 }
 
-// PROVEN: b8977a97 IDENTICAL
+// PROVEN: b8977a97 IDENTICAL/NONE
 // OFFSET: 0x007BD300
 void Blizzard::String::JoinPath(char* dst, int32_t count, const char* dir, const char* file) {
     if (!dst) {

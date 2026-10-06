@@ -103,8 +103,8 @@ void PlayerNameInitialize() {
     s_playerNameIcons = TextureCreate("Interface\\TargetingFrame\\UI-RaidTargetingIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0);
 }
 
-// PROVEN: 763e3951 IDENTICAL
-// OFFSET: 0x004E04D0
+// PROVEN: 763e3951 IDENTICAL/NONE
+// OFFSET: 0x004E04D0/0x140120870
 void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc) {
     if (desc) {
         desc->m_flags |= 0x2;
@@ -158,16 +158,16 @@ void PlayerNameUpdateEarly() {
     s_lastRenderFrame++;
 }
 
-// PROVEN: e0c19acc IDENTICAL
-// OFFSET: 0x004E0510
+// PROVEN: e0c19acc IDENTICAL/NONE
+// OFFSET: 0x004E0510/0x1401208B0
 void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
     if (desc) {
         desc->m_flags |= 0x1;
     }
 }
 
-// PROVEN: 5eb9b876 IDENTICAL
-// OFFSET: 0x004E0530
+// PROVEN: 5eb9b876 IDENTICAL/NONE
+// OFFSET: 0x004E0530/0x1401208D0
 bool PlayerNameShowing(PLAYERNAMEDESC* desc) {
     return desc && (desc->m_flags & 0x8);
 }
@@ -489,8 +489,8 @@ void PLAYERNAMEDESC::DeleteWorldText(uint32_t type) {
     }
 }
 
-// PROVEN: d6268158 IDENTICAL
-// OFFSET: 0x004E04E0
+// PROVEN: d6268158 IDENTICAL/NONE
+// OFFSET: 0x004E04E0/0x140120880
 void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type) {
     if (desc) {
         desc->DeleteWorldText(type);

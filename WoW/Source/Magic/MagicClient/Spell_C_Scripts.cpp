@@ -24,7 +24,7 @@ static int32_t Script_SpellIsTargeting(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 0c6e96e2 IDENTICAL
+// PROVEN: 0c6e96e2 IDENTICAL/NONE
 // OFFSET: 0x008A5AA0
 static int32_t Script_SpellCanTargetItem(lua_State* L) {
     if (s_targetingSpell && (s_needTargets & 0x4010)) {
@@ -281,7 +281,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CannotBeResurrected", &Script_CannotBeResurrected },
 };
 
-// PROVEN: db7bed79 IDENTICAL
+// PROVEN: db7bed79 IDENTICAL/NONE
 // OFFSET: 0x005F3B70
 void SpellRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -289,7 +289,7 @@ void SpellRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 56a174da IDENTICAL
+// PROVEN: 56a174da IDENTICAL/NONE
 // OFFSET: 0x005F3BA0
 void SpellUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

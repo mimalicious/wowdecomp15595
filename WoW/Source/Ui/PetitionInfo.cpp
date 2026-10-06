@@ -69,7 +69,7 @@ void SignatureNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
-// PROVEN: 3b87c374 IDENTICAL
+// PROVEN: 3b87c374 IDENTICAL/NONE
 // OFFSET: 0x009E0330
 void PetitionQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {

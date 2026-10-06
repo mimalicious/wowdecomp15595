@@ -49,8 +49,8 @@ void CMinigame_C::UpdateSetup(CDataStore* msg) {
     }
 }
 
-// PROVEN: 5a310b5e IDENTICAL
-// OFFSET: 0x00B38100
+// PROVEN: 5a310b5e IDENTICAL/NONE
+// OFFSET: 0x00B38100/0x140903FC0
 void CMinigameTicTacToe_C::UpdateState(CDataStore* msg) {
     for (uint32_t i = 0; i < 9; i++) {
         msg->Get(this->m_board[i]);

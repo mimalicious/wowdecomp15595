@@ -3,7 +3,7 @@
 // STATIC: %0x00B44628
 const DBCMeta World_PVP_AreaRec::s_meta = { "DBFilesClient\\World_PVP_Area.dbc", 7, 28, World_PVP_AreaRec::FixupStrings, 0 };
 
-// PROVEN: eadd3d2d IDENTICAL
+// PROVEN: eadd3d2d IDENTICAL/NONE
 // OFFSET: 0x00401000
 void World_PVP_AreaRec::FixupStrings(void* record, const char* strings) {
 }

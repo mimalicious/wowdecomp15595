@@ -772,7 +772,7 @@ static int32_t Script_PickupCompanion(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 981c6d15 IDENTICAL
+// PROVEN: 981c6d15 IDENTICAL/NONE
 // OFFSET: 0x00910D00
 static int32_t Script_GetShapeshiftForm(lua_State* L) {
     lua_pushnumber(L, CGSpellBook::GetShapeshiftForm(StringToBOOL(L, 1, 0)));

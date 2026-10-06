@@ -21,26 +21,26 @@ int32_t CSimpleRotationAnim::s_objectType;
 // STATIC: %0x00BB8BB0
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
-// PROVEN: 03507ea6 IDENTICAL
-// OFFSET: 0x005284E0
+// PROVEN: 03507ea6 IDENTICAL/NONE
+// OFFSET: 0x005284E0/0x140177A20
 bool CSimpleRotationAnim::IsA(int32_t type) {
     return type == CSimpleRotationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 25fa666a IDENTICAL
-// OFFSET: 0x00528510
+// PROVEN: 25fa666a IDENTICAL/NONE
+// OFFSET: 0x00528510/0x140177A40
 bool CSimpleRotationAnim::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleRotationAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleAnim::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: a77f96ee IDENTICAL
-// OFFSET: 0x00528570
+// PROVEN: a77f96ee IDENTICAL/NONE
+// OFFSET: 0x00528570/0x140177AA0
 const char* CSimpleRotationAnim::GetObjectTypeName() {
     return CSimpleRotationAnim::s_objectTypeName;
 }
 
-// PROVEN: 2b67fd3a IDENTICAL
-// OFFSET: 0x00528580
+// PROVEN: 2b67fd3a IDENTICAL/NONE
+// OFFSET: 0x00528580/0x140177AB0
 int32_t CSimpleRotationAnim::GetScriptMetaTable() {
     return CSimpleRotationAnim::s_metatable;
 }

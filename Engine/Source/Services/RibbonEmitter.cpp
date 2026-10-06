@@ -64,26 +64,26 @@ void CRibbonEmitter::SetTexSlot(uint32_t slot) {
     }
 }
 
-// PROVEN: ed7c78b8 IDENTICAL
+// PROVEN: ed7c78b8 IDENTICAL/NONE
 // OFFSET: 0x00B25350
 void CRibbonEmitter::SetAbove(float above) {
     this->m_above = above;
 }
 
-// PROVEN: 394715a7 IDENTICAL
+// PROVEN: 394715a7 IDENTICAL/NONE
 // OFFSET: 0x00B25370
 void CRibbonEmitter::SetBelow(float below) {
     this->m_below = below;
 }
 
-// PROVEN: 2ada7a2f IDENTICAL
+// PROVEN: 2ada7a2f IDENTICAL/NONE
 // OFFSET: 0x00B25390
 void CRibbonEmitter::SetGravity(float gravity) {
     this->m_gravity = gravity;
 }
 
-// PROVEN: 04e36dac IDENTICAL
-// OFFSET: 0x00B253B0
+// PROVEN: 04e36dac IDENTICAL/IDENTICAL
+// OFFSET: 0x00B253B0/0x1408ED370
 int32_t CRibbonEmitter::IsDead() {
     return this->m_readPos == this->m_writePos;
 }
@@ -172,7 +172,7 @@ void CRibbonEmitter::SetColor(float r, float g, float b) {
     this->m_color.Set(this->m_color.a * 255.0f, r, g, b);
 }
 
-// PROVEN: a59571db IDENTICAL
+// PROVEN: a59571db IDENTICAL/NONE
 // OFFSET: 0x00B25A70
 void CRibbonEmitter::SetAlpha(float alpha) {
     this->m_color.a = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f + 0.5f));
@@ -195,8 +195,8 @@ void CRibbonEmitter::ChangeFrameOfReference(const C44Matrix* matrix) {
     }
 }
 
-// PROVEN: 27581724 IDENTICAL
-// OFFSET: 0x00B25EF0
+// PROVEN: 27581724 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B25EF0/0x1408EDFC0
 uint32_t CRibbonEmitter::GetNumBatches() {
     return this->m_materials.Count();
 }
@@ -362,8 +362,8 @@ static void DuplicateTextures(const TSGrowableArray<CTexture*>& source, TSGrowab
     }
 }
 
-// PROVEN: e8398ad1 IDENTICAL
-// OFFSET: 0x00B26720
+// PROVEN: e8398ad1 IDENTICAL/UNPROVEN
+// OFFSET: 0x00B26720/0x1408EE8C0
 CRibbonEmitter::~CRibbonEmitter() {
     this->CloseTextureHandles();
     this->m_flags &= ~0x2;

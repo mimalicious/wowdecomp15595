@@ -9,7 +9,7 @@
 // STATIC: #0x00C0E518
 WOWGUID CGTabardCreationFrame::m_vendor;
 
-// PROVEN: b2cf592f IDENTICAL
+// PROVEN: b2cf592f IDENTICAL/NONE
 // OFFSET: 0x009DFF70
 void CGTabardCreationFrame::EnterWorld() {
     CGTabardCreationFrame::m_vendor = WOWGUID();
@@ -45,7 +45,7 @@ void CGTabardCreationFrame::Close() {
     FrameScript_SignalEvent(SCRIPT_EVENT_CLOSE_TABARD_FRAME, NULL);
 }
 
-// PROVEN: 13228d94 IDENTICAL
+// PROVEN: 13228d94 IDENTICAL/NONE
 // OFFSET: 0x00B0F260
 uint32_t GuildGetTabardCost() {
     return 100000;

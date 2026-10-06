@@ -86,7 +86,7 @@ typedef enum {
 	[SEE_ALSO]
 ]
 */
-// PROVEN: be519a96 IDENTICAL
+// PROVEN: be519a96 IDENTICAL/NONE
 // OFFSET: 0x00AFE4C0
 FMOD_RESULT ChannelDSound::init(int index, SystemI *system, Output *output, DSPI *dspmixtarget)
 {
@@ -124,7 +124,7 @@ FMOD_RESULT ChannelDSound::init(int index, SystemI *system, Output *output, DSPI
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 84f13590 IDENTICAL
+// PROVEN: 84f13590 IDENTICAL/NONE
 // OFFSET: 0x00AFE520
 FMOD_RESULT ChannelDSound::alloc()
 {
@@ -272,7 +272,7 @@ FMOD_RESULT ChannelDSound::alloc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e6bced45 IDENTICAL
+// PROVEN: e6bced45 IDENTICAL/NONE
 // OFFSET: 0x00AFE780
 FMOD_RESULT ChannelDSound::start()
 {
@@ -365,7 +365,7 @@ FMOD_RESULT ChannelDSound::start()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d2c8f8f4 IDENTICAL
+// PROVEN: d2c8f8f4 IDENTICAL/NONE
 // OFFSET: 0x00AFE800
 FMOD_RESULT ChannelDSound::stop(bool ignoreenddelay, bool resetstate)
 {
@@ -617,7 +617,7 @@ FMOD_RESULT ChannelDSound::setVolume(float volume)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 102b4362 IDENTICAL
+// PROVEN: 102b4362 IDENTICAL/NONE
 // OFFSET: 0x00AFEAA0
 FMOD_RESULT ChannelDSound::setFrequency(float frequency)
 {
@@ -659,7 +659,7 @@ FMOD_RESULT ChannelDSound::setFrequency(float frequency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 70d2ca46 IDENTICAL
+// PROVEN: 70d2ca46 IDENTICAL/NONE
 // OFFSET: 0x00AFEB20
 FMOD_RESULT ChannelDSound::setPan(float pan, float fbpan)
 {
@@ -855,7 +855,7 @@ FMOD_RESULT ChannelDSound::getPosition(unsigned int *position, FMOD_TIMEUNIT pos
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 59823825 IDENTICAL
+// PROVEN: 59823825 IDENTICAL/NONE
 // OFFSET: 0x00AFEBF0
 FMOD_RESULT ChannelDSound::set3DAttributes()
 {
@@ -1016,7 +1016,7 @@ FMOD_RESULT ChannelDSound::set3DAttributes()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3579e884 IDENTICAL
+// PROVEN: 3579e884 IDENTICAL/NONE
 // OFFSET: 0x00AFEF70
 FMOD_RESULT ChannelDSound::set3DMinMaxDistance()
 {
@@ -1082,7 +1082,7 @@ FMOD_RESULT ChannelDSound::set3DMinMaxDistance()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cc435f3e IDENTICAL
+// PROVEN: cc435f3e IDENTICAL/NONE
 // OFFSET: 0x00AFF020
 FMOD_RESULT ChannelDSound::set3DOcclusion(float directOcclusion, float reverbOcclusion)
 {
@@ -1139,7 +1139,7 @@ FMOD_RESULT ChannelDSound::set3DOcclusion(float directOcclusion, float reverbOcc
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 97b9e01c IDENTICAL
+// PROVEN: 97b9e01c IDENTICAL/NONE
 // OFFSET: 0x00AFF110
 FMOD_RESULT ChannelDSound::isPlaying(bool *isplaying, bool includethreadlatency)
 {
@@ -1201,7 +1201,7 @@ FMOD_RESULT ChannelDSound::isPlaying(bool *isplaying, bool includethreadlatency)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8db625f9 IDENTICAL
+// PROVEN: 8db625f9 IDENTICAL/NONE
 // OFFSET: 0x00AFF1A0
 FMOD_RESULT ChannelDSound::setMode(FMOD_MODE mode)
 {

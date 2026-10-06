@@ -190,7 +190,7 @@ void CGTradeSkillInfo::CommitPendingRecast(int32_t spellId) {
     CGTradeSkillInfo::m_pendingRecastSpellID = 0;
 }
 
-// PROVEN: f044a112 IDENTICAL
+// PROVEN: f044a112 IDENTICAL/NONE
 // OFFSET: 0x0098D200
 static void TradeSkillListItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (CGTradeSkillInfo::m_itemsPending && !--CGTradeSkillInfo::m_itemsPending) {
@@ -699,8 +699,8 @@ const char* GetInventorySlotToken(int32_t slot) {
     }
 }
 
-// PROVEN: 4b449387 IDENTICAL
-// OFFSET: 0x0098D1D0
+// PROVEN: 4b449387 IDENTICAL/NONE
+// OFFSET: 0x0098D1D0/0x14070B690
 static void TradeSkillLinkNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGTradeSkillInfo::SetLink(static_cast<const char*>(param));

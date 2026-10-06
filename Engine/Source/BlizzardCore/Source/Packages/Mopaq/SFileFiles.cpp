@@ -9,7 +9,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// PROVEN: b36c41a9 IDENTICAL
+// PROVEN: b36c41a9 IDENTICAL/NONE
 // OFFSET: 0x007AB030
 void Blizzard::Mopaq::HSFILERecord::SetLogicalArchive(System_SFile::ARCHIVEREC* archive) {
     if (this->m_handle) {
@@ -200,8 +200,8 @@ int64_t Blizzard::Mopaq::SFileGetFileSize(HSFILERecord* file, uint32_t* sizeHigh
     return file->GetFileSize();
 }
 
-// PROVEN: 81522587 IDENTICAL
-// OFFSET: 0x007B1C20
+// PROVEN: 81522587 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B1C20/0x1404A6CE0
 bool Blizzard::Mopaq::SFileGetFileName(HSFILERecord* file, char* name, uint32_t size) {
     Blizzard::String::Copy(name, file->m_handle ? file->m_handle->m_name : "", size);
     return true;
@@ -221,14 +221,14 @@ bool Blizzard::Mopaq::SFileGetLogicalArchive(HSFILERecord* file, System_SFile::A
     return *archive != NULL;
 }
 
-// PROVEN: edf89f07 IDENTICAL
-// OFFSET: 0x007B1BE0
+// PROVEN: edf89f07 IDENTICAL/UNPROVEN
+// OFFSET: 0x007B1BE0/0x1404A6C90
 bool Blizzard::Mopaq::SFileGetFileMD5(HSFILERecord* file, Blizzard::Util::Digest<16>* md5) {
     *md5 = file->m_handle ? file->m_handle->m_blockEntry.m_md5 : System_SFile::s_emptyMd5;
     return *md5 != System_SFile::s_emptyMd5;
 }
 
-// PROVEN: f5b74e59 IDENTICAL
+// PROVEN: f5b74e59 IDENTICAL/NONE
 // OFFSET: 0x007B2910
 bool Blizzard::Mopaq::SFileGetDeltaDigests(HSFILERecord* file, Blizzard::Util::Digest<16>& source, Blizzard::Util::Digest<16>& target) {
     if (!file || !file->m_handle || !file->m_handle->m_delta) {

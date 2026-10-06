@@ -89,8 +89,8 @@ static void ReloadShadersCallback(const char* fileName) {
     g_theGxDevicePtr->ShaderReloadAll();
 }
 
-// PROVEN: 8fdcd3b0 IDENTICAL
-// OFFSET: 0x004319F0
+// PROVEN: 8fdcd3b0 IDENTICAL/IDENTICAL
+// OFFSET: 0x004319F0/0x14003A2B0
 void CShaderEffect::AddRef() {
     this->m_refCount++;
 }
@@ -116,8 +116,8 @@ void CShaderEffect::InitEffect(const char* vertexShader, const char* hullShader,
     }
 }
 
-// PROVEN: ce4838bb IDENTICAL
-// OFFSET: 0x00431A00
+// PROVEN: ce4838bb IDENTICAL/IDENTICAL
+// OFFSET: 0x00431A00/0x14003A2C0
 void CShaderEffect::InitFixedFuncPass(const EGxTexOp* colorOps, const EGxTexOp* alphaOps, uint32_t count) {
     this->m_fixedFuncPassCount = count;
 
@@ -216,8 +216,8 @@ void CShaderEffect::ComputeLocalLights(LocalLights* localLights, uint32_t lightC
     }
 }
 
-// PROVEN: f2b44fbb IDENTICAL
-// OFFSET: 0x00431A40
+// PROVEN: f2b44fbb IDENTICAL/IDENTICAL
+// OFFSET: 0x00431A40/0x14003A300
 void CShaderEffect::SetUsePcfFiltering(uint32_t usePcfFiltering) {
     if (usePcfFiltering) {
         CShaderEffect::s_usePcfFiltering = 1;
@@ -230,7 +230,7 @@ void CShaderEffect::SetUsePcfFiltering(uint32_t usePcfFiltering) {
     CShaderEffect::s_usePcfFiltering = 0;
 }
 
-// PROVEN: 3dda5674 IDENTICAL
+// PROVEN: 3dda5674 IDENTICAL/NONE
 // OFFSET: 0x00431A70
 void CShaderEffect::GetClipPlane(C4Plane& plane) {
     plane = CShaderEffect::s_clipPlane;
@@ -247,7 +247,7 @@ void CShaderEffect::SetClipPlane(const C4Plane& plane) {
     }
 }
 
-// PROVEN: fc27580e IDENTICAL
+// PROVEN: fc27580e IDENTICAL/NONE
 // OFFSET: 0x00431AA0
 int32_t CShaderEffect::GetClipEnabled() {
     return CShaderEffect::s_clipEnabled;
@@ -263,19 +263,19 @@ void CShaderEffect::FlushFogParams() {
     g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 2, &CShaderEffect::s_fogColorAlphaRef.x, 1);
 }
 
-// PROVEN: d0bf0f63 IDENTICAL
-// OFFSET: 0x00431AB0
+// PROVEN: d0bf0f63 IDENTICAL/IDENTICAL
+// OFFSET: 0x00431AB0/0x14003A370
 int32_t CShaderEffect::TesselationEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_tesselationFactor != 0.0f;
 }
 
-// PROVEN: 4bd2c4b5 IDENTICAL
-// OFFSET: 0x00431AE0
+// PROVEN: 4bd2c4b5 IDENTICAL/IDENTICAL
+// OFFSET: 0x00431AE0/0x14003A3A0
 int32_t CShaderEffect::DisplacementEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_displFactor != 0.0f;
 }
 
-// PROVEN: d251fdb9 IDENTICAL
+// PROVEN: d251fdb9 IDENTICAL/NONE
 // OFFSET: 0x00431B10
 int32_t CShaderEffect::TerrainDisplEnabled() {
     return CShaderEffect::s_enableShaders && CShaderEffect::s_terrainDisplFactor != 0.0f;
@@ -788,19 +788,19 @@ CShaderEffect::~CShaderEffect() {
     }
 }
 
-// PROVEN: 52e2fe92 IDENTICAL
+// PROVEN: 52e2fe92 IDENTICAL/NONE
 // OFFSET: 0x00434610
 CShaderEffect::CShaderEffect() {
     this->m_refCount = 1;
 }
 
-// PROVEN: 52c8bafa IDENTICAL
+// PROVEN: 52c8bafa IDENTICAL/NONE
 // OFFSET: 0x0077A4A0
 CGxShaderPermute* CShaderEffect::GetVertexPermute(uint32_t permute) {
     return this->m_vertexShader ? &this->m_vertexShader->m_permutes[permute] : NULL;
 }
 
-// PROVEN: 89ea3ef0 IDENTICAL
+// PROVEN: 89ea3ef0 IDENTICAL/NONE
 // OFFSET: 0x0077A4C0
 CGxShaderPermute* CShaderEffect::GetPixelPermute(uint32_t permute) {
     return this->m_pixelShader ? &this->m_pixelShader->m_permutes[permute] : NULL;

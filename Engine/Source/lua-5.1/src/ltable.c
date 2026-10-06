@@ -190,7 +190,7 @@ int luaH_next (lua_State *L, Table *t, StkId key) {
 */
 
 
-// PROVEN: 5cf6e2a0 IDENTICAL
+// PROVEN: 5cf6e2a0 IDENTICAL/NONE
 // OFFSET: 0x0042AA00
 static int computesizes (int nums[], int *narray) {
   int i;
@@ -225,8 +225,8 @@ static int countint (const TValue *key, int *nums) {
 }
 
 
-// PROVEN: bc544fe9 IDENTICAL
-// OFFSET: 0x0042AA80
+// PROVEN: bc544fe9 IDENTICAL/NONE
+// OFFSET: 0x0042AA80/0x1400318A0
 static int numusearray (const Table *t, int *nums) {
   int lg;
   int ttlg;  /* 2^lg */
@@ -476,8 +476,8 @@ const TValue *luaH_getnum (Table *t, int key) {
 /*
 ** search function for strings
 */
-// PROVEN: f112f8b1 IDENTICAL
-// OFFSET: 0x0042AE80
+// PROVEN: f112f8b1 IDENTICAL/NONE
+// OFFSET: 0x0042AE80/0x140031C60
 const TValue *luaH_getstr (Table *t, TString *key) {
   Node *n = hashstr(t, key);
   do {  /* check whether `key' is somewhere in the chain */

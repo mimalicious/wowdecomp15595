@@ -3,7 +3,7 @@
 // STATIC: %0x00B463AC
 const DBCMeta ItemArmorTotalRec::s_meta = { "DBFilesClient\\ItemArmorTotal.dbc", 6, 24, ItemArmorTotalRec::FixupStrings, 0 };
 
-// PROVEN: b0f7843b IDENTICAL
+// PROVEN: b0f7843b IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ItemArmorTotalRec::FixupStrings(void* record, const char* strings) {
 }

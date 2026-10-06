@@ -449,8 +449,8 @@ RealmConnection::~RealmConnection() {
 void RealmResponse::JoinRealmResult(uint32_t realmID, int32_t result, int32_t a3, int32_t a4, int32_t a5) {
 }
 
-// PROVEN: 01c03df0 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 01c03df0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void RealmResponse::OnChatPlayerNotFound(RealmConnection* connection, const char* name) {
 }
 
@@ -466,12 +466,12 @@ void RealmResponse::OnChangeArenaTeamRating(RealmConnection* connection, bool su
 void RealmResponse::OnServerInfo(RealmConnection* connection, int32_t a2, int32_t a3, char* a4) {
 }
 
-// PROVEN: d7d1893d IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: d7d1893d IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void RealmResponse::HandleCharacterLoginFailed(RealmConnection* connection, uint8_t result) {
 }
 
-// PROVEN: 44e6f046 IDENTICAL
-// OFFSET: 0x00847950
+// PROVEN: 44e6f046 IDENTICAL/IDENTICAL
+// OFFSET: 0x00847950/0x1407D7E80
 void RealmResponse::HandleReceivingObjects(RealmConnection* connection) {
 }

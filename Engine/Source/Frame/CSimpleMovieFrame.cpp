@@ -540,25 +540,25 @@ CSimpleMovieFrame::CSimpleMovieFrame(CSimpleFrame* parent) : CSimpleFrame(parent
     }
 }
 
-// PROVEN: bbd5c1ae IDENTICAL
+// PROVEN: bbd5c1ae IDENTICAL/NONE
 // OFFSET: 0x00524710
 const char* CSimpleMovieFrame::GetObjectTypeName() {
     return CSimpleMovieFrame::s_objectTypeName;
 }
 
-// PROVEN: 630c5040 IDENTICAL
-// OFFSET: 0x00524720
+// PROVEN: 630c5040 IDENTICAL/NONE
+// OFFSET: 0x00524720/0x140172F10
 int32_t CSimpleMovieFrame::GetScriptMetaTable() {
     return CSimpleMovieFrame::s_metatable;
 }
 
-// PROVEN: 7184a3e2 IDENTICAL
-// OFFSET: 0x00524740
+// PROVEN: 7184a3e2 IDENTICAL/NONE
+// OFFSET: 0x00524740/0x140172F30
 bool CSimpleMovieFrame::IsA(int32_t type) {
     return type == CSimpleMovieFrame::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: 56b800de IDENTICAL
+// PROVEN: 56b800de IDENTICAL/NONE
 // OFFSET: 0x00524780
 bool CSimpleMovieFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMovieFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);

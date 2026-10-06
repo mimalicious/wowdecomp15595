@@ -83,7 +83,7 @@ void SI2::VoiceChat_DestroyChatSystem() {
     SE3::DestroyChatSystem();
 }
 
-// PROVEN: a99efdd2 IDENTICAL
+// PROVEN: a99efdd2 IDENTICAL/NONE
 // OFFSET: 0x00630110
 int32_t SI2::VoiceChat_IsVoiceChatInitialized() {
     return SE3::IsChatSoundInitialized();
@@ -135,7 +135,7 @@ static void ComputeAverageLevel(float* data, uint32_t count) {
     s_microphoneSignalLevel = static_cast<int32_t>(sqrt(sum / count) * 100.0f);
 }
 
-// PROVEN: 19e34e6e IDENTICAL
+// PROVEN: 19e34e6e IDENTICAL/NONE
 // OFFSET: 0x00630360
 int32_t SI2::VoiceChat_GetCurrentMicrophoneSignalLevel() {
     return SE3::IsChatSoundInitialized() != 0 ? s_microphoneSignalLevel : 0;
@@ -179,8 +179,8 @@ int32_t SI2::VoiceChat_Play(uint32_t& handle) {
     return 0;
 }
 
-// PROVEN: 9aa575c3 IDENTICAL
-// OFFSET: 0x00630370
+// PROVEN: 9aa575c3 IDENTICAL/NONE
+// OFFSET: 0x00630370/0x1402C4F10
 static void MonitorCallback(float* data, uint32_t count) {
     if (SE3::IsChatSoundInitialized()) {
         ComputeAverageLevel(data, count);
@@ -247,7 +247,7 @@ void SI2::VoiceChat_InitCapture(float sampleRate) {
     SE3::SetUserMonitorDSPCallback(MonitorCallback);
 }
 
-// PROVEN: 49ff57ae IDENTICAL
+// PROVEN: 49ff57ae IDENTICAL/NONE
 // OFFSET: 0x00630550
 void SI2::VoiceChat_SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks) {
     if (SE3::IsChatSoundInitialized()) {
@@ -297,7 +297,7 @@ bool SI2::VoiceChat_IsRecordingLoopbackSound() {
     return SE3::IsCapturing() && SE3::AlternateCaptureCallbackIsActive();
 }
 
-// PROVEN: 5003db86 IDENTICAL
+// PROVEN: 5003db86 IDENTICAL/NONE
 // OFFSET: 0x00630700
 void SI2::VoiceChat_ActivatePrimaryCaptureCallback() {
     if (SE3::IsChatSoundInitialized()) {
@@ -305,7 +305,7 @@ void SI2::VoiceChat_ActivatePrimaryCaptureCallback() {
     }
 }
 
-// PROVEN: cfa2b2de IDENTICAL
+// PROVEN: cfa2b2de IDENTICAL/NONE
 // OFFSET: 0x00630710
 void SI2::VoiceChat_StopRecordingLoopbackSound() {
     if (SE3::IsChatSoundInitialized()) {

@@ -624,7 +624,7 @@ void CGxDeviceD3d11::IStateSync() {
     this->IStateSyncDepth();
 }
 
-// PROVEN: 1d350db8 IDENTICAL
+// PROVEN: 1d350db8 IDENTICAL/NONE
 // OFFSET: 0x00870160
 void CGxDeviceD3d11::CapsWindowSize(CRect& rect) {
     rect = this->DeviceCurWindow();
@@ -865,7 +865,7 @@ void CGxDeviceD3d11::XformSetProjection(const C44Matrix& matrix) {
     this->m_projNative = projNative;
 }
 
-// PROVEN: d54f1b1c IDENTICAL
+// PROVEN: d54f1b1c IDENTICAL/NONE
 // OFFSET: 0x00870E50
 void CGxDeviceD3d11::XformSetView(const C44Matrix& matrix) {
     CGxDevice::XformSetView(matrix);

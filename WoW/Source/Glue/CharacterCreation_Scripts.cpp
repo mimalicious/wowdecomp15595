@@ -507,7 +507,7 @@ static int32_t Script_SetSelectedRace(lua_State* L) {
     return 0;
 }
 
-// PROVEN: b820d8ae IDENTICAL
+// PROVEN: b820d8ae IDENTICAL/NONE
 // OFFSET: 0x0080F780
 static int32_t Script_UpdateCustomizationBackground(lua_State* L) {
     CCharacterCreation::SetSelectedRace(CCharacterCreation::m_raceIndex);
@@ -525,7 +525,7 @@ static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 75ca45c5 IDENTICAL
+// PROVEN: 75ca45c5 IDENTICAL/NONE
 // OFFSET: 0x0080C320
 static int32_t Script_PaidChange_GetPreviousRaceIndex(lua_State* L) {
     lua_pushnumber(L, 0.0);
@@ -568,7 +568,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetCreateBackgroundModel", &Script_GetCreateBackgroundModel },
 };
 
-// PROVEN: a3c174fa IDENTICAL
+// PROVEN: a3c174fa IDENTICAL/NONE
 // OFFSET: 0x00950110
 void CharacterCreateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -576,7 +576,7 @@ void CharacterCreateRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: fe23ed3e IDENTICAL
+// PROVEN: fe23ed3e IDENTICAL/NONE
 // OFFSET: 0x00950140
 void CharacterCreateUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

@@ -557,7 +557,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTrackingTexture", &Script_GetTrackingTexture },
 };
 
-// PROVEN: 79263025 IDENTICAL
+// PROVEN: 79263025 IDENTICAL/NONE
 // OFFSET: 0x009A3D00
 void MinimapRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -565,7 +565,7 @@ void MinimapRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: eb92dd39 IDENTICAL
+// PROVEN: eb92dd39 IDENTICAL/NONE
 // OFFSET: 0x009A3D30
 void MinimapUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

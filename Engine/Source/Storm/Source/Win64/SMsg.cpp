@@ -55,8 +55,8 @@ static void DeleteWindow(HWND window) {
     }
 }
 
-// PROVEN: 25c0a963 IDENTICAL
-// OFFSET: 0x004C1050
+// PROVEN: 25c0a963 IDENTICAL/IDENTICAL
+// OFFSET: 0x004C1050/0x1400FB8E0
 int32_t STORMAPI SMsgDestroy() {
     WNDREC* rec;
 
@@ -67,7 +67,7 @@ int32_t STORMAPI SMsgDestroy() {
     return 1;
 }
 
-// PROVEN: 0c5f8d8e IDENTICAL
+// PROVEN: 0c5f8d8e IDENTICAL/NONE
 // OFFSET: 0x004C1070
 void SDebugPrintf(const char* format, ...) {
     char buffer[4096];

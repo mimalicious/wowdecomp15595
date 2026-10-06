@@ -56,7 +56,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "EnableSubtitles", &Script_EnableSubtitles },
 };
 
-// PROVEN: 2032fcc3 IDENTICAL
+// PROVEN: 2032fcc3 IDENTICAL/NONE
 // OFFSET: 0x0053B630
 void CSimpleMovieFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);

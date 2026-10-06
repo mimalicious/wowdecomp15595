@@ -25,13 +25,13 @@ void C3Spline_Bezier3::EvaluateDer1(uint32_t seg, float t, C3Vector& vel) {
     C3Spline::EvaluateDer1(3 * seg, t, C44Matrix(s_bezier3Der1), vel);
 }
 
-// PROVEN: 669731df IDENTICAL
+// PROVEN: 669731df IDENTICAL/NONE
 // OFFSET: 0x004C9B70
 float C3Spline_Bezier3::ILength() {
     return C3Spline::ILength(this->m_pointCount / 3);
 }
 
-// PROVEN: b35d2fb8 IDENTICAL
+// PROVEN: b35d2fb8 IDENTICAL/NONE
 // OFFSET: 0x004C9B90
 void C3Spline_Bezier3::IValidateCache() {
     uint32_t segCount = this->m_pointCount / 3;

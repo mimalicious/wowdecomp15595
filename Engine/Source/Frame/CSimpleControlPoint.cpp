@@ -22,26 +22,26 @@ int32_t CSimpleControlPoint::s_objectType;
 // STATIC: %0x00BB8BB8
 const char* CSimpleControlPoint::s_objectTypeName = "ControlPoint";
 
-// PROVEN: 1e3c45e4 IDENTICAL
+// PROVEN: 1e3c45e4 IDENTICAL/NONE
 // OFFSET: 0x00527DB0
 bool CSimpleControlPoint::IsA(int32_t type) {
     return type == CSimpleControlPoint::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: ec1fffa0 IDENTICAL
-// OFFSET: 0x00527DE0
+// PROVEN: ec1fffa0 IDENTICAL/NONE
+// OFFSET: 0x00527DE0/0x140177160
 bool CSimpleControlPoint::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleControlPoint::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: d20324c8 IDENTICAL
-// OFFSET: 0x00527E20
+// PROVEN: d20324c8 IDENTICAL/NONE
+// OFFSET: 0x00527E20/0x1401771A0
 const char* CSimpleControlPoint::GetObjectTypeName() {
     return CSimpleControlPoint::s_objectTypeName;
 }
 
-// PROVEN: 687d86fd IDENTICAL
-// OFFSET: 0x00527E30
+// PROVEN: 687d86fd IDENTICAL/NONE
+// OFFSET: 0x00527E30/0x1401771B0
 int32_t CSimpleControlPoint::GetScriptMetaTable() {
     return CSimpleControlPoint::s_metatable;
 }

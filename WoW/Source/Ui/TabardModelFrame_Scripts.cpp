@@ -246,7 +246,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "CanSaveTabardNow", &Script_CanSaveTabardNow },
 };
 
-// PROVEN: 3e29c68b IDENTICAL
+// PROVEN: 3e29c68b IDENTICAL/NONE
 // OFFSET: 0x00A05F00
 void CGTabardModelFrame::RegisterScriptMethods(lua_State* L) {
     CGCharacterModelBase::RegisterScriptMethods(L);

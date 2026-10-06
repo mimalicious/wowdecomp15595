@@ -3,7 +3,7 @@
 // STATIC: %0x00B43EDC
 const DBCMeta CharacterFacialHairStylesRec::s_meta = { "DBFilesClient\\CharacterFacialHairStyles.dbc", 4, 36, CharacterFacialHairStylesRec::FixupStrings, 0 };
 
-// PROVEN: 88557fa6 IDENTICAL
+// PROVEN: 88557fa6 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CharacterFacialHairStylesRec::FixupStrings(void* record, const char* strings) {
 }

@@ -1070,7 +1070,7 @@ static int32_t Script_IsLoggedIn(lua_State* L) {
     return 1;
 }
 
-// PROVEN: a65fb5b9 IDENTICAL
+// PROVEN: a65fb5b9 IDENTICAL/NONE
 // OFFSET: 0x0044C0F0
 static int32_t Script_CanSwitchVehicleSeat(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::GetActive();
@@ -1200,7 +1200,7 @@ static int32_t Script_GetPetSpellBonusDamage(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 51a82bdd IDENTICAL
+// PROVEN: 51a82bdd IDENTICAL/NONE
 // OFFSET: 0x00456A50
 static int32_t Script_IsIndoors(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2820,7 +2820,7 @@ static int32_t Script_GetPVPRankInfo(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 107dbf5a IDENTICAL
+// PROVEN: 107dbf5a IDENTICAL/NONE
 // OFFSET: 0x0080C320
 static int32_t Script_GetPVPRankProgress(lua_State* L) {
     lua_pushnumber(L, 0.0);
@@ -2986,8 +2986,8 @@ static int32_t Script_UnitIsFriend(lua_State* L) {
     return 1;
 }
 
-// PROVEN: cc73a513 IDENTICAL
-// OFFSET: 0x0044C0D0
+// PROVEN: cc73a513 IDENTICAL/NONE
+// OFFSET: 0x0044C0D0/0x140059710
 static void PortraitQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         CGGameUI::UnitModelUpdate(guid, 3);
@@ -4200,16 +4200,16 @@ static FrameScript_Method s_SystemFunctions[] = {
     { "GetAccountExpansionLevel", &Script_GetAccountExpansionLevel }
 };
 
-// PROVEN: 130561a8 IDENTICAL
-// OFFSET: 0x0044E0F0
+// PROVEN: 130561a8 IDENTICAL/NONE
+// OFFSET: 0x0044E0F0/0x14005C340
 void SystemRegisterFunctions() {
     for (uint32_t i = 0; i < sizeof(s_SystemFunctions) / sizeof(s_SystemFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_SystemFunctions[i].m_name, s_SystemFunctions[i].m_method);
     }
 }
 
-// PROVEN: 88e5031e IDENTICAL
-// OFFSET: 0x0044E120
+// PROVEN: 88e5031e IDENTICAL/NONE
+// OFFSET: 0x0044E120/0x14005C390
 void SystemUnregisterFunctions() {
     for (uint32_t i = 0; i < sizeof(s_SystemFunctions) / sizeof(s_SystemFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_SystemFunctions[i].m_name);

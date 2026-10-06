@@ -203,7 +203,7 @@ static int32_t Script_strreplace(lua_State* L) {
     return 2;
 }
 
-// PROVEN: 0bd04a00 IDENTICAL
+// PROVEN: 0bd04a00 IDENTICAL/NONE
 // OFFSET: 0x00839DF0
 static int32_t Script_strconcat(lua_State* L) {
     lua_concat(L, lua_gettop(L));
@@ -266,7 +266,8 @@ static int32_t Script_issecurevariable(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x007A0390
+// PROVEN: f0a04b2a DIFFERENT/IDENTICAL
+// OFFSET: 0x00839F60/0x1405644B0
 static int32_t Script_forceinsecure(lua_State* L) {
     if (!lua_tainted && lua_taintexpected && !lua_taintedclosure) {
         lua_tainted = "*** TaintForced ***";
@@ -391,7 +392,7 @@ static int32_t Script_hooksecurefunc(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 9e315221 IDENTICAL
+// PROVEN: 9e315221 IDENTICAL/NONE
 // OFFSET: 0x0083A3A0
 static int32_t Script_debugprofilestart(lua_State* L) {
     s_debugProfileStart = OsGetAsyncTimeClocks();
@@ -399,7 +400,7 @@ static int32_t Script_debugprofilestart(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 66c47298 IDENTICAL
+// PROVEN: 66c47298 IDENTICAL/NONE
 // OFFSET: 0x0083A3C0
 static int32_t Script_debugprofilestop(lua_State* L) {
     lua_pushnumber(L, (static_cast<int64_t>(OsGetAsyncTimeClocks()) - s_debugProfileStart) * s_scriptTimeDivisor);
@@ -423,7 +424,7 @@ static int32_t Script_seterrorhandler(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 3ca731b5 IDENTICAL
+// PROVEN: 3ca731b5 IDENTICAL/NONE
 // OFFSET: 0x0083A470
 static int32_t Script_geterrorhandler(lua_State* L) {
     lua_rawgeti(L, LUA_REGISTRYINDEX, s_errorHandlerFunc);
@@ -551,7 +552,7 @@ static int32_t Script_time(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 65976162 IDENTICAL
+// PROVEN: 65976162 IDENTICAL/NONE
 // OFFSET: 0x0083A900
 static int32_t Script_difftime(lua_State* L) {
     lua_pushnumber(L, difftime(static_cast<time_t>(luaL_checknumber(L, 1)), static_cast<time_t>(luaL_optnumber(L, 2, 0))));
@@ -678,7 +679,7 @@ static int32_t Script_strlenutf8(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c892ff89 IDENTICAL
+// PROVEN: c892ff89 IDENTICAL/NONE
 // OFFSET: 0x0083D010
 static int32_t Script_debuglocals(lua_State* L) {
     if (!s_inErrorHandler) {
@@ -718,44 +719,44 @@ static int32_t Script_debuglocals(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 4eefd445 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 4eefd445 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debugload(lua_State* L) {
     return 0;
 }
 
-// PROVEN: fb936623 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: fb936623 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debuginfo(lua_State* L) {
     return 0;
 }
 
-// PROVEN: f8ab9dc4 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: f8ab9dc4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debugprint(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 170149b4 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 170149b4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debugdump(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 435cee3b IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 435cee3b IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debugbreak(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 4f83db2f IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 4f83db2f IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debughook(lua_State* L) {
     return 0;
 }
 
-// PROVEN: 01177d56 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: 01177d56 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_debugtimestamp(lua_State* L) {
     return 0;
 }

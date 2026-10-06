@@ -3,7 +3,7 @@
 // STATIC: %0x00B46138
 const DBCMeta ItemDamageWandRec::s_meta = { "DBFilesClient\\ItemDamageWand.dbc", 3, 36, ItemDamageWandRec::FixupStrings, 0 };
 
-// PROVEN: e8de6c45 IDENTICAL
+// PROVEN: e8de6c45 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ItemDamageWandRec::FixupStrings(void* record, const char* strings) {
 }

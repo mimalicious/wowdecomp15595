@@ -214,8 +214,8 @@ void CGDressUpModelFrame::TryOn(int32_t itemId, const uint32_t* enchants, int32_
     this->TryOnWithVisual(itemId, visual, hand);
 }
 
-// PROVEN: 8c1ea975 IDENTICAL
-// OFFSET: 0x00A04FF0
+// PROVEN: 8c1ea975 IDENTICAL/NONE
+// OFFSET: 0x00A04FF0/0x1407A4790
 static void DressUpItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         static_cast<CGDressUpModelFrame*>(param)->TryOn(id, NULL, -1);

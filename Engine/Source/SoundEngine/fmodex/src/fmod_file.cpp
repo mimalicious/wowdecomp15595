@@ -215,8 +215,8 @@ FMOD_RESULT FileThread::threadFunc()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 0e25e0c7 IDENTICAL
-// OFFSET: 0x00A926E0
+// PROVEN: 0e25e0c7 IDENTICAL/NONE
+// OFFSET: 0x00A926E0/0x1408521E0
 FileThread::FileThread()
 {
     mFileListCrit    = 0;
@@ -281,8 +281,8 @@ FMOD_RESULT FileThread::init(int devicetype, bool owned)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 522c42ba IDENTICAL
-// OFFSET: 0x00A91670
+// PROVEN: 522c42ba IDENTICAL/NONE
+// OFFSET: 0x00A91670/0x140850FC0
 FMOD_RESULT FileThread::release()
 {
     removeNode();
@@ -518,8 +518,8 @@ FMOD_RESULT File::shutDown()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 365adec7 IDENTICAL
-// OFFSET: 0x00A91830
+// PROVEN: 365adec7 IDENTICAL/NONE
+// OFFSET: 0x00A91830/0x1408511E0
 FMOD_RESULT F_API File::open(const char *name_or_data, unsigned int length, bool unicode, const char *encryptionkey)
 {
     FMOD_RESULT result;
@@ -609,8 +609,8 @@ FMOD_RESULT F_API File::open(const char *name_or_data, unsigned int length, bool
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 59c3d1af IDENTICAL
-// OFFSET: 0x00A92760
+// PROVEN: 59c3d1af IDENTICAL/NONE
+// OFFSET: 0x00A92760/0x140852290
 FMOD_RESULT F_API File::close()
 {
     FMOD_RESULT result;
@@ -682,7 +682,7 @@ FMOD_RESULT F_API File::close()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 51c7cf46 IDENTICAL
+// PROVEN: 51c7cf46 IDENTICAL/NONE
 // OFFSET: 0x00A91A10
 FMOD_RESULT F_API File::cancel()
 {
@@ -704,8 +704,8 @@ FMOD_RESULT F_API File::cancel()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 1792ff7e IDENTICAL
-// OFFSET: 0x00A919F0
+// PROVEN: 1792ff7e IDENTICAL/NONE
+// OFFSET: 0x00A919F0/0x1408513E0
 bool File::readyForClose()
 {
     return !mSema || !mBusy;
@@ -822,8 +822,8 @@ FMOD_RESULT File::flip(bool frommainthread)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 11dfcee4 IDENTICAL
-// OFFSET: 0x00A91BF0
+// PROVEN: 11dfcee4 IDENTICAL/NONE
+// OFFSET: 0x00A91BF0/0x1408515F0
 FMOD_RESULT File::seekAndReset()
 {
     FMOD_RESULT result;
@@ -1205,8 +1205,8 @@ FMOD_RESULT F_API File::read(void *buffer, unsigned int size, unsigned int count
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6de4fc87 IDENTICAL
-// OFFSET: 0x00A92280
+// PROVEN: 6de4fc87 IDENTICAL/NONE
+// OFFSET: 0x00A92280/0x140851E40
 FMOD_RESULT File::getByte(unsigned char *val)
 {
     FMOD_RESULT result;
@@ -1237,8 +1237,8 @@ FMOD_RESULT File::getByte(unsigned char *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9f105954 IDENTICAL
-// OFFSET: 0x00A922B0
+// PROVEN: 9f105954 IDENTICAL/NONE
+// OFFSET: 0x00A922B0/0x140851D40
 FMOD_RESULT File::getByte(unsigned short *val)
 {
     FMOD_RESULT result;
@@ -1269,7 +1269,7 @@ FMOD_RESULT File::getByte(unsigned short *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f3baa626 IDENTICAL
+// PROVEN: f3baa626 IDENTICAL/NONE
 // OFFSET: 0x00A922E0
 FMOD_RESULT File::getByte(unsigned int *val)
 {
@@ -1361,8 +1361,8 @@ FMOD_RESULT File::getByte(signed short *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9b1b0e2e IDENTICAL
-// OFFSET: 0x00A92310
+// PROVEN: 9b1b0e2e IDENTICAL/NONE
+// OFFSET: 0x00A92310/0x140851D00
 FMOD_RESULT File::getByte(signed int *val)
 {
     FMOD_RESULT result;
@@ -1393,8 +1393,8 @@ FMOD_RESULT File::getByte(signed int *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 264bb643 IDENTICAL
-// OFFSET: 0x00A92340
+// PROVEN: 264bb643 IDENTICAL/NONE
+// OFFSET: 0x00A92340/0x140851E00
 FMOD_RESULT File::getWord(unsigned short *val)
 {
     FMOD_RESULT result;
@@ -1425,8 +1425,8 @@ FMOD_RESULT File::getWord(unsigned short *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d0c0f54f IDENTICAL
-// OFFSET: 0x00A92370
+// PROVEN: d0c0f54f IDENTICAL/NONE
+// OFFSET: 0x00A92370/0x140851D80
 FMOD_RESULT File::getWord(unsigned int *val)
 {
     FMOD_RESULT result;
@@ -1487,8 +1487,8 @@ FMOD_RESULT File::getWord(signed short *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b8678fe5 IDENTICAL
-// OFFSET: 0x00A923A0
+// PROVEN: b8678fe5 IDENTICAL/NONE
+// OFFSET: 0x00A923A0/0x140851E80
 FMOD_RESULT File::getWord(signed int *val)
 {
     FMOD_RESULT result;
@@ -1519,8 +1519,8 @@ FMOD_RESULT File::getWord(signed int *val)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dea731c4 IDENTICAL
-// OFFSET: 0x00A923D0
+// PROVEN: dea731c4 IDENTICAL/NONE
+// OFFSET: 0x00A923D0/0x140851EC0
 FMOD_RESULT File::getDword(unsigned int *val)
 {    
     FMOD_RESULT result;
@@ -1679,8 +1679,8 @@ FMOD_RESULT F_API File::seek(int pos, int mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 40f490bc IDENTICAL
-// OFFSET: 0x00A92540
+// PROVEN: 40f490bc IDENTICAL/NONE
+// OFFSET: 0x00A92540/0x140852060
 FMOD_RESULT F_API File::tell(unsigned int *pos)
 {
     FMOD_RESULT result = FMOD_OK;
@@ -1711,8 +1711,8 @@ FMOD_RESULT F_API File::tell(unsigned int *pos)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: dca46c22 IDENTICAL
-// OFFSET: 0x00A92570
+// PROVEN: dca46c22 IDENTICAL/NONE
+// OFFSET: 0x00A92570/0x140852080
 FMOD_RESULT File::setStartOffset(unsigned int offset)
 {
     mStartOffset = offset;
@@ -1741,7 +1741,7 @@ FMOD_RESULT File::setStartOffset(unsigned int offset)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3946c1cd IDENTICAL
+// PROVEN: 3946c1cd IDENTICAL/NONE
 // OFFSET: 0x00A925A0
 FMOD_RESULT File::getStartOffset(unsigned int *offset)
 {
@@ -1849,8 +1849,8 @@ FMOD_RESULT File::enableDoubleBuffer(unsigned int sizebytes)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 40dc0011 IDENTICAL
-// OFFSET: 0x00A925D0
+// PROVEN: 40dc0011 IDENTICAL/NONE
+// OFFSET: 0x00A925D0/0x1408520D0
 FMOD_RESULT File::getName(char **name)
 {
     if (name)
@@ -1875,8 +1875,8 @@ FMOD_RESULT File::getName(char **name)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 77152b0c IDENTICAL
-// OFFSET: 0x00A925F0
+// PROVEN: 77152b0c IDENTICAL/NONE
+// OFFSET: 0x00A925F0/0x1408520E0
 FMOD_RESULT File::setName(char *name)
 {
     if (!name)

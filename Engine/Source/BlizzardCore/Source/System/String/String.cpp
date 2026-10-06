@@ -5,8 +5,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: eef19fe9 IDENTICAL
-// OFFSET: 0x007ADA90
+// PROVEN: eef19fe9 IDENTICAL/DIFFERENT
+// OFFSET: 0x007ADA90/0x1404A3700
 uint32_t Blizzard::String::Copy(char* dst, const char* src, uint32_t maxchars) {
     if (!maxchars || !dst) {
         return 0;
@@ -113,7 +113,7 @@ void Blizzard::String::MemCopy(void* dst, const void* src, int32_t bytes) {
     }
 }
 
-// PROVEN: 77cb646b IDENTICAL
+// PROVEN: 77cb646b IDENTICAL/NONE
 // OFFSET: 0x007ADD20
 void Blizzard::String::MemFill(void* dst, uint32_t bytes, uint8_t value) {
     memset(dst, value, bytes);
@@ -140,7 +140,7 @@ const char* System_String::Find(const char* str, const char* substr, uint32_t ma
     return p;
 }
 
-// PROVEN: 1309b3ad IDENTICAL
+// PROVEN: 1309b3ad IDENTICAL/NONE
 // OFFSET: 0x007AF970
 const char* System_String::FindReverse(const char* str, char c, uint32_t maxchars) {
     const char* last = NULL;
@@ -226,8 +226,8 @@ const char* Blizzard::String::FindReverse(const char* str, const char* substr, u
     return NULL;
 }
 
-// PROVEN: fed2a19f IDENTICAL
-// OFFSET: 0x007B5C60
+// PROVEN: fed2a19f IDENTICAL/DIFFERENT
+// OFFSET: 0x007B5C60/0x1404ABCA0
 const char* Blizzard::String::FindReverse(const char* str, char c, uint32_t maxchars) {
     if (str && c) {
         return System_String::FindReverse(str, c, maxchars);
@@ -245,8 +245,8 @@ const char* Blizzard::String::FindI(const char* str, const char* substr, uint32_
     return NULL;
 }
 
-// PROVEN: 7531668c IDENTICAL
-// OFFSET: 0x007B5DA0
+// PROVEN: 7531668c IDENTICAL/UNPROVEN
+// OFFSET: 0x007B5DA0/0x1404ABE00
 int32_t Blizzard::String::Format(char* dst, uint32_t maxchars, const char* format, ...) {
     if (!dst || !maxchars) {
         return 0;

@@ -209,7 +209,7 @@ Octree::~Octree()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: cef61f68 IDENTICAL
+// PROVEN: cef61f68 IDENTICAL/NONE
 // OFFSET: 0x00AD42C0
 void Octree::insertItem(OctreeNode* item)
 {
@@ -266,7 +266,7 @@ void Octree::insertItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9a5c00b4 IDENTICAL
+// PROVEN: 9a5c00b4 IDENTICAL/NONE
 // OFFSET: 0x00AD4410
 void Octree::deleteItem(OctreeNode* item)
 {
@@ -424,7 +424,7 @@ void Octree::deleteItem(OctreeNode* item)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6f079d7c IDENTICAL
+// PROVEN: 6f079d7c IDENTICAL/NONE
 // OFFSET: 0x00AD45A0
 void Octree::updateItem(OctreeNode* item)
 {
@@ -467,7 +467,7 @@ void Octree::updateItem(OctreeNode* item)
     insertItem(item);
 }
 
-// PROVEN: 47deab8a IDENTICAL
+// PROVEN: 47deab8a IDENTICAL/NONE
 // OFFSET: 0x00AD32A0
 void Octree::getAABB(FMOD_AABB* aabb)
 {
@@ -489,7 +489,7 @@ void Octree::getAABB(FMOD_AABB* aabb)
     }
 }
 
-// PROVEN: dfa9bf7f IDENTICAL
+// PROVEN: dfa9bf7f IDENTICAL/NONE
 // OFFSET: 0x00AD3E30
 void Octree::addInternalNode(OctreeNode* item)
 {
@@ -1442,7 +1442,7 @@ OctreeNode* Octree::getFreeNode()
     return node;
 }
 
-// PROVEN: d80f1c2b IDENTICAL
+// PROVEN: d80f1c2b IDENTICAL/NONE
 // OFFSET: 0x00AD33A0
 void Octree::adjustAABBs(OctreeNode* node)
 {
@@ -1514,7 +1514,7 @@ void Octree::removeListItem(OctreeNode* node)
     node->flags &= ~OCTREE_FLAG_EXTRA_NODE;
 }
 
-// PROVEN: 63addc32 IDENTICAL
+// PROVEN: 63addc32 IDENTICAL/NONE
 // OFFSET: 0x00AD3660
 void Octree::addListItem(OctreeNode* list, OctreeNode* node)
 {

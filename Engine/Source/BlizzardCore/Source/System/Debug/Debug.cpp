@@ -47,7 +47,7 @@ char* Blizzard::Debug::CanonicalStr(const char* src, char* dst, uint32_t maxchar
     return dst;
 }
 
-// PROVEN: b23d0eca IDENTICAL
+// PROVEN: b23d0eca IDENTICAL/NONE
 // OFFSET: 0x007AC350
 void Blizzard::Debug::StderrOutput(const char* text) {
     if (text) {

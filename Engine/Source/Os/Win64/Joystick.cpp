@@ -80,7 +80,7 @@ static IDirectInput8A* s_directInput;
 // STATIC: %0x00D9387C
 static TSGrowableArray<W32Joystick> s_joysticks;
 
-// PROVEN: 99e4808e IDENTICAL
+// PROVEN: 99e4808e IDENTICAL/NONE
 // OFFSET: 0x0087A0F0
 static void ResetState(W32Joystick* joystick, DIJOYSTATE* state) {
     LONG* axes = &state->lX;
@@ -670,8 +670,8 @@ static void PollJoystick(uint32_t index, int32_t active) {
     }
 }
 
-// PROVEN: 8eada754 IDENTICAL
-// OFFSET: 0x0087B490
+// PROVEN: 8eada754 IDENTICAL/IDENTICAL
+// OFFSET: 0x0087B490/0x1405B21D0
 void OsPollJoysticks(int32_t active) {
     for (uint32_t i = 0; i < s_joysticks.Count(); i++) {
         PollJoystick(i, active);

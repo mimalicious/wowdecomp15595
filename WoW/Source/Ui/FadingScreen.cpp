@@ -45,8 +45,8 @@ static uint8_t s_fadeActive;
 // STATIC: #0x00C24295
 static uint8_t s_fadeStarted;
 
-// PROVEN: e96252b2 IDENTICAL
-// OFFSET: 0x00842700
+// PROVEN: e96252b2 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t SwallowEvent(const void* data, void* param) {
     return 0;
 }

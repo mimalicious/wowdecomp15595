@@ -3,7 +3,7 @@
 // STATIC: %0x00B44D28
 const DBCMeta SpellRuneCostRec::s_meta = { "DBFilesClient\\SpellRuneCost.dbc", 5, 20, SpellRuneCostRec::FixupStrings, 0 };
 
-// PROVEN: 55483cd9 IDENTICAL
+// PROVEN: 55483cd9 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellRuneCostRec::FixupStrings(void* record, const char* strings) {
 }

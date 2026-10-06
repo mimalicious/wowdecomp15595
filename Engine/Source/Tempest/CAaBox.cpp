@@ -12,7 +12,7 @@ bool CAaBox::IsEmpty() const {
     return this->t.x <= this->b.x || this->t.y <= this->b.y || this->t.z <= this->b.z;
 }
 
-// PROVEN: da4760c8 IDENTICAL
+// PROVEN: da4760c8 IDENTICAL/NONE
 // OFFSET: 0x005AA340
 CAaBox operator|(const CAaBox& l, const CAaBox& r) {
     C3Vector t = C3Vector::Max(l.t, r.t);
@@ -24,8 +24,8 @@ CAaBox operator|(const CAaBox& l, const CAaBox& r) {
     return result;
 }
 
-// PROVEN: e16b0732 IDENTICAL
-// OFFSET: 0x005AA410
+// PROVEN: e16b0732 IDENTICAL/DIFFERENT
+// OFFSET: 0x005AA410/0x14021C8D0
 CAaBox CAaBox::operator|=(const CAaBox& box) {
     *this = *this | box;
     return *this;
@@ -36,7 +36,7 @@ bool CAaBox::ContainsPoint(const C3Vector& point) const {
     return this->b.x <= point.x && this->b.y <= point.y && this->b.z <= point.z && this->t.x >= point.x && this->t.y >= point.y && this->t.z >= point.z;
 }
 
-// PROVEN: 493ccb24 IDENTICAL
+// PROVEN: 493ccb24 IDENTICAL/NONE
 // OFFSET: 0x0072C990
 bool CAaBox::Intersects(const CAaBox& box) const {
     return this->t.x >= box.b.x && this->t.y >= box.b.y && this->t.z >= box.b.z && this->b.x <= box.t.x && this->b.y <= box.t.y && this->b.z <= box.t.z;
@@ -161,14 +161,14 @@ void CAaBox::Expand(float amount) {
     this->t.z = amount + this->t.z;
 }
 
-// PROVEN: 7e9bf4a7 IDENTICAL
+// PROVEN: 7e9bf4a7 IDENTICAL/NONE
 // OFFSET: 0x005AA2E0
 void CAaBox::Set(float min, float max) {
     this->b = C3Vector(min, min, min);
     this->t = C3Vector(max, max, max);
 }
 
-// PROVEN: 64af7a20 IDENTICAL
+// PROVEN: 64af7a20 IDENTICAL/NONE
 // OFFSET: 0x00550E40
 bool CAaBox::ContainsPointExclusive(const C3Vector& point) const {
     return this->b.x < point.x && this->b.y < point.y && this->b.z < point.z && this->t.x > point.x && this->t.y > point.y && this->t.z > point.z;

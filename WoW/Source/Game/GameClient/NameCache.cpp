@@ -15,8 +15,8 @@ NameCache::~NameCache() {
     delete this->m_declinedNames;
 }
 
-// PROVEN: a49c9257 IDENTICAL
-// OFFSET: 0x004EB7B0
+// PROVEN: a49c9257 IDENTICAL/NONE
+// OFFSET: 0x004EB7B0/0x14012E890
 void NameCache::Pack(CDataStore* msg) {
     msg->Put(this->m_guid.m_guid);
     msg->PutString(this->m_name);
@@ -59,8 +59,8 @@ NameCache& NameCache::Copy(const NameCache& other) {
     return *this;
 }
 
-// PROVEN: 78bbcc7e IDENTICAL
-// OFFSET: 0x004EB850
+// PROVEN: 78bbcc7e IDENTICAL/NONE
+// OFFSET: 0x004EB850/0x14012E950
 void NameCache::Unpack(CDataStore* msg) {
     uint8_t hasDeclinedNames;
     msg->Get(this->m_guid.m_guid);

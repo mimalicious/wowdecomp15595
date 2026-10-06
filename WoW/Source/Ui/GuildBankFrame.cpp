@@ -335,7 +335,7 @@ void CGGuildBankInfo::EnterWorld() {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: 2a1e5c60 IDENTICAL
+// PROVEN: 2a1e5c60 IDENTICAL/NONE
 // OFFSET: 0x009C0350
 void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t* tab, uint32_t* slot) {
     *tab = virtualSlot / 98;

@@ -1,8 +1,8 @@
 #include "WGUID.h"
 #include "Engine/Source/Base/CDataStore.h"
 
-// PROVEN: f17f83fc IDENTICAL
-// OFFSET: 0x00438C80
+// PROVEN: f17f83fc IDENTICAL/NONE
+// OFFSET: 0x00438C80/0x1400430B0
 CDataStore& operator>>(CDataStore& msg, SmartGUID& guid) {
     guid.m_guid = 0;
 
@@ -38,8 +38,8 @@ CDataStore& SmartGUID::Put(CDataStore& msg) const {
     return msg.Set(maskPos, mask);
 }
 
-// PROVEN: fb111c69 IDENTICAL
-// OFFSET: 0x00438D60
+// PROVEN: fb111c69 IDENTICAL/NONE
+// OFFSET: 0x00438D60/0x1400431B0
 CDataStore& operator<<(CDataStore& msg, const SmartGUID& guid) {
     guid.Put(msg);
     return msg;

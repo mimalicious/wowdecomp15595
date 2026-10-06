@@ -17,7 +17,7 @@ void CGGameObject_C_Type_Mailbox::StartInteraction() {
     }
 }
 
-// PROVEN: 25d830e7 IDENTICAL
+// PROVEN: 25d830e7 IDENTICAL/NONE
 // OFFSET: 0x00599640
 int32_t CGGameObject_C_Type_Mailbox::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 15 : 41;

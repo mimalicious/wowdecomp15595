@@ -1,8 +1,8 @@
 #include "MacroSubstring.h"
 #include <cstring>
 
-// PROVEN: f1798afb IDENTICAL
-// OFFSET: 0x00A0D220
+// PROVEN: f1798afb IDENTICAL/NONE
+// OFFSET: 0x00A0D220/0x1407AEC60
 void MacroSubstring::SetText(const char* start, const char* end, char delimiter, const char** next) {
     this->m_start = start;
 
@@ -29,7 +29,7 @@ void MacroSubstring::SetText(const char* start, const char* end, char delimiter,
     }
 }
 
-// PROVEN: ecd0a603 IDENTICAL
+// PROVEN: ecd0a603 IDENTICAL/NONE
 // OFFSET: 0x00A0D2F0
 bool MacroSubstring::operator==(const char* str) {
     const char* cursor = this->m_start;
@@ -58,7 +58,7 @@ void MacroSubstring::GetText(char* buffer, uint32_t size) {
     buffer[length] = '\0';
 }
 
-// PROVEN: f39b0927 IDENTICAL
+// PROVEN: f39b0927 IDENTICAL/NONE
 // OFFSET: 0x00A0D2C0
 int32_t MacroSubstring::ToNumber() {
     int32_t value = 0;

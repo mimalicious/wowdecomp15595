@@ -3,7 +3,7 @@
 // STATIC: %0x00B43A54
 const DBCMeta ItemVisualsRec::s_meta = { "DBFilesClient\\ItemVisuals.dbc", 2, 24, ItemVisualsRec::FixupStrings, 0 };
 
-// PROVEN: d392dd33 IDENTICAL
+// PROVEN: d392dd33 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ItemVisualsRec::FixupStrings(void* record, const char* strings) {
 }

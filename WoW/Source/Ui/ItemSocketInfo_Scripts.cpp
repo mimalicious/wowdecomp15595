@@ -299,7 +299,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetSocketItemBoundTradeable", &Script_GetSocketItemBoundTradeable },
 };
 
-// PROVEN: 5a0d4f7c IDENTICAL
+// PROVEN: 5a0d4f7c IDENTICAL/NONE
 // OFFSET: 0x0097A2C0
 void ItemSocketInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -307,7 +307,7 @@ void ItemSocketInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f1a30822 IDENTICAL
+// PROVEN: f1a30822 IDENTICAL/NONE
 // OFFSET: 0x0097A2F0
 void ItemSocketInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

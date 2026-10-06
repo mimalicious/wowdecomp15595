@@ -6,7 +6,7 @@
 
 #include "comb.h"
 
-// PROVEN: 6e73cd74 IDENTICAL
+// PROVEN: 6e73cd74 IDENTICAL/NONE
 // OFFSET: 0x00AF5350
 comb::comb()
 {
@@ -14,7 +14,7 @@ comb::comb()
 	bufidx = 0;
 }
 
-// PROVEN: faaeedb9 IDENTICAL
+// PROVEN: faaeedb9 IDENTICAL/NONE
 // OFFSET: 0x00AF5370
 void comb::setbuffer(float *buf, int size) 
 {
@@ -22,7 +22,7 @@ void comb::setbuffer(float *buf, int size)
 	bufsize = size;
 }
 
-// PROVEN: 8905e1bc IDENTICAL
+// PROVEN: 8905e1bc IDENTICAL/NONE
 // OFFSET: 0x00AF5390
 void comb::mute()
 {
@@ -30,7 +30,7 @@ void comb::mute()
 		buffer[i]=0;
 }
 
-// PROVEN: 83d40f34 IDENTICAL
+// PROVEN: 83d40f34 IDENTICAL/NONE
 // OFFSET: 0x00AF53B0
 void comb::setdamp(float val) 
 {

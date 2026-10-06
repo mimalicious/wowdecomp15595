@@ -3,7 +3,7 @@
 // STATIC: %0x00B4427C
 const DBCMeta AnimKitBoneSetAliasRec::s_meta = { "DBFilesClient\\AnimKitBoneSetAlias.dbc", 3, 12, AnimKitBoneSetAliasRec::FixupStrings, 0 };
 
-// PROVEN: eaa447dc IDENTICAL
+// PROVEN: eaa447dc IDENTICAL/NONE
 // OFFSET: 0x00401000
 void AnimKitBoneSetAliasRec::FixupStrings(void* record, const char* strings) {
 }

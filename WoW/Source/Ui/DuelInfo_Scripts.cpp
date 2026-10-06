@@ -41,7 +41,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CancelDuel", &Script_CancelDuel },
 };
 
-// PROVEN: db9065e7 IDENTICAL
+// PROVEN: db9065e7 IDENTICAL/NONE
 // OFFSET: 0x009F0650
 void DuelInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -49,7 +49,7 @@ void DuelInfoRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 8fefd220 IDENTICAL
+// PROVEN: 8fefd220 IDENTICAL/NONE
 // OFFSET: 0x009F0680
 void DuelInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

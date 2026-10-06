@@ -2,8 +2,8 @@
 #include "fmod_stringw.h"
 #include "fmod_memory.h"
 
-// PROVEN: 6da39ce6 IDENTICAL
-// OFFSET: 0x00ACA050
+// PROVEN: 6da39ce6 IDENTICAL/NONE
+// OFFSET: 0x00ACA050/0x1408940A0
 int FMOD_strlenW(const short * s)
 {
     const short *sc;
@@ -22,8 +22,8 @@ short * FMOD_strcpyW(short * dest,const short *src)
     return tmp;
 }
 
-// PROVEN: b8b40149 IDENTICAL
-// OFFSET: 0x00ACA070
+// PROVEN: b8b40149 IDENTICAL/NONE
+// OFFSET: 0x00ACA070/0x1408940D0
 short * FMOD_strncpyW(short * dest, const short *src, int count)
 {
     short *tmp = dest;

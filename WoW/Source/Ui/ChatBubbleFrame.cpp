@@ -44,7 +44,7 @@ void CGChatBubbleFrame::operator delete(void* ptr) {
     CGChatBubbleFrame::s_chatBubbleHeap.PutData(ptr, NULL, 0);
 }
 
-// PROVEN: 20523c8e IDENTICAL
+// PROVEN: 20523c8e IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGChatBubbleFrame::InitializeGame() {
 }
@@ -79,7 +79,7 @@ void CGChatBubbleFrame::FadeOut(bool remove) {
     this->m_fadeStart = OsGetAsyncTimeMs() - static_cast<int32_t>((255.0f - alpha) * (1.0f / 255.0f) * 250.0f);
 }
 
-// PROVEN: 2f74ebde IDENTICAL
+// PROVEN: 2f74ebde IDENTICAL/NONE
 // OFFSET: 0x009F0B60
 static int32_t ComputeDuration(const char* text, bool self) {
     int32_t perWord = self ? 500 : 750;

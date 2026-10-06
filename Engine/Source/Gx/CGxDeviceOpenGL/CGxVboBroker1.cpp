@@ -90,7 +90,7 @@ void CGxVboBroker1::SelectVbo(uint32_t size, GLuint& vbo, uint32_t& offset) {
     offset = 0;
 }
 
-// PROVEN: 157c8a94 IDENTICAL
+// PROVEN: 157c8a94 IDENTICAL/NONE
 // OFFSET: 0x0084E1A0
 void CGxVboBroker1::GetLastSelectedVbo(GLuint& vbo, uint32_t& offset) {
     vbo = this->m_lastVbo;

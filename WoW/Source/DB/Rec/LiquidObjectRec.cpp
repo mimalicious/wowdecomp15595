@@ -3,7 +3,7 @@
 // STATIC: %0x00B40AFC
 const DBCMeta LiquidObjectRec::s_meta = { "DBFilesClient\\LiquidObject.dbc", 6, 24, LiquidObjectRec::FixupStrings, 0 };
 
-// PROVEN: eefa6274 IDENTICAL
+// PROVEN: eefa6274 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void LiquidObjectRec::FixupStrings(void* record, const char* strings) {
 }

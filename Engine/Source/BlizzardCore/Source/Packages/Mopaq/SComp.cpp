@@ -246,7 +246,7 @@ int32_t System_SComp::LzmaDecompress(void* dest, uint32_t* destSize, const void*
     return LzmaMemDecode(static_cast<const uint8_t*>(source), sourceSize, static_cast<uint8_t*>(dest), *destSize, destSize, alloc_wrap, free_wrap);
 }
 
-// PROVEN: 53d7fb4d IDENTICAL
+// PROVEN: 53d7fb4d IDENTICAL/NONE
 // OFFSET: 0x007AA9A0
 unsigned int System_SComp::PkwareBufferRead(void* param, unsigned char** buffer) {
     PkwareBuffer* pkware = static_cast<PkwareBuffer*>(param);
@@ -254,8 +254,8 @@ unsigned int System_SComp::PkwareBufferRead(void* param, unsigned char** buffer)
     return pkware->m_inputSize;
 }
 
-// PROVEN: d3d378ef IDENTICAL
-// OFFSET: 0x007AA9C0
+// PROVEN: d3d378ef IDENTICAL/UNPROVEN
+// OFFSET: 0x007AA9C0/0x1404A0D30
 int System_SComp::PkwareBufferWrite(void* param, unsigned char* data, unsigned int size) {
     PkwareBuffer* pkware = static_cast<PkwareBuffer*>(param);
     memcpy(pkware->m_output + pkware->m_outputPos, data, size);
@@ -343,14 +343,14 @@ static const System_SComp::COMPRESSOR s_pkwareCompressor = { 0x08, System_SComp:
 // STATIC: #0x009E6E10
 static const System_SComp::COMPRESSOR s_bzip2Compressor = { 0x10, System_SComp::Bzip2Compress };
 
-// PROVEN: a6263b16 IDENTICAL
+// PROVEN: a6263b16 IDENTICAL/NONE
 // OFFSET: 0x007AA980
 void System_SComp::PkwareCompress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     *destSize = sourceSize;
     *hint = 0;
 }
 
-// PROVEN: 09c99054 IDENTICAL
+// PROVEN: 09c99054 IDENTICAL/NONE
 // OFFSET: 0x007AAA50
 void System_SComp::Bzip2Compress(void* dest, uint32_t* destSize, const void* source, uint32_t sourceSize, uint32_t* hint, uint8_t level) {
     int32_t result = BZ2_bzBuffToBuffCompress(static_cast<char*>(dest), destSize, static_cast<char*>(const_cast<void*>(source)), sourceSize, 9, 0, 0);

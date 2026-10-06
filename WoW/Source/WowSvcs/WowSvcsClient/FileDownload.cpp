@@ -474,8 +474,8 @@ bool BattlenetFileDownload::Accepted() {
     return this->m_accepted;
 }
 
-// PROVEN: f60321a0 IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: f60321a0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void BattlenetFileDownload::Proceed(const uint8_t* data, uint32_t size) {
 }
 

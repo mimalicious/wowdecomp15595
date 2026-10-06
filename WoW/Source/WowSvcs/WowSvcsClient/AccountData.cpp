@@ -33,8 +33,8 @@ static int32_t unk_C7BFF8;
 // STATIC: #0x00C7BFFC
 static int32_t unk_C7BFFC;
 
-// PROVEN: 7e58bad5 IDENTICAL
-// OFFSET: 0x004D7890
+// PROVEN: 7e58bad5 IDENTICAL/NONE
+// OFFSET: 0x004D7890/0x140115DE0
 static int32_t CopyAccountFile(bool global, const char* source, const char* dest) {
     char sourcePath[260];
     char destPath[260];
@@ -233,7 +233,7 @@ void LoadAccountData(int32_t type, ACCOUNTDATALOADFUNC func, void* param) {
     }
 }
 
-// PROVEN: a3281402 IDENTICAL
+// PROVEN: a3281402 IDENTICAL/NONE
 // OFFSET: 0x004D79A0
 void SetClearConfigData(int32_t clear) {
     unk_C7BFF8 = clear;
@@ -574,7 +574,7 @@ void AccountDataInitialize(bool global) {
     }
 }
 
-// PROVEN: 673c4585 IDENTICAL
+// PROVEN: 673c4585 IDENTICAL/NONE
 // OFFSET: 0x004D8320
 void AccountDataFlush() {
     for (int32_t i = 0; i < static_cast<int32_t>(sizeof(s_accountData) / sizeof(s_accountData[0])); i++) {

@@ -2,7 +2,7 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// PROVEN: 11751086 IDENTICAL
+// PROVEN: 11751086 IDENTICAL/NONE
 // OFFSET: 0x00B145D0
 void C4Vector::NormalizeSafe() {
     float length = this->w * this->w + this->z * this->z + this->y * this->y + this->x * this->x;
@@ -16,8 +16,8 @@ void C4Vector::NormalizeSafe() {
     }
 }
 
-// PROVEN: 24bba750 IDENTICAL
-// OFFSET: 0x004CBDE0
+// PROVEN: 24bba750 IDENTICAL/IDENTICAL
+// OFFSET: 0x004CBDE0/0x140107B50
 C4Vector::C4Vector(const CImVector& color) {
     this->x = color.r * 0.0039215689f;
     this->y = color.g * 0.0039215689f;

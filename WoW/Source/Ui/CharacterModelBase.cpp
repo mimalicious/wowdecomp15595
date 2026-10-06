@@ -71,14 +71,14 @@ CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
 CGCharacterModelBase::~CGCharacterModelBase() {
 }
 
-// PROVEN: 596b5867 IDENTICAL
+// PROVEN: 596b5867 IDENTICAL/NONE
 // OFFSET: 0x00A02CA0
 const char* CGCharacterModelBase::GetObjectTypeName() {
     return CGCharacterModelBase::s_objectTypeName;
 }
 
-// PROVEN: 65e855b0 IDENTICAL
-// OFFSET: 0x00A02CB0
+// PROVEN: 65e855b0 IDENTICAL/NONE
+// OFFSET: 0x00A02CB0/0x1407A1DA0
 int32_t CGCharacterModelBase::GetScriptMetaTable() {
     return CGCharacterModelBase::s_metatable;
 }
@@ -95,8 +95,8 @@ void CGCharacterModelBase::UpdateModel() {
     this->m_sequenceSet = 0;
 }
 
-// PROVEN: f77a3fda IDENTICAL
-// OFFSET: 0x00A02E60
+// PROVEN: f77a3fda IDENTICAL/NONE
+// OFFSET: 0x00A02E60/0x1407A2010
 void CGCharacterModelBase::HideThis() {
     this->SetModel(static_cast<CM2Model*>(NULL));
     CSimpleFrame::HideThis();
@@ -107,7 +107,7 @@ bool CGCharacterModelBase::IsA(int32_t type) {
     return type == CGCharacterModelBase::s_objectType || type == CSimpleModel::s_objectType || type == CSimpleFrame::s_objectType || type == CScriptRegion::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: fd18a837 IDENTICAL
+// PROVEN: fd18a837 IDENTICAL/NONE
 // OFFSET: 0x00A02F60
 bool CGCharacterModelBase::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CGCharacterModelBase::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CSimpleModel::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);

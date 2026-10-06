@@ -3,7 +3,7 @@
 // STATIC: %0x00B40B34
 const DBCMeta LiquidMaterialRec::s_meta = { "DBFilesClient\\LiquidMaterial.dbc", 3, 12, LiquidMaterialRec::FixupStrings, 0 };
 
-// PROVEN: f3915b82 IDENTICAL
+// PROVEN: f3915b82 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void LiquidMaterialRec::FixupStrings(void* record, const char* strings) {
 }

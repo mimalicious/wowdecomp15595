@@ -33,7 +33,7 @@ static int32_t (*s_confirmCloseCallback)(void*);
 // STATIC: %0x00D9577C
 static void* s_confirmCloseParam;
 
-// PROVEN: 66f5f713 IDENTICAL
+// PROVEN: 66f5f713 IDENTICAL/NONE
 // OFFSET: 0x008A2AE0
 int32_t IEvtConfirmClose() {
     if (s_confirmCloseCallback) {
@@ -137,7 +137,7 @@ void IEvtDispatchJoystickAxis(EvtContext* context, int32_t id, int32_t value, ui
     IEvtQueueDispatch(context, EVENT_ID_18, &data);
 }
 
-// PROVEN: f19241a6 IDENTICAL
+// PROVEN: f19241a6 IDENTICAL/NONE
 // OFFSET: 0x008A2D20
 void IEvtInputDestroy() {
     OsInputDestroy();
@@ -145,7 +145,7 @@ void IEvtInputDestroy() {
     Input::s_metaKeyState = 0;
 }
 
-// PROVEN: eadd608e IDENTICAL
+// PROVEN: eadd608e IDENTICAL/NONE
 // OFFSET: 0x008A2D40
 void IEvtInputInitialize() {
     OsInputInitialize();
@@ -171,7 +171,7 @@ void IEvtInputSetMouseMode(EvtContext* context, MOUSEMODE mode, uint32_t holdBut
     }
 }
 
-// PROVEN: ffcf6f74 IDENTICAL
+// PROVEN: ffcf6f74 IDENTICAL/NONE
 // OFFSET: 0x008A2DC0
 void IEvtInputSetConfirmCloseCallback(int32_t (*callback)(void*), void* param) {
     s_confirmCloseCallback = callback;
@@ -307,7 +307,8 @@ void IEvtDispatchJoystickStick(EvtContext* context, int32_t id, int32_t x, int32
     IEvtQueueDispatch(context, EVENT_ID_17, &data);
 }
 
-// OFFSET: %0x00807930
+// PROVEN: e00efd1e DIFFERENT/IDENTICAL
+// OFFSET: 0x008A3210/0x1405E5380
 void IEvtInputGetMousePosition(float* x, float* y) {
     int32_t mouseX;
     int32_t mouseY;

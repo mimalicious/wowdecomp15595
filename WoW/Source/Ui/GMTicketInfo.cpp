@@ -19,7 +19,7 @@ int32_t CGGMTicketInfo::m_ticketID;
 // STATIC: #0x00C1E8D4
 int32_t CGGMTicketInfo::m_responseID;
 
-// PROVEN: 24dd1cb4 IDENTICAL
+// PROVEN: 24dd1cb4 IDENTICAL/NONE
 // OFFSET: 0x009E5670
 void CGGMTicketInfo::EnterWorld() {
     CGGMTicketInfo::m_ticketID = 0;
@@ -352,7 +352,7 @@ void CGGMTicketInfo::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_GM_TICKET_STATUS_UPDATE);
 }
 
-// PROVEN: db6a0166 IDENTICAL
+// PROVEN: db6a0166 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGGMTicketInfo::LeaveWorld() {
 }

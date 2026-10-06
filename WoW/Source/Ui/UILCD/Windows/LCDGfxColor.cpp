@@ -11,7 +11,7 @@ CLCDGfxColor::CLCDGfxColor() {
 CLCDGfxColor::~CLCDGfxColor() {
 }
 
-// PROVEN: 3559c00b IDENTICAL
+// PROVEN: 3559c00b IDENTICAL/NONE
 // OFFSET: 0x00B40D50
 HRESULT CLCDGfxColor::Initialize() {
     this->Shutdown();
@@ -30,7 +30,7 @@ HRESULT CLCDGfxColor::Initialize() {
     return FAILED(hr) ? hr : S_OK;
 }
 
-// PROVEN: f2f2ae42 IDENTICAL
+// PROVEN: f2f2ae42 IDENTICAL/NONE
 // OFFSET: 0x00B40D90
 lgLcdBitmapHeader* CLCDGfxColor::GetLCDScreen() {
     this->m_lcdBitmap.hdr.Format = LGLCD_BMP_FORMAT_QVGAx32;
@@ -38,8 +38,8 @@ lgLcdBitmapHeader* CLCDGfxColor::GetLCDScreen() {
     return this->m_pLCDScreen;
 }
 
-// PROVEN: 9c0ded8d IDENTICAL
-// OFFSET: 0x00A39FF0
+// PROVEN: 9c0ded8d IDENTICAL/NONE
+// OFFSET: 0x00A39FF0/0x14090ED00
 uint32_t CLCDGfxColor::GetFamily() {
     return LGLCD_DEVICE_FAMILY_QVGA_BASIC;
 }

@@ -3,7 +3,7 @@
 // STATIC: %0x00B44874
 const DBCMeta TransportPhysicsRec::s_meta = { "DBFilesClient\\TransportPhysics.dbc", 11, 44, TransportPhysicsRec::FixupStrings, 0 };
 
-// PROVEN: 0416542b IDENTICAL
+// PROVEN: 0416542b IDENTICAL/NONE
 // OFFSET: 0x00401000
 void TransportPhysicsRec::FixupStrings(void* record, const char* strings) {
 }

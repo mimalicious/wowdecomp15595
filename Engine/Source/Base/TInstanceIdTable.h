@@ -24,7 +24,7 @@ class TInstanceIdTable {
     uint32_t NextId();
 };
 
-// PROVEN: 67394a78 IDENTICAL
+// PROVEN: 67394a78 IDENTICAL/NONE
 // OFFSET: 0x008A08A0
 template <class T, int slotCount>
 TInstanceIdTable<T, slotCount>::TInstanceIdTable() {

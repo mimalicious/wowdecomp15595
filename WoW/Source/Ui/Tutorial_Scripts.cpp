@@ -60,7 +60,7 @@ static int32_t Script_IsTutorialFlagged(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 63a167dd IDENTICAL
+// PROVEN: 63a167dd IDENTICAL/NONE
 // OFFSET: 0x00901CB0
 static int32_t Script_CanResetTutorials(lua_State* L) {
     for (uint32_t i = CGTutorial::m_tutorialShown.m_bits.m_count; i; ) {
@@ -136,7 +136,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetPrevCompleatedTutorial", &Script_GetPrevCompleatedTutorial },
 };
 
-// PROVEN: bf9c0cbc IDENTICAL
+// PROVEN: bf9c0cbc IDENTICAL/NONE
 // OFFSET: 0x00901830
 void TutorialRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -144,7 +144,7 @@ void TutorialRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: d5d9091c IDENTICAL
+// PROVEN: d5d9091c IDENTICAL/NONE
 // OFFSET: 0x00901860
 void TutorialUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

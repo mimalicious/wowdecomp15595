@@ -16,8 +16,8 @@ static HIMC s_context;
 // STATIC: %0x00D93890
 static uint32_t s_enableCount;
 
-// PROVEN: a5c19eca IDENTICAL
-// OFFSET: 0x0087B4C0
+// PROVEN: a5c19eca IDENTICAL/DIFFERENT
+// OFFSET: 0x0087B4C0/0x1405B32A0
 int32_t OsIMEGetLanguageMode() {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
     HIMC context = ImmGetContext(window);
@@ -148,7 +148,7 @@ int32_t OsIMEGetClauseInfo(uint32_t& clauseStart, uint32_t& clauseEnd, uint32_t&
     return 1;
 }
 
-// PROVEN: 11fe8bd0 IDENTICAL
+// PROVEN: 11fe8bd0 IDENTICAL/NONE
 // OFFSET: 0x0087B820
 void OsIMEEnable(int32_t enable) {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
@@ -164,8 +164,8 @@ void OsIMEEnable(int32_t enable) {
     }
 }
 
-// PROVEN: 259534ba IDENTICAL
-// OFFSET: 0x0087B870
+// PROVEN: 259534ba IDENTICAL/IDENTICAL
+// OFFSET: 0x0087B870/0x1405B3720
 void OsIMESync() {
     HWND window = static_cast<HWND>(OsGuiGetWindow(0));
     HIMC context = ImmGetContext(window);
@@ -179,7 +179,7 @@ void OsIMESync() {
     }
 }
 
-// PROVEN: c4993213 IDENTICAL
+// PROVEN: c4993213 IDENTICAL/NONE
 // OFFSET: 0x0087B8B0
 void OsIMESetLanguageMode(int32_t native) {
     HIMC context = ImmGetContext(static_cast<HWND>(OsGuiGetWindow(0)));
@@ -205,8 +205,8 @@ void OsIMEInitialize() {
     s_context = ImmAssociateContext(static_cast<HWND>(OsGuiGetWindow(0)), NULL);
 }
 
-// PROVEN: 511f12da IDENTICAL
-// OFFSET: 0x0087B940
+// PROVEN: 511f12da IDENTICAL/IDENTICAL
+// OFFSET: 0x0087B940/0x1405B3810
 void OsIMEDestroy() {
     ImmAssociateContextEx(static_cast<HWND>(OsGuiGetWindow(0)), NULL, IACE_DEFAULT);
     s_context = NULL;

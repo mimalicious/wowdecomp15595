@@ -163,8 +163,8 @@ int32_t ConsoleCommand_Font(const char* command, const char* arguments) {
     return 1;
 }
 
-// PROVEN: a0e237fc IDENTICAL
-// OFFSET: 0x00610450
+// PROVEN: a0e237fc IDENTICAL/NONE
+// OFFSET: 0x00610450/0x14029A890
 int32_t ConsoleCommand_CurrentSettings(const char* command, const char* arguments) {
     char buffer[260];
 
@@ -331,7 +331,7 @@ int32_t ConsoleCommand_HighLightColor(const char* command, const char* arguments
     return 1;
 }
 
-// PROVEN: 5c7fc97b IDENTICAL
+// PROVEN: 5c7fc97b IDENTICAL/NONE
 // OFFSET: 0x006108C0
 int32_t ConsoleCommand_AppendLogToFile(const char* command, const char* arguments) {
     ConsoleWrite("Access Denied", ERROR_COLOR);

@@ -3,7 +3,7 @@
 // STATIC: %0x00B46100
 const DBCMeta ItemDisenchantLootRec::s_meta = { "DBFilesClient\\ItemDisenchantLoot.dbc", 7, 28, ItemDisenchantLootRec::FixupStrings, 0 };
 
-// PROVEN: 4eba0f6a IDENTICAL
+// PROVEN: 4eba0f6a IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ItemDisenchantLootRec::FixupStrings(void* record, const char* strings) {
 }

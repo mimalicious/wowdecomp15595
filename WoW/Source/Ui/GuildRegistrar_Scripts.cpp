@@ -87,7 +87,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTabardInfo", &Script_GetTabardInfo },
 };
 
-// PROVEN: 58ada4cf IDENTICAL
+// PROVEN: 58ada4cf IDENTICAL/NONE
 // OFFSET: 0x009EB700
 void GuildRegistrarRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -95,7 +95,7 @@ void GuildRegistrarRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: 16af8920 IDENTICAL
+// PROVEN: 16af8920 IDENTICAL/NONE
 // OFFSET: 0x009EB730
 void GuildRegistrarUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

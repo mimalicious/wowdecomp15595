@@ -3,7 +3,7 @@
 // STATIC: %0x00B44394
 const DBCMeta ZoneLightPointRec::s_meta = { "DBFilesClient\\ZoneLightPoint.dbc", 4, 20, ZoneLightPointRec::FixupStrings, 0 };
 
-// PROVEN: 7168c7c0 IDENTICAL
+// PROVEN: 7168c7c0 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void ZoneLightPointRec::FixupStrings(void* record, const char* strings) {
 }

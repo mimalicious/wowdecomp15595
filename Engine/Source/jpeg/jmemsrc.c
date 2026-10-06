@@ -3,8 +3,8 @@
 #include "jpeglib.h"
 #include "jmemsrc.h"
 
-// PROVEN: c40eec4a IDENTICAL
-// OFFSET: 0x00B5E250
+// PROVEN: c40eec4a IDENTICAL/NONE
+// OFFSET: 0x00B5E250/0x1409270E0
 static void read_pixel(mem_source_ptr sinfo) {
   int i;
 
@@ -12,8 +12,8 @@ static void read_pixel(mem_source_ptr sinfo) {
     sinfo->pixel[i] = sinfo->pixels[sinfo->position++];
 }
 
-// PROVEN: 5127fb1f IDENTICAL
-// OFFSET: 0x00B5E280
+// PROVEN: 5127fb1f IDENTICAL/NONE
+// OFFSET: 0x00B5E280/0x140927120
 static JDIMENSION get_rows(j_compress_ptr cinfo, mem_source_ptr sinfo) {
   JSAMPROW outptr = sinfo->buffer[0];
   JDIMENSION col;
@@ -28,8 +28,8 @@ static JDIMENSION get_rows(j_compress_ptr cinfo, mem_source_ptr sinfo) {
   return 1;
 }
 
-// PROVEN: 3200a423 IDENTICAL
-// OFFSET: 0x00B5E2D0
+// PROVEN: 3200a423 IDENTICAL/NONE
+// OFFSET: 0x00B5E2D0/0x140927180
 static void start_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
   sinfo->read_pixel = read_pixel;
   sinfo->get_rows = get_rows;
@@ -41,7 +41,7 @@ static void start_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
   cinfo->image_height = sinfo->height;
 }
 
-// PROVEN: 5b982c5e IDENTICAL
+// PROVEN: 5b982c5e IDENTICAL/NONE
 // OFFSET: 0x00401000
 static void finish_input_mem(j_compress_ptr cinfo, mem_source_ptr sinfo) {
 }

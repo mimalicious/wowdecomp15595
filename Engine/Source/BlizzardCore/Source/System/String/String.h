@@ -47,8 +47,8 @@ int32_t VFormat(char* dst, uint32_t maxchars, const char* format, va_list args);
 }
 }
 
-// PROVEN: adc08770 IDENTICAL
-// OFFSET: 0x007A3420
+// PROVEN: adc08770 IDENTICAL/IDENTICAL
+// OFFSET: 0x007A3420/0x14049ABA0
 template <uint32_t N>
 Blizzard::String::QuickFormat<N>::QuickFormat(const char* format, ...) {
     va_list args;

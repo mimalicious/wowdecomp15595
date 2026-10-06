@@ -3,7 +3,7 @@
 // STATIC: %0x00B4432C
 const DBCMeta WorldStateZoneSoundsRec::s_meta = { "DBFilesClient\\WorldStateZoneSounds.dbc", 8, 36, WorldStateZoneSoundsRec::FixupStrings, 0 };
 
-// PROVEN: 5d3d235c IDENTICAL
+// PROVEN: 5d3d235c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void WorldStateZoneSoundsRec::FixupStrings(void* record, const char* strings) {
 }

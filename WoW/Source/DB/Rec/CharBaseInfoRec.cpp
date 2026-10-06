@@ -3,7 +3,7 @@
 // STATIC: %0x00B43FB4
 const DBCMeta CharBaseInfoRec::s_meta = { "DBFilesClient\\CharBaseInfo.dbc", 2, 8, CharBaseInfoRec::FixupStrings, 0 };
 
-// PROVEN: 55d13938 IDENTICAL
+// PROVEN: 55d13938 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CharBaseInfoRec::FixupStrings(void* record, const char* strings) {
 }

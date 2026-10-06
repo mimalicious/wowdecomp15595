@@ -18,7 +18,7 @@ MemBlock::MemBlock() {
     this->m_strings = NULL;
 }
 
-// PROVEN: c9862745 IDENTICAL
+// PROVEN: c9862745 IDENTICAL/NONE
 // OFFSET: 0x004EC920
 MemBlock::~MemBlock() {
     for (uint32_t i = 0; i < this->m_allocations.Count(); i++) {
@@ -141,7 +141,7 @@ linkObject* linkObject::Compile(uint32_t& size) {
     return result;
 }
 
-// PROVEN: 0c3ec88c IDENTICAL
+// PROVEN: 0c3ec88c IDENTICAL/NONE
 // OFFSET: 0x004EE8A0
 linkObject* linkObject::GetChild(uint32_t element) {
     for (linkObject* child = this->m_child; child; child = child->m_next) {

@@ -3,7 +3,7 @@
 // STATIC: %0x00B45334
 const DBCMeta SpellCastTimesRec::s_meta = { "DBFilesClient\\SpellCastTimes.dbc", 4, 16, SpellCastTimesRec::FixupStrings, 0 };
 
-// PROVEN: e918ec1d IDENTICAL
+// PROVEN: e918ec1d IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellCastTimesRec::FixupStrings(void* record, const char* strings) {
 }

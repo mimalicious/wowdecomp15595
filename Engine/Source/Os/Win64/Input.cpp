@@ -296,7 +296,7 @@ static BOOL OsSetPhysicalCursorPos(int32_t x, int32_t y) {
     return s_setPhysicalCursorPos(x, y);
 }
 
-// PROVEN: ce240a15 IDENTICAL
+// PROVEN: ce240a15 IDENTICAL/NONE
 // OFFSET: 0x00873190
 static BOOL WINAPI LogicalToPhysicalPointNop(HWND hwnd, POINT* point) {
     return TRUE;
@@ -343,8 +343,8 @@ void OsQueuePut(OSINPUT id, int32_t param0, int32_t param1, int32_t param2, int3
     s_queueTail = next;
 }
 
-// PROVEN: 61d84f5f IDENTICAL
-// OFFSET: 0x00873270
+// PROVEN: 61d84f5f IDENTICAL/NONE
+// OFFSET: 0x00873270/0x1405A9960
 int32_t OsQueueGet(OSINPUT* id, int32_t* param0, int32_t* param1, int32_t* param2, int32_t* param3) {
     if (s_queueHead == s_queueTail) {
         return 0;
@@ -860,8 +860,8 @@ int32_t OsInputIsMouseButtonDown(MOUSEBUTTON button) {
     }
 }
 
-// PROVEN: 23a7bb9f IDENTICAL
-// OFFSET: 0x00873BC0
+// PROVEN: 23a7bb9f IDENTICAL/NONE
+// OFFSET: 0x00873BC0/0x1405AA590
 static LRESULT CALLBACK OsInputKeyboardHookProc(int code, WPARAM wparam, LPARAM lparam) {
     if (!code) {
         int32_t ctrl = GetAsyncKeyState(VK_CONTROL);
@@ -876,8 +876,8 @@ static LRESULT CALLBACK OsInputKeyboardHookProc(int code, WPARAM wparam, LPARAM 
     return CallNextHookEx(s_keyboardHook, code, wparam, lparam);
 }
 
-// PROVEN: 58865a1f IDENTICAL
-// OFFSET: 0x00873C30
+// PROVEN: 58865a1f IDENTICAL/NONE
+// OFFSET: 0x00873C30/0x1405AA630
 void OsInputInstallKeyboardHook() {
     if (s_keyboardHook) {
         return;
@@ -892,8 +892,8 @@ void OsInputInstallKeyboardHook() {
     }
 }
 
-// PROVEN: cff9b64c IDENTICAL
-// OFFSET: 0x00873C90
+// PROVEN: cff9b64c IDENTICAL/NONE
+// OFFSET: 0x00873C90/0x1405AA690
 void OsInputInitialize() {
     s_numLockState = GetAsyncKeyState(VK_NUMLOCK);
     s_savedMouseSpeed = 10;
@@ -901,8 +901,8 @@ void OsInputInitialize() {
     s_mouseSpeed = s_savedMouseSpeed;
 }
 
-// PROVEN: e235998e IDENTICAL
-// OFFSET: 0x00873CD0
+// PROVEN: e235998e IDENTICAL/NONE
+// OFFSET: 0x00873CD0/0x1405AA6E0
 void OsInputDestroy() {
     if (GetAsyncKeyState(VK_NUMLOCK) != s_numLockState) {
         INPUT input = {};
@@ -921,7 +921,7 @@ void OsInputDestroy() {
     }
 }
 
-// PROVEN: 62070a1d IDENTICAL
+// PROVEN: 62070a1d IDENTICAL/NONE
 // OFFSET: 0x00873D60
 static int32_t ProcessMouseEvent(uint32_t message, HWND hwnd, MOUSEBUTTON button, OSINPUT id) {
     POINT point;
@@ -983,8 +983,8 @@ static int32_t HandleMouseUp(uint32_t message, uintptr_t wparam, int32_t* xbutto
     return 1;
 }
 
-// PROVEN: c4d4cac2 IDENTICAL
-// OFFSET: 0x00873EB0
+// PROVEN: c4d4cac2 IDENTICAL/NONE
+// OFFSET: 0x00873EB0/0x1405AA950
 static void MoveDragWindow(HWND hwnd, const C2iVector& delta) {
     MoveWindow(hwnd, s_dragRect.left + delta.x, s_dragRect.top + delta.y, s_dragRect.right - s_dragRect.left, s_dragRect.bottom - s_dragRect.top, TRUE);
 }
@@ -1193,7 +1193,7 @@ static void OsInputSetAppActive(int32_t active) {
     OsQueuePut(OS_INPUT_FOCUS, s_appActive != 0, 0, 0, 0);
 }
 
-// PROVEN: 965dc5c6 IDENTICAL
+// PROVEN: 965dc5c6 IDENTICAL/NONE
 // OFFSET: 0x00874390
 static void HandleInputLangChange(uintptr_t wparam) {
     OsQueuePut(OS_INPUT_IME, 0, 0, 0, 0);
@@ -1249,7 +1249,7 @@ static void HandleImeNotify(uintptr_t wparam, intptr_t lparam) {
     }
 }
 
-// PROVEN: 728ad0b9 IDENTICAL
+// PROVEN: 728ad0b9 IDENTICAL/NONE
 // OFFSET: 0x008744B0
 static void HandleImeEndComposition() {
     OsQueuePut(OS_INPUT_IME, 6, 0, 0, 0);
@@ -1338,7 +1338,7 @@ static int32_t HandleKey(uint32_t message, uintptr_t wparam, intptr_t lparam) {
     return 0;
 }
 
-// PROVEN: 9d471d58 IDENTICAL
+// PROVEN: 9d471d58 IDENTICAL/NONE
 // OFFSET: 0x00874690
 static int32_t HandleCaptureChanged(HWND hwnd) {
     if (s_releasingCapture) {
@@ -1354,7 +1354,7 @@ static int32_t HandleCaptureChanged(HWND hwnd) {
     return 0;
 }
 
-// PROVEN: ad54017a IDENTICAL
+// PROVEN: ad54017a IDENTICAL/NONE
 // OFFSET: 0x008746F0
 static void HandleMouseWheel(HWND hwnd, uintptr_t wparam) {
     POINT point;
@@ -1370,13 +1370,13 @@ static void HandleMouseWheel(HWND hwnd, uintptr_t wparam) {
     OsQueuePut(OS_INPUT_MOUSE_WHEEL, static_cast<int16_t>(wparam >> 16), point.x, point.y, 0);
 }
 
-// PROVEN: f6e2631d IDENTICAL
+// PROVEN: f6e2631d IDENTICAL/NONE
 // OFFSET: 0x00874310
 void OsInputSetEventPollProc(void (*pollProc)()) {
     s_eventPollProc = pollProc;
 }
 
-// PROVEN: 7fcf9cb3 IDENTICAL
+// PROVEN: 7fcf9cb3 IDENTICAL/NONE
 // OFFSET: 0x00874320
 static void CALLBACK OsInputCallEventPollProc(HWND hwnd, UINT message, UINT_PTR id, DWORD time) {
     s_eventPollProc();
@@ -1492,8 +1492,8 @@ void OsInputSetMouseSpeed(float speed) {
     }
 }
 
-// PROVEN: 9f153abd IDENTICAL
-// OFFSET: 0x00874AB0
+// PROVEN: 9f153abd IDENTICAL/NONE
+// OFFSET: 0x00874AB0/0x1405AB4D0
 void OsInputGetMousePosition(int32_t* x, int32_t* y) {
     HWND hwnd = static_cast<HWND>(OsGuiGetWindow(0));
 

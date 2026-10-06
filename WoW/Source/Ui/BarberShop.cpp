@@ -55,7 +55,7 @@ float CGBarberShop::GetMinCameraDistance() {
     return CGBarberShop::m_minCameraDistance;
 }
 
-// PROVEN: 7e49b057 IDENTICAL
+// PROVEN: 7e49b057 IDENTICAL/NONE
 // OFFSET: 0x008FF5D0
 const BarberShopStyleRec* CGBarberShop::GetCurrentStyle(int32_t type) {
     switch (type) {

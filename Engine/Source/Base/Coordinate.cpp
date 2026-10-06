@@ -27,14 +27,14 @@ float CoordinateGetAspectRatio() {
     return s_aspectRatio;
 }
 
-// PROVEN: 203f7196 IDENTICAL
-// OFFSET: 0x008723A0
+// PROVEN: 203f7196 IDENTICAL/NONE
+// OFFSET: 0x008723A0/0x1405A87C0
 float CoordinateGetAspectCompensation() {
     return s_aspectCompensation;
 }
 
-// PROVEN: d4e4ae8d IDENTICAL
-// OFFSET: 0x008723B0
+// PROVEN: d4e4ae8d IDENTICAL/NONE
+// OFFSET: 0x008723B0/0x1405A87D0
 void NDCToDDC(float ndcx, float ndcy, float* ddcx, float* ddcy) {
     if (ddcx) {
         *ddcx = s_ddcWidthScale * ndcx;
@@ -45,8 +45,8 @@ void NDCToDDC(float ndcx, float ndcy, float* ddcx, float* ddcy) {
     }
 }
 
-// PROVEN: d388163b IDENTICAL
-// OFFSET: 0x008723F0
+// PROVEN: d388163b IDENTICAL/NONE
+// OFFSET: 0x008723F0/0x1405A8800
 void DDCToNDC(float ddcx, float ddcy, float* ndcx, float* ndcy) {
     if (ndcx) {
         *ndcx = ddcx / s_ddcWidthScale;
@@ -57,26 +57,26 @@ void DDCToNDC(float ddcx, float ddcy, float* ndcx, float* ndcy) {
     }
 }
 
-// PROVEN: 40f9d7c4 IDENTICAL
-// OFFSET: 0x00872430
+// PROVEN: 40f9d7c4 IDENTICAL/NONE
+// OFFSET: 0x00872430/0x1405A8840
 float DDCToNDCWidth(float ddcx) {
     return ddcx / s_ddcWidthScale;
 }
 
-// PROVEN: a20c1a5f IDENTICAL
-// OFFSET: 0x00872440
+// PROVEN: a20c1a5f IDENTICAL/NONE
+// OFFSET: 0x00872440/0x1405A8830
 float DDCToNDCHeight(float ddcy) {
     return ddcy / s_ddcHeightScale;
 }
 
-// PROVEN: 0e4869d2 IDENTICAL
-// OFFSET: 0x00872450
+// PROVEN: 0e4869d2 IDENTICAL/NONE
+// OFFSET: 0x00872450/0x1405A8850
 float NDCToDDCWidth(float ndcx) {
     return s_ddcWidthScale * ndcx;
 }
 
-// PROVEN: f869149e IDENTICAL
-// OFFSET: 0x00872460
+// PROVEN: f869149e IDENTICAL/NONE
+// OFFSET: 0x00872460/0x1405A8860
 float NDCToDDCHeight(float ndcy) {
     return s_ddcHeightScale * ndcy;
 }

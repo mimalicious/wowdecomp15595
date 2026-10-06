@@ -61,7 +61,7 @@ bool Blizzard::Patch::MemoryStream::Read(uint32_t offset, void* buffer, uint32_t
     return true;
 }
 
-// PROVEN: 816b3f0a IDENTICAL
+// PROVEN: 816b3f0a IDENTICAL/NONE
 // OFFSET: 0x007AB220
 System_Mopaq::DeltaData::DeltaData(Blizzard::Mopaq::MpqHandleRecord* handle, const MpqDeltaMetadata* metadata) {
     this->m_deltaSize = metadata ? metadata->m_deltaSize : 0;
@@ -734,7 +734,7 @@ bool System_Mopaq::delta_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqPara
     return true;
 }
 
-// PROVEN: d04a1684 IDENTICAL
+// PROVEN: d04a1684 IDENTICAL/NONE
 // OFFSET: 0x007AB380
 void Blizzard::Mopaq::SetPatchCompleteCallback(System_Mopaq::DeltaData::PatchCompletionFunc callback) {
     System_Mopaq::DeltaData::s_onPatchCompletion = callback;

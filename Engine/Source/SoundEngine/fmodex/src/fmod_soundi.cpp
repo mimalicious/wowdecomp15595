@@ -84,8 +84,8 @@ FMOD_RESULT SoundI::validate(Sound *sound, SoundI **soundi)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 13eb3875 IDENTICAL
-// OFFSET: 0x00A89CF0
+// PROVEN: 13eb3875 IDENTICAL/NONE
+// OFFSET: 0x00A89CF0/0x1408483C0
 SoundI::SoundI()
 {
     mMode                    = FMOD_DEFAULT;
@@ -149,7 +149,7 @@ SoundI::SoundI()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 08649dfb IDENTICAL
+// PROVEN: 08649dfb IDENTICAL/NONE
 // OFFSET: 0x00A8C3C0
 FMOD_RESULT SoundI::loadSubSound(int index, FMOD_MODE mode)
 {
@@ -386,8 +386,8 @@ FMOD_RESULT SoundI::read(unsigned int offset, unsigned int numsamples, unsigned 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 382eb939 IDENTICAL
-// OFFSET: 0x00A88F40
+// PROVEN: 382eb939 IDENTICAL/NONE
+// OFFSET: 0x00A88F40/0x1408475D0
 FMOD_RESULT SoundI::seek(int subsound, unsigned int position)
 {
     FMOD_RESULT result;
@@ -764,8 +764,8 @@ bool SoundI::readyForRelease()
 }
 
 
-// PROVEN: fa3c1b9d IDENTICAL
-// OFFSET: 0x00A88FE0
+// PROVEN: fa3c1b9d IDENTICAL/NONE
+// OFFSET: 0x00A88FE0/0x1408476C0
 FMOD_RESULT SoundI::getSystemObject(System **system)
 {
     if (!system)
@@ -794,8 +794,8 @@ FMOD_RESULT SoundI::getSystemObject(System **system)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a1df404e IDENTICAL
-// OFFSET: 0x00A89010
+// PROVEN: a1df404e IDENTICAL/NONE
+// OFFSET: 0x00A89010/0x1408476E0
 FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, void **ptr2, unsigned int *len1, unsigned int *len2)
 {
     return FMOD_ERR_BADCOMMAND;
@@ -817,7 +817,7 @@ FMOD_RESULT SoundI::lock(unsigned int offset, unsigned int length, void **ptr1, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 35cb548a IDENTICAL
+// PROVEN: 35cb548a IDENTICAL/NONE
 // OFFSET: 0x00A89020
 FMOD_RESULT SoundI::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned int len2)
 {
@@ -840,8 +840,8 @@ FMOD_RESULT SoundI::unlock(void *ptr1, void *ptr2, unsigned int len1, unsigned i
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e2b9a9b7 IDENTICAL
-// OFFSET: 0x00A89030
+// PROVEN: e2b9a9b7 IDENTICAL/NONE
+// OFFSET: 0x00A89030/0x1408476F0
 FMOD_RESULT SoundI::setDefaults(float frequency, float volume, float pan, int priority)
 {
     if (volume > 1)
@@ -893,8 +893,8 @@ FMOD_RESULT SoundI::setDefaults(float frequency, float volume, float pan, int pr
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ff519eff IDENTICAL
-// OFFSET: 0x00A890B0
+// PROVEN: ff519eff IDENTICAL/NONE
+// OFFSET: 0x00A890B0/0x140847760
 FMOD_RESULT SoundI::getDefaults(float *frequency, float *volume, float *pan, int *priority)
 {
     if (frequency)
@@ -933,8 +933,8 @@ FMOD_RESULT SoundI::getDefaults(float *frequency, float *volume, float *pan, int
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b94e4749 IDENTICAL
-// OFFSET: 0x00A890F0
+// PROVEN: b94e4749 IDENTICAL/NONE
+// OFFSET: 0x00A890F0/0x1408477A0
 FMOD_RESULT SoundI::setVariations(float frequencyvar, float volumevar, float panvar)
 {
     if (frequencyvar >= 0)
@@ -969,8 +969,8 @@ FMOD_RESULT SoundI::setVariations(float frequencyvar, float volumevar, float pan
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 07b5dff5 IDENTICAL
-// OFFSET: 0x00A89130
+// PROVEN: 07b5dff5 IDENTICAL/NONE
+// OFFSET: 0x00A89130/0x1408477D0
 FMOD_RESULT SoundI::getVariations(float *frequencyvar, float *volumevar, float *panvar)
 {
 	if (frequencyvar) 
@@ -1007,8 +1007,8 @@ FMOD_RESULT SoundI::getVariations(float *frequencyvar, float *volumevar, float *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 2037a1ca IDENTICAL
-// OFFSET: 0x00A89160
+// PROVEN: 2037a1ca IDENTICAL/NONE
+// OFFSET: 0x00A89160/0x140847800
 FMOD_RESULT SoundI::set3DMinMaxDistance(float min, float max)
 {
     if (min < 0 || max < 0 || max < min)
@@ -1039,8 +1039,8 @@ FMOD_RESULT SoundI::set3DMinMaxDistance(float min, float max)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: c5abb91d IDENTICAL
-// OFFSET: 0x00A891A0
+// PROVEN: c5abb91d IDENTICAL/NONE
+// OFFSET: 0x00A891A0/0x140847830
 FMOD_RESULT SoundI::get3DMinMaxDistance(float *min, float *max)
 {
     if (min)
@@ -1073,8 +1073,8 @@ FMOD_RESULT SoundI::get3DMinMaxDistance(float *min, float *max)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9590c89d IDENTICAL
-// OFFSET: 0x00A891D0
+// PROVEN: 9590c89d IDENTICAL/NONE
+// OFFSET: 0x00A891D0/0x140847850
 FMOD_RESULT SoundI::set3DConeSettings(float insideconeangle, float outsideconeangle, float outsidevolume)
 {
     if (insideconeangle < 0)
@@ -1126,8 +1126,8 @@ FMOD_RESULT SoundI::set3DConeSettings(float insideconeangle, float outsideconean
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 39c7920f IDENTICAL
-// OFFSET: 0x00A89240
+// PROVEN: 39c7920f IDENTICAL/NONE
+// OFFSET: 0x00A89240/0x1408478B0
 FMOD_RESULT SoundI::get3DConeSettings(float *insideconeangle, float *outsideconeangle, float *outsidevolume)
 {
     if (insideconeangle)
@@ -1164,8 +1164,8 @@ FMOD_RESULT SoundI::get3DConeSettings(float *insideconeangle, float *outsidecone
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 790b7a22 IDENTICAL
-// OFFSET: 0x00A89270
+// PROVEN: 790b7a22 IDENTICAL/NONE
+// OFFSET: 0x00A89270/0x1408478E0
 FMOD_RESULT  SoundI::set3DCustomRolloff(FMOD_VECTOR *points, int numpoints)
 {
     if (numpoints < 0)
@@ -1212,8 +1212,8 @@ FMOD_RESULT  SoundI::set3DCustomRolloff(FMOD_VECTOR *points, int numpoints)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: efbb8b74 IDENTICAL
-// OFFSET: 0x00A892E0
+// PROVEN: efbb8b74 IDENTICAL/NONE
+// OFFSET: 0x00A892E0/0x140847950
 FMOD_RESULT SoundI::get3DCustomRolloff(FMOD_VECTOR **points, int *numpoints)
 {
     if (points)
@@ -1588,8 +1588,8 @@ FMOD_RESULT SoundI::setSubSoundSentence(int *subsoundlist, int numsubsounds)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: db650006 IDENTICAL
-// OFFSET: 0x00A896D0
+// PROVEN: db650006 IDENTICAL/NONE
+// OFFSET: 0x00A896D0/0x140847DF0
 FMOD_RESULT SoundI::getName(char *name, int namelen)
 {
     if (!name)
@@ -1809,8 +1809,8 @@ FMOD_RESULT SoundI::getNumSubSounds(int *numsubsounds)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 9993892a IDENTICAL
-// OFFSET: 0x00A89730
+// PROVEN: 9993892a IDENTICAL/NONE
+// OFFSET: 0x00A89730/0x140847E50
 FMOD_RESULT SoundI::getNumTags(int *numtags, int *numtagsupdated)
 {
     if (!numtags && !numtagsupdated)
@@ -1851,8 +1851,8 @@ FMOD_RESULT SoundI::getNumTags(int *numtags, int *numtagsupdated)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: f7e00af4 IDENTICAL
-// OFFSET: 0x00A89780
+// PROVEN: f7e00af4 IDENTICAL/NONE
+// OFFSET: 0x00A89780/0x140847E90
 FMOD_RESULT SoundI::getTag(const char *name, int index, FMOD_TAG *tag)
 {
     if (!tag)
@@ -1884,8 +1884,8 @@ FMOD_RESULT SoundI::getTag(const char *name, int index, FMOD_TAG *tag)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 71e1a77c IDENTICAL
-// OFFSET: 0x00A897D0
+// PROVEN: 71e1a77c IDENTICAL/NONE
+// OFFSET: 0x00A897D0/0x140847EC0
 FMOD_RESULT SoundI::getOpenState(FMOD_OPENSTATE *openstate, unsigned int *percentbuffered, bool *starving)
 {
     if (openstate)
@@ -2098,8 +2098,8 @@ FMOD_RESULT SoundI::readData(void *buffer, unsigned int numbytes, unsigned int *
 	[SEE_ALSO]
 ]
 */
-// PROVEN: d4316a77 IDENTICAL
-// OFFSET: 0x00A89870
+// PROVEN: d4316a77 IDENTICAL/NONE
+// OFFSET: 0x00A89870/0x140847F60
 FMOD_RESULT SoundI::seekData(unsigned int position)
 {
     if (mCodec)
@@ -2165,8 +2165,8 @@ FMOD_RESULT SoundI::setSoundGroup(SoundGroupI *soundgroup)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e65f5dc6 IDENTICAL
-// OFFSET: 0x00A899B0
+// PROVEN: e65f5dc6 IDENTICAL/NONE
+// OFFSET: 0x00A899B0/0x1408480D0
 FMOD_RESULT SoundI::getSoundGroup(SoundGroupI **soundgroup)
 {
     if (!soundgroup)
@@ -2195,8 +2195,8 @@ FMOD_RESULT SoundI::getSoundGroup(SoundGroupI **soundgroup)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 425c9268 IDENTICAL
-// OFFSET: 0x00A899E0
+// PROVEN: 425c9268 IDENTICAL/NONE
+// OFFSET: 0x00A899E0/0x1408480F0
 FMOD_RESULT SoundI::getNumSyncPoints(int *numsyncpoints)
 {
     if (!numsyncpoints)
@@ -2225,8 +2225,8 @@ FMOD_RESULT SoundI::getNumSyncPoints(int *numsyncpoints)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 43c6f467 IDENTICAL
-// OFFSET: 0x00A89A10
+// PROVEN: 43c6f467 IDENTICAL/NONE
+// OFFSET: 0x00A89A10/0x140848110
 FMOD_RESULT SoundI::getSyncPoint(int index, FMOD_SYNCPOINT **point)
 {
     SyncPoint *current;
@@ -2385,8 +2385,8 @@ FMOD_RESULT SoundI::addSyncPoint(unsigned int offset, FMOD_TIMEUNIT offsettype, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: e5d2761c IDENTICAL
-// OFFSET: 0x00A89A50
+// PROVEN: e5d2761c IDENTICAL/NONE
+// OFFSET: 0x00A89A50/0x140848150
 FMOD_RESULT SoundI::deleteSyncPoint(FMOD_SYNCPOINT *point)
 {
     SyncPoint *spoint = (SyncPoint *)point;
@@ -2533,8 +2533,8 @@ FMOD_RESULT SoundI::setMode(FMOD_MODE mode)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 954b99b6 IDENTICAL
-// OFFSET: 0x00A89BE0
+// PROVEN: 954b99b6 IDENTICAL/NONE
+// OFFSET: 0x00A89BE0/0x1408482E0
 FMOD_RESULT SoundI::getMode(FMOD_MODE *mode)
 {
     if (!mode)
@@ -2602,8 +2602,8 @@ FMOD_RESULT SoundI::setLoopCount(int loopcount)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 6512bc4e IDENTICAL
-// OFFSET: 0x00A89C40
+// PROVEN: 6512bc4e IDENTICAL/NONE
+// OFFSET: 0x00A89C40/0x140848350
 FMOD_RESULT SoundI::getLoopCount(int *loopcount)
 {
     if (!loopcount)
@@ -2847,7 +2847,7 @@ FMOD_RESULT SoundI::getPosition(unsigned int *pcm)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5665b423 IDENTICAL
+// PROVEN: 5665b423 IDENTICAL/NONE
 // OFFSET: 0x00A89C80
 FMOD_RESULT SoundI::setUserData(void *userdata)
 {
@@ -2872,8 +2872,8 @@ FMOD_RESULT SoundI::setUserData(void *userdata)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 99d208ec IDENTICAL
-// OFFSET: 0x00A89CA0
+// PROVEN: 99d208ec IDENTICAL/NONE
+// OFFSET: 0x00A89CA0/0x1408483A0
 FMOD_RESULT SoundI::getUserData(void **userdata)
 {
     if (!userdata)

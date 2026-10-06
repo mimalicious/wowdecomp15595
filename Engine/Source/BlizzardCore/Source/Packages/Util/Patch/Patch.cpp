@@ -14,7 +14,7 @@ Blizzard::Patch::PatchReader::~PatchReader() {
 void Blizzard::Patch::PatchReader::Reset() {
 }
 
-// PROVEN: 1193df1f IDENTICAL
+// PROVEN: 1193df1f IDENTICAL/NONE
 // OFFSET: 0x008757D0
 bool Blizzard::Patch::PatchReader::Load(uint32_t offset, uint8_t* dest, uint32_t size) {
     return false;
@@ -23,7 +23,7 @@ bool Blizzard::Patch::PatchReader::Load(uint32_t offset, uint8_t* dest, uint32_t
 // STATIC: %0x00C0C74C
 static Blizzard::Patch::PatchReader s_memoryReader;
 
-// PROVEN: d95819bd IDENTICAL
+// PROVEN: d95819bd IDENTICAL/NONE
 // OFFSET: 0x007B0930
 uint8_t* Blizzard::Patch::PatchBuffer::Get(uint32_t offset, uint32_t size) {
     if (offset + size > this->m_loaded) {
@@ -34,7 +34,7 @@ uint8_t* Blizzard::Patch::PatchBuffer::Get(uint32_t offset, uint32_t size) {
     return this->m_data + offset;
 }
 
-// PROVEN: a20f5937 IDENTICAL
+// PROVEN: a20f5937 IDENTICAL/NONE
 // OFFSET: 0x007B0970
 uint8_t* Blizzard::Patch::PatchBuffer::GetAll() {
     uint32_t size = this->m_size;
@@ -92,26 +92,26 @@ Blizzard::Patch::LegacyPatch::~LegacyPatch() {
     DeleteBuffer(this->m_buffer);
 }
 
-// PROVEN: 1564bfdc IDENTICAL
-// OFFSET: 0x007B0A80
+// PROVEN: 1564bfdc IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0A80/0x1404C1350
 uint32_t Blizzard::Patch::LegacyPatch::GetSourceSize() {
     return this->m_sourceSize;
 }
 
-// PROVEN: 6a015af8 IDENTICAL
-// OFFSET: 0x00B41A40
+// PROVEN: 6a015af8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B41A40/0x14090FD00
 uint32_t Blizzard::Patch::LegacyPatch::GetTargetSize() {
     return this->m_targetSize;
 }
 
-// PROVEN: 9f3d4607 IDENTICAL
+// PROVEN: 9f3d4607 IDENTICAL/NONE
 // OFFSET: 0x007B0A90
 uint32_t Blizzard::Patch::LegacyPatch::GetType() {
     return this->m_type;
 }
 
-// PROVEN: a694ceb8 IDENTICAL
-// OFFSET: 0x007B0A70
+// PROVEN: a694ceb8 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0A70/0x1404A5800
 const char* Blizzard::Patch::LegacyPatch::GetTypeName() {
     return "legacy";
 }
@@ -122,7 +122,7 @@ const uint8_t* Blizzard::Patch::LegacyPatch::GetTransformData(uint32_t* size) {
     return this->m_buffer->Get(0, *size + sizeof(LegacyHeader)) + sizeof(LegacyHeader);
 }
 
-// PROVEN: 065e8797 IDENTICAL
+// PROVEN: 065e8797 IDENTICAL/NONE
 // OFFSET: 0x007B0AA0
 uint32_t Blizzard::Patch::LegacyPatch::GetHeaderSize() {
     return sizeof(LegacyHeader);
@@ -174,39 +174,39 @@ Blizzard::Patch::V2Patch::~V2Patch() {
     DeleteBuffer(this->m_buffer);
 }
 
-// PROVEN: 89d1dab2 IDENTICAL
-// OFFSET: 0x007B0B20
+// PROVEN: 89d1dab2 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0B20/0x1404A58A0
 uint32_t Blizzard::Patch::V2Patch::GetSourceSize() {
     return this->m_patch->m_sourceSize;
 }
 
-// PROVEN: 55cb2394 IDENTICAL
-// OFFSET: 0x007B0B30
+// PROVEN: 55cb2394 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0B30/0x1404A58B0
 uint32_t Blizzard::Patch::V2Patch::GetTargetSize() {
     return this->m_patch->m_targetSize;
 }
 
-// PROVEN: 41ffcbc1 IDENTICAL
-// OFFSET: 0x007B0B40
+// PROVEN: 41ffcbc1 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0B40/0x1404A58C0
 uint32_t Blizzard::Patch::V2Patch::GetType() {
     return this->m_transform->m_type;
 }
 
-// PROVEN: ac039768 IDENTICAL
-// OFFSET: 0x007B0B10
+// PROVEN: ac039768 IDENTICAL/IDENTICAL
+// OFFSET: 0x007B0B10/0x1404A5890
 const char* Blizzard::Patch::V2Patch::GetTypeName() {
     return "v2patch";
 }
 
-// PROVEN: 76f7711c IDENTICAL
-// OFFSET: 0x007AA840
+// PROVEN: 76f7711c IDENTICAL/DIFFERENT
+// OFFSET: 0x007AA840/0x1404A0C10
 const uint8_t* Blizzard::Patch::V2Patch::GetTransformData(uint32_t* size) {
     *size = this->m_transform->m_size - sizeof(TransformChunk);
     return reinterpret_cast<const uint8_t*>(this->m_transform + 1);
 }
 
-// PROVEN: 147979d9 IDENTICAL
-// OFFSET: 0x00B41A40
+// PROVEN: 147979d9 IDENTICAL/DIFFERENT
+// OFFSET: 0x00B41A40/0x14090FD00
 uint32_t Blizzard::Patch::V2Patch::GetHeaderSize() {
     return this->m_headerSize;
 }

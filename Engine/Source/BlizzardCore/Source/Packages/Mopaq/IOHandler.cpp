@@ -40,13 +40,13 @@ int32_t Blizzard::Mopaq::MpqHandleRecord::Release() {
     return result;
 }
 
-// PROVEN: e4d123e8 IDENTICAL
-// OFFSET: 0x007AB010
+// PROVEN: e4d123e8 IDENTICAL/IDENTICAL
+// OFFSET: 0x007AB010/0x1404A1200
 Blizzard::File::StreamRecord* Blizzard::Mopaq::HSFILERecord::GetFileStream() {
     return this->m_handle ? this->m_handle->m_file : NULL;
 }
 
-// PROVEN: 4ab43a64 IDENTICAL
+// PROVEN: 4ab43a64 IDENTICAL/NONE
 // OFFSET: 0x007AB020
 const char* Blizzard::Mopaq::HSFILERecord::GetFileName() {
     return this->m_handle ? this->m_handle->m_name : "";
@@ -191,50 +191,50 @@ bool Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::GetBadSectorList(std::vec
     return true;
 }
 
-// PROVEN: 2d286e26 IDENTICAL
-// OFFSET: 0x007C3810
+// PROVEN: 2d286e26 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::HandleInitSectorTableError(MpqHandleRecord* handle, uint8_t* table, int64_t offset, uint32_t size) {
     return false;
 }
 
-// PROVEN: baa60b30 IDENTICAL
-// OFFSET: 0x007AAB20
+// PROVEN: baa60b30 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAB20/0x1402B9E40
 bool Blizzard::Mopaq::MpqErrorHandler::HandleReadChecksumError(MpqHandleRecord* handle) {
     return false;
 }
 
-// PROVEN: 486a3d46 IDENTICAL
-// OFFSET: 0x007AAB20
+// PROVEN: 486a3d46 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAB20/0x1402B9E40
 bool Blizzard::Mopaq::MpqErrorHandler::HandleDecompressSectorError(uint32_t sector) {
     return false;
 }
 
-// PROVEN: 42bbaaa1 IDENTICAL
-// OFFSET: 0x007C3810
+// PROVEN: 42bbaaa1 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::HandleReadMPQFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t* count) {
     return false;
 }
 
-// PROVEN: 42aabd43 IDENTICAL
+// PROVEN: 42aabd43 IDENTICAL/NONE
 // OFFSET: 0x007AB6C0
 bool Blizzard::Mopaq::MpqErrorHandler::HandleWriteFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset) {
     return false;
 }
 
-// PROVEN: 42815344 IDENTICAL
+// PROVEN: 42815344 IDENTICAL/NONE
 // OFFSET: 0x007AAB30
 bool Blizzard::Mopaq::MpqErrorHandler::HandleMD5BlockError(MpqHandleRecord* handle, uint8_t* buffer, int64_t fileSize, uint32_t block, int32_t blockSize, uint32_t size, uint8_t* md5) {
     return false;
 }
 
-// PROVEN: d5cc93b1 IDENTICAL
-// OFFSET: 0x007C3810
+// PROVEN: d5cc93b1 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C3810/0x140317F90
 bool Blizzard::Mopaq::MpqErrorHandler::HandleNonStreamableFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t count) {
     return false;
 }
 
-// PROVEN: 6e17c5ff IDENTICAL
-// OFFSET: 0x007AAB20
+// PROVEN: 6e17c5ff IDENTICAL/DIFFERENT
+// OFFSET: 0x007AAB20/0x1402B9E40
 bool Blizzard::Mopaq::MpqErrorHandler::GetBadSectorList(std::vector<uint32_t>& sectors) {
     return false;
 }
@@ -260,7 +260,7 @@ System_Mopaq::IOHandler::~IOHandler() {
     }
 }
 
-// PROVEN: 535c6124 IDENTICAL
+// PROVEN: 535c6124 IDENTICAL/NONE
 // OFFSET: 0x007AB8E0
 bool System_Mopaq::IOHandler::ReadData(IOHandler* handler, void* buffer, int64_t offset, int32_t* count) {
     return handler->ReadData(buffer, offset, count);
@@ -282,7 +282,7 @@ bool System_Mopaq::IOHandler::ReadData(void* buffer, int64_t offset, int32_t* co
     return this->m_base.Read(buffer, offset + this->m_baseOffset, *count, count);
 }
 
-// PROVEN: 11f2fd1e IDENTICAL
+// PROVEN: 11f2fd1e IDENTICAL/NONE
 // OFFSET: 0x007C7A30
 bool System_Mopaq::IOHandler::InitializeAndRead(void* buffer, int64_t offset, int32_t* count) {
     return this->ReadData(buffer, offset, count);
@@ -293,8 +293,8 @@ bool System_Mopaq::IOHandler::WriteData(const uint8_t* buffer, int64_t offset, i
     return this->m_base.Write(buffer, offset + this->m_baseOffset, count);
 }
 
-// PROVEN: 55714c49 IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 55714c49 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_Mopaq::IOHandler::Flush() {
     return true;
 }
@@ -307,20 +307,20 @@ int32_t System_Mopaq::IOHandler::TrimRead(int32_t count, System_SFile::BLOCKENTR
     return amount > 0 ? amount : 0;
 }
 
-// PROVEN: 0a5c3582 IDENTICAL
+// PROVEN: 0a5c3582 IDENTICAL/NONE
 // OFFSET: 0x007C7A50
 void System_Mopaq::IOHandler::UpdateBaseOffset() {
     this->m_baseOffset = this->m_handle->m_blockEntry.m_offset;
 }
 
-// PROVEN: 2660d618 IDENTICAL
-// OFFSET: 0x00A3AA30
+// PROVEN: 2660d618 IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_Mopaq::IOHandler::AdjustSectorTable() {
     return true;
 }
 
-// PROVEN: 719f64cf IDENTICAL
-// OFFSET: 0x00841AE0
+// PROVEN: 719f64cf IDENTICAL/DIFFERENT
+// OFFSET: 0x00841AE0/0x140211B90
 void System_Mopaq::IOHandler::SetSizeFileBeforeDelta(uint64_t size) {
 }
 
@@ -344,7 +344,7 @@ bool System_Mopaq::MopaqReadHandler::ReadData(void* buffer, int64_t offset, int3
     return this->m_handle->m_errorHandler->HandleNonStreamableFileError(this->m_handle, static_cast<uint8_t*>(buffer), offset, *count);
 }
 
-// PROVEN: 698c968f IDENTICAL
+// PROVEN: 698c968f IDENTICAL/NONE
 // OFFSET: 0x007AB6C0
 bool System_Mopaq::MopaqReadHandler::WriteData(const uint8_t* buffer, int64_t offset, int32_t count) {
     return false;

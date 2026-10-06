@@ -85,8 +85,8 @@ void GetCurrencyTextureString(int32_t amount, char* buffer, uint32_t size, int32
     }
 }
 
-// PROVEN: 32af9dfe IDENTICAL
-// OFFSET: 0x004E3A00
+// PROVEN: 32af9dfe IDENTICAL/NONE
+// OFFSET: 0x004E3A00/0x140124BF0
 void LootInitialize() {
     s_currencyMultiplier[0] = 1;
     s_currencyMultiplier[1] = 100;
@@ -99,8 +99,8 @@ void CGLootInfo::InitializeGame() {
     CGLootInfo::m_lootObj = WOWGUID();
 }
 
-// PROVEN: 99b26c7d IDENTICAL
-// OFFSET: 0x004E3A30
+// PROVEN: 99b26c7d IDENTICAL/NONE
+// OFFSET: 0x004E3A30/0x140124C20
 void LootDestroy() {
     s_lootInitialized = 0;
 }
@@ -162,8 +162,8 @@ void GetCurrencyIcon(int32_t amount, char* buffer, uint32_t size) {
     }
 }
 
-// PROVEN: 09095f6f IDENTICAL
-// OFFSET: 0x00959970
+// PROVEN: 09095f6f IDENTICAL/NONE
+// OFFSET: 0x00959970/0x1406CBF90
 void CGLootInfo::LeaveWorld() {
     CGGameUI::CloseLoot(true, false, false);
 }
@@ -780,7 +780,7 @@ void CGLootInfo::OnLootSlotChanged(uint8_t slot) {
     }
 }
 
-// PROVEN: 29eb8814 IDENTICAL
+// PROVEN: 29eb8814 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void CGLootInfo::ShutdownGame() {
 }

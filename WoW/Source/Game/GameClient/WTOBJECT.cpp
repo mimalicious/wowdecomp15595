@@ -60,7 +60,7 @@ void WeaponTrailClose(WTOBJECT* trail) {
     s_freeTrails.Delete(trail);
 }
 
-// PROVEN: a5cd2e8f IDENTICAL
+// PROVEN: a5cd2e8f IDENTICAL/NONE
 // OFFSET: 0x004DFC20
 void SWING::FillVertices(CImVector color, uint8_t fade, CGxVertexPC* vertices) {
     for (int32_t i = this->m_tail; i < this->m_head; i++, vertices++) {

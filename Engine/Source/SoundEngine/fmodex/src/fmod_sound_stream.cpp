@@ -29,8 +29,8 @@ namespace FMOD
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 04b00bc9 IDENTICAL
-// OFFSET: 0x00ACB7B0
+// PROVEN: 04b00bc9 IDENTICAL/NONE
+// OFFSET: 0x00ACB7B0/0x140895A00
 Stream::Stream()
 {
     mLastPos          = 0;
@@ -308,8 +308,8 @@ FMOD_RESULT Stream::fill(unsigned int offset, unsigned int length)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a295aad4 IDENTICAL
-// OFFSET: 0x00ACB510
+// PROVEN: a295aad4 IDENTICAL/NONE
+// OFFSET: 0x00ACB510/0x1408956D0
 FMOD_RESULT Stream::flush()
 {
     FMOD_RESULT result;
@@ -494,8 +494,8 @@ FMOD_RESULT Stream::setPosition(unsigned int position, FMOD_TIMEUNIT postype)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 4e364158 IDENTICAL
-// OFFSET: 0x00ACB800
+// PROVEN: 4e364158 IDENTICAL/NONE
+// OFFSET: 0x00ACB800/0x140895A70
 FMOD_RESULT Stream::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 {
     FMOD_RESULT result;
@@ -553,8 +553,8 @@ FMOD_RESULT Stream::getPosition(unsigned int *position, FMOD_TIMEUNIT postype)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 691c25e0 IDENTICAL
-// OFFSET: 0x00ACB780
+// PROVEN: 691c25e0 IDENTICAL/NONE
+// OFFSET: 0x00ACB780/0x1408959E0
 FMOD_RESULT Stream::setLoopCount(int loopcount)
 {
     if (mOpenState != FMOD_OPENSTATE_READY)

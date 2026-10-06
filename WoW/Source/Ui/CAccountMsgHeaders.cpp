@@ -10,20 +10,20 @@
 // STATIC: #0x00BEA750
 CAccountMsgHeaders g_accountMsgHeaders;
 
-// PROVEN: 8cf57339 IDENTICAL
+// PROVEN: 8cf57339 IDENTICAL/NONE
 // OFFSET: 0x00B06D20
 static bool AccountMsgReadCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     return false;
 }
 
-// PROVEN: 73c0db07 IDENTICAL
+// PROVEN: 73c0db07 IDENTICAL/NONE
 // OFFSET: 0x009FA090
 void CAccountMsgHeaders::_SendFailureEvent() {
     this->m_iterator.m_node = NULL;
     this->m_count = 0;
 }
 
-// PROVEN: 44c5b11c IDENTICAL
+// PROVEN: 44c5b11c IDENTICAL/NONE
 // OFFSET: 0x009FA0A0
 const char* CAccountMsgHeaders::GetHeaderSubject(int32_t index) {
     if (this->m_state == 1 || index < 0 || index >= this->m_count) {

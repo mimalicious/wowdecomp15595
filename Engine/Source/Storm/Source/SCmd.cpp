@@ -43,7 +43,7 @@ static void ConvertBool(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// PROVEN: a322c91b IDENTICAL
+// PROVEN: a322c91b IDENTICAL/NONE
 // OFFSET: 0x004B6670
 static void ConvertNumber(CMDDEF* ptr, const char* string, int32_t* datachars) {
     char* endptr = NULL;
@@ -410,7 +410,7 @@ int32_t STORMAPI SCmdRegisterArgument(uint32_t flags, uint32_t id, const char* n
     return 1;
 }
 
-// OFFSET: 0x004B73A0
+// OFFSET: 0x004B73A0/0x1400EF340
 int32_t STORMAPI SCmdRegisterArgList(const _ARGLIST* listptr, uint32_t numargs) {
     if (!listptr) {
         DebugValidate("listptr");
@@ -445,7 +445,7 @@ int32_t ProcessString(const char** stringptr, _PROCESSING* processing, CMDDEF** 
     return **stringptr == 0;
 }
 
-// PROVEN: 4cf24d18 IDENTICAL
+// PROVEN: 4cf24d18 IDENTICAL/NONE
 // OFFSET: 0x004B7140
 int32_t STORMAPI SCmdGetBool(uint32_t id) {
     return SCmdGetNum(id) != 0;

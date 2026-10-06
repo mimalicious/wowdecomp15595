@@ -65,8 +65,8 @@ void CSimpleAnimGroup::LoadXML_Scripts(linkObject* node, CStatus* status) {
     }
 }
 
-// PROVEN: 09689528 IDENTICAL
-// OFFSET: 0x00527110
+// PROVEN: 09689528 IDENTICAL/NONE
+// OFFSET: 0x00527110/0x1401764C0
 FrameScript_Object::ScriptIx* CSimpleAnimGroup::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = this->FrameScript_Object::GetScriptByName(name, data);
 
@@ -136,8 +136,8 @@ void CSimpleAnimGroup::SetInitialOffset(const C2Vector& offset) {
     }
 }
 
-// PROVEN: 6d02956a IDENTICAL
-// OFFSET: 0x00527550
+// PROVEN: 6d02956a IDENTICAL/NONE
+// OFFSET: 0x00527550/0x140176880
 void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     if (this->HasScript(this->m_onFinished)) {
         lua_State* L = FrameScript_GetContext();
@@ -146,8 +146,8 @@ void CSimpleAnimGroup::RunOnFinishedScript(bool requested) {
     }
 }
 
-// PROVEN: 89b388cb IDENTICAL
-// OFFSET: 0x005275A0
+// PROVEN: 89b388cb IDENTICAL/NONE
+// OFFSET: 0x005275A0/0x1401768F0
 void CSimpleAnimGroup::RunOnUpdateScript(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
         lua_State* L = FrameScript_GetContext();
@@ -301,32 +301,32 @@ CSimpleAnimGroup::CSimpleAnimGroup(CScriptRegion* owner) {
     this->m_animLists.Clear();
 }
 
-// PROVEN: c12d3820 IDENTICAL
-// OFFSET: 0x00529DA0
+// PROVEN: c12d3820 IDENTICAL/DIFFERENT
+// OFFSET: 0x00529DA0/0x140512ED0
 CScriptObject* CSimpleAnimGroup::GetScriptObjectParent() {
     return this->m_region;
 }
 
-// PROVEN: 2b6c35aa IDENTICAL
+// PROVEN: 2b6c35aa IDENTICAL/NONE
 // OFFSET: 0x00529DC0
 bool CSimpleAnimGroup::IsA(int32_t type) {
     return type == CSimpleAnimGroup::s_objectType || type == CScriptObject::s_objectType;
 }
 
-// PROVEN: a69e8bb3 IDENTICAL
-// OFFSET: 0x00529DF0
+// PROVEN: a69e8bb3 IDENTICAL/NONE
+// OFFSET: 0x00529DF0/0x140179BF0
 bool CSimpleAnimGroup::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleAnimGroup::s_objectTypeName, STORM_MAX_STR) || !SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR);
 }
 
-// PROVEN: c1eee520 IDENTICAL
-// OFFSET: 0x00529E30
+// PROVEN: c1eee520 IDENTICAL/NONE
+// OFFSET: 0x00529E30/0x140179C30
 const char* CSimpleAnimGroup::GetObjectTypeName() {
     return CSimpleAnimGroup::s_objectTypeName;
 }
 
-// PROVEN: fe24b43d IDENTICAL
-// OFFSET: 0x00529DB0
+// PROVEN: fe24b43d IDENTICAL/NONE
+// OFFSET: 0x00529DB0/0x140179BC0
 int32_t CSimpleAnimGroup::GetScriptMetaTable() {
     return CSimpleAnimGroup::s_metatable;
 }

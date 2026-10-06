@@ -115,8 +115,8 @@ int32_t TextureCacheHasMips(void* handle) {
     return entry && entry->m_data && !entry->m_loadFailed;
 }
 
-// PROVEN: 2587d302 IDENTICAL
-// OFFSET: 0x00703F60
+// PROVEN: 2587d302 IDENTICAL/NONE
+// OFFSET: 0x00703F60/0x1403D0A50
 void TextureCacheResetLoadCount() {
     s_loadCount = 0;
 }

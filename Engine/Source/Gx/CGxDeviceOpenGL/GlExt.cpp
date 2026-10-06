@@ -334,8 +334,8 @@ int32_t glExtCVA;
 // STATIC: %0x00D930B8
 uint32_t glVersion;
 
-// PROVEN: d6c7ee57 IDENTICAL
-// OFFSET: 0x0085B640
+// PROVEN: d6c7ee57 IDENTICAL/NONE
+// OFFSET: 0x0085B640/0x14058D1F0
 void UnbindGlExtensions() {
     s_glExtensions = NULL;
     s_wglExtensions = NULL;

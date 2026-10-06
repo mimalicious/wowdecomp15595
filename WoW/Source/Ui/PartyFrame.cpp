@@ -128,7 +128,7 @@ void CGPartyInfo::SetLeader(WOWGUID leader) {
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_LEADER_CHANGED);
 }
 
-// PROVEN: 6b80e4f8 IDENTICAL
+// PROVEN: 6b80e4f8 IDENTICAL/NONE
 // OFFSET: 0x008FC650
 uint32_t CGPartyInfo::GetNumPartyMembers() {
     uint32_t count = 0;
@@ -162,7 +162,7 @@ WOWGUID GetPartyPetGUID(uint32_t index) {
     return WOWGUID();
 }
 
-// PROVEN: ec05f649 IDENTICAL
+// PROVEN: ec05f649 IDENTICAL/NONE
 // OFFSET: 0x004DA4A0
 bool CGPartyInfo::InParty() {
     return CGPartyInfo::m_members[0].m_guid != 0;
@@ -204,8 +204,8 @@ static void PartyMemberNameCallback(int32_t id, const WOWGUID& guid, void* param
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
 }
 
-// PROVEN: ab72033d IDENTICAL
-// OFFSET: 0x008FD3E0
+// PROVEN: ab72033d IDENTICAL/NONE
+// OFFSET: 0x008FD3E0/0x140654910
 int32_t CGPartyInfo::IsMember(const WOWGUID& guid) {
     if (!guid) {
         return 0;
@@ -224,7 +224,7 @@ int32_t CGPartyInfo::IsMember(const WOWGUID& guid) {
     return 0;
 }
 
-// PROVEN: a0c63dee IDENTICAL
+// PROVEN: a0c63dee IDENTICAL/NONE
 // OFFSET: 0x008FC6A0
 void CGPartyInfo::UpdateRealStats(uint32_t count, WOWGUID leader) {
     if (count <= 4) {
@@ -850,7 +850,7 @@ CGPartyMemberState* CGPartyInfo::GetMemberState(uint32_t index) {
     return NULL;
 }
 
-// PROVEN: e833e10c IDENTICAL
+// PROVEN: e833e10c IDENTICAL/NONE
 // OFFSET: 0x008FC970
 void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     info->m_guid = WOWGUID();
@@ -864,7 +864,7 @@ void CGPartyInfo::GetReadyCheckInfo(PartyReadyCheckInfo* info, uint32_t index) {
     }
 }
 
-// PROVEN: 683a6f92 IDENTICAL
+// PROVEN: 683a6f92 IDENTICAL/NONE
 // OFFSET: 0x008FC9C0
 void CGPartyInfo::SetReadyCheckInfo(const PartyReadyCheckInfo* info, uint32_t index) {
     if (index < 4 && CGPartyInfo::m_members[index] == info->m_guid) {

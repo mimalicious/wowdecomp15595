@@ -56,7 +56,7 @@ void CGArenaTeamInfo::UpdateRoster(uint32_t index, int32_t reset) {
     }
 }
 
-// PROVEN: 439683be IDENTICAL
+// PROVEN: 439683be IDENTICAL/NONE
 // OFFSET: 0x009A9390
 ArenaTeamMember* CGArenaTeamInfo::SelectMember(uint32_t team, uint32_t index) {
     if (team >= 3 || index >= CGArenaTeamInfo::m_arenaTeams[team].m_numMembers) {
@@ -471,7 +471,7 @@ void CGArenaTeamInfo::UpdateTeams(int32_t signal) {
     }
 }
 
-// PROVEN: f5f35875 IDENTICAL
+// PROVEN: f5f35875 IDENTICAL/NONE
 // OFFSET: 0x009AA590
 void CGArenaTeamInfo::EnterWorld() {
     CGArenaTeamInfo::UpdateTeams(0);

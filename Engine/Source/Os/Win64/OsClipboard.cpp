@@ -40,7 +40,7 @@ char* IOsClipboardGetString(void* window) {
     return string;
 }
 
-// PROVEN: c60281e2 IDENTICAL
+// PROVEN: c60281e2 IDENTICAL/NONE
 // OFFSET: 0x0087C990
 void OsClipboardFreeString(char* string) {
     if (string) {

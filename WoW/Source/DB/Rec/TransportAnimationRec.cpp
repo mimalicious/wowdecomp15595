@@ -3,7 +3,7 @@
 // STATIC: %0x00B448B0
 const DBCMeta TransportAnimationRec::s_meta = { "DBFilesClient\\TransportAnimation.dbc", 5, 28, TransportAnimationRec::FixupStrings, 0 };
 
-// PROVEN: 480c9e45 IDENTICAL
+// PROVEN: 480c9e45 IDENTICAL/NONE
 // OFFSET: 0x00401000
 void TransportAnimationRec::FixupStrings(void* record, const char* strings) {
 }

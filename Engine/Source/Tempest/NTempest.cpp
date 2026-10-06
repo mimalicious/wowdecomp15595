@@ -77,7 +77,7 @@ float NTempest::DistanceSquared(const CAaBox& box, const C3Vector& point) {
     return dy * dy + (x - point.x) * (x - point.x) + dz * dz;
 }
 
-// PROVEN: 6c3cfbdc IDENTICAL
+// PROVEN: 6c3cfbdc IDENTICAL/NONE
 // OFFSET: 0x00B08C70
 bool NTempest::HitBoundingBox(const float* origin, const float* dir, const float* minB, const float* maxB, float* t, float* coord) {
     bool inside = true;
@@ -230,7 +230,7 @@ bool NTempest::Intersect2dBoxSphere(const float* minB, const float* maxB, const 
     return false;
 }
 
-// PROVEN: 32b05710 IDENTICAL
+// PROVEN: 32b05710 IDENTICAL/NONE
 // OFFSET: 0x00B09130
 bool NTempest::Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector* hit) {
     float tStorage;

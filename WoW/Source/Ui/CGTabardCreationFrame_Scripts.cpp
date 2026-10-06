@@ -21,7 +21,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTabardCreationCost", &Script_GetTabardCreationCost },
 };
 
-// PROVEN: dad72d6f IDENTICAL
+// PROVEN: dad72d6f IDENTICAL/NONE
 // OFFSET: 0x009DFFC0
 void TabardCreationRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
@@ -29,7 +29,7 @@ void TabardCreationRegisterScriptFunctions() {
     }
 }
 
-// PROVEN: f34a593d IDENTICAL
+// PROVEN: f34a593d IDENTICAL/NONE
 // OFFSET: 0x009DFFF0
 void TabardCreationUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {

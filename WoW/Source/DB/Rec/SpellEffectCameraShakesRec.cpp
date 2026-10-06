@@ -3,7 +3,7 @@
 // STATIC: %0x00B450D8
 const DBCMeta SpellEffectCameraShakesRec::s_meta = { "DBFilesClient\\SpellEffectCameraShakes.dbc", 2, 16, SpellEffectCameraShakesRec::FixupStrings, 0 };
 
-// PROVEN: b53220ba IDENTICAL
+// PROVEN: b53220ba IDENTICAL/NONE
 // OFFSET: 0x00401000
 void SpellEffectCameraShakesRec::FixupStrings(void* record, const char* strings) {
 }

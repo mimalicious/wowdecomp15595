@@ -3,7 +3,7 @@
 // STATIC: %0x00B464F4
 const DBCMeta gtSpellScalingRec::s_meta = { "DBFilesClient\\gtSpellScaling.dbc", 1, 8, gtSpellScalingRec::FixupStrings, 0 };
 
-// PROVEN: 286b55bc IDENTICAL
+// PROVEN: 286b55bc IDENTICAL/NONE
 // OFFSET: 0x00401000
 void gtSpellScalingRec::FixupStrings(void* record, const char* strings) {
 }

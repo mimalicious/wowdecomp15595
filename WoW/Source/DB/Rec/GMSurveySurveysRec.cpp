@@ -3,7 +3,7 @@
 // STATIC: %0x00B46830
 const DBCMeta GMSurveySurveysRec::s_meta = { "DBFilesClient\\GMSurveySurveys.dbc", 2, 44, GMSurveySurveysRec::FixupStrings, 0 };
 
-// PROVEN: 129dd48e IDENTICAL
+// PROVEN: 129dd48e IDENTICAL/NONE
 // OFFSET: 0x00401000
 void GMSurveySurveysRec::FixupStrings(void* record, const char* strings) {
 }

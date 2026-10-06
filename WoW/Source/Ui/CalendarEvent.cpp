@@ -38,8 +38,8 @@ static uint32_t s_inviteSortType;
 // STATIC: #0x00C243B4
 static InviteSortCriterion s_inviteSortCriteria[6];
 
-// PROVEN: 245f356d IDENTICAL
-// OFFSET: 0x00A0AE70
+// PROVEN: 245f356d IDENTICAL/NONE
+// OFFSET: 0x00A0AE70/0x1407AC0C0
 const char* GetEventStatusString(uint32_t status) {
     if (status == 7 || status >= 9) {
         return NULL;
@@ -58,7 +58,7 @@ const char* GetEventRepeatString(uint32_t repeat) {
     return repeat < 4 ? s_eventRepeatStrings[repeat] : NULL;
 }
 
-// PROVEN: 629657d7 IDENTICAL
+// PROVEN: 629657d7 IDENTICAL/NONE
 // OFFSET: 0x00A0AED0
 void CGCalendarEvent::Clear() {
     this->m_eventID = 0;
@@ -93,7 +93,7 @@ void CGCalendarEvent::Clear() {
     }
 }
 
-// PROVEN: 2ecb9e7d IDENTICAL
+// PROVEN: 2ecb9e7d IDENTICAL/NONE
 // OFFSET: 0x00A0AF90
 void CGCalendarEvent::SetTitle(const char* title) {
     if (title && SStrCmp(title, this->m_title, STORM_MAX_STR)) {
@@ -102,7 +102,7 @@ void CGCalendarEvent::SetTitle(const char* title) {
     }
 }
 
-// PROVEN: e202e12e IDENTICAL
+// PROVEN: e202e12e IDENTICAL/NONE
 // OFFSET: 0x00A0AFF0
 void CGCalendarEvent::SetDescription(const char* description) {
     if (description && SStrCmp(description, this->m_description, STORM_MAX_STR)) {
@@ -127,7 +127,7 @@ void CGCalendarEvent::SetRepeatOption(uint32_t repeatOption) {
     }
 }
 
-// PROVEN: 6854125b IDENTICAL
+// PROVEN: 6854125b IDENTICAL/NONE
 // OFFSET: 0x00A0B0C0
 void CGCalendarEvent::SetSize(uint32_t size) {
     if (!(this->m_flags & 0x440) && size > 1 && size != this->m_maxSize) {
@@ -136,8 +136,8 @@ void CGCalendarEvent::SetSize(uint32_t size) {
     }
 }
 
-// PROVEN: b4a305c9 IDENTICAL
-// OFFSET: 0x00A0B0F0
+// PROVEN: b4a305c9 IDENTICAL/NONE
+// OFFSET: 0x00A0B0F0/0x1407AC330
 bool CGCalendarEvent::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) {
     if (month != this->m_date.m_month || monthDay != this->m_date.m_monthDay || year != this->m_date.m_year) {
         this->m_changed = 1;
@@ -146,8 +146,8 @@ bool CGCalendarEvent::SetDate(uint32_t month, uint32_t monthDay, uint32_t year) 
     return this->m_date.SetDate(month, monthDay, year);
 }
 
-// PROVEN: d555b8e5 IDENTICAL
-// OFFSET: 0x00A0B130
+// PROVEN: d555b8e5 IDENTICAL/NONE
+// OFFSET: 0x00A0B130/0x1407AC360
 bool CGCalendarEvent::SetTime(uint32_t hour, uint32_t minute) {
     if (hour != this->m_date.m_hour || minute != this->m_date.m_minute) {
         this->m_changed = 1;
@@ -156,8 +156,8 @@ bool CGCalendarEvent::SetTime(uint32_t hour, uint32_t minute) {
     return this->m_date.SetHourAndMinutes(hour, minute);
 }
 
-// PROVEN: b6674cd7 IDENTICAL
-// OFFSET: 0x00A0B170
+// PROVEN: b6674cd7 IDENTICAL/NONE
+// OFFSET: 0x00A0B170/0x1407AC390
 bool CGCalendarEvent::SetLockoutDate(uint32_t month, uint32_t monthDay, uint32_t year) {
     if (this->m_flags & 0x440) {
         return false;
@@ -170,8 +170,8 @@ bool CGCalendarEvent::SetLockoutDate(uint32_t month, uint32_t monthDay, uint32_t
     return this->m_lockoutDate.SetDate(month, monthDay, year);
 }
 
-// PROVEN: 7f605a86 IDENTICAL
-// OFFSET: 0x00A0B1D0
+// PROVEN: 7f605a86 IDENTICAL/NONE
+// OFFSET: 0x00A0B1D0/0x1407AC3D0
 bool CGCalendarEvent::SetLockoutTime(uint32_t hour, uint32_t minute) {
     if (this->m_flags & 0x440) {
         return false;
@@ -184,8 +184,8 @@ bool CGCalendarEvent::SetLockoutTime(uint32_t hour, uint32_t minute) {
     return this->m_lockoutDate.SetHourAndMinutes(hour, minute);
 }
 
-// PROVEN: d3296ff0 IDENTICAL
-// OFFSET: 0x00A0B220
+// PROVEN: d3296ff0 IDENTICAL/NONE
+// OFFSET: 0x00A0B220/0x1407AC410
 void CGCalendarEvent::SetTextureID(int32_t textureID) {
     if (textureID != this->m_textureID) {
         this->m_textureID = textureID;
@@ -193,7 +193,7 @@ void CGCalendarEvent::SetTextureID(int32_t textureID) {
     }
 }
 
-// PROVEN: 63139ea3 IDENTICAL
+// PROVEN: 63139ea3 IDENTICAL/NONE
 // OFFSET: 0x00A0B240
 void CGCalendarEvent::SetFlag(uint32_t flag) {
     if (!(this->m_flags & flag)) {
@@ -202,7 +202,7 @@ void CGCalendarEvent::SetFlag(uint32_t flag) {
     }
 }
 
-// PROVEN: f156b076 IDENTICAL
+// PROVEN: f156b076 IDENTICAL/NONE
 // OFFSET: 0x00A0B270
 void CGCalendarEvent::ClearFlag(uint32_t flag) {
     if (this->m_flags & flag) {
@@ -216,7 +216,7 @@ void CGCalendarEvent::SetSignalType(uint32_t signalType) {
     this->m_signalType = signalType;
 }
 
-// PROVEN: e39ae649 IDENTICAL
+// PROVEN: e39ae649 IDENTICAL/NONE
 // OFFSET: 0x00A0B2A0
 bool CGCalendarEvent::ProcessUpdateEvent(CDataStore* msg) {
     msg->Get(this->m_flags);
@@ -418,8 +418,8 @@ bool CGCalendarEvent::SortInvites(uint32_t criterion, bool toggle) {
     return true;
 }
 
-// PROVEN: 679d0c8c IDENTICAL
-// OFFSET: 0x00A0BA40
+// PROVEN: 679d0c8c IDENTICAL/NONE
+// OFFSET: 0x00A0BA40/0x1407ACD70
 void CGCalendarEvent::SelectInvite(uint32_t index) {
     if (index > this->m_numInvites) {
         return;
@@ -872,7 +872,7 @@ void CGCalendarEvent::SetModeratorStatus(uint32_t index, uint32_t status) {
     ClientServices::Send2(&msg);
 }
 
-// PROVEN: b8f234ca IDENTICAL
+// PROVEN: b8f234ca IDENTICAL/NONE
 // OFFSET: 0x00A0C800
 CGCalendarEvent::CGCalendarEvent() {
     this->Clear();
@@ -1158,7 +1158,7 @@ void CGCalendarEvent::AddInvite(uint64_t inviteID, WOWGUID guid, uint8_t level, 
     FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_UPDATE_INVITE_LIST, NULL);
 }
 
-// PROVEN: 5a8f1253 IDENTICAL
+// PROVEN: 5a8f1253 IDENTICAL/NONE
 // OFFSET: 0x009ABA40
 EventInviteInfo* CGCalendarEvent::GetInvite(WOWGUID guid) {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {
@@ -1170,7 +1170,7 @@ EventInviteInfo* CGCalendarEvent::GetInvite(WOWGUID guid) {
     return NULL;
 }
 
-// PROVEN: 924dd9d2 IDENTICAL
+// PROVEN: 924dd9d2 IDENTICAL/NONE
 // OFFSET: 0x009ABAA0
 int32_t CGCalendarEvent::GetInviteIndex(WOWGUID guid) {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {
@@ -1182,7 +1182,7 @@ int32_t CGCalendarEvent::GetInviteIndex(WOWGUID guid) {
     return -1;
 }
 
-// PROVEN: 7a8beb1e IDENTICAL
+// PROVEN: 7a8beb1e IDENTICAL/NONE
 // OFFSET: 0x009ABAE0
 int32_t CGCalendarEvent::GetSelectedInviteIndex() {
     for (uint32_t i = 0; i < this->m_numInvites; i++) {

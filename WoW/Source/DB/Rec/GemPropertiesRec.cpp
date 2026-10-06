@@ -3,7 +3,7 @@
 // STATIC: %0x00B46978
 const DBCMeta GemPropertiesRec::s_meta = { "DBFilesClient\\GemProperties.dbc", 6, 24, GemPropertiesRec::FixupStrings, 0 };
 
-// PROVEN: eb3c871c IDENTICAL
+// PROVEN: eb3c871c IDENTICAL/NONE
 // OFFSET: 0x00401000
 void GemPropertiesRec::FixupStrings(void* record, const char* strings) {
 }

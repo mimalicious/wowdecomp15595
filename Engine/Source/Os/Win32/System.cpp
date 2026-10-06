@@ -80,7 +80,7 @@ static int32_t s_checkedPowerProfInfo;
 
 static const char s_vendorIds[] = "GenuineIntel" "AuthenticAMD" "CyrixInstead" "CentaurHauls";
 
-// PROVEN: 642ef6f1 IDENTICAL
+// PROVEN: 642ef6f1 IDENTICAL/NONE
 // OFFSET: 0x00875240
 int32_t IOsGetProcessorFeatures(CpuIdInfo* info) {
     memset(info, 0, sizeof(CpuIdInfo));
@@ -193,14 +193,14 @@ void IOsSystemCpuLog(const CpuIdInfo* info) {
     SLogClose(log);
 }
 
-// PROVEN: 9bbdb948 IDENTICAL
-// OFFSET: 0x008755C0
+// PROVEN: 9bbdb948 IDENTICAL/IDENTICAL
+// OFFSET: 0x008755C0/0x1405AC2A0
 uint32_t OsGetNumberOfProcessors() {
     return s_processorCount;
 }
 
-// PROVEN: 2be3f67e IDENTICAL
-// OFFSET: 0x008755E0
+// PROVEN: 2be3f67e IDENTICAL/IDENTICAL
+// OFFSET: 0x008755E0/0x1405AC2C0
 int32_t OsSleepInBackground() {
     return s_sleepInBackground;
 }
@@ -210,8 +210,8 @@ void OsSetSleepInBackground(int32_t sleep) {
     s_sleepInBackground = sleep;
 }
 
-// PROVEN: b3f2172e IDENTICAL
-// OFFSET: 0x00875600
+// PROVEN: b3f2172e IDENTICAL/IDENTICAL
+// OFFSET: 0x00875600/0x1405AC2E0
 uint32_t OsGetBackgroundSleepMs() {
     return s_backgroundSleepMs;
 }
@@ -299,25 +299,25 @@ void OsGetVersionString(char* buffer, int32_t size) {
     SStrCopy(buffer, name, size);
 }
 
-// PROVEN: 2c4ef866 IDENTICAL
-// OFFSET: 0x00875790
+// PROVEN: 2c4ef866 IDENTICAL/IDENTICAL
+// OFFSET: 0x00875790/0x1405AC480
 uint32_t OsGetProcessorId() {
     return 0x783836;
 }
 
-// PROVEN: 5981606e IDENTICAL
-// OFFSET: 0x008757A0
+// PROVEN: 5981606e IDENTICAL/IDENTICAL
+// OFFSET: 0x008757A0/0x1405AC490
 uint32_t OsGetOsId() {
     return 0x57696E;
 }
 
-// PROVEN: 74809024 IDENTICAL
+// PROVEN: 74809024 IDENTICAL/NONE
 // OFFSET: 0x008757B0
 int32_t OsGetComputerName(char* buffer, uint32_t* size) {
     return GetComputerNameA(buffer, reinterpret_cast<DWORD*>(size));
 }
 
-// PROVEN: ecf3d6ce IDENTICAL
+// PROVEN: ecf3d6ce IDENTICAL/NONE
 // OFFSET: 0x008757D0
 static BOOLEAN WINAPI GetUserNameExWFallback(EXTENDED_NAME_FORMAT format, LPWSTR buffer, PULONG size) {
     return FALSE;
@@ -358,8 +358,8 @@ int32_t OsGetUserName(char* buffer, uint32_t* size) {
     return 1;
 }
 
-// PROVEN: f4ad8b48 IDENTICAL
-// OFFSET: 0x008757E0
+// PROVEN: f4ad8b48 IDENTICAL/IDENTICAL
+// OFFSET: 0x008757E0/0x1405AC4B0
 uint64_t OsGetPhysicalMemory() {
     MEMORYSTATUSEX status;
     status.dwLength = sizeof(status);
@@ -368,8 +368,8 @@ uint64_t OsGetPhysicalMemory() {
     return status.ullTotalPhys;
 }
 
-// PROVEN: c4271444 IDENTICAL
-// OFFSET: 0x00875810
+// PROVEN: c4271444 IDENTICAL/IDENTICAL
+// OFFSET: 0x00875810/0x1405AC4E0
 void* CreateNamedEventA(const char* name, int32_t manualReset) {
     return CreateEventA(NULL, manualReset, FALSE, name);
 }
@@ -468,8 +468,8 @@ int32_t IOsParseProcessorFrequency(const char* brand) {
     return 1;
 }
 
-// PROVEN: 878a6637 IDENTICAL
-// OFFSET: 0x008759B0
+// PROVEN: 878a6637 IDENTICAL/IDENTICAL
+// OFFSET: 0x008759B0/0x1405AC710
 int32_t IOsGetPowerProfFrequency() {
     typedef LONG (WINAPI* CallNtPowerInformationFunc)(int32_t level, void* inputBuffer, ULONG inputBufferLength, void* outputBuffer, ULONG outputBufferLength);
 
@@ -667,8 +667,8 @@ uint32_t OsGetProcessorFeaturesEx(int32_t& vendor) {
     return s_processorFeatures;
 }
 
-// PROVEN: 184abb90 IDENTICAL
-// OFFSET: 0x00875F70
+// PROVEN: 184abb90 IDENTICAL/UNPROVEN
+// OFFSET: 0x00875F70/0x1405ACEB0
 uint64_t OsGetProcessorTicksPerSecond() {
     if (!s_cpuTicksPerSecond) {
         int32_t vendor;

@@ -346,8 +346,8 @@ int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool
     return 1;
 }
 
-// PROVEN: bae5ef52 IDENTICAL
-// OFFSET: 0x00487110
+// PROVEN: bae5ef52 IDENTICAL/NONE
+// OFFSET: 0x00487110/0x1400A8420
 void ObjectAllocDestroy() {
     HeapUse();
 

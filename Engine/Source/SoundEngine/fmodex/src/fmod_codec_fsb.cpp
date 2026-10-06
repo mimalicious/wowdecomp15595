@@ -1220,7 +1220,7 @@ FMOD_RESULT CodecFSB::setPositionInternal(int subsound, unsigned int position, F
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 3b1771a3 IDENTICAL
+// PROVEN: 3b1771a3 IDENTICAL/NONE
 // OFFSET: 0x00ABE2A0
 FMOD_RESULT CodecFSB::getPositionInternal(unsigned int *position, FMOD_TIMEUNIT postype)
 {
@@ -1267,7 +1267,7 @@ FMOD_RESULT CodecFSB::getPositionInternal(unsigned int *position, FMOD_TIMEUNIT 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: a3c07ed9 IDENTICAL
+// PROVEN: a3c07ed9 IDENTICAL/NONE
 // OFFSET: 0x00ABE330
 FMOD_RESULT CodecFSB::soundcreateInternal(int subsound, FMOD_SOUND *sound)
 {
@@ -1641,7 +1641,7 @@ FMOD_RESULT CodecFSB::getWaveFormatInternal(int index, FMOD_CODEC_WAVEFORMAT *wa
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 5f9398d0 IDENTICAL
+// PROVEN: 5f9398d0 IDENTICAL/NONE
 // OFFSET: 0x00ABCFF0
 FMOD_RESULT CodecFSB::resetInternal()
 {
@@ -1705,7 +1705,7 @@ FMOD_RESULT CodecFSB::canPointInternal()
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 560b2219 IDENTICAL
+// PROVEN: 560b2219 IDENTICAL/NONE
 // OFFSET: 0x00ABF460
 FMOD_RESULT F_CALLBACK CodecFSB::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO *userexinfo)
 {
@@ -1730,8 +1730,8 @@ FMOD_RESULT F_CALLBACK CodecFSB::openCallback(FMOD_CODEC_STATE *codec, FMOD_MODE
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 050349d0 IDENTICAL
-// OFFSET: 0x00ABD080
+// PROVEN: 050349d0 IDENTICAL/NONE
+// OFFSET: 0x00ABD080/0x140887130
 FMOD_RESULT F_CALLBACK CodecFSB::closeCallback(FMOD_CODEC_STATE *codec)
 {
     CodecFSB *fsb = (CodecFSB *)codec;    
@@ -1755,7 +1755,7 @@ FMOD_RESULT F_CALLBACK CodecFSB::closeCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: ee0fe575 IDENTICAL
+// PROVEN: ee0fe575 IDENTICAL/NONE
 // OFFSET: 0x00ABE550
 FMOD_RESULT F_CALLBACK CodecFSB::readCallback(FMOD_CODEC_STATE *codec, void *buffer, unsigned int sizebytes, unsigned int *bytesread)
 {
@@ -1779,7 +1779,7 @@ FMOD_RESULT F_CALLBACK CodecFSB::readCallback(FMOD_CODEC_STATE *codec, void *buf
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 7e3862e8 IDENTICAL
+// PROVEN: 7e3862e8 IDENTICAL/NONE
 // OFFSET: 0x00ABE580
 FMOD_RESULT F_CALLBACK CodecFSB::setPositionCallback(FMOD_CODEC_STATE *codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype)
 {
@@ -1803,7 +1803,7 @@ FMOD_RESULT F_CALLBACK CodecFSB::setPositionCallback(FMOD_CODEC_STATE *codec, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: da3e3cc9 IDENTICAL
+// PROVEN: da3e3cc9 IDENTICAL/NONE
 // OFFSET: 0x00ABE5B0
 FMOD_RESULT F_CALLBACK CodecFSB::getPositionCallback(FMOD_CODEC_STATE *codec, unsigned int *position, FMOD_TIMEUNIT postype)
 {
@@ -1827,7 +1827,7 @@ FMOD_RESULT F_CALLBACK CodecFSB::getPositionCallback(FMOD_CODEC_STATE *codec, un
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 8d18180f IDENTICAL
+// PROVEN: 8d18180f IDENTICAL/NONE
 // OFFSET: 0x00ABE5F0
 FMOD_RESULT F_CALLBACK CodecFSB::soundcreateCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_SOUND *sound)
 {
@@ -1854,7 +1854,7 @@ FMOD_RESULT F_CALLBACK CodecFSB::soundcreateCallback(FMOD_CODEC_STATE *codec, in
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 60c34512 IDENTICAL
+// PROVEN: 60c34512 IDENTICAL/NONE
 // OFFSET: 0x00ABD7F0
 FMOD_RESULT F_CALLBACK CodecFSB::getWaveFormatCallback(FMOD_CODEC_STATE *codec, int subsound, FMOD_CODEC_WAVEFORMAT *waveformat)
 {
@@ -1880,8 +1880,8 @@ FMOD_RESULT F_CALLBACK CodecFSB::getWaveFormatCallback(FMOD_CODEC_STATE *codec, 
 	[SEE_ALSO]
 ]
 */
-// PROVEN: 36ffa4b6 IDENTICAL
-// OFFSET: 0x00ABD0B0
+// PROVEN: 36ffa4b6 IDENTICAL/NONE
+// OFFSET: 0x00ABD0B0/0x140885FC0
 FMOD_RESULT F_CALLBACK CodecFSB::resetCallback(FMOD_CODEC_STATE *codec)
 {
     CodecFSB *fsb = (CodecFSB *)codec;    
@@ -1905,8 +1905,8 @@ FMOD_RESULT F_CALLBACK CodecFSB::resetCallback(FMOD_CODEC_STATE *codec)
 	[SEE_ALSO]
 ]
 */
-// PROVEN: b68f66ed IDENTICAL
-// OFFSET: 0x00ABD0E0
+// PROVEN: b68f66ed IDENTICAL/NONE
+// OFFSET: 0x00ABD0E0/0x1408848C0
 FMOD_RESULT F_CALLBACK CodecFSB::canPointCallback(FMOD_CODEC_STATE *codec)
 {
     CodecFSB *fsb = (CodecFSB *)codec;    

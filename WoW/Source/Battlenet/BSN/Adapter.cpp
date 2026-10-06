@@ -1,12 +1,12 @@
 #include "WoW/Source/Battlenet/BSN/Adapter.h"
 
-// PROVEN: 5090b30f IDENTICAL
+// PROVEN: 5090b30f IDENTICAL/NONE
 // OFFSET: 0x00B2DD50
 uint32_t BSN::Adapter::Array::GetLength(const void* data) {
     return *static_cast<const uint32_t*>(data);
 }
 
-// PROVEN: 8d0c407a IDENTICAL
+// PROVEN: 8d0c407a IDENTICAL/NONE
 // OFFSET: 0x00B2DD50
 uint32_t BSN::Adapter::AsciiString::GetLength(const void* data) {
     return *static_cast<const uint32_t*>(data);
@@ -26,7 +26,7 @@ void* BSN::Adapter::AsciiString::SetLength(void* data, uint32_t length) {
     return elements;
 }
 
-// PROVEN: 9b70c32f IDENTICAL
+// PROVEN: 9b70c32f IDENTICAL/NONE
 // OFFSET: 0x00B2DD50
 uint32_t BSN::Adapter::Blob::GetLength(const void* data) {
     return *static_cast<const uint32_t*>(data);
@@ -88,7 +88,7 @@ void BSN::Adapter::String::SetLength(void* data, uint32_t length) {
     *static_cast<uint32_t*>(data) = length;
 }
 
-// PROVEN: 41763355 IDENTICAL
+// PROVEN: 41763355 IDENTICAL/NONE
 // OFFSET: 0x00B2DD50
 uint32_t BSN::Adapter::FourCC::GetValue(const void* data) {
     return *static_cast<const uint32_t*>(data);
@@ -99,7 +99,7 @@ void BSN::Adapter::FourCC::SetValue(void* data, uint32_t value) {
     *static_cast<uint32_t*>(data) = value;
 }
 
-// PROVEN: e2330518 IDENTICAL
+// PROVEN: e2330518 IDENTICAL/NONE
 // OFFSET: 0x00B2DD50
 int32_t BSN::Adapter::Choice::GetTag(const void* data) {
     return *static_cast<const int32_t*>(data);

@@ -13,7 +13,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// PROVEN: 7ffedaf9 IDENTICAL
+// PROVEN: 7ffedaf9 IDENTICAL/NONE
 // OFFSET: 0x00531290
 static int32_t StringToButtonState(const char* string, CSimpleButtonState& state) {
     XMLENUMVALUE states[] = {
@@ -600,8 +600,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetMotionScriptsWhileDisabled", &Script_SetMotionScriptsWhileDisabled },
 };
 
-// PROVEN: 9e0c3615 IDENTICAL
-// OFFSET: 0x00531300
+// PROVEN: 9e0c3615 IDENTICAL/NONE
+// OFFSET: 0x00531300/0x140183110
 void CSimpleButton::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

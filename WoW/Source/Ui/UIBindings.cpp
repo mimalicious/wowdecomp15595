@@ -414,8 +414,8 @@ void CGUIBindings::AddModifiers(uint32_t& modifiers, const char*& binding) {
     }
 }
 
-// PROVEN: 28d3adfe IDENTICAL
-// OFFSET: 0x00925DA0
+// PROVEN: 28d3adfe IDENTICAL/NONE
+// OFFSET: 0x00925DA0/0x14068AF10
 void CGUIBindings::Initialize() {
     CGUIBindings::s_bindings = new (SMemAlloc(sizeof(CGUIBindings), __FILE__, __LINE__, 0)) CGUIBindings();
 
@@ -624,7 +624,7 @@ void CGUIBindings::SaveBindings() {
     }
 }
 
-// PROVEN: 0d8d2942 IDENTICAL
+// PROVEN: 0d8d2942 IDENTICAL/NONE
 // OFFSET: 0x00921F20
 void CGUIBindings::SaveBindingsCallback(HOSFILE localFile, HOSFILE file, void* param) {
     BINDING_SET set = static_cast<BINDING_SET>(reinterpret_cast<uintptr_t>(param));
@@ -645,7 +645,7 @@ void CGUIBindings::Shutdown() {
     s_initRound++;
 }
 
-// PROVEN: 76723f38 IDENTICAL
+// PROVEN: 76723f38 IDENTICAL/NONE
 // OFFSET: 0x00920D20
 void CGUIBindings::StripModifiers(uint32_t& modifiers, const char* binding) {
     while (*binding) {

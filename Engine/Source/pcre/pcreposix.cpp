@@ -118,8 +118,8 @@ static int32_t pcre_posix_error_code(const char* s) {
     return REG_ASSERT;
 }
 
-// PROVEN: 2eaa596b IDENTICAL
-// OFFSET: 0x0063D790
+// PROVEN: 2eaa596b IDENTICAL/NONE
+// OFFSET: 0x0063D790/0x1402D6630
 int32_t regcomp(regex_t* preg, const char* pattern, int32_t cflags) {
     const char* errorptr;
     int erroffset;

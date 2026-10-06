@@ -3,24 +3,24 @@
 #include "Engine/Source/Base/DynamicString.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// PROVEN: 4574a22c IDENTICAL
-// OFFSET: 0x00872DC0
+// PROVEN: 4574a22c IDENTICAL/NONE
+// OFFSET: 0x00872DC0/0x1405A9400
 CDynamicString::CDynamicString() {
     this->m_length = 0;
     this->m_capacity = 0;
     this->m_buffer = NULL;
 }
 
-// PROVEN: d9b49376 IDENTICAL
-// OFFSET: 0x00872DD0
+// PROVEN: d9b49376 IDENTICAL/NONE
+// OFFSET: 0x00872DD0/0x1405A9410
 CDynamicString::~CDynamicString() {
     if (this->m_buffer) {
         SMemFree(this->m_buffer, __FILE__, __LINE__, 0);
     }
 }
 
-// PROVEN: cfd0d636 IDENTICAL
-// OFFSET: 0x00872DF0
+// PROVEN: cfd0d636 IDENTICAL/NONE
+// OFFSET: 0x00872DF0/0x1405A9440
 void CDynamicString::Free() {
     this->m_length = 0;
     this->m_capacity = 0;
@@ -32,8 +32,8 @@ void CDynamicString::Free() {
     this->m_buffer = NULL;
 }
 
-// PROVEN: 35df8dcd IDENTICAL
-// OFFSET: 0x00872E20
+// PROVEN: 35df8dcd IDENTICAL/NONE
+// OFFSET: 0x00872E20/0x1405A9480
 CDynamicString& CDynamicString::operator=(const char* str) {
     if (!str) {
         this->m_length = 0;
@@ -87,8 +87,8 @@ void CDynamicString::SetCapacity(int32_t capacity) {
     }
 }
 
-// PROVEN: 28a96b18 IDENTICAL
-// OFFSET: 0x00872F70
+// PROVEN: 28a96b18 IDENTICAL/NONE
+// OFFSET: 0x00872F70/0x1405A9630
 void CDynamicString::Grow() {
     this->m_capacity = (3 * this->m_length >> 1) + 16;
 
