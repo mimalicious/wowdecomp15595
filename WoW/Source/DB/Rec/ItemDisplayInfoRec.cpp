@@ -1,6 +1,6 @@
 #include "WoW/Source/DB/Rec/ItemDisplayInfoRec.h"
 
-// STATIC: %0x00B43AC0
+// STATIC: 0x00C1D294
 const DBCMeta ItemDisplayInfoRec::s_meta = { "DBFilesClient\\ItemDisplayInfo.dbc", 12, 100, ItemDisplayInfoRec::FixupStrings, 0 };
 
 // OFFSET: %0x0097C000

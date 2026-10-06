@@ -270,9 +270,7 @@ const LightParamsRec* DayNight::GetLightParams(const LightRec* light, int32_t pa
 
 // OFFSET: #0x007EBF90
 float DayNight::CalcIndividualColorFromDBRec(int32_t time, const LightParamsRec* params, int32_t band) {
-    LightFloatBandRec rec;
-    g_lightFloatBandDB.GetRecord(band + 6 * params->m_id - 5, &rec);
-    return DayNight::InterpFloatBand(&rec, time, band);
+    return DayNight::InterpFloatBand(g_lightFloatBandDB.GetRecord(band + 6 * params->m_id - 5), time, band);
 }
 
 // OFFSET: #0x007EBFF0

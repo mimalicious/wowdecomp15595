@@ -11,13 +11,11 @@ class Cfg_CategoriesRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_localeMask;
     /* 0008 */ int32_t m_createCharsetMask;
-    /* 000C */ int32_t m_flags;
-    /* 0010 */ const char* m_name;
+    /* 000C */ int32_t unk_000C;
+    /* 0010 */ int32_t m_flags;
+    /* 0014 */ DBCString m_name;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(Cfg_CategoriesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

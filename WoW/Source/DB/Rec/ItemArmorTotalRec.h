@@ -16,9 +16,6 @@ class ItemArmorTotalRec {
     /* 0014 */ float unk_0014;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemArmorTotalRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

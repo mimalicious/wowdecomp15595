@@ -14,20 +14,17 @@ class WorldStateUIRec {
     /* 000C */ int32_t unk_000C;
     /* 0010 */ int32_t unk_0010;
     /* 0014 */ int32_t unk_0014;
-    /* 0018 */ const char* m_icon;
-    /* 001C */ const char* m_string;
-    /* 0020 */ const char* m_tooltip;
+    /* 0018 */ DBCString m_icon;
+    /* 001C */ DBCString m_string;
+    /* 0020 */ DBCString m_tooltip;
     /* 0024 */ int32_t m_stateVariable;
     /* 0028 */ int32_t m_type;
-    /* 002C */ const char* m_dynamicIcon;
-    /* 0030 */ const char* m_dynamicTooltip;
-    /* 0034 */ const char* m_extendedUi;
+    /* 002C */ DBCString m_dynamicIcon;
+    /* 0030 */ DBCString m_dynamicTooltip;
+    /* 0034 */ DBCString m_extendedUi;
     /* 0038 */ int32_t m_extendedUistateVariable [3];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WorldStateUIRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

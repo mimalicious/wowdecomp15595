@@ -15,9 +15,6 @@ class SoundFilterElemRec {
     /* 0010 */ float m_params [9];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundFilterElemRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

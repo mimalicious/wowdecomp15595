@@ -13,9 +13,6 @@ class CreatureSpellDataRec {
     /* 0014 */ int32_t m_availability [4];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CreatureSpellDataRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

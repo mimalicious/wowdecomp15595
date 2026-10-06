@@ -18,9 +18,6 @@ class FactionTemplateRec {
     /* 0028 */ int32_t m_friend [4];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(FactionTemplateRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

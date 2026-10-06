@@ -74,9 +74,6 @@ class VehicleSeatRec {
     /* 0104 */ int32_t unk_0104;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(VehicleSeatRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

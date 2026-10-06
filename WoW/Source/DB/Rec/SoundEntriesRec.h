@@ -10,10 +10,10 @@ class SoundEntriesRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_soundType;
-    /* 0008 */ const char* m_name;
-    /* 000C */ const char* m_file [10];
+    /* 0008 */ DBCString m_name;
+    /* 000C */ DBCString m_file [10];
     /* 0034 */ int32_t m_freq [10];
-    /* 005C */ const char* m_directoryBase;
+    /* 005C */ DBCString m_directoryBase;
     /* 0060 */ float m_volumeFloat;
     /* 0064 */ int32_t m_flags;
     /* 0068 */ float m_minDistance;
@@ -24,11 +24,9 @@ class SoundEntriesRec {
     /* 007C */ float m_volumeVariationMinus;
     /* 0080 */ float m_pitchVariationPlus;
     /* 0084 */ float m_pitchVariationMinus;
+    /* 0088 */ int32_t unk_0088;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundEntriesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

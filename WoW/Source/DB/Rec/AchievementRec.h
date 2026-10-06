@@ -12,21 +12,18 @@ class AchievementRec {
     /* 0004 */ int32_t m_faction;
     /* 0008 */ int32_t m_instanceID;
     /* 000C */ int32_t m_supercedes;
-    /* 0010 */ const char* m_title;
-    /* 0014 */ const char* m_description;
+    /* 0010 */ DBCString m_title;
+    /* 0014 */ DBCString m_description;
     /* 0018 */ int32_t m_category;
     /* 001C */ int32_t m_points;
     /* 0020 */ int32_t m_uiOrder;
     /* 0024 */ int32_t m_flags;
     /* 0028 */ int32_t m_iconID;
-    /* 002C */ const char* m_reward;
+    /* 002C */ DBCString m_reward;
     /* 0030 */ int32_t m_minimumCriteria;
     /* 0034 */ int32_t m_sharesCriteria;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(AchievementRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

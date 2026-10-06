@@ -1,20 +1,12 @@
 #include "WoW/Source/DB/Rec/FactionGroupRec.h"
 
-// STATIC: %0x00B43D18
+// STATIC: 0x00C1E438/0x140A12660
 const DBCMeta FactionGroupRec::s_meta = { "DBFilesClient\\FactionGroup.dbc", 4, 16, FactionGroupRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C460
+// PROVEN: 6ff3adc3 IDENTICAL/NONE
+// OFFSET: 0x00A2EC50/0x1407D8590
 void FactionGroupRec::FixupStrings(void* record, const char* strings) {
     FactionGroupRec* rec = static_cast<FactionGroupRec*>(record);
-    rec->m_internalName = &strings[reinterpret_cast<uintptr_t>(rec->m_internalName)];
-    rec->m_name = &strings[reinterpret_cast<uintptr_t>(rec->m_name)];
+    DBCFixupString(rec->m_internalName, strings);
+    DBCFixupString(rec->m_name, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void FactionGroupRec::ConvertRow(FactionGroupRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    memcpy(&rec->m_maskID, &row[0x0004], sizeof(rec->m_maskID));
-    rec->m_internalName = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0008])];
-    rec->m_name = &strings[*reinterpret_cast<const uint32_t*>(&row[0x000C])];
-}
-#endif

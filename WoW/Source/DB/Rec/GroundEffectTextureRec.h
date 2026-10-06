@@ -15,9 +15,6 @@ class GroundEffectTextureRec {
     /* 0028 */ int32_t m_sound;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(GroundEffectTextureRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

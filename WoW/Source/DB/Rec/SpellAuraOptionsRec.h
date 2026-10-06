@@ -15,9 +15,6 @@ class SpellAuraOptionsRec {
     /* 0010 */ int32_t unk_0010;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellAuraOptionsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

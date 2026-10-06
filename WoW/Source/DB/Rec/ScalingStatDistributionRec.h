@@ -20,9 +20,6 @@ class ScalingStatDistributionRec {
     /* 0058 */ int32_t m_maxlevel;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ScalingStatDistributionRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -19,25 +19,20 @@ class AreaTableRec {
     /* 0020 */ int32_t m_zoneMusic;
     /* 0024 */ int32_t m_introSound;
     /* 0028 */ int32_t m_explorationLevel;
-    /* 002C */ const char* m_areaName;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
-    /* 0044 */ int32_t unk_0044;
-    /* 0048 */ int32_t unk_0048;
+    /* 002C */ DBCString m_areaName;
+    /* 0030 */ int32_t m_factionGroupMask;
+    /* 0034 */ int32_t m_liquidTypeID [4];
+    /* 0044 */ float m_minElevation;
+    /* 0048 */ float m_ambientMultiplier;
     /* 004C */ int32_t unk_004C;
     /* 0050 */ int32_t unk_0050;
     /* 0054 */ int32_t unk_0054;
     /* 0058 */ int32_t unk_0058;
     /* 005C */ int32_t unk_005C;
     /* 0060 */ int32_t unk_0060;
+    /* 0064 */ int32_t unk_0064;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(AreaTableRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

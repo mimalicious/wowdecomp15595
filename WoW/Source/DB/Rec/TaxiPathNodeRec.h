@@ -19,9 +19,6 @@ class TaxiPathNodeRec {
     /* 0028 */ int32_t m_departureEventID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TaxiPathNodeRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

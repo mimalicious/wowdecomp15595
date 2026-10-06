@@ -15,9 +15,6 @@ class VocalUISoundsRec {
     /* 0014 */ int32_t m_pissedSoundID [2];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(VocalUISoundsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

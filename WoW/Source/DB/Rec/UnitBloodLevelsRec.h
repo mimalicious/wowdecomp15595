@@ -12,9 +12,6 @@ class UnitBloodLevelsRec {
     /* 0004 */ int32_t m_violencelevel [3];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(UnitBloodLevelsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

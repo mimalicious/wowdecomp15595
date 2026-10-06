@@ -14,9 +14,6 @@ class WeaponSwingSounds2Rec {
     /* 000C */ int32_t m_soundID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WeaponSwingSounds2Rec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

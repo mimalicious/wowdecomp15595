@@ -17,14 +17,11 @@ class FactionRec {
     /* 0048 */ int32_t m_parentFactionID;
     /* 004C */ float m_parentFactionMod [2];
     /* 0054 */ int32_t m_parentFactionCap [2];
-    /* 005C */ const char* m_name;
-    /* 0060 */ const char* m_description;
+    /* 005C */ DBCString m_name;
+    /* 0060 */ DBCString m_description;
     /* 0064 */ int32_t unk_0064;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(FactionRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

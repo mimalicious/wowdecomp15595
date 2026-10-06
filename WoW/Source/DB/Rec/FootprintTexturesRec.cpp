@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/FootprintTexturesRec.h"
 
-// STATIC: %0x00B46A94
+// STATIC: 0x00C28210/0x140A1E988
 const DBCMeta FootprintTexturesRec::s_meta = { "DBFilesClient\\FootprintTextures.dbc", 2, 8, FootprintTexturesRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 721f256f IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void FootprintTexturesRec::FixupStrings(void* record, const char* strings) {
     FootprintTexturesRec* rec = static_cast<FootprintTexturesRec*>(record);
-    rec->m_footstepFilename = &strings[reinterpret_cast<uintptr_t>(rec->m_footstepFilename)];
+    DBCFixupString(rec->m_footstepFilename, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void FootprintTexturesRec::ConvertRow(FootprintTexturesRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_footstepFilename = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

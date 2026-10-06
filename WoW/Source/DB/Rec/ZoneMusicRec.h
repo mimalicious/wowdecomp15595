@@ -9,15 +9,12 @@ class ZoneMusicRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_setName;
+    /* 0004 */ DBCString m_setName;
     /* 0008 */ int32_t m_silenceIntervalMin [2];
     /* 0010 */ int32_t m_silenceIntervalMax [2];
     /* 0018 */ int32_t m_sounds [2];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ZoneMusicRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

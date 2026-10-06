@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/SpellMechanicRec.h"
 
-// STATIC: %0x00B44E9C
+// STATIC: 0x00C21018/0x140A15A98
 const DBCMeta SpellMechanicRec::s_meta = { "DBFilesClient\\SpellMechanic.dbc", 2, 8, SpellMechanicRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 1cd50061 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void SpellMechanicRec::FixupStrings(void* record, const char* strings) {
     SpellMechanicRec* rec = static_cast<SpellMechanicRec*>(record);
-    rec->m_stateName = &strings[reinterpret_cast<uintptr_t>(rec->m_stateName)];
+    DBCFixupString(rec->m_stateName, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void SpellMechanicRec::ConvertRow(SpellMechanicRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_stateName = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

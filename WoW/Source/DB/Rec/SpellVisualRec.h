@@ -36,11 +36,9 @@ class SpellVisualRec {
     /* 0064 */ int32_t m_persistentAreaKit;
     /* 0068 */ float m_missileCastOffset [3];
     /* 0074 */ float m_missileImpactOffset [3];
+    /* 0080 */ int32_t unk_0080;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellVisualRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

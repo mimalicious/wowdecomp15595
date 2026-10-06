@@ -13,9 +13,6 @@ class GuildPerkSpellsRec {
     /* 0008 */ int32_t unk_0008;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(GuildPerkSpellsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

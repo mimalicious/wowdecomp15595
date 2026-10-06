@@ -12,13 +12,10 @@ class SpellRangeRec {
     /* 0004 */ float m_rangeMin [2];
     /* 000C */ float m_rangeMax [2];
     /* 0014 */ int32_t m_flags;
-    /* 0018 */ const char* m_displayName;
-    /* 001C */ const char* m_displayNameShort;
+    /* 0018 */ DBCString m_displayName;
+    /* 001C */ DBCString m_displayNameShort;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellRangeRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

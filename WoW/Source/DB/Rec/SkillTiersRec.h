@@ -13,9 +13,6 @@ class SkillTiersRec {
     /* 0044 */ int32_t m_value [16];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SkillTiersRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

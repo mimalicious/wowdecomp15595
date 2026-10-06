@@ -11,12 +11,9 @@ class OverrideSpellDataRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_spells [10];
     /* 002C */ int32_t unk_002C;
-    /* 0030 */ const char* unk_0030;
+    /* 0030 */ DBCString unk_0030;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(OverrideSpellDataRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

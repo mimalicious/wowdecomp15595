@@ -14,9 +14,6 @@ class LightFloatBandRec {
     /* 0048 */ float m_data [16];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LightFloatBandRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

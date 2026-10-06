@@ -5,29 +5,57 @@
 // STATIC: %0x00BAEB20
 bool g_clientDbPerformCompress;
 
-// STATIC: %0x00BAEB28
-static ClientDBTable s_staticTables[] = {
-    { &g_animationDataDB, &AnimationDataRec::s_meta },
-    { &g_liquidMaterialDB, &LiquidMaterialRec::s_meta },
-    { &g_liquidObjectDB, &LiquidObjectRec::s_meta },
-    { &g_liquidTypeDB, &LiquidTypeRec::s_meta },
+// STATIC: 0x00C9AA10
+ClientDBTable g_staticDBTables[] = {
     { &g_soundEntriesAdvancedDB, &SoundEntriesAdvancedRec::s_meta },
     { &g_soundEntriesDB, &SoundEntriesRec::s_meta },
-    { &g_soundEntriesFallbacksDB, &SoundEntriesFallbacksRec::s_meta },
-    { &g_terrainMaterialDB, &TerrainMaterialRec::s_meta },
     { NULL, NULL },
 };
 
-// OFFSET: %0x00493060
-void StaticDBLoadAll() {
-    for (ClientDBTable* table = s_staticTables; table->m_db; table++) {
-        table->m_db->Load(table->m_meta);
-    }
-}
+// STATIC: 0x00C9AA28
+ClientDBTable g_staticDBGlueTables[] = {
+    { &g_animationDataDB, &AnimationDataRec::s_meta },
+    { &g_areaTableDB, &AreaTableRec::s_meta },
+    { &g_lightIntBandDB, &LightIntBandRec::s_meta },
+    { &g_lightParamsDB, &LightParamsRec::s_meta },
+    { &g_mapDB, &MapRec::s_meta },
+    { NULL, NULL },
+};
 
-// OFFSET: %0x00493090
+// STATIC: 0x00C9AA58
+ClientDBTable g_staticDBWorldTables[] = {
+    { &g_footprintTexturesDB, &FootprintTexturesRec::s_meta },
+    { &g_groundEffectDoodadDB, &GroundEffectDoodadRec::s_meta },
+    { &g_groundEffectTextureDB, &GroundEffectTextureRec::s_meta },
+    { &g_lightDB, &LightRec::s_meta },
+    { &g_lightFloatBandDB, &LightFloatBandRec::s_meta },
+    { &g_lightSkyboxDB, &LightSkyboxRec::s_meta },
+    { &g_liquidMaterialDB, &LiquidMaterialRec::s_meta },
+    { &g_liquidObjectDB, &LiquidObjectRec::s_meta },
+    { &g_liquidTypeDB, &LiquidTypeRec::s_meta },
+    { &g_soundEmitterPillPointsDB, &SoundEmitterPillPointsRec::s_meta },
+    { &g_soundEmittersDB, &SoundEmittersRec::s_meta },
+    { &g_soundEntriesFallbacksDB, &SoundEntriesFallbacksRec::s_meta },
+    { &g_terrainMaterialDB, &TerrainMaterialRec::s_meta },
+    { &g_terrainTypeDB, &TerrainTypeRec::s_meta },
+    { &g_weatherDB, &WeatherRec::s_meta },
+    { &g_wmoAreaTableDB, &WMOAreaTableRec::s_meta },
+    { &g_zoneLightDB, &ZoneLightRec::s_meta },
+    { &g_zoneLightPointDB, &ZoneLightPointRec::s_meta },
+    { NULL, NULL },
+};
+
+// OFFSET: 0x0048AAD0
 void StaticDBUnloadAll() {
-    for (ClientDBTable* table = s_staticTables; table->m_db; table++) {
+    for (ClientDBTable* table = g_staticDBTables; table->m_db; table++) {
+        table->m_db->Unload(table->m_meta);
+    }
+
+    for (ClientDBTable* table = g_staticDBGlueTables; table->m_db; table++) {
+        table->m_db->Unload(table->m_meta);
+    }
+
+    for (ClientDBTable* table = g_staticDBWorldTables; table->m_db; table++) {
         table->m_db->Unload(table->m_meta);
     }
 }
@@ -39,7 +67,7 @@ WowClientDB_Common::WowClientDB_Common() {
     this->m_minID = 0;
 }
 
-// OFFSET: %0x00492B10
+// OFFSET: 0x0048AB40/0x1400ADBA0
 void WowClientDB_Common::Load(const DBCMeta* meta) {
     char error[256];
     SFileImpl* file;
@@ -55,6 +83,7 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     uint8_t* data = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
 
     if (!SFile::Read(file, data, size, NULL)) {
+        SMemFree(data, __FILE__, __LINE__, 0);
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
         SErrDisplayAppFatal("Unable to read data for %s: %s", meta->m_filename, error);
     }
@@ -84,14 +113,16 @@ void WowClientDB_Common::Unload(const DBCMeta* meta) {
     this->m_minID = 0xFFFFFFF;
 }
 
-// OFFSET: %0x00492C70
+// PROVEN: b563673a IDENTICAL/NONE
+// OFFSET: 0x0048ACA0/0x1400ADD50
 WowClientDB_Base::WowClientDB_Base() {
     this->m_data = NULL;
     this->m_records = NULL;
     this->m_recordsById = NULL;
 }
 
-// OFFSET: %0x00492CA0
+// PROVEN: 8dd94dbb IDENTICAL/NONE
+// OFFSET: 0x0048ACD0/0x1400ADD80
 void WowClientDB_Base::Free() {
     SMemFree(this->m_data, __FILE__, __LINE__, 0);
     this->m_data = NULL;
@@ -100,7 +131,7 @@ void WowClientDB_Base::Free() {
     this->m_recordsById = NULL;
 }
 
-// OFFSET: %0x00492CF0
+// OFFSET: 0x0048AD20/0x1400ADDE0
 void WowClientDB_Base::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t numRecords, uint8_t* rows, uint32_t stringSize, const char* strings) {
     this->m_data = data;
     this->m_records = NULL;

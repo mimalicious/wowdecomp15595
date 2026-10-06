@@ -11,7 +11,7 @@ class WorldMapOverlayRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapAreaID;
     /* 0008 */ int32_t m_areaID [4];
-    /* 0018 */ const char* unk_0018;
+    /* 0018 */ DBCString unk_0018;
     /* 001C */ int32_t unk_001C;
     /* 0020 */ int32_t unk_0020;
     /* 0024 */ int32_t unk_0024;
@@ -22,9 +22,6 @@ class WorldMapOverlayRec {
     /* 0038 */ int32_t unk_0038;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WorldMapOverlayRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

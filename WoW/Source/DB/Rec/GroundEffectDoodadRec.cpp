@@ -1,18 +1,11 @@
 #include "WoW/Source/DB/Rec/GroundEffectDoodadRec.h"
 
-// STATIC: %0x00B43C14
+// STATIC: 0x00C281B4/0x140A1E910
 const DBCMeta GroundEffectDoodadRec::s_meta = { "DBFilesClient\\GroundEffectDoodad.dbc", 3, 12, GroundEffectDoodadRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: d1bb9e24 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void GroundEffectDoodadRec::FixupStrings(void* record, const char* strings) {
     GroundEffectDoodadRec* rec = static_cast<GroundEffectDoodadRec*>(record);
-    rec->m_doodadpath = &strings[reinterpret_cast<uintptr_t>(rec->m_doodadpath)];
+    DBCFixupString(rec->m_doodadpath, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void GroundEffectDoodadRec::ConvertRow(GroundEffectDoodadRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_doodadpath = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-    memcpy(&rec->m_flags, &row[0x0008], sizeof(rec->m_flags));
-}
-#endif

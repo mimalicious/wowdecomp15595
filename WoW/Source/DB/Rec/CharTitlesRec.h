@@ -10,15 +10,12 @@ class CharTitlesRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_conditionID;
-    /* 0008 */ const char* m_name;
-    /* 000C */ const char* m_name1;
+    /* 0008 */ DBCString m_name;
+    /* 000C */ DBCString m_name1;
     /* 0010 */ int32_t m_maskID;
     /* 0014 */ int32_t unk_0014;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CharTitlesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -9,14 +9,11 @@ class GameTablesRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_numRows;
     /* 000C */ int32_t m_numColumns;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(GameTablesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

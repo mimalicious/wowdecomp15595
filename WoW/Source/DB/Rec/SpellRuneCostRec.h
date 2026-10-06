@@ -15,9 +15,6 @@ class SpellRuneCostRec {
     /* 0010 */ int32_t m_runicPower;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellRuneCostRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

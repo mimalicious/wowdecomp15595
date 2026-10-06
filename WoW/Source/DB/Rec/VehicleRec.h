@@ -29,9 +29,9 @@ class VehicleRec {
     /* 0064 */ float m_msslTrgtArcRepeat;
     /* 0068 */ float m_msslTrgtArcWidth;
     /* 006C */ float m_msslTrgtImpactRadius [2];
-    /* 0074 */ const char* m_msslTrgtArcTexture;
-    /* 0078 */ const char* m_msslTrgtImpactTexture;
-    /* 007C */ const char* m_msslTrgtImpactModel [2];
+    /* 0074 */ DBCString m_msslTrgtArcTexture;
+    /* 0078 */ DBCString m_msslTrgtImpactTexture;
+    /* 007C */ DBCString m_msslTrgtImpactModel [2];
     /* 0084 */ float m_cameraYawOffset;
     /* 0088 */ int32_t m_uiLocomotionType;
     /* 008C */ float m_msslTrgtImpactTexRadius;
@@ -39,9 +39,6 @@ class VehicleRec {
     /* 0094 */ int32_t m_powerDisplayID [3];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(VehicleRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

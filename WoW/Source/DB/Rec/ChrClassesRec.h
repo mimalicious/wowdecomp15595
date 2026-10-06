@@ -10,11 +10,11 @@ class ChrClassesRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
-    /* 0008 */ const char* m_petNameToken;
-    /* 000C */ const char* m_name;
-    /* 0010 */ const char* m_nameFemale;
-    /* 0014 */ const char* m_nameMale;
-    /* 0018 */ const char* m_filename;
+    /* 0008 */ DBCString m_petNameToken;
+    /* 000C */ DBCString m_name;
+    /* 0010 */ DBCString m_nameFemale;
+    /* 0014 */ DBCString m_nameMale;
+    /* 0018 */ DBCString m_filename;
     /* 001C */ int32_t m_spellClassSet;
     /* 0020 */ int32_t unk_0020;
     /* 0024 */ int32_t unk_0024;
@@ -24,9 +24,6 @@ class ChrClassesRec {
     /* 0034 */ int32_t unk_0034;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ChrClassesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

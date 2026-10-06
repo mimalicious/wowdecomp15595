@@ -18,9 +18,6 @@ class DungeonMapRec {
     /* 001C */ int32_t m_parentWorldMapID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(DungeonMapRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

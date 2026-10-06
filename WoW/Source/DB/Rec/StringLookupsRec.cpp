@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/StringLookupsRec.h"
 
-// STATIC: %0x00B44AF0
+// STATIC: 0x00C204EC/0x140A14D38
 const DBCMeta StringLookupsRec::s_meta = { "DBFilesClient\\StringLookups.dbc", 2, 8, StringLookupsRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 1a1ad6c9 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void StringLookupsRec::FixupStrings(void* record, const char* strings) {
     StringLookupsRec* rec = static_cast<StringLookupsRec*>(record);
-    rec->m_string = &strings[reinterpret_cast<uintptr_t>(rec->m_string)];
+    DBCFixupString(rec->m_string, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void StringLookupsRec::ConvertRow(StringLookupsRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_string = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

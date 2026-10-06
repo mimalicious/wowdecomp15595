@@ -24,6 +24,7 @@ class WowClientDB2_Base {
 };
 
 extern WowClientDB2_Base* g_clientDB2Tables[];
+extern WowClientDB2_Base* g_clientDB2GameTables[];
 extern bool (*g_hotfixNotifyBlobHandler)(ClientHotfixNotifyBlob* notify);
 extern bool (*g_hotfixNotifyMultiplexHandler)(ClientHotfixNotify* notify);
 extern bool (*g_dbReplyMultiplexHandler)(ClientDBReply* reply);

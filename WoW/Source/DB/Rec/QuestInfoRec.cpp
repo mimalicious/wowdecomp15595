@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/QuestInfoRec.h"
 
-// STATIC: %0x00B45908
+// STATIC: 0x00C22DA0/0x140A17E38
 const DBCMeta QuestInfoRec::s_meta = { "DBFilesClient\\QuestInfo.dbc", 2, 8, QuestInfoRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 7d66f6ef IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void QuestInfoRec::FixupStrings(void* record, const char* strings) {
     QuestInfoRec* rec = static_cast<QuestInfoRec*>(record);
-    rec->m_infoName = &strings[reinterpret_cast<uintptr_t>(rec->m_infoName)];
+    DBCFixupString(rec->m_infoName, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void QuestInfoRec::ConvertRow(QuestInfoRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_infoName = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

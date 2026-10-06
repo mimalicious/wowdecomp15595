@@ -13,12 +13,9 @@ class WeatherRec {
     /* 0008 */ int32_t m_effectType;
     /* 000C */ float m_transitionSkyBox;
     /* 0010 */ float m_effectColor [3];
-    /* 001C */ const char* m_effectTexture;
+    /* 001C */ DBCString m_effectTexture;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WeatherRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

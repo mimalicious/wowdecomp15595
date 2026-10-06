@@ -23,9 +23,6 @@ class SkillLineAbilityRec {
     /* 0030 */ int32_t m_characterPoints [2];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SkillLineAbilityRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

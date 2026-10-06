@@ -11,12 +11,9 @@ class GMSurveyAnswersRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_sortIndex;
     /* 0008 */ int32_t m_gmsurveyQuestionID;
-    /* 000C */ const char* m_answer;
+    /* 000C */ DBCString m_answer;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(GMSurveyAnswersRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

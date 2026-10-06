@@ -9,17 +9,15 @@ class ScreenEffectRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_effect;
     /* 000C */ int32_t m_param [4];
     /* 001C */ int32_t m_lightParamsID;
     /* 0020 */ int32_t m_soundAmbienceID;
     /* 0024 */ int32_t m_zoneMusicID;
+    /* 0028 */ int32_t unk_0028;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ScreenEffectRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

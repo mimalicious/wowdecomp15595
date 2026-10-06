@@ -21,9 +21,6 @@ class TransportPhysicsRec {
     /* 0028 */ float m_speedDamp;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TransportPhysicsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

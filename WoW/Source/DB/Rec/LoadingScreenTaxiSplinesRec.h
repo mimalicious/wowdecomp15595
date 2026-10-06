@@ -15,9 +15,6 @@ class LoadingScreenTaxiSplinesRec {
     /* 0048 */ int32_t m_legIndex;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LoadingScreenTaxiSplinesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

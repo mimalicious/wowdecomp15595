@@ -19,9 +19,6 @@ class WorldStateZoneSoundsRec {
     /* 0020 */ int32_t m_soundProviderPreferencesID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WorldStateZoneSoundsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

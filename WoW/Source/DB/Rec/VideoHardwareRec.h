@@ -26,16 +26,13 @@ class VideoHardwareRec {
     /* 003C */ int32_t m_smallCullDistIdx;
     /* 0040 */ int32_t m_resolutionIdx;
     /* 0044 */ int32_t m_baseMipLevel;
-    /* 0048 */ const char* m_oglOverrides;
-    /* 004C */ const char* m_d3DOverrides;
+    /* 0048 */ DBCString m_oglOverrides;
+    /* 004C */ DBCString m_d3DOverrides;
     /* 0050 */ int32_t m_fixLag;
     /* 0054 */ int32_t m_multisample;
     /* 0058 */ int32_t m_atlasdisable;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(VideoHardwareRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

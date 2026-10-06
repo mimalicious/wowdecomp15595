@@ -14,9 +14,6 @@ class ObjectEffectPackageElemRec {
     /* 000C */ int32_t m_stateType;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ObjectEffectPackageElemRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

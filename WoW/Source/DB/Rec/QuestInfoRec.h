@@ -9,12 +9,9 @@ class QuestInfoRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_infoName;
+    /* 0004 */ DBCString m_infoName;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(QuestInfoRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

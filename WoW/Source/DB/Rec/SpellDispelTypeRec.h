@@ -9,15 +9,12 @@ class SpellDispelTypeRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_mask;
     /* 000C */ int32_t m_immunityPossible;
-    /* 0010 */ const char* m_internalName;
+    /* 0010 */ DBCString m_internalName;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellDispelTypeRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

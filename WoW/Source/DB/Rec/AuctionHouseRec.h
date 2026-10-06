@@ -12,12 +12,9 @@ class AuctionHouseRec {
     /* 0004 */ int32_t m_factionID;
     /* 0008 */ int32_t m_depositRate;
     /* 000C */ int32_t m_consignmentRate;
-    /* 0010 */ const char* m_name;
+    /* 0010 */ DBCString m_name;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(AuctionHouseRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

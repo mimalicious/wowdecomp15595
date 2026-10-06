@@ -14,7 +14,7 @@ class SpellItemEnchantmentRec {
     /* 0014 */ int32_t m_effectPointsMin [3];
     /* 0020 */ int32_t m_effectPointsMax [3];
     /* 002C */ int32_t m_effectArg [3];
-    /* 0038 */ const char* m_name;
+    /* 0038 */ DBCString m_name;
     /* 003C */ int32_t m_itemVisual;
     /* 0040 */ int32_t m_flags;
     /* 0044 */ int32_t m_srcItemID;
@@ -25,9 +25,6 @@ class SpellItemEnchantmentRec {
     /* 0058 */ int32_t unk_0058;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellItemEnchantmentRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -12,9 +12,6 @@ class gtNPCManaCostScalerRec {
     /* 0004 */ float m_data;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(gtNPCManaCostScalerRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

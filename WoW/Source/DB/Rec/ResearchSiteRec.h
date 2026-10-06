@@ -11,13 +11,10 @@ class ResearchSiteRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
-    /* 000C */ const char* unk_000C;
+    /* 000C */ DBCString unk_000C;
     /* 0010 */ int32_t unk_0010;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ResearchSiteRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

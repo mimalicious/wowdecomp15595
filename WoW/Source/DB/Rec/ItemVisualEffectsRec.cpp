@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/ItemVisualEffectsRec.h"
 
-// STATIC: %0x00B43A20
+// STATIC: 0x00C1D168/0x140A10FC8
 const DBCMeta ItemVisualEffectsRec::s_meta = { "DBFilesClient\\ItemVisualEffects.dbc", 2, 8, ItemVisualEffectsRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: cfd1f086 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void ItemVisualEffectsRec::FixupStrings(void* record, const char* strings) {
     ItemVisualEffectsRec* rec = static_cast<ItemVisualEffectsRec*>(record);
-    rec->m_model = &strings[reinterpret_cast<uintptr_t>(rec->m_model)];
+    DBCFixupString(rec->m_model, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void ItemVisualEffectsRec::ConvertRow(ItemVisualEffectsRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_model = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

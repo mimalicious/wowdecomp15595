@@ -21,9 +21,6 @@ class AreaTriggerRec {
     /* 0030 */ float m_boxYaw;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(AreaTriggerRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

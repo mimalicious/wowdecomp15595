@@ -19,9 +19,6 @@ class ItemDamageThrownRec {
     /* 0020 */ int32_t unk_0020;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemDamageThrownRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

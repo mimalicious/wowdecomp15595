@@ -10,13 +10,10 @@ class StationeryRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_itemID;
-    /* 0008 */ const char* m_texture;
+    /* 0008 */ DBCString m_texture;
     /* 000C */ int32_t m_flags;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(StationeryRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

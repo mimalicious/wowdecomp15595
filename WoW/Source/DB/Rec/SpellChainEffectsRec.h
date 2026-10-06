@@ -15,7 +15,7 @@ class SpellChainEffectsRec {
     /* 0010 */ float m_texCoordScale;
     /* 0014 */ int32_t m_segDuration;
     /* 0018 */ int32_t m_segDelay;
-    /* 001C */ const char* m_texture;
+    /* 001C */ DBCString m_texture;
     /* 0020 */ int32_t m_flags;
     /* 0024 */ int32_t m_jointCount;
     /* 0028 */ float m_jointOffsetRadius;
@@ -52,15 +52,12 @@ class SpellChainEffectsRec {
     /* 009E */ int8_t m_green;
     /* 009F */ int8_t m_blue;
     /* 00A0 */ int8_t m_blendMode;
-    /* 00A4 */ const char* m_combo;
+    /* 00A4 */ DBCString m_combo;
     /* 00A8 */ int32_t m_renderLayer;
     /* 00AC */ float m_textureLength;
     /* 00B0 */ float m_wavePhase;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellChainEffectsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

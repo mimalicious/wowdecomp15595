@@ -15,9 +15,6 @@ class WeaponImpactSoundsRec {
     /* 0034 */ int32_t m_critImpactSoundID [10];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WeaponImpactSoundsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

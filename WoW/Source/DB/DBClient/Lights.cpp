@@ -107,9 +107,7 @@ void InitLights(bool transform) {
 
 // OFFSET: #0x007EBF30
 CImVector DayNight::LoadLightIntBand(int32_t time, const LightParamsRec* params, int32_t band) {
-    LightIntBandRec rec;
-    g_lightIntBandDB.GetRecord(band + 18 * params->m_id - 17, &rec);
-    return InterpolateIntBand(rec, time);
+    return InterpolateIntBand(*g_lightIntBandDB.GetRecord(band + 18 * params->m_id - 17), time);
 }
 
 // OFFSET: #0x007EAEF0

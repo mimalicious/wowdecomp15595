@@ -19,9 +19,6 @@ class SkillRaceClassInfoRec {
     /* 0020 */ int32_t m_skillCostIndex;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SkillRaceClassInfoRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

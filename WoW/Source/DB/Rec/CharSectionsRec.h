@@ -12,15 +12,12 @@ class CharSectionsRec {
     /* 0004 */ int32_t m_raceID;
     /* 0008 */ int32_t m_sexID;
     /* 000C */ int32_t m_baseSection;
-    /* 0010 */ const char* m_textureName [3];
+    /* 0010 */ DBCString m_textureName [3];
     /* 001C */ int32_t m_flags;
     /* 0020 */ int32_t m_variationIndex;
     /* 0024 */ int32_t m_colorIndex;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CharSectionsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

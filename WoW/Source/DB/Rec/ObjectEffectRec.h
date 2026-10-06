@@ -9,7 +9,7 @@ class ObjectEffectRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_objectEffectGroupID;
     /* 000C */ int32_t m_triggerType;
     /* 0010 */ int32_t m_eventType;
@@ -20,9 +20,6 @@ class ObjectEffectRec {
     /* 002C */ int32_t m_objectEffectModifierID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ObjectEffectRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

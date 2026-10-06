@@ -41,12 +41,14 @@
 #include "WoW/Source/DB/Rec/ChatChannelsRec.h"
 #include "WoW/Source/DB/Rec/ChatProfanityRec.h"
 #include "WoW/Source/DB/Rec/ChrClassesRec.h"
+#include "WoW/Source/DB/Rec/ChrClassesXPowerTypesRec.h"
 #include "WoW/Source/DB/Rec/ChrRacesRec.h"
 #include "WoW/Source/DB/Rec/CinematicCameraRec.h"
 #include "WoW/Source/DB/Rec/CinematicSequencesRec.h"
 #include "WoW/Source/DB/Rec/CreatureDisplayInfoRec.h"
 #include "WoW/Source/DB/Rec/CreatureDisplayInfoExtraRec.h"
 #include "WoW/Source/DB/Rec/CreatureFamilyRec.h"
+#include "WoW/Source/DB/Rec/CreatureImmunitiesRec.h"
 #include "WoW/Source/DB/Rec/CreatureModelDataRec.h"
 #include "WoW/Source/DB/Rec/CreatureMovementInfoRec.h"
 #include "WoW/Source/DB/Rec/CreatureSoundDataRec.h"
@@ -98,6 +100,8 @@
 #include "WoW/Source/DB/Rec/gtChanceToSpellCritBaseRec.h"
 #include "WoW/Source/DB/Rec/gtCombatRatingsRec.h"
 #include "WoW/Source/DB/Rec/gtNPCManaCostScalerRec.h"
+#include "WoW/Source/DB/Rec/gtOCTBaseHPByClassRec.h"
+#include "WoW/Source/DB/Rec/gtOCTBaseMPByClassRec.h"
 #include "WoW/Source/DB/Rec/gtOCTClassCombatRatingScalarRec.h"
 #include "WoW/Source/DB/Rec/gtOCTHpPerStaminaRec.h"
 #include "WoW/Source/DB/Rec/gtOCTRegenMPRec.h"
@@ -111,6 +115,10 @@
 #include "WoW/Source/DB/Rec/HolidayDescriptionsRec.h"
 #include "WoW/Source/DB/Rec/HolidayNamesRec.h"
 #include "WoW/Source/DB/Rec/HolidaysRec.h"
+#include "WoW/Source/DB/Rec/ImportPriceArmorRec.h"
+#include "WoW/Source/DB/Rec/ImportPriceQualityRec.h"
+#include "WoW/Source/DB/Rec/ImportPriceShieldRec.h"
+#include "WoW/Source/DB/Rec/ImportPriceWeaponRec.h"
 #include "WoW/Source/DB/Rec/ItemArmorQualityRec.h"
 #include "WoW/Source/DB/Rec/ItemArmorShieldRec.h"
 #include "WoW/Source/DB/Rec/ItemArmorTotalRec.h"
@@ -130,7 +138,9 @@
 #include "WoW/Source/DB/Rec/ItemExtendedCostRec.h"
 #include "WoW/Source/DB/Rec/ItemGroupSoundsRec.h"
 #include "WoW/Source/DB/Rec/ItemLimitCategoryRec.h"
+#include "WoW/Source/DB/Rec/ItemNameDescriptionRec.h"
 #include "WoW/Source/DB/Rec/ItemPetFoodRec.h"
+#include "WoW/Source/DB/Rec/ItemPriceBaseRec.h"
 #include "WoW/Source/DB/Rec/ItemPurchaseGroupRec.h"
 #include "WoW/Source/DB/Rec/ItemRandomPropertiesRec.h"
 #include "WoW/Source/DB/Rec/ItemRandomSuffixRec.h"
@@ -140,11 +150,17 @@
 #include "WoW/Source/DB/Rec/ItemSubClassMaskRec.h"
 #include "WoW/Source/DB/Rec/ItemVisualEffectsRec.h"
 #include "WoW/Source/DB/Rec/ItemVisualsRec.h"
+#include "WoW/Source/DB/Rec/JournalEncounterRec.h"
+#include "WoW/Source/DB/Rec/JournalEncounterCreatureRec.h"
+#include "WoW/Source/DB/Rec/JournalEncounterItemRec.h"
+#include "WoW/Source/DB/Rec/JournalEncounterSectionRec.h"
+#include "WoW/Source/DB/Rec/JournalInstanceRec.h"
 #include "WoW/Source/DB/Rec/LanguagesRec.h"
 #include "WoW/Source/DB/Rec/LanguageWordsRec.h"
 #include "WoW/Source/DB/Rec/LfgDungeonExpansionRec.h"
 #include "WoW/Source/DB/Rec/LfgDungeonGroupRec.h"
 #include "WoW/Source/DB/Rec/LfgDungeonsRec.h"
+#include "WoW/Source/DB/Rec/LfgDungeonsGroupingMapRec.h"
 #include "WoW/Source/DB/Rec/LightRec.h"
 #include "WoW/Source/DB/Rec/LightFloatBandRec.h"
 #include "WoW/Source/DB/Rec/LightIntBandRec.h"
@@ -185,6 +201,7 @@
 #include "WoW/Source/DB/Rec/PhaseRec.h"
 #include "WoW/Source/DB/Rec/PhaseShiftZoneSoundsRec.h"
 #include "WoW/Source/DB/Rec/PhaseXPhaseGroupRec.h"
+#include "WoW/Source/DB/Rec/PlayerConditionRec.h"
 #include "WoW/Source/DB/Rec/PowerDisplayRec.h"
 #include "WoW/Source/DB/Rec/PvpDifficultyRec.h"
 #include "WoW/Source/DB/Rec/QuestFactionRewardRec.h"
@@ -211,6 +228,8 @@
 #include "WoW/Source/DB/Rec/SkillRaceClassInfoRec.h"
 #include "WoW/Source/DB/Rec/SkillTiersRec.h"
 #include "WoW/Source/DB/Rec/SoundAmbienceRec.h"
+#include "WoW/Source/DB/Rec/SoundAmbienceFlavorRec.h"
+#include "WoW/Source/DB/Rec/SoundEmitterPillPointsRec.h"
 #include "WoW/Source/DB/Rec/SoundEmittersRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesAdvancedRec.h"
@@ -223,6 +242,8 @@
 #include "WoW/Source/DB/Rec/SpellActivationOverlayRec.h"
 #include "WoW/Source/DB/Rec/SpellAuraOptionsRec.h"
 #include "WoW/Source/DB/Rec/SpellAuraRestrictionsRec.h"
+#include "WoW/Source/DB/Rec/SpellAuraVisibilityRec.h"
+#include "WoW/Source/DB/Rec/SpellAuraVisXTalentTabRec.h"
 #include "WoW/Source/DB/Rec/SpellCastingRequirementsRec.h"
 #include "WoW/Source/DB/Rec/SpellCastTimesRec.h"
 #include "WoW/Source/DB/Rec/SpellCategoriesRec.h"
@@ -256,6 +277,7 @@
 #include "WoW/Source/DB/Rec/SpellScalingRec.h"
 #include "WoW/Source/DB/Rec/SpellShapeshiftRec.h"
 #include "WoW/Source/DB/Rec/SpellShapeshiftFormRec.h"
+#include "WoW/Source/DB/Rec/SpellSpecialUnitEffectRec.h"
 #include "WoW/Source/DB/Rec/SpellTargetRestrictionsRec.h"
 #include "WoW/Source/DB/Rec/SpellTotemsRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualRec.h"
@@ -263,7 +285,6 @@
 #include "WoW/Source/DB/Rec/SpellVisualKitRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitAreaModelRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitModelAttachRec.h"
-#include "WoW/Source/DB/Rec/Startup_StringsRec.h"
 #include "WoW/Source/DB/Rec/StationeryRec.h"
 #include "WoW/Source/DB/Rec/StringLookupsRec.h"
 #include "WoW/Source/DB/Rec/SummonPropertiesRec.h"
@@ -287,7 +308,6 @@
 #include "WoW/Source/DB/Rec/VehicleSeatRec.h"
 #include "WoW/Source/DB/Rec/VehicleUIIndicatorRec.h"
 #include "WoW/Source/DB/Rec/VehicleUIIndSeatRec.h"
-#include "WoW/Source/DB/Rec/VideoHardwareRec.h"
 #include "WoW/Source/DB/Rec/VocalUISoundsRec.h"
 #include "WoW/Source/DB/Rec/WeaponImpactSoundsRec.h"
 #include "WoW/Source/DB/Rec/WeaponSwingSounds2Rec.h"
@@ -346,12 +366,14 @@ extern WowClientDB<CharacterFacialHairStylesRec> g_characterFacialHairStylesDB;
 extern WowClientDB<ChatChannelsRec> g_chatChannelsDB;
 extern WowClientDB<ChatProfanityRec> g_chatProfanityDB;
 extern WowClientDB<ChrClassesRec> g_chrClassesDB;
+extern WowClientDB<ChrClassesXPowerTypesRec> g_chrClassesXPowerTypesDB;
 extern WowClientDB<ChrRacesRec> g_chrRacesDB;
 extern WowClientDB<CinematicCameraRec> g_cinematicCameraDB;
 extern WowClientDB<CinematicSequencesRec> g_cinematicSequencesDB;
 extern WowClientDB<CreatureDisplayInfoRec> g_creatureDisplayInfoDB;
 extern WowClientDB<CreatureDisplayInfoExtraRec> g_creatureDisplayInfoExtraDB;
 extern WowClientDB<CreatureFamilyRec> g_creatureFamilyDB;
+extern WowClientDB<CreatureImmunitiesRec> g_creatureImmunitiesDB;
 extern WowClientDB<CreatureModelDataRec> g_creatureModelDataDB;
 extern WowClientDB<CreatureMovementInfoRec> g_creatureMovementInfoDB;
 extern WowClientDB<CreatureSoundDataRec> g_creatureSoundDataDB;
@@ -404,6 +426,10 @@ extern WowClientDB<HelmetGeosetVisDataRec> g_helmetGeosetVisDataDB;
 extern WowClientDB<HolidayDescriptionsRec> g_holidayDescriptionsDB;
 extern WowClientDB<HolidayNamesRec> g_holidayNamesDB;
 extern WowClientDB<HolidaysRec> g_holidaysDB;
+extern WowClientDB<ImportPriceArmorRec> g_importPriceArmorDB;
+extern WowClientDB<ImportPriceQualityRec> g_importPriceQualityDB;
+extern WowClientDB<ImportPriceShieldRec> g_importPriceShieldDB;
+extern WowClientDB<ImportPriceWeaponRec> g_importPriceWeaponDB;
 extern WowClientDB<ItemArmorQualityRec> g_itemArmorQualityDB;
 extern WowClientDB<ItemArmorShieldRec> g_itemArmorShieldDB;
 extern WowClientDB<ItemArmorTotalRec> g_itemArmorTotalDB;
@@ -423,7 +449,9 @@ extern WowClientDB_RLE<ItemDisplayInfoRec> g_itemDisplayInfoDB;
 extern WowClientDB<ItemExtendedCostRec> g_itemExtendedCostDB;
 extern WowClientDB<ItemGroupSoundsRec> g_itemGroupSoundsDB;
 extern WowClientDB<ItemLimitCategoryRec> g_itemLimitCategoryDB;
+extern WowClientDB<ItemNameDescriptionRec> g_itemNameDescriptionDB;
 extern WowClientDB<ItemPetFoodRec> g_itemPetFoodDB;
+extern WowClientDB<ItemPriceBaseRec> g_itemPriceBaseDB;
 extern WowClientDB<ItemPurchaseGroupRec> g_itemPurchaseGroupDB;
 extern WowClientDB<ItemRandomPropertiesRec> g_itemRandomPropertiesDB;
 extern WowClientDB<ItemRandomSuffixRec> g_itemRandomSuffixDB;
@@ -433,14 +461,20 @@ extern WowClientDB<ItemSubClassRec> g_itemSubClassDB;
 extern WowClientDB<ItemSubClassMaskRec> g_itemSubClassMaskDB;
 extern WowClientDB<ItemVisualEffectsRec> g_itemVisualEffectsDB;
 extern WowClientDB<ItemVisualsRec> g_itemVisualsDB;
+extern WowClientDB<JournalEncounterRec> g_journalEncounterDB;
+extern WowClientDB<JournalEncounterCreatureRec> g_journalEncounterCreatureDB;
+extern WowClientDB<JournalEncounterItemRec> g_journalEncounterItemDB;
+extern WowClientDB<JournalEncounterSectionRec> g_journalEncounterSectionDB;
+extern WowClientDB<JournalInstanceRec> g_journalInstanceDB;
 extern WowClientDB<LanguageWordsRec> g_languageWordsDB;
 extern WowClientDB<LanguagesRec> g_languagesDB;
 extern WowClientDB<LfgDungeonExpansionRec> g_lfgDungeonExpansionDB;
 extern WowClientDB<LfgDungeonGroupRec> g_lfgDungeonGroupDB;
 extern WowClientDB<LfgDungeonsRec> g_lfgDungeonsDB;
+extern WowClientDB<LfgDungeonsGroupingMapRec> g_lfgDungeonsGroupingMapDB;
 extern WowClientDB<LightRec> g_lightDB;
-extern WowClientDB_RLE<LightFloatBandRec> g_lightFloatBandDB;
-extern WowClientDB_RLE<LightIntBandRec> g_lightIntBandDB;
+extern WowClientDB<LightFloatBandRec> g_lightFloatBandDB;
+extern WowClientDB<LightIntBandRec> g_lightIntBandDB;
 extern WowClientDB<LightParamsRec> g_lightParamsDB;
 extern WowClientDB<LightSkyboxRec> g_lightSkyboxDB;
 extern WowClientDB<LiquidMaterialRec> g_liquidMaterialDB;
@@ -478,6 +512,7 @@ extern WowClientDB<PetPersonalityRec> g_petPersonalityDB;
 extern WowClientDB<PhaseRec> g_phaseDB;
 extern WowClientDB<PhaseShiftZoneSoundsRec> g_phaseShiftZoneSoundsDB;
 extern WowClientDB<PhaseXPhaseGroupRec> g_phaseXPhaseGroupDB;
+extern WowClientDB<PlayerConditionRec> g_playerConditionDB;
 extern WowClientDB<PowerDisplayRec> g_powerDisplayDB;
 extern WowClientDB<PvpDifficultyRec> g_pvpDifficultyDB;
 extern WowClientDB<QuestFactionRewardRec> g_questFactionRewardDB;
@@ -504,6 +539,8 @@ extern WowClientDB<SkillLineCategoryRec> g_skillLineCategoryDB;
 extern WowClientDB<SkillRaceClassInfoRec> g_skillRaceClassInfoDB;
 extern WowClientDB<SkillTiersRec> g_skillTiersDB;
 extern WowClientDB<SoundAmbienceRec> g_soundAmbienceDB;
+extern WowClientDB<SoundAmbienceFlavorRec> g_soundAmbienceFlavorDB;
+extern WowClientDB<SoundEmitterPillPointsRec> g_soundEmitterPillPointsDB;
 extern WowClientDB<SoundEmittersRec> g_soundEmittersDB;
 extern WowClientDB<SoundEntriesRec> g_soundEntriesDB;
 extern WowClientDB<SoundEntriesAdvancedRec> g_soundEntriesAdvancedDB;
@@ -516,6 +553,8 @@ extern WowClientDB<SpellRec> g_spellDB;
 extern WowClientDB<SpellActivationOverlayRec> g_spellActivationOverlayDB;
 extern WowClientDB<SpellAuraOptionsRec> g_spellAuraOptionsDB;
 extern WowClientDB<SpellAuraRestrictionsRec> g_spellAuraRestrictionsDB;
+extern WowClientDB<SpellAuraVisXTalentTabRec> g_spellAuraVisXTalentTabDB;
+extern WowClientDB<SpellAuraVisibilityRec> g_spellAuraVisibilityDB;
 extern WowClientDB<SpellCastTimesRec> g_spellCastTimesDB;
 extern WowClientDB<SpellCastingRequirementsRec> g_spellCastingRequirementsDB;
 extern WowClientDB<SpellCategoriesRec> g_spellCategoriesDB;
@@ -549,6 +588,7 @@ extern WowClientDB<SpellRuneCostRec> g_spellRuneCostDB;
 extern WowClientDB<SpellScalingRec> g_spellScalingDB;
 extern WowClientDB<SpellShapeshiftRec> g_spellShapeshiftDB;
 extern WowClientDB<SpellShapeshiftFormRec> g_spellShapeshiftFormDB;
+extern WowClientDB<SpellSpecialUnitEffectRec> g_spellSpecialUnitEffectDB;
 extern WowClientDB<SpellTargetRestrictionsRec> g_spellTargetRestrictionsDB;
 extern WowClientDB<SpellTotemsRec> g_spellTotemsDB;
 extern WowClientDB<SpellVisualRec> g_spellVisualDB;
@@ -604,6 +644,8 @@ extern WowClientDB<gtChanceToSpellCritRec> g_gtChanceToSpellCritDB;
 extern WowClientDB<gtChanceToSpellCritBaseRec> g_gtChanceToSpellCritBaseDB;
 extern WowClientDB<gtCombatRatingsRec> g_gtCombatRatingsDB;
 extern WowClientDB<gtNPCManaCostScalerRec> g_gtNPCManaCostScalerDB;
+extern WowClientDB<gtOCTBaseHPByClassRec> g_gtOCTBaseHPByClassDB;
+extern WowClientDB<gtOCTBaseMPByClassRec> g_gtOCTBaseMPByClassDB;
 extern WowClientDB<gtOCTClassCombatRatingScalarRec> g_gtOCTClassCombatRatingScalarDB;
 extern WowClientDB<gtOCTHpPerStaminaRec> g_gtOCTHpPerStaminaDB;
 extern WowClientDB<gtOCTRegenMPRec> g_gtOCTRegenMPDB;
@@ -616,7 +658,11 @@ int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty);
 int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty);
 int32_t ClientDBGetNumWeaponSubClasses();
 int32_t ClientDBGetUnarmedWeapon();
+extern int32_t g_clientDBWorldTablesLoaded;
+extern int32_t g_clientDBGlueTablesLoaded;
+
 void ClientDBInitialize();
+void ClientDBInitializeGlue();
 void ClientDBInitializeInGame();
 void ClientDBShutdown();
 void GameTablesInitialize();

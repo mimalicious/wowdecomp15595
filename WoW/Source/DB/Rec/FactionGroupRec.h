@@ -10,13 +10,10 @@ class FactionGroupRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_maskID;
-    /* 0008 */ const char* m_internalName;
-    /* 000C */ const char* m_name;
+    /* 0008 */ DBCString m_internalName;
+    /* 000C */ DBCString m_name;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(FactionGroupRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -20,9 +20,6 @@ class CharStartOutfitRec {
     /* 012C */ int32_t unk_012C;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CharStartOutfitRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/SpellDescriptionVariablesRec.h"
 
-// STATIC: %0x00B451BC
+// STATIC: 0x00C216E0/0x140A16300
 const DBCMeta SpellDescriptionVariablesRec::s_meta = { "DBFilesClient\\SpellDescriptionVariables.dbc", 2, 8, SpellDescriptionVariablesRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 548bfd96 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void SpellDescriptionVariablesRec::FixupStrings(void* record, const char* strings) {
     SpellDescriptionVariablesRec* rec = static_cast<SpellDescriptionVariablesRec*>(record);
-    rec->m_variables = &strings[reinterpret_cast<uintptr_t>(rec->m_variables)];
+    DBCFixupString(rec->m_variables, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void SpellDescriptionVariablesRec::ConvertRow(SpellDescriptionVariablesRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_variables = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

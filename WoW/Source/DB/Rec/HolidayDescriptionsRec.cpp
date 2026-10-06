@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/HolidayDescriptionsRec.h"
 
-// STATIC: %0x00B46484
+// STATIC: 0x00C24B20/0x140A1A3B8
 const DBCMeta HolidayDescriptionsRec::s_meta = { "DBFilesClient\\HolidayDescriptions.dbc", 2, 8, HolidayDescriptionsRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 083dc33e IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void HolidayDescriptionsRec::FixupStrings(void* record, const char* strings) {
     HolidayDescriptionsRec* rec = static_cast<HolidayDescriptionsRec*>(record);
-    rec->m_description = &strings[reinterpret_cast<uintptr_t>(rec->m_description)];
+    DBCFixupString(rec->m_description, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void HolidayDescriptionsRec::ConvertRow(HolidayDescriptionsRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_description = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

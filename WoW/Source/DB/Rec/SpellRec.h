@@ -9,36 +9,36 @@ class SpellRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
+    /* 0004 */ int32_t m_attributes;
+    /* 0008 */ int32_t m_attributesEx;
+    /* 000C */ int32_t m_attributesExB;
+    /* 0010 */ int32_t m_attributesExC;
+    /* 0014 */ int32_t m_attributesExD;
+    /* 0018 */ int32_t m_attributesExE;
+    /* 001C */ int32_t m_attributesExF;
+    /* 0020 */ int32_t m_attributesExG;
     /* 0024 */ int32_t unk_0024;
     /* 0028 */ int32_t unk_0028;
-    /* 002C */ int32_t unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
-    /* 0044 */ int32_t unk_0044;
-    /* 0048 */ int32_t unk_0048;
-    /* 004C */ int32_t unk_004C;
-    /* 0050 */ const char* m_name;
-    /* 0054 */ const char* m_nameSubtext;
-    /* 0058 */ const char* m_description;
-    /* 005C */ const char* m_auraDescription;
-    /* 0060 */ int32_t m_schoolMask;
-    /* 0064 */ int32_t m_runeCostID;
-    /* 0068 */ int32_t m_spellMissileID;
-    /* 006C */ int32_t unk_006C;
-    /* 0070 */ int32_t m_difficulty;
-    /* 0074 */ float unk_0074;
-    /* 0078 */ int32_t unk_0078;
+    /* 002C */ float m_effectChainAmplitude2;
+    /* 0030 */ int32_t m_castingTimeIndex;
+    /* 0034 */ int32_t m_durationIndex;
+    /* 0038 */ int32_t m_powerType;
+    /* 003C */ int32_t m_rangeIndex;
+    /* 0040 */ float m_speed;
+    /* 0044 */ int32_t m_spellVisualID;
+    /* 0048 */ float m_effectChainAmplitude1;
+    /* 004C */ int32_t m_spellIconID;
+    /* 0050 */ int32_t m_activeIconID;
+    /* 0054 */ DBCString m_name;
+    /* 0058 */ DBCString m_nameSubtext;
+    /* 005C */ DBCString m_description;
+    /* 0060 */ DBCString m_auraDescription;
+    /* 0064 */ int32_t m_schoolMask;
+    /* 0068 */ int32_t m_runeCostID;
+    /* 006C */ int32_t m_spellMissileID;
+    /* 0070 */ int32_t unk_0070;
+    /* 0074 */ int32_t m_difficulty;
+    /* 0078 */ float unk_0078;
     /* 007C */ int32_t unk_007C;
     /* 0080 */ int32_t unk_0080;
     /* 0084 */ int32_t unk_0084;
@@ -55,11 +55,9 @@ class SpellRec {
     /* 00B0 */ int32_t unk_00B0;
     /* 00B4 */ int32_t unk_00B4;
     /* 00B8 */ int32_t unk_00B8;
+    /* 00BC */ int32_t unk_00BC;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

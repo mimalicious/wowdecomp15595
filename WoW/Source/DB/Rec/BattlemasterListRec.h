@@ -12,7 +12,7 @@ class BattlemasterListRec {
     /* 0004 */ int32_t m_mapID [8];
     /* 0024 */ int32_t m_instanceType;
     /* 0028 */ int32_t m_groupsAllowed;
-    /* 002C */ const char* m_name;
+    /* 002C */ DBCString m_name;
     /* 0030 */ int32_t m_maxGroupSize;
     /* 0034 */ int32_t m_holidayWorldState;
     /* 0038 */ int32_t unk_0038;
@@ -23,9 +23,6 @@ class BattlemasterListRec {
     /* 004C */ int32_t unk_004C;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(BattlemasterListRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -15,9 +15,6 @@ class CharacterFacialHairStylesRec {
     /* 0010 */ int32_t m_geoset [5];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CharacterFacialHairStylesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

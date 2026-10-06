@@ -16,16 +16,13 @@ class AreaPOIRec {
     /* 0038 */ int32_t m_continentID;
     /* 003C */ int32_t m_flags;
     /* 0040 */ int32_t m_areaID;
-    /* 0044 */ const char* m_name;
-    /* 0048 */ const char* m_description;
+    /* 0044 */ DBCString m_name;
+    /* 0048 */ DBCString m_description;
     /* 004C */ int32_t m_worldStateID;
     /* 0050 */ int32_t unk_0050;
     /* 0054 */ int32_t unk_0054;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(AreaPOIRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

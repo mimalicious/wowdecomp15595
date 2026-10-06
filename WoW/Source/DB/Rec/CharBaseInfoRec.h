@@ -13,9 +13,6 @@ class CharBaseInfoRec {
     /* 0005 */ int8_t m_classID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CharBaseInfoRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

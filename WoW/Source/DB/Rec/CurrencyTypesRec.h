@@ -10,20 +10,17 @@ class CurrencyTypesRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t unk_0004;
-    /* 0008 */ const char* unk_0008;
-    /* 000C */ const char* unk_000C;
-    /* 0010 */ const char* unk_0010;
+    /* 0008 */ DBCString unk_0008;
+    /* 000C */ DBCString unk_000C;
+    /* 0010 */ DBCString unk_0010;
     /* 0014 */ int32_t unk_0014;
     /* 0018 */ int32_t unk_0018;
     /* 001C */ int32_t unk_001C;
     /* 0020 */ int32_t unk_0020;
     /* 0024 */ int32_t unk_0024;
-    /* 0028 */ const char* unk_0028;
+    /* 0028 */ DBCString unk_0028;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CurrencyTypesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -9,14 +9,11 @@ class PackageRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_icon;
+    /* 0004 */ DBCString m_icon;
     /* 0008 */ int32_t m_cost;
-    /* 000C */ const char* m_name;
+    /* 000C */ DBCString m_name;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(PackageRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -11,13 +11,13 @@ class TaxiNodesRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_continentID;
     /* 0008 */ float m_pos [3];
-    /* 0014 */ const char* m_name;
+    /* 0014 */ DBCString m_name;
     /* 0018 */ int32_t m_mountCreatureID [2];
+    /* 0020 */ int32_t unk_0020;
+    /* 0024 */ float unk_0024;
+    /* 0028 */ float unk_0028;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TaxiNodesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

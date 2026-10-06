@@ -9,7 +9,7 @@ class LfgDungeonsRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_minLevel;
     /* 000C */ int32_t m_maxLevel;
     /* 0010 */ int32_t m_targetLevel;
@@ -20,16 +20,17 @@ class LfgDungeonsRec {
     /* 0024 */ int32_t m_flags;
     /* 0028 */ int32_t m_typeID;
     /* 002C */ int32_t m_faction;
-    /* 0030 */ const char* m_textureFilename;
+    /* 0030 */ DBCString m_textureFilename;
     /* 0034 */ int32_t m_expansionLevel;
     /* 0038 */ int32_t m_orderIndex;
     /* 003C */ int32_t m_groupID;
-    /* 0040 */ const char* m_description;
+    /* 0040 */ DBCString m_description;
+    /* 0044 */ int32_t unk_0044;
+    /* 0048 */ int32_t unk_0048;
+    /* 004C */ int32_t unk_004C;
+    /* 0050 */ int32_t unk_0050;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LfgDungeonsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

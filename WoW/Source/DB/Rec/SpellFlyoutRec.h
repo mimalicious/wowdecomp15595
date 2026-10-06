@@ -13,13 +13,10 @@ class SpellFlyoutRec {
     /* 0008 */ int32_t unk_0008;
     /* 000C */ int32_t unk_000C;
     /* 0010 */ int32_t unk_0010;
-    /* 0014 */ const char* unk_0014;
-    /* 0018 */ const char* unk_0018;
+    /* 0014 */ DBCString unk_0014;
+    /* 0018 */ DBCString unk_0018;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellFlyoutRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

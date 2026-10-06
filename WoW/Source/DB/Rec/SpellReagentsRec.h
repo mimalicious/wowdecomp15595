@@ -27,9 +27,6 @@ class SpellReagentsRec {
     /* 0040 */ int32_t unk_0040;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellReagentsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

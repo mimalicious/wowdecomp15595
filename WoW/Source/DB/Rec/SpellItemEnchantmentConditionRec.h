@@ -17,9 +17,6 @@ class SpellItemEnchantmentConditionRec {
     /* 0040 */ int8_t m_logic [5];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellItemEnchantmentConditionRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

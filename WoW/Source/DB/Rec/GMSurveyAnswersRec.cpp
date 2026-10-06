@@ -1,19 +1,11 @@
 #include "WoW/Source/DB/Rec/GMSurveyAnswersRec.h"
 
-// STATIC: %0x00B468DC
+// STATIC: 0x00C2520C/0x140A1ACF0
 const DBCMeta GMSurveyAnswersRec::s_meta = { "DBFilesClient\\GMSurveyAnswers.dbc", 4, 16, GMSurveyAnswersRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C4E0
+// PROVEN: 02ba00c6 IDENTICAL/NONE
+// OFFSET: 0x00A2ECE0/0x1407D8380
 void GMSurveyAnswersRec::FixupStrings(void* record, const char* strings) {
     GMSurveyAnswersRec* rec = static_cast<GMSurveyAnswersRec*>(record);
-    rec->m_answer = &strings[reinterpret_cast<uintptr_t>(rec->m_answer)];
+    DBCFixupString(rec->m_answer, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void GMSurveyAnswersRec::ConvertRow(GMSurveyAnswersRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    memcpy(&rec->m_sortIndex, &row[0x0004], sizeof(rec->m_sortIndex));
-    memcpy(&rec->m_gmsurveyQuestionID, &row[0x0008], sizeof(rec->m_gmsurveyQuestionID));
-    rec->m_answer = &strings[*reinterpret_cast<const uint32_t*>(&row[0x000C])];
-}
-#endif

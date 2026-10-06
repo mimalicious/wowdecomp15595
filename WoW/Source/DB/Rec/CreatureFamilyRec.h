@@ -17,13 +17,10 @@ class CreatureFamilyRec {
     /* 001C */ int32_t m_petFoodMask;
     /* 0020 */ int32_t m_petTalentType;
     /* 0024 */ int32_t m_categoryEnumID;
-    /* 0028 */ const char* m_name;
-    /* 002C */ const char* m_iconFile;
+    /* 0028 */ DBCString m_name;
+    /* 002C */ DBCString m_iconFile;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CreatureFamilyRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

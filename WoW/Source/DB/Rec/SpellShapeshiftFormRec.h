@@ -10,7 +10,7 @@ class SpellShapeshiftFormRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_bonusActionBar;
-    /* 0008 */ const char* m_name;
+    /* 0008 */ DBCString m_name;
     /* 000C */ int32_t m_flags;
     /* 0010 */ int32_t m_creatureType;
     /* 0014 */ int32_t m_attackIconID;
@@ -21,9 +21,6 @@ class SpellShapeshiftFormRec {
     /* 0050 */ int32_t unk_0050;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellShapeshiftFormRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

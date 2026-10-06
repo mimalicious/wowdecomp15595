@@ -14,8 +14,8 @@ class CreatureDisplayInfoRec {
     /* 000C */ int32_t m_extendedDisplayInfoID;
     /* 0010 */ float m_creatureModelScale;
     /* 0014 */ int32_t m_creatureModelAlpha;
-    /* 0018 */ const char* m_textureVariation [3];
-    /* 0024 */ const char* m_portraitTextureName;
+    /* 0018 */ DBCString m_textureVariation [3];
+    /* 0024 */ DBCString m_portraitTextureName;
     /* 0028 */ int32_t m_sizeClass;
     /* 002C */ int32_t m_bloodID;
     /* 0030 */ int32_t m_npcsoundID;
@@ -25,9 +25,6 @@ class CreatureDisplayInfoRec {
     /* 0040 */ int32_t unk_0040;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CreatureDisplayInfoRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

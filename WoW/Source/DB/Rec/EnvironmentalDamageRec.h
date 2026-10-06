@@ -13,9 +13,6 @@ class EnvironmentalDamageRec {
     /* 0008 */ int32_t m_visualkitID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(EnvironmentalDamageRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

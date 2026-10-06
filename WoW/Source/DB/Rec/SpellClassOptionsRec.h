@@ -14,12 +14,9 @@ class SpellClassOptionsRec {
     /* 000C */ int32_t unk_000C;
     /* 0010 */ int32_t unk_0010;
     /* 0014 */ int32_t unk_0014;
-    /* 0018 */ const char* unk_0018;
+    /* 0018 */ DBCString unk_0018;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellClassOptionsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

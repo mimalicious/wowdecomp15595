@@ -10,16 +10,13 @@ class TerrainTypeRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_terrainID;
-    /* 0008 */ const char* m_terrainDesc;
+    /* 0008 */ DBCString m_terrainDesc;
     /* 000C */ int32_t m_footstepSprayRun;
     /* 0010 */ int32_t m_footstepSprayWalk;
     /* 0014 */ int32_t m_soundID;
     /* 0018 */ int32_t m_flags;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TerrainTypeRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -12,9 +12,6 @@ class GuildColorEmblemRec {
     /* 0004 */ int32_t unk_0004;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(GuildColorEmblemRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

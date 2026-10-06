@@ -13,8 +13,8 @@ class UnitPowerBarRec {
     /* 0008 */ int32_t unk_0008;
     /* 000C */ int32_t unk_000C;
     /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
+    /* 0014 */ float unk_0014;
+    /* 0018 */ float unk_0018;
     /* 001C */ int32_t unk_001C;
     /* 0020 */ int32_t unk_0020;
     /* 0024 */ int32_t unk_0024;
@@ -27,17 +27,16 @@ class UnitPowerBarRec {
     /* 0040 */ int32_t unk_0040;
     /* 0044 */ int32_t unk_0044;
     /* 0048 */ int32_t unk_0048;
-    /* 004C */ const char* unk_004C;
-    /* 0050 */ const char* unk_0050;
-    /* 0054 */ const char* unk_0054;
-    /* 0058 */ const char* unk_0058;
-    /* 005C */ float unk_005C;
-    /* 0060 */ float unk_0060;
+    /* 004C */ int32_t unk_004C;
+    /* 0050 */ int32_t unk_0050;
+    /* 0054 */ DBCString unk_0054;
+    /* 0058 */ DBCString unk_0058;
+    /* 005C */ DBCString unk_005C;
+    /* 0060 */ DBCString unk_0060;
+    /* 0064 */ float unk_0064;
+    /* 0068 */ float unk_0068;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(UnitPowerBarRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

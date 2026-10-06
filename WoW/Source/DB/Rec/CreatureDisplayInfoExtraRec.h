@@ -18,12 +18,9 @@ class CreatureDisplayInfoExtraRec {
     /* 001C */ int32_t m_facialHairID;
     /* 0020 */ int32_t m_npcitemDisplay [11];
     /* 004C */ int32_t m_flags;
-    /* 0050 */ const char* m_bakeName;
+    /* 0050 */ DBCString m_bakeName;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(CreatureDisplayInfoExtraRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

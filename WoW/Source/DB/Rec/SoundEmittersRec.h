@@ -13,12 +13,10 @@ class SoundEmittersRec {
     /* 0010 */ float m_direction [3];
     /* 001C */ int32_t m_soundEntryAdvancedID;
     /* 0020 */ int32_t m_mapID;
-    /* 0024 */ const char* m_name;
+    /* 0024 */ DBCString m_name;
+    /* 0028 */ int32_t unk_0028;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundEmittersRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

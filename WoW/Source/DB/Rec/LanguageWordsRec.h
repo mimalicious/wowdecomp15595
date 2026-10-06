@@ -10,12 +10,9 @@ class LanguageWordsRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_languageID;
-    /* 0008 */ const char* m_word;
+    /* 0008 */ DBCString m_word;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LanguageWordsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

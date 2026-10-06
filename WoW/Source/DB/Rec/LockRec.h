@@ -15,9 +15,6 @@ class LockRec {
     /* 0064 */ int32_t m_action [8];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LockRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

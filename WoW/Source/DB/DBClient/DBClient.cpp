@@ -7,6 +7,7 @@
 #include "WoW/Source/DB/WowClientDB2.h"
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Os/OsFile.h"
+#include "Engine/Source/Services/AsyncFile.h"
 #include <ctime>
 
 // STATIC: #0x00AD3028
@@ -30,905 +31,962 @@ static TSFixedArray<uint32_t> s_terrainTypeSoundIDs;
 // STATIC: #0x00C5D680
 static TSFixedArray<const ItemSubClassRec*> s_weaponSubclasses;
 
-// STATIC: %0x00C7672C
+// STATIC: 0x00D73300
 WowClientDB<AnimationDataRec> g_animationDataDB;
 
-// STATIC: %0x00C76748
-WowClientDB<LiquidMaterialRec> g_liquidMaterialDB;
-
-// STATIC: %0x00C76764
-WowClientDB<LiquidObjectRec> g_liquidObjectDB;
-
-// STATIC: %0x00C76780
-WowClientDB<LiquidTypeRec> g_liquidTypeDB;
-
-// STATIC: %0x00C7679C
-WowClientDB<SoundEntriesAdvancedRec> g_soundEntriesAdvancedDB;
-
-// STATIC: %0x00C767B8
-WowClientDB<SoundEntriesRec> g_soundEntriesDB;
-
-// STATIC: %0x00C767D4
-WowClientDB<SoundEntriesFallbacksRec> g_soundEntriesFallbacksDB;
-
-// STATIC: %0x00C767F0
-WowClientDB<TerrainMaterialRec> g_terrainMaterialDB;
-
-// STATIC: %0x00C98A24
-WowClientDB<AchievementRec> g_achievementDB;
-
-// STATIC: %0x00C98AE4
-WowClientDB<Achievement_CriteriaRec> g_achievement_CriteriaDB;
-
-// STATIC: %0x00C98BA4
-WowClientDB<Achievement_CategoryRec> g_achievement_CategoryDB;
-
-// STATIC: %0x00C98BC0
-WowClientDB<AnimKitRec> g_animKitDB;
-
-// STATIC: %0x00C98BDC
-WowClientDB<AnimKitBoneSetRec> g_animKitBoneSetDB;
-
-// STATIC: %0x00C98BF8
-WowClientDB<AnimKitBoneSetAliasRec> g_animKitBoneSetAliasDB;
-
-// STATIC: %0x00C98C14
-WowClientDB<AnimKitConfigRec> g_animKitConfigDB;
-
-// STATIC: %0x00C98C30
-WowClientDB<AnimKitConfigBoneSetRec> g_animKitConfigBoneSetDB;
-
-// STATIC: %0x00C98C4C
-WowClientDB<AnimKitPriorityRec> g_animKitPriorityDB;
-
-// STATIC: %0x00C98C68
-WowClientDB<AnimKitSegmentRec> g_animKitSegmentDB;
-
-// STATIC: %0x00C98C84
-WowClientDB<AnimReplacementRec> g_animReplacementDB;
-
-// STATIC: %0x00C98CA0
-WowClientDB<AnimReplacementSetRec> g_animReplacementSetDB;
-
-// STATIC: %0x00C98CBC
-WowClientDB<AreaGroupRec> g_areaGroupDB;
-
-// STATIC: %0x00C98CD8
-WowClientDB<AreaPOIRec> g_areaPOIDB;
-
-// STATIC: %0x00C98CF4
-WowClientDB<AreaPOISortedWorldStateRec> g_areaPOISortedWorldStateDB;
-
-// STATIC: %0x00C98D10
+// STATIC: 0x00D7331C
 WowClientDB<AreaTableRec> g_areaTableDB;
 
-// STATIC: %0x00C98D2C
+// STATIC: 0x00D73338
+WowClientDB<FootprintTexturesRec> g_footprintTexturesDB;
+
+// STATIC: 0x00D73354
+WowClientDB<GroundEffectDoodadRec> g_groundEffectDoodadDB;
+
+// STATIC: 0x00D73370
+WowClientDB<GroundEffectTextureRec> g_groundEffectTextureDB;
+
+// STATIC: 0x00D7338C
+WowClientDB<LightRec> g_lightDB;
+
+// STATIC: 0x00D733A8
+WowClientDB<LightIntBandRec> g_lightIntBandDB;
+
+// STATIC: 0x00D733C4
+WowClientDB<LightFloatBandRec> g_lightFloatBandDB;
+
+// STATIC: 0x00D733E0
+WowClientDB<LightParamsRec> g_lightParamsDB;
+
+// STATIC: 0x00D733FC
+WowClientDB<LightSkyboxRec> g_lightSkyboxDB;
+
+// STATIC: 0x00D73418
+WowClientDB<LiquidMaterialRec> g_liquidMaterialDB;
+
+// STATIC: 0x00D73434
+WowClientDB<LiquidObjectRec> g_liquidObjectDB;
+
+// STATIC: 0x00D73450
+WowClientDB<LiquidTypeRec> g_liquidTypeDB;
+
+// STATIC: 0x00D7346C
+WowClientDB<MapRec> g_mapDB;
+
+// STATIC: 0x00D73488
+WowClientDB<SoundEmitterPillPointsRec> g_soundEmitterPillPointsDB;
+
+// STATIC: 0x00D734A4
+WowClientDB<SoundEmittersRec> g_soundEmittersDB;
+
+// STATIC: 0x00D734C0
+WowClientDB<SoundEntriesAdvancedRec> g_soundEntriesAdvancedDB;
+
+// STATIC: 0x00D734DC
+WowClientDB<SoundEntriesRec> g_soundEntriesDB;
+
+// STATIC: 0x00D734F8
+WowClientDB<SoundEntriesFallbacksRec> g_soundEntriesFallbacksDB;
+
+// STATIC: 0x00D73514
+WowClientDB<TerrainMaterialRec> g_terrainMaterialDB;
+
+// STATIC: 0x00D73530
+WowClientDB<TerrainTypeRec> g_terrainTypeDB;
+
+// STATIC: 0x00D73568
+WowClientDB<WeatherRec> g_weatherDB;
+
+// STATIC: 0x00D73584
+WowClientDB<WMOAreaTableRec> g_wmoAreaTableDB;
+
+// STATIC: 0x00D735A0
+WowClientDB<ZoneLightRec> g_zoneLightDB;
+
+// STATIC: 0x00D735BC
+WowClientDB<ZoneLightPointRec> g_zoneLightPointDB;
+
+// STATIC: 0x00D98968
+WowClientDB<AchievementRec> g_achievementDB;
+
+// STATIC: 0x00D98984
+WowClientDB<Achievement_CriteriaRec> g_achievement_CriteriaDB;
+
+// STATIC: 0x00D989A0
+WowClientDB<Achievement_CategoryRec> g_achievement_CategoryDB;
+
+// STATIC: 0x00D989BC
+WowClientDB<AnimKitRec> g_animKitDB;
+
+// STATIC: 0x00D989D8
+WowClientDB<AnimKitBoneSetRec> g_animKitBoneSetDB;
+
+// STATIC: 0x00D989F4
+WowClientDB<AnimKitBoneSetAliasRec> g_animKitBoneSetAliasDB;
+
+// STATIC: 0x00D98A10
+WowClientDB<AnimKitConfigRec> g_animKitConfigDB;
+
+// STATIC: 0x00D98A2C
+WowClientDB<AnimKitConfigBoneSetRec> g_animKitConfigBoneSetDB;
+
+// STATIC: 0x00D98A48
+WowClientDB<AnimKitPriorityRec> g_animKitPriorityDB;
+
+// STATIC: 0x00D98A64
+WowClientDB<AnimKitSegmentRec> g_animKitSegmentDB;
+
+// STATIC: 0x00D98A80
+WowClientDB<AnimReplacementRec> g_animReplacementDB;
+
+// STATIC: 0x00D98A9C
+WowClientDB<AnimReplacementSetRec> g_animReplacementSetDB;
+
+// STATIC: 0x00D98AB8
+WowClientDB<AreaGroupRec> g_areaGroupDB;
+
+// STATIC: 0x00D98AD4
+WowClientDB<AreaPOIRec> g_areaPOIDB;
+
+// STATIC: 0x00D98AF0
+WowClientDB<AreaPOISortedWorldStateRec> g_areaPOISortedWorldStateDB;
+
+// STATIC: 0x00D98B0C
 WowClientDB<AreaAssignmentRec> g_areaAssignmentDB;
 
-// STATIC: %0x00C98D48
+// STATIC: 0x00D98B28
 WowClientDB<AreaTriggerRec> g_areaTriggerDB;
 
-// STATIC: %0x00C98D64
+// STATIC: 0x00D98B44
 WowClientDB<ArmorLocationRec> g_armorLocationDB;
 
-// STATIC: %0x00C98D80
+// STATIC: 0x00D98B60
 WowClientDB<AuctionHouseRec> g_auctionHouseDB;
 
-// STATIC: %0x00C98D9C
+// STATIC: 0x00D98B7C
 WowClientDB<BankBagSlotPricesRec> g_bankBagSlotPricesDB;
 
-// STATIC: %0x00C98DB8
+// STATIC: 0x00D98B98
 WowClientDB<BannedAddOnsRec> g_bannedAddOnsDB;
 
-// STATIC: %0x00C98DD4
+// STATIC: 0x00D98BB4
 WowClientDB<BarberShopStyleRec> g_barberShopStyleDB;
 
-// STATIC: %0x00C98DF0
+// STATIC: 0x00D98BD0
 WowClientDB<BattlemasterListRec> g_battlemasterListDB;
 
-// STATIC: %0x00C98E0C
+// STATIC: 0x00D98BEC
 WowClientDB<CameraModeRec> g_cameraModeDB;
 
-// STATIC: %0x00C98E28
+// STATIC: 0x00D98C08
 WowClientDB<CameraShakesRec> g_cameraShakesDB;
 
-// STATIC: %0x00C98E44
+// STATIC: 0x00D98C24
 WowClientDB<CastableRaidBuffsRec> g_castableRaidBuffsDB;
 
-// STATIC: %0x00C98E60
+// STATIC: 0x00D98C40
 WowClientDB<Cfg_CategoriesRec> g_cfg_CategoriesDB;
 
-// STATIC: %0x00C98E7C
+// STATIC: 0x00D98C5C
 WowClientDB<Cfg_ConfigsRec> g_cfg_ConfigsDB;
 
-// STATIC: %0x00C98E98
+// STATIC: 0x00D98C78
 WowClientDB<CharBaseInfoRec> g_charBaseInfoDB;
 
-// STATIC: %0x00C98EB4
+// STATIC: 0x00D98C94
 WowClientDB<CharHairGeosetsRec> g_charHairGeosetsDB;
 
-// STATIC: %0x00C98ED0
+// STATIC: 0x00D98CB0
 WowClientDB<CharSectionsRec> g_charSectionsDB;
 
-// STATIC: %0x00C98EEC
+// STATIC: 0x00D98CCC
 WowClientDB<CharStartOutfitRec> g_charStartOutfitDB;
 
-// STATIC: %0x00C98F08
+// STATIC: 0x00D98CE8
 WowClientDB<CharTitlesRec> g_charTitlesDB;
 
-// STATIC: %0x00C98F24
+// STATIC: 0x00D98D04
 WowClientDB<CharacterFacialHairStylesRec> g_characterFacialHairStylesDB;
 
-// STATIC: %0x00C98F40
+// STATIC: 0x00D98D20
 WowClientDB<ChatChannelsRec> g_chatChannelsDB;
 
-// STATIC: %0x00C98F5C
+// STATIC: 0x00D98D3C
 WowClientDB<ChatProfanityRec> g_chatProfanityDB;
 
-// STATIC: %0x00C98F78
+// STATIC: 0x00D98D58
 WowClientDB<ChrClassesRec> g_chrClassesDB;
 
-// STATIC: %0x00C98F94
+// STATIC: 0x00D98D74
+WowClientDB<ChrClassesXPowerTypesRec> g_chrClassesXPowerTypesDB;
+
+// STATIC: 0x00D98D90
 WowClientDB<ChrRacesRec> g_chrRacesDB;
 
-// STATIC: %0x00C98FB0
+// STATIC: 0x00D98DAC
 WowClientDB<CinematicCameraRec> g_cinematicCameraDB;
 
-// STATIC: %0x00C98FCC
+// STATIC: 0x00D98DC8
 WowClientDB<CinematicSequencesRec> g_cinematicSequencesDB;
 
-// STATIC: %0x00C98FE8
+// STATIC: 0x00D98DE4
 WowClientDB<CreatureDisplayInfoExtraRec> g_creatureDisplayInfoExtraDB;
 
-// STATIC: %0x00C99004
+// STATIC: 0x00D98E00
 WowClientDB<CreatureDisplayInfoRec> g_creatureDisplayInfoDB;
 
-// STATIC: %0x00C99020
+// STATIC: 0x00D98E1C
 WowClientDB<CreatureFamilyRec> g_creatureFamilyDB;
 
-// STATIC: %0x00C9903C
+// STATIC: 0x00D98E38
+WowClientDB<CreatureImmunitiesRec> g_creatureImmunitiesDB;
+
+// STATIC: 0x00D98E54
 WowClientDB<CreatureModelDataRec> g_creatureModelDataDB;
 
-// STATIC: %0x00C99058
+// STATIC: 0x00D98E70
 WowClientDB<CreatureMovementInfoRec> g_creatureMovementInfoDB;
 
-// STATIC: %0x00C99074
+// STATIC: 0x00D98E8C
 WowClientDB<CreatureSoundDataRec> g_creatureSoundDataDB;
 
-// STATIC: %0x00C99090
+// STATIC: 0x00D98EA8
 WowClientDB<CreatureSpellDataRec> g_creatureSpellDataDB;
 
-// STATIC: %0x00C990AC
+// STATIC: 0x00D98EC4
 WowClientDB<CreatureTypeRec> g_creatureTypeDB;
 
-// STATIC: %0x00C990C8
+// STATIC: 0x00D98EE0
 WowClientDB<CurrencyTypesRec> g_currencyTypesDB;
 
-// STATIC: %0x00C990E4
+// STATIC: 0x00D98EFC
 WowClientDB<CurrencyCategoryRec> g_currencyCategoryDB;
 
-// STATIC: %0x00C99100
+// STATIC: 0x00D98F18
 WowClientDB<DanceMovesRec> g_danceMovesDB;
 
-// STATIC: %0x00C9911C
+// STATIC: 0x00D98F34
 WowClientDB<DeathThudLookupsRec> g_deathThudLookupsDB;
 
-// STATIC: %0x00C99170
+// STATIC: 0x00D98F88
 WowClientDB<DestructibleModelDataRec> g_destructibleModelDataDB;
 
-// STATIC: %0x00C9918C
+// STATIC: 0x00D98FA4
 WowClientDB<DungeonEncounterRec> g_dungeonEncounterDB;
 
-// STATIC: %0x00C991A8
+// STATIC: 0x00D98FC0
 WowClientDB<DungeonMapRec> g_dungeonMapDB;
 
-// STATIC: %0x00C991C4
+// STATIC: 0x00D98FDC
 WowClientDB<DungeonMapChunkRec> g_dungeonMapChunkDB;
 
-// STATIC: %0x00C991E0
+// STATIC: 0x00D98FF8
 WowClientDB<DurabilityCostsRec> g_durabilityCostsDB;
 
-// STATIC: %0x00C991FC
+// STATIC: 0x00D99014
 WowClientDB<DurabilityQualityRec> g_durabilityQualityDB;
 
-// STATIC: %0x00C99218
+// STATIC: 0x00D99030
 WowClientDB<EmotesRec> g_emotesDB;
 
-// STATIC: %0x00C99234
+// STATIC: 0x00D9904C
 WowClientDB<EmotesTextDataRec> g_emotesTextDataDB;
 
-// STATIC: %0x00C99250
+// STATIC: 0x00D99068
 WowClientDB<EmotesTextSoundRec> g_emotesTextSoundDB;
 
-// STATIC: %0x00C9926C
+// STATIC: 0x00D99084
 WowClientDB<EmotesTextRec> g_emotesTextDB;
 
-// STATIC: %0x00C99288
+// STATIC: 0x00D990A0
 WowClientDB<EnvironmentalDamageRec> g_environmentalDamageDB;
 
-// STATIC: %0x00C992A4
+// STATIC: 0x00D990BC
 WowClientDB<ExhaustionRec> g_exhaustionDB;
 
-// STATIC: %0x00C992C0
+// STATIC: 0x00D990D8
 WowClientDB<FactionGroupRec> g_factionGroupDB;
 
-// STATIC: %0x00C992DC
+// STATIC: 0x00D990F4
 WowClientDB<FactionRec> g_factionDB;
 
-// STATIC: %0x00C992F8
+// STATIC: 0x00D99110
 WowClientDB<FactionTemplateRec> g_factionTemplateDB;
 
 // STATIC: 0x00D9912C
 WowClientDB<FileDataRec> g_fileDataDB;
 
-// STATIC: %0x00C99330
-WowClientDB<FootprintTexturesRec> g_footprintTexturesDB;
-
-// STATIC: %0x00C9934C
+// STATIC: 0x00D99148
 WowClientDB<FootstepTerrainLookupRec> g_footstepTerrainLookupDB;
 
-// STATIC: %0x00C99368
+// STATIC: 0x00D99164
 WowClientDB<GameObjectArtKitRec> g_gameObjectArtKitDB;
 
-// STATIC: %0x00C99384
+// STATIC: 0x00D99180
 WowClientDB<GameObjectDisplayInfoRec> g_gameObjectDisplayInfoDB;
 
-// STATIC: %0x00C993A0
+// STATIC: 0x00D9919C
 WowClientDB<GameTablesRec> g_gameTablesDB;
 
-// STATIC: %0x00C993BC
+// STATIC: 0x00D991B8
 WowClientDB<GameTipsRec> g_gameTipsDB;
 
-// STATIC: %0x00C993D8
+// STATIC: 0x00D991D4
 WowClientDB<GemPropertiesRec> g_gemPropertiesDB;
 
-// STATIC: %0x00C993F4
+// STATIC: 0x00D991F0
 WowClientDB<GlueScreenEmoteRec> g_glueScreenEmoteDB;
 
-// STATIC: %0x00C99410
+// STATIC: 0x00D9920C
 WowClientDB<GlyphPropertiesRec> g_glyphPropertiesDB;
 
-// STATIC: %0x00C9942C
+// STATIC: 0x00D99228
 WowClientDB<GlyphSlotRec> g_glyphSlotDB;
 
-// STATIC: %0x00C99448
+// STATIC: 0x00D99244
 WowClientDB<GMSurveyAnswersRec> g_gmSurveyAnswersDB;
 
-// STATIC: %0x00C99464
+// STATIC: 0x00D99260
 WowClientDB<GMSurveyCurrentSurveyRec> g_gmSurveyCurrentSurveyDB;
 
-// STATIC: %0x00C99480
+// STATIC: 0x00D9927C
 WowClientDB<GMSurveyQuestionsRec> g_gmSurveyQuestionsDB;
 
-// STATIC: %0x00C9949C
+// STATIC: 0x00D99298
 WowClientDB<GMSurveySurveysRec> g_gmSurveySurveysDB;
 
-// STATIC: %0x00C994B8
+// STATIC: 0x00D992B4
 WowClientDB<GMTicketCategoryRec> g_gmTicketCategoryDB;
 
-// STATIC: %0x00C994D4
-WowClientDB<GroundEffectDoodadRec> g_groundEffectDoodadDB;
-
-// STATIC: %0x00C994F0
-WowClientDB<GroundEffectTextureRec> g_groundEffectTextureDB;
-
-// STATIC: %0x00C9950C
+// STATIC: 0x00D992D0
 WowClientDB<gtBarberShopCostBaseRec> g_gtBarberShopCostBaseDB;
 
-// STATIC: %0x00C99528
+// STATIC: 0x00D992EC
 WowClientDB<gtCombatRatingsRec> g_gtCombatRatingsDB;
 
-// STATIC: %0x00C99544
+// STATIC: 0x00D99308
 WowClientDB<gtChanceToMeleeCritRec> g_gtChanceToMeleeCritDB;
 
-// STATIC: %0x00C99560
+// STATIC: 0x00D99324
 WowClientDB<gtChanceToMeleeCritBaseRec> g_gtChanceToMeleeCritBaseDB;
 
-// STATIC: %0x00C9957C
+// STATIC: 0x00D99340
 WowClientDB<gtChanceToSpellCritRec> g_gtChanceToSpellCritDB;
 
-// STATIC: %0x00C99598
+// STATIC: 0x00D9935C
 WowClientDB<gtChanceToSpellCritBaseRec> g_gtChanceToSpellCritBaseDB;
 
-// STATIC: %0x00C995B4
+// STATIC: 0x00D99378
 WowClientDB<gtNPCManaCostScalerRec> g_gtNPCManaCostScalerDB;
 
-// STATIC: %0x00C995D0
+// STATIC: 0x00D99394
+WowClientDB<gtOCTBaseHPByClassRec> g_gtOCTBaseHPByClassDB;
+
+// STATIC: 0x00D993B0
+WowClientDB<gtOCTBaseMPByClassRec> g_gtOCTBaseMPByClassDB;
+
+// STATIC: 0x00D993CC
 WowClientDB<gtOCTClassCombatRatingScalarRec> g_gtOCTClassCombatRatingScalarDB;
 
-// STATIC: %0x00C995EC
+// STATIC: 0x00D993E8
 WowClientDB<gtOCTHpPerStaminaRec> g_gtOCTHpPerStaminaDB;
 
-// STATIC: %0x00C99608
+// STATIC: 0x00D99404
 WowClientDB<gtOCTRegenMPRec> g_gtOCTRegenMPDB;
 
-// STATIC: %0x00C99624
+// STATIC: 0x00D99420
 WowClientDB<gtRegenMPPerSptRec> g_gtRegenMPPerSptDB;
 
-// STATIC: %0x00C99640
+// STATIC: 0x00D9943C
 WowClientDB<gtSpellScalingRec> g_gtSpellScalingDB;
 
-// STATIC: %0x00C9965C
+// STATIC: 0x00D99458
 WowClientDB<GuildColorBackgroundRec> g_guildColorBackgroundDB;
 
-// STATIC: %0x00C99678
+// STATIC: 0x00D99474
 WowClientDB<GuildColorBorderRec> g_guildColorBorderDB;
 
-// STATIC: %0x00C99694
+// STATIC: 0x00D99490
 WowClientDB<GuildColorEmblemRec> g_guildColorEmblemDB;
 
-// STATIC: %0x00C996B0
+// STATIC: 0x00D994AC
 WowClientDB<GuildPerkSpellsRec> g_guildPerkSpellsDB;
 
-// STATIC: %0x00C996CC
+// STATIC: 0x00D994C8
 WowClientDB<HelmetGeosetVisDataRec> g_helmetGeosetVisDataDB;
 
-// STATIC: %0x00C996E8
+// STATIC: 0x00D994E4
 WowClientDB<HolidayDescriptionsRec> g_holidayDescriptionsDB;
 
-// STATIC: %0x00C99704
+// STATIC: 0x00D99500
 WowClientDB<HolidayNamesRec> g_holidayNamesDB;
 
-// STATIC: %0x00C99720
+// STATIC: 0x00D9951C
 WowClientDB<HolidaysRec> g_holidaysDB;
 
-// STATIC: %0x00C9973C
+// STATIC: 0x00D99538
+WowClientDB<ImportPriceArmorRec> g_importPriceArmorDB;
+
+// STATIC: 0x00D99554
+WowClientDB<ImportPriceQualityRec> g_importPriceQualityDB;
+
+// STATIC: 0x00D99570
+WowClientDB<ImportPriceShieldRec> g_importPriceShieldDB;
+
+// STATIC: 0x00D9958C
+WowClientDB<ImportPriceWeaponRec> g_importPriceWeaponDB;
+
+// STATIC: 0x00D995A8
 WowClientDB<ItemArmorTotalRec> g_itemArmorTotalDB;
 
-// STATIC: %0x00C99758
+// STATIC: 0x00D995C4
 WowClientDB<ItemArmorQualityRec> g_itemArmorQualityDB;
 
-// STATIC: %0x00C99774
+// STATIC: 0x00D995E0
 WowClientDB<ItemArmorShieldRec> g_itemArmorShieldDB;
 
-// STATIC: %0x00C99790
+// STATIC: 0x00D995FC
 WowClientDB<ItemBagFamilyRec> g_itemBagFamilyDB;
 
-// STATIC: %0x00C997AC
+// STATIC: 0x00D99618
 WowClientDB<ItemClassRec> g_itemClassDB;
 
-// STATIC: %0x00C997C8
-WowClientDB<ItemCurrencyCostRec> g_itemCurrencyCostDB;
-
-// STATIC: %0x00C997E4
+// STATIC: 0x00D99634
 WowClientDB<ItemDamageAmmoRec> g_itemDamageAmmoDB;
 
-// STATIC: %0x00C99800
+// STATIC: 0x00D99650
 WowClientDB<ItemDamageOneHandRec> g_itemDamageOneHandDB;
 
-// STATIC: %0x00C9981C
+// STATIC: 0x00D9966C
 WowClientDB<ItemDamageOneHandCasterRec> g_itemDamageOneHandCasterDB;
 
-// STATIC: %0x00C99838
+// STATIC: 0x00D99688
 WowClientDB<ItemDamageRangedRec> g_itemDamageRangedDB;
 
-// STATIC: %0x00C99854
+// STATIC: 0x00D996A4
 WowClientDB<ItemDamageThrownRec> g_itemDamageThrownDB;
 
-// STATIC: %0x00C99870
+// STATIC: 0x00D996C0
 WowClientDB<ItemDamageTwoHandRec> g_itemDamageTwoHandDB;
 
-// STATIC: %0x00C9988C
+// STATIC: 0x00D996DC
 WowClientDB<ItemDamageTwoHandCasterRec> g_itemDamageTwoHandCasterDB;
 
-// STATIC: %0x00C998A8
+// STATIC: 0x00D996F8
 WowClientDB<ItemDamageWandRec> g_itemDamageWandDB;
 
-// STATIC: %0x00C998C4
+// STATIC: 0x00D99714
 WowClientDB<ItemDisenchantLootRec> g_itemDisenchantLootDB;
 
-// STATIC: %0x00C998E0
+// STATIC: 0x00D99730
 WowClientDB_RLE<ItemDisplayInfoRec> g_itemDisplayInfoDB;
 
-// STATIC: %0x00C99900
-WowClientDB<ItemExtendedCostRec> g_itemExtendedCostDB;
-
-// STATIC: %0x00C9991C
+// STATIC: 0x00D99754
 WowClientDB<ItemGroupSoundsRec> g_itemGroupSoundsDB;
 
-// STATIC: %0x00C99938
+// STATIC: 0x00D99770
 WowClientDB<ItemLimitCategoryRec> g_itemLimitCategoryDB;
 
-// STATIC: %0x00C99954
+// STATIC: 0x00D9978C
+WowClientDB<ItemNameDescriptionRec> g_itemNameDescriptionDB;
+
+// STATIC: 0x00D997A8
 WowClientDB<ItemPetFoodRec> g_itemPetFoodDB;
 
-// STATIC: %0x00C99970
+// STATIC: 0x00D997C4
+WowClientDB<ItemPriceBaseRec> g_itemPriceBaseDB;
+
+// STATIC: 0x00D997E0
 WowClientDB<ItemPurchaseGroupRec> g_itemPurchaseGroupDB;
 
-// STATIC: %0x00C9998C
+// STATIC: 0x00D997FC
 WowClientDB<ItemRandomPropertiesRec> g_itemRandomPropertiesDB;
 
-// STATIC: %0x00C999A8
+// STATIC: 0x00D99818
 WowClientDB<ItemRandomSuffixRec> g_itemRandomSuffixDB;
 
-// STATIC: %0x00C999C4
+// STATIC: 0x00D99834
 WowClientDB<ItemReforgeRec> g_itemReforgeDB;
 
-// STATIC: %0x00C999E0
+// STATIC: 0x00D99850
 WowClientDB<ItemSetRec> g_itemSetDB;
 
-// STATIC: %0x00C999FC
+// STATIC: 0x00D9986C
 WowClientDB<ItemSubClassMaskRec> g_itemSubClassMaskDB;
 
-// STATIC: %0x00C99A18
+// STATIC: 0x00D99888
 WowClientDB<ItemSubClassRec> g_itemSubClassDB;
 
-// STATIC: %0x00C99A34
+// STATIC: 0x00D998A4
 WowClientDB<ItemVisualEffectsRec> g_itemVisualEffectsDB;
 
-// STATIC: %0x00C99A50
+// STATIC: 0x00D998C0
 WowClientDB<ItemVisualsRec> g_itemVisualsDB;
 
-// STATIC: %0x00C99A6C
+// STATIC: 0x00D998DC
+WowClientDB<JournalEncounterCreatureRec> g_journalEncounterCreatureDB;
+
+// STATIC: 0x00D998F8
+WowClientDB<JournalEncounterItemRec> g_journalEncounterItemDB;
+
+// STATIC: 0x00D99914
+WowClientDB<JournalEncounterRec> g_journalEncounterDB;
+
+// STATIC: 0x00D99930
+WowClientDB<JournalEncounterSectionRec> g_journalEncounterSectionDB;
+
+// STATIC: 0x00D9994C
+WowClientDB<JournalInstanceRec> g_journalInstanceDB;
+
+// STATIC: 0x00D99968
 WowClientDB<LanguageWordsRec> g_languageWordsDB;
 
-// STATIC: %0x00C99A88
+// STATIC: 0x00D99984
 WowClientDB<LanguagesRec> g_languagesDB;
 
-// STATIC: %0x00C99AA4
+// STATIC: 0x00D999A0
 WowClientDB<LfgDungeonExpansionRec> g_lfgDungeonExpansionDB;
 
-// STATIC: %0x00C99AC0
+// STATIC: 0x00D999BC
 WowClientDB<LfgDungeonGroupRec> g_lfgDungeonGroupDB;
 
-// STATIC: %0x00C99ADC
+// STATIC: 0x00D999D8
+WowClientDB<LfgDungeonsGroupingMapRec> g_lfgDungeonsGroupingMapDB;
+
+// STATIC: 0x00D999F4
 WowClientDB<LfgDungeonsRec> g_lfgDungeonsDB;
 
-// STATIC: %0x00C99AF8
+// STATIC: 0x00D99A10
 WowClientDB<LoadingScreensRec> g_loadingScreensDB;
 
-// STATIC: %0x00C99B14
+// STATIC: 0x00D99A2C
 WowClientDB<LoadingScreenTaxiSplinesRec> g_loadingScreenTaxiSplinesDB;
 
-// STATIC: %0x00C99B30
+// STATIC: 0x00D99A48
 WowClientDB<LockRec> g_lockDB;
 
-// STATIC: %0x00C99B4C
+// STATIC: 0x00D99A64
 WowClientDB<LockTypeRec> g_lockTypeDB;
 
-// STATIC: %0x00C99B68
+// STATIC: 0x00D99A80
 WowClientDB<MailTemplateRec> g_mailTemplateDB;
 
-// STATIC: %0x00C99B84
-WowClientDB<MapRec> g_mapDB;
-
-// STATIC: %0x00C99BA0
+// STATIC: 0x00D99A9C
 WowClientDB<MapDifficultyRec> g_mapDifficultyDB;
 
-// STATIC: %0x00C99BBC
+// STATIC: 0x00D99AB8
 WowClientDB<MaterialRec> g_materialDB;
 
-// STATIC: %0x00C99BD8
+// STATIC: 0x00D99AD4
 WowClientDB<MountCapabilityRec> g_mountCapabilityDB;
 
-// STATIC: %0x00C99BF4
+// STATIC: 0x00D99AF0
 WowClientDB<MountTypeRec> g_mountTypeDB;
 
-// STATIC: %0x00C99C10
+// STATIC: 0x00D99B0C
 WowClientDB<MovieRec> g_movieDB;
 
-// STATIC: %0x00C99C2C
+// STATIC: 0x00D99B28
 WowClientDB<MovieFileDataRec> g_movieFileDataDB;
 
-// STATIC: %0x00C99C48
+// STATIC: 0x00D99B44
 WowClientDB<MovieVariationRec> g_movieVariationDB;
 
-// STATIC: %0x00C99C64
+// STATIC: 0x00D99B60
 WowClientDB<NameGenRec> g_nameGenDB;
 
-// STATIC: %0x00C99C80
+// STATIC: 0x00D99B7C
 WowClientDB<NPCSoundsRec> g_npcSoundsDB;
 
-// STATIC: %0x00C99C9C
+// STATIC: 0x00D99B98
 WowClientDB<NumTalentsAtLevelRec> g_numTalentsAtLevelDB;
 
-// STATIC: %0x00C99CB8
+// STATIC: 0x00D99BB4
 WowClientDB<NamesProfanityRec> g_namesProfanityDB;
 
-// STATIC: %0x00C99CD4
+// STATIC: 0x00D99BD0
 WowClientDB<NamesReservedRec> g_namesReservedDB;
 
-// STATIC: %0x00C99CF0
+// STATIC: 0x00D99BEC
 WowClientDB<OverrideSpellDataRec> g_overrideSpellDataDB;
 
-// STATIC: %0x00C99D0C
+// STATIC: 0x00D99C08
 WowClientDB<PackageRec> g_packageDB;
 
-// STATIC: %0x00C99D28
+// STATIC: 0x00D99C24
 WowClientDB<PageTextMaterialRec> g_pageTextMaterialDB;
 
-// STATIC: %0x00C99D44
+// STATIC: 0x00D99C40
 WowClientDB<PaperDollItemFrameRec> g_paperDollItemFrameDB;
 
-// STATIC: %0x00C99D60
+// STATIC: 0x00D99C5C
 WowClientDB<ParticleColorRec> g_particleColorDB;
 
-// STATIC: %0x00C99D7C
-WowClientDB<PetPersonalityRec> g_petPersonalityDB;
-
-// STATIC: %0x00C99D98
+// STATIC: 0x00D99C78
 WowClientDB<PhaseRec> g_phaseDB;
 
-// STATIC: %0x00C99DB4
+// STATIC: 0x00D99C94
 WowClientDB<PhaseShiftZoneSoundsRec> g_phaseShiftZoneSoundsDB;
 
-// STATIC: %0x00C99DD0
+// STATIC: 0x00D99CB0
 WowClientDB<PhaseXPhaseGroupRec> g_phaseXPhaseGroupDB;
 
-// STATIC: %0x00C99DEC
+// STATIC: 0x00D99CCC
+WowClientDB<PlayerConditionRec> g_playerConditionDB;
+
+// STATIC: 0x00D99CE8
 WowClientDB<PowerDisplayRec> g_powerDisplayDB;
 
-// STATIC: %0x00C99E08
+// STATIC: 0x00D99D04
 WowClientDB<PvpDifficultyRec> g_pvpDifficultyDB;
 
-// STATIC: %0x00C99E24
+// STATIC: 0x00D99D20
 WowClientDB<QuestFactionRewardRec> g_questFactionRewardDB;
 
-// STATIC: %0x00C99E40
+// STATIC: 0x00D99D3C
 WowClientDB<QuestInfoRec> g_questInfoDB;
 
-// STATIC: %0x00C99E5C
+// STATIC: 0x00D99D58
 WowClientDB<QuestPOIBlobRec> g_questPOIBlobDB;
 
-// STATIC: %0x00C99E78
+// STATIC: 0x00D99D74
 WowClientDB<QuestPOIPointRec> g_questPOIPointDB;
 
-// STATIC: %0x00C99E94
+// STATIC: 0x00D99D90
 WowClientDB<QuestSortRec> g_questSortDB;
 
-// STATIC: %0x00C99EB0
+// STATIC: 0x00D99DAC
 WowClientDB<QuestXPRec> g_questXPDB;
 
-// STATIC: %0x00C99ECC
+// STATIC: 0x00D99DC8
 WowClientDB<ResistancesRec> g_resistancesDB;
 
-// STATIC: %0x00C99EE8
+// STATIC: 0x00D99DE4
 WowClientDB<RandPropPointsRec> g_randPropPointsDB;
 
-// STATIC: %0x00C99F04
+// STATIC: 0x00D99E00
 WowClientDB<ResearchFieldRec> g_researchFieldDB;
 
-// STATIC: %0x00C99F20
+// STATIC: 0x00D99E1C
 WowClientDB<ResearchBranchRec> g_researchBranchDB;
 
-// STATIC: %0x00C99F3C
+// STATIC: 0x00D99E38
 WowClientDB<ResearchProjectRec> g_researchProjectDB;
 
-// STATIC: %0x00C99F58
+// STATIC: 0x00D99E54
 WowClientDB<ResearchSiteRec> g_researchSiteDB;
 
-// STATIC: %0x00C99F74
+// STATIC: 0x00D99E70
 WowClientDB<ScalingStatDistributionRec> g_scalingStatDistributionDB;
 
-// STATIC: %0x00C99F90
+// STATIC: 0x00D99E8C
 WowClientDB<ScalingStatValuesRec> g_scalingStatValuesDB;
 
-// STATIC: %0x00C99FAC
+// STATIC: 0x00D99EA8
 WowClientDB<ScreenEffectRec> g_screenEffectDB;
 
-// STATIC: %0x00C99FC8
+// STATIC: 0x00D99EC4
 WowClientDB<ScreenLocationRec> g_screenLocationDB;
 
-// STATIC: %0x00C99FE4
+// STATIC: 0x00D99EE0
 WowClientDB<ServerMessagesRec> g_serverMessagesDB;
 
-// STATIC: %0x00C9A000
+// STATIC: 0x00D99EFC
 WowClientDB<SkillLineAbilityRec> g_skillLineAbilityDB;
 
-// STATIC: %0x00C9A01C
+// STATIC: 0x00D99F18
 WowClientDB<SkillLineAbilitySortedSpellRec> g_skillLineAbilitySortedSpellDB;
 
-// STATIC: %0x00C9A038
+// STATIC: 0x00D99F34
 WowClientDB<SkillLineCategoryRec> g_skillLineCategoryDB;
 
-// STATIC: %0x00C9A054
+// STATIC: 0x00D99F50
 WowClientDB<SkillLineRec> g_skillLineDB;
 
-// STATIC: %0x00C9A070
+// STATIC: 0x00D99F6C
 WowClientDB<SkillRaceClassInfoRec> g_skillRaceClassInfoDB;
 
-// STATIC: %0x00C9A08C
+// STATIC: 0x00D99F88
 WowClientDB<SkillTiersRec> g_skillTiersDB;
 
-// STATIC: %0x00C9A0A8
+// STATIC: 0x00D99FA4
 WowClientDB<SoundAmbienceRec> g_soundAmbienceDB;
 
-// STATIC: %0x00C9A0C4
-WowClientDB<SoundEmittersRec> g_soundEmittersDB;
+// STATIC: 0x00D99FC0
+WowClientDB<SoundAmbienceFlavorRec> g_soundAmbienceFlavorDB;
 
-// STATIC: %0x00C9A0E0
+// STATIC: 0x00D99FDC
 WowClientDB<SoundProviderPreferencesRec> g_soundProviderPreferencesDB;
 
-// STATIC: %0x00C9A0FC
+// STATIC: 0x00D99FF8
 WowClientDB<SpamMessagesRec> g_spamMessagesDB;
 
-// STATIC: %0x00C9A118
+// STATIC: 0x00D9A014
 WowClientDB<SpellActivationOverlayRec> g_spellActivationOverlayDB;
 
-// STATIC: %0x00C9A134
+// STATIC: 0x00D9A030
 WowClientDB<SpellAuraOptionsRec> g_spellAuraOptionsDB;
 
-// STATIC: %0x00C9A150
+// STATIC: 0x00D9A04C
 WowClientDB<SpellAuraRestrictionsRec> g_spellAuraRestrictionsDB;
 
-// STATIC: %0x00C9A16C
+// STATIC: 0x00D9A068
+WowClientDB<SpellAuraVisibilityRec> g_spellAuraVisibilityDB;
+
+// STATIC: 0x00D9A084
+WowClientDB<SpellAuraVisXTalentTabRec> g_spellAuraVisXTalentTabDB;
+
+// STATIC: 0x00D9A0A0
 WowClientDB<SpellCastingRequirementsRec> g_spellCastingRequirementsDB;
 
-// STATIC: %0x00C9A188
+// STATIC: 0x00D9A0BC
 WowClientDB<SpellCastTimesRec> g_spellCastTimesDB;
 
-// STATIC: %0x00C9A1A4
+// STATIC: 0x00D9A0D8
 WowClientDB<SpellCategoriesRec> g_spellCategoriesDB;
 
-// STATIC: %0x00C9A1C0
+// STATIC: 0x00D9A0F4
 WowClientDB<SpellCategoryRec> g_spellCategoryDB;
 
-// STATIC: %0x00C9A1DC
+// STATIC: 0x00D9A110
 WowClientDB<SpellChainEffectsRec> g_spellChainEffectsDB;
 
-// STATIC: %0x00C9A1F8
+// STATIC: 0x00D9A12C
 WowClientDB<SpellClassOptionsRec> g_spellClassOptionsDB;
 
-// STATIC: %0x00C9A214
+// STATIC: 0x00D9A148
 WowClientDB<SpellCooldownsRec> g_spellCooldownsDB;
 
-// STATIC: %0x00C9A230
+// STATIC: 0x00D9A164
 WowClientDB<SpellDescriptionVariablesRec> g_spellDescriptionVariablesDB;
 
-// STATIC: %0x00C9A24C
+// STATIC: 0x00D9A180
 WowClientDB<SpellDifficultyRec> g_spellDifficultyDB;
 
-// STATIC: %0x00C9A268
+// STATIC: 0x00D9A19C
 WowClientDB<SpellDispelTypeRec> g_spellDispelTypeDB;
 
-// STATIC: %0x00C9A284
+// STATIC: 0x00D9A1B8
 WowClientDB<SpellDurationRec> g_spellDurationDB;
 
-// STATIC: %0x00C9A2A0
+// STATIC: 0x00D9A1D4
 WowClientDB<SpellEffectRec> g_spellEffectDB;
 
-// STATIC: %0x00C9A2BC
+// STATIC: 0x00D9A1F0
 WowClientDB<SpellEffectCameraShakesRec> g_spellEffectCameraShakesDB;
 
-// STATIC: %0x00C9A2D8
+// STATIC: 0x00D9A20C
 WowClientDB<SpellEquippedItemsRec> g_spellEquippedItemsDB;
 
-// STATIC: %0x00C9A2F4
+// STATIC: 0x00D9A228
 WowClientDB<SpellFlyoutRec> g_spellFlyoutDB;
 
-// STATIC: %0x00C9A310
+// STATIC: 0x00D9A244
 WowClientDB<SpellFlyoutItemRec> g_spellFlyoutItemDB;
 
-// STATIC: %0x00C9A32C
+// STATIC: 0x00D9A260
 WowClientDB<SpellFocusObjectRec> g_spellFocusObjectDB;
 
-// STATIC: %0x00C9A348
+// STATIC: 0x00D9A27C
 WowClientDB<SpellIconRec> g_spellIconDB;
 
-// STATIC: %0x00C9A364
+// STATIC: 0x00D9A298
 WowClientDB<SpellInterruptsRec> g_spellInterruptsDB;
 
-// STATIC: %0x00C9A380
+// STATIC: 0x00D9A2B4
 WowClientDB<SpellItemEnchantmentRec> g_spellItemEnchantmentDB;
 
-// STATIC: %0x00C9A39C
+// STATIC: 0x00D9A2D0
 WowClientDB<SpellItemEnchantmentConditionRec> g_spellItemEnchantmentConditionDB;
 
-// STATIC: %0x00C9A3B8
+// STATIC: 0x00D9A2EC
 WowClientDB<SpellLevelsRec> g_spellLevelsDB;
 
-// STATIC: %0x00C9A3D4
+// STATIC: 0x00D9A308
 WowClientDB<SpellMechanicRec> g_spellMechanicDB;
 
-// STATIC: %0x00C9A3F0
+// STATIC: 0x00D9A324
 WowClientDB<SpellMissileRec> g_spellMissileDB;
 
-// STATIC: %0x00C9A40C
+// STATIC: 0x00D9A340
 WowClientDB<SpellMissileMotionRec> g_spellMissileMotionDB;
 
-// STATIC: %0x00C9A428
+// STATIC: 0x00D9A35C
 WowClientDB<SpellPowerRec> g_spellPowerDB;
 
-// STATIC: %0x00C9A444
+// STATIC: 0x00D9A378
 WowClientDB<SpellRadiusRec> g_spellRadiusDB;
 
-// STATIC: %0x00C9A460
+// STATIC: 0x00D9A394
 WowClientDB<SpellRangeRec> g_spellRangeDB;
 
-// STATIC: %0x00C9A47C
+// STATIC: 0x00D9A3B0
 WowClientDB<SpellRuneCostRec> g_spellRuneCostDB;
 
-// STATIC: %0x00C9A498
+// STATIC: 0x00D9A3CC
 WowClientDB<SpellReagentsRec> g_spellReagentsDB;
 
-// STATIC: %0x00C9A4B4
+// STATIC: 0x00D9A3E8
 WowClientDB<SpellRec> g_spellDB;
 
-// STATIC: %0x00C9A4D0
+// STATIC: 0x00D9A404
 WowClientDB<SpellScalingRec> g_spellScalingDB;
 
-// STATIC: %0x00C9A4EC
+// STATIC: 0x00D9A420
 WowClientDB<SpellShapeshiftRec> g_spellShapeshiftDB;
 
-// STATIC: %0x00C9A508
+// STATIC: 0x00D9A43C
 WowClientDB<SpellShapeshiftFormRec> g_spellShapeshiftFormDB;
 
-// STATIC: %0x00C9A524
+// STATIC: 0x00D9A458
+WowClientDB<SpellSpecialUnitEffectRec> g_spellSpecialUnitEffectDB;
+
+// STATIC: 0x00D9A474
 WowClientDB<SpellTargetRestrictionsRec> g_spellTargetRestrictionsDB;
 
-// STATIC: %0x00C9A540
+// STATIC: 0x00D9A490
 WowClientDB<SpellTotemsRec> g_spellTotemsDB;
 
-// STATIC: %0x00C9A55C
+// STATIC: 0x00D9A4AC
 WowClientDB<SpellVisualEffectNameRec> g_spellVisualEffectNameDB;
 
-// STATIC: %0x00C9A578
+// STATIC: 0x00D9A4C8
 WowClientDB<SpellVisualKitRec> g_spellVisualKitDB;
 
-// STATIC: %0x00C9A594
+// STATIC: 0x00D9A4E4
 WowClientDB<SpellVisualKitAreaModelRec> g_spellVisualKitAreaModelDB;
 
-// STATIC: %0x00C9A5B0
+// STATIC: 0x00D9A500
 WowClientDB<SpellVisualKitModelAttachRec> g_spellVisualKitModelAttachDB;
 
-// STATIC: %0x00C9A5CC
+// STATIC: 0x00D9A51C
 WowClientDB<SpellVisualRec> g_spellVisualDB;
 
-// STATIC: %0x00C9A5E8
+// STATIC: 0x00D9A538
 WowClientDB<StationeryRec> g_stationeryDB;
 
-// STATIC: %0x00C9A604
+// STATIC: 0x00D9A554
 WowClientDB<StringLookupsRec> g_stringLookupsDB;
 
-// STATIC: %0x00C9A620
+// STATIC: 0x00D9A570
 WowClientDB<SummonPropertiesRec> g_summonPropertiesDB;
 
-// STATIC: %0x00C9A63C
+// STATIC: 0x00D9A58C
 WowClientDB<TalentRec> g_talentDB;
 
-// STATIC: %0x00C9A658
+// STATIC: 0x00D9A5A8
 WowClientDB<TalentTabRec> g_talentTabDB;
 
-// STATIC: %0x00C9A674
+// STATIC: 0x00D9A5C4
 WowClientDB<TalentTreePrimarySpellsRec> g_talentTreePrimarySpellsDB;
 
-// STATIC: %0x00C9A690
+// STATIC: 0x00D9A5E0
 WowClientDB<TaxiNodesRec> g_taxiNodesDB;
 
-// STATIC: %0x00C9A6AC
+// STATIC: 0x00D9A5FC
 WowClientDB<TaxiPathNodeRec> g_taxiPathNodeDB;
 
-// STATIC: %0x00C9A6C8
+// STATIC: 0x00D9A618
 WowClientDB<TaxiPathRec> g_taxiPathDB;
 
-// STATIC: %0x00C9A6E4
-WowClientDB<TerrainTypeRec> g_terrainTypeDB;
-
-// STATIC: %0x00C9A700
+// STATIC: 0x00D9A634
 WowClientDB<TerrainTypeSoundsRec> g_terrainTypeSoundsDB;
 
-// STATIC: %0x00C9A71C
+// STATIC: 0x00D9A650
 WowClientDB<TotemCategoryRec> g_totemCategoryDB;
 
-// STATIC: %0x00C9A738
+// STATIC: 0x00D9A66C
 WowClientDB<TransportAnimationRec> g_transportAnimationDB;
 
-// STATIC: %0x00C9A754
+// STATIC: 0x00D9A688
 WowClientDB<TransportPhysicsRec> g_transportPhysicsDB;
 
-// STATIC: %0x00C9A770
+// STATIC: 0x00D9A6A4
 WowClientDB<TransportRotationRec> g_transportRotationDB;
 
-// STATIC: %0x00C9A78C
+// STATIC: 0x00D9A6C0
 WowClientDB<UnitBloodLevelsRec> g_unitBloodLevelsDB;
 
-// STATIC: %0x00C9A7A8
+// STATIC: 0x00D9A6DC
 WowClientDB<UnitBloodRec> g_unitBloodDB;
 
-// STATIC: %0x00C9A7C4
+// STATIC: 0x00D9A6F8
 WowClientDB<UnitPowerBarRec> g_unitPowerBarDB;
 
-// STATIC: %0x00C9A7E0
+// STATIC: 0x00D9A714
 WowClientDB<VehicleRec> g_vehicleDB;
 
-// STATIC: %0x00C9A7FC
+// STATIC: 0x00D9A730
 WowClientDB<VehicleSeatRec> g_vehicleSeatDB;
 
-// STATIC: %0x00C9A818
+// STATIC: 0x00D9A74C
 WowClientDB<VehicleUIIndicatorRec> g_vehicleUIIndicatorDB;
 
-// STATIC: %0x00C9A834
+// STATIC: 0x00D9A768
 WowClientDB<VehicleUIIndSeatRec> g_vehicleUIIndSeatDB;
 
-// STATIC: %0x00C9A850
+// STATIC: 0x00D9A784
 WowClientDB<VocalUISoundsRec> g_vocalUISoundsDB;
 
-// STATIC: %0x00C9A86C
-WowClientDB<WMOAreaTableRec> g_wmoAreaTableDB;
-
-// STATIC: %0x00C9A888
+// STATIC: 0x00D9A7A0
 WowClientDB<World_PVP_AreaRec> g_world_PVP_AreaDB;
 
-// STATIC: %0x00C9A8A4
+// STATIC: 0x00D9A7BC
 WowClientDB<WeaponImpactSoundsRec> g_weaponImpactSoundsDB;
 
-// STATIC: %0x00C9A8C0
+// STATIC: 0x00D9A7D8
 WowClientDB<WeaponSwingSounds2Rec> g_weaponSwingSounds2DB;
 
-// STATIC: %0x00C9A8DC
-WowClientDB<WeatherRec> g_weatherDB;
-
-// STATIC: %0x00C9A8F8
+// STATIC: 0x00D9A7F4
 WowClientDB<WorldMapAreaRec> g_worldMapAreaDB;
 
-// STATIC: %0x00C9A914
+// STATIC: 0x00D9A810
 WowClientDB<WorldMapContinentRec> g_worldMapContinentDB;
 
-// STATIC: %0x00C9A930
+// STATIC: 0x00D9A82C
 WowClientDB<WorldMapOverlayRec> g_worldMapOverlayDB;
 
-// STATIC: %0x00C9A94C
+// STATIC: 0x00D9A848
 WowClientDB<WorldMapTransformsRec> g_worldMapTransformsDB;
 
-// STATIC: %0x00C9A968
+// STATIC: 0x00D9A864
 WowClientDB<WorldSafeLocsRec> g_worldSafeLocsDB;
 
-// STATIC: %0x00C9A984
+// STATIC: 0x00D9A880
 WowClientDB<WorldStateUIRec> g_worldStateUIDB;
 
-// STATIC: %0x00C9A9A0
+// STATIC: 0x00D9A89C
 WowClientDB<ZoneIntroMusicTableRec> g_zoneIntroMusicTableDB;
 
-// STATIC: %0x00C9A9BC
-WowClientDB<ZoneLightRec> g_zoneLightDB;
-
-// STATIC: %0x00C9A9D8
-WowClientDB<ZoneLightPointRec> g_zoneLightPointDB;
-
-// STATIC: %0x00C9A9F4
+// STATIC: 0x00D9A8B8
 WowClientDB<ZoneMusicRec> g_zoneMusicDB;
 
-// STATIC: %0x00C9AA10
+// STATIC: 0x00D9A8D4
 WowClientDB<WorldStateZoneSoundsRec> g_worldStateZoneSoundsDB;
 
-// STATIC: %0x00C9AA2C
+// STATIC: 0x00D9A8F0
 WowClientDB<WorldChunkSoundsRec> g_worldChunkSoundsDB;
 
-// STATIC: %0x00C9AA48
+// STATIC: 0x00D9A90C
 WowClientDB<ObjectEffectRec> g_objectEffectDB;
 
-// STATIC: %0x00C9AA64
+// STATIC: 0x00D9A928
 WowClientDB<ObjectEffectGroupRec> g_objectEffectGroupDB;
 
-// STATIC: %0x00C9AA80
+// STATIC: 0x00D9A944
 WowClientDB<ObjectEffectModifierRec> g_objectEffectModifierDB;
 
-// STATIC: %0x00C9AA9C
+// STATIC: 0x00D9A960
 WowClientDB<ObjectEffectPackageRec> g_objectEffectPackageDB;
 
-// STATIC: %0x00C9AAB8
+// STATIC: 0x00D9A97C
 WowClientDB<ObjectEffectPackageElemRec> g_objectEffectPackageElemDB;
 
-// STATIC: %0x00C9AAD4
+// STATIC: 0x00D9A998
 WowClientDB<SoundFilterRec> g_soundFilterDB;
 
-// STATIC: %0x00C9AAF0
+// STATIC: 0x00D9A9B4
 WowClientDB<SoundFilterElemRec> g_soundFilterElemDB;
-
-// STATIC: %0x00CC802C
-WowClientDB<LightSkyboxRec> g_lightSkyboxDB;
-
-// STATIC: %0x00CC8048
-WowClientDB_RLE<LightIntBandRec> g_lightIntBandDB;
-
-// STATIC: %0x00CC8068
-WowClientDB_RLE<LightFloatBandRec> g_lightFloatBandDB;
-
-// STATIC: %0x00CC8088
-WowClientDB<LightParamsRec> g_lightParamsDB;
-
-// STATIC: %0x00CC80A4
-WowClientDB<LightRec> g_lightDB;
 
 // STATIC: %0x00C99138
 WowClientDB<DeclinedWordRec> g_declinedWordDB;
@@ -936,7 +994,13 @@ WowClientDB<DeclinedWordRec> g_declinedWordDB;
 // STATIC: %0x00C99154
 WowClientDB<DeclinedWordCasesRec> g_declinedWordCasesDB;
 
-// STATIC: %0x00BAEE98
+WowClientDB<ItemCurrencyCostRec> g_itemCurrencyCostDB;
+
+WowClientDB<ItemExtendedCostRec> g_itemExtendedCostDB;
+
+WowClientDB<PetPersonalityRec> g_petPersonalityDB;
+
+// STATIC: 0x00C9AD80
 static ClientDBTable s_clientDBGameTables[] = {
     { &g_achievementDB, &AchievementRec::s_meta },
     { &g_achievement_CriteriaDB, &Achievement_CriteriaRec::s_meta },
@@ -956,8 +1020,10 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_castableRaidBuffsDB, &CastableRaidBuffsRec::s_meta },
     { &g_charTitlesDB, &CharTitlesRec::s_meta },
     { &g_chatChannelsDB, &ChatChannelsRec::s_meta },
+    { &g_chrClassesXPowerTypesDB, &ChrClassesXPowerTypesRec::s_meta },
     { &g_cinematicCameraDB, &CinematicCameraRec::s_meta },
     { &g_cinematicSequencesDB, &CinematicSequencesRec::s_meta },
+    { &g_creatureImmunitiesDB, &CreatureImmunitiesRec::s_meta },
     { &g_creatureMovementInfoDB, &CreatureMovementInfoRec::s_meta },
     { &g_creatureSoundDataDB, &CreatureSoundDataRec::s_meta },
     { &g_creatureSpellDataDB, &CreatureSpellDataRec::s_meta },
@@ -979,7 +1045,6 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_environmentalDamageDB, &EnvironmentalDamageRec::s_meta },
     { &g_exhaustionDB, &ExhaustionRec::s_meta },
     { &g_factionDB, &FactionRec::s_meta },
-    { &g_footprintTexturesDB, &FootprintTexturesRec::s_meta },
     { &g_footstepTerrainLookupDB, &FootstepTerrainLookupRec::s_meta },
     { &g_gameObjectArtKitDB, &GameObjectArtKitRec::s_meta },
     { &g_gameObjectDisplayInfoDB, &GameObjectDisplayInfoRec::s_meta },
@@ -992,7 +1057,6 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_gmSurveyQuestionsDB, &GMSurveyQuestionsRec::s_meta },
     { &g_gmSurveySurveysDB, &GMSurveySurveysRec::s_meta },
     { &g_gmTicketCategoryDB, &GMTicketCategoryRec::s_meta },
-    { &g_groundEffectTextureDB, &GroundEffectTextureRec::s_meta },
     { &g_gtBarberShopCostBaseDB, &gtBarberShopCostBaseRec::s_meta },
     { &g_gtCombatRatingsDB, &gtCombatRatingsRec::s_meta },
     { &g_gtChanceToMeleeCritDB, &gtChanceToMeleeCritRec::s_meta },
@@ -1000,6 +1064,8 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_gtChanceToSpellCritDB, &gtChanceToSpellCritRec::s_meta },
     { &g_gtChanceToSpellCritBaseDB, &gtChanceToSpellCritBaseRec::s_meta },
     { &g_gtNPCManaCostScalerDB, &gtNPCManaCostScalerRec::s_meta },
+    { &g_gtOCTBaseHPByClassDB, &gtOCTBaseHPByClassRec::s_meta },
+    { &g_gtOCTBaseMPByClassDB, &gtOCTBaseMPByClassRec::s_meta },
     { &g_gtOCTClassCombatRatingScalarDB, &gtOCTClassCombatRatingScalarRec::s_meta },
     { &g_gtOCTHpPerStaminaDB, &gtOCTHpPerStaminaRec::s_meta },
     { &g_gtOCTRegenMPDB, &gtOCTRegenMPRec::s_meta },
@@ -1009,11 +1075,14 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_holidayDescriptionsDB, &HolidayDescriptionsRec::s_meta },
     { &g_holidayNamesDB, &HolidayNamesRec::s_meta },
     { &g_holidaysDB, &HolidaysRec::s_meta },
+    { &g_importPriceArmorDB, &ImportPriceArmorRec::s_meta },
+    { &g_importPriceQualityDB, &ImportPriceQualityRec::s_meta },
+    { &g_importPriceShieldDB, &ImportPriceShieldRec::s_meta },
+    { &g_importPriceWeaponDB, &ImportPriceWeaponRec::s_meta },
     { &g_itemArmorQualityDB, &ItemArmorQualityRec::s_meta },
     { &g_itemArmorTotalDB, &ItemArmorTotalRec::s_meta },
     { &g_itemArmorShieldDB, &ItemArmorShieldRec::s_meta },
     { &g_itemBagFamilyDB, &ItemBagFamilyRec::s_meta },
-    { &g_itemCurrencyCostDB, &ItemCurrencyCostRec::s_meta },
     { &g_itemDamageAmmoDB, &ItemDamageAmmoRec::s_meta },
     { &g_itemDamageOneHandDB, &ItemDamageOneHandRec::s_meta },
     { &g_itemDamageOneHandCasterDB, &ItemDamageOneHandCasterRec::s_meta },
@@ -1023,23 +1092,28 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_itemDamageTwoHandCasterDB, &ItemDamageTwoHandCasterRec::s_meta },
     { &g_itemDamageWandDB, &ItemDamageWandRec::s_meta },
     { &g_itemDisenchantLootDB, &ItemDisenchantLootRec::s_meta },
-    { &g_itemExtendedCostDB, &ItemExtendedCostRec::s_meta },
     { &g_itemGroupSoundsDB, &ItemGroupSoundsRec::s_meta },
     { &g_itemLimitCategoryDB, &ItemLimitCategoryRec::s_meta },
+    { &g_itemNameDescriptionDB, &ItemNameDescriptionRec::s_meta },
     { &g_itemPetFoodDB, &ItemPetFoodRec::s_meta },
+    { &g_itemPriceBaseDB, &ItemPriceBaseRec::s_meta },
     { &g_itemPurchaseGroupDB, &ItemPurchaseGroupRec::s_meta },
     { &g_itemRandomPropertiesDB, &ItemRandomPropertiesRec::s_meta },
     { &g_itemRandomSuffixDB, &ItemRandomSuffixRec::s_meta },
     { &g_itemReforgeDB, &ItemReforgeRec::s_meta },
     { &g_itemSetDB, &ItemSetRec::s_meta },
     { &g_itemSubClassMaskDB, &ItemSubClassMaskRec::s_meta },
+    { &g_journalEncounterCreatureDB, &JournalEncounterCreatureRec::s_meta },
+    { &g_journalEncounterItemDB, &JournalEncounterItemRec::s_meta },
+    { &g_journalEncounterDB, &JournalEncounterRec::s_meta },
+    { &g_journalEncounterSectionDB, &JournalEncounterSectionRec::s_meta },
+    { &g_journalInstanceDB, &JournalInstanceRec::s_meta },
     { &g_languageWordsDB, &LanguageWordsRec::s_meta },
     { &g_languagesDB, &LanguagesRec::s_meta },
     { &g_lfgDungeonExpansionDB, &LfgDungeonExpansionRec::s_meta },
     { &g_lfgDungeonGroupDB, &LfgDungeonGroupRec::s_meta },
+    { &g_lfgDungeonsGroupingMapDB, &LfgDungeonsGroupingMapRec::s_meta },
     { &g_lfgDungeonsDB, &LfgDungeonsRec::s_meta },
-    { &g_lightFloatBandDB, &LightFloatBandRec::s_meta },
-    { &g_lightSkyboxDB, &LightSkyboxRec::s_meta },
     { &g_loadingScreenTaxiSplinesDB, &LoadingScreenTaxiSplinesRec::s_meta },
     { &g_lockDB, &LockRec::s_meta },
     { &g_lockTypeDB, &LockTypeRec::s_meta },
@@ -1054,9 +1128,9 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_packageDB, &PackageRec::s_meta },
     { &g_pageTextMaterialDB, &PageTextMaterialRec::s_meta },
     { &g_paperDollItemFrameDB, &PaperDollItemFrameRec::s_meta },
-    { &g_petPersonalityDB, &PetPersonalityRec::s_meta },
     { &g_phaseDB, &PhaseRec::s_meta },
     { &g_phaseXPhaseGroupDB, &PhaseXPhaseGroupRec::s_meta },
+    { &g_playerConditionDB, &PlayerConditionRec::s_meta },
     { &g_powerDisplayDB, &PowerDisplayRec::s_meta },
     { &g_pvpDifficultyDB, &PvpDifficultyRec::s_meta },
     { &g_questFactionRewardDB, &QuestFactionRewardRec::s_meta },
@@ -1082,10 +1156,12 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_skillRaceClassInfoDB, &SkillRaceClassInfoRec::s_meta },
     { &g_skillTiersDB, &SkillTiersRec::s_meta },
     { &g_soundAmbienceDB, &SoundAmbienceRec::s_meta },
-    { &g_soundEmittersDB, &SoundEmittersRec::s_meta },
+    { &g_soundAmbienceFlavorDB, &SoundAmbienceFlavorRec::s_meta },
     { &g_spellActivationOverlayDB, &SpellActivationOverlayRec::s_meta },
     { &g_spellAuraOptionsDB, &SpellAuraOptionsRec::s_meta },
     { &g_spellAuraRestrictionsDB, &SpellAuraRestrictionsRec::s_meta },
+    { &g_spellAuraVisibilityDB, &SpellAuraVisibilityRec::s_meta },
+    { &g_spellAuraVisXTalentTabDB, &SpellAuraVisXTalentTabRec::s_meta },
     { &g_spellCastingRequirementsDB, &SpellCastingRequirementsRec::s_meta },
     { &g_spellCastTimesDB, &SpellCastTimesRec::s_meta },
     { &g_spellCategoriesDB, &SpellCategoriesRec::s_meta },
@@ -1119,6 +1195,7 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_spellScalingDB, &SpellScalingRec::s_meta },
     { &g_spellShapeshiftDB, &SpellShapeshiftRec::s_meta },
     { &g_spellShapeshiftFormDB, &SpellShapeshiftFormRec::s_meta },
+    { &g_spellSpecialUnitEffectDB, &SpellSpecialUnitEffectRec::s_meta },
     { &g_spellTargetRestrictionsDB, &SpellTargetRestrictionsRec::s_meta },
     { &g_spellTotemsDB, &SpellTotemsRec::s_meta },
     { &g_spellVisualDB, &SpellVisualRec::s_meta },
@@ -1133,7 +1210,6 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_taxiNodesDB, &TaxiNodesRec::s_meta },
     { &g_taxiPathNodeDB, &TaxiPathNodeRec::s_meta },
     { &g_taxiPathDB, &TaxiPathRec::s_meta },
-    { &g_terrainTypeDB, &TerrainTypeRec::s_meta },
     { &g_terrainTypeSoundsDB, &TerrainTypeSoundsRec::s_meta },
     { &g_totemCategoryDB, &TotemCategoryRec::s_meta },
     { &g_transportAnimationDB, &TransportAnimationRec::s_meta },
@@ -1147,11 +1223,9 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_vehicleUIIndicatorDB, &VehicleUIIndicatorRec::s_meta },
     { &g_vehicleUIIndSeatDB, &VehicleUIIndSeatRec::s_meta },
     { &g_vocalUISoundsDB, &VocalUISoundsRec::s_meta },
-    { &g_wmoAreaTableDB, &WMOAreaTableRec::s_meta },
     { &g_world_PVP_AreaDB, &World_PVP_AreaRec::s_meta },
     { &g_weaponImpactSoundsDB, &WeaponImpactSoundsRec::s_meta },
     { &g_weaponSwingSounds2DB, &WeaponSwingSounds2Rec::s_meta },
-    { &g_weatherDB, &WeatherRec::s_meta },
     { &g_worldMapAreaDB, &WorldMapAreaRec::s_meta },
     { &g_worldMapContinentDB, &WorldMapContinentRec::s_meta },
     { &g_worldMapOverlayDB, &WorldMapOverlayRec::s_meta },
@@ -1159,8 +1233,6 @@ static ClientDBTable s_clientDBGameTables[] = {
     { &g_worldSafeLocsDB, &WorldSafeLocsRec::s_meta },
     { &g_worldStateUIDB, &WorldStateUIRec::s_meta },
     { &g_zoneIntroMusicTableDB, &ZoneIntroMusicTableRec::s_meta },
-    { &g_zoneLightDB, &ZoneLightRec::s_meta },
-    { &g_zoneLightPointDB, &ZoneLightPointRec::s_meta },
     { &g_zoneMusicDB, &ZoneMusicRec::s_meta },
     { &g_worldStateZoneSoundsDB, &WorldStateZoneSoundsRec::s_meta },
     { &g_worldChunkSoundsDB, &WorldChunkSoundsRec::s_meta },
@@ -1168,73 +1240,72 @@ static ClientDBTable s_clientDBGameTables[] = {
     { NULL, NULL },
 };
 
-// STATIC: %0x00BAF5B8
+// STATIC: 0x00C9B4E0
 static ClientDBTable s_clientDBTables[] = {
     { &g_animKitBoneSetAliasDB, &AnimKitBoneSetAliasRec::s_meta },
     { &g_animKitBoneSetDB, &AnimKitBoneSetRec::s_meta },
     { &g_animKitDB, &AnimKitRec::s_meta },
     { &g_animKitConfigDB, &AnimKitConfigRec::s_meta },
     { &g_animKitConfigBoneSetDB, &AnimKitConfigBoneSetRec::s_meta },
-    { &g_animKitPriorityDB, &AnimKitPriorityRec::s_meta },
-    { &g_animKitSegmentDB, &AnimKitSegmentRec::s_meta },
-    { &g_animReplacementDB, &AnimReplacementRec::s_meta },
-    { &g_animReplacementSetDB, &AnimReplacementSetRec::s_meta },
-    { &g_areaTableDB, &AreaTableRec::s_meta },
     { &g_bannedAddOnsDB, &BannedAddOnsRec::s_meta },
     { &g_cfg_CategoriesDB, &Cfg_CategoriesRec::s_meta },
     { &g_cfg_ConfigsDB, &Cfg_ConfigsRec::s_meta },
     { &g_charBaseInfoDB, &CharBaseInfoRec::s_meta },
     { &g_charHairGeosetsDB, &CharHairGeosetsRec::s_meta },
     { &g_charSectionsDB, &CharSectionsRec::s_meta },
-    { &g_charStartOutfitDB, &CharStartOutfitRec::s_meta },
     { &g_characterFacialHairStylesDB, &CharacterFacialHairStylesRec::s_meta },
     { &g_chatProfanityDB, &ChatProfanityRec::s_meta },
     { &g_chrClassesDB, &ChrClassesRec::s_meta },
     { &g_chrRacesDB, &ChrRacesRec::s_meta },
+    { &g_factionGroupDB, &FactionGroupRec::s_meta },
+    { &g_factionTemplateDB, &FactionTemplateRec::s_meta },
+    { &g_fileDataDB, &FileDataRec::s_meta },
+    { &g_itemClassDB, &ItemClassRec::s_meta },
+    { &g_itemSubClassDB, &ItemSubClassRec::s_meta },
+    { &g_movieDB, &MovieRec::s_meta },
+    { &g_movieFileDataDB, &MovieFileDataRec::s_meta },
+    { &g_movieVariationDB, &MovieVariationRec::s_meta },
+    { &g_namesProfanityDB, &NamesProfanityRec::s_meta },
+    { &g_namesReservedDB, &NamesReservedRec::s_meta },
+    { &g_resistancesDB, &ResistancesRec::s_meta },
+    { &g_soundFilterDB, &SoundFilterRec::s_meta },
+    { &g_soundFilterElemDB, &SoundFilterElemRec::s_meta },
+    { &g_spamMessagesDB, &SpamMessagesRec::s_meta },
+    { &g_soundProviderPreferencesDB, &SoundProviderPreferencesRec::s_meta },
+    { NULL, NULL },
+};
+
+// STATIC: 0x00C9B5D8
+static ClientDBTable s_clientDBGlueTables[] = {
+    { &g_animKitPriorityDB, &AnimKitPriorityRec::s_meta },
+    { &g_animKitSegmentDB, &AnimKitSegmentRec::s_meta },
+    { &g_animReplacementDB, &AnimReplacementRec::s_meta },
+    { &g_animReplacementSetDB, &AnimReplacementSetRec::s_meta },
+    { &g_charStartOutfitDB, &CharStartOutfitRec::s_meta },
     { &g_creatureDisplayInfoDB, &CreatureDisplayInfoRec::s_meta },
     { &g_creatureDisplayInfoExtraDB, &CreatureDisplayInfoExtraRec::s_meta },
     { &g_creatureFamilyDB, &CreatureFamilyRec::s_meta },
     { &g_creatureModelDataDB, &CreatureModelDataRec::s_meta },
-    { &g_factionGroupDB, &FactionGroupRec::s_meta },
-    { &g_factionTemplateDB, &FactionTemplateRec::s_meta },
-    { &g_fileDataDB, &FileDataRec::s_meta },
     { &g_gameTipsDB, &GameTipsRec::s_meta },
     { &g_glueScreenEmoteDB, &GlueScreenEmoteRec::s_meta },
-    { &g_groundEffectDoodadDB, &GroundEffectDoodadRec::s_meta },
     { &g_guildColorBackgroundDB, &GuildColorBackgroundRec::s_meta },
     { &g_guildColorBorderDB, &GuildColorBorderRec::s_meta },
     { &g_guildColorEmblemDB, &GuildColorEmblemRec::s_meta },
     { &g_helmetGeosetVisDataDB, &HelmetGeosetVisDataRec::s_meta },
-    { &g_itemClassDB, &ItemClassRec::s_meta },
     { &g_itemDisplayInfoDB, &ItemDisplayInfoRec::s_meta },
-    { &g_itemSubClassDB, &ItemSubClassRec::s_meta },
     { &g_itemVisualsDB, &ItemVisualsRec::s_meta },
     { &g_itemVisualEffectsDB, &ItemVisualEffectsRec::s_meta },
-    { &g_lightDB, &LightRec::s_meta },
-    { &g_lightIntBandDB, &LightIntBandRec::s_meta },
-    { &g_lightParamsDB, &LightParamsRec::s_meta },
     { &g_loadingScreensDB, &LoadingScreensRec::s_meta },
-    { &g_mapDB, &MapRec::s_meta },
-    { &g_movieDB, &MovieRec::s_meta },
-    { &g_movieFileDataDB, &MovieFileDataRec::s_meta },
-    { &g_movieVariationDB, &MovieVariationRec::s_meta },
     { &g_nameGenDB, &NameGenRec::s_meta },
-    { &g_namesProfanityDB, &NamesProfanityRec::s_meta },
-    { &g_namesReservedDB, &NamesReservedRec::s_meta },
     { &g_objectEffectDB, &ObjectEffectRec::s_meta },
     { &g_objectEffectGroupDB, &ObjectEffectGroupRec::s_meta },
     { &g_objectEffectModifierDB, &ObjectEffectModifierRec::s_meta },
     { &g_objectEffectPackageDB, &ObjectEffectPackageRec::s_meta },
     { &g_objectEffectPackageElemDB, &ObjectEffectPackageElemRec::s_meta },
     { &g_particleColorDB, &ParticleColorRec::s_meta },
-    { &g_resistancesDB, &ResistancesRec::s_meta },
-    { &g_soundFilterDB, &SoundFilterRec::s_meta },
-    { &g_soundFilterElemDB, &SoundFilterElemRec::s_meta },
-    { &g_spamMessagesDB, &SpamMessagesRec::s_meta },
     { &g_spellEffectDB, &SpellEffectRec::s_meta },
     { &g_spellVisualEffectNameDB, &SpellVisualEffectNameRec::s_meta },
     { &g_spellVisualKitDB, &SpellVisualKitRec::s_meta },
-    { &g_soundProviderPreferencesDB, &SoundProviderPreferencesRec::s_meta },
     { NULL, NULL },
 };
 
@@ -1328,16 +1399,18 @@ void InitTerrainTypeFlags() {
     }
 }
 
-// OFFSET: #0x00634C60
-void ClientDBShutdown() {
-    s_resistances.Clear();
-    s_terrainTypeSoundIDs.Clear();
-}
+// STATIC: 0x00D97E94
+static uint32_t s_hotfixTime;
 
-// OFFSET: %0x0049CB30
+// STATIC: 0x00EBB998
+int32_t g_clientDBWorldTablesLoaded;
+
+// STATIC: 0x00EBB99C
+int32_t g_clientDBGlueTablesLoaded;
+
+// OFFSET: 0x00494A90/0x1400BA260
 static void ClientDBLoadTables() {
     char path[260];
-    uint32_t hotfixTime = 0;
 
     WowClientDB2_Base::GetCacheDir(path, "Hotfix.tbl", false);
     HOSFILE file = OsCreateFile(path, 0x80000000, 1, 3, 0x80, 0x3F3F3F3F);
@@ -1350,8 +1423,8 @@ static void ClientDBLoadTables() {
 
         OsReadFile(file, buffer, 16, &bytesRead);
 
-        if (bytesRead == 16 && buffer[0] == 'HTFX' && buffer[1] == 1 && buffer[3] == 13623) {
-            hotfixTime = buffer[2];
+        if (bytesRead == 16 && buffer[0] == 'HTFX' && buffer[1] == 1 && buffer[3] == 15595) {
+            s_hotfixTime = buffer[2];
             OsReadFile(file, buffer, 12, &bytesRead);
 
             while (bytesRead == 12) {
@@ -1372,19 +1445,30 @@ static void ClientDBLoadTables() {
     }
 
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
-        (*table)->Load(hotfixTime);
+        (*table)->Load(s_hotfixTime);
     }
 
     for (ClientDBTable* table = s_clientDBTables; table->m_db; table++) {
         table->m_db->Load(table->m_meta);
     }
 
+    for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {
+        AsyncFileReadCreateObject(table->m_meta->m_filename, 5, 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
+    }
+
     for (ClientDBTable* table = s_clientDBGameTables; table->m_db; table++) {
-        SFile::MakeFileLocal(table->m_meta->m_filename, 2, false, -1, NULL);
+        AsyncFileReadCreateObject(table->m_meta->m_filename, 5, 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
     }
 }
 
-// OFFSET: %0x0049CF70
+// OFFSET: 0x00494D60
+void ClientDBInitializeGlue() {
+    for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {
+        table->m_db->Load(table->m_meta);
+    }
+}
+
+// OFFSET: 0x00495070
 void ClientDBUnloadTables() {
     char path[260];
     uint32_t hotfixTime = 0;
@@ -1394,7 +1478,7 @@ void ClientDBUnloadTables() {
 
     if (file != OS_INVALID_FILE) {
         uint32_t now = static_cast<uint32_t>(time(NULL));
-        uint32_t header[4] = { 'HTFX', 1, now, 13623 };
+        uint32_t header[4] = { 'HTFX', 1, now, 15595 };
         uint32_t bytesWritten;
 
         OsWriteFile(file, header, 16, &bytesWritten);
@@ -1405,6 +1489,12 @@ void ClientDBUnloadTables() {
             for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
                 (*table)->WriteHotfixes(file);
             }
+
+            if (g_clientDBWorldTablesLoaded == 1) {
+                for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+                    (*table)->WriteHotfixes(file);
+                }
+            }
         }
 
         OsCloseFile(file);
@@ -1414,18 +1504,49 @@ void ClientDBUnloadTables() {
         table->m_db->Unload(table->m_meta);
     }
 
-    for (ClientDBTable* table = s_clientDBGameTables; table->m_db; table++) {
-        table->m_db->Unload(table->m_meta);
-    }
-
     for (WowClientDB2_Base** table = g_clientDB2Tables; *table; table++) {
         (*table)->Save(hotfixTime);
         (*table)->Unload();
     }
+
+    if (g_clientDBGlueTablesLoaded == 1) {
+        for (ClientDBTable* table = s_clientDBGlueTables; table->m_db; table++) {
+            table->m_db->Unload(table->m_meta);
+        }
+
+        g_clientDBGlueTablesLoaded = 0;
+    }
+
+    if (g_clientDBWorldTablesLoaded == 1) {
+        for (ClientDBTable* table = s_clientDBGameTables; table->m_db; table++) {
+            table->m_db->Unload(table->m_meta);
+        }
+
+        for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+            (*table)->Save(hotfixTime);
+            (*table)->Unload();
+        }
+
+        g_clientDBWorldTablesLoaded = 0;
+    }
 }
 
-// OFFSET: %0x0049E570
+// OFFSET: 0x00495CE0
+void ClientDBShutdown() {
+    s_resistances.Clear();
+    s_terrainTypeSoundIDs.Clear();
+    ClientDBUnloadTables();
+    g_hotfixNotifyBlobHandler = NULL;
+    g_hotfixNotifyMultiplexHandler = NULL;
+    g_dbReplyMultiplexHandler = NULL;
+}
+
+// OFFSET: 0x00496790
 void ClientDBInitializeInGame() {
+    for (WowClientDB2_Base** table = g_clientDB2GameTables; *table; table++) {
+        (*table)->Load(s_hotfixTime);
+    }
+
     for (ClientDBTable* table = s_clientDBGameTables; table->m_db; table++) {
         table->m_db->Load(table->m_meta);
     }
@@ -1434,6 +1555,7 @@ void ClientDBInitializeInGame() {
     InitTerrainTypeFlags();
     InitSpellEffects();
     InitSpellActivationOverlays();
+    InitLights(1);
 }
 
 // OFFSET: #0x00634CC0
@@ -1468,7 +1590,7 @@ void InitWeaponSubclasses() {
     }
 }
 
-// OFFSET: %0x0049D670
+// OFFSET: 0x00495810/0x1400BB3B0
 void ClientDBInitialize() {
     CVar* cvar = CVar::Lookup("dbCompress");
 
@@ -1476,12 +1598,22 @@ void ClientDBInitialize() {
         g_clientDbPerformCompress = cvar->m_intValue != 0;
     }
 
-    ClientDB2StartThread();
+    for (ClientDBTable* table = g_staticDBTables; table->m_db; table++) {
+        table->m_db->Load(table->m_meta);
+    }
+
+    for (ClientDBTable* table = g_staticDBGlueTables; table->m_db; table++) {
+        AsyncFileReadCreateObject(table->m_meta->m_filename, 5, 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
+    }
+
+    for (ClientDBTable* table = g_staticDBWorldTables; table->m_db; table++) {
+        AsyncFileReadCreateObject(table->m_meta->m_filename, 5, 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
+    }
+
     ClientDBLoadTables();
     InitResistances();
     InitWeaponSubclasses();
     SDBItemSubclassInitialize();
-    InitLights(1);
     g_hotfixNotifyBlobHandler = WowClientDB2_Base::HotfixNotifyBlob;
     g_hotfixNotifyMultiplexHandler = WowClientDB2_Base::HotfixNotifyMultiplex;
     g_dbReplyMultiplexHandler = WowClientDB2_Base::DBReplyMultiplex;
@@ -1498,11 +1630,11 @@ int32_t LocaleNameToIndex(const char* locale) {
     return 2;
 }
 
-// PROVEN: 9dcd0762 IDENTICAL/NONE
+// PROVEN: 20c6d65c IDENTICAL/NONE
 // OFFSET: 0x00495030/0x1400BA9A0
 const char* ClientDBStringLookup(uint32_t lookup) {
     StringLookupsRec* rec = g_stringLookupsDB.GetRecord(lookup);
-    return rec ? rec->m_string : NULL;
+    return rec ? static_cast<const char*>(rec->m_string) : NULL;
 }
 
 // OFFSET: #0x00634950

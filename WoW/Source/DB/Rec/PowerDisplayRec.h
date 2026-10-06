@@ -10,15 +10,12 @@ class PowerDisplayRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_actualType;
-    /* 0008 */ const char* m_globalStringBaseTag;
+    /* 0008 */ DBCString m_globalStringBaseTag;
     /* 000C */ int8_t m_red;
     /* 000D */ int8_t m_green;
     /* 000E */ int8_t m_blue;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(PowerDisplayRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

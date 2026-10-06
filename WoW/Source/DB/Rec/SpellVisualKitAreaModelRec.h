@@ -9,13 +9,14 @@ class SpellVisualKitAreaModelRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_enumID;
+    /* 000C */ int32_t unk_000C;
+    /* 0010 */ float unk_0010;
+    /* 0014 */ float unk_0014;
+    /* 0018 */ float unk_0018;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellVisualKitAreaModelRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

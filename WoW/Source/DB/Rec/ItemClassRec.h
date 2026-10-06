@@ -12,12 +12,10 @@ class ItemClassRec {
     /* 0004 */ int32_t m_classID;
     /* 0008 */ int32_t m_subclassMapID;
     /* 000C */ int32_t m_flags;
-    /* 0010 */ const char* m_className;
+    /* 0010 */ float unk_0010;
+    /* 0014 */ DBCString m_className;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemClassRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

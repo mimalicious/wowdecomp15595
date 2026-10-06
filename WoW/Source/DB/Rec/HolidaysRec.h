@@ -16,15 +16,12 @@ class HolidaysRec {
     /* 009C */ int32_t m_calendarFlags [10];
     /* 00C4 */ int32_t m_holidayNameID;
     /* 00C8 */ int32_t m_holidayDescriptionID;
-    /* 00CC */ const char* m_textureFileName;
+    /* 00CC */ DBCString m_textureFileName;
     /* 00D0 */ int32_t m_priority;
     /* 00D4 */ int32_t m_calendarFilterType;
     /* 00D8 */ int32_t m_flags;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(HolidaysRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

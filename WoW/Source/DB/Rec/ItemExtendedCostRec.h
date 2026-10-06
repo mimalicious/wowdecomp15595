@@ -41,9 +41,6 @@ class ItemExtendedCostRec {
     /* 0078 */ int32_t unk_0078;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemExtendedCostRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

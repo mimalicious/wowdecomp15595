@@ -1,16 +1,9 @@
 #include "WoW/Source/DB/Rec/gtRegenMPPerSptRec.h"
 
-// STATIC: %0x00B4652C
+// STATIC: 0x00C24C28/0x140A1A528
 const DBCMeta gtRegenMPPerSptRec::s_meta = { "DBFilesClient\\gtRegenMPPerSpt.dbc", 1, 8, gtRegenMPPerSptRec::FixupStrings, 0 };
 
 // PROVEN: c4ebab3d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void gtRegenMPPerSptRec::FixupStrings(void* record, const char* strings) {
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void gtRegenMPPerSptRec::ConvertRow(gtRegenMPPerSptRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    memcpy(&rec->m_data, &row[0x0004], sizeof(rec->m_data));
-}
-#endif

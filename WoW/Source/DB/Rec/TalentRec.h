@@ -20,9 +20,6 @@ class TalentRec {
     /* 0044 */ int32_t m_categoryMask [2];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TalentRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

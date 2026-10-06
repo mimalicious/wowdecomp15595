@@ -11,12 +11,9 @@ class WorldSafeLocsRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_continent;
     /* 0008 */ float m_loc [3];
-    /* 0014 */ const char* m_areaName;
+    /* 0014 */ DBCString m_areaName;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WorldSafeLocsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

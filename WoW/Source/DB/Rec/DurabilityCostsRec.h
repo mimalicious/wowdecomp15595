@@ -13,9 +13,6 @@ class DurabilityCostsRec {
     /* 0058 */ int32_t m_armorSubClassCost [8];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(DurabilityCostsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -11,12 +11,9 @@ class UnitBloodRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_combatBloodSpurtFront [2];
     /* 000C */ int32_t m_combatBloodSpurtBack [2];
-    /* 0014 */ const char* m_groundBlood [5];
+    /* 0014 */ DBCString m_groundBlood [5];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(UnitBloodRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

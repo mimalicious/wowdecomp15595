@@ -31,12 +31,11 @@ class SoundEntriesAdvancedRec {
     /* 0050 */ float m_outsideAngle;
     /* 0054 */ float m_outsideVolume;
     /* 0058 */ float m_outerRadius2d;
-    /* 005C */ const char* m_name;
+    /* 005C */ int32_t unk_005C;
+    /* 0060 */ int32_t unk_0060;
+    /* 0064 */ float unk_0064;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundEntriesAdvancedRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

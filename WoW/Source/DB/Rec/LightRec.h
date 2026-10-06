@@ -16,9 +16,6 @@ class LightRec {
     /* 001C */ int32_t m_lightParamsID [8];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LightRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

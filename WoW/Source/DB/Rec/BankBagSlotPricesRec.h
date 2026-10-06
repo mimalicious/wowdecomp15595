@@ -12,9 +12,6 @@ class BankBagSlotPricesRec {
     /* 0004 */ int32_t m_cost;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(BankBagSlotPricesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/SpellIconRec.h"
 
-// STATIC: %0x00B44FB8
+// STATIC: 0x00C212F0/0x140A15E08
 const DBCMeta SpellIconRec::s_meta = { "DBFilesClient\\SpellIcon.dbc", 2, 8, SpellIconRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: f5647291 IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void SpellIconRec::FixupStrings(void* record, const char* strings) {
     SpellIconRec* rec = static_cast<SpellIconRec*>(record);
-    rec->m_textureFilename = &strings[reinterpret_cast<uintptr_t>(rec->m_textureFilename)];
+    DBCFixupString(rec->m_textureFilename, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void SpellIconRec::ConvertRow(SpellIconRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_textureFilename = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

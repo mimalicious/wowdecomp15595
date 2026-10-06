@@ -13,13 +13,10 @@ class ExhaustionRec {
     /* 0008 */ float m_factor;
     /* 000C */ float m_outdoorHours;
     /* 0010 */ float m_innHours;
-    /* 0014 */ const char* m_name;
+    /* 0014 */ DBCString m_name;
     /* 0018 */ float m_threshold;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ExhaustionRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

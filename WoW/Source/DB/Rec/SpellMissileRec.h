@@ -25,9 +25,6 @@ class SpellMissileRec {
     /* 0038 */ float m_collisionRadius;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellMissileRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

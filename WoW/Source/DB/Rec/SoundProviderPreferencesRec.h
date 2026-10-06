@@ -9,7 +9,7 @@ class SoundProviderPreferencesRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_description;
+    /* 0004 */ DBCString m_description;
     /* 0008 */ int32_t m_flags;
     /* 000C */ int32_t m_eaxenvironmentSelection;
     /* 0010 */ float m_eaxdecayTime;
@@ -34,9 +34,6 @@ class SoundProviderPreferencesRec {
     /* 005C */ float m_eax3Lfreference;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundProviderPreferencesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

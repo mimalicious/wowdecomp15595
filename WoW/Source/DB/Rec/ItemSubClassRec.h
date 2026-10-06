@@ -19,13 +19,10 @@ class ItemSubClassRec {
     /* 0020 */ int32_t m_weaponReadySeq;
     /* 0024 */ int32_t m_weaponAttackSeq;
     /* 0028 */ int32_t m_weaponSwingSize;
-    /* 002C */ const char* m_displayName;
-    /* 0030 */ const char* m_verboseName;
+    /* 002C */ DBCString m_displayName;
+    /* 0030 */ DBCString m_verboseName;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ItemSubClassRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

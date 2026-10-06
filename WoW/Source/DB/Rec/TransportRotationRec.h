@@ -14,9 +14,6 @@ class TransportRotationRec {
     /* 000C */ float m_rot [4];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TransportRotationRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

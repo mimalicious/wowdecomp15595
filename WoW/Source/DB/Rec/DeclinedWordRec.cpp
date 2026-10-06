@@ -1,17 +1,11 @@
 #include "WoW/Source/DB/Rec/DeclinedWordRec.h"
 
-// STATIC: %0x00B47438
+// STATIC: 0x00C2727C/0x140A1D478
 const DBCMeta DeclinedWordRec::s_meta = { "DBFilesClient\\DeclinedWord.dbc", 2, 8, DeclinedWordRec::FixupStrings, 0 };
 
-// OFFSET: %0x0097C040
+// PROVEN: 723529cc IDENTICAL/NONE
+// OFFSET: 0x00A2EBA0/0x1407D8330
 void DeclinedWordRec::FixupStrings(void* record, const char* strings) {
     DeclinedWordRec* rec = static_cast<DeclinedWordRec*>(record);
-    rec->m_word = &strings[reinterpret_cast<uintptr_t>(rec->m_word)];
+    DBCFixupString(rec->m_word, strings);
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-void DeclinedWordRec::ConvertRow(DeclinedWordRec* rec, const uint8_t* row, const char* strings) {
-    memcpy(&rec->m_id, &row[0x0000], sizeof(rec->m_id));
-    rec->m_word = &strings[*reinterpret_cast<const uint32_t*>(&row[0x0004])];
-}
-#endif

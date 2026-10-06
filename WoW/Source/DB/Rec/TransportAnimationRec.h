@@ -15,9 +15,6 @@ class TransportAnimationRec {
     /* 0018 */ int32_t m_sequenceID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TransportAnimationRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

@@ -9,16 +9,13 @@ class ResearchBranchRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* unk_0004;
+    /* 0004 */ DBCString unk_0004;
     /* 0008 */ int32_t unk_0008;
     /* 000C */ int32_t unk_000C;
-    /* 0010 */ const char* unk_0010;
+    /* 0010 */ DBCString unk_0010;
     /* 0014 */ int32_t unk_0014;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(ResearchBranchRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

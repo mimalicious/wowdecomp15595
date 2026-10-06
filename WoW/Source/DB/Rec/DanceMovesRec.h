@@ -13,14 +13,11 @@ class DanceMovesRec {
     /* 0008 */ int32_t m_param;
     /* 000C */ int32_t m_fallback;
     /* 0010 */ int32_t m_racemask;
-    /* 0014 */ const char* m_internalName;
-    /* 0018 */ const char* m_name;
+    /* 0014 */ DBCString m_internalName;
+    /* 0018 */ DBCString m_name;
     /* 001C */ int32_t m_lockID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(DanceMovesRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

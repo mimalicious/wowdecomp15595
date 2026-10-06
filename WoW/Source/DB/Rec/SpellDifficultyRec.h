@@ -12,9 +12,6 @@ class SpellDifficultyRec {
     /* 0004 */ int32_t m_difficultySpellID [4];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellDifficultyRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

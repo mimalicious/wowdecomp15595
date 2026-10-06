@@ -11,9 +11,6 @@ class TerrainTypeSoundsRec {
     /* 0000 */ int32_t m_id;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(TerrainTypeSoundsRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

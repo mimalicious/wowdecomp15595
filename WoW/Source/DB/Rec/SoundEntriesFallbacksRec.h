@@ -13,9 +13,6 @@ class SoundEntriesFallbacksRec {
     /* 0008 */ int32_t m_fallbackSoundEntriesID;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SoundEntriesFallbacksRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

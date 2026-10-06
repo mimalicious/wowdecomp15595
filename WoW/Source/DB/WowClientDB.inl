@@ -7,54 +7,10 @@ int32_t WowClientDB<T>::GetRecordByIndex(int32_t index, void* rec) const {
         return 0;
     }
 
-    memcpy(rec, src, sizeof(T));
+    *static_cast<T*>(rec) = *src;
 
     return 1;
 }
-
-#if defined(WOWDECOMP_ARCH_64)
-template <class T>
-void WowClientDB<T>::LoadRecords(const DBCMeta* meta, uint8_t* data, uint32_t numRecords, uint8_t* rows, uint32_t stringSize, const char* strings) {
-    this->m_data = data;
-    this->m_records = NULL;
-    this->m_recordsById = NULL;
-    this->m_maxID = -1;
-    this->m_minID = 0xFFFFFFF;
-    this->m_numRecords = numRecords;
-
-    if (!numRecords) {
-        return;
-    }
-
-    T* records = static_cast<T*>(SMemAlloc(sizeof(T) * numRecords, __FILE__, __LINE__, 0));
-    this->m_records = reinterpret_cast<uint8_t*>(records);
-
-    for (int32_t i = 0; i < this->m_numRecords; i++) {
-        const uint8_t* row = &rows[i * meta->m_rowSize];
-        T::ConvertRow(&records[i], row, strings);
-
-        int32_t id = *reinterpret_cast<const int32_t*>(&row[meta->m_idOffset]);
-        this->m_maxID = id > this->m_maxID ? id : this->m_maxID;
-        this->m_minID = id < this->m_minID ? id : this->m_minID;
-    }
-
-    this->m_recordsById = static_cast<uint8_t**>(SMemAlloc(sizeof(uint8_t*) * (this->m_maxID - this->m_minID + 1), __FILE__, __LINE__, 8));
-
-    for (int32_t i = 0; i < this->m_numRecords; i++) {
-        int32_t id = *reinterpret_cast<const int32_t*>(&rows[i * meta->m_rowSize + meta->m_idOffset]);
-        this->m_recordsById[id - this->m_minID] = reinterpret_cast<uint8_t*>(&records[i]);
-    }
-}
-
-template <class T>
-void WowClientDB<T>::Free() {
-    if (this->m_records) {
-        SMemFree(this->m_records, __FILE__, __LINE__, 0);
-    }
-
-    WowClientDB_Base::Free();
-}
-#endif
 
 // OFFSET: [%0x00564E40]
 template <class T>

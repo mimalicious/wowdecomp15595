@@ -19,15 +19,12 @@ class WMOAreaTableRec {
     /* 0020 */ int32_t m_introSound;
     /* 0024 */ int32_t m_flags;
     /* 0028 */ int32_t m_areaTableID;
-    /* 002C */ const char* m_areaName;
+    /* 002C */ DBCString m_areaName;
     /* 0030 */ int32_t unk_0030;
     /* 0034 */ int32_t unk_0034;
     /* 0038 */ int32_t unk_0038;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(WMOAreaTableRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

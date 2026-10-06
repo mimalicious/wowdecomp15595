@@ -9,15 +9,15 @@ class MapRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_directory;
+    /* 0004 */ DBCString m_directory;
     /* 0008 */ int32_t m_instanceType;
     /* 000C */ int32_t m_flags;
     /* 0010 */ int32_t m_pvp;
     /* 0014 */ int32_t unk_0014;
-    /* 0018 */ const char* m_mapName;
+    /* 0018 */ DBCString m_mapName;
     /* 001C */ int32_t m_areaTableID;
-    /* 0020 */ const char* m_mapDescription0;
-    /* 0024 */ const char* m_mapDescription1;
+    /* 0020 */ DBCString m_mapDescription0;
+    /* 0024 */ DBCString m_mapDescription1;
     /* 0028 */ int32_t m_loadingScreenID;
     /* 002C */ float m_minimapIconScale;
     /* 0030 */ int32_t m_corpseMapID;
@@ -29,9 +29,6 @@ class MapRec {
     /* 004C */ int32_t unk_004C;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(MapRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

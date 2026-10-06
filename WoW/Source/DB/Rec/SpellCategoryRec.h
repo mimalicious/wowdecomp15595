@@ -10,11 +10,10 @@ class SpellCategoryRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_flags;
+    /* 0008 */ int32_t unk_0008;
+    /* 000C */ DBCString unk_000C;
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(SpellCategoryRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif

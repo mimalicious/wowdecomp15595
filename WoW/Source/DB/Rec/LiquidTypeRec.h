@@ -9,7 +9,7 @@ class LiquidTypeRec {
     static const DBCMeta s_meta;
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ const char* m_name;
+    /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_flags;
     /* 000C */ int32_t m_soundBank;
     /* 0010 */ int32_t m_soundID;
@@ -23,15 +23,12 @@ class LiquidTypeRec {
     /* 0030 */ int32_t m_particleMovement;
     /* 0034 */ int32_t m_particleTexSlots;
     /* 0038 */ int32_t m_materialID;
-    /* 003C */ const char* m_texture [6];
+    /* 003C */ DBCString m_texture [6];
     /* 0054 */ int32_t m_color [2];
     /* 005C */ float m_float [18];
     /* 00A4 */ int32_t m_int [4];
 
     static void FixupStrings(void* record, const char* strings);
-#if defined(WOWDECOMP_ARCH_64)
-    static void ConvertRow(LiquidTypeRec* rec, const uint8_t* row, const char* strings);
-#endif
 };
 
 #endif
