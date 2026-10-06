@@ -4,6 +4,7 @@
 #include "Engine/Source/ShaderEffect/ShadowCache.h"
 #include "Engine/Source/Base/Handle.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/CGxFrameBuffer.h"
 #include "Engine/Source/Gx/CGxTexFlags.h"
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Gxu/Gxu.h"
@@ -18,19 +19,19 @@ CGxShader* CShadowCache::s_shadowMapPixelShader;
 // STATIC: 0x00D3833C
 CGxShader* CShadowCache::s_shadowMapVertexShader;
 
-// STATIC: %0x00BACE10
+// STATIC: 0x00C98B34
 float CShadowCache::s_debugAspect = 1.0f;
 
-// STATIC: %0x00BACE14
+// STATIC: 0x00C98B38/0x140B3023C
 int32_t CShadowCache::s_recreateTextures = 0;
 
-// STATIC: %0x00BACE18
+// STATIC: 0x00C98B3C
 const float CShadowCache::s_bandRadius[3] = { 40.0f, 160.0f, 640.0f };
 
-// STATIC: %0x00BACE24
+// STATIC: 0x00C98B48
 const float CShadowCache::s_bandUpdateDistance[3] = { 4.0f, 16.0f, 1024.0f };
 
-// STATIC: %0x00BACE30
+// STATIC: 0x00C98B54
 const char* CShadowCache::s_shadowModeDescs[NUM_SHADOW_MODES] = {
     "0 - Precomputed terrain shadows, blob shadows.",
     "1 - Precomputed terrain shadows, dynamic shadows near player.",
@@ -38,46 +39,58 @@ const char* CShadowCache::s_shadowModeDescs[NUM_SHADOW_MODES] = {
     "3 - Full dynamic shadows.",
 };
 
-// STATIC: %0x00C3CD88
+// STATIC: 0x00D38340/0x140BF1E60
 uint32_t CShadowCache::s_shadowSize;
 
-// STATIC: %0x00C3CD8C
+// STATIC: 0x00D38344/0x140BF1E64
 EShadowMode CShadowCache::s_shadowMode;
+
+// STATIC: 0x00D38348
+CGxFrameBuffer* CShadowCache::s_bandFrameBuffers[3][2];
 
 // STATIC: 0x00D38360
 CTexture* CShadowCache::s_intDynShadow;
 
-// STATIC: %0x00C3CD94
+// STATIC: 0x00D38364
+CTexture* CShadowCache::s_depthBuffer;
+
+// STATIC: 0x00D38368
 int32_t CShadowCache::s_fullClear;
 
-// STATIC: %0x00C3CD98
+// STATIC: 0x00D3836C
 int32_t CShadowCache::s_fullUpdate;
 
-// STATIC: %0x00C3CD9C
+// STATIC: 0x00D38370
+CGxFrameBuffer* CShadowCache::s_extDynFrameBuffer;
+
+// STATIC: 0x00D38374
+CGxFrameBuffer* CShadowCache::s_intDynFrameBuffer;
+
+// STATIC: 0x00D38378/0x140BF1EC0
 ShadowMatrixCallback CShadowCache::s_matrixCallback;
 
-// STATIC: %0x00C3CDA0
+// STATIC: 0x00D3837C/0x140BF1EC8
 ShadowFrustumCallback CShadowCache::s_frustumCallback;
 
-// STATIC: %0x00C3CDA4
+// STATIC: 0x00D38380/0x140BF1ED0
 ShadowQueryCallback CShadowCache::s_queryCallback;
 
-// STATIC: %0x00C3CDA8
+// STATIC: 0x00D38384/0x140BF1ED8
 ShadowRenderCallback CShadowCache::s_renderCallback;
 
-// STATIC: %0x00C3CDAC
+// STATIC: 0x00D38388
 int32_t CShadowCache::s_debugLevel;
 
-// STATIC: %0x00C3CDB0
+// STATIC: 0x00D3838C
 uint8_t CShadowCache::s_frameCounter;
 
 // STATIC: 0x00D38390
 CShadowBand CShadowCache::s_extDynShadow;
 
-// STATIC: %0x00C3CDF8
+// STATIC: 0x00D383D0
 float CShadowCache::s_extDynShadowCullRect[4];
 
-// STATIC: %0x00C3CE08
+// STATIC: 0x00D383E0
 C3Vector CShadowCache::s_sunDir;
 
 // STATIC: 0x00D383EC
@@ -89,28 +102,28 @@ C4Vector CShadowCache::s_cutoffPlane;
 // STATIC: 0x00D3840C
 C4Vector CShadowCache::s_cutoffPlaneDefault;
 
-// STATIC: %0x00C3CE44
+// STATIC: 0x00D3841C
 float CShadowCache::s_textureSize[2];
 
-// STATIC: %0x00C3CE50
+// STATIC: 0x00D38428/0x140BF1F94
 float CShadowCache::s_shadowScale;
 
-// STATIC: %0x00C3CE58
+// STATIC: 0x00D38430
 C4Vector CShadowCache::s_shadowMatrices[12];
 
-// STATIC: %0x00C3CF18
+// STATIC: 0x00D384F0
 C4Vector CShadowCache::s_extShadowMatrix[3];
 
-// STATIC: %0x00C3CF48
+// STATIC: 0x00D38520
 C4Vector CShadowCache::s_bandParams[6];
 
-// STATIC: %0x00C3CFA8
+// STATIC: 0x00D38580
 C4Vector CShadowCache::s_pcfOffsets[8];
 
 // STATIC: 0x00D38600
 CShadowBand CShadowCache::s_extShadowBands[3];
 
-// OFFSET: %0x0043F770
+// OFFSET: 0x004352A0/0x14003E9E0
 const char* CShadowCache::GetShadowModeDesc(uint32_t mode) {
     if (mode >= NUM_SHADOW_MODES) {
         return "Unknown shadow mode";
@@ -208,7 +221,7 @@ CShadowBand::CShadowBand() {
     this->m_dir = C3Vector(1.0f, 0.0f, 0.0f);
 }
 
-// OFFSET: %0x0043FAD0
+// OFFSET: 0x004356F0/0x14003EE20
 uint32_t CShadowCache::ValidateShadowMode(EShadowMode mode) {
     if (!mode) {
         return 0;
@@ -235,7 +248,7 @@ uint32_t CShadowCache::ValidateShadowMode(EShadowMode mode) {
     return 8;
 }
 
-// OFFSET: %0x0043FB60
+// OFFSET: 0x00435780/0x14003EEC0
 int32_t CShadowCache::SetShadowMode(EShadowMode mode) {
     if (CShadowCache::ValidateShadowMode(mode)) {
         return 0;
@@ -247,8 +260,37 @@ int32_t CShadowCache::SetShadowMode(EShadowMode mode) {
     return 1;
 }
 
-// OFFSET: %0x0043FB90
+// PROVEN: de879430 IDENTICAL/IDENTICAL
+// OFFSET: 0x00435470/0x14003EB90
+static CGxFrameBuffer* CreateFrameBuffer(CGxTex* depth, CGxTex* color) {
+    CGxFrameBuffer* frameBuffer = g_theGxDevicePtr->FrameBufferCreate();
+    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Depth, depth, 0);
+    g_theGxDevicePtr->FrameBufferAttach(frameBuffer, GxBuffers_Color, color, 0);
+
+    if (!g_theGxDevicePtr->FrameBufferFinalize(frameBuffer)) {
+        g_theGxDevicePtr->FrameBufferDelete(frameBuffer);
+    }
+
+    return frameBuffer;
+}
+
+// OFFSET: 0x004357B0/0x14003EF00
 void CShadowCache::Destroy() {
+    if (CShadowCache::s_shadowMapVertexShader) {
+        g_theGxDevicePtr->ShaderRelease(CShadowCache::s_shadowMapVertexShader);
+        CShadowCache::s_shadowMapVertexShader = NULL;
+    }
+
+    if (CShadowCache::s_shadowMapPixelShader) {
+        g_theGxDevicePtr->ShaderRelease(CShadowCache::s_shadowMapPixelShader);
+        CShadowCache::s_shadowMapPixelShader = NULL;
+    }
+
+    if (CShadowCache::s_depthBuffer) {
+        TextureRelease(CShadowCache::s_depthBuffer);
+        CShadowCache::s_depthBuffer = NULL;
+    }
+
     if (CShadowCache::s_extDynShadow.m_textures[0]) {
         TextureRelease(CShadowCache::s_extDynShadow.m_textures[0]);
         CShadowCache::s_extDynShadow.m_textures[0] = NULL;
@@ -259,9 +301,17 @@ void CShadowCache::Destroy() {
         CShadowCache::s_extDynShadow.m_textures[1] = NULL;
     }
 
+    if (CShadowCache::s_extDynFrameBuffer) {
+        g_theGxDevicePtr->FrameBufferDelete(CShadowCache::s_extDynFrameBuffer);
+    }
+
     if (CShadowCache::s_intDynShadow) {
         TextureRelease(CShadowCache::s_intDynShadow);
         CShadowCache::s_intDynShadow = NULL;
+    }
+
+    if (CShadowCache::s_intDynFrameBuffer) {
+        g_theGxDevicePtr->FrameBufferDelete(CShadowCache::s_intDynFrameBuffer);
     }
 
     for (uint32_t i = 0; i < 3; i++) {
@@ -272,16 +322,24 @@ void CShadowCache::Destroy() {
             band.m_textures[0] = NULL;
         }
 
+        if (CShadowCache::s_bandFrameBuffers[i][0]) {
+            g_theGxDevicePtr->FrameBufferDelete(CShadowCache::s_bandFrameBuffers[i][0]);
+        }
+
         if (band.m_textures[1]) {
             TextureRelease(band.m_textures[1]);
             band.m_textures[1] = NULL;
+        }
+
+        if (CShadowCache::s_bandFrameBuffers[i][1]) {
+            g_theGxDevicePtr->FrameBufferDelete(CShadowCache::s_bandFrameBuffers[i][1]);
         }
     }
 
     g_theGxDevicePtr->RemoveTextureRecreationCallback(CShadowCache::NotifyTexturesRecreate);
 }
 
-// OFFSET: %0x0043FC50
+// OFFSET: 0x00435910/0x14003F0C0
 void CShadowCache::InitPcfOffsets() {
     float size = CShadowCache::s_shadowSize;
     CShadowCache::s_textureSize[0] = size;
@@ -405,7 +463,43 @@ void CShadowCache::SetShadowMapDetailDoodad() {
     }
 }
 
-// OFFSET: %0x00440280
+// OFFSET: 0x00435F40
+static C3Vector SnapBandPosition(const C3Vector& pos, float radius, uint32_t band) {
+    float size = static_cast<float>(CShadowCache::s_shadowSize);
+    float cell = 1.0f;
+
+    if (band == 0) {
+        cell = 2.0f;
+    } else if (band == 1) {
+        cell = 4.0f;
+    } else if (band == 2) {
+        cell = 16.0f;
+    }
+
+    float texelSize = cell / size * radius;
+
+    C44Matrix lookAt;
+    C3Vector up(1.0f, 0.0f, 0.0f);
+    C3Vector eye(0.0f, 0.0f, 0.0f);
+    GxuXformCreateLookAtXXX(eye, CShadowCache::s_sunDir, up, lookAt);
+
+    float lightX = 1.0f / texelSize * (pos.z * lookAt.c0 + lookAt.b0 * pos.y + lookAt.a0 * pos.x + lookAt.d0);
+    float lightY = 1.0f / texelSize * (pos.z * lookAt.c1 + lookAt.b1 * pos.y + lookAt.a1 * pos.x + lookAt.d1);
+
+    C44Matrix inverse = lookAt.Inverse(lookAt.Determinant());
+
+    float dx = (floor(lightX + 0.5f) - lightX) * texelSize;
+    float dy = (floor(lightY + 0.5f) - lightY) * texelSize;
+
+    C3Vector snapped;
+    snapped.x = pos.x + (inverse.b0 * dy + dx * inverse.a0 + inverse.c0 * 0.0f + inverse.d0);
+    snapped.y = pos.y + (inverse.b1 * dy + inverse.a1 * dx + inverse.c1 * 0.0f + inverse.d1);
+    snapped.z = pos.z + (inverse.b2 * dy + inverse.a2 * dx + inverse.c2 * 0.0f + inverse.d2);
+
+    return snapped;
+}
+
+// OFFSET: 0x004361E0
 void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos, CFrustum& frustum, int32_t useCullFrustum) {
     uint32_t frame = 0;
 
@@ -432,7 +526,7 @@ void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos,
             data.m_radius[i] = band.m_radius;
 
             if (!band.m_updateCount) {
-                band.m_pos = pos;
+                band.m_pos = SnapBandPosition(pos, band.m_radius, i);
             }
 
             data.m_pos[i] = band.m_pos;
@@ -461,8 +555,16 @@ void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos,
             float scale = 0.5f / data.m_radius[i];
             data.m_texBounds[i][0] = data.m_bounds[i][0] * scale + 0.5f;
             data.m_texBounds[i][1] = data.m_bounds[i][1] * scale + 0.5f;
-            data.m_texBounds[i][3] = 0.5f - data.m_bounds[i][2] * scale;
-            data.m_texBounds[i][2] = 0.5f - data.m_bounds[i][3] * scale;
+            float top = 0.5f - data.m_bounds[i][3] * scale;
+            float bottom = 0.5f - data.m_bounds[i][2] * scale;
+
+            if (g_theGxDevicePtr->m_caps.m_texelCenterOnEdge) {
+                data.m_texBounds[i][2] = 1.0f - bottom;
+                data.m_texBounds[i][3] = 1.0f - top;
+            } else {
+                data.m_texBounds[i][2] = top;
+                data.m_texBounds[i][3] = bottom;
+            }
 
             CShadowCache::s_frustumCallback(data.m_frustums[i], data.m_matrices[i], band.m_dir, data, i);
             data.m_frustums[i].Extents(data.m_extents[i]);
@@ -514,23 +616,7 @@ void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos,
             data.m_active[i] = 0;
             data.m_queryFlags[i] = 30;
             data.m_radius[i] = band.m_radius;
-            band.m_pos = pos;
-
-            float cell;
-
-            if (i == 0) {
-                cell = 2.0f;
-            } else if (i == 1) {
-                cell = 4.0f;
-            } else {
-                cell = 16.0f;
-            }
-
-            float invCell = 1.0f / cell;
-            band.m_pos.x = floor(invCell * band.m_pos.x) * cell;
-            band.m_pos.y = floor(band.m_pos.y * invCell) * cell;
-            band.m_pos.z = floor(band.m_pos.z * invCell) * cell;
-
+            band.m_pos = SnapBandPosition(pos, band.m_radius, i);
             data.m_pos[i] = band.m_pos;
 
             data.m_bounds[i][0] = -data.m_radius[i];
@@ -565,36 +651,26 @@ void CShadowCache::GatherBands(CShadowCacheQueryData& data, const C3Vector& pos,
     CShadowCache::s_queryCallback(data, frame);
 }
 
-// OFFSET: %0x00440A70
+// OFFSET: 0x00435370
 void CShadowCache::RenderBands(CShadowCacheQueryData& data) {
     for (int32_t i = 0; i <= data.m_lastBand; i++) {
         if (!data.m_active[i]) {
             continue;
         }
 
-        CShadowBand& band = CShadowCache::s_extShadowBands[i];
-        CGxTex* colorTarget = NULL;
-        CGxTex* target;
+        CGxFrameBuffer* frameBuffer;
 
-        if (CShaderEffect::s_usePcfFiltering) {
-            if (CShadowCache::s_shadowMode < SHADOW_HIGH) {
-                colorTarget = TextureGetGxTex(band.m_textures[data.m_textureIndex[i]]);
-            } else {
-                colorTarget = TextureGetGxTex(band.m_textures[0]);
-            }
-
-            target = TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]);
-        } else if (CShadowCache::s_shadowMode >= SHADOW_HIGH) {
-            target = TextureGetGxTex(band.m_textures[0]);
+        if (CShadowCache::s_shadowMode < SHADOW_HIGH) {
+            frameBuffer = CShadowCache::s_bandFrameBuffers[i][data.m_textureIndex[i]];
         } else {
-            target = TextureGetGxTex(band.m_textures[data.m_textureIndex[i]]);
+            frameBuffer = CShadowCache::s_bandFrameBuffers[i][0];
         }
 
-        CShadowCache::s_renderCallback(data, i, target, colorTarget, band.m_dir);
+        CShadowCache::s_renderCallback(data, i, frameBuffer, CShadowCache::s_extShadowBands[i].m_dir);
     }
 }
 
-// OFFSET: %0x00440B50
+// OFFSET: 0x00436960
 void CShadowCache::PostUpdate() {
     if (!CShadowCache::s_matrixCallback || !CShadowCache::s_frustumCallback || !CShadowCache::s_queryCallback || !CShadowCache::s_renderCallback) {
         return;
@@ -671,7 +747,7 @@ void CShadowCache::PostUpdate() {
     }
 }
 
-// OFFSET: %0x004414E0
+// OFFSET: 0x004372B0
 CShadowCacheQueryData::CShadowCacheQueryData() {
     for (uint32_t i = 0; i < 3; i++) {
         this->m_extents[i].b = C3Vector(0.0f, 0.0f, 0.0f);
@@ -709,7 +785,14 @@ CShadowCacheQueryData::CShadowCacheQueryData() {
     this->m_lastBand = -1;
 }
 
-// OFFSET: %0x00441850
+// PROVEN: 2c08d044 IDENTICAL/DIFFERENT
+// OFFSET: 0x004370B0/0x140040C90
+static void SetFrameBuffer(CGxFrameBuffer* frameBuffer) {
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->FrameBufferSet(frameBuffer);
+}
+
+// OFFSET: 0x00437620/0x140041210
 void CShadowCache::ClearBandTextures() {
     if (CShadowCache::s_shadowMode <= SHADOW_LOW) {
         CShadowCache::s_fullUpdate = 0;
@@ -718,17 +801,15 @@ void CShadowCache::ClearBandTextures() {
     }
 
     if (!CShadowCache::s_fullClear) {
+        CShadowCache::s_fullUpdate = 0;
+        CShadowCache::s_fullClear = 0;
         CShadowCache::s_extShadowBands[0].m_updateCount = 1;
         CShadowCache::s_extShadowBands[1].m_updateCount = 1;
         CShadowCache::s_extShadowBands[2].m_updateCount = 1;
-        CShadowCache::s_fullUpdate = 0;
-        CShadowCache::s_fullClear = 0;
         return;
     }
 
-    CGxTex* colorTarget = NULL;
-    CGxTex* depthTarget = NULL;
-    g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Color, colorTarget);
+    CGxFrameBuffer* frameBuffer = g_theGxDevicePtr->FrameBufferGet();
 
     float minX;
     float maxX;
@@ -738,76 +819,38 @@ void CShadowCache::ClearBandTextures() {
     float maxZ;
     GxXformViewport(minX, maxX, minY, maxY, minZ, maxZ);
 
-    CImVector clearColor(0xFF, 0xFF, 0xFF, 0xFF);
-
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 0);
-        g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Depth, depthTarget);
     }
 
     GxXformSetViewport(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
 
-    if (CShaderEffect::s_usePcfFiltering) {
-        if (CShadowCache::s_extDynShadow.m_textures[0]) {
-            GxRenderTargetSet(GxBuffers_Color, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]), 0);
-        }
+    CImVector clearColor(0xFF, 0xFF, 0xFF, 0xFF);
 
-        if (CShadowCache::s_extDynShadow.m_textures[1]) {
-            GxRenderTargetSet(GxBuffers_Depth, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[1]), 0);
-            GxSceneClear(31, clearColor);
-        }
-
-        if (CShadowCache::s_intDynShadow) {
-            GxRenderTargetSet(GxBuffers_Depth, TextureGetGxTex(CShadowCache::s_intDynShadow), 0);
-            GxSceneClear(31, clearColor);
-        }
-    } else {
-        GxRenderTargetSet(GxBuffers_Depth, NULL, 0);
-
-        if (CShadowCache::s_extDynShadow.m_textures[0]) {
-            GxRenderTargetSet(GxBuffers_Color, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]), 0);
-            GxSceneClear(31, clearColor);
-        }
-
-        if (CShadowCache::s_intDynShadow) {
-            GxRenderTargetSet(GxBuffers_Color, TextureGetGxTex(CShadowCache::s_intDynShadow), 0);
-            GxSceneClear(31, clearColor);
-        }
+    if (CShadowCache::s_extDynFrameBuffer) {
+        SetFrameBuffer(CShadowCache::s_extDynFrameBuffer);
+        GxSceneClear(31, clearColor);
     }
 
-    EGxBuffer buffer;
-
-    if (CShaderEffect::s_usePcfFiltering) {
-        buffer = GxBuffers_Depth;
-
-        if (CShadowCache::s_extDynShadow.m_textures[0]) {
-            GxRenderTargetSet(GxBuffers_Color, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]), 0);
-        }
-    } else {
-        buffer = GxBuffers_Color;
-        GxRenderTargetSet(GxBuffers_Depth, NULL, 0);
+    if (CShadowCache::s_intDynShadow) {
+        SetFrameBuffer(CShadowCache::s_intDynFrameBuffer);
+        GxSceneClear(31, clearColor);
     }
 
     for (uint32_t i = 0; i < 3; i++) {
-        CShadowBand& band = CShadowCache::s_extShadowBands[i];
-
-        if (band.m_textures[0]) {
-            GxRenderTargetSet(buffer, TextureGetGxTex(band.m_textures[0]), 0);
-            GxSceneClear(31, clearColor);
-        }
-
-        if (band.m_textures[1]) {
-            GxRenderTargetSet(buffer, TextureGetGxTex(band.m_textures[1]), 0);
-            GxSceneClear(31, clearColor);
+        for (uint32_t j = 0; j < 2; j++) {
+            if (CShadowCache::s_extShadowBands[i].m_textures[j]) {
+                SetFrameBuffer(CShadowCache::s_bandFrameBuffers[i][j]);
+                GxSceneClear(31, clearColor);
+            }
         }
     }
 
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
-    GxRenderTargetSet(GxBuffers_Color, colorTarget, 0);
+    SetFrameBuffer(frameBuffer);
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 15);
-        GxRenderTargetSet(GxBuffers_Depth, depthTarget, 0);
     }
 
     for (uint32_t i = 0; i < 3; i++) {
@@ -822,7 +865,7 @@ void CShadowCache::ClearBandTextures() {
     CShadowCache::s_fullClear = 0;
 }
 
-// OFFSET: %0x00441D00
+// OFFSET: 0x004379A0
 int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
     if (!CShadowCache::s_matrixCallback || !CShadowCache::s_frustumCallback || !CShadowCache::s_queryCallback || !CShadowCache::s_renderCallback) {
         return 0;
@@ -860,11 +903,11 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
     data.m_pos[0] = snapped;
     CShadowCache::s_extDynShadow.m_lastPos = snapped;
 
-    CGxTex* depthTarget = NULL;
+    CGxFrameBuffer* frameBuffer = NULL;
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 0);
-        g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Depth, depthTarget);
+        frameBuffer = g_theGxDevicePtr->FrameBufferGet();
     }
 
     data.m_bounds[0][0] = -radius;
@@ -898,15 +941,7 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
     data.m_useFrustum = 0;
     CShadowCache::s_queryCallback(data, frame);
 
-    CGxTex* target = TextureGetGxTex(CShadowCache::s_intDynShadow);
-    CGxTex* colorTarget = NULL;
-
-    if (CShaderEffect::s_usePcfFiltering) {
-        target = TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]);
-        colorTarget = TextureGetGxTex(CShadowCache::s_intDynShadow);
-    }
-
-    CShadowCache::s_renderCallback(data, 0, target, colorTarget, CShadowCache::s_extDynShadow.m_dir);
+    CShadowCache::s_renderCallback(data, 0, CShadowCache::s_intDynFrameBuffer, CShadowCache::s_extDynShadow.m_dir);
 
     if (useCullFrustum) {
         data.m_queryFlags[0] = 4;
@@ -920,15 +955,7 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
         }
 
         CShadowCache::s_queryCallback(data, frame);
-
-        target = TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]);
-        colorTarget = NULL;
-
-        if (CShaderEffect::s_usePcfFiltering) {
-            colorTarget = TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[1]);
-        }
-
-        CShadowCache::s_renderCallback(data, 0, target, colorTarget, CShadowCache::s_extDynShadow.m_dir);
+        CShadowCache::s_renderCallback(data, 0, CShadowCache::s_extDynFrameBuffer, CShadowCache::s_extDynShadow.m_dir);
     }
 
     if (CShadowCache::s_shadowMode > SHADOW_LOW) {
@@ -956,18 +983,19 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 15);
-        GxRenderTargetSet(GxBuffers_Depth, depthTarget, 0);
+        SetFrameBuffer(frameBuffer);
     }
 
     return 1;
 }
 
-// OFFSET: %0x004422D0
+// OFFSET: 0x00437F10
 void CShadowCache::PreUpdate(const C3Vector& sunDir) {
     CShadowCache::s_sunDir = sunDir;
 
     C44Matrix view;
-    GxXformView(view);
+    C44Matrix viewXform;
+    GxXformView(viewXform);
 
     C3Vector& dir = CShadowCache::s_sunDir;
     float y = view.c1 * dir.z + view.b1 * dir.y + dir.x * view.a1;
@@ -981,18 +1009,23 @@ void CShadowCache::PreUpdate(const C3Vector& sunDir) {
     CShadowCache::s_sunDirViewSpace.w = 0.0f;
 }
 
-// OFFSET: %0x00442460
+// OFFSET: 0x00438130/0x140041F40
 void CShadowCache::Create() {
     CShadowCache::InitPcfOffsets();
 
     CShadowCache::s_extDynShadow.m_textures[0] = NULL;
     CShadowCache::s_extDynShadow.m_textures[1] = NULL;
+    CShadowCache::s_extDynFrameBuffer = NULL;
     CShadowCache::s_intDynShadow = NULL;
+    CShadowCache::s_intDynFrameBuffer = NULL;
+    CShadowCache::s_depthBuffer = NULL;
 
     for (uint32_t i = 0; i < 3; i++) {
         CShadowCache::s_extShadowBands[i].m_textures[0] = NULL;
         CShadowCache::s_extShadowBands[i].m_textures[1] = NULL;
         CShadowCache::s_extShadowBands[i].m_current = 0;
+        CShadowCache::s_bandFrameBuffers[i][0] = NULL;
+        CShadowCache::s_bandFrameBuffers[i][1] = NULL;
     }
 
     CGxTexFlags flags;
@@ -1007,21 +1040,15 @@ void CShadowCache::Create() {
 
     if (CShaderEffect::s_usePcfFiltering) {
         if (g_theGxDevicePtr->DeviceApi() == GxApi_GLL && g_theGxDevicePtr->m_caps.m_pcfFormat[GxTex_D16] && g_theGxDevicePtr->m_caps.m_rttFormat[GxTex_D16]) {
-            depthFlags = flags;
-            depthFlags.m_filter = GxTex_Linear;
-            depthFlags.m_bit3 = 1;
             depthFormat = GxTex_D16;
-            colorFlags.m_filter = GxTex_Linear;
-        } else {
-            if (g_theGxDevicePtr->m_caps.m_pcfFormat[GxTex_D24X8] && g_theGxDevicePtr->m_caps.m_rttFormat[GxTex_D24X8]) {
-                depthFormat = GxTex_D24X8;
-            }
-
-            depthFlags = flags;
-            depthFlags.m_filter = GxTex_Linear;
-            depthFlags.m_bit3 = 1;
-            colorFlags.m_filter = GxTex_Linear;
+        } else if (g_theGxDevicePtr->m_caps.m_pcfFormat[GxTex_D24X8] && g_theGxDevicePtr->m_caps.m_rttFormat[GxTex_D24X8]) {
+            depthFormat = GxTex_D24X8;
         }
+
+        depthFlags = flags;
+        depthFlags.m_filter = GxTex_Linear;
+        depthFlags.m_bit3 = 1;
+        colorFlags.m_filter = GxTex_Linear;
     } else {
         depthFormat = GxTex_R32F;
         depthFlags = flags;
@@ -1032,15 +1059,34 @@ void CShadowCache::Create() {
     uint32_t size = CShadowCache::s_shadowSize;
 
     if (CShadowCache::s_shadowMode > SHADOW_LOWEST) {
+        CGxTex* depthTarget = g_theGxDevicePtr->BackBufferDepthTex();
+
+        if (!CShaderEffect::s_usePcfFiltering && (size > depthTarget->m_width || size > depthTarget->m_height || g_theGxDevicePtr->DeviceFormat().m_multisampleCount > 1)) {
+            CGxTexFlags bufferFlags;
+            bufferFlags.m_filter = GxTex_Nearest;
+            bufferFlags.m_renderTarget = 1;
+            CShadowCache::s_depthBuffer = TextureCreate(size, size, GxTex_D24X8, GxTex_D24X8, bufferFlags, NULL, GxTexNullUserFunc, "ShadowCacheDepthBuffer", 0);
+            depthTarget = TextureGetGxTex(CShadowCache::s_depthBuffer);
+        }
+
         if (CShaderEffect::s_usePcfFiltering) {
             CShadowCache::s_extDynShadow.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, colorFormat, colorFormat, colorFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowColor", 0);
             CShadowCache::s_extDynShadow.m_textures[1] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheExteriorDynamicShadow", 0);
+            CShadowCache::s_extDynFrameBuffer = CreateFrameBuffer(TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
         } else {
             CShadowCache::s_extDynShadow.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheExteriorDynamicShadow", 0);
             CShadowCache::s_extDynShadow.m_textures[1] = NULL;
+            CShadowCache::s_extDynFrameBuffer = CreateFrameBuffer(depthTarget, TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
         }
 
         CShadowCache::s_intDynShadow = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheInteriorDynamicShadow", 0);
+
+        if (CShaderEffect::s_usePcfFiltering) {
+            CShadowCache::s_intDynFrameBuffer = CreateFrameBuffer(TextureGetGxTex(CShadowCache::s_intDynShadow), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+        } else {
+            CShadowCache::s_intDynFrameBuffer = CreateFrameBuffer(depthTarget, TextureGetGxTex(CShadowCache::s_intDynShadow));
+        }
+
         CShadowCache::s_extDynShadow.m_radius = 20.0f;
 
         if (CShadowCache::s_shadowMode > SHADOW_LOW) {
@@ -1048,8 +1094,20 @@ void CShadowCache::Create() {
                 CShadowBand& band = CShadowCache::s_extShadowBands[i];
                 band.m_textures[0] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowBand0", 0);
 
+                if (CShaderEffect::s_usePcfFiltering) {
+                    CShadowCache::s_bandFrameBuffers[i][0] = CreateFrameBuffer(TextureGetGxTex(band.m_textures[0]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+                } else {
+                    CShadowCache::s_bandFrameBuffers[i][0] = CreateFrameBuffer(depthTarget, TextureGetGxTex(band.m_textures[0]));
+                }
+
                 if (CShadowCache::s_shadowMode < SHADOW_HIGH) {
                     band.m_textures[1] = TextureCreate(GxTex_2d, size, size, 0, depthFormat, depthFormat, depthFlags, NULL, GxTexNullUserFunc, "ShadowCacheShadowBand1", 0);
+
+                    if (CShaderEffect::s_usePcfFiltering) {
+                        CShadowCache::s_bandFrameBuffers[i][1] = CreateFrameBuffer(TextureGetGxTex(band.m_textures[1]), TextureGetGxTex(CShadowCache::s_extDynShadow.m_textures[0]));
+                    } else {
+                        CShadowCache::s_bandFrameBuffers[i][1] = CreateFrameBuffer(depthTarget, TextureGetGxTex(band.m_textures[1]));
+                    }
                 }
 
                 band.m_radius = CShadowCache::s_bandRadius[i];
@@ -1058,19 +1116,23 @@ void CShadowCache::Create() {
         }
     }
 
+    CShadowCache::s_fullClear = 1;
     CShadowCache::ClearBandTextures();
     g_theGxDevicePtr->AddTextureRecreationCallback(CShadowCache::NotifyTexturesRecreate);
 
     CShadowCache::s_cutoffPlaneDefault.w = 0.0f;
     CShadowCache::s_cutoffPlane.w = 0.0f;
-    CShadowCache::s_fullUpdate = 0;
-    CShadowCache::s_fullClear = 0;
     CShadowCache::s_cutoffPlaneDefault.x = 0.0f;
     CShadowCache::s_cutoffPlaneDefault.y = 0.0f;
     CShadowCache::s_cutoffPlaneDefault.z = 0.0f;
     CShadowCache::s_cutoffPlane.x = 0.0f;
     CShadowCache::s_cutoffPlane.y = 0.0f;
     CShadowCache::s_cutoffPlane.z = 0.0f;
+    CShadowCache::s_fullUpdate = 0;
+    CShadowCache::s_fullClear = 0;
+
+    CShadowCache::s_shadowMapVertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "ShadowMap");
+    CShadowCache::s_shadowMapPixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "ShadowMapSL");
 }
 
 // OFFSET: %0x00442750
@@ -1080,7 +1142,8 @@ int32_t CShadowCache::Init() {
     return 1;
 }
 
-// OFFSET: %0x00442730
+// PROVEN: c464dcd8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00438610/0x1400425F0
 void CShadowCache::CreateResources() {
     if (!CShadowCache::s_recreateTextures) {
         return;

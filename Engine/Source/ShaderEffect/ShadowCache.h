@@ -10,6 +10,7 @@
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 
+class CGxFrameBuffer;
 class CGxShader;
 class CGxTex;
 class CTexture;
@@ -18,7 +19,7 @@ struct CShadowCacheQueryData;
 typedef void (*ShadowMatrixCallback)(C3Vector& center, float radius, C44Matrix& matrix, C3Vector& direction, int32_t band);
 typedef void (*ShadowFrustumCallback)(CFrustum& frustum, C44Matrix& matrix, const C3Vector& direction, CShadowCacheQueryData& data, int32_t band);
 typedef int32_t (*ShadowQueryCallback)(CShadowCacheQueryData& data, uint32_t frame);
-typedef int32_t (*ShadowRenderCallback)(CShadowCacheQueryData& data, int32_t band, CGxTex* target, CGxTex* colorTarget, C3Vector& direction);
+typedef int32_t (*ShadowRenderCallback)(CShadowCacheQueryData& data, int32_t band, CGxFrameBuffer* frameBuffer, C3Vector& direction);
 
 struct CShadowBand {
     /* 0000 */ CTexture* m_textures[2];
@@ -57,12 +58,15 @@ struct CShadowCacheQueryData {
 
 class CShadowCache {
     public:
+    static CGxFrameBuffer* s_bandFrameBuffers[3][2];
     static const float s_bandRadius[3];
     static const float s_bandUpdateDistance[3];
     static C4Vector s_cutoffPlane;
     static C4Vector s_cutoffPlaneDefault;
     static float s_debugAspect;
     static int32_t s_debugLevel;
+    static CTexture* s_depthBuffer;
+    static CGxFrameBuffer* s_extDynFrameBuffer;
     static CShadowBand s_extDynShadow;
     static float s_extDynShadowCullRect[4];
     static CShadowBand s_extShadowBands[3];
@@ -73,6 +77,7 @@ class CShadowCache {
     static int32_t s_fullClear;
     static int32_t s_fullUpdate;
     static CTexture* s_intDynShadow;
+    static CGxFrameBuffer* s_intDynFrameBuffer;
     static ShadowMatrixCallback s_matrixCallback;
     static C4Vector s_pcfOffsets[8];
     static ShadowQueryCallback s_queryCallback;
