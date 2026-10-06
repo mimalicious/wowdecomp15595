@@ -193,7 +193,7 @@ void CBackdropGenerator::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: 0x00510B00
+// OFFSET: 0x00510B00/0x14015A660
 void CBackdropGenerator::Generate(const CRect* rect) {
     if (!rect) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

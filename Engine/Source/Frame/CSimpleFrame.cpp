@@ -21,6 +21,7 @@
 #include "Engine/Source/Frame/CSimpleTexture.h"
 #include "Engine/Source/Frame/CSimpleTitleRegion.h"
 #include "Engine/Source/Frame/CSimpleTop.h"
+#include "Engine/Source/Frame/SimpleFrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameXML/BinaryXML.h"
 #include "Engine/Source/FrameXML/FrameXML.h"
@@ -2080,25 +2081,29 @@ void CSimpleFrame::LoadXML(linkObject* node, CStatus* status) {
             } else {
                 FrameScript_GetContext();
 
-                const char* savedTaint = lua_tainted;
+                if (s_createFrameTaint && !ref.m_taint && !CSimpleTop::s_instance->m_allowProtectedActions) {
+                    this->LoadXML(ref.m_node, status);
+                } else {
+                    const char* savedTaint = lua_tainted;
 
-                if (++lua_taintexpected && !lua_taintedclosure) {
-                    lua_tainted = ref.m_taint;
-                }
+                    if (++lua_taintexpected && !lua_taintedclosure) {
+                        lua_tainted = ref.m_taint;
+                    }
 
-                const char* savedTag = lua_gctag;
-                lua_gctag = ref.m_taint;
+                    const char* savedTag = lua_gctag;
+                    lua_gctag = ref.m_taint;
 
-                this->LoadXML(ref.m_node, status);
+                    this->LoadXML(ref.m_node, status);
 
-                lua_gctag = savedTag;
+                    lua_gctag = savedTag;
 
-                if (lua_taintexpected && !lua_taintedclosure) {
-                    lua_tainted = savedTaint;
-                }
+                    if (lua_taintexpected && !lua_taintedclosure) {
+                        lua_tainted = savedTaint;
+                    }
 
-                if (--lua_taintexpected <= 0) {
-                    lua_taintexpected = 0;
+                    if (--lua_taintexpected <= 0) {
+                        lua_taintexpected = 0;
+                    }
                 }
             }
         } while (name[0]);

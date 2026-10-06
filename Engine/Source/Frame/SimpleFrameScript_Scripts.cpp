@@ -169,7 +169,10 @@ static int32_t Script_GetNumFrames(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A5BE0
+// STATIC: 0x00DD3918
+const char* s_createFrameTaint;
+
+// OFFSET: 0x0083FB40/0x14056B7C0
 static int32_t Script_CreateFrame(lua_State* L) {
     if (!lua_isstring(L, 1) || (lua_type(L, 3) != LUA_TNONE && lua_type(L, 3) != LUA_TNIL && lua_type(L, 3) != LUA_TTABLE)) {
         luaL_error(L, "Usage: CreateFrame(\"frameType\" [, \"name\"] [, parent] [, \"template\"] [, id])");
@@ -180,6 +183,8 @@ static int32_t Script_CreateFrame(lua_State* L) {
     const char* frameType = lua_tolstring(L, 1, NULL);
     const char* name = lua_tolstring(L, 2, NULL);
     const char* inherits = lua_tolstring(L, 4, NULL);
+    const char* savedTaint = s_createFrameTaint;
+    s_createFrameTaint = lua_tainted;
 
     if (lua_type(L, 3) == LUA_TTABLE) {
         lua_rawgeti(L, 3, 0);
@@ -188,11 +193,13 @@ static int32_t Script_CreateFrame(lua_State* L) {
 
         if (!parent) {
             luaL_error(L, "CreateFrame: Couldn't find 'this' in parent object");
+            s_createFrameTaint = savedTaint;
             return 0;
         }
 
         if (!parent->IsA(CSimpleFrame::GetObjectType())) {
             luaL_error(L, "CreateFrame: Wrong parent object type, expected frame");
+            s_createFrameTaint = savedTaint;
             return 0;
         }
     }
@@ -213,11 +220,13 @@ static int32_t Script_CreateFrame(lua_State* L) {
 
             if (!ref.Acquire(inheritName)) {
                 luaL_error(L, "CreateFrame(): Couldn't find inherited node \"%s\"", inheritName);
+                s_createFrameTaint = savedTaint;
                 return 0;
             }
 
             if (ref.m_locked) {
                 luaL_error(L, "CreateFrame(): Recursively inherited node \"%s\"", inheritName);
+                s_createFrameTaint = savedTaint;
                 return 0;
             }
         } while (inheritName[0]);
@@ -261,12 +270,13 @@ static int32_t Script_CreateFrame(lua_State* L) {
 
     if (!frame) {
         luaL_error(L, "CreateFrame: Unknown frame type '%s'", frameType);
+        s_createFrameTaint = savedTaint;
         return 0;
     }
 
     if (!frame->ProtectedFunctionsAllowed()) {
-        delete frame;
         luaL_error(L, "CreateFrame: Can't create '%s' now", frameType);
+        s_createFrameTaint = savedTaint;
         return 0;
     }
 
@@ -275,6 +285,7 @@ static int32_t Script_CreateFrame(lua_State* L) {
     }
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, frame->m_luaObjectRef);
+    s_createFrameTaint = savedTaint;
     return 1;
 }
 

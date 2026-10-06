@@ -2879,7 +2879,7 @@ void CSimpleEmbeddedTexture::InitEmbeddedTexture(CSimpleFontString* string, cons
     }
 }
 
-// OFFSET: 0x004FD7B0
+// OFFSET: 0x004FD7B0/0x140142120
 void CSimpleTexture::LoadXML(linkObject* node, CStatus* status) {
     if (node->m_flags & 0x2000000) {
         XMLHashNodeRef ref;
