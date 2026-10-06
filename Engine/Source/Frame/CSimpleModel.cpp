@@ -383,7 +383,7 @@ void CSimpleModel::UpdateModel() {
     this->m_model->SetWorldTransform(position, this->m_facing, this->m_modelScale * this->m_layoutScale * height);
 }
 
-// OFFSET: %0x0052F5E0
+// OFFSET: 0x0051F690
 void CSimpleModel::RenderModel(void* arg) {
     CSimpleModel* simpleModel = static_cast<CSimpleModel*>(arg);
 
@@ -434,14 +434,19 @@ void CSimpleModel::RenderModel(void* arg) {
     rect.minY = rect.minY >= 1.0f ? 1.0f : (rect.minY <= 0.0f ? 0.0f : rect.minY);
     rect.maxY = rect.maxY >= 1.0f ? 1.0f : (rect.maxY <= 0.0f ? 0.0f : rect.maxY);
 
-    if (fabs(rect.minX - rect.maxX) < 0.00000023841858f || fabs(rect.minY - rect.maxY) < 0.00000023841858f) {
+    rect.minX *= maxX;
+    rect.maxX *= maxX;
+    rect.minY *= maxY;
+    rect.maxY *= maxY;
+
+    if (!GxXformIsValidViewport(rect.minX, rect.maxX, rect.minY, rect.maxY, 0.0f, 1.0f)) {
         g_theGxDevicePtr->XformSetProjection(projection);
         g_theGxDevicePtr->XformSetView(view);
         GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
         return;
     }
 
-    GxXformSetViewport(rect.minX * maxX, rect.maxX * maxX, rect.minY * maxY, rect.maxY * maxY, 0.0f, 1.0f);
+    GxXformSetViewport(rect.minX, rect.maxX, rect.minY, rect.maxY, 0.0f, 1.0f);
 
     CImVector clearColor(0x00, 0x00, 0x00, 0xFF);
     GxSceneClear(0x10, clearColor);
@@ -449,19 +454,22 @@ void CSimpleModel::RenderModel(void* arg) {
     CShaderEffect::UpdateProjMatrix();
     simpleModel->UpdateModel();
 
+    CM2Scene* scene = simpleModel->GetScene();
+
     if (simpleModel->m_pendingCameraIndex == 0xFFFFFFFF) {
-        simpleModel->GetScene()->Animate(cameraPos);
-        simpleModel->GetScene()->BeginDraw();
-        simpleModel->GetScene()->Draw(M2PASS_0);
-        simpleModel->GetScene()->Draw(M2PASS_1);
-        simpleModel->GetScene()->Draw(M2PASS_2);
-        simpleModel->GetScene()->EndDraw();
+        scene->Animate(cameraPos);
+        scene->BeginDraw();
+        scene->Draw(M2PASS_0);
+        scene->Draw(M2PASS_1);
+        scene->Draw(M2PASS_2);
+        scene->EndDraw();
     }
 
     g_theGxDevicePtr->XformSetProjection(projection);
     g_theGxDevicePtr->XformSetView(view);
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
     CShaderEffect::UpdateProjMatrix();
+    scene->GarbageCollectModels();
 }
 
 // OFFSET: %0x0052FA90

@@ -2879,7 +2879,7 @@ void CSimpleEmbeddedTexture::InitEmbeddedTexture(CSimpleFontString* string, cons
     }
 }
 
-// OFFSET: %0x0050DAA0
+// OFFSET: 0x004FD7B0
 void CSimpleTexture::LoadXML(linkObject* node, CStatus* status) {
     if (node->m_flags & 0x2000000) {
         XMLHashNodeRef ref;
@@ -2934,7 +2934,13 @@ void CSimpleTexture::LoadXML(linkObject* node, CStatus* status) {
         switch (child->m_element) {
             case XML_COLOR:
                 LoadXML_Color(child, color, status);
-                this->SetTexture(color);
+
+                if ((node->m_flags & 0x2000000) && this->m_texture && *this->m_texture->GetObjectName()) {
+                    this->SetVertexColor(color);
+                } else if (!(texture->m_textureFlags & 0x2)) {
+                    this->SetTexture(color);
+                }
+
                 break;
 
             case XML_GRADIENT: {
