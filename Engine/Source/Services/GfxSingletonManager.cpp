@@ -9,13 +9,13 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRandom.h"
 
-// STATIC: %0x00C2B6B8
+// STATIC: 0x00D27C88
 static float s_scaler = 1.0f;
 
-// STATIC: %0x00ECE0DC
+// STATIC: 0x01008B38
 ParticleSystemManager* ParticleSystemManager::s_instance;
 
-// STATIC: %0x00ECE0E0
+// STATIC: 0x01008B3C
 RibbonManager* RibbonManager::s_instance;
 
 // PROVEN: 9a00f6d5 IDENTICAL/NONE
@@ -36,25 +36,13 @@ void ParticleSystemManager::SetScaler(float scaler) {
     }
 }
 
-// OFFSET: %0x00A58D50
+// OFFSET: 0x00B13C10
 void ParticleSystemManager::Flush() {
-    for (uint32_t i = this->m_emitters.Count(); i; i--) {
-        this->m_emitters[i - 1]->DecRef();
-    }
-
-    this->m_emitters.m_count = 0;
-
     for (uint32_t i = this->m_emitters2.Count(); i; i--) {
         this->m_emitters2[i - 1]->DecRef();
     }
 
     this->m_emitters2.m_count = 0;
-
-    for (uint32_t i = this->m_pendingEmitters.Count(); i; i--) {
-        this->m_pendingEmitters[i - 1]->DecRef();
-    }
-
-    this->m_pendingEmitters.m_count = 0;
 
     for (uint32_t i = this->m_pendingEmitters2.Count(); i; i--) {
         this->m_pendingEmitters2[i - 1]->DecRef();
@@ -63,7 +51,7 @@ void ParticleSystemManager::Flush() {
     this->m_pendingEmitters2.m_count = 0;
 }
 
-// OFFSET: %0x00A58DE0
+// OFFSET: 0x00B13C60
 CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitter2* emitter, int32_t copyParticles) {
     if (!emitter) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -77,7 +65,7 @@ CParticleEmitter2* ParticleSystemManager::DuplicateEmitter(const CParticleEmitte
     return duplicate;
 }
 
-// OFFSET: %0x00A58E30
+// OFFSET: 0x00B13CB0
 void RibbonManager::Flush() {
     for (uint32_t i = this->m_emitters.Count(); i; i--) {
         this->m_emitters[i - 1]->DecRef();
@@ -92,7 +80,7 @@ void RibbonManager::Flush() {
     this->m_pendingEmitters.m_count = 0;
 }
 
-// OFFSET: %0x00A58E80
+// OFFSET: 0x00B13D00
 ParticleSystemManager* ParticleSystemManager::GetInstance() {
     if (ParticleSystemManager::s_instance) {
         return ParticleSystemManager::s_instance;
@@ -112,12 +100,12 @@ ParticleSystemManager* ParticleSystemManager::GetInstance() {
     return ParticleSystemManager::s_instance;
 }
 
-// OFFSET: %0x00A58F50
+// OFFSET: 0x00B13DC0
 ParticleSystemManager::~ParticleSystemManager() {
     this->Flush();
 }
 
-// OFFSET: %0x00A59050
+// OFFSET: 0x00B13EA0
 void ParticleSystemManager::Destroy() {
     if (ParticleSystemManager::s_instance) {
         CParticleEmitter2::Destroy();
@@ -127,13 +115,13 @@ void ParticleSystemManager::Destroy() {
     ParticleSystemManager::s_instance = NULL;
 }
 
-// OFFSET: %0x00A59090
+// OFFSET: 0x00B13ED0
 void RibbonManager::Destroy() {
     delete RibbonManager::s_instance;
     RibbonManager::s_instance = NULL;
 }
 
-// OFFSET: %0x00A58FE0
+// OFFSET: 0x00B13E30
 RibbonManager::~RibbonManager() {
     this->Flush();
 }

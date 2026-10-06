@@ -21,10 +21,8 @@ class ParticleSystemManager {
     static float GetScaler();
     static void SetScaler(float scaler);
 
-    /* 0000 */ TSGrowableArray<CParticleEmitter*> m_emitters;
-    /* 0010 */ TSGrowableArray<CParticleEmitter2*> m_emitters2;
-    /* 0020 */ TSGrowableArray<CParticleEmitter*> m_pendingEmitters;
-    /* 0030 */ TSGrowableArray<CParticleEmitter2*> m_pendingEmitters2;
+    /* 0000 */ TSGrowableArray<CParticleEmitter2*> m_emitters2;
+    /* 0010 */ TSGrowableArray<CParticleEmitter2*> m_pendingEmitters2;
 
     ~ParticleSystemManager();
     CParticleEmitter2* DuplicateEmitter(const CParticleEmitter2* emitter, int32_t copyParticles);

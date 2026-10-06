@@ -222,7 +222,7 @@ void AsyncTextureFailureCallback(CAsyncObject* object) {
 }
 
 // OFFSET: 0x00540AB0
-SFileImpl* TextureCreateOpenFile(const char* fileName, int32_t flags) {
+SFileImpl* TextureCreateOpenFile(const char* debugName, const char* fileName, int32_t flags) {
     SFileImpl* file = NULL;
     SErrSetLastError(0);
 
@@ -696,7 +696,7 @@ void RequestImageDimensions(uint32_t* width, uint32_t* height, uint32_t* bestMip
 
 // OFFSET: 0x00541230
 static void* TextureLoadFile(const char* fileName, int32_t flags, uint32_t* size) {
-    SFileImpl* file = TextureCreateOpenFile(fileName, flags);
+    SFileImpl* file = TextureCreateOpenFile(NULL, fileName, flags);
 
     if (!file) {
         return NULL;

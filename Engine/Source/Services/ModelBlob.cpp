@@ -143,7 +143,7 @@ int32_t ModelBlobLoad(const char* fileName) {
         s_modelBlob = NULL;
     }
 
-    s_modelBlob = new CModelBlob(fileName);
+    s_modelBlob = new (__FILE__, __LINE__) CModelBlob(fileName);
 
     if (s_modelBlob->m_data) {
         return 1;

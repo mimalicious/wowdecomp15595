@@ -294,7 +294,7 @@ int32_t CTextureBlob::Load(const char* fileName) {
         return 1;
     }
 
-    SFileImpl* file = TextureCreateOpenFile(fileName, 0);
+    SFileImpl* file = TextureCreateOpenFile(NULL, fileName, 0);
 
     if (!file) {
         return 0;
