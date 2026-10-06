@@ -742,7 +742,11 @@ int32_t CGxString::SetGradient(int32_t start, int32_t length) {
     uint8_t alpha = this->m_fontColor.a;
     int32_t first = 4 * start;
     int32_t count = this->m_gradientInfo.m_count;
-    uint8_t fade = static_cast<uint8_t>(alpha / static_cast<float>(length));
+    uint8_t fade = alpha;
+
+    if (length) {
+        fade = alpha / length;
+    }
 
     for (int32_t i = 0; i < count; i++) {
         if (i < first) {

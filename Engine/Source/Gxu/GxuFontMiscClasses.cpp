@@ -277,7 +277,7 @@ CGxVertexPCT* BATCHEDRENDERFONTDESC::UnlockVertexPtrAndRender(CGxBuf*& buf, int3
     return reinterpret_cast<CGxVertexPCT*>(GxBufLock(buf));
 }
 
-// OFFSET: %0x00631420
+// OFFSET: 0x00620E90
 void BATCHEDRENDERFONTDESC::RenderBatch() {
     if (!BATCHEDRENDERFONTDESC::s_indexPool) {
         return;

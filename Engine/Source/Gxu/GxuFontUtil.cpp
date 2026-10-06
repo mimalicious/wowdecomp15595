@@ -23,7 +23,11 @@ static int32_t CanWrapBetween(uint32_t previous, uint32_t next) {
         return 0;
     }
 
-    if (previous == '-' || previous == ';' || previous == '/' || next == '|' || next == 0xFFFFFFFF) {
+    if (previous == '-') {
+        return next != ',';
+    }
+
+    if (previous == ';' || previous == '/' || next == '|' || next == 0xFFFFFFFF) {
         return 1;
     }
 

@@ -295,7 +295,7 @@ float CGxFont::ComputeStepFixedWidth(uint32_t code, uint32_t nextCode) {
     uint32_t advance = static_cast<uint32_t>(this->GetGlyphAdvance(code));
 
     if (advance >= this->m_cellHeight) {
-        return this->m_cellHeight;
+        return static_cast<float>(static_cast<double>(this->m_cellHeight) * 0.75);
     }
 
     uint32_t padding = this->m_cellHeight - advance;
@@ -309,7 +309,7 @@ float CGxFont::ComputeStepFixedWidth(uint32_t code, uint32_t nextCode) {
     uint32_t nextAdvance = static_cast<uint32_t>(this->GetGlyphAdvance(nextCode));
 
     if (nextAdvance >= this->m_cellHeight) {
-        return step;
+        return static_cast<float>(static_cast<double>(step) * 0.75);
     }
 
     uint32_t nextPadding = this->m_cellHeight - nextAdvance;
@@ -318,7 +318,7 @@ float CGxFont::ComputeStepFixedWidth(uint32_t code, uint32_t nextCode) {
         nextPadding--;
     }
 
-    return step + nextPadding / 2;
+    return static_cast<float>(static_cast<double>(step + nextPadding / 2) * 0.75);
 }
 
 // OFFSET: %0x0062DFA0
