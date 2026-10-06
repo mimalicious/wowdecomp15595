@@ -67,7 +67,7 @@ int32_t s_streamIndexPoolSize = 0x40000;
 // STATIC: #0x00AD8BB4
 C3Vector CGxDevice::s_pointScaleAttenuation(1.0f, 0.0f, 0.0f);
 
-// STATIC: #0x00AD8C80
+// STATIC: 0x00D09028
 static const char* s_formatNames[CGxFormat::Formats_Last] = { "Rgb565", "ArgbX888", "Argb8888", "Argb2101010", "Ds160", "Ds24X", "Ds248", "Ds320" };
 
 // STATIC: %0x00C0E360
@@ -1659,6 +1659,8 @@ void CGxDevice::Log(const char* format, ...) {
 // OFFSET: %0x007A82C0
 void CGxDevice::Log(const CGxCaps& caps) const {
     CGxDevice::Log("Caps:");
+    CGxDevice::Log("\tVendor ID: %x", caps.m_vendorId);
+    CGxDevice::Log("\tDevice ID: %x", caps.m_deviceId);
     CGxDevice::Log("\tnumTmus: %d", caps.m_numTmus);
     CGxDevice::Log("\ttexFilterAnisotropic: %d, %d", caps.m_texFilterTrilinear, caps.m_maxTexAnisotropy);
     CGxDevice::Log("\trttFormat: %d, %d", caps.m_rttFormat[GxTex_Argb8888], caps.m_rttFormat[GxTex_Rgb565]);
@@ -1695,7 +1697,7 @@ void CGxDevice::Log(const CGxFormat& format) const {
     if (format.m_window) {
         CGxDevice::Log("\tFormat: %d x %d Window, %s, multisample %d", format.m_size.x, format.m_size.y, s_formatNames[format.m_depthFormat], format.m_multisampleCount);
     } else {
-        CGxDevice::Log("\tFormat %d x %d @ %d Fullscreen, %s, %s, multisample %d", format.m_size.x, format.m_size.y, format.m_refreshRate / format.m_refreshRateDenom, s_formatNames[format.m_colorFormat], s_formatNames[format.m_depthFormat], format.m_multisampleCount);
+        CGxDevice::Log("\tFormat %d x %d @ %.1f Fullscreen, %s, %s, multisample %d", format.m_size.x, format.m_size.y, static_cast<double>(static_cast<float>(format.m_refreshRate) / static_cast<float>(format.m_refreshRateDenom)), s_formatNames[format.m_colorFormat], s_formatNames[format.m_depthFormat], format.m_multisampleCount);
     }
 }
 
@@ -2352,7 +2354,10 @@ bool CGxDevice::ShaderReload(CGxShader* shader, const char* name) {
 // OFFSET: %0x007AECC0
 void CGxDevice::ShaderReloadAll() {
     for (uint32_t target = 0; target < GxShTargets_Last; target++) {
-        for (CGxShader* shader = CGxDevice::s_shaderList[target].Head(); shader; shader = CGxDevice::s_shaderList[target].Next(shader)) {
+        CGxShader* next;
+
+        for (CGxShader* shader = CGxDevice::s_shaderList[target].Head(); shader; shader = next) {
+            next = CGxDevice::s_shaderList[target].Next(shader);
             this->ShaderReload(shader, shader->m_key.m_str);
         }
     }

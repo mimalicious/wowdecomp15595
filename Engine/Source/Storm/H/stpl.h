@@ -329,7 +329,7 @@ int32_t TSLink<T>::IsLinked() {
 // INLINED
 template <class T>
 T* TSLink<T>::Next() {
-    return (reinterpret_cast<uintptr_t>(this->m_next) & 1) ? NULL : this->m_next;
+    return (reinterpret_cast<uintptr_t>(this->m_next) & 1) || !this->m_next ? NULL : this->m_next;
 }
 
 // OFFSET: [%0x0046A3F0<BFSNODE>]

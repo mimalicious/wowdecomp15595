@@ -762,7 +762,11 @@ void CGxDeviceOpenGl::IReleaseShaders(int32_t freeShaders) {
     }
 
     for (uint32_t target = 0; target < GxShTargets_Last; target++) {
-        for (CGxShader* shader = CGxDevice::s_shaderList[target].Head(); shader; shader = CGxDevice::s_shaderList[target].Next(shader)) {
+        CGxShader* next;
+
+        for (CGxShader* shader = CGxDevice::s_shaderList[target].Head(); shader; shader = next) {
+            next = CGxDevice::s_shaderList[target].Next(shader);
+
             for (uint32_t i = 0; i < shader->m_permutes.Count(); i++) {
                 this->IShaderDestroy(&shader->m_permutes[i]);
             }
