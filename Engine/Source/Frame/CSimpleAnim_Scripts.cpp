@@ -381,12 +381,14 @@ static int32_t Script_HookScript(lua_State* L) {
 
 // OFFSET: %0x0054C5B0
 void CSimpleAnim::CreateScriptMetaTable() {
-    CSimpleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleAnim::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleAnim::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B580
 void CSimpleAnim::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleAnim::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleAnim::s_metatable);
     CSimpleAnim::s_metatable = LUA_NOREF;
 }
 

@@ -13,12 +13,14 @@
 
 // OFFSET: %0x0053E5F0
 void CSimpleFontString::CreateScriptMetaTable() {
-    CSimpleFontString::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleFontString::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleFontString::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFontString::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0053C190
 void CSimpleFontString::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleFontString::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFontString::s_metatable);
     CSimpleFontString::s_metatable = LUA_NOREF;
 }
 

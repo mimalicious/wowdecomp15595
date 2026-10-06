@@ -32,13 +32,14 @@ class CSimpleStatusBar : public CSimpleFrame {
     /* 01F0 */ uint32_t m_rangeSet : 1;
     /* 01F0 */ uint32_t m_valueSet : 1;
     /* 01F0 */ uint32_t m_rotatesTexture : 1;
+    /* 01F0 */ uint32_t m_reverseFill : 1;
+    /* 01F0 */ uint32_t m_orientation : 1;
     /* 01F4 */ float m_minValue;
     /* 01F8 */ float m_maxValue;
     /* 01FC */ float m_value;
     /* 0200 */ CSimpleTexture* m_barTexture;
-    /* 0204 */ ORIENTATION m_orientation;
-    /* 0208 */ FrameScript_Object::ScriptIx m_onValueChanged;
-    /* 0209 */ FrameScript_Object::ScriptIx m_onMinMaxChanged;
+    /* 0204 */ FrameScript_Object::ScriptIx m_onValueChanged;
+    /* 0205 */ FrameScript_Object::ScriptIx m_onMinMaxChanged;
 
     virtual ~CSimpleStatusBar();
     virtual int32_t GetScriptMetaTable();
@@ -62,6 +63,7 @@ class CSimpleStatusBar : public CSimpleFrame {
     int32_t SetBarTexture(const char* fileName, uint32_t drawLayer, int8_t subLevel);
     void SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer, int8_t subLevel);
     void SetMinMaxValues(float minValue, float maxValue);
+    void SetReverseFill(int32_t reverse);
     void SetOrientation(ORIENTATION orientation);
     void SetRotatesTexture(int32_t rotates);
 };

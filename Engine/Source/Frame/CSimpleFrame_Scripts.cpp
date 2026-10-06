@@ -1807,12 +1807,14 @@ static int32_t Script_GetPropagateKeyboardInput(lua_State* L) {
 
 // OFFSET: %0x0051E9D0
 void CSimpleFrame::CreateScriptMetaTable() {
-    CSimpleFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFrame::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0051B080
 void CSimpleFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFrame::s_metatable);
     CSimpleFrame::s_metatable = LUA_NOREF;
 }
 

@@ -9,12 +9,14 @@
 
 // INLINED
 void CSimpleMovieFrame::CreateScriptMetaTable() {
-    CSimpleMovieFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleMovieFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleMovieFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleMovieFrame::RegisterScriptMethods);
 }
 
 // INLINED
 void CSimpleMovieFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleMovieFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleMovieFrame::s_metatable);
     CSimpleMovieFrame::s_metatable = LUA_NOREF;
 }
 

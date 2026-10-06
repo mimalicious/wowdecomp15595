@@ -11,12 +11,14 @@
 
 // OFFSET: %0x00541160
 void CSimpleStatusBar::CreateScriptMetaTable() {
-    CSimpleStatusBar::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleStatusBar::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleStatusBar::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleStatusBar::RegisterScriptMethods);
 }
 
 // OFFSET: %0x00540960
 void CSimpleStatusBar::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleStatusBar::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleStatusBar::s_metatable);
     CSimpleStatusBar::s_metatable = LUA_NOREF;
 }
 
@@ -33,7 +35,7 @@ void CSimpleStatusBar::GetStatusBarColor(CImVector& color) {
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
-    lua_pushstring(L, OrientationToString(statusBar->m_orientation));
+    lua_pushstring(L, OrientationToString(static_cast<ORIENTATION>(statusBar->m_orientation)));
     return 1;
 }
 
@@ -229,6 +231,27 @@ static int32_t Script_SetRotatesTexture(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x005311C0
+static int32_t Script_GetReverseFill(lua_State* L) {
+    CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
+
+    if (statusBar->m_reverseFill) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00531220
+static int32_t Script_SetReverseFill(lua_State* L) {
+    CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
+
+    statusBar->SetReverseFill(StringToBOOL(L, 2, 0));
+    return 0;
+}
+
 // STATIC: %0x00BB8FB8
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetOrientation", &Script_GetOrientation },
@@ -243,6 +266,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetStatusBarColor", &Script_SetStatusBarColor },
     { "GetRotatesTexture", &Script_GetRotatesTexture },
     { "SetRotatesTexture", &Script_SetRotatesTexture },
+    { "GetReverseFill", &Script_GetReverseFill },
+    { "SetReverseFill", &Script_SetReverseFill },
 };
 
 // OFFSET: %0x00540940

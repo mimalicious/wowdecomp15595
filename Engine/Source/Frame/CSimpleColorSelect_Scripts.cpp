@@ -12,12 +12,14 @@
 
 // OFFSET: %0x0054B320
 void CSimpleColorSelect::CreateScriptMetaTable() {
-    CSimpleColorSelect::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleColorSelect::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleColorSelect::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleColorSelect::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054A9C0
 void CSimpleColorSelect::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleColorSelect::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleColorSelect::s_metatable);
     CSimpleColorSelect::s_metatable = LUA_NOREF;
 }
 

@@ -15,11 +15,13 @@ void CSimpleTitleRegion::RegisterScriptMethods(lua_State* L) {
 
 // OFFSET: %0x0051B3C0
 void CSimpleTitleRegion::CreateScriptMetaTable() {
-    CSimpleTitleRegion::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleTitleRegion::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleTitleRegion::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTitleRegion::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0051B030
 void CSimpleTitleRegion::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleTitleRegion::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTitleRegion::s_metatable);
     CSimpleTitleRegion::s_metatable = LUA_NOREF;
 }

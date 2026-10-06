@@ -14,13 +14,15 @@
 
 // OFFSET: #0x00597CE0
 void CGDressUpModelFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGDressUpModelFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGDressUpModelFrame::s_metatable);
     CGDressUpModelFrame::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x00597F20
 void CGDressUpModelFrame::CreateScriptMetaTable() {
-    CGDressUpModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGDressUpModelFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGDressUpModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGDressUpModelFrame::RegisterScriptMethods);
 }
 
 // OFFSET: #0x00597E90

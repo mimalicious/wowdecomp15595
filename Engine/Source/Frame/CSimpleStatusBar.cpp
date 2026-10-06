@@ -130,10 +130,16 @@ void CSimpleStatusBar::SetBarTexture(CSimpleTexture* texture, uint32_t drawLayer
     this->m_barTexture = texture;
 }
 
-// OFFSET: %0x0051F4A0
+// OFFSET: 0x0050F0E0
 void CSimpleStatusBar::SetOrientation(ORIENTATION orientation) {
-    this->m_changed = 1;
     this->m_orientation = orientation;
+    this->m_changed = 1;
+}
+
+// OFFSET: 0x0050F110
+void CSimpleStatusBar::SetReverseFill(int32_t reverse) {
+    this->m_reverseFill = reverse;
+    this->m_changed = 1;
 }
 
 // PROVEN: 9af81927 DIFFERENT/IDENTICAL
@@ -228,11 +234,12 @@ CSimpleStatusBar::CSimpleStatusBar(CSimpleFrame* parent) : CSimpleFrame(parent) 
     this->m_rangeSet = 0;
     this->m_valueSet = 0;
     this->m_rotatesTexture = 0;
+    this->m_reverseFill = 0;
+    this->m_orientation = ORIENTATION_HORIZONTAL;
     this->m_minValue = 0.0f;
     this->m_maxValue = 0.0f;
     this->m_barTexture = NULL;
     this->m_value = 0.0f;
-    this->m_orientation = ORIENTATION_HORIZONTAL;
 }
 
 // OFFSET: %0x0051F740

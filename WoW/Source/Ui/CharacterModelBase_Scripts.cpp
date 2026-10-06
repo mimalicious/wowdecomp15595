@@ -10,13 +10,15 @@
 
 // OFFSET: #0x00597250
 void CGCharacterModelBase::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGCharacterModelBase::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGCharacterModelBase::s_metatable);
     CGCharacterModelBase::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x00597A80
 void CGCharacterModelBase::CreateScriptMetaTable() {
-    CGCharacterModelBase::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGCharacterModelBase::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGCharacterModelBase::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCharacterModelBase::RegisterScriptMethods);
 }
 
 // OFFSET: #0x00597960

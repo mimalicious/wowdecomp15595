@@ -17,13 +17,15 @@
 
 // OFFSET: #0x00599000
 void CGTabardModelFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGTabardModelFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGTabardModelFrame::s_metatable);
     CGTabardModelFrame::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x00599390
 void CGTabardModelFrame::CreateScriptMetaTable() {
-    CGTabardModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGTabardModelFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGTabardModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTabardModelFrame::RegisterScriptMethods);
 }
 
 // OFFSET: #0x00598FA0

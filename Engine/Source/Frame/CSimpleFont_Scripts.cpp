@@ -372,12 +372,14 @@ int32_t CSimpleFont_SetIndentedWordWrap(const char* name, CSimpleFont* font, lua
 
 // OFFSET: %0x00543BC0
 void CSimpleFont::CreateScriptMetaTable() {
-    CSimpleFont::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleFont::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleFont::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleFont::RegisterScriptMethods);
 }
 
 // OFFSET: %0x005429F0
 void CSimpleFont::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleFont::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleFont::s_metatable);
     CSimpleFont::s_metatable = LUA_NOREF;
 }
 

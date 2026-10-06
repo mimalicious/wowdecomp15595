@@ -52,13 +52,15 @@ static int32_t Script_SetCooldown(lua_State* L) {
 
 // OFFSET: #0x005EBE30
 void CGCooldown::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGCooldown::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGCooldown::s_metatable);
     CGCooldown::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x005ECAC0
 void CGCooldown::CreateScriptMetaTable() {
-    CGCooldown::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGCooldown::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGCooldown::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCooldown::RegisterScriptMethods);
 }
 
 // STATIC: #0x00AD13A4

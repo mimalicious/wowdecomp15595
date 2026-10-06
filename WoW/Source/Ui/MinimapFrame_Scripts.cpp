@@ -41,13 +41,15 @@ int32_t Script_GetPingPosition(lua_State* L);
 
 // OFFSET: #0x0057C060
 void CGMinimapFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGMinimapFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGMinimapFrame::s_metatable);
     CGMinimapFrame::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x0057E340
 void CGMinimapFrame::CreateScriptMetaTable() {
-    CGMinimapFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGMinimapFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGMinimapFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGMinimapFrame::RegisterScriptMethods);
 }
 
 // OFFSET: #0x0057F170

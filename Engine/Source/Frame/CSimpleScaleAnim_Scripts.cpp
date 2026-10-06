@@ -73,12 +73,14 @@ static int32_t Script_GetScale(lua_State* L) {
 
 // OFFSET: %0x0054CD00
 void CSimpleScaleAnim::CreateScriptMetaTable() {
-    CSimpleScaleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleScaleAnim::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleScaleAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleScaleAnim::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B6A0
 void CSimpleScaleAnim::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleScaleAnim::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleScaleAnim::s_metatable);
     CSimpleScaleAnim::s_metatable = LUA_NOREF;
 }
 

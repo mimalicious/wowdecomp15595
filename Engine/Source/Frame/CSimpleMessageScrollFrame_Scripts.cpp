@@ -11,12 +11,14 @@
 
 // OFFSET: %0x00547F40
 void CSimpleMessageScrollFrame::CreateScriptMetaTable() {
-    CSimpleMessageScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleMessageScrollFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleMessageScrollFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleMessageScrollFrame::RegisterScriptMethods);
 }
 
 // OFFSET: %0x005469F0
 void CSimpleMessageScrollFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleMessageScrollFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleMessageScrollFrame::s_metatable);
     CSimpleMessageScrollFrame::s_metatable = LUA_NOREF;
 }
 

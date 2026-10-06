@@ -557,13 +557,15 @@ static int32_t Script_SetMotionScriptsWhileDisabled(lua_State* L) {
 
 // OFFSET: %0x00541210
 void CSimpleButton::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleButton::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleButton::s_metatable);
     CSimpleButton::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: %0x005424F0
 void CSimpleButton::CreateScriptMetaTable() {
-    CSimpleButton::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleButton::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleButton::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleButton::RegisterScriptMethods);
 }
 
 // STATIC: %0x00BB9020

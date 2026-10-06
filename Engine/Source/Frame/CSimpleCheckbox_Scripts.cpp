@@ -148,13 +148,15 @@ static int32_t Script_SetDisabledCheckedTexture(lua_State* L) {
 
 // OFFSET: %0x00542530
 void CSimpleCheckbox::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleCheckbox::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleCheckbox::s_metatable);
     CSimpleCheckbox::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: %0x005429B0
 void CSimpleCheckbox::CreateScriptMetaTable() {
-    CSimpleCheckbox::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleCheckbox::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleCheckbox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleCheckbox::RegisterScriptMethods);
 }
 
 // STATIC: %0x00BB9134

@@ -85,12 +85,14 @@ static int32_t Script_GetRadians(lua_State* L) {
 
 // OFFSET: %0x0054CA70
 void CSimpleRotationAnim::CreateScriptMetaTable() {
-    CSimpleRotationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleRotationAnim::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleRotationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleRotationAnim::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B640
 void CSimpleRotationAnim::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleRotationAnim::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleRotationAnim::s_metatable);
     CSimpleRotationAnim::s_metatable = LUA_NOREF;
 }
 

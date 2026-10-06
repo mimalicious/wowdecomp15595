@@ -18,7 +18,8 @@ int32_t CSimpleModel::s_metatable = LUA_NOREF;
 
 // OFFSET: %0x00547FB0
 void CSimpleModel::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleModel::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleModel::s_metatable);
     CSimpleModel::s_metatable = LUA_NOREF;
 }
 
@@ -499,7 +500,8 @@ static int32_t Script_SetGlow(lua_State* L) {
 
 // OFFSET: %0x005491A0
 void CSimpleModel::CreateScriptMetaTable() {
-    CSimpleModel::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleModel::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleModel::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleModel::RegisterScriptMethods);
 }
 
 // STATIC: %0x00BB9678

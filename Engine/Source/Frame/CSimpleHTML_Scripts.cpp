@@ -243,13 +243,15 @@ static int32_t Script_GetHyperlinksEnabled(lua_State* L) {
 
 // OFFSET: %0x0054A0C0
 void CSimpleHTML::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleHTML::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleHTML::s_metatable);
     CSimpleHTML::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: %0x0054A980
 void CSimpleHTML::CreateScriptMetaTable() {
-    CSimpleHTML::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleHTML::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleHTML::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleHTML::RegisterScriptMethods);
 }
 
 // STATIC: %0x00BB9800

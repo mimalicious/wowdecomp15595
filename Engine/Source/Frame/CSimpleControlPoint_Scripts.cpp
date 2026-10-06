@@ -124,12 +124,14 @@ static int32_t Script_GetOrder(lua_State* L) {
 
 // OFFSET: %0x0054D150
 void CSimpleControlPoint::CreateScriptMetaTable() {
-    CSimpleControlPoint::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleControlPoint::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleControlPoint::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleControlPoint::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B6F0
 void CSimpleControlPoint::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleControlPoint::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleControlPoint::s_metatable);
     CSimpleControlPoint::s_metatable = LUA_NOREF;
 }
 

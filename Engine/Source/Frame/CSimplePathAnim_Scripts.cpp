@@ -140,12 +140,14 @@ static int32_t Script_CreateControlPoint(lua_State* L) {
 
 // OFFSET: %0x0054D2E0
 void CSimplePathAnim::CreateScriptMetaTable() {
-    CSimplePathAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimplePathAnim::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimplePathAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimplePathAnim::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B750
 void CSimplePathAnim::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimplePathAnim::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimplePathAnim::s_metatable);
     CSimplePathAnim::s_metatable = LUA_NOREF;
 }
 

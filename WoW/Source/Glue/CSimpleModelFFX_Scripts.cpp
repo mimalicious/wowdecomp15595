@@ -138,7 +138,8 @@ static int32_t Script_AddPetLight(lua_State* L) {
 
 // OFFSET: #0x004E6F60
 void CSimpleModelFFX::CreateScriptMetaTable() {
-    CSimpleModelFFX::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleModelFFX::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleModelFFX::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleModelFFX::RegisterScriptMethods);
 }
 
 // STATIC: #0x00AC465C

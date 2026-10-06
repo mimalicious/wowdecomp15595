@@ -476,12 +476,14 @@ static int32_t Script_SetTexCoord(lua_State* L) {
 
 // OFFSET: %0x0053D140
 void CSimpleTexture::CreateScriptMetaTable() {
-    CSimpleTexture::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleTexture::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleTexture::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTexture::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0053C110
 void CSimpleTexture::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleTexture::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTexture::s_metatable);
     CSimpleTexture::s_metatable = LUA_NOREF;
 }
 

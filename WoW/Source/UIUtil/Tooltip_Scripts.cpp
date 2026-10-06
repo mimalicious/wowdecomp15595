@@ -212,13 +212,15 @@ static int32_t Script_IsEquippedItem(lua_State* L) {
 
 // OFFSET: #0x0061B4C0
 void CGTooltip::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGTooltip::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGTooltip::s_metatable);
     CGTooltip::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: #0x0061DBA0
 void CGTooltip::CreateScriptMetaTable() {
-    CGTooltip::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGTooltip::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGTooltip::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTooltip::RegisterScriptMethods);
 }
 
 // OFFSET: #0x0061EB40

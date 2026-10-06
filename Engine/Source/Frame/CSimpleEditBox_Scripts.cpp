@@ -574,13 +574,15 @@ static int32_t Script_GetUTF8CursorPosition(lua_State* L) {
 
 // OFFSET: %0x00543E70
 void CSimpleEditBox::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleEditBox::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleEditBox::s_metatable);
     CSimpleEditBox::s_metatable = LUA_NOREF;
 }
 
 // OFFSET: %0x00545630
 void CSimpleEditBox::CreateScriptMetaTable() {
-    CSimpleEditBox::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleEditBox::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleEditBox::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleEditBox::RegisterScriptMethods);
 }
 
 // STATIC: %0x00BB9230

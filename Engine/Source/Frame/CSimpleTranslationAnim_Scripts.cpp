@@ -45,12 +45,14 @@ static int32_t Script_GetOffset(lua_State* L) {
 
 // OFFSET: %0x0054C760
 void CSimpleTranslationAnim::CreateScriptMetaTable() {
-    CSimpleTranslationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CSimpleTranslationAnim::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CSimpleTranslationAnim::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleTranslationAnim::RegisterScriptMethods);
 }
 
 // OFFSET: %0x0054B5E0
 void CSimpleTranslationAnim::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CSimpleTranslationAnim::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CSimpleTranslationAnim::s_metatable);
     CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 }
 

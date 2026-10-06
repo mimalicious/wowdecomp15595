@@ -72,7 +72,8 @@ static int32_t Script_SetBorderTexture(lua_State* L) {
 
 // OFFSET: #0x0058E000
 void CGQuestPOIFrame::DestroyScriptMetaTable() {
-    luaL_unref(FrameScript_GetContext(), LUA_REGISTRYINDEX, CGQuestPOIFrame::s_metatable);
+    lua_State* L = FrameScript_GetContext();
+    luaL_unref(L, LUA_REGISTRYINDEX, CGQuestPOIFrame::s_metatable);
     CGQuestPOIFrame::s_metatable = LUA_NOREF;
 }
 
@@ -99,7 +100,8 @@ static int32_t Script_GetNumTooltips(lua_State* L) {
 
 // OFFSET: #0x0058EB00
 void CGQuestPOIFrame::CreateScriptMetaTable() {
-    CGQuestPOIFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(FrameScript_GetContext(), &CGQuestPOIFrame::RegisterScriptMethods);
+    lua_State* L = FrameScript_GetContext();
+    CGQuestPOIFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGQuestPOIFrame::RegisterScriptMethods);
 }
 
 // OFFSET: #0x0058E660
