@@ -320,27 +320,31 @@ System_File::FileError::~FileError() {
     this->m_errorStack = NULL;
 }
 
-// OFFSET: %0x0070EED0
+// PROVEN: 10e3c9cf IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC4A0/0x1404A2240
 bool Blizzard::File::Close(StreamRecord* file) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_close);
     parms.m_stream = file;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_close(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_close(manager, &parms);
     }
 
     return false;
 }
 
-// OFFSET: %0x0070EF60
+// PROVEN: e286eadd IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC530/0x1404A2280
 bool Blizzard::File::Delete(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_unlink);
     parms.m_path = const_cast<char*>(path);
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_unlink(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_unlink(manager, &parms);
     }
 
     return false;
@@ -368,6 +372,7 @@ int32_t Blizzard::File::Exists(Filesystem* fs, const char* path) {
 
 // OFFSET: %0x0070F020
 bool Blizzard::File::GetFileInfo(const char* path, FileInfo* info) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_getfileinfo);
     parms.m_path = const_cast<char*>(path);
@@ -376,21 +381,22 @@ bool Blizzard::File::GetFileInfo(const char* path, FileInfo* info) {
     parms.m_want.m_all = 0xFFFFFFFF;
     parms.m_info = &parms.m_info2;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_getfileinfo(manager, &parms);
+
+        if (result) {
+            *info = *parms.m_info;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_getfileinfo(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *info = *parms.m_info;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: %0x0070F0A0
 Blizzard::File::FileInfo* Blizzard::File::GetFileInfo(StreamRecord* file) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_getfileinfo);
     parms.m_path = NULL;
@@ -399,7 +405,7 @@ Blizzard::File::FileInfo* Blizzard::File::GetFileInfo(StreamRecord* file) {
     parms.m_want.m_all = 0xFFFFFFFF;
     parms.m_info = NULL;
 
-    if (System_File::Stacked::s_manager && System_File::Stacked::s_manager->m_verbs.m_getfileinfo(System_File::Stacked::s_manager, &parms)) {
+    if (manager && manager->m_verbs.m_getfileinfo(manager, &parms)) {
         return parms.m_info;
     }
 
@@ -408,23 +414,24 @@ Blizzard::File::FileInfo* Blizzard::File::GetFileInfo(StreamRecord* file) {
 
 // OFFSET: %0x0070F110
 bool Blizzard::File::GetFileInfo(StreamRecord* file, FileInfo* info) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_getfileinfo);
     parms.m_path = NULL;
     parms.m_stream = file;
     parms.m_info = NULL;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_getfileinfo(manager, &parms);
+
+        if (result) {
+            *info = *parms.m_info;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_getfileinfo(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *info = *parms.m_info;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: #0x00427330
@@ -437,62 +444,65 @@ bool Blizzard::File::GetFileInfo(Filesystem* fs, const char* path, FileInfo* inf
     parms.m_want.m_all = 0xFFFFFFFF;
     parms.m_info = &parms.m_info2;
 
-    if (!fs) {
-        return false;
+    if (fs) {
+        bool result = fs->m_verbs.m_getfileinfo(fs, &parms);
+
+        if (result) {
+            *info = *parms.m_info;
+        }
+
+        return result;
     }
 
-    bool result = fs->m_verbs.m_getfileinfo(fs, &parms);
-
-    if (result) {
-        *info = *parms.m_info;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: #0x004273A0
 bool Blizzard::File::GetPos(StreamRecord* file, int64_t* offset) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_getpos);
     parms.m_stream = file;
     parms.m_pos = 0;
     parms.m_posMode = 1;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_getpos(manager, &parms);
+
+        if (result) {
+            *offset = parms.m_pos;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_getpos(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *offset = parms.m_pos;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: %0x0070F1F0
 int32_t Blizzard::File::GetRootChars(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_getrootchars);
     parms.m_path = const_cast<char*>(path);
     parms.m_pos = 0;
 
-    bool result = System_File::Stacked::s_manager ? System_File::Stacked::s_manager->m_verbs.m_getrootchars(System_File::Stacked::s_manager, &parms) : false;
+    bool result = manager ? manager->m_verbs.m_getrootchars(manager, &parms) : false;
 
     return result ? static_cast<int32_t>(parms.m_pos) : 0;
 }
 
 // OFFSET: #0x00427470
 bool Blizzard::File::GetWorkingDirectory(char* buffer, int32_t buffersize) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_cwd);
     parms.m_cwdbuf = buffer;
     parms.m_cwdbuflen = buffersize;
     *buffer = '\0';
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_cwd(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_cwd(manager, &parms);
     }
 
     return false;
@@ -500,19 +510,22 @@ bool Blizzard::File::GetWorkingDirectory(char* buffer, int32_t buffersize) {
 
 // OFFSET: #0x004274C0
 bool Blizzard::File::IsAbsolutePath(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_isabspath);
     parms.m_path = const_cast<char*>(path);
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_isabspath(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_isabspath(manager, &parms);
     }
 
     return false;
 }
 
-// OFFSET: %0x0070F2E0
+// PROVEN: 69cdcb61 IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC8B0/0x1404A2640
 bool Blizzard::File::MakeAbsolutePath(const char* rel, char* result, int32_t resultsize, bool canonicalize) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_path = const_cast<char*>(rel);
     parms.m_cwdbuf = result;
@@ -520,8 +533,8 @@ bool Blizzard::File::MakeAbsolutePath(const char* rel, char* result, int32_t res
     parms.m_cwdbuflen = resultsize;
     parms.m_makeCanonical = canonicalize;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_makeabspath(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_makeabspath(manager, &parms);
     }
 
     return false;
@@ -529,13 +542,14 @@ bool Blizzard::File::MakeAbsolutePath(const char* rel, char* result, int32_t res
 
 // OFFSET: #0x00427560
 bool Blizzard::File::Move(const char* src, const char* dst) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_move);
     parms.m_path = const_cast<char*>(src);
     parms.m_newpath = const_cast<char*>(dst);
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_move(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_move(manager, &parms);
     }
 
     return false;
@@ -543,14 +557,15 @@ bool Blizzard::File::Move(const char* src, const char* dst) {
 
 // OFFSET: #0x004275B0
 bool Blizzard::File::Copy(const char* src, const char* dst, bool overwrite) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_path = const_cast<char*>(src);
     parms.m_verb = offsetof(Filesystem, m_verbs.m_copy);
     parms.m_newpath = const_cast<char*>(dst);
     parms.m_overwrite = overwrite;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_copy(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_copy(manager, &parms);
     }
 
     return false;
@@ -569,21 +584,22 @@ bool Blizzard::File::Open(Filesystem* fs, const char* filename, int32_t flags, S
     parms.m_path = const_cast<char*>(filename);
     parms.m_mode = flags;
 
-    if (!fs) {
-        return false;
+    if (fs) {
+        bool result = fs->m_verbs.m_open(fs, &parms);
+
+        if (result) {
+            file = parms.m_stream;
+        }
+
+        return result;
     }
 
-    bool result = fs->m_verbs.m_open(fs, &parms);
-
-    if (result) {
-        file = parms.m_stream;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: %0x0070F460
 bool Blizzard::File::ProcessDirFast(const char* path, void* cookie, ProcessDirCallback callback, bool treatSymlinksAsFiles) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_cookie = cookie;
     parms.m_path = const_cast<char*>(path);
@@ -592,8 +608,8 @@ bool Blizzard::File::ProcessDirFast(const char* path, void* cookie, ProcessDirCa
     parms.m_sorted = false;
     parms.m_mode = treatSymlinksAsFiles;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_dirwalk(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_dirwalk(manager, &parms);
     }
 
     return false;
@@ -601,6 +617,7 @@ bool Blizzard::File::ProcessDirFast(const char* path, void* cookie, ProcessDirCa
 
 // OFFSET: #0x004276C0
 bool Blizzard::File::Read(StreamRecord* file, void* data, int32_t* count) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_read);
@@ -608,21 +625,22 @@ bool Blizzard::File::Read(StreamRecord* file, void* data, int32_t* count) {
     parms.m_amount = *count;
     *count = 0;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_read(manager, &parms);
+
+        if (result) {
+            *count = parms.m_amount;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_read(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *count = parms.m_amount;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: %0x0070F530
 bool Blizzard::File::Read(StreamRecord* file, void* data, int64_t offset, int32_t* count, int32_t streamFlags) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_buffer = data;
@@ -632,17 +650,17 @@ bool Blizzard::File::Read(StreamRecord* file, void* data, int64_t offset, int32_
     parms.m_streamFlags = streamFlags;
     *count = 0;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_readp(manager, &parms);
+
+        if (result) {
+            *count = parms.m_amount;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_readp(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *count = parms.m_amount;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: #0x00427790
@@ -654,28 +672,29 @@ bool Blizzard::File::Read(Filesystem* fs, StreamRecord* file, void* data, int64_
     parms.m_verb = offsetof(Filesystem, m_verbs.m_readp);
     parms.m_amount = *count;
 
-    if (!fs) {
-        return false;
+    if (fs) {
+        bool result = fs->m_verbs.m_readp(fs, &parms);
+
+        if (result) {
+            *count = parms.m_amount;
+        }
+
+        return result;
     }
 
-    bool result = fs->m_verbs.m_readp(fs, &parms);
-
-    if (result) {
-        *count = parms.m_amount;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: #0x00427800
 bool Blizzard::File::RemoveDirectory(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_rmdir);
     parms.m_path = const_cast<char*>(path);
     parms.m_recursive = false;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_rmdir(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_rmdir(manager, &parms);
     }
 
     return false;
@@ -683,6 +702,7 @@ bool Blizzard::File::RemoveDirectory(const char* path) {
 
 // OFFSET: #0x00427850
 bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_path = const_cast<char*>(path);
     parms.m_verb = offsetof(Filesystem, m_verbs.m_setfileinfo);
@@ -690,8 +710,8 @@ bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
     parms.m_info2.m_attributes = attributes;
     parms.m_info = &parms.m_info2;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_setfileinfo(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_setfileinfo(manager, &parms);
     }
 
     return false;
@@ -699,42 +719,96 @@ bool Blizzard::File::SetAttributes(const char* path, int32_t attributes) {
 
 // OFFSET: %0x0070F660
 bool Blizzard::File::SetEOF(StreamRecord* file, int64_t offset, int32_t whence) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_pos = offset;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_seteof);
     parms.m_posMode = whence;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_seteof(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_seteof(manager, &parms);
     }
 
     return false;
 }
 
+// PROVEN: acdabe66 IDENTICAL/NONE
+// OFFSET: 0x007ACC90
+bool Blizzard::File::SetSparse(StreamRecord* file, bool zeroFill) {
+    Filesystem* manager = System_File::Stacked::s_manager;
+    System_File::Stacked::FileParms parms;
+    parms.m_verb = offsetof(Filesystem, m_verbs.m_setsparse);
+    parms.m_stream = file;
+    parms.m_zeroFillAll = zeroFill;
+
+    if (manager) {
+        return manager->m_verbs.m_setsparse(manager, &parms);
+    }
+
+    return false;
+}
+
+// OFFSET: 0x007ACCE0
+bool Blizzard::File::SetModificationTime(StreamRecord* file, Blizzard::Time::Timestamp time) {
+    Filesystem* manager = System_File::Stacked::s_manager;
+    System_File::Stacked::FileParms parms;
+    parms.m_verb = offsetof(Filesystem, m_verbs.m_setfileinfo);
+    parms.m_stream = file;
+    parms.m_info = &parms.m_info2;
+    parms.m_info2.m_modTime = time;
+    parms.m_has.m_all = 0x10;
+
+    if (manager) {
+        return manager->m_verbs.m_setfileinfo(manager, &parms);
+    }
+
+    return false;
+}
+
+// OFFSET: 0x007AC450
+bool Blizzard::File::SupportsSparse(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
+    System_File::Stacked::FileParms parms;
+    parms.m_verb = offsetof(Filesystem, m_verbs.m_supportssparse);
+    parms.m_path = const_cast<char*>(path);
+    parms.m_supportsSparse = false;
+
+    bool result = manager ? manager->m_verbs.m_supportssparse(manager, &parms) : false;
+
+    if (!result) {
+        return false;
+    }
+
+    return parms.m_supportsSparse;
+}
+
 // OFFSET: %0x0070F6C0
 bool Blizzard::File::SetPos(StreamRecord* file, int64_t offset, int32_t whence) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_pos = offset;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_setpos);
     parms.m_posMode = whence;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_setpos(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_setpos(manager, &parms);
     }
 
     return false;
 }
 
-// OFFSET: %0x0070F720
+// PROVEN: d62e4460 IDENTICAL/DIFFERENT
+// OFFSET: 0x007ACDA0/0x1404A2A80
 bool Blizzard::File::SetWorkingDirectory(const char* path) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_cd);
     parms.m_path = const_cast<char*>(path);
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_cd(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_cd(manager, &parms);
     }
 
     return false;
@@ -742,6 +816,7 @@ bool Blizzard::File::SetWorkingDirectory(const char* path) {
 
 // OFFSET: #0x004279B0
 bool Blizzard::File::Write(StreamRecord* file, const void* data, int32_t* count) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_amount = *count;
@@ -749,21 +824,22 @@ bool Blizzard::File::Write(StreamRecord* file, const void* data, int32_t* count)
     parms.m_buffer = const_cast<void*>(data);
     parms.m_pos = -1;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_write(manager, &parms);
+
+        if (result) {
+            *count = parms.m_amount;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_write(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *count = parms.m_amount;
-    }
-
-    return result;
+    return false;
 }
 
 // OFFSET: #0x00427A20
 bool Blizzard::File::Write(StreamRecord* file, const void* data, int64_t offset, int32_t* count, int32_t streamFlags) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_stream = file;
     parms.m_buffer = const_cast<void*>(data);
@@ -772,17 +848,17 @@ bool Blizzard::File::Write(StreamRecord* file, const void* data, int64_t offset,
     parms.m_amount = *count;
     parms.m_streamFlags = streamFlags;
 
-    if (!System_File::Stacked::s_manager) {
-        return false;
+    if (manager) {
+        bool result = manager->m_verbs.m_writep(manager, &parms);
+
+        if (result) {
+            *count = parms.m_amount;
+        }
+
+        return result;
     }
 
-    bool result = System_File::Stacked::s_manager->m_verbs.m_writep(System_File::Stacked::s_manager, &parms);
-
-    if (result) {
-        *count = parms.m_amount;
-    }
-
-    return result;
+    return false;
 }
 
 // PROVEN: 7633edd1 IDENTICAL/DIFFERENT
@@ -877,16 +953,18 @@ bool Blizzard::File::SimpleGlob(const char* name, const char* pattern) {
     }
 }
 
-// OFFSET: %0x00716860
+// PROVEN: e226f43a IDENTICAL/DIFFERENT
+// OFFSET: 0x007B4BE0/0x1404AA710
 bool Blizzard::File::CreateDirectory(const char* path, bool recursive) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_mkdir);
     parms.m_path = const_cast<char*>(path);
     parms.m_recursive = recursive;
     parms.m_grantEveryone = false;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_mkdir(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_mkdir(manager, &parms);
     }
 
     return false;
@@ -894,14 +972,15 @@ bool Blizzard::File::CreateDirectory(const char* path, bool recursive) {
 
 // OFFSET: %0x0070EF10
 bool Blizzard::File::CreateDirectory(const char* path, bool recursive, bool grantEveryone) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_mkdir);
     parms.m_path = const_cast<char*>(path);
     parms.m_recursive = recursive;
     parms.m_grantEveryone = grantEveryone;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_mkdir(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_mkdir(manager, &parms);
     }
 
     return false;
@@ -909,12 +988,13 @@ bool Blizzard::File::CreateDirectory(const char* path, bool recursive, bool gran
 
 // INLINED
 bool Blizzard::File::Flush(StreamRecord* file) {
+    Filesystem* manager = System_File::Stacked::s_manager;
     System_File::Stacked::FileParms parms;
     parms.m_verb = offsetof(Filesystem, m_verbs.m_flush);
     parms.m_stream = file;
 
-    if (System_File::Stacked::s_manager) {
-        return System_File::Stacked::s_manager->m_verbs.m_flush(System_File::Stacked::s_manager, &parms);
+    if (manager) {
+        return manager->m_verbs.m_flush(manager, &parms);
     }
 
     return false;
