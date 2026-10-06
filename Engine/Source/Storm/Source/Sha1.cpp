@@ -129,7 +129,7 @@ void Sha1::Initialize() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
-// OFFSET: %0x004C5930
+// OFFSET: 0x004C1600/0x1400FBE70
 void Sha1::Append(const void* _data, uint32_t size) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);
     uint32_t index = (static_cast<uint32_t>(this->m_size) >> 3) & 0x3F;

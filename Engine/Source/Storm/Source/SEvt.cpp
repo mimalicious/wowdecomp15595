@@ -18,7 +18,7 @@ static uint32_t s_typehashtableused;
 // STATIC: #0x00CB750C
 static CCritSect s_critsect;
 
-// OFFSET: %0x004C7FD0
+// OFFSET: 0x004C17C0/0x1400FC090
 static void DeleteIdHashTable(_IDHASHTABLE* idhashtable) {
     for (uint32_t i = 0; i < idhashtable->size; i++) {
         while (_IDHASHENTRY* entry = idhashtable->data[i]) {
@@ -46,7 +46,7 @@ static _TYPEHASHENTRY* FindTypeHashEntry(uint32_t type, uintptr_t subtype) {
     return NULL;
 }
 
-// OFFSET: %0x004C8030
+// OFFSET: 0x004C1820/0x1400FC130
 int32_t STORMAPI SEvtDestroy() {
     s_critsect.Enter();
 
@@ -72,7 +72,7 @@ int32_t STORMAPI SEvtDestroy() {
     return 1;
 }
 
-// OFFSET: %0x004C80F0
+// OFFSET: 0x004C18E0
 int32_t STORMAPI SEvtUnregisterType(uint32_t type, uintptr_t subtype) {
     int32_t result = 0;
 

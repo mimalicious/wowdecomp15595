@@ -24,7 +24,7 @@ void STORMAPI SMemSetDebugFlags(uint32_t flags, uint8_t changeMask) {
     }
 }
 
-// OFFSET: %0x004B98F0
+// OFFSET: 0x004B2A50/0x1400E9620
 static void FatalError(size_t bytes, const char* filename, int32_t linenumber) {
     char buffer[128];
     sprintf(buffer, "Requested %u bytes of memory", static_cast<uint32_t>(bytes));
@@ -69,7 +69,7 @@ int32_t STORMAPI SMemIsValidPointer(void* ptr, size_t bytes, uint32_t flags) {
     return 1;
 }
 
-// OFFSET: %0x004B9A00
+// OFFSET: 0x004B2B20/0x1400E9740
 void* STORMAPI SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_t linenumber, uint32_t flags) {
     if (flags == SMEM_REALLOC_NULL) {
         return NULL;
@@ -109,19 +109,19 @@ void* STORMAPI SMemReAlloc(void* ptr, size_t bytes, const char* filename, int32_
     return newptr;
 }
 
-// OFFSET: %0x00401010
+// OFFSET: 0x00401010/0x140001060
 void* operator new(size_t bytes) {
     return SMemAlloc(bytes, "new", SLOG_FUNCTION, 0);
 }
 
-// OFFSET: %0x007D7820
+// OFFSET: 0x00872C50/0x140001030
 void operator delete(void* ptr) {
     if (ptr) {
         SMemFree(ptr, "delete", SLOG_FUNCTION, 0);
     }
 }
 
-// OFFSET: %0x0043EA30
+// OFFSET: 0x00401030/0x140001080
 void operator delete[](void* ptr) {
     if (ptr) {
         SMemFree(ptr, "delete[]", SLOG_FUNCTION, 0);

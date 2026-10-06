@@ -68,7 +68,7 @@ int32_t STORMAPI SSetCurrentProcessAffinityMask(size_t mask) {
     return SetProcessAffinityMask(GetCurrentProcess(), mask);
 }
 
-// OFFSET: %0x004BE450
+// OFFSET: 0x004B7670
 static void SetThreadName(uint32_t threadId, const char* threadName) {
     THREADNAME_INFO info;
     info.dwType = 0x1000;
@@ -82,7 +82,7 @@ static void SetThreadName(uint32_t threadId, const char* threadName) {
     }
 }
 
-// OFFSET: %0x004BE4D0
+// OFFSET: 0x004B76F0
 int32_t CInitCritSect::Enter() {
     int32_t result = 0;
 
@@ -118,7 +118,7 @@ static uint32_t STORMAPI ProcessCompletionCallbackThread(void* vdata) {
     return 0;
 }
 
-// OFFSET: %0x004BE560
+// OFFSET: 0x004B7780
 uint32_t STORMAPI S_Thread::s_SLaunchThread(void* threadParam) {
     s_threadCrit.Enter();
 

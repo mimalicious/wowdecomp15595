@@ -70,7 +70,7 @@ void GenerateError(void (STORMAPI* errorcallback)(_CMDERROR*), uint32_t errorcod
     errorcallback(&data);
 }
 
-// OFFSET: %0x004BD710
+// OFFSET: 0x004B6920/0x1400EE2C0
 int32_t ProcessFile(const char* filename, _PROCESSING* processing, CMDDEF** nextarg, int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     HANDLE file = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
 

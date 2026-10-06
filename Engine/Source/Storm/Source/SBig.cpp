@@ -48,7 +48,7 @@ uint32_t BigBuffer::operator[](uint32_t index) const {
     return this->IsUsed(index) ? this->m_data[index + this->m_offset] : 0;
 }
 
-// OFFSET: %0x004C2500
+// OFFSET: 0x004BBE10
 static int32_t Compare(const BigBuffer& a, const BigBuffer& b) {
     int32_t result = 0;
 
@@ -96,17 +96,17 @@ int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
 BigStack::~BigStack() {
 }
 
-// OFFSET: %0x004C2760
+// OFFSET: 0x004BC0D0
 void BigBuffer::GrowToFit(uint32_t index) {
     this->m_data.GrowToFit(index + this->m_offset, 1);
 }
 
-// OFFSET: %0x004C27D0
+// OFFSET: 0x004BC140
 void BigBuffer::SetCount(uint32_t count) {
     this->m_data.SetCount(count + this->m_offset);
 }
 
-// OFFSET: %0x004C2820
+// OFFSET: 0x004BC190
 void BigBuffer::Trim() const {
     while (this->Count() && !*this->m_data.Top()) {
         this->m_data.SetCount(this->m_data.Count() - 1);
@@ -119,7 +119,7 @@ BigStack::BigStack() {
     this->m_used = 0;
 }
 
-// OFFSET: %0x004C28C0
+// OFFSET: 0x004BC230
 static void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -132,7 +132,7 @@ static void Add(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     a.SetCount(i);
 }
 
-// OFFSET: %0x004C2A00
+// OFFSET: 0x004BC370
 static void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     a.SetCount(c.Count());
 
@@ -150,7 +150,7 @@ static void Div(BigBuffer& a, uint32_t* b, const BigBuffer& c, uint64_t d) {
     *b = static_cast<uint32_t>(data);
 }
 
-// OFFSET: %0x004C2B50
+// OFFSET: 0x004BC4C0
 static void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -163,7 +163,7 @@ static void Mul(BigBuffer& a, const BigBuffer& b, uint64_t c) {
     a.SetCount(i);
 }
 
-// OFFSET: %0x004C2C70
+// OFFSET: 0x004BC5E0
 static void Sub(BigBuffer& a, const BigBuffer& b, const BigBuffer& c) {
     uint64_t borrow = 0;
     uint32_t i = 0;
@@ -181,13 +181,13 @@ inline void SetZero(BigBuffer& a) {
     a.Clear();
 }
 
-// OFFSET: %0x004C2DC0
+// OFFSET: 0x004BC730
 static void SetOne(BigBuffer& a) {
     a.SetCount(1);
     a[0] = 1;
 }
 
-// OFFSET: %0x004C2E20
+// OFFSET: 0x004BC790
 static void Shl(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -215,7 +215,7 @@ static void Shl(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     a.Trim();
 }
 
-// OFFSET: %0x004C2F90
+// OFFSET: 0x004BC900
 static void Shr(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -234,7 +234,7 @@ static void Shr(BigBuffer& a, const BigBuffer& b, uint32_t c) {
     a.SetCount(i);
 }
 
-// OFFSET: %0x004C3080
+// OFFSET: 0x004BC9F0/0x1400F61C0
 static void FromBinary(BigBuffer& a, const void* data, uint32_t bytes) {
     a.Clear();
 
@@ -244,13 +244,13 @@ static void FromBinary(BigBuffer& a, const void* data, uint32_t bytes) {
     }
 }
 
-// OFFSET: %0x004C3140
+// OFFSET: 0x004BCAB0
 static void FromUnsigned(BigBuffer& a, uint32_t value) {
     a[0] = value;
     a.SetCount(1);
 }
 
-// OFFSET: %0x004C31A0
+// OFFSET: 0x004BCB10
 static void ToBinaryAppend(TSGrowableArray<uint8_t>& output, const BigBuffer& a) {
     for (uint32_t i = 0; i < 4 * a.Count(); ++i) {
         uint32_t value = a[i >> 2] >> (8 * (i & 3));
@@ -272,7 +272,7 @@ void STORMAPI SBigAdd(BigData* a, const BigData* b, const BigData* c) {
     Add(a->Primary(), b->Primary(), c->Primary());
 }
 
-// OFFSET: %0x004C3290
+// OFFSET: 0x004BCC00
 void STORMAPI SBigBitLen(BigData* a, uint32_t* bits) {
     BigBuffer& buffer = a->Primary();
     buffer.Trim();
@@ -309,7 +309,7 @@ void STORMAPI SBigSub(BigData* a, const BigData* b, const BigData* c) {
     Sub(a->Primary(), b->Primary(), c->Primary());
 }
 
-// OFFSET: %0x004C33A0
+// OFFSET: 0x004BCD10
 static void Div(BigBuffer& a, BigBuffer& b, const BigBuffer& c, const BigBuffer& d, BigStack& stack) {
     c.Trim();
     d.Trim();
@@ -384,7 +384,7 @@ void STORMAPI SBigNew(BigData** num) {
     *num = new (SMemAlloc(sizeof(BigData), __FILE__, __LINE__, 0)) BigData;
 }
 
-// OFFSET: %0x004C3860
+// OFFSET: 0x004BD1D0
 void STORMAPI SBigToBinaryBuffer(const BigData* num, void* data, uint32_t maxBytes, uint32_t* bytes) {
     TSGrowableArray<uint8_t>& output = num->Output();
     ToBinary(output, num->Primary());
@@ -402,7 +402,7 @@ void STORMAPI SBigToBinaryBuffer(const BigData* num, void* data, uint32_t maxByt
     }
 }
 
-// OFFSET: %0x004C38C0
+// OFFSET: 0x004BD230
 static void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& stack) {
     BigBuffer& aa = stack.MakeDistinct(a, &a == &b || &a == &c);
     aa.Clear();
@@ -422,7 +422,7 @@ static void Mul(BigBuffer& a, const BigBuffer& b, const BigBuffer& c, BigStack& 
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: %0x004C3BF0
+// OFFSET: 0x004BD560
 static void Square(BigBuffer& a, const BigBuffer& b, BigStack& stack) {
     BigBuffer& aa = stack.MakeDistinct(a, &a == &b);
     aa.Clear();

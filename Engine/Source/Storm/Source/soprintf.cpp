@@ -22,7 +22,7 @@ union ArgumentValue {
     /* 0000 */ double doubleValue;
 };
 
-// OFFSET: %0x004C4EF0
+// OFFSET: 0x004BE8E0
 static int32_t ParseFormatSpecifier(const char** format, ArgumentSize* size, int32_t* orderingPtr) {
     const char* curr = *format;
     int32_t currentNumber = 0;
@@ -127,7 +127,7 @@ static void FixUpLongLongFormatSpecifier(char* specifier) {
     }
 }
 
-// OFFSET: %0x004C5080
+// OFFSET: 0x004BEA70/0x1400F8850
 int32_t vsnoprintf(char* out, size_t outSize, const char* format, va_list argumentList) {
     if (!outSize) {
         return 0;

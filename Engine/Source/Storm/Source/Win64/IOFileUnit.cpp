@@ -10,7 +10,7 @@
 
 namespace Storm {
 
-// OFFSET: %0x00A99980
+// OFFSET: 0x00B67730/0x1409318A0
 static HANDLE OpenFileHandle(const IOFileParam* param) {
     HANDLE handle;
 
@@ -95,7 +95,7 @@ bool IOWin32FileUnit::Seek(int64_t offset) {
     return true;
 }
 
-// OFFSET: %0x00A99A70
+// OFFSET: 0x00B67830/0x140931950
 bool IOWin32FileUnit::Read(void* buffer, int64_t offset, uint32_t count, uint32_t* bytesRead) {
     uint32_t minimum = 1;
     uint32_t localRead;
@@ -183,7 +183,7 @@ void* IOWin32FileUnit::Win32Handle() {
     return this->m_handle;
 }
 
-// OFFSET: %0x00A99D00
+// OFFSET: 0x00B67AC0/0x140931CB0
 bool IOUnbufferedFileUnit::Read(void* buffer, int64_t offset, uint32_t count, uint32_t* bytesRead) {
     if (!(this->m_alignMask & reinterpret_cast<uintptr_t>(buffer)) && !(this->m_alignMask & count)) {
         return this->m_unit->Read(buffer, offset, count, bytesRead);
@@ -232,7 +232,7 @@ bool IOUnbufferedFileUnit::Read(void* buffer, int64_t offset, uint32_t count, ui
     return result;
 }
 
-// OFFSET: %0x00A99E10
+// OFFSET: 0x00B67BD0/0x140931E00
 bool IOUnbufferedFileUnit::Write(const void* buffer, int64_t offset, uint32_t count) {
     if (!(this->m_alignMask & reinterpret_cast<uintptr_t>(buffer)) && !(this->m_alignMask & count)) {
         return this->m_unit->Write(buffer, offset, count);
@@ -278,7 +278,7 @@ bool IOUnbufferedFileUnit::Flush() {
     return this->m_unit->Flush();
 }
 
-// OFFSET: %0x00A99EF0
+// OFFSET: 0x00B67CB0/0x140931EF0
 bool IOUnbufferedFileUnit::SetFileSize(int64_t size) {
     this->m_size = size;
 
@@ -297,7 +297,7 @@ bool IOUnbufferedFileUnit::GetFileSize(int64_t* size) {
 IOUnit::~IOUnit() {
 }
 
-// OFFSET: %0x00A99F50
+// OFFSET: 0x00B67D10/0x140931F90
 IOWin32FileUnit::~IOWin32FileUnit() {
     CloseHandle(this->m_handle);
     this->m_handle = NULL;
@@ -332,7 +332,7 @@ void* IOUnbufferedFileUnit::Win32Handle() {
     return this->m_unit->Win32Handle();
 }
 
-// OFFSET: %0x00A9A150
+// OFFSET: 0x00B67F10/0x1409321E0
 IOUnbufferedFileUnit* IOUnbufferedFileUnit::Open(const IOFileParam* param) {
     HANDLE handle = OpenFileHandle(param);
 
@@ -343,7 +343,7 @@ IOUnbufferedFileUnit* IOUnbufferedFileUnit::Open(const IOFileParam* param) {
     return new IOUnbufferedFileUnit(handle, param);
 }
 
-// OFFSET: %0x00A99F90
+// OFFSET: 0x00B67D50/0x140931FF0
 IOWin32FileUnit* IOWin32FileUnit::Open(const IOFileParam* param) {
     HANDLE handle = OpenFileHandle(param);
 
@@ -354,7 +354,7 @@ IOWin32FileUnit* IOWin32FileUnit::Open(const IOFileParam* param) {
     return new IOWin32FileUnit(handle);
 }
 
-// OFFSET: %0x00A9A1A0
+// OFFSET: 0x00B67F60/0x140932240
 IOUnit* IOFileUnit::Create(const IOFileParam& param, IOUnit* next) {
     if (next) {
         return NULL;

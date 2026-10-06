@@ -341,7 +341,7 @@ static int32_t CreateFileDirectory(const char* path) {
     return CreateDirectoryA(buffer, NULL);
 }
 
-// OFFSET: %0x004C4A50
+// OFFSET: 0x004BE440/0x1400F8180
 static int32_t OpenLogFile(const char* filename, void** file, uint32_t flags) {
     if (!filename || !*filename) {
         *file = INVALID_HANDLE_VALUE;

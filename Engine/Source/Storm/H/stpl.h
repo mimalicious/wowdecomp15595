@@ -438,7 +438,7 @@ T* TSList<T, TGetLink>::DeleteNode(T* ptr) {
     return next;
 }
 
-// OFFSET: %0x00495BB0
+// OFFSET: 0x00544F70/0x1402B0D40
 template <class T, class TGetLink>
 T* TSList<T, TGetLink>::Head() {
     return this->m_terminator.Next();
@@ -621,7 +621,7 @@ T* TSLinkedNode<T>::RawNext() {
     return this->m_link.RawNext();
 }
 
-// OFFSET: %0x0060BE80
+// OFFSET: 0x00601810
 template <class T>
 void TSSwap(T& a, T& b) {
     T temp = a;
@@ -1114,7 +1114,7 @@ void TSHashTable<T, TKey>::Insert(T* ptr, uint32_t hashval, const char* str) {
     ptr->m_key = str;
 }
 
-// OFFSET: %0x006336F0
+// OFFSET: 0x00622F40/0x1402B42E0
 template <class T, class TKey>
 void TSHashTable<T, TKey>::Insert(T* ptr, const char* str) {
     this->Insert(ptr, SStrHashHT(str), str);
@@ -1365,12 +1365,12 @@ T* TSExportTableSimpleReuse<T, THandle>::Ptr(THandle handle) {
     return TSHashTable<T, HASHKEY_NONE>::Ptr(static_cast<uint32_t>(reinterpret_cast<uintptr_t>(handle)), this->m_key);
 }
 
-// OFFSET: %0x004C9B20
+// OFFSET: 0x004C3280/0x1400FE270
 template <class T, class THandle, class TLockedHandle, class TSync>
 TSExportTableSyncReuse<T, THandle, TLockedHandle, TSync>::~TSExportTableSyncReuse() {
 }
 
-// OFFSET: %0x004C9950
+// OFFSET: 0x004C28D0/0x1400FD510
 template <class T, class THandle, class TLockedHandle, class TSync>
 void TSExportTableSyncReuse<T, THandle, TLockedHandle, TSync>::Delete(THandle handle) {
     TLockedHandle lockedhandle;

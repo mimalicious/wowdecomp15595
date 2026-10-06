@@ -44,7 +44,7 @@ static void DeleteSourceRect(TSGrowableArray<_SOURCE>* sourcearray, uint32_t ind
     source->flags = 0;
 }
 
-// OFFSET: %0x004C8290
+// OFFSET: 0x004C1A80
 static void ProcessBooleanOperation(TSGrowableArray<_SOURCE>* sourcearray, int32_t combinemode) {
     for (uint32_t i = 0; i < sourcearray->Count(); i++) {
         _SOURCE* source = &(*sourcearray)[i];
@@ -78,7 +78,7 @@ static void ProcessBooleanOperation(TSGrowableArray<_SOURCE>* sourcearray, int32
     }
 }
 
-// OFFSET: %0x004C83A0
+// OFFSET: 0x004C1B90
 static void AddSourceRect(TSGrowableArray<_SOURCE>* sourcearray, const RECTF* rect, void* param, int32_t sequence, uint32_t flags) {
     _SOURCE* source = sourcearray->New();
     source->rect = *rect;
@@ -87,7 +87,7 @@ static void AddSourceRect(TSGrowableArray<_SOURCE>* sourcearray, const RECTF* re
     source->flags = flags;
 }
 
-// OFFSET: %0x004C83E0
+// OFFSET: 0x004C1BD0
 static void FragmentSourceRectangles(TSGrowableArray<_SOURCE>* sourcearray, uint32_t firstindex, uint32_t lastindex, int32_t previousoverlap, const RECTF* rect, void* param, int32_t sequence) {
     int32_t overlapsexisting = previousoverlap;
 
@@ -166,7 +166,7 @@ static void FragmentSourceRectangles(TSGrowableArray<_SOURCE>* sourcearray, uint
     AddSourceRect(sourcearray, rect, param, sequence, (overlapsexisting ? SOURCE_OVERLAPPED : 0) | SOURCE_NEWRECT);
 }
 
-// OFFSET: %0x004C8920
+// OFFSET: 0x004C2110
 static void OptimizeSource(TSGrowableArray<_SOURCE>* sourcearray) {
     uint32_t index = 0;
 
@@ -197,16 +197,16 @@ static void ClearRegion(RGN* rgn) {
     rgn->dirty = 0;
 }
 
-// OFFSET: %0x004C89D0
+// OFFSET: 0x004C2A60/0x1400FD750
 RGN::~RGN() {
 }
 
-// OFFSET: %0x004C8C40
+// OFFSET: 0x004C25C0
 void STORMAPI SRgnDestroy() {
     s_rgntable.Destroy();
 }
 
-// OFFSET: %0x004C94C0
+// OFFSET: 0x004C24A0
 void STORMAPI SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int32_t combinemode) {
     if (!handle) {
         DebugValidate("handle");
@@ -256,7 +256,7 @@ void STORMAPI SRgnCombineRectf(HSRGN handle, const RECTF* rect, void* param, int
     s_rgntable.Unlock(lockedhandle);
 }
 
-// OFFSET: %0x004C9640
+// OFFSET: 0x004C25E0
 void STORMAPI SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     if (!handle) {
         DebugValidate("handle");
@@ -306,7 +306,7 @@ void STORMAPI SRgnGetBoundingRectf(HSRGN handle, RECTF* rect) {
     }
 }
 
-// OFFSET: %0x004C9AE0
+// OFFSET: 0x004C29C0/0x1400FD6A0
 void STORMAPI SRgnDelete(HSRGN handle) {
     if (!handle) {
         DebugValidate("handle");
@@ -317,7 +317,7 @@ void STORMAPI SRgnDelete(HSRGN handle) {
     s_rgntable.Delete(handle);
 }
 
-// OFFSET: %0x004C9430
+// OFFSET: 0x004C2420
 void STORMAPI SRgnClear(HSRGN handle) {
     if (!handle) {
         DebugValidate("handle");
@@ -334,7 +334,7 @@ void STORMAPI SRgnClear(HSRGN handle) {
     }
 }
 
-// OFFSET: %0x004C9B60
+// OFFSET: 0x004C32C0/0x1400FE2C0
 void STORMAPI SRgnCreate(HSRGN* handle) {
     if (!handle) {
         DebugValidate("handle");

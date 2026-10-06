@@ -51,7 +51,7 @@ CDebugLock* TDebugLock<T>::s_lockList;
 // STATIC: %0x00CA66C0
 static volatile LONG s_stallCount;
 
-// OFFSET: %0x004C1700
+// OFFSET: 0x004BAFC0/0x1400F43C0
 void SRWLock::IInitialize() {
     for (uint32_t type = 0; type < 2; type++) {
         for (uint32_t i = 0; i < 1024; i++) {
@@ -72,7 +72,7 @@ void SRWLock::IInitialize() {
     SServerInitialize();
 }
 
-// OFFSET: %0x004C17F0
+// OFFSET: 0x004BB0B0
 void SRWLock::IDestroy() {
     for (uint32_t type = 0; type < 2; type++) {
         for (uint32_t i = 0; i < 1024; i++) {
@@ -89,7 +89,7 @@ void SRWLock::IDestroy() {
     SServerDestroy();
 }
 
-// OFFSET: %0x004C1880
+// OFFSET: 0x004BB140/0x1400F4600
 uint32_t SRWLock::IAllocEvent(uint32_t type) {
     if (InterlockedDecrement(&s_eventCount[type]) < 0) {
         DebugLog("IAllocEvent: too many %s event allocs", type ? "SUMREVTYPE" : "SUAREVTYPE");
@@ -121,7 +121,7 @@ uint32_t SRWLock::IAllocEvent(uint32_t type) {
     return event;
 }
 
-// OFFSET: %0x004C1930
+// OFFSET: 0x004BB1F0/0x1400F46C0
 void SRWLock::IFreeEvent(uint32_t event, uint32_t type, int32_t reset) {
     if (InterlockedIncrement(&s_eventCount[type]) > 1024) {
         DebugLog("IFreeEvent: too many %s event frees", type ? "SUMREVTYPE" : "SUAREVTYPE");
@@ -155,7 +155,7 @@ void SRWLock::IFreeEvent(uint32_t event, uint32_t type, int32_t reset) {
     }
 }
 
-// OFFSET: %0x004C1A10
+// OFFSET: 0x004BB2D0/0x1400F47D0
 uint32_t SRWLock::IAddWaiter(volatile LONG* waiters, uint32_t type, uint32_t increment) {
     uint32_t event = IAllocEvent(type);
     LONG value = InterlockedCompareExchange(waiters, event, 0);
@@ -172,7 +172,7 @@ uint32_t SRWLock::IAddWaiter(volatile LONG* waiters, uint32_t type, uint32_t inc
     return event;
 }
 
-// OFFSET: %0x004C1A70
+// OFFSET: 0x004BB330
 int32_t SRWLock::IRemoveWaiter(volatile LONG* waiters, uint32_t expected, uint32_t type, uint32_t decrement) {
     LONG value = InterlockedCompareExchange(waiters, 0, expected);
 
@@ -199,7 +199,7 @@ inline void SRWLock::SUNNLockLeave(volatile SUNNLOCK* sunnlock) {
     }
 }
 
-// OFFSET: %0x004C1AD0
+// OFFSET: 0x004BB390/0x1400F4850
 void SRWLock::SURWLockLeave(volatile SURWLOCK* surwlock, int32_t fromwriting) {
     if (fromwriting) {
         SUNNLockLeave(&surwlock->m_mutex);
@@ -256,7 +256,7 @@ uint32_t SSyncObject::Wait(uint32_t timeout) {
     return WaitForSingleObject(this->m_opaqueData, timeout);
 }
 
-// OFFSET: %0x004C1BF0
+// OFFSET: 0x004BB4C0/0x1400F42C0
 uint32_t STORMAPI SSyncObject::WaitMultiplePtr(uint32_t count, SSyncObject** objects, int32_t waitAll, uint32_t timeout) {
     HANDLE handles[MAXIMUM_WAIT_OBJECTS];
 
@@ -313,7 +313,7 @@ int32_t SSemaphore::Signal(uint32_t count) {
     return ReleaseSemaphore(this->m_opaqueData, count, NULL);
 }
 
-// OFFSET: %0x004C1CF0
+// OFFSET: 0x004BB5C0/0x1400F49F0
 void SMutex::Create(int32_t initialOwner, const char* name) {
     if (this->m_opaqueData) {
         CloseHandle(this->m_opaqueData);
@@ -379,13 +379,13 @@ inline void SRWLock::SURWLockDelete(volatile SURWLOCK* surwlock) {
     }
 }
 
-// OFFSET: %0x004C1D50
+// OFFSET: 0x004BB620/0x1400F48F0
 CSRWLock::CSRWLock() {
     SRWLock::IOsRWLockIncRef();
     SRWLock::SURWLockInitialize(&this->m_opaqueData);
 }
 
-// OFFSET: %0x004C1DA0
+// OFFSET: 0x004BB670/0x1400F4920
 CSRWLock::~CSRWLock() {
     SRWLock::SURWLockDelete(&this->m_opaqueData);
     SRWLock::IOsRWLockDecRef();
@@ -407,7 +407,7 @@ void SSyncObject::Close() {
     }
 }
 
-// OFFSET: %0x004C1E10
+// OFFSET: 0x004BB6E0/0x1400F4980
 SEvent::SEvent(int32_t manualReset, int32_t initialState) {
     this->m_opaqueData = CreateEventA(NULL, manualReset, initialState, NULL);
 
@@ -422,7 +422,7 @@ SSemaphore::SSemaphore(int32_t initialCount, int32_t maximumCount) {
     this->m_opaqueData = CreateSemaphoreA(NULL, initialCount, maximumCount, NULL);
 }
 
-// OFFSET: %0x004C1E80
+// OFFSET: 0x004BB750/0x1400F4E30
 SMutex::SMutex() {
     this->Create(0, NULL);
 }
@@ -498,7 +498,7 @@ void CDebugSRWLock::DumpAllEntries() {
     s_critsect.Leave();
 }
 
-// OFFSET: %0x004C21B0
+// OFFSET: 0x004BBA80
 void SRWLock::SUNNLockEnter(volatile SUNNLOCK* sunnlock) {
     if (!sunnlock->m_event) {
         uint32_t spin = s_spinCount;
@@ -542,7 +542,7 @@ void SRWLock::SUNNLockEnter(volatile SUNNLOCK* sunnlock) {
     }
 }
 
-// OFFSET: %0x004C22B0
+// OFFSET: 0x004BBB80
 void SRWLock::SURWLockEnter(volatile SURWLOCK* surwlock, int32_t forwriting) {
     if (forwriting) {
         SUNNLockEnter(&surwlock->m_mutex);

@@ -34,7 +34,7 @@ HWND STORMAPI SMsgGetDefaultWindow() {
     return s_defaultwindow;
 }
 
-// OFFSET: %0x004C7E90
+// OFFSET: 0x004C0FB0/0x1400FB7C0
 static void DeleteWindow(HWND window) {
     if (window == s_defaultwindow) {
         s_defaultwindow = NULL;

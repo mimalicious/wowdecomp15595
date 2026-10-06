@@ -147,7 +147,7 @@ T* TSListWinHeap<T, TGetLink>::NewNode(uint32_t location, size_t extrabytes, uin
     return node;
 }
 
-// OFFSET: %0x004BB2F0
+// OFFSET: 0x007AC370
 static void Breakpoint() {
     __try {
         __debugbreak();
@@ -155,7 +155,7 @@ static void Breakpoint() {
     }
 }
 
-// OFFSET: %0x004BB270
+// OFFSET: 0x004B3EF0/0x1400EB010
 static const char* GetErrorString(uint32_t id) {
     // STATIC: %0x00C9BBD8
     static char buffer[256];
@@ -167,7 +167,7 @@ static const char* GetErrorString(uint32_t id) {
     return buffer;
 }
 
-// OFFSET: %0x004BB2A0
+// OFFSET: 0x004B3F20/0x1400EB070
 static void AddStormFacility(uint16_t facility) {
     _MSGSRC** tail = &s_msgsrchead;
 
@@ -188,7 +188,7 @@ inline void AddStormMessages() {
     AddStormFacility(_FACDS);
 }
 
-// OFFSET: %0x004BB350
+// OFFSET: 0x004B3F70
 static void InternalEnterCriticalSection(CRITICAL_SECTION* critsect) {
     if (InterlockedIncrement(&s_critsectinit)) {
         InterlockedDecrement(&s_critsectinit);
@@ -244,7 +244,7 @@ static void WriteLine(void* param, const char* format, ...) {
     WriteFile(param, buffer, static_cast<DWORD>(SStrLen(buffer)), &byteswritten, NULL);
 }
 
-// OFFSET: %0x004BB3D0
+// OFFSET: 0x004B3FF0/0x1400EB110
 static void WriteMessageToLog(HANDLE logfile, const char* message) {
     uint32_t length = static_cast<uint32_t>(SStrLen(message));
     char* buffer = static_cast<char*>(alloca(2 * length + 4));
@@ -380,7 +380,7 @@ static void LogProcessCallback(const char* name, uint32_t pid, void* param) {
     WriteMessageToLog(static_cast<HANDLE>(param), line);
 }
 
-// OFFSET: %0x004BB4B0
+// OFFSET: 0x004B40D0
 static void LogRunningProcesses(HANDLE logfile, const char* appname) {
     WriteMessageToLog(logfile, "List of running WoW processes:");
 
@@ -401,7 +401,7 @@ static void TerminateApplication(uint32_t exitcode) {
     s_displaying = 0;
 }
 
-// OFFSET: %0x004BC390
+// OFFSET: 0x004B4DB0
 static int32_t DisplayErrorDialog(uint32_t errorcode, int32_t linenumber, const char* description, int32_t recoverable, const char* errorstr, const char* outstr, char* outptr, char* outend, const char* localnameptr, const char* appname) {
     uint32_t icon;
     uint32_t buttons;
@@ -581,7 +581,7 @@ int32_t STORMAPI SErrIsDisplayingError() {
     return s_displaying;
 }
 
-// OFFSET: %0x004BB690
+// OFFSET: 0x004B4280/0x1400EB3F0
 void STORMAPI SErrPrepareAppFatal(const char* filename, int32_t linenumber) {
     InternalEnterCriticalSection(&s_critsect);
     s_appFatInfo.filename = filename;
@@ -610,7 +610,7 @@ void STORMAPI SErrSetLogTitleString(const char* title) {
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// OFFSET: %0x004BB730
+// OFFSET: 0x004B4320
 void STORMAPI SErrSetLogCallback(int32_t (STORMAPI* callback)(char*, uint32_t)) {
     InternalEnterCriticalSection(&s_critsect);
     s_logCallback = callback;
@@ -729,14 +729,14 @@ int32_t STORMAPI SErrGetErrorStrW(uint32_t errorcode, wchar_t* buffer, uint32_t 
     return FormatMessageW((module ? FORMAT_MESSAGE_FROM_HMODULE : FORMAT_MESSAGE_FROM_SYSTEM) | FORMAT_MESSAGE_IGNORE_INSERTS, module, errorcode, languageid, buffer, bufferchars, NULL);
 }
 
-// OFFSET: %0x004BC200
+// OFFSET: 0x004B5E30/0x1400ED570
 void STORMAPI SErrRegisterHandler(int32_t (STORMAPI* handler)(uint32_t, const char*, const char*, int32_t, const char*)) {
     InternalEnterCriticalSection(&s_critsect);
     s_handlerlist.NewNode(1, 0, 0x8000000)->handler = handler;
     InternalLeaveCriticalSection(&s_critsect);
 }
 
-// OFFSET: %0x004BC310
+// OFFSET: 0x004B5F40/0x1400ED750
 int32_t STORMAPI SErrDestroy() {
     s_handlerlist.Clear();
 
@@ -970,7 +970,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     return 0;
 }
 
-// OFFSET: %0x004BCEC0
+// OFFSET: 0x004B58F0/0x1400ECEF0
 void STORMAPI SErrReportNamedResourceLeak(const char* handlename, const char* resourcename) {
     // STATIC: #0x00CAE940
     static int32_t checked;
@@ -1080,14 +1080,14 @@ void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list 
     StormExitProcess(1);
 }
 
-// OFFSET: %0x004BD340
+// OFFSET: 0x004B5D90/0x1400ED490
 void SErrDisplayAppFatalCustom(uint32_t errorcode, const char* format, ...) {
     va_list args;
     va_start(args, format);
     SErrDisplayAppFatalCustomV(errorcode, format, args);
 }
 
-// OFFSET: %0x004BD360
+// OFFSET: 0x004B5DB0/0x1400ED4C0
 void SErrDisplayAppFatal(const char* format, ...) {
     va_list args;
     va_start(args, format);

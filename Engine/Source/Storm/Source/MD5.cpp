@@ -44,7 +44,7 @@ uint8_t* MD5::ToArray(uint8_t* array) const {
     return array;
 }
 
-// OFFSET: %0x004BAD50
+// OFFSET: 0x004B8430/0x1400F09F0
 const MD5& MD5::operator=(const char* str) {
     for (int32_t i = 0; i < 4; ++i) {
         uint32_t value = 0;
@@ -190,7 +190,7 @@ static void MD5Transform(uint32_t state[4], const uint8_t block[64]) {
     memset(x, 0, sizeof(x));
 }
 
-// OFFSET: %0x004BFB60
+// OFFSET: 0x004B93A0/0x1400F1C90
 void MD5Update(MD5_CTX* context, const uint8_t* input, uint32_t inputLen) {
     uint32_t index = (context->count[0] >> 3) & 0x3F;
 

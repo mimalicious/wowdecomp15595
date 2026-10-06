@@ -146,6 +146,8 @@ int32_t STORMAPI SCmdRegisterArgList(const _ARGLIST* listptr, uint32_t numargs);
 int32_t STORMAPI SCmdRegisterArgument(uint32_t flags, uint32_t id, const char* name, void* variableptr, uint32_t variablebytes, uint32_t setvalue, uint32_t setmask, int32_t (STORMAPI* callback)(_CMDPARAMS*, const char*));
 
 uint32_t SCrcBuffer(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags);
+uint64_t SCrc64Buffer(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags);
+uint64_t STORMAPI SCrc64Compute(const void* buffer, uint32_t length, uint64_t* crc, uint32_t flags);
 uint32_t STORMAPI SCrcCompute(const void* buffer, uint32_t length, uint32_t* crc, uint32_t flags);
 
 int32_t STORMAPI SCompDestroy();

@@ -14,7 +14,7 @@ static TSList<CMDDEF> s_flaglist;
 // STATIC: #0x00CAE944
 static int32_t s_addedoptional;
 
-// OFFSET: %0x004BD3F0
+// OFFSET: 0x004B6600
 static void ConvertBool(CMDDEF* ptr, const char* string, int32_t* datachars) {
     int32_t set;
 
@@ -246,7 +246,7 @@ static int32_t ProcessFlags(const char* string, _PROCESSING* processing, void (S
     return 1;
 }
 
-// OFFSET: %0x004BDCD0
+// OFFSET: 0x004B6E80/0x1400EEA70
 static int32_t ProcessToken(const char* string, int32_t quoted, _PROCESSING* processing, CMDDEF** nextarg, int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     if (*string == '@' && !quoted) {
         return ProcessFile(string + 1, processing, nextarg, extracallback, errorcallback);
@@ -301,7 +301,7 @@ int32_t STORMAPI SCmdDestroy() {
     return 1;
 }
 
-// OFFSET: %0x004BDE50
+// OFFSET: 0x004B6F70/0x1400EEB80
 uint32_t STORMAPI SCmdGetNum(uint32_t id) {
     for (int32_t i = 0; i <= 1; i++) {
         TSList<CMDDEF>* list = i ? &s_flaglist : &s_arglist;
@@ -428,7 +428,7 @@ int32_t STORMAPI SCmdRegisterArgList(const _ARGLIST* listptr, uint32_t numargs) 
     return 1;
 }
 
-// OFFSET: %0x004BE210
+// OFFSET: 0x004B70B0/0x1400EED10
 int32_t ProcessString(const char** stringptr, _PROCESSING* processing, CMDDEF** nextarg, int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     while (**stringptr) {
         const char* nextptr = *stringptr;
@@ -452,7 +452,7 @@ int32_t STORMAPI SCmdGetBool(uint32_t id) {
     return SCmdGetNum(id) != 0;
 }
 
-// OFFSET: %0x004BE2C0
+// OFFSET: 0x004B7160/0x1400EEE10
 int32_t STORMAPI SCmdProcess(const char* cmdline, int32_t skipprogname, int32_t (STORMAPI* extracallback)(const char*), void (STORMAPI* errorcallback)(_CMDERROR*)) {
     if (!cmdline) {
         DebugValidate("cmdline");

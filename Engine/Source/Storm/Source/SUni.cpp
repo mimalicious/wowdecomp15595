@@ -132,7 +132,7 @@ int32_t STORMAPI SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint
     return result;
 }
 
-// OFFSET: %0x004C5C60
+// OFFSET: 0x004B6180/0x1400EDA20
 int32_t STORMAPI SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, uint32_t* srcchars) {
     if (!srcmaxchars || !src) {
         if (srcchars) {

@@ -44,7 +44,7 @@ static int32_t s_initialized;
 // STATIC: #0x00CAC170
 static double s_realDigit[20][10];
 
-// OFFSET: %0x004B9B30
+// OFFSET: 0x004B2D00/0x1400E98E0
 static int32_t GetNextTextUpper(const char** string, uint32_t* code, uint32_t* upper) {
     int32_t bytes = bytesFromUTF8[static_cast<uint8_t>(**string)];
     *code = 0;
@@ -115,7 +115,7 @@ static int32_t GetNextTextUpper(const char** string, uint32_t* code, uint32_t* u
     return bytes;
 }
 
-// OFFSET: %0x004B9C60
+// OFFSET: 0x004B2E30
 static int32_t SStrCmpGetNextTextUpper(const char** string, uint32_t* code, uint32_t* upper) {
     int32_t bytes = bytesFromUTF8[static_cast<uint8_t>(**string)];
     *code = 0;
@@ -210,7 +210,7 @@ int32_t SStrCmpUTF8I(const char* string1, const char* string2, size_t maxchars) 
     return 0;
 }
 
-// OFFSET: %0x004B9E20
+// OFFSET: 0x004B2FF0/0x1400E9CB0
 static uint32_t GetSortChar(uint32_t ch) {
     if (ch >= 0xC0 && ch <= 0xDF) {
         if (ch <= 0xC6) {
@@ -260,7 +260,7 @@ static uint32_t GetNextSortChar(const char* string, int32_t* bytes) {
     return GetSortChar(upper);
 }
 
-// OFFSET: %0x004B9EF0
+// OFFSET: 0x004B30C0/0x1400E9D70
 static bool CompareSortChars(uint32_t upper1, uint32_t upper2, const char** string1, const char** string2) {
     if (GetSortChar(upper1) != GetSortChar(upper2)) {
         return false;
@@ -355,7 +355,7 @@ int32_t SStrSortUTF8I(const char* string1, const char* string2, size_t maxchars)
     return result;
 }
 
-// OFFSET: %0x004BA0D0
+// OFFSET: 0x004B32A0/0x1400EA8C0
 size_t SStrCopyUTF8(char* dest, const char* source, size_t destsize, size_t maxchars) {
     if (!dest || !source) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -442,7 +442,7 @@ const char* SStrAdvanceCharsUTF8(const char* string, size_t chars) {
     return string;
 }
 
-// OFFSET: %0x004BA210
+// OFFSET: 0x004B33E0/0x1400EA010
 static size_t ISStrVPrintf(char* dest, size_t maxchars, const char* format, va_list arglist) {
     if (!maxchars) {
         return 0;
@@ -620,7 +620,7 @@ uint32_t SStrHash(const char* string, uint32_t flags, uint32_t seed) {
     return result ? result : 1;
 }
 
-// OFFSET: %0x004BA550
+// OFFSET: 0x004B3720/0x1400EA3F0
 static uint32_t bjhash(const uint8_t* k, uint32_t length, uint32_t initval) {
     uint32_t a = 0x9E3779B9;
     uint32_t b = 0x9E3779B9;
@@ -667,7 +667,7 @@ static uint32_t bjhash(const uint8_t* k, uint32_t length, uint32_t initval) {
     return c;
 }
 
-// OFFSET: %0x004BA760
+// OFFSET: 0x004B3930/0x1400EA680
 uint32_t SStrHashHT(const char* string) {
     uint8_t buffer[1024];
     uint8_t* dest = buffer;
@@ -772,7 +772,7 @@ char* Int64ToString(int64_t num, char* buf, size_t destsize) {
     return buf;
 }
 
-// OFFSET: %0x004BA9B0
+// OFFSET: 0x004B3B80
 static void InitializeFloatDigits() {
     for (int32_t exponent = -1; exponent > -21; exponent--) {
         for (int32_t digit = 0; digit < 10; digit++) {

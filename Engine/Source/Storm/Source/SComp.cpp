@@ -300,7 +300,7 @@ static const uint32_t s_ima_steptable[89] = {
     15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767,
 };
 
-// STATIC: %0x00C9DE10
+// STATIC: 0x00D9D584
 static void* s_DecompressBuffer;
 
 // STATIC: #0x00CB746C
@@ -439,7 +439,7 @@ void ImaAdpcmCheckOptimization(uint32_t optimization, uint8_t* bitspersample, ui
     *hint = 7;
 }
 
-// OFFSET: %0x004BFED0
+// OFFSET: 0x004B9710
 uint32_t ImaAdpcmCompress(uint8_t* dest, uint32_t destsize, const int16_t* source, uint32_t sourcesize, uint32_t channels, uint8_t bitspersample) {
     uint8_t* basedest = dest;
 
@@ -575,7 +575,7 @@ uint32_t ImaAdpcmCompress(uint8_t* dest, uint32_t destsize, const int16_t* sourc
     return static_cast<uint32_t>(currdest - basedest + 2);
 }
 
-// OFFSET: %0x004C0150
+// OFFSET: 0x004B9990
 uint32_t ImaAdpcmDecompress(int16_t* dest, uint32_t destsize, const uint8_t* source, uint32_t sourcesize, uint32_t channels) {
     int16_t* basedest = dest;
     const uint8_t* endsource = source + sourcesize;
@@ -731,7 +731,7 @@ void CHuffmanEncoder::EncodeSymbol(CBitOutput* output, int32_t symbol) {
     output->OutputBits(value, count);
 }
 
-// OFFSET: %0x004C0330
+// OFFSET: 0x004B9B70
 static voidpf ZlibAlloc(voidpf opaque, uInt items, uInt size) {
     ZLIBBUFFER* buffer = static_cast<ZLIBBUFFER*>(opaque);
     uint32_t bytes = items * size;
@@ -761,7 +761,7 @@ static void ZlibFree(voidpf opaque, voidpf address) {
     }
 }
 
-// OFFSET: %0x004C03B0
+// OFFSET: 0x004B9BF0/0x1400F23D0
 int32_t STORMAPI zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t* source, uint32_t sourceLen, int32_t level) {
     char storage[300000];
     ZLIBBUFFER buffer;
@@ -796,7 +796,7 @@ int32_t STORMAPI zlib_compress(uint8_t* dest, uint32_t* destLen, const uint8_t* 
     return deflateEnd(&stream);
 }
 
-// OFFSET: %0x004C0480
+// OFFSET: 0x004B9CC0
 void ZlibCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     int32_t level;
 
@@ -817,7 +817,7 @@ void ZlibCompress(void* dest, uint32_t* destsize, const void* source, uint32_t s
     *hint = 0;
 }
 
-// OFFSET: %0x004C04F0
+// OFFSET: 0x004B9D30/0x1400F2530
 int32_t STORMAPI zlib_uncompress(uint8_t* dest, uint32_t* destLen, const uint8_t* source, uint32_t sourceLen) {
     char storage[47000];
     ZLIBBUFFER buffer;
@@ -1005,7 +1005,7 @@ void RLEZeroCompress(void* dest, uint32_t* destsize, const void* source, uint32_
     *destsize = static_cast<uint32_t>(currdest - basedest);
 }
 
-// OFFSET: #0x00778500
+// OFFSET: 0x004BA0A0
 int32_t RLEZeroDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     uint8_t* currdest = static_cast<uint8_t*>(dest);
     const uint8_t* curr = static_cast<const uint8_t*>(source);
@@ -1041,7 +1041,7 @@ int32_t RLEZeroDecompress(void* dest, uint32_t* destsize, const void* source, ui
     return 1;
 }
 
-// OFFSET: %0x004C0900
+// OFFSET: 0x004BA140/0x1400F2A10
 void Bzip2Compress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     int32_t result = BZ2_bzBuffToBuffCompress(static_cast<char*>(dest), destsize, static_cast<char*>(const_cast<void*>(source)), sourcesize, 9, 0, 0);
 
@@ -1062,33 +1062,34 @@ int32_t Bzip2Decompress(void* dest, uint32_t* destsize, const void* source, uint
     return BZ2_bzBuffToBuffDecompress(static_cast<char*>(dest), destsize, static_cast<char*>(const_cast<void*>(source)), sourcesize, 0, 0) == BZ_OK;
 }
 
-// OFFSET: %0x004C09C0
+// OFFSET: 0x004BA1D0
 void ImaAdpcmMonoCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     uint8_t bitspersample;
     ImaAdpcmCheckOptimization(optimization, &bitspersample, hint);
     *destsize = ImaAdpcmCompress(static_cast<uint8_t*>(dest), *destsize, static_cast<const int16_t*>(source), sourcesize, 1, bitspersample);
 }
 
-// OFFSET: %0x004C0A30
+// OFFSET: 0x004BA240
 int32_t ImaAdpcmMonoDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     *destsize = ImaAdpcmDecompress(static_cast<int16_t*>(dest), *destsize, static_cast<const uint8_t*>(source), sourcesize, 1);
     return 1;
 }
 
-// OFFSET: %0x004C0A60
+// OFFSET: 0x004BA270
 void ImaAdpcmStereoCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     uint8_t bitspersample;
     ImaAdpcmCheckOptimization(optimization, &bitspersample, hint);
     *destsize = ImaAdpcmCompress(static_cast<uint8_t*>(dest), *destsize, static_cast<const int16_t*>(source), sourcesize, 2, bitspersample);
 }
 
-// OFFSET: %0x004C0AD0
+// OFFSET: 0x004BA2E0
 int32_t ImaAdpcmStereoDecompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize) {
     *destsize = ImaAdpcmDecompress(static_cast<int16_t*>(dest), *destsize, static_cast<const uint8_t*>(source), sourcesize, 2);
     return 1;
 }
 
-// OFFSET: %0x004C0B00
+// PROVEN: 3bf79e6a IDENTICAL/NONE
+// OFFSET: 0x004BA310/0x1400F3050
 int32_t STORMAPI SCompDestroy() {
     if (s_DecompressBuffer) {
         SMemFree(s_DecompressBuffer, __FILE__, __LINE__, 0);
@@ -1098,7 +1099,7 @@ int32_t STORMAPI SCompDestroy() {
     return 1;
 }
 
-// OFFSET: %0x004C0CA0
+// OFFSET: 0x004BA560
 HUFFNODE* CHuffman::AllocNode(uint32_t linktype) {
     HUFFNODE* node = this->m_nodefreelist.Head();
 
@@ -1113,7 +1114,7 @@ HUFFNODE* CHuffman::AllocNode(uint32_t linktype) {
     return node;
 }
 
-// OFFSET: %0x004C0D00
+// OFFSET: 0x004BA5C0/0x1400F3240
 void CHuffman::BuildTree(uint8_t hint) {
     HUFFNODE* node;
 
@@ -1194,7 +1195,7 @@ void CHuffman::BuildTree(uint8_t hint) {
     this->m_changesequence = 1;
 }
 
-// OFFSET: %0x004C10F0
+// OFFSET: 0x004BA9B0/0x1400F36D0
 void CHuffman::IncrementWeight(HUFFNODE* node) {
     for (HUFFNODE* curr = node; curr; curr = curr->parent) {
         curr->weight++;
@@ -1232,7 +1233,7 @@ void CHuffman::IncrementWeight(HUFFNODE* node) {
     }
 }
 
-// OFFSET: %0x004C0B30
+// OFFSET: 0x004BA340/0x1400F3090
 int32_t CHuffmanDecoder::DecodeSymbol(CBitInput* input) {
     uint32_t cachebits = input->PeekBits(7, 0x7F);
     _CACHEREC* cacheslot = &this->m_cache[cachebits];
@@ -1283,7 +1284,7 @@ int32_t CHuffmanDecoder::DecodeSymbol(CBitInput* input) {
     return currnode->symbol;
 }
 
-// OFFSET: %0x004C1280
+// OFFSET: 0x004BAB40
 void CHuffman::AddSymbol(int32_t symbol) {
     HUFFNODE* parent = this->m_nodelist.Head();
 
@@ -1303,11 +1304,11 @@ void CHuffman::AddSymbol(int32_t symbol) {
     this->IncrementWeight(newnode);
 }
 
-// OFFSET: %0x004C12F0
+// OFFSET: 0x004BABB0
 CHuffman::~CHuffman() {
 }
 
-// OFFSET: %0x004C13C0
+// OFFSET: 0x004BAC80/0x1400F3B90
 uint32_t CHuffmanDecoder::Decompress(void* dest, uint32_t destsize, CBitInput* input) {
     if (!destsize) {
         return 0;
@@ -1407,7 +1408,7 @@ int32_t HuffmanDecompress(void* dest, uint32_t* destsize, const void* source, ui
     return 1;
 }
 
-// OFFSET: %0x004C1610
+// OFFSET: 0x004BAED0
 void HuffmanCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     CBitOutput output(dest, *destsize);
     CHuffmanEncoder encoder;
