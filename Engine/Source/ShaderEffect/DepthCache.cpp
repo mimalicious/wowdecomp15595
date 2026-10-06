@@ -61,11 +61,11 @@ int32_t DepthCache::IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFo
     EDepthMode depthMode = DM_Unknown;
     EGxTexFormat depth = GxTex_Unknown;
 
-    if (g_theGxDevicePtr->m_caps.m_texNonPow2) {
+    if (g_theGxDevicePtr->m_caps.m_texNonPow2 || !g_theGxDevicePtr->m_caps.unk_0300) {
         return 0;
     }
 
-    if (g_theGxDevicePtr->m_caps.unk_0300) {
+    if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11) {
         switch (g_theGxDevicePtr->DeviceFormat().m_depthFormat) {
             case CGxFormat::Fmt_Ds160:
                 depth = GxTex_R16;
@@ -173,14 +173,14 @@ static void CreateTextures() {
     DepthCache::EDepthMode mode = DepthCache::DM_Unknown;
     s_depthMode = DepthCache::DM_Unknown;
 
-    if (DepthCache::IsSupported(&mode, &format, &resolveFormat)) {
+    if (DepthCache::IsSupported(&mode, &format, &resolveFormat) && (g_theGxDevicePtr->m_caps.unk_0314 || g_theGxDevicePtr->DeviceFormat().m_multisampleCount == 1)) {
         GxLog("    DepthCache is supported!");
         GxLog("    Format:        %s", CGxDevice::s_texFormatNames[format]);
         GxLog("    FormatResolve: %s", CGxDevice::s_texFormatNames[resolveFormat]);
 
         CGxTexFlags flags;
 
-        if (!g_theGxDevicePtr->m_caps.unk_0314) {
+        if (g_theGxDevicePtr->DeviceApi() != GxApi_D3d11) {
             flags.m_renderTarget = 1;
         }
 

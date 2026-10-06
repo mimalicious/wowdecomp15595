@@ -292,14 +292,13 @@ void CShaderEffect::InitShaderSystem(int32_t enableShaders, int32_t usePcfFilter
     CShaderEffect::s_forceAlphaTest = 0;
     CShaderEffect::s_useAlphaRef = g_theGxDevicePtr->m_caps.unk_02F4;
 
-    uint16_t vendorID;
-    uint16_t deviceID;
-    uint32_t driverVersionHi;
-    uint32_t driverVersionLo;
-
-    if (GxAdapterID(vendorID, deviceID, driverVersionHi, driverVersionLo) && vendorID == 0x8086) {
+    if (g_theGxDevicePtr->m_caps.m_vendorId == 0x8086) {
         CShaderEffect::s_forceAlphaTest = 1;
         GxLog("Forcing AlphaTest on Intel GPUs instead of using texkill!");
+    }
+
+    if (!g_theGxDevicePtr->m_caps.unk_02F4) {
+        CShaderEffect::s_forceAlphaTest = 0;
     }
 
     FileNotification::RegisterSingleFile("bls", ReloadShadersCallback);
