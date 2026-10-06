@@ -13,7 +13,7 @@
 // STATIC: %0x00BBD970
 static TSCArray<uint16_t, 256 * 256> s_textureData = { 256 * 256 };
 
-// OFFSET: %0x00633AF0
+// OFFSET: 0x00623340
 void TEXTURECACHE::PasteGlyphOutlinedMonochrome(const GLYPHBITMAPDATA& data, TSCArray<uint16_t, 256 * 256>& texture, uint32_t offset) {
     uint16_t* dest = &texture.m_data[offset];
     const uint8_t* source = static_cast<const uint8_t*>(data.m_data);
@@ -122,7 +122,7 @@ void TEXTURECACHE::PasteGlyphOutlinedMonochrome(const GLYPHBITMAPDATA& data, TSC
     }
 }
 
-// OFFSET: %0x00633FB0
+// OFFSET: 0x00623800
 void TEXTURECACHE::PasteGlyphNonOutlinedMonochrome(const GLYPHBITMAPDATA& data, TSCArray<uint16_t, 256 * 256>& texture, uint32_t offset) {
     uint16_t* dest = &texture.m_data[offset];
     const uint8_t* source = static_cast<const uint8_t*>(data.m_data);
@@ -153,7 +153,7 @@ void TEXTURECACHE::PasteGlyphNonOutlinedMonochrome(const GLYPHBITMAPDATA& data, 
     }
 }
 
-// OFFSET: %0x006340D0
+// OFFSET: 0x00623920
 void TEXTURECACHE::PasteGlyphOutlinedAA(const GLYPHBITMAPDATA& data, TSCArray<uint16_t, 256 * 256>& texture, uint32_t offset) {
     uint16_t* dest = &texture.m_data[offset];
     static const uint8_t s_outlineAlpha[] = { 0, 1, 1, 3, 5, 7, 9, 11, 13, 15 };
@@ -303,7 +303,7 @@ void TEXTURECACHE::PasteGlyphOutlinedAA(const GLYPHBITMAPDATA& data, TSCArray<ui
     }
 }
 
-// OFFSET: %0x00634940
+// OFFSET: 0x00624190
 void TEXTURECACHE::PasteGlyphNonOutlinedAA(const GLYPHBITMAPDATA& data, TSCArray<uint16_t, 256 * 256>& texture, uint32_t offset) {
     uint16_t* dest = &texture.m_data[offset];
     const uint8_t* source = static_cast<const uint8_t*>(data.m_data);
@@ -334,7 +334,7 @@ void TEXTURECACHE::PasteGlyphNonOutlinedAA(const GLYPHBITMAPDATA& data, TSCArray
     }
 }
 
-// OFFSET: %0x00633AB0
+// OFFSET: 0x00623300
 void TEXTURECACHE::UpdateDirty() {
     if (this->m_anyDirtyGlyphs && this->m_texture) {
         CGxTex* gxTex = TextureGetGxTex(this->m_texture);
@@ -343,7 +343,7 @@ void TEXTURECACHE::UpdateDirty() {
     }
 }
 
-// OFFSET: %0x00634A50
+// OFFSET: 0x006242A0/0x1402B5890
 CHARCODEDESC* TEXTURECACHE::AllocateNewGlyph(GLYPHBITMAPDATA* data) {
     uint32_t count = this->m_textureRows.m_count;
 
@@ -375,7 +375,7 @@ void TEXTURECACHE::PasteGlyph(const GLYPHBITMAPDATA& data, TSCArray<uint16_t, 25
     }
 }
 
-// OFFSET: %0x00634AB0
+// OFFSET: 0x00624300
 void TEXTURECACHE::WriteGlyphToTexture(CHARCODEDESC* glyph) {
     if (!this->m_texture || !this->m_theFace || !this->m_theFace->m_cellHeight) {
         return;
@@ -385,7 +385,7 @@ void TEXTURECACHE::WriteGlyphToTexture(CHARCODEDESC* glyph) {
     this->PasteGlyph(glyph->m_bitmapData, s_textureData, offset);
 }
 
-// OFFSET: %0x00634CA0
+// OFFSET: 0x00624380/0x1402B5910
 void TEXTURECACHE::TextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command != GxTex_Latch) {
         return;
@@ -396,7 +396,8 @@ void TEXTURECACHE::TextureCallback(EGxTexCommand command, uint32_t width, uint32
     for (uint32_t row = cache->m_textureRows.m_count; row > 0; row--) {
         TEXTURECACHEROW& cacheRow = cache->m_textureRows.m_data[row - 1];
 
-        for (CHARCODEDESC* glyph = cacheRow.m_glyphlist.Head(); glyph; glyph = cacheRow.m_glyphlist.Next(glyph)) {
+        for (CHARCODEDESC* glyph = cacheRow.m_glyphlist.Head(), * next; !cacheRow.m_glyphlist.IsEnd(glyph); glyph = next) {
+            next = cacheRow.m_glyphlist.RawNext(glyph);
             cache->WriteGlyphToTexture(glyph);
         }
     }
@@ -414,7 +415,7 @@ void TEXTURECACHE::CreateTexture(int32_t filter) {
     this->m_texture = TextureCreate(256, 256, GxTex_Argb4444, GxTex_Argb4444, flags, this, TEXTURECACHE::TextureCallback, "GxuFont", 0);
 }
 
-// OFFSET: %0x00634E00
+// OFFSET: 0x00624660/0x1402B5D90
 void TEXTURECACHE::Initialize(CGxFont* face, uint32_t cellHeight) {
     this->m_theFace = face;
     uint32_t rows = 256 / cellHeight;

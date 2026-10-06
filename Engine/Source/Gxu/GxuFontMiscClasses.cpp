@@ -29,7 +29,7 @@ CGxBuf* BATCHEDRENDERFONTDESC::s_indexBuf;
 // STATIC: %0x00CE4568
 uint8_t BATCHEDRENDERFONTDESC::s_billboarded;
 
-// OFFSET: %0x0062CBD0
+// OFFSET: 0x0061C340
 CHARCODEDESC::CHARCODEDESC() {
     this->m_textureNumber = 0xFFFFFFFF;
     this->m_rowNumber = 0xFFFFFFFF;
@@ -74,7 +74,7 @@ GLYPHBITMAPDATA::~GLYPHBITMAPDATA() {
     this->m_data = NULL;
 }
 
-// OFFSET: %0x00630B20
+// OFFSET: 0x006202B0
 void CHARCODEDESC::GenerateTextureCoords(uint32_t rowNumber, uint32_t cellHeight) {
     int32_t top = rowNumber * cellHeight;
     float left = this->m_glyphStartPixel;
@@ -90,7 +90,7 @@ void CHARCODEDESC::GenerateTextureCoords(uint32_t rowNumber, uint32_t cellHeight
     this->m_bitmapData.m_textureCoords = coords;
 }
 
-// OFFSET: %0x00630C60
+// OFFSET: 0x006203F0
 uint32_t CHARCODEDESC::GapToPrevious() {
     CHARCODEDESC* previous = this->m_textureRowLink.Prev();
 
@@ -101,7 +101,7 @@ uint32_t CHARCODEDESC::GapToPrevious() {
     return this->m_glyphStartPixel - previous->m_glyphEndPixel - 1;
 }
 
-// OFFSET: %0x00630C80
+// OFFSET: 0x00620410
 void TEXTLINETEXTURE::WriteGeometry(CGxVertexPCT* buf, const CImVector& fontColor, const C2Vector& shadowOffset, const CImVector& shadowColor, const C3Vector& viewTranslation, bool hasShadow, bool hasGradient, int32_t vertIndex, int32_t numVerts) const {
     if (!numVerts) {
         return;
@@ -219,7 +219,7 @@ void BATCHEDRENDERFONTDESC::Initialize() {
     BATCHEDRENDERFONTDESC::s_indexBuf = g_theGxDevicePtr->BufCreate(BATCHEDRENDERFONTDESC::s_indexPool, sizeof(uint16_t), 3072, 0);
 }
 
-// OFFSET: %0x00631100
+// OFFSET: 0x006208B0
 void BATCHEDRENDERFONTDESC::InitializeIndexBuff() {
     uint16_t* indices = reinterpret_cast<uint16_t*>(GxBufLock(BATCHEDRENDERFONTDESC::s_indexBuf));
 
@@ -239,7 +239,7 @@ void BATCHEDRENDERFONTDESC::InitializeIndexBuff() {
     GxBufUnlock(BATCHEDRENDERFONTDESC::s_indexBuf, 0);
 }
 
-// OFFSET: %0x00631170
+// OFFSET: 0x00620920
 void BATCHEDRENDERFONTDESC::Shutdown() {
     if (BATCHEDRENDERFONTDESC::s_indexBuf) {
         GxBufDestroy(BATCHEDRENDERFONTDESC::s_indexBuf);
@@ -252,7 +252,7 @@ void BATCHEDRENDERFONTDESC::Shutdown() {
     }
 }
 
-// OFFSET: %0x006311E0
+// OFFSET: 0x00620990
 CGxVertexPCT* BATCHEDRENDERFONTDESC::UnlockVertexPtrAndRender(CGxBuf*& buf, int32_t count) {
     GxBufUnlock(buf, sizeof(CGxVertexPCT) * count);
 
@@ -344,13 +344,13 @@ void BATCHEDRENDERFONTDESC::RenderBatch() {
     GxBufUnlock(buf, 0);
 }
 
-// OFFSET: %0x00631620
+// OFFSET: 0x006210F0/0x1402B1740
 TEXTLINETEXTURE::~TEXTLINETEXTURE() {
     this->m_verts.Clear();
     this->m_colors.Clear();
 }
 
-// OFFSET: %0x006316F0
+// OFFSET: 0x006211C0
 TEXTLINETEXTURE* TEXTLINETEXTURE::NewTextLineTexture() {
     TEXTLINETEXTURE* texture = TEXTLINETEXTURE::s_freeTextLineTextures.Head();
 
@@ -364,7 +364,7 @@ TEXTLINETEXTURE* TEXTLINETEXTURE::NewTextLineTexture() {
     return texture;
 }
 
-// OFFSET: %0x00631900
+// OFFSET: 0x006213D0
 void TEXTURECACHEROW::EvictGlyph(CHARCODEDESC* desc) {
     uint32_t needed = desc->m_bitmapData.m_glyphCellWidth;
 
@@ -406,7 +406,7 @@ void TEXTURECACHEROW::EvictGlyph(CHARCODEDESC* desc) {
     }
 }
 
-// OFFSET: %0x00631AA0
+// OFFSET: 0x00620C10
 CHARCODEDESC* TEXTURECACHEROW::CreateNewDesc(GLYPHBITMAPDATA* data, uint32_t rowNumber, uint32_t cellHeight) {
     uint32_t width = data->m_glyphCellWidth;
 
@@ -485,7 +485,7 @@ CHARCODEDESC* TEXTURECACHEROW::CreateNewDesc(GLYPHBITMAPDATA* data, uint32_t row
     return desc;
 }
 
-// OFFSET: %0x00631D20
+// OFFSET: 0x00621580/0x1402B1D10
 void CGxStringBatch::RenderBatch() {
     if (g_fontStatsEnabled) {
         return;
@@ -564,12 +564,12 @@ void CGxStringBatch::RenderBatch() {
     GxXformSetProjection(projection);
 }
 
-// OFFSET: %0x006322E0
+// OFFSET: 0x00621B40/0x1402B2590
 BATCHEDRENDERFONTDESC::~BATCHEDRENDERFONTDESC() {
     this->m_strings.UnlinkAll();
 }
 
-// OFFSET: %0x00632380
+// OFFSET: 0x00621BE0/0x1402B2610
 void TEXTLINETEXTURE::Recycle(TEXTLINETEXTURE* ptr) {
     if (TEXTLINETEXTURE::s_recycledBytes > 0x80000) {
         delete ptr;
@@ -582,7 +582,7 @@ void TEXTLINETEXTURE::Recycle(TEXTLINETEXTURE* ptr) {
     TEXTLINETEXTURE::s_freeTextLineTextures.LinkToTail(ptr);
 }
 
-// OFFSET: %0x00632400
+// OFFSET: 0x00621C60
 void TEXTLINETEXTURE::Shutdown() {
     TEXTLINETEXTURE::s_recycledBytes = 0;
     TEXTLINETEXTURE::s_freeTextLineTextures.Clear();
@@ -592,7 +592,7 @@ void TEXTLINETEXTURE::Shutdown() {
 CGxStringBatch::CGxStringBatch() : m_flags(0) {
 }
 
-// OFFSET: %0x00632860
+// OFFSET: 0x006220B0/0x1402B2E20
 void CGxStringBatch::AddString(CGxString* string) {
     CGxFont* face = string->m_currentFace;
     uint32_t hashval = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(face));

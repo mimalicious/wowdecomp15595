@@ -33,7 +33,7 @@ void CGxString::WriteGeometry(CGxVertexPCT* buf, int32_t texturePage, int32_t ve
     }
 }
 
-// OFFSET: %0x0062E600
+// OFFSET: 0x0061DDB0
 EMBEDDEDPARSEINFO::EMBEDDEDPARSEINFO() {
     this->m_state = 0;
     this->m_hyperlink.m_lineHeight = 0.0f;
@@ -48,7 +48,7 @@ EMBEDDEDPARSEINFO::EMBEDDEDPARSEINFO() {
     this->m_hyperlink.m_colorCodeLength = 0;
 }
 
-// OFFSET: %0x0062E680
+// OFFSET: 0x0061DE30
 void CGxString::SetGradientAlpha(const GRADIENTINFO& info, uint8_t alpha) {
     if (info.m_texturePage >= 8) {
         return;
@@ -61,7 +61,7 @@ void CGxString::SetGradientAlpha(const GRADIENTINFO& info, uint8_t alpha) {
     }
 }
 
-// OFFSET: %0x0062E6C0
+// OFFSET: 0x0061DE70
 uint8_t CGxString::GetGradientAlpha(const GRADIENTINFO& info) {
     if (info.m_texturePage >= 8) {
         return 0;
@@ -76,7 +76,7 @@ uint8_t CGxString::GetGradientAlpha(const GRADIENTINFO& info) {
     return textLine->m_colors.m_data[info.m_vertIndex].a;
 }
 
-// OFFSET: %0x0062E700
+// OFFSET: 0x0061DEB0
 void CGxString::InitializeViewTranslation() {
     this->m_viewTranslation = this->m_position;
 
@@ -130,7 +130,7 @@ void CGxString::SetStringPosition(const C3Vector& position) {
     this->InitializeViewTranslation();
 }
 
-// OFFSET: %0x0062EFF0
+// OFFSET: 0x0061E7A0
 void CGxString::AddHyperlinkParseInfo(GXUFONTHYPERLINKINFO info) {
     float heightPixels = g_heightPixels;
     info.m_lineHeight = info.m_lineHeight / heightPixels;
@@ -143,7 +143,7 @@ void CGxString::AddHyperlinkParseInfo(GXUFONTHYPERLINKINFO info) {
     this->m_hyperlinkInfo.Add(1, &info);
 }
 
-// OFFSET: %0x0062F070
+// OFFSET: 0x0061E820
 void CGxString::AddEmbeddedTextureParseInfo(GXUEMBEDDEDTEXTUREINFO info) {
     float heightPixels = g_heightPixels;
     info.m_lineHeight = info.m_lineHeight / heightPixels;
@@ -160,7 +160,7 @@ void CGxString::AddEmbeddedTextureParseInfo(GXUEMBEDDEDTEXTUREINFO info) {
     this->m_embeddedTextureInfo.Add(1, &info);
 }
 
-// OFFSET: %0x0062F110
+// OFFSET: 0x0061E8C0/0x1402AD390
 void CGxString::ClearInstanceData() {
     this->m_hyperlinkInfo.SetCount(0);
     this->m_embeddedTextureInfo.SetCount(0);
@@ -200,7 +200,7 @@ void CGxString::SetColor(const CImVector& color) {
     }
 }
 
-// OFFSET: %0x0062F1F0
+// OFFSET: 0x0061E9A0/0x1402AD480
 void CGxString::HandleScreenSizeChange() {
     if (this->m_flags & 4) {
         this->m_requestedFontHeight = GxuFontGetOneToOneHeight(this->m_currentFace);
@@ -212,7 +212,7 @@ void CGxString::HandleScreenSizeChange() {
     this->ClearInstanceData();
 }
 
-// OFFSET: %0x0062F260
+// OFFSET: 0x0061EA10
 void CGxString::InitializeTextLine(const char* text, uint32_t numBytes, CImVector& color, const C3Vector& position, uint32_t* texturePagesUsed, EMBEDDEDPARSEINFO& parseInfo) {
     float rotation = this->m_rotation;
     bool rotated = false;
@@ -606,7 +606,7 @@ int32_t CGxString::CheckGeometry() {
     return this->m_numLines != 0;
 }
 
-// OFFSET: %0x0062FDD0
+// OFFSET: 0x0061F580
 int32_t CGxString::Initialize(float fontHeight, const C3Vector& position, float blockWidth, float blockHeight, CGxFont* face, const char* text, EGxFontVJusts vertJust, EGxFontHJusts horzJust, float spacing, uint32_t flags, const CImVector& color, float scale, float stringScale, float rotation) {
     uint32_t textLen = SStrLen(text) + 1;
 
@@ -648,14 +648,14 @@ int32_t CGxString::Initialize(float fontHeight, const C3Vector& position, float 
     return 1;
 }
 
-// OFFSET: %0x0062FF40
+// OFFSET: 0x0061F6F0/0x1402AE5D0
 void CGxString::Recycle() {
     this->m_batchedStringLink.Unlink();
     g_freeStrings.LinkToTail(this);
     this->ClearInstanceData();
 }
 
-// OFFSET: %0x0062FFA0
+// OFFSET: 0x0061F750
 CGxString::CGxString() {
     this->m_requestedFontHeight = 0.02f;
     this->m_currentFontHeight = 0.02f;
@@ -700,7 +700,7 @@ CGxString::CGxString() {
     }
 }
 
-// OFFSET: %0x00630100
+// OFFSET: 0x0061F8B0
 CGxString::~CGxString() {
     for (uint32_t i = 0; i < 8; i++) {
         if (this->m_textLines[i]) {
@@ -716,7 +716,7 @@ CGxString::~CGxString() {
     this->m_embeddedTextureInfo.Clear();
 }
 
-// OFFSET: %0x00630330
+// OFFSET: 0x0061FAE0
 int32_t CGxString::SetGradient(int32_t start, int32_t length) {
     if (start < 0 || length < 0) {
         return 2;
@@ -773,7 +773,7 @@ int32_t CGxString::SetGradient(int32_t start, int32_t length) {
     return 2;
 }
 
-// OFFSET: %0x006304E0
+// OFFSET: 0x0061FC70/0x1402AEC50
 CGxString* CGxString::GetNewString(int32_t linkOnTop) {
     CGxString* string = g_freeStrings.Head();
 
@@ -785,7 +785,7 @@ CGxString* CGxString::GetNewString(int32_t linkOnTop) {
     return g_strings.NewNode(linkOnTop ? 2 : 0, 0, 0);
 }
 
-// OFFSET: %0x00630530
+// OFFSET: 0x0061FCC0/0x1402AED40
 void CGxString::CreateGeometry() {
     if (this->m_numLines || !this->m_text || !*this->m_text) {
         return;

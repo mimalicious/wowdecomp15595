@@ -16,7 +16,7 @@ static int32_t FREETYPE_RenderGlyph(FT_Face face, uint32_t code, bool monochrome
     return FT_Render_Glyph(face->glyph, static_cast<FT_Render_Mode>(monochrome)) == 0;
 }
 
-// OFFSET: %0x006338A0
+// OFFSET: 0x006230F0
 static void CalculateYOffset(uint32_t pixelSize, int32_t baseline, FT_Face face, uint32_t glyphHeight, int32_t* yOffset, uint32_t* yStart) {
     int32_t offset = 0;
     int32_t start;
@@ -47,7 +47,7 @@ static void CalculateYOffset(uint32_t pixelSize, int32_t baseline, FT_Face face,
     }
 }
 
-// OFFSET: %0x00633900
+// OFFSET: 0x00623150/0x1402B4500
 bool IGxuFontGlyphRenderGlyph(FT_Face face, uint32_t pixelSize, uint32_t code, uint32_t baseline, GLYPHBITMAPDATA* dataPtr, int32_t monochrome, uint32_t padding) {
     if (!face || !pixelSize || !dataPtr) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

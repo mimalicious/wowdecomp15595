@@ -107,7 +107,7 @@ CGxShader* g_fontPixelShader;
 // STATIC: %0x00CE44A4
 CGxShader* g_fontVertexShader;
 
-// OFFSET: %0x00623BC0
+// OFFSET: 0x006130E0
 static float GetAverageFrameRate() {
     float total = 0.0f;
     uint32_t index = s_frameTimeIndex;
@@ -129,7 +129,7 @@ static float GetAverageFrameRate() {
     return 1.0f / average;
 }
 
-// OFFSET: %0x00623C30
+// OFFSET: 0x00613150/0x14029E6A0
 const char* GxuFontGetFontName(CGxFont* face) {
     if (!face) {
         return NULL;
@@ -138,7 +138,7 @@ const char* GxuFontGetFontName(CGxFont* face) {
     return face->GetName();
 }
 
-// OFFSET: %0x00623C50
+// OFFSET: 0x00613170/0x14029E6B0
 uint32_t GxuFontGetFontFlags(CGxFont* face) {
     if (!face) {
         return 0;
@@ -191,12 +191,12 @@ void GxuFontGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, fl
     InternalGetTextExtent(face, text, numBytes, fontHeight, extent, flags, shadowWidth, scale);
 }
 
-// OFFSET: %0x00623D50
+// OFFSET: 0x00613270
 uint32_t GxuFontGetMaxCharsWithinWidth(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     return InternalGetMaxCharsWithinWidth(face, text, fontHeight, maxWidth, numBytes, extent, flags, shadowWidth, scale, NULL, NULL);
 }
 
-// OFFSET: %0x00623DA0
+// OFFSET: 0x006132C0
 uint32_t GxuFontGetMaxCharsWithinWidthFromEnd(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!text || !*text || !numBytes || maxWidth == 0.0f) {
         return 0;
@@ -234,7 +234,7 @@ uint32_t GxuFontGetMaxCharsWithinWidthFromEnd(CGxFont* face, const char* text, f
     return 0;
 }
 
-// OFFSET: %0x00623ED0
+// OFFSET: 0x006133F0
 float GxuFontGetOneToOneHeight(CGxFont* face) {
     if (!face) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -276,7 +276,7 @@ void GxuFontAddShadow(CGxString* string, const CImVector& color, const C2Vector&
     }
 }
 
-// OFFSET: %0x00623F90
+// OFFSET: 0x006134B0
 void GxuFontRemoveShadow(CGxString* string) {
     if (string) {
         string->RemoveShadow();
@@ -319,7 +319,7 @@ void GxuFontSetTokenCallback(const char* (*callback)(uint32_t, uint32_t)) {
     s_tokenCallback = callback;
 }
 
-// OFFSET: %0x00624020
+// OFFSET: 0x00613540/0x14029EA60
 static void InitializeFrameGraph() {
     CImVector red(0x00, 0x00, 0xFF, 0xFF);
 
@@ -385,7 +385,7 @@ static void InitializeFrameGraph() {
     }
 }
 
-// OFFSET: %0x00624250
+// OFFSET: 0x00613770
 uint32_t GxuFontGetMaxCharsWithinWidthAndHeight(CGxFont* face, const char* text, float fontHeight, float blockWidth, float blockHeight, uint32_t numBytes, float shadowWidth, float scale, float spacing, uint32_t flags) {
     uint32_t numChars = 0;
 
@@ -440,14 +440,14 @@ uint32_t GxuFontGetMaxCharsWithinWidthAndHeight(CGxFont* face, const char* text,
     return numChars;
 }
 
-// OFFSET: %0x00624410
+// OFFSET: 0x00613930/0x14029EF30
 C3Vector GxuFontGetStringPosition(CGxString* string) {
     C3Vector position = string ? string->m_position : C3Vector(0.0f, 0.0f, 0.0f);
 
     return position;
 }
 
-// OFFSET: %0x00624460
+// OFFSET: 0x00613980/0x14029EF90
 QUOTEDCODE GxuDetermineQuotedCode(const char* text, int32_t& advance, CImVector* color, uint32_t flags, uint32_t& wide, int32_t writeToken) {
     uint32_t ignoreColor = flags & 0x100;
     uint32_t ignoreNewLine = flags & 0x200;
@@ -793,7 +793,7 @@ QUOTEDCODE GxuDetermineQuotedCode(const char* text, int32_t& advance, CImVector*
     return CODE_INVALIDCODE;
 }
 
-// OFFSET: %0x006249F0
+// OFFSET: 0x00613F10
 int32_t GxuFontRemoveFromBatch(CGxString* string) {
     if (!string) {
         return 0;
@@ -804,7 +804,7 @@ int32_t GxuFontRemoveFromBatch(CGxString* string) {
     return 1;
 }
 
-// OFFSET: %0x00624A40
+// OFFSET: 0x00613F60/0x14029F600
 float GxuFontGetWrappedTextHeight(CGxFont* face, const char* text, float fontHeight, float blockWidth, const C2Vector& shadowOffset, float scale, float spacing, uint32_t flags) {
     uint32_t numLines = 0;
 
@@ -881,7 +881,7 @@ float GxuFontGetWrappedTextHeight(CGxFont* face, const char* text, float fontHei
     return extraHeight / heightPixels + lineSpacing * static_cast<float>(numLines - 1) + static_cast<float>(numLines) * fontHeight;
 }
 
-// OFFSET: %0x00624C50
+// OFFSET: 0x00614170/0x14029F910
 uint32_t GxuFontWrapText(CGxFont* face, const char* text, uint32_t textLength, float fontHeight, float blockWidth, uint32_t* lineStarts, uint32_t maxLines, float shadowWidth, float scale, float unused, uint32_t flags) {
     if (!text || !*text || !textLength || fontHeight == 0.0f || blockWidth == 0.0f) {
         return 0;
@@ -941,7 +941,7 @@ uint32_t GxuFontWrapText(CGxFont* face, const char* text, uint32_t textLength, f
     return numLines;
 }
 
-// OFFSET: %0x00624DA0
+// OFFSET: 0x006142C0
 const char* GxuFontStripEscapeCodes(const char* text, uint32_t textLength, uint32_t flags, char* buffer, uint32_t bufferSize) {
     *buffer = '\0';
 
@@ -1012,7 +1012,7 @@ const char* GxuFontStripEscapeCodes(const char* text, uint32_t textLength, uint3
     return buffer;
 }
 
-// OFFSET: %0x00624FD0
+// OFFSET: 0x006144F0/0x14029FDA0
 int32_t GxuFontCreateFont(const char* name, float fontHeight, CGxFont*& face, uint32_t flags) {
     if (!name) {
         DebugValidate("name");
@@ -1062,7 +1062,7 @@ void GxuFontDestroyFont(CGxFont*& face) {
     face = NULL;
 }
 
-// OFFSET: %0x00625120
+// OFFSET: 0x00614640/0x14029FFA0
 void GxuFontDestroyString(CGxString*& string) {
     if (string) {
         string->m_link.Unlink();
@@ -1071,7 +1071,7 @@ void GxuFontDestroyString(CGxString*& string) {
     }
 }
 
-// OFFSET: %0x00625180
+// OFFSET: 0x006146A0/0x1402A0010
 void GxuFontWindowSizeChanged() {
     static CRect s_currentRect = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -1091,13 +1091,14 @@ void GxuFontWindowSizeChanged() {
         g_indentPixelWidth = 15.0f;
         g_indentNormWidth = 15.0f / static_cast<float>(g_widthPixels);
 
-        for (CGxFont* face = g_fonts.Head(); face; face = g_fonts.Next(face)) {
+        for (CGxFont* face = g_fonts.Head(), * next; !g_fonts.IsEnd(face); face = next) {
+            next = g_fonts.RawNext(face);
             face->HandleScreenSizeChange();
         }
     }
 }
 
-// OFFSET: %0x006253B0
+// OFFSET: 0x006148D0/0x1402A01D0
 void GxuFontInitialize() {
     g_fontVertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
     g_fontPixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "UI");
@@ -1111,7 +1112,7 @@ void GxuFontInitialize() {
     InitializeFrameGraph();
 }
 
-// OFFSET: %0x00625410
+// OFFSET: 0x00614930/0x1402A0250
 int32_t GxuFontCreateString(CGxFont* face, const char* text, float fontHeight, const C3Vector& position, float blockWidth, float blockHeight, float spacing, CGxString*& string, EGxFontVJusts vertJust, EGxFontHJusts horzJust, uint32_t flags, const CImVector& color, float unused, float scale, float stringScale, float rotation) {
     if (!face) {
         DebugValidate("face");
@@ -1155,7 +1156,7 @@ int32_t GxuFontCreateString(CGxFont* face, const char* text, float fontHeight, c
     return result;
 }
 
-// OFFSET: %0x00625510
+// OFFSET: 0x00614A30/0x1402A0480
 int32_t GxuFontClearBatch(CGxStringBatch* batch) {
     if (!batch) {
         return 0;
@@ -1166,7 +1167,7 @@ int32_t GxuFontClearBatch(CGxStringBatch* batch) {
     return 1;
 }
 
-// OFFSET: %0x00625530
+// OFFSET: 0x00614A50
 int32_t GxuFontDestroyBatch(CGxStringBatch* batch) {
     if (!batch) {
         return 0;
@@ -1178,9 +1179,10 @@ int32_t GxuFontDestroyBatch(CGxStringBatch* batch) {
     return 1;
 }
 
-// OFFSET: %0x00625560
+// OFFSET: 0x00614A80
 void GxuFontUpdate() {
-    for (CGxString* string = g_strings.Head(); string; string = g_strings.Next(string)) {
+    for (CGxString* string = g_strings.Head(), * next; !g_strings.IsEnd(string); string = next) {
+        next = g_strings.RawNext(string);
         string->Tick();
     }
 
@@ -1283,7 +1285,7 @@ void GxuFontUpdate() {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: %0x006263A0
+// OFFSET: 0x006158D0/0x1402A1690
 CGxStringBatch* GxuFontCreateBatch(bool billboarded, bool worldSpace, bool noDepthWrite) {
     CGxStringBatch* batch = s_freeBatches.Head();
 

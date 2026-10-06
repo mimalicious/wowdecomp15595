@@ -36,7 +36,7 @@ uint32_t CGxFont::GetPixelSize() {
     return this->m_pixelSize;
 }
 
-// OFFSET: %0x0062C1A0
+// OFFSET: 0x0061B920
 float CGxFont::FindNearestFixedSize(FT_Face face, float height) {
     if (face->num_fixed_sizes == 0) {
         return height;
@@ -55,7 +55,7 @@ float CGxFont::FindNearestFixedSize(FT_Face face, float height) {
     return fixedHeight < height ? height : fixedHeight;
 }
 
-// OFFSET: %0x0062C290
+// OFFSET: 0x0061BA10/0x1402A9630
 int32_t CGxFont::UpdateDimensions() {
     FT_Face face = FontFaceGetFace(this->m_fontFaceHandle);
 
@@ -97,7 +97,7 @@ int32_t CGxFont::UpdateDimensions() {
     return result;
 }
 
-// OFFSET: %0x0062C420
+// OFFSET: 0x0061BBA0
 bool CGxFont::GetGlyphData(GLYPHBITMAPDATA* data, uint32_t code) {
     FT_Face face = FontFaceGetFace(this->m_fontFaceHandle);
     FT_Set_Pixel_Sizes(face, this->m_pixelSize, 0);
@@ -113,7 +113,7 @@ bool CGxFont::GetGlyphData(GLYPHBITMAPDATA* data, uint32_t code) {
     return IGxuFontGlyphRenderGlyph(face, this->m_pixelSize, code, this->m_baseline, data, this->m_fontFlags & 2, padding);
 }
 
-// OFFSET: %0x0062C210
+// OFFSET: 0x0061B990/0x1402A95D0
 float CGxFont::GetGlyphBearing(const CHARCODEDESC* desc, bool scaled, float height) {
     if (!scaled) {
         float bearing = desc->m_bitmapData.m_glyphBearing;
@@ -135,7 +135,7 @@ void CGxFont::RegisterEvictNotice(uint32_t texturePage) {
     }
 }
 
-// OFFSET: %0x0062C920
+// OFFSET: 0x0061BCF0/0x1402A9890
 int32_t CGxFont::CheckStringGlyphs(const char* string) {
     while (string && *string) {
         int32_t advance;
@@ -150,7 +150,7 @@ int32_t CGxFont::CheckStringGlyphs(const char* string) {
     return 1;
 }
 
-// OFFSET: %0x0062C980
+// OFFSET: 0x0061BD50
 float CGxFont::GetGlyphAdvance(uint32_t code) {
     CHARCODEDESC* desc = this->m_activeCharacters.Ptr(code, HASHKEY_NONE());
 
@@ -167,7 +167,7 @@ float CGxFont::GetGlyphAdvance(uint32_t code) {
     return advance;
 }
 
-// OFFSET: %0x0062D6E0
+// OFFSET: 0x0061CE50
 void CGxFont::ClearGlyphs() {
     for (uint32_t i = 0; i < 8; i++) {
         this->m_textureCache[i].Destroy();
@@ -190,11 +190,11 @@ void CGxFont::HandleScreenSizeChange() {
     }
 }
 
-// OFFSET: %0x0062D940
+// OFFSET: 0x0061D090
 CGxFont::CGxFont() : m_cellHeight(0), m_pixelsPerUnit(0.0f) {
 }
 
-// OFFSET: %0x0062DAC0
+// OFFSET: 0x0061D210
 CGxFont::~CGxFont() {
     if (this->m_fontFaceHandle) {
         FontFaceCloseHandle(this->m_fontFaceHandle);
@@ -231,7 +231,7 @@ int32_t CGxFont::Initialize(const char* name, uint32_t fontFlags, float fontHeig
     return this->UpdateDimensions();
 }
 
-// OFFSET: %0x0062DCE0
+// OFFSET: 0x0061D430/0x1402AB9C0
 float CGxFont::ComputeStep(uint32_t code, uint32_t nextCode) {
     KERNINGHASHKEY key;
     key.m_code = (code << 16) | (nextCode & 0xFFFF);
@@ -270,7 +270,7 @@ float CGxFont::ComputeStep(uint32_t code, uint32_t nextCode) {
     return node->m_proportionalSpacing;
 }
 
-// OFFSET: %0x0062DE20
+// OFFSET: 0x0061D570/0x1402ABBC0
 float CGxFont::ComputeStepFixedWidth(uint32_t code, uint32_t nextCode) {
     KERNINGHASHKEY key;
     key.m_code = (code << 16) | (nextCode & 0xFFFF);
@@ -321,7 +321,7 @@ float CGxFont::ComputeStepFixedWidth(uint32_t code, uint32_t nextCode) {
     return static_cast<float>(static_cast<double>(step + nextPadding / 2) * 0.75);
 }
 
-// OFFSET: %0x0062DFA0
+// OFFSET: 0x0061D750/0x1402ABDA0
 CHARCODEDESC* CGxFont::NewCodeDesc(uint32_t code) {
     CHARCODEDESC* desc = this->m_activeCharacters.Ptr(code, HASHKEY_NONE());
 

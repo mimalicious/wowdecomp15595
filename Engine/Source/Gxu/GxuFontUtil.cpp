@@ -17,7 +17,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// OFFSET: %0x006277D0
+// OFFSET: 0x00616F50
 static int32_t CanWrapBetween(uint32_t previous, uint32_t next) {
     if (!previous) {
         return 0;
@@ -140,7 +140,7 @@ static int32_t CanWrapBetween(uint32_t previous, uint32_t next) {
     return next - 0xFFA0 <= 0x3C;
 }
 
-// OFFSET: %0x00627E80
+// OFFSET: 0x00617610/0x1402A4530
 static float GetCharacterWidth(const char* text, uint32_t flags, uint32_t code, CGxFont* face, float fontHeight) {
     if (!code) {
         return 0.0f;
@@ -208,7 +208,7 @@ float GetMaxScreenHeight() {
     return 32.0f / static_cast<float>(g_heightPixels);
 }
 
-// OFFSET: %0x00628010
+// OFFSET: 0x006177A0
 void InternalWipeUntilNameTokenStop(char* text) {
     if (!text || !*text) {
         return;
@@ -249,7 +249,7 @@ GXUEMBEDDEDTEXTUREINFO::GXUEMBEDDEDTEXTUREINFO() {
     this->m_hasColor = 0;
 }
 
-// OFFSET: %0x006280C0
+// OFFSET: 0x00617850/0x1402A47A0
 float ScreenToPixelHeight(int32_t unscaled, float height) {
     if (unscaled) {
         return height;
@@ -259,7 +259,7 @@ float ScreenToPixelHeight(int32_t unscaled, float height) {
     return CMath::fint_n(pixels);
 }
 
-// OFFSET: %0x00628100
+// OFFSET: 0x00617890
 float ScreenToPixelWidth(int32_t unscaled, float width) {
     if (unscaled) {
         return width;
@@ -269,7 +269,7 @@ float ScreenToPixelWidth(int32_t unscaled, float width) {
     return CMath::fint_n(pixels);
 }
 
-// OFFSET: %0x00628140
+// OFFSET: 0x006178D0
 bool SetProjection() {
     float minX = g_theGxDevicePtr->m_viewport.m_x.m_l;
     float maxX = g_theGxDevicePtr->m_viewport.m_x.m_h;
@@ -314,7 +314,7 @@ bool SetProjection() {
     return true;
 }
 
-// OFFSET: %0x00628410
+// OFFSET: 0x00617BA0
 bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float fontPixelHeight, float scale, float fontHeight) {
     CRect window;
     window.minY = 0.0f;
@@ -375,10 +375,10 @@ bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float 
     bool heightFromFont = false;
     SStrCopy(buffer, field, length > 32 ? 32 : length);
 
-    float textureHeight = SStrToFloat(buffer) * scale * pixelScale;
+    float textureHeight = SStrToFloat(buffer) * pixelScale;
     info->m_height = textureHeight;
 
-    if (!(0.0f < textureHeight)) {
+    if (textureHeight <= 0.0f) {
         heightFromFont = true;
         info->m_height = fontPixelHeight;
     }
@@ -398,7 +398,7 @@ bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float 
     length = next - field + 1;
     SStrCopy(buffer, field, length > 32 ? 32 : length);
 
-    float textureWidth = SStrToFloat(buffer) * scale;
+    float textureWidth = SStrToFloat(buffer);
     info->m_width = textureWidth;
 
     if (0.0f < textureWidth) {
@@ -420,7 +420,7 @@ bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float 
 
     length = next - field + 1;
     SStrCopy(buffer, field, length > 32 ? 32 : length);
-    info->m_offsetX = SStrToFloat(buffer) * scale;
+    info->m_offsetX = SStrToFloat(buffer);
 
     field = next + 1;
     next = SStrChr(field, ':');
@@ -435,7 +435,7 @@ bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float 
 
     length = next - field + 1;
     SStrCopy(buffer, field, length > 32 ? 32 : length);
-    info->m_offsetY = SStrToFloat(buffer) * scale;
+    info->m_offsetY = SStrToFloat(buffer);
 
     field = next + 1;
     next = SStrChr(field, ':');
@@ -586,7 +586,7 @@ bool ParseEmbeddedTexture(const char* text, GXUEMBEDDEDTEXTUREINFO* info, float 
     return true;
 }
 
-// OFFSET: %0x00628CA0
+// OFFSET: 0x00618430/0x1402A5530
 void InternalGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, float fontHeight, float* extent, uint32_t flags, float shadowWidth, float scale) {
     if (!face || !text || !extent) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -714,7 +714,7 @@ void InternalGetTextExtent(CGxFont* face, const char* text, uint32_t numBytes, f
     }
 }
 
-// OFFSET: %0x00628FD0
+// OFFSET: 0x00618760
 uint32_t InternalGetMaxCharsWithinWidth(CGxFont* face, const char* text, float fontHeight, float maxWidth, uint32_t numBytes, float* extent, uint32_t flags, float shadowWidth, float scale, uint32_t* bytesInString, float* widthArray) {
     if (!face || !text || !extent) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -871,7 +871,7 @@ uint32_t InternalGetMaxCharsWithinWidth(CGxFont* face, const char* text, float f
     return numChars;
 }
 
-// OFFSET: %0x00629400
+// OFFSET: 0x00618B90/0x1402A5F00
 static void CalcWrapPointBillboarded(const char* text, uint32_t flags, CGxFont* face, float fontHeight, uint32_t* numBytes, float* width, const char** nextText, float* height, float scale) {
     if (0.0f == fontHeight) {
         *numBytes = 0;
@@ -984,7 +984,7 @@ static void CalcWrapPointBillboarded(const char* text, uint32_t flags, CGxFont* 
     *nextText = text;
 }
 
-// OFFSET: %0x006296B0
+// OFFSET: 0x00618E40/0x1402A6300
 static void CalcWrapPointNonBillboarded(const char* text, CGxFont* face, float fontHeight, float blockWidth, uint32_t* numBytes, float* width, const char** nextText, float shadowWidth, uint32_t flags, bool* wordBreak, float* height, float scale) {
     if (0.0f == fontHeight || (flags & 4)) {
         fontHeight = GxuFontGetOneToOneHeight(face);
@@ -1165,7 +1165,7 @@ static void CalcWrapPointNonBillboarded(const char* text, CGxFont* face, float f
     *nextText = text;
 }
 
-// OFFSET: %0x00629BD0
+// OFFSET: 0x00619360/0x1402A6930
 void CalcWrapPoint(CGxFont* face, const char* text, float fontHeight, float blockWidth, uint32_t* numBytes, float* width, const char** nextText, float shadowWidth, uint32_t flags, bool* wordBreak, float* height, float scale) {
     if (fontHeight >= 0.0f && blockWidth > 0.0f && text && *text) {
         if (flags & 0x80) {

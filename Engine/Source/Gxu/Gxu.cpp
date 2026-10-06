@@ -9,7 +9,7 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// OFFSET: %0x006265C0
+// OFFSET: 0x00615BA0/0x1402A1B60
 void GxuXformCreateProjection_Exact(float fovyInRadians, float aspect, float minZ, float maxZ, C44Matrix& dst) {
     if (!(fovyInRadians > 0.0f && fovyInRadians < 3.1415927f)) {
         DebugLog("\"%s\", %s = %g", "fovyInRadians > 0.0f && fovyInRadians < PI", "fovyInRadians", fovyInRadians);
@@ -51,7 +51,7 @@ void GxuXformCreateProjection_Exact(float fovyInRadians, float aspect, float min
     dst.d3 = 0.0f;
 }
 
-// OFFSET: %0x00626710
+// OFFSET: 0x00615CF0
 void GxuXformCreateOrtho(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, C44Matrix& dst) {
     if (maxX == minX) {
         DebugValidate("minX != maxX");
@@ -89,7 +89,7 @@ void GxuXformCreateOrtho(float minX, float maxX, float minY, float maxY, float m
     dst.d3 = 1.0f;
 }
 
-// OFFSET: %0x00626810
+// OFFSET: 0x00615DF0
 void GxuXformCreateOrthoDepth(float minX, float maxX, float minY, float maxY, float minZ, float maxZ, C44Matrix& dst) {
     if (maxX == minX) {
         DebugValidate("minX != maxX");
@@ -139,7 +139,7 @@ void GxuXformCreateOrthoDepth(float minX, float maxX, float minY, float maxY, fl
     }
 }
 
-// OFFSET: %0x00626960
+// OFFSET: 0x00615F40/0x1402A1FF0
 void GxuAdjustProjForHalfPixel(C44Matrix& proj) {
     if (!g_theGxDevicePtr->m_caps.m_pixelCenterOnEdge) {
         return;
@@ -154,7 +154,7 @@ void GxuAdjustProjForHalfPixel(C44Matrix& proj) {
     proj.d1 = proj.d1 + offsetY;
 }
 
-// OFFSET: %0x00626A10
+// OFFSET: 0x00615FF0
 void GxuXformCalcFrustumCorners(const C44Matrix& view, const C44Matrix& proj, C3Vector* corners) {
     C44Matrix invView = view.Inverse(view.Determinant());
     C44Matrix invProj = proj.Inverse(proj.Determinant());
@@ -263,7 +263,7 @@ void GxuXformCalcFrustumCorners(const C44Matrix& view, const C44Matrix& proj, C3
     }
 }
 
-// OFFSET: %0x00626F70
+// OFFSET: 0x00616550
 int32_t GxuXformCalc3dScreenCoords(const C44Matrix& toScreen, uint32_t count, const C3Vector* points, C3Vector* screen) {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -319,7 +319,7 @@ void GxuUpdateSingleColorTexture(EGxTexCommand command, uint32_t width, uint32_t
     }
 }
 
-// OFFSET: %0x00627140
+// OFFSET: 0x00616720
 void GxuXformCreateProjection_SG(float fovyInRadians, float aspect, float minZ, float maxZ, C44Matrix& dst) {
     float scale = aspect * aspect + 1.0f;
     scale = sqrt(scale);
@@ -328,7 +328,7 @@ void GxuXformCreateProjection_SG(float fovyInRadians, float aspect, float minZ, 
     GxuXformCreateProjection_Exact(scale, aspect, minZ, maxZ, dst);
 }
 
-// OFFSET: %0x006271A0
+// OFFSET: 0x00616780
 void GxuXformCreateLookAtSgCompat(const C3Vector& eye, const C3Vector& center, const C3Vector& up, C44Matrix& dst) {
     dst = C44Matrix();
 
@@ -339,8 +339,15 @@ void GxuXformCreateLookAtSgCompat(const C3Vector& eye, const C3Vector& center, c
     }
 
     zv.Normalize();
-    C3Vector xv = C3Vector::Cross(zv, up);
-    xv.Normalize();
+    C3Vector xv;
+
+    if (fabs(fabs(zv.z) - 1.0f) >= 0.00000023841858f) {
+        xv = C3Vector::Cross(zv, up);
+        xv.Normalize();
+    } else {
+        xv = C3Vector(1.0f, 0.0f, 0.0f);
+    }
+
     C3Vector yv = C3Vector::Cross(xv, zv);
     yv.Normalize();
 
@@ -357,7 +364,7 @@ void GxuXformCreateLookAtSgCompat(const C3Vector& eye, const C3Vector& center, c
     dst.Translate(-eye);
 }
 
-// OFFSET: %0x006273A0
+// OFFSET: 0x006169D0/0x1402A3720
 void GxuXformCreateLookAtXXX(const C3Vector& eye, const C3Vector& center, const C3Vector& up, C44Matrix& dst) {
     dst = C44Matrix();
 

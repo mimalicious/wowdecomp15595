@@ -15,7 +15,7 @@ void GxuScene::Clear() {
     this->m_lastUpdateTime = 0;
 }
 
-// OFFSET: %0x00623950
+// OFFSET: 0x00612E70/0x14029E390
 void GxuScene::Update(uint32_t time) {
     if (!this->m_lastUpdateTime) {
         this->m_lastUpdateTime = time;

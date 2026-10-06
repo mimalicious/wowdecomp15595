@@ -733,7 +733,7 @@ int32_t IWBitMatrix::ResetScratch() {
     return 1;
 }
 
-// OFFSET: %0x00A6CB20
+// OFFSET: 0x00B3A320/0x140906E70
 void IWBitMatrix::FreeScratch() {
     if (s_scratch) {
         IWFree(s_scratch);
@@ -754,14 +754,14 @@ IWBitMatrix::IWBitMatrix() {
     this->m_static = 0;
 }
 
-// OFFSET: %0x00A6CB70
+// OFFSET: 0x00B3A370/0x140906ED0
 IWBitMatrix::~IWBitMatrix() {
     if (this->m_data && !this->m_static) {
         IWFree(const_cast<uint8_t*>(this->m_data));
     }
 }
 
-// OFFSET: %0x00A6CB90
+// OFFSET: 0x00B3A390/0x140906EF0
 int32_t IWBitMatrix::Initialize(uint32_t size, const char* name, const uint8_t* data) {
     if (this->m_name == name && this->m_data == data && this->m_rows == size && this->m_static) {
         return 1;
@@ -820,7 +820,7 @@ IWEncoder::IWEncoder() {
 IWEncoder::~IWEncoder() {
 }
 
-// OFFSET: %0x00A6CC80
+// OFFSET: 0x00B3A480/0x140906FF0
 void IWEncoder::Reset() {
     if (this->m_encoded) {
         IWFree(this->m_encoded);
@@ -828,7 +828,7 @@ void IWEncoder::Reset() {
     }
 }
 
-// OFFSET: %0x00A6B280
+// OFFSET: 0x00B38A90/0x140904AE0
 IWLdpcEncoder::IWLdpcEncoder() {
     this->m_codeword = NULL;
     this->m_sourceBits = NULL;
@@ -840,7 +840,7 @@ IWLdpcEncoder::IWLdpcEncoder() {
 IWLdpcEncoder::~IWLdpcEncoder() {
 }
 
-// OFFSET: %0x00A6B300
+// OFFSET: 0x00B38B10/0x140904B90
 void IWLdpcEncoder::Reset() {
     if (this->m_checkNodes) {
         IWFree(this->m_checkNodes);
@@ -873,7 +873,7 @@ uint32_t IWLdpcEncoder::GetEncodedSize(uint32_t size) {
     return (copies * this->m_codeBits * ((copies * (this->m_codeBits + 16 * size) - 1) / (this->m_codeBits * copies)) + 7) >> 3;
 }
 
-// OFFSET: %0x00A6B3C0
+// OFFSET: 0x00B38BD0/0x140904C60
 uint32_t IWLdpcEncoder::Encode(const uint8_t* data, uint32_t size) {
     uint32_t sourceIndex = 0;
     uint32_t outputBit = 0;
@@ -957,7 +957,7 @@ uint32_t IWLdpcEncoder::Encode(const uint8_t* data, uint32_t size) {
     return this->m_encodedSize;
 }
 
-// OFFSET: %0x00A6B6D0
+// OFFSET: 0x00B38EE0/0x140904FE0
 int32_t IWLdpcEncoder::BuildGraph() {
     this->m_checkNodes = static_cast<IWCheckNode*>(IWAlloc(sizeof(IWCheckNode) * this->m_checkNodeCount));
     this->m_bitNodes = static_cast<IWBitNode*>(IWAlloc(sizeof(IWBitNode) * this->m_codeBits));
@@ -1020,7 +1020,7 @@ int32_t IWLdpcEncoder::BuildGraph() {
     return 1;
 }
 
-// OFFSET: %0x00A6B9C0
+// OFFSET: 0x00B391D0/0x1409053A0
 int32_t IWLdpcEncoder::Initialize(uint32_t codeBits, uint32_t repeat) {
     if (codeBits & 1) {
         return 0;
@@ -1058,7 +1058,7 @@ int32_t IWLdpcEncoder::Initialize(uint32_t codeBits, uint32_t repeat) {
     return 1;
 }
 
-// OFFSET: %0x00A6BFB0
+// OFFSET: 0x00B397A0/0x140905E90
 int32_t SelectWeights() {
     switch (s_blockWidth) {
         case 8:
@@ -1106,7 +1106,7 @@ int32_t SetBlockSize(uint32_t width, uint32_t height, float step) {
     return SelectWeights();
 }
 
-// OFFSET: %0x00A6C060
+// OFFSET: 0x00B39850/0x140905F60
 float AdjustBlock(int32_t top, uint32_t width, uint8_t* pixels, uint32_t bytesPerPixel, float ratio, int32_t left) {
     float error[3] = { 0.0f, 0.0f, 0.0f };
     float sum = 0.0f;
@@ -1169,7 +1169,7 @@ float AdjustBlock(int32_t top, uint32_t width, uint8_t* pixels, uint32_t bytesPe
     return sum / s_blockArea;
 }
 
-// OFFSET: %0x00A6C390
+// OFFSET: 0x00B39B80/0x1409064E0
 int32_t ValidateRects(IWRect** rects, uint32_t* count, uint32_t byteCount, uint32_t width, uint32_t height, bool checkCapacity) {
     s_defaultRect.x = static_cast<int16_t>(-static_cast<int32_t>(width >> 1));
     s_defaultRect.width = static_cast<int16_t>(width);
@@ -1215,7 +1215,7 @@ int32_t ValidateRects(IWRect** rects, uint32_t* count, uint32_t byteCount, uint3
     return 1;
 }
 
-// OFFSET: %0x00A6C570
+// OFFSET: 0x00B39D60/0x140906710
 int32_t EmbedBits(IWEmbedParams* params) {
     if (!params) {
         return 0;
@@ -1273,13 +1273,17 @@ int32_t EmbedBits(IWEmbedParams* params) {
 
                 float difference = target - mean;
 
-                if (fabs(difference) <= 0.0000099999997f) {
+                if (fabs(difference) <= 0.0000099999997f || !(mean > 0.0f)) {
                     continue;
                 }
 
                 float level = AdjustBlock(y, params->m_width, params->m_pixels, params->m_bytesPerPixel, difference / mean, x);
                 float invStep = 1.0f / s_step;
                 float error = fabs(invStep * level - invStep * target);
+
+                if (error <= 0.02f) {
+                    continue;
+                }
 
                 uint32_t iteration = 0;
 
@@ -1306,7 +1310,7 @@ int32_t EmbedBits(IWEmbedParams* params) {
     return 1;
 }
 
-// OFFSET: %0x00A6BB00
+// OFFSET: 0x00B39300/0x140905510
 int32_t WriteJpegFile(IWJpegParams* params) {
     if (!params->m_pixels) {
         return 0;
@@ -1462,7 +1466,7 @@ int32_t WriteJpegFile(IWJpegParams* params) {
     return 1;
 }
 
-// OFFSET: %0x00A6ADF0
+// OFFSET: 0x00B38600/0x1409045F0
 int32_t ComputeLayout(uint32_t height, uint32_t width, uint32_t dataSize) {
     if (width == 800 && height == 600) {
         s_rects[0].x = -384;
@@ -1587,7 +1591,7 @@ int32_t ComputeLayout(uint32_t height, uint32_t width, uint32_t dataSize) {
     return SetBlockSize(4, 5, 2.5f) != 0;
 }
 
-// OFFSET: %0x00A6AC80
+// OFFSET: 0x00B384A0/0x140904440
 int32_t ImageWriterInitialize(uint32_t dataSize, void* (*allocFunc)(size_t bytes), void (*freeFunc)(void* ptr), int32_t flags) {
     if (dataSize > 128) {
         return 0;
@@ -1614,7 +1618,7 @@ int32_t ImageWriterInitialize(uint32_t dataSize, void* (*allocFunc)(size_t bytes
     return 1;
 }
 
-// OFFSET: %0x00A6AD00
+// OFFSET: 0x00B38520/0x140904500
 int32_t ImageWriterShutdown() {
     if (s_writerState[0]) {
         IWFree(s_writerState[0]);
@@ -1654,7 +1658,7 @@ int32_t ImageWriterWriteJpeg(const char* fileName, const void* pixels, uint32_t 
     return WriteJpegFile(&params) != 0;
 }
 
-// OFFSET: %0x00A6B1B0
+// OFFSET: 0x00B389C0/0x1409049D0
 int32_t ImageWriterEmbedData(const void* pixels, uint32_t width, uint32_t height, uint32_t bytesPerPixel, const uint8_t* data, uint32_t dataSize) {
     if (!s_initialized || !pixels || !data) {
         return 0;

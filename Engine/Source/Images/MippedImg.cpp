@@ -3,7 +3,7 @@
 #include "Engine/Source/Services/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00645890
+// OFFSET: 0x006392A0
 uint32_t GetBitDepth(uint32_t format) {
     switch (format) {
         case PIXEL_DXT1:
@@ -27,7 +27,7 @@ uint32_t GetBitDepth(uint32_t format) {
     }
 }
 
-// OFFSET: %0x006458F0
+// OFFSET: 0x00639300
 uint32_t CalcLevelSize(uint32_t level, uint32_t width, uint32_t height, uint32_t format) {
     uint32_t levelWidth = width >> level ? width >> level : 1;
     uint32_t levelHeight = height >> level ? height >> level : 1;
@@ -63,7 +63,7 @@ uint32_t CalcLevelOffset(uint32_t level, uint32_t width, uint32_t height, uint32
     return offset;
 }
 
-// OFFSET: %0x006459D0
+// OFFSET: 0x006393E0/0x1402D0CE0
 uint32_t CalcLevelCount(uint32_t width, uint32_t height) {
     uint32_t levels = 1;
 

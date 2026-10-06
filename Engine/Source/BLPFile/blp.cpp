@@ -94,7 +94,7 @@ int32_t CBLPFile::ValidateHeader(const BLPHeader& header) {
     return header.m_magic == 0x32504C42 && header.m_formatVersion == 1;
 }
 
-// OFFSET: %0x004C9D50
+// OFFSET: 0x004C3AA0/0x1400FE650
 int32_t CBLPFile::Source(void* data) {
     this->Close();
 
@@ -115,7 +115,7 @@ int32_t CBLPFile::Source(void* data) {
     return 1;
 }
 
-// OFFSET: %0x004C9DE0
+// OFFSET: 0x004C3B30
 void CBLPFile::DecompPalFastPath(uint8_t* out, const void* in, uint32_t count) {
     BlpPalPixel* pixels = reinterpret_cast<BlpPalPixel*>(out);
     const uint8_t* indices = static_cast<const uint8_t*>(in);
@@ -128,7 +128,7 @@ void CBLPFile::DecompPalFastPath(uint8_t* out, const void* in, uint32_t count) {
     }
 }
 
-// OFFSET: %0x004C9E30
+// OFFSET: 0x004C3B80
 void CBLPFile::DecompPalARGB8888(uint8_t* out, const void* in, uint32_t count) {
     BlpPalPixel* pixels = reinterpret_cast<BlpPalPixel*>(out);
     const uint8_t* indices = static_cast<const uint8_t*>(in);
@@ -195,7 +195,7 @@ void CBLPFile::DecompPalARGB8888(uint8_t* out, const void* in, uint32_t count) {
     }
 }
 
-// OFFSET: %0x004CA040
+// OFFSET: 0x004C3D90
 void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: %0x00CA69B0
     static int32_t s_errors[2][1026][3];
@@ -309,7 +309,7 @@ void CBLPFile::DecompPalARGB4444DitherFloydSteinberg(uint8_t* out, const void* i
     }
 }
 
-// OFFSET: %0x004CA360
+// OFFSET: 0x004C40B0
 void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: %0x00CAC9E0
     static int32_t s_errors[2][1026][3];
@@ -424,7 +424,7 @@ void CBLPFile::DecompPalARGB1555DitherFloydSteinberg(uint8_t* out, const void* i
     }
 }
 
-// OFFSET: %0x004CA6A0
+// OFFSET: 0x004C43F0
 void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: %0x00CB2A10
     static int32_t s_errors[2][1026][3];
@@ -489,7 +489,7 @@ void CBLPFile::DecompPalARGB565DitherFloydSteinberg(uint8_t* out, const void* in
     }
 }
 
-// OFFSET: %0x004CA8A0
+// OFFSET: 0x004C45F0
 void CBLPFile::DecompPalARGB2565DitherFloydSteinberg(uint8_t* out, const void* in, uint32_t width, uint32_t height) {
     // STATIC: %0x00CB8A40
     static int32_t s_errors[2][1026][3];
@@ -620,7 +620,7 @@ int32_t CBLPFile::Unlock(uint32_t mipLevel) {
     return this->IsValidMip(mipLevel);
 }
 
-// OFFSET: %0x004CACE0
+// OFFSET: 0x004C4A00/0x1400FF860
 int32_t CBLPFile::GetFormatSize(PIXEL_FORMAT format, uint32_t mipLevel, uint32_t* size, uint32_t* stride) const {
     uint32_t width = this->Width(mipLevel);
     uint32_t height = this->Height(mipLevel);
@@ -652,7 +652,7 @@ int32_t CBLPFile::GetFormatSize(PIXEL_FORMAT format, uint32_t mipLevel, uint32_t
     }
 }
 
-// OFFSET: %0x004CADC0
+// OFFSET: 0x004C4AE0
 int32_t CBLPFile::DecompPalDither(PIXEL_FORMAT format, uint32_t mipLevel, uint8_t* out, const void* in) {
     switch (format) {
         case PIXEL_ARGB8888: {
@@ -688,7 +688,7 @@ int32_t CBLPFile::DecompPalDither(PIXEL_FORMAT format, uint32_t mipLevel, uint8_
     }
 }
 
-// OFFSET: %0x004CAF50
+// OFFSET: 0x004C4C70/0x1400FFB10
 int32_t CBLPFile::Lock(PIXEL_FORMAT format, uint32_t mipLevel, uint8_t*& data, uint32_t& stride) {
     if (!this->m_inMemoryImage) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -888,7 +888,7 @@ int32_t CBLPFile::Lock2(const char* fileName, PIXEL_FORMAT format, uint32_t mipL
     }
 }
 
-// OFFSET: %0x004CB4E0
+// OFFSET: 0x004C4E60/0x1400FFD20
 int32_t CBLPFile::Open(const char* fileName, int32_t flags) {
     if (!fileName) {
         DebugValidate("filename");

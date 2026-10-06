@@ -18,7 +18,7 @@ FT_Face FontFaceGetFace(HFACE handle) {
     return reinterpret_cast<FACEDATA*>(handle)->m_face;
 }
 
-// OFFSET: %0x00632CB0
+// OFFSET: 0x00622500
 void FontFaceCloseHandle(HFACE handle) {
     if (!handle) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -47,13 +47,13 @@ const char* FontFaceGetFontName(HFACE handle) {
     return reinterpret_cast<FACEDATA*>(handle)->m_key.m_str;
 }
 
-// OFFSET: %0x00632DA0
+// OFFSET: 0x00622600
 FACEDATA::FACEDATA() {
     this->m_data = NULL;
     this->m_face = NULL;
 }
 
-// OFFSET: %0x00632DD0
+// OFFSET: 0x00622630
 FACEDATA::~FACEDATA() {
     if (this->m_face) {
         FT_Done_Face(this->m_face);
@@ -64,7 +64,7 @@ FACEDATA::~FACEDATA() {
     }
 }
 
-// OFFSET: %0x00633720
+// OFFSET: 0x00622F70/0x1402B4370
 HFACE FontFaceGetHandle(const char* fileName, FT_Library library) {
     if (!library || !fileName || !*fileName) {
         return NULL;

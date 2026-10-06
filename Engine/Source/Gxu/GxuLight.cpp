@@ -59,7 +59,7 @@ static CGxLight* GxuLightLockImpl(CGxuLight* light) {
     return &light->m_light;
 }
 
-// OFFSET: %0x006213B0
+// OFFSET: 0x006109D0/0x14029AF50
 static void GxuLightSetEnabledImpl(CGxuLight* light, bool enabled) {
     CGxLight* gxLight = GxuLightLock(light);
     gxLight->m_flags ^= (enabled ^ gxLight->m_flags) & 1;
@@ -103,7 +103,7 @@ static void GxuLightInvalidateImpl() {
     s_dirty = 1;
 }
 
-// OFFSET: %0x00621480
+// OFFSET: 0x00610AA0
 float CGxuLight::CalcIntensity(const C3Vector& point, float linearAttenuation, float quadraticAttenuation) {
     C3Vector delta = point - this->m_light.m_dir;
     float distance = sqrt(delta.SquaredMag());
@@ -118,7 +118,7 @@ float CGxuLight::CalcIntensity(const C3Vector& point, float linearAttenuation, f
 CGxuLightLink::~CGxuLightLink() {
 }
 
-// OFFSET: %0x00621570
+// OFFSET: 0x00610B90
 void CGxuLight::ClearLinks() {
     CGxuLightLink* link = this->m_links.Head();
 
@@ -141,7 +141,7 @@ void CGxuLight::ClearLinks() {
     }
 }
 
-// OFFSET: %0x006217A0
+// OFFSET: 0x00610D30
 CGxuLightLink* CGxuLight::NewLink() {
     CGxuLightLink* link = s_freeLinks.Head();
 
@@ -159,7 +159,7 @@ CGxuLightLink* CGxuLight::NewLink() {
 CLightList::~CLightList() {
 }
 
-// OFFSET: %0x006218E0
+// OFFSET: 0x00610E70/0x14029B530
 static void GxuLightDestroyImpl(CGxuLight* light) {
     s_dirty = 1;
     s_lights.UnlinkNode(light);
@@ -167,7 +167,7 @@ static void GxuLightDestroyImpl(CGxuLight* light) {
     s_freeLights.LinkToTail(light);
 }
 
-// OFFSET: %0x006219A0
+// OFFSET: 0x006110F0
 CGxuLight::~CGxuLight() {
 }
 
@@ -175,7 +175,7 @@ CGxuLight::~CGxuLight() {
 CGxuLight::CGxuLight() : m_lockCount(0) {
 }
 
-// OFFSET: %0x00621D20
+// OFFSET: 0x00611400/0x14029BBE0
 static CGxuLight* GxuLightCreateImpl() {
     CGxuLight* light = s_freeLights.Head();
 
@@ -237,14 +237,14 @@ static void GxuLightApplyImpl(float x, float y, int32_t unused, const C3Vector& 
     s_lastHashval = hashval;
 }
 
-// OFFSET: %0x006221C0
+// OFFSET: 0x006116F0
 static void GxuLightShutdownImpl() {
     s_lightGrid.Destroy();
     s_freeLights.Clear();
     s_freeLinks.Clear();
 }
 
-// OFFSET: %0x006227C0
+// OFFSET: 0x00611CE0/0x14029C9F0
 static void GxuLightUnlockImpl(CGxuLight* light) {
     light->m_lockCount--;
     s_dirty = 1;
