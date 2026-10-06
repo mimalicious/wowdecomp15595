@@ -533,32 +533,6 @@ static int32_t Script_GetInsertMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547E80
-static int32_t Script_SetHyperlinksEnabled(lua_State* L) {
-    CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
-    bool enabled = StringToBOOL(L, 2, 1) != 0;
-
-    if (enabled != frame->m_hyperlinksEnabled) {
-        frame->m_hyperlinksEnabled = enabled;
-        frame->RefreshHyperlinks();
-    }
-
-    return 0;
-}
-
-// OFFSET: %0x00547EE0
-static int32_t Script_GetHyperlinksEnabled(lua_State* L) {
-    CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
-
-    if (frame->m_hyperlinksEnabled) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
-}
-
 // STATIC: %0x00BB94F0
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
@@ -607,12 +581,10 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetInsertMode", &Script_GetInsertMode },
     { "SetIndentedWordWrap", &Script_SetIndentedWordWrap },
     { "GetIndentedWordWrap", &Script_GetIndentedWordWrap },
-    { "SetHyperlinksEnabled", &Script_SetHyperlinksEnabled },
-    { "GetHyperlinksEnabled", &Script_GetHyperlinksEnabled },
 };
 
 // OFFSET: %0x005469D0
 void CSimpleMessageScrollFrame::RegisterScriptMethods(lua_State* L) {
-    CSimpleFrame::RegisterScriptMethods(L);
+    CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }

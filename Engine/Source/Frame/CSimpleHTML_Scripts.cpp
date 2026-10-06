@@ -215,32 +215,6 @@ static int32_t Script_GetHyperlinkFormat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054A8C0
-static int32_t Script_SetHyperlinksEnabled(lua_State* L) {
-    CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
-    bool enabled = StringToBOOL(L, 2, 1) != 0;
-
-    if (enabled != html->m_hyperlinksEnabled) {
-        html->m_hyperlinksEnabled = enabled;
-        html->RefreshHyperlinks();
-    }
-
-    return 0;
-}
-
-// OFFSET: %0x0054A920
-static int32_t Script_GetHyperlinksEnabled(lua_State* L) {
-    CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
-
-    if (html->m_hyperlinksEnabled) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
-}
-
 // OFFSET: %0x0054A0C0
 void CSimpleHTML::DestroyScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
@@ -277,12 +251,10 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetText", &Script_SetText },
     { "SetHyperlinkFormat", &Script_SetHyperlinkFormat },
     { "GetHyperlinkFormat", &Script_GetHyperlinkFormat },
-    { "SetHyperlinksEnabled", &Script_SetHyperlinksEnabled },
-    { "GetHyperlinksEnabled", &Script_GetHyperlinksEnabled },
 };
 
 // OFFSET: %0x0054A0A0
 void CSimpleHTML::RegisterScriptMethods(lua_State* L) {
-    CSimpleFrame::RegisterScriptMethods(L);
+    CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
 }

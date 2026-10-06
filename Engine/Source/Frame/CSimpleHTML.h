@@ -35,14 +35,11 @@ class CSimpleHTML : public CSimpleHyperlinkedFrame, public CSimpleFontedFrame {
     static int32_t GetObjectType();
     static void RegisterScriptMethods(lua_State* L);
 
-    /* 01F8 */ TSList<CONTENTNODE, TSGetLink<CONTENTNODE> > m_content;
-    /* 0204 */ CLayoutFrame* m_layoutAnchor;
-    /* 0208 */ float m_layoutOffset;
-    /* 020C */ CSimpleFontedFrameFont* m_fonts[NUM_HTML_TEXT_TYPES];
-    /* 021C */ char* m_hyperlinkFormat;
-    /* 0220 */ TSExplicitList<CSimpleHyperlinkButton, offsetof(CSimpleHyperlinkButton, m_hyperlinkLink)> m_hyperlinks;
-    /* 022C */ int32_t m_hyperlinksDirty;
-    /* 0230 */ bool m_hyperlinksEnabled;
+    /* 0204 */ TSList<CONTENTNODE, TSGetLink<CONTENTNODE> > m_content;
+    /* 0210 */ CLayoutFrame* m_layoutAnchor;
+    /* 0214 */ float m_layoutOffset;
+    /* 0218 */ CSimpleFontedFrameFont* m_fonts[NUM_HTML_TEXT_TYPES];
+    /* 0228 */ char* m_hyperlinkFormat;
 
     virtual ~CSimpleHTML();
     virtual int32_t GetScriptMetaTable();
@@ -60,7 +57,7 @@ class CSimpleHTML : public CSimpleHyperlinkedFrame, public CSimpleFontedFrame {
     void ParseBODY(XMLNode* node, CStatus* status);
     void ParseIMG(XMLNode* node, CStatus* status);
     void ParseP(XMLNode* node, HTML_TEXT_TYPE type, CStatus* status);
-    void RefreshHyperlinks();
+    virtual void RefreshHyperlinks();
     void SetHyperlinkFormat(const char* format);
     bool SetText(const char* text, CStatus* status);
 };

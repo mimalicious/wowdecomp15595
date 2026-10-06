@@ -11,27 +11,8 @@
 #include "Engine/Source/Storm/H/stpl.h"
 
 class CSimpleFontString;
+class CSimpleHyperlinkedFrame;
 struct lua_State;
-
-class CSimpleHyperlinkedFrame : public CSimpleFrame {
-    public:
-    /* 01F0 */ uint8_t m_inHyperlinkScript;
-    /* 01F1 */ FrameScript_Object::ScriptIx m_onHyperlinkEnter;
-    /* 01F2 */ FrameScript_Object::ScriptIx m_onHyperlinkLeave;
-    /* 01F3 */ FrameScript_Object::ScriptIx m_onHyperlinkClick;
-
-    virtual ~CSimpleHyperlinkedFrame();
-    virtual FrameScript_Object::ScriptIx* GetScriptByName(const char* name, FrameScript_Object::ScriptData& data);
-    virtual void GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse);
-    virtual void OnHyperlinkEnter(const char* link, const char* text);
-    virtual void OnHyperlinkLeave(const char* link, const char* text);
-    virtual void OnHyperlinkClick(const char* link, const char* text, const char* btn);
-
-    CSimpleHyperlinkedFrame(CSimpleFrame* parent);
-    void RunOnHyperlinkClickScript(const char* link, const char* text, const char* btn);
-    void RunOnHyperlinkEnterScript(const char* link, const char* text);
-    void RunOnHyperlinkLeaveScript(const char* link, const char* text);
-};
 
 class CSimpleHyperlinkButton : public CSimpleButton {
     public:
@@ -56,6 +37,32 @@ class CSimpleHyperlinkButton : public CSimpleButton {
 
     CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent);
     void SetHyperlink(CSimpleFontString* fontString, const GXUFONTHYPERLINKINFO* info);
+};
+
+class CSimpleHyperlinkedFrame : public CSimpleFrame {
+    public:
+    /* 01F0 */ uint8_t m_inHyperlinkScript : 1;
+    /* 01F0 */ uint8_t m_hyperlinksEnabled : 1;
+    /* 01F0 */ uint8_t m_hyperlinksDirty : 1;
+    /* 01F1 */ FrameScript_Object::ScriptIx m_onHyperlinkEnter;
+    /* 01F2 */ FrameScript_Object::ScriptIx m_onHyperlinkLeave;
+    /* 01F3 */ FrameScript_Object::ScriptIx m_onHyperlinkClick;
+    /* 01F4 */ TSExplicitList<CSimpleHyperlinkButton, offsetof(CSimpleHyperlinkButton, m_hyperlinkLink)> m_hyperlinks;
+
+    virtual ~CSimpleHyperlinkedFrame();
+    virtual FrameScript_Object::ScriptIx* GetScriptByName(const char* name, FrameScript_Object::ScriptData& data);
+    virtual void GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse);
+    virtual void OnHyperlinkEnter(const char* link, const char* text);
+    virtual void OnHyperlinkLeave(const char* link, const char* text);
+    virtual void OnHyperlinkClick(const char* link, const char* text, const char* btn);
+    virtual void RefreshHyperlinks() = 0;
+
+    static void RegisterScriptMethods(lua_State* L);
+
+    CSimpleHyperlinkedFrame(CSimpleFrame* parent);
+    void RunOnHyperlinkClickScript(const char* link, const char* text, const char* btn);
+    void RunOnHyperlinkEnterScript(const char* link, const char* text);
+    void RunOnHyperlinkLeaveScript(const char* link, const char* text);
 };
 
 #include "Engine/Source/Frame/CSimpleHyperlinkedFrame.inl"
