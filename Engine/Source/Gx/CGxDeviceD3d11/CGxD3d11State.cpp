@@ -527,13 +527,6 @@ void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
     CGxStateBom& value = this->m_appRenderStates[which].m_value;
 
     switch (which) {
-        case GxRs_PolygonOffset:
-        case GxRs_Culling:
-        case GxRs_Multisample:
-        case GxRs_ScissorTest:
-            this->m_stateDirty |= StateDirty_Rasterizer;
-            break;
-
         case GxRs_BlendingMode:
         case GxRs_ColorWrite:
             this->m_stateDirty |= StateDirty_Blend;
@@ -543,6 +536,13 @@ void CGxDeviceD3d11::IRsSendToHw(EGxRenderState which) {
         case GxRs_DepthFunc:
         case GxRs_DepthWrite:
             this->m_stateDirty |= StateDirty_Depth;
+            break;
+
+        case GxRs_PolygonOffset:
+        case GxRs_Culling:
+        case GxRs_Multisample:
+        case GxRs_ScissorTest:
+            this->m_stateDirty |= StateDirty_Rasterizer;
             break;
 
         case GxRs_Texture0:

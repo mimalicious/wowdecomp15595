@@ -118,7 +118,8 @@ CGxDeviceOpenGl::~CGxDeviceOpenGl() {
     this->m_glVersion = NULL;
 }
 
-// OFFSET: %0x007AF790
+// PROVEN: 3b4d5cbc IDENTICAL/DIFFERENT
+// OFFSET: 0x0084E2C0/0x14057D070
 void CGxDeviceOpenGl::DeviceOverride(EGxOverride override, uint32_t value) {
     CGxDevice::DeviceOverride(override, value);
 

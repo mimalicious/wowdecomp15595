@@ -68,7 +68,7 @@ static const D3DQUERYTYPE s_d3dQueryTypes[1] = { D3DQUERYTYPE_OCCLUSION };
 // STATIC: %0x00AFE010
 const D3DFORMAT CGxDeviceD3d::s_GxTexFmtToD3dFmt[GxTexFormats_Last] = { D3DFMT_UNKNOWN, D3DFMT_A8B8G8R8, D3DFMT_A8R8G8B8, D3DFMT_A4R4G4B4, D3DFMT_A1R5G5B5, D3DFMT_R5G6B5, D3DFMT_V8U8, D3DFMT_DXT1, D3DFMT_DXT3, D3DFMT_DXT5, D3DFMT_L16, D3DFMT_G16R16F, D3DFMT_A16B16G16R16F, D3DFMT_UNKNOWN, D3DFMT_R32F, D3DFMT_A32B32G32R32F, static_cast<D3DFORMAT>(MAKEFOURCC('N', 'U', 'L', 'L')), D3DFMT_D24X8, D3DFMT_D16, D3DFMT_D32, static_cast<D3DFORMAT>(MAKEFOURCC('I', 'N', 'T', 'Z')), static_cast<D3DFORMAT>(MAKEFOURCC('R', 'A', 'W', 'Z')), static_cast<D3DFORMAT>(MAKEFOURCC('R', 'E', 'S', 'Z')), static_cast<D3DFORMAT>(MAKEFOURCC('D', 'F', '2', '4')) };
 
-// STATIC: %0x00AFE070
+// STATIC: 0x00BD58C0/0x1409CAC00
 const D3DCUBEMAP_FACES CGxDeviceD3d::s_faceTypes[6] = { D3DCUBEMAP_FACE_POSITIVE_X, D3DCUBEMAP_FACE_NEGATIVE_X, D3DCUBEMAP_FACE_POSITIVE_Y, D3DCUBEMAP_FACE_NEGATIVE_Y, D3DCUBEMAP_FACE_POSITIVE_Z, D3DCUBEMAP_FACE_NEGATIVE_Z };
 
 // STATIC: %0x00AFE118
@@ -3371,18 +3371,16 @@ void CGxDeviceD3d::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint
         return;
     }
 
-    CGxDevice::TextureTarget& target = this->m_textureTarget[buffer];
-
-    if (target.m_texture == texture && target.m_plane == plane) {
+    if (this->m_textureTarget[buffer].m_texture == texture && this->m_textureTarget[buffer].m_plane == plane) {
         return;
     }
 
-    CGxDevice::DeviceSetRenderTarget(buffer, texture, plane);
-
-    if (target.m_apiSpecific) {
-        static_cast<LPDIRECT3DSURFACE9>(target.m_apiSpecific)->Release();
-        target.m_apiSpecific = NULL;
+    if (this->m_textureTarget[buffer].m_apiSpecific && this->m_textureTarget[buffer].m_texture->m_target != GxTex_5 && this->m_textureTarget[buffer].m_texture->m_target != GxTex_6) {
+        static_cast<LPDIRECT3DSURFACE9>(this->m_textureTarget[buffer].m_apiSpecific)->Release();
+        this->m_textureTarget[buffer].m_apiSpecific = NULL;
     }
+
+    CGxDevice::DeviceSetRenderTarget(buffer, texture, plane);
 
     if (texture) {
         if (texture->m_needsCreation || (!texture->m_apiSpecificData && !texture->m_apiSpecificData2)) {
@@ -3390,34 +3388,16 @@ void CGxDeviceD3d::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint
         }
 
         if (!texture->m_needsCreation && (texture->m_apiSpecificData || texture->m_apiSpecificData2)) {
-            target.m_apiSpecific = this->ITexGetSurface(texture, 0, plane);
+            this->m_textureTarget[buffer].m_apiSpecific = this->ITexGetSurface(texture, 0, plane);
         }
+    } else {
+        this->m_textureTarget[buffer].m_apiSpecific = NULL;
     }
 
-    if (buffer == GxBuffers_Color || buffer == GxBuffers_Depth) {
-        LPDIRECT3DSURFACE9 depthSurface = this->m_defDepthSurface;
-        LPDIRECT3DSURFACE9 colorSurface = this->m_defColorSurface;
-
-        if (this->m_textureTarget[GxBuffers_Color].m_apiSpecific) {
-            colorSurface = static_cast<LPDIRECT3DSURFACE9>(this->m_textureTarget[GxBuffers_Color].m_apiSpecific);
-
-            if (!this->m_textureTarget[GxBuffers_Depth].m_apiSpecific) {
-                this->ICreateDepthStencilSurface(texture->m_width, texture->m_height);
-
-                if (this->m_defDepthStencilSurface) {
-                    depthSurface = this->m_defDepthStencilSurface;
-                }
-            }
-        }
-
-        if (this->m_textureTarget[GxBuffers_Depth].m_apiSpecific) {
-            depthSurface = static_cast<LPDIRECT3DSURFACE9>(this->m_textureTarget[GxBuffers_Depth].m_apiSpecific);
-        }
-
-        this->m_d3dDevice->SetRenderTarget(0, colorSurface);
-        this->m_d3dDevice->SetDepthStencilSurface(depthSurface);
+    if (buffer) {
+        this->m_d3dDevice->SetRenderTarget(buffer - GxBuffers_Color, static_cast<LPDIRECT3DSURFACE9>(this->m_textureTarget[buffer].m_apiSpecific));
     } else {
-        this->m_d3dDevice->SetRenderTarget(buffer, static_cast<LPDIRECT3DSURFACE9>(target.m_apiSpecific));
+        this->m_d3dDevice->SetDepthStencilSurface(static_cast<LPDIRECT3DSURFACE9>(this->m_textureTarget[GxBuffers_Depth].m_apiSpecific));
     }
 
     GxXformSetViewport(this->m_viewport.m_x.m_l, this->m_viewport.m_x.m_h, this->m_viewport.m_y.m_l, this->m_viewport.m_y.m_h, this->m_viewport.m_z.m_l, this->m_viewport.m_z.m_h);
@@ -3519,7 +3499,8 @@ void CGxDeviceD3d::DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex* d
     }
 }
 
-// OFFSET: %0x007D0DC0
+// PROVEN: ed224cd9 IDENTICAL/IDENTICAL
+// OFFSET: 0x00856590/0x140587300
 LPDIRECT3DSURFACE9 CGxDeviceD3d::ITexGetSurface(CGxTex* texId, uint32_t level, uint32_t face) {
     LPDIRECT3DSURFACE9 surface = NULL;
 
@@ -3527,15 +3508,19 @@ LPDIRECT3DSURFACE9 CGxDeviceD3d::ITexGetSurface(CGxTex* texId, uint32_t level, u
         case GxTex_2d:
         case GxTex_NonPow2:
             static_cast<IDirect3DTexture9*>(texId->m_apiSpecificData)->GetSurfaceLevel(level, &surface);
-            return surface;
+            break;
 
         case GxTex_CubeMap:
             static_cast<IDirect3DCubeTexture9*>(texId->m_apiSpecificData)->GetCubeMapSurface(s_faceTypes[face], level, &surface);
-            return surface;
+            break;
 
-        default:
-            return NULL;
+        case GxTex_5:
+        case GxTex_6:
+            surface = static_cast<LPDIRECT3DSURFACE9>(texId->m_apiSpecificData);
+            break;
     }
+
+    return surface;
 }
 
 // OFFSET: [%0x007C9600, %0x007C9B30]
@@ -3804,33 +3789,6 @@ int32_t CGxDeviceD3d::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* des
     return SUCCEEDED(result);
 }
 
-// OFFSET: %0x007D3520
-void CGxDeviceD3d::ICreateDepthStencilSurface(uint32_t width, uint32_t height) {
-    if (this->m_defDepthStencilSurface) {
-        D3DSURFACE_DESC desc;
-
-        if (SUCCEEDED(this->m_defDepthStencilSurface->GetDesc(&desc)) && desc.Width >= width && desc.Height >= height) {
-            return;
-        }
-
-        this->m_defDepthStencilSurface->Release();
-    }
-
-    D3DFORMAT formats[3] = { D3DFMT_D24S8, D3DFMT_D24X8, D3DFMT_D32 };
-
-    for (uint32_t i = 0; i < 3; i++) {
-        D3DFORMAT format = formats[i];
-
-        if (this->ICheckDepthStencilFormat(format)) {
-            this->m_d3dDevice->CreateDepthStencilSurface(width, height, format, D3DMULTISAMPLE_NONE, 0, FALSE, &this->m_defDepthStencilSurface, NULL);
-        }
-
-        if (this->m_defDepthStencilSurface) {
-            break;
-        }
-    }
-}
-
 // OFFSET: 0x0084D9D0
 CGxDeviceD3d::CGxDeviceD3d() {
     this->m_d3dStereoConvergence = 1.0f;
@@ -3851,10 +3809,11 @@ CGxDeviceD3d::CGxDeviceD3d() {
     memset(&this->m_desktopDisplayMode, 0, sizeof(this->m_desktopDisplayMode));
     memset(this->m_deviceStates, 0xFF, sizeof(this->m_deviceStates));
     memset(this->m_texEnabled, 0, sizeof(this->m_texEnabled));
-    this->m_defDepthStencilSurface = NULL;
     this->m_defColorSurface = NULL;
     this->m_defDepthSurface = NULL;
     this->m_nvDepthSurfaceHandle = NULL;
+    this->unk_29DC = 0;
+    this->unk_29E0 = 0;
     this->m_readbackSurface = NULL;
     this->m_eventQuery = NULL;
     this->m_hwCursorDirty = 1;

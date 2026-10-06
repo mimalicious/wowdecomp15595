@@ -1412,7 +1412,8 @@ void CGxDevice::TexSetWrap(CGxTex* texId, EGxTexWrapMode wrapU, EGxTexWrapMode w
     }
 }
 
-// OFFSET: %0x007AAD10
+// PROVEN: 7b50f304 IDENTICAL/NONE
+// OFFSET: 0x00845040
 void CGxDevice::MasterEnableSet(EGxMasterEnables state, int32_t enable) {
     this->m_appMasterEnables = ((enable & 1) << state) | (this->m_appMasterEnables & ~(1 << state));
 

@@ -248,7 +248,7 @@ class CGxDeviceD3d : public CGxDevice {
     /* 29C0 */ int32_t m_ambientOnlyMode;
     /* 29C4 */ D3DFORMAT m_devDepthFormat;
     /* 29C8 */ D3DFORMAT m_devAdapterFormat;
-    /* 29CC */ LPDIRECT3DSURFACE9 m_defDepthStencilSurface;
+    /* 29CC */ LPDIRECT3DSURFACE9 unk_29CC;
     /* 29D0 */ LPDIRECT3DSURFACE9 m_defColorSurface;
     /* 29D4 */ LPDIRECT3DSURFACE9 m_defDepthSurface;
     /* 29D8 */ NVDX_ObjectHandle m_nvDepthSurfaceHandle;
@@ -360,7 +360,6 @@ class CGxDeviceD3d : public CGxDevice {
     CGxDeviceD3d();
     void DsSet(EDeviceState state, uint32_t value);
     int32_t ICheckDepthStencilFormat(D3DFORMAT format);
-    void ICreateDepthStencilSurface(uint32_t width, uint32_t height);
     void ICreateReadbackSurface();
     void IBindPixelShader(CGxShaderPermute* permute);
     void IBindVertexShader(CGxShaderPermute* permute);
