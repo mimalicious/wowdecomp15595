@@ -619,7 +619,7 @@ void CM2Model::ChangeEmittersFrameOfReference(const C44Matrix* matrix) {
     M2Data* data = this->m_shared->m_data;
 
     for (uint32_t i = 0; i < data->m_particles.m_count; i++) {
-        this->m_particleEmitters[i]->ChangeFrameOfReference(matrix);
+        this->m_particleEmitters[i]->ChangeFrameOfReference(*matrix);
     }
 
     for (uint32_t i = 0; i < data->m_ribbons.m_count; i++) {

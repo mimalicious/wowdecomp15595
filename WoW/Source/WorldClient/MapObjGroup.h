@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Gx/CGxVertexPNCT.h"
 #include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "Engine/Source/Tempest/C3Ray.h"
@@ -113,14 +114,6 @@ class CGxVertexPNC2T2 {
     /* 000C */ C3Vector m_normal;
     /* 0018 */ CImVector m_color [2];
     /* 0020 */ C2Vector m_texture [2];
-};
-
-class CGxVertexPNCT {
-    public:
-    /* 0000 */ C3Vector m_position;
-    /* 000C */ C3Vector m_normal;
-    /* 0018 */ CImVector m_color;
-    /* 001C */ C2Vector m_texture;
 };
 
 class CMapObjOccluder {

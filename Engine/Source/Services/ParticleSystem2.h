@@ -3,6 +3,10 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <queue>
+#include <vector>
+#include "Engine/Source/Gx/CGxVertexPCT.h"
+#include "Engine/Source/Gx/CGxVertexPNCT.h"
 #include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Model2/M2Data.h"
 #include "Engine/Source/Storm/H/stpl.h"
@@ -12,7 +16,6 @@
 #include "Engine/Source/Tempest/C4Quaternion.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/CImVector.h"
-#include "Engine/Source/Tempest/CMemBlock.h"
 #include "Engine/Source/Tempest/CRandom.h"
 
 class C2Vector;
@@ -55,44 +58,28 @@ struct CSortableParticleRecord {
     /* 0004 */ CParticle2* m_particle;
 };
 
-class CSortableParticleQueue : public CMemBlock {
-    public:
-    /* 0014 */ uint32_t m_chunk;
-    /* 0018 */ uint32_t m_capacity;
-    /* 001C */ uint32_t m_count;
-
-    CSortableParticleQueue(const uint32_t* params);
-    void Erase(uint32_t index, uint32_t count);
-    CSortableParticleRecord Pop();
-    void Push(float depth, CParticle2* particle);
-};
+bool operator<(const CSortableParticleRecord& l, const CSortableParticleRecord& r);
 
 class CParticleEmitter2 {
     public:
-    struct ParticleVertex {
-        /* 0000 */ uint8_t* m_position;
-        /* 0004 */ uint8_t* m_normal;
-        /* 0008 */ uint8_t* m_color;
-        /* 000C */ uint8_t* m_texCoord;
-        /* 0010 */ uint32_t m_positionStride;
-        /* 0014 */ uint32_t m_normalStride;
-        /* 0018 */ uint32_t m_colorStride;
-        /* 001C */ uint32_t m_texCoordStride;
-        /* 0020 */ uint32_t m_count;
+    struct TrackValues {
+        /* 0000 */ CImVector m_color;
+        /* 0004 */ C2Vector m_scale;
+        /* 000C */ int32_t m_headCell;
+        /* 0010 */ int32_t m_tailCell;
     };
 
     struct SimpleKey {
-        /* 0000 */ CImVector m_color;
-        /* 0004 */ int32_t m_deltaR;
-        /* 0008 */ int32_t m_deltaG;
-        /* 000C */ int32_t m_deltaB;
-        /* 0010 */ int32_t m_deltaA;
-        /* 0014 */ float m_scale;
-        /* 0018 */ float m_deltaScale;
-        /* 001C */ int32_t m_headCell;
-        /* 0020 */ int32_t m_deltaHeadCell;
-        /* 0024 */ int32_t m_tailCell;
-        /* 0028 */ int32_t m_deltaTailCell;
+        /* 0000 */ int32_t m_color [4];
+        /* 0010 */ float m_scale;
+        /* 0014 */ int32_t m_headCell;
+        /* 0018 */ int32_t m_tailCell;
+        /* 001C */ uint32_t unk_001C;
+        /* 0020 */ int32_t m_deltaColor [4];
+        /* 0030 */ float m_deltaScale;
+        /* 0034 */ int32_t m_deltaHeadCell;
+        /* 0038 */ int32_t m_deltaTailCell;
+        /* 003C */ uint32_t unk_003C;
 
         SimpleKey();
     };
@@ -132,14 +119,13 @@ class CParticleEmitter2 {
     static CGxPool* s_indexPool;
     static uint32_t s_initCount;
     static uint8_t s_noIndexBuffer;
-    static CSortableParticleQueue s_pq;
+    static std::priority_queue<CSortableParticleRecord> s_pq;
     static float s_rndTable[128];
     static float s_viewDist;
 
     static void Destroy();
     static void Init();
     static void __stdcall RenderIndices(CGxBuf* buf);
-    static void __stdcall RenderParticleVertices(CGxBuf* buf, EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount);
 
     /* 0004 */ int32_t m_refCount;
     /* 0008 */ float m_emitAccumulator;
@@ -216,16 +202,17 @@ class CParticleEmitter2 {
     CParticleEmitter2();
     CParticleEmitter2(const CParticleEmitter2& source, int32_t copyParticles);
     CParticleEmitter2* AddRef();
-    void BuildParticleVertices(ParticleVertex& vertex, uint32_t count, const C44Matrix& transform);
-    int32_t BuildVertex(const CParticle2& particle, ParticleVertex& vertex);
+    template <class V>
+    void BuildParticleVertices(V* vertices, uint32_t count, const C44Matrix& transform);
+    template <class V, class P, bool simple>
+    void BuildVertices(V* vertices, uint32_t count);
     float CalcVelocity();
-    void ChangeFrameOfReference(const C44Matrix* matrix);
+    void ChangeFrameOfReference(const C44Matrix& matrix);
     void CreateChildEmittersFromModel(CM2Scene* scene, const char* name);
     void DecRef();
     void DetermineIfSimple();
     void EmitNewParticles(float deltaTime, const C44Matrix& transform);
     void EmitParticle(float time, const C44Matrix& transform);
-    void FillOutParticleVertex(void* buffer, EGxVertexBufferFormat format, ParticleVertex* vertex);
     uint32_t GetNumBatches();
     uint32_t GetNumParticleModels();
     uint32_t GetNumPrimitives();
@@ -233,11 +220,15 @@ class CParticleEmitter2 {
     void GetReplacementColors(CImVector& color0, CImVector& color1, CImVector& color2);
     int32_t HasLiveParticles();
     void InternalUpdate(float deltaTime, int32_t child);
-    void InterpolateAllTracks(const CParticle2& particle, CImVector* color, C2Vector* scale, int32_t* headCell, int32_t* tailCell);
-    void InterpolateAllTracksSimple(const CParticle2& particle, CImVector* color, C2Vector* scale, int32_t* headCell, int32_t* tailCell);
+    void InterpolateAllTracks(const CParticle2& particle, TrackValues* values);
+    void InterpolateAllTracksSimple(const CParticle2& particle, TrackValues* values);
     CImVector InterpolateColorTrack(float t);
+    template <class P>
+    void KillExpiredParticles();
     int32_t MoveParticle(CParticle2& particle, float deltaTime);
     int32_t MoveParticle(CParticle2_Model& particle, float deltaTime);
+    template <class P>
+    CParticle2* NextParticle(uint32_t index);
     void PlaceParticleModels(const C44Matrix* frameOfReference);
     void ProjectParticle(CParticle2& particle);
     void RandomizeSpin(const CParticle2& particle, float* spin, float* spinRate);
@@ -245,6 +236,7 @@ class CParticleEmitter2 {
     int32_t RenderParticle(CParticle2_Model& particle, const C44Matrix* frameOfReference);
     void RenderParticles(const C44Matrix* frameOfReference, void* buffer);
     void RenderParticlesPrep(const C44Matrix* frameOfReference, const C44Matrix& view);
+    void RenderParticleVertices(CGxBuf* buf, uint32_t vertexCount, uint32_t indexCount);
     void SetChooseRandomTexture(int32_t choose);
     void SetFollowParams(float speed1, float scale1, float speed2, float scale2);
     void SetLifeSpan(float life);
@@ -261,7 +253,10 @@ class CParticleEmitter2 {
     void SetTextureDimensions(uint32_t rows, uint32_t cols);
     void SetTwinkleScale(const CRange& scale);
     void SetZsource(float zsource);
-    void StepUpdate(float deltaTime, int32_t child);
+    template <class P>
+    void SortParticles();
+    template <class P>
+    void StepUpdate(float deltaTime, int32_t child, uint32_t count);
     void SyncAllocation(uint32_t count);
     void SyncReserve(uint32_t count, uint32_t used, uint32_t spare);
     void Update(float deltaTime, const C44Matrix& transform, const C3Vector& viewPos, const C44Matrix* frameOfReference);

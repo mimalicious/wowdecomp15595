@@ -867,7 +867,7 @@ void CM2SceneRender::DrawRibbon() {
 }
 
 // OFFSET: 0x0082C2E0/0x14054B9E0
-void CM2SceneRender::RenderBatchedParticle(CParticleEmitter2* emitter, CGxBuf* buf, EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount) {
+void CM2SceneRender::RenderBatchedParticle(CParticleEmitter2* emitter, CGxBuf* buf, uint32_t vertexCount, uint32_t indexCount) {
     CShaderEffect* effect = (emitter->m_params.m_materialFlags & 1) ? this->m_particleEffect : this->m_particleUnlitEffect;
 
     g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(emitter->m_texture));
@@ -875,7 +875,7 @@ void CM2SceneRender::RenderBatchedParticle(CParticleEmitter2* emitter, CGxBuf* b
     effect->SetCurrent();
     this->SetupLighting();
     this->SetupMaterial();
-    CParticleEmitter2::RenderParticleVertices(buf, format, vertexCount, indexCount);
+    emitter->RenderParticleVertices(buf, vertexCount, indexCount);
 }
 
 // OFFSET: 0x0082C390/0x14054BAD0
@@ -995,7 +995,7 @@ uint32_t CM2SceneRender::DrawBatchedParticle(uint32_t index, M2Element* elements
     buf->unk_001C = 1;
 
     if (renderedVertices && renderedIndices) {
-        this->RenderBatchedParticle(emitter, buf, format, renderedVertices, renderedIndices);
+        this->RenderBatchedParticle(emitter, buf, renderedVertices, renderedIndices);
     } else {
         this->m_curType = -1;
     }
