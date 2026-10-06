@@ -10,7 +10,7 @@
 // STATIC: %0x00D93838
 static CommandLineUTF8 s_commandLineUTF8;
 
-// OFFSET: %0x007DBD50
+// OFFSET: 0x00875FA0
 uint32_t GetModuleFileNameUTF8(void* module, char* path, uint32_t size) {
     uint32_t wideSize = size * 3 * sizeof(uint16_t);
     uint16_t* wide = static_cast<uint16_t*>(_alloca(wideSize));
@@ -29,7 +29,7 @@ uint32_t GetModuleFileNameUTF8(void* module, char* path, uint32_t size) {
     return written;
 }
 
-// OFFSET: %0x007DC050
+// OFFSET: 0x008762A0/0x1405AD230
 CommandLineUTF8::CommandLineUTF8() {
     const wchar_t* commandLine = GetCommandLineW();
     if (!commandLine) {

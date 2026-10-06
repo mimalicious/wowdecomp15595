@@ -5,7 +5,7 @@ BLLLoader::~BLLLoader() {
     this->Unload();
 }
 
-// OFFSET: %0x007E1AD0
+// OFFSET: 0x0087BF00/0x1405B3F80
 void* BLLLoader::GetExport(int32_t ordinal) {
     uint8_t* image = this->m_image;
 

@@ -35,12 +35,12 @@ uint32_t OsPathGetRootChars(const char* path) {
     return length;
 }
 
-// OFFSET: %0x007DBE30
+// OFFSET: 0x00876080
 uint32_t GetExecutablePathUTF8(char* path, uint32_t size) {
     return GetModuleFileNameUTF8(NULL, path, size);
 }
 
-// OFFSET: %0x007DBEB0
+// OFFSET: 0x00876100
 char* IOsPathFindExtension(char* path, int32_t offset) {
     char* extension = NULL;
 
@@ -72,7 +72,7 @@ char* OsPathFindExtensionWithoutDot(char* path) {
     return IOsPathFindExtension(path, 1);
 }
 
-// OFFSET: %0x007DBE50
+// OFFSET: 0x008760A0
 const char* OsPathFindFilename(const char* path) {
     const char* filename = path;
     int32_t c;
@@ -86,7 +86,7 @@ const char* OsPathFindFilename(const char* path) {
     return filename;
 }
 
-// OFFSET: %0x007DBE80
+// OFFSET: 0x008760D0/0x1405AD050
 char* OsPathFindFilename(char* path) {
     char* filename = path;
     int32_t c;
@@ -100,22 +100,22 @@ char* OsPathFindFilename(char* path) {
     return filename;
 }
 
-// OFFSET: %0x007DBF50
+// OFFSET: 0x008761A0/0x1405AD080
 const char* OsPathFindExtensionWithDot(const char* path) {
     return IOsPathFindExtension(const_cast<char*>(path), 0);
 }
 
-// OFFSET: %0x007DBF50
+// OFFSET: 0x008761A0/0x1405AD080
 char* OsPathFindExtensionWithDot(char* path) {
     return IOsPathFindExtension(path, 0);
 }
 
-// OFFSET: %0x007DBF70
+// OFFSET: 0x008761C0/0x1405AD0C0
 bool OsPathCheckExtension(const char* path, const char* extension) {
     return _stricmp(IOsPathFindExtension(const_cast<char*>(path), 1), extension) == 0;
 }
 
-// OFFSET: %0x007DBFA0
+// OFFSET: 0x008761F0/0x1405AD120
 void OsPathReplaceExtension(char* dest, uint32_t size, const char* path, const char* extension) {
     char* pathExtension = IOsPathFindExtension(const_cast<char*>(path), 0);
     uint32_t length = static_cast<uint32_t>(pathExtension - path);
@@ -133,7 +133,7 @@ void OsBuildFontFilePath(const char* fontName, char* path, uint32_t size) {
     SStrPrintf(path, size, "%s\\%s", "Fonts", fontName);
 }
 
-// OFFSET: %0x007DC0F0
+// OFFSET: 0x00876340
 void OsPathStripFilename(char* path) {
     char* filename = path;
 
@@ -154,7 +154,7 @@ void OsPathStripFilename(char* path) {
     }
 }
 
-// OFFSET: %0x007DC140
+// OFFSET: 0x00876390
 void OsGetExePath(char* path, uint32_t size) {
     GetModuleFileNameUTF8(NULL, path, size);
     OsPathStripFilename(path);

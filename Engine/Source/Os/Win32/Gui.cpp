@@ -51,7 +51,7 @@ int32_t COsControl::SendEvent(int32_t event, int32_t code) {
     return 0;
 }
 
-// OFFSET: %0x007DC1D0
+// OFFSET: 0x00876420/0x1405AD430
 static int32_t sIsCharacterAllowed(char c, uint32_t filters) {
     uint8_t ch = static_cast<uint8_t>(c);
 
@@ -97,7 +97,7 @@ void* COsTreeView::GetEditControl() {
     return reinterpret_cast<void*>(SendMessageA(static_cast<HWND>(this->m_handle), TVM_GETEDITCONTROL, 0, 0));
 }
 
-// OFFSET: %0x007DC240
+// OFFSET: 0x00876490/0x1405AD4A0
 int32_t COsTreeView::IsCharacterAllowed(char c) {
     if (!this->GetEditControl()) {
         return 1;
@@ -110,7 +110,8 @@ int32_t COsTreeView::IsCharacterAllowed(char c) {
     return 1;
 }
 
-// OFFSET: %0x007DC290
+// PROVEN: 3678f5f0 IDENTICAL/NONE
+// OFFSET: 0x008764E0/0x1405AD500
 void OsGuiSetWindowTitle(void* window, const char* title) {
     uint32_t length = SUniConvertUTF8to16Len(title, 0x7FFFFFFF, NULL);
     uint16_t* wideTitle = static_cast<uint16_t*>(_alloca(length * sizeof(uint16_t)));
@@ -146,19 +147,12 @@ void* OsGuiGetWindow(int32_t type) {
     }
 }
 
-// OFFSET: %0x007DC310
-int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title) {
-    uint32_t messageLength = SUniConvertUTF8to16Len(message, 0x7FFFFFFF, NULL);
-    uint16_t* wideMessage = static_cast<uint16_t*>(_alloca(messageLength * sizeof(uint16_t)));
-    SUniConvertUTF8to16(wideMessage, messageLength, message, 0x7FFFFFFF, NULL, NULL);
-
+// PROVEN: 274c8bd1 IDENTICAL/NONE
+// OFFSET: 0x00876570/0x1405AD5E0
+int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* message, const uint16_t* title) {
     if (!title) {
-        title = "";
+        title = reinterpret_cast<const uint16_t*>(L"");
     }
-
-    uint32_t titleLength = SUniConvertUTF8to16Len(title, 0x7FFFFFFF, NULL);
-    uint16_t* wideTitle = static_cast<uint16_t*>(_alloca(titleLength * sizeof(uint16_t)));
-    SUniConvertUTF8to16(wideTitle, titleLength, title, 0x7FFFFFFF, NULL, NULL);
 
     UINT type = MB_OK;
 
@@ -195,17 +189,40 @@ int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, 
             break;
     }
 
-    switch (MessageBoxW(static_cast<HWND>(parentWindow), reinterpret_cast<const wchar_t*>(wideMessage), reinterpret_cast<const wchar_t*>(wideTitle), type)) {
+    int32_t result = 2;
+
+    switch (MessageBoxW(static_cast<HWND>(parentWindow), reinterpret_cast<const wchar_t*>(message), reinterpret_cast<const wchar_t*>(title), type)) {
         case IDOK:
         case IDYES:
-            return 0;
+            result = 0;
+            break;
 
         case IDNO:
-            return 1;
-
-        default:
-            return 2;
+            result = 1;
+            break;
     }
+
+    return result;
+}
+
+// PROVEN: b0d34565 IDENTICAL/NONE
+// OFFSET: 0x008767A0/0x1405AD890
+int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title) {
+    uint32_t messageLength = SUniConvertUTF8to16Len(message, 0x7FFFFFFF, NULL);
+    uint16_t* wideMessage = static_cast<uint16_t*>(_alloca(messageLength * sizeof(uint16_t)));
+    SUniConvertUTF8to16(wideMessage, messageLength, message, 0x7FFFFFFF, NULL, NULL);
+
+    uint16_t* wideTitle;
+
+    if (title) {
+        uint32_t titleLength = SUniConvertUTF8to16Len(title, 0x7FFFFFFF, NULL);
+        wideTitle = static_cast<uint16_t*>(_alloca(titleLength * sizeof(uint16_t)));
+        SUniConvertUTF8to16(wideTitle, titleLength, title, 0x7FFFFFFF, NULL, NULL);
+    } else {
+        wideTitle = NULL;
+    }
+
+    return OsGuiMessageBoxW(parentWindow, style, wideMessage, wideTitle);
 }
 
 // PROVEN: 80ea6ed0 DIFFERENT/IDENTICAL
@@ -287,7 +304,7 @@ int32_t COsDialog::OnCancel() {
     return this->OnEvent(this->m_cancelButton->m_id, 0, 0);
 }
 
-// OFFSET: %0x007DC540
+// OFFSET: 0x00876730/0x1405AD7E0
 int32_t COsTabControl::OnControlTab() {
     int32_t shift = OsGuiIsModifierKeyDown(1);
     int32_t value = this->GetValue();
@@ -309,7 +326,7 @@ int32_t COsTabControl::OnControlTab() {
     return 1;
 }
 
-// OFFSET: %0x007DC5B0
+// OFFSET: 0x00876840/0x1405AD9A0
 int32_t COsDialog::OnControlTab() {
     int32_t count = this->m_controls.Count();
 
@@ -323,7 +340,7 @@ int32_t COsDialog::OnControlTab() {
     return 0;
 }
 
-// OFFSET: %0x007DC5F0
+// OFFSET: 0x00876880/0x1405AD9F0
 int32_t COsDialog::ProcessMessage(void* message) {
     MSG* msg = static_cast<MSG*>(message);
 
@@ -367,7 +384,7 @@ int32_t COsDialog::ProcessMessage(void* message) {
     return IsDialogMessageA(static_cast<HWND>(this->m_handle), msg);
 }
 
-// OFFSET: %0x007DC730
+// OFFSET: 0x008769C0/0x1405ADB60
 int32_t OsGuiProcessMessage(void* message) {
     MSG* msg = static_cast<MSG*>(message);
 

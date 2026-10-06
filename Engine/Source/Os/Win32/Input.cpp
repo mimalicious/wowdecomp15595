@@ -237,7 +237,7 @@ static int32_t s_dragCancel;
 // STATIC: %0x00D93794
 static uint32_t s_codePage;
 
-// STATIC: %0x00D93798
+// STATIC: 0x00EC6CD8
 static int32_t s_WindowResizeLock;
 
 // STATIC: %0x00D9379C
@@ -262,7 +262,7 @@ static SetPhysicalCursorPosProc s_setPhysicalCursorPos;
 // STATIC: %0x00D937B0
 static LogicalToPhysicalPointProc s_logicalToPhysicalPoint;
 
-// OFFSET: %0x007D8A70
+// OFFSET: 0x008730F0/0x1405AB690
 static BOOL OsGetPhysicalCursorPos(POINT* point) {
     if (!s_getPhysicalCursorPos) {
         HMODULE user32 = GetModuleHandleA("user32.dll");
@@ -307,7 +307,7 @@ static BOOL WINAPI LogicalToPhysicalPointNop(HWND hwnd, POINT* point) {
     return TRUE;
 }
 
-// OFFSET: %0x007D8B10
+// OFFSET: 0x008731A0
 static BOOL OsLogicalToPhysicalPoint(POINT* point) {
     if (!s_logicalToPhysicalPoint) {
         HMODULE user32 = GetModuleHandleA("user32.dll");
@@ -330,7 +330,7 @@ static BOOL OsLogicalToPhysicalPoint(POINT* point) {
     return OsSetPhysicalCursorPos(point->x, point->y);
 }
 
-// OFFSET: %0x007D8B70
+// OFFSET: 0x00873200
 void OsQueuePut(OSINPUT id, int32_t param0, int32_t param1, int32_t param2, int32_t param3) {
     int32_t next = s_queueTail == 15 ? 0 : s_queueTail + 1;
 
@@ -367,7 +367,7 @@ int32_t OsQueueGet(OSINPUT* id, int32_t* param0, int32_t* param1, int32_t* param
     return 1;
 }
 
-// OFFSET: %0x007D8C60
+// OFFSET: 0x008732F0
 static int32_t ConvertKeyCode(uint32_t vkey, KEY* key) {
     if (vkey >= VK_F1 && vkey <= VK_F12) {
         *key = static_cast<KEY>(vkey + (KEY_F1 - VK_F1));
@@ -556,7 +556,7 @@ static int32_t ConvertKeyCode(uint32_t vkey, KEY* key) {
     }
 }
 
-// OFFSET: %0x007D8FF0
+// OFFSET: 0x00873680/0x1405A9E90
 static int32_t ConvertKeyToVirtualKey(KEY key, uint32_t* vkey) {
     if (key >= KEY_F1 && key <= KEY_F12) {
         *vkey = key - (KEY_F1 - VK_F1);
@@ -745,7 +745,7 @@ static int32_t ConvertKeyToVirtualKey(KEY key, uint32_t* vkey) {
     }
 }
 
-// OFFSET: %0x007D9310
+// OFFSET: 0x008739A0
 static int32_t ConvertButton(uint32_t message, uintptr_t wparam, MOUSEBUTTON* button) {
     switch (message) {
         case WM_NCLBUTTONDOWN:
@@ -824,7 +824,8 @@ void OsInputSetJoystickPollFcn(void (*pollFcn)(int32_t)) {
     s_joystickPollFcn = pollFcn;
 }
 
-// OFFSET: %0x007D9430
+// PROVEN: 0bc0115e IDENTICAL/NONE
+// OFFSET: 0x00873AC0
 void OsInputSetWindowResizeLock(int32_t resizeLock) {
     s_WindowResizeLock = resizeLock;
 }
@@ -834,7 +835,7 @@ float OsInputGetMouseSpeed() {
     return s_mouseSpeed * 0.1f;
 }
 
-// OFFSET: %0x007D9450
+// OFFSET: 0x00873AE0/0x1405AA4B0
 int32_t OsInputIsKeyDown(KEY key) {
     uint32_t vkey;
     if (!ConvertKeyToVirtualKey(key, &vkey)) {
@@ -844,7 +845,7 @@ int32_t OsInputIsKeyDown(KEY key) {
     return (GetAsyncKeyState(vkey) >> 15) & 1;
 }
 
-// OFFSET: %0x007D9480
+// OFFSET: 0x00873B10/0x1405AA4E0
 int32_t OsInputIsMouseButtonDown(MOUSEBUTTON button) {
     switch (button) {
         case MOUSE_BUTTON_LEFT:
@@ -946,7 +947,7 @@ static int32_t ProcessMouseEvent(uint32_t message, HWND hwnd, MOUSEBUTTON button
     return message == WM_XBUTTONDOWN || message == WM_XBUTTONUP || message == WM_NCXBUTTONDOWN || message == WM_NCXBUTTONUP;
 }
 
-// OFFSET: %0x007D9760
+// OFFSET: 0x00873DF0
 static int32_t HandleMouseDown(uint32_t message, uintptr_t wparam, int32_t* xbutton, HWND hwnd) {
     MOUSEBUTTON button;
     if (!ConvertButton(message, wparam, &button)) {
@@ -967,7 +968,7 @@ static int32_t HandleMouseDown(uint32_t message, uintptr_t wparam, int32_t* xbut
     return 1;
 }
 
-// OFFSET: %0x007D97B0
+// OFFSET: 0x00873E40
 static int32_t HandleMouseUp(uint32_t message, uintptr_t wparam, int32_t* xbutton, HWND hwnd) {
     MOUSEBUTTON button;
     if (!ConvertButton(message, wparam, &button)) {
@@ -996,7 +997,7 @@ static void MoveDragWindow(HWND hwnd, const C2iVector& delta) {
     MoveWindow(hwnd, s_dragRect.left + delta.x, s_dragRect.top + delta.y, s_dragRect.right - s_dragRect.left, s_dragRect.bottom - s_dragRect.top, TRUE);
 }
 
-// OFFSET: %0x007D9860
+// OFFSET: 0x00873EF0/0x1405AA840
 static void ResizeDragWindow(int32_t hitTest, HWND hwnd, const C2iVector& delta) {
     if (s_WindowResizeLock) {
         return;
@@ -1043,7 +1044,7 @@ static void ResizeDragWindow(int32_t hitTest, HWND hwnd, const C2iVector& delta)
     }
 }
 
-// OFFSET: %0x007D9960
+// OFFSET: 0x00873FF0
 static void DispatchMouseMove(HWND hwnd, int32_t point) {
     if (!s_dragging) {
         return;
@@ -1060,7 +1061,7 @@ static void DispatchMouseMove(HWND hwnd, int32_t point) {
     }
 }
 
-// OFFSET: %0x007D99C0
+// OFFSET: 0x00874050/0x1405AA9F0
 static void BeginDrag(int32_t hitTest, HWND hwnd, int32_t point) {
     s_dragCancel = 0;
     s_dragHitTest = hitTest;
@@ -1082,7 +1083,7 @@ static void BeginDrag(int32_t hitTest, HWND hwnd, int32_t point) {
     s_dragging = 0;
 }
 
-// OFFSET: %0x007D9A50
+// OFFSET: 0x008740E0
 static void HandleNcDblClick(HWND hwnd, int32_t hitTest) {
     s_dragCancel = 1;
 
@@ -1111,7 +1112,7 @@ static void HandleNcDblClick(HWND hwnd, int32_t hitTest) {
     }
 }
 
-// OFFSET: %0x007D9AF0
+// OFFSET: 0x00874180
 static void HandleDragEnd(int32_t hitTest, HWND hwnd, int32_t point) {
     if (!s_dragCancel) {
         if (s_dragHitTest == hitTest) {
@@ -1162,7 +1163,7 @@ static void HandleDragEnd(int32_t hitTest, HWND hwnd, int32_t point) {
     s_dragCancel = 0;
 }
 
-// OFFSET: %0x007D9BE0
+// OFFSET: 0x00874270
 static bool DispatchMouseButtonChanges(HWND hwnd, uint32_t message, uintptr_t wparam, int32_t* xbutton) {
     uint32_t state = static_cast<uint32_t>(wparam) & ~0x1F;
     uint32_t changed = s_extraButtonState ^ state;
@@ -1188,7 +1189,7 @@ static bool DispatchMouseButtonChanges(HWND hwnd, uint32_t message, uintptr_t wp
     return true;
 }
 
-// OFFSET: %0x007D9CA0
+// OFFSET: 0x00874330
 static void OsInputSetAppActive(int32_t active) {
     if (s_appActive == active) {
         return;
@@ -1211,7 +1212,7 @@ static void HandleInputLangChange(uintptr_t wparam) {
     }
 }
 
-// OFFSET: %0x007D9D40
+// OFFSET: 0x008743D0
 static void HandleImeComposition(intptr_t lparam) {
     int32_t flags = (lparam & GCS_CURSORPOS) != 0;
 
@@ -1226,7 +1227,7 @@ static void HandleImeComposition(intptr_t lparam) {
     OsQueuePut(OS_INPUT_IME, 2, 0, flags, 0);
 }
 
-// OFFSET: %0x007D9D70
+// OFFSET: 0x00874400
 static void HandleImeNotify(uintptr_t wparam, intptr_t lparam) {
     switch (wparam) {
         case IMN_CHANGECANDIDATE:
@@ -1262,7 +1263,7 @@ static void HandleImeEndComposition() {
     OsQueuePut(OS_INPUT_IME, 6, 0, 0, 0);
 }
 
-// OFFSET: %0x007D9E40
+// OFFSET: 0x008744D0
 static int32_t HandleChar(uintptr_t wparam, intptr_t lparam) {
     if (wparam < 0x20) {
         return 1;
@@ -1308,7 +1309,7 @@ static int32_t HandleChar(uintptr_t wparam, intptr_t lparam) {
     return 0;
 }
 
-// OFFSET: %0x007D9EF0
+// OFFSET: 0x00874580
 static int32_t HandleKey(uint32_t message, uintptr_t wparam, intptr_t lparam) {
     int32_t down = message == WM_KEYDOWN || message == WM_SYSKEYDOWN;
     uint32_t vkey = static_cast<uint32_t>(wparam);
@@ -1389,7 +1390,7 @@ static void CALLBACK OsInputCallEventPollProc(HWND hwnd, UINT message, UINT_PTR 
     s_eventPollProc();
 }
 
-// OFFSET: %0x007DA0C0
+// OFFSET: 0x00874750/0x1405AB100
 static void CenterMouse() {
     RECT rect;
     GetWindowRect(static_cast<HWND>(OsGuiGetWindow(0)), &rect);
@@ -1399,7 +1400,7 @@ static void CenterMouse() {
     OsSetPhysicalCursorPos(s_centerMousePos.x, s_centerMousePos.y);
 }
 
-// OFFSET: %0x007DA150
+// OFFSET: 0x008747E0/0x1405AB1A0
 int32_t OsInputGet(OSINPUT* id, int32_t* param0, int32_t* param1, int32_t* param2, int32_t* param3) {
     *id = static_cast<OSINPUT>(-1);
 
@@ -1490,7 +1491,7 @@ void OsInputSetMouseMode(OS_MOUSE_MODE mode) {
     }
 }
 
-// OFFSET: %0x007DA3D0
+// OFFSET: 0x00874A60
 void OsInputSetMouseSpeed(float speed) {
     float clamped = speed < 0.1f ? 0.1f : (speed >= 2.0f ? 2.0f : speed);
     s_mouseSpeed = static_cast<int32_t>(clamped * 10.0f);
@@ -1533,7 +1534,7 @@ void OsInputSetMousePosition(int32_t x, int32_t y) {
     OsLogicalToPhysicalPoint(&point);
 }
 
-// OFFSET: %0x007DA4D0
+// OFFSET: 0x00874B60/0x1405AB610
 int32_t OsGetDefaultWindowRect(tagRECT* rect) {
     if (!rect) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -1551,7 +1552,7 @@ int32_t OsGetDefaultWindowRect(tagRECT* rect) {
     return 1;
 }
 
-// OFFSET: %0x007DA540
+// OFFSET: 0x00874BD0
 static int32_t HandleMouseMove(HWND hwnd, intptr_t lparam) {
     if (s_dragging) {
         POINT point;
@@ -1581,7 +1582,7 @@ static int32_t HandleMouseMove(HWND hwnd, intptr_t lparam) {
     return 1;
 }
 
-// OFFSET: %0x007DA630
+// OFFSET: 0x00874CC0
 intptr_t OsWindowProc(void* window, uint32_t message, uintptr_t wparam, intptr_t lparam) {
     HWND hwnd = static_cast<HWND>(window);
     UINT_PTR timer = 0;

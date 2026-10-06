@@ -29,8 +29,8 @@ static const uint8_t trailingBytesForUTF8[256] = {
 // STATIC: #0x00A3A358
 static const uint32_t firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
-// OFFSET: %0x004C5AA0
-int32_t STORMAPI SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint16_t* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
+// OFFSET: 0x004B5FC0/0x1400ED7E0
+int32_t SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint16_t* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
     char* dstStart = dst;
     const uint16_t* srcStart = src;
     const uint16_t* srcEnd = srcmaxchars == STORM_MAX_STR ? reinterpret_cast<const uint16_t*>(-1) : src + srcmaxchars;
@@ -133,7 +133,7 @@ int32_t STORMAPI SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint
 }
 
 // OFFSET: 0x004B6180/0x1400EDA20
-int32_t STORMAPI SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, uint32_t* srcchars) {
+int32_t SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, uint32_t* srcchars) {
     if (!srcmaxchars || !src) {
         if (srcchars) {
             *srcchars = 0;
@@ -205,8 +205,8 @@ int32_t STORMAPI SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, u
     return result;
 }
 
-// OFFSET: %0x004C5D70
-int32_t STORMAPI SUniConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
+// OFFSET: 0x004B6280/0x1400EDB80
+int32_t SUniConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
     if (!src || !srcmaxchars) {
         return -1;
     }

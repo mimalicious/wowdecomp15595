@@ -4,6 +4,7 @@
 #include <cstring>
 #include <windows.h>
 #include <wincrypt.h>
+#include <intrin.h>
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SHA1.h"
 #include "Engine/Source/Os/OsSecureRandom.h"
 #include "Engine/Source/Storm/H/storm.h"
@@ -20,31 +21,22 @@ struct OsSecureRandomEntropy {
     /* 0074 */ DWORD m_threadId;
     /* 0078 */ LONG m_counter;
     /* 007C */ void* m_heapPointer;
+    /* 0080 */ volatile LONG* m_counterAddress;
 };
 
-// STATIC: %0x00D93898
+// STATIC: 0x00EC6DDC
 static volatile LONG s_counter;
 
-// OFFSET: %0x007E11F0
+// PROVEN: 15fe9366 IDENTICAL/DIFFERENT
+// OFFSET: 0x0087BCC0/0x1405B3CA0
 void IOsSecureRandom(uint8_t* buffer, uint32_t size) {
-    typedef BOOL (WINAPI* GlobalMemoryStatusExFunc)(MEMORYSTATUSEX* buffer);
-
-    HMODULE kernel32 = GetModuleHandleW(L"kernel32.dll");
-
     OsSecureRandomEntropy entropy;
     entropy.m_tickCount = GetTickCount();
     QueryPerformanceCounter(&entropy.m_performanceCount);
     GetSystemTimeAsFileTime(&entropy.m_systemTime);
 
-    GlobalMemoryStatusExFunc globalMemoryStatusEx = reinterpret_cast<GlobalMemoryStatusExFunc>(GetProcAddress(kernel32, "GlobalMemoryStatusEx"));
-
-    if (globalMemoryStatusEx) {
-        entropy.m_memoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
-        globalMemoryStatusEx(&entropy.m_memoryStatus);
-    } else {
-        entropy.m_memoryStatus.dwLength = sizeof(MEMORYSTATUS);
-        GlobalMemoryStatus(reinterpret_cast<MEMORYSTATUS*>(&entropy.m_memoryStatus));
-    }
+    entropy.m_memoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
+    GlobalMemoryStatusEx(&entropy.m_memoryStatus);
 
     GetDiskFreeSpaceExW(NULL, &entropy.m_freeBytesAvailable, &entropy.m_totalBytes, &entropy.m_totalFreeBytes);
 
@@ -57,7 +49,8 @@ void IOsSecureRandom(uint8_t* buffer, uint32_t size) {
         SMemFree(entropy.m_heapPointer, __FILE__, __LINE__, 0);
     }
 
-    entropy.m_counter = InterlockedIncrement(&s_counter);
+    entropy.m_counterAddress = &s_counter;
+    entropy.m_counter = _InterlockedIncrement(&s_counter);
 
     SHA1_CONTEXT context;
     uint8_t digest[20];

@@ -52,7 +52,7 @@ static int __cdecl CompareEntries(const void* a, const void* b) {
     return entryA->m_offset > entryB->m_offset;
 }
 
-// OFFSET: %0x00A74710
+// OFFSET: 0x00B42440
 static void HashZeroes(IOsVersionHashCallback& callback, uint32_t size) {
     uint8_t zeroes[4096];
     memset(zeroes, 0, sizeof(zeroes));
@@ -64,7 +64,7 @@ static void HashZeroes(IOsVersionHashCallback& callback, uint32_t size) {
     }
 }
 
-// OFFSET: %0x00A74770
+// OFFSET: 0x00B424A0/0x140910C70
 static int32_t AddRelocationEntries(OsVersionHash& hash, const uint8_t* image, uint64_t imageBase, const IMAGE_DATA_DIRECTORY* directory, int32_t unrelocate, bool is32Bit) {
     if (!directory->VirtualAddress || !directory->Size) {
         return 1;
@@ -128,7 +128,7 @@ static int32_t AddRelocationEntries(OsVersionHash& hash, const uint8_t* image, u
     return 1;
 }
 
-// OFFSET: %0x00A74880
+// OFFSET: 0x00B425B0/0x140910E10
 static int32_t AddHeaderEntries(OsVersionHash& hash, const uint8_t* image, uint64_t imageBase, uint32_t sizeOfHeaders, int32_t unrelocate, bool is32Bit) {
     if (sizeOfHeaders < sizeof(IMAGE_DOS_HEADER)) {
         return 0;
@@ -144,7 +144,7 @@ static int32_t AddHeaderEntries(OsVersionHash& hash, const uint8_t* image, uint6
     return 1;
 }
 
-// OFFSET: %0x00A748D0
+// OFFSET: 0x00B42600
 static int32_t HashEntry(IOsVersionHashCallback& callback, const OsVersionHashEntry& entry, const uint8_t* image, uint64_t imageBase, const uint8_t* data, int32_t unrelocate, bool is32Bit) {
     uint64_t delta = reinterpret_cast<intptr_t>(image) - imageBase;
 
@@ -214,7 +214,7 @@ static int32_t HashEntry(IOsVersionHashCallback& callback, const OsVersionHashEn
     }
 }
 
-// OFFSET: %0x00A74AC0
+// OFFSET: 0x00B427F0
 static int32_t HashSection(IOsVersionHashCallback& callback, OsVersionHash& hash, const uint8_t* image, uint64_t imageBase, const IMAGE_SECTION_HEADER* section, uint32_t alignment, int32_t unrelocate, bool is32Bit) {
     uint32_t size = section->Misc.VirtualSize;
     uint32_t address = section->VirtualAddress;
@@ -307,7 +307,7 @@ OsVersionHash::OsVersionHash() : m_entries(NULL) {
     this->m_capacity = 256;
 }
 
-// OFFSET: %0x00A74D60
+// OFFSET: 0x00B42A90
 static int32_t AddImportEntries(OsVersionHash& hash, const uint8_t* image, const IMAGE_IMPORT_DESCRIPTOR* imports, uint32_t importAddress, uint32_t importSize, int32_t unrelocate, bool is32Bit) {
     if (!imports) {
         return 1;
@@ -373,7 +373,7 @@ static int32_t AddImportEntries(OsVersionHash& hash, const uint8_t* image, const
     return 1;
 }
 
-// OFFSET: %0x00A74E60
+// OFFSET: 0x00B42B90/0x140911600
 static int32_t ComputeChecksum(IOsVersionHashCallback& callback, const uint8_t* image, int32_t unrelocate) {
     const IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<const IMAGE_DOS_HEADER*>(image);
     if (!dosHeader->e_lfanew) {
@@ -469,7 +469,7 @@ static int32_t ComputeChecksum(IOsVersionHashCallback& callback, const uint8_t* 
     return 1;
 }
 
-// OFFSET: %0x00A750D0
+// OFFSET: 0x00B42E00/0x1409119C0
 int32_t IOsVersionChecksum(IOsVersionHashCallback& callback, const char* path, int32_t loaded) {
     if (!path && !loaded) {
         return 0;

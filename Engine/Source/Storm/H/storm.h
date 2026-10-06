@@ -264,9 +264,9 @@ void SServerInitialize();
 int32_t STORMAPI SSetCurrentProcessAffinityMask(size_t mask);
 int32_t STORMAPI SSetCurrentThreadPriority(int32_t priority);
 
-int32_t STORMAPI SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint16_t* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars);
-int32_t STORMAPI SUniConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars);
-int32_t STORMAPI SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, uint32_t* srcchars);
+int32_t SUniConvertUTF16to8(char* dst, uint32_t dstmaxchars, const uint16_t* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars);
+int32_t SUniConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars);
+int32_t SUniConvertUTF8to16Len(const char* src, uint32_t srcmaxchars, uint32_t* srcchars);
 
 int32_t STORMAPI SMsgDestroy();
 HWND__* STORMAPI SMsgGetDefaultWindow();

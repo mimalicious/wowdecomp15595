@@ -1,38 +1,34 @@
 #if defined(WOWDECOMP_ARCH_64)
 
 #include <cstdint>
-#include <malloc.h>
 #include <windows.h>
 #include "Engine/Source/Base/ConvertUTF.h"
 #include "Engine/Source/Os/OsClipboard.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007E1E40
+// PROVEN: eca019ff IDENTICAL/DIFFERENT
+// OFFSET: 0x0087C8F0/0x1405B4D80
 char* IOsClipboardGetString(void* window) {
     if (!OpenClipboard(static_cast<HWND>(window))) {
         return NULL;
     }
 
-    HANDLE data = GetClipboardData(CF_TEXT);
+    HANDLE data = GetClipboardData(CF_UNICODETEXT);
     if (!data) {
         CloseClipboard();
         return NULL;
     }
 
-    const char* text = static_cast<const char*>(GlobalLock(data));
-    if (!text) {
+    const uint16_t* wide = static_cast<const uint16_t*>(GlobalLock(data));
+    if (!wide) {
         CloseClipboard();
         return NULL;
     }
 
-    int32_t length = MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, text, -1, NULL, 0);
-    uint16_t* wide = static_cast<uint16_t*>(_alloca(length * sizeof(uint16_t)));
-    MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, text, -1, reinterpret_cast<LPWSTR>(wide), length);
-
-    uint32_t size = length * 3;
-    char* string = static_cast<char*>(SMemAlloc(size, __FILE__, __LINE__, 0));
+    uint32_t length = static_cast<uint32_t>(wcslen(reinterpret_cast<const wchar_t*>(wide)));
+    char* string = static_cast<char*>(SMemAlloc(3 * length + 1, __FILE__, __LINE__, 0));
     uint32_t written;
-    ConvertUTF16toUTF8(string, size, wide, length, &written, NULL);
+    ConvertUTF16toUTF8(string, 3 * length, wide, length, &written, NULL);
     string[written] = '\0';
 
     GlobalUnlock(data);
@@ -48,24 +44,23 @@ void OsClipboardFreeString(char* string) {
     }
 }
 
-// OFFSET: %0x007E1F30
+// PROVEN: c7b837c0 IDENTICAL/DIFFERENT
+// OFFSET: 0x0087C9B0/0x1405B4EC0
 int32_t IOsClipboardPutString(const char* string, void* window) {
     uint32_t size = static_cast<uint32_t>(strlen(string) + 1);
 
-    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT | GMEM_DDESHARE, size);
+    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT | GMEM_DDESHARE, size * sizeof(uint16_t));
     if (!memory) {
         return 0;
     }
 
-    char* data = static_cast<char*>(GlobalLock(memory));
+    uint16_t* data = static_cast<uint16_t*>(GlobalLock(memory));
     if (!data) {
         CloseClipboard();
         return 0;
     }
 
-    uint16_t* wide = static_cast<uint16_t*>(_alloca(size * sizeof(uint16_t)));
-    ConvertUTF8toUTF16(wide, size, string, 0x7FFFFFFF, NULL, NULL);
-    WideCharToMultiByte(GetACP(), 0, reinterpret_cast<LPCWSTR>(wide), -1, data, size, NULL, NULL);
+    ConvertUTF8toUTF16(data, size, string, 0x7FFFFFFF, NULL, NULL);
     GlobalUnlock(memory);
 
     if (!OpenClipboard(static_cast<HWND>(window))) {
@@ -79,7 +74,7 @@ int32_t IOsClipboardPutString(const char* string, void* window) {
         return 0;
     }
 
-    SetClipboardData(CF_TEXT, memory);
+    SetClipboardData(CF_UNICODETEXT, memory);
     CloseClipboard();
     return 1;
 }

@@ -49,7 +49,7 @@ int32_t OsMoveFile(const char* existingFileName, const char* newFileName);
 int32_t OsReadFile(HOSFILE file, void* buffer, uint32_t bytesToRead, uint32_t* bytesRead);
 int32_t OsRemoveDirectory(const char* pathName);
 int32_t OsRemoveDirectoryRecurse(const char* pathName, uint32_t flags);
-bool OsSetCurrentDirectory(const char* path);
+int32_t OsSetCurrentDirectory(const char* path);
 int32_t OsSetFileAttributes(const char* fileName, uint32_t attributes);
 int32_t OsWriteFile(HOSFILE file, const void* buffer, uint32_t bytesToWrite, uint32_t* bytesWritten);
 

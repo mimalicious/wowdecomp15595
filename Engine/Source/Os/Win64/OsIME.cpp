@@ -50,7 +50,7 @@ int32_t OsIMEGetLanguageMode() {
     return mode;
 }
 
-// OFFSET: %0x007DE400
+// OFFSET: 0x0087B570
 static int32_t GetCompositionString(DWORD index, char* buffer, uint32_t bufferSize) {
     memset(buffer, 0, bufferSize);
 
@@ -71,17 +71,17 @@ static int32_t GetCompositionString(DWORD index, char* buffer, uint32_t bufferSi
     return 1;
 }
 
-// OFFSET: %0x007DE4A0
+// OFFSET: 0x0087B610
 int32_t OsIMEGetCompositionString(char* buffer, uint32_t bufferSize) {
     return GetCompositionString(GCS_COMPSTR, buffer, bufferSize);
 }
 
-// OFFSET: %0x007DE4C0
+// OFFSET: 0x0087B630
 int32_t OsIMEGetCompositionResult(char* buffer, uint32_t bufferSize) {
     return GetCompositionString(GCS_RESULTSTR, buffer, bufferSize);
 }
 
-// OFFSET: %0x007DE4E0
+// OFFSET: 0x0087B650
 int32_t OsIMEGetClauseInfo(uint32_t& clauseStart, uint32_t& clauseEnd, uint32_t& cursor) {
     UINT codePage = GetACP();
 
@@ -213,7 +213,7 @@ void OsIMEDestroy() {
     s_context = NULL;
 }
 
-// OFFSET: %0x007DE8F0
+// OFFSET: 0x0087BA60/0x1405B39C0
 int32_t OsIMEGetCandidates(uint32_t listMask, uint32_t& pageStart, uint32_t& pageSize, uint32_t& count, uint32_t& selection, TSGrowableArray<OsIMECandidate>& candidates) {
     candidates.Clear();
 

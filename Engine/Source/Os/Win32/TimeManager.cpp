@@ -2,25 +2,56 @@
 
 #include <cstdint>
 #include <windows.h>
-#include <cstdlib>
-#include <new>
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: 0x00D0A8C0/0x140BBC8F0
+// STATIC: 0x00D0A8C8/0x140BBC8F0
 static OsTimeManager s_OsTimeMgr;
 
 // INLINED
-OsTimeManager::OsTimeManager() {
-    this->m_scaleToMs = 1.0;
-    this->m_timingMethod = SystemMethod1;
-    this->m_timingTestError = 0;
-    this->m_performanceFrequency = 0;
-    this->m_timeBegin = 0.0;
+static int64_t OsTimeReadClocks(OsTimeManager::TimingMethod method) {
+    switch (method) {
+        case OsTimeManager::SystemMethod1:
+            return GetTickCount();
+
+        case OsTimeManager::SystemMethod2: {
+            LARGE_INTEGER count;
+            QueryPerformanceCounter(&count);
+            return count.QuadPart;
+        }
+
+        default:
+            return GetTickCount();
+    }
 }
 
-// OFFSET: %0x007DB940
+// INLINED
+static int64_t OsTimeClocksPerSecond(OsTimeManager::TimingMethod method, int64_t performanceFrequency) {
+    switch (method) {
+        case OsTimeManager::SystemMethod1:
+            return 1000;
+
+        case OsTimeManager::SystemMethod2:
+            return performanceFrequency;
+
+        default:
+            return 1000;
+    }
+}
+
+// INLINED
+OsTimeManager::OsTimeManager() {
+    this->m_timingMethod = SystemMethod1;
+    this->m_timingTestError = 0;
+    this->m_performanceFrequency = 1000;
+    this->m_scaleToMs = 1.0;
+    this->m_timeBegin = 0.0;
+    this->m_lastTime = 0;
+}
+
+// PROVEN: fab6fdc8 IDENTICAL/NONE
+// OFFSET: 0x00879290/0x1405B2210
 OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
     if (!QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&this->m_performanceFrequency))) {
         this->m_timingTestError = 1;
@@ -43,10 +74,8 @@ OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
     this->m_timingTestError = 0;
 
     DWORD tick = GetTickCount();
-    DWORD startTick;
-    do {
-        startTick = GetTickCount();
-    } while (tick == startTick);
+    while (tick == GetTickCount()) {
+    }
 
     LARGE_INTEGER startCount;
     QueryPerformanceCounter(&startCount);
@@ -78,26 +107,6 @@ OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
         OsSleep(0);
     }
 
-    if (!this->m_timingTestError) {
-        DWORD now;
-        do {
-            now = GetTickCount();
-        } while (now - startTick < 250);
-
-        DWORD endTick;
-        do {
-            endTick = GetTickCount();
-        } while (now == endTick);
-
-        LARGE_INTEGER endCount;
-        QueryPerformanceCounter(&endCount);
-
-        int64_t elapsed = static_cast<int64_t>(static_cast<double>(endCount.QuadPart - startCount.QuadPart) / static_cast<double>(this->m_performanceFrequency) * 1000.0);
-        if (abs(static_cast<int32_t>(endTick - static_cast<uint32_t>(elapsed) - startTick)) >= 5) {
-            this->m_timingTestError = 3;
-        }
-    }
-
     SetPriorityClass(process, priorityClass);
     SetThreadPriority(thread, threadPriority);
     OsSleep(0);
@@ -105,7 +114,8 @@ OsTimeManager::TimingMethod OsTimeManager::Calibrate() {
     return this->m_timingTestError ? SystemMethod1 : SystemMethod2;
 }
 
-// OFFSET: %0x007DBB60
+// PROVEN: 369eb92f IDENTICAL/NONE
+// OFFSET: 0x00879420/0x1405B23D0
 uint32_t OsTimeGetTestError() {
     return s_OsTimeMgr.m_timingTestError;
 }
@@ -137,109 +147,104 @@ const char* GetTimingMethodName(OsTimeManager::TimingMethod method) {
     }
 }
 
-// OFFSET: %0x007DBBD0
-uint64_t OsTimeManager::Snapshot() {
-    switch (this->m_timingMethod) {
-        case SystemMethod1:
-            break;
+// OFFSET: 0x00879490
+uint32_t OsTimeManager::SnapshotPrecise() {
+    this->m_lock.Enter();
+    OsTimeManager::TimingMethod method = this->m_timingMethod;
+    double scaleToMs = this->m_scaleToMs;
+    double timeBegin = this->m_timeBegin;
+    this->m_lock.Leave();
 
-        case SystemMethod2: {
-            LARGE_INTEGER count;
-            QueryPerformanceCounter(&count);
-            return static_cast<int64_t>(static_cast<double>(count.QuadPart) * this->m_scaleToMs + this->m_timeBegin);
-        }
-
-        default:
-            break;
+    uint32_t current = static_cast<uint32_t>(static_cast<double>(OsTimeReadClocks(method)) * scaleToMs + timeBegin);
+    if (static_cast<int32_t>(current - this->m_lastTime) < 0) {
+        return this->m_lastTime;
     }
 
-    int64_t ticks = GetTickCount();
-    return static_cast<int64_t>(static_cast<double>(ticks) * this->m_scaleToMs + this->m_timeBegin);
+    return current;
 }
 
-// OFFSET: %0x007DBC30
-uint32_t OsGetAsyncTimeMs() {
-    return static_cast<uint32_t>(s_OsTimeMgr.Snapshot());
+// PROVEN: 93d71ede IDENTICAL/NONE
+// OFFSET: 0x00879530/0x1405B2430
+uint32_t OsGetAsyncTimeMsPrecise() {
+    return s_OsTimeMgr.SnapshotPrecise();
 }
 
-// OFFSET: %0x007DBC40
-uint64_t OsGetAsyncTimeClocks() {
-    switch (s_OsTimeMgr.m_timingMethod) {
-        case OsTimeManager::SystemMethod1:
-            break;
-
-        case OsTimeManager::SystemMethod2: {
-            LARGE_INTEGER count;
-            QueryPerformanceCounter(&count);
-            return count.QuadPart;
-        }
-
-        default:
-            break;
-    }
-
-    return GetTickCount();
-}
-
-// OFFSET: %0x007DBC80
+// OFFSET: 0x00879540/0x1405B24D0
 int64_t OsGetAsyncClocksPerSecond() {
-    switch (s_OsTimeMgr.m_timingMethod) {
-        case OsTimeManager::SystemMethod1:
-            break;
-
-        case OsTimeManager::SystemMethod2:
-            return s_OsTimeMgr.m_performanceFrequency;
-
-        default:
-            break;
-    }
-
-    return 1000;
+    return OsTimeClocksPerSecond(s_OsTimeMgr.m_timingMethod, s_OsTimeMgr.m_performanceFrequency);
 }
 
-// OFFSET: %0x007DBCB0
-OsTimeManager::OsTimeManager(OsTimeManager::TimingMethod method) {
-    this->m_timingMethod = NotSet;
+// OFFSET: 0x00879570
+uint32_t OsTimeManager::Snapshot() {
+    uint32_t current = static_cast<uint32_t>(static_cast<double>(OsTimeReadClocks(this->m_timingMethod)) * this->m_scaleToMs + this->m_timeBegin);
+    if (static_cast<int32_t>(current - this->m_lastTime) < 0) {
+        return this->m_lastTime;
+    }
 
-    OsTimeManager::TimingMethod calibrated = this->Calibrate();
-    if (method != BestAvailable && calibrated != method) {
-        if (method == SystemMethod2 && calibrated == SystemMethod1) {
-            this->m_timingTestError = 5;
+    this->m_lastTime = current;
+    return current;
+}
+
+// OFFSET: 0x008795F0
+void OsTimeManager::SetTimingMethod(OsTimeManager::TimingMethod method) {
+    this->m_lock.Enter();
+    this->m_timingMethod = method;
+    this->m_scaleToMs = 1000.0 / static_cast<double>(OsTimeClocksPerSecond(method, this->m_performanceFrequency));
+    this->m_timeBegin = 0.0;
+    this->m_lastTime = static_cast<uint32_t>(static_cast<double>(OsTimeReadClocks(method)) * this->m_scaleToMs);
+    this->m_lock.Leave();
+}
+
+// OFFSET: 0x008796B0
+void OsTimeManager::ScaleTime(float scale) {
+    double now = static_cast<double>(OsTimeReadClocks(this->m_timingMethod));
+    double scaleToMs = scale * this->m_scaleToMs;
+    double timeBegin = now * this->m_scaleToMs + this->m_timeBegin + this->m_timeBegin - (now * scaleToMs + this->m_timeBegin);
+
+    this->m_lock.Enter();
+    this->m_timeBegin = timeBegin;
+    this->m_scaleToMs = scaleToMs;
+    this->m_lock.Leave();
+}
+
+// PROVEN: 7ee1a284 IDENTICAL/DIFFERENT
+// OFFSET: 0x00879740/0x1405B2500
+uint32_t OsGetAsyncTimeMs() {
+    return s_OsTimeMgr.Snapshot();
+}
+
+// PROVEN: 83b6cd6f IDENTICAL/DIFFERENT
+// OFFSET: 0x00879750/0x1405B2570
+uint64_t OsGetAsyncTimeClocks() {
+    return OsTimeReadClocks(s_OsTimeMgr.m_timingMethod);
+}
+
+// PROVEN: 2b3e040f IDENTICAL/NONE
+// OFFSET: 0x00879790/0x1405B25B0
+void OsTimeScaleTime(float scale) {
+    s_OsTimeMgr.ScaleTime(scale);
+}
+
+// OFFSET: 0x008797B0/0x1405B2670
+double OsTimeGetCurrentScale() {
+    return static_cast<double>(OsTimeClocksPerSecond(s_OsTimeMgr.m_timingMethod, s_OsTimeMgr.m_performanceFrequency)) * s_OsTimeMgr.m_scaleToMs * 0.001;
+}
+
+// PROVEN: edd0240f IDENTICAL/NONE
+// OFFSET: 0x00879810/0x1405B26B0
+void OsTimeManagerCreate(OsTimeManager::TimingMethod method) {
+    s_OsTimeMgr.m_timingMethod = OsTimeManager::NotSet;
+
+    OsTimeManager::TimingMethod calibrated = s_OsTimeMgr.Calibrate();
+    if (method != OsTimeManager::BestAvailable && calibrated != method) {
+        if (method == OsTimeManager::SystemMethod2 && calibrated == OsTimeManager::SystemMethod1) {
+            s_OsTimeMgr.m_timingTestError = 5;
         }
 
         calibrated = method;
     }
 
-    this->m_timingMethod = calibrated;
-
-    int64_t clocksPerSecond;
-    switch (calibrated) {
-        case SystemMethod1:
-            clocksPerSecond = 1000;
-            break;
-
-        case SystemMethod2:
-            clocksPerSecond = this->m_performanceFrequency;
-            break;
-
-        default:
-            clocksPerSecond = 1000;
-            break;
-    }
-
-    this->m_scaleToMs = 1000.0 / static_cast<double>(clocksPerSecond);
-    this->m_timeBegin = 0.0;
-}
-
-// OFFSET: %0x007DBD30
-void OsTimeManagerCreate(OsTimeManager::TimingMethod method) {
-    new (&s_OsTimeMgr) OsTimeManager(method);
-}
-
-// PROVEN: d3396581 IDENTICAL/IDENTICAL
-// OFFSET: 0x008755D0/0x1405AC2B0
-void OsSleep(uint32_t milliseconds) {
-    Sleep(milliseconds);
+    s_OsTimeMgr.SetTimingMethod(calibrated);
 }
 
 #endif

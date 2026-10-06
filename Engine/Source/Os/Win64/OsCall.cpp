@@ -23,7 +23,7 @@ static int32_t s_threadCount;
 // STATIC: %0x00ECF528
 static CInitCritSect s_critsect;
 
-// OFFSET: %0x00A74280
+// OFFSET: 0x00B41FB0
 void OsCallSetContext(void* context) {
     if (!s_threadCount || !context) {
         return;
@@ -41,7 +41,7 @@ void OsCallSetContext(void* context) {
     s_critsect.Leave();
 }
 
-// OFFSET: %0x00A742D0
+// OFFSET: 0x00B42000
 void OsCallResetContext(void* context) {
     if (!s_threadCount || !context) {
         return;
@@ -61,11 +61,11 @@ void OsCallResetContext(void* context) {
     }
 }
 
-// OFFSET: %0x00A74330
+// OFFSET: 0x00B42060
 OsCallContext::~OsCallContext() {
 }
 
-// OFFSET: %0x00A743C0
+// OFFSET: 0x00B420F0
 void OsCallDestroy() {
     s_critsect.Enter();
 
@@ -91,7 +91,7 @@ void OsCallDestroy() {
     s_critsect.Leave();
 }
 
-// OFFSET: %0x00A74440
+// OFFSET: 0x00B42170/0x1409106D0
 void OsCallInitialize(const char* name) {
     s_critsect.Enter();
 
@@ -116,7 +116,7 @@ void OsCallInitialize(const char* name) {
     s_critsect.Leave();
 }
 
-// OFFSET: %0x00A74550
+// OFFSET: 0x00B42280
 void* OsCallInitializeContext(const char* name) {
     OsCallContext* context = new (SMemAlloc(sizeof(OsCallContext), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)) OsCallContext;
     SStrCopy(context->m_name, name, sizeof(context->m_name));
@@ -129,7 +129,7 @@ void* OsCallInitializeContext(const char* name) {
     return context;
 }
 
-// OFFSET: %0x00A74610
+// OFFSET: 0x00B42340
 void OsCallDestroyContext(void* context) {
     if (!context) {
         return;

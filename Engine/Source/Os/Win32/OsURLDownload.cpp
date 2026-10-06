@@ -7,7 +7,7 @@
 #include "Engine/Source/Os/OsURLDownload.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007E13E0
+// OFFSET: 0x0087E960/0x1405B7960
 static uint32_t STORMAPI OsUrlDownloadCallback(void* param) {
     OsUrlDownload* download = static_cast<OsUrlDownload*>(param);
 
@@ -63,7 +63,7 @@ static uint32_t STORMAPI OsUrlDownloadCallback(void* param) {
     return 0;
 }
 
-// OFFSET: %0x007E1690
+// OFFSET: 0x0087EAF0/0x1405B7B20
 static void CALLBACK fnInternetCallback(HINTERNET internet, DWORD_PTR context, DWORD internetStatus, LPVOID statusInformation, DWORD statusInformationLength) {
     OsUrlDownload* download = reinterpret_cast<OsUrlDownload*>(context);
 
@@ -150,7 +150,7 @@ OsUrlDownload::OsUrlDownload() {
     this->m_errorCode = HTTPError::NoError;
 }
 
-// OFFSET: %0x007E1850
+// OFFSET: 0x0087ECB0/0x1405B7D50
 bool OsUrlDownload::DownloadString(const char* url, OsURLDownloadCallback callback, void* param, int32_t timeout) {
     char hostName[1024];
     char urlPath[1024];

@@ -98,7 +98,7 @@ static void ResetState(W32Joystick* joystick, DIJOYSTATE* state) {
     }
 }
 
-// OFFSET: %0x007DD030
+// OFFSET: 0x0087A2A0
 static BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCEA object, LPVOID ref) {
     W32Joystick* joystick = static_cast<W32Joystick*>(ref);
     int32_t axis = -1;
@@ -150,7 +150,7 @@ static BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCEA object, LPVO
     return DIENUM_CONTINUE;
 }
 
-// OFFSET: %0x007DD210
+// OFFSET: 0x0087A480/0x1405B0AF0
 void OsJoystickMapStick(uint32_t index, int32_t stick, int32_t xAxis, int32_t yAxis) {
     if (index >= OsJoystickCount()) {
         return;
@@ -166,7 +166,7 @@ void OsJoystickMapStick(uint32_t index, int32_t stick, int32_t xAxis, int32_t yA
     }
 }
 
-// OFFSET: %0x007DD3C0
+// OFFSET: 0x0087A630/0x1405B0D40
 static BOOL CALLBACK EnumDevicesCallback(LPCDIDEVICEINSTANCEA instance, LPVOID ref) {
     W32Joystick* joystick = s_joysticks.New();
     memset(joystick, 0, sizeof(W32Joystick));
@@ -191,7 +191,7 @@ static BOOL CALLBACK EnumDevicesCallback(LPCDIDEVICEINSTANCEA instance, LPVOID r
     return DIENUM_CONTINUE;
 }
 
-// OFFSET: %0x007DD4D0
+// OFFSET: 0x0087A740/0x1405B0ED0
 uint32_t OsJoystickCount() {
     if (!s_joysticks.Count()) {
         if (DirectInput8Create(GetModuleHandleA(NULL), DIRECTINPUT_VERSION, IID_IDirectInput8A, reinterpret_cast<void**>(&s_directInput), NULL) < 0) {
@@ -204,7 +204,7 @@ uint32_t OsJoystickCount() {
     return s_joysticks.Count();
 }
 
-// OFFSET: %0x007DD520
+// OFFSET: 0x0087A790/0x1405B0F50
 uint32_t OsJoystickOpen(uint32_t index) {
     if (index >= OsJoystickCount()) {
         return 0xFFFFFFFF;
@@ -242,7 +242,7 @@ uint32_t OsJoystickOpen(uint32_t index) {
     return 0xFFFFFFFF;
 }
 
-// OFFSET: %0x007DD630
+// OFFSET: 0x0087A8A0/0x1405B10B0
 void OsJoystickClose(uint32_t index) {
     if (index >= OsJoystickCount()) {
         return;
@@ -256,7 +256,7 @@ void OsJoystickClose(uint32_t index) {
     }
 }
 
-// OFFSET: %0x007DD680
+// OFFSET: 0x0087A8F0/0x1405B1110
 char* OsJoystickGetName(uint32_t index, char* buffer, uint32_t size) {
     if (index >= OsJoystickCount()) {
         return NULL;
@@ -273,7 +273,7 @@ char* OsJoystickGetName(uint32_t index, char* buffer, uint32_t size) {
     return buffer;
 }
 
-// OFFSET: %0x007DD6F0
+// OFFSET: 0x0087A960/0x1405B11C0
 void OsJoystickMapSlider(uint32_t index, int32_t axis) {
     if (index >= OsJoystickCount()) {
         return;
@@ -286,7 +286,7 @@ void OsJoystickMapSlider(uint32_t index, int32_t axis) {
     }
 }
 
-// OFFSET: %0x007DD730
+// OFFSET: 0x0087A9A0/0x1405B1220
 void OsJoystickMapHat(uint32_t index, int32_t hat, int32_t up, int32_t right, int32_t down, int32_t left) {
     if (index >= OsJoystickCount()) {
         return;
@@ -356,7 +356,7 @@ void OsJoystickSetMouseMode(uint32_t index, int32_t enable) {
     }
 }
 
-// OFFSET: %0x007DD800
+// OFFSET: 0x0087AA70/0x1405B1320
 void OsJoystickConfigureMouseMode(uint32_t index, int32_t stick, int32_t leftButton, int32_t rightButton, float speed) {
     if (index >= OsJoystickCount()) {
         return;
@@ -372,7 +372,7 @@ void OsJoystickConfigureMouseMode(uint32_t index, int32_t stick, int32_t leftBut
     }
 }
 
-// OFFSET: %0x007DD880
+// OFFSET: 0x0087AAF0
 static void PollJoystick(uint32_t index, int32_t active) {
     if (index >= OsJoystickCount()) {
         return;

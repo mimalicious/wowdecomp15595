@@ -5,7 +5,7 @@
 #include <windows.h>
 #include "Engine/Source/Os/Time.h"
 
-// OFFSET: %0x007DE2E0
+// OFFSET: 0x0087E8F0/0x1405B78E0
 int32_t OsGetTimeZone() {
     TIME_ZONE_INFORMATION information;
 

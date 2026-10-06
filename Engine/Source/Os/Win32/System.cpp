@@ -16,7 +16,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C0FB6C
+// STATIC: 0x00D0A794/0x140BBC634
 static int32_t s_sleepInBackground = 1;
 
 // STATIC: %0x00C0FB70
@@ -61,7 +61,7 @@ static uintptr_t s_textEnd;
 // STATIC: %0x00D937D8
 static int32_t s_cpuLogEnabled;
 
-// STATIC: %0x00D937DC
+// STATIC: 0x00EC6D1C/0x140DB905C
 static uint32_t s_backgroundSleepMs;
 
 // STATIC: %0x00D937E0
@@ -153,7 +153,7 @@ void OsSystemEnableCpuLog() {
     s_cpuLogEnabled = 1;
 }
 
-// OFFSET: %0x007DADC0
+// OFFSET: 0x00875450/0x1405AC110
 void IOsSystemCpuLog(const CpuIdInfo* info) {
     if (!s_cpuLogEnabled) {
         return;
@@ -199,13 +199,20 @@ uint32_t OsGetNumberOfProcessors() {
     return s_processorCount;
 }
 
+// PROVEN: d3396581 IDENTICAL/IDENTICAL
+// OFFSET: 0x008755D0/0x1405AC2B0
+void OsSleep(uint32_t milliseconds) {
+    Sleep(milliseconds);
+}
+
 // PROVEN: 2be3f67e IDENTICAL/IDENTICAL
 // OFFSET: 0x008755E0/0x1405AC2C0
 int32_t OsSleepInBackground() {
     return s_sleepInBackground;
 }
 
-// OFFSET: %0x007DAF60
+// PROVEN: bd3e9443 IDENTICAL/NONE
+// OFFSET: 0x008755F0
 void OsSetSleepInBackground(int32_t sleep) {
     s_sleepInBackground = sleep;
 }
@@ -216,12 +223,13 @@ uint32_t OsGetBackgroundSleepMs() {
     return s_backgroundSleepMs;
 }
 
-// OFFSET: %0x007DAF80
+// PROVEN: 9b6d08c8 IDENTICAL/NONE
+// OFFSET: 0x00875610
 void OsSetBackgroundSleepMs(uint32_t milliseconds) {
     s_backgroundSleepMs = milliseconds;
 }
 
-// OFFSET: %0x007DAF90
+// OFFSET: 0x00875620/0x1405AC300
 OsType OsGetVersion() {
     OsType type = OsType_Unknown;
 
@@ -288,7 +296,7 @@ OsType OsGetVersion() {
     return type;
 }
 
-// OFFSET: %0x007DB3D0
+// OFFSET: 0x00875A30/0x1405AC810
 void OsGetVersionString(char* buffer, int32_t size) {
     const char* name = s_osTypeNames[OsGetVersion()];
 
@@ -323,7 +331,7 @@ static BOOLEAN WINAPI GetUserNameExWFallback(EXTENDED_NAME_FORMAT format, LPWSTR
     return FALSE;
 }
 
-// OFFSET: %0x007DB420
+// OFFSET: 0x00875A80/0x1405AC890
 int32_t OsGetUserName(char* buffer, uint32_t* size) {
     if (!s_getUserNameExW) {
         HMODULE secur32 = LoadLibraryA("Secur32.dll");
@@ -374,28 +382,24 @@ void* CreateNamedEventA(const char* name, int32_t manualReset) {
     return CreateEventA(NULL, manualReset, FALSE, name);
 }
 
-// OFFSET: %0x007DB190
+// OFFSET: 0x00875830/0x1405AC4F0
 void OsFindTextSectionBounds() {
-    uint8_t* image = reinterpret_cast<uint8_t*>(StormGetInstance());
+    uint8_t* image = reinterpret_cast<uint8_t*>(GetModuleHandleW(NULL));
     IMAGE_NT_HEADERS* header = reinterpret_cast<IMAGE_NT_HEADERS*>(image + reinterpret_cast<IMAGE_DOS_HEADER*>(image)->e_lfanew);
     IMAGE_SECTION_HEADER* sections = IMAGE_FIRST_SECTION(header);
-    uint16_t i;
 
-    for (i = 0; i < header->FileHeader.NumberOfSections; i++) {
+    for (uint16_t i = 0; i < header->FileHeader.NumberOfSections; i++) {
         if (!strncmp(reinterpret_cast<const char*>(sections[i].Name), ".text", 8)) {
-            break;
+            s_textStart = header->OptionalHeader.ImageBase + sections[i].VirtualAddress;
+            s_textEnd = sections[i].Misc.VirtualSize + header->OptionalHeader.ImageBase + sections[i].VirtualAddress;
+            return;
         }
     }
 
-    if (i >= header->FileHeader.NumberOfSections) {
-        SErrDisplayAppFatal("Unable to find .text section");
-    }
-
-    s_textStart = header->OptionalHeader.ImageBase + sections[i].VirtualAddress;
-    s_textEnd = header->OptionalHeader.ImageBase + sections[i].VirtualAddress + sections[i].Misc.VirtualSize;
+    SErrDisplayAppFatal("Unable to find .text section");
 }
 
-// OFFSET: %0x007DB680
+// OFFSET: 0x00875CE0/0x1405ACBE0
 void OsValidateFunctionPointer(const void* ptr) {
     if (!s_textStart || !s_textEnd) {
         OsFindTextSectionBounds();
@@ -408,7 +412,7 @@ void OsValidateFunctionPointer(const void* ptr) {
     }
 }
 
-// OFFSET: %0x007DB210
+// OFFSET: 0x008758B0/0x1405AC5B0
 int32_t IOsParseProcessorFrequency(const char* brand) {
     if (!brand) {
         return 0;
@@ -496,7 +500,7 @@ int32_t OsIsRemoteSession() {
     return GetSystemMetrics(SM_REMOTESESSION);
 }
 
-// OFFSET: %0x007DB4E0
+// OFFSET: 0x00875B40/0x1405AC990
 int32_t OsLaunchURL(const char* url) {
     if (!url || !*url) {
         return 0;
@@ -571,7 +575,7 @@ int32_t OsLaunchURL(const char* url) {
     return reinterpret_cast<uintptr_t>(result) > 32;
 }
 
-// OFFSET: %0x007DB6E0
+// OFFSET: 0x00875D40/0x1405ACC50
 uint32_t OsGetProcessorFeaturesEx(int32_t& vendor) {
     if (s_haveProcessorFeatures) {
         vendor = s_processorVendor;
