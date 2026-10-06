@@ -289,7 +289,7 @@ static void WriteConnectionLog(const char* text) {
 // OFFSET: %0x00767170
 void CGlueMgr::QuitGameAndRunLauncher() {
     ClientPostClose(0);
-    SCreateProcess("Launcher.exe", NULL, NULL, NULL);
+    SCreateProcess("Launcher.exe", NULL, NULL, NULL, NULL, NULL);
 }
 
 // PROVEN: 80a87352 IDENTICAL/NONE

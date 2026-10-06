@@ -108,11 +108,12 @@ void CInitCritSect::Leave() {
     this->m_critsect->Leave();
 }
 
-// OFFSET: %0x004BE520
+// OFFSET: 0x004B7740/0x1400EF750
 static uint32_t STORMAPI ProcessCompletionCallbackThread(void* vdata) {
     PROCESSCOMPLETION* completion = static_cast<PROCESSCOMPLETION*>(vdata);
     WaitForSingleObject(completion->process, INFINITE);
     completion->callback(completion->data);
+    CloseHandle(completion->process);
     delete completion;
     return 0;
 }
@@ -237,8 +238,8 @@ HANDLE STORMAPI SCreateThread(uint32_t (STORMAPI* lpStartAddress)(void*), void* 
     return SCreateThread(stackSize, lpStartAddress, lpParameter, 0, lpThreadId, threadName);
 }
 
-// OFFSET: %0x004BE920
-int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*callbackWhenProcessCompletes)(void*), void* callbackData) {
+// OFFSET: 0x004B7B30/0x1400EFDD0
+int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*callbackWhenProcessCompletes)(void*), void* callbackData, void** processHandle, uint32_t* processId) {
     STARTUPINFOW startInfo;
     memset(&startInfo, 0, sizeof(startInfo));
     startInfo.cb = sizeof(startInfo);
@@ -254,7 +255,7 @@ int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*c
 
     SUniConvertUTF8to16(commandLineW, sizeof(commandLineW) / sizeof(commandLineW[0]), commandLine, STORM_MAX_STR, NULL, NULL);
 
-    if (!CreateProcessW(appName ? reinterpret_cast<LPCWSTR>(appNameW) : NULL, reinterpret_cast<LPWSTR>(commandLineW), NULL, NULL, FALSE, 0, NULL, NULL, &startInfo, &processInfo)) {
+    if (!CreateProcessW(appName ? reinterpret_cast<LPCWSTR>(appNameW) : NULL, reinterpret_cast<LPWSTR>(commandLineW), NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &startInfo, &processInfo)) {
         return 0;
     }
 
@@ -264,13 +265,39 @@ int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*c
         }
 
         PROCESSCOMPLETION* completion = static_cast<PROCESSCOMPLETION*>(SMemAlloc(sizeof(PROCESSCOMPLETION), __FILE__, __LINE__, 0));
-        completion->data = callbackData;
         completion->callback = callbackWhenProcessCompletes;
-        completion->process = processInfo.hProcess;
+        completion->data = callbackData;
+
+        HANDLE currentProcess = GetCurrentProcess();
+
+        if (!DuplicateHandle(currentProcess, processInfo.hProcess, currentProcess, &completion->process, 0, FALSE, DUPLICATE_SAME_ACCESS)) {
+            TerminateProcess(processInfo.hProcess, 0xC0000001);
+            CloseHandle(processInfo.hProcess);
+            CloseHandle(processInfo.hThread);
+            return 0;
+        }
 
         uint32_t threadId;
         SCreateThread(ProcessCompletionCallbackThread, completion, &threadId, NULL, NULL, 0);
+
+        if (processHandle) {
+            *processHandle = processInfo.hProcess;
+        } else {
+            CloseHandle(NULL);
+        }
+    } else if (processHandle) {
+        *processHandle = processInfo.hProcess;
+    } else {
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(NULL);
     }
+
+    if (processId) {
+        *processId = processInfo.dwProcessId;
+    }
+
+    ResumeThread(processInfo.hThread);
+    CloseHandle(processInfo.hThread);
 
     return 1;
 }

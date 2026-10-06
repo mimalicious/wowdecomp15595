@@ -52,7 +52,7 @@ void SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t modulusSize, 
     (*token)->sha.Initialize();
 }
 
-// OFFSET: #0x00770DB0
+// OFFSET: 0x004B87B0/0x1400F0DC0
 int32_t SSignatureVerifyStream_Finish(SSignatureData* token, const uint8_t* modulus, const uint8_t* pubExponent) {
     int32_t result = 0;
 

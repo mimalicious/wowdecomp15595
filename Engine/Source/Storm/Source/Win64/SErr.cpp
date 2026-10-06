@@ -1,10 +1,12 @@
 #if defined(WOWDECOMP_ARCH_64)
 
+#include <cfloat>
 #include <cstdarg>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <xmmintrin.h>
 #include <malloc.h>
 #include <windows.h>
 #include <ddraw.h>
@@ -36,6 +38,7 @@
 #define SERR_STR_ACCESS_VIOLATION 15
 #define SERR_STR_READ 16
 #define SERR_STR_WRITTEN 17
+#define SERR_STR_PROCESSID 21
 
 template <class T, class TGetLink = TSGetLink<T> >
 class TSListWinHeap : public TSList<T, TGetLink> {
@@ -61,7 +64,7 @@ struct _MSGSRC {
 };
 
 // STATIC: %0x00ACE880
-static const char* const s_displaystr[20] = {
+static const char* const s_displaystr[22] = {
     "ERROR #%u (0x%08x) %s",
     "This application has encountered a critical error:\n\n%s\n",
     "Program:\t%s\n",
@@ -81,7 +84,9 @@ static const char* const s_displaystr[20] = {
     "read",
     "written",
     "Couldn't locate the \"DbgHelp.dll\" debugging DLL.\n\nSome debugging information will be missing from error log files. Press OK to continue, or press Cancel to terminate the program.",
-    "Missing Debugging DLL"
+    "Missing Debugging DLL",
+    "",
+    "ProcessID:\t%d\n"
 };
 
 // STATIC: %0x00BB3464
@@ -225,7 +230,7 @@ inline int32_t CanBreakToDebugger() {
     return result;
 }
 
-// OFFSET: #0x007710B0
+// OFFSET: 0x004B4B80/0x1400EBEF0
 static void WriteLine(void* param, const char* format, ...) {
     char buffer[512];
     va_list args;
@@ -443,18 +448,20 @@ static int32_t DisplayErrorDialog(uint32_t errorcode, int32_t linenumber, const 
     InternalEnterCriticalSection(&s_critsect);
 
     UINT type = icon | buttons | MB_TASKMODAL | MB_SETFOREGROUND | MB_TOPMOST;
-    int32_t result = keeprunning ? keeprunning : defaultresult;
-    HANDLER* handler = s_handlerlist.Head();
+    int32_t handled = keeprunning ? keeprunning : defaultresult;
+    int32_t result;
+    HANDLER* next;
 
-    while (handler) {
+    for (HANDLER* handler = s_handlerlist.Head(); !s_handlerlist.IsEnd(handler); handler = next) {
+        next = s_handlerlist.RawNext(handler);
+
         if (!handler->handler(errorcode, errorstr, localnameptr, linenumber, description ? description : "")) {
-            break;
+            result = handled;
+            goto shown;
         }
-
-        handler = s_handlerlist.Next(handler);
     }
 
-    if (!handler) {
+    {
         HWND window = SMsgGetDefaultWindow();
 
         if (window && (!IsWindow(window) || !IsWindowVisible(window))) {
@@ -464,6 +471,7 @@ static int32_t DisplayErrorDialog(uint32_t errorcode, int32_t linenumber, const 
         result = MessageBoxA(window, outstr, appname, type);
     }
 
+shown:
     InternalLeaveCriticalSection(&s_critsect);
 
     if ((!debugger && CanBreakToDebugger()) || result == breakresult) {
@@ -480,39 +488,7 @@ static int32_t DisplayErrorDialog(uint32_t errorcode, int32_t linenumber, const 
     return 0;
 }
 
-// OFFSET: %0x004BB4F0
-static const char* SErrGetErrorText(uint32_t errorcode) {
-    switch (errorcode) {
-        case STORM_ERROR_ASSERTION:
-            return "Assertion Failure";
-        case STORM_ERROR_NOT_ARCHIVE:
-            return "Not Archive";
-        case STORM_ERROR_VERSION_MISMATCH:
-            return "Version Mismatch";
-        case STORM_ERROR_MEM_NOT_ALLOCATED:
-            return "Memory Already Freed";
-        case STORM_ERROR_MEM_CORRUPTED:
-            return "Memory Corrupt";
-        case STORM_ERROR_MEM_INVALID:
-            return "Memory Invalid Block";
-        case STORM_ERROR_MEM_NOT_FREED:
-            return "Memory Never Released";
-        case STORM_ERROR_RESOURCES_NOT_RELEASED:
-            return "Handle Never Released";
-        case STORM_ERROR_OUT_OF_BOUNDS:
-            return "Access Out Of Bounds";
-        case STORM_ERROR_FILE_CORRUPTED:
-            return "File Corrupt";
-        case STORM_ERROR_FATAL:
-            return "Fatal Exception";
-        case STORM_ERROR_FATAL_CONDITION:
-            return "Fatal Condition";
-        default:
-            return "";
-    }
-}
-
-// OFFSET: #0x007714E0
+// OFFSET: 0x004B4720/0x1400EB9B0
 static void GetExceptionNameWin32(uint32_t exceptioncode, char* buffer, uint32_t buffersize) {
     switch (exceptioncode) {
         case EXCEPTION_ACCESS_VIOLATION:
@@ -627,7 +603,7 @@ void STORMAPI SErrSetLastError(uint32_t errorcode) {
     SetLastError(errorcode);
 }
 
-// OFFSET: #0x00771890
+// OFFSET: 0x004B4D20
 void STORMAPI SErrSetLogTitleString(const char* title) {
     InternalEnterCriticalSection(&s_critsect);
     SStrCopy(s_logtitle, title, sizeof(s_logtitle));
@@ -656,7 +632,7 @@ int32_t STORMAPI SErrGetLogLastPath(char* buf, uint32_t size) {
     return result;
 }
 
-// OFFSET: #0x007719E0
+// OFFSET: 0x004B4380
 static int32_t UndecorateObjectName(const char* source, char* dest, uint32_t destchars) {
     if (SStrLen(source) < 6) {
         return 0;
@@ -695,13 +671,8 @@ static int32_t UndecorateObjectName(const char* source, char* dest, uint32_t des
     return 1;
 }
 
-// OFFSET: #0x00771A80
-int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars) {
-    if (!buffer || !bufferchars) {
-        SErrSetLastError(ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
+// OFFSET: 0x004B4160
+static HINSTANCE GetMessageSource(uint32_t errorcode) {
     InternalEnterCriticalSection(&s_critsect);
 
     if (!s_msgsrcinit) {
@@ -719,19 +690,43 @@ int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t buff
     }
 
     InternalLeaveCriticalSection(&s_critsect);
+
+    return module;
+}
+
+// PROVEN: 8698af7c IDENTICAL/NONE
+// OFFSET: 0x004B4220/0x1400EB360
+static DWORD FormatErrorMessage(uint32_t errorcode, char* buffer, uint32_t bufferchars, ...) {
+    HINSTANCE module = GetMessageSource(errorcode);
+
+    va_list args;
+    va_start(args, bufferchars);
     *buffer = 0;
 
-    if (errorcode == 108) {
-        SStrCopy(buffer, "Invalid or corrupt archive.\n", bufferchars);
-        return 1;
+    return FormatMessageA(module ? FORMAT_MESSAGE_FROM_HMODULE : FORMAT_MESSAGE_FROM_SYSTEM, module, errorcode, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), buffer, bufferchars, &args);
+}
+
+// OFFSET: 0x004B4A20/0x1400EBD50
+int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars) {
+    if (!buffer || !bufferchars) {
+        SErrSetLastError(ERROR_INVALID_PARAMETER);
+        return 0;
     }
 
-    if (errorcode == 2100) {
-        SStrCopy(buffer, "Failed to download data. Please check the network connection.\n", bufferchars);
-        return 1;
+    return FormatErrorMessage(errorcode, buffer, bufferchars, errorcode & 0xFFFF, errorcode);
+}
+
+// OFFSET: 0x004B4A70/0x1400EBD90
+int32_t STORMAPI SErrGetErrorStrW(uint32_t errorcode, wchar_t* buffer, uint32_t bufferchars, uint32_t languageid) {
+    if (!buffer || !bufferchars) {
+        SErrSetLastError(ERROR_INVALID_PARAMETER);
+        return 0;
     }
 
-    return FormatMessageA(module ? FORMAT_MESSAGE_FROM_HMODULE : FORMAT_MESSAGE_FROM_SYSTEM, module, errorcode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, bufferchars, NULL) != 0;
+    HINSTANCE module = GetMessageSource(errorcode);
+    *buffer = 0;
+
+    return FormatMessageW((module ? FORMAT_MESSAGE_FROM_HMODULE : FORMAT_MESSAGE_FROM_SYSTEM) | FORMAT_MESSAGE_IGNORE_INSERTS, module, errorcode, languageid, buffer, bufferchars, NULL);
 }
 
 // OFFSET: %0x004BC200
@@ -770,6 +765,10 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     static int32_t lastlinenumber;
     // STATIC: #0x00CAE938
     static const char* lastfilename;
+
+    if (g_opt.unk_0030 && recoverable) {
+        return 1;
+    }
 
     if (g_opt.unk_0028) {
         if (filename == lastfilename && linenumber == lastlinenumber) {
@@ -813,11 +812,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     // STATIC: #0x00CAE4E8
     static char errorstr[256];
     errorstr[0] = 0;
-    SErrGetErrorStr(errorcode, errorstr, sizeof(errorstr));
-
-    if (!errorstr[0]) {
-        SStrPrintf(errorstr, sizeof(errorstr), GetErrorString(SERR_STR_ERROR), errorcode & 0xFFFF, errorcode, SErrGetErrorText(errorcode));
-    }
+    FormatErrorMessage(errorcode, errorstr, sizeof(errorstr), errorcode & 0xFFFF, errorcode);
 
     // STATIC: #0x00CAE4E0
     static const char* localnameptr = filename;
@@ -854,6 +849,8 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
     SStrPrintf(outptr, outend - outptr, GetErrorString(SERR_STR_CRITICAL), errorstr);
     outptr += SStrLen(outptr);
     SStrPrintf(outptr, outend - outptr, GetErrorString(SERR_STR_PROGRAM), appfilename);
+    outptr += SStrLen(outptr);
+    SStrPrintf(outptr, outend - outptr, GetErrorString(SERR_STR_PROCESSID), GetCurrentProcessId());
     outptr += SStrLen(outptr);
 
     if (localnameptr && *localnameptr) {
@@ -899,6 +896,15 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         InternalLeaveCriticalSection(&s_exceptioncritsect);
 
         CONTEXT* context = exceptionPointers ? exceptionPointers->ContextRecord : NULL;
+        uint32_t extended = 0;
+
+        if (exceptionPointers) {
+            DWORD code = exceptionPointers->ExceptionRecord->ExceptionCode;
+
+            if ((code >= EXCEPTION_FLT_DENORMAL_OPERAND && code <= EXCEPTION_FLT_UNDERFLOW) || code == STATUS_FLOAT_MULTIPLE_FAULTS || code == STATUS_FLOAT_MULTIPLE_TRAPS) {
+                extended = LOG_OPTION_EXTREGISTERS;
+            }
+        }
 
         // STATIC: #0x00CADBCC
         static SYSTEMTIME time;
@@ -908,7 +914,7 @@ int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int3
         HANDLE logfile = CreateErrorLog(suffix, outstr, &time);
 
         if (logfile != INVALID_HANDLE_VALUE) {
-            LogMachineState(LOG_OPTION_DEFAULT | LOG_OPTION_FRAMEPARAMS, WriteLine, logfile, context ? 0 : skipframes + 2, context);
+            LogMachineState(extended | LOG_OPTION_DEFAULT | LOG_OPTION_FRAMEPARAMS, WriteLine, logfile, context ? 0 : skipframes + 2, context);
 
             // STATIC: #0x00C9BEE8
             static WIN32_FIND_DATAA exefinddata;
@@ -1016,9 +1022,14 @@ static LONG WINAPI ExceptionFilterWin32(EXCEPTION_POINTERS* exceptionpointers) {
     buffer[0] = 0;
     message[0] = 0;
 
+    _clearfp();
+
+    _control87(_MCW_EM, _MCW_EM);
+    _mm_setcsr((_mm_getcsr() & 0xFFFFE040) | 0x1F80);
+
     __try {
         GetExceptionNameWin32(record->ExceptionCode, exceptionname, sizeof(exceptionname));
-        SStrPrintf(buffer, sizeof(buffer), "0x%p (%s) at %04X:%p", reinterpret_cast<void*>(static_cast<uintptr_t>(record->ExceptionCode)), exceptionname, exceptionpointers->ContextRecord->SegCs, record->ExceptionAddress);
+        SStrPrintf(buffer, sizeof(buffer), "0x%08X (%s) at %04X:%p", record->ExceptionCode, exceptionname, exceptionpointers->ContextRecord->SegCs, record->ExceptionAddress);
 
         if (record->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && record->NumberParameters == 2) {
             char format[256];
@@ -1094,9 +1105,24 @@ int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t li
     return SErrDisplayError(errorcode, filename, linenumber, buffer, recoverable, exitcode, 2, 0x11111111);
 }
 
-// OFFSET: %0x004BD3E0
+// OFFSET: 0x004B5DD0/0x1400ED4F0
 void STORMAPI SErrCatchUnhandledExceptions() {
     SetUnhandledExceptionFilter(ExceptionFilterWin32);
+
+    HMODULE kernel32 = GetModuleHandleW(L"kernel32.dll");
+
+    if (!kernel32) {
+        return;
+    }
+
+    BOOL (WINAPI* setPolicy)(DWORD) = reinterpret_cast<BOOL (WINAPI*)(DWORD)>(GetProcAddress(kernel32, "SetProcessUserModeExceptionPolicy"));
+    BOOL (WINAPI* getPolicy)(LPDWORD) = reinterpret_cast<BOOL (WINAPI*)(LPDWORD)>(GetProcAddress(kernel32, "GetProcessUserModeExceptionPolicy"));
+
+    DWORD flags;
+
+    if (setPolicy && getPolicy && getPolicy(&flags)) {
+        setPolicy(flags & ~1u);
+    }
 }
 
 // OFFSET: #0x008889B0

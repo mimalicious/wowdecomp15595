@@ -8,11 +8,15 @@ void Crypt::RSA::Prepare(const void* modulus, uint32_t mLength, const void* expo
     this->m_exponent.FromBinary(exponent, eLength);
 }
 
-// OFFSET: %0x004C4260
-void Crypt::RSA::Process(uint8_t* data, uint32_t length) {
+// PROVEN: c8bd61fc IDENTICAL/NONE
+// OFFSET: 0x004BDC40
+bool Crypt::RSA::Process(uint8_t* data, uint32_t length) {
     BigNum src;
     src.FromBinary(data, length);
+    bool valid = SBigCompare(src.m_data, this->m_modulus.m_data) < 0;
     BigNum dst;
     dst.PowMod(src, this->m_exponent, this->m_modulus);
     dst.ToBinaryBuffer(data, length);
+
+    return valid;
 }

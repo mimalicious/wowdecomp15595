@@ -28,7 +28,8 @@ static WNDREC* FindWindow(HWND window) {
     return NULL;
 }
 
-// OFFSET: #0x0077E820
+// PROVEN: bf8275f6 IDENTICAL/NONE
+// OFFSET: 0x004C0F20
 HWND STORMAPI SMsgGetDefaultWindow() {
     return s_defaultwindow;
 }

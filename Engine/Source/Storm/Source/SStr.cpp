@@ -790,7 +790,8 @@ char* SStrDupA(const char* string, const char* filename, int32_t linenumber) {
     return result;
 }
 
-// OFFSET: %0x004BAA10
+// PROVEN: 0799581b IDENTICAL/NONE
+// OFFSET: 0x004B3BE0
 void SStrInitialize() {
     InitializeFloatDigits();
     s_initialized = 1;

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <winerror.h>
 #include <malloc.h>
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/Storm/H/storm.h"
 
 // STATIC: 0x00C9F7B0/0x140B3B908
@@ -131,5 +132,18 @@ int32_t STORMAPI SMemDestroy() {
     return 1;
 }
 
+// OFFSET: 0x004B2C80/0x1400E9560
+static void* StormAllocHook(size_t bytes) {
+    return SMemAlloc(bytes, "blz", 0, 0);
+}
+
+// OFFSET: 0x004B2CA0
+static void StormFreeHook(void* ptr, size_t bytes) {
+    SMemFree(ptr, NULL, 0, 0);
+}
+
+// INLINED
 void STORMAPI SMemInitialize() {
+    Blizzard::Memory::s_allocHook = StormAllocHook;
+    Blizzard::Memory::s_freeHook = StormFreeHook;
 }

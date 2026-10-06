@@ -16,6 +16,7 @@ struct _STORMOPTIONS {
     /* 0024 */ int32_t unk_0024;
     /* 0028 */ int32_t unk_0028;
     /* 002C */ int32_t unk_002C;
+    /* 0030 */ int32_t unk_0030;
 };
 
 extern _STORMOPTIONS g_opt;

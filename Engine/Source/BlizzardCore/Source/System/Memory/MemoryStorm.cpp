@@ -1,9 +1,27 @@
 #include <cstdint>
+#include <cstdlib>
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 
 static System_Memory::UsingMemory s_usingMemory;
+
+// PROVEN: 96e55dd0 IDENTICAL/NONE
+// OFFSET: 0x00B392B0
+static void* DefaultAllocHook(size_t bytes) {
+    return malloc(bytes);
+}
+
+// OFFSET: 0x00A30330
+static void DefaultFreeHook(void* ptr, size_t bytes) {
+    free(ptr);
+}
+
+// STATIC: 0x00D1C918
+void* (*Blizzard::Memory::s_allocHook)(size_t bytes) = DefaultAllocHook;
+
+// STATIC: 0x00D1C91C
+void (*Blizzard::Memory::s_freeHook)(void* ptr, size_t bytes) = DefaultFreeHook;
 
 // INLINED
 inline uint32_t ToStormFlags(uint32_t flags) {

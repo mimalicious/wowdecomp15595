@@ -81,7 +81,8 @@ static void ConvertString(CMDDEF* ptr, const char* string, int32_t* datachars) {
     }
 }
 
-// OFFSET: #0x00772E70
+// PROVEN: 59723438 IDENTICAL/NONE
+// OFFSET: 0x004B69F0/0x1400EE3F0
 static CMDDEF* FindFlagDef(const char* string, CMDDEF* firstdef, int32_t minlength) {
     int32_t strlength = SStrLen(string);
     int32_t bestlength = minlength - 1;
@@ -166,7 +167,7 @@ static int32_t PerformConversion(CMDDEF* ptr, const char* string, int32_t* datac
     return 1;
 }
 
-// OFFSET: #0x007730E0
+// OFFSET: 0x004B6C10/0x1400EE6F0
 static int32_t ProcessCurrentFlag(const char* string, _PROCESSING* processing, int32_t* datachars) {
     *datachars = 0;
 
@@ -187,7 +188,7 @@ static int32_t ProcessCurrentFlag(const char* string, _PROCESSING* processing, i
     return 1;
 }
 
-// OFFSET: #0x00773160
+// OFFSET: 0x004B6C80/0x1400EE7A0
 static int32_t ProcessFlags(const char* string, _PROCESSING* processing, void (STORMAPI* errorcallback)(_CMDERROR*)) {
     char lastflag[256];
     lastflag[0] = 0;
@@ -280,7 +281,7 @@ static int32_t ProcessToken(const char* string, int32_t quoted, _PROCESSING* pro
     return 0;
 }
 
-// OFFSET: %0x004BDDC0
+// OFFSET: 0x004B7300/0x1400EF190
 int32_t STORMAPI SCmdDestroy() {
     for (int32_t i = 0; i <= 1; i++) {
         TSList<CMDDEF>* list = i ? &s_flaglist : &s_arglist;

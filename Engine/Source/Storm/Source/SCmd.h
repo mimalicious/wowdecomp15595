@@ -24,8 +24,8 @@ struct CMDDEF : TSLinkedNode<CMDDEF> {
 
 struct _PROCESSING {
     /* 0000 */ CMDDEF* ptr;
-    /* 0004 */ char name[16];
-    /* 0014 */ int32_t namelength;
+    /* 0004 */ char name[24];
+    /* 001C */ int32_t namelength;
 };
 
 void GenerateError(void (STORMAPI* errorcallback)(_CMDERROR*), uint32_t errorcode, const char* itemstring);

@@ -21,7 +21,7 @@ static void StormAtExit() {
     }
 }
 
-// OFFSET: #0x007739E0
+// OFFSET: 0x004B8980
 void STORMAPI StormInitialize() {
     SStrInitialize();
     SErrInitialize();
@@ -29,7 +29,7 @@ void STORMAPI StormInitialize() {
     SFile::Initialize();
 }
 
-// OFFSET: %0x004BF1A0
+// OFFSET: 0x004B89A0/0x1400F1070
 void STORMAPI StormDestroy() {
     SRgnDestroy();
     SMsgDestroy();

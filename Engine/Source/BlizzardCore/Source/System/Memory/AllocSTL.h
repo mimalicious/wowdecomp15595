@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <new>
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 
 namespace Blizzard {
 namespace Memory {
@@ -70,13 +71,13 @@ const T* Blizzard::Memory::AllocSTL_raw<T>::address(const T& value) const {
 // INLINED
 template <class T>
 T* Blizzard::Memory::AllocSTL_raw<T>::allocate(size_t count) {
-    return static_cast<T*>(::operator new(count * sizeof(T)));
+    return static_cast<T*>(Blizzard::Memory::s_allocHook(count * sizeof(T)));
 }
 
 // INLINED
 template <class T>
 void Blizzard::Memory::AllocSTL_raw<T>::deallocate(T* ptr, size_t count) {
-    ::operator delete(ptr);
+    Blizzard::Memory::s_freeHook(ptr, count * sizeof(T));
 }
 
 // INLINED

@@ -11,7 +11,7 @@ class RSA {
     /* 0004 */ BigNum m_exponent;
 
     void Prepare(const void* modulus, uint32_t mLength, const void* exponent, uint32_t eLength);
-    void Process(uint8_t* data, uint32_t length);
+    bool Process(uint8_t* data, uint32_t length);
 };
 }
 

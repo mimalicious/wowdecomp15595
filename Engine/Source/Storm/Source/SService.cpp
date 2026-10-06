@@ -2,15 +2,15 @@
 #include <cstdint>
 #include "Engine/Source/Storm/H/storm.h"
 
-// INLINED: [0x0077EC47->0x0077EC57]
+// INLINED
 static int32_t ISMemGetAllocator(va_list arglist) {
-    *va_arg(arglist, uint32_t*) = 2;
+    *va_arg(arglist, uint32_t*) = 0;
     return 1;
 }
 
-// INLINED: [0x0077EC65->0x0077EC67]
-static int32_t ISMemGenerateReport(va_list arglist) {
-    return 0;
+// OFFSET: 0x004B2C60
+int32_t STORMAPI ISMemGenerateReport(va_list arglist) {
+    return va_arg(arglist, int32_t) == 0;
 }
 
 // INLINED: [0x0077EC65->0x0077EC67]
@@ -18,7 +18,7 @@ static int32_t ISMemMarkAllHeaps(va_list arglist) {
     return 0;
 }
 
-// OFFSET: %0x004C9C70
+// OFFSET: 0x004C33D0
 static int32_t ISStrI64ToString(va_list arglist) {
     int64_t num = va_arg(arglist, int64_t);
     char* buf = va_arg(arglist, char*);
@@ -27,7 +27,7 @@ static int32_t ISStrI64ToString(va_list arglist) {
     return 1;
 }
 
-// OFFSET: #0x0077EC30
+// OFFSET: 0x004C3400
 int32_t StormCallService(int32_t selector, ...) {
     va_list arglist;
     va_start(arglist, selector);

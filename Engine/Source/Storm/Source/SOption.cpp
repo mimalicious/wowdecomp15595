@@ -11,7 +11,7 @@ static int32_t s_alloccount;
 // STATIC: 0x00D9D54C
 _STORMOPTIONS g_opt;
 
-// OFFSET: %0x004BF200
+// OFFSET: 0x004B8A10
 int32_t STORMAPI StormSetOption(int32_t optname, void* optval, uint32_t optlen) {
     SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
 
@@ -113,6 +113,13 @@ int32_t STORMAPI StormSetOption(int32_t optname, void* optval, uint32_t optlen) 
         }
 
         g_opt.unk_002C = *value != 0;
+        break;
+    case STORM_OPTION_UNK_0030:
+        if (optlen != sizeof(int32_t)) {
+            return 0;
+        }
+
+        g_opt.unk_0030 = *value != 0;
         break;
     default:
         return 0;

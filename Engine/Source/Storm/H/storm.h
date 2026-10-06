@@ -108,6 +108,7 @@
 #define STORM_OPTION_UNK_0024 12
 #define STORM_OPTION_UNK_0028 13
 #define STORM_OPTION_UNK_002C 14
+#define STORM_OPTION_UNK_0030 15
 
 #define STORM_SERVICE_GETALLOCATOR 1
 #define STORM_SERVICE_GENERATEREPORT 2
@@ -158,6 +159,7 @@ void SErrDisplayAppFatalCustomV(uint32_t errorcode, const char* format, va_list 
 int32_t STORMAPI SErrDisplayError(uint32_t errorcode, const char* filename, int32_t linenumber, const char* description, int32_t recoverable, uint32_t exitcode, uint32_t skipframes, uint32_t unknown);
 int32_t SErrDisplayErrorFmt(uint32_t errorcode, const char* filename, int32_t linenumber, int32_t recoverable, uint32_t exitcode, const char* format, ...);
 int32_t STORMAPI SErrGetErrorStr(uint32_t errorcode, char* buffer, uint32_t bufferchars);
+int32_t STORMAPI SErrGetErrorStrW(uint32_t errorcode, wchar_t* buffer, uint32_t bufferchars, uint32_t languageid);
 uint32_t STORMAPI SErrGetLastError();
 int32_t STORMAPI SErrGetLogLastPath(char* buf, uint32_t size);
 void SErrInitialize();
@@ -250,7 +252,7 @@ int32_t vsoprintf(char* out, const char* format, va_list argumentList);
 void* SCreateThread(uint32_t dwStackSize, uint32_t (STORMAPI* lpStartAddress)(void*), void* lpParameter, uint32_t dwCreationFlags, uint32_t* lpThreadId, char* threadName);
 void* STORMAPI SCreateThread(uint32_t (STORMAPI* lpStartAddress)(void*), void* lpParameter, uint32_t* lpThreadId, void* linuxData, char* threadName, uint32_t stackSize);
 int32_t STORMAPI SEnumProcessesByName(const char* name, void (*callback)(const char*, uint32_t, void*), void* param);
-int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*callbackWhenProcessCompletes)(void*), void* callbackData);
+int32_t STORMAPI SCreateProcess(const char* appName, char* commandLine, void (*callbackWhenProcessCompletes)(void*), void* callbackData, void** processHandle, uint32_t* processId);
 uint32_t STORMAPI SGetCurrentProcessId();
 uint32_t STORMAPI SGetCurrentThreadId();
 int32_t STORMAPI SGetCurrentThreadPriority();

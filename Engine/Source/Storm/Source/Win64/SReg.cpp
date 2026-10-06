@@ -7,8 +7,13 @@
 #include "Engine/Source/Storm/Source/SOption.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// INLINED: [0x007704BE->0x007704E7, 0x00770595->0x007705BE]
+// OFFSET: 0x004B7DC0
 int32_t STORMAPI SRegGetBaseKey(uint32_t flags, char* buffer, uint32_t bufferchars) {
+    if (!buffer || !bufferchars) {
+        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        return 0;
+    }
+
     if (flags & SREG_BATTLE_NET) {
         SStrCopy(buffer, "Software\\Battle.net\\", bufferchars);
     } else {

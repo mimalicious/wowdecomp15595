@@ -14,6 +14,9 @@ void Free(void* ptr);
 void Free(void* ptr, uint32_t flags, const char* fileName, int32_t lineNumber);
 uint64_t GetPhysicalMemory();
 
+extern void* (*s_allocHook)(size_t bytes);
+extern void (*s_freeHook)(void* ptr, size_t bytes);
+
 }
 }
 

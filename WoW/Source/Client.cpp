@@ -1961,7 +1961,7 @@ int32_t STORMAPI SendErrorLog(uint32_t errorcode, const char* description, const
     if (SErrGetLogLastPath(path, sizeof(path))) {
         char commandLine[520];
         SStrPrintf(commandLine, sizeof(commandLine), "%s %s", "WowError.exe", path);
-        SCreateProcess("WowError.exe", commandLine, NULL, NULL);
+        SCreateProcess("WowError.exe", commandLine, NULL, NULL, NULL, NULL);
     }
 
     return 1;

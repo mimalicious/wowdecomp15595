@@ -26,7 +26,8 @@ static _LOG* s_loghead[4];
 // STATIC: %0x00CA6800
 static CRITICAL_SECTION s_critsect[4];
 
-// OFFSET: #0x007750D0
+// PROVEN: 22299fbb IDENTICAL/NONE
+// OFFSET: 0x004BDCE0/0x1400F7780
 static uint32_t PathGetRootChars(const char* path) {
     if (*path == '/') {
         return 1;
@@ -197,7 +198,7 @@ static void UnlockLog(HLOCKEDLOG lockedhandle) {
     LeaveCriticalSection(&s_critsect[reinterpret_cast<uintptr_t>(lockedhandle)]);
 }
 
-// OFFSET: #0x007753E0
+// OFFSET: 0x004BE1B0/0x1400F7E00
 static const char* PrependDefaultDir(char* newfilename, uint32_t newfilenamesize, const char* filename) {
     if (!filename || !*filename || filename[1] == ':' || SStrChr(filename, '\\')) {
         return filename;
@@ -279,7 +280,7 @@ void STORMAPI SLogFlushAll() {
     }
 }
 
-// OFFSET: %0x004C4780
+// INLINED
 void STORMAPI SLogInitialize() {
     if (s_logsysteminit) {
         return;
@@ -317,7 +318,7 @@ static void PathConvertSlashes(char* path) {
     }
 }
 
-// OFFSET: #0x00775630
+// OFFSET: 0x004BE320/0x1400F8010
 static int32_t CreateFileDirectory(const char* path) {
     if (!path) {
         SErrSetLastError(ERROR_INVALID_PARAMETER);

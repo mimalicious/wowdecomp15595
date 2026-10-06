@@ -8,8 +8,8 @@ void StormRtlDestroy() {
     SLogDestroy();
 }
 
-// OFFSET: #0x0076E490
+// OFFSET: 0x004B2CE0
 void StormRtlInitialize() {
-    SLogInitialize();
     SMemInitialize();
+    SLogInitialize();
 }
