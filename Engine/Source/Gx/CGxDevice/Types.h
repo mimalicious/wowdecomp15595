@@ -85,7 +85,7 @@ enum EGxTexTarget {
     GxTex_Volume = 4,
     GxTex_5 = 5,
     GxTex_6 = 6,
-    GxTexTargets_Last = 5,
+    GxTexTargets_Last = 7,
 };
 
 #endif

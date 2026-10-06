@@ -219,13 +219,9 @@ class CGxCaps {
     /* 0018 */ EGxColorFormat m_colorFormat;
     /* 001C */ int32_t unk_001C;
     /* 0020 */ uint32_t m_maxIndex;
-    /* 0024 */ int32_t m_texTarget [5];
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
+    /* 0024 */ int32_t m_texTarget [7];
     /* 0040 */ uint32_t m_texNonPow2;
-    /* 0044 */ uint32_t m_texMaxSize [5];
-    /* 0058 */ int32_t unk_0058;
-    /* 005C */ int32_t unk_005C;
+    /* 0044 */ uint32_t m_texMaxSize [7];
     /* 0060 */ int32_t m_vertexTexFmt [24];
     /* 00C0 */ int32_t m_texFmt [24];
     /* 0120 */ int32_t m_rttFormat [24];

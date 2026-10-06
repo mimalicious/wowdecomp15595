@@ -643,11 +643,11 @@ void GxTexUpdate(CGxTex* texId, CiRect& updateRect, int32_t immediate) {
     g_theGxDevicePtr->TexMarkForUpdate(texId, updateRect, immediate);
 }
 
-// OFFSET: %0x007A6D80
+// OFFSET: 0x00840C90
 int32_t GxTexCreate(uint32_t width, uint32_t height, EGxTexFormat format, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, CGxTex*& texId) {
     texId = NULL;
 
-    if (width > g_theGxDevicePtr->Caps().m_texMaxSize[GxTex_2d] || height > g_theGxDevicePtr->Caps().m_texMaxSize[GxTex_2d] || (width & (width - 1)) || (height & (height - 1)) || format > GxTexFormats_Last || (flags.m_filter == GxTex_Anisotropic && !g_theGxDevicePtr->Caps().m_texFilterAnisotropic) || !userFunc || width < 8 || height < 8) {
+    if (width > g_theGxDevicePtr->m_caps.m_texMaxSize[GxTex_2d] || height > g_theGxDevicePtr->m_caps.m_texMaxSize[GxTex_2d] || (width & (width - 1)) || (height & (height - 1)) || format > GxTexFormats_Last || (flags.m_filter == GxTex_Anisotropic && !g_theGxDevicePtr->m_caps.m_texFilterAnisotropic) || !userFunc || width < 8 || height < 8) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
@@ -655,11 +655,11 @@ int32_t GxTexCreate(uint32_t width, uint32_t height, EGxTexFormat format, CGxTex
     return g_theGxDevicePtr->TexCreate(GxTex_2d, width, height, 0, format, format, flags, userArg, userFunc, "Unknown", texId);
 }
 
-// OFFSET: %0x007A6E20
+// OFFSET: 0x00840D30
 int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, const char* name, CGxTex*& texId) {
     texId = NULL;
 
-    if (target > GxTexTargets_Last || g_theGxDevicePtr->Caps().m_texTarget[target] != 1 || width < 8 || height < 8 || width > g_theGxDevicePtr->Caps().m_texMaxSize[target] || height > g_theGxDevicePtr->Caps().m_texMaxSize[target]) {
+    if (target > GxTexTargets_Last || g_theGxDevicePtr->m_caps.m_texTarget[target] != 1 || width < 8 || height < 8 || width > g_theGxDevicePtr->m_caps.m_texMaxSize[target] || height > g_theGxDevicePtr->m_caps.m_texMaxSize[target]) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
@@ -676,7 +676,7 @@ int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32
         }
     }
 
-    if (format > GxTexFormats_Last || (flags.m_filter == GxTex_Anisotropic && !g_theGxDevicePtr->Caps().m_texFilterAnisotropic) || dataFormat > GxTexFormats_Last || !userFunc) {
+    if (format > GxTexFormats_Last || (flags.m_filter == GxTex_Anisotropic && !g_theGxDevicePtr->m_caps.m_texFilterAnisotropic) || dataFormat > GxTexFormats_Last || !userFunc) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
@@ -684,7 +684,7 @@ int32_t GxTexCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32
     return g_theGxDevicePtr->TexCreate(target, width, height, depth, format, dataFormat, flags, userArg, userFunc, name, texId);
 }
 
-// OFFSET: %0x007A6F20
+// OFFSET: 0x00840E30
 int32_t GxTexCreate(const CGxTexParms& parms, CGxTex*& texId) {
     return GxTexCreate(parms.m_target, parms.m_width, parms.m_height, parms.m_depth, parms.m_format, parms.m_dataFormat, parms.m_flags, parms.m_userArg, parms.m_userFunc, "", texId);
 }

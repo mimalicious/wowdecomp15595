@@ -825,12 +825,12 @@ void CGxDeviceD3d11::IXformSetViewport() {
 
     viewport.TopLeftX = static_cast<float>(static_cast<int32_t>(this->m_viewport.m_x.m_l * window.maxX + 0.5f));
     viewport.TopLeftY = static_cast<float>(static_cast<int32_t>((1.0f - this->m_viewport.m_y.m_h) * window.maxY + 0.5f));
-    viewport.Width = static_cast<float>(static_cast<uint32_t>(static_cast<int64_t>(this->m_viewport.m_x.m_h * window.maxX - viewport.TopLeftX + 0.5)));
-    viewport.Height = static_cast<float>(static_cast<uint32_t>(static_cast<int64_t>((1.0f - this->m_viewport.m_y.m_l) * window.maxY - viewport.TopLeftY + 0.5)));
+    viewport.Width = static_cast<float>(static_cast<uint32_t>(this->m_viewport.m_x.m_h * window.maxX - viewport.TopLeftX + 0.5f));
+    viewport.Height = static_cast<float>(static_cast<uint32_t>((1.0f - this->m_viewport.m_y.m_l) * window.maxY - viewport.TopLeftY + 0.5f));
     viewport.MinDepth = this->m_viewport.m_z.m_l;
     viewport.MaxDepth = this->m_viewport.m_z.m_h;
 
-    if (this->m_textureTarget[GxBuffers_Color].m_apiSpecific || this->m_textureTarget[GxBuffers_Depth].m_apiSpecific) {
+    if (this->m_frameBuffer != g_theGxDevicePtr->BackBuffer()) {
         viewport.TopLeftY = static_cast<float>(static_cast<int32_t>(window.maxY * this->m_viewport.m_y.m_l));
     }
 
