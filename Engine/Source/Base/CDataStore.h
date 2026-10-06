@@ -94,7 +94,7 @@ void CDataStoreCache<size>::InternalInitialize(uint8_t*& data, uint32_t& base, u
     alloc = size;
 }
 
-// OFFSET: %0x00A44190
+// OFFSET: 0x00B04220
 template <uint32_t size>
 void CDataStoreCache<size>::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     if (data == this->m_cache) {
@@ -110,7 +110,7 @@ void CDataStoreCache<size>::InternalDestroy(uint8_t*& data, uint32_t& base, uint
     }
 }
 
-// OFFSET: %0x00A44200
+// OFFSET: 0x00B04290
 template <uint32_t size>
 int32_t CDataStoreCache<size>::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& data, uint32_t& base, uint32_t& alloc, const char* fileName, int32_t lineNumber) {
     uint32_t newAlloc = pos + bytes;

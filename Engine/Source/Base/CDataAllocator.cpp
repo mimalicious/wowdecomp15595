@@ -3,7 +3,7 @@
 #include "Engine/Source/Base/CDataAllocator.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x007D75C0
+// OFFSET: 0x008729F0/0x1405A8FA0
 CDataAllocator::CDataAllocator(uint32_t bytesPerData, uint32_t dataPerBlock) {
     this->m_bytesPerData = bytesPerData < sizeof(Data) ? sizeof(Data) : bytesPerData;
     this->m_dataPerBlock = dataPerBlock ? dataPerBlock : 1;

@@ -3,7 +3,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00401050
+// OFFSET: 0x00408460
 CDataStore::CDataStore() {
     this->m_data = NULL;
     this->m_base = 0;
@@ -12,7 +12,7 @@ CDataStore::CDataStore() {
     this->m_read = -1;
 }
 
-// OFFSET: %0x00490120
+// OFFSET: 0x00487990
 CDataStore::CDataStore(uint8_t* data, uint32_t size) {
     this->m_data = data;
     this->m_base = 0;
@@ -21,7 +21,7 @@ CDataStore::CDataStore(uint8_t* data, uint32_t size) {
     this->m_read = 0;
 }
 
-// OFFSET: %0x00401070
+// OFFSET: 0x00408480
 int32_t CDataStore::FetchWrite(uint32_t pos, uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (pos >= this->m_base && pos + bytes <= this->m_base + this->m_alloc) {
         return 1;
@@ -36,7 +36,7 @@ int32_t CDataStore::IsRead() {
     return this->m_read == this->m_size;
 }
 
-// OFFSET: %0x004010E0
+// OFFSET: 0x004084F0/0x14000A800
 void CDataStore::Reset() {
     if (this->m_alloc == -1) {
         this->m_data = NULL;
@@ -113,7 +113,7 @@ void CDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc
     alloc = 0;
 }
 
-// OFFSET: %0x007D60F0
+// OFFSET: 0x00871740/0x1405A7620
 int32_t CDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& data, uint32_t& base, uint32_t& alloc, const char* fileName, int32_t lineNumber) {
     alloc = (pos + bytes + 255) & ~255;
 
@@ -204,7 +204,7 @@ CDataStore& CDataStore::Put(float val) {
     return *this;
 }
 
-// OFFSET: %0x007D6410
+// OFFSET: 0x00871A60/0x1405A7AC0
 CDataStore& CDataStore::PutArray(const uint8_t* pval, uint32_t count) {
     if (!pval) {
         if (count) {
@@ -244,7 +244,7 @@ CDataStore& CDataStore::PutData(const void* data, uint32_t bytes) {
     return this->PutArray(static_cast<const uint8_t*>(data), bytes);
 }
 
-// OFFSET: %0x007D64E0
+// OFFSET: 0x00871B30/0x1405A7C10
 int32_t CDataStore::FetchRead(uint32_t pos, uint32_t bytes) {
     if (pos + bytes > this->m_size) {
         this->m_read = this->m_size + 1;
@@ -329,7 +329,7 @@ CDataStore& CDataStore::Get(float& val) {
     return *this;
 }
 
-// OFFSET: %0x007D66C0
+// OFFSET: 0x00871D10/0x1405A7E20
 CDataStore& CDataStore::GetString(char* string, uint32_t maxChars) {
     if (!string) {
         if (maxChars) {
@@ -384,7 +384,7 @@ CDataStore& CDataStore::GetString(char* string, uint32_t maxChars) {
     return *this;
 }
 
-// OFFSET: %0x007D67A0
+// OFFSET: 0x00871DF0/0x1405A7F90
 CDataStore& CDataStore::GetArray(uint8_t* pval, uint32_t count) {
     if (!pval && count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -419,7 +419,7 @@ CDataStore& CDataStore::GetArray(uint8_t* pval, uint32_t count) {
     return *this;
 }
 
-// OFFSET: %0x007D6830
+// OFFSET: 0x00871E80
 CDataStore& CDataStore::GetArray(uint32_t* pval, uint32_t count) {
     if (!pval && count) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -482,7 +482,7 @@ uint8_t* CDataStore::GetHeaderSpace(uint32_t bytes) {
     return NULL;
 }
 
-// OFFSET: %0x004CC2E0
+// OFFSET: 0x004C5DB0
 void* CDataStore::Alloc(uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (!bytes) {
         return NULL;
@@ -495,7 +495,7 @@ void* CDataStore::Alloc(uint32_t bytes, const char* fileName, int32_t lineNumber
     return SMemAlloc(bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x004CC320
+// OFFSET: 0x004C5DF0
 void* CDataStore::ReAlloc(void* ptr, uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (fileName) {
         return SMemReAlloc(ptr, bytes, fileName, lineNumber, 0);
@@ -504,7 +504,7 @@ void* CDataStore::ReAlloc(void* ptr, uint32_t bytes, const char* fileName, int32
     return SMemReAlloc(ptr, bytes, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00401130
+// OFFSET: 0x00401070
 CDataStore& CDataStore::GetInt8(uint32_t& val) {
     uint8_t value = 0;
     this->Get(value);
@@ -520,7 +520,7 @@ uint8_t CDataStore::GetByte() {
     return val;
 }
 
-// OFFSET: %0x00423080
+// OFFSET: 0x0045B8C0
 CDataStore& CDataStore::Get(int32_t& val) {
     uint32_t value = 0;
     this->Get(value);

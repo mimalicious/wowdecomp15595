@@ -12,7 +12,7 @@ static uint32_t Pack565_SSE2(uint32_t color) {
     return ((color & 0xF8) | (((color & 0xFC00) | ((color >> 3) & 0x1F0000)) >> 2)) >> 3;
 }
 
-// OFFSET: %0x00498F70
+// OFFSET: 0x00491100
 static void CompressDXT1_SSE2(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     __m128i zero = _mm_setzero_si128();
     __m128i row0 = _mm_load_si128(reinterpret_cast<const __m128i*>(src));
@@ -62,7 +62,7 @@ static void CompressDXT1_SSE2(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     __m128 lengthSq = _mm_mul_ps(axis, axis);
     lengthSq = _mm_add_ps(_mm_shuffle_ps(lengthSq, lengthSq, 0xB1), lengthSq);
     lengthSq = _mm_add_ps(_mm_shuffle_ps(lengthSq, lengthSq, 0x4E), lengthSq);
-    axis = _mm_and_ps(_mm_mul_ps(_mm_rsqrt_ps(lengthSq), axis), _mm_cmpneq_ps(_mm_setzero_ps(), lengthSq));
+    axis = _mm_mul_ps(_mm_and_ps(_mm_cmpneq_ps(_mm_setzero_ps(), lengthSq), _mm_rsqrt_ps(lengthSq)), axis);
 
     __m128 low = _mm_set_ss(1.0f);
     __m128 high = _mm_set_ss(-1.0f);

@@ -16,7 +16,7 @@ static void (*const s_binders[])(SIMD::FunctionTable*) = {
     SIMD::Init_AVX,
 };
 
-// OFFSET: %0x00498E30
+// OFFSET: 0x00490FC0
 void SIMD::BindAll(int32_t features) {
     uint32_t bit = 1;
 
@@ -29,7 +29,7 @@ void SIMD::BindAll(int32_t features) {
     }
 }
 
-// OFFSET: %0x00498E70
+// OFFSET: 0x00491000/0x1400B5F70
 void* SIMD::AllocA16(uint32_t size) {
     uint8_t* ptr = static_cast<uint8_t*>(SMemAlloc(size + 16, __FILE__, __LINE__, 0));
 
@@ -44,7 +44,7 @@ void* SIMD::AllocA16(uint32_t size) {
     return ptr;
 }
 
-// OFFSET: %0x00498EB0
+// OFFSET: 0x00491040/0x1400B5FC0
 void SIMD::FreeA16(void* ptr) {
     if (ptr) {
         uint8_t* base = static_cast<uint8_t*>(ptr) - static_cast<uint8_t*>(ptr)[-1];

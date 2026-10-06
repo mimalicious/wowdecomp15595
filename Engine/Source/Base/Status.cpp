@@ -26,7 +26,7 @@ CStatus& GetGlobalStatusObj() {
     return s_errorList;
 }
 
-// OFFSET: %0x007D7050
+// OFFSET: 0x00872480/0x1405A8880
 void CStatus::Add(const CStatus& source) {
     CStatus& src = const_cast<CStatus&>(source);
 
@@ -41,7 +41,7 @@ int32_t CStatus::IsEmpty() {
     return this->m_statusList.Head() == NULL;
 }
 
-// OFFSET: #0x0047C110
+// OFFSET: 0x008724F0/0x1405A8900
 char* CStatus::GetErrorStr(char* buffer, size_t bufchars, STATUS_TYPE minSeverity, const char* separator) {
     char* curr = buffer;
     *curr = 0;
@@ -91,7 +91,8 @@ uint32_t CStatus::GetErrorStrLen(STATUS_TYPE minSeverity, const char* separator)
     return length;
 }
 
-// OFFSET: %0x007D7280
+// PROVEN: 21318ce1 IDENTICAL/DIFFERENT
+// OFFSET: 0x008726B0/0x1405A8AF0
 char* CStatus::GetErrorStrAlloc(STATUS_TYPE minSeverity, const char* separator) {
     size_t bufchars = this->GetErrorStrLen(minSeverity, separator) + 1;
     char* buffer = static_cast<char*>(SMemAlloc(bufchars, __FILE__, __LINE__, 0));

@@ -27,14 +27,15 @@ CStringMemory::CStringMemory() {
     this->AllocateBlock(0);
 }
 
-// OFFSET: #0x0047CD50
+// PROVEN: 04fc1c81 IDENTICAL/NONE
+// OFFSET: 0x00872010/0x1405A8310
 CStringMemory::~CStringMemory() {
     for (uint32_t i = 0; i < this->Count(); i++) {
         SMemFree(this->m_data[i], __FILE__, __LINE__, 0);
     }
 }
 
-// OFFSET: %0x007D7920
+// OFFSET: 0x00872060/0x1405A8390
 void CStringMemory::AllocateBlock(uint32_t size) {
     if (size < 0x10000) {
         size = 0x10000;
@@ -47,7 +48,8 @@ void CStringMemory::AllocateBlock(uint32_t size) {
     this->unk_0014 = this->unk_0010 + size;
 }
 
-// OFFSET: #0x0047CE40
+// PROVEN: a0e51e37 IDENTICAL/NONE
+// OFFSET: 0x00872100/0x1405A8410
 char* CStringMemory::New(const char* str) {
     uint32_t bytes = (SStrLen(str) + sizeof(char*) + 4) & ~3;
 
@@ -101,7 +103,7 @@ CStringManager* CStringManager::Get() {
     return CStringManager::s_stringManager;
 }
 
-// OFFSET: %0x007D7B30
+// OFFSET: 0x00872270/0x1405A86A0
 void RCString::Copy(const char* str) {
     if (!str) {
         this->m_str = NULL;

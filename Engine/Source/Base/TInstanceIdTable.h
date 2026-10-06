@@ -30,12 +30,12 @@ template <class T, int slotCount>
 TInstanceIdTable<T, slotCount>::TInstanceIdTable() {
 }
 
-// OFFSET: %0x00805020
+// OFFSET: 0x008A0810/0x1405E1F30
 template <class T, int slotCount>
 TInstanceIdTable<T, slotCount>::~TInstanceIdTable() {
 }
 
-// OFFSET: %0x00805C50
+// OFFSET: 0x008A15D0/0x1405E3160
 template <class T, int slotCount>
 uint32_t TInstanceIdTable<T, slotCount>::Insert(T* instance) {
     if (instance->m_id) {
@@ -59,7 +59,7 @@ uint32_t TInstanceIdTable<T, slotCount>::Insert(T* instance) {
     return id;
 }
 
-// OFFSET: %0x00804900
+// OFFSET: 0x008A00F0
 template <class T, int slotCount>
 T* TInstanceIdTable<T, slotCount>::Ptr(uint32_t id, int32_t lockMode, int32_t* findMask, int32_t unused1, int32_t unused2) {
     if (id) {

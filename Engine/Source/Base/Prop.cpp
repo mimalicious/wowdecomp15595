@@ -13,7 +13,8 @@ void PropInitialize() {
     OsTlsSetValue(s_tlsIndex, NULL);
 }
 
-// OFFSET: #0x0047CBE0
+// PROVEN: 607e63f1 IDENTICAL/NONE
+// OFFSET: 0x00872BA0/0x1405A91C0
 void PropDestroy() {
     OsTlsFree(s_tlsIndex);
 }

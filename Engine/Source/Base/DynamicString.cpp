@@ -55,7 +55,7 @@ CDynamicString& CDynamicString::operator=(const char* str) {
     return *this;
 }
 
-// OFFSET: %0x007D8220
+// OFFSET: 0x00872EB0/0x1405A9540
 void CDynamicString::SetCapacity(int32_t capacity) {
     if (capacity < 1) {
         this->m_length = 0;
@@ -114,7 +114,7 @@ void CDynamicString::operator+=(const char* str) {
     }
 }
 
-// OFFSET: %0x007D8380
+// OFFSET: 0x00873010/0x1405A9720
 void CDynamicString::operator+=(char c) {
     if (c) {
         this->m_length++;
@@ -138,7 +138,7 @@ void CDynamicString::operator+=(int32_t value) {
     this->m_length = static_cast<int32_t>(SStrLen(this->m_buffer));
 }
 
-// OFFSET: %0x007D8410
+// OFFSET: 0x008730A0
 void CDynamicString::Append(const char* src, int32_t count) {
     if (src && count > 0) {
         this->m_length += count;

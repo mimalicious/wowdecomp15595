@@ -11,6 +11,6 @@ void TRefCnt::DeleteSelf() {
     delete this;
 }
 
-// OFFSET: %0x0050F5B0
+// OFFSET: 0x004FF400/0x140159E70
 TRefCnt::~TRefCnt() {
 }

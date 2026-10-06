@@ -3,7 +3,7 @@
 #include "Engine/Source/Base/CDataRecycler.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: %0x00A73F20
+// OFFSET: 0x00B41C30/0x14090FFC0
 CDataRecycler::CDataRecycler(uint32_t nodesPerBlock, int32_t maxNodes) {
     this->m_nodeBlockList = NULL;
     this->m_nodeFullList = NULL;
@@ -47,7 +47,7 @@ void CDataRecycler::FreeData(void* data, const char* fileName, int32_t lineNumbe
     SMemFree(data, fileName, lineNumber, 0);
 }
 
-// OFFSET: %0x00A74030
+// OFFSET: 0x00B41D40
 void CDataRecycler::Link(Node** list, NodeBlock* nodeBlock) {
     Node* node = nodeBlock->m_nodes;
 
@@ -65,7 +65,7 @@ void CDataRecycler::Link(Node** list, NodeBlock* nodeBlock) {
     } while (InterlockedCompareExchangePointer(reinterpret_cast<void**>(list), nodeBlock->m_nodes, head) != head);
 }
 
-// OFFSET: %0x00A74090
+// OFFSET: 0x00B41DA0
 void CDataRecycler::Link(void** list, void* item) {
     void* head;
 
@@ -88,7 +88,7 @@ void* CDataRecycler::Unlink(void** list) {
     return item;
 }
 
-// OFFSET: %0x00A740C0
+// OFFSET: 0x00B41DD0/0x1409100F0
 void CDataRecycler::Clear() {
     for (Node* node = static_cast<Node*>(this->Unlink(reinterpret_cast<void**>(&this->m_nodeFullList))); node; node = static_cast<Node*>(this->Unlink(reinterpret_cast<void**>(&this->m_nodeFullList)))) {
         this->FreeData(node->m_data, NULL, 0);
@@ -116,7 +116,7 @@ void CDataRecycler::GetData(void*& data, uint32_t& bytes, const char* fileName, 
     }
 }
 
-// OFFSET: %0x00A741B0
+// OFFSET: 0x00B41EC0/0x140910210
 void CDataRecycler::PutData(void* data, uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (InterlockedDecrement(reinterpret_cast<volatile LONG*>(&this->m_nodesRecyclable)) >= 0) {
         Node* node;

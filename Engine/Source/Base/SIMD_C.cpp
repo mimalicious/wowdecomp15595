@@ -68,7 +68,7 @@ static uint8_t ClampColor(float value) {
     return static_cast<uint8_t>(color);
 }
 
-// OFFSET: %0x0049A790
+// OFFSET: 0x00492920
 static bool ProjectBoxTop_C(const CAaBox* box, const C44Matrix* matrix, float nearW, float* minX, float* maxX, float* maxY) {
     float x0 = box->b.x;
     float y0 = box->b.y;
@@ -142,7 +142,7 @@ static bool ProjectBoxTop_C(const CAaBox* box, const C44Matrix* matrix, float ne
     return true;
 }
 
-// OFFSET: %0x0049AB10
+// OFFSET: 0x00492CA0
 static uint32_t PlaneMask_C(int32_t count, const C4Plane* planes, const CAaBox* box) {
     const C3Vector* corners[2] = { &box->t, &box->b };
     uint32_t mask = 0;
@@ -156,7 +156,7 @@ static uint32_t PlaneMask_C(int32_t count, const C4Plane* planes, const CAaBox* 
     return mask;
 }
 
-// OFFSET: %0x0049AD40
+// OFFSET: 0x00492ED0
 static void CompressDXT1_C(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     float colors[16][3];
     float* color = colors[0];
@@ -286,12 +286,12 @@ static void CompressDXT1_C(const uint8_t* src, int32_t pitch, uint8_t* dst) {
     *reinterpret_cast<uint32_t*>(&dst[4]) = bits;
 }
 
-// OFFSET: %0x0049B450
+// OFFSET: 0x004935E0
 static void BlendBoneMatrices_C(C44Matrix* result, uint32_t weights, uint32_t indices, const C44Matrix* bones) {
     BlendBones_C(*result, weights, indices, bones);
 }
 
-// OFFSET: %0x0049B5E0
+// OFFSET: 0x00493770
 static void SkinVertices_C(void* dst, const M2Vertex* src, uint32_t count, const C44Matrix* bones, uint32_t texCoord) {
     float* out = static_cast<float*>(dst);
     C44Matrix matrix;
@@ -319,7 +319,7 @@ static void SkinVertices_C(void* dst, const M2Vertex* src, uint32_t count, const
     }
 }
 
-// OFFSET: %0x0049B940
+// OFFSET: 0x00493AD0
 static void SkinVerticesOneBone_C(void* dst, const M2Vertex* src, uint32_t count, const C44Matrix* bones, uint32_t texCoord) {
     float* out = static_cast<float*>(dst);
 
@@ -354,7 +354,7 @@ static void ProjectToPlane_C(C3Vector* dst, const M2Vertex* vertex, const C44Mat
     dst->z = dist;
 }
 
-// OFFSET: %0x0049BB00
+// OFFSET: 0x00493C90
 static void ProjectVertices_C(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d) {
     C44Matrix matrix;
     uint32_t weights = 0;
@@ -376,7 +376,7 @@ static void ProjectVertices_C(C3Vector* dst, const M2Vertex* vertices, uint32_t 
     }
 }
 
-// OFFSET: %0x0049BE90
+// OFFSET: 0x00494020
 static void ProjectVerticesOneBone_C(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d) {
     const uint16_t* index = &indices[start];
 
@@ -386,7 +386,7 @@ static void ProjectVerticesOneBone_C(C3Vector* dst, const M2Vertex* vertices, ui
     }
 }
 
-// OFFSET: %0x0049C0B0
+// OFFSET: 0x00494240
 static void FFT_C(float* re, float* im, int32_t n, int32_t log2n) {
     int32_t j = 0;
 
@@ -441,7 +441,7 @@ static void FFT_C(float* re, float* im, int32_t n, int32_t log2n) {
     }
 }
 
-// OFFSET: %0x0049C280
+// OFFSET: 0x00494410
 static void FFT2D_C(float* data, void* re, void* im, int32_t n, int32_t log2n) {
     float* real = static_cast<float*>(re);
     float* imag = static_cast<float*>(im);
@@ -477,7 +477,34 @@ static void FFT2D_C(float* data, void* re, void* im, int32_t n, int32_t log2n) {
     }
 }
 
-// OFFSET: %0x0049C6F0
+// OFFSET: 0x00494880
+static void Downsample2x2_C(const uint32_t* src, uint32_t width, uint32_t height, uint32_t* dst) {
+    uint32_t dstRow = 0;
+
+    for (uint32_t y = 0; y < height; y += 2) {
+        const uint32_t* row0 = src + y * width;
+        const uint32_t* row1 = row0 + width;
+        uint32_t index = dstRow;
+
+        for (uint32_t x = 0; x < width; x += 2) {
+            uint32_t p0 = row0[x];
+            uint32_t p1 = row0[x + 1];
+            uint32_t p2 = row1[x];
+            uint32_t p3 = row1[x + 1];
+            uint32_t b = (p0 & 0xFF) + (p1 & 0xFF) + (p2 & 0xFF) + (p3 & 0xFF);
+            uint32_t g = ((p0 >> 8) & 0xFF) + ((p1 >> 8) & 0xFF) + ((p2 >> 8) & 0xFF) + ((p3 >> 8) & 0xFF);
+            uint32_t r = ((p0 >> 16) & 0xFF) + ((p1 >> 16) & 0xFF) + ((p2 >> 16) & 0xFF) + ((p3 >> 16) & 0xFF);
+            uint32_t a = (p0 >> 24) + (p1 >> 24) + (p2 >> 24) + (p3 >> 24);
+            dst[index >> 1] = (b >> 2) + (((g & 0x3FC) + ((((a & ~3u) << 8) + (r & 0x3FC)) << 8)) << 6);
+            index += 2;
+        }
+
+        dstRow += 2 * (width >> 1);
+    }
+}
+
+// PROVEN: 51a426e3 IDENTICAL/DIFFERENT
+// OFFSET: 0x00494A10/0x1400BA1C0
 void SIMD::Init_C(SIMD::FunctionTable* table) {
     table->ProjectBoxTop = ProjectBoxTop_C;
     table->PlaneMask = PlaneMask_C;
@@ -488,4 +515,5 @@ void SIMD::Init_C(SIMD::FunctionTable* table) {
     table->ProjectVertices = ProjectVertices_C;
     table->ProjectVerticesOneBone = ProjectVerticesOneBone_C;
     table->FFT2D = FFT2D_C;
+    table->Downsample2x2 = Downsample2x2_C;
 }

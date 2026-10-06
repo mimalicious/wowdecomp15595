@@ -21,6 +21,7 @@ namespace SIMD {
         /* 0018 */ void (*ProjectVertices)(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d);
         /* 001C */ void (*ProjectVerticesOneBone)(C3Vector* dst, const M2Vertex* vertices, uint32_t start, uint32_t count, const uint16_t* indices, const C44Matrix* bones, int32_t normals, const C3Vector* dir, float d);
         /* 0020 */ void (*FFT2D)(float* data, void* re, void* im, int32_t n, int32_t log2n);
+        /* 0024 */ void (*Downsample2x2)(const uint32_t* src, uint32_t width, uint32_t height, uint32_t* dst);
     };
 
     extern FunctionTable s_functions;

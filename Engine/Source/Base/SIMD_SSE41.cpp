@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
-// OFFSET: %0x00498EE0
+// OFFSET: 0x00491070
 static uint32_t PlaneMask_SSE41(int32_t count, const C4Plane* planes, const CAaBox* box) {
     __m128 one = _mm_set1_ps(1.0f);
     __m128 bottom = _mm_insert_ps(_mm_loadu_ps(&box->b.x), one, 0xF0);

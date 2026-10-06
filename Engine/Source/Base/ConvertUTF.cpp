@@ -29,7 +29,7 @@ static const uint8_t trailingBytesForUTF8[256] = {
 // STATIC: #0x009E9EC8
 static const uint32_t firstByteMark[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
 
-// OFFSET: %0x007D6990
+// OFFSET: 0x004B5FC0/0x1400ED7E0
 int32_t ConvertUTF16toUTF8(char* dst, uint32_t dstmaxchars, const uint16_t* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
     char* dstStart = dst;
     const uint16_t* srcStart = src;
@@ -132,8 +132,12 @@ int32_t ConvertUTF16toUTF8(char* dst, uint32_t dstmaxchars, const uint16_t* src,
     return result;
 }
 
-// OFFSET: %0x007D6B50
+// OFFSET: 0x004B6280/0x1400EDB80
 int32_t ConvertUTF8toUTF16(uint16_t* dst, uint32_t dstmaxchars, const char* src, uint32_t srcmaxchars, uint32_t* dstchars, uint32_t* srcchars) {
+    if (!src || !srcmaxchars) {
+        return -1;
+    }
+
     uint16_t* dstStart = dst;
     const uint8_t* source = reinterpret_cast<const uint8_t*>(src);
     const uint8_t* sourceEnd = srcmaxchars == STORM_MAX_STR ? reinterpret_cast<const uint8_t*>(-1) : source + srcmaxchars;
