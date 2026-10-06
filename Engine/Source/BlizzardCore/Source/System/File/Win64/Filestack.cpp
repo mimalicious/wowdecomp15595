@@ -7,6 +7,7 @@
 #include <cstring>
 #include <windows.h>
 #include <sddl.h>
+#include <winioctl.h>
 #include "Engine/Source/BlizzardCore/Source/System/Debug/Debug.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
@@ -108,7 +109,7 @@ int32_t System_File::FromNativeAttributes(int32_t attributes) {
     return result;
 }
 
-// OFFSET: #0x00427CC0
+// OFFSET: 0x007B4B00/0x1404AA650
 bool System_File::ReadP(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     OVERLAPPED overlapped;
     overlapped.Offset = static_cast<DWORD>(parms->m_pos);
@@ -120,7 +121,7 @@ bool System_File::ReadP(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
     return read_func(parms->m_stream, parms->m_buffer, &overlapped, &parms->m_amount);
 }
 
-// OFFSET: #0x00427D10
+// OFFSET: 0x007B4B90/0x1404AA6C0
 bool System_File::WriteP(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     OVERLAPPED overlapped;
     overlapped.Offset = static_cast<DWORD>(parms->m_pos);
@@ -132,7 +133,8 @@ bool System_File::WriteP(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return write_func(parms->m_stream, parms->m_buffer, &overlapped, &parms->m_amount);
 }
 
-// OFFSET: #0x0042D620
+// PROVEN: 336cd3c4 IDENTICAL/NONE
+// OFFSET: 0x007BC640/0x1404B46A0
 bool System_File::Close(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     Blizzard::File::StreamRecord* stream = parms->m_stream;
 
@@ -145,8 +147,8 @@ bool System_File::Close(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
     return true;
 }
 
-// OFFSET: %0x0071E2B0
-bool System_File::GetRootChars(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007BC6C0
+bool System_File::Stacked::GetRootChars(System_File::Stacked::FileParms* parms) {
     const char* path = parms->m_path;
     Blizzard::Memory::TempBuffer<char, 256> buffer((path ? static_cast<uint32_t>(strlen(path)) : 0) + 1);
 
@@ -184,7 +186,13 @@ bool System_File::GetRootChars(Blizzard::File::Filesystem* fs, System_File::Stac
     return true;
 }
 
-// OFFSET: #0x00435580
+// PROVEN: f099edff IDENTICAL/NONE
+// OFFSET: 0x007BFF70/0x1404B93D0
+bool System_File::GetRootChars(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::GetRootChars(parms);
+}
+
+// OFFSET: 0x007C0030/0x1404B94B0
 void System_File::GetFileInfoByFile(Blizzard::File::StreamRecord* file) {
     if (file->m_infoValid && !(file->m_mode & 0x8)) {
         return;
@@ -201,6 +209,20 @@ void System_File::GetFileInfoByFile(Blizzard::File::StreamRecord* file) {
     if (!file->m_streaming || !file->m_streaming->m_unit) {
         file->m_info.m_size = (static_cast<int64_t>(sizeHigh) << 32) | sizeLow;
     }
+
+    DWORD compressedHigh;
+    DWORD compressedLow;
+
+    {
+        Blizzard::StringConversion_CodepageToUTF8::ToNative name(file->m_info.m_path);
+        compressedLow = GetCompressedFileSizeW(reinterpret_cast<LPCWSTR>(name.m_data), &compressedHigh);
+    }
+
+    if (compressedLow == INVALID_FILE_SIZE && GetLastError()) {
+        return;
+    }
+
+    file->m_info.m_compressedSize = (static_cast<int64_t>(compressedHigh) << 32) | compressedLow;
 
     WIN32_FILE_ATTRIBUTE_DATA data;
     BOOL found;
@@ -228,11 +250,8 @@ void System_File::GetFileInfoByFile(Blizzard::File::StreamRecord* file) {
     file->m_infoValid = true;
 }
 
-// OFFSET: #0x004356B0
-bool System_File::Exists(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
-    char path[1024];
-    Blizzard::String::MakeBackslashPath(parms->m_path, path, sizeof(path));
-
+// OFFSET: 0x007C0200/0x1404B98A0
+static int32_t GetPathState(const char* path) {
     DWORD attributes;
 
     {
@@ -241,18 +260,28 @@ bool System_File::Exists(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     }
 
     if (attributes == INVALID_FILE_ATTRIBUTES) {
-        parms->m_info->m_existence = 0;
-    } else if (attributes & FILE_ATTRIBUTE_DIRECTORY) {
-        parms->m_info->m_existence = 2;
-    } else {
-        parms->m_info->m_existence = 1;
+        return 0;
     }
+
+    return ((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0) + 1;
+}
+
+// OFFSET: 0x007C0260/0x1404B9970
+bool System_File::Stacked::Exists(System_File::Stacked::FileParms* parms) {
+    char path[1024];
+    Blizzard::String::MakeBackslashPath(parms->m_path, path, sizeof(path));
+    parms->m_info->m_existence = GetPathState(path);
 
     return true;
 }
 
-// OFFSET: #0x00435790
-bool System_File::MakeAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007C4020/0x1404BE8A0
+bool System_File::Exists(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::Exists(parms);
+}
+
+// OFFSET: 0x007C02D0/0x1404B99F0
+bool System_File::Stacked::MakeAbsolutePath(System_File::Stacked::FileParms* parms) {
     wchar_t buffer[1024];
 
     {
@@ -272,8 +301,14 @@ bool System_File::MakeAbsolutePath(Blizzard::File::Filesystem* fs, System_File::
     return true;
 }
 
-// OFFSET: #0x00435890
-bool System_File::Move(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: c7792b6e IDENTICAL/NONE
+// OFFSET: 0x007C4040/0x1404BE8B0
+bool System_File::MakeAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::MakeAbsolutePath(parms);
+}
+
+// OFFSET: 0x007C0450/0x1404B9CE0
+bool System_File::Stacked::Move(System_File::Stacked::FileParms* parms) {
     char src[1024];
     char dst[1024];
     Blizzard::String::MakeBackslashPath(parms->m_path, src, sizeof(src));
@@ -285,8 +320,39 @@ bool System_File::Move(Blizzard::File::Filesystem* fs, System_File::Stacked::Fil
     return MoveFileW(reinterpret_cast<LPCWSTR>(oldName.m_data), reinterpret_cast<LPCWSTR>(newName.m_data)) != 0;
 }
 
-// OFFSET: #0x004359C0
-bool System_File::Delete(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: b1c28d38 IDENTICAL/NONE
+// OFFSET: 0x007C4060/0x1404BE8C0
+bool System_File::Move(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::Move(parms);
+}
+
+// OFFSET: 0x007C0570/0x1404B9EF0
+bool System_File::Stacked::SupportsSparse(System_File::Stacked::FileParms* parms) {
+    wchar_t volumeName[MAX_PATH];
+    wchar_t fileSystemName[MAX_PATH];
+    DWORD serialNumber;
+    DWORD maxComponentLength;
+    DWORD flags;
+    BOOL result;
+
+    {
+        Blizzard::StringConversion_CodepageToUTF8::ToNative name(parms->m_path);
+        result = GetVolumeInformationW(reinterpret_cast<LPCWSTR>(name.m_data), volumeName, MAX_PATH, &serialNumber, &maxComponentLength, &flags, fileSystemName, MAX_PATH);
+    }
+
+    parms->m_supportsSparse = (flags & FILE_SUPPORTS_SPARSE_FILES) != 0;
+
+    return result != 0;
+}
+
+// PROVEN: 711edcb5 IDENTICAL/NONE
+// OFFSET: 0x007C4000/0x1404BE890
+bool System_File::SupportsSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SupportsSparse(parms);
+}
+
+// OFFSET: 0x007C0600/0x1404BA010
+bool System_File::Stacked::Delete(System_File::Stacked::FileParms* parms) {
     char path[1024];
     Blizzard::String::MakeBackslashPath(parms->m_path, path, sizeof(path));
 
@@ -295,7 +361,62 @@ bool System_File::Delete(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return DeleteFileW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
 }
 
-// OFFSET: #0x00454870
+// PROVEN: f226fdf0 IDENTICAL/NONE
+// OFFSET: 0x007C4080/0x1404BE8D0
+bool System_File::Delete(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::Delete(parms);
+}
+
+// OFFSET: 0x007ACF60/0x1404A2B30
+bool System_File::Stacked::SetSparse(System_File::Stacked::FileParms* parms) {
+    DWORD bytesReturned = 0;
+    LARGE_INTEGER size;
+
+    if (!GetFileSizeEx(parms->m_stream->m_fileHandle, &size)) {
+        return false;
+    }
+
+    BOOL result = DeviceIoControl(parms->m_stream->m_fileHandle, FSCTL_SET_SPARSE, NULL, 0, NULL, 0, &bytesReturned, NULL);
+
+    if (parms->m_zeroFillAll && result) {
+        FILE_ZERO_DATA_INFORMATION zero;
+        zero.FileOffset.QuadPart = 0;
+        zero.BeyondFinalZero = size;
+        result = DeviceIoControl(parms->m_stream->m_fileHandle, FSCTL_SET_ZERO_DATA, &zero, sizeof(zero), NULL, 0, &bytesReturned, NULL);
+    }
+
+    return result != 0;
+}
+
+// PROVEN: 29aa2632 IDENTICAL/NONE
+// OFFSET: 0x007B4B50/0x1404AA6A0
+bool System_File::SetSparse(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SetSparse(parms);
+}
+
+// OFFSET: 0x007AD000/0x1404A2C00
+bool System_File::Stacked::ZeroRange(System_File::Stacked::FileParms* parms) {
+    DWORD bytesReturned = 0;
+    BY_HANDLE_FILE_INFORMATION info;
+
+    if (!GetFileInformationByHandle(parms->m_stream->m_fileHandle, &info) || !(info.dwFileAttributes & FILE_ATTRIBUTE_SPARSE_FILE)) {
+        return false;
+    }
+
+    FILE_ZERO_DATA_INFORMATION zero;
+    zero.FileOffset.QuadPart = parms->m_pos;
+    zero.BeyondFinalZero.QuadPart = parms->m_pos + parms->m_length;
+
+    return DeviceIoControl(parms->m_stream->m_fileHandle, FSCTL_SET_ZERO_DATA, &zero, sizeof(zero), NULL, 0, &bytesReturned, NULL) != 0;
+}
+
+// PROVEN: 70bce816 IDENTICAL/NONE
+// OFFSET: 0x007B4B70/0x1404AA6B0
+bool System_File::ZeroRange(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::ZeroRange(parms);
+}
+
+// OFFSET: 0x007E4960/0x1404ED6D0
 bool System_File::read_overlapped(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     if (file->m_fileHandle == INVALID_HANDLE_VALUE) {
         Blizzard::File::SetLastError(8);
@@ -331,7 +452,7 @@ bool System_File::read_overlapped(Blizzard::File::StreamRecord* file, void* buff
     return false;
 }
 
-// OFFSET: %0x0074A7C0
+// OFFSET: 0x007E4A90/0x1404ED840
 bool System_File::write_overlapped(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     if (file->m_fileHandle == INVALID_HANDLE_VALUE) {
         Blizzard::File::SetLastError(8);
@@ -357,7 +478,7 @@ bool System_File::write_overlapped(Blizzard::File::StreamRecord* file, void* buf
     return false;
 }
 
-// OFFSET: %0x0074A860
+// OFFSET: 0x007E4B30
 bool System_File::ToCreateFlags(uint32_t flags, DWORD* sharemode, DWORD* desiredaccess, DWORD* creationdisposition, DWORD* flagsandattributes) {
     *sharemode = (flags >> 2) & 3;
     *desiredaccess = ((flags * 4) | (flags & 2)) << 29;
@@ -376,26 +497,41 @@ bool System_File::ToCreateFlags(uint32_t flags, DWORD* sharemode, DWORD* desired
     return true;
 }
 
-// OFFSET: #0x00454A50
+// OFFSET: 0x007C01B0/0x1404B97E0
+bool System_File::Stacked::SetWorkingDirectory(System_File::Stacked::FileParms* parms) {
+    Blizzard::StringConversion_CodepageToUTF8::ToNative name(parms->m_path);
+
+    return SetCurrentDirectoryW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
+}
+
+// OFFSET: 0x007E99F0/0x1404F5330
 bool System_File::SetWorkingDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     if (!parms->m_path) {
         Blizzard::File::SetLastError(8);
         return false;
     }
 
-    Blizzard::StringConversion_CodepageToUTF8::ToNative name(parms->m_path);
-
-    return SetCurrentDirectoryW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
+    return System_File::Stacked::SetWorkingDirectory(parms);
 }
 
-// OFFSET: #0x00454AC0
+// OFFSET: 0x007E9A20/0x1404F5360
 bool System_File::Create(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     Blizzard::File::SetLastError(9);
 
     return false;
 }
 
-// OFFSET: #0x00454AE0
+// PROVEN: 9ad2d1a6 IDENTICAL/NONE
+// OFFSET: 0x007BC670/0x1404B46E0
+bool System_File::Stacked::GetWorkingDirectory(System_File::Stacked::FileParms* parms) {
+    wchar_t buffer[1024];
+    GetCurrentDirectoryW(1024, buffer);
+    Blizzard::Unicode::ConvertUTF16to8(parms->m_cwdbuf, parms->m_cwdbuflen, reinterpret_cast<const uint16_t*>(buffer), -1, NULL, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x007E9A40/0x1404F5380
 bool System_File::GetWorkingDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     if (!parms->m_cwdbuf || parms->m_cwdbuflen <= 0) {
         Blizzard::File::SetLastError(8);
@@ -403,21 +539,20 @@ bool System_File::GetWorkingDirectory(Blizzard::File::Filesystem* fs, System_Fil
     }
 
     *parms->m_cwdbuf = '\0';
-    char buffer[1024];
-    GetCurrentDirectoryA(sizeof(buffer), buffer);
-    FromNativeName(parms->m_cwdbuf, parms->m_cwdbuflen, buffer);
 
-    return true;
+    return System_File::Stacked::GetWorkingDirectory(parms);
 }
 
-// OFFSET: #0x00454B50
-bool System_File::ProcessDirFast(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007E4BE0/0x1404ED910
+bool System_File::Stacked::ProcessDirFast(System_File::Stacked::FileParms* parms) {
     void* cookie = parms->m_cookie;
     const char* path = parms->m_path;
     Blizzard::File::ProcessDirCallback callback = parms->m_dircallback;
 
     char pattern[512];
-    Blizzard::String::Format(pattern, sizeof(pattern), "%s\\*", path);
+    Blizzard::String::Format(pattern, sizeof(pattern), "%s", path);
+    Blizzard::String::ForceTrailingSeparator(pattern, sizeof(pattern), '\0');
+    Blizzard::String::Format(pattern, sizeof(pattern), "%s*", pattern);
 
     WIN32_FIND_DATAW findData;
     HANDLE find;
@@ -456,7 +591,13 @@ bool System_File::ProcessDirFast(Blizzard::File::Filesystem* fs, System_File::St
     return true;
 }
 
-// OFFSET: %0x00751900
+// PROVEN: e4d61db0 IDENTICAL/NONE
+// OFFSET: 0x007E9A80/0x1404F53D0
+bool System_File::ProcessDirFast(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::ProcessDirFast(parms);
+}
+
+// OFFSET: 0x007E9AA0/0x1404F53E0
 bool System_File::Flush(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     if (parms->m_stream->m_fileHandle == INVALID_HANDLE_VALUE) {
         Blizzard::File::SetLastError(8);
@@ -466,8 +607,8 @@ bool System_File::Flush(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
     return FlushFileBuffers(parms->m_stream->m_fileHandle) != 0;
 }
 
-// OFFSET: #0x00454CF0
-bool System_File::GetFileInfo(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007E4DC0/0x1404EDB90
+bool System_File::Stacked::GetFileInfo(System_File::Stacked::FileParms* parms) {
     if (parms->m_path) {
         WIN32_FILE_ATTRIBUTE_DATA data;
         BOOL found;
@@ -496,6 +637,20 @@ bool System_File::GetFileInfo(Blizzard::File::Filesystem* fs, System_File::Stack
             parms->m_info->m_existence = ((parms->m_info->m_attributes & 0x40) != 0) + 1;
         }
 
+        DWORD compressedHigh;
+        DWORD compressedLow;
+
+        {
+            Blizzard::StringConversion_CodepageToUTF8::ToNative name(parms->m_path);
+            compressedLow = GetCompressedFileSizeW(reinterpret_cast<LPCWSTR>(name.m_data), &compressedHigh);
+        }
+
+        if (compressedLow == INVALID_FILE_SIZE && GetLastError()) {
+            return false;
+        }
+
+        parms->m_info->m_compressedSize = (static_cast<int64_t>(compressedHigh) << 32) | compressedLow;
+
         return true;
     }
 
@@ -516,8 +671,14 @@ bool System_File::GetFileInfo(Blizzard::File::Filesystem* fs, System_File::Stack
     return false;
 }
 
-// OFFSET: #0x00454E70
-bool System_File::GetFreeSpace(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: 5ba0aeed IDENTICAL/NONE
+// OFFSET: 0x007E9AE0/0x1404F5420
+bool System_File::GetFileInfo(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::GetFileInfo(parms);
+}
+
+// OFFSET: 0x007E4F90/0x1404EDEF0
+bool System_File::Stacked::GetFreeSpace(System_File::Stacked::FileParms* parms) {
     const char* path = parms->m_path;
 
     if (path && *path) {
@@ -565,8 +726,14 @@ bool System_File::GetFreeSpace(Blizzard::File::Filesystem* fs, System_File::Stac
     return false;
 }
 
-// OFFSET: %0x0074AD40
-bool System_File::GetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: 47fc02f4 IDENTICAL/NONE
+// OFFSET: 0x007E9B00/0x1404F5430
+bool System_File::GetFreeSpace(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::GetFreeSpace(parms);
+}
+
+// OFFSET: 0x007E50F0/0x1404EE1D0
+bool System_File::Stacked::GetPos(System_File::Stacked::FileParms* parms) {
     Blizzard::File::StreamRecord* stream = parms->m_stream;
     LONG high;
     DWORD low;
@@ -581,8 +748,14 @@ bool System_File::GetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return true;
 }
 
-// OFFSET: %0x0074ADC0
-bool System_File::IsAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: 256f0de7 IDENTICAL/NONE
+// OFFSET: 0x007E9B20/0x1404F5440
+bool System_File::GetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::GetPos(parms);
+}
+
+// OFFSET: 0x007E5170/0x1404EE280
+bool System_File::Stacked::IsAbsolutePath(System_File::Stacked::FileParms* parms) {
     const char* path = parms->m_path;
 
     if (((path[0] == '\\' || path[0] == '/') && (path[1] == '\\' || path[1] == '/') && path[2]) || (isalpha(path[0]) && path[1] == ':' && (path[2] == '\\' || path[2] == '/') && path[3])) {
@@ -594,8 +767,14 @@ bool System_File::IsAbsolutePath(Blizzard::File::Filesystem* fs, System_File::St
     return false;
 }
 
-// OFFSET: #0x004550C0
-bool System_File::IsReadOnly(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: ced7a509 IDENTICAL/NONE
+// OFFSET: 0x007E9B40/0x1404F5450
+bool System_File::IsAbsolutePath(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::IsAbsolutePath(parms);
+}
+
+// OFFSET: 0x007E51E0/0x1404EE2F0
+bool System_File::Stacked::IsReadOnly(System_File::Stacked::FileParms* parms) {
     DWORD attributes;
 
     {
@@ -612,23 +791,13 @@ bool System_File::IsReadOnly(Blizzard::File::Filesystem* fs, System_File::Stacke
     return false;
 }
 
-// OFFSET: %0x00721980
-static int32_t GetPathState(const char* path) {
-    DWORD attributes;
-
-    {
-        Blizzard::StringConversion_CodepageToUTF8::ToNative name(path);
-        attributes = GetFileAttributesW(reinterpret_cast<LPCWSTR>(name.m_data));
-    }
-
-    if (attributes == INVALID_FILE_ATTRIBUTES) {
-        return 0;
-    }
-
-    return ((attributes & FILE_ATTRIBUTE_DIRECTORY) != 0) + 1;
+// PROVEN: ffed721d IDENTICAL/NONE
+// OFFSET: 0x007E9B60/0x1404F5460
+bool System_File::IsReadOnly(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::IsReadOnly(parms);
 }
 
-// OFFSET: %0x00721B50
+// OFFSET: 0x007C03E0/0x1404B9BE0
 static bool CreateOneDirectory(const char* path, SECURITY_ATTRIBUTES* attributes) {
     BOOL created;
 
@@ -645,8 +814,8 @@ static bool CreateOneDirectory(const char* path, SECURITY_ATTRIBUTES* attributes
     return error == ERROR_ALREADY_EXISTS || error == ERROR_ACCESS_DENIED;
 }
 
-// OFFSET: #0x00455130
-bool System_File::CreateDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007E5250/0x1404EE3E0
+bool System_File::Stacked::CreateDirectory(System_File::Stacked::FileParms* parms) {
     bool recursive = parms->m_recursive;
     const char* path = parms->m_path;
     bool grantEveryone = parms->m_grantEveryone;
@@ -747,7 +916,13 @@ bool System_File::CreateDirectory(Blizzard::File::Filesystem* fs, System_File::S
     return result;
 }
 
-// OFFSET: #0x004554C0
+// PROVEN: c09a0209 IDENTICAL/NONE
+// OFFSET: 0x007E9B80/0x1404F5470
+bool System_File::CreateDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::CreateDirectory(parms);
+}
+
+// OFFSET: 0x007E9BA0/0x1404F5480
 bool System_File::Copy(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     bool overwrite = parms->m_overwrite;
     char src[1024];
@@ -809,8 +984,8 @@ done:
     return result;
 }
 
-// OFFSET: #0x00455730
-bool System_File::Open(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007E5570/0x1404EE760
+bool System_File::Stacked::Open(System_File::Stacked::FileParms* parms) {
     int32_t mode = parms->m_mode;
     char path[1024];
     Blizzard::String::MakeBackslashPath(parms->m_path, path, sizeof(path));
@@ -833,8 +1008,8 @@ bool System_File::Open(Blizzard::File::Filesystem* fs, System_File::Stacked::Fil
     }
 
     if (handle == INVALID_HANDLE_VALUE) {
+        Blizzard::File::AddToLastErrorStack(4, Blizzard::String::QuickFormat<1024>("Win32 Open - %s, accessMode:0x%x, shareMode:0x%x, createMode:0x%x, flags:0x%x, lastError:%d", path, desiredaccess, sharemode, creationdisposition, flagsandattributes, GetLastError()).m_buffer, 1);
         Blizzard::File::SetLastError(4);
-        Blizzard::File::AddToLastErrorStack(4, Blizzard::String::QuickFormat<1024>("Win32 Open - %s", path).m_buffer, 1);
         return false;
     }
 
@@ -862,13 +1037,20 @@ bool System_File::Open(Blizzard::File::Filesystem* fs, System_File::Stacked::Fil
     return true;
 }
 
-// OFFSET: #0x004558F0
+// PROVEN: 3a7091b8 IDENTICAL/NONE
+// OFFSET: 0x007E9DE0/0x1404F5870
+bool System_File::Open(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::Open(parms);
+}
+
+// PROVEN: 2b74ce0b IDENTICAL/NONE
+// OFFSET: 0x007E9E00/0x1404F5880
 bool System_File::Read(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return read_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);
 }
 
-// OFFSET: #0x00455910
-bool System_File::RemoveDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// OFFSET: 0x007E5730/0x1404EEA70
+bool System_File::Stacked::RemoveDirectory(System_File::Stacked::FileParms* parms) {
     const char* path = parms->m_path;
 
     if (parms->m_recursive) {
@@ -888,8 +1070,14 @@ bool System_File::RemoveDirectory(Blizzard::File::Filesystem* fs, System_File::S
     return RemoveDirectoryW(reinterpret_cast<LPCWSTR>(name.m_data)) != 0;
 }
 
-// OFFSET: #0x00455A30
-bool System_File::SetCacheMode(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: c4253d44 IDENTICAL/NONE
+// OFFSET: 0x007E9E20/0x1404F58A0
+bool System_File::RemoveDirectory(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::RemoveDirectory(parms);
+}
+
+// OFFSET: 0x007E5850/0x1404EEC20
+bool System_File::Stacked::SetCacheMode(System_File::Stacked::FileParms* parms) {
     Blizzard::File::StreamRecord* stream = parms->m_stream;
     stream->m_mode = parms->m_mode | (stream->m_mode & ~0x40);
 
@@ -919,8 +1107,14 @@ bool System_File::SetCacheMode(Blizzard::File::Filesystem* fs, System_File::Stac
     return true;
 }
 
-// OFFSET: #0x00455B10
-bool System_File::SetEOF(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: 0c2c0359 IDENTICAL/NONE
+// OFFSET: 0x007E9E40/0x1404F58B0
+bool System_File::SetCacheMode(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SetCacheMode(parms);
+}
+
+// OFFSET: 0x007E5930/0x1404EEE20
+bool System_File::Stacked::SetEOF(System_File::Stacked::FileParms* parms) {
     int64_t pos = parms->m_pos;
     Blizzard::File::StreamRecord* stream = parms->m_stream;
     int32_t whence = parms->m_posMode;
@@ -932,13 +1126,31 @@ bool System_File::SetEOF(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     }
 
     BOOL result = SetEndOfFile(stream->m_fileHandle);
+
+    if (!result) {
+        DWORD error = GetLastError();
+
+        if (error == ERROR_HANDLE_DISK_FULL || error == ERROR_DISK_FULL) {
+            Blizzard::File::SetLastError(11);
+        } else {
+            Blizzard::File::SetLastError(8);
+        }
+    }
+
     Blizzard::File::SetPos(stream, offset, 0);
+    stream->m_infoValid = false;
 
     return result != 0;
 }
 
-// OFFSET: #0x00455BA0
-bool System_File::SetAttributes(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: 1fe0fe85 IDENTICAL/NONE
+// OFFSET: 0x007E9E60/0x1404F58C0
+bool System_File::SetEOF(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SetEOF(parms);
+}
+
+// OFFSET: 0x007E59F0/0x1404EEF90
+bool System_File::Stacked::SetAttributes(System_File::Stacked::FileParms* parms) {
     if (parms->m_has.m_all & 0x10) {
         Blizzard::Time::Timestamp time = parms->m_info->m_modTime;
         int64_t ticks = time / 100 + 125911584000000000;
@@ -980,8 +1192,14 @@ bool System_File::SetAttributes(Blizzard::File::Filesystem* fs, System_File::Sta
     return parms->m_has.m_all == 0;
 }
 
-// OFFSET: #0x00455CA0
-bool System_File::SetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+// PROVEN: f4a53b78 IDENTICAL/NONE
+// OFFSET: 0x007E9E80/0x1404F58D0
+bool System_File::SetAttributes(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SetAttributes(parms);
+}
+
+// OFFSET: 0x007E5AF0/0x1404EF1A0
+bool System_File::Stacked::SetPos(System_File::Stacked::FileParms* parms) {
     Blizzard::File::StreamRecord* stream = parms->m_stream;
     LONG low = static_cast<LONG>(parms->m_pos);
     DWORD method = parms->m_posMode;
@@ -997,10 +1215,30 @@ bool System_File::SetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::F
         method = (method != 1) + 1;
     }
 
-    return SetFilePointer(stream->m_fileHandle, low, &high, method) != INVALID_SET_FILE_POINTER || !GetLastError();
+    DWORD result = SetFilePointer(stream->m_fileHandle, low, &high, method);
+    DWORD error = GetLastError();
+
+    if (result == INVALID_SET_FILE_POINTER && error) {
+        if (error == ERROR_HANDLE_DISK_FULL || error == ERROR_DISK_FULL) {
+            Blizzard::File::SetLastError(11);
+        } else {
+            Blizzard::File::SetLastError(8);
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
-// OFFSET: #0x00455D20
+// PROVEN: caf2fc39 IDENTICAL/NONE
+// OFFSET: 0x007E9EA0/0x1404F58E0
+bool System_File::SetPos(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
+    return System_File::Stacked::SetPos(parms);
+}
+
+// PROVEN: 7d1f9700 IDENTICAL/NONE
+// OFFSET: 0x007E9EC0/0x1404F58F0
 bool System_File::Write(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     return write_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);
 }
