@@ -94,7 +94,7 @@ int32_t CSimpleModel::AdvanceTime() {
 // OFFSET: [%0x0052EBA0, %0x0052EED0, %0x0052F170]
 CSimpleModel::~CSimpleModel() {
     if (this->m_camera) {
-        HandleClose(reinterpret_cast<HOBJECT>(this->m_camera));
+        CameraRelease(this->m_camera);
     }
 
     if (this->m_model) {
@@ -155,7 +155,7 @@ void CSimpleModel::SetCamera(CCamera* camera) {
     }
 
     if (this->m_camera) {
-        HandleClose(reinterpret_cast<HOBJECT>(this->m_camera));
+        CameraRelease(this->m_camera);
     }
 
     this->m_camera = newCamera;
@@ -176,7 +176,7 @@ void CSimpleModel::SetCameraByID(uint32_t id) {
     }
 
     if (this->m_camera) {
-        HandleClose(reinterpret_cast<HOBJECT>(this->m_camera));
+        CameraRelease(this->m_camera);
     }
 
     this->m_camera = NULL;
@@ -324,7 +324,7 @@ void CSimpleModel::SetCameraByIndex(uint32_t index) {
     }
 
     if (this->m_camera) {
-        HandleClose(reinterpret_cast<HOBJECT>(this->m_camera));
+        CameraRelease(this->m_camera);
     }
 
     this->m_camera = NULL;
@@ -416,8 +416,8 @@ void CSimpleModel::RenderModel(void* arg) {
     C3Vector cameraTarget;
 
     if (camera) {
-        DataMgrGetCoord(camera, 7, &cameraPos);
-        DataMgrGetCoord(camera, 8, &cameraTarget);
+        CameraGetCoord(camera, 7, &cameraPos);
+        CameraGetCoord(camera, 8, &cameraTarget);
         CameraSetupWorldProjection(camera, rect, 0);
     } else {
         C2Vector offset;

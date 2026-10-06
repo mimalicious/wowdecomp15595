@@ -306,11 +306,11 @@ void CGCharacterModelBase::ConfigureCamera() {
         CAaSphere sphere = this->m_model->GetBoundingSphere();
         camera = CameraCreate();
         CameraSetFloat(camera, 4, 0.5f);
-        CameraSetCoord(camera, 8, sphere.c, 0);
-        CameraSetCoord(camera, 7, C3Vector(5.5555558f, 0.0f, 2.4166667f), 0);
+        CameraSetCoord(camera, 8, sphere.c);
+        CameraSetCoord(camera, 7, C3Vector(5.5555558f, 0.0f, 2.4166667f));
         CameraSetFloat(camera, 3, 0.027777778f);
     }
 
     this->SetCamera(camera);
-    HandleClose(reinterpret_cast<HOBJECT>(camera));
+    CameraRelease(camera);
 }

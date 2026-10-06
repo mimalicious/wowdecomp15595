@@ -566,8 +566,8 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
         position.y = info.m_center.y;
         position.z = info.m_center.z;
         CameraSetFloat(camera, 4, 1.57f);
-        CameraSetCoord(camera, 8, target, 0);
-        CameraSetCoord(camera, 7, position, 0);
+        CameraSetCoord(camera, 8, target);
+        CameraSetCoord(camera, 7, position);
         CameraSetFloat(camera, 3, 0.027777778f);
     }
 
@@ -598,8 +598,8 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
     model->SetAnimating(1);
     C3Vector origin(0.0f, 0.0f, 0.0f);
     scene->Animate(origin);
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(camera), 7, &cameraPosition);
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(camera), 8, &cameraTarget);
+    CameraGetCoord(reinterpret_cast<CCamera*>(camera), 7, &cameraPosition);
+    CameraGetCoord(reinterpret_cast<CCamera*>(camera), 8, &cameraTarget);
 
     CRect window;
     window.minY = 0.0f;
@@ -785,7 +785,7 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
     GxXformSetViewport(viewportMinX, viewportMaxX, viewportMinY, viewportMaxY, viewportMinZ, viewportMaxZ);
 
     if (createdCamera) {
-        HandleClose(reinterpret_cast<HOBJECT>(createdCamera));
+        CameraRelease(createdCamera);
     }
 
     model->Release();

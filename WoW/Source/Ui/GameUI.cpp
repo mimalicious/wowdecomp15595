@@ -5391,7 +5391,7 @@ int32_t CGGameUI::StartCinematicCamera() {
     }
 
     C3Vector position(0.0f, 0.0f, 0.0f);
-    DataMgrGetCoord(static_cast<CDataMgr*>(camera->m_model->GetCameraByIndex(0)), 7, &position);
+    CameraGetCoord(camera->m_model->GetCameraByIndex(0), 7, &position);
 
     if ((previous.x - position.x) * (previous.x - position.x) + (previous.y - position.y) * (previous.y - position.y) + (previous.z - position.z) * (previous.z - position.z) > 900.0f) {
         World::Preload(position, 0);

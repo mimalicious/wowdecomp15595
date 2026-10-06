@@ -437,7 +437,7 @@ static bool CreateIntroScene(uint8_t classID, uint8_t raceID, C3Vector& position
             void* camera = model->GetCameraByIndex(0);
 
             if (camera) {
-                DataMgrGetCoord(static_cast<CDataMgr*>(camera), 7, &position);
+                CameraGetCoord(static_cast<CCamera*>(camera), 7, &position);
                 model->Release();
                 scene->Release();
                 return true;

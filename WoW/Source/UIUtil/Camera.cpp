@@ -4076,8 +4076,8 @@ int32_t CGCamera::FinishLoadingModel() {
     this->unk_0050 = HandleDuplicate(static_cast<HOBJECT>(camera));
     C3Vector position;
     C3Vector target;
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(this->unk_0050), 7, &position);
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(this->unk_0050), 8, &target);
+    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 7, &position);
+    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 8, &target);
     this->SetPositionAndTargetWithRoll(position, target, CameraGetFloat(reinterpret_cast<CCamera*>(this->unk_0050), 5));
     return 1;
 }
@@ -4096,8 +4096,8 @@ void CGCamera::CalcModelCamera(uint32_t time) {
     C3Vector position;
     C3Vector target;
     this->m_someTime = now;
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(this->unk_0050), 7, &position);
-    DataMgrGetCoord(reinterpret_cast<CDataMgr*>(this->unk_0050), 8, &target);
+    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 7, &position);
+    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 8, &target);
     this->SetPositionAndTargetWithRoll(position, target, CameraGetFloat(reinterpret_cast<CCamera*>(this->unk_0050), 5));
 }
 

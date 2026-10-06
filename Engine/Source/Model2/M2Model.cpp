@@ -652,7 +652,7 @@ void CM2Model::FreeExternalResources() {
             M2ModelCamera* camera = &this->m_cameras[i];
 
             if (camera->m_camera) {
-                HandleClose(reinterpret_cast<HOBJECT>(camera->m_camera));
+                CameraRelease(camera->m_camera);
             }
         }
     }
