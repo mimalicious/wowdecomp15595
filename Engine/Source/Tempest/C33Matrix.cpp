@@ -78,7 +78,7 @@ void C33Matrix::Scale(float x, float y, float z) {
     this->c2 = z * this->c2;
 }
 
-// OFFSET: %0x004D37A0
+// OFFSET: 0x004CD530
 void C33Matrix::Scale(const C3Vector& scale) {
     this->a0 = scale.x * this->a0;
     this->a1 = this->a1 * scale.x;
@@ -181,7 +181,7 @@ bool C33Matrix::ToEulerAnglesZYX(float& yaw, float& pitch, float& roll) const {
     return true;
 }
 
-// OFFSET: %0x004D3EB0
+// OFFSET: 0x004CDC40
 void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     float c = cos(yaw);
     float s = sin(yaw);
@@ -292,7 +292,7 @@ C33Matrix::C33Matrix(float a0, float a1, float a2, float b0, float b1, float b2,
     this->c2 = c2;
 }
 
-// OFFSET: %0x004D3CE0
+// OFFSET: 0x004CDA70
 void C33Matrix::RotateAroundY(float angle) {
     float c = cos(angle);
     float s = sin(angle);

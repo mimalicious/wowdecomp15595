@@ -95,7 +95,7 @@ void C3Spline::Frame(float t, C44Matrix& frame, EvalType type) {
     }
 }
 
-// OFFSET: #0x004C39D0
+// OFFSET: 0x004C9540
 void C3Spline::Evaluate(uint32_t seg, float t, const C44Matrix& basis, C3Vector& pos) {
     const float* row = &basis.a0;
 
@@ -113,7 +113,7 @@ void C3Spline::Evaluate(uint32_t seg, float t, const C44Matrix& basis, C3Vector&
     } while (i < 4);
 }
 
-// OFFSET: #0x004C3A70
+// OFFSET: 0x004C9620/0x1401044D0
 void C3Spline::EvaluateDer1(uint32_t seg, float t, const C44Matrix& basis, C3Vector& vel) {
     const float* row = &basis.a0;
 
@@ -131,7 +131,8 @@ void C3Spline::EvaluateDer1(uint32_t seg, float t, const C44Matrix& basis, C3Vec
     } while (i < 4);
 }
 
-// OFFSET: %0x004CF410
+// PROVEN: 82491039 IDENTICAL/DIFFERENT
+// OFFSET: 0x004C96F0/0x1401045A0
 float C3Spline::SegLength(uint32_t seg, const C44Matrix& basis) {
     float step = 0.05f;
     float length = 0.0f;
@@ -179,7 +180,8 @@ void C3Spline::ArclengthSegT(float t, const C44Matrix& basis, uint32_t segCount,
     segT = (target - before) / this->GetCachedSegLength(seg);
 }
 
-// OFFSET: #0x004C3C80
+// PROVEN: 330e9725 IDENTICAL/NONE
+// OFFSET: 0x004C9880/0x140104740
 float C3Spline::ILength(uint32_t segCount) {
     float length = 0.0f;
 
@@ -208,7 +210,7 @@ void C3Spline::GetPoints(C3Vector* points, uint32_t count) {
     }
 }
 
-// OFFSET: %0x004D10F0
+// OFFSET: 0x004CB3D0/0x140107000
 void C3Spline::ISetPoints(const C3Vector* points, uint32_t count) {
     this->m_pointCount = count;
 

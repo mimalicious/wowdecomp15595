@@ -1,6 +1,6 @@
 #include "Engine/Source/Tempest/CiRect.h"
 
-// OFFSET: %0x00688630
+// OFFSET: 0x00722590
 CiRect operator&(const CiRect& l, const CiRect& r) {
     int32_t maxX = l.maxX >= r.maxX ? r.maxX : l.maxX;
     int32_t maxY = l.maxY >= r.maxY ? r.maxY : l.maxY;

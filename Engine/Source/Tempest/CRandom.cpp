@@ -16,7 +16,7 @@ static const uint32_t s_rndTable[64] = {
     0x5603325A, 0x932BC5A3, 0x434B0F80, 0x3CE0A8F7, 0x2664D196, 0x4FCC45D7, 0xB5E9B0C8, 0xEA31D600
 };
 
-// OFFSET: %0x004CC990
+// OFFSET: 0x004C6700/0x1401019E0
 uint32_t CRandom::uint32_(CRndSeed& seed) {
     uint32_t vls = seed.rndvls;
     uint32_t acc = seed.rndacc;
@@ -115,7 +115,7 @@ C2Vector CRandom::C2Vector_(CRndSeed& seed) {
     return result;
 }
 
-// OFFSET: %0x004CCB70
+// OFFSET: 0x004C6870/0x140101AC0
 C3Vector CRandom::C3Vector_(CRndSeed& seed) {
     float c;
     float s;

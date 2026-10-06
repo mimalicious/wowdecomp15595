@@ -47,7 +47,7 @@ bool CAaBox::IntersectsXY(const CAaBox& box) const {
     return this->t.x >= box.b.x && this->t.y >= box.b.y && this->b.x <= box.t.x && this->b.y <= box.t.y;
 }
 
-// OFFSET: %0x004D4660
+// OFFSET: 0x004CE3F0/0x14010A360
 CAaBox CAaBox::Transform(const CAaBox& box, const C44Matrix& m) {
     const C3Vector& translation = *reinterpret_cast<const C3Vector*>(&m.d0);
     CAaBox result(translation, translation);
@@ -98,7 +98,7 @@ CAaBox CAaBox::Transform(const CAaBox& box, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: %0x004D4790
+// OFFSET: 0x004CE520
 CAaBox CAaBox::Bounding(const C3Vector* points, uint32_t count) {
     CAaBox result;
 

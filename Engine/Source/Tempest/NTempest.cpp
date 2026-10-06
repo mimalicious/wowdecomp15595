@@ -50,7 +50,7 @@ static float InterpolatedNoise2D(float x, float y) {
     return (top - bottom) * (y - floorY) + bottom;
 }
 
-// OFFSET: %0x006D7920
+// OFFSET: 0x00777050
 float NTempest::Distance(const CAaBox& box, const C3Vector& point) {
     float x = box.b.x <= point.x ? (box.t.x >= point.x ? point.x : box.t.x) : box.b.x;
     float y = box.b.y <= point.y ? (box.t.y >= point.y ? point.y : box.t.y) : box.b.y;
@@ -247,12 +247,12 @@ bool NTempest::Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector
     return HitBoundingBox(&ray.origin.x, &ray.dir.x, &box.b.x, &box.t.x, t, &hit->x);
 }
 
-// OFFSET: %0x00A47F70
+// OFFSET: 0x00B09180
 bool NTempest::Intersect2d(const CAaBox& box, const CAaSphere& sphere, SolidIntersect mode) {
     return Intersect2dBoxSphere(&box.b.x, &box.t.x, &sphere.c.x, sphere.r, mode);
 }
 
-// OFFSET: %0x00A47FA0
+// OFFSET: 0x00B091B0/0x1408CC850
 bool NTempest::Intersect(const C3Ray& ray, const C4Plane& plane, float* t, C3Vector* hit, float tolerance) {
     float denom = ray.dir.y * plane.n.y + ray.dir.z * plane.n.z + plane.n.x * ray.dir.x;
 
@@ -292,7 +292,7 @@ bool NTempest::Intersect(const C3Ray& ray, const C4Plane& plane, float* t, C3Vec
     return true;
 }
 
-// OFFSET: %0x00A48110
+// OFFSET: 0x00B09320/0x1408CC990
 bool NTempest::Intersect(const C3Vector& point, const C3Vector* verts, uint32_t count, C3Vector::EAxis axis) {
     uint32_t u = s_planeAxes[axis][0];
     uint32_t v = s_planeAxes[axis][1];
@@ -318,7 +318,7 @@ bool NTempest::Intersect(const C3Vector& point, const C3Vector* verts, uint32_t 
     return inside;
 }
 
-// OFFSET: %0x00A48470
+// OFFSET: 0x00B09680/0x1408CCD00
 bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint16_t* indices, float* t, C2Vector* uv, float tolerance) {
     float minBound = -tolerance;
     float maxBound = tolerance + 1.0f;
@@ -376,7 +376,7 @@ bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint16_t
     return true;
 }
 
-// OFFSET: %0x00A486D0
+// OFFSET: 0x00B098E0
 bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint32_t* indices, float* t, C2Vector* uv, float tolerance) {
     float minBound = -tolerance;
     float maxBound = tolerance + 1.0f;
@@ -434,7 +434,7 @@ bool NTempest::Intersect(const C3Ray& ray, const C3Vector* verts, const uint32_t
     return true;
 }
 
-// OFFSET: %0x00A48930
+// OFFSET: 0x00B08080
 float NTempest::DistanceSquared(const C3Segment& segment, const C3Vector& point, float* t) {
     float dx = point.x - segment.b.x;
     float dy = point.y - segment.b.y;
@@ -494,7 +494,7 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
     return best;
 }
 
-// OFFSET: %0x00A48BE0
+// OFFSET: 0x00B08460
 float NTempest::DistanceFromPolygon(const C3Vector& point, const C3Vector* verts, uint32_t count, const C4Plane& plane) {
     C3Vector hit = point;
     float dist = point.x * plane.n.x + plane.n.y * point.y + plane.n.z * point.z + plane.d;
@@ -520,7 +520,7 @@ float NTempest::DistanceFromPolygon(const C3Vector& point, const C3Vector* verts
     return DistanceFromPolygonEdge(point, verts, count);
 }
 
-// OFFSET: %0x00A47180
+// OFFSET: 0x00B07DA0/0x1408CAD30
 void RGBtoHSV(const C3Vector& rgb, C3Vector& hsv) {
     C3Vector::EAxis major = rgb.MajorAxis();
     C3Vector::EAxis minor = rgb.MinorAxis();

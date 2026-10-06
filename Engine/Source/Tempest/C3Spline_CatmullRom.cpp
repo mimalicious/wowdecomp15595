@@ -13,7 +13,7 @@ static const C44Matrix s_catmullRomBasis(-0.5f, 1.0f, -0.5f, 0.0f, 1.5f, -2.5f, 
 // STATIC: #0x00AC37F8
 static const C34Matrix s_catmullRomDer1(-1.5f, 2.0f, -0.5f, 4.5f, -5.0f, 0.0f, -4.5f, 4.0f, 0.5f, 1.5f, -1.0f, 0.0f);
 
-// OFFSET: %0x0040B240
+// OFFSET: 0x0040BEB0
 C3Spline_CatmullRom::C3Spline_CatmullRom() {
     this->m_splineMode = 1;
 }
@@ -24,7 +24,7 @@ uint32_t C3Spline_CatmullRom::GetSplineMode() {
     return this->m_splineMode;
 }
 
-// OFFSET: #0x004C3FD0
+// OFFSET: 0x004C9C10/0x140104BB0
 void C3Spline_CatmullRom::Evaluate(uint32_t seg, float t, C3Vector& pos) {
     uint32_t mode = this->m_splineMode;
 
@@ -54,7 +54,7 @@ void C3Spline_CatmullRom::Evaluate(uint32_t seg, float t, C3Vector& pos) {
     }
 }
 
-// OFFSET: %0x004CFDA0
+// OFFSET: 0x004CA080/0x140105080
 float C3Spline_CatmullRom::SegLength(uint32_t seg) {
     if (!this->m_splineMode) {
         const C3Vector& a = this->Point(seg + 1);
@@ -94,7 +94,8 @@ void C3Spline_CatmullRom::IValidateCache() {
     }
 }
 
-// OFFSET: %0x004CFEB0
+// PROVEN: 6aab6aa4 IDENTICAL/NONE
+// OFFSET: 0x004CA190
 void C3Spline_CatmullRom::IPosArclength(float t, C3Vector& pos) {
     uint32_t seg;
     float segT;
@@ -216,7 +217,7 @@ void C3Spline_CatmullRom::IFrameArclength(float t, C44Matrix& frame) {
     frame.c2 = frame.a0 * frame.b1 - frame.a1 * frame.b0;
 }
 
-// OFFSET: %0x004D0320
+// OFFSET: 0x004CA600/0x140105A40
 uint32_t C3Spline_CatmullRom::IGetPoints(float t, C3Vector* points, uint32_t count) {
     uint32_t pointCount = this->m_pointCount;
     uint32_t seg;
@@ -241,7 +242,7 @@ uint32_t C3Spline_CatmullRom::IGetPoints(float t, C3Vector* points, uint32_t cou
     return remaining;
 }
 
-// OFFSET: %0x004D11C0
+// OFFSET: 0x004CB4A0/0x1401070F0
 void C3Spline_CatmullRom::ISetPoints(const C3Vector* points, uint32_t count) {
     if (count) {
         uint32_t segCount = count - 3;

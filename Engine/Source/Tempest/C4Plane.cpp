@@ -28,7 +28,7 @@ bool operator!=(const C4Plane& l, const C4Plane& r) {
     return l.n.x != r.n.x || l.n.y != r.n.y || l.n.z != r.n.z || l.d != r.d;
 }
 
-// OFFSET: %0x00A47800
+// OFFSET: 0x00B08940/0x1408CBF70
 void C4Plane::Transform(const C44Matrix& matrix) {
     float d = -this->d;
     C3Vector point(this->n.x * d, this->n.y * d, this->n.z * d);

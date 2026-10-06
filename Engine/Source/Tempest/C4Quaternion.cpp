@@ -61,7 +61,7 @@ C4Quaternion::C4Quaternion(const C4QuaternionCompressed& compressed) {
     this->w = fabs(length - 1.0f) < 0.00000095367432f ? 0.0f : sqrt(1.0f - length);
 }
 
-// OFFSET: %0x004D1690
+// OFFSET: 0x004CB6A0/0x1401072A0
 void C4Quaternion::FromAngleAxis(float angle, const C3Vector& axis) {
     float half = angle * 0.5f;
     float c = cos(half);
@@ -72,7 +72,7 @@ void C4Quaternion::FromAngleAxis(float angle, const C3Vector& axis) {
     this->z = s * axis.z;
 }
 
-// OFFSET: %0x004D1710
+// OFFSET: 0x004CB720
 C4Quaternion C4Quaternion::Slerp(float t, const C4Quaternion& a, const C4Quaternion& b) {
     float cosine = a.z * b.z + a.y * b.y + a.x * b.x + b.w * a.w;
     float sign = 1.0f;
@@ -136,7 +136,7 @@ C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quatern
     return result;
 }
 
-// OFFSET: %0x004D1D00
+// OFFSET: 0x004CBD10/0x140107A90
 void C4Quaternion::FromRotationMatrix(const C33Matrix& m) {
     FromRotationMatrixImpl<3>(m.a0 + m.b1 + m.c2, *this, &m.a0);
 }
@@ -162,7 +162,7 @@ C4Quaternion operator*(const C4Quaternion& l, const C4Quaternion& r) {
     return result;
 }
 
-// OFFSET: %0x0041F340
+// OFFSET: 0x0041EE80
 C4QuaternionCompressed& C4QuaternionCompressed::operator=(const C4Quaternion& q) {
     int32_t sign = q.w < 0.0f ? -1 : 1;
     int32_t y = (sign * FloatToInt64(q.y * 1048576.0f)) & 0x1FFFFF;

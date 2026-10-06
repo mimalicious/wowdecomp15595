@@ -34,7 +34,7 @@ void CImVector::InterpColor(int32_t t, const CImVector* src) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
-// OFFSET: #0x009851A0
+// OFFSET: 0x00B08000/0x1408CAFD0
 CImVector& CImVector::operator=(const C3Vector& color) {
     this->a = 0xFF;
     this->r = static_cast<uint8_t>(CMath::fint_(color.x * 255.0f));

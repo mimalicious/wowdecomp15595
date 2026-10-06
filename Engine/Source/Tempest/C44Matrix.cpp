@@ -114,7 +114,7 @@ bool operator!=(const C44Matrix& l, const C44Matrix& r) {
     return l.a0 != r.a0 || l.a1 != r.a1 || l.a2 != r.a2 || l.a3 != r.a3 || l.b0 != r.b0 || l.b1 != r.b1 || l.b2 != r.b2 || l.b3 != r.b3 || l.c0 != r.c0 || l.c1 != r.c1 || l.c2 != r.c2 || l.c3 != r.c3 || l.d0 != r.d0 || l.d1 != r.d1 || l.d2 != r.d2 || l.d3 != r.d3;
 }
 
-// OFFSET: %0x004CCC40
+// OFFSET: 0x004C6F90/0x1401022A0
 float C44Matrix::Determinant() const {
     float b0 = this->b0;
     float b1 = this->b1;
@@ -336,7 +336,7 @@ C44Matrix& C44Matrix::operator*=(const C44Matrix& m) {
     return *this;
 }
 
-// OFFSET: #0x004C23A0
+// OFFSET: 0x004C76A0
 C44Matrix& C44Matrix::operator*=(float s) {
     *this = *this * s;
     return *this;
@@ -404,12 +404,12 @@ C44Matrix C44Matrix::Adjoint() const {
     return result;
 }
 
-// OFFSET: %0x004CE3B0
+// OFFSET: 0x004C8690/0x140103340
 C44Matrix C44Matrix::Inverse(float determinant) const {
     return this->Adjoint() * (1.0f / determinant);
 }
 
-// OFFSET: %0x004CE4C0
+// OFFSET: 0x004C87A0/0x140103380
 C44Matrix C44Matrix::AffineInverse() const {
     C33Matrix rotation(*this);
 
@@ -449,7 +449,7 @@ void C44Matrix::InvertTranslation() {
     this->d2 = this->c2 * z + this->b2 * y + this->a2 * x;
 }
 
-// OFFSET: %0x004CE600
+// OFFSET: 0x004C88E0/0x140103500
 C44Matrix C44Matrix::AffineInverse(float scale) const {
     if (fabs(scale - 1.0f) < 0.00000095367432f) {
         return this->AffineInverse();

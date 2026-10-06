@@ -9,7 +9,7 @@ CFacet::CFacet(float value) {
     this->Set(value);
 }
 
-// OFFSET: %0x004D3340
+// OFFSET: 0x004CD170
 CFacet::CFacet(const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
     this->v[0] = v0;
     this->v[1] = v1;

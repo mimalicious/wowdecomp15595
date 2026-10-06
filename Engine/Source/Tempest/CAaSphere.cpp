@@ -80,7 +80,7 @@ CAaBox CAaSphere::FindExtrema(const CAaSphere* spheres, uint32_t count) {
     return result;
 }
 
-// OFFSET: %0x00A48FD0
+// OFFSET: 0x00B09DF0
 CAaSphere CAaSphere::BoundingAccurate(const CAaSphere* spheres, uint32_t count) {
     CAaSphere result;
 

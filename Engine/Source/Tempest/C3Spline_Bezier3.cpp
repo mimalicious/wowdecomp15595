@@ -17,7 +17,8 @@ void C3Spline_Bezier3::ParametricSegT(float t, uint32_t& seg, float& segT) {
     segT = (t - 1.0f / segCount * seg) * segCount;
 }
 
-// OFFSET: %0x004CF700
+// PROVEN: 91dbe5e0 IDENTICAL/UNPROVEN
+// OFFSET: 0x004C99E0/0x1401048D0
 void C3Spline_Bezier3::EvaluateDer1(uint32_t seg, float t, C3Vector& vel) {
     // STATIC: #0x00B4A308
     static const C34Matrix s_bezier3Der1(-3.0f, 6.0f, -3.0f, 9.0f, -12.0f, 3.0f, -9.0f, 6.0f, 0.0f, 3.0f, 0.0f, 0.0f);
@@ -50,7 +51,8 @@ void C3Spline_Bezier3::IPosParametric(float t, C3Vector& pos) {
     C3Spline::Evaluate(3 * seg, segT, s_bezier3Basis, pos);
 }
 
-// OFFSET: %0x004D0650
+// PROVEN: 15d7cb10 IDENTICAL/NONE
+// OFFSET: 0x004CA930
 void C3Spline_Bezier3::IPosArclength(float t, C3Vector& pos) {
     uint32_t seg;
     float segT;
@@ -114,7 +116,7 @@ void C3Spline_Bezier3::IFrameArclength(float t, C44Matrix& frame) {
     frame.c2 = frame.b1 * frame.a0 - frame.b0 * frame.a1;
 }
 
-// OFFSET: %0x004D1170
+// OFFSET: 0x004CB450/0x140107080
 void C3Spline_Bezier3::ISetPoints(const C3Vector* points, uint32_t count) {
     uint32_t segCount = count / 3;
     uint32_t pointCount = 3 * (segCount - 1) + 4 * (segCount > 0);

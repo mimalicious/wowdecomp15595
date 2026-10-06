@@ -269,7 +269,7 @@ double CMath::exp2_(double x) {
 }
 
 
-// OFFSET: %0x004D1430
+// OFFSET: 0x004C6B30
 bool CMath::solvequad_(float a, float b, float c, float& r0, float& r1) {
     float fourAC = a * c * 4.0f;
     float bb = b * b;
@@ -463,7 +463,7 @@ uint32_t __fastcall CSoftFloat::CountLeadingZeros(uint32_t value) {
 #endif
 }
 
-// OFFSET: %0x007D7BC0
+// OFFSET: 0x00B2EDA0/0x1408F7860
 CSoftFloat operator*(const CSoftFloat& l, const CSoftFloat& r) {
     uint32_t a = l.m_bits;
     uint32_t b = r.m_bits;
@@ -493,7 +493,7 @@ CSoftFloat operator*(const CSoftFloat& l, const CSoftFloat& r) {
     return result;
 }
 
-// OFFSET: %0x007D7C80
+// OFFSET: 0x00B2EE60/0x1408F7950
 CSoftFloat operator+(const CSoftFloat& l, const CSoftFloat& r) {
     uint32_t a = l.m_bits;
     uint32_t expA = a & 0x7F800000;
@@ -559,7 +559,7 @@ CSoftFloat operator+(const CSoftFloat& l, const CSoftFloat& r) {
     return result;
 }
 
-// OFFSET: %0x007D7D70
+// OFFSET: 0x00B2EF50
 CSoftFloat CSoftFloat::Reciprocal(const CSoftFloat& value) {
     uint32_t bits = value.m_bits;
     uint32_t mantissa = bits & 0x7FFFFF;
@@ -576,7 +576,7 @@ CSoftFloat CSoftFloat::Reciprocal(const CSoftFloat& value) {
     return result;
 }
 
-// OFFSET: %0x007D7DE0
+// OFFSET: 0x00B2EFC0/0x1408F7A80
 CSoftFloat CSoftFloat::Floor(const CSoftFloat& value) {
     uint32_t bits = value.m_bits;
     int32_t exp = static_cast<int32_t>((bits >> 23) & 0xFF) - 127;
@@ -725,7 +725,7 @@ void CMath::sincos_(float x, float* s, float* c) {
     *c = (whole & 1) ? -value : value;
 }
 
-// OFFSET: %0x005808C0
+// OFFSET: 0x00571660
 int32_t Clamp(int32_t value, int32_t min, int32_t max) {
     uint32_t offset = value - min;
     uint32_t range = max - min;
