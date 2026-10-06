@@ -21,7 +21,7 @@
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/WorldClient/CPortalView.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 
 const char* const SnowFlakeParticleBuffer::s_packetName = ".?AU?$Packet@UFlake@Snow@@$0BIAA@$00@@";

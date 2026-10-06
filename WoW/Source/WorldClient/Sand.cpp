@@ -12,7 +12,7 @@
 #include "Engine/Source/Tempest/CRect.h"
 #include "WoW/Source/WorldClient/CPortalView.h"
 #include "WoW/Source/WorldClient/DayNight__DNInfo.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/MapWeather.h"
 

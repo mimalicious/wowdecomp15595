@@ -1,7 +1,7 @@
 #include "LiquidWaveManager.h"
 #include <cstring>
 #include "WoW/Source/WorldClient/World.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include <cmath>
 #include <cstdlib>

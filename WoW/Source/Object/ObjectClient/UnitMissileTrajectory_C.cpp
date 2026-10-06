@@ -12,7 +12,7 @@
 #include "WoW/Source/DB/Rec/SpellVisualRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitRec.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/DB/Rec/VehicleRec.h"
 #include "WoW/Source/Object/ObjectClient/Vehicle_C.h"
 #include "WoW/Source/UIUtil/InputControl.h"

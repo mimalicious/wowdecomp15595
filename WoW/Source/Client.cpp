@@ -100,7 +100,7 @@
 #include "WoW/Source/UIUtil/InputControl.h"
 #include "WoW/Source/UIUtil/SmartScreenRect.h"
 #include "WoW/Source/WorldClient/AreaList.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapWeather.h"
 #include "WoW/Source/WorldClient/shadow.h"
@@ -444,8 +444,11 @@ static int32_t PollNet(const void* data, void* param) {
 
 // OFFSET: #0x004020E0
 static int32_t EnableCallback(const void* data, void* param) {
-    const EVENT_DATA_UPDATE* update = static_cast<const EVENT_DATA_UPDATE*>(data);
-    FrameTime::Update(update->m_elapsedSec, update->m_time);
+    const EVENT_DATA_IDLE* idle = static_cast<const EVENT_DATA_IDLE*>(data);
+    CWorld::s_elapsedTimeSec += idle->m_elapsedSec;
+    int32_t ticks = Weather::TimeToFixed(idle->m_elapsedSec);
+    CWorld::s_elapsedTicks += ticks;
+    CWorld::s_tickTimeFixed = ticks;
     return 1;
 }
 
@@ -981,7 +984,8 @@ static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uin
 
 // OFFSET: #0x00404130
 static void InitializeClient() {
-    EventRegister(EVENT_ID_UPDATE, EnableCallback);
+    FrameTime::Initialize(0);
+    EventRegister(EVENT_ID_IDLE, EnableCallback);
     SysMsgInitialize();
     WowSysMessageOutput::Initialize();
     ClientRegisterConsoleCommands();

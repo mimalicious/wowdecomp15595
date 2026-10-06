@@ -7,7 +7,7 @@
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/TradeFrame.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/Ui/Types.h"

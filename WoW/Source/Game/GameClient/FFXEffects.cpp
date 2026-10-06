@@ -22,7 +22,7 @@
 #include "WoW/Source/Game/GameClient/PassNetherBlur.h"
 #include "WoW/Source/Game/GameClient/PassPropagateFog.h"
 #include "WoW/Source/WorldClient/DayNight__DNInfo.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 
 // STATIC: %0x00C2B574
 static float s_twoPi = 6.2831855f;

@@ -82,14 +82,14 @@ class EvtContext : public TSingletonInstanceId<EvtContext, 8> {
     /* 0064 */ uint32_t m_schedSmoothWeight;
     /* 0068 */ int32_t m_schedRebalance;
     /* 006C */ TSExplicitList<EvtHandler, offsetof(EvtHandler, m_link)> m_queueHandlerList[EVENTIDS];
-    /* 021C */ TSExplicitList<EvtMessage, offsetof(EvtMessage, m_link)> m_queueMessageList;
-    /* 0228 */ uint32_t m_queueSyncButtonState;
-    /* 022C */ TSExplicitList<EvtKeyDown, offsetof(EvtKeyDown, m_link)> m_queueSyncKeyDownList;
-    /* 0238 */ EvtIdTable<EvtTimer*> m_timerIdTable;
-    /* 0258 */ TSPriorityQueue<EvtTimer> m_timerQueue;
-    /* 026C */ HPROPCONTEXT m_propContext;
-    /* 0270 */ void* m_callContext;
-    /* 0274 */ int32_t m_startWatchdog;
+    /* 0210 */ TSExplicitList<EvtMessage, offsetof(EvtMessage, m_link)> m_queueMessageList;
+    /* 021C */ uint32_t m_queueSyncButtonState;
+    /* 0220 */ TSExplicitList<EvtKeyDown, offsetof(EvtKeyDown, m_link)> m_queueSyncKeyDownList;
+    /* 022C */ EvtIdTable<EvtTimer*> m_timerIdTable;
+    /* 024C */ TSPriorityQueue<EvtTimer> m_timerQueue;
+    /* 0260 */ HPROPCONTEXT m_propContext;
+    /* 0264 */ void* m_callContext;
+    /* 0268 */ int32_t m_startWatchdog;
 
     EvtContext(uint32_t flags, uint32_t idleTime, uint32_t schedWeight, void* callContext, int32_t startWatchdog);
     ~EvtContext();

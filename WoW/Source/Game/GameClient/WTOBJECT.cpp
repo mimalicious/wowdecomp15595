@@ -6,7 +6,7 @@
 #include "Engine/Source/Gx/CGxBuf.h"
 #include "Engine/Source/Gx/CGxVertexPC.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include <typeinfo>
 
 // STATIC: #0x00D38074

@@ -2,7 +2,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include <new>
 #include <typeinfo>
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "Engine/Source/lua-5.1/src/lua.h"

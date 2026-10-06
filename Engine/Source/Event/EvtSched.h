@@ -34,7 +34,6 @@ void DestroySchedulerThread(uint32_t hThread);
 void DetachContextFromThread(uint32_t hThread, EvtContext* context);
 void EventForceIdleProcessing();
 EvtContext* GetNextContext(uint32_t hThread);
-void IEvtDispatchUpdate(EvtContext* context, uint32_t currTime, float elapsedSec);
 HEVENTCONTEXT IEvtSchedulerCreateContext(int32_t interactive, EVENTHANDLERFUNC initializeHandler, EVENTHANDLERFUNC destroyHandler, uint32_t idleTime, uint32_t debugFlags);
 void IEvtSchedulerDestroy();
 void IEvtSchedulerInitialize(uint32_t threadCount, int32_t netServer);

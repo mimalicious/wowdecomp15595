@@ -81,7 +81,7 @@
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/WorldClient/CWorldMath.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapEntity.h"
 #include "WoW/Source/WorldClient/World.h"

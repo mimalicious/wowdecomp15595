@@ -8,6 +8,7 @@
 #include "Engine/Source/Event/EvtSched.h"
 #include "Engine/Source/Event/EvtThread.h"
 #include "Engine/Source/Event/EvtTimer.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Os/OsCall.h"
 #include "Engine/Source/Os/OsTcp.h"
 #include "Engine/Source/Os/System.h"
@@ -115,21 +116,6 @@ int32_t SynthesizeInitialize(EvtContext* context) {
     return 1;
 }
 
-// OFFSET: %0x008053D0
-void IEvtDispatchUpdate(EvtContext* context, uint32_t currTime, float elapsedSec) {
-    context->m_critsect.Enter();
-    int32_t closed = context->m_schedState == SCHEDSTATE_CLOSED;
-    context->m_critsect.Leave();
-
-    if (!closed) {
-        EVENT_DATA_UPDATE data;
-        data.m_elapsedSec = elapsedSec;
-        data.m_time = currTime;
-
-        IEvtQueueDispatch(context, EVENT_ID_UPDATE, &data);
-    }
-}
-
 // OFFSET: %0x00805420
 void SynthesizeIdle(EvtContext* context, uint32_t currTime, float elapsedSec) {
     context->m_critsect.Enter();
@@ -202,7 +188,7 @@ void EventForceIdleProcessing() {
     float elapsedSec = static_cast<float>(static_cast<int32_t>(currTime - context->m_schedLastIdle)) * 0.001f;
     context->m_schedLastIdle = currTime;
 
-    IEvtDispatchUpdate(context, currTime, elapsedSec);
+    FrameTime::Update(elapsedSec, currTime);
     IEvtTimerDispatch(context);
     SynthesizePoll(context);
     IEvtQueueDispatchAll(context);
@@ -589,7 +575,7 @@ int32_t SchedulerThreadProcProcess(uint32_t hThread, int32_t* watchdogStarted) {
         float elapsedSec = static_cast<float>(static_cast<int32_t>(currTime - context->m_schedLastIdle)) * 0.001f;
         context->m_schedLastIdle = currTime;
 
-        IEvtDispatchUpdate(context, currTime, elapsedSec);
+        FrameTime::Update(elapsedSec, currTime);
         IEvtTimerDispatch(context);
 
         if (context->m_schedFlags & 2) {

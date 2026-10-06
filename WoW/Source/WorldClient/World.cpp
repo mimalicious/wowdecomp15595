@@ -72,7 +72,7 @@
 #include "WoW/Source/WorldClient/ClipInfo.h"
 #include "WoW/Source/WorldClient/DayNight__DNInfo.h"
 #include "WoW/Source/WorldClient/DetailDoodad.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/LiquidEnvironment.h"
 #include "WoW/Source/WorldClient/LiquidGeomFactories.h"
 #include "WoW/Source/WorldClient/Map.h"
@@ -219,6 +219,9 @@ int32_t CWorld::s_elapsedTicks;
 
 // STATIC: #0x00CD769C
 float CWorld::s_elapsedTimeSec;
+
+// STATIC: #0x00CD7698
+int32_t CWorld::s_tickTimeFixed;
 
 // STATIC: #0x00CD774C
 uint32_t CWorld::enables;

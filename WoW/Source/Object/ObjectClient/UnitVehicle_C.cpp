@@ -11,7 +11,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 #include "WoW/Source/UIUtil/Camera.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 
 // OFFSET: #0x0074C650
 CGUnit_C* CGUnit_C::FindRootVehicle(CGUnit_C* stop) {

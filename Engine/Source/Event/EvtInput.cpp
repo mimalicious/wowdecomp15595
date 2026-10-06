@@ -134,7 +134,7 @@ void IEvtDispatchJoystickAxis(EvtContext* context, int32_t id, int32_t value, ui
     data.m_value = value < 0 ? -(value * -(1.0f / 32768.0f)) : value * (1.0f / 32767.0f);
     data.m_time = time;
 
-    IEvtQueueDispatch(context, EVENT_ID_19, &data);
+    IEvtQueueDispatch(context, EVENT_ID_18, &data);
 }
 
 // PROVEN: f19241a6 IDENTICAL
@@ -304,7 +304,7 @@ void IEvtDispatchJoystickStick(EvtContext* context, int32_t id, int32_t x, int32
     data.m_y = stickY;
     data.m_time = time;
 
-    IEvtQueueDispatch(context, EVENT_ID_18, &data);
+    IEvtQueueDispatch(context, EVENT_ID_17, &data);
 }
 
 // OFFSET: %0x00807930
@@ -430,7 +430,7 @@ void IEvtDispatchInput(EvtContext* context, OSINPUT id, int32_t* param, int32_t*
             data.m_state = 1;
             data.m_time = param[3];
 
-            IEvtQueueDispatch(context, EVENT_ID_20, &data);
+            IEvtQueueDispatch(context, EVENT_ID_19, &data);
             break;
         }
 
@@ -441,7 +441,7 @@ void IEvtDispatchInput(EvtContext* context, OSINPUT id, int32_t* param, int32_t*
             data.m_state = 0;
             data.m_time = param[3];
 
-            IEvtQueueDispatch(context, EVENT_ID_21, &data);
+            IEvtQueueDispatch(context, EVENT_ID_20, &data);
             break;
         }
 
@@ -452,7 +452,7 @@ void IEvtDispatchInput(EvtContext* context, OSINPUT id, int32_t* param, int32_t*
             data.m_state = param[1];
             data.m_time = param[3];
 
-            IEvtQueueDispatch(context, EVENT_ID_22, &data);
+            IEvtQueueDispatch(context, EVENT_ID_21, &data);
             break;
         }
 

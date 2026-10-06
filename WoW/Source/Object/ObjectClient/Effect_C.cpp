@@ -19,7 +19,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Common/ComponentCore/CharacterComponent.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CAaBox.h"

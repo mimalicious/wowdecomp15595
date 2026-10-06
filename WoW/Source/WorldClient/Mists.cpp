@@ -14,7 +14,7 @@
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "WoW/Source/WorldClient/DayNight__DNInfo.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/MapWeather.h"
 #include "WoW/Source/WorldClient/World.h"
 
@@ -145,8 +145,8 @@ void Mists::Render() {
     uint32_t now = CWorld::s_elapsedTicks;
     C2Vector texCoords[4] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(1.0f, 1.0f), C2Vector(0.0f, 1.0f) };
     float tickSec = FrameTime::s_tickTimeSec;
-    uint32_t prevTick = CWorld::s_elapsedTicks - FrameTime::s_tickTimeFixed;
-    uint32_t tickFixed = FrameTime::s_tickTimeFixed;
+    uint32_t prevTick = CWorld::s_elapsedTicks - CWorld::s_tickTimeFixed;
+    uint32_t tickFixed = CWorld::s_tickTimeFixed;
     float tickSecSquared = FrameTime::s_tickTimeSec * FrameTime::s_tickTimeSec;
     this->m_spawnAccum = FrameTime::s_tickTimeSec * this->m_spawnRate + this->m_spawnAccum;
 

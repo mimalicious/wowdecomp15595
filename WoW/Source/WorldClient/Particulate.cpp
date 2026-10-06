@@ -15,7 +15,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/LiquidTypeRec.h"
-#include "WoW/Source/WorldClient/FrameTime.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 
 // STATIC: #0x00A3F970

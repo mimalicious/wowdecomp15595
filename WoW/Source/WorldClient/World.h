@@ -534,6 +534,7 @@ class CWorld {
     static int32_t frameCnt;
     static int32_t s_elapsedTicks;
     static float s_elapsedTimeSec;
+    static int32_t s_tickTimeFixed;
     static uint32_t enables;
     static uint32_t enables2;
     static uint32_t m_M2PassMask;
