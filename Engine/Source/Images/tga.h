@@ -48,21 +48,21 @@ struct TGAFooter {
 class CImageFileImpl {
     public:
     virtual ~CImageFileImpl();
+    virtual uint32_t ComputeAlphaDepth() const = 0;
+    virtual int32_t HasNonBlackZeroAlphaPixels() const = 0;
     virtual uint32_t Width() const = 0;
     virtual uint32_t Height() const = 0;
     virtual uint32_t Size() const = 0;
     virtual int32_t BytesPerPixel() const = 0;
     virtual uint32_t Bytes() const = 0;
     virtual uint8_t AlphaBits() const = 0;
-    virtual uint32_t ComputeAlphaDepth() const = 0;
-    virtual int32_t HasNonBlackZeroAlphaPixels() const = 0;
     virtual int32_t IsTopDown() const = 0;
     virtual int32_t SetTopDown(int32_t topDown) = 0;
     virtual int32_t AddAlphaChannel(const void* alpha) = 0;
     virtual const uint8_t* Image() const = 0;
     virtual uint8_t* Image() = 0;
-    virtual const TGA32Pixel* ImageTGA32Pixel() const = 0;
-    virtual TGA32Pixel* ImageTGA32Pixel() = 0;
+    virtual const TGA32Pixel* ImageBGRA32Pixel() const = 0;
+    virtual TGA32Pixel* ImageBGRA32Pixel() = 0;
     virtual int32_t LoadImageData(uint32_t flags) = 0;
     virtual int32_t Open(const char* fileName, int32_t flags) = 0;
     virtual void Close() = 0;
@@ -72,28 +72,31 @@ class CTgaFile : public CImageFileImpl {
     public:
     /* 0004 */ SFileImpl* m_file;
     /* 0008 */ uint8_t* m_image;
-    /* 000C */ TGAHeader m_header;
-    /* 0020 */ uint8_t* m_addlHeaderData;
-    /* 0024 */ TGAFooter m_footer;
-    /* 0040 */ uint32_t m_imageBytes;
-    /* 0044 */ uint8_t* m_colorMap;
+    /* 000C */ TGAHeader* m_header;
+    /* 0010 */ uint8_t* m_addlHeaderData;
+    /* 0014 */ TGAFooter m_footer;
+    /* 0030 */ uint32_t m_imageBytes;
+    /* 0034 */ uint8_t* m_colorMap;
+    /* 0038 */ uint8_t* m_fileData;
+    /* 003C */ uint8_t* m_data;
+    /* 0040 */ uint32_t m_dataSize;
 
     virtual ~CTgaFile();
+    virtual uint32_t ComputeAlphaDepth() const;
+    virtual int32_t HasNonBlackZeroAlphaPixels() const;
     virtual uint32_t Width() const;
     virtual uint32_t Height() const;
     virtual uint32_t Size() const;
     virtual int32_t BytesPerPixel() const;
     virtual uint32_t Bytes() const;
     virtual uint8_t AlphaBits() const;
-    virtual uint32_t ComputeAlphaDepth() const;
-    virtual int32_t HasNonBlackZeroAlphaPixels() const;
     virtual int32_t IsTopDown() const;
     virtual int32_t SetTopDown(int32_t topDown);
     virtual int32_t AddAlphaChannel(const void* alpha);
     virtual const uint8_t* Image() const;
     virtual uint8_t* Image();
-    virtual const TGA32Pixel* ImageTGA32Pixel() const;
-    virtual TGA32Pixel* ImageTGA32Pixel();
+    virtual const TGA32Pixel* ImageBGRA32Pixel() const;
+    virtual TGA32Pixel* ImageBGRA32Pixel();
     virtual int32_t LoadImageData(uint32_t flags);
     virtual int32_t Open(const char* fileName, int32_t flags);
     virtual void Close();
@@ -111,8 +114,9 @@ class CTgaFile : public CImageFileImpl {
     int32_t ReadRleImage(uint32_t flags);
     int32_t RemoveAlphaChannels();
     int32_t RleCompressLine(uint8_t** source, uint8_t** dest);
-    int32_t RLEDecompressImage(uint8_t* rleData, uint8_t* data);
+    int32_t RLEDecompressImage(uint8_t* rleData, uint32_t size, uint8_t* data);
     int32_t SetImage(const void* bits, uint16_t width, uint16_t height, uint8_t pixelDepth, uint8_t alphaBits, int32_t topBottomOrder, int32_t leftRightOrder);
+    int32_t SetToData(uint8_t* data, uint32_t size);
     int32_t ValidateColorDepth();
     int32_t Write(const char* fileName);
 };

@@ -468,6 +468,11 @@ int32_t STORMAPI SFile::OpenPathAsArchive(SArchive* archive, const char* path, i
     return opened;
 }
 
+// OFFSET: 0x007A6550
+int32_t STORMAPI SFile::Read(SFileImpl* file, void* buffer, uint32_t count, uint32_t* bytesRead) {
+    return SFileReadFile(file, buffer, count, bytesRead, NULL, 0);
+}
+
 // OFFSET: %0x00708880
 int32_t STORMAPI SFile::ReadAtPosition(SFileImpl* file, void* buffer, uint32_t offset, uint32_t count, uint32_t* bytesRead) {
     int32_t result = 0;

@@ -14,54 +14,65 @@ CImageFileImpl::~CImageFileImpl() {
 CTgaFile::CTgaFile() {
     this->m_file = NULL;
     this->m_image = NULL;
+    this->m_header = NULL;
     this->m_addlHeaderData = NULL;
     this->m_imageBytes = 0;
     this->m_colorMap = NULL;
+    this->m_fileData = NULL;
+    this->m_data = NULL;
 }
 
-// OFFSET: %0x00489E30
+// OFFSET: 0x00481AE0
 CTgaFile::~CTgaFile() {
     this->Close();
 }
 
-// OFFSET: %0x00489E50
+// PROVEN: 152e3338 IDENTICAL
+// OFFSET: 0x00481A60
 uint32_t CTgaFile::Width() const {
-    return this->m_header.m_wWidth;
+    return this->m_header->m_wWidth;
 }
 
-// OFFSET: %0x00489E60
+// PROVEN: ef0d8cfc IDENTICAL
+// OFFSET: 0x00481A70
 uint32_t CTgaFile::Height() const {
-    return this->m_header.m_wHeight;
+    return this->m_header->m_wHeight;
 }
 
-// OFFSET: %0x00489E70
+// PROVEN: 9e903054 IDENTICAL
+// OFFSET: 0x00481A80
 uint32_t CTgaFile::Size() const {
     return this->Width() * this->Height();
 }
 
-// OFFSET: %0x00489E90
+// PROVEN: d33e0123 IDENTICAL
+// OFFSET: 0x00481AA0
 int32_t CTgaFile::BytesPerPixel() const {
-    return (this->m_header.m_bPixelDepth + 7) / 8;
+    return (this->m_header->m_bPixelDepth + 7) / 8;
 }
 
-// OFFSET: %0x00489EB0
+// PROVEN: f37cdf9c IDENTICAL
+// OFFSET: 0x00529DA0
 uint32_t CTgaFile::Bytes() const {
     return this->m_imageBytes;
 }
 
-// OFFSET: %0x00489EC0
+// PROVEN: 26518593 IDENTICAL
+// OFFSET: 0x00481AC0
 uint8_t CTgaFile::AlphaBits() const {
-    return this->m_header.m_desc.m_bAlphaChannelBits;
+    return this->m_header->m_desc.m_bAlphaChannelBits;
 }
 
-// OFFSET: %0x00489ED0
+// PROVEN: f3be8934 IDENTICAL
+// OFFSET: 0x00481AD0
 int32_t CTgaFile::IsTopDown() const {
-    return this->m_header.m_desc.m_bTopBottomOrder;
+    return this->m_header->m_desc.m_bTopBottomOrder;
 }
 
-// OFFSET: %0x00644550
+// PROVEN: a16fe6b9 IDENTICAL
+// OFFSET: 0x00637FF0
 uint32_t CTgaFile::ColorMapEntryBytes() {
-    int32_t bits = this->m_header.m_bColorMapEntrySize / 3;
+    int32_t bits = this->m_header->m_bColorMapEntrySize / 3;
 
     if (bits >= 8) {
         bits = 8;
@@ -70,19 +81,21 @@ uint32_t CTgaFile::ColorMapEntryBytes() {
     return 3 * bits / 8;
 }
 
-// OFFSET: %0x00644580
+// PROVEN: 1f2df0bd IDENTICAL
+// OFFSET: 0x00638020
 uint32_t CTgaFile::ColorMapBytes() {
-    return this->m_header.m_wColorMapEntries * this->ColorMapEntryBytes();
+    return this->m_header->m_wColorMapEntries * this->ColorMapEntryBytes();
 }
 
-// OFFSET: %0x006445B0
+// PROVEN: 596dcf39 IDENTICAL
+// OFFSET: 0x00637EE0
 uint32_t CTgaFile::ComputeAlphaDepth() const {
     if (!this->AlphaBits()) {
         return 0;
     }
 
     uint32_t depth = 0;
-    const TGA32Pixel* pixels = this->ImageTGA32Pixel();
+    const TGA32Pixel* pixels = this->ImageBGRA32Pixel();
     uint32_t count = this->Size();
 
     for (uint32_t i = 0; i < count; i++) {
@@ -110,9 +123,10 @@ uint32_t CTgaFile::ComputeAlphaDepth() const {
     return depth;
 }
 
-// OFFSET: %0x00644620
+// PROVEN: 903ff678 IDENTICAL
+// OFFSET: 0x00637F50
 int32_t CTgaFile::HasNonBlackZeroAlphaPixels() const {
-    const TGA32Pixel* pixels = this->ImageTGA32Pixel();
+    const TGA32Pixel* pixels = this->ImageBGRA32Pixel();
 
     for (uint32_t i = 0; i < this->Size(); i++) {
         if (pixels[i].m_a > 0) {
@@ -129,23 +143,76 @@ int32_t CTgaFile::HasNonBlackZeroAlphaPixels() const {
     return 0;
 }
 
-// OFFSET: %0x00644800
+// OFFSET: 0x00638060
+int32_t CTgaFile::SetToData(uint8_t* data, uint32_t size) {
+    if (!data) {
+        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        return 0;
+    }
+
+    this->m_data = data;
+    this->m_dataSize = size;
+
+    if (size < sizeof(TGAHeader)) {
+        return 0;
+    }
+
+    TGAHeader* header = reinterpret_cast<TGAHeader*>(data);
+    this->m_header = header;
+    uint32_t offset = sizeof(TGAHeader);
+
+    if (!header->m_bIDLength) {
+        this->m_addlHeaderData = NULL;
+    } else {
+        if (header->m_bIDLength + sizeof(TGAHeader) > size) {
+            return 0;
+        }
+
+        this->m_addlHeaderData = &data[sizeof(TGAHeader)];
+        offset = header->m_bIDLength + sizeof(TGAHeader);
+    }
+
+    if (header->m_bColorMapType) {
+        if (offset + this->ColorMapBytes() > size) {
+            return 0;
+        }
+
+        this->m_colorMap = &data[offset];
+    } else {
+        this->m_colorMap = NULL;
+    }
+
+    if (header->m_bPixelDepth == 24 && header->m_desc.m_bAlphaChannelBits == 8) {
+        header->m_desc.m_bAlphaChannelBits = 0;
+        SErrSetLastError(0x8720012E);
+    }
+
+    if (this->m_header->m_bPixelDepth == 32 && !this->m_header->m_desc.m_bAlphaChannelBits) {
+        this->m_header->m_desc.m_bAlphaChannelBits = 8;
+        SErrSetLastError(0x8720012F);
+    }
+
+    return 1;
+}
+
+// PROVEN: e5ce2bb1 IDENTICAL
+// OFFSET: 0x00638130
 int32_t CTgaFile::ValidateColorDepth() {
-    if (this->m_header.m_bPixelDepth - this->m_header.m_desc.m_bAlphaChannelBits == 24) {
+    if (this->m_header->m_bPixelDepth - this->m_header->m_desc.m_bAlphaChannelBits == 24) {
         return 1;
     }
 
-    SErrSetLastError(this->m_header.m_bPixelDepth == 16 ? 0xF720007C : 0xF720007D);
+    SErrSetLastError(this->m_header->m_bPixelDepth == 16 ? 0xF720007C : 0xF720007D);
 
     return 0;
 }
 
-// OFFSET: %0x00644830
+// OFFSET: 0x00638170
 uint32_t CTgaFile::PreImageBytes() {
-    return this->m_header.m_bIDLength + sizeof(TGAHeader) + this->ColorMapBytes();
+    return this->m_header->m_bIDLength + sizeof(TGAHeader) + this->ColorMapBytes();
 }
 
-// OFFSET: %0x00644870
+// OFFSET: 0x006381D0
 void CTgaFile::AddAlphaChannel(uint8_t* dest, uint8_t* source, const uint8_t* alpha) {
     if (alpha) {
         for (uint32_t pixels = this->Size(); pixels; pixels--) {
@@ -163,26 +230,29 @@ void CTgaFile::AddAlphaChannel(uint8_t* dest, uint8_t* source, const uint8_t* al
         }
     }
 
-    uint8_t alphaBits = this->AlphaBits();
-    this->m_header.m_desc.m_bAlphaChannelBits = 8;
-    this->m_header.m_bPixelDepth += 8 - alphaBits;
+    this->m_header->m_bPixelDepth += 8 - this->AlphaBits();
+    this->m_header->m_desc.m_bAlphaChannelBits = 8;
     this->m_imageBytes = this->BytesPerPixel() * this->Size();
 }
 
-// OFFSET: %0x00644960
+// OFFSET: 0x006382C0
 int32_t CTgaFile::ReadRawImage(uint32_t flags) {
     int32_t addAlpha = (flags & 1) && !this->AlphaBits() ? 1 : 0;
+    uint32_t offset = this->PreImageBytes();
+    uint32_t bytes = this->BytesPerPixel() * this->Size();
 
-    if (SFile::SetFilePointer(this->m_file, this->PreImageBytes(), NULL, 0) == -1) {
+    if (bytes + offset > this->m_dataSize) {
         return 0;
     }
 
-    uint32_t bytes = this->BytesPerPixel() * this->Size();
+    const uint8_t* source = &this->m_data[offset];
     this->m_image = static_cast<uint8_t*>(SMemAlloc(bytes + addAlpha * this->Size(), __FILE__, __LINE__, 0));
 
-    if (!this->m_image || !SFileReadFile(this->m_file, &this->m_image[addAlpha * this->Size()], bytes, NULL, NULL, 0)) {
+    if (!this->m_image) {
         return 0;
     }
+
+    memcpy(&this->m_image[addAlpha * this->Size()], source, bytes);
 
     if (addAlpha) {
         this->AddAlphaChannel(this->m_image, &this->m_image[this->Size()], NULL);
@@ -191,17 +261,28 @@ int32_t CTgaFile::ReadRawImage(uint32_t flags) {
     return 1;
 }
 
-// OFFSET: %0x00644A70
-int32_t CTgaFile::RLEDecompressImage(uint8_t* rleData, uint8_t* data) {
+// OFFSET: 0x006383A0
+int32_t CTgaFile::RLEDecompressImage(uint8_t* rleData, uint32_t size, uint8_t* data) {
     int32_t pixels = this->Size();
     int32_t bytesPerPixel = this->BytesPerPixel();
+    uint8_t* end = &rleData[size];
 
     while (pixels) {
+        if (rleData + 1 > end) {
+            SErrSetLastError(0xF7200077);
+            return 0;
+        }
+
         uint8_t packet = *rleData++;
 
         if (packet & 0x80) {
             int32_t count = (packet & 0x7F) + 1;
             pixels -= count;
+
+            if (rleData + bytesPerPixel > end) {
+                SErrSetLastError(0xF7200077);
+                return 0;
+            }
 
             while (count--) {
                 memcpy(data, rleData, bytesPerPixel);
@@ -212,6 +293,12 @@ int32_t CTgaFile::RLEDecompressImage(uint8_t* rleData, uint8_t* data) {
         } else {
             int32_t count = packet + 1;
             pixels -= count;
+
+            if (rleData + bytesPerPixel * count > end) {
+                SErrSetLastError(0xF7200077);
+                return 0;
+            }
+
             memcpy(data, rleData, bytesPerPixel * count);
             rleData += bytesPerPixel * count;
             data += bytesPerPixel * count;
@@ -223,12 +310,12 @@ int32_t CTgaFile::RLEDecompressImage(uint8_t* rleData, uint8_t* data) {
         }
     }
 
-    this->m_header.m_bImageType -= 8;
+    this->m_header->m_bImageType -= 8;
 
     return 1;
 }
 
-// OFFSET: %0x00644B20
+// OFFSET: 0x00638480
 int32_t CTgaFile::SetTopDown(int32_t topDown) {
     int32_t isTopDown = this->IsTopDown();
 
@@ -240,7 +327,7 @@ int32_t CTgaFile::SetTopDown(int32_t topDown) {
         return 1;
     }
 
-    if (this->m_header.m_bImageType >= 9 && this->m_header.m_bImageType <= 11) {
+    if (this->m_header->m_bImageType >= 9 && this->m_header->m_bImageType <= 11) {
         SErrSetLastError(0xF7200083);
         return 0;
     }
@@ -256,8 +343,8 @@ int32_t CTgaFile::SetTopDown(int32_t topDown) {
     }
 
     SMemFree(this->m_image, __FILE__, __LINE__, 0);
-    this->m_header.m_desc.m_bTopBottomOrder = topDown != 0;
     this->m_image = image;
+    this->m_header->m_desc.m_bTopBottomOrder = topDown != 0;
 
     return 1;
 }
@@ -284,14 +371,15 @@ uint8_t* CTgaFile::Image() {
     return this->m_image;
 }
 
-// OFFSET: %0x00644C90
-const TGA32Pixel* CTgaFile::ImageTGA32Pixel() const {
+// PROVEN: 263c0bc6 IDENTICAL
+// OFFSET: 0x00638600
+const TGA32Pixel* CTgaFile::ImageBGRA32Pixel() const {
     if (!this->m_image) {
         SErrSetLastError(0xF720007F);
         return NULL;
     }
 
-    if (this->m_header.m_bPixelDepth != 32) {
+    if (this->m_header->m_bPixelDepth != 32) {
         SErrSetLastError(0xF720007D);
         return NULL;
     }
@@ -299,14 +387,15 @@ const TGA32Pixel* CTgaFile::ImageTGA32Pixel() const {
     return reinterpret_cast<const TGA32Pixel*>(this->m_image);
 }
 
-// OFFSET: %0x00644C90
-TGA32Pixel* CTgaFile::ImageTGA32Pixel() {
+// PROVEN: 44fb3ed6 IDENTICAL
+// OFFSET: 0x00638600
+TGA32Pixel* CTgaFile::ImageBGRA32Pixel() {
     if (!this->m_image) {
         SErrSetLastError(0xF720007F);
         return NULL;
     }
 
-    if (this->m_header.m_bPixelDepth != 32) {
+    if (this->m_header->m_bPixelDepth != 32) {
         SErrSetLastError(0xF720007D);
         return NULL;
     }
@@ -314,30 +403,30 @@ TGA32Pixel* CTgaFile::ImageTGA32Pixel() {
     return reinterpret_cast<TGA32Pixel*>(this->m_image);
 }
 
-// OFFSET: %0x00644CC0
+// OFFSET: 0x00638630
 int32_t CTgaFile::RemoveAlphaChannels() {
     if (!this->Image()) {
         return 0;
     }
 
-    if (!this->m_header.m_desc.m_bAlphaChannelBits) {
-        if (this->m_header.m_bPixelDepth == 24) {
+    if (!this->m_header->m_desc.m_bAlphaChannelBits) {
+        if (this->m_header->m_bPixelDepth == 24) {
             return 1;
         }
 
         SErrSetLastError(0x8720012D);
-        this->m_header.m_desc.m_bAlphaChannelBits = this->m_header.m_bPixelDepth - 8;
+        this->m_header->m_desc.m_bAlphaChannelBits = this->m_header->m_bPixelDepth - 8;
     }
 
-    if (this->m_header.m_desc.m_bAlphaChannelBits != 8) {
+    if (this->m_header->m_desc.m_bAlphaChannelBits != 8) {
         SErrSetLastError(0xF7200082);
         return 0;
     }
 
     uint32_t pixels = this->Size();
+    this->m_header->m_bPixelDepth -= this->m_header->m_desc.m_bAlphaChannelBits;
+    this->m_header->m_desc.m_bAlphaChannelBits = 0;
     uint8_t* source = this->m_image;
-    this->m_header.m_bPixelDepth -= this->m_header.m_desc.m_bAlphaChannelBits;
-    this->m_header.m_desc.m_bAlphaChannelBits = 0;
     uint8_t* dest = source;
 
     while (pixels--) {
@@ -349,21 +438,27 @@ int32_t CTgaFile::RemoveAlphaChannels() {
     return 1;
 }
 
-// OFFSET: %0x006455E0
+// OFFSET: 0x00638FA0
 int32_t CTgaFile::SetImage(const void* bits, uint16_t width, uint16_t height, uint8_t pixelDepth, uint8_t alphaBits, int32_t topBottomOrder, int32_t leftRightOrder) {
     if (!bits || (pixelDepth != 32 && pixelDepth != 24) || (alphaBits && alphaBits != 8)) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
 
-    memset(&this->m_header, 0, sizeof(this->m_header));
-    this->m_header.m_bPixelDepth = pixelDepth;
-    this->m_header.m_wWidth = width;
-    this->m_header.m_wHeight = height;
-    this->m_header.m_desc.m_bAlphaChannelBits = alphaBits;
-    this->m_header.m_desc.m_bLeftRightOrder = leftRightOrder != 0;
-    this->m_header.m_desc.m_bTopBottomOrder = topBottomOrder != 0;
-    this->m_header.m_bImageType = 2;
+    if (this->m_fileData) {
+        SMemFree(this->m_fileData, __FILE__, __LINE__, 0);
+    }
+
+    this->m_fileData = static_cast<uint8_t*>(SMemAlloc(sizeof(TGAHeader), __FILE__, __LINE__, 0));
+    this->m_header = reinterpret_cast<TGAHeader*>(this->m_fileData);
+    memset(this->m_header, 0, sizeof(TGAHeader));
+    this->m_header->m_bImageType = 2;
+    this->m_header->m_wWidth = width;
+    this->m_header->m_wHeight = height;
+    this->m_header->m_bPixelDepth = pixelDepth;
+    this->m_header->m_desc.m_bAlphaChannelBits = alphaBits;
+    this->m_header->m_desc.m_bLeftRightOrder = leftRightOrder != 0;
+    this->m_header->m_desc.m_bTopBottomOrder = topBottomOrder != 0;
     this->m_imageBytes = this->BytesPerPixel() * this->Size();
 
     if (this->m_image) {
@@ -384,7 +479,7 @@ int32_t CTgaFile::SetImage(const void* bits, uint16_t width, uint16_t height, ui
     return 1;
 }
 
-// OFFSET: %0x00644D90
+// OFFSET: 0x00638700
 int32_t CTgaFile::CountRun(const uint8_t* source, int32_t count) {
     int32_t run = 0;
     uint32_t pixel = 0;
@@ -406,7 +501,7 @@ int32_t CTgaFile::CountRun(const uint8_t* source, int32_t count) {
     return run;
 }
 
-// OFFSET: %0x00644E40
+// OFFSET: 0x006387B0
 int32_t CTgaFile::RleCompressLine(uint8_t** source, uint8_t** dest) {
     uint8_t* in = *source;
     uint8_t* out = *dest;
@@ -457,14 +552,14 @@ int32_t CTgaFile::RleCompressLine(uint8_t** source, uint8_t** dest) {
     return 1;
 }
 
-// OFFSET: %0x00644FB0
+// OFFSET: 0x00638920
 int32_t CTgaFile::Compress() {
     if (!this->m_image) {
         SErrSetLastError(0xF7200081);
         return 0;
     }
 
-    if (this->m_header.m_bImageType >= 9) {
+    if (this->m_header->m_bImageType >= 9) {
         SErrSetLastError(0xF7200083);
         return 0;
     }
@@ -487,14 +582,14 @@ int32_t CTgaFile::Compress() {
         }
     }
 
-    this->m_header.m_bImageType += 8;
+    this->m_header->m_bImageType += 8;
     SMemFree(this->m_image, __FILE__, __LINE__, 0);
     this->m_image = compressed;
 
     return 1;
 }
 
-// OFFSET: %0x006450A0
+// OFFSET: 0x00638A20
 int32_t CTgaFile::Write(const char* fileName) {
     if (!fileName) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -515,9 +610,9 @@ int32_t CTgaFile::Write(const char* fileName) {
     int32_t result = 0;
     uint32_t written;
 
-    if (OsWriteFile(file, &this->m_header, sizeof(this->m_header), &written) && written == sizeof(this->m_header)
-        && (!this->m_header.m_bIDLength || (OsWriteFile(file, this->m_addlHeaderData, this->m_header.m_bIDLength, &written) && written == this->m_header.m_bIDLength))
-        && (!this->m_header.m_bColorMapType || (OsWriteFile(file, this->m_colorMap, this->ColorMapBytes(), &written) && written == this->ColorMapBytes()))
+    if (OsWriteFile(file, this->m_header, sizeof(TGAHeader), &written) && written == sizeof(TGAHeader)
+        && (!this->m_header->m_bIDLength || (OsWriteFile(file, this->m_addlHeaderData, this->m_header->m_bIDLength, &written) && written == this->m_header->m_bIDLength))
+        && (!this->m_header->m_bColorMapType || (OsWriteFile(file, this->m_colorMap, this->ColorMapBytes(), &written) && written == this->ColorMapBytes()))
         && OsWriteFile(file, this->m_image, this->m_imageBytes, &written) && written == this->m_imageBytes
         && OsWriteFile(file, &this->m_footer, sizeof(this->m_footer), &written) && written == sizeof(this->m_footer)) {
         result = 1;
@@ -532,8 +627,19 @@ int32_t CTgaFile::Write(const char* fileName) {
     return result;
 }
 
-// OFFSET: %0x00645200
+// PROVEN: e348369a IDENTICAL
+// OFFSET: 0x00638B70
 void CTgaFile::Close() {
+    if (this->m_fileData) {
+        SMemFree(this->m_fileData, __FILE__, __LINE__, 0);
+    }
+
+    if (reinterpret_cast<uint8_t*>(this->m_header) == this->m_fileData) {
+        this->m_header = NULL;
+    }
+
+    this->m_fileData = NULL;
+
     if (this->m_image) {
         SMemFree(this->m_image, __FILE__, __LINE__, 0);
     }
@@ -545,22 +651,16 @@ void CTgaFile::Close() {
     }
 
     this->m_file = NULL;
-
-    if (this->m_addlHeaderData) {
-        SMemFree(this->m_addlHeaderData, __FILE__, __LINE__, 0);
-    }
-
     this->m_addlHeaderData = NULL;
-    this->m_header.m_bIDLength = 0;
 
-    if (this->m_colorMap) {
-        SMemFree(this->m_colorMap, __FILE__, __LINE__, 0);
+    if (this->m_header) {
+        this->m_header->m_bIDLength = 0;
     }
 
     this->m_colorMap = NULL;
 }
 
-// OFFSET: %0x006446C0
+// OFFSET: 0x00638BE0
 int32_t CTgaFile::Open(const char* fileName, int32_t flags) {
     if (!fileName || !*fileName) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -573,44 +673,17 @@ int32_t CTgaFile::Open(const char* fileName, int32_t flags) {
         return 0;
     }
 
-    if (!SFileReadFile(this->m_file, &this->m_header, sizeof(this->m_header), NULL, NULL, 0)) {
+    uint32_t size = SFileGetFileSize(this->m_file, NULL);
+    this->m_fileData = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
+
+    if (!SFile::Read(this->m_file, this->m_fileData, size, NULL)) {
         return 0;
     }
 
-    if (this->m_header.m_bIDLength) {
-        this->m_addlHeaderData = static_cast<uint8_t*>(SMemAlloc(this->m_header.m_bIDLength, __FILE__, __LINE__, 0));
-
-        if (!SFileReadFile(this->m_file, this->m_addlHeaderData, this->m_header.m_bIDLength, NULL, NULL, 0)) {
-            return 0;
-        }
-    } else {
-        this->m_addlHeaderData = NULL;
-    }
-
-    if (this->m_header.m_bColorMapType) {
-        this->m_colorMap = static_cast<uint8_t*>(SMemAlloc(this->ColorMapBytes(), __FILE__, __LINE__, 0));
-
-        if (!SFileReadFile(this->m_file, this->m_colorMap, this->ColorMapBytes(), NULL, NULL, 0)) {
-            return 0;
-        }
-    } else {
-        this->m_colorMap = NULL;
-    }
-
-    if (this->m_header.m_bPixelDepth == 24 && this->m_header.m_desc.m_bAlphaChannelBits == 8) {
-        this->m_header.m_desc.m_bAlphaChannelBits = 0;
-        SErrSetLastError(0x8720012E);
-    }
-
-    if (this->m_header.m_bPixelDepth == 32 && !this->m_header.m_desc.m_bAlphaChannelBits) {
-        this->m_header.m_desc.m_bAlphaChannelBits = 8;
-        SErrSetLastError(0x8720012F);
-    }
-
-    return 1;
+    return this->SetToData(this->m_fileData, size);
 }
 
-// OFFSET: %0x00645270
+// OFFSET: 0x00638C70
 void CTgaFile::ConvertColorMapped(uint32_t flags) {
     uint32_t addAlpha = flags & 1;
     uint32_t pixelDepth = this->AlphaBits() + 24;
@@ -621,17 +694,17 @@ void CTgaFile::ConvertColorMapped(uint32_t flags) {
     uint8_t* index = indices;
 
     for (uint32_t pixels = this->Size(); pixels; pixels--) {
-        memcpy(dest, &this->m_colorMap[(*index++ - this->m_header.m_wColorMapStartIndex) * this->ColorMapEntryBytes()], this->ColorMapEntryBytes());
+        memcpy(dest, &this->m_colorMap[(*index++ - this->m_header->m_wColorMapStartIndex) * this->ColorMapEntryBytes()], this->ColorMapEntryBytes());
         dest += this->ColorMapEntryBytes();
     }
 
     SMemFree(indices, __FILE__, __LINE__, 0);
     SMemFree(this->m_colorMap, __FILE__, __LINE__, 0);
-    this->m_header.m_wColorMapEntries = 0;
-    this->m_header.m_bPixelDepth = pixelDepth;
     this->m_colorMap = NULL;
-    this->m_header.m_bColorMapType = 0;
-    this->m_header.m_bImageType = 2;
+    this->m_header->m_bColorMapType = 0;
+    this->m_header->m_bImageType = 2;
+    this->m_header->m_wColorMapEntries = 0;
+    this->m_header->m_bPixelDepth = pixelDepth;
     this->m_imageBytes = this->BytesPerPixel() * this->Size();
 
     if (addAlpha) {
@@ -639,7 +712,7 @@ void CTgaFile::ConvertColorMapped(uint32_t flags) {
     }
 }
 
-// OFFSET: %0x006453C0
+// OFFSET: 0x00638DD0
 int32_t CTgaFile::ReadRleImage(uint32_t flags) {
     int32_t addAlpha = (flags & 1) && !this->AlphaBits() ? 1 : 0;
     this->m_image = static_cast<uint8_t*>(SMemAlloc(this->BytesPerPixel() * this->Size() + addAlpha * this->Size(), __FILE__, __LINE__, 0));
@@ -648,7 +721,8 @@ int32_t CTgaFile::ReadRleImage(uint32_t flags) {
         return 0;
     }
 
-    uint32_t bytes = SFileGetFileSize(this->m_file, NULL) - this->PreImageBytes();
+    uint32_t offset = this->PreImageBytes();
+    uint32_t bytes = this->m_dataSize - offset;
 
     if (bytes == 0xFFFFFFFF) {
         return 0;
@@ -660,15 +734,8 @@ int32_t CTgaFile::ReadRleImage(uint32_t flags) {
         return 0;
     }
 
-    if (SFile::SetFilePointer(this->m_file, this->PreImageBytes(), NULL, 0) == -1) {
-        return 0;
-    }
-
-    if (!SFileReadFile(this->m_file, rleData, bytes, NULL, NULL, 0)) {
-        return 0;
-    }
-
-    int32_t result = this->RLEDecompressImage(rleData, &this->m_image[addAlpha * this->Size()]);
+    memcpy(rleData, &this->m_data[offset], bytes);
+    int32_t result = this->RLEDecompressImage(rleData, bytes, &this->m_image[addAlpha * this->Size()]);
     SMemFree(rleData, __FILE__, __LINE__, 0);
 
     if (!result) {
@@ -682,18 +749,18 @@ int32_t CTgaFile::ReadRleImage(uint32_t flags) {
     return 1;
 }
 
-// OFFSET: %0x00645530
+// OFFSET: 0x00638EF0
 int32_t CTgaFile::AddAlphaChannel(const void* alpha) {
     if (!this->Image()) {
         return 0;
     }
 
-    if (this->m_header.m_bImageType >= 9 && this->m_header.m_bImageType <= 11) {
+    if (this->m_header->m_bImageType >= 9 && this->m_header->m_bImageType <= 11) {
         SErrSetLastError(0xF7200083);
         return 0;
     }
 
-    if (this->m_header.m_desc.m_bAlphaChannelBits) {
+    if (this->m_header->m_desc.m_bAlphaChannelBits) {
         this->RemoveAlphaChannels();
     }
 
@@ -710,37 +777,38 @@ int32_t CTgaFile::AddAlphaChannel(const void* alpha) {
     return 1;
 }
 
-// OFFSET: %0x00645720
+// PROVEN: 62fa6b3d IDENTICAL
+// OFFSET: 0x00639130
 int32_t CTgaFile::ReadColorMappedImage(uint32_t flags) {
-    if (!this->m_header.m_bColorMapType) {
+    if (!this->m_header->m_bColorMapType) {
         SErrSetLastError(0xF7200084);
         return 0;
     }
 
-    int32_t result = this->m_header.m_bImageType < 9 ? this->ReadRawImage(0) : this->ReadRleImage(0);
+    int32_t result = this->m_header->m_bImageType < 9 ? this->ReadRawImage(0) : this->ReadRleImage(0);
 
-    if (this->m_header.m_bColorMapType && (flags & 2)) {
+    if (this->m_header->m_bColorMapType && (flags & 2)) {
         this->ConvertColorMapped(flags);
     }
 
     return result;
 }
 
-// OFFSET: %0x00645780
+// OFFSET: 0x00639190
 int32_t CTgaFile::LoadImageData(uint32_t flags) {
     if (this->m_image) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 1;
     }
 
-    if (!this->m_file) {
+    if (!this->m_data) {
         SErrSetLastError(0xF720007E);
         return 0;
     }
 
     this->m_imageBytes = this->BytesPerPixel() * this->Size();
 
-    switch (this->m_header.m_bImageType) {
+    switch (this->m_header->m_bImageType) {
         case 0:
             SErrSetLastError(0xF7200078);
             return 0;

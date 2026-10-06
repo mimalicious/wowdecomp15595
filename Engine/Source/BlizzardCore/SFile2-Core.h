@@ -113,6 +113,7 @@ class SFile {
     static int32_t STORMAPI OpenEx(SArchive* archive, const char* name, uint32_t flags, SFileImpl** result);
     static int32_t STORMAPI OpenPathAsArchive(SArchive* archive, const char* path, int32_t priority, uint32_t flags, SArchive** result);
     static void STORMAPI PauseBackgroundStreaming(bool pause);
+    static int32_t STORMAPI Read(SFileImpl* file, void* buffer, uint32_t count, uint32_t* bytesRead);
     static int32_t STORMAPI ReadAtPosition(SFileImpl* file, void* buffer, uint32_t offset, uint32_t count, uint32_t* bytesRead);
     static int32_t STORMAPI ReadFile(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags, SOVERLAPPED* overlapped);
     static void RebuildHash();

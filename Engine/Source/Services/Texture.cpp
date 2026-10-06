@@ -632,7 +632,7 @@ uint32_t LoadPredrawnMips(CTgaFile* image, const char* format, int32_t flags, Mi
 
         mip.SetTopDown(1);
 
-        const TGA32Pixel* source = mip.ImageTGA32Pixel();
+        const TGA32Pixel* source = mip.ImageBGRA32Pixel();
         C4Pixel* dest = images->m_mip[level++];
 
         for (uint32_t pixels = width * height; pixels; pixels--) {
@@ -1612,7 +1612,7 @@ int32_t LoadTgaMips(char* fileName, char* extension, int32_t flags, MipBits** im
         *images = TextureAllocMippedImg(PIXEL_ARGB8888, imageWidth, imageHeight);
     }
 
-    const TGA32Pixel* source = image.ImageTGA32Pixel();
+    const TGA32Pixel* source = image.ImageBGRA32Pixel();
     C4Pixel* dest = (*images)->m_mip[0];
 
     for (uint32_t pixels = imageWidth * imageHeight; pixels; pixels--) {
