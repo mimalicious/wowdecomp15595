@@ -20,7 +20,8 @@ void CM2Light::Initialize(CM2Scene* scene) {
     this->m_stamp = scene ? scene->m_frameStamp - 1 : 0;
 }
 
-// OFFSET: %0x00779700
+// PROVEN: ee6c8208 IDENTICAL/DIFFERENT
+// OFFSET: 0x00812CE0/0x14052AA80
 void CM2Lighting::Initialize(CM2Scene* scene, const CAaSphere& sphere) {
     memset(this, 0, sizeof(*this));
     this->m_scene = scene;
@@ -28,7 +29,8 @@ void CM2Lighting::Initialize(CM2Scene* scene, const CAaSphere& sphere) {
     this->m_sphere4 = sphere;
 }
 
-// OFFSET: %0x00779740
+// PROVEN: a97406ac IDENTICAL/DIFFERENT
+// OFFSET: 0x00812D20/0x14052AAE0
 void CM2Lighting::SetFog(const C3Vector& color, float start, float end) {
     this->m_fogStart = start;
     this->m_fogEnd = end;
@@ -37,7 +39,8 @@ void CM2Lighting::SetFog(const C3Vector& color, float start, float end) {
     this->m_fogColor = color;
 }
 
-// OFFSET: %0x007797B0
+// PROVEN: 38c345ef IDENTICAL/DIFFERENT
+// OFFSET: 0x00812D90/0x14052AB30
 void CM2Lighting::SetFog(const C3Vector& color, float start, float end, float density) {
     this->m_fogStart = start;
     this->m_fogEnd = end;
@@ -46,7 +49,8 @@ void CM2Lighting::SetFog(const C3Vector& color, float start, float end, float de
     this->m_fogColor = color;
 }
 
-// OFFSET: %0x00779820
+// PROVEN: 20156ce1 IDENTICAL/NONE
+// OFFSET: 0x00812E00
 int32_t CM2Lighting::GetPointLight(uint32_t index, C3Vector& pos, C3Vector& color, C3Vector& attenuation) {
     if (index >= this->m_lightCount) {
         return 0;
@@ -309,8 +313,8 @@ void CM2Lighting::SetupGxLights(const C3Vector* origin) {
 
     uint32_t index = 1;
 
-    for (uint32_t i = this->m_lightCount; i > 0 && index < 4; i--) {
-        CM2Light* point = this->m_lights[i - 1];
+    for (uint32_t i = 0; i < this->m_lightCount && index < 4; i++) {
+        CM2Light* point = this->m_lights[i];
 
         if (origin) {
             light.m_dir = point->m_pos - *origin;

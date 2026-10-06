@@ -55,15 +55,15 @@ class CM2Lighting {
     /* 0060 */ C3Vector m_sunDiffuse;
     /* 006C */ C3Vector m_sunSpecular;
     /* 0078 */ C3Vector m_sunDir;
-    /* 0084 */ CM2Light* m_lights [4];
-    /* 0094 */ float m_lightDist [4];
-    /* 00A4 */ uint32_t m_lightCount;
-    /* 00A8 */ float m_fogStart;
-    /* 00AC */ float m_fogEnd;
-    /* 00B0 */ float m_fogScale;
-    /* 00B4 */ float m_fogDensity;
-    /* 00B8 */ C3Vector m_fogColor;
-    /* 00C4 */ C4Plane m_liquidPlane;
+    /* 0084 */ CM2Light* m_lights [3];
+    /* 0090 */ float m_lightDist [3];
+    /* 009C */ uint32_t m_lightCount;
+    /* 00A0 */ float m_fogStart;
+    /* 00A4 */ float m_fogEnd;
+    /* 00A8 */ float m_fogScale;
+    /* 00AC */ float m_fogDensity;
+    /* 00B0 */ C3Vector m_fogColor;
+    /* 00BC */ C4Plane m_liquidPlane;
 
     CM2Lighting();
     CM2Lighting(const CAaSphere& sphere);
