@@ -565,6 +565,6 @@ void WorldTextInitialize() {
     CStatus status;
 
     for (uint32_t i = 0; i < 15; i++) {
-        s_pvpRankTextures[i] = TextureCreate(s_pvpRankTextureNames[i], CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0);
+        s_pvpRankTextures[i] = TextureCreate(s_pvpRankTextureNames[i], CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
     }
 }

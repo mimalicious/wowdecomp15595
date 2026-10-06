@@ -1303,7 +1303,7 @@ void CGObject_C::Initialize() {
     }
 
     CStatus status;
-    CGObject_C::s_selectionTexture = TextureCreate("Textures\\UnitSelectTexture.blp", CGxTexFlags(), &status, 1);
+    CGObject_C::s_selectionTexture = TextureCreate("Textures\\UnitSelectTexture.blp", CGxTexFlags(), &status, 1, NULL, 2);
     LoadInteractIcons(1);
     ClntObjMgrSetTypeMirrorHandler(ID_OBJECT, OBJECT_FIELD_SCALE_X * sizeof(uint32_t), sizeof(float), &ScaleUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
 }

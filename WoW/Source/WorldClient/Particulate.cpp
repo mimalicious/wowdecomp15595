@@ -140,7 +140,7 @@ void Particulate::SetTexture(const char* textureName) {
     }
 
     CStatus status;
-    this->m_texture = TextureCreate(textureName, CGxTexFlags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1), &status, 0);
+    this->m_texture = TextureCreate(textureName, CGxTexFlags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
     SysMsgAdd(&status);
 }
 

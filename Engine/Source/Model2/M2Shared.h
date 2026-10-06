@@ -74,11 +74,11 @@ class CM2Shared {
     /* 019C */ uint32_t m_lastUsedTime;
     /* 01A0 */ TSLink<CM2Shared> m_updateLink;
 
-    static void LoadFailedCallback(void* param);
-    static void LoadSucceededCallback(void* param);
-    static void LowPrioritySequenceFailedCallback(void* param);
-    static void LowPrioritySequenceLoadedCallback(void* param);
-    static void SkinProfileLoadedCallback(void* param);
+    static void LoadFailedCallback(CAsyncObject* object);
+    static void LoadSucceededCallback(CAsyncObject* object);
+    static void LowPrioritySequenceFailedCallback(CAsyncObject* object);
+    static void LowPrioritySequenceLoadedCallback(CAsyncObject* object);
+    static void SkinProfileLoadedCallback(CAsyncObject* object);
 
     CM2Shared(CM2Cache* cache);
     ~CM2Shared();

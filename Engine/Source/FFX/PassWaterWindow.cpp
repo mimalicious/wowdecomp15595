@@ -208,12 +208,12 @@ PassWaterWindow::PassWaterWindow(uint32_t type, int32_t submarine, FFX::Tex** in
             for (uint32_t i = 0; i < 30; i++) {
                 char name[256];
                 SStrPrintf(name, sizeof(name), "XTextures\\ocean\\ocean_h.%d.blp", i + 1);
-                s_oceanTex[i] = TextureCreate(name, flags, &status, 0);
+                s_oceanTex[i] = TextureCreate(name, flags, &status, 0, NULL, 2);
             }
         }
 
         if (g_theGxDevicePtr->m_caps.m_shaderModel >= 4 && this->m_type) {
-            s_bumpTex = TextureCreate("XTextures\\FX\\blobbybump.blp", flags, &status, 0);
+            s_bumpTex = TextureCreate("XTextures\\FX\\blobbybump.blp", flags, &status, 0, NULL, 2);
         }
     }
 

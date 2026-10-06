@@ -107,7 +107,7 @@ class SFile {
     static int32_t STORMAPI List(SArchive* archive, int32_t (*callback)(const char* fileName, void* param), void* param);
     static void LogFileAccess(SFileImpl* file, int32_t mode, bool flag);
     static int32_t STORMAPI LoadFile(const char* name, void** data, uint32_t* size, uint32_t extra);
-    static int32_t STORMAPI MakeFileLocal(SFileImpl* file, int32_t queue, bool wait, int64_t budget, int32_t* status);
+    static int32_t STORMAPI MakeFileLocal(SFileImpl* file, bool wait, int64_t chunk, int32_t* status, int64_t offset, uint32_t size);
     static int32_t STORMAPI MakeFileRangeLocal(SFileImpl* file, int32_t queue, bool wait, int64_t offset, uint32_t size);
     static int32_t STORMAPI OpenArchive(const char* path, int32_t priority, uint32_t flags, SArchive** archive);
     static int32_t STORMAPI OpenEx(SArchive* archive, const char* name, uint32_t flags, SFileImpl** result);

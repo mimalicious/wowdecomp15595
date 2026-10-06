@@ -577,21 +577,21 @@ void CGMinimapFrame::EnterWorld() {
 void CGMinimapFrame::InitializeGame() {
     CStatus status;
 
-    s_maskTexture = TextureCreate("Textures\\MinimapMask", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_iconTexture = TextureCreate("Interface\\Minimap\\POIIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_blipTexture = TextureCreate("Interface\\Minimap\\ObjectIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_classBlipTexture = TextureCreate("Interface\\Minimap\\PartyRaidBlips", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[0] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[1] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Occupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[2] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[3] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Occupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[4] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[5] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Horde", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_vehicleTextures[6] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Alliance", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_staticPOIArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_poiArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapGuideArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_corpseArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapCorpseArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
-    s_groupArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapGroupArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
+    s_maskTexture = TextureCreate("Textures\\MinimapMask", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_iconTexture = TextureCreate("Interface\\Minimap\\POIIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_blipTexture = TextureCreate("Interface\\Minimap\\ObjectIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_classBlipTexture = TextureCreate("Interface\\Minimap\\PartyRaidBlips", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[0] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[1] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Occupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[2] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[3] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Occupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[4] = TextureCreate("Interface\\Minimap\\Vehicle-Ground-Unoccupied", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[5] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Horde", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_vehicleTextures[6] = TextureCreate("Interface\\Minimap\\Vehicle-Air-Alliance", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_staticPOIArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_poiArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapGuideArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_corpseArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapCorpseArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
+    s_groupArrowTexture = TextureCreate("Interface\\Minimap\\Rotating-MinimapGroupArrow", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
 
     uint32_t width = 256;
     uint32_t height = 256;
@@ -1248,7 +1248,7 @@ static void SetupTextureHandles(const int32_t* tile, int32_t reset, MINIMAPTILE*
             }
 
             CStatus status;
-            CTexture* texture = TextureCreate(path, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
+            CTexture* texture = TextureCreate(path, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
             tiles[i].m_flags |= 2;
             tiles[i].m_texture = texture;
             tiles[i].m_x = source[0];
@@ -1416,7 +1416,7 @@ static void SetupQuad(MINIMAPTILE* tiles, const MINIMAPQUADINFO* quad, int32_t c
 
     if (path[0]) {
         CStatus status;
-        CTexture* texture = TextureCreate(path, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
+        CTexture* texture = TextureCreate(path, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
         tiles->m_flags |= 4;
         tiles->m_texture = texture;
     } else {

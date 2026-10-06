@@ -655,12 +655,12 @@ void CGCooldown::SetCooldown(uint32_t start, uint32_t duration) {
 
     if (!this->m_starTexture) {
         CStatus status;
-        this->m_starTexture = TextureCreate(CGCooldown::s_starTextureName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+        this->m_starTexture = TextureCreate(CGCooldown::s_starTextureName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
     }
 
     if (!this->m_edgeTexture) {
         CStatus status;
-        this->m_edgeTexture = TextureCreate(CGCooldown::s_edgeTextureName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+        this->m_edgeTexture = TextureCreate(CGCooldown::s_edgeTextureName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
     }
 
     this->UpdateColors();

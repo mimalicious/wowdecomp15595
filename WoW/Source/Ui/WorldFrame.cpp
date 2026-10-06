@@ -1224,7 +1224,7 @@ CGWorldFrame::CGWorldFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     CStatus status;
 
     for (uint32_t i = 0; i < sizeof(s_spellShadowTexture) / sizeof(s_spellShadowTexture[0]); i++) {
-        s_spellShadowTexture[i] = TextureCreate(s_spellShadowTextureNames[i], CGxTexFlags(GxTex_Linear), &status, 1);
+        s_spellShadowTexture[i] = TextureCreate(s_spellShadowTextureNames[i], CGxTexFlags(GxTex_Linear), &status, 1, NULL, 2);
         SysMsgAdd(&status);
     }
 

@@ -145,8 +145,8 @@ class CMapObjGroup {
 
     static void Destroy();
     static void Initialize();
-    static void AsyncFailedCallback(void* param, CAsyncObject* object);
-    static void AsyncPostloadCallback(void* arg);
+    static void AsyncFailedCallback(CAsyncObject* object);
+    static void AsyncPostloadCallback(CAsyncObject* object);
     static void AllocVertArray(CMapObjGroup::VertArray** vertArray, uint32_t count);
 
     /* 0000 */ int32_t m_objectIndex;

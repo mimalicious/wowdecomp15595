@@ -1337,13 +1337,13 @@ void CGUnit_C::StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec*
     CStatus status;
 
     if (*vehicleRec->m_msslTrgtArcTexture) {
-        s_trajectoryTexture0 = TextureCreate(vehicleRec->m_msslTrgtArcTexture, CGxTexFlags(GxTex_Linear, 1, 1, 0, 0, 1, 0, 0, 0), &status, 0);
+        s_trajectoryTexture0 = TextureCreate(vehicleRec->m_msslTrgtArcTexture, CGxTexFlags(GxTex_Linear, 1, 1, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
     } else {
         s_trajectoryTexture0 = NULL;
     }
 
     if (*vehicleRec->m_msslTrgtImpactTexture) {
-        s_trajectoryTexture1 = TextureCreate(vehicleRec->m_msslTrgtImpactTexture, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0);
+        s_trajectoryTexture1 = TextureCreate(vehicleRec->m_msslTrgtImpactTexture, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
     } else {
         s_trajectoryTexture1 = NULL;
     }

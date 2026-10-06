@@ -167,14 +167,14 @@ PassUnderwater::PassUnderwater(uint32_t type, FFX::Tex** inputs, uint32_t count,
             for (uint32_t i = 0; i < 32; i++) {
                 char name[1024];
                 SStrPrintf(name, sizeof(name), "XTextures\\caustic\\caustics_%03d", i + 1);
-                PassUnderwater::s_causticsTex[i] = TextureCreate(name, flags, &status, 0);
+                PassUnderwater::s_causticsTex[i] = TextureCreate(name, flags, &status, 0, NULL, 2);
             }
         }
     }
 
     if (this->m_type) {
         CStatus status;
-        PassUnderwater::s_screenMask = TextureCreate("xtextures\\fx\\screenmask.blp", CGxTexFlags(), &status, 0);
+        PassUnderwater::s_screenMask = TextureCreate("xtextures\\fx\\screenmask.blp", CGxTexFlags(), &status, 0, NULL, 2);
         PassUnderwater::s_texRef++;
     }
 }

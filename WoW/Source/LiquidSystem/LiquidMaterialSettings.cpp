@@ -129,7 +129,7 @@ void Liquid::CMaterialSettings::InitTexture() {
 
             for (uint32_t frame = 1; frame <= 30; frame++) {
                 SStrPrintf(fileName, sizeof(fileName), name, frame);
-                CTexture* texture = TextureCreate(fileName, flags, &status, 0);
+                CTexture* texture = TextureCreate(fileName, flags, &status, 0, NULL, 2);
                 this->m_textures[i].New(texture);
 
                 if (TextureIsBlob(texture)) {
@@ -166,7 +166,7 @@ void Liquid::CMaterialSettings::InitTexture() {
                     texture = TextureCreateSolid(color);
                 }
             } else {
-                texture = TextureCreate(name, flags, &status, 0);
+                texture = TextureCreate(name, flags, &status, 0, NULL, 2);
             }
 
             if (texture) {

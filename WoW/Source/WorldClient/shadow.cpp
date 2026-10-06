@@ -213,7 +213,7 @@ void ShadowSetLOD(int32_t lod) {
 void ShadowInit() {
     CStatus status;
 
-    s_shadowBlobTexture = TextureCreate("Textures\\ShadowBlob.blp", CGxTexFlags(), &status, 1);
+    s_shadowBlobTexture = TextureCreate("Textures\\ShadowBlob.blp", CGxTexFlags(), &status, 1, NULL, 2);
     s_shadowAddTexture = TextureCreate(64, 8, GxTex_Argb8888, GxTex_Argb8888, CGxTexFlags(), NULL, ShadowAddCallback, "ShadowAdd", 0);
     s_shadowModTexture = TextureCreate(64, 8, GxTex_Argb8888, GxTex_Argb8888, CGxTexFlags(), NULL, ShadowModCallback, "ShadowMod", 0);
     s_cvShadowLOD = CVar::Register("shadowLOD", "Unit shadow LOD", 1, "1", ShadowLODCallback, CATEGORY_GRAPHICS, false, NULL, false);

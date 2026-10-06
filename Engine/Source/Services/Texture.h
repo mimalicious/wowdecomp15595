@@ -14,6 +14,7 @@
 #include "Engine/Source/Tempest/CImVector.h"
 
 class CTexture;
+class StaticImage;
 class C2Vector;
 class CTextureAtlas;
 class CTextureBlobTexture;
@@ -98,25 +99,21 @@ class CTextureAtlas {
     void Update(CTexture* texture);
 };
 
-void AsyncTextureDestroyedCallback(void* param, CAsyncObject* object);
-void AsyncTextureFailureCallback(CTexture* texture, CAsyncObject* object);
+void AsyncTextureDestroyedCallback(CAsyncObject* object);
+void AsyncTextureFailureCallback(CAsyncObject* object);
 void AsyncTextureHandler();
 void AsyncTextureProcess(CAsyncObject* object, int32_t immediate);
 int32_t AsyncTextureStatus();
-void AsyncTextureSuccessCallback(CTexture* texture, CAsyncObject* object);
+void AsyncTextureSuccessCallback(CAsyncObject* object);
 void AsyncTextureWait(CTexture* texture);
-int32_t CreateBlpAsync(CTexture* texture, const char* fileName, char* extension, uint32_t flags, CGxTexFlags texFlags);
-int32_t CreateBlpSync(CTexture* texture, const char* fileName, uint32_t flags, CGxTexFlags texFlags);
-int32_t CreateTgaTexture(CTexture* texture, const char* fileName, char* extension, int32_t flags, CGxTexFlags texFlags, CStatus* status);
 void FillInSolidTexture(const CImVector& color, CTexture* texture);
 MipBits* GetDefaultTexture(uint32_t width, uint32_t height);
-int32_t LoadBlpMips(char* fileName, char* extension, int32_t flags, MipBits** images, uint32_t* width, uint32_t* height, int32_t* opaque, uint32_t* alphaBits, PIXEL_FORMAT* pixelFormat);
-int32_t LoadBlpWithAlias(char* fileName, int32_t flags, MipBits** images);
+int32_t LoadBlpMips(void* data, uint32_t size, MipBits** images, StaticImage* image, PIXEL_FORMAT format);
 uint32_t LoadPredrawnMips(CTgaFile* image, const char* format, int32_t flags, MipBits* images);
-int32_t LoadTgaMips(char* fileName, char* extension, int32_t flags, MipBits** images, uint32_t* width, uint32_t* height, EGxTexFormat* gxTexFormat, int32_t* opaque, uint32_t* alphaBits, PIXEL_FORMAT* pixelFormat);
-int32_t PumpBlpTextureAsync(CTexture* texture, void* data);
+int32_t LoadTgaMips(void* data, uint32_t size, const char* fileName, int32_t flags, MipBits** images, StaticImage* image);
 void GxTexNullUserFunc(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
 void RequestImageDimensions(uint32_t* width, uint32_t* height, uint32_t* bestMip);
+void UpdateTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
 void ResolveMipLevel(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
 void TextureAddRef(CTexture* texture);
 MipBits* TextureAllocMippedImg(PIXEL_FORMAT format, uint32_t width, uint32_t height);
@@ -132,7 +129,7 @@ uint32_t TextureCalcGxTexSize(EGxTexFormat format, uint32_t width, uint32_t heig
 int32_t TextureCalcMipCount(uint32_t width, uint32_t height);
 int32_t TextureCanUpdate(CTexture* texture);
 void TextureComputeLoadProgress(CTexture* texture, int64_t& loaded, int64_t& total);
-CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* status, uint32_t flags);
+CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* status, uint32_t flags, const char* debugName, uint8_t priority);
 CTexture* TextureCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags texFlags, void* userArg, GxTexUserFunc userFunc, const char* name, int32_t defaultFilter);
 CTexture* TextureCreate(uint32_t width, uint32_t height, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags texFlags, void* userArg, GxTexUserFunc userFunc, const char* name, int32_t defaultFilter);
 CTexture* TextureCreateBlob(char* fileName, CGxTexFlags texFlags, CStatus* status, int32_t defaultFilter);
@@ -171,7 +168,8 @@ void TextureInitialize();
 CGxTexFlags TextureMakeTexFlags(CGxTexFlags texFlags, int32_t defaultFilter);
 int32_t TextureLoadBlob(const char* fileName);
 int32_t TextureLoadBlob(const char* fileName, void* data, uint32_t size);
-int32_t TextureLoadBlpMips(char* fileName, int32_t flags, MipBits** images);
+int32_t TextureLoadBlpMips(void* data, uint32_t size, MipBits** images);
+int32_t TextureReloadMips(CTexture* texture, MipBits** images);
 MipBits* TextureLoadImage(const char* fileName, uint32_t* width, uint32_t* height, PIXEL_FORMAT* dataFormat, int32_t* opaque, CStatus* status, uint32_t* alphaBits, int32_t flags);
 void TextureNotifyGxRestart();
 int32_t TextureOnAtlas(CTexture* texture);
@@ -186,7 +184,5 @@ void TextureSetTextureSubstitutions(const char* from, const char* to);
 void TextureSetUserData(CTexture* texture, GxTexUserFunc userFunc, void* userArg);
 int32_t TextureUnloadBlob(const char* fileName);
 int32_t TextureUpdate(const void* data, void* param);
-void UpdateBlpTextureAsync(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
-void UpdateTgaTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
 
 #endif

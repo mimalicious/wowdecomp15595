@@ -359,7 +359,7 @@ static int32_t Script_SetMaskTexture(lua_State* L) {
         TextureRelease(s_maskTexture);
     }
 
-    s_maskTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_maskTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -384,7 +384,7 @@ static int32_t Script_SetPOIArrowTexture(lua_State* L) {
         TextureRelease(s_poiArrowTexture);
     }
 
-    s_poiArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_poiArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -409,7 +409,7 @@ static int32_t Script_SetStaticPOIArrowTexture(lua_State* L) {
         TextureRelease(s_staticPOIArrowTexture);
     }
 
-    s_staticPOIArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_staticPOIArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -434,7 +434,7 @@ static int32_t Script_SetCorpsePOIArrowTexture(lua_State* L) {
         TextureRelease(s_corpseArrowTexture);
     }
 
-    s_corpseArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_corpseArrowTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -459,7 +459,7 @@ static int32_t Script_SetIconTexture(lua_State* L) {
         TextureRelease(s_iconTexture);
     }
 
-    s_iconTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_iconTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -491,7 +491,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
         TextureRelease(s_blipTexture);
     }
 
-    s_blipTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_blipTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();
@@ -516,7 +516,7 @@ static int32_t Script_SetClassBlipTexture(lua_State* L) {
         TextureRelease(s_classBlipTexture);
     }
 
-    s_classBlipTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3);
+    s_classBlipTexture = TextureCreate(lua_tolstring(L, 2, NULL), CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 3, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         const char* name = minimap->GetName();

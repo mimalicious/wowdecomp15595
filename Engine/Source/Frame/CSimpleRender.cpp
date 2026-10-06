@@ -2637,7 +2637,7 @@ int32_t CSimpleTexture::LoadTexture() {
     texFlags.m_wrapU = (this->m_textureFlags >> 4) & 1;
     texFlags.m_wrapV = (this->m_textureFlags >> 5) & 1;
 
-    CTexture* texture = TextureCreate(fileName, texFlags, &status, 7);
+    CTexture* texture = TextureCreate(fileName, texFlags, &status, 7, NULL, 2);
 
     if (status.m_highestSeverity >= STATUS_ERROR) {
         TextureRelease(texture);

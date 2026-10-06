@@ -234,7 +234,7 @@ void DayNight::DNClouds::Render() {
 // OFFSET: #0x009AD000
 void DayNight::DNGlare::Initialize(const char* fileName) {
     CStatus status;
-    this->m_texture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1);
+    this->m_texture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 1, NULL, 2);
     SysMsgAdd(&status);
 
     if (g_theGxDevicePtr->Caps().m_occlusionQuery) {
@@ -247,6 +247,6 @@ void DayNight::DNGlare::Initialize(const char* fileName) {
 // OFFSET: #0x009AD0B0
 void DayNight::DNPlanet::Initialize(const char* fileName) {
     CStatus status;
-    this->m_texture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0);
+    this->m_texture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
     SysMsgAdd(&status);
 }

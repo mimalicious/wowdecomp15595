@@ -99,7 +99,7 @@ void CGQuestPOIFrame::SetFillTexture(const char* fileName) {
     }
 
     CStatus status;
-    this->m_fillTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0);
+    this->m_fillTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
 }
 
 // OFFSET: #0x0058FDC0
@@ -110,7 +110,7 @@ void CGQuestPOIFrame::SetBorderTexture(const char* fileName) {
     }
 
     CStatus status;
-    this->m_borderTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0);
+    this->m_borderTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
 }
 
 // OFFSET: #0x0058FF50

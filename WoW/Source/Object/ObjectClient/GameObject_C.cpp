@@ -334,7 +334,7 @@ void ApplyGameObjectArtKit(CM2Model* model, int32_t artKit) {
 
         for (uint32_t i = 0; i < 3; i++) {
             if (*rec->m_textureVariation[i]) {
-                CTexture* texture = TextureCreate(rec->m_textureVariation[i], flags, &status, 0);
+                CTexture* texture = TextureCreate(rec->m_textureVariation[i], flags, &status, 0, NULL, 2);
 
                 if (texture) {
                     model->ReplaceTexture(i + 11, texture);

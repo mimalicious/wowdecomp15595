@@ -13,21 +13,23 @@ class CAsyncObject {
     public:
     /* 0000 */ SFileImpl* m_file;
     /* 0004 */ void* m_buffer;
-    /* 0008 */ uint32_t m_size;
-    /* 000C */ void* m_userArg;
-    /* 0010 */ void* m_userPostloadCallback;
-    /* 0014 */ void* m_userPostUnloadCallback;
-    /* 0018 */ CAsyncQueue* m_queue;
-    /* 001C */ uint8_t m_priority;
-    /* 001D */ int8_t m_isProcessed;
-    /* 001E */ int8_t m_isRead;
-    /* 001F */ int8_t m_isCurrent;
-    /* 0020 */ int8_t m_isStreamed;
-    /* 0021 */ int8_t m_readSucceeded;
-    /* 0022 */ int8_t m_cancelled;
-    /* 0023 */ uint8_t m_padding;
+    /* 0008 */ uint32_t m_offset;
+    /* 000C */ uint32_t m_size;
+    /* 0010 */ void* m_userArg;
+    /* 0014 */ void (*m_userPostloadCallback)(CAsyncObject* object);
+    /* 0018 */ void (*m_userPostUnloadCallback)(CAsyncObject* object);
+    /* 001C */ CAsyncQueue* m_queue;
+    /* 0020 */ uint8_t m_priority;
+    /* 0021 */ uint8_t m_isProcessed : 1;
+    /* 0021 */ uint8_t m_isRead : 1;
+    /* 0021 */ uint8_t m_isCurrent : 1;
+    /* 0021 */ uint8_t m_isStreamed : 1;
+    /* 0021 */ uint8_t m_readSucceeded : 1;
+    /* 0021 */ uint8_t m_cancelled : 1;
+    /* 0021 */ uint8_t m_ownsFile : 1;
+    /* 0021 */ uint8_t m_inUse : 1;
+    /* 0022 */ uint16_t m_userFlags;
     /* 0024 */ TSLink<CAsyncObject> m_link;
-
 };
 
 struct HTEXTBLOCK__ {

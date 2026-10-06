@@ -1774,7 +1774,7 @@ void CMapObj::InitPtrs() {
 }
 
 // OFFSET: %0x006A5B70
-void CMapObj::AsyncFailedCallback(void* param, CAsyncObject* object) {
+void CMapObj::AsyncFailedCallback(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);

@@ -41,14 +41,14 @@ static uint8_t* s_sequenceData;
 static uint32_t s_sequenceSize;
 
 // OFFSET: %0x00795650
-static void AsyncFileReadFreeA16(void* param, CAsyncObject* object) {
+static void AsyncFileReadFreeA16(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SIMD::FreeA16(buffer);
 }
 
 #if defined(WOWDECOMP_ARCH_64)
-static void AsyncFileReadFreeNear(void* param, CAsyncObject* object) {
+static void AsyncFileReadFreeNear(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     OsFreeNear(buffer);
@@ -91,8 +91,8 @@ int32_t CM2Shared::CallbackWhenLoaded(CM2Model* model) {
 }
 
 // OFFSET: %0x00795700
-void CM2Shared::LoadFailedCallback(void* param) {
-    CM2Shared* shared = static_cast<CM2Shared*>(param);
+void CM2Shared::LoadFailedCallback(CAsyncObject* object) {
+    CM2Shared* shared = static_cast<CM2Shared*>(object->m_userArg);
     AsyncFileReadDestroyObject(shared->m_asyncObject);
     shared->m_asyncObject = NULL;
 }
@@ -1590,8 +1590,8 @@ int32_t CM2Shared::FinishLoadingLowPrioritySequence(uint32_t sequenceIndex, CAsy
 }
 
 // OFFSET: %0x0079DE20
-void CM2Shared::SkinProfileLoadedCallback(void* param) {
-    CM2Shared* shared = static_cast<CM2Shared*>(param);
+void CM2Shared::SkinProfileLoadedCallback(CAsyncObject* object) {
+    CM2Shared* shared = static_cast<CM2Shared*>(object->m_userArg);
     shared->FinishLoadingSkinProfile(shared->m_asyncObject->m_size);
     AsyncFileReadDestroyObject(shared->m_asyncObject);
     shared->m_asyncObject = NULL;
@@ -1630,8 +1630,8 @@ int32_t CM2Shared::LoadSkinProfile(uint32_t profile) {
     this->m_asyncObject->m_buffer = this->m_skinData;
     this->m_asyncObject->m_size = size;
     this->m_asyncObject->m_userArg = this;
-    this->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(&CM2Shared::SkinProfileLoadedCallback);
-    this->m_asyncObject->m_userPostUnloadCallback = reinterpret_cast<void*>(&CM2Shared::LoadFailedCallback);
+    this->m_asyncObject->m_userPostloadCallback = &CM2Shared::SkinProfileLoadedCallback;
+    this->m_asyncObject->m_userPostUnloadCallback = &CM2Shared::LoadFailedCallback;
     this->m_asyncObject->m_isRead = 0;
     this->m_asyncObject->m_isProcessed = 0;
     this->m_asyncObject->m_priority = 125;
@@ -1712,7 +1712,7 @@ int32_t CM2Shared::Initialize() {
                 flags |= 0x30;
             }
 
-            this->m_textures[i] = TextureCreate(texture->m_filename.Data(), texFlags, &GetGlobalStatusObj(), flags);
+            this->m_textures[i] = TextureCreate(texture->m_filename.Data(), texFlags, &GetGlobalStatusObj(), flags, NULL, 2);
         } else {
             static const uint32_t white = 0xFFFFFFFF;
             this->m_textures[i] = TextureCreateSolid(*reinterpret_cast<const CImVector*>(&white));
@@ -1761,8 +1761,8 @@ int32_t CM2Shared::FinishLoading() {
 }
 
 // OFFSET: %0x0079E990
-void CM2Shared::LoadSucceededCallback(void* param) {
-    CM2Shared* shared = static_cast<CM2Shared*>(param);
+void CM2Shared::LoadSucceededCallback(CAsyncObject* object) {
+    CM2Shared* shared = static_cast<CM2Shared*>(object->m_userArg);
     AsyncFileReadDestroyObject(shared->m_asyncObject);
     shared->m_asyncObject = NULL;
     shared->FinishLoading();
@@ -1809,8 +1809,8 @@ int32_t CM2Shared::Load(SFileImpl* file, int32_t flags, CAaBox* boundingBox) {
     this->m_asyncObject->m_buffer = this->m_data;
     this->m_asyncObject->m_size = this->m_fileSize;
     this->m_asyncObject->m_userArg = this;
-    this->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(&CM2Shared::LoadSucceededCallback);
-    this->m_asyncObject->m_userPostUnloadCallback = reinterpret_cast<void*>(&CM2Shared::LoadFailedCallback);
+    this->m_asyncObject->m_userPostloadCallback = &CM2Shared::LoadSucceededCallback;
+    this->m_asyncObject->m_userPostUnloadCallback = &CM2Shared::LoadFailedCallback;
     this->m_asyncObject->m_isRead = 0;
     this->m_asyncObject->m_isProcessed = 0;
     AsyncFileReadObject(this->m_asyncObject, 0);
@@ -1945,8 +1945,8 @@ CM2Shared::~CM2Shared() {
 }
 
 // OFFSET: %0x0079EEB0
-void CM2Shared::LowPrioritySequenceLoadedCallback(void* param) {
-    CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(param);
+void CM2Shared::LowPrioritySequenceLoadedCallback(CAsyncObject* object) {
+    CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(object->m_userArg);
     CM2Shared* shared = load->m_shared;
 
     shared->m_flags |= 0x10;
@@ -1997,8 +1997,8 @@ void CM2Shared::LowPrioritySequenceLoadedCallback(void* param) {
 }
 
 // OFFSET: %0x0079F040
-void CM2Shared::LowPrioritySequenceFailedCallback(void* param) {
-    CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(param);
+void CM2Shared::LowPrioritySequenceFailedCallback(CAsyncObject* object) {
+    CM2SequenceLoad* load = static_cast<CM2SequenceLoad*>(object->m_userArg);
     load->~CM2SequenceLoad();
     SMemFree(load, typeid(CM2SequenceLoad).raw_name(), SLOG_OBJECT, 0);
 }
@@ -2071,8 +2071,8 @@ CM2SequenceLoad* CM2Shared::LoadLowPrioritySequence(uint16_t sequenceIndex) {
     load->m_asyncObject->m_buffer = buffer;
     load->m_asyncObject->m_size = size;
     load->m_asyncObject->m_userArg = load;
-    load->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(&CM2Shared::LowPrioritySequenceLoadedCallback);
-    load->m_asyncObject->m_userPostUnloadCallback = reinterpret_cast<void*>(&CM2Shared::LowPrioritySequenceFailedCallback);
+    load->m_asyncObject->m_userPostloadCallback = &CM2Shared::LowPrioritySequenceLoadedCallback;
+    load->m_asyncObject->m_userPostUnloadCallback = &CM2Shared::LowPrioritySequenceFailedCallback;
     load->m_asyncObject->m_isRead = 0;
     load->m_asyncObject->m_isProcessed = 0;
     load->m_asyncObject->m_priority = 125;

@@ -319,7 +319,7 @@ Mists::Mists(float size, const C3Vector& extents, const char* textureName, float
     this->m_fadeTime = 0.4f;
     this->m_mists.SetCount(count);
     CStatus status;
-    this->m_texture = TextureCreate(textureName, CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1);
+    this->m_texture = TextureCreate(textureName, CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1, NULL, 2);
 }
 
 // INLINED

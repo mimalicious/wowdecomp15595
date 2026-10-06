@@ -474,7 +474,7 @@ static bool LoadSimpleBackgroundTexture() {
                 if (SFile::FileExistsInArchives(path)) {
                     if (!SFile::IsTrial() || SFile::FileIsLocal(path, 6) == 1) {
                         CGxTexFlags flags;
-                        s_simpleBackgroundTexture = TextureCreate(path, flags, &status, 1);
+                        s_simpleBackgroundTexture = TextureCreate(path, flags, &status, 1, NULL, 2);
 
                         if (s_simpleBackgroundTexture) {
                             s_usingWideScreen = true;
@@ -488,7 +488,7 @@ static bool LoadSimpleBackgroundTexture() {
             if (!s_simpleBackgroundTexture && SFile::FileExistsInArchives(screenRec->m_fileName)) {
                 if (!SFile::IsTrial() || SFile::FileIsLocal(screenRec->m_fileName, 6) == 1) {
                     CGxTexFlags flags;
-                    s_simpleBackgroundTexture = TextureCreate(screenRec->m_fileName, flags, &status, 1);
+                    s_simpleBackgroundTexture = TextureCreate(screenRec->m_fileName, flags, &status, 1, NULL, 2);
                 } else {
                     SFile::MakeFileLocal(screenRec->m_fileName, 6, false, -1, NULL);
                 }
@@ -498,7 +498,7 @@ static bool LoadSimpleBackgroundTexture() {
 
     if (!s_simpleBackgroundTexture) {
         CGxTexFlags flags;
-        s_simpleBackgroundTexture = TextureCreate("Interface\\Glues\\loading", flags, &status, 1);
+        s_simpleBackgroundTexture = TextureCreate("Interface\\Glues\\loading", flags, &status, 1, NULL, 2);
     }
 
     return s_simpleBackgroundTexture != NULL;
@@ -638,7 +638,7 @@ static void InitializeProgressBar(bool loadingWorld) {
         for (uint32_t i = 0; i < sizeof(s_textures) / sizeof(s_textures[0]); i++) {
             if (!s_textures[i]) {
                 CGxTexFlags flags;
-                s_textures[i] = TextureCreate(s_textureInfo[i].m_path, flags, &status, 0);
+                s_textures[i] = TextureCreate(s_textureInfo[i].m_path, flags, &status, 0, NULL, 2);
             }
         }
 
@@ -880,7 +880,7 @@ bool LoadDynamicBackground() {
 
     if (!s_dynamicElementsTexture) {
         CGxTexFlags flags;
-        s_dynamicElementsTexture = TextureCreate("Interface\\Glues\\LoadingScreens\\DynamicElements", flags, &status, 1);
+        s_dynamicElementsTexture = TextureCreate("Interface\\Glues\\LoadingScreens\\DynamicElements", flags, &status, 1, NULL, 2);
 
         if (!s_dynamicElementsTexture) {
             return false;
@@ -892,7 +892,7 @@ bool LoadDynamicBackground() {
         SStrPrintf(fileName, sizeof(fileName), "Interface\\WorldMap\\World\\World%d", i + 1);
 
         CGxTexFlags flags;
-        s_dynamicBackgroundTextures[i] = TextureCreate(fileName, flags, &status, 1);
+        s_dynamicBackgroundTextures[i] = TextureCreate(fileName, flags, &status, 1, NULL, 2);
 
         if (!s_dynamicBackgroundTextures[i]) {
             return false;
@@ -973,7 +973,7 @@ void LoadingScreenMiniEnable() {
     for (uint32_t i = 0; i < sizeof(unk_B2FEC4) / sizeof(unk_B2FEC4[0]); i++) {
         if (!unk_B2FEC4[i]) {
             CGxTexFlags flags;
-            unk_B2FEC4[i] = TextureCreate(s_miniTextureInfo[i].m_path, flags, &status, 0);
+            unk_B2FEC4[i] = TextureCreate(s_miniTextureInfo[i].m_path, flags, &status, 0, NULL, 2);
         }
     }
 

@@ -820,7 +820,7 @@ void CMap::FootprintInitialize() {
         CMapFootprintTexture* footprint = &s_footprintTextures[record->m_id];
 
         if (!footprint->m_texture) {
-            footprint->m_texture = TextureCreate(record->m_footstepFilename, CGxTexFlags(), &status, 1);
+            footprint->m_texture = TextureCreate(record->m_footstepFilename, CGxTexFlags(), &status, 1, NULL, 2);
         }
     }
 }
@@ -4022,7 +4022,7 @@ bool CMap::LocateViewerMapObjs(C3Vector& start, C3Vector& end, float dist, CMapO
 // OFFSET: #0x007D9990
 CTexture* CMap::LoadTexture(const char* fileName) {
     CStatus status;
-    CTexture* texture = TextureCreate(fileName, CGxTexFlags(GxTex_LinearMipLinear, 1, 1, 0, 0, 1), &status, 0);
+    CTexture* texture = TextureCreate(fileName, CGxTexFlags(GxTex_LinearMipLinear, 1, 1, 0, 0, 1), &status, 0, NULL, 2);
     SysMsgAdd(&status);
 
     if (!texture) {

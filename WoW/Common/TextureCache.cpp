@@ -23,15 +23,15 @@ static int32_t s_loadCount;
 static TSHashTable<CACHEENTRY, HASHKEY_NONE> s_cacheTable;
 
 // OFFSET: %0x0066B690
-static void FreeRequest(void* param, CAsyncObject* object) {
+static void FreeRequest(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
 // OFFSET: #0x004F2B70
-static void LoadSuccessCallback(void* param) {
-    CACHEENTRY* entry = static_cast<CACHEENTRY*>(param);
+static void LoadSuccessCallback(CAsyncObject* object) {
+    CACHEENTRY* entry = static_cast<CACHEENTRY*>(object->m_userArg);
 
     AsyncFileReadDestroyObject(entry->m_asyncObject);
     BLPHeader* header = entry->m_data;
@@ -63,7 +63,7 @@ int32_t CACHEENTRY::LoadTexture() {
 
     this->m_asyncObject = AsyncFileReadAllocObject();
     this->m_asyncObject->m_userArg = this;
-    this->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(&LoadSuccessCallback);
+    this->m_asyncObject->m_userPostloadCallback = &LoadSuccessCallback;
     this->m_asyncObject->m_file = file;
     this->m_asyncObject->m_size = SFileGetFileSize(file, NULL);
     this->m_asyncObject->m_priority = 130;

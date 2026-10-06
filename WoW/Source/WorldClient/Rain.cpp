@@ -809,9 +809,9 @@ Rain::Rain(float width, float height) : m_bbox(C3Vector(0.0f, 0.0f, 0.0f), C3Vec
     this->m_bbox.t.z = halfHeight;
     this->m_shaderRain = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "rain");
     CStatus status;
-    this->m_rainDropTex = TextureCreate(World::s_weather->m_precipTexture, CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1);
+    this->m_rainDropTex = TextureCreate(World::s_weather->m_precipTexture, CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1, NULL, 2);
     this->m_shaderPatter = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "patter");
-    this->m_rainDropSplashTex = TextureCreate("textures\\Weather\\RainDropSplash01.blp", CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1);
+    this->m_rainDropSplashTex = TextureCreate("textures\\Weather\\RainDropSplash01.blp", CGxTexFlags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 1, NULL, 2);
 
     if (!this->m_shaderRain || !this->m_shaderRain->m_permutes[0].Valid() || !this->m_shaderPatter || !this->m_shaderPatter->m_permutes[0].Valid()) {
         this->m_useWeatherShaders = 0;

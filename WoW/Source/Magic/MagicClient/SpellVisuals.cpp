@@ -518,7 +518,7 @@ void LightningObject::CreateFromSpell(CGObject_C* caster, CEffect* effect, uint3
         object->m_bolts.SetCount(count);
         object->m_targets[0] = caster->m_obj->m_guid.m_guid;
         object->m_flags = 0;
-        object->m_texture = TextureCreate(chain->m_texture, CGxTexFlags(GxTex_Linear, 1, 0, 0, 0, 1), &status, 0);
+        object->m_texture = TextureCreate(chain->m_texture, CGxTexFlags(GxTex_Linear, 1, 0, 0, 0, 1), &status, 0, NULL, 2);
         object->m_sourceOffset.x = sourceOffset.x;
         object->m_spellId = spellId;
         object->m_sourceAttachment = sourceAttachment;

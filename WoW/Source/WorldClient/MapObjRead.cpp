@@ -402,8 +402,8 @@ void CMapObjGroup::CreateDataPointers(SIffChunk* dataChunk) {
 }
 
 // OFFSET: #0x007D8050
-void CMapObj::PostloadCallback(void* arg) {
-    CMapObj* mapObj = static_cast<CMapObj*>(arg);
+void CMapObj::PostloadCallback(CAsyncObject* object) {
+    CMapObj* mapObj = static_cast<CMapObj*>(object->m_userArg);
 
     AsyncFileReadDestroyObject(mapObj->m_asyncObject);
     mapObj->m_asyncObject = NULL;
@@ -442,7 +442,7 @@ bool CMapObj::Read(char* fileName) {
     this->m_asyncObject->m_userArg = this;
     this->m_asyncObject->m_buffer = this->m_pWmoData;
     this->m_asyncObject->m_size = this->m_wmoFileSize;
-    this->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(CMapObj::PostloadCallback);
+    this->m_asyncObject->m_userPostloadCallback = CMapObj::PostloadCallback;
     this->m_asyncObject->m_priority = 124;
     AsyncFileReadObject(this->m_asyncObject, 0);
 
@@ -582,8 +582,8 @@ void CMapObjGroup::Create() {
 }
 
 // OFFSET: #0x007D8570
-void CMapObjGroup::AsyncPostloadCallback(void* arg) {
-    CMapObjGroup* group = static_cast<CMapObjGroup*>(arg);
+void CMapObjGroup::AsyncPostloadCallback(CAsyncObject* object) {
+    CMapObjGroup* group = static_cast<CMapObjGroup*>(object->m_userArg);
     AsyncFileReadDestroyObject(group->m_asyncObjPtr);
     group->m_asyncObjPtr = NULL;
     group->m_asyncLoadLink.Unlink();
@@ -618,7 +618,7 @@ void CMapObj::ReadGroup(uint32_t index, bool preLoad) {
     object->m_buffer = group->m_filePtr;
     object->m_size = group->m_fileSize;
     object->m_userArg = group;
-    object->m_userPostloadCallback = reinterpret_cast<void*>(CMapObjGroup::AsyncPostloadCallback);
+    object->m_userPostloadCallback = CMapObjGroup::AsyncPostloadCallback;
     group->m_asyncObjPtr = object;
     AsyncFileReadObject(object, 0);
 

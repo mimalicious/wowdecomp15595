@@ -571,7 +571,7 @@ void CSimpleModel::OnLayerUpdate(float elapsedSec) {
 void CSimpleModel::ReplaceTexture(uint32_t type, const char* fileName) {
     if (this->m_model) {
         CStatus status;
-        CTexture* texture = TextureCreate(fileName, CGxTexFlags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1), &status, 2);
+        CTexture* texture = TextureCreate(fileName, CGxTexFlags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1), &status, 2, NULL, 2);
         SysMsgAdd(&status);
         this->m_model->ReplaceTexture(type, texture);
         TextureRelease(texture);

@@ -488,7 +488,7 @@ bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBs
 }
 
 // OFFSET: %0x006F3C00
-void CMapObjGroup::AsyncFailedCallback(void* param, CAsyncObject* object) {
+void CMapObjGroup::AsyncFailedCallback(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);

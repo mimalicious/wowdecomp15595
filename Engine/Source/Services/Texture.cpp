@@ -8,6 +8,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Gxu/Gxu.h"
 #include "Engine/Source/Images/MippedImg.h"
+#include "Engine/Source/Images/StaticImage.h"
 #include "Engine/Source/Images/tga.h"
 #include "Engine/Source/Os/Path.h"
 #include "Engine/Source/Os/System.h"
@@ -65,9 +66,6 @@ static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsC
 
 // STATIC: %0x00BB9E50
 static TSExplicitList<CTextureAtlas, offsetof(CTextureAtlas, m_link)> s_atlasList;
-
-// STATIC: %0x00BB9E5C
-static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncLoadList;
 
 // STATIC: %0x00BB9E68
 static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncTextureList;
@@ -142,7 +140,7 @@ EGxTexFormat TexturePixelFormatToGxTexFormat(PIXEL_FORMAT format) {
     return s_pixelFormatToGxTexFormat[format];
 }
 
-// OFFSET: %0x00550C60
+// OFFSET: 0x00540730
 void CTextureAtlas::Update(CTexture* texture) {
     this->m_updateSlot = texture->m_atlasBlockIndex;
     GxTexUpdate(this->m_gxTex, (texture->m_atlasBlockIndex & 7) * this->m_width, ((texture->m_atlasBlockIndex >> 3) & 7) * this->m_height, (texture->m_atlasBlockIndex & 7) * this->m_width + this->m_width, ((texture->m_atlasBlockIndex >> 3) & 7) * this->m_height + this->m_height, 1);
@@ -150,14 +148,14 @@ void CTextureAtlas::Update(CTexture* texture) {
 }
 
 // OFFSET: %0x00550CC0
-void AsyncTextureDestroyedCallback(void* param, CAsyncObject* object) {
+void AsyncTextureDestroyedCallback(CAsyncObject* object) {
     s_asyncLoadBufferUsed -= object->m_size;
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00550D00
+// OFFSET: 0x00540850
 void TextureReportLoadError(const char* type, const char* fileName, CStatus* status) {
     char buffer[256];
     SErrGetErrorStr(SErrGetLastError(), buffer, sizeof(buffer));
@@ -165,14 +163,14 @@ void TextureReportLoadError(const char* type, const char* fileName, CStatus* sta
     SErrSetLastError(0);
 }
 
-// OFFSET: %0x00550D50
+// OFFSET: 0x005408A0
 static void TextureBuildMipFormat(char* buffer, const char* fileName) {
     SStrCopy(buffer, fileName, 260);
     *OsPathFindExtensionWithDot(buffer) = '\0';
     SStrPack(buffer, "_mip%d.tga", 260);
 }
 
-// OFFSET: %0x00550DC0
+// OFFSET: 0x00540910
 int32_t TextureBuildAliasPath(char* buffer, const char* fileName) {
     if (!s_substituteFrom) {
         return 0;
@@ -190,7 +188,7 @@ int32_t TextureBuildAliasPath(char* buffer, const char* fileName) {
     return 1;
 }
 
-// OFFSET: %0x00550E70
+// OFFSET: 0x005409C0
 MipBits* GetDefaultTexture(uint32_t width, uint32_t height) {
     MipBits* images = s_mipBits;
     MipBits* level = images;
@@ -211,17 +209,19 @@ MipBits* GetDefaultTexture(uint32_t width, uint32_t height) {
     return images;
 }
 
-// OFFSET: %0x00554460
-void AsyncTextureFailureCallback(CTexture* texture, CAsyncObject* object) {
+// OFFSET: 0x00543D60
+void AsyncTextureFailureCallback(CAsyncObject* object) {
+    CTexture* texture = static_cast<CTexture*>(object->m_userArg);
     texture->m_asyncObject = NULL;
     s_asyncLoadBufferUsed -= object->m_size;
     void* buffer = object->m_buffer;
+    object->m_userArg = NULL;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
     FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
 }
 
-// OFFSET: %0x00550EF0
+// OFFSET: 0x00540AB0
 SFileImpl* TextureCreateOpenFile(const char* fileName, int32_t flags) {
     SFileImpl* file = NULL;
     SErrSetLastError(0);
@@ -237,9 +237,22 @@ SFileImpl* TextureCreateOpenFile(const char* fileName, int32_t flags) {
     return NULL;
 }
 
-// OFFSET: %0x00550F40
-static TEXFILETYPE TextureSplitExtension(char* buffer, const char* fileName, char*& extension) {
-    TEXFILETYPE type = TEXFILE_BLP;
+// OFFSET: 0x00540A40/0x140193520
+static void TextureAppendExtension(char* extension, int32_t type, uint32_t size) {
+    if (!extension) {
+        return;
+    }
+
+    if (type == 0) {
+        SStrCopy(extension, ".tga", size);
+    } else if (type == 1) {
+        SStrCopy(extension, ".blp", size);
+    }
+}
+
+// OFFSET: 0x00540B00
+static int32_t TextureSplitExtension(char* buffer, const char* fileName, char*& extension) {
+    int32_t type = 1;
     SStrCopy(buffer, fileName, 260);
     uint32_t length = strlen(fileName);
 
@@ -250,20 +263,15 @@ static TEXFILETYPE TextureSplitExtension(char* buffer, const char* fileName, cha
     extension = &buffer[length];
 
     if (*extension == '.') {
-        SStrLower(extension + 1);
+        _strlwr(extension + 1);
 
         if (extension[3] == 'a') {
             if (extension[1] == 't' && extension[2] == 'g') {
-                type = TEXFILE_TGA;
-            }
-        } else if (extension[3] == 'g') {
-            if (extension[1] == 'p' && extension[2] == 'n') {
-                *extension = '\0';
-                return TEXFILE_UNKNOWN;
+                type = 0;
             }
         } else if (extension[3] == 'p' && extension[1] == 'b' && extension[2] == 'l') {
             *extension = '\0';
-            return TEXFILE_BLP;
+            return 1;
         }
 
         *extension = '\0';
@@ -313,7 +321,7 @@ void TextureAddRef(CTexture* texture) {
     texture->m_refcount++;
 }
 
-// OFFSET: %0x005510B0
+// OFFSET: 0x00540C00
 void TextureRelease(CTexture*& texture) {
     if (!--texture->m_refcount) {
         delete texture;
@@ -322,7 +330,7 @@ void TextureRelease(CTexture*& texture) {
     texture = NULL;
 }
 
-// OFFSET: %0x005510D0
+// OFFSET: 0x00540C20
 int32_t TextureIsSame(CTexture* texture, const char* fileName) {
     char name[260];
     char* extension;
@@ -358,7 +366,7 @@ int32_t TextureOnAtlas(CTexture* texture) {
     return texture->m_atlas != NULL;
 }
 
-// OFFSET: %0x00551190
+// OFFSET: 0x00540CE0
 int32_t TextureGetAtlasOffsetAndScale(CTexture* texture, C2Vector& offset, float& scale) {
     if (!texture) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -458,7 +466,7 @@ TEXFILETYPE TextureDiscoverFileType(const char* fileName) {
     return _stricmp(extension, ".PNG") ? TEXFILE_UNKNOWN : TEXFILE_PNG;
 }
 
-// OFFSET: %0x00551370
+// OFFSET: 0x00540ED0
 TEXFILETYPE TexturePickAlternateFilename(const char* fileName, TEXFILETYPE type, char* buffer, uint32_t size) {
     if (fileName != buffer) {
         SStrCopy(buffer, fileName, size);
@@ -498,7 +506,7 @@ const char* TextureGetFilename(CTexture* texture) {
     return texture->m_filename;
 }
 
-// OFFSET: %0x00551490
+// OFFSET: 0x00540FF0
 int32_t TextureIsLoaded(CTexture* texture) {
     return texture && !texture->m_asyncObject;
 }
@@ -530,7 +538,7 @@ int32_t TextureLoadBlob(const char* fileName) {
     return CTextureBlob::Load(fileName);
 }
 
-// OFFSET: %0x00551500
+// OFFSET: 0x00541060
 int32_t TextureLoadBlob(const char* fileName, void* data, uint32_t size) {
     return CTextureBlob::Load(fileName, data, size);
 }
@@ -562,12 +570,13 @@ int32_t TextureIsBlob(CTexture* texture) {
     return texture->m_asyncObject && texture->m_gxTex;
 }
 
-// OFFSET: %0x005515C0
+// PROVEN: 047493f0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00541120/0x140193D50
 int32_t TextureIsStreaming(CTexture* texture) {
     return texture->m_asyncObject && texture->m_asyncObject->m_isStreamed;
 }
 
-// OFFSET: %0x00551640
+// OFFSET: 0x005411C0
 void ResolveMipLevel(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     // STATIC: %0x00CD2E78
     static uint32_t s_emptyTexel;
@@ -658,7 +667,7 @@ uint32_t LoadPredrawnMips(CTgaFile* image, const char* format, int32_t flags, Mi
     return level;
 }
 
-// OFFSET: %0x00551880
+// OFFSET: 0x005414C0
 void RequestImageDimensions(uint32_t* width, uint32_t* height, uint32_t* bestMip) {
     CGxCaps caps = g_theGxDevicePtr->Caps();
 
@@ -685,117 +694,49 @@ void RequestImageDimensions(uint32_t* width, uint32_t* height, uint32_t* bestMip
     }
 }
 
-// OFFSET: %0x00551910
-int32_t TextureLoadBlpMips(char* fileName, int32_t flags, MipBits** images) {
-    CBLPFile image;
+// OFFSET: 0x00541230
+static void* TextureLoadFile(const char* fileName, int32_t flags, uint32_t* size) {
+    SFileImpl* file = TextureCreateOpenFile(fileName, flags);
 
-    if (!image.Open(fileName, flags)) {
+    if (!file) {
+        return NULL;
+    }
+
+    uint32_t fileSize = SFileGetFileSize(file, NULL);
+    void* data = SMemAlloc(fileSize, __FILE__, __LINE__, 0);
+
+    if (!SFile::Read(file, data, fileSize, NULL)) {
+        DebugLog("TextureLoadFile() failed read: %s.\n", fileName);
+    }
+
+    SFileCloseFile(file);
+    *size = fileSize;
+
+    return data;
+}
+
+// OFFSET: 0x00541930
+int32_t TextureLoadBlpMips(void* data, uint32_t size, MipBits** images) {
+    StaticImage image;
+
+    if (!image.SetToBLPData(static_cast<uint8_t*>(data), size)) {
         return 0;
     }
 
-    PIXEL_FORMAT pixelFormat = PIXEL_ARGB8888;
+    PIXEL_FORMAT pixelFormat;
+    EGxTexFormat gxTexFormat;
+    TextureGetTextureFormats(pixelFormat, gxTexFormat, image.m_pixelFormat, image.m_alphaFormat & 0x3F);
 
-    if (image.m_header.m_colorEncoding == 2) {
-        pixelFormat = static_cast<PIXEL_FORMAT>(image.m_header.m_preferredFormat);
-
-        if (pixelFormat == PIXEL_DXT1) {
-            if (!g_theGxDevicePtr->Caps().m_texFmt[GxTex_Dxt1]) {
-                pixelFormat = (image.m_header.m_alphaSize & 0x3F) ? PIXEL_ARGB1555 : PIXEL_RGB565;
-            }
-        } else if (pixelFormat == PIXEL_DXT3) {
-            if (!g_theGxDevicePtr->Caps().m_texFmt[GxTex_Dxt3]) {
-                pixelFormat = PIXEL_ARGB4444;
-            }
-        } else if (pixelFormat == PIXEL_DXT5 && !g_theGxDevicePtr->Caps().m_texFmt[GxTex_Dxt5]) {
-            pixelFormat = PIXEL_ARGB4444;
-        }
-    }
-
-    uint32_t height = image.m_header.m_height;
     uint32_t bestMip = 0;
-    uint32_t width = image.m_header.m_width;
+    uint32_t width = image.m_width;
+    uint32_t height = image.m_height;
     RequestImageDimensions(&width, &height, &bestMip);
+    MippedImgSet(pixelFormat, width, height, *images);
 
-    return image.LockChain(pixelFormat, *images, bestMip) != 0;
+    return image.Convert(pixelFormat, *images, bestMip);
 }
 
-// OFFSET: %0x00551A70
-int32_t LoadBlpWithAlias(char* fileName, int32_t flags, MipBits** images) {
-    char buffer[260];
-    char* extension = &fileName[strlen(fileName)];
-    strcpy(extension, ".blp");
-
-    if (TextureBuildAliasPath(buffer, fileName)) {
-        fileName = buffer;
-    }
-
-    int32_t result = TextureLoadBlpMips(fileName, flags, images);
-    *extension = '\0';
-
-    return result;
-}
-
-// OFFSET: %0x00551AD0
-void UpdateBlpTextureAsync(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    CTexture* texture = static_cast<CTexture*>(userArg);
-
-    switch (command) {
-        case GxTex_Lock:
-            if (!s_pumping && !LoadBlpWithAlias(texture->m_filename, texture->m_flags & 2, &s_mipBits)) {
-                GetDefaultTexture(width, height);
-                GetGlobalStatusObj().Add(STATUS_ERROR, "Texture %s not loaded -- replaced with default.\n", texture->m_filename);
-            }
-
-            break;
-
-        case GxTex_Latch: {
-            texelStrideInBytes = GxCalcTexelStrideInBytes(texture->m_dataFormat, width);
-
-            const uint8_t* bits = reinterpret_cast<const uint8_t*>(s_mipBits[level].m_mip[0]);
-            texels = bits;
-
-            if (texture->m_gxTexTarget == GxTex_CubeMap) {
-                uint32_t order = face;
-
-                switch (face) {
-                    case 0:
-                        order = 0;
-                        break;
-
-                    case 1:
-                        order = 2;
-                        break;
-
-                    case 2:
-                        order = 4;
-                        break;
-
-                    case 3:
-                        order = 5;
-                        break;
-
-                    case 4:
-                        order = 3;
-                        break;
-
-                    case 5:
-                        order = 1;
-                        break;
-                }
-
-                texels = bits + order * texelStrideInBytes;
-                texelStrideInBytes *= 6;
-            }
-
-            break;
-        }
-
-        default:
-            break;
-    }
-}
-
-// OFFSET: %0x00551BE0
+// OFFSET: 0x00541550
 void TextureGetTextureFormats(PIXEL_FORMAT& pixelFormat, EGxTexFormat& gxTexFormat, PIXEL_FORMAT preferredFormat, uint32_t alphaBits) {
     switch (preferredFormat) {
         case PIXEL_DXT1:
@@ -880,7 +821,7 @@ uint32_t TextureCacheGetMaxSize() {
     return size;
 }
 
-// OFFSET: %0x00551D90
+// OFFSET: 0x00541700
 void TextureSetFilterMode(EGxTexFilter filter) {
     if (filter >= GxTex_LinearMipLinear && !g_theGxDevicePtr->Caps().m_texFilterTrilinear) {
         s_maxAnisotropy = 1;
@@ -893,7 +834,7 @@ void TextureSetFilterMode(EGxTexFilter filter) {
     }
 }
 
-// OFFSET: %0x00551DF0
+// OFFSET: 0x00541760
 void TextureSetMaxAnisotropy(uint32_t maxAnisotropy) {
     if (s_filterMode != GxTex_Anisotropic) {
         s_maxAnisotropy = 1;
@@ -917,7 +858,7 @@ int32_t TextureGetRefCnt(CTexture* texture) {
     return texture->m_refcount;
 }
 
-// OFFSET: %0x00551E30
+// OFFSET: 0x00541820
 int32_t TextureIsReadyNow(CTexture* texture) {
     if (!texture || !texture->m_gxTex) {
         return 0;
@@ -926,7 +867,7 @@ int32_t TextureIsReadyNow(CTexture* texture) {
     return g_theGxDevicePtr->TexIsReadyNow(texture->m_gxTex);
 }
 
-// OFFSET: %0x00551E60
+// OFFSET: 0x00541850
 int32_t TextureCanUpdate(CTexture* texture) {
     if (!texture || !texture->m_gxTex) {
         return 0;
@@ -935,7 +876,7 @@ int32_t TextureCanUpdate(CTexture* texture) {
     return g_theGxDevicePtr->TexCanUpdate(texture->m_gxTex);
 }
 
-// OFFSET: %0x00551E90
+// OFFSET: 0x00541880
 uint32_t TextureCalcGxTexSize(EGxTexFormat format, uint32_t width, uint32_t height, EGxTexFilter filter) {
     uint32_t baseMip = g_theGxDevicePtr->DeviceBaseMipLevel();
     width >>= baseMip;
@@ -981,7 +922,7 @@ void CTextureAtlas::Reload() {
 
         s_pumping = 1;
 
-        if (!LoadBlpWithAlias(texture->m_filename, texture->m_flags & 2, &s_mipBits)) {
+        if (!TextureReloadMips(texture, &s_mipBits)) {
             GetGlobalStatusObj().Add(STATUS_ERROR, "Texture %s not loaded.\n", texture->m_filename);
         }
 
@@ -992,7 +933,7 @@ void CTextureAtlas::Reload() {
     this->m_dirty &= ~1;
 }
 
-// OFFSET: %0x00552070
+// OFFSET: 0x005419C0
 void AsyncTextureProcess(CAsyncObject* object, int32_t immediate) {
     object->m_link.Unlink();
     object->m_buffer = SMemAlloc(object->m_size, __FILE__, __LINE__, 0);
@@ -1013,7 +954,7 @@ void AsyncTextureWait(CTexture* texture) {
     }
 }
 
-// OFFSET: %0x005520E0
+// OFFSET: 0x00541A30
 void TextureSetCacheSize(int32_t size) {
     uint32_t maxSize = 0x4000000;
 
@@ -1037,14 +978,14 @@ void TextureSetCacheSize(int32_t size) {
     }
 }
 
-// OFFSET: %0x00552150
+// OFFSET: 0x00543770
 void TextureNotifyGxRestart() {
     for (CTextureAtlas* atlas = s_atlasList.Head(); atlas; atlas = atlas->m_link.Next()) {
         atlas->Reload();
     }
 }
 
-// OFFSET: %0x00552220
+// OFFSET: 0x00541AE0
 int32_t TextureGetDimensions(CTexture* texture, uint32_t* width, uint32_t* height, int32_t wait) {
     if (texture->m_asyncObject) {
         if (!wait) {
@@ -1066,7 +1007,7 @@ int32_t TextureGetDimensions(CTexture* texture, uint32_t* width, uint32_t* heigh
     return 1;
 }
 
-// OFFSET: %0x00552290
+// OFFSET: 0x00543800
 CGxTex* TextureForceLoad(CTexture* texture) {
     if (texture->m_flags & 4) {
         AsyncTextureWait(texture);
@@ -1087,7 +1028,7 @@ CGxTex* TextureForceLoad(CTexture* texture) {
     return texture->m_gxTex;
 }
 
-// OFFSET: %0x00552310
+// OFFSET: 0x00543880
 CGxTex* TextureForceLoadForDiskOnly(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
 
@@ -1106,7 +1047,7 @@ CGxTex* TextureForceLoadForDiskOnly(CTexture* texture) {
     return TextureForceLoad(texture);
 }
 
-// OFFSET: %0x00552450
+// OFFSET: 0x00541C50
 CTextureAtlas::CTextureAtlas() {
     this->m_slots = 64;
     this->m_count = 0;
@@ -1121,7 +1062,7 @@ CTextureAtlas::CTextureAtlas() {
     memset(this->m_textures, 0, sizeof(this->m_textures));
 }
 
-// OFFSET: %0x005524D0
+// OFFSET: 0x00541CD0
 CGxTex* TextureAllocGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, EGxTexFormat dataFormat, const char* name) {
     CGxTexParms parms;
     parms.m_target = target;
@@ -1181,8 +1122,10 @@ CGxTex* TextureAllocGxTex(EGxTexTarget target, uint32_t width, uint32_t height, 
     return gxTex;
 }
 
-// OFFSET: %0x00554320
+// OFFSET: 0x00543C10
 void FillInSolidTexture(const CImVector& color, CTexture* texture) {
+    texture->m_flags = 0;
+
     if (texture->m_gxTex) {
         TextureFreeGxTex(texture->m_gxTex, texture->m_filename);
         texture->m_gxTex = NULL;
@@ -1210,34 +1153,21 @@ void FillInSolidTexture(const CImVector& color, CTexture* texture) {
     texture->m_colorEncoding = 3;
 }
 
-// OFFSET: %0x00552660
+// OFFSET: 0x00541E60
 void AsyncTextureHandler() {
     uint32_t available = 0x300000 - s_asyncLoadBufferUsed;
 
-    for (CAsyncObject* object = s_asyncLoadList.Head(); !s_asyncLoadList.IsEnd(object); ) {
-        CAsyncObject* next = s_asyncLoadList.RawNext(object);
+    for (CAsyncObject* object = s_asyncTextureList.Head(), * next; !s_asyncTextureList.IsEnd(object); object = next) {
+        next = s_asyncTextureList.RawNext(object);
 
         if (available >= object->m_size) {
             AsyncTextureProcess(object, 0);
             available -= object->m_size;
         }
-
-        object = next;
-    }
-
-    for (CAsyncObject* object = s_asyncTextureList.Head(); !s_asyncTextureList.IsEnd(object); ) {
-        CAsyncObject* next = s_asyncTextureList.RawNext(object);
-
-        if (available >= object->m_size) {
-            AsyncTextureProcess(object, 0);
-            available -= object->m_size;
-        }
-
-        object = next;
     }
 }
 
-// OFFSET: %0x00552760
+// OFFSET: 0x00541F00
 void TextureCacheUpdate() {
     int32_t destroyed = 0;
     int32_t pressure;
@@ -1275,7 +1205,7 @@ void TextureCacheUpdate() {
     }
 }
 
-// OFFSET: %0x00552180
+// OFFSET: 0x00541AA0
 void TextureIncreasePriority(CTexture* texture) {
     CAsyncObject* object = texture->m_asyncObject;
 
@@ -1292,7 +1222,7 @@ void TextureIncreasePriority(CTexture* texture) {
     }
 }
 
-// OFFSET: %0x005521C0
+// OFFSET: 0x005437A0
 CGxTex* TextureGetGxTex(CTexture* texture) {
     if (!texture) {
         DebugValidate("texture");
@@ -1334,7 +1264,7 @@ CGxTex* TextureGetGxTexBlocking(CTexture* texture) {
     return TextureForceLoad(texture);
 }
 
-// OFFSET: %0x00552A00
+// OFFSET: 0x00542180
 CTextureAtlas* CTextureAtlas::Alloc(uint32_t width, uint32_t height, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags flags) {
     CTextureAtlas* atlas = new (__FILE__, __LINE__) CTextureAtlas;
     atlas->m_height = height;
@@ -1350,7 +1280,7 @@ CTextureAtlas* CTextureAtlas::Alloc(uint32_t width, uint32_t height, EGxTexForma
     return atlas;
 }
 
-// OFFSET: %0x00552AA0
+// OFFSET: 0x00542220
 CTexture* TextureCacheGetTexture(const char* fileName) {
     uint32_t hashval = SStrHashHT(fileName);
     HASHKEY_TEXTUREFILE key;
@@ -1365,7 +1295,7 @@ CTexture* TextureCacheGetTexture(const char* fileName) {
     return texture;
 }
 
-// OFFSET: %0x00552AF0
+// OFFSET: 0x00542270
 CTexture* TextureCacheGetTexture(char* fileName, char* extension, CGxTexFlags texFlags) {
     if (extension) {
         *extension = '\0';
@@ -1389,7 +1319,7 @@ CTexture* TextureCacheGetTexture(char* fileName, char* extension, CGxTexFlags te
     return texture;
 }
 
-// OFFSET: %0x00552B50
+// OFFSET: 0x005422D0
 void TextureFreeGxTex(CGxTex* gxTex, const char* name) {
     CGxTexParms parms;
     GxTexParameters(gxTex, parms);
@@ -1442,7 +1372,7 @@ int32_t TextureUpdate(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x00552CC0
+// OFFSET: 0x00542440
 MipBits* TextureAllocMippedImg(PIXEL_FORMAT format, uint32_t width, uint32_t height) {
     int32_t cache = s_pixelFormatToMipBitsCache[format];
 
@@ -1483,7 +1413,7 @@ MipBits* TextureAllocMippedImg(PIXEL_FORMAT format, uint32_t width, uint32_t hei
     return bits;
 }
 
-// OFFSET: %0x00552DA0
+// OFFSET: 0x00542520
 void TextureFreeMippedImg(MipBits* bits, PIXEL_FORMAT format, uint32_t width, uint32_t height) {
     int32_t cache = s_pixelFormatToMipBitsCache[format];
 
@@ -1525,7 +1455,7 @@ void TextureFreeMippedImg(MipBits* bits, PIXEL_FORMAT format, uint32_t width, ui
     s_mipBitsCache[x][y][cache].LinkToTail(entry);
 }
 
-// OFFSET: %0x005531A0
+// OFFSET: 0x00542920
 CTextureAtlas::~CTextureAtlas() {
     if (this->m_gxTex) {
         TextureFreeGxTex(this->m_gxTex, "ATLAS");
@@ -1534,7 +1464,7 @@ CTextureAtlas::~CTextureAtlas() {
     this->m_link.Unlink();
 }
 
-// OFFSET: %0x00553230
+// OFFSET: 0x005429B0
 CTextureAtlas* CTextureAtlas::Get(CTexture* texture) {
     uint16_t width = texture->m_gxWidth;
     uint16_t height = texture->m_gxHeight;
@@ -1584,42 +1514,30 @@ CTextureAtlas* CTextureAtlas::Get(CTexture* texture) {
     return atlas;
 }
 
-// OFFSET: %0x00553360
-int32_t LoadTgaMips(char* fileName, char* extension, int32_t flags, MipBits** images, uint32_t* width, uint32_t* height, EGxTexFormat* gxTexFormat, int32_t* opaque, uint32_t* alphaBits, PIXEL_FORMAT* pixelFormat) {
-    if (extension) {
-        strcpy(extension, ".tga");
-    }
+// OFFSET: 0x00542AE0/0x140195DC0
+int32_t LoadTgaMips(void* data, uint32_t size, const char* fileName, int32_t flags, MipBits** images, StaticImage* image) {
+    CTgaFile tga;
 
-    CTgaFile image;
-
-    if (!image.Open(fileName, flags)) {
+    if (!tga.SetToData(static_cast<uint8_t*>(data), size) || !tga.LoadImageData(3)) {
         return 0;
     }
 
-    if (opaque) {
-        *opaque = image.AlphaBits() == 0;
-    }
+    tga.SetTopDown(1);
 
-    if (!image.LoadImageData(3)) {
-        return 0;
-    }
-
-    image.SetTopDown(1);
-
-    uint32_t imageWidth = image.Width();
-    uint32_t imageHeight = image.Height();
-    uint32_t mipCount = TextureCalcMipCount(imageWidth, imageHeight);
+    uint32_t height = tga.Height();
+    uint32_t width = tga.Width();
+    uint32_t mipCount = TextureCalcMipCount(width, height);
 
     if (*images) {
-        MippedImgSet(PIXEL_ARGB8888, imageWidth, imageHeight, *images);
+        MippedImgSet(PIXEL_ARGB8888, width, height, *images);
     } else {
-        *images = TextureAllocMippedImg(PIXEL_ARGB8888, imageWidth, imageHeight);
+        *images = TextureAllocMippedImg(PIXEL_ARGB8888, width, height);
     }
 
-    const TGA32Pixel* source = image.ImageBGRA32Pixel();
+    const TGA32Pixel* source = tga.ImageBGRA32Pixel();
     C4Pixel* dest = (*images)->m_mip[0];
 
-    for (uint32_t pixels = imageWidth * imageHeight; pixels; pixels--) {
+    for (uint32_t pixels = width * height; pixels; pixels--) {
         dest->m_b = source->m_b;
         dest->m_g = source->m_g;
         dest->m_r = source->m_r;
@@ -1628,52 +1546,81 @@ int32_t LoadTgaMips(char* fileName, char* extension, int32_t flags, MipBits** im
         source++;
     }
 
-    image.Close();
+    tga.Close();
 
     char mipName[260];
     TextureBuildMipFormat(mipName, fileName);
-    uint32_t predrawn = LoadPredrawnMips(&image, mipName, flags, *images);
-    TextureGenerateMips(image.Width(), image.Height(), predrawn, mipCount, *images);
+    uint32_t predrawn = LoadPredrawnMips(&tga, mipName, flags, *images);
+    TextureGenerateMips(tga.Width(), tga.Height(), predrawn, mipCount, *images);
 
-    if (width) {
-        *width = image.Width();
-    }
-
-    if (height) {
-        *height = image.Height();
-    }
-
-    if (gxTexFormat) {
-        *gxTexFormat = GxTex_Argb8888;
-    }
-
-    if (alphaBits) {
-        *alphaBits = image.AlphaBits();
-    }
-
-    if (pixelFormat) {
-        *pixelFormat = PIXEL_ARGB8888;
+    if (image) {
+        image->Set(*images, width, height, mipCount, COLOR_ARGB8888, PIXEL_ARGB8888, static_cast<ALPHA_FORMAT>(tga.AlphaBits()));
     }
 
     return 1;
 }
 
-// OFFSET: %0x00553550
-static int32_t LoadTgaWithExtension(char* fileName, int32_t flags, MipBits** images) {
+// OFFSET: 0x00542C80
+int32_t TextureReloadMips(CTexture* texture, MipBits** images) {
+    char buffer[260];
+    char* fileName = texture->m_filename;
+
+    if (TextureBuildAliasPath(buffer, texture->m_filename)) {
+        fileName = buffer;
+    }
+
     char* extension = &fileName[strlen(fileName)];
-    int32_t result = LoadTgaMips(fileName, extension, flags, images, NULL, NULL, NULL, NULL, NULL, NULL);
+    int32_t type = (texture->m_flags >> 3) & 7;
+    int32_t flags = texture->m_flags & 2;
+    int32_t result = 0;
+    TextureAppendExtension(extension, type, fileName - extension + 260);
+
+    uint32_t size;
+    void* data = TextureLoadFile(fileName, flags, &size);
+
+    if (data) {
+        if (type == 0) {
+            result = LoadTgaMips(data, size, fileName, flags, images, NULL);
+        } else if (type == 1) {
+            result = TextureLoadBlpMips(data, size, images);
+        }
+
+        SMemFree(data, __FILE__, __LINE__, 0);
+    }
+
     *extension = '\0';
 
     return result;
 }
 
-// OFFSET: %0x005535A0
-void UpdateTgaTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
+// OFFSET: 0x00542DC0
+int32_t LoadBlpMips(void* data, uint32_t size, MipBits** images, StaticImage* image, PIXEL_FORMAT format) {
+    if (!image->SetToBLPData(static_cast<uint8_t*>(data), size)) {
+        return 0;
+    }
+
+    uint32_t width = image->m_width;
+
+    if (format == PIXEL_UNSPECIFIED) {
+        format = image->m_pixelFormat;
+    }
+
+    if (*images) {
+        MippedImgSet(format, width, image->m_height, *images);
+    } else {
+        *images = TextureAllocMippedImg(format, width, image->m_height);
+    }
+
+    return image->Convert(format, *images, 0);
+}
+
+// OFFSET: 0x00543170/0x1401968C0
+void UpdateTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     CTexture* texture = static_cast<CTexture*>(userArg);
 
     switch (command) {
         case GxTex_Lock:
-            if (!s_pumping && !LoadTgaWithExtension(texture->m_filename, texture->m_flags & 2, &s_mipBits)) {
+            if (!s_pumping && !TextureReloadMips(texture, &s_mipBits)) {
                 GetDefaultTexture(width, height);
                 GetGlobalStatusObj().Add(STATUS_ERROR, "Texture %s not loaded -- replaced with default.\n", texture->m_filename);
             }
@@ -1681,9 +1628,9 @@ void UpdateTgaTexture(EGxTexCommand command, uint32_t width, uint32_t height, ui
             break;
 
         case GxTex_Latch: {
-            texelStrideInBytes = 4 * width;
+            texelStrideInBytes = GxCalcTexelStrideInBytes(texture->m_dataFormat, width);
 
-            const uint8_t* bits = reinterpret_cast<const uint8_t*>(s_mipBits[level].m_mip[0]);
+            const uint8_t* bits = reinterpret_cast<const uint8_t*>(s_mipBits->m_mip[level]);
             texels = bits;
 
             if (texture->m_gxTexTarget == GxTex_CubeMap) {
@@ -1727,61 +1674,84 @@ void UpdateTgaTexture(EGxTexCommand command, uint32_t width, uint32_t height, ui
     }
 }
 
-// OFFSET: %0x005536B0
-int32_t PumpBlpTextureAsync(CTexture* texture, void* data) {
-    CBLPFile image;
-
-    if (!image.Source(data)) {
-        texture->m_status.Add(STATUS_FATAL, "BLP Texture failure: \"%s\" invalid file version\n", texture->m_filename);
-        return 0;
-    }
-
-    if ((texture->m_flags & 4) && !(image.m_header.m_hasMips & 0x10)) {
+// OFFSET: 0x00543280/0x140196A00
+static int32_t PumpTexture(StaticImage* image, CTexture* texture, CStatus* status) {
+    if ((texture->m_flags & 4) && !(image->m_isAtlasable & 1)) {
         texture->m_flags &= ~4;
     }
 
-    texture->m_colorEncoding = image.m_header.m_colorEncoding;
-    texture->m_alphaBits = image.m_header.m_alphaSize;
+    texture->m_colorEncoding = image->m_colorFormat;
+    texture->m_alphaBits = image->m_alphaFormat;
 
-    if (!image.m_header.m_alphaSize) {
+    if (!texture->m_alphaBits) {
         texture->m_flags |= 1;
     }
 
     uint32_t bestMip = 0;
-    uint32_t width = image.m_header.m_width;
-    uint32_t height = image.m_header.m_height;
+    uint32_t width = image->m_width;
+    uint32_t height = image->m_height;
     RequestImageDimensions(&width, &height, &bestMip);
     texture->m_bestMip = bestMip;
 
-    PIXEL_FORMAT pixelFormat;
-    EGxTexFormat gxTexFormat;
-    TextureGetTextureFormats(pixelFormat, gxTexFormat, static_cast<PIXEL_FORMAT>(image.m_header.m_preferredFormat), image.m_header.m_alphaSize & 0x3F);
+    if (width < 8 || height < 8) {
+        if (status) {
+            status->Add(STATUS_FATAL, "Error loading file \"%s\": Texture size must be at least %dx%d\n", texture->m_filename, 8, 8);
+        }
 
-    s_pumping = 1;
-
-    if (!image.LockChain2(texture->m_filename, pixelFormat, s_mipBits, bestMip, 1)) {
-        s_pumping = 0;
-        texture->m_status.Add(STATUS_FATAL, "BLP Texture failure: \"%s\" decompression failed.\n", texture->m_filename);
         return 0;
     }
 
-    uint32_t faceWidth = width;
     EGxTexTarget target = GxTex_2d;
 
     if (width == 6 * height) {
         target = GxTex_CubeMap;
-        faceWidth = width / 6;
+        width /= 6;
     }
 
-    texture->m_gxHeight = height;
+    if (((width - 1) & width) || ((height - 1) & height)) {
+        if (!(texture->m_flags & 0x100)) {
+            if (status) {
+                status->Add(STATUS_FATAL, "Error loading file \"%s\": Texture size (%dx%d) must be powers of two\n", texture->m_filename, width, height);
+            }
+
+            return 0;
+        }
+
+        target = GxTex_NonPow2;
+    }
+
+    PIXEL_FORMAT pixelFormat;
+    EGxTexFormat gxTexFormat;
+    TextureGetTextureFormats(pixelFormat, gxTexFormat, image->m_pixelFormat, image->m_alphaFormat & 0x3F);
+    s_pumping = 1;
+
+    int32_t inPlace;
+
+    if (image->m_colorFormat == COLOR_DXT) {
+        inPlace = pixelFormat == PIXEL_DXT1 || pixelFormat == PIXEL_DXT3 || pixelFormat == PIXEL_DXT5;
+    } else {
+        inPlace = image->m_colorFormat == COLOR_ARGB8888 || image->m_colorFormat == COLOR_ARGB8888_2;
+    }
+
+    if (inPlace) {
+        for (uint32_t i = bestMip, j = 0; i < image->m_mipCount; i++, j++) {
+            s_mipBits->m_mip[j] = reinterpret_cast<C4Pixel*>(image->m_mips[i]);
+        }
+    } else if (!image->Convert(pixelFormat, s_mipBits, bestMip)) {
+        s_pumping = 0;
+        texture->m_status.Add(STATUS_FATAL, "Texture failure: \"%s\" conversion failed.\n", texture->m_filename);
+        return 0;
+    }
+
+    texture->m_dataFormat = s_pixelFormatToGxTexFormat[pixelFormat];
     texture->m_gxTexFormat = gxTexFormat;
     texture->m_gxTexTarget = target;
-    texture->m_dataFormat = s_pixelFormatToGxTexFormat[pixelFormat];
-    texture->m_gxWidth = faceWidth;
+    texture->m_gxWidth = width;
+    texture->m_gxHeight = height;
 
     uint32_t filter = texture->m_gxTexFlags.m_filter;
 
-    if (filter != GxTex_Nearest && filter != GxTex_Linear && image.m_numLevels == 1) {
+    if (filter != GxTex_Nearest && filter != GxTex_Linear && image->m_mipCount == 1) {
         texture->m_gxTexFlags.m_filter = filter == GxTex_NearestMipNearest ? GxTex_Nearest : GxTex_Linear;
     }
 
@@ -1801,15 +1771,15 @@ int32_t PumpBlpTextureAsync(CTexture* texture, void* data) {
             texture->m_gxTex = NULL;
         }
 
-        texture->m_gxTex = TextureAllocGxTex(texture->m_gxTexTarget, texture->m_gxWidth, texture->m_gxHeight, 0, texture->m_gxTexFormat, texture->m_gxTexFlags, texture, UpdateBlpTextureAsync, texture->m_dataFormat, texture->m_filename);
+        texture->m_gxTex = TextureAllocGxTex(texture->m_gxTexTarget, texture->m_gxWidth, texture->m_gxHeight, 0, texture->m_gxTexFormat, texture->m_gxTexFlags, texture, UpdateTexture, texture->m_dataFormat, texture->m_filename);
 
         if (!texture->m_gxTex) {
             s_pumping = 0;
-            texture->m_status.Add(STATUS_FATAL, "BLP Texture failure: \"%s\" allocating %dx%d texture failed.\n", texture->m_filename, faceWidth, height);
+            texture->m_status.Add(STATUS_FATAL, "Texture failure: \"%s\" allocating %dx%d texture failed.\n", texture->m_filename, width, height);
             return 0;
         }
 
-        GxTexUpdate(texture->m_gxTex, 0, 0, faceWidth, height, 1);
+        GxTexUpdate(texture->m_gxTex, 0, 0, width, height, 1);
     }
 
     s_pumping = 0;
@@ -1817,32 +1787,70 @@ int32_t PumpBlpTextureAsync(CTexture* texture, void* data) {
     return 1;
 }
 
-// OFFSET: %0x005543D0
-void AsyncTextureSuccessCallback(CTexture* texture, CAsyncObject* object) {
-    if (!PumpBlpTextureAsync(texture, object->m_buffer)) {
+// OFFSET: 0x00543580/0x140196E30
+static int32_t PumpTextureFromData(void* data, CTexture* texture, uint32_t size) {
+    int32_t type = (texture->m_flags >> 3) & 7;
+
+    if (type == 0) {
+        MipBits* images = NULL;
+        StaticImage image;
+
+        if (!LoadTgaMips(data, size, texture->m_filename, texture->m_flags & 2, &images, &image)) {
+            return 0;
+        }
+
+        int32_t result = PumpTexture(&image, texture, &texture->m_status);
+
+        if (images) {
+            SMemFree(images, __FILE__, __LINE__, 0);
+        }
+
+        return result;
+    }
+
+    if (type != 1) {
+        return 0;
+    }
+
+    StaticImage image;
+
+    if (image.SetToBLPData(static_cast<uint8_t*>(data), size)) {
+        return PumpTexture(&image, texture, &texture->m_status);
+    }
+
+    const BLPHeader* header = static_cast<const BLPHeader*>(data);
+    texture->m_status.Add(STATUS_FATAL, "BLP Texture failure: \"%s\" invalid file version (size = %d, magic = 0x%08X, version = %d, width = %d, height = %d)\n", texture->m_filename, size, header->m_magic, header->m_formatVersion, header->m_width, header->m_height);
+
+    for (uint32_t i = 0; i < 16; i++) {
+        texture->m_status.Add(STATUS_FATAL, "BLP Texture failure: (Mip Level %d - Offset %d, Size %d)\n", i, header->m_mipOffsets[i], header->m_mipSizes[i]);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00543CD0/0x140197880
+void AsyncTextureSuccessCallback(CAsyncObject* object) {
+    CTexture* texture = static_cast<CTexture*>(object->m_userArg);
+
+    if (!PumpTextureFromData(object->m_buffer, texture, object->m_size)) {
         if (!texture->m_status.IsEmpty()) {
             SysMsgAdd(&texture->m_status);
         }
 
-        FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
+        if (!(texture->m_flags & 0x80)) {
+            FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
+        }
     }
 
-    SFileCloseFile(object->m_file);
-    void* buffer = object->m_buffer;
     s_asyncLoadBufferUsed -= object->m_size;
-    object->m_file = NULL;
-    SMemFree(buffer, __FILE__, __LINE__, 0);
+    SMemFree(object->m_buffer, __FILE__, __LINE__, 0);
     AsyncFileReadDestroyObject(object);
     texture->m_asyncObject = NULL;
 }
 
-// OFFSET: %0x00553960
+// OFFSET: 0x00541EC0
 int32_t AsyncTextureStatus() {
     int32_t count = 0;
-
-    for (CAsyncObject* object = s_asyncLoadList.Head(); !s_asyncLoadList.IsEnd(object); object = s_asyncLoadList.RawNext(object)) {
-        count++;
-    }
 
     for (CAsyncObject* object = s_asyncTextureList.Head(); !s_asyncTextureList.IsEnd(object); object = s_asyncTextureList.RawNext(object)) {
         count++;
@@ -1851,7 +1859,7 @@ int32_t AsyncTextureStatus() {
     return count;
 }
 
-// OFFSET: %0x005539C0
+// OFFSET: 0x00542D50
 void TextureGxCacheClear() {
     for (int32_t x = 0; x < 6; x++) {
         for (int32_t y = 0; y < 6; y++) {
@@ -1864,67 +1872,13 @@ void TextureGxCacheClear() {
     }
 }
 
-// OFFSET: %0x00553A20
+// OFFSET: 0x00542DB0
 void TextureGxCacheFlush() {
     TextureGxCacheClear();
     s_gxTexCacheFree.Clear();
 }
 
-// OFFSET: %0x00553A30
-int32_t LoadBlpMips(char* fileName, char* extension, int32_t flags, MipBits** images, uint32_t* width, uint32_t* height, int32_t* opaque, uint32_t* alphaBits, PIXEL_FORMAT* pixelFormat) {
-    if (extension) {
-        strcpy(extension, ".blp");
-    }
-
-    CBLPFile image;
-
-    if (!image.Open(fileName, flags)) {
-        return 0;
-    }
-
-    uint32_t alphaSize = image.m_header.m_alphaSize & 0x3F;
-    uint32_t imageWidth = image.m_header.m_width;
-    uint32_t imageHeight = image.m_header.m_height;
-    PIXEL_FORMAT format;
-
-    if (!pixelFormat || (format = *pixelFormat) == PIXEL_UNSPECIFIED) {
-        if (image.m_header.m_alphaSize & 0x3F) {
-            format = alphaSize != 1 ? PIXEL_ARGB4444 : PIXEL_ARGB1555;
-        } else {
-            format = PIXEL_RGB565;
-        }
-    }
-
-    *images = TextureAllocMippedImg(format, image.m_header.m_width, image.m_header.m_height);
-
-    if (!image.LockChain2(fileName, format, *images, 0, 0)) {
-        return 0;
-    }
-
-    if (width) {
-        *width = imageWidth;
-    }
-
-    if (height) {
-        *height = imageHeight;
-    }
-
-    if (opaque) {
-        *opaque = alphaSize == 0;
-    }
-
-    if (alphaBits) {
-        *alphaBits = alphaSize;
-    }
-
-    if (pixelFormat) {
-        *pixelFormat = format;
-    }
-
-    return 1;
-}
-
-// OFFSET: %0x00553B90
+// OFFSET: 0x00542E30
 MipBits* TextureLoadImage(const char* fileName, uint32_t* width, uint32_t* height, PIXEL_FORMAT* dataFormat, int32_t* opaque, CStatus* status, uint32_t* alphaBits, int32_t flags) {
     if (!fileName) {
         DebugValidate("filename");
@@ -1950,36 +1904,62 @@ MipBits* TextureLoadImage(const char* fileName, uint32_t* width, uint32_t* heigh
         return NULL;
     }
 
-    MipBits* images = NULL;
     char name[260];
+    StaticImage image;
+    MipBits* images = NULL;
     SStrCopy(name, fileName, sizeof(name));
     char* extension = OsPathFindExtensionWithDot(name);
     *extension = '\0';
 
-    int32_t type = TEXFILE_BLP;
+    int32_t type = 1;
 
-    for (int32_t tries = 0; tries < 3; tries++) {
-        if (type == TEXFILE_TGA) {
-            LoadTgaMips(name, extension, flags, &images, width, height, NULL, opaque, alphaBits, dataFormat);
-        } else if (type == TEXFILE_BLP) {
-            LoadBlpMips(name, extension, flags, &images, width, height, opaque, alphaBits, dataFormat);
+    for (uint32_t tries = 0; ; ) {
+        PIXEL_FORMAT format = *dataFormat;
+        TextureAppendExtension(extension, type, name + sizeof(name) - extension);
+
+        uint32_t size;
+        void* data = TextureLoadFile(name, flags, &size);
+
+        if (data) {
+            if (type == 0) {
+                LoadTgaMips(data, size, name, flags, &images, &image);
+            } else if (type == 1) {
+                LoadBlpMips(data, size, &images, &image, format);
+            }
+
+            SMemFree(data, __FILE__, __LINE__, 0);
+
+            if (images) {
+                break;
+            }
         }
 
-        if (images) {
+        type = (type + 1) % 2;
+
+        if (++tries >= 2) {
+            if (status) {
+                status->Add(STATUS_FATAL, "Error loading texure file \"%s\": unsupported image format\n", fileName);
+            }
+
             return images;
         }
-
-        type = (type + 1) % 3;
     }
 
-    if (status) {
-        status->Add(STATUS_FATAL, "Error loading texure file \"%s\": unsupported image format\n", fileName);
+    *width = image.m_width;
+    *height = image.m_height;
+
+    if (opaque) {
+        *opaque = image.m_alphaFormat == 0;
+    }
+
+    if (alphaBits) {
+        *alphaBits = image.m_alphaFormat & 0x3F;
     }
 
     return images;
 }
 
-// OFFSET: %0x00553D90
+// OFFSET: 0x005436B0
 void TextureDestroy() {
     CTextureBlob::UnloadAll();
     TextureGxCacheClear();
@@ -2003,7 +1983,7 @@ void TextureDestroy() {
     EventUnregisterEx(EVENT_ID_POLL, TextureUpdate, NULL, 0xFFFFFFFF);
 }
 
-// OFFSET: %0x00554090
+// OFFSET: 0x00543B10
 void CTextureAtlas::Free(CTextureAtlas* atlas, CTexture* texture) {
     atlas->m_textures[texture->m_atlasBlockIndex] = NULL;
     atlas->m_count--;
@@ -2018,7 +1998,7 @@ void CTextureAtlas::Free(CTextureAtlas* atlas, CTexture* texture) {
     texture->m_atlasBlockIndex = -1;
 }
 
-// OFFSET: %0x005540E0
+// OFFSET: 0x00543B60
 CTexture::CTexture() {
     this->m_refcount = 1;
     this->m_flags = 0;
@@ -2043,8 +2023,36 @@ const char* CTexture::GetObjectName() {
     return this->m_filename;
 }
 
-// OFFSET: [%0x00555090, %0x00555320]
+// OFFSET: 0x005407D0/0x1401932E0
+static void TextureCancelAsyncLoad(CTexture* texture) {
+    CAsyncObject* object = texture->m_asyncObject;
+
+    if (!object) {
+        return;
+    }
+
+    if (texture->m_flags & 0x40) {
+        object->m_userArg = NULL;
+        texture->m_asyncObject->m_userPostUnloadCallback = AsyncTextureDestroyedCallback;
+        texture->m_asyncObject->m_userPostloadCallback = texture->m_asyncObject->m_userPostUnloadCallback;
+        texture->m_asyncObject = NULL;
+    } else {
+        uint32_t size = object->m_size;
+        void* buffer = object->m_buffer;
+
+        if (AsyncFileReadCancel(object, AsyncTextureDestroyedCallback) && buffer) {
+            s_asyncLoadBufferUsed -= size;
+            SMemFree(buffer, __FILE__, __LINE__, 0);
+        }
+
+        texture->m_asyncObject = NULL;
+    }
+}
+
+// OFFSET: [0x00544860/0x140198A60, 0x00544AA0/0x140198E10]
 CTexture::~CTexture() {
+    this->m_flags = 0;
+
     if (this->m_gxTex) {
         TextureFreeGxTex(this->m_gxTex, this->m_filename);
         this->m_gxTex = NULL;
@@ -2055,84 +2063,50 @@ CTexture::~CTexture() {
         this->m_atlas = NULL;
     }
 
-    if (this->m_asyncObject) {
-        if (this->m_flags & 0x20) {
-            this->m_asyncObject->m_userArg = NULL;
-            this->m_asyncObject->m_userPostUnloadCallback = reinterpret_cast<void*>(AsyncTextureDestroyedCallback);
-            this->m_asyncObject->m_userPostloadCallback = this->m_asyncObject->m_userPostUnloadCallback;
-        } else {
-            void* buffer = this->m_asyncObject->m_buffer;
-            uint32_t size = this->m_asyncObject->m_size;
-
-            if (AsyncFileReadCancel(this->m_asyncObject, AsyncTextureDestroyedCallback) && buffer) {
-                s_asyncLoadBufferUsed -= size;
-                SMemFree(buffer, __FILE__, __LINE__, 0);
-            }
-        }
-
-        this->m_asyncObject = NULL;
-    }
-
+    TextureCancelAsyncLoad(this);
     this->m_link.Unlink();
 }
 
-// OFFSET: %0x005544B0
-int32_t CreateBlpSync(CTexture* texture, const char* fileName, uint32_t flags, CGxTexFlags texFlags) {
-    SFileImpl* file = NULL;
-    SErrSetLastError(0);
+// OFFSET: 0x00543DB0
+static int32_t CreateTextureSync(char* extension, CTexture* texture, const char* fileName, int32_t type, uint32_t size, uint32_t flags, CGxTexFlags texFlags) {
+    TextureAppendExtension(extension, type, fileName + size - extension);
 
-    if (!SFile::OpenEx(NULL, fileName, (flags >> 1) & 1, &file)) {
-        if (!SErrGetLastError()) {
-            SErrSetLastError(STORM_ERROR_FILE_NOT_FOUND);
-        }
+    int32_t localFlag = flags & 2;
+    uint32_t fileSize;
+    void* data = TextureLoadFile(fileName, localFlag, &fileSize);
 
+    if (!data) {
         return 0;
-    }
-
-    if (!file) {
-        return 0;
-    }
-
-    if (texture->m_gxTex) {
-        TextureFreeGxTex(texture->m_gxTex, texture->m_filename);
-        texture->m_gxTex = NULL;
-    }
-
-    if (texture->m_atlas) {
-        CTextureAtlas::Free(texture->m_atlas, texture);
-        texture->m_atlas = NULL;
     }
 
     texture->m_gxTexFlags = texFlags;
+    texture->m_flags = type << 3;
 
-    if (flags & 2) {
-        texture->m_flags |= 2;
+    if (localFlag) {
+        texture->m_flags = (type << 3) | 2;
     }
 
     if ((flags & 4) && s_atlasEnable) {
         texture->m_flags |= 4;
     }
 
-    uint32_t size = SFileGetFileSize(file, NULL);
-    void* data = SMemAlloc(size, __FILE__, __LINE__, 0);
-
-    if (!SFile::Read(file, data, size, NULL)) {
-        DebugLog("CreateBlpTexture() failed read: %s.\n", fileName);
+    if (flags & 0x20) {
+        texture->m_flags |= 0x100;
     }
 
-    if (!PumpBlpTextureAsync(texture, data)) {
+    if (!PumpTextureFromData(data, texture, fileSize) && !(texture->m_flags & 0x80)) {
         FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
     }
 
-    SFileCloseFile(file);
     SMemFree(data, __FILE__, __LINE__, 0);
 
     return 1;
 }
 
-// OFFSET: %0x005545F0
-int32_t CreateBlpAsync(CTexture* texture, const char* fileName, char* extension, uint32_t flags, CGxTexFlags texFlags) {
-    CTextureBlobTexture* blobTexture = NULL;
+// OFFSET: 0x00543E70
+static int32_t CreateTextureAsync(const char* fileName, char* extension, CTexture* texture, int32_t type, uint32_t size, uint32_t flags, CGxTexFlags texFlags, uint8_t priority) {
+    TextureAppendExtension(extension, type, fileName + size - extension);
+
     SFileImpl* file = NULL;
     SErrSetLastError(0);
 
@@ -2148,21 +2122,13 @@ int32_t CreateBlpAsync(CTexture* texture, const char* fileName, char* extension,
         return 0;
     }
 
-    if (texture->m_gxTex) {
-        TextureFreeGxTex(texture->m_gxTex, texture->m_filename);
-        texture->m_gxTex = NULL;
-    }
-
-    if (texture->m_atlas) {
-        CTextureAtlas::Free(texture->m_atlas, texture);
-        texture->m_atlas = NULL;
-    }
-
     if (extension) {
         *extension = '\0';
     }
 
-    if (!(flags & 4)) {
+    CTextureBlobTexture* blobTexture = NULL;
+
+    if (!(flags & 4) && !(texture->m_flags & 0x80)) {
         blobTexture = CTextureBlob::GetTexture(fileName);
     }
 
@@ -2176,79 +2142,64 @@ int32_t CreateBlpAsync(CTexture* texture, const char* fileName, char* extension,
         texture->m_flags |= 4;
     }
 
-    if ((flags & 0x20) && SFile::IsStreamingMode()) {
-        texture->m_flags |= 0x20;
+    if ((flags & 0x10) && SFile::IsStreamingMode()) {
+        texture->m_flags |= 0x40;
     }
+
+    if (flags & 0x20) {
+        texture->m_flags |= 0x100;
+    }
+
+    texture->m_flags |= type << 3;
 
     if (blobTexture) {
         CTextureBlob::CreateTexture(texture, blobTexture);
     }
 
+    if (texture->m_asyncObject) {
+        TextureCancelAsyncLoad(texture);
+    }
+
     texture->m_asyncObject = AsyncFileReadAllocObject();
     texture->m_asyncObject->m_userArg = texture;
-    texture->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(AsyncTextureSuccessCallback);
-    texture->m_asyncObject->m_userPostUnloadCallback = reinterpret_cast<void*>(AsyncTextureFailureCallback);
+    texture->m_asyncObject->m_userPostloadCallback = AsyncTextureSuccessCallback;
+    texture->m_asyncObject->m_userPostUnloadCallback = AsyncTextureFailureCallback;
     texture->m_asyncObject->m_file = file;
     texture->m_asyncObject->m_size = SFileGetFileSize(file, NULL);
-
-    if (blobTexture) {
-        texture->m_asyncObject->m_priority = 132;
-    } else if (flags & 0x10) {
-        texture->m_asyncObject->m_priority = 129;
-    } else {
-        texture->m_asyncObject->m_priority = 130;
-    }
+    texture->m_asyncObject->m_priority = priority;
 
     CAsyncObject* object = texture->m_asyncObject;
 
-    if (0x300000 - s_asyncLoadBufferUsed < object->m_size) {
-        s_asyncTextureList.LinkNode(object, 2, NULL);
-    } else {
+    if (object->m_priority == 2 || 0x300000 - s_asyncLoadBufferUsed >= object->m_size) {
         AsyncTextureProcess(object, 0);
+    } else {
+        s_asyncTextureList.LinkNode(object, 2, NULL);
     }
 
     return 1;
 }
 
-// OFFSET: %0x00554770
-static int32_t CreateBlpTexture(CTexture* texture, char* fileName, char* extension, uint32_t flags, CGxTexFlags texFlags) {
+// OFFSET: 0x00544010
+static int32_t CreateTextureOfType(char* extension, const char* fileName, int32_t type, CTexture* texture, uint32_t size, uint32_t flags, CGxTexFlags texFlags, uint8_t priority) {
     char buffer[260];
-
-    if (extension) {
-        strcpy(extension, ".blp");
-    }
 
     if (TextureBuildAliasPath(buffer, fileName)) {
         fileName = buffer;
-        extension = OsPathFindExtensionWithDot(buffer);
+        extension = &buffer[strlen(buffer)];
     }
 
     if (s_createBlpAsync) {
-        return CreateBlpAsync(texture, fileName, extension, flags, texFlags);
+        return CreateTextureAsync(fileName, extension, texture, type, size, flags, texFlags, priority);
     }
 
-    return CreateBlpSync(texture, fileName, flags, texFlags);
+    return CreateTextureSync(extension, texture, fileName, type, size, flags, texFlags);
 }
 
-// OFFSET: %0x00554800
-static int32_t CreateTextureOfType(CTexture* texture, TEXFILETYPE type, char* fileName, char* extension, uint32_t flags, CGxTexFlags texFlags, CStatus* status) {
-    switch (type) {
-        case TEXFILE_TGA:
-            return CreateTgaTexture(texture, fileName, extension, flags, texFlags, status);
-
-        case TEXFILE_BLP:
-            return CreateBlpTexture(texture, fileName, extension, flags, texFlags);
-
-        default:
-            return 0;
-    }
-}
-
-// OFFSET: %0x00554850
+// OFFSET: 0x005440A0/0x140197DF0
 static void TextureReload(CTexture* texture) {
-    SFile::RebuildHash();
-
     CGxTexFlags texFlags = texture->m_gxTexFlags;
+    texture->m_flags |= 0x80;
+
     CStatus status;
     char name[260];
     SStrCopy(name, texture->m_filename, sizeof(name));
@@ -2258,28 +2209,18 @@ static void TextureReload(CTexture* texture) {
         *extension = '\0';
     }
 
-    for (int32_t type = TEXFILE_UNKNOWN; type < 3; type++) {
-        int32_t result;
+    CGxTexFlags gxTexFlags;
+    GxTexFlags(texture->m_gxTex, gxTexFlags);
 
-        if (type == TEXFILE_TGA) {
-            result = CreateTgaTexture(texture, name, extension, 0, texFlags, &status);
-        } else if (type == TEXFILE_BLP) {
-            result = CreateBlpTexture(texture, name, extension, 0, texFlags);
-        } else {
-            continue;
-        }
-
-        if (result) {
-            GxTexUpdate(texture->m_gxTex, 0, 0, 0, 0, 0);
+    for (int32_t type = 0; type < 2; type++) {
+        if (CreateTextureOfType(extension, name, type, texture, sizeof(name), 0, texFlags, 2)) {
+            GxTexSetFlags(texture->m_gxTex, gxTexFlags);
             return;
         }
     }
-
-    TextureReportLoadError("texture", name, &status);
-    FillInSolidTexture(*reinterpret_cast<const CImVector*>(&s_defaultColor), texture);
 }
 
-// OFFSET: %0x005549A0
+// OFFSET: 0x005441A0
 static void TextureFileChanged(const char* fileName) {
     DebugLog("Texture changed: %s\n", fileName);
 
@@ -2291,9 +2232,6 @@ static void TextureFileChanged(const char* fileName) {
         *extension = '\0';
     }
 
-    int32_t createBlpAsync = s_createBlpAsync;
-    s_createBlpAsync = 0;
-
     for (CTexture* texture = s_textureList.Head(); texture; ) {
         CTexture* next = s_textureList.Next(texture);
         const char* textureName = OsPathFindFilename(texture->m_filename);
@@ -2304,11 +2242,9 @@ static void TextureFileChanged(const char* fileName) {
 
         texture = next;
     }
-
-    s_createBlpAsync = createBlpAsync;
 }
 
-// OFFSET: %0x00554A80
+// OFFSET: 0x00544270
 void TextureInitialize() {
     s_mipBits = static_cast<MipBits*>(SMemAlloc(MippedImgCalcSize(PIXEL_ARGB8888, 1024, 1024), __FILE__, __LINE__, 0));
     AsyncFileReadAddPollHandler(AsyncTextureHandler);
@@ -2322,7 +2258,7 @@ void TextureInitialize() {
     FileNotification::RegisterSingleFile("png", TextureFileChanged);
 }
 
-// OFFSET: %0x00554B30
+// OFFSET: 0x00544320
 CTexture* TextureCreate(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, EGxTexFormat dataFormat, CGxTexFlags texFlags, void* userArg, GxTexUserFunc userFunc, const char* name, int32_t defaultFilter) {
     CTexture* texture = new (__FILE__, __LINE__) CTexture;
     SStrCopy(texture->m_filename, name ? name : "UniqueTexture", sizeof(texture->m_filename));
@@ -2339,7 +2275,7 @@ CTexture* TextureCreate(EGxTexTarget target, uint32_t width, uint32_t height, ui
     return texture;
 }
 
-// OFFSET: %0x00554C40
+// OFFSET: 0x005443F0
 CTexture* TextureCreateBlob(char* fileName, CGxTexFlags texFlags, CStatus* status, int32_t defaultFilter) {
     if (!fileName) {
         DebugValidate("fileName");
@@ -2389,7 +2325,7 @@ CTexture* TextureCreate(uint32_t width, uint32_t height, EGxTexFormat format, EG
     return TextureCreate(GxTex_2d, width, height, 0, format, dataFormat, texFlags, userArg, userFunc, name, defaultFilter);
 }
 
-// OFFSET: %0x00555610
+// OFFSET: 0x00544D80
 void TextureCacheNewTexture(CTexture* texture) {
     uint32_t hashval = SStrHashHT(texture->m_filename);
     HASHKEY_TEXTUREFILE key;
@@ -2399,7 +2335,7 @@ void TextureCacheNewTexture(CTexture* texture) {
     s_textureCache.Insert(texture, hashval, key);
 }
 
-// OFFSET: %0x005553C0
+// OFFSET: 0x00544B40
 void TextureCacheNewTexture(CTexture* texture, CGxTexFlags texFlags) {
     uint32_t hashval = SStrHashHT(texture->m_filename);
     HASHKEY_TEXTUREFILE key;
@@ -2409,7 +2345,7 @@ void TextureCacheNewTexture(CTexture* texture, CGxTexFlags texFlags) {
     s_textureCache.Insert(texture, hashval, key);
 }
 
-// OFFSET: %0x00555660
+// OFFSET: 0x00544DD0
 CTexture* TextureCreateSolid(const CImVector& color) {
     char name[260];
     SStrPrintf(name, sizeof(name), "Color-%x%x%x%x", color.r, color.g, color.b, color.a);
@@ -2433,73 +2369,8 @@ CTexture* TextureCreateSolid(const CImVector& color) {
     return texture;
 }
 
-// OFFSET: %0x00554190
-int32_t CreateTgaTexture(CTexture* texture, const char* fileName, char* extension, int32_t flags, CGxTexFlags texFlags, CStatus* status) {
-    if (extension) {
-        strcpy(extension, ".tga");
-    }
-
-    CTgaFile image;
-
-    if (!image.Open(fileName, flags)) {
-        return 0;
-    }
-
-    if (texture->m_gxTex) {
-        TextureFreeGxTex(texture->m_gxTex, texture->m_filename);
-        texture->m_gxTex = NULL;
-    }
-
-    if (texture->m_atlas) {
-        CTextureAtlas::Free(texture->m_atlas, texture);
-        texture->m_atlas = NULL;
-    }
-
-    uint32_t height = image.Height();
-    EGxTexTarget target = GxTex_2d;
-    uint32_t width = image.Width();
-
-    if (width == 6 * height) {
-        target = GxTex_CubeMap;
-        width /= 6;
-    }
-
-    if (width < 8 || height < 8) {
-        status->Add(STATUS_FATAL, "Error loading file \"%s\": Texture size must be at least %dx%d\n", fileName, 8, 8);
-        return 0;
-    }
-
-    if (((width - 1) & width) || ((height - 1) & height)) {
-        status->Add(STATUS_FATAL, "Error loading file \"%s\": Texture size (%dx%d) must be powers of two\n", fileName, width, height);
-        return 0;
-    }
-
-    texture->m_colorEncoding = 3;
-    texture->m_alphaBits = image.AlphaBits();
-
-    if (!texture->m_alphaBits) {
-        texture->m_flags |= 1;
-    }
-
-    if (flags) {
-        texture->m_flags |= 2;
-    }
-
-    texture->m_gxTex = TextureAllocGxTex(target, width, height, 0, GxTex_Argb8888, texFlags, texture, UpdateTgaTexture, GxTex_Argb8888, texture->m_filename);
-
-    if (!texture->m_gxTex) {
-        return 0;
-    }
-
-    texture->m_gxTexTarget = target;
-    texture->m_gxWidth = width;
-    texture->m_gxHeight = height;
-
-    return 1;
-}
-
-// OFFSET: %0x00555410
-CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* status, uint32_t flags) {
+// OFFSET: 0x00544B90
+CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* status, uint32_t flags, const char* debugName, uint8_t priority) {
     if (!fileName) {
         DebugValidate("fileName");
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -2520,8 +2391,8 @@ CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* sta
 
     texFlags = TextureMakeTexFlags(texFlags, (flags & 1) == 0);
 
-    int32_t tries = 3;
-    int32_t type = TEXFILE_BLP;
+    int32_t tries = 2;
+    int32_t type = 1;
     char name[260];
     SStrCopy(name, fileName, sizeof(name));
     char* extension = OsPathFindExtensionWithDot(name);
@@ -2529,12 +2400,10 @@ CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* sta
     if ((flags & 8) && extension) {
         tries = 1;
 
-        if (_stricmp(extension, ".blp")) {
-            if (!_stricmp(extension, ".tga")) {
-                type = TEXFILE_TGA;
-            } else if (!_stricmp(extension, ".png")) {
-                type = TEXFILE_UNKNOWN;
-            }
+        if (!_stricmp(extension, ".blp")) {
+            type = 1;
+        } else if (!_stricmp(extension, ".tga")) {
+            type = 0;
         }
 
         extension = NULL;
@@ -2557,11 +2426,11 @@ CTexture* TextureCreate(const char* fileName, CGxTexFlags texFlags, CStatus* sta
     int32_t i;
 
     for (i = 0; i < tries; i++) {
-        if (CreateTextureOfType(texture, static_cast<TEXFILETYPE>(type), name, extension, flags, texFlags, status)) {
+        if (CreateTextureOfType(extension, name, type, texture, sizeof(name), flags, texFlags, priority)) {
             break;
         }
 
-        type = (type + 1) % 3;
+        type = (type + 1) % 2;
     }
 
     if (i >= tries) {

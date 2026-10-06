@@ -117,7 +117,7 @@ void __fastcall UpdateAllPortraits() {
 void PortraitInitialize() {
     CStatus status;
 
-    s_portraitMaskTexture = TextureCreate("Interface\\CharacterFrame\\TempPortraitAlphaMaskSmall.blp", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0);
+    s_portraitMaskTexture = TextureCreate("Interface\\CharacterFrame\\TempPortraitAlphaMaskSmall.blp", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1), &status, 0, NULL, 2);
 
     if (s_portraitMaskTexture) {
         s_portraitMaskGxTex = TextureGetGxTexBlocking(s_portraitMaskTexture);

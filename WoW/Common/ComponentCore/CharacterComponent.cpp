@@ -1164,7 +1164,7 @@ void CCharacterComponent::PasteOpaqueScale(void* texture, MipBits* dstMips, C2iV
 CTexture* CreateTexture(const char* fileName, CStatus* status) {
     CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
 
-    return TextureCreate(fileName, flags, status, 0);
+    return TextureCreate(fileName, flags, status, 0, NULL, 2);
 }
 
 // OFFSET: #0x004E8D70
@@ -5212,7 +5212,7 @@ bool CCharacterComponent::SkinNpc(const char* debug) {
     CStatus status;
     strcpy(s_pathEnd, this->m_data.m_npcSkinTexture);
     CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
-    CTexture* texture = TextureCreate(s_path, flags, &status, 0);
+    CTexture* texture = TextureCreate(s_path, flags, &status, 0, NULL, 2);
 
     if (!texture) {
         return false;
@@ -5246,7 +5246,7 @@ void CCharacterComponent::ReplaceMonsterSkin(CM2Model* model, const CreatureDisp
     for (uint32_t i = 0; i < 3; i++) {
         if (*displayRec->m_textureVariation[i]) {
             strcpy(fileName, displayRec->m_textureVariation[i]);
-            CTexture* texture = TextureCreate(path, flags, &status, 0);
+            CTexture* texture = TextureCreate(path, flags, &status, 0, NULL, 2);
 
             if (texture) {
                 model->ReplaceTexture(i + 11, texture);

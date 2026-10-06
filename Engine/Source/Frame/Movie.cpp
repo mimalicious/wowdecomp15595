@@ -41,49 +41,31 @@ MoviePreload::MoviePreload() {
     this->m_total = 0;
 }
 
-// OFFSET: %0x00521CB0
-static void PreloadCallback(void* param, CAsyncObject* object) {
-    MoviePreload* preload = static_cast<MoviePreload*>(param);
-    preload->m_total = 0;
-    preload->m_local = 0;
-    SFile::FileGetIsLocalAmount(object->m_file, preload->m_local, preload->m_total);
+// OFFSET: 0x00511920
+static void PreloadFailedCallback(CAsyncObject* object) {
+    MoviePreload* preload = static_cast<MoviePreload*>(object->m_userArg);
     AsyncFileReadDestroyObject(object);
     preload->m_object = NULL;
 }
 
-// OFFSET: %0x00521D00
+// OFFSET: 0x00511950
+static void PreloadCallback(CAsyncObject* object) {
+    MoviePreload* preload = static_cast<MoviePreload*>(object->m_userArg);
+    AsyncFileReadDestroyObject(object);
+    preload->m_object = NULL;
+    preload = static_cast<MoviePreload*>(object->m_userArg);
+    preload->m_local = preload->m_total;
+}
+
+// OFFSET: 0x00511990
 static void StartPreload(MoviePreload* preload, const char* path, uint8_t priority) {
-    SFileImpl* file;
-    SFile::EnableHash(false);
+    AsyncFileReadCreateObject(path, priority, 1, 1, &preload->m_object, NULL, preload, PreloadCallback, PreloadFailedCallback, 0, 0, 0);
 
-    if (!SFileOpenFile(path, &file)) {
-        return;
+    if (preload->m_object) {
+        preload->m_total = 0;
+        preload->m_local = 0;
+        SFile::FileGetIsLocalAmount(preload->m_object->m_file, preload->m_local, preload->m_total);
     }
-
-    SFile::EnableHash(true);
-
-    if (SFile::FileIsLocal(file, 0, 0)) {
-        SFileCloseFile(file);
-        return;
-    }
-
-    preload->m_object = AsyncFileReadAllocObject();
-
-    if (!preload->m_object) {
-        return;
-    }
-
-    preload->m_object->m_file = file;
-    preload->m_object->m_size = SFileGetFileSize(file, NULL);
-    preload->m_object->m_buffer = NULL;
-    preload->m_object->m_userArg = preload;
-    preload->m_object->m_userPostloadCallback = reinterpret_cast<void*>(&PreloadCallback);
-    preload->m_object->m_userPostUnloadCallback = reinterpret_cast<void*>(&PreloadCallback);
-    preload->m_object->m_priority = priority;
-    preload->m_total = 0;
-    preload->m_local = 0;
-    SFile::FileGetIsLocalAmount(file, preload->m_local, preload->m_total);
-    AsyncFileReadObject(preload->m_object, 1);
 }
 
 // OFFSET: %0x00521DD0

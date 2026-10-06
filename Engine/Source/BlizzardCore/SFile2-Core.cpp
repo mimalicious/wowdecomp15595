@@ -193,41 +193,41 @@ void STORMAPI SFile::FileGetIsLocalAmount(SFileImpl* file, int64_t& local, int64
 
 
 
-// OFFSET: %0x007082F0
-int32_t STORMAPI SFile::MakeFileLocal(SFileImpl* file, int32_t queue, bool wait, int64_t budget, int32_t* status) {
+// OFFSET: 0x007A6020/0x14049AEE0
+int32_t STORMAPI SFile::MakeFileLocal(SFileImpl* file, bool wait, int64_t chunk, int32_t* status, int64_t offset, uint32_t size) {
     int32_t result = SFile::FileIsLocal(file, 0, 0);
 
-    if (result == 1) {
-        return result;
-    }
-
-    if (result == 2) {
-        if (!wait) {
+    switch (result) {
+        case 1:
             return 1;
-        }
-    } else if (result == -1) {
-        return 1;
+
+        case 2:
+            if (!wait) {
+                return 1;
+            }
+
+            break;
+
+        case -1:
+            return 1;
     }
 
     Blizzard::Streaming::MakeLocalParams params;
-    params.m_budget = 0x7FFFFFFFFFFFFFFFLL;
+    params.m_budget = chunk;
     params.m_status = 0;
-
-    if (budget >= 0) {
-        params.m_budget = budget;
-    }
-
     result = 0;
 
     if (file->m_file) {
-        result = Blizzard::Mopaq::SFileMakeFileLocal(file->m_file, queue, wait, &params);
+        result = Blizzard::Mopaq::SFileMakeFileLocal(file->m_file, 1, wait, &params);
     } else if (file->m_stream) {
-        uint32_t size = static_cast<uint32_t>(Blizzard::File::GetFileInfo(file->m_stream)->m_size);
+        if (!size) {
+            size = SFileGetFileSize(file, NULL);
+        }
 
         if (wait) {
-            result = Blizzard::Streaming::MakeLocalBlocking(file->m_stream, 0, size, static_cast<Blizzard::Streaming::MakeLocalOption>(queue), &params);
+            result = Blizzard::Streaming::MakeLocalBlocking(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(1), &params);
         } else {
-            result = Blizzard::Streaming::MakeLocal(file->m_stream, 0, size, static_cast<Blizzard::Streaming::MakeLocalOption>(queue), NULL);
+            result = Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(1), NULL);
         }
     }
 

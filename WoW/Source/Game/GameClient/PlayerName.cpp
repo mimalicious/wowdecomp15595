@@ -100,7 +100,7 @@ void PlayerNameInitialize() {
     s_playerNameBatch = GxuFontCreateBatch(true, true, true);
 
     CStatus status;
-    s_playerNameIcons = TextureCreate("Interface\\TargetingFrame\\UI-RaidTargetingIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0);
+    s_playerNameIcons = TextureCreate("Interface\\TargetingFrame\\UI-RaidTargetingIcons", CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
 }
 
 // PROVEN: 763e3951 IDENTICAL/NONE

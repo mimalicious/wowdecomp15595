@@ -26,7 +26,7 @@ void CMapArea::Initialize() {
 }
 
 // OFFSET: %0x006E69C0
-void CMapArea::FreeAsyncObject(void* param, CAsyncObject* object) {
+void CMapArea::FreeAsyncObject(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     uint32_t size = object->m_size;
     AsyncFileReadDestroyObject(object);
@@ -325,8 +325,8 @@ void CMapArea::ProcessIffChunks() {
 }
 
 // OFFSET: #0x007D7020
-void CMapArea::AsyncCallback(void* param) {
-    CMapArea* area = static_cast<CMapArea*>(param);
+void CMapArea::AsyncCallback(CAsyncObject* object) {
+    CMapArea* area = static_cast<CMapArea*>(object->m_userArg);
 
     area->ProcessIffChunks();
     AsyncFileReadDestroyObject(area->m_asyncObject);
@@ -371,7 +371,7 @@ void CMapArea::Load(const char* fileName) {
     this->m_asyncObject->m_buffer = this->m_fileBuffer;
     this->m_asyncObject->m_size = this->m_fileSize;
     this->m_asyncObject->m_userArg = this;
-    this->m_asyncObject->m_userPostloadCallback = reinterpret_cast<void*>(&CMapArea::AsyncCallback);
+    this->m_asyncObject->m_userPostloadCallback = &CMapArea::AsyncCallback;
     AsyncFileReadObject(this->m_asyncObject, 0);
 }
 

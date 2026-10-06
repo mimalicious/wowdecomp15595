@@ -84,9 +84,9 @@ class CMapObj : public CMapObjIndex, public TSHashObject<CMapObj, HASHKEY_NONE> 
     static uint32_t CreateWmoIgnoreFlags(uint32_t a1);
     static void PrepareUpdate();
     static CMapObj* Create(char* fileName);
-    static void PostloadCallback(void* arg);
+    static void PostloadCallback(CAsyncObject* object);
     static void __stdcall RenderGroupCollidableFaces(CMapObjGroup* mapObjGroup);
-    static void AsyncFailedCallback(void* param, CAsyncObject* object);
+    static void AsyncFailedCallback(CAsyncObject* object);
     static void ProcessAsyncLoadQueue();
     static CMapObjOccluder* AllocOccluder();
     static CMapObjOccluder* AllocOccluderNode(uint32_t* heap);

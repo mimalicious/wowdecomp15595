@@ -40,9 +40,9 @@ class CMapArea : public CMapBaseObj {
     static void Destroy();
     static void Initialize();
     static void* AllocAsyncLoadBuffer(int32_t fileSize);
-    static void AsyncCallback(void* param);
+    static void AsyncCallback(CAsyncObject* object);
     static void FreeAsyncLoadBuffer(void* buffer, int32_t size);
-    static void FreeAsyncObject(void* param, CAsyncObject* object);
+    static void FreeAsyncObject(CAsyncObject* object);
 
     /* 0024 */ CAaBox m_bounds;
     /* 003C */ C3Vector m_topLeft2;

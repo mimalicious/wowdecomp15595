@@ -317,7 +317,7 @@ static bool LoadMapTexture() {
     }
 
     CStatus status;
-    CGTaxiMap::m_mapTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0);
+    CGTaxiMap::m_mapTexture = TextureCreate(fileName, CGxTexFlags(GxTex_Linear, 0, 0, 0, 0, 1, 0, 0, 0), &status, 0, NULL, 2);
     return CGTaxiMap::m_mapTexture != NULL;
 }
 

@@ -249,7 +249,7 @@ void WaterRipple::Initialize() {
     CStatus status;
 
     for (uint32_t i = 0; i < sizeof(s_rippleTextures) / sizeof(s_rippleTextures[0]); i++) {
-        s_rippleTextures[i] = TextureCreate(s_rippleTextureNames[i], flags, &status, 1);
+        s_rippleTextures[i] = TextureCreate(s_rippleTextureNames[i], flags, &status, 1, NULL, 2);
     }
 
     s_ripplePool.SetCount(128);

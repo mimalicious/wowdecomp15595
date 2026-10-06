@@ -87,5 +87,5 @@ PassGlowWave::PassGlowWave(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, 
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXGlowWave");
 
     CStatus status;
-    this->m_maskTex = TextureCreate("xtextures\\fx\\screenmask.blp", CGxTexFlags(), &status, 0);
+    this->m_maskTex = TextureCreate("xtextures\\fx\\screenmask.blp", CGxTexFlags(), &status, 0, NULL, 2);
 }

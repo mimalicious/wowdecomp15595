@@ -60,7 +60,7 @@ void CM2Scene::AdvanceTime(uint32_t delta) {
     if (!this->m_litSphereTexture) {
         CGxTexFlags texFlags;
         CStatus status;
-        this->m_litSphereTexture = TextureCreate("XTextures\\FX\\litsphere.blp", texFlags, &status, 0);
+        this->m_litSphereTexture = TextureCreate("XTextures\\FX\\litsphere.blp", texFlags, &status, 0, NULL, 2);
         this->m_litSphereEffect = CShaderEffectManager::GetEffect("LitSphere_Additive");
     }
 

@@ -267,11 +267,11 @@ void CBarrier::Initialize() {
     flags.m_filter = GxTex_Linear;
     flags.m_wrapU = 0;
     flags.m_wrapV = 0;
-    CBarrier::s_mask = TextureCreate("XTextures\\FX\\LBTBarrierMask", flags, &status, 0);
+    CBarrier::s_mask = TextureCreate("XTextures\\FX\\LBTBarrierMask", flags, &status, 0, NULL, 2);
 
     flags.m_wrapU = 1;
     flags.m_wrapV = 1;
-    CBarrier::s_pattern = TextureCreate("XTextures\\FX\\LBTBarrier", flags, &status, 0);
+    CBarrier::s_pattern = TextureCreate("XTextures\\FX\\LBTBarrier", flags, &status, 0, NULL, 2);
 }
 
 // OFFSET: #0x0078F510
