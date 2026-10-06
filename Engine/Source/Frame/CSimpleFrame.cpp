@@ -1289,7 +1289,8 @@ void CSimpleFrame::RemoveFrameRegion(CSimpleRegion* region, uint32_t drawLayer) 
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// OFFSET: %0x00513F00
+// PROVEN: fcbe4345 IDENTICAL/DIFFERENT
+// OFFSET: 0x00504FB0/0x14014B890
 void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
     if (this->HasScript(this->m_onUpdate)) {
         lua_State* L = FrameScript_GetContext();
@@ -1299,7 +1300,8 @@ void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
 
     CScriptRegion::OnLayerUpdate(elapsedSec);
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         if (region->m_animGroups) {
             region->OnLayerUpdate(elapsedSec);
         }
@@ -1317,9 +1319,11 @@ void CSimpleFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: %0x00514010
+// PROVEN: d01bb310 IDENTICAL/NONE
+// OFFSET: 0x00505260
 void CSimpleFrame::OnScreenSizeChanged() {
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         region->OnScreenSizeChanged();
     }
 }
@@ -1383,7 +1387,8 @@ void CSimpleFrame::ParentFrame(CSimpleFrame* child) {
     node->m_frame = child;
 }
 
-// OFFSET: %0x005144F0
+// PROVEN: e2c67e18 IDENTICAL/DIFFERENT
+// OFFSET: 0x00503B10/0x140149F10
 void CSimpleFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onEvent, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onLoad, time, count);
@@ -1406,7 +1411,8 @@ void CSimpleFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, in
     FrameScript_Object::GetScriptTime(L, this->m_onDisable, time, count);
 
     if (recurse) {
-        for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+        for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+            nextNode = this->m_children.RawNext(node);
             node->m_frame->GetScriptTime(L, time, count, 1);
         }
     }
@@ -1578,9 +1584,11 @@ void CSimpleFrame::SetParent(CSimpleFrame* parent) {
     }
 }
 
-// OFFSET: %0x00514A00
+// PROVEN: b081319b IDENTICAL/DIFFERENT
+// OFFSET: 0x005041C0/0x14014A770
 int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         if (node->m_frame->m_frameFlags & 0x800) {
             deferred = 1;
         } else if (node->m_frame->IsProtected()) {
@@ -1632,7 +1640,8 @@ bool CSimpleFrame::GetBoundsRect(CRect& rect) {
     return rect.maxY > rect.minY && rect.maxX > rect.minX;
 }
 
-// OFFSET: %0x00514C50
+// PROVEN: 605b64c5 IDENTICAL/NONE
+// OFFSET: 0x00504400
 bool CSimpleFrame::UpdateScale(bool force) {
     float scale = this->m_frameScale;
 
@@ -1646,26 +1655,31 @@ bool CSimpleFrame::UpdateScale(bool force) {
 
     this->CLayoutFrame::SetLayoutScale(scale, force);
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         region->SetLayoutScale(scale, force);
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         node->m_frame->UpdateScale(false);
     }
 
     return true;
 }
 
-// OFFSET: %0x00514D50
+// PROVEN: ac34c512 IDENTICAL/NONE
+// OFFSET: 0x00504500
 void CSimpleFrame::UpdateAlpha() {
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         region->OnColorChanged(false);
     }
 
     uint8_t alpha = this->m_alpha * this->m_parentAlpha / 255;
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         CSimpleFrame* child = node->m_frame;
 
         if (!child->m_forceAlpha && alpha != child->m_parentAlpha) {
@@ -1762,15 +1776,18 @@ void CSimpleFrame::ShowThis(bool loadPending) {
     this->OnLayerShow();
 }
 
-// OFFSET: %0x00515300
+// PROVEN: 9981fbcb IDENTICAL/NONE
+// OFFSET: 0x00504AB0
 void CSimpleFrame::StopAnimating() {
     CScriptRegion::StopAnimating();
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         node->m_frame->StopAnimating();
     }
 
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         region->StopAnimating();
     }
 }
@@ -1838,47 +1855,56 @@ void CSimpleFrame::AnimDeactivated(CSimpleAnimGroup* group, int32_t alpha, int32
     }
 }
 
-// OFFSET: %0x00515550
+// PROVEN: 7e98ed5e IDENTICAL/NONE
+// OFFSET: 0x00504CD0
 void CSimpleFrame::AddAnimTranslation(CScriptRegion* region, const C2Vector& translation) {
     if (!region || region == this) {
         region = NULL;
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         node->m_frame->AddAnimTranslation(region, translation);
     }
 
-    for (CSimpleRegion* child = this->m_regions.Head(); child; child = this->m_regions.Next(child)) {
+    for (CSimpleRegion* child = this->m_regions.Head(), * nextChild; !this->m_regions.IsEnd(child); child = nextChild) {
+        nextChild = this->m_regions.RawNext(child);
         child->AddAnimTranslation(region, translation);
     }
 }
 
-// OFFSET: %0x005155E0
+// PROVEN: 3a87e348 IDENTICAL/NONE
+// OFFSET: 0x00504D60
 void CSimpleFrame::AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians) {
     if (!region || region == this) {
         region = NULL;
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         node->m_frame->AddAnimRotation(region, origin, offset, radians);
     }
 
-    for (CSimpleRegion* child = this->m_regions.Head(); child; child = this->m_regions.Next(child)) {
+    for (CSimpleRegion* child = this->m_regions.Head(), * nextChild; !this->m_regions.IsEnd(child); child = nextChild) {
+        nextChild = this->m_regions.RawNext(child);
         child->AddAnimRotation(region, origin, offset, radians);
     }
 }
 
-// OFFSET: %0x00515690
+// PROVEN: 45486cf1 IDENTICAL/NONE
+// OFFSET: 0x00504E10
 void CSimpleFrame::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale) {
     if (!region || region == this) {
         region = NULL;
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         node->m_frame->AddAnimScale(region, origin, offset, scale);
     }
 
-    for (CSimpleRegion* child = this->m_regions.Head(); child; child = this->m_regions.Next(child)) {
+    for (CSimpleRegion* child = this->m_regions.Head(), * nextChild; !this->m_regions.IsEnd(child); child = nextChild) {
+        nextChild = this->m_regions.RawNext(child);
         child->AddAnimScale(region, origin, offset, scale);
     }
 }
@@ -2349,15 +2375,18 @@ void CSimpleFrame::MarkDirty() {
     }
 }
 
-// OFFSET: %0x00477F60
+// PROVEN: 05100265 IDENTICAL/DIFFERENT
+// OFFSET: 0x0046A7C0/0x14007ED40
 int32_t CSimpleFrame::IsObjectLoaded() {
-    for (CSimpleRegion* region = this->m_regions.Head(); region; region = this->m_regions.Next(region)) {
+    for (CSimpleRegion* region = this->m_regions.Head(), * nextRegion; !this->m_regions.IsEnd(region); region = nextRegion) {
+        nextRegion = this->m_regions.RawNext(region);
         if (!region->IsObjectLoaded()) {
             return 0;
         }
     }
 
-    for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
+    for (SIMPLEFRAMENODE* node = this->m_children.Head(), * nextNode; !this->m_children.IsEnd(node); node = nextNode) {
+        nextNode = this->m_children.RawNext(node);
         if (!node->m_frame->IsObjectLoaded()) {
             return 0;
         }

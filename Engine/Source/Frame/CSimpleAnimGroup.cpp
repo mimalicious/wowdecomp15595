@@ -808,11 +808,13 @@ bool CSimpleAnimGroup::RemoveAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPL
     return false;
 }
 
-// OFFSET: %0x0053B770
+// PROVEN: a359ac3b IDENTICAL/DIFFERENT
+// OFFSET: 0x0052B6F0/0x14017BE10
 void CSimpleAnimGroup::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags &= ~1;
 
-    for (CSimpleAnim* anim = this->m_animations.Head(); anim; anim = this->m_animations.Next(anim)) {
+    for (CSimpleAnim* anim = this->m_animations.Head(), * nextAnim; !this->m_animations.IsEnd(anim); anim = nextAnim) {
+        nextAnim = this->m_animations.RawNext(anim);
         anim->PostLoadXML(node, status);
     }
 

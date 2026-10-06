@@ -738,12 +738,14 @@ int32_t CFrameStrata::BuildBatches(int32_t noMouseCapture) {
     return this->m_batchDirty;
 }
 
-// OFFSET: %0x00510710
+// PROVEN: 4339851a IDENTICAL/NONE
+// OFFSET: 0x00500580
 void CFrameStrata::RenderBatches() {
     for (uint32_t level = 0; level < this->m_topLevel; level++) {
         CFrameStrataNode* node = this->m_levels[level];
 
-        for (CRenderBatch* batch = node->m_renderList.Head(); batch; batch = node->m_renderList.Next(batch)) {
+        for (CRenderBatch* batch = node->m_renderList.Head(), * nextBatch; !node->m_renderList.IsEnd(batch); batch = nextBatch) {
+            nextBatch = node->m_renderList.RawNext(batch);
             CSimpleRender::DrawBatch(batch);
         }
     }

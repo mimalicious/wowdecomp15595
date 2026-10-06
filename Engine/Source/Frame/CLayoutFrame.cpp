@@ -684,9 +684,11 @@ void CLayoutFrame::OnProtectedDetach(CLayoutFrame* frame) {
     }
 }
 
-// OFFSET: %0x005186C0
+// PROVEN: 067d629b IDENTICAL/NONE
+// OFFSET: 0x00508190
 int32_t CLayoutFrame::AreDependentsProtected(int32_t& deferred) {
-    for (CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head(); node; node = this->m_resizeList.Next(node)) {
+    for (CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head(), * nextNode; !this->m_resizeList.IsEnd(node); node = nextNode) {
+        nextNode = this->m_resizeList.RawNext(node);
         if (node->m_frame->m_layoutFlags & 0x800) {
             deferred = 1;
         } else if (node->m_frame->IsProtected()) {
