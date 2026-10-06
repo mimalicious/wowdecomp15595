@@ -613,12 +613,12 @@ void CLayoutFrame::ResizePending() {
                     frame->OnFrameResize();
                 }
 
-                frame = s_resizePendingList.Next(frame);
+                frame = frame->m_resizeLink.Next();
                 continue;
             }
 
             int32_t resized = frame->OnFrameResize();
-            CLayoutFrame* next = s_resizePendingList.Next(frame);
+            CLayoutFrame* next = frame->m_resizeLink.Next();
 
             if (resized || --frame->m_resizeCounter == 0) {
                 frame->m_layoutFlags &= ~0x4u;
@@ -776,7 +776,7 @@ void CLayoutFrame::Resize(int32_t force) {
         return;
     }
 
-    if ((this->m_layoutFlags & 0x4) && ((this->m_layoutFlags & 0x2) || this->m_resizeLink.IsLinked())) {
+    if ((this->m_layoutFlags & 0x4) && ((this->m_layoutFlags & 0x2) || s_resizePendingList.IsLinked(this))) {
         this->m_resizeCounter = 6;
         return;
     }
@@ -784,8 +784,12 @@ void CLayoutFrame::Resize(int32_t force) {
     this->m_layoutFlags |= 0x4;
 
     if (this->m_layoutFlags & 0x2) {
-        for (CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head(); node; node = this->m_resizeList.Next(node)) {
+        CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head();
+
+        while (!this->m_resizeList.IsEnd(node)) {
+            CLayoutFrame::FRAMENODE* next = this->m_resizeList.RawNext(node);
             node->m_frame->Resize(0);
+            node = next;
         }
     } else {
         this->AddToResizeList();
