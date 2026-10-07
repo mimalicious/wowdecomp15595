@@ -7,9 +7,39 @@
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/WorldClient/MapObj.h"
+#include "WoW/Source/WorldClient/MapObjDef.h"
 
 // STATIC: 0x00D01AEC
 C3Vector CMapStaticEntity::s_interiorLightDir = C3Vector(-0.30822f, -0.30822f, -0.89999998f);
+
+// OFFSET: 0x00734650
+int32_t CMapStaticEntity::GetMapObjAndGroup(CMapObjDef*& mapObjDef, CMapObj*& mapObj, CMapObjDefGroup*& defGroup, CMapObjGroup*& group, int32_t skipMoving) {
+    for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
+        next = this->m_parentLinkList.Next(link);
+        CMapBaseObj* ref = link->m_ref;
+
+        if (!(ref->m_type & 0x20)) {
+            continue;
+        }
+
+        defGroup = static_cast<CMapObjDefGroup*>(ref);
+        mapObjDef = defGroup->m_mapObjDef;
+
+        if (skipMoving && (mapObjDef->m_flags & 0x200)) {
+            continue;
+        }
+
+        mapObj = mapObjDef->m_mapObj;
+        group = mapObj->GetGroup(defGroup->m_groupNum, 0);
+
+        if (group) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
 
 // OFFSET: [0x00762DE0, 0x00762F40]
 CMapStaticEntity::~CMapStaticEntity() {

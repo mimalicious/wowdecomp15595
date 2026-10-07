@@ -1100,6 +1100,10 @@ void CDetailDoodad::Render(CWorldView* view) {
     }
 }
 
+// OFFSET: 0x0073A630
+DDMaterial::~DDMaterial() {
+}
+
 // OFFSET: 0x0073A940
 CDetailDoodadInst* CDetailDoodad::AllocInst() {
     return CDetailDoodad::s_instHeap->New(__FILE__, __LINE__);

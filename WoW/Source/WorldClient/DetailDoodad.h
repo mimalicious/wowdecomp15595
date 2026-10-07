@@ -87,6 +87,8 @@ class DDMaterial : public TSHashObject<DDMaterial, HASHKEY_NONE> {
     /* 0030 */ float m_fadeDist;
     /* 0034 */ float m_fadeScale;
     /* 0038 */ TSExplicitList<CDetailDoodadInstBatch, offsetof(CDetailDoodadInstBatch, m_materialLink)> m_batches;
+
+    ~DDMaterial();
 };
 
 class DDMaterialSort {
