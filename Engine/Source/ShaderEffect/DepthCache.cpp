@@ -21,6 +21,18 @@ static DepthCache::EDepthMode s_depthMode;
 // STATIC: %0x00E4577C
 static int32_t s_needsCreate;
 
+// STATIC: 0x00D1C904
+static float s_depthRangeMin = -1.0f;
+
+// STATIC: 0x00D1C908
+static float s_depthRangeMax = -1.0f;
+
+// STATIC: 0x00F803D0
+static CGxShader* s_depthRangeVS;
+
+// STATIC: 0x00F803CC
+static CGxShader* s_depthRangePS;
+
 // OFFSET: %0x00970860
 void __fastcall DepthCache::Reset() {
     if (s_depthResolveTex) {
@@ -41,6 +53,11 @@ void __fastcall DepthCache::Reset() {
 // OFFSET: 0x00A2F850/0x1407D9540
 bool DepthCache::IsValid() {
     return s_depthMode != DM_Unknown;
+}
+
+// OFFSET: 0x00A2F860
+CTexture* DepthCache::GetDepthTex() {
+    return s_depthTex;
 }
 
 // PROVEN: 3fd63246 IDENTICAL/IDENTICAL
@@ -221,4 +238,38 @@ void DepthCache::Validate() {
     if (s_needsCreate && s_refCount) {
         CreateTextures();
     }
+}
+
+// OFFSET: 0x00A2F890
+int32_t DepthCache::DepthRangeDumpEnabled() {
+    return s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
+}
+
+// OFFSET: 0x00A2FD00
+void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
+    int32_t enabled = s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
+    int32_t enable = rangeMin >= 0.0f || rangeMax >= 0.0f;
+
+    if (enabled != enable) {
+        if (enable) {
+            DepthCache::AddRef();
+            s_depthRangeVS = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "DepthRange");
+            s_depthRangePS = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "DepthRange");
+        } else {
+            DepthCache::Release();
+
+            if (s_depthRangeVS) {
+                g_theGxDevicePtr->ShaderRelease(s_depthRangeVS);
+                s_depthRangeVS = NULL;
+            }
+
+            if (s_depthRangePS) {
+                g_theGxDevicePtr->ShaderRelease(s_depthRangePS);
+                s_depthRangePS = NULL;
+            }
+        }
+    }
+
+    s_depthRangeMin = rangeMin;
+    s_depthRangeMax = rangeMax;
 }

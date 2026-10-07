@@ -1,107 +1,110 @@
-#include "Liquid.h"
+#include "WoW/Source/LiquidSystem/Liquid.h"
 #include "Engine/Source/Services/SysMessage.h"
-#include "WoW/Source/DB/WowClientDB.h"
-#include "WoW/Source/DB/Rec/LiquidTypeRec.h"
-#include "WoW/Source/DB/Rec/LiquidMaterialRec.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00D43B00
-CDataAllocator Liquid::s_settingsAllocator(sizeof(Liquid::CMaterialSettings), 0x20);
+// STATIC: 0x00E4EB90
+uint32_t Liquid::CSettingsBank::s_refCount;
 
-// STATIC: #0x00D43B14
+// STATIC: 0x00E4EB94
+CDataAllocator Liquid::s_settingsAllocator(sizeof(Liquid::CMaterialSettings), 32);
+
+// STATIC: 0x00E4EBA8
 TSGrowableArray<Liquid::CMaterialSettings*> Liquid::CSettingsBank::s_settings;
 
-// OFFSET: #0x008A2380
-void Liquid::CSettingsBank::Destroy() {
-    if (!--Liquid::s_unk_D43AF8) {
-        for (uint32_t i = 0; i < Liquid::CSettingsBank::s_settings.Count(); i++) {
-            if (Liquid::CSettingsBank::s_settings[i]) {
-                Liquid::CSettingsBank::s_settings[i]->Destroy();
-
-                Liquid::CMaterialSettings* settings = Liquid::CSettingsBank::s_settings[i];
-                settings->~CMaterialSettings();
-                Liquid::s_settingsAllocator.PutData(settings, NULL, 0);
-            }
-        }
-
-        Liquid::CSettingsBank::s_settings.SetCount(0);
-    }
-
-    Liquid::s_settingsAllocator.Clear(".?AVCMaterialSettings@Liquid@@", SLOG_OBJECT, 1);
+// OFFSET: 0x0071BF50
+void Liquid::CSettingsBank::Create() {
+    Liquid::CSettingsBank::s_refCount++;
 }
 
-// OFFSET: #0x008A2780
-void Liquid::CSettingsBank::ResetTextures() {
-    for (uint32_t i = 0; i < Liquid::CSettingsBank::s_settings.Count(); i++) {
-        if (Liquid::CSettingsBank::s_settings[i]) {
-            Liquid::CSettingsBank::s_settings[i]->Destroy();
-            Liquid::CSettingsBank::s_settings[i]->InitTexture();
+// OFFSET: 0x0071C000
+int32_t Liquid::CSettingsBank::UpdateRecord(uint32_t liquidType, CMaterialSettings* settings) {
+    if (!settings) {
+        if (liquidType >= Liquid::CSettingsBank::s_settings.Count()) {
+            return 0;
+        }
+
+        settings = Liquid::CSettingsBank::s_settings.m_data[liquidType];
+
+        if (!settings) {
+            return 0;
         }
     }
-}
 
-// OFFSET: #0x008A27C0
-bool Liquid::CSettingsBank::UpdateRecord(Liquid::CMaterialSettings* settings, uint32_t liquidType) {
     settings->Destroy();
 
-    LiquidTypeRec* typeRec = Liquid::s_liquidTypeDB->GetRecord(liquidType);
+    LiquidTypeRec* rec = g_liquidTypeDB.GetRecord(liquidType);
 
-    if (!typeRec) {
-        return false;
+    if (!rec) {
+        return 0;
     }
 
-    LiquidMaterialRec* materialRec = Liquid::s_liquidMaterialDB->GetRecord(typeRec->m_materialID);
+    LiquidMaterialRec* materialRec = g_liquidMaterialDB.GetRecord(rec->m_materialID);
 
     if (!materialRec) {
-        return false;
+        return 0;
     }
 
     for (uint32_t i = 0; i < 6; i++) {
-        const char* src = typeRec->m_texture[i];
-        char* dst = settings->m_textureNames[i];
-
-        while ((*dst++ = *src++) != 0) {
-        }
+        SStrCopy(settings->m_textureNames[i], rec->m_texture[i], sizeof(settings->m_textureNames[i]));
     }
 
-    settings->m_colors[0] = *reinterpret_cast<CImVector*>(&typeRec->m_color[0]);
-    settings->m_colors[1] = *reinterpret_cast<CImVector*>(&typeRec->m_color[1]);
-    settings->m_ints[0] = typeRec->m_int[0];
-    settings->m_ints[1] = typeRec->m_int[1];
-    settings->m_ints[2] = typeRec->m_int[2];
-    settings->m_ints[3] = typeRec->m_int[3];
+    *reinterpret_cast<int32_t*>(&settings->m_colors[0]) = rec->m_color[0];
+    *reinterpret_cast<int32_t*>(&settings->m_colors[1]) = rec->m_color[1];
+
+    for (uint32_t i = 0; i < 4; i++) {
+        settings->m_ints[i] = rec->m_int[i];
+    }
 
     for (uint32_t i = 0; i < 18; i++) {
-        settings->m_floats[i] = typeRec->m_float[i];
+        settings->m_floats[i] = rec->m_float[i];
     }
 
     settings->m_transparent = materialRec->m_flags & 0x1;
-    settings->InitTexture();
-
-    return true;
+    settings->Initialize(liquidType);
+    return 1;
 }
 
-// OFFSET: #0x008A28F0
-Liquid::CMaterialSettings* Liquid::CSettingsBank::GetSettings(uint32_t liquidType) {
-    Liquid::CMaterialSettings* settings;
+// OFFSET: 0x0071C3B0
+void Liquid::CSettingsBank::Purge() {
+    for (uint32_t i = 0; i < Liquid::CSettingsBank::s_settings.Count(); i++) {
+        CMaterialSettings* settings = Liquid::CSettingsBank::s_settings.m_data[i];
 
+        if (settings) {
+            settings->Destroy();
+            settings->~CMaterialSettings();
+            Liquid::s_settingsAllocator.PutData(settings, NULL, 0);
+        }
+    }
+
+    Liquid::CSettingsBank::s_settings.m_count = 0;
+}
+
+// OFFSET: 0x0071C410
+Liquid::CMaterialSettings* Liquid::CSettingsBank::GetSettings(uint32_t liquidType) {
     while (true) {
         if (liquidType < Liquid::CSettingsBank::s_settings.Count() && Liquid::CSettingsBank::s_settings.m_data[liquidType]) {
             return Liquid::CSettingsBank::s_settings.m_data[liquidType];
         }
 
-        void* mem = Liquid::s_settingsAllocator.GetData(0, ".?AVCMaterialSettings@Liquid@@", SLOG_OBJECT);
-        settings = mem ? new (mem) Liquid::CMaterialSettings() : NULL;
+        CMaterialSettings* settings = Liquid::s_settingsAllocator.New<CMaterialSettings>(0);
 
-        if (Liquid::CSettingsBank::UpdateRecord(settings, liquidType)) {
-            break;
+        if (Liquid::CSettingsBank::UpdateRecord(liquidType, settings)) {
+            Liquid::CSettingsBank::s_settings.GrowToFit(liquidType, 1);
+            Liquid::CSettingsBank::s_settings.m_data[liquidType] = settings;
+            return settings;
         }
 
         SysMsgPrintf(STATUS_ERROR, 2, "Settings Bank: Liquid type [%d] not found, defaulting to water!", liquidType);
         liquidType = 1;
     }
+}
 
-    Liquid::CSettingsBank::s_settings.GrowToFit(liquidType, 1);
-    Liquid::CSettingsBank::s_settings.m_data[liquidType] = settings;
+// OFFSET: 0x0071C4A0
+void Liquid::CSettingsBank::Destroy() {
+    if (!--Liquid::CSettingsBank::s_refCount) {
+        Liquid::CSettingsBank::Purge();
+    }
 
-    return settings;
+    Liquid::s_settingsAllocator.Clear(typeid(Liquid::CMaterialSettings).raw_name(), SLOG_OBJECT, 1);
 }

@@ -7,283 +7,251 @@
 #include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2Vector.h"
+#include "Engine/Source/Tempest/C2iVector.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
+#include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/LiquidSystem/Types.h"
 
-template <class T>
-class IDatabase;
+class CGxBatch;
+class CGxFrameBuffer;
 class CGxShader;
 class CGxTex;
 class CM2Lighting;
 class CTexture;
-class LiquidMaterialRec;
-class LiquidTypeRec;
+struct CGxBuf;
 
 namespace Liquid {
-    class CInstance;
     class CMaterialSettings;
-    class IWaveManager;
-    class IEnvironment;
-    class IGeomFactory;
 
-    struct VSLight {
-        /* 0000 */ C4Vector m_position;
-        /* 0010 */ C4Vector m_color;
-        /* 0020 */ C4Vector m_attenuation;
+    enum ERenderPass {
+        RenderPass_Opaque = 0,
+        RenderPass_Transparent = 1,
     };
 
-    struct VSConstants {
-        /* 0000 */ C44Matrix m_projection;
-        /* 0040 */ C4Vector m_fog;
-        /* 0050 */ C44Matrix m_modelView;
-        /* 0090 */ C44Matrix m_texTransforms[6];
-        /* 0210 */ C4Vector m_sunDir;
-        /* 0220 */ C4Vector m_sunAmbient;
-        /* 0230 */ C4Vector m_sunDiffuse;
-        /* 0240 */ C4Vector m_sunSpecular;
-        /* 0250 */ VSLight m_lights[3];
+    enum EPertSurface {
+        PertSurface_Water = 0,
+        PertSurface_Ocean = 1,
     };
 
-    struct VSWaveConstants {
-        /* 0000 */ float m_directionalPhase[4];
-        /* 0010 */ float m_circularPhase[4];
-        /* 0020 */ C4Vector m_directionalWaves[3];
-        /* 0050 */ float unk_0050[4];
-        /* 0060 */ float unk_0060[4];
-        /* 0070 */ C4Vector m_circularWaves[3];
-        /* 00A0 */ float unk_00A0[4];
-        /* 00B0 */ float unk_00B0[4];
+    struct DisplMapPerturbation {
+        /* 0000 */ C3Vector m_pos;
+        /* 000C */ float m_radius;
+        /* 0010 */ uint64_t m_time;
+        /* 0018 */ uint32_t unk_0018;
     };
 
-    struct PSConstants {
-        /* 0000 */ C44Matrix m_modelViewProj;
-        /* 0040 */ C4Vector m_fogColor;
-        /* 0050 */ C4Vector m_cameraPos;
+    struct DisplMapPerturbationMesh {
+        /* 0000 */ C44Matrix m_transform;
+        /* 0040 */ uint32_t unk_0040[2];
+        /* 0048 */ C3Vector* m_vertices;
+        /* 004C */ uint32_t unk_004C[3];
+        /* 0058 */ uint16_t* m_indices;
+        /* 005C */ uint32_t unk_005C[4];
+
+        DisplMapPerturbationMesh();
     };
 
-    struct PSProcWaterConstants {
-        /* 0000 */ C4Vector m_sunDir;
-        /* 0010 */ C4Vector m_sunAmbient;
-        /* 0020 */ C4Vector m_sunDiffuse;
-        /* 0030 */ C4Vector m_sunSpecular;
-        /* 0040 */ float m_params[8];
-    };
+    typedef void (*CONFIG_CHANGED_CALLBACK)();
+    typedef void (*TEXTURE_LOAD_CALLBACK)(const char* name);
 
     class IEnvironment {
         public:
         virtual ~IEnvironment();
         virtual void Release() = 0;
         virtual void SetInteriorFog(int32_t interiorFog) = 0;
-        virtual void SelectLights(CM2Lighting* lighting) = 0;
-    };
-
-    class IWaveManager {
-        public:
-        virtual ~IWaveManager();
-        virtual void AddRef() = 0;
-        virtual void Release() = 0;
-        virtual void* GetData() = 0;
-        virtual int32_t GetCount() = 0;
+        virtual void SelectLights(CM2Lighting& lighting) = 0;
     };
 
     class IGeomFactory {
         public:
         virtual ~IGeomFactory();
         virtual void Release() = 0;
-        virtual void GetBuffers(EGxVertexBufferFormat format, CGxBuf** vertexBuf, CGxBuf** indexBuf, CGxBatch* batch) = 0;
+        virtual void GetBuffers(EGxVertexBufferFormat format, CGxBuf*& vertexBuf, CGxBuf*& indexBuf, CGxBatch& batch, int32_t a5) = 0;
         virtual void Purge() = 0;
-        virtual bool SetTransform(C44Matrix* transform) = 0;
+        virtual float GetHeight() = 0;
+        virtual bool SetTransform(const C44Matrix& transform) = 0;
+        virtual bool GetWorldSpace() = 0;
     };
+
+    class CInstance;
 
     class IMaterial {
         public:
+        typedef void (*RENDER_FUNC)(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+
+        /* 0004 */ RENDER_FUNC m_render;
+
         virtual ~IMaterial();
-        virtual void Release() = 0;
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings) = 0;
-    };
-
-    class CMaterialProcWater : public IMaterial {
-        public:
-        static int32_t s_refCount;
-        static CGxShader* s_vertexShader;
-        static CGxShader* s_pixelShader;
-
-        static CMaterialProcWater* Create();
-
-        virtual ~CMaterialProcWater();
         virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
-
-        CMaterialProcWater();
-    };
-
-    class CMaterialProcWaterFFP : public IMaterial {
-        public:
-        static CMaterialProcWaterFFP* Create();
-
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
+        virtual void Reset();
+        virtual void OnAddToScene();
+        virtual int32_t SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection);
+        virtual int32_t SetupDefaultTransform(const C3Vector& camPos);
+        virtual int32_t SetupLighting(const C3Vector& camPos, CInstance* instance);
+        virtual int32_t IsAllLoaded(CMaterialSettings* settings) = 0;
+        virtual void LinkToAsyncHead(CMaterialSettings* settings) = 0;
     };
 
     class CMaterialWater : public IMaterial {
         public:
-        static int32_t s_refCount;
+        static uint32_t s_refCount;
         static CGxShader* s_vertexShader;
         static CGxShader* s_pixelShader;
+        static CGxShader* s_pixelShaderBelow;
+        static CGxShader* s_pixelShaderAboveFog;
+        static C4Vector s_vsConsts[53];
+        static C4Vector s_psConsts[32];
 
-        static CMaterialWater* Create();
-
-        virtual ~CMaterialWater();
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
+        static void DestroyResources();
+        static void InitResources();
+        static void RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void SetFogConstants();
+        static void SetPixelShaderAbove(uint32_t reflection);
+        static void SetPixelShaderAboveFog();
+        static void SetPixelShaderBelow(uint32_t reflection);
 
         CMaterialWater();
-    };
-
-    class CMaterialWaterNoSpec : public IMaterial {
-        public:
-        static int32_t s_refCount;
-        static CGxShader* s_vertexShader;
-        static CGxShader* s_pixelShader;
-
-        static CMaterialWaterNoSpec* Create();
-
-        virtual ~CMaterialWaterNoSpec();
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
-
-        CMaterialWaterNoSpec();
-    };
-
-    class CMaterialWaterFFP : public IMaterial {
-        public:
-        static CMaterialWaterFFP* Create();
-
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
+        virtual ~CMaterialWater();
+        virtual void Reset();
+        virtual void OnAddToScene();
+        virtual int32_t SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection);
+        virtual int32_t SetupDefaultTransform(const C3Vector& camPos);
+        virtual int32_t SetupLighting(const C3Vector& camPos, CInstance* instance);
+        virtual int32_t IsAllLoaded(CMaterialSettings* settings);
+        virtual void LinkToAsyncHead(CMaterialSettings* settings);
     };
 
     class CMaterialMagma : public IMaterial {
         public:
-        static int32_t s_refCount;
+        static uint32_t s_refCount;
         static CGxShader* s_vertexShader;
         static CGxShader* s_pixelShader;
+        static CGxShader* s_procVertexShader;
+        static CGxShader* s_procPixelShader;
+        static C4Vector s_vsConsts[51];
+        static C4Vector s_psConsts[18];
 
-        static CMaterialMagma* Create();
-
-        virtual ~CMaterialMagma();
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
+        static void DestroyResources();
+        static void InitResources();
+        static void RenderFixedFunction(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance);
 
         CMaterialMagma();
+        virtual ~CMaterialMagma();
+        virtual void Reset();
+        virtual int32_t SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection);
+        virtual int32_t SetupDefaultTransform(const C3Vector& camPos);
+        virtual int32_t SetupLighting(const C3Vector& camPos, CInstance* instance);
+        virtual int32_t IsAllLoaded(CMaterialSettings* settings);
+        virtual void LinkToAsyncHead(CMaterialSettings* settings);
     };
 
-    class CMaterialMagmaFFP : public IMaterial {
+    class CMaterialMercury : public IMaterial {
         public:
-        static CMaterialMagmaFFP* Create();
+        static uint32_t s_refCount;
+        static CGxShader* s_vertexShader;
+        static CGxShader* s_pixelShader;
+        static C4Vector s_vsConsts[53];
+        static C4Vector s_psConsts[32];
 
-        virtual void Release();
-        virtual void Render(IEnvironment* environment, IGeomFactory* geomFactory, IWaveManager* waveManager, const C3Vector& cameraPos, const C44Matrix* transform, const CAaSphere* bounds, CMaterialSettings* settings);
+        static void InitResources();
+        static void RenderFixedFunction(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void RenderProcedural(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void RenderShader(uint32_t pass, const C3Vector& camPos, CInstance* instance);
+        static void SetFogConstants();
+
+        CMaterialMercury();
+        virtual ~CMaterialMercury();
+        virtual void Reset();
+        virtual void OnAddToScene();
+        virtual int32_t SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection);
+        virtual int32_t SetupDefaultTransform(const C3Vector& camPos);
+        virtual int32_t SetupLighting(const C3Vector& camPos, CInstance* instance);
+        virtual int32_t IsAllLoaded(CMaterialSettings* settings);
+        virtual void LinkToAsyncHead(CMaterialSettings* settings);
     };
 
-    class IVertexData {
+    class CMaterialDebug : public IMaterial {
         public:
-        /* 0004 */ uint32_t unk_0004;
+        static uint32_t s_refCount;
+        static CGxShader* s_vertexShader;
+        static CGxShader* s_pixelShader;
+        static C4Vector s_vsConsts[50];
+        static C4Vector s_psConsts[17];
 
-        virtual ~IVertexData();
-        virtual float GetHeight(uint32_t index) = 0;
-        virtual uint8_t GetDepth(uint32_t index) = 0;
-        virtual const uint16_t* GetTexCoord(uint32_t index) = 0;
-    };
+        static void Render(uint32_t pass, const C3Vector& camPos, CInstance* instance);
 
-    class CChunkVertexData : public IVertexData {
-        public:
-        /* 0008 */ const uint8_t* m_data;
-        /* 000C */ uint32_t m_format;
-
-        virtual float GetHeight(uint32_t index);
-        virtual uint8_t GetDepth(uint32_t index);
-        virtual const uint16_t* GetTexCoord(uint32_t index);
-
-        CChunkVertexData(const uint8_t* data, uint32_t format);
-    };
-
-    class CAreaData;
-
-    class CInstanceVertexData : public IVertexData {
-        public:
-        /* 0008 */ const uint8_t* m_data;
-        /* 000C */ const SMLiquidInstance* m_instance;
-        /* 0010 */ uint32_t m_vertexCount;
-
-        virtual float GetHeight(uint32_t index);
-        virtual uint8_t GetDepth(uint32_t index);
-        virtual const uint16_t* GetTexCoord(uint32_t index);
-
-        CInstanceVertexData(const CAreaData* areaData, const SMLiquidInstance* instance);
-    };
-
-    class CAreaData {
-        public:
-        static uint8_t s_emptyTable[8];
-        static uint8_t s_fullTable[8];
-        static uint16_t s_defaultTexCoord[2];
-
-        /* 0000 */ uint32_t unk_0000;
-        /* 0004 */ const uint8_t* m_data;
-
-        CAreaData(const void* data);
-        void SetData(const void* data);
-        bool HasData() const;
-        const SMLiquidChunkDesc* GetChunkDesc(uint32_t x, uint32_t y) const;
-        const SMLiquidInstance* GetInstanceDesc(const SMLiquidChunkDesc* chunk, uint32_t index) const;
-        const uint8_t* GetFishableTable(const SMLiquidChunkDesc* chunk) const;
-        const uint8_t* GetDeepTable(const SMLiquidChunkDesc* chunk) const;
-        const uint8_t* GetExistsTable(const SMLiquidInstance* instance) const;
+        CMaterialDebug();
+        virtual ~CMaterialDebug();
+        virtual void Reset();
+        virtual int32_t SetupRender(uint32_t time, ERenderPass pass, const C3Vector& camPos, IEnvironment* environment, CMaterialSettings* settings, uint32_t reflection);
+        virtual int32_t IsAllLoaded(CMaterialSettings* settings);
+        virtual void LinkToAsyncHead(CMaterialSettings* settings);
     };
 
     class CMaterialSettings {
         public:
-        /* 0000 */ char m_textureNames[6][128];
-        /* 0300 */ CImVector m_colors[2];
-        /* 0308 */ int32_t m_ints[4];
-        /* 0318 */ float m_floats[18];
-        /* 0360 */ int32_t m_transparent;
-        /* 0364 */ int32_t m_texturesReady[6];
-        /* 037C */ TSGrowableArray<CTexture*> m_textures[6];
-        /* 03DC */ TSGrowableArray<CTexture*> m_pendingTextures[6];
+        /* 0000 */ uint32_t m_liquidType;
+        /* 0004 */ char m_textureNames[6][128];
+        /* 0304 */ CImVector m_colors[2];
+        /* 030C */ int32_t m_ints[4];
+        /* 031C */ float m_floats[18];
+        /* 0364 */ uint8_t m_transparent;
+        /* 0368 */ int32_t m_texturesReady[6];
+        /* 0380 */ TSGrowableArray<CTexture*> m_textures[6];
+        /* 03E0 */ TSGrowableArray<CTexture*> m_pendingTextures[6];
 
         CMaterialSettings();
         ~CMaterialSettings();
         void Destroy();
-        float GetFloat(uint32_t index) const;
-        int32_t GetInt(uint32_t index) const;
+        float GetFloat(uint32_t index);
+        int32_t GetInt(uint32_t index);
         CGxTex* GetTexture(uint32_t index, uint32_t period);
-        void InitTexture();
+        void Initialize(uint32_t liquidType);
+        void InitTexture(uint32_t index);
+        int32_t IsAllLoaded(uint32_t index);
+        void LinkToAsyncHead(uint32_t index);
+    };
+
+    class Object : public TSHashObject<Object, HASHKEY_NONE> {
+        public:
+        /* 0018 */ uint32_t m_liquidType;
+        /* 001C */ uint32_t m_refCount;
+        /* 0020 */ uint8_t m_noReflection;
+        /* 0024 */ uint32_t m_reflectionType;
+        /* 0028 */ C4Plane m_reflectionPlane;
+
+        void SetReflectionPlane(float height);
     };
 
     class CInstance {
         public:
+        static void Initialize();
         static CInstance* Create();
+        static void Destroy();
 
         /* 0000 */ IMaterial* m_material;
         /* 0004 */ CMaterialSettings* m_settings;
         /* 0008 */ IGeomFactory* m_geomFactory;
-        /* 000C */ IWaveManager* m_waveManager;
-        /* 0010 */ IEnvironment* m_environment;
+        /* 000C */ IEnvironment* m_environment;
+        /* 0010 */ Object* m_object;
         /* 0014 */ C44Matrix m_transform;
         /* 0054 */ CAaSphere m_bounds;
-        /* 0064 */ int32_t m_queued;
+        /* 0064 */ uint16_t unk_0064;
+        /* 0066 */ uint16_t m_isMesh;
         /* 0068 */ int32_t m_refCount;
 
         CInstance();
         void AddRef();
         void Purge();
         void Release();
+        void SetTransform(const C44Matrix& transform);
     };
 
     class CRenderer {
@@ -296,85 +264,179 @@ namespace Liquid {
         static int32_t CompareTransparent(const void* a, const void* b);
 
         /* 0000 */ TSGrowableArray<CInstance*> m_instances[2];
+        /* 0020 */ int32_t m_sorted[2];
+        /* 0028 */ uint32_t m_isReflection;
 
+        CRenderer(uint32_t isReflection);
         ~CRenderer();
         void Draw(CInstance* instance);
-        void Flush(const C3Vector& cameraPos, uint32_t pass);
-        void Validate();
+        void Flush(uint32_t time, const C3Vector& camPos, uint32_t pass);
+    };
+
+    class SurfaceGen {
+        public:
+        /* 0000 */ uint32_t unk_0000;
+        /* 0004 */ int32_t m_resolution;
+
+        ~SurfaceGen();
+        void Clear();
     };
 
     class CSettingsBank {
         public:
+        static uint32_t s_refCount;
         static TSGrowableArray<CMaterialSettings*> s_settings;
 
+        static void Create();
         static void Destroy();
         static CMaterialSettings* GetSettings(uint32_t liquidType);
-        static void ResetTextures();
-        static bool UpdateRecord(CMaterialSettings* settings, uint32_t liquidType);
+        static void Purge();
+        static int32_t UpdateRecord(uint32_t liquidType, CMaterialSettings* settings);
     };
 
     class CMaterialBank {
         public:
+        static uint32_t s_refCount;
         static TSGrowableArray<IMaterial*> s_materials;
 
+        static void Create();
         static void Destroy();
         static IMaterial* GetMaterial(uint32_t liquidType);
+        static void Purge();
+        static void ResetMaterials();
     };
 
-    extern CDataAllocator s_settingsAllocator;
+    extern uint32_t s_displMapCount;
+    extern uint8_t s_oceanDepthTexValid;
+    extern uint8_t s_riverDepthTexValid;
+    extern uint8_t s_wmoWaterTexValid;
+    extern uint8_t s_displMapDirty;
+    extern CGxFrameBuffer* s_displMapFBs[4];
+    extern CTexture* s_displMaps[4];
+    extern TSGrowableArray<DisplMapPerturbation*> s_eventPerturbations[2];
+    extern TSGrowableArray<DisplMapPerturbationMesh*> s_eventPerturbationMeshes[2];
+    extern CGxShader* s_clearDisplMapPS;
+    extern CGxShader* s_clearDisplMapVS;
+    extern CGxShader* s_fourTapBlurPS;
+    extern CGxShader* s_fourTapBlurVS;
     extern CDataAllocator s_instanceAllocator;
-    extern CDataAllocator s_procWaterAllocator;
-    extern CDataAllocator s_procWaterFFPAllocator;
-    extern CDataAllocator s_waterAllocator;
-    extern CDataAllocator s_waterNoSpecAllocator;
-    extern CDataAllocator s_waterFFPAllocator;
-    extern CDataAllocator s_magmaAllocator;
-    extern CDataAllocator s_magmaFFPAllocator;
-    extern float s_unk_B23F64;
-    extern int32_t s_specularEnabled;
-    extern IDatabase<LiquidMaterialRec>* s_liquidMaterialDB;
-    extern IDatabase<LiquidTypeRec>* s_liquidTypeDB;
-    extern char s_shaderPath[256];
-    extern int32_t s_shadersEnabled;
-    extern int32_t s_unk_D43AF4;
-    extern int32_t s_unk_D43AF8;
-    extern int32_t s_unk_D43AFC;
-    extern uint8_t s_unk_D43B48[4];
-    extern CTexture* s_unk_D43B4C;
-    extern CTexture* s_unk_D43B50[32];
-    extern CTexture* s_wmoWaterTex;
-    extern CTexture* s_oceanDepthTex;
-    extern CTexture* s_riverDepthTex;
-    extern VSConstants s_vsConstants;
-    extern VSWaveConstants s_vsWaveConstants;
-    extern PSConstants s_psConstants;
-    extern PSProcWaterConstants s_psProcWaterConstants;
+    extern uint32_t s_kawasePingPong;
+    extern CGxShader* s_perturbDisplMapMeshPS;
+    extern CGxShader* s_perturbDisplMapMeshVS;
+    extern CGxShader* s_perturbDisplMapPS;
+    extern CGxShader* s_perturbDisplMapVS;
+    extern CTexture* s_perturbTex;
+    extern TSGrowableArray<DisplMapPerturbation*> s_perturbations[2];
+    extern TSGrowableArray<DisplMapPerturbationMesh*> s_perturbationMeshes[2];
+    extern CGxShader* s_propagateDisplMapPS;
+    extern CGxShader* s_propagateDisplMapVS;
+    extern CDataAllocator s_settingsAllocator;
+    extern TEXTURE_LOAD_CALLBACK s_textureLoadCallback;
 
+    void AddConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback);
+    void AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, uint32_t time);
     void CacheProceduralTextures();
-    void ClearMaterials();
-    void CreateProceduralTextures();
-    void DestroyProceduralTextures();
-    void ExtWaterDepthTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
-    const char* GetShaderSuffix();
-    C44Matrix* GetTexScrollMtx(const C2Vector& speed);
-    int32_t Initialize(int32_t a1, float a2, int32_t a3, const char* a4, IDatabase<LiquidTypeRec>* liquidTypeDB, IDatabase<LiquidMaterialRec>* liquidMaterialDB);
-    void InvalidateProceduralTextures();
-    void SetCircularWave(uint32_t index, const C2Vector& a2, const C2Vector& a3, float a4, float a5, float a6, float speed);
-    void SetDirectionalWave(uint32_t index, const C2Vector& direction, float a3, float a4, float a5, float speed);
-    void SetProcWaterLighting(const CM2Lighting& lighting);
-    void SetProcWaterParams(float a1, float a2, float a3, float a4, float a5, float a6, float a7);
-    void SetShaderConstants();
-    void SetShaderLighting(const CM2Lighting& lighting);
-    void SetShaderTransforms(const C3Vector& cameraPos, const C44Matrix& transform);
-    void Shutdown();
+    void ClearDisplMap();
+    void ClearEventPerturbations();
+    void ClearPerturbatorCache();
+    void CreateDynamicDisplacementMap();
+    DisplMapPerturbation* CreatePerturbator(EPertSurface surface, int32_t force);
+    DisplMapPerturbationMesh* CreatePerturbatorMesh(EPertSurface surface);
+    void CreateProceduralTextures(int32_t materials);
+    void DestroyPerturbator(EPertSurface surface, DisplMapPerturbation* perturbation);
+    void DestroyPerturbatorMesh(EPertSurface surface, DisplMapPerturbationMesh* mesh);
+    void DestroyProceduralTextures(int32_t materials);
+    int32_t CameraSubmerged();
+    CInstance* CreateInstance(uint32_t a1, uint32_t liquidType, IGeomFactory* factory);
+    const SMLiquidChunkDesc* GetChunkDesc(const void* data, uint32_t x, uint32_t y);
+    uint8_t GetChunkDepth(uint32_t format, const void* vertices, uint32_t count, uint32_t index);
+    float GetChunkHeight(uint32_t format, const void* vertices, uint32_t count, uint32_t index);
+    const uint16_t* GetChunkTexCoord0(uint32_t format, const void* vertices, uint32_t count, uint32_t index);
+    const uint8_t* GetExistsTable(const void* data, const SMLiquidInstance* instance);
+    const SMLiquidInstance* GetInstanceDesc(const void* data, const SMLiquidChunkDesc* desc, uint32_t index);
+    const void* GetInstanceVertices(const void* data, const SMLiquidInstance* instance);
+    int32_t GetVertexFormat(uint32_t liquidType, uint32_t format);
+    bool HasData(const SMLiquidChunkDesc* desc, const SMLiquidInstance* instance);
+    void Destroy();
+    void DestroySurfaceGen();
+    void GetAboveWaterFog(float& start, float& end, float& density, CImVector& color);
+    CTexture* GetBackBuffer();
+    CTexture* GetBlurredBackBuffer();
+    CGxFrameBuffer* GetBlurredBackBufferFB();
+    CTexture* GetBlurredReflectionBuffer();
+    void GetDisplMapInfoRaw(uint32_t index, C3Vector& pos, C2Vector& size);
+    C2iVector GetDisplMapTexSize(uint32_t index);
+    CGxTex* GetDynamicDisplMap(uint32_t index);
+    uint32_t GetDynamicDisplMapCnt();
+    float GetDynamicDisplMapInterpolation(uint32_t index);
+    CGxFrameBuffer* GetBlurredReflectionBufferFB();
+    float GetClosestReflectionHeight();
+    CTexture* GetFakeReflectionBuffer();
+    CGxFrameBuffer* GetFakeReflectionFB();
+    CTexture* GetRealReflectionBuffer();
+    CGxFrameBuffer* GetRealReflectionFB();
+    uint32_t GetReflectionDownscale();
+    uint32_t GetReflectionMode();
+    uint32_t GetRippleDetail();
+    int32_t GetShadersEnabled();
+    void GetUnderWaterFog(float& start, float& end, float& density, CImVector& color);
+    uint32_t GetWaterDetail();
+    extern SurfaceGen* s_surfaceGen;
+
+    void GrabBackBuffer();
+    const C44Matrix* GetTexScrollMtx(uint32_t time, const C2Vector& speed);
+    void SetMatrixConstant(C4Vector* constants, uint32_t index, const C44Matrix& matrix);
+    void SetScreenConstants(C4Vector* constants);
+    void SetShaderLighting(C4Vector* vsConstants, C4Vector* psConstants, const CM2Lighting& lighting);
+    void SetupTransform(C4Vector* vsConstants, C4Vector* psConstants, const C3Vector& camPos, const C44Matrix& transform);
+    int32_t HasDynamicDisplMap();
+    int32_t HasFakeReflection();
+    int32_t HasRealReflection();
+    void InitLiquidObjects();
+    int32_t Initialize(int32_t a1, float worldCoordScale);
+    int32_t IsAllLoaded(uint32_t liquidType);
+    int32_t IsTransparent(uint32_t liquidType);
+    void KawaseBlur(CTexture* source, CTexture* target, CGxFrameBuffer* frameBuffer, float a4);
+    void LinkToAsyncHead(uint32_t liquidType);
+    int32_t NeedBackBuffer();
+    void __fastcall OnTexturesDirty();
+    void PerturbDisplMap(TSGrowableArray<DisplMapPerturbation*>& perturbations, uint32_t index, uint32_t time);
+    void PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& meshes, uint32_t index, uint32_t time);
+    void PropagateDisplMap(uint32_t step, uint32_t index);
+    int32_t NeedDynDisplMap();
+    void PurgeMaterialBank();
+    Object* RegisterLiquidObject(uint32_t a1, uint32_t liquidType, uint32_t materialId);
+    void RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback);
+    void RenderUnderwater();
+    void RendererDestroy();
+    void RendererDraw(CInstance* instance);
+    void RendererFlush(uint32_t time, const C3Vector& camPos, uint32_t pass);
+    void RendererInit();
+    void RendererValidate();
+    void SetAboveWaterFog(float start, float end, float density, const CImVector& color);
+    void SetCamPos(const C3Vector& pos);
+    void SetCameraSubmerged(int32_t submerged);
+    void SetDisplMapInfo(const C3Vector& pos, const C2Vector& size);
+    void SetNeedBackBuffer(int32_t need);
+    void SetNeedDynDisplMap(int32_t need);
+    int32_t SetReflectionDownscale(uint32_t downscale);
+    int32_t SetReflectionMode(uint32_t mode);
+    int32_t SetRippleDetail(uint32_t detail);
+    void SetUnderWaterFog(float start, float end, float density, const CImVector& color);
+    int32_t SetWaterDetail(uint32_t detail);
+    void SignalConfigChanged(int32_t materials);
+    void UnCacheProceduralTextures();
+    void UnregisterLiquidObject(Object* object);
+    void Update();
+    void UpdateDisplMap(uint32_t time);
     void UpdateProceduralTextures();
-    void SetShadersEnabled(int32_t enabled);
-    void SetSpecularEnabled(int32_t enabled);
+    void UpdateSurfaceGen(uint32_t time);
     int32_t UseCameraRelativeCoords();
-    void WmoWaterTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
+    uint32_t ValidateReflectionDownscale(uint32_t downscale);
+    uint32_t ValidateReflectionMode(uint32_t mode);
+    uint32_t ValidateRippleDetail(uint32_t detail);
+    uint32_t ValidateWaterDetail(uint32_t detail);
     float WorldCoordScale();
 }
-
-#include "WoW/Source/LiquidSystem/Liquid.inl"
 
 #endif

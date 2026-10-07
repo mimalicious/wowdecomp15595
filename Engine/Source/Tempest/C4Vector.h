@@ -15,6 +15,7 @@ class C4Vector {
 
     C4Vector();
     C4Vector(const CImVector& color);
+    C4Vector(float x, float y, float z, float w);
     void NormalizeSafe();
 };
 

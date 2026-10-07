@@ -1,146 +1,511 @@
-#include "Liquid.h"
+#include "WoW/Source/LiquidSystem/Liquid.h"
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/ShaderEffect/DepthCache.h"
+#include "Engine/Source/ShaderEffect/ShaderEffect.h"
 #include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00D43B34
-CDataAllocator Liquid::s_instanceAllocator(sizeof(Liquid::CInstance), 0x20);
+// STATIC: 0x00E4EADC
+static int32_t s_cameraRelativeCoords;
 
-// STATIC: #0x00B23F64
-float Liquid::s_unk_B23F64 = 1.0f;
+// STATIC: 0x00D00634
+static float s_worldCoordScale = 1.0f;
 
-// STATIC: #0x00B23F68
-int32_t Liquid::s_specularEnabled = 1;
+// STATIC: 0x00D00638
+static int32_t s_shadersEnabled = 1;
 
-// STATIC: #0x00D439E8
-IDatabase<LiquidMaterialRec>* Liquid::s_liquidMaterialDB;
+// STATIC: 0x00D0063C
+static int32_t s_materialsDirty = 1;
 
-// STATIC: #0x00D439EC
-IDatabase<LiquidTypeRec>* Liquid::s_liquidTypeDB;
+// STATIC: 0x00E4EAFC
+static int32_t s_configDirty;
 
-// STATIC: #0x00D439F0
-char Liquid::s_shaderPath[256];
+// STATIC: 0x00E4EAE0
+static uint32_t s_waterDetail;
 
-// STATIC: #0x00D43AF0
-int32_t Liquid::s_shadersEnabled;
+// STATIC: 0x00E4EAE4
+static uint32_t s_rippleDetail;
 
-// STATIC: #0x00D43AF4
-int32_t Liquid::s_unk_D43AF4;
+// STATIC: 0x00E4EAE8
+static uint32_t s_reflectionMode;
 
-// STATIC: #0x00D43AF8
-int32_t Liquid::s_unk_D43AF8;
+// STATIC: 0x00E4EAEC
+static uint32_t s_reflectionDownscale;
 
-// STATIC: #0x00D43AFC
-int32_t Liquid::s_unk_D43AFC;
+// STATIC: 0x00E4EAF0
+static int32_t s_cameraSubmerged;
 
-// OFFSET: #0x008A32C0
-Liquid::IEnvironment::~IEnvironment() {
+// STATIC: 0x00E4EAF4
+static int32_t s_needBackBuffer;
+
+// STATIC: 0x00E4EAF8
+static int32_t s_needDynDisplMap;
+
+// STATIC: 0x00E4EB00
+static float s_underWaterFogStart;
+
+// STATIC: 0x00E4EB04
+static float s_underWaterFogEnd;
+
+// STATIC: 0x00E4EB08
+static float s_underWaterFogDensity;
+
+// STATIC: 0x00E4EB18
+static CImVector s_underWaterFogColor;
+
+// STATIC: 0x00E4EB0C
+static float s_aboveWaterFogStart;
+
+// STATIC: 0x00E4EB10
+static float s_aboveWaterFogEnd;
+
+// STATIC: 0x00E4EB14
+static float s_aboveWaterFogDensity;
+
+// STATIC: 0x00E4EB1C
+static CImVector s_aboveWaterFogColor;
+
+// STATIC: 0x00E4EB20
+static TSGrowableArray<Liquid::CONFIG_CHANGED_CALLBACK> s_configChangedCallbacks;
+
+// STATIC: 0x00E4EB30
+Liquid::SurfaceGen* Liquid::s_surfaceGen;
+
+// STATIC: 0x00E4EB7C
+CDataAllocator Liquid::s_instanceAllocator(sizeof(Liquid::CInstance), 32);
+
+// OFFSET: 0x0071ACF0
+void Liquid::SignalConfigChanged(int32_t materials) {
+    int32_t wasDirty = s_configDirty;
+    s_configDirty = 1;
+
+    if (!wasDirty) {
+        s_materialsDirty = materials;
+    } else {
+        s_materialsDirty |= materials;
+    }
 }
 
-// INLINED
-Liquid::IGeomFactory::~IGeomFactory() {
+// OFFSET: 0x0071AD20
+void Liquid::SetUnderWaterFog(float start, float end, float density, const CImVector& color) {
+    s_underWaterFogStart = start;
+    s_underWaterFogEnd = end;
+    s_underWaterFogDensity = density;
+    s_underWaterFogColor = color;
 }
 
-// INLINED
-Liquid::IWaveManager::~IWaveManager() {
+// OFFSET: 0x0071AD60
+void Liquid::GetUnderWaterFog(float& start, float& end, float& density, CImVector& color) {
+    start = s_underWaterFogStart;
+    end = s_underWaterFogEnd;
+    density = s_underWaterFogDensity;
+    color = s_underWaterFogColor;
 }
 
-// INLINED
-Liquid::IMaterial::~IMaterial() {
+// OFFSET: 0x0071ADA0
+void Liquid::SetAboveWaterFog(float start, float end, float density, const CImVector& color) {
+    s_aboveWaterFogStart = start;
+    s_aboveWaterFogEnd = end;
+    s_aboveWaterFogDensity = density;
+    s_aboveWaterFogColor = color;
 }
 
-// OFFSET: #0x008A1770
-int32_t Liquid::Initialize(int32_t a1, float a2, int32_t a3, const char* a4, IDatabase<LiquidTypeRec>* liquidTypeDB, IDatabase<LiquidMaterialRec>* liquidMaterialDB) {
-    SStrCopy(Liquid::s_shaderPath, a4, sizeof(Liquid::s_shaderPath));
-    Liquid::s_unk_B23F64 = a2;
-    Liquid::s_unk_D43AF8++;
-    Liquid::s_unk_D43AFC++;
-    Liquid::s_unk_D43AF4 = a1;
-    Liquid::s_shadersEnabled = a3;
-    Liquid::s_specularEnabled = 1;
-    Liquid::s_liquidTypeDB = liquidTypeDB;
-    Liquid::s_liquidMaterialDB = liquidMaterialDB;
+// OFFSET: 0x0071ADE0
+void Liquid::GetAboveWaterFog(float& start, float& end, float& density, CImVector& color) {
+    start = s_aboveWaterFogStart;
+    end = s_aboveWaterFogEnd;
+    density = s_aboveWaterFogDensity;
+    color = s_aboveWaterFogColor;
+}
+
+// OFFSET: 0x0071AE20
+uint32_t Liquid::GetWaterDetail() {
+    return s_waterDetail;
+}
+
+// OFFSET: 0x0071AE30
+uint32_t Liquid::GetRippleDetail() {
+    return s_rippleDetail;
+}
+
+// OFFSET: 0x0071AE40
+uint32_t Liquid::GetReflectionMode() {
+    return s_reflectionMode;
+}
+
+// OFFSET: 0x0071AE50
+uint32_t Liquid::GetReflectionDownscale() {
+    return s_reflectionDownscale;
+}
+
+// OFFSET: 0x0071AE70
+int32_t Liquid::CameraSubmerged() {
+    return s_cameraSubmerged;
+}
+
+// OFFSET: 0x0071AE80
+void Liquid::SetCameraSubmerged(int32_t submerged) {
+    s_cameraSubmerged = submerged;
+}
+
+// OFFSET: 0x0071AE90
+int32_t Liquid::NeedBackBuffer() {
+    return s_needBackBuffer;
+}
+
+// OFFSET: 0x0071AEA0
+void Liquid::SetNeedBackBuffer(int32_t need) {
+    s_needBackBuffer = need;
+}
+
+// OFFSET: 0x0071AEB0
+int32_t Liquid::NeedDynDisplMap() {
+    return s_needDynDisplMap;
+}
+
+// OFFSET: 0x0071AEC0
+void Liquid::SetNeedDynDisplMap(int32_t need) {
+    s_needDynDisplMap = need;
+}
+
+// OFFSET: 0x0071AED0
+int32_t Liquid::GetShadersEnabled() {
+    return s_shadersEnabled;
+}
+
+// OFFSET: 0x0071AEE0
+int32_t Liquid::UseCameraRelativeCoords() {
+    return s_cameraRelativeCoords;
+}
+
+// OFFSET: 0x0071AEF0
+float Liquid::WorldCoordScale() {
+    return s_worldCoordScale;
+}
+
+// OFFSET: 0x0071AF00
+void Liquid::Destroy() {
+    Liquid::CMaterialBank::Destroy();
+    Liquid::CSettingsBank::Destroy();
+    Liquid::CInstance::Destroy();
+    Liquid::DestroySurfaceGen();
+    Liquid::ClearPerturbatorCache();
+
+    if (s_waterDetail > 1) {
+        DepthCache::Release();
+    }
+}
+
+// OFFSET: 0x0071AF30
+int32_t Liquid::IsAllLoaded(uint32_t liquidType) {
+    IMaterial* material = Liquid::CMaterialBank::GetMaterial(liquidType);
+    return material->IsAllLoaded(Liquid::CSettingsBank::GetSettings(liquidType));
+}
+
+// OFFSET: 0x0071AF60
+void Liquid::LinkToAsyncHead(uint32_t liquidType) {
+    IMaterial* material = Liquid::CMaterialBank::GetMaterial(liquidType);
+    material->LinkToAsyncHead(Liquid::CSettingsBank::GetSettings(liquidType));
+}
+
+// OFFSET: 0x0071AF90
+int32_t Liquid::IsTransparent(uint32_t liquidType) {
+    return Liquid::CSettingsBank::GetSettings(liquidType)->m_transparent;
+}
+
+// OFFSET: 0x0071AFB0
+void Liquid::PurgeMaterialBank() {
+    Liquid::CMaterialBank::Purge();
+}
+
+// OFFSET: 0x0071AFC0
+uint32_t Liquid::ValidateWaterDetail(uint32_t detail) {
+    if (!detail) {
+        return 0;
+    }
+
+    if (detail > 3) {
+        return 2;
+    }
+
+    CGxDevice* device = g_theGxDevicePtr;
+
+    if (detail == 1) {
+        if (device->m_caps.m_shaderModel < 4) {
+            return 64;
+        }
+    } else {
+        if (device->m_caps.m_shaderModel < 5) {
+            return 128;
+        }
+
+        if (!DepthCache::IsSupported(NULL, NULL, NULL)) {
+            return 8;
+        }
+
+        device = g_theGxDevicePtr;
+    }
+
+    if (device->m_caps.m_texFmt[GxTex_Gr1616F] != 1 || !device->m_caps.m_texTarget[GxTex_NonPow2]) {
+        return 8;
+    }
+
+    return device->m_caps.m_texTarget[GxTex_Volume] != 0 ? 0 : 8;
+}
+
+// OFFSET: 0x0071B050
+int32_t Liquid::SetWaterDetail(uint32_t detail) {
+    if (Liquid::ValidateWaterDetail(detail)) {
+        return 0;
+    }
+
+    s_materialsDirty = 1;
+    s_configDirty |= detail != s_waterDetail;
+
+    if ((s_waterDetail >= 2) != (detail >= 2)) {
+        if (detail >= 2) {
+            DepthCache::AddRef();
+            s_waterDetail = detail;
+            return 1;
+        }
+
+        DepthCache::Release();
+    }
+
+    s_waterDetail = detail;
     return 1;
 }
 
-// OFFSET: #0x008A2400
-void Liquid::Shutdown() {
-    int32_t count = Liquid::s_unk_D43AFC--;
-    Liquid::s_liquidTypeDB = NULL;
-    Liquid::s_liquidMaterialDB = NULL;
-
-    if (count == 1) {
-        Liquid::CMaterialBank::Destroy();
-        Liquid::s_shadersEnabled = 0;
+// OFFSET: 0x0071B0C0
+uint32_t Liquid::ValidateRippleDetail(uint32_t detail) {
+    if (!detail) {
+        return detail;
     }
 
-    Liquid::CSettingsBank::Destroy();
-    Liquid::ClearMaterials();
-    Liquid::s_instanceAllocator.Clear(".?AVCInstance@Liquid@@", SLOG_OBJECT, 1);
+    if (detail > 2) {
+        return 2;
+    }
+
+    if (g_theGxDevicePtr->m_caps.m_shaderModel < 5) {
+        return 128;
+    }
+
+    return g_theGxDevicePtr->m_caps.m_texFmt[GxTex_Gr1616F] != 1 ? 8 : 0;
 }
 
-// OFFSET: #0x008A1700
+// OFFSET: 0x0071B100
+int32_t Liquid::SetRippleDetail(uint32_t detail) {
+    if (detail && (detail > 2 || g_theGxDevicePtr->m_caps.m_shaderModel < 5 || g_theGxDevicePtr->m_caps.m_texFmt[GxTex_Gr1616F] != 1)) {
+        return 0;
+    }
+
+    int32_t same = detail == s_rippleDetail;
+    s_rippleDetail = detail;
+    s_configDirty |= !same;
+    return 1;
+}
+
+// OFFSET: 0x0071B150
+uint32_t Liquid::ValidateReflectionMode(uint32_t mode) {
+    if (!mode) {
+        return mode;
+    }
+
+    if (mode > 3) {
+        return 2;
+    }
+
+    return g_theGxDevicePtr->m_caps.m_shaderModel >= 5 ? 0 : 0x80;
+}
+
+// OFFSET: 0x0071B190
+int32_t Liquid::SetReflectionMode(uint32_t mode) {
+    if (mode && (mode > 3 || g_theGxDevicePtr->m_caps.m_shaderModel < 5)) {
+        return 0;
+    }
+
+    int32_t same = mode == s_reflectionMode;
+    s_reflectionMode = mode;
+    s_configDirty |= !same;
+    return 1;
+}
+
+// OFFSET: 0x0071B1D0
+uint32_t Liquid::ValidateReflectionDownscale(uint32_t downscale) {
+    if (!downscale) {
+        return downscale;
+    }
+
+    if (downscale > 4) {
+        return 2;
+    }
+
+    return g_theGxDevicePtr->m_caps.m_texTarget[GxTex_NonPow2] != 0 ? 0 : 8;
+}
+
+// OFFSET: 0x0071B200
+int32_t Liquid::SetReflectionDownscale(uint32_t downscale) {
+    if (downscale && (downscale > 4 || !g_theGxDevicePtr->m_caps.m_texTarget[GxTex_NonPow2])) {
+        return 0;
+    }
+
+    int32_t same = downscale == s_reflectionDownscale;
+    s_reflectionDownscale = downscale;
+    s_configDirty |= !same;
+    return 1;
+}
+
+// OFFSET: 0x0071B240
+int32_t Liquid::Initialize(int32_t cameraRelativeCoords, float worldCoordScale) {
+    s_cameraRelativeCoords = cameraRelativeCoords;
+    s_worldCoordScale = worldCoordScale;
+    s_configDirty |= CShaderEffect::s_enableShaders != s_shadersEnabled;
+    s_shadersEnabled = CShaderEffect::s_enableShaders;
+    Liquid::CInstance::Initialize();
+    Liquid::CSettingsBank::Create();
+    Liquid::CMaterialBank::Create();
+    s_configDirty = 0;
+    Liquid::InitLiquidObjects();
+    return 1;
+}
+
+// OFFSET: 0x0071B2A0
+void Liquid::Update() {
+    if (s_configDirty) {
+        if (s_materialsDirty) {
+            Liquid::CMaterialBank::ResetMaterials();
+        }
+
+        for (uint32_t i = 0; i < s_configChangedCallbacks.Count(); i++) {
+            s_configChangedCallbacks[i]();
+        }
+
+        Liquid::DestroyProceduralTextures(s_materialsDirty);
+
+        if (s_materialsDirty) {
+            Liquid::CMaterialBank::Purge();
+            Liquid::CSettingsBank::Purge();
+        }
+
+        Liquid::CreateProceduralTextures(s_materialsDirty);
+        s_configDirty = 0;
+        s_materialsDirty = 1;
+    }
+
+    s_needBackBuffer = 0;
+    s_needDynDisplMap = 0;
+    Liquid::s_oceanDepthTexValid = 0;
+    Liquid::s_riverDepthTexValid = 0;
+    Liquid::s_wmoWaterTexValid = 0;
+}
+
+// OFFSET: 0x0071B340
+Liquid::CInstance* Liquid::CreateInstance(uint32_t a1, uint32_t liquidType, IGeomFactory* factory) {
+    CInstance* instance = Liquid::CInstance::Create();
+    instance->m_material = Liquid::CMaterialBank::GetMaterial(liquidType);
+    instance->m_settings = Liquid::CSettingsBank::GetSettings(liquidType);
+    instance->m_geomFactory = factory;
+
+    LiquidTypeRec* rec = g_liquidTypeDB.GetRecord(liquidType);
+
+    if (!rec) {
+        return NULL;
+    }
+
+    Object* object = Liquid::RegisterLiquidObject(a1, liquidType, rec->m_materialID);
+
+    if (object->m_noReflection && object->m_refCount == 1 && object->m_reflectionType == 1) {
+        object->SetReflectionPlane(factory->GetHeight());
+    }
+
+    instance->m_object = object;
+    return instance;
+}
+
+// OFFSET: 0x0071B3E0
+void Liquid::AddConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
+    s_configChangedCallbacks.New(callback);
+}
+
+// OFFSET: 0x0071B400
+void Liquid::RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
+    uint32_t count = s_configChangedCallbacks.Count();
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (s_configChangedCallbacks[i] == callback) {
+            s_configChangedCallbacks[i] = s_configChangedCallbacks[s_configChangedCallbacks.Count() - 1];
+            s_configChangedCallbacks.SetCount(count - 1);
+            return;
+        }
+    }
+}
+
+// OFFSET: 0x0071B490
+void Liquid::DestroySurfaceGen() {
+    SurfaceGen* surfaceGen = s_surfaceGen;
+
+    if (surfaceGen) {
+        surfaceGen->~SurfaceGen();
+        SMemFree(surfaceGen, "delete", -1, 0);
+    }
+
+    s_surfaceGen = NULL;
+}
+
+// OFFSET: 0x00401000
+void Liquid::UpdateSurfaceGen(uint32_t time) {
+}
+
+// OFFSET: 0x0071D9A0
+Liquid::SurfaceGen::~SurfaceGen() {
+    this->Clear();
+}
+
+// OFFSET: 0x00401000
+void Liquid::CInstance::Initialize() {
+}
+
+// OFFSET: 0x0071BDF0
 void Liquid::CInstance::AddRef() {
     this->m_refCount++;
 }
 
-// PROVEN: 259e5a12 IDENTICAL/NONE
-// OFFSET: 0x0071BE00/0x1403F0B50
+// OFFSET: 0x0071BE00
 void Liquid::CInstance::Purge() {
     this->m_geomFactory->Purge();
 }
 
-// OFFSET: #0x008A1720
-void Liquid::SetShadersEnabled(int32_t enabled) {
-    Liquid::s_shadersEnabled = enabled;
+// OFFSET: 0x0071BE10
+void Liquid::CInstance::Destroy() {
+    Liquid::s_instanceAllocator.Clear(typeid(Liquid::CInstance).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: #0x008A1730
-void Liquid::SetSpecularEnabled(int32_t enabled) {
-    Liquid::s_specularEnabled = enabled;
-}
-
-// OFFSET: #0x008A1740
-int32_t Liquid::UseCameraRelativeCoords() {
-    return Liquid::s_unk_D43AF4;
-}
-
-// OFFSET: #0x008A1750
-float Liquid::WorldCoordScale() {
-    return Liquid::s_unk_B23F64;
-}
-
-// OFFSET: #0x008A1760
-const char* Liquid::GetShaderSuffix() {
-    return Liquid::s_shaderPath;
-}
-
-// OFFSET: #0x008A1A40
+// OFFSET: 0x0071BE30
 Liquid::CInstance::CInstance() {
     this->m_material = NULL;
     this->m_settings = NULL;
     this->m_geomFactory = NULL;
-    this->m_waveManager = NULL;
     this->m_environment = NULL;
+    this->m_object = NULL;
+    this->m_transform = C44Matrix();
+    this->m_bounds.c = C3Vector(0.0f, 0.0f, 0.0f);
     this->m_bounds.r = 0.0f;
-    this->m_queued = 0;
+    this->unk_0064 = 0;
+    this->m_isMesh = 0;
     this->m_refCount = 1;
 }
 
-// OFFSET: #0x008A1AC0
+// OFFSET: 0x0071BEE0
+Liquid::CInstance* Liquid::CInstance::Create() {
+    return Liquid::s_instanceAllocator.New<Liquid::CInstance>(0);
+}
+
+// OFFSET: 0x0071BF10
 void Liquid::CInstance::Release() {
     if (this->m_refCount-- == 1) {
         this->m_geomFactory->Release();
         this->m_environment->Release();
-
-        if (this->m_waveManager) {
-            this->m_waveManager->Release();
-        }
-
+        Liquid::UnregisterLiquidObject(this->m_object);
         Liquid::s_instanceAllocator.PutData(this, NULL, 0);
     }
-}
-
-// OFFSET: #0x008A1B00
-Liquid::CInstance* Liquid::CInstance::Create() {
-    void* mem = Liquid::s_instanceAllocator.GetData(0, ".?AVCInstance@Liquid@@", SLOG_OBJECT);
-    return mem ? new (mem) Liquid::CInstance() : NULL;
 }

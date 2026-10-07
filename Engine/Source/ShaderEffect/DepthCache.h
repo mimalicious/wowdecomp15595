@@ -13,13 +13,17 @@ namespace DepthCache {
     };
 
     void AddRef();
+    int32_t DepthRangeDumpEnabled();
+    void DrawDepthRangeDump();
     EDepthMode GetDepthMode();
     CTexture* GetDepthSR();
+    CTexture* GetDepthTex();
     int32_t IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFormat* resolveFormat);
     bool IsValid();
     void Release();
     void __fastcall Reset();
     void Resolve();
+    void SetDepthRangeDump(float rangeMin, float rangeMax);
     void Validate();
 }
 
