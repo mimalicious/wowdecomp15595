@@ -22,6 +22,14 @@ Packet<T, N, V>::~Packet() {
     }
 }
 
+// INLINED
+template <class P>
+PacketList<P>::PacketList() {
+    this->m_activeCount = 0;
+    this->m_freeCount = 0;
+    this->m_current = NULL;
+}
+
 // OFFSET: [0x007517E0<Packet<Rain::Drop, 1024, 3>>, 0x00751A20<Packet<Rain::Patter, 1024, 3>>, 0x00751B60<Packet<Snow::Flake, 6144, 1>>, 0x00751CA0<Packet<Sand::Grain, 6144, 1>>]
 template <class P>
 PacketList<P>::~PacketList() {

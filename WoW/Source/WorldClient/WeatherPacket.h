@@ -43,6 +43,7 @@ class PacketList {
     /* 0014 */ P* m_current;
     /* 0018 */ TSList<P, TSGetLink<P> > m_active;
 
+    PacketList();
     ~PacketList();
     P* Alloc();
 };
