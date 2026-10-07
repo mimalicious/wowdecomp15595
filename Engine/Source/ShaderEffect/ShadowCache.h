@@ -41,17 +41,17 @@ struct CShadowCacheQueryData {
     /* 0018 */ int32_t m_useCullFrustum[3];
     /* 0024 */ CAaBox m_extents[3];
     /* 006C */ CFrustum m_frustums[3];
-    /* 0348 */ CFrustum m_cullFrustums[3];
-    /* 0624 */ CFrustum unk_0624[3];
-    /* 0900 */ float m_cullRects[3][4];
-    /* 0930 */ C3Vector m_pos[3];
-    /* 0954 */ uint8_t m_textureIndex[3];
-    /* 0958 */ float m_radius[3];
-    /* 0964 */ float m_bounds[3][4];
-    /* 0994 */ float m_texBounds[3][4];
-    /* 09C4 */ C44Matrix m_matrices[3];
-    /* 0A84 */ int32_t m_lastBand;
-    /* 0A88 */ int32_t m_useFrustum;
+    /* 02AC */ CFrustum m_cullFrustums[3];
+    /* 04EC */ CFrustum unk_04EC[3];
+    /* 072C */ float m_cullRects[3][4];
+    /* 075C */ C3Vector m_pos[3];
+    /* 0780 */ uint8_t m_textureIndex[3];
+    /* 0784 */ float m_radius[3];
+    /* 0790 */ float m_bounds[3][4];
+    /* 07C0 */ float m_texBounds[3][4];
+    /* 07F0 */ C44Matrix m_matrices[3];
+    /* 08B0 */ int32_t m_lastBand;
+    /* 08B4 */ int32_t m_useFrustum;
 
     CShadowCacheQueryData();
 };
