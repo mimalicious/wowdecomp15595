@@ -1,12 +1,23 @@
 #include "WoW/Source/WorldClient/MapDoodadDef.h"
+#include <cfloat>
 #include <cmath>
+#include <cstring>
 #include "Engine/Source/Model2/M2Light.h"
 #include "Engine/Source/Model2/M2Model.h"
+#include "Engine/Source/Model2/M2Data.h"
 #include "Engine/Source/Model2/M2Shared.h"
+#include "Engine/Source/SoundEngine/SE3.h"
+#include "Engine/Source/Tempest/C3Segment.h"
+#include "Engine/Source/Tempest/CAaSphere.h"
+#include "WoW/Source/LiquidSystem/Liquid.h"
+#include "WoW/Source/WorldClient/CWorldMath.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapArea.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/WorldClient/MapChunkLiquid.h"
+#include "WoW/Source/WorldClient/MapObj.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
+#include "WoW/Source/WorldClient/MapObjGroup.h"
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
@@ -16,6 +27,14 @@
 // OFFSET: 0x00733100/0x140475D70
 void CMapDoodadDef::StreamingCallback(void* param) {
     static_cast<CMapDoodadDef*>(param)->m_model->LinkToAsyncHead();
+}
+
+// OFFSET: 0x00786A20
+void CMapDoodadDef::GetLocalMatrix(C44Matrix& matrix) {
+    matrix = C44Matrix();
+    matrix.Translate(this->m_pos);
+    matrix.Rotate(this->m_rotation);
+    matrix.Scale(this->m_scale);
 }
 
 // OFFSET: 0x00786AC0
@@ -59,6 +78,95 @@ void CMapDoodadDef::SelectLights(CM2Lighting* lighting) {
 
     C3Vector color(fog->m_color.r * 0.0039215689f, fog->m_color.g * 0.0039215689f, fog->m_color.b * 0.0039215689f);
     lighting->SetFog(color, fog->m_start, fog->m_end, fog->m_density);
+}
+
+// OFFSET: 0x00786E70
+int32_t CMapDoodadDef::SelectUnderwater(CMapObjDefGroup* group) {
+    CMapObjDef* mapObjDef = group->m_mapObjDef;
+    CMapObjGroup* objGroup = mapObjDef->m_mapObj->GetGroup(group->m_groupNum, 0);
+
+    if (!objGroup) {
+        return 0;
+    }
+
+    C3Vector local = C3Vector(this->m_position.x, this->m_position.y, this->m_bbox.b.z) * mapObjDef->m_invMat;
+    uint32_t liquidType;
+    float height;
+
+    if (objGroup->QueryLiquid(local, 0, liquidType, height) && height > local.z) {
+        this->m_entityFlags |= 0x1;
+        this->m_entityFlags ^= (this->m_entityFlags ^ (2 * static_cast<uint8_t>(Liquid::IsTransparent(liquidType)))) & 0x2;
+        uint32_t flags = this->m_entityFlags;
+        float worldHeight = mapObjDef->m_mat.a2 * local.x + mapObjDef->m_mat.b2 * local.y + mapObjDef->m_mat.c2 * height + mapObjDef->m_mat.d2;
+
+        if (worldHeight > this->m_liquidHeight) {
+            float top = this->m_bbox.t.z;
+            this->m_liquidHeight = worldHeight;
+
+            if (top >= worldHeight) {
+                this->m_entityFlags = flags | 0x4;
+            }
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00787000
+void CMapDoodadDef::UpdateMatrixOnly(const C44Matrix& matrix) {
+    this->m_position = this->m_pos * matrix;
+    C44Matrix transform;
+    this->GetLocalMatrix(transform);
+    transform *= matrix;
+    CAaBox bounds;
+    memset(&bounds, 0, sizeof(bounds));
+    CAaBox collision;
+    memset(&collision, 0, sizeof(collision));
+    CM2Model* model = this->m_model;
+    C3Vector center;
+    float radius;
+
+    if (model->IsLoaded()) {
+        bounds = model->GetBoundingBox();
+
+        if (!(model->m_shared->m_flags & 0x1)) {
+            model->WaitForLoad(NULL);
+        }
+
+        collision = model->m_shared->m_data->m_collisionBounds.m_extent;
+        CAaSphere sphere = model->GetBoundingSphere();
+        center = sphere.c;
+        radius = sphere.r;
+    } else {
+        memset(&bounds, 0, sizeof(bounds));
+        center = C3Vector(0.0f, 0.0f, 0.0f);
+        collision = model->m_shared->m_boundingBox;
+        radius = 0.0f;
+    }
+
+    this->m_sphere.c = center * transform;
+    this->m_sphere.r = this->m_scale * radius;
+
+    if (bounds.t.x < bounds.b.x || bounds.t.y < bounds.b.y || bounds.t.z < bounds.b.z) {
+        this->m_bbox.b = this->m_position;
+        this->m_bbox.t = this->m_position;
+    } else {
+        CWorldMath::TransformAABox(transform, bounds, this->m_bbox);
+    }
+
+    if ((collision.t.x == collision.b.x && collision.t.y == collision.b.y && collision.t.z == collision.b.z) || collision.t.x < collision.b.x || collision.t.y < collision.b.y || collision.t.z < collision.b.z) {
+        this->m_modelBox.b = C3Vector(FLT_MAX, FLT_MAX, FLT_MAX);
+        this->m_modelBox.t = C3Vector(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    } else {
+        CWorldMath::TransformAABox(transform, collision, this->m_modelBox);
+    }
+
+    this->m_model->m_fFlags |= 0x4000;
+    this->m_model->m_worldTransform = transform;
+
+    if (this->m_soundEmitter) {
+        SE3::EmitterManagerSendMessage_Set3DPosition(this->m_soundEmitter, this->m_position);
+    }
 }
 
 // OFFSET: 0x007874F0/0x140476AB0
@@ -160,7 +268,7 @@ void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     }
 }
 
-// OFFSET: 0x007879B0
+// OFFSET: [0x007879B0, 0x00787DC0]
 CMapDoodadDef::~CMapDoodadDef() {
     if (this->m_model) {
         this->m_model->SetSequenceCallback(NULL, 0);
@@ -172,6 +280,48 @@ CMapDoodadDef::~CMapDoodadDef() {
     }
 
     this->m_updateLink.Unlink();
+}
+
+// OFFSET: 0x00787A40
+void CMapDoodadDef::QueryInteriorLighting(const CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
+    CImVector color(0);
+    bool exterior;
+    bool found;
+
+    if (polyIndex) {
+        C3Vector local = *pos * mapObjDef->m_invMat;
+        found = mapObjDef->m_mapObj->QueryLighting(groupNum, local, *polyIndex, color, exterior) != 0;
+    } else {
+        C3Segment seg;
+        seg.b = C3Vector(this->m_pos.x, this->m_pos.y, this->m_pos.z + 1.5f);
+        seg.t = C3Vector(this->m_pos.x, this->m_pos.y, this->m_pos.z - 1760.0f);
+        found = mapObjDef->m_mapObj->QueryLighting(groupNum, seg, color, exterior);
+    }
+
+    if (!found) {
+        return;
+    }
+
+    CMapStaticEntity::AdjustLighting(color, this->m_interiorDirect, 168, this->m_interiorAmbient, 96);
+
+    if (!exterior) {
+        this->m_entityFlags &= ~0x400;
+        return;
+    }
+
+    const DayNight::LightInfo* info = DayNight::GetLightInfo();
+    uint8_t alpha = color.a;
+
+    if (alpha) {
+        this->m_interiorDirect.InterpColor(alpha, &info->m_directColor);
+    }
+
+    if (alpha) {
+        this->m_interiorAmbient.InterpColor(alpha, &info->m_ambientColor);
+    }
+
+    this->m_entityFlags |= 0x400;
+    this->m_interiorDirect.a = color.a;
 }
 
 // OFFSET: 0x00787C50
@@ -208,6 +358,79 @@ CMapDoodadDef::CMapDoodadDef() {
     this->m_scale = 0.0f;
     this->m_cullStamp = 0xFFFFFFFF;
     this->m_fade = 0xFF00;
+}
+
+// OFFSET: 0x00787DF0
+int32_t CMapDoodadDef::SelectUnderwater() {
+    CMap* map = this->m_worldMap->GetMap(this->m_position);
+
+    if (!map) {
+        return 0;
+    }
+
+    float fx = -(this->m_position.x - 17066.666f) * 0.23999999f;
+    int32_t x = static_cast<int32_t>(fx);
+    int32_t y = static_cast<int32_t>(-(this->m_position.y - 17066.666f) * 0.23999999f);
+    float fy = -(this->m_position.y - 17066.666f) * 0.23999999f;
+    CMap::CMapAreaTableEntry* entry = map->m_areaTable.Get((y >> 7) & 0x3F, (static_cast<int32_t>(fx) >> 7) & 0x3F);
+
+    if (!entry || !(entry->m_flags & 0x2) || !entry->m_area) {
+        return 0;
+    }
+
+    CMapChunk* chunk = entry->m_area->m_chunks[((y >> 3) & 0xF) + 16 * ((x >> 3) & 0xF)];
+
+    if (!chunk) {
+        return 0;
+    }
+
+    C2Vector frac(fy - static_cast<float>(y), fx - static_cast<float>(x));
+    C2iVector cell = { y & 7, static_cast<int32_t>(fx) & 7 };
+    float height;
+
+    for (CChunkLiquid* liquid = chunk->m_liquidList.Head(); liquid; liquid = chunk->m_liquidList.Next(liquid)) {
+        if (liquid->TileExists(cell.x, cell.y) && liquid->GetHeight(frac, cell, height) && height > this->m_bbox.b.z && height > this->m_liquidHeight) {
+            this->m_staticFlags &= ~0x10;
+            this->m_entityFlags |= 0x1;
+            uint8_t transparent = static_cast<uint8_t>(Liquid::IsTransparent(liquid->m_liquidType));
+            float top = this->m_bbox.t.z;
+            this->m_entityFlags ^= (this->m_entityFlags ^ (2 * transparent)) & 0x2;
+            uint32_t flags = this->m_entityFlags;
+            this->m_liquidHeight = height;
+
+            if (top >= height) {
+                this->m_entityFlags = flags | 0x4;
+            }
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00787FB0
+void CMapDoodadDef::SelectUnderwater(CM2Lighting* lighting) {
+    uint32_t flags = this->m_entityFlags;
+
+    if (!(flags & 0x8)) {
+        this->m_entityFlags = (flags & ~0xF) | 0x8;
+        this->m_liquidHeight = -FLT_MAX;
+
+        for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
+            next = this->m_parentLinkList.Next(link);
+            CMapBaseObj* ref = link->m_ref;
+
+            if ((ref->m_type & 0x20) && !this->SelectUnderwater(static_cast<CMapObjDefGroup*>(ref))) {
+                this->m_entityFlags &= ~0x8;
+                break;
+            }
+        }
+
+        if (!(this->m_flags & 0x2)) {
+            this->SelectUnderwater();
+        }
+    }
+
+    CMapStaticEntity::SelectUnderwater(lighting);
 }
 
 // OFFSET: 0x00788030/0x1404778F0

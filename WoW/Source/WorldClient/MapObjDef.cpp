@@ -784,7 +784,7 @@ void CMapObjDef::UpdateLoaded() {
     this->CreateGroups();
 
     if (this->m_flags & 0x100000) {
-        this->m_worldMap->LinkObjectToMapExterior(this, this->m_bbox, 1, 0);
+        this->m_worldMap->LinkMapObjDef(this);
     }
 
     this->m_flags |= 0x40;

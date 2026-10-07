@@ -6,7 +6,10 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/WorldClient/MapStaticEntity.h"
 
+class C44Matrix;
 class CMapChunk;
+class CMapObjDef;
+class CMapObjDefGroup;
 
 class CMapDoodadDef : public CMapStaticEntity, public TSHashObject<CMapDoodadDef, HASHKEY_DWORD> {
     public:
@@ -26,6 +29,10 @@ class CMapDoodadDef : public CMapStaticEntity, public TSHashObject<CMapDoodadDef
     static void StreamingCallback(void* param);
 
     CMapDoodadDef();
+    void GetLocalMatrix(C44Matrix& matrix);
+    void QueryInteriorLighting(const CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos);
+    int32_t SelectUnderwater();
+    int32_t SelectUnderwater(CMapObjDefGroup* group);
     void LinkToChunk(CMapBaseObj* owner);
     void UpdateMatrixOnly(const C44Matrix& matrix);
     void Purge();

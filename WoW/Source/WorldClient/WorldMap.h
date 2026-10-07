@@ -87,7 +87,14 @@ class CShadowQuery;
 class CWorldView;
 class Particulate;
 class Weather;
-struct MapObjIntersectData;
+struct MapObjIntersectData {
+    /* 0000 */ CMapObjDef* m_mapObjDef;
+    /* 0004 */ CMapObjDefGroup* m_group;
+    /* 0008 */ float m_t;
+    /* 000C */ uint16_t m_polyIndex;
+    /* 000E */ uint16_t m_exterior;
+};
+
 struct SMDoodadDef;
 struct SMMapObjDef;
 struct SMODoodadDef;
@@ -147,6 +154,9 @@ class CWorldMap {
     static void SetHitTestDebug(World::HitTestDebug* debug, CMapBaseObj* object);
     static void SetHitTestDebug(World::HitTestDebug* debug, Liquid::CInstance* liquid);
     static void VectorIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end);
+    static void LinkIntersectMapObjDefGroup(CMapObjDef* mapObjDef, uint32_t groupNum, const C3Vector& start, const C3Vector& end, MapObjIntersectData& front, MapObjIntersectData& back);
+    static void LinkStaticEntityMultiple2ToMapObjDefExterior(CMapStaticEntity* entity, CMapObjDef* mapObjDef, CMapObjDefGroup* group);
+    static void LinkStaticEntityMultiple2ToMapObjDefInterior(CMapStaticEntity* entity, CMapObjDef* mapObjDef, CMapObjDefGroup* group);
     static void VectorIntersectMapObjDefs(TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)>& list, const C3Vector& start, const C3Vector& end, uint32_t flags);
     static void VectorIntersectMapObjDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const C3Vector& start, const C3Vector& end, uint32_t flags);
     static void VectorIntersectDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t flags);
@@ -177,7 +187,13 @@ class CWorldMap {
     uintptr_t AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9);
     uintptr_t AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* a8, int32_t a9);
     CMapObjDef* CreateMapObjDef(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t a5, uint16_t* a6, float* a7, int32_t a8);
-    void LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& box, int32_t a3, int32_t a4);
+    int32_t LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& box, int32_t linkChunks, int32_t linkMapObjs);
+    bool LinkIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, const C3Vector& pos, MapObjIntersectData* front, MapObjIntersectData* back);
+    bool LinkIntersectMapObjDefs(const C3Vector& start, const C3Vector& end, const C3Vector& pos, MapObjIntersectData* front, MapObjIntersectData* back, const CMapChunk* chunk);
+    int32_t LinkMapObjDef(CMapObjDef* mapObjDef);
+    void LinkStaticEntity(CMapStaticEntity* entity, C3Vector& start, C3Vector& end, C3Vector& pos, int32_t& exterior, int32_t& found, MapObjIntersectData* front, MapObjIntersectData* back);
+    void LinkStaticEntityMultiple2(CMapStaticEntity* entity);
+    void LinkStaticEntitySingle2(CMapStaticEntity* entity);
     CMapDoodadDef* CreateDoodadDef(const char* name, SMDoodadDef& def, C3Vector& offset);
     CMapDoodadDef* CreateDoodadDef(uint32_t index, SMODoodadDef& def, const char* name, uint32_t parentId, const C44Matrix& parentMat, uint16_t doodadSet);
     CMapObjDef* CreateMapObjDef(const char* name, SMMapObjDef& def, C3Vector& offset, int32_t a4);
