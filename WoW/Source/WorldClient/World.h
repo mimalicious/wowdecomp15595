@@ -48,6 +48,15 @@ namespace World {
 
     typedef int32_t (*COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, CM2Model* model, int32_t blobShadow);
 
+    struct MinimapQuad {
+        /* 0000 */ uint32_t m_groupNum;
+        /* 0004 */ int32_t m_x;
+        /* 0008 */ int32_t m_y;
+        /* 000C */ CAaBox m_box;
+
+        MinimapQuad();
+    };
+
     struct FacetData {
         /* 0000 */ TSGrowableArray<CFacet> facets;
         /* 0010 */ TSGrowableArray<uint64_t> facetIds;
@@ -300,5 +309,7 @@ namespace World {
     int32_t NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool translate);
     bool IntersectSegment(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
 }
+
+#include "WoW/Source/WorldClient/World.inl"
 
 #endif

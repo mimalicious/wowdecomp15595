@@ -48,7 +48,7 @@ class CMapStaticEntity : public CMapBaseObj {
 
     virtual ~CMapStaticEntity();
     virtual void SelectUnderwater(CM2Lighting* lighting);
-    virtual void AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const uint16_t* groupNum, const C3Vector* pos);
+    virtual void AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos);
     virtual void QueryExteriorLighting();
 
     CMapStaticEntity();

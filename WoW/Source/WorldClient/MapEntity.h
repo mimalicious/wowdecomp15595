@@ -37,7 +37,7 @@ class CMapEntity : public CMapStaticEntity {
 
     virtual ~CMapEntity();
     virtual void SelectLights(CM2Lighting* lighting);
-    virtual void AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const uint16_t* groupNum, const C3Vector* pos);
+    virtual void AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos);
 
     CMapEntity();
     void EnablePortals(int32_t enable);

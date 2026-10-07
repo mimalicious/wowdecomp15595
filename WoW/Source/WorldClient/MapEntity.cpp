@@ -290,21 +290,21 @@ void CMapEntity::SelectLights(CM2Lighting* lighting) {
 }
 
 // OFFSET: 0x00733DA0
-void CMapEntity::AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const uint16_t* groupNum, const C3Vector* pos) {
+void CMapEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
     CImVector color;
     *reinterpret_cast<uint32_t*>(&color) = 0;
-    uint8_t exterior;
+    bool exterior;
     bool found;
 
-    if (groupNum) {
+    if (polyIndex) {
         C3Vector local = *pos * mapObjDef->m_invMat;
-        found = mapObj->QueryLighting(*groupNum, local, color, exterior);
+        found = mapObjDef->m_mapObj->QueryLighting(groupNum, local, *polyIndex, color, exterior) != 0;
     } else {
         C3Vector local = this->m_position * mapObjDef->m_invMat;
         C3Segment seg;
         seg.b = C3Vector(local.x, local.y, local.z + 1.0f);
         seg.t = C3Vector(local.x, local.y, local.z - 12.0f);
-        found = mapObj->QueryLighting(seg, color, exterior);
+        found = mapObjDef->m_mapObj->QueryLighting(groupNum, seg, color, exterior);
     }
 
     if (!found) {

@@ -18,6 +18,7 @@
 #include "WoW/Source/WorldClient/MapObj.h"
 
 class C44Matrix;
+class CFrustum;
 class CAsyncObject;
 class CMapObjDef;
 struct CGxBuf;
@@ -276,6 +277,9 @@ class CMapObjGroup : public CMapBaseObj {
     void FreeVB();
     void GenLiquidVerts();
     bool GetTris(const C3Segment& seg, float* dist, uint32_t flags, uint16_t faceIgnoreFlags, World::TriData* triData, const CMapObjDef* mapObjDef);
+    bool GetTris(const CAaBox& box, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef);
+    bool GetTris(const CFrustum& frustum, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef);
+    bool Intersect(const C3Segment& seg, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t& faceIndex);
     void GetTrisFromQuery(World::TriData* triData, BspQuery* query, const CMapObjDef* mapObjDef, uint32_t statusFlags);
     uint32_t GetLiquidType() const;
     uint32_t GetLiquidType(uint32_t legacyType);

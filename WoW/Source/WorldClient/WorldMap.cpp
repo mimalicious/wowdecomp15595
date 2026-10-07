@@ -1187,7 +1187,7 @@ bool CWorldMap::IntersectMapObjDefs(const C3Segment& seg, float& t, C4Plane& pla
 
         World::TriData tris;
 
-        if (!mapObjDef->m_mapObj->Intersect(local, t, flags, tris, mapObjDef)) {
+        if (!mapObjDef->m_mapObj->GetTris(local, t, flags, tris, mapObjDef)) {
             continue;
         }
 
