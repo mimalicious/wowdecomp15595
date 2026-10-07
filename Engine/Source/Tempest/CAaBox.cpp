@@ -42,6 +42,11 @@ bool CAaBox::Intersects(const CAaBox& box) const {
     return this->t.x >= box.b.x && this->t.y >= box.b.y && this->t.z >= box.b.z && this->b.x <= box.t.x && this->b.y <= box.t.y && this->b.z <= box.t.z;
 }
 
+// OFFSET: 0x00730A70
+bool CAaBox::IntersectsExclusive(const CAaBox& box) const {
+    return this->t.x > box.b.x && this->t.y > box.b.y && this->t.z > box.b.z && box.t.x > this->b.x && box.t.y > this->b.y && box.t.z > this->b.z;
+}
+
 // OFFSET: #0x007AE2B0
 bool CAaBox::IntersectsXY(const CAaBox& box) const {
     return this->t.x >= box.b.x && this->t.y >= box.b.y && this->b.x <= box.t.x && this->b.y <= box.t.y;

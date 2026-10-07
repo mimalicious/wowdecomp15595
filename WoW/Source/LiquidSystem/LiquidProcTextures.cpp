@@ -675,14 +675,6 @@ void Liquid::AddPerturbation(EPertSurface surface, const C3Vector& pos, float ra
 
 // INLINED
 Liquid::DisplMapPerturbationMesh::DisplMapPerturbationMesh() {
-    this->m_vertexAlloc = 0;
-    this->m_vertexCount = 0;
-    this->m_vertices = NULL;
-    this->m_vertexChunk = 0;
-    this->m_indexAlloc = 0;
-    this->m_indexCount = 0;
-    this->m_indices = NULL;
-    this->m_indexChunk = 0;
 }
 
 // OFFSET: 0x007183A0
@@ -817,12 +809,12 @@ void Liquid::DestroyPerturbatorMesh(EPertSurface surface, DisplMapPerturbationMe
             meshes.m_data[i] = meshes.m_data[count - 1];
             meshes.SetCount(count - 1);
 
-            if (mesh->m_indices) {
-                SMemFree(mesh->m_indices, typeid(uint16_t).raw_name(), SLOG_OBJECT, 0);
+            if (mesh->m_indices.m_data) {
+                SMemFree(mesh->m_indices.m_data, typeid(uint16_t).raw_name(), SLOG_OBJECT, 0);
             }
 
-            if (mesh->m_vertices) {
-                SMemFree(mesh->m_vertices, typeid(C3Vector).raw_name(), SLOG_OBJECT, 0);
+            if (mesh->m_vertices.m_data) {
+                SMemFree(mesh->m_vertices.m_data, typeid(C3Vector).raw_name(), SLOG_OBJECT, 0);
             }
 
             s_perturbationMeshAllocator.PutData(mesh, NULL, 0);
@@ -841,12 +833,12 @@ void Liquid::ClearEventPerturbations() {
         for (uint32_t j = 0; j < Liquid::s_eventPerturbationMeshes[i].Count(); j++) {
             DisplMapPerturbationMesh* mesh = Liquid::s_eventPerturbationMeshes[i].m_data[j];
 
-            if (mesh->m_indices) {
-                SMemFree(mesh->m_indices, typeid(uint16_t).raw_name(), SLOG_OBJECT, 0);
+            if (mesh->m_indices.m_data) {
+                SMemFree(mesh->m_indices.m_data, typeid(uint16_t).raw_name(), SLOG_OBJECT, 0);
             }
 
-            if (mesh->m_vertices) {
-                SMemFree(mesh->m_vertices, typeid(C3Vector).raw_name(), SLOG_OBJECT, 0);
+            if (mesh->m_vertices.m_data) {
+                SMemFree(mesh->m_vertices.m_data, typeid(C3Vector).raw_name(), SLOG_OBJECT, 0);
             }
 
             s_perturbationMeshAllocator.PutData(mesh, NULL, 0);
@@ -1111,12 +1103,12 @@ void Liquid::PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& mes
                 continue;
             }
 
-            if (mesh->m_vertexCount + vertexCount >= 0x10000 || mesh->m_indexCount + indexCount >= 0x20000) {
+            if (mesh->m_vertices.Count() + vertexCount >= 0x10000 || mesh->m_indices.Count() + indexCount >= 0x20000) {
                 break;
             }
 
-            vertexCount += mesh->m_vertexCount;
-            indexCount += mesh->m_indexCount;
+            vertexCount += mesh->m_vertices.Count();
+            indexCount += mesh->m_indices.Count();
         }
 
         if (vertexCount) {
@@ -1150,8 +1142,8 @@ void Liquid::PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& mes
 
                 const C44Matrix& m = mesh->m_transform;
 
-                for (uint32_t k = 0; k < mesh->m_vertexCount; k++) {
-                    const C3Vector& p = mesh->m_vertices[k];
+                for (uint32_t k = 0; k < mesh->m_vertices.Count(); k++) {
+                    const C3Vector& p = mesh->m_vertices.m_data[k];
                     float x = p.z * m.c0 + p.x * m.a0 + p.y * m.b0 + m.d0;
                     float y = p.y * m.b1 + p.z * m.c1 + p.x * m.a1 + m.d1;
                     vertices[0] = ((x - s_displMapRawPos[index].x) / s_displMapSize[index].x - 0.5f) * 2.0f;
@@ -1160,12 +1152,12 @@ void Liquid::PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& mes
                     vertices += 3;
                 }
 
-                for (uint32_t j = 0; j < mesh->m_indexCount; j++) {
-                    *indices++ = static_cast<uint16_t>(baseVertex + mesh->m_indices[j]);
+                for (uint32_t j = 0; j < mesh->m_indices.Count(); j++) {
+                    *indices++ = static_cast<uint16_t>(baseVertex + mesh->m_indices.m_data[j]);
                 }
 
-                baseVertex += mesh->m_vertexCount;
-                writtenIndices += mesh->m_indexCount;
+                baseVertex += mesh->m_vertices.Count();
+                writtenIndices += mesh->m_indices.Count();
             }
 
             g_theGxDevicePtr->BufUnlock(vertexBuf, 0);

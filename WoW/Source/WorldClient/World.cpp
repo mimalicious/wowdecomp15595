@@ -2631,5 +2631,5 @@ World::FacetData::FacetData() {
     this->facets.m_chunk = 256;
     this->facetIds.m_chunk = 256;
     this->facetFlags.m_chunk = 256;
-    this->unk_0030 = 0;
+    this->m_status = 0;
 }

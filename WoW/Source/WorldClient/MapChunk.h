@@ -145,6 +145,7 @@ class CMapChunk : public CMapBaseObj {
     int32_t LoadDetailDoodadModels();
     void RenderPrep(CWorldView* view, float distSqr);
     void GetLiquidBox(CAaBox& box);
+    int32_t GetLiquidHeight(const C2Vector& pos, float& height);
     void ProcessIffChunks(uint32_t* data, int32_t size, int32_t isNew);
     void Purge();
 };

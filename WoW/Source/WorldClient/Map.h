@@ -16,6 +16,12 @@
 #include "WoW/Source/WorldClient/MapRenderChunk.h"
 #include "WoW/Source/WorldClient/RectArray.h"
 
+namespace World {
+    struct FacetData;
+    struct LiquidQueryResult;
+    struct TriData;
+}
+
 class CChunkLiquid;
 class CFacet;
 class CImVector;
@@ -23,6 +29,7 @@ class CMapChunk;
 class CMapChunkBuf;
 class CMapDoodadDef;
 class CMapEntity;
+class CFrustum;
 class CMapLight;
 class CMapObj;
 class CMapObjDef;
@@ -171,6 +178,9 @@ class CMap : public CMapBaseObj {
     static int32_t SafeOpen(const char* fileName, SFileImpl** file, int32_t warn);
     static int32_t SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint32_t bytes);
     static void SnapBaseObjToSubChunk(CMapBaseObj* baseObj, C3Vector& pos, float facing);
+    static bool QueryMapObjDefHeight(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float& t);
+    static bool QueryDoodadDefsHeight(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end);
+    static bool QueryMapObjDefLinksHeight(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end, float& t);
     static void TestQueryAdd(const CFacet& facet, CImVector color, const C44Matrix* mat);
     static void TestQueryRender();
     static void TestQueryReset();
@@ -194,6 +204,18 @@ class CMap : public CMapBaseObj {
 
     CMap();
     void ClearChunkBufs();
+    uint32_t QueryAreaIdTerrain(const C3Vector& pos);
+    void QueryTris(const CAaBox& box, const CiRect& chunkRect, const CiRect& subChunkRect, World::TriData& tris, uint32_t flags);
+    bool QueryFacets(const CAaBox& box, const CAaBox& box2, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags);
+    bool QueryFacets(const CFrustum& frustum, const CAaBox& bounds, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags);
+    bool QueryLiquidFacets(int32_t x, int32_t y, const CAaBox& box, World::FacetData& facets, uint32_t flags);
+    int32_t QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height);
+    bool QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height);
+    bool QueryShadow(const C3Vector& pos);
+    bool QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType);
+    int32_t QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower);
+    void RenderFlightBounds(const C3Vector& pos);
+    void QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results);
     void ClearChunkDetailDoodads();
     void ClearRenderChunks();
     void CreateAreaTable(const SMAreaInfo* areaInfo);

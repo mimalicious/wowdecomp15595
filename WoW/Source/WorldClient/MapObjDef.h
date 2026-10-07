@@ -11,6 +11,7 @@
 #include "WoW/Source/WorldClient/MapBaseObj.h"
 #include "WoW/Source/WorldClient/World.h"
 
+class CMapDoodadDef;
 class CMapObj;
 class CMapObjDef;
 class CMapLight;
@@ -88,6 +89,11 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     void UpdateLoaded();
     void UpdatePos(const C3Vector& pos, float facing, float a3, float a4);
     void UpdateMatrix(const C44Matrix& matrix);
+    int32_t CanLinkTo();
+    void UpdateBounds();
+    bool GetFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
+    void GetFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
+    void LinkDoodadDef(CMapDoodadDef* doodadDef, int32_t a2);
 };
 
 #endif

@@ -29,6 +29,10 @@ typedef void (*WORLD_RENDER_CALLBACK)(void* param, uint32_t pass, uint64_t param
 typedef void (*WORLD_FADE_CALLBACK)(C44Matrix& matrix, uint64_t param);
 typedef void (*WORLD_FRAME_CALLBACK)();
 
+class LiquidTypeRec;
+
+const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint32_t liquidType);
+
 namespace World {
     struct HitTestDebug;
     struct LiquidQueryResult;
@@ -42,7 +46,7 @@ namespace World {
         /* 0000 */ TSGrowableArray<CFacet> facets;
         /* 0010 */ TSGrowableArray<uint64_t> facetIds;
         /* 0020 */ TSGrowableArray<uint8_t> facetFlags;
-        /* 0030 */ uint32_t unk_0030;
+        /* 0030 */ uint32_t m_status;
 
         FacetData();
     };

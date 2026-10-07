@@ -64,14 +64,8 @@ namespace Liquid {
 
     struct DisplMapPerturbationMesh {
         /* 0000 */ C44Matrix m_transform;
-        /* 0040 */ uint32_t m_vertexAlloc;
-        /* 0044 */ uint32_t m_vertexCount;
-        /* 0048 */ C3Vector* m_vertices;
-        /* 004C */ uint32_t m_vertexChunk;
-        /* 0050 */ uint32_t m_indexAlloc;
-        /* 0054 */ uint32_t m_indexCount;
-        /* 0058 */ uint16_t* m_indices;
-        /* 005C */ uint32_t m_indexChunk;
+        /* 0040 */ TSGrowableArray<C3Vector> m_vertices;
+        /* 0050 */ TSGrowableArray<uint16_t> m_indices;
         /* 0060 */ float m_amplitude;
         /* 0064 */ uint32_t m_period;
         /* 0068 */ uint32_t unk_0068;

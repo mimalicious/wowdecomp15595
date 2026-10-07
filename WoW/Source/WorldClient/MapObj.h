@@ -12,8 +12,15 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/WorldClient/MapBaseObj.h"
 
+namespace World {
+    struct FacetData;
+    struct LiquidQueryResult;
+    struct TriData;
+}
+
 class CAsyncObject;
 class CFrustum;
+class CMapObjDef;
 class CMapObjDefGroup;
 class CMapObjGroup;
 class CTexture;
@@ -225,6 +232,8 @@ class CMapObj : public CMapBaseObj, public TSHashObject<CMapObj, HASHKEY_NONE> {
     void DestroyMaterial(uint32_t materialId);
     void GatherGroup(CWorldView* view, CMapObjDefGroup* defGroup);
     void GetBounds(CAaBox& box);
+    void GetTris(const CAaBox& box, uint32_t flags, World::TriData& tris, CMapObjDef* mapObjDef);
+    bool Intersect(const C3Segment& seg, float& t, uint32_t flags, World::TriData& tris, CMapObjDef* mapObjDef);
     int32_t GetDoodadSet(uint32_t doodadIndex);
     CMapObjGroup* GetGroup(uint32_t groupNum, int32_t loaded);
     void GetGroupBounds(CAaBox& box, uint32_t groupNum);

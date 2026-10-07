@@ -16,6 +16,8 @@
 
 class C2Vector;
 class C3Ray;
+struct C3Segment;
+class C4Plane;
 class C44Matrix;
 class CFrustum;
 class CM2Model;
@@ -90,6 +92,7 @@ class CWorldMap {
     static void LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     static void Initialize();
     static void GetChunkRect(const CAaBox& box, CiRect& rect);
+    static void GetQueryRects(const CAaBox& box, CiRect& subChunkRect, CiRect& chunkRect, CiRect& areaRect);
     static void GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect);
     static void InitializeLiquid();
     static int32_t LoadWorldMap(const char* directory, int32_t mapId, int32_t preload);
@@ -129,6 +132,21 @@ class CWorldMap {
     bool QueryFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
     bool QueryFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
     void UpdateEntity(CMapEntity* entity);
+    void LinkStaticEntity(CMapStaticEntity* entity);
+    void LinkDoodadDefToMapObjDefs(CMapDoodadDef* doodadDef, CMapObjDef* exclude);
+    CMap* GetMap(const C3Vector& pos);
+    bool QueryShadow(const C3Vector& pos);
+    uint32_t QueryAreaIdTerrain(const C3Vector& pos);
+    int32_t QueryMapObjDefsHeight(const C3Vector& start, const C3Vector& end, float& t);
+    int32_t QueryTerrainHeight(const C3Vector& pos, float& height);
+    bool QueryHeight(const C3Vector& start, const C3Vector& end, float& t);
+    bool QueryHeight(const C3Vector& pos, float range, float& height);
+    bool IntersectMapObjDefs(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
+    bool QueryMapObjDefFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
+    void QueryMapObjDefFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
+    void QueryMapObjDefTris(const CAaBox& box, World::TriData& tris, uint32_t flags);
+    bool QueryFacets(const CAaBox& box, World::FacetData& facets, uint32_t flags);
+    bool QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType);
     bool QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height);
     int32_t QueryFlightBoundsUpper(const C3Vector& pos, float& height);
     int32_t QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height);

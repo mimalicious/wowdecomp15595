@@ -39,6 +39,9 @@ class CMapEntity : public CMapStaticEntity {
     void EnablePortals(int32_t enable);
     int32_t QueryInterior(int32_t a2);
     void Update();
+    void UpdateLiquid();
+    void UpdateMapObjLiquid();
+    void UpdateTerrainLiquid();
     int32_t QueryMapObjZoneName(const char*& name);
     int32_t QueryMapObjSubzoneName(const char*& name, uint32_t& areaId);
     int32_t QueryMapObjAreaTable(const WMOAreaTableRec*& groupRec, const WMOAreaTableRec*& rootRec, uint32_t& wmoGroupId, int32_t a5);

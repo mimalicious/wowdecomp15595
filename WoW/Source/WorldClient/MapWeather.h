@@ -17,7 +17,9 @@ class Weather {
     static void Initialize();
     static void InitializeCVars();
 
-    /* 0000 */ uint32_t unk_0000[5];
+    /* 0000 */ uint32_t unk_0000[2];
+    /* 0008 */ float unk_0008;
+    /* 000C */ uint32_t unk_000C[2];
     /* 0014 */ float m_intensity;
     /* 0018 */ uint8_t unk_0018[12];
     /* 0024 */ uint8_t m_densityChanged;
@@ -27,6 +29,7 @@ class Weather {
 
     Weather();
     ~Weather();
+    int32_t GetType();
     void Render();
     void Update();
     void SetType(int32_t type, float intensity, const WeatherRec* rec, bool a4, float a5);
