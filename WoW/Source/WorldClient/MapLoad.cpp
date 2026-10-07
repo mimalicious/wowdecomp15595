@@ -16,6 +16,34 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
+// STATIC: 0x00E74368
+TSHashTable<CMapDynamicTexture, HASHKEY_DWORD> CMap::s_dynamicTextures;
+
+// OFFSET: 0x00773270/0x14045D800
+void CMap::UpdateDynamicTextures() {
+    for (CMapDynamicTexture* entry = CMap::s_dynamicTextures.Head(), * next; entry; entry = next) {
+        next = CMap::s_dynamicTextures.Next(entry);
+
+        if (entry->m_texture && entry->m_texture->m_refcount == 1) {
+            TextureRelease(entry->m_texture);
+            entry->m_texture = NULL;
+        }
+    }
+}
+
+// OFFSET: 0x007732E0
+void CMap::ClearDynamicTextures() {
+    for (CMapDynamicTexture* entry = CMap::s_dynamicTextures.Head(), * next; entry; entry = next) {
+        next = CMap::s_dynamicTextures.Next(entry);
+
+        if (entry->m_texture) {
+            TextureRelease(entry->m_texture);
+        }
+    }
+
+    CMap::s_dynamicTextures.Clear();
+}
+
 // OFFSET: 0x00773390/0x14045D010
 CTexture* CMap::LoadTexture(const char* fileName) {
     CStatus status;
@@ -26,6 +54,20 @@ CTexture* CMap::LoadTexture(const char* fileName) {
     CTexture* texture = TextureCreate(fileName, texFlags, &status, 0, NULL, 3);
     SysMsgAdd(&status);
     return texture;
+}
+
+// OFFSET: 0x007734F0
+CTexture* CMap::GetDynamicTexture(uint32_t textureId) {
+    HASHKEY_DWORD key;
+    key.m_key = textureId;
+    CMapDynamicTexture* entry = CMap::s_dynamicTextures.Ptr(textureId, key);
+
+    if (!entry->m_texture) {
+        entry->m_texture = CMap::LoadTerrainTexture(entry->m_fileName, entry->m_flags);
+    }
+
+    TextureAddRef(entry->m_texture);
+    return entry->m_texture;
 }
 
 // PROVEN: c1e3118d IDENTICAL/NONE

@@ -75,6 +75,13 @@ struct SMDoodadDef {
     /* 0022 */ uint16_t m_flags;
 };
 
+class CMapDynamicTexture : public TSHashObject<CMapDynamicTexture, HASHKEY_DWORD> {
+    public:
+    /* 0018 */ char m_fileName[260];
+    /* 011C */ uint32_t m_flags;
+    /* 0120 */ CTexture* m_texture;
+};
+
 class CMap : public CMapBaseObj {
     public:
     enum {
@@ -143,6 +150,8 @@ class CMap : public CMapBaseObj {
     static CMapObjGroup* AllocMapObjGroup();
     static void* AllocRawAreaData(uint32_t size);
     static CMapRenderChunk* AllocRenderChunk();
+    static TSHashTable<CMapDynamicTexture, HASHKEY_DWORD> s_dynamicTextures;
+
     static void ClearDynamicTextures();
     static CTexture* GetDynamicTexture(uint32_t textureId);
     static void Destroy();
