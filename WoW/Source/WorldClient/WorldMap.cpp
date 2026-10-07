@@ -389,7 +389,7 @@ void CWorldMap::Unload() {
     }
 
     this->m_list00EC.UnlinkAll();
-    CMapObj::ClearCache(1);
+    CMapObj::ClearCache();
     CWorldScene::s_m2Scene->PurgeModelCache();
     TextureGxCacheFlush();
     DayNight::UnloadMap();
@@ -407,7 +407,7 @@ void CWorldMap::PurgeMaps() {
     }
 
     this->m_list00EC.UnlinkAll();
-    CMapObj::ClearCache(1);
+    CMapObj::ClearCache();
     TextureGxCacheFlush();
 }
 
@@ -485,6 +485,80 @@ void CWorldMap::Destroy() {
     CMap::Destroy();
 }
 
+// OFFSET: 0x0072FAD0
+CMapDoodadDef* CWorldMap::CreateDoodadDef(uint32_t index, SMODoodadDef& def, const char* name, uint32_t parentId, const C44Matrix& parentMat, uint16_t doodadSet) {
+    HASHKEY_DWORD key;
+    key.m_key = parentId;
+    CMapDoodadDef* existing = this->m_doodadDefHash.Ptr(index, key);
+
+    if (existing) {
+        return existing;
+    }
+
+    CMapDoodadDef* doodadDef = CMap::AllocDoodadDef();
+    doodadDef->m_worldMap = this;
+    HASHKEY_DWORD insertKey;
+    insertKey.m_key = parentId;
+    this->m_doodadDefHash.Insert(doodadDef, index, insertKey);
+
+    doodadDef->m_pos = def.m_position;
+    doodadDef->m_position = doodadDef->m_pos * parentMat;
+    doodadDef->m_rotation.x = def.m_rotation[0];
+    doodadDef->m_rotation.y = def.m_rotation[1];
+    doodadDef->m_rotation.z = def.m_rotation[2];
+    doodadDef->m_rotation.w = def.m_rotation[3];
+    doodadDef->m_scale = def.m_scale;
+    doodadDef->m_doodadSet = doodadSet;
+
+    if (def.m_nameIndex & 0x1000000) {
+        doodadDef->m_flags |= 0x800;
+    }
+
+    C44Matrix mat;
+    mat.Translate(doodadDef->m_pos);
+    mat.Rotate(doodadDef->m_rotation);
+    mat.Scale(doodadDef->m_scale);
+    mat *= parentMat;
+
+    CMapStaticEntity::AdjustLighting(def.m_color, doodadDef->m_interiorDirect, 112, doodadDef->m_interiorAmbient, 96);
+
+    CM2Model* model = CWorldScene::LoadModel(name, mat, CMapStaticEntity::ModelEventCallback, reinterpret_cast<uintptr_t>(doodadDef), CMapStaticEntity::ModelLightingCallback, doodadDef, 0, 1, 1, 0);
+    doodadDef->m_model = model;
+
+    if (model->IsLoaded()) {
+        doodadDef->UpdateLoaded();
+        const CAaBox& bounds = World::mapObjDefBounds;
+
+        if (doodadDef->m_bbox.t.x >= bounds.b.x && doodadDef->m_bbox.t.y >= bounds.b.y && doodadDef->m_bbox.t.z >= bounds.b.z && bounds.t.x >= doodadDef->m_bbox.b.x && bounds.t.y >= doodadDef->m_bbox.b.y && bounds.t.z >= doodadDef->m_bbox.b.z) {
+            doodadDef->m_fade = 0;
+            CMap::s_doodadDefLoadedList.LinkToTail(doodadDef);
+        }
+
+        return doodadDef;
+    }
+
+    doodadDef->m_sphere.c = doodadDef->m_position;
+    doodadDef->m_bbox.b = doodadDef->m_position;
+    doodadDef->m_bbox.t = doodadDef->m_position;
+    doodadDef->m_sphere.r = 0.0f;
+
+    CAaBox modelBox = doodadDef->m_model->m_shared->m_boundingBox;
+
+    if ((modelBox.t.x == modelBox.b.x && modelBox.t.y == modelBox.b.y && modelBox.t.z == modelBox.b.z) || modelBox.t.x < modelBox.b.x || modelBox.t.y < modelBox.b.y || modelBox.t.z < modelBox.b.z) {
+        doodadDef->m_modelBox.b.x = 3.402823466e38f;
+        doodadDef->m_modelBox.b.y = 3.402823466e38f;
+        doodadDef->m_modelBox.b.z = 3.402823466e38f;
+        doodadDef->m_modelBox.t.x = -3.402823466e38f;
+        doodadDef->m_modelBox.t.y = -3.402823466e38f;
+        doodadDef->m_modelBox.t.z = -3.402823466e38f;
+    } else {
+        doodadDef->m_modelBox = CAaBox::Transform(modelBox, mat);
+    }
+
+    CMap::s_doodadDefLoadingList.LinkToTail(doodadDef);
+    return doodadDef;
+}
+
 // OFFSET: 0x00730200
 CMapObjDef* CWorldMap::CreateMapObjDef(const char* name, SMMapObjDef& def, C3Vector& offset, int32_t unique) {
     if (unique) {
@@ -516,9 +590,9 @@ CMapObjDef* CWorldMap::CreateMapObjDef(const char* name, SMMapObjDef& def, C3Vec
     mapObjDef->m_doodadSet = def.m_doodadSet;
     mapObjDef->m_nameSet = def.m_nameSet;
     mapObjDef->m_param64 = 0;
-    mapObjDef->unk_0154[0] = 0;
-    mapObjDef->unk_0154[1] = 0;
-    mapObjDef->unk_0154[2] = 0;
+    mapObjDef->m_extraDoodadSets[0] = 0;
+    mapObjDef->m_extraDoodadSets[1] = 0;
+    mapObjDef->m_extraDoodadSets[2] = 0;
 
     mapObjDef->m_mat.Identity();
     mapObjDef->m_mat.d0 = mapObjDef->m_position.x;

@@ -18,6 +18,12 @@ class CWorldOcclusionVolume {
     /* 0004 */ uint32_t m_planeCount;
 };
 
+class CWorldAntiOccluder {
+    public:
+    /* 0000 */ uint32_t unk_0000[4];
+    /* 0010 */ TSLink<CWorldAntiOccluder> m_link;
+};
+
 class CWorldOccluder {
     public:
     static void Destroy();

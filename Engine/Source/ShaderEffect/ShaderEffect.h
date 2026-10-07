@@ -53,6 +53,7 @@ class CShaderEffect : public TSHashObject<CShaderEffect, HASHKEY_STRI> {
     static int32_t s_useAlphaRef;
     static uint32_t s_usePcfFiltering;
 
+    static uint32_t ComputeVertexPermute(int32_t option0, int32_t option1, int32_t lighting, uint32_t lightCount, uint32_t texCoords, uint32_t shadow);
     static void ComputeLocalLights(LocalLights* localLights, uint32_t lightCount, CM2Light** lights, const C3Vector* origin);
     static int32_t DisplacementEnabled();
     static void FlushFogParams();

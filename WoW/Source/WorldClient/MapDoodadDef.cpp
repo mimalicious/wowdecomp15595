@@ -202,7 +202,7 @@ CMapDoodadDef::CMapDoodadDef() {
     this->m_rotation.y = 0.0f;
     this->m_rotation.z = 0.0f;
     this->m_rotation.w = 1.0f;
-    this->unk_00EC = 0;
+    this->m_doodadSet = 0;
     this->m_type |= 0x80;
     this->m_scale = 0.0f;
     this->m_cullStamp = 0xFFFFFFFF;

@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Storm/H/stpl.h"
+#include "WoW/Source/WorldClient/MapObjRender.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/C4Plane.h"
@@ -74,7 +75,7 @@ class CWorldView {
     /* 000C */ CSortTable* m_sortTable;
     /* 0010 */ CWorldOcclusion* m_occlusion;
     /* 0014 */ CShadowQuery* m_shadowQuery;
-    /* 0018 */ TSGrowableArray<CSceneMaterial*> m_materials[5];
+    /* 0018 */ CMapObjRender m_mapObjRender;
     /* 0068 */ int32_t m_shadowMode;
     /* 006C */ CMapObjDef* m_viewerMapObjDef;
     /* 0070 */ CMapObjDef* m_viewerMovedMapObjDef;

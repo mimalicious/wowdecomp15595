@@ -413,8 +413,8 @@ void CWorldMap::UpdateMapObjDefs(int32_t waitLoad) {
 
         float distSq = (z - pos.z) * (z - pos.z) + (y - pos.y) * (y - pos.y) + (x - pos.x) * (x - pos.x);
 
-        if (mapObj->unk_0028 > distSq) {
-            mapObj->unk_0028 = distSq;
+        if (mapObj->m_flushTimer > distSq) {
+            mapObj->m_flushTimer = distSq;
         }
 
         const CAaBox& guard = World::mapObjDefBoundsGuard;
@@ -529,6 +529,116 @@ void CWorldMap::GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect) {
     if (maxY >= 64) {
         rect.maxY = 63;
     }
+}
+
+// OFFSET: 0x0079CB70
+void CWorldMap::LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]) {
+    C3Vector localStart = start * mapObjDef->m_invMat;
+    C3Vector localEnd = end * mapObjDef->m_invMat;
+    CMapObj* mapObj = mapObjDef->m_mapObj;
+
+    if (!mapObj->TestBounds(localStart, localEnd)) {
+        return;
+    }
+
+    uint32_t slot = (mapObjDef->m_flags & 0x200) != 0;
+    int32_t exterior = 0;
+
+    for (CMapObjDefGroup* defGroup = mapObjDef->m_defGroupList.Head(); defGroup; defGroup = mapObjDef->m_defGroupList.Next(defGroup)) {
+        uint32_t groupNum = defGroup->m_groupNum;
+        CMapObjGroup* group = mapObj->GetGroup(groupNum, 0);
+
+        if (!group || (group->m_groupFlags & 0x410080) || !mapObj->TestGroupBounds(localStart, localEnd, groupNum)) {
+            continue;
+        }
+
+        C3Segment seg;
+        seg.b = localStart;
+        seg.t = localEnd;
+        World::TriData::s_statusFlags = 0;
+        World::TriData::s_nBatches = 0;
+        World::TriData::s_faceIndexCursor = 0;
+        World::TriData::s_indexCursor = 0;
+        World::TriData::unk_E4FE48 = 0;
+        World::TriData triData;
+
+        if (group->GetTris(seg, &dists[slot], 0, 0, &triData, mapObjDef)) {
+            exterior = (group->m_groupFlags >> 3) & 0x1;
+            mapObjDefs[slot] = mapObjDef;
+            groups[slot][0] = groupNum;
+            groups[slot][1] = 0xFFFF;
+
+            if (!exterior) {
+                float dist = 0.33329999f;
+                uint32_t portalGroup = 0;
+
+                if (mapObj->ClosestPortal(groupNum, localStart, &dist, &portalGroup) && !(mapObj->GetGroupFlags(portalGroup) & 0x8)) {
+                    groups[slot][1] = portalGroup;
+                }
+            }
+        }
+
+        seg.b = localStart;
+        seg.t = localEnd;
+        float t = 1.05f;
+        uint32_t portalGroups[2];
+
+        if (mapObj->VectorIntersectPortals(groupNum, seg, t, portalGroups) && t - dists[slot] < 0.000099999997f) {
+            exterior = (mapObj->GetGroupInfo(portalGroups[0])->m_flags >> 3) & 0x1;
+            dists[slot] = t;
+            mapObjDefs[slot] = mapObjDef;
+            groups[slot][0] = portalGroups[0];
+
+            if (mapObj->GetGroupInfo(portalGroups[1])->m_flags & 0x8) {
+                groups[slot][1] = 0xFFFF;
+            } else {
+                groups[slot][1] = portalGroups[1];
+            }
+        }
+    }
+
+    if (exterior) {
+        mapObjDefs[slot] = NULL;
+    }
+}
+
+// OFFSET: 0x0079CF70
+int32_t CWorldMap::LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& start, const C3Vector& end, float t, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]) {
+    float dists[2];
+    dists[0] = t;
+    dists[1] = t;
+
+    if (chunk) {
+        for (CMapBaseObjLink* link = chunk->m_mapObjDefLinkList.Head(); link; link = chunk->m_mapObjDefLinkList.Next(link)) {
+            CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(link->m_owner);
+
+            if (mapObjDef->TestAABox(start, end)) {
+                CWorldMap::LocateViewerMapObjDef(mapObjDef, start, end, dists, mapObjDefs, groups);
+            }
+        }
+    }
+
+    for (CMapObjDef* mapObjDef = this->m_mapObjDefList.Head(); mapObjDef; mapObjDef = this->m_mapObjDefList.Next(mapObjDef)) {
+        if (!(mapObjDef->m_flags & 0x10) && mapObjDef->TestAABox(start, end)) {
+            CWorldMap::LocateViewerMapObjDef(mapObjDef, start, end, dists, mapObjDefs, groups);
+        }
+    }
+
+    if (mapObjDefs[0]) {
+        return 1;
+    }
+
+    if (!mapObjDefs[1]) {
+        return 0;
+    }
+
+    mapObjDefs[0] = mapObjDefs[1];
+    groups[0][0] = groups[1][0];
+    groups[0][1] = groups[1][1];
+    mapObjDefs[1] = NULL;
+    groups[1][0] = 0xFFFF;
+    groups[1][1] = 0xFFFF;
+    return 1;
 }
 
 // OFFSET: 0x0079F160

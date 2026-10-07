@@ -7,12 +7,14 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CAaBox.h"
+#include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/WorldClient/MapBaseObj.h"
 #include "WoW/Source/WorldClient/World.h"
 
 class CMapObj;
 class CMapObjDef;
 class CMapLight;
+class CSceneMaterial;
 namespace Liquid { class CInstance; struct DisplMapPerturbationMesh; }
 
 class CMapObjDefGroup : public CMapBaseObj {
@@ -29,7 +31,10 @@ class CMapObjDefGroup : public CMapBaseObj {
     /* 0064 */ TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)> m_entityLinks;
     /* 0070 */ TSLink<CMapObjDefGroup> m_moveableLink;
     /* 0078 */ TSLink<CMapObjDefGroup> m_mapObjDefLink;
-    /* 0080 */ uint32_t unk_0080[5];
+    /* 0080 */ TSGrowableArray<CSceneMaterial*> m_batchMaterials;
+    /* 0090 */ uint32_t m_materialState;
+
+    virtual ~CMapObjDefGroup();
 
     CMapObjDefGroup();
     void ClearRefs();
@@ -57,17 +62,19 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     /* 0100 */ uint32_t unk_0100;
     /* 0104 */ TSExplicitList<CMapObjDefGroup, offsetof(CMapObjDefGroup, m_mapObjDefLink)> m_defGroupList;
     /* 0110 */ TSCGrowableArray<CMapObjDefGroup*, 8> m_defGroups;
-    /* 0134 */ TSFixedArray<CMapLight*> m_lights;
-    /* 0140 */ uint32_t unk_0140[2];
+    /* 0134 */ TSGrowableArray<CMapLight*> m_lights;
+    /* 0144 */ CImVector m_ambColor;
     /* 0148 */ uint64_t m_param64;
     /* 0150 */ Liquid::DisplMapPerturbationMesh* m_perturbatorMesh;
-    /* 0154 */ uint16_t unk_0154[3];
+    /* 0154 */ uint16_t m_extraDoodadSets[3];
     /* 015A */ int16_t m_skipPortal;
     /* 015C */ uint32_t unk_015C;
 
     virtual ~CMapObjDef();
 
     CMapObjDef();
+    bool TestAABox(const C3Vector& start, const C3Vector& end);
+    void CreateGroups();
     int32_t IsAllDrawable();
     int32_t IsAllLoaded();
     int32_t MoveDoodadDefs(uint16_t doodadSet, CMapObjDef* target, uint16_t targetDoodadSet);

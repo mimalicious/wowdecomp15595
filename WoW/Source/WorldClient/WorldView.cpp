@@ -237,9 +237,9 @@ void CPortalView::Merge(const CPortalView& other) {
 
 // OFFSET: 0x00753D00
 void CWorldView::GetCameraClosestPoint(const CAaBox& box, C3Vector& point) {
-    point.x = this->m_camPos.x <= this->m_camTarget.x ? box.t.x : box.b.x;
-    point.y = this->m_camPos.y <= this->m_camTarget.y ? box.t.y : box.b.y;
-    point.z = this->m_camPos.z <= this->m_camTarget.z ? box.t.z : box.b.z;
+    point.x = this->m_camPos.x > this->m_camTarget.x ? box.t.x : box.b.x;
+    point.y = this->m_camPos.y > this->m_camTarget.y ? box.t.y : box.b.y;
+    point.z = this->m_camPos.z > this->m_camTarget.z ? box.t.z : box.b.z;
 }
 
 // OFFSET: 0x00753D70
@@ -705,10 +705,10 @@ void CWorldView::UpdateViewerLiquid() {
     if (mapObjDef) {
         C3Vector localPos = this->m_camPos * mapObjDef->m_invMat;
         CMapObjGroup* group = mapObjDef->m_mapObj->GetGroup(groups[0], 0);
-        float liquidType2;
+        uint32_t groupLiquidType;
 
-        if (group && group->QueryLiquid(localPos, 0, &liquidType2, &height) && height + 0.0099999998f > localPos.z) {
-            liquidType = *reinterpret_cast<uint32_t*>(&liquidType2);
+        if (group && group->QueryLiquid(localPos, 0, groupLiquidType, height) && height + 0.0099999998f > localPos.z) {
+            liquidType = groupLiquidType;
             this->m_camDepth = height - localPos.z;
         }
     } else {
@@ -891,10 +891,10 @@ void CWorldView::RenderAlpha() {
         }
 
         if (this->m_flags & 0x200) {
-            CWorldScene::RenderAlphaWater(this);
+            CWorldScene::RenderAlphaWaterFog(this);
 
             if (this->m_flags & 0x200) {
-                CWorldScene::RenderAlphaWaterFog(this);
+                CWorldScene::RenderAlphaWater(this);
             }
         }
 
@@ -928,7 +928,7 @@ void CWorldView::RenderAlpha() {
         }
 
         if ((this->m_flags & 0x200) && Liquid::GetWaterDetail() > 1) {
-            CWorldScene::RenderAlphaWater(this);
+            CWorldScene::RenderAlphaWaterFog(this);
         }
 
         if ((this->m_flags & 0x800) && scene) {
@@ -948,7 +948,7 @@ void CWorldView::RenderAlpha() {
         }
 
         if (this->m_flags & 0x200) {
-            CWorldScene::RenderAlphaWaterFog(this);
+            CWorldScene::RenderAlphaWater(this);
         }
 
         if (this->m_flags & 0x100000) {
@@ -1826,7 +1826,7 @@ void CWorldView::AddMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* group
     int32_t entry = dist > 0.0f ? static_cast<int32_t>(dist * 0.029999999f) : 0;
 
     if (entry < this->m_sortTable->m_lastEntry) {
-        this->m_moveableGroups.LinkToTail(group);
+        this->m_sortTable->m_entries.m_data[entry].m_mapObjDefGroups.LinkToTail(group);
     }
 }
 
@@ -2024,7 +2024,7 @@ void CWorldView::GatherMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* gr
         return;
     }
 
-    CMapObjRender::GatherGroup(this, group);
+    mapObj->GatherGroup(this, group);
 
     if ((mapObjGroup->m_groupFlags & 0x1000) && (this->m_flags & 0x200) && (World::GetEnables() & 0x200)) {
         this->GatherMapObjDefGroupLiquids(mapObjDef, group, mapObj, mapObjGroup);
@@ -2063,12 +2063,12 @@ void CWorldView::AddPortalViewExterior(CMapObj* mapObj, const SMOPortalInfo* por
     view.m_rect.maxX = (view.m_rect.maxX + 1.0f) * 0.5f;
     view.m_rect.minY = (view.m_rect.minY + 1.0f) * 0.5f;
     view.m_rect.maxY = (view.m_rect.maxY + 1.0f) * 0.5f;
-    view.m_maxViewDepth = CMapObj::PortalViewDepth(portal, this->m_localCamPlane);
+    view.m_maxViewDepth = mapObj->CalcPortalFarthestDistance(portal, this->m_localCamPlane);
     this->m_exteriorPortalViews.Add(1, &view);
     this->m_frustumPortalView.Merge(view);
 
     if (addViewer) {
-        CMapObj::PortalViewPos(portal, this->m_localToWorld, view.m_pos);
+        mapObj->CalcPortalCenterInWorldSpace(portal, this->m_localToWorld, view.m_pos);
         this->m_exteriorPortalView.Merge(view);
     }
 }
@@ -2325,7 +2325,6 @@ void CWorldView::AddMapObjDef(CMapObjDef* mapObjDef) {
         }
 
         if (!(mapObj->GetGroupFlags(group->m_groupNum) & 0x4010008)) {
-            this->AddMapObjDefGroup(mapObjDef, group);
             continue;
         }
 
@@ -2336,6 +2335,7 @@ void CWorldView::AddMapObjDef(CMapObjDef* mapObjDef) {
         }
 
         if (!(mapObjGroup->m_groupFlags & 0x4000000)) {
+            this->AddMapObjDefGroup(mapObjDef, group);
             continue;
         }
 
@@ -2544,33 +2544,29 @@ void CWorldView::CullPortals(CMapObj* mapObj, uint32_t groupNum, uint32_t prevGr
             continue;
         }
 
-        if (ext->m_rect.minX > rect.maxY || rect.minX > ext->m_rect.maxY || ext->m_rect.minY > rect.maxX || rect.minY > ext->m_rect.maxX) {
+        if (ext->m_rect.minY > rect.maxY || rect.minY > ext->m_rect.maxY || ext->m_rect.minX > rect.maxX || rect.minX > ext->m_rect.maxX) {
             continue;
         }
 
-        CAaRect clipped;
-        clipped.minY = ext->m_rect.minY;
-        clipped.minX = ext->m_rect.minX;
-        clipped.maxY = ext->m_rect.maxX;
-        clipped.maxX = ext->m_rect.maxY;
-
-        if (rect.minX > clipped.minX) {
-            clipped.minX = rect.minX;
-        }
-
-        if (clipped.maxX > rect.maxY) {
-            clipped.maxX = rect.maxY;
-        }
+        CAaRect clipped = ext->m_rect;
 
         if (rect.minY > clipped.minY) {
             clipped.minY = rect.minY;
         }
 
-        if (clipped.maxX > rect.maxY) {
-            clipped.maxX = rect.maxY;
+        if (clipped.maxY > rect.maxY) {
+            clipped.maxY = rect.maxY;
         }
 
-        if (fequalz(clipped.minX, clipped.maxX, 0.001f) || fequalz(clipped.minY, clipped.maxY, 0.001f)) {
+        if (rect.minX > clipped.minX) {
+            clipped.minX = rect.minX;
+        }
+
+        if (clipped.maxY > rect.maxY) {
+            clipped.maxY = rect.maxY;
+        }
+
+        if (fequalz(clipped.minY, clipped.maxY, 0.001f) || fequalz(clipped.minX, clipped.maxX, 0.001f)) {
             continue;
         }
 

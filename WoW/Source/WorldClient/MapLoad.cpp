@@ -17,7 +17,7 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 
 // OFFSET: 0x00773390
-static CTexture* CreateTerrainTexture(const char* fileName) {
+CTexture* CMap::LoadTexture(const char* fileName) {
     CStatus status;
     CGxTexFlags texFlags;
     texFlags.m_filter = 4;
@@ -329,11 +329,11 @@ CTexture* CMap::LoadTerrainTexture(const char* fileName, uint32_t flags) {
         char name[260];
         strcpy(name, fileName);
         strcpy(strrchr(name, '.'), "_s.blp");
-        return CreateTerrainTexture(name);
+        return CMap::LoadTexture(name);
     }
 
     if (!(flags & 0x1) || solid) {
-        return CreateTerrainTexture(fileName);
+        return CMap::LoadTexture(fileName);
     }
 
     CImVector black(0xFF000000);

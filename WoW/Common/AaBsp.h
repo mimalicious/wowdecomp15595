@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Tempest/C3Segment.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
@@ -65,10 +66,25 @@ class CAaBspDigestCache {
 
     CAaBspDigestCache();
     ~CAaBspDigestCache();
-    void GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices);
+    static void GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices);
     CAaBspNodeDigest* GetDigest(const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices);
     void RemoveEntry(const CAaBspNode* node);
     void Reset();
+};
+
+template <class T>
+class CAaBsp_Query {
+    public:
+    /* 0000 */ const CAaBsp* m_aaBsp;
+    /* 0004 */ T* m_f;
+
+    void GetFaceIndices(const CAaBspNode* node);
+};
+
+template <class T>
+class CAaBsp_Query_Segment : public CAaBsp_Query<T> {
+    public:
+    void GetFaceIndices(uint32_t nodeIndex, const C3Segment& seg, const CAaBox& box);
 };
 
 extern CAaBspDigestCache* g_BspDigestCache;

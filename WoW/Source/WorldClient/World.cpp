@@ -798,12 +798,12 @@ CM2Scene* World::GetScene() {
 }
 
 // OFFSET: 0x007227A0
-void World::Render(const C3Vector& pos, float time) {
+void World::Render(const C3Vector& pos, float elapsedSec) {
     if (World::GetEnables() & 0x8000000) {
         g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, 0);
     }
 
-    CWorldScene::Render(pos, time);
+    CWorldScene::Render(pos, elapsedSec);
 
     if (World::GetEnables() & 0x8000000) {
         g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_PolygonFill, 1);

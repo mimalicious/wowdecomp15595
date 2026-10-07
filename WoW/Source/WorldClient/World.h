@@ -232,7 +232,7 @@ namespace World {
     void UnloadMap();
     int32_t ObjectTestConvexVolume(uintptr_t object, const C3Vector& pos, float radius);
     void ObjectGetExtents(uintptr_t object, CAaBox& box);
-    void Render(const C3Vector& pos, float time);
+    void Render(const C3Vector& pos, float elapsedSec);
     void UpdateDayNight();
     void TriDataToFacetData(const TriData& tris, FacetData& facets, uint64_t guid);
     void PrepareAreaOfInterest(const C3Vector& pos, float nearClip, float farClip, float fov, float aspect);

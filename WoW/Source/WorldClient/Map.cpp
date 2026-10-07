@@ -8,6 +8,7 @@
 #include "Engine/Source/Services/AsyncFile.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
+#include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/WorldClient/DetailDoodad.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
@@ -63,6 +64,12 @@ int32_t CMap::s_globalUniqueId;
 
 // STATIC: 0x00E74344
 CTexture* CMap::s_blackTexture;
+
+// STATIC: 0x00E74348
+TSGrowableArray<CGxVertexPC> CMap::s_testQueryVertices;
+
+// STATIC: 0x00E74358
+TSGrowableArray<uint16_t> CMap::s_testQueryIndices;
 
 // STATIC: 0x00E8938C
 int32_t CMap::s_areasUnloaded;
@@ -291,8 +298,8 @@ void CMap::UpdateLowDetailMapObjDefs() {
 
         float distSq = (x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y) + (z - pos.z) * (z - pos.z);
 
-        if (mapObj->unk_0028 > distSq) {
-            mapObj->unk_0028 = distSq;
+        if (mapObj->m_flushTimer > distSq) {
+            mapObj->m_flushTimer = distSq;
         }
 
         if (mapObj->m_flags & 0x40) {
@@ -685,6 +692,12 @@ void CMap::WaterReset() {
     }
 }
 
+// OFFSET: 0x0077F820
+void CMap::TestQueryReset() {
+    CMap::s_testQueryVertices.SetCount(0);
+    CMap::s_testQueryIndices.m_count = 0;
+}
+
 // OFFSET: 0x00786520
 void CMap::UnloadXXX() {
     this->Purge();
@@ -713,6 +726,26 @@ void CMap::Purge() {
     }
 
     this->m_lowDetail.Purge();
+}
+
+// OFFSET: 0x0078C9C0
+void CMap::TestQueryAdd(const CFacet& facet, CImVector color, const C44Matrix* mat) {
+    uint16_t base = static_cast<uint16_t>(CMap::s_testQueryVertices.Count());
+    C44Matrix identity;
+
+    if (!mat) {
+        mat = &identity;
+    }
+
+    for (uint32_t i = 0; i < 3; i++) {
+        CGxVertexPC* vertex = CMap::s_testQueryVertices.New();
+        vertex->p = facet.v[i] * *mat;
+        vertex->c = color;
+    }
+
+    *CMap::s_testQueryIndices.New() = base;
+    *CMap::s_testQueryIndices.New() = base + 1;
+    *CMap::s_testQueryIndices.New() = base + 2;
 }
 
 // OFFSET: 0x0079D470

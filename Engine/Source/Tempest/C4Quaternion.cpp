@@ -138,7 +138,17 @@ C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quatern
 
 // OFFSET: 0x004CBD10/0x140107A90
 void C4Quaternion::FromRotationMatrix(const C33Matrix& m) {
-    FromRotationMatrixImpl<3>(m.a0 + m.b1 + m.c2, *this, &m.a0);
+    C33Matrix transposed;
+    transposed.a0 = m.a0;
+    transposed.a1 = m.b0;
+    transposed.a2 = m.c0;
+    transposed.b0 = m.a1;
+    transposed.b1 = m.b1;
+    transposed.b2 = m.c1;
+    transposed.c0 = m.a2;
+    transposed.c1 = m.b2;
+    transposed.c2 = m.c2;
+    FromRotationMatrixImpl<3>(transposed.c2 + transposed.b1 + transposed.a0, *this, &transposed.a0);
 }
 
 // INLINED

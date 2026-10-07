@@ -85,6 +85,21 @@ C4Plane CShaderEffect::s_clipPlane;
 uint32_t CShaderEffect::s_shadowValue;
 
 // PROVEN: 551677b8 IDENTICAL/UNPROVEN
+// OFFSET: 0x00431CB0
+uint32_t CShaderEffect::ComputeVertexPermute(int32_t option0, int32_t option1, int32_t lighting, uint32_t lightCount, uint32_t texCoords, uint32_t shadow) {
+    uint32_t shadowIndex = shadow > 1 ? 1 : shadow;
+    uint32_t texCoordIndex = texCoords > 2 ? 2 : texCoords;
+    uint32_t lightIndex = 0;
+
+    if (lighting) {
+        lightIndex = (lightCount > 2 ? 2 : lightCount) + 1;
+    }
+
+    uint32_t permute = lightIndex + 4 * (texCoordIndex + 3 * shadowIndex);
+    permute = (option0 != 0) + 2 * permute;
+    return (option1 != 0) + 2 * permute;
+}
+
 // OFFSET: 0x00431D80/0x14003A550
 static void ReloadShadersCallback(const char* fileName) {
     g_theGxDevicePtr->ShaderReloadAll();

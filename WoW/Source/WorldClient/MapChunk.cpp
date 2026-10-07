@@ -1,4 +1,5 @@
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include <cmath>
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Model2/M2Light.h"
 #include "Engine/Source/Services/Texture.h"
@@ -24,6 +25,15 @@ uint16_t CMapChunk::s_indexCount = 768;
 
 // STATIC: 0x00BC7650
 static uint32_t s_holeMasks[16] = { 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000, 0x8000 };
+
+// STATIC: 0x00BC7690
+static uint32_t s_fanHeights[4][2] = { { 17, 0 }, { 0, 1 }, { 18, 17 }, { 1, 18 } };
+
+// STATIC: 0x00BC76B0
+static uint32_t s_fanCorners[4][2] = { { 3, 0 }, { 0, 1 }, { 2, 3 }, { 1, 2 } };
+
+// STATIC: 0x00D00DE0
+static C3Vector s_subchunkCoords[5] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, -4.1666665f, 0.0f), C3Vector(-4.1666665f, -4.1666665f, 0.0f), C3Vector(-4.1666665f, 0.0f, 0.0f), C3Vector(-2.0833333f, -2.0833333f, 0.0f) };
 
 // STATIC: 0x00E74E28
 float CMapChunk::s_geoToTex;
@@ -647,6 +657,49 @@ void CMapChunk::Purge() {
         next = this->m_entityLinkList.Next(link);
         CMap::FreeBaseObjLink(link);
     }
+}
+
+// OFFSET: 0x00788080
+int32_t CMap::GetHeightTerrain(const CMapChunk* chunk, const C3Vector& pos, int32_t subX, int32_t subY, int32_t a5, float& height) {
+    if (a5 && (chunk->m_holes & s_holeMasks[4 * (subY >> 1) + (subX >> 1)])) {
+        return 0;
+    }
+
+    float originX = subY * -4.1666665f;
+    float originY = subX * -4.1666665f;
+    float dx = pos.x - chunk->m_position.x;
+    float centerX = originX + s_subchunkCoords[4].x;
+    float centerY = originY + s_subchunkCoords[4].y;
+    float dy = pos.y - chunk->m_position.y;
+    uint32_t fan = 0;
+
+    if (((originX + s_subchunkCoords[2].x) - (originX + s_subchunkCoords[0].x)) * ((originY + s_subchunkCoords[2].y) - dy) - ((originY + s_subchunkCoords[2].y) - (originY + s_subchunkCoords[0].y)) * ((originX + s_subchunkCoords[2].x) - dx) <= 0.0f) {
+        fan = 1;
+    }
+
+    if (((originX + s_subchunkCoords[3].x) - (originX + s_subchunkCoords[1].x)) * ((originY + s_subchunkCoords[3].y) - dy) - ((originY + s_subchunkCoords[3].y) - (originY + s_subchunkCoords[1].y)) * ((originX + s_subchunkCoords[3].x) - dx) <= 0.0f) {
+        fan += 2;
+    }
+
+    const float* heights = &chunk->m_vertices[subY + subX + 16 * subY];
+    float centerZ = heights[9];
+    float ax = (s_subchunkCoords[s_fanCorners[fan][0]].x + originX) - centerX;
+    float ay = (s_subchunkCoords[s_fanCorners[fan][0]].y + originY) - centerY;
+    float az = heights[s_fanHeights[fan][0]] - centerZ;
+    float bx = (s_subchunkCoords[s_fanCorners[fan][1]].x + originX) - centerX;
+    float by = (s_subchunkCoords[s_fanCorners[fan][1]].y + originY) - centerY;
+    float bz = heights[s_fanHeights[fan][1]] - centerZ;
+
+    float nx = bz * ay - az * by;
+    float ny = az * bx - bz * ax;
+    float nz = by * ax - bx * ay;
+    float inv = 1.0f / sqrt(nz * nz + ny * ny + nx * nx);
+    nx = inv * nx;
+    ny = inv * ny;
+    nz = inv * nz;
+
+    height = chunk->m_position.z - ((ny * dy + nx * dx) - (centerY * ny + centerX * nx + nz * centerZ)) / nz;
+    return 1;
 }
 
 // OFFSET: 0x00871FE0

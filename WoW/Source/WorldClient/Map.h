@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Base/ObjectAlloc.h"
+#include "Engine/Source/Gx/CGxVertexPC.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/CAaBox.h"
@@ -116,6 +117,8 @@ class CMap : public CMapBaseObj {
     static TSExplicitList<CMapDoodadDef, offsetof(CMapDoodadDef, m_updateLink)> s_doodadDefLoadingList;
     static TSExplicitList<CMapDoodadDef, offsetof(CMapDoodadDef, m_updateLink)> s_doodadDefLoadedList;
     static int32_t s_globalUniqueId;
+    static TSGrowableArray<CGxVertexPC> s_testQueryVertices;
+    static TSGrowableArray<uint16_t> s_testQueryIndices;
     static int32_t s_areasUnloaded;
 
     static CMapArea* AllocArea();

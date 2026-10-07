@@ -9,10 +9,10 @@
 // STATIC: 0x00E71F10
 CAaBspDigestCache* g_BspDigestCache;
 
-// STATIC: #0x00CDF7BC
+// STATIC: 0x00E73F2C
 int32_t CAaBspDigestCache::s_digestReplaceIndex;
 
-// OFFSET: #0x0079ADC0
+// OFFSET: 0x00730530
 void CAaBsp::Set(CAaBspNode* nodes, uint32_t nNodes, uint16_t* nodeFaceIndices, uint32_t nNodeFaceIndices, const CAaBox& aaBox) {
     this->m_nodes = nodes;
     this->m_rootNode = nodes;
@@ -37,7 +37,7 @@ void CAaBspDigestCache::RemoveEntry(const CAaBspNode* node) {
     }
 }
 
-// OFFSET: #0x0079AE80
+// OFFSET: 0x00730610
 void CAaBspDigestCache::GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices) {
     uint16_t slots[1024];
     uint16_t hash[1024];
@@ -158,7 +158,7 @@ void CAaBspDigestCache::Reset() {
     memset(this->m_digests, 0, sizeof(this->m_digests));
 }
 
-// OFFSET: #0x0079B1F0
+// OFFSET: 0x00730970
 CAaBspNodeDigest* CAaBspDigestCache::GetDigest(const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices) {
     uint32_t bucket = ((reinterpret_cast<uintptr_t>(node) >> 5) ^ node->m_nFaces) & 0x7F;
     int32_t freeSlot = -1;

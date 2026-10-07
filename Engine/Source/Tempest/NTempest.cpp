@@ -523,7 +523,7 @@ float NTempest::DistanceSquaredFromEdge(const C2Vector& a, const C2Vector& b, co
     return py * py + px * px;
 }
 
-// OFFSET: #0x00984DB0
+// OFFSET: 0x00B082D0
 float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* verts, uint32_t count) {
     float best = FLT_MAX;
     uint32_t prev = count - 1;
@@ -533,7 +533,7 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
         segment.b = verts[prev];
         segment.t = verts[i];
 
-        float distance = sqrt(DistanceSquared(segment, point, NULL));
+        float distance = DistanceSquared(segment, point, NULL);
 
         if (best > distance) {
             best = distance;
@@ -542,7 +542,7 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
         prev = i;
     }
 
-    return best;
+    return sqrt(best);
 }
 
 // OFFSET: 0x00B08460

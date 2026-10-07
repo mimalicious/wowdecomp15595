@@ -87,6 +87,7 @@ class CWorldMap {
     static void FootprintDestroy();
     static void FootprintInitialize();
     static void Gather(CWorldView* view);
+    static void LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     static void Initialize();
     static void GetChunkRect(const CAaBox& box, CiRect& rect);
     static void GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect);
@@ -104,7 +105,9 @@ class CWorldMap {
     uintptr_t AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9);
     uintptr_t AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* a8, int32_t a9);
     CMapObjDef* CreateMapObjDef(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t a5, uint16_t* a6, float* a7, int32_t a8);
+    void LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& box, int32_t a3, int32_t a4);
     CMapDoodadDef* CreateDoodadDef(const char* name, SMDoodadDef& def, C3Vector& offset);
+    CMapDoodadDef* CreateDoodadDef(uint32_t index, SMODoodadDef& def, const char* name, uint32_t parentId, const C44Matrix& parentMat, uint16_t doodadSet);
     CMapObjDef* CreateMapObjDef(const char* name, SMMapObjDef& def, C3Vector& offset, int32_t a4);
     void CreateWaterRipple(const C3Vector& pos, float a2, float a3, float a4, float a5, float a6, int32_t a7, int32_t a8);
     void DestroyLiquidPerturbators();

@@ -16,7 +16,7 @@ class CMapDoodadDef : public CMapStaticEntity, public TSHashObject<CMapDoodadDef
     /* 00CC */ C3Vector m_pos;
     /* 00D8 */ float m_scale;
     /* 00DC */ C4Quaternion m_rotation;
-    /* 00EC */ uint16_t unk_00EC;
+    /* 00EC */ uint16_t m_doodadSet;
     /* 00EE */ uint16_t m_fade;
 
     virtual ~CMapDoodadDef();

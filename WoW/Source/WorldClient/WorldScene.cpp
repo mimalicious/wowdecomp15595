@@ -314,7 +314,7 @@ void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
 
 // OFFSET: 0x00727670
 void CWorldScene::RenderLowDetailMapObjDefs(CWorldView* view, const C44Matrix& world) {
-    CMapObjGroupRender groups[256];
+    CWorldQueryElement groups[256];
     uint32_t count = 0;
 
     for (uint32_t i = 0; i < view->m_lowDetailMapObjDefs.Count(); i++) {
@@ -431,7 +431,7 @@ void CWorldScene::Update(const C3Vector& camPos, const C3Vector& camTarget, floa
 }
 
 // OFFSET: 0x00728AE0
-void CWorldScene::Render(const C3Vector& pos, float time) {
+void CWorldScene::Render(const C3Vector& pos, float elapsedSec) {
     const CBoundingBox& viewport = g_theGxDevicePtr->m_viewport;
     GxXformSetViewport(viewport.m_x.m_l, viewport.m_x.m_h, viewport.m_y.m_l, viewport.m_y.m_h, viewport.m_z.m_l, 0.94f);
 
@@ -459,7 +459,7 @@ void CWorldScene::Render(const C3Vector& pos, float time) {
     if (scene) {
         scene->m_flags |= 0x1;
         scene->m_shadowValue = CWorldScene::s_defaultWorldView->m_shadowMode;
-        scene->AdvanceTime(static_cast<uint32_t>(time * 1000.0f));
+        scene->AdvanceTime(static_cast<uint32_t>(elapsedSec * 1000.0f));
         scene->Animate(pos);
         scene->BeginDraw();
         scene->m_flags &= ~0x1u;
@@ -805,6 +805,30 @@ void CWorldScene::RenderChunks(CWorldView* view) {
         }
     }
 
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x0072AC10
+void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
+    g_theGxDevicePtr->RsPush();
+    view->FrustumPush();
+    CShadowCache::SetShadowMapGenericGlobal();
+    view->m_mapObjRender.BuildFrameMaterials(view);
+    view->m_mapObjRender.RenderPass(view, 0);
+    view->m_mapObjRender.RenderPass(view, 1);
+    view->m_mapObjRender.RenderPass(view, 2);
+    view->m_mapObjRender.RenderPass(view, 3);
+    view->FrustumPop();
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x0072AC80
+void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
+    g_theGxDevicePtr->RsPush();
+    view->FrustumPush();
+    CShadowCache::SetShadowMapGenericGlobal();
+    view->m_mapObjRender.RenderPass(view, 4);
+    view->FrustumPop();
     g_theGxDevicePtr->RsPop();
 }
 

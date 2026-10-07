@@ -37,6 +37,7 @@ class CMapStaticEntity : public CMapBaseObj {
 
     static C3Vector s_interiorLightDir;
 
+    static void AdjustLighting(const CImVector& color, CImVector& direct, uint8_t maxDirect, CImVector& ambient, uint8_t maxAmbient);
     static void ModelEventCallback(CM2Model* model, uint32_t a2, uint32_t a3, uint32_t a4, const C3Vector& a5, uint32_t a6, uint64_t param);
     static void ModelLightingCallback(CM2Model* model, CM2Lighting* lighting, void* arg);
 

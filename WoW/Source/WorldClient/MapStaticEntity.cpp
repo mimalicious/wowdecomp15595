@@ -1,4 +1,5 @@
 #include "WoW/Source/WorldClient/MapStaticEntity.h"
+#include "Engine/Source/Tempest/NTempest.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Model2/M2Light.h"
 #include "Engine/Source/Model2/M2Model.h"
@@ -90,6 +91,41 @@ void CMapStaticEntity::ModelLightingCallback(CM2Model* model, CM2Lighting* light
     }
 
     lighting->m_flags &= ~0x8u;
+}
+
+// OFFSET: 0x00762C00
+void CMapStaticEntity::AdjustLighting(const CImVector& color, CImVector& direct, uint8_t maxDirect, CImVector& ambient, uint8_t maxAmbient) {
+    uint8_t brightest = color.r > color.g ? color.r : color.g;
+
+    if (color.b > brightest) {
+        brightest = color.b;
+    }
+
+    if (!brightest) {
+        brightest = 1;
+    }
+
+    direct = color;
+
+    if (brightest < maxDirect) {
+        C3Vector rgb(static_cast<float>(direct.r) * 0.0039215689f, static_cast<float>(direct.g) * 0.0039215689f, static_cast<float>(color.b) * 0.0039215689f);
+        C3Vector hsv(0.0f, 0.0f, 0.0f);
+        RGBtoHSV(rgb, hsv);
+        hsv.z = static_cast<float>(maxDirect) / static_cast<float>(brightest) * hsv.z;
+        HSVtoRGB(hsv, rgb);
+        CImVector adjusted(maxDirect, 0, 0, 0);
+        adjusted = rgb;
+        direct = adjusted;
+    }
+
+    ambient = color;
+
+    if (brightest > maxAmbient) {
+        uint32_t factor = static_cast<uint32_t>(static_cast<int64_t>(static_cast<double>(maxAmbient) * 255.0 / static_cast<double>(brightest)));
+        ambient.b = static_cast<uint8_t>((ambient.b * factor + 0xFF) >> 8);
+        ambient.g = static_cast<uint8_t>((ambient.g * factor + 0xFF) >> 8);
+        ambient.r = static_cast<uint8_t>((ambient.r * factor + 0xFF) >> 8);
+    }
 }
 
 // OFFSET: 0x00762D50
