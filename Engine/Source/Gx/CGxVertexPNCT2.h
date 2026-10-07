@@ -1,0 +1,18 @@
+#ifndef ENGINE_SOURCE_GX_CGXVERTEXPNCT2_H
+#define ENGINE_SOURCE_GX_CGXVERTEXPNCT2_H
+
+#include <cstddef>
+#include <cstdint>
+#include "Engine/Source/Tempest/C2Vector.h"
+#include "Engine/Source/Tempest/C3Vector.h"
+#include "Engine/Source/Tempest/CImVector.h"
+
+class CGxVertexPNCT2 {
+    public:
+    /* 0000 */ C3Vector p;
+    /* 000C */ C3Vector n;
+    /* 0018 */ CImVector c;
+    /* 001C */ C2Vector tc[2];
+};
+
+#endif

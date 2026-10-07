@@ -10,6 +10,7 @@
 #include "WoW/Source/WorldClient/MapChunkBuf.h"
 #include "WoW/Source/WorldClient/MapDoodadDef.h"
 #include "WoW/Source/WorldClient/MapEntity.h"
+#include "WoW/Source/WorldClient/MapFootprint.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
 #include "WoW/Source/WorldClient/RectArray.h"
 #include "WoW/Source/WorldClient/World.h"
@@ -76,7 +77,7 @@ class CWorldMap {
     /* 00D4 */ TSExplicitList<CMapBaseObj, 0x10> m_list00D4;
     /* 00E0 */ TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)> m_mapObjDefList;
     /* 00EC */ TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)> m_list00EC;
-    /* 00F8 */ TSExplicitList<CMapBaseObj, 0x18> m_list00F8;
+    /* 00F8 */ TSExplicitList<CMapFootprint, offsetof(CMapFootprint, m_mapLink)> m_footprintList;
     /* 0104 */ Particulate* m_particulate;
     /* 0108 */ Weather* m_weather;
     /* 010C */ uint32_t unk_010C;
@@ -128,7 +129,7 @@ class CWorldMap {
     int32_t Load(const char* directory, int32_t mapId, int32_t preload);
     int32_t LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& start, const C3Vector& end, float t, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     void LocateViewer(const C3Vector& pos, int32_t& exterior, CMapChunk*& chunk, int32_t& interior, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
-    void NewFootprint(uint32_t a1, const C2Vector& a2, const C3Vector& a3, float a4, int32_t a5, uint32_t a6, int32_t a7);
+    void NewFootprint(uint32_t textureIndex, const C2Vector& size, const C3Vector& pos, float facing, int32_t flip, uint32_t terrainType, int32_t isPlayer);
     void Preload(int32_t a1);
     void PurgeMaps();
     int32_t QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower);
