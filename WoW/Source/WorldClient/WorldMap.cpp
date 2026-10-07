@@ -4,6 +4,14 @@
 #include <cstring>
 #include <new>
 #include "Engine/Source/Event/FrameTime.h"
+#include "WoW/Source/WorldClient/WorldView.h"
+#include "Engine/Source/Gx/Gx.h"
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/CGxBuf.h"
+#include "WoW/Source/Game/GameClient/ProjectTex.h"
+#include "Engine/Source/Gx/CGxVertexPCT.h"
+#include "Engine/Source/Gx/CGxTexFlags.h"
+#include "Engine/Source/Base/Status.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Model2/M2Scene.h"
 #include "Engine/Source/Model2/M2Shared.h"
@@ -64,6 +72,30 @@ uint32_t CWorldMap::s_rasterSpanCount;
 
 // STATIC: 0x00E78BD4
 TSGrowableArray<SMapObjDefVectorIntersect> CWorldMap::s_mapObjDefIntersects;
+
+// STATIC: 0x00BC7E94
+static const float s_rippleRiseFraction[2] = { 0.4f, 0.4f };
+
+// STATIC: 0x00D01B20
+static const char* s_rippleTextureNames[2] = { "XTextures\\splash\\splash.blp", "XTextures\\splash\\wake.blp" };
+
+// STATIC: 0x00E78BE4
+CTexture* CWaterRipple::s_textures[2];
+
+// STATIC: 0x00E78BEC
+uint32_t CWaterRipple::s_nextRipple;
+
+// STATIC: 0x00E78BF0
+uint32_t CWaterRipple::s_nextPlayerRipple;
+
+// STATIC: 0x00E78BF4
+CGxShader* CWaterRipple::s_vertexShader;
+
+// STATIC: 0x00E78BF8
+CGxShader* CWaterRipple::s_pixelShader;
+
+// STATIC: 0x00E78BFC
+TSFixedArray<CWaterRipple> CWaterRipple::s_ripples;
 
 // STATIC: 0x00E71E8C/0x140D5BB74
 uint32_t CWorldMap::s_activeWorldMapIndex;
@@ -630,7 +662,7 @@ void CWorldMap::Unload() {
         this->m_weather = NULL;
     }
 
-    this->m_list00EC.UnlinkAll();
+    this->m_rippleList.UnlinkAll();
     CMapObj::ClearCache();
     CWorldScene::s_m2Scene->PurgeModelCache();
     TextureGxCacheFlush();
@@ -648,7 +680,7 @@ void CWorldMap::PurgeMaps() {
         }
     }
 
-    this->m_list00EC.UnlinkAll();
+    this->m_rippleList.UnlinkAll();
     CMapObj::ClearCache();
     TextureGxCacheFlush();
 }
@@ -2899,4 +2931,286 @@ bool CWorldMap::VectorIntersect(const C3Vector& start, const C3Vector& end, C3Ve
 
     *dist = best;
     return hit;
+}
+
+// OFFSET: 0x00764920
+void CWaterRipple::Init(const C3Vector& pos, float facing, float radius, float alpha, float duration, float growth, int32_t large) {
+    this->m_large = large != 0;
+    this->m_position = pos;
+    this->m_facing = facing;
+    float endRadius = duration * growth + radius;
+    this->m_growRate = (endRadius - radius) / duration;
+    this->m_alpha = 0.0f;
+    this->m_radius = radius;
+    this->m_maxAlpha = alpha;
+    this->m_riseRate = alpha / (s_rippleRiseFraction[this->m_large] * duration);
+    this->m_fallRate = -(alpha / ((1.0f - s_rippleRiseFraction[this->m_large]) * duration));
+    this->m_endTime = FrameTime::GetCurTimeSec() + duration;
+
+    CAaBox box;
+    box.b.x = pos.x - endRadius;
+    box.b.y = pos.y - endRadius;
+    box.b.z = pos.z - 1.0f;
+    box.t.x = pos.x + endRadius;
+    box.t.y = pos.y + endRadius;
+    box.t.z = pos.z + 1.0f;
+
+    this->m_verts.SetCount(0);
+    World::TriData::s_statusFlags = 0;
+    World::TriData::s_nBatches = 0;
+    World::TriData::s_faceIndexCursor = 0;
+    World::TriData::s_indexCursor = 0;
+    World::TriData::s_nMatrices = 0;
+    World::TriData tris;
+    World::GetTris(box, tris, 0x20000);
+
+    for (uint32_t b = 0; b < World::TriData::s_nBatches; b++) {
+        const World::TriData::Batch& batch = World::TriData::s_batches[b];
+        const uint16_t* index = batch.m_indices;
+        uint32_t base = this->m_verts.m_count;
+        this->m_verts.SetCount(batch.m_faceCount + base + 2 * batch.m_faceCount);
+        C3Vector* out = &this->m_verts.m_data[base];
+
+        for (uint32_t i = 0; i < batch.m_faceCount; i++) {
+            out[0] = batch.m_vertexList[index[0]] * *batch.m_matrix;
+            out[1] = batch.m_vertexList[index[1]] * *batch.m_matrix;
+            out[2] = batch.m_vertexList[index[2]] * *batch.m_matrix;
+            index += 3;
+            out += 3;
+        }
+    }
+}
+
+// OFFSET: 0x00764D50
+CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
+    uint32_t slot;
+
+    if (player) {
+        slot = CWaterRipple::s_nextPlayerRipple++;
+
+        if (CWaterRipple::s_nextPlayerRipple >= 32) {
+            CWaterRipple::s_nextPlayerRipple = 0;
+        }
+    } else {
+        slot = CWaterRipple::s_nextRipple++;
+
+        if (CWaterRipple::s_nextRipple >= 128) {
+            CWaterRipple::s_nextRipple = 32;
+        }
+    }
+
+    CWaterRipple* ripple = &CWaterRipple::s_ripples.m_data[slot];
+    ripple->Init(pos, -facing, radius, alpha, duration, growth, large);
+    return ripple;
+}
+
+// OFFSET: 0x00764DF0
+void CWorldMap::CreateWaterRipple(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
+    float scale = 1.0f;
+
+    if (alpha < 0.16666667f) {
+        scale = alpha * 6.0f;
+    }
+
+    CWaterRipple* ripple = CWaterRipple::Create(pos, facing, radius, duration, scale, growth, large, player);
+    this->m_rippleList.LinkToTail(ripple);
+}
+
+// OFFSET: 0x00764E70
+void CWorldMap::RenderWaterRipples(CWorldView* view) {
+    if (!this->m_rippleList.Head()) {
+        return;
+    }
+
+    uint32_t counts[2] = { 0, 0 };
+    TSExplicitList<CWaterRipple, offsetof(CWaterRipple, m_renderLink)> lists[2];
+
+    for (CWaterRipple* ripple = this->m_rippleList.Head(), * next; ripple; ripple = next) {
+        next = this->m_rippleList.Next(ripple);
+
+        if (FrameTime::GetCurTimeSec() < ripple->m_endTime) {
+            ripple->m_radius = FrameTime::GetTickTimeSec() * ripple->m_growRate + ripple->m_radius;
+            float dt = FrameTime::GetTickTimeSec();
+
+            if (ripple->m_riseRate != 0.0f) {
+                ripple->m_alpha = ripple->m_riseRate * dt + ripple->m_alpha;
+
+                if (ripple->m_alpha > ripple->m_maxAlpha) {
+                    dt = dt - (ripple->m_alpha - ripple->m_maxAlpha) / ripple->m_riseRate;
+                    ripple->m_alpha = ripple->m_maxAlpha;
+                    ripple->m_riseRate = 0.0f;
+                }
+            }
+
+            if (ripple->m_riseRate == 0.0f) {
+                ripple->m_alpha = ripple->m_fallRate * dt + ripple->m_alpha;
+            }
+
+            if (ripple->m_alpha > 0.0f) {
+                counts[ripple->m_large] += ripple->m_verts.m_count;
+                lists[ripple->m_large].LinkToTail(ripple);
+                continue;
+            }
+        }
+
+        ripple->m_mapLink.Unlink();
+    }
+
+    if (!counts[0] && !counts[1]) {
+        return;
+    }
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_BlendingMode, GxBlend_Add);
+    GxUpdateAlphaRef(GxRs_AlphaRef);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Lighting, 0);
+    GxRsSet(GxRs_PolygonOffset, static_cast<int32_t>(GxPolygonOffset_Default));
+
+    C44Matrix world;
+    world.d0 = -view->m_camPos.x;
+    world.d1 = -view->m_camPos.y;
+    world.d2 = -view->m_camPos.z;
+
+    if (CWaterRipple::s_vertexShader) {
+        GxRsSet(GxRs_VertexShader, CWaterRipple::s_vertexShader, 0);
+        GxRsSet(GxRs_PixelShader, CWaterRipple::s_pixelShader, 0);
+        C44Matrix viewMatrix;
+        GxXform(GxXform_View, viewMatrix);
+        C44Matrix projection = g_theGxDevicePtr->m_projNative;
+
+        if (g_theGxDevicePtr->DeviceApi() == GxApi_OpenGl) {
+            projection.c0 = projection.c0 * -1.0f;
+            projection.c1 = projection.c1 * -1.0f;
+            projection.c2 = projection.c2 * -1.0f;
+            projection.c3 = projection.c3 * -1.0f;
+        }
+
+        C44Matrix transform = world * viewMatrix * projection;
+        g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, reinterpret_cast<const float*>(&transform), 4);
+    } else {
+        g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
+    }
+
+    C44Matrix texMatrix;
+    C44Matrix fadeMatrix;
+
+    for (uint32_t i = 0; i < 2; i++) {
+        if (!counts[i]) {
+            continue;
+        }
+
+        CGxTex* gxTex = TextureGetGxTex(CWaterRipple::s_textures[i]);
+
+        if (!gxTex) {
+            continue;
+        }
+
+        CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(CGxVertexPCT), counts[i]);
+        CGxVertexPCT* vertex = reinterpret_cast<CGxVertexPCT*>(g_theGxDevicePtr->BufLock(vertexBuf));
+        CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), counts[i]);
+        uint16_t* index = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+        uint16_t count = 0;
+
+        for (CWaterRipple* ripple = lists[i].Head(), * next; ripple; ripple = next) {
+            next = lists[i].Next(ripple);
+
+            if (!ripple->m_verts.m_count) {
+                continue;
+            }
+
+            C44Matrix rotation = C44Matrix::RotationAroundZ(ripple->m_facing);
+            CAaBox box;
+            box.b.x = ripple->m_position.x - ripple->m_radius;
+            box.b.y = ripple->m_position.y - ripple->m_radius;
+            box.b.z = ripple->m_position.z - 1.0f;
+            box.t.x = ripple->m_position.x + ripple->m_radius;
+            box.t.y = ripple->m_position.y + ripple->m_radius;
+            box.t.z = ripple->m_position.z + 1.0f;
+            ProjectTex2dMakeMatrices(texMatrix, fadeMatrix, box, NULL, &rotation, 0.5f, 1, 0);
+
+            CImVector color;
+            color.b = 0xFF;
+            color.g = 0xFF;
+            color.r = 0xFF;
+            color.a = static_cast<uint8_t>(static_cast<int32_t>(ripple->m_alpha * 255.0f));
+            const C3Vector* source = ripple->m_verts.m_data;
+
+            for (uint32_t j = 0; j < ripple->m_verts.m_count; j++) {
+                vertex->p = *source;
+                vertex->c = color;
+                vertex->tc = C2Vector(*source * texMatrix);
+                *index++ = count++;
+                vertex++;
+                source++;
+            }
+        }
+
+        g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+        indexBuf->unk_001C = 1;
+        g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+        vertexBuf->unk_001C = 1;
+
+        if (count) {
+            g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PCT);
+            g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+            g_theGxDevicePtr->RsSet(GxRs_Texture0, gxTex);
+
+            CGxBatch batch;
+            batch.m_primType = GxPrim_Triangles;
+            batch.m_start = 0;
+            batch.m_count = count;
+            batch.m_minIndex = 0;
+            batch.m_maxIndex = count - 1;
+            g_theGxDevicePtr->Draw(batch);
+        }
+    }
+
+    g_theGxDevicePtr->RsPop();
+
+    if (!CWaterRipple::s_vertexShader) {
+        GxXformPop(GxXform_World);
+    }
+}
+
+// OFFSET: 0x00765D20/0x14044B880
+void CWaterRipple::Initialize() {
+    CWaterRipple::s_nextPlayerRipple = 0;
+    CWaterRipple::s_nextRipple = 32;
+    CStatus status;
+    CGxTexFlags flags;
+    flags.m_filter = 1;
+
+    for (uint32_t i = 0; i < 2; i++) {
+        CWaterRipple::s_textures[i] = TextureCreate(s_rippleTextureNames[i], flags, &status, 1, NULL, 2);
+    }
+
+    CWaterRipple::s_ripples.SetCount(128);
+    CWaterRipple::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "WaterRipples");
+    CWaterRipple::s_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "WaterRipples");
+}
+
+// OFFSET: 0x00765E00
+void CWaterRipple::Destroy() {
+    for (uint32_t i = 0; i < 2; i++) {
+        if (CWaterRipple::s_textures[i]) {
+            TextureRelease(CWaterRipple::s_textures[i]);
+        }
+    }
+
+    if (CWaterRipple::s_ripples.m_count) {
+        CWaterRipple::s_ripples.Clear();
+    }
+
+    if (CWaterRipple::s_vertexShader) {
+        g_theGxDevicePtr->ShaderRelease(CWaterRipple::s_vertexShader);
+        CWaterRipple::s_vertexShader = NULL;
+    }
+
+    if (CWaterRipple::s_pixelShader) {
+        g_theGxDevicePtr->ShaderRelease(CWaterRipple::s_pixelShader);
+        CWaterRipple::s_pixelShader = NULL;
+    }
 }

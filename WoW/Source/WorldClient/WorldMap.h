@@ -31,6 +31,38 @@ class CMapEntity;
 class CMapObj;
 class CMapObjDef;
 class CMapObjDefGroup;
+class CGxShader;
+class CTexture;
+
+class CWaterRipple {
+    public:
+    static CGxShader* s_vertexShader;
+    static CGxShader* s_pixelShader;
+    static uint32_t s_nextRipple;
+    static uint32_t s_nextPlayerRipple;
+    static CTexture* s_textures[2];
+    static TSFixedArray<CWaterRipple> s_ripples;
+
+    static CWaterRipple* Create(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player);
+    static void Destroy();
+    static void Initialize();
+
+    /* 0000 */ C3Vector m_position;
+    /* 000C */ float m_facing;
+    /* 0010 */ float m_radius;
+    /* 0014 */ float m_growRate;
+    /* 0018 */ float m_alpha;
+    /* 001C */ float m_maxAlpha;
+    /* 0020 */ float m_riseRate;
+    /* 0024 */ float m_fallRate;
+    /* 0028 */ float m_endTime;
+    /* 002C */ int32_t m_large;
+    /* 0030 */ TSLink<CWaterRipple> m_mapLink;
+    /* 0038 */ TSLink<CWaterRipple> m_renderLink;
+    /* 0040 */ TSGrowableArray<C3Vector> m_verts;
+
+    void Init(const C3Vector& pos, float facing, float radius, float alpha, float duration, float growth, int32_t large);
+};
 
 struct SMapObjDefVectorIntersect {
     /* 0000 */ CMapObjDef* m_mapObjDef;
@@ -83,7 +115,7 @@ class CWorldMap {
     /* 00C8 */ TSExplicitList<CMapChunkBuf, offsetof(CMapChunkBuf, m_link)> m_list00C8;
     /* 00D4 */ TSExplicitList<CMapBaseObj, 0x10> m_list00D4;
     /* 00E0 */ TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)> m_mapObjDefList;
-    /* 00EC */ TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)> m_list00EC;
+    /* 00EC */ TSExplicitList<CWaterRipple, offsetof(CWaterRipple, m_mapLink)> m_rippleList;
     /* 00F8 */ TSExplicitList<CMapFootprint, offsetof(CMapFootprint, m_mapLink)> m_footprintList;
     /* 0104 */ Particulate* m_particulate;
     /* 0108 */ Weather* m_weather;
@@ -203,11 +235,6 @@ class CWorldMap {
     void WaterReset();
 };
 
-class CWaterRipple {
-    public:
-    static void Destroy();
-    static void Initialize();
-};
 
 #include "WoW/Source/WorldClient/WorldMap.inl"
 
