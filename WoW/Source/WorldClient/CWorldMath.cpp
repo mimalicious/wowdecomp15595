@@ -1,7 +1,15 @@
 #include "WoW/Source/WorldClient/CWorldMath.h"
+#include <cstring>
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
+#include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/CAaBox.h"
+
+// STATIC: 0x01008A30
+static uint32_t s_clipSides[32];
+
+// STATIC: 0x01008AB0
+static float s_clipDists[32];
 
 // OFFSET: 0x00B130F0/0x1408D8D90
 static void TransformAABoxInner(CAaBox& dst, const CAaBox& src, const float* row1, const float* row0, const float* row2) {
@@ -124,4 +132,75 @@ bool CWorldMath::VectorIntersectAABox2(const CAaBox& box, const C3Vector& start,
     }
 
     return true;
+}
+
+// OFFSET: 0x00B13410
+void CWorldMath::ClipVertexListToPlane(const C3Vector* verts, uint32_t count, C3Vector* out, uint32_t& outCount, const C4Plane& plane, float epsilon, int32_t keepCoplanar) {
+    uint32_t counts[3];
+    counts[0] = 0;
+    counts[1] = 0;
+    counts[2] = 0;
+
+    for (uint32_t i = 0; i < count; i++) {
+        float dist = plane.n.z * verts[i].z + verts[i].x * plane.n.x + verts[i].y * plane.n.y + plane.d;
+        s_clipDists[i] = dist;
+
+        if (dist > epsilon) {
+            s_clipSides[i] = 1;
+        } else if (-epsilon <= dist) {
+            s_clipSides[i] = 0;
+        } else {
+            s_clipSides[i] = 2;
+        }
+
+        counts[s_clipSides[i]]++;
+    }
+
+    s_clipSides[count] = s_clipSides[0];
+    s_clipDists[count] = s_clipDists[0];
+
+    if (!counts[1]) {
+        if (!counts[2] && keepCoplanar) {
+            memcpy(out, verts, sizeof(C3Vector) * count);
+            outCount = count;
+        } else {
+            outCount = 0;
+        }
+
+        return;
+    }
+
+    if (!counts[2]) {
+        memcpy(out, verts, sizeof(C3Vector) * count);
+        outCount = count;
+        return;
+    }
+
+    outCount = 0;
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint32_t side = s_clipSides[i];
+
+        if (side == 0) {
+            out[outCount++] = verts[i];
+            continue;
+        }
+
+        if (side == 1) {
+            out[outCount++] = verts[i];
+        }
+
+        uint32_t next = s_clipSides[i + 1];
+
+        if (next && next != s_clipSides[i]) {
+            float t = s_clipDists[i] / (s_clipDists[i] - s_clipDists[i + 1]);
+            const C3Vector& a = verts[i];
+            const C3Vector& b = verts[(i + 1) % count];
+            C3Vector& v = out[outCount];
+            v.x = (b.x - a.x) * t + a.x;
+            v.y = (b.y - a.y) * t + a.y;
+            v.z = (b.z - a.z) * t + a.z;
+            outCount++;
+        }
+    }
 }

@@ -419,7 +419,7 @@ void CMapArea::CreateMapObjDefs() {
     }
 }
 
-// OFFSET: 0x007976F0/0x14048AD80
+// OFFSET: [0x007976F0/0x14048AD80, 0x00797B70]
 CMapArea::~CMapArea() {
     for (uint32_t i = 0; i < 3; i++) {
         if (this->m_buffers[i]) {

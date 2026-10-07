@@ -40,17 +40,19 @@ class CWorldOccluder {
 
 class CWorldOcclusion {
     public:
-    /* 0000 */ float m_buffer[576];
+    /* 0000 */ float m_buffer[2][256];
+    /* 0800 */ uint8_t m_bufferFlags[256];
     /* 0900 */ C44Matrix m_viewProj;
     /* 0940 */ C44Matrix m_proj;
     /* 0980 */ C3Vector m_camDir;
-    /* 098C */ uint32_t unk_098C[2];
+    /* 098C */ int32_t m_horizon;
+    /* 0990 */ uint32_t unk_0990;
     /* 0994 */ TSGrowableArray<C4Plane> m_planes;
     /* 09A4 */ TSGrowableArray<CWorldOcclusionVolume> m_volumes;
 
     CWorldOcclusion();
     ~CWorldOcclusion();
-    void AddVolume(const C3Vector& pos, const C3Vector* verts, int32_t count, int32_t a4, float a5);
+    void AddVolume(const C3Vector& pos, const C3Vector* verts, int32_t count, int32_t clip, float extend);
     void Clear();
     void ClearVolumes();
     int32_t QueryBuffer(const CAaBox& box, uint32_t flags);
