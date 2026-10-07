@@ -145,7 +145,7 @@ void CAaBsp::Free() {
     }
 }
 
-// OFFSET: 0x00730910
+// OFFSET: 0x00730910/0x14040B4B0
 CAaBspDigestCache::CAaBspDigestCache() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
     memset(this->m_digests, 0, sizeof(this->m_digests));

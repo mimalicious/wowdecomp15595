@@ -16,6 +16,7 @@ static Liquid::Object s_magmaObject;
 // STATIC: 0x00E4ECC4
 static TSHashTable<Liquid::Object, HASHKEY_NONE> s_objectHash;
 
+// PROVEN: 069029d2 IDENTICAL/NONE
 // OFFSET: 0x0071CE80
 void Liquid::Object::SetReflectionPlane(float height) {
     this->m_reflectionPlane.n.x = 0.0f;
@@ -37,7 +38,7 @@ void Liquid::InitLiquidObjects() {
 void Liquid::UnregisterLiquidObject(Object* object) {
     object->m_refCount--;
 
-    if (object->m_liquidType && !object->m_refCount) {
+    if (object->m_objectId && !object->m_refCount) {
         s_objectHash.Delete(object);
     }
 }
@@ -66,7 +67,7 @@ Liquid::Object* Liquid::RegisterLiquidObject(uint32_t a1, uint32_t liquidType, u
         if (rec) {
             object = s_objectHash.New(a1, key, 0, 0);
             object->m_hashval = a1;
-            object->m_liquidType = a1;
+            object->m_objectId = a1;
             object->m_noReflection = rec->unk_0008 <= 0.0f;
             object->m_reflectionType = rec->unk_0014;
             object->m_refCount++;

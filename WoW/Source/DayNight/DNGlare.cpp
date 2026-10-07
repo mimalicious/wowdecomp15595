@@ -467,7 +467,7 @@ void DayNight::DNGlare::Render() {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x00650B80
+// OFFSET: 0x00650B80/0x1402F0520
 void DayNight::DNGlare::Initialize(const char* fileName) {
     CStatus status;
     this->m_texture = TextureCreate(fileName, CGxTexFlags(), &status, 1, NULL, 2);

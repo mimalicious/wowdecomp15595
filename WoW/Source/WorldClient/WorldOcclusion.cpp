@@ -9,7 +9,8 @@ static TSExplicitList<CWorldOccluder, offsetof(CWorldOccluder, m_link)> s_freeOc
 // STATIC: 0x00D02F2C
 static TSExplicitList<CWorldAntiOccluder, offsetof(CWorldAntiOccluder, m_link)> s_freeAntiOccluders;
 
-// OFFSET: 0x00401000
+// PROVEN: f52cc1f6 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CWorldOccluder::Initialize() {
 }
 

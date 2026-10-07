@@ -91,7 +91,7 @@ void CWorldMap::Initialize() {
     CWorldMap::s_queryTag = 0;
 }
 
-// OFFSET: 0x0072CA20
+// OFFSET: 0x0072CA20/0x140405B90
 const float* CWorldMap::GetDepthCoordTable(uint32_t liquidType) {
     if (liquidType) {
         LiquidTypeRec* type = g_liquidTypeDB.GetRecord(liquidType);
@@ -108,7 +108,7 @@ const float* CWorldMap::GetDepthCoordTable(uint32_t liquidType) {
     return CWorldMap::s_emptyDepthCoordTable;
 }
 
-// OFFSET: 0x0072CAA0
+// OFFSET: 0x0072CAA0/0x140405C20
 void CWorldMap::ClearAllChunkBufs() {
     for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
         if (*worldMap) {
@@ -147,6 +147,7 @@ void CWorldMap::ClearAllDetailDoodads() {
     }
 }
 
+// PROVEN: 25cfaffc IDENTICAL/NONE
 // OFFSET: 0x0072CB60
 void CWorldMap::RemoveOtherMaps() {
     for (uint32_t i = 0; i < 12; i++) {
@@ -187,7 +188,7 @@ int32_t CWorldMap::AddMap(const char* directory, int32_t mapId, int32_t preload)
     return index != 12;
 }
 
-// OFFSET: 0x0072CCE0
+// OFFSET: 0x0072CCE0/0x140405E70
 void CWorldMap::RemoveMap(int32_t mapId) {
     for (uint32_t i = 1; i < 12; i++) {
         if (this->m_maps[i] && this->m_maps[i]->m_mapId == mapId) {
@@ -198,7 +199,7 @@ void CWorldMap::RemoveMap(int32_t mapId) {
     }
 }
 
-// OFFSET: 0x0072CD20
+// OFFSET: 0x0072CD20/0x140405EC0
 void CWorldMap::SetCurrent(int32_t mapId, int32_t current) {
     for (uint32_t i = 0; i < 12; i++) {
         if (this->m_maps[i] && this->m_maps[i]->m_mapId == mapId) {
@@ -209,6 +210,7 @@ void CWorldMap::SetCurrent(int32_t mapId, int32_t current) {
     }
 }
 
+// PROVEN: dc043875 IDENTICAL/NONE
 // OFFSET: 0x0072D000
 void CWorldMap::AddChildMaps(int32_t mapId) {
     for (int32_t i = 0; i < g_mapDB.m_numRecords; i++) {
@@ -300,7 +302,7 @@ int32_t CWorldMap::GetActiveMapRecId(int32_t x, int32_t y) {
     return map->m_mapId;
 }
 
-// OFFSET: 0x0072D9C0
+// OFFSET: 0x0072D9C0/0x1404070E0
 int32_t CWorldMap::Load(const char* directory, int32_t mapId, int32_t preload) {
     this->m_mapId = mapId;
 
@@ -411,7 +413,7 @@ void CWorldMap::PurgeMaps() {
     TextureGxCacheFlush();
 }
 
-// OFFSET: 0x0072EBF0
+// OFFSET: 0x0072EBF0/0x140408C10
 CWorldMap::CWorldMap() {
     for (uint32_t i = 0; i < 12; i++) {
         this->m_maps[i] = NULL;
@@ -429,7 +431,7 @@ CWorldMap::CWorldMap() {
 CWorldMap::~CWorldMap() {
 }
 
-// OFFSET: 0x0072F350
+// OFFSET: 0x0072F350/0x140409860
 int32_t CWorldMap::LoadWorldMap(const char* directory, int32_t mapId, int32_t preload) {
     for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
         if (*worldMap && (*worldMap)->m_mapId == mapId) {
@@ -559,7 +561,7 @@ CMapDoodadDef* CWorldMap::CreateDoodadDef(uint32_t index, SMODoodadDef& def, con
     return doodadDef;
 }
 
-// OFFSET: 0x00730200
+// OFFSET: 0x00730200/0x14040ABC0
 CMapObjDef* CWorldMap::CreateMapObjDef(const char* name, SMMapObjDef& def, C3Vector& offset, int32_t unique) {
     if (unique) {
         CMapObjDef* existing = this->m_mapObjDefHash.Ptr(def.m_uniqueId, CWorldMap::s_mapObjDefKey);

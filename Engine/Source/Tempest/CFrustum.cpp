@@ -10,7 +10,7 @@ void CFrustum::Extents(CAaBox& box) {
     box = CAaBox::Bounding(this->corners, 8);
 }
 
-// PROVEN: 194f6653 IDENTICAL/DIFFERENT
+// PROVEN: 5ce1ca7e IDENTICAL/DIFFERENT
 // OFFSET: 0x004CBEF0/0x140107C60
 uint32_t CFrustum::Cull(const CAaBox& box) const {
     const C3Vector* extremes[2] = { &box.t, &box.b };

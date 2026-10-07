@@ -103,7 +103,8 @@ void CWorldScene::ClearBarriers() {
     CWorldScene::s_barrier.m_mapObjDefGroups.m_count = 0;
 }
 
-// OFFSET: 0x00726F00
+// PROVEN: 5b22a4ce IDENTICAL/NONE
+// OFFSET: 0x00726F00/0x1403FE3C0
 CM2Model* CWorldScene::LoadModel(const char* name, const C44Matrix& mat, void (*eventCallback)(CM2Model*, uint32_t, uint32_t, uint32_t, const C3Vector&, uint32_t, uint64_t), uint64_t eventParam, void (*lightingCallback)(CM2Model*, CM2Lighting*, void*), void* lightingParam, int32_t a7, int32_t a8, int32_t a9, int32_t a10) {
     uint32_t flags = 0;
 
@@ -150,11 +151,13 @@ void CWorldScene::GetFrustumCornersInWorldSpace(const C44Matrix& view, const C44
     }
 }
 
-// OFFSET: 0x00727130
+// PROVEN: e652f252 IDENTICAL/NONE
+// OFFSET: 0x00727130/0x1403FE700
 void CWorldScene::GetFrustumCorners(C3Vector* corners) {
     memcpy(corners, CWorldScene::s_defaultWorldView->m_frustumCorners, sizeof(CWorldScene::s_defaultWorldView->m_frustumCorners));
 }
 
+// PROVEN: 8835a74c IDENTICAL/NONE
 // OFFSET: 0x00727150
 void CWorldScene::UpdateViewer() {
     CWorldScene::s_defaultWorldView->m_flags &= ~0x400000u;
@@ -491,12 +494,13 @@ void CWorldScene::ClearObjectFadeoutList() {
     }
 }
 
+// PROVEN: 6a1869f8 IDENTICAL/NONE
 // OFFSET: 0x007288F0
 void __fastcall CWorldScene::TextureRecreationCallback() {
     CWorldScene::ClearObjectFadeoutList();
 }
 
-// OFFSET: 0x00728900
+// OFFSET: 0x00728900/0x140400BD0
 void CWorldScene::Initialize() {
     CBarrier::Initialize();
     CWorldOccluder::Initialize();
@@ -549,7 +553,7 @@ void CWorldScene::Update(const C3Vector& camPos, const C3Vector& camTarget, floa
     CWorldScene::UpdateFadeOutObjects();
 }
 
-// OFFSET: 0x00728AE0
+// OFFSET: 0x00728AE0/0x140400E40
 void CWorldScene::Render(const C3Vector& pos, float elapsedSec) {
     const CBoundingBox& viewport = g_theGxDevicePtr->m_viewport;
     GxXformSetViewport(viewport.m_x.m_l, viewport.m_x.m_h, viewport.m_y.m_l, viewport.m_y.m_h, viewport.m_z.m_l, 0.94f);

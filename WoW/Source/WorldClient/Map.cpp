@@ -85,6 +85,7 @@ struct CMapAreaSortEntry {
     float m_distSq;
 };
 
+// PROVEN: 30adeb3c IDENTICAL/NONE
 // OFFSET: 0x007614F0
 static int CompareAreaDist(const void* a, const void* b) {
     float distA = static_cast<const CMapAreaSortEntry*>(a)->m_distSq;
@@ -103,7 +104,7 @@ uint32_t CMap::GetTerrainVSPerm(int32_t displacement, int32_t lighting, uint32_t
     return clip + 2 * ((displacement != 0) + 2 * ((shadow != 0) + 2 * (material + 2 * (base + format + 2 * base))));
 }
 
-// OFFSET: 0x00735AC0
+// OFFSET: 0x00735AC0/0x140411FC0
 void CMap::Initialize() {
     CMapArea::Initialize();
     CMapAreaLow::Initialize();
@@ -171,6 +172,7 @@ void CMap::Destroy() {
     CMap::MapMemDestroy();
 }
 
+// PROVEN: 792fbef9 IDENTICAL/NONE
 // OFFSET: 0x00735CB0
 uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t shadowMode) {
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
@@ -200,7 +202,7 @@ void CMap::ClearRenderChunks() {
     }
 }
 
-// OFFSET: 0x00735DC0
+// OFFSET: 0x00735DC0/0x140412310
 void CMap::ClearChunkBufs() {
     for (CMapArea* area = this->m_areaList.Head(); area; area = this->m_areaList.Next(area)) {
         for (CMapChunk* chunk = area->m_chunkList.Head(); chunk; chunk = area->m_chunkList.Next(chunk)) {
@@ -607,6 +609,7 @@ void CMap::ProcessDoodadDefUpdateList() {
     }
 }
 
+// PROVEN: 8e810a58 IDENTICAL/NONE
 // OFFSET: 0x00762580
 void CMap::PreUpdateMap() {
     this->PreUpdateAreas();
@@ -698,7 +701,7 @@ void CMap::TestQueryReset() {
     CMap::s_testQueryIndices.m_count = 0;
 }
 
-// OFFSET: 0x00786520
+// OFFSET: 0x00786520/0x140475670
 void CMap::UnloadXXX() {
     this->Purge();
     this->m_lowDetail.Unload();
@@ -717,7 +720,7 @@ void CMap::UnloadXXX() {
     TextureUnloadBlob(blobName);
 }
 
-// OFFSET: 0x007869D0
+// OFFSET: 0x007869D0/0x140475D00
 void CMap::Purge() {
     for (CMapArea* area = this->m_areaList.Head(), * next; area; area = next) {
         next = this->m_areaList.Next(area);

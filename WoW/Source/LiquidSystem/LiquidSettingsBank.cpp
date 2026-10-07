@@ -12,12 +12,13 @@ CDataAllocator Liquid::s_settingsAllocator(sizeof(Liquid::CMaterialSettings), 32
 // STATIC: 0x00E4EBA8
 TSGrowableArray<Liquid::CMaterialSettings*> Liquid::CSettingsBank::s_settings;
 
+// PROVEN: 2356bc85 IDENTICAL/NONE
 // OFFSET: 0x0071BF50
 void Liquid::CSettingsBank::Create() {
     Liquid::CSettingsBank::s_refCount++;
 }
 
-// OFFSET: 0x0071C000
+// OFFSET: 0x0071C000/0x1403F0DD0
 int32_t Liquid::CSettingsBank::UpdateRecord(uint32_t liquidType, CMaterialSettings* settings) {
     if (!settings) {
         if (liquidType >= Liquid::CSettingsBank::s_settings.Count()) {
@@ -80,7 +81,7 @@ void Liquid::CSettingsBank::Purge() {
     Liquid::CSettingsBank::s_settings.m_count = 0;
 }
 
-// OFFSET: 0x0071C410
+// OFFSET: 0x0071C410/0x1403F1330
 Liquid::CMaterialSettings* Liquid::CSettingsBank::GetSettings(uint32_t liquidType) {
     while (true) {
         if (liquidType < Liquid::CSettingsBank::s_settings.Count() && Liquid::CSettingsBank::s_settings.m_data[liquidType]) {

@@ -42,7 +42,7 @@ static const SMOShaderInfo s_shaderInfo[15] = {
 // STATIC: 0x00EB3254
 static TSGrowableArray<C4Vector> s_tangentScratch;
 
-// OFFSET: 0x007940D0
+// OFFSET: 0x007940D0/0x1404867D0
 void CMapObj::DestroyMaterial(uint32_t materialId) {
     CMapObjMaterial* material = &this->m_runtimeMaterials[materialId];
 
@@ -82,7 +82,7 @@ void CMapObjGroup::FixColorVertexAlpha() {
     }
 }
 
-// OFFSET: 0x007942C0
+// OFFSET: 0x007942C0/0x140486A50
 void CMapObj::AsyncFailedCallback(CAsyncObject* object) {
     CMapObj* mapObj = static_cast<CMapObj*>(object->m_userArg);
 
@@ -96,7 +96,7 @@ void CMapObj::AsyncFailedCallback(CAsyncObject* object) {
     World::SetLoadFailed(1, mapObj->m_name);
 }
 
-// OFFSET: 0x00794310
+// OFFSET: 0x00794310/0x140486AB0
 int32_t CMapObj::CreatePointers() {
     uint8_t* data = this->m_data;
     uint8_t* end = this->m_data + this->m_dataSize;
@@ -225,7 +225,7 @@ int32_t CMapObj::CreatePointers() {
     return data == end;
 }
 
-// OFFSET: 0x00794680
+// OFFSET: 0x00794680/0x140486EB0
 void CMapObj::CreateMaterials() {
     if (!this->m_materialCount) {
         return;
@@ -241,7 +241,7 @@ void CMapObj::CreateMaterials() {
     }
 }
 
-// OFFSET: 0x00794710
+// OFFSET: 0x00794710/0x140486F60
 void CMapObj::CreateMaterial(uint32_t materialId) {
     CMapObjMaterial* runtime = &this->m_runtimeMaterials[materialId];
     SMOMaterial* material = &this->m_materials[materialId];
@@ -288,7 +288,7 @@ void CMapObj::CreateMaterial(uint32_t materialId) {
     }
 }
 
-// OFFSET: 0x00794860
+// OFFSET: 0x00794860/0x140487110
 void CMapObjGroup::AsyncFailedCallback(CAsyncObject* object) {
     CMapObjGroup* group = static_cast<CMapObjGroup*>(object->m_userArg);
 
@@ -560,7 +560,7 @@ void CMapObj::AttenTransVerts(CMapObjGroup* group) {
     }
 }
 
-// OFFSET: 0x007951F0
+// OFFSET: 0x007951F0/0x140487D60
 int32_t CMapObj::Create() {
     int32_t created = this->CreatePointers();
     this->CreateMaterials();
@@ -581,7 +581,7 @@ int32_t CMapObj::Create() {
     return 1;
 }
 
-// OFFSET: 0x00795440
+// OFFSET: 0x00795440/0x140488050
 void CMapObj::AsyncCallback(CAsyncObject* object) {
     CMapObj* mapObj = static_cast<CMapObj*>(object->m_userArg);
     AsyncFileReadDestroyObject(object);
@@ -592,7 +592,7 @@ void CMapObj::AsyncCallback(CAsyncObject* object) {
     }
 }
 
-// OFFSET: 0x00795480
+// OFFSET: 0x00795480/0x140488090
 int32_t CMapObj::Read(const char* name) {
     strcpy(this->m_name, name);
 
@@ -612,7 +612,7 @@ int32_t CMapObj::Read(const char* name) {
     return 1;
 }
 
-// OFFSET: 0x00795560
+// OFFSET: 0x00795560/0x1404881D0
 void CMapObjGroup::ComputeTangents(const SMOBatch* batch, const uint16_t* indices, const C3Vector* vertices, const C3Vector* normals, const C2Vector* texCoords, C4Vector* tangents) {
     uint32_t vertexCount = batch->m_maxIndex - batch->m_minIndex + 1;
     uint32_t scratchIndex = 2 * vertexCount;
@@ -760,7 +760,7 @@ void CMapObjGroup::CreateOccluders() {
     }
 }
 
-// OFFSET: 0x00795C70
+// OFFSET: 0x00795C70/0x140488A90
 void CMapObjGroup::Create() {
     CMapObj* parent = this->m_parent;
     uint8_t* end = this->m_data + this->m_dataSize;
@@ -909,7 +909,7 @@ void CMapObjGroup::Create() {
     }
 }
 
-// OFFSET: 0x00796100
+// OFFSET: 0x00796100/0x140489030
 void CMapObjGroup::AsyncCallback(CAsyncObject* object) {
     CMapObjGroup* group = static_cast<CMapObjGroup*>(object->m_userArg);
     AsyncFileReadDestroyObject(object);
@@ -917,7 +917,7 @@ void CMapObjGroup::AsyncCallback(CAsyncObject* object) {
     group->Create();
 }
 
-// OFFSET: 0x00796130
+// OFFSET: 0x00796130/0x140489060
 void CMapObj::ReadGroup(uint32_t groupNum, int32_t wait) {
     CMapObjGroup* group = this->m_groups[groupNum];
 

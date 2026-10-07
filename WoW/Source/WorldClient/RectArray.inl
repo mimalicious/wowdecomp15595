@@ -8,7 +8,7 @@ TSRectArray<T>::TSRectArray() {
     this->m_height = 0;
 }
 
-// OFFSET: [0x0072CFA0<CWorldMap::CMapTableEntry>, 0x0072CF40<CMap::CMapAreaTableEntry>, 0x00797E70<CMapLowDetail::CMapAreaLowTableEntry>]
+// OFFSET: [0x0072CFA0<CWorldMap::CMapTableEntry>, 0x0072CF40/0x140475850<CMap::CMapAreaTableEntry>, 0x00797E70<CMapLowDetail::CMapAreaLowTableEntry>]
 template <class T>
 T* TSRectArray<T>::Get(int32_t x, int32_t y) {
     if (!this->m_width || !this->m_height) {

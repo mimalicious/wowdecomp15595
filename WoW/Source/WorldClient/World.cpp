@@ -234,18 +234,20 @@ static CWorldMap* ActiveWorldMap() {
     return CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 }
 
-// OFFSET: 0x00721CC0
+// PROVEN: 66b8f85f IDENTICAL/NONE
+// OFFSET: 0x00721CC0/0x1403F82C0
 void World::SetLoadProgressCallback(WORLD_PROGRESS_CALLBACK callback, void* param) {
     World::s_loadProgressCallback = callback;
     World::s_loadProgressParam = param;
 }
 
-// OFFSET: 0x00721CE0
+// PROVEN: 9b265c1d IDENTICAL/NONE
+// OFFSET: 0x00721CE0/0x1403F82D0
 void World::SetUserModelEventCallback(WORLD_MODEL_EVENT_CALLBACK callback) {
     World::s_userModelEventCallback = callback;
 }
 
-// OFFSET: 0x00721D30
+// OFFSET: 0x00721D30/0x1403F8300
 int32_t World::QueryAreaId(uintptr_t object, uint32_t& areaId) {
     if (!object) {
         return 0;
@@ -263,7 +265,7 @@ int32_t World::QueryObjectVisible(uintptr_t object) {
     return (reinterpret_cast<CMapEntity*>(object)->m_entityFlags & 0x60000) == 0x20000;
 }
 
-// OFFSET: 0x00721D50
+// OFFSET: 0x00721D50/0x1403F8310
 int32_t World::QueryObjectInside(uintptr_t object, int32_t a2) {
     if (!object) {
         return 0;
@@ -272,6 +274,7 @@ int32_t World::QueryObjectInside(uintptr_t object, int32_t a2) {
     return reinterpret_cast<CMapEntity*>(object)->QueryInterior(a2);
 }
 
+// PROVEN: 5b9af47e IDENTICAL/NONE
 // OFFSET: 0x00721DC0
 int32_t World::QueryMapObjSubzoneName(uintptr_t object, const char*& name, uint32_t& areaId) {
     if (!object) {
@@ -281,7 +284,8 @@ int32_t World::QueryMapObjSubzoneName(uintptr_t object, const char*& name, uint3
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjSubzoneName(name, areaId);
 }
 
-// OFFSET: 0x00721DE0
+// PROVEN: d032d634 IDENTICAL/NONE
+// OFFSET: 0x00721DE0/0x1403F8360
 int32_t World::QueryMapObjFileName(uintptr_t object, const char*& fileName) {
     if (!object) {
         return 0;
@@ -290,6 +294,7 @@ int32_t World::QueryMapObjFileName(uintptr_t object, const char*& fileName) {
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjFileName(fileName);
 }
 
+// PROVEN: fa199cf8 IDENTICAL/NONE
 // OFFSET: 0x00721E00
 int32_t World::QueryMapObjMinimap(uintptr_t object, const CAaBox& box, TSStackArray<MinimapQuad>& quads, uint32_t maxQuads, bool a5, bool a6) {
     if (!object) {
@@ -299,6 +304,7 @@ int32_t World::QueryMapObjMinimap(uintptr_t object, const CAaBox& box, TSStackAr
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjMinimap(box, quads, maxQuads, a5, a6);
 }
 
+// PROVEN: 2608865e IDENTICAL/NONE
 // OFFSET: 0x00721E30
 int32_t World::QueryMapObjIDs(uintptr_t object, uint32_t& wmoId, uint32_t& nameSet, uint32_t& groupId) {
     if (!object) {
@@ -308,6 +314,7 @@ int32_t World::QueryMapObjIDs(uintptr_t object, uint32_t& wmoId, uint32_t& nameS
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjIDs(wmoId, nameSet, groupId);
 }
 
+// PROVEN: 20e87dbd IDENTICAL/NONE
 // OFFSET: 0x00721E60
 int32_t World::QueryMapObjMatrix(uintptr_t object, C44Matrix* matrix, C44Matrix* invMatrix) {
     if (!object) {
@@ -317,7 +324,7 @@ int32_t World::QueryMapObjMatrix(uintptr_t object, C44Matrix* matrix, C44Matrix*
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjMatrix(matrix, invMatrix);
 }
 
-// OFFSET: 0x00721E80
+// OFFSET: 0x00721E80/0x1403F83C0
 int32_t World::QueryMapObjAreaTable(uintptr_t object, const WMOAreaTableRec*& groupRec, const WMOAreaTableRec*& rootRec, uint32_t& wmoGroupId, int32_t a5) {
     if (!object) {
         return 0;
@@ -326,7 +333,7 @@ int32_t World::QueryMapObjAreaTable(uintptr_t object, const WMOAreaTableRec*& gr
     return reinterpret_cast<CMapEntity*>(object)->QueryMapObjAreaTable(groupRec, rootRec, wmoGroupId, a5);
 }
 
-// OFFSET: 0x00721EB0
+// OFFSET: 0x00721EB0/0x1403F83F0
 int32_t World::QueryObjectLiquid(uintptr_t object, uint32_t& liquidType, float& height, int32_t& a4) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
@@ -353,7 +360,7 @@ int32_t World::QueryObjectLiquidFlags(uintptr_t object, int32_t& a2, int32_t& a3
     return 1;
 }
 
-// OFFSET: 0x00721F30
+// OFFSET: 0x00721F30/0x1403F8450
 int32_t World::QueryGroundType(uintptr_t object, uint32_t& groundType) {
     if (!object) {
         return 0;
@@ -369,7 +376,7 @@ int32_t World::QueryGroundType(uintptr_t object, uint32_t& groundType) {
     return 1;
 }
 
-// OFFSET: 0x00721F60
+// OFFSET: 0x00721F60/0x1403F8470
 int32_t World::QueryOutdoors(uintptr_t object) {
     if (!object) {
         return 1;
@@ -378,11 +385,13 @@ int32_t World::QueryOutdoors(uintptr_t object) {
     return ActiveWorldMap()->QueryOutdoors(reinterpret_cast<CMapEntity*>(object));
 }
 
+// PROVEN: daa3f05a IDENTICAL/NONE
 // OFFSET: 0x00721F80
 void World::SetObjectRenderCallback(RENDER_OBJECT_CALLBACK callback) {
     World::s_entityRenderCallback = callback;
 }
 
+// PROVEN: bef01d33 IDENTICAL/NONE
 // OFFSET: 0x00721F90
 void World::SetObjectCollisionCallback(COLLISION_CALLBACK callback) {
     World::s_entityCollisionCallback = callback;
@@ -406,17 +415,19 @@ int32_t World::ObjectIsInvisibleStalker(uintptr_t object) {
     return (reinterpret_cast<CMapEntity*>(object)->m_entityFlags >> 7) & 1;
 }
 
-// OFFSET: 0x00722000
+// PROVEN: 0a3205f3 IDENTICAL/NONE
+// OFFSET: 0x00722000/0x1403F84E0
 void World::GetFrustumCorners(C3Vector* corners) {
     CWorldScene::GetFrustumCorners(corners);
 }
 
+// PROVEN: 09921b73 IDENTICAL/NONE
 // OFFSET: 0x00722010
 uint32_t World::GetFrameCnt() {
     return World::frameCnt;
 }
 
-// OFFSET: 0x00722020
+// OFFSET: 0x00722020/0x1403F8500
 float World::GetFramerate() {
     float total = 0.0f;
     uint32_t index = World::s_frameTimeIndex;
@@ -436,6 +447,7 @@ float World::GetFramerate() {
     return 1000.0f;
 }
 
+// PROVEN: dde64a81 IDENTICAL/NONE
 // OFFSET: 0x00722080
 void World::SetDetailDoodadDensity(uint32_t density) {
     if (World::detailDoodadDensity != density) {
@@ -444,6 +456,7 @@ void World::SetDetailDoodadDensity(uint32_t density) {
     }
 }
 
+// PROVEN: 76b6d8be IDENTICAL/NONE
 // OFFSET: 0x007220A0
 void World::SetDetailDoodadDensityFade(float fade) {
     if (World::detailDoodadDensityFade != fade) {
@@ -452,6 +465,7 @@ void World::SetDetailDoodadDensityFade(float fade) {
     }
 }
 
+// PROVEN: 51fa7dc6 IDENTICAL/NONE
 // OFFSET: 0x007220D0
 void World::SetDetailDoodadDist(float dist) {
     if (World::detailDoodadDist != dist) {
@@ -461,7 +475,7 @@ void World::SetDetailDoodadDist(float dist) {
     }
 }
 
-// OFFSET: 0x00722110
+// OFFSET: 0x00722110/0x1403F85E0
 uint32_t World::ValidateFarClip(float farClip) {
     if (farClip < 183.33333f || farClip > 1250.0f) {
         return 2;
@@ -478,22 +492,25 @@ uint32_t World::ValidateFarClip(float farClip) {
     return 32;
 }
 
+// PROVEN: e43dabe8 IDENTICAL/NONE
 // OFFSET: 0x00722160
 void World::SetNearClip(float nearClip) {
     World::s_nearClip = 0.2f;
 }
 
+// PROVEN: fc615406 IDENTICAL/NONE
 // OFFSET: 0x00722180
 void World::SetHorizonFarClipScale(float scale) {
     World::s_horizonFarClipScale = scale;
 }
 
+// PROVEN: f4ef0a23 IDENTICAL/NONE
 // OFFSET: 0x007221A0
 void World::SetHorizonNearClipScale(float scale) {
     World::s_horizonNearClipScale = scale;
 }
 
-// OFFSET: 0x007221C0
+// OFFSET: 0x007221C0/0x1403F8670
 static void ShadowModTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     switch (command) {
         case GxTex_Latch:
@@ -506,42 +523,50 @@ static void ShadowModTextureCallback(EGxTexCommand command, uint32_t width, uint
     }
 }
 
-// OFFSET: 0x00722200
+// PROVEN: 83b05375 IDENTICAL/NONE
+// OFFSET: 0x00722200/0x1403F86A0
 void World::ClearLastCollisionGUID() {
     World::s_lastCollisionGUID = 0;
 }
 
-// OFFSET: 0x00722210
+// PROVEN: ef4bff95 IDENTICAL/NONE
+// OFFSET: 0x00722210/0x1403F86B0
 void World::SetLastCollisionGUID(uint64_t guid) {
     World::s_lastCollisionGUID = guid;
 }
 
-// OFFSET: 0x00722230
+// PROVEN: 281e775e IDENTICAL/NONE
+// OFFSET: 0x00722230/0x1403F86C0
 uint64_t World::GetLastCollisionGUID() {
     return World::s_lastCollisionGUID;
 }
 
-// OFFSET: 0x00722240
+// PROVEN: a652528d IDENTICAL/NONE
+// OFFSET: 0x00722240/0x1403F86D0
 void World::ClearTrackedMapObjGUID() {
     World::s_trackedMapObjGUID = 0;
 }
 
-// OFFSET: 0x00722250
+// PROVEN: 2fb78304 IDENTICAL/NONE
+// OFFSET: 0x00722250/0x1403F86E0
 void World::SetTrackedMapObjGUID(uint64_t guid) {
     World::s_trackedMapObjGUID = guid;
 }
 
-// OFFSET: 0x00722270
+// PROVEN: 6ad48992 IDENTICAL/NONE
+// OFFSET: 0x00722270/0x1403F86F0
 uint64_t World::GetTrackedMapObjGUID() {
     return World::s_trackedMapObjGUID;
 }
 
-// OFFSET: 0x00722280
+// PROVEN: 0cd6a15d IDENTICAL/NONE
+// OFFSET: 0x00722280/0x1403F8700
 uint32_t World::GetEnables() {
     return World::s_enables & World::s_enablesMask;
 }
 
-// OFFSET: 0x00722290
+// PROVEN: cf1618f8 IDENTICAL/NONE
+// OFFSET: 0x00722290/0x1403F8710
 void World::SetEnables(uint32_t enables, int32_t enable) {
     if (enable) {
         World::s_enables |= enables;
@@ -550,6 +575,7 @@ void World::SetEnables(uint32_t enables, int32_t enable) {
     }
 }
 
+// PROVEN: 42d86e21 IDENTICAL/NONE
 // OFFSET: 0x007222C0
 uint32_t World::GetM2PassEnables() {
     return World::s_m2PassEnables;
@@ -564,7 +590,8 @@ float World::GetFarClip() {
     return World::s_farClip;
 }
 
-// OFFSET: 0x00722310
+// PROVEN: 6c36254e IDENTICAL/NONE
+// OFFSET: 0x00722310/0x1403F8760
 float World::GetNearClip() {
     return World::s_nearClip;
 }
@@ -591,6 +618,7 @@ void World::SetFarClipOverride(float farClip) {
     World::s_farClipOverride = value;
 }
 
+// PROVEN: 15a80962 IDENTICAL/NONE
 // OFFSET: 0x00722390
 void World::SetFarClipOverrideEnabled(int32_t enable) {
     if (enable) {
@@ -611,97 +639,115 @@ void World::SetUnderwaterViewEnabled(int32_t enable) {
     }
 }
 
+// PROVEN: f3c04bc6 IDENTICAL/NONE
 // OFFSET: 0x007223F0
 const C3Vector& World::GetGuardBandPosition() {
     return World::gbPosition;
 }
 
+// PROVEN: c4c208b0 IDENTICAL/NONE
 // OFFSET: 0x00722400
 float World::GetGuardBandAoiDist() {
     return World::gbAoiDist;
 }
 
+// PROVEN: 8c9c87f9 IDENTICAL/NONE
 // OFFSET: 0x00722410
 float World::GetObjectAoiDist() {
     return World::objectAoiDist;
 }
 
+// PROVEN: 8508fdbd IDENTICAL/NONE
 // OFFSET: 0x00722420
 float World::GetCharacterAmbMul() {
     return World::fCharacterAmbMul;
 }
 
-// OFFSET: 0x00722430
+// PROVEN: 745418d0 IDENTICAL/NONE
+// OFFSET: 0x00722430/0x1403F8860
 uint32_t World::GetPoolUsage() {
     return World::worldPoolUsage;
 }
 
-// OFFSET: 0x00722440
+// OFFSET: 0x00722440/0x1403F8870
 WORLD_MODEL_EVENT_CALLBACK World::GetUserModelEventCallback() {
     return World::s_userModelEventCallback;
 }
 
+// PROVEN: 06532170 IDENTICAL/NONE
 // OFFSET: 0x00722450
 void World::SetObjectAmbientMultiplier(float mul) {
     World::fCharacterAmbMul = mul;
 }
 
-// OFFSET: 0x00722470
+// PROVEN: 05b9a825 IDENTICAL/UNPROVEN
+// OFFSET: 0x00722470/0x1403F8890
 int32_t World::GetLoadFailed() {
     return World::s_loadFailed;
 }
 
-// OFFSET: 0x00722480
+// PROVEN: 84f28b98 IDENTICAL/NONE
+// OFFSET: 0x00722480/0x1403F88A0
 void World::ClearLoadFailed() {
     World::s_loadFailed = 0;
 }
 
+// PROVEN: 11201097 IDENTICAL/NONE
 // OFFSET: 0x00722490
 const C3Vector& World::GetWeatherVelocity() {
     return World::s_weatherVelocity;
 }
 
+// PROVEN: 904420f4 IDENTICAL/NONE
 // OFFSET: 0x007224A0
 const C3Vector& World::GetWeatherPosition() {
     return World::s_weatherPosition;
 }
 
+// PROVEN: 400a5cb7 IDENTICAL/NONE
 // OFFSET: 0x007224B0
 float World::GetWeatherFacing() {
     return World::s_weatherFacing;
 }
 
+// PROVEN: ea2102bd IDENTICAL/NONE
 // OFFSET: 0x007224C0
 int32_t World::GetWeatherOnTaxi() {
     return World::s_weatherOnTaxi;
 }
 
+// PROVEN: 6fcd3f0e IDENTICAL/NONE
 // OFFSET: 0x007224D0
 const C3Spline_CatmullRom* World::GetWeatherSpline() {
     return World::s_weatherSpline;
 }
 
+// PROVEN: 816f8342 IDENTICAL/NONE
 // OFFSET: 0x007224E0
 float World::GetWeatherSplineElapsedTime() {
     return World::s_weatherSplineElapsedTime;
 }
 
+// PROVEN: bba71aa1 IDENTICAL/NONE
 // OFFSET: 0x007224F0
 float World::GetWeatherSplineDuration() {
     return World::s_weatherSplineDuration;
 }
 
+// PROVEN: cd319b68 IDENTICAL/NONE
 // OFFSET: 0x00722500
 float World::GetMaxTeleport() {
     return 150.0f;
 }
 
+// PROVEN: 67cdb0a3 IDENTICAL/NONE
 // OFFSET: 0x00722510
 float World::GetWaterEpsilon() {
     return 0.01f;
 }
 
-// OFFSET: 0x007225F0
+// PROVEN: 0dd755a3 IDENTICAL/NONE
+// OFFSET: 0x007225F0/0x1403F8B40
 void World::SetLoadFailed(int32_t failed, const char* name) {
     World::s_loadFailed = failed;
 
@@ -733,7 +779,7 @@ int32_t World::AddMapById(int32_t mapId, int32_t a2) {
     return worldMap->AddMap(rec->m_directory, mapId, a2);
 }
 
-// OFFSET: 0x007226C0
+// OFFSET: 0x007226C0/0x1403F8C20
 int32_t World::RemoveMapById(int32_t mapId) {
     CWorldMap* worldMap = ActiveWorldMap();
 
@@ -745,7 +791,7 @@ int32_t World::RemoveMapById(int32_t mapId) {
     return 1;
 }
 
-// OFFSET: 0x007226F0
+// OFFSET: 0x007226F0/0x1403F8C60
 int32_t World::SetMapActive(int32_t mapId, int32_t a2) {
     if (mapId < 0 || !ActiveWorldMap()) {
         return 0;
@@ -783,6 +829,7 @@ int32_t World::IsInfiniteOcean() {
     return static_cast<int32_t>(worldMap->m_maps[0]->m_mapFlags << 26) >> 31;
 }
 
+// PROVEN: 4bcdc566 IDENTICAL/NONE
 // OFFSET: 0x00722770
 void World::WaterReset() {
     for (uint32_t i = 0; i < 2; i++) {
@@ -792,7 +839,8 @@ void World::WaterReset() {
     }
 }
 
-// OFFSET: 0x00722790
+// PROVEN: 82b45be9 IDENTICAL/NONE
+// OFFSET: 0x00722790/0x1403F8D40
 CM2Scene* World::GetScene() {
     return CWorldScene::s_m2Scene;
 }
@@ -810,6 +858,7 @@ void World::Render(const C3Vector& pos, float elapsedSec) {
     }
 }
 
+// PROVEN: a359b16f IDENTICAL/NONE
 // OFFSET: 0x00722810
 void World::SetActivePlayerPos(const C3Vector& pos) {
     CWorldScene::s_playerPos = pos;
@@ -839,7 +888,7 @@ void World::SetWeather(int32_t type, float intensity, const WeatherRec* rec, boo
     }
 }
 
-// OFFSET: 0x007228F0
+// OFFSET: 0x007228F0/0x1403F8ED0
 int32_t World::QueryMapId() {
     CWorldMap* worldMap = ActiveWorldMap();
 
@@ -850,7 +899,7 @@ int32_t World::QueryMapId() {
     return -1;
 }
 
-// OFFSET: 0x00722910
+// OFFSET: 0x00722910/0x1403F8EF0
 uintptr_t World::ObjectCreate(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t snap, uint64_t param64, uint32_t param32, int32_t a8, uint16_t* a9, float* a10, int32_t a11) {
     const char* ext = strrchr(name, '.');
 
@@ -902,7 +951,7 @@ int32_t World::ObjectIsDrawable(uintptr_t object) {
     return 1;
 }
 
-// OFFSET: 0x00722AE0
+// OFFSET: 0x00722AE0/0x1403F91A0
 int32_t World::ObjectIsLoaded(uintptr_t object) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -940,7 +989,8 @@ void World::ObjectSetAcceptProjTex(uintptr_t object, int32_t enable) {
     }
 }
 
-// OFFSET: 0x00722B50
+// PROVEN: 9832f532 IDENTICAL/NONE
+// OFFSET: 0x00722B50/0x1403F9210
 void World::ObjectSetAlwaysExterior(uintptr_t object, int32_t enable) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -951,7 +1001,7 @@ void World::ObjectSetAlwaysExterior(uintptr_t object, int32_t enable) {
     }
 }
 
-// OFFSET: 0x00722B70
+// OFFSET: 0x00722B70/0x1403F9230
 void World::ObjectSetMoveable(uintptr_t object, int32_t enable) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1088,7 +1138,7 @@ void World::ObjectSetEventCallback(uintptr_t object, WORLD_MODEL_EVENT_CALLBACK 
     }
 }
 
-// OFFSET: 0x00722D90
+// OFFSET: 0x00722D90/0x1403F9400
 int32_t World::ObjectTestConvexVolume(uintptr_t object, const C3Vector& pos, float radius) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1137,7 +1187,7 @@ int32_t World::ObjectTestConvexVolume(uintptr_t object, const C3Vector& pos, flo
     return 1;
 }
 
-// OFFSET: 0x00722F60
+// OFFSET: 0x00722F60/0x1403F9740
 void World::ObjectEnablePortals(uintptr_t object, int32_t enable) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1146,7 +1196,7 @@ void World::ObjectEnablePortals(uintptr_t object, int32_t enable) {
     }
 }
 
-// OFFSET: 0x00722F80
+// OFFSET: 0x00722F80/0x1403F9760
 void World::ObjectGetExtents(uintptr_t object, CAaBox& box) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1165,7 +1215,7 @@ int32_t World::ObjectIsWMO(uintptr_t object) {
     return reinterpret_cast<CMapBaseObj*>(object)->m_type & MapBaseObj_Type_MapObjDef;
 }
 
-// OFFSET: 0x00723000
+// OFFSET: 0x00723000/0x1403F9800
 uintptr_t World::ObjectCreate(CM2Model* model, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a8) {
     C44Matrix matrix;
     return ActiveWorldMap()->AddEntity(model, matrix, callback, param, param64, param32, flags, name, a8);
@@ -1176,7 +1226,7 @@ uintptr_t World::ObjectCreate(CM2Model* model, const C44Matrix& matrix, WORLD_LO
     return ActiveWorldMap()->AddEntity(model, matrix, callback, param, param64, param32, flags, name, a9);
 }
 
-// OFFSET: 0x007230E0
+// OFFSET: 0x007230E0/0x1403F9950
 void World::ObjectSetModel(uintptr_t object, CM2Model* model) {
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
 
@@ -1215,7 +1265,7 @@ void World::ObjectSetHidden(uintptr_t object, int32_t enable) {
     }
 }
 
-// OFFSET: 0x00723770
+// OFFSET: 0x00723770/0x1403FA0A0
 bool World::Intersect(const C3Vector& start, const C3Vector& end, C3Vector* hitPoint, float* dist, uint32_t flags, HitTestDebug* debug) {
     C3Vector delta(end.x - start.x, end.y - start.y, end.z - start.z);
 
@@ -1226,6 +1276,7 @@ bool World::Intersect(const C3Vector& start, const C3Vector& end, C3Vector* hitP
     return ActiveWorldMap()->VectorIntersect(start, end, hitPoint, dist, flags, debug);
 }
 
+// PROVEN: b708c242 IDENTICAL/NONE
 // OFFSET: 0x007237E0
 bool World::DNIntersect(const C3Vector& start, const C3Vector& end, C3Vector* hitPoint, float* dist) {
     return World::Intersect(start, end, hitPoint, dist, 0x200112, NULL);
@@ -1242,7 +1293,7 @@ int32_t World::IsFacetQueryValid() {
     return 0;
 }
 
-// OFFSET: 0x007238F0
+// OFFSET: 0x007238F0/0x1403FA250
 int32_t World::QueryLiquid(const C3Vector& pos, uint32_t& liquidType, float& height) {
     if (!ActiveWorldMap()) {
         return 0;
@@ -1260,7 +1311,7 @@ int32_t World::QueryLiquidNearest(const C3Vector& pos, uint32_t& liquidType, flo
     return ActiveWorldMap()->QueryLiquid(pos, 1, liquidType, height) && height + 0.0099999998f > pos.z;
 }
 
-// OFFSET: 0x007239B0
+// OFFSET: 0x007239B0/0x1403FA330
 int32_t World::QueryLiquidSounds(uintptr_t object, float radius, TSGrowableArray<LiquidQueryResult>& results) {
     if (!ActiveWorldMap()) {
         return 0;
@@ -1291,27 +1342,31 @@ void World::CreateWaterRipple(const C3Vector& pos, float a2, float a3, float a4,
     }
 }
 
+// PROVEN: 21bfafd2 IDENTICAL/NONE
 // OFFSET: 0x00723AB0
 const C3Vector& World::GetCamPos() {
     return CWorldScene::s_defaultWorldView->m_camPos;
 }
 
+// PROVEN: 4f20401c IDENTICAL/NONE
 // OFFSET: 0x00723AC0
 const C3Vector& World::GetCamTarget() {
     return CWorldScene::s_defaultWorldView->m_camTarget;
 }
 
+// PROVEN: 2a0c31f8 IDENTICAL/NONE
 // OFFSET: 0x00723AD0
 const C3Vector* World::GetCamFrustumCorners() {
     return CWorldScene::s_defaultWorldView->m_frustumCorners;
 }
 
+// PROVEN: 5721fb33 IDENTICAL/NONE
 // OFFSET: 0x00723AE0
 float World::GetCamDepth() {
     return CWorldScene::s_defaultWorldView->m_camDepth;
 }
 
-// OFFSET: 0x00723B00
+// OFFSET: 0x00723B00/0x1403FA4B0
 void World::SetShadowColor(const CImVector& color) {
     if (World::shadowColor == *reinterpret_cast<const uint32_t*>(&color)) {
         World::shadowColor = *reinterpret_cast<const uint32_t*>(&color);
@@ -1332,7 +1387,7 @@ void World::SetShadowColor(const CImVector& color) {
     World::shadowColor = *reinterpret_cast<const uint32_t*>(&color);
 }
 
-// OFFSET: 0x00723BB0
+// OFFSET: 0x00723BB0/0x1403FA5C0
 uint32_t World::ValidateDetailDoodadDensity(uint32_t density) {
     if (density < 16 || density > 256) {
         return 2;
@@ -1345,7 +1400,7 @@ uint32_t World::ValidateDetailDoodadDensity(uint32_t density) {
     return 128;
 }
 
-// OFFSET: 0x00723BF0
+// OFFSET: 0x00723BF0/0x1403FA600
 uint32_t World::ValidateDetailDoodadDist(uint32_t dist) {
     float value = static_cast<float>(dist);
 
@@ -1360,7 +1415,7 @@ uint32_t World::ValidateDetailDoodadDist(uint32_t dist) {
     return 128;
 }
 
-// OFFSET: 0x00723C50
+// OFFSET: 0x00723C50/0x1403FA650
 float World::GetFarClipForMap(float farClip, int32_t mapId) {
     float maxFarClip = OsGetPhysicalMemory() > 0x40000000 ? 1250.0f : 727.0f;
 
@@ -1495,7 +1550,7 @@ void World::ProjectTextureCallback(const CAaBox& box, const CImVector& color, in
     }
 }
 
-// OFFSET: 0x00724330
+// OFFSET: 0x00724330/0x1403FAF50
 int32_t World::ProjectPositionCallback(const C3Vector& pos, float& z, void* param) {
     C3Vector end(pos.x, pos.y, pos.z - 20.0f);
     C3Vector hitPoint(0.0f, 0.0f, 0.0f);
@@ -1509,7 +1564,7 @@ int32_t World::ProjectPositionCallback(const C3Vector& pos, float& z, void* para
     return 1;
 }
 
-// OFFSET: 0x007243C0
+// OFFSET: 0x007243C0/0x1403FB040
 int32_t World::GetFlightBoundsUpper(const C3Vector& pos, float& z) {
     if (!ActiveWorldMap()) {
         return 0;
@@ -1558,7 +1613,7 @@ void World::UpdateTextureCacheBudget() {
     g_theGxDevicePtr->TexSetCacheSize(megabytes << 20);
 }
 
-// OFFSET: 0x00724510
+// OFFSET: 0x00724510/0x1403FB1C0
 int32_t World::IsValidPosition(const C3Vector& pos, float margin) {
     if (!_finite(pos.x) || !_finite(pos.y) || !_finite(pos.z)) {
         return 0;
@@ -1570,7 +1625,7 @@ int32_t World::IsValidPosition(const C3Vector& pos, float margin) {
     return ty >= margin && 34133.332f - margin > ty && tx >= margin && 34133.332f - margin > tx;
 }
 
-// OFFSET: 0x00724660
+// OFFSET: 0x00724660/0x1403FB310
 void World::Initialize() {
     CWorldParam::Initialize();
 
@@ -1670,7 +1725,7 @@ void World::Destroy() {
     CShadowQuery::Destroy();
 }
 
-// OFFSET: 0x00725090
+// OFFSET: 0x00725090/0x1403FC190
 void World::PrepareAreaOfInterest(const C3Vector& pos) {
     float farClip = World::s_farClip;
     float nearClip = World::s_nearClip;
@@ -1679,7 +1734,7 @@ void World::PrepareAreaOfInterest(const C3Vector& pos) {
     World::PrepareAreaOfInterest(pos, nearClip, farClip, 1.5707964f, (rect.maxY - rect.minY) / (rect.maxX - rect.minX));
 }
 
-// OFFSET: 0x007253A0
+// OFFSET: 0x007253A0/0x1403FC490
 int32_t World::LoadMap(int32_t mapId, C3Vector& pos) {
     int32_t firstMap = 0;
     World::s_loadFailed = 0;
@@ -1704,7 +1759,7 @@ int32_t World::LoadMap(int32_t mapId, C3Vector& pos) {
     return CWorldMap::LoadWorldMap(rec->m_directory, mapId, 1);
 }
 
-// OFFSET: 0x007254D0
+// OFFSET: 0x007254D0/0x1403FC630
 void World::Preload(const C3Vector& pos, int32_t loadingScreen) {
     CWorldMap* worldMap = ActiveWorldMap();
 
@@ -1741,7 +1796,7 @@ void World::Preload(const C3Vector& pos, int32_t loadingScreen) {
     }
 }
 
-// OFFSET: 0x00725890
+// OFFSET: 0x00725890/0x1403FCA60
 void World::ObjectDestroy(uintptr_t object) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
 
@@ -1808,6 +1863,7 @@ void World::UpdateDayNight() {
     CWorldMap::s_sunLight.m_specColor = C3Vector(specular.r * 0.0039215689f, specular.g * 0.0039215689f, specular.b * 0.0039215689f);
 }
 
+// PROVEN: 94d71607 IDENTICAL/NONE
 // OFFSET: 0x00726710
 void World::UnloadMap() {
     CWorldScene::ClearObjectFadeoutList();
@@ -1903,7 +1959,7 @@ void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float near
     }
 }
 
-// OFFSET: 0x00724490
+// OFFSET: 0x00724490/0x1403FB0A0
 void World::OnShaderModelChanged(void* param) {
     CShadowQuery::Destroy();
     CShaderEffectManager::DestroyAllEffects();

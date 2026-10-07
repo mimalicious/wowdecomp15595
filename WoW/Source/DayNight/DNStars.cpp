@@ -13,7 +13,7 @@ static C2Vector s_starAlphaTable[4] = {
     C2Vector(1.0f, 1.0f),
 };
 
-// OFFSET: 0x0064F600
+// OFFSET: 0x0064F600/0x1402EE9E0
 void DayNight::DNStars::Initialize() {
     this->m_scene = M2CreateScene();
     this->m_model = this->m_scene->CreateModel("Environments\\Stars\\stars.m2", 0, 3);

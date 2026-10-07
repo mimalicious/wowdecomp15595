@@ -20,7 +20,7 @@ bool ComponentVarHandler(CVar* var, const char* oldValue, const char* value, voi
     return true;
 }
 
-// OFFSET: 0x006F83C0
+// OFFSET: 0x006F83C0/0x1403C1320
 uint32_t CCharacterComponent::ValidateComponentTextureLevel(uint32_t level) {
     if (level - 7 > 2) {
         return 2;
@@ -33,7 +33,7 @@ uint32_t CCharacterComponent::ValidateComponentTextureLevel(uint32_t level) {
     return 16;
 }
 
-// OFFSET: 0x00B3C110
+// OFFSET: 0x00B3C110/0x140908FC0
 static bool ComponentTextureLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t level = SStrToInt(value);
 
@@ -48,7 +48,7 @@ static bool ComponentTextureLevelCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// OFFSET: 0x00B3C180
+// OFFSET: 0x00B3C180/0x140909030
 void CCharacterComponent::InitCVars() {
     CCharacterComponent::g_componentTextureLevelVar = CVar::Register("componentTextureLevel", "Number of mip levels used for character component textures", 1, "8", ComponentTextureLevelCallback, CATEGORY_GRAPHICS, false, NULL, false);
     CCharacterComponent::g_componentThreadVar = CVar::Register("componentThread", "Multi thread character component processing", 1, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);

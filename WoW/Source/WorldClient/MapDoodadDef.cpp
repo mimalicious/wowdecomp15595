@@ -180,7 +180,7 @@ void CMapDoodadDef::UpdateOwners() {
     }
 }
 
-// OFFSET: 0x00787C90
+// OFFSET: 0x00787C90/0x1404773F0
 void CMapDoodadDef::Purge() {
     if (this->m_refCount) {
         return;

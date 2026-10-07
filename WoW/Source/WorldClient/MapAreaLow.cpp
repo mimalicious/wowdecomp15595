@@ -11,11 +11,13 @@
 #include "WoW/Source/WorldClient/MapRenderChunk.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// OFFSET: 0x00401000
+// PROVEN: 941e909f IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapAreaLow::Initialize() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: 9cb3f080 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapAreaLow::Destroy() {
 }
 
@@ -171,6 +173,7 @@ void CMapAreaLow::Render() {
     CMap::s_mapAreaLowUpdateList.LinkToTail(this);
 }
 
+// PROVEN: 560ac273 IDENTICAL/NONE
 // OFFSET: 0x00796880
 void CMapAreaLow::LiquidReset() {
     if (this->m_oceanInstance) {
@@ -266,7 +269,7 @@ void CMapAreaLow::RenderPrep() {
     }
 }
 
-// OFFSET: 0x00797360
+// OFFSET: 0x00797360/0x14048A760
 void CMapAreaLow::FreeBuf() {
     if (this->m_buf) {
         CMapChunkBuf::Free(this->m_buf);
@@ -280,7 +283,7 @@ void CMapAreaLow::FreeBuf() {
     this->m_renderLink.Unlink();
 }
 
-// OFFSET: 0x007975F0
+// OFFSET: 0x007975F0/0x14048ABC0
 CMapAreaLow::~CMapAreaLow() {
     for (CMapBaseObjLink* link = this->m_linkList.Head(), * next; link; link = next) {
         next = this->m_linkList.Next(link);

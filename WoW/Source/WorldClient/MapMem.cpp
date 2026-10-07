@@ -63,12 +63,14 @@ static TSObjectAllocPool<T>* NewPool(const char* name, uint32_t objectsPerBlock,
     return mem ? new (mem) TSObjectAllocPool<T>(name, objectsPerBlock) : NULL;
 }
 
+// PROVEN: bc78ff82 IDENTICAL/NONE
 // OFFSET: 0x00775900
 void* CMap::AllocRawAreaData(uint32_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x00775920
+// PROVEN: 9b0ed89c IDENTICAL/NONE
+// OFFSET: 0x00775920/0x140460000
 void CMap::FreeRawAreaData(void* data) {
     SMemFree(data, __FILE__, __LINE__, 0);
 }
@@ -83,12 +85,12 @@ void CMap::FreeMapObj(CMapObj* mapObj) {
     CMap::s_mapObjHeap->Delete(mapObj, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776030
+// OFFSET: 0x00776030/0x140460660
 CMapObjGroup* CMap::AllocMapObjGroup() {
     return CMap::s_mapObjGroupHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776050
+// OFFSET: 0x00776050/0x140460670
 void CMap::FreeMapObjGroup(CMapObjGroup* mapObjGroup) {
     CMap::s_mapObjGroupHeap->Delete(mapObjGroup, __FILE__, __LINE__);
 }
@@ -98,7 +100,7 @@ CMapArea* CMap::AllocArea() {
     return CMap::s_areaHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x007760C0
+// OFFSET: 0x007760C0/0x1404606D0
 void CMap::FreeArea(CMapArea* area) {
     area->m_mapLink.Unlink();
     CMap::s_areaHeap->Delete(area, __FILE__, __LINE__);
@@ -136,7 +138,7 @@ void CMap::FreeRenderChunk(CMapRenderChunk* renderChunk) {
     CMap::s_renderChunkHeap->Delete(renderChunk, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x007762F0
+// OFFSET: 0x007762F0/0x140460930
 CMapChunkBuf* CMap::AllocChunkBuf() {
     return CMap::s_chunkBufHeap->New(__FILE__, __LINE__);
 }
@@ -152,17 +154,17 @@ CMapDoodadDef* CMap::AllocDoodadDef() {
     return CMap::s_doodadDefHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x007763B0
+// OFFSET: 0x007763B0/0x1404609F0
 void CMap::FreeDoodadDef(CMapDoodadDef* doodadDef) {
     CMap::s_doodadDefHeap->Delete(doodadDef, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776400
+// OFFSET: 0x00776400/0x140460A40
 CMapEntity* CMap::AllocEntity() {
     return CMap::s_entityHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776420
+// OFFSET: 0x00776420/0x140460A50
 void CMap::FreeEntity(CMapEntity* entity) {
     CMap::s_entityHeap->Delete(entity, __FILE__, __LINE__);
 }
@@ -172,7 +174,7 @@ CMapObjDefGroup* CMap::AllocMapObjDefGroup() {
     return CMap::s_mapObjDefGroupHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776490
+// OFFSET: 0x00776490/0x140460AB0
 void CMap::FreeMapObjDefGroup(CMapObjDefGroup* mapObjDefGroup) {
     mapObjDefGroup->m_mapObjDefLink.Unlink();
     CMap::s_mapObjDefGroupHeap->Delete(mapObjDefGroup, __FILE__, __LINE__);
@@ -183,7 +185,7 @@ CMapObjDef* CMap::AllocMapObjDef() {
     return CMap::s_mapObjDefHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776530
+// OFFSET: 0x00776530/0x140460B70
 void CMap::FreeMapObjDef(CMapObjDef* mapObjDef) {
     CMap::s_mapObjDefHeap->Delete(mapObjDef, __FILE__, __LINE__);
 }
@@ -203,7 +205,7 @@ CMapChunkInfo* CMap::AllocChunkInfo() {
     return CMap::s_chunkInfoHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776680
+// OFFSET: 0x00776680/0x140460D20
 CMapBaseObjLink* CMap::AllocBaseObjLink(CMapBaseObj* owner, CMapBaseObj* ref) {
     owner->m_refCount++;
     CMapBaseObjLink* link = CMap::s_baseObjLinkHeap->New(__FILE__, __LINE__);
@@ -212,12 +214,12 @@ CMapBaseObjLink* CMap::AllocBaseObjLink(CMapBaseObj* owner, CMapBaseObj* ref) {
     return link;
 }
 
-// OFFSET: 0x007766B0
+// OFFSET: 0x007766B0/0x140460D60
 void CMap::FreeChunkInfo(CMapChunkInfo* chunkInfo) {
     CMap::s_chunkInfoHeap->Delete(chunkInfo, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776D20
+// OFFSET: 0x00776D20/0x140461520
 void CMap::FreeBaseObjLink(CMapBaseObjLink* link) {
     link->m_owner->m_refCount--;
     link->m_ownerLink.Unlink();
@@ -227,7 +229,7 @@ void CMap::FreeBaseObjLink(CMapBaseObjLink* link) {
     CMap::s_baseObjLinkHeap->Delete(link, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x007766F0
+// OFFSET: 0x007766F0/0x140460DA0
 void CMap::MapMemInitialize() {
     CMap::s_lightHeap = NewPool<CMapLight>("WLIGHT", 128, __LINE__);
     CMap::s_mapObjGroupHeap = NewPool<CMapObjGroup>("WMAPOBJGROUP", 128, __LINE__);

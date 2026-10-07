@@ -130,6 +130,7 @@ uint32_t CWorldView::CalcMinSizeCatFromDistSqr(float distSqr) {
     return 3;
 }
 
+// PROVEN: 9faeb6ca IDENTICAL/NONE
 // OFFSET: 0x00753580
 void CWorldView::Gather() {
     CWorldMap::Gather(this);
@@ -141,6 +142,7 @@ void CWorldView::CalcProjection(C44Matrix& projection) {
     GxuXformCreateProjection_Exact(this->m_fov * 0.60000002f, this->m_aspect, nearClip, World::GetHorizonFarClip(), projection);
 }
 
+// PROVEN: aeb50149 IDENTICAL/NONE
 // OFFSET: 0x007535F0
 void CWorldView::FrustumPop() {
     this->m_frustumIndex--;
@@ -280,7 +282,7 @@ int32_t CWorldView::OcclusionQueryBox(const CAaBox& box, uint32_t flags) {
     return occluded;
 }
 
-// OFFSET: 0x00753EC0
+// OFFSET: 0x00753EC0/0x140434FB0
 void CWorldView::EnableSortTable(int32_t enable) {
     if (enable) {
         if (!this->m_sortTable) {
@@ -421,6 +423,7 @@ void CWorldView::RenderSceneClear() {
     GxSceneClear(0x1F, DayNight::GetFogInfo()->m_color);
 }
 
+// PROVEN: 1ec1277b IDENTICAL/NONE
 // OFFSET: 0x00754410
 void CWorldView::FrustumPush() {
     this->m_frustumIndex++;
@@ -678,7 +681,7 @@ int32_t CWorldView::ClipPolygon(const C3Vector* verts, uint32_t count, C3Vector*
     return 1;
 }
 
-// OFFSET: 0x00755440
+// OFFSET: 0x00755440/0x1404368A0
 void CWorldView::UpdateViewerLiquid() {
     uint32_t prevStatus = this->m_camLiquidStatus;
     this->m_camLiquidStatus = 0;
@@ -1084,6 +1087,7 @@ int32_t CWorldView::TransformAndClipVerts(int32_t ignoreOcclusion, const C3Vecto
     return 0;
 }
 
+// PROVEN: cfc2bd66 IDENTICAL/NONE
 // OFFSET: 0x00757130
 void CWorldView::ClearLists() {
     for (uint32_t i = 0; i < 6; i++) {
@@ -2109,7 +2113,7 @@ void CWorldView::AddPortalViewInterior(CMapObj* mapObj, const SMOPortalInfo* por
     *ext |= 0x8;
 }
 
-// OFFSET: 0x0075A8B0
+// OFFSET: 0x0075A8B0/0x14043D5D0
 CWorldView::CWorldView(int32_t viewType) {
     this->m_viewType = viewType;
     this->m_portalVerts.m_chunk = 32;
@@ -2165,7 +2169,7 @@ CWorldView::~CWorldView() {
     }
 }
 
-// OFFSET: 0x0075B670
+// OFFSET: 0x0075B670/0x14043E5A0
 void CWorldView::UpdateViewer() {
     this->m_viewerMapObjDef = NULL;
     this->m_viewerMovedMapObjDef = NULL;

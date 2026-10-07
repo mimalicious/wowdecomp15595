@@ -41,7 +41,8 @@ static uint32_t AlphaSize(const CMapChunk* chunk) {
     return header ? 64 >> header->m_mamp : 64;
 }
 
-// OFFSET: 0x00765E90
+// PROVEN: 0dcac47e IDENTICAL/NONE
+// OFFSET: 0x00765E90/0x14044BB30
 void CMapRenderChunk::Initialize() {
     CMapRenderChunk::s_vertexFormat = GxVBF_PN;
     s_chunkBatch.m_primType = GxPrim_Triangles;
@@ -53,7 +54,8 @@ void CMapRenderChunk::Initialize() {
     memset(CMapRenderChunk::s_emptyShadow, 0, sizeof(CMapRenderChunk::s_emptyShadow));
 }
 
-// OFFSET: 0x00765EF0
+// PROVEN: 3190c7c0 IDENTICAL/NONE
+// OFFSET: 0x00765EF0/0x14044BBF0
 void CMapRenderChunk::SetVertexFormat(uint32_t format) {
     if (CMapRenderChunk::s_vertexFormat != format) {
         CMapRenderChunk::s_vertexFormat = format;
@@ -61,7 +63,8 @@ void CMapRenderChunk::SetVertexFormat(uint32_t format) {
     }
 }
 
-// OFFSET: 0x00765F10
+// PROVEN: 9bf5b422 IDENTICAL/NONE
+// OFFSET: 0x00765F10/0x14044BC10
 void CMapRenderChunk::FreeBuf() {
     if (this->m_chunkBuf) {
         CMapChunkBuf::Free(this->m_chunkBuf);
@@ -77,6 +80,7 @@ void CMapRenderChunk::AddChunks(CMapChunk** chunks) {
     }
 }
 
+// PROVEN: 80e1e3d8 IDENTICAL/NONE
 // OFFSET: 0x00765F80
 void CMapRenderChunk::DestroyBufs() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
@@ -149,6 +153,7 @@ CMapChunk* CMapRenderChunk::GetBatchChunk(uint32_t chunkMask) {
     return NULL;
 }
 
+// PROVEN: fdec8e70 IDENTICAL/NONE
 // OFFSET: 0x00766730
 void CMapRenderChunk::AllocBuf() {
     this->m_chunkBuf = CMapChunkBuf::Alloc(580, 3072, static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
@@ -600,18 +605,22 @@ CMapRenderChunkBatch::CMapRenderChunkBatch() {
     this->m_renderChunk = NULL;
 }
 
-// OFFSET: 0x00401000
+// PROVEN: ee8ed274 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapRenderChunk::DestroyPools() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: 784ea8a8 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapRenderChunk::DirtyPools() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: dfa0e1fb IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapRenderChunk::UpdateBufs() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: f41802ce IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapRenderChunk::UpdatePools() {
 }

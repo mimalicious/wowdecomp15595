@@ -121,24 +121,25 @@ static CImVector Brighten(const CImVector& color) {
     return *reinterpret_cast<CImVector*>(&result);
 }
 
-// OFFSET: 0x00646DD0
+// OFFSET: 0x00646DD0/0x1402E3930
 void DayNight::Initialize(bool enableFogMode) {
     DayNight::g_dnInfo.m_enableFogMode = enableFogMode;
     DayNight::g_dnInfo.m_showSky = 1;
 }
 
-// OFFSET: 0x00401000
+// PROVEN: a0f23023 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void DayNight::Destroy() {
 }
 
-// OFFSET: 0x00646DF0
+// OFFSET: 0x00646DF0/0x1402E3950
 void DayNight::SetTime(uint32_t time, float timeOfDay, float dayFraction) {
     DayNight::g_dnInfo.m_timeOfDay = timeOfDay;
     DayNight::g_dnInfo.m_time = time;
     DayNight::g_dnInfo.m_dayFraction = dayFraction;
 }
 
-// OFFSET: 0x00646E20
+// OFFSET: 0x00646E20/0x1402E3970
 const DayNight::FogInfo* DayNight::GetFogInfo() {
     if (Liquid::CameraSubmerged()) {
         return &DayNight::g_dnInfo.m_fogUW;
@@ -214,7 +215,7 @@ void DayNight::SetFogDistanceMax(float distance) {
     DayNight::g_fogDistanceMax = distance;
 }
 
-// OFFSET: 0x00646FC0
+// OFFSET: 0x00646FC0/0x1402E3A10
 const DayNight::LightInfo* DayNight::GetLightInfo() {
     if (Liquid::CameraSubmerged()) {
         return &DayNight::g_dnInfo.m_lightInfoUW;
@@ -310,7 +311,7 @@ float DayNight::GetMoonGlareOpacity() {
     return DayNight::g_moonGlare.m_visibility;
 }
 
-// OFFSET: 0x006471D0
+// OFFSET: 0x006471D0/0x1402E3B70
 void DayNight::SetCloudLOD(uint32_t lod) {
     DayNight::g_clouds.SetLOD(lod, 0);
 }
@@ -321,7 +322,7 @@ void DayNight::SetEclipse(uint32_t lightId, float amount) {
     DayNight::g_dnInfo.m_eclipseAmount = static_cast<int32_t>(amount * 255.0f);
 }
 
-// OFFSET: 0x00647240
+// OFFSET: 0x00647240/0x1402E3B90
 void DayNight::SetIntersectCallback(INTERSECT_CALLBACK callback) {
     DayNight::g_intersectCallback = callback;
 }
@@ -353,7 +354,7 @@ DayNight::CurrentLight::CurrentLight() {
     this->m_lightParamsFlag = 0.0f;
 }
 
-// OFFSET: 0x006473F0
+// OFFSET: 0x006473F0/0x1402E4080
 const DayNight::LightInfo* DayNight::GetDeathLightInfo() {
     LightParamsRec* params = g_lightParamsDB.GetRecord(3);
     DayNight::g_dnInfo.m_deathLightInfo = DayNight::g_dnInfo.m_lightInfo;
@@ -401,7 +402,7 @@ void DayNight::SetOverrideLightParamsID(int32_t id, int32_t preload) {
     DayNight::g_dnInfo.m_overrideLightParamsId = id;
 }
 
-// OFFSET: 0x006475B0
+// OFFSET: 0x006475B0/0x1402E4180
 CImVector* DayNight::GetLiquidMinimapColor(CImVector* color, uint32_t time, const C3Vector& pos, uint8_t blend, uint32_t band) {
     CurrentLight light;
     DayNight::GetLight(time, pos, 0.5f, light, 0, 2);
@@ -606,7 +607,7 @@ void DayNight::LoadMap(int32_t mapId) {
     DayNight::g_exteriorUnderwater = 0;
 }
 
-// OFFSET: 0x00647E40
+// OFFSET: 0x00647E40/0x1402E4C10
 void DayNight::ForceFullUpdate() {
     DayNight::g_forceFullUpdate = 1;
 }
@@ -930,7 +931,7 @@ void DayNight::SetDirection() {
     DayNight::g_dnInfo.m_lightInfoUW.m_direction.z = z;
 }
 
-// OFFSET: 0x006489B0
+// OFFSET: 0x006489B0/0x1402E5690
 void DayNight::SetPlanets() {
     static C2Vector s_sunTheta[5] = {
         C2Vector(0.22916667f, 1.7453293f),

@@ -653,7 +653,7 @@ void CMapRenderChunk::UnpackAlphaShadowBits(void* dest, uint32_t x, uint32_t pit
     }
 }
 
-// OFFSET: 0x00767B80
+// OFFSET: 0x00767B80/0x14044E9A0
 void CMapRenderChunk::UnpackAlphaBits(CMapChunk* chunk, uint32_t* dest, uint32_t size, SLayerAlpha* alpha, const uint8_t* shadow, EGxTexFormat format, int32_t fixedAlpha) {
     if (fixedAlpha) {
         if (format == 3) {

@@ -114,7 +114,8 @@ void DayNight::DNClouds::SetFullUpdate() {
     this->m_fullUpdate = 1;
 }
 
-// OFFSET: 0x0064D270
+// PROVEN: 42668219 IDENTICAL/NONE
+// OFFSET: 0x0064D270/0x1402E87A0
 void DayNight::DNClouds::Callback_GxTex(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch && !level) {
         texelStrideInBytes = 4 * width;
@@ -133,7 +134,7 @@ void DayNight::DNClouds::SetDensity(float density) {
     this->m_density = static_cast<uint8_t>(static_cast<int32_t>((1.0f - value) * 255.0f));
 }
 
-// OFFSET: 0x0064D2E0
+// OFFSET: 0x0064D2E0/0x1402E88C0
 void DayNight::DNClouds::Initialize() {
     if (!DNClouds::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
         DNClouds::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "DNClouds");
@@ -194,7 +195,7 @@ void DayNight::DNClouds::SetSharpness(float sharpness) {
     }
 }
 
-// OFFSET: 0x0064D570
+// OFFSET: 0x0064D570/0x1402E89E0
 DayNight::DNClouds::DNClouds() {
     for (float* noise = s_noiseTable; noise < s_noiseTable + 256; noise++) {
         *noise = 1.0f - static_cast<float>(rand()) * 0.000030518509f * 2.0f;
@@ -263,7 +264,7 @@ float DayNight::DNClouds::GetDensity(const C3Vector& pos, float scale) {
     return this->m_densities.m_data[(y << this->m_shift) + x] * 0.0039215689f;
 }
 
-// OFFSET: 0x0064D860
+// OFFSET: 0x0064D860/0x1402E8D50
 void DayNight::DNClouds::SetupBumpMap(C3Vector& shadeColor, C3Vector& sunColor, C3Vector& baseColor, C3Vector& sunPos, float& intensity) {
     DNInfo& info = DayNight::g_dnInfo;
     const C3Vector& planet = info.m_dayFraction < 0.2013889f || info.m_dayFraction > 0.9236111f ? DayNight::g_planets[1].m_position : DayNight::g_planets[0].m_position;
@@ -300,7 +301,7 @@ void DayNight::DNClouds::SetupBumpMap(C3Vector& shadeColor, C3Vector& sunColor, 
     intensity = (1.0f - info.m_stormBlend * 0.75f) * intensity;
 }
 
-// OFFSET: 0x0064DAE0
+// OFFSET: 0x0064DAE0/0x1402E90E0
 void DayNight::DNClouds::Update() {
     DNInfo& info = DayNight::g_dnInfo;
 
@@ -599,7 +600,7 @@ void DayNight::DNClouds::GenSphere(float radius) {
     this->m_nIndices = 374;
 }
 
-// OFFSET: 0x0064E880
+// OFFSET: 0x0064E880/0x1402EA300
 void DayNight::DNClouds::SetLOD(uint32_t lod, uint32_t rowsPerUpdate) {
     if (this->m_textures[0] || this->m_textures[1]) {
         if (this->m_textures[0]) {

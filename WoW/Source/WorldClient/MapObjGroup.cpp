@@ -301,14 +301,14 @@ bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBs
     return true;
 }
 
-// OFFSET: 0x0078E370
+// OFFSET: 0x0078E370/0x14047F230
 void CMapObjGroup::AsyncFreeCallback(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x0078E3A0
+// OFFSET: 0x0078E3A0/0x14047F270
 int32_t CMapObjGroup::HasLiquidVB(CGxBatch*& batch) {
     if (!this->m_liquidVertsBlock || !this->m_liquidIndicesBlock) {
         return 0;
@@ -318,7 +318,7 @@ int32_t CMapObjGroup::HasLiquidVB(CGxBatch*& batch) {
     return 1;
 }
 
-// OFFSET: 0x0078E3D0
+// OFFSET: 0x0078E3D0/0x14047F290
 uint32_t CMapObjGroup::GetLiquidType() const {
     return this->m_liquidType;
 }
@@ -479,7 +479,7 @@ void CMapObjGroup::GetTrisFromQuery(World::TriData* triData, BspQuery* query, co
     batch->m_faceIndices = faceIndices;
 }
 
-// OFFSET: 0x0078F240
+// OFFSET: 0x0078F240/0x140480130
 void CMapObjGroup::InitPtrs() {
     this->m_groupName = NULL;
     this->m_polys = NULL;
@@ -653,7 +653,7 @@ int32_t CMapObjGroup::QueryLiquid(const C3Vector& pos, int32_t requireTiles, uin
     return 1;
 }
 
-// OFFSET: 0x0078F8A0
+// OFFSET: 0x0078F8A0/0x140480880
 void VBBList::Block::Set(uint32_t itemSize, uint32_t itemCount, uint32_t offset) {
     this->m_size = itemCount * itemSize;
     this->m_offset = offset;
@@ -771,7 +771,7 @@ void CMapObjGroup::UploadIndexBuffer(CGxBuf* buf) const {
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x0078FFE0
+// OFFSET: 0x0078FFE0/0x140480FC0
 int32_t CMapObjGroup::GetNumSharedTiles() {
     if (this->m_numSharedTiles > 0) {
         return this->m_numSharedTiles;
@@ -1395,7 +1395,7 @@ void VBBList::Destroy() {
     }
 }
 
-// OFFSET: 0x00793090
+// OFFSET: 0x00793090/0x140484F30
 void VBBList::FreeVBB(Block* block) {
     if (!block) {
         return;
@@ -1451,7 +1451,7 @@ void VBBList::FreeVBB(Block* block) {
     this->m_blocks.DeleteNode(block);
 }
 
-// OFFSET: 0x007931B0
+// OFFSET: 0x007931B0/0x140485090
 void VBBList::AllocVBB(Block** owner, uint32_t itemSize, uint32_t itemCount) {
     if (!this->m_pooled) {
         Block* block = this->AllocBlock();
@@ -1548,7 +1548,7 @@ void CMapObjGroup::FreeVB() {
     this->m_indicesBlock = NULL;
 }
 
-// OFFSET: 0x00793440
+// OFFSET: 0x00793440/0x140485320
 void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCount, uint32_t indexCount, CGxBatch*& batch) {
     if (!this->m_liquidVertsBlock) {
         CMapObjGroup::s_vertexList.AllocVBB(&this->m_liquidVertsBlock, GxVertexSize(format), vertexCount);
@@ -1564,7 +1564,7 @@ void CMapObjGroup::AllocLiquidVB(EGxVertexBufferFormat format, uint32_t vertexCo
     this->m_liquidVBRefCount++;
 }
 
-// OFFSET: 0x007934B0
+// OFFSET: 0x007934B0/0x1404853C0
 void CMapObjGroup::FreeLiquidVB() {
     int32_t refCount = this->m_liquidVBRefCount;
 
@@ -1590,7 +1590,7 @@ void CMapObjGroup::FreeLiquidVB() {
     this->m_liquidIndicesBlock = NULL;
 }
 
-// OFFSET: 0x00793610
+// OFFSET: 0x00793610/0x1404855C0
 void CMapObjGroup::Initialize() {
     CMapObjGroup::s_vertexList.m_pooled = 0;
     CMapObjGroup::s_vertexList.m_target = GxPoolTarget_Vertex;
@@ -1609,7 +1609,7 @@ void CMapObjGroup::Destroy() {
     CMapObjGroup::PurgeVertArrayList();
 }
 
-// OFFSET: 0x00793680
+// OFFSET: 0x00793680/0x140485640
 void CMapObjGroup::Clear(int32_t force) {
     if (!force && !(this->m_flags & 0x40)) {
         return;

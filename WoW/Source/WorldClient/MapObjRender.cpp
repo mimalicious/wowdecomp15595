@@ -134,7 +134,7 @@ void CMapObjRender::RenderLiquidBatch(FFX::Effect* effect, SMOBatch* batch, CMap
     FFX::AddPortalEffect(effect, defGroup->m_mapObjDef->m_mat, group->m_vertices, group->m_normals, group->m_colors, group->m_colors2, group->m_texCoords, &group->m_tangents[group->m_tangentStarts[batchIndex]], group->m_indices, gxBatch);
 }
 
-// OFFSET: 0x00779D10
+// OFFSET: 0x00779D10/0x140465AD0
 void CMapObjRender::Initialize() {
     CMapObjRender::s_effects[0] = CShaderEffectManager::GetEffect("MapObjDiffuse");
     CMapObjRender::s_effects[1] = CShaderEffectManager::GetEffect("MapObjSpecular");

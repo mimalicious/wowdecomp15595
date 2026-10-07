@@ -240,6 +240,7 @@ void CMapRenderChunk::RenderPrepBufs(CGxBuf* vertexBuf, CGxBuf* indexBuf) {
     }
 }
 
+// PROVEN: 08f48e95 IDENTICAL/NONE
 // OFFSET: 0x00781BD0
 void CMapRenderChunk::UseStreamingBufs() {
     uint32_t vertexSize = GxVertexSize(static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
@@ -602,6 +603,7 @@ void CMapRenderChunk::RenderSolid(CMapRenderChunkBatch* batch) {
     GxRsSet(GxRs_Texture1, 0);
 }
 
+// PROVEN: 4288d101 IDENTICAL/NONE
 // OFFSET: 0x00783820
 void CMapRenderChunk::RenderSolidPixelShader(CMapRenderChunkBatch* batch) {
     CMapRenderChunk::RenderSolid(batch);

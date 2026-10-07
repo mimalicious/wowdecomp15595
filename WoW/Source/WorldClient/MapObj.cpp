@@ -39,6 +39,7 @@ void CMapObj::LinkToAsyncHead(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CMapObj*>(param)->m_asyncObject, 1);
 }
 
+// PROVEN: bd76315d IDENTICAL/NONE
 // OFFSET: 0x00745A30
 void CMapObj::InitPtrs() {
     this->m_header = NULL;
@@ -68,14 +69,14 @@ void CMapObj::InitPtrs() {
     this->m_convexVolumePlaneCount = 0;
 }
 
-// OFFSET: 0x00745AD0
+// OFFSET: 0x00745AD0/0x1404239E0
 void CMapObj::AsyncFreeCallback(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: 0x00745B00
+// OFFSET: 0x00745B00/0x140423A20
 uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
     if (flags & 0x80) {
         return 0x2CA;
@@ -106,6 +107,7 @@ uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
     return ignore;
 }
 
+// PROVEN: 893420cb IDENTICAL/NONE
 // OFFSET: 0x00745B60
 void CMapObj::ReadGroup(uint32_t groupNum) {
     this->ReadGroup(groupNum, 0);
@@ -116,7 +118,7 @@ void CMapObj::WaitLoad() {
     AsyncFileReadWait(this->m_asyncObject);
 }
 
-// OFFSET: 0x00745C40
+// OFFSET: 0x00745C40/0x140423A90
 void CMapObj::Delete(CMapObj* mapObj) {
     mapObj->m_refCount--;
 }
@@ -141,7 +143,7 @@ void CMapObj::Init() {
     this->InitPtrs();
 }
 
-// OFFSET: 0x00745D00
+// OFFSET: 0x00745D00/0x140423B60
 void CMapObj::Clear() {
     int32_t freeData = 1;
 
@@ -188,7 +190,7 @@ int32_t CMapObj::IsGroupLoaded(uint32_t groupNum) {
     return this->m_groups[groupNum]->m_flags & 0x40;
 }
 
-// OFFSET: 0x00745DF0
+// OFFSET: 0x00745DF0/0x140423D30
 void CMapObj::GetBounds(CAaBox& box) {
     if (this->m_flags & 0x40) {
         box = this->m_bbox;
@@ -203,7 +205,7 @@ void CMapObj::GetBounds(CAaBox& box) {
     box.t.z = 0.0f;
 }
 
-// OFFSET: 0x00745E90
+// OFFSET: 0x00745E90/0x140423DD0
 void CMapObj::GetGroupBounds(CAaBox& box, uint32_t groupNum) {
     if (this->m_flags & 0x40) {
         box = this->m_groupInfos[groupNum].m_bbox;
@@ -218,7 +220,7 @@ void CMapObj::GetGroupBounds(CAaBox& box, uint32_t groupNum) {
     box.t.z = 0.0f;
 }
 
-// OFFSET: 0x00745F30
+// OFFSET: 0x00745F30/0x140423E70
 uint32_t CMapObj::GetGroupFlags(uint32_t groupNum) {
     if (this->m_flags & 0x40) {
         return this->m_groupInfos[groupNum].m_flags;
@@ -227,7 +229,7 @@ uint32_t CMapObj::GetGroupFlags(uint32_t groupNum) {
     return 0;
 }
 
-// OFFSET: 0x00745F60
+// OFFSET: 0x00745F60/0x140423E90
 int32_t CMapObj::TestBounds(const CAaBox& box) {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -250,12 +252,12 @@ int32_t CMapObj::TestBounds(const C3Vector& start, const C3Vector& end) {
     return (this->m_flags & 0x40) && CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end) != 0;
 }
 
-// OFFSET: 0x007460B0
+// OFFSET: 0x007460B0/0x140423F90
 int32_t CMapObj::TestGroupBounds(const C3Vector& start, const C3Vector& end, uint32_t groupNum) {
     return (this->m_flags & 0x40) && (this->m_groups[groupNum]->m_flags & 0x40) && CWorldMath::VectorIntersectAABox2(this->m_groupInfos[groupNum].m_bbox, start, end) != 0;
 }
 
-// OFFSET: 0x00746100
+// OFFSET: 0x00746100/0x140423FE0
 int32_t CMapObj::TestGroupBounds(const CAaBox& box, uint32_t groupNum, int32_t requireLoaded) {
     if (requireLoaded && (!(this->m_flags & 0x40) || !(this->m_groups[groupNum]->m_flags & 0x40))) {
         return 0;
@@ -265,7 +267,7 @@ int32_t CMapObj::TestGroupBounds(const CAaBox& box, uint32_t groupNum, int32_t r
     return groupBox.t.x >= box.b.x && groupBox.t.y >= box.b.y && groupBox.t.z >= box.b.z && box.t.x >= groupBox.b.x && box.t.y >= groupBox.b.y && box.t.z >= groupBox.b.z;
 }
 
-// OFFSET: 0x007461A0
+// OFFSET: 0x007461A0/0x140424070
 int32_t CMapObj::TestGroupBounds(const C3Vector& pos, uint32_t groupNum) {
     if (!(this->m_flags & 0x40) || !(this->m_groups[groupNum]->m_flags & 0x40)) {
         return 0;
@@ -275,7 +277,7 @@ int32_t CMapObj::TestGroupBounds(const C3Vector& pos, uint32_t groupNum) {
     return pos.x >= groupBox.b.x && pos.y >= groupBox.b.y && pos.z >= groupBox.b.z && groupBox.t.x >= pos.x && groupBox.t.y >= pos.y && groupBox.t.z >= pos.z;
 }
 
-// OFFSET: 0x00746230
+// OFFSET: 0x00746230/0x1404240F0
 int32_t CMapObj::TestConvexVolume(const C3Vector& pos) {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -292,7 +294,7 @@ int32_t CMapObj::TestConvexVolume(const C3Vector& pos) {
     return 1;
 }
 
-// OFFSET: 0x007462B0
+// OFFSET: 0x007462B0/0x140424180
 CMapObjGroup* CMapObj::GetGroup(uint32_t groupNum, int32_t loaded) {
     if (!(this->m_flags & 0x40)) {
         return NULL;
@@ -546,7 +548,7 @@ void CMapObj::ClearCache() {
     }
 }
 
-// OFFSET: 0x00747C10
+// OFFSET: 0x00747C10/0x140426820
 void CMapObj::Initialize() {
     CMapObjRender::Initialize();
     CMapObj::bPoolsDirty = 1;
@@ -572,7 +574,7 @@ void CMapObj::Destroy() {
     }
 }
 
-// OFFSET: 0x00747CE0
+// OFFSET: 0x00747CE0/0x1404269E0
 void CMapObj::FreeOccluder(CMapObjOccluder* occluder) {
     CMapObj::s_occluderPool->Delete(occluder, "", 0);
 }

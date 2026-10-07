@@ -47,6 +47,7 @@ void CMapStaticEntity::SetSequenceSpeed(float speed) {
     }
 }
 
+// PROVEN: f1ebbb75 IDENTICAL/NONE
 // OFFSET: 0x00762820
 void CMapStaticEntity::AdjustLighting(CM2Lighting* lighting, void* a2, void* a3, void* a4) {
 }
@@ -68,7 +69,7 @@ void CMapStaticEntity::SelectUnderwater(CM2Lighting* lighting) {
     }
 }
 
-// OFFSET: 0x00762AB0
+// OFFSET: 0x00762AB0/0x140447BC0
 void CMapStaticEntity::ModelLightingCallback(CM2Model* model, CM2Lighting* lighting, void* arg) {
     CMapStaticEntity* entity = static_cast<CMapStaticEntity*>(arg);
     lighting->m_flags |= 0x10;

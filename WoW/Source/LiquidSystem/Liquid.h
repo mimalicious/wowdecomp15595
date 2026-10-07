@@ -24,6 +24,23 @@ class CM2Lighting;
 class CTexture;
 struct CGxBuf;
 
+class WaterSurfaceGen {
+    public:
+    /* 0000 */ uint32_t unk_0000;
+    /* 0004 */ int32_t m_resolution;
+    /* 0008 */ uint32_t unk_0008;
+    /* 000C */ float* m_alignedBuffers[5];
+    /* 0020 */ uint8_t* unk_0020;
+    /* 0024 */ uint8_t* unk_0024;
+    /* 0028 */ uint8_t* unk_0028;
+    /* 002C */ uint8_t unk_002C[56];
+    /* 0064 */ TSGrowableArray<uint16_t> m_indices;
+    /* 0074 */ CTexture* m_texture;
+
+    ~WaterSurfaceGen();
+    void Release();
+};
+
 namespace Liquid {
     class CMaterialSettings;
 
@@ -40,17 +57,24 @@ namespace Liquid {
     struct DisplMapPerturbation {
         /* 0000 */ C3Vector m_pos;
         /* 000C */ float m_radius;
-        /* 0010 */ uint64_t m_time;
+        /* 0010 */ float m_amplitude;
+        /* 0014 */ uint32_t m_period;
         /* 0018 */ uint32_t unk_0018;
     };
 
     struct DisplMapPerturbationMesh {
         /* 0000 */ C44Matrix m_transform;
-        /* 0040 */ uint32_t unk_0040[2];
+        /* 0040 */ uint32_t m_vertexAlloc;
+        /* 0044 */ uint32_t m_vertexCount;
         /* 0048 */ C3Vector* m_vertices;
-        /* 004C */ uint32_t unk_004C[3];
+        /* 004C */ uint32_t m_vertexChunk;
+        /* 0050 */ uint32_t m_indexAlloc;
+        /* 0054 */ uint32_t m_indexCount;
         /* 0058 */ uint16_t* m_indices;
-        /* 005C */ uint32_t unk_005C[4];
+        /* 005C */ uint32_t m_indexChunk;
+        /* 0060 */ float m_amplitude;
+        /* 0064 */ uint32_t m_period;
+        /* 0068 */ uint32_t unk_0068;
 
         DisplMapPerturbationMesh();
     };
@@ -221,7 +245,7 @@ namespace Liquid {
 
     class Object : public TSHashObject<Object, HASHKEY_NONE> {
         public:
-        /* 0018 */ uint32_t m_liquidType;
+        /* 0018 */ uint32_t m_objectId;
         /* 001C */ uint32_t m_refCount;
         /* 0020 */ uint8_t m_noReflection;
         /* 0024 */ uint32_t m_reflectionType;
@@ -271,15 +295,6 @@ namespace Liquid {
         ~CRenderer();
         void Draw(CInstance* instance);
         void Flush(uint32_t time, const C3Vector& camPos, uint32_t pass);
-    };
-
-    class SurfaceGen {
-        public:
-        /* 0000 */ uint32_t unk_0000;
-        /* 0004 */ int32_t m_resolution;
-
-        ~SurfaceGen();
-        void Clear();
     };
 
     class CSettingsBank {
@@ -334,7 +349,7 @@ namespace Liquid {
     extern TEXTURE_LOAD_CALLBACK s_textureLoadCallback;
 
     void AddConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback);
-    void AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, uint32_t time);
+    void AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, float amplitude);
     void CacheProceduralTextures();
     void ClearDisplMap();
     void ClearEventPerturbations();
@@ -359,6 +374,7 @@ namespace Liquid {
     bool HasData(const SMLiquidChunkDesc* desc, const SMLiquidInstance* instance);
     void Destroy();
     void DestroySurfaceGen();
+    int32_t WaterDetailNeedsDepthCache(uint32_t detail);
     void GetAboveWaterFog(float& start, float& end, float& density, CImVector& color);
     CTexture* GetBackBuffer();
     CTexture* GetBlurredBackBuffer();
@@ -381,7 +397,7 @@ namespace Liquid {
     int32_t GetShadersEnabled();
     void GetUnderWaterFog(float& start, float& end, float& density, CImVector& color);
     uint32_t GetWaterDetail();
-    extern SurfaceGen* s_surfaceGen;
+    extern WaterSurfaceGen* s_surfaceGen;
 
     void GrabBackBuffer();
     const C44Matrix* GetTexScrollMtx(uint32_t time, const C2Vector& speed);
@@ -402,7 +418,7 @@ namespace Liquid {
     void __fastcall OnTexturesDirty();
     void PerturbDisplMap(TSGrowableArray<DisplMapPerturbation*>& perturbations, uint32_t index, uint32_t time);
     void PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& meshes, uint32_t index, uint32_t time);
-    void PropagateDisplMap(uint32_t step, uint32_t index);
+    void PropagateDisplMap(uint32_t index);
     int32_t NeedDynDisplMap();
     void PurgeMaterialBank();
     Object* RegisterLiquidObject(uint32_t a1, uint32_t liquidType, uint32_t materialId);

@@ -41,7 +41,7 @@ void CChunkLiquid::UpdateResourcePurging() {
     }
 }
 
-// OFFSET: 0x00798940
+// OFFSET: 0x00798940/0x14048C580
 bool CChunkLiquid::HasData() const {
     if (this->m_tileData) {
         return true;
@@ -135,7 +135,7 @@ bool CChunkLiquid::Intersect(int32_t x, int32_t y, C3Ray& ray, float& t) const {
     return hit;
 }
 
-// OFFSET: 0x00798CB0
+// OFFSET: 0x00798CB0/0x14048C9F0
 bool CChunkLiquid::TileExists(uint32_t x, uint32_t y) const {
     if (this->m_tileData) {
         return (static_cast<const uint8_t*>(this->m_tileData)[8 * y + x] & 0xF) != 15;

@@ -16,7 +16,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// OFFSET: 0x00773390
+// OFFSET: 0x00773390/0x14045D010
 CTexture* CMap::LoadTexture(const char* fileName) {
     CStatus status;
     CGxTexFlags texFlags;
@@ -28,7 +28,8 @@ CTexture* CMap::LoadTexture(const char* fileName) {
     return texture;
 }
 
-// OFFSET: 0x00784990
+// PROVEN: c1e3118d IDENTICAL/NONE
+// OFFSET: 0x00784990/0x140473590
 int32_t CMap::SafeOpen(const char* fileName, SFileImpl** file, int32_t fatal) {
     if (SFileOpenFile(fileName, file)) {
         return 1;
@@ -41,7 +42,7 @@ int32_t CMap::SafeOpen(const char* fileName, SFileImpl** file, int32_t fatal) {
     return 0;
 }
 
-// OFFSET: 0x007849D0
+// OFFSET: 0x007849D0/0x1404735E0
 void CMap::LoadTextureBlob() {
     char blobName[260];
     strcpy(blobName, this->m_wdtFileName);
@@ -83,7 +84,7 @@ void CMap::LoadTextureBlob() {
     World::SetLoadFailed(1, blobName);
 }
 
-// OFFSET: 0x00784B20
+// OFFSET: 0x00784B20/0x1404737A0
 int32_t CMap::SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint32_t bytes) {
     int32_t tries = 10;
 
@@ -150,7 +151,7 @@ void CMap::CreateAreaTable(const SMAreaInfo* areaInfo) {
     }
 }
 
-// OFFSET: 0x00785060
+// OFFSET: 0x00785060/0x140473BA0
 int32_t CMap::LoadWdt() {
     char globalWmoName[256];
     SMMapObjDef globalWmoDef;
@@ -320,7 +321,7 @@ void CMap::LoadArea(CMapArea* area) {
     area->Load(fileName);
 }
 
-// OFFSET: 0x00773420
+// OFFSET: 0x00773420/0x14045D0C0
 CTexture* CMap::LoadTerrainTexture(const char* fileName, uint32_t flags) {
     int32_t shaderModel = g_theGxDevicePtr->m_caps.m_shaderModel;
     int32_t solid = g_theGxDevicePtr->m_caps.m_texTarget[1] && (shaderModel >= 4 || shaderModel == 2);

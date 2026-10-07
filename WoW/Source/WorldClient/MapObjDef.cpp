@@ -16,7 +16,7 @@ void CMapObjDefGroup::WaterDestroy() {
     }
 }
 
-// OFFSET: 0x0075EE50
+// OFFSET: 0x0075EE50/0x140442E60
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {
     return CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end);
 }
@@ -27,7 +27,7 @@ void CMapObjDefGroup::ExtendBounds(const CAaBox& box) {
     this->m_mapObjDef->m_bbox |= box;
 }
 
-// OFFSET: 0x0075FBE0
+// OFFSET: 0x0075FBE0/0x140443DC0
 void CMapObjDefGroup::ClearRefs() {
     CMapBaseObjLink* link = this->m_doodadLinks.Head();
 

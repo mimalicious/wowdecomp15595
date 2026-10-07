@@ -3,7 +3,7 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 
-// OFFSET: 0x00B130F0
+// OFFSET: 0x00B130F0/0x1408D8D90
 static void TransformAABoxInner(CAaBox& dst, const CAaBox& src, const float* row1, const float* row0, const float* row2) {
     float* bmin = &dst.b.x;
     float* bmax = &dst.t.x;
@@ -44,7 +44,7 @@ static void TransformAABoxInner(CAaBox& dst, const CAaBox& src, const float* row
     }
 }
 
-// OFFSET: 0x00B13210
+// OFFSET: 0x00B13210/0x1408D8E90
 void CWorldMath::TransformAABox(const C44Matrix& m, const CAaBox& src, CAaBox& dst) {
     dst.b.x = m.d0;
     dst.b.y = m.d1;
@@ -55,7 +55,7 @@ void CWorldMath::TransformAABox(const C44Matrix& m, const CAaBox& src, CAaBox& d
     TransformAABoxInner(dst, src, &m.b0, &m.a0, &m.c0);
 }
 
-// OFFSET: 0x00B13260
+// OFFSET: 0x00B13260/0x1408D8EE0
 bool CWorldMath::VectorIntersectAABox2(const CAaBox& box, const C3Vector& start, const C3Vector& end) {
     float dir[3];
     dir[0] = end.x - start.x;

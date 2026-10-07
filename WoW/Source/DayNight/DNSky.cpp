@@ -52,7 +52,7 @@ static void ApplyEclipse(CImVector& color) {
     }
 }
 
-// OFFSET: 0x006519C0
+// OFFSET: 0x006519C0/0x1402F1680
 void DayNight::DNSky::Initialize() {
     if (!DNSky::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
         DNSky::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "DNSky");

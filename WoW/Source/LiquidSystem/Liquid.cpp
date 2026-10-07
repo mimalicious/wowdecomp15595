@@ -1,4 +1,6 @@
 #include "WoW/Source/LiquidSystem/Liquid.h"
+#include "Engine/Source/Base/SIMD.h"
+#include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/ShaderEffect/DepthCache.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
@@ -69,7 +71,7 @@ static CImVector s_aboveWaterFogColor;
 static TSGrowableArray<Liquid::CONFIG_CHANGED_CALLBACK> s_configChangedCallbacks;
 
 // STATIC: 0x00E4EB30
-Liquid::SurfaceGen* Liquid::s_surfaceGen;
+WaterSurfaceGen* Liquid::s_surfaceGen;
 
 // STATIC: 0x00E4EB7C
 CDataAllocator Liquid::s_instanceAllocator(sizeof(Liquid::CInstance), 32);
@@ -118,67 +120,86 @@ void Liquid::GetAboveWaterFog(float& start, float& end, float& density, CImVecto
     color = s_aboveWaterFogColor;
 }
 
-// OFFSET: 0x0071AE20
+// PROVEN: c9f9370b IDENTICAL/NONE
+// OFFSET: 0x0071AE20/0x1403EF290
 uint32_t Liquid::GetWaterDetail() {
     return s_waterDetail;
 }
 
-// OFFSET: 0x0071AE30
+// PROVEN: 1b32f54a IDENTICAL/NONE
+// OFFSET: 0x0071AE30/0x1403EF2A0
 uint32_t Liquid::GetRippleDetail() {
     return s_rippleDetail;
 }
 
+// PROVEN: af6e86d2 IDENTICAL/NONE
 // OFFSET: 0x0071AE40
 uint32_t Liquid::GetReflectionMode() {
     return s_reflectionMode;
 }
 
+// PROVEN: 3dd13e28 IDENTICAL/NONE
 // OFFSET: 0x0071AE50
 uint32_t Liquid::GetReflectionDownscale() {
     return s_reflectionDownscale;
 }
 
-// OFFSET: 0x0071AE70
+// PROVEN: cfbb7e77 IDENTICAL/NONE
+// OFFSET: 0x0071AE60/0x1403EF2D0
+int32_t Liquid::WaterDetailNeedsDepthCache(uint32_t detail) {
+    return detail >= 2;
+}
+
+// PROVEN: 191c7132 IDENTICAL/NONE
+// OFFSET: 0x0071AE70/0x1403EF2E0
 int32_t Liquid::CameraSubmerged() {
     return s_cameraSubmerged;
 }
 
+// PROVEN: b651f811 IDENTICAL/NONE
 // OFFSET: 0x0071AE80
 void Liquid::SetCameraSubmerged(int32_t submerged) {
     s_cameraSubmerged = submerged;
 }
 
+// PROVEN: abc6bfc0 IDENTICAL/NONE
 // OFFSET: 0x0071AE90
 int32_t Liquid::NeedBackBuffer() {
     return s_needBackBuffer;
 }
 
-// OFFSET: 0x0071AEA0
+// PROVEN: 5f61cc36 IDENTICAL/NONE
+// OFFSET: 0x0071AEA0/0x1403EF310
 void Liquid::SetNeedBackBuffer(int32_t need) {
     s_needBackBuffer = need;
 }
 
-// OFFSET: 0x0071AEB0
+// PROVEN: ea9b8ac0 IDENTICAL/NONE
+// OFFSET: 0x0071AEB0/0x1403EF320
 int32_t Liquid::NeedDynDisplMap() {
     return s_needDynDisplMap;
 }
 
-// OFFSET: 0x0071AEC0
+// PROVEN: ed575564 IDENTICAL/NONE
+// OFFSET: 0x0071AEC0/0x1403EF330
 void Liquid::SetNeedDynDisplMap(int32_t need) {
     s_needDynDisplMap = need;
 }
 
-// OFFSET: 0x0071AED0
+// PROVEN: d45ce39a IDENTICAL/NONE
+// OFFSET: 0x0071AED0/0x1403EF340
 int32_t Liquid::GetShadersEnabled() {
     return s_shadersEnabled;
 }
 
-// OFFSET: 0x0071AEE0
+// PROVEN: 1383d3e2 IDENTICAL/NONE
+// OFFSET: 0x0071AEE0/0x1403EF350
 int32_t Liquid::UseCameraRelativeCoords() {
     return s_cameraRelativeCoords;
 }
 
-// OFFSET: 0x0071AEF0
+// PROVEN: f46b1b37 IDENTICAL/NONE
+// OFFSET: 0x0071AEF0/0x1403EF360
 float Liquid::WorldCoordScale() {
     return s_worldCoordScale;
 }
@@ -208,17 +229,18 @@ void Liquid::LinkToAsyncHead(uint32_t liquidType) {
     material->LinkToAsyncHead(Liquid::CSettingsBank::GetSettings(liquidType));
 }
 
-// OFFSET: 0x0071AF90
+// OFFSET: 0x0071AF90/0x1403EF420
 int32_t Liquid::IsTransparent(uint32_t liquidType) {
     return Liquid::CSettingsBank::GetSettings(liquidType)->m_transparent;
 }
 
-// OFFSET: 0x0071AFB0
+// PROVEN: b9bf9c00 IDENTICAL/NONE
+// OFFSET: 0x0071AFB0/0x1403EF440
 void Liquid::PurgeMaterialBank() {
     Liquid::CMaterialBank::Purge();
 }
 
-// OFFSET: 0x0071AFC0
+// OFFSET: 0x0071AFC0/0x1403EF510
 uint32_t Liquid::ValidateWaterDetail(uint32_t detail) {
     if (!detail) {
         return 0;
@@ -253,7 +275,7 @@ uint32_t Liquid::ValidateWaterDetail(uint32_t detail) {
     return device->m_caps.m_texTarget[GxTex_Volume] != 0 ? 0 : 8;
 }
 
-// OFFSET: 0x0071B050
+// OFFSET: 0x0071B050/0x1403EF5B0
 int32_t Liquid::SetWaterDetail(uint32_t detail) {
     if (Liquid::ValidateWaterDetail(detail)) {
         return 0;
@@ -276,7 +298,8 @@ int32_t Liquid::SetWaterDetail(uint32_t detail) {
     return 1;
 }
 
-// OFFSET: 0x0071B0C0
+// PROVEN: a2627f67 IDENTICAL/NONE
+// OFFSET: 0x0071B0C0/0x1403EF630
 uint32_t Liquid::ValidateRippleDetail(uint32_t detail) {
     if (!detail) {
         return detail;
@@ -293,7 +316,7 @@ uint32_t Liquid::ValidateRippleDetail(uint32_t detail) {
     return g_theGxDevicePtr->m_caps.m_texFmt[GxTex_Gr1616F] != 1 ? 8 : 0;
 }
 
-// OFFSET: 0x0071B100
+// OFFSET: 0x0071B100/0x1403EF670
 int32_t Liquid::SetRippleDetail(uint32_t detail) {
     if (detail && (detail > 2 || g_theGxDevicePtr->m_caps.m_shaderModel < 5 || g_theGxDevicePtr->m_caps.m_texFmt[GxTex_Gr1616F] != 1)) {
         return 0;
@@ -305,7 +328,8 @@ int32_t Liquid::SetRippleDetail(uint32_t detail) {
     return 1;
 }
 
-// OFFSET: 0x0071B150
+// PROVEN: c74a57a9 IDENTICAL/NONE
+// OFFSET: 0x0071B150/0x1403EF6C0
 uint32_t Liquid::ValidateReflectionMode(uint32_t mode) {
     if (!mode) {
         return mode;
@@ -318,7 +342,7 @@ uint32_t Liquid::ValidateReflectionMode(uint32_t mode) {
     return g_theGxDevicePtr->m_caps.m_shaderModel >= 5 ? 0 : 0x80;
 }
 
-// OFFSET: 0x0071B190
+// OFFSET: 0x0071B190/0x1403EF6F0
 int32_t Liquid::SetReflectionMode(uint32_t mode) {
     if (mode && (mode > 3 || g_theGxDevicePtr->m_caps.m_shaderModel < 5)) {
         return 0;
@@ -330,7 +354,8 @@ int32_t Liquid::SetReflectionMode(uint32_t mode) {
     return 1;
 }
 
-// OFFSET: 0x0071B1D0
+// PROVEN: a3b4a00d IDENTICAL/NONE
+// OFFSET: 0x0071B1D0/0x1403EF730
 uint32_t Liquid::ValidateReflectionDownscale(uint32_t downscale) {
     if (!downscale) {
         return downscale;
@@ -343,7 +368,7 @@ uint32_t Liquid::ValidateReflectionDownscale(uint32_t downscale) {
     return g_theGxDevicePtr->m_caps.m_texTarget[GxTex_NonPow2] != 0 ? 0 : 8;
 }
 
-// OFFSET: 0x0071B200
+// OFFSET: 0x0071B200/0x1403EF760
 int32_t Liquid::SetReflectionDownscale(uint32_t downscale) {
     if (downscale && (downscale > 4 || !g_theGxDevicePtr->m_caps.m_texTarget[GxTex_NonPow2])) {
         return 0;
@@ -355,7 +380,7 @@ int32_t Liquid::SetReflectionDownscale(uint32_t downscale) {
     return 1;
 }
 
-// OFFSET: 0x0071B240
+// OFFSET: 0x0071B240/0x1403EF7A0
 int32_t Liquid::Initialize(int32_t cameraRelativeCoords, float worldCoordScale) {
     s_cameraRelativeCoords = cameraRelativeCoords;
     s_worldCoordScale = worldCoordScale;
@@ -414,7 +439,7 @@ Liquid::CInstance* Liquid::CreateInstance(uint32_t a1, uint32_t liquidType, IGeo
 
     Object* object = Liquid::RegisterLiquidObject(a1, liquidType, rec->m_materialID);
 
-    if (object->m_noReflection && object->m_refCount == 1 && object->m_reflectionType == 1) {
+    if (object->m_objectId && object->m_refCount == 1 && object->m_reflectionType == 1) {
         object->SetReflectionPlane(factory->GetHeight());
     }
 
@@ -442,35 +467,35 @@ void Liquid::RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback) {
 
 // OFFSET: 0x0071B490
 void Liquid::DestroySurfaceGen() {
-    SurfaceGen* surfaceGen = s_surfaceGen;
+    WaterSurfaceGen* surfaceGen = s_surfaceGen;
 
     if (surfaceGen) {
-        surfaceGen->~SurfaceGen();
+        surfaceGen->~WaterSurfaceGen();
         SMemFree(surfaceGen, "delete", -1, 0);
     }
 
     s_surfaceGen = NULL;
 }
 
-// OFFSET: 0x00401000
+// PROVEN: 86e54946 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void Liquid::UpdateSurfaceGen(uint32_t time) {
 }
 
-// OFFSET: 0x0071D9A0
-Liquid::SurfaceGen::~SurfaceGen() {
-    this->Clear();
-}
 
-// OFFSET: 0x00401000
+// PROVEN: 9a41ca3e IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void Liquid::CInstance::Initialize() {
 }
 
+// PROVEN: 90ee0c9d IDENTICAL/NONE
 // OFFSET: 0x0071BDF0
 void Liquid::CInstance::AddRef() {
     this->m_refCount++;
 }
 
-// OFFSET: 0x0071BE00
+// PROVEN: 259e5a12 IDENTICAL/NONE
+// OFFSET: 0x0071BE00/0x1403F0B50
 void Liquid::CInstance::Purge() {
     this->m_geomFactory->Purge();
 }
@@ -500,7 +525,7 @@ Liquid::CInstance* Liquid::CInstance::Create() {
     return Liquid::s_instanceAllocator.New<Liquid::CInstance>(0);
 }
 
-// OFFSET: 0x0071BF10
+// OFFSET: 0x0071BF10/0x1403F0C80
 void Liquid::CInstance::Release() {
     if (this->m_refCount-- == 1) {
         this->m_geomFactory->Release();
@@ -508,4 +533,40 @@ void Liquid::CInstance::Release() {
         Liquid::UnregisterLiquidObject(this->m_object);
         Liquid::s_instanceAllocator.PutData(this, NULL, 0);
     }
+}
+
+// PROVEN: 02c0d807 IDENTICAL/NONE
+// OFFSET: 0x0071D8D0
+void WaterSurfaceGen::Release() {
+    if (this->unk_0028) {
+        SMemFree(this->unk_0028, "delete[]", -1, 0);
+    }
+
+    SIMD::FreeA16(this->m_alignedBuffers[0]);
+    SIMD::FreeA16(this->m_alignedBuffers[1]);
+    SIMD::FreeA16(this->m_alignedBuffers[2]);
+    SIMD::FreeA16(this->m_alignedBuffers[3]);
+    SIMD::FreeA16(this->m_alignedBuffers[4]);
+
+    if (this->unk_0020) {
+        SMemFree(this->unk_0020, "delete[]", -1, 0);
+    }
+
+    if (this->unk_0024) {
+        SMemFree(this->unk_0024, "delete[]", -1, 0);
+    }
+
+    this->m_indices.Clear();
+
+    if (this->m_texture) {
+        TextureRelease(this->m_texture);
+    }
+
+    this->m_texture = NULL;
+}
+
+// PROVEN: a59e00a4 IDENTICAL/NONE
+// OFFSET: 0x0071D9A0
+WaterSurfaceGen::~WaterSurfaceGen() {
+    this->Release();
 }

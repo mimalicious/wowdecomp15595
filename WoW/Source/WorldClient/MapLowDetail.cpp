@@ -45,7 +45,8 @@ CMapAreaLow* CMapLowDetail::CreateOcean(int32_t x, int32_t y) {
     return area;
 }
 
-// OFFSET: 0x00797F90
+// PROVEN: 218a44ed IDENTICAL/NONE
+// OFFSET: 0x00797F90/0x14048B980
 void CMapLowDetail::Purge() {
     for (int32_t y = 0; y < 64; y++) {
         for (int32_t x = 0; x < 64; x++) {
@@ -58,7 +59,7 @@ void CMapLowDetail::Purge() {
     }
 }
 
-// OFFSET: 0x00798250
+// OFFSET: 0x00798250/0x14048BC80
 int32_t CMapLowDetail::Load(CMap* map, const char* mapPath, const char* mapName) {
     this->m_map = map;
     this->m_worldMap = map->m_worldMap;
@@ -199,7 +200,7 @@ int32_t CMapLowDetail::Load(CMap* map, const char* mapPath, const char* mapName)
     return 1;
 }
 
-// OFFSET: 0x00798710
+// OFFSET: 0x00798710/0x14048C240
 void CMapLowDetail::Unload() {
     for (int32_t y = 0; y < 64; y++) {
         for (int32_t x = 0; x < 64; x++) {

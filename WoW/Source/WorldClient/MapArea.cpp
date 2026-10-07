@@ -123,26 +123,29 @@ static int32_t CanBatchChunks(CMapChunk** chunks, uint32_t mask, int32_t multiPa
     return 1;
 }
 
-// OFFSET: 0x00401000
+// PROVEN: 2c619432 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapArea::Initialize() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: eb5495bb IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapArea::Destroy() {
 }
 
+// PROVEN: 452c9edf IDENTICAL/NONE
 // OFFSET: 0x00847950
 void CMapArea::Enable(int32_t enable) {
 }
 
-// OFFSET: 0x007865B0
+// OFFSET: 0x007865B0/0x140475720
 static void AsyncCancelCallback(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     CMap::FreeRawAreaData(buffer);
 }
 
-// OFFSET: 0x00786870
+// OFFSET: 0x00786870/0x140475B40
 void CMapArea::PurgeXXX() {
     CMap::CMapAreaTableEntry* entry = this->m_map->m_areaTable.Get(this->m_indexX, this->m_indexY);
     entry->m_flags &= ~0x2u;
@@ -184,6 +187,7 @@ void CMapArea::PurgeXXX() {
     this->m_textures.SetCount(0);
 }
 
+// PROVEN: 85663c4a IDENTICAL/NONE
 // OFFSET: 0x007869A0
 void CMapArea::PurgeChunk(CMapChunk* chunk) {
     this->m_chunks[16 * chunk->m_indexY + chunk->m_indexX] = NULL;
@@ -202,7 +206,7 @@ int32_t CMapArea::IsLoading() {
     return 0;
 }
 
-// OFFSET: 0x00796940
+// OFFSET: 0x00796940/0x140489AE0
 void CMapArea::ProcessIffChunks(int32_t fileIndex, uint32_t* data, int32_t size) {
     uint32_t chunkOffset = 0;
 
@@ -280,7 +284,7 @@ void CMapArea::ProcessIffChunks(int32_t fileIndex, uint32_t* data, int32_t size)
     }
 }
 
-// OFFSET: 0x00796AF0
+// OFFSET: 0x00796AF0/0x140489D10
 void CMapArea::AsyncFailedCallback(CAsyncObject* object) {
     CMapArea* area = static_cast<CMapArea*>(object->m_userArg);
     uint32_t index = 0;
@@ -397,7 +401,7 @@ void CMapArea::Update(const CiRect& rect) {
     }
 }
 
-// OFFSET: 0x00797540
+// OFFSET: 0x00797540/0x14048AA10
 void CMapArea::CreateMapObjDefs() {
     C3Vector offset(17066.666f, 17066.666f, 0.0f);
 
@@ -415,7 +419,7 @@ void CMapArea::CreateMapObjDefs() {
     }
 }
 
-// OFFSET: 0x007976F0
+// OFFSET: 0x007976F0/0x14048AD80
 CMapArea::~CMapArea() {
     for (uint32_t i = 0; i < 3; i++) {
         if (this->m_buffers[i]) {
@@ -447,7 +451,7 @@ CMapAreaTexture::CMapAreaTexture() {
     this->m_texture = NULL;
 }
 
-// OFFSET: 0x00797860
+// OFFSET: 0x00797860/0x14048AF80
 void CMapArea::LoadTextures() {
     const char* names = this->m_textureNames;
     uint32_t offset = 0;
@@ -527,7 +531,7 @@ CMapArea::CMapArea() {
     this->m_distSq = 0.0f;
 }
 
-// OFFSET: 0x00797BA0
+// OFFSET: 0x00797BA0/0x14048B3D0
 void CMapArea::Create() {
     for (uint32_t i = 0; i < 3; i++) {
         uint8_t* buffer = this->m_buffers[i];
@@ -550,7 +554,7 @@ void CMapArea::Create() {
     this->CreateMapObjDefs();
 }
 
-// OFFSET: 0x00797C40
+// OFFSET: 0x00797C40/0x14048B4C0
 void CMapArea::AsyncLoadCallback(CAsyncObject* object) {
     CMapArea* area = static_cast<CMapArea*>(object->m_userArg);
     uint32_t index = 0;
@@ -586,6 +590,7 @@ void CMapArea::Load(const char* fileName) {
     this->m_numFiles++;
 }
 
+// PROVEN: 4ac5fdf4 IDENTICAL/NONE
 // OFFSET: 0x007968D0
 void CMapArea::InitBounds() {
     float posX = this->m_posX;

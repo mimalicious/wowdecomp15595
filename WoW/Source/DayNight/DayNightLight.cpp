@@ -301,7 +301,7 @@ void DayNight::BlendOutputs(CurrentLight& out, const CurrentLight& in, float t) 
     out.m_cloudWeight = t;
 }
 
-// OFFSET: 0x0064B8C0
+// OFFSET: 0x0064B8C0/0x1402EB000
 CImVector* DayNight::CalcIndividualColorFromDBRec(CImVector* out, int32_t time, const LightParamsRec* params, int32_t band) {
     const LightIntBandRec* rec = g_lightIntBandDB.GetRecord(band + 18 * params->m_id - 17);
     return DayNight::CalcIndividualColorFromDBRec(out, rec, time);

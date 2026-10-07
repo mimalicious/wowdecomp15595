@@ -32,8 +32,6 @@ static C3Vector s_camPos;
 
 // INLINED
 Liquid::CRenderer::CRenderer(uint32_t isReflection) {
-    this->m_sorted[0] = 0;
-    this->m_sorted[1] = 0;
     this->m_isReflection = isReflection;
 }
 
@@ -42,6 +40,7 @@ void Liquid::RendererValidate() {
     s_drawStamp += 2;
 }
 
+// PROVEN: 705f4f0f IDENTICAL/NONE
 // OFFSET: 0x00B3C260
 void Liquid::SetCamPos(const C3Vector& pos) {
     s_camPos = pos;
@@ -62,6 +61,7 @@ float Liquid::GetClosestReflectionHeight() {
     return 0.0f;
 }
 
+// PROVEN: 3bb558e0 IDENTICAL/NONE
 // OFFSET: 0x00B3C360
 int32_t Liquid::CRenderer::CompareOpaque(const void* a, const void* b) {
     const CInstance* l = *static_cast<CInstance* const*>(a);
@@ -110,6 +110,7 @@ int32_t Liquid::CRenderer::CompareOpaque(const void* a, const void* b) {
     return 0;
 }
 
+// PROVEN: 2ebd9172 IDENTICAL/NONE
 // OFFSET: 0x00B3C3D0
 int32_t Liquid::CRenderer::CompareTransparent(const void* a, const void* b) {
     const CInstance* l = *static_cast<CInstance* const*>(a);
@@ -170,6 +171,7 @@ int32_t Liquid::HasRealReflection() {
     return s_reflectionRenderer->m_instances[0].Count() + s_reflectionRenderer->m_instances[1].Count() && real;
 }
 
+// PROVEN: 3d910c8b IDENTICAL/NONE
 // OFFSET: 0x00B3C4B0
 Liquid::CRenderer::~CRenderer() {
 }
@@ -193,7 +195,8 @@ void Liquid::CRenderer::Draw(CInstance* instance) {
     instance->m_material->OnAddToScene();
 }
 
-// OFFSET: 0x00B3C5C0
+// PROVEN: 6eb60f5a IDENTICAL/NONE
+// OFFSET: 0x00B3C5C0/0x140909580
 void Liquid::RendererInit() {
     void* mem = SMemAlloc(sizeof(CRenderer), __FILE__, __LINE__, 0);
     s_renderer = mem ? new (mem) CRenderer(0) : NULL;
@@ -235,6 +238,7 @@ void Liquid::RendererDraw(CInstance* instance) {
     s_renderer->Draw(instance);
 }
 
+// PROVEN: 47492e71 IDENTICAL/NONE
 // OFFSET: 0x00B3C750
 void Liquid::RendererDestroy() {
     CRenderer* renderer = s_renderer;
@@ -360,6 +364,7 @@ void Liquid::CRenderer::Flush(uint32_t time, const C3Vector& camPos, uint32_t pa
     }
 }
 
+// PROVEN: dd0bdcfc IDENTICAL/NONE
 // OFFSET: 0x00B3CCC0
 void Liquid::RendererFlush(uint32_t time, const C3Vector& camPos, uint32_t pass) {
     s_renderer->Flush(time, camPos, pass);

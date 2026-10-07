@@ -132,12 +132,13 @@ void CWorldParam::SetDefaults(OPTION_PAGE page) {
     }
 }
 
+// PROVEN: cb6b2cea IDENTICAL/NONE
 // OFFSET: 0x0076B610
 void CWorldParam::Destroy() {
     RemoveConsoleDeviceDefaultCallback(CWorldParam::SetDefaults);
 }
 
-// OFFSET: 0x0076C130
+// OFFSET: 0x0076C130/0x140454240
 uint32_t CWorldParam::ValidateTextureFilteringMode(uint32_t mode) {
     if (mode <= 1) {
         return 0;

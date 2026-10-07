@@ -54,11 +54,12 @@ CSortEntry::CSortEntry() {
     this->m_doodadDefHead = -1;
 }
 
-// OFFSET: 0x0079A410
+// OFFSET: 0x0079A410/0x14048E8F0
 CSortTable::~CSortTable() {
 }
 
-// OFFSET: 0x0079A4F0
+// PROVEN: 11cda42e IDENTICAL/NONE
+// OFFSET: 0x0079A4F0/0x14048EA40
 CSortTable::CSortTable() {
     this->m_entries.m_chunk = 16;
     this->m_doodadDefs.m_chunk = 256;
@@ -87,7 +88,8 @@ void CSortTable::AddDoodadDef(CMapDoodadDef* doodadDef, int32_t entry) {
     this->m_entries.m_data[entry].m_doodadDefHead = this->m_doodadDefs.Count() - 1;
 }
 
-// OFFSET: 0x00408540
+// PROVEN: e66dcbd7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00408540/0x14000A870
 void CSortTable::Finish() {
     this->m_doodadDefs.m_count = 0;
 }

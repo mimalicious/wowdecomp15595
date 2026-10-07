@@ -11,7 +11,7 @@
 // STATIC: 0x00D040A0
 static TSExplicitList<CMapChunkBufList, offsetof(CMapChunkBufList, m_link)> s_freeLists;
 
-// OFFSET: 0x00796260
+// OFFSET: 0x00796260/0x1404891F0
 CMapChunkBuf* CMapChunkBuf::CreateBuf(int32_t vertexCount, int32_t indexCount, int32_t vertexSize) {
     uint32_t vertexBytes = vertexSize * vertexCount;
     CMapChunkBuf* buf = CMap::AllocChunkBuf();
@@ -31,7 +31,8 @@ CMapChunkBuf* CMapChunkBuf::CreateBuf(int32_t vertexCount, int32_t indexCount, i
     return buf;
 }
 
-// OFFSET: 0x00796320
+// PROVEN: 492414c0 IDENTICAL/NONE
+// OFFSET: 0x00796320/0x140489310
 int32_t CMapChunkBuf::Valid() const {
     if (!this->m_vertexBuf || !this->m_vertexBuf->unk_001C || !this->m_vertexBuf->unk_001D) {
         return 0;
@@ -44,7 +45,7 @@ int32_t CMapChunkBuf::Valid() const {
     return 1;
 }
 
-// OFFSET: 0x00796350
+// OFFSET: 0x00796350/0x140489350
 CMapChunkBuf* CMapChunkBuf::Alloc(int32_t vertexCount, int32_t indexCount, EGxVertexBufferFormat format) {
     uint32_t vertexSize = GxVertexSize(format);
     CMapChunkBufList* list;
@@ -66,6 +67,7 @@ CMapChunkBuf* CMapChunkBuf::Alloc(int32_t vertexCount, int32_t indexCount, EGxVe
     return buf;
 }
 
+// PROVEN: b7464487 IDENTICAL/NONE
 // OFFSET: 0x00796410
 CMapChunkBuf::CMapChunkBuf() {
     this->m_lastUsedFrame = 0;
@@ -108,7 +110,7 @@ CMapChunkBuf::~CMapChunkBuf() {
 CMapChunkBufList::~CMapChunkBufList() {
 }
 
-// OFFSET: 0x00796590
+// OFFSET: 0x00796590/0x140489630
 void CMapChunkBuf::Free(CMapChunkBuf* buf) {
     CMapChunkBufList* list;
 
@@ -171,6 +173,7 @@ void CMapChunkBuf::Destroy() {
     }
 }
 
-// OFFSET: 0x00401000
+// PROVEN: c6a6a7a3 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CMapChunkBuf::Initialize() {
 }

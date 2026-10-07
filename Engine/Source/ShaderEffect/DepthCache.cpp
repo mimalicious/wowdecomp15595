@@ -55,7 +55,7 @@ bool DepthCache::IsValid() {
     return s_depthMode != DM_Unknown;
 }
 
-// OFFSET: 0x00A2F860
+// OFFSET: 0x00A2F860/0x1407D9550
 CTexture* DepthCache::GetDepthTex() {
     return s_depthTex;
 }
@@ -240,12 +240,12 @@ void DepthCache::Validate() {
     }
 }
 
-// OFFSET: 0x00A2F890
+// OFFSET: 0x00A2F890/0x1407D9590
 int32_t DepthCache::DepthRangeDumpEnabled() {
     return s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
 }
 
-// OFFSET: 0x00A2FD00
+// OFFSET: 0x00A2FD00/0x1407D9AD0
 void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
     int32_t enabled = s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
     int32_t enable = rangeMin >= 0.0f || rangeMax >= 0.0f;

@@ -16,8 +16,14 @@
 // STATIC: 0x00BC705C
 static const float s_displMapScale[2] = { 1.0f, 1.0f };
 
+// STATIC: 0x00BC7064
+static const float s_perturbAmplitudeScale[2] = { 1.25f, 0.25f };
+
 // STATIC: 0x00D00620
 static uint16_t s_quadIndices[4] = { 0, 3, 1, 2 };
+
+// STATIC: 0x00D00628
+static uint16_t s_quadTriIndices[6] = { 0, 2, 1, 1, 2, 3 };
 
 // STATIC: 0x00E4E908
 uint8_t Liquid::s_wmoWaterTexValid;
@@ -180,7 +186,7 @@ static void ReserveTexBuffer() {
     s_texBuffer.m_count = 2048;
 }
 
-// OFFSET: 0x007172F0
+// OFFSET: 0x007172F0/0x1403EA8A0
 static void NoiseVolTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
         texels = userArg;
@@ -188,6 +194,7 @@ static void NoiseVolTexCallback(EGxTexCommand command, uint32_t width, uint32_t 
     }
 }
 
+// PROVEN: 4081f755 IDENTICAL/NONE
 // OFFSET: 0x00717320
 static CTexture* CreateBlurBuffer(const char* name) {
     CGxTexFlags flags;
@@ -195,7 +202,8 @@ static CTexture* CreateBlurBuffer(const char* name) {
     return TextureCreate(512, 512, GxTex_Argb8888, GxTex_Argb8888, flags, NULL, GxTexNullUserFunc, name, 0);
 }
 
-// OFFSET: 0x00717360
+// PROVEN: 6981411d IDENTICAL/NONE
+// OFFSET: 0x00717360/0x1403EA8D0
 int32_t Liquid::HasDynamicDisplMap() {
     if ((Liquid::s_displMapCount > 1 && (!Liquid::s_displMaps[2] || !Liquid::s_displMaps[3])) || !Liquid::s_displMaps[0] || !Liquid::s_displMaps[1]) {
         return 0;
@@ -204,17 +212,20 @@ int32_t Liquid::HasDynamicDisplMap() {
     return 1;
 }
 
-// OFFSET: 0x007173A0
+// PROVEN: ebead9d9 IDENTICAL/NONE
+// OFFSET: 0x007173A0/0x1403EA910
 uint32_t Liquid::GetDynamicDisplMapCnt() {
     return Liquid::s_displMapCount;
 }
 
-// OFFSET: 0x007173B0
+// PROVEN: 66674763 IDENTICAL/NONE
+// OFFSET: 0x007173B0/0x1403EA920
 CGxTex* Liquid::GetDynamicDisplMap(uint32_t index) {
     return TextureGetGxTex(Liquid::s_displMaps[s_displMapCurrent[index]]);
 }
 
-// OFFSET: 0x007173D0
+// PROVEN: aaf7a655 IDENTICAL/NONE
+// OFFSET: 0x007173D0/0x1403EA940
 float Liquid::GetDynamicDisplMapInterpolation(uint32_t index) {
     return s_displMapInterpolation[index];
 }
@@ -268,6 +279,7 @@ void Liquid::UnCacheProceduralTextures() {
     }
 }
 
+// PROVEN: 970ca42d IDENTICAL/NONE
 // OFFSET: 0x00717520
 void Liquid::GrabBackBuffer() {
     if (!Liquid::NeedBackBuffer() || !s_backBuffer) {
@@ -281,58 +293,68 @@ void Liquid::GrabBackBuffer() {
     }
 }
 
-// OFFSET: 0x00717560
+// PROVEN: a5e4295c IDENTICAL/NONE
+// OFFSET: 0x00717560/0x1403EAAE0
 CTexture* Liquid::GetBackBuffer() {
     return s_backBuffer;
 }
 
+// PROVEN: ad67666a IDENTICAL/NONE
 // OFFSET: 0x00717570
 CTexture* Liquid::GetBlurredBackBuffer() {
     return s_blurredBackBuffer;
 }
 
+// PROVEN: 6545f23d IDENTICAL/NONE
 // OFFSET: 0x00717580
 CGxFrameBuffer* Liquid::GetBlurredBackBufferFB() {
     return s_blurredBackBufferFB;
 }
 
+// PROVEN: 50c22a2c IDENTICAL/NONE
 // OFFSET: 0x00717590
 CTexture* Liquid::GetRealReflectionBuffer() {
     return s_realReflectionBuffer;
 }
 
-// OFFSET: 0x007175A0
+// PROVEN: d308aadb IDENTICAL/NONE
+// OFFSET: 0x007175A0/0x1403EAAF0
 CTexture* Liquid::GetBlurredReflectionBuffer() {
     return s_blurredReflectionBuffer;
 }
 
+// PROVEN: e2cf3e9f IDENTICAL/NONE
 // OFFSET: 0x007175B0
 CGxFrameBuffer* Liquid::GetBlurredReflectionBufferFB() {
     return s_blurredReflectionFB;
 }
 
-// OFFSET: 0x007175C0
+// PROVEN: 47212a35 IDENTICAL/NONE
+// OFFSET: 0x007175C0/0x1403EAB40
 CTexture* Liquid::GetFakeReflectionBuffer() {
     return s_fakeReflectionBuffer;
 }
 
+// PROVEN: 91d99b69 IDENTICAL/NONE
 // OFFSET: 0x007175D0
 CGxFrameBuffer* Liquid::GetRealReflectionFB() {
     return s_realReflectionFB;
 }
 
+// PROVEN: 0d567191 IDENTICAL/NONE
 // OFFSET: 0x007175E0
 CGxFrameBuffer* Liquid::GetFakeReflectionFB() {
     return s_fakeReflectionFB;
 }
 
-// OFFSET: 0x007175F0
+// PROVEN: 233ca5a9 IDENTICAL/NONE
+// OFFSET: 0x007175F0/0x1403EAB70
 void Liquid::GetDisplMapInfoRaw(uint32_t index, C3Vector& pos, C2Vector& size) {
     pos = s_displMapRawPos[index];
     size = s_displMapSize[index];
 }
 
-// OFFSET: 0x00717770
+// OFFSET: 0x00717770/0x1403EAD90
 static CTexture* CreateBackBuffer() {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_theGxDevicePtr->CapsWindowSize(rect);
@@ -431,7 +453,7 @@ void Liquid::ClearPerturbatorCache() {
     s_perturbationMeshAllocator.Clear(typeid(Liquid::DisplMapPerturbationMesh).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: 0x00717C10
+// OFFSET: 0x00717C10/0x1403EB300
 C2iVector Liquid::GetDisplMapTexSize(uint32_t index) {
     C2iVector size;
     size.x = s_displMapTexSize[index];
@@ -561,7 +583,7 @@ static void ExtWaterDepthTexCallback(EGxTexCommand command, uint32_t width, uint
     texels = buffer;
 }
 
-// OFFSET: 0x00718100
+// OFFSET: 0x00718100/0x1403EBBC0
 static CTexture* CreateNoiseVolTex() {
     CGxTexFlags flags;
     flags.m_wrapU = 1;
@@ -605,7 +627,7 @@ Liquid::DisplMapPerturbation* Liquid::CreatePerturbator(EPertSurface surface, in
     return perturbation;
 }
 
-// OFFSET: 0x00718260
+// OFFSET: 0x00718260/0x1403EBDD0
 void Liquid::DestroyPerturbator(EPertSurface surface, DisplMapPerturbation* perturbation) {
     uint32_t index = Liquid::s_displMapCount - 1;
 
@@ -627,7 +649,7 @@ void Liquid::DestroyPerturbator(EPertSurface surface, DisplMapPerturbation* pert
 }
 
 // OFFSET: 0x00718300
-void Liquid::AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, uint32_t time) {
+void Liquid::AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, float amplitude) {
     uint32_t index = Liquid::s_displMapCount - 1;
 
     if (index >= static_cast<uint32_t>(surface)) {
@@ -647,19 +669,20 @@ void Liquid::AddPerturbation(EPertSurface surface, const C3Vector& pos, float ra
     Liquid::s_eventPerturbations[index].New(perturbation);
     perturbation->m_pos = pos;
     perturbation->m_radius = radius;
-    perturbation->m_time = time;
+    perturbation->m_amplitude = amplitude;
+    perturbation->m_period = 0;
 }
 
 // INLINED
 Liquid::DisplMapPerturbationMesh::DisplMapPerturbationMesh() {
-    this->unk_0040[0] = 0;
-    this->unk_0040[1] = 0;
+    this->m_vertexAlloc = 0;
+    this->m_vertexCount = 0;
     this->m_vertices = NULL;
-    this->unk_004C[0] = 0;
-    this->unk_004C[1] = 0;
-    this->unk_004C[2] = 0;
+    this->m_vertexChunk = 0;
+    this->m_indexAlloc = 0;
+    this->m_indexCount = 0;
     this->m_indices = NULL;
-    this->unk_005C[0] = 0;
+    this->m_indexChunk = 0;
 }
 
 // OFFSET: 0x007183A0
@@ -808,7 +831,7 @@ void Liquid::DestroyPerturbatorMesh(EPertSurface surface, DisplMapPerturbationMe
     }
 }
 
-// OFFSET: 0x00718A60
+// OFFSET: 0x00718A60/0x1403EC760
 void Liquid::ClearEventPerturbations() {
     for (uint32_t i = 0; i < Liquid::s_displMapCount; i++) {
         for (uint32_t j = 0; j < Liquid::s_eventPerturbations[i].Count(); j++) {
@@ -847,7 +870,398 @@ void Liquid::ClearEventPerturbations() {
     }
 }
 
-// OFFSET: 0x0071A0A0
+// OFFSET: 0x00718BB0/0x1403EC940
+void Liquid::ClearDisplMap() {
+    uint16_t indices[6] = { 0, 2, 1, 1, 2, 3 };
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(C3Vector), 4);
+    C3Vector* vertices = reinterpret_cast<C3Vector*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    vertices[0] = C3Vector(-1.0f, 1.0f, 0.0f);
+    vertices[1] = C3Vector(1.0f, 1.0f, 0.0f);
+    vertices[2] = C3Vector(-1.0f, -1.0f, 0.0f);
+    vertices[3] = C3Vector(1.0f, -1.0f, 0.0f);
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 6);
+    uint16_t* indexData = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+    memcpy(indexData, indices, sizeof(indices));
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_BlendingMode, 0);
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_P);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &Liquid::s_clearDisplMapVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &Liquid::s_clearDisplMapPS->m_permutes[0]);
+
+    for (uint32_t i = 0; i < 2 * Liquid::s_displMapCount; i++) {
+        CGxFrameBuffer* frameBuffer = Liquid::s_displMapFBs[i];
+        GxRsSet(GxRs_ScissorTest, 0);
+        g_theGxDevicePtr->FrameBufferSet(frameBuffer);
+
+        CGxBatch batch;
+        batch.m_primType = GxPrim_Triangles;
+        batch.m_start = 0;
+        batch.m_count = 6;
+        batch.m_minIndex = 0;
+        batch.m_maxIndex = 3;
+        g_theGxDevicePtr->Draw(batch);
+    }
+
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x00718FA0/0x1403ECDF0
+void Liquid::PerturbDisplMap(TSGrowableArray<DisplMapPerturbation*>& perturbations, uint32_t index, uint32_t time) {
+    uint32_t count = perturbations.Count();
+
+    if (!count) {
+        return;
+    }
+
+    CGxTex* perturbTex = TextureGetGxTex(Liquid::s_perturbTex);
+
+    if (!perturbTex) {
+        return;
+    }
+
+    float texSize = static_cast<float>(s_displMapTexSize[index]);
+    float texel = 1.0f / texSize;
+    float texelConst[4];
+    texelConst[0] = texel;
+    texelConst[1] = texel;
+    texelConst[2] = texel * 0.5f;
+    texelConst[3] = texelConst[2];
+
+    static uint32_t s_startTime = time;
+    uint32_t elapsed = time - s_startTime;
+
+    uint16_t quadIndices[6];
+    quadIndices[0] = 0;
+    quadIndices[3] = 1;
+    quadIndices[2] = 1;
+    quadIndices[1] = 2;
+    quadIndices[4] = 2;
+    quadIndices[5] = 3;
+
+    uint32_t vertexCount = 0;
+    uint32_t indexCount = 0;
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, 20, 4 * count);
+    float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 6 * count);
+    uint16_t* indices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+
+    for (uint32_t i = 0; i < count; i++) {
+        DisplMapPerturbation* perturbation = perturbations.m_data[i];
+        float amplitude = perturbation->m_amplitude;
+
+        if (fabs(amplitude) < 0.001f) {
+            continue;
+        }
+
+        float radiusY = perturbation->m_radius / s_displMapSize[index].y;
+        float radiusX = perturbation->m_radius / s_displMapSize[index].x;
+        float sizeY = floor(texSize * radiusY);
+        sizeY = sizeY >= 0.5f ? sizeY : 0.5f;
+        float sizeX = floor(texSize * radiusX);
+        sizeX = sizeX >= 0.5f ? sizeX : 0.5f;
+        sizeX = texel * sizeX;
+        sizeY = texel * sizeY;
+
+        float u = (perturbation->m_pos.x - s_displMapRawPos[index].x) / s_displMapSize[index].x;
+        float v = (perturbation->m_pos.y - s_displMapRawPos[index].y) / s_displMapSize[index].y;
+        u = floor(texSize * u) * texel;
+        v = floor(texSize * v) * texel;
+
+        if (u + sizeX < 0.0f || v + sizeY < 0.0f || u - sizeX > 1.0f || v - sizeY > 1.0f) {
+            continue;
+        }
+
+        if (g_theGxDevicePtr->m_caps.m_pixelCenterOnEdge) {
+            u = u - texelConst[2];
+            v = v - texelConst[3];
+        }
+
+        float y = (0.5f - v) * 2.0f;
+        float height = sizeY * 2.0f;
+        float x = (u - 0.5f) * 2.0f;
+        float width = sizeX * 2.0f;
+        float z = s_perturbAmplitudeScale[index] * amplitude;
+
+        if (z < -1.0f) {
+            z = -1.0f;
+        } else if (z >= 1.0f) {
+            z = 1.0f;
+        }
+
+        if (perturbation->m_period) {
+            z = static_cast<float>(sin(static_cast<double>(elapsed % perturbation->m_period) * 6.2831855f / static_cast<double>(perturbation->m_period))) * z;
+        }
+
+        vertices[0] = x - width;
+        vertices[1] = height + y;
+        vertices[2] = z;
+        vertices[3] = 0.0f;
+        vertices[4] = 0.0f;
+        vertices[5] = width + x;
+        vertices[6] = height + y;
+        vertices[7] = z;
+        vertices[8] = 1.0f;
+        vertices[9] = 0.0f;
+        vertices[10] = x - width;
+        vertices[11] = y - height;
+        vertices[12] = z;
+        vertices[13] = 0.0f;
+        vertices[14] = 1.0f;
+        vertices[15] = width + x;
+        vertices[16] = y - height;
+        vertices[17] = z;
+        vertices[18] = 1.0f;
+        vertices[19] = 1.0f;
+
+        for (uint32_t j = 0; j < 6; j++) {
+            indices[j] = static_cast<uint16_t>(vertexCount + quadIndices[j]);
+        }
+
+        vertices += 20;
+        indices += 6;
+        vertexCount += 4;
+        indexCount += 6;
+    }
+
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+
+    if (!vertexCount) {
+        return;
+    }
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_BlendingMode, 3);
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PT);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &Liquid::s_perturbDisplMapVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &Liquid::s_perturbDisplMapPS->m_permutes[0]);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, texelConst, 1);
+    g_theGxDevicePtr->RsSet(GxRs_Texture0, perturbTex);
+
+    CGxFrameBuffer* frameBuffer = Liquid::s_displMapFBs[s_displMapCurrent[index]];
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->FrameBufferSet(frameBuffer);
+
+    CGxBatch batch;
+    batch.m_minIndex = 0;
+    batch.m_count = indexCount;
+    batch.m_maxIndex = static_cast<uint16_t>(vertexCount - 1);
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    g_theGxDevicePtr->Draw(batch);
+
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x00719690/0x1403ED680
+void Liquid::PerturbDisplMapMesh(TSGrowableArray<DisplMapPerturbationMesh*>& meshes, uint32_t index, uint32_t time) {
+    uint32_t count = meshes.Count();
+
+    if (!count) {
+        return;
+    }
+
+    static uint32_t s_startTime = time;
+    uint32_t elapsed = time - s_startTime;
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_BlendingMode, 3);
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &Liquid::s_perturbDisplMapMeshVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &Liquid::s_perturbDisplMapMeshPS->m_permutes[0]);
+    GxFrameBufferSet(Liquid::s_displMapFBs[s_displMapCurrent[index]]);
+
+    uint32_t start = 0;
+
+    do {
+        uint32_t vertexCount = 0;
+        uint32_t indexCount = 0;
+        uint32_t end = start;
+
+        for (; end < count; end++) {
+            DisplMapPerturbationMesh* mesh = meshes.m_data[end];
+
+            if (0.001f > fabs(mesh->m_amplitude)) {
+                continue;
+            }
+
+            if (mesh->m_vertexCount + vertexCount >= 0x10000 || mesh->m_indexCount + indexCount >= 0x20000) {
+                break;
+            }
+
+            vertexCount += mesh->m_vertexCount;
+            indexCount += mesh->m_indexCount;
+        }
+
+        if (vertexCount) {
+            uint32_t baseVertex = 0;
+            uint32_t writtenIndices = 0;
+
+            CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(C3Vector), vertexCount);
+            float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(vertexBuf));
+            CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), indexCount);
+            uint16_t* indices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+
+            for (uint32_t i = start; i < end; i++) {
+                DisplMapPerturbationMesh* mesh = meshes.m_data[i];
+                float amplitude = mesh->m_amplitude;
+
+                if (fabs(amplitude) < 0.001f) {
+                    continue;
+                }
+
+                float z = s_perturbAmplitudeScale[index] * amplitude;
+
+                if (z < -1.0f) {
+                    z = -1.0f;
+                } else if (z >= 1.0f) {
+                    z = 1.0f;
+                }
+
+                if (mesh->m_period) {
+                    z = static_cast<float>(sin(static_cast<double>(elapsed % mesh->m_period) * 6.2831855f / static_cast<double>(mesh->m_period))) * z;
+                }
+
+                const C44Matrix& m = mesh->m_transform;
+
+                for (uint32_t k = 0; k < mesh->m_vertexCount; k++) {
+                    const C3Vector& p = mesh->m_vertices[k];
+                    float x = p.z * m.c0 + p.x * m.a0 + p.y * m.b0 + m.d0;
+                    float y = p.y * m.b1 + p.z * m.c1 + p.x * m.a1 + m.d1;
+                    vertices[0] = ((x - s_displMapRawPos[index].x) / s_displMapSize[index].x - 0.5f) * 2.0f;
+                    vertices[1] = (0.5f - (y - s_displMapRawPos[index].y) / s_displMapSize[index].y) * 2.0f;
+                    vertices[2] = z;
+                    vertices += 3;
+                }
+
+                for (uint32_t j = 0; j < mesh->m_indexCount; j++) {
+                    *indices++ = static_cast<uint16_t>(baseVertex + mesh->m_indices[j]);
+                }
+
+                baseVertex += mesh->m_vertexCount;
+                writtenIndices += mesh->m_indexCount;
+            }
+
+            g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+            vertexBuf->unk_001C = 1;
+            g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+            indexBuf->unk_001C = 1;
+            g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_P);
+            g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+
+            CGxBatch batch;
+            batch.m_count = writtenIndices;
+            batch.m_minIndex = 0;
+            batch.m_maxIndex = static_cast<uint16_t>(baseVertex - 1);
+            batch.m_primType = GxPrim_Triangles;
+            batch.m_start = 0;
+            g_theGxDevicePtr->Draw(batch);
+        }
+
+        start = end;
+    } while (start < count);
+
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x00719CC0/0x1403EDEE0
+void Liquid::PropagateDisplMap(uint32_t index) {
+    uint32_t previous = s_displMapCurrent[index];
+    uint32_t* current = &s_displMapCurrent[index];
+    *current = ((previous - 1) & 1) + 2 * index;
+
+    float dx = s_displMapPos[index].x - s_displMapRawPos[index].x;
+    float dy = s_displMapPos[index].y - s_displMapRawPos[index].y;
+
+    if (dy * dy + dx * dx >= 10000.0f) {
+        dx = 0.0f;
+        dy = 0.0f;
+    }
+
+    float texSize = static_cast<float>(s_displMapTexSize[index]);
+    s_displMapRawPos[index] = s_displMapPos[index];
+
+    float offset[4];
+    offset[0] = dx / s_displMapSize[index].x;
+    offset[1] = dy / s_displMapSize[index].y;
+    offset[2] = 0.0f;
+    offset[3] = 0.0f;
+
+    float inv = 1.0f / texSize;
+    float texel[4];
+    texel[0] = inv;
+    texel[1] = inv;
+    texel[2] = inv * 0.5f;
+    texel[3] = inv * 0.5f;
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(C3Vector), 4);
+    C3Vector* vertices = reinterpret_cast<C3Vector*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    vertices[0] = C3Vector(-1.0f, 1.0f, 0.0f);
+    vertices[1] = C3Vector(1.0f, 1.0f, 0.0f);
+    vertices[2] = C3Vector(-1.0f, -1.0f, 0.0f);
+    vertices[3] = C3Vector(1.0f, -1.0f, 0.0f);
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 6);
+    GxBufData(indexBuf, s_quadTriIndices, sizeof(s_quadTriIndices), 0);
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_P);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &Liquid::s_propagateDisplMapVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &Liquid::s_propagateDisplMapPS->m_permutes[0]);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, texel, 1);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 1, offset, 1);
+    g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(Liquid::s_displMaps[previous]));
+
+    CGxFrameBuffer* frameBuffer = Liquid::s_displMapFBs[*current];
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->FrameBufferSet(frameBuffer);
+
+    CGxBatch batch;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = 3;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = 6;
+    g_theGxDevicePtr->Draw(batch);
+
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x0071A0A0/0x1403EE340
 void Liquid::UpdateDisplMap(uint32_t time) {
     if (!Liquid::NeedDynDisplMap()) {
         Liquid::ClearEventPerturbations();
@@ -910,7 +1324,7 @@ void Liquid::UpdateDisplMap(uint32_t time) {
             count--;
             Liquid::PerturbDisplMap(Liquid::s_perturbations[i], i, time);
             Liquid::PerturbDisplMapMesh(Liquid::s_perturbationMeshes[i], i, time);
-            Liquid::PropagateDisplMap(count, i);
+            Liquid::PropagateDisplMap(i);
         }
     }
 
@@ -1080,7 +1494,7 @@ void Liquid::DestroyProceduralTextures(int32_t materials) {
     s_texBuffer.m_data = NULL;
 }
 
-// OFFSET: 0x0071A6C0
+// OFFSET: 0x0071A6C0/0x1403EEAD0
 void Liquid::CreateDynamicDisplacementMap() {
     Liquid::s_displMapCount = 1;
     s_displMapTexSize[0] = 1024;

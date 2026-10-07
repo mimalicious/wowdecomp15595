@@ -57,6 +57,7 @@ void DayNight::DNPlanet::Destroy() {
     }
 }
 
+// PROVEN: cca6bb27 IDENTICAL/NONE
 // OFFSET: 0x00650D10
 void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t& vertCount, uint32_t& indexCount) {
     static C3Vector s_verts[6] = {
@@ -225,7 +226,7 @@ void DayNight::DNPlanet::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00651910
+// OFFSET: 0x00651910/0x1402F15A0
 void DayNight::DNPlanet::Initialize(const char* fileName) {
     CStatus status;
     this->m_texture = TextureCreate(fileName, CGxTexFlags(), &status, 0, NULL, 2);

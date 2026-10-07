@@ -8,32 +8,36 @@
 // STATIC: 0x00E4EBCC
 Liquid::TEXTURE_LOAD_CALLBACK Liquid::s_textureLoadCallback;
 
+// PROVEN: 64d572f1 IDENTICAL/NONE
 // OFFSET: 0x0071C200
 Liquid::CMaterialSettings::~CMaterialSettings() {
 }
 
-// OFFSET: 0x0071C270
+// OFFSET: 0x0071C270/0x1403F1150
 Liquid::CMaterialSettings::CMaterialSettings() {
     *reinterpret_cast<uint32_t*>(&this->m_colors[0]) = 0;
     *reinterpret_cast<uint32_t*>(&this->m_colors[1]) = 0;
 }
 
-// OFFSET: 0x0071C820
+// PROVEN: feb09674 IDENTICAL/NONE
+// OFFSET: 0x0071C820/0x1403F1900
 void Liquid::CMaterialSettings::Initialize(uint32_t liquidType) {
     this->m_liquidType = liquidType;
 }
 
-// OFFSET: 0x0071C830
+// PROVEN: d923ddd5 IDENTICAL/NONE
+// OFFSET: 0x0071C830/0x1403F1910
 int32_t Liquid::CMaterialSettings::GetInt(uint32_t index) {
     return this->m_ints[index];
 }
 
-// OFFSET: 0x0071C850
+// PROVEN: 3be6f5c1 IDENTICAL/NONE
+// OFFSET: 0x0071C850/0x1403F1920
 float Liquid::CMaterialSettings::GetFloat(uint32_t index) {
     return this->m_floats[index];
 }
 
-// OFFSET: 0x0071C870
+// OFFSET: 0x0071C870/0x1403F1930
 void Liquid::CMaterialSettings::Destroy() {
     for (uint32_t i = 0; i < 6; i++) {
         for (uint32_t j = 0; j < this->m_textures[i].Count(); j++) {
@@ -50,7 +54,7 @@ void Liquid::CMaterialSettings::Destroy() {
     }
 }
 
-// OFFSET: 0x0071C8D0
+// OFFSET: 0x0071C8D0/0x1403F19D0
 int32_t Liquid::CMaterialSettings::IsAllLoaded(uint32_t index) {
     if (this->m_texturesReady[index]) {
         return 1;
@@ -86,7 +90,7 @@ int32_t Liquid::CMaterialSettings::IsAllLoaded(uint32_t index) {
     return ready;
 }
 
-// OFFSET: 0x0071C9E0
+// OFFSET: 0x0071C9E0/0x1403F1B20
 void Liquid::CMaterialSettings::InitTexture(uint32_t index) {
     this->m_texturesReady[index] = 0;
     const char* name = this->m_textureNames[index];
@@ -180,7 +184,7 @@ void Liquid::CMaterialSettings::InitTexture(uint32_t index) {
     }
 }
 
-// OFFSET: 0x0071CD00
+// OFFSET: 0x0071CD00/0x1403F1FA0
 CGxTex* Liquid::CMaterialSettings::GetTexture(uint32_t index, uint32_t period) {
     TSGrowableArray<CTexture*>* textures = &this->m_textures[index];
     uint32_t count = textures->Count();
@@ -214,7 +218,8 @@ CGxTex* Liquid::CMaterialSettings::GetTexture(uint32_t index, uint32_t period) {
     return TextureGetGxTex(textures->m_data[static_cast<int64_t>(t * static_cast<double>(count))]);
 }
 
-// OFFSET: 0x0071CE00
+// PROVEN: 95b2f6d3 IDENTICAL/NONE
+// OFFSET: 0x0071CE00/0x1403F2080
 void Liquid::CMaterialSettings::LinkToAsyncHead(uint32_t index) {
     TSGrowableArray<CTexture*>& textures = this->m_textures[index];
 

@@ -37,6 +37,7 @@ void CWorldMap::UpdateAllEnvironments() {
     }
 }
 
+// PROVEN: b4827ba5 IDENTICAL/NONE
 // OFFSET: 0x00774950
 void CWorldMap::UpdateLowDetailMapObjDefs() {
     for (uint32_t i = 0; i < 12; i++) {
@@ -691,7 +692,7 @@ void CWorldMap::UpdateStreaming() {
     CWorldMap::s_queryTag++;
 }
 
-// OFFSET: 0x0079D0A0
+// OFFSET: 0x0079D0A0/0x140491D30
 void CWorldMap::LocateViewer(const C3Vector& pos, int32_t& exterior, CMapChunk*& chunk, int32_t& interior, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]) {
     C3Vector start = pos;
     C3Vector end;
