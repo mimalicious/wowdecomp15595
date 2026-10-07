@@ -238,6 +238,9 @@ class CMap : public CMapBaseObj {
     void UpdateAreas(int32_t a2, int32_t a3);
     void PreUpdateAreas();
     CMapArea* PrepareArea(int32_t x, int32_t y);
+    void UpdateAreaDistances();
+    int32_t PreloadAreasExist(const CiRect& rect);
+    void PreloadUpdateMap(const CiRect& rect);
     void PreUpdateMap();
     void UpdateLowDetailMapObjDefs();
     void UpdateMap();

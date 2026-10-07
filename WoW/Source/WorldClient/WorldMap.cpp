@@ -286,8 +286,8 @@ void CWorldMap::UpdateEntity(CMapEntity* entity) {
 
     entity->unk_00DC = lighting;
 
-    if (entity->unk_008C) {
-        SE3::EmitterManagerSendMessage_Set3DPosition(entity->unk_008C, entity->m_position);
+    if (entity->m_soundEmitter) {
+        SE3::EmitterManagerSendMessage_Set3DPosition(entity->m_soundEmitter, entity->m_position);
     }
 }
 

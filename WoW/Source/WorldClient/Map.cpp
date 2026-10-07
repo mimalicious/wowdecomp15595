@@ -358,6 +358,38 @@ CMap::CMap() {
     this->m_mapId = -1;
 }
 
+// OFFSET: 0x00761520/0x1404460A0
+void CMap::SnapBaseObjToSubChunk(CMapBaseObj* baseObj, C3Vector& pos, float facing) {
+    C44Matrix rotation = C44Matrix::RotationAroundZ(facing);
+    CAaBox bounds;
+    bounds.b = C3Vector(0.0f, 0.0f, 0.0f);
+    bounds.t = C3Vector(0.0f, 0.0f, 0.0f);
+
+    if (baseObj->m_type & MapBaseObj_Type_MapObjDef) {
+        static_cast<CMapObjDef*>(baseObj)->m_mapObj->GetBounds(bounds);
+    } else {
+        bounds = static_cast<CMapStaticEntity*>(baseObj)->m_model->GetBoundingBox();
+    }
+
+    float centerX = (bounds.t.x + bounds.b.x) * 0.5f;
+    float centerZ = (bounds.t.z + bounds.b.z) * 0.5f;
+    bounds.t.x = bounds.t.x - centerX;
+    float centerY = (bounds.t.y + bounds.b.y) * 0.5f;
+    bounds.b.z = bounds.b.z - centerZ;
+    bounds.t.y = bounds.t.y - centerY;
+    bounds.t.z = bounds.t.z - centerZ;
+    bounds.b.x = bounds.b.x - centerX;
+    bounds.b.y = bounds.b.y - centerY;
+
+    CAaBox rotated;
+    memset(&rotated, 0, sizeof(rotated));
+    CWorldMath::TransformAABox(rotation, bounds, rotated);
+
+    float y = pos.y - ((pos.y + rotated.b.y) - static_cast<float>(static_cast<int32_t>(((pos.y + rotated.b.y) + 4.1666665f) * 0.23999999f)) * 4.1666665f);
+    pos.x = pos.x - ((pos.x + rotated.b.x) - static_cast<float>(static_cast<int32_t>(((pos.x + rotated.b.x) + 4.1666665f) * 0.23999999f)) * 4.1666665f);
+    pos.y = y;
+}
+
 // OFFSET: 0x007616E0/0x1404462F0
 void CMap::UpdateArea(CMapArea* area, const CiRect& rect, int32_t depth) {
     if (rect.minX > World::gbChunkRect.maxX || rect.minY > World::gbChunkRect.maxY || rect.maxX < World::gbChunkRect.minX || rect.maxY < World::gbChunkRect.minY) {
@@ -459,6 +491,54 @@ void CMap::UpdateLowDetailMapObjDefs() {
             }
         }
     }
+}
+
+// OFFSET: 0x00761950
+void CMap::UpdateAreaDistances() {
+    const C3Vector& pos = World::GetGuardBandPosition();
+    float x = pos.x;
+    float y = pos.y;
+
+    for (CMapArea* area = this->m_areaList.Head(), * next; area; area = next) {
+        next = this->m_areaList.Next(area);
+        float clampX = area->m_bbox.b.x;
+
+        if (clampX <= x) {
+            clampX = area->m_bbox.t.x;
+
+            if (x <= clampX) {
+                clampX = x;
+            }
+        }
+
+        float clampY = area->m_bbox.b.y;
+
+        if (clampY <= y) {
+            clampY = area->m_bbox.t.y;
+
+            if (y <= clampY) {
+                clampY = y;
+            }
+        }
+
+        area->m_distSq = (clampX - x) * (clampX - x) + (clampY - y) * (clampY - y);
+    }
+}
+
+// OFFSET: 0x007619F0
+int32_t CMap::PreloadAreasExist(const CiRect& rect) {
+    for (int32_t y = rect.minY; y <= rect.maxY; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX; x++) {
+            CMapAreaTableEntry* entry = this->m_areaTable.Get(x, y);
+            uint8_t flags = entry ? static_cast<uint8_t>(entry->m_flags) : 0;
+
+            if (flags & 0x1) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x00761AB0/0x140446790
@@ -812,6 +892,28 @@ void CMap::UpdateMap() {
             }
         }
     }
+}
+
+// OFFSET: 0x007626E0
+void CMap::PreloadUpdateMap(const CiRect& rect) {
+    for (int32_t y = rect.minY; y <= rect.maxY; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX; x++) {
+            CMapAreaTableEntry* entry = this->m_areaTable.Get(x, y);
+            uint8_t flags = entry ? static_cast<uint8_t>(entry->m_flags) : 0;
+
+            if (!(flags & 0x1)) {
+                continue;
+            }
+
+            CMapAreaTableEntry* areaEntry = this->m_areaTable.Get(x, y);
+
+            if (!areaEntry || !areaEntry->m_area) {
+                this->PrepareArea(x, y);
+            }
+        }
+    }
+
+    this->UpdateAreaDistances();
 }
 
 // OFFSET: 0x0077DD80

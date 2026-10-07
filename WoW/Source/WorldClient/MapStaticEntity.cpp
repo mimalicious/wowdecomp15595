@@ -3,11 +3,19 @@
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Model2/M2Light.h"
 #include "Engine/Source/Model2/M2Model.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
 
 // STATIC: 0x00D01AEC
 C3Vector CMapStaticEntity::s_interiorLightDir = C3Vector(-0.30822f, -0.30822f, -0.89999998f);
+
+// OFFSET: [0x00762DE0, 0x00762F40]
+CMapStaticEntity::~CMapStaticEntity() {
+    if (this->m_soundEmitter) {
+        SE3::EmitterMangerSendMessage_DestroyEmitter(this->m_soundEmitter);
+    }
+}
 
 // OFFSET: 0x00788C90
 static void SampleVertexLighting(const CMapChunk* chunk, const C3Vector& pos, int32_t cellY, int32_t cellX, CImVector& color) {
@@ -181,5 +189,5 @@ CMapStaticEntity::CMapStaticEntity() {
     this->unk_0027 = 0;
     this->m_liquidHeight = 0.0f;
     this->m_sizeCategory = 4;
-    this->unk_008C = 0;
+    this->m_soundEmitter = 0;
 }

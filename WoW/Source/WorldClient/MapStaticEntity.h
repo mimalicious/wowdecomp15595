@@ -38,7 +38,7 @@ class CMapStaticEntity : public CMapBaseObj {
     /* 0080 */ CImVector m_interiorAmbient;
     /* 0084 */ CImVector m_interiorDirect;
     /* 0088 */ CImVector m_exteriorVertexLight;
-    /* 008C */ uint32_t unk_008C;
+    /* 008C */ uint32_t m_soundEmitter;
 
     static C3Vector s_interiorLightDir;
 
