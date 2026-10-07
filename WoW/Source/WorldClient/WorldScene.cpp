@@ -593,6 +593,7 @@ void CWorldScene::RenderWeather() {
     }
 }
 
+// PROVEN: fff60dd1 IDENTICAL/NONE
 // OFFSET: 0x007275F0/0x1403FEC80
 void CWorldScene::RenderBarriers(CWorldView* view) {
     CWorldScene::s_barrier.Render(view->m_camPos, FrameTime::GetTickTimeSec());
@@ -1469,6 +1470,29 @@ void CWorldScene::RenderChunks(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
+// OFFSET: 0x0072AB30/0x140403A70
+void CWorldScene::RenderDetailDoodads(CWorldView* view) {
+    if (!(World::GetEnables() & 0x80)) {
+        for (DDMaterial* mat = CDetailDoodad::s_materials.Head(), * next; mat; mat = next) {
+            next = CDetailDoodad::s_materials.Next(mat);
+            mat->m_batches.UnlinkAll();
+        }
+
+        return;
+    }
+
+    g_theGxDevicePtr->RsPush();
+    g_theGxDevicePtr->XformPush(GxXform_World);
+    g_theGxDevicePtr->XformPush(GxXform_Tex1);
+    CDetailDoodad::InitializeRenderState(view);
+    CDetailDoodad::UpdateWind();
+    CDetailDoodad::ResetVisibility();
+    CDetailDoodad::Render(view);
+    GxXformPop(GxXform_Tex1);
+    GxXformPop(GxXform_World);
+    g_theGxDevicePtr->RsPop();
+}
+
 // OFFSET: 0x0072AC10
 void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
@@ -1897,6 +1921,7 @@ void CWorldScene::RenderPortalLists(CWorldView* view) {
     }
 }
 
+// PROVEN: 257d2cf7 IDENTICAL/NONE
 // OFFSET: 0x0079C480/0x140490E40
 static void InitClipVolumeBounds() {
     if (s_clipVolumeBoundsValid) {

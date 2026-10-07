@@ -501,7 +501,7 @@ bool CWorldParam::BspCacheCallback(CVar* var, const char* oldValue, const char* 
 bool CWorldParam::GroundEffectDensityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     uint32_t minDensity;
     uint32_t maxDensity;
-    CDetailDoodad::GetDensityRange(minDensity, maxDensity);
+    CDetailDoodad::GetMinMaxDensity(minDensity, maxDensity);
 
     uint32_t density = SStrToInt(value);
     uint32_t range = maxDensity - minDensity;
@@ -518,7 +518,7 @@ bool CWorldParam::GroundEffectDensityCallback(CVar* var, const char* oldValue, c
 bool CWorldParam::GroundEffectDistCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     float minDist;
     float maxDist;
-    CDetailDoodad::GetDistRange(minDist, maxDist);
+    CDetailDoodad::GetMinMaxDist(minDist, maxDist);
 
     float dist = SStrToFloat(value);
 

@@ -21,8 +21,10 @@
 #include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 #include "Engine/Source/Tempest/NTempest.h"
+#include "Engine/Source/Tempest/CRandom.h"
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/GroundEffectDoodadRec.h"
 #include "WoW/Source/DB/Rec/GroundEffectTextureRec.h"
 #include "WoW/Source/DB/Rec/LiquidTypeRec.h"
 #include "WoW/Source/DB/Rec/TerrainMaterialRec.h"
@@ -63,6 +65,12 @@ static uint16_t s_lowQualityTexMasks[8] = { 0x3, 0xC, 0x30, 0xC0, 0x300, 0xC00, 
 
 // STATIC: 0x00BC76F8
 static uint32_t s_lowQualityTexShifts[8] = { 0, 2, 4, 6, 8, 10, 12, 14 };
+
+// STATIC: 0x00BC7718
+static uint16_t s_noEffectDoodadMasks[8] = { 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80 };
+
+// STATIC: 0x00BC7728
+static uint32_t s_noEffectDoodadShifts[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
 // STATIC: 0x00BC92E4
 static uint32_t s_subchunkTris[4][3] = { { 17, 9, 0 }, { 9, 1, 0 }, { 9, 17, 18 }, { 9, 18, 1 } };
@@ -682,6 +690,218 @@ CMapChunk::CMapChunk() {
     this->m_shaderTexture = NULL;
     this->m_holes = 0;
     this->m_holesHigh = 0;
+}
+
+struct DetailDoodadCell {
+    /* 0000 */ uint32_t x;
+    /* 0004 */ uint32_t y;
+
+    DetailDoodadCell() : x(0), y(0) {
+    }
+};
+
+// OFFSET: 0x00783980
+void CMapChunk::CreateDetailDoodads() {
+    CRndSeed seed(0);
+    seed.SetSeed(this->m_chunkX | (this->m_chunkY << 16));
+
+    if (World::detailDoodadTest) {
+        return;
+    }
+
+    static C4Plane s_planes[256];
+    static DetailDoodadCell s_cells[256];
+    static CImVector s_colors[64];
+    static CImVector s_lights[64];
+    uint8_t cellMask[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    uint32_t count = World::detailDoodadDensity;
+
+    for (uint32_t i = 0; i < World::detailDoodadDensity; i++) {
+        uint32_t x = CRandom::uint32_(seed) & 0x7;
+        uint32_t y = CRandom::uint32_(seed) & 0x7;
+        s_cells[i].x = x;
+        s_cells[i].y = y;
+
+        if (cellMask[y] & (1 << x)) {
+            continue;
+        }
+
+        uint32_t cell = x + 8 * y;
+        uint32_t base = x + 17 * y;
+        cellMask[y] |= 1 << x;
+        const float* heights = &this->m_vertices[base];
+        float offsetX = static_cast<float>(static_cast<int32_t>(y)) * -4.1666665f;
+        float offsetY = static_cast<float>(static_cast<int32_t>(x)) * -4.1666665f;
+        float centerX = offsetX + s_subchunkCoords[4].x;
+        float centerY = offsetY + s_subchunkCoords[4].y;
+        float centerZ = heights[9];
+        C4Plane* plane = &s_planes[4 * cell];
+
+        for (uint32_t k = 0; k < 4; k++) {
+            const C3Vector& a = s_subchunkCoords[s_fanCorners[k][0]];
+            const C3Vector& b = s_subchunkCoords[s_fanCorners[k][1]];
+            float ax = offsetX + a.x - centerX;
+            float ay = a.y + offsetY - centerY;
+            float bx = b.x + offsetX - centerX;
+            float by = b.y + offsetY - centerY;
+            float ah = heights[s_fanHeights[k][0]] - centerZ;
+            float bh = heights[s_fanHeights[k][1]] - centerZ;
+            plane->n.x = by * ah - bh * ay;
+            plane->n.y = bh * ax - ah * bx;
+            plane->n.z = ay * bx - by * ax;
+            float scale = 1.0f / sqrt(plane->n.x * plane->n.x + plane->n.y * plane->n.y + plane->n.z * plane->n.z);
+            plane->n.x = plane->n.x * scale;
+            plane->n.y = plane->n.y * scale;
+            plane->n.z = plane->n.z * scale;
+            plane->d = -(plane->n.z * centerZ + centerY * plane->n.y + plane->n.x * centerX);
+            plane++;
+        }
+
+        if (this->m_vertexColors) {
+            const uint8_t* colors = reinterpret_cast<const uint8_t*>(&this->m_vertexColors[base]);
+            int32_t r = ((colors[2] + colors[6] + colors[70] + colors[74]) >> 2) * 2;
+            int32_t g = ((colors[1] + colors[5] + colors[69] + colors[73]) >> 2) * 2;
+            int32_t b = ((colors[0] + colors[4] + colors[68] + colors[72]) >> 2) * 2;
+            s_colors[cell] = CImVector(b > 255 ? 255 : b, g > 255 ? 255 : g, r > 255 ? 255 : r, 0xFF);
+        }
+
+        if (this->m_vertexLighting) {
+            const uint8_t* lights = reinterpret_cast<const uint8_t*>(&this->m_vertexLighting[base]);
+            int32_t r = (lights[2] + lights[6] + lights[70] + lights[74]) >> 2;
+            int32_t g = (lights[1] + lights[5] + lights[69] + lights[73]) >> 2;
+            int32_t b = (lights[0] + lights[4] + lights[68] + lights[72]) >> 2;
+            s_lights[cell] = CImVector(b > 255 ? 255 : b, g > 255 ? 255 : g, r > 255 ? 255 : r, 0xFF);
+        }
+    }
+
+    C3Vector position(0.0f, 0.0f, 0.0f);
+    CImVector color(0);
+    CImVector light(0);
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint32_t x = s_cells[i].x;
+        uint32_t y = s_cells[i].y;
+
+        if ((s_noEffectDoodadMasks[x] & this->m_noEffectDoodad[y]) >> s_noEffectDoodadShifts[x]) {
+            continue;
+        }
+
+        if (this->m_holes & s_holeMasks[4 * (y >> 1) + (x >> 1)]) {
+            continue;
+        }
+
+        uint32_t layer = (s_lowQualityTexMasks[x] & reinterpret_cast<const uint16_t*>(this->m_lowQualityTexMap)[y]) >> s_lowQualityTexShifts[x];
+        GroundEffectTextureRec* rec = g_groundEffectTextureDB.GetRecord(this->m_layers[layer].m_effectId);
+
+        if (!rec) {
+            continue;
+        }
+
+        uint32_t density = rec->m_density;
+
+        if (!density) {
+            density = 8;
+        }
+
+        uint32_t ids[16];
+        uint32_t slot = 0;
+        uint32_t total = 0;
+
+        for (uint32_t k = 0; k < 4; k++) {
+            uint32_t weight = rec->m_doodadWeight[k];
+            uint32_t id = rec->m_doodadID[k];
+
+            if (weight) {
+                total += weight;
+
+                do {
+                    ids[slot & 0xF] = id;
+                    slot += 13;
+                } while (--weight);
+            }
+        }
+
+        for (; total < 16; total++) {
+            ids[slot & 0xF] = rec->m_doodadID[total & 0x3];
+            slot += 13;
+        }
+
+        float cellX = static_cast<float>(x) * 4.1666665f;
+        float cellY = static_cast<float>(y) * 4.1666665f;
+        uint32_t cellIndex = x + 8 * y;
+
+        for (uint32_t j = 0; j < density; j++) {
+            float rx = CRandom::sfloat_(seed);
+            float ry = CRandom::sfloat_(seed);
+            uint32_t id = ids[(j + i) & 0xF];
+            float u = rx * 2.0833333f + 2.0833333f;
+            float v = ry * 2.0833333f + 2.0833333f;
+
+            if (!id) {
+                continue;
+            }
+
+            CDetailDoodadData* data = CDetailDoodad::s_doodadList[id];
+            float px = -u;
+            float py = -v;
+            uint32_t tri = 0;
+
+            if (px - py < 0.0f) {
+                tri = 1;
+            }
+
+            if ((-px - 4.1666665f) - py > 0.0f) {
+                tri += 2;
+            }
+
+            uint32_t planeIndex = 4 * cellIndex + tri;
+            const C4Plane& plane = s_planes[planeIndex];
+            float nz = plane.n.z;
+
+            if (nz < 0.40000001f) {
+                continue;
+            }
+
+            light = this->m_vertexLighting ? s_lights[cellIndex] : CImVector(0xFF000000);
+            color = (data->m_record->m_flags & 0x2) || !this->m_vertexColors ? CImVector(0xFFFFFFFF) : s_colors[cellIndex];
+
+            if (this->m_shadowMap) {
+                const SMAreaHeader* header = this->m_area->m_header;
+                int32_t sx = static_cast<int32_t>((u + cellX) * 1.92f);
+                int32_t sy = static_cast<int32_t>((v + cellY) * 1.92f);
+
+                if (!header || !header->m_mamp) {
+                    if (this->m_shadowMap[(sx >> 3) + 8 * sy] & (1 << (sx & 0x7))) {
+                        color.a = 0;
+                    }
+                } else if (header->m_mamp == 1) {
+                    if (this->m_shadowMap[(sx >> 4) + 4 * (sy >> 1)] & (1 << ((sx >> 1) & 0x7))) {
+                        color.a = 0;
+                    }
+                }
+            }
+
+            position.x = py - cellY;
+            position.y = px - cellX;
+            position.z = -((plane.n.y * position.y + plane.n.x * position.x + plane.d) / nz);
+            float rotation = (CRandom::sfloat_(seed) + 1.0f) * 3.1415927f;
+            float scale = CRandom::sfloat_(seed) * 0.33000001f + 1.0f;
+            float windPhase = CRandom::sfloat_(seed) * 6.2831855f;
+            this->m_detailDoodadInst->AddDoodad(id, position, rotation, scale, plane, static_cast<uint16_t>(planeIndex), color, light, windPhase);
+        }
+    }
+}
+
+// PROVEN: 3a34611f IDENTICAL/NONE
+// OFFSET: 0x007848B0
+void CMapChunk::CreateDetailDoodadInst() {
+    if (!this->m_header.m_nLayers || !this->LoadDetailDoodadModels()) {
+        return;
+    }
+
+    this->m_detailDoodadInst = CDetailDoodad::AllocInst();
+    this->m_detailDoodadInst->m_chunk = this;
+    this->CreateDetailDoodads();
 }
 
 // OFFSET: 0x00786690/0x1404758D0

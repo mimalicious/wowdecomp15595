@@ -289,7 +289,7 @@ int32_t CMapChunk::LoadDetailDoodadModels() {
         }
 
         for (uint32_t j = 0; j < 4; j++) {
-            if (rec->m_doodadID[j] && !CDetailDoodad::IsModelLoaded(rec->m_doodadID[j])) {
+            if (rec->m_doodadID[j] && !CDetailDoodad::LoadModel(rec->m_doodadID[j])) {
                 loaded = 0;
             }
         }
@@ -747,10 +747,10 @@ void CMapChunk::RenderPrep(CWorldView* view, float distSq) {
     }
 
     if (!this->m_detailDoodadInst) {
-        this->CreateDetailDoodads();
+        this->CreateDetailDoodadInst();
     }
 
     if (this->m_detailDoodadInst) {
-        this->m_detailDoodadInst->Update(sqrt(distSq));
+        this->m_detailDoodadInst->FlagVisible(sqrt(distSq));
     }
 }

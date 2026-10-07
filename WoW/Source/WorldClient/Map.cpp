@@ -351,7 +351,7 @@ void CMap::ClearChunkBufs() {
     }
 }
 
-// OFFSET: 0x00735E30/0x1404123A0
+// OFFSET: [0x00735E30/0x1404123A0, 0x00736000/0x1404125F0]
 CMap::~CMap() {
 }
 

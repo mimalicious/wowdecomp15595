@@ -137,6 +137,7 @@ class CMapChunk : public CMapBaseObj {
     void Batch();
     void Create(int32_t isNew);
     void CreateBounds();
+    void CreateDetailDoodadInst();
     void CreateDetailDoodads();
     uint32_t CreateIndices(uint16_t* indices, uint16_t base, int32_t lowRes);
     void CreateIndices(uint16_t* indices, uint16_t base, uint32_t& count, int32_t lowRes);
