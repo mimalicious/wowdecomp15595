@@ -63,7 +63,8 @@ static void DestroyWaterEffects() {
     }
 }
 
-// OFFSET: 0x007797C0
+// PROVEN: cdaa04ca IDENTICAL/NONE
+// OFFSET: 0x007797C0/0x140465500
 SMOMaterial* CMapObj::GetGroupMaterial(uint32_t groupNum) {
     CMapObjGroup* group = this->GetGroup(groupNum, 0);
 
@@ -80,6 +81,7 @@ void CMapObjRender::WaterResetCallback() {
     CreateWaterEffects();
 }
 
+// PROVEN: 06dc38c7 IDENTICAL/NONE
 // OFFSET: 0x00779890
 bool HASHKEY_MATERIAL::operator==(const HASHKEY_MATERIAL& key) const {
     return this->m_textures[0] == key.m_textures[0] && this->m_textures[1] == key.m_textures[1] && this->m_textures[2] == key.m_textures[2] && this->m_materialFlags == key.m_materialFlags && this->m_ambColor == key.m_ambColor && this->m_color == key.m_color && this->m_pass == key.m_pass && this->m_shader == key.m_shader && this->m_unified == key.m_unified && this->m_blendMode == key.m_blendMode && this->m_cull == key.m_cull && this->m_lighting == key.m_lighting && this->m_interior == key.m_interior && this->m_fog == key.m_fog && this->m_secondVB == key.m_secondVB && this->m_shadow == key.m_shadow;
@@ -123,7 +125,7 @@ void CMapObj::CalcPortalCenterInWorldSpace(const SMOPortalInfo* portal, const C4
     pos.z = matrix.c2 * z + matrix.b2 * y + matrix.a2 * x + matrix.d2;
 }
 
-// OFFSET: 0x00779C70
+// OFFSET: 0x00779C70/0x140465A00
 void CMapObjRender::RenderLiquidBatch(FFX::Effect* effect, SMOBatch* batch, CMapObjDefGroup* defGroup, CMapObjGroup* group, uint32_t batchIndex) {
     CGxBatch gxBatch;
     gxBatch.m_primType = GxPrim_Triangles;
@@ -222,6 +224,7 @@ void CMapObjRender::RenderMaterialElements(CWorldView* view, CSceneMaterial* mat
     }
 }
 
+// PROVEN: 99d80a2d IDENTICAL/NONE
 // OFFSET: 0x0077A320
 HASHKEY_MATERIAL& HASHKEY_MATERIAL::operator=(const HASHKEY_MATERIAL& key) {
     this->m_textures[0] = key.m_textures[0];
@@ -863,7 +866,7 @@ void CMapObj::UpdateSceneMaterials(CMapObjDefGroup* defGroup, uint32_t state) {
     }
 }
 
-// OFFSET: 0x0077CA20
+// OFFSET: 0x0077CA20/0x140469410
 void CMapObj::GatherGroup(CWorldView* view, CMapObjDefGroup* defGroup) {
     CMapObjDef* mapObjDef = defGroup->m_mapObjDef;
     CMapObjGroup* group = this->GetGroup(defGroup->m_groupNum, 0);

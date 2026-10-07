@@ -124,7 +124,7 @@ static void NextAlphaRows4444(CMapRenderChunk::SLayerAlpha* alpha, uint32_t size
     }
 }
 
-// OFFSET: 0x00766250
+// OFFSET: 0x00766250/0x14044BE20
 static void UnpackAlphaBitsFixed4444Mip0(uint16_t* dest, uint32_t size, const CMapRenderChunk::SLayerAlpha* alpha) {
     const uint8_t* bits = alpha->m_alpha;
     uint32_t index = 0;
@@ -136,7 +136,7 @@ static void UnpackAlphaBitsFixed4444Mip0(uint16_t* dest, uint32_t size, const CM
     }
 }
 
-// OFFSET: 0x007662C0
+// OFFSET: 0x007662C0/0x14044BEC0
 static void UnpackAlphaBitsFixed4444Mip1(uint16_t* dest, uint32_t size, const CMapRenderChunk::SLayerAlpha* alpha) {
     const uint8_t* bits = alpha->m_alpha;
     uint32_t index = 0;
@@ -160,7 +160,7 @@ static void UnpackAlphaBitsFixed4444Mip1(uint16_t* dest, uint32_t size, const CM
     }
 }
 
-// OFFSET: 0x00766390
+// OFFSET: 0x00766390/0x14044BFC0
 static void UnpackAlphaBitsUnfixed4444Mip0(uint16_t* dest, uint32_t size, const CMapRenderChunk::SLayerAlpha* alpha) {
     const uint8_t* bits = alpha->m_alpha;
     uint32_t index = 0;
@@ -187,7 +187,7 @@ static void UnpackAlphaBitsUnfixed4444Mip0(uint16_t* dest, uint32_t size, const 
     *dest = texel;
 }
 
-// OFFSET: 0x00766460
+// OFFSET: 0x00766460/0x14044C0D0
 static void UnpackAlphaBitsUnfixed4444Mip1(uint16_t* dest, uint32_t size, const CMapRenderChunk::SLayerAlpha* alpha) {
     const uint8_t* bits = alpha->m_alpha;
     uint32_t index = 0;
@@ -226,7 +226,7 @@ static void GatherLayerAlphas(const CMapChunk* chunk, CMapRenderChunk::SLayerAlp
     }
 }
 
-// OFFSET: 0x007665C0
+// OFFSET: 0x007665C0/0x14044C190
 static void UnpackShadowBitsMip0(uint16_t* dest, uint32_t size, const uint8_t* shadow) {
     uint32_t index = 0;
 
@@ -237,7 +237,7 @@ static void UnpackShadowBitsMip0(uint16_t* dest, uint32_t size, const uint8_t* s
     }
 }
 
-// OFFSET: 0x00766630
+// OFFSET: 0x00766630/0x14044C220
 static void UnpackShadowBitsMip1(uint16_t* dest, uint32_t size, const uint8_t* shadow) {
     uint32_t index = 0;
 
@@ -606,7 +606,7 @@ static void UnpackAlphaBitsFixed8888Mip1(CMapRenderChunk::SLayerAlpha* alpha, ui
     }
 }
 
-// OFFSET: 0x00766960
+// OFFSET: 0x00766960/0x14044C630
 void CMapRenderChunk::UnpackShadowBits(CMapRenderChunkBatch* batch) {
     CMapChunk* chunk = this->GetBatchChunk(batch->m_chunkMask);
     const uint8_t* shadow = chunk->m_shadowMap;

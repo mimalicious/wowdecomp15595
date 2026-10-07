@@ -40,6 +40,7 @@ static void QueryVertexLighting(const CMapChunk* chunk, const C3Vector& pos, CIm
     SampleVertexLighting(chunk, pos, cellY, cellX, color);
 }
 
+// PROVEN: 60d6bccf IDENTICAL/NONE
 // OFFSET: 0x00762800
 void CMapStaticEntity::SetSequenceSpeed(float speed) {
     if (this->m_model) {
@@ -47,7 +48,7 @@ void CMapStaticEntity::SetSequenceSpeed(float speed) {
     }
 }
 
-// PROVEN: f1ebbb75 IDENTICAL/NONE
+// PROVEN: 58f5ee9a IDENTICAL/NONE
 // OFFSET: 0x00762820
 void CMapStaticEntity::AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const uint16_t* groupNum, const C3Vector* pos) {
 }

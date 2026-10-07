@@ -158,7 +158,7 @@ void CMapRenderChunk::InitializeVertexShaderConstants(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x007818A0
+// OFFSET: 0x007818A0/0x14046F170
 void CMapRenderChunk::RenderPrepBufs(CGxBuf* vertexBuf, CGxBuf* indexBuf) {
     int32_t vertexValid = vertexBuf->unk_001C && vertexBuf->unk_001D;
     int32_t indexValid = indexBuf->unk_001C && indexBuf->unk_001D;
@@ -271,7 +271,7 @@ void CMapRenderChunk::RenderSetup(CMapRenderChunkBatch* batch, int32_t vertexSha
     g_theGxDevicePtr->PrimIndexPtr(this->m_chunkBuf->m_indexBuf);
 }
 
-// OFFSET: 0x00781D80
+// OFFSET: 0x00781D80/0x14046F650
 int32_t CMapChunk::LoadDetailDoodadModels() {
     int32_t loaded = 1;
 
@@ -626,7 +626,7 @@ void CMapRenderChunk::RenderSolidVertexPixelShader(CWorldView* view, CMapRenderC
     GxRsSet(GxRs_Texture1, 0);
 }
 
-// OFFSET: 0x007844E0
+// OFFSET: 0x007844E0/0x140472FB0
 void CMapRenderChunk::SetShaders(uint32_t materialType, uint32_t shadowMode) {
     CMapRenderChunk::s_pixelShaderIds[0] = -1;
     CMapRenderChunk::s_pixelShaderIds[1] = -1;
@@ -697,7 +697,7 @@ void CMapRenderChunk::RenderSinglePassVertexPixelShader(CWorldView* view, CMapRe
     }
 }
 
-// OFFSET: 0x00784810
+// OFFSET: 0x00784810/0x1404733F0
 void CMapRenderChunk::RenderPrep() {
     uint32_t flags = this->m_flags;
 
@@ -726,7 +726,7 @@ void CMapRenderChunk::RenderPrep() {
     }
 }
 
-// OFFSET: 0x007848E0
+// OFFSET: 0x007848E0/0x1404734F0
 void CMapChunk::RenderPrep(CWorldView* view, float distSq) {
     if (!(this->m_chunkFlags & 0x1)) {
         this->Batch();

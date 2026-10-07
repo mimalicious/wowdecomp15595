@@ -34,6 +34,7 @@ void CImVector::InterpColor(int32_t t, const CImVector* src) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
+// PROVEN: e1d1c93b IDENTICAL/NONE
 // OFFSET: 0x00648130
 void CImVector::ScaleRGB(uint32_t scale) {
     uint32_t& value = *reinterpret_cast<uint32_t*>(this);

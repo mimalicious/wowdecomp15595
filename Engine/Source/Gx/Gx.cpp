@@ -229,7 +229,7 @@ void GxPrimUnlockIndexPtr() {
 }
 
 // PROVEN: 1034c42e IDENTICAL/NONE
-// OFFSET: 0x00840210
+// OFFSET: 0x00840210/0x14056C050
 void GxSceneClearToViewport(uint32_t mask, CImVector color) {
     g_theGxDevicePtr->SceneClearToViewport(mask, color);
 }
@@ -247,7 +247,7 @@ void GxTexSetFilterMode(EGxTexFilter filter, uint32_t maxAnisotropy) {
 }
 
 // PROVEN: 63aa73e2 IDENTICAL/NONE
-// OFFSET: 0x008403F0
+// OFFSET: 0x008403F0/0x14056C250
 int32_t GxTexResolve(CGxTex* dest, CGxTex* source) {
     return g_theGxDevicePtr->TexResolve(dest, source);
 }
@@ -277,7 +277,7 @@ int32_t GxVertexHasAttrib(EGxVertexBufferFormat format, EGxVertexAttrib attrib) 
     return Buffer::s_vertexBufDesc[format].attribPtrs[attrib] != NULL;
 }
 
-// OFFSET: 0x008400E0
+// OFFSET: 0x008400E0/0x14056BEE0
 int32_t CreateGxDevice(EGxApi api, GxWindowProc windowProc, const CGxFormat& format) {
     CGxDevice* device;
 
@@ -353,6 +353,12 @@ void GxXformView(C44Matrix& matrix) {
     matrix = stack.m_mtx[stack.m_level];
 }
 
+// OFFSET: 0x00430AB0
+void GxXform(EGxXform xf, C44Matrix& matrix) {
+    CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];
+    matrix = stack.m_mtx[stack.m_level];
+}
+
 // OFFSET: 0x00409FF0
 void GxXformProjNative(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
@@ -366,7 +372,7 @@ void GxXformProjNative(C44Matrix& matrix) {
     }
 }
 
-// OFFSET: 0x00841070
+// OFFSET: 0x00841070/0x14056D1D0
 void GxXformViewProjNative(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
     C44Matrix view;
@@ -539,7 +545,7 @@ void GxQueryCreate(CGxQuery*& query, EGxQueryType type) {
 }
 
 // PROVEN: 07b2b081 IDENTICAL/NONE
-// OFFSET: 0x008404D0
+// OFFSET: 0x008404D0/0x14056C310
 void GxQueryDestroy(CGxQuery*& query) {
     g_theGxDevicePtr->QueryDestroy(query);
 }
@@ -613,7 +619,7 @@ void GxBufData(CGxBuf* buf, const void* data, uint32_t size, uint32_t offset) {
 }
 
 // PROVEN: 46e6b5a1 IDENTICAL/NONE
-// OFFSET: 0x008408C0
+// OFFSET: 0x008408C0/0x14056C620
 void GxDrawLockedElements() {
     if (!s_lockVertexCount) {
         return;
@@ -1093,31 +1099,31 @@ void GxReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels) {
 }
 
 // PROVEN: d7f158e1 IDENTICAL/NONE
-// OFFSET: 0x008403C0
+// OFFSET: 0x008403C0/0x14056C210
 int32_t GxTexStretch(CGxTex* source, CGxTex* dest, const CiRect* destRect, const CiRect* sourceRect, uint32_t level, uint32_t face) {
     return g_theGxDevicePtr->TexStretch(source, dest, destRect, sourceRect, level, face);
 }
 
 // PROVEN: 14e624c4 IDENTICAL/NONE
-// OFFSET: 0x008404F0
+// OFFSET: 0x008404F0/0x14056C330
 int32_t GxQueryBegin(CGxQuery* query) {
     return g_theGxDevicePtr->QueryBegin(query);
 }
 
 // PROVEN: f82379f0 IDENTICAL/NONE
-// OFFSET: 0x00840510
+// OFFSET: 0x00840510/0x14056C350
 int32_t GxQueryEnd(CGxQuery* query) {
     return g_theGxDevicePtr->QueryEnd(query);
 }
 
 // PROVEN: 66f16c38 IDENTICAL/NONE
-// OFFSET: 0x00840530
+// OFFSET: 0x00840530/0x14056C370
 int32_t GxQueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetParam(query, param, data);
 }
 
 // PROVEN: 8b269a24 IDENTICAL/NONE
-// OFFSET: 0x00840560
+// OFFSET: 0x00840560/0x14056C390
 int32_t GxQueryGetData(CGxQuery* query, uint32_t* data) {
     return g_theGxDevicePtr->QueryGetData(query, data);
 }

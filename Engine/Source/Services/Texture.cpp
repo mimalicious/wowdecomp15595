@@ -506,7 +506,7 @@ const char* TextureGetFilename(CTexture* texture) {
     return texture->m_filename;
 }
 
-// OFFSET: 0x00540FF0
+// OFFSET: 0x00540FF0/0x140193BF0
 int32_t TextureIsLoaded(CTexture* texture) {
     return texture && !texture->m_asyncObject;
 }
@@ -879,7 +879,7 @@ int32_t TextureGetRefCnt(CTexture* texture) {
     return texture->m_refcount;
 }
 
-// OFFSET: 0x00541820
+// OFFSET: 0x00541820/0x140194260
 int32_t TextureIsReadyNow(CTexture* texture) {
     if (!texture || !texture->m_gxTex) {
         return 0;
@@ -888,7 +888,7 @@ int32_t TextureIsReadyNow(CTexture* texture) {
     return g_theGxDevicePtr->TexIsReadyNow(texture->m_gxTex);
 }
 
-// OFFSET: 0x00541850
+// OFFSET: 0x00541850/0x140194280
 int32_t TextureCanUpdate(CTexture* texture) {
     if (!texture || !texture->m_gxTex) {
         return 0;
@@ -1893,7 +1893,7 @@ void TextureGxCacheClear() {
     }
 }
 
-// OFFSET: 0x00542DB0
+// OFFSET: 0x00542DB0/0x140196350
 void TextureGxCacheFlush() {
     TextureGxCacheClear();
     s_gxTexCacheFree.Clear();

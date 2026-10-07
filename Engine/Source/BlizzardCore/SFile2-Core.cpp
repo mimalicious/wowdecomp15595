@@ -1399,7 +1399,7 @@ int32_t STORMAPI SFile::IsPatchFile(const char* name) {
     return result;
 }
 
-// OFFSET: 0x007A8CC0
+// OFFSET: 0x007A8CC0/0x14049EA90
 int32_t STORMAPI SFile::FileIsLocal(const char* name) {
     SFileImpl* file;
 

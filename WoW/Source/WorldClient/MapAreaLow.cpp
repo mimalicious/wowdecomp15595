@@ -73,6 +73,7 @@ static uint16_t* BuildLowDetailIndices(const uint16_t* holes, int32_t holeMode, 
     return indices;
 }
 
+// PROVEN: 0295b48a IDENTICAL/NONE
 // OFFSET: 0x0077F530
 void CMapAreaLow::CreateVertices(CGxBuf* buf) {
     float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(buf));
@@ -107,7 +108,7 @@ void CMapAreaLow::CreateVertices(CGxBuf* buf) {
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x0077F840
+// OFFSET: 0x0077F840/0x14046C8D0
 void CMapAreaLow::Render() {
     if (static_cast<int32_t>(this->m_indexCount) <= 0) {
         return;
@@ -249,7 +250,7 @@ void CMapAreaLow::Create(int32_t x, int32_t y, const int16_t* heights, const uin
     this->m_radius = sqrt(dx * dx + (dy * dy + dz * dz));
 }
 
-// OFFSET: 0x00796D70
+// OFFSET: 0x00796D70/0x140489FA0
 void CMapAreaLow::CreateOceanInstance() {
     CAreaGeomFactory* factory = CAreaGeomFactory::Create(this);
     C44Matrix transform;
@@ -262,7 +263,8 @@ void CMapAreaLow::CreateOceanInstance() {
     this->m_oceanInstance->m_isMesh = factory->GetWorldSpace() == 0;
 }
 
-// OFFSET: 0x00796E60
+// PROVEN: 403410d0 IDENTICAL/NONE
+// OFFSET: 0x00796E60/0x14048A160
 void CMapAreaLow::RenderPrep() {
     if (!this->m_oceanInstance) {
         this->CreateOceanInstance();

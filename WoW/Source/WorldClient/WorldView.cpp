@@ -136,7 +136,7 @@ void CWorldView::Gather() {
     CWorldMap::Gather(this);
 }
 
-// OFFSET: 0x00753590
+// OFFSET: 0x00753590/0x1404346A0
 void CWorldView::CalcProjection(C44Matrix& projection) {
     float nearClip = this->m_farClip - 50.0f;
     GxuXformCreateProjection_Exact(this->m_fov * 0.60000002f, this->m_aspect, nearClip, World::GetHorizonFarClip(), projection);
@@ -148,7 +148,7 @@ void CWorldView::FrustumPop() {
     this->m_frustumIndex--;
 }
 
-// OFFSET: 0x00753600
+// OFFSET: 0x00753600/0x140434720
 int32_t CWorldView::IsBehindCullPlane(const CAaBox& box) {
     const C3Vector* corners[2] = { &box.t, &box.b };
     const C4Plane& plane = this->m_cullPlane;
@@ -186,7 +186,7 @@ void CWorldView::RectFromVerts(CAaRect& rect, const C3Vector* verts, uint32_t co
     }
 }
 
-// OFFSET: 0x00753AB0
+// OFFSET: 0x00753AB0/0x140434C60
 float CWorldView::DistSqrToBox(const CAaBox& box, const C3Vector& pos) {
     float x = pos.x < box.b.x ? box.b.x : (pos.x <= box.t.x ? pos.x : box.t.x);
     float y = pos.y < box.b.y ? box.b.y : (pos.y <= box.t.y ? pos.y : box.t.y);
@@ -244,7 +244,7 @@ void CWorldView::GetCameraClosestPoint(const CAaBox& box, C3Vector& point) {
     point.z = this->m_camPos.z > this->m_camTarget.z ? box.t.z : box.b.z;
 }
 
-// OFFSET: 0x00753D70
+// OFFSET: 0x00753D70/0x140434DA0
 int32_t CWorldView::OcclusionQuerySphere(const CAaSphere& sphere, uint32_t flags) {
     if (!this->m_occlusion) {
         return 0;
@@ -263,7 +263,7 @@ int32_t CWorldView::OcclusionQuerySphere(const CAaSphere& sphere, uint32_t flags
     return occluded;
 }
 
-// OFFSET: 0x00753DC0
+// OFFSET: 0x00753DC0/0x140434E20
 int32_t CWorldView::OcclusionQueryBox(const CAaBox& box, uint32_t flags) {
     if (!this->m_occlusion) {
         return 0;
@@ -296,7 +296,7 @@ void CWorldView::EnableSortTable(int32_t enable) {
     }
 }
 
-// OFFSET: 0x00753F30
+// OFFSET: 0x00753F30/0x140435040
 void CWorldView::EnableShadow(int32_t enable) {
     if (enable) {
         if (!this->m_shadowQuery) {
@@ -311,6 +311,7 @@ void CWorldView::EnableShadow(int32_t enable) {
     }
 }
 
+// PROVEN: 7c4b7b97 IDENTICAL/NONE
 // OFFSET: 0x00753FB0
 void CWorldView::UpdateViewMat() {
     this->m_viewMat = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
@@ -423,14 +424,14 @@ void CWorldView::RenderSceneClear() {
     GxSceneClear(0x1F, DayNight::GetFogInfo()->m_color);
 }
 
-// PROVEN: 1ec1277b IDENTICAL/NONE
-// OFFSET: 0x00754410
+// PROVEN: 1ec1277b IDENTICAL/DIFFERENT
+// OFFSET: 0x00754410/0x1404356C0
 void CWorldView::FrustumPush() {
     this->m_frustumIndex++;
     this->m_frustumStack[this->m_frustumIndex] = this->m_frustumStack[this->m_frustumIndex - 1];
 }
 
-// OFFSET: 0x00754440
+// OFFSET: 0x00754440/0x140435700
 void CWorldView::FrustumCalcCorners(C3Vector* dest, const C3Vector* corners, const CAaRect& rect) {
     for (uint32_t i = 0; i < 2; i++) {
         const C3Vector* src = &corners[4 * i];
@@ -448,21 +449,21 @@ void CWorldView::FrustumCalcCorners(C3Vector* dest, const C3Vector* corners, con
     }
 }
 
-// OFFSET: 0x00754700
+// OFFSET: 0x00754700/0x140435A20
 void CWorldView::FrustumSet(const CAaRect& rect) {
     C3Vector corners[8];
     CWorldView::FrustumCalcCorners(corners, this->m_frustumCorners, rect);
     this->m_frustumStack[this->m_frustumIndex].CalcPlanesFromCorners(corners);
 }
 
-// OFFSET: 0x007547C0
+// OFFSET: 0x007547C0/0x140435AF0
 void CWorldView::FrustumSet(CFrustum* frustum, const C3Vector* srcCorners, const CAaRect& rect) {
     C3Vector corners[8];
     CWorldView::FrustumCalcCorners(corners, srcCorners, rect);
     frustum->CalcPlanesFromCorners(corners);
 }
 
-// OFFSET: 0x00754880
+// OFFSET: 0x00754880/0x140435BC0
 int32_t CWorldView::CullSphere(const C3Vector& center, float radius) {
     if ((this->m_flags & 0x200000) && -radius > center.z * this->m_cullPlane.n.z + center.y * this->m_cullPlane.n.y + center.x * this->m_cullPlane.n.x + this->m_cullPlane.d) {
         return 1;
@@ -474,7 +475,7 @@ int32_t CWorldView::CullSphere(const C3Vector& center, float radius) {
     return this->m_frustumStack[this->m_frustumIndex].Cull(sphere) == 0;
 }
 
-// OFFSET: 0x00754930
+// OFFSET: 0x00754930/0x140435C70
 int32_t CWorldView::CullModel(const CAaBox& box) {
     if ((this->m_flags & 0x200000) && this->IsBehindCullPlane(box)) {
         return 1;
@@ -492,7 +493,7 @@ int32_t CWorldView::CullModel(const CAaBox& box, uint32_t mask) {
     return this->m_frustumStack[this->m_frustumIndex].Cull(box, mask) == 0;
 }
 
-// OFFSET: 0x00754AB0
+// OFFSET: 0x00754AB0/0x140435DF0
 void CWorldView::CullChunk(CSortEntryChunk& entry) {
     uint32_t outside = 0;
 
@@ -520,7 +521,7 @@ void CWorldView::CullChunk(CSortEntryChunk& entry) {
     }
 }
 
-// OFFSET: 0x00754B80
+// OFFSET: 0x00754B80/0x140435EF0
 void CWorldView::CullChunkReflection(CSortEntryChunk& entry) {
     entry.m_box.b.z = entry.m_minZ;
     entry.m_box.t.z = entry.m_maxZ;
@@ -983,7 +984,7 @@ void CWorldView::RenderAlpha() {
     }
 }
 
-// OFFSET: 0x00755C80
+// OFFSET: 0x00755C80/0x1404370B0
 void CWorldView::CalcLowDetailFrustum(CFrustum& frustum, const CAaRect& rect) {
     C44Matrix projection;
     float nearClip = this->m_farClip - 50.0f;
@@ -995,7 +996,7 @@ void CWorldView::CalcLowDetailFrustum(CFrustum& frustum, const CAaRect& rect) {
     CWorldView::FrustumSet(&frustum, corners, rect);
 }
 
-// OFFSET: 0x00755F90
+// OFFSET: 0x00755F90/0x140437570
 void CWorldView::AddDoodadDefModelToModelScene(CMapDoodadDef* doodadDef) {
     float alpha = 1.0f;
 
@@ -1152,7 +1153,7 @@ void CWorldView::UpdateNonVisEntitys() {
     }
 }
 
-// OFFSET: 0x00757300
+// OFFSET: 0x00757300/0x140438C30
 void CWorldView::AddMapChunkToRenderList(CMapChunk* chunk) {
     CMapRenderChunk* renderChunk = chunk->m_renderChunk;
 
@@ -1185,7 +1186,7 @@ void CWorldView::AddMapChunkToRenderList(CMapChunk* chunk) {
     }
 }
 
-// OFFSET: 0x007574A0
+// OFFSET: 0x007574A0/0x140438E30
 void CWorldView::CullLowDetail(CSortEntry* entry, const CFrustum& frustum) {
     for (uint32_t i = 0; i < entry->m_lowDetailOceans.Count(); i++) {
         CMapAreaLow* area = entry->m_lowDetailOceans.m_data[i];
@@ -1227,7 +1228,7 @@ void CWorldView::CullLowDetail(CSortEntry* entry, const CFrustum& frustum) {
     this->FrustumPop();
 }
 
-// OFFSET: 0x00757660
+// OFFSET: 0x00757660/0x1404391E0
 void CWorldView::CullEntitys(CSortEntry* entry) {
     s_entityCullDone = 0;
     CMapEntity* entity = entry->m_entities.Head();
@@ -1267,7 +1268,7 @@ void CWorldView::CullEntitys(CSortEntry* entry) {
     s_entityCullDone = 1;
 }
 
-// OFFSET: 0x00757850
+// OFFSET: 0x00757850/0x140439440
 void CWorldView::CullEntitysInterior(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, int32_t interior) {
     if (!(this->m_flags & 0x20000)) {
         return;
@@ -1321,7 +1322,7 @@ void CWorldView::CullEntitysInterior(TSExplicitList<CMapBaseObjLink, offsetof(CM
     s_entityCullDone = 1;
 }
 
-// OFFSET: 0x007579C0
+// OFFSET: 0x007579C0/0x1404395F0
 void CWorldView::CullDoodads(CSortTable* table, int32_t index, uint16_t minSize) {
     CSortEntry& entry = table->m_entries.m_data[index];
 
@@ -1365,7 +1366,7 @@ void CWorldView::CullDoodads(CSortTable* table, int32_t index, uint16_t minSize)
     entry.m_doodadDefHead = -1;
 }
 
-// OFFSET: 0x00757B10
+// OFFSET: 0x00757B10/0x140439790
 void CWorldView::CullDoodadsExterior(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, uint16_t minSize, int32_t sorted, int32_t cull) {
     if (!(World::GetEnables() & 0x1) || !(this->m_flags & 0x800)) {
         return;
@@ -1406,7 +1407,7 @@ void CWorldView::CullDoodadsExterior(TSExplicitList<CMapBaseObjLink, offsetof(CM
     }
 }
 
-// OFFSET: 0x00757C70
+// OFFSET: 0x00757C70/0x140439930
 void CWorldView::CullDoodadsInterior(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, uint16_t minSize, int32_t interior) {
     if (!(World::GetEnables() & 0x1) || !(this->m_flags & 0x800)) {
         return;
@@ -1445,7 +1446,7 @@ void CWorldView::CullDoodadsInterior(TSExplicitList<CMapBaseObjLink, offsetof(CM
     }
 }
 
-// OFFSET: 0x00757DE0
+// OFFSET: 0x00757DE0/0x140439AD0
 void CWorldView::CullMapObjDefGroupContents(CMapObjDefGroup* group) {
     float distSqr = CWorldView::DistSqrToBox(group->m_bbox, this->m_camPos);
     uint16_t minSize;
@@ -1467,7 +1468,7 @@ void CWorldView::CullMapObjDefGroupContents(CMapObjDefGroup* group) {
     this->CullEntitysInterior(group->m_entityLinks, interior);
 }
 
-// OFFSET: 0x00757E90
+// OFFSET: 0x00757E90/0x140439B80
 void CWorldView::GatherMapObjDefGroupLiquids(CMapObjDef* mapObjDef, CMapObjDefGroup* group, CMapObj* mapObj, CMapObjGroup* mapObjGroup) {
     if (!group->m_liquidInstance) {
         uint32_t liquidType = mapObjGroup->GetLiquidType();
@@ -1599,7 +1600,7 @@ void CWorldView::ClipPortalExt(CMapObj* mapObj, const SMOPortalInfo* portal, SPo
     }
 }
 
-// OFFSET: 0x007588E0
+// OFFSET: 0x007588E0/0x14043ADB0
 void CWorldView::Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect) {
     this->m_flags &= ~0x4u;
     this->m_exteriorPortalView = CPortalView();
@@ -1723,7 +1724,7 @@ void CWorldView::Update(const C3Vector& camPos, const C3Vector& camTarget, float
     this->m_viewStamp++;
 }
 
-// OFFSET: 0x007590C0
+// OFFSET: 0x007590C0/0x14043B8C0
 void CWorldView::AddOccluder(const C3Vector& start, const C3Vector& end) {
     float dirZ = this->m_camDir.z;
 
@@ -1990,7 +1991,7 @@ static uint32_t AddViewerGroup(TSGrowableArray<uint32_t>& groups, uint32_t group
     return groups.Count();
 }
 
-// OFFSET: 0x0075A310
+// OFFSET: 0x0075A310/0x14043CE70
 void CWorldView::CullChunkLiquids(CMapChunk* chunk, int32_t cull) {
     if (!chunk->m_liquidList.Head()) {
         return;
@@ -2022,7 +2023,7 @@ void CWorldView::CullChunkLiquids(CMapChunk* chunk, int32_t cull) {
     }
 }
 
-// OFFSET: 0x0075A3F0
+// OFFSET: 0x0075A3F0/0x14043CF70
 void CWorldView::GatherMapObjDefGroup(CMapObjDef* mapObjDef, CMapObjDefGroup* group, CMapObj* mapObj, CMapObjGroup* mapObjGroup) {
     if (!(World::GetEnables() & 0x20)) {
         return;
@@ -2281,7 +2282,7 @@ void CWorldView::Render() {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0075B9C0
+// OFFSET: 0x0075B9C0/0x14043EA70
 void CWorldView::AddDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, int32_t entry) {
     if (!(World::GetEnables() & 0x1) || !(this->m_flags & 0x800)) {
         return;
@@ -2351,7 +2352,7 @@ void CWorldView::AddMapObjDef(CMapObjDef* mapObjDef) {
     }
 }
 
-// OFFSET: 0x0075BDA0
+// OFFSET: 0x0075BDA0/0x14043EEA0
 void CWorldView::CullChunks(CSortEntry* entry, int32_t index) {
     for (uint32_t i = 0; i < entry->m_chunks.Count(); i++) {
         if (this->m_flags & 0x8) {
@@ -2433,7 +2434,7 @@ void CWorldView::CullChunks(CSortEntry* entry, int32_t index) {
     }
 }
 
-// OFFSET: 0x0075BFB0
+// OFFSET: 0x0075BFB0/0x14043F120
 void CWorldView::CullMapObjDefGroup(CMapObjDefGroup* group, int32_t cullContents) {
     if (!(group->m_flags & 0x40)) {
         return;
@@ -2462,7 +2463,7 @@ void CWorldView::CullMapObjDefGroup(CMapObjDefGroup* group, int32_t cullContents
     }
 }
 
-// OFFSET: 0x0075C040
+// OFFSET: 0x0075C040/0x14043F1E0
 void CWorldView::CullPortals(CMapObj* mapObj, uint32_t groupNum, uint32_t prevGroup, const CAaRect& rect, uint32_t depth, int32_t fromInterior) {
     if (depth > s_maxPortalDepth) {
         return;
@@ -2625,7 +2626,7 @@ void CWorldView::CullPortals(CMapObj* mapObj, uint32_t groupNum, uint32_t prevGr
     this->m_cullRects.SetCount(0);
 }
 
-// OFFSET: 0x0075C630
+// OFFSET: 0x0075C630/0x14043FAD0
 void CWorldView::CullMapObjDefGroupFromExterior(CMapObjDefGroup* group, const CAaRect& rect) {
     this->FrustumPush();
     CWorldView::FrustumSet(&this->m_frustumStack[this->m_frustumIndex], this->m_frustumCorners, rect);
@@ -2656,7 +2657,7 @@ void CWorldView::CullMapObjDefGroupFromExterior(CMapObjDefGroup* group, const CA
     this->m_frustumIndex--;
 }
 
-// OFFSET: 0x0075C750
+// OFFSET: 0x0075C750/0x14043FC30
 void CWorldView::CullMapObjDefGroupFromInterior(CMapObjDefGroup* group, const CAaRect& rect) {
     this->FrustumPush();
     CWorldView::FrustumSet(&this->m_frustumStack[this->m_frustumIndex], this->m_frustumCorners, rect);
@@ -2724,7 +2725,7 @@ void CWorldView::CullMoveableMapObjDefGroups(const CAaRect& rect) {
     this->m_frustumIndex--;
 }
 
-// OFFSET: 0x0075C9D0
+// OFFSET: 0x0075C9D0/0x14043FF00
 void CWorldView::CullMapObjDefGroups(CSortEntry* entry, const CAaRect& rect, int32_t index) {
     CMapObjDefGroup* group = entry->m_mapObjDefGroups.Head();
 
@@ -2744,7 +2745,7 @@ void CWorldView::CullMapObjDefGroups(CSortEntry* entry, const CAaRect& rect, int
     }
 }
 
-// OFFSET: 0x0075CAE0
+// OFFSET: 0x0075CAE0/0x140440080
 void CWorldView::CullSortTable(const CAaRect& rect) {
     CWorldScene::CreateClipVolumes(this->m_occlusion, this->m_camPos, this->m_frustumCorners, 0, this->m_frustumPortalView.m_maxViewDepth);
     CWorldScene::AddWorldOccluders(this);
@@ -2964,7 +2965,7 @@ void CWorldView::Cull() {
     this->m_moveableGroups.UnlinkAll();
 }
 
-// OFFSET: 0x0075A070
+// OFFSET: 0x0075A070/0x14043CB60
 void CWorldView::UpdateOcclusion(CSortEntry* entry, int32_t index, int32_t chunks) {
     uint32_t enabled = World::GetEnables() & 0x1000;
 
@@ -3043,7 +3044,7 @@ void CWorldView::UpdateOcclusion(CSortEntry* entry, int32_t index, int32_t chunk
     entry->m_chunks.SetCount(0);
 }
 
-// OFFSET: 0x00757390
+// OFFSET: 0x00757390/0x140438CF0
 void CWorldView::AddChunkOccluders(const CSortEntryChunk& sortChunk, int32_t a2, int32_t a3, int32_t keep) {
     uint32_t flags = a2 ? 4 : 0;
 
@@ -3075,7 +3076,7 @@ void CWorldView::AddChunkOccluders(const CSortEntryChunk& sortChunk, int32_t a2,
     }
 }
 
-// OFFSET: 0x00759C10
+// OFFSET: 0x00759C10/0x14043C600
 void CWorldView::CreateInverseExteriorPortalList() {
     CAaRect rects[2][128];
     int32_t counts[2] = { 1, 0 };

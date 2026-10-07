@@ -336,7 +336,7 @@ C44Matrix& C44Matrix::operator*=(const C44Matrix& m) {
     return *this;
 }
 
-// OFFSET: 0x004C76A0
+// OFFSET: 0x004C76A0/0x140102A00
 C44Matrix& C44Matrix::operator*=(float s) {
     *this = *this * s;
     return *this;

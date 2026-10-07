@@ -169,6 +169,7 @@ void CMapChunk::ProcessIffChunks(uint32_t* data, int32_t size, int32_t isNew) {
     }
 }
 
+// PROVEN: 5ac2b00d IDENTICAL/NONE
 // OFFSET: 0x0073B410
 int32_t CMapChunk::TestBit(const uint8_t* bits, uint32_t index) {
     return ((1 << (index & 7)) & bits[index >> 3]) != 0;
@@ -315,6 +316,24 @@ void CMapChunk::GetLiquidBox(CAaBox& box) {
         box.t.z = box.t.z <= liquid->m_maxHeight ? liquid->m_maxHeight : box.t.z;
         box.b.z = liquid->m_minHeight <= box.b.z ? liquid->m_minHeight : box.b.z;
     }
+}
+
+// OFFSET: 0x0073F7B0/0x14041D720
+int32_t CMapChunk::GetLiquidHeight(const C2Vector& pos, float& height) {
+    float x = pos.x;
+    float y = pos.y;
+    C2Vector frac(x - static_cast<float>(static_cast<int32_t>(x)), y - static_cast<float>(static_cast<int32_t>(y)));
+    C2iVector tile;
+    tile.x = static_cast<int32_t>(x) & 0x7;
+    tile.y = static_cast<int32_t>(y) & 0x7;
+
+    for (CChunkLiquid* liquid = this->m_liquidList.Head(); liquid; liquid = this->m_liquidList.Next(liquid)) {
+        if (liquid->TileExists(tile.x, tile.y) && liquid->GetHeight(frac, tile, height)) {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x0073F870
@@ -516,7 +535,7 @@ void CMapChunk::CreateRefs(CMapArea* area) {
     }
 }
 
-// OFFSET: 0x00740180/0x14041E330
+// OFFSET: [0x00740180/0x14041E330, 0x007405F0/0x14041E8C0]
 CMapChunk::~CMapChunk() {
     if (this->m_chunkFlags & 0x8) {
         SMemFree(const_cast<SMLayer*>(this->m_layers), __FILE__, __LINE__, 0);
@@ -621,7 +640,7 @@ CMapChunk::CMapChunk() {
     this->m_holesHigh = 0;
 }
 
-// OFFSET: 0x00786690
+// OFFSET: 0x00786690/0x1404758D0
 void CMapChunk::Purge() {
     if (this->m_renderChunk) {
         CMap::FreeRenderChunk(this->m_renderChunk);
@@ -734,7 +753,7 @@ void CMapChunk::InitVertexListXY() {
 }
 
 // PROVEN: 2525e2da IDENTICAL/NONE
-// OFFSET: 0x0073B360
+// OFFSET: 0x0073B360/0x140418A70
 int32_t CMapChunk::AreTexturesLoaded() {
     const SMLayer* layer = this->m_layers;
 
@@ -772,7 +791,7 @@ void CMapChunk::Initialize() {
 }
 
 // PROVEN: f3795343 IDENTICAL/NONE
-// OFFSET: 0x0073B6D0
+// OFFSET: 0x0073B6D0/0x140418DF0
 void CMapChunk::Batch() {
     if (this->m_chunkFlags & 0x1) {
         return;
@@ -784,7 +803,7 @@ void CMapChunk::Batch() {
     this->m_area->BatchChunks(index);
 }
 
-// OFFSET: 0x0073B780
+// OFFSET: 0x0073B780/0x140418EC0
 void CMapChunk::CreateVerticesWorldPN(float* vertices, const C3Vector& origin) {
     CalcWorldRows(this, s_worldPNX, s_worldPNY);
 
@@ -823,7 +842,7 @@ void CMapChunk::CreateVerticesWorldPN(float* vertices, const C3Vector& origin) {
     }
 }
 
-// OFFSET: 0x0073C050
+// OFFSET: 0x0073C050/0x140419890
 void CMapChunk::CreateVerticesWorldPNC(float* vertices, const C3Vector& origin) {
     CalcWorldRows(this, s_worldPNCX, s_worldPNCY);
 
@@ -875,7 +894,7 @@ void CMapChunk::CreateVerticesWorldPNC(float* vertices, const C3Vector& origin) 
     }
 }
 
-// OFFSET: 0x0073CD90
+// OFFSET: 0x0073CD90/0x14041A740
 void CMapChunk::CreateVerticesWorldPNC2(float* vertices, const C3Vector& origin) {
     CalcWorldRows(this, s_worldPNC2X, s_worldPNC2Y);
 
@@ -940,7 +959,7 @@ void CMapChunk::CreateVerticesWorldPNC2(float* vertices, const C3Vector& origin)
     }
 }
 
-// OFFSET: 0x0073DF60
+// OFFSET: 0x0073DF60/0x14041BBA0
 void CMapChunk::CreateVerticesLocalPN(float* vertices) {
     float stepX;
     float stepY;
@@ -986,7 +1005,7 @@ void CMapChunk::CreateVerticesLocalPN(float* vertices) {
     }
 }
 
-// OFFSET: 0x0073E660
+// OFFSET: 0x0073E660/0x14041C3C0
 void CMapChunk::CreateVerticesLocalPNC(float* vertices) {
     float stepX;
     float stepY;
@@ -1045,7 +1064,7 @@ void CMapChunk::CreateVerticesLocalPNC(float* vertices) {
     }
 }
 
-// OFFSET: 0x0073F190
+// OFFSET: 0x0073F190/0x14041D250
 uint32_t CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, int32_t lowRes) {
     uint16_t count = 0;
     int32_t flip = this->m_map->m_header.m_flags & 0x20;
@@ -1132,7 +1151,7 @@ uint32_t CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, int32_t lowR
 }
 
 // PROVEN: c6fc17a8 IDENTICAL/NONE
-// OFFSET: 0x0073F520
+// OFFSET: 0x0073F520/0x14041D490
 void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& origin) {
     uint8_t* buffer = static_cast<uint8_t*>(vertices);
 
@@ -1151,12 +1170,12 @@ void CMapChunk::CreateVertices(void* vertices, int32_t index, const C3Vector& or
     }
 }
 
-// OFFSET: 0x0073F5C0
+// OFFSET: 0x0073F5C0/0x14041D510
 void CMapChunk::CreateIndices(uint16_t* indices, uint16_t base, uint32_t& count, int32_t lowRes) {
     count = this->CreateIndices(indices, base, lowRes);
 }
 
-// OFFSET: 0x0073F5E0
+// OFFSET: 0x0073F5E0/0x14041D530
 void CMapChunk::LinkToAsyncHead(void* param) {
     CMapChunk* chunk = static_cast<CMapChunk*>(param);
     const SMLayer* layer = chunk->m_layers;

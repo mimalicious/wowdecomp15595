@@ -62,19 +62,19 @@ TSGrowableArray<uint32_t> CWorldMap::s_rasterSpans;
 // STATIC: 0x00E78BC0
 uint32_t CWorldMap::s_rasterSpanCount;
 
-// STATIC: 0x00E71E8C
+// STATIC: 0x00E71E8C/0x140D5BB74
 uint32_t CWorldMap::s_activeWorldMapIndex;
 
 // STATIC: 0x00E71E98
 CM2Light CWorldMap::s_sunLight;
 
-// STATIC: 0x00E71E90
+// STATIC: 0x00E71E90/0x140D5BB78
 CWorldMap* CWorldMap::s_worldMaps[2];
 
 // STATIC: 0x00D00C38
 float CWorldMap::s_oceanDepthScale = 0.58333331f;
 
-// OFFSET: 0x0072C7D0
+// OFFSET: 0x0072C7D0/0x140405920
 void CWorldMap::InitializeLiquid() {
     float scale = CWorldMap::s_oceanDepthScale;
     memset(CWorldMap::s_emptyDepthCoordTable, 0, sizeof(CWorldMap::s_emptyDepthCoordTable));
@@ -102,7 +102,7 @@ void CWorldMap::InitializeLiquid() {
     CWaterRipple::Initialize();
 }
 
-// OFFSET: 0x0072C9F0
+// OFFSET: 0x0072C9F0/0x140405B50
 void CWorldMap::Initialize() {
     CMap::Initialize();
     CWorldMap::InitializeLiquid();
@@ -143,7 +143,7 @@ void CWorldMap::ClearAllChunkBufs() {
     }
 }
 
-// OFFSET: 0x0072CAE0
+// OFFSET: 0x0072CAE0/0x140405C90
 void CWorldMap::ClearAllRenderChunks() {
     for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
         if (*worldMap) {
@@ -181,7 +181,7 @@ void CWorldMap::RemoveOtherMaps() {
     }
 }
 
-// OFFSET: 0x0072CC20
+// OFFSET: 0x0072CC20/0x140405D70
 int32_t CWorldMap::AddMap(const char* directory, int32_t mapId, int32_t preload) {
     for (uint32_t i = 0; i < 12; i++) {
         if (this->m_maps[i] && this->m_maps[i]->m_mapId == mapId) {
@@ -232,7 +232,7 @@ void CWorldMap::SetCurrent(int32_t mapId, int32_t current) {
     }
 }
 
-// OFFSET: 0x0072CD70
+// OFFSET: 0x0072CD70/0x140405F20
 void CWorldMap::UpdateEntity(CMapEntity* entity) {
     CM2Model* model = entity->m_model;
     entity->m_flags &= ~0x3;
@@ -289,7 +289,7 @@ void CWorldMap::UpdateEntity(CMapEntity* entity) {
 }
 
 // PROVEN: dc043875 IDENTICAL/NONE
-// OFFSET: 0x0072D000
+// OFFSET: 0x0072D000/0x140406160
 void CWorldMap::AddChildMaps(int32_t mapId) {
     for (int32_t i = 0; i < g_mapDB.m_numRecords; i++) {
         MapRec* rec = g_mapDB.GetRecordByIndex(i);
@@ -337,7 +337,7 @@ uint8_t CWorldMap::GetCurrentMapIndex(int32_t x, int32_t y) {
     return index;
 }
 
-// OFFSET: 0x0072D1C0
+// OFFSET: 0x0072D1C0/0x140406500
 void CWorldMap::UpdateEntityLinks(const CAaBox& box) {
     for (CMapEntity* entity = this->m_entityList.Head(); entity; entity = this->m_entityList.Next(entity)) {
         if (box.t.x >= entity->m_bbox.b.x && box.t.y >= entity->m_bbox.b.y && box.t.z >= entity->m_bbox.b.z && entity->m_bbox.t.x >= box.b.x && entity->m_bbox.t.y >= box.b.y && entity->m_bbox.t.z >= box.b.z) {
@@ -346,7 +346,7 @@ void CWorldMap::UpdateEntityLinks(const CAaBox& box) {
     }
 }
 
-// OFFSET: 0x0072D240
+// OFFSET: 0x0072D240/0x140406590
 uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9) {
     CMapEntity* entity = CMap::AllocEntity();
     entity->m_worldMap = this;
@@ -432,7 +432,7 @@ uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_L
     return reinterpret_cast<uintptr_t>(entity);
 }
 
-// OFFSET: 0x0072D4B0
+// OFFSET: 0x0072D4B0/0x140406860
 uintptr_t CWorldMap::AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* a8, int32_t a9) {
     CM2Model* model = CWorldScene::LoadModel(name, matrix, NULL, 0, NULL, NULL, 0, 0, 0, 0);
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(this->AddEntity(model, matrix, callback, param, param64, param32, flags, a8, a9));
@@ -637,7 +637,7 @@ void CWorldMap::Unload() {
     this->DestroyLiquidPerturbators();
 }
 
-// OFFSET: 0x0072DC20
+// OFFSET: 0x0072DC20/0x140407490
 void CWorldMap::PurgeMaps() {
     for (uint32_t i = 0; i < 12; i++) {
         if (this->m_maps[i]) {
@@ -650,7 +650,7 @@ void CWorldMap::PurgeMaps() {
     TextureGxCacheFlush();
 }
 
-// OFFSET: 0x0072DC60
+// OFFSET: 0x0072DC60/0x1404074F0
 void CWorldMap::UpdateRipples(const C3Vector& pos) {
     if (!Liquid::HasDynamicDisplMap()) {
         return;
@@ -688,7 +688,7 @@ void CWorldMap::UpdateRipples(const C3Vector& pos) {
             World::TriData::s_nBatches = 0;
             World::TriData::s_faceIndexCursor = 0;
             World::TriData::s_indexCursor = 0;
-            World::TriData::unk_E4FE48 = 0;
+            World::TriData::s_nMatrices = 0;
 
             World::TriData tris;
             mapObjDef->m_mapObj->GetTris(localBox, 0x40010, tris, mapObjDef);
@@ -863,7 +863,7 @@ void CWorldMap::Destroy() {
     CMap::Destroy();
 }
 
-// OFFSET: 0x0072FAD0
+// OFFSET: 0x0072FAD0/0x14040A240
 CMapDoodadDef* CWorldMap::CreateDoodadDef(uint32_t index, SMODoodadDef& def, const char* name, uint32_t parentId, const C44Matrix& parentMat, uint16_t doodadSet) {
     HASHKEY_DWORD key;
     key.m_key = parentId;
@@ -937,7 +937,7 @@ CMapDoodadDef* CWorldMap::CreateDoodadDef(uint32_t index, SMODoodadDef& def, con
     return doodadDef;
 }
 
-// OFFSET: 0x0072FF10
+// OFFSET: 0x0072FF10/0x14040A7C0
 CMapObjDef* CWorldMap::CreateMapObjDef(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t a5, uint16_t* a6, float* a7, int32_t a8) {
     int32_t uniqueId = CMap::s_globalUniqueId--;
     CMapObjDef* mapObjDef = CMap::AllocMapObjDef();
@@ -1183,7 +1183,7 @@ bool CWorldMap::IntersectMapObjDefs(const C3Segment& seg, float& t, C4Plane& pla
         World::TriData::s_nBatches = 0;
         World::TriData::s_faceIndexCursor = 0;
         World::TriData::s_indexCursor = 0;
-        World::TriData::unk_E4FE48 = 0;
+        World::TriData::s_nMatrices = 0;
 
         World::TriData tris;
 
@@ -1305,7 +1305,7 @@ void CWorldMap::QueryMapObjDefTris(const CAaBox& box, World::TriData& tris, uint
     }
 }
 
-// OFFSET: 0x00731540
+// OFFSET: 0x00731540/0x140406350
 CMap* CWorldMap::GetMap(const C3Vector& pos) {
     if (this->m_isGlobalMapObj) {
         return this->m_maps[0];
@@ -1353,7 +1353,7 @@ bool CWorldMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liqu
     return map->QueryLiquid(pos, nearest, liquidType, height);
 }
 
-// OFFSET: 0x00731660
+// OFFSET: 0x00731660/0x14040C450
 bool CWorldMap::QueryShadow(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
 
@@ -1430,7 +1430,7 @@ static int32_t QueryMapObjDefModels(CMapObjDef* mapObjDef, CM2Model** models, ui
     return count;
 }
 
-// OFFSET: 0x00731870
+// OFFSET: 0x00731870/0x14040C720
 int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower) {
     CMap* map = this->GetMap(pos);
 
@@ -1497,7 +1497,7 @@ int32_t CWorldMap::QueryTerrainHeight(const C3Vector& pos, float& height) {
     return 1;
 }
 
-// OFFSET: 0x00731A10
+// OFFSET: 0x00731A10/0x14040C9F0
 bool CWorldMap::QueryHeight(const C3Vector& start, const C3Vector& end, float& t) {
     CWorldMap::s_queryTag++;
 
@@ -1720,7 +1720,7 @@ bool CWorldMap::IntersectTerrainSpans(const C3Segment& seg, float& t, C4Plane& p
     }
 }
 
-// OFFSET: 0x00732110
+// OFFSET: 0x00732110/0x14040D3A0
 int32_t CWorldMap::QueryAreaId(CMapEntity* entity, uint32_t& areaId) {
     CWorldMap* worldMap = entity->m_worldMap;
 
@@ -1783,7 +1783,7 @@ int32_t CWorldMap::QueryAreaId(CMapEntity* entity, uint32_t& areaId) {
     return 1;
 }
 
-// OFFSET: 0x00732270
+// OFFSET: 0x00732270/0x14040D530
 int32_t CWorldMap::QueryAreaIds(CMapEntity* entity, uint32_t* areaIds) {
     CWorldMap* worldMap = entity->m_worldMap;
     areaIds[0] = 0;
@@ -1862,7 +1862,7 @@ int32_t CWorldMap::QueryAreaIds(CMapEntity* entity, uint32_t* areaIds) {
     return 1;
 }
 
-// OFFSET: 0x00732410
+// OFFSET: 0x00732410/0x14040D6E0
 int32_t CWorldMap::QueryOutdoors(CMapEntity* entity) {
     CMapObjDef* mapObjDef;
     CMapObj* mapObj;
@@ -2099,7 +2099,7 @@ bool CWorldMap::QueryFacets(const CFrustum& frustum, World::FacetData& facets, u
     return facets.facets.Count() != 0;
 }
 
-// OFFSET: 0x00732CA0
+// OFFSET: 0x00732CA0/0x14040E330
 bool CWorldMap::QueryHeight(const C3Vector& pos, float range, float& height) {
     if (range < 0.0099999998f) {
         return false;
@@ -2132,7 +2132,7 @@ bool CWorldMap::QueryHeight(const C3Vector& pos, float range, float& height) {
     return true;
 }
 
-// OFFSET: 0x00732DD0
+// OFFSET: 0x00732DD0/0x14040E460
 bool CWorldMap::IntersectTerrain(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags) {
     float y1 = -(seg.t.y - 17066.666f);
     float y0 = -(seg.b.y - 17066.666f);

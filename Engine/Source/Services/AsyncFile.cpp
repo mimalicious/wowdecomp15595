@@ -148,7 +148,7 @@ float AsyncFileReadGetStreamingBandwidth() {
 }
 
 // PROVEN: c850dd30 IDENTICAL/NONE
-// OFFSET: 0x0053EB20
+// OFFSET: 0x0053EB20/0x1401995F0
 static int CompareStreamingObjects(const void* a, const void* b) {
     int32_t priority1 = static_cast<const CStreamingObj*>(a)->m_priority;
     int32_t priority2 = static_cast<const CStreamingObj*>(b)->m_priority;
@@ -211,7 +211,7 @@ int32_t AsyncFileReadGetStreamingQueue() {
 }
 
 // PROVEN: 337a9368 IDENTICAL/NONE
-// OFFSET: 0x0053EDF0
+// OFFSET: 0x0053EDF0/0x1401999A0
 int32_t AsyncFileReadIsStreaming() {
     g_queueLock.Enter();
 
@@ -242,7 +242,7 @@ int32_t AsyncFileReadIsDiskReading() {
     return reading;
 }
 
-// OFFSET: 0x0053EE70
+// OFFSET: 0x0053EE70/0x140199A40
 int32_t AsyncFileReadComputePriority(int32_t category, int32_t type, int32_t visible, float distanceSq) {
     float distance = sqrt(distanceSq);
     int32_t priority = static_cast<int32_t>((distance < 1000.0f ? distance : 1000.0f) * 0.255f);
@@ -610,7 +610,7 @@ int32_t AsyncFileReadIsReading() {
     return reading;
 }
 
-// OFFSET: 0x0053F970
+// OFFSET: 0x0053F970/0x14019A860
 void AsyncFileReadAddStreamingObject(void (*callback)(void*), void* param, int32_t priority) {
     CStreamingObj* object = s_streamingObjects.New();
     object->m_callback = callback;
@@ -618,12 +618,12 @@ void AsyncFileReadAddStreamingObject(void (*callback)(void*), void* param, int32
     object->m_priority = priority;
 }
 
-// OFFSET: 0x0053F990
+// OFFSET: 0x0053F990/0x14019A8A0
 void AsyncFileReadClearStreamingObjectList() {
     s_streamingObjects.SetCount(0);
 }
 
-// OFFSET: 0x0053F9A0
+// OFFSET: 0x0053F9A0/0x14019A8B0
 void AsyncFileReadUpdateStreamingObjectList() {
     if (!s_streamingObjects.Count()) {
         return;

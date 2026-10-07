@@ -97,7 +97,7 @@ int32_t CMap::SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint
     return 1;
 }
 
-// OFFSET: 0x00784CA0
+// OFFSET: 0x00784CA0/0x1404739F0
 void CMap::CreateAreaTable(const SMAreaInfo* areaInfo) {
     this->m_areaExtents.minX = 0xFFFF;
     this->m_areaExtents.minY = 0xFFFF;
@@ -246,7 +246,7 @@ int32_t CMap::LoadWdt() {
     return 1;
 }
 
-// OFFSET: 0x00785330
+// OFFSET: 0x00785330/0x140473F00
 int32_t CMap::Load(const char* mapName, CWorldMap* worldMap, int32_t mapId, int32_t preload) {
     LoadingScreenEnableFileBar(true);
 
@@ -280,7 +280,7 @@ int32_t CMap::Load(const char* mapName, CWorldMap* worldMap, int32_t mapId, int3
     return 1;
 }
 
-// OFFSET: 0x0079D2D0
+// OFFSET: 0x0079D2D0/0x140491FF0
 void CMap::LoadArea(CMapArea* area) {
     char fileName[256];
     area->m_areaFlags &= ~0x2u;

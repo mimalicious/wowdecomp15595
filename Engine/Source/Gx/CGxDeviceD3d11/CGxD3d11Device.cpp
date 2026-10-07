@@ -728,7 +728,7 @@ char* CGxDeviceD3d11::BufLock(CGxBuf* buf) {
 }
 
 // PROVEN: 5aed507e IDENTICAL/NONE
-// OFFSET: 0x00852980
+// OFFSET: 0x00852980/0x1405824F0
 void CGxDeviceD3d11::ICursorCreate(const CGxFormat& format) {
     CGxDevice::ICursorCreate(format);
 
@@ -783,7 +783,7 @@ void CGxDeviceD3d11::QueryCreate(CGxQuery*& query, EGxQueryType type) {
     }
 }
 
-// OFFSET: 0x00852AF0
+// OFFSET: 0x00852AF0/0x140582650
 int32_t CGxDeviceD3d11::QueryBegin(CGxQuery* query) {
     if (!this->m_context) {
         return 0;
@@ -842,7 +842,7 @@ int32_t CGxDeviceD3d11::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint
 }
 
 // PROVEN: b9cc1e3d IDENTICAL/NONE
-// OFFSET: 0x00852C00
+// OFFSET: 0x00852C00/0x1405827D0
 int32_t CGxDeviceD3d11::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -1464,7 +1464,7 @@ void CGxDeviceD3d11::BufData(CGxBuf* buf, const void* data, uint32_t size, uint3
     this->IBufUnlock(buf, size);
 }
 
-// OFFSET: 0x00852210
+// OFFSET: 0x00852210/0x140581C60
 int32_t CGxDeviceD3d11::IHardwareSupported() {
     UINT flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 
@@ -1483,7 +1483,7 @@ int32_t CGxDeviceD3d11::IHardwareSupported() {
 }
 
 // PROVEN: d97b73ff IDENTICAL/NONE
-// OFFSET: 0x00850270
+// OFFSET: 0x00850270/0x14057F530
 void CGxDevice::D3d11ApiQuery(int32_t& supported, int32_t& selectable) {
     if (!CGxDeviceD3d11::ILoadD3dLib()) {
         return;

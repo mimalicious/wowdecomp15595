@@ -41,7 +41,7 @@ int32_t CGxFrameBuffer::Attach(EGxBuffer buffer, CGxTex* texture, uint32_t plane
 }
 
 // PROVEN: b2b9910c IDENTICAL/NONE
-// OFFSET: 0x008563C0
+// OFFSET: 0x008563C0/0x140587080
 int32_t CGxFrameBuffer::Finalize() {
     uint32_t version = CGxFrameBuffer::s_nextVersion;
     this->m_version = version;

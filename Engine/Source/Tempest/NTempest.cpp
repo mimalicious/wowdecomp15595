@@ -494,7 +494,7 @@ void NTempest::SmoothDamp(C4Vector& value, C4Vector& velocity, const C4Vector& t
     }
 }
 
-// OFFSET: 0x00B081A0
+// OFFSET: 0x00B081A0/0x1408CB140
 float NTempest::DistanceSquaredFromEdge(const C2Vector& a, const C2Vector& b, const C2Vector& point) {
     float ex = b.x - a.x;
     float ey = b.y - a.y;

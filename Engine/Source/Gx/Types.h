@@ -379,6 +379,13 @@ enum EGxRenderState {
     GxRenderStates_Last = 95,
 };
 
+enum EGxPolygonOffset {
+    GxPolygonOffset_None = 0,
+    GxPolygonOffset_Default = 1,
+    GxPolygonOffset_Small = 2,
+    GxPolygonOffsets_Last = 3,
+};
+
 enum EGxShTarget {
     GxSh_Vertex = 0,
     GxSh_Hull = 1,

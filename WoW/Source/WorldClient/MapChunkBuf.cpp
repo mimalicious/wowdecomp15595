@@ -68,7 +68,7 @@ CMapChunkBuf* CMapChunkBuf::Alloc(int32_t vertexCount, int32_t indexCount, EGxVe
 }
 
 // PROVEN: b7464487 IDENTICAL/NONE
-// OFFSET: 0x00796410
+// OFFSET: 0x00796410/0x140489440
 CMapChunkBuf::CMapChunkBuf() {
     this->m_lastUsedFrame = 0;
     this->m_vertexBytes = 0;
@@ -106,7 +106,7 @@ CMapChunkBuf::~CMapChunkBuf() {
     }
 }
 
-// OFFSET: 0x00796510
+// OFFSET: 0x00796510/0x140489580
 CMapChunkBufList::~CMapChunkBufList() {
 }
 
@@ -132,7 +132,7 @@ void CMapChunkBuf::Free(CMapChunkBuf* buf) {
     buf->m_lastUsedFrame = World::GetFrameCnt();
 }
 
-// OFFSET: 0x00796640
+// OFFSET: 0x00796640/0x140489750
 void CMapChunkBuf::Update() {
     for (CMapChunkBufList* list = s_freeLists.Head(), * nextList; list; list = nextList) {
         nextList = s_freeLists.Next(list);

@@ -33,7 +33,7 @@ static uint32_t FindZoneLight(int32_t id) {
     return index;
 }
 
-// OFFSET: 0x00652630
+// OFFSET: 0x00652630/0x1402F27A0
 int32_t DayNight::PointInZone(const CZoneLight& zone, const C2Vector& point, float& dist) {
     int32_t inside = 0;
     float minDist = FLT_MAX;
@@ -61,7 +61,7 @@ int32_t DayNight::PointInZone(const CZoneLight& zone, const C2Vector& point, flo
     return inside;
 }
 
-// OFFSET: 0x00652770
+// OFFSET: 0x00652770/0x1402F28D0
 void DayNight::FindAndAddZoneLight() {
     C2Vector pos(DayNight::g_dnInfo.m_camPos.x, DayNight::g_dnInfo.m_camPos.y);
     int32_t mapId = DayNight::g_dnInfo.m_mapId;
@@ -88,7 +88,7 @@ void DayNight::FindAndAddZoneLight() {
     }
 }
 
-// OFFSET: 0x00652C30
+// OFFSET: 0x00652C30/0x1402F2E50
 void DayNight::UpdateZoneLights() {
     if (!DayNight::g_zoneLightsDirty) {
         return;
@@ -143,7 +143,7 @@ void DayNight::UpdateZoneLights() {
 }
 
 // PROVEN: b15ccd3c IDENTICAL/NONE
-// OFFSET: 0x00652F00
+// OFFSET: 0x00652F00/0x1402F31E0
 void DayNight::DNInfo::ClearZoneLights() {
     this->m_zoneLights[0] = NULL;
     this->m_zoneLightBlend[0] = 0.0f;
@@ -159,7 +159,7 @@ void DayNight::DNInfo::ClearZoneLights() {
 }
 
 // PROVEN: 7c3d27ec IDENTICAL/NONE
-// OFFSET: 0x00652F60
+// OFFSET: 0x00652F60/0x1402F3220
 void DayNight::DNInfo::AddZoneLight(int32_t lightId, float blend) {
     if (this->m_zoneLightCount >= 5) {
         return;

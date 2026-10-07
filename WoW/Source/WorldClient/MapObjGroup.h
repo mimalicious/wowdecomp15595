@@ -29,8 +29,8 @@ namespace World {
             /* 0000 */ const C44Matrix* m_matrix;
             /* 0004 */ C3Vector* m_vertexList;
             /* 0008 */ C3Vector* m_normalList;
-            /* 000C */ uint32_t unk_000C;
-            /* 0010 */ uint32_t unk_0010;
+            /* 000C */ float* m_heightList;
+            /* 0010 */ const int8_t* m_packedNormals;
             /* 0014 */ uint16_t* m_indices;
             /* 0018 */ uint16_t* m_faceIndices;
             /* 001C */ uint16_t m_indexCount;
@@ -38,18 +38,22 @@ namespace World {
             /* 0020 */ uint16_t m_minVertexIndex;
             /* 0022 */ uint16_t m_maxVertexIndex;
             /* 0024 */ const CMapObjDef* m_def;
+
+            C3Vector GetNormal(uint16_t index) const;
         };
 
         static uint32_t s_statusFlags;
         static uint32_t s_nBatches;
         static uint32_t s_faceIndexCursor;
         static uint32_t s_indexCursor;
-        static uint32_t unk_E4FE48;
+        static uint32_t s_nMatrices;
+        static C44Matrix s_matrices[32];
         static uint16_t s_faceIndexPool[0x4000];
         static uint16_t s_indexPool[0xC000];
         static Batch s_batches[32];
 
         static Batch* AllocBatch();
+        static C44Matrix* AllocMatrix();
         static Batch* AllocBatch(uint32_t indexCount, uint32_t faceCount);
         static uint16_t* AllocIndices(uint32_t count);
     };

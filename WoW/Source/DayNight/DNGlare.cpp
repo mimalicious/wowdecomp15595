@@ -57,7 +57,7 @@ CGxShader* DayNight::DNGlare::s_queryVertexShader;
 CGxShader* DayNight::DNGlare::s_queryPixelShader;
 
 // PROVEN: bb7ab595 IDENTICAL/NONE
-// OFFSET: 0x0064F7F0
+// OFFSET: 0x0064F7F0/0x1402EEC30
 int32_t DayNight::GlareBase::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }

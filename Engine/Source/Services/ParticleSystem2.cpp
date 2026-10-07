@@ -1428,7 +1428,7 @@ uint32_t CParticleEmitter2::GetNumBatches() {
     return count;
 }
 
-// OFFSET: 0x00B15940
+// OFFSET: 0x00B15940/0x1408DBA20
 uint32_t CParticleEmitter2::GetNumPrimitives() {
     uint32_t count = this->m_liveList.Count() * this->m_indicesPerParticle / 3;
 

@@ -328,7 +328,7 @@ void GxuXformCreateProjection_SG(float fovyInRadians, float aspect, float minZ, 
     GxuXformCreateProjection_Exact(scale, aspect, minZ, maxZ, dst);
 }
 
-// OFFSET: 0x00616780
+// OFFSET: 0x00616780/0x1402A3340
 void GxuXformCreateLookAtSgCompat(const C3Vector& eye, const C3Vector& center, const C3Vector& up, C44Matrix& dst) {
     dst = C44Matrix();
 

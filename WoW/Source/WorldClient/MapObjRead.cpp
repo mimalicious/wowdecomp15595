@@ -42,6 +42,7 @@ static const SMOShaderInfo s_shaderInfo[15] = {
 // STATIC: 0x00EB3254
 static TSGrowableArray<C4Vector> s_tangentScratch;
 
+// PROVEN: 738f2391 IDENTICAL/NONE
 // OFFSET: 0x007940D0/0x1404867D0
 void CMapObj::DestroyMaterial(uint32_t materialId) {
     CMapObjMaterial* material = &this->m_runtimeMaterials[materialId];
@@ -58,7 +59,7 @@ void CMapObj::DestroyMaterial(uint32_t materialId) {
     }
 }
 
-// OFFSET: 0x00794120
+// OFFSET: 0x00794120/0x140486840
 void CMapObjGroup::FixColorVertexAlpha() {
     uint32_t firstExterior = this->m_transBatchCount ? this->m_batches[this->m_transBatchCount - 1].m_maxIndex + 1 : 0;
 
@@ -308,7 +309,7 @@ void CMapObjGroup::AsyncFailedCallback(CAsyncObject* object) {
     World::SetLoadFailed(1, name);
 }
 
-// OFFSET: 0x00794910
+// OFFSET: 0x00794910/0x1404871D0
 uint32_t CMapObjGroup::GetLiquidType(uint32_t legacyType) {
     if (legacyType >= 21 || !legacyType) {
         return legacyType;
@@ -331,7 +332,7 @@ uint32_t CMapObjGroup::GetLiquidType(uint32_t legacyType) {
     return legacyType;
 }
 
-// OFFSET: 0x00794980
+// OFFSET: 0x00794980/0x140487220
 void CMapObjGroup::CreateDataPointers(uint8_t* data, uint8_t* end) {
     CAaBspNode* bspNodes = NULL;
     uint32_t bspNodeCount = 0;
@@ -478,7 +479,7 @@ void CMapObjGroup::CreateDataPointers(uint8_t* data, uint8_t* end) {
     }
 }
 
-// OFFSET: 0x00794E50
+// OFFSET: 0x00794E50/0x140487810
 void CMapObj::AttenTransVerts(CMapObjGroup* group) {
     group->m_renderFlags |= 0x1;
 

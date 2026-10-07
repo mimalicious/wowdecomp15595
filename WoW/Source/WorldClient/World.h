@@ -2,6 +2,7 @@
 #define WOW_SOURCE_WORLDCLIENT_WORLD_H
 
 #include <cstdint>
+#include "Engine/Source/Gx/Types.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
@@ -184,6 +185,8 @@ namespace World {
     void InitializeShaderEffects();
     void OnShaderModelChanged(void* param);
     int32_t ProjectPositionCallback(const C3Vector& pos, float& z, void* param);
+    void ProjectTex2d(const CAaBox& box, const CImVector& color, const C44Matrix* rotation, float fade, uint32_t triFlags, uint32_t flags, EGxPolygonOffset polygonOffset);
+    void ShadowRender(const C3Vector& position, float facing, float scale, const CAaBox& box, float alpha);
     void ProjectTextureCallback(const CAaBox& box, const CImVector& color, int32_t a3, void* param, int32_t a5);
     uint32_t ValidateFarClip(float farClip);
     void SetDetailDoodadDist(float dist);

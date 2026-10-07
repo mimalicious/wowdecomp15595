@@ -12,6 +12,7 @@ CClientLiquidEnvironment* CClientLiquidEnvironment::s_shared;
 // STATIC: 0x00E890C4
 static int32_t s_localLightInitialized;
 
+// PROVEN: f99279b5 IDENTICAL/NONE
 // OFFSET: 0x0076C740
 void CClientLiquidEnvironment::SetInteriorFog(int32_t interiorFog) {
     this->m_interiorFog = interiorFog;

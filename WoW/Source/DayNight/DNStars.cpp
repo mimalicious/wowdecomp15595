@@ -35,14 +35,14 @@ void DayNight::DNStars::Destroy() {
 }
 
 // PROVEN: 674570ad IDENTICAL/NONE
-// OFFSET: 0x0064F660
+// OFFSET: 0x0064F660/0x1402EEA60
 void DayNight::DNStars::Update() {
     this->m_position = DayNight::g_dnInfo.m_camPos;
     this->m_color.a = static_cast<uint8_t>(static_cast<int32_t>(DayNight::InterpTable(s_starAlphaTable, 4, DayNight::g_dnInfo.m_dayFraction) * 254.0f + 1.0f));
 }
 
 // PROVEN: 001fc972 IDENTICAL/NONE
-// OFFSET: 0x0064F6D0
+// OFFSET: 0x0064F6D0/0x1402EEAC0
 int32_t DayNight::DNStars::IsAllLoaded() {
     return this->m_model->IsLoaded() && this->m_model->TexturesAllLoaded();
 }

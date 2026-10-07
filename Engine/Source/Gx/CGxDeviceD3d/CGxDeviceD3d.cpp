@@ -454,7 +454,7 @@ void CGxDeviceD3d::QueryCreate(CGxQuery*& query, EGxQueryType type) {
 }
 
 // PROVEN: 4c939c1c IDENTICAL/NONE
-// OFFSET: 0x0084BC90
+// OFFSET: 0x0084BC90/0x14057A4D0
 int32_t CGxDeviceD3d::QueryBegin(CGxQuery* query) {
     if (!this->m_context) {
         return 0;
@@ -482,7 +482,7 @@ int32_t CGxDeviceD3d::QueryBegin(CGxQuery* query) {
 }
 
 // PROVEN: c65a65ce IDENTICAL/NONE
-// OFFSET: 0x0084BD50
+// OFFSET: 0x0084BD50/0x14057A5B0
 int32_t CGxDeviceD3d::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     if (!this->m_context || !query->m_apiSpecific) {
         return 0;
@@ -1038,7 +1038,7 @@ void CGxDeviceD3d::ISetVertexDeclInstanced() {
 }
 
 // PROVEN: 579e86fe IDENTICAL/NONE
-// OFFSET: 0x00858A20
+// OFFSET: 0x00858A20/0x140589FB0
 void CGxDeviceD3d::ISetIndexBuffer() {
     LPDIRECT3DINDEXBUFFER9 indexBuffer = static_cast<LPDIRECT3DINDEXBUFFER9>(this->m_primIndexBuf->m_pool->m_apiSpecific);
 
@@ -1060,7 +1060,7 @@ void CGxDeviceD3d::ISetVertexStream() {
 }
 
 // PROVEN: 897e8281 IDENTICAL/NONE
-// OFFSET: 0x00858AA0
+// OFFSET: 0x00858AA0/0x14058A060
 void CGxDeviceD3d::ISetVertexStreams() {
     LPDIRECT3DVERTEXBUFFER9 vertexBuffer0 = static_cast<LPDIRECT3DVERTEXBUFFER9>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
     LPDIRECT3DVERTEXBUFFER9 vertexBuffer1 = this->m_primVertexBufs[1] ? static_cast<LPDIRECT3DVERTEXBUFFER9>(this->m_primVertexBufs[1]->m_pool->m_apiSpecific) : NULL;
@@ -3369,7 +3369,7 @@ void CGxDeviceD3d::ICreateReadbackSurface() {
     this->m_d3dDevice->CreateRenderTarget(static_cast<UINT>(window.maxX - window.minX), static_cast<UINT>(window.maxY - window.minY), format, D3DMULTISAMPLE_NONE, 0, TRUE, &this->m_readbackSurface, NULL);
 }
 
-// OFFSET: 0x0084C990
+// OFFSET: 0x0084C990/0x14057B2A0
 void CGxDeviceD3d::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (!this->m_context) {
         return;
@@ -3854,7 +3854,7 @@ CGxDeviceD3d::CGxDeviceD3d() {
     this->DeviceCreateStreamBufs();
 }
 
-// OFFSET: 0x008563E0
+// OFFSET: 0x008563E0/0x1405870A0
 int32_t CGxDeviceD3d::ITexAllocD3dTexture(CGxTex* texId) {
     uint32_t width;
     uint32_t height;
@@ -4372,7 +4372,7 @@ void CGxDeviceD3d::ITexForceRecreation(int32_t all) {
     }
 }
 
-// OFFSET: 0x00857540
+// OFFSET: 0x00857540/0x140588690
 int32_t CGxDeviceD3d::ITexEvictFor(CGxTex* texId, uint32_t size) {
     for (CGxTex* cached = this->m_texCacheList.Tail(); cached && cached->unk_0050 == static_cast<uint32_t>(this->m_frameCount); cached = this->m_texCacheList.Prev(cached)) {
         if (texId->m_flags.m_filter == cached->m_flags.m_filter && texId->m_flags.m_renderTarget == cached->m_flags.m_renderTarget && texId->m_format == cached->m_format && texId->m_target == cached->m_target && texId->m_width == cached->m_width && texId->m_height == cached->m_height) {

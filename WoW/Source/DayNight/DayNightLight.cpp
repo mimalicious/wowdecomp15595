@@ -126,7 +126,7 @@ CImVector* DayNight::DarkenColor(CImVector* out, const CImVector* color, float s
     return out;
 }
 
-// OFFSET: 0x0064B060
+// OFFSET: 0x0064B060/0x1402EAD50
 float DayNight::InterpTable(const C2Vector* table, uint32_t count, float t) {
     float value = t;
 

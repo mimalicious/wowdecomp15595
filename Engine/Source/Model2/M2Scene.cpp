@@ -133,7 +133,7 @@ uint32_t ParticleFlagsToM2Flags(uint32_t flags) {
 }
 
 // PROVEN: 5955f780 IDENTICAL/NONE
-// OFFSET: 0x00827630
+// OFFSET: 0x00827630/0x140545580
 void CM2Scene::EndDraw() {
     this->m_drawing = 0;
 }
@@ -153,7 +153,7 @@ void CM2Scene::BeginHitTest() {
 }
 
 // PROVEN: 75b851aa IDENTICAL/NONE
-// OFFSET: 0x00827660
+// OFFSET: 0x00827660/0x1405455C0
 void CM2Scene::ClearHitTestList() {
     for (CM2Model* model = this->m_hitTestList; model; model = model->m_hitTestNext) {
         *model->m_hitTestPrev = NULL;
@@ -1825,7 +1825,7 @@ CM2Model* CM2Scene::DuplicateModel(CM2Model* source, uint32_t flags) {
     return model;
 }
 
-// OFFSET: 0x0082CEB0
+// OFFSET: 0x0082CEB0/0x14054C760
 void CM2Scene::GarbageCollectModels() {
     while (this->m_recycleList) {
         g_modelPool->Delete(this->m_recycleList, __FILE__, __LINE__);

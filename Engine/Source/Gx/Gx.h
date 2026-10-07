@@ -139,6 +139,7 @@ int32_t GxTexCopy(CGxTex* source, CGxTex* dest, const C2iVector& destPos, const 
 void GxTexDestroy(CGxTex* texId);
 int32_t GxTexReusable(CGxTexParms& parms);
 int32_t GxTexReusable(CGxTex* texId);
+void GxXform(EGxXform xf, C44Matrix& matrix);
 void GxXformPop(EGxXform xf);
 void GxXformProjection(C44Matrix& matrix);
 void GxXformPush(EGxXform xf);

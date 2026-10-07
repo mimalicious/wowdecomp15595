@@ -289,7 +289,7 @@ int32_t CGxDeviceD3d11::ITexCreate(CGxTex* texId) {
 }
 
 // PROVEN: bbd6c235 IDENTICAL/NONE
-// OFFSET: 0x0086B6C0
+// OFFSET: 0x0086B6C0/0x14059F850
 void CGxDeviceD3d11::ITexScratchClear() {
     for (uint32_t i = 0; i < GxTexFormats_Last; i++) {
         this->m_scratchCount[i] = 0;

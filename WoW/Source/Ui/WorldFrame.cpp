@@ -1502,7 +1502,7 @@ static void DrawSpellCursorShadow(uint32_t a1) {
     GxRsSet(GxRs_AlphaOp1, 0);
 
     CImVector color(0xFF, 0xFF, 0xFF, 0xFF);
-    ProjectTex::Render2d(box, color, NULL, 0.5f, a1, 5, 0.4f);
+    ProjectTex2d(box, color, NULL, 0.5f, a1, 5, GxPolygonOffset_Default);
     g_theGxDevicePtr->RsPop();
 }
 

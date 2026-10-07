@@ -24,23 +24,26 @@ HASHKEY_NONE CMapObj::s_mapObjKey;
 // STATIC: 0x00E75688
 TSHashTable<CMapObj, HASHKEY_NONE> CMapObj::s_mapObjHash;
 
+// PROVEN: 90e66194 IDENTICAL/NONE
 // OFFSET: 0x007459F0
 void CMapObj::DestroyPools() {
     CMapObj::bPoolsDirty = 1;
 }
 
+// PROVEN: 346c15fb IDENTICAL/NONE
 // OFFSET: 0x00745A00
 void CMapObj::UpdatePools() {
     CMapObj::bPoolsDirty = 0;
 }
 
-// OFFSET: 0x00745A10
+// PROVEN: 71aa0cc3 IDENTICAL/NONE
+// OFFSET: 0x00745A10/0x140423920
 void CMapObj::LinkToAsyncHead(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CMapObj*>(param)->m_asyncObject, 1);
 }
 
 // PROVEN: bd76315d IDENTICAL/NONE
-// OFFSET: 0x00745A30
+// OFFSET: 0x00745A30/0x140423930
 void CMapObj::InitPtrs() {
     this->m_header = NULL;
     this->m_textureNames = NULL;
@@ -108,12 +111,13 @@ uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
 }
 
 // PROVEN: 893420cb IDENTICAL/NONE
-// OFFSET: 0x00745B60
+// OFFSET: 0x00745B60/0x140423A70
 void CMapObj::ReadGroup(uint32_t groupNum) {
     this->ReadGroup(groupNum, 0);
 }
 
-// OFFSET: 0x00745B80
+// PROVEN: be75624a IDENTICAL/NONE
+// OFFSET: 0x00745B80/0x140423A80
 void CMapObj::WaitLoad() {
     AsyncFileReadWait(this->m_asyncObject);
 }
@@ -123,7 +127,7 @@ void CMapObj::Delete(CMapObj* mapObj) {
     mapObj->m_refCount--;
 }
 
-// OFFSET: 0x00745C50
+// OFFSET: 0x00745C50/0x140423AA0
 void CMapObj::Init() {
     this->m_minimapGroup = 0xFFFF;
     this->m_bbox.b.x = 0.0f;
@@ -181,7 +185,8 @@ void CMapObj::Clear() {
     this->m_dataSize = 0;
 }
 
-// OFFSET: 0x00745DD0
+// PROVEN: 42688913 IDENTICAL/NONE
+// OFFSET: 0x00745DD0/0x140423D10
 int32_t CMapObj::IsGroupLoaded(uint32_t groupNum) {
     if (!(this->m_flags & 0x40)) {
         return 0;
@@ -294,6 +299,7 @@ int32_t CMapObj::TestConvexVolume(const C3Vector& pos) {
     return 1;
 }
 
+// PROVEN: 80205287 IDENTICAL/NONE
 // OFFSET: 0x007462B0/0x140424180
 CMapObjGroup* CMapObj::GetGroup(uint32_t groupNum, int32_t loaded) {
     if (!(this->m_flags & 0x40)) {
@@ -309,7 +315,8 @@ CMapObjGroup* CMapObj::GetGroup(uint32_t groupNum, int32_t loaded) {
     return group;
 }
 
-// OFFSET: 0x007462E0
+// PROVEN: 35c617a3 IDENTICAL/NONE
+// OFFSET: 0x007462E0/0x1404241A0
 void CMapObj::WaitLoadGroup(uint32_t groupNum) {
     AsyncFileReadWait(this->m_groups[groupNum]->m_asyncObject);
 }
@@ -374,7 +381,7 @@ int32_t CMapObj::QueryLiquid(uint32_t ignoreFlags, int32_t requireTiles, const C
     return 0;
 }
 
-// OFFSET: 0x00746460
+// OFFSET: 0x00746460/0x140424350
 int32_t CMapObj::GetDoodadSet(uint32_t doodadIndex) {
     if (!(this->m_flags & 0x40) || doodadIndex >= this->m_doodadDefCount) {
         return -1;
@@ -489,7 +496,7 @@ bool CMapObj::ClosestPortal(uint32_t groupNum, const C3Vector& pos, float* dist,
     return found;
 }
 
-// OFFSET: 0x00747000
+// OFFSET: 0x00747000/0x140425480
 CMapObj::CMapObj() {
     this->m_mapObjGroupCount = 512;
     this->m_bbox.b.x = 0.0f;
@@ -502,7 +509,7 @@ CMapObj::CMapObj() {
     this->Init();
 }
 
-// OFFSET: 0x00747070
+// OFFSET: 0x00747070/0x1404254F0
 CMapObj::~CMapObj() {
     this->Clear();
 }

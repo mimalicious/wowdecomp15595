@@ -119,7 +119,7 @@ const EGxTexFilter CWorldParam::s_textureFilteringModes[6] = { GxTex_LinearMipNe
 // STATIC: 0x00D02964
 const uint32_t CWorldParam::s_textureFilteringAnisotropy[6] = { 1, 1, 2, 4, 8, 16 };
 
-// OFFSET: 0x0076B5C0
+// OFFSET: 0x0076B5C0/0x140453690
 void CWorldParam::SetDefaults(OPTION_PAGE page) {
     if (page != OPTION_PAGE_0) {
         return;

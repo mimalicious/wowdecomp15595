@@ -12,7 +12,7 @@ CM2Scene* DayNight::DNOverrideSky::s_scene;
 uint32_t DayNight::DNOverrideSky::s_lastTimeMs;
 
 // PROVEN: 54190adf IDENTICAL/NONE
-// OFFSET: 0x0064EDB0
+// OFFSET: 0x0064EDB0/0x1402EDDE0
 int32_t DayNight::DNOverrideSky::IsAllLoaded() {
     return this->m_model->IsLoaded() && this->m_model->TexturesAllLoaded();
 }

@@ -648,7 +648,7 @@ void Liquid::DestroyPerturbator(EPertSurface surface, DisplMapPerturbation* pert
     }
 }
 
-// OFFSET: 0x00718300
+// OFFSET: 0x00718300/0x1403EBE50
 void Liquid::AddPerturbation(EPertSurface surface, const C3Vector& pos, float radius, float amplitude) {
     uint32_t index = Liquid::s_displMapCount - 1;
 

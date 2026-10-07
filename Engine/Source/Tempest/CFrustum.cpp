@@ -52,7 +52,7 @@ uint32_t CFrustum::Cull(const CAaBox& box, uint32_t mask) {
     return 3;
 }
 
-// OFFSET: 0x004CC030
+// OFFSET: 0x004CC030/0x140107D90
 uint32_t CFrustum::Cull(const CAaBox& box, uint32_t* outside) {
     const C3Vector* extremes[2] = { &box.t, &box.b };
     *outside = 0;
@@ -107,7 +107,7 @@ void CFrustum::Translate(const C3Vector& v) {
     }
 }
 
-// OFFSET: 0x004CC500
+// OFFSET: 0x004CC500/0x140108240
 uint32_t CFrustum::Cull(const CAaSphere& sphere) {
     float limit = -sphere.r;
 

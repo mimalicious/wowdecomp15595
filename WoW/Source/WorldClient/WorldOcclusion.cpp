@@ -14,13 +14,13 @@ static TSExplicitList<CWorldAntiOccluder, offsetof(CWorldAntiOccluder, m_link)> 
 void CWorldOccluder::Initialize() {
 }
 
-// OFFSET: 0x00780F20
+// OFFSET: 0x00780F20/0x14046E2F0
 void CWorldOccluder::Free() {
     this->m_link.Unlink();
     s_freeOccluders.LinkToTail(this);
 }
 
-// OFFSET: 0x00780F70
+// OFFSET: 0x00780F70/0x14046E3C0
 CWorldOccluder* CWorldOccluder::Alloc() {
     CWorldOccluder* occluder = s_freeOccluders.Head();
 

@@ -683,7 +683,7 @@ void CGUnit_C::RenderMissileTrajectoryTargetingTexture() {
     CImVector color(0xFF, 0xFF, 0xFF, static_cast<uint8_t>(s_trajectoryAlpha * 255.0f + 0.5f));
     C44Matrix rotation;
     rotation.RotateAroundZ(-facing);
-    ProjectTex::Render2d(box, color, &rotation, 0.5f, 0x200122, 5, 0.039999999f);
+    ProjectTex2d(box, color, &rotation, 0.5f, 0x200122, 5, GxPolygonOffset_Small);
     g_theGxDevicePtr->RsPop();
 }
 

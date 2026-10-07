@@ -603,7 +603,7 @@ void CGxDevice::RemoveDisplayChangeCallback(GxDisplayChangeCallback callback) {
     }
 }
 
-// OFFSET: 0x00844810
+// OFFSET: 0x00844810/0x140571440
 void CGxDevice::AddShaderModelChangeCallback(GxShaderModelCallback callback, void* arg) {
     CGxDevice::ShaderModelCall* call = CGxDevice::s_shaderModelChangeCallbacks.New();
     call->m_callback = callback;
@@ -947,7 +947,7 @@ int32_t CGxDevice::CapsWindowHasFocus(int32_t focus) {
 }
 
 // PROVEN: 10d672b6 IDENTICAL/NONE
-// OFFSET: 0x00841AF0
+// OFFSET: 0x00841AF0/0x14056DE50
 void CGxDevice::SetScissor(const CRect& rect) {
     this->m_scissorRectDirty = 1;
     this->m_scissorRect = rect;
@@ -1345,7 +1345,7 @@ void CGxDevice::BufDestroy(CGxBuf*& buf) {
 }
 
 // PROVEN: 5816835d IDENTICAL/NONE
-// OFFSET: 0x00841B40
+// OFFSET: 0x00841B40/0x14056DE90
 void CGxDevice::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     this->m_primVertexBufs[0] = buf;
     this->m_primVertexBufs[1] = NULL;
@@ -1355,7 +1355,7 @@ void CGxDevice::PrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
 }
 
 // PROVEN: 37979e58 IDENTICAL/NONE
-// OFFSET: 0x00841B80
+// OFFSET: 0x00841B80/0x14056DEC0
 void CGxDevice::PrimVertexPtrs(CGxBuf** bufs, const EGxVertexBufferFormat* formats, EGxVertexBufferFormat format) {
     this->m_primVertexBufs[0] = bufs[0];
     this->m_primVertexBufs[1] = bufs[1];
@@ -1978,7 +1978,7 @@ void CGxDevice::DeviceCreatePools() {
 }
 
 // PROVEN: 3eb9bc67 IDENTICAL/NONE
-// OFFSET: 0x008433F0
+// OFFSET: 0x008433F0/0x14056F8A0
 void CGxDevice::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
     if (this->m_frameBuffer == frameBuffer && this->m_frameBufferVersion == frameBuffer->m_version) {
         return;

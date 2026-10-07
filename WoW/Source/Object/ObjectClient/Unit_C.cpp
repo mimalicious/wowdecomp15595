@@ -2186,7 +2186,7 @@ void CGUnit_C::RenderAutoTrackCursor() {
 
     if (this->SetCircleRenderStates()) {
         CImVector color(0x7F, 0xFF, 0xFF, 0xFF);
-        ProjectTex::Render2d(box, color, &matrix, 0.5f, 0x200122, 1, 0.4f);
+        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
     }
 
     g_theGxDevicePtr->RsPop();
@@ -24140,7 +24140,7 @@ void CGUnit_C::RenderTargetSelection() const {
     int32_t states = CGObject_C::SetCircleRenderStates();
 
     if (states) {
-        ProjectTex::Render2d(box, color, &matrix, 0.5f, 0x200122, 1, 0.4f);
+        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
     }
 
     if (this->m_clientFlags & 0x10) {
@@ -24165,7 +24165,7 @@ void CGUnit_C::RenderTargetSelection() const {
             box.Expand(amount);
 
             if (states) {
-                ProjectTex::Render2d(box, color, &matrix, 0.5f, 0x200122, 1, 0.4f);
+                ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
             }
         }
     }
@@ -24215,7 +24215,7 @@ void CGUnit_C::RenderPetTargetSelection() const {
     g_theGxDevicePtr->RsPush();
 
     if (CGObject_C::SetCircleRenderStates()) {
-        ProjectTex::Render2d(box, color, &matrix, 0.5f, 0x200122, 1, 0.4f);
+        ProjectTex2d(box, color, &matrix, 0.5f, 0x200122, 1, GxPolygonOffset_Default);
     }
 
     g_theGxDevicePtr->RsPop();

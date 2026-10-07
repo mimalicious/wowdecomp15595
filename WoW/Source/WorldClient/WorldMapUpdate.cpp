@@ -22,7 +22,7 @@
 #include "WoW/Source/WorldClient/WorldScene.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// OFFSET: 0x007749E0
+// OFFSET: 0x007749E0/0x14045E950
 void CWorldMap::UpdateAllEnvironments() {
     for (CWorldMap** worldMap = CWorldMap::s_worldMaps; worldMap < &CWorldMap::s_worldMaps[2]; worldMap++) {
         if (*worldMap && CWorldScene::s_defaultWorldView) {
@@ -155,7 +155,7 @@ void CWorldMap::UpdateAreas() {
     }
 }
 
-// OFFSET: 0x00774CD0
+// OFFSET: 0x00774CD0/0x14045EE20
 void CWorldMap::UpdateMapObjDefGroups(CMapObj* mapObj, CMapObjDef* mapObjDef, int32_t waitLoad) {
     for (CMapObjDefGroup* group = mapObjDef->m_defGroupList.Head(), * next; group; group = next) {
         next = mapObjDef->m_defGroupList.Next(group);
@@ -361,7 +361,7 @@ void CWorldMap::UpdateBarriers() {
     }
 }
 
-// OFFSET: 0x007754E0
+// OFFSET: 0x007754E0/0x14045F9F0
 void CWorldMap::UpdateMapObjDefs(int32_t waitLoad) {
     if (waitLoad) {
         for (CMapObjDef* mapObjDef = this->m_mapObjDefList.Head(), * next; mapObjDef; mapObjDef = next) {
@@ -447,7 +447,7 @@ void CWorldMap::UpdateMapObjDefs(int32_t waitLoad) {
     }
 }
 
-// OFFSET: 0x007757F0
+// OFFSET: 0x007757F0/0x14045FDF0
 void CWorldMap::Update(int32_t waitLoad) {
     for (uint32_t i = 0; i < 12; i++) {
         if (this->m_maps[i]) {
@@ -465,7 +465,7 @@ void CWorldMap::Update(int32_t waitLoad) {
     this->m_facetQueryValid = 1;
 }
 
-// OFFSET: 0x00775860
+// OFFSET: 0x00775860/0x14045FF20
 void CWorldMap::UpdateAllMaps(int32_t waitLoad) {
     CMapChunkBuf::Update();
     CMapRenderChunk::UpdateBufs();
@@ -560,7 +560,7 @@ void CWorldMap::LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& sta
         World::TriData::s_nBatches = 0;
         World::TriData::s_faceIndexCursor = 0;
         World::TriData::s_indexCursor = 0;
-        World::TriData::unk_E4FE48 = 0;
+        World::TriData::s_nMatrices = 0;
         World::TriData triData;
 
         if (group->GetTris(seg, &dists[slot], 0, 0, &triData, mapObjDef)) {
@@ -642,7 +642,7 @@ int32_t CWorldMap::LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& star
     return 1;
 }
 
-// OFFSET: 0x0079F160
+// OFFSET: 0x0079F160/0x140494580
 void CWorldMap::UpdateStreaming() {
     CCharacterComponent::StreamingUpdate();
     DayNight::StreamingUpdate();

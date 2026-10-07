@@ -21,7 +21,8 @@ static const uint32_t s_cellTriangles[6] = { 0, 18, 17, 0, 1, 18 };
 // STATIC: 0x00EB3A0C
 static TSGrowableArray<CChunkLiquid*> s_batchLiquids;
 
-// OFFSET: 0x0075EDD0
+// PROVEN: c063c8fe IDENTICAL/NONE
+// OFFSET: 0x0075EDD0/0x14048C530
 void CChunkLiquid::Purge() {
     if (this->m_instance) {
         this->m_instance->Release();
@@ -29,18 +30,21 @@ void CChunkLiquid::Purge() {
     }
 }
 
-// OFFSET: 0x0076CDE0
+// PROVEN: 6e4ed08f IDENTICAL/NONE
+// OFFSET: 0x0076CDE0/0x140909D40
 float CChunkLiquid::GetVertexHeight(uint32_t index) const {
     return Liquid::GetChunkHeight(this->m_liquidObject, this->m_vertexData, this->m_vertexCount, index);
 }
 
-// OFFSET: 0x00798930
+// PROVEN: 6d9f518c IDENTICAL/NONE
+// OFFSET: 0x00798930/0x14048C560
 void CChunkLiquid::UpdateResourcePurging() {
     if (this->m_instance) {
         this->m_instance->Purge();
     }
 }
 
+// PROVEN: 834227f6 IDENTICAL/NONE
 // OFFSET: 0x00798940/0x14048C580
 bool CChunkLiquid::HasData() const {
     if (this->m_tileData) {
@@ -50,6 +54,7 @@ bool CChunkLiquid::HasData() const {
     return Liquid::HasData(static_cast<const SMLiquidChunkDesc*>(this->m_owner->m_liquidChunk), static_cast<const SMLiquidInstance*>(this->m_liquidHeader));
 }
 
+// PROVEN: b8e632aa IDENTICAL/NONE
 // OFFSET: 0x00798960
 void CChunkLiquid::CreateVertXY() {
     if (CChunkLiquid::s_vertXYInitialized) {
@@ -73,6 +78,7 @@ void CChunkLiquid::CreateVertXY() {
     CChunkLiquid::s_vertXYInitialized = 1;
 }
 
+// PROVEN: 044bef56 IDENTICAL/NONE
 // OFFSET: 0x007989C0
 void CChunkLiquid::CreateVertZ() {
     memset(this->m_heights, 0, sizeof(this->m_heights));
@@ -85,7 +91,7 @@ void CChunkLiquid::CreateVertZ() {
     }
 }
 
-// OFFSET: 0x00798A60
+// OFFSET: 0x00798A60/0x14048C6F0
 bool CChunkLiquid::GetHeight(const C2Vector& frac, const C2iVector& cell, float& height) const {
     if (cell.x < this->m_yOffset || cell.y < this->m_xOffset || cell.x > this->m_height || cell.y > this->m_width) {
         return false;
@@ -248,6 +254,7 @@ void CChunkLiquid::Batch() {
     instance->Release();
 }
 
+// PROVEN: 0b03f0c6 IDENTICAL/NONE
 // OFFSET: 0x00799BC0
 void CChunkLiquid::RenderPrep() {
     if (!this->m_instance) {

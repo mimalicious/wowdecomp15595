@@ -87,7 +87,7 @@ struct CMapAreaSortEntry {
     float m_distSq;
 };
 
-// OFFSET: 0x007342A0
+// OFFSET: 0x007342A0/0x14040FEC0
 int32_t CMap::LinkStaticEntityGetChunk(const C3Vector& pos, float& height, CMapChunk*& chunk) {
     chunk = NULL;
     int32_t x = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.23999999f);
@@ -108,7 +108,7 @@ int32_t CMap::LinkStaticEntityGetChunk(const C3Vector& pos, float& height, CMapC
     return CMap::GetHeightTerrain(found, pos, x & 0x7, y & 0x7, 1, height);
 }
 
-// OFFSET: 0x00734370
+// OFFSET: 0x00734370/0x140410030
 CMapBaseObjLink* CMap::LinkObjectToMapObjDefGroup(CMapBaseObj* object, CMapObjDefGroup* group) {
     CMapBaseObjLink* link = CMap::AllocBaseObjLink(object, group);
 
@@ -126,7 +126,7 @@ CMapBaseObjLink* CMap::LinkObjectToMapObjDefGroup(CMapBaseObj* object, CMapObjDe
     return link;
 }
 
-// OFFSET: 0x007343C0
+// OFFSET: 0x007343C0/0x1404100A0
 int32_t CMap::LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const CiRect& rect, int32_t linkChunks, int32_t linkMapObjs) {
     CMapAreaTableEntry* entry = this->m_areaTable.Get(rect.minX >> 4, rect.minY >> 4);
 
@@ -218,7 +218,7 @@ int32_t CMap::LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const
 }
 
 // PROVEN: 30adeb3c IDENTICAL/NONE
-// OFFSET: 0x007614F0
+// OFFSET: 0x007614F0/0x140446070
 static int CompareAreaDist(const void* a, const void* b) {
     float distA = static_cast<const CMapAreaSortEntry*>(a)->m_distSq;
     float distB = static_cast<const CMapAreaSortEntry*>(b)->m_distSq;
@@ -305,7 +305,7 @@ void CMap::Destroy() {
 }
 
 // PROVEN: 792fbef9 IDENTICAL/NONE
-// OFFSET: 0x00735CB0
+// OFFSET: 0x00735CB0/0x1404121B0
 uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t shadowMode) {
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
 }
@@ -322,7 +322,7 @@ void CMap::ClearChunkDetailDoodads() {
     }
 }
 
-// OFFSET: 0x00735D50
+// OFFSET: 0x00735D50/0x140412270
 void CMap::ClearRenderChunks() {
     for (CMapArea* area = this->m_areaList.Head(); area; area = this->m_areaList.Next(area)) {
         for (CMapChunk* chunk = area->m_chunkList.Head(); chunk; chunk = area->m_chunkList.Next(chunk)) {
@@ -345,11 +345,11 @@ void CMap::ClearChunkBufs() {
     }
 }
 
-// OFFSET: 0x00735E30
+// OFFSET: 0x00735E30/0x1404123A0
 CMap::~CMap() {
 }
 
-// OFFSET: 0x00735F50
+// OFFSET: 0x00735F50/0x140412520
 CMap::CMap() {
     this->m_mapFlags &= ~0xFFu;
     this->m_type |= 0x8;
@@ -358,7 +358,7 @@ CMap::CMap() {
     this->m_mapId = -1;
 }
 
-// OFFSET: 0x007616E0
+// OFFSET: 0x007616E0/0x1404462F0
 void CMap::UpdateArea(CMapArea* area, const CiRect& rect, int32_t depth) {
     if (rect.minX > World::gbChunkRect.maxX || rect.minY > World::gbChunkRect.maxY || rect.maxX < World::gbChunkRect.minX || rect.maxY < World::gbChunkRect.minY) {
         area->PurgeChunks(rect);
@@ -391,7 +391,7 @@ void CMap::UpdateArea(CMapArea* area, const CiRect& rect, int32_t depth) {
     this->UpdateArea(area, quad, depth + 1);
 }
 
-// OFFSET: 0x00761800
+// OFFSET: 0x00761800/0x140446460
 void CMap::UpdateLowDetailMapObjDefs() {
     for (uint32_t i = 0; i < this->m_lowDetail.m_lowDetailMapObjDefs.m_count; i++) {
         CMapObjDef* mapObjDef = this->m_lowDetail.m_lowDetailMapObjDefs.m_data[i];
@@ -461,7 +461,7 @@ void CMap::UpdateLowDetailMapObjDefs() {
     }
 }
 
-// OFFSET: 0x00761AB0
+// OFFSET: 0x00761AB0/0x140446790
 void CMap::PreUpdateAreas() {
     int32_t minX = World::gbChunkRect.minX >> 4;
     int32_t maxX = World::gbChunkRect.maxX >> 4;
@@ -562,7 +562,7 @@ void CMap::PreUpdateAreas() {
     }
 }
 
-// OFFSET: 0x00761F20
+// OFFSET: 0x00761F20/0x140446D20
 void CMap::ProcessAreaLowUpdateList() {
     if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11 || g_theGxDevicePtr->DeviceApi() == GxApi_GLL) {
         return;
@@ -579,7 +579,7 @@ void CMap::ProcessAreaLowUpdateList() {
     }
 }
 
-// OFFSET: 0x00761F80
+// OFFSET: 0x00761F80/0x140446DB0
 void CMap::ProcessChunkLiquidUpdateList() {
     if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11 || g_theGxDevicePtr->DeviceApi() == GxApi_GLL) {
         return;
@@ -597,7 +597,7 @@ void CMap::ProcessChunkLiquidUpdateList() {
     }
 }
 
-// OFFSET: 0x00762020
+// OFFSET: 0x00762020/0x140446EB0
 void CMap::ProcessRenderChunkUpdateList() {
     if (g_theGxDevicePtr->DeviceApi() == GxApi_D3d11 || g_theGxDevicePtr->DeviceApi() == GxApi_GLL) {
         return;
@@ -615,7 +615,7 @@ void CMap::ProcessRenderChunkUpdateList() {
     }
 }
 
-// OFFSET: 0x007620C0
+// OFFSET: 0x007620C0/0x140446F90
 void CMap::ProcessDoodadDefUpdateList() {
     int32_t streaming = AsyncFileReadIsStreaming();
     C3Vector guardBand = World::GetGuardBandPosition();
@@ -742,12 +742,12 @@ void CMap::ProcessDoodadDefUpdateList() {
 }
 
 // PROVEN: 8e810a58 IDENTICAL/NONE
-// OFFSET: 0x00762580
+// OFFSET: 0x00762580/0x140447580
 void CMap::PreUpdateMap() {
     this->PreUpdateAreas();
 }
 
-// OFFSET: 0x00761DE0
+// OFFSET: 0x00761DE0/0x140446B80
 void CMap::UpdateAreas(int32_t noDistance, int32_t urgent) {
     CiRect rect;
 
@@ -792,7 +792,7 @@ void CMap::UpdateAreas(int32_t noDistance, int32_t urgent) {
     }
 }
 
-// OFFSET: 0x00762590
+// OFFSET: 0x00762590/0x140447590
 void CMap::UpdateMap() {
     this->UpdateAreas(0, 0);
 
@@ -883,7 +883,7 @@ void CMap::TestQueryAdd(const CFacet& facet, CImVector color, const C44Matrix* m
     *CMap::s_testQueryIndices.New() = base + 2;
 }
 
-// OFFSET: 0x0079D470
+// OFFSET: 0x0079D470/0x140492220
 CMapArea* CMap::PrepareArea(int32_t x, int32_t y) {
     CMapArea* area = CMap::AllocArea();
     this->m_areaList.LinkToTail(area);

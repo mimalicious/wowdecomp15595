@@ -8,7 +8,8 @@
 #include "WoW/Source/WorldClient/MapObjRender.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// OFFSET: 0x0075EDD0
+// PROVEN: c6695cb7 IDENTICAL/NONE
+// OFFSET: 0x0075EDD0/0x14048C530
 void CMapObjDefGroup::WaterDestroy() {
     if (this->m_liquidInstance) {
         this->m_liquidInstance->Release();
@@ -16,11 +17,13 @@ void CMapObjDefGroup::WaterDestroy() {
     }
 }
 
+// PROVEN: e9e8d538 IDENTICAL/NONE
 // OFFSET: 0x0075EE50/0x140442E60
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {
     return CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end);
 }
 
+// PROVEN: a922f468 IDENTICAL/NONE
 // OFFSET: 0x0075EF10
 void CMapObjDefGroup::ExtendBounds(const CAaBox& box) {
     this->m_bbox |= box;
@@ -69,7 +72,7 @@ void CMapObjDefGroup::ClearRefs() {
     this->m_materialState = 0;
 }
 
-// OFFSET: 0x0075FD10
+// OFFSET: 0x0075FD10/0x140443F50
 void CMapObjDefGroup::CreateDoodadRefs() {
     CMapObjDef* mapObjDef = this->m_mapObjDef;
     CMapObj* mapObj = mapObjDef->m_mapObj;
@@ -125,7 +128,7 @@ void CMapObjDefGroup::CreateDoodadRefs() {
     this->m_flags |= 0x8;
 }
 
-// OFFSET: 0x0075FF20
+// OFFSET: 0x0075FF20/0x1404441D0
 void CMapObjDefGroup::CreateBatchMaterials() {
     CMapObj* mapObj = this->m_mapObjDef->m_mapObj;
     CMapObjGroup* group = mapObj->GetGroup(this->m_groupNum, 0);
@@ -179,7 +182,7 @@ CMapObjDefGroup::CMapObjDefGroup() {
     this->m_materialState = 0;
 }
 
-// OFFSET: 0x00760EF0
+// OFFSET: 0x00760EF0/0x140445950
 void CMapObjDef::CreateGroups() {
     uint32_t count = this->m_mapObj->m_groupCount;
     this->m_defGroups.SetCount(count);
@@ -228,7 +231,7 @@ CMapObjDef::~CMapObjDef() {
     }
 }
 
-// OFFSET: 0x007613D0
+// OFFSET: 0x007613D0/0x140445F50
 void CMapObjDef::UpdateLoaded() {
     CAaBox box;
     box.b.x = 0.0f;

@@ -188,14 +188,14 @@ void CMapArea::PurgeXXX() {
 }
 
 // PROVEN: 85663c4a IDENTICAL/NONE
-// OFFSET: 0x007869A0
+// OFFSET: 0x007869A0/0x140475CC0
 void CMapArea::PurgeChunk(CMapChunk* chunk) {
     this->m_chunks[16 * chunk->m_indexY + chunk->m_indexX] = NULL;
     chunk->Purge();
     CMap::FreeChunk(chunk);
 }
 
-// OFFSET: 0x00796920
+// OFFSET: 0x00796920/0x140489AB0
 int32_t CMapArea::IsLoading() {
     for (uint32_t i = 0; i < 3; i++) {
         if (this->m_asyncObjects[i]) {
@@ -305,7 +305,7 @@ void CMapArea::AsyncFailedCallback(CAsyncObject* object) {
     World::SetLoadFailed(1, NULL);
 }
 
-// OFFSET: 0x00796E70
+// OFFSET: 0x00796E70/0x14048A180
 void CMapArea::AsyncPriorityCallback(void* param) {
     CMapArea* area = static_cast<CMapArea*>(param);
 
@@ -316,7 +316,7 @@ void CMapArea::AsyncPriorityCallback(void* param) {
     }
 }
 
-// OFFSET: 0x00796E80
+// OFFSET: 0x00796E80/0x14048A1C0
 void CMapArea::PurgeChunks(const CiRect& rect) {
     int32_t maxX = rect.maxX - this->m_chunkOffsetX;
     int32_t minY = rect.minY - this->m_chunkOffsetY;
@@ -334,7 +334,7 @@ void CMapArea::PurgeChunks(const CiRect& rect) {
     }
 }
 
-// OFFSET: 0x007972F0
+// OFFSET: 0x007972F0/0x14048A6F0
 CTexture* CMapArea::LoadTexture(uint32_t index) {
     CMapAreaTexture* texture = &this->m_textures.m_data[index];
 
@@ -347,7 +347,7 @@ CTexture* CMapArea::LoadTexture(uint32_t index) {
     return texture->m_texture;
 }
 
-// OFFSET: 0x00797340
+// OFFSET: 0x00797340/0x14048A740
 CTexture* CMapArea::GetTexture(uint32_t index) {
     return this->m_textures.m_data[index].m_texture;
 }
@@ -382,7 +382,7 @@ void CMapArea::PrepareChunk(int32_t x, int32_t y) {
     chunk->Create(isNew);
 }
 
-// OFFSET: 0x00797490
+// OFFSET: 0x00797490/0x14048A930
 void CMapArea::Update(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
         int32_t localY = y & 0xF;
@@ -574,7 +574,7 @@ void CMapArea::AsyncLoadCallback(CAsyncObject* object) {
     }
 }
 
-// OFFSET: 0x00797CA0
+// OFFSET: 0x00797CA0/0x14048B550
 void CMapArea::Load(const char* fileName) {
     SFileImpl* file = NULL;
 
@@ -591,7 +591,7 @@ void CMapArea::Load(const char* fileName) {
 }
 
 // PROVEN: 4ac5fdf4 IDENTICAL/NONE
-// OFFSET: 0x007968D0
+// OFFSET: 0x007968D0/0x140489A70
 void CMapArea::InitBounds() {
     float posX = this->m_posX;
     float posY = this->m_posY;
@@ -603,7 +603,7 @@ void CMapArea::InitBounds() {
     this->m_bbox.b.z = 100000.0f;
 }
 
-// OFFSET: 0x00797120
+// OFFSET: 0x00797120/0x14048A4C0
 void CMapArea::BatchChunks(const C2iVector& index) {
     uint32_t first = 16 * index.y + index.x;
     CMapChunk* chunks[4];

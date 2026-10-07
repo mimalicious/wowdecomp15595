@@ -64,7 +64,7 @@ static TSObjectAllocPool<T>* NewPool(const char* name, uint32_t objectsPerBlock,
 }
 
 // PROVEN: bc78ff82 IDENTICAL/NONE
-// OFFSET: 0x00775900
+// OFFSET: 0x00775900/0x14045FFE0
 void* CMap::AllocRawAreaData(uint32_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
@@ -95,7 +95,7 @@ void CMap::FreeMapObjGroup(CMapObjGroup* mapObjGroup) {
     CMap::s_mapObjGroupHeap->Delete(mapObjGroup, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x007760A0
+// OFFSET: 0x007760A0/0x1404606C0
 CMapArea* CMap::AllocArea() {
     return CMap::s_areaHeap->New(__FILE__, __LINE__);
 }
@@ -121,7 +121,7 @@ CMapChunk* CMap::AllocChunk() {
     return CMap::s_chunkHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x007761D0
+// OFFSET: 0x007761D0/0x1404607E0
 void CMap::FreeChunk(CMapChunk* chunk) {
     chunk->m_areaLink.Unlink();
     CMap::s_chunkHeap->Delete(chunk, __FILE__, __LINE__);
@@ -132,7 +132,7 @@ CMapRenderChunk* CMap::AllocRenderChunk() {
     return CMap::s_renderChunkHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776270
+// OFFSET: 0x00776270/0x140460890
 void CMap::FreeRenderChunk(CMapRenderChunk* renderChunk) {
     renderChunk->m_link.Unlink();
     CMap::s_renderChunkHeap->Delete(renderChunk, __FILE__, __LINE__);
@@ -143,7 +143,7 @@ CMapChunkBuf* CMap::AllocChunkBuf() {
     return CMap::s_chunkBufHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776310
+// OFFSET: 0x00776310/0x140460940
 void CMap::FreeChunkBuf(CMapChunkBuf* chunkBuf) {
     chunkBuf->m_link.Unlink();
     CMap::s_chunkBufHeap->Delete(chunkBuf, __FILE__, __LINE__);
@@ -169,7 +169,7 @@ void CMap::FreeEntity(CMapEntity* entity) {
     CMap::s_entityHeap->Delete(entity, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776470
+// OFFSET: 0x00776470/0x140460AA0
 CMapObjDefGroup* CMap::AllocMapObjDefGroup() {
     return CMap::s_mapObjDefGroupHeap->New(__FILE__, __LINE__);
 }
@@ -195,7 +195,7 @@ CChunkLiquid* CMap::AllocChunkLiquid() {
     return CMap::s_chunkLiquidHeap->New(__FILE__, __LINE__);
 }
 
-// OFFSET: 0x007765A0
+// OFFSET: 0x007765A0/0x140460BD0
 void CMap::FreeChunkLiquid(CChunkLiquid* liquid) {
     CMap::s_chunkLiquidHeap->Delete(liquid, __FILE__, __LINE__);
 }

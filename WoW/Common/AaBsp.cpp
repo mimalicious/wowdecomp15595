@@ -12,7 +12,7 @@ CAaBspDigestCache* g_BspDigestCache;
 // STATIC: 0x00E73F2C
 int32_t CAaBspDigestCache::s_digestReplaceIndex;
 
-// OFFSET: 0x00730530
+// OFFSET: 0x00730530/0x14040B010
 void CAaBsp::Set(CAaBspNode* nodes, uint32_t nNodes, uint16_t* nodeFaceIndices, uint32_t nNodeFaceIndices, const CAaBox& aaBox) {
     this->m_nodes = nodes;
     this->m_rootNode = nodes;

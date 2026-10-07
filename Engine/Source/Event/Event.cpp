@@ -48,7 +48,7 @@ void EventInitiateShutdown() {
 }
 
 // PROVEN: 047bcbf3 IDENTICAL/NONE
-// OFFSET: 0x008A0090
+// OFFSET: 0x008A0090/0x1405E1250
 HEVENTCONTEXT EventCreateContextEx(int32_t interactive, EVENTHANDLERFUNC initializeHandler, EVENTHANDLERFUNC destroyHandler, uint32_t idleTime, uint32_t debugFlags) {
     return IEvtSchedulerCreateContext(interactive, initializeHandler, destroyHandler, idleTime, debugFlags);
 }

@@ -8,7 +8,7 @@
 #include "WoW/Source/DayNight/DNStars.h"
 #include "WoW/Source/WorldClient/MapObj.h"
 
-// OFFSET: 0x00B38360
+// OFFSET: 0x00B38360/0x140904290
 static void LinkAllToAsyncHead(void* param) {
     for (DayNight::DNOverrideSky* sky = DayNight::g_overrideSky.Head(); sky; sky = DayNight::g_overrideSky.Next(sky)) {
         sky->LinkToAsyncHead();
@@ -43,7 +43,7 @@ void DayNight::Preload(const C3Vector& pos) {
     DayNight::Update(FrameTime::GetCurTimeMs(), FrameTime::GetTickTimeSec(), FrameTime::GetCurTimeSec());
 }
 
-// OFFSET: 0x00B383E0
+// OFFSET: 0x00B383E0/0x140904330
 int32_t DayNight::IsAllLoaded() {
     for (DNOverrideSky* sky = DayNight::g_overrideSky.Head(); sky; sky = DayNight::g_overrideSky.Next(sky)) {
         if (!sky->IsAllLoaded()) {
@@ -60,7 +60,7 @@ int32_t DayNight::IsAllLoaded() {
 }
 
 // PROVEN: 00212bb2 IDENTICAL/NONE
-// OFFSET: 0x00B38480
+// OFFSET: 0x00B38480/0x140904410
 void DayNight::StreamingUpdate() {
     if (!DayNight::IsAllLoaded()) {
         AsyncFileReadAddStreamingObject(LinkAllToAsyncHead, NULL, 0);

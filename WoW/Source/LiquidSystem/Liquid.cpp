@@ -88,7 +88,7 @@ void Liquid::SignalConfigChanged(int32_t materials) {
     }
 }
 
-// OFFSET: 0x0071AD20
+// OFFSET: 0x0071AD20/0x1403EF450
 void Liquid::SetUnderWaterFog(float start, float end, float density, const CImVector& color) {
     s_underWaterFogStart = start;
     s_underWaterFogEnd = end;
@@ -104,7 +104,7 @@ void Liquid::GetUnderWaterFog(float& start, float& end, float& density, CImVecto
     color = s_underWaterFogColor;
 }
 
-// OFFSET: 0x0071ADA0
+// OFFSET: 0x0071ADA0/0x1403EF4B0
 void Liquid::SetAboveWaterFog(float start, float end, float density, const CImVector& color) {
     s_aboveWaterFogStart = start;
     s_aboveWaterFogEnd = end;
@@ -133,7 +133,7 @@ uint32_t Liquid::GetRippleDetail() {
 }
 
 // PROVEN: af6e86d2 IDENTICAL/NONE
-// OFFSET: 0x0071AE40
+// OFFSET: 0x0071AE40/0x1403EF2B0
 uint32_t Liquid::GetReflectionMode() {
     return s_reflectionMode;
 }
@@ -157,7 +157,7 @@ int32_t Liquid::CameraSubmerged() {
 }
 
 // PROVEN: b651f811 IDENTICAL/NONE
-// OFFSET: 0x0071AE80
+// OFFSET: 0x0071AE80/0x1403EF2F0
 void Liquid::SetCameraSubmerged(int32_t submerged) {
     s_cameraSubmerged = submerged;
 }
@@ -217,13 +217,13 @@ void Liquid::Destroy() {
     }
 }
 
-// OFFSET: 0x0071AF30
+// OFFSET: 0x0071AF30/0x1403EF3A0
 int32_t Liquid::IsAllLoaded(uint32_t liquidType) {
     IMaterial* material = Liquid::CMaterialBank::GetMaterial(liquidType);
     return material->IsAllLoaded(Liquid::CSettingsBank::GetSettings(liquidType));
 }
 
-// OFFSET: 0x0071AF60
+// OFFSET: 0x0071AF60/0x1403EF3E0
 void Liquid::LinkToAsyncHead(uint32_t liquidType) {
     IMaterial* material = Liquid::CMaterialBank::GetMaterial(liquidType);
     material->LinkToAsyncHead(Liquid::CSettingsBank::GetSettings(liquidType));
@@ -394,7 +394,7 @@ int32_t Liquid::Initialize(int32_t cameraRelativeCoords, float worldCoordScale) 
     return 1;
 }
 
-// OFFSET: 0x0071B2A0
+// OFFSET: 0x0071B2A0/0x1403EF800
 void Liquid::Update() {
     if (s_configDirty) {
         if (s_materialsDirty) {

@@ -70,7 +70,7 @@ void CGxDeviceD3d11::IStateReset() {
 }
 
 // PROVEN: 4c6bafa7 IDENTICAL/NONE
-// OFFSET: 0x0086D570
+// OFFSET: 0x0086D570/0x1405A1EA0
 void CGxDeviceD3d11::ISetIndexBuffer() {
     ID3D11Buffer* indexBuffer = static_cast<ID3D11Buffer*>(this->m_primIndexBuf->m_pool->m_apiSpecific);
 
@@ -81,7 +81,7 @@ void CGxDeviceD3d11::ISetIndexBuffer() {
 }
 
 // PROVEN: 2ce63dde IDENTICAL/NONE
-// OFFSET: 0x0086D5B0
+// OFFSET: 0x0086D5B0/0x1405A1F00
 void CGxDeviceD3d11::ISetVertexBuffer() {
     ID3D11Buffer* vertexBuffer = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
     UINT offset = 0;
@@ -93,7 +93,7 @@ void CGxDeviceD3d11::ISetVertexBuffer() {
 }
 
 // PROVEN: d6040b1d IDENTICAL/NONE
-// OFFSET: 0x0086D600
+// OFFSET: 0x0086D600/0x1405A1F60
 void CGxDeviceD3d11::ISetVertexBuffers() {
     ID3D11Buffer* vertexBuffer0 = static_cast<ID3D11Buffer*>(this->m_primVertexBufs[0]->m_pool->m_apiSpecific);
     ID3D11Buffer* vertexBuffer1 = this->m_primVertexBufs[1] ? static_cast<ID3D11Buffer*>(this->m_primVertexBufs[1]->m_pool->m_apiSpecific) : NULL;

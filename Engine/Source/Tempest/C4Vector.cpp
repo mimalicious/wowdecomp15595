@@ -24,3 +24,12 @@ C4Vector::C4Vector(const CImVector& color) {
     this->z = color.b * 0.0039215689f;
     this->w = 0.0039215689f * color.a;
 }
+
+// PROVEN: ade01e28 IDENTICAL/IDENTICAL
+// OFFSET: 0x004CBE40/0x140107BB0
+void C4Vector::Set(const CImVector& color) {
+    this->x = color.r * 0.0039215689f;
+    this->y = color.g * 0.0039215689f;
+    this->z = color.b * 0.0039215689f;
+    this->w = color.a * 0.0039215689f;
+}

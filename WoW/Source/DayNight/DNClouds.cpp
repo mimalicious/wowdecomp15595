@@ -110,7 +110,7 @@ static float FastInvSqrt(float value) {
 }
 
 // PROVEN: b83565b0 IDENTICAL/NONE
-// OFFSET: 0x0064D260
+// OFFSET: 0x0064D260/0x1402E8790
 void DayNight::DNClouds::SetFullUpdate() {
     this->m_fullUpdate = 1;
 }

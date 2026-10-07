@@ -36,7 +36,7 @@ struct SFogQueueLess {
 
 typedef std::priority_queue<std::pair<float, uint32_t>, std::vector<std::pair<float, uint32_t>, Blizzard::Memory::AllocSTL_raw<std::pair<float, uint32_t> > >, SFogQueueLess> FogQueue;
 
-// OFFSET: 0x00733140
+// OFFSET: 0x00733140/0x14040E850
 void CMapEntity::UpdateMapObjLiquid(CMapObjDef* mapObjDef, CMapObjGroup* group) {
     C3Vector local = this->m_position * mapObjDef->m_invMat;
     uint32_t liquidType;
@@ -63,7 +63,7 @@ void CMapEntity::UpdateMapObjLiquid(CMapObjDef* mapObjDef, CMapObjGroup* group) 
     }
 }
 
-// OFFSET: 0x007332E0
+// OFFSET: 0x007332E0/0x14040EA00
 void CMapEntity::UpdateTerrainLiquid() {
     C3Vector pos = this->m_position;
     uint32_t liquidType;
@@ -86,7 +86,7 @@ void CMapEntity::UpdateTerrainLiquid() {
     }
 }
 
-// OFFSET: 0x00733390
+// OFFSET: 0x00733390/0x14040EAC0
 static void ApproachColor(const CImVector& target, CImVector& current) {
     int32_t dr = target.r - current.r;
     int32_t dg = target.g - current.g;
@@ -136,7 +136,7 @@ static void ApproachColor(const CImVector& target, CImVector& current) {
     }
 }
 
-// OFFSET: 0x007334B0
+// OFFSET: 0x007334B0/0x14040EC00
 void CMapEntity::UpdateBounds() {
     CM2Model* model = this->m_model;
 
@@ -330,7 +330,7 @@ void CMapEntity::AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const ui
     }
 }
 
-// OFFSET: 0x00734050
+// OFFSET: 0x00734050/0x14040FAA0
 void CMapEntity::UpdateLighting() {
     CImVector& ambient = *reinterpret_cast<CImVector*>(&this->unk_00D4);
     CImVector& direct = *reinterpret_cast<CImVector*>(&this->unk_00D8);
@@ -399,7 +399,7 @@ void CMapEntity::UpdateLighting() {
     }
 }
 
-// OFFSET: 0x00734710
+// OFFSET: 0x00734710/0x140410610
 int32_t CMapEntity::QueryInterior(int32_t a2) {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -491,7 +491,7 @@ int32_t CMapEntity::QueryMapObjSubzoneName(const char*& name, uint32_t& areaId) 
     return 1;
 }
 
-// OFFSET: 0x007348D0
+// OFFSET: 0x007348D0/0x140410920
 int32_t CMapEntity::QueryMapObjAreaTable(const WMOAreaTableRec*& groupRec, const WMOAreaTableRec*& rootRec, uint32_t& wmoGroupId, int32_t a5) {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -518,7 +518,7 @@ int32_t CMapEntity::QueryMapObjAreaTable(const WMOAreaTableRec*& groupRec, const
     return 0;
 }
 
-// OFFSET: 0x007349B0
+// OFFSET: 0x007349B0/0x140410A40
 int32_t CMapEntity::QueryMapObjFileName(const char*& fileName) {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -641,7 +641,7 @@ bool CMapEntity::QueryMapObjMatrix(C44Matrix* matrix, C44Matrix* invMatrix) {
     return true;
 }
 
-// OFFSET: 0x00734C70
+// OFFSET: 0x00734C70/0x140410F20
 void CMapEntity::UpdateLiquid() {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -663,7 +663,7 @@ void CMapEntity::UpdateLiquid() {
     this->UpdateTerrainLiquid();
 }
 
-// OFFSET: 0x00734CE0
+// OFFSET: 0x00734CE0/0x140410FC0
 void CMapEntity::UpdateMapObjLiquid() {
     CMapObjDef* mapObjDef;
     CMapObj* mapObj;
@@ -693,7 +693,7 @@ void CMapEntity::QueryLiquidSounds(TSGrowableArray<World::LiquidQueryResult>& re
     }
 }
 
-// OFFSET: 0x00734E60
+// OFFSET: 0x00734E60/0x1404111B0
 void CMapEntity::UpdatePortals() {
     for (CMapBaseObjLink* link = this->m_parentLinkList.Head(), * next; link; link = next) {
         next = this->m_parentLinkList.Next(link);
@@ -754,13 +754,13 @@ void CMapEntity::UpdatePortals() {
     }
 }
 
-// OFFSET: 0x007354A0
+// OFFSET: 0x007354A0/0x1404117F0
 void CMapEntity::EnablePortals(int32_t enable) {
     this->m_staticFlags = this->m_staticFlags ^ ((this->m_staticFlags ^ (2 * (enable != 0))) & 0x2) | 0x1;
     this->UpdatePortals();
 }
 
-// OFFSET: 0x00735560
+// OFFSET: 0x00735560/0x140411900
 void CMapEntity::Update() {
     if (this->m_model) {
         int32_t status = this->m_model->GetAsyncRenderStatusRecursive();
@@ -799,7 +799,7 @@ void CMapEntity::Update() {
     }
 }
 
-// OFFSET: 0x007356D0
+// OFFSET: 0x007356D0/0x140411A10
 int32_t CMapEntity::QueryCameraFog(SMOFog* fog, uint8_t& found, float& distance) {
     CWorldView* view = CWorldScene::s_defaultWorldView;
     CMapObjDef* mapObjDef = view->m_viewerMapObjDef;

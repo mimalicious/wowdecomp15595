@@ -25,7 +25,7 @@ CGxShader* DayNight::DNPlanet::s_vertexShader;
 CGxShader* DayNight::DNPlanet::s_pixelShader;
 
 // PROVEN: d39fed51 IDENTICAL/NONE
-// OFFSET: 0x00650C80
+// OFFSET: 0x00650C80/0x1402F0670
 int32_t DayNight::DNPlanet::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }

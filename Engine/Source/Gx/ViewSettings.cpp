@@ -42,7 +42,7 @@ void ViewSettings::SetViewportFarClip(float farClip) {
 }
 
 // PROVEN: 888189fe IDENTICAL/NONE
-// OFFSET: 0x00A30150
+// OFFSET: 0x00A30150/0x1407DA020
 void ViewSettings::SetSubmerged(int32_t submerged) {
     s_submerged = submerged;
 }
@@ -53,7 +53,7 @@ int32_t ViewSettings::GetSubmerged() {
     return s_submerged;
 }
 
-// OFFSET: 0x00A301F0
+// OFFSET: 0x00A301F0/0x1407DA0C0
 void ViewSettings::SetFog(uint32_t index, float start, float end, float density, const CImVector& color) {
     s_fog[index].m_start = start;
     s_fog[index].m_end = end;

@@ -1,6 +1,6 @@
 #include "WoW/Source/WorldClient/SortTable.h"
 
-// OFFSET: 0x00799BD0
+// OFFSET: 0x00799BD0/0x14048DDC0
 void CSortTable::SetPlanes(const C3Vector& normal, const C3Vector& pos) {
     float dist = 0.0f;
 
@@ -67,7 +67,7 @@ CSortTable::CSortTable() {
     this->m_lastEntry = 0;
 }
 
-// OFFSET: 0x0079A520
+// OFFSET: 0x0079A520/0x14048EA70
 void CSortTable::Setup(float farClip, const C3Vector& normal, const C3Vector& pos) {
     int32_t count = 3 - static_cast<int32_t>(farClip * -0.029999999f);
 
@@ -80,7 +80,7 @@ void CSortTable::Setup(float farClip, const C3Vector& normal, const C3Vector& po
     this->SetPlanes(normal, pos);
 }
 
-// OFFSET: 0x0075A830
+// OFFSET: 0x0075A830/0x14043D570
 void CSortTable::AddDoodadDef(CMapDoodadDef* doodadDef, int32_t entry) {
     CSortEntryDoodadDef* node = this->m_doodadDefs.New();
     node->m_doodadDef = doodadDef;

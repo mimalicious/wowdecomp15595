@@ -33,7 +33,7 @@
 #include "WoW/Source/WorldClient/WorldView.h"
 #include "WoW/Source/WorldClient/shadow.h"
 
-// STATIC: 0x00E70C48
+// STATIC: 0x00E70C48/0x140D5A768
 CWorldView* CWorldScene::s_defaultWorldView;
 
 // STATIC: 0x00E70C44
@@ -45,7 +45,7 @@ CWorldView* CWorldScene::s_defaultReflectionView2;
 // STATIC: 0x00E70C34
 CWorldView* CWorldScene::s_activeWorldView;
 
-// STATIC: 0x00E70C4C
+// STATIC: 0x00E70C4C/0x140D5A770
 CM2Scene* CWorldScene::s_m2Scene;
 
 // STATIC: 0x00E70C24
@@ -103,6 +103,7 @@ CWorldSceneLight::CWorldSceneLight() {
     this->m_free = 1;
 }
 
+// PROVEN: b9e544c9 IDENTICAL/NONE
 // OFFSET: 0x00726BD0
 void CWorldScene::FreeSceneLights() {
     CWorldScene::s_sceneLights[0].m_free = 1;
@@ -173,7 +174,7 @@ void CWorldScene::GetFrustumCorners(C3Vector* corners) {
 }
 
 // PROVEN: 8835a74c IDENTICAL/NONE
-// OFFSET: 0x00727150
+// OFFSET: 0x00727150/0x1403FE720
 void CWorldScene::UpdateViewer() {
     CWorldScene::s_defaultWorldView->m_flags &= ~0x400000u;
     CWorldScene::s_defaultWorldView->UpdateViewer();
@@ -189,7 +190,7 @@ void CWorldScene::UpdateViewer() {
     }
 }
 
-// OFFSET: 0x007271C0
+// OFFSET: 0x007271C0/0x1403FE7A0
 void CWorldScene::UpdateLiquid() {
     Liquid::Update();
 
@@ -326,12 +327,12 @@ void CWorldScene::RenderWeather() {
     }
 }
 
-// OFFSET: 0x007275F0
+// OFFSET: 0x007275F0/0x1403FEC80
 void CWorldScene::RenderBarriers(CWorldView* view) {
     CWorldScene::s_barrier.Render(view->m_camPos, FrameTime::GetTickTimeSec());
 }
 
-// OFFSET: 0x00727620
+// OFFSET: 0x00727620/0x1403FECB0
 void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
     if (!view->m_lowDetailAreas.Count()) {
         return;
@@ -554,7 +555,7 @@ void CWorldScene::RenderSetFog() {
     CShaderEffect::SetFogParams(fog->m_start, fog->m_end, fog->m_density, fog->m_color, 0.0f);
 }
 
-// OFFSET: 0x00728600
+// OFFSET: 0x00728600/0x140400730
 void CWorldScene::UpdateFadeOutObjects() {
     uint32_t now = FrameTime::GetCurTimeMs();
 
@@ -647,7 +648,7 @@ void CWorldScene::Initialize() {
     g_theGxDevicePtr->AddTextureRecreationCallback(CWorldScene::TextureRecreationCallback);
 }
 
-// OFFSET: 0x00728A20
+// OFFSET: 0x00728A20/0x140400D30
 void CWorldScene::Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect) {
     Liquid::RendererValidate();
     CWorldScene::renderSkyboxName = NULL;
@@ -1216,6 +1217,7 @@ void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
+// PROVEN: be9df0ad IDENTICAL/NONE
 // OFFSET: 0x0072AC80
 void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
@@ -1226,7 +1228,7 @@ void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0072ACC0
+// OFFSET: 0x0072ACC0/0x140403C90
 void CWorldScene::RenderPortalList(const CPortalView* portalViews, uint32_t count, const C3Vector* verts, int32_t interior) {
     if (!count) {
         return;
@@ -1612,7 +1614,8 @@ void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x0072C740
+// PROVEN: 1affac43 IDENTICAL/NONE
+// OFFSET: 0x0072C740/0x140405890
 void CWorldScene::RenderPortalLists(CWorldView* view) {
     if (view->m_exteriorPortalViews.Count()) {
         if (Liquid::GetWaterDetail() <= 1 && view->m_underwater) {

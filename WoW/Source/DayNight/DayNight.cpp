@@ -154,7 +154,7 @@ const DayNight::FogInfo* DayNight::GetFogInfo() {
     return &DayNight::g_dnInfo.m_fog;
 }
 
-// OFFSET: 0x00646E40
+// OFFSET: 0x00646E40/0x1402E39A0
 const DayNight::FogInfo* DayNight::GetIntFogInfo() {
     if (Liquid::CameraSubmerged()) {
         return &DayNight::g_dnInfo.m_intFogUW;
@@ -168,19 +168,19 @@ const DayNight::FogInfo* DayNight::GetIntFogInfo() {
 }
 
 // PROVEN: 07b618f3 IDENTICAL/NONE
-// OFFSET: 0x00646E60
+// OFFSET: 0x00646E60/0x1402E39D0
 const DayNight::FogInfo* DayNight::GetFogInfoUW() {
     return &DayNight::g_dnInfo.m_fogUW;
 }
 
 // PROVEN: f93d4754 IDENTICAL/NONE
-// OFFSET: 0x00646E70
+// OFFSET: 0x00646E70/0x1402E39E0
 const DayNight::FogInfo* DayNight::GetIntFogInfoUW() {
     return &DayNight::g_dnInfo.m_intFogUW;
 }
 
 // PROVEN: 5c4191e8 IDENTICAL/NONE
-// OFFSET: 0x00646E80
+// OFFSET: 0x00646E80/0x1402E39F0
 const DayNight::FogInfo* DayNight::GetFogInfoAW() {
     return &DayNight::g_dnInfo.m_fog;
 }
@@ -218,7 +218,7 @@ void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int
 }
 
 // PROVEN: 8b750674 IDENTICAL/NONE
-// OFFSET: 0x00646FA0
+// OFFSET: 0x00646FA0/0x1402E3A00
 void DayNight::SetFogDistanceMax(float distance) {
     DayNight::g_fogDistanceMax = distance;
 }
@@ -252,14 +252,14 @@ float DayNight::GetGlow() {
 }
 
 // PROVEN: dfc00c99 IDENTICAL/NONE
-// OFFSET: 0x00647010
+// OFFSET: 0x00647010/0x1402E3A60
 CImVector* DayNight::GetShadowColor(CImVector* color) {
     *color = DayNight::g_dnInfo.m_shadowColor;
     return color;
 }
 
 // PROVEN: d430eab6 IDENTICAL/NONE
-// OFFSET: 0x00647020
+// OFFSET: 0x00647020/0x1402E3A70
 CImVector* DayNight::GetSpecularColor(CImVector* color) {
     const CurrentLight* light = Liquid::CameraSubmerged() ? &DayNight::g_dnInfo.m_lightUW : &DayNight::g_dnInfo.m_light;
     *color = light->m_colors[9];
@@ -634,7 +634,7 @@ void DayNight::ForceFullUpdate() {
     DayNight::g_forceFullUpdate = 1;
 }
 
-// OFFSET: 0x00647E50
+// OFFSET: 0x00647E50/0x1402E4C30
 void DayNight::SetCamera(const C3Vector& pos, const C3Vector& dir, const C3Vector& target, uint32_t liquidStatus, float depth, float farClip) {
     DayNight::g_dnInfo.m_camPos = pos;
     DayNight::g_dnInfo.m_camDir = dir;
@@ -655,7 +655,7 @@ void DayNight::SetCamera(const C3Vector& pos, const C3Vector& dir, const C3Vecto
 }
 
 // PROVEN: 19db56a0 IDENTICAL/NONE
-// OFFSET: 0x00647F40
+// OFFSET: 0x00647F40/0x1402E4C20
 void DayNight::SetStormPercentage(float percentage) {
     DayNight::g_dnInfo.m_stormPercentage = percentage;
 }
@@ -710,7 +710,7 @@ void DayNight::CalcFog(FogInfo& fog, const float* params) {
     }
 }
 
-// OFFSET: 0x00648190
+// OFFSET: 0x00648190/0x1402E4DC0
 void DayNight::UpdateFog() {
     DNInfo& info = DayNight::g_dnInfo;
     float fogEnd;
@@ -1152,7 +1152,7 @@ void DayNight::SetLightColors() {
     infoUW.m_desaturate[3] = 1.0f;
 }
 
-// OFFSET: 0x0064A580
+// OFFSET: 0x0064A580/0x1402E7D00
 void DayNight::SetInteriorFog(bool inside, const SMOFog& fog, bool blend, float distance) {
     DayNight::g_dnInfo.m_interiorFogEnabled = inside;
     memcpy(DayNight::g_dnInfo.m_interiorFog, &fog, sizeof(DayNight::g_dnInfo.m_interiorFog));
@@ -1160,7 +1160,7 @@ void DayNight::SetInteriorFog(bool inside, const SMOFog& fog, bool blend, float 
     DayNight::g_dnInfo.m_interiorFogDistance = inside ? distance : 0.0f;
 }
 
-// OFFSET: 0x0064A640
+// OFFSET: 0x0064A640/0x1402E7DB0
 void DayNight::UpdateLighting() {
     float x = DayNight::g_dnInfo.m_camDir.x;
     float y = DayNight::g_dnInfo.m_camDir.y;
@@ -1190,7 +1190,7 @@ void DayNight::UpdateLighting() {
 }
 
 // PROVEN: 1eb3ce22 IDENTICAL/NONE
-// OFFSET: 0x0064A6F0
+// OFFSET: 0x0064A6F0/0x1402E7E70
 void DayNight::Update(uint32_t timeMs, float tickSec, float timeSec) {
     DayNight::g_dnInfo.m_tickSec = tickSec;
     DayNight::g_dnInfo.m_timeSec = timeSec;

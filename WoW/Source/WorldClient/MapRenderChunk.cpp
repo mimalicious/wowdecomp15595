@@ -121,7 +121,7 @@ void CMapRenderChunk::DestroyBufs() {
     }
 }
 
-// OFFSET: 0x00766060
+// OFFSET: 0x00766060/0x14044BD80
 void CMapRenderChunk::UpdateLoaded() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
         CMapRenderChunkBatch& batch = this->m_batches[i];
@@ -154,7 +154,7 @@ CMapChunk* CMapRenderChunk::GetBatchChunk(uint32_t chunkMask) {
 }
 
 // PROVEN: fdec8e70 IDENTICAL/NONE
-// OFFSET: 0x00766730
+// OFFSET: 0x00766730/0x14044C320
 void CMapRenderChunk::AllocBuf() {
     this->m_chunkBuf = CMapChunkBuf::Alloc(580, 3072, static_cast<EGxVertexBufferFormat>(CMapRenderChunk::s_vertexFormat));
 }
@@ -194,7 +194,7 @@ void CMapRenderChunk::AddBatch(uint32_t chunkMask, uint8_t flags) {
     this->m_center.z = (this->m_bbox.t.z + this->m_bbox.b.z) * 0.5f;
 }
 
-// OFFSET: 0x007668B0
+// OFFSET: 0x007668B0/0x14044C550
 void CMapRenderChunk::CreateLayer(CMapArea* area, CMapRenderChunkBatch& batch, const SMLayer* layer, int32_t merge) {
     if (merge) {
         for (uint32_t i = 0; i < batch.m_layerCount; i++) {
@@ -224,7 +224,7 @@ void CMapRenderChunk::CreateLayer(CMapArea* area, CMapRenderChunkBatch& batch, c
     batch.m_layerCount++;
 }
 
-// OFFSET: 0x00767CA0
+// OFFSET: 0x00767CA0/0x14044EBB0
 void CMapRenderChunk::UpdateShadowGxTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command != GxTex_Latch) {
         return;
@@ -236,7 +236,7 @@ void CMapRenderChunk::UpdateShadowGxTexture(EGxTexCommand command, uint32_t widt
     texels = CMapRenderChunk::s_texelBuffer;
 }
 
-// OFFSET: 0x00768180
+// OFFSET: 0x00768180/0x14044F020
 void CMapRenderChunk::CreateLayers() {
     for (uint32_t i = 0; i < this->m_batchCount; i++) {
         CMapRenderChunkBatch& batch = this->m_batches[i];
@@ -267,7 +267,7 @@ void CMapRenderChunk::CreateLayers() {
     this->m_flags &= ~0x80u;
 }
 
-// OFFSET: 0x00768260
+// OFFSET: 0x00768260/0x14044F1A0
 void CMapRenderChunk::AllocShadowTexture(CMapRenderChunkBatch& batch) {
     if (batch.m_shadowTexture) {
         CTexture* texture = batch.m_shadowTexture;
@@ -301,7 +301,7 @@ void CMapRenderChunk::AllocShadowTexture(CMapRenderChunkBatch& batch) {
     GxTexUpdate(TextureGetGxTex(batch.m_shadowTexture), 0, 0, width, height, 1);
 }
 
-// OFFSET: 0x00768340
+// OFFSET: 0x00768340/0x14044F310
 void CMapRenderChunk::CreateLayerTexture(CMapRenderChunkBatch* batch, CMapRenderChunkLayer* layer) {
     EGxTexFormat format = static_cast<EGxTexFormat>((this->m_flags & 0x100) ? 2 : 3);
     CMapChunk* chunk = this->GetBatchChunk(batch->m_chunkMask);
@@ -409,7 +409,7 @@ void CMapRenderChunk::CreateShaderTexture(CMapRenderChunkBatch* batch) {
     }
 }
 
-// OFFSET: 0x00768630
+// OFFSET: 0x00768630/0x14044F820
 void CMapRenderChunk::UpdateLayerGxTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     CMapRenderChunkLayer* layer = static_cast<CMapRenderChunkLayer*>(userArg);
     CMapRenderChunk* renderChunk = layer->m_batch->m_renderChunk;
@@ -423,7 +423,7 @@ void CMapRenderChunk::UpdateLayerGxTexture(EGxTexCommand command, uint32_t width
     texels = CMapRenderChunk::s_texelBuffer;
 }
 
-// OFFSET: 0x00768690
+// OFFSET: 0x00768690/0x14044F880
 void CMapRenderChunk::UpdateShaderGxTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     CMapRenderChunkBatch* batch = static_cast<CMapRenderChunkBatch*>(userArg);
     CMapRenderChunk* renderChunk = batch->m_renderChunk;
@@ -474,7 +474,7 @@ CMapRenderChunk::~CMapRenderChunk() {
     }
 }
 
-// OFFSET: 0x00768860
+// OFFSET: 0x00768860/0x14044FA80
 void CMapRenderChunk::AllocLayerTexture(CMapRenderChunkBatch& batch, uint32_t index) {
     CMapRenderChunkLayer& layer = batch.m_layers[index];
 
@@ -509,7 +509,7 @@ void CMapRenderChunk::AllocLayerTexture(CMapRenderChunkBatch& batch, uint32_t in
     GxTexUpdate(TextureGetGxTex(layer.m_alphaTexture), 0, 0, width, height, 1);
 }
 
-// OFFSET: 0x00768970
+// OFFSET: 0x00768970/0x14044FC00
 void CMapRenderChunk::AllocShaderTexture(CMapRenderChunkBatch& batch) {
     if (batch.m_shaderTexture) {
         CTexture* texture = batch.m_shaderTexture;
@@ -544,7 +544,7 @@ void CMapRenderChunk::AllocShaderTexture(CMapRenderChunkBatch& batch) {
     GxTexUpdate(TextureGetGxTex(batch.m_shaderTexture), 0, 0, width, height, 1);
 }
 
-// OFFSET: 0x00768A60
+// OFFSET: 0x00768A60/0x14044FD40
 void CMapRenderChunk::AllocLayerTextures() {
     uint32_t flags = this->m_flags;
     int32_t mipChanged = 0;

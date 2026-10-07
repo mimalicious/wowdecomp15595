@@ -59,7 +59,7 @@ static int32_t s_firstAttach = 1;
 // STATIC: %0x00D92EA4
 static EmergencyMem s_emergencyMem[GxPoolTargets_Last];
 
-// OFFSET: 0x0084ED20
+// OFFSET: 0x0084ED20/0x14057DB90
 CGxDevice* CreateCGxDeviceOpenGl() {
     void* mem = SMemAlloc(sizeof(CGxDeviceOpenGl), __FILE__, __LINE__, 0);
 
@@ -501,7 +501,7 @@ int32_t CGxDeviceOpenGl::QueryBegin(CGxQuery* query) {
 }
 
 // PROVEN: 933d8e32 IDENTICAL/NONE
-// OFFSET: 0x0084EB70
+// OFFSET: 0x0084EB70/0x14057D980
 int32_t CGxDeviceOpenGl::QueryEnd(CGxQuery* query) {
     if (!this->m_context) {
         return 0;
@@ -516,7 +516,7 @@ int32_t CGxDeviceOpenGl::QueryEnd(CGxQuery* query) {
 }
 
 // PROVEN: f906afd0 IDENTICAL/NONE
-// OFFSET: 0x0084EBB0
+// OFFSET: 0x0084EBB0/0x14057D9D0
 int32_t CGxDeviceOpenGl::QueryGetParam(CGxQuery* query, EGxQueryParam param, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -561,7 +561,7 @@ int32_t CGxDeviceOpenGl::QueryGetParam(CGxQuery* query, EGxQueryParam param, uin
 }
 
 // PROVEN: ae17b8a1 IDENTICAL/NONE
-// OFFSET: 0x0084EC60
+// OFFSET: 0x0084EC60/0x14057DA80
 int32_t CGxDeviceOpenGl::QueryGetData(CGxQuery* query, uint32_t* data) {
     if (!this->m_context) {
         return 0;
@@ -857,7 +857,7 @@ void CGxDeviceOpenGl::IDeviceSetRenderTargetFBO(EGxBuffer buffer, CGxTex* textur
 }
 
 // PROVEN: bc59d12d IDENTICAL/NONE
-// OFFSET: 0x0084F740
+// OFFSET: 0x0084F740/0x14057E770
 void CGxDeviceOpenGl::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
     if (texture == this->m_backBufferColorTex || texture == this->m_backBufferDepthTex) {
         texture = NULL;
@@ -1077,8 +1077,8 @@ static void CreateDummyContext() {
     UnregisterClassA(reinterpret_cast<LPCSTR>(static_cast<uintptr_t>(atom)), instance);
 }
 
-// PROVEN: 13e0859e IDENTICAL/NONE
-// OFFSET: 0x00850780
+// PROVEN: 13e0859e IDENTICAL/DIFFERENT
+// OFFSET: 0x00850780/0x14057FCA0
 void CGxDeviceOpenGl::DeviceDestroyPbuffer() {
     if (this->m_pbuffer) {
         wglReleasePbufferDCARB(this->m_pbuffer, this->m_pbufferDC);

@@ -20,7 +20,7 @@ void CDetailDoodad::DirtyPools() {
 }
 
 // PROVEN: c716616c IDENTICAL/NONE
-// OFFSET: 0x00736280
+// OFFSET: 0x00736280/0x140412930
 int32_t CDetailDoodad::IsInstanced() {
     return CDetailDoodad::s_instanced;
 }
@@ -40,7 +40,7 @@ void CDetailDoodad::GetDensityRange(uint32_t& minDensity, uint32_t& maxDensity) 
 }
 
 // PROVEN: 1b9103a6 IDENTICAL/NONE
-// OFFSET: 0x00736A10
+// OFFSET: 0x00736A10/0x140413080
 void CDetailDoodad::SetInstanced(int32_t instanced) {
     CDetailDoodad::s_instanced = g_theGxDevicePtr->m_caps.unk_0304 && instanced ? 1 : 0;
     CDetailDoodad::s_poolsDirty = 1;

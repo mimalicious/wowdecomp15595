@@ -517,7 +517,7 @@ void CGCorpse_C::RenderTargetSelection() const {
     g_theGxDevicePtr->RsPush();
 
     if (CGObject_C::SetCircleRenderStates()) {
-        ProjectTex::Render2d(box, s_deadSelectionColor, &matrix, 0.5f, 0x200122, 0, 0.4f);
+        ProjectTex2d(box, s_deadSelectionColor, &matrix, 0.5f, 0x200122, 9, GxPolygonOffset_Default);
     }
 
     g_theGxDevicePtr->RsPop();

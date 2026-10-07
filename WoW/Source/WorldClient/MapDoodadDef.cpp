@@ -12,7 +12,8 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldView.h"
 
-// OFFSET: 0x00733100
+// PROVEN: 878cc1c9 IDENTICAL/NONE
+// OFFSET: 0x00733100/0x140475D70
 void CMapDoodadDef::StreamingCallback(void* param) {
     static_cast<CMapDoodadDef*>(param)->m_model->LinkToAsyncHead();
 }
@@ -60,7 +61,7 @@ void CMapDoodadDef::SelectLights(CM2Lighting* lighting) {
     lighting->SetFog(color, fog->m_start, fog->m_end, fog->m_density);
 }
 
-// OFFSET: 0x007874F0
+// OFFSET: 0x007874F0/0x140476AB0
 void CMapDoodadDef::UpdateBounds() {
     CAaBox modelBox = this->m_model->GetBoundingBox();
     CAaSphere sphere = this->m_model->GetBoundingSphere();
@@ -128,7 +129,7 @@ void CMapDoodadDef::UpdateBounds() {
     }
 }
 
-// OFFSET: 0x00787900
+// OFFSET: 0x00787900/0x140476FA0
 void CMapDoodadDef::LinkToChunk(CMapBaseObj* owner) {
     if (owner->m_type & 0x4) {
         CMapChunk* chunk = static_cast<CMapChunk*>(owner);
@@ -209,7 +210,7 @@ CMapDoodadDef::CMapDoodadDef() {
     this->m_fade = 0xFF00;
 }
 
-// OFFSET: 0x00788030
+// OFFSET: 0x00788030/0x1404778F0
 void CMapDoodadDef::UpdateLoaded() {
     this->UpdateBounds();
     this->UpdateOwners();

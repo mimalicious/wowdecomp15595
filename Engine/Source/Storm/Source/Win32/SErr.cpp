@@ -603,7 +603,7 @@ void STORMAPI SErrSetLastError(uint32_t errorcode) {
     SetLastError(errorcode);
 }
 
-// OFFSET: 0x004B4D20
+// OFFSET: 0x004B4D20/0x1400EC100
 void STORMAPI SErrSetLogTitleString(const char* title) {
     InternalEnterCriticalSection(&s_critsect);
     SStrCopy(s_logtitle, title, sizeof(s_logtitle));
@@ -671,7 +671,7 @@ static int32_t UndecorateObjectName(const char* source, char* dest, uint32_t des
     return 1;
 }
 
-// OFFSET: 0x004B4160
+// OFFSET: 0x004B4160/0x1400EB2A0
 static HINSTANCE GetMessageSource(uint32_t errorcode) {
     InternalEnterCriticalSection(&s_critsect);
 

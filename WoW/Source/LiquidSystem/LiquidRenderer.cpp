@@ -35,13 +35,13 @@ Liquid::CRenderer::CRenderer(uint32_t isReflection) {
     this->m_isReflection = isReflection;
 }
 
-// OFFSET: 0x00B3C240
+// OFFSET: 0x00B3C240/0x140909160
 void Liquid::RendererValidate() {
     s_drawStamp += 2;
 }
 
 // PROVEN: 705f4f0f IDENTICAL/NONE
-// OFFSET: 0x00B3C260
+// OFFSET: 0x00B3C260/0x140909180
 void Liquid::SetCamPos(const C3Vector& pos) {
     s_camPos = pos;
 
@@ -176,7 +176,7 @@ int32_t Liquid::HasRealReflection() {
 Liquid::CRenderer::~CRenderer() {
 }
 
-// OFFSET: 0x00B3C550
+// OFFSET: 0x00B3C550/0x140909510
 void Liquid::CRenderer::Draw(CInstance* instance) {
     if (instance->unk_0064 == s_drawStamp) {
         return;
@@ -205,7 +205,7 @@ void Liquid::RendererInit() {
     s_reflectionRenderer = mem ? new (mem) CRenderer(1) : NULL;
 }
 
-// OFFSET: 0x00B3C650
+// OFFSET: 0x00B3C650/0x140909630
 void Liquid::RendererDraw(CInstance* instance) {
     if (Liquid::GetWaterDetail() >= 3 && Liquid::GetReflectionMode()) {
         Object* object = instance->m_object;

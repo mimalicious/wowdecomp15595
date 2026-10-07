@@ -117,6 +117,7 @@ static uint16_t* BuildAreaIndices(uint16_t* indices) {
 Liquid::IGeomFactory::~IGeomFactory() {
 }
 
+// PROVEN: 1306526c IDENTICAL/NONE
 // OFFSET: 0x0076CA00
 void CMeshGeomFactory::SetTexCoord1ValueX(float value) {
     this->m_texCoord1ValueX = value;
@@ -145,6 +146,7 @@ void CChunkGeomFactory::Purge() {
     }
 }
 
+// PROVEN: 6d5fc22b IDENTICAL/NONE
 // OFFSET: 0x0076CBD0/0x1404551F0
 void CAreaGeomFactory::Purge() {
     if (this->m_buf) {
@@ -265,6 +267,7 @@ void CAreaGeomFactory::Release() {
     }
 }
 
+// PROVEN: e609827c IDENTICAL/NONE
 // OFFSET: 0x0076D690/0x140455FB0
 bool CAreaGeomFactory::SetTransform(const C44Matrix& transform) {
     if (this->m_transform == transform) {

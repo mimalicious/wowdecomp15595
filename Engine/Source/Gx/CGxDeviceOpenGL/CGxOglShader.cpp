@@ -212,7 +212,7 @@ void CGxDeviceOpenGl::IPixelShaderPatch(char* code, uint32_t size) {
 }
 
 // PROVEN: 4f54f945 IDENTICAL/NONE
-// OFFSET: 0x00869F20
+// OFFSET: 0x00869F20/0x14059DD50
 void CGxDeviceOpenGl::IShaderDestroyVertex(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
         switch (this->m_caps.m_shaderTargets[GxSh_Vertex]) {
@@ -236,7 +236,7 @@ void CGxDeviceOpenGl::IShaderDestroyVertex(CGxShaderPermute* permute) {
     permute->m_loaded = 0;
 }
 
-// OFFSET: 0x00869F90
+// OFFSET: 0x00869F90/0x14059DDC0
 void CGxDeviceOpenGl::IShaderDestroyPixel(CGxShaderPermute* permute) {
     if (permute->m_apiSpecific) {
         int32_t target = this->m_caps.m_shaderTargets[GxSh_Pixel];
@@ -254,7 +254,7 @@ void CGxDeviceOpenGl::IShaderDestroyPixel(CGxShaderPermute* permute) {
 }
 
 // PROVEN: b36674fb IDENTICAL/NONE
-// OFFSET: 0x00869FF0
+// OFFSET: 0x00869FF0/0x14059DE40
 void CGxDeviceOpenGl::IShaderDestroy(CGxShaderPermute* permute) {
     switch (permute->m_target) {
         case GxSh_Vertex:
@@ -554,7 +554,7 @@ void CGxDeviceOpenGl::IShaderConstantsSend(EGxShTarget target, uint32_t index, c
     }
 }
 
-// OFFSET: 0x0086A780
+// OFFSET: 0x0086A780/0x14059E5C0
 void CGxDeviceOpenGl::IShaderConstantsFlush() {
     ShadowConstants& vertex = CGxDevice::s_shadowConstants[GxSh_Vertex];
 

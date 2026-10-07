@@ -217,7 +217,7 @@ uint32_t CRibbonEmitter::GetNumBatches() {
     return this->m_materials.Count();
 }
 
-// OFFSET: 0x00B25F00
+// OFFSET: 0x00B25F00/0x1408EDFD0
 uint32_t CRibbonEmitter::GetNumPrimitives() {
     if (this->m_readPos >= this->m_writePos) {
         return 2 * (this->m_writePos + this->m_edgeAges.Count() - this->m_readPos);

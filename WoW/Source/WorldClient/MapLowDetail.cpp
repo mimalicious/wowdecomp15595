@@ -9,7 +9,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
-// OFFSET: 0x00798000
+// OFFSET: 0x00798000/0x14048BA10
 void CMapLowDetail::LinkMapObjDefToAreas(CMapObjDef* mapObjDef) {
     int32_t minY = static_cast<int32_t>(-(mapObjDef->m_bbox.t.x - 17066.666f) * 0.029999999f) >> 4;
     int32_t maxY = static_cast<int32_t>(-(mapObjDef->m_bbox.b.x - 17066.666f) * 0.029999999f) >> 4;
@@ -244,11 +244,11 @@ void CMapLowDetail::Unload() {
     }
 }
 
-// OFFSET: 0x00798840
+// OFFSET: 0x00798840/0x14048C3E0
 CMapLowDetail::~CMapLowDetail() {
 }
 
-// OFFSET: 0x007988D0
+// OFFSET: 0x007988D0/0x14048C4B0
 CMapLowDetail::CMapLowDetail() {
     this->m_map = NULL;
     this->m_worldMap = NULL;

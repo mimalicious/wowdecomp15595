@@ -1284,7 +1284,7 @@ int32_t CHuffmanDecoder::DecodeSymbol(CBitInput* input) {
     return currnode->symbol;
 }
 
-// OFFSET: 0x004BAB40
+// OFFSET: 0x004BAB40/0x1400F3830
 void CHuffman::AddSymbol(int32_t symbol) {
     HUFFNODE* parent = this->m_nodelist.Head();
 

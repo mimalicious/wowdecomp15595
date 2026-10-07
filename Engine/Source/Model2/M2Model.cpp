@@ -214,7 +214,7 @@ int32_t CM2Model::IsBoundingBoxValid() {
     return !(this->m_fFlags & 0x100000) && (this->m_fFlags & 0x4000);
 }
 
-// OFFSET: 0x00814240
+// OFFSET: 0x00814240/0x14052C080
 int32_t CM2Model::GetAsyncRenderStatus() {
     if (this->m_fFlags & 0x40000000) {
         return 2;
@@ -248,7 +248,7 @@ int32_t CM2Model::GetAsyncRenderStatus() {
     return status;
 }
 
-// OFFSET: 0x008142C0
+// OFFSET: 0x008142C0/0x14052C140
 int32_t CM2Model::GetAsyncRenderStatusRecursive() {
     int32_t result = this->GetAsyncRenderStatus();
 
@@ -334,7 +334,7 @@ int32_t CM2Model::IsDrawableRecursive() {
     return 1;
 }
 
-// OFFSET: 0x00814310
+// OFFSET: 0x00814310/0x14052C1D0
 int32_t CM2Model::CanUpdateNonReadyTextures() {
     if (!(this->m_fFlags & 1)) {
         return 0;
@@ -667,7 +667,7 @@ void CM2Model::LinkToCallbackListTail() {
 }
 
 // PROVEN: 46991a67 IDENTICAL/NONE
-// OFFSET: 0x00814D10
+// OFFSET: 0x00814D10/0x14052CE60
 void CM2Model::UnlinkFromCallbackList() {
     if (!this->m_callbackPrev) {
         return;
@@ -927,7 +927,7 @@ int32_t CM2Model::Release() {
 
 
 
-// OFFSET: 0x008143A0
+// OFFSET: 0x008143A0/0x14052C2A0
 void CM2Model::LinkToAsyncHeadRecursive() {
     CAsyncObject* object = this->m_shared->m_asyncObject;
 
@@ -948,7 +948,7 @@ void CM2Model::LinkToAsyncHeadRecursive() {
     }
 }
 
-// OFFSET: 0x00814650
+// OFFSET: 0x00814650/0x14052C640
 void CM2Model::IncreaseTexturePriority() {
     for (uint32_t i = 0; i < this->m_shared->m_data->m_textures.m_count; i++) {
         if (this->m_textures[i]) {
@@ -958,7 +958,7 @@ void CM2Model::IncreaseTexturePriority() {
 }
 
 // PROVEN: 1e135c4f IDENTICAL/NONE
-// OFFSET: 0x00814420
+// OFFSET: 0x00814420/0x14052C350
 void CM2Model::LinkToAsyncHead() {
     AsyncFileReadEnterQueueLock();
     this->LinkToAsyncHeadRecursive();
@@ -3046,7 +3046,7 @@ uint32_t CM2Model::GetNumCombinableDoodadBatches() {
     return combinable;
 }
 
-// OFFSET: 0x00819ED0
+// OFFSET: 0x00819ED0/0x1405334D0
 uint32_t CM2Model::GetNumPrimitives() {
     if (!(this->m_fFlags & 1)) {
         this->WaitForLoad(NULL);

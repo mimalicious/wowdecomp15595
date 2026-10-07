@@ -13,7 +13,7 @@
 // STATIC: 0x00D0174C
 float CMapObj::s_closestDistSq = FLT_MAX;
 
-// OFFSET: 0x0079ECD0
+// OFFSET: 0x0079ECD0/0x140493FB0
 void CMapObj::UpdateTextures(CMapObjGroup* group) {
     if (group->m_distSq >= 1111.1111f) {
         return;
@@ -42,7 +42,7 @@ void CMapObj::UpdateTextures(CMapObjGroup* group) {
     AsyncFileReadAddStreamingObject(CMapObjGroup::LinkToAsyncHead, group, priority);
 }
 
-// OFFSET: 0x0079ED90
+// OFFSET: 0x0079ED90/0x1404940B0
 void CMapObj::UpdateGroups(CMapObj* mapObj) {
     for (uint32_t i = 0; i < mapObj->m_mapObjGroupCount; i++) {
         CMapObjGroup* group = mapObj->m_groups[i];
@@ -82,7 +82,7 @@ void CMapObj::UpdateGroups(CMapObj* mapObj) {
     DayNight::SetFogDistanceMax(sqrtf(CMapObj::s_closestDistSq));
 }
 
-// OFFSET: 0x0079EEC0
+// OFFSET: 0x0079EEC0/0x140494200
 void CMapObj::Update() {
     CMapObj::s_closestDistSq = FLT_MAX;
     CMapObj* mapObj = CMapObj::s_mapObjHash.Head();
