@@ -998,7 +998,7 @@ bool CMap::QueryLightingColorTerrain(CMapChunk* chunk, const C3Vector& pos, CImV
     return true;
 }
 
-// OFFSET: 0x00788EC0
+// OFFSET: 0x00788EC0/0x14040C2A0
 uint32_t CMap::QueryAreaIdTerrain(const C3Vector& pos) {
     int32_t y = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.029999999f);
     int32_t x = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.029999999f);

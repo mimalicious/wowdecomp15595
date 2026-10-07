@@ -28,7 +28,7 @@ static void ClassifyStaticEntityLink(CMapStaticEntity* entity, CMapObjDef* mapOb
     }
 }
 
-// OFFSET: 0x007854C0
+// OFFSET: 0x007854C0/0x140474090
 void CWorldMap::LinkIntersectMapObjDefGroup(CMapObjDef* mapObjDef, uint32_t groupNum, const C3Vector& start, const C3Vector& end, MapObjIntersectData& front, MapObjIntersectData& back) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
     CMapObjGroup* group = mapObj->GetGroup(groupNum, 0);
@@ -78,7 +78,7 @@ void CWorldMap::LinkIntersectMapObjDefGroup(CMapObjDef* mapObjDef, uint32_t grou
     }
 }
 
-// OFFSET: 0x00785660
+// OFFSET: 0x00785660/0x1404742C0
 bool CWorldMap::LinkIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, const C3Vector& pos, MapObjIntersectData* front, MapObjIntersectData* back) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
 
@@ -110,7 +110,7 @@ bool CWorldMap::LinkIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& st
     return true;
 }
 
-// OFFSET: 0x00785960
+// OFFSET: 0x00785960/0x140474630
 bool CWorldMap::LinkIntersectMapObjDefs(const C3Vector& start, const C3Vector& end, const C3Vector& pos, MapObjIntersectData* front, MapObjIntersectData* back, const CMapChunk* chunk) {
     back[0].m_t = 1.05f;
     back[0].m_mapObjDef = NULL;
@@ -180,7 +180,7 @@ bool CWorldMap::LinkIntersectMapObjDefs(const C3Vector& start, const C3Vector& e
     return true;
 }
 
-// OFFSET: 0x00785B70
+// OFFSET: 0x00785B70/0x1404748C0
 int32_t CWorldMap::LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& box, int32_t linkChunks, int32_t linkMapObjs) {
     if (this->m_isGlobalMapObj) {
         return 0;
@@ -226,7 +226,7 @@ int32_t CWorldMap::LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& bo
     return result;
 }
 
-// OFFSET: 0x00785D40
+// OFFSET: 0x00785D40/0x140474B40
 void CWorldMap::LinkStaticEntityMultiple2ToMapObjDefExterior(CMapStaticEntity* entity, CMapObjDef* mapObjDef, CMapObjDefGroup* group) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
 
@@ -257,7 +257,7 @@ void CWorldMap::LinkStaticEntityMultiple2ToMapObjDefExterior(CMapStaticEntity* e
     }
 }
 
-// OFFSET: 0x00785E30
+// OFFSET: 0x00785E30/0x140474C50
 void CWorldMap::LinkStaticEntityMultiple2ToMapObjDefInterior(CMapStaticEntity* entity, CMapObjDef* mapObjDef, CMapObjDefGroup* group) {
     CMapObj* mapObj = mapObjDef->m_mapObj;
 
@@ -288,12 +288,13 @@ void CWorldMap::LinkStaticEntityMultiple2ToMapObjDefInterior(CMapStaticEntity* e
     }
 }
 
-// OFFSET: 0x00785F10
+// PROVEN: 98eeba89 IDENTICAL/NONE
+// OFFSET: 0x00785F10/0x140474D60
 int32_t CWorldMap::LinkMapObjDef(CMapObjDef* mapObjDef) {
     return this->LinkObjectToMapExterior(mapObjDef, mapObjDef->m_bbox, 1, 0);
 }
 
-// OFFSET: 0x00785F30
+// OFFSET: 0x00785F30/0x140474D90
 void CWorldMap::LinkStaticEntity(CMapStaticEntity* entity, C3Vector& start, C3Vector& end, C3Vector& pos, int32_t& exterior, int32_t& found, MapObjIntersectData* front, MapObjIntersectData* back) {
     front[0].m_mapObjDef = NULL;
     back[0].m_mapObjDef = NULL;
@@ -369,7 +370,7 @@ void CWorldMap::LinkStaticEntity(CMapStaticEntity* entity, C3Vector& start, C3Ve
     }
 }
 
-// OFFSET: 0x007860E0
+// OFFSET: 0x007860E0/0x140475020
 void CWorldMap::LinkStaticEntitySingle2(CMapStaticEntity* entity) {
     C3Vector start(entity->m_vec2.x, entity->m_vec2.y, entity->m_vec2.z + 0.1f);
     C3Vector end(entity->m_vec2.x, entity->m_vec2.y, entity->m_vec2.z - 1000.0f);
@@ -431,7 +432,7 @@ void CWorldMap::LinkStaticEntitySingle2(CMapStaticEntity* entity) {
     entity->m_entityFlags &= ~0x4000;
 }
 
-// OFFSET: 0x007862C0
+// OFFSET: 0x007862C0/0x1404752E0
 void CWorldMap::LinkStaticEntityMultiple2(CMapStaticEntity* entity) {
     C3Vector start(entity->m_vec2.x, entity->m_vec2.y, entity->m_vec2.z + 4.0f);
     C3Vector end(entity->m_vec2.x, entity->m_vec2.y, entity->m_vec2.z - 1000.0f);
@@ -484,7 +485,7 @@ void CWorldMap::LinkStaticEntityMultiple2(CMapStaticEntity* entity) {
     entity->m_entityFlags ^= (entity->m_entityFlags ^ ((linked == 0) << 14)) & 0x4000;
 }
 
-// OFFSET: 0x007864B0
+// OFFSET: 0x007864B0/0x1404755E0
 void CWorldMap::LinkStaticEntity(CMapStaticEntity* entity) {
     for (CMapBaseObjLink* link = entity->m_parentLinkList.Head(), * next; link; link = next) {
         next = entity->m_parentLinkList.Next(link);

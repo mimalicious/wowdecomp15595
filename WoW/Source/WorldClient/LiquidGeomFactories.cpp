@@ -1,18 +1,32 @@
 #include "WoW/Source/WorldClient/LiquidGeomFactories.h"
 #include "Engine/Source/Gx/CGxBuf.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/WorldClient/MapArea.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
 #include "WoW/Source/WorldClient/MapChunkBuf.h"
 #include "WoW/Source/WorldClient/MapChunkLiquid.h"
+#include "WoW/Source/WorldClient/MapObj.h"
 #include "WoW/Source/WorldClient/MapObjGroup.h"
+#include "WoW/Source/WorldClient/PolyClipper.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
 typedef void (*CHUNK_VERTEX_FILL)(const CChunkLiquid* liquid, const C44Matrix& transform, float** vertices);
 typedef void (*AREA_VERTEX_FILL)(const CMapAreaLow* area, const C44Matrix& transform, float** vertices);
+typedef int32_t (*MAPOBJ_VERTICES_FILL)(CMapObjGroup* group, const CImVector& color, float texCoord1, void*& vertices);
+typedef void (*MAPOBJ_VERTEX_FILL)(CMapObjGroup* group, const C3Vector& pos, const float* depthTable, const SMOLiquidVert* vertex, const CImVector& color, float texCoord1, void*& vertices);
+
+// STATIC: 0x00D02A20
+static float s_mapObjLiquidTexScale = 0.24f;
+
+// STATIC: 0x00E89138
+static uint32_t s_smolVertCacheSize;
 
 // STATIC: 0x00E8913C
 CDataAllocator CMeshGeomFactory::s_allocator(sizeof(CMeshGeomFactory), 4);
+
+// STATIC: 0x00E89150
+static SMOLiquidVert s_smolVertCache[64];
 
 // STATIC: 0x00E89350
 CDataAllocator CChunkGeomFactory::s_allocator(sizeof(CChunkGeomFactory), 16);
@@ -174,6 +188,236 @@ void CMeshGeomFactory::Release() {
     if (this->m_refCount-- == 1) {
         CMeshGeomFactory::s_allocator.Delete(this);
     }
+}
+
+// OFFSET: 0x0076CEA0/0x1404554D0
+static void BuildMapObjLiquidIndices(CMapObjGroup* group, uint16_t*& indices) {
+    uint16_t last = 0;
+    int32_t started = 0;
+
+    for (int32_t row = 0; row < group->m_liquidTiles.y; row++) {
+        uint16_t i0 = static_cast<uint16_t>(row * group->m_liquidVerts.x);
+        uint16_t i1 = i0 + static_cast<uint16_t>(group->m_liquidVerts.x);
+        uint16_t next = i0 + 1;
+
+        for (int32_t col = 0; col < group->m_liquidTiles.x; col++) {
+            uint8_t flags = group->m_liquidTileFlags[col + row * group->m_liquidTiles.x];
+
+            if ((flags & 0xF) == 0xF || static_cast<int8_t>(flags) < 0) {
+                if (started) {
+                    *indices++ = last;
+                    started = 0;
+                }
+            } else {
+                if (!started) {
+                    *indices++ = i1;
+                    *indices++ = i1;
+                    *indices++ = i0;
+                    started = 1;
+                }
+
+                *indices++ = i1 + 1;
+                *indices++ = next;
+                last = next;
+            }
+
+            next++;
+            i0++;
+            i1++;
+        }
+
+        if (started) {
+            *indices++ = last;
+            started = 0;
+        }
+    }
+}
+
+// PROVEN: 462e946d IDENTICAL/NONE
+// OFFSET: 0x0076CFC0
+static void* PolyClipVtxLerpTexCoords(const void* a, const void* b, float t) {
+    const uint16_t* from = static_cast<const uint16_t*>(a);
+    const uint16_t* to = static_cast<const uint16_t*>(b);
+    uint16_t* vert = reinterpret_cast<uint16_t*>(&s_smolVertCache[s_smolVertCacheSize++]);
+    vert[0] = static_cast<uint16_t>(static_cast<int32_t>((static_cast<float>(to[0]) - static_cast<float>(from[0])) * t + static_cast<float>(from[0])));
+    vert[1] = static_cast<uint16_t>(static_cast<int32_t>((static_cast<float>(to[1]) - static_cast<float>(from[1])) * t + static_cast<float>(from[1])));
+    return vert;
+}
+
+// PROVEN: bbad3458 IDENTICAL/NONE
+// OFFSET: 0x0076D030
+static void* PolyClipVtxLerpDepth(const void* a, const void* b, float t) {
+    const uint8_t* from = static_cast<const uint8_t*>(a);
+    const uint8_t* to = static_cast<const uint8_t*>(b);
+    uint8_t* vert = reinterpret_cast<uint8_t*>(&s_smolVertCache[s_smolVertCacheSize++]);
+    vert[0] = static_cast<uint8_t>(static_cast<int32_t>((static_cast<float>(to[0]) - static_cast<float>(from[0])) * t + static_cast<float>(from[0])));
+    return vert;
+}
+
+// OFFSET: 0x0076D070/0x1404556E0
+static int32_t ClipGroupGeometry(CMapObjGroup* group, CMapObj* mapObj, const CImVector& color, float texCoord1, void*& vertices, uint16_t*& indices, uint16_t baseVertex, MAPOBJ_VERTEX_FILL fill, PCInterpolateFunc lerp) {
+    const float* depthTable = CWorldMap::GetDepthCoordTable(group->GetLiquidType());
+    uint16_t nextIndex = baseVertex;
+    int32_t vertexCount = 0;
+    SMOPortalRef* refs = &mapObj->m_portalRefs[group->m_portalStart];
+    const uint8_t* tile = group->m_liquidTileFlags;
+
+    for (int32_t row = 0; row < group->m_liquidTiles.y; row++) {
+        for (int32_t col = 0; col < group->m_liquidTiles.x; col++, tile++) {
+            if ((*tile & 0xF) == 0xF || static_cast<int8_t>(*tile) >= 0) {
+                continue;
+            }
+
+            int32_t row0 = row * group->m_liquidVerts.x;
+            int32_t row1 = row0 + group->m_liquidVerts.x;
+            int32_t corners[4];
+            corners[0] = col + row0;
+            corners[1] = col + row1;
+            corners[3] = col + row0 + 1;
+            corners[2] = col + row1 + 1;
+            int32_t offsets[4][2] = { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 } };
+
+            PolyClipper clipper;
+            C3Vector points[4];
+
+            for (int32_t i = 0; i < 4; i++) {
+                SMOLiquidVert* liquidVert = &group->m_liquidVertices[corners[i]];
+                float x = static_cast<float>(col + offsets[i][0]) * 4.1666665f + group->m_liquidCorner.x;
+                float y = static_cast<float>(row + offsets[i][1]) * 4.1666665f + group->m_liquidCorner.y;
+                points[i] = C3Vector(x, y, liquidVert->m_height);
+                clipper.AddVertex(points[i], liquidVert);
+            }
+
+            clipper.Begin();
+
+            for (uint32_t p = 0; p < group->m_portalCount; p++) {
+                SMOPortalRef& ref = refs[p];
+                CMapObjGroup* other = mapObj->GetGroup(ref.m_groupIndex, 0);
+
+                if (other && other->m_liquidCorner.x < points[2].x && other->m_liquidCorner.y < points[2].y && points[0].x < static_cast<float>(other->m_liquidTiles.x) * 4.1666665f + other->m_liquidCorner.x && points[0].y < static_cast<float>(other->m_liquidTiles.y) * 4.1666665f + other->m_liquidCorner.y) {
+                    clipper.Clip(mapObj->m_portalInfos[ref.m_portalIndex].m_plane, ref.m_side);
+                }
+            }
+
+            clipper.End();
+            s_smolVertCacheSize = 0;
+            int32_t started = 0;
+
+            for (PCResultsIterator it = clipper.GetResults(lerp); !it.HasFinished(); it.Next()) {
+                C3Vector pos(0.0f, 0.0f, 0.0f);
+                const void* data;
+                it.GetVertex(pos, data);
+
+                if (!started) {
+                    *indices++ = nextIndex;
+                    started = 1;
+                }
+
+                fill(group, pos, depthTable, static_cast<const SMOLiquidVert*>(data), color, texCoord1, vertices);
+                vertexCount++;
+                *indices++ = nextIndex;
+                nextIndex++;
+            }
+
+            if (started) {
+                *indices++ = nextIndex - 1;
+            }
+        }
+    }
+
+    return vertexCount;
+}
+
+// OFFSET: [0x0076D790<13, 1>, 0x0076D9E0<13, 0>, 0x0076DBF0<9, 1>, 0x0076DE80<9, 0>, 0x0076E0C0<10, 1>, 0x0076E3F0<10, 0>, 0x0076E6D0<7, 1>, 0x0076EA80<7, 0>]
+template <uint32_t FORMAT, int32_t LOCAL>
+int32_t FillMapObjVertices(CMapObjGroup* group, const CImVector& color, float texCoord1, void*& vertices) {
+    const float* depthTable = FORMAT == 7 || FORMAT == 10 ? CWorldMap::GetDepthCoordTable(group->GetLiquidType()) : NULL;
+    int32_t rows = group->m_liquidVerts.y;
+    const SMOLiquidVert* vertex = group->m_liquidVertices;
+    float y = group->m_liquidCorner.y;
+    int32_t cols = group->m_liquidVerts.x;
+    float*& out = reinterpret_cast<float*&>(vertices);
+
+    for (int32_t row = 0; row < rows; row++) {
+        float x = group->m_liquidCorner.x;
+
+        for (int32_t col = 0; col < cols; col++) {
+            out[0] = x;
+            out[1] = y;
+            out[2] = vertex->m_height;
+            uint32_t uv = 3;
+
+            if (FORMAT == 7) {
+                out[3] = 0.0f;
+                out[4] = 0.0f;
+                out[5] = 1.0f;
+                *reinterpret_cast<CImVector*>(&out[6]) = color;
+                uv = 7;
+            } else if (FORMAT == 9 || FORMAT == 10) {
+                *reinterpret_cast<CImVector*>(&out[3]) = color;
+                uv = 4;
+            }
+
+            if (LOCAL) {
+                out[uv] = static_cast<float>(vertex->m_texCoord[0]) * 0.00390625f;
+                out[uv + 1] = static_cast<float>(vertex->m_texCoord[1]) * 0.00390625f;
+            } else {
+                out[uv] = static_cast<float>(col);
+                out[uv + 1] = static_cast<float>(row);
+            }
+
+            if (FORMAT == 7 || FORMAT == 10) {
+                out[uv + 2] = texCoord1;
+                out[uv + 3] = depthTable[vertex->m_flow[0]];
+            }
+
+            out += FORMAT == 7 ? 11 : FORMAT == 10 ? 8 : FORMAT == 9 ? 6 : 5;
+            vertex++;
+            x += 4.1666665f;
+        }
+
+        y += 4.1666665f;
+    }
+
+    return cols * rows;
+}
+
+// OFFSET: [0x0076D980<13, 1>, 0x0076DB90<13, 0>, 0x0076DE20<9, 1>, 0x0076E050<9, 0>, 0x0076E370<10, 1>, 0x0076E640<10, 0>, 0x0076E9F0<7, 1>, 0x0076ED30<7, 0>]
+template <uint32_t FORMAT, int32_t LOCAL>
+void FillMapObjVertex(CMapObjGroup* group, const C3Vector& pos, const float* depthTable, const SMOLiquidVert* vertex, const CImVector& color, float texCoord1, void*& vertices) {
+    float*& out = reinterpret_cast<float*&>(vertices);
+    *reinterpret_cast<C3Vector*>(out) = pos;
+    uint32_t uv = 3;
+
+    if (FORMAT == 7) {
+        out[3] = 0.0f;
+        out[4] = 0.0f;
+        out[5] = 1.0f;
+        *reinterpret_cast<CImVector*>(&out[6]) = color;
+        uv = 7;
+    } else if (FORMAT == 9 || FORMAT == 10) {
+        *reinterpret_cast<CImVector*>(&out[3]) = color;
+        uv = 4;
+    }
+
+    if (LOCAL) {
+        float v = static_cast<float>(vertex->m_texCoord[1]) * 0.00390625f;
+        float u = static_cast<float>(vertex->m_texCoord[0]) * 0.00390625f;
+        out[uv] = u;
+        out[uv + 1] = v;
+    } else {
+        float v = (pos.y - group->m_liquidCorner.y) * s_mapObjLiquidTexScale;
+        float u = (pos.x - group->m_liquidCorner.x) * s_mapObjLiquidTexScale;
+        out[uv] = u;
+        out[uv + 1] = v;
+    }
+
+    if (FORMAT == 7 || FORMAT == 10) {
+        out[uv + 2] = texCoord1;
+        out[uv + 3] = depthTable[vertex->m_flow[0]];
+    }
+
+    out += FORMAT == 7 ? 11 : FORMAT == 10 ? 8 : FORMAT == 9 ? 6 : 5;
 }
 
 // OFFSET: 0x0076D420
@@ -796,7 +1040,7 @@ CMeshGeomFactory::CMeshGeomFactory() {
     this->m_refCount = 1;
     this->m_mapObj = NULL;
     this->m_mapObjGroup = NULL;
-    this->unk_0010 = 0;
+    this->m_batch = NULL;
     this->m_diffuseColor = CImVector(0xFFFFFFFF);
     this->m_texCoord1ValueX = 0.0f;
 }
@@ -821,6 +1065,126 @@ CAreaGeomFactory::~CAreaGeomFactory() {
         CMapChunkBuf::Free(this->m_buf);
         this->m_buf = NULL;
     }
+}
+
+// OFFSET: 0x007726D0/0x14045C180
+void CMeshGeomFactory::GetBuffers(EGxVertexBufferFormat format, CGxBuf*& vertexBuf, CGxBuf*& indexBuf, CGxBatch& batch, int32_t a5) {
+    if (this->m_mapObjGroup->m_liquidMaterialId >= this->m_mapObj->m_materialCount) {
+        SErrDisplayAppFatal("Water in chunk \"%s\" of object \"%s\" has no materialId.", this->m_mapObjGroup->m_groupName, this->m_mapObj->m_name);
+    }
+
+    uint32_t vertexCount = this->m_mapObjGroup->m_liquidVerts.x * this->m_mapObjGroup->m_liquidVerts.y + 6 * this->m_mapObjGroup->GetNumSharedTiles();
+
+    if (!this->m_mapObjGroup->HasLiquidVB(this->m_batch)) {
+        this->m_mapObjGroup->AllocLiquidVB(format, vertexCount, 3 * vertexCount, this->m_batch);
+    }
+
+    vertexBuf = this->m_mapObjGroup->m_liquidVertsBlock->m_buf;
+    indexBuf = this->m_mapObjGroup->m_liquidIndicesBlock->m_buf;
+
+    if (vertexBuf->unk_001C && vertexBuf->unk_001D && indexBuf->unk_001C && indexBuf->unk_001D) {
+        batch = *this->m_batch;
+        return;
+    }
+
+    void* vertices = g_theGxDevicePtr->BufLock(vertexBuf);
+    uint16_t* indices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+    uint16_t* indexStart = indices;
+
+    if (!vertices || !indices) {
+        if (vertices) {
+            CGxBuf* buf = vertexBuf;
+            g_theGxDevicePtr->BufUnlock(buf, 0);
+            buf->unk_001C = 1;
+        } else if (indices) {
+            CGxBuf* buf = indexBuf;
+            g_theGxDevicePtr->BufUnlock(buf, 0);
+            buf->unk_001C = 1;
+        }
+
+        return;
+    }
+
+    MAPOBJ_VERTEX_FILL fillVertex = NULL;
+    MAPOBJ_VERTICES_FILL fillVertices = NULL;
+    PCInterpolateFunc lerp = NULL;
+
+    switch (format) {
+        case 7:
+            if (a5) {
+                fillVertices = FillMapObjVertices<7, 1>;
+                fillVertex = FillMapObjVertex<7, 1>;
+            } else {
+                fillVertices = FillMapObjVertices<7, 0>;
+                fillVertex = FillMapObjVertex<7, 0>;
+            }
+
+            lerp = PolyClipVtxLerpDepth;
+            break;
+
+        case 9:
+            if (a5) {
+                fillVertices = FillMapObjVertices<9, 1>;
+                fillVertex = FillMapObjVertex<9, 1>;
+            } else {
+                fillVertices = FillMapObjVertices<9, 0>;
+                fillVertex = FillMapObjVertex<9, 0>;
+            }
+
+            lerp = PolyClipVtxLerpTexCoords;
+            break;
+
+        case 10:
+            if (a5) {
+                fillVertices = FillMapObjVertices<10, 1>;
+                fillVertex = FillMapObjVertex<10, 1>;
+            } else {
+                fillVertices = FillMapObjVertices<10, 0>;
+                fillVertex = FillMapObjVertex<10, 0>;
+            }
+
+            lerp = PolyClipVtxLerpDepth;
+            break;
+
+        case 13:
+            if (a5) {
+                fillVertices = FillMapObjVertices<13, 1>;
+                fillVertex = FillMapObjVertex<13, 1>;
+            } else {
+                fillVertices = FillMapObjVertices<13, 0>;
+                fillVertex = FillMapObjVertex<13, 0>;
+            }
+
+            lerp = PolyClipVtxLerpTexCoords;
+            break;
+
+        default:
+            break;
+    }
+
+    int32_t count = fillVertices(this->m_mapObjGroup, this->m_diffuseColor, this->m_texCoord1ValueX, vertices);
+    BuildMapObjLiquidIndices(this->m_mapObjGroup, indices);
+    count += ClipGroupGeometry(this->m_mapObjGroup, this->m_mapObj, this->m_diffuseColor, this->m_texCoord1ValueX, vertices, indices, static_cast<uint16_t>(count), fillVertex, lerp);
+
+    if (vertices) {
+        CGxBuf* buf = vertexBuf;
+        g_theGxDevicePtr->BufUnlock(buf, 0);
+        buf->unk_001C = 1;
+    }
+
+    if (indices) {
+        CGxBuf* buf = indexBuf;
+        g_theGxDevicePtr->BufUnlock(buf, 0);
+        buf->unk_001C = 1;
+    }
+
+    CGxBatch* meshBatch = this->m_batch;
+    meshBatch->m_primType = GxPrim_TriangleStrip;
+    meshBatch->m_start = 0;
+    meshBatch->m_count = static_cast<uint32_t>(indices - indexStart);
+    meshBatch->m_minIndex = 0;
+    meshBatch->m_maxIndex = static_cast<uint16_t>(count - 1);
+    batch = *this->m_batch;
 }
 
 // OFFSET: 0x007729D0

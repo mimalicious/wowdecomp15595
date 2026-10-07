@@ -56,7 +56,7 @@ CTexture* CMap::LoadTexture(const char* fileName) {
     return texture;
 }
 
-// OFFSET: 0x007734F0
+// OFFSET: 0x007734F0/0x14045D1A0
 CTexture* CMap::GetDynamicTexture(uint32_t textureId) {
     HASHKEY_DWORD key;
     key.m_key = textureId;

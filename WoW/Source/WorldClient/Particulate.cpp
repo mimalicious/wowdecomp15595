@@ -65,6 +65,7 @@ static const uint32_t s_particleFrames[5][8] = {
     { 17, 18, 19, 20, 21, 22, 23, 24 },
 };
 
+// PROVEN: 1c2a908c IDENTICAL/NONE
 // OFFSET: 0x0077CC80
 Particulate::~Particulate() {
     if (this->m_texture) {
@@ -72,12 +73,13 @@ Particulate::~Particulate() {
     }
 }
 
+// PROVEN: d0dbafd4 IDENTICAL/NONE
 // OFFSET: 0x0077CCA0
 void Particulate::SetScale(float scale) {
     this->m_scale = scale;
 }
 
-// OFFSET: 0x0077D300
+// OFFSET: 0x0077D300/0x140469CE0
 void Particulate::InitParticles(uint32_t liquidType) {
     float minSize = this->m_scale * 0.5f;
     float sizeRange = this->m_scale * 1.5f - minSize;
@@ -122,7 +124,7 @@ void Particulate::InitMovement() {
     this->m_moveAmplitude = (CRandom::ufloat_(g_rndSeed) + 1.0f) * 0.0049999999f;
 }
 
-// OFFSET: 0x0077D940
+// OFFSET: 0x0077D940/0x14046A330
 C3Vector Particulate::ComputeMovement(float dt) {
     LiquidTypeRec* rec = g_liquidTypeDB.GetRecord(this->m_liquidType);
 
@@ -152,7 +154,7 @@ C3Vector Particulate::ComputeMovement(float dt) {
     }
 }
 
-// OFFSET: 0x0077DA40
+// OFFSET: 0x0077DA40/0x14046A450
 void Particulate::Update() {
     if (!this->m_enabled) {
         return;

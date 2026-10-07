@@ -1897,7 +1897,7 @@ void CWorldScene::RenderPortalLists(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x0079C480
+// OFFSET: 0x0079C480/0x140490E40
 static void InitClipVolumeBounds() {
     if (s_clipVolumeBoundsValid) {
         return;
@@ -1937,7 +1937,7 @@ static void InitClipVolumeBounds() {
     s_clipVolumeBoundsValid = 1;
 }
 
-// OFFSET: 0x0079C530
+// OFFSET: 0x0079C530/0x140490F00
 void CWorldScene::CreateClipVolumes(CWorldOcclusion* occlusion, const C3Vector& camPos, const C3Vector* corners, int32_t a4, float maxViewDepth) {
     if (!occlusion) {
         return;
@@ -1971,7 +1971,7 @@ void CWorldScene::CreateClipVolumes(CWorldOcclusion* occlusion, const C3Vector& 
     }
 }
 
-// OFFSET: 0x0079C600
+// OFFSET: 0x0079C600/0x140491040
 void CWorldScene::RenderClipVolumes(CWorldView* view) {
     if (!(World::GetEnables() & 0x400000)) {
         return;

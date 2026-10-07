@@ -362,7 +362,7 @@ void CWorldMap::Preload(CMap* map, CWorldMapPreloadData& data, int32_t pass, int
     }
 }
 
-// OFFSET: 0x007742E0
+// OFFSET: 0x007742E0/0x14045E210
 void CWorldMap::Preload(int32_t purge) {
     if (World::GetScene()) {
         World::GetScene()->PurgeModelCache();

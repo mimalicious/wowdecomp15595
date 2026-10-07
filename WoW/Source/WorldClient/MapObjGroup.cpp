@@ -157,6 +157,7 @@ uint16_t* World::TriData::AllocIndices(uint32_t count) {
     return &World::TriData::s_indexPool[cursor];
 }
 
+// PROVEN: 741ba07f IDENTICAL/NONE
 // OFFSET: 0x0077CC50
 void SpanRasterizer::VisitRange(int32_t x0, int32_t x1, int32_t y) {
     if (x0 <= x1) {
@@ -2158,7 +2159,7 @@ bool CMapObjGroup::GetFacesForLinking(const C3Segment& seg, float& frontT, uint3
     return query.GetHits(frontT, frontFace, backT, backFace);
 }
 
-// OFFSET: 0x007928E0
+// OFFSET: 0x007928E0/0x140484360
 bool CMapObjGroup::Intersect(const C3Segment& seg, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t& faceIndex) {
     bool hit = false;
 

@@ -25,7 +25,7 @@ class CMeshGeomFactory : public Liquid::IGeomFactory {
     /* 0004 */ int32_t m_refCount;
     /* 0008 */ CMapObj* m_mapObj;
     /* 000C */ CMapObjGroup* m_mapObjGroup;
-    /* 0010 */ uint32_t unk_0010;
+    /* 0010 */ CGxBatch* m_batch;
     /* 0014 */ CImVector m_diffuseColor;
     /* 0018 */ uint32_t unk_0018;
     /* 001C */ float m_texCoord1ValueX;

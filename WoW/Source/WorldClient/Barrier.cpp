@@ -77,7 +77,7 @@ CGxVertexPCT0T1::CGxVertexPCT0T1() {
     this->m_t1y = 0.0f;
 }
 
-// OFFSET: 0x00777610
+// OFFSET: 0x00777610/0x1404624B0
 CBarrier::CBarrier() {
     this->m_enabled = 1;
 }
@@ -284,7 +284,7 @@ void CBarrier::AddAxisAlignedWall(const C2Vector& a1, const C2Vector& a2, float 
     this->AddBarrierConvexPoly(quad, 4, a3, NULL, 0, 0);
 }
 
-// OFFSET: 0x00778650
+// OFFSET: 0x00778650/0x140463E60
 void CBarrier::AddBarrier(const CAaBox& box, float a2) {
     if (!this->m_enabled || !(box.t.x > box.b.x && box.t.y > box.b.y && box.t.z > box.b.z)) {
         return;
@@ -342,7 +342,7 @@ void CBarrier::AddBarrier(const CAaBox& box, float a2) {
     this->AddBarrierConvexPoly(quad, 4, a2, NULL, 0, 0);
 }
 
-// OFFSET: 0x00778BA0
+// OFFSET: 0x00778BA0/0x140464550
 void CBarrier::Render(const C3Vector& pos, float a2) {
     if (!this->m_enabled || !this->m_vertices.Count()) {
         return;
@@ -548,7 +548,7 @@ void CBarrier::Render(const C3Vector& pos, float a2) {
     this->m_mapObjDefGroups.m_count = 0;
 }
 
-// OFFSET: 0x007796F0
+// OFFSET: 0x007796F0/0x1404653F0
 void CBarrier::Initialize() {
     CGxTexFlags flags;
     CStatus status;

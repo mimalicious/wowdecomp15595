@@ -15,7 +15,7 @@ TSObjectAllocPool<T>::~TSObjectAllocPool() {
     ObjectAllocUnregisterPool(this);
 }
 
-// OFFSET: [0x007479A0<CMapObjOccluder>]
+// OFFSET: [0x007479A0/0x1404268C0<CMapObjOccluder>]
 template <class T>
 void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {
     object->~T();
@@ -23,7 +23,7 @@ void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {
     ObjectFree(this->m_heapId, object->m_handle);
 }
 
-// OFFSET: [0x00747900<CMapObjOccluder>, 0x00775940<CMapObjGroup>, 0x007759C0<CMapObj>, 0x00775A40<CMapArea>, 0x00775AC0<CMapAreaLow>, 0x00775B40<CMapChunk>, 0x00775BC0<CMapRenderChunk>, 0x00775C40<CMapChunkBuf>, 0x00775CC0<CMapDoodadDef>, 0x00775D40<CMapEntity>, 0x00775DC0<CMapObjDefGroup>, 0x00775E40<CMapObjDef>, 0x00775EC0<CChunkLiquid>, 0x007765E0<CMapBaseObjLink>]
+// OFFSET: [0x00747900<CMapObjOccluder>, 0x00775940/0x140460020<CMapObjGroup>, 0x007759C0<CMapObj>, 0x00775A40/0x140460100<CMapArea>, 0x00775AC0<CMapAreaLow>, 0x00775B40<CMapChunk>, 0x00775BC0<CMapRenderChunk>, 0x00775C40/0x1404602C0<CMapChunkBuf>, 0x00775CC0<CMapDoodadDef>, 0x00775D40/0x1404603A0<CMapEntity>, 0x00775DC0/0x140460410<CMapObjDefGroup>, 0x00775E40<CMapObjDef>, 0x00775EC0/0x1404604F0<CChunkLiquid>, 0x007765E0/0x140460C90<CMapBaseObjLink>]
 template <class T>
 T* TSObjectAllocPool<T>::New(const char* file, int32_t line) {
     uint32_t memHandle;

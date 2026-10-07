@@ -7,7 +7,7 @@ CMapBaseObj::CMapBaseObj() {
     this->m_type = MapBaseObj_Type_Base;
 }
 
-// OFFSET: [0x00797D90, 0x00797DA0/0x14048B690]
+// OFFSET: [0x00797D90/0x14048B680, 0x00797DA0/0x14048B690]
 CMapBaseObj::~CMapBaseObj() {
 }
 

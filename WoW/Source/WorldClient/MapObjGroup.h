@@ -154,7 +154,10 @@ struct SMOStripBatch {
 };
 
 struct SMOLiquidVert {
-    /* 0000 */ uint8_t m_flow[4];
+    union {
+        /* 0000 */ uint8_t m_flow[4];
+        /* 0000 */ int16_t m_texCoord[2];
+    };
     /* 0004 */ float m_height;
 };
 

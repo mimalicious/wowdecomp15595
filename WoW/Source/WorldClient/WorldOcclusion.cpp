@@ -70,7 +70,7 @@ void CWorldOccluder::Destroy() {
     }
 }
 
-// OFFSET: 0x0079AA50
+// OFFSET: 0x0079AA50/0x14048F0D0
 int32_t CWorldOcclusion::QueryBuffer(const CAaBox& box, uint32_t flags) {
     if (!this->m_horizon) {
         return 0;
@@ -108,6 +108,7 @@ int32_t CWorldOcclusion::QueryBuffer(const CAaBox& box, uint32_t flags) {
     return 1;
 }
 
+// PROVEN: bf769bea IDENTICAL/NONE
 // OFFSET: 0x0079AB10
 void CWorldOcclusion::Update(const C44Matrix& viewProj, const C44Matrix& proj, const C3Vector& camDir, int32_t horizon) {
     this->m_viewProj = viewProj;
@@ -120,7 +121,7 @@ void CWorldOcclusion::Update(const C44Matrix& viewProj, const C44Matrix& proj, c
     }
 }
 
-// OFFSET: 0x0079AB90
+// OFFSET: 0x0079AB90/0x14048F320
 void CWorldOcclusion::UpdateBuffer(const C3Vector* segment, uint32_t flags) {
     if (!this->m_horizon) {
         return;
@@ -212,7 +213,7 @@ void CWorldOcclusion::UpdateBuffer(const C3Vector* segment, uint32_t flags) {
     }
 }
 
-// OFFSET: 0x0079AF70
+// OFFSET: 0x0079AF70/0x14048F760
 int32_t CWorldOcclusion::QueryBuffer(const CAaSphere& sphere, uint32_t flags) {
     if (!this->m_horizon) {
         return 0;
@@ -262,7 +263,7 @@ int32_t CWorldOcclusion::QueryBuffer(const CAaSphere& sphere, uint32_t flags) {
     return 1;
 }
 
-// OFFSET: 0x0079B1E0
+// OFFSET: 0x0079B1E0/0x14048F9E0
 int32_t CWorldOcclusion::QueryVolumes(const CAaSphere& sphere) {
     for (uint32_t v = 0; v < this->m_volumes.Count(); v++) {
         const CWorldOcclusionVolume& volume = this->m_volumes.m_data[v];
@@ -283,7 +284,7 @@ int32_t CWorldOcclusion::QueryVolumes(const CAaSphere& sphere) {
     return 0;
 }
 
-// OFFSET: 0x0079B3E0
+// OFFSET: 0x0079B3E0/0x14048FC00
 int32_t CWorldOcclusion::QueryVolumes(const CAaBox& box) {
     const C3Vector* corners[2];
     corners[0] = &box.t;
@@ -312,7 +313,7 @@ int32_t CWorldOcclusion::QueryVolumes(const CAaBox& box) {
     return 0;
 }
 
-// OFFSET: 0x0079B640
+// OFFSET: 0x0079B640/0x14048FE90
 int32_t CWorldOcclusion::QueryVolumes(const C3Vector* verts, uint32_t count) {
     for (uint32_t v = 0; v < this->m_volumes.Count(); v++) {
         const CWorldOcclusionVolume& volume = this->m_volumes.m_data[v];
@@ -341,7 +342,7 @@ int32_t CWorldOcclusion::QueryVolumes(const C3Vector* verts, uint32_t count) {
     return 0;
 }
 
-// OFFSET: 0x0079BD80
+// OFFSET: 0x0079BD80/0x1404907A0
 void CWorldOcclusion::ClearVolumes() {
     this->m_planes.SetCount(0);
     this->m_planes.m_chunk = 32;
@@ -349,7 +350,7 @@ void CWorldOcclusion::ClearVolumes() {
     this->m_volumes.m_chunk = 8;
 }
 
-// OFFSET: 0x0079BDC0
+// OFFSET: 0x0079BDC0/0x1404907E0
 void CWorldOcclusion::AddVolume(const C3Vector& pos, const C3Vector* verts, int32_t count, int32_t clip, float extend) {
     static C3Vector s_unused[4];
 

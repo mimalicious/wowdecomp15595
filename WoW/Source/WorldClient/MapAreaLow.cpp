@@ -285,7 +285,7 @@ void CMapAreaLow::FreeBuf() {
     this->m_renderLink.Unlink();
 }
 
-// OFFSET: [0x007975F0/0x14048ABC0, 0x00797990]
+// OFFSET: [0x007975F0/0x14048ABC0, 0x00797990/0x14048B130]
 CMapAreaLow::~CMapAreaLow() {
     for (CMapBaseObjLink* link = this->m_linkList.Head(), * next; link; link = next) {
         next = this->m_linkList.Next(link);

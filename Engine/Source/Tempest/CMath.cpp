@@ -695,7 +695,7 @@ void CMath::split_(float x, float* frac, int32_t* whole) {
     *frac = x - *whole;
 }
 
-// OFFSET: 0x0057D180
+// OFFSET: 0x0057D180/0x1401E32E0
 float CMath::sin_(float x) {
     float frac;
     int32_t whole;
