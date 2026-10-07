@@ -8,7 +8,7 @@
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Jobs.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/Jobs/WorkerPool.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/Storm/H/Types.h"
 
 namespace Blizzard {
@@ -50,6 +50,7 @@ class CacheManager : public Blizzard::Jobs::WorkerPool {
     /* 0068 */ uint64_t m_queuedBytes;
     /* 0070 */ uint64_t m_memoryLimit;
     /* 0078 */ int32_t m_writeRuns;
+    /* 007C */ Blizzard::Util::Buffer<0x400000, uint8_t>* m_oggBuffer;
 
     CacheManager(uint64_t memoryLimit);
     virtual ~CacheManager();
@@ -70,7 +71,7 @@ void ShutdownManager();
 
 namespace OggToWavConversion {
 
-typedef bool (*DECOMPRESSOGGCALLBACK)(const void* data, uint32_t size, Blizzard::Memory::TempBuffer<uint8_t, 0x400000>* buffer);
+typedef bool (*DECOMPRESSOGGCALLBACK)(const void* data, uint32_t size, Blizzard::Util::Buffer<0x400000, uint8_t>* buffer);
 typedef void (*CONVERTOGGCALLBACK)(const char* name);
 
 class OggConverterJob : public BackgroundCache::CacheJob {
@@ -80,7 +81,7 @@ class OggConverterJob : public BackgroundCache::CacheJob {
     /* 0234 */ System_SFile::ARCHIVEREC* m_archive;
 
     OggConverterJob(const char* name);
-    bool Convert();
+    bool ConvertToOgg();
     virtual bool Execute();
     virtual uint32_t GetClassId() const;
     virtual int64_t EstimateCost() const;
@@ -117,6 +118,8 @@ class PoDWriteJob : public BackgroundCache::CacheJob {
 
 namespace Cache {
 
+typedef int32_t (*ENUMARCHIVESCALLBACK)(const char* path, void* param, uint8_t flags);
+
 class ArchiveList {
     public:
     struct ListItem {
@@ -135,25 +138,23 @@ class ArchiveList {
     /* 0014 */ ListItem* m_tail;
     /* 0018 */ char* m_path;
     /* 001C */ char* m_locale;
-    /* 0020 */ bool m_oldWorld;
 
     ~ArchiveList();
     int32_t Add(int32_t type, int32_t build);
     int32_t AddUpdate(int32_t build);
     int32_t AddUpdateBase(int32_t build);
     int32_t AddUpdateLang(int32_t build);
-    int32_t EnumerateArchives(int32_t (*callback)(const char* path, void* param, bool update, bool base, bool alternate), void* param);
+    int32_t EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param);
     ListItem* FindInsertPosition(int32_t type, int32_t build);
     void GenerateFilename(ListItem* item, char* buffer, uint32_t size);
-    int32_t LoadArchives(const char* path, const char* locale, int32_t oldWorld);
+    int32_t LoadArchives(const char* path, const char* locale);
 };
 
-extern const char* s_oldWorldSuffix;
 extern ArchiveList s_archiveList;
 
-int32_t EnumerateArchives(int32_t (*callback)(const char* path, void* param, bool update, bool base, bool alternate), void* param);
+int32_t EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param);
 void Init(int32_t memoryLimit);
-int32_t LoadArchives(const char* path, const char* locale, int32_t oldWorld);
+int32_t LoadArchives(const char* path, const char* locale);
 void Shutdown();
 
 }

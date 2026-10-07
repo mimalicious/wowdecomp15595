@@ -8,7 +8,7 @@
 #include <string>
 #include "Engine/Source/BlizzardCore/Source/System/File/Types.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 #include "Engine/Source/Storm/H/Types.h"
 

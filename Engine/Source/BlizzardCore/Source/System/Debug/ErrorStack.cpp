@@ -3,7 +3,7 @@
 #include <cstring>
 #include "Engine/Source/BlizzardCore/Source/System/Debug/ErrorStack.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
 // STATIC: #0x00AB909D
@@ -61,7 +61,7 @@ Blizzard::Debug::ErrorStackRecord* Blizzard::Debug::AddErrorToStack(ErrorStackRe
     }
 
     uint32_t bytes = std::min<uint32_t>(strBytes + (prevText ? static_cast<uint32_t>(strlen(prevText)) : 0) + 100, 4096);
-    Blizzard::Memory::TempBuffer<char, 2048> buffer(bytes);
+    Blizzard::Util::Buffer<2048, char> buffer(bytes);
     Blizzard::String::Format(buffer.m_data, bytes, "[%d] err=%d text=%s\n%s", level, errCode, errStr, prevText);
     uint32_t flatBytes = (buffer.m_data ? static_cast<uint32_t>(strlen(buffer.m_data)) : 0) + 1;
 

@@ -13,23 +13,20 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
-// STATIC: %0x00D73494
+// STATIC: 0x00EB3C60/0x140DAB9A8
 char BackgroundCache::CacheManager::s_locale[5];
 
-// STATIC: %0x00D73490
+// STATIC: 0x00EB3C5C/0x140DAB9A0
 BackgroundCache::CacheManager* BackgroundCache::s_cacheManager;
 
-// STATIC: %0x00D7348C
+// STATIC: 0x00EB3C58
 OggToWavConversion::DECOMPRESSOGGCALLBACK OggToWavConversion::s_DecompressOggCallback;
 
-// STATIC: %0x00D734AC
+// STATIC: 0x00EB3D7C/0x140D9FF28
 OggToWavConversion::CONVERTOGGCALLBACK OggToWavConversion::s_ConvertOggCallback;
 
-// STATIC: %0x00C0AC90
-const char* PatchOnDemand::Cache::s_oldWorldSuffix = "";
-
-// STATIC: %0x00C0AC94
-PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL, false };
+// STATIC: 0x00D0589C
+PatchOnDemand::Cache::ArchiveList PatchOnDemand::Cache::s_archiveList = { 0, { NULL, NULL, 13, 0 }, &PatchOnDemand::Cache::s_archiveList.m_head, NULL, NULL };
 
 // PROVEN: 4e1947ad IDENTICAL/IDENTICAL
 // OFFSET: 0x007A2DB0/0x14050B8D0
@@ -37,7 +34,7 @@ void BackgroundCache::SetLocale(const char* locale) {
     Blizzard::String::Copy(CacheManager::s_locale, locale, sizeof(CacheManager::s_locale));
 }
 
-// OFFSET: %0x00705A30
+// OFFSET: 0x007A2DD0/0x14050B8F0
 void PatchOnDemand::Cache::ArchiveList::GenerateFilename(ListItem* item, char* buffer, uint32_t size) {
     *buffer = '\0';
 
@@ -53,42 +50,42 @@ void PatchOnDemand::Cache::ArchiveList::GenerateFilename(ListItem* item, char* b
 
     switch (item->m_type) {
         case 0: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/patch-alternate-%s%d.MPQ", this->m_path, this->m_oldWorld ? "oldworld-" : "", item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/Cache/%s/patch-alternate-%d.MPQ", this->m_path, this->m_locale, item->m_build);
             break;
         }
 
         case 1: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-patch-%d.MPQ", this->m_path, item->m_build);
-            break;
-        }
-
-        case 2: {
             Blizzard::String::Format(buffer, size, "%s/Cache/%s/SoundCache-patch-%s-%d.MPQ", this->m_path, this->m_locale, this->m_locale, item->m_build);
             break;
         }
 
+        case 2: {
+            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-patch-%d.MPQ", this->m_path, item->m_build);
+            break;
+        }
+
         case 3: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/patch-base-%s%d.MPQ", this->m_path, this->m_oldWorld ? "oldworld-" : "", item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/Cache/%s/patch-%s-%d.MPQ", this->m_path, this->m_locale, this->m_locale, item->m_build);
             break;
         }
 
         case 4: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/%s/patch-%s-%s%d.MPQ", this->m_path, this->m_locale, this->m_locale, this->m_oldWorld ? "oldworld-" : "", item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/Cache/patch-base-%d.MPQ", this->m_path, item->m_build);
             break;
         }
 
         case 5: {
-            Blizzard::String::Format(buffer, size, "%s/wow-update-%s%d.MPQ", this->m_path, this->m_oldWorld ? "oldworld-" : "", item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/wow-update-%d.MPQ", this->m_path, item->m_build);
             break;
         }
 
         case 6: {
-            Blizzard::String::Format(buffer, size, "%s/wow-update-base-%d.MPQ", this->m_path, item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/%s/wow-update-%s-%d.MPQ", this->m_path, this->m_locale, this->m_locale, item->m_build);
             break;
         }
 
         case 7: {
-            Blizzard::String::Format(buffer, size, "%s/%s/wow-update-%s-%d.MPQ", this->m_path, this->m_locale, this->m_locale, item->m_build);
+            Blizzard::String::Format(buffer, size, "%s/wow-update-base-%d.MPQ", this->m_path, item->m_build);
             break;
         }
 
@@ -103,7 +100,7 @@ void PatchOnDemand::Cache::ArchiveList::GenerateFilename(ListItem* item, char* b
         }
 
         case 10: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-1.MPQ", this->m_path);
+            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-3.MPQ", this->m_path);
             break;
         }
 
@@ -113,29 +110,49 @@ void PatchOnDemand::Cache::ArchiveList::GenerateFilename(ListItem* item, char* b
         }
 
         case 12: {
-            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-3.MPQ", this->m_path);
+            Blizzard::String::Format(buffer, size, "%s/Cache/SoundCache-1.MPQ", this->m_path);
             break;
         }
     }
 }
 
-// OFFSET: %0x00705C90
-int32_t PatchOnDemand::Cache::ArchiveList::EnumerateArchives(int32_t (*callback)(const char* path, void* param, bool update, bool base, bool alternate), void* param) {
+// OFFSET: 0x007A2FF0
+int32_t PatchOnDemand::Cache::ArchiveList::EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param) {
     int32_t result = 0;
 
     for (ListItem* item = this->m_head.m_next; item; item = item->m_next) {
         char path[260];
         this->GenerateFilename(item, path, sizeof(path));
         int32_t type = item->m_type;
-        result = callback(path, param, type >= 5 && type <= 7, type >= 5 && type <= 7 && type >= 6, type <= 0);
+        uint8_t flags = 0;
+
+        if (type == 5) {
+            flags = 1;
+        } else if (type == 7) {
+            flags = 2;
+        } else if (type == 6) {
+            flags = 4;
+        } else if (type >= 0 && type <= 4) {
+            flags = 8;
+        }
+
+        if (type == 0) {
+            flags |= 0x10;
+        }
+
+        result = callback(path, param, flags);
+
+        if (!result) {
+            break;
+        }
     }
 
     return result;
 }
 
-// OFFSET: %0x00705D30
+// OFFSET: 0x007A3090
 PatchOnDemand::Cache::ArchiveList::ListItem* PatchOnDemand::Cache::ArchiveList::FindInsertPosition(int32_t type, int32_t build) {
-    if (build > 13623) {
+    if (build > 15595) {
         return NULL;
     }
 
@@ -164,7 +181,7 @@ PatchOnDemand::Cache::ArchiveList::ListItem* PatchOnDemand::Cache::ArchiveList::
     return prev;
 }
 
-// OFFSET: %0x00705DA0
+// OFFSET: 0x007A3100
 int32_t PatchOnDemand::Cache::ArchiveList::Add(int32_t type, int32_t build) {
     ListItem* prev = this->FindInsertPosition(type, build);
 
@@ -186,42 +203,43 @@ int32_t PatchOnDemand::Cache::ArchiveList::Add(int32_t type, int32_t build) {
     return ++this->m_count;
 }
 
-// OFFSET: %0x00705E20
+// OFFSET: 0x007A3180
 int32_t PatchOnDemand::Cache::ArchiveList::AddUpdate(int32_t build) {
     if (Blizzard::String::EqualI(this->m_locale, "zhCN") || Blizzard::String::EqualI(this->m_locale, "enCN")) {
         this->Add(0, build);
     }
 
-    this->Add(3, build);
     this->Add(4, build);
-    this->Add(1, build);
+    this->Add(3, build);
     this->Add(2, build);
+    this->Add(1, build);
 
     return this->Add(5, build);
 }
 
-// OFFSET: %0x00705EA0
+// OFFSET: 0x007A3200
 int32_t PatchOnDemand::Cache::ArchiveList::AddUpdateBase(int32_t build) {
-    this->Add(3, build);
-    this->Add(1, build);
-
-    return this->Add(6, build);
-}
-
-// OFFSET: %0x00705ED0
-int32_t PatchOnDemand::Cache::ArchiveList::AddUpdateLang(int32_t build) {
-    if (Blizzard::String::EqualI(this->m_locale, "zhCN") || Blizzard::String::EqualI(this->m_locale, "enCN")) {
-        this->Add(0, build);
-    }
-
     this->Add(4, build);
     this->Add(2, build);
 
     return this->Add(7, build);
 }
 
-// OFFSET: %0x00705F40
-int32_t PatchOnDemand::Cache::EnumerateArchives(int32_t (*callback)(const char* path, void* param, bool update, bool base, bool alternate), void* param) {
+// OFFSET: 0x007A3230/0x14050C120
+int32_t PatchOnDemand::Cache::ArchiveList::AddUpdateLang(int32_t build) {
+    if (Blizzard::String::EqualI(this->m_locale, "zhCN") || Blizzard::String::EqualI(this->m_locale, "enCN")) {
+        this->Add(0, build);
+    }
+
+    this->Add(3, build);
+    this->Add(1, build);
+
+    return this->Add(6, build);
+}
+
+// PROVEN: 8f08739d IDENTICAL/NONE
+// OFFSET: 0x007A32A0
+int32_t PatchOnDemand::Cache::EnumerateArchives(ENUMARCHIVESCALLBACK callback, void* param) {
     return s_archiveList.EnumerateArchives(callback, param);
 }
 
@@ -235,7 +253,7 @@ void PatchOnDemand::Cache::Shutdown() {
 BackgroundCache::CacheJob::CacheJob(int32_t dependencyCount) : Blizzard::Jobs::Job(dependencyCount) {
 }
 
-// OFFSET: %0x00705F70
+// OFFSET: 0x007A32D0/0x14050C3A0
 OggToWavConversion::OggConverterJob::OggConverterJob(const char* name) : BackgroundCache::CacheJob(0) {
     this->m_archive = NULL;
     Blizzard::String::Copy(this->m_name, name, sizeof(this->m_name));
@@ -243,9 +261,10 @@ OggToWavConversion::OggConverterJob::OggConverterJob(const char* name) : Backgro
     Blizzard::String::Copy(const_cast<char*>(Blizzard::String::FindExtension(this->m_wavName)), "wav", 4);
 }
 
-// OFFSET: %0x00706000
+// PROVEN: b204d4ee IDENTICAL/DIFFERENT
+// OFFSET: 0x007A3360/0x14050C440
 uint32_t OggToWavConversion::OggConverterJob::GetClassId() const {
-    return 'ogww';
+    return 'oggw';
 }
 
 // PROVEN: 8653ed5a IDENTICAL/IDENTICAL
@@ -254,27 +273,27 @@ int64_t OggToWavConversion::OggConverterJob::EstimateCost() const {
     return 520;
 }
 
-// OFFSET: %0x00706020
+// OFFSET: 0x007A3380/0x14050C460
 bool OggToWavConversion::ShutdownCache() {
     SetCallback(NULL);
     s_DecompressOggCallback = NULL;
     return true;
 }
 
-// OFFSET: %0x00706110
+// OFFSET: 0x007A3540
 PatchOnDemand::Cache::ArchiveList::ListItem::~ListItem() {
     if (this->m_next) {
         delete this->m_next;
     }
 }
 
-// OFFSET: %0x00706130
+// OFFSET: 0x007A3560
 PatchOnDemand::Cache::ArchiveList::~ArchiveList() {
     Blizzard::Memory::Free(this->m_path);
     Blizzard::Memory::Free(this->m_locale);
 }
 
-// OFFSET: %0x007061A0
+// OFFSET: 0x007A35D0/0x14050C4B0
 bool PatchOnDemand::Cache::ArchiveList::DirCallback(const Blizzard::File::ProcessDirParms& parms) {
     ArchiveList* list = static_cast<ArchiveList*>(parms.m_cookie);
 
@@ -291,7 +310,7 @@ bool PatchOnDemand::Cache::ArchiveList::DirCallback(const Blizzard::File::Proces
         return true;
     }
 
-    if (sscanf(parms.m_filename, Blizzard::String::QuickFormat<1024>("wow-update-%s%%d.MPQ", list->m_oldWorld ? "oldworld-" : "").m_buffer, &build)) {
+    if (sscanf(parms.m_filename, "wow-update-%d.MPQ", &build)) {
         list->AddUpdate(build);
         return true;
     }
@@ -333,12 +352,24 @@ bool PatchOnDemand::PoDWriteJob::WriteFile(System_SFile::ARCHIVEREC* archive, co
     return result;
 }
 
-// OFFSET: %0x007063B0
+// OFFSET: 0x007A34E0
+static void GetMetadataFromFilename(const char* filename, Blizzard::Util::Buffer<4096, char>& metadata) {
+    const char* start = Blizzard::String::Find(Blizzard::String::Find(filename, '-', 0x7FFFFFFF) + 1, '-', 0x7FFFFFFF) + 1;
+    const char* end = Blizzard::String::Find(start, '-', 0x7FFFFFFF);
+
+    if (end) {
+        Blizzard::String::Copy(metadata.m_data, start, static_cast<uint32_t>(end - start + 1));
+    } else {
+        Blizzard::String::Copy(metadata.m_data, "base", metadata.m_count);
+    }
+}
+
+// OFFSET: 0x007A37D0/0x14050C720
 bool BackgroundCache::CacheManager::ResolveUpdatePath(System_SFile::ARCHIVEREC* archive, const char* filename, const char* prefix, char* buffer, uint32_t size) {
-    Blizzard::Memory::TempBuffer<char, 4096> metadata;
+    Blizzard::Util::Buffer<4096, char> metadata;
 
     if (!Blizzard::Mopaq::SFileGetPatchMetadata(archive, metadata)) {
-        return false;
+        GetMetadataFromFilename(filename, metadata);
     }
 
     char suffix[10] = { 0 };
@@ -352,15 +383,22 @@ bool BackgroundCache::CacheManager::ResolveUpdatePath(System_SFile::ARCHIVEREC* 
     }
 
     if (Blizzard::String::EqualI(metadata.m_data, "alternate") || Blizzard::String::EqualI(metadata.m_data, "base")) {
-        Blizzard::String::Format(buffer, size, "Data/Cache/%s-%s%s%s.mpq", prefix, metadata.m_data, PatchOnDemand::Cache::s_oldWorldSuffix, suffix);
+        Blizzard::String::Format(buffer, size, "Data/Cache/%s-%s%s.mpq", prefix, metadata.m_data, suffix);
     } else {
-        Blizzard::String::Format(buffer, size, "Data/Cache/%s/%s-%s%s%s.mpq", metadata.m_data, prefix, metadata.m_data, PatchOnDemand::Cache::s_oldWorldSuffix, suffix);
+        char* alternate = const_cast<char*>(Blizzard::String::FindWordI(metadata.m_data, "-alternate", 0x7FFFFFFF));
+
+        if (alternate) {
+            *alternate = '\0';
+            Blizzard::String::Format(buffer, size, "Data/Cache/%s/%s-alternate%s.mpq", metadata.m_data, prefix, suffix);
+        } else {
+            Blizzard::String::Format(buffer, size, "Data/Cache/%s/%s-%s%s.mpq", metadata.m_data, prefix, metadata.m_data, suffix);
+        }
     }
 
     return true;
 }
 
-// OFFSET: %0x00706530
+// OFFSET: 0x007A3960/0x14050C940
 System_SFile::ARCHIVEREC* BackgroundCache::CacheManager::ResolveOggTarget(System_SFile::ARCHIVEREC* archive) {
     char path[260];
 
@@ -396,7 +434,7 @@ System_SFile::ARCHIVEREC* BackgroundCache::CacheManager::ResolveOggTarget(System
     return Blizzard::Mopaq::SFileGetArchiveHandle(path);
 }
 
-// OFFSET: %0x00706690
+// OFFSET: 0x007A3AC0/0x14050CAB0
 System_SFile::ARCHIVEREC* BackgroundCache::CacheManager::ResolvePatchTarget(System_SFile::ARCHIVEREC* archive) {
     char path[260];
 
@@ -413,12 +451,10 @@ System_SFile::ARCHIVEREC* BackgroundCache::CacheManager::ResolvePatchTarget(Syst
     return NULL;
 }
 
-// OFFSET: %0x00706730
-int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const char* locale, int32_t oldWorld) {
+// OFFSET: 0x007A3B60/0x14050CB60
+int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const char* locale) {
     this->m_path = Blizzard::String::Duplicate(path);
     this->m_locale = Blizzard::String::Duplicate(locale);
-    this->m_oldWorld = oldWorld != 0;
-    s_oldWorldSuffix = oldWorld ? "-oldworld" : "";
 
     char buffer[260] = { 0 };
     Blizzard::String::Format(buffer, sizeof(buffer), "%s/wave.mpq", this->m_path);
@@ -429,7 +465,7 @@ int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const 
         Blizzard::String::Format(buffer, sizeof(buffer), "%s/expansion1.mpq", this->m_path);
 
         if (Blizzard::File::Exists(buffer)) {
-            this->Add(10, 0);
+            this->Add(12, 0);
         }
 
         Blizzard::String::Format(buffer, sizeof(buffer), "%s/expansion2.mpq", this->m_path);
@@ -441,7 +477,7 @@ int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const 
         Blizzard::String::Format(buffer, sizeof(buffer), "%s/expansion3.mpq", this->m_path);
 
         if (Blizzard::File::Exists(buffer)) {
-            this->Add(12, 0);
+            this->Add(10, 0);
         }
 
         this->Add(8, 0);
@@ -453,12 +489,13 @@ int32_t PatchOnDemand::Cache::ArchiveList::LoadArchives(const char* path, const 
     return this->m_count;
 }
 
-// OFFSET: %0x00706AB0
-int32_t PatchOnDemand::Cache::LoadArchives(const char* path, const char* locale, int32_t oldWorld) {
-    return s_archiveList.LoadArchives(path, locale, oldWorld);
+// PROVEN: de35798d IDENTICAL/NONE
+// OFFSET: 0x007A3CB0
+int32_t PatchOnDemand::Cache::LoadArchives(const char* path, const char* locale) {
+    return s_archiveList.LoadArchives(path, locale);
 }
 
-// OFFSET: %0x00706AD0
+// OFFSET: 0x007A3CD0
 PatchOnDemand::PoDWriteJob::PoDWriteJob(const void* data, int64_t size, System_SFile::ARCHIVEREC* archive, const char* name, const Blizzard::Util::Digest<16>& md5) : BackgroundCache::CacheJob(0) {
     this->m_size = static_cast<uint32_t>(size);
     this->m_data = this->m_size ? new uint8_t[this->m_size] : NULL;
@@ -483,7 +520,7 @@ int64_t PatchOnDemand::PoDWriteJob::EstimateCost() const {
     return this->m_size;
 }
 
-// OFFSET: %0x00706BC0
+// OFFSET: 0x007A3DC0/0x14050CFF0
 bool PatchOnDemand::PoDWriteJob::Execute() {
     System_SFile::ARCHIVEREC* target = BackgroundCache::CacheManager::ResolvePatchTarget(this->m_archive);
     bool result = false;
@@ -505,7 +542,7 @@ bool PatchOnDemand::PoDWriteJob::Execute() {
     return result;
 }
 
-// OFFSET: %0x00706C40
+// OFFSET: 0x007A3E40/0x14050D090
 bool OggToWavConversion::OggConverterJob::WriteWav(const void* data, uint32_t size) {
     Blizzard::Mopaq::HSFILERecord* file = NULL;
     bool result = Blizzard::Mopaq::SFileCreateFile(BackgroundCache::CacheManager::ResolveOggTarget(this->m_archive), this->m_wavName, size, 0, &file);
@@ -519,7 +556,7 @@ bool OggToWavConversion::OggConverterJob::WriteWav(const void* data, uint32_t si
     return result;
 }
 
-// OFFSET: %0x00706E90
+// OFFSET: 0x007A4010
 bool STORMAPI BackgroundCache::CacheManager::WritePatchFile(const void* data, uint64_t size, Blizzard::Mopaq::HSFILERecord* file, const char* name, const Blizzard::Util::Digest<16>& md5) {
     System_SFile::ARCHIVEREC* archive = NULL;
 
@@ -530,28 +567,26 @@ bool STORMAPI BackgroundCache::CacheManager::WritePatchFile(const void* data, ui
     return PatchOnDemand::PoDWriteJob::WriteFile(ResolvePatchTarget(archive), name, data, size, md5);
 }
 
-// OFFSET: %0x00706EE0
+// OFFSET: 0x007A4060/0x14050D220
 PatchOnDemand::PoDWriteJob::~PoDWriteJob() {
     if (this->m_data) {
         delete[] this->m_data;
     }
 }
 
-// OFFSET: %0x00706F20
-bool OggToWavConversion::OggConverterJob::Convert() {
+// OFFSET: 0x007A3EB0/0x14050D120
+bool OggToWavConversion::OggConverterJob::ConvertToOgg() {
     void* data = NULL;
     uint32_t size = 0;
     bool result;
 
     if (Blizzard::Mopaq::SFileLoadFile(this->m_archive, this->m_name, &data, &size, 0, 0)) {
-        Blizzard::Memory::TempBuffer<uint8_t, 0x400000>* buffer = new Blizzard::Memory::TempBuffer<uint8_t, 0x400000>;
+        Blizzard::Util::Buffer<0x400000, uint8_t>* buffer = BackgroundCache::s_cacheManager->m_oggBuffer;
         result = s_DecompressOggCallback(data, size, buffer);
 
         if (result && !this->WriteWav(buffer->m_data, buffer->m_count)) {
             result = false;
         }
-
-        delete buffer;
     } else {
         result = false;
     }
@@ -563,16 +598,17 @@ bool OggToWavConversion::OggConverterJob::Convert() {
     return result;
 }
 
-// OFFSET: %0x00706FE0
+// PROVEN: 2e615aaf IDENTICAL/UNPROVEN
+// OFFSET: 0x007A3F40/0x14050D1D0
 bool OggToWavConversion::OggConverterJob::Execute() {
     if (Blizzard::Mopaq::SFileFileExists(NULL, this->m_wavName, 0, NULL) || Blizzard::Mopaq::SFileFileExists(NULL, this->m_name, 0, &this->m_archive) != 1) {
         return true;
     }
 
-    return this->Convert();
+    return this->ConvertToOgg();
 }
 
-// OFFSET: %0x007074B0
+// OFFSET: 0x007A4250/0x14050D270
 void BackgroundCache::CacheManager::QueueNextJob() {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 
@@ -606,7 +642,7 @@ void BackgroundCache::CacheManager::QueueNextJob() {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x00707600
+// OFFSET: 0x007A4380/0x14050D470
 void BackgroundCache::CacheManager::Pump() {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 
@@ -619,7 +655,7 @@ void BackgroundCache::CacheManager::Pump() {
             break;
         }
 
-        if (job->GetClassId() == 'ogww') {
+        if (job->GetClassId() == 'oggw') {
             this->m_oggActive = false;
         }
 
@@ -638,21 +674,23 @@ void BackgroundCache::Pump() {
     s_cacheManager->Pump();
 }
 
-// OFFSET: %0x00707850
+// OFFSET: 0x007A4510
 BackgroundCache::CacheManager::CacheManager(uint64_t memoryLimit) : Blizzard::Jobs::WorkerPool(1) {
     Blizzard::Lock::MutexCreate(this->m_mutex);
     this->m_oggActive = false;
     this->m_queuedBytes = 0;
     this->m_memoryLimit = memoryLimit;
     this->m_writeRuns = 0;
+    this->m_oggBuffer = new Blizzard::Util::Buffer<0x400000, uint8_t>;
 }
 
-// OFFSET: %0x00707910
+// OFFSET: 0x007A45F0/0x14050D6C0
 BackgroundCache::CacheManager::~CacheManager() {
+    delete this->m_oggBuffer;
     Blizzard::Lock::MutexDestroy(this->m_mutex);
 }
 
-// OFFSET: %0x007079A0
+// OFFSET: 0x007A46A0
 void BackgroundCache::InitManager(int32_t memoryLimit) {
     if (s_cacheManager) {
         s_cacheManager->m_memoryLimit = memoryLimit <= 0 ? 0 : memoryLimit;
@@ -661,7 +699,7 @@ void BackgroundCache::InitManager(int32_t memoryLimit) {
     }
 }
 
-// OFFSET: %0x00707BB0
+// OFFSET: 0x007A48B0/0x14050D760
 void BackgroundCache::ShutdownManager() {
     if (s_cacheManager) {
         delete s_cacheManager;
@@ -670,7 +708,7 @@ void BackgroundCache::ShutdownManager() {
     s_cacheManager = NULL;
 }
 
-// OFFSET: %0x00707C60
+// OFFSET: 0x007A4990
 void BackgroundCache::CacheManager::QueuePatchWrite(const void* data, uint64_t size, Blizzard::Mopaq::HSFILERecord* file, const char* name, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 
@@ -685,7 +723,7 @@ void BackgroundCache::CacheManager::QueuePatchWrite(const void* data, uint64_t s
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x00707D50
+// OFFSET: 0x007A4A90/0x14050D8B0
 void BackgroundCache::CacheManager::QueueOggConversion(const char* name) {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 
@@ -697,14 +735,13 @@ void BackgroundCache::CacheManager::QueueOggConversion(const char* name) {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x00707E10
+// OFFSET: 0x007A4B60/0x14050D970
 void BackgroundCache::CacheManager::PatchCompleteCallback(const void* data, uint64_t size, Blizzard::Mopaq::HSFILERecord* file, const Blizzard::Util::Digest<16>& md5) {
     if (!s_cacheManager) {
         return;
     }
 
-    char name[260];
-    memset(name, 0, sizeof(name));
+    char name[260] = { 0 };
 
     if (Blizzard::Mopaq::SFileGetFileName(file, name, sizeof(name))) {
         if (size + s_cacheManager->m_queuedBytes < s_cacheManager->m_memoryLimit) {
@@ -736,7 +773,7 @@ void PatchOnDemand::Cache::Init(int32_t memoryLimit) {
     Blizzard::Mopaq::SetPatchCompleteCallback(BackgroundCache::CacheManager::PatchCompleteCallback);
 }
 
-// OFFSET: %0x00707F70
+// OFFSET: 0x007A4CC0/0x14050DB70
 bool OggToWavConversion::InitCache(DECOMPRESSOGGCALLBACK callback) {
     BackgroundCache::InitManager(10240);
     s_DecompressOggCallback = callback;

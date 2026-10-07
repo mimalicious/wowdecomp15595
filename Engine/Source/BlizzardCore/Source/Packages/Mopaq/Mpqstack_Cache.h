@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/StackedMopaq.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 
 namespace System_Mopaq {
 
@@ -28,7 +28,7 @@ struct CacheData {
     /* 0020 */ uint32_t m_bufferAlign;
     /* 0024 */ bool m_skipCleanOnWrite;
     /* 0025 */ uint8_t unk_0025[3];
-    /* 0028 */ Blizzard::Memory::TempBuffer<CacheBlock, 1> m_blocks;
+    /* 0028 */ Blizzard::Util::Buffer<1, CacheBlock> m_blocks;
     /* 0040 */ uint8_t* m_alignedBuffer;
     /* 0044 */ void* m_buffer;
 

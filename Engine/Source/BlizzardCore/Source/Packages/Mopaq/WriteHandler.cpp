@@ -4,7 +4,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Mpqstack_MD5Verify.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SComp.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "ThirdParty/zlib/zlib.h"
 
@@ -431,7 +431,7 @@ bool System_Mopaq::SectorReadWriteHandler::PerformWrite(const uint8_t* buffer, i
 // OFFSET: 0x007E9050
 bool System_Mopaq::SectorReadWriteHandler::CompressAndWrite(const uint8_t* buffer, uint32_t sector, uint32_t count) {
     uint32_t first = sector;
-    Blizzard::Memory::TempBuffer<uint8_t, 4096> output(0);
+    Blizzard::Util::Buffer<4096, uint8_t> output(0);
     output.Resize(count * this->m_sectorSize);
 
     uint32_t outputSize = 0;
@@ -542,7 +542,7 @@ bool System_Mopaq::SectorInPlaceReadWriteHandler::FinalizeWrite() {
 bool System_Mopaq::SectorInPlaceReadWriteHandler::CompressAndWrite(const uint8_t* buffer, uint32_t sector, uint32_t count) {
     uint32_t first = sector;
     bool result = true;
-    Blizzard::Memory::TempBuffer<uint8_t, 4096> output(0);
+    Blizzard::Util::Buffer<4096, uint8_t> output(0);
     output.Resize(count * this->m_sectorSize);
 
     uint32_t outputSize = 0;

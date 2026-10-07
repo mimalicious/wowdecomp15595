@@ -9,7 +9,7 @@
 #include <tlhelp32.h>
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
@@ -210,7 +210,7 @@ bool Blizzard::Process::GetProcessPath(char* buffer, int32_t buffersize) {
 
 // OFFSET: #0x004389C0
 bool Blizzard::Process::GetProcessDirectory(char* buffer, int32_t buffersize) {
-    Blizzard::Memory::TempBuffer<char, 1024> path(buffersize);
+    Blizzard::Util::Buffer<1024, char> path(buffersize);
 
     if (!GetProcessPath(path.m_data, buffersize)) {
         return false;

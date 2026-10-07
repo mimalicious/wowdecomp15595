@@ -12,7 +12,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
@@ -150,7 +150,7 @@ bool System_File::Close(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
 // OFFSET: 0x007BC6C0
 bool System_File::Stacked::GetRootChars(System_File::Stacked::FileParms* parms) {
     const char* path = parms->m_path;
-    Blizzard::Memory::TempBuffer<char, 256> buffer((path ? static_cast<uint32_t>(strlen(path)) : 0) + 1);
+    Blizzard::Util::Buffer<256, char> buffer((path ? static_cast<uint32_t>(strlen(path)) : 0) + 1);
 
     if (buffer.m_count < 2) {
         parms->m_pos = 0;
@@ -825,7 +825,7 @@ bool System_File::Stacked::CreateDirectory(System_File::Stacked::FileParms* parm
         return false;
     }
 
-    Blizzard::Memory::TempBuffer<char, MAX_PATH> buffer(static_cast<uint32_t>(strlen(path)) + 1);
+    Blizzard::Util::Buffer<MAX_PATH, char> buffer(static_cast<uint32_t>(strlen(path)) + 1);
     Blizzard::String::MakeBackslashPath(path, buffer.m_data, buffer.m_count);
 
     SECURITY_ATTRIBUTES attributes;
@@ -841,7 +841,7 @@ bool System_File::Stacked::CreateDirectory(System_File::Stacked::FileParms* parm
         return CreateOneDirectory(buffer.m_data, grantEveryone ? &attributes : NULL);
     }
 
-    Blizzard::Memory::TempBuffer<char, MAX_PATH> partial(buffer.m_count);
+    Blizzard::Util::Buffer<MAX_PATH, char> partial(buffer.m_count);
     memmove(partial.m_data, buffer.m_data, buffer.m_count);
 
     bool result = true;
@@ -1062,7 +1062,7 @@ bool System_File::Stacked::RemoveDirectory(System_File::Stacked::FileParms* parm
         return false;
     }
 
-    Blizzard::Memory::TempBuffer<char, MAX_PATH> buffer(static_cast<uint32_t>(strlen(path)) + 1);
+    Blizzard::Util::Buffer<MAX_PATH, char> buffer(static_cast<uint32_t>(strlen(path)) + 1);
     Blizzard::String::MakeBackslashPath(path, buffer.m_data, buffer.m_count);
 
     Blizzard::StringConversion_CodepageToUTF8::ToNative name(buffer.m_data);
@@ -1321,7 +1321,7 @@ bool System_File::write_first(Blizzard::File::StreamRecord* file, void* buffer, 
 // OFFSET: 0x007BD3F0
 void System_File::FromNativeName(char* buffer, uint32_t buffersize, const char* str) {
     uint32_t length = str ? static_cast<uint32_t>(strlen(str)) : 0;
-    Blizzard::Memory::TempBuffer<uint16_t, 300> wide(length + 1);
+    Blizzard::Util::Buffer<300, uint16_t> wide(length + 1);
     wide.m_data[MultiByteToWideChar(CP_ACP, 0, str, length, reinterpret_cast<wchar_t*>(wide.m_data), wide.m_count)] = 0;
     Blizzard::Unicode::ConvertUTF16to8(buffer, buffersize, wide.m_data, -1, NULL, NULL);
 }

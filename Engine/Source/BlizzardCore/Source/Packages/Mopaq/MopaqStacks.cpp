@@ -12,7 +12,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/Filestack.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 #include "Engine/Source/Storm/H/storm.h"
@@ -1197,7 +1197,7 @@ bool System_Mopaq::verify_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     uint32_t last = (blockSize + remaining - 1) / blockSize + first - 1;
     const uint8_t* src = static_cast<const uint8_t*>(parms->m_buffer);
 
-    Blizzard::Memory::TempBuffer<uint8_t, 20480> buffer(blockSize + 4095);
+    Blizzard::Util::Buffer<20480, uint8_t> buffer(blockSize + 4095);
     uint8_t* aligned = reinterpret_cast<uint8_t*>(reinterpret_cast<uintptr_t>(buffer.m_data + 4095) & ~static_cast<uintptr_t>(0xFFF));
 
     for (uint32_t index = first; index <= last; index++) {

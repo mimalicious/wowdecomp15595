@@ -4,7 +4,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/ArchiveCheckpoint.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/StackedMopaq.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 
 // STATIC: %0x00C0AD4C
 static const char* s_extension = ".writeCacheBackup";
@@ -23,7 +23,7 @@ struct RestorePointCopier {
     /* 0004 */ Blizzard::File::StreamRecord* m_sourceFile;
     /* 0008 */ Blizzard::Mopaq::HSFILERecord* m_targetArchive;
     /* 000C */ Blizzard::File::StreamRecord* m_targetFile;
-    /* 0010 */ Blizzard::Memory::TempBuffer<char, 4096> m_buffer;
+    /* 0010 */ Blizzard::Util::Buffer<4096, char> m_buffer;
 
     bool Copy(int64_t source, int64_t target, uint32_t size);
     bool Read(void* buffer, int64_t offset, uint32_t size);

@@ -4,9 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <vector>
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 
-typedef Blizzard::Memory::TempBuffer<uint8_t, 0x400000> OggDecompressBuffer;
+typedef Blizzard::Util::Buffer<0x400000, uint8_t> OggDecompressBuffer;
 
 struct OggMemoryStream {
     /* 0000 */ const uint8_t* m_data;

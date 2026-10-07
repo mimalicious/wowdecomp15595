@@ -26,7 +26,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/Log/Log.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
@@ -1398,7 +1398,7 @@ bool System_SFile::ARCHIVEREC::ReadTable(void* data, int64_t offset, uint32_t si
 }
 
 // OFFSET: 0x007F0B80
-bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Memory::TempBuffer<char, 4096>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5) {
+bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Util::Buffer<4096, char>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5) {
     if (diskSize == size) {
         bool result = archive->ReadTable(table, offset, size, md5);
 
@@ -1423,7 +1423,7 @@ bool System_SFile::ARCHIVEREC::LoadOldTable(ARCHIVEREC* archive, void* table, Bl
 }
 
 // OFFSET: 0x007F0C20
-bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer) {
+bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Util::Buffer<4096, char>& buffer) {
     uint32_t diskSize = this->m_header.m_blockTablePos - this->m_header.m_hashTablePos;
     uint32_t size = 16 * this->m_header.m_hashTableSize;
     int64_t offset = (static_cast<int64_t>(this->m_header.m_hashTablePosHi) << 32) | this->m_header.m_hashTablePos;
@@ -1450,7 +1450,7 @@ bool System_SFile::ARCHIVEREC::LoadOldHashTable(Blizzard::Memory::TempBuffer<cha
 }
 
 // OFFSET: 0x007F0D60
-bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer) {
+bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Util::Buffer<4096, char>& buffer) {
     uint32_t diskSize;
 
     if (this->m_header.m_hiBlockTablePos) {
@@ -1488,7 +1488,7 @@ bool System_SFile::ARCHIVEREC::LoadOldBlockTable(Blizzard::Memory::TempBuffer<ch
 }
 
 // OFFSET: 0x007F0F40
-bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5) {
+bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5) {
     if (size > buffer.m_count) {
         buffer.Resize(size);
     }
@@ -1531,13 +1531,13 @@ bool System_SFile::ARCHIVEREC::LoadTable(ARCHIVEREC* archive, Blizzard::Memory::
 }
 
 // OFFSET: 0x007F10B0
-bool System_SFile::ARCHIVEREC::LoadBlockEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize) {
+bool System_SFile::ARCHIVEREC::LoadBlockEntryTable(Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, char** data, uint32_t* dataSize) {
     return LoadTable(this, buffer, output, this->m_header.m_betTablePos, static_cast<uint32_t>(this->m_header.m_betTableSize64), data, dataSize, 0xEC83B3A3, 0x1A544542, this->m_header.m_betTableMd5);
 }
 
-// PROVEN: a33644c2 IDENTICAL/NONE
+// PROVEN: 86eec255 IDENTICAL/NONE
 // OFFSET: 0x007F1040
-bool System_SFile::ARCHIVEREC::LoadHashEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize) {
+bool System_SFile::ARCHIVEREC::LoadHashEntryTable(Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, char** data, uint32_t* dataSize) {
     uint32_t size = static_cast<uint32_t>(this->m_header.m_hetTableSize64);
 
     if (!LoadTable(this, buffer, output, this->m_header.m_hetTablePos, size, data, dataSize, 0xC3AF3770, 0x1A544548, this->m_header.m_hetTableMd5)) {
@@ -1583,7 +1583,7 @@ bool System_SFile::ARCHIVEREC::InitializeTables() {
         return false;
     }
 
-    Blizzard::Memory::TempBuffer<char, 4096> buffers[2];
+    Blizzard::Util::Buffer<4096, char> buffers[2];
     this->m_hashTable.resize(this->m_header.m_hashTableSize);
     this->m_blockTable.resize(this->m_header.m_blockTableSize);
 
@@ -3773,7 +3773,7 @@ static bool WriteAttributeFile(System_SFile::ARCHIVEREC* archive, bool result) {
 }
 
 // OFFSET: 0x007B9C20
-static bool WriteTableMD5s(Blizzard::Mopaq::HSFILERecord* file, Blizzard::Memory::TempBuffer<char, 1024>& buffer, int64_t offset, int64_t size, int64_t chunkSize) {
+static bool WriteTableMD5s(Blizzard::Mopaq::HSFILERecord* file, Blizzard::Util::Buffer<1024, char>& buffer, int64_t offset, int64_t size, int64_t chunkSize) {
     int32_t chunks = static_cast<int32_t>((size - 1) / static_cast<int32_t>(chunkSize)) + 1;
     int32_t remaining = static_cast<int32_t>(size);
 
@@ -3869,7 +3869,7 @@ bool System_SFile::HashEntryTable::SaveHashEntryTableToBuffer(char* buffer, uint
 
 // OFFSET: 0x007E6AF0/0x1404F08A0
 bool System_SFile::ARCHIVEREC::WriteBitPackedHashTable() {
-    Blizzard::Memory::TempBuffer<char, 1024> buffer;
+    Blizzard::Util::Buffer<1024, char> buffer;
     HashEntryTable* table = this->m_hashEntryTable;
     uint32_t size = ((table->m_indices->m_bitCount + 7) >> 3) + table->m_slotCount + sizeof(HashTableHeader);
     bool result = true;
@@ -3921,7 +3921,7 @@ bool System_SFile::ARCHIVEREC::WriteBitPackedHashTable() {
 
 // OFFSET: 0x007E6D40/0x1404F0BD0
 bool System_SFile::ARCHIVEREC::WriteBitPackedBlockTable() {
-    Blizzard::Memory::TempBuffer<char, 1024> buffer;
+    Blizzard::Util::Buffer<1024, char> buffer;
     BlockEntryTable* table = this->m_blockEntryTable;
     bool result = true;
     uint32_t entriesSize = table->m_entries ? (table->m_entries->m_bitCount + 7) >> 3 : 0;
@@ -4312,7 +4312,7 @@ bool Blizzard::Mopaq::IsArchiveComplete(System_SFile::ARCHIVEREC* handle) {
 }
 
 // OFFSET: 0x007FA940
-bool Blizzard::Mopaq::SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Memory::TempBuffer<char, 4096>& metadata) {
+bool Blizzard::Mopaq::SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Util::Buffer<4096, char>& metadata) {
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
     bool result = false;
 

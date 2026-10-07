@@ -4,7 +4,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/Storm/Source/SComp.h"
 extern "C" {
 #include "ThirdParty/zlib/contrib/blast/blast.h"
@@ -142,7 +142,7 @@ bool __stdcall System_SComp::DecompressBlock(void* dst, uint32_t* dstSize, const
         count++;
     }
 
-    Blizzard::Memory::TempBuffer<uint8_t, 0x4000> scratch(0);
+    Blizzard::Util::Buffer<0x4000, uint8_t> scratch(0);
     uint8_t* output = static_cast<uint8_t*>(dst);
     const uint8_t* input = static_cast<const uint8_t*>(src);
     uint32_t inputSize = srcSize;
@@ -633,7 +633,7 @@ bool System_SComp::Compress(void* dst, uint32_t* dstSize, bool* checksum, const 
         }
 
         uint32_t buffers = overlap + multiple + twoStage;
-        Blizzard::Memory::TempBuffer<uint8_t, 0x4000> scratch(0);
+        Blizzard::Util::Buffer<0x4000, uint8_t> scratch(0);
 
         if (buffers) {
             scratch.Resize(srcSize * buffers);

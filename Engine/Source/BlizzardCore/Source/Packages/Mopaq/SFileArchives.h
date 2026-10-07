@@ -11,7 +11,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Types.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SBig.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 
 namespace Blizzard {
 namespace Mopaq {
@@ -201,9 +201,9 @@ struct MPQHEADER {
 #pragma pack(pop)
 
 struct ArchiveBuffers {
-    /* 0000 */ Blizzard::Memory::TempBuffer<uint8_t, 4> unk_0000;
-    /* 000C */ Blizzard::Memory::TempBuffer<uint8_t, 256> unk_000C;
-    /* 0114 */ Blizzard::Memory::TempBuffer<uint8_t, 256> unk_0114;
+    /* 0000 */ Blizzard::Util::Buffer<4, uint8_t> unk_0000;
+    /* 000C */ Blizzard::Util::Buffer<256, uint8_t> unk_000C;
+    /* 0114 */ Blizzard::Util::Buffer<256, uint8_t> unk_0114;
     /* 021C */ std::string unk_021C;
 
     ~ArchiveBuffers();
@@ -213,8 +213,8 @@ class ARCHIVEREC {
     public:
     typedef std::map<std::string, uint32_t, Blizzard::STL::CaseInsensitive> Listfile;
 
-    static bool LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Memory::TempBuffer<char, 4096>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5);
-    static bool LoadTable(ARCHIVEREC* archive, Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5);
+    static bool LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Util::Buffer<4096, char>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5);
+    static bool LoadTable(ARCHIVEREC* archive, Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5);
     static bool WriteArchiveChanges(ARCHIVEREC* archive);
 
     /* 0000 */ Blizzard::Lock::RMutex m_mutex;
@@ -287,10 +287,10 @@ class ARCHIVEREC {
     bool InitializeTables();
     bool InitPatchMetadata();
     void InitializeWriteReservations(int32_t headerSize);
-    bool LoadBlockEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize);
-    bool LoadHashEntryTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer, Blizzard::Memory::TempBuffer<char, 4096>& output, char** data, uint32_t* dataSize);
-    bool LoadOldBlockTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer);
-    bool LoadOldHashTable(Blizzard::Memory::TempBuffer<char, 4096>& buffer);
+    bool LoadBlockEntryTable(Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, char** data, uint32_t* dataSize);
+    bool LoadHashEntryTable(Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, char** data, uint32_t* dataSize);
+    bool LoadOldBlockTable(Blizzard::Util::Buffer<4096, char>& buffer);
+    bool LoadOldHashTable(Blizzard::Util::Buffer<4096, char>& buffer);
     void PackBlockTable();
     bool PreRequestWriteReservation(int64_t size);
     bool ReadAdditionalAttributes();
@@ -390,7 +390,7 @@ bool IsArchiveStreamingComplete(System_SFile::ARCHIVEREC* handle);
 void SFileGetIsLocalAmount(System_SFile::ARCHIVEREC* handle, int64_t& local, int64_t& total);
 bool SFileEnableDirectAccess(uint32_t enable);
 uint32_t SFileGetArchiveBlockCount(System_SFile::ARCHIVEREC* handle);
-bool SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Memory::TempBuffer<char, 4096>& metadata);
+bool SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Blizzard::Util::Buffer<4096, char>& metadata);
 uint32_t SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex);
 System_SFile::ARCHIVEREC* SFileGetArchiveHandle(const char* name);
 int32_t SFileFileExists(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags, System_SFile::ARCHIVEREC** archiveOut);

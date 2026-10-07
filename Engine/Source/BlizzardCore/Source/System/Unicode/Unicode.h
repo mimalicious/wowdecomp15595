@@ -2,7 +2,7 @@
 #define ENGINE_SOURCE_BLIZZARDCORE_SOURCE_SYSTEM_UNICODE_UNICODE_H
 
 #include <cstdint>
-#include "Engine/Source/BlizzardCore/Source/System/Memory/TempBuffer.h"
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 
 namespace Blizzard {
 namespace Unicode {
@@ -16,7 +16,7 @@ int32_t ConvertUTF8to16(uint16_t* dst, uint32_t dstmaxchars, const char* src, in
 namespace Blizzard {
 namespace StringConversion_CodepageToUTF8 {
 
-class ToNative : public Blizzard::Memory::TempBuffer<uint16_t, 300> {
+class ToNative : public Blizzard::Util::Buffer<300, uint16_t> {
     public:
     ToNative(const char* str);
 };
