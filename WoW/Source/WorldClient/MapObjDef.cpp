@@ -24,7 +24,8 @@ void CMapObjDefGroup::WaterDestroy() {
     }
 }
 
-// OFFSET: 0x0075EDF0
+// PROVEN: 01f72353 IDENTICAL/NONE
+// OFFSET: 0x0075EDF0/0x140442DF0
 void CMapObjDefGroup::UpdateBounds(const C44Matrix& matrix) {
     this->m_mapObjDef->m_mapObj->GetGroupBounds(this->m_portalBox, this->m_groupNum);
     CWorldMath::TransformAABox(matrix, this->m_portalBox, this->m_bbox);

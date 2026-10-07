@@ -380,7 +380,7 @@ void CShadowCache::InitPcfOffsets() {
 }
 
 // PROVEN: 29f5640c IDENTICAL/NONE
-// OFFSET: 0x00435B60
+// OFFSET: 0x00435B60/0x14003F350
 void CShadowCache::SetShadowMapGenericGlobal() {
     if (CShadowCache::s_recreateTextures || CShadowCache::s_shadowMode <= SHADOW_LOWEST) {
         return;

@@ -499,7 +499,7 @@ void CWorldMap::UpdateAllMaps(int32_t waitLoad) {
     AsyncFileReadUpdateStreamingObjectList();
 }
 
-// OFFSET: 0x0079A570
+// OFFSET: 0x0079A570/0x14048EAD0
 void CWorldMap::GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect) {
     int32_t chunkX = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.029999999f);
     int32_t chunkY = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.029999999f);

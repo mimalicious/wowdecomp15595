@@ -156,7 +156,7 @@ CM2Model* CWorldScene::LoadModel(const char* name, const C44Matrix& mat, void (*
     return model;
 }
 
-// OFFSET: 0x00726FB0
+// OFFSET: 0x00726FB0/0x1403FE570
 void CWorldScene::GetFrustumCornersInWorldSpace(const C44Matrix& view, const C44Matrix& proj, const C3Vector& camPos, C3Vector* corners) {
     GxuXformCalcFrustumCorners(view, proj, corners);
 
@@ -212,7 +212,7 @@ void CWorldScene::UpdateLiquid() {
     Liquid::SetAboveWaterFog(-10.0f, 200.0f, 5.0f, color);
 }
 
-// OFFSET: 0x007272C0
+// OFFSET: 0x007272C0/0x1403FE8B0
 void CWorldScene::CallRenderCallbacks(uint32_t pass) {
     for (CRenderCallback* callback = CWorldScene::s_renderCallbackList[pass].Head(); callback; callback = CWorldScene::s_renderCallbackList[pass].Next(callback)) {
         callback->m_callback(callback->m_param, pass, callback->m_param64);
@@ -542,7 +542,7 @@ void CWorldScene::RenderReflection(CWorldView* view, CGxFrameBuffer* frameBuffer
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: 0x00728480
+// OFFSET: 0x00728480/0x140400580
 void CWorldScene::RenderSetFog() {
     const DayNight::FogInfo* fog = DayNight::GetFogInfo();
 
@@ -999,7 +999,7 @@ void CWorldScene::RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK call
     }
 }
 
-// OFFSET: 0x007298A0
+// OFFSET: 0x007298A0/0x140402030
 void CWorldScene::RenderAlphaWater(CWorldView* view) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 
@@ -1019,7 +1019,7 @@ void CWorldScene::RenderAlphaWater(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: 0x00729920
+// OFFSET: 0x00729920/0x1404020E0
 void CWorldScene::RenderWaterFogPoly(CWorldView* view) {
     C3Vector camPos = view->m_camPos;
     const C3Vector* corners = view->m_lowDetailFrustum.corners;
@@ -1218,7 +1218,7 @@ void CWorldScene::RenderMapObjOpaque(CWorldView* view) {
 }
 
 // PROVEN: be9df0ad IDENTICAL/NONE
-// OFFSET: 0x0072AC80
+// OFFSET: 0x0072AC80/0x140403C30
 void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPush();
     view->FrustumPush();
@@ -1371,7 +1371,7 @@ void CWorldScene::RenderPortalList(const CPortalView* portalViews, uint32_t coun
     g_theGxDevicePtr->XformSetView(savedView);
 }
 
-// OFFSET: 0x0072B4D0
+// OFFSET: 0x0072B4D0/0x1404049E0
 void CWorldScene::RenderOccluders(CWorldView* view) {
     CWorldOccluder* occluder = view->m_occluders.Head();
 
@@ -1459,7 +1459,7 @@ void CWorldScene::RenderOccluders(CWorldView* view) {
     GxXformPop(GxXform_World);
 }
 
-// OFFSET: 0x0072B8F0
+// OFFSET: 0x0072B8F0/0x140404ED0
 void CWorldScene::RenderFrustum(CWorldView* view) {
     if (!CWorldScene::s_debugFrustumEnabled) {
         return;
@@ -1593,7 +1593,7 @@ void CWorldScene::RenderFrustum(CWorldView* view) {
     GxXformPop(GxXform_World);
 }
 
-// OFFSET: 0x0072C6B0
+// OFFSET: 0x0072C6B0/0x1404057D0
 void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
     if (!CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex]) {
         return;

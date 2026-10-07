@@ -280,7 +280,7 @@ void Liquid::UnCacheProceduralTextures() {
 }
 
 // PROVEN: 970ca42d IDENTICAL/NONE
-// OFFSET: 0x00717520
+// OFFSET: 0x00717520/0x1403EAAA0
 void Liquid::GrabBackBuffer() {
     if (!Liquid::NeedBackBuffer() || !s_backBuffer) {
         return;
@@ -312,7 +312,7 @@ CGxFrameBuffer* Liquid::GetBlurredBackBufferFB() {
 }
 
 // PROVEN: 50c22a2c IDENTICAL/NONE
-// OFFSET: 0x00717590
+// OFFSET: 0x00717590/0x1403EAB10
 CTexture* Liquid::GetRealReflectionBuffer() {
     return s_realReflectionBuffer;
 }
@@ -324,7 +324,7 @@ CTexture* Liquid::GetBlurredReflectionBuffer() {
 }
 
 // PROVEN: e2cf3e9f IDENTICAL/NONE
-// OFFSET: 0x007175B0
+// OFFSET: 0x007175B0/0x1403EAB30
 CGxFrameBuffer* Liquid::GetBlurredReflectionBufferFB() {
     return s_blurredReflectionFB;
 }
@@ -688,7 +688,7 @@ static Liquid::DisplMapPerturbationMesh* NewPerturbationMesh(int32_t zero) {
     return mesh;
 }
 
-// OFFSET: 0x00718440
+// OFFSET: 0x00718440/0x1403EBF30
 void Liquid::KawaseBlur(CTexture* source, CTexture* target, CGxFrameBuffer* frameBuffer, float a4) {
     if (!Liquid::NeedBackBuffer()) {
         return;

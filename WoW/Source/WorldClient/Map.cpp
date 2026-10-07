@@ -493,7 +493,7 @@ void CMap::UpdateLowDetailMapObjDefs() {
     }
 }
 
-// OFFSET: 0x00761950
+// OFFSET: 0x00761950/0x140446610
 void CMap::UpdateAreaDistances() {
     const C3Vector& pos = World::GetGuardBandPosition();
     float x = pos.x;
@@ -525,7 +525,7 @@ void CMap::UpdateAreaDistances() {
     }
 }
 
-// OFFSET: 0x007619F0
+// OFFSET: 0x007619F0/0x1404466C0
 int32_t CMap::PreloadAreasExist(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
         for (int32_t x = rect.minX; x <= rect.maxX; x++) {
@@ -894,7 +894,7 @@ void CMap::UpdateMap() {
     }
 }
 
-// OFFSET: 0x007626E0
+// OFFSET: 0x007626E0/0x140447720
 void CMap::PreloadUpdateMap(const CiRect& rect) {
     for (int32_t y = rect.minY; y <= rect.maxY; y++) {
         for (int32_t x = rect.minX; x <= rect.maxX; x++) {

@@ -74,7 +74,7 @@ static uint16_t* BuildLowDetailIndices(const uint16_t* holes, int32_t holeMode, 
 }
 
 // PROVEN: 0295b48a IDENTICAL/NONE
-// OFFSET: 0x0077F530
+// OFFSET: 0x0077F530/0x14046C480
 void CMapAreaLow::CreateVertices(CGxBuf* buf) {
     float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(buf));
     uint32_t index = 0;

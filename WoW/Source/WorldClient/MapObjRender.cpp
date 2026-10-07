@@ -184,7 +184,7 @@ void CMapObjRender::Destroy() {
     CShaderEffectManager::DestroyAllEffects();
 }
 
-// OFFSET: 0x00779FE0
+// OFFSET: 0x00779FE0/0x140465DB0
 void CMapObjRender::RenderMaterialElements(CWorldView* view, CSceneMaterial* material) {
     TSGrowableArray<RElement>& elements = material->m_elements[view->m_viewType];
 
@@ -261,7 +261,7 @@ void HASHKEY_MATERIAL::SetState(uint32_t state) {
     this->m_pad = state >> 23;
 }
 
-// OFFSET: 0x0077A4E0
+// OFFSET: 0x0077A4E0/0x1404663D0
 void CMapObj::UpdateMaterials() {
     float scalar = DayNight::GetSelfIlluminatedScalar();
 
@@ -282,7 +282,7 @@ void CMapObj::UpdateMaterials() {
     }
 }
 
-// OFFSET: 0x0077A5A0
+// OFFSET: 0x0077A5A0/0x140466480
 void CMapObjRender::SceneSetup(CWorldView* view) {
     const CM2Light& sun = CWorldMap::s_sunLight;
     C4Vector specular(sun.m_specColor.x, sun.m_specColor.y, sun.m_specColor.z, 14.0f);
@@ -344,7 +344,7 @@ void CSceneMaterial::UpdateSceneMaterial(int32_t shadow) {
     this->m_permuteHash = static_cast<uint32_t>(vs ^ ((vs >> 2) + ps + (vs << 6) - 0x61C88647));
 }
 
-// OFFSET: 0x0077A920
+// OFFSET: 0x0077A920/0x1404668B0
 int32_t CMapObjRender::ApplyMaterial(CWorldView* view, CSceneMaterial* material) {
     const HASHKEY_MATERIAL& key = material->m_key;
     material->m_effect->SetCurrent();
@@ -499,7 +499,7 @@ void CMapObjRender::BuildFrameMaterials(CWorldView* view) {
     }
 }
 
-// OFFSET: 0x0077B1C0
+// OFFSET: 0x0077B1C0/0x140467340
 void CMapObjRender::RenderMaterialList(CWorldView* view, TSGrowableArray<CSceneMaterial*>& list) {
     for (uint32_t i = 0; i < list.m_count; i++) {
         CSceneMaterial* material = list.m_data[i];
@@ -694,7 +694,7 @@ void CMapObjRender::UnregisterMaterial(CSceneMaterial* material) {
     CMapObjRender::s_materialHash.Delete(material);
 }
 
-// OFFSET: 0x0077BAB0
+// OFFSET: 0x0077BAB0/0x140467F90
 void CMapObjRender::RenderPass(CWorldView* view, uint32_t pass) {
     TSGrowableArray<CSceneMaterial*>& list = this->m_materials[pass];
 

@@ -86,7 +86,7 @@ C4Vector ViewSettings::CalculateParams() {
     return params;
 }
 
-// OFFSET: 0x00A30260
+// OFFSET: 0x00A30260/0x1407DA120
 C4Vector ViewSettings::CalculateHomToScreen(float offsetX, float offsetY) {
     float x = ((s_viewExtents.minY + 1.0f) - (1.0f - s_viewExtents.maxY)) * 0.5f;
     float scaleY;

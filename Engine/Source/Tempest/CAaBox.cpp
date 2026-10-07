@@ -103,7 +103,7 @@ CAaBox CAaBox::Transform(const CAaBox& box, const C44Matrix& m) {
     return result;
 }
 
-// OFFSET: 0x004CE520
+// OFFSET: 0x004CE520/0x14010A470
 CAaBox CAaBox::Bounding(const C3Vector* points, uint32_t count) {
     CAaBox result;
 

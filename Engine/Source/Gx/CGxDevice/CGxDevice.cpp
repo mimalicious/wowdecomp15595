@@ -824,7 +824,7 @@ void CGxDevice::XformSetProjection(const C44Matrix& matrix) {
     this->m_projection = matrix;
 }
 
-// OFFSET: 0x004E05A0
+// OFFSET: 0x004E05A0/0x1400A08E0
 void CGxDevice::XformPush(EGxXform xf) {
     CGxMatrixStack& stack = this->m_xforms[xf];
     stack.m_level++;

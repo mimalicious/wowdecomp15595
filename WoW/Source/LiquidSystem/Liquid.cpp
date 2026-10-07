@@ -96,7 +96,7 @@ void Liquid::SetUnderWaterFog(float start, float end, float density, const CImVe
     s_underWaterFogColor = color;
 }
 
-// OFFSET: 0x0071AD60
+// OFFSET: 0x0071AD60/0x1403EF480
 void Liquid::GetUnderWaterFog(float& start, float& end, float& density, CImVector& color) {
     start = s_underWaterFogStart;
     end = s_underWaterFogEnd;
@@ -163,7 +163,7 @@ void Liquid::SetCameraSubmerged(int32_t submerged) {
 }
 
 // PROVEN: abc6bfc0 IDENTICAL/NONE
-// OFFSET: 0x0071AE90
+// OFFSET: 0x0071AE90/0x1403EF300
 int32_t Liquid::NeedBackBuffer() {
     return s_needBackBuffer;
 }

@@ -14,6 +14,15 @@ static TSExplicitList<CWorldAntiOccluder, offsetof(CWorldAntiOccluder, m_link)> 
 void CWorldOccluder::Initialize() {
 }
 
+// PROVEN: 7665bf77 IDENTICAL/NONE
+// OFFSET: 0x007553F0/0x140436830
+CWorldOcclusion::~CWorldOcclusion() {
+}
+
+// OFFSET: 0x00756FD0/0x140438930
+CWorldOcclusion::CWorldOcclusion() {
+}
+
 // OFFSET: 0x00780F20/0x14046E2F0
 void CWorldOccluder::Free() {
     this->m_link.Unlink();

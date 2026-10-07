@@ -265,7 +265,7 @@ void CShaderEffect::SetClipPlane(const C4Plane& plane) {
 }
 
 // PROVEN: fc27580e IDENTICAL/NONE
-// OFFSET: 0x00431AA0
+// OFFSET: 0x00431AA0/0x14003A360
 int32_t CShaderEffect::GetClipEnabled() {
     return CShaderEffect::s_clipEnabled;
 }
@@ -444,7 +444,7 @@ void CShaderEffect::SetFogParams(float start, float end, float density, const CI
     GxRsSet(GxRs_FogColor, *reinterpret_cast<const int32_t*>(&color));
 }
 
-// OFFSET: 0x00433800
+// OFFSET: 0x00433800/0x14003BB80
 void CShaderEffect::SetFogEnabled(int32_t enabled) {
     if (enabled && g_theGxDevicePtr->MasterEnable(GxMasterEnable_Fog)) {
         if (CShaderEffect::s_enableShaders) {
@@ -772,7 +772,7 @@ void CShaderEffect::SetLocalLighting(CM2Lighting* lighting, int32_t enabled, con
     CShadowCache::SetShadowMapGenericInterior(lighting->m_flags & 8);
 }
 
-// OFFSET: 0x004345C0
+// OFFSET: 0x004345C0/0x14003D6B0
 void CShaderEffect::SetAlphaRefDefault() {
     float alphaRef = CGxDevice::s_alphaRef[g_theGxDevicePtr->m_appRenderStates[GxRs_BlendingMode].m_value.m_data.i[0]] * 0.0039215689f;
     CShaderEffect::SetAlphaRef(alphaRef);

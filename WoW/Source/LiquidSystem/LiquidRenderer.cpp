@@ -260,7 +260,7 @@ void Liquid::RendererDestroy() {
     s_reflectionRenderer = NULL;
 }
 
-// OFFSET: 0x00B3C7B0
+// OFFSET: 0x00B3C7B0/0x140909830
 void Liquid::CRenderer::Flush(uint32_t time, const C3Vector& camPos, uint32_t pass) {
     uint32_t list = pass == 2 ? 1 : pass;
     TSGrowableArray<CInstance*>& instances = this->m_instances[list];
@@ -365,7 +365,7 @@ void Liquid::CRenderer::Flush(uint32_t time, const C3Vector& camPos, uint32_t pa
 }
 
 // PROVEN: dd0bdcfc IDENTICAL/NONE
-// OFFSET: 0x00B3CCC0
+// OFFSET: 0x00B3CCC0/0x140909C50
 void Liquid::RendererFlush(uint32_t time, const C3Vector& camPos, uint32_t pass) {
     s_renderer->Flush(time, camPos, pass);
     s_reflectionRenderer->Flush(time, camPos, pass);

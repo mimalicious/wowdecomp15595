@@ -55,7 +55,7 @@ bool CChunkLiquid::HasData() const {
 }
 
 // PROVEN: b8e632aa IDENTICAL/NONE
-// OFFSET: 0x00798960
+// OFFSET: 0x00798960/0x14048C5B0
 void CChunkLiquid::CreateVertXY() {
     if (CChunkLiquid::s_vertXYInitialized) {
         return;
@@ -79,7 +79,7 @@ void CChunkLiquid::CreateVertXY() {
 }
 
 // PROVEN: 044bef56 IDENTICAL/NONE
-// OFFSET: 0x007989C0
+// OFFSET: 0x007989C0/0x14048C630
 void CChunkLiquid::CreateVertZ() {
     memset(this->m_heights, 0, sizeof(this->m_heights));
     uint32_t index = 0;

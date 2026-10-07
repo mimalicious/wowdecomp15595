@@ -144,7 +144,7 @@ int32_t SunShafts::SetMode(uint32_t mode) {
     return 0;
 }
 
-// OFFSET: 0x00A2EFE0
+// OFFSET: 0x00A2EFE0/0x1407D8A70
 void SunShafts::Update(const C3Vector& eye, const C3Vector& sun) {
     if (!s_mode) {
         return;

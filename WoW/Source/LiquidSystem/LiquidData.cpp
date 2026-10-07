@@ -8,19 +8,19 @@ static const uint8_t s_existsAll[8] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
 static uint16_t s_defaultTexCoord[2];
 
 // PROVEN: d5b7f5e5 IDENTICAL/NONE
-// OFFSET: 0x00B3CD10
+// OFFSET: 0x00B3CD10/0x140909CC0
 const SMLiquidChunkDesc* Liquid::GetChunkDesc(const void* data, uint32_t x, uint32_t y) {
     return static_cast<const SMLiquidChunkDesc*>(data) + (x + 16 * y);
 }
 
 // PROVEN: 1f4660f0 IDENTICAL/NONE
-// OFFSET: 0x00B3CD30
+// OFFSET: 0x00B3CD30/0x140909CD0
 const SMLiquidInstance* Liquid::GetInstanceDesc(const void* data, const SMLiquidChunkDesc* desc, uint32_t index) {
     return reinterpret_cast<const SMLiquidInstance*>(static_cast<const uint8_t*>(data) + desc->m_offsetInstances) + index;
 }
 
 // PROVEN: 47211c8b IDENTICAL/NONE
-// OFFSET: 0x00B3CD50
+// OFFSET: 0x00B3CD50/0x140909CF0
 const void* Liquid::GetInstanceVertices(const void* data, const SMLiquidInstance* instance) {
     if (instance->m_offsetVertexData) {
         return static_cast<const uint8_t*>(data) + instance->m_offsetVertexData;
@@ -100,7 +100,7 @@ const uint16_t* Liquid::GetChunkTexCoord0(uint32_t format, const void* vertices,
 }
 
 // PROVEN: 0abf6eed IDENTICAL/NONE
-// OFFSET: 0x00B3CEC0
+// OFFSET: 0x00B3CEC0/0x140909E10
 int32_t Liquid::GetVertexFormat(uint32_t liquidType, uint32_t format) {
     if (!liquidType) {
         return -1;

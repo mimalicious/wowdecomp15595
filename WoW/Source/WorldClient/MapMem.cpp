@@ -190,7 +190,7 @@ void CMap::FreeMapObjDef(CMapObjDef* mapObjDef) {
     CMap::s_mapObjDefHeap->Delete(mapObjDef, __FILE__, __LINE__);
 }
 
-// OFFSET: 0x00776580
+// OFFSET: 0x00776580/0x140460BC0
 CChunkLiquid* CMap::AllocChunkLiquid() {
     return CMap::s_chunkLiquidHeap->New(__FILE__, __LINE__);
 }

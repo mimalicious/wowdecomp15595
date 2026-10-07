@@ -64,6 +64,7 @@ static CAaBox FootprintBounds(const C2Vector& size, const C3Vector& pos) {
     return box;
 }
 
+// PROVEN: bcb6208a IDENTICAL/NONE
 // OFFSET: 0x0075D550
 static void FootprintRotation(C44Matrix& matrix, const C2Vector& size, int32_t flip, float facing) {
     if (flip) {
@@ -94,6 +95,7 @@ void CWorldMap::ClearAllFootprints() {
     }
 }
 
+// PROVEN: 0d451cf6 IDENTICAL/NONE
 // OFFSET: 0x0075D7C0
 void CWorldMap::FootprintDestroy() {
     if (s_footprintVS) {
@@ -186,7 +188,7 @@ void CWorldMap::NewFootprint(uint32_t textureIndex, const C2Vector& size, const 
     this->m_footprintList.LinkToTail(footprint);
 }
 
-// OFFSET: 0x0075DCF0
+// OFFSET: 0x0075DCF0/0x140441900
 void CWorldMap::RenderFootprints(CWorldView* view) {
     for (CMapFootprint* footprint = this->m_footprintList.Head(), * next; footprint; footprint = next) {
         next = this->m_footprintList.Next(footprint);

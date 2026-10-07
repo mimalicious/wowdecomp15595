@@ -2981,6 +2981,7 @@ void CWaterRipple::Init(const C3Vector& pos, float facing, float radius, float a
     }
 }
 
+// PROVEN: ab810557 IDENTICAL/NONE
 // OFFSET: 0x00764D50
 CWaterRipple* CWaterRipple::Create(const C3Vector& pos, float facing, float radius, float duration, float alpha, float growth, int32_t large, int32_t player) {
     uint32_t slot;
@@ -3016,7 +3017,7 @@ void CWorldMap::CreateWaterRipple(const C3Vector& pos, float facing, float radiu
     this->m_rippleList.LinkToTail(ripple);
 }
 
-// OFFSET: 0x00764E70
+// OFFSET: 0x00764E70/0x14044A720
 void CWorldMap::RenderWaterRipples(CWorldView* view) {
     if (!this->m_rippleList.Head()) {
         return;

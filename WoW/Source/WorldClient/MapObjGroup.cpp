@@ -700,7 +700,7 @@ void VBBList::Block::Set(uint32_t itemSize, uint32_t itemCount, uint32_t offset)
     this->m_buf->unk_001C = 0;
 }
 
-// OFFSET: 0x0078F910
+// OFFSET: 0x0078F910/0x1404808F0
 void CMapObjGroup::FillVertexVB(CGxBuf* buf, EGxVertexBufferFormat format) const {
     uint32_t defaultColor = (this->m_parent->m_header->m_flags & 0x2) ? 0xFF000000 : 0xFF7F7F7F;
     const uint32_t* colors = reinterpret_cast<const uint32_t*>(this->m_colors);
@@ -770,7 +770,7 @@ void CMapObjGroup::FillVertexVB(CGxBuf* buf, EGxVertexBufferFormat format) const
     buf->unk_001C = 1;
 }
 
-// OFFSET: 0x0078FE70
+// OFFSET: 0x0078FE70/0x140480E80
 void CMapObjGroup::FillTransparencyVB(CGxBuf* buf) const {
     uint32_t count = this->m_batches[this->m_transBatchCount - 1].m_maxIndex + 1;
     uint32_t* dst = reinterpret_cast<uint32_t*>(g_theGxDevicePtr->BufLock(buf));
@@ -1157,7 +1157,7 @@ void CMapObjGroup::Init() {
     this->InitPtrs();
 }
 
-// OFFSET: 0x007915D0
+// OFFSET: 0x007915D0/0x1404825F0
 void CMapObjGroup::SetVertexVB() const {
     uint32_t stride = GxVertexSize(this->m_vertexFormat);
     CGxBuf* buf = this->m_vertsBlock ? this->m_vertsBlock->m_buf : g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, stride, this->m_vertexCount);
@@ -1169,7 +1169,7 @@ void CMapObjGroup::SetVertexVB() const {
     g_theGxDevicePtr->PrimVertexPtr(buf, this->m_vertexFormat);
 }
 
-// OFFSET: 0x00791640
+// OFFSET: 0x00791640/0x140482680
 void CMapObjGroup::SetTransparencyVB() const {
     CGxBuf* buf;
 
@@ -1187,7 +1187,7 @@ void CMapObjGroup::SetTransparencyVB() const {
 }
 
 // PROVEN: 5e357e18 IDENTICAL/NONE
-// OFFSET: 0x007916B0
+// OFFSET: 0x007916B0/0x140482710
 void CMapObjGroup::SetIndexVB() const {
     CGxBuf* buf = this->m_indicesBlock ? this->m_indicesBlock->m_buf : g_theGxDevicePtr->BufStream(GxPoolTarget_Index, 2, this->m_indexCount);
 
@@ -1277,7 +1277,7 @@ bool CMapObjGroup::VectorIntersectLiquid(const C3Segment& seg, float* t, uint32_
     return this->VectorIntersectLiquidTiles(seg, t, flags, &tileCount, tiles, triData, mapObjDef);
 }
 
-// OFFSET: 0x00792680
+// OFFSET: 0x00792680/0x140483EB0
 bool CMapObjGroup::GetTris(const C3Segment& seg, float* dist, uint32_t flags, uint16_t faceIgnoreFlags, World::TriData* triData, const CMapObjDef* mapObjDef) {
     uint32_t batchCount = World::TriData::s_nBatches;
 

@@ -160,7 +160,7 @@ void CMeshGeomFactory::Destroy() {
     CMeshGeomFactory::s_allocator.Clear(typeid(CMeshGeomFactory).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: 0x0076CE20
+// OFFSET: 0x0076CE20/0x140455450
 void CMeshGeomFactory::SetDiffuseColor(const CImVector& color) {
     if (g_theGxDevicePtr->m_caps.m_colorFormat == GxCF_rgba) {
         this->m_diffuseColor = CImVector(color.r, color.g, color.b, color.a);

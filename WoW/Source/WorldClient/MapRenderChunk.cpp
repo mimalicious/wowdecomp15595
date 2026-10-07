@@ -72,7 +72,7 @@ void CMapRenderChunk::FreeBuf() {
     }
 }
 
-// OFFSET: 0x00765F40
+// OFFSET: 0x00765F40/0x14044BC40
 void CMapRenderChunk::AddChunks(CMapChunk** chunks) {
     for (uint32_t i = 0; i < 4; i++) {
         this->m_chunks[i] = chunks[i];

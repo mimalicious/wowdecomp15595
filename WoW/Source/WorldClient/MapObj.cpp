@@ -51,13 +51,13 @@ void CMapObj::UpdatePools() {
     CMapObj::bPoolsDirty = 0;
 }
 
-// PROVEN: 71aa0cc3 IDENTICAL/NONE
+// PROVEN: 71aa0cc3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00745A10/0x140423920
 void CMapObj::LinkToAsyncHead(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CMapObj*>(param)->m_asyncObject, 1);
 }
 
-// PROVEN: bd76315d IDENTICAL/NONE
+// PROVEN: bd76315d IDENTICAL/IDENTICAL
 // OFFSET: 0x00745A30/0x140423930
 void CMapObj::InitPtrs() {
     this->m_header = NULL;
@@ -125,13 +125,13 @@ uint32_t CMapObj::CreateWmoIgnoreFlags(uint32_t flags) {
     return ignore;
 }
 
-// PROVEN: 893420cb IDENTICAL/NONE
+// PROVEN: 893420cb IDENTICAL/UNPROVEN
 // OFFSET: 0x00745B60/0x140423A70
 void CMapObj::ReadGroup(uint32_t groupNum) {
     this->ReadGroup(groupNum, 0);
 }
 
-// PROVEN: be75624a IDENTICAL/NONE
+// PROVEN: be75624a IDENTICAL/IDENTICAL
 // OFFSET: 0x00745B80/0x140423A80
 void CMapObj::WaitLoad() {
     AsyncFileReadWait(this->m_asyncObject);
@@ -211,7 +211,7 @@ void CMapObj::Clear() {
     this->m_dataSize = 0;
 }
 
-// PROVEN: 42688913 IDENTICAL/NONE
+// PROVEN: 42688913 IDENTICAL/IDENTICAL
 // OFFSET: 0x00745DD0/0x140423D10
 int32_t CMapObj::IsGroupLoaded(uint32_t groupNum) {
     if (!(this->m_flags & 0x40)) {
@@ -325,7 +325,7 @@ int32_t CMapObj::TestConvexVolume(const C3Vector& pos) {
     return 1;
 }
 
-// PROVEN: 80205287 IDENTICAL/NONE
+// PROVEN: 80205287 IDENTICAL/IDENTICAL
 // OFFSET: 0x007462B0/0x140424180
 CMapObjGroup* CMapObj::GetGroup(uint32_t groupNum, int32_t loaded) {
     if (!(this->m_flags & 0x40)) {
@@ -341,7 +341,7 @@ CMapObjGroup* CMapObj::GetGroup(uint32_t groupNum, int32_t loaded) {
     return group;
 }
 
-// PROVEN: 35c617a3 IDENTICAL/NONE
+// PROVEN: 35c617a3 IDENTICAL/IDENTICAL
 // OFFSET: 0x007462E0/0x1404241A0
 void CMapObj::WaitLoadGroup(uint32_t groupNum) {
     AsyncFileReadWait(this->m_groups[groupNum]->m_asyncObject);

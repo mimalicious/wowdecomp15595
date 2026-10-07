@@ -165,7 +165,7 @@ void DepthCache::Release() {
 }
 
 // PROVEN: 7a3dc296 IDENTICAL/NONE
-// OFFSET: 0x00A2FA50
+// OFFSET: 0x00A2FA50/0x1407D97A0
 void DepthCache::Resolve() {
     CGxTex* depth = TextureGetGxTex(s_depthTex);
 

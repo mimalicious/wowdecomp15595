@@ -56,7 +56,7 @@ void CMapStaticEntity::SetSequenceSpeed(float speed) {
     }
 }
 
-// PROVEN: 58f5ee9a IDENTICAL/NONE
+// PROVEN: ccf96f9c IDENTICAL/NONE
 // OFFSET: 0x00762820
 void CMapStaticEntity::AdjustLighting(CMapObjDef* mapObjDef, uint32_t groupNum, const uint16_t* polyIndex, const C3Vector* pos) {
 }

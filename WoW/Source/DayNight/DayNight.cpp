@@ -240,7 +240,7 @@ const DayNight::LightInfo* DayNight::GetMinimapLightInfo() {
 }
 
 // PROVEN: 37c36cc4 IDENTICAL/NONE
-// OFFSET: 0x00646FF0
+// OFFSET: 0x00646FF0/0x1402E3A40
 float DayNight::GetSelfIlluminatedScalar() {
     return DayNight::g_dnInfo.m_selfIlluminatedScalar;
 }
@@ -312,7 +312,7 @@ C3Vector* DayNight::GetMoonPos(C3Vector* pos) {
     return pos;
 }
 
-// OFFSET: 0x00647180
+// OFFSET: 0x00647180/0x1402E3B30
 C3Vector* DayNight::GetSunGlarePos(C3Vector* pos) {
     *pos = DayNight::g_sunGlare.m_position;
     return pos;

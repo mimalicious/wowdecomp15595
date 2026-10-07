@@ -143,7 +143,7 @@ void CWorldView::CalcProjection(C44Matrix& projection) {
 }
 
 // PROVEN: aeb50149 IDENTICAL/NONE
-// OFFSET: 0x007535F0
+// OFFSET: 0x007535F0/0x140434710
 void CWorldView::FrustumPop() {
     this->m_frustumIndex--;
 }
@@ -160,7 +160,7 @@ int32_t CWorldView::IsBehindCullPlane(const CAaBox& box) {
     return x * plane.n.x + z * plane.n.z + y * plane.n.y + plane.d < -0.000099999997f;
 }
 
-// OFFSET: 0x00753690
+// OFFSET: 0x00753690/0x1404347B0
 void CWorldView::RectFromVerts(CAaRect& rect, const C3Vector* verts, uint32_t count) {
     rect.minY = 3.402823466e38f;
     rect.maxY = -3.402823466e38f;
@@ -312,13 +312,13 @@ void CWorldView::EnableShadow(int32_t enable) {
 }
 
 // PROVEN: 7c4b7b97 IDENTICAL/NONE
-// OFFSET: 0x00753FB0
+// OFFSET: 0x00753FB0/0x1404350E0
 void CWorldView::UpdateViewMat() {
     this->m_viewMat = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
     this->m_viewMat.Translate(C3Vector(-this->m_camPos.x, -this->m_camPos.y, -this->m_camPos.z));
 }
 
-// OFFSET: 0x00754030
+// OFFSET: 0x00754030/0x140435160
 void CWorldView::UpdateViewerUnderwater() {
     this->m_underwater = 0;
 
@@ -373,7 +373,7 @@ void CWorldView::UpdateShadows() {
     CShadowQuery::s_activeShadowQuery = NULL;
 }
 
-// OFFSET: 0x00754170
+// OFFSET: 0x00754170/0x1404352E0
 void CWorldView::RenderM2SkyboxPass(CM2Scene* scene) {
     const CBoundingBox& viewport = g_theGxDevicePtr->m_viewport;
     float minX = viewport.m_x.m_l;
@@ -580,7 +580,7 @@ void CWorldView::CullModelTree(CM2Model* model, uint32_t boneId) {
     }
 }
 
-// OFFSET: 0x00754CF0
+// OFFSET: 0x00754CF0/0x1404360D0
 void CWorldView::ClipPortal(CMapObj* mapObj, const SMOPortalInfo* portal, uint16_t* ext) {
     float dist = this->m_localCamPos.z * portal->m_plane.n.z + this->m_localCamPos.y * portal->m_plane.n.y + this->m_localCamPos.x * portal->m_plane.n.x + portal->m_plane.d;
 
@@ -593,7 +593,7 @@ void CWorldView::ClipPortal(CMapObj* mapObj, const SMOPortalInfo* portal, uint16
     }
 }
 
-// OFFSET: 0x00754D80
+// OFFSET: 0x00754D80/0x140436180
 int32_t CWorldView::ClipPolygon(const C3Vector* verts, uint32_t count, C3Vector*& outVerts, uint32_t& outCount) {
     C3Vector* buffers[2] = { s_clipVerts[0], s_clipVerts[1] };
     uint32_t counts[2] = { count, 0 };
@@ -837,7 +837,7 @@ void CWorldView::RenderOpaque() {
     }
 }
 
-// OFFSET: 0x00755960
+// OFFSET: 0x00755960/0x140436D60
 void CWorldView::RenderAlpha() {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
 
@@ -1043,7 +1043,7 @@ void CWorldView::AddDoodadDefModelToModelScene(CMapDoodadDef* doodadDef) {
     doodadDef->m_model->m_fadeAlpha = alpha;
 }
 
-// OFFSET: 0x00756130
+// OFFSET: 0x00756130/0x1404376E0
 int32_t CWorldView::TransformAndClipVerts(int32_t ignoreOcclusion, const C3Vector* verts, uint32_t count, const C3Vector& offset, C3Vector*& outVerts, uint32_t& outCount) {
     if (count > 12) {
         count = 12;
@@ -1573,7 +1573,7 @@ void CWorldView::SetupMapObjDefCull(CMapObjDef* mapObjDef) {
     this->m_cullValid = 1;
 }
 
-// OFFSET: 0x007585A0
+// OFFSET: 0x007585A0/0x14043A800
 void CWorldView::ClipPortalExt(CMapObj* mapObj, const SMOPortalInfo* portal, SPortalExt* ext) {
     this->ClipPortal(mapObj, portal, &ext->m_flags);
 
@@ -1597,6 +1597,25 @@ void CWorldView::ClipPortalExt(CMapObj* mapObj, const SMOPortalInfo* portal, SPo
         ext->m_rect.maxX = -3.402823466e38f;
     } else {
         CWorldView::RectFromVerts(ext->m_rect, verts, count);
+    }
+}
+
+// PROVEN: 080d5354 IDENTICAL/NONE
+// OFFSET: 0x00758870/0x14043AD20
+void CWorldView::EnableOcclusion(int32_t enable) {
+    if (enable) {
+        if (!this->m_occlusion) {
+            void* mem = SMemAlloc(sizeof(CWorldOcclusion), __FILE__, __LINE__, 0);
+            this->m_occlusion = mem ? new (mem) CWorldOcclusion() : NULL;
+        }
+    } else {
+        CWorldOcclusion* occlusion = this->m_occlusion;
+
+        if (occlusion) {
+            occlusion->~CWorldOcclusion();
+            SMemFree(occlusion, "delete", -1, 0);
+            this->m_occlusion = NULL;
+        }
     }
 }
 
@@ -1859,7 +1878,7 @@ void CWorldView::AddMoveableMapObjDefGroups() {
     }
 }
 
-// OFFSET: 0x00759690
+// OFFSET: 0x00759690/0x14043BFF0
 void CWorldView::AddMapChunk(CMapChunk* chunk, int32_t a2) {
     if (this->m_sortTable) {
         C3Vector point;

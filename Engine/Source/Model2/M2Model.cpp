@@ -8744,7 +8744,7 @@ CM2Lighting::CM2Lighting(const CAaSphere& sphere) {
     this->Initialize(NULL, sphere);
 }
 
-// OFFSET: 0x0075D380
+// OFFSET: 0x0075D380/0x140440D70
 CM2Lighting::CM2Lighting(const C3Vector& position) {
     this->m_sphere4.c.x = 0.0f;
     this->m_sphere4.r = 0.0f;

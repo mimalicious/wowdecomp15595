@@ -336,7 +336,7 @@ int32_t CMapChunk::GetLiquidHeight(const C2Vector& pos, float& height) {
     return 0;
 }
 
-// OFFSET: 0x0073F870
+// OFFSET: 0x0073F870/0x14041D800
 void CMapChunk::CreateLiquids(int32_t isNew) {
     for (CChunkLiquid* liquid = this->m_liquidList.Head(), * next; liquid; liquid = next) {
         next = this->m_liquidList.Next(liquid);

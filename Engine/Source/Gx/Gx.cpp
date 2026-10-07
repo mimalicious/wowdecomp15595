@@ -645,7 +645,7 @@ void GxXformSetViewport(float minX, float maxX, float minY, float maxY, float mi
     g_theGxDevicePtr->XformSetViewport(cleanMinX, cleanMaxX, cleanMinY, cleanMaxY, minZ, maxZ);
 }
 
-// OFFSET: 0x00840F60
+// OFFSET: 0x00840F60/0x14056CF50
 void GxXformViewProj(C44Matrix& matrix) {
     CGxDevice* device = g_theGxDevicePtr;
     C44Matrix view;
