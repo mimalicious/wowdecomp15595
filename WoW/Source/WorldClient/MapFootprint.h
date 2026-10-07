@@ -23,6 +23,10 @@ class CMapFootprintTexture {
     /* 0000 */ CTexture* m_texture;
     /* 0004 */ uint32_t m_vertexCount;
     /* 0008 */ TSExplicitList<CMapFootprint, offsetof(CMapFootprint, m_textureLink)> m_footprints;
+
+    CMapFootprintTexture();
 };
+
+#include "WoW/Source/WorldClient/MapFootprint.inl"
 
 #endif

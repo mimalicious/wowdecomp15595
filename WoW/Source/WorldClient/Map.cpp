@@ -316,6 +316,10 @@ uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
 }
 
+// OFFSET: 0x00401000/0x1407D7E80
+void CMap::ProcessDetailDoodadUpdateList() {
+}
+
 // OFFSET: 0x00735CE0
 void CMap::ClearChunkDetailDoodads() {
     for (CMapArea* area = this->m_areaList.Head(); area; area = this->m_areaList.Next(area)) {
