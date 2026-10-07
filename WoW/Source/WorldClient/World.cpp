@@ -286,12 +286,12 @@ void World::RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, 
 }
 
 // OFFSET: 0x00721D30/0x1403F8300
-int32_t World::QueryAreaId(uintptr_t object, uint32_t& areaId) {
+int32_t World::QueryAreaId(uintptr_t object, uint32_t* areaIds) {
     if (!object) {
         return 0;
     }
 
-    return ActiveWorldMap()->QueryAreaId(reinterpret_cast<CMapEntity*>(object), areaId);
+    return CWorldMap::QueryAreaIds(reinterpret_cast<CMapEntity*>(object), areaIds);
 }
 
 // OFFSET: 0x00721D70
@@ -429,7 +429,7 @@ int32_t World::QueryOutdoors(uintptr_t object) {
         return 1;
     }
 
-    return ActiveWorldMap()->QueryOutdoors(reinterpret_cast<CMapEntity*>(object));
+    return CWorldMap::QueryOutdoors(reinterpret_cast<CMapEntity*>(object));
 }
 
 // PROVEN: daa3f05a IDENTICAL/NONE
@@ -1412,6 +1412,15 @@ bool World::DNIntersect(const C3Vector& start, const C3Vector& end, C3Vector* hi
     return World::Intersect(start, end, hitPoint, dist, 0x200112, NULL);
 }
 
+// OFFSET: 0x00723810
+bool World::IntersectSegment(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags) {
+    if (!ActiveWorldMap()) {
+        return false;
+    }
+
+    return ActiveWorldMap()->Intersect(seg, t, plane, flags);
+}
+
 // OFFSET: 0x00723840
 int32_t World::IsFacetQueryValid() {
     CWorldMap* worldMap = ActiveWorldMap();
@@ -1421,6 +1430,31 @@ int32_t World::IsFacetQueryValid() {
     }
 
     return 0;
+}
+
+// OFFSET: 0x00723860
+int32_t World::GetFacets(const CFrustum& frustum, FacetData& facets, uint32_t flags) {
+    if (!ActiveWorldMap()) {
+        return 0;
+    }
+
+    return ActiveWorldMap()->QueryFacets(frustum, facets, flags);
+}
+
+// OFFSET: 0x00723890
+void World::GetTris(const CAaBox& box, TriData& tris, uint32_t flags) {
+    if (ActiveWorldMap()) {
+        ActiveWorldMap()->QueryTris(box, tris, flags);
+    }
+}
+
+// OFFSET: 0x007238C0
+int32_t World::GetIntersectingDoodadModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags) {
+    if (!ActiveWorldMap()) {
+        return 0;
+    }
+
+    return ActiveWorldMap()->QueryIntersectingModels(models, maxModels, box, flags);
 }
 
 // OFFSET: 0x007238F0/0x1403FA250

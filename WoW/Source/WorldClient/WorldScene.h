@@ -7,6 +7,7 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Model2/M2Light.h"
+#include "Engine/Source/Tempest/CFrustum.h"
 #include "WoW/Source/WorldClient/Barrier.h"
 #include "WoW/Source/WorldClient/World.h"
 
@@ -20,6 +21,7 @@ class CMapEntity;
 class CTexture;
 class CWorldOcclusion;
 class CWorldView;
+class CPortalView;
 
 class CRenderCallback {
     public:
@@ -73,6 +75,8 @@ class CWorldScene {
     static CM2Lighting s_lighting;
     static CWorldSceneLight s_sceneLights[3];
     static CBarrier s_barrier;
+    static int32_t s_debugFrustumEnabled;
+    static CFrustum s_debugFrustum;
     static TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)> s_renderCallbackList[3];
     static TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> s_fadeoutList;
     static TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> s_fadeoutFreeList;
@@ -80,6 +84,7 @@ class CWorldScene {
     static void AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64);
     static void RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param);
     static void FreeSceneLights();
+    static void RenderPortalList(const CPortalView* portalViews, uint32_t count, const C3Vector* verts, int32_t interior);
     static int32_t FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uint32_t param32);
 
     static void CallRenderCallbacks(uint32_t pass);

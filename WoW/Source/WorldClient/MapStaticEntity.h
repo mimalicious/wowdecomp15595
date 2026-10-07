@@ -11,6 +11,11 @@
 class CM2Lighting;
 class CM2Model;
 
+class CMapObj;
+class CMapObjDef;
+class CMapObjDefGroup;
+class CMapObjGroup;
+
 class CMapStaticEntity : public CMapBaseObj {
     public:
     /* 0010 */ CWorldMap* m_worldMap;
@@ -47,6 +52,7 @@ class CMapStaticEntity : public CMapBaseObj {
     virtual void QueryExteriorLighting();
 
     CMapStaticEntity();
+    int32_t GetMapObjAndGroup(CMapObjDef*& mapObjDef, CMapObj*& mapObj, CMapObjDefGroup*& defGroup, CMapObjGroup*& group, int32_t skipMoving);
     void SetSequenceSpeed(float speed);
 };
 

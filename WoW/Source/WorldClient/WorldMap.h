@@ -61,6 +61,8 @@ class CWorldMap {
     static float s_riverDepthCoordTable[256];
     static float s_emptyDepthCoordTable[256];
     static float* s_depthCoordTables[2];
+    static TSGrowableArray<uint32_t> s_rasterSpans;
+    static uint32_t s_rasterSpanCount;
 
     /* 0000 */ int32_t m_mapId;
     /* 0004 */ int32_t m_isGlobalMapObj;
@@ -92,6 +94,9 @@ class CWorldMap {
     static void LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     static void Initialize();
     static void GetChunkRect(const CAaBox& box, CiRect& rect);
+    static int32_t QueryAreaId(CMapEntity* entity, uint32_t& areaId);
+    static int32_t QueryAreaIds(CMapEntity* entity, uint32_t* areaIds);
+    static int32_t QueryOutdoors(CMapEntity* entity);
     static void GetQueryRects(const CAaBox& box, CiRect& subChunkRect, CiRect& chunkRect, CiRect& areaRect);
     static void GetLowDetailAreaRect(const C3Vector& pos, CiRect& rect);
     static void InitializeLiquid();
@@ -126,7 +131,6 @@ class CWorldMap {
     void NewFootprint(uint32_t a1, const C2Vector& a2, const C3Vector& a3, float a4, int32_t a5, uint32_t a6, int32_t a7);
     void Preload(int32_t a1);
     void PurgeMaps();
-    int32_t QueryAreaId(CMapEntity* entity, uint32_t& areaId);
     int32_t QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower);
     int32_t QueryIntersectingModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags);
     bool QueryFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
@@ -142,6 +146,13 @@ class CWorldMap {
     bool QueryHeight(const C3Vector& start, const C3Vector& end, float& t);
     bool QueryHeight(const C3Vector& pos, float range, float& height);
     bool IntersectMapObjDefs(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
+    bool IntersectTerrainSpans(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
+    bool IntersectTerrain(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
+    bool Intersect(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
+    void RasterizeRow(const int32_t* coords);
+    void RasterizeColumn(const int32_t* coords);
+    void RasterizeShallow(const C3Vector& start, const C3Vector& end, const int32_t* coords);
+    void RasterizeSteep(const C3Vector& start, const C3Vector& end, const int32_t* coords);
     bool QueryMapObjDefFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
     void QueryMapObjDefFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
     void QueryMapObjDefTris(const CAaBox& box, World::TriData& tris, uint32_t flags);
@@ -151,7 +162,6 @@ class CWorldMap {
     int32_t QueryFlightBoundsUpper(const C3Vector& pos, float& height);
     int32_t QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height);
     void QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results);
-    int32_t QueryOutdoors(CMapEntity* entity);
     void QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flags);
     void RemoveMap(int32_t mapId);
     void RemoveOtherMaps();

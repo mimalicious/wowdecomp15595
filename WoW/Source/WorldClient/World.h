@@ -13,7 +13,9 @@
 
 class C2Vector;
 class C3Spline_CatmullRom;
+class C4Plane;
 class CAaSphere;
+struct C3Segment;
 class CFrustum;
 class CM2Model;
 class CM2Scene;
@@ -31,7 +33,10 @@ typedef void (*WORLD_FRAME_CALLBACK)();
 
 class LiquidTypeRec;
 
+class WMOAreaTableRec;
+
 const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint32_t liquidType);
+const WMOAreaTableRec* SDBWMOAreaTableLookup(uint32_t wmoId, uint32_t nameSet, uint32_t groupId);
 
 namespace World {
     struct HitTestDebug;
@@ -192,7 +197,7 @@ namespace World {
     int32_t QueryOutdoors(uintptr_t object);
     void WaterReset();
     void Destroy();
-    int32_t QueryAreaId(uintptr_t object, uint32_t& areaId);
+    int32_t QueryAreaId(uintptr_t object, uint32_t* areaIds);
     int32_t ObjectIsWMO(uintptr_t object);
     void ObjectEnablePortals(uintptr_t object, int32_t enable);
     void ObjectSetEventCallback(uintptr_t object, WORLD_MODEL_EVENT_CALLBACK callback, uint64_t param, uint16_t doodadSet);
@@ -290,6 +295,7 @@ namespace World {
     uintptr_t ObjectFind(uint32_t uniqueId);
     int32_t NDCClip(C3Vector* verts, uint32_t count, C3Vector**& outVerts, uint32_t& outCount);
     int32_t NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool translate);
+    bool IntersectSegment(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags);
 }
 
 #endif

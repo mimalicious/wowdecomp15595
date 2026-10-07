@@ -9,6 +9,9 @@
 #include "WoW/Source/WorldClient/MapBaseObj.h"
 #include "WoW/Source/WorldClient/MapChunkLiquid.h"
 
+class C2Vector;
+class C4Plane;
+struct C3Segment;
 class CDetailDoodadInst;
 class CMap;
 class CMapArea;
@@ -146,6 +149,7 @@ class CMapChunk : public CMapBaseObj {
     void RenderPrep(CWorldView* view, float distSqr);
     void GetLiquidBox(CAaBox& box);
     int32_t GetLiquidHeight(const C2Vector& pos, float& height);
+    bool IntersectSubChunk(int32_t subX, int32_t subY, const C3Segment& seg, C4Plane& plane, float& t);
     void ProcessIffChunks(uint32_t* data, int32_t size, int32_t isNew);
     void Purge();
 };

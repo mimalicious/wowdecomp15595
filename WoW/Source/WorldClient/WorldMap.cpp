@@ -16,7 +16,9 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/LiquidMaterialRec.h"
 #include "WoW/Source/DB/Rec/LiquidTypeRec.h"
+#include "WoW/Source/DB/Rec/AreaTableRec.h"
 #include "WoW/Source/DB/Rec/MapRec.h"
+#include "WoW/Source/DB/Rec/WMOAreaTableRec.h"
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "Engine/Source/Tempest/C3Segment.h"
@@ -53,6 +55,12 @@ float* CWorldMap::s_depthCoordTables[2] = { CWorldMap::s_riverDepthCoordTable, C
 
 // STATIC: 0x00E71E88
 uint32_t CWorldMap::s_queryTag;
+
+// STATIC: 0x00E78BC4
+TSGrowableArray<uint32_t> CWorldMap::s_rasterSpans;
+
+// STATIC: 0x00E78BC0
+uint32_t CWorldMap::s_rasterSpanCount;
 
 // STATIC: 0x00E71E8C
 uint32_t CWorldMap::s_activeWorldMapIndex;
@@ -250,7 +258,7 @@ void CWorldMap::UpdateEntity(CMapEntity* entity) {
     if (!(flags & 0x1000) && (flags & 0x4) && entity->m_liquidHeight + 0.0099999998f > entity->m_position.z) {
         uint32_t areaId;
 
-        if (this->QueryAreaId(entity, areaId)) {
+        if (CWorldMap::QueryAreaId(entity, areaId)) {
             const LiquidTypeRec* rec = GetLiquidTypeRecForArea(areaId, entity->m_liquidType);
 
             if (rec) {
@@ -1623,6 +1631,274 @@ void CWorldMap::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableA
     }
 }
 
+// OFFSET: 0x00731E10
+bool CWorldMap::IntersectTerrainSpans(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags) {
+    const uint32_t* span = CWorldMap::s_rasterSpans.m_data;
+    uint32_t areaX = ~span[0];
+    uint32_t chunkX = areaX;
+    uint32_t areaY = ~span[1];
+    uint32_t chunkY = areaY;
+    CMapArea* area = NULL;
+    CMapChunk* chunk = NULL;
+
+    C3Vector delta = seg.t - seg.b;
+
+    if (delta.y * delta.y + delta.x * delta.x + delta.z * delta.z < 0.000099999997f) {
+        return false;
+    }
+
+    C3Segment local;
+    local.b = seg.b;
+    local.t = delta;
+
+    if (!CWorldMap::s_rasterSpanCount) {
+        return false;
+    }
+
+    while (true) {
+        uint32_t x = span[0];
+        uint32_t y = span[1];
+        CWorldMap::s_rasterSpanCount -= 2;
+        span += 2;
+
+        if ((x & 0x1F80) != areaX || (y & 0x1F80) != areaY) {
+            int32_t ax = (x >> 7) & 0x3F;
+            int32_t ay = (y >> 7) & 0x3F;
+            CMap* map;
+
+            if (this->m_isGlobalMapObj) {
+                map = this->m_maps[0];
+            } else {
+                CMapTableEntry* entry = this->m_mapTable.Get(ax, ay);
+
+                if (!entry || !(entry->m_flags & 0x1)) {
+                    return false;
+                }
+
+                map = this->m_maps[entry->m_mapIndex];
+            }
+
+            if (!map) {
+                return false;
+            }
+
+            CMap::CMapAreaTableEntry* areaEntry = map->m_areaTable.Get(ax, ay);
+
+            if (!areaEntry || !(areaEntry->m_flags & 0x2)) {
+                return false;
+            }
+
+            area = areaEntry->m_area;
+
+            if (!area) {
+                return false;
+            }
+
+            areaX = x & 0x1F80;
+            areaY = y & 0x1F80;
+        }
+
+        if ((x & 0x78) != chunkX || (y & 0x78) != chunkY) {
+            chunk = area->m_chunks[((x >> 3) & 0xF) + 16 * ((y >> 3) & 0xF)];
+
+            if (!chunk) {
+                return false;
+            }
+
+            chunkX = x & 0x78;
+            local.b = seg.b - chunk->m_position;
+            chunkY = y & 0x78;
+        }
+
+        if (chunk->IntersectSubChunk(x & 0x7, y & 0x7, local, plane, t)) {
+            return true;
+        }
+
+        if (!CWorldMap::s_rasterSpanCount) {
+            return false;
+        }
+    }
+}
+
+// OFFSET: 0x00732110
+int32_t CWorldMap::QueryAreaId(CMapEntity* entity, uint32_t& areaId) {
+    CWorldMap* worldMap = entity->m_worldMap;
+
+    if (worldMap->m_isGlobalMapObj) {
+        int32_t id = g_mapDB.GetRecord(worldMap->m_mapId)->m_areaTableID;
+
+        if (!id) {
+            return 0;
+        }
+
+        areaId = id;
+        return 1;
+    }
+
+    CMapBaseObjLink* link = entity->m_parentLinkList.Head();
+
+    if (link) {
+        if (link->m_ref->m_type & 0x4) {
+            float x = entity->m_position.x;
+
+            for (; link; link = entity->m_parentLinkList.Next(link)) {
+                CMapChunk* chunk = static_cast<CMapChunk*>(link->m_ref);
+
+                if (x >= chunk->m_bbox.b.x && chunk->m_bbox.t.x >= x) {
+                    float y = entity->m_position.y;
+
+                    if (y >= chunk->m_bbox.b.y && chunk->m_bbox.t.y >= y) {
+                        areaId = chunk->m_header.m_areaId;
+                        return 1;
+                    }
+                }
+            }
+        } else {
+            for (; link; link = entity->m_parentLinkList.Next(link)) {
+                CMapObjDefGroup* defGroup = static_cast<CMapObjDefGroup*>(link->m_ref);
+                CMapObjDef* mapObjDef = defGroup->m_mapObjDef;
+
+                if (mapObjDef->m_flags & 0x200) {
+                    continue;
+                }
+
+                CMapObjGroup* group = mapObjDef->m_mapObj->GetGroup(defGroup->m_groupNum, 0);
+
+                if (group) {
+                    const WMOAreaTableRec* rec = SDBWMOAreaTableLookup(mapObjDef->m_mapObj->m_header->m_wmoId, mapObjDef->m_nameSet, group->m_wmoGroupId);
+
+                    if (rec && rec->m_areaTableID) {
+                        areaId = rec->m_areaTableID;
+                        return 1;
+                    }
+                }
+
+                break;
+            }
+        }
+    }
+
+    CMap* map = worldMap->GetMap(entity->m_position);
+    areaId = map ? map->QueryAreaIdTerrain(entity->m_position) : 0;
+    return 1;
+}
+
+// OFFSET: 0x00732270
+int32_t CWorldMap::QueryAreaIds(CMapEntity* entity, uint32_t* areaIds) {
+    CWorldMap* worldMap = entity->m_worldMap;
+    areaIds[0] = 0;
+    areaIds[1] = 0;
+    areaIds[2] = 0;
+
+    if (worldMap->m_isGlobalMapObj) {
+        int32_t id = g_mapDB.GetRecord(worldMap->m_mapId)->m_areaTableID;
+
+        if (!id) {
+            return 0;
+        }
+
+        areaIds[1] = id;
+        return 1;
+    }
+
+    CMapBaseObjLink* link = entity->m_parentLinkList.Head();
+
+    if (link) {
+        int32_t found = 0;
+
+        for (; link; link = entity->m_parentLinkList.Next(link)) {
+            CMapBaseObj* ref = link->m_ref;
+
+            if (ref->m_type & 0x4) {
+                CMapChunk* chunk = static_cast<CMapChunk*>(ref);
+                float x = entity->m_position.x;
+
+                if (x >= chunk->m_bbox.b.x && chunk->m_bbox.t.x >= x) {
+                    float y = entity->m_position.y;
+
+                    if (y >= chunk->m_bbox.b.y && chunk->m_bbox.t.y >= y) {
+                        areaIds[2] = chunk->m_header.m_areaId;
+                        found = 1;
+                    }
+                }
+            } else if (ref->m_type & MapBaseObj_Type_MapObjDefGroup) {
+                CMapObjDefGroup* defGroup = static_cast<CMapObjDefGroup*>(ref);
+                CMapObjDef* mapObjDef = defGroup->m_mapObjDef;
+                CMapObjGroup* group = mapObjDef->m_mapObj->GetGroup(defGroup->m_groupNum, 0);
+
+                if (!group) {
+                    continue;
+                }
+
+                const WMOAreaTableRec* rec = SDBWMOAreaTableLookup(mapObjDef->m_mapObj->m_header->m_wmoId, mapObjDef->m_nameSet, group->m_wmoGroupId);
+
+                if (!rec || !rec->m_areaTableID) {
+                    continue;
+                }
+
+                if (mapObjDef->m_flags & 0x200) {
+                    if (!areaIds[0]) {
+                        areaIds[0] = rec->m_areaTableID;
+                    }
+                } else if (!areaIds[1]) {
+                    areaIds[1] = rec->m_areaTableID;
+                }
+            }
+        }
+
+        if (found) {
+            return 1;
+        }
+    }
+
+    CMap* map = worldMap->GetMap(entity->m_position);
+
+    if (!map) {
+        areaIds[2] = 0;
+        return 1;
+    }
+
+    areaIds[2] = map->QueryAreaIdTerrain(entity->m_position);
+    return 1;
+}
+
+// OFFSET: 0x00732410
+int32_t CWorldMap::QueryOutdoors(CMapEntity* entity) {
+    CMapObjDef* mapObjDef;
+    CMapObj* mapObj;
+    CMapObjDefGroup* defGroup;
+    CMapObjGroup* group = NULL;
+
+    if (!entity->GetMapObjAndGroup(mapObjDef, mapObj, defGroup, group, 0)) {
+        CMap* map = entity->m_worldMap->GetMap(entity->m_position);
+        uint32_t areaId = map ? map->QueryAreaIdTerrain(entity->m_position) : 0;
+        AreaTableRec* rec = g_areaTableDB.GetRecord(areaId);
+
+        if (!rec || (rec->m_flags & 0x4000000)) {
+            return 1;
+        }
+
+        return (rec->m_flags & 0x2000000) == 0;
+    }
+
+    int32_t outdoors = (group->m_groupFlags >> 3) & 1;
+    const WMOAreaTableRec* rec = SDBWMOAreaTableLookup(mapObj->m_header->m_wmoId, mapObjDef->m_nameSet, group->m_wmoGroupId);
+
+    if (rec) {
+        uint32_t flags = rec->m_flags;
+
+        if (flags & 0x4) {
+            return 1;
+        }
+
+        if (flags & 0x2) {
+            return 0;
+        }
+    }
+
+    return outdoors;
+}
+
 // OFFSET: 0x007324F0
 int32_t CWorldMap::QueryIntersectingModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags) {
     if (!maxModels) {
@@ -1854,4 +2130,81 @@ bool CWorldMap::QueryHeight(const C3Vector& pos, float range, float& height) {
 
     height = z;
     return true;
+}
+
+// OFFSET: 0x00732DD0
+bool CWorldMap::IntersectTerrain(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags) {
+    float y1 = -(seg.t.y - 17066.666f);
+    float y0 = -(seg.b.y - 17066.666f);
+    float x0 = -(seg.b.x - 17066.666f);
+    float x1 = -(seg.t.x - 17066.666f);
+    float dy = y1 - y0;
+    float dx = x1 - x0;
+
+    int32_t coords[4];
+    coords[0] = static_cast<int32_t>(x0 * 0.23999999f);
+    coords[1] = static_cast<int32_t>(y0 * 0.23999999f);
+    coords[2] = static_cast<int32_t>(x1 * 0.23999999f);
+    coords[3] = static_cast<int32_t>(y1 * 0.23999999f);
+
+    CWorldMap::s_rasterSpanCount = 0;
+    CWorldMap::s_rasterSpans.SetCount(4096);
+
+    dy = fabs(dy);
+
+    if (dy < 0.00000023841858f || coords[1] == coords[3]) {
+        this->RasterizeRow(coords);
+    } else {
+        dx = fabs(dx);
+
+        if (dx < 0.00000023841858f || coords[0] == coords[2]) {
+            this->RasterizeColumn(coords);
+        } else {
+            C3Vector start(y0, x0, 0.0f);
+            C3Vector end(y1, x1, 0.0f);
+
+            if (dy <= dx) {
+                this->RasterizeSteep(start, end, coords);
+            } else {
+                this->RasterizeShallow(start, end, coords);
+            }
+        }
+    }
+
+    float scale = t;
+    C3Segment clipped;
+    clipped.b = seg.b;
+    clipped.t.x = seg.b.x + (seg.t.x - seg.b.x) * scale;
+    clipped.t.y = seg.b.y + (seg.t.y - seg.b.y) * scale;
+    clipped.t.z = seg.b.z + (seg.t.z - seg.b.z) * scale;
+
+    float localT = 1.0f;
+    bool result = this->IntersectTerrainSpans(clipped, localT, plane, flags);
+
+    if (result) {
+        t = t * localT;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00733050
+bool CWorldMap::Intersect(const C3Segment& seg, float& t, C4Plane& plane, uint32_t flags) {
+    float dz = seg.t.z - seg.b.z;
+    float dy = seg.t.y - seg.b.y;
+    bool hit = false;
+
+    if ((seg.t.x - seg.b.x) * (seg.t.x - seg.b.x) + dz * dz + dy * dy < 0.001f) {
+        return false;
+    }
+
+    if (flags & 0xF000FF) {
+        hit = this->IntersectMapObjDefs(seg, t, plane, flags);
+    }
+
+    if (flags & 0xF0010F) {
+        return this->IntersectTerrain(seg, t, plane, flags) | hit;
+    }
+
+    return hit;
 }

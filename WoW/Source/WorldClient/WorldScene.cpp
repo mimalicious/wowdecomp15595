@@ -69,6 +69,12 @@ const char* CWorldScene::renderSkyboxName;
 // STATIC: 0x00E70C58
 C3Vector CWorldScene::s_playerPos;
 
+// STATIC: 0x00E70C54
+int32_t CWorldScene::s_debugFrustumEnabled;
+
+// STATIC: 0x00E70F40
+CFrustum CWorldScene::s_debugFrustum;
+
 // STATIC: 0x00E70C88
 CBarrier CWorldScene::s_barrier;
 
@@ -1220,6 +1226,371 @@ void CWorldScene::RenderMapObjAlpha(CWorldView* view) {
     g_theGxDevicePtr->RsPop();
 }
 
+// OFFSET: 0x0072ACC0
+void CWorldScene::RenderPortalList(const CPortalView* portalViews, uint32_t count, const C3Vector* verts, int32_t interior) {
+    if (!count) {
+        return;
+    }
+
+    CGxDevice* device = g_theGxDevicePtr;
+    C44Matrix savedProjection;
+    C44Matrix savedView;
+    C44Matrix savedWorld;
+    savedProjection = device->m_projection;
+    savedView = device->m_xforms[GxXform_View].m_mtx[device->m_xforms[GxXform_View].m_level];
+    savedWorld = device->m_xforms[GxXform_World].m_mtx[device->m_xforms[GxXform_World].m_level];
+
+    C44Matrix identity;
+    device->XformSetView(identity);
+    g_theGxDevicePtr->XformSetProjection(identity);
+    GxXformSet(GxXform_World, identity);
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_DepthWrite, 1);
+    GxRsSet(GxRs_DepthTest, 1);
+
+    const CImVector* fogColor = interior ? &DayNight::GetIntFogInfo()->m_color : &DayNight::GetFogInfo()->m_color;
+    CImVector color;
+
+    if (g_theGxDevicePtr->m_caps.m_colorFormat == GxCF_rgba) {
+        color.b = fogColor->r;
+        color.g = fogColor->g;
+        color.r = fogColor->b;
+        color.a = fogColor->a;
+    } else {
+        color = *fogColor;
+    }
+
+    GxRsSet(GxRs_BlendingMode, 0);
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Lighting, 0);
+    DefaultShaders::SetFogEnabled(0);
+
+    uint32_t vertexCount = 0;
+    uint32_t indexCount = 0;
+    uint16_t base = 0;
+
+    for (uint32_t i = 0; i < count; i++) {
+        uint32_t viewVerts = portalViews[i].m_vertCount;
+
+        if (viewVerts) {
+            vertexCount += viewVerts;
+            indexCount = viewVerts + indexCount - 2 + 2 * viewVerts - 4;
+        } else {
+            vertexCount += 4;
+            indexCount += 6;
+        }
+    }
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, 16, vertexCount);
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), indexCount);
+    float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    uint16_t* indices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+
+    if (vertices && indices) {
+        for (uint32_t i = 0; i < count; i++) {
+            const CPortalView& view = portalViews[i];
+
+            if (view.m_vertCount) {
+                const C3Vector* vert = &verts[view.m_vertStart];
+
+                for (uint32_t k = 0; k < view.m_vertCount; k++) {
+                    vertices[0] = vert->x;
+                    vertices[1] = vert->y;
+                    vertices[2] = 1.0f;
+                    *reinterpret_cast<CImVector*>(&vertices[3]) = color;
+                    vertices += 4;
+                    vert++;
+                }
+
+                for (uint32_t k = 0; k < view.m_vertCount - 2; k++) {
+                    indices[1] = static_cast<uint16_t>(base + k + 1);
+                    indices[2] = static_cast<uint16_t>(base + k + 2);
+                    indices[0] = base;
+                    indices += 3;
+                }
+
+                base = static_cast<uint16_t>(base + view.m_vertCount);
+            } else {
+                float x0 = view.m_rect.minY * 2.0f - 1.0f;
+                float y0 = view.m_rect.minX * 2.0f - 1.0f;
+                float y1 = view.m_rect.maxX * 2.0f - 1.0f;
+                float x1 = view.m_rect.maxY * 2.0f - 1.0f;
+
+                vertices[0] = x0;
+                vertices[1] = y0;
+                vertices[2] = 1.0f;
+                *reinterpret_cast<CImVector*>(&vertices[3]) = color;
+                vertices[4] = x0;
+                vertices[5] = y1;
+                vertices[6] = 1.0f;
+                *reinterpret_cast<CImVector*>(&vertices[7]) = color;
+                vertices[8] = x1;
+                vertices[9] = y1;
+                vertices[10] = 1.0f;
+                *reinterpret_cast<CImVector*>(&vertices[11]) = color;
+                vertices[12] = x1;
+                vertices[13] = y0;
+                vertices[14] = 1.0f;
+                *reinterpret_cast<CImVector*>(&vertices[15]) = color;
+
+                indices[1] = static_cast<uint16_t>(base + 1);
+                indices[2] = static_cast<uint16_t>(base + 2);
+                indices[4] = static_cast<uint16_t>(base + 2);
+                indices[0] = base;
+                indices[3] = base;
+                indices[5] = static_cast<uint16_t>(base + 3);
+                vertices += 16;
+                indices += 6;
+                base = static_cast<uint16_t>(base + 4);
+            }
+        }
+    }
+
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PC);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    DefaultShaders::SetDefaultShaders(GxVertexBufferFormats_Last, static_cast<uint32_t>(-1));
+
+    CGxBatch batch;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = indexCount;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = static_cast<uint16_t>(vertexCount - 1);
+    g_theGxDevicePtr->Draw(batch);
+    g_theGxDevicePtr->RsPop();
+
+    GxXformSet(GxXform_World, savedWorld);
+    g_theGxDevicePtr->XformSetProjection(savedProjection);
+    g_theGxDevicePtr->XformSetView(savedView);
+}
+
+// OFFSET: 0x0072B4D0
+void CWorldScene::RenderOccluders(CWorldView* view) {
+    CWorldOccluder* occluder = view->m_occluders.Head();
+
+    if (!occluder) {
+        return;
+    }
+
+    int32_t count = 0;
+
+    for (CWorldOccluder* o = occluder; o; o = view->m_occluders.Next(o)) {
+        count++;
+    }
+
+    C44Matrix world;
+    world.Translate(C3Vector(-view->m_camPos.x, -view->m_camPos.y, -view->m_camPos.z));
+    g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_BlendingMode, 2);
+    GxUpdateAlphaRef(GxRs_AlphaRef);
+    GxRsSet(GxRs_Lighting, 0);
+    GxRsSet(GxRs_Culling, 0);
+
+    uint32_t vertexCount = 4 * count;
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, 16, vertexCount);
+    uint32_t* vertices = reinterpret_cast<uint32_t*>(g_theGxDevicePtr->BufLock(vertexBuf));
+
+    do {
+        CWorldOccluder* next = view->m_occluders.Next(occluder);
+        float* v = reinterpret_cast<float*>(vertices);
+        v[0] = occluder->m_start.x;
+        v[1] = occluder->m_start.y;
+        v[2] = occluder->m_start.z;
+        vertices[3] = 0x90002020;
+        v[4] = occluder->m_end.x;
+        v[5] = occluder->m_end.y;
+        v[6] = occluder->m_end.z;
+        vertices[7] = 0x90002020;
+        v[8] = occluder->m_start.x;
+        v[9] = occluder->m_start.y;
+        v[10] = occluder->m_start.z - 100.0f;
+        vertices[11] = 0x90002020;
+        v[12] = occluder->m_end.x;
+        v[13] = occluder->m_end.y;
+        v[14] = occluder->m_end.z - 100.0f;
+        vertices[15] = 0x90002020;
+        vertices += 16;
+        occluder->Free();
+        occluder = next;
+    } while (occluder);
+
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PC);
+
+    uint32_t indexCount = 6 * count;
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), indexCount);
+    uint16_t* indices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+
+    for (int32_t i = 0; i < count; i++) {
+        uint16_t b = static_cast<uint16_t>(4 * i);
+        indices[0] = b;
+        indices[1] = b + 1;
+        indices[2] = b + 2;
+        indices[3] = b + 1;
+        indices[4] = b + 3;
+        indices[5] = b + 2;
+        indices += 6;
+    }
+
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    DefaultShaders::SetDefaultShaders(GxVertexBufferFormats_Last, static_cast<uint32_t>(-1));
+
+    CGxBatch batch;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = indexCount;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = static_cast<uint16_t>(vertexCount);
+    g_theGxDevicePtr->Draw(batch);
+    g_theGxDevicePtr->RsPop();
+    GxXformPop(GxXform_World);
+}
+
+// OFFSET: 0x0072B8F0
+void CWorldScene::RenderFrustum(CWorldView* view) {
+    if (!CWorldScene::s_debugFrustumEnabled) {
+        return;
+    }
+
+    static const uint16_t s_faceCorners[24] = {
+        1, 2, 5, 6,
+        0, 3, 4, 7,
+        0, 1, 4, 5,
+        2, 3, 6, 7,
+        5, 6, 4, 7,
+        1, 2, 0, 3,
+    };
+
+    CImVector faceColors[6];
+    faceColors[0] = CImVector(0x00, 0x00, 0xFF, 0x7F);
+    faceColors[1] = CImVector(0x00, 0xFF, 0x00, 0x7F);
+    faceColors[2] = CImVector(0xFF, 0x00, 0x00, 0x7F);
+    faceColors[3] = CImVector(0xFF, 0x00, 0xFF, 0x7F);
+    faceColors[4] = CImVector(0x00, 0xFF, 0xFF, 0x7F);
+    faceColors[5] = CImVector(0xFF, 0xFF, 0x00, 0x7F);
+
+    C44Matrix world;
+    world.Translate(C3Vector(-view->m_camPos.x, -view->m_camPos.y, -view->m_camPos.z));
+    g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_BlendingMode, 2);
+    GxUpdateAlphaRef(GxRs_AlphaRef);
+    GxRsSet(GxRs_MatDiffuse, static_cast<int32_t>(0x90002020));
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Lighting, 0);
+    DefaultShaders::SetFogEnabled(0);
+
+    const C3Vector* corners = CWorldScene::s_debugFrustum.corners;
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, 16, 24);
+    float* vertices = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(vertexBuf));
+
+    for (uint32_t face = 0; face < 6; face++) {
+        const uint16_t* indices = &s_faceCorners[face * 4];
+
+        for (uint32_t k = 0; k < 4; k++) {
+            const C3Vector& corner = corners[indices[k]];
+            vertices[0] = corner.x;
+            vertices[1] = corner.y;
+            vertices[2] = corner.z;
+            *reinterpret_cast<CImVector*>(&vertices[3]) = faceColors[face];
+            vertices += 4;
+        }
+    }
+
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PC);
+
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 36);
+    uint16_t* faceIndices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+
+    for (uint32_t i = 0; i < 6; i++) {
+        faceIndices[1] = static_cast<uint16_t>(4 * i + 1);
+        faceIndices[2] = static_cast<uint16_t>(4 * i + 2);
+        faceIndices[3] = static_cast<uint16_t>(4 * i + 1);
+        faceIndices[0] = static_cast<uint16_t>(4 * i);
+        faceIndices[4] = static_cast<uint16_t>(4 * i + 2);
+        faceIndices[5] = static_cast<uint16_t>(4 * i + 3);
+        faceIndices += 6;
+    }
+
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    DefaultShaders::SetDefaultShaders(GxVertexBufferFormats_Last, static_cast<uint32_t>(-1));
+
+    CGxBatch batch;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = 36;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = 24;
+    g_theGxDevicePtr->Draw(batch);
+
+    CGxBuf* lineBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, 16, 12);
+    float* lines = reinterpret_cast<float*>(g_theGxDevicePtr->BufLock(lineBuf));
+
+    for (uint32_t face = 0; face < 6; face++) {
+        const uint16_t* indices = &s_faceCorners[face * 4];
+        const C3Vector& n = CWorldScene::s_debugFrustum.planes[face].n;
+        C3Vector center;
+        center.x = (corners[indices[0]].x + corners[indices[1]].x + corners[indices[2]].x + corners[indices[3]].x) * 0.25f;
+        center.y = (corners[indices[0]].y + corners[indices[1]].y + corners[indices[2]].y + corners[indices[3]].y) * 0.25f;
+        center.z = (corners[indices[0]].z + corners[indices[1]].z + corners[indices[2]].z + corners[indices[3]].z) * 0.25f;
+
+        lines[0] = center.x;
+        lines[1] = center.y;
+        lines[2] = center.z;
+        reinterpret_cast<uint32_t*>(lines)[3] = 0xFFFFFFFF;
+        lines[4] = n.x * 10.0f + center.x;
+        lines[5] = n.y * 10.0f + center.y;
+        lines[6] = n.z * 10.0f + center.z;
+        reinterpret_cast<uint32_t*>(lines)[7] = 0xFFFFFFFF;
+        lines += 8;
+    }
+
+    g_theGxDevicePtr->BufUnlock(lineBuf, 0);
+    lineBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimVertexPtr(lineBuf, GxVBF_PC);
+
+    CGxBuf* lineIndexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 12);
+    uint16_t* lineIndices = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(lineIndexBuf));
+
+    for (uint32_t i = 0; i < 6; i++) {
+        lineIndices[0] = static_cast<uint16_t>(2 * i);
+        lineIndices[1] = static_cast<uint16_t>(2 * i + 1);
+        lineIndices += 2;
+    }
+
+    g_theGxDevicePtr->BufUnlock(lineIndexBuf, 0);
+    lineIndexBuf->unk_001C = 1;
+    g_theGxDevicePtr->PrimIndexPtr(lineIndexBuf);
+    DefaultShaders::SetDefaultShaders(GxVertexBufferFormats_Last, static_cast<uint32_t>(-1));
+
+    batch.m_primType = GxPrim_Lines;
+    batch.m_start = 0;
+    batch.m_count = 12;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = 12;
+    g_theGxDevicePtr->Draw(batch);
+
+    g_theGxDevicePtr->RsPop();
+    GxXformPop(GxXform_World);
+}
+
 // OFFSET: 0x0072C6B0
 void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
     if (!CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex]) {
@@ -1239,4 +1610,20 @@ void CWorldScene::RenderAlphaWaterFog(CWorldView* view) {
 
     Liquid::RendererFlush(FrameTime::GetCurTimeMs(), view->m_camPos, 2);
     g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x0072C740
+void CWorldScene::RenderPortalLists(CWorldView* view) {
+    if (view->m_exteriorPortalViews.Count()) {
+        if (Liquid::GetWaterDetail() <= 1 && view->m_underwater) {
+            CWorldScene::RenderPortalList(view->m_exteriorPortalViews.m_data, view->m_exteriorPortalViews.Count(), view->m_portalVerts.m_data, 0);
+        }
+
+        view->CreateInverseExteriorPortalList();
+        CWorldScene::RenderPortalList(view->m_exteriorPortalViews.m_data, view->m_exteriorPortalViews.Count(), view->m_portalVerts.m_data, 1);
+    }
+
+    if (view->m_portalViews.Count()) {
+        CWorldScene::RenderPortalList(view->m_portalViews.m_data, view->m_portalViews.Count(), view->m_portalVerts.m_data, 0);
+    }
 }
