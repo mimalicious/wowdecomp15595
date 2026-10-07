@@ -35,6 +35,14 @@
 #include "WoW/Source/WorldClient/WorldView.h"
 #include "WoW/Source/WorldClient/shadow.h"
 
+struct CClipVolume {
+    /* 0000 */ int32_t m_mapId;
+    /* 0004 */ uint32_t m_flags;
+    /* 0008 */ CAaBox m_bounds;
+    /* 0020 */ const C3Vector* m_verts;
+    /* 0024 */ int32_t m_count;
+};
+
 // STATIC: 0x00E70C48/0x140D5A768
 CWorldView* CWorldScene::s_defaultWorldView;
 
@@ -94,6 +102,261 @@ CM2Lighting CWorldScene::s_lighting;
 
 // STATIC: 0x00E70DA8
 CWorldSceneLight CWorldScene::s_sceneLights[3];
+
+// STATIC: 0x00D04100
+static C3Vector s_clipVolumeVerts0[8] = { C3Vector(5567.66f, 714.34f, 596.68f), C3Vector(5605.32f, 394.26f, 596.68f), C3Vector(5888.74f, 382.14f, 596.68f), C3Vector(6026.98f, 494.67f, 596.68f), C3Vector(6051.12f, 634.18f, 596.68f), C3Vector(5952.54f, 849.71f, 596.68f), C3Vector(5793.61f, 991.54f, 596.68f), C3Vector(5582.06f, 799.39f, 596.68f) };
+
+// STATIC: 0x00D04160
+static C3Vector s_clipVolumeVerts1[6] = { C3Vector(5634.5f, 419.0f, 630.4f), C3Vector(5612.57f, 814.0f, 630.4f), C3Vector(5810.19f, 953.83f, 630.4f), C3Vector(5955.67f, 785.4f, 630.4f), C3Vector(6025.93f, 545.39f, 630.4f), C3Vector(5817.91f, 394.35f, 630.4f) };
+
+// STATIC: 0x00D041A8
+static C3Vector s_clipVolumeVerts2[4] = { C3Vector(5892.49f, 627.3f, 620.0f), C3Vector(5892.49f, 627.3f, 664.0f), C3Vector(5990.5f, 557.7f, 664.0f), C3Vector(5990.5f, 557.7f, 620.0f) };
+
+// STATIC: 0x00D041D8
+static C3Vector s_clipVolumeVerts3[4] = { C3Vector(5847.0f, 539.0f, 620.0f), C3Vector(5847.0f, 539.0f, 685.0f), C3Vector(5800.0f, 526.0f, 685.0f), C3Vector(5800.0f, 526.0f, 620.0f) };
+
+// STATIC: 0x00D04208
+static C3Vector s_clipVolumeVerts4[4] = { C3Vector(5827.39f, 603.35f, 620.34f), C3Vector(5827.39f, 603.35f, 679.34f), C3Vector(5786.06f, 590.07f, 678.06f), C3Vector(5786.06f, 590.07f, 620.06f) };
+
+// STATIC: 0x00D04238
+static C3Vector s_clipVolumeVerts5[4] = { C3Vector(5730.99f, 679.31f, 620.76f), C3Vector(5730.99f, 679.31f, 670.76f), C3Vector(5679.87f, 720.15f, 670.76f), C3Vector(5679.87f, 720.15f, 620.76f) };
+
+// STATIC: 0x00D04268
+static C3Vector s_clipVolumeVerts6[4] = { C3Vector(5774.5f, 655.43f, 620.15f), C3Vector(5774.5f, 655.43f, 661.15f), C3Vector(5762.92f, 611.93f, 661.15f), C3Vector(5762.92f, 611.93f, 620.15f) };
+
+// STATIC: 0x00D04298
+static C3Vector s_clipVolumeVerts7[4] = { C3Vector(5784.65f, 664.97f, 620.02f), C3Vector(5784.65f, 664.97f, 658.02f), C3Vector(5823.0f, 686.91f, 658.02f), C3Vector(5823.0f, 686.91f, 620.02f) };
+
+// STATIC: 0x00D042C8
+static C3Vector s_clipVolumeVerts8[4] = { C3Vector(5841.56f, 633.28f, 620.66f), C3Vector(5841.56f, 633.28f, 669.66f), C3Vector(5845.92f, 669.59f, 664.72f), C3Vector(5845.92f, 669.59f, 620.72f) };
+
+// STATIC: 0x00D042F8
+static C3Vector s_clipVolumeVerts9[4] = { C3Vector(5904.17f, 618.49f, 620.41f), C3Vector(5904.17f, 618.49f, 672.41f), C3Vector(5883.92f, 591.09f, 672.36f), C3Vector(5883.92f, 591.09f, 620.36f) };
+
+// STATIC: 0x00D04328
+static C3Vector s_clipVolumeVerts10[4] = { C3Vector(5895.04f, 627.82f, 620.553f), C3Vector(5895.04f, 627.82f, 649.553f), C3Vector(5834.78f, 553.96f, 649.553f), C3Vector(5834.78f, 553.96f, 620.553f) };
+
+// STATIC: 0x00D04358
+static C3Vector s_clipVolumeVerts11[4] = { C3Vector(5899.41f, 668.11f, 620.54f), C3Vector(5899.41f, 668.11f, 676.54f), C3Vector(5941.06f, 714.99f, 661.17f), C3Vector(5941.06f, 714.99f, 620.17f) };
+
+// STATIC: 0x00D04388
+static C3Vector s_clipVolumeVerts12[4] = { C3Vector(5864.97f, 751.17f, 620.59f), C3Vector(5864.97f, 751.17f, 669.59f), C3Vector(5835.75f, 720.71f, 669.59f), C3Vector(5835.75f, 720.71f, 620.59f) };
+
+// STATIC: 0x00D043B8
+static C3Vector s_clipVolumeVerts13[5] = { C3Vector(5636.45f, 398.96f, 630.0f), C3Vector(5947.95f, 827.4f, 630.0f), C3Vector(5924.75f, 796.8f, 574.11f), C3Vector(5806.25f, 636.31f, 397.4f), C3Vector(5636.45f, 398.96f, 574.11f) };
+
+// STATIC: 0x00D043F4
+static C3Vector s_clipVolumeVerts14[5] = { C3Vector(5590.91f, 783.86f, 630.0f), C3Vector(6006.9f, 537.08f, 630.0f), C3Vector(5971.75f, 552.69f, 558.75f), C3Vector(5806.25f, 636.31f, 397.4f), C3Vector(5631.61f, 751.34f, 527.85f) };
+
+// STATIC: 0x00D04430
+static C3Vector s_clipVolumeVerts15[4] = { C3Vector(5749.85f, 865.61f, 630.0f), C3Vector(5749.85f, 865.61f, 704.0f), C3Vector(5864.17f, 851.47f, 704.0f), C3Vector(5864.17f, 851.47f, 630.0f) };
+
+// STATIC: 0x00D04460
+static C3Vector s_clipVolumeVerts16[4] = { C3Vector(5800.51f, 816.42f, 630.0f), C3Vector(5800.51f, 816.42f, 704.0f), C3Vector(5814.84f, 906.58f, 704.0f), C3Vector(5814.84f, 906.58f, 630.0f) };
+
+// STATIC: 0x00D04490
+static C3Vector s_clipVolumeVerts17[4] = { C3Vector(5868.96f, 572.64f, 623.44f), C3Vector(5868.96f, 572.64f, 665.44f), C3Vector(5847.01f, 539.19f, 665.44f), C3Vector(5847.01f, 539.19f, 623.44f) };
+
+// STATIC: 0x00D044C0
+static C3Vector s_clipVolumeVerts18[4] = { C3Vector(5867.43f, 720.05f, 624.9f), C3Vector(5867.43f, 720.05f, 654.9f), C3Vector(5893.14f, 700.98f, 654.69f), C3Vector(5893.14f, 700.98f, 624.69f) };
+
+// STATIC: 0x00D044F0
+static C3Vector s_clipVolumeVerts19[7] = { C3Vector(2478.83f, -5620.13f, 366.5f), C3Vector(2491.95f, -5599.4f, 366.5f), C3Vector(2487.5f, -5574.95f, 366.5f), C3Vector(2466.24f, -5561.56f, 366.5f), C3Vector(2441.82f, -5566.63f, 366.5f), C3Vector(2433.41f, -5612.21f, 366.5f), C3Vector(2454.25f, -5625.66f, 366.5f) };
+
+// STATIC: 0x00D04544
+static C3Vector s_clipVolumeVerts20[4] = { C3Vector(2510.17f, -5702.89f, 364.0f), C3Vector(2491.45f, -5658.32f, 520.0f), C3Vector(2429.59f, -5523.72f, 520.0f), C3Vector(2413.68f, -5483.44f, 364.0f) };
+
+// STATIC: 0x00D04578
+static C3Vector s_clipVolumeVerts21[7] = { C3Vector(2370.95f, -5680.14f, 382.0f), C3Vector(2351.14f, -5635.16f, 382.0f), C3Vector(2377.8f, -5472.44f, 382.0f), C3Vector(2512.15f, -5448.47f, 382.0f), C3Vector(2586.21f, -5551.42f, 382.0f), C3Vector(2537.38f, -5704.73f, 382.0f), C3Vector(2425.22f, -5744.56f, 382.0f) };
+
+// STATIC: 0x00D045CC
+static C3Vector s_clipVolumeVerts22[5] = { C3Vector(2364.06f, -5692.39f, 382.24f), C3Vector(2347.53f, -5672.2f, 382.24f), C3Vector(2333.75f, -5647.47f, 382.24f), C3Vector(2353.04f, -5636.88f, 382.24f), C3Vector(2382.53f, -5679.76f, 382.24f) };
+
+// STATIC: 0x00D04608
+static C3Vector s_clipVolumeVerts23[4] = { C3Vector(1204.96f, -4963.32f, 0.0f), C3Vector(1198.36f, -4933.69f, 346.08f), C3Vector(1158.87f, -4823.17f, 344.76f), C3Vector(1149.31f, -4791.83f, 0.0f) };
+
+// STATIC: 0x00D04638
+static C3Vector s_clipVolumeVerts24[4] = { C3Vector(1219.4f, -5004.42f, 0.0f), C3Vector(1219.4f, -5004.42f, 173.61f), C3Vector(1128.43f, -4743.66f, 173.13f), C3Vector(1128.43f, -4743.66f, 0.0f) };
+
+// STATIC: 0x00D04668
+static C3Vector s_clipVolumeVerts25[7] = { C3Vector(1111.31f, -4819.9f, 172.49f), C3Vector(1090.0f, -4809.76f, 172.49f), C3Vector(1073.63f, -4794.27f, 172.49f), C3Vector(1069.92f, -4767.41f, 172.49f), C3Vector(1098.59f, -4757.36f, 172.49f), C3Vector(1163.56f, -4754.04f, 172.49f), C3Vector(1167.65f, -4794.54f, 172.49f) };
+
+// STATIC: 0x00D046BC
+static C3Vector s_clipVolumeVerts26[5] = { C3Vector(1142.32f, -5006.38f, 172.12f), C3Vector(1153.18f, -4968.25f, 172.12f), C3Vector(1254.25f, -4932.14f, 172.12f), C3Vector(1286.37f, -4988.77f, 172.12f), C3Vector(1156.18f, -5028.96f, 172.12f) };
+
+// STATIC: 0x00D046F8
+static C3Vector s_clipVolumeVerts27[4] = { C3Vector(2181.39f, 5312.53f, -50.0f), C3Vector(2181.39f, 5312.53f, 44.97f), C3Vector(2116.82f, 5332.81f, 44.97f), C3Vector(2116.82f, 5332.81f, -50.0f) };
+
+// STATIC: 0x00D04728
+static C3Vector s_clipVolumeVerts28[4] = { C3Vector(2116.82f, 5332.81f, -50.0f), C3Vector(2116.82f, 5332.81f, 44.97f), C3Vector(2100.22f, 5284.27f, 44.97f), C3Vector(2100.22f, 5284.27f, -50.0f) };
+
+// STATIC: 0x00D04758
+static C3Vector s_clipVolumeVerts29[4] = { C3Vector(2324.46f, 5188.88f, -50.0f), C3Vector(2324.46f, 5188.88f, 38.29f), C3Vector(2273.21f, 5209.71f, 38.29f), C3Vector(2273.21f, 5209.71f, -50.0f) };
+
+// STATIC: 0x00D04788
+static C3Vector s_clipVolumeVerts30[4] = { C3Vector(2275.63f, 5190.17f, -50.0f), C3Vector(2275.63f, 5190.17f, 39.58f), C3Vector(2286.96f, 5210.31f, 39.58f), C3Vector(2286.96f, 5210.31f, -50.0f) };
+
+// STATIC: 0x00D047B8
+static C3Vector s_clipVolumeVerts31[4] = { C3Vector(2878.06f, 6177.6f, 207.71f), C3Vector(2937.51f, 6113.32f, 207.71f), C3Vector(2905.17f, 6082.4f, 207.71f), C3Vector(2845.54f, 6145.42f, 207.71f) };
+
+// STATIC: 0x00D047E8
+static C3Vector s_clipVolumeVerts32[4] = { C3Vector(2763.39f, 6089.57f, 207.81f), C3Vector(2828.63f, 6147.74f, 207.81f), C3Vector(2797.2f, 6179.55f, 207.81f), C3Vector(2733.97f, 6120.93f, 207.81f) };
+
+// STATIC: 0x00D04818
+static C3Vector s_clipVolumeVerts33[4] = { C3Vector(2741.27f, 6261.16f, 207.81f), C3Vector(2799.12f, 6196.67f, 207.81f), C3Vector(2831.21f, 6228.19f, 207.81f), C3Vector(2773.36f, 6292.17f, 207.81f) };
+
+// STATIC: 0x00D04848
+static C3Vector s_clipVolumeVerts34[4] = { C3Vector(2902.29f, 6274.68f, 202.81f), C3Vector(2846.68f, 6224.76f, 202.81f), C3Vector(2880.4f, 6195.17f, 202.81f), C3Vector(2931.48f, 6241.73f, 202.81f) };
+
+// STATIC: 0x00D04878
+static C3Vector s_clipVolumeVerts35[4] = { C3Vector(2926.83f, 6120.47f, 79.05f), C3Vector(2781.04f, 6278.55f, 79.08f), C3Vector(2772.78f, 6291.58f, 203.9f), C3Vector(2935.23f, 6114.39f, 192.48f) };
+
+// STATIC: 0x00D048A8
+static C3Vector s_clipVolumeVerts36[4] = { C3Vector(2853.66f, 6199.46f, 202.5f), C3Vector(2910.86f, 6255.33f, 200.34f), C3Vector(2885.69f, 6230.23f, 74.69f), C3Vector(2860.12f, 6206.81f, 82.69f) };
+
+// STATIC: 0x00D048D8
+static C3Vector s_clipVolumeVerts37[4] = { C3Vector(2826.04f, 6175.62f, 80.37f), C3Vector(2760.65f, 6116.42f, 78.86f), C3Vector(2747.8f, 6104.57f, 203.55f), C3Vector(2826.79f, 6176.22f, 203.27f) };
+
+// STATIC: 0x00D04908
+static C3Vector s_clipVolumeVerts38[5] = { C3Vector(2924.92f, 6123.46f, 191.494f), C3Vector(2940.1f, 6198.47f, 191.494f), C3Vector(2914.91f, 6257.2f, 191.494f), C3Vector(2860.75f, 6282.54f, 191.494f), C3Vector(2781.79f, 6276.07f, 191.494f) };
+
+// STATIC: 0x00D04944
+static C3Vector s_clipVolumeVerts39[4] = { C3Vector(3968.22f, -3566.96f, 256.79f), C3Vector(3968.22f, -3566.96f, 377.16f), C3Vector(3940.76f, -3451.53f, 354.33f), C3Vector(3940.76f, -3451.53f, 291.48f) };
+
+// STATIC: 0x00D04974
+static C3Vector s_clipVolumeVerts40[4] = { C3Vector(4792.57f, -1936.71f, 160.0f), C3Vector(4792.57f, -1936.71f, 295.2f), C3Vector(4791.64f, -2034.22f, 295.2f), C3Vector(4791.64f, -2034.22f, 160.0f) };
+
+// STATIC: 0x00D049A4
+static C3Vector s_clipVolumeVerts41[4] = { C3Vector(4790.41f, -2159.31f, 295.2f), C3Vector(4790.41f, -2159.31f, 160.0f), C3Vector(4791.35f, -2056.96f, 160.0f), C3Vector(4791.35f, -2056.96f, 295.2f) };
+
+// STATIC: 0x00D04B40
+static C3Vector s_clipVolumeVerts42[5] = { C3Vector(-208.17f, -661.93f, 120.12f), C3Vector(-232.25f, -655.88f, 120.12f), C3Vector(-262.43f, -661.54f, 120.12f), C3Vector(-261.61f, -693.07f, 120.12f), C3Vector(-220.75f, -701.13f, 120.12f) };
+
+// STATIC: 0x00D04B7C
+static C3Vector s_clipVolumeVerts43[4] = { C3Vector(-336.99f, -570.87f, 46.54f), C3Vector(-327.17f, -684.76f, 46.54f), C3Vector(-510.79f, -626.06f, 46.54f), C3Vector(-467.16f, -575.2f, 46.54f) };
+
+// STATIC: 0x00D04BAC
+static C3Vector s_clipVolumeVerts44[4] = { C3Vector(-336.72f, -777.35f, 0.0f), C3Vector(-336.72f, -777.35f, 126.6f), C3Vector(-335.71f, -707.36f, 126.6f), C3Vector(-335.71f, -707.36f, 0.0f) };
+
+// STATIC: 0x00D04BDC
+static C3Vector s_clipVolumeVerts45[4] = { C3Vector(-364.9f, -637.23f, 0.0f), C3Vector(-364.9f, -637.23f, 85.53f), C3Vector(-365.04f, -806.45f, 87.68f), C3Vector(-365.04f, -806.45f, 0.0f) };
+
+// STATIC: 0x00D04C0C
+static C3Vector s_clipVolumeVerts46[4] = { C3Vector(-227.26f, -760.09f, 0.0f), C3Vector(-227.26f, -760.09f, 101.34f), C3Vector(-444.86f, -740.53f, 91.18f), C3Vector(-444.86f, -740.53f, 0.0f) };
+
+// STATIC: 0x00D04C3C
+static C3Vector s_clipVolumeVerts47[5] = { C3Vector(-287.79f, -547.27f, 6.36f), C3Vector(-227.24f, -735.28f, 6.36f), C3Vector(-393.96f, -846.24f, 6.36f), C3Vector(-499.18f, -683.28f, 6.36f), C3Vector(-441.81f, -599.64f, 6.36f) };
+
+// STATIC: 0x00D049D4
+static C3Vector s_clipVolumeVerts48[4] = { C3Vector(1530.73f, -3570.53f, 158.3f), C3Vector(1418.82f, -3136.56f, 158.3f), C3Vector(1418.82f, -3136.56f, 0.0f), C3Vector(1530.73f, -3570.53f, 0.0f) };
+
+// STATIC: 0x00D04A04
+static C3Vector s_clipVolumeVerts49[4] = { C3Vector(1579.05f, -3461.45f, 147.2f), C3Vector(1535.65f, -3238.25f, 147.2f), C3Vector(1447.48f, -3239.19f, 147.2f), C3Vector(1467.61f, -3591.0f, 147.2f) };
+
+// STATIC: 0x00D04A38
+static C3Vector s_clipVolumeVerts50[7] = { C3Vector(1713.96f, -3423.56f, 133.84f), C3Vector(1637.58f, -3417.66f, 133.84f), C3Vector(1608.12f, -3365.9f, 133.84f), C3Vector(1608.5f, -3307.29f, 133.84f), C3Vector(1635.45f, -3263.94f, 133.84f), C3Vector(1687.9f, -3252.33f, 133.84f), C3Vector(1747.5f, -3271.53f, 133.84f) };
+
+// STATIC: 0x00D04A8C
+static C3Vector s_clipVolumeVerts51[5] = { C3Vector(1747.58f, -3461.09f, 139.0f), C3Vector(1658.71f, -3446.07f, 139.0f), C3Vector(1625.67f, -3548.94f, 139.0f), C3Vector(1676.45f, -3612.46f, 139.0f), C3Vector(1720.96f, -3582.86f, 139.0f) };
+
+// STATIC: 0x00D04AC8
+static C3Vector s_clipVolumeVerts52[5] = { C3Vector(301.84f, -475.68f, 104.58f), C3Vector(293.69f, -509.9f, 104.58f), C3Vector(307.11f, -528.01f, 104.58f), C3Vector(485.31f, -525.93f, 104.58f), C3Vector(496.53f, -493.97f, 104.58f) };
+
+// STATIC: 0x00D04B04
+static C3Vector s_clipVolumeVerts53[5] = { C3Vector(481.86f, -273.24f, 103.43f), C3Vector(499.19f, -264.26f, 103.43f), C3Vector(490.12f, -233.92f, 103.43f), C3Vector(304.62f, -229.97f, 103.43f), C3Vector(302.91f, -268.57f, 103.43f) };
+
+// STATIC: 0x00D04C78
+static C3Vector s_clipVolumeVerts54[4] = { C3Vector(2087.0f, 300.0f, 503.0f), C3Vector(2087.0f, -300.0f, 503.0f), C3Vector(2087.0f, -300.0f, -2000.0f), C3Vector(2087.0f, 300.0f, -2000.0f) };
+
+// STATIC: 0x00D04CA8
+static C3Vector s_clipVolumeVerts55[4] = { C3Vector(2087.0f, -300.0f, 500.0f), C3Vector(2531.0f, -288.0f, 500.0f), C3Vector(2531.0f, -288.0f, -2000.0f), C3Vector(2087.0f, -300.0f, -2000.0f) };
+
+// STATIC: 0x00D04CD8
+static C3Vector s_clipVolumeVerts56[4] = { C3Vector(2087.0f, 300.0f, 500.0f), C3Vector(2538.0f, 212.0f, 500.0f), C3Vector(2538.0f, 212.0f, -2000.0f), C3Vector(2087.0f, 300.0f, -2000.0f) };
+
+// STATIC: 0x00D04D08
+static C3Vector s_clipVolumeVerts57[4] = { C3Vector(9000.0f, -1300.0f, 10000.0f), C3Vector(9000.0f, -1300.0f, -10000.0f), C3Vector(-9000.0f, -1300.0f, -10000.0f), C3Vector(-9000.0f, -1300.0f, 10000.0f) };
+
+// STATIC: 0x00D04D38
+static C3Vector s_clipVolumeVerts58[8] = { C3Vector(-274.3f, 2212.7f, 175.0f), C3Vector(-316.2f, 2120.5f, 175.0f), C3Vector(-435.9f, 2033.8f, 175.0f), C3Vector(-549.5f, 2104.6f, 175.0f), C3Vector(-613.6f, 2212.3f, 175.0f), C3Vector(-547.4f, 2320.6f, 175.0f), C3Vector(-438.1f, 2382.3f, 175.0f), C3Vector(-326.9f, 2320.5f, 175.0f) };
+
+// STATIC: 0x00D04D98
+static C3Vector s_clipVolumeVerts59[4] = { C3Vector(-470.6f, 2243.3f, 614.0f), C3Vector(-520.1f, 2293.4f, -163.9f), C3Vector(-336.1f, 2116.0f, -163.3f), C3Vector(-405.7f, 2179.5f, 614.0f) };
+
+// STATIC: 0x00D04DC8
+static C3Vector s_clipVolumeVerts60[4] = { C3Vector(-475.6f, 2173.8f, 614.0f), C3Vector(-502.2f, 2148.7f, -158.0f), C3Vector(-344.4f, 2309.0f, -158.0f), C3Vector(-403.9f, 2243.7f, 614.0f) };
+
+// STATIC: 0x00D04DF8
+static C3Vector s_clipVolumeVerts61[7] = { C3Vector(298.347f, 6122.54f, 124.0f), C3Vector(236.631f, 6101.06f, 124.0f), C3Vector(221.561f, 6027.54f, 124.0f), C3Vector(227.218f, 5996.12f, 124.0f), C3Vector(292.199f, 5971.68f, 124.0f), C3Vector(352.901f, 6017.67f, 124.0f), C3Vector(350.715f, 6078.74f, 124.0f) };
+
+// STATIC: 0x00D04E50
+static CClipVolume s_clipVolumes[62] = {
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts0, 8 },
+    { 571, 0x2, CAaBox(), s_clipVolumeVerts1, 6 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts2, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts3, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts4, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts5, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts6, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts7, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts8, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts9, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts10, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts11, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts12, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts13, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts14, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts15, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts16, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts17, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts18, 4 },
+    { 609, 0x1, CAaBox(), s_clipVolumeVerts19, 7 },
+    { 609, 0x0, CAaBox(), s_clipVolumeVerts20, 4 },
+    { 609, 0x0, CAaBox(), s_clipVolumeVerts21, 7 },
+    { 609, 0x1, CAaBox(), s_clipVolumeVerts22, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts23, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts24, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts25, 7 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts26, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts27, 4 },
+    { 571, 0x1, CAaBox(), s_clipVolumeVerts28, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts29, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts30, 4 },
+    { 571, 0x1, CAaBox(), s_clipVolumeVerts31, 4 },
+    { 571, 0x1, CAaBox(), s_clipVolumeVerts32, 4 },
+    { 571, 0x1, CAaBox(), s_clipVolumeVerts33, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts34, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts35, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts36, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts37, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts38, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts39, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts40, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts41, 4 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts42, 5 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts43, 4 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts44, 4 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts45, 4 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts46, 4 },
+    { 600, 0x1, CAaBox(), s_clipVolumeVerts47, 5 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts48, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts49, 4 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts50, 7 },
+    { 571, 0x0, CAaBox(), s_clipVolumeVerts51, 5 },
+    { 575, 0x1, CAaBox(), s_clipVolumeVerts52, 5 },
+    { 575, 0x1, CAaBox(), s_clipVolumeVerts53, 5 },
+    { 603, 0x0, CAaBox(), s_clipVolumeVerts54, 4 },
+    { 603, 0x0, CAaBox(), s_clipVolumeVerts55, 4 },
+    { 603, 0x0, CAaBox(), s_clipVolumeVerts56, 4 },
+    { 631, 0x0, CAaBox(), s_clipVolumeVerts57, 4 },
+    { 631, 0x0, CAaBox(), s_clipVolumeVerts58, 8 },
+    { 631, 0x1, CAaBox(), s_clipVolumeVerts59, 4 },
+    { 631, 0x1, CAaBox(), s_clipVolumeVerts60, 4 },
+    { 530, 0x0, CAaBox(), s_clipVolumeVerts61, 7 },
+};
+
+// STATIC: 0x00EB3A54
+static int32_t s_clipVolumeBoundsValid;
 
 CWorldSceneLight::CWorldSceneLight() {
     this->m_color = C3Vector(0.0f, 0.0f, 0.0f);
@@ -1632,269 +1895,6 @@ void CWorldScene::RenderPortalLists(CWorldView* view) {
         CWorldScene::RenderPortalList(view->m_portalViews.m_data, view->m_portalViews.Count(), view->m_portalVerts.m_data, 0);
     }
 }
-
-struct CClipVolume {
-    /* 0000 */ int32_t m_mapId;
-    /* 0004 */ uint32_t m_flags;
-    /* 0008 */ CAaBox m_bounds;
-    /* 0020 */ const C3Vector* m_verts;
-    /* 0024 */ int32_t m_count;
-};
-
-// STATIC: 0x00D04100
-static C3Vector s_clipVolumeVerts0[8] = { C3Vector(5567.66f, 714.34f, 596.68f), C3Vector(5605.32f, 394.26f, 596.68f), C3Vector(5888.74f, 382.14f, 596.68f), C3Vector(6026.98f, 494.67f, 596.68f), C3Vector(6051.12f, 634.18f, 596.68f), C3Vector(5952.54f, 849.71f, 596.68f), C3Vector(5793.61f, 991.54f, 596.68f), C3Vector(5582.06f, 799.39f, 596.68f) };
-
-// STATIC: 0x00D04160
-static C3Vector s_clipVolumeVerts1[6] = { C3Vector(5634.5f, 419.0f, 630.4f), C3Vector(5612.57f, 814.0f, 630.4f), C3Vector(5810.19f, 953.83f, 630.4f), C3Vector(5955.67f, 785.4f, 630.4f), C3Vector(6025.93f, 545.39f, 630.4f), C3Vector(5817.91f, 394.35f, 630.4f) };
-
-// STATIC: 0x00D041A8
-static C3Vector s_clipVolumeVerts2[4] = { C3Vector(5892.49f, 627.3f, 620.0f), C3Vector(5892.49f, 627.3f, 664.0f), C3Vector(5990.5f, 557.7f, 664.0f), C3Vector(5990.5f, 557.7f, 620.0f) };
-
-// STATIC: 0x00D041D8
-static C3Vector s_clipVolumeVerts3[4] = { C3Vector(5847.0f, 539.0f, 620.0f), C3Vector(5847.0f, 539.0f, 685.0f), C3Vector(5800.0f, 526.0f, 685.0f), C3Vector(5800.0f, 526.0f, 620.0f) };
-
-// STATIC: 0x00D04208
-static C3Vector s_clipVolumeVerts4[4] = { C3Vector(5827.39f, 603.35f, 620.34f), C3Vector(5827.39f, 603.35f, 679.34f), C3Vector(5786.06f, 590.07f, 678.06f), C3Vector(5786.06f, 590.07f, 620.06f) };
-
-// STATIC: 0x00D04238
-static C3Vector s_clipVolumeVerts5[4] = { C3Vector(5730.99f, 679.31f, 620.76f), C3Vector(5730.99f, 679.31f, 670.76f), C3Vector(5679.87f, 720.15f, 670.76f), C3Vector(5679.87f, 720.15f, 620.76f) };
-
-// STATIC: 0x00D04268
-static C3Vector s_clipVolumeVerts6[4] = { C3Vector(5774.5f, 655.43f, 620.15f), C3Vector(5774.5f, 655.43f, 661.15f), C3Vector(5762.92f, 611.93f, 661.15f), C3Vector(5762.92f, 611.93f, 620.15f) };
-
-// STATIC: 0x00D04298
-static C3Vector s_clipVolumeVerts7[4] = { C3Vector(5784.65f, 664.97f, 620.02f), C3Vector(5784.65f, 664.97f, 658.02f), C3Vector(5823.0f, 686.91f, 658.02f), C3Vector(5823.0f, 686.91f, 620.02f) };
-
-// STATIC: 0x00D042C8
-static C3Vector s_clipVolumeVerts8[4] = { C3Vector(5841.56f, 633.28f, 620.66f), C3Vector(5841.56f, 633.28f, 669.66f), C3Vector(5845.92f, 669.59f, 664.72f), C3Vector(5845.92f, 669.59f, 620.72f) };
-
-// STATIC: 0x00D042F8
-static C3Vector s_clipVolumeVerts9[4] = { C3Vector(5904.17f, 618.49f, 620.41f), C3Vector(5904.17f, 618.49f, 672.41f), C3Vector(5883.92f, 591.09f, 672.36f), C3Vector(5883.92f, 591.09f, 620.36f) };
-
-// STATIC: 0x00D04328
-static C3Vector s_clipVolumeVerts10[4] = { C3Vector(5895.04f, 627.82f, 620.553f), C3Vector(5895.04f, 627.82f, 649.553f), C3Vector(5834.78f, 553.96f, 649.553f), C3Vector(5834.78f, 553.96f, 620.553f) };
-
-// STATIC: 0x00D04358
-static C3Vector s_clipVolumeVerts11[4] = { C3Vector(5899.41f, 668.11f, 620.54f), C3Vector(5899.41f, 668.11f, 676.54f), C3Vector(5941.06f, 714.99f, 661.17f), C3Vector(5941.06f, 714.99f, 620.17f) };
-
-// STATIC: 0x00D04388
-static C3Vector s_clipVolumeVerts12[4] = { C3Vector(5864.97f, 751.17f, 620.59f), C3Vector(5864.97f, 751.17f, 669.59f), C3Vector(5835.75f, 720.71f, 669.59f), C3Vector(5835.75f, 720.71f, 620.59f) };
-
-// STATIC: 0x00D043B8
-static C3Vector s_clipVolumeVerts13[5] = { C3Vector(5636.45f, 398.96f, 630.0f), C3Vector(5947.95f, 827.4f, 630.0f), C3Vector(5924.75f, 796.8f, 574.11f), C3Vector(5806.25f, 636.31f, 397.4f), C3Vector(5636.45f, 398.96f, 574.11f) };
-
-// STATIC: 0x00D043F4
-static C3Vector s_clipVolumeVerts14[5] = { C3Vector(5590.91f, 783.86f, 630.0f), C3Vector(6006.9f, 537.08f, 630.0f), C3Vector(5971.75f, 552.69f, 558.75f), C3Vector(5806.25f, 636.31f, 397.4f), C3Vector(5631.61f, 751.34f, 527.85f) };
-
-// STATIC: 0x00D04430
-static C3Vector s_clipVolumeVerts15[4] = { C3Vector(5749.85f, 865.61f, 630.0f), C3Vector(5749.85f, 865.61f, 704.0f), C3Vector(5864.17f, 851.47f, 704.0f), C3Vector(5864.17f, 851.47f, 630.0f) };
-
-// STATIC: 0x00D04460
-static C3Vector s_clipVolumeVerts16[4] = { C3Vector(5800.51f, 816.42f, 630.0f), C3Vector(5800.51f, 816.42f, 704.0f), C3Vector(5814.84f, 906.58f, 704.0f), C3Vector(5814.84f, 906.58f, 630.0f) };
-
-// STATIC: 0x00D04490
-static C3Vector s_clipVolumeVerts17[4] = { C3Vector(5868.96f, 572.64f, 623.44f), C3Vector(5868.96f, 572.64f, 665.44f), C3Vector(5847.01f, 539.19f, 665.44f), C3Vector(5847.01f, 539.19f, 623.44f) };
-
-// STATIC: 0x00D044C0
-static C3Vector s_clipVolumeVerts18[4] = { C3Vector(5867.43f, 720.05f, 624.9f), C3Vector(5867.43f, 720.05f, 654.9f), C3Vector(5893.14f, 700.98f, 654.69f), C3Vector(5893.14f, 700.98f, 624.69f) };
-
-// STATIC: 0x00D044F0
-static C3Vector s_clipVolumeVerts19[7] = { C3Vector(2478.83f, -5620.13f, 366.5f), C3Vector(2491.95f, -5599.4f, 366.5f), C3Vector(2487.5f, -5574.95f, 366.5f), C3Vector(2466.24f, -5561.56f, 366.5f), C3Vector(2441.82f, -5566.63f, 366.5f), C3Vector(2433.41f, -5612.21f, 366.5f), C3Vector(2454.25f, -5625.66f, 366.5f) };
-
-// STATIC: 0x00D04544
-static C3Vector s_clipVolumeVerts20[4] = { C3Vector(2510.17f, -5702.89f, 364.0f), C3Vector(2491.45f, -5658.32f, 520.0f), C3Vector(2429.59f, -5523.72f, 520.0f), C3Vector(2413.68f, -5483.44f, 364.0f) };
-
-// STATIC: 0x00D04578
-static C3Vector s_clipVolumeVerts21[7] = { C3Vector(2370.95f, -5680.14f, 382.0f), C3Vector(2351.14f, -5635.16f, 382.0f), C3Vector(2377.8f, -5472.44f, 382.0f), C3Vector(2512.15f, -5448.47f, 382.0f), C3Vector(2586.21f, -5551.42f, 382.0f), C3Vector(2537.38f, -5704.73f, 382.0f), C3Vector(2425.22f, -5744.56f, 382.0f) };
-
-// STATIC: 0x00D045CC
-static C3Vector s_clipVolumeVerts22[5] = { C3Vector(2364.06f, -5692.39f, 382.24f), C3Vector(2347.53f, -5672.2f, 382.24f), C3Vector(2333.75f, -5647.47f, 382.24f), C3Vector(2353.04f, -5636.88f, 382.24f), C3Vector(2382.53f, -5679.76f, 382.24f) };
-
-// STATIC: 0x00D04608
-static C3Vector s_clipVolumeVerts23[4] = { C3Vector(1204.96f, -4963.32f, 0.0f), C3Vector(1198.36f, -4933.69f, 346.08f), C3Vector(1158.87f, -4823.17f, 344.76f), C3Vector(1149.31f, -4791.83f, 0.0f) };
-
-// STATIC: 0x00D04638
-static C3Vector s_clipVolumeVerts24[4] = { C3Vector(1219.4f, -5004.42f, 0.0f), C3Vector(1219.4f, -5004.42f, 173.61f), C3Vector(1128.43f, -4743.66f, 173.13f), C3Vector(1128.43f, -4743.66f, 0.0f) };
-
-// STATIC: 0x00D04668
-static C3Vector s_clipVolumeVerts25[7] = { C3Vector(1111.31f, -4819.9f, 172.49f), C3Vector(1090.0f, -4809.76f, 172.49f), C3Vector(1073.63f, -4794.27f, 172.49f), C3Vector(1069.92f, -4767.41f, 172.49f), C3Vector(1098.59f, -4757.36f, 172.49f), C3Vector(1163.56f, -4754.04f, 172.49f), C3Vector(1167.65f, -4794.54f, 172.49f) };
-
-// STATIC: 0x00D046BC
-static C3Vector s_clipVolumeVerts26[5] = { C3Vector(1142.32f, -5006.38f, 172.12f), C3Vector(1153.18f, -4968.25f, 172.12f), C3Vector(1254.25f, -4932.14f, 172.12f), C3Vector(1286.37f, -4988.77f, 172.12f), C3Vector(1156.18f, -5028.96f, 172.12f) };
-
-// STATIC: 0x00D046F8
-static C3Vector s_clipVolumeVerts27[4] = { C3Vector(2181.39f, 5312.53f, -50.0f), C3Vector(2181.39f, 5312.53f, 44.97f), C3Vector(2116.82f, 5332.81f, 44.97f), C3Vector(2116.82f, 5332.81f, -50.0f) };
-
-// STATIC: 0x00D04728
-static C3Vector s_clipVolumeVerts28[4] = { C3Vector(2116.82f, 5332.81f, -50.0f), C3Vector(2116.82f, 5332.81f, 44.97f), C3Vector(2100.22f, 5284.27f, 44.97f), C3Vector(2100.22f, 5284.27f, -50.0f) };
-
-// STATIC: 0x00D04758
-static C3Vector s_clipVolumeVerts29[4] = { C3Vector(2324.46f, 5188.88f, -50.0f), C3Vector(2324.46f, 5188.88f, 38.29f), C3Vector(2273.21f, 5209.71f, 38.29f), C3Vector(2273.21f, 5209.71f, -50.0f) };
-
-// STATIC: 0x00D04788
-static C3Vector s_clipVolumeVerts30[4] = { C3Vector(2275.63f, 5190.17f, -50.0f), C3Vector(2275.63f, 5190.17f, 39.58f), C3Vector(2286.96f, 5210.31f, 39.58f), C3Vector(2286.96f, 5210.31f, -50.0f) };
-
-// STATIC: 0x00D047B8
-static C3Vector s_clipVolumeVerts31[4] = { C3Vector(2878.06f, 6177.6f, 207.71f), C3Vector(2937.51f, 6113.32f, 207.71f), C3Vector(2905.17f, 6082.4f, 207.71f), C3Vector(2845.54f, 6145.42f, 207.71f) };
-
-// STATIC: 0x00D047E8
-static C3Vector s_clipVolumeVerts32[4] = { C3Vector(2763.39f, 6089.57f, 207.81f), C3Vector(2828.63f, 6147.74f, 207.81f), C3Vector(2797.2f, 6179.55f, 207.81f), C3Vector(2733.97f, 6120.93f, 207.81f) };
-
-// STATIC: 0x00D04818
-static C3Vector s_clipVolumeVerts33[4] = { C3Vector(2741.27f, 6261.16f, 207.81f), C3Vector(2799.12f, 6196.67f, 207.81f), C3Vector(2831.21f, 6228.19f, 207.81f), C3Vector(2773.36f, 6292.17f, 207.81f) };
-
-// STATIC: 0x00D04848
-static C3Vector s_clipVolumeVerts34[4] = { C3Vector(2902.29f, 6274.68f, 202.81f), C3Vector(2846.68f, 6224.76f, 202.81f), C3Vector(2880.4f, 6195.17f, 202.81f), C3Vector(2931.48f, 6241.73f, 202.81f) };
-
-// STATIC: 0x00D04878
-static C3Vector s_clipVolumeVerts35[4] = { C3Vector(2926.83f, 6120.47f, 79.05f), C3Vector(2781.04f, 6278.55f, 79.08f), C3Vector(2772.78f, 6291.58f, 203.9f), C3Vector(2935.23f, 6114.39f, 192.48f) };
-
-// STATIC: 0x00D048A8
-static C3Vector s_clipVolumeVerts36[4] = { C3Vector(2853.66f, 6199.46f, 202.5f), C3Vector(2910.86f, 6255.33f, 200.34f), C3Vector(2885.69f, 6230.23f, 74.69f), C3Vector(2860.12f, 6206.81f, 82.69f) };
-
-// STATIC: 0x00D048D8
-static C3Vector s_clipVolumeVerts37[4] = { C3Vector(2826.04f, 6175.62f, 80.37f), C3Vector(2760.65f, 6116.42f, 78.86f), C3Vector(2747.8f, 6104.57f, 203.55f), C3Vector(2826.79f, 6176.22f, 203.27f) };
-
-// STATIC: 0x00D04908
-static C3Vector s_clipVolumeVerts38[5] = { C3Vector(2924.92f, 6123.46f, 191.494f), C3Vector(2940.1f, 6198.47f, 191.494f), C3Vector(2914.91f, 6257.2f, 191.494f), C3Vector(2860.75f, 6282.54f, 191.494f), C3Vector(2781.79f, 6276.07f, 191.494f) };
-
-// STATIC: 0x00D04944
-static C3Vector s_clipVolumeVerts39[4] = { C3Vector(3968.22f, -3566.96f, 256.79f), C3Vector(3968.22f, -3566.96f, 377.16f), C3Vector(3940.76f, -3451.53f, 354.33f), C3Vector(3940.76f, -3451.53f, 291.48f) };
-
-// STATIC: 0x00D04974
-static C3Vector s_clipVolumeVerts40[4] = { C3Vector(4792.57f, -1936.71f, 160.0f), C3Vector(4792.57f, -1936.71f, 295.2f), C3Vector(4791.64f, -2034.22f, 295.2f), C3Vector(4791.64f, -2034.22f, 160.0f) };
-
-// STATIC: 0x00D049A4
-static C3Vector s_clipVolumeVerts41[4] = { C3Vector(4790.41f, -2159.31f, 295.2f), C3Vector(4790.41f, -2159.31f, 160.0f), C3Vector(4791.35f, -2056.96f, 160.0f), C3Vector(4791.35f, -2056.96f, 295.2f) };
-
-// STATIC: 0x00D04B40
-static C3Vector s_clipVolumeVerts42[5] = { C3Vector(-208.17f, -661.93f, 120.12f), C3Vector(-232.25f, -655.88f, 120.12f), C3Vector(-262.43f, -661.54f, 120.12f), C3Vector(-261.61f, -693.07f, 120.12f), C3Vector(-220.75f, -701.13f, 120.12f) };
-
-// STATIC: 0x00D04B7C
-static C3Vector s_clipVolumeVerts43[4] = { C3Vector(-336.99f, -570.87f, 46.54f), C3Vector(-327.17f, -684.76f, 46.54f), C3Vector(-510.79f, -626.06f, 46.54f), C3Vector(-467.16f, -575.2f, 46.54f) };
-
-// STATIC: 0x00D04BAC
-static C3Vector s_clipVolumeVerts44[4] = { C3Vector(-336.72f, -777.35f, 0.0f), C3Vector(-336.72f, -777.35f, 126.6f), C3Vector(-335.71f, -707.36f, 126.6f), C3Vector(-335.71f, -707.36f, 0.0f) };
-
-// STATIC: 0x00D04BDC
-static C3Vector s_clipVolumeVerts45[4] = { C3Vector(-364.9f, -637.23f, 0.0f), C3Vector(-364.9f, -637.23f, 85.53f), C3Vector(-365.04f, -806.45f, 87.68f), C3Vector(-365.04f, -806.45f, 0.0f) };
-
-// STATIC: 0x00D04C0C
-static C3Vector s_clipVolumeVerts46[4] = { C3Vector(-227.26f, -760.09f, 0.0f), C3Vector(-227.26f, -760.09f, 101.34f), C3Vector(-444.86f, -740.53f, 91.18f), C3Vector(-444.86f, -740.53f, 0.0f) };
-
-// STATIC: 0x00D04C3C
-static C3Vector s_clipVolumeVerts47[5] = { C3Vector(-287.79f, -547.27f, 6.36f), C3Vector(-227.24f, -735.28f, 6.36f), C3Vector(-393.96f, -846.24f, 6.36f), C3Vector(-499.18f, -683.28f, 6.36f), C3Vector(-441.81f, -599.64f, 6.36f) };
-
-// STATIC: 0x00D049D4
-static C3Vector s_clipVolumeVerts48[4] = { C3Vector(1530.73f, -3570.53f, 158.3f), C3Vector(1418.82f, -3136.56f, 158.3f), C3Vector(1418.82f, -3136.56f, 0.0f), C3Vector(1530.73f, -3570.53f, 0.0f) };
-
-// STATIC: 0x00D04A04
-static C3Vector s_clipVolumeVerts49[4] = { C3Vector(1579.05f, -3461.45f, 147.2f), C3Vector(1535.65f, -3238.25f, 147.2f), C3Vector(1447.48f, -3239.19f, 147.2f), C3Vector(1467.61f, -3591.0f, 147.2f) };
-
-// STATIC: 0x00D04A38
-static C3Vector s_clipVolumeVerts50[7] = { C3Vector(1713.96f, -3423.56f, 133.84f), C3Vector(1637.58f, -3417.66f, 133.84f), C3Vector(1608.12f, -3365.9f, 133.84f), C3Vector(1608.5f, -3307.29f, 133.84f), C3Vector(1635.45f, -3263.94f, 133.84f), C3Vector(1687.9f, -3252.33f, 133.84f), C3Vector(1747.5f, -3271.53f, 133.84f) };
-
-// STATIC: 0x00D04A8C
-static C3Vector s_clipVolumeVerts51[5] = { C3Vector(1747.58f, -3461.09f, 139.0f), C3Vector(1658.71f, -3446.07f, 139.0f), C3Vector(1625.67f, -3548.94f, 139.0f), C3Vector(1676.45f, -3612.46f, 139.0f), C3Vector(1720.96f, -3582.86f, 139.0f) };
-
-// STATIC: 0x00D04AC8
-static C3Vector s_clipVolumeVerts52[5] = { C3Vector(301.84f, -475.68f, 104.58f), C3Vector(293.69f, -509.9f, 104.58f), C3Vector(307.11f, -528.01f, 104.58f), C3Vector(485.31f, -525.93f, 104.58f), C3Vector(496.53f, -493.97f, 104.58f) };
-
-// STATIC: 0x00D04B04
-static C3Vector s_clipVolumeVerts53[5] = { C3Vector(481.86f, -273.24f, 103.43f), C3Vector(499.19f, -264.26f, 103.43f), C3Vector(490.12f, -233.92f, 103.43f), C3Vector(304.62f, -229.97f, 103.43f), C3Vector(302.91f, -268.57f, 103.43f) };
-
-// STATIC: 0x00D04C78
-static C3Vector s_clipVolumeVerts54[4] = { C3Vector(2087.0f, 300.0f, 503.0f), C3Vector(2087.0f, -300.0f, 503.0f), C3Vector(2087.0f, -300.0f, -2000.0f), C3Vector(2087.0f, 300.0f, -2000.0f) };
-
-// STATIC: 0x00D04CA8
-static C3Vector s_clipVolumeVerts55[4] = { C3Vector(2087.0f, -300.0f, 500.0f), C3Vector(2531.0f, -288.0f, 500.0f), C3Vector(2531.0f, -288.0f, -2000.0f), C3Vector(2087.0f, -300.0f, -2000.0f) };
-
-// STATIC: 0x00D04CD8
-static C3Vector s_clipVolumeVerts56[4] = { C3Vector(2087.0f, 300.0f, 500.0f), C3Vector(2538.0f, 212.0f, 500.0f), C3Vector(2538.0f, 212.0f, -2000.0f), C3Vector(2087.0f, 300.0f, -2000.0f) };
-
-// STATIC: 0x00D04D08
-static C3Vector s_clipVolumeVerts57[4] = { C3Vector(9000.0f, -1300.0f, 10000.0f), C3Vector(9000.0f, -1300.0f, -10000.0f), C3Vector(-9000.0f, -1300.0f, -10000.0f), C3Vector(-9000.0f, -1300.0f, 10000.0f) };
-
-// STATIC: 0x00D04D38
-static C3Vector s_clipVolumeVerts58[8] = { C3Vector(-274.3f, 2212.7f, 175.0f), C3Vector(-316.2f, 2120.5f, 175.0f), C3Vector(-435.9f, 2033.8f, 175.0f), C3Vector(-549.5f, 2104.6f, 175.0f), C3Vector(-613.6f, 2212.3f, 175.0f), C3Vector(-547.4f, 2320.6f, 175.0f), C3Vector(-438.1f, 2382.3f, 175.0f), C3Vector(-326.9f, 2320.5f, 175.0f) };
-
-// STATIC: 0x00D04D98
-static C3Vector s_clipVolumeVerts59[4] = { C3Vector(-470.6f, 2243.3f, 614.0f), C3Vector(-520.1f, 2293.4f, -163.9f), C3Vector(-336.1f, 2116.0f, -163.3f), C3Vector(-405.7f, 2179.5f, 614.0f) };
-
-// STATIC: 0x00D04DC8
-static C3Vector s_clipVolumeVerts60[4] = { C3Vector(-475.6f, 2173.8f, 614.0f), C3Vector(-502.2f, 2148.7f, -158.0f), C3Vector(-344.4f, 2309.0f, -158.0f), C3Vector(-403.9f, 2243.7f, 614.0f) };
-
-// STATIC: 0x00D04DF8
-static C3Vector s_clipVolumeVerts61[7] = { C3Vector(298.347f, 6122.54f, 124.0f), C3Vector(236.631f, 6101.06f, 124.0f), C3Vector(221.561f, 6027.54f, 124.0f), C3Vector(227.218f, 5996.12f, 124.0f), C3Vector(292.199f, 5971.68f, 124.0f), C3Vector(352.901f, 6017.67f, 124.0f), C3Vector(350.715f, 6078.74f, 124.0f) };
-
-// STATIC: 0x00D04E50
-static CClipVolume s_clipVolumes[62] = {
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts0, 8 },
-    { 571, 0x2, CAaBox(), s_clipVolumeVerts1, 6 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts2, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts3, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts4, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts5, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts6, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts7, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts8, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts9, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts10, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts11, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts12, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts13, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts14, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts15, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts16, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts17, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts18, 4 },
-    { 609, 0x1, CAaBox(), s_clipVolumeVerts19, 7 },
-    { 609, 0x0, CAaBox(), s_clipVolumeVerts20, 4 },
-    { 609, 0x0, CAaBox(), s_clipVolumeVerts21, 7 },
-    { 609, 0x1, CAaBox(), s_clipVolumeVerts22, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts23, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts24, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts25, 7 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts26, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts27, 4 },
-    { 571, 0x1, CAaBox(), s_clipVolumeVerts28, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts29, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts30, 4 },
-    { 571, 0x1, CAaBox(), s_clipVolumeVerts31, 4 },
-    { 571, 0x1, CAaBox(), s_clipVolumeVerts32, 4 },
-    { 571, 0x1, CAaBox(), s_clipVolumeVerts33, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts34, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts35, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts36, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts37, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts38, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts39, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts40, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts41, 4 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts42, 5 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts43, 4 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts44, 4 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts45, 4 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts46, 4 },
-    { 600, 0x1, CAaBox(), s_clipVolumeVerts47, 5 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts48, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts49, 4 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts50, 7 },
-    { 571, 0x0, CAaBox(), s_clipVolumeVerts51, 5 },
-    { 575, 0x1, CAaBox(), s_clipVolumeVerts52, 5 },
-    { 575, 0x1, CAaBox(), s_clipVolumeVerts53, 5 },
-    { 603, 0x0, CAaBox(), s_clipVolumeVerts54, 4 },
-    { 603, 0x0, CAaBox(), s_clipVolumeVerts55, 4 },
-    { 603, 0x0, CAaBox(), s_clipVolumeVerts56, 4 },
-    { 631, 0x0, CAaBox(), s_clipVolumeVerts57, 4 },
-    { 631, 0x0, CAaBox(), s_clipVolumeVerts58, 8 },
-    { 631, 0x1, CAaBox(), s_clipVolumeVerts59, 4 },
-    { 631, 0x1, CAaBox(), s_clipVolumeVerts60, 4 },
-    { 530, 0x0, CAaBox(), s_clipVolumeVerts61, 7 },
-};
-
-// STATIC: 0x00EB3A54
-static int32_t s_clipVolumeBoundsValid;
 
 // OFFSET: 0x0079C480
 static void InitClipVolumeBounds() {
