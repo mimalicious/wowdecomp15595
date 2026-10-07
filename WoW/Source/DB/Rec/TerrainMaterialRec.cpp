@@ -16,6 +16,6 @@ const DBCMeta TerrainMaterialRec::s_meta = { "DBFilesClient\\TerrainMaterial.dbc
 // OFFSET: 0x00A3B710/0x1407E8520
 void TerrainMaterialRec::FixupStrings(void* record, const char* strings) {
     TerrainMaterialRec* rec = static_cast<TerrainMaterialRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
-    DBCFixupString(rec->unk_000C, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_envMapPath, strings);
 }

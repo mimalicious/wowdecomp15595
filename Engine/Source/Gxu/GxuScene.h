@@ -24,4 +24,6 @@ class GxuScene {
     void Update(uint32_t time);
 };
 
+extern GxuScene g_scene;
+
 #endif

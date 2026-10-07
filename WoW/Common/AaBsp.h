@@ -64,6 +64,7 @@ class CAaBspDigestCache {
     /* 1000 */ CAaBspNodeDigest m_digests [1024];
 
     CAaBspDigestCache();
+    ~CAaBspDigestCache();
     void GenerateDigest(CAaBspNodeDigest* digest, const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices);
     CAaBspNodeDigest* GetDigest(const CAaBsp& bsp, const CAaBspNode* node, SMOPoly* faces, const C3Vector* vertices, const uint16_t* faceVertexIndices);
     void RemoveEntry(const CAaBspNode* node);
@@ -71,5 +72,7 @@ class CAaBspDigestCache {
 };
 
 extern CAaBspDigestCache* g_BspDigestCache;
+
+#include "WoW/Common/AaBsp.inl"
 
 #endif

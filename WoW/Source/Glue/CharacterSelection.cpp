@@ -334,8 +334,10 @@ void CCharacterSelection::GenericLightingCallback(CM2Model* model, CM2Lighting* 
             lighting->Initialize(model->m_scene, sphere);
 
             LightParamsRec* paramsRec = g_lightParamsDB.GetRecord(3);
-            CImVector direct = DayNight::LoadLightIntBand(0, paramsRec, 0);
-            CImVector ambient = DayNight::LoadLightIntBand(0, paramsRec, 1);
+            CImVector direct;
+            DayNight::CalcIndividualColorFromDBRec(&direct, 0, paramsRec, 0);
+            CImVector ambient;
+            DayNight::CalcIndividualColorFromDBRec(&ambient, 0, paramsRec, 1);
 
             CM2Light light;
             light.SetLightType(M2LIGHT_DIRECT);

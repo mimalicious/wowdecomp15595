@@ -1,5 +1,8 @@
 #include "Engine/Source/Gxu/GxuScene.h"
 
+// STATIC: 0x00CA8554
+GxuScene g_scene;
+
 // OFFSET: #0x009A8180
 GxuScene::~GxuScene() {
 }

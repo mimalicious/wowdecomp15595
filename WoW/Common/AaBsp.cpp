@@ -3,10 +3,10 @@
 #include <cstring>
 #include "WoW/Common/AaBsp.h"
 #include "WoW/Common/Types.h"
-#include "WoW/Source/WorldClient/Types.h"
+#include "WoW/Source/WorldClient/MapObj.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00CDD7A0
+// STATIC: 0x00E71F10
 CAaBspDigestCache* g_BspDigestCache;
 
 // STATIC: #0x00CDF7BC
@@ -145,7 +145,7 @@ void CAaBsp::Free() {
     }
 }
 
-// OFFSET: #0x0079B160
+// OFFSET: 0x00730910
 CAaBspDigestCache::CAaBspDigestCache() {
     memset(this->m_nodes, 0, sizeof(this->m_nodes));
     memset(this->m_digests, 0, sizeof(this->m_digests));

@@ -292,6 +292,25 @@ C33Matrix::C33Matrix(float a0, float a1, float a2, float b0, float b1, float b2,
     this->c2 = c2;
 }
 
+// OFFSET: 0x004CD9E0
+void C33Matrix::RotateAroundX(float angle) {
+    float c = cos(angle);
+    float s = sin(angle);
+
+    C33Matrix rotation;
+    rotation.a0 = 1.0f;
+    rotation.a1 = 0.0f;
+    rotation.a2 = 0.0f;
+    rotation.b0 = 0.0f;
+    rotation.b1 = c;
+    rotation.b2 = s;
+    rotation.c0 = 0.0f;
+    rotation.c1 = -s;
+    rotation.c2 = c;
+
+    *this = rotation * *this;
+}
+
 // OFFSET: 0x004CDA70
 void C33Matrix::RotateAroundY(float angle) {
     float c = cos(angle);
@@ -307,6 +326,25 @@ void C33Matrix::RotateAroundY(float angle) {
     rotation.c0 = s;
     rotation.c1 = 0.0f;
     rotation.c2 = c;
+
+    *this = rotation * *this;
+}
+
+// OFFSET: 0x004CDB10
+void C33Matrix::RotateAroundZ(float angle) {
+    float c = cos(angle);
+    float s = sin(angle);
+
+    C33Matrix rotation;
+    rotation.a0 = c;
+    rotation.a1 = s;
+    rotation.a2 = 0.0f;
+    rotation.b0 = -s;
+    rotation.b1 = c;
+    rotation.b2 = 0.0f;
+    rotation.c0 = 0.0f;
+    rotation.c1 = 0.0f;
+    rotation.c2 = 1.0f;
 
     *this = rotation * *this;
 }

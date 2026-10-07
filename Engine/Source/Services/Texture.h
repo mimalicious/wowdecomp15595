@@ -123,6 +123,7 @@ CTexture* TextureCacheGetTexture(char* fileName, char* extension, CGxTexFlags te
 void TextureCacheUpdate();
 void TextureCacheNewTexture(CTexture* texture);
 void TextureCacheNewTexture(CTexture* texture, CGxTexFlags texFlags);
+void TextureCacheRemoveTexture(CTexture* texture);
 uint32_t TextureCacheGetMaxSize();
 CTexture* TextureCacheGetTexture(const char* fileName);
 uint32_t TextureCalcGxTexSize(EGxTexFormat format, uint32_t width, uint32_t height, EGxTexFilter filter);

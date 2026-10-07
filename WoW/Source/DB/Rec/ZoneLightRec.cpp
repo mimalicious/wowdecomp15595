@@ -16,5 +16,5 @@ const DBCMeta ZoneLightRec::s_meta = { "DBFilesClient\\ZoneLight.dbc", 4, 16, Zo
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void ZoneLightRec::FixupStrings(void* record, const char* strings) {
     ZoneLightRec* rec = static_cast<ZoneLightRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
+    DBCFixupString(rec->m_name, strings);
 }

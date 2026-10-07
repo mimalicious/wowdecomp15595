@@ -8,6 +8,7 @@
 class C2Vector;
 class C3Ray;
 class C4Plane;
+class C4Vector;
 class CAaBox;
 class CAaSphere;
 struct C3Segment;
@@ -26,6 +27,7 @@ namespace NTempest {
     float DistanceSquared(const CAaBox& box, const C2Vector& point);
     float DistanceSquared(const CAaBox& box, const C3Vector& point);
     float DistanceSquared(const C3Segment& segment, const C3Vector& point, float* t);
+    float DistanceSquaredFromEdge(const C2Vector& a, const C2Vector& b, const C2Vector& point);
     bool HitBoundingBox(const float* origin, const float* dir, const float* minB, const float* maxB, float* t, float* coord);
     bool Intersect(const C3Ray& ray, const C3Vector* verts, const uint16_t* indices, float* t, C2Vector* uv, float tolerance);
     bool Intersect(const C3Ray& ray, const C3Vector* verts, const uint32_t* indices, float* t, C2Vector* uv, float tolerance);
@@ -34,6 +36,7 @@ namespace NTempest {
     bool Intersect(const C3Vector& point, const C3Vector* verts, uint32_t count, C3Vector::EAxis axis);
     bool Intersect2d(const CAaBox& box, const CAaSphere& sphere, SolidIntersect mode);
     bool Intersect2dBoxSphere(const float* minB, const float* maxB, const float* center, float radius, SolidIntersect mode);
+    void SmoothDamp(C4Vector& value, C4Vector& velocity, const C4Vector& target, float omega, float deltaTime, float decay);
 }
 
 void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb);

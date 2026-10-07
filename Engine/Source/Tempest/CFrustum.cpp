@@ -29,6 +29,55 @@ uint32_t CFrustum::Cull(const CAaBox& box) {
     return 3;
 }
 
+// OFFSET: 0x004CBF80
+uint32_t CFrustum::Cull(const CAaBox& box, uint32_t mask) {
+    const C3Vector* extremes[2] = { &box.t, &box.b };
+    uint32_t bit = 1;
+
+    for (int32_t i = 0; i < 6; i++) {
+        if (mask & bit) {
+            const C4Plane& plane = this->planes[i];
+            const C3Vector* x = extremes[*reinterpret_cast<const uint32_t*>(&plane.n.x) >> 31];
+            const C3Vector* z = extremes[*reinterpret_cast<const uint32_t*>(&plane.n.z) >> 31];
+            const C3Vector* y = extremes[*reinterpret_cast<const uint32_t*>(&plane.n.y) >> 31];
+
+            if (x->x * plane.n.x + z->z * plane.n.z + y->y * plane.n.y + plane.d < -0.019444443f) {
+                return 0;
+            }
+        }
+
+        bit += bit;
+    }
+
+    return 3;
+}
+
+// OFFSET: 0x004CC030
+uint32_t CFrustum::Cull(const CAaBox& box, uint32_t* outside) {
+    const C3Vector* extremes[2] = { &box.t, &box.b };
+    *outside = 0;
+    uint32_t bit = 1;
+
+    for (int32_t i = 0; i < 6; i++) {
+        const C4Plane& plane = this->planes[i];
+        uint32_t sx = *reinterpret_cast<const uint32_t*>(&plane.n.x) >> 31;
+        uint32_t sz = *reinterpret_cast<const uint32_t*>(&plane.n.z) >> 31;
+        uint32_t sy = *reinterpret_cast<const uint32_t*>(&plane.n.y) >> 31;
+
+        if (extremes[sx]->x * plane.n.x + extremes[sz]->z * plane.n.z + extremes[sy]->y * plane.n.y + plane.d < -0.019444443f) {
+            return 0;
+        }
+
+        if (extremes[(sx - 1) & 1]->x * plane.n.x + extremes[(sz - 1) & 1]->z * plane.n.z + extremes[(sy - 1) & 1]->y * plane.n.y + plane.d > 0.019444443f) {
+            *outside |= bit;
+        }
+
+        bit <<= 1;
+    }
+
+    return 3;
+}
+
 // OFFSET: 0x004CC140
 uint32_t CFrustum::CullInv(const CAaBox& box) {
     const C3Vector* extremes[2] = { &box.t, &box.b };

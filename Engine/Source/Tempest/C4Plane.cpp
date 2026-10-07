@@ -43,3 +43,8 @@ void C4Plane::Transform(const C44Matrix& matrix) {
     C3Vector viewPoint = point * matrix;
     this->d = -(this->n.z * viewPoint.z + this->n.y * viewPoint.y + this->n.x * viewPoint.x);
 }
+
+// OFFSET: 0x004CC1D0
+float C4Plane::Distance(const C3Vector& point) const {
+    return point.z * this->n.z + point.y * this->n.y + point.x * this->n.x + this->d;
+}

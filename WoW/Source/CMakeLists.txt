@@ -58,6 +58,7 @@ target_link_libraries(Wow
         Battlenet
         Console
         ConsoleDevice
+        DayNight
         DB
         Game
         Glue

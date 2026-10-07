@@ -32,7 +32,9 @@ class C33Matrix {
     void FromEulerAnglesZYX(float yaw, float pitch, float roll);
     C33Matrix Inverse(float determinant) const;
     void Rotate(float angle, const C3Vector& axis, bool normalized);
+    void RotateAroundX(float angle);
     void RotateAroundY(float angle);
+    void RotateAroundZ(float angle);
     void Scale(const C3Vector& scale);
     void Scale(float scale);
     void Scale(float x, float y, float z);

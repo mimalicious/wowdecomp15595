@@ -15,6 +15,24 @@
 static float s_lightGridScale = 0.05f;
 
 // PROVEN: d77917a8 IDENTICAL/DIFFERENT
+// OFFSET: 0x00812BF0
+void CM2Light::Copy(const CM2Light& light) {
+    this->m_scene = NULL;
+    this->m_stamp = 0;
+    this->m_type = light.m_type;
+    this->m_pos = light.m_pos;
+    this->m_dir = light.m_dir;
+    this->m_ambColor = light.m_ambColor;
+    this->m_dirColor = light.m_dirColor;
+    this->m_specColor = light.m_specColor;
+    this->m_constantAttenuation = light.m_constantAttenuation;
+    this->m_linearAttenuation = light.m_linearAttenuation;
+    this->m_quadraticAttenuation = light.m_quadraticAttenuation;
+    this->m_visible = light.m_visible;
+    this->m_lightPrev = NULL;
+    this->m_lightNext = NULL;
+}
+
 // OFFSET: 0x00812C90/0x14052A8E0
 void CM2Light::Initialize(CM2Scene* scene) {
     this->m_scene = scene;

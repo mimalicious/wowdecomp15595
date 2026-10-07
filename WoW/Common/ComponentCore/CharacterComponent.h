@@ -115,6 +115,8 @@ class CCharacterComponent {
     static char* GetTabardBackgroundFileName(COMPONENT_SECTIONS section, int32_t background, char* buffer, int32_t size);
     static char* GetTabardBorderFileName(COMPONENT_SECTIONS section, int32_t border, int32_t color, char* buffer, int32_t size);
     static char* GetTabardEmblemFileName(COMPONENT_SECTIONS section, int32_t emblem, int32_t color, char* buffer, int32_t size);
+    static void InitCVars();
+    static void StreamingUpdate();
     static bool Initialize();
     static bool Initialize(EGxTexFormat format, uint32_t mipLevels, int32_t useThread, int32_t useCompression);
     static CM2Model* MakeAmmoModel(CM2Model* model, const ItemDisplayInfoRec* displayRec, uint32_t invType);
@@ -143,6 +145,7 @@ class CCharacterComponent {
     static int32_t Update(const void* data, void* param);
     static void UpdateBaseTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
     static void ValidateComponentData(ComponentData* data, COMPONENT_CONTEXT context);
+    static uint32_t ValidateComponentTextureLevel(uint32_t level);
 
     /* 0000 */ TSLink<CCharacterComponent> m_link;
     /* 0008 */ uint32_t m_flags;

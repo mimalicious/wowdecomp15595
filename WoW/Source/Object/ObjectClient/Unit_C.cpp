@@ -22606,22 +22606,22 @@ CM2Model* CGUnit_C::CreateItemModel(uint32_t displayId, uint32_t inventoryType, 
 
     switch (inventoryType) {
         case 1:
-            path = "Item\ObjectComponents\Head\\";
+            path = "Item\\ObjectComponents\\Head\\";
             break;
         case 3:
-            path = "Item\ObjectComponents\Shoulder\\";
+            path = "Item\\ObjectComponents\\Shoulder\\";
             break;
         case 14:
-            path = "Item\ObjectComponents\Shield\\";
+            path = "Item\\ObjectComponents\\Shield\\";
             break;
         case 24:
-            path = "Item\ObjectComponents\Ammo\\";
+            path = "Item\\ObjectComponents\\Ammo\\";
             break;
         case 27:
-            path = "Item\ObjectComponents\Quiver\\";
+            path = "Item\\ObjectComponents\\Quiver\\";
             break;
         default:
-            path = "Item\ObjectComponents\Weapon\\";
+            path = "Item\\ObjectComponents\\Weapon\\";
             break;
     }
 

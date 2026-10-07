@@ -5,6 +5,7 @@
 #include "Engine/Source/Tempest/C3Ray.h"
 #include "Engine/Source/Tempest/C3Segment.h"
 #include "Engine/Source/Tempest/C3Vector.h"
+#include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/CAaSphere.h"
@@ -470,6 +471,56 @@ float NTempest::DistanceSquared(const C3Segment& segment, const C3Vector& point,
     }
 
     return dz * dz + dy * dy + dx * dx;
+}
+
+// OFFSET: 0x004C6DE0
+void NTempest::SmoothDamp(C4Vector& value, C4Vector& velocity, const C4Vector& target, float omega, float deltaTime, float decay) {
+    float* current = &value.x;
+    float* speed = &velocity.x;
+    const float* goal = &target.x;
+
+    for (uint32_t i = 0; i < 4; i++) {
+        float end = goal[i];
+        float delta = current[i] - end;
+
+        if (fabs(delta) > 0.00000011920929f) {
+            float temp = (delta * omega + speed[i]) * deltaTime;
+            current[i] = (temp + delta) * decay + end;
+            speed[i] = (speed[i] - temp * omega) * decay;
+        } else {
+            current[i] = end;
+            speed[i] = 0.0f;
+        }
+    }
+}
+
+// OFFSET: 0x00B081A0
+float NTempest::DistanceSquaredFromEdge(const C2Vector& a, const C2Vector& b, const C2Vector& point) {
+    float ex = b.x - a.x;
+    float ey = b.y - a.y;
+    float dx = point.x - a.x;
+    float dy = point.y - a.y;
+    float dot = ey * dy + ex * dx;
+    float length = ey * ey + ex * ex;
+
+    if (fabs(length) < 0.00000023841858f) {
+        float ny = a.y - point.y;
+        return (a.x - point.x) * (a.x - point.x) + ny * ny;
+    }
+
+    float t = dot / length;
+
+    if (t < 0.0f) {
+        return dy * dy + dx * dx;
+    }
+
+    if (t > 1.0f) {
+        return (point.x - b.x) * (point.x - b.x) + (point.y - b.y) * (point.y - b.y);
+    }
+
+    float py = point.y - (t * ey + a.y);
+    float px = point.x - (t * ex + a.x);
+    return py * py + px * px;
 }
 
 // OFFSET: #0x00984DB0

@@ -531,6 +531,7 @@ class SE3 {
     static void EmitterManagerHeartbeat(int32_t elapsed);
     static void EmitterManagerInit(void (*callback)(const C3Vector&, uint32_t*, uint32_t*), uint32_t chunkSize, uint32_t chunkRadius);
     static void EmitterManagerProcessEmitterMessages();
+    static void StreamingUpdate();
     static void EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties);
     static void EmitterManagerSendMessage_MarkSoundChunkDirty(SE3SoundChunk* chunk);
     static void EmitterManagerSendMessage_Set3DPosition(uint32_t handle, const C3Vector& position);

@@ -31,6 +31,7 @@ class CM2Light {
 
     CM2Light();
     ~CM2Light();
+    void Copy(const CM2Light& light);
     void GxLightSet(uint32_t index);
     void Initialize(CM2Scene* scene);
     void Link();

@@ -405,7 +405,7 @@ void CCharacterComponent::ComponentCloseFingers(CM2Model* model, COMP_HAND_SLOT 
     }
 
     for (uint32_t bone = first; bone <= last; bone++) {
-        model->SetBoneSequence(bone, 15, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0);
+        model->SetBoneSequence(bone, 15, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0, 0, 0);
     }
 }
 
@@ -1934,7 +1934,7 @@ void CCharacterComponent::ComponentUtilAddItemVisual(CM2Model* model, int32_t it
 
         if (effectRec && *effectRec->m_model) {
             strcpy(s_pathEnd, effectRec->m_model);
-            CM2Model* effectModel = model->m_scene->CreateModel(s_path, 0);
+            CM2Model* effectModel = model->m_scene->CreateModel(s_path, 0, 3);
 
             if (effectModel) {
                 effectModel->AttachToParent(model, i, NULL, 0);
@@ -1972,7 +1972,7 @@ void CCharacterComponent::AddLink(CM2Model* parent, GEOCOMPONENTLINKS link, cons
         return;
     }
 
-    CM2Model* model = parent->m_scene->CreateModel(modelPath, 0);
+    CM2Model* model = parent->m_scene->CreateModel(modelPath, 0, 3);
 
     if (!model) {
         return;
@@ -2031,13 +2031,12 @@ CM2Model* CCharacterComponent::MakeAmmoModel(CM2Model* model, const ItemDisplayI
     strcpy(texturePath, folder);
     strcat(texturePath, displayRec->m_modelTexture[1]);
 
-    CM2Model* ammoModel = model->m_scene->CreateModel(modelPath, 0);
+    CM2Model* ammoModel = model->m_scene->CreateModel(modelPath, 0, 3);
 
     if (!ammoModel) {
         return NULL;
     }
 
-    ammoModel->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
     CTexture* texture = CreateTexture(texturePath, &s_status);
 
     if (!texture) {
