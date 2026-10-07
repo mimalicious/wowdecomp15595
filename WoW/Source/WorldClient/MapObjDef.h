@@ -43,6 +43,13 @@ class CMapObjDefGroup : public CMapBaseObj {
     void ExtendBounds(const CAaBox& box);
     void CreateDoodadRefs();
     void WaterDestroy();
+    void UpdateBounds(const C44Matrix& matrix);
+    void UpdateMatrix(const C44Matrix& matrix);
+    void SetSequence(uint32_t sequence, int32_t a2, uint16_t doodadSet);
+    void SetSequenceSpeed(float speed, int32_t a2, uint16_t doodadSet);
+    void SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callback, uint64_t param, uint16_t doodadSet);
+    void SetEventCallback(WORLD_MODEL_EVENT_CALLBACK callback, uint64_t param, uint16_t doodadSet);
+    bool IsAllDrawable();
 };
 
 class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_NONE> {
@@ -79,7 +86,9 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     int32_t IsAllDrawable();
     int32_t IsAllLoaded();
     int32_t MoveDoodadDefs(uint16_t doodadSet, CMapObjDef* target, uint16_t targetDoodadSet);
-    void Purge(int32_t a1);
+    void Purge(int32_t unlinkWorld);
+    uint32_t GetGroundType(uint32_t groupNum, uint16_t polyIndex);
+    void UpdateMoved();
     void SetDoodadEmittersIgnoresDistance(int32_t enable, uint16_t doodadSet);
     void SetDoodadsEnabled(int32_t enable, uint16_t doodadSet);
     void SetEventCallback(WORLD_MODEL_EVENT_CALLBACK callback, uint64_t param, uint16_t doodadSet);
@@ -87,13 +96,13 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     void SetSequenceFinishedCallback(WORLD_SEQUENCE_CALLBACK callback, uint64_t param, uint16_t doodadSet);
     void SetSequenceSpeed(float speed, int32_t a2, uint16_t doodadSet);
     void UpdateLoaded();
-    void UpdatePos(const C3Vector& pos, float facing, float a3, float a4);
+    void UpdatePos(const C3Vector& pos, float facing, float pitch, float roll);
     void UpdateMatrix(const C44Matrix& matrix);
     int32_t CanLinkTo();
     void UpdateBounds();
     bool GetFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
-    void GetFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
-    void LinkDoodadDef(CMapDoodadDef* doodadDef, int32_t a2);
+    bool GetFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
+    void LinkDoodadDef(CMapDoodadDef* doodadDef, int32_t testBounds);
 };
 
 #endif

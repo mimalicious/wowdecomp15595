@@ -157,6 +157,8 @@ class CMap : public CMapBaseObj {
     static void FreeEntity(CMapEntity* entity);
     static void FreeMapObj(CMapObj* mapObj);
     static void FreeMapObjDef(CMapObjDef* mapObjDef);
+    static bool GetDoodadDefFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags, uint64_t guid);
+    static bool GetEntityFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
     static void FreeMapObjDefGroup(CMapObjDefGroup* mapObjDefGroup);
     static void FreeMapObjGroup(CMapObjGroup* mapObjGroup);
     static void FreeRawAreaData(void* data);

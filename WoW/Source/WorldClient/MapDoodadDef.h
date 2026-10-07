@@ -27,6 +27,7 @@ class CMapDoodadDef : public CMapStaticEntity, public TSHashObject<CMapDoodadDef
 
     CMapDoodadDef();
     void LinkToChunk(CMapBaseObj* owner);
+    void UpdateMatrixOnly(const C44Matrix& matrix);
     void Purge();
     void UpdateBounds();
     void UpdateLoaded();
