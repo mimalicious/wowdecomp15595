@@ -142,6 +142,7 @@ void DayNight::UpdateZoneLights() {
     }
 }
 
+// PROVEN: b15ccd3c IDENTICAL/NONE
 // OFFSET: 0x00652F00
 void DayNight::DNInfo::ClearZoneLights() {
     this->m_zoneLights[0] = NULL;
@@ -157,6 +158,7 @@ void DayNight::DNInfo::ClearZoneLights() {
     this->m_zoneLightCount = 0;
 }
 
+// PROVEN: 7c3d27ec IDENTICAL/NONE
 // OFFSET: 0x00652F60
 void DayNight::DNInfo::AddZoneLight(int32_t lightId, float blend) {
     if (this->m_zoneLightCount >= 5) {

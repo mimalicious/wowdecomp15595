@@ -64,6 +64,7 @@ struct LightQELess {
     }
 };
 
+// PROVEN: a610679e IDENTICAL/NONE
 // OFFSET: 0x0064AB90
 const LightParamsRec* DayNight::GetLightParams(const LightRec* light, int32_t index) {
     return g_lightParamsDB.GetRecord(light->m_lightParamsID[index]);

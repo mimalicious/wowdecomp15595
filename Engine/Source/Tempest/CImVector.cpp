@@ -34,6 +34,15 @@ void CImVector::InterpColor(int32_t t, const CImVector* src) {
     value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
 }
 
+// OFFSET: 0x00648130
+void CImVector::ScaleRGB(uint32_t scale) {
+    uint32_t& value = *reinterpret_cast<uint32_t*>(this);
+    uint8_t g = (this->g * scale + 0xFF) >> 8;
+    uint8_t r = (this->r * scale + 0xFF) >> 8;
+    uint8_t b = (this->b * scale + 0xFF) >> 8;
+    value = ((((r << 8) | g) << 8) | b) | (value & 0xFF000000);
+}
+
 // OFFSET: 0x00B08000/0x1408CAFD0
 CImVector& CImVector::operator=(const C3Vector& color) {
     this->a = 0xFF;

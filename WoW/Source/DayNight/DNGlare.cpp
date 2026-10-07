@@ -56,11 +56,13 @@ CGxShader* DayNight::DNGlare::s_queryVertexShader;
 // STATIC: 0x00E43278
 CGxShader* DayNight::DNGlare::s_queryPixelShader;
 
+// PROVEN: bb7ab595 IDENTICAL/NONE
 // OFFSET: 0x0064F7F0
 int32_t DayNight::GlareBase::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }
 
+// PROVEN: 435f07f8 IDENTICAL/NONE
 // OFFSET: 0x0064F800
 void DayNight::GlareBase::LinkToAsyncHead() {
     if (this->m_texture) {
@@ -68,11 +70,13 @@ void DayNight::GlareBase::LinkToAsyncHead() {
     }
 }
 
+// PROVEN: 3fa6a7f9 IDENTICAL/NONE
 // OFFSET: 0x0064F810
 float DayNight::DNSunGlare::GetCloudDensityFade() {
     return 1.0f - DayNight::g_clouds.GetDensity(this->m_position, 1.0f);
 }
 
+// PROVEN: cb38ef01 IDENTICAL/NONE
 // OFFSET: 0x0064F830
 void DayNight::DNGlare::Destroy() {
     if (this->m_texture) {
@@ -371,6 +375,7 @@ float DayNight::DNGlare::IsVisibleQuery() {
     return 0.0f;
 }
 
+// PROVEN: cc7f6dc2 IDENTICAL/NONE
 // OFFSET: 0x006506B0
 float DayNight::DNGlare::IsVisible() {
     if (!GlareBase::s_masterEnable || !this->m_enable || !this->m_color.a) {

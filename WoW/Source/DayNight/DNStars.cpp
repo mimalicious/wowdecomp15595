@@ -13,6 +13,7 @@ static C2Vector s_starAlphaTable[4] = {
     C2Vector(1.0f, 1.0f),
 };
 
+// PROVEN: 05ec80bb IDENTICAL/NONE
 // OFFSET: 0x0064F600/0x1402EE9E0
 void DayNight::DNStars::Initialize() {
     this->m_scene = M2CreateScene();
@@ -33,12 +34,14 @@ void DayNight::DNStars::Destroy() {
     }
 }
 
+// PROVEN: 674570ad IDENTICAL/NONE
 // OFFSET: 0x0064F660
 void DayNight::DNStars::Update() {
     this->m_position = DayNight::g_dnInfo.m_camPos;
     this->m_color.a = static_cast<uint8_t>(static_cast<int32_t>(DayNight::InterpTable(s_starAlphaTable, 4, DayNight::g_dnInfo.m_dayFraction) * 254.0f + 1.0f));
 }
 
+// PROVEN: 001fc972 IDENTICAL/NONE
 // OFFSET: 0x0064F6D0
 int32_t DayNight::DNStars::IsAllLoaded() {
     return this->m_model->IsLoaded() && this->m_model->TexturesAllLoaded();

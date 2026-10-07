@@ -122,10 +122,7 @@ void CMapStaticEntity::AdjustLighting(const CImVector& color, CImVector& direct,
     ambient = color;
 
     if (brightest > maxAmbient) {
-        uint32_t factor = static_cast<uint32_t>(static_cast<int64_t>(static_cast<double>(maxAmbient) * 255.0 / static_cast<double>(brightest)));
-        ambient.b = static_cast<uint8_t>((ambient.b * factor + 0xFF) >> 8);
-        ambient.g = static_cast<uint8_t>((ambient.g * factor + 0xFF) >> 8);
-        ambient.r = static_cast<uint8_t>((ambient.r * factor + 0xFF) >> 8);
+        ambient.ScaleRGB(static_cast<uint32_t>(static_cast<int64_t>(static_cast<double>(maxAmbient) * 255.0 / static_cast<double>(brightest))));
     }
 }
 

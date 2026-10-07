@@ -59,6 +59,7 @@ int32_t DayNight::IsAllLoaded() {
         && DayNight::g_stars.IsAllLoaded();
 }
 
+// PROVEN: 00212bb2 IDENTICAL/NONE
 // OFFSET: 0x00B38480
 void DayNight::StreamingUpdate() {
     if (!DayNight::IsAllLoaded()) {

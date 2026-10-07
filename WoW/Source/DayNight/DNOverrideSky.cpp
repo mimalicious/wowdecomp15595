@@ -11,11 +11,13 @@ CM2Scene* DayNight::DNOverrideSky::s_scene;
 // STATIC: 0x00E43260
 uint32_t DayNight::DNOverrideSky::s_lastTimeMs;
 
+// PROVEN: 54190adf IDENTICAL/NONE
 // OFFSET: 0x0064EDB0
 int32_t DayNight::DNOverrideSky::IsAllLoaded() {
     return this->m_model->IsLoaded() && this->m_model->TexturesAllLoaded();
 }
 
+// PROVEN: 1e4198fe IDENTICAL/NONE
 // OFFSET: 0x0064EDE0
 void DayNight::DNOverrideSky::LinkToAsyncHead() {
     this->m_model->LinkToAsyncHead();
@@ -48,6 +50,7 @@ void DayNight::SyncSkyAnimWithTime(DNOverrideSky* sky, int32_t minute) {
     sky->m_lastMinute = minute;
 }
 
+// PROVEN: 2e4d28e5 IDENTICAL/NONE
 // OFFSET: 0x0064EEC0
 DayNight::DNOverrideSky::DNOverrideSky() {
     this->m_model = NULL;

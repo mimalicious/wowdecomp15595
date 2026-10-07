@@ -24,11 +24,13 @@ CGxShader* DayNight::DNPlanet::s_vertexShader;
 // STATIC: 0x00E43284
 CGxShader* DayNight::DNPlanet::s_pixelShader;
 
+// PROVEN: d39fed51 IDENTICAL/NONE
 // OFFSET: 0x00650C80
 int32_t DayNight::DNPlanet::IsAllLoaded() {
     return TextureIsLoaded(this->m_texture);
 }
 
+// PROVEN: 1dffceaa IDENTICAL/NONE
 // OFFSET: 0x00650C90
 void DayNight::DNPlanet::LinkToAsyncHead() {
     if (this->m_texture) {
@@ -36,6 +38,7 @@ void DayNight::DNPlanet::LinkToAsyncHead() {
     }
 }
 
+// PROVEN: 3553ae41 IDENTICAL/NONE
 // OFFSET: 0x00650CA0
 void DayNight::DNPlanet::Destroy() {
     if (this->m_texture) {
@@ -57,7 +60,6 @@ void DayNight::DNPlanet::Destroy() {
     }
 }
 
-// PROVEN: cca6bb27 IDENTICAL/NONE
 // OFFSET: 0x00650D10
 void DayNight::DNPlanet::GenGeometry(C3Vector* verts, C2Vector* texCoords, CImVector* colors, uint16_t* indices, uint32_t& vertCount, uint32_t& indexCount) {
     static C3Vector s_verts[6] = {

@@ -121,6 +121,7 @@ static CImVector Brighten(const CImVector& color) {
     return *reinterpret_cast<CImVector*>(&result);
 }
 
+// PROVEN: 2b6e9b71 IDENTICAL/NONE
 // OFFSET: 0x00646DD0/0x1402E3930
 void DayNight::Initialize(bool enableFogMode) {
     DayNight::g_dnInfo.m_enableFogMode = enableFogMode;
@@ -132,6 +133,7 @@ void DayNight::Initialize(bool enableFogMode) {
 void DayNight::Destroy() {
 }
 
+// PROVEN: 15ba432a IDENTICAL/NONE
 // OFFSET: 0x00646DF0/0x1402E3950
 void DayNight::SetTime(uint32_t time, float timeOfDay, float dayFraction) {
     DayNight::g_dnInfo.m_timeOfDay = timeOfDay;
@@ -165,21 +167,25 @@ const DayNight::FogInfo* DayNight::GetIntFogInfo() {
     return &DayNight::g_dnInfo.m_intFog;
 }
 
+// PROVEN: 07b618f3 IDENTICAL/NONE
 // OFFSET: 0x00646E60
 const DayNight::FogInfo* DayNight::GetFogInfoUW() {
     return &DayNight::g_dnInfo.m_fogUW;
 }
 
+// PROVEN: f93d4754 IDENTICAL/NONE
 // OFFSET: 0x00646E70
 const DayNight::FogInfo* DayNight::GetIntFogInfoUW() {
     return &DayNight::g_dnInfo.m_intFogUW;
 }
 
+// PROVEN: 5c4191e8 IDENTICAL/NONE
 // OFFSET: 0x00646E80
 const DayNight::FogInfo* DayNight::GetFogInfoAW() {
     return &DayNight::g_dnInfo.m_fog;
 }
 
+// PROVEN: add2ec27 IDENTICAL/NONE
 // OFFSET: 0x00646E90
 void DayNight::ClearOverrideFog() {
     if (DayNight::g_bOverrideFog) {
@@ -192,6 +198,7 @@ void DayNight::ClearOverrideFog() {
     }
 }
 
+// PROVEN: d22e86a9 IDENTICAL/NONE
 // OFFSET: 0x00646EF0
 void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int32_t showSky) {
     if (!DayNight::g_bOverrideFog) {
@@ -210,11 +217,13 @@ void DayNight::SetOverrideFog(float startScalar, float end, CImVector color, int
     DayNight::g_bOverrideFog = 1;
 }
 
+// PROVEN: 8b750674 IDENTICAL/NONE
 // OFFSET: 0x00646FA0
 void DayNight::SetFogDistanceMax(float distance) {
     DayNight::g_fogDistanceMax = distance;
 }
 
+// PROVEN: 2fed8983 IDENTICAL/NONE
 // OFFSET: 0x00646FC0/0x1402E3A10
 const DayNight::LightInfo* DayNight::GetLightInfo() {
     if (Liquid::CameraSubmerged()) {
@@ -224,27 +233,32 @@ const DayNight::LightInfo* DayNight::GetLightInfo() {
     return &DayNight::g_dnInfo.m_lightInfo;
 }
 
+// PROVEN: 3497c27d IDENTICAL/NONE
 // OFFSET: 0x00646FE0
 const DayNight::LightInfo* DayNight::GetMinimapLightInfo() {
     return DayNight::g_dnInfo.m_minimapLight;
 }
 
+// PROVEN: 37c36cc4 IDENTICAL/NONE
 // OFFSET: 0x00646FF0
 float DayNight::GetSelfIlluminatedScalar() {
     return DayNight::g_dnInfo.m_selfIlluminatedScalar;
 }
 
+// PROVEN: b978a76a IDENTICAL/NONE
 // OFFSET: 0x00647000
 float DayNight::GetGlow() {
     return DayNight::g_dnInfo.m_light.m_glow;
 }
 
+// PROVEN: dfc00c99 IDENTICAL/NONE
 // OFFSET: 0x00647010
 CImVector* DayNight::GetShadowColor(CImVector* color) {
     *color = DayNight::g_dnInfo.m_shadowColor;
     return color;
 }
 
+// PROVEN: d430eab6 IDENTICAL/NONE
 // OFFSET: 0x00647020
 CImVector* DayNight::GetSpecularColor(CImVector* color) {
     const CurrentLight* light = Liquid::CameraSubmerged() ? &DayNight::g_dnInfo.m_lightUW : &DayNight::g_dnInfo.m_light;
@@ -252,6 +266,7 @@ CImVector* DayNight::GetSpecularColor(CImVector* color) {
     return color;
 }
 
+// PROVEN: 6036d080 IDENTICAL/NONE
 // OFFSET: 0x00647040
 void DayNight::ClearOverrideLightParamsID() {
     DayNight::g_dnInfo.m_overrideLightParamsId = 0;
@@ -273,11 +288,13 @@ const DayNight::LiquidColors* DayNight::GetLiquidColors(uint32_t index) {
     return colors;
 }
 
+// PROVEN: f9ad628a IDENTICAL/NONE
 // OFFSET: 0x006470E0
 void DayNight::SetExteriorUnderwater(int32_t underwater) {
     DayNight::g_exteriorUnderwater = underwater;
 }
 
+// PROVEN: cebed488 IDENTICAL/NONE
 // OFFSET: 0x006470F0
 int32_t DayNight::ShouldClearToBlack() {
     return !DayNight::g_exteriorUnderwater && (DayNight::g_dnInfo.m_showSky || !DayNight::g_bOverrideFog);
@@ -301,11 +318,13 @@ C3Vector* DayNight::GetSunGlarePos(C3Vector* pos) {
     return pos;
 }
 
+// PROVEN: 688dd66f IDENTICAL/NONE
 // OFFSET: 0x006471B0
 float DayNight::GetSunGlareOpacity() {
     return DayNight::g_sunGlare.m_visibility;
 }
 
+// PROVEN: 30c4bba3 IDENTICAL/NONE
 // OFFSET: 0x006471C0
 float DayNight::GetMoonGlareOpacity() {
     return DayNight::g_moonGlare.m_visibility;
@@ -322,6 +341,7 @@ void DayNight::SetEclipse(uint32_t lightId, float amount) {
     DayNight::g_dnInfo.m_eclipseAmount = static_cast<int32_t>(amount * 255.0f);
 }
 
+// PROVEN: b4ba290b IDENTICAL/NONE
 // OFFSET: 0x00647240/0x1402E3B90
 void DayNight::SetIntersectCallback(INTERSECT_CALLBACK callback) {
     DayNight::g_intersectCallback = callback;
@@ -422,7 +442,8 @@ CImVector* DayNight::GetLiquidMinimapColor(CImVector* color, uint32_t time, cons
         alpha = &light.m_waterShallowAlpha;
     }
 
-    color->a = static_cast<uint8_t>(CMath::fint_((((alpha[band + 1] - alpha[band]) * (blend * 0.0039215689f)) + alpha[band]) * 255.0f));
+    float value = (((alpha[band + 1] - alpha[band]) * (blend * 0.0039215689f)) + alpha[band]) * 255.0f + 512.0f;
+    color->a = *reinterpret_cast<uint32_t*>(&value) >> 14;
     return color;
 }
 
@@ -607,6 +628,7 @@ void DayNight::LoadMap(int32_t mapId) {
     DayNight::g_exteriorUnderwater = 0;
 }
 
+// PROVEN: e098bd4f IDENTICAL/NONE
 // OFFSET: 0x00647E40/0x1402E4C10
 void DayNight::ForceFullUpdate() {
     DayNight::g_forceFullUpdate = 1;
@@ -632,6 +654,7 @@ void DayNight::SetCamera(const C3Vector& pos, const C3Vector& dir, const C3Vecto
     DayNight::g_dnInfo.m_farClip = farClip;
 }
 
+// PROVEN: 19db56a0 IDENTICAL/NONE
 // OFFSET: 0x00647F40
 void DayNight::SetStormPercentage(float percentage) {
     DayNight::g_dnInfo.m_stormPercentage = percentage;
@@ -976,7 +999,7 @@ void DayNight::SetPlanets() {
     };
 
     static C2Vector s_sunScale[4] = {
-        C2Vector(0.0f, 2.0f),
+        C2Vector(0.25f, 2.0f),
         C2Vector(0.28125f, 1.0f),
         C2Vector(0.84375f, 1.0f),
         C2Vector(0.875f, 2.0f),
@@ -1166,6 +1189,7 @@ void DayNight::UpdateLighting() {
     DayNight::SetPlanets();
 }
 
+// PROVEN: 1eb3ce22 IDENTICAL/NONE
 // OFFSET: 0x0064A6F0
 void DayNight::Update(uint32_t timeMs, float tickSec, float timeSec) {
     DayNight::g_dnInfo.m_tickSec = tickSec;

@@ -52,6 +52,7 @@ static void ApplyEclipse(CImVector& color) {
     }
 }
 
+// PROVEN: 2ca9ae1a IDENTICAL/NONE
 // OFFSET: 0x006519C0/0x1402F1680
 void DayNight::DNSky::Initialize() {
     if (!DNSky::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
@@ -60,6 +61,7 @@ void DayNight::DNSky::Initialize() {
     }
 }
 
+// PROVEN: 0feec97e IDENTICAL/NONE
 // OFFSET: 0x00651A10
 void DayNight::DNSky::Destroy() {
     if (--DNSky::s_refCount) {

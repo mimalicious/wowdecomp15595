@@ -109,6 +109,7 @@ static float FastInvSqrt(float value) {
     return *reinterpret_cast<float*>(&bits);
 }
 
+// PROVEN: b83565b0 IDENTICAL/NONE
 // OFFSET: 0x0064D260
 void DayNight::DNClouds::SetFullUpdate() {
     this->m_fullUpdate = 1;
@@ -123,6 +124,7 @@ void DayNight::DNClouds::Callback_GxTex(EGxTexCommand command, uint32_t width, u
     }
 }
 
+// PROVEN: f280b04a IDENTICAL/NONE
 // OFFSET: 0x0064D2A0
 void DayNight::DNClouds::SetDensity(float density) {
     float value = this->m_densityOverride;
@@ -134,6 +136,7 @@ void DayNight::DNClouds::SetDensity(float density) {
     this->m_density = static_cast<uint8_t>(static_cast<int32_t>((1.0f - value) * 255.0f));
 }
 
+// PROVEN: 04cf9141 IDENTICAL/NONE
 // OFFSET: 0x0064D2E0/0x1402E88C0
 void DayNight::DNClouds::Initialize() {
     if (!DNClouds::s_refCount++ && g_theGxDevicePtr->m_caps.m_shaderModel >= 3) {
@@ -142,6 +145,7 @@ void DayNight::DNClouds::Initialize() {
     }
 }
 
+// PROVEN: 8fc14f98 IDENTICAL/NONE
 // OFFSET: 0x0064D330
 void DayNight::DNClouds::Destroy() {
     if (this->m_textures[0]) {
