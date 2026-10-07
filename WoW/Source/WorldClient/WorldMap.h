@@ -84,6 +84,7 @@ struct SMapObjDefVectorIntersect {
 class CMapStaticEntity;
 struct CShadowCacheQueryData;
 class CShadowQuery;
+struct CShadowCacheQueryData;
 class CWorldView;
 class Particulate;
 class Weather;
@@ -168,7 +169,14 @@ class CWorldMap {
     static void LocateViewerMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float* dists, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     static void Initialize();
     static void GetChunkRect(const CAaBox& box, CiRect& rect);
+    static void ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand);
+    static void ShadowQueryMapObjDef(CMapObjDef* mapObjDef, CShadowQuery& query, CShadowCacheQueryData& data, int32_t band, float maxRadius);
     static int32_t QueryAreaId(CMapEntity* entity, uint32_t& areaId);
+    void ShadowQueryEntitys(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand);
+    void ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand);
+    void ShadowQueryMapObjDefs(CShadowQuery& query, CShadowCacheQueryData& data, int32_t band);
+    void ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, int32_t startBand, int32_t endBand);
+    void ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, int32_t band);
     static int32_t QueryAreaIds(CMapEntity* entity, uint32_t* areaIds);
     static int32_t QueryOutdoors(CMapEntity* entity);
     static void GetQueryRects(const CAaBox& box, CiRect& subChunkRect, CiRect& chunkRect, CiRect& areaRect);

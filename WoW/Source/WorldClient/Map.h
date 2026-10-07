@@ -38,7 +38,9 @@ class CMapObjGroup;
 class CMapRenderChunk;
 class CGxShader;
 class CTexture;
+class CShadowQuery;
 class CWorldMap;
+struct CShadowCacheQueryData;
 class CWorldView;
 class C44Matrix;
 class SFileImpl;
@@ -240,6 +242,8 @@ class CMap : public CMapBaseObj {
     bool QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType);
     int32_t GetFlightBounds(const C3Vector& pos, float& z, int32_t lower);
     void RenderFlightBounds(const C3Vector& pos);
+    void ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, CiRect& rect, int32_t startBand, int32_t endBand);
+    void ShadowQueryTerrain(CShadowQuery& query, CShadowCacheQueryData& data, CiRect& rect, int32_t band);
     void QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results);
     void ClearChunkDetailDoodads();
     void ClearRenderChunks();

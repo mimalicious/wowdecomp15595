@@ -21,9 +21,7 @@ class CMapStaticEntity : public CMapBaseObj {
     /* 0010 */ CWorldMap* m_worldMap;
     /* 0014 */ TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_ownerLink)> m_parentLinkList;
     /* 0020 */ uint32_t unk_0020;
-    /* 0024 */ uint8_t m_fadeLevel;
-    /* 0025 */ uint8_t m_culled;
-    /* 0026 */ uint8_t unk_0026;
+    /* 0024 */ uint8_t m_shadowFrame[3];
     /* 0027 */ uint8_t unk_0027;
     /* 0028 */ uint8_t m_sizeCategory;
     /* 002C */ uint32_t m_staticFlags;

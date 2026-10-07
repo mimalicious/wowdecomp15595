@@ -63,7 +63,7 @@ float CWorldView::s_fadeStart[5];
 static float s_fadeInner[5];
 
 // STATIC: 0x00D01920
-static float s_fadeInnerSqr[5];
+float CWorldView::s_fadeInnerSqr[5];
 
 // STATIC: 0x00D01934
 static float s_fadeOuter[5];
@@ -105,7 +105,7 @@ void CWorldView::ScaleFadeDist(float scale) {
         s_fadeOuter[i] = outer;
         s_fadeOuterSqr[i] = outer * outer;
         s_fadeInner[i] = outer - s_baseFadeDist.m_fadeRange[i];
-        s_fadeInnerSqr[i] = s_fadeInner[i] * s_fadeInner[i];
+        CWorldView::s_fadeInnerSqr[i] = s_fadeInner[i] * s_fadeInner[i];
     }
 }
 
@@ -1009,7 +1009,7 @@ void CWorldView::AddDoodadDefModelToModelScene(CMapDoodadDef* doodadDef) {
             return;
         }
 
-        if (distSqr > s_fadeInnerSqr[category]) {
+        if (distSqr > CWorldView::s_fadeInnerSqr[category]) {
             alpha = 1.0f - (sqrt(distSqr) - s_fadeInner[category]) / s_baseFadeDist.m_fadeRange[category];
 
             if (alpha > 0.99000001f) {

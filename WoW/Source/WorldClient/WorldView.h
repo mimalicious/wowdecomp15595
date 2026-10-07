@@ -151,6 +151,7 @@ class CWorldView {
     /* 2028 */ char m_subzoneName[260];
     /* 212C */ char m_zoneName[260];
 
+    static float s_fadeInnerSqr[5];
     static float s_fadeStart[5];
     static float s_skyboxMinZ;
 
@@ -203,6 +204,7 @@ class CWorldView {
     void CullMapObjDefGroupFromInterior(CMapObjDefGroup* group, const CAaRect& rect);
     void CullMapObjDefGroups(CSortEntry* entry, const CAaRect& rect, int32_t index);
     int32_t CullModel(const CAaBox& box);
+    int32_t IsBeyondFadeInner(const C3Vector& pos, uint32_t sizeCategory);
     int32_t CullModel(const CAaBox& box, uint32_t mask);
     void CullModelTree(CM2Model* model);
     void CullModelTree(CM2Model* model, uint32_t boneId);

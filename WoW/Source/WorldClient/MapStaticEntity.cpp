@@ -153,9 +153,9 @@ CMapStaticEntity::CMapStaticEntity() {
     this->unk_0020 = 0;
     this->m_exteriorLightingValid = 0;
     this->m_entityFlags = (this->m_entityFlags & 0xFFF90000) | 0x60000;
-    this->m_fadeLevel = 0;
-    this->m_culled = 0;
-    this->unk_0026 = 0;
+    this->m_shadowFrame[0] = 0;
+    this->m_shadowFrame[1] = 0;
+    this->m_shadowFrame[2] = 0;
     this->unk_0027 = 0;
     this->m_liquidHeight = 0.0f;
     this->m_sizeCategory = 4;
