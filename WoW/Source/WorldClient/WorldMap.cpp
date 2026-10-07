@@ -807,7 +807,7 @@ void CWorldMap::UpdateRipples(const C3Vector& pos) {
         s_lastTime = now;
     }
 
-    float intensity = this->m_weather->unk_0008;
+    float intensity = this->m_weather->m_intensity;
 
     if (this->m_weather->GetType() != 1 || intensity <= 0.2f) {
         return;
@@ -1355,6 +1355,7 @@ CMap* CWorldMap::GetMap(const C3Vector& pos) {
     return NULL;
 }
 
+// PROVEN: 102131a9 IDENTICAL/NONE
 // OFFSET: 0x007315C0
 uint32_t CWorldMap::QueryAreaIdTerrain(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
@@ -1377,6 +1378,7 @@ int32_t CWorldMap::QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType,
     return map->QueryLiquidTerrain(pos, liquidType, height);
 }
 
+// PROVEN: 957b594a IDENTICAL/NONE
 // OFFSET: 0x00731620
 bool CWorldMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height) {
     CMap* map = this->GetMap(pos);
@@ -1388,6 +1390,7 @@ bool CWorldMap::QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liqu
     return map->QueryLiquid(pos, nearest, liquidType, height);
 }
 
+// PROVEN: bcd5592e IDENTICAL/NONE
 // OFFSET: 0x00731660/0x14040C450
 bool CWorldMap::QueryShadow(const C3Vector& pos) {
     CMap* map = this->GetMap(pos);
@@ -1399,6 +1402,7 @@ bool CWorldMap::QueryShadow(const C3Vector& pos) {
     return map->QueryShadowTerrain(pos);
 }
 
+// PROVEN: 56078b96 IDENTICAL/NONE
 // OFFSET: 0x00731690
 bool CWorldMap::QueryGroundTypeTerrain(const C3Vector& pos, uint32_t& groundType) {
     CMap* map = this->GetMap(pos);
@@ -1657,6 +1661,7 @@ void CWorldMap::QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flag
     }
 }
 
+// PROVEN: cbc913e1 IDENTICAL/NONE
 // OFFSET: 0x00731DE0
 void CWorldMap::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results) {
     CMap* map = this->GetMap(pos);

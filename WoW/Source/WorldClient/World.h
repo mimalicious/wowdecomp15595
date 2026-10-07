@@ -293,7 +293,7 @@ namespace World {
     void PrepareAreaOfInterest(const C3Vector& pos, float nearClip, float farClip, float fov, float aspect);
     void PrepareAreaOfInterest(const C3Vector& pos);
     void UpdateTextureCacheBudget();
-    void Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect, const C3Vector& camUp, const C3Vector& weatherVelocity, const C3Vector& weatherPosition, float weatherFacing, int32_t weatherOnTaxi, const C3Spline_CatmullRom* weatherSpline, float splineElapsedTime, float splineDuration);
+    void Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect, const C3Vector& camUp, const C3Vector& weatherPosition, const C3Vector& weatherVelocity, float weatherFacing, int32_t weatherOnTaxi, const C3Spline_CatmullRom* weatherSpline, float splineElapsedTime, float splineDuration);
     void ObjectEnableCollision(uintptr_t object, int32_t enable);
     void ObjectUpdate(uintptr_t object, const C44Matrix& matrix, const CAaBox& box, const CAaSphere& sphere, const C3Vector& pos, int32_t a6, uint32_t a7);
     void ObjectUpdate(uintptr_t object, const C44Matrix& matrix, const CAaBox& box, const CAaSphere& sphere, const C3Vector& pos, int32_t a6);

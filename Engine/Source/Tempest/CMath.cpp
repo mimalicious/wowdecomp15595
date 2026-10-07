@@ -712,7 +712,7 @@ float OrganicSmooth(float from, float to, float t) {
     return from + (to - from) * ((1.0f - cosf(t * 3.1415927f)) * 0.5f);
 }
 
-// OFFSET: #0x006F7A60
+// OFFSET: 0x00581000
 void CMath::sincos_(float x, float* s, float* c) {
     float turns = x * 0.31830987f;
     float frac;

@@ -228,7 +228,7 @@ static uint32_t s_numPatchArchives;
 // STATIC: #0x00B2FA18
 static uint32_t s_firstBaseArchive;
 
-// STATIC: #0x00B2FA30
+// STATIC: 0x00D364E8
 CRndSeed g_rndSeed(0);
 
 // STATIC: #0x00B2FA38

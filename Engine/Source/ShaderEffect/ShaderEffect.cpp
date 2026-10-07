@@ -27,7 +27,7 @@ int32_t CShaderEffect::s_clipEnabled;
 // STATIC: %0x00C3CBFC
 int32_t CShaderEffect::s_useAlphaRef;
 
-// STATIC: %0x00C3CC00
+// STATIC: 0x00D381B0
 float CShaderEffect::s_fogMul;
 
 // STATIC: %0x00C3CC04

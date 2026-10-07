@@ -210,10 +210,10 @@ CAaBox World::mapObjDefBounds;
 CAaBox World::mapObjDefBoundsGuard;
 
 // STATIC: 0x00E74208/0x140D5DF40
-C3Vector World::s_weatherVelocity;
+C3Vector World::s_weatherPosition;
 
 // STATIC: 0x00E74214/0x140D5DF50
-C3Vector World::s_weatherPosition;
+C3Vector World::s_weatherVelocity;
 
 // STATIC: 0x00E74058/0x140D5DD84
 float World::s_weatherFacing;
@@ -318,6 +318,7 @@ int32_t World::QueryObjectInside(uintptr_t object, int32_t a2) {
     return reinterpret_cast<CMapEntity*>(object)->QueryInterior(a2);
 }
 
+// PROVEN: 42504752 IDENTICAL/NONE
 // OFFSET: 0x00721DA0
 int32_t World::QueryMapObjZoneName(uintptr_t object, const char*& name) {
     if (!object) {
@@ -750,16 +751,16 @@ void World::ClearLoadFailed() {
     World::s_loadFailed = 0;
 }
 
-// PROVEN: 11201097 IDENTICAL/IDENTICAL
-// OFFSET: 0x00722490/0x1403F88B0
-const C3Vector& World::GetWeatherVelocity() {
-    return World::s_weatherVelocity;
-}
-
 // PROVEN: 904420f4 IDENTICAL/IDENTICAL
-// OFFSET: 0x007224A0/0x1403F88C0
+// OFFSET: 0x00722490/0x1403F88B0
 const C3Vector& World::GetWeatherPosition() {
     return World::s_weatherPosition;
+}
+
+// PROVEN: 11201097 IDENTICAL/IDENTICAL
+// OFFSET: 0x007224A0/0x1403F88C0
+const C3Vector& World::GetWeatherVelocity() {
+    return World::s_weatherVelocity;
 }
 
 // PROVEN: 400a5cb7 IDENTICAL/IDENTICAL
@@ -809,6 +810,7 @@ void World::ProjectTex2d(const CAaBox& box, const CImVector& color, const C44Mat
     ::ProjectTex2d(box, color, rotation, fade, triFlags, flags, polygonOffset);
 }
 
+// PROVEN: 52172725 IDENTICAL/UNPROVEN
 // OFFSET: 0x00722550/0x1403F8970
 void World::ShadowRender(const C3Vector& position, float facing, float scale, const CAaBox& box, float alpha) {
     ::ShadowRender(position, facing, scale, box, alpha, World::gbPosition);
@@ -938,6 +940,7 @@ int32_t World::FrustumCull(const CAaBox& box) {
     return CWorldScene::s_activeWorldView->FrustumCull(box);
 }
 
+// PROVEN: f5ab264f IDENTICAL/NONE
 // OFFSET: 0x00722870
 void World::NewFootprint(uint32_t a1, const C2Vector& a2, const C3Vector& a3, float a4, int32_t a5, uint32_t a6, int32_t a7) {
     CWorldMap* worldMap = ActiveWorldMap();
@@ -947,6 +950,7 @@ void World::NewFootprint(uint32_t a1, const C2Vector& a2, const C3Vector& a3, fl
     }
 }
 
+// PROVEN: d236498c IDENTICAL/NONE
 // OFFSET: 0x007228B0
 void World::SetWeather(int32_t type, float intensity, const WeatherRec* rec, bool a4, float a5) {
     CWorldMap* worldMap = ActiveWorldMap();
@@ -1124,6 +1128,7 @@ void World::ObjectSetDoodadEmittersIgnoresDistance(uintptr_t object, int32_t ena
     }
 }
 
+// PROVEN: 8116fa3f IDENTICAL/NONE
 // OFFSET: 0x00722C30
 void World::ObjectSetDoodadsEnabled(uintptr_t object, int32_t enable, uint16_t doodadSet) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
@@ -1152,6 +1157,7 @@ void World::ObjectSetSequence(uintptr_t object, uint32_t sequence, int32_t a3, u
     }
 }
 
+// PROVEN: 147ff2a6 IDENTICAL/NONE
 // OFFSET: 0x00722CA0
 void World::ObjectSetSequenceSpeed(uintptr_t object, float speed, int32_t a3, uint16_t doodadSet) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
@@ -1262,6 +1268,7 @@ int32_t World::ObjectTestConvexVolume(uintptr_t object, const C3Vector& pos, flo
     return 1;
 }
 
+// PROVEN: 38e845cb IDENTICAL/NONE
 // OFFSET: 0x00722F60/0x1403F9740
 void World::ObjectEnablePortals(uintptr_t object, int32_t enable) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
@@ -1547,6 +1554,7 @@ uint32_t World::SceneCamLiquidStatus(float* depth) {
     return view->m_camLiquidStatus;
 }
 
+// PROVEN: ff81fd99 IDENTICAL/NONE
 // OFFSET: 0x00723A60
 void World::CreateWaterRipple(const C3Vector& pos, float a2, float a3, float a4, float a5, float a6, int32_t a7, int32_t a8) {
     CWorldMap* worldMap = ActiveWorldMap();
@@ -1763,6 +1771,7 @@ void World::PrepareAreaOfInterest(const C3Vector& pos, float nearClip, float far
     World::detailDoodadChunkRect.maxY = detailRadius + static_cast<int32_t>(gbChunkY);
 }
 
+// PROVEN: d3865ba8 IDENTICAL/NONE
 // OFFSET: 0x007242F0
 void World::ProjectTextureCallback(const CAaBox& box, const CImVector& color, int32_t a3, void* param, int32_t a5) {
     if (a5 || (World::GetEnables() & 0x800)) {
@@ -2361,7 +2370,7 @@ void World::UpdateDayNight() {
     CWorldMap* worldMap = ActiveWorldMap();
 
     DayNight::SetCamera(worldView->m_camPos, worldView->m_camDir, worldView->m_camTarget, worldView->m_camLiquidStatus, worldView->m_camDepth, World::GetFarClip());
-    DayNight::SetStormPercentage(worldMap->m_weather ? worldMap->m_weather->m_intensity : 0.0f);
+    DayNight::SetStormPercentage(worldMap->m_weather ? worldMap->m_weather->m_fogIntensity : 0.0f);
 
     SMOFog fog;
     uint8_t found;
@@ -2424,7 +2433,7 @@ void World::UnloadMap() {
 }
 
 // OFFSET: 0x00726760/0x1403FDB30
-void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect, const C3Vector& camUp, const C3Vector& weatherVelocity, const C3Vector& weatherPosition, float weatherFacing, int32_t weatherOnTaxi, const C3Spline_CatmullRom* weatherSpline, float splineElapsedTime, float splineDuration) {
+void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect, const C3Vector& camUp, const C3Vector& weatherPosition, const C3Vector& weatherVelocity, float weatherFacing, int32_t weatherOnTaxi, const C3Spline_CatmullRom* weatherSpline, float splineElapsedTime, float splineDuration) {
     World::UpdateTextureCacheBudget();
 
     uint32_t index = World::s_frameTimeIndex;
@@ -2478,8 +2487,8 @@ void World::Update(const C3Vector& camPos, const C3Vector& camTarget, float near
     CWorldScene::UpdateViewer();
     World::UpdateDayNight();
 
-    World::s_weatherVelocity = weatherVelocity;
     World::s_weatherPosition = weatherPosition;
+    World::s_weatherVelocity = weatherVelocity;
     World::s_weatherFacing = weatherFacing;
     World::s_weatherOnTaxi = weatherOnTaxi;
     World::s_weatherSpline = weatherSpline;
