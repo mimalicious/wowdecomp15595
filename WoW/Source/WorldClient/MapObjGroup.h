@@ -90,6 +90,33 @@ struct BspQuery_Segment : public BspQuery {
     bool GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node);
 };
 
+struct BspQuery_SegmentLink : public BspQuery {
+    /* 0010 */ C3Ray m_ray;
+    /* 0028 */ C3Segment m_seg;
+    /* 0040 */ float m_oosegMag;
+    /* 0044 */ float m_origHitT[2];
+    /* 004C */ float m_maxT[2];
+    /* 0054 */ uint32_t m_hitFace[2];
+    /* 005C */ uint32_t m_faceIgnoreFlags;
+
+    BspQuery_SegmentLink(SMOPoly* faces, C3Vector* vertexList, uint16_t* indices, const C3Segment& seg, float frontT, float backT);
+    void operator()(uint16_t face);
+    bool GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node);
+    bool GetHits(float& frontT, uint32_t& frontFace, float& backT, uint32_t& backFace);
+};
+
+template <class T>
+struct BspQuery_Volume : public BspQuery {
+    /* 0010 */ const T* m_volume;
+    /* 0014 */ uint16_t m_faceIgnoreFlags;
+
+    void operator()(uint16_t face);
+    bool GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node);
+};
+
+template <>
+bool BspQuery_Volume<CAaBox>::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node);
+
 struct SMOBatch {
     /* 0000 */ int16_t m_box[6];
     /* 000C */ uint32_t m_startIndex;
@@ -281,6 +308,9 @@ class CMapObjGroup : public CMapBaseObj {
     bool GetTris(const CAaBox& box, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef);
     bool GetTris(const CFrustum& frustum, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef);
     bool Intersect(const C3Segment& seg, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t& faceIndex);
+    bool GetFacesForLinking(const C3Segment& seg, float& frontT, uint32_t& frontFace, float& backT, uint32_t& backFace);
+    bool GetLiquidTris(const CAaBox& box, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef);
+    bool GetLiquidTris(const CFrustum& frustum, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef);
     void GetTrisFromQuery(World::TriData* triData, BspQuery* query, const CMapObjDef* mapObjDef, uint32_t statusFlags);
     uint32_t GetLiquidType() const;
     uint32_t GetLiquidType(uint32_t legacyType);
@@ -291,7 +321,6 @@ class CMapObjGroup : public CMapBaseObj {
     void InitPtrs();
     int32_t QueryLighting(const C3Vector& pos, uint16_t polyIndex, CImVector& color, bool& exterior);
     int32_t QueryLiquid(const C3Vector& pos, int32_t requireTiles, uint32_t& liquidType, float& height);
-    float DistFromClosestExtPortal(const C3Vector& pos, int32_t a2);
     void SetIndexVB() const;
     void SetTransparencyVB() const;
     void SetVertexVB() const;
@@ -301,5 +330,7 @@ class CMapObjGroup : public CMapBaseObj {
     void VectorIntersectLiquidDY(const C3Vector& start, const C3Vector& end, uint32_t* tileCount, uint8_t* tiles, uint32_t maxTiles) const;
     bool VectorIntersectLiquidTiles(const C3Segment& seg, float* t, uint32_t flags, const uint32_t* tileCount, const uint8_t* tiles, World::TriData* triData, const CMapObjDef* mapObjDef) const;
 };
+
+#include "WoW/Source/WorldClient/MapObjGroup.inl"
 
 #endif

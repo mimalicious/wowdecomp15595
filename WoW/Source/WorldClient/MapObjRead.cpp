@@ -479,6 +479,47 @@ void CMapObjGroup::CreateDataPointers(uint8_t* data, uint8_t* end) {
     }
 }
 
+// OFFSET: 0x00794D50
+void CMapObj::DistFromClosestExtPortal(uint32_t depth, uint32_t flags, const CMapObjGroup* group, const CMapObjGroup* fromGroup, const C3Vector& pos, float& dist) {
+    if (depth > 3) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < group->m_portalCount; i++) {
+        const SMOPortalRef* ref = &this->m_portalRefs[group->m_portalStart + i];
+        uint16_t groupIndex = ref->m_groupIndex;
+        CMapObjGroup* other = this->m_groups[groupIndex];
+
+        if (!other || other == fromGroup) {
+            continue;
+        }
+
+        if (flags & this->m_groupInfos[groupIndex].m_flags) {
+            const SMOPortalInfo* info = &this->m_portalInfos[ref->m_portalIndex];
+            float d = NTempest::DistanceFromPolygon(pos, &this->m_portalVertices[info->m_startVertex], info->m_count, info->m_plane);
+
+            if (d < 25.0f && dist > d) {
+                dist = d;
+            }
+        } else {
+            this->DistFromClosestExtPortal(depth + 1, flags, other, group, pos, dist);
+        }
+    }
+}
+
+// OFFSET: 0x00795290
+float CMapObj::DistFromClosestExtPortal(CMapObjGroup* group, const C3Vector& pos, int32_t outdoor) {
+    uint32_t flags = 0x8;
+
+    if (outdoor) {
+        flags = 0x48;
+    }
+
+    float dist = FLT_MAX;
+    this->DistFromClosestExtPortal(0, flags, group, NULL, pos, dist);
+    return dist;
+}
+
 // OFFSET: 0x00794E50/0x140487810
 void CMapObj::AttenTransVerts(CMapObjGroup* group) {
     group->m_renderFlags |= 0x1;

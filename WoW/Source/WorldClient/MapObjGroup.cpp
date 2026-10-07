@@ -1,6 +1,8 @@
 #include "WoW/Source/WorldClient/MapObjGroup.h"
+#include <cfloat>
 #include <cmath>
 #include <cstring>
+#include <malloc.h>
 #include "Engine/Source/Gx/CGxBuf.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/CGxPool.h"
@@ -10,9 +12,12 @@
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CFacet.h"
+#include "Engine/Source/Tempest/CFrustum.h"
+#include "Engine/Source/Tempest/CiRect.h"
 #include "Engine/Source/Tempest/NTempest.h"
 #include "WoW/Common/Types.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/LiquidTypeRec.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
 #include "WoW/Source/WorldClient/World.h"
@@ -67,6 +72,10 @@ VBBList CMapObjGroup::s_indexList;
 
 // STATIC: 0x00D03F88
 TSExplicitList<CMapObjGroup::VertArray, offsetof(CMapObjGroup::VertArray, m_link)> CMapObjGroup::s_freeVertArrays;
+
+static uint32_t FloatBits(float value) {
+    return *reinterpret_cast<uint32_t*>(&value);
+}
 
 static uint32_t SwapColor(uint32_t color) {
     if (g_theGxDevicePtr->m_caps.m_colorFormat == GxCF_rgba) {
@@ -329,6 +338,378 @@ bool BspQuery_Segment::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBs
     }
 
     return true;
+}
+
+// OFFSET: 0x0078D5B0
+void BspQuery_SegmentLink::operator()(uint16_t face) {
+    uint8_t faceFlags = this->m_faces[face].m_flags;
+
+    if (faceFlags & this->m_faceIgnoreFlags) {
+        return;
+    }
+
+    if (BspQuery::s_testFaceSub >= 0x2000) {
+        return;
+    }
+
+    BspQuery::s_testFaces[BspQuery::s_testFaceSub++] = face;
+    this->m_faces[face].m_flags |= 0x80;
+    float t = 0.0f;
+
+    if (!NTempest::Intersect(this->m_ray, this->m_vertexList, &this->m_indices[3 * face], &t, NULL, 0.0020000001f)) {
+        return;
+    }
+
+    if (faceFlags & 0x20) {
+        if (t < 0.0f) {
+            return;
+        }
+
+        if (this->m_maxT[0] >= t) {
+            this->m_maxT[0] = t;
+            this->m_hitFace[0] = face;
+        }
+    } else if (faceFlags & 0x8) {
+        if (t >= 0.0f && this->m_maxT[0] >= t) {
+            this->m_hitFace[0] = face;
+            this->m_maxT[0] = t;
+        }
+
+        return;
+    } else if (!(faceFlags & 0x4) || t < 0.0f) {
+        return;
+    }
+
+    if (this->m_maxT[1] >= t) {
+        this->m_hitFace[1] = face;
+        this->m_maxT[1] = t;
+    }
+}
+
+// OFFSET: 0x0078D6B0
+bool BspQuery_SegmentLink::GetHits(float& frontT, uint32_t& frontFace, float& backT, uint32_t& backFace) {
+    frontFace = 0xFFFFFFFF;
+    backFace = 0xFFFFFFFF;
+
+    if (this->m_hitFace[0] == 0xFFFFFFFF && this->m_hitFace[1] == 0xFFFFFFFF) {
+        return false;
+    }
+
+    if (this->m_hitFace[1] != 0xFFFFFFFF) {
+        backT = this->m_maxT[1] * this->m_oosegMag;
+
+        if (this->m_origHitT[1] <= backT) {
+            backT = this->m_origHitT[1];
+        }
+
+        backFace = this->m_hitFace[1];
+    }
+
+    if (this->m_hitFace[0] != 0xFFFFFFFF) {
+        frontT = this->m_maxT[0] * this->m_oosegMag;
+
+        if (this->m_origHitT[0] <= frontT) {
+            frontT = this->m_origHitT[0];
+        }
+
+        frontFace = this->m_hitFace[0];
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0078D780
+bool BspQuery_SegmentLink::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node) {
+    if (!g_BspDigestCache) {
+        return false;
+    }
+
+    CAaBspNodeDigest* digest = g_BspDigestCache->GetDigest(aaBsp, node, this->m_faces, this->m_vertexList, this->m_indices);
+
+    if (!digest) {
+        return false;
+    }
+
+    float minX = this->m_seg.b.x;
+    float maxX = this->m_seg.t.x;
+    float minY = this->m_seg.b.y;
+    float minZ = this->m_seg.b.z;
+    float maxY = this->m_seg.t.y;
+    float maxZ = this->m_seg.t.z;
+
+    if (minX > maxX) {
+        minX = this->m_seg.t.x;
+        maxX = this->m_seg.b.x;
+    }
+
+    if (minY > maxY) {
+        minY = this->m_seg.t.y;
+        maxY = this->m_seg.b.y;
+    }
+
+    if (minZ > maxZ) {
+        minZ = this->m_seg.t.z;
+        maxZ = this->m_seg.b.z;
+    }
+
+    minX -= 0.0099999998f;
+    maxX += 0.0099999998f;
+    minY -= 0.0099999998f;
+    maxY += 0.0099999998f;
+    minZ -= 0.0099999998f;
+    maxZ += 0.0099999998f;
+
+    uint8_t outcodes[452];
+
+    for (int32_t i = 0; i < static_cast<int32_t>(digest->m_nVertices); i++) {
+        const C3Vector& vertex = digest->m_vertices[i];
+        uint8_t code = 0;
+
+        if (minX > vertex.x) {
+            code = 0x20;
+        }
+
+        if (vertex.x > maxX) {
+            code |= 0x10;
+        }
+
+        if (minY > vertex.y) {
+            code |= 0x8;
+        }
+
+        if (vertex.y > maxY) {
+            code |= 0x4;
+        }
+
+        if (minZ > vertex.z) {
+            code |= 0x2;
+        }
+
+        if (vertex.z > maxZ) {
+            code |= 0x1;
+        }
+
+        outcodes[i] = code;
+    }
+
+    for (uint32_t i = 0; i < digest->m_nFaces; i++) {
+        uint16_t face = digest->m_faceIndices[i];
+        uint32_t ignore = this->m_faceIgnoreFlags;
+        uint8_t faceFlags = this->m_faces[face].m_flags;
+
+        if ((digest->m_faceFlags[i] & ignore) || (ignore & faceFlags)) {
+            continue;
+        }
+
+        if (BspQuery::s_testFaceSub >= 0x2000) {
+            break;
+        }
+
+        BspQuery::s_testFaces[BspQuery::s_testFaceSub++] = face;
+        this->m_faces[face].m_flags |= 0x80;
+        const uint16_t* verts = &digest->m_faceVertexIndices[3 * i];
+
+        if (outcodes[verts[0]] & outcodes[verts[1]] & outcodes[verts[2]] & 0x3F) {
+            continue;
+        }
+
+        float t = 0.0f;
+
+        if (!NTempest::Intersect(this->m_ray, digest->m_vertices, verts, &t, NULL, 0.0020000001f)) {
+            continue;
+        }
+
+        if (faceFlags & 0x20) {
+            if (t < 0.0f) {
+                continue;
+            }
+
+            if (this->m_maxT[0] >= t) {
+                this->m_maxT[0] = t;
+                this->m_hitFace[0] = face;
+            }
+        } else if (faceFlags & 0x8) {
+            if (t >= 0.0f && this->m_maxT[0] >= t) {
+                this->m_maxT[0] = t;
+                this->m_hitFace[0] = face;
+            }
+
+            continue;
+        } else if (!(faceFlags & 0x4) || t < 0.0f) {
+            continue;
+        }
+
+        if (this->m_maxT[1] >= t) {
+            this->m_maxT[1] = t;
+            this->m_hitFace[1] = face;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0078E030
+static bool QueryCull(const CFrustum& frustum, const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
+    uint8_t outside0;
+    uint8_t outside1;
+    uint8_t outside2;
+    frustum.Cull(v0, outside0);
+    frustum.Cull(v1, outside1);
+    frustum.Cull(v2, outside2);
+    return (outside1 & outside2 & outside0) != 0;
+}
+
+// OFFSET: 0x0078E080
+template <>
+bool BspQuery_Volume<CAaBox>::GetFaceIndicesUsingCache(const CAaBsp& aaBsp, const CAaBspNode* node) {
+    if (!g_BspDigestCache) {
+        return false;
+    }
+
+    CAaBspNodeDigest* digest = g_BspDigestCache->GetDigest(aaBsp, node, this->m_faces, this->m_vertexList, this->m_indices);
+
+    if (!digest) {
+        return false;
+    }
+
+    const CAaBox& box = *this->m_volume;
+    uint8_t outcodes[452];
+
+    for (int32_t i = 0; i < static_cast<int32_t>(digest->m_nVertices); i++) {
+        const C3Vector& vertex = digest->m_vertices[i];
+        uint8_t code = 0;
+
+        if (box.b.x >= vertex.x) {
+            code = 0x20;
+        }
+
+        if (vertex.x >= box.t.x) {
+            code |= 0x10;
+        }
+
+        if (box.b.y >= vertex.y) {
+            code |= 0x8;
+        }
+
+        if (vertex.y >= box.t.y) {
+            code |= 0x4;
+        }
+
+        if (box.b.z >= vertex.z) {
+            code |= 0x2;
+        }
+
+        if (vertex.z >= box.t.z) {
+            code |= 0x1;
+        }
+
+        outcodes[i] = code;
+    }
+
+    for (uint32_t i = 0; i < digest->m_nFaces; i++) {
+        uint16_t ignore = this->m_faceIgnoreFlags;
+        uint16_t face = digest->m_faceIndices[i];
+
+        if (ignore & digest->m_faceFlags[i]) {
+            continue;
+        }
+
+        if (static_cast<uint8_t>(ignore) & this->m_faces[face].m_flags) {
+            continue;
+        }
+
+        if (BspQuery::s_testFaceSub >= 0x2000) {
+            if (this->m_overflowFlags) {
+                *this->m_overflowFlags |= 0x1;
+            }
+
+            break;
+        }
+
+        BspQuery::s_testFaces[BspQuery::s_testFaceSub++] = face;
+        this->m_faces[face].m_flags |= 0x80;
+        const uint16_t* verts = &digest->m_faceVertexIndices[3 * i];
+
+        if (!(outcodes[verts[0]] & outcodes[verts[2]] & outcodes[verts[1]] & 0x3F)) {
+            BspQuery::s_hitFaces[BspQuery::s_hitFaceSub++] = face;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0078E550
+static uint8_t CullLiquidVertexZ(const CAaBox& box, const C3Vector& vertex) {
+    return static_cast<uint8_t>(((FloatBits(box.t.z - vertex.z + 0.019444443f) >> 26) & 0x20) | ((FloatBits(vertex.z - box.b.z + 0.019444443f) >> 29) & 0x4));
+}
+
+// OFFSET: 0x0078E650
+BspQuery_SegmentLink::BspQuery_SegmentLink(SMOPoly* faces, C3Vector* vertexList, uint16_t* indices, const C3Segment& seg, float frontT, float backT) {
+    this->m_faces = faces;
+    this->m_overflowFlags = NULL;
+    this->m_vertexList = vertexList;
+    this->m_indices = indices;
+    this->m_ray.origin = seg.b;
+    this->m_ray.dir = C3Vector(seg.t.x - seg.b.x, seg.t.y - seg.b.y, seg.t.z - seg.b.z);
+    this->m_seg = seg;
+
+    float length = sqrt(this->m_ray.dir.z * this->m_ray.dir.z + this->m_ray.dir.y * this->m_ray.dir.y + this->m_ray.dir.x * this->m_ray.dir.x);
+    this->m_oosegMag = 1.0f / length;
+    this->m_ray.dir.x = (1.0f / length) * this->m_ray.dir.x;
+    this->m_ray.dir.y = this->m_ray.dir.y * (1.0f / length);
+    this->m_ray.dir.z = this->m_ray.dir.z * (1.0f / length);
+    this->m_origHitT[0] = frontT;
+    this->m_origHitT[1] = backT;
+    this->m_hitFace[0] = 0xFFFFFFFF;
+    this->m_maxT[0] = frontT * length;
+    this->m_hitFace[1] = 0xFFFFFFFF;
+    this->m_faceIgnoreFlags = 0x82;
+    this->m_maxT[1] = length * backT;
+}
+
+// OFFSET: 0x0078E920
+static bool QueryCull(const CAaBox& box, const C3Vector& v0, const C3Vector& v1, const C3Vector& v2) {
+    for (uint32_t axis = 0; axis < 3; axis++) {
+        float b = (&box.b.x)[axis];
+        float t = (&box.t.x)[axis];
+        float a0 = (&v0.x)[axis];
+        float a1 = (&v1.x)[axis];
+        float a2 = (&v2.x)[axis];
+
+        if (FloatBits(t - a2) & 0x80000000 & FloatBits(t - a0) & 0x80000000 & FloatBits(t - a1) & 0x80000000) {
+            return true;
+        }
+
+        if (FloatBits(a2 - b) & 0x80000000 & FloatBits(a0 - b) & 0x80000000 & FloatBits(a1 - b) & 0x80000000) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: [0x00791410<CAaBox>, 0x0078E410<CFrustum>]
+template <class T>
+void BspQuery_Volume<T>::operator()(uint16_t face) {
+    if (this->m_faces[face].m_flags & static_cast<uint8_t>(this->m_faceIgnoreFlags)) {
+        return;
+    }
+
+    if (BspQuery::s_testFaceSub >= 0x2000) {
+        if (this->m_overflowFlags) {
+            *this->m_overflowFlags |= 0x1;
+        }
+
+        return;
+    }
+
+    BspQuery::s_testFaces[BspQuery::s_testFaceSub++] = face;
+    this->m_faces[face].m_flags |= 0x80;
+    const uint16_t* indices = &this->m_indices[3 * face];
+
+    if (!QueryCull(*this->m_volume, this->m_vertexList[indices[0]], this->m_vertexList[indices[1]], this->m_vertexList[indices[2]])) {
+        BspQuery::s_hitFaces[BspQuery::s_hitFaceSub++] = face;
+    }
 }
 
 // OFFSET: 0x0078E370/0x14047F230
@@ -1101,6 +1482,235 @@ void CMapObjGroup::VectorIntersectLiquidDY(const C3Vector& start, const C3Vector
     }
 }
 
+// OFFSET: 0x00790840
+bool CMapObjGroup::GetLiquidTris(const CAaBox& box, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef) {
+    uint32_t liquidType = this->m_liquidType;
+
+    if (!liquidType || !this->m_liquidTiles.x || !this->m_liquidTiles.y) {
+        return false;
+    }
+
+    if ((flags & 0x10000) && !(flags & 0x20000) && !(g_liquidTypeDB.GetRecord(liquidType)->m_flags & 0x4)) {
+        return false;
+    }
+
+    C3Vector corners[2];
+    corners[0].x = box.b.x - this->m_liquidCorner.x;
+    corners[0].y = box.b.y - this->m_liquidCorner.y;
+    corners[0].z = box.b.z;
+    corners[1].x = box.t.x - this->m_liquidCorner.x;
+    corners[1].y = box.t.y - this->m_liquidCorner.y;
+    corners[1].z = box.t.z;
+    CAaBox bounds = CAaBox::Bounding(corners, 2);
+
+    CiRect rect;
+    rect.maxX = static_cast<int32_t>(floor(bounds.t.x * s_invLiquidTileSize));
+    rect.maxY = static_cast<int32_t>(floor(bounds.t.y * s_invLiquidTileSize));
+    rect.minY = static_cast<int32_t>(floor(bounds.b.y * s_invLiquidTileSize));
+    rect.minX = static_cast<int32_t>(floor(bounds.b.x * s_invLiquidTileSize));
+
+    if (rect.maxX < 0 || rect.maxY < 0 || rect.minX >= this->m_liquidTiles.x || rect.minY >= this->m_liquidTiles.y) {
+        return false;
+    }
+
+    rect &= CiRect(0, 0, this->m_liquidTiles.y - 1, this->m_liquidTiles.x - 1);
+
+    int32_t vertsX = this->m_liquidVerts.x;
+    int32_t height = rect.maxY - rect.minY;
+    int32_t width = rect.maxX - rect.minX;
+    int32_t clipCols = width + 2;
+    uint32_t clipCount = (width + 2) * (height + 2);
+
+    if (clipCount > 0x2000) {
+        return false;
+    }
+
+    uint8_t* clip = static_cast<uint8_t*>(alloca(clipCount));
+    uint8_t* code = clip;
+    const C3Vector* vertex = &this->m_liquidVertArray->m_verts.m_data[rect.minX + rect.minY * vertsX];
+
+    for (int32_t y = rect.minY; y <= rect.maxY + 1; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX + 1; x++) {
+            *code++ = CullLiquidVertexZ(box, *vertex);
+            vertex++;
+        }
+
+        vertex += vertsX - rect.maxX + rect.minX - 2;
+    }
+
+    C3Vector* cell = &this->m_liquidVertArray->m_verts.m_data[rect.minX + rect.minY * vertsX];
+    const uint8_t* tileFlags = &this->m_liquidTileFlags[rect.minX + rect.minY * this->m_liquidTiles.x];
+    int32_t tileSkip = this->m_liquidTiles.x - rect.maxX + rect.minX - 1;
+    uint32_t clipTris[6] = { 0, clipCols + 1, clipCols, 0, 1, clipCols + 1 };
+    uint32_t vertTris[6] = { 0, vertsX + 1, vertsX, 0, 1, vertsX + 1 };
+    World::TriData::Batch* batch = NULL;
+    uint16_t* indices = NULL;
+    bool started = false;
+    code = clip;
+
+    for (int32_t y = rect.minY; y <= rect.maxY; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX; x++, cell++, tileFlags++, code++) {
+            if ((*tileFlags & 0xF) == 15) {
+                continue;
+            }
+
+            for (uint32_t i = 0; i < 2; i++) {
+                const uint32_t* ct = &clipTris[3 * i];
+                const uint32_t* vt = &vertTris[3 * i];
+
+                if (code[ct[2]] & code[ct[0]] & code[ct[1]]) {
+                    continue;
+                }
+
+                if (!started) {
+                    batch = World::TriData::AllocBatch();
+
+                    if (batch) {
+                        batch->m_def = mapObjDef;
+                        batch->m_matrix = &mapObjDef->m_mat;
+                        batch->m_vertexList = this->m_liquidVertArray->m_verts.m_data;
+                        indices = World::TriData::AllocIndices(6 * (width + 1) * (height + 1));
+                        batch->m_indices = indices;
+                    }
+                }
+
+                started = true;
+
+                if (!batch || !batch->m_indices) {
+                    continue;
+                }
+
+                for (uint32_t j = 0; j < 3; j++) {
+                    uint16_t index = static_cast<uint16_t>(vt[j] + static_cast<int16_t>(cell - this->m_liquidVertArray->m_verts.m_data));
+                    indices[batch->m_indexCount++] = index;
+                    batch->m_minVertexIndex = batch->m_minVertexIndex >= index ? index : batch->m_minVertexIndex;
+                    batch->m_maxVertexIndex = batch->m_maxVertexIndex > index ? batch->m_maxVertexIndex : index;
+                }
+
+                batch->m_faceCount++;
+            }
+        }
+
+        cell += tileSkip + 1;
+        tileFlags += tileSkip;
+        code++;
+    }
+
+    return started;
+}
+
+// OFFSET: 0x00790D90
+bool CMapObjGroup::GetLiquidTris(const CFrustum& frustum, uint32_t flags, World::TriData& tris, const CMapObjDef* mapObjDef) {
+    uint32_t liquidType = this->m_liquidType;
+
+    if (!liquidType || !this->m_liquidTiles.x || !this->m_liquidTiles.y) {
+        return false;
+    }
+
+    if ((flags & 0x10000) && !(flags & 0x20000) && !(g_liquidTypeDB.GetRecord(liquidType)->m_flags & 0x4)) {
+        return false;
+    }
+
+    CFrustum local = frustum;
+    local.Translate(C3Vector(-this->m_liquidCorner.x, -this->m_liquidCorner.y, -this->m_liquidCorner.z));
+    CAaBox bounds = CAaBox::Bounding(local.corners, 8);
+
+    CiRect rect;
+    rect.maxX = static_cast<int32_t>(floor(bounds.t.x * s_invLiquidTileSize));
+    rect.maxY = static_cast<int32_t>(floor(bounds.t.y * s_invLiquidTileSize));
+    rect.minY = static_cast<int32_t>(floor(bounds.b.y * s_invLiquidTileSize));
+    rect.minX = static_cast<int32_t>(floor(bounds.b.x * s_invLiquidTileSize));
+
+    if (rect.maxX < 0 || rect.maxY < 0 || rect.minX >= this->m_liquidTiles.x || rect.minY >= this->m_liquidTiles.y) {
+        return false;
+    }
+
+    rect &= CiRect(0, 0, this->m_liquidTiles.y - 1, this->m_liquidTiles.x - 1);
+
+    int32_t vertsX = this->m_liquidVerts.x;
+    int32_t height = rect.maxY - rect.minY;
+    int32_t width = rect.maxX - rect.minX;
+    int32_t clipCols = width + 2;
+    uint32_t clipCount = (width + 2) * (height + 2);
+
+    if (clipCount > 0x2000) {
+        return false;
+    }
+
+    uint8_t* clip = static_cast<uint8_t*>(alloca(clipCount));
+    uint8_t* code = clip;
+    const C3Vector* vertex = &this->m_liquidVertArray->m_verts.m_data[rect.minX + rect.minY * vertsX];
+
+    for (int32_t y = rect.minY; y <= rect.maxY + 1; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX + 1; x++) {
+            static_cast<const CFrustum&>(local).Cull(*vertex, *code++);
+            vertex++;
+        }
+
+        vertex += vertsX - rect.maxX + rect.minX - 2;
+    }
+
+    C3Vector* cell = &this->m_liquidVertArray->m_verts.m_data[rect.minX + rect.minY * vertsX];
+    const uint8_t* tileFlags = &this->m_liquidTileFlags[rect.minX + rect.minY * this->m_liquidTiles.x];
+    int32_t tileSkip = this->m_liquidTiles.x - rect.maxX + rect.minX - 1;
+    uint32_t clipTris[6] = { 0, clipCols + 1, clipCols, 0, 1, clipCols + 1 };
+    uint32_t vertTris[6] = { 0, vertsX + 1, vertsX, 0, 1, vertsX + 1 };
+    World::TriData::Batch* batch = NULL;
+    uint16_t* indices = NULL;
+    bool started = false;
+    code = clip;
+
+    for (int32_t y = rect.minY; y <= rect.maxY; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX; x++, cell++, tileFlags++, code++) {
+            if ((*tileFlags & 0xF) == 15) {
+                continue;
+            }
+
+            for (uint32_t i = 0; i < 2; i++) {
+                const uint32_t* ct = &clipTris[3 * i];
+                const uint32_t* vt = &vertTris[3 * i];
+
+                if (code[ct[2]] & code[ct[0]] & code[ct[1]]) {
+                    continue;
+                }
+
+                if (!started) {
+                    batch = World::TriData::AllocBatch();
+
+                    if (batch) {
+                        batch->m_def = mapObjDef;
+                        batch->m_matrix = &mapObjDef->m_mat;
+                        batch->m_vertexList = this->m_liquidVertArray->m_verts.m_data;
+                        indices = World::TriData::AllocIndices(6 * (width + 1) * (height + 1));
+                        batch->m_indices = indices;
+                    }
+                }
+
+                started = true;
+
+                if (!batch || !batch->m_indices) {
+                    continue;
+                }
+
+                for (uint32_t j = 0; j < 3; j++) {
+                    uint16_t index = static_cast<uint16_t>(vt[j] + static_cast<int16_t>(cell - this->m_liquidVertArray->m_verts.m_data));
+                    indices[batch->m_indexCount++] = index;
+                    batch->m_minVertexIndex = batch->m_minVertexIndex >= index ? index : batch->m_minVertexIndex;
+                    batch->m_maxVertexIndex = batch->m_maxVertexIndex > index ? batch->m_maxVertexIndex : index;
+                }
+
+                batch->m_faceCount++;
+            }
+        }
+
+        cell += tileSkip + 1;
+        tileFlags += tileSkip;
+        code++;
+    }
+
+    return started;
+}
+
 // OFFSET: 0x007912B0/0x140482290
 uint32_t CMapObjGroup::ComputePassCount(int32_t unified, uint32_t batch) const {
     if (unified) {
@@ -1292,6 +1902,104 @@ bool CMapObjGroup::GetTris(const C3Segment& seg, float* dist, uint32_t flags, ui
 
     if ((flags & 0x30000) && (this->m_groupFlags & 0x1000)) {
         this->VectorIntersectLiquid(seg, dist, flags, triData, mapObjDef);
+    }
+
+    return World::TriData::s_nBatches != batchCount;
+}
+
+// OFFSET: 0x00792750
+bool CMapObjGroup::GetTris(const CFrustum& frustum, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef) {
+    uint32_t batchCount = World::TriData::s_nBatches;
+
+    if ((flags & 0xF0) && this->m_bsp.m_nNodes) {
+        uint32_t status;
+        BspQuery_Volume<CFrustum> query;
+        query.m_overflowFlags = &status;
+        query.m_faces = this->m_polys;
+        query.m_vertexList = this->m_vertices;
+        query.m_indices = this->m_indices;
+        status = 0;
+        query.m_volume = &frustum;
+        query.m_faceIgnoreFlags = static_cast<uint16_t>(ignoreFlags) | 0x80;
+        CAaBox bounds = CAaBox::Bounding(frustum.corners, 8);
+        CAaBsp_Query_AaBox<BspQuery_Volume<CFrustum> > bspQuery;
+        bspQuery.m_aaBsp = &this->m_bsp;
+        bspQuery.m_f = &query;
+        bspQuery.GetFaceIndices(0, bounds, this->m_bsp.m_aaBox);
+        this->GetTrisFromQuery(&tris, &query, mapObjDef, status);
+    }
+
+    if (flags & 0x30000) {
+        this->GetLiquidTris(frustum, flags, tris, mapObjDef);
+    }
+
+    return World::TriData::s_nBatches != batchCount;
+}
+
+// OFFSET: 0x00792840
+bool CMapObjGroup::GetFacesForLinking(const C3Segment& seg, float& frontT, uint32_t& frontFace, float& backT, uint32_t& backFace) {
+    if (!this->m_bsp.m_nNodes) {
+        return false;
+    }
+
+    BspQuery_SegmentLink query(this->m_polys, this->m_vertices, this->m_indices, seg, frontT, backT);
+    CAaBsp_Query_Segment<BspQuery_SegmentLink> bspQuery;
+    bspQuery.m_aaBsp = &this->m_bsp;
+    bspQuery.m_f = &query;
+    bspQuery.GetFaceIndices(0, seg, this->m_bsp.m_aaBox);
+    return query.GetHits(frontT, frontFace, backT, backFace);
+}
+
+// OFFSET: 0x007928E0
+bool CMapObjGroup::Intersect(const C3Segment& seg, float& t, uint32_t flags, uint32_t ignoreFlags, uint32_t& faceIndex) {
+    bool hit = false;
+
+    if (this->m_bsp.m_nNodes) {
+        BspQuery_Segment query(this->m_polys, this->m_vertices, this->m_indices, seg, &t, static_cast<uint16_t>(ignoreFlags), this->m_parent->m_materials);
+        CAaBsp_Query_Segment<BspQuery_Segment> bspQuery;
+        bspQuery.m_aaBsp = &this->m_bsp;
+        bspQuery.m_f = &query;
+        bspQuery.GetFaceIndices(0, seg, this->m_bsp.m_aaBox);
+
+        if (BspQuery::s_hitFaceSub) {
+            faceIndex = BspQuery::s_hitFaces[0];
+            hit = true;
+        }
+    }
+
+    if ((flags & 0x30000) && (this->m_groupFlags & 0x1000)) {
+        if (this->VectorIntersectLiquid(seg, &t, flags, NULL, NULL)) {
+            faceIndex = 0;
+            return true;
+        }
+    }
+
+    return hit;
+}
+
+// OFFSET: 0x00792EA0
+bool CMapObjGroup::GetTris(const CAaBox& box, uint32_t flags, uint32_t ignoreFlags, World::TriData& tris, const CMapObjDef* mapObjDef) {
+    uint32_t batchCount = World::TriData::s_nBatches;
+
+    if (this->m_bsp.m_nNodes) {
+        uint32_t status;
+        BspQuery_Volume<CAaBox> query;
+        query.m_overflowFlags = &status;
+        query.m_faces = this->m_polys;
+        query.m_vertexList = this->m_vertices;
+        query.m_indices = this->m_indices;
+        status = 0;
+        query.m_volume = &box;
+        query.m_faceIgnoreFlags = static_cast<uint16_t>(ignoreFlags) | 0x80;
+        CAaBsp_Query_AaBox<BspQuery_Volume<CAaBox> > bspQuery;
+        bspQuery.m_aaBsp = &this->m_bsp;
+        bspQuery.m_f = &query;
+        bspQuery.GetFaceIndices(0, box, this->m_bsp.m_aaBox);
+        this->GetTrisFromQuery(&tris, &query, mapObjDef, status);
+    }
+
+    if (flags & 0x30000) {
+        this->GetLiquidTris(box, flags, tris, mapObjDef);
     }
 
     return World::TriData::s_nBatches != batchCount;

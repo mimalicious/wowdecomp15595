@@ -825,7 +825,7 @@ int32_t CMapEntity::QueryCameraFog(SMOFog* fog, uint8_t& found, float& distance)
         }
 
         found = 1;
-        float dist = group->DistFromClosestExtPortal(local, 1);
+        float dist = mapObj->DistFromClosestExtPortal(group, local, 1);
 
         if (distance > dist) {
             distance = dist;

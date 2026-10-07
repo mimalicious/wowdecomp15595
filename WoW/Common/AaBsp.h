@@ -87,6 +87,12 @@ class CAaBsp_Query_Segment : public CAaBsp_Query<T> {
     void GetFaceIndices(uint32_t nodeIndex, const C3Segment& seg, const CAaBox& box);
 };
 
+template <class T>
+class CAaBsp_Query_AaBox : public CAaBsp_Query<T> {
+    public:
+    void GetFaceIndices(uint32_t nodeIndex, const CAaBox& box, const CAaBox& nodeBox);
+};
+
 extern CAaBspDigestCache* g_BspDigestCache;
 
 #include "WoW/Common/AaBsp.inl"

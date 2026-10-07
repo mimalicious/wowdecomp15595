@@ -268,6 +268,8 @@ class CMapObj : public CMapBaseObj, public TSHashObject<CMapObj, HASHKEY_NONE> {
     int32_t TestGroupBounds(const CAaBox& box, uint32_t groupNum, int32_t requireLoaded);
     int32_t TestGroupBounds(const C3Vector& pos, uint32_t groupNum);
     bool VectorIntersectPortals(uint32_t groupNum, const C3Segment& seg, float& t, uint32_t* groups);
+    void DistFromClosestExtPortal(uint32_t depth, uint32_t flags, const CMapObjGroup* group, const CMapObjGroup* fromGroup, const C3Vector& pos, float& dist);
+    float DistFromClosestExtPortal(CMapObjGroup* group, const C3Vector& pos, int32_t outdoor);
     void UpdateMaterials();
     void UpdateSceneMaterials(CMapObjDefGroup* defGroup, uint32_t state);
     void UpdateTextures(CMapObjGroup* group);
