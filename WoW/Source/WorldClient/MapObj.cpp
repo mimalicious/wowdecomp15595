@@ -1028,3 +1028,40 @@ CMapObj* CMapObj::Create(const char* name) {
     mapObj->m_refCount++;
     return mapObj;
 }
+
+// OFFSET: 0x0077D630
+void CMapObj::QueryLiquidSounds(uint32_t groupNum, uint32_t fromGroup, uint32_t depth, uint32_t* distance, const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results) {
+    if (depth > 2) {
+        return;
+    }
+
+    SMOGroupInfo* info = this->GetGroupInfo(groupNum);
+
+    if (!info) {
+        return;
+    }
+
+    if (!(pos.x >= info->m_bbox.b.x && pos.y >= info->m_bbox.b.y && pos.z >= info->m_bbox.b.z && info->m_bbox.t.x >= pos.x && info->m_bbox.t.y >= pos.y && info->m_bbox.t.z >= pos.z)) {
+        return;
+    }
+
+    CMapObjGroup* group = this->GetGroup(groupNum, 0);
+
+    if (!group) {
+        return;
+    }
+
+    if ((group->m_groupFlags & 0x8) && depth < *distance) {
+        *distance = depth;
+    }
+
+    group->QueryLiquidSounds(pos, results);
+
+    for (uint32_t i = 0; i < group->m_portalCount; i++) {
+        uint16_t other = this->m_portalRefs[group->m_portalStart + i].m_groupIndex;
+
+        if (other != 0xFFFF && other != fromGroup) {
+            this->QueryLiquidSounds(other, groupNum, depth + 1, distance, pos, results);
+        }
+    }
+}

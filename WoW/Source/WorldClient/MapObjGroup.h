@@ -26,6 +26,8 @@ struct CGxBuf;
 struct CGxPool;
 
 namespace World {
+    struct LiquidQueryResult;
+
     struct TriData {
         struct Batch {
             /* 0000 */ const C44Matrix* m_matrix;
@@ -321,6 +323,7 @@ class CMapObjGroup : public CMapBaseObj {
     void InitPtrs();
     int32_t QueryLighting(const C3Vector& pos, uint16_t polyIndex, CImVector& color, bool& exterior);
     int32_t QueryLiquid(const C3Vector& pos, int32_t requireTiles, uint32_t& liquidType, float& height);
+    void QueryLiquidSounds(const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results);
     void SetIndexVB() const;
     void SetTransparencyVB() const;
     void SetVertexVB() const;

@@ -734,7 +734,7 @@ void CWorldView::UpdateViewerLiquid() {
                 particulate->m_enabled = (rec->m_flags & 0x8) != 0;
 
                 if (particulate->m_enabled) {
-                    particulate->SetLiquidType(liquidType);
+                    particulate->InitParticles(liquidType);
                     particulate->SetScale(rec->m_particleScale * 0.027777778f);
                 }
             } else {

@@ -41,7 +41,6 @@ const WMOAreaTableRec* SDBWMOAreaTableLookup(uint32_t wmoId, uint32_t nameSet, u
 
 namespace World {
     struct HitTestDebug;
-    struct LiquidQueryResult;
     struct MinimapQuad;
     struct ObjectCollisionData;
     struct TriData;
@@ -54,6 +53,11 @@ namespace World {
         /* 0004 */ CAaBox m_bounds;
         /* 001C */ float m_scale;
         /* 0020 */ C44Matrix m_matrix;
+    };
+
+    struct LiquidQueryResult {
+        /* 0000 */ uint32_t m_liquidType;
+        /* 0004 */ C3Vector m_offset;
     };
 
     struct MinimapQuad {

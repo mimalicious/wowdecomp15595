@@ -8,10 +8,13 @@
 #include "Engine/Source/Services/AsyncFile.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
+#include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CImVector.h"
-#include "WoW/Source/WorldClient/DetailDoodad.h"
+#include "Engine/Source/Tempest/NTempest.h"
 #include "WoW/Source/WorldClient/CWorldMath.h"
+#include "WoW/Source/WorldClient/DetailDoodad.h"
+#include "WoW/Source/WorldClient/MapArea.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
 #include "WoW/Source/WorldClient/MapEntity.h"
 #include "WoW/Source/WorldClient/MapObj.h"
@@ -1024,4 +1027,52 @@ CMapArea* CMap::PrepareArea(int32_t x, int32_t y) {
     }
 
     return area;
+}
+
+// OFFSET: 0x0077EF80
+void CMap::QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results) {
+    CAaSphere sphere;
+    sphere.c = C3Vector(pos.x, pos.y, 0.0f);
+    sphere.r = radius;
+    int32_t ax = (static_cast<int32_t>(-(pos.x - 17066.666f) * 0.23999999f) >> 7) & 0x3F;
+    int32_t ay = (static_cast<int32_t>(-(pos.y - 17066.666f) * 0.23999999f) >> 7) & 0x3F;
+    int32_t minX = ax - 1;
+    minX = minX <= 0 ? 0 : minX;
+    int32_t maxX = ax + 1;
+    int32_t minY = ay - 1;
+    minY = minY <= 0 ? 0 : minY;
+
+    if (maxX >= 63) {
+        maxX = 63;
+    }
+
+    int32_t maxY = ay + 1;
+
+    if (maxY >= 63) {
+        maxY = 63;
+    }
+
+    for (int32_t x = minX; x <= maxX; x++) {
+        for (int32_t y = minY; y <= maxY; y++) {
+            CMapAreaTableEntry* entry = this->m_areaTable.Get(y, x);
+
+            if (!entry || !(entry->m_flags & 0x2)) {
+                continue;
+            }
+
+            CMapArea* area = entry->m_area;
+
+            if (!area) {
+                continue;
+            }
+
+            CAaBox box;
+            box.b = C3Vector(area->m_posX - 533.33331f, area->m_posY - 533.33331f, 0.0f);
+            box.t = C3Vector(area->m_posX, area->m_posY, 0.0f);
+
+            if (NTempest::Intersect2d(box, sphere, NTempest::SOLID_BOTH)) {
+                area->QueryLiquidSounds(pos, radius, results);
+            }
+        }
+    }
 }

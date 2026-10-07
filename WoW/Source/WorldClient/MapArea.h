@@ -21,6 +21,7 @@ class SFileImpl;
 struct SMDoodadDef;
 struct SMMapObjDef;
 namespace Liquid { class CInstance; }
+namespace World { struct LiquidQueryResult; }
 
 struct SMAreaHeader {
     /* 0000 */ uint32_t m_flags;
@@ -116,6 +117,7 @@ class CMapArea : public CMapBaseObj {
     void PurgeChunk(CMapChunk* chunk);
     void PurgeChunks(const CiRect& rect);
     void PurgeXXX();
+    void QueryLiquidSounds(const C3Vector& pos, float radius, TSGrowableArray<World::LiquidQueryResult>& results);
     void Update(const CiRect& rect);
 };
 

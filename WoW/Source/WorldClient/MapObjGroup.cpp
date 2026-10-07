@@ -14,16 +14,24 @@
 #include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CFrustum.h"
 #include "Engine/Source/Tempest/CiRect.h"
+#include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/NTempest.h"
 #include "WoW/Common/Types.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/LiquidTypeRec.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
+#include "WoW/Source/WorldClient/SpanRasterizer.h"
 #include "WoW/Source/WorldClient/World.h"
 
 // STATIC: 0x00D03F34
 static float s_invLiquidTileSize = 0.24000001f;
+
+// STATIC: 0x00D02AE8
+static float s_liquidSoundTileScale = 0.24f;
+
+// STATIC: 0x00BC9148
+static const float s_liquidSoundRings[26] = { 0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 12.0f, 14.0f, 16.0f, 18.0f, 20.0f, 24.0f, 28.0f, 32.0f, 36.0f, 40.0f, 44.0f, 48.0f, 52.0f, 56.0f, 60.0f };
 
 // STATIC: 0x00E4FE38
 uint32_t World::TriData::s_statusFlags;
@@ -147,6 +155,206 @@ uint16_t* World::TriData::AllocIndices(uint32_t count) {
 
     World::TriData::s_indexCursor += count;
     return &World::TriData::s_indexPool[cursor];
+}
+
+// OFFSET: 0x0077CC50
+void SpanRasterizer::VisitRange(int32_t x0, int32_t x1, int32_t y) {
+    if (x0 <= x1) {
+        this->VisitSpan(x0, x1, y);
+    }
+}
+
+// OFFSET: 0x0077CEC0
+SpanRange SpanRange::Merge(const SpanRange& range) {
+    int32_t max = this->m_max;
+
+    if (max <= range.m_max) {
+        max = range.m_max;
+    }
+
+    int32_t min = range.m_min;
+
+    if (this->m_min < range.m_min) {
+        min = this->m_min;
+    }
+
+    this->m_max = max;
+    this->m_min = min;
+    return *this;
+}
+
+// OFFSET: 0x0077CF00
+SpanRasterizer::SpanRasterizer(const C2iVector& size, SpanRange* ranges) {
+    this->m_width = size.x;
+    this->m_ranges = ranges;
+    this->m_height = size.y;
+
+    for (int32_t i = 0; i < this->m_height; i++) {
+        this->m_ranges[i].m_min = 0x7FFFFFFF;
+        this->m_ranges[i].m_max = 0x80000000;
+    }
+}
+
+// OFFSET: 0x0077CF50
+void SpanRasterizer::AddSpan(int32_t x0, int32_t x1, int32_t y) {
+    if (y < 0 || y >= this->m_height || x1 < 0 || x0 >= this->m_width) {
+        return;
+    }
+
+    int32_t lo = Clamp(x0, 0, this->m_width - 1);
+    int32_t hi = Clamp(x1, 0, this->m_width - 1);
+    SpanRange& range = this->m_ranges[y];
+
+    if (range.m_max >= range.m_min) {
+        this->VisitRange(lo, range.m_min - 1, y);
+        this->VisitRange(this->m_ranges[y].m_max + 1, hi, y);
+    } else {
+        this->VisitRange(lo, hi, y);
+    }
+
+    SpanRange add;
+    add.m_max = hi;
+    add.m_min = lo;
+    this->m_ranges[y].Merge(add);
+}
+
+// OFFSET: 0x0077D010
+void SpanRasterizer::AddRing(int32_t x, int32_t y, int32_t radius) {
+    if (!radius) {
+        this->AddSpan(x, x, y);
+        return;
+    }
+
+    if (radius == 1) {
+        this->AddSpan(x - 1, x + 1, y);
+        this->AddSpan(x - 1, x + 1, y - 1);
+        this->AddSpan(x - 1, x + 1, y + 1);
+        return;
+    }
+
+    int32_t right = x + radius - 1;
+    int32_t error = radius - 1;
+    int32_t limit = radius - 1;
+    this->AddSpan(x - (radius - 1), right, y);
+    int32_t step = 0;
+
+    if (radius - 1 < 0) {
+        return;
+    }
+
+    int32_t left = x - (radius - 1);
+    int32_t dx = 1;
+    int32_t dy = 1 - 2 * (radius - 1);
+    int32_t up = x;
+    int32_t down = x;
+    int32_t nextDy = dy;
+    int32_t offset = y - x;
+
+    while (true) {
+        step++;
+        int32_t nextDx = dx + 2;
+        up++;
+        down--;
+        error -= dx;
+
+        if (error < 0) {
+            limit--;
+            left++;
+            right--;
+            error -= dy;
+            nextDy = dy + 2;
+        }
+
+        this->AddSpan(left, right, offset + down);
+        this->AddSpan(left, right, offset + up);
+        this->AddSpan(down, up, offset + left);
+        this->AddSpan(down, up, offset + right);
+
+        if (step > limit) {
+            break;
+        }
+
+        dx = nextDx;
+        dy = nextDy;
+    }
+}
+
+// OFFSET: 0x0077D170
+LiquidSoundQuery::LiquidSoundQuery(const C2iVector& size, SpanRange* ranges, const C3Vector& pos, uint32_t liquidType, const uint8_t* tileFlags, const SMOLiquidVert* verts, TSGrowableArray<World::LiquidQueryResult>* results) : SpanRasterizer(size, ranges) {
+    this->m_pos = pos;
+    this->m_liquidType = liquidType;
+    this->m_results = results;
+    this->m_tileFlags = tileFlags;
+    this->m_verts = verts;
+    this->m_found = 0;
+}
+
+// OFFSET: 0x0077D1D0
+void CMapObjGroup::QueryLiquidSounds(const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results) {
+    if (!this->m_liquidType || !this->m_liquidTiles.x) {
+        return;
+    }
+
+    int32_t height = this->m_liquidTiles.y;
+
+    if (!height) {
+        return;
+    }
+
+    C3Vector local;
+    local.x = pos.x - this->m_liquidCorner.x;
+    local.y = pos.y - this->m_liquidCorner.y;
+    local.z = pos.z;
+    int32_t x = static_cast<int32_t>(s_liquidSoundTileScale * local.x);
+    int32_t y = static_cast<int32_t>(s_liquidSoundTileScale * local.y);
+    SpanRange* ranges = static_cast<SpanRange*>(alloca(sizeof(SpanRange) * height));
+    LiquidSoundQuery query(this->m_liquidTiles, ranges, local, this->m_liquidType, this->m_liquidTileFlags, this->m_liquidVertices, &results);
+
+    for (uint32_t i = 0; i < 26 && !query.m_found; i++) {
+        float ring = s_liquidSoundRings[i];
+        query.m_radiusSq = (ring * 4.1666665f) * (ring * 4.1666665f);
+        query.AddRing(x, y, static_cast<int32_t>(ring));
+    }
+}
+
+// OFFSET: 0x0077DEB0
+void LiquidSoundQuery::VisitSpan(int32_t x0, int32_t x1, int32_t y) {
+    int32_t width = this->m_width;
+    const uint8_t* flags = &this->m_tileFlags[x0 + y * width];
+    const SMOLiquidVert* vert = &this->m_verts[x0 + y * (width + 1)];
+
+    for (int32_t x = x0; x <= x1; x++, flags++, vert++) {
+        if ((*flags & 0xF) == 15) {
+            continue;
+        }
+
+        TSGrowableArray<World::LiquidQueryResult>* results = this->m_results;
+        World::LiquidQueryResult* result = NULL;
+
+        for (uint32_t i = 0; i < results->Count(); i++) {
+            if (results->m_data[i].m_liquidType == this->m_liquidType) {
+                result = &results->m_data[i];
+                break;
+            }
+        }
+
+        float dz = vert->m_height - this->m_pos.z;
+
+        if (result) {
+            if (dz * dz + this->m_radiusSq >= result->m_offset.x * result->m_offset.x + result->m_offset.y * result->m_offset.y + result->m_offset.z * result->m_offset.z) {
+                continue;
+            }
+        } else {
+            result = results->New();
+        }
+
+        result->m_liquidType = this->m_liquidType;
+        float dy = static_cast<float>(y) * 4.1666665f - this->m_pos.y;
+        result->m_offset.x = static_cast<float>(x) * 4.1666665f - this->m_pos.x;
+        result->m_offset.y = dy;
+        result->m_offset.z = dz;
+        this->m_found = 1;
+    }
 }
 
 // OFFSET: 0x0078D740
