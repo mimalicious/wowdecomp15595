@@ -62,6 +62,9 @@ TSGrowableArray<uint32_t> CWorldMap::s_rasterSpans;
 // STATIC: 0x00E78BC0
 uint32_t CWorldMap::s_rasterSpanCount;
 
+// STATIC: 0x00E78BD4
+TSGrowableArray<SMapObjDefVectorIntersect> CWorldMap::s_mapObjDefIntersects;
+
 // STATIC: 0x00E71E8C/0x140D5BB74
 uint32_t CWorldMap::s_activeWorldMapIndex;
 
@@ -2164,9 +2167,9 @@ bool CWorldMap::IntersectTerrain(const C3Segment& seg, float& t, C4Plane& plane,
             C3Vector end(y1, x1, 0.0f);
 
             if (dy <= dx) {
-                this->RasterizeSteep(start, end, coords);
-            } else {
                 this->RasterizeShallow(start, end, coords);
+            } else {
+                this->RasterizeSteep(start, end, coords);
             }
         }
     }
@@ -2206,5 +2209,694 @@ bool CWorldMap::Intersect(const C3Segment& seg, float& t, C4Plane& plane, uint32
         return this->IntersectTerrain(seg, t, plane, flags) | hit;
     }
 
+    return hit;
+}
+
+// OFFSET: 0x00762F70/0x1404481B0
+static int32_t SortMapObjDefIntersects(const void* a, const void* b) {
+    float distA = static_cast<const SMapObjDefVectorIntersect*>(a)->m_distSq;
+    float distB = static_cast<const SMapObjDefVectorIntersect*>(b)->m_distSq;
+
+    if (distB <= distA) {
+        return distA > distB;
+    }
+
+    return -1;
+}
+
+// OFFSET: 0x00763050
+void CWorldMap::RasterizeColumn(const int32_t* coords) {
+    int32_t y = coords[1];
+
+    if (y <= coords[3]) {
+        do {
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = y;
+            y++;
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[0];
+        } while (y <= coords[3]);
+    } else {
+        do {
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = y;
+            y--;
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[0];
+        } while (y >= coords[3]);
+    }
+}
+
+// OFFSET: 0x007630E0
+void CWorldMap::RasterizeRow(const int32_t* coords) {
+    int32_t x = coords[0];
+
+    if (x <= coords[2]) {
+        do {
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[1];
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = x++;
+        } while (x <= coords[2]);
+    } else {
+        do {
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[1];
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = x--;
+        } while (x >= coords[2]);
+    }
+}
+
+// OFFSET: 0x00763170
+void CWorldMap::RasterizeSteep(const C3Vector& start, const C3Vector& end, const int32_t* coords) {
+    int32_t i = coords[1];
+    int32_t j = coords[0];
+    float slope = (end.y - start.y) / (end.x - start.x);
+    float intercept = start.y - start.x * slope;
+    float first;
+    int32_t step;
+
+    if (coords[3] <= i) {
+        first = static_cast<float>(i);
+        step = -1;
+    } else {
+        first = static_cast<float>(i + 1);
+        step = 1;
+    }
+
+    CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = i;
+    CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = j;
+    float pos = first * 4.1666665f;
+
+    if (i != step + coords[3]) {
+        while (true) {
+            if (CWorldMap::s_rasterSpanCount >= 4092) {
+                return;
+            }
+
+            int32_t k = static_cast<int32_t>((pos * slope + intercept) * 0.23999999f);
+
+            if (k != j) {
+                CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = i;
+                CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = k;
+            }
+
+            i += step;
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = i;
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = k;
+            pos = static_cast<float>(step) * 4.1666665f + pos;
+            j = k;
+
+            if (i == step + coords[3]) {
+                break;
+            }
+        }
+    }
+
+    if (j != coords[2]) {
+        CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[3];
+        CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[2];
+    }
+}
+
+// OFFSET: 0x00763300
+void CWorldMap::RasterizeShallow(const C3Vector& start, const C3Vector& end, const int32_t* coords) {
+    float slope = (end.y - start.y) / (end.x - start.x);
+    int32_t j = coords[1];
+    int32_t i = coords[0];
+    float intercept = start.y - start.x * slope;
+    float invSlope = 1.0f / slope;
+    float first;
+    int32_t step;
+
+    if (coords[2] <= i) {
+        first = static_cast<float>(i);
+        step = -1;
+    } else {
+        first = static_cast<float>(i + 1);
+        step = 1;
+    }
+
+    CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[1];
+    CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[0];
+    float pos = first * 4.1666665f;
+
+    if (i != step + coords[2]) {
+        while (true) {
+            if (CWorldMap::s_rasterSpanCount >= 4092) {
+                return;
+            }
+
+            int32_t k = static_cast<int32_t>(((pos - intercept) * invSlope) * 0.23999999f);
+
+            if (k != j) {
+                CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = k;
+                CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = i;
+            }
+
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = k;
+            i += step;
+            CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = i;
+            pos = static_cast<float>(step) * 4.1666665f + pos;
+            j = k;
+
+            if (i == step + coords[2]) {
+                break;
+            }
+        }
+    }
+
+    if (j != coords[3]) {
+        CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[3];
+        CWorldMap::s_rasterSpans.m_data[CWorldMap::s_rasterSpanCount++] = coords[2];
+    }
+}
+
+// OFFSET: 0x00763550/0x1404488D0
+void CWorldMap::VectorIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end) {
+    if (!(mapObjDef->m_mapObj->m_flags & 0x40)) {
+        return;
+    }
+
+    for (uint32_t i = 0; ; i++) {
+        uint32_t count = mapObjDef->m_defGroups.m_count;
+
+        if (count == 0xFFFFFFFF) {
+            count = mapObjDef->m_defGroups.Dynamic().m_count;
+        }
+
+        if (i >= count) {
+            break;
+        }
+
+        CMapObjDefGroup* group = mapObjDef->m_defGroups[i];
+
+        if (!CWorldMath::VectorIntersectAABox2(group->m_bbox, start, end)) {
+            continue;
+        }
+
+        SMapObjDefVectorIntersect intersect;
+        intersect.m_mapObjDef = mapObjDef;
+        intersect.m_group = group;
+        const CAaBox& defBox = mapObjDef->m_bbox;
+
+        if (start.x < defBox.b.x || start.y < defBox.b.y || start.z < defBox.b.z || defBox.t.x < start.x || defBox.t.y < start.y || defBox.t.z < start.z) {
+            const CAaBox& box = group->m_bbox;
+            float x = box.b.x <= start.x ? (start.x <= box.t.x ? start.x : box.t.x) : box.b.x;
+            float y = box.b.y <= start.y ? (start.y <= box.t.y ? start.y : box.t.y) : box.b.y;
+            float z = box.b.z <= start.z ? (start.z <= box.t.z ? start.z : box.t.z) : box.b.z;
+            intersect.m_distSq = (start.x - x) * (start.x - x) + (start.z - z) * (start.z - z) + (start.y - y) * (start.y - y);
+        } else {
+            intersect.m_distSq = 0.0f;
+        }
+
+        CWorldMap::s_mapObjDefIntersects.Add(1, &intersect);
+    }
+}
+
+// OFFSET: 0x007636C0/0x140448A80
+void CWorldMap::VectorIntersectDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t flags) {
+    uint32_t mode;
+
+    if (flags & 0x1) {
+        mode = 3;
+    } else if (flags & 0x8) {
+        mode = 2;
+    } else {
+        if (!(flags & 0x6)) {
+            return;
+        }
+
+        mode = (flags >> 24) & 0x1;
+    }
+
+    for (CMapBaseObjLink* link = links.Head(), * next; link; link = next) {
+        next = links.Next(link);
+        CMapDoodadDef* doodadDef = static_cast<CMapDoodadDef*>(link->m_owner);
+
+        if (doodadDef->unk_0020 == CWorldMap::s_queryTag) {
+            continue;
+        }
+
+        doodadDef->unk_0020 = CWorldMap::s_queryTag;
+
+        if (!(doodadDef->m_flags & 0x40)) {
+            continue;
+        }
+
+        CM2Model* model = doodadDef->m_model;
+
+        if (!(model->m_fFlags & 0x1)) {
+            continue;
+        }
+
+        if (!model->m_hitTestPrev) {
+            CM2Model** head = &model->m_scene->m_hitTestList;
+            model->m_hitTestPrev = head;
+            model->m_hitTestNext = *head;
+            *head = model;
+
+            if (model->m_hitTestNext) {
+                model->m_hitTestNext->m_hitTestPrev = &model->m_hitTestNext;
+            }
+        }
+
+        model->m_hitTestMode = mode;
+        model->m_hitTestGroup = 0;
+        model->m_hitTestOwner = doodadDef;
+    }
+}
+
+// OFFSET: 0x00763790/0x140448B70
+void CWorldMap::VectorIntersectEntitys(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t flags) {
+    if (!World::s_entityRenderCallback) {
+        return;
+    }
+
+    for (CMapBaseObjLink* link = links.Head(), * next; link; link = next) {
+        CMapEntity* entity = static_cast<CMapEntity*>(link->m_owner);
+        next = links.Next(link);
+
+        if ((flags & 0x1000000) && (entity->m_entityFlags & 0x60000) != 0x20000) {
+            continue;
+        }
+
+        if ((flags & 0x800000) && (entity->m_entityFlags & 0x800)) {
+            continue;
+        }
+
+        if (entity->m_flags & 0x80) {
+            return;
+        }
+
+        if ((entity->m_flags & 0x10000) || entity->unk_0020 == CWorldMap::s_queryTag) {
+            continue;
+        }
+
+        entity->unk_0020 = CWorldMap::s_queryTag;
+        World::ObjectCollisionData data;
+
+        if (!reinterpret_cast<World::OBJECT_COLLISION_CALLBACK>(World::s_entityRenderCallback)(entity->m_param64, entity->m_param32, &data, flags)) {
+            continue;
+        }
+
+        if (!data.m_model) {
+            if (!entity->m_model) {
+                continue;
+            }
+
+            data.m_model = entity->m_model;
+        }
+
+        if (!data.m_model->IsLoaded()) {
+            continue;
+        }
+
+        CM2Model* model = data.m_model;
+
+        if (!(model->m_fFlags & 0x1)) {
+            continue;
+        }
+
+        if (!model->m_hitTestPrev) {
+            model->m_hitTestPrev = &model->m_scene->m_hitTestList;
+            model->m_hitTestNext = model->m_scene->m_hitTestList;
+            model->m_scene->m_hitTestList = model;
+
+            if (model->m_hitTestNext) {
+                model->m_hitTestNext->m_hitTestPrev = &model->m_hitTestNext;
+            }
+        }
+
+        model->m_hitTestMode = (flags & 0x100000) ? 3 : 0;
+        model->m_hitTestGroup = 0;
+        model->m_hitTestOwner = entity;
+    }
+}
+
+// OFFSET: 0x00763990/0x140448DE0
+void CWorldMap::VectorIntersectMapObjDefs(TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)>& list, const C3Vector& start, const C3Vector& end, uint32_t flags) {
+    for (CMapObjDef* mapObjDef = list.Head(), * next; mapObjDef; mapObjDef = next) {
+        next = list.Next(mapObjDef);
+
+        if ((mapObjDef->m_flags & 0x90) || mapObjDef->unk_004C == CWorldMap::s_queryTag) {
+            continue;
+        }
+
+        mapObjDef->unk_004C = CWorldMap::s_queryTag;
+
+        if (CWorldMath::VectorIntersectAABox2(mapObjDef->m_bbox, start, end)) {
+            CWorldMap::VectorIntersectMapObjDef(mapObjDef, start, end);
+        }
+    }
+}
+
+// OFFSET: 0x00763A10
+void CWorldMap::VectorIntersectMapObjDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const C3Vector& start, const C3Vector& end, uint32_t flags) {
+    for (CMapBaseObjLink* link = links.Head(), * next; link; link = next) {
+        CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(link->m_owner);
+        next = links.Next(link);
+
+        if ((mapObjDef->m_flags & 0x90) || mapObjDef->unk_004C == CWorldMap::s_queryTag) {
+            continue;
+        }
+
+        mapObjDef->unk_004C = CWorldMap::s_queryTag;
+
+        if (CWorldMath::VectorIntersectAABox2(mapObjDef->m_bbox, start, end)) {
+            CWorldMap::VectorIntersectMapObjDef(mapObjDef, start, end);
+        }
+    }
+}
+
+// OFFSET: 0x00763A90
+bool CWorldMap::VectorIntersectSubChunkList(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, CMapChunk*& hitChunk, Liquid::CInstance*& hitLiquid) {
+    const uint32_t* span = CWorldMap::s_rasterSpans.m_data;
+    uint32_t chunkX = ~span[0];
+    uint32_t areaX = chunkX;
+    uint32_t chunkY = ~span[1];
+    uint32_t areaY = chunkY;
+    C3Vector dir(end.x - start.x, end.y - start.y, end.z - start.z);
+    CMapArea* area = NULL;
+    CMapChunk* chunk = NULL;
+    CMapChunk* bestChunk = NULL;
+    Liquid::CInstance* bestLiquid = NULL;
+    float invLength = 1.0f / sqrt(dir.z * dir.z + dir.y * dir.y + dir.x * dir.x);
+
+    C3Ray ray;
+    ray.origin = start;
+    ray.dir.x = dir.x * invLength;
+    ray.dir.y = dir.y * invLength;
+    ray.dir.z = dir.z * invLength;
+    float best = t;
+    int32_t testTerrain = 1;
+    int32_t testLiquid = 1;
+    int32_t filterLiquid = (flags & 0x10000) && !(flags & 0x20000);
+
+    if (!CWorldMap::s_rasterSpanCount) {
+        return false;
+    }
+
+    do {
+        uint32_t x = span[0];
+        uint32_t y = span[1];
+        CWorldMap::s_rasterSpanCount -= 2;
+        span += 2;
+
+        if ((x & 0x1F80) != areaX || (y & 0x1F80) != areaY) {
+            int32_t ax = (x >> 7) & 0x3F;
+            int32_t ay = (y >> 7) & 0x3F;
+            CMap* map;
+
+            if (this->m_isGlobalMapObj) {
+                map = this->m_maps[0];
+            } else {
+                CMapTableEntry* entry = this->m_mapTable.Get(ax, ay);
+
+                if (!entry || !(entry->m_flags & 0x1)) {
+                    break;
+                }
+
+                map = this->m_maps[entry->m_mapIndex];
+            }
+
+            if (!map) {
+                break;
+            }
+
+            CMap::CMapAreaTableEntry* areaEntry = map->m_areaTable.Get(ax, ay);
+
+            if (!areaEntry || !(areaEntry->m_flags & 0x2)) {
+                break;
+            }
+
+            area = areaEntry->m_area;
+
+            if (!area) {
+                break;
+            }
+
+            areaX = x & 0x1F80;
+            areaY = y & 0x1F80;
+        }
+
+        if ((x & 0x78) != chunkX || (y & 0x78) != chunkY) {
+            chunk = area->m_chunks[((x >> 3) & 0xF) + 16 * ((y >> 3) & 0xF)];
+
+            if (!chunk) {
+                break;
+            }
+
+            ray.origin = start - chunk->m_position;
+            chunkX = x & 0x78;
+            chunkY = y & 0x78;
+            testTerrain = 0;
+            testLiquid = 0;
+
+            if (CWorldMath::VectorIntersectAABox2(chunk->m_bbox, start, end)) {
+                if (flags & 0x4000000F) {
+                    CWorldMap::VectorIntersectDoodadDefs(chunk->m_doodadDefLinkList, flags);
+                }
+
+                testTerrain = 1;
+                testLiquid = 1;
+            }
+
+            if (flags & 0x40F300FF) {
+                CWorldMap::VectorIntersectMapObjDefs(chunk->m_mapObjDefLinkList, start, end, flags);
+            }
+
+            if (flags & 0x40F00000) {
+                CWorldMap::VectorIntersectEntitys(chunk->m_entityLinkList, flags);
+            }
+        }
+
+        uint32_t subY = y & 0x7;
+        uint32_t subX = x & 0x7;
+
+        if (testTerrain && (flags & 0x100)) {
+            float hitT = FLT_MAX;
+
+            if (chunk->Intersect(subX, subY, ray, hitT)) {
+                if (hitT < FLT_MAX) {
+                    hitT = hitT * invLength;
+                }
+
+                if (best > hitT && hitT >= 0.0f) {
+                    best = hitT;
+                    bestChunk = chunk;
+                }
+            }
+        }
+
+        if (testLiquid && (flags & 0x30000)) {
+            for (CChunkLiquid* liquid = chunk->m_liquidList.Head(), * next; liquid; liquid = next) {
+                next = chunk->m_liquidList.Next(liquid);
+
+                if (filterLiquid && !(g_liquidTypeDB.GetRecord(liquid->m_liquidType)->m_flags & 0x4)) {
+                    continue;
+                }
+
+                if (!liquid->TileExists(subX, subY)) {
+                    continue;
+                }
+
+                float hitT = FLT_MAX;
+
+                if (!liquid->Intersect(subX, subY, ray, hitT)) {
+                    continue;
+                }
+
+                if (hitT < FLT_MAX) {
+                    hitT = hitT * invLength;
+                }
+
+                if (best > hitT && hitT >= 0.0f) {
+                    best = hitT;
+                    bestChunk = chunk;
+                    bestLiquid = liquid->m_instance;
+                }
+            }
+        }
+    } while (CWorldMap::s_rasterSpanCount);
+
+    if (!bestChunk) {
+        return false;
+    }
+
+    hitChunk = bestChunk;
+    t = best;
+    hitLiquid = bestLiquid;
+    return true;
+}
+
+// OFFSET: 0x00763FC0/0x1404495A0
+bool CWorldMap::VectorIntersectTerrain(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, CMapChunk*& hitChunk, Liquid::CInstance*& hitLiquid) {
+    float y1 = -(end.y - 17066.666f);
+    float x1 = -(end.x - 17066.666f);
+    float y0 = -(start.y - 17066.666f);
+    float x0 = -(start.x - 17066.666f);
+    float dy = y1 - y0;
+    float dx = x1 - x0;
+
+    int32_t coords[4];
+    coords[0] = static_cast<int32_t>(x0 * 0.23999999f);
+    coords[3] = static_cast<int32_t>(y1 * 0.23999999f);
+    coords[1] = static_cast<int32_t>(y0 * 0.23999999f);
+    coords[2] = static_cast<int32_t>(x1 * 0.23999999f);
+
+    CWorldMap::s_rasterSpanCount = 0;
+    CWorldMap::s_rasterSpans.SetCount(4096);
+
+    dy = fabs(dy);
+
+    if (dy < 0.00000023841858f || coords[1] == coords[3]) {
+        this->RasterizeRow(coords);
+    } else {
+        dx = fabs(dx);
+
+        if (dx < 0.00000023841858f || coords[0] == coords[2]) {
+            this->RasterizeColumn(coords);
+        } else {
+            C3Vector startRaster(y0, x0, 0.0f);
+            C3Vector endRaster(y1, x1, 0.0f);
+
+            if (dy <= dx) {
+                this->RasterizeShallow(startRaster, endRaster, coords);
+            } else {
+                this->RasterizeSteep(startRaster, endRaster, coords);
+            }
+        }
+    }
+
+    return this->VectorIntersectSubChunkList(start, end, t, flags, hitChunk, hitLiquid);
+}
+
+// OFFSET: 0x007641B0/0x1404498E0
+bool CWorldMap::VectorIntersect(const C3Vector& start, const C3Vector& end, C3Vector* hitPoint, float* dist, uint32_t flags, World::HitTestDebug* debug) {
+    CWorldMap::s_queryTag++;
+    CWorldMap::s_mapObjDefIntersects.m_count = 0;
+    CMapBaseObj* hitObject = NULL;
+    float best = *dist;
+    bool hit = false;
+    CWorldScene::s_m2Scene->m_lastHit.m_model = NULL;
+    World::ClearLastCollisionGUID();
+    uint32_t testModels = flags & 0x40F0000F;
+
+    if (testModels) {
+        CWorldScene::s_m2Scene->BeginHitTest();
+    }
+
+    if (flags & 0x40F300FF) {
+        CWorldMap::VectorIntersectMapObjDefs(this->m_mapObjDefList, start, end, flags);
+    }
+
+    CMapChunk* chunk = NULL;
+    Liquid::CInstance* liquid = NULL;
+    float terrainT = best;
+
+    if (flags & 0x40F301FF) {
+        this->VectorIntersectTerrain(start, end, terrainT, flags, chunk, liquid);
+
+        if (chunk) {
+            best = terrainT;
+            hitObject = chunk;
+            hit = true;
+        }
+    }
+
+    CMapObjDef* hitDef = NULL;
+    CMapObjDefGroup* hitGroup = NULL;
+    float wmoT = best;
+
+    if (CWorldMap::s_mapObjDefIntersects.m_count) {
+        qsort(CWorldMap::s_mapObjDefIntersects.m_data, CWorldMap::s_mapObjDefIntersects.m_count, sizeof(SMapObjDefVectorIntersect), SortMapObjDefIntersects);
+        uint32_t ignoreFlags = CMapObj::CreateWmoIgnoreFlags(flags);
+        float dz = end.z - start.z;
+        float dy = end.y - start.y;
+        float dx = end.x - start.x;
+        float invLength = 1.0f / sqrt(dz * dz + dy * dy + dx * dx);
+
+        for (uint32_t i = 0; i < CWorldMap::s_mapObjDefIntersects.m_count; i++) {
+            SMapObjDefVectorIntersect& intersect = CWorldMap::s_mapObjDefIntersects.m_data[i];
+
+            if (sqrt(intersect.m_distSq) * invLength > wmoT) {
+                break;
+            }
+
+            CMapObjDef* mapObjDef = intersect.m_mapObjDef;
+            CMapObjDefGroup* group = intersect.m_group;
+            CMapObj* mapObj = mapObjDef->m_mapObj;
+            C3Vector localStart = start * mapObjDef->m_invMat;
+            C3Vector localEnd = end * mapObjDef->m_invMat;
+
+            if (mapObj->TestGroupBounds(localStart, localEnd, group->m_groupNum)) {
+                uint32_t faceIndex = 0xFFFFFFFF;
+
+                if (mapObj->Intersect(localStart, localEnd, wmoT, flags, ignoreFlags, group->m_groupNum, faceIndex)) {
+                    hitDef = mapObjDef;
+                    hitGroup = group;
+                }
+            }
+
+            if (testModels) {
+                CWorldMap::VectorIntersectDoodadDefs(group->m_doodadLinks, flags);
+            }
+
+            if (flags & 0x40F00000) {
+                CWorldMap::VectorIntersectEntitys(group->m_entityLinks, flags);
+            }
+        }
+
+        if (hitDef) {
+            if (hitDef->m_param64) {
+                World::SetLastCollisionGUID(hitDef->m_param64);
+            }
+
+            best = wmoT;
+            hitObject = hitGroup;
+            hit = true;
+        }
+    }
+
+    float modelT = best;
+
+    if (testModels) {
+        if (flags & 0x16000AE) {
+            C3Vector collisionStart = start * World::s_camTargetView;
+            C3Vector collisionEnd = end * World::s_camTargetView;
+            CWorldScene::s_m2Scene->EndHitTest(collisionStart, collisionEnd, modelT, 0);
+        } else {
+            CWorldScene::s_m2Scene->EndHitTestCollisionWorld(start, end, modelT);
+        }
+
+        if (best > modelT && CWorldScene::s_m2Scene->m_lastHit.m_model) {
+            CMapBaseObj* owner = static_cast<CMapBaseObj*>(CWorldScene::s_m2Scene->m_lastHitOwner);
+            best = modelT;
+            hitObject = owner;
+            hit = true;
+
+            if (owner->m_type & MapBaseObj_Type_Entity) {
+                uint64_t guid = static_cast<CMapEntity*>(owner)->m_param64;
+
+                if (guid) {
+                    World::SetLastCollisionGUID(guid);
+                }
+            }
+        } else if (!hit) {
+            return false;
+        }
+    } else if (!hit) {
+        return false;
+    }
+
+    if (debug) {
+        CWorldMap::SetHitTestDebug(debug, hitObject);
+    }
+
+    if (liquid && debug) {
+        CWorldMap::SetHitTestDebug(debug, liquid);
+    }
+
+    if (hitPoint) {
+        hitPoint->x = start.x + (end.x - start.x) * best;
+        hitPoint->y = start.y + (end.y - start.y) * best;
+        hitPoint->z = start.z + (end.z - start.z) * best;
+    }
+
+    *dist = best;
     return hit;
 }

@@ -47,6 +47,15 @@ namespace World {
     struct TriData;
 
     typedef int32_t (*COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, CM2Model* model, int32_t blobShadow);
+    typedef int32_t (*OBJECT_COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, ObjectCollisionData* data, uint32_t flags);
+
+    struct ObjectCollisionData {
+        /* 0000 */ CM2Model* m_model;
+        /* 0004 */ C3Vector unk_0004;
+        /* 0010 */ C3Vector unk_0010;
+        /* 001C */ uint32_t unk_001C;
+        /* 0020 */ C44Matrix m_matrix;
+    };
 
     struct MinimapQuad {
         /* 0000 */ uint32_t m_groupNum;

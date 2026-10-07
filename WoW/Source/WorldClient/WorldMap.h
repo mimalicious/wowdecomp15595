@@ -31,6 +31,12 @@ class CMapEntity;
 class CMapObj;
 class CMapObjDef;
 class CMapObjDefGroup;
+
+struct SMapObjDefVectorIntersect {
+    /* 0000 */ CMapObjDef* m_mapObjDef;
+    /* 0004 */ CMapObjDefGroup* m_group;
+    /* 0008 */ float m_distSq;
+};
 class CMapStaticEntity;
 struct CShadowCacheQueryData;
 class CShadowQuery;
@@ -56,6 +62,7 @@ class CWorldMap {
     static CWorldMap* s_worldMaps[2];
     static uint32_t s_activeWorldMapIndex;
     static uint32_t s_queryTag;
+    static TSGrowableArray<SMapObjDefVectorIntersect> s_mapObjDefIntersects;
     static CM2Light s_sunLight;
     static float s_oceanDepthScale;
     static float s_oceanDepthCoordTable[256];
@@ -88,6 +95,13 @@ class CWorldMap {
     static void ClearAllRenderChunks();
     static void ClearAllDetailDoodads();
     static void ClearAllFootprints();
+    static void SetHitTestDebug(World::HitTestDebug* debug, CMapBaseObj* object);
+    static void SetHitTestDebug(World::HitTestDebug* debug, Liquid::CInstance* liquid);
+    static void VectorIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end);
+    static void VectorIntersectMapObjDefs(TSExplicitList<CMapObjDef, offsetof(CMapObjDef, m_link30)>& list, const C3Vector& start, const C3Vector& end, uint32_t flags);
+    static void VectorIntersectMapObjDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, const C3Vector& start, const C3Vector& end, uint32_t flags);
+    static void VectorIntersectDoodadDefs(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t flags);
+    static void VectorIntersectEntitys(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t flags);
     static void Destroy();
     static void FootprintDestroy();
     static void FootprintInitialize();
@@ -184,6 +198,8 @@ class CWorldMap {
     void UpdateStreaming(CMapChunk* chunk);
     void UpdateRipples(const C3Vector& pos);
     bool VectorIntersect(const C3Vector& start, const C3Vector& end, C3Vector* hitPoint, float* dist, uint32_t flags, World::HitTestDebug* debug);
+    bool VectorIntersectSubChunkList(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, CMapChunk*& hitChunk, Liquid::CInstance*& hitLiquid);
+    bool VectorIntersectTerrain(const C3Vector& start, const C3Vector& end, float& t, uint32_t flags, CMapChunk*& hitChunk, Liquid::CInstance*& hitLiquid);
     void WaterReset();
 };
 
