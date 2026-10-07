@@ -51,9 +51,8 @@ namespace World {
 
     struct ObjectCollisionData {
         /* 0000 */ CM2Model* m_model;
-        /* 0004 */ C3Vector unk_0004;
-        /* 0010 */ C3Vector unk_0010;
-        /* 001C */ uint32_t unk_001C;
+        /* 0004 */ CAaBox m_bounds;
+        /* 001C */ float m_scale;
         /* 0020 */ C44Matrix m_matrix;
     };
 

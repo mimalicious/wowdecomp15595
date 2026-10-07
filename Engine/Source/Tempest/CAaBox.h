@@ -25,6 +25,7 @@ class CAaBox {
     bool IntersectsXY(const CAaBox& box) const;
     bool IsEmpty() const;
     bool IsInverted() const;
+    bool IsNonDegenerate() const;
     bool IsValid() const;
     void Expand(float amount);
     void Expand(const C3Vector& amount);

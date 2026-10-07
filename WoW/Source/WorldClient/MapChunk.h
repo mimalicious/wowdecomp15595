@@ -13,13 +13,17 @@ class C3Ray;
 class C2Vector;
 class C4Plane;
 struct C3Segment;
+class CAaBox;
 class CDetailDoodadInst;
+class CFrustum;
+class CiRect;
 class CMap;
 class CMapArea;
 class CMapRenderChunk;
 class CTexture;
 class CWorldView;
 class CWorldMap;
+namespace World { struct FacetData; }
 
 struct SMChunk {
     /* 0000 */ uint32_t m_flags;
@@ -150,8 +154,10 @@ class CMapChunk : public CMapBaseObj {
     void RenderPrep(CWorldView* view, float distSqr);
     void GetLiquidBox(CAaBox& box);
     int32_t GetLiquidHeight(const C2Vector& pos, float& height);
-    bool IntersectSubChunk(int32_t subX, int32_t subY, const C3Segment& seg, C4Plane& plane, float& t);
     bool Intersect(int32_t subX, int32_t subY, C3Ray& ray, float& t);
+    bool Intersect(int32_t subX, int32_t subY, C3Ray& ray, C4Plane& plane, float& t);
+    void Intersect(const CiRect& rect, CAaBox& box, World::FacetData& facets);
+    void Intersect(const CiRect& rect, const CFrustum& frustum, World::FacetData& facets);
     void ProcessIffChunks(uint32_t* data, int32_t size, int32_t isNew);
     void Purge();
 };

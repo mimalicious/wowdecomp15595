@@ -20,6 +20,7 @@
 class C44Matrix;
 class CFrustum;
 class CAsyncObject;
+class CMapBaseObj;
 class CMapObjDef;
 struct CGxBuf;
 struct CGxPool;
@@ -38,7 +39,7 @@ namespace World {
             /* 001E */ uint16_t m_faceCount;
             /* 0020 */ uint16_t m_minVertexIndex;
             /* 0022 */ uint16_t m_maxVertexIndex;
-            /* 0024 */ const CMapObjDef* m_def;
+            /* 0024 */ const CMapBaseObj* m_def;
 
             C3Vector GetNormal(uint16_t index) const;
         };

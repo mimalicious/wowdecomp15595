@@ -1,6 +1,10 @@
 #include "WoW/Source/WorldClient/MapChunkLiquid.h"
 #include <cmath>
 #include "Engine/Source/Tempest/C3Ray.h"
+#include "Engine/Source/Tempest/C44Matrix.h"
+#include "Engine/Source/Tempest/CAaBox.h"
+#include "Engine/Source/Tempest/CFrustum.h"
+#include "Engine/Source/Tempest/CiRect.h"
 #include "Engine/Source/Tempest/NTempest.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "WoW/Source/WorldClient/LiquidEnvironment.h"
@@ -8,6 +12,7 @@
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapArea.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/WorldClient/MapObjGroup.h"
 
 // STATIC: 0x00EB3270
 C3Vector CChunkLiquid::s_vertXY[81];
@@ -20,6 +25,10 @@ static const uint32_t s_cellTriangles[6] = { 0, 18, 17, 0, 1, 18 };
 
 // STATIC: 0x00EB3A0C
 static TSGrowableArray<CChunkLiquid*> s_batchLiquids;
+
+static uint32_t FloatSign(float value) {
+    return *reinterpret_cast<uint32_t*>(&value) >> 31;
+}
 
 // PROVEN: c063c8fe IDENTICAL/NONE
 // OFFSET: 0x0075EDD0/0x14048C530
@@ -154,6 +163,146 @@ bool CChunkLiquid::TileExists(uint32_t x, uint32_t y) const {
     int32_t width = this->m_height - this->m_yOffset;
     const uint8_t* exists = Liquid::GetExistsTable(this->m_owner->m_area->m_liquid, static_cast<const SMLiquidInstance*>(this->m_liquidHeader));
     return CMapChunk::TestBit(exists, x + width * (y - this->m_xOffset) - this->m_yOffset) != 0;
+}
+
+// OFFSET: 0x00798D40
+bool CChunkLiquid::GetTris(World::TriData& tris, uint8_t* clip, const C2iVector& start, const C2iVector& size) const {
+    uint32_t cellTris[6];
+    cellTris[1] = 9;
+    cellTris[2] = 10;
+    cellTris[0] = 0;
+    cellTris[3] = 0;
+    cellTris[4] = 10;
+    cellTris[5] = 1;
+    int32_t skip = 9 - size.x;
+    uint32_t vertex = start.y + start.x + 8 * start.y;
+    uint8_t* cellClip = &clip[vertex];
+    int32_t endX = start.x + size.x;
+    int32_t endY = start.y + size.y;
+    World::TriData::Batch* batch = NULL;
+    uint16_t* indices = NULL;
+
+    for (int32_t y = start.y; y < endY; y++) {
+        for (int32_t x = start.x; x < endX; x++, vertex++, cellClip++) {
+            if (!this->TileExists(x, y)) {
+                continue;
+            }
+
+            for (uint32_t i = 0; i < 2; i++) {
+                const uint32_t* tri = &cellTris[3 * i];
+
+                if (cellClip[tri[2]] & cellClip[tri[0]] & cellClip[tri[1]]) {
+                    continue;
+                }
+
+                if (!batch) {
+                    batch = World::TriData::AllocBatch();
+
+                    if (!batch) {
+                        return false;
+                    }
+
+                    batch->m_def = this->m_owner;
+                    C44Matrix* matrix = World::TriData::AllocMatrix();
+                    *matrix = C44Matrix();
+                    matrix->d0 = this->m_owner->m_position.x;
+                    matrix->d1 = this->m_owner->m_position.y;
+                    matrix->d2 = this->m_owner->m_position.z;
+                    batch->m_matrix = matrix;
+                    batch->m_vertexList = CChunkLiquid::s_vertXY;
+                    batch->m_heightList = const_cast<float*>(this->m_heights);
+                    batch->m_normalList = NULL;
+                    indices = World::TriData::AllocIndices(6 * size.x * size.y);
+                    batch->m_indices = indices;
+
+                    if (!indices) {
+                        return false;
+                    }
+                }
+
+                for (uint32_t j = 0; j < 3; j++) {
+                    uint16_t index = static_cast<uint16_t>(vertex + tri[j]);
+                    indices[batch->m_indexCount++] = index;
+                    batch->m_minVertexIndex = batch->m_minVertexIndex >= index ? index : batch->m_minVertexIndex;
+                    batch->m_maxVertexIndex = batch->m_maxVertexIndex > index ? batch->m_maxVertexIndex : index;
+                }
+
+                batch->m_faceCount++;
+            }
+        }
+
+        vertex += skip;
+        cellClip += skip;
+    }
+
+    return batch != NULL;
+}
+
+// OFFSET: 0x007990C0
+bool CChunkLiquid::GetTris(World::TriData& tris, const CAaBox& box, const CiRect& rect) const {
+    CiRect query(rect.minY, rect.minX, rect.maxY + 1, rect.maxX + 1);
+    CiRect area = *reinterpret_cast<const CiRect*>(&this->m_xOffset) & query;
+    C2iVector size;
+    size.x = area.maxX - area.minX;
+    int32_t cols = area.maxX - area.minX + 1;
+    uint32_t first = area.minY + area.minX + 8 * area.minY;
+    C2iVector start;
+    start.x = area.minX;
+    start.y = area.minY;
+    const float* height = &this->m_heights[first];
+    uint8_t clip[81];
+    uint8_t* code = &clip[first];
+    size.y = area.maxY - area.minY;
+    int32_t rows = area.maxY - area.minY + 1;
+    C3Vector* vertex = &CChunkLiquid::s_vertXY[first];
+    int32_t skip = 9 - cols;
+
+    for (int32_t i = rows; i > 0; i--) {
+        for (int32_t j = 0; j < cols; j++, vertex++, height++, code++) {
+            float z = *height;
+            vertex->z = z;
+            *code = static_cast<uint8_t>((FloatSign(z - box.b.z + 0.019444443f) << 2) | (FloatSign(box.t.z - z + 0.019444443f) << 5));
+        }
+
+        vertex += skip;
+        height += skip;
+        code += skip;
+    }
+
+    return this->GetTris(tris, clip, start, size);
+}
+
+// OFFSET: 0x00799350
+bool CChunkLiquid::GetTris(World::TriData& tris, const CFrustum& frustum, const CiRect& rect) const {
+    CiRect query(rect.minY, rect.minX, rect.maxY + 1, rect.maxX + 1);
+    CiRect area = *reinterpret_cast<const CiRect*>(&this->m_xOffset) & query;
+    C2iVector start;
+    start.x = area.minX;
+    C2iVector size;
+    size.x = area.maxX - area.minX;
+    uint32_t first = area.minY + area.minX + 8 * area.minY;
+    int32_t cols = area.maxX - area.minX + 1;
+    int32_t rows = area.maxY - area.minY + 1;
+    size.y = area.maxY - area.minY;
+    const float* height = &this->m_heights[first];
+    uint8_t clip[81];
+    uint8_t* code = &clip[first];
+    int32_t skip = 9 - cols;
+    start.y = area.minY;
+    C3Vector* vertex = &CChunkLiquid::s_vertXY[first];
+
+    for (int32_t i = rows; i > 0; i--) {
+        for (int32_t j = cols; j > 0; j--, vertex++, height++, code++) {
+            vertex->z = *height;
+            frustum.Cull(*vertex, *code);
+        }
+
+        vertex += skip;
+        height += skip;
+        code += skip;
+    }
+
+    return this->GetTris(tris, clip, start, size);
 }
 
 // OFFSET: 0x00799460

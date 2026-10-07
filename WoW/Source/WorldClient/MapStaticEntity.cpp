@@ -5,6 +5,7 @@
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DayNight/DayNight.h"
+#include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
 
 // STATIC: 0x00D01AEC
@@ -15,37 +16,6 @@ CMapStaticEntity::~CMapStaticEntity() {
     if (this->m_soundEmitter) {
         SE3::EmitterMangerSendMessage_DestroyEmitter(this->m_soundEmitter);
     }
-}
-
-// OFFSET: 0x00788C90
-static void SampleVertexLighting(const CMapChunk* chunk, const C3Vector& pos, int32_t cellY, int32_t cellX, CImVector& color) {
-    const uint8_t* lighting = reinterpret_cast<const uint8_t*>(chunk->m_vertexLighting);
-
-    if (!lighting) {
-        color = CImVector(0);
-        return;
-    }
-
-    int32_t fx = static_cast<int32_t>((((pos.x - chunk->m_position.x) - static_cast<float>(cellX) * -4.1666665f) * -0.23999999f) * 255.0f);
-    int32_t fy = static_cast<int32_t>((((pos.y - chunk->m_position.y) - static_cast<float>(cellY) * -4.1666665f) * -0.23999999f) * 255.0f);
-    const uint8_t* v = lighting + 4 * (cellX + cellY + 16 * cellX);
-    int32_t b0 = (v[0] << 8) + ((fx * ((v[4] << 8) - (v[0] << 8))) >> 8);
-    int32_t g0 = (v[1] << 8) + ((fx * ((v[5] << 8) - (v[1] << 8))) >> 8);
-    int32_t r0 = (v[2] << 8) + ((fx * ((v[6] << 8) - (v[2] << 8))) >> 8);
-    int32_t b1 = (v[36] << 8) + ((fx * ((v[40] << 8) - (v[36] << 8))) >> 8);
-    int32_t g1 = (v[37] << 8) + ((fx * ((v[41] << 8) - (v[37] << 8))) >> 8);
-    int32_t r1 = (v[38] << 8) + ((fx * ((v[42] << 8) - (v[38] << 8))) >> 8);
-    color.b = static_cast<uint8_t>((b0 + ((fy * (b1 - b0)) >> 8)) >> 8);
-    color.g = static_cast<uint8_t>((g0 + ((fy * (g1 - g0)) >> 8)) >> 8);
-    color.r = static_cast<uint8_t>(static_cast<uint16_t>(r0 + ((fy * (r1 - r0)) >> 8)) >> 8);
-    color.a = 0;
-}
-
-// OFFSET: 0x00788E50
-static void QueryVertexLighting(const CMapChunk* chunk, const C3Vector& pos, CImVector& color) {
-    int32_t cellY = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.23999999f) & 7;
-    int32_t cellX = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.23999999f) & 7;
-    SampleVertexLighting(chunk, pos, cellY, cellX, color);
 }
 
 // PROVEN: 60d6bccf IDENTICAL/NONE
@@ -155,7 +125,7 @@ void CMapStaticEntity::QueryExteriorLighting() {
         CMapChunk* chunk = static_cast<CMapChunk*>(owner);
 
         if (chunk->m_terrainBox.b.x <= this->m_position.x && this->m_position.x <= chunk->m_terrainBox.t.x && chunk->m_terrainBox.b.y <= this->m_position.y && this->m_position.y <= chunk->m_terrainBox.t.y) {
-            QueryVertexLighting(chunk, this->m_position, this->m_exteriorVertexLight);
+            CMap::QueryLightingColorTerrain(chunk, this->m_position, this->m_exteriorVertexLight);
             this->m_exteriorLightingValid = 1;
             return;
         }

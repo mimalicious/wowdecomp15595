@@ -9,7 +9,11 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 
 class C3Ray;
+class CAaBox;
+class CFrustum;
+class CiRect;
 class CMapChunk;
+namespace World { struct TriData; }
 namespace Liquid { class CInstance; }
 
 class CChunkLiquid {
@@ -47,6 +51,9 @@ class CChunkLiquid {
     void Batch();
     void CreateVertZ();
     bool GetHeight(const C2Vector& frac, const C2iVector& cell, float& height) const;
+    bool GetTris(World::TriData& tris, uint8_t* clip, const C2iVector& start, const C2iVector& size) const;
+    bool GetTris(World::TriData& tris, const CAaBox& box, const CiRect& rect) const;
+    bool GetTris(World::TriData& tris, const CFrustum& frustum, const CiRect& rect) const;
     float GetVertexHeight(uint32_t index) const;
     bool HasData() const;
     bool Intersect(int32_t x, int32_t y, C3Ray& ray, float& t) const;

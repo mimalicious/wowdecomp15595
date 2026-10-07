@@ -1313,7 +1313,7 @@ int32_t CWorldMap::QueryMapObjDefsHeight(const C3Vector& start, const C3Vector& 
             continue;
         }
 
-        if (mapObjDef->TestAABox(start, end) && !CMap::QueryMapObjDefHeight(mapObjDef, start, end, t)) {
+        if (mapObjDef->TestAABox(start, end) && !CMap::GetHeightMapObjDef(mapObjDef, start, end, t)) {
             return 0;
         }
     }
@@ -1396,7 +1396,7 @@ bool CWorldMap::QueryShadow(const C3Vector& pos) {
         return false;
     }
 
-    return map->QueryShadow(pos);
+    return map->QueryShadowTerrain(pos);
 }
 
 // OFFSET: 0x00731690
@@ -1473,7 +1473,7 @@ int32_t CWorldMap::QueryFlightBounds(const C3Vector& pos, float& z, int32_t lowe
         return 0;
     }
 
-    return map->QueryFlightBounds(pos, z, lower);
+    return map->GetFlightBounds(pos, z, lower);
 }
 
 // OFFSET: 0x007318B0
@@ -1595,12 +1595,12 @@ bool CWorldMap::QueryHeight(const C3Vector& start, const C3Vector& end, float& t
                 }
             }
 
-            if (!CMap::QueryDoodadDefsHeight(chunk->m_doodadDefLinkList, start, end)) {
+            if (!CMap::GetHeightDoodadDefs(chunk->m_doodadDefLinkList, start, end)) {
                 return false;
             }
         }
 
-        if (!CMap::QueryMapObjDefLinksHeight(chunk->m_mapObjDefLinkList, start, end, t)) {
+        if (!CMap::GetHeightMapObjDefs(chunk->m_mapObjDefLinkList, start, end, t)) {
             return false;
         }
     }
@@ -1652,7 +1652,7 @@ void CWorldMap::QueryTris(const CAaBox& box, World::TriData& tris, uint32_t flag
 
             rect.minX = 16 * x <= chunkRect.minX ? chunkRect.minX : 16 * x;
             rect.maxX = 16 * x + 15 >= chunkRect.maxX ? chunkRect.maxX : 16 * x + 15;
-            map->QueryTris(box, rect, subChunkRect, tris, flags);
+            map->GetTrisTerrain(box, rect, subChunkRect, tris, flags);
         }
     }
 }
@@ -1682,9 +1682,9 @@ bool CWorldMap::IntersectTerrainSpans(const C3Segment& seg, float& t, C4Plane& p
         return false;
     }
 
-    C3Segment local;
-    local.b = seg.b;
-    local.t = delta;
+    C3Ray local;
+    local.origin = seg.b;
+    local.dir = delta;
 
     if (!CWorldMap::s_rasterSpanCount) {
         return false;
@@ -1741,11 +1741,11 @@ bool CWorldMap::IntersectTerrainSpans(const C3Segment& seg, float& t, C4Plane& p
             }
 
             chunkX = x & 0x78;
-            local.b = seg.b - chunk->m_position;
+            local.origin = seg.b - chunk->m_position;
             chunkY = y & 0x78;
         }
 
-        if (chunk->IntersectSubChunk(x & 0x7, y & 0x7, local, plane, t)) {
+        if (chunk->Intersect(x & 0x7, y & 0x7, local, plane, t)) {
             return true;
         }
 
@@ -2065,11 +2065,11 @@ bool CWorldMap::QueryFacets(const CAaBox& box, const CAaBox& box2, World::FacetD
             rect.minX = 16 * x <= chunkRect.minX ? chunkRect.minX : 16 * x;
             rect.maxX = 16 * x + 15 >= chunkRect.maxX ? chunkRect.maxX : 16 * x + 15;
 
-            if (!map->QueryFacets(box, box2, rect, subChunkRect, facets, flags)) {
+            if (!map->GetFacets(box, box2, rect, subChunkRect, facets, flags)) {
                 return false;
             }
 
-            if ((flags & 0x600) && !map->QueryLiquidFacets(x, y, box2, facets, flags)) {
+            if ((flags & 0x600) && !map->CreateFlightBoundsFacets(x, y, box2, facets, flags)) {
                 return false;
             }
         }
@@ -2126,7 +2126,7 @@ bool CWorldMap::QueryFacets(const CFrustum& frustum, World::FacetData& facets, u
 
                 rect.minX = 16 * x <= chunkRect.minX ? chunkRect.minX : 16 * x;
                 rect.maxX = 16 * x + 15 >= chunkRect.maxX ? chunkRect.maxX : 16 * x + 15;
-                map->QueryFacets(frustum, bounds, rect, subChunkRect, facets, flags);
+                map->GetFacets(frustum, bounds, rect, subChunkRect, facets, flags);
             }
         }
     }
