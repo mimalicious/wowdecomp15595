@@ -148,7 +148,7 @@ Blizzard::Time::Timestamp Blizzard::Streaming::Manifests::TimeslotItem::ParseTim
     return Blizzard::Time::MakeTime(rec);
 }
 
-// OFFSET: #0x0042D7A0
+// OFFSET: 0x007B3900
 char* STORMAPI Blizzard::Streaming::TrimLine(char* line) {
     char* start = line;
 
@@ -425,7 +425,7 @@ Blizzard::Streaming::Manifests::FileItem::FileItem() {
 Blizzard::Streaming::Manifests::FileItem::~FileItem() {
 }
 
-// OFFSET: #0x004474D0
+// OFFSET: 0x007D5970
 Blizzard::Streaming::Manifests::ServerItem::ServerItem() {
     UsageSlot slot;
     slot.m_time = TimeslotItem::ParseTimestamp("0:00");

@@ -365,7 +365,7 @@ bool BGLoading::IsStreamingInProgress() {
     return BGLoadManager::Get()->m_inProgress;
 }
 
-// OFFSET: %0x00762540
+// OFFSET: 0x007A2270
 uint32_t BGLoading::BGLoadManager::BGLoadThread() {
     int32_t slice = 0;
 

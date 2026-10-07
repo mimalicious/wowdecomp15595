@@ -404,7 +404,7 @@ bool System_Mopaq::base_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parm
     return Blizzard::File::Read(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
 
-// OFFSET: %0x00714840
+// OFFSET: 0x007B24B0
 bool System_Mopaq::base_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Write(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
@@ -1243,7 +1243,7 @@ bool System_Mopaq::verify_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
-// OFFSET: %0x0070E440
+// OFFSET: 0x007AB500
 bool System_Mopaq::verify_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_verify->m_size;
     return true;

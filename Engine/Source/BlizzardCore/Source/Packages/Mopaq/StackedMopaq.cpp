@@ -610,7 +610,7 @@ void System_Mopaq::OpenArchiveFile(const char* name, System_SFile::ARCHIVEREC* l
     }
 }
 
-// OFFSET: %0x0072DBC0
+// OFFSET: 0x007F31A0
 void System_Mopaq::CreateArchiveFile(const char* name, System_SFile::ARCHIVEREC* archive, uint32_t flags, const System_SFile::BLOCKENTRY& entry, uint32_t index, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));

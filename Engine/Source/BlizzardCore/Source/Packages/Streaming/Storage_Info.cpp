@@ -27,7 +27,7 @@ Blizzard::Storage::StorageUnit::~StorageUnit() {
     delete this->m_http;
 }
 
-// OFFSET: %0x0070E9F0
+// OFFSET: 0x007ABBD0
 void Blizzard::Storage::StorageUnit::SetCacheSource() {
     delete this->m_cache;
     this->m_cache = new CacheSource(this);
@@ -47,7 +47,7 @@ void Blizzard::Storage::StorageUnit::ReserveChunks() {
     this->m_flushed = false;
 }
 
-// OFFSET: %0x0073BB50
+// OFFSET: 0x007ABBA0
 void Blizzard::Storage::StorageUnit::SetLocal(BackingStore* local, int64_t size) {
     delete this->m_local;
     this->m_logicalFileSize = size;

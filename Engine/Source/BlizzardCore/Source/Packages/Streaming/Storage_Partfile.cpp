@@ -57,7 +57,7 @@ static bool ValidateHeader(const PartialFileHeader* header, int64_t fileSize, in
     return header->m_chunkSize && !memcmp(header->m_magic, "ptv3", 4) && header->m_fileSize == fileSize && header->m_version == 3 && header->m_contentId == contentId;
 }
 
-// OFFSET: %0x0071D500
+// OFFSET: 0x007BB680
 static bool EnsureParentDirectory(const char* path) {
     char directory[260];
     memset(directory, 0, sizeof(directory));
@@ -167,7 +167,7 @@ bool Blizzard::Storage::PartialBlock::SetPartial(uint32_t block, uint32_t size) 
 Blizzard::Storage::BackingStore::~BackingStore() {
 }
 
-// OFFSET: %0x00726F40
+// OFFSET: 0x007C6220
 Blizzard::Storage::PartialFile::PartialFile() {
     this->m_chunkSize = s_Chunk_Size;
     this->m_fileSize = 0;
@@ -209,7 +209,7 @@ int32_t Blizzard::Storage::PartialFile::GetChunkSize() const {
     return this->m_chunkSize;
 }
 
-// OFFSET: %0x00715D80
+// OFFSET: 0x007B3E00
 int64_t Blizzard::Storage::PartialFile::GetTotalLocalSize() const {
     if (this->m_completed) {
         return this->m_fileSize;
@@ -245,7 +245,7 @@ bool Blizzard::Storage::PartialFile::Read(void* buffer, int64_t offset, int32_t 
     return true;
 }
 
-// OFFSET: %0x00724A10
+// OFFSET: 0x007C3A00
 bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, int32_t size) {
     if (offset % this->GetChunkSize()) {
         return false;
@@ -284,7 +284,7 @@ bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, i
     return result;
 }
 
-// OFFSET: %0x00724B60
+// OFFSET: 0x007EB6E0
 bool Blizzard::Storage::PartialFile::Flush() {
     if (this->m_dirtyStart < 0 || this->m_dirtyEnd < 0) {
         return true;
@@ -392,7 +392,7 @@ bool Blizzard::Storage::PartialFile::Close() {
     return false;
 }
 
-// OFFSET: %0x0071D8B0
+// OFFSET: 0x007BBC00
 bool Blizzard::Storage::PartialFile::IsAvailable(int64_t offset, int64_t size) const {
     int32_t first = static_cast<int32_t>(offset / this->GetChunkSize());
     int32_t last = static_cast<int32_t>((size + offset - 1) / this->GetChunkSize());
@@ -483,7 +483,7 @@ bool Blizzard::Storage::PartialFile::IsMatch(const char* path, int64_t size, int
     return filename && !_stricmp(filename, name);
 }
 
-// OFFSET: %0x0070EA60
+// OFFSET: 0x007ABD30
 void Blizzard::Storage::PartialFile::GetChunkRange(int32_t* chunks, int64_t offset, int64_t size) {
     chunks[0] = static_cast<int32_t>(offset / this->GetChunkSize());
     chunks[1] = static_cast<int32_t>((size + offset - 1) / this->GetChunkSize());
@@ -511,7 +511,7 @@ bool Blizzard::Storage::PartialFile::WriteLocality(int32_t first, int32_t last) 
     return Blizzard::File::Write(this->m_file, this->m_locality->m_bits + (first >> 3), this->m_fileSize + (first >> 3), &count, 0);
 }
 
-// OFFSET: %0x00715EC0
+// OFFSET: 0x007B3FE0
 bool Blizzard::Storage::PartialFile::IsLocalityComplete() {
     int64_t fileSize = this->m_fileSize;
     this->GetChunkSize();

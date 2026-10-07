@@ -76,7 +76,7 @@ void System_Log::PrintTimestamp(FILE* file, Blizzard::Time::Timestamp time) {
     fprintf(file, "%02d:%02d:%02d.%04d ", rec.hour, rec.minute, rec.second, rec.nanosecond / 100000);
 }
 
-// OFFSET: #0x0042E250
+// OFFSET: 0x007B56B0
 int32_t System_Log::FindBest(const char* name, uint32_t now) {
     int32_t freeIndex = -1;
     int32_t oldestOpen = -1;
@@ -533,7 +533,7 @@ bool System_Log::Acquire(int32_t logClass) {
     return true;
 }
 
-// OFFSET: #0x00451BB0
+// OFFSET: 0x007EDEC0
 void Blizzard::Log::Printf(int32_t logClass, const char* name, const char* format, ...) {
     va_list args;
     va_start(args, format);

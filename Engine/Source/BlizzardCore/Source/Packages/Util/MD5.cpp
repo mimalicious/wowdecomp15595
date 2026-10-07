@@ -193,7 +193,7 @@ void Blizzard::Util::MD5::Process(const void* data, uint32_t size) {
     }
 }
 
-// OFFSET: #0x0042B320
+// OFFSET: 0x007B03E0
 void Blizzard::Util::HashString(uint8_t* digest, const char* str) {
     MD5 md5;
     md5.Process(str, str ? static_cast<uint32_t>(strlen(str)) : 0);

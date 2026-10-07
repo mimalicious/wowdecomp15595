@@ -229,7 +229,7 @@ Blizzard::Streaming::AddLatency::~AddLatency() {
     } while (accumulatorNs > 1000000);
 }
 
-// OFFSET: %0x00728BC0
+// OFFSET: 0x007C7A60
 Blizzard::Streaming::Transport::Config* Blizzard::Streaming::Transport::GetConfig() {
     static Config s_config = { 10000, true };
     return &s_config;
@@ -285,7 +285,7 @@ bool Blizzard::Streaming::Transport::TransportHttpCallback::ReceivedData(const v
     return true;
 }
 
-// OFFSET: %0x00728DF0
+// OFFSET: 0x007C74B0
 Blizzard::Streaming::Transport::URL_INFO::URL_INFO(const char* url, int64_t start, int64_t end, int32_t size) : m_url(url) {
     this->m_start = start;
     this->m_end = end;

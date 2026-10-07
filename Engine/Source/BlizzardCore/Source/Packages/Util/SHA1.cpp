@@ -197,7 +197,7 @@ uint8_t* SHA1_InterleaveHash(uint8_t* out, const uint8_t* in, uint32_t length) {
     return out;
 }
 
-// OFFSET: #0x00425850
+// OFFSET: 0x00658940
 void Process(uint32_t* hash, const uint8_t* data) {
     uint32_t w[80];
 

@@ -98,7 +98,7 @@ void System_File::Stacked::PushStreaming() {
     HoistAll();
 }
 
-// OFFSET: %0x00726D80
+// OFFSET: 0x007C5F80
 Blizzard::File::StreamRecord* STORMAPI System_File::Stacked::AllocStreamingRecord(const char* path) {
     uint32_t length = path ? strlen(path) : 0;
 
@@ -312,7 +312,7 @@ std::string System_File::GetInode(const std::string& path) {
     return result;
 }
 
-// OFFSET: %0x00743C90
+// OFFSET: 0x007E3880
 void System_File::Stacked::LockAndMap::Release() {
     delete s_instance;
     s_instance = NULL;
@@ -517,7 +517,7 @@ bool System_File::Stacked::stream_readp(Blizzard::File::Filesystem* fs, FileParm
     return true;
 }
 
-// OFFSET: %0x00756AD0
+// OFFSET: 0x007F1CB0
 Blizzard::File::StreamRecord* FileStack_Streaming::StreamingOpen() {
     Blizzard::Streaming::Manifests::FileItem* item = Blizzard::Streaming::ManifestInfo::Get()->GetFileItem(this->m_key);
 

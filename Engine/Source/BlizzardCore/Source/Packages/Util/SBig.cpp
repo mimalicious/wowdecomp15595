@@ -94,7 +94,7 @@ inline void Blizzard::BigBuffer::SetOffset(uint32_t offset) {
     }
 }
 
-// OFFSET: #0x004395D0
+// OFFSET: 0x007C5E60
 void Blizzard::BigBuffer::Trim() const {
     while (this->Count() && !this->m_data.back()) {
         this->m_data.pop_back();
@@ -157,7 +157,7 @@ inline Blizzard::BigStack& Blizzard::BigData::Stack() const {
     return this->m_stack;
 }
 
-// OFFSET: #0x004310B0
+// OFFSET: 0x007B8A20
 static int32_t Compare(const Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b) {
     int32_t result = 0;
 
@@ -273,7 +273,7 @@ static void Shl(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c
     a.Trim();
 }
 
-// OFFSET: #0x00446940
+// OFFSET: 0x007D7AF0
 static void Shr(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -318,7 +318,7 @@ static void Square(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, Blizzar
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: #0x00446D00
+// OFFSET: 0x007D7E40
 static void Sub(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c) {
     uint64_t borrow = 0;
     uint32_t i = 0;
@@ -352,7 +352,7 @@ static void FromBinary(Blizzard::BigBuffer& a, const void* data, uint32_t bytes)
     }
 }
 
-// OFFSET: #0x00443D50
+// OFFSET: 0x007D8060
 static void ToBinaryAppend(std::vector<uint8_t>& output, const Blizzard::BigBuffer& a) {
     for (uint32_t i = 0; i < 4 * a.Count(); ++i) {
         uint32_t value = a[i >> 2] >> (8 * (i & 3));

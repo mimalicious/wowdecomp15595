@@ -136,7 +136,7 @@ bool Blizzard::Thread::CreateFromPool(ThreadPoolRecord* pool, uint32_t (*functio
     return true;
 }
 
-// OFFSET: %0x00746410
+// OFFSET: 0x007EA550
 bool Blizzard::Thread::CreateDetachedFromPool(ThreadPoolRecord* pool, uint32_t (*function)(void*), void* param, int32_t flags, int32_t stackSize) {
     ThreadRecord* thread;
     bool result = CreateFromPool(pool, function, param, &thread, flags, stackSize);
