@@ -414,8 +414,8 @@ void CWorldMap::UpdateMapObjDefs(int32_t waitLoad) {
 
         float distSq = (z - pos.z) * (z - pos.z) + (y - pos.y) * (y - pos.y) + (x - pos.x) * (x - pos.x);
 
-        if (mapObj->m_flushTimer > distSq) {
-            mapObj->m_flushTimer = distSq;
+        if (mapObj->m_distSq > distSq) {
+            mapObj->m_distSq = distSq;
         }
 
         const CAaBox& guard = World::mapObjDefBoundsGuard;

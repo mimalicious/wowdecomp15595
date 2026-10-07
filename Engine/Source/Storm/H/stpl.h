@@ -1621,7 +1621,7 @@ void TSCGrowableArray<T, N>::SetCount(uint32_t count) {
     }
 }
 
-// OFFSET: [#0x00801120]
+// OFFSET: [#0x00801120, 0x00773710<CWorldMapPreloadData>]
 template <class T>
 void TSStackArray<T>::SetCount(uint32_t count) {
     if (count == this->m_count) {

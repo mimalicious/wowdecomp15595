@@ -15,7 +15,7 @@ TSObjectAllocPool<T>::~TSObjectAllocPool() {
     ObjectAllocUnregisterPool(this);
 }
 
-// INLINED
+// OFFSET: [0x007479A0<CMapObjOccluder>]
 template <class T>
 void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {
     object->~T();
@@ -23,7 +23,7 @@ void TSObjectAllocPool<T>::Delete(T* object, const char* file, int32_t line) {
     ObjectFree(this->m_heapId, object->m_handle);
 }
 
-// INLINED
+// OFFSET: [0x00747900<CMapObjOccluder>, 0x00775940<CMapObjGroup>, 0x007759C0<CMapObj>, 0x00775A40<CMapArea>, 0x00775AC0<CMapAreaLow>, 0x00775B40<CMapChunk>, 0x00775BC0<CMapRenderChunk>, 0x00775C40<CMapChunkBuf>, 0x00775CC0<CMapDoodadDef>, 0x00775D40<CMapEntity>, 0x00775DC0<CMapObjDefGroup>, 0x00775E40<CMapObjDef>, 0x00775EC0<CChunkLiquid>, 0x007765E0<CMapBaseObjLink>]
 template <class T>
 T* TSObjectAllocPool<T>::New(const char* file, int32_t line) {
     uint32_t memHandle;

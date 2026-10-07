@@ -464,8 +464,8 @@ void CMap::UpdateLowDetailMapObjDefs() {
 
         float distSq = (x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y) + (z - pos.z) * (z - pos.z);
 
-        if (mapObj->m_flushTimer > distSq) {
-            mapObj->m_flushTimer = distSq;
+        if (mapObj->m_distSq > distSq) {
+            mapObj->m_distSq = distSq;
         }
 
         if (mapObj->m_flags & 0x40) {

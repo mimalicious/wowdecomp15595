@@ -169,7 +169,7 @@ void CMapObj::Init() {
     this->m_materialCount = 0;
     this->m_bbox.t.z = 0.0f;
     this->m_mapObjGroupCount = 0;
-    this->m_flushTimer = FLT_MAX;
+    this->m_distSq = FLT_MAX;
     this->InitPtrs();
 }
 

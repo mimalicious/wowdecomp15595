@@ -173,7 +173,7 @@ class CMapObj : public CMapBaseObj, public TSHashObject<CMapObj, HASHKEY_NONE> {
     static void UpdateGroups(CMapObj* mapObj);
     static void UpdatePools();
 
-    /* 0028 */ float m_flushTimer;
+    /* 0028 */ float m_distSq;
     /* 002C */ CAsyncObject* m_asyncObject;
     /* 0030 */ uint32_t m_mapObjGroupCount;
     /* 0034 */ CMapObjGroup* m_groups[512];

@@ -64,6 +64,18 @@ class CWaterRipple {
     void Init(const C3Vector& pos, float facing, float radius, float alpha, float duration, float growth, int32_t large);
 };
 
+struct CWorldMapPreloadData {
+    /* 0000 */ int32_t m_mapIndex;
+    /* 0004 */ CiRect m_loadRect;
+    /* 0014 */ CiRect m_streamRect;
+    /* 0024 */ uint32_t m_totals[5];
+    /* 0038 */ uint32_t m_loaded[5];
+    /* 004C */ C3Vector m_center;
+    /* 0058 */ CAaBox m_boxes[2];
+
+    CWorldMapPreloadData();
+};
+
 struct SMapObjDefVectorIntersect {
     /* 0000 */ CMapObjDef* m_mapObjDef;
     /* 0004 */ CMapObjDefGroup* m_group;
@@ -127,6 +139,11 @@ class CWorldMap {
     static void ClearAllRenderChunks();
     static void ClearAllDetailDoodads();
     static void ClearAllFootprints();
+    static void PreloadChunk(CMap* map, const CAaBox& box);
+    static void PreloadCountDoodadDefs(const CAaBox& box, TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& links, uint32_t* totals, uint32_t* loaded, int32_t raisePriority);
+    static void PreloadCountMapObjGroupTextures(const CAaBox& box, CMapObjDef* mapObjDef, CMapObjDefGroup* defGroup, uint32_t* totals, uint32_t* loaded);
+    static void PreloadDoodadDefs(const CAaBox& box);
+    static void PreloadMapObjDefGroups(CMapObj* mapObj, CMapObjDef* mapObjDef, const CAaBox& box);
     static void SetHitTestDebug(World::HitTestDebug* debug, CMapBaseObj* object);
     static void SetHitTestDebug(World::HitTestDebug* debug, Liquid::CInstance* liquid);
     static void VectorIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end);
@@ -176,7 +193,10 @@ class CWorldMap {
     int32_t LocateViewerMapObjDefs(CMapChunk* chunk, const C3Vector& start, const C3Vector& end, float t, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     void LocateViewer(const C3Vector& pos, int32_t& exterior, CMapChunk*& chunk, int32_t& interior, CMapObjDef** mapObjDefs, uint32_t (*groups)[2]);
     void NewFootprint(uint32_t textureIndex, const C2Vector& size, const C3Vector& pos, float facing, int32_t flip, uint32_t terrainType, int32_t isPlayer);
-    void Preload(int32_t a1);
+    void Preload(int32_t purge);
+    void Preload(CMap* map, CWorldMapPreloadData& data, int32_t pass, int32_t phase, float progressStart, float progressRange);
+    void PreloadCount(CMap* map, const CAaBox& box, uint32_t* totals, uint32_t* loaded, int32_t raisePriority);
+    void PreloadMapObjDefs(const CAaBox& box);
     void PurgeMaps();
     int32_t QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower);
     int32_t QueryIntersectingModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags);

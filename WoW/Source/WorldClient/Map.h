@@ -239,6 +239,7 @@ class CMap : public CMapBaseObj {
     void PreUpdateAreas();
     CMapArea* PrepareArea(int32_t x, int32_t y);
     void UpdateAreaDistances();
+    CMapChunk* GetChunk(const C3Vector& pos);
     int32_t PreloadAreasExist(const CiRect& rect);
     void PreloadUpdateMap(const CiRect& rect);
     void PreUpdateMap();

@@ -96,14 +96,14 @@ void CMapObj::Update() {
         } else if (mapObj->m_flags & 0x40) {
             mapObj->UpdateMaterials();
             CMapObj::UpdateGroups(mapObj);
-            mapObj->m_flushTimer = FLT_MAX;
+            mapObj->m_distSq = FLT_MAX;
         } else {
             if (mapObj->m_asyncObject) {
-                int32_t priority = AsyncFileReadComputePriority(mapObj->m_flushTimer < 1111.1111f ? 0 : 2, 0, 1, mapObj->m_flushTimer);
+                int32_t priority = AsyncFileReadComputePriority(mapObj->m_distSq < 1111.1111f ? 0 : 2, 0, 1, mapObj->m_distSq);
                 AsyncFileReadAddStreamingObject(CMapObj::LinkToAsyncHead, mapObj, priority);
             }
 
-            mapObj->m_flushTimer = FLT_MAX;
+            mapObj->m_distSq = FLT_MAX;
         }
 
         mapObj = next;
