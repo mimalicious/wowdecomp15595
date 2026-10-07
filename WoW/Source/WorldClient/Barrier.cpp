@@ -555,10 +555,10 @@ void CBarrier::Initialize() {
     flags.m_filter = 1;
     flags.m_wrapU = 0;
     flags.m_wrapV = 0;
-    s_maskTexture = TextureCreate("XTextures\FX\LBTBarrierMask", flags, &status, 0, NULL, 2);
+    s_maskTexture = TextureCreate("XTextures\\FX\\LBTBarrierMask", flags, &status, 0, NULL, 2);
     flags.m_wrapU = 1;
     flags.m_wrapV = 1;
-    s_texture = TextureCreate("XTextures\FX\LBTBarrier", flags, &status, 0, NULL, 2);
+    s_texture = TextureCreate("XTextures\\FX\\LBTBarrier", flags, &status, 0, NULL, 2);
 
     if (CShaderEffect::s_enableShaders) {
         s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "Barrier");

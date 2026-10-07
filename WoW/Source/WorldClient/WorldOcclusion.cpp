@@ -1,4 +1,5 @@
 #include "WoW/Source/WorldClient/WorldOcclusion.h"
+#include <cfloat>
 #include <cstddef>
 #include <cmath>
 #include <malloc.h>
@@ -8,12 +9,42 @@
 #include "Engine/Source/Tempest/CAaBox.h"
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "WoW/Source/WorldClient/CWorldMath.h"
+#include "WoW/Source/WorldClient/WorldMap.h"
+#include "WoW/Source/WorldClient/WorldScene.h"
+#include "WoW/Source/WorldClient/WorldView.h"
+
+struct WorldOccluderVolume {
+    /* 0000 */ uint32_t m_mapId;
+    /* 0004 */ CAaBox m_bounds;
+    /* 001C */ const C3Vector* m_verts;
+    /* 0020 */ int32_t m_count;
+
+    WorldOccluderVolume(uint32_t mapId, float depth, const C3Vector* verts, int32_t count);
+};
 
 // STATIC: 0x00D02F20
 static TSExplicitList<CWorldOccluder, offsetof(CWorldOccluder, m_link)> s_freeOccluders;
 
 // STATIC: 0x00D02F2C
 static TSExplicitList<CWorldAntiOccluder, offsetof(CWorldAntiOccluder, m_link)> s_freeAntiOccluders;
+
+// STATIC: 0x00D02F38
+static C3Vector s_worldOccluderVerts0[22] = { C3Vector(2287.73f, 5169.48f, 44.17f), C3Vector(2297.8f, 5165.72f, 44.17f), C3Vector(2296.86f, 5166.19f, 33.63f), C3Vector(2328.38f, 5159.77f, 33.63f), C3Vector(2327.02f, 5159.73f, 45.0f), C3Vector(2337.21f, 5163.88f, 45.0f), C3Vector(2335.61f, 5162.59f, 30.9f), C3Vector(2364.9f, 5187.67f, 30.9f), C3Vector(2364.08f, 5186.96f, 39.15f), C3Vector(2372.46f, 5196.06f, 39.15f), C3Vector(2372.96f, 5192.9f, 27.81f), C3Vector(2381.72f, 5230.61f, 27.81f), C3Vector(2381.62f, 5229.2f, 40.9f), C3Vector(2381.38f, 5239.99f, 40.9f), C3Vector(2370.56f, 5272.84f, 47.0f), C3Vector(2365.48f, 5281.81f, 47.0f), C3Vector(2366.57f, 5281.31f, 33.1f), C3Vector(2342.17f, 5301.84f, 33.1f), C3Vector(2341.39f, 5302.19f, 50.63f), C3Vector(2325.29f, 5313.29f, 50.63f), C3Vector(2325.29f, 5313.29f, 50.63f), C3Vector(2314.61f, 5303.97f, 50.63f) };
+
+// STATIC: 0x00D03040
+static C3Vector s_worldOccluderVerts1[16] = { C3Vector(2189.1f, 5348.63f, 44.74f), C3Vector(2200.34f, 5343.43f, 44.74f), C3Vector(2122.23f, 5368.76f, 32.36f), C3Vector(2076.05f, 5340.02f, 32.36f), C3Vector(2076.05f, 5340.02f, 32.36f), C3Vector(2064.68f, 5300.59f, 32.36f), C3Vector(2065.1f, 5302.51f, 64.32f), C3Vector(2063.47f, 5290.36f, 64.32f), C3Vector(2062.59f, 5291.6f, 51.33f), C3Vector(2077.09f, 5252.01f, 51.33f), C3Vector(2077.09f, 5252.01f, 51.33f), C3Vector(2109.76f, 5225.79f, 51.33f), C3Vector(2108.5f, 5228.31f, 39.76f), C3Vector(2190.55f, 5195.1f, 39.76f), C3Vector(2189.1f, 5348.63f, 44.74f), C3Vector(2200.34f, 5343.43f, 44.74f) };
+
+// STATIC: 0x00D03100
+static C3Vector s_worldOccluderVerts2[6] = { C3Vector(701.41f, -5045.22f, 25.0f), C3Vector(702.15f, -5032.52f, 25.0f), C3Vector(702.32f, -5034.81f, 15.81f), C3Vector(704.03f, -4994.79f, 15.81f), C3Vector(703.46f, -4995.75f, 19.43f), C3Vector(701.07f, -4983.98f, 19.43f) };
+
+// STATIC: 0x00D03148
+static C3Vector s_worldOccluderVerts3[6] = { C3Vector(693.52f, -4946.7f, 20.3f), C3Vector(690.32f, -4934.54f, 19.36f), C3Vector(691.16f, -4936.69f, 15.4f), C3Vector(675.85f, -4907.31f, 15.4f), C3Vector(676.57f, -4907.72f, 28.38f), C3Vector(670.09f, -4896.62f, 28.38f) };
+
+// STATIC: 0x00D03190
+static C3Vector s_worldOccluderVerts4[22] = { C3Vector(3922.27f, -3780.83f, 223.88f), C3Vector(3931.13f, -3816.65f, 225.3f), C3Vector(3930.43f, -3816.25f, 247.05f), C3Vector(3972.51f, -3865.33f, 246.88f), C3Vector(3985.02f, -3862.98f, 266.38f), C3Vector(4019.3f, -3871.85f, 266.38f), C3Vector(4018.84f, -3870.28f, 283.14f), C3Vector(4057.42f, -3866.95f, 283.6f), C3Vector(4057.42f, -3866.95f, 283.6f), C3Vector(4090.54f, -3839.41f, 283.14f), C3Vector(4097.93f, -3813.61f, 312.86f), C3Vector(4108.39f, -3773.72f, 310.56f), C3Vector(4108.39f, -3773.72f, 310.56f), C3Vector(4085.14f, -3743.49f, 312.86f), C3Vector(4070.07f, -3716.09f, 279.63f), C3Vector(4032.64f, -3689.24f, 283.55f), C3Vector(4032.64f, -3689.24f, 283.55f), C3Vector(4005.67f, -3693.7f, 279.63f), C3Vector(4003.38f, -3697.04f, 266.74f), C3Vector(3963.34f, -3709.25f, 240.45f), C3Vector(3963.34f, -3709.25f, 240.45f), C3Vector(3936.94f, -3745.73f, 230.22f) };
+
+// STATIC: 0x00EA9770
+static WorldOccluderVolume s_worldOccluders[5] = { WorldOccluderVolume(571, -100.0f, s_worldOccluderVerts0, 22), WorldOccluderVolume(571, -100.0f, s_worldOccluderVerts1, 16), WorldOccluderVolume(571, -50.0f, s_worldOccluderVerts2, 6), WorldOccluderVolume(571, -50.0f, s_worldOccluderVerts3, 6), WorldOccluderVolume(571, -100.0f, s_worldOccluderVerts4, 22) };
 
 static uint32_t FloatBits(float value) {
     return *reinterpret_cast<uint32_t*>(&value);
@@ -31,6 +62,69 @@ CWorldOcclusion::~CWorldOcclusion() {
 
 // OFFSET: 0x00756FD0/0x140438930
 CWorldOcclusion::CWorldOcclusion() {
+}
+
+// PROVEN: 70f4354a IDENTICAL/NONE
+// OFFSET: 0x00780D80/0x14046E220
+void CWorldOccluder::ClipBufferUpdate(CWorldOcclusion* occlusion, int32_t exterior) {
+    occlusion->UpdateBuffer(&this->m_start, exterior);
+}
+
+// OFFSET: 0x00780DA0
+WorldOccluderVolume::WorldOccluderVolume(uint32_t mapId, float depth, const C3Vector* verts, int32_t count) {
+    this->m_bounds.b = C3Vector(FLT_MAX, FLT_MAX, FLT_MAX);
+    this->m_bounds.t = C3Vector(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    this->m_mapId = mapId;
+    this->m_verts = verts;
+    this->m_count = count;
+    const C3Vector* vert = verts;
+
+    for (int32_t i = 0; i < count; i++, vert++) {
+        if (this->m_bounds.b.x > vert->x) {
+            this->m_bounds.b.x = vert->x;
+        }
+
+        if (this->m_bounds.b.y > vert->y) {
+            this->m_bounds.b.y = vert->y;
+        }
+
+        if (vert->x > this->m_bounds.t.x) {
+            this->m_bounds.t.x = vert->x;
+        }
+
+        if (vert->y > this->m_bounds.t.y) {
+            this->m_bounds.t.y = vert->y;
+        }
+
+        if (vert->z > this->m_bounds.t.z) {
+            this->m_bounds.t.z = vert->z;
+        }
+
+        if (this->m_bounds.b.z > vert->z + depth) {
+            this->m_bounds.b.z = vert->z + depth;
+        }
+    }
+}
+
+// OFFSET: 0x00780EA0/0x14046E230
+void CWorldScene::AddWorldOccluders(CWorldView* view) {
+    CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
+
+    if (!worldMap) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        WorldOccluderVolume& volume = s_worldOccluders[i];
+
+        if (volume.m_mapId != static_cast<uint32_t>(worldMap->m_mapId) || view->CullModel(volume.m_bounds)) {
+            continue;
+        }
+
+        for (int32_t j = 0; j < volume.m_count; j += 2) {
+            view->AddOccluder(volume.m_verts[j], volume.m_verts[j + 1]);
+        }
+    }
 }
 
 // OFFSET: 0x00780F20/0x14046E2F0
@@ -55,19 +149,8 @@ CWorldOccluder* CWorldOccluder::Alloc() {
 
 // OFFSET: 0x00781150
 void CWorldOccluder::Destroy() {
-    CWorldOccluder* occluder;
-
-    while ((occluder = s_freeOccluders.Head()) != NULL) {
-        occluder->m_link.Unlink();
-        SMemFree(occluder, __FILE__, __LINE__, 0);
-    }
-
-    CWorldAntiOccluder* antiOccluder;
-
-    while ((antiOccluder = s_freeAntiOccluders.Head()) != NULL) {
-        antiOccluder->m_link.Unlink();
-        SMemFree(antiOccluder, __FILE__, __LINE__, 0);
-    }
+    s_freeOccluders.Clear();
+    s_freeAntiOccluders.Clear();
 }
 
 // OFFSET: 0x0079AA50/0x14048F0D0

@@ -114,7 +114,7 @@ float CGxuLight::CalcIntensity(const C3Vector& point, float linearAttenuation, f
     return ambientMag + intensity;
 }
 
-// INLINED
+// OFFSET: 0x00775F40
 CGxuLightLink::~CGxuLightLink() {
 }
 

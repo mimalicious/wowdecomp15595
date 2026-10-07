@@ -4,9 +4,11 @@
 #include <malloc.h>
 #include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Services/AsyncFile.h"
 #include "Engine/Source/Services/Texture.h"
+#include "Engine/Source/ShaderEffect/DefaultShaders.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFacet.h"
@@ -24,6 +26,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldScene.h"
+#include "WoW/Source/WorldClient/WorldView.h"
 
 // STATIC: 0x00D00D98
 TSExplicitList<CMapAreaLow, offsetof(CMapAreaLow, m_renderLink)> CMap::s_mapAreaLowUpdateList;
@@ -936,6 +939,44 @@ void CMap::WaterReset() {
 void CMap::TestQueryReset() {
     CMap::s_testQueryVertices.SetCount(0);
     CMap::s_testQueryIndices.m_count = 0;
+}
+
+// OFFSET: 0x0077FAE0
+void CMap::TestQueryRender() {
+    if (!CMap::s_testQueryVertices.Count()) {
+        return;
+    }
+
+    CWorldView* view = CWorldScene::s_defaultWorldView;
+
+    if (!view) {
+        return;
+    }
+
+    g_theGxDevicePtr->RsPush();
+    C44Matrix world;
+    world.Translate(C3Vector(-view->m_camPos.x, -view->m_camPos.y, -view->m_camPos.z));
+    g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
+    GxRsSet(GxRs_BlendingMode, GxBlend_Alpha);
+    GxUpdateAlphaRef(GxRs_AlphaRef);
+    GxRsSet(GxRs_Lighting, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_Culling, 0);
+    CGxVertexPC* vertices = CMap::s_testQueryVertices.m_data;
+    GxPrimVertexPtr(CMap::s_testQueryVertices.Count(), &vertices->p, sizeof(CGxVertexPC), NULL, 0, &vertices->c, sizeof(CGxVertexPC), NULL, 0, NULL, 0);
+    GxPrimIndexPtr(CMap::s_testQueryIndices.Count(), CMap::s_testQueryIndices.m_data);
+    DefaultShaders::SetFogEnabled(0);
+    DefaultShaders::SetDefaultShaders(static_cast<EGxVertexBufferFormat>(22), -1);
+    CGxBatch batch;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = CMap::s_testQueryIndices.Count();
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = static_cast<uint16_t>(CMap::s_testQueryVertices.Count() - 1);
+    g_theGxDevicePtr->Draw(batch);
+    GxXformPop(GxXform_World);
+    g_theGxDevicePtr->RsPop();
 }
 
 // OFFSET: 0x00786520/0x140475670

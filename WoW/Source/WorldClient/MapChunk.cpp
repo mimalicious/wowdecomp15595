@@ -2,11 +2,16 @@
 #include <cfloat>
 #include <cmath>
 #include <cstring>
+#include "Engine/Source/Base/Status.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/CGxTexFlags.h"
+#include "Engine/Source/Gx/CGxVertexPCT.h"
+#include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Model2/M2Light.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Model2/M2Scene.h"
 #include "Engine/Source/Services/Texture.h"
+#include "Engine/Source/ShaderEffect/DefaultShaders.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C2iVector.h"
 #include "Engine/Source/Tempest/C2Vector.h"
@@ -35,6 +40,8 @@
 #include "WoW/Source/WorldClient/MapRenderChunk.h"
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
+#include "WoW/Source/WorldClient/WorldScene.h"
+#include "WoW/Source/WorldClient/WorldView.h"
 
 // STATIC: 0x00D025D0
 uint32_t CMapChunk::s_vertexCount = 145;
@@ -850,6 +857,110 @@ bool CMap::GetHeightMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, cons
     }
 
     return true;
+}
+
+// OFFSET: 0x0077FDC0/0x14046D0D0
+void CMap::RenderFlightBounds(const C3Vector& pos) {
+    if (this->m_mapFlags & Flag_GlobalMapObj) {
+        return;
+    }
+
+    CWorldView* view = CWorldScene::s_defaultWorldView;
+
+    if (!view) {
+        return;
+    }
+
+    int32_t ay = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.001875f);
+    int32_t ax = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.001875f);
+    CImVector color = g_theGxDevicePtr->m_caps.m_colorFormat == GxCF_rgba ? CImVector(0x80FFFF80) : CImVector(0x8080FFFF);
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(CGxVertexPCT), 882);
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 2352);
+    CGxVertexPCT* vertexStart = reinterpret_cast<CGxVertexPCT*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    uint16_t* indexStart = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+    CGxVertexPCT* vertex = vertexStart;
+    uint16_t* index = indexStart;
+
+    for (int32_t x = ax - 3; x <= ax + 3; x++) {
+        for (int32_t y = ay - 3; y <= ay + 3; y++) {
+            CMapAreaTableEntry* entry = this->m_areaTable.Get(y, x);
+
+            if (!entry || !(entry->m_flags & 0x2)) {
+                continue;
+            }
+
+            CMapArea* area = entry->m_area;
+
+            if (!area || !area->m_flightBounds) {
+                continue;
+            }
+
+            uint16_t base = static_cast<uint16_t>(vertex - vertexStart);
+            static C2Vector s_texCoords[9] = { C2Vector(0.0f, 0.0f), C2Vector(1.0f, 0.0f), C2Vector(2.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 1.0f), C2Vector(2.0f, 1.0f), C2Vector(0.0f, 2.0f), C2Vector(1.0f, 2.0f), C2Vector(2.0f, 2.0f) };
+            const int16_t* heights = static_cast<const int16_t*>(area->m_flightBounds);
+
+            for (uint32_t layer = 0; layer < 2; layer++) {
+                for (uint32_t i = 0; i < 9; i++) {
+                    vertex->p.x = s_flightBoundsVerts[i].x + area->m_posX;
+                    vertex->p.y = s_flightBoundsVerts[i].y + area->m_posY;
+                    vertex->p.z = static_cast<float>(heights[9 * layer + i]);
+                    vertex->c = color;
+                    vertex->tc = s_texCoords[i];
+                    vertex++;
+                }
+            }
+
+            for (uint32_t layer = 0; layer < 2; layer++) {
+                for (uint32_t t = 0; t < 8; t++) {
+                    for (uint32_t k = 0; k < 3; k++) {
+                        *index++ = static_cast<uint16_t>(base + s_flightBoundsTris[t][k] + 9 * layer);
+                    }
+                }
+            }
+        }
+    }
+
+    uint32_t vertexCount = static_cast<uint32_t>(vertex - vertexStart);
+    uint32_t indexCount = static_cast<uint32_t>(index - indexStart);
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+    g_theGxDevicePtr->BufUnlock(indexBuf, 0);
+    indexBuf->unk_001C = 1;
+
+    if (!indexCount) {
+        return;
+    }
+
+    g_theGxDevicePtr->RsPush();
+    C44Matrix world;
+    world.Translate(C3Vector(-view->m_camPos.x, -view->m_camPos.y, -view->m_camPos.z));
+    g_theGxDevicePtr->XformPushAndSet(GxXform_World, world);
+    GxRsSet(GxRs_BlendingMode, GxBlend_Alpha);
+    GxUpdateAlphaRef(GxRs_AlphaRef);
+    GxRsSet(GxRs_Lighting, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    GxRsSet(GxRs_DepthTest, 1);
+    GxRsSet(GxRs_Culling, 0);
+    CStatus status;
+    CGxTexFlags flags;
+    flags.m_wrapU = 1;
+    flags.m_wrapV = 1;
+    CTexture* texture = TextureCreate("XTextures\\FX\\LBTBarrier", flags, &status, 0, NULL, 2);
+    g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(texture));
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, static_cast<EGxVertexBufferFormat>(9));
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    DefaultShaders::SetFogEnabled(0);
+    DefaultShaders::SetDefaultShaders(static_cast<EGxVertexBufferFormat>(22), -1);
+    CGxBatch batch;
+    batch.m_primType = GxPrim_Triangles;
+    batch.m_start = 0;
+    batch.m_count = indexCount;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = static_cast<uint16_t>(vertexCount - 1);
+    g_theGxDevicePtr->Draw(batch);
+    GxXformPop(GxXform_World);
+    g_theGxDevicePtr->RsPop();
+    TextureRelease(texture);
 }
 
 // OFFSET: 0x00788780/0x140478150
