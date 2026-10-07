@@ -21,26 +21,25 @@ class CTexture;
 class CWorldOcclusion;
 class CWorldView;
 
-class CWorldRenderCallback {
+class CRenderCallback {
     public:
     /* 0000 */ WORLD_RENDER_CALLBACK m_callback;
     /* 0004 */ void* m_param;
     /* 0008 */ uint64_t m_param64;
-    /* 0010 */ TSLink<CWorldRenderCallback> m_link;
+    /* 0010 */ TSLink<CRenderCallback> m_link;
 };
 
-class CWorldFadeEntry {
+class SObjectFadeout {
     public:
     /* 0000 */ CMapEntity* m_entity;
-    /* 0004 */ float m_fadeTime;
-    /* 0008 */ float m_elapsed;
+    /* 0004 */ uint32_t m_startTime;
+    /* 0008 */ float m_alpha;
     /* 000C */ C44Matrix m_matrix;
-    /* 004C */ WORLD_FADE_CALLBACK m_callback;
+    /* 004C */ uint32_t unk_004C;
     /* 0050 */ uint64_t m_param;
-    /* 0058 */ uint32_t unk_0058;
-    /* 005C */ TSLink<CWorldFadeEntry> m_entityLink;
-    /* 0064 */ TSLink<CWorldFadeEntry> m_link;
-    /* 006C */ TSLink<CWorldFadeEntry> m_freeLink;
+    /* 0058 */ WORLD_FADE_CALLBACK m_callback;
+    /* 005C */ TSLink<SObjectFadeout> m_link;
+    /* 0064 */ uint32_t unk_0064;
 };
 
 class CWorldSceneLight {
@@ -74,9 +73,14 @@ class CWorldScene {
     static CM2Lighting s_lighting;
     static CWorldSceneLight s_sceneLights[3];
     static CBarrier s_barrier;
-    static TSExplicitList<CWorldRenderCallback, offsetof(CWorldRenderCallback, m_link)> s_renderCallbackList[3];
-    static TSExplicitList<CWorldFadeEntry, offsetof(CWorldFadeEntry, m_link)> s_fadeoutList;
-    static TSExplicitList<CWorldFadeEntry, offsetof(CWorldFadeEntry, m_freeLink)> s_fadeoutFreeList;
+    static TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)> s_renderCallbackList[3];
+    static TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> s_fadeoutList;
+    static TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> s_fadeoutFreeList;
+
+    static void AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64);
+    static void RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param);
+    static void FreeSceneLights();
+    static int32_t FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uint32_t param32);
 
     static void CallRenderCallbacks(uint32_t pass);
     static void ClearBarriers();

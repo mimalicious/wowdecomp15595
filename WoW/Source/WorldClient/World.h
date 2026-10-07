@@ -7,6 +7,7 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CAaBox.h"
+#include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/CiRect.h"
 
@@ -29,16 +30,37 @@ typedef void (*WORLD_FADE_CALLBACK)(C44Matrix& matrix, uint64_t param);
 typedef void (*WORLD_FRAME_CALLBACK)();
 
 namespace World {
-    struct FacetData;
     struct HitTestDebug;
     struct LiquidQueryResult;
     struct MinimapQuad;
     struct ObjectCollisionData;
     struct TriData;
 
-    typedef int32_t (*COLLISION_CALLBACK)(uint64_t* guids, uint32_t count, ObjectCollisionData* data, uint32_t flags);
+    typedef int32_t (*COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, CM2Model* model, int32_t blobShadow);
+
+    struct FacetData {
+        /* 0000 */ TSGrowableArray<CFacet> facets;
+        /* 0010 */ TSGrowableArray<uint64_t> facetIds;
+        /* 0020 */ TSGrowableArray<uint8_t> facetFlags;
+        /* 0030 */ uint32_t unk_0030;
+
+        FacetData();
+    };
+
+    struct CLIPINFO {
+        /* 0000 */ float m_dist[6];
+        /* 0018 */ uint32_t m_flags;
+        /* 001C */ uint32_t unk_001C;
+
+        void Set(const C3Vector& pos);
+    };
     typedef int32_t (*RENDER_OBJECT_CALLBACK)(uint64_t guid, uintptr_t object, CM2Model* model, int32_t a4);
 
+    extern uint64_t s_camTargetGuid;
+    extern C44Matrix s_camTargetMatrix;
+    extern C44Matrix s_camTargetView;
+    extern C3Vector* s_ndcClipVertsA[32];
+    extern C3Vector* s_ndcClipVertsB[32];
     extern WORLD_PROGRESS_CALLBACK s_loadProgressCallback;
     extern void* s_loadProgressParam;
     extern WORLD_MODEL_EVENT_CALLBACK s_userModelEventCallback;
@@ -234,7 +256,7 @@ namespace World {
     void ObjectGetExtents(uintptr_t object, CAaBox& box);
     void Render(const C3Vector& pos, float elapsedSec);
     void UpdateDayNight();
-    void TriDataToFacetData(const TriData& tris, FacetData& facets, uint64_t guid);
+    void TriDataToFacetData(const TriData& tris, FacetData& facets, uint64_t guid, uint8_t flags);
     void PrepareAreaOfInterest(const C3Vector& pos, float nearClip, float farClip, float fov, float aspect);
     void PrepareAreaOfInterest(const C3Vector& pos);
     void UpdateTextureCacheBudget();
@@ -250,7 +272,20 @@ namespace World {
     int32_t GetFacets(const CAaBox& box, FacetData& facets, uint32_t flags);
     void Preload(const C3Vector& pos, int32_t loadingScreen);
     int32_t LoadMap(int32_t mapId, C3Vector& pos);
-    void AddAaBoxFacets(const CAaBox& box, uint64_t guid, FacetData& facets);
+    void AddAaBoxFacets(const CAaBox& box, uint64_t guid, FacetData& facets, uint8_t flags);
+    void InitializeMaps();
+    void AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64);
+    void RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param);
+    void ObjectSetModelLighting(uintptr_t object, CM2Model* model);
+    void SetCameraTarget(uintptr_t entity, uint64_t guid, const C44Matrix& matrix);
+    uint32_t SceneCamLiquidStatus(float* depth);
+    float GetSmoothCamDepth();
+    void GetChunkCoords(const C3Vector& pos, int32_t& areaX, int32_t& areaY, int32_t& chunkX, int32_t& chunkY);
+    int32_t ObjectHasParent(uintptr_t object);
+    void UpdateAreaOfInterest(const C3Vector& pos, int32_t waitLoad);
+    uintptr_t ObjectFind(uint32_t uniqueId);
+    int32_t NDCClip(C3Vector* verts, uint32_t count, C3Vector**& outVerts, uint32_t& outCount);
+    int32_t NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool translate);
 }
 
 #endif

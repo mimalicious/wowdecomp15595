@@ -2,6 +2,7 @@
 #include <cfloat>
 #include <cmath>
 #include <cstring>
+#include <typeinfo>
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
@@ -16,13 +17,17 @@
 #include "Engine/Source/Model2/M2Shared.h"
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Services/AsyncFile.h"
+#include "Engine/Source/Services/SysMessage.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
 #include "Engine/Source/ShaderEffect/DepthCache.h"
 #include "Engine/Source/ShaderEffect/ShaderEffectManager.h"
 #include "Engine/Source/ShaderEffect/SunShafts.h"
 #include "Engine/Source/Storm/H/storm.h"
+#include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/C4Quaternion.h"
+#include "Engine/Source/Tempest/CAaSphere.h"
+#include "Engine/Source/Tempest/CFrustum.h"
 #include "Engine/Source/Tempest/CRect.h"
 #include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
@@ -33,10 +38,13 @@
 #include "WoW/Source/WorldClient/DetailDoodad.h"
 #include "WoW/Source/WorldClient/LiquidEnvironment.h"
 #include "WoW/Source/WorldClient/LiquidGeomFactories.h"
+#include "WoW/Source/WorldClient/HMMgr.h"
 #include "WoW/Source/WorldClient/Map.h"
+#include "WoW/Source/WorldClient/MapChunk.h"
 #include "WoW/Source/WorldClient/MapEntity.h"
 #include "WoW/Source/WorldClient/MapObj.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
+#include "WoW/Source/WorldClient/MapObjGroup.h"
 #include "WoW/Source/WorldClient/MapWeather.h"
 #include "WoW/Source/WorldClient/ShadowQuery.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
@@ -225,6 +233,21 @@ float World::s_weatherSplineDuration;
 // STATIC: 0x00E741BC
 int32_t World::s_loadFailed;
 
+// STATIC: 0x00E70C38
+uint64_t World::s_camTargetGuid;
+
+// STATIC: 0x00D00AA8
+C44Matrix World::s_camTargetMatrix;
+
+// STATIC: 0x00D00AE8
+C44Matrix World::s_camTargetView;
+
+// STATIC: 0x00E71080
+C3Vector* World::s_ndcClipVertsA[32];
+
+// STATIC: 0x00E71000
+C3Vector* World::s_ndcClipVertsB[32];
+
 // STATIC: 0x00E73F38
 char World::s_loadFailedName[256];
 
@@ -232,6 +255,11 @@ static const float s_texVectSpeed[16] = { -1.0f, 0.0f, -1.0f, 1.0f, 0.0f, 1.0f, 
 
 static CWorldMap* ActiveWorldMap() {
     return CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
+}
+
+// OFFSET: 0x00721CB0
+void World::InitializeMaps() {
+    CWorldMap::Initialize();
 }
 
 // PROVEN: 66b8f85f IDENTICAL/NONE
@@ -245,6 +273,16 @@ void World::SetLoadProgressCallback(WORLD_PROGRESS_CALLBACK callback, void* para
 // OFFSET: 0x00721CE0/0x1403F82D0
 void World::SetUserModelEventCallback(WORLD_MODEL_EVENT_CALLBACK callback) {
     World::s_userModelEventCallback = callback;
+}
+
+// OFFSET: 0x00721CF0
+void World::AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64) {
+    CWorldScene::AddRenderCallback(pass, callback, param, param64);
+}
+
+// OFFSET: 0x00721D20
+void World::RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param) {
+    CWorldScene::RemoveRenderCallback(pass, callback, param);
 }
 
 // OFFSET: 0x00721D30/0x1403F8300
@@ -272,6 +310,15 @@ int32_t World::QueryObjectInside(uintptr_t object, int32_t a2) {
     }
 
     return reinterpret_cast<CMapEntity*>(object)->QueryInterior(a2);
+}
+
+// OFFSET: 0x00721DA0
+int32_t World::QueryMapObjZoneName(uintptr_t object, const char*& name) {
+    if (!object) {
+        return 0;
+    }
+
+    return reinterpret_cast<CMapEntity*>(object)->QueryMapObjZoneName(name);
 }
 
 // PROVEN: 5b9af47e IDENTICAL/NONE
@@ -1254,6 +1301,68 @@ void World::ObjectSetModel(uintptr_t object, CM2Model* model) {
     entity->m_model->m_refCount++;
 }
 
+// OFFSET: 0x00723170
+void World::ObjectSetModelLighting(uintptr_t object, CM2Model* model) {
+    if (model) {
+        model->m_lightingCallback = CMapStaticEntity::ModelLightingCallback;
+        model->m_lightingArg = reinterpret_cast<void*>(object);
+    }
+}
+
+// OFFSET: 0x00723190
+void World::ObjectUpdate(uintptr_t object, const C44Matrix& matrix, const CAaBox& box, const CAaSphere& sphere, const C3Vector& pos, int32_t a6, uint32_t a7) {
+    CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
+
+    C3Vector worldPos = pos * matrix;
+    C3Vector translation(matrix.d0, matrix.d1, matrix.d2);
+
+    CAaSphere worldSphere;
+    worldSphere.c = translation;
+    worldSphere.r = 0.0f;
+
+    if (sphere.r > 0.0001f) {
+        worldSphere.r = sqrt(matrix.a2 * matrix.a2 + matrix.a1 * matrix.a1 + matrix.a0 * matrix.a0) * sphere.r;
+        worldSphere.c = sphere.c * matrix;
+    }
+
+    CAaBox worldBox(translation, translation);
+
+    if (box.t.x > box.b.x && box.t.y > box.b.y && box.t.z > box.b.z) {
+        worldBox = CAaBox::Transform(box, matrix);
+    }
+
+    C3Vector dPos = entity->m_position - translation;
+    C3Vector dVec = entity->m_vec2 - worldPos;
+    C3Vector dMin = entity->m_bbox.b - worldBox.b;
+    C3Vector dMax = entity->m_bbox.t - worldBox.t;
+    C3Vector dCenter = entity->m_sphere.c - worldSphere.c;
+    float dRadius = entity->m_sphere.r - worldSphere.r;
+
+    entity->m_position = translation;
+    entity->m_bbox = worldBox;
+    entity->m_vec2 = worldPos;
+    entity->m_sphere = worldSphere;
+    entity->unk_00BC = a7;
+
+    if (a6) {
+        return;
+    }
+
+    if (dPos.z * dPos.z + dPos.y * dPos.y + dPos.x * dPos.x > 0.000001f
+        || dVec.z * dVec.z + dVec.y * dVec.y + dVec.x * dVec.x > 0.0001f
+        || dMin.z * dMin.z + dMin.y * dMin.y + dMin.x * dMin.x > 0.0001f
+        || dMax.z * dMax.z + dMax.y * dMax.y + dMax.x * dMax.x > 0.0001f
+        || dCenter.z * dCenter.z + dCenter.y * dCenter.y + dCenter.x * dCenter.x > 0.0001f
+        || dRadius > 0.0001f) {
+        entity->m_worldMap->UpdateEntity(entity);
+    }
+}
+
+// OFFSET: 0x00723640
+void World::ObjectUpdate(uintptr_t object, const C44Matrix& matrix, const CAaBox& box, const CAaSphere& sphere, const C3Vector& pos, int32_t a6) {
+    World::ObjectUpdate(object, matrix, box, sphere, pos, a6, -1);
+}
+
 // OFFSET: 0x00723670
 void World::ObjectSetHidden(uintptr_t object, int32_t enable) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
@@ -1263,6 +1372,27 @@ void World::ObjectSetHidden(uintptr_t object, int32_t enable) {
     } else {
         baseObj->m_flags &= ~0x10000u;
     }
+}
+
+// OFFSET: 0x00723690
+void World::SetCameraTarget(uintptr_t entity, uint64_t guid, const C44Matrix& matrix) {
+    CWorldScene::camTargEntity = entity;
+
+    if (guid) {
+        if (World::s_camTargetGuid) {
+            C44Matrix inverse = matrix.AffineInverse();
+            C44Matrix view = inverse * World::s_camTargetMatrix * CWorldScene::s_m2Scene->m_view;
+            World::s_camTargetView = view;
+        } else {
+            World::s_camTargetView = CWorldScene::s_m2Scene->m_view;
+        }
+
+        World::s_camTargetMatrix = matrix;
+    } else {
+        World::s_camTargetView = CWorldScene::s_m2Scene->m_view;
+    }
+
+    World::s_camTargetGuid = guid;
 }
 
 // OFFSET: 0x00723770/0x1403FA0A0
@@ -1333,6 +1463,17 @@ int32_t World::QueryLiquidSounds(uintptr_t object, float radius, TSGrowableArray
     return 1;
 }
 
+// OFFSET: 0x00723A40
+uint32_t World::SceneCamLiquidStatus(float* depth) {
+    CWorldView* view = CWorldScene::s_defaultWorldView;
+
+    if (depth) {
+        *depth = view->m_camDepth;
+    }
+
+    return view->m_camLiquidStatus;
+}
+
 // OFFSET: 0x00723A60
 void World::CreateWaterRipple(const C3Vector& pos, float a2, float a3, float a4, float a5, float a6, int32_t a7, int32_t a8) {
     CWorldMap* worldMap = ActiveWorldMap();
@@ -1364,6 +1505,11 @@ const C3Vector* World::GetCamFrustumCorners() {
 // OFFSET: 0x00723AE0
 float World::GetCamDepth() {
     return CWorldScene::s_defaultWorldView->m_camDepth;
+}
+
+// OFFSET: 0x00723AF0
+float World::GetSmoothCamDepth() {
+    return CWorldScene::s_defaultWorldView->m_smoothCamDepth;
 }
 
 // OFFSET: 0x00723B00/0x1403FA4B0
@@ -1625,6 +1771,19 @@ int32_t World::IsValidPosition(const C3Vector& pos, float margin) {
     return ty >= margin && 34133.332f - margin > ty && tx >= margin && 34133.332f - margin > tx;
 }
 
+// OFFSET: 0x007245E0
+void World::GetChunkCoords(const C3Vector& pos, int32_t& areaX, int32_t& areaY, int32_t& chunkX, int32_t& chunkY) {
+    float x = pos.x;
+    chunkX = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.029999999f);
+    chunkY = static_cast<int32_t>(-(x - 17066.666f) * 0.029999999f);
+    areaX = chunkX >> 4;
+    areaY = chunkY >> 4;
+    areaX &= 0x3F;
+    areaY &= 0x3F;
+    chunkX &= 0xF;
+    chunkY &= 0xF;
+}
+
 // OFFSET: 0x00724660/0x1403FB310
 void World::Initialize() {
     CWorldParam::Initialize();
@@ -1725,6 +1884,101 @@ void World::Destroy() {
     CShadowQuery::Destroy();
 }
 
+// OFFSET: 0x00724B70
+uint64_t World::QueryObjectParentParam64(uintptr_t object) {
+    CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
+    CMapBaseObjLink* link = entity->m_parentLinkList.Head();
+
+    if (link && link->m_ref && (link->m_ref->m_type & MapBaseObj_Type_MapObjDefGroup)) {
+        return static_cast<CMapObjDefGroup*>(link->m_ref)->m_mapObjDef->m_param64;
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00724BB0
+int32_t World::ObjectHasParent(uintptr_t object) {
+    CMapEntity* entity = reinterpret_cast<CMapEntity*>(object);
+
+    if (!(entity->m_type & MapBaseObj_Type_Entity)) {
+        return 0;
+    }
+
+    return entity->m_parentLinkList.Head() != NULL;
+}
+
+// OFFSET: 0x00724BE0
+void World::ObjectUpdate(uintptr_t object, C3Vector& pos, float facing, float a4, float a5, int32_t a6) {
+    CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
+
+    if (a6) {
+        CMap::SnapBaseObjToSubChunk(baseObj, pos, facing);
+    }
+
+    if (baseObj->m_type & MapBaseObj_Type_MapObjDef) {
+        static_cast<CMapObjDef*>(baseObj)->UpdatePos(pos, facing, a4, a5);
+        return;
+    }
+
+    if (!(baseObj->m_type & MapBaseObj_Type_Entity)) {
+        return;
+    }
+
+    C44Matrix matrix;
+    matrix.d0 = pos.x;
+    matrix.d1 = pos.y;
+    matrix.d2 = pos.z;
+    matrix.RotateAroundZ(facing);
+    matrix.RotateAroundY(a4);
+    matrix.RotateAroundX(a5);
+    World::ObjectUpdate(object, matrix);
+}
+
+// OFFSET: 0x00724EB0
+void World::ObjectUpdate(uintptr_t object, const C44Matrix& matrix) {
+    CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
+
+    if (baseObj->m_type & MapBaseObj_Type_MapObjDef) {
+        static_cast<CMapObjDef*>(baseObj)->UpdateMatrix(matrix);
+        return;
+    }
+
+    if (!(baseObj->m_type & MapBaseObj_Type_Entity)) {
+        return;
+    }
+
+    CMapEntity* entity = static_cast<CMapEntity*>(baseObj);
+    C3Vector center(0.0f, 0.0f, 0.0f);
+    CAaBox box(C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, 0.0f, 0.0f));
+    CAaSphere sphere;
+    sphere.c = C3Vector(0.0f, 0.0f, 0.0f);
+    sphere.r = 0.0f;
+    CM2Model* model = entity->m_model;
+
+    if (model) {
+        if (model->IsLoaded()) {
+            box = model->GetBoundingBox();
+            sphere = model->GetBoundingSphere();
+            CM2Model* m = entity->m_model;
+
+            if (!(m->m_shared->m_flags & 0x1)) {
+                m->WaitForLoad(NULL);
+            }
+
+            CAaBox bounds = m->m_shared->m_data->m_collisionBounds.m_extent;
+            box |= bounds;
+            center.x = (bounds.t.x + bounds.b.x) * 0.5f;
+            center.y = (bounds.t.y + bounds.b.y) * 0.5f;
+            center.z = (bounds.t.z + bounds.b.z) * 0.5f;
+        }
+
+        entity->m_model->m_fFlags |= 0x4000;
+        entity->m_model->m_worldTransform = matrix;
+    }
+
+    World::ObjectUpdate(object, matrix, box, sphere, center, 0, -1);
+}
+
 // OFFSET: 0x00725090/0x1403FC190
 void World::PrepareAreaOfInterest(const C3Vector& pos) {
     float farClip = World::s_farClip;
@@ -1796,6 +2050,81 @@ void World::Preload(const C3Vector& pos, int32_t loadingScreen) {
     }
 }
 
+// OFFSET: 0x00725610
+void World::UpdateAreaOfInterest(const C3Vector& pos, int32_t waitLoad) {
+    World::gbChunkRectOld = World::gbChunkRect;
+    World::gbPositionOld = World::gbPosition;
+    World::detailDoodadChunkRectOld = World::detailDoodadChunkRect;
+    World::PrepareAreaOfInterest(pos);
+
+    if (CWorldParam::cvar_terrainMipLevel->m_intValue != World::alphaShadowMipLevel) {
+        CWorldMap::ClearAllRenderChunks();
+        World::alphaShadowMipLevel = CWorldParam::cvar_terrainMipLevel->m_intValue;
+    }
+
+    CWorldMap::UpdateAllMaps(waitLoad);
+}
+
+// OFFSET: 0x007256D0
+void World::ObjectSetRenderEnabled(uintptr_t object, int32_t enable) {
+    CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
+
+    if (enable) {
+        baseObj->m_flags &= ~0x10;
+    } else {
+        baseObj->m_flags |= 0x10;
+    }
+
+    if (!(baseObj->m_type & MapBaseObj_Type_MapObjDef)) {
+        return;
+    }
+
+    CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(baseObj);
+
+    for (CMapObjDefGroup* group = mapObjDef->m_defGroupList.Head(), * nextGroup; group; group = nextGroup) {
+        nextGroup = mapObjDef->m_defGroupList.Next(group);
+
+        for (CMapBaseObjLink* link = group->m_entityLinks.Head(), * next; link; link = next) {
+            next = group->m_entityLinks.Next(link);
+            CMap::FreeBaseObjLink(link);
+        }
+    }
+}
+
+// OFFSET: 0x00725760
+void World::ObjectEnableCollision(uintptr_t object, int32_t enable) {
+    CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
+
+    if (enable) {
+        baseObj->m_flags &= ~0x80;
+    } else {
+        baseObj->m_flags |= 0x80;
+    }
+
+    if (baseObj->m_type & MapBaseObj_Type_Entity) {
+        CMapEntity* entity = static_cast<CMapEntity*>(baseObj);
+        uint32_t linkType = (entity->m_flags & 0x80) ? 2 : 1;
+
+        for (CMapBaseObjLink* link = entity->m_parentLinkList.Head(), * next; link; link = next) {
+            next = entity->m_parentLinkList.Next(link);
+            CMapBaseObj* ref = link->m_ref;
+            link->m_refLink.Unlink();
+
+            if (ref->m_type & 0x4) {
+                static_cast<CMapChunk*>(ref)->m_entityLinkList.LinkNode(link, linkType, NULL);
+            } else if (ref->m_type & MapBaseObj_Type_MapObjDefGroup) {
+                static_cast<CMapObjDefGroup*>(ref)->m_entityLinks.LinkNode(link, linkType, NULL);
+            }
+        }
+    } else if (baseObj->m_type & MapBaseObj_Type_MapObjDef) {
+        CWorldMap* worldMap = ActiveWorldMap();
+
+        if (worldMap && worldMap->m_weather && worldMap->m_weather->m_hmMgr) {
+            worldMap->m_weather->m_hmMgr->Invalidate();
+        }
+    }
+}
+
 // OFFSET: 0x00725890/0x1403FCA60
 void World::ObjectDestroy(uintptr_t object) {
     CMapBaseObj* baseObj = reinterpret_cast<CMapBaseObj*>(object);
@@ -1821,6 +2150,121 @@ void World::ObjectDestroy(uintptr_t object) {
 
     entity->m_sortLink.Unlink();
     CMap::FreeEntity(entity);
+}
+
+// OFFSET: 0x00725940
+void World::TriDataToFacetData(const TriData& tris, FacetData& facets, uint64_t guid, uint8_t flags) {
+    uint32_t oldCount = facets.facets.Count();
+
+    for (uint32_t b = 0; b < TriData::s_nBatches; b++) {
+        TriData::Batch& batch = TriData::s_batches[b];
+        const uint16_t* indices = batch.m_indices;
+
+        for (uint32_t i = 0; i < batch.m_faceCount; i++) {
+            CFacet* facet = facets.facets.New();
+            const C44Matrix& m = *batch.m_matrix;
+            C3Vector v0 = batch.m_vertexList[indices[0]];
+            C3Vector v1 = batch.m_vertexList[indices[1]];
+            C3Vector v2 = batch.m_vertexList[indices[2]];
+
+            float nx = (v1.y - v0.y) * (v2.z - v0.z) - (v1.z - v0.z) * (v2.y - v0.y);
+            float ny = (v1.z - v0.z) * (v2.x - v0.x) - (v2.z - v0.z) * (v1.x - v0.x);
+            float nz = (v2.y - v0.y) * (v1.x - v0.x) - (v1.y - v0.y) * (v2.x - v0.x);
+            facet->plane.n.x = m.c0 * nz + m.b0 * ny + m.a0 * nx;
+            facet->plane.n.y = m.c1 * nz + m.b1 * ny + m.a1 * nx;
+            facet->plane.n.z = m.c2 * nz + m.b2 * ny + m.a2 * nx;
+
+            facet->v[0] = v0 * m;
+            facet->v[1] = v1 * m;
+            facet->v[2] = v2 * m;
+
+            float len = facet->plane.n.x * facet->plane.n.x + facet->plane.n.y * facet->plane.n.y + facet->plane.n.z * facet->plane.n.z;
+
+            if (len == 0.0f) {
+                SysMsgPrintf(STATUS_ERROR, 2, "Found degenerate triangle -- data needs to be fixed\n");
+                facet->plane.n.x = 0.0f;
+                facet->plane.n.y = 0.0f;
+                facet->plane.n.z = 1.0f;
+            } else {
+                float inv = 1.0f / sqrt(len);
+                facet->plane.n.x *= inv;
+                facet->plane.n.y *= inv;
+                facet->plane.n.z *= inv;
+            }
+
+            indices += 3;
+            facet->plane.d = -(facet->v[0].z * facet->plane.n.z + facet->v[0].y * facet->plane.n.y + facet->plane.n.x * facet->v[0].x);
+        }
+    }
+
+    uint32_t count = facets.facets.Count();
+
+    if (count == oldCount) {
+        return;
+    }
+
+    facets.facetIds.SetCount(count);
+    facets.facetFlags.SetCount(count);
+
+    for (uint32_t i = oldCount; i < count; i++) {
+        facets.facetIds.m_data[i] = guid;
+        facets.facetFlags.m_data[i] = flags;
+    }
+}
+
+// OFFSET: 0x00725ED0
+void World::AddAaBoxFacets(const CAaBox& box, uint64_t guid, FacetData& facets, uint8_t flags) {
+    if (!(box.t.x > box.b.x && box.t.y > box.b.y && box.t.z > box.b.z)) {
+        return;
+    }
+
+    C3Vector corners[8];
+    corners[0] = C3Vector(box.b.x, box.t.y, box.b.z);
+    corners[1] = C3Vector(box.t.x, box.t.y, box.b.z);
+    corners[2] = C3Vector(box.t.x, box.b.y, box.b.z);
+    corners[3] = C3Vector(box.b.x, box.b.y, box.b.z);
+    corners[4] = C3Vector(box.b.x, box.t.y, box.t.z);
+    corners[5] = C3Vector(box.t.x, box.t.y, box.t.z);
+    corners[6] = C3Vector(box.t.x, box.b.y, box.t.z);
+    corners[7] = C3Vector(box.b.x, box.b.y, box.t.z);
+
+    uint32_t oldCount = facets.facets.Count();
+
+    static const uint32_t s_indices[36] = {
+        0, 2, 3, 0, 1, 2,
+        1, 6, 2, 1, 5, 6,
+        4, 6, 5, 4, 7, 6,
+        0, 7, 4, 0, 3, 7,
+        0, 5, 1, 0, 4, 5,
+        2, 7, 3, 2, 6, 7,
+    };
+
+    C4Plane planes[6];
+    planes[0].From3Pos(corners[0], corners[2], corners[3]);
+    planes[1].From3Pos(corners[1], corners[6], corners[2]);
+    planes[2].From3Pos(corners[4], corners[6], corners[5]);
+    planes[3].From3Pos(corners[0], corners[7], corners[4]);
+    planes[4].From3Pos(corners[0], corners[5], corners[1]);
+    planes[5].From3Pos(corners[2], corners[7], corners[3]);
+
+    CFacet facet(0.0f);
+
+    for (uint32_t i = 0; i < 36; i += 3) {
+        facet.plane = planes[i / 6];
+        facet.v[0] = corners[s_indices[i]];
+        facet.v[1] = corners[s_indices[i + 1]];
+        facet.v[2] = corners[s_indices[i + 2]];
+        facets.facets.Add(1, &facet);
+    }
+
+    uint32_t count = facets.facets.Count();
+    facets.facetIds.SetCount(count);
+    facets.facetFlags.SetCount(count);
+
+    for (uint32_t i = oldCount; i < count; i++) {
+        facets.facetIds.m_data[i] = guid;
+        facets.facetFlags.m_data[i] = flags;
+    }
 }
 
 // OFFSET: 0x00726400
@@ -1861,6 +2305,25 @@ void World::UpdateDayNight() {
     CImVector specular;
     DayNight::GetSpecularColor(&specular);
     CWorldMap::s_sunLight.m_specColor = C3Vector(specular.r * 0.0039215689f, specular.g * 0.0039215689f, specular.b * 0.0039215689f);
+}
+
+// OFFSET: 0x007266C0
+uintptr_t World::ObjectFind(uint32_t uniqueId) {
+    CWorldMap* worldMap = ActiveWorldMap();
+
+    if (!worldMap) {
+        return 0;
+    }
+
+    CMapObjDef* mapObjDef = worldMap->m_mapObjDefHash.Ptr(uniqueId, CWorldMap::s_mapObjDefKey);
+
+    if (mapObjDef) {
+        return reinterpret_cast<uintptr_t>(mapObjDef);
+    }
+
+    HASHKEY_DWORD key;
+    key.m_key = 0;
+    return reinterpret_cast<uintptr_t>(worldMap->m_doodadDefHash.Ptr(uniqueId, key));
 }
 
 // PROVEN: 94d71607 IDENTICAL/NONE
@@ -1964,4 +2427,209 @@ void World::OnShaderModelChanged(void* param) {
     CShadowQuery::Destroy();
     CShaderEffectManager::DestroyAllEffects();
     World::InitializeShaderEffects();
+}
+
+// OFFSET: 0x00726A40
+int32_t World::GetFacets(const CAaBox& box, const CAaBox& box2, FacetData& facets, uint32_t flags) {
+    CWorldMap* worldMap = ActiveWorldMap();
+
+    if (!worldMap) {
+        return 0;
+    }
+
+    if (!(flags & 0x4000)) {
+        return worldMap->QueryFacets(box, box2, facets, flags);
+    }
+
+    static FacetData s_facets;
+    s_facets.facets.SetCount(0);
+    s_facets.facetIds.SetCount(0);
+    s_facets.facetFlags.SetCount(0);
+
+    bool result = worldMap->QueryFacets(box, box2, s_facets, flags);
+
+    for (uint32_t i = 0; i < s_facets.facets.Count(); i++) {
+        if (s_facets.facets.m_data[i].plane.n.z >= 0.64278764f) {
+            facets.facets.New(s_facets.facets.m_data[i]);
+            facets.facetIds.New(s_facets.facetIds.m_data[i]);
+            facets.facetFlags.New(s_facets.facetFlags.m_data[i]);
+        }
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00726BB0
+int32_t World::GetFacets(const CAaBox& box, FacetData& facets, uint32_t flags) {
+    return World::GetFacets(box, box, facets, flags);
+}
+
+// OFFSET: 0x00726C00
+void World::CLIPINFO::Set(const C3Vector& pos) {
+    this->m_dist[0] = pos.x;
+    this->m_dist[1] = 1.0f - pos.x;
+    this->m_dist[2] = pos.y;
+    this->m_dist[3] = 1.0f - pos.y;
+    this->m_dist[4] = pos.z;
+    this->m_dist[5] = 1.0f - pos.z;
+
+    const uint32_t* bits = reinterpret_cast<const uint32_t*>(this->m_dist);
+    this->m_flags = (bits[0] & 0x80000000)
+        + ((bits[2] >> 2) & 0x20000000)
+        + ((bits[5] >> 5) & 0x4000000)
+        + ((bits[3] >> 3) & 0x10000000)
+        + ((bits[4] >> 4) & 0x8000000)
+        + ((bits[1] >> 1) & 0x40000000);
+}
+
+// OFFSET: 0x00727740
+int32_t World::NDCClip(C3Vector* verts, uint32_t count, C3Vector**& outVerts, uint32_t& outCount) {
+    static C3Vector s_clipVerts[32];
+
+    CLIPINFO infoA[32];
+    CLIPINFO* infoPtrA[32];
+    CLIPINFO infoB[32];
+    CLIPINFO* infoPtrB[32];
+
+    if (!count) {
+        return 0;
+    }
+
+    uint32_t andFlags = 0xFFFFFFFF;
+    uint32_t orFlags = 0;
+
+    for (uint32_t i = 0; i < count; i++) {
+        infoA[i].Set(verts[i]);
+        infoPtrA[i] = &infoA[i];
+        andFlags &= infoA[i].m_flags;
+        orFlags |= infoA[i].m_flags;
+        World::s_ndcClipVertsA[i] = &verts[i];
+    }
+
+    if (andFlags) {
+        return 0;
+    }
+
+    if (!orFlags) {
+        outVerts = World::s_ndcClipVertsA;
+        outCount = count;
+        return 1;
+    }
+
+    C3Vector** srcVerts = World::s_ndcClipVertsA;
+    CLIPINFO** srcInfos = infoPtrA;
+    uint32_t srcCount = count;
+    C3Vector** dstVerts = World::s_ndcClipVertsB;
+    CLIPINFO** dstInfos = infoPtrB;
+    uint32_t dstCount = 0;
+
+    C3Vector* newVert = s_clipVerts;
+    CLIPINFO* newInfo = infoB;
+    uint32_t bit = 0x80000000;
+
+    for (uint32_t plane = 0; plane < 6; plane++, bit >>= 1) {
+        if (!(bit & orFlags)) {
+            continue;
+        }
+
+        uint32_t prev = srcCount - 1;
+        uint32_t prevOut = bit & srcInfos[prev]->m_flags;
+        dstCount = 0;
+
+        for (uint32_t i = 0; i < srcCount; i++) {
+            CLIPINFO* info = srcInfos[i];
+            uint32_t out = bit & info->m_flags;
+
+            if (prevOut != out) {
+                float denom = srcInfos[prev]->m_dist[plane] - info->m_dist[plane];
+
+                if (denom == 0.0f) {
+                    denom = 0.0001f;
+                }
+
+                const C3Vector* p = srcVerts[prev];
+                const C3Vector* c = srcVerts[i];
+                float t = srcInfos[prev]->m_dist[plane] / denom;
+                newVert->x = (c->x - p->x) * t + p->x;
+                newVert->y = p->y + (c->y - p->y) * t;
+                newVert->z = p->z + (c->z - p->z) * t;
+                newInfo->Set(*newVert);
+                dstVerts[dstCount] = newVert;
+                dstInfos[dstCount] = newInfo;
+                newVert++;
+                dstCount++;
+                newInfo++;
+            }
+
+            if (!out) {
+                dstVerts[dstCount] = srcVerts[i];
+                dstInfos[dstCount] = srcInfos[i];
+                dstCount++;
+            }
+
+            prev = i;
+            prevOut = out;
+        }
+
+        if (!dstCount) {
+            return 0;
+        }
+
+        C3Vector** tmpVerts = srcVerts;
+        CLIPINFO** tmpInfos = srcInfos;
+        srcVerts = dstVerts;
+        srcInfos = dstInfos;
+        srcCount = dstCount;
+        dstVerts = tmpVerts;
+        dstInfos = tmpInfos;
+    }
+
+    outVerts = srcVerts;
+    outCount = srcCount;
+    return 1;
+}
+
+// OFFSET: 0x00727A20
+int32_t World::NDCXform(const CFrustum& frustum, C44Matrix& matrix, bool translate) {
+    const C3Vector* corners = frustum.corners;
+    matrix.a0 = corners[3].x - corners[0].x;
+    matrix.a1 = corners[3].y - corners[0].y;
+    matrix.a2 = corners[3].z - corners[0].z;
+    matrix.b0 = corners[1].x - corners[0].x;
+    matrix.b1 = corners[1].y - corners[0].y;
+    matrix.b2 = corners[1].z - corners[0].z;
+    matrix.c0 = corners[4].x - corners[0].x;
+    matrix.c1 = corners[4].y - corners[0].y;
+    matrix.c2 = corners[4].z - corners[0].z;
+    matrix.d3 = 1.0f;
+    matrix.d0 = 0.0f;
+    matrix.d1 = 0.0f;
+    matrix.d2 = 0.0f;
+    matrix.c3 = 0.0f;
+    matrix.b3 = 0.0f;
+    matrix.a3 = 0.0f;
+
+    if (translate) {
+        matrix.d0 = corners[0].x;
+        matrix.d1 = corners[0].y;
+        matrix.d2 = corners[0].z;
+    }
+
+    float det = matrix.Determinant();
+
+    if (fabs(det) < 0.00000023841858f) {
+        matrix = C44Matrix();
+        return 0;
+    }
+
+    matrix = matrix.Inverse(det);
+    return 1;
+}
+
+// INLINED
+World::FacetData::FacetData() {
+    this->facets.m_chunk = 256;
+    this->facetIds.m_chunk = 256;
+    this->facetFlags.m_chunk = 256;
+    this->unk_0030 = 0;
 }

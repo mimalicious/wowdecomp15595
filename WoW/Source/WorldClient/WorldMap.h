@@ -127,6 +127,8 @@ class CWorldMap {
     int32_t QueryFlightBounds(const C3Vector& pos, float& z, int32_t lower);
     int32_t QueryIntersectingModels(CM2Model** models, uint32_t maxModels, const CAaBox& box, uint32_t flags);
     bool QueryFacets(const CFrustum& frustum, World::FacetData& facets, uint32_t flags);
+    bool QueryFacets(const CAaBox& box, const CAaBox& box2, World::FacetData& facets, uint32_t flags);
+    void UpdateEntity(CMapEntity* entity);
     bool QueryLiquid(const C3Vector& pos, int32_t nearest, uint32_t& liquidType, float& height);
     int32_t QueryFlightBoundsUpper(const C3Vector& pos, float& height);
     int32_t QueryLiquidTerrain(const C3Vector& pos, uint32_t& liquidType, float& height);

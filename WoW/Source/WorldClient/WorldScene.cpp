@@ -1,6 +1,7 @@
 #include "WorldScene.h"
 #include <cmath>
 #include <cstring>
+#include <typeinfo>
 #include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Gx/Gx.h"
@@ -30,6 +31,7 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
 #include "WoW/Source/WorldClient/WorldOcclusion.h"
 #include "WoW/Source/WorldClient/WorldView.h"
+#include "WoW/Source/WorldClient/shadow.h"
 
 // STATIC: 0x00E70C48
 CWorldView* CWorldScene::s_defaultWorldView;
@@ -71,13 +73,13 @@ C3Vector CWorldScene::s_playerPos;
 CBarrier CWorldScene::s_barrier;
 
 // STATIC: 0x00E70C64
-TSExplicitList<CWorldRenderCallback, offsetof(CWorldRenderCallback, m_link)> CWorldScene::s_renderCallbackList[3];
+TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)> CWorldScene::s_renderCallbackList[3];
 
 // STATIC: 0x00D00B28
-TSExplicitList<CWorldFadeEntry, offsetof(CWorldFadeEntry, m_link)> CWorldScene::s_fadeoutList;
+TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> CWorldScene::s_fadeoutList;
 
 // STATIC: 0x00D00B34
-TSExplicitList<CWorldFadeEntry, offsetof(CWorldFadeEntry, m_freeLink)> CWorldScene::s_fadeoutFreeList;
+TSExplicitList<SObjectFadeout, offsetof(SObjectFadeout, m_link)> CWorldScene::s_fadeoutFreeList;
 
 // STATIC: 0x00E70CD8
 CM2Lighting CWorldScene::s_lighting;
@@ -93,6 +95,13 @@ CWorldSceneLight::CWorldSceneLight() {
     this->m_fadeOut = 0;
     this->m_fadeIn = 0;
     this->m_free = 1;
+}
+
+// OFFSET: 0x00726BD0
+void CWorldScene::FreeSceneLights() {
+    CWorldScene::s_sceneLights[0].m_free = 1;
+    CWorldScene::s_sceneLights[1].m_free = 1;
+    CWorldScene::s_sceneLights[2].m_free = 1;
 }
 
 // OFFSET: 0x00726BF0
@@ -198,7 +207,7 @@ void CWorldScene::UpdateLiquid() {
 
 // OFFSET: 0x007272C0
 void CWorldScene::CallRenderCallbacks(uint32_t pass) {
-    for (CWorldRenderCallback* callback = CWorldScene::s_renderCallbackList[pass].Head(); callback; callback = CWorldScene::s_renderCallbackList[pass].Next(callback)) {
+    for (CRenderCallback* callback = CWorldScene::s_renderCallbackList[pass].Head(); callback; callback = CWorldScene::s_renderCallbackList[pass].Next(callback)) {
         callback->m_callback(callback->m_param, pass, callback->m_param64);
     }
 }
@@ -302,6 +311,20 @@ void CWorldScene::SetupSceneLighting() {
     }
 }
 
+// OFFSET: 0x007275D0
+void CWorldScene::RenderWeather() {
+    CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
+
+    if (worldMap && worldMap->m_weather) {
+        worldMap->m_weather->Render();
+    }
+}
+
+// OFFSET: 0x007275F0
+void CWorldScene::RenderBarriers(CWorldView* view) {
+    CWorldScene::s_barrier.Render(view->m_camPos, FrameTime::GetTickTimeSec());
+}
+
 // OFFSET: 0x00727620
 void CWorldScene::RenderLowDetailAreas(CWorldView* view) {
     if (!view->m_lowDetailAreas.Count()) {
@@ -345,6 +368,52 @@ void CWorldScene::RenderLowDetailMapObjDefs(CWorldView* view, const C44Matrix& w
         DefaultShaders::GetFogColor(color);
         CMapObj::RenderMapObjGroupsColor(groups, count, world, color);
     }
+}
+
+// OFFSET: 0x00727BE0
+int32_t CWorldScene::FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uint32_t param32) {
+    SObjectFadeout* fadeout = static_cast<SObjectFadeout*>(param);
+    CM2Model* model = fadeout->m_entity->m_model;
+
+    if (flags & 0x1) {
+        model->SetAnimating(1);
+
+        if (model->m_attachParent) {
+            model->m_fFlags |= 0x40;
+        } else {
+            model->m_fFlags |= 0x8;
+        }
+
+        if (model->m_attachParent) {
+            model->m_fFlags |= 0x10000;
+        } else {
+            model->m_fFlags |= 0x8000;
+        }
+
+        return 1;
+    }
+
+    if (model->m_attachParent) {
+        model->m_fFlags &= ~0x40;
+    } else {
+        model->m_fFlags &= ~0x8;
+    }
+
+    if (model->m_attachParent) {
+        model->m_fFlags &= ~0x10000;
+    } else {
+        model->m_fFlags &= ~0x8000;
+    }
+
+    model->SetAnimating(0);
+
+    if (model->m_attachParent) {
+        model->m_fFlags &= ~0x10000;
+    } else {
+        model->m_fFlags &= ~0x8000;
+    }
+
+    return 1;
 }
 
 // OFFSET: 0x00727C80
@@ -479,17 +548,56 @@ void CWorldScene::RenderSetFog() {
     CShaderEffect::SetFogParams(fog->m_start, fog->m_end, fog->m_density, fog->m_color, 0.0f);
 }
 
+// OFFSET: 0x00728600
+void CWorldScene::UpdateFadeOutObjects() {
+    uint32_t now = FrameTime::GetCurTimeMs();
+
+    for (SObjectFadeout* fadeout = CWorldScene::s_fadeoutList.Head(), * next; fadeout; fadeout = next) {
+        uint32_t elapsed = now - fadeout->m_startTime;
+        CM2Model* model = fadeout->m_entity->m_model;
+        next = CWorldScene::s_fadeoutList.Next(fadeout);
+
+        if (elapsed <= 2000 && model->CanUpdateNonReadyTextures()) {
+            if (fadeout->m_callback) {
+                C44Matrix matrix;
+                fadeout->m_callback(matrix, fadeout->m_param);
+                C44Matrix transform = fadeout->m_matrix * matrix;
+                model->m_fFlags |= 0x4000;
+                model->m_worldTransform = transform;
+            }
+
+            float alpha = (1.0f - static_cast<float>(elapsed) * 0.00050000002f) * fadeout->m_alpha;
+
+            if (alpha >= 0.0f) {
+                float value = 1.0f;
+
+                if (alpha <= 1.0f) {
+                    value = (3.0f - alpha * 2.0f) * alpha * alpha;
+                }
+
+                model->m_fadeAlpha = value;
+            } else {
+                model->m_fadeAlpha = 0.0f;
+            }
+        } else {
+            World::ObjectDestroy(reinterpret_cast<uintptr_t>(fadeout->m_entity));
+            fadeout->m_entity = NULL;
+            fadeout->m_link.Unlink();
+            CWorldScene::s_fadeoutFreeList.LinkToTail(fadeout);
+        }
+    }
+}
+
 // OFFSET: 0x00728810
 void CWorldScene::ClearObjectFadeoutList() {
-    CWorldFadeEntry* entry = CWorldScene::s_fadeoutList.Head();
+    SObjectFadeout* entry = CWorldScene::s_fadeoutList.Head();
 
     while (entry) {
-        CWorldFadeEntry* next = CWorldScene::s_fadeoutList.Next(entry);
+        SObjectFadeout* next = CWorldScene::s_fadeoutList.Next(entry);
         World::ObjectDestroy(reinterpret_cast<uintptr_t>(entry->m_entity));
         entry->m_entity = NULL;
-        entry->m_entityLink.Unlink();
-        CWorldScene::s_fadeoutList.UnlinkNode(entry);
-        CWorldScene::s_fadeoutFreeList.LinkToHead(entry);
+        entry->m_link.Unlink();
+        CWorldScene::s_fadeoutFreeList.LinkToTail(entry);
         entry = next;
     }
 }
@@ -665,6 +773,68 @@ void CWorldScene::Render(const C3Vector& pos, float elapsedSec) {
     }
 }
 
+// OFFSET: 0x00728ED0
+void CWorldScene::RenderEntitys(CWorldView* view) {
+    int32_t blobShadows = ShadowBlobsEnabled();
+
+    for (CMapEntity* entity = view->m_list2004.Head(), * next; entity; entity = next) {
+        next = view->m_list2004.Next(entity);
+        entity->m_viewLink.Unlink();
+        CM2Model* model = entity->m_model;
+
+        if (!model) {
+            continue;
+        }
+
+        if (model->IsLoadedRecursive()) {
+            view->CullModelTree(entity->m_model, entity->unk_00BC);
+        }
+
+        if (entity->m_model->IsLoaded() && World::s_entityCollisionCallback) {
+            World::s_entityCollisionCallback(entity->m_param64, entity->m_param32, entity->m_model, blobShadows & (entity->m_entityFlags >> 9) & 1);
+        }
+    }
+}
+
+// OFFSET: 0x00728FE0
+void CWorldScene::FadeoutObject(CMapEntity* entity, float time, C44Matrix* matrix, WORLD_FADE_CALLBACK callback, uint64_t param) {
+    SObjectFadeout* fadeout = CWorldScene::s_fadeoutFreeList.Head();
+
+    if (!fadeout) {
+        fadeout = new (SMemAlloc(sizeof(SObjectFadeout), typeid(SObjectFadeout).raw_name(), SLOG_OBJECT, SMEM_FLAG_ZEROMEMORY)) SObjectFadeout;
+    }
+
+    fadeout->m_entity = entity;
+    fadeout->m_startTime = FrameTime::GetCurTimeMs();
+    fadeout->m_callback = callback;
+    fadeout->m_alpha = time;
+    fadeout->m_param = param;
+
+    if (matrix) {
+        fadeout->m_matrix = entity->m_model->m_worldTransform * *matrix;
+    }
+
+    entity->m_updateCallback = CWorldScene::FadeoutUpdateCallback;
+    entity->m_updateParam = fadeout;
+    CWorldScene::s_fadeoutList.LinkToTail(fadeout);
+}
+
+// OFFSET: 0x00729100
+void CWorldScene::AddRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param, uint64_t param64) {
+    TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)>& list = CWorldScene::s_renderCallbackList[pass];
+
+    for (CRenderCallback* node = list.Head(); node; node = list.Next(node)) {
+        if (node->m_callback == callback && node->m_param == param) {
+            return;
+        }
+    }
+
+    CRenderCallback* node = list.NewNode(2, 0, 0);
+    node->m_callback = callback;
+    node->m_param = param;
+    node->m_param64 = param64;
+}
+
 // OFFSET: 0x007291E0
 void CWorldScene::RenderChunksLayered(CWorldView* view) {
     int32_t vertexShader = CMap::enableTerrainShaderVertex != 0;
@@ -810,6 +980,18 @@ void CWorldScene::Destroy() {
     g_theGxDevicePtr->RemoveTextureRecreationCallback(CWorldScene::TextureRecreationCallback);
 }
 
+// OFFSET: 0x00729850
+void CWorldScene::RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param) {
+    TSExplicitList<CRenderCallback, offsetof(CRenderCallback, m_link)>& list = CWorldScene::s_renderCallbackList[pass];
+
+    for (CRenderCallback* node = list.Head(); node; node = list.Next(node)) {
+        if (node->m_callback == callback && node->m_param == param) {
+            list.DeleteNode(node);
+            return;
+        }
+    }
+}
+
 // OFFSET: 0x007298A0
 void CWorldScene::RenderAlphaWater(CWorldView* view) {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];
@@ -827,6 +1009,89 @@ void CWorldScene::RenderAlphaWater(CWorldView* view) {
 
     Liquid::RendererFlush(FrameTime::GetCurTimeMs(), view->m_camPos, 1);
     worldMap->RenderWaterRipples(view);
+    g_theGxDevicePtr->RsPop();
+}
+
+// OFFSET: 0x00729920
+void CWorldScene::RenderWaterFogPoly(CWorldView* view) {
+    C3Vector camPos = view->m_camPos;
+    const C3Vector* corners = view->m_lowDetailFrustum.corners;
+
+    if (corners[4].z > 0.0f && corners[7].z > 0.0f) {
+        return;
+    }
+
+    C3Vector c5 = corners[5];
+    C3Vector d = camPos - c5;
+    float inv = 1.0f / sqrt(d.y * d.y + d.z * d.z + d.x * d.x);
+    c5.z = d.z * inv + c5.z;
+    c5.y = d.y * inv + c5.y;
+    c5.x = d.x * inv + c5.x;
+
+    C3Vector c6 = corners[6];
+    inv = 1.0f / sqrt((camPos.z - c6.z) * (camPos.z - c6.z) + (camPos.y - c6.y) * (camPos.y - c6.y) + (camPos.x - c6.x) * (camPos.x - c6.x));
+    c6.z = (camPos.z - c6.z) * inv + c6.z;
+    c6.y = (camPos.y - c6.y) * inv + c6.y;
+    c6.x = (camPos.x - c6.x) * inv + c6.x;
+
+    C3Vector c4 = corners[4];
+    inv = 1.0f / sqrt((camPos.z - c4.z) * (camPos.z - c4.z) + (camPos.y - c4.y) * (camPos.y - c4.y) + (camPos.x - c4.x) * (camPos.x - c4.x));
+    c4.z = (camPos.z - c4.z) * inv + c4.z;
+    c4.y = (camPos.y - c4.y) * inv + c4.y;
+    c4.x = (camPos.x - c4.x) * inv + c4.x;
+
+    C3Vector c7 = corners[7];
+    d = camPos - c7;
+    inv = 1.0f / sqrt(d.z * d.z + d.y * d.y + d.x * d.x);
+    c7.x = d.x * inv + c7.x;
+    c7.y = d.y * inv + c7.y;
+    c7.z = d.z * inv + c7.z;
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_Lighting, 0);
+    GxRsSet(GxRs_Fog, 0);
+    GxRsSet(GxRs_ScissorTest, 0);
+    GxRsSet(GxRs_BlendingMode, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+
+    C44Matrix identity;
+    g_theGxDevicePtr->XformPushAndSet(GxXform_World, identity);
+
+    if (CWorldScene::s_vsWaterFogPoly) {
+        GxRsSet(GxRs_VertexShader, CWorldScene::s_vsWaterFogPoly, 0);
+        GxRsSet(GxRs_PixelShader, CWorldScene::s_psWaterFogPoly, 0);
+
+        C44Matrix viewMatrix = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
+        C44Matrix proj;
+        GxXformProjNative(proj);
+        C44Matrix transform = viewMatrix * proj;
+        g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, reinterpret_cast<const float*>(&transform), 4);
+    }
+
+    float fogStart;
+    float fogEnd;
+    float fogDensity;
+    CImVector color;
+    *reinterpret_cast<uint32_t*>(&color) = 0;
+    Liquid::GetUnderWaterFog(fogStart, fogEnd, fogDensity, color);
+
+    C3Vector verts[4];
+    verts[0] = c5 - camPos;
+    verts[1] = c4 - camPos;
+    verts[2] = c6 - camPos;
+    verts[3] = c7 - camPos;
+    GxPrimVertexPtr(4, verts, sizeof(C3Vector), NULL, 0, &color, 0, NULL, 0, NULL, 0);
+
+    CGxBatch batch;
+    batch.m_primType = GxPrim_TriangleStrip;
+    batch.m_start = 0;
+    batch.m_count = 4;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = 3;
+    g_theGxDevicePtr->DrawNonIndexed(batch);
+
+    GxXformPop(GxXform_World);
     g_theGxDevicePtr->RsPop();
 }
 

@@ -87,6 +87,7 @@ class CMapObjDef : public CMapBaseObj, public TSHashObject<CMapObjDef, HASHKEY_N
     void SetSequenceSpeed(float speed, int32_t a2, uint16_t doodadSet);
     void UpdateLoaded();
     void UpdatePos(const C3Vector& pos, float facing, float a3, float a4);
+    void UpdateMatrix(const C44Matrix& matrix);
 };
 
 #endif

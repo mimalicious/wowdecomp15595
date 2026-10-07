@@ -27,6 +27,7 @@ class Weather {
 
     Weather();
     ~Weather();
+    void Render();
     void Update();
     void SetType(int32_t type, float intensity, const WeatherRec* rec, bool a4, float a5);
 };
