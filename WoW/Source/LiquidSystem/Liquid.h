@@ -407,7 +407,6 @@ namespace Liquid {
     void PurgeMaterialBank();
     Object* RegisterLiquidObject(uint32_t a1, uint32_t liquidType, uint32_t materialId);
     void RemoveConfigChangedCallback(CONFIG_CHANGED_CALLBACK callback);
-    void RenderUnderwater();
     void RendererDestroy();
     void RendererDraw(CInstance* instance);
     void RendererFlush(uint32_t time, const C3Vector& camPos, uint32_t pass);

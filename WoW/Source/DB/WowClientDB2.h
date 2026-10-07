@@ -5,6 +5,7 @@
 #include "Engine/Source/Os/OsFile.h"
 
 struct ClientDBReply;
+struct WOWGUID;
 struct ClientHotfixNotify;
 struct ClientHotfixNotifyBlob;
 
@@ -21,6 +22,15 @@ class WowClientDB2_Base {
     void Save(uint32_t hotfixTime);
     void Unload();
     void WriteHotfixes(HOSFILE file);
+};
+
+template <class T>
+class WowClientDB2 : public WowClientDB2_Base {
+    public:
+    typedef void (*RECORD_CALLBACK)(int32_t id, const WOWGUID& guid, void* param, bool success);
+
+    void CancelCallback(int32_t id, RECORD_CALLBACK callback, void* param);
+    T* GetRecord(int32_t id, const WOWGUID& guid, RECORD_CALLBACK callback, void* param, bool a5);
 };
 
 extern WowClientDB2_Base* g_clientDB2Tables[];

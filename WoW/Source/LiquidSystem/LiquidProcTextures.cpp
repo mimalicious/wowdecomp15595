@@ -16,6 +16,9 @@
 // STATIC: 0x00BC705C
 static const float s_displMapScale[2] = { 1.0f, 1.0f };
 
+// STATIC: 0x00D00620
+static uint16_t s_quadIndices[4] = { 0, 3, 1, 2 };
+
 // STATIC: 0x00E4E908
 uint8_t Liquid::s_wmoWaterTexValid;
 
@@ -668,6 +671,94 @@ static Liquid::DisplMapPerturbationMesh* NewPerturbationMesh(int32_t zero) {
     }
 
     return mesh;
+}
+
+// OFFSET: 0x00718440
+void Liquid::KawaseBlur(CTexture* source, CTexture* target, CGxFrameBuffer* frameBuffer, float a4) {
+    if (!Liquid::NeedBackBuffer()) {
+        return;
+    }
+
+    CGxTex* textures[2];
+    textures[0] = TextureGetGxTex(target);
+    textures[1] = TextureGetGxTex(s_blurTemp);
+
+    CGxFrameBuffer* frameBuffers[2];
+    frameBuffers[0] = frameBuffer;
+    frameBuffers[1] = s_blurTempFB;
+
+    CGxTex* sourceTex = source ? TextureGetGxTex(source) : NULL;
+
+    CBoundingBox viewport = g_theGxDevicePtr->m_viewport;
+    GxXformSetViewport(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+    GxTexStretch(sourceTex, textures[0], NULL, NULL, 0, 0);
+
+    CGxFrameBuffer* oldFrameBuffer = g_theGxDevicePtr->FrameBufferGet();
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(C3Vector), 4);
+    C3Vector* vertices = reinterpret_cast<C3Vector*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    vertices[0] = C3Vector(-1.0f, -1.0f, 0.0f);
+    vertices[1] = C3Vector(-1.0f, 1.0f, 0.0f);
+    vertices[2] = C3Vector(1.0f, 1.0f, 0.0f);
+    vertices[3] = C3Vector(1.0f, -1.0f, 0.0f);
+    g_theGxDevicePtr->BufUnlock(vertexBuf, 0);
+    vertexBuf->unk_001C = 1;
+
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 4);
+    GxBufData(indexBuf, s_quadIndices, sizeof(s_quadIndices), 0);
+
+    CGxBatch batch;
+    batch.m_minIndex = 0;
+    batch.m_primType = GxPrim_TriangleStrip;
+    batch.m_start = 0;
+    batch.m_count = 4;
+    batch.m_maxIndex = 3;
+
+    g_theGxDevicePtr->RsPush();
+    GxRsSet(GxRs_Culling, 0);
+    GxRsSet(GxRs_DepthTest, 0);
+    GxRsSet(GxRs_DepthWrite, 0);
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_P);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &s_fourTapBlurVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_fourTapBlurPS->m_permutes[0]);
+
+    uint32_t width;
+    uint32_t height;
+    TextureGetDimensions(s_blurTemp, &width, &height, 1);
+
+    float texel[4];
+    texel[0] = 1.0f / static_cast<float>(width);
+    texel[1] = 1.0f / static_cast<float>(height);
+    texel[2] = texel[0] * 0.5f;
+    texel[3] = texel[1] * 0.5f;
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 0, texel, 1);
+
+    s_kawasePingPong = 0;
+
+    for (uint32_t i = 0; i < 5; i++) {
+        float offset[4];
+        offset[0] = texel[0] * static_cast<float>(i) * a4;
+        offset[1] = static_cast<float>(i) * texel[1] * a4;
+        offset[2] = 0.0f;
+        offset[3] = 0.0f;
+        g_theGxDevicePtr->ShaderConstantsSet(GxSh_Vertex, 1, offset, 1);
+
+        s_kawasePingPong ^= 1;
+        CGxFrameBuffer* passFrameBuffer = frameBuffers[s_kawasePingPong];
+        GxRsSet(GxRs_ScissorTest, 0);
+        g_theGxDevicePtr->FrameBufferSet(passFrameBuffer);
+        g_theGxDevicePtr->RsSet(GxRs_Texture0, textures[(s_kawasePingPong - 1) & 1]);
+        g_theGxDevicePtr->RsSet(GxRs_Texture1, textures[(s_kawasePingPong - 1) & 1]);
+        g_theGxDevicePtr->RsSet(GxRs_Texture2, textures[(s_kawasePingPong - 1) & 1]);
+        g_theGxDevicePtr->RsSet(GxRs_Texture3, textures[(s_kawasePingPong - 1) & 1]);
+        g_theGxDevicePtr->Draw(batch);
+    }
+
+    g_theGxDevicePtr->RsPop();
+    GxXformSetViewport(viewport.m_x.m_l, viewport.m_x.m_h, viewport.m_y.m_l, viewport.m_y.m_h, viewport.m_z.m_l, viewport.m_z.m_h);
+    GxRsSet(GxRs_ScissorTest, 0);
+    g_theGxDevicePtr->FrameBufferSet(oldFrameBuffer);
 }
 
 // OFFSET: 0x00718930

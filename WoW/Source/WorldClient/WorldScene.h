@@ -110,7 +110,7 @@ class CWorldScene {
     static void RenderPortalLists(CWorldView* view);
     static void RenderSetFog();
     static void RenderWaterFogPoly(CWorldView* view);
-    static void RenderReflection(CM2Scene* scene, CWorldView* view, CGxFrameBuffer* frameBuffer, uint32_t mode, float height);
+    static void RenderReflection(CWorldView* view, CGxFrameBuffer* frameBuffer, uint32_t mode, float height);
     static void __fastcall TextureRecreationCallback();
     static void Update(const C3Vector& camPos, const C3Vector& camTarget, float nearClip, float farClip, float fov, float aspect);
     static void UpdateFadeOutObjects();

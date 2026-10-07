@@ -8,6 +8,14 @@
 #include "WoW/Source/WorldClient/MapObjRender.h"
 #include "WoW/Source/WorldClient/WorldMap.h"
 
+// OFFSET: 0x0075EDD0
+void CMapObjDefGroup::WaterDestroy() {
+    if (this->m_liquidInstance) {
+        this->m_liquidInstance->Release();
+        this->m_liquidInstance = NULL;
+    }
+}
+
 // OFFSET: 0x0075EE50
 bool CMapObjDef::TestAABox(const C3Vector& start, const C3Vector& end) {
     return CWorldMath::VectorIntersectAABox2(this->m_bbox, start, end);

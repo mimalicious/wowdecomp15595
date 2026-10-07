@@ -311,8 +311,8 @@ void CWorldView::EnableShadow(int32_t enable) {
 
 // OFFSET: 0x00753FB0
 void CWorldView::UpdateViewMat() {
-    C44Matrix view = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
-    view.Translate(C3Vector(-this->m_camPos.x, -this->m_camPos.y, -this->m_camPos.z));
+    this->m_viewMat = g_theGxDevicePtr->m_xforms[GxXform_View].m_mtx[g_theGxDevicePtr->m_xforms[GxXform_View].m_level];
+    this->m_viewMat.Translate(C3Vector(-this->m_camPos.x, -this->m_camPos.y, -this->m_camPos.z));
 }
 
 // OFFSET: 0x00754030
@@ -883,7 +883,7 @@ void CWorldView::RenderAlpha() {
         }
 
         if (this->m_flags & 0x20) {
-            Liquid::RenderUnderwater();
+            Liquid::GrabBackBuffer();
 
             if (Liquid::GetWaterDetail() >= 3) {
                 Liquid::KawaseBlur(Liquid::GetRealReflectionBuffer(), Liquid::GetBlurredReflectionBuffer(), Liquid::GetBlurredReflectionBufferFB(), 0.25f);
@@ -924,7 +924,7 @@ void CWorldView::RenderAlpha() {
         }
 
         if (this->m_flags & 0x20) {
-            Liquid::RenderUnderwater();
+            Liquid::GrabBackBuffer();
         }
 
         if ((this->m_flags & 0x200) && Liquid::GetWaterDetail() > 1) {
@@ -936,7 +936,7 @@ void CWorldView::RenderAlpha() {
         }
 
         if (this->m_flags & 0x20) {
-            Liquid::RenderUnderwater();
+            Liquid::GrabBackBuffer();
 
             if (Liquid::GetWaterDetail() >= 3) {
                 Liquid::KawaseBlur(Liquid::GetRealReflectionBuffer(), Liquid::GetBlurredReflectionBuffer(), Liquid::GetBlurredReflectionBufferFB(), 0.25f);

@@ -48,3 +48,12 @@ void C4Plane::Transform(const C44Matrix& matrix) {
 float C4Plane::Distance(const C3Vector& point) const {
     return point.z * this->n.z + point.y * this->n.y + point.x * this->n.x + this->d;
 }
+
+// OFFSET: 0x00B08B10
+C3Vector& C4Plane::Reflect(const C3Vector& point, C3Vector& result) const {
+    float dist = (this->n.x * point.x + this->n.y * point.y + this->n.z * point.z + this->d) * 2.0f;
+    result.x = point.x - this->n.x * dist;
+    result.y = point.y - this->n.y * dist;
+    result.z = point.z - this->n.z * dist;
+    return result;
+}

@@ -344,6 +344,125 @@ void CWorldScene::RenderLowDetailMapObjDefs(CWorldView* view, const C44Matrix& w
     }
 }
 
+// OFFSET: 0x00727C80
+void CWorldScene::RenderReflection(CWorldView* view, CGxFrameBuffer* frameBuffer, uint32_t mode, float height) {
+    if (!Liquid::GetWaterDetail()) {
+        return;
+    }
+
+    view->m_flags &= ~0x400000u;
+
+    if (CWorldScene::s_defaultWorldView->m_flags & 0x400000) {
+        view->m_flags |= 0x400000;
+    }
+
+    if (!CWorldScene::s_defaultWorldView->m_hasLiquids) {
+        return;
+    }
+
+    GxFrameBufferSet(frameBuffer);
+
+    float minX;
+    float maxX;
+    float minY;
+    float maxY;
+    float minZ;
+    float maxZ;
+    GxXformViewport(minX, maxX, minY, maxY, minZ, maxZ);
+    GxXformSetViewport(0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.94f);
+
+    if (mode > 1) {
+        view->m_flags |= 0x11000;
+    } else {
+        view->m_flags &= ~0x11000u;
+    }
+
+    if (mode > 2) {
+        view->m_flags |= 0x2000;
+    } else {
+        view->m_flags &= ~0x2000u;
+    }
+
+    C4Plane plane;
+    plane.n.x = 0.0f;
+    plane.n.y = 0.0f;
+    plane.n.z = 1.0f;
+    plane.d = -height;
+
+    if (Liquid::CameraSubmerged()) {
+        plane.n.z = -1.0f;
+    }
+
+    CWorldView* parent = CWorldScene::s_defaultWorldView;
+    C3Vector camPos = parent->m_camPos;
+    C3Vector camTarget = parent->m_camTarget;
+    C3Vector camDir = parent->m_camDir;
+    plane.Reflect(parent->m_camPos, camPos);
+    plane.Reflect(parent->m_camTarget, camTarget);
+
+    view->m_cullPlane = plane;
+    camDir.z = -camDir.z;
+
+    C44Matrix viewMatrix;
+    C44Matrix projNative;
+    C44Matrix projection;
+    CGxDevice* device = g_theGxDevicePtr;
+    viewMatrix = device->m_xforms[GxXform_View].m_mtx[device->m_xforms[GxXform_View].m_level];
+    projNative = device->m_projNative;
+
+    if (!device->DeviceApi()) {
+        projNative.c0 = projNative.c0 * -1.0f;
+        projNative.c1 = projNative.c1 * -1.0f;
+        projNative.c2 = projNative.c2 * -1.0f;
+        projNative.c3 = projNative.c3 * -1.0f;
+    }
+
+    projection = g_theGxDevicePtr->m_projection;
+
+    C44Matrix reflectedView = viewMatrix;
+    float scale = -1.0f / sqrt(viewMatrix.c2 * viewMatrix.c2 + viewMatrix.c1 * viewMatrix.c1 + viewMatrix.c0 * viewMatrix.c0);
+    reflectedView.c0 = viewMatrix.c0 * scale;
+    reflectedView.c1 = reflectedView.c1 * scale;
+    reflectedView.c2 = reflectedView.c2 * scale;
+
+    C44Matrix inverse = projNative.Inverse(projNative.Determinant());
+    C44Matrix transposed = inverse.Transpose();
+
+    plane.d = -fabs(height - camPos.z);
+    plane.Transform(reflectedView);
+
+    C4Plane clipPlane;
+    clipPlane.n.x = transposed.a0 * plane.n.x + transposed.b0 * plane.n.y + transposed.c0 * plane.n.z + transposed.d0 * plane.d;
+    clipPlane.n.y = transposed.a1 * plane.n.x + transposed.b1 * plane.n.y + transposed.c1 * plane.n.z + transposed.d1 * plane.d;
+    clipPlane.n.z = transposed.a2 * plane.n.x + transposed.b2 * plane.n.y + transposed.c2 * plane.n.z + transposed.d2 * plane.d;
+    clipPlane.d = transposed.a3 * plane.n.x + transposed.b3 * plane.n.y + transposed.c3 * plane.n.z + transposed.d3 * plane.d;
+    plane = clipPlane;
+
+    C44Matrix lookAt;
+    C3Vector up(0.0f, 0.0f, 1.0f);
+    C3Vector eye(0.0f, 0.0f, 0.0f);
+    GxuXformCreateLookAtSgCompat(eye, camDir, up, lookAt);
+    g_theGxDevicePtr->XformSetView(lookAt);
+
+    C3Vector corners[8];
+    CWorldScene::GetFrustumCornersInWorldSpace(lookAt, projection, camPos, corners);
+
+    view->Update(camPos, camTarget, parent->m_nearClip, parent->m_farClip, parent->m_fov, parent->m_aspect);
+    view->UpdateViewer();
+    view->UpdateViewerLiquid();
+    view->Gather();
+    view->Cull();
+
+    g_theGxDevicePtr->XformSetView(reflectedView);
+    view->UpdateViewMat();
+    CShaderEffect::SetClipPlane(plane);
+    CShaderEffect::SetClipEnabled(1);
+    view->Render();
+    CShaderEffect::SetClipEnabled(0);
+    g_theGxDevicePtr->XformSetView(viewMatrix);
+    GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
+}
+
 // OFFSET: 0x00728480
 void CWorldScene::RenderSetFog() {
     const DayNight::FogInfo* fog = DayNight::GetFogInfo();
@@ -497,11 +616,11 @@ void CWorldScene::Render(const C3Vector& pos, float elapsedSec) {
     if (Liquid::HasRealReflection()) {
         float height = Liquid::GetClosestReflectionHeight();
         uint32_t mode = Liquid::GetReflectionMode();
-        CWorldScene::RenderReflection(scene, CWorldScene::s_defaultReflectionView, Liquid::GetRealReflectionFB(), mode, height);
+        CWorldScene::RenderReflection(CWorldScene::s_defaultReflectionView, Liquid::GetRealReflectionFB(), mode, height);
     }
 
     if (Liquid::HasFakeReflection()) {
-        CWorldScene::RenderReflection(scene, CWorldScene::s_defaultReflectionView2, Liquid::GetFakeReflectionFB(), 0, 0.0f);
+        CWorldScene::RenderReflection(CWorldScene::s_defaultReflectionView2, Liquid::GetFakeReflectionFB(), 0, 0.0f);
     }
 
     CGxFrameBuffer* backBuffer = g_theGxDevicePtr->BackBuffer();

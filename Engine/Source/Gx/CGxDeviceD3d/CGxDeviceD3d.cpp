@@ -84,7 +84,7 @@ static int32_t s_isIdent;
 static void* NvQueryInterface(NvU32 id) {
     typedef void* (__cdecl* QueryInterfaceProc)(NvU32 id);
 
-    HMODULE nvapi = GetModuleHandleA("nvapi.dll");
+    HMODULE nvapi = GetModuleHandleA(sizeof(void*) == 8 ? "nvapi64.dll" : "nvapi.dll");
 
     if (!nvapi) {
         return NULL;

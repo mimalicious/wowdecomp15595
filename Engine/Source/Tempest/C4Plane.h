@@ -15,6 +15,7 @@ class C4Plane {
     C4Plane();
     float Distance(const C3Vector& point) const;
     void From3Pos(const C3Vector& p0, const C3Vector& p1, const C3Vector& p2);
+    C3Vector& Reflect(const C3Vector& point, C3Vector& result) const;
     void Transform(const C44Matrix& matrix);
 };
 
