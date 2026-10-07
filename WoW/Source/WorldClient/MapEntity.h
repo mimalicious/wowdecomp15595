@@ -33,13 +33,21 @@ class CMapEntity : public CMapStaticEntity {
     /* 00E0 */ float unk_00E0;
     /* 00E4 */ uint32_t unk_00E4;
 
-    static int32_t QueryCameraFog(SMOFog* fog, int32_t* found, float* distance);
+    static int32_t QueryCameraFog(SMOFog* fog, uint8_t& found, float& distance);
+
+    virtual ~CMapEntity();
+    virtual void SelectLights(CM2Lighting* lighting);
+    virtual void AdjustLighting(CMapObjDef* mapObjDef, CMapObj* mapObj, const uint16_t* groupNum, const C3Vector* pos);
 
     CMapEntity();
     void EnablePortals(int32_t enable);
     int32_t QueryInterior(int32_t a2);
     void Update();
     void UpdateLiquid();
+    void UpdateMapObjLiquid(CMapObjDef* mapObjDef, CMapObjGroup* group);
+    void UpdateBounds();
+    void UpdateLighting();
+    void UpdatePortals();
     void UpdateMapObjLiquid();
     void UpdateTerrainLiquid();
     int32_t QueryMapObjZoneName(const char*& name);

@@ -178,6 +178,7 @@ class CMap : public CMapBaseObj {
     static int32_t SafeOpen(const char* fileName, SFileImpl** file, int32_t warn);
     static int32_t SafeRead(const char* fileName, SFileImpl* file, void* buffer, uint32_t bytes);
     static void SnapBaseObjToSubChunk(CMapBaseObj* baseObj, C3Vector& pos, float facing);
+    static CMapBaseObjLink* LinkObjectToMapObjDefGroup(CMapBaseObj* object, CMapObjDefGroup* group);
     static bool QueryMapObjDefHeight(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, float& t);
     static bool QueryDoodadDefsHeight(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end);
     static bool QueryMapObjDefLinksHeight(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjLink, m_refLink)>& list, const C3Vector& start, const C3Vector& end, float& t);
@@ -205,6 +206,8 @@ class CMap : public CMapBaseObj {
     CMap();
     void ClearChunkBufs();
     uint32_t QueryAreaIdTerrain(const C3Vector& pos);
+    int32_t LinkStaticEntityGetChunk(const C3Vector& pos, float& height, CMapChunk*& chunk);
+    int32_t LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const CiRect& rect, int32_t linkChunks, int32_t linkMapObjs);
     void QueryTris(const CAaBox& box, const CiRect& chunkRect, const CiRect& subChunkRect, World::TriData& tris, uint32_t flags);
     bool QueryFacets(const CAaBox& box, const CAaBox& box2, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags);
     bool QueryFacets(const CFrustum& frustum, const CAaBox& bounds, const CiRect& chunkRect, const CiRect& subChunkRect, World::FacetData& facets, uint32_t flags);

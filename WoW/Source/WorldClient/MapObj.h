@@ -15,6 +15,7 @@
 namespace World {
     struct FacetData;
     struct LiquidQueryResult;
+    struct MinimapQuad;
     struct TriData;
 }
 
@@ -232,6 +233,10 @@ class CMapObj : public CMapBaseObj, public TSHashObject<CMapObj, HASHKEY_NONE> {
     void DestroyMaterial(uint32_t materialId);
     void GatherGroup(CWorldView* view, CMapObjDefGroup* defGroup);
     void GetBounds(CAaBox& box);
+    bool QueryLighting(uint32_t groupNum, const C3Vector& pos, CImVector& color, uint8_t& exterior);
+    bool QueryLighting(const C3Segment& seg, CImVector& color, uint8_t& exterior);
+    bool QueryMapObjMinimap(uint32_t groupNum, const CAaBox& box, TSStackArray<World::MinimapQuad>& quads, uint32_t maxQuads, bool a5, bool a6);
+    void QueryLiquidSounds(uint32_t groupNum, uint32_t fromGroup, uint32_t depth, uint32_t* distance, const C3Vector& pos, TSGrowableArray<World::LiquidQueryResult>& results);
     void GetTris(const CAaBox& box, uint32_t flags, World::TriData& tris, CMapObjDef* mapObjDef);
     bool Intersect(const C3Segment& seg, float& t, uint32_t flags, World::TriData& tris, CMapObjDef* mapObjDef);
     int32_t GetDoodadSet(uint32_t doodadIndex);

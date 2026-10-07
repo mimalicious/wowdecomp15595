@@ -2321,9 +2321,9 @@ void World::UpdateDayNight() {
     DayNight::SetStormPercentage(worldMap->m_weather ? worldMap->m_weather->m_intensity : 0.0f);
 
     SMOFog fog;
-    int32_t found;
+    uint8_t found;
     float distance = 3.402823466e38f;
-    bool inside = CMapEntity::QueryCameraFog(&fog, &found, &distance) == 1;
+    bool inside = CMapEntity::QueryCameraFog(&fog, found, distance) == 1;
     DayNight::SetInteriorFog(inside, fog, found, distance);
 
     DayNight::Update(FrameTime::GetCurTimeMs(), FrameTime::GetTickTimeSec(), FrameTime::GetCurTimeSec());

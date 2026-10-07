@@ -11,7 +11,9 @@
 #include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/WorldClient/DetailDoodad.h"
+#include "WoW/Source/WorldClient/CWorldMath.h"
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/WorldClient/MapEntity.h"
 #include "WoW/Source/WorldClient/MapObj.h"
 #include "WoW/Source/WorldClient/MapObjDef.h"
 #include "WoW/Source/WorldClient/MapObjGroup.h"
@@ -84,6 +86,136 @@ struct CMapAreaSortEntry {
     CMapArea* m_area;
     float m_distSq;
 };
+
+// OFFSET: 0x007342A0
+int32_t CMap::LinkStaticEntityGetChunk(const C3Vector& pos, float& height, CMapChunk*& chunk) {
+    chunk = NULL;
+    int32_t x = static_cast<int32_t>(-(pos.y - 17066.666f) * 0.23999999f);
+    int32_t y = static_cast<int32_t>(-(pos.x - 17066.666f) * 0.23999999f);
+    CMapAreaTableEntry* entry = this->m_areaTable.Get((x >> 7) & 0x3F, (y >> 7) & 0x3F);
+
+    if (!entry || !(entry->m_flags & 0x2) || !entry->m_area) {
+        return 0;
+    }
+
+    CMapChunk* found = entry->m_area->m_chunks[((x >> 3) & 0xF) + 16 * ((y >> 3) & 0xF)];
+
+    if (!found) {
+        return 0;
+    }
+
+    chunk = found;
+    return CMap::GetHeightTerrain(found, pos, x & 0x7, y & 0x7, 1, height);
+}
+
+// OFFSET: 0x00734370
+CMapBaseObjLink* CMap::LinkObjectToMapObjDefGroup(CMapBaseObj* object, CMapObjDefGroup* group) {
+    CMapBaseObjLink* link = CMap::AllocBaseObjLink(object, group);
+
+    if (object->m_type & MapBaseObj_Type_Entity) {
+        CMapEntity* entity = static_cast<CMapEntity*>(object);
+        entity->m_parentLinkList.LinkToTail(link);
+
+        if (entity->m_flags & 0x80) {
+            group->m_entityLinks.LinkToTail(link);
+        } else {
+            group->m_entityLinks.LinkToHead(link);
+        }
+    }
+
+    return link;
+}
+
+// OFFSET: 0x007343C0
+int32_t CMap::LinkObjectToExterior(CMapBaseObj* object, const CAaBox& box, const CiRect& rect, int32_t linkChunks, int32_t linkMapObjs) {
+    CMapAreaTableEntry* entry = this->m_areaTable.Get(rect.minX >> 4, rect.minY >> 4);
+
+    if (!entry || !(entry->m_flags & 0x2) || !entry->m_area) {
+        return 0;
+    }
+
+    CMapArea* area = entry->m_area;
+
+    if (object->m_type & MapBaseObj_Type_MapObjDef) {
+        CMapBaseObjLink* link = CMap::AllocBaseObjLink(object, area);
+        static_cast<CMapObjDef*>(object)->m_parentLinkList.LinkToTail(link);
+        area->m_linkList.LinkToTail(link);
+    }
+
+    int32_t result = 1;
+
+    for (int32_t y = rect.minY; y <= rect.maxY; y++) {
+        for (int32_t x = rect.minX; x <= rect.maxX; x++) {
+            CMapChunk* chunk = area->m_chunks[16 * (y & 0xF) + (x & 0xF)];
+
+            if (!chunk) {
+                result = 0;
+                continue;
+            }
+
+            if (linkChunks) {
+                CMapBaseObjLink* link = CMap::AllocBaseObjLink(object, chunk);
+                uint16_t type = object->m_type;
+
+                if (type & MapBaseObj_Type_Entity) {
+                    static_cast<CMapStaticEntity*>(object)->m_parentLinkList.LinkToTail(link);
+
+                    if (object->m_flags & 0x80) {
+                        chunk->m_entityLinkList.LinkToTail(link);
+                    } else {
+                        chunk->m_entityLinkList.LinkToHead(link);
+                    }
+                } else if (type & MapBaseObj_Type_DoodadDef) {
+                    static_cast<CMapStaticEntity*>(object)->m_parentLinkList.LinkToTail(link);
+                    chunk->m_doodadDefLinkList.LinkToTail(link);
+                } else if (type & MapBaseObj_Type_MapObjDef) {
+                    static_cast<CMapObjDef*>(object)->m_parentLinkList.LinkToTail(link);
+                    chunk->m_mapObjDefLinkList.LinkToTail(link);
+                }
+            }
+
+            if (!linkMapObjs) {
+                continue;
+            }
+
+            CAaBox local;
+            memset(&local, 0, sizeof(local));
+
+            for (CMapBaseObjLink* link = chunk->m_mapObjDefLinkList.Head(), * next; link; link = next) {
+                CMapObjDef* mapObjDef = static_cast<CMapObjDef*>(link->m_owner);
+                next = chunk->m_mapObjDefLinkList.Next(link);
+
+                if (mapObjDef->unk_004C == CWorldMap::s_queryTag) {
+                    continue;
+                }
+
+                mapObjDef->unk_004C = CWorldMap::s_queryTag;
+
+                if ((mapObjDef->m_flags & 0x10) || !mapObjDef->m_mapObj || !(mapObjDef->m_mapObj->m_flags & 0x40)) {
+                    continue;
+                }
+
+                CWorldMath::TransformAABox(mapObjDef->m_invMat, box, local);
+
+                if (!mapObjDef->m_mapObj->TestBounds(local)) {
+                    continue;
+                }
+
+                for (CMapObjDefGroup* defGroup = mapObjDef->m_defGroupList.Head(), * nextGroup; defGroup; defGroup = nextGroup) {
+                    uint32_t groupNum = defGroup->m_groupNum;
+                    nextGroup = mapObjDef->m_defGroupList.Next(defGroup);
+                    uint32_t groupFlags = mapObjDef->m_mapObj->GetGroupFlags(groupNum);
+
+                    if (!(groupFlags & 0x410080) && (groupFlags & 0x8) && mapObjDef->m_mapObj->TestGroupBounds(local, defGroup->m_groupNum, 1)) {
+                        CMap::LinkObjectToMapObjDefGroup(object, defGroup);
+                    }
+                }
+            }
+        }
+    }
+
+    return result;
+}
 
 // PROVEN: 30adeb3c IDENTICAL/NONE
 // OFFSET: 0x007614F0
