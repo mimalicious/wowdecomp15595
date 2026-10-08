@@ -137,7 +137,7 @@ SFileImpl* CM2Shared::OpenSkinFile(uint32_t profile) {
     return NULL;
 }
 
-// OFFSET: [%0x00795CA0, %0x00795B20, %0x00795B70, %0x00795BC0, %0x00795AD0, %0x00795A80, %0x00795CF0]
+// OFFSET: [0x008318A0/0x140552FB0<char>, 0x008318F0/0x140552EA0<M2Loop>, 0x008318F0/0x140552EA0<M2Material>, 0x008318F0/0x140552EA0<ubyte4>, 0x008318F0/0x140552EA0<unsigned int>, 0x008318F0/0x140552EA0<float>, 0x00831940/0x140553060<M2Sequence>, 0x00831990/0x1405530C0<unsigned short>, 0x00831990/0x1405530C0<fixed16>, 0x008317B0/0x140552EF0<M2Vertex>, 0x008317B0/0x140552EF0<M2SkinSection>, 0x00831800<M2Batch>, 0x00831850/0x140553000<C3Vector>, 0x00831850/0x140553000<M2ShadowBatch>, 0x00831850/0x140553000<M2SplineKey<float> >, 0x008319E0<C2Vector>, 0x008319E0<M2CompQuat>]
 template <class T>
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<T>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -151,7 +151,7 @@ int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<T>& arr
     return 1;
 }
 
-// OFFSET: [%0x00796D30, %0x00796880, %0x00796B80, %0x00796C10, %0x00796CA0, %0x00796DC0, %0x00796E50]
+// OFFSET: [0x008328C0<unsigned int>, 0x008328C0<float>, 0x00832460<unsigned short>, 0x00832460<fixed16>, 0x00832950<M2CompQuat>, 0x008329E0<C4Quaternion>, 0x00832A70<unsigned char>, 0x00832B00<M2SplineKey<C3Vector> >, 0x00832B90<C3Vector>, 0x00832B90<M2SplineKey<float> >]
 template <class T>
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Array<T> >& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -561,7 +561,7 @@ uint32_t CM2Shared::AllocInstances(uint32_t count, int32_t exact) {
     return this->m_instances;
 }
 
-// OFFSET: %0x00796A40
+// OFFSET: 0x00832C90/0x140555220
 template <>
 int32_t M2Init<M2Event>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Event>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -647,7 +647,7 @@ int32_t CM2Shared::InitializeSkinProfile() {
     return 1;
 }
 
-// OFFSET: %0x007978D0
+// OFFSET: 0x00833520
 template <>
 int32_t M2Init<M2Color>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Color>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -669,7 +669,7 @@ int32_t M2Init<M2Color>(uint8_t* base, uint32_t size, const M2Data& data, M2Arra
     return 1;
 }
 
-// OFFSET: %0x00797C90
+// OFFSET: 0x008339A0
 template <>
 int32_t M2Init<M2TextureWeight>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2TextureWeight>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -689,7 +689,7 @@ int32_t M2Init<M2TextureWeight>(uint8_t* base, uint32_t size, const M2Data& data
     return 1;
 }
 
-// INLINED
+// OFFSET: 0x00832150/0x140553B00
 int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2SkinProfile& skinData) {
     return M2Init(base, size, data, skinData.m_vertices) && M2Init(base, size, data, skinData.m_indices) && M2Init(base, size, data, skinData.m_bones) && M2Init(base, size, data, skinData.m_skinSections) && M2Init(base, size, data, skinData.m_batches) && M2Init(base, size, data, skinData.m_shadowBatches);
 }
@@ -725,7 +725,7 @@ int32_t CM2Shared::FinishLoadingSkinProfile(uint32_t size) {
     return 1;
 }
 
-// OFFSET: %0x00797F20
+// OFFSET: 0x00832E90
 template <>
 int32_t M2Init<M2CompBone>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2CompBone>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -747,7 +747,7 @@ int32_t M2Init<M2CompBone>(uint8_t* base, uint32_t size, const M2Data& data, M2A
     return 1;
 }
 
-// OFFSET: %0x00798490
+// OFFSET: 0x00833BF0
 template <>
 int32_t M2Init<M2TextureTransform>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2TextureTransform>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -769,7 +769,7 @@ int32_t M2Init<M2TextureTransform>(uint8_t* base, uint32_t size, const M2Data& d
     return 1;
 }
 
-// OFFSET: %0x00798A10
+// OFFSET: 0x00834280
 template <>
 int32_t M2Init<M2Attachment>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Attachment>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -789,7 +789,7 @@ int32_t M2Init<M2Attachment>(uint8_t* base, uint32_t size, const M2Data& data, M
     return 1;
 }
 
-// OFFSET: %0x00798C00
+// OFFSET: 0x008344E0
 template <>
 int32_t M2Init<M2Light>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Light>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -811,7 +811,7 @@ int32_t M2Init<M2Light>(uint8_t* base, uint32_t size, const M2Data& data, M2Arra
     return 1;
 }
 
-// OFFSET: %0x00799E00
+// OFFSET: 0x008353B0
 template <>
 int32_t M2Init<M2Camera>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Camera>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -833,7 +833,7 @@ int32_t M2Init<M2Camera>(uint8_t* base, uint32_t size, const M2Data& data, M2Arr
     return 1;
 }
 
-// OFFSET: %0x0079A520
+// OFFSET: 0x00835C30
 template <>
 int32_t M2Init<M2Ribbon>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Ribbon>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
@@ -860,7 +860,7 @@ int32_t M2Init(uint8_t* base, uint32_t size, const M2Data& data, M2Particle& par
     return M2Init(base, size, data, particle.m_geometryMdl) && M2Init(base, size, data, particle.m_recursionMdl) && M2Init(base, size, data, particle.m_speedTrack) && M2Init(base, size, data, particle.m_variationTrack) && M2Init(base, size, data, particle.m_latitudeTrack) && M2Init(base, size, data, particle.m_longitudeTrack) && M2Init(base, size, data, particle.m_gravityTrack) && M2Init(base, size, data, particle.m_lifeTrack) && M2Init(base, size, data, particle.m_emissionRateTrack) && M2Init(base, size, data, particle.m_widthTrack) && M2Init(base, size, data, particle.m_lengthTrack) && M2Init(base, size, data, particle.m_zsourceTrack) && M2Init(base, size, data, particle.m_colorTrack.m_times) && M2Init(base, size, data, particle.m_colorTrack.m_values) && M2Init(base, size, data, particle.m_alphaTrack.m_times) && M2Init(base, size, data, particle.m_alphaTrack.m_values) && M2Init(base, size, data, particle.m_scaleTrack.m_times) && M2Init(base, size, data, particle.m_scaleTrack.m_values) && M2Init(base, size, data, particle.m_headCellTrack.m_times) && M2Init(base, size, data, particle.m_headCellTrack.m_values) && M2Init(base, size, data, particle.m_tailCellTrack.m_times) && M2Init(base, size, data, particle.m_tailCellTrack.m_values) && M2Init(base, size, data, particle.m_spline) && M2Init(base, size, data, particle.m_visibilityTrack);
 }
 
-// OFFSET: %0x0079C6D0
+// OFFSET: 0x00836970
 template <>
 int32_t M2Init<M2Particle>(uint8_t* base, uint32_t size, const M2Data& data, M2Array<M2Particle>& array) {
     if (s_sequenceIndex == 0xFFFFFFFF) {
