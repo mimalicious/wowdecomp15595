@@ -2335,30 +2335,30 @@ void CGlueMgr::RaceChange(WOWGUID guid, const CHARACTER_CREATE_INFO* info) {
 // OFFSET: #0x004D7F90
 void CGlueMgr::LoginEnterPIN(int32_t count, uint8_t* digits) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s", "CANCEL");
-    ClientServices::LoginEnterPIN(count, digits);
+    ClientServices::EnterPIN(count, digits);
 }
 
 // OFFSET: #0x004D7FB0
 void CGlueMgr::LoginEnterMatrix(uint8_t value) {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
-        ClientServices::LoginEnterMatrix(value);
+        ClientServices::EnterMatrix(value);
     }
 }
 
 // OFFSET: #0x004D7FD0
 void CGlueMgr::LoginRevertMatrix() {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
-        ClientServices::LoginRevertMatrix();
+        ClientServices::RevertMatrix();
     }
 }
 
 // OFFSET: #0x004D7FF0
 void CGlueMgr::LoginCommitMatrix() {
     if (CGlueMgr::m_loginState == LOGIN_STATE_MATRIX_WAIT && CGlueMgr::m_matrixRemaining) {
-        ClientServices::LoginCommitMatrix();
+        ClientServices::CommitMatrix();
 
         if (!--CGlueMgr::m_matrixRemaining) {
-            ClientServices::LoginFinalizeMatrix();
+            ClientServices::FinalizeMatrix();
             FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s", "CANCEL");
         }
     }
@@ -2376,7 +2376,7 @@ bool CGlueMgr::LoginGetMatrixCoordinate(uint32_t* x, uint32_t* y) {
 // OFFSET: #0x004D8080
 void CGlueMgr::LoginEnterToken(const char* token) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s", "CANCEL");
-    ClientServices::LoginEnterToken(token);
+    ClientServices::EnterToken(token);
 }
 
 // OFFSET: #0x004D9190

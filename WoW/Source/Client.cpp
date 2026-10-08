@@ -1503,7 +1503,7 @@ static void OpenArchives() {
     }
 
     ProfileClose(profile);
-    ClientServices::InitLoginServerCVars(1, locale);
+    ClientServices::InitLoginServerCVars();
     LoadMopaqFileSigningData(locale);
 }
 // OFFSET: #0x004064A0

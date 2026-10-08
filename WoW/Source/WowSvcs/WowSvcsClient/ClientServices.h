@@ -21,18 +21,18 @@ struct CLIENTCDKEY {
 
 class ClientConnection : public RealmConnection {
     public:
-    /* 2F3C */ uint32_t unk_2F3C;
-    /* 2F40 */ uint32_t unk_2F40;
-    /* 2F44 */ int32_t m_statusComplete;
-    /* 2F48 */ int32_t m_statusResult;
-    /* 2F4C */ WOWCS_OPS m_statusOp;
-    /* 2F50 */ int32_t m_errorCode;
-    /* 2F54 */ int32_t m_inGame;
-    /* 2F58 */ uint8_t m_quitAfterLogout;
-    /* 2F59 */ uint8_t m_loggingOut;
-    /* 2F5A */ uint8_t m_realmConnectPending;
-    /* 2F5B */ uint8_t unk_2F5B[1];
-    /* 2F5C */ void (*m_cleanup)();
+    /* 4768 */ uint32_t unk_2F3C;
+    /* 476C */ uint32_t unk_2F40;
+    /* 4770 */ int32_t m_statusComplete;
+    /* 4774 */ int32_t m_statusResult;
+    /* 4778 */ WOWCS_OPS m_statusOp;
+    /* 477C */ int32_t m_errorCode;
+    /* 4780 */ int32_t m_inGame;
+    /* 4784 */ uint8_t m_quitAfterLogout;
+    /* 4785 */ uint8_t m_loggingOut;
+    /* 4786 */ uint8_t m_realmConnectPending;
+    /* 4787 */ uint8_t unk_4787[1];
+    /* 4788 */ void (*m_cleanup)();
 
     ~ClientConnection();
     int32_t HandleConnect() override;
@@ -52,12 +52,12 @@ class ClientConnection : public RealmConnection {
     void Complete(int32_t result, int32_t errorCode);
     void CharacterAbortLogout();
     void CharacterLogin(WOWGUID guid, int32_t a2);
-    int32_t CharacterLoggingOut();
+    bool CharacterLoggingOut();
     void CharacterLogout(bool quit, bool instant);
     void CharacterForceLogout();
     void CharacterSetInGame(int32_t inGame);
     void Connect();
-    void Disconnect();
+    int32_t Disconnect(DISCONNECT_REASON reason);
     void HandleAuthResult(int32_t result);
     int32_t EnumerateCharacters(void (*callback)(CHARACTER_INFO& info, void* param), void* param);
     void GetCharacterList();
@@ -96,6 +96,7 @@ class ClientServices : public LoginResponse {
     static CVar* s_portalVar;
     static CVar* s_realmListVar;
     static CVar* s_decorateAccountName;
+    static CVar* s_patchListVar;
     static bool s_newLogin;
     static CVar* s_realmNameVar;
     static REALM_INFO m_selectRealmInfo;
@@ -122,12 +123,12 @@ class ClientServices : public LoginResponse {
     static uint8_t GetCharacterSex();
     static const char* GetSelectedRealmName();
     static int32_t LaunchURL(const char* url);
-    static void LoginEnterToken(const char* token);
-    static void LoginEnterPIN(int32_t count, uint8_t* digits);
-    static void LoginEnterMatrix(uint8_t value);
-    static void LoginCommitMatrix();
-    static void LoginRevertMatrix();
-    static void LoginFinalizeMatrix();
+    static void EnterToken(const char* token);
+    static void EnterPIN(int32_t count, uint8_t* digits);
+    static void EnterMatrix(uint8_t value);
+    static void CommitMatrix();
+    static void RevertMatrix();
+    static void FinalizeMatrix();
     static void FileAccept(bool accept, uint64_t offset);
     static void StartDownload();
     static void SendSurveyData(uint16_t size, uint8_t* data);
@@ -143,7 +144,14 @@ class ClientServices : public LoginResponse {
     static REALM_INFO* GetSelectedRealm();
     static void Initialize();
     static void SetMessageHandler(NETMESSAGE msgId, MESSAGE_HANDLER handler, void* param);
-    static void InitLoginServerCVars(int32_t overwrite, const char* locale);
+    static void InitLoginServerCVars();
+    static const char* GetDefaultPortalString();
+    static const char* GetDefaultRealmlistString();
+    static const char* GetDefaultPatchListString();
+    static const char* GetPatchListURL();
+    static void AdvanceRealmAddress();
+    static void Send(JamClientMessage* msg);
+    static int32_t Report(uint32_t suggestion, const char* text);
     static void LoadCDKey();
     static bool SelectRealm(const char* realmName);
     static bool SetSelectedRealmInfo(int32_t index);
@@ -162,6 +170,5 @@ extern ClientConnection* g_clientConnection;
 
 int32_t ConsoleCommand_Logout(const char* command, const char* arguments);
 
-int32_t SendBugOpcode(uint32_t suggestion, const char* text);
 
 #endif

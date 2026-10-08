@@ -9,6 +9,8 @@
 #include "Engine/Source/Os/Processor.h"
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Os/TimeManager.h"
+#include "Engine/Source/Tempest/CRandom.h"
+#include <ctime>
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Common/WowTime.h"
 #include "WoW/Source/Client.h"
@@ -22,6 +24,7 @@
 #include "WoW/Source/Game/ValidateName.h"
 #include "WoW/Source/GameClientCommands.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
+#include "WoW/Source/Glue/CharacterSelection.h"
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/Magic/MagicClient/SpellTable.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
@@ -36,7 +39,7 @@
 #include "WoW/Source/WowServices/LoginResponse.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/AccountData.h"
 
-// STATIC: #0x00AD91F0
+// STATIC: 0x00CA0970
 static const char* s_errorTokens[] = {
     "RESPONSE_SUCCESS",
     "RESPONSE_FAILURE",
@@ -114,6 +117,7 @@ static const char* s_errorTokens[] = {
     "CHAR_DELETE_FAILED_LOCKED_FOR_TRANSFER",
     "CHAR_DELETE_FAILED_GUILD_LEADER",
     "CHAR_DELETE_FAILED_ARENA_CAPTAIN",
+    "CHAR_DELETE_FAILED_HAS_HEIRLOOM_OR_MAIL",
     "CHAR_LOGIN_IN_PROGRESS",
     "CHAR_LOGIN_SUCCESS",
     "CHAR_LOGIN_NO_WORLD",
@@ -125,6 +129,7 @@ static const char* s_errorTokens[] = {
     "CHAR_LOGIN_LOCKED_FOR_TRANSFER",
     "CHAR_LOGIN_LOCKED_BY_BILLING",
     "CHAR_LOGIN_LOCKED_BY_MOBILE_AH",
+    "CHAR_LOGIN_TEMPORARY_GM_LOCK",
     "CHAR_NAME_SUCCESS",
     "CHAR_NAME_FAILURE",
     "CHAR_NAME_NO_NAME",
@@ -144,49 +149,49 @@ static const char* s_errorTokens[] = {
     "CHAR_NAME_DECLENSION_DOESNT_MATCH_BASE_NAME",
 };
 
-// STATIC: #0x00C79620
+// STATIC: 0x00DBE268
 char ClientServices::s_accountName[1280];
 
-// STATIC: #0x00C79B98
+// STATIC: 0x00DBE9A8
 REALM_INFO ClientServices::m_selectRealmInfo;
 
-// STATIC: #0x00C79CE0
+// STATIC: 0x00DBE7E0
 ClientConnection* g_clientConnection;
 
-// STATIC: #0x00C79CE4
+// STATIC: 0x00DBE7E4
 ClientServices* ClientServices::m_instance;
 
-// STATIC: #0x00C79CE8
+// STATIC: 0x00DBE7E8
 bool ClientServices::s_newLogin;
 
-// STATIC: #0x00C79CE9
+// STATIC: 0x00DBE7E9
 bool ClientServices::m_selectRealmInfoValid;
 
-// STATIC: #0x00C79CEC
+// STATIC: 0x00DBE7EC
 Login* ClientServices::s_loginObj;
 
-// STATIC: #0x00C79E98
+// STATIC: 0x00DBEB00
 static char s_statusText[256];
 
-// STATIC: #0x00C79CF0
+// STATIC: 0x00DBE7F0
 RealmResponse* ClientServices::s_clientRealmResponse;
 
-// STATIC: #0x00C79CF4
+// STATIC: 0x00DBE7F4
 ClientConnection* ClientServices::s_currentConnection;
 
-// STATIC: #0x00C79D10
+// STATIC: 0x00DBE818
 CHARACTER_INFO ClientServices::s_characterInfo;
 
-// STATIC: #0x00C79B20
+// STATIC: 0x00DBE768
 static CLIENTCDKEY s_cdKey;
 
-// STATIC: #0x00C79CEA
+// STATIC: 0x00DBE7EA
 static bool s_cdKeyLoaded;
 
 // STATIC: #0x00AD93C0
 static const char* s_processorVendors[] = { "Unknown", "intel", "AMD", "PPC" };
 
-// STATIC: #0x00C79B40
+// STATIC: 0x00DBE788
 static char s_clientStamp[88];
 
 // OFFSET: 0x004CF2B0/0x14010B470
@@ -385,6 +390,10 @@ static void LogConnectionStatus(WOWCS_OPS op, int32_t errorCode, int32_t initiat
             SStrCopy(errorText, "CHAR_DELETE_FAILED_ARENA_CAPTAIN", sizeof(errorText));
             break;
 
+        case 76:
+            SStrCopy(errorText, "CHAR_DELETE_FAILED_HAS_HEIRLOOM_OR_MAIL", sizeof(errorText));
+            break;
+
         default:
             SStrPrintf(errorText, sizeof(errorText), "%d", errorCode);
             break;
@@ -402,16 +411,17 @@ ClientConnection::ClientConnection(RealmResponse* realmResponse) : RealmConnecti
     this->unk_2F3C = 0;
     this->unk_2F40 = 0;
     this->m_inGame = 0;
-    this->m_statusComplete = 1;
-    this->m_statusResult = 1;
     this->m_statusOp = COP_NONE;
     this->m_errorCode = 0;
     this->m_cleanup = NULL;
     this->m_quitAfterLogout = 0;
     this->m_loggingOut = 0;
     this->m_realmConnectPending = 0;
+    this->m_statusComplete = 1;
+    this->m_statusResult = 1;
 }
 
+// OFFSET: [0x00625D00/0x1402B77C0, 0x004CF280/0x1402B79C0]
 ClientConnection::~ClientConnection() {
 }
 
@@ -449,43 +459,64 @@ void ClientConnection::Cleanup() {
     }
 }
 
-// OFFSET: #0x006B0870
+// OFFSET: 0x004D00A0
 void ClientConnection::AccountLogin(const char* accountName, const char* password, int32_t region, int32_t locale) {
-    if (this->m_statusComplete != 1 || !accountName || !password) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     this->Initiate(COP_AUTHENTICATE, CSTATUS_AUTHENTICATING, NULL);
 }
 
-// OFFSET: #0x006B0940
-void ClientConnection::Disconnect() {
-    this->NetClient::Disconnect();
+// PROVEN: 90b8867e IDENTICAL/NONE
+// OFFSET: 0x004CEA00/0x14010AA10
+int32_t ClientConnection::Disconnect(DISCONNECT_REASON reason) {
+    CGlueMgr::LogConnectionStatus("Client Disconnect due to reason:%d", reason);
+    this->NetClient::Disconnect(reason);
     this->unk_2F3C = 0;
     WardenClient_Destroy();
+    return 1;
 }
 
-// OFFSET: #0x006B0970
+// PROVEN: beeeb389 IDENTICAL/NONE
+// OFFSET: 0x004CEA40/0x14010AA60
 ClientConnection* ClientServices::Connection() {
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     return ClientServices::s_currentConnection;
 }
 
+// PROVEN: 17549417 IDENTICAL/NONE
 // OFFSET: 0x004CEA50/0x14010AA70
 Login* ClientServices::LoginConnection() {
     return ClientServices::s_loginObj;
 }
 
-// OFFSET: 0x004CEBB0/0x14010AC10
-void ClientServices::Send2(CDataStore* msg) {
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// OFFSET: 0x004CEBD0/0x14010AC40
+void ClientServices::Send(JamClientMessage* msg) {
+    if (ClientServices::s_currentConnection) {
+        ClientServices::s_currentConnection->Send(msg, CONNECTION_ROUTED);
+    }
+}
+
+// PROVEN: 2c448044 IDENTICAL/NONE
+// OFFSET: 0x004CEFA0/0x14010B180
+const char* ClientServices::GetPatchListURL() {
+    return ClientServices::s_patchListVar->m_stringValue.m_str;
+}
+
+// PROVEN: f071a55f IDENTICAL/NONE
+// OFFSET: 0x004CF000
+void ClientServices::AdvanceRealmAddress() {
+    if (ClientServices::s_currentConnection) {
+        ClientServices::s_currentConnection->m_statusComplete = 0;
     }
 
-    ClientServices::s_currentConnection->Send(msg);
+    ClientServices::m_selectRealmInfo.m_addresses[0] = ClientServices::m_selectRealmInfo.m_addresses[1];
+    ClientServices::m_selectRealmInfo.m_ports[0] = ClientServices::m_selectRealmInfo.m_ports[1];
+    ClientServices::m_selectRealmInfo.m_addresses[1].Clear();
+    ClientServices::m_selectRealmInfo.m_ports[1] = 0;
+}
+
+// OFFSET: 0x004CEBB0/0x14010AC10
+void ClientServices::Send2(CDataStore* msg) {
+    if (ClientServices::s_currentConnection) {
+        ClientServices::s_currentConnection->Send(msg, CONNECTION_ROUTED);
+    }
 }
 
 // OFFSET: #0x006B0B80
@@ -510,6 +541,7 @@ void ClientServices::ClearMessageHandler(NETMESSAGE msgId) {
     ClientServices::s_currentConnection->ResetHandler(msgId);
 }
 
+// PROVEN: b94c3125 IDENTICAL/NONE
 // OFFSET: 0x004CEFB0/0x14010B190
 const char* ClientServices::GetSelectedRealmName() {
     if (!ClientServices::s_realmNameVar) {
@@ -519,20 +551,19 @@ const char* ClientServices::GetSelectedRealmName() {
     return ClientServices::s_realmNameVar->m_stringValue.m_str;
 }
 
-// OFFSET: #0x006B0DF0
+// PROVEN: 33feb0af IDENTICAL/NONE
+// OFFSET: 0x004CEFE0/0x14010B1F0
 const char* ClientServices::GetServerAlertURL() {
-    if (!ClientServices::s_serverAlertVar) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     return ClientServices::s_serverAlertVar->m_stringValue.m_str;
 }
 
+// PROVEN: b3c5e6f9 IDENTICAL/NONE
 // OFFSET: 0x004CF0A0/0x14010B2C0
 REALM_INFO* ClientServices::GetSelectedRealm() {
     return ClientServices::m_selectRealmInfoValid ? &ClientServices::m_selectRealmInfo : NULL;
 }
 
+// PROVEN: 9995a82a IDENTICAL/NONE
 // OFFSET: 0x004CFE40/0x14010C2B0
 void ClientConnection::Cancel(int32_t errorCode) {
     if (this->m_cleanup) {
@@ -546,6 +577,7 @@ void ClientConnection::Cancel(int32_t errorCode) {
     LogConnectionStatus(this->m_statusOp, errorCode, 0, 0);
 }
 
+// PROVEN: b4be18f3 IDENTICAL/NONE
 // OFFSET: 0x004CF0C0/0x14010B2E0
 void ClientServices::FileData(const uint8_t* data, uint32_t size) {
     CGlueMgr::DownloadFeed(data, size);
@@ -553,21 +585,23 @@ void ClientServices::FileData(const uint8_t* data, uint32_t size) {
 
 // OFFSET: 0x004CF120/0x14010B330
 const char* ClientServices::GetErrorToken(int32_t errorCode) {
-    if (static_cast<uint32_t>(errorCode - 1) > 0x66) {
+    if (static_cast<uint32_t>(errorCode - 1) > 0x68) {
         return "";
     }
 
     return s_errorTokens[errorCode];
 }
 
+// PROVEN: 79dd7121 IDENTICAL/NONE
 // OFFSET: 0x004CF160/0x14010B360
 int32_t ClientServices::CharacterValidateName(const char* name) {
-    return ValidateCharacterNameConst(s_locale, name, true, true, true, true, 0) + 87;
+    return ValidateCharacterNameConst(s_locale, name, true, true, true, true, 0) + 89;
 }
 
+// PROVEN: 870122ab IDENTICAL/NONE
 // OFFSET: 0x004CF190/0x14010B3A0
 int32_t ClientServices::CharacterValidateDeclension(const char* name, const char* declension) {
-    return ValidateCharacterNameDeclension(s_locale, name, declension) + 87;
+    return ValidateCharacterNameDeclension(s_locale, name, declension) + 89;
 }
 
 // OFFSET: 0x004CFD50/0x14010C190
@@ -589,8 +623,8 @@ int32_t ClientConnection::PollStatus(WOWCS_OPS& op, const char** text, int32_t& 
         return this->m_statusComplete;
     }
 
-    if (errorCode == 27) {
-        SStrPrintf(s_statusText, sizeof(s_statusText), token, ClientServices::Connection()->m_queuePosition);
+    if (errorCode == AUTH_WAIT_QUEUE) {
+        SStrPrintf(s_statusText, sizeof(s_statusText), token, ClientServices::s_currentConnection->m_queuePosition);
         *text = s_statusText;
         return this->m_statusComplete;
     }
@@ -599,7 +633,7 @@ int32_t ClientConnection::PollStatus(WOWCS_OPS& op, const char** text, int32_t& 
     return this->m_statusComplete;
 }
 
-// OFFSET: #0x006B1BB0
+// OFFSET: 0x004D0690/0x14010CE30
 void ClientServices::Destroy() {
     ClientServices::m_selectRealmInfoValid = false;
 
@@ -611,9 +645,7 @@ void ClientServices::Destroy() {
 
     if (g_clientConnection) {
         if (g_clientConnection->unk_2F3C) {
-            g_clientConnection->NetClient::Disconnect();
-            g_clientConnection->unk_2F3C = 0;
-            WardenClient_Destroy();
+            g_clientConnection->Disconnect(DISCONNECT_REASON_SHUTDOWN);
         }
 
         delete g_clientConnection;
@@ -636,7 +668,7 @@ void ClientServices::Destroy() {
     }
 }
 
-// OFFSET: #0x006B21F0
+// OFFSET: 0x004D0C10
 void ClientConnection::CharacterForceLogout() {
     this->CharacterLogout(false, true);
 }
@@ -646,18 +678,14 @@ void ClientServices::Initialize() {
     if (!g_clientConnection) {
         ClientServices::s_clientRealmResponse = new (__FILE__, __LINE__) ClientRealmResponseAdapter();
         g_clientConnection = new (__FILE__, __LINE__) ClientConnection(ClientServices::s_clientRealmResponse);
-
-        if (!g_clientConnection) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
     }
 
     ClientServices::s_currentConnection = g_clientConnection;
-    ConsoleCommandRegister("logout", ConsoleCommand_Logout, CATEGORY_DEFAULT, NULL, NULL);
+    ConsoleCommandRegister("logout", ConsoleCommand_Logout, CATEGORY_NET, NULL, NULL);
 }
 
 // OFFSET: 0x004D0D90/0x14010D990
-int32_t SendBugOpcode(uint32_t suggestion, const char* text) {
+int32_t ClientServices::Report(uint32_t suggestion, const char* text) {
     if (!text || !*text) {
         return 0;
     }
@@ -710,7 +738,7 @@ int32_t SendBugOpcode(uint32_t suggestion, const char* text) {
     OsGetVersionString(line, sizeof(line));
     SStrPack(info, line, sizeof(info));
     SStrPack(info, "\n", sizeof(info));
-    SStrPrintf(line, sizeof(line), "Version:\t%s\n", "WoW [Release] Build 12340 (Jun 24 2010 23:54:57)");
+    SStrPrintf(line, sizeof(line), "Version:\t%s\n", "WoW [Release] Build 15595 (Apr 10 2012 17:51:59)");
     SStrPack(info, line, sizeof(info));
     const char* account = ClientServices::s_accountName[0] ? ClientServices::s_accountName : NULL;
 
@@ -769,7 +797,6 @@ int32_t SendBugOpcode(uint32_t suggestion, const char* text) {
 
                 SStrPrintf(line, sizeof(line), "Auras:\n");
                 SStrPack(info, line, sizeof(info));
-                SpellRec spell;
 
                 for (uint32_t i = 0; i < player->GetAuraCount(); i++) {
                     int32_t spellId = player->GetAuraSpellId(i);
@@ -778,7 +805,8 @@ int32_t SendBugOpcode(uint32_t suggestion, const char* text) {
                         continue;
                     }
 
-                    const char* spellName = g_spellDB.GetRecord(spellId, &spell) ? spell.m_name : "UNKNOWN";
+                    SpellRec* spell = g_spellDB.GetRecord(spellId);
+                    const char* spellName = spell ? spell->m_name : "UNKNOWN";
                     SStrPrintf(line, sizeof(line), "\t%s(%d)\n", spellName, spellId);
                     SStrPack(info, line, sizeof(info));
                 }
@@ -811,7 +839,7 @@ void ClientServices::Logon(const char* username, const char* password) {
         ClientServices::s_newLogin = false;
     }
 
-    bool battlenet = SStrChr(username, '@') != NULL;
+    bool battlenet = strchr(username, '@') != NULL;
 
     if (ClientServices::s_loginObj && ((ClientServices::s_loginObj->GetLoginServerType() == 1 && !battlenet) || (ClientServices::s_loginObj->GetLoginServerType() == 0 && battlenet))) {
         delete ClientServices::s_loginObj;
@@ -836,6 +864,7 @@ void ClientServices::Logon(const char* username, const char* password) {
         switch (s_locale) {
             case 0:
             case 7:
+            case 10:
                 SStrPrintf(accountName, sizeof(accountName), s_region == 3 ? "%s#EU" : "%s#US", username);
                 break;
 
@@ -869,7 +898,7 @@ void ClientServices::Logon(const char* username, const char* password) {
     ClientServices::s_loginObj->Logon(realmList, portal);
 }
 
-// OFFSET: #0x006B1C70
+// OFFSET: 0x004D07C0/0x14010CFB0
 char* ClientServices::GetClientStamp() {
     const char* account = ClientServices::s_accountName[0] ? ClientServices::s_accountName : NULL;
     REALM_INFO* realm = ClientServices::m_selectRealmInfoValid ? &ClientServices::m_selectRealmInfo : NULL;
@@ -877,55 +906,22 @@ char* ClientServices::GetClientStamp() {
     WowTime::WowEncodeTime(time, &g_clientGameTime);
     memset(s_clientStamp, 0, sizeof(s_clientStamp));
 
-    if (!account || !realm) {
-        return s_clientStamp;
+    if (account && realm) {
+        strcpy(s_clientStamp, account);
+        SockAddr address = realm->m_addresses[0];
+        *reinterpret_cast<uint32_t*>(&s_clientStamp[64]) = time;
+        address.Normalize();
+        memcpy(&s_clientStamp[68], address.m_ipv6, sizeof(address.m_ipv6));
+        s_clientStamp[84] = 0;
+        s_clientStamp[85] = static_cast<char>(0xFF);
+        s_clientStamp[86] = 63;
+        s_clientStamp[87] = 15;
     }
 
-    SStrCopy(s_clientStamp, account, STORM_MAX_STR);
-    const char* address = realm->m_realmAddress;
-    *reinterpret_cast<uint32_t*>(&s_clientStamp[64]) = time;
-    const char* source = &address[SStrLen(address) - 1];
-    memset(&s_clientStamp[68], '0', 17);
-    char* dest = &s_clientStamp[84];
-
-    while (*source >= '0' && *source <= '9') {
-        *dest-- = *source--;
-    }
-
-    source--;
-    dest = &s_clientStamp[79];
-
-    while (*source >= '0' && *source <= '9') {
-        *dest-- = *source--;
-    }
-
-    source--;
-    dest = &s_clientStamp[76];
-
-    while (*source >= '0' && *source <= '9') {
-        *dest-- = *source--;
-    }
-
-    source--;
-    dest = &s_clientStamp[73];
-
-    while (*source >= '0' && *source <= '9') {
-        *dest-- = *source--;
-    }
-
-    source--;
-
-    for (dest = &s_clientStamp[70]; source >= address; dest--) {
-        *dest = *source--;
-    }
-
-    s_clientStamp[85] = static_cast<char>(0xFF);
-    s_clientStamp[86] = 63;
-    s_clientStamp[87] = 15;
     return s_clientStamp;
 }
 
-// OFFSET: #0x006B1E00
+// OFFSET: 0x004D0CB0/0x14010D820
 void ClientServices::LoginServerStatus(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, const char* stateString, const char* resultString, uint16_t flags) {
     CGlueMgr::SetLoginStateAndResult(state, result, addressString, stateString, resultString, flags);
 
@@ -939,20 +935,16 @@ void ClientServices::LoginServerStatus(LOGIN_STATE state, LOGIN_RESULT result, c
     memcpy(loginData.m_sessionKey, ClientServices::s_loginObj->m_sessionKey, sizeof(loginData.m_sessionKey));
     loginData.m_loginServerType = ClientServices::s_loginObj->GetLoginServerType();
 
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     ClientServices::s_currentConnection->SetLoginData(&loginData);
-    SStrCopy(ClientServices::s_accountName, loginData.m_account, sizeof(ClientServices::s_accountName));
+    ClientServices::SetAccountName(loginData.m_account);
     CGlueMgr::SetCurrentAccount(loginData.m_account);
     InitializeAddOns(loginData.m_account);
     CVar::DeleteAccountCVars();
 }
 
-// OFFSET: 0x00408680/0x14000A990
+// OFFSET: #0x00406F40
 void ClientServices::SendPacket(CDataStore* msg) {
-    StaticSingleton<CommandManager>::Instance()->m_connection->Send(msg);
+    StaticSingleton<CommandManager>::Instance()->m_connection->Send(msg, CONNECTION_ROUTED);
 }
 
 // OFFSET: 0x004D1970/0x14010E9D0
@@ -985,11 +977,6 @@ void ClientConnection::Initiate(WOWCS_OPS op, int32_t errorCode, void (*cleanup)
 // OFFSET: #0x006B0E10
 void ClientServices::GetRealmList() {
     ClientConnection* connection = ClientServices::s_currentConnection;
-
-    if (!connection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     connection->Initiate(COP_GET_REALMS, 35, NULL);
 
     if (ClientServices::s_loginObj->IsLoggedOn()) {
@@ -999,7 +986,8 @@ void ClientServices::GetRealmList() {
     }
 }
 
-// OFFSET: #0x006B10B0
+// PROVEN: e2864986 IDENTICAL/NONE
+// OFFSET: 0x004CFD00/0x14010C120
 void ClientConnection::Complete(int32_t result, int32_t errorCode) {
     if (this->m_cleanup) {
         this->m_cleanup();
@@ -1025,45 +1013,42 @@ bool ClientServices::GetCdKeys(Grunt::CdKey& cdKey) {
     return true;
 }
 
-// OFFSET: #0x006B2F60
+// OFFSET: 0x004D1E90/0x14010EF90
 void ClientServices::RealmEnumCallback(uint32_t result) {
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    if (result == 1) {
-        ClientServices::s_currentConnection->Complete(0, 23);
-        return;
-    }
-
-    if (result == 3 || result == 2 || result == 4) {
-        ClientServices::s_currentConnection->Complete(0, 37);
-        return;
-    }
-
     ClientConnection* connection = ClientServices::s_currentConnection;
 
-    if (connection->m_statusOp != COP_CONNECT || connection->m_realmConnectPending) {
-        if (connection->m_statusOp == COP_GET_REALMS) {
-            connection->Complete(1, 36);
-        }
-
+    if (result == 1) {
+        connection->Complete(0, 23);
         return;
     }
 
-    if (ClientServices::s_loginObj->GetLoginServerType() == 1) {
-        if (ClientServices::m_selectRealmInfoValid || ClientServices::SetSelectedRealmInfo(0)) {
-            connection->m_realmConnectPending = 1;
-            ClientServices::s_loginObj->JoinRealm(ClientServices::m_selectRealmInfo.m_regionId, ClientServices::m_selectRealmInfo.m_battlegroupId, ClientServices::m_selectRealmInfo.m_realmId);
-        } else {
-            ClientServices::Connection()->Complete(0, 39);
+    if (result) {
+        connection->Complete(0, 37);
+        return;
+    }
+
+    if (connection->m_statusOp == COP_CONNECT) {
+        if (connection->m_realmConnectPending) {
+            return;
         }
-    } else {
-        connection->m_realmConnectPending = 1;
-        ClientServices::ConnectToSelectedServer();
+
+        if (ClientServices::s_loginObj->GetLoginServerType() == 1) {
+            if (ClientServices::m_selectRealmInfoValid || ClientServices::SetSelectedRealmInfo(0)) {
+                connection->m_realmConnectPending = 1;
+                ClientServices::s_loginObj->JoinRealm(ClientServices::m_selectRealmInfo.m_regionId, ClientServices::m_selectRealmInfo.m_battlegroupId, ClientServices::m_selectRealmInfo.m_realmId);
+            } else {
+                connection->Complete(0, 39);
+            }
+        } else {
+            connection->m_realmConnectPending = 1;
+            ClientServices::ConnectToSelectedServer();
+        }
+    } else if (connection->m_statusOp == COP_GET_REALMS) {
+        connection->Complete(1, 36);
     }
 }
 
+// PROVEN: 0c146b87 IDENTICAL/NONE
 // OFFSET: 0x004CFEA0/0x14010C310
 int32_t ClientConnection::HandleConnect() {
     this->Complete(1, 5);
@@ -1073,6 +1058,7 @@ int32_t ClientConnection::HandleConnect() {
     return this->NetClient::HandleConnect();
 }
 
+// PROVEN: 0e82720a IDENTICAL/NONE
 // OFFSET: 0x004CFF10/0x14010C390
 int32_t ClientConnection::HandleDisconnect() {
     if (this->m_cleanup) {
@@ -1088,6 +1074,7 @@ int32_t ClientConnection::HandleDisconnect() {
     return this->NetClient::HandleDisconnect();
 }
 
+// PROVEN: 3941ba83 IDENTICAL/NONE
 // OFFSET: 0x004CFF60/0x14010C3E0
 int32_t ClientConnection::HandleCantConnect() {
     this->Complete(0, 4);
@@ -1099,10 +1086,6 @@ int32_t ClientConnection::HandleCantConnect() {
 
 // OFFSET: 0x004CFFD0/0x14010C450
 void ClientConnection::Connect() {
-    if (this->m_statusComplete != 1) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     CGlueMgr::ResetQueueState();
     this->m_realmConnectPending = 0;
     this->Initiate(COP_CONNECT, 7, NULL);
@@ -1128,7 +1111,7 @@ bool ClientServices::SetSelectedRealmInfo(int32_t force) {
         if (!SStrCmpUTF8I(realm->m_realmName, ClientServices::GetSelectedRealmName(), STORM_MAX_STR)) {
             if (!(realm->m_flags & 0x1) || force) {
                 ClientServices::m_selectRealmInfoValid = true;
-                memcpy(&ClientServices::m_selectRealmInfo, realm, sizeof(((ClientServices*)0)->m_selectRealmInfo));
+                memcpy(&ClientServices::m_selectRealmInfo, realm, sizeof(ClientServices::m_selectRealmInfo));
                 return true;
             }
 
@@ -1141,28 +1124,20 @@ bool ClientServices::SetSelectedRealmInfo(int32_t force) {
     return false;
 }
 
-// OFFSET: #0x006B2E30
+// OFFSET: 0x004D1DA0/0x14010EE70
 void ClientServices::ConnectToSelectedServer() {
-    if (!ClientServices::m_selectRealmInfoValid && !ClientServices::SetSelectedRealmInfo(0)) {
-        ClientServices::Connection()->Complete(0, 39);
-        return;
-    }
-
-    if (ClientServices::Connection()->m_netState != NS_INITIALIZED) {
-        ClientServices::Connection()->Complete(0, 39);
+    if ((!ClientServices::m_selectRealmInfoValid && !ClientServices::SetSelectedRealmInfo(0)) || ClientServices::s_currentConnection->m_netState != NS_INITIALIZED) {
+        ClientServices::s_currentConnection->Complete(0, 39);
         return;
     }
 
     ClientServices::s_currentConnection->SetSelectedRealm(ClientServices::m_selectRealmInfo.m_regionId, ClientServices::m_selectRealmInfo.m_battlegroupId, ClientServices::m_selectRealmInfo.m_realmId);
-    ClientServices::Connection()->NetClient::Connect(ClientServices::m_selectRealmInfo.m_realmAddress);
+    ClientServices::s_currentConnection->ConnectInternal(ClientServices::m_selectRealmInfo.m_addresses[0], ClientServices::m_selectRealmInfo.m_ports[0]);
 }
 
+// PROVEN: 4b4fa192 IDENTICAL/NONE
 // OFFSET: 0x004D1D70/0x14010EE30
 bool ClientServices::SelectRealm(const char* realmName) {
-    if (!ClientServices::s_realmNameVar) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     ClientServices::s_realmNameVar->Set(realmName, true, false, false, true);
 
     return ClientServices::SetSelectedRealmInfo(1);
@@ -1184,7 +1159,7 @@ void ClientConnection::HandleAuthResult(int32_t result) {
 
 // OFFSET: #0x006B14C0
 void ClientConnection::GetCharacterList() {
-    this->Initiate(COP_GET_CHARACTERS, 43, NULL);
+    this->Initiate(COP_GET_CHARACTERS, CHAR_LIST_RETRIEVING, NULL);
 
     if (this->unk_2F3C) {
         this->RequestCharacterEnum();
@@ -1193,20 +1168,22 @@ void ClientConnection::GetCharacterList() {
     }
 }
 
+// PROVEN: 7777b3c5 IDENTICAL/NONE
 // OFFSET: 0x004D0670/0x14010CE20
 void ClientRealmResponseAdapter::AddOnListReceived(RealmConnection* connection) {
     FrameScript_SignalEvent(GLUE_EVENT_ADDON_LIST_UPDATE, NULL);
 }
 
+// PROVEN: a4788567 IDENTICAL/NONE
 // OFFSET: 0x004D09E0/0x14010D260
 void ClientRealmResponseAdapter::HandleAuthResponse(RealmConnection* connection, uint8_t result) {
     ClientConnection* clientConnection = static_cast<ClientConnection*>(connection);
 
-    if (result == 27) {
+    if (result == AUTH_WAIT_QUEUE) {
         clientConnection->m_statusOp = COP_WAIT_QUEUE;
-        clientConnection->m_errorCode = 27;
+        clientConnection->m_errorCode = AUTH_WAIT_QUEUE;
         clientConnection->m_statusComplete = 0;
-        LogConnectionStatus(COP_WAIT_QUEUE, 27, 1, 1);
+        LogConnectionStatus(COP_WAIT_QUEUE, AUTH_WAIT_QUEUE, 1, 1);
         CGlueMgr::UpdateWaitQueue(clientConnection->m_queuePosition);
     } else {
         clientConnection->HandleAuthResult(result);
@@ -1215,14 +1192,15 @@ void ClientRealmResponseAdapter::HandleAuthResponse(RealmConnection* connection,
     AccountDataInitialize(1);
 }
 
-// OFFSET: #0x006B2000
+// OFFSET: 0x004D0A60
 void ClientRealmResponseAdapter::CharacterListReceived(RealmConnection* connection, const TSFixedArray<CHARACTER_INFO>& characters, int32_t success) {
     ClientConnection* clientConnection = static_cast<ClientConnection*>(connection);
 
     if (success) {
-        clientConnection->Complete(1, 44);
+        CCharacterSelection::UpdateCharacterList(characters);
+        clientConnection->Complete(1, CHAR_LIST_RETRIEVED);
     } else {
-        clientConnection->Complete(0, 45);
+        clientConnection->Complete(0, CHAR_LIST_FAILED);
     }
 }
 
@@ -1241,54 +1219,48 @@ int32_t ClientConnection::EnumerateCharacters(void (*callback)(CHARACTER_INFO& i
     return count;
 }
 
-// OFFSET: #0x006B0F60
+// PROVEN: f56dca74 IDENTICAL/NONE
+// OFFSET: 0x004CF140
 int32_t ClientServices::ValidDisconnect(const void* connection) {
-    if (!connection || !ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     return connection == ClientServices::s_currentConnection;
 }
 
+// PROVEN: 289643e8 IDENTICAL/NONE
 // OFFSET: 0x004CF1B0/0x14010B3C0
 const char* ClientServices::GetAccountName() {
     return ClientServices::s_accountName[0] ? ClientServices::s_accountName : NULL;
 }
 
-// OFFSET: #0x006B0FE0
+// PROVEN: 57d2151f IDENTICAL/NONE
+// OFFSET: 0x004D08F0
 void ClientServices::SetAccountName(const char* accountName) {
-    if (!accountName) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     SStrCopy(ClientServices::s_accountName, accountName, sizeof(ClientServices::s_accountName));
 }
 
-// OFFSET: #0x006B1020
+// PROVEN: 617c03e3 IDENTICAL/NONE
+// OFFSET: 0x004CF1D0
 void ClientServices::SetCharacterInfo(const CHARACTER_INFO* info) {
-    if (!info) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     memcpy(&ClientServices::s_characterInfo, info, sizeof(ClientServices::s_characterInfo));
 }
 
+// PROVEN: 0dc508ae IDENTICAL/NONE
 // OFFSET: 0x004CF1F0/0x14010B400
 CHARACTER_INFO* ClientServices::GetCharacterInfo() {
     return &ClientServices::s_characterInfo;
 }
 
+// PROVEN: 0cc12acb IDENTICAL/NONE
 // OFFSET: 0x004CF200/0x14010B410
 const char* ClientServices::GetCharacterName() {
     return ClientServices::s_characterInfo.m_name[0] ? ClientServices::s_characterInfo.m_name : NULL;
 }
 
-// OFFSET: #0x006B15C0
+// OFFSET: 0x004D0140/0x14010C6E0
 void ClientConnection::HandleCharacterCreate(uint8_t result) {
     this->Complete(result == CHAR_CREATE_SUCCESS, result);
 }
 
-// OFFSET: #0x006B1620
+// OFFSET: 0x004D01A0
 void ClientConnection::RequestCharacterCreate(const CHARACTER_CREATE_INFO& info) {
     this->Initiate(COP_CREATE_CHARACTER, CHAR_CREATE_IN_PROGRESS, NULL);
 
@@ -1310,10 +1282,10 @@ void ClientConnection::RequestCharacterCreate(const CHARACTER_CREATE_INFO& info)
     msg.Put(info.m_facialHairStyleID);
     msg.Put(info.m_outfitID);
     msg.Finalize();
-    this->Send(&msg);
+    this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// OFFSET: #0x006B1790
+// OFFSET: 0x004D02E0
 void ClientConnection::CharacterLogin(WOWGUID guid, int32_t a2) {
     this->Initiate(COP_LOGIN_CHARACTER, CHAR_LOGIN_IN_PROGRESS, NULL);
 
@@ -1326,8 +1298,8 @@ void ClientConnection::CharacterLogin(WOWGUID guid, int32_t a2) {
     this->unk_2F40 = 1;
 }
 
-// OFFSET: #0x006B0930
-int32_t ClientConnection::CharacterLoggingOut() {
+// OFFSET: 0x004CE9F0/0x14010AA00
+bool ClientConnection::CharacterLoggingOut() {
     return this->m_loggingOut;
 }
 
@@ -1342,7 +1314,7 @@ void ClientConnection::CharacterSetInGame(int32_t inGame) {
     }
 }
 
-// OFFSET: #0x006B1A10
+// OFFSET: 0x004D0540/0x14010CC50
 void ClientConnection::HandleCharacterDelete(uint8_t result) {
     this->Complete(result == CHAR_DELETE_SUCCESS, result);
 }
@@ -1360,7 +1332,7 @@ void ClientConnection::RequestCharacterDelete(WOWGUID guid) {
     msg.Put(static_cast<uint32_t>(CMSG_CHAR_DELETE));
     msg.Put(guid.m_guid);
     msg.Finalize();
-    this->Send(&msg);
+    this->Send(&msg, CONNECTION_ROUTED);
 }
 
 // OFFSET: 0x004CF260
@@ -1408,16 +1380,19 @@ void ClientRealmResponseAdapter::HandleDisconnect(RealmConnection* connection) {
 void ClientRealmResponseAdapter::HandleCantConnect(RealmConnection* connection) {
 }
 
-// OFFSET: #0x006B1070
+// PROVEN: 9c66e800 IDENTICAL/NONE
+// OFFSET: 0x004CF220/0x14010B430
 uint8_t ClientServices::GetCharacterRace() {
     return ClientServices::s_characterInfo.m_raceID;
 }
 
+// PROVEN: b4b0f750 IDENTICAL/NONE
 // OFFSET: 0x004CF230/0x14010B440
 uint8_t ClientServices::GetCharacterClass() {
     return ClientServices::s_characterInfo.m_classID;
 }
 
+// PROVEN: 68f06e05 IDENTICAL/NONE
 // OFFSET: 0x004CF240/0x14010B450
 uint8_t ClientServices::GetCharacterSex() {
     return ClientServices::s_characterInfo.m_sexID;
@@ -1431,6 +1406,7 @@ void ClientConnection::HandleLogoutAbortAck() {
     }
 }
 
+// PROVEN: 52870fef IDENTICAL/NONE
 // OFFSET: 0x004CF0E0/0x14010B2F0
 const char* ClientServices::GetLoginServer() {
     if (ClientServices::s_loginObj->GetLoginServerType() == 1) {
@@ -1445,10 +1421,11 @@ void ClientConnection::CharacterAbortLogout() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_LOGOUT_CANCEL));
     msg.Finalize();
-    this->Send(&msg);
+    this->Send(&msg, CONNECTION_ROUTED);
     this->m_loggingOut = 0;
 }
 
+// PROVEN: 3291e39d IDENTICAL/NONE
 // OFFSET: 0x004D0BC0/0x14010D620
 void ClientConnection::HandleLogoutComplete() {
     if (this->m_inGame) {
@@ -1456,10 +1433,6 @@ void ClientConnection::HandleLogoutComplete() {
     }
 
     this->unk_2F40 = 0;
-
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
 
     if (this == ClientServices::s_currentConnection) {
         ClientDestroyGame(1, 1, 0);
@@ -1472,36 +1445,71 @@ void ClientConnection::HandleLogoutComplete() {
     }
 }
 
-// OFFSET: #0x006B3070
-void ClientServices::JoinRealmResult(uint32_t realmId, int32_t a2, int32_t a3, int32_t a4, int32_t a5) {
+// OFFSET: 0x004D1F70/0x14010F100
+void ClientServices::JoinRealmResult(uint32_t realmId, const REALM_ADDRESS_LIST* lists, int32_t listCount, int32_t a4, int32_t error) {
     if (ClientServices::s_loginObj->GetLoginServerType() != 1) {
         return;
     }
 
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    ClientConnection* connection = ClientServices::s_currentConnection;
+
+    if (lists && ClientServices::m_selectRealmInfoValid && realmId && ClientServices::m_selectRealmInfo.m_realmId == realmId) {
+        LoginData loginData;
+        SStrCopy(loginData.m_account, ClientServices::s_loginObj->m_username, sizeof(loginData.m_account));
+        loginData.m_loginServerID = ClientServices::s_loginObj->GetServerId();
+        memcpy(loginData.m_sessionKey, ClientServices::s_loginObj->m_sessionKey, sizeof(loginData.m_sessionKey));
+        loginData.m_loginServerType = ClientServices::s_loginObj->GetLoginServerType();
+        connection->SetLoginData(&loginData);
+
+        ClientServices::m_selectRealmInfo.m_addresses[0].Clear();
+        ClientServices::m_selectRealmInfo.m_addresses[1].Clear();
+        ClientServices::m_selectRealmInfo.m_ports[0] = 0;
+        ClientServices::m_selectRealmInfo.m_ports[1] = 0;
+
+        CRndSeed ipv4Seed(static_cast<uint32_t>(_time32(NULL)) ^ OsGetAsyncTimeMs());
+
+        for (int32_t i = 0; i < listCount; i++) {
+            if (lists[i].m_type == SOCKADDR_IPV4) {
+                if (lists[i].m_count) {
+                    uint32_t index = static_cast<uint32_t>((static_cast<uint64_t>(lists[i].m_count) * CRandom::uint32_(ipv4Seed)) >> 32);
+                    ClientServices::m_selectRealmInfo.m_addresses[0] = lists[i].m_addresses[index];
+                    ClientServices::m_selectRealmInfo.m_ports[0] = lists[i].m_ports[index];
+                }
+
+                break;
+            }
+        }
+
+        if (g_useIPv6Var->m_intValue) {
+            CRndSeed ipv6Seed;
+            ipv6Seed.SetSeed(static_cast<uint32_t>(_time32(NULL)) ^ OsGetAsyncTimeMs());
+
+            for (int32_t i = 0; i < listCount; i++) {
+                if (lists[i].m_type == SOCKADDR_IPV6) {
+                    if (lists[i].m_count) {
+                        uint32_t index = static_cast<uint32_t>((static_cast<uint64_t>(lists[i].m_count) * CRandom::uint32_(ipv6Seed)) >> 32);
+                        ClientServices::m_selectRealmInfo.m_addresses[1] = ClientServices::m_selectRealmInfo.m_addresses[0];
+                        ClientServices::m_selectRealmInfo.m_ports[1] = ClientServices::m_selectRealmInfo.m_ports[0];
+                        ClientServices::m_selectRealmInfo.m_addresses[0] = lists[i].m_addresses[index];
+                        ClientServices::m_selectRealmInfo.m_ports[0] = lists[i].m_ports[index];
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        if (ClientServices::m_selectRealmInfo.m_addresses[0].m_type) {
+            ClientServices::ConnectToSelectedServer();
+            return;
+        }
     }
 
-    if (!ClientServices::m_selectRealmInfoValid || !realmId || ClientServices::m_selectRealmInfo.m_realmId != realmId) {
-        ClientServices::s_currentConnection->Complete(0, 4);
-        return;
-    }
-
-    LoginData loginData;
-    SStrCopy(loginData.m_account, ClientServices::s_loginObj->m_username, sizeof(loginData.m_account));
-    loginData.m_loginServerID = ClientServices::s_loginObj->GetServerId();
-    memcpy(loginData.m_sessionKey, ClientServices::s_loginObj->m_sessionKey, sizeof(loginData.m_sessionKey));
-    loginData.m_loginServerType = ClientServices::s_loginObj->GetLoginServerType();
-    ClientServices::Connection()->SetLoginData(&loginData);
-
-    if (a2 || a3) {
-        SStrPrintf(ClientServices::m_selectRealmInfo.m_realmAddress, sizeof(ClientServices::m_selectRealmInfo.m_realmAddress), "%d.%d.%d.%d:%u", (a2 >> 24) & 0xFF, (a2 >> 16) & 0xFF, (a2 >> 8) & 0xFF, a2 & 0xFF, a3);
-    }
-
-    ClientServices::ConnectToSelectedServer();
+    connection->Cancel(RESPONSE_FAILED_TO_CONNECT);
 }
 
-// OFFSET: #0x006B10A0
+// PROVEN: 9a0696e0 IDENTICAL/NONE
+// OFFSET: 0x004CF250/0x14010B460
 uint8_t ClientServices::GetCharacterLevel() {
     return ClientServices::s_characterInfo.m_experienceLevel;
 }
@@ -1510,10 +1518,6 @@ uint8_t ClientServices::GetCharacterLevel() {
 void ClientConnection::CharacterLogout(bool quit, bool instant) {
     if ((this->m_loggingOut && !instant) || !this->m_inGame) {
         return;
-    }
-
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
     }
 
     if (this != ClientServices::s_currentConnection) {
@@ -1531,21 +1535,21 @@ void ClientConnection::CharacterLogout(bool quit, bool instant) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(instant ? CMSG_PLAYER_LOGOUT : CMSG_LOGOUT_REQUEST));
     msg.Finalize();
-    this->Send(&msg);
+    this->Send(&msg, CONNECTION_ROUTED);
 }
 
-// OFFSET: #0x006B0F30
+// PROVEN: e946375b IDENTICAL/NONE
+// OFFSET: 0x004CF110/0x14010B320
 int32_t ClientServices::LaunchURL(const char* url) {
     return OsLaunchURL(url);
 }
 
-// OFFSET: #0x006B0AA0
-void ClientServices::LoginEnterToken(const char* token) {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: c5a5b33d IDENTICAL/NONE
+// OFFSET: 0x004CEB10/0x14010AB40
+void ClientServices::EnterToken(const char* token) {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->EnterToken(token);
     }
-
-    ClientServices::s_loginObj->EnterToken(token);
 }
 
 // OFFSET: 0x004CE960/0x14010A980
@@ -1558,77 +1562,77 @@ void ClientConnection::HandleLogoutResponse(int32_t result, int32_t instant) {
     }
 }
 
-// OFFSET: #0x006B09A0
-void ClientServices::LoginEnterPIN(int32_t count, uint8_t* digits) {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: b90a463c IDENTICAL/NONE
+// OFFSET: 0x004CEA60
+void ClientServices::EnterPIN(int32_t count, uint8_t* digits) {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->EnterPIN(count, digits);
     }
-
-    ClientServices::s_loginObj->EnterPIN(count, digits);
 }
 
-// OFFSET: #0x006B09E0
-void ClientServices::LoginEnterMatrix(uint8_t value) {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: d20b75be IDENTICAL/NONE
+// OFFSET: 0x004CEA90/0x14010AAB0
+void ClientServices::EnterMatrix(uint8_t value) {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->EnterMatrix(value);
     }
-
-    ClientServices::s_loginObj->EnterMatrix(value);
 }
 
 // OFFSET: #0x006B0A10
-void ClientServices::LoginRevertMatrix() {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+void ClientServices::RevertMatrix() {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->RevertMatrix();
     }
-
-    ClientServices::s_loginObj->RevertMatrix();
 }
 
-// OFFSET: #0x006B0A40
-void ClientServices::LoginCommitMatrix() {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: 3546dff6 IDENTICAL/NONE
+// OFFSET: 0x004CEAD0/0x14010AB00
+void ClientServices::CommitMatrix() {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->CommitMatrix();
     }
-
-    ClientServices::s_loginObj->CommitMatrix();
 }
 
-// OFFSET: #0x006B0A70
-void ClientServices::LoginFinalizeMatrix() {
-    if (!ClientServices::s_loginObj) {
-        SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: 6f9702f4 IDENTICAL/NONE
+// OFFSET: 0x004CEAF0/0x14010AB20
+void ClientServices::FinalizeMatrix() {
+    if (ClientServices::s_loginObj) {
+        ClientServices::s_loginObj->FinalizeMatrix();
     }
-
-    ClientServices::s_loginObj->FinalizeMatrix();
 }
 
+// PROVEN: 662f26bf IDENTICAL/NONE
 // OFFSET: 0x004CEB30/0x14010AB70
 void ClientServices::FileAccept(bool accept, uint64_t offset) {
     ClientServices::s_loginObj->FileAccept(accept, offset);
     ClientServices::s_newLogin = true;
 }
 
-// OFFSET: #0x006B0B00
+// PROVEN: 84e50bf5 IDENTICAL/NONE
+// OFFSET: 0x004CEB60/0x14010ABA0
 void ClientServices::StartDownload() {
     ClientServices::s_newLogin = true;
 }
 
+// PROVEN: 73d94135 IDENTICAL/NONE
 // OFFSET: 0x004CEB70/0x14010ABB0
 void ClientServices::SendSurveyData(uint16_t size, uint8_t* data) {
     ClientServices::s_loginObj->SendSurveyData(size, data);
 }
 
+// PROVEN: 6b3c293e IDENTICAL/NONE
 // OFFSET: 0x004CEB90/0x14010ABD0
 void ClientServices::SendSurveyFailed() {
     ClientServices::s_loginObj->SendSurveyFailed();
 }
 
+// PROVEN: 6a7346fb IDENTICAL/NONE
 // OFFSET: 0x004CEBA0/0x14010ABF0
 int32_t ClientServices::GetSurveyId() {
     return ClientServices::s_loginObj->GetSurveyId();
 }
 
+// PROVEN: a93e7381 IDENTICAL/NONE
 // OFFSET: 0x004D0AC0/0x14010D460
 void ClientConnection::HandleCharacterLoginFailed(uint8_t result) {
     if (this->m_inGame) {
@@ -1636,10 +1640,6 @@ void ClientConnection::HandleCharacterLoginFailed(uint8_t result) {
     }
 
     this->unk_2F40 = 0;
-
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
 
     if (this == ClientServices::s_currentConnection) {
         ClientDestroyGame(1, 1, 1);
@@ -1676,6 +1676,10 @@ void ClientConnection::HandleCharacterLoginFailed(uint8_t result) {
 
         case 8:
             this->Cancel(CHAR_LOGIN_LOCKED_BY_MOBILE_AH);
+            break;
+
+        case 9:
+            this->Cancel(CHAR_LOGIN_TEMPORARY_GM_LOCK);
             break;
 
         default:

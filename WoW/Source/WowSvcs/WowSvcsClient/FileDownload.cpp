@@ -39,6 +39,7 @@ GruntFileDownload::GruntFileDownload() {
     this->m_header.m_magic = 'DInf';
 }
 
+// PROVEN: 478fcc9b IDENTICAL/NONE
 // OFFSET: 0x00B0A980/0x1408CE580
 int32_t GruntFileDownload::Delete() {
     char path[260];
@@ -52,6 +53,7 @@ int32_t GruntFileDownload::Delete() {
     return OsDeleteFile(path);
 }
 
+// PROVEN: f1a10e9f IDENTICAL/NONE
 // OFFSET: 0x00B0A350/0x1408CDE60
 void GruntFileDownload::RenamePartial() {
     if (!this->m_partial) {
@@ -146,6 +148,7 @@ bool GruntFileDownload::ValidateForContinue(bool& complete) {
     return false;
 }
 
+// PROVEN: 17418ef6 IDENTICAL/NONE
 // OFFSET: 0x00B0A660/0x1408CE220
 int32_t GruntFileDownload::GetStatus() {
     return this->m_status;
@@ -397,6 +400,7 @@ float BattlenetFileDownload::GetProgress() {
     return static_cast<float>(static_cast<double>(progress) / static_cast<double>(total));
 }
 
+// PROVEN: 1b0adff3 IDENTICAL/NONE
 // OFFSET: 0x00B0AE50/0x1408CEAF0
 void BattlenetFileDownload::StopDownload() {
     this->m_status = 3;
@@ -446,6 +450,7 @@ GruntFileDownload::~GruntFileDownload() {
 BattlenetFileDownload::BattlenetFileDownload() {
 }
 
+// PROVEN: 8c00ef91 IDENTICAL/NONE
 // OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t GruntFileDownload::GetReason(uint32_t* data) {
     if (data) {
@@ -455,6 +460,7 @@ int32_t GruntFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
+// PROVEN: 32e508ff IDENTICAL/NONE
 // OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     if (data) {
@@ -464,11 +470,13 @@ int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
+// PROVEN: d74a8d12 IDENTICAL/NONE
 // OFFSET: 0x00B0A340/0x1408CDE50
 bool GruntFileDownload::Accepted() {
     return this->m_accepted;
 }
 
+// PROVEN: 098d26f1 IDENTICAL/NONE
 // OFFSET: 0x00B0A340/0x1408CDE50
 bool BattlenetFileDownload::Accepted() {
     return this->m_accepted;
