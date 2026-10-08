@@ -154,7 +154,14 @@ Blizzard::Jobs::WorkerPool::WorkerPool(int32_t threads) {
     this->m_pImpl->m_pool = new Blizzard::Thread::ThreadPoolRecord(threads, threads, 0, affinity);
 }
 
-// OFFSET: %0x00746760
+// OFFSET: 0x007EA900
 bool Blizzard::Jobs::WorkerPool::RunOnThread(uint32_t (*function)(void*), void* param) {
-    return Blizzard::Thread::CreateDetachedFromPool(this->m_pImpl->m_pool, function, param, 0, 0);
+    Blizzard::Thread::ThreadRecord* thread;
+    bool result = Blizzard::Thread::CreateFromPool(this->m_pImpl->m_pool, function, param, &thread, 0, 0);
+
+    if (result) {
+        Blizzard::Thread::Close(thread);
+    }
+
+    return result;
 }

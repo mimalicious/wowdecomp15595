@@ -2,6 +2,7 @@
 #define ENGINE_SOURCE_BLIZZARDCORE_SOURCE_SYSTEM_URL_URL_H
 
 #include <cstdint>
+#include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
 namespace Blizzard {
 namespace URL {
@@ -44,6 +45,7 @@ class DownloadCallback {
     virtual ByteRange GetByteRange();
     virtual bool Stop();
     virtual bool ShouldBlock();
+    virtual void WaitForCompletion();
     virtual const char* GetPostData();
     virtual const char* GetPostContentType();
     virtual Cookie GetCookie();
@@ -56,19 +58,17 @@ class HttpRequest {
     /* 0000 */ void* m_session;
     /* 0004 */ void* m_connect;
     /* 0008 */ void* m_request;
-    /* 000C */ void* m_connectEvent;
-    /* 0010 */ void* m_requestEvent;
-    /* 0014 */ void* m_completeEvent;
-    /* 0018 */ void* m_dataEvent;
-    /* 001C */ int32_t m_state;
-    /* 0020 */ bool m_done;
-    /* 0021 */ bool m_connected;
-    /* 0024 */ uint32_t m_error;
-    /* 0028 */ DownloadCallback::Status m_status;
-    /* 002C */ DownloadCallback* m_callback;
+    /* 000C */ Blizzard::Lock::EventObject m_connectEvent;
+    /* 0010 */ Blizzard::Lock::EventObject m_requestEvent;
+    /* 0014 */ Blizzard::Lock::EventObject m_completeEvent;
+    /* 0018 */ int32_t m_state;
+    /* 001C */ bool m_done;
+    /* 001D */ bool m_connected;
+    /* 0020 */ uint32_t m_error;
+    /* 0024 */ DownloadCallback::Status m_status;
+    /* 0028 */ DownloadCallback* m_callback;
 
     HttpRequest();
-    ~HttpRequest();
 };
 
 bool DownloadURL(const char* url, DownloadCallback* callback);

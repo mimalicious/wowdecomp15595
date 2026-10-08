@@ -58,7 +58,7 @@ class ThreadPoolRecord {
 bool Close(ThreadRecord* thread);
 bool Create(uint32_t (*function)(void*), void* param, ThreadRecord** thread, const char* name, int32_t flags, int32_t stackSize);
 bool CreateDetached(uint32_t (*function)(void*), void* param, const char* name);
-bool CreateDetachedFromPool(ThreadPoolRecord* pool, uint32_t (*function)(void*), void* param, int32_t flags, int32_t stackSize);
+bool CreateDetachedFromPool(uint32_t (*function)(void*), void* param, int32_t flags, int32_t stackSize);
 bool CreateFromPool(ThreadPoolRecord* pool, uint32_t (*function)(void*), void* param, ThreadRecord** thread, int32_t flags, int32_t stackSize);
 bool GetAffinity(ThreadRecord* thread, ThreadAffinity* affinity);
 bool IsRunning(ThreadRecord* thread);

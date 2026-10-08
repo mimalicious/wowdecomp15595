@@ -93,4 +93,6 @@ T* Blizzard::Lock::ConstructOnce<T>::Get() {
     return reinterpret_cast<T*>(this->m_storage);
 }
 
+#include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.inl"
+
 #endif

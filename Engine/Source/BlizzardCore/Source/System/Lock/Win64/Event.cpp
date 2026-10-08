@@ -34,14 +34,4 @@ Blizzard::Lock::Event* Blizzard::Lock::EventWait(uint32_t timeout, Event& event)
     return WaitForSingleObject(event, timeout) == WAIT_OBJECT_0 ? &event : NULL;
 }
 
-// INLINED
-Blizzard::Lock::EventObject::EventObject() {
-    this->m_event = CreateEventW(NULL, FALSE, FALSE, NULL);
-}
-
-// OFFSET: #0x0042B390
-Blizzard::Lock::EventObject::~EventObject() {
-    EventDestroy(this->m_event);
-}
-
 #endif

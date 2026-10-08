@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstdlib>
+#include <algorithm>
 #include <cstring>
 #include <windows.h>
 #include <wininet.h>
@@ -10,10 +11,10 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// STATIC: #0x00B38010
+// STATIC: 0x00EBA244
 static HINTERNET s_session;
 
-// OFFSET: #0x0042CA00
+// OFFSET: 0x007B4670
 static uint32_t ReadResponseData(void* param) {
     Blizzard::URL::HttpRequest* request = static_cast<Blizzard::URL::HttpRequest*>(param);
 
@@ -46,6 +47,7 @@ static uint32_t ReadResponseData(void* param) {
 
     DWORD statusCode;
     DWORD statusCodeLength = sizeof(statusCode);
+
     if (!HttpQueryInfoA(request->m_request, HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER, &statusCode, &statusCodeLength, NULL)) {
         statusCode = 0;
     }
@@ -53,16 +55,20 @@ static uint32_t ReadResponseData(void* param) {
     request->m_callback->GetHTTPStatusCode(statusCode);
 
     if (statusCode >= HTTP_STATUS_OK && statusCode < HTTP_STATUS_AMBIGUOUS) {
+        uint32_t contentLength = 0;
         char lastModified[256];
         DWORD lastModifiedLength = sizeof(lastModified);
+
         if (HttpQueryInfoA(request->m_request, HTTP_QUERY_LAST_MODIFIED, lastModified, &lastModifiedLength, NULL)) {
             request->m_callback->GetLastModified(lastModified);
         }
 
-        char contentLength[256];
-        DWORD contentLengthLength = sizeof(contentLength);
-        if (HttpQueryInfoA(request->m_request, HTTP_QUERY_CONTENT_LENGTH, contentLength, &contentLengthLength, NULL)) {
-            request->m_callback->GetContentLength(static_cast<uint32_t>(atol(contentLength)));
+        char length[256];
+        DWORD lengthLength = sizeof(length);
+
+        if (HttpQueryInfoA(request->m_request, HTTP_QUERY_CONTENT_LENGTH, length, &lengthLength, NULL)) {
+            contentLength = atoi(length);
+            request->m_callback->GetContentLength(contentLength);
         }
 
         if (!request->m_callback->WantData()) {
@@ -71,44 +77,54 @@ static uint32_t ReadResponseData(void* param) {
             return 0;
         }
 
-        char data[16384];
+        char data[16416];
 
-        do {
+        while (true) {
             INTERNET_BUFFERSA buffers;
             memset(&buffers, 0, sizeof(buffers));
             buffers.dwStructSize = sizeof(buffers);
             buffers.lpvBuffer = data;
             buffers.dwBufferLength = sizeof(data);
 
-            if (!InternetReadFileExA(request->m_request, &buffers, 0, reinterpret_cast<DWORD_PTR>(request))) {
+            if (!InternetReadFileExA(request->m_request, &buffers, IRF_ASYNC, reinterpret_cast<DWORD_PTR>(request))) {
                 if (GetLastError() != ERROR_IO_PENDING) {
-                    break;
+                    request->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_FAILED;
+                    InternetCloseHandle(request->m_connect);
+                    return 0;
                 }
 
-                WaitForSingleObject(request->m_completeEvent, INFINITE);
+                WaitForSingleObject(request->m_completeEvent.m_event, INFINITE);
             }
 
-            if (!request->m_done) {
-                if (!buffers.dwBufferLength) {
-                    request->m_done = true;
-                    continue;
+            if (request->m_done) {
+                break;
+            }
+
+            if (!buffers.dwBufferLength) {
+                request->m_done = true;
+            } else {
+                if (contentLength) {
+                    buffers.dwBufferLength = std::min<DWORD>(contentLength, buffers.dwBufferLength);
                 }
 
-                WaitForSingleObject(request->m_dataEvent, INFINITE);
-            }
+                DWORD received = buffers.dwBufferLength;
 
-            if (buffers.dwBufferLength) {
-                if (!request->m_callback->ReceivedData(data, buffers.dwBufferLength)) {
+                if (!request->m_callback->ReceivedData(data, received)) {
                     request->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_ABORTED;
                     request->m_done = true;
-                }
-
-                if (request->m_callback->Stop()) {
+                } else if (contentLength && received == contentLength) {
+                    request->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_SUCCESS;
+                    request->m_done = true;
+                } else if (request->m_callback->Stop()) {
                     request->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_STOPPED;
                     request->m_done = true;
                 }
             }
-        } while (!request->m_done);
+
+            if (request->m_done) {
+                break;
+            }
+        }
 
         InternetCloseHandle(request->m_connect);
         return 0;
@@ -140,14 +156,6 @@ static uint32_t ReadResponseData(void* param) {
     return 0;
 }
 
-// OFFSET: %0x00716700
-Blizzard::URL::HttpRequest::~HttpRequest() {
-    CloseHandle(this->m_dataEvent);
-    CloseHandle(this->m_completeEvent);
-    CloseHandle(this->m_requestEvent);
-    CloseHandle(this->m_connectEvent);
-}
-
 // OFFSET: 0x007B4A20/0x1404AA5A0
 static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* serverName, INTERNET_PORT serverPort) {
     request->m_state = 0;
@@ -159,7 +167,7 @@ static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* 
             return NULL;
         }
 
-        WaitForSingleObject(request->m_connectEvent, INFINITE);
+        WaitForSingleObject(request->m_connectEvent.m_event, INFINITE);
     }
 
     DWORD timeout = request->m_callback->GetTimeout();
@@ -171,10 +179,6 @@ static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* 
 
 // OFFSET: 0x007C3D90
 Blizzard::URL::HttpRequest::HttpRequest() {
-    this->m_connectEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
-    this->m_requestEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
-    this->m_completeEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
-    this->m_dataEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
     this->m_session = NULL;
     this->m_connect = NULL;
     this->m_request = NULL;
@@ -193,7 +197,7 @@ static void CALLBACK InternetCallback(HINTERNET internet, DWORD_PTR context, DWO
     if (!request->m_state) {
         if (internetStatus == INTERNET_STATUS_HANDLE_CREATED) {
             request->m_connect = reinterpret_cast<HINTERNET>(static_cast<INTERNET_ASYNC_RESULT*>(statusInformation)->dwResult);
-            SetEvent(request->m_connectEvent);
+            SetEvent(request->m_connectEvent.m_event);
         } else if (internetStatus == INTERNET_STATUS_HANDLE_CLOSING && internet == request->m_connect) {
             request->m_done = true;
         }
@@ -210,24 +214,14 @@ static void CALLBACK InternetCallback(HINTERNET internet, DWORD_PTR context, DWO
 
             break;
 
-        case INTERNET_STATUS_RESPONSE_RECEIVED:
-            SetEvent(request->m_dataEvent);
-
-            if (!*static_cast<DWORD*>(statusInformation)) {
-                request->m_done = true;
-            }
-
-            break;
-
         case INTERNET_STATUS_HANDLE_CREATED:
             request->m_request = reinterpret_cast<HINTERNET>(static_cast<INTERNET_ASYNC_RESULT*>(statusInformation)->dwResult);
-            SetEvent(request->m_requestEvent);
+            SetEvent(request->m_requestEvent.m_event);
             break;
 
         case INTERNET_STATUS_HANDLE_CLOSING:
             if (internet == request->m_connect) {
-                SetEvent(request->m_dataEvent);
-                SetEvent(request->m_completeEvent);
+                SetEvent(request->m_completeEvent.m_event);
                 request->m_callback->Completed(request->m_status);
                 delete request;
             }
@@ -236,11 +230,12 @@ static void CALLBACK InternetCallback(HINTERNET internet, DWORD_PTR context, DWO
 
         case INTERNET_STATUS_REQUEST_COMPLETE:
             if (request->m_state == 2) {
-                SetEvent(request->m_completeEvent);
+                SetEvent(request->m_completeEvent.m_event);
             } else {
                 request->m_state = 2;
-                request->m_error = static_cast<INTERNET_ASYNC_RESULT*>(statusInformation)->dwError;
-                Blizzard::Thread::CreateDetachedFromPool(NULL, ReadResponseData, request, 0, 0);
+                INTERNET_ASYNC_RESULT* result = static_cast<INTERNET_ASYNC_RESULT*>(statusInformation);
+                request->m_error = result->dwResult ? 0 : result->dwError;
+                Blizzard::Thread::CreateDetachedFromPool(ReadResponseData, request, 0, 0);
             }
 
             break;
@@ -323,11 +318,10 @@ bool Blizzard::URL::DownloadURL(const char* url, DownloadCallback* callback) {
             return false;
         }
 
-        WaitForSingleObject(request->m_requestEvent, INFINITE);
+        WaitForSingleObject(request->m_requestEvent.m_event, INFINITE);
     }
 
-    char headers[1024];
-    memset(headers, 0, sizeof(headers));
+    char headers[1024] = { 0 };
 
     char header[1024];
 
@@ -371,6 +365,10 @@ bool Blizzard::URL::DownloadURL(const char* url, DownloadCallback* callback) {
     if (!HttpSendRequestA(request->m_request, headers, static_cast<DWORD>(-1), const_cast<char*>(postData), postDataLength) && GetLastError() != ERROR_IO_PENDING) {
         delete request;
         return false;
+    }
+
+    if (callback->ShouldBlock()) {
+        callback->WaitForCompletion();
     }
 
     return true;

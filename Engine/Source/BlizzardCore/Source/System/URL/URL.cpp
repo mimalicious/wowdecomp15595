@@ -66,6 +66,10 @@ bool Blizzard::URL::DownloadCallback::ShouldBlock() {
     return false;
 }
 
+// OFFSET: 0x00401000
+void Blizzard::URL::DownloadCallback::WaitForCompletion() {
+}
+
 // PROVEN: ba9c6c50 IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
 const char* Blizzard::URL::DownloadCallback::GetPostData() {
