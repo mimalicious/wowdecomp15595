@@ -818,14 +818,14 @@ int64_t SStrToInt64(const char* string) {
         string++;
 
         if (value >= 0x19999999) {
-            result = value + static_cast<int64_t>(pow(10.0, string - start) + 0.5) * result;
+            result = value + static_cast<int64_t>(pow(10.0, static_cast<int32_t>(string - start)) + 0.5) * result;
             value = 0;
             start = string;
         }
     }
 
     if (result) {
-        result = value + static_cast<int64_t>(pow(10.0, string - start) + 0.5) * result;
+        result = value + static_cast<int64_t>(pow(10.0, static_cast<int32_t>(string - start)) + 0.5) * result;
     } else {
         result = value;
     }
@@ -860,7 +860,7 @@ float SStrToFloat(const char* string) {
         string++;
 
         if (value >= 0x19999999) {
-            result = pow(10.0, string - start) * result + value;
+            result = pow(10.0, static_cast<int32_t>(string - start)) * result + value;
             value = 0;
             start = string;
         }
@@ -869,7 +869,7 @@ float SStrToFloat(const char* string) {
     if (result == 0.0) {
         result = value;
     } else {
-        result = pow(10.0, string - start) * result + value;
+        result = pow(10.0, static_cast<int32_t>(string - start)) * result + value;
     }
 
     if (*string == '.') {

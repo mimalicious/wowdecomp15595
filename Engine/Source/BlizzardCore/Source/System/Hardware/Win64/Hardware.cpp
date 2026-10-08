@@ -10,7 +10,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 
-// STATIC: %0x00D82B7C
+// STATIC: 0x00EB6204
 Blizzard::Hardware::ProcessorFeatures System_Hardware::s_processorFeatures;
 
 // STATIC: %0x00D871A0

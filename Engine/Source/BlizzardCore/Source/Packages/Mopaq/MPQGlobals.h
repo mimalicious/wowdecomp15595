@@ -45,7 +45,10 @@ class WorkerPool {
     public:
     /* 0000 */ Blizzard::Lock::RMutex m_mutex;
     /* 0018 */ std::vector<Worker*> m_workers;
+    /* 0030 */ uint32_t unk_0030;
+    /* 0034 */ uint32_t m_maxWorkers;
 
+    WorkerPool();
     ~WorkerPool();
 };
 

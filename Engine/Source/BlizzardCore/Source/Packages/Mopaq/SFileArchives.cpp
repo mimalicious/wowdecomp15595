@@ -944,12 +944,7 @@ bool Blizzard::Mopaq::SFileOpenArchive(HSFILERecord* file, const char* name, int
     archive->m_flags = flags;
     Blizzard::String::Copy(archive->m_name, name, sizeof(archive->m_name));
 
-    HSFILERecord* copy = new HSFILERecord;
-    copy->m_handle = file->m_handle;
-
-    if (copy->m_handle) {
-        copy->m_handle->m_refCount.Increment();
-    }
+    HSFILERecord* copy = new HSFILERecord(*file);
 
     archive->m_file = copy;
     archive->m_externalRefs.Increment();
@@ -1256,9 +1251,10 @@ void System_SFile::ClearNewBlockHashTables(ARCHIVEREC* archive) {
     delete archive->m_hashEntryTable;
 }
 
-// INLINED
-System_SFile::ArchivePtr::ArchivePtr(ARCHIVEREC* archive) {
-    this->m_archive = archive;
+// PROVEN: 9d2f041b IDENTICAL/NONE
+// OFFSET: 0x007F2300
+System_SFile::ArchivePtr::ArchivePtr(ARCHIVEREC* handle) {
+    this->m_archive = GetArchivePtr(handle, true);
     this->m_locked = false;
 }
 
@@ -1560,7 +1556,7 @@ bool System_SFile::ARCHIVEREC::InitializeTables() {
         return true;
     }
 
-    ArchivePtr archive(GetArchivePtr(this, true));
+    ArchivePtr archive(this);
 
     if (archive.m_archive) {
         Blizzard::Lock::MutexEnter(archive.m_archive->m_mutex.m_mutex);
@@ -1569,7 +1565,7 @@ bool System_SFile::ARCHIVEREC::InitializeTables() {
     archive.m_locked = true;
 
     if (this->m_parent) {
-        ArchivePtr parent(GetArchivePtr(this->m_parent, true));
+        ArchivePtr parent(this->m_parent);
         this->m_tablesInitialized = parent.m_archive->InitializeTables();
 
         return this->m_tablesInitialized;
@@ -1961,12 +1957,7 @@ bool Blizzard::Mopaq::SFileCreateArchive(HSFILERecord* file, const char* name, i
 
     Blizzard::String::Copy(archive->m_name, name, sizeof(archive->m_name));
 
-    HSFILERecord* copy = new HSFILERecord;
-    copy->m_handle = file->m_handle;
-
-    if (copy->m_handle) {
-        copy->m_handle->m_refCount.Increment();
-    }
+    HSFILERecord* copy = new HSFILERecord(*file);
 
     archive->m_file = copy;
     archive->m_header.m_formatVersion = 1;
@@ -2192,7 +2183,7 @@ int32_t GetFileBlockEntry(System_SFile::ARCHIVEREC* handle, const char* name, co
         *blockIndex = -1;
     }
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (handle && !archive.m_archive) {
         Blizzard::String::QuickFormat<1024> message("%s - Null archive handle", "GetFileBlockEntry");
@@ -2367,7 +2358,7 @@ int64_t Blizzard::Mopaq::GetStreamedSize(System_SFile::ARCHIVEREC* handle, int64
 
 // OFFSET: 0x007F44A0/0x140502000
 int32_t Blizzard::Mopaq::SFileFileIsLocal(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex) {
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return 1;
@@ -2382,7 +2373,7 @@ int32_t Blizzard::Mopaq::SFileFileIsLocal(System_SFile::ARCHIVEREC* handle, uint
 
 // OFFSET: 0x007F4680/0x140502170
 bool Blizzard::Mopaq::SFileMakeFileLocal(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex, int64_t offset, int64_t size, bool wait) {
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return true;
@@ -2894,7 +2885,7 @@ bool System_SFile::ARCHIVEREC::ReadAdditionalAttributes() {
 bool Blizzard::Mopaq::SFileOpenArchiveView(System_SFile::ARCHIVEREC* handle, const char* name, int32_t priority, System_SFile::ARCHIVEREC** result) {
     *result = NULL;
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return false;
@@ -2927,12 +2918,7 @@ bool Blizzard::Mopaq::SFileOpenArchiveView(System_SFile::ARCHIVEREC* handle, con
 
     Blizzard::String::Copy(view->m_name, archive.m_archive->m_name, sizeof(view->m_name));
 
-    HSFILERecord* file = new HSFILERecord;
-    file->m_handle = archive.m_archive->m_file->m_handle;
-
-    if (file->m_handle) {
-        file->m_handle->m_refCount.Increment();
-    }
+    HSFILERecord* file = new HSFILERecord(*archive.m_archive->m_file);
 
     view->m_file = file;
     view->m_parent = handle;
@@ -3010,7 +2996,7 @@ bool Blizzard::Mopaq::SetFileSignature(const char* name, const Blizzard::Util::D
         return false;
     }
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(record, true));
+    System_SFile::ArchivePtr archive(record);
 
     if (archive.m_archive) {
         Blizzard::Lock::MutexEnter(archive.m_archive->m_mutex.m_mutex);
@@ -3502,7 +3488,7 @@ bool Blizzard::Mopaq::SFileCreateFile(System_SFile::ARCHIVEREC* handle, const ch
         }
     }
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (archive.m_archive) {
         Blizzard::Lock::MutexEnter(archive.m_archive->m_mutex.m_mutex);
@@ -4302,7 +4288,7 @@ bool Blizzard::Mopaq::SFileGetArchiveFile(System_SFile::ARCHIVEREC* handle, HSFI
 
 // OFFSET: 0x007F3010/0x140500340
 int64_t Blizzard::Mopaq::SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex) {
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return 0;
@@ -4325,7 +4311,7 @@ int64_t Blizzard::Mopaq::SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* hand
 
 // OFFSET: 0x007F4560/0x1405020C0
 bool Blizzard::Mopaq::IsArchiveComplete(System_SFile::ARCHIVEREC* handle) {
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return false;
@@ -4394,7 +4380,7 @@ int32_t Blizzard::Mopaq::SFileDeleteFile(System_SFile::ARCHIVEREC* handle, const
         result = 0;
         break;
     case 1: {
-        System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(archiveOut, true));
+        System_SFile::ArchivePtr archive(archiveOut);
         char joined[260];
         const char* fileName = name;
 

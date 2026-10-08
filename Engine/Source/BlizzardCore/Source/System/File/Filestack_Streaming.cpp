@@ -68,8 +68,8 @@ bool System_File::Stacked::g_callerGuaranteesStreamingWriteHasProperData;
 // STATIC: 0x00EBA504
 static std::map<std::string, std::string>* s_inodes;
 
-// STATIC: 0x00EBA6B0
-static Blizzard::Lock::RMutex s_inodeLock;
+// STATIC: 0x00EBA6AC
+System_File::UsingInode System_File::s_usingInode;
 
 // INLINED
 FileStack_Streaming::FileStack_Streaming(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) : m_fs(fs), m_parms(parms), m_key(System_File::GetInode(std::string(parms->m_path))), m_unit(NULL) {
@@ -157,6 +157,10 @@ bool System_File::Stacked::stream_writep(Blizzard::File::Filesystem* fs, FilePar
 bool StreamDirWalk::Callback(const Blizzard::File::ProcessDirParms& parms) {
     static_cast<StreamDirWalk*>(parms.m_cookie)->m_files[std::string(parms.m_filename)] = parms.m_isDir;
     return true;
+}
+
+// OFFSET: 0x007E10C0
+System_File::Stacked::LockAndMap::LockAndMap() {
 }
 
 // OFFSET: 0x007E1110
@@ -254,7 +258,7 @@ Blizzard::File::StreamRecord* FileStack_Streaming::InitRecord(Blizzard::File::St
 
 // OFFSET: 0x007E1810/0x1404E7C40
 std::string System_File::GetInode(const std::string& path) {
-    Blizzard::Lock::MutexEnter(s_inodeLock.m_mutex);
+    Blizzard::Lock::MutexEnter(System_File::s_usingInode.m_lock);
 
     if (!s_inodes) {
         s_inodes = new std::map<std::string, std::string>();
@@ -296,7 +300,7 @@ std::string System_File::GetInode(const std::string& path) {
         }
     }
 
-    Blizzard::Lock::MutexLeave(s_inodeLock.m_mutex);
+    Blizzard::Lock::MutexLeave(System_File::s_usingInode.m_lock);
 
     return result;
 }
@@ -307,10 +311,35 @@ void System_File::Stacked::LockAndMap::Release() {
     s_instance = NULL;
 }
 
+// OFFSET: 0x007B4190
+bool System_File::ExistsUnstreamed(const char* path) {
+    Blizzard::File::Filesystem* fs = System_File::Stacked::s_manager;
+
+    for (Blizzard::File::Filesystem* stack = fs; stack; stack = stack->m_next) {
+        if (stack->m_original == &System_File::Stacked::s_streamstack) {
+            if (stack->m_next) {
+                fs = stack->m_next;
+            }
+
+            break;
+        }
+    }
+
+    return Blizzard::File::Exists(fs, path) == 1;
+}
+
 // OFFSET: 0x007E3880/0x1404EA660
-void System_File::ReleaseInodes() {
+void System_File::UsingInode::ShutdownProc() {
     delete s_inodes;
     s_inodes = NULL;
+}
+
+// OFFSET: 0x007E4840/0x1404ED460
+System_File::UsingInode::UsingInode() : Blizzard::Using::Use("Blizzard::Inode") {
+    System_Using::Intern(this->m_name)->shutdownproc = ShutdownProc;
+    Blizzard::Lock::MutexCreate(this->m_lock);
+    Blizzard::Using::DependsOn("Blizzard::File", "Blizzard::Inode");
+    Blizzard::Using::DependsOn("Blizzard::Inode", "Blizzard::Memory");
 }
 
 // OFFSET: 0x007E44D0/0x1404EC4D0

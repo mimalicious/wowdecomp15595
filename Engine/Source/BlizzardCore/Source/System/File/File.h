@@ -45,6 +45,7 @@ bool ProcessDirFast(const char* path, void* cookie, ProcessDirCallback callback,
 bool Read(StreamRecord* file, void* data, int32_t* count);
 bool Read(StreamRecord* file, void* data, int64_t offset, int32_t* count, int32_t streamFlags);
 bool Read(Filesystem* fs, StreamRecord* file, void* data, int64_t offset, int32_t* count);
+bool ReadExact(StreamRecord* file, void* buffer, int64_t offset, int32_t size, int32_t flags);
 bool RemoveDirectory(const char* path);
 bool RemoveDirectoryAndContents(const char* path, bool removeReadOnly);
 bool SetAttributes(const char* path, int32_t attributes);

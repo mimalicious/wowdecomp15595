@@ -7,9 +7,15 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Types.h"
+#include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 #include "Engine/Source/Storm/H/storm.h"
 
 namespace System_Time {
+
+class UsingTime : public Blizzard::Using::Use {
+    public:
+    UsingTime();
+};
 
 class TimeInfo {
     public:
@@ -37,6 +43,7 @@ TimeInfo* GetTimeInfo();
 uint64_t GetTickCount64();
 bool InitFrequency(LARGE_INTEGER* frequency);
 double MeasureDrift(int64_t frequency, LARGE_INTEGER* counter, DWORD* tickCount);
+void ShutdownProc();
 
 }
 

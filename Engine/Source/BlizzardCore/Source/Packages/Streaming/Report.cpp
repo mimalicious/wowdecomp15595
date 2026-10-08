@@ -81,6 +81,11 @@ Report::TrackerData<T>::TrackerData(std::string key, const T& value) {
     this->m_value = value;
 }
 
+// OFFSET: [0x007FD3B0<std::string>, 0x007FD400<std::string>, 0x007FD200<int32_t>]
+template <class T>
+Report::TrackerData<T>::~TrackerData() {
+}
+
 // OFFSET: 0x007FD250
 template <class T>
 std::string Report::TrackerData<T>::Key() const {

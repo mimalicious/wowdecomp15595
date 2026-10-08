@@ -15,13 +15,13 @@
 // STATIC: #0x00B325BB
 static bool s_continueAfterAssert;
 
-// STATIC: %0x00D82070
+// STATIC: 0x00EB5880
 static Blizzard::Lock::Mutex s_dbgHelpLock;
 
-// STATIC: %0x00D86D58
+// STATIC: 0x00EBA668
 static HMODULE s_dbgHelp;
 
-// STATIC: %0x00D86D5C
+// STATIC: 0x00EBA66C
 static bool s_dbgHelpInitialized;
 
 // OFFSET: 0x007AC370
@@ -65,7 +65,7 @@ void Blizzard::Debug::DefaultCallback(const char* expression, const char* messag
     }
 }
 
-// OFFSET: %0x0071DE00
+// OFFSET: 0x007BC260/0x1404B40B0
 void System_Debug::ShutdownProc() {
     if (s_dbgHelpInitialized && s_dbgHelp) {
         Blizzard::Lock::MutexEnter(s_dbgHelpLock);
@@ -77,6 +77,7 @@ void System_Debug::ShutdownProc() {
 
         Blizzard::Lock::MutexLeave(s_dbgHelpLock);
         Blizzard::Lock::MutexDestroy(s_dbgHelpLock);
+        s_dbgHelpInitialized = false;
     }
 }
 

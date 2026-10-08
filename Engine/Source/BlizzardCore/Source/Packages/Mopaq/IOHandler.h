@@ -69,6 +69,8 @@ class IOHandler {
     virtual void UpdateBaseOffset();
     virtual bool AdjustSectorTable();
     virtual void SetSizeFileBeforeDelta(uint64_t size);
+
+    void StoreBlockEntry();
 };
 
 class MopaqReadHandler : public IOHandler {

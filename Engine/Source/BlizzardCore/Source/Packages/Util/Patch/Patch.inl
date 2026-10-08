@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-// OFFSET: 0x007B74B0<Blizzard::Patch::PatchBuffer>
+// OFFSET: [0x007B74B0<Blizzard::Patch::PatchBuffer>, 0x007B7570<MpqPatchStream>, 0x007B7610<Blizzard::Patch::MemoryStream>]
 template <class S>
 bool Blizzard::Patch::PatchStream<S>::FindChunk(uint32_t tag, uint32_t& offset, ChunkHeader& header) {
     while (this->m_stream->Read(offset, &header, sizeof(ChunkHeader))) {
@@ -25,7 +25,7 @@ bool Blizzard::Patch::PatchStream<S>::FindChunk(uint32_t tag, uint32_t& offset, 
     return false;
 }
 
-// INLINED
+// OFFSET: [0x007BE200/0x1404ADC60, 0x007BE250]
 template <class S>
 template <class C>
 bool Blizzard::Patch::PatchStream<S>::Search(uint32_t tag, uint32_t& offset, C& chunk) {

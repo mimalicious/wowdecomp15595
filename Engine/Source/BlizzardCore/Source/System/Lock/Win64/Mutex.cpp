@@ -3,7 +3,7 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
-// OFFSET: #0x004283A0
+// OFFSET: 0x007AD510/0x1404A31F0
 void Blizzard::Lock::MutexCreate(Mutex& mutex) {
     InitializeCriticalSection(&mutex);
 }

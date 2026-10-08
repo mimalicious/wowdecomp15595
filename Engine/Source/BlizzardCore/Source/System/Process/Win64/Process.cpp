@@ -51,8 +51,11 @@ static ToolhelpFunction s_module32First;
 // STATIC: #0x00D871D4
 static ToolhelpFunction s_module32Next;
 
-// STATIC: #0x00B38310
-static std::set<ChildProcess*> s_childProcesses;
+// OFFSET: 0x007DC750
+static std::set<ChildProcess*>& GetChildProcesses() {
+    static std::set<ChildProcess*> s_childProcesses;
+    return s_childProcesses;
+}
 
 // INLINED
 inline void ToolhelpFunction::Load(const char* name) {
@@ -177,18 +180,18 @@ bool ToolhelpFunction::ModuleNext(HANDLE snapshot, char* path, uint32_t pathsize
 
 // OFFSET: 0x007DC7C0/0x1404DFC50
 static void CALLBACK TimerFunc(HWND hwnd, UINT message, UINT_PTR id, DWORD time) {
-    for (std::set<ChildProcess*>::iterator it = s_childProcesses.begin(); it != s_childProcesses.end();) {
+    for (std::set<ChildProcess*>::iterator it = GetChildProcesses().begin(); it != GetChildProcesses().end();) {
         std::set<ChildProcess*>::iterator current = it++;
         ChildProcess* child = *current;
 
         if (!WaitForSingleObjectEx(child->m_process, 0, FALSE)) {
             child->m_callback(child->m_param);
-            s_childProcesses.erase(current);
+            GetChildProcesses().erase(current);
             delete child;
         }
     }
 
-    if (!s_childProcesses.size()) {
+    if (!GetChildProcesses().size()) {
         KillTimer(NULL, s_timer);
         s_timer = 0;
     }
@@ -290,7 +293,7 @@ bool Blizzard::Process::LaunchChildProcessWithArguments(const char* path, const 
     child->m_process = info.hProcess;
     child->m_callback = callback;
     child->m_param = param;
-    s_childProcesses.insert(child);
+    GetChildProcesses().insert(child);
 
     if (!s_timer) {
         s_timer = SetTimer(NULL, 0, 250, TimerFunc);

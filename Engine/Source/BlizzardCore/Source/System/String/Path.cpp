@@ -20,6 +20,12 @@ const char* Blizzard::String::FindFilename(const char* str) {
     return result;
 }
 
+// PROVEN: 65f01901 IDENTICAL/NONE
+// OFFSET: 0x007AD980/0x1404A3620
+char* Blizzard::String::FindFilename(char* str) {
+    return const_cast<char*>(FindFilename(static_cast<const char*>(str)));
+}
+
 // OFFSET: 0x007AD990
 const char* System_String::FindExtension(const char* str, int32_t offset) {
     if (!str) {

@@ -7,6 +7,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/File/Filestack.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/Types.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
+#include "Engine/Source/BlizzardCore/Source/System/Using/Using.h"
 #include "Engine/Source/Storm/H/Types.h"
 
 class FileStack_Streaming {
@@ -33,8 +34,19 @@ class StreamDirWalk {
 
 namespace System_File {
 
+class UsingInode : public Blizzard::Using::Use {
+    public:
+    static void ShutdownProc();
+
+    /* 0004 */ Blizzard::Lock::Mutex m_lock;
+
+    UsingInode();
+};
+
+extern UsingInode s_usingInode;
+
+bool ExistsUnstreamed(const char* path);
 std::string GetInode(const std::string& path);
-void ReleaseInodes();
 
 namespace Stacked {
 
@@ -48,6 +60,8 @@ class LockAndMap {
 
     /* 0000 */ Blizzard::Lock::RMutex m_mutex;
     /* 0018 */ std::map<std::string, Blizzard::File::StreamRecord*> m_map;
+
+    LockAndMap();
 };
 
 extern Blizzard::File::Filesystem s_streamstack;

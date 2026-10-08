@@ -356,6 +356,13 @@ int32_t Blizzard::File::Exists(const char* path) {
     return Blizzard::File::Exists(System_File::Stacked::s_manager, path);
 }
 
+// PROVEN: 82063241 IDENTICAL/DIFFERENT
+// OFFSET: 0x007B4C30/0x1404AA760
+bool Blizzard::File::ReadExact(StreamRecord* file, void* buffer, int64_t offset, int32_t size, int32_t flags) {
+    int32_t count = size;
+    return Read(file, buffer, offset, &count, flags) && count == size;
+}
+
 // PROVEN: 77c80729 IDENTICAL/NONE
 // OFFSET: 0x007AC570
 int32_t Blizzard::File::Exists(Filesystem* fs, const char* path) {
@@ -1097,16 +1104,11 @@ void System_File::Stacked::Push(const Blizzard::File::Filesystem* fs) {
 
 #undef HOIST
 
-// OFFSET: #0x0042D440
+// OFFSET: 0x007B5280
 bool System_File::Stacked::file_init(Blizzard::File::Filesystem* fs, FileParms* parms) {
-    s_manager = static_cast<Blizzard::File::Filesystem*>(malloc(sizeof(Blizzard::File::Filesystem)));
+    s_manager = static_cast<Blizzard::File::Filesystem*>(SMemAlloc(sizeof(Blizzard::File::Filesystem), __FILE__, __LINE__, 0));
     Blizzard::String::MemCopy(s_manager, &s_nullstack, sizeof(Blizzard::File::Filesystem));
-
-    Blizzard::File::Filesystem* base = static_cast<Blizzard::File::Filesystem*>(malloc(sizeof(Blizzard::File::Filesystem)));
-    Blizzard::String::MemCopy(base, &s_basestack, sizeof(Blizzard::File::Filesystem));
-    base->m_next = s_manager;
-    s_manager = base;
-    HoistAll();
+    Push(&s_basestack);
 
     if (!s_manager) {
         return false;
@@ -1252,7 +1254,7 @@ bool Blizzard::File::RemoveDirectoryAndContents_Internal::Callback(const Process
     return true;
 }
 
-// OFFSET: #0x00450970
+// OFFSET: 0x007C06A0
 bool Blizzard::File::RemoveDirectoryAndContents_Internal::State::Remove(const char* path, bool removeReadOnly) {
     this->m_removeReadOnly = removeReadOnly;
     this->m_success = true;

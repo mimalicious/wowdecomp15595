@@ -121,6 +121,11 @@ void operator delete(void* ptr) {
     }
 }
 
+// OFFSET: 0x008499B0/0x140577DB0
+void* operator new[](size_t bytes) {
+    return SMemAlloc(bytes, "new[]", SLOG_FUNCTION, 0);
+}
+
 // OFFSET: 0x00401030/0x140001080
 void operator delete[](void* ptr) {
     if (ptr) {

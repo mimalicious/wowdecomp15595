@@ -18,11 +18,13 @@ static void ReserveBlockOffset(System_Mopaq::IOHandler* handler) {
     handler->m_baseOffset = handle->m_archive->RequestWriteReservation(size, false);
     handler->m_handle->m_blockEntry.m_offset = handler->m_baseOffset;
 
-    if (handler->m_base.m_handle && handler->m_base.m_handle->m_md5Verify) {
-        handler->m_base.m_handle->m_md5Verify->m_baseOffset = handler->m_handle->m_blockEntry.m_offset;
-    }
+    handler->m_base.SetVerifyBaseOffset(handler->m_handle->m_blockEntry.m_offset);
+    handler->StoreBlockEntry();
+}
 
-    handle = handler->m_handle;
+// OFFSET: 0x007BAFA0
+void System_Mopaq::IOHandler::StoreBlockEntry() {
+    Blizzard::Mopaq::MpqHandleRecord* handle = this->m_handle;
 
     if (handle->m_blockIndex != 0xFFFFFFFE && handle->m_archive) {
         handle->m_archive->SetBlockEntry(handle->m_blockIndex, handle->m_blockEntry);
@@ -61,7 +63,7 @@ bool System_Mopaq::MopaqReadWriteHandler::WriteData(const uint8_t* buffer, int64
         return false;
     }
 
-    if (this->m_baseOffset < 0) {
+    if (this->m_baseOffset < 0 && this->m_handle->m_blockIndex != 0xFFFFFFFE) {
         ReserveBlockOffset(this);
     }
 

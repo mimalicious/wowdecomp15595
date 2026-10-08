@@ -2,6 +2,7 @@
 #include <cstring>
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFileArchives.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQGlobals.h"
+#include "Engine/Source/BlizzardCore/Source/System/Hardware/Hardware.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 
 // STATIC: %0x00D829D8
@@ -76,6 +77,13 @@ System_SFile::ARCHIVEREC* Blizzard::Mopaq::SFileGetArchiveHandle(const char* nam
 
 // OFFSET: 0x007E5E10/0x1404EF5C0
 System_MPQGlobals::Globals::~Globals() {
+}
+
+// OFFSET: 0x007D35B0
+System_MPQGlobals::WorkerPool::WorkerPool() {
+    Blizzard::Hardware::GetProcessorFeatures();
+    System_Hardware::ReadLogicalProcessorInformation();
+    this->m_maxWorkers = System_Hardware::s_processorFeatures.m_coreCount;
 }
 
 // OFFSET: 0x007E4050

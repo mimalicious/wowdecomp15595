@@ -45,6 +45,7 @@ class BigData {
     /* 0014 */ mutable BigStack m_stack;
     /* 0158 */ mutable std::vector<uint8_t> m_output;
 
+    ~BigData();
     std::vector<uint8_t>& Output() const;
     BigBuffer& Primary();
     const BigBuffer& Primary() const;
@@ -68,6 +69,8 @@ class RSA {
     /* 0000 */ BigNum m_modulus;
     /* 0004 */ BigNum m_exponent;
 
+    RSA();
+    ~RSA();
     void Prepare(const void* modulus, uint32_t mLength, const void* exponent, uint32_t eLength);
     void Process(uint8_t* data, uint32_t length);
 };

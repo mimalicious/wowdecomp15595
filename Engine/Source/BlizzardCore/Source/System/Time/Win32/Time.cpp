@@ -22,6 +22,9 @@ System_Time::TimeInfo* System_Time::s_timeInfo;
 // STATIC: 0x00EBAB80
 uint64_t System_Time::s_tickCountHigh;
 
+// STATIC: 0x00D07438
+static System_Time::UsingTime s_usingTime;
+
 // OFFSET: 0x007AE260
 Blizzard::Time::Timestamp Blizzard::Time::FromFileTime(uint64_t fileTime) {
     if (fileTime <= 0x0077A5D6AA8BF851) {
@@ -265,6 +268,17 @@ int64_t Blizzard::Time::Seconds() {
     }
 
     return System_Time::GetTickCount64() / 1000;
+}
+
+// INLINED
+System_Time::UsingTime::UsingTime() : Blizzard::Using::Use("Blizzard::Time") {
+    System_Using::Intern(this->m_name)->shutdownproc = System_Time::ShutdownProc;
+}
+
+// PROVEN: bd763776 IDENTICAL/NONE
+// OFFSET: 0x007AE2C0
+void System_Time::ShutdownProc() {
+    SMemFree(s_timeInfo, __FILE__, __LINE__, 0);
 }
 
 #endif

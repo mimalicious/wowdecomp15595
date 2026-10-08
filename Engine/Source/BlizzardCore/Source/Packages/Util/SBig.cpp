@@ -138,6 +138,10 @@ inline void Blizzard::BigStack::UnmakeDistinct(BigBuffer& orig, BigBuffer& disti
     }
 }
 
+// OFFSET: 0x007C5EB0
+Blizzard::BigData::~BigData() {
+}
+
 // INLINED
 inline std::vector<uint8_t>& Blizzard::BigData::Output() const {
     return this->m_output;
@@ -343,7 +347,7 @@ inline void SetOne(Blizzard::BigBuffer& a) {
     a[0] = 1;
 }
 
-// OFFSET: #0x00446E30
+// OFFSET: 0x007D7F50
 static void FromBinary(Blizzard::BigBuffer& a, const void* data, uint32_t bytes) {
     a.Clear();
 
@@ -569,6 +573,14 @@ inline void* Blizzard::BigNum::ToBinaryBuffer(void* data, uint32_t bytes) const 
 inline void Blizzard::Crypt::RSA::Prepare(const void* modulus, uint32_t mLength, const void* exponent, uint32_t eLength) {
     this->m_modulus.FromBinary(modulus, mLength);
     this->m_exponent.FromBinary(exponent, eLength);
+}
+
+// OFFSET: 0x007DBF40
+Blizzard::Crypt::RSA::RSA() {
+}
+
+// OFFSET: 0x007D0440
+Blizzard::Crypt::RSA::~RSA() {
 }
 
 // OFFSET: 0x007DEB90

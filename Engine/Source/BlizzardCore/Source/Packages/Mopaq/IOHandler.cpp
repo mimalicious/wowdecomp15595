@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstring>
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/IOHandler.h"
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Mpqstack_MD5Verify.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQEncrypt.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SComp.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
@@ -846,6 +847,27 @@ bool System_Mopaq::SectorReadHandler::PkwareDecompressWrapper(void* dest, uint32
     }
 
     return true;
+}
+
+// INLINED
+Blizzard::Mopaq::HSFILERecord::HSFILERecord() {
+}
+
+// OFFSET: 0x007BF420
+Blizzard::Mopaq::HSFILERecord::HSFILERecord(const HSFILERecord& other) {
+    this->m_handle = other.m_handle;
+
+    if (this->m_handle) {
+        this->m_handle->m_refCount.Increment();
+    }
+}
+
+// PROVEN: 56f36a75 IDENTICAL/NONE
+// OFFSET: 0x007B2290
+void Blizzard::Mopaq::HSFILERecord::SetVerifyBaseOffset(int64_t offset) {
+    if (this->m_handle && this->m_handle->m_md5Verify) {
+        this->m_handle->m_md5Verify->m_baseOffset = offset;
+    }
 }
 
 // OFFSET: 0x007C5F50

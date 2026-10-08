@@ -238,6 +238,22 @@ void System_Mopaq::InitializeHandle(Blizzard::Mopaq::MpqHandleRecord* handle, Mp
     memmove(name, parms->m_name, size);
 }
 
+// OFFSET: 0x007EA970
+static void CreateSectorReadWriteHandler(Blizzard::Mopaq::MpqHandleRecord* handle, void* memory, void* sectorTable, bool sharedMemory) {
+    System_Mopaq::SectorReadWriteHandler* handler = memory ? new (memory) System_Mopaq::SectorReadWriteHandler(handle, sectorTable, sharedMemory) : NULL;
+    handle->m_handler = handler;
+    System_SFile::ARCHIVEREC* archive = handle->m_archive;
+
+    if (archive->m_compression.size()) {
+        handler->m_compression.insert(handler->m_compression.end(), archive->m_compression.begin(), archive->m_compression.end());
+    } else {
+        Blizzard::Mopaq::CompressionAlgorithm algorithm;
+        algorithm.m_type = 2;
+        algorithm.m_level = 0;
+        handler->m_compression.push_back(algorithm);
+    }
+}
+
 // OFFSET: 0x007EABA0
 static void CreateHandler(bool sharedMemory, bool compressed, Blizzard::Mopaq::MpqHandleRecord* handle, void* memory, void* sectorTable, bool writable, bool inPlace) {
     if (inPlace) {
@@ -261,18 +277,7 @@ static void CreateHandler(bool sharedMemory, bool compressed, Blizzard::Mopaq::M
         }
     } else if (writable) {
         if (compressed) {
-            System_Mopaq::SectorReadWriteHandler* handler = memory ? new (memory) System_Mopaq::SectorReadWriteHandler(handle, sectorTable, sharedMemory) : NULL;
-            handle->m_handler = handler;
-            System_SFile::ARCHIVEREC* archive = handle->m_archive;
-
-            if (archive->m_compression.size()) {
-                handler->m_compression.insert(handler->m_compression.end(), archive->m_compression.begin(), archive->m_compression.end());
-            } else {
-                Blizzard::Mopaq::CompressionAlgorithm algorithm;
-                algorithm.m_type = 2;
-                algorithm.m_level = 0;
-                handler->m_compression.push_back(algorithm);
-            }
+            CreateSectorReadWriteHandler(handle, memory, sectorTable, sharedMemory);
         } else if (memory) {
             handle->m_handler = new (memory) System_Mopaq::MopaqReadWriteHandler(handle);
         } else {

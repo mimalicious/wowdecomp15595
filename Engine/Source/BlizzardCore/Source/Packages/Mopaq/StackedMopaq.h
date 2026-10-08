@@ -84,6 +84,8 @@ class MpqHandleRecord {
 struct HSFILERecord {
     /* 0000 */ MpqHandleRecord* m_handle;
 
+    HSFILERecord();
+    HSFILERecord(const HSFILERecord& other);
     void Assign(const HSFILERecord& other);
     bool Flush();
     const char* GetFileName();
@@ -92,6 +94,7 @@ struct HSFILERecord {
     bool Read(void* buffer, int64_t offset, int32_t count, int32_t* amount);
     bool Repair();
     void SetLogicalArchive(System_SFile::ARCHIVEREC* archive);
+    void SetVerifyBaseOffset(int64_t offset);
     bool SetFileSize(int64_t size);
     bool Write(const void* buffer, int64_t offset, int32_t count);
 };

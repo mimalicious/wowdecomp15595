@@ -21,6 +21,7 @@ class TrackerData : public LogData {
     /* 0020 */ T m_value;
 
     TrackerData(std::string key, const T& value);
+    virtual ~TrackerData();
     std::string ToString() const;
     std::string Key() const;
 };

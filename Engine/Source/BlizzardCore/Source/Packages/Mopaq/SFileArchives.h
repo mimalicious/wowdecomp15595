@@ -333,7 +333,7 @@ class ArchivePtr {
     /* 0004 */ bool m_locked;
     /* 0005 */ uint8_t unk_0005[3];
 
-    ArchivePtr(ARCHIVEREC* archive);
+    ArchivePtr(ARCHIVEREC* handle);
     ~ArchivePtr();
     void Reset(ARCHIVEREC* handle);
 };

@@ -23,28 +23,28 @@
 #undef GetFreeSpace
 #undef RemoveDirectory
 
-// STATIC: #0x00AB912C
+// STATIC: 0x00D071DC
 System_File::IOFunc System_File::read_func = System_File::read_first;
 
-// STATIC: %0x00C0C5B8
+// STATIC: 0x00D07268
 System_File::IOFunc System_File::write_func = System_File::write_first;
 
-// STATIC: %0x00D87260
+// STATIC: 0x00EBAC40
 bool System_File::s_read_init;
 
-// STATIC: %0x00D87264
+// STATIC: 0x00EBAC44
 Blizzard::Lock::Atomic System_File::s_readInitCount;
 
-// STATIC: #0x00B38A64
+// STATIC: 0x00EBAC48
 bool System_File::s_write_init;
 
-// STATIC: #0x00B38A68
+// STATIC: 0x00EBAC4C
 Blizzard::Lock::Atomic System_File::s_writeInitCount;
 
-// STATIC: %0x00D82030
+// STATIC: 0x00EB5858
 Blizzard::Lock::Mutex System_File::s_ioMutex;
 
-// STATIC: %0x00D8139C
+// STATIC: 0x00EB56C4
 Blizzard::Lock::Mutex* System_File::s_ioLock;
 
 // OFFSET: 0x007ACEC0
@@ -1243,7 +1243,7 @@ bool System_File::Write(Blizzard::File::Filesystem* fs, System_File::Stacked::Fi
     return write_overlapped(parms->m_stream, parms->m_buffer, NULL, &parms->m_amount);
 }
 
-// OFFSET: #0x00457820
+// OFFSET: 0x007E6110
 bool System_File::read_locked(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     Blizzard::Lock::ScopedMutex lock(*s_ioLock);
 
@@ -1256,7 +1256,7 @@ bool System_File::read_locked(Blizzard::File::StreamRecord* file, void* buffer, 
     return read_overlapped(file, buffer, NULL, count);
 }
 
-// OFFSET: #0x00457910
+// OFFSET: 0x007E6200
 bool System_File::write_locked(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     Blizzard::Lock::ScopedMutex lock(*s_ioLock);
 
@@ -1302,7 +1302,7 @@ bool System_File::read_first(Blizzard::File::StreamRecord* file, void* buffer, O
     return read_func(file, buffer, overlapped, count);
 }
 
-// OFFSET: #0x0045B490
+// OFFSET: 0x007EC100/0x1404F84A0
 bool System_File::write_first(Blizzard::File::StreamRecord* file, void* buffer, OVERLAPPED* overlapped, int32_t* count) {
     if (!s_write_init) {
         if (s_writeInitCount.Increment() == 1) {

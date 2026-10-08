@@ -14,6 +14,7 @@ bool OsCloseFile(HOSFILE file) {
     return Blizzard::File::Close(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
 }
 
+// PROVEN: 2fecd0d8 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8D50/0x14049EAF0
 int32_t OsFileExists(const char* fileName) {
     return Blizzard::File::IsFile(fileName) != 0;
@@ -80,6 +81,7 @@ uint32_t OsGetFileAttributes(const char* fileName) {
     return info.m_attributes;
 }
 
+// PROVEN: 4df40135 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8F60/0x1404A2930
 int32_t OsSetFileAttributes(const char* fileName, uint32_t attributes) {
     if (!fileName) {
@@ -90,6 +92,7 @@ int32_t OsSetFileAttributes(const char* fileName, uint32_t attributes) {
     return Blizzard::File::SetAttributes(fileName, attributes) != 0;
 }
 
+// PROVEN: c9df3ac1 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8F90/0x14049ED00
 int32_t OsMoveFile(const char* existingFileName, const char* newFileName) {
     if (!existingFileName) {
@@ -105,6 +108,7 @@ int32_t OsMoveFile(const char* existingFileName, const char* newFileName) {
     return Blizzard::File::Move(existingFileName, newFileName) != 0;
 }
 
+// PROVEN: 52de0b8d IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8FD0/0x14049ED40
 int32_t OsCopyFile(const char* existingFileName, const char* newFileName, int32_t failIfExists) {
     if (!existingFileName) {
@@ -142,6 +146,7 @@ int32_t OsCreateDirectory(const char* pathName, int32_t recursive) {
     return Blizzard::File::CreateDirectory(pathName, recursive != 0) != 0;
 }
 
+// PROVEN: b55c5738 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A9080/0x14049EDF0
 int32_t OsRemoveDirectory(const char* pathName) {
     if (!pathName) {
@@ -174,6 +179,7 @@ int32_t OsSetCurrentDirectory(const char* path) {
     return Blizzard::File::SetWorkingDirectory(path) != 0;
 }
 
+// PROVEN: 715367bd IDENTICAL/DIFFERENT
 // OFFSET: 0x007A9120/0x14049EE80
 int32_t OsGetCurrentDirectory(uint32_t bufferSize, char* buffer) {
     if (!buffer) {
@@ -270,6 +276,7 @@ uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t create
     return mode;
 }
 
+// PROVEN: 2376fe9a IDENTICAL/UNPROVEN
 // OFFSET: 0x007A9320/0x14049F070
 char* OsFileGetDownloadFolder() {
     // STATIC: %0x00D81108

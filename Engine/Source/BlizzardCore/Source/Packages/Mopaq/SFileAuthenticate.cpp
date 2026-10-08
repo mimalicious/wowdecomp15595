@@ -49,7 +49,7 @@ bool Blizzard::Mopaq::SFileAuthenticateArchiveEx(System_SFile::ARCHIVEREC* handl
 
     *result = AUTH_UNKNOWN;
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (archive.m_archive) {
         Blizzard::Lock::MutexEnter(archive.m_archive->m_mutex.m_mutex);

@@ -87,7 +87,7 @@ class SFile {
     static int32_t STORMAPI FileRangeIsLocal(SFileImpl* file, int64_t offset, uint32_t size);
     static int32_t STORMAPI GetActualFileName(SFileImpl* file, char* buffer, uint32_t size);
     static int32_t STORMAPI GetBasePath(char* path, uint32_t size);
-    static float GetBGStreamingDownloadedPercentage();
+    static double GetBGStreamingDownloadedPercentage();
     static uint32_t STORMAPI GetFileCompressedSize(SFileImpl* file, uint32_t* sizeHigh);
     static int32_t STORMAPI GetFilePointer(SFileImpl* file);
     static void GetStreamingStatus(bool* mfilReady, bool* dataReady, bool* disabled, uint32_t* build);
@@ -138,6 +138,11 @@ class SFile {
 };
 
 namespace System_SFile2 {
+
+struct CacheBlock {
+    /* 0000 */ uint8_t unk_0000[0x6BE8];
+    /* 6BE8 */ CacheBlock* m_next;
+};
 
 struct SFileFatalInfo {
     /* 0000 */ bool m_fatal;

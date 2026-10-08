@@ -75,6 +75,9 @@ int32_t (*System_SFile2::s_findFileCallback)(const char* name, char* path, uint3
 // STATIC: 0x00EB3C6C
 void* System_SFile2::s_findFileParam;
 
+// STATIC: 0x00EB3C68
+static System_SFile2::CacheBlock* s_cacheBlocks;
+
 class StreamingRequestHandler : public Blizzard::Streaming::RequestHandler {
     public:
     void Queue(Blizzard::Storage::Request* request) override;
@@ -923,8 +926,9 @@ float SFile::GetStreamingBandwidth() {
     return BGLoading::GetBandwidth();
 }
 
-// OFFSET: %0x00708FA0
-float SFile::GetBGStreamingDownloadedPercentage() {
+// PROVEN: b294fc61 IDENTICAL/NONE
+// OFFSET: 0x007A5C40/0x14049AA30
+double SFile::GetBGStreamingDownloadedPercentage() {
     return BGLoading::GetDownloadedPercentage();
 }
 
@@ -980,6 +984,18 @@ void STORMAPI SFile::SetTrial(bool trial) {
 // OFFSET: 0x007A5D50/0x14049AB30
 int32_t SFile::IsTrial() {
     return System_SFile2::s_trial;
+}
+
+// PROVEN: a3bca4d0 IDENTICAL/NONE
+// OFFSET: 0x007A5D80/0x14049AB60
+void SFile::Destroy() {
+    System_SFile2::CacheBlock* block = s_cacheBlocks;
+
+    while (block) {
+        System_SFile2::CacheBlock* next = block->m_next;
+        delete block;
+        block = next;
+    }
 }
 
 // INLINED

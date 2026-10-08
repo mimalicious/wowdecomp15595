@@ -41,7 +41,7 @@ void RunTLSDestructors();
 
 }
 
-// OFFSET: [%0x00711190, %0x00722550]
+// OFFSET: [0x007AEBE0/0x14049AC10<System_SFile::RawReadInfo>, 0x007C0ED0<System_File::FileError>, 0x007C58D0<std::string>]
 template <class T>
 void Blizzard::Thread::LocalObject<T>::Delete(void* ptr) {
     delete static_cast<T*>(ptr);
@@ -54,7 +54,7 @@ void* Blizzard::Thread::LocalObject<T>::New(void* param) {
     return new T;
 }
 
-// OFFSET: [%0x007091C0, %0x00749780, %0x00749870, %0x007498F0]
+// OFFSET: [0x007E3990<System_SFile::RawReadInfo>, 0x007E3A00<std::string>, 0x007E3B80<System_File::FileError>, 0x007E4150<System_SComp::ZlibAllocBuffer>]
 template <class T>
 Blizzard::Thread::LocalObject<T>::operator T&() {
     return *static_cast<T*>(RegisterLocalStorage(&this->m_slot, New, NULL, Delete));

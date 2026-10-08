@@ -14,6 +14,7 @@ namespace String {
 
 const char* FindExtension(const char* str);
 const char* FindExtensionWithLeadingDot(const char* str);
+char* FindFilename(char* str);
 const char* FindFilename(const char* str);
 char* FindPathSeparatorReverse(char* str, uint32_t maxchars);
 char FirstPathSeparator(const char* str);

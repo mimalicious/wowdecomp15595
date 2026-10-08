@@ -687,7 +687,7 @@ bool System_Mopaq::delta_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
 
 // OFFSET: 0x007F3D80/0x140501360
 bool System_Mopaq::delta_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(parms->m_handle->m_archive, true));
+    System_SFile::ArchivePtr archive(parms->m_handle->m_archive);
     bool result = false;
 
     if (ReleaseDeltaData(parms->m_handle, archive)) {

@@ -177,7 +177,7 @@ Blizzard::Mopaq::MPQEnumerator::MPQEnumerator(System_SFile::ARCHIVEREC* handle, 
     this->m_directories.insert(base);
 }
 
-// OFFSET: 0x007F1850
+// OFFSET: [0x007F1850, 0x007F2A40]
 Blizzard::Mopaq::MPQEnumerator::~MPQEnumerator() {
     System_SFile::ARCHIVEREC* archive = this->m_archive;
     Blizzard::Lock::MutexEnter(archive->m_mutex.m_mutex);
@@ -414,7 +414,7 @@ bool Blizzard::Mopaq::SFileFileIsDeleted(System_SFile::ARCHIVEREC* handle, const
 bool Blizzard::Mopaq::SFileOpenArchiveEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags, Enumerator** result) {
     *result = NULL;
 
-    System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
+    System_SFile::ArchivePtr archive(handle);
 
     if (!archive.m_archive) {
         return false;

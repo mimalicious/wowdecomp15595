@@ -5,11 +5,11 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Streaming.h"
 
-// OFFSET: #0x004294C0
+// OFFSET: 0x007AE820/0x1404A43D0
 char* GetComponentVersionData(uint32_t* size) {
     *size = 0;
 
-    HRSRC resource = FindResourceExA(NULL, "BLIZZARDCOMPONENT", "BLIZZARDCOMPONENT", 0);
+    HRSRC resource = FindResourceExW(NULL, L"BLIZZARDCOMPONENT", L"BLIZZARDCOMPONENT", 0);
 
     if (!resource) {
         return NULL;

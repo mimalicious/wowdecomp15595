@@ -56,12 +56,6 @@ Blizzard::Storage::PartialBlockMap Blizzard::Storage::s_partialBlockMap;
 // STATIC: 0x00EBA23C
 Blizzard::Lock::Atomic Blizzard::Storage::s_partialBlockMapDestroyed;
 
-// OFFSET: 0x007B4C30/0x1404AA760
-static bool ReadExact(Blizzard::File::StreamRecord* file, void* buffer, int64_t offset, int32_t size, int32_t flags) {
-    int32_t count = size;
-    return Blizzard::File::Read(file, buffer, offset, &count, flags) && count == size;
-}
-
 // OFFSET: 0x007B3D00
 static bool ValidateHeader(const PartialFileHeader* header, int64_t fileSize) {
     return header->m_chunkSize && !memcmp(header->m_magic, "ptv3", 4) && header->m_fileSize == fileSize && header->m_version == 3;
@@ -391,7 +385,7 @@ bool Blizzard::Storage::PartialFile::Read(void* buffer, int64_t offset, int64_t 
         return false;
     }
 
-    ReadExact(this->m_file, buffer, offset, static_cast<int32_t>(size), 0);
+    Blizzard::File::ReadExact(this->m_file, buffer, offset, static_cast<int32_t>(size), 0);
 
     return true;
 }
@@ -1066,7 +1060,7 @@ bool Blizzard::Storage::PartialFile::ParseFileFromHeader(Blizzard::File::StreamR
         bits = s_bitFieldAllocator->Create(bitCount);
 
         if (header.m_fileSize + bits->m_length == headerOffset) {
-            result = ReadExact(file, bits->m_bits, header.m_fileSize, bits->m_length, 0);
+            result = Blizzard::File::ReadExact(file, bits->m_bits, header.m_fileSize, bits->m_length, 0);
 
             if (result) {
                 bits = s_bitFieldAllocator->Attach(info.m_path, bitCount, bits);
