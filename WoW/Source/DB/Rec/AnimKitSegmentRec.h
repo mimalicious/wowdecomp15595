@@ -11,21 +11,21 @@ class AnimKitSegmentRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ int32_t unk_0028;
-    /* 002C */ float unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
+    /* 0004 */ int32_t m_parentAnimKitID;
+    /* 0008 */ int32_t m_animID;
+    /* 000C */ int32_t m_animStartTime;
+    /* 0010 */ int32_t m_animKitConfigID;
+    /* 0014 */ int32_t m_startCondition;
+    /* 0018 */ int32_t m_startConditionParam;
+    /* 001C */ int32_t m_startConditionDelay;
+    /* 0020 */ int32_t m_endCondition;
+    /* 0024 */ int32_t m_endConditionParam;
+    /* 0028 */ int32_t m_endConditionDelay;
+    /* 002C */ float m_speed;
+    /* 0030 */ int32_t m_segmentFlags;
+    /* 0034 */ int32_t m_forcedVariation;
+    /* 0038 */ int32_t m_overrideConfigFlags;
+    /* 003C */ int32_t m_loopToSegmentIndex;
 };
 
 #endif

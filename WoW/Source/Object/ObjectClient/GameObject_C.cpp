@@ -1730,7 +1730,8 @@ void CGGameObject_C_TypeBase::UpdateDisplay(uint32_t time) {
 void CGGameObject_C_TypeBase::UpdateDisabled() {
 }
 
-// OFFSET: 0x00401000
+// PROVEN: feb43afd IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::ModelLoaded() {
 }
 
@@ -1767,7 +1768,7 @@ bool CGGameObject_C_Type_Null::CanUse() const {
     return false;
 }
 
-// OFFSET: 0x005A1AD0
+// OFFSET: 0x005A1AD0/0x140211B90
 void CGGameObject_C_TypeAnimated::ModelLoaded() {
     this->ResetAnimState();
 }

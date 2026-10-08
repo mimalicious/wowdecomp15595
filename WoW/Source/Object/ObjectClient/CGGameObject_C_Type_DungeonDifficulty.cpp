@@ -21,7 +21,7 @@ float CGGameObject_C_Type_DungeonDifficulty::GetBaseAlpha() const {
     return 0.5f;
 }
 
-// OFFSET: 0x0059AE80
+// OFFSET: 0x0059AE80/0x140209580
 CGGameObject_C_Type_DungeonDifficulty::~CGGameObject_C_Type_DungeonDifficulty() {
     SE3::StopSound(this->m_sound, -1, __FILE__, __LINE__, "CGGameObject_C_Type_DungeonDifficulty::CloseLoopingSound");
 }
@@ -32,7 +32,7 @@ bool CGGameObject_C_Type_DungeonDifficulty::CanUse() const {
     return false;
 }
 
-// OFFSET: 0x00599670
+// OFFSET: 0x00599670/0x140207A70
 void CGGameObject_C_Type_DungeonDifficulty::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     a3 = this->m_disabled;
 }
@@ -48,22 +48,22 @@ void CGGameObject_C_Type_DungeonDifficulty::HandleAnimEvent(uint32_t eventId, ui
     }
 }
 
-// OFFSET: 0x00599660
+// OFFSET: 0x00599660/0x140207A60
 void CGGameObject_C_Type_DungeonDifficulty::PostInitWithStats() {
     this->UpdateDisabled();
 }
 
-// OFFSET: 0x005A1140
+// OFFSET: 0x005A1140/0x140211080
 int32_t CGGameObject_C_Type_DungeonDifficulty::GetMapID() const {
     return this->m_owner->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 87));
 }
 
-// OFFSET: 0x005A1180
+// OFFSET: 0x005A1180/0x1402110D0
 int32_t CGGameObject_C_Type_DungeonDifficulty::GetDifficulty() const {
     return this->m_owner->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 88));
 }
 
-// OFFSET: 0x005A11C0
+// OFFSET: 0x005A11C0/0x140211120
 void CGGameObject_C_Type_DungeonDifficulty::UpdateDisabled() {
     this->m_disabled = 1;
 

@@ -1355,7 +1355,7 @@ int32_t ClientDBGetNumWeaponSubClasses() {
     return s_weaponSubclasses.Count();
 }
 
-// PROVEN: 836efa84 IDENTICAL/NONE
+// PROVEN: 056beead IDENTICAL/NONE
 // OFFSET: 0x00495350
 int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
@@ -1811,7 +1811,7 @@ MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_
     return NULL;
 }
 
-// PROVEN: be1740d5 IDENTICAL/NONE
+// PROVEN: 97860801 IDENTICAL/NONE
 // OFFSET: 0x00495380
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
     MapDifficultyRec* entry = GetMapDifficultyRec(map->m_id, difficulty, NULL);

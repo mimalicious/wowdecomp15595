@@ -152,7 +152,8 @@ template <class T, uint32_t N>
 class TSCGrowableArray {
     public:
     /* 0000 */ union {
-        T m_inline[N];
+        uint32_t m_align;
+        uint8_t m_inlineStorage[sizeof(T) * N];
         uint8_t m_dynamicStorage[sizeof(TSGrowableArray<T>)];
     };
     uint32_t m_count;
@@ -162,6 +163,8 @@ class TSCGrowableArray {
     uint32_t Count() const;
     TSGrowableArray<T>& Dynamic();
     const TSGrowableArray<T>& Dynamic() const;
+    T* Inline();
+    const T* Inline() const;
     T& operator[](uint32_t index);
     void BecomeDynamic();
     T* New(const T& source);
@@ -1581,7 +1584,7 @@ T* TSCGrowableArray<T, N>::Ptr() {
         return this->Dynamic().m_data;
     }
 
-    return this->m_inline;
+    return this->Inline();
 }
 
 // INLINED
@@ -1591,7 +1594,19 @@ const T* TSCGrowableArray<T, N>::Ptr() const {
         return this->Dynamic().m_data;
     }
 
-    return this->m_inline;
+    return this->Inline();
+}
+
+// INLINED
+template <class T, uint32_t N>
+T* TSCGrowableArray<T, N>::Inline() {
+    return reinterpret_cast<T*>(this->m_inlineStorage);
+}
+
+// INLINED
+template <class T, uint32_t N>
+const T* TSCGrowableArray<T, N>::Inline() const {
+    return reinterpret_cast<const T*>(this->m_inlineStorage);
 }
 
 // INLINED
@@ -1612,7 +1627,7 @@ TSCGrowableArray<T, N>::~TSCGrowableArray() {
     if (this->m_count == 0xFFFFFFFF) {
         this->Dynamic().~TSGrowableArray<T>();
     } else {
-        this->m_count = 0;
+        this->SetCount(0);
     }
 }
 
@@ -1623,7 +1638,7 @@ T& TSCGrowableArray<T, N>::operator[](uint32_t index) {
         return this->Dynamic().m_data[index];
     }
 
-    return this->m_inline[index];
+    return this->Inline()[index];
 }
 
 // OFFSET: [%0x005C9E90, %0x005C9F10, %0x005C9F90<unsigned int, 16>, #0x007B3B70<CMapObjDefGroup*, 4>, 0x00760A10/0x1404450E0<CMapObjDefGroup*, 8>]
@@ -1639,13 +1654,32 @@ void TSCGrowableArray<T, N>::BecomeDynamic() {
     T saved[overlap];
 
     if (count) {
-        memcpy(saved, this->m_inline, sizeof(T) * count);
+        memcpy(saved, this->Inline(), sizeof(T) * count);
     }
 
     new (this->m_dynamicStorage) TSGrowableArray<T>();
     this->Dynamic().Add(count, saved);
-    this->Dynamic().Add(this->m_count - count, &this->m_inline[count]);
+    this->Dynamic().Add(this->m_count - count, &this->Inline()[count]);
     this->m_count = 0xFFFFFFFF;
+}
+
+// OFFSET: [0x0058E980<AnimKitSegmentInst*, 8>]
+template <class T, uint32_t N>
+T* TSCGrowableArray<T, N>::New(const T& source) {
+    if (this->m_count == 0xFFFFFFFF) {
+        return this->Dynamic().New(source);
+    }
+
+    if (this->m_count == N) {
+        this->BecomeDynamic();
+        return this->Dynamic().New(source);
+    }
+
+    T* element = &this->Inline()[this->m_count];
+    new (element) T(source);
+    this->m_count++;
+
+    return element;
 }
 
 // INLINED
@@ -1654,6 +1688,16 @@ void TSCGrowableArray<T, N>::SetCount(uint32_t count) {
     if (this->m_count == 0xFFFFFFFF) {
         this->Dynamic().SetCount(count);
     } else if (count <= N) {
+        T* data = this->Inline();
+
+        for (uint32_t i = this->m_count; i < count; i++) {
+            new (&data[i]) T;
+        }
+
+        for (uint32_t i = count; i < this->m_count; i++) {
+            data[i].~T();
+        }
+
         this->m_count = count;
     } else {
         this->BecomeDynamic();
