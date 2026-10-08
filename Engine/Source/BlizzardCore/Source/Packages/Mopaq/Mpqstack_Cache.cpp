@@ -387,7 +387,7 @@ bool System_Mopaq::cache_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return next && CallNext(system, parms) && result;
 }
 
-// OFFSET: %0x0070E420
+// OFFSET: 0x007AB5B0
 bool System_Mopaq::cache_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_cache->m_size;
     return true;

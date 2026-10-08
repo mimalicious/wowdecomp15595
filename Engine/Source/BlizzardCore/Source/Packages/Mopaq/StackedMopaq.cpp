@@ -296,7 +296,7 @@ static void CreateErrorHandler(Blizzard::Mopaq::MpqHandleRecord* handle, void* m
     }
 }
 
-// OFFSET: %0x00753540
+// OFFSET: 0x007EEFE0
 bool System_Mopaq::mopaq_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     InitializeHandle(handle, parms);
@@ -315,7 +315,7 @@ bool System_Mopaq::mopaq_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     uint32_t sectorTableSize = GetSectorTableSize(archive, &handle->m_blockEntry, parms->m_flags);
     nameLength = handle->m_name ? strlen(handle->m_name) : 0;
     uint8_t* errorHandler = reinterpret_cast<uint8_t*>(handle) + sizeof(Blizzard::Mopaq::MpqHandleRecord) + 1 + nameLength + handlerSize + sectorTableSize;
-    CreateErrorHandler(handle, errorHandler, (parms->m_flags & 0x800) != 0, archive->m_header.m_rawChunkSize > 0);
+    CreateErrorHandler(handle, errorHandler, (parms->m_flags & 0x800) != 0, archive->m_header.m_rawChunkSize > 0 && !System_MPQGlobals::GetMopaqGlobals()->m_disableRepair);
 
     archive = handle->m_archive;
 

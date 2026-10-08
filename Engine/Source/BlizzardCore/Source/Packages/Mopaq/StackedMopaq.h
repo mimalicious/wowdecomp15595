@@ -224,6 +224,7 @@ bool delta_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool checksum_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool checksum_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool checksum_operation(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
+bool checksum_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool lock_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool lock_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);
 bool lock_operation(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms);

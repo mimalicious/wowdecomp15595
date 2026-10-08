@@ -18,7 +18,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "ThirdParty/zlib/zlib.h"
 
-// STATIC: %0x00C0C264
+// STATIC: 0x00D06E7C
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_nullstack = {
     0,
     NULL,
@@ -34,7 +34,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_nullstack = {
     System_Mopaq::null_func
 };
 
-// STATIC: %0x00C0C294
+// STATIC: 0x00D06EAC
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_basestack = {
     0x1,
     NULL,
@@ -50,7 +50,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_basestack = {
     NULL
 };
 
-// STATIC: %0x00C0C2C4
+// STATIC: 0x00D06EDC
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_mopaqstack = {
     0x2,
     NULL,
@@ -66,7 +66,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_mopaqstack = {
     NULL
 };
 
-// STATIC: %0x00C0C2F4
+// STATIC: 0x00D06F0C
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_metadatastack = {
     0x200,
     NULL,
@@ -82,7 +82,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_metadatastack = {
     NULL
 };
 
-// STATIC: %0x00C0C324
+// STATIC: 0x00D06F3C
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_deltastack = {
     0x400,
     NULL,
@@ -98,7 +98,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_deltastack = {
     NULL
 };
 
-// STATIC: %0x00C0C358
+// STATIC: 0x00D06F70
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_checksumstack = {
     0x8,
     NULL,
@@ -108,13 +108,13 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_checksumstack = {
     System_Mopaq::checksum_operation,
     NULL,
     NULL,
-    NULL,
+    System_Mopaq::checksum_setfilesize,
     NULL,
     NULL,
     NULL
 };
 
-// STATIC: %0x00C0C388
+// STATIC: 0x00D06FA0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_lockstack = {
     0x10,
     NULL,
@@ -130,7 +130,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_lockstack = {
     System_Mopaq::lock_operation
 };
 
-// STATIC: %0x00C0C3B8
+// STATIC: 0x00D06FD0
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_memorystack = {
     0x4,
     NULL,
@@ -146,7 +146,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_memorystack = {
     NULL
 };
 
-// STATIC: %0x00C0C3E8
+// STATIC: 0x00D07000
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_alignstack = {
     0x40,
     NULL,
@@ -162,7 +162,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_alignstack = {
     NULL
 };
 
-// STATIC: %0x00C0C418
+// STATIC: 0x00D07030
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_cachestack = {
     0x80,
     NULL,
@@ -178,7 +178,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_cachestack = {
     System_Mopaq::cache_abandon
 };
 
-// STATIC: %0x00C0C448
+// STATIC: 0x00D07060
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_verifystack = {
     0x100,
     NULL,
@@ -194,7 +194,7 @@ Blizzard::Mopaq::Mpqsystem System_Mopaq::s_verifystack = {
     NULL
 };
 
-// STATIC: %0x00C0C478
+// STATIC: 0x00D07090
 Blizzard::Mopaq::Mpqsystem System_Mopaq::s_md5verifystack = {
     0x4000,
     NULL,
@@ -399,7 +399,7 @@ bool System_Mopaq::base_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return true;
 }
 
-// OFFSET: %0x00714870
+// OFFSET: 0x007B24E0
 bool System_Mopaq::base_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Read(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
 }
@@ -429,12 +429,12 @@ bool System_Mopaq::base_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParam
     return true;
 }
 
-// OFFSET: %0x00714920
+// OFFSET: 0x007B2590
 bool System_Mopaq::base_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::SetEOF(parms->m_handle->m_file, parms->m_offset, 0);
 }
 
-// OFFSET: %0x00714980
+// OFFSET: 0x007B25F0
 bool System_Mopaq::base_setposition(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::SetPos(parms->m_handle->m_file, parms->m_offset, 0);
 }
@@ -816,7 +816,7 @@ bool System_Mopaq::align_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: %0x0070E370
+// OFFSET: 0x007AB500
 bool System_Mopaq::align_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_align->m_size;
     return true;
@@ -1098,6 +1098,23 @@ bool System_Mopaq::checksum_operation(Blizzard::Mopaq::Mpqsystem* system, MpqPar
     return handle->m_checksum->Update(handle, parms->m_buffer, parms->m_offset, parms->m_count);
 }
 
+// OFFSET: 0x007AB390
+bool System_Mopaq::checksum_setfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
+    Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
+
+    if (!system->m_next) {
+        return false;
+    }
+
+    bool result = (*reinterpret_cast<Blizzard::Mopaq::Mpqfunc*>(reinterpret_cast<uint8_t*>(system->m_next) + parms->m_verb))(system->m_next, parms);
+
+    if (result && handle->m_checksum) {
+        handle->m_checksum->m_size = parms->m_offset;
+    }
+
+    return result;
+}
+
 // OFFSET: 0x007D90C0
 void System_Mopaq::VerifyData::ChecksumTable::SetChecksum(uint32_t index, uint32_t checksum) {
     uint32_t entry = index >> 5;
@@ -1243,7 +1260,7 @@ bool System_Mopaq::verify_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
-// OFFSET: 0x007AB500
+// OFFSET: 0x007AB5D0
 bool System_Mopaq::verify_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_verify->m_size;
     return true;
