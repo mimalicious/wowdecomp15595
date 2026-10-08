@@ -43,6 +43,39 @@ void* BSN::Adapter::Blob::SetLength(void* data, uint32_t length) {
     return static_cast<uint8_t*>(data) + 4;
 }
 
+// PROVEN: 374c1c9e IDENTICAL/IDENTICAL
+// OFFSET: [0x00B2DD50/0x1408F69E0]
+uint32_t BSN::Adapter::BitArray::GetLength(const void* data) {
+    return *static_cast<const uint32_t*>(data);
+}
+
+// PROVEN: 940552cc IDENTICAL/NONE
+// OFFSET: [0x00B2E3F0/0x1408F5FA0]
+const void* BSN::Adapter::BitArray::GetElements(const void* data) {
+    return static_cast<const uint8_t*>(data) + 4;
+}
+
+// OFFSET: 0x00B2CFD0
+void* BSN::Adapter::BitArray::SetLength(void* data, uint32_t length) {
+    uint32_t* count = static_cast<uint32_t*>(data);
+    uint8_t* bits = static_cast<uint8_t*>(data) + 4;
+    uint32_t current = *count;
+
+    if (length > current) {
+        uint32_t used = (current + 8) >> 3;
+        bits[used - 1] &= (1 << (current & 7)) - 1;
+        uint32_t needed = (length + 7) >> 3;
+
+        if (needed > used) {
+            memset(bits + used, 0, needed - used);
+        }
+    }
+
+    *count = length;
+
+    return bits;
+}
+
 // OFFSET: #0x008BFC30
 const void* BSN::Adapter::FixedBlob::GetElements(const void* data) {
     return data;

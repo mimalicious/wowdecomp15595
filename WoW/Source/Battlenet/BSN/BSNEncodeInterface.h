@@ -285,4 +285,6 @@ void BSN::BSNEncodedObjectPtr<T, P, ON_STACK>::Destroy() const {
     delete this;
 }
 
+#include "WoW/Source/Battlenet/BSN/BSNEncodeInterface.inl"
+
 #endif

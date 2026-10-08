@@ -75,7 +75,7 @@ extern BSN::FourCC DATAGRAM_CONNECTION_INIT;
 }
 }
 
-// OFFSET: #0x008C6F70<Battlenet::Event::Creep::Invoke, Protocol>
+// OFFSET: 0x00628BB0/0x1402BAD50<Battlenet::Event::Creep::Invoke, Protocol>
 template <class T, class P>
 void Battlenet::TumorManager::SendEvent(const BSN::FourCC& eventId, const T& data) {
     BSN::BSNEncodedObjectPtr<T, P, 1> object(&data);

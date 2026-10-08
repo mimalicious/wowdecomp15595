@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Os/SockAddr.h"
 
 enum BN_EVENT_ID {
     BN_EVENT_CONNECTED = 1,
@@ -10,15 +11,18 @@ enum BN_EVENT_ID {
     BN_EVENT_DISCONNECTED = 3,
     BN_EVENT_DATA = 4,
     BN_EVENT_REALM_LIST = 5,
-    BN_EVENT_RECONNECTED = 6,
-    BN_EVENT_SERVICE_LOST = 7,
-    BN_EVENT_SERVICE_RECOVERED = 8,
-    BN_EVENT_SERVICE_DISCONNECTED = 9,
-    BN_EVENT_SERVICE_FAILED = 10,
-    BN_EVENT_GAME_ACCOUNTS_UPDATED = 11,
-    BN_EVENT_LOGOFF = 12,
-    BN_EVENT_SHOW_SURVEY = 13,
-    BN_EVENT_SEND_SURVEY_INFO = 14,
+    BN_EVENT_REALM_LIST_EMPTY = 6,
+    BN_EVENT_RECONNECTED = 7,
+    BN_EVENT_SERVICE_LOST = 8,
+    BN_EVENT_SERVICE_RECOVERED = 9,
+    BN_EVENT_SERVICE_DISCONNECTED = 10,
+    BN_EVENT_SERVICE_FAILED = 11,
+    BN_EVENT_GAME_ACCOUNTS_UPDATED = 12,
+    BN_EVENT_LOGOFF = 13,
+    BN_EVENT_SHOW_SURVEY = 14,
+    BN_EVENT_SEND_SURVEY_INFO = 15,
+    BN_EVENT_OUTOFBAND_CHALLENGE = 16,
+    BN_EVENT_OUTOFBAND_DISMISS = 17,
 };
 
 enum LOGIN_RESULT {
@@ -156,28 +160,35 @@ struct CHARACTER_CREATE_INFO {
     /* 0038 */ uint8_t m_outfitID;
 };
 
+struct REALM_ADDRESS_LIST {
+    /* 0000 */ SOCKADDR_TYPE m_type;
+    /* 0004 */ uint32_t m_count;
+    /* 0008 */ SockAddr* m_addresses;
+    /* 000C */ uint16_t* m_ports;
+};
+
 struct REALM_INFO {
     /* 0000 */ uint32_t m_id;
     /* 0004 */ uint8_t m_type;
     /* 0005 */ uint8_t m_flags;
     /* 0006 */ char m_realmName [256];
-    /* 0106 */ char m_realmAddress [32];
-    /* 0126 */ uint8_t unk_0126[2];
-    /* 0128 */ float m_population;
-    /* 012C */ uint8_t m_numCharacters;
-    /* 012D */ uint8_t m_category;
-    /* 012E */ uint8_t unk_012E;
-    /* 012F */ uint8_t unk_012F;
-    /* 0130 */ uint32_t m_regionId;
-    /* 0134 */ uint32_t m_battlegroupId;
-    /* 0138 */ uint32_t m_realmId;
-    /* 013C */ uint32_t m_build;
-    /* 0140 */ uint8_t m_otherFlags;
-    /* 0141 */ uint8_t m_versionMajor;
-    /* 0142 */ uint8_t m_versionMinor;
-    /* 0143 */ uint8_t m_versionRevision;
-    /* 0144 */ uint16_t m_versionBuild;
-    /* 0146 */ uint8_t unk_0146[2];
+    /* 0106 */ uint8_t unk_0106[2];
+    /* 0108 */ SockAddr m_addresses[2];
+    /* 0130 */ uint16_t m_ports[2];
+    /* 0134 */ float m_population;
+    /* 0138 */ uint8_t m_numCharacters;
+    /* 0139 */ uint8_t m_category;
+    /* 013A */ uint8_t unk_013A[2];
+    /* 013C */ uint32_t m_regionId;
+    /* 0140 */ uint32_t m_battlegroupId;
+    /* 0144 */ uint32_t m_realmId;
+    /* 0148 */ uint32_t m_build;
+    /* 014C */ uint8_t m_otherFlags;
+    /* 014D */ uint8_t m_versionMajor;
+    /* 014E */ uint8_t m_versionMinor;
+    /* 014F */ uint8_t m_versionRevision;
+    /* 0150 */ uint16_t m_versionBuild;
+    /* 0152 */ uint8_t unk_0152[2];
 };
 
 #endif

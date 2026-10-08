@@ -34,6 +34,12 @@ const void* GetElements(const void* data);
 void* SetLength(void* data, uint32_t length);
 }
 
+namespace BitArray {
+uint32_t GetLength(const void* data);
+const void* GetElements(const void* data);
+void* SetLength(void* data, uint32_t length);
+}
+
 namespace FixedBitArray {
 template <uint32_t N>
 uint32_t GetLength(const void* data);

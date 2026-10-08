@@ -36,4 +36,6 @@ class Tendril : public Service::Interface, public SystemClient {
 };
 }
 
+#include "WoW/Source/Battlenet/Tumor/Tendril.inl"
+
 #endif

@@ -39,7 +39,8 @@ class Creep {
     virtual bool Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) = 0;
     virtual bool RecvDatagram(uint32_t connection, void* data, uint32_t size, const void* address, uint32_t addressSize) = 0;
     virtual void RecvEvent(const BSN::EncodedObject* header, const BSN::EncodedObject* data) = 0;
-    virtual void Process(uint32_t time) = 0;
+    virtual int32_t Process() = 0;
+    virtual int32_t GetLastError() const = 0;
 };
 
 typedef bool (*CreepInitializeFunc)();
@@ -64,7 +65,7 @@ class Instance : public Tendril, public Host {
 
     /* 0020 */ Creep* m_creep;
     /* 0024 */ Authentication::Settings m_settings;
-    /* 0730 */ EventHandler m_eventHandlers[16];
+    /* 0B20 */ EventHandler m_eventHandlers[16];
 
     void RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) override;
     ~Instance();
@@ -75,7 +76,8 @@ class Instance : public Tendril, public Host {
     void Disconnected(uint32_t connection) override;
     bool Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) override;
     bool RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) override;
-    void Process(uint32_t time) override;
+    int32_t Process(uint32_t time) override;
+    int32_t GetLastError() const override;
     uint32_t Resolve(uint32_t token, const char* hostname) override;
     uint32_t Connect(const void* address, uint32_t addressSize) override;
     void Disconnect(uint32_t connection) override;
@@ -98,14 +100,14 @@ class Instance : public Tendril, public Host {
 }
 }
 
-// OFFSET: [#0x009C2040<1>, #0x009C20A0<2>, #0x009C2100<3>, #0x009C2160<10>, #0x009C21C0<11>, #0x009C2220<5>, #0x009C2280<6>, #0x009C22E0<9>, #0x009C2340<8>, #0x009C23A0<14>, #0x009C2400<15>]
+// OFFSET: [0x00662A90<1>, 0x00662AF0<2>, 0x00662B50<3>, 0x00662BB0<10>, 0x00662C10<11>, 0x00662C70<5>, 0x00662CD0<6>, 0x00662D30<9>, 0x00662D90<8>, 0x00662DF0<14>, 0x00662E50<15>]
 template <uint8_t EVENT_TYPE>
 int32_t Battlenet::CreepTendril::Instance::ProcessEventData(const Event::Header& header, const BSN::EncodedObject* data) {
-    if (header.m_target.m_type == 0) {
+    if (header.m_destination.m_tag == 0) {
         uint8_t eventType = EVENT_TYPE;
-        static_cast<Service::Interface*>(this)->SendEvent(eventType, reinterpret_cast<const BSN::FourCC&>(header.m_target.m_value), data);
-    } else if (header.m_target.m_type == 1) {
-        uint32_t target = header.m_target.m_value;
+        static_cast<Service::Interface*>(this)->SendEvent(eventType, header.m_destination.Value<BSN::FourCC>(), data);
+    } else if (header.m_destination.m_tag == 1) {
+        uint32_t target = header.m_destination.Value<uint32_t>();
         uint8_t eventType = EVENT_TYPE;
         static_cast<Service::Interface*>(this)->SendEvent(eventType, reinterpret_cast<const BSN::FourCC&>(target), data);
     }

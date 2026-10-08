@@ -31,17 +31,19 @@ BSN::FourCC Battlenet::Event::FROM_UI("FmUI");
 // STATIC: #0x00DCEE78
 BSN::FourCC Battlenet::Event::DATAGRAM_CONNECTION_INIT("DCDI");
 
-// OFFSET: #0x009BFDB0
+// PROVEN: 40b7f33f IDENTICAL/NONE
+// OFFSET: 0x00660670
 void Battlenet::TumorManagerRegisterFunction(void* param, const char* name, GeneralFunction::Function func, void* funcParam) {
     static_cast<TumorManager*>(param)->RegisterFunction(name, func, funcParam);
 }
 
-// OFFSET: #0x009BFDD0
+// PROVEN: 49cf5298 IDENTICAL/NONE
+// OFFSET: 0x00660690/0x140305D50
 Battlenet::Tumor* Battlenet::TumorManager::GetTumor() {
     return &this->m_tumor;
 }
 
-// OFFSET: #0x009BFDE0
+// OFFSET: 0x006606A0
 void Battlenet::TumorManager::AddTendril(Tendril* tendril) {
     uint32_t i = 0;
 
@@ -56,7 +58,8 @@ void Battlenet::TumorManager::AddTendril(Tendril* tendril) {
     tendril->DoSubscriptions();
 }
 
-// OFFSET: #0x009BFE30
+// PROVEN: 4f843ee0 IDENTICAL/NONE
+// OFFSET: 0x006606F0
 void Battlenet::TumorManager::DestroyTendrils() {
     for (int32_t i = 0; i < 20; i++) {
         if (this->m_tendrils[i]) {
@@ -66,17 +69,19 @@ void Battlenet::TumorManager::DestroyTendrils() {
     }
 }
 
-// OFFSET: #0x009BFE60
+// PROVEN: 81c2e84d IDENTICAL/NONE
+// OFFSET: 0x00660720/0x140305D60
 void Battlenet::TumorManager::SendEvent(uint8_t eventType, const uint32_t& adapter, const BSN::EncodedObject* data) {
     this->m_eventAdapter->SendEvent(eventType, adapter, data);
 }
 
-// OFFSET: #0x009BFE80
+// PROVEN: 269144f0 IDENTICAL/NONE
+// OFFSET: 0x00660740/0x140305D70
 void Battlenet::TumorManager::SendEvent(uint8_t eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     this->m_eventAdapter->SendEvent(eventType, eventId, data);
 }
 
-// OFFSET: #0x009C0070
+// OFFSET: 0x00660A40
 GeneralFunction::Arg Battlenet::TumorManagerSendEvent(void* param, int32_t argc, const GeneralFunction::Arg* args) {
     if (argc != 3) {
         DebugLog("Usage: SendEvent(eventId, dest, event)");
@@ -97,7 +102,7 @@ GeneralFunction::Arg Battlenet::TumorManagerSendEvent(void* param, int32_t argc,
     return GeneralFunction::Arg();
 }
 
-// OFFSET: #0x009C0110
+// OFFSET: 0x00660AE0/0x140306110
 Battlenet::TumorManager::TumorManager(Application& application) : m_tumor(application) {
     this->m_eventAdapter = NULL;
     this->m_tumor.AllocTendrilId(this->m_tendrilId);
@@ -105,13 +110,13 @@ Battlenet::TumorManager::TumorManager(Application& application) : m_tumor(applic
     memset(this->m_tendrils, 0, sizeof(this->m_tendrils));
 }
 
-// OFFSET: #0x009C0180
+// OFFSET: 0x00660B50/0x1403061B0
 Battlenet::TumorManager::~TumorManager() {
 }
 
-// OFFSET: #0x009C0A10
+// OFFSET: 0x006613C0/0x140306D00
 Battlenet::TumorManager* Battlenet::TumorManager::Create(Application& application, const Authentication::Settings& settings) {
-    void* memory = Battlenet::g_allocator->Alloc(sizeof(TumorManagerImplementation));
+    void* memory = Battlenet::g_allocator->Alloc(sizeof(TumorManagerImplementation), ".\\TumorManager.cpp(122):TumorManagerImplementation");
     TumorManagerImplementation* manager = memory ? new (memory) TumorManagerImplementation(application) : NULL;
 
     CreepTendril::Instance* creep = CreepTendril::Instance::Create(settings, *manager);
@@ -133,7 +138,7 @@ Battlenet::TumorManager* Battlenet::TumorManager::Create(Application& applicatio
 Battlenet::TumorManagerImplementation::TumorManagerImplementation(Application& application) : TumorManager(application) {
 }
 
-// OFFSET: #0x009C0540
+// OFFSET: 0x00660F10/0x140306500
 void Battlenet::TumorManagerImplementation::EnumFunctions(EnumFunctionsCallback callback, void* param) {
     MapKey key;
     FunctionEntry entry = { NULL, NULL };
@@ -144,7 +149,7 @@ void Battlenet::TumorManagerImplementation::EnumFunctions(EnumFunctionsCallback 
     }
 }
 
-// OFFSET: #0x009C05E0
+// OFFSET: 0x00660FB0/0x140306620
 GeneralFunction::Arg Battlenet::TumorManagerImplementation::CallFunction(const char* name, int32_t argc, GeneralFunction::Arg* args) {
     GeneralFunction::Function func = NULL;
     void* param = NULL;
@@ -170,12 +175,12 @@ GeneralFunction::Arg Battlenet::TumorManagerImplementation::CallFunction(const c
     return func(param, argc, args);
 }
 
-// OFFSET: #0x009C09C0
+// OFFSET: 0x00661370/0x140306CB0
 Battlenet::TumorManagerImplementation::~TumorManagerImplementation() {
     this->DestroyTendrils();
 }
 
-// OFFSET: #0x009C0AF0
+// OFFSET: 0x006614A0/0x140306E60
 void Battlenet::TumorManagerImplementation::RegisterFunction(const char* name, GeneralFunction::Function func, void* param) {
     MapKey key((String(name)));
     FunctionEntry& entry = this->m_functions[key];
@@ -183,7 +188,7 @@ void Battlenet::TumorManagerImplementation::RegisterFunction(const char* name, G
     entry.m_param = param;
 }
 
-// OFFSET: #0x009C0B70
+// OFFSET: 0x00661520/0x140306ED0
 void Battlenet::TumorManagerImplementation::UnregisterFunction(const char* name, GeneralFunction::Function func, void* param) {
     GeneralFunction::Function registeredFunc = NULL;
     void* registeredParam = NULL;

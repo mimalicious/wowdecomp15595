@@ -201,4 +201,6 @@ void WriteInt(uint64_t value, uint32_t size, void* data);
 extern const Utf8Sequence s_utf8Sequences[9];
 }
 
+#include "WoW/Source/Battlenet/BSN/Protocol.inl"
+
 #endif

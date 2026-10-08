@@ -1,7 +1,7 @@
 #include "WoW/Source/Battlenet/BSN/Encoder.h"
 #include <cstring>
 
-// OFFSET: #0x009C1820
+// OFFSET: 0x006621E0
 BSN::Encoder::~Encoder() {
 }
 
@@ -10,55 +10,65 @@ BSN::Encoder::~Encoder() {
 void BSN::Encoder::Flush() {
 }
 
-// OFFSET: #0x009C2A90
+// PROVEN: 14609084 IDENTICAL/NONE
+// OFFSET: 0x00665080/0x14030BB20
 void BSN::Encoder::SetData(void* data, uint32_t bytes) {
     this->m_data = static_cast<uint8_t*>(data);
     this->m_size = 8 * bytes;
     this->m_position = 0;
 }
 
-// INLINED
-int32_t BSN::Encoder::PutBits(uint32_t bits, uint32_t value) {
-    uint32_t remaining = bits;
+// PROVEN: 717400e6 IDENTICAL/NONE
+// OFFSET: 0x00663CA0
+bool BSN::IsValidAscii(uint32_t length, const char* data) {
+    for (uint32_t i = 0; i < length; i++) {
+        uint8_t c = data[i];
 
-    while (true) {
-        uint32_t position = this->m_position;
-
-        if (position >= this->m_size) {
-            this->Flush();
-            position = this->m_position;
-
-            if (position >= this->m_size) {
-                return BSN::CODEC_OVERFLOW;
-            }
-        }
-
-        uint32_t shift = position & 7;
-        uint32_t count = 8 - shift;
-
-        if (count >= remaining) {
-            count = remaining;
-        }
-
-        remaining -= count;
-
-        uint8_t mask = static_cast<uint8_t>((1 << count) - 1);
-        uint8_t* byte = &this->m_data[position >> 3];
-        *byte = (*byte & ~(mask << shift)) | ((mask & (value >> remaining)) << shift);
-        this->m_position += count;
-
-        if (!remaining) {
-            return BSN::CODEC_VALID;
+        if (!c || c > 0x7E) {
+            return false;
         }
     }
+
+    return true;
 }
 
-// OFFSET: #0x009C2AC0
+// OFFSET: 0x006650B0/0x14030B3F0
+int32_t BSN::Encoder::PutBool(bool value) {
+    return this->PutBits(1, value != false);
+}
+
+// OFFSET: 0x00665160/0x14030B4D0
 int32_t BSN::Encoder::PutUInt32(uint32_t value) {
     return this->PutBits(32, value);
 }
 
-// OFFSET: #0x009C2B70
+// OFFSET: 0x00665210/0x14030B5A0
+int32_t BSN::Encoder::PutChecksum(uint32_t bits, uint32_t& checksum) {
+    uint32_t offset = this->m_position >> 3;
+
+    if (offset >= 4) {
+        checksum += *reinterpret_cast<const uint32_t*>(&this->m_data[offset - 4]);
+    }
+
+    if (offset >= 2) {
+        checksum += *reinterpret_cast<const uint16_t*>(&this->m_data[offset - 2]);
+    } else if (offset) {
+        checksum += this->m_data[offset - 1];
+    } else {
+        checksum = ~checksum;
+    }
+
+    uint32_t value = (checksum << 8) | (checksum >> 24);
+    checksum = value;
+
+    if (!bits) {
+        return BSN::CODEC_VALID;
+    }
+
+    return this->PutBits(bits, value);
+}
+
+// OFFSET: 0x00665300/0x14030B6D0
 int32_t BSN::Encoder::PutData(uint32_t bits, const uint8_t* data) {
     if ((this->m_position & 7) == 0 && bits >= 8) {
         do {
@@ -121,7 +131,7 @@ int32_t BSN::Encoder::PutData(uint32_t bits, const uint8_t* data) {
     return this->PutBits(total, value);
 }
 
-// OFFSET: #0x009C2DC0
+// OFFSET: 0x00665550/0x14030B980
 int32_t BSN::Encoder::Align() {
     uint32_t position = this->m_position;
     uint32_t aligned = (position + 7) & ~7u;
@@ -161,7 +171,23 @@ int32_t BSN::Encoder::Align() {
     }
 }
 
-// OFFSET: #0x009C2E70
+// OFFSET: 0x00665600
+int32_t BSN::Encoder::PutAsciiData(uint32_t bytes, const char* data) {
+    int32_t result = this->Align();
+
+    if (result) {
+        return result;
+    }
+
+    if (!BSN::IsValidAscii(bytes, data)) {
+        return BSN::CODEC_INVALID;
+    }
+
+    return this->PutData(8 * bytes, reinterpret_cast<const uint8_t*>(data));
+}
+
+// PROVEN: 69ee53e3 IDENTICAL/NONE
+// OFFSET: 0x00665650/0x14030BAD0
 int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
     int32_t result = this->Align();
 
@@ -172,7 +198,7 @@ int32_t BSN::Encoder::PutAlignedData(uint32_t bytes, const uint8_t* data) {
     return this->PutData(8 * bytes, data);
 }
 
-// OFFSET: #0x009C1850
+// OFFSET: 0x004E1F00/0x140122B10
 BSN::Decoder::~Decoder() {
 }
 
@@ -182,14 +208,15 @@ int32_t BSN::Decoder::Fill() {
     return BSN::CODEC_VALID;
 }
 
-// OFFSET: #0x009C2A90
+// PROVEN: 24eb3afb IDENTICAL/NONE
+// OFFSET: 0x00665080/0x14030BB20
 void BSN::Decoder::SetData(const void* data, uint32_t bytes) {
     this->m_data = static_cast<const uint8_t*>(data);
     this->m_size = 8 * bytes;
     this->m_position = 0;
 }
 
-// OFFSET: #0x009C2EA0
+// OFFSET: 0x00665680
 int32_t BSN::Decoder::GetData(uint32_t bits, uint8_t* data) {
     if ((this->m_position & 7) == 0 && bits >= 8) {
         do {
@@ -332,20 +359,17 @@ int32_t BSN::Decoder::GetData(uint32_t bits, uint8_t* data) {
     return BSN::CODEC_VALID;
 }
 
-// OFFSET: #0x009C30F0
+// PROVEN: 02017c3f IDENTICAL/NONE
+// OFFSET: 0x006658D0
 int32_t BSN::Decoder::GetAlignedData(uint32_t bytes, uint8_t* data) {
     this->m_position = (this->m_position + 7) & ~7u;
     return this->GetData(8 * bytes, data);
-}
-
-// INLINED
-BSN::SizeEncoder::SizeEncoder() : m_size(0) {
 }
 
 // OFFSET: #0x0077A200
 BSN::SizeEncoder::~SizeEncoder() {
 }
 
-// OFFSET: #0x009C1880
+// OFFSET: 0x00662240
 BSN::Hard::SizeEncoder::~SizeEncoder() {
 }

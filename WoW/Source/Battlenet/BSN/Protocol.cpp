@@ -11,7 +11,7 @@ uint32_t BSN::Protocol::GetUInt32(const uint8_t*& cursor) {
     return value;
 }
 
-// OFFSET: #0x00889E80
+// OFFSET: 0x00665930/0x14030BE30
 BSN::Protocol::Protocol::Protocol(const uint8_t* bytecode, uint32_t bytecodeSize, const void* const* codeInfo, uint32_t codeInfoCount) {
     this->m_bytecodeSize = bytecodeSize;
     this->m_codeInfoCount = codeInfoCount;
@@ -94,7 +94,7 @@ const uint8_t* BSN::Protocol::Protocol::DumpInfo(uint32_t typeId) const {
     return &this->m_bytecode[offset];
 }
 
-// OFFSET: #0x0088A000
+// OFFSET: 0x00665A90/0x14030BFF0
 const char* BSN::Protocol::Protocol::DumpString(const uint8_t* dumpInfo, uint32_t index) const {
     if (!this->m_dumpInfoSize || !dumpInfo) {
         return "";

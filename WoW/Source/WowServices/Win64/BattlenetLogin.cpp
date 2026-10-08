@@ -19,13 +19,13 @@ uint32_t BattlenetApplication::Resolve(uint32_t token, const char* hostname) {
         Battlenet::Client::DNSInfo info;
         info.m_addresses.SetCount(1);
 
-        Battlenet::IP4::Address& address = info.m_addresses[0];
-        address.m_value[0] = host->h_addr_list[0][0];
-        address.m_value[1] = host->h_addr_list[0][1];
-        address.m_value[2] = host->h_addr_list[0][2];
-        address.m_value[3] = host->h_addr_list[0][3];
+        BSN::FixedBlob<4>& address = info.m_addresses[0];
+        address.m_data[0] = host->h_addr_list[0][0];
+        address.m_data[1] = host->h_addr_list[0][1];
+        address.m_data[2] = host->h_addr_list[0][2];
+        address.m_data[3] = host->h_addr_list[0][3];
 
-        info.m_name = host->h_name;
+        info.m_canonicalName = host->h_name;
         client.Resolved(token, info);
         return 0;
     }
@@ -52,7 +52,7 @@ uint32_t BattlenetApplication::Resolve(uint32_t token, const char* hostname) {
         BattlenetLogin::LogConnectionStatus("Failed to resolve %s", hostname);
 
         Battlenet::Client::DNSInfo info;
-        info.m_name = "";
+        info.m_canonicalName = "";
         client.Resolved(token, info);
         return 0;
     }
@@ -60,13 +60,13 @@ uint32_t BattlenetApplication::Resolve(uint32_t token, const char* hostname) {
     Battlenet::Client::DNSInfo info;
     info.m_addresses.SetCount(1);
 
-    Battlenet::IP4::Address& address = info.m_addresses[0];
-    address.m_value[0] = ip;
-    address.m_value[1] = ip >> 8;
-    address.m_value[2] = ip >> 16;
-    address.m_value[3] = ip >> 24;
+    BSN::FixedBlob<4>& address = info.m_addresses[0];
+    address.m_data[0] = ip;
+    address.m_data[1] = ip >> 8;
+    address.m_data[2] = ip >> 16;
+    address.m_data[3] = ip >> 24;
 
-    info.m_name = "";
+    info.m_canonicalName = "";
     client.Resolved(token, info);
     return 0;
 }

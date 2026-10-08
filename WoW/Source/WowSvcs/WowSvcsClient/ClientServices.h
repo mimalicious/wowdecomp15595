@@ -153,7 +153,7 @@ class ClientServices : public LoginResponse {
     void FileData(const uint8_t* data, uint32_t size) override;
     const char* GetLoginServer() override;
     int32_t GetLoginServerType() override;
-    void JoinRealmResult(uint32_t realmId, int32_t a2, int32_t a3, int32_t a4, int32_t a5) override;
+    void JoinRealmResult(uint32_t realmId, const REALM_ADDRESS_LIST* lists, int32_t listCount, int32_t a4, int32_t error) override;
     void LoginServerStatus(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, const char* stateString, const char* resultString, uint16_t flags) override;
     void RealmEnumCallback(uint32_t result) override;
 };

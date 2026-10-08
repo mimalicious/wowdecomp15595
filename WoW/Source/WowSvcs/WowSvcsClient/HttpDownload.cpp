@@ -33,7 +33,7 @@ bool HttpDownload::Done() {
     return !this->m_requested || this->m_state->m_done;
 }
 
-// OFFSET: #0x008A1390
+// OFFSET: 0x00B3CF80/0x140909ED0
 bool HttpDownload::Cancel() {
     if (!this->m_requested || this->m_state->m_done) {
         return true;
@@ -87,7 +87,7 @@ bool DownloadFileCallback::ShouldBlock() {
     return false;
 }
 
-// OFFSET: #0x008A1440
+// OFFSET: 0x00B3D020/0x140909F90
 bool DownloadFileCallback::ReceivedData(const void* data, int32_t size) {
     if (!this->m_state) {
         return true;
@@ -131,7 +131,7 @@ const char* HttpDownload::TargetName() {
     return this->m_state->m_targetName.c_str();
 }
 
-// OFFSET: #0x008A1550
+// OFFSET: 0x00B3D130/0x14090A0D0
 HttpDownload::~HttpDownload() {
     if (!this->m_state->m_done) {
         while (this->m_state->m_receiving) {
@@ -145,7 +145,7 @@ HttpDownload::~HttpDownload() {
     delete this->m_state;
 }
 
-// OFFSET: #0x008A15E0
+// OFFSET: 0x00B3D1C0/0x14090A170
 HttpDownload::HttpDownload(const char* url, const char* targetName) {
     this->m_state = new HttpDownloadState;
     this->m_state->m_receiving = false;

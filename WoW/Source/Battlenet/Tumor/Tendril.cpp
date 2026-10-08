@@ -1,26 +1,20 @@
 #include "WoW/Source/Battlenet/Tumor/Tendril.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
 
-// INLINED
-Battlenet::Service::Interface::Interface(TumorManager& manager) {
-    this->m_manager = &manager;
-    this->m_eventAdapter = NULL;
-    this->m_tendrilId = 0;
-}
-
 // PROVEN: 71c346c6 IDENTICAL/DIFFERENT
 // OFFSET: 0x00841AE0/0x140211B90
 void Battlenet::Service::Interface::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
 }
 
-// OFFSET: #0x009C1950
+// OFFSET: 0x00662340
 Battlenet::Service::Interface::~Interface() {
     if (this->m_tendrilId) {
         this->m_manager->GetTumor()->RemoveTendril(this->m_tendrilId);
     }
 }
 
-// OFFSET: #0x009C1900
+// PROVEN: eb74f12e IDENTICAL/NONE
+// OFFSET: 0x006622C0
 void Battlenet::Service::Interface::Register() {
     if (this->m_eventId.m_value) {
         Tumor* tumor = this->m_manager->GetTumor();
@@ -30,7 +24,8 @@ void Battlenet::Service::Interface::Register() {
     }
 }
 
-// OFFSET: #0x009C1AE0
+// PROVEN: 2a0132f2 IDENTICAL/NONE
+// OFFSET: 0x00662310
 void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BSN::FourCC& eventId, const BSN::EncodedObject* data) {
     if (this->m_eventAdapter) {
         this->m_eventAdapter->SendEvent(eventType, eventId, data);

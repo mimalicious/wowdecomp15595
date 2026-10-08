@@ -52,7 +52,7 @@ extern CVar* g_checkAddonVersionVar;
 extern CVar* g_disableServerNagleVar;
 extern CVar* g_useIPv6Var;
 extern HEVENTCONTEXT g_clientEventContext;
-extern bool g_hasIsoLocale[12];
+extern bool g_hasIsoLocale[15];
 extern CVar* g_lastCharacterIndexVar;
 extern CVar* g_readContestVar;
 extern CVar* g_readEULAVar;

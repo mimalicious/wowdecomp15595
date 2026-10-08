@@ -81,4 +81,6 @@ class SimpleCallback : public Callback {
 typedef Arg (*Function)(void* param, int32_t argc, const Arg* args);
 }
 
+#include "WoW/Source/Battlenet/GeneralFunction.inl"
+
 #endif

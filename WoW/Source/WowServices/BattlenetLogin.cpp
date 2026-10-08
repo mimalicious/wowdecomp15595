@@ -9,10 +9,12 @@
 #include "Engine/Source/BlizzardCore/Source/System/Version/Version.h"
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/FrameXML/XMLTree.h"
 #include "Engine/Source/Os/OsFile.h"
 #include "Engine/Source/Os/OsSecureRandom.h"
 #include "Engine/Source/Os/OsTcp.h"
+#include "Engine/Source/Os/SockAddr.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Battlenet/Tumor/TumorManager.h"
@@ -21,18 +23,22 @@
 #include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/Ui/BattlenetUI.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/WowServices/InstallLocation.h"
 #include "WoW/Source/WowServices/LoginResponse.h"
 
-// STATIC: #0x00B24B94
+// STATIC: 0x00CC8C4C
 BattlenetAllocator s_battlenetAllocator;
 
-// STATIC: #0x00D45C98
+// STATIC: 0x00DD9FF8
 Battlenet::TumorManager* g_tumorManager;
 
-// STATIC: #0x00D45C9C
+// STATIC: 0x00DD9FFC
 bool BattlenetLogin::s_monolithicComponent;
 
-// STATIC: #0x00D45CB0
+// STATIC: 0x00DD9FFD
+bool BattlenetLogin::s_toolPatch;
+
+// STATIC: 0x00DDA018
 char BattlenetLogin::s_monolithicPlatform[5];
 
 // OFFSET: #0x008C51D0
@@ -41,12 +47,19 @@ void BattlenetAssert(const char* message, const char* file, int32_t line) {
     abort();
 }
 
-// OFFSET: #0x008C5140
+// PROVEN: 0fdc9e0a IDENTICAL/NONE
+// OFFSET: 0x006273B0/0x1402B9400
 void* BattlenetAllocator::Alloc(uint32_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x008C5160
+// OFFSET: 0x006273D0/0x1402B9420
+void* BattlenetAllocator::Alloc(uint32_t size, const char* name) {
+    return SMemAlloc(size, name && *name ? name : __FILE__, __LINE__, 0);
+}
+
+// PROVEN: 71fe10eb IDENTICAL/NONE
+// OFFSET: 0x00627400/0x1402B9450
 void BattlenetAllocator::Free(void* memory) {
     SMemFree(memory, __FILE__, __LINE__, 0);
 }
@@ -249,12 +262,12 @@ static void GetComponentVersion(const char* name, uint32_t& version, const char*
 
 // OFFSET: 0x00627780/0x1402B97B0
 static uint32_t GetWowDataVersion() {
-    uint32_t version = 12340;
+    uint32_t version = 15595;
     void* data;
     uint32_t size;
 
     if (!SFileLoadFileEx(NULL, "component.wow-data.txt", &data, &size, 0, 0, NULL) || !data) {
-        return 12340;
+        return 15595;
     }
 
     GetComponentVersion("wow-data", version, static_cast<const char*>(data), size);
@@ -265,26 +278,12 @@ static uint32_t GetWowDataVersion() {
 
 // OFFSET: 0x006277F0
 static uint32_t GetWowLangVersion(const char* locale) {
-    char path[256];
     char fileName[32];
     char componentName[32];
-    uint32_t version = 12340;
-    SArchive* archive = NULL;
+    uint32_t version = 15595;
 
-    if (SStrCmp(locale, s_localeCode, STORM_MAX_STR)) {
-        sprintf(path, "Data/%s/patch-%s-2.MPQ", locale, locale);
-
-        if (!OsFileExists(path)) {
-            sprintf(path, "Data/%s/patch-%s.MPQ", locale, locale);
-
-            if (!OsFileExists(path)) {
-                sprintf(path, "Data/%s/locale-%s.MPQ", locale, locale);
-            }
-        }
-
-        if (!SFile::OpenArchive(path, 0, 0x800, &archive)) {
-            return 12340;
-        }
+    if (strcmp(locale, s_localeCode)) {
+        return 15595;
     }
 
     sprintf(fileName, "component.wow-%s.txt", locale);
@@ -292,21 +291,13 @@ static uint32_t GetWowLangVersion(const char* locale) {
     void* data;
     uint32_t size;
 
-    if (!SFile::ReadFile(archive, fileName, &data, &size, 0, 0) || !data) {
-        if (archive) {
-            SFile::CloseArchive(archive);
-        }
-
-        return 12340;
+    if (!SFile::ReadFile(NULL, fileName, &data, &size, 0, 0) || !data) {
+        return 15595;
     }
 
     sprintf(componentName, "wow-%s", locale);
     GetComponentVersion(componentName, version, static_cast<const char*>(data), size);
     SMemFree(data, __FILE__, __LINE__, 0);
-
-    if (archive) {
-        SFile::CloseArchive(archive);
-    }
 
     return version;
 }
@@ -545,7 +536,7 @@ uint32_t BattlenetApplication::Connect(const Battlenet::IP4::AddressPort& addres
         this->m_wowConnection->SetType(WOWC_TYPE_STREAM);
     }
 
-    sprintf(buffer, "%d.%d.%d.%d:%d", address.m_address[0], address.m_address[1], address.m_address[2], address.m_address[3], address.m_port[1] + (address.m_port[0] << 8));
+    sprintf(buffer, "%d.%d.%d.%d:%d", address.m_address.m_data[0], address.m_address.m_data[1], address.m_address.m_data[2], address.m_address.m_data[3], address.m_port.m_data[1] + (address.m_port.m_data[0] << 8));
     BattlenetLogin::LogConnectionStatus("Connecting to %s", buffer);
     this->m_wowConnection->Connect(buffer, 5000);
 
@@ -604,20 +595,36 @@ void BattlenetLogin::HandleUpdateInvoke(const Battlenet::Event::Update::Invoke* 
 
     this->m_patchInstructionLock.Enter();
 
-    PatchInstruction* instruction = this->m_patchInstructions.New();
-    SStrCopy(instruction->m_patch, invoke->m_patch.m_data, sizeof(instruction->m_patch));
+    strcpy(this->m_patchInstructions.New()->m_patch, invoke->m_patch.m_instructions.m_data);
 
-    invoke->m_program.ToString(program, sizeof(program));
-    invoke->m_component.ToString(component, sizeof(component));
-    BattlenetLogin::LogConnectionStatus("program=%s component=%s patch=%s", program, component, instruction->m_patch);
+    invoke->m_patch.m_programId.ToString(program, sizeof(program));
+    invoke->m_patch.m_component.ToString(component, sizeof(component));
+
+    if (invoke->m_patch.m_programId.m_value == BSN::FourCC("Tool").m_value) {
+        BattlenetLogin::s_toolPatch = true;
+        this->m_patchInstructions.Clear();
+    }
+
+    if (invoke->m_patch.m_programId.m_value == BSN::FourCC("Tool").m_value || !BattlenetLogin::s_toolPatch) {
+        PatchInstruction* instruction = this->m_patchInstructions.New();
+        SStrCopy(instruction->m_patch, invoke->m_patch.m_instructions.m_data, sizeof(instruction->m_patch));
+        BattlenetLogin::LogConnectionStatus("program=%s component=%s patch=%s", program, component, instruction->m_patch);
+    }
 
     this->m_patchInstructionLock.Leave();
 
-    if (!invoke->unk_010C) {
+    if (!invoke->m_more) {
         SStrCopy(this->m_fileName, "Patch", sizeof(this->m_fileName));
         this->m_fileSize = 0;
         this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_DOWNLOADFILE, LOGIN_OK, NULL, 0);
     }
+}
+
+// OFFSET: 0x006274B0/0x1402B9510
+void BattlenetLogin::BuildEmptyRealmListResult() {
+    CDataStore* msg = new (__FILE__, __LINE__) CDataStore();
+    this->RealmListResult(msg);
+    delete msg;
 }
 
 // OFFSET: 0x00628E60/0x1402BB0F0
@@ -636,7 +643,11 @@ void BattlenetLogin::BuildRealmListResult() {
         msg->Put(info.m_otherFlags);
         msg->Put(info.m_flags);
         msg->PutString(info.m_realmName);
-        msg->PutString(info.m_realmAddress);
+
+        char address[64];
+        SStrPrintf(address, "%s", SockAddrString(info.m_addresses[0], info.m_ports[0]).m_str);
+        msg->PutString(address);
+
         msg->Put(info.m_population);
         msg->Put(info.m_numCharacters);
         msg->Put(info.m_category);
@@ -670,24 +681,24 @@ void BattlenetLogin::BuildRealmListResult() {
 void BattlenetLogin::JoinRealm(uint32_t region, uint32_t battlegroup, uint32_t id) {
     this->m_joinRealmId = id;
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Realm::Request* request = invoke.Set<6, Battlenet::Realm::Request>();
-    BSN::Optional<Battlenet::Realm::Address>* join = request->Set<1, BSN::Optional<Battlenet::Realm::Address>>();
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::WoW* wow = invoke->Set<6, Battlenet::Event::Creep::Invoke::WoW>();
+    Battlenet::Event::Creep::Invoke::WoW::JoinRealm* join = wow->Set<1, Battlenet::Event::Creep::Invoke::WoW::JoinRealm>();
 
     if (region || battlegroup || id) {
-        join->m_exists = true;
-        join->m_value.m_region = region;
-        join->m_value.m_battlegroup = battlegroup;
-        join->m_value.m_id = id;
+        join->m_realmId.m_exists = true;
+        join->m_realmId.m_value.m_region = region;
+        join->m_realmId.m_value.m_site = battlegroup;
+        join->m_realmId.m_value.m_realm = id;
     } else {
-        join->m_exists = false;
+        join->m_realmId.m_exists = false;
     }
 
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629720/0x1402BBD40
@@ -696,34 +707,46 @@ void BattlenetLogin::GetLogonMethod() {
         return;
     }
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::RequestPassword;
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication* authentication = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = authentication->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RequestPassword;
 
-    Battlenet::Authentication::ModuleParam* param = message->m_params.New();
-    *param->Set<0, BSN::String<256>>() = this->m_password;
+    Battlenet::Event::AuthModule::Parameter* parameter = module->m_parameters.New();
+    *parameter->Set<0, BSN::String<256> >() = this->m_password;
 
     memset(this->m_password, 0, SStrLen(this->m_password));
     SMemFree(this->m_password, __FILE__, __LINE__, 0);
     this->m_password = NULL;
 
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629130/0x1402BB4A0
 void BattlenetLogin::Logoff() {
-    Battlenet::Event::Creep::Invoke invoke;
-    invoke.Set<9, Battlenet::Event::Creep::Logoff>();
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Service* service = invoke->Set<9, Battlenet::Event::Creep::Invoke::Service>();
+    service->Set<0, Battlenet::Event::Creep::Invoke::Service::Disconnect>();
 
     if (g_tumorManager) {
-        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
+
+    BattlenetApplication* application = this->m_application;
+
+    if (application->m_wowConnection) {
+        application->m_wowConnection->Disconnect();
+
+        SockAddrString address(application->m_wowConnection->m_connectAddress);
+        BattlenetLogin::LogConnectionStatus("Client initiated Disconnect from %s", address.m_str);
+    }
+
+    delete invoke;
 }
 
 // OFFSET: 0x00629200/0x1402BB5F0
@@ -733,73 +756,71 @@ Battlenet::TumorManager* BattlenetLogin::CreateTumorManager() {
     }
 
     const char* program = "WoW";
-
-    if (SFile::IsTrial()) {
-        program = "WoWS";
-    }
-
     Battlenet::Authentication::Settings settings;
 
-    if (settings.m_seedLength < 32) {
-        memset(&settings.m_seed[settings.m_seedLength], 0, 32 - settings.m_seedLength);
+    if (settings.m_seed.m_length < 32) {
+        memset(&settings.m_seed.m_data[settings.m_seed.m_length], 0, 32 - settings.m_seed.m_length);
     }
 
-    settings.m_seedLength = 32;
-    OsSecureRandom(settings.m_seed, 32);
+    settings.m_seed.m_length = 32;
+    OsSecureRandom(settings.m_seed.m_data, 32);
 
     settings.m_program = BSN::FourCC("WoW");
     settings.m_platform = BSN::FourCC("Win");
-    settings.m_locale.m_value = SFile::s_locale;
-    settings.m_systemLocale.m_value = SFile::s_locale;
+    settings.m_productLocale.m_value = SFile::s_locale;
+    settings.m_textLocale.m_value = SFile::s_locale;
+    settings.m_cacheOverridePath.m_exists = false;
 
     BattlenetLogin::LogConnectionStatus("Login program=%s platform=%s locale=%s", "WoW", "Win", s_localeCode);
+
+    if (GetInstallLocation() <= INSTALL_LOCATION_BETA) {
+        program = "WoWT";
+    }
 
     if (BattlenetLogin::s_monolithicComponent) {
         BattlenetLogin::s_monolithicComponent = false;
         SStrCopy(BattlenetLogin::s_monolithicPlatform, "Win", sizeof(BattlenetLogin::s_monolithicPlatform));
         SStrCopy(&BattlenetLogin::s_monolithicPlatform[1], &s_localeCode[1], 4);
 
-        Battlenet::Authentication::Component* component = settings.m_components.New();
-        component->m_program = BSN::FourCC(program);
-        component->m_platform = BSN::FourCC(BattlenetLogin::s_monolithicPlatform);
-        component->m_version = 12340;
+        Battlenet::Version::Record* record = settings.m_versions.New();
+        record->m_programId = BSN::FourCC(program);
+        record->m_component = BSN::FourCC(BattlenetLogin::s_monolithicPlatform);
+        record->m_version = 15595;
     } else {
-        Battlenet::Authentication::Component* component = settings.m_components.New();
-        component->m_program = BSN::FourCC(program);
-        component->m_platform = BSN::FourCC("Win");
-        component->m_version = 12340;
+        Battlenet::Version::Record* record = settings.m_versions.New();
+        record->m_programId = BSN::FourCC(program);
+        record->m_component = BSN::FourCC("Win");
+        record->m_version = 15595;
 
-        component = settings.m_components.New();
-        component->m_program = BSN::FourCC("WoW");
-        component->m_platform = BSN::FourCC("base");
-        component->m_version = GetWowDataVersion();
+        record = settings.m_versions.New();
+        record->m_programId = BSN::FourCC("WoW");
+        record->m_component = BSN::FourCC("base");
+        record->m_version = GetWowDataVersion();
 
         uint32_t localeCount = 0;
 
-        for (int32_t i = 0; i < 12; i++) {
+        for (int32_t i = 0; i < 15; i++) {
             if (g_hasIsoLocale[i]) {
-                component = settings.m_components.New();
-                component->m_program = BSN::FourCC("WoW");
+                record = settings.m_versions.New();
+                record->m_programId = BSN::FourCC("WoW");
 
                 const char* locale = g_localeNames[i];
-                component->m_platform = BSN::FourCC(locale);
+                record->m_component = BSN::FourCC(locale);
                 localeCount++;
-                component->m_version = GetWowLangVersion(locale);
+                record->m_version = GetWowLangVersion(locale);
             }
         }
 
         if (!localeCount) {
-            component = settings.m_components.New();
-            component->m_program = BSN::FourCC("WoW");
-
-            const char* locale = s_iniLocaleNames[s_locale];
-            component->m_platform = BSN::FourCC(locale);
-            component->m_version = GetWowLangVersion(locale);
+            record = settings.m_versions.New();
+            record->m_programId = BSN::FourCC("WoW");
+            record->m_component = BSN::FourCC(s_localeCode);
+            record->m_version = GetWowLangVersion(s_localeCode);
         }
 
-        component = settings.m_components.New();
-        component->m_program = BSN::FourCC("Tool");
-        component->m_platform = BSN::FourCC("Win");
+        record = settings.m_versions.New();
+        record->m_programId = BSN::FourCC("Tool");
+        record->m_component = BSN::FourCC("Win");
 
         uint32_t launcherVersion = 0;
         Blizzard::Version::FileVersion version;
@@ -808,21 +829,21 @@ Battlenet::TumorManager* BattlenetLogin::CreateTumorManager() {
             launcherVersion = version.m_revision;
         }
 
-        component->m_version = launcherVersion;
+        record->m_version = launcherVersion;
     }
 
     this->m_patchInstructionLock.Enter();
     this->m_patchInstructions.Clear();
     this->m_patchInstructionLock.Leave();
 
-    for (uint32_t i = 0; i < settings.m_components.m_count; i++) {
-        char componentProgram[5];
-        char componentPlatform[5];
+    for (uint32_t i = 0; i < settings.m_versions.m_count; i++) {
+        char recordProgram[5];
+        char recordComponent[5];
 
-        Battlenet::Authentication::Component& component = settings.m_components[i];
-        component.m_program.ToString(componentProgram, sizeof(componentProgram));
-        component.m_platform.ToString(componentPlatform, sizeof(componentPlatform));
-        BattlenetLogin::LogConnectionStatus("Component %s.%s.%d", componentProgram, componentPlatform, component.m_version);
+        Battlenet::Version::Record& record = settings.m_versions[i];
+        record.m_programId.ToString(recordProgram, sizeof(recordProgram));
+        record.m_component.ToString(recordComponent, sizeof(recordComponent));
+        BattlenetLogin::LogConnectionStatus("Component %s.%s.%d", recordProgram, recordComponent, record.m_version);
     }
 
     return Battlenet::TumorManager::Create(*this->m_application, settings);
@@ -836,10 +857,6 @@ void BattlenetLogin::EnterPIN(int32_t count, uint8_t* digits) {
 
     this->unk_105D[0] = 0;
 
-    if (static_cast<uint32_t>(count) > 10) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     char pin[12];
 
     for (int32_t i = 0; i < count; i++) {
@@ -848,135 +865,124 @@ void BattlenetLogin::EnterPIN(int32_t count, uint8_t* digits) {
 
     pin[count] = '\0';
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::RequestVirtualKeypadPIN;
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RequestVirtualKeypadPIN;
+    *module->m_parameters.New()->Set<0, BSN::String<256> >() = pin;
 
-    Battlenet::Authentication::ModuleParam* param = message->m_params.New();
-    *param->Set<0, BSN::String<256>>() = pin;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629BB0/0x1402BC450
 void BattlenetLogin::EnterMatrix(uint8_t value) {
-    if (!this->m_matrixEnabled) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::EnterMatrixCard;
+    *module->m_parameters.New()->Set<1, uint32_t>() = value;
+
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::EnterMatrixCard;
-
-    Battlenet::Authentication::ModuleParam* param = message->m_params.New();
-    *param->Set<1, uint32_t>() = value;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629CA0/0x1402BC630
 void BattlenetLogin::RevertMatrix() {
-    if (!this->m_matrixEnabled) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RevertMatrixCard;
+
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::RevertMatrixCard;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629D70/0x1402BC7E0
 void BattlenetLogin::CommitMatrix() {
-    if (!this->m_matrixEnabled) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::CommitMatrixCard;
+
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::CommitMatrixCard;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629E40/0x1402BC990
 void BattlenetLogin::FinalizeMatrix() {
-    if (!this->m_matrixEnabled) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     this->m_matrixEnabled = false;
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::FinalizeMatrixCard;
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::FinalizeMatrixCard;
 
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x00629F20/0x1402BCB40
 void BattlenetLogin::EnterToken(const char* token) {
-    if (!this->m_tokenRequired) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     this->m_tokenRequired = false;
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::RequestToken;
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RequestToken;
+    *module->m_parameters.New()->Set<0, BSN::String<256> >() = token;
 
-    Battlenet::Authentication::ModuleParam* param = message->m_params.New();
-    *param->Set<0, BSN::String<256>>() = token;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x0062A050/0x1402BCD50
 void BattlenetLogin::SendSurveyInfoToModule() {
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RequestSurveyInfo;
+    *module->m_parameters.New()->Set<0, BSN::String<256> >() = "WoW";
+    *module->m_parameters.New()->Set<1, uint32_t>() = SFile::s_locale;
 
-    SErrDisplayAppFatalMessage("", "", 0);
+    uint32_t desktopWidth = 0;
+    uint32_t desktopHeight = 0;
+    uint32_t desktopBpp = 0;
+    uint32_t width = 0;
+    uint32_t height = 0;
+    uint32_t bpp = 0;
+
+    if (g_theGxDevicePtr) {
+        g_theGxDevicePtr->GetSurveyModeInfo(desktopWidth, desktopHeight, desktopBpp, width, height, bpp);
+    }
+
+    char info[256];
+    SStrPrintf(info, sizeof(info), "%u,%u,%u,%u,%u,%u", desktopWidth, desktopHeight, desktopBpp, width, height, bpp);
+    *module->m_parameters.New()->Set<0, BSN::String<256> >() = info;
+
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
+    }
+
+    delete invoke;
 }
 
 // OFFSET: 0x0062A250/0x1402BD0A0
@@ -985,28 +991,24 @@ bool BattlenetLogin::SetGameAccount(uint32_t index) {
         return false;
     }
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-    message->m_moduleId = this->m_moduleId;
-    message->m_name = Battlenet::Event::AuthModule::RequestGameAccount;
+    SStrCopy(this->m_accountName, this->m_gameAccounts.m_data[index].m_name, sizeof(this->m_accountName));
 
-    GameAccount& account = this->m_gameAccounts.m_data[index];
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+    Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+    module->m_token = this->m_moduleId;
+    module->m_function = Battlenet::Event::AuthModule::RequestGameAccount;
+    *module->m_parameters.New()->Set<1, uint32_t>() = this->m_gameAccounts.m_data[index].m_region;
+    *module->m_parameters.New()->Set<0, BSN::String<256> >() = this->m_gameAccounts.m_data[index].m_name;
 
-    Battlenet::Authentication::ModuleParam* param = message->m_params.New();
-    *param->Set<1, uint32_t>() = account.m_region;
-
-    param = message->m_params.New();
-    *param->Set<0, BSN::String<256>>() = account.m_name;
-
-    if (!g_tumorManager) {
-        SErrDisplayAppFatalMessage("", "", 0);
+    if (g_tumorManager) {
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
+        this->m_gameAccountSelected = 1;
+        delete invoke;
+        return true;
     }
 
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
-    this->m_gameAccountSelected = 1;
-
-    return true;
+    delete invoke;
+    return false;
 }
 
 // OFFSET: 0x00629890/0x1402BBF30
@@ -1037,21 +1039,20 @@ void BattlenetLogin::Logon(const char* loginServer, const char* portal) {
     this->m_logonResult = 0;
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_CONNECTING, LOGIN_OK, NULL, 0);
 
+    Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+
     if (portal && *portal) {
-        Battlenet::Event::Creep::Invoke invoke;
-        Battlenet::Event::Creep::Portal* request = invoke.Set<12, Battlenet::Event::Creep::Portal>();
-        *request->Set<0, BSN::AsciiString<31>>() = portal;
-        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+        invoke->Set<12, Battlenet::Event::Creep::Invoke::DarkPortal>()->Set<0, Battlenet::Event::Creep::Invoke::DarkPortal::Select>()->m_name = portal;
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
     }
 
     this->m_gameAccountSelected = 0;
 
-    Battlenet::Event::Creep::Invoke invoke;
-    Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-    BSN::AsciiString<320>* accountName = authentication->Set<1, BSN::AsciiString<320>>();
-    SStrLower(this->m_username);
-    *accountName = this->m_username;
-    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+    Battlenet::Event::Creep::Invoke::Authentication::Logon* logon = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<1, Battlenet::Event::Creep::Invoke::Authentication::Logon>();
+    _strlwr(this->m_username);
+    logon->m_mail = this->m_username;
+    g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
+    delete invoke;
 }
 
 // OFFSET: 0x0062A4C0/0x1402BD320
@@ -1068,12 +1069,12 @@ void BattlenetLogin::QueueEvent(BN_EVENT_ID id, void* data, int32_t size) {
 
 // OFFSET: #0x008C8730
 void BattlenetApplication::WCConnected(WowConnection* connection, WowConnection* inbound, uint32_t timeStamp, const NETCONNADDR* addr) {
-    this->m_localAddress.m_address[0] = addr->selfAddr.data[4];
-    this->m_localAddress.m_address[1] = addr->selfAddr.data[5];
-    this->m_localAddress.m_address[2] = addr->selfAddr.data[6];
-    this->m_localAddress.m_address[3] = addr->selfAddr.data[7];
-    this->m_localAddress.m_port[0] = addr->selfAddr.data[2];
-    this->m_localAddress.m_port[1] = addr->selfAddr.data[3];
+    this->m_localAddress.m_address.m_data[0] = addr->selfAddr.data[4];
+    this->m_localAddress.m_address.m_data[1] = addr->selfAddr.data[5];
+    this->m_localAddress.m_address.m_data[2] = addr->selfAddr.data[6];
+    this->m_localAddress.m_address.m_data[3] = addr->selfAddr.data[7];
+    this->m_localAddress.m_port.m_data[0] = addr->selfAddr.data[2];
+    this->m_localAddress.m_port.m_data[1] = addr->selfAddr.data[3];
 
     if (!this->m_login) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1108,7 +1109,7 @@ void BattlenetApplication::WCDisconnected(WowConnection* connection, uint32_t ti
 }
 
 // OFFSET: 0x0062A860
-void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, uint32_t id, const Battlenet::Realm::Info* info, uint8_t flags, bool remove) {
+void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, uint32_t id, const Battlenet::WoWRealm::RealmInfo* info, uint8_t flags, bool remove) {
     this->m_realmLock.Enter();
 
     REALM_INFO* realm = NULL;
@@ -1144,10 +1145,13 @@ void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, 
     }
 
     realm->m_type = info->m_type;
-    realm->m_otherFlags = info->m_otherFlags;
+    realm->m_otherFlags = info->m_stateFlags;
     realm->m_flags = flags;
     SStrCopy(realm->m_realmName, info->m_name.m_data, sizeof(realm->m_realmName));
-    SStrCopy(realm->m_realmAddress, "0.0.0.0", sizeof(realm->m_realmAddress));
+    realm->m_addresses[0].Clear();
+    realm->m_addresses[1].Clear();
+    realm->m_ports[0] = 0;
+    realm->m_ports[1] = 0;
     realm->m_population = info->m_population;
     realm->m_numCharacters = this->GetCharacterCount(region, battlegroup, id);
     realm->m_category = info->m_category;
@@ -1155,7 +1159,7 @@ void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, 
     realm->m_battlegroupId = battlegroup;
     realm->m_realmId = id;
 
-    if (!info->m_build.m_exists) {
+    if (!info->m_privilegedData.m_exists) {
         realm->m_build = 0;
         realm->m_versionMajor = 0;
         realm->m_versionMinor = 0;
@@ -1165,49 +1169,53 @@ void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, 
         return;
     }
 
-    realm->m_build = info->m_build.Get().m_build;
-    realm->m_versionMajor = SStrToInt(info->m_build.Get().m_version.m_data);
+    const Battlenet::WoWRealm::RealmInfo::__subtypeof_m_privilegedData& privileged = info->m_privilegedData.m_value;
+    realm->m_build = privileged.m_configId;
+    realm->m_versionMajor = SStrToInt(privileged.m_version.m_data);
 
-    const char* cursor = SStrChr(info->m_build.Get().m_version.m_data, '.');
+    const char* cursor = strchr(privileged.m_version.m_data, '.');
 
     if (cursor) {
         cursor++;
         realm->m_versionMinor = SStrToInt(cursor);
-        cursor = SStrChr(cursor, '.');
+        cursor = strchr(cursor, '.');
 
         if (cursor) {
             cursor++;
             realm->m_versionRevision = SStrToInt(cursor);
-            cursor = SStrChr(cursor, '.');
+            cursor = strchr(cursor, '.');
 
             if (cursor) {
-                realm->m_versionBuild = SStrToInt(cursor + 1);
                 realm->m_flags |= 0x4;
+                realm->m_versionBuild = SStrToInt(cursor + 1);
             }
         }
     }
 
-    const Battlenet::IP4::AddressPort& address = info->m_build.Get().m_address;
-    SStrPrintf(realm->m_realmAddress, sizeof(realm->m_realmAddress), "%u.%u.%u.%u:%u", address.m_address[0], address.m_address[1], address.m_address[2], address.m_address[3], address.m_port[1] + (address.m_port[0] << 8));
+    realm->m_addresses[0].Clear();
+    realm->m_addresses[1].Clear();
+    realm->m_ports[0] = 0;
+    realm->m_ports[1] = 0;
+    realm->m_ports[0] = privileged.m_address.m_port.m_data[1] + (privileged.m_address.m_port.m_data[0] << 8);
+    realm->m_addresses[0].m_type = SOCKADDR_IPV4;
+    realm->m_addresses[0].m_ipv4 = *reinterpret_cast<const uint32_t*>(privileged.m_address.m_address.m_data);
 
     this->m_realmLock.Leave();
 }
 
 // OFFSET: 0x0062ABE0/0x1402BDBF0
 void BattlenetLogin::GetRealmList() {
-    if (this->m_realmListRequested) {
+    if (this->m_realmListState == 3) {
         this->QueueEvent(BN_EVENT_REALM_LIST, NULL, 0);
+    } else if (this->m_realmListState) {
+        this->QueueEvent(BN_EVENT_RECONNECTED, NULL, 0);
     } else if (g_tumorManager && this->IsLoggedOn()) {
-        this->m_realmListRequested = true;
+        this->m_realmListState = 1;
 
-        Battlenet::Event::Creep::Invoke invoke;
-        Battlenet::Realm::Request* request = invoke.Set<6, Battlenet::Realm::Request>();
-        Battlenet::Realm::ListRequest* list = request->Set<0, Battlenet::Realm::ListRequest>();
-        list->m_subscribe = true;
-        list->unk_0004 = 0;
-        list->unk_0008 = 0;
-
-        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+        Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+        invoke->Set<6, Battlenet::Event::Creep::Invoke::WoW>()->Set<0, Battlenet::Event::Creep::Invoke::WoW::RequestRealmList>()->m_on = true;
+        g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
+        delete invoke;
     }
 }
 
@@ -1223,7 +1231,7 @@ BattlenetLogin::BattlenetLogin() {
     this->m_realms.Clear();
     this->m_realmLock.Leave();
 
-    this->m_realmListRequested = false;
+    this->m_realmListState = 0;
     this->m_joinRealmId = 0;
 
     this->m_eventLock.Enter();
@@ -1235,6 +1243,7 @@ BattlenetLogin::BattlenetLogin() {
 
     this->m_gameAccountLock.Enter();
     this->m_gameAccounts.Clear();
+    memset(this->m_accountName, 0, sizeof(this->m_accountName));
     this->m_gameAccountLock.Leave();
 
     this->m_gameAccountSelected = 0;
@@ -1247,6 +1256,11 @@ BattlenetLogin::BattlenetLogin() {
     this->m_accountFlags2 = 0;
     this->m_surveyPending = false;
     this->m_surveyTime = 0;
+    this->m_outOfBandType = 0;
+    this->m_outOfBandTimeout = 0;
+    this->m_outOfBandTitle = NULL;
+    this->m_outOfBandText = NULL;
+    this->m_outOfBandStart = 0;
 }
 
 // OFFSET: 0x0062AED0/0x1402BE010
@@ -1262,7 +1276,7 @@ void BattlenetLogin::DestroyTumorManager() {
     this->m_realms.Clear();
     this->m_realmLock.Leave();
 
-    this->m_realmListRequested = false;
+    this->m_realmListState = 0;
 
     this->m_gameAccountLock.Enter();
     this->m_gameAccounts.Clear();
@@ -1277,11 +1291,12 @@ void BattlenetLogin::DestroyTumorManager() {
 
 // OFFSET: 0x0062B010/0x1402BE1F0
 void BattlenetLogin::Init(LoginResponse* loginResponse) {
+    this->m_loginResponse = loginResponse;
+
     if (!loginResponse) {
-        SErrDisplayAppFatalMessage("", "", 0);
+        return;
     }
 
-    this->m_loginResponse = loginResponse;
     this->m_logonResult = 0;
     this->m_serviceState = 4;
 
@@ -1296,6 +1311,7 @@ void BattlenetLogin::Init(LoginResponse* loginResponse) {
 
     this->m_gameAccountLock.Enter();
     this->m_gameAccounts.Clear();
+    memset(this->m_accountName, 0, sizeof(this->m_accountName));
     this->m_gameAccountLock.Leave();
 
     this->m_gameAccountSelected = 0;
@@ -1303,6 +1319,13 @@ void BattlenetLogin::Init(LoginResponse* loginResponse) {
     this->m_realmCharacterCountCount = 0;
     this->m_surveyPending = false;
     this->m_surveyTime = 0;
+    this->m_outOfBandType = 0;
+    this->m_outOfBandTimeout = 0;
+    this->m_outOfBandStart = 0;
+    SMemFree(this->m_outOfBandTitle, __FILE__, __LINE__, 0);
+    this->m_outOfBandTitle = NULL;
+    SMemFree(this->m_outOfBandText, __FILE__, __LINE__, 0);
+    this->m_outOfBandText = NULL;
 
     Battlenet::Initialize(s_battlenetAllocator);
 
@@ -1397,60 +1420,68 @@ void BattlenetLogin::HandleDisconnectEvents(uint32_t index) {
 // OFFSET: 0x0062B3A0/0x1402BE660
 void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke) {
     if (invoke->m_tag == 0) {
-        if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 0) {
-            const Battlenet::Authentication::ModuleRequest& request = invoke->Get<0, Battlenet::Authentication::Response>().Get<0, Battlenet::Authentication::ModuleRequest>();
+        const Battlenet::Event::Larva::Invoke::Authentication& authentication = invoke->Value<Battlenet::Event::Larva::Invoke::Authentication>();
 
-            if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestPassword.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+        if (authentication.m_tag == 0) {
+            const Battlenet::Event::Larva::Invoke::Authentication::Module& module = authentication.Value<Battlenet::Event::Larva::Invoke::Authentication::Module>();
+
+            if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestPassword.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->GetLogonMethod();
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestToken.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
-                this->SetTokenInfo(true, request.m_params[0].Get<1, uint32_t>());
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestMatrixCard.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
-                const char* challenges = request.m_params[1].Get<0, BSN::String<256>>().m_data;
-                const char* info = request.m_params[0].Get<0, BSN::String<256>>().m_data;
-                this->SetAuthModuleMatrixInfo(info, challenges);
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestVirtualKeypadPIN.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
-                this->SetAuthModulePinInfo(request.m_params[0].Get<0, BSN::String<256>>().m_data);
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::ClearGameAccounts.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestToken.m_data)) {
+                this->m_moduleId = module.m_token;
+                this->SetTokenInfo(true, module.m_parameters[0].Value<uint32_t>());
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestMatrixCard.m_data)) {
+                this->m_moduleId = module.m_token;
+                this->SetAuthModuleMatrixInfo(module.m_parameters[0].Value<BSN::String<256> >().m_data, module.m_parameters[1].Value<BSN::String<256> >().m_data);
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestVirtualKeypadPIN.m_data)) {
+                this->m_moduleId = module.m_token;
+                this->SetAuthModulePinInfo(module.m_parameters[0].Value<BSN::String<256> >().m_data);
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::ClearGameAccounts.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->m_gameAccountLock.Enter();
                 this->m_gameAccounts.Clear();
                 this->m_gameAccountLock.Leave();
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::AddGameAccount.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::AddGameAccount.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->m_gameAccountLock.Enter();
 
                 GameAccount* account = this->m_gameAccounts.New();
-                account->m_region = request.m_params[0].Get<1, uint32_t>();
-                SStrCopy(account->m_name, request.m_params[1].Get<0, BSN::String<256>>().m_data, sizeof(account->m_name));
+                account->m_region = module.m_parameters[0].Value<uint32_t>();
+                SStrCopy(account->m_name, module.m_parameters[1].Value<BSN::String<256> >().m_data, sizeof(account->m_name));
 
                 this->m_gameAccountLock.Leave();
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestGameAccount.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestGameAccount.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->QueueEvent(BN_EVENT_GAME_ACCOUNTS_UPDATED, NULL, 0);
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestSurveyInfo.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::RequestSurveyInfo.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->QueueEvent(BN_EVENT_SEND_SURVEY_INFO, NULL, 0);
-            } else if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::ShowSurveyDialog.m_data, STORM_MAX_STR)) {
-                this->m_moduleId = request.m_moduleId;
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::ShowSurveyDialog.m_data)) {
+                this->m_moduleId = module.m_token;
                 this->QueueEvent(BN_EVENT_SHOW_SURVEY, NULL, 0);
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::DisplayOutOfBandChallenge.m_data)) {
+                this->SetAuthModuleOutOfBandInfo(module.m_parameters[0].Value<uint32_t>(), module.m_parameters[1].Value<BSN::String<256> >().m_data, module.m_parameters[2].Value<BSN::String<256> >().m_data, module.m_parameters[3].Value<uint32_t>());
+                this->m_moduleId = module.m_token;
+                this->QueueEvent(BN_EVENT_OUTOFBAND_CHALLENGE, NULL, 0);
+            } else if (!_stricmp(module.m_function.m_data, Battlenet::Event::AuthModule::DismissOutOfBandChallenge.m_data)) {
+                this->QueueEvent(BN_EVENT_OUTOFBAND_DISMISS, NULL, 0);
             }
-        } else if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 1) {
+        } else if (authentication.m_tag == 1) {
             if (this->m_serviceState == 6) {
                 this->m_application->LogLevel("Ignoring Authentication Success invoke while in Service::RECOVERED state.", 4);
             } else {
-                const Battlenet::Authentication::Complete& complete = invoke->Get<0, Battlenet::Authentication::Response>().Get<1, Battlenet::Authentication::Complete>();
-                SStrCopy(this->m_username, complete.m_accountName.m_data, STORM_MAX_STR);
-                this->m_accountFlags = complete.m_accountFlags;
-                this->m_accountFlags2 = complete.m_accountFlags2;
-                this->LogonResultBN(0);
+                const Battlenet::Event::Larva::Invoke::Authentication::Success& success = authentication.Value<Battlenet::Event::Larva::Invoke::Authentication::Success>();
+                strcpy(this->m_username, success.m_gameAccountName.m_data);
+                this->m_accountFlags = static_cast<uint32_t>(success.m_gameAccountFlags);
+                this->m_accountFlags2 = static_cast<uint32_t>(success.m_gameAccountFlags >> 32);
+                this->m_logonResult = 0;
+                this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_AUTHENTICATED, LOGIN_OK, NULL, 0);
+                this->m_surveyPending = false;
             }
-        } else if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 2 && this->m_serviceState != 5) {
+        } else if (authentication.m_tag == 2 && this->m_serviceState != 5) {
             char text[64];
-            const Battlenet::Authentication::Failure& failure = invoke->Get<0, Battlenet::Authentication::Response>().Get<2, Battlenet::Authentication::Failure>();
+            const Battlenet::Event::Larva::Invoke::Authentication::Failure& failure = authentication.Value<Battlenet::Event::Larva::Invoke::Authentication::Failure>();
 
             SStrPrintf(text, 63, "Battle.net Authentication failure code: %d", failure.m_error);
             ConsoleWrite(text, DEFAULT_COLOR);
@@ -1464,15 +1495,16 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
             }
         }
     } else if (invoke->m_tag == 1) {
-        this->m_serviceState = invoke->Value<Battlenet::Service::State>().m_tag;
+        const Battlenet::Event::Larva::Invoke::Service& service = invoke->Value<Battlenet::Event::Larva::Invoke::Service>();
+        this->m_serviceState = service.m_tag;
 
-        switch (invoke->Value<Battlenet::Service::State>().m_tag) {
+        switch (service.m_tag) {
             case 2:
                 this->QueueEvent(BN_EVENT_SERVICE_FAILED, NULL, 0);
                 break;
 
             case 3:
-                if (!invoke->Get<1, Battlenet::Service::State>().Get<3, uint32_t>()) {
+                if (!service.Value<Battlenet::Event::Larva::Invoke::Service::FloodingError>().m_depth) {
                     this->m_serviceState = 6;
                 }
 
@@ -1495,25 +1527,27 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
                 break;
         }
     } else if (invoke->m_tag == 9) {
-        if (invoke->Value<Battlenet::Realm::Response>().m_tag == 0) {
-            int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<0, Battlenet::Realm::Update>().m_info.m_tag;
+        const Battlenet::Event::Larva::Invoke::WoW& wow = invoke->Value<Battlenet::Event::Larva::Invoke::WoW>();
 
-            if (tag == 0) {
-                const Battlenet::Realm::Update& update = invoke->Get<9, Battlenet::Realm::Response>().Get<0, Battlenet::Realm::Update>();
-                this->UpdateRealmListData(update.m_region, update.m_battlegroup, update.m_id, &update.m_info.Get<0, Battlenet::Realm::Info>(), update.m_info.Get<0, Battlenet::Realm::Info>().m_flags, false);
-            } else if (tag == 1) {
-                const Battlenet::Realm::Update& update = invoke->Get<9, Battlenet::Realm::Response>().Get<0, Battlenet::Realm::Update>();
-                this->UpdateRealmListData(update.m_region, update.m_battlegroup, update.m_id, NULL, 0, true);
+        if (wow.m_tag == 0) {
+            const Battlenet::Event::Larva::Invoke::WoW::RealmUpdate& update = wow.Value<Battlenet::Event::Larva::Invoke::WoW::RealmUpdate>();
+
+            if (update.m_result.m_tag == 0) {
+                const Battlenet::WoWRealm::RealmInfo& info = update.m_result.Value<Battlenet::Event::Larva::Invoke::WoW::RealmUpdate::Result::Update>().m_info;
+                this->UpdateRealmListData(update.m_id.m_region, update.m_id.m_site, update.m_id.m_realm, &info, info.m_infoFlags, false);
+            } else if (update.m_result.m_tag == 1) {
+                this->UpdateRealmListData(update.m_id.m_region, update.m_id.m_site, update.m_id.m_realm, NULL, 0, true);
             }
-        } else if (invoke->Value<Battlenet::Realm::Response>().m_tag == 1) {
-            int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<1, Battlenet::Realm::List>().m_tag;
+        } else if (wow.m_tag == 1) {
+            const Battlenet::Event::Larva::Invoke::WoW::RealmList::Result& result = wow.Value<Battlenet::Event::Larva::Invoke::WoW::RealmList>().m_result;
 
-            if (tag == 0) {
+            if (result.m_tag == 0) {
                 this->m_realmLock.Enter();
                 this->m_realms.Clear();
-                this->m_realmListRequested = true;
+                this->m_realmListState = 2;
 
-                uint32_t count = invoke->Get<9, Battlenet::Realm::Response>().Get<1, Battlenet::Realm::List>().Get<0, BSN::Array<Battlenet::Realm::CharacterCount, 64>>().m_count;
+                const BSN::Array<Battlenet::WoWRealm::ToonCountEntry, 64>& counts = result.Value<Battlenet::Event::Larva::Invoke::WoW::RealmList::Result::Start>().m_toonCounts;
+                uint32_t count = counts.m_count;
                 this->m_realmCharacterCountCount = count;
 
                 if (count >= 64) {
@@ -1524,34 +1558,64 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
 
                 if (this->m_realmCharacterCounts) {
                     for (uint32_t i = 0; i < this->m_realmCharacterCountCount; i++) {
-                        const Battlenet::Realm::CharacterCount& characterCount = invoke->Get<9, Battlenet::Realm::Response>().Get<1, Battlenet::Realm::List>().Get<0, BSN::Array<Battlenet::Realm::CharacterCount, 64>>()[i];
-                        this->m_realmCharacterCounts[i].m_region = characterCount.m_region;
-                        this->m_realmCharacterCounts[i].m_battlegroup = characterCount.m_battlegroup;
-                        this->m_realmCharacterCounts[i].m_id = characterCount.m_id;
-                        this->m_realmCharacterCounts[i].m_count = characterCount.m_count;
+                        this->m_realmCharacterCounts[i].m_region = counts.m_data[i].m_id.m_region;
+                        this->m_realmCharacterCounts[i].m_battlegroup = counts.m_data[i].m_id.m_site;
+                        this->m_realmCharacterCounts[i].m_id = counts.m_data[i].m_id.m_realm;
+                        this->m_realmCharacterCounts[i].m_count = counts.m_data[i].m_count;
                     }
                 }
 
                 this->m_realmLock.Leave();
-            } else if (tag == 1) {
+            } else if (result.m_tag == 1) {
+                this->m_realmListState = 3;
                 this->QueueEvent(BN_EVENT_REALM_LIST, NULL, 0);
+            } else if (result.m_tag == 2) {
+                this->m_realmListState = 0;
             }
-        } else if (invoke->Value<Battlenet::Realm::Response>().m_tag == 2) {
-            int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<2, Battlenet::Realm::JoinResponse>().m_tag;
+        } else if (wow.m_tag == 2) {
+            const Battlenet::Event::Larva::Invoke::WoW::JoinResponse::Result& result = wow.Value<Battlenet::Event::Larva::Invoke::WoW::JoinResponse>().m_result;
 
-            if (tag == 0) {
-                const Battlenet::Realm::JoinInfo& join = invoke->Get<9, Battlenet::Realm::Response>().Get<2, Battlenet::Realm::JoinResponse>().Get<0, Battlenet::Realm::JoinInfo>();
+            if (result.m_tag == 0) {
+                const Battlenet::Event::Larva::Invoke::WoW::JoinResponse::Result::Success& success = result.Value<Battlenet::Event::Larva::Invoke::WoW::JoinResponse::Result::Success>();
 
                 for (uint32_t i = 0; i < 40; i++) {
-                    this->m_sessionKey[i] = join.m_sessionKey[i];
+                    this->m_sessionKey[i] = success.m_sessionKey.m_data[i];
                 }
 
-                uint16_t port = (join.m_address.m_port[0] << 8) | join.m_address.m_port[1];
-                uint32_t address = (((((join.m_address.m_address[0] << 8) | join.m_address.m_address[1]) << 8) | join.m_address.m_address[2]) << 8) | join.m_address.m_address[3];
-                this->m_loginResponse->JoinRealmResult(this->m_joinRealmId, address, port, 0, 0);
-            } else if (tag == 1) {
-                uint32_t error = invoke->Get<9, Battlenet::Realm::Response>().Get<2, Battlenet::Realm::JoinResponse>().Get<1, uint32_t>();
-                this->m_loginResponse->JoinRealmResult(0, 0, 0, 0, error);
+                SockAddr ipv4Addresses[16];
+                uint16_t ipv4Ports[16];
+
+                for (uint32_t i = 0; i < success.m_addresses.m_v4.m_count; i++) {
+                    const Battlenet::IP4::AddressPort& address = success.m_addresses.m_v4.m_data[i];
+                    ipv4Addresses[i].m_ipv4 = *reinterpret_cast<const uint32_t*>(address.m_address.m_data);
+                    ipv4Addresses[i].m_type = SOCKADDR_IPV4;
+                    ipv4Ports[i] = address.m_port.m_data[1] | (address.m_port.m_data[0] << 8);
+                }
+
+                REALM_ADDRESS_LIST lists[2];
+                lists[0].m_type = SOCKADDR_IPV4;
+                lists[0].m_count = success.m_addresses.m_v4.m_count;
+                lists[0].m_addresses = ipv4Addresses;
+                lists[0].m_ports = ipv4Ports;
+
+                SockAddr ipv6Addresses[16];
+                uint16_t ipv6Ports[16];
+
+                for (uint32_t i = 0; i < success.m_addresses.m_v6.m_count; i++) {
+                    const Battlenet::IP6::AddressPort& address = success.m_addresses.m_v6.m_data[i];
+                    memcpy(ipv6Addresses[i].m_ipv6, address.m_address.m_data, sizeof(ipv6Addresses[i].m_ipv6));
+                    ipv6Ports[i] = address.m_port.m_data[1] | (address.m_port.m_data[0] << 8);
+                    ipv6Addresses[i].m_type = SOCKADDR_IPV6;
+                }
+
+                lists[1].m_type = SOCKADDR_IPV6;
+                lists[1].m_count = success.m_addresses.m_v6.m_count;
+                lists[1].m_addresses = ipv6Addresses;
+                lists[1].m_ports = ipv6Ports;
+
+                this->m_loginResponse->JoinRealmResult(this->m_joinRealmId, lists, 2, 0, 0);
+            } else if (result.m_tag == 1) {
+                this->m_loginResponse->JoinRealmResult(0, NULL, 0, 0, result.Value<Battlenet::Event::Larva::Invoke::WoW::JoinResponse::Result::Failure>().m_reasonCode);
             }
         }
     }
@@ -1588,6 +1652,8 @@ BattlenetLogin::~BattlenetLogin() {
     delete[] this->m_realmCharacterCounts;
 
     this->m_realmCharacterCounts = NULL;
+    SMemFree(this->m_outOfBandTitle, __FILE__, __LINE__, 0);
+    SMemFree(this->m_outOfBandText, __FILE__, __LINE__, 0);
 
     Battlenet::Teardown();
 }
@@ -1621,18 +1687,22 @@ void BattlenetLogin::EventQueueUpdate() {
                 break;
 
             case BN_EVENT_DATA: {
-                if (!g_tumorManager) {
-                    SErrDisplayAppFatalMessage("", "", 0);
+                uint32_t used = 0;
+
+                if (g_tumorManager) {
+                    Battlenet::SystemClient& client = g_tumorManager->m_tumor;
+                    client.Recv(this->m_application->m_connection, event->m_data, event->m_size, used);
                 }
 
-                uint32_t used;
-                Battlenet::SystemClient& client = g_tumorManager->m_tumor;
-                client.Recv(this->m_application->m_connection, event->m_data, event->m_size, used);
                 break;
             }
 
             case BN_EVENT_REALM_LIST:
                 this->BuildRealmListResult();
+                break;
+
+            case BN_EVENT_REALM_LIST_EMPTY:
+                this->BuildEmptyRealmListResult();
                 break;
 
             case BN_EVENT_RECONNECTED:
@@ -1664,9 +1734,17 @@ void BattlenetLogin::EventQueueUpdate() {
 
             case BN_EVENT_SEND_SURVEY_INFO:
                 this->SendSurveyInfoToModule();
+                break;
 
-            default:
-                SErrDisplayAppFatalMessage("", "", 0);
+            case BN_EVENT_OUTOFBAND_CHALLENGE:
+                this->m_outOfBandStart = OsGetAsyncTimeMs();
+                this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_OUTOFBAND_CHALLENGE, LOGIN_OK, NULL, 0);
+                break;
+
+            case BN_EVENT_OUTOFBAND_DISMISS:
+                this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_CONNECTING, LOGIN_OK, NULL, 0);
+                this->ClearAuthModuleOutOfBandInfo();
+                break;
         }
 
         free(event->m_data);
@@ -1677,14 +1755,14 @@ void BattlenetLogin::EventQueueUpdate() {
 
 // OFFSET: 0x0062C080/0x1402BF580
 void BattlenetApplication::RecvEvent(const Battlenet::Event::Header& header, const BSN::EncodedObject* data) {
-    if (header.m_eventType == 5) {
-        BSN::BSNEncodedObject<Battlenet::Event::Larva::Invoke, Protocol> invoke;
-        invoke.WalkAndGet(data);
-        this->m_login->HandleInvoke(&invoke.m_data);
-    } else if (header.m_eventType == 1) {
-        BSN::BSNEncodedObject<Battlenet::Event::Update::Invoke, Protocol> invoke;
-        invoke.WalkAndGet(data);
-        this->m_login->HandleUpdateInvoke(&invoke.m_data);
+    if (header.m_id == 5) {
+        static BSN::BSNEncodedObject<Battlenet::Event::Larva::Invoke, Protocol> s_larvaInvoke;
+        s_larvaInvoke.WalkAndGet(data);
+        this->m_login->HandleInvoke(&s_larvaInvoke.m_data);
+    } else if (header.m_id == 1) {
+        static BSN::BSNEncodedObject<Battlenet::Event::Update::Invoke, Protocol> s_updateInvoke;
+        s_updateInvoke.WalkAndGet(data);
+        this->m_login->HandleUpdateInvoke(&s_updateInvoke.m_data);
     }
 }
 
@@ -1702,12 +1780,12 @@ void BattlenetLogin::Update() {
         FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
 
         if (g_tumorManager) {
-            Battlenet::Event::Creep::Invoke invoke;
-            Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
-            Battlenet::Authentication::ModuleMessage* message = authentication->Set<2, Battlenet::Authentication::ModuleMessage>();
-            message->m_moduleId = this->m_moduleId;
-            message->m_name = Battlenet::Event::AuthModule::SurveyDialogComplete;
-            g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
+            Battlenet::Event::Creep::Invoke* invoke = new (__FILE__, __LINE__) Battlenet::Event::Creep::Invoke();
+            Battlenet::Event::Creep::Invoke::Authentication::Module* module = invoke->Set<0, Battlenet::Event::Creep::Invoke::Authentication>()->Set<2, Battlenet::Event::Creep::Invoke::Authentication::Module>();
+            module->m_token = this->m_moduleId;
+            module->m_function = Battlenet::Event::AuthModule::SurveyDialogComplete;
+            g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, *invoke);
+            delete invoke;
         }
     }
 }
@@ -1745,12 +1823,9 @@ bool BattlenetLogin::IsGMAccount() {
     return (this->m_accountFlags & 0x1) != 0;
 }
 
+// PROVEN: 8dd2d732 IDENTICAL/NONE
 // OFFSET: 0x006278D0/0x1402B99F0
 bool BattlenetLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* minDigits, uint32_t* maxDigits, bool* flipCoords, uint32_t* challengeCount) {
-    if (!width || !height || !minDigits || !maxDigits || !challengeCount || !flipCoords) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     if (!this->m_matrixEnabled) {
         return false;
     }
@@ -1764,13 +1839,9 @@ bool BattlenetLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* 
     return true;
 }
 
+// PROVEN: ead726c1 IDENTICAL/NONE
 // OFFSET: 0x00627930/0x1402B9A50
 bool BattlenetLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t* y) {
-    if (!x || !y) {
-        SErrDisplayAppFatalMessage("", "", 0);
-        return false;
-    }
-
     if (!this->m_matrixEnabled || !this->m_matrixData || index >= this->m_matrixChallengeCount) {
         return false;
     }
@@ -1778,12 +1849,6 @@ bool BattlenetLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t*
     uint32_t coordinate = this->m_matrixData[index];
     *x = coordinate % this->m_matrixWidth;
     *y = coordinate / this->m_matrixWidth;
-
-    if (*y >= this->m_matrixHeight) {
-        SErrDisplayAppFatalMessage("", "", 0);
-        return false;
-    }
-
     return true;
 }
 

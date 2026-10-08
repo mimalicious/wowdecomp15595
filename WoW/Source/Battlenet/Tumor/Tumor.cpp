@@ -3,37 +3,15 @@
 #include <new>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x009BFF90
+// OFFSET: 0x00660860/0x140305E00
 Battlenet::Tumor::Tumor(Application& application) {
     this->m_application = &application;
     this->m_nextTendrilId = 1;
-
-    for (int32_t i = 0; i < 20; i++) {
-        this->m_eventBindings[i].m_subscriber = NULL;
-        this->m_eventBindings[i].m_active = false;
-        this->m_eventBindings[i].m_tendrilId = 0;
-        this->m_eventBindings[i].m_eventId.m_value = 0;
-    }
-
-    for (int32_t i = 0; i < 64; i++) {
-        this->m_connectionBindings[i].m_connection = 0;
-        this->m_connectionBindings[i].m_client = NULL;
-        this->m_connectionBindings[i].m_active = false;
-        this->m_connectionBindings[i].m_tendrilId = 0;
-    }
-
-    for (int32_t i = 0; i < 64; i++) {
-        this->m_tokenBindings[i].m_token = 0;
-        this->m_tokenBindings[i].m_request = 0;
-        this->m_tokenBindings[i].m_client = NULL;
-        this->m_tokenBindings[i].m_active = false;
-    }
-
     memset(this->m_adapters, 0, sizeof(this->m_adapters));
     memset(this->m_eventAdapters, 0, sizeof(this->m_eventAdapters));
 }
 
-// OFFSET: [#0x009C0040, #0x009C10E0]
+// OFFSET: [0x00661A30/0x140307480, 0x00660910/0x140305EE0]
 Battlenet::Tumor::~Tumor() {
     for (int32_t i = 0; i < 20; i++) {
         if (this->m_adapters[i]) {
@@ -50,7 +28,8 @@ Battlenet::Tumor::~Tumor() {
     }
 }
 
-// OFFSET: #0x009C0D30
+// PROVEN: 886170e7 IDENTICAL/NONE
+// OFFSET: 0x00661700/0x140307170
 bool Battlenet::Tumor::AllocTendrilId(uint32_t& tendrilId) {
     tendrilId = this->m_nextTendrilId++;
     uint32_t first = tendrilId;
@@ -70,16 +49,40 @@ bool Battlenet::Tumor::AllocTendrilId(uint32_t& tendrilId) {
     return false;
 }
 
-// OFFSET: #0x009C0DA0
-void Battlenet::Tumor::Process(uint32_t time) {
+// OFFSET: 0x00661760/0x140307200
+int32_t Battlenet::Tumor::Process(uint32_t time) {
+    int32_t error = 0;
+
     for (int32_t i = 0; i < 20; i++) {
         if (this->m_adapters[i]) {
-            static_cast<SystemClient*>(this->m_adapters[i])->Process(time);
+            int32_t result = static_cast<SystemClient*>(this->m_adapters[i])->Process(time);
+
+            if (result) {
+                error = result;
+            }
         }
     }
+
+    return error;
 }
 
-// OFFSET: #0x009C0DE0
+// OFFSET: 0x006617B0/0x140307260
+int32_t Battlenet::Tumor::GetLastError() const {
+    for (uint32_t i = 0; i < 20; i++) {
+        if (this->m_adapters[i]) {
+            int32_t result = static_cast<const SystemClient*>(this->m_adapters[i])->GetLastError();
+
+            if (result) {
+                return result;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// PROVEN: 7220af67 IDENTICAL/NONE
+// OFFSET: 0x006617E0
 Battlenet::Tumor::ConnectionBinding* Battlenet::Tumor::FindConnectionBinding(uint32_t connection) {
     uint32_t i = 0;
 
@@ -92,7 +95,8 @@ Battlenet::Tumor::ConnectionBinding* Battlenet::Tumor::FindConnectionBinding(uin
     return &this->m_connectionBindings[i];
 }
 
-// OFFSET: #0x009C0E20
+// PROVEN: 2b51fbc8 IDENTICAL/NONE
+// OFFSET: 0x00661820
 Battlenet::Tumor::TokenBinding* Battlenet::Tumor::FindTokenBinding(uint32_t token) {
     uint32_t i = 0;
 
@@ -172,13 +176,13 @@ Battlenet::Tumor::Adapter* Battlenet::Tumor::AllocAdapter(SystemClient& client, 
         }
     }
 
-    void* memory = Battlenet::g_allocator->Alloc(sizeof(Adapter));
+    void* memory = Battlenet::g_allocator->Alloc(sizeof(Adapter), ".\\Tumor.cpp(367):Adapter");
     Adapter* adapter = memory ? new (memory) Adapter(client, this, index, tendrilId) : NULL;
     this->m_adapters[index] = adapter;
     return adapter;
 }
 
-// OFFSET: #0x009C1250
+// OFFSET: 0x00661BD0/0x140307680
 Battlenet::Tumor::EventAdapter* Battlenet::Tumor::AllocEventAdapter(BSN::FourCC eventId, EventSubscriber& subscriber, const uint32_t& tendrilId) {
     uint32_t index = 0;
 
@@ -189,13 +193,13 @@ Battlenet::Tumor::EventAdapter* Battlenet::Tumor::AllocEventAdapter(BSN::FourCC 
         }
     }
 
-    void* memory = Battlenet::g_allocator->Alloc(sizeof(EventAdapter));
+    void* memory = Battlenet::g_allocator->Alloc(sizeof(EventAdapter), ".\\Tumor.cpp(386):EventAdapter");
     EventAdapter* adapter = memory ? new (memory) EventAdapter(eventId, subscriber, this, index, tendrilId) : NULL;
     this->m_eventAdapters[index] = adapter;
     return adapter;
 }
 
-// OFFSET: #0x009C12F0
+// OFFSET: 0x00661C70/0x140307770
 void Battlenet::Tumor::RemoveTendril(const uint32_t& tendrilId) {
     for (int32_t i = 0; i < 20; i++) {
         if (this->m_eventAdapters[i] && this->m_eventAdapters[i]->m_tendrilId == tendrilId) {
@@ -258,7 +262,8 @@ uint32_t Battlenet::Tumor::OpenDatagram(uint32_t index, int32_t port, const uint
     return connection;
 }
 
-// OFFSET: #0x009C1520
+// PROVEN: 3faf57fe IDENTICAL/NONE
+// OFFSET: 0x00661EE0/0x140307B20
 void Battlenet::Tumor::Resolved(uint32_t request, const Client::DNSInfo& info) {
     TokenBinding* binding = this->FindTokenBinding(request);
 
@@ -270,7 +275,8 @@ void Battlenet::Tumor::Resolved(uint32_t request, const Client::DNSInfo& info) {
     }
 }
 
-// OFFSET: #0x009C1560
+// PROVEN: 5a4cec35 IDENTICAL/NONE
+// OFFSET: 0x00661F20/0x140307B90
 void Battlenet::Tumor::Connected(uint32_t connection, const IP4::AddressPort& address) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
 
@@ -279,7 +285,8 @@ void Battlenet::Tumor::Connected(uint32_t connection, const IP4::AddressPort& ad
     }
 }
 
-// OFFSET: #0x009C1590
+// PROVEN: b8f025a9 IDENTICAL/NONE
+// OFFSET: 0x00661F50/0x140307BE0
 void Battlenet::Tumor::Disconnected(uint32_t connection) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
 
@@ -291,7 +298,8 @@ void Battlenet::Tumor::Disconnected(uint32_t connection) {
     }
 }
 
-// OFFSET: #0x009C15D0
+// PROVEN: 173ee0a4 IDENTICAL/NONE
+// OFFSET: 0x00661F90/0x140307C50
 bool Battlenet::Tumor::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
 
@@ -302,7 +310,8 @@ bool Battlenet::Tumor::Recv(uint32_t connection, void* data, uint32_t size, uint
     return false;
 }
 
-// OFFSET: #0x009C1610
+// PROVEN: 64f976f5 IDENTICAL/NONE
+// OFFSET: 0x00661FD0/0x140307CB0
 bool Battlenet::Tumor::RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) {
     ConnectionBinding* binding = this->FindConnectionBinding(connection);
 
@@ -313,16 +322,16 @@ bool Battlenet::Tumor::RecvDatagram(uint32_t connection, void* data, uint32_t si
     return false;
 }
 
-// OFFSET: #0x009C1650
+// OFFSET: 0x00662010
 void Battlenet::Tumor::SendEvent(const Event::Header& header, const BSN::EncodedObject* data) {
-    if (header.m_target.m_type == 0) {
+    if (header.m_destination.m_tag == 0) {
         for (int32_t i = 0; i < 20; i++) {
-            if (this->m_eventBindings[i].m_active && this->m_eventBindings[i].m_eventId.m_value == header.m_target.m_value) {
+            if (this->m_eventBindings[i].m_active && this->m_eventBindings[i].m_eventId.m_value == header.m_destination.Value<uint32_t>()) {
                 this->m_eventBindings[i].m_subscriber->RecvEvent(header, data);
             }
         }
-    } else if (header.m_target.m_type == 1) {
-        EventAdapter* adapter = this->m_eventAdapters[header.m_target.m_value];
+    } else if (header.m_destination.m_tag == 1) {
+        EventAdapter* adapter = this->m_eventAdapters[header.m_destination.Value<uint32_t>()];
 
         if (adapter) {
             static_cast<EventSubscriber*>(adapter)->RecvEvent(header, data);
@@ -338,7 +347,7 @@ Battlenet::Tumor::Adapter::Adapter(SystemClient& client, Tumor* tumor, uint32_t 
     this->m_client = &client;
 }
 
-// OFFSET: #0x009C16C0
+// OFFSET: 0x00662080
 uint32_t Battlenet::Tumor::Adapter::Resolve(uint32_t token, const char* hostname) {
     Tumor* tumor = this->m_tumor;
     uint32_t index = this->m_index;
@@ -413,39 +422,52 @@ void Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
 Battlenet::Tumor::Adapter::~Adapter() {
 }
 
-// OFFSET: #0x009C10B0
+// PROVEN: eda6052b IDENTICAL/NONE
+// OFFSET: 0x00661A00
 void Battlenet::Tumor::Adapter::Destroy() {
     Battlenet::Delete(this);
 }
 
-// OFFSET: #0x009C0C70
+// PROVEN: 63a55997 IDENTICAL/NONE
+// OFFSET: 0x00661620
 void Battlenet::Tumor::Adapter::Resolved(uint32_t request, const Client::DNSInfo& info) {
     this->m_client->Resolved(request, info);
 }
 
-// OFFSET: #0x009C0C80
+// PROVEN: 5a6d2eea IDENTICAL/NONE
+// OFFSET: 0x00661630
 void Battlenet::Tumor::Adapter::Connected(uint32_t connection, const IP4::AddressPort& address) {
     this->m_client->Connected(connection, address);
 }
 
-// OFFSET: #0x009C0C90
+// PROVEN: 0a62ec3d IDENTICAL/NONE
+// OFFSET: 0x00661640
 void Battlenet::Tumor::Adapter::Disconnected(uint32_t connection) {
     this->m_client->Disconnected(connection);
 }
 
-// OFFSET: #0x009C0CA0
+// PROVEN: 44a89ee0 IDENTICAL/NONE
+// OFFSET: 0x00661650
 bool Battlenet::Tumor::Adapter::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     return this->m_client->Recv(connection, data, size, used);
 }
 
-// OFFSET: #0x009C0CB0
+// PROVEN: 9e616a2b IDENTICAL/NONE
+// OFFSET: 0x00661660
 bool Battlenet::Tumor::Adapter::RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) {
     return this->m_client->RecvDatagram(connection, data, size, address);
 }
 
-// OFFSET: #0x009C0CC0
-void Battlenet::Tumor::Adapter::Process(uint32_t time) {
-    this->m_client->Process(time);
+// PROVEN: 869f18c3 IDENTICAL/NONE
+// OFFSET: 0x00661670
+int32_t Battlenet::Tumor::Adapter::Process(uint32_t time) {
+    return this->m_client->Process(time);
+}
+
+// PROVEN: 2d3d777b IDENTICAL/NONE
+// OFFSET: 0x00661680
+int32_t Battlenet::Tumor::Adapter::GetLastError() const {
+    return this->m_client->GetLastError();
 }
 
 // INLINED
@@ -457,40 +479,44 @@ Battlenet::Tumor::EventAdapter::EventAdapter(BSN::FourCC eventId, EventSubscribe
     this->m_subscriber = &subscriber;
 }
 
-// OFFSET: #0x009C1790
+// PROVEN: 0df30c1a IDENTICAL/NONE
+// OFFSET: 0x00662150
 void Battlenet::Tumor::EventAdapter::SendEvent(uint8_t eventType, uint32_t adapter, const BSN::EncodedObject* data) {
     Event::Header header;
-    header.m_eventType = eventType;
-    header.m_source.m_exists = true;
-    header.m_source.m_adapter = this->m_index;
-    header.m_source.m_event = this->m_eventId.m_value;
-    header.m_target.m_type = 1;
-    header.m_target.m_value = adapter;
+    header.m_id = eventType;
+    header.m_sourceAddress.m_exists = true;
+    header.m_sourceAddress.m_value = this->m_index;
+    header.m_sourceName.m_value = this->m_eventId.m_value;
+    header.m_destination.m_tag = 1;
+    header.m_destination.Value<uint32_t>() = adapter;
     this->m_tumor->SendEvent(header, data);
 }
 
-// OFFSET: #0x009C17E0
+// PROVEN: 9c48aa7a IDENTICAL/NONE
+// OFFSET: 0x006621A0
 void Battlenet::Tumor::EventAdapter::SendEvent(uint8_t eventType, BSN::FourCC eventId, const BSN::EncodedObject* data) {
     Event::Header header;
-    header.m_eventType = eventType;
-    header.m_source.m_exists = true;
-    header.m_source.m_adapter = this->m_index;
-    header.m_source.m_event = this->m_eventId.m_value;
-    header.m_target.m_type = 0;
-    header.m_target.m_value = eventId.m_value;
+    header.m_id = eventType;
+    header.m_sourceAddress.m_exists = true;
+    header.m_sourceAddress.m_value = this->m_index;
+    header.m_sourceName.m_value = this->m_eventId.m_value;
+    header.m_destination.m_tag = 0;
+    header.m_destination.Value<uint32_t>() = eventId.m_value;
     this->m_tumor->SendEvent(header, data);
 }
 
-// OFFSET: #0x009C0CD0
+// PROVEN: 16dcd556 IDENTICAL/NONE
+// OFFSET: 0x00661690
 void Battlenet::Tumor::EventAdapter::Subscribe(BSN::FourCC eventId, const uint32_t& tendrilId) {
     this->m_tumor->Subscribe(eventId, *this, tendrilId);
 }
 
-// OFFSET: #0x009C0F90
+// OFFSET: 0x006618F0/0x140307040
 Battlenet::Tumor::EventAdapter::~EventAdapter() {
 }
 
-// OFFSET: #0x009C0D00
+// PROVEN: 046071e3 IDENTICAL/NONE
+// OFFSET: 0x006616C0
 void Battlenet::Tumor::EventAdapter::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
     this->m_subscriber->RecvEvent(header, data);
 }

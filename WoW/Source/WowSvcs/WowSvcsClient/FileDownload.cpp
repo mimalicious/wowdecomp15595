@@ -25,11 +25,11 @@ FileDownload::FileDownload() {
     memset(this->m_fileName, 0, sizeof(this->m_fileName));
 }
 
-// OFFSET: #0x006BA620
+// OFFSET: 0x00B0A950/0x1408CE540
 FileDownload::~FileDownload() {
 }
 
-// OFFSET: #0x006B9DF0
+// OFFSET: 0x00B0A2B0/0x1408CDD90
 GruntFileDownload::GruntFileDownload() {
     this->m_unit = NULL;
     this->m_header.m_received = 0;
@@ -39,7 +39,7 @@ GruntFileDownload::GruntFileDownload() {
     this->m_header.m_magic = 'DInf';
 }
 
-// OFFSET: #0x006B9E80
+// OFFSET: 0x00B0A980/0x1408CE580
 int32_t GruntFileDownload::Delete() {
     char path[260];
 
@@ -52,7 +52,7 @@ int32_t GruntFileDownload::Delete() {
     return OsDeleteFile(path);
 }
 
-// OFFSET: #0x006B9EF0
+// OFFSET: 0x00B0A350/0x1408CDE60
 void GruntFileDownload::RenamePartial() {
     if (!this->m_partial) {
         return;
@@ -71,7 +71,7 @@ void GruntFileDownload::RenamePartial() {
     }
 }
 
-// OFFSET: #0x006B9F70
+// OFFSET: 0x00B0A3D0/0x1408CDEF0
 void STORMAPI GruntFileDownload::CalculateMD5(Storm::IOUnit* unit, uint64_t offset, uint64_t size, uint8_t* digest) {
     uint8_t buffer[0x8000];
     MD5_CTX context;
@@ -106,14 +106,14 @@ bool GruntFileDownload::VerifyMD5(uint64_t size) {
     return memcmp(digest, this->m_header.m_md5, sizeof(digest)) == 0;
 }
 
-// OFFSET: #0x006BA0F0
+// OFFSET: 0x00B0A4E0/0x1408CE020
 bool GruntFileDownload::VerifyFile() {
     int64_t size;
     this->m_unit->GetFileSize(&size);
     return static_cast<uint64_t>(size) == this->m_header.m_size && this->VerifyMD5(size);
 }
 
-// OFFSET: #0x006BA140
+// OFFSET: 0x00B0A530/0x1408CE0B0
 bool GruntFileDownload::ValidateForContinue(bool& complete) {
     complete = false;
 
@@ -146,12 +146,12 @@ bool GruntFileDownload::ValidateForContinue(bool& complete) {
     return false;
 }
 
-// OFFSET: #0x006BA2D0
+// OFFSET: 0x00B0A660/0x1408CE220
 int32_t GruntFileDownload::GetStatus() {
     return this->m_status;
 }
 
-// OFFSET: #0x006BA2E0
+// OFFSET: 0x00B0A670/0x1408CE230
 void GruntFileDownload::WriteHeader() {
     if (!this->m_unit) {
         return;
@@ -165,7 +165,7 @@ void GruntFileDownload::WriteHeader() {
     }
 }
 
-// OFFSET: #0x006BA340
+// OFFSET: 0x00B0A6D0/0x1408CE2C0
 void GruntFileDownload::Proceed(const uint8_t* data, uint32_t size) {
     s_downloadLock.Enter();
 
@@ -200,7 +200,7 @@ void GruntFileDownload::Proceed(const uint8_t* data, uint32_t size) {
     }
 }
 
-// OFFSET: #0x006BA500
+// OFFSET: 0x00B0A820/0x1408CE400
 float GruntFileDownload::GetProgress() {
     if (!this->m_header.m_size) {
         return 0.0f;
@@ -229,12 +229,12 @@ inline void GruntFileDownload::Close(bool deleteFile, bool rename) {
     s_downloadLock.Leave();
 }
 
-// OFFSET: #0x006BA650
+// OFFSET: 0x00B0B020/0x1408CED60
 void GruntFileDownload::Destroy(bool deleteFile) {
     this->Close(deleteFile, false);
 }
 
-// OFFSET: #0x006BA6B0
+// OFFSET: 0x00B0AA20/0x1408CE620
 bool GruntFileDownload::Initialize(const char* fileName, const uint8_t* md5, uint64_t size, uint64_t& offset) {
     this->Destroy(false);
 
@@ -315,7 +315,7 @@ bool GruntFileDownload::Initialize(const char* fileName, const uint8_t* md5, uin
     return result;
 }
 
-// OFFSET: #0x006BA930
+// OFFSET: 0x00B0B080/0x1408CEDF0
 void GruntFileDownload::CompleteDownload() {
     if (!this->m_unit) {
         return;
@@ -333,7 +333,7 @@ void GruntFileDownload::CompleteDownload() {
     this->Close(false, rename);
 }
 
-// OFFSET: #0x006BA9D0
+// OFFSET: 0x00B0B120/0x1408CEEB0
 void GruntFileDownload::StopDownload() {
     s_downloadLock.Enter();
 
@@ -348,7 +348,7 @@ void GruntFileDownload::StopDownload() {
     s_downloadLock.Leave();
 }
 
-// OFFSET: #0x006BAA50
+// OFFSET: 0x00B0ACC0/0x1408CE910
 int32_t BattlenetFileDownload::GetStatus() {
     if (static_cast<uint32_t>(this->m_status) <= 1) {
         bool complete = true;
@@ -374,7 +374,7 @@ int32_t BattlenetFileDownload::GetStatus() {
     return this->m_status;
 }
 
-// OFFSET: #0x006BAB30
+// OFFSET: 0x00B0ADA0/0x1408CEA20
 float BattlenetFileDownload::GetProgress() {
     int64_t total = 0;
     int64_t progress = 0;
@@ -397,7 +397,7 @@ float BattlenetFileDownload::GetProgress() {
     return static_cast<float>(static_cast<double>(progress) / static_cast<double>(total));
 }
 
-// OFFSET: #0x006BABF0
+// OFFSET: 0x00B0AE50/0x1408CEAF0
 void BattlenetFileDownload::StopDownload() {
     this->m_status = 3;
     this->m_reason = 3;
@@ -407,7 +407,7 @@ void BattlenetFileDownload::StopDownload() {
     }
 }
 
-// OFFSET: #0x006BAC30
+// OFFSET: 0x00B0AE90/0x1408CEB60
 void BattlenetFileDownload::CompleteDownload() {
     for (int32_t i = 0; i < this->m_numDownloads; i++) {
         const char* name = this->m_downloads[i]->TargetName();
@@ -442,11 +442,11 @@ GruntFileDownload::~GruntFileDownload() {
     this->Close(false, false);
 }
 
-// OFFSET: #0x006BAE80
+// OFFSET: 0x00B0B280/0x1408CEFE0
 BattlenetFileDownload::BattlenetFileDownload() {
 }
 
-// OFFSET: #0x006BAEE0
+// OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t GruntFileDownload::GetReason(uint32_t* data) {
     if (data) {
         *data = this->m_reasonData;
@@ -455,7 +455,7 @@ int32_t GruntFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
-// OFFSET: #0x006BAEE0
+// OFFSET: 0x00B0B2E0/0x1408CDE30
 int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     if (data) {
         *data = this->m_reasonData;
@@ -464,12 +464,12 @@ int32_t BattlenetFileDownload::GetReason(uint32_t* data) {
     return this->m_reason;
 }
 
-// OFFSET: #0x006BAF00
+// OFFSET: 0x00B0A340/0x1408CDE50
 bool GruntFileDownload::Accepted() {
     return this->m_accepted;
 }
 
-// OFFSET: #0x006BAF00
+// OFFSET: 0x00B0A340/0x1408CDE50
 bool BattlenetFileDownload::Accepted() {
     return this->m_accepted;
 }
@@ -479,7 +479,7 @@ bool BattlenetFileDownload::Accepted() {
 void BattlenetFileDownload::Proceed(const uint8_t* data, uint32_t size) {
 }
 
-// OFFSET: #0x006BAF10
+// OFFSET: 0x00B0B300/0x1408CF060
 bool BattlenetFileDownload::Initialize(const char* fileName, const uint8_t* md5, uint64_t size, uint64_t& offset) {
     BattlenetLogin* login = static_cast<BattlenetLogin*>(ClientServices::LoginConnection());
 
@@ -536,7 +536,7 @@ bool BattlenetFileDownload::Initialize(const char* fileName, const uint8_t* md5,
     return true;
 }
 
-// OFFSET: #0x006BB150
+// OFFSET: 0x00B0B530/0x1408CF390
 void BattlenetFileDownload::Destroy(bool deleteFile) {
     this->StopDownload();
 
@@ -552,7 +552,7 @@ void BattlenetFileDownload::Destroy(bool deleteFile) {
     this->m_downloads.Clear();
 }
 
-// OFFSET: #0x006BB1F0
+// OFFSET: 0x00B0B600/0x1408CF4D0
 BattlenetFileDownload::~BattlenetFileDownload() {
     this->Destroy(false);
 }

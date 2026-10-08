@@ -119,6 +119,13 @@ class FixedBlob {
 };
 
 template <uint32_t N>
+class BitArray {
+    public:
+    /* 0000 */ uint32_t m_length;
+    /* 0004 */ uint8_t m_data[(N + 7) / 8];
+};
+
+template <uint32_t N>
 class FixedBitArray {
     public:
     /* 0000 */ uint8_t m_data[(N + 7) / 8];

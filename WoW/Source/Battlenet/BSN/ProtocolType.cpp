@@ -1,6 +1,6 @@
 #include "WoW/Source/Battlenet/BSN/Protocol.h"
 
-// OFFSET: #0x0088A050
+// OFFSET: 0x00665AE0/0x14030C040
 void BSN::Protocol::Type::Int::Get(int32_t intType, const uint8_t*& cursor, uint64_t& value) {
     uint32_t size = 1 << (intType >> 1);
 
@@ -15,7 +15,8 @@ void BSN::Protocol::Type::Int::Get(int32_t intType, const uint8_t*& cursor, uint
     }
 }
 
-// OFFSET: #0x0088A0C0
+// PROVEN: d8a7adb1 IDENTICAL/NONE
+// OFFSET: 0x00665B50
 void BSN::Protocol::Type::Int::Get(int32_t intType, const uint8_t*& cursor, uint32_t& value) {
     uint32_t size = 1 << (intType >> 1);
 
@@ -26,13 +27,14 @@ void BSN::Protocol::Type::Int::Get(int32_t intType, const uint8_t*& cursor, uint
     }
 }
 
-// OFFSET: #0x0088A100
+// PROVEN: d913a6f4 IDENTICAL/NONE
+// OFFSET: 0x00665B90/0x14030C090
 void BSN::Protocol::Type::Int::GetSize(const uint8_t*& cursor, uint32_t& value) {
     uint8_t intType = *cursor++;
     BSN::Protocol::Type::Int::Get(intType, cursor, value);
 }
 
-// OFFSET: #0x0088A130
+// OFFSET: 0x00665BB0/0x14030C0E0
 bool BSN::Protocol::Type::Bounds::Contains(uint64_t value) const {
     if (this->m_intType & 1) {
         return value >= this->m_min && value <= this->m_max;
@@ -41,7 +43,8 @@ bool BSN::Protocol::Type::Bounds::Contains(uint64_t value) const {
     return static_cast<int64_t>(value) >= static_cast<int64_t>(this->m_min) && static_cast<int64_t>(value) <= static_cast<int64_t>(this->m_max);
 }
 
-// OFFSET: #0x0088A180
+// PROVEN: f6e919a3 IDENTICAL/NONE
+// OFFSET: 0x00665C00
 void BSN::Protocol::Type::Bounds::Get(bool fixed, const uint8_t*& cursor, Bounds& bounds) {
     uint8_t intType = *cursor++;
     bounds.m_intType = intType;
@@ -59,7 +62,7 @@ void BSN::Protocol::Type::Bounds::Get(bool fixed, const uint8_t*& cursor, Bounds
     }
 }
 
-// OFFSET: #0x0088A200
+// OFFSET: 0x00665C80/0x14030C260
 void BSN::Protocol::Type::GetTypeId(const uint8_t*& cursor, uint32_t& typeId) {
     typeId = 0;
 

@@ -10,8 +10,8 @@
 #include "Engine/Source/Services/AsyncFile.h"
 #include <ctime>
 
-// STATIC: #0x00AD3028
-const char* g_localeNames[12] = { "deDE", "enGB", "enUS", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU" };
+// STATIC: 0x00C9A990
+const char* g_localeNames[15] = { "deDE", "enGB", "enUS", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU", "enUS", "ptBR", "ptPT" };
 
 // STATIC: #0x00AD2F90
 static int32_t s_physicalDamageClassID = -1;
@@ -1622,7 +1622,7 @@ void ClientDBInitialize() {
 
 // OFFSET: #0x00635D90
 int32_t LocaleNameToIndex(const char* locale) {
-    for (int32_t i = 0; i < 12; i++) {
+    for (int32_t i = 0; i < 15; i++) {
         if (!SStrCmpI(locale, g_localeNames[i], 4)) {
             return i;
         }

@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "WoW/Source/Battlenet/BSN/BSNEncodeInterface.h"
+#include "WoW/Source/Battlenet/BattlenetProtocolTypes.h"
 
 #ifdef GetCurrentTime
 #undef GetCurrentTime
@@ -13,6 +14,7 @@ namespace Battlenet {
 class Allocator {
     public:
     virtual ~Allocator();
+    virtual void* Alloc(uint32_t size, const char* name) = 0;
     virtual void* Alloc(uint32_t size) = 0;
     virtual void Free(void* memory) = 0;
 
@@ -25,45 +27,6 @@ extern Allocator* g_allocator;
 bool Initialize(Allocator& allocator);
 void Teardown();
 
-namespace IP4 {
-struct Address {
-    /* 0000 */ uint8_t m_value[4];
-};
-
-struct AddressPort {
-    /* 0000 */ uint8_t m_address[4];
-    /* 0004 */ uint8_t m_port[2];
-};
-}
-
-namespace Client {
-struct DNSInfo {
-    /* 0000 */ BSN::Array<IP4::Address, 127> m_addresses;
-    /* 0200 */ BSN::AsciiString<255> m_name;
-};
-}
-
-namespace Event {
-struct Header {
-    struct Source {
-        /* 0000 */ bool m_exists;
-        /* 0004 */ uint32_t m_adapter;
-        /* 0008 */ uint32_t m_event;
-    };
-
-    struct Target {
-        /* 0000 */ uint32_t m_type;
-        /* 0004 */ uint32_t m_value;
-    };
-
-    /* 0000 */ uint8_t m_eventType;
-    /* 0004 */ Source m_source;
-    /* 0010 */ Target m_target;
-
-    Header();
-};
-}
-
 class ApplicationFile;
 
 class SystemClient {
@@ -73,7 +36,8 @@ class SystemClient {
     virtual void Disconnected(uint32_t connection) = 0;
     virtual bool Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) = 0;
     virtual bool RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) = 0;
-    virtual void Process(uint32_t time) = 0;
+    virtual int32_t Process(uint32_t time) = 0;
+    virtual int32_t GetLastError() const = 0;
     virtual ~SystemClient();
 };
 
@@ -166,5 +130,7 @@ void Battlenet::Delete(T* object) {
         allocator->Free(object);
     }
 }
+
+#include "WoW/Source/Battlenet/Battlenet.inl"
 
 #endif

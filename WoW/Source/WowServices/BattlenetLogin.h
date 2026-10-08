@@ -24,6 +24,7 @@ extern Battlenet::TumorManager* g_tumorManager;
 
 class BattlenetAllocator : public Battlenet::Allocator {
     public:
+    void* Alloc(uint32_t size, const char* name) override;
     void* Alloc(uint32_t size) override;
     void Free(void* memory) override;
 };
@@ -59,6 +60,7 @@ class BattlenetLogin : public Login {
     };
 
     static bool s_monolithicComponent;
+    static bool s_toolPatch;
     static char s_monolithicPlatform[5];
 
     static void LogConnectionStatus(const char* format, ...);
@@ -69,8 +71,7 @@ class BattlenetLogin : public Login {
     /* 10FC */ RealmCharacterCount* m_realmCharacterCounts;
     /* 1100 */ uint32_t m_realmCharacterCountCount;
     /* 1104 */ TSList<BattlenetLogin::BN_REALM> m_realms;
-    /* 1110 */ bool m_realmListRequested;
-    /* 1111 */ uint8_t unk_1111[3];
+    /* 1110 */ uint32_t m_realmListState;
     /* 1114 */ uint32_t m_joinRealmId;
     /* 1118 */ SCritSect m_realmLock;
     /* 1140 */ TSGrowableArray<BattlenetLogin::GameAccount> m_gameAccounts;
@@ -147,6 +148,7 @@ class BattlenetLogin : public Login {
     int32_t GetLoginServerType() override;
 
     BattlenetLogin();
+    void BuildEmptyRealmListResult();
     void BuildRealmListResult();
     Battlenet::TumorManager* CreateTumorManager();
     void DestroyTumorManager();
@@ -168,7 +170,7 @@ class BattlenetLogin : public Login {
     void SetAuthModuleMatrixInfo(const char* info, const char* challenges);
     void SetAuthModulePinInfo(const char* keyMap);
     bool SetGameAccount(uint32_t index);
-    void UpdateRealmListData(uint32_t region, uint32_t battlegroup, uint32_t id, const Battlenet::Realm::Info* info, uint8_t flags, bool remove);
+    void UpdateRealmListData(uint32_t region, uint32_t battlegroup, uint32_t id, const Battlenet::WoWRealm::RealmInfo* info, uint8_t flags, bool remove);
 };
 
 class BattlenetApplication : public Battlenet::Application, public WowConnectionResponse {

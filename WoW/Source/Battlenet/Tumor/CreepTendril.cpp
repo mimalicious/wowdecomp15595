@@ -22,16 +22,17 @@ Battlenet::CreepTendril::CreepDestroyFunc Battlenet::CreepTendril::s_creepDestro
 // STATIC: #0x00DCED44
 Battlenet::Library* Battlenet::CreepTendril::s_creepModule;
 
-// OFFSET: #0x009C18D0
+// OFFSET: 0x00662290
 Battlenet::CreepTendril::Host::~Host() {
 }
 
-// OFFSET: #0x009C18B0
+// PROVEN: 235c13d3 IDENTICAL/NONE
+// OFFSET: 0x00662270
 void Battlenet::CreepTendril::Host::Log(const char* message) {
     this->LogLevel(message, 5);
 }
 
-// OFFSET: #0x009C2460
+// OFFSET: 0x00662EB0
 bool Battlenet::CreepTendril::Initialize() {
     if (Battlenet::CreepTendril::s_creepModule) {
         return true;
@@ -68,10 +69,8 @@ bool Battlenet::CreepTendril::Initialize() {
     return false;
 }
 
-// OFFSET: #0x009C25D0
-Battlenet::CreepTendril::Instance::Instance(const Authentication::Settings& settings, TumorManager& manager) : Tendril(Battlenet::Event::CREEP, manager) {
-    this->m_creep = NULL;
-    memcpy(&this->m_settings, &settings, sizeof(this->m_settings));
+// OFFSET: 0x00663030/0x140308F50
+Battlenet::CreepTendril::Instance::Instance(const Authentication::Settings& settings, TumorManager& manager) : Tendril(Battlenet::Event::CREEP, manager), m_creep(NULL), m_settings(settings) {
     Battlenet::CreepTendril::s_instances++;
 
     BSN::Hard::SizeEncoder sizeEncoder;
@@ -97,13 +96,13 @@ Battlenet::CreepTendril::Instance::Instance(const Authentication::Settings& sett
     this->m_eventHandlers[15] = &Instance::ProcessEventData<15>;
 }
 
-// OFFSET: #0x009C2840
+// OFFSET: 0x006632A0/0x140309360
 Battlenet::CreepTendril::Instance* Battlenet::CreepTendril::Instance::Create(const Authentication::Settings& settings, TumorManager& manager) {
     if (!Battlenet::CreepTendril::s_instances && !Battlenet::CreepTendril::Initialize()) {
         return NULL;
     }
 
-    void* memory = Battlenet::g_allocator->Alloc(sizeof(Instance));
+    void* memory = Battlenet::g_allocator->Alloc(sizeof(Instance), ".\\CreepTendril.cpp(185):Instance");
 
     if (!memory) {
         return NULL;
@@ -129,25 +128,26 @@ void Battlenet::CreepTendril::Instance::Destroy() {
     Battlenet::Delete(this);
 }
 
-// OFFSET: #0x009C1B10
+// PROVEN: 8ea34d2a IDENTICAL/NONE
+// OFFSET: 0x006624E0/0x140308290
 void Battlenet::CreepTendril::Instance::EnumFunctions(EnumFunctionsCallback callback, void* param) {
     this->m_creep->EnumFunctions(callback, param);
 }
 
-// OFFSET: #0x009C1B50
+// OFFSET: 0x00662520
 void Battlenet::CreepTendril::Instance::DoSubscriptions() {
     this->m_eventAdapter->Subscribe(Battlenet::Event::DATAGRAM_CONNECTION_INIT, this->m_tendrilId);
     this->m_eventAdapter->Subscribe(Battlenet::Event::S2_LOBBY, this->m_tendrilId);
 }
 
-// OFFSET: #0x009C2530
+// OFFSET: 0x00662F80
 void Battlenet::CreepTendril::Instance::RecvEvent(const Event::Header& header, const BSN::EncodedObject* data) {
     BSN::BSNEncodedObjectPtr<Event::Header, ::Protocol, 0> object(&header);
     object.IncRef();
     this->m_creep->RecvEvent(&object, data);
 }
 
-// OFFSET: #0x009C1D20
+// OFFSET: 0x00662780
 void Battlenet::CreepTendril::Instance::Resolved(uint32_t request, const Client::DNSInfo& info) {
     BSN::Hard::SizeEncoder sizeEncoder;
     ProtocolHard::TypeInfoOf<Client::DNSInfo>::Encode(info, sizeEncoder);
@@ -159,7 +159,7 @@ void Battlenet::CreepTendril::Instance::Resolved(uint32_t request, const Client:
     this->m_creep->Resolved(request, encoder.m_data, (encoder.m_position + 7) >> 3);
 }
 
-// OFFSET: #0x009C1DB0
+// OFFSET: 0x00662810
 void Battlenet::CreepTendril::Instance::Connected(uint32_t connection, const IP4::AddressPort& address) {
     BSN::Hard::SizeEncoder sizeEncoder;
     ProtocolHard::TypeInfoOf<IP4::AddressPort>::Encode(address, sizeEncoder);
@@ -171,17 +171,19 @@ void Battlenet::CreepTendril::Instance::Connected(uint32_t connection, const IP4
     this->m_creep->Connected(connection, encoder.m_data, (encoder.m_position + 7) >> 3);
 }
 
-// OFFSET: #0x009C1B20
+// PROVEN: 566ce43c IDENTICAL/NONE
+// OFFSET: 0x006624F0
 void Battlenet::CreepTendril::Instance::Disconnected(uint32_t connection) {
     this->m_creep->Disconnected(connection);
 }
 
-// OFFSET: #0x009C1B30
+// PROVEN: 826b8b83 IDENTICAL/NONE
+// OFFSET: 0x00662500
 bool Battlenet::CreepTendril::Instance::Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) {
     return this->m_creep->Recv(connection, data, size, used);
 }
 
-// OFFSET: #0x009C1E40
+// OFFSET: 0x006628A0
 bool Battlenet::CreepTendril::Instance::RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) {
     BSN::Hard::SizeEncoder sizeEncoder;
     ProtocolHard::TypeInfoOf<IP4::AddressPort>::Encode(address, sizeEncoder);
@@ -196,17 +198,25 @@ bool Battlenet::CreepTendril::Instance::RecvDatagram(uint32_t connection, void* 
     return this->m_creep->RecvDatagram(connection, data, size, buffer, addressSize);
 }
 
-// OFFSET: #0x009C1B40
-void Battlenet::CreepTendril::Instance::Process(uint32_t time) {
-    this->m_creep->Process(time);
+// PROVEN: 1e19656d IDENTICAL/NONE
+// OFFSET: 0x00662510
+int32_t Battlenet::CreepTendril::Instance::Process(uint32_t time) {
+    return this->m_creep->Process();
 }
 
-// OFFSET: #0x009C1B80
+// PROVEN: 5217c9d3 IDENTICAL/NONE
+// OFFSET: 0x006624D0
+int32_t Battlenet::CreepTendril::Instance::GetLastError() const {
+    return this->m_creep->GetLastError();
+}
+
+// PROVEN: c23f21ff IDENTICAL/NONE
+// OFFSET: 0x00662550
 uint32_t Battlenet::CreepTendril::Instance::Resolve(uint32_t token, const char* hostname) {
     return this->m_adapter->Resolve(token, hostname);
 }
 
-// OFFSET: #0x009C1ED0
+// OFFSET: 0x00662930
 uint32_t Battlenet::CreepTendril::Instance::Connect(const void* address, uint32_t addressSize) {
     BSN::Hard::Decoder decoder;
     decoder.SetData(address, addressSize);
@@ -221,27 +231,31 @@ uint32_t Battlenet::CreepTendril::Instance::Connect(const void* address, uint32_
     return this->m_adapter->Connect(decoded, this->m_tendrilId);
 }
 
-// OFFSET: #0x009C1B90
+// PROVEN: ab571ee2 IDENTICAL/NONE
+// OFFSET: 0x00662560
 void Battlenet::CreepTendril::Instance::Disconnect(uint32_t connection) {
     this->m_adapter->Disconnect(connection);
 }
 
-// OFFSET: #0x009C1BA0
+// PROVEN: 316be5ee IDENTICAL/NONE
+// OFFSET: 0x00662570
 bool Battlenet::CreepTendril::Instance::Send(uint32_t connection, const void* data, uint32_t size) {
     return this->m_adapter->Send(connection, data, size);
 }
 
-// OFFSET: #0x009C1BB0
+// PROVEN: cb1c06fd IDENTICAL/NONE
+// OFFSET: 0x00662580
 uint32_t Battlenet::CreepTendril::Instance::OpenDatagram(int32_t port) {
     return this->m_adapter->OpenDatagram(port, this->m_tendrilId);
 }
 
-// OFFSET: #0x009C1BD0
+// PROVEN: cd29b7a0 IDENTICAL/NONE
+// OFFSET: 0x006625A0
 void Battlenet::CreepTendril::Instance::CloseDatagram(uint32_t connection) {
     this->m_adapter->CloseDatagram(connection);
 }
 
-// OFFSET: #0x009C1F50
+// OFFSET: 0x006629B0
 bool Battlenet::CreepTendril::Instance::SendDatagram(uint32_t connection, const void* data, uint32_t size, const void* address, uint32_t addressSize) {
     BSN::Hard::Decoder decoder;
     decoder.SetData(address, addressSize);
@@ -256,32 +270,37 @@ bool Battlenet::CreepTendril::Instance::SendDatagram(uint32_t connection, const 
     return this->m_adapter->SendDatagram(connection, data, size, decoded);
 }
 
-// OFFSET: #0x009C1BE0
+// PROVEN: 5d9782c8 IDENTICAL/NONE
+// OFFSET: 0x006625B0
 uint64_t Battlenet::CreepTendril::Instance::GetCurrentTime() const {
     return this->m_adapter->GetCurrentTime();
 }
 
-// OFFSET: #0x009C1BF0
+// PROVEN: 0057ad59 IDENTICAL/NONE
+// OFFSET: 0x006625C0
 uint64_t Battlenet::CreepTendril::Instance::GetCurrentTick() const {
     return this->m_adapter->GetCurrentTick();
 }
 
-// OFFSET: #0x009C1C00
+// PROVEN: f8c386ce IDENTICAL/NONE
+// OFFSET: 0x006625D0
 void Battlenet::CreepTendril::Instance::LogLevel(const char* message, int32_t level) {
     this->m_adapter->LogLevel(message, level);
 }
 
-// OFFSET: #0x009C1C10
+// PROVEN: 2306d5ed IDENTICAL/NONE
+// OFFSET: 0x006625E0
 Battlenet::ApplicationFile* Battlenet::CreepTendril::Instance::OpenApplicationFile(const char* name) {
     return this->m_adapter->OpenApplicationFile(name);
 }
 
-// OFFSET: #0x009C1C20
+// PROVEN: e45daf35 IDENTICAL/NONE
+// OFFSET: 0x006625F0
 void Battlenet::CreepTendril::Instance::CloseApplicationFile(ApplicationFile* file) {
     this->m_adapter->CloseApplicationFile(file);
 }
 
-// OFFSET: #0x009C2760
+// OFFSET: 0x006631C0
 void Battlenet::CreepTendril::Instance::SendEvent(const BSN::EncodedObject* header, const BSN::EncodedObject* data) {
     BSN::BSNEncodedObject<Event::Header, ::Protocol> decoded;
 
@@ -290,6 +309,6 @@ void Battlenet::CreepTendril::Instance::SendEvent(const BSN::EncodedObject* head
         return;
     }
 
-    EventHandler handler = this->m_eventHandlers[decoded.m_data.m_eventType];
+    EventHandler handler = this->m_eventHandlers[decoded.m_data.m_id];
     (this->*handler)(decoded.m_data, data);
 }

@@ -38,7 +38,8 @@ class Tumor : public SystemClient {
         void Disconnected(uint32_t connection) override;
         bool Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) override;
         bool RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) override;
-        void Process(uint32_t time) override;
+        int32_t Process(uint32_t time) override;
+        int32_t GetLastError() const override;
 
         Adapter(SystemClient& client, Tumor* tumor, uint32_t index, const uint32_t& tendrilId);
     };
@@ -64,6 +65,8 @@ class Tumor : public SystemClient {
         /* 0004 */ EventSubscriber* m_subscriber;
         /* 0008 */ bool m_active;
         /* 000C */ uint32_t m_tendrilId;
+
+        EventBinding();
     };
 
     struct ConnectionBinding {
@@ -71,6 +74,8 @@ class Tumor : public SystemClient {
         /* 0004 */ SystemClient* m_client;
         /* 0008 */ bool m_active;
         /* 000C */ uint32_t m_tendrilId;
+
+        ConnectionBinding();
     };
 
     struct TokenBinding {
@@ -78,6 +83,8 @@ class Tumor : public SystemClient {
         /* 0004 */ uint32_t m_request;
         /* 0008 */ SystemClient* m_client;
         /* 000C */ bool m_active;
+
+        TokenBinding();
     };
 
     /* 0004 */ Adapter* m_adapters[20];
@@ -93,7 +100,8 @@ class Tumor : public SystemClient {
     void Disconnected(uint32_t connection) override;
     bool Recv(uint32_t connection, void* data, uint32_t size, uint32_t& used) override;
     bool RecvDatagram(uint32_t connection, void* data, uint32_t size, const IP4::AddressPort& address) override;
-    void Process(uint32_t time) override;
+    int32_t Process(uint32_t time) override;
+    int32_t GetLastError() const override;
     ~Tumor();
     virtual bool AllocTendrilId(uint32_t& tendrilId);
     virtual EventAdapter* AllocEventAdapter(BSN::FourCC eventId, EventSubscriber& subscriber, const uint32_t& tendrilId);
@@ -112,5 +120,7 @@ class Tumor : public SystemClient {
     void SendEvent(const Event::Header& header, const BSN::EncodedObject* data);
 };
 }
+
+#include "WoW/Source/Battlenet/Tumor/Tumor.inl"
 
 #endif

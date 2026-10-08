@@ -1,12 +1,6 @@
 #include "WoW/Source/Battlenet/BattlenetMap.h"
 
-// INLINED
-Battlenet::String::String() {
-    this->m_block = NULL;
-    this->m_string = NULL;
-}
-
-// OFFSET: #0x009BFF00
+// OFFSET: 0x006607C0
 Battlenet::String::String(const char* string) {
     if (!string) {
         this->m_block = NULL;
@@ -15,7 +9,7 @@ Battlenet::String::String(const char* string) {
     }
 
     uint32_t capacity = (static_cast<uint32_t>(strlen(string)) + 40) & ~31u;
-    Block* block = static_cast<Block*>(Battlenet::g_allocator->Alloc(capacity + sizeof(Block)));
+    Block* block = static_cast<Block*>(Battlenet::g_allocator->Alloc(capacity + sizeof(Block), "d:\\buildserver\\wow\\4\\work\\wow-code\\branches\\wow-patch-4_3_4-branch\\wow\\source\\battlenet\\tumor\\String.cpp(125):Data[capacity]"));
 
     if (block) {
         block->m_refCount = 1;
@@ -27,58 +21,7 @@ Battlenet::String::String(const char* string) {
     this->m_string = reinterpret_cast<const char*>(block + 1);
 }
 
-// INLINED
-Battlenet::String::String(const String& other) {
-    this->m_block = other.m_block;
-    this->m_string = other.m_string;
-
-    if (this->m_block) {
-        this->m_block->m_refCount++;
-    }
-}
-
-// INLINED
-Battlenet::String::~String() {
-    this->Release();
-}
-
-// INLINED
-void Battlenet::String::Release() {
-    if (this->m_block) {
-        if (this->m_block->m_refCount-- == 1) {
-            Battlenet::g_allocator->Free(this->m_block);
-        }
-
-        this->m_block = NULL;
-    }
-
-    this->m_string = NULL;
-}
-
-// INLINED
-Battlenet::String& Battlenet::String::operator=(const String& other) {
-    this->Release();
-    this->m_block = other.m_block;
-    this->m_string = other.m_string;
-
-    if (this->m_block) {
-        this->m_block->m_refCount++;
-    }
-
-    return *this;
-}
-
-// INLINED
-const char* Battlenet::String::GetString() const {
-    return this->m_string ? this->m_string : "";
-}
-
-// INLINED
-Battlenet::MapKey::MapKey() {
-    this->m_hash = 0;
-}
-
-// OFFSET: #0x009C01B0
+// OFFSET: 0x00660B80
 Battlenet::MapKey::MapKey(const String& value) {
     const char* string = value.GetString();
     uint32_t hash = 0x811C9DC5;
@@ -96,7 +39,7 @@ Battlenet::MapKey::MapKey(const String& value) {
     }
 }
 
-// OFFSET: #0x009C0210
+// OFFSET: 0x00660BE0
 Battlenet::MapKey::MapKey(const char* value) {
     String key(value);
     const char* string = key.GetString();
@@ -115,19 +58,14 @@ Battlenet::MapKey::MapKey(const char* value) {
     }
 }
 
-// OFFSET: #0x009C0260
+// OFFSET: 0x00660C30
 Battlenet::MapKey::~MapKey() {
     this->m_hash = 0;
 }
 
-// OFFSET: #0x009C02A0
+// OFFSET: 0x00660C70
 Battlenet::MapKey& Battlenet::MapKey::operator=(const MapKey& other) {
     this->m_hash = other.m_hash;
     this->m_value = other.m_value;
     return *this;
-}
-
-// INLINED
-bool Battlenet::MapKey::operator==(const MapKey& other) const {
-    return this->m_hash == other.m_hash && !strcmp(this->m_value.m_string, other.m_value.m_string);
 }

@@ -42,7 +42,7 @@ static int32_t Script_ShowFriends(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B4060
+// OFFSET: 0x004D3180/0x140110060
 static int32_t Script_GetNumFriends(lua_State* L) {
     FriendList* list = FriendList::s_friendList;
 
@@ -77,7 +77,7 @@ static int32_t Script_GetNumIgnores(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B4A80
+// OFFSET: 0x004D3B10/0x140110B40
 static int32_t Script_GetWhoInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetWhoInfo(index)");
@@ -140,7 +140,8 @@ static int32_t Script_AddFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6B50
+// PROVEN: cb5416e7 IDENTICAL/NONE
+// OFFSET: 0x004D5A20/0x140113740
 static int32_t Script_SendWho(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SendWho(\"filter\")");
@@ -154,7 +155,7 @@ static int32_t Script_SendWho(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B4130
+// OFFSET: 0x004D3250/0x140110140
 static int32_t Script_GetFriendInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetFriendInfo(index or name)");
@@ -242,7 +243,7 @@ static int32_t Script_GetFriendInfo(lua_State* L) {
     return 8;
 }
 
-// OFFSET: #0x006B4400
+// OFFSET: 0x004D3520/0x1401104A0
 static int32_t Script_SetSelectedFriend(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedFriend(index)");
@@ -340,7 +341,7 @@ static int32_t Script_GetMuteName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B48A0
+// OFFSET: 0x004D3930/0x140110960
 static int32_t Script_SetSelectedIgnore(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedIgnore(index)");
@@ -359,7 +360,7 @@ static int32_t Script_SetSelectedIgnore(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B4950
+// OFFSET: 0x004D39E0/0x1401109F0
 static int32_t Script_SetSelectedMute(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedMute(index)");
@@ -390,7 +391,7 @@ static int32_t Script_GetSelectedMute(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B4EB0
+// OFFSET: 0x004D3F40/0x1401110D0
 static int32_t Script_SortWho(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SortWho(\"type\")");
@@ -488,7 +489,7 @@ static int32_t Script_AddMute(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6C60
+// OFFSET: 0x004D5B30/0x140113860
 static int32_t Script_IsIgnored(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
 
@@ -554,7 +555,7 @@ static int32_t Script_AddOrRemoveFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B7BD0
+// OFFSET: 0x004D6970/0x140114BD0
 static int32_t Script_RemoveFriend(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -584,7 +585,7 @@ static int32_t Script_RemoveFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B7C90
+// OFFSET: 0x004D6A30/0x140114C70
 static int32_t Script_SetFriendNotes(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetFriendNotes([\"name\"] or [index], [\"notes\"])");

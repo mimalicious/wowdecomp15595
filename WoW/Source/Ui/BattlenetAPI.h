@@ -19,7 +19,7 @@ int32_t GetChatChannelType(uint8_t channel);
 const char* GetErrorString(uint16_t error);
 const char* GetExactNameForPresenceId(uint32_t presenceId, bool full);
 uint32_t GetFocusedToon(uint32_t presenceId);
-Battlenet::Friends::FriendInvite GetFriendInvite(uint32_t presenceId);
+Battlenet::Friends::FriendInviteContainer GetFriendInvite(uint32_t presenceId);
 uint16_t GetFriendsOfFriend(uint32_t presenceId, GeneralFunction::Callback* callback);
 const char* GetNameForPresenceId(uint32_t presenceId, bool full);
 uint32_t GetNumChatMembers(uint8_t channel);

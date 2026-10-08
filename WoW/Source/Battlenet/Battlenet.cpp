@@ -5,22 +5,20 @@
 // STATIC: #0x00DCED2C
 Battlenet::Allocator* Battlenet::g_allocator;
 
-// INLINED
-Battlenet::Allocator::~Allocator() {
-}
-
-// OFFSET: #0x009C0D10
+// PROVEN: feb762da IDENTICAL/NONE
+// OFFSET: 0x006616D0/0x140307140
 bool Battlenet::Initialize(Allocator& allocator) {
     Battlenet::g_allocator = &allocator;
     return true;
 }
 
-// OFFSET: #0x009C0D20
+// PROVEN: 46c8d1a4 IDENTICAL/NONE
+// OFFSET: 0x006616E0/0x140307150
 void Battlenet::Teardown() {
     Battlenet::g_allocator = NULL;
 }
 
-// OFFSET: #0x009BFEA0
+// OFFSET: 0x00660760
 uint32_t Battlenet::StringCopy(void* dest, const char* source, uint32_t size) {
     if (!size) {
         return 0;
@@ -38,45 +36,18 @@ uint32_t Battlenet::StringCopy(void* dest, const char* source, uint32_t size) {
     return size;
 }
 
-// INLINED
-Battlenet::Event::Header::Header() {
-    this->m_source.m_exists = false;
-    this->m_source.m_adapter = 0;
-    this->m_source.m_event = static_cast<uint32_t>(-1);
-    this->m_target.m_type = 0;
-}
-
-// OFFSET: #0x009BFD80
-Battlenet::SystemClient::~SystemClient() {
-}
-
-// OFFSET: #0x008C50C0
+// PROVEN: 2daf627d IDENTICAL/NONE
+// OFFSET: 0x00627330/0x1402B9370
 void Battlenet::SystemServer::Log(const char* message) {
     this->LogLevel(message, 5);
 }
 
-// OFFSET: #0x008C50E0
-Battlenet::SystemServer::~SystemServer() {
-}
-
-// INLINED
-Battlenet::EventSubscriber::EventSubscriber() {
-    this->m_eventId.m_value = 0;
-}
-
-// OFFSET: #0x008C5110
-Battlenet::EventSubscriber::~EventSubscriber() {
-}
-
-// OFFSET: #0x009C0C40
-Battlenet::EventInterface::~EventInterface() {
-}
-
-// OFFSET: #0x009C2880
+// OFFSET: 0x006632F0/0x1403093D0
 Battlenet::Library::~Library() {
 }
 
-// OFFSET: #0x009C29C0
+// PROVEN: 03711987 IDENTICAL/NONE
+// OFFSET: 0x00663440/0x140309540
 Battlenet::Library* Battlenet::Library::LoadApplicationBundle(const char* name, Allocator& allocator) {
     uint32_t length = SStrLen(name);
 
@@ -84,7 +55,7 @@ Battlenet::Library* Battlenet::Library::LoadApplicationBundle(const char* name, 
         return NULL;
     }
 
-    char* path = static_cast<char*>(allocator.Alloc(length + 5));
+    char* path = static_cast<char*>(allocator.Alloc(length + 5, ".\\LibraryWin32.cpp(176)"));
 
     if (!path) {
         return NULL;
@@ -98,14 +69,16 @@ Battlenet::Library* Battlenet::Library::LoadApplicationBundle(const char* name, 
     return library;
 }
 
-// OFFSET: #0x009C2A70
+// PROVEN: 2f2df8da IDENTICAL/NONE
+// OFFSET: 0x00663510/0x140309650
 void Battlenet::WindowsLibrary::Destroy() {
     Allocator* allocator = this->m_allocator;
     this->~WindowsLibrary();
     allocator->Free(this);
 }
 
-// OFFSET: #0x009C2010
+// PROVEN: e66c6e92 IDENTICAL/NONE
+// OFFSET: 0x00662A60
 bool Battlenet::GetProc(Library* library, void*& proc, uint32_t ordinal) {
     proc = library->GetProc(ordinal);
     return proc != NULL;

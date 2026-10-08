@@ -24,6 +24,7 @@ class SockAddr {
 
     SockAddr();
     ~SockAddr();
+    void Clear();
     void Normalize();
     bool Parse(const char* str);
 };

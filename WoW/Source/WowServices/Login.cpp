@@ -1,4 +1,5 @@
 #include "Login.h"
+#include <cstdlib>
 #include <cstring>
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
@@ -209,7 +210,7 @@ bool Login::GetCdKeys(Grunt::CdKey& cdKey) {
     return this->m_loginResponse->GetCdKeys(cdKey);
 }
 
-// OFFSET: #0x00465B20
+// OFFSET: 0x004C5760/0x140100950
 void LoginResponse::HandleRealmData(uint32_t result, CDataStore* msg) {
     if (this->m_realmList.m_count) {
         this->m_realmList.Clear();
@@ -232,7 +233,23 @@ void LoginResponse::HandleRealmData(uint32_t result, CDataStore* msg) {
         msg->Get(realm->m_otherFlags);
         msg->Get(realm->m_flags);
         msg->GetString(realm->m_realmName, sizeof(realm->m_realmName));
-        msg->GetString(realm->m_realmAddress, sizeof(realm->m_realmAddress));
+
+        char address[64];
+        msg->GetString(address, sizeof(address));
+
+        realm->m_addresses[0].Clear();
+        realm->m_addresses[1].Clear();
+        realm->m_ports[0] = 0;
+        realm->m_ports[1] = 0;
+
+        char* port = strrchr(address, ':');
+
+        if (port) {
+            *port = '\0';
+            realm->m_ports[0] = static_cast<uint16_t>(strtol(port + 1, NULL, 0));
+        }
+
+        realm->m_addresses[0].Parse(address);
         msg->Get(realm->m_population);
         msg->Get(realm->m_numCharacters);
         msg->Get(realm->m_category);

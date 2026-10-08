@@ -12,7 +12,7 @@ struct ChecksumFile {
 // STATIC: #0x00AD96E8
 static ChecksumFile s_files[3] = { { NULL, 2 }, { "DivxDecoder.dll", 2 }, { "unicows.dll", 1 } };
 
-// OFFSET: #0x006B9CF0
+// OFFSET: 0x00B09FB0/0x1408CD990
 void ChecksumExecutables(const uint8_t* challenge, uint32_t challengeLength, uint8_t* checksum) {
     HMAC<SHA1> hmac;
     hmac.Init(challenge, challengeLength);

@@ -220,8 +220,8 @@ static int32_t CountFormatStrings(const char* format) {
 
 // OFFSET: #0x00530E90
 int32_t BattlenetUI::QSortFriendInviteListByTimeCB(const void* a, const void* b) {
-    int32_t time1 = static_cast<const Battlenet::Friends::FriendInvite*>(a)->m_time;
-    int32_t time2 = static_cast<const Battlenet::Friends::FriendInvite*>(b)->m_time;
+    int32_t time1 = static_cast<const Battlenet::Friends::FriendInviteContainer*>(a)->m_createdTime;
+    int32_t time2 = static_cast<const Battlenet::Friends::FriendInviteContainer*>(b)->m_createdTime;
 
     if (time1 > time2) {
         return -1;
@@ -288,10 +288,10 @@ void BattlenetUI::SortFriendInviteList() {
         SErrDisplayAppFatalMessage("", "", 0);
     }
 
-    BSN::Array<Battlenet::Friends::FriendInvite, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
+    BSN::Array<Battlenet::Friends::FriendInviteContainer, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
 
     if (invites.m_count > 1) {
-        qsort(invites.m_data, invites.m_count, sizeof(Battlenet::Friends::FriendInvite), BattlenetUI::QSortFriendInviteListByTimeCB);
+        qsort(invites.m_data, invites.m_count, sizeof(Battlenet::Friends::FriendInviteContainer), BattlenetUI::QSortFriendInviteListByTimeCB);
     }
 }
 
@@ -807,7 +807,7 @@ void BattlenetUI::FriendInviteAddedCB(void* param, int32_t argc, const GeneralFu
         SErrDisplayAppFatalMessage("", "", 0);
     }
 
-    Battlenet::Friends::FriendInvite invite = BattlenetAPI::GetFriendInvite(presenceId);
+    Battlenet::Friends::FriendInviteContainer invite = BattlenetAPI::GetFriendInvite(presenceId);
 
     if (!invite.m_presenceId) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -845,7 +845,7 @@ void BattlenetUI::FriendInviteRemovedCB(void* param, int32_t argc, const General
         SErrDisplayAppFatalMessage("", "", 0);
     }
 
-    BSN::Array<Battlenet::Friends::FriendInvite, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
+    BSN::Array<Battlenet::Friends::FriendInviteContainer, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
     int32_t index = 0;
 
     for (; static_cast<uint32_t>(index) < invites.m_count; index++) {

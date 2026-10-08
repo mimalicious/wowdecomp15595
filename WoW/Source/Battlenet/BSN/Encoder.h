@@ -6,6 +6,8 @@
 #include "WoW/Source/Battlenet/BSN/Types.h"
 
 namespace BSN {
+bool IsValidAscii(uint32_t length, const char* data);
+
 class Encoder {
     public:
     /* 0004 */ uint8_t* m_data;
@@ -17,9 +19,12 @@ class Encoder {
 
     void SetData(void* data, uint32_t bytes);
     int32_t PutBits(uint32_t bits, uint32_t value);
+    int32_t PutBool(bool value);
     int32_t PutUInt32(uint32_t value);
+    int32_t PutChecksum(uint32_t bits, uint32_t& checksum);
     int32_t PutData(uint32_t bits, const uint8_t* data);
     int32_t Align();
+    int32_t PutAsciiData(uint32_t bytes, const char* data);
     int32_t PutAlignedData(uint32_t bytes, const uint8_t* data);
 };
 
@@ -61,5 +66,7 @@ class SizeEncoder : public BSN::SizeEncoder {
 };
 }
 }
+
+#include "WoW/Source/Battlenet/BSN/Encoder.inl"
 
 #endif

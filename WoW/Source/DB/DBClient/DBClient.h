@@ -652,7 +652,7 @@ extern WowClientDB<gtOCTRegenMPRec> g_gtOCTRegenMPDB;
 extern WowClientDB<gtRegenMPPerSptRec> g_gtRegenMPPerSptDB;
 extern WowClientDB<gtSpellScalingRec> g_gtSpellScalingDB;
 
-extern const char* g_localeNames[12];
+extern const char* g_localeNames[15];
 extern int32_t g_clientDBWorldTablesLoaded;
 extern int32_t g_clientDBGlueTablesLoaded;
 

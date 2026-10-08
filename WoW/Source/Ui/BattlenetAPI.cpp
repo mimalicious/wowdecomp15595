@@ -300,10 +300,10 @@ bool BattlenetAPI::HasRIDFriendship(uint32_t presenceId) {
 }
 
 // OFFSET: #0x00533460
-Battlenet::Friends::FriendInvite BattlenetAPI::GetFriendInvite(uint32_t presenceId) {
+Battlenet::Friends::FriendInviteContainer BattlenetAPI::GetFriendInvite(uint32_t presenceId) {
     GeneralFunction::Arg arg;
     arg = static_cast<uint64_t>(presenceId);
-    BSN::BSNEncodedObject<Battlenet::Friends::FriendInvite, Protocol> invite(g_tumorManager->CallFunction("BattlenetAPI_GetFriendInvite", 1, &arg).ToObject());
+    BSN::BSNEncodedObject<Battlenet::Friends::FriendInviteContainer, Protocol> invite(g_tumorManager->CallFunction("BattlenetAPI_GetFriendInvite", 1, &arg).ToObject());
     return invite.m_data;
 }
 

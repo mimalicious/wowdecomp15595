@@ -263,8 +263,8 @@ static uint32_t s_unk_B2FA10;
 // STATIC: #0x00B2FA48
 static char s_installLocation[1024];
 
-// STATIC: #0x00C5DE90
-bool g_hasIsoLocale[12];
+// STATIC: 0x00D732EC
+bool g_hasIsoLocale[15];
 
 // STATIC: #0x00C5DE9C
 int32_t s_locale;
@@ -641,7 +641,7 @@ static void CheckAvailableLocales(char* locale) {
         return;
     }
 
-    for (int32_t i = 0; i < 12; i++) {
+    for (int32_t i = 0; i < 15; i++) {
         char path[1024];
         g_hasIsoLocale[i] = false;
 
@@ -655,8 +655,8 @@ static void CheckAvailableLocales(char* locale) {
 
     int32_t index = LocaleNameToIndex(locale);
 
-    for (int32_t i = 0; i < 12 && !g_hasIsoLocale[index]; i++) {
-        index = (index + 1) % 12;
+    for (int32_t i = 0; i < 15 && !g_hasIsoLocale[index]; i++) {
+        index = (index + 1) % 15;
     }
 
     SStrCopy(locale, g_localeNames[index], STORM_MAX_STR);

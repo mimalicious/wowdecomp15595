@@ -224,7 +224,7 @@ static int32_t Script_BNGetFriendInviteInfo(lua_State* L) {
 
     double number = lua_tonumber(L, 1);
     uint32_t index = static_cast<uint32_t>(number - 1);
-    BSN::Array<Battlenet::Friends::FriendInvite, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
+    BSN::Array<Battlenet::Friends::FriendInviteContainer, 100>& invites = BattlenetUI::m_friendInvites->m_data.m_invites;
 
     if (index >= invites.m_count) {
         return 0;

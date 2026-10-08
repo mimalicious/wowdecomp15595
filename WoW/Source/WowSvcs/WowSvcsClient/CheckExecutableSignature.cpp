@@ -27,7 +27,7 @@ static const uint8_t s_signatureModulus[256] = {
     0xE8, 0xFD, 0xA6, 0x33, 0x10, 0xD1, 0x12, 0x8F, 0x05, 0x80, 0xDA, 0x42, 0x57, 0x0C, 0xEB, 0xC0
 };
 
-// OFFSET: #0x006BB240
+// OFFSET: 0x00B0A090/0x1408CDAA0
 bool ScanFileForHack(const char* fileName, uint8_t* hackFound, uint8_t* shouldBlockPlaying, const char** result, char* hackName, uint32_t hackNameSize) {
     if (!hackNameSize) {
         return false;
@@ -108,7 +108,8 @@ bool ScanFileForHack(const char* fileName, uint8_t* hackFound, uint8_t* shouldBl
     return success;
 }
 
-// OFFSET: %0x00A4A790
+// PROVEN: 4d3d2a66 IDENTICAL/NONE
+// OFFSET: 0x00B0A1E0/0x1408CDC70
 bool GetDllVersionString(const char* fileName, char* buffer, uint32_t size) {
     if (size < 24) {
         return false;
@@ -128,7 +129,7 @@ bool GetDllVersionString(const char* fileName, char* buffer, uint32_t size) {
     return true;
 }
 
-// OFFSET: #0x006BB430
+// OFFSET: 0x00B0B660/0x1408CF550
 bool CheckExecutableSignature(const char* fileName) {
     bool valid = false;
     HOSFILE file = OsCreateFile(fileName, OS_GENERIC_READ, 1, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
