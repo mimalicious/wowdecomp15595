@@ -5,7 +5,7 @@
 
 static const int32_t POSIX_MALLOC_THRESHOLD = 10;
 
-// STATIC: #0x00A46180
+// STATIC: 0x00BBA720/0x0009A2540
 static const char* const estring[] = {
     "\\ at end of pattern",
     "\\c at end of pattern",
@@ -56,7 +56,7 @@ static const char* const estring[] = {
     "unknown property name after \\P or \\p"
 };
 
-// STATIC: #0x00A46240
+// STATIC: 0x00BBA7E0/0x0009A26C0
 static const int32_t eint[] = {
     REG_EESCAPE,
     REG_EESCAPE,
@@ -107,7 +107,7 @@ static const int32_t eint[] = {
     REG_BADPAT
 };
 
-// OFFSET: #0x0083DEC0
+// OFFSET: 0x0063D710
 static int32_t pcre_posix_error_code(const char* s) {
     for (size_t i = 0; i < sizeof(estring) / sizeof(estring[0]); i++) {
         if (strcmp(s, estring[i]) == 0) {
@@ -116,6 +116,15 @@ static int32_t pcre_posix_error_code(const char* s) {
     }
 
     return REG_ASSERT;
+}
+
+// OFFSET: 0x0063D760
+void regfree(regex_t* preg) {
+    pcre_free(preg->re_pcre);
+
+    if (preg->re_extra) {
+        pcre_free(preg->re_extra);
+    }
 }
 
 // PROVEN: 2eaa596b IDENTICAL/UNPROVEN
@@ -146,7 +155,7 @@ int32_t regcomp(regex_t* preg, const char* pattern, int32_t cflags) {
     return 0;
 }
 
-// OFFSET: #0x0083DFA0
+// OFFSET: 0x0063D810
 int32_t regexec(const regex_t* preg, const char* string, size_t nmatch, regmatch_t pmatch[], int32_t eflags) {
     int rc;
     int options = PCRE_NO_UTF8_CHECK;
