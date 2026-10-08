@@ -225,7 +225,7 @@ static int32_t Script_SetHyperlinkFormat(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054A880
+// OFFSET: 0x0053AC30
 static int32_t Script_GetHyperlinkFormat(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
 

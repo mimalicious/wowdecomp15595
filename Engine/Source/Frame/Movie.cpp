@@ -80,7 +80,7 @@ void MovieStreaming::CancelPreloadingMovie(int32_t movieID) {
     }
 }
 
-// OFFSET: %0x00521E10
+// OFFSET: 0x005119F0
 static void WaitProgressCallback(float progress, int32_t param) {
     LoadingScreenAsyncCallback(MovieStreaming::s_progressScale * progress + MovieStreaming::s_progressBase, NULL);
 }
@@ -829,7 +829,7 @@ void MovieStreaming::PreloadMovie(int32_t movieID) {
     }
 }
 
-// OFFSET: %0x005234B0
+// OFFSET: 0x00513640
 static void GetMovieLocalAmount(int64_t& local, int64_t& total, int32_t movieID) {
     FileDataRec* file = g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, false));
 

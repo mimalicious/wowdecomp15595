@@ -814,7 +814,7 @@ static void Blit_Dxt5_Argb8888(const C2iVector& size, const void* in, uint32_t i
     }
 }
 
-// OFFSET: #0x006AE6E0
+// OFFSET: 0x0063C170
 static void InitBlit() {
     s_blits[BlitFormat_Argb8888][BlitFormat_Abgr8888][BlitAlpha_0] = Blit_Argb8888_Abgr8888;
     s_blits[BlitFormat_Argb8888][BlitFormat_Argb8888][BlitAlpha_0] = Blit_generic32_generic32;

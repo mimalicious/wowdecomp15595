@@ -231,7 +231,7 @@ void CSimpleHyperlinkedFrame::OnHyperlinkClick(const char* link, const char* tex
     this->RunOnHyperlinkClickScript(link, text, btn);
 }
 
-// OFFSET: %0x00546770
+// OFFSET: 0x005334F0
 CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_inHyperlinkScript = 0;
     this->m_hyperlinksEnabled = 0;

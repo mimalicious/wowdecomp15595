@@ -595,7 +595,7 @@ static int32_t Script_ClearAllPoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540470
+// OFFSET: 0x005304D0
 static int32_t Script_StopAnimating(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     region->StopAnimating();

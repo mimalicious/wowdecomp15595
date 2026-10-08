@@ -27,7 +27,7 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/UIBindings.h"
 
-// OFFSET: %0x0051B3E0
+// OFFSET: 0x0050B050
 static int32_t Script_GetTitleRegion(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CScriptRegion* titleRegion = frame->m_titleRegion;
@@ -308,7 +308,7 @@ static int32_t Script_GetChildren(lua_State* L) {
     return count;
 }
 
-// OFFSET: %0x0051B650
+// OFFSET: 0x0050B2C0
 static int32_t Script_GetFrameStrata(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 

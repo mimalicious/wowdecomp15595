@@ -280,7 +280,7 @@ void CSimpleMessageScrollFrame::SetMaxLines(int32_t maxLines) {
     this->m_currentScroll = 0;
 }
 
-// OFFSET: %0x0052D670
+// OFFSET: 0x0051DDD0
 void CSimpleMessageScrollFrame::Clear() {
     this->m_displayNodes.Clear();
     this->m_numDisplayed = 0;

@@ -317,7 +317,7 @@ static int32_t Script_GetText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C140
+// OFFSET: 0x0052BE60
 static int32_t Script_GetFieldSize(lua_State* L) {
     lua_pushnumber(L, 8191.0);
 
@@ -437,7 +437,7 @@ static int32_t Script_SetShadowOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053E0B0
+// OFFSET: 0x0052DF90
 static int32_t Script_GetSpacing(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     float spacing = string->m_spacing;

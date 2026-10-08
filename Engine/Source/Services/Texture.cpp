@@ -147,7 +147,7 @@ void CTextureAtlas::Update(CTexture* texture) {
     this->m_updateSlot = -1;
 }
 
-// OFFSET: %0x00550CC0
+// OFFSET: 0x00540790
 void AsyncTextureDestroyedCallback(CAsyncObject* object) {
     s_asyncLoadBufferUsed -= object->m_size;
     void* buffer = object->m_buffer;

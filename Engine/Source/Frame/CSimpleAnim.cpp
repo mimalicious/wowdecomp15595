@@ -227,7 +227,7 @@ void CSimpleAnim::Pause() {
     }
 }
 
-// OFFSET: %0x00537850
+// OFFSET: 0x005277C0
 void CSimpleAnim::Stop(bool requested) {
     if (!this->m_playState) {
         return;
