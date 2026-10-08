@@ -1907,7 +1907,7 @@ int32_t Packet_SMSG_TRANSFER_ABORTED(void* param, NETMESSAGE msgId, uint32_t tim
             case 8: {
                 uint8_t difficulty;
                 msg->Get(difficulty);
-                MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(map->m_id, difficulty, NULL);
+                MapDifficultyRec* entry = GetMapDifficultyRec(map->m_id, difficulty, NULL);
 
                 if (!entry || !(text = entry->m_message) || !*text) {
                     char difficultyToken[64];

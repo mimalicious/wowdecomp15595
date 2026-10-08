@@ -656,9 +656,9 @@ extern const char* g_localeNames[15];
 extern int32_t g_clientDBWorldTablesLoaded;
 extern int32_t g_clientDBGlueTablesLoaded;
 
-MapDifficultyRec* GetMapDifficultyEntryByMapIdAndDifficulty(int32_t mapId, uint32_t difficulty, int32_t* a3);
+MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_t* a3);
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty);
-int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty);
+int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty);
 int32_t ClientDBGetNumWeaponSubClasses();
 int32_t ClientDBGetUnarmedWeapon();
 
@@ -677,7 +677,7 @@ void SDBItemSubclassInitialize();
 const ItemSubClassRec* SDBItemSubclassGetSubClassRec(uint32_t classID, uint32_t subClassID);
 int32_t GetPhysicalDamageClassID();
 uint32_t GetPhysicalDamageClassMask();
-int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty);
+int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty);
 int32_t LocaleNameToIndex(const char* locale);
 int32_t LocaleIdToIndex(uint32_t locale);
 int32_t GetCurrentLocaleIndex();

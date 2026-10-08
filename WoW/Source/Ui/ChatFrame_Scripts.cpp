@@ -1767,7 +1767,7 @@ static int32_t Script_GetSavedInstanceInfo(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(info->m_instanceID >> 32));
     lua_pushboolean(L, map->m_instanceType == 2);
     lua_pushnumber(L, GetMaxPlayersForMap(map, info->m_difficulty));
-    MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(mapId, difficulty, NULL);
+    MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
 
     if (!entry) {
         lua_pushstring(L, "");

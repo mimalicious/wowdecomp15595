@@ -1357,8 +1357,8 @@ int32_t ClientDBGetNumWeaponSubClasses() {
 
 // PROVEN: 836efa84 IDENTICAL/NONE
 // OFFSET: 0x00495350
-int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty) {
-    MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(mapId, difficulty, NULL);
+int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty) {
+    MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
 
     if (entry) {
         return entry->m_raidDuration;
@@ -1783,7 +1783,7 @@ const char* ClientDBStringLookup(uint32_t lookup) {
 }
 
 // OFFSET: #0x00634950
-MapDifficultyRec* GetMapDifficultyEntryByMapIdAndDifficulty(int32_t mapId, uint32_t difficulty, int32_t* index) {
+MapDifficultyRec* GetMapDifficultyRec(int32_t mapId, uint32_t difficulty, int32_t* index) {
     for (int32_t i = 0; i < g_mapDifficultyDB.m_numRecords; i++) {
         MapDifficultyRec* rec = g_mapDifficultyDB.GetRecordByIndex(i);
 
@@ -1814,7 +1814,7 @@ MapDifficultyRec* GetMapDifficultyEntryByMapIdAndDifficulty(int32_t mapId, uint3
 // PROVEN: be1740d5 IDENTICAL/NONE
 // OFFSET: 0x00495380
 int32_t GetMaxPlayersForMap(const MapRec* map, int32_t difficulty) {
-    MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(map->m_id, difficulty, NULL);
+    MapDifficultyRec* entry = GetMapDifficultyRec(map->m_id, difficulty, NULL);
 
     if (!entry || !entry->m_maxPlayers) {
         return map->m_maxPlayers;

@@ -218,7 +218,7 @@ static void PushLFDChoiceInfo(lua_State* L, int32_t id) {
 
     LfgDungeonsRec* rec = g_lfgDungeonsDB.GetRecord(id);
     LfgDungeonExpansionRec* expansion = GetLfgDungeonExpansionRec(rec->m_id, ClientServices::Connection()->m_accountExpansion);
-    MapDifficultyRec* difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(rec->m_mapID, rec->m_difficulty, NULL);
+    MapDifficultyRec* difficulty = GetMapDifficultyRec(rec->m_mapID, rec->m_difficulty, NULL);
     lua_pushnumber(L, 1.0);
     lua_pushstring(L, rec->m_name);
     lua_settable(L, -3);
@@ -842,7 +842,7 @@ static int32_t PushDungeonInfo(lua_State* L, int32_t dungeonId) {
     }
 
     LfgDungeonExpansionRec* expansion = GetLfgDungeonExpansionRec(rec->m_id, ClientServices::Connection()->m_accountExpansion);
-    MapDifficultyRec* difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(rec->m_mapID, rec->m_difficulty, NULL);
+    MapDifficultyRec* difficulty = GetMapDifficultyRec(rec->m_mapID, rec->m_difficulty, NULL);
     lua_pushstring(L, rec->m_name);
     lua_pushnumber(L, rec->m_typeID);
     lua_pushnumber(L, expansion ? expansion->m_hardLevelMin : rec->m_minLevel);

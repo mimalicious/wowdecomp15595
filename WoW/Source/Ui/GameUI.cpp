@@ -1397,7 +1397,7 @@ int32_t CGGameUI::CanResetInstance() {
     if (map && (map->m_instanceType == 1 || map->m_instanceType == 2)) {
         uint32_t difficulty = CGGameUI::GetCurrentDungeonDifficulty();
 
-        if (difficulty > 3 || !GetMapResetTime(map->m_id, difficulty)) {
+        if (difficulty > 3 || !GetMapRaidDuration(map->m_id, difficulty)) {
             return 0;
         }
     }
@@ -1408,7 +1408,7 @@ int32_t CGGameUI::CanResetInstance() {
 
     uint32_t difficulty = CGGameUI::GetCurrentDungeonDifficulty();
 
-    if ((difficulty > 3 || !GetMapResetTime(map->m_id, difficulty)) && time(NULL) - CGGameUI::m_uiLastInstanceTime <= 90000) {
+    if ((difficulty > 3 || !GetMapRaidDuration(map->m_id, difficulty)) && time(NULL) - CGGameUI::m_uiLastInstanceTime <= 90000) {
         return 1;
     }
 
@@ -1426,7 +1426,7 @@ void CGGameUI::SetLastInstanceTime(uint32_t time, int32_t mapId, int32_t current
     if (map && (map->m_instanceType == 1 || map->m_instanceType == 2)) {
         uint32_t difficulty = CGGameUI::GetCurrentDungeonDifficulty();
 
-        if (difficulty > 3 || !GetMapResetTime(map->m_id, difficulty)) {
+        if (difficulty > 3 || !GetMapRaidDuration(map->m_id, difficulty)) {
             CGGameUI::m_uiLastInstanceTime = time;
             CGGameUI::m_iMapID = mapId;
         }
@@ -6882,7 +6882,7 @@ void CGGameUI::SendRaidDifficultyMessage() {
     map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
 
     if (map->m_instanceType == 2) {
-        MapDifficultyRec* difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(CGGameUI::m_iCurrentMapID, CGGameUI::m_instanceDifficulty, NULL);
+        MapDifficultyRec* difficulty = GetMapDifficultyRec(CGGameUI::m_iCurrentMapID, CGGameUI::m_instanceDifficulty, NULL);
         CGGameUI::DisplayError(ERR_RAID_DIFFICULTY_CHANGED_S, FrameScript_GetText(difficulty->m_difficultystring, -1, GENDER_NOT_APPLICABLE));
     } else {
         SStrPrintf(token, sizeof(token), "RAID_DIFFICULTY%d", CGGameUI::GetCurrentRaidDifficulty() + 1);

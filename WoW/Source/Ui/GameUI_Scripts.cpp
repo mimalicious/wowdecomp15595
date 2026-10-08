@@ -2270,7 +2270,7 @@ static int32_t Script_GetInstanceInfo(lua_State* L) {
     lua_pushstring(L, type < 5 ? s_instanceTypeTokens[type] : s_instanceTypeTokens[0]);
     uint32_t difficulty = CGGameUI::m_instanceDifficulty;
     lua_pushnumber(L, difficulty + 1);
-    MapDifficultyRec* rec = GetMapDifficultyEntryByMapIdAndDifficulty(mapId, difficulty, NULL);
+    MapDifficultyRec* rec = GetMapDifficultyRec(mapId, difficulty, NULL);
 
     if (rec) {
         lua_pushstring(L, FrameScript_GetText(rec->m_difficultystring, -1, GENDER_NOT_APPLICABLE));

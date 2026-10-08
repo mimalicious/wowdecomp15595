@@ -58,6 +58,7 @@ class CGGameObject_C_TypeBase {
     virtual int32_t HandleAnimInterrupted();
     virtual void HandleAnimFinished();
     virtual void ActivateOneShotAnim(uint32_t anim);
+    virtual void ActivateOneShotAnimKit(uint32_t animKitID);
     virtual const char* DebugStatus();
     virtual C3Vector GetPosition() const;
     virtual C3Vector GetRawPosition() const;
@@ -76,6 +77,7 @@ class CGGameObject_C_TypeBase {
     virtual void UpdateMovement(uint32_t time, uint32_t elapsed);
     virtual void UpdateDisplay(uint32_t time);
     virtual void UpdateDisabled();
+    virtual void ModelLoaded();
     virtual void StartInteraction();
     virtual void CloseInteraction();
     virtual void AddToolTipInfo(CGTooltip* tooltip);
@@ -95,6 +97,9 @@ class CGGameObject_C_TypeAnimated : public CGGameObject_C_TypeBase {
     /* 0014 */ int32_t m_pendingAnimState;
     /* 0018 */ int32_t m_nextAnimTime;
     /* 001C */ uint32_t m_sound;
+    /* 0020 */ uint32_t unk_0020;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ uint32_t unk_0028;
 
     virtual ~CGGameObject_C_TypeAnimated();
     virtual bool ShouldFadeIn() const;
@@ -106,13 +111,15 @@ class CGGameObject_C_TypeAnimated : public CGGameObject_C_TypeBase {
     virtual int32_t HandleAnimInterrupted();
     virtual void HandleAnimFinished();
     virtual void ActivateOneShotAnim(uint32_t anim);
+    virtual void ActivateOneShotAnimKit(uint32_t animKitID);
     virtual const char* DebugStatus();
     virtual void PostInit(bool a1);
     virtual void Disable();
     virtual void PostReenable();
     virtual void UpdateDisplay(uint32_t time);
-    virtual void UpdateDisabled();
+    virtual void ModelLoaded();
     virtual void UpdateAnimState(uint32_t state);
+    virtual void UpdateSolidity();
 
     CGGameObject_C_TypeAnimated(CGGameObject_C* owner);
     void SetSequence(CM2Model* model);
@@ -301,9 +308,10 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     /* 0230 */ int32_t m_pendingOneShotAnim;
     /* 0234 */ uint8_t m_hasWorldBounds;
     /* 0235 */ uint8_t unk_0235 [3];
-    /* 0238 */ CM2Model* m_lootEffect;
-    /* 023C */ uint32_t m_effectAnimState;
-    /* 0240 */ uint32_t unk_0240 [2];
+    /* 0238 */ uint32_t m_animKitID;
+    /* 023C */ CM2Model* m_lootEffect;
+    /* 0240 */ uint32_t m_effectAnimState;
+    /* 0244 */ uint32_t unk_0244;
     /* 0248 */ CAnimKitManager m_animKitManager;
 
     virtual C3Vector GetPosition() const;

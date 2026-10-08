@@ -5602,7 +5602,7 @@ void CGRaidInfo::GetMapNameWithDifficulty(char* buffer, uint32_t size, int32_t m
         return;
     }
 
-    MapDifficultyRec* entry = GetMapDifficultyEntryByMapIdAndDifficulty(mapId, difficulty, NULL);
+    MapDifficultyRec* entry = GetMapDifficultyRec(mapId, difficulty, NULL);
 
     if (entry && entry->m_difficultystring && *entry->m_difficultystring) {
         const char* difficultyName = FrameScript_GetText(entry->m_difficultystring, -1, GENDER_NOT_APPLICABLE);

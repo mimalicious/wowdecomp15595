@@ -755,7 +755,7 @@ void CGGameObject_C::UpdateInteractIconAttach() {
 // INLINED
 CGGameObject_C_TypeBase::CGGameObject_C_TypeBase(CGGameObject_C* owner) {
     this->m_owner = owner;
-    this->m_useErrorType = 234;
+    this->m_useErrorType = 243;
     this->m_interactDistance = 5.0f;
 }
 
@@ -1730,6 +1730,10 @@ void CGGameObject_C_TypeBase::UpdateDisplay(uint32_t time) {
 void CGGameObject_C_TypeBase::UpdateDisabled() {
 }
 
+// OFFSET: 0x00401000
+void CGGameObject_C_TypeBase::ModelLoaded() {
+}
+
 // PROVEN: 9690f15d IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CGGameObject_C_TypeBase::StartInteraction() {
@@ -1763,8 +1767,8 @@ bool CGGameObject_C_Type_Null::CanUse() const {
     return false;
 }
 
-// OFFSET: #0x0070FCD0
-void CGGameObject_C_TypeAnimated::UpdateDisabled() {
+// OFFSET: 0x005A1AD0
+void CGGameObject_C_TypeAnimated::ModelLoaded() {
     this->ResetAnimState();
 }
 
@@ -2562,7 +2566,7 @@ void CGGameObject_C::ModelLoaded(CM2Model* model) {
     }
 
     ApplyGameObjectArtKit(model, this->m_gameObject->m_artKit);
-    this->m_typeData->UpdateDisabled();
+    this->m_typeData->ModelLoaded();
     this->UpdateInteractIconAttach();
 
     if (this->m_modelFlags & 0x400000) {

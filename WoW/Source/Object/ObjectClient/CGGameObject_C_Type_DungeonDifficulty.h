@@ -8,12 +8,15 @@
 class CGGameObject_C_Type_DungeonDifficulty : public CGGameObject_C_TypeBase {
     public:
     /* 0010 */ uint32_t m_sound;
+    /* 0014 */ int32_t m_disabled;
 
     virtual ~CGGameObject_C_Type_DungeonDifficulty();
     virtual bool CanUse() const;
+    virtual void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3);
     virtual float GetBaseAlpha() const;
     virtual void HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time);
-    virtual void UpdateDisplay(uint32_t time);
+    virtual void PostInitWithStats();
+    virtual void UpdateDisabled();
 
     CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner);
     int32_t GetMapID() const;

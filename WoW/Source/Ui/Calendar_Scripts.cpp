@@ -704,7 +704,7 @@ static int32_t Script_CalendarGetRaidInfo(lua_State* L) {
     lua_pushnumber(L, date.m_hour);
     lua_pushnumber(L, date.m_minute);
     lua_pushnumber(L, static_cast<int32_t>(event->m_endTime + 1));
-    MapDifficultyRec* difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(event->m_holidayID, event->m_endTime, NULL);
+    MapDifficultyRec* difficulty = GetMapDifficultyRec(event->m_holidayID, event->m_endTime, NULL);
 
     if (!difficulty) {
         lua_pushstring(L, "");
@@ -1417,7 +1417,7 @@ static int32_t Script_CalendarEventGetTextures(lua_State* L) {
             lua_pushinteger(L, dungeon->m_expansionLevel);
             MapDifficultyRec* difficulty;
 
-            if (type == 1 && (difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(dungeon->m_mapID, dungeon->m_difficulty, NULL))) {
+            if (type == 1 && (difficulty = GetMapDifficultyRec(dungeon->m_mapID, dungeon->m_difficulty, NULL))) {
                 lua_pushstring(L, FrameScript_GetText(difficulty->m_difficultystring, -1, GENDER_NOT_APPLICABLE));
             } else {
                 lua_pushstring(L, "");
@@ -1982,7 +1982,7 @@ static int32_t Script_CalendarGetDayEvent(lua_State* L) {
     lua_pushnumber(L, event->m_sequenceLength);
     MapDifficultyRec* difficulty;
 
-    if (!(event->m_type & 0x280) || !(difficulty = GetMapDifficultyEntryByMapIdAndDifficulty(event->m_holidayID, event->m_endTime, NULL))) {
+    if (!(event->m_type & 0x280) || !(difficulty = GetMapDifficultyRec(event->m_holidayID, event->m_endTime, NULL))) {
         lua_pushstring(L, "");
         return 15;
     }
