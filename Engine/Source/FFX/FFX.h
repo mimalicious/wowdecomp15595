@@ -52,6 +52,7 @@ namespace FFX {
         virtual void Begin();
         virtual void End();
         virtual void SetParameters(int32_t count, const int32_t* params);
+        virtual float GetFadeAmount();
 
         Effect();
     };
@@ -126,6 +127,7 @@ namespace FFX {
     void Init();
     void InitCVars();
     void Render();
+    float GetEffectFadeAmount(uint32_t index);
     void SetEffect(uint32_t index, Effect* effect);
     void SetupGeo_PortalEffect(C44Matrix* modelView, C44Matrix* projection, C44Matrix* model);
     void SetupGeo_Quad(const C2iVector& size, C44Matrix* matrix);

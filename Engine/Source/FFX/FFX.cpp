@@ -244,6 +244,17 @@ int32_t FFX::EffectIsSet(Effect* effect) {
     return 0;
 }
 
+// OFFSET: 0x00899D80
+float FFX::GetEffectFadeAmount(uint32_t index) {
+    Effect* effect = FFX::s_effect[index];
+
+    if (!effect) {
+        return 1.0f;
+    }
+
+    return effect->GetFadeAmount();
+}
+
 // PROVEN: 360fcc7c IDENTICAL/IDENTICAL
 // OFFSET: 0x00899DA0/0x1405D94C0
 void FFX::SetEffect(uint32_t index, Effect* effect) {
@@ -1112,4 +1123,10 @@ void FFX::Effect::End() {
 // PROVEN: 787a0f92 IDENTICAL/DIFFERENT
 // OFFSET: 0x00841AE0/0x140211B90
 void FFX::Effect::SetParameters(int32_t count, const int32_t* params) {
+}
+
+// PROVEN: c78f3d36 IDENTICAL/IDENTICAL
+// OFFSET: [0x00599E10/0x1402082B0]
+float FFX::Effect::GetFadeAmount() {
+    return 1.0f;
 }

@@ -42,6 +42,7 @@ class PassGlowFade : public PassGlowBase {
 
     PassGlowFade(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend);
     void BeginFadeOut();
+    float GetFadeAmount();
 };
 
 #endif

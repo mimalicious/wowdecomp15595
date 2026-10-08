@@ -9,6 +9,27 @@ PassGlowBase::PassGlowBase(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, 
     this->m_color = CImVector(0, 0, 0, 0);
 }
 
+// OFFSET: 0x0089EA20
+float PassGlowFade::GetFadeAmount() {
+    float time = this->m_fadeTime;
+
+    if (this->m_fadingOut && time > this->m_fadeOutTime) {
+        time = this->m_fadeOutTime;
+    }
+
+    float amount = 0.0f;
+
+    if (this->m_fadingOut) {
+        if (this->m_fadeOutTime > 0.0f) {
+            amount = time / this->m_fadeOutTime;
+        }
+    } else if (this->m_fadeInTime > 0.0f) {
+        amount = time / this->m_fadeInTime;
+    }
+
+    return amount;
+}
+
 // PROVEN: bd74b2a8 IDENTICAL/NONE
 // OFFSET: 0x0089EA90
 void PassGlowFade::BeginFadeOut() {
