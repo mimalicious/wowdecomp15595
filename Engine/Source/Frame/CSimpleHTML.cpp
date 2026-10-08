@@ -28,13 +28,13 @@
 // STATIC: %0x00BB98B8
 int32_t CSimpleHTML::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD25E4
+// STATIC: 0x00DD3A8C
 int32_t CSimpleHTML::s_objectType;
 
 // STATIC: %0x00BB87F8
 const char* CSimpleHTML::s_objectTypeName = "SimpleHTML";
 
-// STATIC: %0x00CD25E8
+// STATIC: 0x00DD3A90
 CDataAllocator CSimpleHTML::s_allocator(sizeof(CSimpleHTML), 5);
 
 // INLINED

@@ -22,7 +22,7 @@
 // STATIC: %0x00D88D38
 CM2ModelHeap* g_modelPool;
 
-// STATIC: %0x00D88D3C
+// STATIC: 0x00EBC4CC
 uint32_t CM2Cache::s_processorFeatures;
 
 // STATIC: %0x00D88D40

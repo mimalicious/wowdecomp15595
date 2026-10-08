@@ -40,7 +40,7 @@ const uint32_t s_blendModes[6][7] = { { 0, 1, 2, 10, 3, 4, 5 }, { 0, 1, 2, 10, 3
 // STATIC: %0x00C0D298
 uint32_t CM2Scene::s_optFlags;
 
-// STATIC: %0x00C0D2A0
+// STATIC: 0x00D07F14
 static float s_lightGridScale = 0.05f;
 
 // STATIC: %0x00D89EB0

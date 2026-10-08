@@ -33,10 +33,10 @@
 // STATIC: %0x00BB87EC
 const char* CSimpleModel::s_objectTypeName = "Model";
 
-// STATIC: %0x00CD259C
+// STATIC: 0x00DD3A44
 int32_t CSimpleModel::s_objectType;
 
-// STATIC: %0x00CD25A0
+// STATIC: 0x00DD3A48
 CDataAllocator CSimpleModel::s_allocator(sizeof(CSimpleModel), 3);
 
 // PROVEN: f38dfe15 IDENTICAL/NONE

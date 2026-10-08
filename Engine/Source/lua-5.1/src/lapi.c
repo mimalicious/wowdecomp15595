@@ -42,7 +42,7 @@ int lua_taintexpected;
 // STATIC: %0x00C3CAF0
 int lua_taintedclosure;
 
-// STATIC: #0x00D413A8
+// STATIC: 0x00D380A0
 const char *lua_closuretaint;
 
 // STATIC: %0x00C3CAF8

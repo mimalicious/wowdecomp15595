@@ -39,31 +39,31 @@
 // STATIC: %0x00BB993C
 int32_t CSimpleMovieFrame::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2748
+// STATIC: 0x00DD3BF0
 int32_t CSimpleMovieFrame::s_objectType;
 
 // STATIC: %0x00BB8824
 const char* CSimpleMovieFrame::s_objectTypeName = "MovieFrame";
 
-// STATIC: %0x00CD274C
+// STATIC: 0x00DD3BF4
 CSimpleMovieFrame* CSimpleMovieFrame::s_currentMovieFrame;
 
-// STATIC: %0x00CD2750
+// STATIC: 0x00DD3BF8
 int32_t CSimpleMovieFrame::s_decoderCount;
 
 // STATIC: %0x00CD2780
 CDataAllocator CSimpleMovieFrame::s_allocator(sizeof(CSimpleMovieFrame), 5);
 
-// STATIC: %0x00CD2754
+// STATIC: 0x00DD3BFC
 static int32_t s_sfxWasMuted;
 
-// STATIC: %0x00CD2758
+// STATIC: 0x00DD3C00
 static int32_t s_musicWasMuted;
 
-// STATIC: %0x00CD275C
+// STATIC: 0x00DD3C04
 static int32_t s_ambienceWasMuted;
 
-// STATIC: %0x00CD2760
+// STATIC: 0x00DD3C08
 static int32_t s_voiceChatWasMuted;
 
 // STATIC: %0x00AD9784
@@ -195,7 +195,7 @@ static MOVIETEXTUREINFO s_textureInfo[7][6] = {
     },
 };
 
-// STATIC: %0x00AD9A80
+// STATIC: 0x00BE2D8C
 static MOVIEUPDATERECT s_updateRects[7][6] = {
     {
         { 0, 6, 512, 256 },
@@ -845,7 +845,7 @@ void CSimpleMovieFrame::Render() {
     GxXformSetView(view);
     GxXformSetProjection(projection);
 
-    // STATIC: %0x00CD27B4
+    // STATIC: 0x00DD3C5C
     static C3Vector s_normal(0.0f, 0.0f, 1.0f);
 
     // STATIC: %0x00CD2794

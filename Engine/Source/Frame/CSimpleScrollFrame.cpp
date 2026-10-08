@@ -23,13 +23,13 @@
 // STATIC: %0x00BB9788
 int32_t CSimpleScrollFrame::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD25B4
+// STATIC: 0x00DD3A5C
 int32_t CSimpleScrollFrame::s_objectType;
 
 // STATIC: %0x00BB87F0
 const char* CSimpleScrollFrame::s_objectTypeName = "ScrollFrame";
 
-// STATIC: %0x00CD25B8
+// STATIC: 0x00DD3A60
 CDataAllocator CSimpleScrollFrame::s_allocator(sizeof(CSimpleScrollFrame), 5);
 
 // INLINED

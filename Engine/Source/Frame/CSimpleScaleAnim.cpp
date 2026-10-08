@@ -15,7 +15,7 @@
 // STATIC: %0x00BB9AA4
 int32_t CSimpleScaleAnim::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2808
+// STATIC: 0x00DD3CB0
 int32_t CSimpleScaleAnim::s_objectType;
 
 // STATIC: %0x00BB8BB4

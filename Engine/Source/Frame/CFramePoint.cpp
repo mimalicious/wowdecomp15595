@@ -10,7 +10,7 @@
 // STATIC: %0x00BB8EE8
 float CFramePoint::UNDEFINED = std::numeric_limits<float>::infinity();
 
-// STATIC: %0x00CD2818
+// STATIC: 0x00DD3CC0
 CDataAllocator CFramePoint::s_framePointHeap(sizeof(CFramePoint), 0x1000);
 
 // INLINED

@@ -67,7 +67,7 @@ static TSExplicitList<CMipBitsCache, offsetof(CMipBitsCache, m_link)> s_mipBitsC
 // STATIC: %0x00BB9E50
 static TSExplicitList<CTextureAtlas, offsetof(CTextureAtlas, m_link)> s_atlasList;
 
-// STATIC: %0x00BB9E68
+// STATIC: 0x00CA4B2C
 static TSExplicitList<CAsyncObject, offsetof(CAsyncObject, m_link)> s_asyncTextureList;
 
 // STATIC: %0x00CD2900

@@ -1830,7 +1830,7 @@ void CSimpleFrame::DestroyScriptMetaTable() {
     CSimpleFrame::s_metatable = LUA_NOREF;
 }
 
-// STATIC: %0x00BB8350
+// STATIC: 0x00CA2FA8
 static FrameScript_Method s_ScriptMethods[] = {
     { "GetTitleRegion", &Script_GetTitleRegion },
     { "CreateTitleRegion", &Script_CreateTitleRegion },

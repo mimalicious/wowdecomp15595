@@ -28,7 +28,7 @@ static TSFixedArray<const ResistancesRec*> s_resistances;
 // STATIC: #0x00C5D674
 static TSFixedArray<uint32_t> s_terrainTypeSoundIDs;
 
-// STATIC: #0x00C5D680
+// STATIC: 0x00D97EB0
 static TSFixedArray<const ItemSubClassRec*> s_weaponSubclasses;
 
 // STATIC: 0x00D73300

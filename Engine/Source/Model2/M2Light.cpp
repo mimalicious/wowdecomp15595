@@ -11,7 +11,7 @@
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: %0x00C0D1CC
+// STATIC: 0x00D07F14
 static float s_lightGridScale = 0.05f;
 
 // PROVEN: 9a8905f2 IDENTICAL/NONE

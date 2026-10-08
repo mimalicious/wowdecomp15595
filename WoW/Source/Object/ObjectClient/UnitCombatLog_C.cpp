@@ -156,7 +156,7 @@ static TSList<PendingCombatLogData, TSGetLink<PendingCombatLogData> > s_pendingD
 // STATIC: #0x00ADB95C
 static TSList<PendingCombatLogData, TSGetLink<PendingCombatLogData> > s_freePendingData;
 
-// STATIC: #0x00ADB968
+// STATIC: 0x00CA7A28
 TSList<CombatLogFilter, TSGetLink<CombatLogFilter> > s_filters;
 
 // STATIC: #0x00ADB974

@@ -6,7 +6,7 @@
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00BEA7B0
+// STATIC: 0x00F76B18
 CAccountMsgBody g_accountMsgBody;
 
 // OFFSET: #0x0054FB10

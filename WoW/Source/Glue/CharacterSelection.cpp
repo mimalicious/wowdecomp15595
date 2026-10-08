@@ -47,7 +47,7 @@ static float s_ghostGlow = 0.15f;
 // STATIC: #0x00AC436C
 int32_t CCharacterSelection::s_selectionIndex = -1;
 
-// STATIC: #0x00B6B1FC
+// STATIC: 0x00EBC078
 CSimpleModelFFX* CCharacterSelection::m_modelFrame;
 
 // STATIC: #0x00B6B200

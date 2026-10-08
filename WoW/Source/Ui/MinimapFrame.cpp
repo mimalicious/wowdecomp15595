@@ -199,10 +199,10 @@ static const float s_indoorZoomRadius[6] = { 150.0f, 120.0f, 90.0f, 60.0f, 40.0f
 // STATIC: #0x00AF4E48
 static int32_t s_mapId = -1;
 
-// STATIC: #0x00AF4E4C
+// STATIC: 0x00CA2714
 static int32_t s_outdoorZoom = 3;
 
-// STATIC: #0x00AF4E50
+// STATIC: 0x00CA2718
 static int32_t s_indoorZoom = 3;
 
 // STATIC: #0x00AF4E58
@@ -220,7 +220,7 @@ static int32_t s_poisChanged;
 // STATIC: #0x00D39230
 static char s_dynamicPOINames[4][64];
 
-// STATIC: #0x00D39434
+// STATIC: 0x00DC75BC
 static uint8_t s_isIndoors;
 
 // STATIC: #0x00D39444
@@ -235,7 +235,7 @@ static int32_t s_closestPOIsChanged;
 // STATIC: #0x00D39454
 static C3Vector s_playerPosition;
 
-// STATIC: #0x00D39490
+// STATIC: 0x00DC7620
 static AreaPOIRec s_dynamicPOIs[4];
 
 // STATIC: #0x00D395F0
@@ -261,7 +261,7 @@ static MINIMAPQUAD s_quads[4] = {
     { { 0.0f, 0.5f, 0.5f, 1.0f }, C2Vector(0.0f, 1.0f) },
 };
 
-// STATIC: #0x00BEBB10
+// STATIC: 0x00F61278
 static MINIMAPTILE s_tiles[256];
 
 // STATIC: #0x00BF5F10

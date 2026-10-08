@@ -30,7 +30,7 @@ int32_t CGGossipInfo::m_textPending;
 // STATIC: #0x00C016F8
 uint32_t CGGossipInfo::m_gossipID;
 
-// STATIC: #0x00C016F0
+// STATIC: 0x00F75E38
 WOWGUID CGGossipInfo::m_gossip;
 
 // STATIC: #0x00C016FC

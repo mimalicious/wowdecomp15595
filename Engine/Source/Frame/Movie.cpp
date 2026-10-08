@@ -37,10 +37,10 @@ float MovieStreaming::s_progressBase;
 // STATIC: %0x00CD12FC
 float MovieStreaming::s_progressScale;
 
-// STATIC: %0x00CD2518
+// STATIC: 0x00DD39C0
 static uint32_t s_bandwidthTime;
 
-// STATIC: %0x00CD251C
+// STATIC: 0x00DD39C4
 static float s_bandwidth;
 
 // INLINED

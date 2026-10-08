@@ -75,7 +75,7 @@ static const char* s_modelDomainShaders[4] = {
     "T1_T2_T3_T4",
 };
 
-// STATIC: %0x00C0D3F8
+// STATIC: 0x00D080A0
 static M2ShaderEffect s_shaderEffects[29] = {
     { 12, 3, 1, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3) },
     { 13, 3, 1, 1, static_cast<EGxTexOp>(0), static_cast<EGxTexOp>(3) },

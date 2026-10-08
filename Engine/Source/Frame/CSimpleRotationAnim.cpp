@@ -15,7 +15,7 @@
 // STATIC: %0x00BB9A80
 int32_t CSimpleRotationAnim::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD280C
+// STATIC: 0x00DD3CB4
 int32_t CSimpleRotationAnim::s_objectType;
 
 // STATIC: %0x00BB8BB0

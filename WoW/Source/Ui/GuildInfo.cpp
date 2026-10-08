@@ -42,7 +42,7 @@ char CGGuildInfo::m_motd[516];
 // STATIC: #0x00C22A70
 GuildRosterSortCriteria CGGuildInfo::m_sortCriteria[8];
 
-// STATIC: #0x00C22AB0
+// STATIC: 0x00F35ECC
 uint32_t CGGuildInfo::m_numMembers;
 
 // STATIC: #0x00C22AB4
@@ -51,7 +51,7 @@ uint32_t CGGuildInfo::m_numOnlineMembers;
 // STATIC: #0x00C22ABC
 int32_t CGGuildInfo::m_showOffline;
 
-// STATIC: #0x00C22AC0
+// STATIC: 0x00F35EE8
 WOWGUID CGGuildInfo::m_selectedMember;
 
 // STATIC: #0x00C22AC8
@@ -63,7 +63,7 @@ int32_t CGGuildInfo::m_pendingEventLogNames;
 // STATIC: #0x00C22AD4
 uint8_t CGGuildInfo::m_saveToFile;
 
-// STATIC: #0x00C22AD8
+// STATIC: 0x00F35F5C
 TSGrowableArray<GuildMemberInfo*> CGGuildInfo::m_roster;
 
 // STATIC: #0x00AD07A4

@@ -37,7 +37,7 @@ WorldPvPQueueStatus CGBattlefieldInfo::m_worldPvPQueues[1];
 // STATIC: #0x00BEA2C0
 BattlefieldScoreSortCriteria CGBattlefieldInfo::m_scoreSortCriteria[17];
 
-// STATIC: #0x00BEA720
+// STATIC: 0x00F36D68
 TSGrowableArray<int32_t> CGBattlefieldInfo::m_battlegroundTypes;
 
 // STATIC: #0x00BE9EE0

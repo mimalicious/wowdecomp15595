@@ -16,13 +16,13 @@
 // STATIC: %0x00BB9164
 int32_t CSimpleCheckbox::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2538
+// STATIC: 0x00DD39E0
 int32_t CSimpleCheckbox::s_objectType;
 
 // STATIC: %0x00BB86B4
 const char* CSimpleCheckbox::s_objectTypeName = "CheckButton";
 
-// STATIC: %0x00CD253C
+// STATIC: 0x00DD39E4
 CDataAllocator CSimpleCheckbox::s_allocator(sizeof(CSimpleCheckbox), 50);
 
 // INLINED

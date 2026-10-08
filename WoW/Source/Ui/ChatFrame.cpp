@@ -228,7 +228,7 @@ TSExplicitList<PENDINGCHAT, 0> CGChat::s_pendingChat;
 // STATIC: #0x00B759D0
 int32_t s_chatLogging[2];
 
-// STATIC: #0x00B759D8
+// STATIC: 0x00ED9168
 HSLOG s_chatLog[2];
 
 // STATIC: #0x00B75A60

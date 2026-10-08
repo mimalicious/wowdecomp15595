@@ -38,10 +38,10 @@
 // STATIC: %0x00BB9400
 int32_t CSimpleEditBox::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2554
+// STATIC: 0x00DD39FC
 CSimpleEditBox* CSimpleEditBox::s_currentFocus;
 
-// STATIC: %0x00CD2550
+// STATIC: 0x00DD39F8
 int32_t CSimpleEditBox::s_objectType;
 
 // STATIC: %0x00BB86B8
@@ -50,7 +50,7 @@ const char* CSimpleEditBox::s_objectTypeName = "EditBox";
 // STATIC: 0x00CA3350
 const char* CSimpleEditBox::s_inputLanguageNames[4] = { "ROMAN", "KOREAN", "CHINESE", "JAPANESE" };
 
-// STATIC: %0x00CD2558
+// STATIC: 0x00DD3A00
 CDataAllocator CSimpleEditBox::s_allocator(sizeof(CSimpleEditBox), 5);
 
 // PROVEN: 9be4407c IDENTICAL/IDENTICAL

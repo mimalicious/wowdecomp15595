@@ -35,7 +35,7 @@ uint32_t CGReputationInfo::m_numFactions;
 // STATIC: #0x00C23478
 uint32_t CGReputationInfo::m_numShownFactions;
 
-// STATIC: #0x00C23480
+// STATIC: 0x00F4CC38
 TSFixedArray<FactionListEntry*> CGReputationInfo::m_factionList;
 
 // STATIC: #0x00C2348C

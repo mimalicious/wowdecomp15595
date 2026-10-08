@@ -29,18 +29,18 @@
 // STATIC: %0x00BB9920
 int32_t CSimpleColorSelect::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2614
+// STATIC: 0x00DD3ABC
 int32_t CSimpleColorSelect::s_objectType;
 
 // STATIC: %0x00BB8818
 const char* CSimpleColorSelect::s_objectTypeName = "ColorSelect";
 
-// STATIC: %0x00CD2618
+// STATIC: 0x00DD3AC0
 CDataAllocator CSimpleColorSelect::s_allocator(sizeof(CSimpleColorSelect), 5);
 
 // OFFSET: %0x00533130
 static void ValueTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
-    // STATIC: %0x00CD2630
+    // STATIC: 0x00DD3AD8
     static CImVector s_texels[64];
 
     switch (command) {
@@ -420,7 +420,7 @@ void CSimpleColorSelect::SetColorWheelTexture(CSimpleTexture* texture) {
     }
 
     if (texture) {
-        // STATIC: %0x00CD2734
+        // STATIC: 0x00DD3BDC
         static TSGrowableArray<CImVector> s_wheelTexels;
 
         if (!s_wheelTexels.Count()) {

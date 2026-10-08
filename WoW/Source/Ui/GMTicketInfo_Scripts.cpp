@@ -10,7 +10,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/GMSurveyInfo.h"
 
-// STATIC: #0x00ACFAC0
+// STATIC: 0x00D169B8
 static StaticConstant s_staticConstants[7] = {
     { "STATIC_CONSTANTS", 0 },
     { "Loot", 1 },

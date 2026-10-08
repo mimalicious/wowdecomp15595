@@ -25,7 +25,7 @@ const char* Blizzard::Streaming::s_filePrefix = "file://";
 // STATIC: %0x00D81374
 Blizzard::Streaming::PROCESSURLFUNC Blizzard::Streaming::s_processUrlFunc;
 
-// STATIC: #0x00B38170
+// STATIC: 0x00EBA234
 Blizzard::Streaming::ManifestInfo* Blizzard::Streaming::ManifestInfo::s_instance;
 
 // STATIC: #0x00B38660

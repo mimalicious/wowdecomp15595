@@ -15,13 +15,13 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// STATIC: %0x00CD2570
+// STATIC: 0x00DD3A18
 CDataAllocator CSimpleMessageFrame::s_allocator(sizeof(CSimpleMessageFrame), 5);
 
 // STATIC: %0x00BB94E8
 int32_t CSimpleMessageFrame::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD256C
+// STATIC: 0x00DD3A14
 int32_t CSimpleMessageFrame::s_objectType;
 
 // STATIC: %0x00BB8718

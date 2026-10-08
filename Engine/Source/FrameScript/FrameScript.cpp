@@ -59,7 +59,7 @@ int32_t s_errorHandlerFunc = -1;
 // STATIC: %0x00C0D6F8
 static int32_t s_recursiveTableHash = -1;
 
-// STATIC: %0x00C0D700
+// STATIC: 0x00D083B0
 static const char* s_savedVariablesTaint = "SavedVariables";
 
 // STATIC: %0x00C0D778

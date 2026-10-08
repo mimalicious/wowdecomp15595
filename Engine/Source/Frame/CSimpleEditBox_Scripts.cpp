@@ -647,7 +647,7 @@ static int32_t Script_IsEnabled(lua_State* L) {
     return 1;
 }
 
-// STATIC: %0x00BB9230
+// STATIC: 0x00CA3F08
 static FrameScript_Method s_ScriptMethods[] = {
     { "SetFontObject", &Script_SetFontObject },
     { "GetFontObject", &Script_GetFontObject },

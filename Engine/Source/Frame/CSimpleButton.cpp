@@ -24,13 +24,13 @@
 // STATIC: %0x00BB9130
 int32_t CSimpleButton::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD2520
+// STATIC: 0x00DD39C8
 int32_t CSimpleButton::s_objectType;
 
 // STATIC: %0x00BB86A0
 const char* CSimpleButton::s_objectTypeName = "Button";
 
-// STATIC: %0x00CD2524
+// STATIC: 0x00DD39CC
 CDataAllocator CSimpleButton::s_allocator(sizeof(CSimpleButton), 100);
 
 // INLINED

@@ -13,7 +13,7 @@ static int64_t s_repairSuccessBytes;
 // STATIC: %0x00D812F0
 static int64_t s_repairFailBytes;
 
-// STATIC: %0x00D87628
+// STATIC: 0x00EBAD88
 static bool s_trackerDisabled;
 
 // STATIC: %0x00D8762C

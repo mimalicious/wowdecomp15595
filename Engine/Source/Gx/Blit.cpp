@@ -4,7 +4,7 @@
 #include "Engine/Source/Tempest/C2iVector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
-// STATIC: #0x00C60930
+// STATIC: 0x00E28FB8
 static BLIT_FUNCTION s_blits[BlitFormats_Last][BlitFormats_Last][BlitAlphas_Last];
 
 // STATIC: %0x00D0D010

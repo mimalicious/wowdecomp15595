@@ -24,13 +24,13 @@
 // STATIC: %0x00BB97F8
 int32_t CSimpleSlider::s_metatable = LUA_NOREF;
 
-// STATIC: %0x00CD25CC
+// STATIC: 0x00DD3A74
 int32_t CSimpleSlider::s_objectType;
 
 // STATIC: %0x00BB87F4
 const char* CSimpleSlider::s_objectTypeName = "Slider";
 
-// STATIC: %0x00CD25D0
+// STATIC: 0x00DD3A78
 CDataAllocator CSimpleSlider::s_allocator(sizeof(CSimpleSlider), 5);
 
 // INLINED
