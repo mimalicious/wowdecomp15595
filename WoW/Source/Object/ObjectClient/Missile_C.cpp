@@ -969,7 +969,7 @@ CMissile* CMissile::NewMissile() {
     uint32_t memHandle;
     CMissile* missile = NULL;
 
-    if (!ObjectAlloc(*CMissile::s_missileHeap, &memHandle, reinterpret_cast<void**>(&missile), false)) {
+    if (!ObjectAlloc(*CMissile::s_missileHeap, &memHandle, reinterpret_cast<void**>(&missile), false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -986,7 +986,7 @@ CMissile* CMissile::CopyMissile(const CMissile* source) {
     uint32_t memHandle;
     CMissile* missile = NULL;
 
-    if (ObjectAlloc(*CMissile::s_missileHeap, &memHandle, reinterpret_cast<void**>(&missile), false)) {
+    if (ObjectAlloc(*CMissile::s_missileHeap, &memHandle, reinterpret_cast<void**>(&missile), false, __FILE__, __LINE__)) {
         if (missile) {
             new (missile) CMissile();
         }
@@ -1046,7 +1046,7 @@ void CMissile::DeleteSelf() {
 
     uint32_t* heap = CMissile::s_missileHeap;
     this->~CMissile();
-    ObjectFree(*heap, this->m_memHandle);
+    ObjectFree(*heap, this->m_memHandle, this, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x00703770

@@ -159,7 +159,7 @@ CMissileCollision* CMissileCollisionHeap::New() {
     uint32_t memHandle;
     void* memory = NULL;
 
-    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false)) {
+    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -199,7 +199,7 @@ void CMissileCollision::Free() {
         this->m_next->m_prev = this->m_prev;
     }
 
-    ObjectFree(CMissileCollision::s_pool->m_heapId, this->m_memHandle);
+    ObjectFree(CMissileCollision::s_pool->m_heapId, this->m_memHandle, this, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x006FC920

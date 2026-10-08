@@ -4611,7 +4611,7 @@ CCharacterComponent* CCharacterComponent::AllocComponent() {
     uint32_t memHandle;
     void* object = NULL;
 
-    if (!ObjectAlloc(*s_componentHeap, &memHandle, &object, false)) {
+    if (!ObjectAlloc(*s_componentHeap, &memHandle, &object, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -5001,7 +5001,7 @@ bool CCharacterComponent::RenderPrep(int32_t wait) {
 void CCharacterComponent::FreeComponent(CCharacterComponent* component) {
     uint32_t* heap = s_componentHeap;
     component->~CCharacterComponent();
-    ObjectFree(*heap, component->m_heapIndex);
+    ObjectFree(*heap, component->m_heapIndex, component, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x004F16F0

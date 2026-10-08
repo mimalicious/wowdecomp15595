@@ -581,7 +581,7 @@ static void DestroyRemovedObject(CGObject_C* object) {
     if (activePlayer) {
         SMemFree(object, __FILE__, __LINE__, 0);
     } else {
-        ObjectFree(s_objHeapIds[object->m_typeId], object->m_heapIndex);
+        ObjectFree(s_objHeapIds[object->m_typeId], object->m_heapIndex, object, __FILE__, __LINE__);
     }
 }
 
@@ -773,7 +773,7 @@ CGObject_C* ClntObjMgrAllocObject(OBJECT_TYPE_ID typeId, WOWGUID guid) {
 
     uint32_t memHandle;
 
-    if (!ObjectAlloc(s_objHeapIds[typeId], &memHandle, NULL, false)) {
+    if (!ObjectAlloc(s_objHeapIds[typeId], &memHandle, NULL, false, __FILE__, __LINE__)) {
         return NULL;
     }
 

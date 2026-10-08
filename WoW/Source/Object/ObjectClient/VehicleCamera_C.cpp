@@ -165,7 +165,7 @@ void CVehicleCamera_C::Destroy() {
     uint32_t memHandle = this->m_memHandle;
     uint32_t heapId = s_cameraPool->m_heapId;
     s_cameraCount--;
-    ObjectFree(heapId, memHandle);
+    ObjectFree(heapId, memHandle, this, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x0075AA70
@@ -392,7 +392,7 @@ CVehicleCamera_C* CVehicleCameraHeap::New() {
     uint32_t memHandle;
     void* memory = NULL;
 
-    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false)) {
+    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -1161,6 +1161,6 @@ CVehicleCamera_C* CVehicleCamera_C::Create(CGUnit_C* unit, uint32_t time) {
     }
 
     CVehicleCamera_C::s_cameraCount--;
-    ObjectFree(CVehicleCamera_C::s_cameraPool->m_heapId, camera->m_memHandle);
+    ObjectFree(CVehicleCamera_C::s_cameraPool->m_heapId, camera->m_memHandle, camera, __FILE__, __LINE__);
     return NULL;
 }

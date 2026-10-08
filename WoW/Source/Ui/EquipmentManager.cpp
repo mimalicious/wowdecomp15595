@@ -77,7 +77,7 @@ static EQUIPMENT_SET* AllocSet(uint32_t* heap) {
     uint32_t handle;
     void* object = NULL;
 
-    if (!ObjectAlloc(*heap, &handle, &object, false)) {
+    if (!ObjectAlloc(*heap, &handle, &object, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -145,7 +145,7 @@ bool CGEquipmentManager::DeleteEquipmentSet(EQUIPMENT_SET* set) {
         }
     }
 
-    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle);
+    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle, set, __FILE__, __LINE__);
     WDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_EQUIPMENT_SET_DELETE));
     SmartGUID setGuid;
@@ -312,7 +312,7 @@ int32_t Packet_SMSG_EQUIPMENT_SET_LIST(void* param, NETMESSAGE msgId, uint32_t t
 
     if (existing) {
         for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); !CGEquipmentManager::s_equipmentSets.IsEnd(node); node = CGEquipmentManager::s_equipmentSets.RawNext(node)) {
-            ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle);
+            ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle, node->m_set, __FILE__, __LINE__);
         }
 
         CGEquipmentManager::s_equipmentSets.Clear();
@@ -323,7 +323,7 @@ int32_t Packet_SMSG_EQUIPMENT_SET_LIST(void* param, NETMESSAGE msgId, uint32_t t
         uint32_t handle;
         void* object = NULL;
 
-        if (ObjectAlloc(*CGEquipmentManager::s_equipmentSetHeap, &handle, &object, false)) {
+        if (ObjectAlloc(*CGEquipmentManager::s_equipmentSetHeap, &handle, &object, false, __FILE__, __LINE__)) {
             set = object ? new (object) EQUIPMENT_SET() : NULL;
             set->m_handle = handle;
         }
@@ -453,7 +453,7 @@ static void OnEquipmentSetSaved(int32_t id, WOWGUID guid) {
         }
     }
 
-    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle);
+    ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, set->m_handle, set, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x005AF6C0
@@ -659,7 +659,7 @@ void CGEquipmentManager::ShutdownGame() {
     CGEquipmentManager::m_loaded = 0;
 
     for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
-        ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle);
+        ObjectFree(*CGEquipmentManager::s_equipmentSetHeap, node->m_set->m_handle, node->m_set, __FILE__, __LINE__);
     }
 
     CGEquipmentManager::s_equipmentSets.Clear();

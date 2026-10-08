@@ -2741,7 +2741,6 @@ void CM2Model::DetachFromParent() {
     this->Release();
 }
 
-// PROVEN: 903696a9 IDENTICAL/DIFFERENT
 // OFFSET: 0x008147D0/0x14052C7A0
 void CM2Model::DetachAllChildrenById(uint32_t id) {
     CM2Model* model = this->m_attachList;
@@ -7331,7 +7330,6 @@ int32_t CM2Model::ProcessCallbacksRecursive() {
     return this->Release();
 }
 
-// PROVEN: 63ffb4b1 IDENTICAL/DIFFERENT
 // OFFSET: 0x00820A10/0x14053C2D0
 void CM2Model::DeactivateModel() {
     this->CancelAllDeferredSequences();

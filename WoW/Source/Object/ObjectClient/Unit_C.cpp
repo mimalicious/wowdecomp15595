@@ -17979,7 +17979,7 @@ UnitThreat* UnitThreatHeap::New() {
     uint32_t memHandle;
     void* memory = NULL;
 
-    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false)) {
+    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -18058,7 +18058,7 @@ void CGUnit_C::ClearThreatList() {
         this->m_threats.Unlink(entry);
         UnitThreatHeap* heap = s_unitThreatPool;
         entry->~UnitThreat();
-        ObjectFree(heap->m_heapId, entry->m_memHandle);
+        ObjectFree(heap->m_heapId, entry->m_memHandle, entry, __FILE__, __LINE__);
     }
 
     this->m_highestThreatGuid = WOWGUID();
@@ -18273,7 +18273,7 @@ void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
     this->m_threats.Unlink(entry);
     UnitThreatHeap* heap = s_unitThreatPool;
     entry->~UnitThreat();
-    ObjectFree(heap->m_heapId, entry->m_memHandle);
+    ObjectFree(heap->m_heapId, entry->m_memHandle, entry, __FILE__, __LINE__);
     Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_THREAT_SITUATION_UPDATE);
 
     if (update) {

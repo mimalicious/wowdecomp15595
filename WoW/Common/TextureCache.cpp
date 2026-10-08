@@ -224,7 +224,7 @@ static CACHEENTRY* TextureCacheAllocEntry() {
     uint32_t memHandle;
     void* object = NULL;
 
-    if (!ObjectAlloc(*s_entryHeap, &memHandle, &object, false)) {
+    if (!ObjectAlloc(*s_entryHeap, &memHandle, &object, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
@@ -246,7 +246,7 @@ void TextureCacheDestroyTexture(void* handle) {
         s_cacheTable.Unlink(entry);
         uint32_t* heap = s_entryHeap;
         entry->~CACHEENTRY();
-        ObjectFree(*heap, entry->m_memHandle);
+        ObjectFree(*heap, entry->m_memHandle, entry, __FILE__, __LINE__);
     }
 }
 

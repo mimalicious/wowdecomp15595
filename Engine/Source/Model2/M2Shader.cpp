@@ -215,6 +215,7 @@ const char* M2GetDomainShaderName(uint32_t textureCount, uint16_t shader) {
     return s_modelDomainShaders[textureCount != 1];
 }
 
+// PROVEN: 9defac58 IDENTICAL/DIFFERENT
 // OFFSET: 0x00839830/0x140563C80
 void M2GetFixedFunctionFallback(uint16_t shader, EGxTexOp* colorOp, EGxTexOp* alphaOp) {
     if (shader & 0x8000) {

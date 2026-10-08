@@ -173,7 +173,7 @@ void CVehiclePassenger_C::Free() {
         delete this->m_deferredTransitionSpline;
     }
 
-    ObjectFree(*s_passengerPool, this->m_memHandle);
+    ObjectFree(*s_passengerPool, this->m_memHandle, this, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x00749060
@@ -548,7 +548,7 @@ void CVehiclePassenger_C::StartMirroringVehicleAnims() {
 CVehiclePassenger_C* CVehiclePassenger_C::Alloc(CGUnit_C* unit) {
     uint32_t memHandle;
     void* memory = NULL;
-    CVehiclePassenger_C* passenger = reinterpret_cast<CVehiclePassenger_C*>(ObjectAlloc(*s_passengerPool, &memHandle, &memory, false));
+    CVehiclePassenger_C* passenger = reinterpret_cast<CVehiclePassenger_C*>(ObjectAlloc(*s_passengerPool, &memHandle, &memory, false, __FILE__, __LINE__));
 
     if (passenger) {
         passenger = static_cast<CVehiclePassenger_C*>(memory);

@@ -475,7 +475,7 @@ CVehicle_C* CVehicle_C::Create(const CClientObjCreate* create, CGUnit_C* unit, i
     uint32_t memHandle;
     void* memory = NULL;
 
-    if (ObjectAlloc(s_vehiclePool->m_heapId, &memHandle, &memory, false)) {
+    if (ObjectAlloc(s_vehiclePool->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
         vehicle = static_cast<CVehicle_C*>(memory);
 
         if (vehicle) {
@@ -544,7 +544,7 @@ void CVehicle_C::UpdateWorldMatrix() {
 // OFFSET: #0x00757B40
 void CVehicleHeap::Delete(CVehicle_C* vehicle) {
     vehicle->~CVehicle_C();
-    ObjectFree(this->m_heapId, vehicle->m_memHandle);
+    ObjectFree(this->m_heapId, vehicle->m_memHandle, vehicle, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x00757000

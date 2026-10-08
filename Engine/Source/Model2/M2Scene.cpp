@@ -1802,7 +1802,7 @@ CM2Model* CM2Scene::CreateModel(const char* fileName, uint32_t flags, uint8_t pr
         model = g_modelPool->New(__FILE__, __LINE__);
 
         if (model && !model->Initialize(this, shared, NULL, flags)) {
-            g_modelPool->Delete(model, __FILE__, __LINE__);
+            g_modelPool->Delete(model);
             model = NULL;
         }
 
@@ -1821,7 +1821,7 @@ CM2Model* CM2Scene::DuplicateModel(CM2Model* source, uint32_t flags) {
     CM2Model* model = g_modelPool->New(__FILE__, __LINE__);
 
     if (model && !model->Initialize(this, source->m_shared, source, flags)) {
-        g_modelPool->Delete(model, __FILE__, __LINE__);
+        g_modelPool->Delete(model);
         return NULL;
     }
 

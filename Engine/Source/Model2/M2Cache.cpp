@@ -115,6 +115,7 @@ void M2SetCacheFlags(uint32_t flags) {
     s_cache.m_flags = flags;
 }
 
+// PROVEN: 3dbe4961 IDENTICAL/DIFFERENT
 // OFFSET: 0x00812100/0x140529A30
 void CM2Cache::UpdateShaderFlags() {
     uint32_t requested = this->m_requestedFlags;

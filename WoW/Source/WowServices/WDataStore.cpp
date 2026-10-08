@@ -48,7 +48,7 @@ uint8_t* WDataStore::GetHeaderSpace(uint32_t bytes) {
 
 // OFFSET: %0x004CC2C0
 void WDataStoreHeap::Delete(WDATASTOREBUFFER* buffer) {
-    ObjectFree(this->m_heapId, buffer->m_memHandle);
+    ObjectFree(this->m_heapId, buffer->m_memHandle, buffer, __FILE__, __LINE__);
 }
 
 // OFFSET: #0x00466140
@@ -78,13 +78,13 @@ void WDataStore::StaticInitialize() {
 void WDataStore::InternalDestroy(uint8_t*& data, uint32_t& base, uint32_t& alloc) {
     if (this->m_bufferObj) {
         if (alloc == 0x300) {
-            ObjectFree(s_smallBufferHeap->m_heapId, this->m_bufferObj->m_memHandle);
+            ObjectFree(s_smallBufferHeap->m_heapId, this->m_bufferObj->m_memHandle, this->m_bufferObj, __FILE__, __LINE__);
             this->m_bufferObj = NULL;
         } else if (alloc == 0x4000) {
-            ObjectFree(s_largeBufferHeap->m_heapId, this->m_bufferObj->m_memHandle);
+            ObjectFree(s_largeBufferHeap->m_heapId, this->m_bufferObj->m_memHandle, this->m_bufferObj, __FILE__, __LINE__);
             this->m_bufferObj = NULL;
         } else if (alloc == 0x40040) {
-            ObjectFree(s_superBufferHeap->m_heapId, this->m_bufferObj->m_memHandle);
+            ObjectFree(s_superBufferHeap->m_heapId, this->m_bufferObj->m_memHandle, this->m_bufferObj, __FILE__, __LINE__);
             this->m_bufferObj = NULL;
         }
     } else if (data) {
@@ -101,11 +101,11 @@ void WDataStore::FreeBuffer(void* buffer, uint32_t size) {
     WDATASTOREBUFFER* header = static_cast<WDATASTOREBUFFER*>(buffer) - 1;
 
     if (size <= 0x300) {
-        ObjectFree(s_smallBufferHeap->m_heapId, header->m_memHandle);
+        ObjectFree(s_smallBufferHeap->m_heapId, header->m_memHandle, header, __FILE__, __LINE__);
     } else if (size <= 0x4000) {
-        ObjectFree(s_largeBufferHeap->m_heapId, header->m_memHandle);
+        ObjectFree(s_largeBufferHeap->m_heapId, header->m_memHandle, header, __FILE__, __LINE__);
     } else if (size <= 0x40040) {
-        ObjectFree(s_superBufferHeap->m_heapId, header->m_memHandle);
+        ObjectFree(s_superBufferHeap->m_heapId, header->m_memHandle, header, __FILE__, __LINE__);
     } else {
         SMemFree(buffer, __FILE__, __LINE__, 0);
     }
@@ -116,7 +116,7 @@ WDATASTOREBUFFER* WDataStoreHeap::New() {
     uint32_t memHandle;
     WDATASTOREBUFFER* buffer = NULL;
 
-    if (ObjectAlloc(this->m_heapId, &memHandle, reinterpret_cast<void**>(&buffer), false)) {
+    if (ObjectAlloc(this->m_heapId, &memHandle, reinterpret_cast<void**>(&buffer), false, __FILE__, __LINE__)) {
         buffer->m_memHandle = memHandle;
         return buffer;
     }
@@ -187,11 +187,11 @@ int32_t WDataStore::InternalFetchWrite(uint32_t pos, uint32_t bytes, uint8_t*& d
     if (oldBuffer) {
         switch (oldAlloc) {
             case 0x300:
-                ObjectFree(s_smallBufferHeap->m_heapId, oldBuffer->m_memHandle);
+                ObjectFree(s_smallBufferHeap->m_heapId, oldBuffer->m_memHandle, oldBuffer, __FILE__, __LINE__);
                 return 1;
 
             case 0x4000:
-                ObjectFree(s_largeBufferHeap->m_heapId, oldBuffer->m_memHandle);
+                ObjectFree(s_largeBufferHeap->m_heapId, oldBuffer->m_memHandle, oldBuffer, __FILE__, __LINE__);
                 return 1;
 
             case 0x40040:

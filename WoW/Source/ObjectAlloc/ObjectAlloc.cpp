@@ -262,9 +262,9 @@ static void HeapUse() {
     s_globalsLock.Leave();
 }
 
-// PROVEN: 71ce0149 IDENTICAL/NONE
+// PROVEN: 06f4e206 IDENTICAL/NONE
 // OFFSET: 0x00486D40/0x1400A7D90
-void ObjectFree(uint32_t heapId, uint32_t memHandle) {
+void ObjectFree(uint32_t heapId, uint32_t memHandle, void* object, const char* file, int32_t line) {
     s_globalsLock.Enter();
     s_globals.objects[heapId].Delete(memHandle);
     s_globalsLock.Leave();
@@ -311,7 +311,7 @@ int32_t CObjectHeapList::New(uint32_t* index, void** ptr, bool zero) {
 }
 
 // OFFSET: 0x00486F00
-int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool zero) {
+int32_t ObjectAlloc(uint32_t heapId, uint32_t* memHandle, void** objectPtr, bool zero, const char* file, int32_t line) {
     if (memHandle) {
         *memHandle = 0;
         s_globalsLock.Enter();
