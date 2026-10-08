@@ -441,7 +441,7 @@ void BattlenetFileDownload::CompleteDownload() {
     }
 }
 
-// OFFSET: [0x00B0B220, 0x00B0B5D0]
+// OFFSET: [0x00B0B220/0x1408CEF60, 0x00B0B5D0/0x1408CF480]
 GruntFileDownload::~GruntFileDownload() {
     this->Close(false, false);
 }

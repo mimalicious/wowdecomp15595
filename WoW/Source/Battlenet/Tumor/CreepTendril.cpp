@@ -111,7 +111,7 @@ Battlenet::CreepTendril::Instance* Battlenet::CreepTendril::Instance::Create(con
     return new (memory) Instance(settings, manager);
 }
 
-// OFFSET: [#0x009C1A40, #0x009C1C50, #0x009C1CF0]
+// OFFSET: [0x00662430, 0x006626C0]
 Battlenet::CreepTendril::Instance::~Instance() {
     Battlenet::CreepTendril::s_creepDestroy(this->m_creep);
     this->m_creep = NULL;
@@ -123,7 +123,7 @@ Battlenet::CreepTendril::Instance::~Instance() {
     }
 }
 
-// OFFSET: #0x009C1CC0
+// OFFSET: 0x00662690
 void Battlenet::CreepTendril::Instance::Destroy() {
     Battlenet::Delete(this);
 }

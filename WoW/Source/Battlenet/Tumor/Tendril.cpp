@@ -32,7 +32,7 @@ void Battlenet::Service::Interface::SendEvent(const uint8_t& eventType, const BS
     }
 }
 
-// OFFSET: #0x009C19A0
+// OFFSET: 0x00662390
 Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Service::Interface(manager) {
     this->m_eventId = eventId;
 
@@ -46,7 +46,7 @@ Battlenet::Tendril::Tendril(BSN::FourCC eventId, TumorManager& manager) : Servic
     this->m_adapter = manager.GetTumor()->AllocAdapter(*this, this->m_tendrilId);
 }
 
-// OFFSET: #0x009C1C60
+// INLINED
 Battlenet::Tendril::~Tendril() {
 }
 

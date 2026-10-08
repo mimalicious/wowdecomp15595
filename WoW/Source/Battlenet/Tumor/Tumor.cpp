@@ -109,7 +109,7 @@ Battlenet::Tumor::TokenBinding* Battlenet::Tumor::FindTokenBinding(uint32_t toke
     return &this->m_tokenBindings[i];
 }
 
-// OFFSET: #0x009C0E60
+// INLINED
 Battlenet::Tumor::EventBinding* Battlenet::Tumor::AllocEventBinding() {
     uint32_t i = 0;
 
@@ -123,7 +123,7 @@ Battlenet::Tumor::EventBinding* Battlenet::Tumor::AllocEventBinding() {
     return &this->m_eventBindings[i];
 }
 
-// OFFSET: #0x009C0EA0
+// INLINED
 Battlenet::Tumor::ConnectionBinding* Battlenet::Tumor::AllocConnectionBinding() {
     uint32_t i = 0;
 
@@ -137,7 +137,7 @@ Battlenet::Tumor::ConnectionBinding* Battlenet::Tumor::AllocConnectionBinding() 
     return &this->m_connectionBindings[i];
 }
 
-// OFFSET: #0x009C0EE0
+// OFFSET: 0x00661860
 Battlenet::Tumor::TokenBinding* Battlenet::Tumor::AllocTokenBinding() {
     uint32_t i = 0;
 
@@ -153,7 +153,7 @@ Battlenet::Tumor::TokenBinding* Battlenet::Tumor::AllocTokenBinding() {
     return binding;
 }
 
-// OFFSET: #0x009C1190
+// OFFSET: 0x00661AE0/0x140307550
 void Battlenet::Tumor::Subscribe(BSN::FourCC eventId, EventSubscriber& subscriber, const uint32_t& tendrilId) {
     EventBinding* binding = this->AllocEventBinding();
 
@@ -165,7 +165,7 @@ void Battlenet::Tumor::Subscribe(BSN::FourCC eventId, EventSubscriber& subscribe
     }
 }
 
-// OFFSET: #0x009C11C0
+// OFFSET: 0x00661B40/0x1403075C0
 Battlenet::Tumor::Adapter* Battlenet::Tumor::AllocAdapter(SystemClient& client, const uint32_t& tendrilId) {
     uint32_t index = 0;
 
@@ -228,7 +228,7 @@ void Battlenet::Tumor::RemoveTendril(const uint32_t& tendrilId) {
     }
 }
 
-// OFFSET: #0x009C1400
+// OFFSET: 0x00661D80
 uint32_t Battlenet::Tumor::Connect(uint32_t index, const IP4::AddressPort& address, const uint32_t& tendrilId) {
     ConnectionBinding* binding = this->AllocConnectionBinding();
 
@@ -245,7 +245,7 @@ uint32_t Battlenet::Tumor::Connect(uint32_t index, const IP4::AddressPort& addre
     return connection;
 }
 
-// OFFSET: #0x009C1490
+// OFFSET: 0x00661E30
 uint32_t Battlenet::Tumor::OpenDatagram(uint32_t index, int32_t port, const uint32_t& tendrilId) {
     ConnectionBinding* binding = this->AllocConnectionBinding();
 
@@ -363,62 +363,64 @@ uint32_t Battlenet::Tumor::Adapter::Resolve(uint32_t token, const char* hostname
     return tumor->m_application->Resolve(binding->m_token, hostname);
 }
 
-// OFFSET: #0x009C1710
+// PROVEN: cf8fbf4b IDENTICAL/NONE
+// OFFSET: 0x006620D0
 uint32_t Battlenet::Tumor::Adapter::Connect(const IP4::AddressPort& address, const uint32_t& tendrilId) {
     return this->m_tumor->Connect(this->m_index, address, tendrilId);
 }
 
-// OFFSET: #0x009C1730
+// OFFSET: 0x006620F0
 void Battlenet::Tumor::Adapter::Disconnect(uint32_t connection) {
     this->m_tumor->m_application->Disconnect(connection);
 }
 
-// OFFSET: #0x009C1750
+// OFFSET: 0x00662110
 bool Battlenet::Tumor::Adapter::Send(uint32_t connection, const void* data, uint32_t size) {
     return this->m_tumor->m_application->Send(connection, data, size);
 }
 
-// OFFSET: #0x009C1770
+// PROVEN: 38938bfb IDENTICAL/NONE
+// OFFSET: 0x00662130
 uint32_t Battlenet::Tumor::Adapter::OpenDatagram(int32_t port, const uint32_t& tendrilId) {
     return this->m_tumor->OpenDatagram(this->m_index, port, tendrilId);
 }
 
-// OFFSET: #0x009C0FD0
+// OFFSET: 0x00661920
 void Battlenet::Tumor::Adapter::CloseDatagram(uint32_t connection) {
     this->m_tumor->m_application->CloseDatagram(connection);
 }
 
-// OFFSET: #0x009C0FF0
+// OFFSET: 0x00661940
 bool Battlenet::Tumor::Adapter::SendDatagram(uint32_t connection, const void* data, uint32_t size, const IP4::AddressPort& address) {
     return this->m_tumor->m_application->SendDatagram(connection, data, size, address);
 }
 
-// OFFSET: #0x009C1010
+// OFFSET: 0x00661960
 uint64_t Battlenet::Tumor::Adapter::GetCurrentTime() const {
     return this->m_tumor->m_application->GetCurrentTime();
 }
 
-// OFFSET: #0x009C1030
+// OFFSET: 0x00661980
 uint64_t Battlenet::Tumor::Adapter::GetCurrentTick() const {
     return this->m_tumor->m_application->GetCurrentTick();
 }
 
-// OFFSET: #0x009C1050
+// OFFSET: 0x006619A0
 void Battlenet::Tumor::Adapter::LogLevel(const char* message, int32_t level) {
     this->m_tumor->m_application->LogLevel(message, level);
 }
 
-// OFFSET: #0x009C1070
+// OFFSET: 0x006619C0
 Battlenet::ApplicationFile* Battlenet::Tumor::Adapter::OpenApplicationFile(const char* name) {
     return this->m_tumor->m_application->OpenApplicationFile(name);
 }
 
-// OFFSET: #0x009C1090
+// OFFSET: 0x006619E0
 void Battlenet::Tumor::Adapter::CloseApplicationFile(ApplicationFile* file) {
     this->m_tumor->m_application->CloseApplicationFile(file);
 }
 
-// OFFSET: [#0x009C0F30, #0x009C0F50]
+// OFFSET: 0x006618C0
 Battlenet::Tumor::Adapter::~Adapter() {
 }
 
