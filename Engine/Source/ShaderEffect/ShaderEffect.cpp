@@ -477,7 +477,7 @@ void CShaderEffect::SetTexMtx_Identity(uint32_t stage) {
     }
 
     GxRsSet(static_cast<EGxRenderState>(GxRs_TextureShader0 + stage), 0);
-    g_theGxDevicePtr->m_xforms[stage].Identity();
+    g_theGxDevicePtr->XformSetIdentity(static_cast<EGxXform>(stage));
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 0);
 }
 
@@ -490,7 +490,7 @@ void CShaderEffect::SetTexMtx_SphereMap(uint32_t stage) {
     }
 
     GxRsSet(static_cast<EGxRenderState>(GxRs_TextureShader0 + stage), 0);
-    g_theGxDevicePtr->m_xforms[stage].Identity();
+    g_theGxDevicePtr->XformSetIdentity(static_cast<EGxXform>(stage));
     GxRsSet(static_cast<EGxRenderState>(GxRs_TexGen0 + stage), 6);
 }
 

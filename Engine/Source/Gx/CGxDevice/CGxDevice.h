@@ -402,6 +402,7 @@ class CGxDevice {
     void TexSetDataFormat(CGxTex* texId, EGxTexFormat dataFormat);
     void WaitForFPSCap();
     void XformPush(EGxXform xf);
+    void XformSetIdentity(EGxXform xf);
     void XformPushAndSet(EGxXform xf, const C44Matrix& matrix);
     void XformSetViewport(float minX, float maxX, float minY, float maxY, float minZ, float maxZ);
 };

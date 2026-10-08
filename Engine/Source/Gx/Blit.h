@@ -35,6 +35,7 @@ class CArgb4444 {
     /* 0000 */ uint16_t m_value;
 
     CArgb4444();
+    CArgb4444(const CRgb565& color);
 };
 
 class DxtColorBlock {

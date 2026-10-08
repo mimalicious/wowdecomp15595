@@ -839,6 +839,11 @@ void CGxDevice::XformPush(EGxXform xf) {
     stack.m_dirty = 1;
 }
 
+// OFFSET: 0x00431BC0
+void CGxDevice::XformSetIdentity(EGxXform xf) {
+    this->m_xforms[xf].Identity();
+}
+
 // PROVEN: 64320f83 IDENTICAL/IDENTICAL
 // OFFSET: 0x008418D0/0x14056DC50
 EGxApi CGxDevice::DeviceApi() {
