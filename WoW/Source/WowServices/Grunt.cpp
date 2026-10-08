@@ -144,7 +144,8 @@ void Grunt::ClientLink::Connect(const char* address) {
     }
 }
 
-// OFFSET: %0x00A43EE0
+// PROVEN: 0b18597c IDENTICAL/NONE
+// OFFSET: 0x00B03E80
 void Grunt::ClientLink::WCConnected(WowConnection* connection, WowConnection* inbound, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_lock.Enter();
     this->SetState(2);

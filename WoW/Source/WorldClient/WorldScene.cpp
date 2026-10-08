@@ -584,6 +584,7 @@ void CWorldScene::SetupSceneLighting() {
     }
 }
 
+// PROVEN: 7f57448b IDENTICAL/NONE
 // OFFSET: 0x007275D0
 void CWorldScene::RenderWeather() {
     CWorldMap* worldMap = CWorldMap::s_worldMaps[CWorldMap::s_activeWorldMapIndex];

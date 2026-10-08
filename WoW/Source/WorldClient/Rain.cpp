@@ -795,6 +795,7 @@ void Rain::UpdatePackets() {
     }
 }
 
+// PROVEN: bf9f2627 IDENTICAL/NONE
 // OFFSET: 0x007522E0
 void Rain::Render() {
     this->UpdatePackets();

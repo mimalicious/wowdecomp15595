@@ -889,6 +889,7 @@ void CWorldMap::UnloadAllWorldMaps() {
     }
 }
 
+// PROVEN: 25ebd110 IDENTICAL/NONE
 // OFFSET: 0x0072F560
 void CWorldMap::Destroy() {
     CWorldMap::UnloadAllWorldMaps();
