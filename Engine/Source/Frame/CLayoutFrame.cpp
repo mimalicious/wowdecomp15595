@@ -910,7 +910,7 @@ int32_t CLayoutFrame::CanBeAnchorFor(CLayoutFrame* frame) {
     return 1;
 }
 
-// OFFSET: %0x00518D80
+// OFFSET: 0x005089D0/0x1401504A0
 void CLayoutFrame::OnFrameSizeChanged(const CRect& rect) {
     for (CLayoutFrame::FRAMENODE* node = this->m_resizeList.Head(); node; node = this->m_resizeList.Next(node)) {
         node->m_frame->Resize(0);

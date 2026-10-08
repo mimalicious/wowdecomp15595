@@ -2678,7 +2678,7 @@ int32_t CSimpleTexture::LoadTexture() {
     return 1;
 }
 
-// OFFSET: %0x0050C9E0
+// OFFSET: 0x004FC690
 void CSimpleTexture::ShowThis(bool loadPending) {
     CSimpleRegion::ShowThis(loadPending);
 
@@ -2686,7 +2686,7 @@ void CSimpleTexture::ShowThis(bool loadPending) {
         this->m_visible = 1;
     }
 
-    if (this->m_fileName && !this->m_texture) {
+    if (this->m_visible && this->m_fileName && !this->m_texture) {
         this->LoadTexture();
     }
 }

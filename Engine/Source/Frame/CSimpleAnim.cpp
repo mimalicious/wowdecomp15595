@@ -579,18 +579,14 @@ void CSimpleAnim::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
+// PROVEN: 4620d55f IDENTICAL/DIFFERENT
 // OFFSET: 0x0052B7D0/0x14017BFB0
 bool CSimpleAnim::ChangeParent(CSimpleAnimGroup* group) {
     if (!group || this->m_group == group) {
         return false;
     }
 
-    group->m_animations.LinkToTail(this);
-
-    if (this->m_group) {
-        this->m_group->NotifyAnimRemoved(this);
-    }
-
+    this->m_group->NotifyAnimRemoved(this);
     this->m_group = group;
     group->NotifyAnimAdded(this);
 

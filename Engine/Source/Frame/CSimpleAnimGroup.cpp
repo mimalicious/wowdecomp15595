@@ -580,6 +580,8 @@ void CSimpleAnimGroup::NotifyAnimAdded(CSimpleAnim* anim) {
         return;
     }
 
+    this->m_animations.LinkToTail(anim);
+
     if (this->AddAnimListNode(this->RegisterAnimList(anim->m_order), anim)) {
         this->ComputeDuration();
     }
@@ -851,13 +853,21 @@ bool CSimpleAnimGroup::OnUpdate(float elapsedSec) {
     return this->IsDone();
 }
 
-// OFFSET: %0x0053B8C0
+// OFFSET: 0x0052B770/0x14017BEC0
 void CSimpleAnimGroup::NotifyAnimRemoved(CSimpleAnim* anim) {
     if (!anim) {
         return;
     }
 
-    if (this->RemoveAnimListNode(this->FindAnimList(anim->m_order), anim)) {
+    this->m_animations.UnlinkNode(anim);
+
+    TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list = this->FindAnimList(anim->m_order);
+
+    if (this->RemoveAnimListNode(list, anim)) {
+        if (!list->Head()) {
+            this->SortAnimations();
+        }
+
         this->ComputeDuration();
     }
 }

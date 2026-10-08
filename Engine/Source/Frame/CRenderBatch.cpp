@@ -104,7 +104,7 @@ void CRenderBatch::Clear() {
     this->m_count = 0;
 }
 
-// OFFSET: [%0x0050CE40, %0x0050CE10]
+// OFFSET: [0x004FCB60/0x140140FD0, 0x004FCE60/0x140141500]
 CRenderBatch::~CRenderBatch() {
     this->Clear();
 }
