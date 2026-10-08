@@ -866,7 +866,7 @@ int32_t ZlibDecompress(void* dest, uint32_t* destsize, const void* source, uint3
     return 1;
 }
 
-// OFFSET: #0x00778290
+// OFFSET: 0x004B9E40
 void RLEZeroCompress(void* dest, uint32_t* destsize, const void* source, uint32_t sourcesize, uint32_t* hint, uint32_t optimization) {
     uint8_t* basedest = static_cast<uint8_t*>(dest);
     uint8_t* enddest = basedest + *destsize;

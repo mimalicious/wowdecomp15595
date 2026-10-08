@@ -25,7 +25,7 @@ static HANDLE OpenFileHandle(const IOFileParam* param) {
     return handle != INVALID_HANDLE_VALUE ? handle : NULL;
 }
 
-// OFFSET: #0x00779F50
+// OFFSET: 0x00B67A50/0x140931BF0
 static uint32_t OsPathGetRootChars(const char* path) {
     uint32_t length = SStrLen(path);
 

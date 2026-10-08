@@ -96,6 +96,11 @@ int32_t STORMAPI SBigCompare(const BigData* a, const BigData* b) {
 BigStack::~BigStack() {
 }
 
+// PROVEN: 3b903b75 IDENTICAL/NONE
+// OFFSET: 0x004BCC60
+BigData::~BigData() {
+}
+
 // OFFSET: 0x004BC0D0
 void BigBuffer::GrowToFit(uint32_t index) {
     this->m_data.GrowToFit(index + this->m_offset, 1);

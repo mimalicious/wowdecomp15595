@@ -13,13 +13,13 @@ inline void BigNum::FromBinary(const void* data, uint32_t bytes) {
     SBigFromBinary(this->m_data, data, bytes);
 }
 
-// INLINED: 0x0077CA0E->0x0077CA22
+// OFFSET: 0x004BDBA0
 inline BigNum& BigNum::PowMod(const BigNum& b, const BigNum& c, const BigNum& d) {
     SBigPowMod(this->m_data, b.m_data, c.m_data, d.m_data);
     return *this;
 }
 
-// INLINED: 0x0077CA22->0x0077CA48
+// OFFSET: 0x004BDBD0
 inline void* BigNum::ToBinaryBuffer(void* data, uint32_t bytes) const {
     uint32_t written;
     SBigToBinaryBuffer(this->m_data, data, bytes, &written);

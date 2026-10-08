@@ -232,6 +232,7 @@ void CGxDevice::DeviceResolveDepthBuffer(CGxTex* texture) {
 void CGxDevice::DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex* dest, uint32_t destPlane, uint32_t level) {
 }
 
+// PROVEN: ce586b75 IDENTICAL/NONE
 // OFFSET: 0x00841930
 CGxFrameBuffer* CGxDevice::FrameBufferCreate() {
     return new (SMemAlloc(sizeof(CGxFrameBuffer), __FILE__, __LINE__, 0)) CGxFrameBuffer();

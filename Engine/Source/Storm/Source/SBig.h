@@ -42,6 +42,7 @@ class BigData {
     /* 0014 */ mutable BigStack m_stack;
     /* 0158 */ mutable TSGrowableArray<uint8_t> m_output;
 
+    ~BigData();
     TSGrowableArray<uint8_t>& Output() const;
     BigBuffer& Primary();
     const BigBuffer& Primary() const;

@@ -60,7 +60,7 @@ inline void Save(uint32_t a, uint8_t* const b) {
 }
 }
 
-// OFFSET: #0x0077A560
+// OFFSET: 0x004C10B0/0x1400FB960
 void Sha1::Pump(uint32_t* const hash, const uint8_t* const data) {
     uint32_t w[80];
 
@@ -129,6 +129,7 @@ void Sha1::Initialize() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
+// PROVEN: 65ab97d4 IDENTICAL/UNPROVEN
 // OFFSET: 0x004C1600/0x1400FBE70
 void Sha1::Append(const void* _data, uint32_t size) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);

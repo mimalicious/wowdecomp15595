@@ -3854,6 +3854,7 @@ CGxDeviceD3d::CGxDeviceD3d() {
     this->DeviceCreateStreamBufs();
 }
 
+// PROVEN: 91a0d061 IDENTICAL/NONE
 // OFFSET: 0x008563E0/0x1405870A0
 int32_t CGxDeviceD3d::ITexAllocD3dTexture(CGxTex* texId) {
     uint32_t width;

@@ -71,7 +71,8 @@ const MD5& MD5::operator=(const char* str) {
     return *this;
 }
 
-// OFFSET: %0x004BAF90
+// PROVEN: 6dd18a41 IDENTICAL/NONE
+// OFFSET: 0x004B8670/0x1400F0C40
 MD5::MD5(char* str) {
     *this = str;
 }
