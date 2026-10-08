@@ -42,7 +42,7 @@ inline uint64_t MakeLarge(uint32_t low, uint32_t high) {
     return low + (static_cast<uint64_t>(high) << 32);
 }
 
-// OFFSET: #0x00443D30
+// OFFSET: 0x007D3610
 Blizzard::BigBuffer::BigBuffer() {
     this->m_offset = 0;
 }
@@ -195,7 +195,7 @@ static uint32_t HighBitPos(const Blizzard::BigBuffer& a) {
     return 0;
 }
 
-// OFFSET: #0x004462D0
+// OFFSET: 0x007D7560
 static void Div(Blizzard::BigBuffer& a, uint32_t* b, const Blizzard::BigBuffer& c, uint64_t d) {
     a.SetCount(c.Count());
 
@@ -213,7 +213,7 @@ static void Div(Blizzard::BigBuffer& a, uint32_t* b, const Blizzard::BigBuffer& 
     *b = static_cast<uint32_t>(data);
 }
 
-// OFFSET: #0x00446420
+// OFFSET: 0x007D7670
 static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint64_t c) {
     uint64_t carry = 0;
     uint32_t i = 0;
@@ -226,7 +226,7 @@ static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint64_t c
     a.SetCount(i);
 }
 
-// OFFSET: #0x004464F0
+// OFFSET: 0x007D7750
 static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c, Blizzard::BigStack& stack) {
     Blizzard::BigBuffer& aa = stack.MakeDistinct(a, &a == &b || &a == &c);
     aa.Clear();
@@ -246,7 +246,7 @@ static void Mul(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Bliz
     stack.UnmakeDistinct(a, aa);
 }
 
-// OFFSET: #0x004467B0
+// OFFSET: 0x007D79C0
 static void Shl(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c) {
     uint32_t cWords = c >> 5;
     uint32_t cBits = c & 0x1F;
@@ -293,7 +293,7 @@ static void Shr(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, uint32_t c
     a.SetCount(i);
 }
 
-// OFFSET: #0x00446A40
+// OFFSET: 0x007D7C00
 static void Square(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, Blizzard::BigStack& stack) {
     Blizzard::BigBuffer& aa = stack.MakeDistinct(a, &a == &b);
     aa.Clear();
@@ -370,7 +370,7 @@ inline void ToBinary(std::vector<uint8_t>& output, const Blizzard::BigBuffer& a)
     ToBinaryAppend(output, a);
 }
 
-// OFFSET: #0x004494A0
+// OFFSET: 0x007DB680
 static void Div(Blizzard::BigBuffer& a, Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c, const Blizzard::BigBuffer& d, Blizzard::BigStack& stack) {
     c.Trim();
     d.Trim();
@@ -439,7 +439,7 @@ inline void MulMod(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const B
     stack.Free(allocCount);
 }
 
-// OFFSET: #0x00449820
+// OFFSET: 0x007DBA00
 static void PowMod(Blizzard::BigBuffer& a, const Blizzard::BigBuffer& b, const Blizzard::BigBuffer& c, const Blizzard::BigBuffer& d, Blizzard::BigStack& stack) {
     c.Trim();
 
@@ -502,7 +502,7 @@ inline void Blizzard::SBigFromBinary(BigData* num, const void* data, uint32_t by
     FromBinary(num->Primary(), data, bytes);
 }
 
-// OFFSET: #0x00446EB0
+// OFFSET: 0x007D8140
 void Blizzard::SBigNew(BigData** num) {
     *num = new BigData;
 }
@@ -512,7 +512,7 @@ inline void Blizzard::SBigPowMod(BigData* a, const BigData* b, const BigData* c,
     PowMod(a->Primary(), b->Primary(), c->Primary(), d->Primary(), a->Stack());
 }
 
-// OFFSET: #0x00446F20
+// OFFSET: 0x007DBCB0
 void Blizzard::SBigToBinaryBuffer(const BigData* num, void* data, uint32_t maxBytes, uint32_t* bytes) {
     std::vector<uint8_t>& output = num->Output();
     ToBinary(output, num->Primary());
@@ -571,7 +571,7 @@ inline void Blizzard::Crypt::RSA::Prepare(const void* modulus, uint32_t mLength,
     this->m_exponent.FromBinary(exponent, eLength);
 }
 
-// OFFSET: #0x0044B0E0
+// OFFSET: 0x007DEB90
 void Blizzard::Crypt::RSA::Process(uint8_t* data, uint32_t length) {
     BigNum src;
     src.FromBinary(data, length);
@@ -592,7 +592,7 @@ void Blizzard::SSignatureVerifyStream_Begin(SSignatureData** token, uint32_t mod
     (*token)->sha.Prepare();
 }
 
-// OFFSET: #0x0042C950
+// OFFSET: 0x007B1FD0
 void Blizzard::SSignatureVerifyStream_ProvideData(SSignatureData* token, const uint8_t* data, uint32_t size) {
     int32_t excess = size - token->magicBufferSize;
 
@@ -621,7 +621,7 @@ void Blizzard::SSignatureVerifyStream_ProvideData(SSignatureData* token, const u
     }
 }
 
-// OFFSET: #0x0044B2B0
+// OFFSET: 0x007DEC80
 bool Blizzard::SSignatureVerifyStream_Finish(SSignatureData* token, const uint8_t* modulus, const uint8_t* pubExponent) {
     bool result = false;
 

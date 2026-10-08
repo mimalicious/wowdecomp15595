@@ -29,7 +29,7 @@ Blizzard::Util::Buffer<N, T>::Buffer() {
     this->m_count = N;
 }
 
-// OFFSET: #0x0042EBB0<4096, uint8_t>
+// OFFSET: 0x007B67A0<4096, uint8_t>
 template <uint32_t N, class T>
 Blizzard::Util::Buffer<N, T>::Buffer(uint32_t count) {
     this->m_count = count;

@@ -4,7 +4,8 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
-// OFFSET: #0x00435C00
+// PROVEN: a3632f70 IDENTICAL/IDENTICAL
+// OFFSET: 0x007C0770/0x1404BA1F0
 void Blizzard::Lock::EventCreate(Event& event) {
     event = CreateEventW(NULL, FALSE, FALSE, NULL);
 }

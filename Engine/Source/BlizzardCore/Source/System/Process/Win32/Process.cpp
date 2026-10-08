@@ -175,7 +175,7 @@ bool ToolhelpFunction::ModuleNext(HANDLE snapshot, char* path, uint32_t pathsize
     return this->m_proc ? this->CallModuleW(snapshot, path, pathsize) : Module32NextA(snapshot, path, pathsize);
 }
 
-// OFFSET: #0x0043DEC0
+// OFFSET: 0x007DC7C0/0x1404DFC50
 static void CALLBACK TimerFunc(HWND hwnd, UINT message, UINT_PTR id, DWORD time) {
     for (std::set<ChildProcess*>::iterator it = s_childProcesses.begin(); it != s_childProcesses.end();) {
         std::set<ChildProcess*>::iterator current = it++;
@@ -194,7 +194,8 @@ static void CALLBACK TimerFunc(HWND hwnd, UINT message, UINT_PTR id, DWORD time)
     }
 }
 
-// OFFSET: #0x00435C20
+// PROVEN: e409a6f3 IDENTICAL/IDENTICAL
+// OFFSET: 0x007BCFF0/0x1404B56E0
 bool Blizzard::Process::GetProcessPath(char* buffer, int32_t buffersize) {
     if (!buffer || buffersize <= 0) {
         return false;
@@ -208,7 +209,7 @@ bool Blizzard::Process::GetProcessPath(char* buffer, int32_t buffersize) {
     return true;
 }
 
-// OFFSET: #0x004389C0
+// OFFSET: 0x007C0880/0x1404BA350
 bool Blizzard::Process::GetProcessDirectory(char* buffer, int32_t buffersize) {
     Blizzard::Util::Buffer<1024, char> path(buffersize);
 
@@ -228,7 +229,7 @@ bool Blizzard::Process::GetProcessDirectory(char* buffer, int32_t buffersize) {
     return true;
 }
 
-// OFFSET: #0x00440D80
+// OFFSET: 0x007DC8F0/0x1404DFDE0
 bool Blizzard::Process::LaunchChildProcessWithArguments(const char* path, const char* arguments, void (*callback)(void*), void* param) {
     if (!arguments) {
         arguments = "";

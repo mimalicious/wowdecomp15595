@@ -1,7 +1,7 @@
 // INLINED
 inline System_Time::TimeInfo* System_Time::GetTimeInfo() {
     if (!s_timeInfo) {
-        void* memory = malloc(sizeof(TimeInfo));
+        void* memory = SMemAlloc(sizeof(TimeInfo), __FILE__, __LINE__, 0);
         s_timeInfo = memory ? new (memory) TimeInfo() : NULL;
     }
 

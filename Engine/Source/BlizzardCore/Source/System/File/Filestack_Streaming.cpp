@@ -153,7 +153,7 @@ bool System_File::Stacked::stream_writep(Blizzard::File::Filesystem* fs, FilePar
     return result;
 }
 
-// OFFSET: %0x00740A40
+// OFFSET: 0x007DEF60
 bool StreamDirWalk::Callback(const Blizzard::File::ProcessDirParms& parms) {
     static_cast<StreamDirWalk*>(parms.m_cookie)->m_files[std::string(parms.m_filename)] = parms.m_isDir;
     return true;

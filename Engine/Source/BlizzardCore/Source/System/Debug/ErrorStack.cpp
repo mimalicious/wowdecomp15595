@@ -42,7 +42,7 @@ const char* Blizzard::Debug::ErrorStackAsText(ErrorStackRecord* stack) {
     return stack ? stack->m_flattened : "";
 }
 
-// OFFSET: #0x00432210
+// OFFSET: 0x007BC270/0x1404B4130
 Blizzard::Debug::ErrorStackRecord* Blizzard::Debug::AddErrorToStack(ErrorStackRecord* stack, int32_t errCode, const char* errStr, int32_t category) {
     if (!g_ErrorStackEnabled) {
         return NULL;

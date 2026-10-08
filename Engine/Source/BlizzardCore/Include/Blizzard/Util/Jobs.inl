@@ -7,7 +7,7 @@ inline Blizzard::Jobs::RefCounted<T>::RefCounted() {
     this->m_refCount = 0;
 }
 
-// OFFSET: %0x00979550<Blizzard::Jobs::Job>
+// OFFSET: 0x00A39260<Blizzard::Jobs::Job>
 template <class T>
 inline Blizzard::Jobs::RefCounted<T>::~RefCounted() {
 }

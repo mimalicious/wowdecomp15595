@@ -103,7 +103,7 @@ void System_MPQGlobals::RegisterGlobalStorage::Shutdown() {
     }
 }
 
-// OFFSET: #0x00451C90
+// OFFSET: 0x007EE110/0x1404FA8E0
 System_MPQGlobals::RegisterGlobalStorage::RegisterGlobalStorage() : Blizzard::Using::Use("Blizzard::Mopaq") {
     System_Using::Intern(this->m_name)->shutdownproc = System_MPQGlobals::RegisterGlobalStorage::Shutdown;
     Blizzard::Using::DependsOn("Blizzard::Mopaq", "Blizzard::Memory");

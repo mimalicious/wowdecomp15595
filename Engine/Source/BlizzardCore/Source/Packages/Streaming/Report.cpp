@@ -55,7 +55,7 @@ void ReportOld::SetLanguage(const char* language) {
     }
 }
 
-// OFFSET: %0x00762CB0
+// OFFSET: 0x007FCF60
 Report::LogData::~LogData() {
 }
 
@@ -81,13 +81,13 @@ Report::TrackerData<T>::TrackerData(std::string key, const T& value) {
     this->m_value = value;
 }
 
-// OFFSET: %0x00762F40
+// OFFSET: 0x007FD250
 template <class T>
 std::string Report::TrackerData<T>::Key() const {
     return this->m_key;
 }
 
-// OFFSET: %0x007638D0
+// OFFSET: 0x007FDB80/0x1405109F0
 std::string ReportOld::GetDefaultMessage() {
     std::string message;
     message.append("&stats=", 7);
@@ -98,7 +98,7 @@ std::string ReportOld::GetDefaultMessage() {
     return message;
 }
 
-// OFFSET: %0x00763AE0
+// OFFSET: 0x007FDD90/0x140510C40
 template <>
 std::string Report::TrackerData<int32_t>::ToString() const {
     char buffer[256];
@@ -107,7 +107,7 @@ std::string Report::TrackerData<int32_t>::ToString() const {
     return std::string(buffer);
 }
 
-// OFFSET: %0x00763B70
+// OFFSET: 0x007FDE20/0x140510CD0
 template <>
 std::string Report::TrackerData<int64_t>::ToString() const {
     char buffer[256];
@@ -116,7 +116,7 @@ std::string Report::TrackerData<int64_t>::ToString() const {
     return std::string(buffer);
 }
 
-// OFFSET: %0x00763C00
+// OFFSET: 0x007FDEB0/0x140510D60
 template <>
 std::string Report::TrackerData<std::string>::ToString() const {
     char buffer[256];
@@ -125,13 +125,13 @@ std::string Report::TrackerData<std::string>::ToString() const {
     return std::string(buffer);
 }
 
-// OFFSET: %0x00763CA0
+// OFFSET: 0x007FDF50/0x140510E00
 std::vector<Report::LogData*>& Report::GetLogData() {
     static std::vector<LogData*> s_logData;
     return s_logData;
 }
 
-// OFFSET: %0x00763D00
+// OFFSET: 0x007FDFB0/0x140510E80
 std::vector<Report::LogData*>::iterator Report::FindLogData(std::string key) {
     for (std::vector<LogData*>::iterator it = GetLogData().begin(); it != GetLogData().end(); ++it) {
         if ((*it)->Key() == key) {
@@ -142,7 +142,7 @@ std::vector<Report::LogData*>::iterator Report::FindLogData(std::string key) {
     return GetLogData().end();
 }
 
-// OFFSET: %0x00763F70
+// OFFSET: 0x007FE200
 void Report::Reset() {
     for (std::vector<LogData*>::iterator it = GetLogData().begin(); it != GetLogData().end(); ++it) {
         delete *it;
@@ -158,7 +158,7 @@ void Report::Shutdown() {
     s_initialized = false;
 }
 
-// OFFSET: %0x00764140
+// OFFSET: 0x007FE3D0/0x140511300
 void Report::DeleteData(std::string key) {
     std::vector<LogData*>::iterator it = FindLogData(key);
 
@@ -168,7 +168,7 @@ void Report::DeleteData(std::string key) {
     }
 }
 
-// OFFSET: %0x00764220
+// OFFSET: 0x007FE4B0/0x140511440
 void Report::SendReport() {
     if (!s_initialized) {
         return;
@@ -187,19 +187,19 @@ void Report::SendReport() {
     Tracker::SendToTracker(message.c_str());
 }
 
-// OFFSET: %0x00764440
+// OFFSET: 0x007FE6D0/0x1405116C0
 void Report::SetData(std::string key, int32_t value) {
     DeleteData(key);
     GetLogData().push_back(new TrackerData<int32_t>(key, value));
 }
 
-// OFFSET: %0x00764510
+// OFFSET: 0x007FE7A0/0x1405118B0
 void Report::SetData(std::string key, int64_t value) {
     DeleteData(key);
     GetLogData().push_back(new TrackerData<int64_t>(key, value));
 }
 
-// OFFSET: %0x007645E0
+// OFFSET: 0x007FE870/0x140511AA0
 void Report::SetData(std::string key, std::string value) {
     DeleteData(key);
     GetLogData().push_back(new TrackerData<std::string>(key, value));

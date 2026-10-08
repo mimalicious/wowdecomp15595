@@ -113,7 +113,7 @@ Blizzard::Util::Array<T>::Array() {
     this->m_count = 0;
 }
 
-// OFFSET: %0x00717B10<uint8_t>
+// OFFSET: 0x007B6370/0x1404AC690<uint8_t>
 template <class T>
 void Blizzard::Util::Array<T>::SetCount(uint32_t count) {
     if (count) {

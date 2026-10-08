@@ -14,7 +14,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// OFFSET: #0x0042D500
+// OFFSET: 0x007B5310/0x1404AB180
 void System_File::Stacked::Throttle(int64_t bytes, int64_t elapsed) {
     if (s_throttleDelay > 0) {
         Sleep(s_throttleDelay);

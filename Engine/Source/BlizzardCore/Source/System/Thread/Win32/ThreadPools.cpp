@@ -8,7 +8,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// OFFSET: #0x0044B7B0
+// OFFSET: 0x007DF4A0/0x1404E4470
 System_Thread::ThreadWorker::~ThreadWorker() {
     Blizzard::Lock::EventSet(this->m_wakeEvent.m_event);
     Blizzard::Lock::EventWaitForever(this->m_readyEvent.m_event);
@@ -21,7 +21,7 @@ System_Thread::ThreadWorker::~ThreadWorker() {
     }
 }
 
-// OFFSET: #0x0044B860
+// OFFSET: 0x007DF530/0x1404E4530
 uint32_t System_Thread::ThreadWorker::Executive(void* param) {
     ThreadWorker* worker = static_cast<ThreadWorker*>(param);
 
@@ -60,7 +60,7 @@ uint32_t System_Thread::ThreadWorker::Executive(void* param) {
     return 0;
 }
 
-// OFFSET: #0x00450D80
+// OFFSET: 0x007EA040/0x1404EA980
 bool System_Thread::ThreadWorker::Start(Blizzard::Thread::ThreadPoolRecord* pool, int32_t flags, int32_t stackSize, const Blizzard::Thread::ThreadAffinity& affinity) {
     if (!Blizzard::Thread::Create(Executive, this, &this->m_thread, "Blizzard Thread Pool Worker", flags, stackSize)) {
         return false;

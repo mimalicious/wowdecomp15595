@@ -14,7 +14,7 @@ void System_Streaming::HttpCallback::Completed(Blizzard::URL::DownloadCallback::
     SetEvent(this->m_event);
 }
 
-// OFFSET: #0x00439ED0
+// OFFSET: 0x007C8070/0x1404C3410
 System_Streaming::HttpCallback::HttpCallback() {
     this->m_data.reserve(1024);
     this->m_data.erase(this->m_data.begin(), this->m_data.end());
@@ -24,7 +24,7 @@ System_Streaming::HttpCallback::HttpCallback() {
     this->m_event = CreateEventW(NULL, FALSE, FALSE, NULL);
 }
 
-// OFFSET: #0x00439F80
+// OFFSET: 0x007C62B0/0x1404C1460
 System_Streaming::HttpCallback::~HttpCallback() {
     CloseHandle(this->m_event);
 }
@@ -169,7 +169,7 @@ bool Blizzard::Streaming::SourceManifest::ReadIndirectFile(const char* url) {
     return result;
 }
 
-// OFFSET: %0x007599F0
+// OFFSET: 0x007F1FC0/0x1404FF0B0
 bool Blizzard::Streaming::ManifestInfo::ReadIndirectFile(const char* url) {
     System_Streaming::HttpCallback* callback = new System_Streaming::HttpCallback();
 

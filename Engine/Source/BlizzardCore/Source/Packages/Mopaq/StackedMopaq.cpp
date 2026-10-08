@@ -720,7 +720,7 @@ void System_Mopaq::OpenDiskFile(const char* name, uint32_t flags, const char* pa
     }
 }
 
-// OFFSET: %0x0072DA90
+// OFFSET: 0x007CC750/0x1404C8CC0
 void System_Mopaq::CreateDiskFile(const char* name, uint32_t flags, const char* path, System_SFile::ARCHIVEREC* archive, Blizzard::Mopaq::HSFILERecord** result) {
     MpqParams parms;
     memset(&parms, 0, sizeof(parms));

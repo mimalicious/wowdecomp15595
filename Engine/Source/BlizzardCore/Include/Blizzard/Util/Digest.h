@@ -24,7 +24,7 @@ extern const char s_hexChars[16];
 }
 }
 
-// OFFSET: %0x00710F80<16>
+// OFFSET: 0x007AE910<16>
 template <int N>
 Blizzard::Util::Digest<N>& Blizzard::Util::Digest<N>::FromHexString(const char* hex) {
     if (hex && strlen(hex) == 2 * N) {
@@ -65,7 +65,7 @@ bool Blizzard::Util::Digest<N>::operator!=(const Digest& other) const {
     return memcmp(this->m_data, other.m_data, N) != 0;
 }
 
-// OFFSET: %0x00710FE0<16>
+// OFFSET: 0x007AE970<16>
 template <int N>
 bool Blizzard::Util::Digest<N>::ToHexString(char* buffer, int32_t size) const {
     if (size <= 2 * N) {

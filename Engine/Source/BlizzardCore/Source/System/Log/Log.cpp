@@ -12,45 +12,49 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
+#include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
+#include "Engine/Source/Storm/H/storm.h"
+#include <new>
 
 // STATIC: #0x00AB93EC
 static System_Log::UsingLog s_usingLog;
 
-// STATIC: #0x00B33C59
-bool System_Log::s_threadRunning;
-
-// STATIC: #0x00B33C5A
-bool System_Log::s_threadDone;
-
-// STATIC: #0x00B33C5C
-Blizzard::Lock::Mutex System_Log::s_mutex;
-
-// STATIC: #0x00B33C74
-int32_t System_Log::s_state;
-
-// STATIC: #0x00B33C78
-int32_t System_Log::s_prefCount;
-
-// STATIC: #0x00B33C7C
-uint32_t System_Log::s_stringPoolSize;
-
-// STATIC: #0x00B33C80
-Blizzard::Time::Timestamp System_Log::s_startTime;
-
-// STATIC: #0x00B33C88
-Blizzard::Thread::ThreadRecord* System_Log::s_thread;
-
-// STATIC: #0x00B33C8C
-uint32_t System_Log::s_stringPoolUsed;
-
-// STATIC: #0x00B33C90
+// STATIC: 0x00EBA62C
 System_Log::Pref* System_Log::s_Prefs;
 
-// STATIC: #0x00B33C94
-char* System_Log::s_stringPool;
+// STATIC: 0x00EBA630
+System_Log::LogGlobals* System_Log::s_LogGlobals;
 
-// STATIC: #0x00B33C98
-System_Log::LogFile System_Log::s_logs[16];
+// INLINED
+static System_Log::LogGlobals* GetLogGlobals() {
+    if (!System_Log::s_LogGlobals) {
+        void* memory = SMemAlloc(sizeof(System_Log::LogGlobals), __FILE__, __LINE__, 0);
+        System_Log::s_LogGlobals = memory ? new (memory) System_Log::LogGlobals() : NULL;
+    }
+
+    return System_Log::s_LogGlobals;
+}
+
+// OFFSET: 0x007B55B0
+System_Log::Pref& System_Log::Pref::operator=(const Pref& other) {
+    if (&other != this) {
+        this->m_mode = other.m_mode;
+        this->m_preamble = other.m_preamble;
+        this->m_dayHeader = other.m_dayHeader;
+        this->m_disabled = other.m_disabled;
+        this->m_noTimestamp = other.m_noTimestamp;
+        this->m_maxOpenTime = other.m_maxOpenTime;
+        this->m_maxIdleTime = other.m_maxIdleTime;
+        this->m_directory = NULL;
+
+        if (other.m_directory) {
+            this->m_directory = static_cast<char*>(SMemAlloc(strlen(other.m_directory) + 1, __FILE__, __LINE__, 0));
+            Blizzard::String::Copy(this->m_directory, other.m_directory, other.m_directory ? static_cast<uint32_t>(strlen(other.m_directory)) + 1 : 1);
+        }
+    }
+
+    return *this;
+}
 
 // PROVEN: e10f01d8 IDENTICAL/NONE
 // OFFSET: 0x007AD560
@@ -78,12 +82,13 @@ void System_Log::PrintTimestamp(FILE* file, Blizzard::Time::Timestamp time) {
 
 // OFFSET: 0x007B56B0
 int32_t System_Log::FindBest(const char* name, uint32_t now) {
+    LogFile* logs = s_LogGlobals->m_logs;
     int32_t freeIndex = -1;
     int32_t oldestOpen = -1;
     int32_t oldestClosed = -1;
 
     for (int32_t i = 0; i < 16; i++) {
-        LogFile& log = s_logs[i];
+        LogFile& log = logs[i];
 
         if (!log.m_name) {
             if (freeIndex < 0) {
@@ -94,7 +99,7 @@ int32_t System_Log::FindBest(const char* name, uint32_t now) {
         }
 
         if (name && !strcmp(log.m_name, name)) {
-            if (log.m_file || i >= 0) {
+            if (s_LogGlobals->m_logs[i].m_file || i >= 0) {
                 return i;
             }
 
@@ -102,10 +107,10 @@ int32_t System_Log::FindBest(const char* name, uint32_t now) {
         }
 
         if (log.m_file) {
-            if (oldestOpen < 0 || now - log.m_lastWrite > now - s_logs[oldestOpen].m_lastWrite) {
+            if (oldestOpen < 0 || now - log.m_lastWrite > now - logs[oldestOpen].m_lastWrite) {
                 oldestOpen = i;
             }
-        } else if (oldestClosed < 0 || now - log.m_lastWrite > now - s_logs[oldestClosed].m_lastWrite) {
+        } else if (oldestClosed < 0 || now - log.m_lastWrite > now - logs[oldestClosed].m_lastWrite) {
             oldestClosed = i;
         }
     }
@@ -116,18 +121,18 @@ int32_t System_Log::FindBest(const char* name, uint32_t now) {
 
     int32_t index = oldestClosed >= 0 ? oldestClosed : oldestOpen;
 
-    if (s_logs[index].m_file) {
-        fclose(s_logs[index].m_file);
-        s_logs[index].m_file = NULL;
+    if (s_LogGlobals->m_logs[index].m_file) {
+        fclose(s_LogGlobals->m_logs[index].m_file);
+        s_LogGlobals->m_logs[index].m_file = NULL;
     }
 
     return index;
 }
 
-// OFFSET: #0x00432F00
+// OFFSET: 0x007BC930/0x1404B4A40
 bool Blizzard::Log::Expand(int32_t logClass, const char* name, char* dst, int32_t count, bool createDirectory) {
     Blizzard::Time::TimeRec rec;
-    Blizzard::Time::BreakTime(System_Log::s_startTime, rec);
+    Blizzard::Time::BreakTime(System_Log::s_LogGlobals->m_startTime, rec);
 
     char path[1024];
     Blizzard::String::MakeUnivPath(name, path, sizeof(path));
@@ -217,26 +222,27 @@ bool Blizzard::Log::Expand(int32_t logClass, const char* name, char* dst, int32_
     return true;
 }
 
-// OFFSET: #0x00433220
+// OFFSET: 0x007BCC30/0x1404B4F70
 const char* System_Log::Intern(const char* str) {
-    char* pool = s_stringPool;
-    char* newPool = NULL;
+    LogGlobals* globals = GetLogGlobals();
 
-    if (!pool) {
-        pool = static_cast<char*>(malloc(4096));
-        s_stringPool = pool;
-        s_stringPoolUsed = 0;
-        s_stringPoolSize = 4096;
+    if (!globals->m_stringPool) {
+        s_LogGlobals->m_stringPool = static_cast<char*>(SMemAlloc(4096, __FILE__, __LINE__, 0));
+        s_LogGlobals->m_stringPoolUsed = 0;
+        s_LogGlobals->m_stringPoolSize = 4096;
+        globals = s_LogGlobals;
     }
 
     uint32_t length = str ? static_cast<uint32_t>(strlen(str)) : 0;
 
-    if (s_stringPoolUsed + length + 1 > 4096) {
+    if (globals->m_stringPoolUsed + length + 1 > 4096) {
+        char* newPool = NULL;
+
         for (int32_t pass = 2; pass; pass--) {
-            s_stringPoolUsed = 0;
+            globals->m_stringPoolUsed = 0;
 
             for (int32_t i = 0; i < 16; i++) {
-                const char* name = s_logs[i].m_name;
+                const char* name = s_LogGlobals->m_logs[i].m_name;
                 const char* moved = NULL;
 
                 if (name) {
@@ -244,16 +250,16 @@ const char* System_Log::Intern(const char* str) {
                     uint32_t bytes = static_cast<uint32_t>(strlen(name)) + 1;
 
                     if (newPool) {
-                        moved = newPool + s_stringPoolUsed;
-                        Blizzard::String::Copy(newPool + s_stringPoolUsed, name, bytes);
+                        moved = newPool + s_LogGlobals->m_stringPoolUsed;
+                        Blizzard::String::Copy(newPool + s_LogGlobals->m_stringPoolUsed, name, bytes);
                     }
 
-                    s_stringPoolUsed += bytes;
+                    s_LogGlobals->m_stringPoolUsed += bytes;
                 }
 
-                s_logs[i].m_name = moved;
+                s_LogGlobals->m_logs[i].m_name = moved;
 
-                const char* path = s_logs[i].m_path;
+                const char* path = s_LogGlobals->m_logs[i].m_path;
                 moved = NULL;
 
                 if (path) {
@@ -261,35 +267,32 @@ const char* System_Log::Intern(const char* str) {
                     uint32_t bytes = static_cast<uint32_t>(strlen(path)) + 1;
 
                     if (newPool) {
-                        moved = newPool + s_stringPoolUsed;
-                        Blizzard::String::Copy(newPool + s_stringPoolUsed, path, bytes);
+                        moved = newPool + s_LogGlobals->m_stringPoolUsed;
+                        Blizzard::String::Copy(newPool + s_LogGlobals->m_stringPoolUsed, path, bytes);
                     }
 
-                    s_stringPoolUsed += bytes;
+                    s_LogGlobals->m_stringPoolUsed += bytes;
                 }
 
-                s_logs[i].m_path = moved;
+                s_LogGlobals->m_logs[i].m_path = moved;
             }
 
-            uint32_t size = s_stringPoolSize;
-
-            if (s_stringPoolUsed > size) {
-                do {
-                    size *= 2;
-                } while (s_stringPoolUsed > size);
-
-                s_stringPoolSize = size;
+            for (globals = s_LogGlobals; globals->m_stringPoolUsed > globals->m_stringPoolSize; globals = s_LogGlobals) {
+                globals->m_stringPoolSize *= 2;
             }
 
             if (!newPool) {
-                newPool = static_cast<char*>(malloc(size));
+                newPool = static_cast<char*>(SMemAlloc(globals->m_stringPoolSize, __FILE__, __LINE__, 0));
+                globals = s_LogGlobals;
             }
         }
 
-        free(s_stringPool);
-        pool = newPool;
-        s_stringPool = newPool;
+        SMemFree(globals->m_stringPool, __FILE__, __LINE__, 0);
+        s_LogGlobals->m_stringPool = newPool;
+        globals = s_LogGlobals;
     }
+
+    char* pool = globals->m_stringPool;
 
     if (!str) {
         return NULL;
@@ -299,30 +302,33 @@ const char* System_Log::Intern(const char* str) {
     uint32_t bytes = static_cast<uint32_t>(strlen(str)) + 1;
 
     if (pool) {
-        result = pool + s_stringPoolUsed;
-        Blizzard::String::Copy(pool + s_stringPoolUsed, str, bytes);
+        result = pool + globals->m_stringPoolUsed;
+        Blizzard::String::Copy(pool + globals->m_stringPoolUsed, str, bytes);
     }
 
-    s_stringPoolUsed += bytes;
+    globals->m_stringPoolUsed += bytes;
 
     return result;
 }
 
-// OFFSET: #0x00438560
+// OFFSET: 0x007C42C0/0x1404BEC00
 bool System_Log::Reopen(int32_t logClass, const char* name, FILE*& file, int32_t& index, bool binary) {
+    GetLogGlobals();
     uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
     index = FindBest(name, now);
-    FILE* stream = s_logs[index].m_file;
+    FILE* stream = s_LogGlobals->m_logs[index].m_file;
 
     if (stream) {
-        if (s_logs[index].m_binary == binary) {
-            file = s_logs[index].m_file;
-            return true;
+        if (s_LogGlobals->m_logs[index].m_binary != binary) {
+            fclose(stream);
+            stream = NULL;
+            s_LogGlobals->m_logs[index].m_binary = binary;
         }
 
-        fclose(stream);
-        stream = NULL;
-        s_logs[index].m_binary = binary;
+        if (stream) {
+            file = s_LogGlobals->m_logs[index].m_file;
+            return true;
+        }
     }
 
     char path[1024];
@@ -331,56 +337,54 @@ bool System_Log::Reopen(int32_t logClass, const char* name, FILE*& file, int32_t
         return false;
     }
 
-    s_logs[index].m_name = Intern(name);
-    s_logs[index].m_path = Intern(path);
-    s_logs[index].m_openTime = now;
-    s_logs[index].m_lastWrite = now;
-    s_logs[index].m_logClass = logClass;
+    s_LogGlobals->m_logs[index].m_name = Intern(name);
+    s_LogGlobals->m_logs[index].m_path = Intern(path);
+    s_LogGlobals->m_logs[index].m_openTime = now;
+    s_LogGlobals->m_logs[index].m_lastWrite = now;
+    s_LogGlobals->m_logs[index].m_logClass = logClass;
 
-    const char* mode = s_Prefs[logClass].m_mode;
-
-    if (!mode) {
-        mode = s_Prefs[0].m_mode;
-    }
+    const char* mode = s_Prefs[logClass].m_mode ? s_Prefs[logClass].m_mode : s_Prefs[0].m_mode;
 
     if (binary) {
         mode = "ab";
     }
 
     bool created = true;
+    bool exists = *mode == 'a' && !_wfopen_s(&stream, reinterpret_cast<const wchar_t*>(Blizzard::StringConversion_CodepageToUTF8::ToNative(s_LogGlobals->m_logs[index].m_path).m_data), reinterpret_cast<const wchar_t*>(Blizzard::StringConversion_CodepageToUTF8::ToNative("r").m_data));
 
-    if (*mode == 'a' && !fopen_s(&stream, s_logs[index].m_path, "r")) {
+    if (exists) {
         fclose(stream);
         created = false;
     }
 
-    fopen_s(&s_logs[index].m_file, s_logs[index].m_path, mode);
+    _wfopen_s(&s_LogGlobals->m_logs[index].m_file, reinterpret_cast<const wchar_t*>(Blizzard::StringConversion_CodepageToUTF8::ToNative(s_LogGlobals->m_logs[index].m_path).m_data), reinterpret_cast<const wchar_t*>(Blizzard::StringConversion_CodepageToUTF8::ToNative(mode).m_data));
 
-    if (!s_logs[index].m_file) {
+    if (!s_LogGlobals->m_logs[index].m_file) {
         file = NULL;
         return false;
     }
 
-    if (s_logs[index].m_headerWritten) {
+    if (s_LogGlobals->m_logs[index].m_headerWritten) {
         if (created) {
             char* header = GetDayHeader(logClass);
-            fprintf(s_logs[index].m_file, "%s", header);
-            free(header);
+            fprintf(s_LogGlobals->m_logs[index].m_file, "%s", header);
+            SMemFree(header, __FILE__, __LINE__, 0);
         }
     } else {
         char* header = GetPreamble(logClass);
-        fprintf(s_logs[index].m_file, "%s", header);
-        s_logs[index].m_headerWritten = true;
-        free(header);
+        fprintf(s_LogGlobals->m_logs[index].m_file, "%s", header);
+        s_LogGlobals->m_logs[index].m_headerWritten = true;
+        SMemFree(header, __FILE__, __LINE__, 0);
     }
 
-    file = s_logs[index].m_file;
+    file = s_LogGlobals->m_logs[index].m_file;
 
     return true;
 }
 
-// OFFSET: #0x00438800
+// OFFSET: 0x007C46E0/0x1404BF100
 void System_Log::FlushLogs(bool force) {
+    GetLogGlobals();
     uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 
     if (force) {
@@ -388,7 +392,7 @@ void System_Log::FlushLogs(bool force) {
     }
 
     for (int32_t i = 0; i < 16; i++) {
-        LogFile& log = s_logs[i];
+        LogFile& log = s_LogGlobals->m_logs[i];
 
         if (!log.m_file) {
             continue;
@@ -413,11 +417,11 @@ void System_Log::FlushLogs(bool force) {
         }
 
         fclose(log.m_file);
-        log.m_file = NULL;
+        s_LogGlobals->m_logs[i].m_file = NULL;
     }
 }
 
-// OFFSET: #0x00439FE0
+// OFFSET: 0x007C6410/0x1404C1650
 void System_Log::IVPrintf(bool locked, int32_t logClass, const char* name, const char* format, va_list args) {
     FILE* file;
     int32_t index;
@@ -433,12 +437,12 @@ void System_Log::IVPrintf(bool locked, int32_t logClass, const char* name, const
     }
 
     vfprintf(file, format, args);
-    s_logs[index].m_lastWrite = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
+    s_LogGlobals->m_logs[index].m_lastWrite = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 }
 
-// OFFSET: #0x0043A070
+// OFFSET: 0x007C48C0/0x1404BF260
 void System_Log::Init(int32_t logClass) {
-    if (s_prefCount > logClass) {
+    if (s_LogGlobals->m_prefCount > logClass) {
         return;
     }
 
@@ -448,15 +452,15 @@ void System_Log::Init(int32_t logClass) {
 
     Pref* old = s_Prefs;
     uint32_t bytes = sizeof(Pref) * (logClass + 1);
-    s_Prefs = static_cast<Pref*>(malloc(bytes));
+    s_Prefs = static_cast<Pref*>(SMemAlloc(bytes, __FILE__, __LINE__, 0));
     memset(s_Prefs, 0, bytes);
 
     if (old) {
-        Blizzard::String::MemCopy(s_Prefs, old, sizeof(Pref) * s_prefCount);
-        free(old);
+        Blizzard::String::MemCopy(s_Prefs, old, sizeof(Pref) * s_LogGlobals->m_prefCount);
+        SMemFree(old, __FILE__, __LINE__, 0);
     }
 
-    if (!s_prefCount) {
+    if (!s_LogGlobals->m_prefCount) {
         s_Prefs[0].m_mode = "a";
         s_Prefs[0].m_preamble = DefaultPreamble;
         s_Prefs[0].m_dayHeader = DefaultDayHeader;
@@ -467,67 +471,79 @@ void System_Log::Init(int32_t logClass) {
 
         char directory[MAX_PATH];
         Blizzard::Process::GetProcessDirectory(directory, sizeof(directory));
-        s_Prefs[0].m_directory = static_cast<char*>(malloc(strlen(directory) + 1));
+        s_Prefs[0].m_directory = static_cast<char*>(SMemAlloc(strlen(directory) + 1, __FILE__, __LINE__, 0));
         Blizzard::String::MakeUnivPath(directory, s_Prefs[0].m_directory, static_cast<int32_t>(strlen(directory) + 1));
-        s_prefCount++;
+        s_LogGlobals->m_prefCount++;
     }
 
-    if (s_prefCount == 1) {
+    if (s_LogGlobals->m_prefCount == 1) {
         s_Prefs[1] = s_Prefs[0];
         s_Prefs[1].m_maxOpenTime = 1;
-        s_prefCount++;
+        s_LogGlobals->m_prefCount++;
     }
 
-    if (s_prefCount == 2) {
+    if (s_LogGlobals->m_prefCount == 2) {
         s_Prefs[2] = s_Prefs[0];
         s_Prefs[2].m_maxOpenTime = 1;
-        s_prefCount++;
+        s_LogGlobals->m_prefCount++;
     }
 
-    if (s_prefCount == 3) {
+    if (s_LogGlobals->m_prefCount == 3) {
         s_Prefs[3] = s_Prefs[0];
         s_Prefs[3].m_disabled = true;
+        s_LogGlobals->m_prefCount++;
     }
 
-    s_prefCount = logClass + 1;
+    s_LogGlobals->m_prefCount = logClass + 1;
 }
 
-// OFFSET: #0x0044CC50
+// OFFSET: 0x007E1A00/0x1404E7EB0
 void System_Log::ShutdownProc() {
-    if (s_state <= 0) {
+    if (!s_LogGlobals || s_LogGlobals->m_state <= 0) {
         return;
     }
 
-    s_state = -1;
+    s_LogGlobals->m_state = -1;
+    Blizzard::Thread::ThreadRecord* thread = s_LogGlobals->m_thread;
 
-    if (s_thread->m_state >= 0 && s_threadRunning) {
-        Blizzard::Thread::WaitForever(s_thread);
-        Blizzard::Thread::Close(s_thread);
+    if (thread && thread->m_state >= 0 && s_LogGlobals->m_threadRunning) {
+        Blizzard::Thread::WaitForever(s_LogGlobals->m_thread);
+        Blizzard::Thread::Close(s_LogGlobals->m_thread);
     }
 
-    Blizzard::Lock::MutexEnter(s_mutex);
-    Blizzard::Lock::MutexLeave(s_mutex);
+    Blizzard::Lock::MutexEnter(s_LogGlobals->m_mutex);
+    Blizzard::Lock::MutexLeave(s_LogGlobals->m_mutex);
     FlushLogs(true);
-    Blizzard::Lock::MutexDestroy(s_mutex);
-    free(s_Prefs);
-    free(s_stringPool);
+    Blizzard::Lock::MutexDestroy(s_LogGlobals->m_mutex);
+
+    for (int32_t i = 0; i < s_LogGlobals->m_prefCount; i++) {
+        SMemFree(s_Prefs[i].m_directory, __FILE__, __LINE__, 0);
+        s_Prefs[i].m_directory = NULL;
+    }
+
+    SMemFree(s_Prefs, __FILE__, __LINE__, 0);
+    SMemFree(s_LogGlobals->m_stringPool, __FILE__, __LINE__, 0);
+    SMemFree(s_LogGlobals, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x004519B0
+// OFFSET: 0x007EBFA0/0x1404EF270
 bool System_Log::Acquire(int32_t logClass) {
-    if (s_state < 0) {
+    LogGlobals* globals = GetLogGlobals();
+
+    if (globals->m_state < 0) {
         return false;
     }
 
-    if (!s_state) {
-        s_startTime = Blizzard::Time::GetTimestamp();
-        Blizzard::Lock::MutexCreate(s_mutex);
-        s_state = 1;
-        s_threadRunning = true;
-        Blizzard::Thread::Create(LogThread, NULL, &s_thread, "", 0, 0x10000);
+    if (!globals->m_state) {
+        s_LogGlobals->m_startTime = Blizzard::Time::GetTimestamp();
+        Blizzard::Lock::MutexCreate(s_LogGlobals->m_mutex);
+        s_LogGlobals->m_state = 1;
+        s_LogGlobals->m_threadRunning = true;
+        Blizzard::Thread::Create(LogThread, NULL, &s_LogGlobals->m_thread, "", 0, 0x10000);
+        globals = s_LogGlobals;
     }
 
-    Blizzard::Lock::MutexEnter(s_mutex);
+    Blizzard::Lock::MutexEnter(globals->m_mutex);
     Init(logClass);
 
     return true;
@@ -543,17 +559,28 @@ void Blizzard::Log::Printf(int32_t logClass, const char* name, const char* forma
             System_Log::IVPrintf(true, logClass, name, format, args);
         }
 
-        Blizzard::Lock::MutexLeave(System_Log::s_mutex);
+        Blizzard::Lock::MutexLeave(System_Log::s_LogGlobals->m_mutex);
     }
 
     va_end(args);
 }
 
-// OFFSET: #0x00451C10
+// OFFSET: 0x007EDF30
+void Blizzard::Log::VPrintf(int32_t logClass, const char* name, const char* format, va_list args) {
+    if (System_Log::Acquire(logClass)) {
+        if (!System_Log::s_Prefs[logClass].m_disabled && !System_Log::s_Prefs[0].m_disabled) {
+            System_Log::IVPrintf(true, logClass, name, format, args);
+        }
+
+        Blizzard::Lock::MutexLeave(System_Log::s_LogGlobals->m_mutex);
+    }
+}
+
+// OFFSET: 0x007EDFA0/0x1404F5990
 void Blizzard::Log::Flush(int32_t logClass) {
     if (System_Log::Acquire(logClass)) {
         System_Log::FlushLogs(true);
-        Blizzard::Lock::MutexLeave(System_Log::s_mutex);
+        Blizzard::Lock::MutexLeave(System_Log::s_LogGlobals->m_mutex);
     }
 }
 

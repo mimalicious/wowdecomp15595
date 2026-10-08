@@ -10,7 +10,7 @@ typedef DWORD (WINAPI* GETFILEVERSIONINFOSIZEWPROC)(LPCWSTR filename, LPDWORD ha
 typedef BOOL (WINAPI* GETFILEVERSIONINFOWPROC)(LPCWSTR filename, DWORD handle, DWORD size, LPVOID data);
 typedef BOOL (WINAPI* VERQUERYVALUEWPROC)(LPCVOID block, LPCWSTR subBlock, LPVOID* buffer, PUINT length);
 
-// OFFSET: #0x00429380
+// OFFSET: 0x007AE6E0
 DWORD OsGetFileVersionInfoSizeW(LPCWSTR filename, LPDWORD handle) {
     HMODULE module = LoadLibraryW(L"version.dll");
 
@@ -31,7 +31,7 @@ DWORD OsGetFileVersionInfoSizeW(LPCWSTR filename, LPDWORD handle) {
     return result;
 }
 
-// OFFSET: #0x004293E0
+// OFFSET: 0x007AE740/0x1404A4330
 BOOL OsGetFileVersionInfoW(LPCWSTR filename, DWORD handle, DWORD size, LPVOID data) {
     HMODULE module = LoadLibraryW(L"version.dll");
 
@@ -52,7 +52,7 @@ BOOL OsGetFileVersionInfoW(LPCWSTR filename, DWORD handle, DWORD size, LPVOID da
     return result;
 }
 
-// OFFSET: #0x00429450
+// OFFSET: 0x007AE7B0
 BOOL OsVerQueryValueW(LPCVOID block, LPCWSTR subBlock, LPVOID* buffer, PUINT length) {
     HMODULE module = LoadLibraryW(L"version.dll");
 
@@ -73,7 +73,7 @@ BOOL OsVerQueryValueW(LPCVOID block, LPCWSTR subBlock, LPVOID* buffer, PUINT len
     return result;
 }
 
-// OFFSET: #0x004338F0
+// OFFSET: 0x007BD6A0
 static bool GetVersionInfo(const char* path, Blizzard::Version::FileVersion& version, int32_t type) {
     version.m_major = 0;
     version.m_minor = 0;

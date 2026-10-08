@@ -46,7 +46,7 @@ Blizzard::Streaming::DownloadProgress Blizzard::Streaming::s_progress;
 // STATIC: #0x00B38038
 Blizzard::Time::Timestamp Blizzard::Streaming::s_elapsedSinceStart;
 
-// OFFSET: #0x00424280
+// OFFSET: 0x007A7F30/0x14049D7B0
 bool Blizzard::Streaming::ScanDirectoryForManifest(const Blizzard::File::ProcessDirParms& parms) {
     System_SFile2::ScanDirCookie* cookie = static_cast<System_SFile2::ScanDirCookie*>(parms.m_cookie);
 

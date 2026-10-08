@@ -70,7 +70,7 @@ void MutexLeave(Mutex& mutex);
 }
 }
 
-// OFFSET: #0x004511B0
+// OFFSET: 0x007EA690
 template <class T>
 void Blizzard::Lock::ConstructOnce<T>::Construct(void* param) {
     new (static_cast<ConstructOnce<T>*>(param)->m_storage) T();

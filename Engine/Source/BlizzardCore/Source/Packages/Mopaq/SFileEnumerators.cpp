@@ -312,7 +312,7 @@ Blizzard::Mopaq::MPQEnumeratorBlockOrder::MPQEnumeratorBlockOrder(System_SFile::
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::~MPQEnumeratorBlockOrder() {
 }
 
-// OFFSET: %0x00757860
+// OFFSET: 0x007F5640/0x1405037B0
 bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::Initialize() {
     System_SFile::ARCHIVEREC* archive = this->m_archive;
     Blizzard::Lock::MutexEnter(archive->m_mutex.m_mutex);
@@ -337,7 +337,7 @@ bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::Initialize() {
     return true;
 }
 
-// OFFSET: %0x0075D440
+// OFFSET: 0x007FAE60/0x14050B050
 int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t size) {
     for (; this->m_block != this->m_blocks.end(); ++this->m_block) {
         if (this->m_block->m_blockIndex == -1) {

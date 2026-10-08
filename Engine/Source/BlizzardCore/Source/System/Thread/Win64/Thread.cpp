@@ -12,34 +12,34 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// STATIC: #0x00B33C58
+// STATIC: 0x00EB5C9F
 bool System_Thread::s_initialized;
 
-// STATIC: #0x00B33718
+// STATIC: 0x00EB5CA0
 Blizzard::Lock::Mutex System_Thread::s_mutex;
 
-// STATIC: #0x00B33930
+// STATIC: 0x00EB5EB8
 Blizzard::Lock::Mutex System_Thread::s_registryMutex;
 
-// STATIC: %0x00D86DC8
+// STATIC: 0x00EBA7A0
 Blizzard::Thread::TLSSlot System_Thread::s_threadRecordTLS;
 
-// STATIC: #0x00B3831C
+// STATIC: 0x00EBA788
 Blizzard::Thread::TLSSlot System_Thread::s_stackTraceEntryPointTLS;
 
-// STATIC: %0x00D8248C
+// STATIC: 0x00EB5C98
 Blizzard::Thread::ThreadRecord* System_Thread::s_mainThread;
 
-// STATIC: #0x00B3394C
+// STATIC: 0x00EB5ED4
 std::set<Blizzard::Thread::ThreadRecord*, std::less<Blizzard::Thread::ThreadRecord*>, Blizzard::Memory::AllocSTL_raw<Blizzard::Thread::ThreadRecord*>>* System_Thread::s_ThreadRegistry;
 
-// STATIC: #0x00B38020
+// STATIC: 0x00EBA63C
 int32_t System_Thread::s_DefaultStackSize;
 
-// STATIC: #0x00B33958
+// STATIC: 0x00EB5EE0
 System_Thread::ExternalTLSRecord System_Thread::s_externalTLS[32];
 
-// STATIC: #0x00B382B0
+// STATIC: 0x00EBA640
 int32_t System_Thread::s_externalTLSCount;
 
 // PROVEN: bb135620 IDENTICAL/IDENTICAL
@@ -107,7 +107,7 @@ bool System_Thread::GetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int
     return false;
 }
 
-// OFFSET: #0x00428E20
+// OFFSET: 0x007B5FB0/0x1404AC000
 void System_Thread::ShutdownThreadLocalStorage() {
     if (!s_initialized) {
         return;
@@ -115,50 +115,63 @@ void System_Thread::ShutdownThreadLocalStorage() {
 
     Blizzard::Lock::MutexEnter(s_mutex);
 
-    while (s_externalTLSCount > 0) {
-        for (int32_t i = 0; i < s_externalTLSCount; i++) {
-            HANDLE watcher = s_externalTLS[i].m_watcher;
-            HANDLE event = s_externalTLS[i].m_event;
+    for (int32_t i = 0; i < s_externalTLSCount; i++) {
+        ExternalTLSRecord& record = s_externalTLS[i];
 
-            if (watcher) {
-                Blizzard::Lock::MutexLeave(s_mutex);
-                SignalObjectAndWait(event, watcher, INFINITE, TRUE);
-                Blizzard::Lock::MutexEnter(s_mutex);
-            }
+        if (record.m_destructor) {
+            record.m_destructor(record.m_value);
         }
 
-        if (s_externalTLSCount <= 0) {
-            break;
+        record.m_threadId = 0;
+        record.m_value = NULL;
+        record.m_destructor = NULL;
+    }
+
+    s_externalTLSCount = 0;
+    Blizzard::Lock::MutexLeave(s_mutex);
+}
+
+// OFFSET: 0x007B60A0
+void System_Thread::RunExternalTLSDestructors(uint32_t threadId) {
+    Blizzard::Lock::MutexEnter(s_mutex);
+
+    for (int32_t i = 0; i < s_externalTLSCount;) {
+        ExternalTLSRecord& record = s_externalTLS[i];
+
+        if (record.m_threadId != threadId) {
+            i++;
+            continue;
         }
 
-        Blizzard::Lock::MutexLeave(s_mutex);
-        Sleep(10);
-        Blizzard::Lock::MutexEnter(s_mutex);
+        if (record.m_destructor) {
+            record.m_destructor(record.m_value);
+        }
+
+        int32_t last = s_externalTLSCount - 1;
+        record.m_threadId = 0;
+        record.m_value = NULL;
+        record.m_destructor = NULL;
+        record = s_externalTLS[last];
+        s_externalTLSCount = last;
     }
 
     Blizzard::Lock::MutexLeave(s_mutex);
 }
 
-// OFFSET: #0x0042E7A0
-void System_Thread::RunExternalTLSDestructors(HANDLE thread) {
-    Blizzard::Lock::ScopedMutex lock(s_mutex);
-
-    for (int32_t i = s_externalTLSCount; i != 0;) {
-        i--;
-        ExternalTLSRecord& record = s_externalTLS[i];
-
-        if (record.m_thread == thread) {
-            if (record.m_destructor) {
-                record.m_destructor(record.m_value);
-            }
-
-            s_externalTLSCount--;
-            record = s_externalTLS[s_externalTLSCount];
-        }
+// OFFSET: 0x007B6160
+void NTAPI System_Thread::TLSCallback(PVOID module, DWORD reason, PVOID reserved) {
+    if (s_initialized && (reason == DLL_THREAD_DETACH || reason == DLL_PROCESS_DETACH)) {
+        RunExternalTLSDestructors(GetCurrentThreadId());
     }
 }
 
-// OFFSET: #0x00448260
+#pragma comment(linker, "/INCLUDE:_tls_used")
+#pragma section(".CRT$XLB", read)
+
+// STATIC: 0x140965180
+__declspec(allocate(".CRT$XLB")) PIMAGE_TLS_CALLBACK s_tlsCallback = System_Thread::TLSCallback;
+
+// OFFSET: 0x007DA3A0
 void System_Thread::AddToRegistry(Blizzard::Thread::ThreadRecord* thread) {
     Blizzard::Lock::ScopedMutex lock(s_registryMutex);
 
@@ -170,7 +183,7 @@ void System_Thread::AddToRegistry(Blizzard::Thread::ThreadRecord* thread) {
     s_ThreadRegistry->insert(thread);
 }
 
-// OFFSET: #0x00449D70
+// OFFSET: 0x007DCD00/0x1404E0A80
 Blizzard::Thread::ThreadRecord* System_Thread::NewThread(uint32_t (*function)(void*), void* param, const char* name) {
     if (!name) {
         name = "";
@@ -189,7 +202,7 @@ Blizzard::Thread::ThreadRecord* System_Thread::NewThread(uint32_t (*function)(vo
     return thread;
 }
 
-// OFFSET: #0x00449DF0
+// OFFSET: 0x007DCDA0
 void System_Thread::RemoveFromRegistry(Blizzard::Thread::ThreadRecord* thread) {
     Blizzard::Lock::ScopedMutex lock(s_registryMutex);
 
@@ -207,7 +220,7 @@ void System_Thread::RemoveFromRegistry(Blizzard::Thread::ThreadRecord* thread) {
     }
 }
 
-// OFFSET: #0x0044B6E0
+// INLINED
 void System_Thread::InitMainThread() {
     s_mainThread = NewThread(NULL, NULL, NULL);
     InternalSetLocalStorage(&s_threadRecordTLS, s_mainThread);
@@ -215,7 +228,7 @@ void System_Thread::InitMainThread() {
     s_mainThread->m_refCount.m_value = 1;
 }
 
-// OFFSET: #0x0044CCE0
+// OFFSET: 0x007E1B40
 void System_Thread::InitThreadSystem() {
     if (s_initialized) {
         return;
@@ -229,20 +242,20 @@ void System_Thread::InitThreadSystem() {
     InitMainThread();
 }
 
-// OFFSET: #0x0044CD30
+// OFFSET: 0x007E1BC0
 void System_Thread::SetStackTraceEntryPoint(void* entryPoint) {
     InitThreadSystem();
     InternalSetLocalStorage(&s_stackTraceEntryPointTLS, entryPoint);
 }
 
-// OFFSET: #0x0044CD90
+// INLINED
 Blizzard::Thread::ThreadRecord* System_Thread::GetThreadRecord() {
     InitThreadSystem();
 
     return static_cast<Blizzard::Thread::ThreadRecord*>(TlsGetValue(~s_threadRecordTLS.m_key));
 }
 
-// OFFSET: #0x0044CDF0
+// OFFSET: 0x007E1BE0/0x1404E8160
 bool System_Thread::AllocateTLSSlot(Blizzard::Thread::TLSSlot* slot, Blizzard::Thread::TLSDestructor destructor) {
     InitThreadSystem();
     Blizzard::Lock::ScopedMutex lock(s_mutex);
@@ -257,48 +270,6 @@ void System_Thread::InitStackTraceEntryPoint() {
     if (RtlCaptureStackBackTrace(2, 1, &entryPoint, NULL) == 1) {
         SetStackTraceEntryPoint(entryPoint);
     }
-}
-
-// OFFSET: #0x0044CF50
-uint32_t System_Thread::ExternalTLSWatcher(void* param) {
-    HANDLE threadHandle = static_cast<HANDLE>(param);
-    HANDLE event = NULL;
-    bool found = false;
-
-    {
-        Blizzard::Lock::ScopedMutex lock(s_mutex);
-
-        for (int32_t i = s_externalTLSCount; i != 0;) {
-            i--;
-
-            if (s_externalTLS[i].m_thread != threadHandle) {
-                continue;
-            }
-
-            Blizzard::Thread::ThreadRecord* thread = GetThreadRecord();
-
-            if (thread && thread->m_worker) {
-                thread = thread->m_worker->m_task;
-            }
-
-            event = s_externalTLS[i].m_event;
-            s_externalTLS[i].m_watcher = thread->m_handle;
-            found = true;
-            break;
-        }
-    }
-
-    if (found) {
-        HANDLE handles[2];
-        handles[0] = threadHandle;
-        handles[1] = event;
-        MsgWaitForMultipleObjects(2, handles, FALSE, INFINITE, 0);
-        RunExternalTLSDestructors(threadHandle);
-        CloseHandle(threadHandle);
-        CloseHandle(event);
-    }
-
-    return 0;
 }
 
 // OFFSET: 0x007E3900
@@ -321,7 +292,7 @@ uint32_t __stdcall System_Thread::ThreadStarter(void* param) {
     return result;
 }
 
-// OFFSET: #0x00450AC0
+// OFFSET: 0x007E9F60
 bool Blizzard::Thread::Create(uint32_t (*function)(void*), void* param, ThreadRecord** thread, const char* name, int32_t flags, int32_t stackSize) {
     System_Thread::InitThreadSystem();
     ThreadRecord* record = System_Thread::NewThread(function, param, name);
@@ -343,53 +314,22 @@ bool Blizzard::Thread::Create(uint32_t (*function)(void*), void* param, ThreadRe
     return true;
 }
 
-// OFFSET: #0x00450BF0
+// OFFSET: 0x007B6050/0x1404AC0A0
 void System_Thread::RegisterExternalTLSDestructor(void* value, Blizzard::Thread::TLSDestructor destructor) {
     uint32_t threadId = GetCurrentThreadId();
-    Blizzard::Lock::ScopedMutex lock(s_mutex);
+    Blizzard::Lock::MutexEnter(s_mutex);
 
-    if (s_externalTLSCount >= 32) {
-        return;
-    }
-
-    int32_t i;
-
-    for (i = 0; i < s_externalTLSCount; i++) {
-        if (s_externalTLS[i].m_threadId == threadId) {
-            break;
-        }
-    }
-
-    if (i < s_externalTLSCount) {
+    if (s_externalTLSCount < 32) {
         ExternalTLSRecord& record = s_externalTLS[s_externalTLSCount++];
-        record.m_thread = s_externalTLS[i].m_thread;
-        record.m_watcher = s_externalTLS[i].m_watcher;
-        record.m_event = s_externalTLS[i].m_event;
         record.m_threadId = threadId;
         record.m_value = value;
         record.m_destructor = destructor;
-    } else {
-        HANDLE thread = NULL;
-
-        if (DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &thread, 0, FALSE, DUPLICATE_SAME_ACCESS)) {
-            ExternalTLSRecord& record = s_externalTLS[s_externalTLSCount];
-            record.m_event = CreateEventW(NULL, TRUE, FALSE, NULL);
-            record.m_value = value;
-            record.m_thread = thread;
-            record.m_watcher = NULL;
-            record.m_threadId = threadId;
-            record.m_destructor = destructor;
-            s_externalTLSCount++;
-
-            if (!Blizzard::Thread::CreateDetached(ExternalTLSWatcher, thread, "Blizzard TLS Destructor")) {
-                s_externalTLSCount--;
-                CloseHandle(thread);
-            }
-        }
     }
+
+    Blizzard::Lock::MutexLeave(s_mutex);
 }
 
-// OFFSET: #0x00451C40
+// OFFSET: 0x007BD510/0x1404BA5D0
 void System_Thread::InternalSetLocalStorage(const Blizzard::Thread::TLSSlot* slot, const void* value) {
     TlsSetValue(~slot->m_key, const_cast<void*>(value));
 

@@ -7,6 +7,7 @@
 #include <windows.h>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Types.h"
+#include "Engine/Source/Storm/H/storm.h"
 
 namespace System_Time {
 

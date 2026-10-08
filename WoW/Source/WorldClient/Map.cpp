@@ -316,6 +316,7 @@ uint32_t CMap::GetTerrainPSPerm(uint32_t materialType, uint32_t layers, uint32_t
     return materialType + 6 * (layers + 4 * (CShaderEffect::s_usePcfFiltering + 2 * shadowMode) - 1);
 }
 
+// PROVEN: c6c12bb0 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void CMap::ProcessDetailDoodadUpdateList() {
 }

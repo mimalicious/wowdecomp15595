@@ -6,7 +6,7 @@
 // STATIC: #0x00B38334
 static System_Thread::UsingThread s_usingThread;
 
-// OFFSET: #0x00450B80
+// OFFSET: 0x007E9FE0
 bool Blizzard::Thread::CreateDetached(uint32_t (*function)(void*), void* param, const char* name) {
     ThreadRecord* thread;
     bool result = Create(function, param, &thread, name, 0, 0);
@@ -18,7 +18,7 @@ bool Blizzard::Thread::CreateDetached(uint32_t (*function)(void*), void* param, 
     return result;
 }
 
-// OFFSET: #0x004509F0
+// OFFSET: 0x007E9EE0/0x1404F59C0
 System_Thread::UsingThread::UsingThread() : Blizzard::Using::Use("Blizzard::Thread") {
     System_Using::Intern(this->m_name)->shutdownproc = System_Thread::ShutdownThreadSystem;
     Blizzard::Using::DependsOn("Blizzard::Thread", "Blizzard::Memory");

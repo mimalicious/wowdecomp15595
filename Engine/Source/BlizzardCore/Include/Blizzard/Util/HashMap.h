@@ -149,7 +149,7 @@ void Blizzard::Util::HashMap<K, V>::Resize(uint32_t capacity) {
     SMemFree(old, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00727EA0<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
+// OFFSET: 0x007C6EC0<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 bool Blizzard::Util::HashMap<K, V>::Remove(const K& key, V* value) {
     uint32_t index;
@@ -187,7 +187,7 @@ bool Blizzard::Util::HashMap<K, V>::Remove(const K& key, V* value) {
     return true;
 }
 
-// OFFSET: %0x00726850<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
+// OFFSET: 0x007C59C0<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 bool Blizzard::Util::HashMap<K, V>::Shrink() {
     int32_t capacity = this->m_capacity;

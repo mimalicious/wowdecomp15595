@@ -10,16 +10,16 @@
 // STATIC: #0x009E56C0
 const int32_t System_Time::s_daysBeforeMonth[13] = { 0, 31, 59, 90, 120, 151, 182, 212, 243, 273, 304, 334, 365 };
 
-// STATIC: %0x00D87190
+// STATIC: 0x00EBAB8C
 Blizzard::Lock::Atomic System_Time::s_tickLock;
 
-// STATIC: %0x00D87194
+// STATIC: 0x00EBAB88
 uint32_t System_Time::s_lastTickCount;
 
-// STATIC: %0x00D86D40
+// STATIC: 0x00EBA648
 System_Time::TimeInfo* System_Time::s_timeInfo;
 
-// STATIC: %0x00D87198
+// STATIC: 0x00EBAB80
 uint64_t System_Time::s_tickCountHigh;
 
 // OFFSET: 0x007AE260
@@ -55,6 +55,7 @@ double System_Time::MeasureDrift(int64_t frequency, LARGE_INTEGER* counter, DWOR
     return fabs(counterSeconds - tickSeconds * 0.001) / counterSeconds;
 }
 
+// PROVEN: f4d9ee3b IDENTICAL/DIFFERENT
 // OFFSET: 0x007AE370/0x1404A3F80
 uint64_t System_Time::GetTickCount64() {
     while (s_tickLock.Increment() != 1) {
@@ -125,7 +126,7 @@ Blizzard::Time::Timestamp Blizzard::Time::MakeTime(const TimeRec& rec) {
 
     FILETIME fileTime;
     SystemTimeToFileTime(&systemTime, &fileTime);
-    Timestamp time = FromFileTime((static_cast<uint64_t>(fileTime.dwHighDateTime) << 32) | fileTime.dwLowDateTime);
+    Timestamp time = FromFileTime(*reinterpret_cast<uint64_t*>(&fileTime));
 
     if (time != static_cast<Timestamp>(0x8000000000000000)) {
         return time + rec.nanosecond;
@@ -169,7 +170,8 @@ bool System_Time::CalibrateFrequency(LARGE_INTEGER* frequency) {
     return true;
 }
 
-// OFFSET: #0x004337C0
+// PROVEN: 58af4a11 IDENTICAL/NONE
+// OFFSET: 0x007BD570
 bool System_Time::InitFrequency(LARGE_INTEGER* frequency) {
     OSVERSIONINFOW versionInfo;
     versionInfo.dwOSVersionInfoSize = sizeof(versionInfo);
@@ -179,7 +181,7 @@ bool System_Time::InitFrequency(LARGE_INTEGER* frequency) {
         return QueryPerformanceFrequency(frequency) != 0;
     }
 
-    if (versionInfo.dwMajorVersion >= 5 && versionInfo.dwMinorVersion) {
+    if (versionInfo.dwMajorVersion >= 5 && versionInfo.dwMinorVersion >= 1) {
         return CalibrateFrequency(frequency);
     }
 
@@ -204,7 +206,7 @@ System_Time::TimeInfo::TimeInfo() {
 
     FILETIME fileTime;
     GetSystemTimeAsFileTime(&fileTime);
-    this->m_gmBegin = Blizzard::Time::FromFileTime((static_cast<uint64_t>(fileTime.dwHighDateTime) << 32) | fileTime.dwLowDateTime);
+    this->m_gmBegin = Blizzard::Time::FromFileTime(*reinterpret_cast<uint64_t*>(&fileTime));
 
     double scale = 1.0 / static_cast<double>(this->m_scaleCycles);
     this->m_scaleNanoseconds = 1000000000.0 * scale;
@@ -213,7 +215,7 @@ System_Time::TimeInfo::TimeInfo() {
     this->m_scaleSeconds = scale;
 }
 
-// OFFSET: #0x00435D80
+// OFFSET: 0x007C0AF0/0x1404BA7B0
 Blizzard::Time::Timestamp Blizzard::Time::GetTimestamp() {
     System_Time::TimeInfo* info = System_Time::GetTimeInfo();
 
@@ -227,19 +229,20 @@ Blizzard::Time::Timestamp Blizzard::Time::GetTimestamp() {
 
     FILETIME fileTime;
     GetSystemTimeAsFileTime(&fileTime);
-    return FromFileTime((static_cast<uint64_t>(fileTime.dwHighDateTime) << 32) | fileTime.dwLowDateTime);
+    return FromFileTime(*reinterpret_cast<uint64_t*>(&fileTime));
 }
 
-// OFFSET: #0x00435E20
+// PROVEN: 4644c957 IDENTICAL/DIFFERENT
+// OFFSET: 0x007C0BA0/0x1404BA8A0
 int64_t Blizzard::Time::Milliseconds() {
-    if (!System_Time::GetTimeInfo()->m_usePerformanceCounter) {
-        return System_Time::GetTickCount64();
+    if (System_Time::GetTimeInfo()->m_usePerformanceCounter) {
+        LARGE_INTEGER counter;
+        QueryPerformanceCounter(&counter);
+
+        return static_cast<int64_t>(static_cast<double>(counter.QuadPart) * System_Time::s_timeInfo->m_scaleMilliseconds);
     }
 
-    LARGE_INTEGER counter;
-    QueryPerformanceCounter(&counter);
-
-    return static_cast<int64_t>(static_cast<double>(counter.QuadPart) * System_Time::s_timeInfo->m_scaleMilliseconds);
+    return System_Time::GetTickCount64();
 }
 
 // OFFSET: 0x007AE240
@@ -251,16 +254,17 @@ uint32_t Blizzard::Time::GetTimeElapsed(uint32_t start, uint32_t end) {
     return end - start - 1;
 }
 
+// PROVEN: 167a9d77 IDENTICAL/DIFFERENT
 // OFFSET: 0x007C0C00/0x1404BA950
 int64_t Blizzard::Time::Seconds() {
-    if (!System_Time::GetTimeInfo()->m_usePerformanceCounter) {
-        return System_Time::GetTickCount64() / 1000;
+    if (System_Time::GetTimeInfo()->m_usePerformanceCounter) {
+        LARGE_INTEGER counter;
+        QueryPerformanceCounter(&counter);
+
+        return static_cast<int64_t>(static_cast<double>(counter.QuadPart) * System_Time::s_timeInfo->m_scaleSeconds);
     }
 
-    LARGE_INTEGER counter;
-    QueryPerformanceCounter(&counter);
-
-    return static_cast<int64_t>(static_cast<double>(counter.QuadPart) * System_Time::s_timeInfo->m_scaleSeconds);
+    return System_Time::GetTickCount64() / 1000;
 }
 
 #endif

@@ -144,7 +144,7 @@ bool ArchiveCheckpoint::ApplyRestorePoint(Blizzard::Mopaq::HSFILERecord* file) {
     return result;
 }
 
-// OFFSET: %0x0072CFE0
+// OFFSET: 0x007CBD60
 bool ArchiveCheckpoint::CreateRestorePoint(const System_SFile::ARCHIVEREC* archive) {
     Blizzard::Mopaq::HSFILERecord* file = archive->m_file;
 

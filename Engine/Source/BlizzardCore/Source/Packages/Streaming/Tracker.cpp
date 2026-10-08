@@ -40,7 +40,7 @@ void Tracker::TrackerHttpDataDownloadCallBack::Completed(Blizzard::URL::Download
     Blizzard::Lock::EventSet(this->m_event);
 }
 
-// OFFSET: %0x00762A60
+// OFFSET: 0x007FCD20/0x14050F8D0
 char* Tracker::GetPeerID() {
     if (s_peerId[0]) {
         return s_peerId;
@@ -104,7 +104,7 @@ void Tracker::SetBuildnum(int32_t buildnum) {
     s_buildnum = buildnum;
 }
 
-// OFFSET: %0x0070BEF0
+// OFFSET: 0x007FB530/0x14050DD90
 void Tracker::RepairReportFail(const char* name, int64_t offset, uint32_t size, const char* error) {
     s_repairFailBytes += size;
     Report::SetData("rpfl", s_repairFailBytes);
@@ -115,13 +115,13 @@ void Tracker::RepairReportFail(const char* name, int64_t offset, uint32_t size, 
     Report::DeleteData("rper");
 }
 
-// OFFSET: %0x0070C070
+// OFFSET: 0x007FB6B0/0x14050DF70
 void Tracker::RepairReportSuccess(const char* name, int64_t offset, uint32_t size) {
     s_repairSuccessBytes += size;
     Report::SetData("rpsc", s_repairSuccessBytes);
 }
 
-// OFFSET: #0x00462500
+// OFFSET: 0x007FD050
 Tracker::TrackerHttpDataDownloadCallBack::TrackerHttpDataDownloadCallBack() {
     this->m_timeout = 10000;
     this->m_shouldBlock = true;
@@ -150,13 +150,13 @@ Tracker::TrackerHttpDataDownloadCallBack::~TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
-// OFFSET: %0x007632A0
+// OFFSET: 0x007FD560
 bool Tracker::TrackerHttpDataDownloadCallBack::ReceivedData(const void* data, int32_t size) {
     this->m_data.append(static_cast<const char*>(data), size);
     return true;
 }
 
-// OFFSET: #0x00462660
+// OFFSET: 0x007FD490
 std::string Tracker::ByteToHex(uint8_t byte) {
     char digits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -166,7 +166,7 @@ std::string Tracker::ByteToHex(uint8_t byte) {
     return hex;
 }
 
-// OFFSET: #0x004627D0
+// OFFSET: 0x007FD580
 std::string Tracker::BytesToHex(const uint8_t* bytes, int32_t count) {
     std::string hex;
 
@@ -177,7 +177,7 @@ std::string Tracker::BytesToHex(const uint8_t* bytes, int32_t count) {
     return hex;
 }
 
-// OFFSET: #0x00462870
+// OFFSET: 0x007FD620
 std::string Tracker::Quote(const char* str, uint32_t length) {
     std::string quoted;
 
@@ -195,7 +195,7 @@ std::string Tracker::Quote(const char* str, uint32_t length) {
     return quoted;
 }
 
-// OFFSET: %0x00763450
+// OFFSET: 0x007FD710/0x140510440
 std::string Tracker::MakeTrackerURL(const char* stats, bool start) {
     std::string key = GetKey();
     std::string peerId = GetPeerID();
@@ -223,7 +223,7 @@ std::string Tracker::MakeTrackerURL(const char* stats, bool start) {
     return url;
 }
 
-// OFFSET: %0x007637B0
+// OFFSET: 0x007FDA70/0x140510890
 void Tracker::SendToTracker(const char* stats) {
     if (s_trackerDisabled || !Tracker::trackerAddress) {
         return;

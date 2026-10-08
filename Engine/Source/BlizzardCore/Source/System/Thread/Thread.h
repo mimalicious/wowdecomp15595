@@ -101,12 +101,9 @@ class UsingThreadLocalStorage : public Blizzard::Using::Use {
 };
 
 struct ExternalTLSRecord {
-    /* 0000 */ HANDLE m_thread;
-    /* 0004 */ HANDLE m_event;
-    /* 0008 */ HANDLE m_watcher;
-    /* 000C */ uint32_t m_threadId;
-    /* 0010 */ void* m_value;
-    /* 0014 */ Blizzard::Thread::TLSDestructor m_destructor;
+    /* 0000 */ uint32_t m_threadId;
+    /* 0004 */ void* m_value;
+    /* 0008 */ Blizzard::Thread::TLSDestructor m_destructor;
 };
 
 extern bool s_initialized;
@@ -123,7 +120,6 @@ extern Blizzard::Thread::ThreadPoolRecord* s_defaultPool;
 
 void AddToRegistry(Blizzard::Thread::ThreadRecord* thread);
 bool CreateDefaultPool();
-uint32_t ExternalTLSWatcher(void* param);
 bool GetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t* level);
 int32_t GetProcessorCount();
 Blizzard::Thread::ThreadRecord* GetThreadRecord();
@@ -133,12 +129,13 @@ void InitThreadSystem();
 Blizzard::Thread::ThreadRecord* NewThread(uint32_t (*function)(void*), void* param, const char* name);
 void RegisterExternalTLSDestructor(void* value, Blizzard::Thread::TLSDestructor destructor);
 void RemoveFromRegistry(Blizzard::Thread::ThreadRecord* thread);
-void RunExternalTLSDestructors(HANDLE thread);
+void RunExternalTLSDestructors(uint32_t threadId);
 bool SetPriorityLevel(Blizzard::Thread::ThreadRecord* thread, int32_t level);
 void SetStackTraceEntryPoint(void* entryPoint);
 void ShutdownThreadLocalStorage();
 void ShutdownThreadSystem();
 uint32_t __stdcall ThreadStarter(void* param);
+void NTAPI TLSCallback(PVOID module, DWORD reason, PVOID reserved);
 
 }
 

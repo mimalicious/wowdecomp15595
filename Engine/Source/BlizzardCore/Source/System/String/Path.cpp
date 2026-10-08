@@ -170,7 +170,7 @@ char* Blizzard::String::MakeConsistentPath(const char* src, char* dst, int32_t c
     return dst;
 }
 
-// OFFSET: #0x0042E4B0
+// OFFSET: 0x007B5AE0/0x1404ABB90
 void Blizzard::String::ForceTrailingSeparator(char* dst, int32_t count, char separator) {
     if (!dst) {
         return;

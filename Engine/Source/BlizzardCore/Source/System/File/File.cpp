@@ -1260,7 +1260,7 @@ bool Blizzard::File::RemoveDirectoryAndContents_Internal::State::Remove(const ch
     return Blizzard::File::ProcessDirFast(path, this, Callback, true) && this->m_success;
 }
 
-// OFFSET: #0x004518C0
+// OFFSET: 0x007C4100/0x1404BE950
 bool Blizzard::File::RemoveDirectoryAndContents(const char* path, bool removeReadOnly) {
     if (Exists(path) != 2) {
         return false;

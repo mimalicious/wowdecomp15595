@@ -15,6 +15,7 @@ namespace Log {
 bool Expand(int32_t logClass, const char* name, char* dst, int32_t count, bool createDirectory);
 void Flush(int32_t logClass);
 void Printf(int32_t logClass, const char* name, const char* format, ...);
+void VPrintf(int32_t logClass, const char* name, const char* format, va_list args);
 
 }
 }
@@ -36,6 +37,8 @@ struct Pref {
     /* 0010 */ uint32_t m_maxOpenTime;
     /* 0014 */ uint32_t m_maxIdleTime;
     /* 0018 */ char* m_directory;
+
+    Pref& operator=(const Pref& other);
 };
 
 struct LogFile {
@@ -50,18 +53,24 @@ struct LogFile {
     /* 001A */ uint8_t unk_001A[2];
 };
 
-extern bool s_threadRunning;
-extern bool s_threadDone;
-extern Blizzard::Lock::Mutex s_mutex;
-extern int32_t s_state;
-extern int32_t s_prefCount;
-extern uint32_t s_stringPoolSize;
-extern Blizzard::Time::Timestamp s_startTime;
-extern Blizzard::Thread::ThreadRecord* s_thread;
-extern uint32_t s_stringPoolUsed;
+struct LogGlobals {
+    /* 0000 */ int32_t m_state;
+    /* 0004 */ uint8_t unk_0004[4];
+    /* 0008 */ Blizzard::Time::Timestamp m_startTime;
+    /* 0010 */ LogFile m_logs[16];
+    /* 01D0 */ char* m_stringPool;
+    /* 01D4 */ uint32_t m_stringPoolUsed;
+    /* 01D8 */ uint32_t m_stringPoolSize;
+    /* 01DC */ int32_t m_prefCount;
+    /* 01E0 */ Blizzard::Lock::Mutex m_mutex;
+    /* 01F8 */ Blizzard::Thread::ThreadRecord* m_thread;
+    /* 01FC */ bool m_threadRunning;
+    /* 01FD */ bool m_threadDone;
+    /* 01FE */ uint8_t unk_01FE[2];
+};
+
 extern Pref* s_Prefs;
-extern char* s_stringPool;
-extern LogFile s_logs[16];
+extern LogGlobals* s_LogGlobals;
 
 bool Acquire(int32_t logClass);
 char* DefaultDayHeader();

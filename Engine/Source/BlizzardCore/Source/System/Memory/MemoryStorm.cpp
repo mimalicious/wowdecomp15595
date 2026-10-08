@@ -45,7 +45,7 @@ void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags) {
     return SMemAlloc(bytes, __FILE__, __LINE__, ToStormFlags(flags));
 }
 
-// OFFSET: #0x0042E3D0
+// OFFSET: 0x007B5890/0x1404AB840
 void* operator new(size_t bytes, uint32_t flags, const char* fileName, int32_t lineNumber) {
     return Blizzard::Memory::Allocate(static_cast<uint32_t>(bytes), flags | 0x80, fileName, lineNumber);
 }
@@ -57,7 +57,7 @@ void operator delete(void* ptr, uint32_t flags, const char* fileName, int32_t li
     }
 }
 
-// OFFSET: #0x00428450
+// OFFSET: 0x007AD670/0x1404A32F0
 void* Blizzard::Memory::Allocate(uint32_t bytes, uint32_t flags, const char* fileName, int32_t lineNumber) {
     return SMemAlloc(bytes, fileName, lineNumber, ToStormFlags(flags));
 }
@@ -68,7 +68,7 @@ void Blizzard::Memory::Free(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x00428480
+// OFFSET: 0x007AD6B0/0x1404A3340
 void Blizzard::Memory::Free(void* ptr, uint32_t flags, const char* fileName, int32_t lineNumber) {
     SMemFree(ptr, fileName, lineNumber, ToStormFlags(flags));
 }

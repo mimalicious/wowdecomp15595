@@ -388,7 +388,7 @@ System_SFile::ArchiveBuffers::~ArchiveBuffers() {
     memset(this->unk_0114.m_data, 0, this->unk_0114.m_count);
 }
 
-// OFFSET: %0x0073D850
+// OFFSET: 0x007D8870
 System_SFile::ARCHIVEREC::~ARCHIVEREC() {
     delete this->m_blockEntryTable;
     delete this->m_hashEntryTable;
@@ -419,7 +419,7 @@ System_SFile::ARCHIVEREC::~ARCHIVEREC() {
     }
 }
 
-// OFFSET: %0x00740620
+// OFFSET: 0x007DBD60
 System_SFile::ARCHIVEREC::ARCHIVEREC() {
     this->m_sectorSize = 0x4000;
     this->unk_011C = 0;
@@ -1940,7 +1940,7 @@ void System_SFile::ARCHIVEREC::InitializeWriteReservations(int32_t headerSize) {
     Blizzard::Lock::MutexLeave(this->m_writeLock.m_mutex);
 }
 
-// OFFSET: %0x00758F80
+// OFFSET: 0x007F6B40
 bool Blizzard::Mopaq::SFileCreateArchive(HSFILERecord* file, const char* name, int32_t priority, uint32_t userDataSize, System_SFile::ARCHIVEREC** result, const ArchiveOptions* options) {
     Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetArchiveLock()->m_mutex);
 
@@ -3034,7 +3034,7 @@ char* System_SFile::BackslashPath(const char* path, char* buffer, uint32_t size)
     return buffer;
 }
 
-// OFFSET: %0x0073A600
+// OFFSET: 0x007C8510
 void System_SFile::ARCHIVEREC::ReleaseListfile() {
     if (--this->m_listfileRefcount <= 0) {
         this->m_listfile.clear();
@@ -3283,7 +3283,7 @@ bool System_SFile::ARCHIVEREC::AcquireListfile() {
     return this->m_listfileLoaded;
 }
 
-// OFFSET: %0x00757280
+// OFFSET: 0x007F4DF0
 bool System_SFile::RebuildHashTable(ARCHIVEREC* archive, uint32_t hashSize) {
     if (!archive->AcquireListfile()) {
         archive->ReleaseListfile();
@@ -3359,7 +3359,7 @@ static void DeleteHashEntry(System_SFile::ARCHIVEREC* archive, uint32_t hashInde
     archive->ReturnWriteReservation(entry.m_offset, entry.m_compressedSize, 0, false);
 }
 
-// OFFSET: %0x00759360
+// OFFSET: 0x007F6F60
 bool System_SFile::PrepareArchiveForWriting(ARCHIVEREC* archive) {
     if (!(archive->m_flags & 0x10)) {
         return false;
@@ -3397,7 +3397,7 @@ bool System_SFile::PrepareArchiveForWriting(ARCHIVEREC* archive) {
     return true;
 }
 
-// OFFSET: %0x007140B0
+// OFFSET: 0x007B1D20
 int64_t System_SFile::ARCHIVEREC::GetWriteReservationLimit() {
     if (this->m_blockEntryTable) {
         return -1;
@@ -3510,7 +3510,7 @@ bool Blizzard::Mopaq::SetupHashEntry(System_SFile::ArchivePtr& archive, const ch
     return false;
 }
 
-// OFFSET: %0x00757BE0
+// OFFSET: 0x007F59C0/0x140503D10
 bool Blizzard::Mopaq::SFileCreateFile(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t size, uint32_t flags, HSFILERecord** result) {
     *result = NULL;
 
@@ -3674,7 +3674,7 @@ static uint32_t GetHashTableSize(System_SFile::ARCHIVEREC* archive) {
     return size;
 }
 
-// OFFSET: %0x00758A30
+// OFFSET: 0x007F65A0/0x140504F80
 static bool WriteListfile(std::vector<char>& data, System_SFile::ARCHIVEREC* archive) {
     bool result = true;
     data.reserve(260 * archive->m_listfile.size());
@@ -3998,7 +3998,7 @@ bool System_SFile::ARCHIVEREC::WriteBitPackedBlockTable() {
     return result;
 }
 
-// OFFSET: %0x0074C790
+// OFFSET: 0x007E6FB0/0x1404F0F20
 bool System_SFile::ARCHIVEREC::WriteHashTable() {
     uint32_t count = static_cast<uint32_t>(this->m_hashTable.size());
     uint32_t size = 16 * count;
@@ -4047,7 +4047,7 @@ bool System_SFile::ARCHIVEREC::WriteHashTable() {
     return result;
 }
 
-// OFFSET: %0x0074CB00
+// OFFSET: 0x007E7310/0x1404F1320
 bool System_SFile::ARCHIVEREC::WriteBlockTable(bool& extended, bool reserve) {
     extended = false;
 
@@ -4160,7 +4160,7 @@ bool System_SFile::ARCHIVEREC::WriteExtendedBlockTable(bool reserve) {
     return result;
 }
 
-// OFFSET: %0x00758D20
+// OFFSET: 0x007F68D0/0x1405054A0
 bool System_SFile::ARCHIVEREC::WriteArchiveChanges(ARCHIVEREC* archive) {
     archive->m_locale = 0;
     archive->m_platform = 0;
@@ -4387,7 +4387,7 @@ bool Blizzard::Mopaq::SFileGetPatchMetadata(System_SFile::ARCHIVEREC* handle, Bl
     return result;
 }
 
-// OFFSET: %0x00752C60
+// OFFSET: 0x007F2C80/0x1404FFEA0
 int32_t Blizzard::Mopaq::SFileDeleteFile(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t flags) {
     if ((!handle && !(flags & 8)) || (flags & 2)) {
         System_SFile::s_lastError = 87;

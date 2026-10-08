@@ -7,10 +7,10 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// STATIC: %0x00D86D3C
+// STATIC: 0x00EBA644
 Blizzard::Thread::ThreadPoolRecord* System_Thread::s_defaultPool;
 
-// OFFSET: #0x00438AD0
+// OFFSET: 0x007C4E20
 System_Thread::ThreadWorker::ThreadWorker() {
     this->m_thread = NULL;
     this->m_pool = NULL;
@@ -21,7 +21,7 @@ System_Thread::ThreadWorker::ThreadWorker() {
     this->m_affinity.m_processor = 0;
 }
 
-// OFFSET: #0x00450DF0
+// OFFSET: 0x007EA0B0
 Blizzard::Thread::ThreadPoolRecord::ThreadPoolRecord(uint32_t count, uint32_t maxWorkers, int64_t unk, const ThreadAffinity& affinity) {
     this->m_affinity = affinity;
     Blizzard::Lock::ScopedMutex lock(this->m_mutex.m_mutex);
@@ -41,7 +41,7 @@ Blizzard::Thread::ThreadPoolRecord::ThreadPoolRecord(uint32_t count, uint32_t ma
     }
 }
 
-// OFFSET: #0x0044CFD0
+// OFFSET: 0x007E1D00/0x1404E81E0
 Blizzard::Thread::ThreadPoolRecord::~ThreadPoolRecord() {
     {
         Blizzard::Lock::ScopedMutex lock(this->m_mutex.m_mutex);
@@ -61,7 +61,7 @@ Blizzard::Thread::ThreadPoolRecord::~ThreadPoolRecord() {
     }
 }
 
-// OFFSET: #0x00450EF0
+// OFFSET: 0x007EA2F0/0x1404EAE30
 System_Thread::ThreadWorker* Blizzard::Thread::ThreadPoolRecord::GetWorker(int32_t flags, int32_t stackSize) {
     Blizzard::Lock::ScopedMutex lock(this->m_mutex.m_mutex);
 
@@ -94,7 +94,7 @@ System_Thread::ThreadWorker* Blizzard::Thread::ThreadPoolRecord::GetWorker(int32
     return worker;
 }
 
-// OFFSET: #0x00451040
+// OFFSET: 0x007EA440/0x1404EAF80
 bool System_Thread::CreateDefaultPool() {
     Blizzard::Thread::ThreadAffinity affinity;
     affinity.m_mode = 0;

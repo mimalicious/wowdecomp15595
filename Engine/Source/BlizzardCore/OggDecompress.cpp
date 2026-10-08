@@ -59,14 +59,14 @@ static int OggClose(void* source) {
     return 0;
 }
 
-// OFFSET: #0x0041D600
+// OFFSET: 0x007FED00/0x1405121B0
 OggChunkList::~OggChunkList() {
     for (std::vector<OggChunk>::iterator it = this->m_chunks->begin(); it != this->m_chunks->end(); ++it) {
         Blizzard::Memory::Free(it->m_data, 0, __FILE__, __LINE__);
     }
 }
 
-// OFFSET: #0x0041DDA0
+// OFFSET: 0x007FEDB0/0x140512630
 bool DecompressOgg(const void* data, uint32_t size, OggDecompressBuffer* buffer) {
     std::vector<OggChunk> chunks;
     OggChunkList chunkList;

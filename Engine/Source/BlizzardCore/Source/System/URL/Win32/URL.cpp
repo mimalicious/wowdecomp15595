@@ -148,7 +148,7 @@ Blizzard::URL::HttpRequest::~HttpRequest() {
     CloseHandle(this->m_connectEvent);
 }
 
-// OFFSET: %0x00716740
+// OFFSET: 0x007B4A20/0x1404AA5A0
 static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* serverName, INTERNET_PORT serverPort) {
     request->m_state = 0;
 
@@ -169,7 +169,7 @@ static HINTERNET ConnectServer(Blizzard::URL::HttpRequest* request, const char* 
     return connect;
 }
 
-// OFFSET: #0x00437840
+// OFFSET: 0x007C3D90
 Blizzard::URL::HttpRequest::HttpRequest() {
     this->m_connectEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
     this->m_requestEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
@@ -186,7 +186,7 @@ Blizzard::URL::HttpRequest::HttpRequest() {
     this->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_SUCCESS;
 }
 
-// OFFSET: %0x00746890
+// OFFSET: 0x007EB920
 static void CALLBACK InternetCallback(HINTERNET internet, DWORD_PTR context, DWORD internetStatus, LPVOID statusInformation, DWORD statusInformationLength) {
     Blizzard::URL::HttpRequest* request = reinterpret_cast<Blizzard::URL::HttpRequest*>(context);
 
@@ -247,7 +247,7 @@ static void CALLBACK InternetCallback(HINTERNET internet, DWORD_PTR context, DWO
     }
 }
 
-// OFFSET: %0x00746A20
+// OFFSET: 0x007EBAB0/0x1404ECD90
 static HINTERNET GetSession() {
     if (!s_session) {
         s_session = InternetOpenA("Blizzard Web Client", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, INTERNET_FLAG_ASYNC);
@@ -265,7 +265,7 @@ static HINTERNET GetSession() {
     return s_session;
 }
 
-// OFFSET: #0x00451470
+// OFFSET: 0x007EBB00/0x1404ECE00
 bool Blizzard::URL::DownloadURL(const char* url, DownloadCallback* callback) {
     char hostName[1024];
     char urlPath[1024];

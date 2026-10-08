@@ -19,7 +19,7 @@ static int32_t s_startTime;
 // STATIC: %0x00D81300
 static int64_t s_initialLocal;
 
-// OFFSET: %0x0070C0C0
+// OFFSET: 0x007FB700/0x14050DFD0
 void WoWReport::SetInitialDownloadData() {
     int64_t total = 0;
     s_initialLocal = 0;
@@ -31,7 +31,7 @@ void WoWReport::SetInitialDownloadData() {
     Report::SetData("lc", s_initialLocal);
 }
 
-// OFFSET: %0x0070C140
+// OFFSET: 0x007FB780/0x14050E050
 void WoWReport::SetFinalDownloadData() {
     std::string bandwidth = Blizzard::Streaming::ManifestInfo::Get()->GetBandwidthDataString();
 
@@ -50,7 +50,7 @@ void WoWReport::SetFinalDownloadData() {
     Report::SetData("dn", local);
 }
 
-// OFFSET: %0x0070C260
+// OFFSET: 0x007FB8A0/0x14050E190
 void WoWReport::SetConverted(const char* version, const char* language) {
     bool initialized = Report::IsInitialized();
 
@@ -66,7 +66,7 @@ void WoWReport::SetConverted(const char* version, const char* language) {
     }
 }
 
-// OFFSET: %0x0070C3E0
+// OFFSET: 0x007FBA20/0x14050E380
 void WoWReport::Shutdown() {
     Report::SetData("rt", static_cast<int64_t>(static_cast<uint32_t>(Blizzard::Time::Seconds() - s_startTime)));
 
@@ -85,7 +85,7 @@ void WoWReport::Shutdown() {
     Report::Shutdown();
 }
 
-// OFFSET: %0x0070C4E0
+// OFFSET: 0x007FBB20/0x14050E4F0
 void WoWReport::SetStage(const char* stage) {
     Report::SetData("stg", std::string(stage));
 
@@ -102,7 +102,7 @@ void WoWReport::SetStage(const char* stage) {
     SetInitialDownloadData();
 }
 
-// OFFSET: %0x0070C610
+// OFFSET: 0x007FBC50/0x14050E660
 void WoWReport::Initialize(const char* version, const char* language, bool converted, bool trial) {
     s_startTime = static_cast<int32_t>(Blizzard::Time::Seconds());
     const char* app = "SWOW";

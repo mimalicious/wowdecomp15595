@@ -55,7 +55,7 @@ void Blizzard::Streaming::Transport::TransportHttpCallback::SetTimeOutValue(uint
     this->m_timeout = timeout;
 }
 
-// OFFSET: %0x0070E910
+// OFFSET: 0x007ABAC0
 int32_t Blizzard::Streaming::Transport::AdjustRange(int64_t* start, int64_t* end, int32_t md5Size, int64_t fileSize) {
     int64_t alignedStart = *start - *start % md5Size;
     int64_t alignedEnd = md5Size + *end - (md5Size + *end) % md5Size - 1;
@@ -74,7 +74,7 @@ int32_t Blizzard::Streaming::Transport::AdjustRange(int64_t* start, int64_t* end
     return static_cast<int32_t>(skip + original - *start);
 }
 
-// OFFSET: %0x00715B40
+// OFFSET: 0x007B37B0
 void Blizzard::Streaming::Transport::TransportHttpCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
 
@@ -101,7 +101,7 @@ void Blizzard::Streaming::Transport::TransportHttpCallback::Completed(Blizzard::
     Blizzard::Lock::EventSet(this->m_event);
 }
 
-// OFFSET: %0x0071C6B0
+// OFFSET: 0x007BB2C0
 bool Blizzard::Streaming::Transport::MD5_Data(std::string* data, int32_t md5Size) {
     bool result = false;
     char* out = const_cast<char*>(data->c_str());
@@ -160,7 +160,7 @@ bool Blizzard::Streaming::Transport::MD5_Data(std::string* data, int32_t md5Size
     return result;
 }
 
-// OFFSET: %0x0071C810
+// OFFSET: 0x007BB420
 bool Blizzard::Streaming::Transport::ReadFile(const Manifests::TransportInfo& info, void* data, int64_t fileSize, int64_t offset, int32_t size) {
     Blizzard::File::StreamRecord* file;
 
@@ -179,7 +179,7 @@ bool Blizzard::Streaming::Transport::ReadFile(const Manifests::TransportInfo& in
     return false;
 }
 
-// OFFSET: %0x00724530
+// OFFSET: 0x007C3610
 Blizzard::Streaming::Transport::TransportHttpCallback::~TransportHttpCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
@@ -199,7 +199,7 @@ bool Blizzard::Streaming::Transport::TransportHttpCallback::Stop() {
     return this->m_stop;
 }
 
-// OFFSET: %0x007245E0
+// OFFSET: 0x007C36D0
 Blizzard::URL::DownloadCallback::Cookie Blizzard::Streaming::Transport::TransportHttpCallback::GetCookie() {
     Cookie cookie;
     cookie.m_name = this->m_cookieName.c_str();
@@ -241,13 +241,13 @@ bool Blizzard::Streaming::Transport::TransportHttpCallback::ShouldBlock() {
     return GetConfig()->m_shouldBlock;
 }
 
-// OFFSET: %0x00728C30
+// OFFSET: 0x007C7AD0/0x1404C2D80
 void Blizzard::Streaming::Transport::TransportHttpCallback::SetCookie(const char* name, const char* value) {
     this->m_cookieName.assign(name, strlen(name));
     this->m_cookieValue.assign(value, strlen(value));
 }
 
-// OFFSET: %0x00728C80
+// OFFSET: 0x007C7B20
 Blizzard::Streaming::Transport::TransportHttpCallback::TransportHttpCallback(int32_t size, std::string& data) : m_data(&data) {
     this->m_cookieName.erase(this->m_cookieName.begin(), this->m_cookieName.end());
     this->m_cookieValue.erase(this->m_cookieValue.begin(), this->m_cookieValue.end());
@@ -262,7 +262,7 @@ Blizzard::Streaming::Transport::TransportHttpCallback::TransportHttpCallback(int
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
-// OFFSET: %0x00728D70
+// OFFSET: 0x007C7C10/0x1404C2EF0
 bool Blizzard::Streaming::Transport::TransportHttpCallback::ReceivedData(const void* data, int32_t size) {
     if (this->m_received >= this->m_rangeEnd - this->m_rangeStart + 1) {
         this->m_stop = true;
@@ -292,7 +292,7 @@ Blizzard::Streaming::Transport::URL_INFO::URL_INFO(const char* url, int64_t star
     this->m_size = size;
 }
 
-// OFFSET: %0x00743EA0
+// OFFSET: 0x007E29A0/0x1404E94D0
 void Blizzard::Streaming::Transport::GetSplitFileURL(const std::string& url, int64_t start, int64_t end, int32_t skip, int32_t splitSize, int32_t md5Size, int32_t size, std::vector<URL_INFO>* urls) {
     if (md5Size) {
         splitSize += 32 * (splitSize / md5Size);
@@ -341,7 +341,7 @@ void Blizzard::Streaming::Transport::GetSplitFileURL(const std::string& url, int
     }
 }
 
-// OFFSET: %0x00750220
+// OFFSET: 0x007EC5A0/0x1404F3DD0
 bool Blizzard::Streaming::Transport::ReadHttp(const Manifests::TransportInfo& info, void* data, int64_t fileSize, int64_t offset, int32_t size) {
     int32_t error = 0;
     int32_t overhead = info.m_item ? 32 * (size / info.m_item->m_md5Size) : 0;
@@ -483,7 +483,7 @@ bool Blizzard::Streaming::Transport::ReadHttp(const Manifests::TransportInfo& in
     return result;
 }
 
-// OFFSET: %0x00754B50
+// OFFSET: 0x007EFC10/0x1404F7E20
 bool Blizzard::Streaming::Transport::Read(const Manifests::TransportInfo& info, void* data, int64_t fileSize, int64_t offset, int32_t size) {
     struct Handler {
         const char* m_prefix;

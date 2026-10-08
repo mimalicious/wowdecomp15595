@@ -174,7 +174,7 @@ bool System_SFile::ListfileParser::Next() {
     return false;
 }
 
-// OFFSET: %0x007565A0
+// OFFSET: 0x007F5340/0x140503350
 bool System_SFile::ARCHIVEREC::FillNewHashTable(int32_t hashBits, char* listfile, int32_t size) {
     bool loaded = false;
     void* data = NULL;

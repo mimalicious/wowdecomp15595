@@ -6,7 +6,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
-// OFFSET: %0x0071EE50
+// OFFSET: 0x007BD4B0/0x1404B5D40
 bool System_Thread::AllocateLocalStorage(Blizzard::Thread::TLSSlot* slot, Blizzard::Thread::TLSDestructor destructor) {
     InitThreadSystem();
     slot->m_key = ~TlsAlloc();
@@ -23,7 +23,7 @@ bool System_Thread::AllocateLocalStorage(Blizzard::Thread::TLSSlot* slot, Blizza
     return true;
 }
 
-// OFFSET: #0x0042E700
+// OFFSET: 0x007B5E40/0x1404ABEC0
 void System_Thread::RunTLSDestructors() {
     if (!s_initialized) {
         return;
@@ -45,7 +45,7 @@ void System_Thread::RunTLSDestructors() {
     }
 }
 
-// OFFSET: %0x00749730
+// OFFSET: 0x007E38B0/0x1404EA900
 void* Blizzard::Thread::RegisterLocalStorage(TLSSlot* slot, void* (*constructor)(void*), void* param, TLSDestructor destructor) {
     void* value;
 
