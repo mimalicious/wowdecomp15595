@@ -11,37 +11,37 @@
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/CheckExecutableSignature.h"
 
-// STATIC: #0x00B6B268
+// STATIC: 0x00EBC248
 char CGlueMgr::m_scandllHackName[512];
 
-// STATIC: #0x00B6B468
+// STATIC: 0x00EBC448
 static volatile long s_downloadComplete;
 
-// STATIC: #0x00B6B46C
+// STATIC: 0x00EBC44C
 volatile long CGlueMgr::m_scandllStatus;
 
-// STATIC: #0x00B6B470
+// STATIC: 0x00EBC450
 const char* CGlueMgr::m_scandllResult;
 
-// STATIC: #0x00B6B474
+// STATIC: 0x00EBC454
 uint8_t CGlueMgr::m_scandllOkayToLogIn;
 
-// STATIC: #0x00B6B475
+// STATIC: 0x00EBC455
 uint8_t CGlueMgr::m_scandllShouldBlockPlaying;
 
-// STATIC: #0x00B6B478
+// STATIC: 0x00EBC458
 static CDataStore* s_versionData;
 
-// STATIC: #0x00B6B47C
+// STATIC: 0x00EBC45C
 static char* s_dllURL;
 
-// STATIC: #0x00B6B480
+// STATIC: 0x00EBC460
 static char* s_localVersion;
 
-// STATIC: #0x00B6B484
+// STATIC: 0x00EBC464
 SThread CGlueMgr::m_scandllThread;
 
-// STATIC: #0x009F6628
+// STATIC: 0x00BD1334
 static ScanDLLThreadParams s_scanThreadParams = { ".\\Scan.dll", &CGlueMgr::m_scandllStatus, &CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, sizeof(((CGlueMgr*)0)->m_scandllHackName), &CGlueMgr::m_scandllOkayToLogIn, &CGlueMgr::m_scandllShouldBlockPlaying };
 
 // OFFSET: 0x0080F810/0x140526AB0

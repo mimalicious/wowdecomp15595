@@ -9,25 +9,25 @@
 #include "WoW/Source/WowServices/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00AC4188
+// STATIC: 0x00D07A00
 int32_t CRealmList::m_selectedCategory = -1;
 
-// STATIC: #0x00AC418C
+// STATIC: 0x00D07A04
 int32_t CRealmList::m_preferredCategory = -1;
 
-// STATIC: #0x00B6B0BC
+// STATIC: 0x00EBC0C0
 float CRealmList::m_avgLoad;
 
-// STATIC: #0x00B6B0C0
+// STATIC: 0x00EBC0C4
 float CRealmList::m_stdDevLoad;
 
-// STATIC: #0x00B6B09C
+// STATIC: 0x00EBC0A0
 RealmSortCriterion CRealmList::m_sortCriteria[4];
 
-// STATIC: #0x00B6B0C4
+// STATIC: 0x00EBC0C8
 TSFixedArray<RealmCategory*> CRealmList::m_categories;
 
-// OFFSET: #0x004DE5B0
+// OFFSET: 0x0080AAF0/0x140520EA0
 float GetRealmPopulation(REALM_INFO* realm) {
     if (static_cast<int8_t>(realm->m_flags) < 0) {
         return 2.0f;
@@ -52,7 +52,7 @@ float GetRealmPopulation(REALM_INFO* realm) {
     return 0.0f;
 }
 
-// OFFSET: #0x004DE630
+// OFFSET: 0x0080ABA0/0x140520F10
 int32_t QSortCategory(const void* a, const void* b) {
     REALM_INFO* realm1 = ClientServices::GetRealmInfoByIndex(*static_cast<const uint32_t*>(a));
     REALM_INFO* realm2 = ClientServices::GetRealmInfoByIndex(*static_cast<const uint32_t*>(b));
@@ -152,7 +152,7 @@ int32_t QSortCategory(const void* a, const void* b) {
     return 0;
 }
 
-// OFFSET: #0x004DE860
+// OFFSET: 0x0080ADD0/0x140521180
 void CRealmList::SortRealms(int32_t criterion) {
     uint32_t i;
 
@@ -184,7 +184,7 @@ void CRealmList::SortRealms(int32_t criterion) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_REALM_LIST, NULL);
 }
 
-// OFFSET: #0x004DE910
+// OFFSET: 0x0080AE80/0x140521260
 uint32_t GetCategoryIndex(int32_t visibleIndex) {
     int32_t visible = -1;
 
@@ -199,7 +199,7 @@ uint32_t GetCategoryIndex(int32_t visibleIndex) {
     return 0;
 }
 
-// OFFSET: #0x004DE960
+// OFFSET: 0x0080AED0/0x1405212E0
 void CRealmList::SetPreferredInfo(int32_t index, int32_t pvp, int32_t roleplaying) {
     uint32_t count = CRealmList::m_categories.Count();
 
@@ -266,7 +266,7 @@ void CRealmList::SetPreferredInfo(int32_t index, int32_t pvp, int32_t roleplayin
     }
 }
 
-// OFFSET: #0x004DF580
+// OFFSET: 0x0080BB40/0x140522000
 void CRealmList::Initialize() {
     uint32_t count = g_cfg_CategoriesDB.m_numRecords;
     CRealmList::m_categories.SetCount(count);
@@ -283,7 +283,8 @@ void CRealmList::Initialize() {
     }
 }
 
-// OFFSET: #0x004DF670
+// PROVEN: ab13bd12 IDENTICAL/NONE
+// OFFSET: 0x0080BC40
 void CRealmList::Shutdown() {
     for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {
         CRealmList::m_categories[i]->m_realms.Clear();
@@ -299,7 +300,7 @@ void CRealmList::Shutdown() {
     CRealmList::m_categories.Clear();
 }
 
-// OFFSET: #0x004DF710
+// OFFSET: 0x0080BD00
 void CRealmList::UpdateList() {
     for (uint32_t i = 0; i < CRealmList::m_categories.Count(); i++) {
         CRealmList::m_categories[i]->m_numRealms = 0;

@@ -13,7 +13,7 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: #0x00B6B48C
+// STATIC: 0x00EBC488
 CDataAllocator CSimpleModelFFX::s_simpleModelFFXHeap(sizeof(CSimpleModelFFX), 5);
 
 // OFFSET: 0x00811030/0x140528800
@@ -30,6 +30,7 @@ void CSimpleModelFFX::SetModel(CM2Model* model) {
     this->m_model->SetEventCallback(reinterpret_cast<void*>(AnimEventCallback), reinterpret_cast<uintptr_t>(this));
 }
 
+// PROVEN: 87cf2636 IDENTICAL/DIFFERENT
 // OFFSET: 0x00810FC0/0x140528780
 void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
     this->CSimpleModel::LoadXML(node, status);
@@ -45,6 +46,7 @@ void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
+// PROVEN: 5fbdd967 IDENTICAL/NONE
 // OFFSET: 0x00811010
 void CSimpleModelFFX::OnLayerShow() {
     FFX::SetEffect(1, CGlueMgr::m_glowEffect);
@@ -128,6 +130,7 @@ CSimpleFrame* CSimpleModelFFX::Create(CSimpleFrame* parent) {
     return data ? new (data) CSimpleModelFFX(parent) : NULL;
 }
 
+// PROVEN: 80f379d5 IDENTICAL/NONE
 // OFFSET: 0x00811430
 void CSimpleModelFFX::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);

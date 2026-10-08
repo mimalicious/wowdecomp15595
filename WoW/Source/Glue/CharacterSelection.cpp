@@ -96,6 +96,7 @@ void CharSelectAttachDeathVisuals(CM2Model* model) {
     CGlueMgr::ApplySpellVisualKit(CCharacterSelection::m_modelFrame, model, 989, 0);
 }
 
+// PROVEN: ccb98158 IDENTICAL/NONE
 // OFFSET: 0x00807E80
 void LinkModelAndTexturesToAsyncHead(CM2Model* model) {
     if (model) {

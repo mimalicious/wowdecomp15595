@@ -65,7 +65,6 @@ static int32_t Script_IsMoviePlayable(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 253fc041 IDENTICAL/NONE
 // OFFSET: 0x004816F0/0x1400A02E0
 static int32_t Script_IsWindowsClient(lua_State* L) {
     lua_pushnumber(L, 1.0);

@@ -6,7 +6,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: #0x00AC467C
+// STATIC: 0x00D07E4C
 int32_t CSimpleModelFFX::s_metatable = LUA_NOREF;
 
 // OFFSET: 0x00811A10/0x1405293E0
@@ -136,13 +136,14 @@ static int32_t Script_AddPetLight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E6F60
+// PROVEN: 2ce82653 IDENTICAL/NONE
+// OFFSET: 0x00811D90
 void CSimpleModelFFX::CreateScriptMetaTable() {
     lua_State* L = FrameScript_GetContext();
     CSimpleModelFFX::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CSimpleModelFFX::RegisterScriptMethods);
 }
 
-// STATIC: #0x00AC465C
+// STATIC: 0x00D07E2C
 static FrameScript_Method s_ScriptMethods[] = {
     { "ResetLights", &Script_ResetLights },
     { "AddLight", &Script_AddLight },

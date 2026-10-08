@@ -721,6 +721,7 @@ void CGlueMgr::SetScreen(int32_t screen) {
     FrameScript_SignalEvent(GLUE_EVENT_SET_GLUE_SCREEN, "%s", s_screenNames[screen]);
 }
 
+// PROVEN: 8b1efe07 IDENTICAL/NONE
 // OFFSET: 0x008008F0/0x1405148C0
 void CGlueMgr::UpdateCurrentScreen(const char* screen) {
     switch (CGlueMgr::m_currentScreen) {
@@ -1499,6 +1500,7 @@ bool CGlueMgr::OnRandomCharacterNameResult(ClientGenerateRandomCharacterNameResu
     return true;
 }
 
+// PROVEN: 548886ee IDENTICAL/NONE
 // OFFSET: 0x008020E0
 int32_t CGlueMgr::GetSelectedCharInfo(CHARACTER_INFO* info) {
     CGlueMgr::m_characterInfo = info;
@@ -2182,6 +2184,7 @@ void CGlueMgr::PollEnterWorld() {
     ClientServices::Connection()->CharacterLogin(s_activeCharacterGuid, 0);
 }
 
+// PROVEN: 0bd5903a IDENTICAL/NONE
 // OFFSET: 0x00803500
 CharacterSelectionDisplay* GetCharacterInfo(int32_t index) {
     if (index < 0 || index >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
@@ -3060,6 +3063,7 @@ int32_t CGlueMgr::NetDisconnectHandler(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 4d713df3 IDENTICAL/NONE
 // OFFSET: 0x008052D0/0x14051A770
 static void ReloadGlue() {
     CCharacterCreation::Shutdown();

@@ -55,7 +55,6 @@ int32_t Script_GetBillingTimeRested(lua_State* L);
 int32_t Script_IsLinuxClient(lua_State* L);
 int32_t Script_RestoreVideoResolutionDefaults(lua_State* L);
 int32_t Script_RestoreVideoEffectsDefaults(lua_State* L);
-int32_t Script_RestoreVideoStereoDefaults(lua_State* L);
 
 // OFFSET: 0x00807380/0x14051CB90
 static int32_t Script_GetBuildInfo(lua_State* L) {
@@ -74,6 +73,7 @@ static int32_t Script_GetBuildInfo(lua_State* L) {
     return 5;
 }
 
+// PROVEN: 738cfcb2 IDENTICAL/NONE
 // OFFSET: 0x00805B50/0x14051B100
 static int32_t Script_SetSavedAccountName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -85,12 +85,14 @@ static int32_t Script_SetSavedAccountName(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2bb9c52f IDENTICAL/NONE
 // OFFSET: 0x00805BA0/0x14051B170
 static int32_t Script_GetUsesToken(lua_State* L) {
     lua_pushboolean(L, g_accountUsesTokenVar->m_intValue);
     return 1;
 }
 
+// PROVEN: 55697f40 IDENTICAL/NONE
 // OFFSET: 0x00805BC0/0x14051B190
 static int32_t Script_SetUsesToken(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
@@ -102,6 +104,7 @@ static int32_t Script_SetUsesToken(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 59b6afbb IDENTICAL/NONE
 // OFFSET: 0x00805C30/0x14051B210
 static int32_t Script_SetSavedAccountList(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -295,12 +298,6 @@ static int32_t Script_IsScanDLLFinished(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DCE40
-int32_t Script_IsWindowsClient(lua_State* L) {
-    lua_pushnumber(L, 1.0);
-    return 1;
-}
-
 // OFFSET: 0x00806A80/0x14051C150
 static int32_t Script_SetCVar(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -399,12 +396,14 @@ static int32_t Script_IsSystemSupported(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 3927c850 IDENTICAL/NONE
 // OFFSET: 0x00805B30/0x14051B0E0
 static int32_t Script_GetSavedAccountName(lua_State* L) {
     lua_pushstring(L, g_accountNameVar->m_stringValue.m_str);
     return 1;
 }
 
+// PROVEN: 7d2dc8ef IDENTICAL/NONE
 // OFFSET: 0x00805C10/0x14051B1F0
 static int32_t Script_GetSavedAccountList(lua_State* L) {
     lua_pushstring(L, g_accountListVar->m_stringValue.m_str);
@@ -635,18 +634,6 @@ static int32_t Script_GetChangedOptionWarnings(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x00510B90
-int32_t Script_IsMacClient(lua_State* L) {
-    lua_pushnil(L);
-    return 1;
-}
-
-// OFFSET: #0x00510B90
-int32_t Script_IsLinuxClient(lua_State* L) {
-    lua_pushnil(L);
-    return 1;
-}
-
 // OFFSET: 0x008C3780/0x140633280
 int32_t Script_GetMovieResolution(lua_State* L) {
     CVar* resolution = CVar::Lookup("gxResolution");
@@ -676,13 +663,6 @@ static int32_t Script_HideCursor(lua_State* L) {
     g_theGxDevicePtr->CursorSetVisible(0);
 
     return 0;
-}
-
-// OFFSET: #0x004DDC20
-int32_t Script_GetAccountExpansionLevel(lua_State* L) {
-    lua_pushnumber(L, ClientServices::Connection()->m_accountExpansion);
-
-    return 1;
 }
 
 // PROVEN: 6467a37d IDENTICAL/NONE
@@ -768,12 +748,6 @@ static int32_t Script_ResetAddOns(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004DD420
-int32_t Script_RestoreVideoStereoDefaults(lua_State* L) {
-    ConsoleDeviceDefaults(OPTION_PAGE_2);
-    return 0;
-}
-
 // PROVEN: d4513791 IDENTICAL/NONE
 // OFFSET: 0x008C2770/0x14051B280
 int32_t Script_GetLocale(lua_State* L) {
@@ -781,6 +755,7 @@ int32_t Script_GetLocale(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f6b50669 IDENTICAL/NONE
 // OFFSET: 0x00807870/0x14051D0E0
 static int32_t Script_PatchDownloadProgress(lua_State* L) {
     lua_pushnumber(L, CGlueMgr::m_patchDownloadProgress);

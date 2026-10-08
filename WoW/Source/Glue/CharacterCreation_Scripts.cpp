@@ -1,10 +1,13 @@
 #include "CharacterCreation.h"
 #include <cstdint>
+#include <cstring>
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Frame/CScriptObject.h"
 #include "Engine/Source/Frame/CSimpleModel.h"
+#include "Engine/Source/Frame/CSimpleTexture.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
+#include "Engine/Source/Model2/M2Scene.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "Engine/Source/Storm/H/storm.h"
@@ -14,14 +17,87 @@
 #include "WoW/Source/DB/Rec/ChrRacesRec.h"
 #include "WoW/Source/DB/Rec/FactionGroupRec.h"
 #include "WoW/Source/DB/Rec/FactionTemplateRec.h"
+#include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/Glue/CharacterSelection.h"
 #include "WoW/Source/Glue/CSimpleModelFFX.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
-#include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/LFGInfo.h"
+#include "WoW/Source/UIUtil/PortraitButton.h"
+#include "WoW/Source/WorldClient/World.h"
+#include "WoW/Source/WowServices/RealmConnection.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
-#include "WoW/Source/WowSvcs/WowSvcsClient/Types.h"
 
+// INLINED
+static const ChrRacesRec* GetSelectedRaceRec() {
+    int32_t raceID = CCharacterCreation::m_raceIndex < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[CCharacterCreation::m_raceIndex] : 0;
+    return g_chrRacesDB.GetRecord(raceID);
+}
+
+// OFFSET: 0x0080C1A0/0x140522810
+static int32_t Script_IsRaceClassRestricted(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: Script_IsRaceClassRestricted(raceID, classID)");
+        return 0;
+    }
+
+    uint32_t raceID = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    uint32_t classID = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2)));
+    int32_t restricted = 0;
+
+    if (classID < 32 && ClientServices::Connection() && (ClientServices::Connection()->GetFactionChangeRestriction(raceID) & (1 << classID))) {
+        restricted = 1;
+    }
+
+    lua_pushnumber(L, restricted);
+    return 1;
+}
+
+// PROVEN: 1a498207 IDENTICAL/NONE
+// OFFSET: 0x0080C280/0x1405228F0
+static int32_t Script_UpdateCustomizationScene(lua_State* L) {
+    if (CCharacterCreation::m_character) {
+        CCharacterCreation::m_character->RenderPrep(0);
+    }
+
+    if (CCharacterCreation::m_alteredCharacter) {
+        CCharacterCreation::m_alteredCharacter->RenderPrep(0);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0080C2B0/0x140522930
+static int32_t Script_GenerateRandomName(lua_State* L) {
+    char name[16];
+    size_t length;
+
+    do {
+        CCharacterCreation::m_nameGen.GenerateName(name, 14);
+        length = strlen(name);
+    } while (length && (ClientServices::CharacterValidateName(name) != 89 || length < 4 || length > 10));
+
+    lua_pushstring(L, name);
+    return 1;
+}
+
+// PROVEN: 75ca45c5 IDENTICAL/NONE
+// OFFSET: 0x0080C320/0x1405229B0
+static int32_t Script_PaidChange_GetPreviousRaceIndex(lua_State* L) {
+    lua_pushnumber(L, 0.0);
+    return 1;
+}
+
+// OFFSET: 0x0080C340/0x1405229D0
+static int32_t Script_HasAlteredForm(lua_State* L) {
+    lua_pushboolean(L, CCharacterCreation::m_alteredCharacter != NULL);
+    return 1;
+}
+
+// OFFSET: 0x0080C370/0x1405229F0
+static int32_t Script_IsViewingAlteredForm(lua_State* L) {
+    lua_pushboolean(L, CCharacterCreation::m_alteredCharacter ? CCharacterCreation::m_alteredFormAtFront : 0);
+    return 1;
+}
 
 // PROVEN: 0a6b3514 IDENTICAL/NONE
 // OFFSET: 0x0080D350/0x140523BE0
@@ -40,99 +116,6 @@ static int32_t Script_SetCharCustomizeFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0080C1A0/0x140522810
-static int32_t Script_IsRaceClassRestricted(lua_State* L) {
-    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: Script_IsRaceClassRestricted(raceID, classID)");
-        return 0;
-    }
-
-    int32_t raceID = static_cast<int32_t>(lua_tonumber(L, 1));
-    int32_t classID = static_cast<int32_t>(lua_tonumber(L, 2));
-    bool restricted;
-
-    switch (raceID) {
-        case 1: {
-            restricted = (CCharacterSelection::s_raceRestrictions[0] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 2: {
-            restricted = (CCharacterSelection::s_raceRestrictions[5] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 3: {
-            restricted = (CCharacterSelection::s_raceRestrictions[1] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 4: {
-            restricted = (CCharacterSelection::s_raceRestrictions[3] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 5: {
-            restricted = (CCharacterSelection::s_raceRestrictions[8] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 6: {
-            restricted = (CCharacterSelection::s_raceRestrictions[7] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 7: {
-            restricted = (CCharacterSelection::s_raceRestrictions[2] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 8: {
-            restricted = (CCharacterSelection::s_raceRestrictions[6] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 10: {
-            restricted = (CCharacterSelection::s_raceRestrictions[9] & (1 << classID)) != 0;
-            break;
-        }
-
-        case 11: {
-            restricted = (CCharacterSelection::s_raceRestrictions[4] & (1 << classID)) != 0;
-            break;
-        }
-
-        default: {
-            restricted = false;
-            luaL_error(L, "Script_IsRaceClassRestricted: unsupported race ID(%d)", raceID);
-            break;
-        }
-    }
-
-    lua_pushnumber(L, restricted);
-    return 1;
-}
-
-// OFFSET: 0x0080C280/0x1405228F0
-static int32_t Script_UpdateCustomizationScene(lua_State* L) {
-    CCharacterCreation::m_character->RenderPrep(0);
-    return 0;
-}
-
-// OFFSET: #0x004DFCA0
-static int32_t Script_GetRandomName(lua_State* L) {
-    char name[16];
-    uint32_t length;
-
-    do {
-        CCharacterCreation::m_nameGen.GenerateName(name, 14);
-        length = SStrLen(name);
-    } while (length && (ClientServices::CharacterValidateName(name) != CHAR_NAME_SUCCESS || length < 4 || length > 10));
-
-    lua_pushstring(L, name);
-    return 1;
-}
-
 // PROVEN: f0bc9972 IDENTICAL/NONE
 // OFFSET: 0x0080D3C0/0x140523C70
 static int32_t Script_SetCharCustomizeBackground(lua_State* L) {
@@ -147,8 +130,10 @@ static int32_t Script_SetCharCustomizeBackground(lua_State* L) {
 
 // OFFSET: 0x0080D410/0x140523CC0
 static int32_t Script_GetNameForRace(lua_State* L) {
-    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_character->m_data.m_preferences.m_raceID);
-    const char* name = CGUnit_C::GetDisplayRaceNameFromRecord(raceRec, CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL);
+    int32_t raceID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_raceID : 0;
+    const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+    int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
+    const char* name = CGUnit_C::GetDisplayRaceNameFromRecord(raceRec, sexID, NULL);
 
     if (raceRec && name) {
         lua_pushstring(L, name);
@@ -168,22 +153,19 @@ static int32_t Script_GetFactionForRace(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)) - 1);
     int32_t raceID = index < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[index] : 0;
-    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+    const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+    const FactionTemplateRec* templateRec = raceRec ? g_factionTemplateDB.GetRecord(raceRec->m_factionID) : NULL;
 
-    if (raceRec) {
-        FactionTemplateRec* factionTemplate = g_factionTemplateDB.GetRecord(raceRec->m_factionID);
+    if (templateRec) {
+        for (int32_t i = 0; i < g_factionGroupDB.m_numRecords; i++) {
+            const FactionGroupRec* groupRec = g_factionGroupDB.GetRecordByIndex(i);
 
-        if (factionTemplate) {
-            for (int32_t i = 0; i < g_factionGroupDB.m_numRecords; i++) {
-                FactionGroupRec* group = g_factionGroupDB.GetRecordByIndex(i);
-
-                if (group && group->m_maskID && ((1 << group->m_maskID) & factionTemplate->m_factionGroup)) {
-                    lua_pushstring(L, group->m_name);
-                    lua_pushstring(L, group->m_internalName);
-                    return 2;
-                }
+            if (groupRec && groupRec->m_maskID && ((1 << groupRec->m_maskID) & templateRec->m_factionGroup)) {
+                lua_pushstring(L, groupRec->m_name);
+                lua_pushstring(L, groupRec->m_internalName);
+                return 2;
             }
         }
     }
@@ -198,8 +180,8 @@ static int32_t Script_GetAvailableClasses(lua_State* L) {
     int32_t count = g_chrClassesDB.m_numRecords;
 
     for (int32_t i = 0; i < count; i++) {
-        ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(i);
-        const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL);
+        const ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(i);
+        const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::GetSelectedSex(), NULL);
         bool available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
 
         if (name) {
@@ -217,9 +199,8 @@ static int32_t Script_GetAvailableClasses(lua_State* L) {
 }
 
 // OFFSET: 0x0080D6A0/0x140524010
-int32_t Script_GetHairCustomization(lua_State* L) {
-    int32_t raceID = CCharacterCreation::m_raceIndex < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[CCharacterCreation::m_raceIndex] : 0;
-    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+static int32_t Script_GetHairCustomization(lua_State* L) {
+    const ChrRacesRec* raceRec = GetSelectedRaceRec();
 
     if (raceRec) {
         lua_pushstring(L, raceRec->m_hairCustomization);
@@ -231,16 +212,20 @@ int32_t Script_GetHairCustomization(lua_State* L) {
 }
 
 // OFFSET: 0x0080D710/0x1405240C0
-int32_t Script_GetFacialHairCustomization(lua_State* L) {
-    int32_t raceID = CCharacterCreation::m_raceIndex < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[CCharacterCreation::m_raceIndex] : 0;
-    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+static int32_t Script_GetFacialHairCustomization(lua_State* L) {
+    const ChrRacesRec* raceRec = GetSelectedRaceRec();
 
-    if (raceRec) {
-        lua_pushstring(L, raceRec->m_facialHairCustomization[CCharacterCreation::m_character->m_data.m_preferences.m_sexID]);
+    if (!raceRec) {
+        lua_pushstring(L, "NORMAL");
         return 1;
     }
 
-    lua_pushstring(L, "NORMAL");
+    if (CCharacterCreation::m_character) {
+        lua_pushstring(L, raceRec->m_facialHairCustomization[CCharacterCreation::m_character->m_data.m_preferences.m_sexID]);
+    } else {
+        lua_pushstring(L, raceRec->m_facialHairCustomization[0]);
+    }
+
     return 1;
 }
 
@@ -253,28 +238,28 @@ static int32_t Script_GetSelectedRace(lua_State* L) {
 
 // OFFSET: 0x0080D7F0/0x1405241B0
 static int32_t Script_GetSelectedSex(lua_State* L) {
-    lua_pushnumber(L, g_scriptSexIndex[CCharacterCreation::m_character->m_data.m_preferences.m_sexID]);
+    int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
+    lua_pushnumber(L, g_scriptSexIndex[sexID]);
     return 1;
 }
 
 // OFFSET: 0x0080D830/0x1405241F0
 static int32_t Script_GetSelectedClass(lua_State* L) {
     int32_t classID = CCharacterCreation::m_selectedClassID;
-    ChrClassesRec* classRec = g_chrClassesDB.GetRecord(classID);
+    const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(classID);
 
     if (!classRec) {
         return 0;
     }
 
-    lua_pushstring(L, CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL));
+    int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
+    lua_pushstring(L, CGUnit_C::GetDisplayClassNameFromRecord(classRec, sexID, NULL));
     lua_pushstring(L, classRec->m_filename);
 
     int32_t index = 0;
 
     for (int32_t i = 0; i < g_chrClassesDB.m_numRecords; i++) {
-        ChrClassesRec* rec = g_chrClassesDB.GetRecordByIndex(i);
-
-        if (rec->m_id == classID) {
+        if (g_chrClassesDB.GetRecordByIndex(i)->m_id == classID) {
             index = i;
         }
     }
@@ -286,19 +271,6 @@ static int32_t Script_GetSelectedClass(lua_State* L) {
     lua_pushboolean(L, roles & 0x4);
     lua_pushboolean(L, roles & 0x8);
     return 6;
-}
-
-// OFFSET: 0x0080EAF0/0x140525A80
-static int32_t Script_CycleCharCustomization(lua_State* L) {
-    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: CycleCharCustomization(index, delta)");
-        return 0;
-    }
-
-    CHAR_CUSTOMIZATION_TYPE type = static_cast<CHAR_CUSTOMIZATION_TYPE>(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
-    int32_t delta = static_cast<int32_t>(lua_tonumber(L, 2));
-    CCharacterCreation::CycleCharCustomization(type, delta);
-    return 0;
 }
 
 // PROVEN: 7d63dc36 IDENTICAL/NONE
@@ -315,8 +287,14 @@ static int32_t Script_SetCharacterCreateFacing(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetCharacterFacing(lua_tonumber(L, 1) * 0.017453292f);
+    CCharacterCreation::SetCharacterFacing(static_cast<float>(lua_tonumber(L, 1) * 0.017453292f));
     return 1;
+}
+
+// OFFSET: 0x0080D9B0/0x1405243D0
+static int32_t Script_RequestRandomName(lua_State* L) {
+    CGlueMgr::RequestRandomCharacterName(CCharacterCreation::m_character->m_data.m_preferences.m_raceID, CCharacterCreation::m_character->m_data.m_preferences.m_sexID);
+    return 0;
 }
 
 // PROVEN: fbf9a149 IDENTICAL/NONE
@@ -351,18 +329,22 @@ static int32_t Script_IsRaceClassValid(lua_State* L) {
         return 0;
     }
 
-    uint32_t raceIndex = static_cast<uint32_t>(lua_tointeger(L, 1) - 1);
-    int32_t classIndex = static_cast<int32_t>(lua_tointeger(L, 2) - 1);
-    ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(classIndex);
+    uint32_t raceIndex = lua_tointeger(L, 1) - 1;
+    int32_t classIndex = lua_tointeger(L, 2) - 1;
+
+    if (classIndex < 0 || classIndex >= g_chrClassesDB.m_numRecords) {
+        return 0;
+    }
+
+    const ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(classIndex);
 
     if (!classRec) {
         return 0;
     }
 
-    int32_t classID = classRec->m_id;
     int32_t raceID = raceIndex < CCharacterCreation::m_races.Count() ? CCharacterCreation::m_races.m_data[raceIndex] : 0;
 
-    if (IsRaceClassValid(raceID, classID)) {
+    if (IsRaceClassValid(raceID, classRec->m_id)) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -373,37 +355,92 @@ static int32_t Script_IsRaceClassValid(lua_State* L) {
 
 // OFFSET: 0x0080DB50/0x140524620
 static int32_t Script_GetCreateBackgroundModel(lua_State* L) {
-    if (SFile::IsTrial()) {
-        lua_pushstring(L, "CharacterSelect");
-        return 1;
-    }
+    const char* modelName = NULL;
 
     if (CCharacterCreation::m_selectedClassID == 6) {
-        ChrClassesRec* classRec = g_chrClassesDB.GetRecord(6);
+        const ChrClassesRec* classRec = g_chrClassesDB.GetRecord(6);
 
         if (classRec) {
-            lua_pushstring(L, classRec->m_filename);
-            return 1;
+            modelName = classRec->m_filename;
         }
     } else {
-        uint32_t raceID = CCharacterCreation::m_character->m_data.m_preferences.m_raceID;
-
-        if (raceID == 7) {
-            raceID = 3;
-        } else if (raceID == 8) {
-            raceID = 2;
-        }
-
-        ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+        int32_t raceID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_raceID : 0;
+        const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
 
         if (raceRec) {
-            lua_pushstring(L, raceRec->m_clientFileString);
-            return 1;
+            modelName = raceRec->m_clientFileString;
         }
     }
 
-    lua_pushstring(L, "");
+    if (modelName && SFile::IsStreamingMode()) {
+        char path[260] = { 0 };
+        CharSelectGetBGModelPathFromRaceStr(modelName, path);
+
+        if (!World::GetScene()->PrefetchModel(path, 5)) {
+            modelName = NULL;
+        }
+    }
+
+    if (!modelName) {
+        modelName = "CharacterSelect";
+    }
+
+    lua_pushstring(L, modelName);
     return 1;
+}
+
+// PROVEN: b26cafb9 IDENTICAL/NONE
+// OFFSET: 0x0080DC40/0x140524770
+static int32_t Script_SetViewingAlteredForm(lua_State* L) {
+    if (lua_type(L, 1) != LUA_TBOOLEAN) {
+        luaL_error(L, "Usage: SetViewingAlteredForm(bool)");
+        return 0;
+    }
+
+    CCharacterCreation::SetViewingAlteredForm(lua_toboolean(L, 1));
+    return 0;
+}
+
+// OFFSET: 0x0080DC80/0x1405247C0
+static int32_t Script_SetPortraitTexture(lua_State* L) {
+    CSimpleTexture* texture;
+
+    if (lua_isstring(L, 1)) {
+        texture = static_cast<CSimpleTexture*>(CScriptObject::GetScriptObjectByName(lua_tolstring(L, 1, NULL), CSimpleTexture::GetObjectType()));
+    } else {
+        if (lua_type(L, 1) != LUA_TTABLE) {
+            luaL_error(L, "SetPortraitToTexture(): Couldn't find texture named '%s'", lua_tolstring(L, 1, NULL));
+        }
+
+        lua_rawgeti(L, 1, 0);
+        texture = static_cast<CSimpleTexture*>(lua_touserdata(L, -1));
+        lua_settop(L, -2);
+
+        if (!texture) {
+            luaL_error(L, "SetPortraitToTexture(): Couldn't find 'this' in texture object");
+        }
+
+        if (!texture->IsA(CSimpleTexture::GetObjectType())) {
+            luaL_error(L, "SetPortraitToTexture(): Wrong object type, expected texture");
+        }
+    }
+
+    if (!texture) {
+        luaL_error(L, "SetPortraitToTexture(): Couldn't find texture named '%s'", lua_tolstring(L, 1, NULL));
+    }
+
+    if (lua_isnumber(L, 2) && lua_isnumber(L, 3)) {
+        int32_t raceID = lua_tointeger(L, 2);
+        int32_t sex = lua_tointeger(L, 3);
+
+        for (int32_t i = 0; i < 3; i++) {
+            if (sex == g_scriptSexIndex[i]) {
+                SetPortraitTexture(texture, raceID, i, WOWGUID());
+            }
+        }
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x0080E2A0/0x140525060
@@ -411,13 +448,15 @@ static int32_t Script_GetAvailableRaces(lua_State* L) {
     uint32_t count = CCharacterCreation::m_races.Count();
 
     for (uint32_t i = 0; i < count; i++) {
-        lua_pushstring(L, CGUnit_C::GetDisplayRaceNameFromRecord(g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]), CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL));
+        const ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
+        int32_t sexID = CCharacterCreation::m_character ? CCharacterCreation::m_character->m_data.m_preferences.m_sexID : 0;
+        lua_pushstring(L, CGUnit_C::GetDisplayRaceNameFromRecord(raceRec, sexID, NULL));
 
-        ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
-        lua_pushstring(L, raceRec ? raceRec->m_clientFileString : NULL);
+        const ChrRacesRec* fileRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
+        lua_pushstring(L, fileRec ? static_cast<const char*>(fileRec->m_clientFileString) : NULL);
 
-        raceRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
-        bool available = raceRec ? ClientServices::Connection()->m_accountExpansion >= raceRec->m_requiredExpansion : false;
+        const ChrRacesRec* expansionRec = g_chrRacesDB.GetRecord(CCharacterCreation::m_races.m_data[i]);
+        bool available = expansionRec ? ClientServices::Connection()->m_accountExpansion >= expansionRec->m_requiredExpansion : false;
         lua_pushnumber(L, available);
     }
 
@@ -430,7 +469,7 @@ static int32_t Script_GetClassesForRace(lua_State* L) {
 
     for (uint32_t i = 0; i < count; i++) {
         const ChrClassesRec* classRec = i < CCharacterCreation::m_classes.Count() ? CCharacterCreation::m_classes.m_data[i] : NULL;
-        const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL);
+        const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::GetSelectedSex(), NULL);
         bool available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
 
         if (name) {
@@ -447,47 +486,9 @@ static int32_t Script_GetClassesForRace(lua_State* L) {
     return 3 * count;
 }
 
-// PROVEN: 7d2c4032 IDENTICAL/NONE
-// OFFSET: 0x0080F060/0x140526230
-static int32_t Script_SetSelectedSex(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetSelectedSex(index)");
-        return 0;
-    }
-
-    lua_Integer sex = lua_tointeger(L, 1);
-
-    for (uint32_t i = 0; i < 3; i++) {
-        if (sex == g_scriptSexIndex[i]) {
-            CCharacterCreation::SetSelectedSex(i);
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: 0x0080EA50/0x140525A00
-static int32_t Script_SetSelectedClass(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetSelectedClass(index)");
-        return 0;
-    }
-
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    ChrClassesRec* classRec = g_chrClassesDB.GetRecordByIndex(index);
-    CCharacterCreation::SetSelectedClass(classRec->m_id);
-    return 0;
-}
-
-// OFFSET: 0x0080EB80/0x140525B00
-static int32_t Script_RandomizeCharCustomization(lua_State* L) {
-    CCharacterCreation::RandomizeCharCustomization();
-    return 0;
-}
-
 // OFFSET: 0x0080E480/0x1405252E0
 static int32_t Script_PaidChange_GetName(lua_State* L) {
-    CharacterSelectionDisplay* display = CCharacterCreation::m_existingCharacterIndex >= 0 && CCharacterCreation::m_existingCharacterIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList[CCharacterCreation::m_existingCharacterIndex] : NULL;
+    CharacterSelectionDisplay* display = CCharacterCreation::m_existingCharacterIndex >= 0 && CCharacterCreation::m_existingCharacterIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList.m_data[CCharacterCreation::m_existingCharacterIndex] : NULL;
 
     if (display) {
         lua_pushstring(L, display->m_characterInfo.m_name);
@@ -498,6 +499,57 @@ static int32_t Script_PaidChange_GetName(lua_State* L) {
     return 1;
 }
 
+// OFFSET: 0x0080EA50/0x140525A00
+static int32_t Script_SetSelectedClass(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetSelectedClass(index)");
+        return 0;
+    }
+
+    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    const ChrClassesRec* classRec = index < 0 || index >= g_chrClassesDB.m_numRecords ? NULL : g_chrClassesDB.GetRecordByIndex(index);
+    CCharacterCreation::SetSelectedClass(classRec->m_id);
+    return 0;
+}
+
+// OFFSET: 0x0080EAF0/0x140525A80
+static int32_t Script_CycleCharCustomization(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: CycleCharCustomization(index, delta)");
+        return 0;
+    }
+
+    int32_t type = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    int32_t delta = static_cast<int32_t>(lua_tonumber(L, 2));
+    CCharacterCreation::CycleCharCustomization(static_cast<CHAR_CUSTOMIZATION_TYPE>(type), delta);
+    return 0;
+}
+
+// OFFSET: 0x0080EB80/0x140525B00
+static int32_t Script_RandomizeCharCustomization(lua_State* L) {
+    CCharacterCreation::RandomizeCharCustomization();
+    return 0;
+}
+
+// PROVEN: f0e19ac7 IDENTICAL/NONE
+// OFFSET: 0x0080F060/0x140526230
+static int32_t Script_SetSelectedSex(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: SetSelectedSex(index)");
+        return 0;
+    }
+
+    int32_t sex = lua_tointeger(L, 1);
+
+    for (uint32_t i = 0; i < 3; i++) {
+        if (sex == g_scriptSexIndex[i]) {
+            CCharacterCreation::SetSelectedSex(i);
+        }
+    }
+
+    return 0;
+}
+
 // PROVEN: f2e8a69f IDENTICAL/NONE
 // OFFSET: 0x0080F700/0x1405269E0
 static int32_t Script_ResetCharCustomize(lua_State* L) {
@@ -505,7 +557,6 @@ static int32_t Script_ResetCharCustomize(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e7355674 IDENTICAL/NONE
 // OFFSET: 0x0080F710/0x1405269F0
 static int32_t Script_SetSelectedRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -513,7 +564,7 @@ static int32_t Script_SetSelectedRace(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetSelectedRace(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
+    CCharacterCreation::SetSelectedRace(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
     return 0;
 }
 
@@ -524,7 +575,6 @@ static int32_t Script_UpdateCustomizationBackground(lua_State* L) {
     return 0;
 }
 
-// PROVEN: eca4036d IDENTICAL/NONE
 // OFFSET: 0x0080F7A0/0x140526A60
 static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -532,18 +582,11 @@ static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
         return 0;
     }
 
-    CCharacterCreation::SetToExistingCharacter(static_cast<uint32_t>(lua_tonumber(L, 1)) - 1);
+    CCharacterCreation::SetToExistingCharacter(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
     return 0;
 }
 
-// PROVEN: 75ca45c5 IDENTICAL/NONE
-// OFFSET: 0x0080C320/0x1405229B0
-static int32_t Script_PaidChange_GetPreviousRaceIndex(lua_State* L) {
-    lua_pushnumber(L, 0.0);
-    return 1;
-}
-
-// STATIC: #0x00AC4228
+// STATIC: 0x00D07AA0
 static FrameScript_Method s_scriptFunctions[] = {
     { "SetCharCustomizeFrame", &Script_SetCharCustomizeFrame },
     { "SetCharCustomizeBackground", &Script_SetCharCustomizeBackground },
@@ -567,7 +610,8 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "RandomizeCharCustomization", &Script_RandomizeCharCustomization },
     { "GetCharacterCreateFacing", &Script_GetCharacterCreateFacing },
     { "SetCharacterCreateFacing", &Script_SetCharacterCreateFacing },
-    { "GetRandomName", &Script_GetRandomName },
+    { "GenerateRandomName", &Script_GenerateRandomName },
+    { "RequestRandomName", &Script_RequestRandomName },
     { "CreateCharacter", &Script_CreateCharacter },
     { "CustomizeExistingCharacter", &Script_CustomizeExistingCharacter },
     { "PaidChange_GetPreviousRaceIndex", &Script_PaidChange_GetPreviousRaceIndex },
@@ -577,8 +621,13 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "IsRaceClassValid", &Script_IsRaceClassValid },
     { "IsRaceClassRestricted", &Script_IsRaceClassRestricted },
     { "GetCreateBackgroundModel", &Script_GetCreateBackgroundModel },
+    { "HasAlteredForm", &Script_HasAlteredForm },
+    { "IsViewingAlteredForm", &Script_IsViewingAlteredForm },
+    { "SetViewingAlteredForm", &Script_SetViewingAlteredForm },
+    { "SetPortraitTexture", &Script_SetPortraitTexture },
 };
 
+// PROVEN: a3c174fa IDENTICAL/NONE
 // OFFSET: 0x0080C3A0
 void CharacterCreateRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -586,6 +635,7 @@ void CharacterCreateRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: fe23ed3e IDENTICAL/NONE
 // OFFSET: 0x0080C3D0/0x140522A70
 void CharacterCreateUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {

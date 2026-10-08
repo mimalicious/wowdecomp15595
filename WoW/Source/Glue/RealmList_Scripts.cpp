@@ -416,7 +416,7 @@ static int32_t Script_GetSelectedCategory(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AC4190
+// STATIC: 0x00D07A08
 static FrameScript_Method s_scriptFunctions[] = {
     { "RequestRealmList", &Script_RequestRealmList },
     { "RealmListUpdateRate", &Script_RealmListUpdateRate },
@@ -434,6 +434,7 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "IsInvalidLocale", &Script_IsInvalidLocale },
 };
 
+// PROVEN: 745fcfb5 IDENTICAL/NONE
 // OFFSET: 0x0080AA00
 void RealmListRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
@@ -441,6 +442,7 @@ void RealmListRegisterScriptFunctions() {
     }
 }
 
+// PROVEN: 9616674b IDENTICAL/NONE
 // OFFSET: 0x0080AA30/0x140520D70
 void RealmListUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
