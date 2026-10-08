@@ -216,7 +216,6 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return 1;
 }
 
-// PROVEN: d7c0228b IDENTICAL/DIFFERENT
 // OFFSET: 0x0052D6B0/0x14017E240
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
@@ -693,6 +692,25 @@ static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     return 0;
 }
 
+// OFFSET: 0x0052E560/0x14017F380
+static int32_t Script_GetMaxLines(lua_State* L) {
+    CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
+
+    lua_pushnumber(L, string->m_maxLines);
+    return 1;
+}
+
+// OFFSET: 0x0052E4E0/0x14017F300
+static int32_t Script_SetMaxLines(lua_State* L) {
+    CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
+
+    if (lua_isnumber(L, 2)) {
+        string->m_maxLines = static_cast<uint32_t>(lua_tonumber(L, 2));
+    }
+
+    return 0;
+}
+
 // STATIC: %0x00BB8D90
 static FrameScript_Method s_ScriptMethods[] = {
     { "IsObjectType", &Script_IsObjectType },
@@ -738,6 +756,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetWordWrap", &Script_SetWordWrap },
     { "GetIndentedWordWrap", &Script_SetIndentedWordWrap },
     { "SetIndentedWordWrap", &Script_GetIndentedWordWrap },
+    { "GetMaxLines", &Script_GetMaxLines },
+    { "SetMaxLines", &Script_SetMaxLines },
 };
 
 // OFFSET: %0x0053C170

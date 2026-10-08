@@ -116,7 +116,7 @@ CSimpleHyperlinkButton::CSimpleHyperlinkButton(CSimpleHyperlinkedFrame* parent) 
     this->m_linkText = NULL;
 }
 
-// OFFSET: [%0x00546880, %0x00546910, %0x005469A0]
+// OFFSET: [0x00533220, 0x00533430]
 CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
     if (this->m_linkData) {
         SMemFree(this->m_linkData, __FILE__, __LINE__, 0);
@@ -126,6 +126,10 @@ CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
         SMemFree(this->m_linkText, __FILE__, __LINE__, 0);
     }
 }
+
+// PROVEN: 6db8490c IDENTICAL/NONE
+// STATIC: 0x00CA3E14
+int32_t CSimpleHyperlinkedFrame::s_metatable;
 
 // PROVEN: 6db8490c IDENTICAL/NONE
 // OFFSET: 0x00532D20
@@ -173,7 +177,7 @@ void CSimpleHyperlinkedFrame::RunOnHyperlinkClickScript(const char* link, const 
     this->m_inHyperlinkScript = 0;
 }
 
-// OFFSET: [%0x00546290, %0x00546420, %0x005467B0]
+// OFFSET: [0x00533460/0x1401859C0, 0x00533560/0x140185AF0]
 CSimpleHyperlinkedFrame::~CSimpleHyperlinkedFrame() {
 }
 
@@ -229,6 +233,12 @@ void CSimpleHyperlinkedFrame::OnHyperlinkLeave(const char* link, const char* tex
 // OFFSET: 0x005330A0
 void CSimpleHyperlinkedFrame::OnHyperlinkClick(const char* link, const char* text, const char* btn) {
     this->RunOnHyperlinkClickScript(link, text, btn);
+}
+
+// PROVEN: 9a157691 IDENTICAL/NONE
+// OFFSET: 0x005334D0/0x140185A60
+int32_t CSimpleHyperlinkedFrame::GetScriptMetaTable() {
+    return CSimpleHyperlinkedFrame::s_metatable;
 }
 
 // OFFSET: 0x005334F0/0x140185A80

@@ -24,7 +24,7 @@
 // STATIC: %0x00BB9B14
 int32_t CSimpleAnimGroup::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CA0
+// STATIC: 0x00DD3CA0/0x140CB9A50
 int32_t CSimpleAnimGroup::s_objectType;
 
 // STATIC: %0x00BB8BC4
@@ -330,7 +330,7 @@ CScriptObject* CSimpleAnimGroup::GetScriptObjectParent() {
     return this->m_region;
 }
 
-// PROVEN: 2b6c35aa IDENTICAL/IDENTICAL
+// PROVEN: 2b6c35aa DIFFERENT/IDENTICAL
 // OFFSET: 0x00529DC0/0x140179BD0
 bool CSimpleAnimGroup::IsA(int32_t type) {
     return type == CSimpleAnimGroup::s_objectType || type == CScriptObject::s_objectType;

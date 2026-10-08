@@ -24,7 +24,7 @@
 // STATIC: %0x00BB97F8
 int32_t CSimpleSlider::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3A74
+// STATIC: 0x00DD3A74/0x140CB97D8
 int32_t CSimpleSlider::s_objectType;
 
 // STATIC: %0x00BB87F4

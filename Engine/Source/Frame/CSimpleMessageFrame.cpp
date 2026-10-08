@@ -21,7 +21,7 @@ CDataAllocator CSimpleMessageFrame::s_allocator(sizeof(CSimpleMessageFrame), 5);
 // STATIC: %0x00BB94E8
 int32_t CSimpleMessageFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3A14
+// STATIC: 0x00DD3A14/0x140CB9738
 int32_t CSimpleMessageFrame::s_objectType;
 
 // STATIC: %0x00BB8718

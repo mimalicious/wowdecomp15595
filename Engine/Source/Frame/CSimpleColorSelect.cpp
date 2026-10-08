@@ -29,7 +29,7 @@
 // STATIC: %0x00BB9920
 int32_t CSimpleColorSelect::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3ABC
+// STATIC: 0x00DD3ABC/0x140CB9858
 int32_t CSimpleColorSelect::s_objectType;
 
 // STATIC: %0x00BB8818

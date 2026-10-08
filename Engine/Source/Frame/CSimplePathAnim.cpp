@@ -17,13 +17,13 @@
 // STATIC: %0x00BB9AFC
 int32_t CSimplePathAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CA8
+// STATIC: 0x00DD3CA8/0x140CB9A58
 int32_t CSimplePathAnim::s_objectType;
 
 // STATIC: %0x00BB8BBC
 const char* CSimplePathAnim::s_objectTypeName = "Path";
 
-// PROVEN: 223a23c0 IDENTICAL/IDENTICAL
+// PROVEN: 223a23c0 DIFFERENT/IDENTICAL
 // OFFSET: 0x005294D0/0x140178ED0
 bool CSimplePathAnim::IsA(int32_t type) {
     return type == CSimplePathAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;

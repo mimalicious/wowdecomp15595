@@ -45,13 +45,13 @@ static void PaintScreen(void* param, const RECTF* rect, const RECTF* visible, fl
     top->CheckLoadingObjectsQueue();
 }
 
-// OFFSET: %0x005117B0
+// OFFSET: 0x005015F0
 void CSimpleTop::QueueTextureRelease(CTexture* texture) {
     UNEEDED_TEXTURES* node = s_textureReleaseQueue.NewNode(2, 0, 0);
     node->m_texture = texture;
 }
 
-// OFFSET: %0x00511930
+// OFFSET: 0x00501770/0x1401471E0
 void CSimpleTop::PurgeTextureReleaseQueue() {
     UNEEDED_TEXTURES* node = s_textureReleaseQueue.Head();
 
@@ -61,7 +61,7 @@ void CSimpleTop::PurgeTextureReleaseQueue() {
     }
 }
 
-// OFFSET: %0x00510E70
+// OFFSET: 0x00500CB0/0x1401463A0
 void CSimpleTop::CheckLoadingObjectsQueue() {
     CSimpleFrame* frame = this->m_loadingObjects.Head();
 
@@ -78,7 +78,7 @@ void CSimpleTop::CheckLoadingObjectsQueue() {
     }
 }
 
-// OFFSET: %0x00510F10
+// OFFSET: 0x00500D50/0x140146480
 void CSimpleTop::ClearLoadingObjectsQueue() {
     CSimpleFrame* frame = this->m_loadingObjects.Head();
 
@@ -89,7 +89,7 @@ void CSimpleTop::ClearLoadingObjectsQueue() {
     }
 }
 
-// OFFSET: %0x00510F80
+// OFFSET: 0x00500DC0/0x140146510
 void CSimpleTop::UpdateLoadingQueue(CSimpleFrame* frame, bool add) {
     if (frame->m_loadLink.IsLinked()) {
         this->m_loadingObjects.UnlinkNode(frame);
@@ -111,7 +111,7 @@ void CSimpleTop::GetCursorPosition(C2Vector& position) {
     NDCToDDC(this->m_mousePosition.m_x, this->m_mousePosition.m_y, &position.x, &position.y);
 }
 
-// OFFSET: %0x0050F070
+// OFFSET: 0x004FEDD0/0x140143BD0
 void CSimpleTop::StopMoveOrResizeFrame() {
     if (this->m_moveResizeFrame) {
         this->m_moveResizeFrame->UnflattenFrame(this);
@@ -137,7 +137,7 @@ void CSimpleTop::NotifyFrameDelayedLoad(CSimpleFrame* frame) {
     strata->m_batchDirty = 1;
 }
 
-// OFFSET: %0x0050F370
+// OFFSET: 0x004FF1C0
 void CSimpleTop::SetCursor(MipBits* image) {
     if (image) {
         memcpy(g_theGxDevicePtr->CursorLock(), image->m_mip[0], sizeof(CGxDevice::s_cursor));
@@ -146,7 +146,7 @@ void CSimpleTop::SetCursor(MipBits* image) {
     }
 }
 
-// OFFSET: %0x0050F3D0
+// OFFSET: 0x004FF220
 void CSimpleTop::MoveOrResizeFrame(const CMouseEvent& evt) {
     float offsetX = evt.m_data.m_mousePosition.x - this->m_moveResizeLast.x;
     float offsetY = evt.m_data.m_mousePosition.y - this->m_moveResizeLast.y;
@@ -158,7 +158,7 @@ void CSimpleTop::MoveOrResizeFrame(const CMouseEvent& evt) {
     }
 }
 
-// OFFSET: %0x0050F470
+// OFFSET: 0x004FF2C0/0x140143FE0
 float CSimpleTop::RoundToPixelWidth(float ddcWidth) {
     if (fabs(ddcWidth) < 0.00000023841858f) {
         return ddcWidth;
@@ -178,7 +178,7 @@ float CSimpleTop::RoundToPixelWidth(float ddcWidth) {
     return NDCToDDCWidth(pixels / windowWidth);
 }
 
-// OFFSET: %0x0050F510
+// OFFSET: 0x004FF360/0x1401440D0
 float CSimpleTop::RoundToPixelHeight(float ddcHeight) {
     if (fabs(ddcHeight) < 0.00000023841858f) {
         return ddcHeight;
@@ -198,7 +198,7 @@ float CSimpleTop::RoundToPixelHeight(float ddcHeight) {
     return NDCToDDCHeight(pixels / windowHeight);
 }
 
-// OFFSET: %0x0050F680
+// OFFSET: 0x004FF4D0/0x140144290
 void CSimpleTop::HideFrame(CSimpleFrame* frame, int32_t a3) {
     if (this->m_moveResizeFrame == frame && !a3) {
         this->StopMoveOrResizeFrame();
@@ -214,7 +214,7 @@ void CSimpleTop::HideFrame(CSimpleFrame* frame, int32_t a3) {
     }
 }
 
-// OFFSET: %0x0050F700
+// OFFSET: 0x004FF550
 void CSimpleTop::SetMouseFocus(CSimpleFrame* frame) {
     CSimpleFrame* oldFocus = this->m_mouseFocus;
 
@@ -241,7 +241,7 @@ void CSimpleTop::SetMouseFocus(CSimpleFrame* frame) {
     }
 }
 
-// OFFSET: %0x0050F7C0
+// OFFSET: 0x004FF610/0x140144460
 int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASON reason, float x, float y, FRAMEPOINT point) {
     if (!frame->FlattenFrame(this, 0.0f, 0.0f, 0.0f, 0.0f)) {
         return 0;
@@ -263,7 +263,7 @@ int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASO
     return 1;
 }
 
-// OFFSET: %0x0050F880
+// OFFSET: 0x004FF6D0/0x140144620
 int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASON reason, float x, float y, int32_t resize) {
     FRAMEPOINT point = FRAMEPOINT_CENTER;
 
@@ -309,7 +309,7 @@ int32_t CSimpleTop::StartMoveOrResizeFrame(CSimpleFrame* frame, MOVERESIZE_REASO
     return this->StartMoveOrResizeFrame(frame, reason, x, y, point);
 }
 
-// OFFSET: %0x0050F9C0
+// OFFSET: 0x004FF810
 int32_t CSimpleTop::OnChar(const void* data, void* param) {
     const EVENT_DATA_CHAR* charData = static_cast<const EVENT_DATA_CHAR*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -341,7 +341,7 @@ int32_t CSimpleTop::OnChar(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x0050FA60
+// OFFSET: 0x004FF8B0
 int32_t CSimpleTop::OnIme(const void* data, void* param) {
     const EVENT_DATA_IME* imeData = static_cast<const EVENT_DATA_IME*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -373,7 +373,7 @@ int32_t CSimpleTop::OnIme(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x0050FB00
+// OFFSET: 0x004FF950
 int32_t CSimpleTop::OnKeyDown(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -415,7 +415,7 @@ int32_t CSimpleTop::OnKeyDown(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x0050FBD0
+// OFFSET: 0x004FFA20
 int32_t CSimpleTop::OnKeyUp(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -439,7 +439,7 @@ int32_t CSimpleTop::OnKeyUp(const void* data, void* param) {
     return !handled;
 }
 
-// OFFSET: %0x0050FC70
+// OFFSET: 0x004FFAC0
 int32_t CSimpleTop::OnKeyDownRepeat(const void* data, void* param) {
     const EVENT_DATA_KEY* keyData = static_cast<const EVENT_DATA_KEY*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -457,7 +457,7 @@ int32_t CSimpleTop::OnKeyDownRepeat(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x0050FCE0
+// OFFSET: 0x004FFB30/0x140144B90
 int32_t CSimpleTop::OnMouseMove(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -536,7 +536,7 @@ int32_t CSimpleTop::OnMouseMove(const void* data, void* param) {
     return newFocus == NULL;
 }
 
-// OFFSET: %0x0050FE80
+// OFFSET: 0x004FFCD0
 int32_t CSimpleTop::OnMouseMoveRelative(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -550,7 +550,7 @@ int32_t CSimpleTop::OnMouseMoveRelative(const void* data, void* param) {
     return !callback || !callback(&evt);
 }
 
-// OFFSET: %0x0050FEF0
+// OFFSET: 0x004FFD40
 int32_t CSimpleTop::OnMouseUp(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -585,7 +585,7 @@ int32_t CSimpleTop::OnMouseUp(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x0050FFF0
+// OFFSET: 0x004FFE40
 int32_t CSimpleTop::OnMouseWheel(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -625,7 +625,7 @@ int32_t CSimpleTop::OnMouseWheel(const void* data, void* param) {
     return handled == 0;
 }
 
-// OFFSET: %0x005100E0
+// OFFSET: 0x004FFF30
 int32_t CSimpleTop::OnFocusChanged(const void* data, void* param) {
     const EVENT_DATA_FOCUS* focusData = static_cast<const EVENT_DATA_FOCUS*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -643,7 +643,7 @@ int32_t CSimpleTop::OnFocusChanged(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x00510430
+// OFFSET: 0x00500280/0x140148E80
 CSimpleFrame* CFrameStrata::GetHitFrame(const C2Vector& pt) {
     for (uint32_t level = this->m_topLevel; level > 0;) {
         level--;
@@ -667,7 +667,7 @@ CSimpleFrame* CFrameStrata::GetHitFrame(const C2Vector& pt) {
     return NULL;
 }
 
-// OFFSET: %0x005104D0
+// OFFSET: 0x00500330/0x140145640
 int32_t CFrameStrata::FrameOccluded(CSimpleFrame* frame) {
     CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
     CRect otherRect = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -703,7 +703,7 @@ int32_t CFrameStrata::FrameOccluded(CSimpleFrame* frame) {
     return 0;
 }
 
-// OFFSET: %0x00510650
+// OFFSET: 0x005004B0
 void CFrameStrata::CheckOcclusion() {
     for (uint32_t level = 0; level < this->m_topLevel; level++) {
         CFrameStrataNode* node = this->m_levels[level];
@@ -716,7 +716,7 @@ void CFrameStrata::CheckOcclusion() {
     }
 }
 
-// OFFSET: %0x005106C0
+// OFFSET: 0x00500530
 int32_t CFrameStrata::BuildBatches(int32_t noMouseCapture) {
     if (this->m_levelsDirty) {
         this->CheckOcclusion();
@@ -751,12 +751,12 @@ void CFrameStrata::RenderBatches() {
     }
 }
 
-// OFFSET: %0x00510770
+// OFFSET: 0x005005E0/0x140145960
 void CSimpleTop::RegisterFrame(CSimpleFrame* frame) {
     this->m_frames.LinkToTail(frame);
 }
 
-// OFFSET: %0x00510780
+// OFFSET: 0x005005F0
 void CSimpleTop::UnregisterFrame(CSimpleFrame* frame) {
     if (this->m_moveResizeFrame == frame) {
         this->StopMoveOrResizeFrame();
@@ -774,12 +774,12 @@ void CSimpleTop::UnregisterFrame(CSimpleFrame* frame) {
     this->m_frames.UnlinkNode(frame);
 }
 
-// OFFSET: %0x00510830
+// OFFSET: 0x00500660
 void CSimpleTop::RegisterForCleanup(CSimpleFrame* frame) {
     this->m_destroyed.LinkToTail(frame);
 }
 
-// OFFSET: %0x00510840
+// OFFSET: 0x00500670/0x140145A70
 void CSimpleTop::CompressStrata(int32_t strata) {
     if (strata < FRAME_STRATA_WORLD || strata > FRAME_STRATA_TOOLTIP) {
         return;
@@ -836,7 +836,7 @@ void CSimpleTop::CompressStrata(int32_t strata) {
     this->m_strata[strata]->m_topLevel = topLevel;
 }
 
-// OFFSET: %0x00510980
+// OFFSET: 0x005007B0/0x140145C30
 int32_t CSimpleTop::RaiseFrame(CSimpleFrame* frame, int32_t checkOcclusion) {
     while (!(frame->m_frameFlags & 1)) {
         frame = frame->m_parent;
@@ -863,7 +863,7 @@ int32_t CSimpleTop::RaiseFrame(CSimpleFrame* frame, int32_t checkOcclusion) {
     return 1;
 }
 
-// OFFSET: %0x00510A50
+// OFFSET: 0x00500880/0x140145D30
 int32_t CSimpleTop::StartMoveOrResizeFrame(const CMouseEvent& evt, MOVERESIZE_REASON reason, int32_t resize) {
     CSimpleFrame* frame = NULL;
 
@@ -920,7 +920,7 @@ void CSimpleTop::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x00510BF0
+// OFFSET: 0x00500A30/0x140145FF0
 void CSimpleTop::OnLayerRender() {
     C2Vector offset;
     CameraSetupScreenProjection(this->m_rect, offset, 0.0f, 0);
@@ -931,7 +931,7 @@ void CSimpleTop::OnLayerRender() {
     }
 }
 
-// OFFSET: %0x00510C60
+// OFFSET: 0x00500AA0/0x1401460C0
 int32_t CSimpleTop::OnMouseDown(const void* data, void* param) {
     const EVENT_DATA_MOUSE* mouseData = static_cast<const EVENT_DATA_MOUSE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -981,7 +981,7 @@ int32_t CSimpleTop::OnMouseDown(const void* data, void* param) {
     return 0;
 }
 
-// OFFSET: %0x00510DE0
+// OFFSET: 0x00500C20
 int32_t CSimpleTop::OnDisplaySizeChanged(const void* data, void* param) {
     const EVENT_DATA_SIZE* sizeData = static_cast<const EVENT_DATA_SIZE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
@@ -1034,7 +1034,7 @@ void CSimpleTop::RegisterForEvent(CSimpleFrame* frame, CSimpleEventType event, i
     }
 }
 
-// OFFSET: %0x005111B0
+// OFFSET: 0x00500FF0/0x1401467D0
 void CSimpleTop::UnregisterForEvent(CSimpleFrame* frame, CSimpleEventType event, int32_t a4) {
     CSimpleSortedArray<FRAMEPRIORITY*>& queue = this->m_eventqueue[event][frame->m_strata];
 
@@ -1118,7 +1118,7 @@ CFrameStrata::CFrameStrata() {
     this->m_topLevel = 0;
 }
 
-// OFFSET: %0x005116A0
+// OFFSET: 0x005014E0/0x140146F10
 void CFrameStrata::AddFrame(CSimpleFrame* frame) {
     uint32_t level = frame->m_level;
 
@@ -1150,7 +1150,7 @@ void CFrameStrata::AddFrame(CSimpleFrame* frame) {
     this->m_batchDirty |= node->m_batchDirty != 0;
 }
 
-// OFFSET: %0x005119A0
+// OFFSET: 0x00501800/0x1401472F0
 CSimpleTop::CSimpleTop() {
     this->m_mouseFocus = NULL;
     this->m_mouseCapture = NULL;
@@ -1211,7 +1211,7 @@ void CSimpleTop::ShowFrame(CSimpleFrame* frame, int32_t a3) {
     frame->RegisterForEvents(a3);
 }
 
-// OFFSET: %0x005118C0
+// OFFSET: 0x00501700/0x140147130
 CFrameStrata::~CFrameStrata() {
     for (uint32_t level = 0; level < this->m_levels.Count(); level++) {
         delete this->m_levels[level];

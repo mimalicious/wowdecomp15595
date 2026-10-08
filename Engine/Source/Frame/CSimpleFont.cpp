@@ -19,7 +19,7 @@ static int32_t s_fontCount;
 // STATIC: %0x00BB9228
 int32_t CSimpleFont::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3C70
+// STATIC: 0x00DD3C70/0x140CB9A4C
 int32_t CSimpleFont::s_objectType;
 
 // STATIC: %0x00BB8B4C
@@ -41,7 +41,7 @@ const char* CSimpleFont::GetName() {
     return this->m_name;
 }
 
-// PROVEN: cd230c82 IDENTICAL/IDENTICAL
+// PROVEN: cd230c82 DIFFERENT/IDENTICAL
 // OFFSET: 0x00517000/0x140161610
 bool CSimpleFont::IsA(int32_t type) {
     return type == CSimpleFont::s_objectType;
@@ -117,7 +117,7 @@ CSimpleFont::~CSimpleFont() {
     s_fontCount--;
 }
 
-// OFFSET: %0x00535D60
+// OFFSET: 0x00525DF0
 void CSimpleFont::Destroy() {
     s_fontList.Clear();
 }

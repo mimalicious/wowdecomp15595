@@ -20,7 +20,7 @@
 // STATIC: %0x00BB9A38
 int32_t CSimpleAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CBC
+// STATIC: 0x00DD3CBC/0x140CB9A6C
 int32_t CSimpleAnim::s_objectType;
 
 // STATIC: %0x00BB8BA8
@@ -337,7 +337,7 @@ CSimpleAnim::~CSimpleAnim() {
     delete this->m_smoother;
 }
 
-// PROVEN: defe0283 IDENTICAL/IDENTICAL
+// PROVEN: defe0283 DIFFERENT/IDENTICAL
 // OFFSET: 0x005282F0/0x140177900
 bool CSimpleAnim::IsA(int32_t type) {
     return type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;

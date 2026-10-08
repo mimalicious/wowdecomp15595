@@ -41,6 +41,8 @@ class CSimpleHyperlinkButton : public CSimpleButton {
 
 class CSimpleHyperlinkedFrame : public CSimpleFrame {
     public:
+    static int32_t s_metatable;
+
     /* 01F0 */ uint8_t m_inHyperlinkScript : 1;
     /* 01F0 */ uint8_t m_hyperlinksEnabled : 1;
     /* 01F0 */ uint8_t m_hyperlinksDirty : 1;
@@ -50,6 +52,7 @@ class CSimpleHyperlinkedFrame : public CSimpleFrame {
     /* 01F4 */ TSExplicitList<CSimpleHyperlinkButton, offsetof(CSimpleHyperlinkButton, m_hyperlinkLink)> m_hyperlinks;
 
     virtual ~CSimpleHyperlinkedFrame();
+    virtual int32_t GetScriptMetaTable();
     virtual FrameScript_Object::ScriptIx* GetScriptByName(const char* name, FrameScript_Object::ScriptData& data);
     virtual void GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse);
     virtual void OnHyperlinkEnter(const char* link, const char* text);

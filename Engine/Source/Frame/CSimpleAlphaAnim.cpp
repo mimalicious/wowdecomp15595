@@ -21,7 +21,7 @@ int32_t CSimpleAlphaAnim::s_objectType;
 // STATIC: %0x00BB8BC0
 const char* CSimpleAlphaAnim::s_objectTypeName = "Alpha";
 
-// PROVEN: 224a22a3 IDENTICAL/IDENTICAL
+// PROVEN: 224a22a3 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528D50/0x140178490
 bool CSimpleAlphaAnim::IsA(int32_t type) {
     return type == CSimpleAlphaAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;

@@ -16,7 +16,7 @@
 // STATIC: %0x00BB9164
 int32_t CSimpleCheckbox::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD39E0
+// STATIC: 0x00DD39E0/0x140CB96E0
 int32_t CSimpleCheckbox::s_objectType;
 
 // STATIC: %0x00BB86B4

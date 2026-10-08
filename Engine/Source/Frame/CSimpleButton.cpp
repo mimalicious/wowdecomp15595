@@ -24,7 +24,7 @@
 // STATIC: %0x00BB9130
 int32_t CSimpleButton::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD39C8
+// STATIC: 0x00DD39C8/0x140CB96B8
 int32_t CSimpleButton::s_objectType;
 
 // STATIC: %0x00BB86A0
@@ -368,7 +368,7 @@ void CSimpleButton::RunOnDoubleClickScript(const char* btn) {
     }
 }
 
-// OFFSET: [%0x00524B10, %0x00524910]
+// OFFSET: [0x00514520, 0x00514D20]
 CSimpleButton::~CSimpleButton() {
 }
 

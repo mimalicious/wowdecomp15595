@@ -23,7 +23,7 @@
 // STATIC: %0x00BB9788
 int32_t CSimpleScrollFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3A5C
+// STATIC: 0x00DD3A5C/0x140CB97B0
 int32_t CSimpleScrollFrame::s_objectType;
 
 // STATIC: %0x00BB87F0

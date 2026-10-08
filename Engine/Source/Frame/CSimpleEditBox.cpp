@@ -38,10 +38,10 @@
 // STATIC: %0x00BB9400
 int32_t CSimpleEditBox::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD39FC
+// STATIC: 0x00DD39FC/0x140CB9710
 CSimpleEditBox* CSimpleEditBox::s_currentFocus;
 
-// STATIC: 0x00DD39F8
+// STATIC: 0x00DD39F8/0x140CB9708
 int32_t CSimpleEditBox::s_objectType;
 
 // STATIC: %0x00BB86B8

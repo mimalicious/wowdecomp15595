@@ -58,7 +58,6 @@ static int32_t Script_GetProgress(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 9b613245 IDENTICAL/NONE
 // OFFSET: 0x0053D740/0x140191BC0
 static int32_t Script_IsDone(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -66,7 +65,6 @@ static int32_t Script_IsDone(lua_State* L) {
     return 1;
 }
 
-// PROVEN: c05a43b6 IDENTICAL/NONE
 // OFFSET: 0x0053D790/0x140191C10
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -74,7 +72,6 @@ static int32_t Script_IsPaused(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 69fabf31 IDENTICAL/NONE
 // OFFSET: 0x0053D7E0/0x140191C60
 static int32_t Script_IsPendingFinish(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -118,7 +115,6 @@ static int32_t Script_GetLooping(lua_State* L) {
     return 1;
 }
 
-// PROVEN: b2e4cb2b IDENTICAL/NONE
 // OFFSET: 0x0053D980/0x140191E20
 static int32_t Script_GetLoopState(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -126,7 +122,6 @@ static int32_t Script_GetLoopState(lua_State* L) {
     return 1;
 }
 
-// PROVEN: dbaf1394 IDENTICAL/NONE
 // OFFSET: 0x0053D9D0/0x140191E70
 static int32_t Script_GetMaxOrder(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -192,28 +187,24 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 50338bc3 IDENTICAL/NONE
 // OFFSET: 0x0053DC70
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->GetScript(L) : 0;
 }
 
-// PROVEN: ae739430 IDENTICAL/NONE
 // OFFSET: 0x0053DCB0
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->SetScript(L) : 0;
 }
 
-// PROVEN: e04de98e IDENTICAL/NONE
 // OFFSET: 0x0053DCF0/0x140192240
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->HookScript(L) : 0;
 }
 
-// PROVEN: d7fba91e IDENTICAL/NONE
 // OFFSET: 0x0053DD30/0x140192290
 static int32_t Script_SetIgnoreFramerateThrottle(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
@@ -227,7 +218,6 @@ static int32_t Script_SetIgnoreFramerateThrottle(lua_State* L) {
     return 0;
 }
 
-// PROVEN: e61103bd IDENTICAL/NONE
 // OFFSET: 0x0053DD80/0x140192300
 static int32_t Script_GetIgnoreFramerateThrottle(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));

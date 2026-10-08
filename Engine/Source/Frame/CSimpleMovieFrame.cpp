@@ -416,6 +416,7 @@ int32_t CSimpleMovieFrame::OpenAudio() {
     return 1;
 }
 
+// PROVEN: b29eb7d5 IDENTICAL/NONE
 // OFFSET: 0x00523DB0
 void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     if (CSimpleMovieFrame::s_currentMovieFrame) {
@@ -423,6 +424,7 @@ void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     }
 }
 
+// PROVEN: 98f4c054 IDENTICAL/NONE
 // OFFSET: 0x00523DD0
 void CSimpleMovieFrame::AudioDeviceChanged_Restart() {
     if (CSimpleMovieFrame::s_currentMovieFrame && CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart) {
@@ -710,6 +712,7 @@ void CSimpleMovieFrame::CloseCaptions() {
     this->m_captions.Clear();
 }
 
+// PROVEN: 602601e4 IDENTICAL/NONE
 // OFFSET: 0x00524BD0/0x140173460
 void CSimpleMovieFrame::Cleanup() {
     SE3::SoundBusMute(SE3BUS_SFX, s_sfxWasMuted);

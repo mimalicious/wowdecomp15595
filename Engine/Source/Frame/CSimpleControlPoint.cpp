@@ -46,7 +46,7 @@ int32_t CSimpleControlPoint::GetScriptMetaTable() {
     return CSimpleControlPoint::s_metatable;
 }
 
-// OFFSET: %0x00537B10
+// OFFSET: 0x00527A90
 void CSimpleControlPoint::SetOffset(const C2Vector& offset) {
     if (offset.x * offset.x + offset.y * offset.y <= 0.00000023841858f) {
         this->m_offset.x = 0.0f;

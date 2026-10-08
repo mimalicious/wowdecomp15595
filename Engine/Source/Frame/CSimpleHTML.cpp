@@ -28,7 +28,7 @@
 // STATIC: %0x00BB98B8
 int32_t CSimpleHTML::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3A8C
+// STATIC: 0x00DD3A8C/0x140CB9800
 int32_t CSimpleHTML::s_objectType;
 
 // STATIC: %0x00BB87F8
@@ -208,7 +208,7 @@ void CSimpleHTML::AddText(const char* text, HTML_TEXT_TYPE type, uint32_t justif
     content->m_type = SStrStr(text, "|H") != NULL;
 }
 
-// OFFSET: [%0x00531AC0, %0x00532090, %0x00532930]
+// OFFSET: [0x00522230/0x140170020, 0x00522870/0x140170800]
 CSimpleHTML::~CSimpleHTML() {
     for (int32_t i = 0; i < NUM_HTML_TEXT_TYPES; i++) {
         if (this->m_fonts[i]) {
@@ -234,7 +234,7 @@ CSimpleHTML::~CSimpleHTML() {
     SMemFree(this->m_hyperlinkFormat, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00532220
+// OFFSET: 0x00522300/0x140170210
 void CSimpleHTML::ClearContent() {
     CONTENTNODE* content = this->m_content.Head();
 
@@ -355,7 +355,7 @@ void CSimpleHTML::ParseP(XMLNode* node, HTML_TEXT_TYPE type, CStatus* status) {
     SMemFree(text, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00532760
+// OFFSET: 0x00521AF0
 void CSimpleHTML::RefreshHyperlinks() {
     if (!(this->m_layoutFlags & 0x1)) {
         return;

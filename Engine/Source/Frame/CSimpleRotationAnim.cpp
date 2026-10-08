@@ -15,13 +15,13 @@
 // STATIC: %0x00BB9A80
 int32_t CSimpleRotationAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CB4
+// STATIC: 0x00DD3CB4/0x140CB9A64
 int32_t CSimpleRotationAnim::s_objectType;
 
 // STATIC: %0x00BB8BB0
 const char* CSimpleRotationAnim::s_objectTypeName = "Rotation";
 
-// PROVEN: 03507ea6 IDENTICAL/IDENTICAL
+// PROVEN: 03507ea6 DIFFERENT/IDENTICAL
 // OFFSET: 0x005284E0/0x140177A20
 bool CSimpleRotationAnim::IsA(int32_t type) {
     return type == CSimpleRotationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;

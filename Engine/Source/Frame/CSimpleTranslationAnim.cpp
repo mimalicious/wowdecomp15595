@@ -15,13 +15,13 @@
 // STATIC: %0x00BB9A4C
 int32_t CSimpleTranslationAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CB8
+// STATIC: 0x00DD3CB8/0x140CB9A68
 int32_t CSimpleTranslationAnim::s_objectType;
 
 // STATIC: %0x00BB8BAC
 const char* CSimpleTranslationAnim::s_objectTypeName = "Translation";
 
-// PROVEN: 16876655 IDENTICAL/IDENTICAL
+// PROVEN: 16876655 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528430/0x140177980
 bool CSimpleTranslationAnim::IsA(int32_t type) {
     return type == CSimpleTranslationAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
@@ -45,7 +45,7 @@ int32_t CSimpleTranslationAnim::GetScriptMetaTable() {
     return CSimpleTranslationAnim::s_metatable;
 }
 
-// OFFSET: %0x00537960
+// OFFSET: 0x005278E0
 void CSimpleTranslationAnim::SetOffset(const C2Vector& offset) {
     if (offset.x * offset.x + offset.y * offset.y <= 0.00000023841858f) {
         this->m_offset.x = 0.0f;

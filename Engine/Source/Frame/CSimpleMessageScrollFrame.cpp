@@ -22,7 +22,7 @@ CDataAllocator CSimpleMessageScrollFrame::s_allocator(sizeof(CSimpleMessageScrol
 // STATIC: %0x00BB9670
 int32_t CSimpleMessageScrollFrame::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3A2C
+// STATIC: 0x00DD3A2C/0x140CB9760
 int32_t CSimpleMessageScrollFrame::s_objectType;
 
 // STATIC: %0x00BB8760
@@ -293,7 +293,7 @@ void CSimpleMessageScrollFrame::Clear() {
     this->m_currentScroll = 0;
 }
 
-// OFFSET: %0x0052DA50
+// OFFSET: 0x0051D610
 void CSimpleMessageScrollFrame::RefreshHyperlinks() {
     this->ClearHyperlinks();
 
@@ -310,7 +310,7 @@ void CSimpleMessageScrollFrame::RefreshHyperlinks() {
     }
 }
 
-// OFFSET: [%0x0052DC20, %0x0052DDC0, %0x0052E690]
+// OFFSET: [0x0051DCD0, 0x0051E1B0]
 CSimpleMessageScrollFrame::~CSimpleMessageScrollFrame() {
     this->m_lines.Clear();
     this->m_displayNodes.Clear();

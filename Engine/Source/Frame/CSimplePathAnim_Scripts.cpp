@@ -41,7 +41,6 @@ static int32_t Script_GetCurve(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 8669560e IDENTICAL/NONE
 // OFFSET: 0x0053D450
 static int32_t Script_GetMaxOrder(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));

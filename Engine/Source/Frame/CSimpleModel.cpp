@@ -33,7 +33,7 @@
 // STATIC: %0x00BB87EC
 const char* CSimpleModel::s_objectTypeName = "Model";
 
-// STATIC: 0x00DD3A44
+// STATIC: 0x00DD3A44/0x140CB9788
 int32_t CSimpleModel::s_objectType;
 
 // STATIC: 0x00DD3A48

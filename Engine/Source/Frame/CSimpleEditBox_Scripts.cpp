@@ -712,7 +712,8 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "IsEnabled", &Script_IsEnabled },
 };
 
-// OFFSET: %0x00543E50
+// PROVEN: 61c4a8dd IDENTICAL/NONE
+// OFFSET: 0x00534A20
 void CSimpleEditBox::RegisterScriptMethods(lua_State* L) {
     CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

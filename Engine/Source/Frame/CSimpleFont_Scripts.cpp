@@ -385,7 +385,6 @@ void CSimpleFont::DestroyScriptMetaTable() {
     CSimpleFont::s_metatable = LUA_NOREF;
 }
 
-// PROVEN: f63ad92f IDENTICAL/NONE
 // OFFSET: 0x00533FA0/0x140186710
 static int32_t Script_GetObjectType(lua_State* L) {
     CSimpleFont* font = reinterpret_cast<CSimpleFont*>(FrameScript_GetObjectThis(L, CSimpleFont::GetObjectType()));
@@ -413,7 +412,6 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// PROVEN: af8893b8 IDENTICAL/NONE
 // OFFSET: 0x005340B0/0x140186840
 static int32_t Script_GetName(lua_State* L) {
     CSimpleFont* font = reinterpret_cast<CSimpleFont*>(FrameScript_GetObjectThis(L, CSimpleFont::GetObjectType()));

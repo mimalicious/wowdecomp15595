@@ -54,7 +54,7 @@ static uint16_t s_languageWideBuffer[0x2000];
 // STATIC: %0x00CCD1F0
 static char s_languageBuffer[0x2000];
 
-// STATIC: %0x00BB8100
+// STATIC: 0x00CA2C00
 static TSExplicitList<CSimpleEmbeddedTexture, offsetof(CSimpleEmbeddedTexture, m_link)> s_embeddedTextureStorage;
 
 // STATIC: %0x00CCF208
@@ -962,7 +962,7 @@ void CSimpleFontString::FreeEmbeddedTextures() {
     }
 }
 
-// OFFSET: %0x0050C8A0
+// OFFSET: 0x004FC540
 void CSimpleFontString::FreeEmbededTextureStorage() {
     CSimpleEmbeddedTexture* embedded = s_embeddedTextureStorage.Head();
 

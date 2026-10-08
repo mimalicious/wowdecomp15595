@@ -15,13 +15,13 @@
 // STATIC: %0x00BB9AA4
 int32_t CSimpleScaleAnim::s_metatable = LUA_NOREF;
 
-// STATIC: 0x00DD3CB0
+// STATIC: 0x00DD3CB0/0x140CB9A60
 int32_t CSimpleScaleAnim::s_objectType;
 
 // STATIC: %0x00BB8BB4
 const char* CSimpleScaleAnim::s_objectTypeName = "Scale";
 
-// PROVEN: 62d528f7 IDENTICAL/IDENTICAL
+// PROVEN: 62d528f7 DIFFERENT/IDENTICAL
 // OFFSET: 0x00528590/0x140177AC0
 bool CSimpleScaleAnim::IsA(int32_t type) {
     return type == CSimpleScaleAnim::s_objectType || type == CSimpleAnim::s_objectType || type == CScriptObject::s_objectType;
