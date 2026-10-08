@@ -347,7 +347,7 @@ static int32_t Script_SetFrameStrata(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051B7A0
+// OFFSET: 0x0050B410/0x140153940
 static int32_t Script_GetFrameLevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -692,7 +692,7 @@ static int32_t Script_SetAttribute(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C250
+// OFFSET: 0x0050BEC0/0x140154630
 static int32_t Script_GetEffectiveScale(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -777,7 +777,7 @@ static int32_t Script_SetAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C560
+// OFFSET: 0x0050C1E0/0x140154970
 static int32_t Script_GetID(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -865,7 +865,7 @@ static int32_t Script_DisableDrawLayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C810
+// OFFSET: 0x0050C490/0x140154CB0
 static int32_t Script_Show(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -881,7 +881,7 @@ static int32_t Script_Show(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C870
+// OFFSET: 0x0050C4F0
 static int32_t Script_Hide(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1045,7 +1045,7 @@ static int32_t Script_SetClampRectInsets(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051CF20
+// OFFSET: 0x0050CBA0/0x140155550
 static int32_t Script_GetMinResize(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CRect bounds = frame->m_resizeRect;
@@ -1076,7 +1076,7 @@ static int32_t Script_SetMinResize(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D0E0
+// OFFSET: 0x0050CD60/0x140155760
 static int32_t Script_GetMaxResize(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CRect bounds = frame->m_resizeRect;

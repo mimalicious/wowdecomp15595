@@ -87,7 +87,7 @@ static int32_t Script_SetOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D000
+// OFFSET: 0x0053D1D0/0x140191570
 static int32_t Script_GetOffset(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
 

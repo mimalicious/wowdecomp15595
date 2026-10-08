@@ -98,7 +98,7 @@ static int32_t Script_SetStartDelay(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054BB40
+// OFFSET: 0x0053BE40/0x14018FC50
 static int32_t Script_GetStartDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_startDelay);
@@ -119,7 +119,7 @@ static int32_t Script_SetEndDelay(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054BC10
+// OFFSET: 0x0053BF00/0x14018FD40
 static int32_t Script_GetEndDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_endDelay);
@@ -140,14 +140,14 @@ static int32_t Script_SetDuration(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054BCE0
+// OFFSET: 0x0053BFC0/0x14018FE30
 static int32_t Script_GetDuration(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_duration);
     return 1;
 }
 
-// OFFSET: %0x0054BD30
+// OFFSET: 0x0053C000/0x14018FE80
 static int32_t Script_GetSmoothProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_smoothProgress);
@@ -175,14 +175,14 @@ static int32_t Script_GetProgress(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BE50
+// OFFSET: 0x0053C100/0x14018FFC0
 static int32_t Script_GetProgressWithDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_progressWithDelay);
     return 1;
 }
 
-// OFFSET: %0x0054BF70
+// OFFSET: 0x0053C140/0x140190010
 static int32_t Script_GetElapsed(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_elapsed);

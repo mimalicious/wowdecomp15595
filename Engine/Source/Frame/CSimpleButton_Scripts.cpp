@@ -480,7 +480,7 @@ static int32_t Script_GetPushedTextOffset(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x005421C0
+// OFFSET: 0x005322D0/0x140184390
 static int32_t Script_GetTextWidth(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     float width = button->m_fontString ? button->m_fontString->GetWidth() : 0.0f;
@@ -489,7 +489,7 @@ static int32_t Script_GetTextWidth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00542240
+// OFFSET: 0x00532350/0x140184420
 static int32_t Script_GetTextHeight(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     float height = button->m_fontString ? button->m_fontString->GetHeight() : 0.0f;
@@ -525,7 +525,7 @@ static int32_t Script_Click(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005423D0
+// OFFSET: 0x005324E0/0x140184600
 static int32_t Script_LockHighlight(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -533,7 +533,7 @@ static int32_t Script_LockHighlight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00542410
+// OFFSET: 0x00532520/0x140184640
 static int32_t Script_UnlockHighlight(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 

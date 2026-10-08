@@ -319,14 +319,14 @@ static int32_t Script_ScrollDown(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547540
+// OFFSET: 0x00537BB0/0x14018ABD0
 static int32_t Script_PageUp(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->PageUp();
     return 0;
 }
 
-// OFFSET: %0x00547580
+// OFFSET: 0x00537BF0/0x14018AC10
 static int32_t Script_PageDown(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->PageDown();
@@ -408,7 +408,7 @@ static int32_t Script_GetNumMessages(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547870
+// OFFSET: 0x00537EE0/0x14018AF40
 static int32_t Script_GetNumLinesDisplayed(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_numDisplayed);
@@ -423,14 +423,14 @@ static int32_t Script_GetCurrentScroll(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547910
+// OFFSET: 0x00537F80/0x14018AFE0
 static int32_t Script_GetCurrentLine(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_currentLine);
     return 1;
 }
 
-// OFFSET: %0x00547960
+// OFFSET: 0x00537FD0/0x14018B030
 static int32_t Script_GetMaxLines(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_maxMessages);
@@ -491,7 +491,7 @@ static int32_t Script_SetTimeVisible(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547B70
+// OFFSET: 0x005381E0
 static int32_t Script_GetTimeVisible(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_timeVisible);
@@ -512,7 +512,7 @@ static int32_t Script_SetFadeDuration(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547C40
+// OFFSET: 0x005382B0/0x14018B380
 static int32_t Script_GetFadeDuration(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_fadeDuration);
@@ -556,7 +556,7 @@ static int32_t Script_SetInsertMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547E10
+// OFFSET: 0x00538480
 static int32_t Script_GetInsertMode(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     const char* mode = NULL;

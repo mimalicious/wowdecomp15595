@@ -43,7 +43,8 @@ static int32_t Script_StopMovie(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054B470
+// PROVEN: 6c0bbd20 IDENTICAL/NONE
+// OFFSET: 0x0053B760/0x14018F570
 static int32_t Script_EnableSubtitles(lua_State* L) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(FrameScript_GetObjectThis(L, CSimpleMovieFrame::GetObjectType()));
 

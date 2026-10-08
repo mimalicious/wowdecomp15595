@@ -288,7 +288,7 @@ static int32_t Script_SetBlinkSpeed(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00544960
+// OFFSET: 0x00535520/0x140188020
 static int32_t Script_GetBlinkSpeed(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, editBox->m_cursorBlinkSpeed);
@@ -494,7 +494,7 @@ static int32_t Script_SetMaxLetters(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005451B0
+// OFFSET: 0x00535D60/0x140188A60
 static int32_t Script_GetMaxLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, editBox->m_textMaxLetters);
@@ -510,7 +510,7 @@ static int32_t Script_GetNumLetters(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00545280
+// OFFSET: 0x00535E30/0x140188B20
 static int32_t Script_GetHistoryLines(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, editBox->m_historyLines);

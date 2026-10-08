@@ -99,7 +99,7 @@ static int32_t Script_SetMinMaxValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540C50
+// OFFSET: 0x00530CB0
 static int32_t Script_GetValue(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 

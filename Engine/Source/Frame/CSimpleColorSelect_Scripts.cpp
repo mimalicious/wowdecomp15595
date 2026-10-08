@@ -261,7 +261,7 @@ static int32_t Script_SetColorHSV(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054B150
+// OFFSET: 0x0053B440/0x14018F1F0
 static int32_t Script_GetColorHSV(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     C3Vector hsv = colorSelect->m_hsv;

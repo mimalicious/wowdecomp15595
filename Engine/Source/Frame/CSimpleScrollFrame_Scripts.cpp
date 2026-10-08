@@ -131,7 +131,7 @@ static int32_t Script_SetVerticalScroll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549620
+// OFFSET: 0x00539A30/0x14018D090
 static int32_t Script_GetHorizontalScroll(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -139,7 +139,7 @@ static int32_t Script_GetHorizontalScroll(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549680
+// OFFSET: 0x00539A90/0x14018D100
 static int32_t Script_GetVerticalScroll(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -147,7 +147,7 @@ static int32_t Script_GetVerticalScroll(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005496E0
+// OFFSET: 0x00539AF0/0x14018D170
 static int32_t Script_GetHorizontalScrollRange(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -155,7 +155,7 @@ static int32_t Script_GetHorizontalScrollRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549740
+// OFFSET: 0x00539B50/0x14018D1E0
 static int32_t Script_GetVerticalScrollRange(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 

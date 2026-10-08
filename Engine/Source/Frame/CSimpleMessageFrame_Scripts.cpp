@@ -194,7 +194,7 @@ static int32_t Script_SetInsertMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00545D50
+// OFFSET: 0x005369E0
 static int32_t Script_GetInsertMode(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     const char* mode = NULL;
@@ -266,7 +266,7 @@ static int32_t Script_SetTimeVisible(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00545FB0
+// OFFSET: 0x00536C40
 static int32_t Script_GetTimeVisible(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_timeVisible);
@@ -287,7 +287,7 @@ static int32_t Script_SetFadeDuration(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00546080
+// OFFSET: 0x00536D10/0x140189C40
 static int32_t Script_GetFadeDuration(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     lua_pushnumber(L, frame->m_fadeDuration);

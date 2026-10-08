@@ -80,7 +80,7 @@ static int32_t Script_IsPendingFinish(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D660
+// OFFSET: 0x0053D830/0x140191CB0
 static int32_t Script_GetDuration(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushnumber(L, group->m_duration);
@@ -153,7 +153,7 @@ static int32_t Script_SetInitialOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D960
+// OFFSET: 0x0053DB20/0x140192000
 static int32_t Script_GetInitialOffset(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 

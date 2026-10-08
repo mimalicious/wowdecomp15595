@@ -103,7 +103,7 @@ static int32_t Script_GetModel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00548260
+// OFFSET: 0x00538680/0x14018B8C0
 static int32_t Script_ClearModel(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -357,7 +357,7 @@ static int32_t Script_GetLight(lua_State* L) {
     return count + 1;
 }
 
-// OFFSET: %0x00548C10
+// OFFSET: 0x00539030/0x14018C490
 static int32_t Script_GetPosition(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
     float y = model->m_position.y;
@@ -370,7 +370,7 @@ static int32_t Script_GetPosition(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x00548C90
+// OFFSET: 0x005390B0/0x14018C520
 static int32_t Script_GetFacing(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -378,7 +378,7 @@ static int32_t Script_GetFacing(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00548CE0
+// OFFSET: 0x00539100/0x14018C570
 static int32_t Script_GetModelScale(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -386,7 +386,7 @@ static int32_t Script_GetModelScale(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00548D30
+// OFFSET: 0x00539150/0x14018C5C0
 static int32_t Script_AdvanceTime(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -447,7 +447,7 @@ static int32_t Script_SetFogNear(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548FA0
+// OFFSET: 0x005393C0/0x14018C8A0
 static int32_t Script_GetFogNear(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -469,7 +469,7 @@ static int32_t Script_SetFogFar(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549080
+// OFFSET: 0x00539490/0x14018C990
 static int32_t Script_GetFogFar(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 

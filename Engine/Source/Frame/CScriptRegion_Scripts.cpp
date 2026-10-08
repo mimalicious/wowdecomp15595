@@ -163,7 +163,7 @@ static int32_t Script_GetCenter(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0053F490
+// OFFSET: 0x0052F4F0/0x140180510
 static int32_t Script_GetLeft(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -182,7 +182,7 @@ static int32_t Script_GetLeft(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053F550
+// OFFSET: 0x0052F5B0/0x140180600
 static int32_t Script_GetRight(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -201,7 +201,7 @@ static int32_t Script_GetRight(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053F610
+// OFFSET: 0x0052F670/0x1401806F0
 static int32_t Script_GetTop(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -220,7 +220,7 @@ static int32_t Script_GetTop(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053F6D0
+// OFFSET: 0x0052F730/0x1401807E0
 static int32_t Script_GetBottom(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 

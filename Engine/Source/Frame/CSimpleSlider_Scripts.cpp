@@ -122,7 +122,7 @@ static int32_t Script_SetMinMaxValues(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549CE0
+// OFFSET: 0x0053A060
 static int32_t Script_GetValue(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -144,7 +144,7 @@ static int32_t Script_SetValue(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549DB0
+// OFFSET: 0x0053A130/0x14018D8F0
 static int32_t Script_GetValueStep(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 

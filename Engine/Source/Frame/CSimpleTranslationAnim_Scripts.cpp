@@ -28,7 +28,7 @@ static int32_t Script_SetOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054C6C0
+// OFFSET: 0x0053C890/0x140190920
 static int32_t Script_GetOffset(lua_State* L) {
     CSimpleTranslationAnim* anim = static_cast<CSimpleTranslationAnim*>(FrameScript_GetObjectThis(L, CSimpleTranslationAnim::GetObjectType()));
 
