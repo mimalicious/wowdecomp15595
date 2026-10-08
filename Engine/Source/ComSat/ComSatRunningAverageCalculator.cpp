@@ -1,6 +1,6 @@
 #include "Engine/Source/ComSat/ComSatRunningAverageCalculator.h"
 
-// OFFSET: %0x0097A120
+// OFFSET: 0x00A39E10
 ComSat::RunningAverageCalculator::RunningAverageCalculator(ComSat::Allocator& allocator) {
     this->m_sum = 0.0;
     this->m_allocator = &allocator;
@@ -9,7 +9,7 @@ ComSat::RunningAverageCalculator::RunningAverageCalculator(ComSat::Allocator& al
     this->m_index = 0;
 }
 
-// OFFSET: [#0x00886750, %0x0097A2B0]
+// OFFSET: [0x00A39F60, %0x0097A2B0]
 ComSat::RunningAverageCalculator::~RunningAverageCalculator() {
     if (this->m_values) {
         this->m_allocator->Free(this->m_values);

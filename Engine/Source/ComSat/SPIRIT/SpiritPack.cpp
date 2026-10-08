@@ -3,7 +3,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A81510
+// OFFSET: 0x00B4F2B0
 void SPIRIT_IP_MR_V3_PutBits(int32_t value, SPIRIT_IPMR_STREAM* stream, int16_t count, int16_t skip) {
     if (skip) {
         stream->m_bits += count;
@@ -32,7 +32,7 @@ void SPIRIT_IP_MR_V3_PutBits(int32_t value, SPIRIT_IPMR_STREAM* stream, int16_t 
     }
 }
 
-// OFFSET: %0x00A816F0
+// OFFSET: 0x00B4F490
 void SPIRIT_IP_MR_V3_WriteFrameHeader(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream, int16_t* counter, int16_t skip) {
     uint32_t start = stream->m_bits;
 
@@ -47,7 +47,7 @@ void SPIRIT_IP_MR_V3_WriteFrameHeader(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPM
     *counter += static_cast<int16_t>(stream->m_bits - start);
 }
 
-// OFFSET: %0x00A81910
+// OFFSET: 0x00B4F6B0
 void SPIRIT_IP_MR_V3_WriteFrameFlags(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream, int16_t skip) {
     const uint8_t* widths = frame->unk_02B4 >= 0 || frame->unk_02B0 == 3 ? s_ipmrTableB23754 : s_ipmrTableB23768;
 
@@ -56,7 +56,7 @@ void SPIRIT_IP_MR_V3_WriteFrameFlags(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR
     }
 }
 
-// OFFSET: %0x00A819B0
+// OFFSET: 0x00B4F750
 void SPIRIT_IP_MR_V3_NAME_31(SPIRIT_IPMR_FRAME* frame, int16_t start) {
     for (int16_t t = start; t < frame->unk_02AE; t++) {
         int16_t shift = s_ipmrTableB235D8[t] - 6;
@@ -88,7 +88,7 @@ void SPIRIT_IP_MR_V3_NAME_31(SPIRIT_IPMR_FRAME* frame, int16_t start) {
     }
 }
 
-// OFFSET: %0x00A81FA0
+// OFFSET: 0x00B4FD40
 int16_t SPIRIT_IP_MR_V3_NAME_107(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream, int16_t* sizes, int16_t* counters, int16_t skip) {
     if (frame->unk_02B0 == 4) {
         for (int32_t i = 0; i < 7; i++) {

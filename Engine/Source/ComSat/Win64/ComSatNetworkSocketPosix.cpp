@@ -33,12 +33,12 @@ ComSat::Network::SocketPosix::SocketPosix() {
     setsockopt(this->m_socket, SOL_SOCKET, SO_RCVBUF, reinterpret_cast<const char*>(&value), sizeof(value));
 }
 
-// OFFSET: %0x0097BBF0
+// OFFSET: 0x00A3B6B0/0x1407E8490
 ComSat::Network::SocketPosix::~SocketPosix() {
     closesocket(this->m_socket);
 }
 
-// OFFSET: %0x0097BA90
+// OFFSET: 0x00A3B550/0x1407E82D0
 bool ComSat::Network::SocketPosix::Bind(int32_t port) {
     ComSat::Network::Address address;
     address.SetPort(port);

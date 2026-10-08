@@ -27,7 +27,7 @@ void ComSat::Network::Session::Recv(uint64_t talker, const uint8_t* data, uint32
     this->m_callback->Recv(talker, data, size);
 }
 
-// OFFSET: %0x00979960
+// OFFSET: 0x00A39650
 void ComSat::Network::Session::SetTalkerNetworkIdLocal(uint64_t talker, uint8_t networkId) {
     LocalTalker key;
     key.m_talker = talker;
@@ -38,7 +38,7 @@ void ComSat::Network::Session::SetTalkerNetworkIdLocal(uint64_t talker, uint8_t 
     }
 }
 
-// OFFSET: %0x009799B0
+// OFFSET: 0x00A396A0
 void ComSat::Network::Session::SetTalkerNetworkIdRemote(uint64_t talker, uint8_t networkId) {
     RemoteTalker key;
     key.m_talker = talker;
@@ -50,7 +50,7 @@ void ComSat::Network::Session::SetTalkerNetworkIdRemote(uint64_t talker, uint8_t
     }
 }
 
-// OFFSET: #0x00885F20
+// OFFSET: 0x00A396F0/0x1407E5A50
 bool ComSat::Network::Session::Send(uint64_t talker, const uint8_t* data, uint32_t size) {
     uint8_t networkId = 0;
     uint32_t i = 0;
@@ -74,7 +74,7 @@ bool ComSat::Network::Session::Send(uint64_t talker, const uint8_t* data, uint32
     return true;
 }
 
-// OFFSET: %0x00979AA0
+// OFFSET: 0x00A39790/0x1407E5B20
 void ComSat::Network::Session::Work() {
     if (this->m_localTalkers.Count() && static_cast<int32_t>(this->m_manager->m_time - this->m_lastSendTime) > 10000) {
         uint8_t networkId = this->m_localTalkers[0].m_networkId;
@@ -86,7 +86,7 @@ void ComSat::Network::Session::Work() {
     }
 }
 
-// OFFSET: %0x00979B10
+// OFFSET: 0x00A39800/0x1407E5BC0
 bool ComSat::Network::Session::Resolve(uint8_t networkId, const ComSat::Network::Address& address, uint64_t& talker, const uint8_t (*&key)[16]) {
     for (uint32_t i = 0; i < this->m_remoteTalkers.Count(); i++) {
         RemoteTalker& remote = this->m_remoteTalkers[i];
@@ -99,7 +99,7 @@ bool ComSat::Network::Session::Resolve(uint8_t networkId, const ComSat::Network:
     return false;
 }
 
-// OFFSET: %0x00979C40
+// OFFSET: 0x00A39930/0x1407E5C80
 ComSat::Network::Session::Session(ComSat::Network::Manager& manager, uint64_t id, ComSat::Network::Session::Callback& callback) : m_localTalkers(*manager.m_allocator), m_endpoints(*manager.m_allocator), m_remoteTalkers(*manager.m_allocator) {
     this->m_id = id;
     this->m_manager = &manager;
@@ -108,7 +108,7 @@ ComSat::Network::Session::Session(ComSat::Network::Manager& manager, uint64_t id
     this->m_callback = &callback;
 }
 
-// OFFSET: %0x00979CA0
+// OFFSET: 0x00A39990/0x1407E5CE0
 ComSat::Network::Session::~Session() {
     while (this->m_endpoints.Count()) {
         ComSat::Network::Endpoint* endpoint = this->m_endpoints[0];
@@ -117,7 +117,7 @@ ComSat::Network::Session::~Session() {
     }
 }
 
-// OFFSET: %0x00979D60
+// OFFSET: 0x00A39A50
 bool ComSat::Network::Session::Remove(uint64_t talker) {
     RemoteTalker key;
     key.m_talker = talker;
@@ -139,7 +139,7 @@ bool ComSat::Network::Session::Remove(uint64_t talker) {
     return this->m_localTalkers.Remove(local);
 }
 
-// OFFSET: %0x00979E20
+// OFFSET: 0x00A39B10/0x1407E5F10
 bool ComSat::Network::Session::LocalAdd(uint64_t talker) {
     LocalTalker key;
     key.m_talker = talker;
@@ -152,7 +152,7 @@ bool ComSat::Network::Session::LocalAdd(uint64_t talker) {
     return true;
 }
 
-// OFFSET: %0x00979EA0
+// OFFSET: 0x00A39B90/0x1407E5F90
 bool ComSat::Network::Session::Add(uint64_t talker, uint8_t networkId, const uint8_t (&key)[16], const ComSat::Network::Address& address) {
     RemoteTalker remote;
     remote.m_talker = talker;

@@ -1,7 +1,7 @@
 #include "Engine/Source/ComSat/ComSatSoundLevelCalculator.h"
 #include <cmath>
 
-// OFFSET: %0x0097B950
+// OFFSET: 0x00A3B410/0x1407E8160
 void ComSat::Sound::LevelCalculator16Bit::CalculateLevelForFrame(const uint8_t* data, uint32_t size, float& level, float& decibels) {
     level = 0.0f;
     decibels = 0.0f;
@@ -26,7 +26,7 @@ void ComSat::Sound::LevelCalculator16Bit::CalculateLevelForFrame(const uint8_t* 
     }
 }
 
-// OFFSET: %0x0097B9F0
+// OFFSET: 0x00A3B4B0
 float ComSat::Sound::LevelCalculator16Bit::GetMaxDecibelLevel() {
     return static_cast<float>(log10(131.072) * 20.0f);
 }

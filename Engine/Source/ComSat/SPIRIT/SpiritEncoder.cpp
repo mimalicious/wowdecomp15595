@@ -3,7 +3,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A82810
+// OFFSET: 0x00B505B0
 void SPIRIT_IP_MR_V3_NAME_181(SPIRIT_IPMR_ENC_UNK0D20* state, const SPIRIT_IPMR_TABLES* tables, const float* signal, SPIRIT_IPMR_FRAME* frame) {
     int16_t count = frame->unk_02AE;
     SPIRIT_IPMR_TRACK tracks[11];
@@ -105,7 +105,7 @@ void SPIRIT_IP_MR_V3_NAME_181(SPIRIT_IPMR_ENC_UNK0D20* state, const SPIRIT_IPMR_
     state->unk_1FB2 = count;
 }
 
-// OFFSET: %0x00A7EB20
+// OFFSET: 0x00B4C8D0
 void SPIRIT_IP_MR_V3_AnalyzeFrame(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_ENC_UNK0D20* state, const SPIRIT_IPMR_TABLES* tables, const float* input) {
     SPIRIT_IP_MR_V3_NAME_332(frame->unk_0000, 160);
 
@@ -123,7 +123,7 @@ void SPIRIT_IP_MR_V3_AnalyzeFrame(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_ENC_UNK0
     }
 }
 
-// OFFSET: %0x00A7EBA0
+// OFFSET: 0x00B4C950
 int32_t SPIRIT_IP_MR_V3_NAME_195(SPIRIT_IPMR_ENCODER* encoder, const uint8_t* pcm, SPIRIT_IPMR_STREAM* stream, int32_t a4, int32_t a5, int16_t a6, int16_t a7, int16_t* a8, int16_t* a9, int16_t* a10, int16_t* a11, int16_t* a12) {
     const SPIRIT_IPMR_TABLES* tables = encoder->m_tables;
     float input[640];

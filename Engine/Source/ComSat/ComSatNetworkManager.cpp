@@ -15,7 +15,7 @@ void ComSat::Network::HMAC::Init(const uint8_t* key, uint32_t length) {
     this->m_inner.Process(this->m_innerPad, sizeof(this->m_innerPad));
 }
 
-// OFFSET: %0x00978CE0
+// OFFSET: 0x00A389F0/0x1407E4B60
 uint32_t ComSat::Network::ComputeSignature(const uint8_t (&key)[16], const uint8_t* data, uint32_t size) {
     HMAC hmac;
     uint8_t innerDigest[16];
@@ -39,7 +39,7 @@ ComSat::Network::Manager::Manager(const ComSat::Initialization& init, ComSat::Al
     this->m_socket->Bind(init.m_port);
 }
 
-// OFFSET: %0x009790D0
+// OFFSET: 0x00A38DE0/0x1407E5090
 ComSat::Network::Manager::~Manager() {
     if (this->m_socket) {
         ComSat::Delete(*this->m_allocator, this->m_socket);
@@ -52,7 +52,7 @@ ComSat::Network::Manager::~Manager() {
     }
 }
 
-// OFFSET: %0x00978E80
+// OFFSET: 0x00A38B90/0x1407E4DB0
 void ComSat::Network::Manager::Work(uint32_t time) {
     ComSat::Network::Address from;
     ComSat::Network::Packet packet;
@@ -89,7 +89,7 @@ void ComSat::Network::Manager::Work(uint32_t time) {
     }
 }
 
-// OFFSET: %0x00978FD0
+// OFFSET: 0x00A38CE0/0x1407E4F70
 void ComSat::Network::Manager::DestroySession(ComSat::Network::Session* session) {
     this->m_sessions.Remove(session);
     ComSat::Delete(*this->m_allocator, session);

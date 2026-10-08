@@ -4,14 +4,14 @@
 
 extern "C" {
 
-// OFFSET: %0x00A87A70
+// OFFSET: 0x00B55810
 void SPIRIT_IP_MR_V3_AddVector(int32_t count, float* dst, const float* src) {
     for (int32_t i = 0; i < count; i++) {
         dst[i] = src[i] + dst[i];
     }
 }
 
-// OFFSET: %0x00A87B00
+// OFFSET: 0x00B558A0
 float* SPIRIT_IP_MR_V3_CopyVector(int32_t count, float* dst, const float* src) {
     for (int32_t i = 0; i < count; i++) {
         dst[i] = src[i];
@@ -20,14 +20,14 @@ float* SPIRIT_IP_MR_V3_CopyVector(int32_t count, float* dst, const float* src) {
     return dst;
 }
 
-// OFFSET: %0x00A87B80
+// OFFSET: 0x00B55920
 void SPIRIT_IP_MR_V3_SubVector(int32_t count, float* dst, const float* src) {
     for (int32_t i = 0; i < count; i++) {
         dst[i] = dst[i] - src[i];
     }
 }
 
-// OFFSET: %0x00A87C10
+// OFFSET: 0x00B559B0
 float SPIRIT_IP_MR_V3_NAME_331(const float* codebook, const float* target, const float* mean, const float* predictor, const float* previous, const int32_t* sizes, const float* weights, float* quantized, int32_t* indices, int32_t stages) {
     int32_t paths[64];
     int32_t parents[2][8];

@@ -13,7 +13,7 @@ const float s_ipmrTableB23374[7] = {
     1.0f, 0.98f, 0.98f, 0.98f, 0.98f, 0.9f, 0.6f,
 };
 
-// OFFSET: %0x00A7F270
+// OFFSET: 0x00B4D020
 float GetMedian(const float* values) {
     float sorted[5];
     int16_t order[5];
@@ -54,7 +54,7 @@ float GetMedian(const float* values) {
     return values[order[2]];
 }
 
-// OFFSET: %0x00A7F360
+// OFFSET: 0x00B4D110
 float SPIRIT_IP_MR_V3_NAME_113(const SPIRIT_IPMR_UNK114* state) {
     float gain = GetMedian(state->unk_0028);
 
@@ -65,7 +65,7 @@ float SPIRIT_IP_MR_V3_NAME_113(const SPIRIT_IPMR_UNK114* state) {
     return s_ipmrTableB23358[state->unk_005A] * gain;
 }
 
-// OFFSET: %0x00A7F3B0
+// OFFSET: 0x00B4D160
 void SPIRIT_IP_MR_V3_NAME_63(SPIRIT_IPMR_UNK114* state, SPIRIT_IPMR_SUBFRAME* subframe, SPIRIT_IPMR_TRACK* track) {
     if (subframe) {
         if (state->unk_0058 < 143) {
@@ -108,7 +108,7 @@ void SPIRIT_IP_MR_V3_NAME_63(SPIRIT_IPMR_UNK114* state, SPIRIT_IPMR_SUBFRAME* su
     }
 }
 
-// OFFSET: %0x00A7F510
+// OFFSET: 0x00B4D2C0
 void SPIRIT_IP_MR_V3_UpdateGainHistory(int16_t lost, SPIRIT_IPMR_UNK114* state, const SPIRIT_IPMR_SUBFRAME* subframe) {
     if (!subframe) {
         return;

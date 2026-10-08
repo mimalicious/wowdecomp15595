@@ -12,7 +12,7 @@ const float s_ipmrTableA58F70[4][3] = {
     { 0.25f, 0.5f, 0.75f },
 };
 
-// OFFSET: %0x00A82D70
+// OFFSET: 0x00B50B10
 void SPIRIT_IP_MR_V3_NAME_137(const float* x, float* y, const float* a) {
     for (int32_t n = 0; n < 40; n++) {
         float sum = x[n];
@@ -25,7 +25,7 @@ void SPIRIT_IP_MR_V3_NAME_137(const float* x, float* y, const float* a) {
     }
 }
 
-// OFFSET: %0x00A82E00
+// OFFSET: 0x00B50BA0
 void SPIRIT_IP_MR_V3_NAME_148(const float* x, float* y, const float* a, float* mem, int16_t update) {
     float history[50];
 
@@ -51,7 +51,7 @@ void SPIRIT_IP_MR_V3_NAME_148(const float* x, float* y, const float* a, float* m
     }
 }
 
-// OFFSET: %0x00A82EE0
+// OFFSET: 0x00B50C80
 void SPIRIT_IP_MR_V3_NAME_389(const float* coeffs, float* h, const float* a) {
     for (int32_t n = 0; n < 40; n++) {
         float sum = n == 0 ? 1.0f : n <= 10 ? coeffs[n - 1] : 0.0f;
@@ -74,7 +74,7 @@ void SPIRIT_IP_MR_V3_NAME_389(const float* coeffs, float* h, const float* a) {
     }
 }
 
-// OFFSET: %0x00A83070
+// OFFSET: 0x00B50E10
 void SPIRIT_IP_MR_V3_NAME_390(float* y, const float* a, const float* mem) {
     float history[50];
 
@@ -94,7 +94,7 @@ void SPIRIT_IP_MR_V3_NAME_390(float* y, const float* a, const float* mem) {
     }
 }
 
-// OFFSET: %0x00A83130
+// OFFSET: 0x00B50ED0
 int32_t SPIRIT_IP_MR_V3_SortLsf(float* lsf) {
     float* f = lsf - 1;
     int32_t pass = 0;
@@ -179,7 +179,7 @@ int32_t SPIRIT_IP_MR_V3_SortLsf(float* lsf) {
     return 1;
 }
 
-// OFFSET: %0x00A83440
+// OFFSET: 0x00B511E0
 void SPIRIT_IP_MR_V3_NAME_215(const float* lsp, float* a) {
     float f1[6];
     float f2[6];
@@ -211,7 +211,7 @@ void SPIRIT_IP_MR_V3_NAME_215(const float* lsp, float* a) {
     }
 }
 
-// OFFSET: %0x00A83780
+// OFFSET: 0x00B51520
 void SPIRIT_IP_MR_V3_NAME_391(float* out, const float* src, const float* w1, const float* w2) {
     for (int32_t sf = 0; sf < 4; sf++) {
         for (int32_t k = 0; k < 10; k++) {
@@ -224,7 +224,7 @@ void SPIRIT_IP_MR_V3_NAME_391(float* out, const float* src, const float* w1, con
     }
 }
 
-// OFFSET: %0x00A83800
+// OFFSET: 0x00B515A0
 void SPIRIT_IP_MR_V3_NAME_216(const float* lsp, float* lsf) {
     for (int32_t i = 0; i < 10; i++) {
         double angle = atan(sqrt((1.0 - lsp[i]) / (lsp[i] + 1.0)));
@@ -232,7 +232,7 @@ void SPIRIT_IP_MR_V3_NAME_216(const float* lsp, float* lsf) {
     }
 }
 
-// OFFSET: %0x00A83850
+// OFFSET: 0x00B515F0
 void SPIRIT_IP_MR_V3_NAME_205(const float* prev, const float* cur, int16_t index, float* a) {
     for (int32_t i = 0; i < 3; i++) {
         float weight = s_ipmrTableA58F70[index][i];
@@ -249,7 +249,7 @@ void SPIRIT_IP_MR_V3_NAME_205(const float* prev, const float* cur, int16_t index
     SPIRIT_IP_MR_V3_NAME_215(cur, a);
 }
 
-// OFFSET: %0x00A83910
+// OFFSET: 0x00B516B0
 void SPIRIT_IP_MR_V3_ComputeLpc(float* a, const float* signal, const SPIRIT_IPMR_TABLES* tables) {
     float windowed[251];
     float r[11];

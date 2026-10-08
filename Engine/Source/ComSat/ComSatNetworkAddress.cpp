@@ -1,7 +1,7 @@
 #include "Engine/Source/ComSat/ComSatNetwork.h"
 #include <cstring>
 
-// OFFSET: %0x00979790
+// OFFSET: 0x00A39480/0x1407E5840
 ComSat::Network::Address::Address() {
     this->m_length = 16;
     this->m_family = 0;

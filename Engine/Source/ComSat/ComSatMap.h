@@ -114,7 +114,8 @@ ComSat::Map<K, V>::~Map() {
     this->Clear();
 }
 
-// OFFSET: [0x00A34BD0/0x1407E72F0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, %0x00975150<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// PROVEN: 2706c501 IDENTICAL/NONE
+// OFFSET: [0x00A34BD0/0x1407E72F0<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, 0x00A34D30<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
 template <class K, class V>
 void ComSat::Map<K, V>::Clear() {
     for (uint32_t i = 0; i < this->m_capacity; i++) {
@@ -192,7 +193,7 @@ bool ComSat::Map<K, V>::Next(uint32_t& iterator, ComSat::MapKey<K>& key, V& valu
     return true;
 }
 
-// OFFSET: [#0x00881750<unsigned __int64, unsigned char>, #0x008817D0<unsigned __int64, float>, #0x00881850<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, #0x008818D0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>]
+// OFFSET: [0x00A34D80<unsigned __int64, unsigned char>, 0x00A34E00<unsigned __int64, float>, 0x00A34E80<unsigned char, ComSat::Sound::Manager::LocalPlayer*>, 0x00A34E80<unsigned char, ComSat::Sound::CODECIPMR6000::LocalPlayer*>, 0x00A34EF0<unsigned __int64, ComSat::Sound::Manager::RemoteTalker*>, 0x00A34EF0<unsigned __int64, ComSat::Sound::Manager::Session*>]
 template <class K, class V>
 uint32_t ComSat::Map<K, V>::Reinsert(const Entry* entries, uint32_t count) {
     uint32_t inserted = 0;

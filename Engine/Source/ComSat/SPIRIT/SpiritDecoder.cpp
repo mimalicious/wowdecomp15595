@@ -4,7 +4,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A80FC0
+// OFFSET: 0x00B4ED60
 void SPIRIT_IP_MR_V3_NAME_324(SPIRIT_IPMR_DEC_UNK0020* state, const SPIRIT_IPMR_TABLES* tables, float* out, SPIRIT_IPMR_FRAME* frame, float* lpc, int16_t lost) {
     int16_t count = frame->unk_02AE;
 
@@ -112,7 +112,7 @@ void SPIRIT_IP_MR_V3_NAME_324(SPIRIT_IPMR_DEC_UNK0020* state, const SPIRIT_IPMR_
     }
 }
 
-// OFFSET: %0x00A7E580
+// OFFSET: 0x00B4C330
 void SPIRIT_IP_MR_V3_SynthesizeFrame(SPIRIT_IPMR_FRAME* frame, const SPIRIT_IPMR_TABLES* tables, SPIRIT_IPMR_DEC_UNK0020* state, float* out) {
     if (frame->unk_02AA && frame->unk_02AC) {
         float lpc[40];
@@ -132,7 +132,7 @@ void SPIRIT_IP_MR_V3_SynthesizeFrame(SPIRIT_IPMR_FRAME* frame, const SPIRIT_IPMR
     SPIRIT_IP_MR_V3_NAME_332(out, 160);
 }
 
-// OFFSET: %0x00A7E780
+// OFFSET: 0x00B4C530
 int32_t SPIRIT_IP_MR_V3_NAME_192(SPIRIT_IPMR_DECODER* decoder, SPIRIT_IPMR_STREAM* stream, uint8_t* pcm, int32_t a4, uint32_t a5, int32_t a6, int16_t a7, int16_t a8, int16_t a9, int32_t a10, int16_t* a11) {
     float output[160];
     float unused[640];

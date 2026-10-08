@@ -14,7 +14,7 @@ const int32_t s_ipmrTableB23758[3] = {
     128, 128, 64,
 };
 
-// OFFSET: %0x00A843D0
+// OFFSET: 0x00B52170
 int32_t SPIRIT_IP_MR_V3_NAME_121(float* lsp, const float* lpc, int32_t* indices, const float* previous, const SPIRIT_IPMR_TABLES* tables) {
     float lsf[10];
     float weights[10];
@@ -75,7 +75,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_121(float* lsp, const float* lpc, int32_t* indices,
     return result;
 }
 
-// OFFSET: %0x00A84850
+// OFFSET: 0x00B525F0
 void SPIRIT_IP_MR_V3_NAME_78(SPIRIT_IPMR_ENC_UNK0D20* state, const SPIRIT_IPMR_TABLES* tables, float* lpc, float* weighted, SPIRIT_IPMR_FRAME* frame) {
     float analysis[4][10];
     float lsp[4][10];

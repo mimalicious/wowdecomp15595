@@ -5,17 +5,17 @@
 #include <cstring>
 #include "Engine/Source/ComSat/ComSatNetwork.h"
 
-// OFFSET: %0x00979720
+// OFFSET: 0x00A39410/0x1407E57D0
 void ComSat::Network::Address::SetPort(int32_t port) {
     this->m_port = htons(static_cast<u_short>(port));
 }
 
-// OFFSET: %0x00979740
+// OFFSET: 0x00A39430/0x1407E57F0
 int32_t ComSat::Network::Address::GetPort() const {
     return ntohs(this->m_port);
 }
 
-// OFFSET: %0x009797B0
+// OFFSET: 0x00A394A0/0x1407E5860
 void ComSat::Network::Address::SetAddress(const char* address) {
     const char* colon = strchr(address, ':');
     if (colon) {

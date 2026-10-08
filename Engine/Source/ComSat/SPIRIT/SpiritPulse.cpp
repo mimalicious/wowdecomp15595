@@ -27,7 +27,7 @@ const float s_ipmrTableB23430[40] = {
     -0.0744847879f, 0.0828922316f, -0.0869466439f, 0.0850813091f,
 };
 
-// OFFSET: %0x00A85D90
+// OFFSET: 0x00B53B30
 void SPIRIT_IP_MR_V3_NAME_109(int16_t mode, const SPIRIT_IPMR_TRACK* tracks, int16_t first, int16_t last, float* out) {
     if (mode == 2) {
         SPIRIT_IP_MR_V3_NAME_35(tracks, first, last, out);
@@ -58,7 +58,7 @@ void SPIRIT_IP_MR_V3_NAME_109(int16_t mode, const SPIRIT_IPMR_TRACK* tracks, int
     }
 }
 
-// OFFSET: %0x00A85F40
+// OFFSET: 0x00B53CE0
 void SPIRIT_IP_MR_V3_NAME_156(float* excitation, const float* target, const float* response, const float* a, const float* weighted, const SPIRIT_IPMR_TRACK* tracks, float* memory, float* out, int16_t count) {
     float synthesized[40];
     float pulses[40];
@@ -86,7 +86,7 @@ void SPIRIT_IP_MR_V3_NAME_156(float* excitation, const float* target, const floa
     }
 }
 
-// OFFSET: %0x00A86080
+// OFFSET: 0x00B53E20
 void SPIRIT_IP_MR_V3_SearchTrackPulses(SPIRIT_IPMR_TRACK* track, float* target, const float* h, float* correlation, const float* phi, int16_t* used, int16_t skip) {
     int32_t count = track->unk_0000;
     float d[40];
@@ -174,7 +174,7 @@ void SPIRIT_IP_MR_V3_SearchTrackPulses(SPIRIT_IPMR_TRACK* track, float* target, 
     SPIRIT_IP_MR_V3_NAME_191(track->unk_020C, pulses);
 }
 
-// OFFSET: %0x00A864E0
+// OFFSET: 0x00B54280
 void SPIRIT_IP_MR_V3_NAME_59(float* target, SPIRIT_IPMR_TRACK* tracks, int16_t count, const float* h, int16_t skip) {
     int16_t used[40] = {};
     float correlation[40];
@@ -212,14 +212,14 @@ void SPIRIT_IP_MR_V3_NAME_59(float* target, SPIRIT_IPMR_TRACK* tracks, int16_t c
     }
 }
 
-// OFFSET: %0x00A867C0
+// OFFSET: 0x00B54560
 void SPIRIT_IP_MR_V3_SearchFixedCodebook(float* target, const float* h, const float* unused, SPIRIT_IPMR_TRACK* tracks, int16_t count, int16_t skip, const SPIRIT_IPMR_TABLES* tables) {
     SPIRIT_IP_MR_V3_NAME_59(target, tracks, count, h, skip);
     SPIRIT_IP_MR_V3_SortPulses(count, tracks);
     SPIRIT_IP_MR_V3_EncodePulsePositions(tracks, count, tables);
 }
 
-// OFFSET: %0x00A86800
+// OFFSET: 0x00B545A0
 void SPIRIT_IP_MR_V3_NAME_149(SPIRIT_IPMR_TRACK* tracks, int16_t count, const SPIRIT_IPMR_TABLES* tables) {
     int16_t used[40] = {};
 

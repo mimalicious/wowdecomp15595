@@ -4,7 +4,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A7F8D0
+// OFFSET: 0x00B4D680
 void SPIRIT_IP_MR_V3_NAME_399(SPIRIT_IPMR_DEC_UNK0730* state, SPIRIT_IPMR_FRAME* frame) {
     if (frame->unk_029C == 1) {
         if (state->unk_0084 <= 0 || state->unk_0084 >= 16) {
@@ -26,7 +26,7 @@ void SPIRIT_IP_MR_V3_NAME_399(SPIRIT_IPMR_DEC_UNK0730* state, SPIRIT_IPMR_FRAME*
     }
 }
 
-// OFFSET: %0x00A7F730
+// OFFSET: 0x00B4D4E0
 void SPIRIT_IP_MR_V3_NAME_400(SPIRIT_IPMR_ENC_UNK0020* state, SPIRIT_IPMR_FRAME* frame) {
     if (!frame->unk_02B0) {
         state->unk_0166 = frame->unk_0294;
@@ -61,7 +61,7 @@ void SPIRIT_IP_MR_V3_NAME_400(SPIRIT_IPMR_ENC_UNK0020* state, SPIRIT_IPMR_FRAME*
     state->unk_0166 = frame->unk_0294;
 }
 
-// OFFSET: %0x00A7F570
+// OFFSET: 0x00B4D320
 void SPIRIT_IP_MR_V3_UpdateFixedCodebookEnergy(int16_t lost, SPIRIT_IPMR_UNK114* state, const SPIRIT_IPMR_TRACK* tracks, int16_t count) {
     float energy = 0.0f;
 
@@ -82,7 +82,7 @@ void SPIRIT_IP_MR_V3_UpdateFixedCodebookEnergy(int16_t lost, SPIRIT_IPMR_UNK114*
     state->unk_0040[4] = gain;
 }
 
-// OFFSET: %0x00A80690
+// OFFSET: 0x00B4E430
 void SPIRIT_IP_MR_V3_NAME_60(SPIRIT_IPMR_ENC_UNK0D20* state, SPIRIT_IPMR_FRAME* frame, const int16_t* open) {
     int16_t previous;
     SPIRIT_IPMR_SUBFRAME subframe;
@@ -128,7 +128,7 @@ void SPIRIT_IP_MR_V3_NAME_60(SPIRIT_IPMR_ENC_UNK0D20* state, SPIRIT_IPMR_FRAME* 
     }
 }
 
-// OFFSET: %0x00A80990
+// OFFSET: 0x00B4E730
 void SPIRIT_IP_MR_V3_SynthesisFilter32(const float* in, float* out, const float* a) {
     float buffer[42] = {};
     float* y = &buffer[10];
@@ -146,7 +146,7 @@ void SPIRIT_IP_MR_V3_SynthesisFilter32(const float* in, float* out, const float*
     SPIRIT_IP_MR_V3_NAME_189(out, y, 32);
 }
 
-// OFFSET: %0x00A80A30
+// OFFSET: 0x00B4E7D0
 void SPIRIT_IP_MR_V3_TiltCompensation(float* x, float* state, float mu) {
     float last = x[39];
 
@@ -158,7 +158,7 @@ void SPIRIT_IP_MR_V3_TiltCompensation(float* x, float* state, float mu) {
     *state = last;
 }
 
-// OFFSET: %0x00A80A90
+// OFFSET: 0x00B4E830
 void SPIRIT_IP_MR_V3_AdaptiveGainControl(float* gain, float alpha, float* signal, const float* reference) {
     float output = SPIRIT_IP_MR_V3_NAME_42(signal, signal, 40);
 
@@ -188,7 +188,7 @@ void SPIRIT_IP_MR_V3_AdaptiveGainControl(float* gain, float alpha, float* signal
     *gain = current;
 }
 
-// OFFSET: %0x00A80B70
+// OFFSET: 0x00B4E910
 void SPIRIT_IP_MR_V3_NAME_115(SPIRIT_IPMR_POSTFILTER* state, float* signal, const float* lpc, const float* w1, const float* w2) {
     float weighted[80];
     float residual[40];
@@ -228,7 +228,7 @@ void SPIRIT_IP_MR_V3_NAME_115(SPIRIT_IPMR_POSTFILTER* state, float* signal, cons
     SPIRIT_IP_MR_V3_NAME_190(state->unk_0000, &state->unk_0028[150]);
 }
 
-// OFFSET: %0x00A80D60
+// OFFSET: 0x00B4EB00
 void SPIRIT_IP_MR_V3_NAME_116(SPIRIT_IPMR_DEC_UNK0020* state, const SPIRIT_IPMR_TABLES* tables, float* signal, const float* lpc, const SPIRIT_IPMR_FRAME* frame) {
     if (frame->unk_02AE > 5) {
         state->unk_03B8.unk_02DC = 1.0f;
@@ -247,7 +247,7 @@ void SPIRIT_IP_MR_V3_NAME_116(SPIRIT_IPMR_DEC_UNK0020* state, const SPIRIT_IPMR_
     }
 }
 
-// OFFSET: %0x00A80E20
+// OFFSET: 0x00B4EBC0
 void SPIRIT_IP_MR_V3_DecodeSubframeGains(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_SUBFRAME* subframe, SPIRIT_IPMR_UNK114* state, int16_t* previous, int16_t index, int32_t lost) {
     int16_t conceal = 0;
     int16_t missing = 0;

@@ -4,7 +4,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A85090
+// OFFSET: 0x00B52E30
 int32_t SPIRIT_IP_MR_V3_NAME_37(float* lsp, const int32_t* indices, int16_t lost, float* lsf, const float* previous, const SPIRIT_IPMR_TABLES* tables) {
     if (lost) {
         for (int32_t i = 0; i < 10; i++) {
@@ -62,12 +62,12 @@ int32_t SPIRIT_IP_MR_V3_NAME_37(float* lsp, const int32_t* indices, int16_t lost
     return result;
 }
 
-// OFFSET: %0x00A85520
+// OFFSET: 0x00B532C0
 void SPIRIT_IP_MR_V3_NAME_29(const float* a, const float* coeffs, float* h) {
     SPIRIT_IP_MR_V3_NAME_389(coeffs, h, a);
 }
 
-// OFFSET: %0x00A85540
+// OFFSET: 0x00B532E0
 void SPIRIT_IP_MR_V3_NAME_147(const float* target, const float* a, const float* weighted, float* out, float* synthesis, float* weighting) {
     float saved[10];
     float zero[40];
@@ -82,7 +82,7 @@ void SPIRIT_IP_MR_V3_NAME_147(const float* target, const float* a, const float* 
     }
 }
 
-// OFFSET: %0x00A856B0
+// OFFSET: 0x00B53450
 void SPIRIT_IP_MR_V3_NAME_146(const float* excitation, float* residual, const float* a, const float* weighted, float* out, SPIRIT_IPMR_TRACK* tracks, float* memory, int16_t count) {
     float saved[10];
     float synthesized[40];
@@ -103,7 +103,7 @@ void SPIRIT_IP_MR_V3_NAME_146(const float* excitation, float* residual, const fl
     }
 }
 
-// OFFSET: %0x00A857A0
+// OFFSET: 0x00B53540
 void SPIRIT_IP_MR_V3_NAME_157(const float* excitation, const float* a, const float* weighted, float* synthesis, float* weighting, float* out) {
     float saved[10];
     float synthesized[40];
@@ -115,7 +115,7 @@ void SPIRIT_IP_MR_V3_NAME_157(const float* excitation, const float* a, const flo
     SPIRIT_IP_MR_V3_NAME_148(response, response, weighted + 10, weighting, 1);
 }
 
-// OFFSET: %0x00A85820
+// OFFSET: 0x00B535C0
 void SPIRIT_IP_MR_V3_NAME_28(float* memory, int16_t first, int16_t last) {
     for (int32_t t = first; t <= last; t++) {
         SPIRIT_IP_MR_V3_NAME_314(&memory[30 * t]);
@@ -124,7 +124,7 @@ void SPIRIT_IP_MR_V3_NAME_28(float* memory, int16_t first, int16_t last) {
     }
 }
 
-// OFFSET: %0x00A85870
+// OFFSET: 0x00B53610
 void SPIRIT_IP_MR_V3_SortPulses(int16_t count, SPIRIT_IPMR_TRACK* tracks) {
     for (int32_t t = 0; t < count; t++) {
         SPIRIT_IPMR_TRACK* track = &tracks[t];
@@ -148,7 +148,7 @@ void SPIRIT_IP_MR_V3_SortPulses(int16_t count, SPIRIT_IPMR_TRACK* tracks) {
     }
 }
 
-// OFFSET: %0x00A85940
+// OFFSET: 0x00B536E0
 void SPIRIT_IP_MR_V3_EncodePulsePositions(SPIRIT_IPMR_TRACK* tracks, int16_t count, const SPIRIT_IPMR_TABLES* tables) {
     int16_t taken[40] = {};
 
@@ -188,7 +188,7 @@ void SPIRIT_IP_MR_V3_EncodePulsePositions(SPIRIT_IPMR_TRACK* tracks, int16_t cou
     }
 }
 
-// OFFSET: %0x00A85B60
+// OFFSET: 0x00B53900
 void SPIRIT_IP_MR_V3_NAME_35(const SPIRIT_IPMR_TRACK* tracks, int16_t first, int16_t last, float* out) {
     SPIRIT_IP_MR_V3_NAME_333(out);
 
@@ -201,7 +201,7 @@ void SPIRIT_IP_MR_V3_NAME_35(const SPIRIT_IPMR_TRACK* tracks, int16_t first, int
     }
 }
 
-// OFFSET: %0x00A85C10
+// OFFSET: 0x00B539B0
 void SPIRIT_IP_MR_V3_QuantizeUniform(int16_t levels, float* value, int16_t* index, float low, float high) {
     float step = (high - low) / (levels - 1);
     float threshold = static_cast<float>(0.5 * step + low);
@@ -220,7 +220,7 @@ void SPIRIT_IP_MR_V3_QuantizeUniform(int16_t levels, float* value, int16_t* inde
     *index = level;
 }
 
-// OFFSET: %0x00A85C90
+// OFFSET: 0x00B53A30
 void SPIRIT_IP_MR_V3_NAME_158(SPIRIT_IPMR_UNK158* state, float gain, float energy) {
     for (int16_t i = 4; i > 0; i--) {
         state->unk_0000[i] = state->unk_0000[i - 1];

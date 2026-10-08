@@ -4,7 +4,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A83C80
+// OFFSET: 0x00B51A20
 float SPIRIT_IP_MR_V3_ChebyshevEval(float x, const float* f) {
     float x2 = x + x;
     float b2 = 1.0f;
@@ -19,7 +19,7 @@ float SPIRIT_IP_MR_V3_ChebyshevEval(float x, const float* f) {
     return x * b1 - b2 + f[5];
 }
 
-// OFFSET: %0x00A83D00
+// OFFSET: 0x00B51AA0
 int32_t SPIRIT_IP_MR_V3_LpcToLsp(const float* a, float* lsp, const float* grid) {
     float f1[6];
     float f2[6];
@@ -92,7 +92,7 @@ int32_t SPIRIT_IP_MR_V3_LpcToLsp(const float* a, float* lsp, const float* grid) 
     return 0;
 }
 
-// OFFSET: %0x00A840E0
+// OFFSET: 0x00B51E80
 void SPIRIT_IP_MR_V3_FilterSubframes(float* out, const float* coeffs, const float* src, float* mem) {
     for (int32_t sf = 0; sf < 4; sf++) {
         SPIRIT_IP_MR_V3_NAME_137(src, out, coeffs);
@@ -103,7 +103,7 @@ void SPIRIT_IP_MR_V3_FilterSubframes(float* out, const float* coeffs, const floa
     }
 }
 
-// OFFSET: %0x00A84130
+// OFFSET: 0x00B51ED0
 float SPIRIT_IP_MR_V3_EvalLpcSpectrum(float w, const float* a) {
     float c = static_cast<float>(cos(w));
     float s = static_cast<float>(sin(w));
@@ -124,7 +124,7 @@ float SPIRIT_IP_MR_V3_EvalLpcSpectrum(float w, const float* a) {
     return rotated * rotated + re * re;
 }
 
-// OFFSET: %0x00A84350
+// OFFSET: 0x00B520F0
 void SPIRIT_IP_MR_V3_NAME_330(float* out, const float* lsf, const float* a) {
     for (int32_t i = 0; i < 10; i++) {
         float w = static_cast<float>(lsf[i] * static_cast<double>(3.1415927f));

@@ -3,7 +3,7 @@
 
 extern "C" {
 
-// OFFSET: %0x00A7DDD0
+// OFFSET: 0x00B4BB80
 int32_t SPIRIT_IP_MR_V3_1_GenerateTables(void* tables) {
     if (!tables) {
         return 1;
@@ -13,7 +13,7 @@ int32_t SPIRIT_IP_MR_V3_1_GenerateTables(void* tables) {
     return 0;
 }
 
-// OFFSET: %0x00A7DDF0
+// OFFSET: 0x00B4BBA0
 int32_t SPIRIT_IP_MR_V3_1_Init(void* state, const void* tables) {
     if (!state || !tables) {
         return 1;
@@ -34,7 +34,7 @@ int32_t SPIRIT_IP_MR_V3_1_Init(void* state, const void* tables) {
     return result;
 }
 
-// OFFSET: %0x00A7DE50
+// OFFSET: 0x00B4BC00
 int32_t SPIRIT_IP_MR_V3_1_Encode(void* state, const uint8_t* pcm, SPIRIT_IPMR_PARAMS* params, SPIRIT_IPMR_STREAM* stream, SPIRIT_IPMR_INFO* info) {
     if (!state || !pcm || !params || !stream || !info) {
         return 1;
@@ -49,7 +49,7 @@ int32_t SPIRIT_IP_MR_V3_1_Encode(void* state, const uint8_t* pcm, SPIRIT_IPMR_PA
     return SPIRIT_IP_MR_V3_NAME_195(&codec->m_encoder, pcm, stream, params->unk_0000, 1, params->unk_0004, params->unk_0004, &params->unk_0006, info->unk_0002, info->unk_0010, &info->unk_0018, &info->unk_0000);
 }
 
-// OFFSET: %0x00A7DEE0
+// OFFSET: 0x00B4BC90
 int32_t SPIRIT_IP_MR_V3_1_Decode(void* state, uint8_t* pcm, SPIRIT_IPMR_PARAMS* params, SPIRIT_IPMR_STREAM* stream, int32_t lost) {
     int16_t bits = 0;
 
@@ -61,7 +61,7 @@ int32_t SPIRIT_IP_MR_V3_1_Decode(void* state, uint8_t* pcm, SPIRIT_IPMR_PARAMS* 
     return SPIRIT_IP_MR_V3_NAME_192(&codec->m_decoder, stream, pcm, 0, 0, params->unk_0000, 1, params->unk_0004, params->unk_0004, lost, &bits);
 }
 
-// OFFSET: %0x00A7E480
+// OFFSET: 0x00B4C230
 void SPIRIT_IP_MR_V3_ResetDecoderState(SPIRIT_IPMR_DEC_UNK0020* state, const SPIRIT_IPMR_TABLES* tables) {
     SPIRIT_IP_MR_V3_NAME_334(state, sizeof(SPIRIT_IPMR_DEC_UNK0020));
     state->unk_03B4 = &state->unk_0000[154];
@@ -72,7 +72,7 @@ void SPIRIT_IP_MR_V3_ResetDecoderState(SPIRIT_IPMR_DEC_UNK0020* state, const SPI
     SPIRIT_IP_MR_V3_NAME_114(&state->unk_06A8, tables->unk_B7C0);
 }
 
-// OFFSET: %0x00A7E4F0
+// OFFSET: 0x00B4C2A0
 int32_t SPIRIT_IP_MR_V3_NAME_194(SPIRIT_IPMR_DECODER* decoder, const SPIRIT_IPMR_TABLES* tables, int32_t rateIn, int32_t rateOut, uint32_t mode) {
     if (!decoder || !tables) {
         return 1;
@@ -101,7 +101,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_194(SPIRIT_IPMR_DECODER* decoder, const SPIRIT_IPMR
     return 0;
 }
 
-// OFFSET: %0x00A7E9E0
+// OFFSET: 0x00B4C790
 void SPIRIT_IP_MR_V3_ResetEncoderState(SPIRIT_IPMR_ENC_UNK0D20* state) {
     SPIRIT_IP_MR_V3_NAME_334(state, sizeof(SPIRIT_IPMR_ENC_UNK0D20));
     state->unk_1F98 = &state->unk_0010[200];
@@ -117,7 +117,7 @@ void SPIRIT_IP_MR_V3_ResetEncoderState(SPIRIT_IPMR_ENC_UNK0D20* state) {
     SPIRIT_IP_MR_V3_NAME_189(state->unk_19B0, s_ipmrTableB234D0, 10);
 }
 
-// OFFSET: %0x00A7EAA0
+// OFFSET: 0x00B4C850
 int32_t SPIRIT_IP_MR_V3_NAME_197(SPIRIT_IPMR_ENCODER* encoder, const SPIRIT_IPMR_TABLES* tables, int32_t rate, uint32_t mode) {
     encoder->m_tables = const_cast<SPIRIT_IPMR_TABLES*>(tables);
     encoder->m_initialized = 0;
@@ -142,7 +142,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_197(SPIRIT_IPMR_ENCODER* encoder, const SPIRIT_IPMR
     return 0;
 }
 
-// OFFSET: %0x00A7F6D0
+// OFFSET: 0x00B4D480
 void SPIRIT_IP_MR_V3_NAME_46(SPIRIT_IPMR_ENC_UNK0020* state) {
     state->unk_0160 = 0;
     state->unk_0162 = 0;
@@ -150,7 +150,7 @@ void SPIRIT_IP_MR_V3_NAME_46(SPIRIT_IPMR_ENC_UNK0020* state) {
     state->unk_0166 = 1;
 }
 
-// OFFSET: %0x00A7F700
+// OFFSET: 0x00B4D4B0
 void SPIRIT_IP_MR_V3_NAME_44(SPIRIT_IPMR_DEC_UNK0730* state) {
     state->unk_0004 = 0.0f;
     state->unk_0084 = 0;
@@ -158,7 +158,7 @@ void SPIRIT_IP_MR_V3_NAME_44(SPIRIT_IPMR_DEC_UNK0730* state) {
     SPIRIT_IP_MR_V3_NAME_190(state->unk_0034, s_ipmrTableB234D0);
 }
 
-// OFFSET: %0x00A7F1C0
+// OFFSET: 0x00B4CF70
 void SPIRIT_IP_MR_V3_NAME_114(SPIRIT_IPMR_UNK114* state, const float* init) {
     state->unk_005A = 0;
     state->unk_005C = 0;
@@ -179,7 +179,7 @@ void SPIRIT_IP_MR_V3_NAME_114(SPIRIT_IPMR_UNK114* state, const float* init) {
     state->unk_0054 = 0.5f;
 }
 
-// OFFSET: %0x00A7F230
+// OFFSET: 0x00B4CFE0
 void SPIRIT_IP_MR_V3_NAME_144(SPIRIT_IPMR_UNK114* state, int16_t flag) {
     if (flag) {
         state->unk_005A++;

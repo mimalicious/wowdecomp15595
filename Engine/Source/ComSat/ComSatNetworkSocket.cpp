@@ -1,7 +1,7 @@
 #include "Engine/Source/ComSat/ComSatNetwork.h"
 #include <new>
 
-// OFFSET: %0x0097BA10
+// OFFSET: 0x00A3B4D0/0x1407E8230
 ComSat::Network::Socket::~Socket() {
 }
 

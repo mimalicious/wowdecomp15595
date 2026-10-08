@@ -40,7 +40,8 @@ void ComSat::Session::Remove(uint64_t talker) {
     }
 }
 
-// OFFSET: %0x00979660
+// PROVEN: 18e0b577 IDENTICAL/UNPROVEN
+// OFFSET: 0x00A39350/0x1407E5720
 bool ComSat::Session::Send(uint64_t talker, const uint8_t* data, uint32_t size) {
     return this->m_networkSession && this->m_networkSession->Send(talker, data, size);
 }
@@ -53,7 +54,7 @@ void ComSat::Session::Recv(uint64_t talker, const uint8_t* data, uint32_t size) 
     }
 }
 
-// OFFSET: %0x009796E0
+// OFFSET: 0x00A393D0/0x1407E5790
 ComSat::Session::Session(ComSat::SessionCallback& callback, uint64_t id, ComSat::Allocator& allocator) {
     this->m_callback = &callback;
     this->m_id = id;
@@ -61,6 +62,6 @@ ComSat::Session::Session(ComSat::SessionCallback& callback, uint64_t id, ComSat:
     this->m_allocator = &allocator;
 }
 
-// OFFSET: %0x00979710
+// OFFSET: 0x00A39400
 ComSat::Session::~Session() {
 }

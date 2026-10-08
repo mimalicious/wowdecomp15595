@@ -1,7 +1,7 @@
 #include "Engine/Source/ComSat/ComSatBitPacker.h"
 #include <cstring>
 
-// OFFSET: %0x00979390
+// OFFSET: 0x00A38EF0/0x1407E5430
 ComSat::BitPacker::BitPacker(uint8_t* buffer, uint32_t bitLength) {
     this->m_buffer = buffer;
     this->m_bitLength = bitLength;
@@ -9,7 +9,7 @@ ComSat::BitPacker::BitPacker(uint8_t* buffer, uint32_t bitLength) {
     this->m_bitOffset = 0;
 }
 
-// OFFSET: %0x009791E0
+// OFFSET: 0x00A38F20/0x1407E5450
 ComSat::BitPacker::~BitPacker() {
 }
 
@@ -24,7 +24,7 @@ uint32_t ComSat::BitPacker::Finalize() {
     return this->m_byteOffset;
 }
 
-// OFFSET: %0x009791F0
+// OFFSET: 0x00A38F30/0x1407E5210
 bool ComSat::BitPacker::PackBits(const uint8_t* data, uint32_t bits) {
     if (this->m_bitLength < bits + this->m_bitOffset + 8 * this->m_byteOffset) {
         return false;
@@ -61,7 +61,7 @@ bool ComSat::BitPacker::PackBits(const uint8_t* data, uint32_t bits) {
     return true;
 }
 
-// OFFSET: %0x00979390
+// OFFSET: 0x00A38EF0/0x1407E5430
 ComSat::BitUnpacker::BitUnpacker(const uint8_t* buffer, uint32_t bitLength) {
     this->m_buffer = buffer;
     this->m_bitLength = bitLength;
@@ -73,7 +73,7 @@ ComSat::BitUnpacker::BitUnpacker(const uint8_t* buffer, uint32_t bitLength) {
 ComSat::BitUnpacker::~BitUnpacker() {
 }
 
-// OFFSET: %0x009793C0
+// OFFSET: 0x00A390D0/0x1407E5460
 bool ComSat::BitUnpacker::UnpackBits(uint8_t* data, uint32_t bits) {
     if (this->m_bitLength < this->m_bitOffset + bits + 8 * this->m_byteOffset) {
         return false;

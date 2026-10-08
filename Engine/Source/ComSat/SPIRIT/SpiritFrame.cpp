@@ -25,7 +25,7 @@ const int32_t s_ipmrTableB23724[8] = {
     6000, 8350, 10600, 13900, 22600, 30200, 40000, 50800,
 };
 
-// OFFSET: %0x00A7F040
+// OFFSET: 0x00B4CDF0
 void SPIRIT_IP_MR_V3_PutBitsClear(int32_t value, SPIRIT_IPMR_STREAM* stream, int16_t count, int16_t skip) {
     if (skip) {
         stream->m_bits += count;
@@ -60,7 +60,7 @@ void SPIRIT_IP_MR_V3_PutBitsClear(int32_t value, SPIRIT_IPMR_STREAM* stream, int
     }
 }
 
-// OFFSET: %0x00A7F110
+// OFFSET: 0x00B4CEC0
 void SPIRIT_IP_MR_V3_CopyBits(SPIRIT_IPMR_STREAM* stream, const uint8_t* src, int16_t start, int16_t count) {
     uint8_t* data = const_cast<uint8_t*>(stream->m_data);
     data[static_cast<int32_t>(stream->m_bits) >> 3] &= 0xFF >> (8 - static_cast<int32_t>(stream->m_bits) % 8);
@@ -76,7 +76,7 @@ void SPIRIT_IP_MR_V3_CopyBits(SPIRIT_IPMR_STREAM* stream, const uint8_t* src, in
     }
 }
 
-// OFFSET: %0x00A7FD00
+// OFFSET: 0x00B4DAB0
 int32_t SPIRIT_IP_MR_V3_NAME_323(int32_t mode, int32_t rate, int16_t a3, int16_t a4, SPIRIT_IPMR_FRAME* frame) {
     int32_t result = 1;
     frame->unk_02AA = 1;
@@ -137,7 +137,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_323(int32_t mode, int32_t rate, int16_t a3, int16_t
     return result;
 }
 
-// OFFSET: %0x00A7FE70
+// OFFSET: 0x00B4DC20
 int16_t SPIRIT_IP_MR_V3_NAME_387(SPIRIT_IPMR_FRAME* frame) {
     int32_t bits = 0;
 
@@ -158,7 +158,7 @@ int16_t SPIRIT_IP_MR_V3_NAME_387(SPIRIT_IPMR_FRAME* frame) {
     return static_cast<int16_t>(s_ipmrTableB23724[3] / (400 * frame->unk_9426) + static_cast<int16_t>(bits) / frame->unk_9426);
 }
 
-// OFFSET: %0x00A7FEF0
+// OFFSET: 0x00B4DCA0
 int16_t SPIRIT_IP_MR_V3_NAME_61(int32_t index, SPIRIT_IPMR_FRAME* frame) {
     int16_t bits = 0;
 
@@ -186,7 +186,7 @@ int16_t SPIRIT_IP_MR_V3_NAME_61(int32_t index, SPIRIT_IPMR_FRAME* frame) {
     return result;
 }
 
-// OFFSET: %0x00A7FFA0
+// OFFSET: 0x00B4DD40
 int32_t SPIRIT_IP_MR_V3_NAME_309(int32_t index, SPIRIT_IPMR_FRAME* frame) {
     if (index < 0) {
         return 1;
@@ -260,7 +260,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_309(int32_t index, SPIRIT_IPMR_FRAME* frame) {
     return 0;
 }
 
-// OFFSET: %0x00A80100
+// OFFSET: 0x00B4DEA0
 void SPIRIT_IP_MR_V3_NAME_311(SPIRIT_IPMR_FRAME* frame) {
     if (frame->m_mode == 0) {
         frame->unk_0288 = 0;
@@ -269,7 +269,7 @@ void SPIRIT_IP_MR_V3_NAME_311(SPIRIT_IPMR_FRAME* frame) {
     }
 }
 
-// OFFSET: %0x00A80130
+// OFFSET: 0x00B4DED0
 float SPIRIT_IP_MR_V3_SquaredDistance10(const float* a, const float* b) {
     float sum = 0.0f;
 
@@ -281,7 +281,7 @@ float SPIRIT_IP_MR_V3_SquaredDistance10(const float* a, const float* b) {
     return sum;
 }
 
-// OFFSET: %0x00A80220
+// OFFSET: 0x00B4DFC0
 void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input) {
     SPIRIT_IP_MR_V3_NAME_189(state->unk_0010, &state->unk_0010[160], 200);
     SPIRIT_IP_MR_V3_NAME_189(state->unk_1F98, input, 160);
@@ -291,7 +291,7 @@ void SPIRIT_IP_MR_V3_NAME_85(SPIRIT_IPMR_ENC_UNK0D20* state, const float* input)
     SPIRIT_IP_MR_V3_NAME_189(state->unk_1450, &state->unk_1450[160], 154);
 }
 
-// OFFSET: %0x00A802C0
+// OFFSET: 0x00B4E060
 void SPIRIT_IP_MR_V3_HighPassFilter(float* memory, const float* input, float* output) {
     float y = 0.0f;
 
@@ -311,7 +311,7 @@ void SPIRIT_IP_MR_V3_HighPassFilter(float* memory, const float* input, float* ou
     }
 }
 
-// OFFSET: %0x00A80620
+// OFFSET: 0x00B4E3C0
 void SPIRIT_IP_MR_V3_NAME_199(const int16_t* pcm, float* dst, int16_t count) {
     int32_t blocks = count / 4;
 
@@ -320,7 +320,7 @@ void SPIRIT_IP_MR_V3_NAME_199(const int16_t* pcm, float* dst, int16_t count) {
     }
 }
 
-// OFFSET: %0x00A80940
+// OFFSET: 0x00B4E6E0
 void SPIRIT_IP_MR_V3_NAME_200(const float* src, int16_t* pcm, int16_t count) {
     int32_t blocks = count / 4;
 

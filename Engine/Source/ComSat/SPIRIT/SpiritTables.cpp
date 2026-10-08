@@ -754,7 +754,7 @@ const float s_ipmrTableB2358C[5] = {
     0.899999976f, 0.899999976f, 0.899999976f, 0.899999976f, 0.899999976f,
 };
 
-// OFFSET: %0x00A7DF50
+// OFFSET: 0x00B4BD00
 void SPIRIT_IP_MR_V3_DequantizeTable(float* dst, const int16_t* src, float scale, int32_t count) {
     float factor = static_cast<float>(scale / 32767.0);
 
@@ -763,7 +763,7 @@ void SPIRIT_IP_MR_V3_DequantizeTable(float* dst, const int16_t* src, float scale
     }
 }
 
-// OFFSET: %0x00A7E000
+// OFFSET: 0x00B4BDB0
 void SPIRIT_IP_MR_V3_NAME_201(SPIRIT_IPMR_TABLES* tables) {
     SPIRIT_IP_MR_V3_NAME_334(tables, sizeof(SPIRIT_IPMR_TABLES));
     SPIRIT_IP_MR_V3_DequantizeTable(tables->unk_B7C0, s_ipmrTableB1DE44, 0.82f, 10);

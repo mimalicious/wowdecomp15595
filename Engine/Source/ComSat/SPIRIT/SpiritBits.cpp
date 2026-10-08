@@ -57,7 +57,7 @@ const uint32_t s_ipmrTableB23628[33] = {
     0xFFFFFFFF,
 };
 
-// OFFSET: %0x00A815C0
+// OFFSET: 0x00B4F360
 int32_t SPIRIT_IP_MR_V3_GetBits(SPIRIT_IPMR_STREAM* stream, int16_t count) {
     int32_t result = 0;
     int16_t index = static_cast<int16_t>(stream->m_bits) >> 3;
@@ -85,7 +85,7 @@ int32_t SPIRIT_IP_MR_V3_GetBits(SPIRIT_IPMR_STREAM* stream, int16_t count) {
     return result;
 }
 
-// OFFSET: %0x00A81670
+// OFFSET: 0x00B4F410
 void SPIRIT_IP_MR_V3_ReadFrameHeader(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream) {
     if (frame->unk_02A8) {
         frame->unk_0288 = SPIRIT_IP_MR_V3_GetBits(stream, 2);
@@ -104,7 +104,7 @@ void SPIRIT_IP_MR_V3_ReadFrameHeader(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREA
     }
 }
 
-// OFFSET: %0x00A81BC0
+// OFFSET: 0x00B4F960
 void SPIRIT_IP_MR_V3_ValidateStreamIndex(int16_t count, int16_t* index) {
     if (count == 0) {
         return;
@@ -115,7 +115,7 @@ void SPIRIT_IP_MR_V3_ValidateStreamIndex(int16_t count, int16_t* index) {
     }
 }
 
-// OFFSET: %0x00A81B40
+// OFFSET: 0x00B4F8E0
 void SPIRIT_IP_MR_V3_ReadFrameFlags(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream) {
     const uint8_t* widths = frame->unk_02B4 >= 0 || frame->unk_02B0 == 3 ? s_ipmrTableB23754 : s_ipmrTableB23768;
 
@@ -124,7 +124,7 @@ void SPIRIT_IP_MR_V3_ReadFrameFlags(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM
     }
 }
 
-// OFFSET: %0x00A81860
+// OFFSET: 0x00B4F600
 int32_t SPIRIT_IP_MR_V3_NAME_68(int16_t kind, const SPIRIT_IPMR_FRAME* frame, int16_t index) {
     switch (kind) {
         case 0:
@@ -147,7 +147,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_68(int16_t kind, const SPIRIT_IPMR_FRAME* frame, in
     return 6;
 }
 
-// OFFSET: %0x00A81760
+// OFFSET: 0x00B4F500
 int16_t SPIRIT_IP_MR_V3_NAME_152(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream) {
     int16_t start = static_cast<int16_t>(stream->m_bits);
 
@@ -180,7 +180,7 @@ int16_t SPIRIT_IP_MR_V3_NAME_152(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* s
     return static_cast<int16_t>(stream->m_bits - start);
 }
 
-// OFFSET: %0x00A81D90
+// OFFSET: 0x00B4FB30
 int16_t SPIRIT_IP_MR_V3_NAME_67(const SPIRIT_IPMR_FRAME* frame, int16_t* sizes, int16_t* primary) {
     *primary = 1;
 
@@ -251,7 +251,7 @@ int16_t SPIRIT_IP_MR_V3_NAME_67(const SPIRIT_IPMR_FRAME* frame, int16_t* sizes, 
     return total;
 }
 
-// OFFSET: %0x00A8246E
+// OFFSET: 0x00B5020E
 int16_t SPIRIT_IP_MR_V3_NAME_155(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream, int16_t lost) {
     SPIRIT_IPMR_STREAM streams[7];
     streams[0] = *stream;
@@ -352,7 +352,7 @@ int16_t SPIRIT_IP_MR_V3_NAME_155(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* s
     return 1;
 }
 
-// OFFSET: %0x00A81BDF
+// OFFSET: 0x00B4F97F
 void SPIRIT_IP_MR_V3_NAME_38(SPIRIT_IPMR_FRAME* frame, int16_t start) {
     for (int16_t t = start; t < frame->unk_02AE; t++) {
         int16_t shift = s_ipmrTableB235D8[t] - 6;
@@ -385,7 +385,7 @@ void SPIRIT_IP_MR_V3_NAME_38(SPIRIT_IPMR_FRAME* frame, int16_t start) {
     }
 }
 
-// OFFSET: %0x00A7E620
+// OFFSET: 0x00B4C3D0
 void SPIRIT_IP_MR_V3_UnpackFrameParameters(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_STREAM* stream) {
     if (frame->unk_02AC) {
         SPIRIT_IP_MR_V3_NAME_152(frame, stream);
@@ -397,7 +397,7 @@ void SPIRIT_IP_MR_V3_UnpackFrameParameters(SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR
     }
 }
 
-// OFFSET: %0x00A7E660
+// OFFSET: 0x00B4C410
 int32_t SPIRIT_IP_MR_V3_Reconfigure(SPIRIT_IPMR_DECODER* decoder, int32_t rateIn, uint32_t mode) {
     if (decoder->unk_0004 == SPIRIT_IP_MR_V3_NAME_66(rateIn) && decoder->unk_0010 == static_cast<int32_t>(mode)) {
         return 0;
@@ -406,7 +406,7 @@ int32_t SPIRIT_IP_MR_V3_Reconfigure(SPIRIT_IPMR_DECODER* decoder, int32_t rateIn
     return SPIRIT_IP_MR_V3_NAME_194(decoder, decoder->m_tables, rateIn, SPIRIT_IP_MR_V3_NAME_65(decoder->unk_000C), mode);
 }
 
-// OFFSET: %0x00A7E6B0
+// OFFSET: 0x00B4C460
 void SPIRIT_IP_MR_V3_SaveFrameState(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_DECODER* decoder) {
     decoder->unk_0014 = frame->unk_028C;
     decoder->unk_0018 = frame->unk_0292;
@@ -425,7 +425,7 @@ void SPIRIT_IP_MR_V3_SaveFrameState(const SPIRIT_IPMR_FRAME* frame, SPIRIT_IPMR_
     }
 }
 
-// OFFSET: %0x00A7E710
+// OFFSET: 0x00B4C4C0
 void SPIRIT_IP_MR_V3_RestoreFrameState(const SPIRIT_IPMR_DECODER* decoder, SPIRIT_IPMR_FRAME* frame) {
     frame->unk_0288 = decoder->unk_001C;
     frame->unk_028C = decoder->unk_0014;

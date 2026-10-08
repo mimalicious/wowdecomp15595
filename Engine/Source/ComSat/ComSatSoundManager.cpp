@@ -16,11 +16,11 @@ static int32_t s_jitterBufferSize = (ComSat::Sound::CODECIPMR6000::s_sampleRate 
 // STATIC: #0x00D43998
 static int32_t s_frameTimeWindow = (ComSat::Sound::CODECIPMR6000::s_sampleRate * ComSat::Sound::CODECIPMR6000::s_bitsPerSample / 8 * 2) / ComSat::Sound::CODECIPMR6000::s_bytesPerFrame;
 
-// OFFSET: %0x00973430
+// OFFSET: 0x00A32F00
 ComSat::Sound::Manager::Callback::~Callback() {
 }
 
-// OFFSET: %0x00974D70
+// OFFSET: 0x00A347E0
 ComSat::Sound::Manager::RemoteTalker::RemoteTalker(ComSat::Allocator& allocator) : m_allocator(&allocator), m_packets(NULL), m_frameTime(allocator) {
     this->m_packets = static_cast<VoicePacket*>(allocator.Alloc(sizeof(VoicePacket) * s_jitterBufferSize));
 }
@@ -67,7 +67,7 @@ int32_t ComSat::Sound::Manager::LocalTalkerGetCurrentCaptureDeviceIndex(uint8_t 
     return -1;
 }
 
-// OFFSET: %0x00974E50
+// OFFSET: 0x00A348C0/0x1407DF140
 bool ComSat::Sound::Manager::LocalTalkerThreshold(uint8_t player, float threshold) {
     if (!this->m_codec) {
         return false;
@@ -127,7 +127,7 @@ int32_t ComSat::Sound::Manager::EnumerateCaptureDevices(ComSat::DeviceInfo* devi
     return this->m_io->EnumerateCaptureDevices(devices, maxDevices);
 }
 
-// OFFSET: %0x00974EF0
+// OFFSET: 0x00A34960
 void ComSat::Sound::Manager::AdvancePlayCursorForRemoteTalker(ComSat::Sound::Manager::RemoteTalker* talker) {
     int32_t cursor = static_cast<int32_t>(talker->m_playCursor);
     talker->m_playCursor += ComSat::Sound::CODECIPMR6000::s_samplesPerFrame * 1000.0f / ComSat::Sound::CODECIPMR6000::s_sampleRate / talker->m_frameTime.GetCurrentAverage();
@@ -152,7 +152,7 @@ void ComSat::Sound::Manager::DebugSetSoundOutputDelay(uint8_t player, int32_t de
     }
 }
 
-// OFFSET: %0x00974FF0
+// OFFSET: 0x00A34A60
 ComSat::Sound::Manager::RemoteTalker::~RemoteTalker() {
     this->m_allocator->Free(this->m_packets);
 }
@@ -171,7 +171,7 @@ ComSat::Sound::Manager::LocalPlayer::LocalPlayer(ComSat::Allocator& allocator) :
 ComSat::Sound::Manager::Session::Session(ComSat::Allocator& allocator) : m_id(0), m_talkerPriorities(allocator) {
 }
 
-// OFFSET: %0x00975740
+// OFFSET: 0x00A35310/0x1407DF900
 ComSat::Sound::Manager::Manager(const ComSat::Initialization& init, ComSat::Allocator& allocator) : m_localPlayers(allocator), m_sessions(allocator), m_remoteTalkers(allocator) {
     this->m_maxLocalPlayers = init.m_maxLocalPlayers;
     this->m_allocator = &allocator;
@@ -198,7 +198,7 @@ ComSat::Sound::Manager::Manager(const ComSat::Initialization& init, ComSat::Allo
     }
 }
 
-// OFFSET: %0x00975880
+// OFFSET: 0x00A35450/0x1407DFAE0
 bool ComSat::Sound::Manager::LocalTalkerEnable(uint8_t player, bool enable) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -211,7 +211,7 @@ bool ComSat::Sound::Manager::LocalTalkerEnable(uint8_t player, bool enable) {
     return true;
 }
 
-// OFFSET: %0x00975920
+// OFFSET: 0x00A354F0/0x1407DFBD0
 bool ComSat::Sound::Manager::LocalTalkerEnableVoiceLevelCallback(uint8_t player, bool enable) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -221,7 +221,7 @@ bool ComSat::Sound::Manager::LocalTalkerEnableVoiceLevelCallback(uint8_t player,
     return true;
 }
 
-// OFFSET: %0x00975990
+// OFFSET: 0x00A35560/0x1407DFC80
 int32_t ComSat::Sound::Manager::SessionNumMembers(uint64_t session) {
     Session* info;
     if (!this->m_sessions.Get(ComSat::MapKey<uint64_t>(session), info)) {
@@ -240,7 +240,7 @@ int32_t ComSat::Sound::Manager::SessionNumMembers(uint64_t session) {
     return count;
 }
 
-// OFFSET: %0x00975A80
+// OFFSET: 0x00A35650
 bool ComSat::Sound::Manager::SessionGetTalkerByIndex(uint64_t session, int32_t index, uint64_t& talker, uint8_t& player) {
     if (index >= this->SessionNumMembers(session)) {
         return false;
@@ -283,7 +283,7 @@ bool ComSat::Sound::Manager::SessionGetTalkerByIndex(uint64_t session, int32_t i
     return true;
 }
 
-// OFFSET: %0x00975C10
+// OFFSET: 0x00A357E0
 void ComSat::Sound::Manager::RecenterJitterBufferForRemoteTalker(uint64_t talker, int32_t offset) {
     RemoteTalker* remote;
     if (!this->m_remoteTalkers.Get(ComSat::MapKey<uint64_t>(talker), remote)) {
@@ -321,7 +321,7 @@ void ComSat::Sound::Manager::RecenterJitterBufferForRemoteTalker(uint64_t talker
     this->m_allocator->Free(packets);
 }
 
-// OFFSET: %0x00975D80
+// OFFSET: 0x00A35950/0x1407E0260
 void ComSat::Sound::Manager::SubmitIncomingFrameTimeData(uint64_t talker, uint16_t sequence) {
     RemoteTalker* remote;
     if (!this->m_remoteTalkers.Get(ComSat::MapKey<uint64_t>(talker), remote)) {
@@ -351,7 +351,7 @@ void ComSat::Sound::Manager::SubmitIncomingFrameTimeData(uint64_t talker, uint16
     remote->m_lastPacketTime = this->m_currentTime;
 }
 
-// OFFSET: %0x00975E90
+// OFFSET: 0x00A35A60/0x1407E03D0
 void ComSat::Sound::Manager::SubmitIncomingVoicePacket(uint64_t session, uint64_t talker, uint8_t* data, uint32_t size, bool reliable) {
     if (size > static_cast<uint32_t>(ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength + 4)) {
         return;
@@ -392,7 +392,7 @@ store:
     remote->m_packets[index].m_session = session;
 }
 
-// OFFSET: %0x00976010
+// OFFSET: 0x00A35BE0
 uint32_t ComSat::Sound::Manager::CalculateTotalVoicePriorityForRemoteTalkerInSessionForLocalPlayer(uint8_t player, uint64_t talker, uint64_t session) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -419,7 +419,7 @@ uint32_t ComSat::Sound::Manager::CalculateTotalVoicePriorityForRemoteTalkerInSes
     return 0;
 }
 
-// OFFSET: %0x00976140
+// OFFSET: 0x00A35D10
 bool ComSat::Sound::Manager::DecodeVoicePacket(uint8_t player, int32_t channel, ComSat::Sound::Manager::VoicePacket* packet, uint32_t* size) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -429,7 +429,7 @@ bool ComSat::Sound::Manager::DecodeVoicePacket(uint8_t player, int32_t channel, 
     return this->m_codec->DecompressEncodedData(player, channel, packet->m_data, packet->m_bits, localPlayer->m_buffer, size);
 }
 
-// OFFSET: %0x009761C0
+// OFFSET: 0x00A35D90
 void ComSat::Sound::Manager::WriteVoiceDataToHeadsetDeviceBuffer(uint8_t player, int32_t channel, uint32_t size, double rate) {
     if (!size) {
         return;
@@ -440,7 +440,7 @@ void ComSat::Sound::Manager::WriteVoiceDataToHeadsetDeviceBuffer(uint8_t player,
     }
 }
 
-// OFFSET: %0x00976250
+// OFFSET: 0x00A35E20/0x1407E0A60
 void ComSat::Sound::Manager::TransferEncodedVoiceDataForLocalPlayer(uint8_t player, const uint8_t* data, uint32_t bits, uint32_t time) {
     if (!data || bits > static_cast<uint32_t>(ComSat::Sound::CODECIPMR6000::s_maxEncodedFrameLength) || bits < static_cast<uint32_t>(ComSat::Sound::CODECIPMR6000::s_minEncodedFrameLength)) {
         return;
@@ -459,7 +459,7 @@ void ComSat::Sound::Manager::TransferEncodedVoiceDataForLocalPlayer(uint8_t play
     }
 }
 
-// OFFSET: %0x00976320
+// OFFSET: 0x00A35EF0/0x1407E0BB0
 bool ComSat::Sound::Manager::IsRemoteTalkerMuted(uint8_t player, uint64_t talker) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -469,7 +469,7 @@ bool ComSat::Sound::Manager::IsRemoteTalkerMuted(uint8_t player, uint64_t talker
     return localPlayer->m_mutedTalkers.Find(talker, index);
 }
 
-// OFFSET: %0x00976390
+// OFFSET: 0x00A35F60
 bool ComSat::Sound::Manager::SetTalkerMuted(uint8_t player, uint64_t talker, ComSat::MuteSetting setting) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -486,7 +486,7 @@ bool ComSat::Sound::Manager::SetTalkerMuted(uint8_t player, uint64_t talker, Com
     return localPlayer->m_mutedTalkers.Remove(talker);
 }
 
-// OFFSET: %0x00976440
+// OFFSET: 0x00A36010/0x1407E0E50
 bool ComSat::Sound::Manager::IsSessionMuted(uint8_t player, uint64_t session) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -496,7 +496,7 @@ bool ComSat::Sound::Manager::IsSessionMuted(uint8_t player, uint64_t session) {
     return localPlayer->m_mutedSessions.Find(session, index);
 }
 
-// OFFSET: %0x009764B0
+// OFFSET: 0x00A36080
 bool ComSat::Sound::Manager::SetSessionMuted(uint8_t player, uint64_t session, ComSat::MuteSetting setting) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -513,7 +513,7 @@ bool ComSat::Sound::Manager::SetSessionMuted(uint8_t player, uint64_t session, C
     return localPlayer->m_mutedSessions.Remove(session);
 }
 
-// OFFSET: %0x00976560
+// OFFSET: 0x00A36130
 void ComSat::Sound::Manager::DeviceError(uint8_t player) {
     LocalPlayer* localPlayer;
     if (this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer) && !localPlayer->m_deviceError) {
@@ -522,7 +522,7 @@ void ComSat::Sound::Manager::DeviceError(uint8_t player) {
     }
 }
 
-// OFFSET: %0x009766D0
+// OFFSET: 0x00A362F0
 void ComSat::Sound::Manager::AssignTalkersToChannelsForLocalPlayer(uint8_t player, int32_t channelCount, ComSat::Sound::Manager::TalkingTalkerInfo* infos) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -629,7 +629,7 @@ void ComSat::Sound::Manager::AssignTalkersToChannelsForLocalPlayer(uint8_t playe
     }
 }
 
-// OFFSET: %0x00976BA0
+// OFFSET: 0x00A367C0
 void ComSat::Sound::Manager::GenerateAndWriteSilenceToHeadsetDeviceBuffer(uint8_t player, int32_t channel, float frames, double rate) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -642,7 +642,7 @@ void ComSat::Sound::Manager::GenerateAndWriteSilenceToHeadsetDeviceBuffer(uint8_
     }
 }
 
-// OFFSET: %0x00976C50
+// OFFSET: 0x00A36870/0x1407E19F0
 void ComSat::Sound::Manager::EncodeAvailableVoiceDataForLocalPlayer(uint8_t player, ComSat::Sound::Manager::LocalPlayer* localPlayer) {
     if (!this->m_io || !this->m_codec) {
         return;
@@ -709,7 +709,7 @@ void ComSat::Sound::Manager::EncodeAvailableVoiceDataForLocalPlayer(uint8_t play
     }
 }
 
-// OFFSET: %0x00977320
+// OFFSET: 0x00A36FD0/0x1407E2630
 bool ComSat::Sound::Manager::InitLocalPlayer(uint8_t player, float threshold, int32_t outputDevice, int32_t captureDevice) {
     uint32_t index;
     if (this->m_localPlayers.Find(ComSat::MapKey<uint8_t>(player), index)) {
@@ -738,7 +738,7 @@ bool ComSat::Sound::Manager::InitLocalPlayer(uint8_t player, float threshold, in
     return true;
 }
 
-// OFFSET: %0x00977460
+// OFFSET: 0x00A37110/0x1407E2940
 bool ComSat::Sound::Manager::LocalTalkerSetRemoteTalkerVolume(uint8_t player, uint64_t talker, float volume) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -748,7 +748,7 @@ bool ComSat::Sound::Manager::LocalTalkerSetRemoteTalkerVolume(uint8_t player, ui
     return true;
 }
 
-// OFFSET: %0x00977500
+// OFFSET: 0x00A371B0/0x1407E2A40
 bool ComSat::Sound::Manager::LocalTalkerSetSessionVolume(uint8_t player, uint64_t session, float volume) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -758,7 +758,7 @@ bool ComSat::Sound::Manager::LocalTalkerSetSessionVolume(uint8_t player, uint64_
     return true;
 }
 
-// OFFSET: %0x009775A0
+// OFFSET: 0x00A37250/0x1407E2B40
 bool ComSat::Sound::Manager::SessionCreate(uint64_t session) {
     uint32_t index;
     if (!this->m_sessions.Find(ComSat::MapKey<uint64_t>(session), index)) {
@@ -769,7 +769,7 @@ bool ComSat::Sound::Manager::SessionCreate(uint64_t session) {
     return true;
 }
 
-// OFFSET: %0x00977660
+// OFFSET: 0x00A37310/0x1407E2C60
 bool ComSat::Sound::Manager::RegisterLocalTalkerForSession(uint64_t session, uint8_t player) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -785,7 +785,7 @@ bool ComSat::Sound::Manager::RegisterLocalTalkerForSession(uint64_t session, uin
     return true;
 }
 
-// OFFSET: %0x00977790
+// OFFSET: 0x00A37440/0x1407E2E70
 bool ComSat::Sound::Manager::RegisterRemoteTalkerForSession(uint64_t session, uint64_t talker) {
     Session* info;
     if (!this->m_sessions.Get(ComSat::MapKey<uint64_t>(session), info)) {
@@ -811,7 +811,7 @@ bool ComSat::Sound::Manager::RegisterRemoteTalkerForSession(uint64_t session, ui
     return true;
 }
 
-// OFFSET: %0x00977970
+// OFFSET: 0x00A37620/0x1407E3130
 bool ComSat::Sound::Manager::SetPlaybackPriorityForPlayerInSession(uint64_t session, uint64_t talker, uint8_t priority) {
     Session* info;
     if (!this->m_sessions.Get(ComSat::MapKey<uint64_t>(session), info)) {
@@ -821,7 +821,7 @@ bool ComSat::Sound::Manager::SetPlaybackPriorityForPlayerInSession(uint64_t sess
     return true;
 }
 
-// OFFSET: %0x00977A10
+// OFFSET: 0x00A376C0/0x1407E3220
 bool ComSat::Sound::Manager::SetPlaybackPriorityForSession(uint64_t session, uint8_t player, uint8_t priority) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -831,7 +831,7 @@ bool ComSat::Sound::Manager::SetPlaybackPriorityForSession(uint64_t session, uin
     return true;
 }
 
-// OFFSET: %0x00977AB0
+// OFFSET: 0x00A37760
 void ComSat::Sound::Manager::PlayVoiceDataForLocalPlayer(uint8_t player, int32_t frames) {
     bool reset = false;
     LocalPlayer* localPlayer;
@@ -954,7 +954,7 @@ void ComSat::Sound::Manager::PlayVoiceDataForLocalPlayer(uint8_t player, int32_t
     }
 }
 
-// OFFSET: %0x00978260
+// OFFSET: 0x00A37F10/0x1407E3D80
 void ComSat::Sound::Manager::EncodeAvailableVoiceData() {
     uint32_t iterator = 0;
     ComSat::MapKey<uint8_t> key;
@@ -998,7 +998,7 @@ ComSat::Sound::Manager::~Manager() {
     }
 }
 
-// OFFSET: %0x009785A0
+// OFFSET: 0x00A38250
 bool ComSat::Sound::Manager::UnregisterRemoteTalkerFromSession(uint64_t session, uint64_t talker) {
     Session* info;
     if (!this->m_sessions.Get(ComSat::MapKey<uint64_t>(session), info)) {
@@ -1027,7 +1027,7 @@ bool ComSat::Sound::Manager::UnregisterRemoteTalkerFromSession(uint64_t session,
     return true;
 }
 
-// OFFSET: %0x00978790
+// OFFSET: 0x00A38440/0x1407E4450
 void ComSat::Sound::Manager::PlayScheduledVoiceData() {
     uint32_t elapsed = this->m_currentTime - this->m_startTime;
     double frames = elapsed * 0.001 * this->m_framesPerSecond;
@@ -1065,7 +1065,7 @@ void ComSat::Sound::Manager::Work(uint32_t time) {
     this->EncodeAvailableVoiceData();
 }
 
-// OFFSET: %0x009788B0
+// OFFSET: 0x00A38560
 bool ComSat::Sound::Manager::SessionDestroy(uint64_t session) {
     Session* info;
     if (this->m_sessions.Get(ComSat::MapKey<uint64_t>(session), info)) {
@@ -1082,7 +1082,7 @@ bool ComSat::Sound::Manager::SessionDestroy(uint64_t session) {
     return true;
 }
 
-// OFFSET: %0x009789E0
+// OFFSET: 0x00A38690
 bool ComSat::Sound::Manager::UnregisterLocalTalkerFromSession(uint64_t session, uint8_t player) {
     LocalPlayer* localPlayer;
     if (!this->m_localPlayers.Get(ComSat::MapKey<uint8_t>(player), localPlayer)) {
@@ -1112,7 +1112,7 @@ bool ComSat::Sound::Manager::UnregisterLocalTalkerFromSession(uint64_t session, 
     return true;
 }
 
-// OFFSET: %0x00978BC0
+// OFFSET: 0x00A38870/0x1407E4A50
 bool ComSat::Sound::Manager::DestroyLocalPlayer(uint8_t player) {
     uint32_t iterator = 0;
     ComSat::MapKey<uint64_t> key;
