@@ -197,6 +197,40 @@ int32_t CGxDevice::DeviceAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint3
     return result;
 }
 
+// PROVEN: 6ae548e9 IDENTICAL/NONE
+// OFFSET: 0x00849B70/0x140577D00
+int32_t CGxDevice::AdapterHasDriver() {
+    DISPLAY_DEVICEA device;
+    memset(&device, 0, sizeof(device));
+    device.cb = sizeof(device);
+
+    for (DWORD i = 0; EnumDisplayDevicesA(NULL, i, &device, 0); i++) {
+        if ((device.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) && device.DeviceID[0] && strcmp(device.DeviceString, "Standard VGA Graphics Adapter")) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+// PROVEN: 0e82249c IDENTICAL/NONE
+// OFFSET: 0x0084BEA0
+int32_t CGxDevice::AdapterD3dAvailable() {
+    HINSTANCE d3dLib;
+    LPDIRECT3D9 d3d;
+    int32_t result = CGxDeviceD3d::ILoadD3dLib(d3dLib, d3d);
+
+    if (d3d) {
+        d3d->Release();
+    }
+
+    if (d3dLib) {
+        FreeLibrary(d3dLib);
+    }
+
+    return result;
+}
+
 // OFFSET: #0x00689DB0
 int32_t CGxDevice::DeviceAdapterInfer(uint16_t& deviceID) {
     int32_t result = 0;

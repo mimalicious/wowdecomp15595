@@ -62,6 +62,8 @@ int32_t CreateGxDevice(EGxApi api, GxWindowProc windowProc, const CGxFormat& for
 int32_t GxAdapterDesktopMode(uint32_t monitor, CGxMonitorMode& mode);
 int32_t GxAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo);
 int32_t GxAdapterInfer(uint16_t& deviceID);
+int32_t GxAdapterD3dAvailable();
+int32_t GxAdapterHasDriver();
 int32_t GxAdapterMonitorModes(uint32_t monitor, TSGrowableArray<CGxMonitorMode>& modes);
 void GxReadPixels(CiRect& rect, TSGrowableArray<CImVector>& pixels);
 int32_t GxVertexHasAttrib(EGxVertexBufferFormat format, EGxVertexAttrib attrib);

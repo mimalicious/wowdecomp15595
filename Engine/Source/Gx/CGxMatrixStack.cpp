@@ -30,7 +30,7 @@ void CGxMatrixStack::Identity() {
     this->m_flags[this->m_level] = F_Identity;
 }
 
-// OFFSET: #0x00683B90
+// OFFSET: 0x00842B90
 CGxMatrixStack::CGxMatrixStack() {
     this->m_level = 0;
     this->m_dirty = 0;

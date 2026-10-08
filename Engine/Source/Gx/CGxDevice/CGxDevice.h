@@ -268,6 +268,8 @@ class CGxDevice {
     static int32_t AdapterFormats(TSGrowableArray<CGxFormat>& formats);
     static int32_t AdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo);
     static int32_t AdapterInfer(uint16_t& deviceID);
+    static int32_t AdapterD3dAvailable();
+    static int32_t AdapterHasDriver();
     static void* AdapterGetMonitorHandle(uint32_t monitor);
     static void AdapterInitMonitors();
     static void AdapterResetMonitors();

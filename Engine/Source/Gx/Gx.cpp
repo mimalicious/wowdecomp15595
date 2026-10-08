@@ -68,6 +68,7 @@ static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
 GxuDrawListItem::~GxuDrawListItem() {
 }
 
+// PROVEN: ebf9e54d IDENTICAL/NONE
 // OFFSET: 0x006128C0
 float GxuDrawListItem::GetDepth(const C3Vector& viewPos) {
     return 0.0f;
@@ -167,6 +168,18 @@ int32_t GxAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVers
 // OFFSET: 0x0083FF90/0x14056BD80
 int32_t GxAdapterInfer(uint16_t& deviceID) {
     return CGxDevice::AdapterInfer(deviceID);
+}
+
+// PROVEN: 433cf364 IDENTICAL/NONE
+// OFFSET: 0x0083FFA0/0x14056BD90
+int32_t GxAdapterD3dAvailable() {
+    return CGxDevice::AdapterD3dAvailable();
+}
+
+// PROVEN: bd0e1850 IDENTICAL/NONE
+// OFFSET: 0x0083FFB0/0x14056BDA0
+int32_t GxAdapterHasDriver() {
+    return CGxDevice::AdapterHasDriver();
 }
 
 // PROVEN: ca432153 IDENTICAL/NONE
