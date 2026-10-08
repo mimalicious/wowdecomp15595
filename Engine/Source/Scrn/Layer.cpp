@@ -21,40 +21,40 @@
 #include "Engine/Source/Storm/Source/SRgn.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// STATIC: #0x009EDCB8
+// STATIC: 0x00BCEA84
 static const RECTF s_defaultRect = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 // STATIC: 0x00D07518
 static char s_screenshotFormat[16] = "jpeg";
 
-// STATIC: %0x00C0C890
+// STATIC: 0x00D07528
 static uint32_t s_screenshotQuality = 60;
 
-// STATIC: %0x00C0C894
+// STATIC: 0x00D0752C
 static TSExplicitList<CILayer, offsetof(CILayer, m_zorderlink)> s_zorderlist;
 
-// STATIC: %0x00D87998
+// STATIC: 0x00EBB0F8/0x140DABE60
 static float s_elapsedSec;
 
-// STATIC: %0x00D8799C
+// STATIC: 0x00EBB0FC/0x140DABE68
 static void (*s_screenshotCallback)(int32_t success);
 
-// STATIC: %0x00D879A0
+// STATIC: 0x00EBB100
 static int32_t s_noPresent;
 
-// STATIC: %0x00D879A4
+// STATIC: 0x00EBB104/0x140DABE70
 static uint8_t* s_screenshotData;
 
-// STATIC: %0x00D879A8
+// STATIC: 0x00EBB108/0x140DABE78
 static uint32_t s_screenshotDataSize;
 
-// STATIC: %0x00D879AC
+// STATIC: 0x00EBB10C/0x140DABE80
 static const char* s_screenshotDirectory;
 
-// STATIC: %0x00D879B0
+// STATIC: 0x00EBB110/0x140DABE88
 static const char* s_screenshotFileName;
 
-// STATIC: %0x00D879B4
+// STATIC: 0x00EBB114/0x140DABE90
 static HSRGN s_layerRgn;
 
 // PROVEN: 6f7db3fc IDENTICAL/NONE
@@ -83,15 +83,13 @@ void ScrnSetScreenshotFormat(const char* format) {
     SStrCopy(s_screenshotFormat, format, sizeof(s_screenshotFormat));
 }
 
-// OFFSET: %0x00765EC0
-void ScrnSetScreenshotQuality(uint32_t quality) {
-    if (quality > 10) {
-        quality = 10;
-    } else if (quality < 1) {
-        quality = 1;
+// OFFSET: 0x007FF620
+void ScrnSetScreenshotQuality(int32_t quality) {
+    if (static_cast<uint32_t>(quality - 1) > 9) {
+        quality = quality - 1 < 0 ? 1 : 10;
     }
 
-    s_screenshotQuality = static_cast<uint32_t>(quality * 5.5f + 45.0f);
+    s_screenshotQuality = static_cast<uint32_t>(quality * 11 + 90) / 2;
 }
 
 // PROVEN: 9c64b476 IDENTICAL/IDENTICAL
@@ -122,7 +120,7 @@ void ScrnScreenshot(void (*callback)(int32_t success), uint8_t* data, uint32_t s
     s_screenshotFileName = fileName;
 }
 
-// OFFSET: %0x00765FA0
+// OFFSET: 0x007FF360/0x140512F10
 static int32_t CaptureScreen() {
     uint32_t width;
     uint32_t height;
@@ -178,7 +176,7 @@ static int32_t CaptureScreen() {
     return pixels != NULL;
 }
 
-// OFFSET: %0x00766250
+// OFFSET: 0x007FF650/0x140513290
 static int32_t OnPaint(const void* data, void* param) {
     if (GxHasContext() && GxIsWindowVisible()) {
         SRgnClear(s_layerRgn);
@@ -278,7 +276,7 @@ static int32_t OnPaint(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x007667C0
+// OFFSET: 0x007FFC00/0x140513910
 void ILayerInitialize() {
     SRgnCreate(&s_layerRgn);
     EventRegister(EVENT_ID_IDLE, OnIdle);
@@ -291,7 +289,7 @@ static void ILayerPaint() {
     OnPaint(NULL, NULL);
 }
 
-// OFFSET: %0x00766800
+// OFFSET: 0x007FFC40/0x140513960
 void ScrnLayerCreate(const RECTF* rect, float zorder, uint32_t flags, void* param, void (*paintFunc)(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec), HLAYER* layer) {
     const RECTF* layerRect = rect ? rect : &s_defaultRect;
 
@@ -314,11 +312,11 @@ void ScrnLayerCreate(const RECTF* rect, float zorder, uint32_t flags, void* para
     *layer = reinterpret_cast<HLAYER>(HandleCreate(ilayer, "HLAYER"));
 }
 
-// OFFSET: %0x007668E0
+// OFFSET: 0x007FFD20/0x140513B00
 CILayer::~CILayer() {
 }
 
-// OFFSET: %0x00766780
+// OFFSET: 0x007FFBC0/0x1405138C0
 void ILayerDestroy() {
     SRgnDelete(s_layerRgn);
     s_layerRgn = NULL;
@@ -326,7 +324,7 @@ void ILayerDestroy() {
     EventUnregister(EVENT_ID_PAINT, OnPaint);
 }
 
-// OFFSET: %0x00766950
+// OFFSET: 0x007FFD90/0x140513B90
 void ScrnLayerPaint() {
     ILayerPaint();
 }

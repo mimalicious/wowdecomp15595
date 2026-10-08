@@ -7,7 +7,7 @@
 // STATIC: 0x00E28FB8
 static BLIT_FUNCTION s_blits[BlitFormats_Last][BlitFormats_Last][BlitAlphas_Last];
 
-// STATIC: %0x00D0D010
+// STATIC: 0x00E42090
 DxtColorBlock::Tables DxtColorBlock::s_tables;
 
 // INLINED
@@ -871,7 +871,7 @@ int32_t Blit(const C2iVector& size, BlitAlpha alpha, const void* in, uint32_t in
     return 1;
 }
 
-// OFFSET: #0x006AE820
+// OFFSET: 0x0063D680/0x1402D6550
 DxtColorBlock::Tables::Tables() {
     for (uint32_t i = 0; i < 32; i++) {
         this->m_oneThird5[i] = (i << 8) / 3 + 1;

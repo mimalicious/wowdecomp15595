@@ -8,13 +8,13 @@
 #include "Engine/Source/Services/TextBlock.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00AF66BC
+// STATIC: 0x00BCEA94/0x1409C2E10
 static const float s_stockObjectHeights[SCRNSTOCKOBJECTS] = { 0.01953125f, 0.01953125f };
 
-// STATIC: %0x00D879BC
+// STATIC: 0x00EBB11C
 static HTEXTFONT s_stockObjects[SCRNSTOCKOBJECTS];
 
-// OFFSET: %0x00766990
+// OFFSET: 0x007FFDD0
 void ScrnSetStockFont(SCRNSTOCK stockID, const char* fontTexturePath) {
     if (s_stockObjects[stockID]) {
         HandleClose(reinterpret_cast<HOBJECT>(s_stockObjects[stockID]));
@@ -47,7 +47,7 @@ float ScrnGetStockFontHeight(SCRNSTOCK stockID) {
     return s_stockObjectHeights[stockID];
 }
 
-// OFFSET: %0x00766A50
+// OFFSET: 0x007FFE90/0x140513C90
 void IStockInitialize() {
     GxuFontInitialize();
 

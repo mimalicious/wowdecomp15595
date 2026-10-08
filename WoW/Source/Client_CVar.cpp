@@ -393,7 +393,7 @@ static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char
     return true;
 }
 
-// OFFSET: %0x00401930
+// OFFSET: 0x00401770
 static bool ScreenshotQualityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotQuality(SStrToInt(value));
     return true;

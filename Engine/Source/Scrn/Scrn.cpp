@@ -3,10 +3,10 @@
 #include "Engine/Source/Scrn/Scrn.h"
 #include "Engine/Source/Scrn/Stock.h"
 
-// STATIC: %0x00D879B8
+// STATIC: 0x00EBB118/0x140DABE98
 static int32_t s_initParam;
 
-// OFFSET: %0x00766960
+// OFFSET: 0x007FFDA0
 void ScrnDestroy() {
     ILayerDestroy();
     IStockDestroy();

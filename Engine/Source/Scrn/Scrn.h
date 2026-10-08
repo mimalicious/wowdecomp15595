@@ -20,6 +20,6 @@ void ScrnSetStockFont(SCRNSTOCK stockID, const char* fontTexturePath);
 
 void ScrnSetScreenshotFormat(const char* format);
 void ScrnScreenshot(void (*callback)(int32_t success), uint8_t* data, uint32_t size, const char* directory, const char* fileName);
-void ScrnSetScreenshotQuality(uint32_t quality);
+void ScrnSetScreenshotQuality(int32_t quality);
 
 #endif
