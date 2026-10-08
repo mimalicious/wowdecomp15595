@@ -122,7 +122,7 @@ C33Matrix C33Matrix::Adjoint() const {
     return result;
 }
 
-// OFFSET: #0x004C54E0
+// OFFSET: 0x004CD7C0
 C33Matrix C33Matrix::Inverse(float determinant) const {
     float scale = 1.0f / determinant;
     C33Matrix adjoint = this->Adjoint();
@@ -140,7 +140,7 @@ C33Matrix C33Matrix::Inverse(float determinant) const {
     return result;
 }
 
-// OFFSET: #0x004C5550
+// OFFSET: 0x004CD970
 C33Matrix C33Matrix::Rotation(float angle) {
     float c = cos(angle);
     float s = sin(angle);
@@ -158,7 +158,7 @@ C33Matrix C33Matrix::Rotation(float angle) {
     return result;
 }
 
-// OFFSET: #0x004C5630
+// OFFSET: 0x004CDBA0
 bool C33Matrix::ToEulerAnglesZYX(float& yaw, float& pitch, float& roll) const {
     if (this->a2 >= 1.0f) {
         yaw = atan2(-this->b0, -this->c0);
@@ -238,7 +238,6 @@ void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     this->c2 = product.c2;
 }
 
-// PROVEN: 0798e9ee IDENTICAL/DIFFERENT
 // OFFSET: 0x004CDF00/0x140109D80
 C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized) {
     C3Vector v = axis;

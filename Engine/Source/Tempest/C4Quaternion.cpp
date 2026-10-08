@@ -9,7 +9,8 @@
 // STATIC: #0x00AA2E4C
 static const uint32_t s_nextAxis[3] = { 1, 2, 0 };
 
-// OFFSET: [#0x009826A0, 0x004CBBD0/0x1401078F0]
+// PROVEN: 64f52896 IDENTICAL/NONE
+// OFFSET: [0x004CBA80/0x140107760<3>, 0x004CBBD0/0x1401078F0<4>]
 template <uint32_t N>
 static void FromRotationMatrixImpl(float trace, C4Quaternion& q, const float* m) {
     float* out = &q.x;
@@ -106,7 +107,7 @@ C4Quaternion C4Quaternion::Slerp(float t, const C4Quaternion& a, const C4Quatern
     return result;
 }
 
-// OFFSET: #0x00982570
+// OFFSET: 0x004CB8B0/0x140107560
 void C4Quaternion::NormalizeApprox() {
     float length = this->w * this->w + this->z * this->z + this->y * this->y + this->x * this->x;
     float scale = 1.021435f - (length - 0.95906597f) * 0.532516f;

@@ -9,12 +9,12 @@
 // STATIC: %0x00BB4520
 static const C44Matrix s_bezier3Basis(-1.0f, 3.0f, -3.0f, 1.0f, 3.0f, -6.0f, 3.0f, 0.0f, -3.0f, 3.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
 
-// OFFSET: #0x004C3E00
+// INLINED
 void C3Spline_Bezier3::ParametricSegT(float t, uint32_t& seg, float& segT) {
-    float segCount = static_cast<float>(this->m_pointCount / 3);
+    double segCount = static_cast<double>(this->m_pointCount / 3);
 
-    seg = CMath::fint_(segCount * t - 0.5f);
-    segT = (t - 1.0f / segCount * seg) * segCount;
+    seg = static_cast<uint32_t>(static_cast<int64_t>(segCount * t));
+    segT = static_cast<float>(segCount * (t - 1.0 / segCount * seg));
 }
 
 // PROVEN: 91dbe5e0 IDENTICAL/UNPROVEN
@@ -42,7 +42,7 @@ void C3Spline_Bezier3::IValidateCache() {
     }
 }
 
-// OFFSET: #0x004C4880
+// OFFSET: 0x004CA8B0
 void C3Spline_Bezier3::IPosParametric(float t, C3Vector& pos) {
     uint32_t seg;
     float segT;
@@ -61,7 +61,7 @@ void C3Spline_Bezier3::IPosArclength(float t, C3Vector& pos) {
     C3Spline::Evaluate(3 * seg, segT, s_bezier3Basis, pos);
 }
 
-// OFFSET: #0x004C4930
+// OFFSET: 0x004CA990
 void C3Spline_Bezier3::IVelParametric(float t, C3Vector& vel) {
     uint32_t seg;
     float segT;
@@ -80,7 +80,7 @@ void C3Spline_Bezier3::IVelArclength(float t, C3Vector& vel) {
     this->EvaluateDer1(seg, segT, vel);
 }
 
-// OFFSET: #0x004C49C0
+// OFFSET: 0x004CAA60
 void C3Spline_Bezier3::IFrameArclength(float t, C44Matrix& frame) {
     uint32_t seg;
     float segT;

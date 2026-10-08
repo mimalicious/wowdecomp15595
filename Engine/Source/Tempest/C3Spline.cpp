@@ -12,7 +12,7 @@ C3Spline::C3Spline() {
     this->m_segCount = 0;
 }
 
-// OFFSET: #0x004C3720
+// OFFSET: 0x004C92A0
 float C3Spline::LengthBeforePoint(uint32_t index) {
     float length = 0.0f;
 

@@ -2,7 +2,7 @@
 #include "Engine/Source/Tempest/C34Matrix.h"
 #include "Engine/Source/Tempest/CMath.h"
 
-// OFFSET: #0x00984310
+// OFFSET: 0x004CE0C0
 C34Matrix operator*(const C34Matrix& l, const C34Matrix& r) {
     C34Matrix result;
     result.a0 = l.a0 * r.a0 + l.a1 * r.b0 + l.a2 * r.c0;
@@ -20,7 +20,7 @@ C34Matrix operator*(const C34Matrix& l, const C34Matrix& r) {
     return result;
 }
 
-// OFFSET: %0x004D4580
+// OFFSET: 0x004CE310
 void C34Matrix::RotateAroundZ(float angle) {
     float c;
     float s;

@@ -13,6 +13,7 @@ class C3Spline_CatmullRom : public C3Spline {
 
     C3Spline_CatmullRom();
     void Evaluate(uint32_t seg, float t, C3Vector& pos);
+    void EvaluateDer1(uint32_t seg, float t, C3Vector& vel);
     void ParametricSegT(float t, uint32_t& seg, float& segT);
     float SegLength(uint32_t seg);
 
