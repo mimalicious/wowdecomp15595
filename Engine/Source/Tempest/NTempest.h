@@ -35,6 +35,7 @@ namespace NTempest {
     bool Intersect(const C3Ray& ray, const CAaBox& box, float* t, C3Vector* hit);
     bool Intersect(const C3Vector& point, const C3Vector* verts, uint32_t count, C3Vector::EAxis axis);
     bool Intersect2d(const CAaBox& box, const CAaSphere& sphere, SolidIntersect mode);
+    bool Intersect2dSegments(const C2Vector& a0, const C2Vector& a1, const C2Vector& b0, const C2Vector& b1);
     bool Intersect2dBoxSphere(const float* minB, const float* maxB, const float* center, float radius, SolidIntersect mode);
     void SmoothDamp(C3Vector& value, C3Vector& velocity, const C3Vector& target, float omega, float deltaTime, float decay);
     void SmoothDamp(C4Vector& value, C4Vector& velocity, const C4Vector& target, float omega, float deltaTime, float decay);
