@@ -18,8 +18,8 @@ class CharStartOutfitRec {
     /* 0008 */ int32_t m_itemID [24];
     /* 0068 */ int32_t m_displayItemID [24];
     /* 00C8 */ int32_t m_inventoryType [24];
-    /* 0128 */ int32_t unk_0128;
-    /* 012C */ int32_t unk_012C;
+    /* 0128 */ int32_t m_petDisplayID;
+    /* 012C */ int32_t m_petFamilyID;
 };
 
 #endif

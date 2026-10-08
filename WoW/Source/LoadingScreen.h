@@ -59,6 +59,7 @@ void LoadingScreenEnableShip(uint32_t transportEntry, int32_t transportMap, int3
 bool LoadDynamicBackground();
 void LoadingScreenInitialize();
 bool LoadingScreenIsEnabled(int32_t a1);
+bool LoadingScreenGetBackgroundTexturePath(int32_t mapID, char* path, uint32_t size, bool* isWide);
 void LoadingScreenMiniDisable();
 void LoadingScreenMiniEnable();
 void LoadingScreenMiniUpdate(float progress);

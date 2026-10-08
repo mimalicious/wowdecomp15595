@@ -479,7 +479,7 @@ static int32_t Script_RandomizeCharCustomization(lua_State* L) {
 
 // OFFSET: 0x0080E480/0x1405252E0
 static int32_t Script_PaidChange_GetName(lua_State* L) {
-    CharacterSelectionDisplay* display = CCharacterCreation::m_existingCharacterIndex >= 0 && CCharacterCreation::m_existingCharacterIndex < static_cast<int32_t>(CCharacterSelection::s_characterList.Count()) ? &CCharacterSelection::s_characterList[CCharacterCreation::m_existingCharacterIndex] : NULL;
+    CharacterSelectionDisplay* display = CCharacterCreation::m_existingCharacterIndex >= 0 && CCharacterCreation::m_existingCharacterIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? &CCharacterSelection::m_characterList[CCharacterCreation::m_existingCharacterIndex] : NULL;
 
     if (display) {
         lua_pushstring(L, display->m_characterInfo.m_name);

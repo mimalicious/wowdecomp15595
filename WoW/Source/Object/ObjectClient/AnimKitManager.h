@@ -35,8 +35,12 @@ class CAnimKitManager {
     /* 00C8 */ uint8_t unk_00C8 [0x28];
 
     CAnimKitManager();
+    CAnimKitManager(const CAnimKitManager& source);
+    ~CAnimKitManager();
     CAnimKitInst* GetExpressingAnimKitInst(uint32_t boneID, int32_t a2);
     CAnimKitInst* PlayAndMaintain(uint32_t animKitID, int32_t a2, int32_t a3);
+    void SetGlueMode(int32_t enable);
+    void SetModel(CM2Model* model, int32_t a2);
     void SetExpressionCallback(void (*callback)(CAnimKitManager* manager, uint64_t param), uint64_t param);
 };
 

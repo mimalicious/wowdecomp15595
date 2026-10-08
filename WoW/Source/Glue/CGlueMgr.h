@@ -56,13 +56,13 @@ struct CharacterEmoteKitFinishedData {
     /* 0004 */ CM2Model* m_leftHand;
 };
 
-struct CharacterHandItemTypes {
-    /* 0000 */ int32_t m_offHand;
-    /* 0004 */ int32_t m_mainHand;
-};
-
 class CGlueMgr {
     public:
+    struct WeaponLoadOut {
+        /* 0000 */ int32_t m_offHand;
+        /* 0004 */ int32_t m_mainHand;
+    };
+
     struct Agreements {
         /* 0000 */ TSGrowableArray<char> m_data;
         /* 0010 */ int32_t m_complete;
@@ -204,9 +204,9 @@ class CGlueMgr {
     static void StatusDialogClick();
     static void CancelLogin();
     static void SetUIDepth(float depth);
-    static void StopCharacterEmoteKits(CAnimKitManager* manager);
+    static void StopCharacterEmoteKits(CAnimKitManager& manager);
     static void CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param);
-    static CharacterHandItemTypes AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg));
+    static WeaponLoadOut AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg));
     static void ProcessAttachment(CSimpleModel* modelFrame, CM2Model* model, int32_t effectID, uint32_t attachID, int32_t sequenceCallback);
     static void PollLoginServerLogin();
     static void PollEnterWorld();
@@ -218,7 +218,7 @@ class CGlueMgr {
     static bool AgreementsURLCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error);
     static int32_t OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    static void PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t screen, const CharacterHandItemTypes* handItems, CAnimKitManager* manager, CSimpleModelFFX* modelFrame);
+    static void PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t screen, const WeaponLoadOut& handItems, CAnimKitManager& manager, CSimpleModelFFX* modelFrame);
     static void AcceptChangedOptionWarnings();
     static void LogConnectionStatus(const char* format, ...);
     static void SetLoginStateAndResult(LOGIN_STATE state, LOGIN_RESULT result, const char* addressString, const char* stateString, const char* resultString, uint16_t flags);

@@ -821,7 +821,7 @@ void CGlueMgr::DownloadFeed(const uint8_t* data, uint32_t size) {
 }
 
 // OFFSET: 0x00800B10
-int32_t StoreHandItemType(int32_t slot, int32_t inventoryType, bool hunter, CharacterHandItemTypes* types) {
+int32_t StoreHandItemType(int32_t slot, int32_t inventoryType, bool hunter, CGlueMgr::WeaponLoadOut* types) {
     int32_t* type;
 
     switch (slot) {
@@ -1507,7 +1507,7 @@ int32_t CGlueMgr::GetSelectedCharInfo(CHARACTER_INFO* info) {
         return 0;
     }
 
-    CCharacterSelection::m_enterWorldIndex = CCharacterSelection::s_selectionIndex;
+    CCharacterSelection::m_enterWorldIndex = CCharacterSelection::m_selectionIndex;
     return 1;
 }
 
@@ -1517,10 +1517,10 @@ int32_t CGlueMgr::OnCharCustomizeResult(void* param, NETMESSAGE msgId, uint32_t 
     char name[48];
     uint8_t sexID = 0;
     uint8_t skinID = 0;
-    uint8_t faceID = 0;
-    uint8_t hairStyleID = 0;
     uint8_t hairColorID = 0;
+    uint8_t hairStyleID = 0;
     uint8_t facialHairStyleID = 0;
+    uint8_t faceID = 0;
     uint8_t result;
 
     CGlueMgr::m_idleState = IDLE_NONE;
@@ -1532,10 +1532,10 @@ int32_t CGlueMgr::OnCharCustomizeResult(void* param, NETMESSAGE msgId, uint32_t 
         msg->GetString(name, sizeof(name));
         msg->Get(sexID);
         msg->Get(skinID);
-        msg->Get(faceID);
-        msg->Get(hairStyleID);
         msg->Get(hairColorID);
+        msg->Get(hairStyleID);
         msg->Get(facialHairStyleID);
+        msg->Get(faceID);
     }
 
     if (result) {
@@ -1548,7 +1548,7 @@ int32_t CGlueMgr::OnCharCustomizeResult(void* param, NETMESSAGE msgId, uint32_t 
         return 1;
     }
 
-    CCharacterSelection::UpdateCharacterInfo(guid, name, sexID, skinID, faceID, hairStyleID, hairColorID, facialHairStyleID, 0);
+    CCharacterSelection::UpdateCharacterInfo(guid, name, sexID, skinID, hairColorID, hairStyleID, facialHairStyleID, faceID, 0);
     FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
     FrameScript_SignalEvent(GLUE_EVENT_SET_GLUE_SCREEN, "%s", s_screenNames[GLUE_SCREEN_CHARSELECT]);
     return 1;
@@ -1560,10 +1560,10 @@ int32_t CGlueMgr::OnCharFactionChangeResult(void* param, NETMESSAGE msgId, uint3
     char name[48];
     uint8_t sexID = 0;
     uint8_t skinID = 0;
-    uint8_t faceID = 0;
-    uint8_t hairStyleID = 0;
     uint8_t hairColorID = 0;
+    uint8_t hairStyleID = 0;
     uint8_t facialHairStyleID = 0;
+    uint8_t faceID = 0;
     uint8_t raceID = 0;
     uint8_t result;
 
@@ -1576,16 +1576,16 @@ int32_t CGlueMgr::OnCharFactionChangeResult(void* param, NETMESSAGE msgId, uint3
         msg->GetString(name, sizeof(name));
         msg->Get(sexID);
         msg->Get(skinID);
-        msg->Get(faceID);
-        msg->Get(hairStyleID);
         msg->Get(hairColorID);
+        msg->Get(hairStyleID);
         msg->Get(facialHairStyleID);
+        msg->Get(faceID);
         msg->Get(raceID);
     }
 
     switch (result) {
         case 0:
-            CCharacterSelection::UpdateCharacterInfo(guid, name, sexID, skinID, faceID, hairStyleID, hairColorID, facialHairStyleID, raceID);
+            CCharacterSelection::UpdateCharacterInfo(guid, name, sexID, skinID, hairColorID, hairStyleID, facialHairStyleID, faceID, raceID);
             FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
             CGlueMgr::SetScreen(GLUE_SCREEN_CHARSELECT);
             return 1;
@@ -1794,7 +1794,7 @@ void CGlueMgr::SetUIDepth(float depth) {
 }
 
 // OFFSET: 0x00802930
-static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t screen, const CharacterHandItemTypes* handItems, uint32_t* animKitID, uint32_t* spellVisualKitID) {
+static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t screen, const CGlueMgr::WeaponLoadOut& handItems, uint32_t* animKitID, uint32_t* spellVisualKitID) {
     *animKitID = 0;
     *spellVisualKitID = 0;
 
@@ -1819,13 +1819,13 @@ static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t scre
             continue;
         }
 
-        int32_t offHand = handItems->m_offHand;
+        int32_t offHand = handItems.m_offHand;
 
         if (rec->m_offHandItemType != offHand && rec->m_offHandItemType && (rec->m_offHandItemType != 13 || (offHand != 17 && offHand != 21 && offHand != 22))) {
             continue;
         }
 
-        int32_t mainHand = handItems->m_mainHand;
+        int32_t mainHand = handItems.m_mainHand;
 
         if (rec->m_mainHandItemType != mainHand && rec->m_mainHandItemType && (rec->m_mainHandItemType != 13 || (mainHand != 17 && mainHand != 21 && mainHand != 22))) {
             continue;
@@ -1840,15 +1840,15 @@ static int32_t FindGlueScreenEmote(int32_t classID, int32_t raceID, int32_t scre
 }
 
 // OFFSET: 0x00802A20/0x140517180
-void CGlueMgr::StopCharacterEmoteKits(CAnimKitManager* manager) {
-    CAnimKitInst* inst = manager->GetExpressingAnimKitInst(0xFFFFFFFF, 1);
-    CharacterEmoteSpellStartData* data = reinterpret_cast<CharacterEmoteSpellStartData*>(static_cast<uintptr_t>(manager->m_expressionCallbackParam));
+void CGlueMgr::StopCharacterEmoteKits(CAnimKitManager& manager) {
+    CAnimKitInst* inst = manager.GetExpressingAnimKitInst(0xFFFFFFFF, 1);
+    CharacterEmoteSpellStartData* data = reinterpret_cast<CharacterEmoteSpellStartData*>(static_cast<uintptr_t>(manager.m_expressionCallbackParam));
 
     if (data) {
         s_emoteSpellStartAllocator.PutData(data, NULL, 0);
     }
 
-    manager->SetExpressionCallback(NULL, 0);
+    manager.SetExpressionCallback(NULL, 0);
 
     if (inst && inst->GetID() != 540 && inst->GetID() != 541) {
         inst->Stop(1, 0);
@@ -1885,8 +1885,8 @@ void CGlueMgr::CharacterEmoteKitFinished(CAnimKitInst* inst, uint64_t param) {
 }
 
 // OFFSET: 0x00802B10
-CharacterHandItemTypes CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg)) {
-    CharacterHandItemTypes types;
+CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* info, CCharacterComponent* component, void (*guildCallback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void (*loadedCallback)(CM2Model* model, void* arg)) {
+    CGlueMgr::WeaponLoadOut types;
     types.m_offHand = 0;
     types.m_mainHand = 0;
 
@@ -2184,11 +2184,11 @@ void CGlueMgr::PollEnterWorld() {
 
 // OFFSET: 0x00803500
 CharacterSelectionDisplay* GetCharacterInfo(int32_t index) {
-    if (index < 0 || index >= static_cast<int32_t>(CCharacterSelection::s_characterList.Count())) {
+    if (index < 0 || index >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
         return NULL;
     }
 
-    return &CCharacterSelection::s_characterList[index];
+    return &CCharacterSelection::m_characterList[index];
 }
 
 // OFFSET: 0x00803530
@@ -2237,11 +2237,11 @@ void CGlueMgr::ApplySpellVisualKit(CSimpleModelFFX* modelFrame, CM2Model* model,
 
 // OFFSET: 0x00803790/0x1405184E0
 int32_t CGlueMgr::DeclineCharacter(WOWGUID guid, const char** names) {
-    if (CCharacterSelection::s_selectionIndex < 0 || CCharacterSelection::s_selectionIndex >= static_cast<int32_t>(CCharacterSelection::s_characterList.Count())) {
+    if (CCharacterSelection::m_selectionIndex < 0 || CCharacterSelection::m_selectionIndex >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
         return 1;
     }
 
-    CharacterSelectionDisplay* display = &CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex];
+    CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
 
     if (!display || !display->m_characterInfo.m_guid.m_guid == guid.m_guid) {
         return 1;
@@ -2284,14 +2284,14 @@ void CGlueMgr::EnterWorld() {
         return;
     }
 
-    CharacterSelectionDisplay* display = CCharacterSelection::s_selectionIndex < 0 || CCharacterSelection::s_selectionIndex >= static_cast<int32_t>(CCharacterSelection::s_characterList.Count()) ? NULL : &CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex];
+    CharacterSelectionDisplay* display = CCharacterSelection::m_selectionIndex < 0 || CCharacterSelection::m_selectionIndex >= static_cast<int32_t>(CCharacterSelection::m_characterList.Count()) ? NULL : &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
     CGlueMgr::m_characterInfo = &display->m_characterInfo;
 
     if (!display) {
         return;
     }
 
-    CCharacterSelection::m_enterWorldIndex = CCharacterSelection::s_selectionIndex;
+    CCharacterSelection::m_enterWorldIndex = CCharacterSelection::m_selectionIndex;
 
     if (!ClientServices::Connection()->unk_2F3C) {
         return;
@@ -2515,8 +2515,8 @@ int32_t CGlueMgr::OnCharRenameResult(void* param, NETMESSAGE msgId, uint32_t tim
 
     CCharacterSelection::UpdateCharacterName(guid, name);
 
-    if (CCharacterSelection::s_selectionIndex >= 0 && CCharacterSelection::s_selectionIndex < static_cast<int32_t>(CCharacterSelection::s_characterList.Count())) {
-        CharacterSelectionDisplay* display = &CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex];
+    if (CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
+        CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
 
         if (display && display->m_characterInfo.m_guid == guid) {
             CGlueMgr::EnterWorld();
@@ -2542,8 +2542,8 @@ int32_t CGlueMgr::OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(guid.m_guid);
     CCharacterSelection::UpdateCharacterNameDeclension(guid);
 
-    if (CCharacterSelection::s_selectionIndex >= 0 && CCharacterSelection::s_selectionIndex < static_cast<int32_t>(CCharacterSelection::s_characterList.Count())) {
-        CharacterSelectionDisplay* display = &CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex];
+    if (CCharacterSelection::m_selectionIndex >= 0 && CCharacterSelection::m_selectionIndex < static_cast<int32_t>(CCharacterSelection::m_characterList.Count())) {
+        CharacterSelectionDisplay* display = &CCharacterSelection::m_characterList[CCharacterSelection::m_selectionIndex];
 
         if (display && display->m_characterInfo.m_guid == guid) {
             CGlueMgr::EnterWorld();
@@ -2554,7 +2554,7 @@ int32_t CGlueMgr::OnCharDeclineResult(void* param, NETMESSAGE msgId, uint32_t ti
 }
 
 // OFFSET: 0x008040D0/0x140519020
-void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t screen, const CharacterHandItemTypes* handItems, CAnimKitManager* manager, CSimpleModelFFX* modelFrame) {
+void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t screen, const CGlueMgr::WeaponLoadOut& handItems, CAnimKitManager& manager, CSimpleModelFFX* modelFrame) {
     uint32_t animKitID = 0;
     uint32_t spellVisualKitID = 0;
 
@@ -2563,7 +2563,7 @@ void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t s
     }
 
     CGlueMgr::StopCharacterEmoteKits(manager);
-    CAnimKitInst* inst = manager->PlayAndMaintain(animKitID, -1, 0);
+    CAnimKitInst* inst = manager.PlayAndMaintain(animKitID, -1, 0);
 
     if (!inst) {
         return;
@@ -2573,7 +2573,7 @@ void CGlueMgr::PlayCharacterEmoteKits(int32_t classID, int32_t raceID, int32_t s
         CharacterEmoteSpellStartData* data = s_emoteSpellStartAllocator.New<CharacterEmoteSpellStartData>(0);
         data->m_modelFrame = modelFrame;
         data->m_spellVisualKitID = spellVisualKitID;
-        manager->SetExpressionCallback(CGlueMgr::CharacterEmoteSpellStart, reinterpret_cast<uintptr_t>(data));
+        manager.SetExpressionCallback(CGlueMgr::CharacterEmoteSpellStart, reinterpret_cast<uintptr_t>(data));
     }
 
     inst->SetStopCallback(CGlueMgr::CharacterEmoteKitFinished, 0);

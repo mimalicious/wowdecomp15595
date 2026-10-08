@@ -4,6 +4,7 @@
 #include <intrin.h>
 #endif
 #include <cstdint>
+#include <xmmintrin.h>
 #include "Engine/Source/Tempest/CMath.h"
 
 // STATIC: %0x00AFE5E8
@@ -367,6 +368,11 @@ uint32_t CMath::fuint_pi(float f) {
 // OFFSET: #0x00577370
 int32_t CMath::ftrunc(float f) {
     return static_cast<int32_t>(f);
+}
+
+// OFFSET: 0x004319B0
+int32_t CMath::fuint8_n(float f) {
+    return _mm_cvtss_si32(_mm_set_ss(f * 255.0f));
 }
 
 // PROVEN: 082592de IDENTICAL/NONE

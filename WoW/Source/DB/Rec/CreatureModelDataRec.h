@@ -40,7 +40,7 @@ class CreatureModelDataRec {
     /* 006C */ float unk_006C;
     /* 0070 */ float unk_0070;
     /* 0074 */ float unk_0074;
-    /* 0078 */ float unk_0078;
+    /* 0078 */ float m_petScale;
 };
 
 #endif

@@ -155,7 +155,7 @@ MipBits* CCharacterComponent::s_textureBuffer;
 // STATIC: #0x00B6B874
 uint32_t CCharacterComponent::s_chrVarArrayLength;
 
-// STATIC: #0x00B6B878
+// STATIC: 0x00E4DC20
 CCharacterComponent* CCharacterComponent::m_activePlayerComponent;
 
 // STATIC: #0x00B6B880

@@ -200,6 +200,7 @@ class CCharacterComponent {
     int32_t GetQuiverModelFilePath(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec);
     CharSectionsRec* GetSectionsRecord(COMPONENT_VARIATIONS variation, int32_t variationIndex, int32_t colorIndex, bool* found);
     bool Init(ComponentData* data, const char* debug);
+    void LinkToAsyncHead();
     bool IsHelmModelCorrect();
     bool IsQuiverModelCorrect();
     bool ItemsLoaded(int32_t wait);

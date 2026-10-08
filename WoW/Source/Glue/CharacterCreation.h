@@ -7,6 +7,7 @@
 #include "WoW/Source/Glue/Types.h"
 
 class CCharacterComponent;
+class CM2Model;
 class ChrClassesRec;
 class ComponentData;
 class CSimpleModelFFX;
@@ -30,6 +31,7 @@ class CCharacterCreation {
     static uint32_t m_prevHairStyleIndex;
     static uint32_t m_prevFacialHairIndex;
 
+    static void BowModelLoadedCallback(CM2Model* model, void* arg);
     static void CalcClasses(int32_t raceID);
     static void CreateCharacter(const char* name);
     static void CycleCharCustomization(CHAR_CUSTOMIZATION_TYPE type, int32_t delta);

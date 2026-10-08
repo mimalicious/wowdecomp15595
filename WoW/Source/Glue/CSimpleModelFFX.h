@@ -32,10 +32,10 @@ class CM2LightArray {
 
 class CSimpleModelFFX : public CSimpleModel {
     public:
-    /* 0368 */ CM2LightArray m_lightArray1 [2];
-    /* 06E8 */ CM2LightArray m_lightArray2 [2];
-    /* 0A68 */ CM2LightArray m_lightArray3 [2];
-    /* 0DE8 */ float m_glow;
+    /* 02B0 */ CM2LightArray m_lightArray1 [2];
+    /* 0630 */ CM2LightArray m_lightArray2 [2];
+    /* 09B0 */ CM2LightArray m_lightArray3 [2];
+    /* 0D30 */ float m_glow;
 
     static CDataAllocator s_simpleModelFFXHeap;
     static int32_t s_metatable;

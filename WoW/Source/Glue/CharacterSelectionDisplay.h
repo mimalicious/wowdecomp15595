@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Tempest/C3Vector.h"
+#include "WoW/Source/Glue/CGlueMgr.h"
+#include "WoW/Source/Object/ObjectClient/AnimKitManager.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
 
 class CCharacterComponent;
@@ -12,15 +14,19 @@ class CM2Model;
 class CharacterSelectionDisplay {
     public:
     /* 0000 */ CHARACTER_INFO m_characterInfo;
-    /* 0188 */ CCharacterComponent* m_component;
-    /* 018C */ CM2Model* m_petModel;
-    /* 0190 */ float m_petAlpha;
+    /* 0190 */ CCharacterComponent* m_component;
     /* 0194 */ uint32_t unk_0194;
+    /* 0198 */ CAnimKitManager m_animKitManager;
+    /* 0288 */ CAnimKitInst* m_emoteKit;
+    /* 028C */ CM2Model* m_petModel;
+    /* 0290 */ float m_petAlpha;
+    /* 0294 */ CGlueMgr::WeaponLoadOut m_weaponLoadOut;
+    /* 029C */ uint32_t unk_029C;
 
     static void SetCharacterFacing(float rotation);
-    static int32_t SetSelectedCharacterInfo(CHARACTER_INFO* info);
 
     CharacterSelectionDisplay();
+    CharacterSelectionDisplay(const CharacterSelectionDisplay& source);
     ~CharacterSelectionDisplay();
 };
 
