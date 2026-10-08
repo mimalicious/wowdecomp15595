@@ -2982,13 +2982,17 @@ void Blizzard::Mopaq::SetSignatureErrorCallback(void (*callback)(const char* nam
     System_MPQGlobals::GetMopaqGlobals()->m_signatureErrorCallback = callback;
 }
 
-// OFFSET: %0x0075C230
+// OFFSET: 0x007F9B60/0x140509810
 bool Blizzard::Mopaq::SetFileSignature(const char* name, const Blizzard::Util::Digest<16>& md5) {
     Blizzard::Util::Digest<16> empty = System_SFile::s_emptyMd5;
     System_SFile::ARCHIVEREC* record = NULL;
     uint32_t blockIndex;
+    int32_t found = GetFileBlockEntry(NULL, name, empty, 0, NULL, &record, &blockIndex, NULL);
 
-    if (GetFileBlockEntry(NULL, name, empty, 0, NULL, &record, &blockIndex, NULL) != 1) {
+    if (found != 1) {
+        Blizzard::String::QuickFormat<1024> message("%s - GetFileBlockEntry returns %d", "Blizzard::Mopaq::SetFileSignature", found);
+        Blizzard::File::AddToLastErrorStack(0, message.m_buffer, 4);
+
         if (record) {
             record->RemoveInternalArchiveRef();
         }
@@ -3006,7 +3010,23 @@ bool Blizzard::Mopaq::SetFileSignature(const char* name, const Blizzard::Util::D
 
     bool result = System_SFile::s_signatures.AddEntry(name, md5);
 
-    if (result || (System_SFile::s_signatures.DelEntry(name) && (result = System_SFile::s_signatures.AddEntry(name, md5)))) {
+    if (!result) {
+        result = System_SFile::s_signatures.DelEntry(name);
+
+        if (!result) {
+            Blizzard::String::QuickFormat<1024> message("%s - DelEntry fails", "Blizzard::Mopaq::SetFileSignature");
+            Blizzard::File::AddToLastErrorStack(0, message.m_buffer, 4);
+        } else {
+            result = System_SFile::s_signatures.AddEntry(name, md5);
+
+            if (!result) {
+                Blizzard::String::QuickFormat<1024> message("%s - AddEntry fails", "Blizzard::Mopaq::SetFileSignature");
+                Blizzard::File::AddToLastErrorStack(0, message.m_buffer, 4);
+            }
+        }
+    }
+
+    if (result) {
         archive.m_archive->SetMD5Check(blockIndex, true);
     }
 

@@ -45,7 +45,7 @@ Blizzard::Util::Buffer<N, T>::~Buffer() {
     }
 }
 
-// OFFSET: [0x007B6410<4096, char>, 0x007B65E0<1024, char>, 0x007B66A0/0x1404ACB30<1, System_Mopaq::CacheData::CacheBlock>]
+// OFFSET: [0x007B6410<4096, char>, 0x007B65E0<1024, char>, 0x007B66A0/0x1404ACB30<1, System_Mopaq::CacheData::CacheBlock>, 0x007B64A0<16384, uint8_t>, 0x007FEB50<4194304, uint8_t>]
 template <uint32_t N, class T>
 void Blizzard::Util::Buffer<N, T>::Resize(uint32_t count) {
     if (count > N) {

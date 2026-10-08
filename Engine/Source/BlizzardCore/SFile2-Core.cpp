@@ -951,6 +951,7 @@ int32_t SFileClearBlockTableMD5s() {
     return 1;
 }
 
+// PROVEN: b32b47a1 IDENTICAL/UNPROVEN
 // OFFSET: 0x007A5CA0/0x14049AA90
 int32_t STORMAPI SFileSetFileBlockEntryMD5(const char* name, const MD5& md5) {
     Blizzard::Util::Digest<16> digest;

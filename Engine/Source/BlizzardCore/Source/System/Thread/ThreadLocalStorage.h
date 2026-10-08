@@ -54,7 +54,7 @@ void* Blizzard::Thread::LocalObject<T>::New(void* param) {
     return new T;
 }
 
-// OFFSET: [0x007E3990<System_SFile::RawReadInfo>, 0x007E3A00<std::string>, 0x007E3B80<System_File::FileError>, 0x007E4150<System_SComp::ZlibAllocBuffer>]
+// OFFSET: [0x007A6210<System_SFile2::SFileFatalInfo>, 0x007E3990<System_SFile::RawReadInfo>, 0x007E3A00<std::string>, 0x007E3B80<System_File::FileError>, 0x007E4150<System_SComp::ZlibAllocBuffer>]
 template <class T>
 Blizzard::Thread::LocalObject<T>::operator T&() {
     return *static_cast<T*>(RegisterLocalStorage(&this->m_slot, New, NULL, Delete));
