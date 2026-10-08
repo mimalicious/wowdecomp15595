@@ -27,7 +27,7 @@ bool CVar::s_archiveCodeRegisteredOnly;
 // STATIC: %0x00CE2A6C
 static TSHashTable<CVar, HASHKEY_STRI> s_registeredCVars;
 
-// OFFSET: %0x0061BFC0
+// OFFSET: 0x00654D80/0x1402F5A50
 static int32_t TryCreateDirectory(const char* path) {
     int32_t result = 1;
 
@@ -60,7 +60,7 @@ static int32_t TryCreateDirectory(const char* path) {
     return result;
 }
 
-// OFFSET: %0x0061D030
+// OFFSET: 0x00655A50/0x1402F6DF0
 static int32_t CvarListCommandHandler(const char* command, const char* arguments) {
     for (CVar* var = s_registeredCVars.m_fulllist.Head(); var; var = s_registeredCVars.m_fulllist.Next(var)) {
         if (var->m_flags & 0x40) {
@@ -88,7 +88,7 @@ static int32_t CvarListCommandHandler(const char* command, const char* arguments
     return 1;
 }
 
-// OFFSET: %0x0061D550
+// OFFSET: 0x00656010/0x1402F74F0
 static int32_t CvarCommandHandler(const char* command, const char* arguments) {
     CVar* var = CVar::Lookup(command);
 
@@ -134,7 +134,7 @@ static int32_t CvarCommandHandler(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: %0x0061D6D0
+// OFFSET: 0x00656190/0x1402F7670
 static int32_t CvarResetCommandHandler(const char* command, const char* arguments) {
     char name[64];
     SStrTokenize(&arguments, name, sizeof(name), " ,;\t\"\r\n", NULL);
@@ -160,7 +160,7 @@ static int32_t CvarResetCommandHandler(const char* command, const char* argument
     return 1;
 }
 
-// OFFSET: %0x0061D790
+// OFFSET: 0x00656260/0x1402F7760
 static int32_t CvarDefaultCommandHandler(const char* command, const char* arguments) {
     char name[64];
     SStrTokenize(&arguments, name, sizeof(name), " ,;\t\"\r\n", NULL);
@@ -226,7 +226,7 @@ static uint32_t VersionBuild(uint32_t version) {
     return version & 0xFFFF;
 }
 
-// OFFSET: %0x0061C090
+// OFFSET: 0x00654E60/0x1402F5B50
 int32_t CVar::Load(HOSFILE file, uint32_t version) {
     int32_t result = 1;
     bool active = true;
@@ -353,7 +353,7 @@ int32_t CVar::Load(const char* fileName, uint32_t version) {
     return result;
 }
 
-// OFFSET: %0x0061C610
+// OFFSET: 0x0060DAD0
 int32_t ConsoleLoadClientCVar(HOSFILE file) {
     return CVar::Load(file, 0);
 }
@@ -363,7 +363,7 @@ int32_t ConsoleLoadClientCVar(const char* fileName) {
     return CVar::Load(fileName, 0);
 }
 
-// OFFSET: %0x0061C3F0
+// OFFSET: 0x00655080/0x1402F5DE0
 int32_t CVar::Delete(const char* fileName) {
     const char* path = fileName;
     char buffer[260];
@@ -383,7 +383,7 @@ int32_t CVar::Delete(const char* fileName) {
     return 1;
 }
 
-// OFFSET: %0x0061C460
+// OFFSET: 0x006550F0/0x1402F5E60
 int32_t CVar::SaveCvar(const char* name, const char* value, void* arg) {
     char line[260];
     SStrPrintf(line, sizeof(line), "SET %s \"%s\"\n", name, value);
@@ -394,7 +394,7 @@ int32_t CVar::SaveCvar(const char* name, const char* value, void* arg) {
     return written != 0;
 }
 
-// OFFSET: %0x0061C4D0
+// OFFSET: 0x00655160/0x1402F5EF0
 int32_t CVar::LogCvar(const char* name, const char* value, void* arg) {
     char line[260];
     SStrPrintf(line, sizeof(line), "SET %s \"%s\"\n", name, value);
@@ -415,7 +415,7 @@ void CVar::SetReadOnly(bool readOnly) {
     }
 }
 
-// OFFSET: %0x0061C580
+// OFFSET: 0x00655320/0x1402F6140
 void CVarIntListWrapper::AddNextValue(uint32_t value) {
     this->m_state = 2;
 
@@ -426,7 +426,7 @@ void CVarIntListWrapper::AddNextValue(uint32_t value) {
     }
 }
 
-// OFFSET: %0x0061C650
+// OFFSET: 0x00655210/0x1402F5F90
 void CVar::InternalSet(const char* value, bool setValue, bool setReset, bool setDefault, bool setNeedsSave) {
     bool changed = false;
 
@@ -460,14 +460,14 @@ void CVar::InternalSet(const char* value, bool setValue, bool setReset, bool set
     }
 }
 
-// OFFSET: %0x0061C700
+// OFFSET: 0x006552C0/0x1402F6080
 bool CVarArrayWrapper::RawGetValue(uint32_t index) const {
     const char* str = this->m_cvar->m_stringValue.m_str;
 
     return *str && index < 2 * (3 * strlen(str) - 3) && (str[index / 6 + 1] & (1 << (index % 6))) != 0;
 }
 
-// OFFSET: %0x0061C760
+// OFFSET: 0x006553B0/0x1402F61D0
 bool CVar::Set(const char* value, bool setValue, bool setReset, bool setDefault, bool setNeedsSave) {
     bool postCallback = false;
     char* oldValue = NULL;
@@ -524,7 +524,7 @@ bool CVar::Set(int32_t value, bool setValue, bool setReset, bool setDefault, boo
     return this->Set(buffer, setValue, setReset, setDefault, setNeedsSave);
 }
 
-// OFFSET: %0x0061C8C0
+// OFFSET: 0x00655510/0x1402F63B0
 void CVar::Reset() {
     const char* value = this->m_resetValue.m_str;
 
@@ -547,7 +547,7 @@ void CVar::Reset() {
     this->InternalSet(value, true, false, false, true);
 }
 
-// OFFSET: %0x0061C950
+// OFFSET: 0x006555A0/0x1402F6470
 void CVar::Default() {
     const char* value = this->m_defaultValue.m_str;
 
@@ -570,7 +570,7 @@ void CVar::Default() {
     this->InternalSet(value, true, false, false, true);
 }
 
-// OFFSET: %0x0061C9E0
+// OFFSET: 0x00655630/0x1402F6530
 bool CVar::Update() {
     if (!(this->m_flags & 0x2) || !this->m_latchedValue.m_str) {
         return false;
@@ -582,7 +582,7 @@ bool CVar::Update() {
     return true;
 }
 
-// OFFSET: %0x0061CA50
+// OFFSET: 0x006556A0/0x1402F65D0
 void CVarArrayWrapper::UpdateFromVersion(int32_t version) {
     if (version != 1) {
         return;
@@ -633,7 +633,7 @@ void CVarArrayWrapper::UpdateFromVersion(int32_t version) {
     cvar->Set(buffer, true, false, false, true);
 }
 
-// OFFSET: %0x0061CB20
+// OFFSET: 0x00655770
 bool CVarArrayWrapper::RawSetValue(uint32_t index, bool value) {
     const char* str = this->m_cvar->m_stringValue.m_str;
     size_t length = strlen(str);
@@ -681,7 +681,7 @@ bool CVarArrayWrapper::RawSetValue(uint32_t index, bool value) {
     return true;
 }
 
-// OFFSET: %0x0061CC60
+// OFFSET: 0x006559D0
 CVar::CVar() {
 }
 
@@ -711,7 +711,7 @@ void CVarIntListWrapper::UpdateFromVersion(int32_t version) {
     this->WriteVersionTag();
 }
 
-// OFFSET: %0x0061CD70
+// OFFSET: 0x00655940/0x1402F6CA0
 uint32_t CVarIntListWrapper::GetNextValue() {
     if (this->m_pos == 2) {
         uint8_t version = 0;
@@ -739,7 +739,7 @@ uint32_t CVarIntListWrapper::GetNextValue() {
     return 93 * (93 * (str[0] - 35) + str[1] - 35) + str[2] - 35;
 }
 
-// OFFSET: %0x0061CE30
+// OFFSET: 0x00655C30/0x1402F7000
 int32_t CVar::IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_t (*callback)(const char* name, const char* value, void* arg), void* arg) {
     for (CVar* var = s_registeredCVars.m_fulllist.Head(); var; var = s_registeredCVars.m_fulllist.Next(var)) {
         if (!(var->m_flags & 0x1) || (var->m_flags & 0x80) || (var->m_flags & 0x30) != category || (var->m_flags & excludeFlags)) {
@@ -774,7 +774,7 @@ int32_t CVar::SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags) {
     return CVar::IterateForArchive(category, excludeFlags, CVar::SaveCvar, file);
 }
 
-// OFFSET: %0x0061CF10
+// OFFSET: 0x00655D20/0x1402F7130
 int32_t CVar::SaveAll() {
     if (!CVar::m_needsSave) {
         return 1;
@@ -846,12 +846,12 @@ void CVar::Destroy() {
     CVar::s_configFile = NULL;
 }
 
-// OFFSET: %0x0061D300
+// OFFSET: 0x00655E50/0x1402F72C0
 CVar* CVar::Lookup(const char* name) {
     return name ? s_registeredCVars.Ptr(name) : NULL;
 }
 
-// OFFSET: %0x0061D320
+// OFFSET: 0x00655E70/0x1402F72E0
 CVar* CVar::LookupRegistered(const char* name) {
     if (!name) {
         return NULL;
@@ -870,7 +870,7 @@ CVar* CVar::LookupRegistered(const char* name) {
     return var;
 }
 
-// OFFSET: %0x0061DF70
+// OFFSET: 0x00656BF0
 CVar* CVar::Register(const char* name, const char* help, uint32_t flags, const char* value, bool (*callback)(CVar*, const char*, const char*, void*), uint32_t category, bool setCommand, void* arg, bool unk) {
     if (!name || !*name || !value) {
         return NULL;
@@ -934,12 +934,12 @@ CVar* CVar::Register(const char* name, const char* help, uint32_t flags, const c
         var->m_flags |= 0x80;
     }
 
-    ConsoleCommandRegister(var->m_key.m_str, CvarCommandHandler, static_cast<CATEGORY>(category), help);
+    ConsoleCommandRegister(var->m_key.m_str, CvarCommandHandler, static_cast<CATEGORY>(category), help, NULL);
 
     return var;
 }
 
-// OFFSET: %0x0061E290
+// OFFSET: 0x00656E90/0x1402F89C0
 void CVar::Initialize() {
     CVar::m_initialized = true;
 
@@ -948,10 +948,10 @@ void CVar::Initialize() {
     SStrPack(path, "WTF\\", sizeof(path));
     TryCreateDirectory(path);
 
-    ConsoleCommandRegister("set", SetCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar");
-    ConsoleCommandRegister("cvar_reset", CvarResetCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar to it's startup value");
-    ConsoleCommandRegister("cvar_default", CvarDefaultCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar to it's coded default value");
-    ConsoleCommandRegister("cvarlist", CvarListCommandHandler, CATEGORY_DEFAULT, "List cvars");
+    ConsoleCommandRegister("set", SetCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar", NULL);
+    ConsoleCommandRegister("cvar_reset", CvarResetCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar to it's startup value", NULL);
+    ConsoleCommandRegister("cvar_default", CvarDefaultCommandHandler, CATEGORY_DEFAULT, "Set the value of a CVar to it's coded default value", NULL);
+    ConsoleCommandRegister("cvarlist", CvarListCommandHandler, CATEGORY_DEFAULT, "List cvars", NULL);
 }
 
 // OFFSET: %0x0061E360

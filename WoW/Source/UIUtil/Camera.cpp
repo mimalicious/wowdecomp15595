@@ -325,7 +325,7 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
     this->InitializeView();
     this->SetTarget(NULL, 0);
 
-    ConsoleCommandRegister("pitchLimit", CGCamera::CCommand_PitchLimit, CATEGORY_GAME, NULL);
+    ConsoleCommandRegister("pitchLimit", CGCamera::CCommand_PitchLimit, CATEGORY_GAME, NULL, NULL);
 
     this->m_state |= 0x50;
     this->m_prevViewIndex = 2;

@@ -1706,7 +1706,7 @@ bool InitializeGlobal() {
     CVar* timingTestError = CVar::Register("timingTestError", "Error reported by the timing validation system", 6, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
     CVar* timingMethod = CVar::Register("timingMethod", "Desired method for game timing", 2, "0", TimingMethodCallback, CATEGORY_DEFAULT, false, timingTestError, false);
     OsTimeStartup(static_cast<OsTimeManager::TimingMethod>(timingMethod->m_intValue));
-    ConsoleCommandRegister("timingInfo", CCommand_TimingInfo, CATEGORY_DEBUG, NULL);
+    ConsoleCommandRegister("timingInfo", CCommand_TimingInfo, CATEGORY_DEBUG, NULL, NULL);
 
     s_timeTestError = OsTimeGetTestError();
 
@@ -1749,7 +1749,7 @@ void BeginCloseGame() {
     }
 
     CVar::Destroy();
-    ConsoleCommandDestroy();
+    ConsoleDestroyClientCommand();
     BaseDestroyGlobal();
     CloseAllArchives();
     ShutdownStreamingIfTrial();
@@ -1829,13 +1829,13 @@ void GameClientCommands::Uninstall() {
 
 // OFFSET: #0x00407870
 void GameClientCommands::Install() {
-    ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL);
-    ConsoleCommandRegister("charmport", CCommand_CharmTeleport, CATEGORY_DEBUG, NULL);
-    ConsoleCommandRegister("worldport", CCommand_WorldTeleport, CATEGORY_DEBUG, NULL);
-    ConsoleCommandRegister("setrawpos", CCommand_SetRawPos, CATEGORY_DEBUG, NULL);
-    ConsoleCommandRegister("showplayer", CCommand_TogglePlayer, CATEGORY_GRAPHICS, NULL);
-    ConsoleCommandRegister("togglehelm", CCommand_ToggleHelm, CATEGORY_GAME, NULL);
-    ConsoleCommandRegister("togglecloak", CCommand_ToggleCloak, CATEGORY_GAME, NULL);
+    ConsoleCommandRegister("port", CCommand_Teleport, CATEGORY_DEBUG, NULL, NULL);
+    ConsoleCommandRegister("charmport", CCommand_CharmTeleport, CATEGORY_DEBUG, NULL, NULL);
+    ConsoleCommandRegister("worldport", CCommand_WorldTeleport, CATEGORY_DEBUG, NULL, NULL);
+    ConsoleCommandRegister("setrawpos", CCommand_SetRawPos, CATEGORY_DEBUG, NULL, NULL);
+    ConsoleCommandRegister("showplayer", CCommand_TogglePlayer, CATEGORY_GRAPHICS, NULL, NULL);
+    ConsoleCommandRegister("togglehelm", CCommand_ToggleHelm, CATEGORY_GAME, NULL, NULL);
+    ConsoleCommandRegister("togglecloak", CCommand_ToggleCloak, CATEGORY_GAME, NULL, NULL);
 }
 
 // OFFSET: #0x00401480

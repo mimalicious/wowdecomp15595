@@ -311,7 +311,7 @@ void ConsoleDeviceInitialize(const char* title, bool a2, bool a3) {
 
     ConsoleDetectSetDefaultsFormat(s_defaults, s_hardware);
     RegisterGxCVars();
-    ConsoleCommandRegister("gxRestart", CCGxRestart, CATEGORY_GRAPHICS, NULL);
+    ConsoleCommandRegister("gxRestart", CCGxRestart, CATEGORY_GRAPHICS, NULL, NULL);
 
     GxAdapterMonitorModes(s_requestedFormat.m_monitor, s_gxMonitorModes);
     ValidateFormatMonitor(s_fallbackFormat);

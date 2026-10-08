@@ -818,7 +818,7 @@ void ClntObjMgrInitializeShared() {
     }
 
     MirrorInitialize();
-    ConsoleCommandRegister("ObjUsage", CCommand_ObjUsage, CATEGORY_GAME, NULL);
+    ConsoleCommandRegister("ObjUsage", CCommand_ObjUsage, CATEGORY_GAME, NULL, NULL);
 }
 
 // OFFSET: #0x004D5150

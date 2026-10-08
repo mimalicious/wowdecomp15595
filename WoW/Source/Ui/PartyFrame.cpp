@@ -553,7 +553,7 @@ void CGPartyInfo::InitializeGame() {
 
     ClientServices::SetMessageHandler(SMSG_INSTANCE_SAVE_CREATED, Packet_SMSG_INSTANCE_SAVE_CREATED, NULL);
     ClientServices::SetMessageHandler(SMSG_CHANGE_PLAYER_DIFFICULTY_RESULT, Packet_SMSG_PLAYER_DIFFICULTY_CHANGE, NULL);
-    ConsoleCommandRegister("changePlayerDifficulty", CCommand_SetDifficulty, CATEGORY_DEFAULT, NULL);
+    ConsoleCommandRegister("changePlayerDifficulty", CCommand_SetDifficulty, CATEGORY_DEFAULT, NULL, NULL);
 }
 
 // OFFSET: #0x0052C860

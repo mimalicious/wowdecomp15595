@@ -655,8 +655,8 @@ bool LocaleCallback(CVar* var, const char* oldValue, const char* value, void* ar
 
 // OFFSET: #0x00401B60
 void ClientRegisterConsoleCommands() {
-    ConsoleCommandRegister("reloadUI", CCommand_ReloadUI, CATEGORY_GRAPHICS, NULL);
-    ConsoleCommandRegister("perf", CCommand_Perf, CATEGORY_DEBUG, NULL);
+    ConsoleCommandRegister("reloadUI", CCommand_ReloadUI, CATEGORY_GRAPHICS, NULL, NULL);
+    ConsoleCommandRegister("perf", CCommand_Perf, CATEGORY_DEBUG, NULL, NULL);
 
     g_accountNameVar = CVar::Register("accountName", "Saved account name", 0x40, "", NULL, CATEGORY_GAME, false, NULL, false);
     g_accountListVar = CVar::Register("accountList", "List of wow accounts for saved Blizzard account", 0, "", NULL, CATEGORY_GAME, false, NULL, false);

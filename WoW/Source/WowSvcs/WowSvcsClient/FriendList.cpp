@@ -130,7 +130,7 @@ void FriendList::Initialize() {
     ClientServices::SetMessageHandler(SMSG_RWHOIS, Packet_SMSG_RWHOIS, NULL);
     ClientServices::SetMessageHandler(SMSG_CONTACT_LIST, Packet_SMSG_CONTACT_LIST, NULL);
     ClientServices::SetMessageHandler(SMSG_FRIEND_STATUS, Packet_SMSG_FRIEND_STATUS, NULL);
-    ConsoleCommandRegister("whois", CCommand_Whois, CATEGORY_DEBUG, "Ask the server to do an account/real name lookup on a character name");
+    ConsoleCommandRegister("whois", CCommand_Whois, CATEGORY_DEBUG, "Ask the server to do an account/real name lookup on a character name", NULL);
 
     for (int32_t i = 0; i < 7; i++) {
         FriendList::s_whoSort[i].m_field = i;

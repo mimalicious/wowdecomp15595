@@ -1249,7 +1249,7 @@ CSimpleTop::CSimpleTop() {
     this->m_actionBlockedCallback = NULL;
 
     CSimpleTop::s_instance = this;
-    ConsoleCommandRegister("colorblindShader", ConsoleCommand_ColorblindShader, CATEGORY_DEBUG, NULL);
+    ConsoleCommandRegister("colorblindShader", ConsoleCommand_ColorblindShader, CATEGORY_DEBUG, NULL, NULL);
     CSimpleTop::s_colorShiftEffect = new (__FILE__, __LINE__) EffectColorShift();
     CSimpleTop::SetColorblindShader();
     ScrnLayerCreate(NULL, 1.0f, 4, NULL, &PaintScreen, &this->m_screenLayer);

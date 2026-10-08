@@ -653,7 +653,7 @@ void ClientServices::Initialize() {
     }
 
     ClientServices::s_currentConnection = g_clientConnection;
-    ConsoleCommandRegister("logout", ConsoleCommand_Logout, CATEGORY_DEFAULT, NULL);
+    ConsoleCommandRegister("logout", ConsoleCommand_Logout, CATEGORY_DEFAULT, NULL, NULL);
 }
 
 // OFFSET: #0x006B22A0

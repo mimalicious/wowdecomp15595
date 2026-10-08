@@ -111,6 +111,9 @@ static int32_t s_completionMode;
 // STATIC: #0x00CA1984
 static const char* s_completedCmd;
 
+// STATIC: 0x00DD87F8
+static int32_t s_completionIndex;
+
 // STATIC: #0x00CA198C
 HTEXTFONT s_textFont;
 
@@ -1027,19 +1030,28 @@ static int32_t OnKeyDown(const void* data, void* param) {
             Backspace(line);
             break;
 
-        case KEY_TAB:
-            if (!s_completionMode) {
-                s_completedCmd = NULL;
-                s_completionMode = 1;
-                SStrCopy(s_partial, reinterpret_cast<const char*>(line->m_buffer) + line->m_inputstart, STORM_MAX_STR);
+        case KEY_TAB: {
+            if (key->m_metaKeyState & 0xC) {
+                ConsoleCommandPrintAllMatching(reinterpret_cast<const char*>(line->m_buffer) + line->m_inputstart, true);
+                break;
             }
 
-            if (ConsoleCommandComplete(s_partial, &s_completedCmd, (key->m_metaKeyState & 3) != 0)) {
-                MakeCommandCurrent(line, s_completedCmd);
+            if (!s_completionMode) {
+                s_completedCmd = NULL;
+                s_completionIndex = -1;
+                s_completionMode = 1;
+                SStrCopy(s_partial, reinterpret_cast<const char*>(line->m_buffer) + line->m_inputstart, sizeof(s_partial));
+            }
+
+            char completed[1024];
+
+            if (ConsoleCommandComplete(s_partial, &s_completedCmd, &s_completionIndex, (key->m_metaKeyState & 3) != 0, completed)) {
+                MakeCommandCurrent(line, completed);
             }
 
             SetInputString(reinterpret_cast<const char*>(line->m_buffer));
             break;
+        }
 
         case KEY_LEFT:
             if (line->m_inputpos > line->m_inputstart) {
@@ -1236,7 +1248,7 @@ void ConsoleScreenInitialize(const char* title) {
     RegisterHandlers();
 
     for (uint32_t i = 0; i < sizeof(s_consoleCommandNames) / sizeof(s_consoleCommandNames[0]); i++) {
-        ConsoleCommandRegister(s_consoleCommandNames[i], s_consoleCommandHandlers[i], CATEGORY_CONSOLE, s_consoleCommandHelp[i]);
+        ConsoleCommandRegister(s_consoleCommandNames[i], s_consoleCommandHandlers[i], CATEGORY_CONSOLE, s_consoleCommandHelp[i], NULL);
     }
 
     EventSetConfirmCloseCallback(EventCloseCallback, NULL);
