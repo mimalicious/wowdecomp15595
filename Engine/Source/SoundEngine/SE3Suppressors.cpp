@@ -4,7 +4,7 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DB/Rec/SoundEntriesAdvancedRec.h"
 
-// STATIC: %0x00C05BA8
+// STATIC: 0x00D0055C
 static TSList<SuppressorSound, TSGetLink<SuppressorSound> > s_suppressors;
 
 // PROVEN: 1e007cf1 IDENTICAL/DIFFERENT

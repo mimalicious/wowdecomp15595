@@ -6,55 +6,55 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: %0x00D0DE38
+// STATIC: 0x00E4E4E0
 static HASHKEY_NONE s_chatLookupKey;
 
-// STATIC: %0x00D0DE40
+// STATIC: 0x00E4E4E8
 static FMOD_CREATESOUNDEXINFO s_captureExInfo;
 
-// STATIC: %0x00D0DEB0
+// STATIC: 0x00E4E558
 static char s_chatInputDeviceName[256];
 
-// STATIC: %0x00D0DFB0
+// STATIC: 0x00E4E658
 static char s_chatOutputDeviceName[256];
 
-// STATIC: %0x00D0E0B0
+// STATIC: 0x00E4E758
 int32_t SE3::sm_bCaptureInitialized;
 
-// STATIC: %0x00D0E0B4
+// STATIC: 0x00E4E75C/0x140D37A58
 static SE3CaptureCallbacks* s_primaryCaptureCallbacks;
 
-// STATIC: %0x00D0E0B8
+// STATIC: 0x00E4E760/0x140D37A60
 static SE3CaptureCallbacks* s_alternateCaptureCallbacks;
 
-// STATIC: %0x00D0E0BC
+// STATIC: 0x00E4E764/0x140D37A68
 static SE3CaptureCallbacks* s_captureCallbacks;
 
-// STATIC: %0x00D0E0C0
+// STATIC: 0x00E4E768/0x140D37A54
 static uint32_t s_captureLength;
 
-// STATIC: %0x00D0E0C4
+// STATIC: 0x00E4E76C/0x140D37A70
 static uint32_t s_captureChannels;
 
-// STATIC: %0x00D0E0C8
+// STATIC: 0x00E4E770/0x140D37A74
 static uint32_t s_captureLastPosition;
 
-// STATIC: %0x00D0E0CC
+// STATIC: 0x00E4E774/0x140D37A78
 static int32_t s_capturing;
 
-// STATIC: %0x00D0E0D0
+// STATIC: 0x00E4E778/0x140D37A80
 static FMOD::DSP* s_monitorDSP;
 
-// STATIC: %0x00D0E0D4
+// STATIC: 0x00E4E77C/0x140D37A88
 static void (*s_userMonitorDSPCallback)(float*, uint32_t);
 
-// STATIC: %0x00D0E0DC
+// STATIC: 0x00E4E784
 TSHashTable<SE3ChatSound, HASHKEY_NONE> SE3::sm_ChatSoundObjectTable;
 
-// STATIC: %0x00D0E108
+// STATIC: 0x00E4E7B0/0x140D37A98
 static SCritSect s_heartBeatCritSect;
 
-// STATIC: %0x00D0E130
+// STATIC: 0x00E4E7D8
 char SE3::sm_sSystemDefaultName[64];
 
 // OFFSET: 0x00712450

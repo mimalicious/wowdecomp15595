@@ -272,7 +272,7 @@ bool SI2ZoneSoundPair::IsPlaying() {
 
 // OFFSET: #0x004C5D20
 void SI2ZoneSoundPair::SetFinishedCallback(void (*callback)(SE3SoundKitObject*)) {
-    SE3::SetPlayFinishedCallback(this->m_sounds[this->m_current].m_object.m_handle, callback);
+    SE3::SetPlayFinishedCallback(this->m_sounds[this->m_current].m_object.m_handle, callback, NULL);
 }
 
 // OFFSET: #0x004C5DC0

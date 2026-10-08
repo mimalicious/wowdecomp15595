@@ -23,220 +23,220 @@
 #include "WoW/Source/DB/Rec/SoundEntriesFallbacksRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesRec.h"
 
-// STATIC: %0x00C05560
+// STATIC: 0x00CFFEB4
 static int32_t s_millisecondsPerDay = 86400000;
 
-// STATIC: %0x00C05564
+// STATIC: 0x00CFFEB8
 FMOD_OUTPUTTYPE SE3::sm_eGameSystemOutputType = FMOD_OUTPUTTYPE_NOSOUND;
 
-// STATIC: %0x00C05568
+// STATIC: 0x00CFFEBC
 float SE3::sm_fFocusScalar = 1.0f;
 
-// STATIC: %0x00C0556C
+// STATIC: 0x00CFFEC0
 uint32_t SE3::sm_uNextUniqueID = 2;
 
-// STATIC: %0x00C05570
+// STATIC: 0x00CFFEC4
 static uint32_t s_uNextEmitterHandle = 1;
 
-// STATIC: %0x00C05574
+// STATIC: 0x00CFFEC8
 static int32_t s_bListenerChunkDirty = 1;
 
-// STATIC: %0x00C05578
+// STATIC: 0x00CFFECC
 static int32_t s_bEmitterManagerShutDown = 1;
 
-// STATIC: %0x00C05634
+// STATIC: 0x00CFFF88
 static float s_speakerMixFront = 0.6f;
 
-// STATIC: %0x00C05638
+// STATIC: 0x00CFFF8C
 static float s_speakerMixCenter = 0.001f;
 
-// STATIC: %0x00C0563C
+// STATIC: 0x00CFFF90
 static float s_speakerMixBack = 0.2f;
 
-// STATIC: %0x00C05640
+// STATIC: 0x00CFFF94
 static float s_speakerMixSide = 0.001f;
 
-// STATIC: %0x00D0D7A0
+// STATIC: 0x00E4DE30
 static uint32_t* s_soundChunkList;
 
-// STATIC: %0x00D0D7A4
+// STATIC: 0x00E4DE34
 static int32_t sm_SoundKitDefs_ClosestAsyncObjectSortVal;
 
-// STATIC: %0x00D0D7A8
+// STATIC: 0x00E4DE38
 static char s_gameOutputDeviceName[256];
 
-// STATIC: %0x00D0D8A8
+// STATIC: 0x00E4DF38
 static CAsyncObject* sm_SoundKitDefs_ClosestAsyncObject;
 
-// STATIC: %0x00D0D8AC
+// STATIC: 0x00E4DF3C
 static HASHKEY_NONE s_lookupKey;
 
-// STATIC: %0x00D0D8B0
+// STATIC: 0x00E4DF40
 int32_t SE3::sm_bShuttingDown;
 
-// STATIC: %0x00D0D8B4
+// STATIC: 0x00E4DF44/0x140D37230
 FMOD::Sound* SE3::sm_pCaptureSound;
 
-// STATIC: %0x00D0D8B8
+// STATIC: 0x00E4DF48/0x140D37238
 FMOD::System* SE3::sm_pGameSystem;
 
-// STATIC: %0x00D0D8BC
+// STATIC: 0x00E4DF4C/0x140D37240
 FMOD::System* SE3::sm_pChatSystem;
 
-// STATIC: %0x00D0D8C0
+// STATIC: 0x00E4DF50
 static int32_t s_dayProgression;
 
-// STATIC: %0x00D0D8C4
+// STATIC: 0x00E4DF54
 static void (*sm_fpFilenameTranslateCallback)(const char**);
 
-// STATIC: %0x00D0D8C8
+// STATIC: 0x00E4DF58
 static void* sm_fpStatTrackerUpdate;
 
-// STATIC: %0x00D0D8CC
+// STATIC: 0x00E4DF5C
 static int32_t (*sm_fpGetDayProgression)();
 
-// STATIC: %0x00D0D8D4
+// STATIC: 0x00E4DF64
 static void (*s_deviceChangeCallback)();
 
-// STATIC: %0x00D0D8D8
+// STATIC: 0x00E4DF68
 static uint32_t s_chunkSize;
 
-// STATIC: %0x00D0D8DC
+// STATIC: 0x00E4DF6C
 static uint32_t s_chunkRadius;
 
-// STATIC: %0x00D0D8E0
+// STATIC: 0x00E4DF70
 static uint32_t s_listenerChunkX;
 
-// STATIC: %0x00D0D8E4
+// STATIC: 0x00E4DF74
 static uint32_t s_listenerChunkY;
 
-// STATIC: %0x00D0D8E8
+// STATIC: 0x00E4DF78
 static void (*_fpEmitterManagerPosToSoundChunkCoordsCallback)(const C3Vector&, uint32_t*, uint32_t*);
 
-// STATIC: %0x00D0D8EC
+// STATIC: 0x00E4DF7C
 static C3Vector s_listenerPosition;
 
-// STATIC: %0x00D0D900
+// STATIC: 0x00E4DF90
 TSGrowableArray<SE3DriverInfo> SE3::sm_aCachedGameSoundOutputDriverInfo;
 
-// STATIC: %0x00D0D910
+// STATIC: 0x00E4DFA0
 TSGrowableArray<SE3DriverInfo> SE3::sm_aCachedChatSoundInputDriverInfo;
 
-// STATIC: %0x00D0D920
+// STATIC: 0x00E4DFB0
 TSGrowableArray<SE3DriverInfo> SE3::sm_aCachedChatSoundOutputDriverInfo;
 
-// STATIC: %0x00D0D930
+// STATIC: 0x00E4DFC0
 static CDataAllocator s_CombinableSoundKitPositionPool(sizeof(SE3CombinableSoundKitPosition), 32);
 
-// STATIC: %0x00D0D944
+// STATIC: 0x00E4DFD4
 SCritSect SE3::sm_DoneLoading_MessageQueue_CritSect;
 
-// STATIC: %0x00C0558C
+// STATIC: 0x00CFFEE0
 TSList<SE3DoneLoadingMessage, TSGetLink<SE3DoneLoadingMessage> > SE3::sm_DoneLoading_MessageQueue;
 
-// STATIC: %0x00D0D96C
+// STATIC: 0x00E4DFFC
 static SCritSect sm_MemorySoundEnded_MessageQueue_CritSect;
 
-// STATIC: %0x00D0D994
+// STATIC: 0x00E4E024
 static SCritSect sm_SoundEnded_MessageQueue_CritSect;
 
-// STATIC: %0x00C05598
+// STATIC: 0x00CFFEEC
 static TSList<SE3MemorySoundEndedMessage, TSGetLink<SE3MemorySoundEndedMessage> > sm_MemorySoundEnded_MessageQueue;
 
-// STATIC: %0x00C055A4
+// STATIC: 0x00CFFEF8
 static TSList<SE3SoundEndedMessage, TSGetLink<SE3SoundEndedMessage> > sm_SoundEnded_MessageQueue;
 
-// STATIC: %0x00D0D9BC
+// STATIC: 0x00E4E04C
 static CDataAllocator s_MemorySoundEnded_MessagePool(sizeof(SE3MemorySoundEndedMessage), 32);
 
-// STATIC: %0x00D0D9D0
+// STATIC: 0x00E4E060
 static CDataAllocator s_SoundEnded_MessagePool(sizeof(SE3SoundEndedMessage), 32);
 
-// STATIC: %0x00D0D9E4
+// STATIC: 0x00E4E074
 static CDataAllocator s_DoneLoading_MessagePool(sizeof(SE3DoneLoadingMessage), 32);
 
-// STATIC: %0x00D0D9F8
+// STATIC: 0x00E4E088
 static TSHashTableReuse<SE3COMBINABLESOUNDLIST, HASHKEY_NONE> sm_CombinableSoundsTable;
 
-// STATIC: %0x00D0DA30
+// STATIC: 0x00E4E0C0
 TSHashTable<SE3SOUNDKITOBJECT_LOOKUP, HASHKEY_NONE> SE3::sm_SoundKitObjectTable;
 
-// STATIC: %0x00C055B0
+// STATIC: 0x00CFFF04
 static TSExplicitList<SE3SoundKitObject, offsetof(SE3SoundKitObject, m_loadingLink)> sm_SoundKitObjects_Loading;
 
-// STATIC: %0x00C055BC
+// STATIC: 0x00CFFF10
 static TSExplicitList<SE3SoundKitObject, offsetof(SE3SoundKitObject, m_goGoGoLink)> sm_SoundKitObjects_GoGoGo;
 
-// STATIC: %0x00C055C8
+// STATIC: 0x00CFFF1C
 TSList<SE3SoundKitObject, TSGetLink<SE3SoundKitObject> > SE3::sm_SoundKitObjects;
 
-// STATIC: %0x00C055D4
+// STATIC: 0x00CFFF28
 static TSExplicitList<SE3SoundKitObject, offsetof(SE3SoundKitObject, m_deleteLink)> sm_SoundKitObjects_DeleteList;
 
-// STATIC: %0x00C055E0
+// STATIC: 0x00CFFF34
 static TSExplicitList<SE3SoundKitObject, offsetof(SE3SoundKitObject, m_fadeLink)> sm_SoundKitObjects_FadeList;
 
-// STATIC: %0x00C055EC
+// STATIC: 0x00CFFF40
 static TSExplicitList<SE3SoundKitObject, offsetof(SE3SoundKitObject, m_downloadLink)> sm_SoundKitObjects_WaitingForDownloadList;
 
-// STATIC: %0x00D0DA5C
+// STATIC: 0x00E4E0EC
 static TSGrowableArray<SE3SoundKitDef*> sm_SoundKitDefArray;
 
-// STATIC: %0x00D0DA6C
+// STATIC: 0x00E4E0FC
 static TSHashTable<SOUNDKITLOOKUP, HASHKEY_CONSTSTRI> s_soundKitLookup;
 
-// STATIC: %0x00D0DA98
+// STATIC: 0x00E4E128
 static TSHashTable<SE3SoundChunk, HASHKEY_NONE> s_soundChunkTable;
 
-// STATIC: %0x00D0DAC4
+// STATIC: 0x00E4E154
 static TSHashTable<SE3SoundEmitterLookup, HASHKEY_NONE> s_soundEmitterTable;
 
-// STATIC: %0x00D0DAF0
+// STATIC: 0x00E4E180
 static SCritSect s_emitterManagerCritSect;
 
-// STATIC: %0x00D0DB18
+// STATIC: 0x00E4E1A8
 static SCritSect s_createEmitterMessagesCritSect;
 
-// STATIC: %0x00D0DB40
+// STATIC: 0x00E4E1D0
 static SCritSect s_set3DPositionMessagesCritSect;
 
-// STATIC: %0x00D0DB68
+// STATIC: 0x00E4E1F8
 static SCritSect s_destroyEmitterMessagesCritSect;
 
-// STATIC: %0x00D0DB90
+// STATIC: 0x00E4E220
 static SCritSect s_markSoundChunkDirtyMessagesCritSect;
 
-// STATIC: %0x00C055F8
+// STATIC: 0x00CFFF4C
 static TSList<SE3CreateSoundEmitterMessage, TSGetLink<SE3CreateSoundEmitterMessage> > s_createEmitterMessages;
 
-// STATIC: %0x00C05604
+// STATIC: 0x00CFFF58
 static TSList<SE3Set3DPositionMessage, TSGetLink<SE3Set3DPositionMessage> > s_set3DPositionMessages;
 
-// STATIC: %0x00C05610
+// STATIC: 0x00CFFF64
 static TSList<SE3DestroySoundEmitterMessage, TSGetLink<SE3DestroySoundEmitterMessage> > s_destroyEmitterMessages;
 
-// STATIC: %0x00C0561C
+// STATIC: 0x00CFFF70
 static TSList<SE3MarkSoundChunkDirtyMessage, TSGetLink<SE3MarkSoundChunkDirtyMessage> > s_markSoundChunkDirtyMessages;
 
-// STATIC: %0x00D0DBB8
+// STATIC: 0x00E4E248
 static CDataAllocator s_createEmitterMessagePool(sizeof(SE3CreateSoundEmitterMessage), 32);
 
-// STATIC: %0x00D0DBCC
+// STATIC: 0x00E4E25C
 static CDataAllocator s_set3DPositionMessagePool(sizeof(SE3Set3DPositionMessage), 32);
 
-// STATIC: %0x00D0DBE0
+// STATIC: 0x00E4E270
 static CDataAllocator s_destroyEmitterMessagePool(sizeof(SE3DestroySoundEmitterMessage), 32);
 
-// STATIC: %0x00D0DBF4
+// STATIC: 0x00E4E284
 static CDataAllocator s_markSoundChunkDirtyMessagePool(sizeof(SE3MarkSoundChunkDirtyMessage), 32);
 
-// STATIC: %0x00C05628
+// STATIC: 0x00CFFF7C
 static TSExplicitList<SE3SoundChunk, offsetof(SE3SoundChunk, m_dirtyLink)> s_dirtySoundChunks;
 
-// STATIC: %0x00D0DC08
+// STATIC: 0x00E4E2A0
 static float s_speakerMixLFE;
 
-// STATIC: %0x00D0DC28
+// STATIC: 0x00E4E2B8
 SE3SoundBus SE3::sm_aSoundBus[SE3BUS_LAST];
 
 // PROVEN: 1e5dc8b5 IDENTICAL/NONE
@@ -419,6 +419,7 @@ void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callbac
     }
 }
 
+// PROVEN: 92cdefe8 IDENTICAL/NONE
 // OFFSET: 0x007059B0
 void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel* channel) {
     if (!sko || !channel) {
@@ -739,6 +740,7 @@ static void StreamingCallback(void* param) {
     AsyncFileReadLinkToPriority(static_cast<CAsyncObject*>(param), 1);
 }
 
+// PROVEN: d6ad7797 IDENTICAL/NONE
 // OFFSET: 0x007060E0/0x1403D3560
 void SE3::StreamingUpdate() {
     if (sm_SoundKitDefs_ClosestAsyncObject) {
@@ -1047,6 +1049,36 @@ int32_t SE3::IsLooping_ByDef(int32_t soundKitID) {
     return 0;
 }
 
+// OFFSET: 0x00706940
+int32_t SE3::PreloadSoundKit(int32_t soundKitID, int32_t wait) {
+    SE3SoundKitDef* def = SE3::GetSoundKitDef(soundKitID);
+
+    if (!def) {
+        return SE3_ERR_INVALID_KIT;
+    }
+
+    for (int32_t i = 0; i < def->m_nNumFiles; i++) {
+        char path[260];
+        def->BuildPath(path, sizeof(path), i);
+
+        if (OsPathCheckExtension(path, "wav")) {
+            OsPathReplaceExtension(path, sizeof(path), path, "ogg");
+        }
+
+        CAsyncObject* object = NULL;
+
+        if (!AsyncFileReadCreateObject(path, 5, 1, 0, &object, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0)) {
+            return SE3_ERR_FILE;
+        }
+
+        if (object && wait) {
+            AsyncFileReadWait(object);
+        }
+    }
+
+    return SE3_OK;
+}
+
 // OFFSET: 0x007068F0/0x1403D3F80
 int32_t SE3::IsLoopingOrPeriodic_ByDef(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count())) {
@@ -1312,7 +1344,7 @@ static void OutWithTheOldInWithTheNew(SE3SoundKitObject* sko, uint32_t waveDataI
     sko->m_channels[0].m_waveDataID = waveDataID;
 }
 
-// OFFSET: %0x0066EA30
+// OFFSET: 0x00706AE0
 int32_t SE3::ShouldSoundPlay(SE3SoundKitDef* def, SE3SoundKitProperties* properties, const C3Vector* position) {
     if (def && (def->m_pSoundKitRec->m_flags & 0x2000) && properties->m_conditionArg && properties->m_fpCondition && !properties->m_fpCondition(properties->m_conditionArg)) {
         return SE3_ERR_CONDITION;
@@ -1331,25 +1363,11 @@ int32_t SE3::ShouldSoundPlay(SE3SoundKitDef* def, SE3SoundKitProperties* propert
         }
     }
 
-    int32_t uniqueness = properties->m_uniqueness;
+    if (def) {
+        int32_t uniqueness = properties->m_uniqueness;
 
-    if (uniqueness == 2 || (!uniqueness && def && (def->m_pSoundKitRec->m_flags & 0x20))) {
-        for (SE3SoundKitObject* sko = SE3::sm_SoundKitObjects.Head(); sko; sko = SE3::sm_SoundKitObjects.Next(sko)) {
-            if (sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec->m_id == def->m_pSoundKitRec->m_id) {
-                return SE3_ERR_ALREADY_PLAYING;
-            }
-        }
-
-        for (SE3SoundKitObject* sko = sm_SoundKitObjects_Loading.Head(); sko; sko = sm_SoundKitObjects_Loading.Next(sko)) {
-            if (sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec->m_id == def->m_pSoundKitRec->m_id) {
-                return SE3_ERR_ALREADY_PLAYING;
-            }
-        }
-
-        for (SE3SoundKitObject* sko = sm_SoundKitObjects_GoGoGo.Head(); sko; sko = sm_SoundKitObjects_GoGoGo.Next(sko)) {
-            if (sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec->m_id == def->m_pSoundKitRec->m_id) {
-                return SE3_ERR_ALREADY_PLAYING;
-            }
+        if ((uniqueness == 2 || (!uniqueness && (def->m_pSoundKitRec->m_flags & 0x20))) && def->m_nPlayingCount > 0) {
+            return SE3_ERR_ALREADY_PLAYING;
         }
     }
 
@@ -1534,16 +1552,16 @@ SE3SoundKitDef::~SE3SoundKitDef() {
 
         if (rec) {
             if (rec->m_name) {
-                SMemFree(const_cast<char*>(rec->m_name), __FILE__, __LINE__, 0);
+                SMemFree(const_cast<char*>(static_cast<const char*>(rec->m_name)), __FILE__, __LINE__, 0);
             }
 
             if (rec->m_directoryBase) {
-                SMemFree(const_cast<char*>(rec->m_directoryBase), __FILE__, __LINE__, 0);
+                SMemFree(const_cast<char*>(static_cast<const char*>(rec->m_directoryBase)), __FILE__, __LINE__, 0);
             }
 
             for (int32_t i = 0; i < 10; i++) {
                 if (rec->m_file[i]) {
-                    SMemFree(const_cast<char*>(rec->m_file[i]), __FILE__, __LINE__, 0);
+                    SMemFree(const_cast<char*>(static_cast<const char*>(rec->m_file[i])), __FILE__, __LINE__, 0);
                 }
             }
 
@@ -2037,7 +2055,7 @@ void SE3::EmitterManagerSendMessage_MarkSoundChunkDirty(SE3SoundChunk* chunk) {
     s_markSoundChunkDirtyMessagesCritSect.Leave();
 }
 
-// OFFSET: %0x006714B0
+// OFFSET: 0x0070A570/0x1403D8740
 void SE3::EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties, const TSGrowableArray<C3Vector>* positions, int32_t userData) {
     if (!SE3::sm_pGameSystem || SE3::sm_eGameSystemOutputType == FMOD_OUTPUTTYPE_NOSOUND) {
         return;
@@ -2265,6 +2283,10 @@ void SE3::DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message) {
     SE3::sm_DoneLoading_MessageQueue_CritSect.Leave();
 }
 
+// OFFSET: 0x0070C470
+SE3COMBINABLESOUNDLIST::SE3COMBINABLESOUNDLIST() {
+}
+
 // OFFSET: 0x0070B6E0/0x1403D9BE0
 SE3COMBINABLESOUNDLIST::~SE3COMBINABLESOUNDLIST() {
     SE3CombinableSoundKitPosition* position = this->m_positions.Head();
@@ -2324,6 +2346,19 @@ void SE3SoundEmitter::UpdatePillPosition(C3Vector listener) {
     }
 
     SE3::EmitterManagerSendMessage_Set3DPosition(this->m_hSoundEmitter, this->m_position);
+}
+
+// OFFSET: 0x0070BE10
+void SE3::EmitterManagerDestroyAllEmitters() {
+    for (SE3SoundChunk* chunk = s_soundChunkTable.Head(); chunk; chunk = s_soundChunkTable.Next(chunk)) {
+        SE3SoundEmitter* emitter = chunk->m_emitters.Head();
+
+        while (emitter) {
+            SE3SoundEmitter* next = chunk->m_emitters.Next(emitter);
+            SE3::EmitterMangerSendMessage_DestroyEmitter(emitter->m_hSoundEmitter);
+            emitter = next;
+        }
+    }
 }
 
 // OFFSET: 0x0070BA50/0x1403DA120
@@ -2493,12 +2528,13 @@ int32_t SE3::StopSound(uint32_t handle, int32_t fadeOutTime, const char* file, i
     return 1;
 }
 
-// OFFSET: %0x00673E30
-void SE3::SetPlayFinishedCallback(uint32_t handle, void (*callback)(SE3SoundKitObject*)) {
+// OFFSET: 0x007083A0/0x1403D6B30
+void SE3::SetPlayFinishedCallback(uint32_t handle, void (*callback)(SE3SoundKitObject*), void* param) {
     SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_lookupKey);
 
     if (lookup && lookup->m_pSKO) {
         lookup->m_pSKO->m_fpPlayFinishedCallback = callback;
+        lookup->m_pSKO->m_playFinishedParam = param;
     }
 }
 
@@ -2524,6 +2560,24 @@ void SE3::Set3DPosition(uint32_t handle, const C3Vector& position) {
     if (lookup && lookup->m_pSKO) {
         lookup->m_pSKO->Set3DPosition(position);
     }
+}
+
+// OFFSET: 0x00708BC0/0x1403D6E90
+int32_t SE3::IsStoppable(uint32_t handle) {
+    if (!handle) {
+        return 0;
+    }
+
+    SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_lookupKey);
+    SE3SoundKitObject* sko;
+    SE3SoundKitDef* def;
+    const SoundEntriesRec* rec;
+
+    if (!lookup || (sko = lookup->m_pSKO) == NULL || (def = sko->m_pSoundKitDef) == NULL || (rec = def->m_pSoundKitRec) == NULL || !(rec->m_flags & 0x1000)) {
+        return 1;
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x00708A70/0x1403D6C80
@@ -2576,7 +2630,39 @@ void SE3::KillVirtualSounds(int32_t elapsed) {
     }
 }
 
+// OFFSET: 0x00707840
+SE3SoundEmitter::SE3SoundEmitter() {
+    this->m_userData = 0;
+    this->m_hSoundEmitter = 0;
+    this->m_uSoundKitObjectUID = 0;
+    this->m_pParentSoundChunk = NULL;
+    this->m_nSoundKitID = 0;
+    this->m_position.x = 0.0f;
+    this->m_position.y = 0.0f;
+    this->m_position.z = 0.0f;
+    this->m_positions.Clear();
+    this->m_properties.ResetToDefaults();
+}
+
+// OFFSET: 0x00709360
+SE3CreateSoundEmitterMessage::SE3CreateSoundEmitterMessage() {
+    this->m_userData = 0;
+    this->m_hSoundEmitter = 0;
+    this->m_pParentSoundChunk = NULL;
+    this->m_nSoundKitID = 0;
+    this->m_position.x = 0.0f;
+    this->m_position.y = 0.0f;
+    this->m_position.z = 0.0f;
+    this->m_positions.Clear();
+    this->m_properties.ResetToDefaults();
+}
+
+// OFFSET: 0x00709400
+SE3CreateSoundEmitterMessage::~SE3CreateSoundEmitterMessage() {
+}
+
 // INLINED
+// OFFSET: 0x00708B10/0x1403D6D90
 SE3SoundEmitter::~SE3SoundEmitter() {
     SE3::StopSound(this->m_uSoundKitObjectUID, 500, __FILE__, __LINE__, "Sound Emitter Destructor, Stop Sound");
 }

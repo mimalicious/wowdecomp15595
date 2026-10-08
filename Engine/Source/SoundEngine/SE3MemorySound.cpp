@@ -4,10 +4,10 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: %0x00D0E17C
+// STATIC: 0x00E4E824
 static HASHKEY_NONE s_memoryLookupKey;
 
-// STATIC: %0x00D0E180
+// STATIC: 0x00E4E828
 TSHashTable<SE3MemorySoundObject, HASHKEY_NONE> SE3::sm_MemorySoundObjectTable;
 
 // OFFSET: 0x007147F0/0x1403E6F30
@@ -51,28 +51,61 @@ int32_t SE3::SetMemorySoundFinishedCallback(uint32_t handle, void (*callback)(SE
     return SE3_OK;
 }
 
-// OFFSET: %0x0067B7A0
+// OFFSET: 0x00714890
 int32_t SE3::StopMemorySound(uint32_t handle) {
-    SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
-
-    if (!sound) {
+    if (!handle) {
         return SE3_ERR_NOT_FOUND;
     }
 
-    return sound->m_pFMODChannel->stop() != FMOD_OK ? SE3_ERR_FMOD : SE3_OK;
-}
+    FMOD::Channel* channel;
+    SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_memoryLookupKey);
 
-// OFFSET: %0x0067B7E0
-uint32_t SE3::GetPositionInMS(uint32_t handle) {
-    unsigned int position = 0;
-    SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
+    if (lookup && lookup->m_pSKO) {
+        channel = lookup->m_pSKO->m_channels[0].m_pFMODChannel;
+    } else {
+        SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
 
-    if (!sound) {
-        return 0;
+        if (!sound) {
+            return SE3_ERR_NOT_FOUND;
+        }
+
+        channel = sound->m_pFMODChannel;
     }
 
-    sound->m_pFMODChannel->getPosition(&position, FMOD_TIMEUNIT_MS);
+    if (!channel) {
+        return SE3_ERR_NOT_FOUND;
+    }
 
+    return channel->stop() != FMOD_OK ? SE3_ERR_FMOD : SE3_OK;
+}
+
+// OFFSET: 0x007148F0
+uint32_t SE3::GetPositionInMS(uint32_t handle) {
+    if (!handle) {
+        return SE3_ERR_NOT_FOUND;
+    }
+
+    FMOD::Channel* channel;
+    SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_memoryLookupKey);
+
+    if (lookup && lookup->m_pSKO) {
+        channel = lookup->m_pSKO->m_channels[0].m_pFMODChannel;
+    } else {
+        SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
+
+        if (!sound) {
+            return SE3_ERR_NOT_FOUND;
+        }
+
+        channel = sound->m_pFMODChannel;
+    }
+
+    if (!channel) {
+        return SE3_ERR_NOT_FOUND;
+    }
+
+    unsigned int position = 0;
+    channel->getPosition(&position, FMOD_TIMEUNIT_MS);
     return position;
 }
 

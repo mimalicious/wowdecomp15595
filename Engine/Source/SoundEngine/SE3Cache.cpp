@@ -8,52 +8,52 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/SLock.h"
 
-// STATIC: %0x00C05B34
+// STATIC: 0x00D00490/0x140BAFE18
 int32_t SE3::sm_nMaxCacheSizeInBytes = 0x1000000;
 
-// STATIC: %0x00C05B38
+// STATIC: 0x00D00494/0x140BAFE1C
 uint32_t SE3::sm_uMaxCacheableSize = 0x100000;
 
-// STATIC: %0x00C05B3C
+// STATIC: 0x00D00498
 uint32_t SE3WaveDataNode::sm_uNextUniqueID = 1;
 
-// STATIC: %0x00C05B40
+// STATIC: 0x00D0049C
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_SoundCache_Loading;
 
-// STATIC: %0x00C05B4C
+// STATIC: 0x00D004A8
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_SoundCache;
 
-// STATIC: %0x00C05B58
+// STATIC: 0x00D004B4
 TSExplicitList<SE3WaveDataNode, offsetof(SE3WaveDataNode, m_unreferencedLink)> SE3::sm_SoundCacheUnreferenced;
 
-// STATIC: %0x00C05B64
+// STATIC: 0x00D004C0
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_Streams_Loading;
 
-// STATIC: %0x00C05B70
+// STATIC: 0x00D004CC
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_Streams;
 
-// STATIC: %0x00C05B7C
+// STATIC: 0x00D004D8
 TSList<SE3WaveDataNode, TSGetLink<SE3WaveDataNode> > SE3::sm_WaveDataNode_DeleteList;
 
-// STATIC: %0x00D0E1AC
+// STATIC: 0x00E4E854
 int32_t SE3::sm_SoundCache_Stats_Count;
 
-// STATIC: %0x00D0E1B0
+// STATIC: 0x00E4E858
 int32_t SE3::sm_SoundCache_Stats_TotalSizeInBytes;
 
-// STATIC: %0x00D0E1B4
+// STATIC: 0x00E4E85C
 void (*SE3::sm_fpCacheEventCallback)(SE3CACHEEVENT, uint32_t);
 
-// STATIC: %0x00D0E1B8
+// STATIC: 0x00E4E860/0x140D37B20
 FMOD_RESULT (*SE3::sm_fpWaveDataDoneLoadingCallback)(FMOD_SOUND*, FMOD_RESULT);
 
-// STATIC: %0x00D0E1BC
+// STATIC: 0x00E4E864
 SCritSect SE3::sm_SoundCache_Loading_CritSec;
 
-// STATIC: %0x00D0E1E4
+// STATIC: 0x00E4E88C
 SCritSect SE3::sm_StreamedSound_Loading_CritSec;
 
-// STATIC: %0x00D0E20C
+// STATIC: 0x00E4E8B4/0x140D37B78
 SCritSect SE3::sm_SE3ShuttingDown_CritSec;
 
 // STATIC: 0x00D004E4
@@ -236,6 +236,10 @@ static int32_t CancelStreamReads(SE3StreamInfo* info) {
 
     s_streamCritSect.Leave();
     return pending == 0;
+}
+
+// OFFSET: 0x00715C30/0x1403E8AE0
+SE3StreamInfo::~SE3StreamInfo() {
 }
 
 // OFFSET: 0x007163C0/0x1403E94D0

@@ -323,8 +323,9 @@ struct SE3CombinableSoundKitPosition : public TSLinkedNode<SE3CombinableSoundKit
 struct SE3COMBINABLESOUNDLIST : public TSHashObject<SE3COMBINABLESOUNDLIST, HASHKEY_NONE> {
     /* 0018 */ int32_t m_nSoundKitID;
     /* 001C */ SE3SoundKitProperties m_properties;
-    /* 00FC */ TSList<SE3CombinableSoundKitPosition, TSGetLink<SE3CombinableSoundKitPosition> > m_positions;
+    /* 00F8 */ TSList<SE3CombinableSoundKitPosition, TSGetLink<SE3CombinableSoundKitPosition> > m_positions;
 
+    SE3COMBINABLESOUNDLIST();
     ~SE3COMBINABLESOUNDLIST();
 };
 
@@ -347,6 +348,8 @@ struct SE3StreamInfo {
     /* 0028 */ uint8_t m_key[32];
     /* 0048 */ uint8_t m_iv[32];
     /* 0068 */ Crypt::PanamaCypher m_cypher;
+
+    ~SE3StreamInfo();
 };
 
 class SE3WaveDataNode : public TSLinkedNode<SE3WaveDataNode> {
@@ -413,6 +416,7 @@ struct SE3CreateSoundEmitterMessage : public TSLinkedNode<SE3CreateSoundEmitterM
     /* 0034 */ SE3SoundKitProperties m_properties;
 
     SE3CreateSoundEmitterMessage();
+    ~SE3CreateSoundEmitterMessage();
 };
 
 struct SE3Set3DPositionMessage : public TSLinkedNode<SE3Set3DPositionMessage> {
@@ -563,6 +567,7 @@ class SE3 {
     static void DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message);
     static FMOD_RESULT DspDestroy(void* dsp);
     static void EmitterManagerBuildSoundChunkList(uint32_t x, uint32_t y);
+    static void EmitterManagerDestroyAllEmitters();
     static int32_t EmitterManagerEmitterExists(uint32_t handle);
     static uint32_t EmitterManagerGetSoundChunkHandle(const C3Vector& position);
     static SE3SoundChunk* EmitterManagerGetOrCreateSoundChunk(uint32_t handle);
@@ -617,9 +622,11 @@ class SE3 {
     static int32_t IsLoopingOrPeriodic_ByDef(int32_t soundKitID);
     static int32_t IsLooping_ByDef(int32_t soundKitID);
     static int32_t IsPlaying(uint32_t handle);
+    static int32_t IsStoppable(uint32_t handle);
     static int32_t IsTooCloseToExistingSoundKit(int32_t soundKitID, const C3Vector& position);
     static void KillVirtualSounds(int32_t elapsed);
     static void Log_Init();
+    static int32_t PreloadSoundKit(int32_t soundKitID, int32_t wait);
     static void Log_Write(const char* format, ...);
     static void Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const char* format, ...);
     static void ManageOutOfRangeSounds(int32_t elapsed);
@@ -655,7 +662,7 @@ class SE3 {
     static void SetMaxCacheableSizeInBytes(uint32_t size);
     static int32_t SetMemorySoundFinishedCallback(uint32_t handle, void (*callback)(SE3MemorySoundObject*, void*));
     static void SetNewSoundKitObjectProperties(SE3SoundKitObject* sko, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t modeFlags);
-    static void SetPlayFinishedCallback(uint32_t handle, void (*callback)(SE3SoundKitObject*));
+    static void SetPlayFinishedCallback(uint32_t handle, void (*callback)(SE3SoundKitObject*), void* param);
     static void SetPrimaryCaptureCallback(SE3CaptureCallbacks* callbacks);
     static void SetReverb(const SE3_REVERB_PROPERTIES* properties);
     static void SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel* channel);

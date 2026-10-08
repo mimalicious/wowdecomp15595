@@ -27,32 +27,6 @@ inline SE3SoundKitProperties::SE3SoundKitProperties() {
 }
 
 // INLINED
-inline SE3SoundEmitter::SE3SoundEmitter() {
-    this->m_userData = 0;
-    this->m_hSoundEmitter = 0;
-    this->m_uSoundKitObjectUID = 0;
-    this->m_pParentSoundChunk = NULL;
-    this->m_nSoundKitID = 0;
-    this->m_position.x = 0.0f;
-    this->m_position.y = 0.0f;
-    this->m_position.z = 0.0f;
-    this->m_positions.Clear();
-    this->m_properties.ResetToDefaults();
-}
-
-// INLINED
-inline SE3CreateSoundEmitterMessage::SE3CreateSoundEmitterMessage() {
-    this->m_userData = 0;
-    this->m_hSoundEmitter = 0;
-    this->m_pParentSoundChunk = NULL;
-    this->m_nSoundKitID = 0;
-    this->m_position.x = 0.0f;
-    this->m_position.y = 0.0f;
-    this->m_position.z = 0.0f;
-    this->m_positions.Clear();
-}
-
-// INLINED
 inline SE3SoundChunk::SE3SoundChunk() {
     this->m_handle = 0;
     this->m_minX = 0.0f;

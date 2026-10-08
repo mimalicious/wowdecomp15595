@@ -7,13 +7,13 @@
 #include "Engine/Source/SoundEngine/fmodex/src/fmod_errors.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00D0E170
+// STATIC: 0x00E4E818/0x140D37B00
 HSLOG SE3::sm_log;
 
-// STATIC: %0x00D0E174
+// STATIC: 0x00E4E81C/0x140D37B08
 static uint32_t s_logFlags;
 
-// STATIC: %0x00D0E178
+// STATIC: 0x00E4E820
 static int32_t s_errorCount;
 
 // PROVEN: 22b93471 IDENTICAL/IDENTICAL
