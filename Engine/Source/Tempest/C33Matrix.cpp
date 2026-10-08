@@ -238,6 +238,7 @@ void C33Matrix::FromEulerAnglesZYX(float yaw, float pitch, float roll) {
     this->c2 = product.c2;
 }
 
+// PROVEN: 0798e9ee IDENTICAL/DIFFERENT
 // OFFSET: 0x004CDF00/0x140109D80
 C33Matrix C33Matrix::Rotation(float angle, const C3Vector& axis, bool normalized) {
     C3Vector v = axis;

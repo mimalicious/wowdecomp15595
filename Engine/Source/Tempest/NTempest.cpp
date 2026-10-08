@@ -20,10 +20,10 @@ static float Noise2D(int32_t x, int32_t y) {
     uint32_t n = static_cast<uint32_t>(x + y * 57);
     n = (n << 13) ^ n;
 
-    return 1.0f - ((n * (n * n * 15731 + 789221) - 771171069) & 0x7FFFFFFF) * 9.3132257e-10f;
+    return 1.0f - static_cast<int32_t>((n * (n * n * 15731 + 789221) - 771171069) & 0x7FFFFFFF) * 9.3132257e-10f;
 }
 
-// OFFSET: #0x009852A0
+// OFFSET: 0x00B085A0
 static float SmoothNoise2D(int32_t x, int32_t y) {
     float sides = (Noise2D(x, y + 1) + Noise2D(x, y - 1) + Noise2D(x + 1, y) + Noise2D(x - 1, y)) * 0.125f;
     float corners = (Noise2D(x + 1, y + 1) + Noise2D(x - 1, y + 1) + Noise2D(x + 1, y - 1) + Noise2D(x - 1, y - 1)) * 0.0625f;
@@ -32,7 +32,7 @@ static float SmoothNoise2D(int32_t x, int32_t y) {
     return sides + corners + center;
 }
 
-// OFFSET: #0x009854D0
+// INLINED
 static float InterpolatedNoise2D(float x, float y) {
     float floorX = floor(x);
     float fractionX = x - floorX;
@@ -473,6 +473,45 @@ float NTempest::DistanceSquared(const C3Segment& segment, const C3Vector& point,
     return dz * dz + dy * dy + dx * dx;
 }
 
+// OFFSET: 0x004C6C90
+void NTempest::SmoothDamp(C3Vector& value, C3Vector& velocity, const C3Vector& target, float omega, float deltaTime, float decay) {
+    float end = target.x;
+    float delta = value.x - end;
+
+    if (fabs(delta) > 0.00000011920929f) {
+        float temp = (delta * omega + velocity.x) * deltaTime;
+        value.x = (temp + delta) * decay + end;
+        velocity.x = (velocity.x - temp * omega) * decay;
+    } else {
+        value.x = end;
+        velocity.x = 0.0f;
+    }
+
+    end = target.y;
+    delta = value.y - end;
+
+    if (fabs(delta) > 0.00000011920929f) {
+        float temp = (delta * omega + velocity.y) * deltaTime;
+        value.y = (delta + temp) * decay + end;
+        velocity.y = (velocity.y - temp * omega) * decay;
+    } else {
+        value.y = end;
+        velocity.y = 0.0f;
+    }
+
+    end = target.z;
+    delta = value.z - end;
+
+    if (fabs(delta) > 0.00000011920929f) {
+        float temp = (delta * omega + velocity.z) * deltaTime;
+        value.z = (temp + delta) * decay + end;
+        velocity.z = (velocity.z - temp * omega) * decay;
+    } else {
+        value.z = end;
+        velocity.z = 0.0f;
+    }
+}
+
 // OFFSET: 0x004C6DE0
 void NTempest::SmoothDamp(C4Vector& value, C4Vector& velocity, const C4Vector& target, float omega, float deltaTime, float decay) {
     float* current = &value.x;
@@ -609,7 +648,7 @@ void RGBtoHSV(const C3Vector& rgb, C3Vector& hsv) {
     }
 }
 
-// OFFSET: #0x00985030
+// OFFSET: 0x00B07E90/0x1408CAE30
 void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb) {
     if (hsv.y == 0.0f) {
         rgb = C3Vector(hsv.z, hsv.z, hsv.z);
@@ -623,7 +662,7 @@ void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb) {
     }
 
     float sector = hue * 0.016666668f;
-    int32_t index = CMath::fint_(sector - 0.5f);
+    int32_t index = static_cast<int32_t>(sector);
 
     if (index > 5) {
         index = 5;
@@ -674,7 +713,7 @@ void HSVtoRGB(const C3Vector& hsv, C3Vector& rgb) {
     }
 }
 
-// OFFSET: #0x00985580
+// OFFSET: 0x00B08810
 float PerlinNoise2D(float x, float y, int32_t octaves) {
     float amplitude = 1.0f;
     float total = 0.0f;

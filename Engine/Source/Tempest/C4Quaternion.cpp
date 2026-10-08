@@ -126,7 +126,7 @@ void C4Quaternion::NormalizeApprox() {
     this->w = scale * this->w;
 }
 
-// OFFSET: #0x00982630
+// OFFSET: 0x004CB9D0
 C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quaternion& b) {
     C4Quaternion result;
     result.x = (b.x - a.x) * t + a.x;

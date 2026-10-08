@@ -19,7 +19,7 @@ CAaBox CAaSphere::Box() const {
     return result;
 }
 
-// OFFSET: #0x009855F0
+// OFFSET: 0x00B09C20
 CAaBox CAaSphere::FindExtrema(const CAaSphere* spheres, uint32_t count) {
     CAaBox result;
 

@@ -2,7 +2,7 @@
 #include "Engine/Source/Tempest/C4Plane.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 
-// OFFSET: #0x007912C0
+// OFFSET: 0x004CC6D0/0x140108400
 void C4Plane::From3Pos(const C3Vector& p0, const C3Vector& p1, const C3Vector& p2) {
     float ex = p2.x - p0.x;
     float ey = p2.y - p0.y;
