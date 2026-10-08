@@ -1487,7 +1487,7 @@ CAaBox CM2Model::GetSplitBodyBoundingBox(uint32_t boneId) {
     }
 
     for (uint32_t i = 0; i < this->m_shared->m_data->m_ribbons.m_count; i++) {
-        box |= this->m_ribbonEmitters[i]->m_worldBounds;
+        box |= this->m_ribbonEmitters[i]->GetWorldBounds();
     }
 
     return box;

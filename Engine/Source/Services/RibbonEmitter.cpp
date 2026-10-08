@@ -543,3 +543,9 @@ int32_t CRibbonEmitter::Render(const C44Matrix* frameOfReference) {
 
     return 1;
 }
+
+// PROVEN: 0a7a64d0 IDENTICAL/NONE
+// OFFSET: 0x00815230
+CAaBox CRibbonEmitter::GetWorldBounds() {
+    return this->m_worldBounds;
+}

@@ -79,6 +79,7 @@ class CRibbonEmitter {
     void DecRef();
     uint32_t GetNumBatches();
     uint32_t GetNumPrimitives();
+    CAaBox GetWorldBounds();
     void InitInterpDeltas();
     void Initialize(float edgesPerSecond, float edgeLifetime, const CImVector& color, const TSGrowableArray<CTexture*>& textures, const TSGrowableArray<CRibbonMat>& materials, const TSGrowableArray<uint32_t>& textureTypes, const CAaRect& texCoords, uint32_t rows, uint32_t cols);
     void InterpEdge(float age, float t, uint32_t advance);
