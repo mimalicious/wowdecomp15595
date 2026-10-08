@@ -25,7 +25,7 @@ void CSimpleColorSelect::DestroyScriptMetaTable() {
     CSimpleColorSelect::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x0054A9F0
+// OFFSET: 0x0053ACE0/0x14018E940
 static int32_t Script_GetColorWheelTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     CSimpleTexture* texture = colorSelect->m_wheelTexture;
@@ -43,7 +43,7 @@ static int32_t Script_GetColorWheelTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054AA60
+// OFFSET: 0x0053AD50/0x14018E9D0
 static int32_t Script_SetColorWheelTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
 
@@ -78,7 +78,7 @@ static int32_t Script_SetColorWheelTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054AB90
+// OFFSET: 0x0053AE80/0x14018EB20
 static int32_t Script_GetColorWheelThumbTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     CSimpleTexture* texture = colorSelect->m_wheelThumbTexture;
@@ -96,7 +96,7 @@ static int32_t Script_GetColorWheelThumbTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054AC00
+// OFFSET: 0x0053AEF0/0x14018EBB0
 static int32_t Script_SetColorWheelThumbTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
 
@@ -136,7 +136,7 @@ static int32_t Script_SetColorWheelThumbTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054AD60
+// OFFSET: 0x0053B050/0x14018ED40
 static int32_t Script_GetColorValueTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     CSimpleTexture* texture = colorSelect->m_valueTexture;
@@ -154,7 +154,7 @@ static int32_t Script_GetColorValueTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054ADD0
+// OFFSET: 0x0053B0C0/0x14018EDD0
 static int32_t Script_SetColorValueTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
 
@@ -189,7 +189,7 @@ static int32_t Script_SetColorValueTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054AF00
+// OFFSET: 0x0053B1F0/0x14018EF20
 static int32_t Script_GetColorValueThumbTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     CSimpleTexture* texture = colorSelect->m_valueThumbTexture;
@@ -207,7 +207,7 @@ static int32_t Script_GetColorValueThumbTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054AF70
+// OFFSET: 0x0053B260/0x14018EFB0
 static int32_t Script_SetColorValueThumbTexture(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
 
@@ -247,7 +247,7 @@ static int32_t Script_SetColorValueThumbTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054B0D0
+// OFFSET: 0x0053B3C0/0x14018F140
 static int32_t Script_SetColorHSV(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     float h = lua_tonumber(L, 2);
@@ -272,7 +272,7 @@ static int32_t Script_GetColorHSV(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x0054B1D0
+// OFFSET: 0x0053B4C0/0x14018F280
 static int32_t Script_SetColorRGB(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     CImVector color;
@@ -283,7 +283,7 @@ static int32_t Script_SetColorRGB(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054B250
+// OFFSET: 0x0053B540/0x14018F300
 static int32_t Script_GetColorRGB(lua_State* L) {
     CSimpleColorSelect* colorSelect = static_cast<CSimpleColorSelect*>(FrameScript_GetObjectThis(L, CSimpleColorSelect::GetObjectType()));
     C3Vector rgb;

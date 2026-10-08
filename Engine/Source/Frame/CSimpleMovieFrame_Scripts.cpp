@@ -20,7 +20,7 @@ void CSimpleMovieFrame::DestroyScriptMetaTable() {
     CSimpleMovieFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x0054B390
+// OFFSET: 0x0053B680/0x14018F470
 static int32_t Script_StartMovie(lua_State* L) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(FrameScript_GetObjectThis(L, CSimpleMovieFrame::GetObjectType()));
 
@@ -35,7 +35,7 @@ static int32_t Script_StartMovie(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0054B430
+// OFFSET: 0x0053B720/0x14018F530
 static int32_t Script_StopMovie(lua_State* L) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(FrameScript_GetObjectThis(L, CSimpleMovieFrame::GetObjectType()));
 

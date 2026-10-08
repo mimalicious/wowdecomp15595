@@ -19,7 +19,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054D400
+// OFFSET: 0x0053D5D0
 static int32_t Script_Play(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 
@@ -30,7 +30,7 @@ static int32_t Script_Play(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D460
+// OFFSET: 0x0053D630
 static int32_t Script_Pause(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     group->Pause();
@@ -51,21 +51,23 @@ static int32_t Script_Finish(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D520
+// OFFSET: 0x0053D6F0/0x140191B60
 static int32_t Script_GetProgress(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushnumber(L, group->m_elapsed / group->m_duration);
     return 1;
 }
 
-// OFFSET: %0x0054D570
+// PROVEN: 9b613245 IDENTICAL/NONE
+// OFFSET: 0x0053D740/0x140191BC0
 static int32_t Script_IsDone(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushboolean(L, group->IsDone());
     return 1;
 }
 
-// OFFSET: %0x0054D5C0
+// PROVEN: c05a43b6 IDENTICAL/NONE
+// OFFSET: 0x0053D790/0x140191C10
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushboolean(L, (group->m_flags >> 2) & 1);
@@ -87,7 +89,7 @@ static int32_t Script_GetDuration(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D6A0
+// OFFSET: 0x0053D870/0x140191D00
 static int32_t Script_SetLooping(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 
@@ -133,7 +135,7 @@ static int32_t Script_GetMaxOrder(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D870
+// OFFSET: 0x0053DA30/0x140191ED0
 static int32_t Script_SetInitialOffset(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
 
@@ -190,19 +192,22 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 50338bc3 IDENTICAL/NONE
 // OFFSET: 0x0053DC70
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->GetScript(L) : 0;
 }
 
+// PROVEN: ae739430 IDENTICAL/NONE
 // OFFSET: 0x0053DCB0
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->SetScript(L) : 0;
 }
 
-// OFFSET: 0x0053DCF0
+// PROVEN: e04de98e IDENTICAL/NONE
+// OFFSET: 0x0053DCF0/0x140192240
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->HookScript(L) : 0;
@@ -236,14 +241,14 @@ static int32_t Script_GetIgnoreFramerateThrottle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054DC50
+// OFFSET: 0x0053DEC0
 static int32_t Script_IsPlaying(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushboolean(L, group->m_loopState && !(group->m_flags & 0x4));
     return 1;
 }
 
-// OFFSET: %0x0054DCB0
+// OFFSET: 0x0053DF20/0x1401924F0
 static int32_t Script_GetAnimations(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     TSExplicitList<CSimpleAnim, offsetof(CSimpleAnim, m_link)>* animations = &group->m_animations;
@@ -275,7 +280,7 @@ static int32_t Script_GetAnimations(lua_State* L) {
     return count;
 }
 
-// OFFSET: %0x0054DFC0
+// OFFSET: 0x0053E230/0x140192910
 static int32_t Script_CreateAnimation(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     const char* type = "Animation";

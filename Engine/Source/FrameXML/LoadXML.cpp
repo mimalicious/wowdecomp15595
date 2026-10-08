@@ -248,7 +248,7 @@ int32_t StringToOrientation(const char* string, ORIENTATION& orientation) {
     return 0;
 }
 
-// OFFSET: %0x004FF3A0
+// OFFSET: 0x004EEDC0/0x1401332F0
 const char* OrientationToString(ORIENTATION orientation) {
     for (uint32_t i = 0; i < sizeof(s_orientations) / sizeof(s_orientations[0]); i++) {
         if (orientation == s_orientations[i].m_value) {

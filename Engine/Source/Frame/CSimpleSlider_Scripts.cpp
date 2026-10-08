@@ -27,7 +27,7 @@ static int32_t Script_GetThumbTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549950
+// OFFSET: 0x00539CD0/0x14018D3B0
 static int32_t Script_SetThumbTexture(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -67,7 +67,8 @@ static int32_t Script_SetThumbTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549AB0
+// PROVEN: e9c979c6 IDENTICAL/NONE
+// OFFSET: 0x00539E30/0x14018D550
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -97,7 +98,7 @@ static int32_t Script_SetOrientation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549BD0
+// OFFSET: 0x00539F50
 static int32_t Script_GetMinMaxValues(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -106,7 +107,7 @@ static int32_t Script_GetMinMaxValues(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x00549C30
+// OFFSET: 0x00539FB0/0x14018D720
 static int32_t Script_SetMinMaxValues(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
     float minValue;
@@ -130,7 +131,7 @@ static int32_t Script_GetValue(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549D30
+// OFFSET: 0x0053A0B0/0x14018D850
 static int32_t Script_SetValue(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -152,7 +153,7 @@ static int32_t Script_GetValueStep(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549E00
+// OFFSET: 0x0053A180/0x14018D940
 static int32_t Script_SetValueStep(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -166,7 +167,7 @@ static int32_t Script_SetValueStep(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549E80
+// OFFSET: 0x0053A200
 static int32_t Script_IsEnabled(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -179,7 +180,7 @@ static int32_t Script_IsEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549F00
+// OFFSET: 0x0053A280/0x14018DA80
 static int32_t Script_Enable(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 
@@ -192,7 +193,7 @@ static int32_t Script_Enable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549F70
+// OFFSET: 0x0053A300
 static int32_t Script_Disable(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 

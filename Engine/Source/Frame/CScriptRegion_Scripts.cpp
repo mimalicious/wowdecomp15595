@@ -52,7 +52,7 @@ static int32_t Script_CanChangeProtectedState(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053EFB0
+// OFFSET: 0x0052F010/0x14017FEF0
 static int32_t Script_SetParent(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -115,7 +115,7 @@ static int32_t Script_SetParent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053F220
+// OFFSET: 0x0052F280/0x140180210
 static int32_t Script_GetRect(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -140,7 +140,7 @@ static int32_t Script_GetRect(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0053F370
+// OFFSET: 0x0052F3D0/0x1401803A0
 static int32_t Script_GetCenter(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -239,7 +239,7 @@ static int32_t Script_GetBottom(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053F790
+// OFFSET: 0x0052F7F0/0x1401808D0
 static int32_t Script_GetWidth(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     float width = region->GetWidth();
@@ -260,7 +260,7 @@ static int32_t Script_GetWidth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053F870
+// OFFSET: 0x0052F8D0/0x1401809D0
 static int32_t Script_SetWidth(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -283,7 +283,7 @@ static int32_t Script_SetWidth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053F940
+// OFFSET: 0x0052F9A0/0x140180AE0
 static int32_t Script_GetHeight(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     float height = region->GetHeight();
@@ -304,7 +304,7 @@ static int32_t Script_GetHeight(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053FA20
+// OFFSET: 0x0052FA80/0x140180BE0
 static int32_t Script_SetHeight(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -327,7 +327,7 @@ static int32_t Script_SetHeight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053FAF0
+// OFFSET: 0x0052FB50/0x140180CF0
 static int32_t Script_GetSize(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     int32_t ignoreRect = StringToBOOL(L, 2, 0);
@@ -345,7 +345,7 @@ static int32_t Script_GetSize(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0053FBA0
+// OFFSET: 0x0052FC00/0x140180DC0
 static int32_t Script_SetSize(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -371,7 +371,7 @@ static int32_t Script_SetSize(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053FCB0
+// OFFSET: 0x0052FD10/0x140180F20
 static int32_t Script_GetNumPoints(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     int32_t count = 0;
@@ -388,7 +388,7 @@ static int32_t Script_GetNumPoints(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053FD40
+// OFFSET: 0x0052FDA0/0x140180F90
 static int32_t Script_GetPoint(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     int32_t index = 0;
@@ -530,7 +530,7 @@ static int32_t Script_SetPoint(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540240
+// OFFSET: 0x005302A0/0x140181550
 static int32_t Script_SetAllPoints(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -578,7 +578,7 @@ static int32_t Script_SetAllPoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540410
+// OFFSET: 0x00530470/0x140181760
 static int32_t Script_ClearAllPoints(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 
@@ -628,7 +628,7 @@ static int32_t Script_IsMouseOver(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00540670
+// OFFSET: 0x005306D0/0x140181A20
 static int32_t Script_GetAnimationGroups(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     TSExplicitList<CSimpleAnimGroup, offsetof(CSimpleAnimGroup, m_regionLink)>* groups = region->m_animGroups;
@@ -660,7 +660,7 @@ static int32_t Script_GetAnimationGroups(lua_State* L) {
     return count;
 }
 
-// OFFSET: %0x00540760
+// OFFSET: 0x005307C0/0x140181B40
 static int32_t Script_CreateAnimationGroup(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
     const char* name = NULL;

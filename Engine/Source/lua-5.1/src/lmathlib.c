@@ -37,7 +37,7 @@ static int math_sin (lua_State *L) {
   return 1;
 }
 
-// OFFSET: #0x008510A0
+// OFFSET: 0x00A2A2F0/0x1407D2370
 static int math_sinh (lua_State *L) {
   lua_pushnumber(L, sinh(luaL_checknumber(L, 1)));
   return 1;
@@ -50,7 +50,7 @@ static int math_cos (lua_State *L) {
   return 1;
 }
 
-// OFFSET: #0x00851100
+// OFFSET: 0x00A2A350/0x1407D23D0
 static int math_cosh (lua_State *L) {
   lua_pushnumber(L, cosh(luaL_checknumber(L, 1)));
   return 1;
@@ -63,19 +63,21 @@ static int math_tan (lua_State *L) {
   return 1;
 }
 
-// OFFSET: #0x00851160
+// OFFSET: 0x00A2A3B0/0x1407D2430
 static int math_tanh (lua_State *L) {
   lua_pushnumber(L, tanh(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C450
+// PROVEN: d0531571 IDENTICAL/NONE
+// OFFSET: 0x00A2A3E0/0x1407D2460
 static int math_asin (lua_State *L) {
   lua_pushnumber(L, asin(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C480
+// PROVEN: 4fdaa66d IDENTICAL/NONE
+// OFFSET: 0x00A2A410/0x1407D2490
 static int math_acos (lua_State *L) {
   lua_pushnumber(L, acos(luaL_checknumber(L, 1)));
   return 1;
@@ -95,19 +97,22 @@ static int math_atan2 (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C520
+// PROVEN: 91f218c7 IDENTICAL/NONE
+// OFFSET: 0x00A2A4B0/0x1407D2550
 static int math_ceil (lua_State *L) {
   lua_pushnumber(L, ceil(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C550
+// PROVEN: f52477b2 IDENTICAL/NONE
+// OFFSET: 0x00A2A4E0/0x1407D25C0
 static int math_floor (lua_State *L) {
   lua_pushnumber(L, floor(luaL_checknumber(L, 1)));
   return 1;
 }
 
-// OFFSET: %0x0096C580
+// PROVEN: 8f0aa313 IDENTICAL/NONE
+// OFFSET: 0x00A2A510/0x1407D2630
 static int math_fmod (lua_State *L) {
   lua_pushnumber(L, fmod(luaL_checknumber(L, 1), luaL_checknumber(L, 2)));
   return 1;
@@ -130,7 +135,8 @@ static int math_sqrt (lua_State *L) {
   return 1;
 }
 
-// OFFSET: %0x0096C650
+// PROVEN: 651bb26c IDENTICAL/NONE
+// OFFSET: 0x00A2A5E0/0x1407D2710
 static int math_pow (lua_State *L) {
   lua_pushnumber(L, pow(luaL_checknumber(L, 1), luaL_checknumber(L, 2)));
   return 1;
@@ -157,13 +163,15 @@ static int math_exp (lua_State *L) {
   return 1;
 }
 
-// OFFSET: #0x00851480
+// PROVEN: f653d959 IDENTICAL/NONE
+// OFFSET: 0x00A2A6D0/0x1407D2800
 static int math_deg (lua_State *L) {
   lua_pushnumber(L, luaL_checknumber(L, 1)/RADIANS_PER_DEGREE);
   return 1;
 }
 
-// OFFSET: #0x008514B0
+// PROVEN: d60e0a45 IDENTICAL/NONE
+// OFFSET: 0x00A2A700/0x1407D2840
 static int math_rad (lua_State *L) {
   lua_pushnumber(L, luaL_checknumber(L, 1)*RADIANS_PER_DEGREE);
   return 1;
@@ -187,7 +195,8 @@ static int math_ldexp (lua_State *L) {
 
 
 
-// OFFSET: #0x00851560
+// PROVEN: 9230314d IDENTICAL/NONE
+// OFFSET: 0x00A2A7B0/0x1407D2910
 static int math_min (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   lua_Number dmin = luaL_checknumber(L, 1);
@@ -202,7 +211,8 @@ static int math_min (lua_State *L) {
 }
 
 
-// OFFSET: #0x008515D0
+// PROVEN: 2e0f66fa IDENTICAL/NONE
+// OFFSET: 0x00A2A820/0x1407D2990
 static int math_max (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   lua_Number dmax = luaL_checknumber(L, 1);

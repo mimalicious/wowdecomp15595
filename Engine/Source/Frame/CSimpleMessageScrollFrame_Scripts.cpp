@@ -186,7 +186,7 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x005470F0
+// OFFSET: 0x005376C0/0x14018A630
 static int32_t Script_AddMessage(lua_State* L) {
     int32_t extraData = 0;
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
@@ -250,7 +250,7 @@ static int32_t Script_AddMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547320
+// OFFSET: 0x005378F0/0x14018A8A0
 static int32_t Script_GetMessageInfo(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -386,7 +386,7 @@ static int32_t Script_AtBottom(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547760
+// OFFSET: 0x00537DD0/0x14018AE00
 static int32_t Script_UpdateColorByID(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -400,7 +400,7 @@ static int32_t Script_UpdateColorByID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547810
+// OFFSET: 0x00537E80/0x14018AED0
 static int32_t Script_GetNumMessages(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     int32_t accessID = lua_tointeger(L, 2);
@@ -437,7 +437,7 @@ static int32_t Script_GetMaxLines(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005479B0
+// OFFSET: 0x00538020/0x14018B080
 static int32_t Script_SetMaxLines(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -519,14 +519,14 @@ static int32_t Script_GetFadeDuration(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547C90
+// OFFSET: 0x00538300/0x14018B3D0
 static int32_t Script_Clear(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->Clear();
     return 0;
 }
 
-// OFFSET: %0x00547CD0
+// OFFSET: 0x00538340/0x14018B410
 static int32_t Script_SetInsertMode(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 

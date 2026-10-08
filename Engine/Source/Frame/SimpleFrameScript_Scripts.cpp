@@ -42,7 +42,7 @@
 // STATIC: 0x00DD3918
 const char* s_createFrameTaint;
 
-// OFFSET: %0x007A57A0
+// OFFSET: 0x0083F590/0x14056B130
 static int32_t Script_GetText(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
     int32_t ordinal = -1;
@@ -119,7 +119,7 @@ static int32_t Script_GetMaxAnimFramerate(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A5A40
+// OFFSET: 0x0083F8B0/0x14056B4F0
 static int32_t Script_EnumerateFrames(lua_State* L) {
     CSimpleFrame* frame;
 
@@ -160,7 +160,7 @@ static int32_t Script_EnumerateFrames(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A5B70
+// OFFSET: 0x0083F9E0/0x14056B640
 static int32_t Script_GetNumFrames(lua_State* L) {
     uint32_t count = 0;
 
@@ -289,7 +289,7 @@ static int32_t Script_CreateFrame(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A5F60
+// OFFSET: 0x0083FA50/0x14056B6A0
 static int32_t Script_GetFramesRegisteredForEvent(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetFramesRegisteredForEvent(\"event\")");

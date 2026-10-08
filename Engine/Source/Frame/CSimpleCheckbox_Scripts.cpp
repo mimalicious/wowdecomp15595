@@ -17,7 +17,8 @@ static int32_t Script_SetChecked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005425B0
+// PROVEN: 2dc76d4c IDENTICAL/NONE
+// OFFSET: 0x005326E0/0x140184820
 static int32_t Script_GetChecked(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
 
@@ -30,7 +31,7 @@ static int32_t Script_GetChecked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00542610
+// OFFSET: 0x00532740/0x140184880
 static int32_t Script_GetCheckedTexture(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
     CSimpleTexture* texture = checkbox->m_checkedTexture;
@@ -48,7 +49,7 @@ static int32_t Script_GetCheckedTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00542680
+// OFFSET: 0x005327B0/0x140184910
 static int32_t Script_SetCheckedTexture(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
 
@@ -88,7 +89,7 @@ static int32_t Script_SetCheckedTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005427E0
+// OFFSET: 0x00532910/0x140184AA0
 static int32_t Script_GetDisabledCheckedTexture(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
     CSimpleTexture* texture = checkbox->m_disabledCheckedTexture;
@@ -106,7 +107,7 @@ static int32_t Script_GetDisabledCheckedTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00542850
+// OFFSET: 0x00532980/0x140184B30
 static int32_t Script_SetDisabledCheckedTexture(lua_State* L) {
     CSimpleCheckbox* checkbox = static_cast<CSimpleCheckbox*>(FrameScript_GetObjectThis(L, CSimpleCheckbox::GetObjectType()));
 

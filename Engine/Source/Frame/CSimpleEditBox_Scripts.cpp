@@ -172,7 +172,8 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: 0x00535130
+// PROVEN: 63c583bd IDENTICAL/NONE
+// OFFSET: 0x00535130/0x140187BC0
 static int32_t Script_SetAutoFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetAutoFocus(StringToBOOL(L, 2, 1));
@@ -234,7 +235,8 @@ static int32_t Script_IsMultiLine(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x00535340
+// PROVEN: c5794bbe IDENTICAL/NONE
+// OFFSET: 0x00535340/0x140187E00
 static int32_t Script_SetNumeric(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetNumeric(StringToBOOL(L, 2, 1));
@@ -275,7 +277,7 @@ static int32_t Script_IsPassword(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005448E0
+// OFFSET: 0x005354A0/0x140187F80
 static int32_t Script_SetBlinkSpeed(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (!lua_isnumber(L, 2)) {
@@ -307,7 +309,7 @@ static int32_t Script_Insert(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00544A10
+// OFFSET: 0x005355D0/0x1401880F0
 static int32_t Script_SetText(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (!lua_isstring(L, 2)) {
@@ -333,7 +335,7 @@ static int32_t Script_GetText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00544B00
+// OFFSET: 0x005356C0/0x140188220
 static int32_t Script_SetNumber(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (!lua_isstring(L, 2)) {
@@ -379,7 +381,7 @@ static int32_t Script_HighlightText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00544C80
+// OFFSET: 0x00535840/0x140188400
 static int32_t Script_AddHistoryLine(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (lua_gettop(L) != 2) {
@@ -400,7 +402,7 @@ static int32_t Script_ClearHistory(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00544D40
+// OFFSET: 0x00535900/0x1401884F0
 static int32_t Script_SetTextInsets(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (!lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4) || !lua_isnumber(L, 5)) {
@@ -460,7 +462,7 @@ static int32_t Script_HasFocus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00545050
+// OFFSET: 0x00535C00/0x1401888B0
 static int32_t Script_SetMaxBytes(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (lua_gettop(L) != 2) {
@@ -474,14 +476,14 @@ static int32_t Script_SetMaxBytes(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005450E0
+// OFFSET: 0x00535C90/0x140188970
 static int32_t Script_GetMaxBytes(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, editBox->m_textMaxLength + 1);
     return 1;
 }
 
-// OFFSET: %0x00545130
+// OFFSET: 0x00535CE0/0x1401889C0
 static int32_t Script_SetMaxLetters(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (lua_gettop(L) != 2) {
@@ -517,7 +519,7 @@ static int32_t Script_GetHistoryLines(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005452D0
+// OFFSET: 0x00535E80/0x140188B70
 static int32_t Script_SetHistoryLines(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     int32_t lines;
@@ -547,7 +549,8 @@ static int32_t Script_ToggleInputLanguage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x00535FA0
+// PROVEN: 5845568a IDENTICAL/NONE
+// OFFSET: 0x00535FA0/0x140188CB0
 static int32_t Script_SetAltArrowKeyMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetAltArrowKeyMode(StringToBOOL(L, 2, 1));
@@ -580,7 +583,7 @@ static int32_t Script_IsInIMECompositionMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00545500
+// OFFSET: 0x005360C0/0x140188DD0
 static int32_t Script_SetCursorPosition(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (!lua_isnumber(L, 2)) {
@@ -593,14 +596,14 @@ static int32_t Script_SetCursorPosition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00545580
+// OFFSET: 0x00536140/0x140188E70
 static int32_t Script_GetCursorPosition(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, editBox->m_cursorPos);
     return 1;
 }
 
-// OFFSET: %0x005455D0
+// OFFSET: 0x00536190/0x140188EC0
 static int32_t Script_GetUTF8CursorPosition(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     lua_pushnumber(L, SStrLenUTF8(editBox->m_text, editBox->m_cursorPos));

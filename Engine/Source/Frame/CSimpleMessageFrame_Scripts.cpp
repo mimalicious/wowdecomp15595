@@ -171,7 +171,7 @@ static int32_t Script_GetJustifyV(lua_State* L) {
     return CSimpleFont_GetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545CA0
+// OFFSET: 0x00536930/0x140189790
 static int32_t Script_SetInsertMode(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 
@@ -294,7 +294,7 @@ static int32_t Script_GetFadeDuration(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005460D0
+// OFFSET: 0x00536D60/0x140189C90
 static int32_t Script_AddMessage(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 

@@ -58,7 +58,7 @@ static int luaB_tonumber (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096F4E0
+// OFFSET: 0x00A2D470/0x1407D5F30
 static int luaB_error (lua_State *L) {
   int level = luaL_optint(L, 2, 1);
   lua_settop(L, 1);
@@ -312,7 +312,7 @@ static int luaB_assert (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096FB40
+// OFFSET: 0x00A2DAD0/0x1407D6740
 static int luaB_unpack (lua_State *L) {
   int i, e, n;
   luaL_checktype(L, 1, LUA_TTABLE);
@@ -490,7 +490,7 @@ static int costatus (lua_State *L, lua_State *co) {
 }
 
 
-// OFFSET: %0x0096FF60
+// OFFSET: 0x00A2DEF0/0x1407D6C80
 static int luaB_costatus (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   luaL_argcheck(L, co, 1, "coroutine expected");
@@ -525,7 +525,7 @@ static int auxresume (lua_State *L, lua_State *co, int narg) {
 }
 
 
-// OFFSET: %0x00970080
+// OFFSET: 0x00A2E010/0x1407D6DF0
 static int luaB_coresume (lua_State *L) {
   lua_State *co = lua_tothread(L, 1);
   int r;
@@ -588,7 +588,7 @@ static int luaB_yield (lua_State *L) {
 }
 
 
-// OFFSET: #0x00854F20
+// OFFSET: 0x00A2E1B0/0x1407D6FF0
 static int luaB_corunning (lua_State *L) {
   if (lua_pushthread(L))
     return 0;  /* main thread is not a coroutine */

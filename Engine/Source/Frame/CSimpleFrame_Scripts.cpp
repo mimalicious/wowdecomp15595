@@ -45,7 +45,7 @@ static int32_t Script_GetTitleRegion(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051B450
+// OFFSET: 0x0050B0C0/0x140153540
 static int32_t Script_CreateTitleRegion(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CScriptRegion* titleRegion = frame->m_titleRegion;
@@ -68,7 +68,7 @@ static int32_t Script_CreateTitleRegion(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051EB80
+// OFFSET: 0x0050E960/0x140157950
 static int32_t Script_CreateTexture(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     int8_t subLevel = 0;
@@ -140,7 +140,7 @@ static int32_t Script_CreateTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051EE30
+// OFFSET: 0x0050EBF0/0x140157CD0
 static int32_t Script_CreateFontString(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     const char* name = NULL;
@@ -208,7 +208,7 @@ static int32_t Script_CreateFontString(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051B510
+// OFFSET: 0x0050B180/0x140153630
 static int32_t Script_GetBoundsRect(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CRect rect = { 3.402823466e38f, 3.402823466e38f, 0.0f, 0.0f };
@@ -228,7 +228,7 @@ static int32_t Script_GetBoundsRect(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0051E9F0
+// OFFSET: 0x0050E670/0x140157600
 static int32_t Script_GetNumRegions(lua_State* L) {
     uint32_t count = 0;
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -241,7 +241,7 @@ static int32_t Script_GetNumRegions(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051EA80
+// OFFSET: 0x0050E700/0x140157690
 static int32_t Script_GetRegions(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     int32_t count = 0;
@@ -267,7 +267,7 @@ static int32_t Script_GetRegions(lua_State* L) {
     return count;
 }
 
-// OFFSET: %0x0051F0E0
+// OFFSET: 0x0050E800/0x1401577C0
 static int32_t Script_GetNumChildren(lua_State* L) {
     uint32_t count = 0;
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
@@ -280,7 +280,7 @@ static int32_t Script_GetNumChildren(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051F160
+// OFFSET: 0x0050E880/0x140157840
 static int32_t Script_GetChildren(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     int32_t count = 0;
@@ -317,7 +317,7 @@ static int32_t Script_GetFrameStrata(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051B6A0
+// OFFSET: 0x0050B310/0x140153810
 static int32_t Script_SetFrameStrata(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -355,7 +355,7 @@ static int32_t Script_GetFrameLevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051B7F0
+// OFFSET: 0x0050B460/0x140153990
 static int32_t Script_SetFrameLevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -408,25 +408,28 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d8839d20 IDENTICAL/NONE
 // OFFSET: 0x0050B600
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     return frame ? frame->GetScript(L) : 0;
 }
 
+// PROVEN: 0959de32 IDENTICAL/NONE
 // OFFSET: 0x0050B640
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     return frame ? frame->SetScript(L) : 0;
 }
 
-// OFFSET: 0x0050B680
+// PROVEN: 587a1098 IDENTICAL/NONE
+// OFFSET: 0x0050B680/0x140153C50
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     return frame ? frame->HookScript(L) : 0;
 }
 
-// OFFSET: %0x0051BA50
+// OFFSET: 0x0050B6C0/0x140153CA0
 static int32_t Script_RegisterEvent(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -440,7 +443,7 @@ static int32_t Script_RegisterEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051BB00
+// OFFSET: 0x0050B770/0x140153D70
 static int32_t Script_UnregisterEvent(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -454,7 +457,7 @@ static int32_t Script_UnregisterEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051BBB0
+// OFFSET: 0x0050B820/0x140153E40
 static int32_t Script_RegisterAllEvents(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -462,7 +465,7 @@ static int32_t Script_RegisterAllEvents(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051BBF0
+// OFFSET: 0x0050B860/0x140153E80
 static int32_t Script_UnregisterAllEvents(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -470,7 +473,7 @@ static int32_t Script_UnregisterAllEvents(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051BC30
+// OFFSET: 0x0050B8A0/0x140153EC0
 static int32_t Script_IsEventRegistered(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -501,7 +504,7 @@ static int32_t Script_AllowAttributeChanges(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051BD20
+// OFFSET: 0x0050B990/0x140153FE0
 static int32_t Script_CanChangeAttribute(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -514,7 +517,7 @@ static int32_t Script_CanChangeAttribute(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051BD90
+// OFFSET: 0x0050BA00/0x140154070
 static int32_t Script_GetAttribute(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -644,7 +647,7 @@ static int32_t Script_GetAttribute(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C0D0
+// OFFSET: 0x0050BD40/0x140154470
 static int32_t Script_SetAttribute(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -700,7 +703,7 @@ static int32_t Script_GetEffectiveScale(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C2A0
+// OFFSET: 0x0050BF10/0x140154680
 static int32_t Script_GetScale(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -708,7 +711,7 @@ static int32_t Script_GetScale(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C2F0
+// OFFSET: 0x0050BF70/0x1401546D0
 static int32_t Script_SetScale(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -738,7 +741,7 @@ static int32_t Script_SetScale(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C3D0
+// OFFSET: 0x0050C050/0x1401547C0
 static int32_t Script_GetEffectiveAlpha(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -747,7 +750,7 @@ static int32_t Script_GetEffectiveAlpha(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C440
+// OFFSET: 0x0050C0C0/0x140154840
 static int32_t Script_GetAlpha(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -755,7 +758,7 @@ static int32_t Script_GetAlpha(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C4A0
+// OFFSET: 0x0050C120/0x1401548A0
 static int32_t Script_SetAlpha(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -785,7 +788,7 @@ static int32_t Script_GetID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C5B0
+// OFFSET: 0x0050C230/0x1401549C0
 static int32_t Script_SetID(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -807,7 +810,7 @@ static int32_t Script_SetID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C660
+// OFFSET: 0x0050C2E0/0x140154A90
 static int32_t Script_SetToplevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -897,7 +900,7 @@ static int32_t Script_Hide(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C8D0
+// OFFSET: 0x0050C550
 static int32_t Script_IsVisible(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -910,7 +913,7 @@ static int32_t Script_IsVisible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C930
+// OFFSET: 0x0050C5B0/0x140154E00
 static int32_t Script_IsShown(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -973,7 +976,7 @@ static int32_t Script_GetHitRectInsets(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0051CB30
+// OFFSET: 0x0050C7B0/0x140155050
 static int32_t Script_SetHitRectInsets(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1004,7 +1007,7 @@ static int32_t Script_SetHitRectInsets(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051CCD0
+// OFFSET: 0x0050C950/0x140155270
 static int32_t Script_GetClampRectInsets(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1022,7 +1025,7 @@ static int32_t Script_GetClampRectInsets(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0051CDB0
+// OFFSET: 0x0050CA30/0x140155370
 static int32_t Script_SetClampRectInsets(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1056,7 +1059,7 @@ static int32_t Script_GetMinResize(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0051CFC0
+// OFFSET: 0x0050CC40/0x140155600
 static int32_t Script_SetMinResize(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CRect bounds = frame->m_resizeRect;
@@ -1087,7 +1090,7 @@ static int32_t Script_GetMaxResize(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0051D180
+// OFFSET: 0x0050CE00/0x140155810
 static int32_t Script_SetMaxResize(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CRect bounds = frame->m_resizeRect;
@@ -1176,7 +1179,7 @@ static int32_t Script_IsResizable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051D4B0
+// OFFSET: 0x0050D130/0x140155C10
 static int32_t Script_StartMoving(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1201,7 +1204,7 @@ static int32_t Script_StartMoving(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D590
+// OFFSET: 0x0050D210/0x140155D10
 static int32_t Script_StartSizing(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1245,7 +1248,7 @@ static int32_t Script_StopMovingOrSizing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D6F0
+// OFFSET: 0x0050D370/0x140155EA0
 static int32_t Script_SetUserPlaced(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1296,7 +1299,7 @@ static int32_t Script_IsClampedToScreen(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051D880
+// OFFSET: 0x0050D500/0x140156080
 static int32_t Script_RegisterForDrag(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     uint32_t buttons = 0;
@@ -1309,7 +1312,7 @@ static int32_t Script_RegisterForDrag(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D920
+// OFFSET: 0x0050D5A0/0x140156120
 static int32_t Script_EnableKeyboard(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1332,7 +1335,7 @@ static int32_t Script_EnableKeyboard(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D9C0
+// OFFSET: 0x0050D640/0x1401561F0
 static int32_t Script_IsKeyboardEnabled(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1345,7 +1348,7 @@ static int32_t Script_IsKeyboardEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051DA30
+// OFFSET: 0x0050D6B0/0x140156260
 static int32_t Script_EnableMouse(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1366,7 +1369,7 @@ static int32_t Script_EnableMouse(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051DAC0
+// OFFSET: 0x0050D740/0x140156310
 static int32_t Script_IsMouseEnabled(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1379,7 +1382,7 @@ static int32_t Script_IsMouseEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051DB20
+// OFFSET: 0x0050D7A0/0x140156380
 static int32_t Script_EnableMouseWheel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1400,7 +1403,7 @@ static int32_t Script_EnableMouseWheel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051DBB0
+// OFFSET: 0x0050D830/0x140156430
 static int32_t Script_IsMouseWheelEnabled(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1413,7 +1416,7 @@ static int32_t Script_IsMouseWheelEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051DC10
+// OFFSET: 0x0050D890/0x1401564A0
 static int32_t Script_EnableJoystick(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1434,7 +1437,7 @@ static int32_t Script_EnableJoystick(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051DCA0
+// OFFSET: 0x0050D920/0x140156550
 static int32_t Script_IsJoystickEnabled(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1447,7 +1450,7 @@ static int32_t Script_IsJoystickEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051DD00
+// OFFSET: 0x0050D980/0x1401565C0
 static int32_t Script_GetBackdrop(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CBackdropGenerator* backdrop = frame->m_backdropGenerator;
@@ -1527,7 +1530,7 @@ static int32_t Script_GetBackdrop(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051DFD0
+// OFFSET: 0x0050DC50/0x140156990
 static int32_t Script_SetBackdrop(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1655,7 +1658,7 @@ static int32_t Script_SetBackdrop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E450
+// OFFSET: 0x0050E0D0/0x140156F70
 static int32_t Script_GetBackdropColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CBackdropGenerator* backdrop = frame->m_backdropGenerator;
@@ -1687,7 +1690,7 @@ static int32_t Script_SetBackdropColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E590
+// OFFSET: 0x0050E210/0x1401570E0
 static int32_t Script_GetBackdropBorderColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CBackdropGenerator* backdrop = frame->m_backdropGenerator;
@@ -1719,7 +1722,7 @@ static int32_t Script_SetBackdropBorderColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E6D0
+// OFFSET: 0x0050E350/0x140157250
 static int32_t Script_SetDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1733,7 +1736,7 @@ static int32_t Script_SetDepth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E750
+// OFFSET: 0x0050E3D0/0x1401572F0
 static int32_t Script_GetDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1745,7 +1748,7 @@ static int32_t Script_GetDepth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051E7B0
+// OFFSET: 0x0050E430/0x140157350
 static int32_t Script_GetEffectiveDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1757,7 +1760,7 @@ static int32_t Script_GetEffectiveDepth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051E810
+// OFFSET: 0x0050E490/0x1401573C0
 static int32_t Script_IgnoreDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1799,7 +1802,7 @@ static int32_t Script_SetPropagateKeyboardInput(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E960
+// OFFSET: 0x0050E5E0/0x140157560
 static int32_t Script_GetPropagateKeyboardInput(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 

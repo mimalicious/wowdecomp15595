@@ -90,7 +90,7 @@ static int32_t GetStateTexture(lua_State* L, CSimpleButtonState state) {
     return 1;
 }
 
-// OFFSET: %0x00541240
+// OFFSET: 0x00531350/0x140183170
 static int32_t Script_Enable(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -106,7 +106,7 @@ static int32_t Script_Enable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005412B0
+// OFFSET: 0x005313C0
 static int32_t Script_Disable(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -122,7 +122,7 @@ static int32_t Script_Disable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541320
+// OFFSET: 0x00531430/0x140183260
 static int32_t Script_IsEnabled(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -130,7 +130,7 @@ static int32_t Script_IsEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00541380
+// OFFSET: 0x00531490/0x1401832C0
 static int32_t Script_GetButtonState(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -150,7 +150,7 @@ static int32_t Script_GetButtonState(lua_State* L) {
     }
 }
 
-// OFFSET: %0x00541420
+// OFFSET: 0x00531530
 static int32_t Script_SetButtonState(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleButtonState state = BUTTONSTATE_DISABLED;
@@ -165,7 +165,7 @@ static int32_t Script_SetButtonState(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005414E0
+// OFFSET: 0x005315F0/0x1401834A0
 static int32_t Script_SetNormalFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleFont* font = NULL;
@@ -201,7 +201,7 @@ static int32_t Script_GetNormalFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", button->m_normalFont, L);
 }
 
-// OFFSET: %0x00541640
+// OFFSET: 0x00531750/0x140183660
 static int32_t Script_SetDisabledFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleFont* font = NULL;
@@ -237,7 +237,7 @@ static int32_t Script_GetDisabledFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", button->m_disabledFont, L);
 }
 
-// OFFSET: %0x005417A0
+// OFFSET: 0x005318B0/0x140183820
 static int32_t Script_SetHighlightFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleFont* font = NULL;
@@ -273,7 +273,7 @@ static int32_t Script_GetHighlightFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", button->m_highlightFont, L);
 }
 
-// OFFSET: %0x00541900
+// OFFSET: 0x00531A10/0x1401839E0
 static int32_t Script_SetFontString(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -303,7 +303,7 @@ static int32_t Script_SetFontString(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541A10
+// OFFSET: 0x00531B20/0x140183B00
 static int32_t Script_GetFontString(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleFontString* fontString = button->m_fontString;
@@ -321,7 +321,8 @@ static int32_t Script_GetFontString(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00541A80
+// PROVEN: c76c2012 IDENTICAL/NONE
+// OFFSET: 0x00531B90/0x140183B90
 static int32_t Script_SetText(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -339,7 +340,7 @@ static int32_t Script_SetFormattedText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541B30
+// OFFSET: 0x00531C40/0x140183C70
 static int32_t Script_GetText(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     const char* text = NULL;
@@ -358,7 +359,7 @@ static int32_t Script_SetNormalTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_NORMAL, "SetNormalTexture");
 }
 
-// OFFSET: %0x00541DA0
+// OFFSET: 0x00531EB0/0x140183F10
 static int32_t Script_GetNormalTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_NORMAL);
 }
@@ -381,12 +382,12 @@ static int32_t Script_SetDisabledTexture(lua_State* L) {
     return SetStateTexture(L, BUTTONSTATE_DISABLED, "SetDisabledTexture");
 }
 
-// OFFSET: %0x00541E20
+// OFFSET: 0x00531F30/0x140183F60
 static int32_t Script_GetDisabledTexture(lua_State* L) {
     return GetStateTexture(L, BUTTONSTATE_DISABLED);
 }
 
-// OFFSET: %0x00541E40
+// OFFSET: 0x00531F50/0x140183F70
 static int32_t Script_SetHighlightTexture(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     EGxBlend blend = GxBlend_Add;
@@ -431,7 +432,7 @@ static int32_t Script_SetHighlightTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541FE0
+// OFFSET: 0x005320F0/0x140184150
 static int32_t Script_GetHighlightTexture(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleTexture* texture = button->m_highlightTexture;
@@ -449,7 +450,7 @@ static int32_t Script_GetHighlightTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00542050
+// OFFSET: 0x00532160/0x1401841E0
 static int32_t Script_SetPushedTextOffset(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -469,7 +470,7 @@ static int32_t Script_SetPushedTextOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00542130
+// OFFSET: 0x00532240/0x140184300
 static int32_t Script_GetPushedTextOffset(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     float x = button->m_pushedTextOffset.x;
@@ -498,7 +499,7 @@ static int32_t Script_GetTextHeight(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005422C0
+// OFFSET: 0x005323D0/0x1401844B0
 static int32_t Script_RegisterForClicks(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     uint64_t action = 0;
@@ -550,7 +551,7 @@ static int32_t Script_GetMotionScriptsWhileDisabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005424A0
+// OFFSET: 0x005325B0/0x1401846D0
 static int32_t Script_SetMotionScriptsWhileDisabled(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 

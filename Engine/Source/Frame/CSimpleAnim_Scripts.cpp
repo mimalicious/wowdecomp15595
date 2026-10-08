@@ -38,14 +38,14 @@ static int32_t Script_Pause(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054B8F0
+// OFFSET: 0x0053BBE0/0x14018F9D0
 static int32_t Script_Stop(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     anim->Stop(true);
     return 0;
 }
 
-// OFFSET: %0x0054B930
+// OFFSET: 0x0053BC20/0x14018FA10
 static int32_t Script_IsDone(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->m_progressWithDelay >= 1.0f);
@@ -84,7 +84,7 @@ static int32_t Script_IsDelaying(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BAC0
+// OFFSET: 0x0053BDC0/0x14018FBB0
 static int32_t Script_SetStartDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -105,7 +105,7 @@ static int32_t Script_GetStartDelay(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BB90
+// OFFSET: 0x0053BE80/0x14018FCA0
 static int32_t Script_SetEndDelay(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -126,7 +126,7 @@ static int32_t Script_GetEndDelay(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BC60
+// OFFSET: 0x0053BF40/0x14018FD90
 static int32_t Script_SetDuration(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -154,7 +154,7 @@ static int32_t Script_GetSmoothProgress(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BD80
+// OFFSET: 0x0053C040/0x14018FED0
 static int32_t Script_SetSmoothProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -168,7 +168,7 @@ static int32_t Script_SetSmoothProgress(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054BE00
+// OFFSET: 0x0053C0C0/0x14018FF70
 static int32_t Script_GetProgress(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_progress);
@@ -211,7 +211,7 @@ static int32_t Script_GetOrder(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054C080
+// OFFSET: 0x0053C240/0x140190160
 static int32_t Script_SetSmoothing(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -247,7 +247,7 @@ static int32_t Script_GetSmoothing(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054C1C0
+// OFFSET: 0x0053C380/0x1401902A0
 static int32_t Script_SetParent(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -305,7 +305,7 @@ static int32_t Script_SetParent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054C3B0
+// OFFSET: 0x0053C580/0x140190550
 static int32_t Script_GetRegionParent(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     CScriptRegion* region = anim->GetRegionParent();
@@ -346,19 +346,22 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 987077d3 IDENTICAL/NONE
 // OFFSET: 0x0053C6C0
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->GetScript(L) : 0;
 }
 
+// PROVEN: 61b80a4e IDENTICAL/NONE
 // OFFSET: 0x0053C700
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->SetScript(L) : 0;
 }
 
-// OFFSET: 0x0053C740
+// PROVEN: 4be7edbe IDENTICAL/NONE
+// OFFSET: 0x0053C740/0x140190770
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     return anim ? anim->HookScript(L) : 0;

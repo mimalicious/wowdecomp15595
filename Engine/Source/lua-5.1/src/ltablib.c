@@ -83,7 +83,7 @@ static int getn (lua_State *L) {
 }
 
 
-// OFFSET: #0x008519B0
+// OFFSET: 0x00A2ABE0/0x1407D2EC0
 static int setn (lua_State *L) {
   luaL_checktype(L, 1, LUA_TTABLE);
 #ifndef luaL_setn
@@ -126,7 +126,7 @@ static int tinsert (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096CD30
+// OFFSET: 0x00A2ACC0/0x1407D2FE0
 static int tremove (lua_State *L) {
   int e = aux_getn(L, 1);
   int pos = luaL_optint(L, 2, e);
@@ -143,7 +143,7 @@ static int tremove (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096CDD0
+// OFFSET: 0x00A2AD60/0x1407D30C0
 static int tremovemulti (lua_State *L) {
   int e = aux_getn(L, 1);
   int pos = luaL_optint(L, 2, e);

@@ -37,7 +37,7 @@ static int32_t Script_GetObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054E3B0
+// OFFSET: 0x0053E620/0x140192DC0
 static int32_t Script_IsObjectType(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
 
@@ -71,7 +71,7 @@ static int32_t Script_GetName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054E4C0
+// OFFSET: 0x0053E730/0x140192F10
 static int32_t Script_GetParent(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
     CScriptObject* parent = object->GetScriptObjectParent();

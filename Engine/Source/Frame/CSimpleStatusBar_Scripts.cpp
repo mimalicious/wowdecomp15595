@@ -33,6 +33,7 @@ void CSimpleStatusBar::GetStatusBarColor(CImVector& color) {
     }
 }
 
+// PROVEN: df625eff IDENTICAL/NONE
 // OFFSET: 0x00530A10/0x140181E30
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
@@ -63,7 +64,7 @@ static int32_t Script_SetOrientation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540AD0
+// OFFSET: 0x00530B30
 static int32_t Script_GetMinMaxValues(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -72,7 +73,7 @@ static int32_t Script_GetMinMaxValues(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x00540B30
+// OFFSET: 0x00530B90/0x140182000
 static int32_t Script_SetMinMaxValues(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -107,7 +108,7 @@ static int32_t Script_GetValue(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00540CA0
+// OFFSET: 0x00530D00/0x1401821C0
 static int32_t Script_SetValue(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -139,7 +140,7 @@ static int32_t Script_GetStatusBarTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00540D90
+// OFFSET: 0x00530DF0/0x140182300
 static int32_t Script_SetStatusBarTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
     uint32_t drawLayer = 2;
@@ -189,7 +190,7 @@ static int32_t Script_SetStatusBarTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540F60
+// OFFSET: 0x00530FC0/0x1401824E0
 static int32_t Script_GetStatusBarColor(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
     CImVector color;
@@ -202,7 +203,7 @@ static int32_t Script_GetStatusBarColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x00541050
+// OFFSET: 0x005310B0/0x140182600
 static int32_t Script_SetStatusBarColor(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
     CImVector color;

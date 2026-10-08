@@ -70,7 +70,7 @@ int32_t FrameScript_GetColorNoAlpha(lua_State* L, int32_t index, CImVector& colo
     return index;
 }
 
-// OFFSET: %0x00548170
+// OFFSET: 0x00538590/0x14018B790
 static int32_t Script_SetModel(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -111,7 +111,7 @@ static int32_t Script_ClearModel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005482A0
+// OFFSET: 0x005386C0/0x14018B900
 static int32_t Script_SetPosition(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
     float x = lua_tonumber(L, 2);
@@ -125,7 +125,7 @@ static int32_t Script_SetPosition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548320
+// OFFSET: 0x00538740/0x14018B9B0
 static int32_t Script_SetFacing(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -139,7 +139,7 @@ static int32_t Script_SetFacing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005483A0
+// OFFSET: 0x005387C0/0x14018BA50
 static int32_t Script_SetModelScale(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -153,7 +153,7 @@ static int32_t Script_SetModelScale(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548420
+// OFFSET: 0x00538840/0x14018BAF0
 static int32_t Script_SetSequence(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -175,7 +175,7 @@ static int32_t Script_SetSequence(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005484F0
+// OFFSET: 0x00538910/0x14018BBE0
 static int32_t Script_SetSequenceTime(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -191,7 +191,7 @@ static int32_t Script_SetSequenceTime(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005485B0
+// OFFSET: 0x005389D0/0x14018BCB0
 static int32_t Script_SetCamera(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -273,7 +273,7 @@ int32_t CSimpleModel::SetLightHelper(lua_State* L, int32_t index, CM2Light* ligh
     return 1;
 }
 
-// OFFSET: %0x00548980
+// OFFSET: 0x00538DA0/0x14018C140
 static int32_t Script_SetLight(lua_State* L) {
     const char* name = "model";
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -297,7 +297,7 @@ static int32_t Script_SetLight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548A30
+// OFFSET: 0x00538E50/0x14018C210
 static int32_t Script_GetLight(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
     CM2Light* light = &model->m_light;
@@ -394,7 +394,7 @@ static int32_t Script_AdvanceTime(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548D70
+// OFFSET: 0x00539190/0x14018C600
 static int32_t Script_ReplaceIconTexture(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -408,7 +408,7 @@ static int32_t Script_ReplaceIconTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548DF0
+// OFFSET: 0x00539210/0x14018C6B0
 static int32_t Script_SetFogColor(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
     CImVector color;
@@ -420,7 +420,7 @@ static int32_t Script_SetFogColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548E50
+// OFFSET: 0x00539270/0x14018C720
 static int32_t Script_GetFogColor(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
     CImVector color = model->m_fogColor;
@@ -433,7 +433,7 @@ static int32_t Script_GetFogColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x00548F20
+// OFFSET: 0x00539340/0x14018C800
 static int32_t Script_SetFogNear(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -455,7 +455,7 @@ static int32_t Script_GetFogNear(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549000
+// OFFSET: 0x00539410/0x14018C8F0
 static int32_t Script_SetFogFar(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -486,7 +486,7 @@ static int32_t Script_ClearFog(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549110
+// OFFSET: 0x00539520/0x14018CA20
 static int32_t Script_SetGlow(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 

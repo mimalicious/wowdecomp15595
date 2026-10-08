@@ -41,7 +41,7 @@ static int32_t Script_GetOrigin(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x0054C8D0
+// OFFSET: 0x0053CAA0/0x140190BF0
 static int32_t Script_SetDegrees(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
 
@@ -55,14 +55,14 @@ static int32_t Script_SetDegrees(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054C950
+// OFFSET: 0x0053CB20/0x140190CA0
 static int32_t Script_GetDegrees(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
     lua_pushnumber(L, anim->m_radians * 57.29578f);
     return 1;
 }
 
-// OFFSET: %0x0054C9A0
+// OFFSET: 0x0053CB70/0x140190D00
 static int32_t Script_SetRadians(lua_State* L) {
     CSimpleRotationAnim* anim = static_cast<CSimpleRotationAnim*>(FrameScript_GetObjectThis(L, CSimpleRotationAnim::GetObjectType()));
 

@@ -10,7 +10,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00549210
+// OFFSET: 0x00539620/0x14018CB60
 static int32_t Script_SetScrollChild(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -85,7 +85,7 @@ static int32_t Script_GetScrollChild(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549480
+// OFFSET: 0x00539890/0x14018CE90
 static int32_t Script_SetHorizontalScroll(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 
@@ -108,7 +108,7 @@ static int32_t Script_SetHorizontalScroll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549550
+// OFFSET: 0x00539960/0x14018CF90
 static int32_t Script_SetVerticalScroll(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
 

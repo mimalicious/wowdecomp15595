@@ -9,7 +9,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054CD20
+// OFFSET: 0x0053CEF0/0x140191190
 static int32_t Script_SetParent(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
 

@@ -41,7 +41,7 @@ static int32_t Script_GetOrigin(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x0054CBE0
+// OFFSET: 0x0053CDB0/0x140191010
 static int32_t Script_SetScale(lua_State* L) {
     CSimpleScaleAnim* anim = static_cast<CSimpleScaleAnim*>(FrameScript_GetObjectThis(L, CSimpleScaleAnim::GetObjectType()));
 
@@ -59,7 +59,7 @@ static int32_t Script_SetScale(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054CC90
+// OFFSET: 0x0053CE60
 static int32_t Script_GetScale(lua_State* L) {
     CSimpleScaleAnim* anim = static_cast<CSimpleScaleAnim*>(FrameScript_GetObjectThis(L, CSimpleScaleAnim::GetObjectType()));
 

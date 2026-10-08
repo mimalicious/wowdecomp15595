@@ -438,6 +438,7 @@ T* TSList<T, TGetLink>::DeleteNode(T* ptr) {
     return next;
 }
 
+// PROVEN: 89d57c33 IDENTICAL/NONE
 // OFFSET: 0x00544F70/0x1402B0D40
 template <class T, class TGetLink>
 T* TSList<T, TGetLink>::Head() {

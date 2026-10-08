@@ -12,7 +12,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054D170
+// OFFSET: 0x0053D340/0x140191750
 static int32_t Script_SetCurve(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
 
@@ -50,7 +50,7 @@ static int32_t Script_GetMaxOrder(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054DB90
+// OFFSET: 0x0053DE00/0x140192390
 static int32_t Script_GetControlPoints(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
     uint32_t count = path->m_sortedPoints.Count();
@@ -78,7 +78,7 @@ static int32_t Script_GetControlPoints(lua_State* L) {
     return count;
 }
 
-// OFFSET: %0x0054DD90
+// OFFSET: 0x0053E000/0x140192610
 static int32_t Script_CreateControlPoint(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
     XMLHashNodeRef ref;

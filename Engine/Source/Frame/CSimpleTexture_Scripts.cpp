@@ -44,7 +44,7 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C2C0
+// OFFSET: 0x0052C170
 static int32_t Script_GetDrawLayer(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -52,7 +52,7 @@ static int32_t Script_GetDrawLayer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C330
+// OFFSET: 0x0052C1E0/0x14017C9A0
 static int32_t Script_SetDrawLayer(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -88,7 +88,7 @@ static int32_t Script_GetBlendMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C480
+// OFFSET: 0x0052C330/0x14017CB30
 static int32_t Script_SetBlendMode(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -106,7 +106,7 @@ static int32_t Script_SetBlendMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C520
+// OFFSET: 0x0052C3D0/0x14017CBF0
 static int32_t Script_GetVertexColor(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     CImVector color;
@@ -120,7 +120,7 @@ static int32_t Script_GetVertexColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0053C600
+// OFFSET: 0x0052C4B0/0x14017CD00
 static int32_t Script_SetVertexColor(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     CImVector current;
@@ -137,7 +137,7 @@ static int32_t Script_SetVertexColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C680
+// OFFSET: 0x0052C530/0x14017CDA0
 static int32_t Script_SetGradient(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     ORIENTATION orientation;
@@ -157,7 +157,7 @@ static int32_t Script_SetGradient(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C750
+// OFFSET: 0x0052C600/0x14017CE90
 static int32_t Script_SetGradientAlpha(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     ORIENTATION orientation;
@@ -177,7 +177,7 @@ static int32_t Script_SetGradientAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C820
+// OFFSET: 0x0052C6D0/0x14017CF80
 static int32_t Script_SetAlpha(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -198,7 +198,8 @@ static int32_t Script_SetAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C900
+// PROVEN: 24314fdc IDENTICAL/NONE
+// OFFSET: 0x0052C7B0/0x14017D070
 static int32_t Script_GetAlpha(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     CImVector color;
@@ -209,7 +210,7 @@ static int32_t Script_GetAlpha(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C970
+// OFFSET: 0x0052C820/0x14017D0E0
 static int32_t Script_Show(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -219,7 +220,7 @@ static int32_t Script_Show(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C9C0
+// OFFSET: 0x0052C870
 static int32_t Script_Hide(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -229,7 +230,7 @@ static int32_t Script_Hide(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053CA00
+// OFFSET: 0x0052C8B0
 static int32_t Script_IsVisible(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -242,7 +243,7 @@ static int32_t Script_IsVisible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CA60
+// OFFSET: 0x0052C910/0x14017D1F0
 static int32_t Script_IsShown(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -270,7 +271,7 @@ static int32_t Script_GetTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CB40
+// OFFSET: 0x0052C9F0/0x14017D2E0
 static int32_t Script_SetTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -294,7 +295,7 @@ static int32_t Script_SetTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CC30
+// OFFSET: 0x0052CAE0/0x14017D430
 static int32_t Script_GetTexCoord(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -306,7 +307,7 @@ static int32_t Script_GetTexCoord(lua_State* L) {
     return 8;
 }
 
-// OFFSET: %0x0053CCA0
+// OFFSET: 0x0052CB50/0x14017D4C0
 static int32_t Script_SetRotation(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -364,7 +365,7 @@ static int32_t Script_IsDesaturated(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CF00
+// OFFSET: 0x0052CDB0/0x14017D7B0
 static int32_t Script_SetNonBlocking(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     uint32_t nonBlocking = StringToBOOL(L, 2, 1) != 0;
@@ -387,7 +388,7 @@ static int32_t Script_GetNonBlocking(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053CFC0
+// OFFSET: 0x0052CE70/0x14017D880
 static int32_t Script_SetHorizTile(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -395,7 +396,7 @@ static int32_t Script_SetHorizTile(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053D020
+// OFFSET: 0x0052CED0/0x14017D8F0
 static int32_t Script_GetHorizTile(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -408,7 +409,7 @@ static int32_t Script_GetHorizTile(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053D080
+// OFFSET: 0x0052CF30/0x14017D960
 static int32_t Script_SetVertTile(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -416,7 +417,7 @@ static int32_t Script_SetVertTile(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053D0E0
+// OFFSET: 0x0052CF90/0x14017D9D0
 static int32_t Script_GetVertTile(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -429,7 +430,7 @@ static int32_t Script_GetVertTile(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053E610
+// OFFSET: 0x0052E5E0/0x14017F410
 static int32_t Script_SetTexCoord(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     int32_t count = lua_gettop(L) - 1;

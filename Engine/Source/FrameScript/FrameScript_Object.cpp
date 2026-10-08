@@ -486,14 +486,14 @@ void FrameScript_Object::UnregisterScriptEvent(const char* name) {
     FrameScript_UnregisterScriptEvent(this, event);
 }
 
-// OFFSET: %0x007A54E0
+// OFFSET: 0x0083E750/0x140569CE0
 void FrameScript_Object::RegisterAllScriptEvents() {
     for (FrameScript_EventObject* event = s_scriptEventsHash.m_fulllist.Head(); event; event = s_scriptEventsHash.m_fulllist.Next(event)) {
         this->RegisterScriptEvent(event->m_key.m_str);
     }
 }
 
-// OFFSET: %0x007A5530
+// OFFSET: 0x0083E7B0
 void FrameScript_Object::UnregisterAllScriptEvents() {
     for (FrameScript_EventObject* event = s_scriptEventsHash.m_fulllist.Head(); event; event = s_scriptEventsHash.m_fulllist.Next(event)) {
         this->UnregisterScriptEvent(event->m_key.m_str);

@@ -73,7 +73,7 @@ static int str_reverse (lua_State *L) {
 }
 
 
-// OFFSET: #0x00852580
+// OFFSET: 0x00A2B7F0/0x1407D3D30
 static int str_lower (lua_State *L) {
   size_t l;
   size_t i;
@@ -99,7 +99,7 @@ static int str_lower (lua_State *L) {
 }
 
 
-// OFFSET: #0x00852680
+// OFFSET: 0x00A2B8F0/0x1407D3EA0
 static int str_upper (lua_State *L) {
   size_t l;
   size_t i;
@@ -599,13 +599,13 @@ static int str_find_aux (lua_State *L, int find) {
 }
 
 
-// OFFSET: #0x008535B0
+// OFFSET: 0x00A2C7A0/0x1407D5140
 static int str_find (lua_State *L) {
   return str_find_aux(L, 1);
 }
 
 
-// OFFSET: #0x008535D0
+// OFFSET: 0x00A2C7C0/0x1407D5150
 static int str_match (lua_State *L) {
   return str_find_aux(L, 0);
 }
@@ -650,7 +650,7 @@ static int gmatch (lua_State *L) {
 }
 
 
-// OFFSET: #0x00853760
+// OFFSET: 0x00A2C9C0/0x1407D5390
 static int gfind_nodef (lua_State *L) {
   return luaL_error(L, LUA_QL("string.gfind") " was renamed to "
                        LUA_QL("string.gmatch"));
@@ -807,7 +807,7 @@ static void addintlen (char *form) {
 }
 
 
-// OFFSET: %0x0096EF30
+// OFFSET: 0x00A2CEC0/0x1407D58D0
 static int str_format (lua_State *L) {
   int arg = 1;
   size_t sfl;

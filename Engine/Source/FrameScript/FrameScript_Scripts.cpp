@@ -211,7 +211,7 @@ static int32_t Script_strconcat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A0240
+// OFFSET: 0x00839E10/0x140564320
 static int32_t Script_issecure(lua_State* L) {
     if (lua_tainted) {
         lua_pushnil(L);

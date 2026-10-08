@@ -203,7 +203,7 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A7B0
+// OFFSET: 0x0053AB50/0x14018E5D0
 static int32_t Script_SetText(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
 
@@ -211,7 +211,7 @@ static int32_t Script_SetText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054A800
+// OFFSET: 0x0053ABB0/0x14018E650
 static int32_t Script_SetHyperlinkFormat(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
 
