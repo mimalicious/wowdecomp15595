@@ -212,7 +212,8 @@ static int32_t Script_SetStatusBarColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005410B0
+// PROVEN: a8b4e84f IDENTICAL/NONE
+// OFFSET: 0x00531110/0x140182670
 static int32_t Script_GetRotatesTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -225,7 +226,8 @@ static int32_t Script_GetRotatesTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00541110
+// PROVEN: 38cb25dc IDENTICAL/NONE
+// OFFSET: 0x00531170/0x1401826D0
 static int32_t Script_SetRotatesTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 

@@ -28,7 +28,8 @@ CScriptObject* FrameScript_GetObjectThis(lua_State* L, int32_t type) {
     return object;
 }
 
-// OFFSET: %0x0054E360
+// PROVEN: 6cb01ba8 IDENTICAL/NONE
+// OFFSET: 0x0053E5D0/0x140192D70
 static int32_t Script_GetObjectType(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
 
@@ -55,7 +56,8 @@ static int32_t Script_IsObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054E460
+// PROVEN: 5a9b9a7d IDENTICAL/NONE
+// OFFSET: 0x0053E6D0/0x140192EA0
 static int32_t Script_GetName(lua_State* L) {
     CScriptObject* object = FrameScript_GetObjectThis(L, CScriptObject::GetObjectType());
     const char* name = object->GetName();

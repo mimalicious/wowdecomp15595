@@ -230,14 +230,16 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545E80
+// PROVEN: f3f648fc IDENTICAL/NONE
+// OFFSET: 0x00536B10/0x1401899F0
 static int32_t Script_SetFading(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     frame->m_fading = StringToBOOL(L, 2, 1);
     return 0;
 }
 
-// OFFSET: %0x00545ED0
+// PROVEN: 33156144 IDENTICAL/NONE
+// OFFSET: 0x00536B60
 static int32_t Script_GetFading(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 

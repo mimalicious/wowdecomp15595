@@ -76,7 +76,8 @@ static int32_t Script_IsStopped(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BA70
+// PROVEN: 95fcd629 IDENTICAL/NONE
+// OFFSET: 0x0053BD70/0x14018FB60
 static int32_t Script_IsDelaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushboolean(L, anim->IsDelaying());
@@ -202,7 +203,8 @@ static int32_t Script_SetOrder(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054C040
+// PROVEN: 3c3cc62a IDENTICAL/NONE
+// OFFSET: 0x0053C200/0x140190110
 static int32_t Script_GetOrder(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     lua_pushinteger(L, anim->m_order + 1);

@@ -358,7 +358,8 @@ static int32_t Script_SetScrollOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005476A0
+// PROVEN: 00cabdf6 IDENTICAL/NONE
+// OFFSET: 0x00537D10/0x14018AD40
 static int32_t Script_AtTop(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -371,7 +372,8 @@ static int32_t Script_AtTop(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547700
+// PROVEN: 3e6b2333 IDENTICAL/NONE
+// OFFSET: 0x00537D70/0x14018ADA0
 static int32_t Script_AtBottom(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -453,14 +455,16 @@ static int32_t Script_SetMaxLines(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00547A40
+// PROVEN: c4e3d673 IDENTICAL/NONE
+// OFFSET: 0x005380B0/0x14018B130
 static int32_t Script_SetFading(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->m_fading = StringToBOOL(L, 2, 1);
     return 0;
 }
 
-// OFFSET: %0x00547A90
+// PROVEN: f1d85cc2 IDENTICAL/NONE
+// OFFSET: 0x00538100
 static int32_t Script_GetFading(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 

@@ -26,7 +26,8 @@ void CSimpleFontString::DestroyScriptMetaTable() {
     CSimpleFontString::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x0053D160
+// PROVEN: e5c8640e IDENTICAL/NONE
+// OFFSET: 0x0052D010
 static int32_t Script_GetObjectType(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     lua_pushstring(L, string->GetObjectTypeName());
@@ -503,7 +504,8 @@ static int32_t Script_GetWrappedWidth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053E370
+// PROVEN: 8fbbfec5 IDENTICAL/NONE
+// OFFSET: 0x0052E260/0x14017F050
 static int32_t Script_IsTruncated(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     lua_pushboolean(L, string->IsTruncated());
@@ -592,7 +594,8 @@ static int32_t Script_SetJustifyV(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053E4D0
+// PROVEN: e76304d1 IDENTICAL/NONE
+// OFFSET: 0x0052E3C0/0x14017F1C0
 static int32_t Script_CanNonSpaceWrap(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
 

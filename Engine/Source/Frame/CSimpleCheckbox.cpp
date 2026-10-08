@@ -37,12 +37,14 @@ CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_disabledCheckedTexture = NULL;
 }
 
-// OFFSET: %0x00525A20
+// PROVEN: 8dbd22bf IDENTICAL/NONE
+// OFFSET: 0x00515C50
 const char* CSimpleCheckbox::GetObjectTypeName() {
     return CSimpleCheckbox::s_objectTypeName;
 }
 
-// OFFSET: %0x00525A30
+// PROVEN: 29fd7aea IDENTICAL/NONE
+// OFFSET: 0x00515C60
 int32_t CSimpleCheckbox::GetScriptMetaTable() {
     return CSimpleCheckbox::s_metatable;
 }

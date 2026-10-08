@@ -365,7 +365,8 @@ void CSimpleEditBox::GetScriptTime(lua_State* L, double* time, uint32_t* count, 
     CSimpleHyperlinkedFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x00526310
+// PROVEN: d7b1d513 IDENTICAL/NONE
+// OFFSET: 0x00516540/0x140160C90
 void CSimpleEditBox::SetAutoFocus(int32_t enable) {
     if (enable) {
         this->m_editBoxFlags |= 0x1;
@@ -384,7 +385,8 @@ void CSimpleEditBox::SetCountInvisibleLetters(int32_t enable) {
     }
 }
 
-// OFFSET: %0x00526350
+// PROVEN: 0678a072 IDENTICAL/NONE
+// OFFSET: 0x00516580/0x140160CD0
 void CSimpleEditBox::SetNumeric(int32_t enable) {
     if (enable) {
         this->m_editBoxFlags |= 0x4;
@@ -403,7 +405,8 @@ void CSimpleEditBox::SetPassword(int32_t enable) {
     }
 }
 
-// OFFSET: %0x00526390
+// PROVEN: 2b3de7b3 IDENTICAL/NONE
+// OFFSET: 0x005165C0/0x140160D10
 void CSimpleEditBox::SetAltArrowKeyMode(int32_t enable) {
     if (enable) {
         this->m_editBoxFlags |= 0x10;

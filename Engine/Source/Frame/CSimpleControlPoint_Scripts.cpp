@@ -115,7 +115,8 @@ static int32_t Script_SetOrder(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D110
+// PROVEN: c904816c IDENTICAL/NONE
+// OFFSET: 0x0053D2E0/0x1401916D0
 static int32_t Script_GetOrder(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
     lua_pushinteger(L, point->m_order + 1);

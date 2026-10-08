@@ -34,14 +34,15 @@ static int32_t Script_SetCurve(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D230
+// OFFSET: 0x0053D400/0x140191820
 static int32_t Script_GetCurve(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
     lua_pushstring(L, CurveTypeToString(static_cast<SimpleAnimCurveType>(path->m_curve)));
     return 1;
 }
 
-// OFFSET: %0x0054D280
+// PROVEN: 8669560e IDENTICAL/NONE
+// OFFSET: 0x0053D450
 static int32_t Script_GetMaxOrder(lua_State* L) {
     CSimplePathAnim* path = static_cast<CSimplePathAnim*>(FrameScript_GetObjectThis(L, CSimplePathAnim::GetObjectType()));
     int32_t order = path->GetMaxControlPointOrder() + 1;

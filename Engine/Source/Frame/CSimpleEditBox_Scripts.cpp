@@ -179,7 +179,8 @@ static int32_t Script_SetAutoFocus(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005445C0
+// PROVEN: ea8b8cdc IDENTICAL/NONE
+// OFFSET: 0x00535180/0x140187C20
 static int32_t Script_IsAutoFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (editBox->m_editBoxFlags & 0x1) {
@@ -212,14 +213,16 @@ static int32_t Script_IsCountInvisibleLetters(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005446D0
+// PROVEN: 61ed0e22 IDENTICAL/NONE
+// OFFSET: 0x00535290/0x140187D40
 static int32_t Script_SetMultiLine(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetMultiLine(StringToBOOL(L, 2, 1));
     return 0;
 }
 
-// OFFSET: %0x00544720
+// PROVEN: d0512e61 IDENTICAL/NONE
+// OFFSET: 0x005352E0/0x140187DA0
 static int32_t Script_IsMultiLine(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (editBox->m_editBoxFlags & 0x2) {
@@ -259,7 +262,8 @@ static int32_t Script_SetPassword(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00544880
+// PROVEN: 41efc86e IDENTICAL/NONE
+// OFFSET: 0x00535440/0x140187F20
 static int32_t Script_IsPassword(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (editBox->m_editBoxFlags & 0x8) {
@@ -550,7 +554,8 @@ static int32_t Script_SetAltArrowKeyMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00545440
+// PROVEN: fcc84e5d IDENTICAL/NONE
+// OFFSET: 0x00536000/0x140188D10
 static int32_t Script_GetAltArrowKeyMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (editBox->m_editBoxFlags & 0x10) {
@@ -562,7 +567,8 @@ static int32_t Script_GetAltArrowKeyMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x005454A0
+// PROVEN: 13bd053d IDENTICAL/NONE
+// OFFSET: 0x00536060/0x140188D70
 static int32_t Script_IsInIMECompositionMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     if (editBox->m_imeComposition) {

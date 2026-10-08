@@ -16,7 +16,8 @@
 // STATIC: %0x00BB8D88
 int32_t CSimpleTexture::s_metatable = LUA_NOREF;
 
-// OFFSET: %0x0053C1C0
+// PROVEN: 7218d2b2 IDENTICAL/NONE
+// OFFSET: 0x0052C070
 static int32_t Script_GetObjectType(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -79,7 +80,7 @@ static int32_t Script_SetDrawLayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053C430
+// OFFSET: 0x0052C2E0/0x14017CAE0
 static int32_t Script_GetBlendMode(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -372,7 +373,8 @@ static int32_t Script_SetNonBlocking(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053CF60
+// PROVEN: 36b43e75 IDENTICAL/NONE
+// OFFSET: 0x0052CE10/0x14017D820
 static int32_t Script_GetNonBlocking(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 

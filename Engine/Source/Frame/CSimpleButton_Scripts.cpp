@@ -541,7 +541,8 @@ static int32_t Script_UnlockHighlight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00542450
+// PROVEN: 187f6fc4 IDENTICAL/NONE
+// OFFSET: 0x00532560/0x140184680
 static int32_t Script_GetMotionScriptsWhileDisabled(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 

@@ -823,7 +823,8 @@ static int32_t Script_SetToplevel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C6D0
+// PROVEN: eb52d9f8 IDENTICAL/NONE
+// OFFSET: 0x0050C350/0x140154B30
 static int32_t Script_IsToplevel(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1138,7 +1139,8 @@ static int32_t Script_SetDontSavePosition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D3A0
+// PROVEN: 099468cb IDENTICAL/NONE
+// OFFSET: 0x0050D020/0x140155AC0
 static int32_t Script_GetDontSavePosition(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1257,7 +1259,8 @@ static int32_t Script_SetUserPlaced(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D770
+// PROVEN: 05737aa4 IDENTICAL/NONE
+// OFFSET: 0x0050D3F0/0x140155F50
 static int32_t Script_IsUserPlaced(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1279,7 +1282,8 @@ static int32_t Script_SetClampedToScreen(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051D820
+// PROVEN: 6a8b4f79 IDENTICAL/NONE
+// OFFSET: 0x0050D4A0/0x140156020
 static int32_t Script_IsClampedToScreen(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1767,7 +1771,8 @@ static int32_t Script_IgnoreDepth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051E8A0
+// PROVEN: 4eae8bcc IDENTICAL/NONE
+// OFFSET: 0x0050E520/0x140157470
 static int32_t Script_IsIgnoringDepth(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 

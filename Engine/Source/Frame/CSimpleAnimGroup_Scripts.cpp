@@ -72,7 +72,8 @@ static int32_t Script_IsPaused(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054D610
+// PROVEN: 69fabf31 IDENTICAL/NONE
+// OFFSET: 0x0053D7E0/0x140191C60
 static int32_t Script_IsPendingFinish(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushboolean(L, (group->m_flags >> 1) & 1);
@@ -108,21 +109,23 @@ static int32_t Script_SetLooping(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054D770
+// OFFSET: 0x0053D930/0x140191DD0
 static int32_t Script_GetLooping(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushstring(L, LoopTypeToString(static_cast<SimpleAnimLoopType>(group->m_loopType)));
     return 1;
 }
 
-// OFFSET: %0x0054D7C0
+// PROVEN: b2e4cb2b IDENTICAL/NONE
+// OFFSET: 0x0053D980/0x140191E20
 static int32_t Script_GetLoopState(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     lua_pushstring(L, LoopStateToString(static_cast<SimpleAnimLoopState>(group->m_loopState)));
     return 1;
 }
 
-// OFFSET: %0x0054D810
+// PROVEN: dbaf1394 IDENTICAL/NONE
+// OFFSET: 0x0053D9D0/0x140191E70
 static int32_t Script_GetMaxOrder(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     int32_t order = group->GetMaxAnimOrder() + 1;
