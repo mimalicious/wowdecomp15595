@@ -58,11 +58,45 @@ int32_t OsWriteFile(HOSFILE file, const void* buffer, uint32_t bytesToWrite, uin
     return Blizzard::File::Write(reinterpret_cast<Blizzard::File::StreamRecord*>(file), buffer, reinterpret_cast<int32_t*>(bytesWritten)) != 0;
 }
 
+// OFFSET: 0x007A8E10
+int64_t OsSetFilePointer(HOSFILE file, int64_t distance, uint32_t moveMethod) {
+    int32_t whence[] = { 0, 1, 2 };
+    int64_t position = 0;
+
+    if (moveMethod && !Blizzard::File::GetPos(reinterpret_cast<Blizzard::File::StreamRecord*>(file), &position)) {
+        return -1;
+    }
+
+    if (!Blizzard::File::SetPos(reinterpret_cast<Blizzard::File::StreamRecord*>(file), distance, whence[moveMethod])) {
+        return -1;
+    }
+
+    return distance + position;
+}
+
 // PROVEN: 3b7a53d4 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A8EA0/0x14049EC40
 uint64_t OsGetFileSize(HOSFILE file) {
     Blizzard::File::FileInfo* info = Blizzard::File::GetFileInfo(reinterpret_cast<Blizzard::File::StreamRecord*>(file));
     return !info ? 0xFFFFFFFF : info->m_size;
+}
+
+// PROVEN: d47165be IDENTICAL/NONE
+// OFFSET: 0x007A8ED0
+uint64_t OsGetFileSize(const char* fileName) {
+    Blizzard::File::FileInfo info;
+
+    if (Blizzard::File::GetFileInfo(fileName, &info)) {
+        return info.m_compressedSize;
+    }
+
+    return 0xFFFFFFFF;
+}
+
+// PROVEN: abf4fa49 IDENTICAL/NONE
+// OFFSET: 0x007A8F00
+int32_t OsSetEndOfFile(HOSFILE file) {
+    return Blizzard::File::SetEOF(reinterpret_cast<Blizzard::File::StreamRecord*>(file), 0, 1) != 0;
 }
 
 // PROVEN: 1d127c33 IDENTICAL/DIFFERENT
@@ -274,6 +308,22 @@ uint32_t GetFileMode(uint32_t desiredAccess, uint32_t shareMode, uint32_t create
     }
 
     return mode;
+}
+
+// PROVEN: 8a1fe467 IDENTICAL/NONE
+// OFFSET: 0x007A92B0
+int32_t OsFileSetSparse(HOSFILE file, int32_t sparse) {
+    return Blizzard::File::SetSparse(reinterpret_cast<Blizzard::File::StreamRecord*>(file), sparse != 0) != 0;
+}
+
+// PROVEN: 95667a9b IDENTICAL/NONE
+// OFFSET: 0x007A92E0
+int32_t OsFileSupportsSparse() {
+    char path[260];
+    char root[4];
+    Blizzard::File::GetWorkingDirectory(path, sizeof(path));
+    Blizzard::String::Copy(root, path, sizeof(root));
+    return Blizzard::File::SupportsSparse(root);
 }
 
 // PROVEN: 2376fe9a IDENTICAL/UNPROVEN

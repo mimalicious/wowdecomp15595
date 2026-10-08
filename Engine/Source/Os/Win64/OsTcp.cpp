@@ -204,7 +204,7 @@ void OsNet::TCPNET::LogWrite(const char* format, ...) {
 
     DWORD lastError = GetLastError();
     int wsaError = WSAGetLastError();
-    uint32_t length = static_cast<uint32_t>(SStrPrintf(line, sizeof(line), "t[0x%08x] se[%u] we[%u] ", GetCurrentThreadId(), wsaError, lastError));
+    uint32_t length = static_cast<uint32_t>(SStrPrintf(line, "t[0x%08x] se[%u] we[%u] ", GetCurrentThreadId(), wsaError, lastError));
 
     va_list arglist;
     va_start(arglist, format);

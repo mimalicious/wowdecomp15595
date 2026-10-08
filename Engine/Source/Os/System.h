@@ -61,6 +61,7 @@ OsType OsGetVersion();
 void OsGetVersionString(char* buffer, int32_t size);
 int32_t OsIsRemoteSession();
 int32_t OsLaunchURL(const char* url);
+void OsOutputDebugString(const char* format, ...);
 void OsSetBackgroundSleepMs(uint32_t milliseconds);
 void OsSetSleepInBackground(int32_t sleep);
 int32_t OsSleepInBackground();

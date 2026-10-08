@@ -830,7 +830,8 @@ void OsInputSetWindowResizeLock(int32_t resizeLock) {
     s_WindowResizeLock = resizeLock;
 }
 
-// OFFSET: %0x007D9440
+// PROVEN: 5a37cffa IDENTICAL/NONE
+// OFFSET: 0x00873AD0/0x1405AA490
 float OsInputGetMouseSpeed() {
     return s_mouseSpeed * 0.1f;
 }

@@ -148,7 +148,13 @@ int32_t IOsGetProcessorFeatures(CpuIdInfo* info) {
     return 2;
 }
 
-// OFFSET: %0x007DADB0
+// PROVEN: a64fab05 IDENTICAL/IDENTICAL
+// OFFSET: [0x00401000/0x1407D7E80]
+void OsOutputDebugString(const char* format, ...) {
+}
+
+// PROVEN: 8348ba01 IDENTICAL/NONE
+// OFFSET: 0x00875440
 void OsSystemEnableCpuLog() {
     s_cpuLogEnabled = 1;
 }
@@ -495,7 +501,8 @@ int32_t IOsGetPowerProfFrequency() {
     return result;
 }
 
-// OFFSET: %0x007DB380
+// PROVEN: b58193b6 IDENTICAL/NONE
+// OFFSET: 0x00875A20/0x1405AC7A0
 int32_t OsIsRemoteSession() {
     return GetSystemMetrics(SM_REMOTESESSION);
 }

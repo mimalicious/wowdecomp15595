@@ -108,7 +108,7 @@ void OsCallInitialize(const char* name) {
     OsCallThread* thread = new (SMemAlloc(sizeof(OsCallThread), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)) OsCallThread;
     thread->m_threadId = GetCurrentThreadId();
     DuplicateHandle(GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &thread->m_threadHandle, 0, FALSE, DUPLICATE_SAME_ACCESS);
-    SStrPrintf(thread->m_name, sizeof(thread->m_name), "%s [%u]", name, thread->m_threadId);
+    SStrPrintf(thread->m_name, "%s [%u]", name, thread->m_threadId);
 
     OsTlsSetValue(s_tlsIndex, thread);
     s_threadList.LinkToTail(thread);
