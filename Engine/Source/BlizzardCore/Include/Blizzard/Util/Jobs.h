@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
 namespace Blizzard {
 namespace Jobs {
@@ -10,7 +11,7 @@ namespace Jobs {
 template <class T>
 class RefCounted {
     public:
-    /* 0004 */ int32_t m_refCount;
+    /* 0004 */ Blizzard::Lock::Atomic m_refCount;
 
     RefCounted();
     virtual ~RefCounted();
@@ -39,7 +40,7 @@ class Job : public RefCounted<Job> {
     /* 001C */ RefPtr<Job> unk_001C;
     /* 0020 */ RefPtr<Job> unk_0020;
     /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ bool unk_0028;
+    /* 0028 */ bool m_synchronous;
     /* 0029 */ bool m_result;
     /* 002A */ bool m_cancelled;
 

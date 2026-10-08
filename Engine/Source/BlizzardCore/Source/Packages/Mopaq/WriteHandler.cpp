@@ -164,7 +164,7 @@ System_Mopaq::SectorReadWriteHandler::SectorReadWriteHandler(Blizzard::Mopaq::Mp
     this->m_reserved = false;
 }
 
-// OFFSET: 0x007CCA00
+// OFFSET: [0x007CCA00, 0x007D0730]
 System_Mopaq::SectorReadWriteHandler::~SectorReadWriteHandler() {
 }
 

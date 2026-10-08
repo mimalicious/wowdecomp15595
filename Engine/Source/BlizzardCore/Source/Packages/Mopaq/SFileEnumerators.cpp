@@ -51,7 +51,7 @@ Blizzard::Mopaq::Enumerator::Enumerator(System_SFile::ARCHIVEREC* handle, const 
     this->m_path.assign(buffer, strlen(buffer));
 }
 
-// OFFSET: 0x007F1630
+// OFFSET: [0x007F1630, 0x007F29B0]
 Blizzard::Mopaq::Enumerator::~Enumerator() {
     if (this->m_archive) {
         this->m_archive->RemoveInternalArchiveRef();

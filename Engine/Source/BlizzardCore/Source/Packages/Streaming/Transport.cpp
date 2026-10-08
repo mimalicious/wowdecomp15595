@@ -179,7 +179,7 @@ bool Blizzard::Streaming::Transport::ReadFile(const Manifests::TransportInfo& in
     return false;
 }
 
-// OFFSET: 0x007C3610
+// OFFSET: [0x007C3610, 0x007C6000]
 Blizzard::Streaming::Transport::TransportHttpCallback::~TransportHttpCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }

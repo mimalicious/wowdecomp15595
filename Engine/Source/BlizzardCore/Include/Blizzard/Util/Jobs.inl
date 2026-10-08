@@ -4,7 +4,7 @@
 // INLINED
 template <class T>
 inline Blizzard::Jobs::RefCounted<T>::RefCounted() {
-    this->m_refCount = 0;
+    this->m_refCount.m_value = 0;
 }
 
 // OFFSET: 0x00A39260<Blizzard::Jobs::Job>
@@ -15,13 +15,13 @@ inline Blizzard::Jobs::RefCounted<T>::~RefCounted() {
 // INLINED
 template <class T>
 inline void Blizzard::Jobs::RefCounted<T>::AddRef() {
-    ++this->m_refCount;
+    this->m_refCount.Increment();
 }
 
 // INLINED
 template <class T>
 inline void Blizzard::Jobs::RefCounted<T>::Release() {
-    if (!--this->m_refCount) {
+    if (!this->m_refCount.Decrement()) {
         delete this;
     }
 }
@@ -42,14 +42,11 @@ inline Blizzard::Jobs::RefPtr<T>::RefPtr(T* ptr) {
     }
 }
 
-// INLINED
+// OFFSET: 0x007A3FC0<Blizzard::Jobs::Job>
 template <class T>
 inline Blizzard::Jobs::RefPtr<T>::RefPtr(const RefPtr& other) {
-    this->m_ptr = other.m_ptr;
-
-    if (this->m_ptr) {
-        this->m_ptr->AddRef();
-    }
+    this->m_ptr = NULL;
+    *this = other;
 }
 
 // INLINED
@@ -60,7 +57,7 @@ inline Blizzard::Jobs::RefPtr<T>::~RefPtr() {
     }
 }
 
-// INLINED
+// OFFSET: 0x007A40A0<Blizzard::Jobs::Job>
 template <class T>
 inline Blizzard::Jobs::RefPtr<T>& Blizzard::Jobs::RefPtr<T>::operator=(const RefPtr& other) {
     T* ptr = other.m_ptr;

@@ -26,7 +26,7 @@ uint32_t Blizzard::Jobs::WorkerPool::RunJobProc(void* param) {
     return 0;
 }
 
-// OFFSET: %0x00712AB0
+// OFFSET: 0x007B0620
 void Blizzard::Jobs::WorkerPool::QueueJob(const RefPtr<Job>& job) {
     if (!job->m_cancelled) {
         this->m_pImpl->m_queued.Push(job);
@@ -44,7 +44,7 @@ void Blizzard::Jobs::WorkerPool::QueueJob(const RefPtr<Job>& job) {
 Blizzard::Jobs::Job::Job(int32_t dependencyCount) {
     this->m_dependencyCount = dependencyCount;
     this->unk_0024 = 0;
-    this->unk_0028 = false;
+    this->m_synchronous = false;
     this->m_result = true;
     this->m_cancelled = false;
 
@@ -53,11 +53,11 @@ Blizzard::Jobs::Job::Job(int32_t dependencyCount) {
     }
 }
 
-// OFFSET: 0x007B8340
+// OFFSET: [0x007B8340, 0x007BF000]
 Blizzard::Jobs::Job::~Job() {
 }
 
-// OFFSET: %0x00719850
+// OFFSET: 0x007B8400
 bool Blizzard::Jobs::WorkerPool::RunJob(RefPtr<Job> job) {
     if (this->m_pImpl->m_shutdown) {
         return false;
@@ -67,6 +67,12 @@ bool Blizzard::Jobs::WorkerPool::RunJob(RefPtr<Job> job) {
     param->m_job = job.Get();
     param->m_completed = &this->m_pImpl->m_completed;
     job->AddRef();
+
+    if (job->m_synchronous) {
+        RunJobProc(param);
+        this->m_pImpl->m_pending++;
+        return true;
+    }
 
     if (this->RunOnThread(RunJobProc, param)) {
         this->m_pImpl->m_pending++;
@@ -79,7 +85,7 @@ bool Blizzard::Jobs::WorkerPool::RunJob(RefPtr<Job> job) {
     return false;
 }
 
-// OFFSET: %0x00720760
+// OFFSET: 0x007BF030
 Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job> Blizzard::Jobs::WorkerPool::GetCompletedJob() {
     Job* completed;
 
@@ -100,7 +106,7 @@ Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job> Blizzard::Jobs::WorkerPool::GetCompl
     return result;
 }
 
-// OFFSET: %0x00720850
+// OFFSET: 0x007BF120
 bool Blizzard::Jobs::WorkerPool::Pump() {
     if (this->m_pImpl->m_shutdown) {
         while (this->GetCompletedJob().Get()) {
@@ -128,7 +134,7 @@ Blizzard::Jobs::WorkerPool::Impl::Impl() {
     this->m_shutdown = false;
 }
 
-// OFFSET: 0x007E3F90
+// OFFSET: [0x007E3F90, 0x007E62F0]
 Blizzard::Jobs::WorkerPool::~WorkerPool() {
     if (this->m_pImpl->m_pool) {
         delete this->m_pImpl->m_pool;

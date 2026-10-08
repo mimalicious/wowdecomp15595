@@ -425,7 +425,7 @@ System_Mopaq::SectorReadHandler::SectorReadHandler(Blizzard::Mopaq::MpqHandleRec
     }
 }
 
-// OFFSET: 0x007CC950
+// OFFSET: [0x007CC950, 0x007D0700]
 System_Mopaq::SectorReadHandler::~SectorReadHandler() {
     delete[] this->m_checksums;
 
