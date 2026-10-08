@@ -24,7 +24,8 @@ void CSimpleMessageScrollFrame::DestroyScriptMetaTable() {
     CSimpleMessageScrollFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x00546A20
+// PROVEN: b05eda5d IDENTICAL/NONE
+// OFFSET: 0x00537000
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -32,7 +33,8 @@ static int32_t Script_SetFontObject(lua_State* L) {
     return CSimpleFont_SetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546A80
+// PROVEN: ffa2997c IDENTICAL/NONE
+// OFFSET: 0x00537060
 static int32_t Script_GetFontObject(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -40,7 +42,8 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546AE0
+// PROVEN: 5b9cfbad IDENTICAL/NONE
+// OFFSET: 0x005370C0
 static int32_t Script_SetFont(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -48,7 +51,8 @@ static int32_t Script_SetFont(lua_State* L) {
     return CSimpleFont_SetFont(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546B40
+// PROVEN: e9ed06f4 IDENTICAL/NONE
+// OFFSET: 0x00537120
 static int32_t Script_GetFont(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -56,7 +60,8 @@ static int32_t Script_GetFont(lua_State* L) {
     return CSimpleFont_GetFont(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546BA0
+// PROVEN: b81e174f IDENTICAL/NONE
+// OFFSET: 0x00537180
 static int32_t Script_SetTextColor(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -64,7 +69,8 @@ static int32_t Script_SetTextColor(lua_State* L) {
     return CSimpleFont_SetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546C00
+// PROVEN: 5113edf9 IDENTICAL/NONE
+// OFFSET: 0x005371E0
 static int32_t Script_GetTextColor(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -72,7 +78,8 @@ static int32_t Script_GetTextColor(lua_State* L) {
     return CSimpleFont_GetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546C60
+// PROVEN: a8ec7652 IDENTICAL/NONE
+// OFFSET: 0x00537240
 static int32_t Script_SetShadowColor(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -80,7 +87,8 @@ static int32_t Script_SetShadowColor(lua_State* L) {
     return CSimpleFont_SetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546CC0
+// PROVEN: cdad25f2 IDENTICAL/NONE
+// OFFSET: 0x005372A0
 static int32_t Script_GetShadowColor(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -88,7 +96,8 @@ static int32_t Script_GetShadowColor(lua_State* L) {
     return CSimpleFont_GetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546D20
+// PROVEN: 7b2ff78a IDENTICAL/NONE
+// OFFSET: 0x00537300
 static int32_t Script_SetShadowOffset(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -96,7 +105,8 @@ static int32_t Script_SetShadowOffset(lua_State* L) {
     return CSimpleFont_SetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546D80
+// PROVEN: 9e3f7074 IDENTICAL/NONE
+// OFFSET: 0x00537360
 static int32_t Script_GetShadowOffset(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -104,7 +114,8 @@ static int32_t Script_GetShadowOffset(lua_State* L) {
     return CSimpleFont_GetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546DE0
+// PROVEN: 652f6a8f IDENTICAL/NONE
+// OFFSET: 0x005373C0
 static int32_t Script_SetSpacing(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -112,7 +123,8 @@ static int32_t Script_SetSpacing(lua_State* L) {
     return CSimpleFont_SetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546E40
+// PROVEN: cd5280c5 IDENTICAL/NONE
+// OFFSET: 0x00537420
 static int32_t Script_GetSpacing(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -120,7 +132,8 @@ static int32_t Script_GetSpacing(lua_State* L) {
     return CSimpleFont_GetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546EA0
+// PROVEN: 58c1fa8f IDENTICAL/NONE
+// OFFSET: 0x00537480
 static int32_t Script_SetJustifyH(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -128,7 +141,8 @@ static int32_t Script_SetJustifyH(lua_State* L) {
     return CSimpleFont_SetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546F00
+// PROVEN: 7e945dd5 IDENTICAL/NONE
+// OFFSET: 0x005374E0
 static int32_t Script_GetJustifyH(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -136,7 +150,8 @@ static int32_t Script_GetJustifyH(lua_State* L) {
     return CSimpleFont_GetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546F60
+// PROVEN: 6eaa3428 IDENTICAL/NONE
+// OFFSET: 0x00537540
 static int32_t Script_SetJustifyV(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -144,7 +159,8 @@ static int32_t Script_SetJustifyV(lua_State* L) {
     return CSimpleFont_SetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00546FD0
+// PROVEN: 7884c3e3 IDENTICAL/NONE
+// OFFSET: 0x005375A0/0x14018A4E0
 static int32_t Script_GetJustifyV(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -152,7 +168,8 @@ static int32_t Script_GetJustifyV(lua_State* L) {
     return CSimpleFont_GetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00547030
+// PROVEN: 99e88492 IDENTICAL/NONE
+// OFFSET: 0x00537600
 static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -160,7 +177,8 @@ static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_SetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00547090
+// PROVEN: 2b6b4297 IDENTICAL/NONE
+// OFFSET: 0x00537660
 static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -258,7 +276,7 @@ static int32_t Script_GetMessageInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x00547440
+// OFFSET: 0x00537A10/0x14018A9F0
 static int32_t Script_RemoveMessagesByAccessID(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -268,18 +286,33 @@ static int32_t Script_RemoveMessagesByAccessID(lua_State* L) {
         return 0;
     }
 
-    frame->RemoveLinesByAccessID(lua_tointeger(L, 2));
+    int32_t accessID = lua_tointeger(L, 2);
+    frame->RemoveLines(&accessID, NULL);
     return 0;
 }
 
-// OFFSET: %0x005474C0
+// OFFSET: 0x00537AA0/0x14018AAA0
+static int32_t Script_RemoveMessagesByExtraData(lua_State* L) {
+    CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
+
+    if (!lua_isnumber(L, 2)) {
+        const char* name = frame->GetName();
+        luaL_error(L, "Usage: %s:RemoveMessagesByExtraData(extraData)", name ? name : "<unnamed>");
+    }
+
+    int32_t extraData = lua_tointeger(L, 2);
+    frame->RemoveLines(NULL, &extraData);
+    return 0;
+}
+
+// OFFSET: 0x00537B30/0x14018AB50
 static int32_t Script_ScrollUp(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->ScrollUp();
     return 0;
 }
 
-// OFFSET: %0x00547500
+// OFFSET: 0x00537B70/0x14018AB90
 static int32_t Script_ScrollDown(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->ScrollDown();
@@ -300,14 +333,14 @@ static int32_t Script_PageDown(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005475C0
+// OFFSET: 0x00537C30/0x14018AC50
 static int32_t Script_ScrollToTop(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->ScrollToTop();
     return 0;
 }
 
-// OFFSET: %0x00547600
+// OFFSET: 0x00537C70/0x14018AC90
 static int32_t Script_ScrollToBottom(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
     frame->ScrollToBottom();
@@ -440,7 +473,7 @@ static int32_t Script_GetFading(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547AF0
+// OFFSET: 0x00538160
 static int32_t Script_SetTimeVisible(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -461,7 +494,7 @@ static int32_t Script_GetTimeVisible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00547BC0
+// OFFSET: 0x00538230
 static int32_t Script_SetFadeDuration(lua_State* L) {
     CSimpleMessageScrollFrame* frame = static_cast<CSimpleMessageScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageScrollFrame::GetObjectType()));
 
@@ -558,6 +591,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "AddMessage", &Script_AddMessage },
     { "GetMessageInfo", &Script_GetMessageInfo },
     { "RemoveMessagesByAccessID", &Script_RemoveMessagesByAccessID },
+    { "RemoveMessagesByExtraData", &Script_RemoveMessagesByExtraData },
     { "ScrollUp", &Script_ScrollUp },
     { "ScrollDown", &Script_ScrollDown },
     { "PageUp", &Script_PageUp },

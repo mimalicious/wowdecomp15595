@@ -8,7 +8,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054C5D0
+// OFFSET: 0x0053C7A0/0x1401907F0
 static int32_t Script_SetOffset(lua_State* L) {
     CSimpleTranslationAnim* anim = static_cast<CSimpleTranslationAnim*>(FrameScript_GetObjectThis(L, CSimpleTranslationAnim::GetObjectType()));
 

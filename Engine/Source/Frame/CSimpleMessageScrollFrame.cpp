@@ -563,8 +563,8 @@ void CSimpleMessageScrollFrame::FontUpdated(CSimpleFontedFrameFont* font, int32_
     }
 }
 
-// OFFSET: %0x0052DEB0
-void CSimpleMessageScrollFrame::RemoveLinesByAccessID(int32_t accessID) {
+// OFFSET: 0x0051E240/0x14016B080
+void CSimpleMessageScrollFrame::RemoveLines(const int32_t* accessID, const int32_t* extraData) {
     int32_t start = this->m_currentLine - this->m_numMessages + 1;
 
     if (start < 0) {
@@ -576,7 +576,7 @@ void CSimpleMessageScrollFrame::RemoveLinesByAccessID(int32_t accessID) {
     int32_t kept = 0;
 
     for (int32_t i = 0; i < this->m_numMessages; i++) {
-        if (this->m_lines[src].m_accessID != accessID) {
+        if ((accessID && this->m_lines[src].m_accessID != *accessID) || (extraData && this->m_lines[src].m_extraData != *extraData)) {
             if (src != dst) {
                 if (this->m_lines[dst].m_text) {
                     SMemFree(this->m_lines[dst].m_text, __FILE__, __LINE__, 0);

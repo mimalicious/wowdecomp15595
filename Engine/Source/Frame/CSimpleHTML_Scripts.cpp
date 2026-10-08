@@ -41,7 +41,8 @@ static HTML_TEXT_TYPE ReadHtmlTextType(lua_State* L) {
     return HTML_TEXT_NORMAL;
 }
 
-// OFFSET: %0x0054A0F0
+// PROVEN: 6e8ba53c IDENTICAL/NONE
+// OFFSET: 0x0053A490
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -49,7 +50,8 @@ static int32_t Script_SetFontObject(lua_State* L) {
     return CSimpleFont_SetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A150
+// PROVEN: d579a133 IDENTICAL/NONE
+// OFFSET: 0x0053A4F0
 static int32_t Script_GetFontObject(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -57,7 +59,8 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A1B0
+// PROVEN: 65ee27d2 IDENTICAL/NONE
+// OFFSET: 0x0053A550
 static int32_t Script_SetFont(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -65,7 +68,8 @@ static int32_t Script_SetFont(lua_State* L) {
     return CSimpleFont_SetFont(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A210
+// PROVEN: 990b9763 IDENTICAL/NONE
+// OFFSET: 0x0053A5B0
 static int32_t Script_GetFont(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -73,7 +77,8 @@ static int32_t Script_GetFont(lua_State* L) {
     return CSimpleFont_GetFont(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A270
+// PROVEN: ed0ba36e IDENTICAL/NONE
+// OFFSET: 0x0053A610
 static int32_t Script_SetTextColor(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -81,7 +86,8 @@ static int32_t Script_SetTextColor(lua_State* L) {
     return CSimpleFont_SetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A2D0
+// PROVEN: c5ebbd44 IDENTICAL/NONE
+// OFFSET: 0x0053A670
 static int32_t Script_GetTextColor(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -89,7 +95,8 @@ static int32_t Script_GetTextColor(lua_State* L) {
     return CSimpleFont_GetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A330
+// PROVEN: 5af69eff IDENTICAL/NONE
+// OFFSET: 0x0053A6D0
 static int32_t Script_SetShadowColor(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -97,7 +104,8 @@ static int32_t Script_SetShadowColor(lua_State* L) {
     return CSimpleFont_SetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A390
+// PROVEN: 43ac330e IDENTICAL/NONE
+// OFFSET: 0x0053A730
 static int32_t Script_GetShadowColor(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -105,7 +113,8 @@ static int32_t Script_GetShadowColor(lua_State* L) {
     return CSimpleFont_GetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A3F0
+// PROVEN: c4b2841c IDENTICAL/NONE
+// OFFSET: 0x0053A790
 static int32_t Script_SetShadowOffset(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -113,7 +122,8 @@ static int32_t Script_SetShadowOffset(lua_State* L) {
     return CSimpleFont_SetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A450
+// PROVEN: d5fb03b6 IDENTICAL/NONE
+// OFFSET: 0x0053A7F0
 static int32_t Script_GetShadowOffset(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -121,7 +131,8 @@ static int32_t Script_GetShadowOffset(lua_State* L) {
     return CSimpleFont_GetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A4B0
+// PROVEN: c50f99b8 IDENTICAL/NONE
+// OFFSET: 0x0053A850
 static int32_t Script_SetSpacing(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -129,7 +140,8 @@ static int32_t Script_SetSpacing(lua_State* L) {
     return CSimpleFont_SetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A510
+// PROVEN: 7a9d3901 IDENTICAL/NONE
+// OFFSET: 0x0053A8B0
 static int32_t Script_GetSpacing(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -137,7 +149,8 @@ static int32_t Script_GetSpacing(lua_State* L) {
     return CSimpleFont_GetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A570
+// PROVEN: 76a068eb IDENTICAL/NONE
+// OFFSET: 0x0053A910
 static int32_t Script_SetJustifyH(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -145,7 +158,8 @@ static int32_t Script_SetJustifyH(lua_State* L) {
     return CSimpleFont_SetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A5D0
+// PROVEN: e94083cc IDENTICAL/NONE
+// OFFSET: 0x0053A970
 static int32_t Script_GetJustifyH(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -153,7 +167,8 @@ static int32_t Script_GetJustifyH(lua_State* L) {
     return CSimpleFont_GetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A630
+// PROVEN: 5ebe3f26 IDENTICAL/NONE
+// OFFSET: 0x0053A9D0
 static int32_t Script_SetJustifyV(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -161,7 +176,8 @@ static int32_t Script_SetJustifyV(lua_State* L) {
     return CSimpleFont_SetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A690
+// PROVEN: c751c502 IDENTICAL/NONE
+// OFFSET: 0x0053AA30
 static int32_t Script_GetJustifyV(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -169,7 +185,8 @@ static int32_t Script_GetJustifyV(lua_State* L) {
     return CSimpleFont_GetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A6F0
+// PROVEN: 9fd2d92c IDENTICAL/NONE
+// OFFSET: 0x0053AA90
 static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];
@@ -177,7 +194,8 @@ static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_SetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x0054A750
+// PROVEN: b5f87a5d IDENTICAL/NONE
+// OFFSET: 0x0053AAF0/0x14018E550
 static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
     CSimpleFont* font = html->m_fonts[ReadHtmlTextType(L)];

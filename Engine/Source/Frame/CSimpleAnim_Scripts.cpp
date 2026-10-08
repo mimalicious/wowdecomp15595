@@ -24,14 +24,14 @@ void ReadOrigin(lua_State* L, int32_t index, FRAMEPOINT& point, C2Vector& offset
     offset.y = NDCToDDCWidth(y / (CoordinateGetAspectCompensation() * 1024.0f));
 }
 
-// OFFSET: %0x0054B870
+// OFFSET: 0x0053BB60
 static int32_t Script_Play(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     anim->Play();
     return 0;
 }
 
-// OFFSET: %0x0054B8B0
+// OFFSET: 0x0053BBA0
 static int32_t Script_Pause(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
     anim->Pause();
@@ -52,7 +52,6 @@ static int32_t Script_IsDone(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 29f807f1 IDENTICAL/NONE
 // OFFSET: 0x0053BC80
 static int32_t Script_IsPlaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -60,7 +59,6 @@ static int32_t Script_IsPlaying(lua_State* L) {
     return 1;
 }
 
-// PROVEN: 5b096820 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053BCD0/0x14018FAC0
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -188,7 +186,7 @@ static int32_t Script_GetElapsed(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054BFC0
+// OFFSET: 0x0053C180/0x140190060
 static int32_t Script_SetOrder(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 
@@ -321,7 +319,7 @@ static int32_t Script_GetRegionParent(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054C430
+// OFFSET: 0x0053C600/0x1401905E0
 static int32_t Script_HasScript(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
 

@@ -24,7 +24,8 @@ void CSimpleMessageFrame::DestroyScriptMetaTable() {
     CSimpleMessageFrame::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x005456A0
+// PROVEN: 4341dcb6 IDENTICAL/NONE
+// OFFSET: 0x00536330
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -32,7 +33,8 @@ static int32_t Script_SetFontObject(lua_State* L) {
     return CSimpleFont_SetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545700
+// PROVEN: 8dd0e67d IDENTICAL/NONE
+// OFFSET: 0x00536390
 static int32_t Script_GetFontObject(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -40,7 +42,7 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return CSimpleFont_GetFontObject(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545760
+// OFFSET: 0x005363F0
 static int32_t Script_SetFont(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 
@@ -52,7 +54,8 @@ static int32_t Script_SetFont(lua_State* L) {
     return CSimpleFont_SetFont(name ? name : "<unnamed>", frame->m_font, L);
 }
 
-// OFFSET: %0x005457C0
+// PROVEN: a2e28e99 IDENTICAL/NONE
+// OFFSET: 0x00536450
 static int32_t Script_GetFont(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -60,7 +63,8 @@ static int32_t Script_GetFont(lua_State* L) {
     return CSimpleFont_GetFont(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545820
+// PROVEN: 40bd729b IDENTICAL/NONE
+// OFFSET: 0x005364B0
 static int32_t Script_SetTextColor(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -68,7 +72,8 @@ static int32_t Script_SetTextColor(lua_State* L) {
     return CSimpleFont_SetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545880
+// PROVEN: 193bef2e IDENTICAL/NONE
+// OFFSET: 0x00536510
 static int32_t Script_GetTextColor(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -76,7 +81,8 @@ static int32_t Script_GetTextColor(lua_State* L) {
     return CSimpleFont_GetTextColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x005458E0
+// PROVEN: 496e14cf IDENTICAL/NONE
+// OFFSET: 0x00536570
 static int32_t Script_SetShadowColor(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -84,7 +90,8 @@ static int32_t Script_SetShadowColor(lua_State* L) {
     return CSimpleFont_SetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545940
+// PROVEN: 4d49042c IDENTICAL/NONE
+// OFFSET: 0x005365D0
 static int32_t Script_GetShadowColor(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -92,7 +99,8 @@ static int32_t Script_GetShadowColor(lua_State* L) {
     return CSimpleFont_GetShadowColor(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x005459A0
+// PROVEN: e0499834 IDENTICAL/NONE
+// OFFSET: 0x00536630
 static int32_t Script_SetShadowOffset(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -100,7 +108,8 @@ static int32_t Script_SetShadowOffset(lua_State* L) {
     return CSimpleFont_SetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545A00
+// PROVEN: 537be6ad IDENTICAL/NONE
+// OFFSET: 0x00536690
 static int32_t Script_GetShadowOffset(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -108,7 +117,8 @@ static int32_t Script_GetShadowOffset(lua_State* L) {
     return CSimpleFont_GetShadowOffset(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545A60
+// PROVEN: ac65fe6e IDENTICAL/NONE
+// OFFSET: 0x005366F0
 static int32_t Script_SetSpacing(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -116,7 +126,8 @@ static int32_t Script_SetSpacing(lua_State* L) {
     return CSimpleFont_SetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545AC0
+// PROVEN: 14d9fa36 IDENTICAL/NONE
+// OFFSET: 0x00536750
 static int32_t Script_GetSpacing(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -124,7 +135,8 @@ static int32_t Script_GetSpacing(lua_State* L) {
     return CSimpleFont_GetSpacing(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545B20
+// PROVEN: 11b65527 IDENTICAL/NONE
+// OFFSET: 0x005367B0
 static int32_t Script_SetJustifyH(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -132,7 +144,8 @@ static int32_t Script_SetJustifyH(lua_State* L) {
     return CSimpleFont_SetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545B80
+// PROVEN: 4d69fe30 IDENTICAL/NONE
+// OFFSET: 0x00536810
 static int32_t Script_GetJustifyH(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -140,7 +153,8 @@ static int32_t Script_GetJustifyH(lua_State* L) {
     return CSimpleFont_GetJustifyH(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545BE0
+// PROVEN: a61f5726 IDENTICAL/NONE
+// OFFSET: 0x00536870
 static int32_t Script_SetJustifyV(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -148,7 +162,8 @@ static int32_t Script_SetJustifyV(lua_State* L) {
     return CSimpleFont_SetJustifyV(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545C40
+// PROVEN: e539e198 IDENTICAL/NONE
+// OFFSET: 0x005368D0/0x140189720
 static int32_t Script_GetJustifyV(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -197,7 +212,8 @@ static int32_t Script_GetInsertMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00545DC0
+// PROVEN: 178320e9 IDENTICAL/NONE
+// OFFSET: 0x00536A50
 static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -205,7 +221,8 @@ static int32_t Script_SetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_SetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00545E20
+// PROVEN: 8e8bd109 IDENTICAL/NONE
+// OFFSET: 0x00536AB0/0x140189980
 static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     CSimpleFont* font = frame->m_font;
@@ -233,7 +250,7 @@ static int32_t Script_GetFading(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00545F30
+// OFFSET: 0x00536BC0
 static int32_t Script_SetTimeVisible(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 
@@ -254,7 +271,7 @@ static int32_t Script_GetTimeVisible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00546000
+// OFFSET: 0x00536C90
 static int32_t Script_SetFadeDuration(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
 
@@ -296,7 +313,7 @@ static int32_t Script_AddMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005461A0
+// OFFSET: 0x00536E30/0x140189D80
 static int32_t Script_Clear(lua_State* L) {
     CSimpleMessageFrame* frame = static_cast<CSimpleMessageFrame*>(FrameScript_GetObjectThis(L, CSimpleMessageFrame::GetObjectType()));
     frame->Clear();

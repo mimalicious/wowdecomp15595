@@ -41,7 +41,7 @@ static int32_t Script_GetOrientation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00540A00
+// OFFSET: 0x00530A60
 static int32_t Script_SetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 
@@ -121,7 +121,7 @@ static int32_t Script_SetValue(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00540D20
+// OFFSET: 0x00530D80/0x140182270
 static int32_t Script_GetStatusBarTexture(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
     CSimpleTexture* texture = statusBar->m_barTexture;

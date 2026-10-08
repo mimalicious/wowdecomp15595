@@ -384,7 +384,7 @@ static int32_t Script_SetFrameLevel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051B8D0
+// OFFSET: 0x0050B540/0x140153AC0
 static int32_t Script_HasScript(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -835,7 +835,8 @@ static int32_t Script_IsToplevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C730
+// PROVEN: e18f72c3 IDENTICAL/NONE
+// OFFSET: 0x0050C3B0/0x140154B90
 static int32_t Script_EnableDrawLayer(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     uint32_t drawLayer = 2;
@@ -848,7 +849,8 @@ static int32_t Script_EnableDrawLayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C7A0
+// PROVEN: 12f316de IDENTICAL/NONE
+// OFFSET: 0x0050C420/0x140154C20
 static int32_t Script_DisableDrawLayer(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     uint32_t drawLayer = 2;
@@ -919,7 +921,7 @@ static int32_t Script_IsShown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0051C990
+// OFFSET: 0x0050C610/0x140154E70
 static int32_t Script_Raise(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -935,7 +937,7 @@ static int32_t Script_Raise(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051C9F0
+// OFFSET: 0x0050C670/0x140154EE0
 static int32_t Script_Lower(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -951,7 +953,7 @@ static int32_t Script_Lower(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0051CA50
+// OFFSET: 0x0050C6D0/0x140154F50
 static int32_t Script_GetHitRectInsets(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
 
@@ -1666,7 +1668,7 @@ static int32_t Script_GetBackdropColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0051E520
+// OFFSET: 0x0050E1A0/0x140157070
 static int32_t Script_SetBackdropColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CImVector color;
@@ -1698,7 +1700,7 @@ static int32_t Script_GetBackdropBorderColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0051E660
+// OFFSET: 0x0050E2E0/0x1401571E0
 static int32_t Script_SetBackdropBorderColor(lua_State* L) {
     CSimpleFrame* frame = static_cast<CSimpleFrame*>(FrameScript_GetObjectThis(L, CSimpleFrame::GetObjectType()));
     CImVector color;

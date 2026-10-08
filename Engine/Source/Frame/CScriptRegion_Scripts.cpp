@@ -445,7 +445,7 @@ static int32_t Script_GetPoint(lua_State* L) {
     return 5;
 }
 
-// OFFSET: %0x0053FF10
+// OFFSET: 0x0052FF70/0x140181190
 static int32_t Script_SetPoint(lua_State* L) {
     CScriptRegion* region = static_cast<CScriptRegion*>(FrameScript_GetObjectThis(L, CScriptRegion::GetObjectType()));
 

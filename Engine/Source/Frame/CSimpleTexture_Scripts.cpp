@@ -24,7 +24,7 @@ static int32_t Script_GetObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053C210
+// OFFSET: 0x0052C0C0
 static int32_t Script_IsObjectType(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 

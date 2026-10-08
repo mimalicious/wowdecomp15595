@@ -91,7 +91,8 @@ static int32_t Script_SetModel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548210
+// PROVEN: 86a767ce IDENTICAL/DIFFERENT
+// OFFSET: 0x00538630/0x14018B860
 static int32_t Script_GetModel(lua_State* L) {
     CSimpleModel* model = static_cast<CSimpleModel*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 

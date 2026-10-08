@@ -67,7 +67,7 @@ static int32_t Script_SetParent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0054CF10
+// OFFSET: 0x0053D0E0/0x140191440
 static int32_t Script_SetOffset(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
 
@@ -101,7 +101,7 @@ static int32_t Script_GetOffset(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x0054D090
+// OFFSET: 0x0053D260/0x140191620
 static int32_t Script_SetOrder(lua_State* L) {
     CSimpleControlPoint* point = static_cast<CSimpleControlPoint*>(FrameScript_GetObjectThis(L, CSimpleControlPoint::GetObjectType()));
 

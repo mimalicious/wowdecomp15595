@@ -9,7 +9,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x005498E0
+// OFFSET: 0x00539C60/0x14018D320
 static int32_t Script_GetThumbTexture(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
     CSimpleTexture* texture = slider->m_thumbTexture;
@@ -75,7 +75,7 @@ static int32_t Script_GetOrientation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00549B00
+// OFFSET: 0x00539E80
 static int32_t Script_SetOrientation(lua_State* L) {
     CSimpleSlider* slider = static_cast<CSimpleSlider*>(FrameScript_GetObjectThis(L, CSimpleSlider::GetObjectType()));
 

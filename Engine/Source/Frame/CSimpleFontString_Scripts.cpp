@@ -34,7 +34,7 @@ static int32_t Script_GetObjectType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053D1B0
+// OFFSET: 0x0052D060
 static int32_t Script_IsObjectType(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
 
@@ -129,7 +129,7 @@ static int32_t Script_SetAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053D540
+// OFFSET: 0x0052D3F0/0x14017DEE0
 static int32_t Script_SetAlphaGradient(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
 
@@ -195,7 +195,7 @@ static int32_t Script_IsShown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053D760
+// OFFSET: 0x0052D640/0x14017E1B0
 static int32_t Script_GetFontObject(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     CSimpleFont* font = string->m_fontObject;
@@ -214,7 +214,8 @@ static int32_t Script_GetFontObject(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053D7D0
+// PROVEN: d7c0228b IDENTICAL/DIFFERENT
+// OFFSET: 0x0052D6B0/0x14017E240
 static int32_t Script_SetFontObject(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     CSimpleFont* font = NULL;
@@ -483,7 +484,7 @@ static int32_t Script_SetTextHeight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053E290
+// OFFSET: 0x0052E180/0x14017EF50
 static int32_t Script_GetStringWidth(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     float width = string->GetStringWidth();
@@ -509,7 +510,7 @@ static int32_t Script_IsTruncated(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053E3C0
+// OFFSET: 0x0052E2B0/0x14017F0A0
 static int32_t Script_GetStringHeight(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     float height = string->GetStringHeight();
@@ -518,7 +519,8 @@ static int32_t Script_GetStringHeight(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0053E430
+// PROVEN: 069f9e8c IDENTICAL/DIFFERENT
+// OFFSET: 0x0052E320/0x14017F120
 static int32_t Script_GetJustifyH(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     lua_pushstring(L, JustifyToString(string->m_styleFlags & 0x7));
@@ -553,7 +555,8 @@ static int32_t Script_SetJustifyH(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0053E480
+// PROVEN: e40a938e IDENTICAL/DIFFERENT
+// OFFSET: 0x0052E370/0x14017F170
 static int32_t Script_GetJustifyV(lua_State* L) {
     CSimpleFontString* string = static_cast<CSimpleFontString*>(FrameScript_GetObjectThis(L, CSimpleFontString::GetObjectType()));
     lua_pushstring(L, JustifyToString(string->m_styleFlags & 0x38));

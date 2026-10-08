@@ -189,7 +189,7 @@ static int32_t Script_SetNormalFontObject(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005415E0
+// OFFSET: 0x005316F0/0x1401835E0
 static int32_t Script_GetNormalFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -225,7 +225,7 @@ static int32_t Script_SetDisabledFontObject(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00541740
+// OFFSET: 0x00531850/0x1401837A0
 static int32_t Script_GetDisabledFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -261,7 +261,7 @@ static int32_t Script_SetHighlightFontObject(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005418A0
+// OFFSET: 0x005319B0/0x140183960
 static int32_t Script_GetHighlightFontObject(lua_State* L) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 

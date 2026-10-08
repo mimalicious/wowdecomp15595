@@ -67,7 +67,7 @@ static int32_t Script_SetScrollChild(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00549410
+// OFFSET: 0x00539820/0x14018CE00
 static int32_t Script_GetScrollChild(lua_State* L) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(FrameScript_GetObjectThis(L, CSimpleScrollFrame::GetObjectType()));
     CSimpleFrame* child = scrollFrame->m_scrollChild;

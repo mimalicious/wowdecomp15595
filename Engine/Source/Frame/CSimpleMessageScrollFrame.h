@@ -109,7 +109,7 @@ class CSimpleMessageScrollFrame : public CSimpleHyperlinkedFrame, public CSimple
     void PageUp();
     virtual void RefreshHyperlinks();
     void RefreshMessages();
-    void RemoveLinesByAccessID(int32_t accessID);
+    void RemoveLines(const int32_t* accessID, const int32_t* extraData);
     int32_t ScrollDown();
     void ScrollMessages(int32_t scroll);
     void ScrollToBottom();
