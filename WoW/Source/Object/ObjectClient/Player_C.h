@@ -240,7 +240,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     ~CGPlayer_C();
     void Disable() override;
     void OnSpellEffectClear(CEffect* effect) override;
-    void PlayUnitSound(uint32_t soundType, int32_t force) override;
+    void PlayUnitSound(uint32_t soundType, int32_t force, int32_t a3) override;
     void PlayFoleySound() override;
     const CGUnitVirtualItem* GetVirtualItem(uint32_t slot, bool ignoreDisarm) const override;
     uint32_t GetVirtualItemDisplayID(uint32_t slot) const override;
@@ -261,12 +261,16 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void GetDNDText(char* buffer, uint32_t size) const override;
     void GetGMText(char* buffer, uint32_t size) const override;
     void GetDevText(char* buffer, uint32_t size) const override;
+    void GetComText(char* buffer, uint32_t size) const override;
     uint32_t GetImpactType() const override;
     const CGUnitVirtualItem* GetDefendingItem() const override;
     bool IsDeadOrGhost() const override;
     uint32_t GetClientStandState() const override;
-    void Reenable() override;
-    void PostReenable() override;
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void Reenable(const CClientObjCreate& create) override;
+    void PostReenable(const CClientObjCreate& create) override;
+    void HandleGuildIDUpdate() override;
+    void LoadGuildTextures() override;
     void PreAnimate(CGWorldFrame* frame) override;
     void ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) override;
 
@@ -414,7 +418,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     bool IsInFlyableZone(int32_t checkContinent);
     int32_t SpellUsesWeaponSkill(const SpellRec* spell);
     CGPlayer_C(uint32_t time, const CClientObjCreate& create);
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable);
     void SetStorage(uint32_t* storage, uint32_t* saved);
     int32_t RefreshVisibleItems();
     void OnDeath();
@@ -436,6 +439,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONENTLINKS link);
     void UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_t slot);
     void PostInitActivePlayer();
+    void UpdateObjectComplete(bool transport);
     void UpdatePartyMemberState();
     void SetActiveMirrorHandlers();
     void UnsetActiveMirrorHandlers();

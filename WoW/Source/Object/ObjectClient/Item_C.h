@@ -48,16 +48,18 @@ class CGItem_C : public CGObject_C, public CGItem {
     static const char* GetInventoryArt(int32_t displayId);
     const char* GetInventoryArt() const;
 
-    /* 00DC */ TSList<void> m_itemMirrorLists [58];
-    /* 0394 */ uint32_t m_itemFlags;
-    /* 0398 */ CGUnitVirtualItem m_virtualItem;
-    /* 03A0 */ uint32_t m_expirationTime;
-    /* 03A4 */ uint32_t m_enchantmentExpiration [12];
-    /* 03D4 */ ItemPurchaseData* m_itemPurchaseData;
-    /* 03D8 */ const ItemGroupSoundsRec* m_groupSounds;
-    /* 03DC */ uint8_t unk_03DC [4];
+    /* 0104 */ TSList<void> m_itemMirrorLists [66];
+    /* 041C */ uint32_t m_itemFlags;
+    /* 0420 */ CGUnitVirtualItem m_virtualItem;
+    /* 0428 */ uint32_t m_expirationTime;
+    /* 042C */ uint32_t m_enchantmentExpiration [15];
+    /* 0468 */ ItemPurchaseData* m_itemPurchaseData;
+    /* 046C */ const ItemGroupSoundsRec* m_groupSounds;
 
     ~CGItem_C();
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void PostReenable(const CClientObjCreate& create) override;
+    int32_t GetModelFileName(const char** name) const override;
     int32_t GetSelectionHighlightColor(CImVector* color) const override;
     void OnRightClick() override;
     const char* GetObjectName() const override;
@@ -112,7 +114,6 @@ class CGItem_C : public CGObject_C, public CGItem {
     bool IsInstanceBound() const;
     bool IsPermanentlyBoundForTrade();
     bool IsZoneBound() const;
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool a3);
     void PostInitWithStats();
     void RequestItemCacheInfo();
     void RequestItemPurchaseData();

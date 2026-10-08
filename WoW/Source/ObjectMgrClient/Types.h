@@ -27,7 +27,8 @@ enum TypeID {
     TYPEID_GAMEOBJECT = 5,
     TYPEID_DYNAMICOBJECT = 6,
     TYPEID_CORPSE = 7,
-    NUM_TYPEIDS = 8,
+    TYPEID_AREATRIGGER = 8,
+    NUM_TYPEIDS = 9,
 };
 
 struct WowTlsBlock {

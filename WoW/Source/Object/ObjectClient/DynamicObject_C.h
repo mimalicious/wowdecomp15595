@@ -20,12 +20,12 @@ class CGDynamicObject_C : public CGObject_C, public CGDynamicObject {
     public:
     static void Initialize();
 
-    /* 00D8 */ CPassenger m_passenger;
-    /* 0108 */ TSList<void> m_dynamicObjectMirrorLists [6];
-    /* 0150 */ uint32_t unk_0150;
-    /* 0154 */ float m_scale;
-    /* 0158 */ BlizzardObject* m_blizzardVisual;
-    /* 015C */ SE2SoundKitObject m_soundKit;
+    /* 0100 */ CPassenger m_passenger;
+    /* 0130 */ TSList<void> m_dynamicObjectMirrorLists [6];
+    /* 0178 */ uint32_t unk_0178;
+    /* 017C */ float m_scale;
+    /* 0180 */ BlizzardObject* m_blizzardVisual;
+    /* 0184 */ SE2SoundKitObject m_soundKit;
 
     ~CGDynamicObject_C();
     virtual C3Vector GetPosition() const;
@@ -37,8 +37,9 @@ class CGDynamicObject_C : public CGObject_C, public CGDynamicObject {
     virtual void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3);
     void SetFrameOfReference(const C44Matrix* matrix) override;
     void Disable() override;
-    void Reenable() override;
-    void PostReenable() override;
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void Reenable(const CClientObjCreate& create) override;
+    void PostReenable(const CClientObjCreate& create) override;
     void HandleOutOfRange(OUT_OF_RANGE_TYPE type) override;
     void ModelLoaded(CM2Model* model) override;
     int32_t GetModelFileName(const char** name) const override;
@@ -46,7 +47,6 @@ class CGDynamicObject_C : public CGObject_C, public CGDynamicObject {
     CGDynamicObject_C(uint32_t time, const CClientObjCreate& create);
     void HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time);
     void ObjectVisKitProc();
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool a3);
     void SetStorage(uint32_t* storage, uint32_t* saved);
     void UpdateDisplay(uint32_t time);
     SpellVisualEffectNameRec* GetVisualEffectNameRec(const SpellRec* spell) const;

@@ -27,10 +27,8 @@ class CGCorpseData {
     /* 0014 */ uint32_t m_corpseFieldItem [19];
     /* 0060 */ uint8_t m_corpseFieldBytes1 [4];
     /* 0064 */ uint8_t m_corpseFieldBytes2 [4];
-    /* 0068 */ uint32_t m_corpseFieldGuild;
-    /* 006C */ uint32_t m_corpseFieldFlags;
-    /* 0070 */ uint32_t m_corpseFieldDynamicFlags;
-    /* 0074 */ uint32_t m_corpseFieldPad;
+    /* 0068 */ uint32_t m_corpseFieldFlags;
+    /* 006C */ uint32_t m_corpseFieldDynamicFlags;
 };
 
 #endif

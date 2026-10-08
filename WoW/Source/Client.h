@@ -82,6 +82,7 @@ int32_t CCommand_Perf(const char* command, const char* arguments);
 int32_t CCommand_ReloadUI(const char* command, const char* arguments);
 int32_t CCommand_TimingInfo(const char* command, const char* arguments);
 bool CheckDataFilesExist();
+void ClientChangeWorld(uint32_t mapId, const C3Vector& position, float facing);
 void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogin);
 void ClientInitializeGame(uint32_t mapId, C3Vector position);
 void ClientPostClose(int32_t reason);

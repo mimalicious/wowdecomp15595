@@ -16,14 +16,13 @@ class CM2Model;
 class CGCorpse_C : public CGObject_C, public CGCorpse {
     public:
     static void Initialize();
-    /* 00D8 */ CPassenger m_passenger;
-    /* 0108 */ TSList<void> m_corpseMirrorLists [30];
-    /* 0270 */ CCharacterComponent* m_component;
-    /* 0274 */ C3Vector m_groundNormal;
-    /* 0280 */ uint32_t m_corpseFlags;
-    /* 0284 */ float m_selectionRadius;
-    /* 0288 */ CM2Model* m_lootEffect;
-    /* 028C */ uint8_t unk_028C [4];
+    /* 0100 */ CPassenger m_passenger;
+    /* 0130 */ TSList<void> m_corpseMirrorLists [28];
+    /* 0280 */ CCharacterComponent* m_component;
+    /* 0284 */ C3Vector m_groundNormal;
+    /* 0290 */ uint32_t m_corpseFlags;
+    /* 0294 */ float m_selectionRadius;
+    /* 0298 */ CM2Model* m_lootEffect;
 
     ~CGCorpse_C();
     int32_t ShouldFadeout() override;
@@ -32,13 +31,15 @@ class CGCorpse_C : public CGObject_C, public CGCorpse {
     float GetFacing() const override;
     void ModelLoaded(CM2Model* model) override;
     void Disable() override;
-    void Reenable() override;
-    void PostReenable() override;
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void Reenable(const CClientObjCreate& create) override;
+    void PostReenable(const CClientObjCreate& create) override;
     int32_t GetModelFileName(const char** name) const override;
     void RenderTargetSelection() const override;
     int32_t Animate(float elapsed) override;
     void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) override;
     void OnRightClick() override;
+    void OnInteract() override;
 
     CGCorpse_C(uint32_t time, const CClientObjCreate& create);
     void ApplyGuildColor(int32_t request);
@@ -47,7 +48,6 @@ class CGCorpse_C : public CGObject_C, public CGCorpse {
     float GetDisplayScale() const;
     uint32_t GetFactionTemplate() const;
     const char* GetPortraitTexture() const;
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool a3);
     void ShowLootEffect();
     void OnFlagChanged(uint32_t oldFlags);
     void OnDynamicFlagChanged(uint32_t oldFlags);

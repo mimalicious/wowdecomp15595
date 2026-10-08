@@ -393,7 +393,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     virtual void GetDNDText(char* buffer, uint32_t size) const;
     virtual void GetGMText(char* buffer, uint32_t size) const;
     virtual void GetDevText(char* buffer, uint32_t size) const;
-    virtual void PlayUnitSound(uint32_t soundType, int32_t a2);
+    virtual void GetComText(char* buffer, uint32_t size) const;
+    virtual void PlayUnitSound(uint32_t soundType, int32_t a2, int32_t a3);
     virtual void PlayFoleySound();
     virtual uint32_t GetImpactType() const;
     virtual const CGUnitVirtualItem* GetDefendingItem() const;
@@ -450,8 +451,18 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t Animate(float elapsed) override;
     void ModelLoaded(CM2Model* model) override;
     void ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) override;
-    void Reenable() override;
-    void PostReenable() override;
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void Reenable(const CClientObjCreate& create) override;
+    void PostReenable(const CClientObjCreate& create) override;
+    void LoadGuildTextures() override;
+    int32_t IsSolidSelectable() const override;
+    void OnInteract() override;
+    float AddSquelchedEffect() override;
+    bool IsTransport() const override;
+    int32_t IsPointInside(const C3Vector& point) const override;
+    void PlaySpellVisualKit_PlayAnims(const PlaySpellVisuaKitData* data) override;
+    void PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), int32_t* hasEffect, uint32_t a9, int32_t a10) override;
+    int32_t PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) override;
     void CleanUpVehicleBoneAnimsBeforeObjectModelChange() override;
     void OnReceiveMirrorImageDataFromServer(CDataStore* msg);
     void RenderTargetSelection() const override;
@@ -467,7 +478,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void DestroyVehicleData(int32_t removePassengers);
     void SignalPlayerLosesVehicleDataEvent();
     void OnDeath();
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable);
     void SetClientInitData(const CClientObjCreate& create, bool activeMover);
     void SetStorage(uint32_t* storage, uint32_t* saved);
     void SetUpdateInfo(const CClientMoveUpdate& update, int32_t activeMover);
@@ -958,9 +968,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ShakeCameraOnHit();
     void TriggerDamageFeedback();
     void CreateProceduralEffect(const SpellRec* spell, const SpellVisualRec* visual, const SpellVisualKitRec* kit, int32_t a4, uint32_t flags, WOWGUID guid);
-    void PlaySpellVisualKit_PlayAnims(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, int32_t a5, int32_t a6, WOWGUID guid, uint32_t a8, const SpellVisualRec* visual, uint32_t a10, int32_t a11) override;
-    void PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), int32_t* hasEffect) override;
-    int32_t PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual) override;
     void HandleSpellEventSound();
     int32_t IsHostileCritter();
     float GetSpellChanceToCrit() const;

@@ -85,6 +85,7 @@ enum TypeMask {
     TYPEMASK_GAMEOBJECT = 32,
     TYPEMASK_DYNAMICOBJECT = 64,
     TYPEMASK_CORPSE = 128,
+    TYPEMASK_AREATRIGGER = 256,
 };
 
 enum MovementFlags : uint32_t {

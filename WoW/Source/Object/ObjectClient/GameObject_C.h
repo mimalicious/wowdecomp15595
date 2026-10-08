@@ -217,11 +217,11 @@ class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_Worl
     /* 0068 */ CMapEntity* m_baseCollision;
     /* 006C */ float m_sinkDepth;
     /* 0070 */ float m_previousSinkDepth;
-    /* 0074 */ SE2SoundKitObject m_sound;
-    /* 0088 */ CDestructibleProxy m_proxy;
-    /* 00A8 */ DestructibleModelDataRec* m_modelData;
-    /* 00AC */ uint8_t m_loadPending;
-    /* 00AD */ uint8_t m_animating;
+    /* 0074 */ uint32_t unk_0074;
+    /* 0078 */ uint32_t unk_0078;
+    /* 007C */ uint8_t m_loadPending;
+    /* 007D */ uint8_t m_animating;
+    /* 0080 */ DestructibleModelDataRec* m_modelData;
 
     virtual ~CGGameObject_C_Type_DestructibleBuilding();
     virtual bool CanHighlight() const;
@@ -287,8 +287,8 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     static int32_t OnStateChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
     static void SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
 
-    /* 00D8 */ CPassenger m_passenger;
-    /* 0108 */ TSList<void> m_gameObjectMirrorLists [12];
+    /* 0100 */ CPassenger m_passenger;
+    /* 0130 */ TSList<void> m_gameObjectMirrorLists [12];
     /* 0198 */ TSLink<CGGameObject_C> m_transportLink;
     /* 01A0 */ CGGameObject_C_TypeBase* m_typeData;
     /* 01A4 */ GameObjectStats* m_stats;
@@ -313,7 +313,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     virtual void UpdateInteractIconAttach();
     virtual int32_t Animate(float elapsed);
     virtual int32_t IsSolidSelectable() const;
-    virtual int32_t IsCollidable(int32_t a1) const;
+    int32_t IsCollidable(int32_t a1) const;
     virtual int32_t IsHighlightSuppressed() const;
     virtual int32_t GetModelFileName(const char** name) const;
     virtual void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3);
@@ -332,13 +332,15 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     int32_t CanHighlight() const override;
     int32_t FloatingTooltip() const override;
     void OnRightClick() override;
+    void OnInteract() override;
     int32_t GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const override;
-    void PostReenable() override;
+    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
+    void PostReenable(const CClientObjCreate& create) override;
 
     CGGameObject_C(uint32_t time, const CClientObjCreate& create);
     ~CGGameObject_C();
     void Disable() override;
-    void Reenable() override;
+    void Reenable(const CClientObjCreate& create) override;
     void AddToolTipInfo(CGTooltip* tooltip);
     bool CanUse() const;
     bool IsCreatorOnlyUse() const;
@@ -361,7 +363,6 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     bool IsValidOpenAction(int32_t action) const;
     void LoadBaseObject(GameObjectStats_C* stats);
     void PlayCustomAnim(uint32_t anim);
-    void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable);
     void ResetDisplayState();
     void SetDisplayState(int32_t state);
     int32_t ObjectReaction(const CGUnit_C* unit) const;

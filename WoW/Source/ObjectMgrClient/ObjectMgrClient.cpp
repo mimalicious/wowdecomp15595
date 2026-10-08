@@ -1,21 +1,23 @@
 #include <cstdint>
 #include <cstring>
 #include <ctime>
-#include <malloc.h>
 #include <new>
 #include "ObjectMgrClient.h"
 #include "Engine/Source/Base/CDataStore.h"
-#include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/ConsoleBase/ConsoleCommand.h"
 #include "Engine/Source/ConsoleBase/IConsole.h"
-#include "Engine/Source/Os/TimeManager.h"
+#include "Engine/Source/Event/Event.h"
+#include "Engine/Source/Event/FrameTime.h"
 #include "Engine/Source/Storm/H/storm.h"
-#include "WoW/Source/Net/NetClient/NetClient.h"
+#include "WoW/Source/Client.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayer.h"
+#include "WoW/Source/Object/AreaTrigger.h"
 #include "WoW/Source/Object/Container.h"
 #include "WoW/Source/Object/Corpse.h"
 #include "WoW/Source/Object/DynamicObject.h"
 #include "WoW/Source/Object/GameObject.h"
 #include "WoW/Source/Object/Item.h"
+#include "WoW/Source/Object/ObjectClient/AreaTrigger_C.h"
 #include "WoW/Source/Object/ObjectClient/Container_C.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"
 #include "WoW/Source/Object/ObjectClient/DynamicObject_C.h"
@@ -26,38 +28,49 @@
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/Object/Unit.h"
+#include "Engine/Source/Base/ObjectAlloc.h"
 #include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
+#include "WoW/Source/ObjectMgrClient/Mirror.h"
 #include "WoW/Source/Ui/BattlefieldInfo.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/WowServices/RealmConnection.h"
-#include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00DD2008
+// STATIC: 0x01014008
 static __declspec(thread) ObjectMgr* s_curMgr;
 
-// STATIC: #0x00B4B014
+// STATIC: 0x00D73658
 static ObjectMgr* s_savedObjMgr;
 
-// STATIC: #0x00B4B020
-static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> > s_typeMirrorHandlers[NUM_CLIENT_OBJECT_TYPES][1326];
+// STATIC: 0x00D73660
+static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> > s_typeMirrorHandlers[NUM_CLIENT_OBJECT_TYPES][(sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData)) / sizeof(uint32_t)];
 
-// STATIC: #0x00B4AFF4
+// STATIC: 0x00D73634
 static uint32_t s_objHeapIds[NUM_CLIENT_OBJECT_TYPES];
 
-// STATIC: #0x00B4B018
-static int32_t s_heapsAllocated;
+// STATIC: 0x00D7365C
+static bool s_heapsAllocated;
 
-// STATIC: #0x00AC3CC4
-static const char* s_objNames[NUM_CLIENT_OBJECT_TYPES] = { "CGObject_C", "CGItem_C", "CGContainer_C", "CGUnit_C", "CGPlayer_C", "CGGameObject_C", "CGDynamicObject_C", "CGCorpse_C" };
+// STATIC: 0x00C9AC14
+static const char* s_objNames[NUM_CLIENT_OBJECT_TYPES] = { "CGObject_C", "CGItem_C", "CGContainer_C", "CGUnit_C", "CGPlayer_C", "CGGameObject_C", "CGDynamicObject_C", "CGCorpse_C", "CGAreaTrigger_C" };
 
-// STATIC: #0x00AC3CE4
-static const uint32_t s_objHeapSize[NUM_CLIENT_OBJECT_TYPES] = { 0, 512, 32, 64, 64, 64, 32, 32 };
+// STATIC: 0x00C9AC38
+static const uint32_t s_objHeapSize[NUM_CLIENT_OBJECT_TYPES] = { 0, 512, 32, 64, 64, 64, 32, 32, 32 };
 
-// STATIC: #0x00AC3D04
-static const uint32_t s_objDwordCount[NUM_CLIENT_OBJECT_TYPES] = { 0x6, 0x40, 0x8A, 0x94, 0x52E, 0x12, 0xC, 0x24 };
+// STATIC: 0x00C9AC5C
+static const uint32_t s_objDwordCount[NUM_CLIENT_OBJECT_TYPES] = {
+    sizeof(CGObjectData) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGItemData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGItemData) + sizeof(CGContainerData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGUnitData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerLocalData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGGameObjectData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGDynamicObjectData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGCorpseData)) / sizeof(uint32_t),
+    (sizeof(CGObjectData) + sizeof(CGAreaTriggerData)) / sizeof(uint32_t),
+};
 
-// STATIC: #0x00B6A160
+// STATIC: 0x00D97E40
 uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGObject_C) + sizeof(CGObjectData) + CGObject::TotalFieldsSaved() * sizeof(uint32_t),
     sizeof(CGItem_C) + sizeof(CGObjectData) + sizeof(CGItemData) + CGItem::TotalFieldsSaved() * sizeof(uint32_t),
@@ -67,9 +80,10 @@ uint32_t s_objTotalSize[NUM_CLIENT_OBJECT_TYPES] = {
     sizeof(CGGameObject_C) + sizeof(CGObjectData) + sizeof(CGGameObjectData) + CGGameObject::TotalFieldsSaved() * sizeof(uint32_t),
     sizeof(CGDynamicObject_C) + sizeof(CGObjectData) + sizeof(CGDynamicObjectData) + CGDynamicObject::TotalFields() * sizeof(uint32_t),
     sizeof(CGCorpse_C) + sizeof(CGObjectData) + sizeof(CGCorpseData) + CGCorpse::TotalFieldsSaved() * sizeof(uint32_t),
+    sizeof(CGAreaTrigger_C) + sizeof(CGObjectData) + sizeof(CGAreaTriggerData) + CGAreaTrigger::TotalFields() * sizeof(uint32_t),
 };
 
-// OFFSET: #0x004D5850
+// OFFSET: 0x0048F190/0x1400B37F0
 static CMirrorHandler* AssignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list, uint32_t fieldByteOffset, uint32_t mirrorByteOffset, uint32_t fieldByteSize, MIRRORHANDLERFUNC function, void* param, HANDLER_PRIORITY priority, int32_t alwaysFire) {
     CMirrorHandler* handler = list->NewNode(2, 0, 0);
     handler->m_fieldByteOffset = fieldByteOffset;
@@ -84,23 +98,24 @@ static CMirrorHandler* AssignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMir
     return handler;
 }
 
-// OFFSET: #0x004D3BF0
+// OFFSET: 0x0048D2D0
 static uint32_t GetObjectTypeFieldByteOffset(OBJECT_TYPE_ID typeId) {
     switch (typeId) {
         case ID_ITEM:
         case ID_UNIT:
         case ID_GAMEOBJECT:
         case ID_DYNAMICOBJECT:
-        case ID_CORPSE: {
-            return OBJECT_END * sizeof(uint32_t);
+        case ID_CORPSE:
+        case ID_AREATRIGGER: {
+            return sizeof(CGObjectData);
         }
 
         case ID_CONTAINER: {
-            return 0x100;
+            return sizeof(CGObjectData) + sizeof(CGItemData);
         }
 
         case ID_PLAYER: {
-            return 0x250;
+            return sizeof(CGObjectData) + sizeof(CGUnitData);
         }
 
         default: {
@@ -109,7 +124,7 @@ static uint32_t GetObjectTypeFieldByteOffset(OBJECT_TYPE_ID typeId) {
     }
 }
 
-// OFFSET: #0x004D44F0
+// OFFSET: 0x0048DC00/0x1400B1C00
 static uint32_t TypeDescriptorToMirrorOffset(OBJECT_TYPE_ID typeId, uint32_t offset, uint32_t size) {
     switch (typeId) {
         case ID_ITEM: {
@@ -140,13 +155,17 @@ static uint32_t TypeDescriptorToMirrorOffset(OBJECT_TYPE_ID typeId, uint32_t off
             return CGCorpse::DescriptorToMirrorOffset(offset, size, 0, 0);
         }
 
+        case ID_AREATRIGGER: {
+            return CGAreaTrigger::DescriptorToMirrorOffset(offset, size, 0, 0);
+        }
+
         default: {
             return (offset & 3) + 4 * CGObject::GetSavedIndexFromDataIndex(offset >> 2);
         }
     }
 }
 
-// OFFSET: #0x004D5900
+// OFFSET: 0x0048F240/0x1400B3900
 static void UnassignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list, MIRRORHANDLERFUNC function, void* param) {
     for (CMirrorHandler* handler = list->Head(); handler; handler = list->Next(handler)) {
         if (handler->m_function == function && handler->m_functionParam == param) {
@@ -161,8 +180,9 @@ static void UnassignMirrorHandler(TSList<CMirrorHandler, TSGetLink<CMirrorHandle
     }
 }
 
-// OFFSET: #0x004D36C0
-void NetClient::PushObjMgr(ClntObjMgr* mgr) {
+// PROVEN: f5d66880 IDENTICAL/NONE
+// OFFSET: 0x0048D120/0x1400B0F80
+void ClntObjMgrPush(ClntObjMgr* mgr) {
     if (s_savedObjMgr) {
         return;
     }
@@ -175,21 +195,23 @@ void NetClient::PushObjMgr(ClntObjMgr* mgr) {
     }
 }
 
-// OFFSET: #0x004D3700
-void NetClient::PopObjMgr() {
+// PROVEN: dc993463 IDENTICAL/NONE
+// OFFSET: 0x0048D160/0x1400B0FC0
+void ClntObjMgrPop() {
     if (s_savedObjMgr) {
         s_curMgr = s_savedObjMgr;
         s_savedObjMgr = NULL;
     }
 }
 
-// OFFSET: #0x004D3750
+// PROVEN: 675b198a IDENTICAL/NONE
+// OFFSET: 0x0048D1B0/0x1400B1020
 int32_t ClntObjMgrIsValid(int32_t a1) {
     ObjectMgr* mgr = s_curMgr;
     return mgr && SMemIsValidPointer(mgr, sizeof(ObjectMgr), a1);
 }
 
-// OFFSET: #0x004D3790
+// OFFSET: 0x0048D1F0/0x1400B1070
 WOWGUID ClntObjMgrGetActivePlayer() {
     ObjectMgr* mgr = s_curMgr;
 
@@ -200,7 +222,7 @@ WOWGUID ClntObjMgrGetActivePlayer() {
     return mgr->m_playerGuid;
 }
 
-// OFFSET: #0x004D4DB0
+// OFFSET: 0x0048E5C0/0x1400B26D0
 CGObject_C* ClntObjMgrObjectPtr(WOWGUID guid, TypeMask mask, const char* fileName, int32_t lineNumber) {
     ObjectMgr* mgr = s_curMgr;
 
@@ -217,7 +239,7 @@ CGObject_C* ClntObjMgrObjectPtr(WOWGUID guid, TypeMask mask, const char* fileNam
     return object;
 }
 
-// OFFSET: #0x004D4B30
+// OFFSET: 0x0048E2C0/0x1400B2380
 int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param) {
     for (CGObject_C* object = s_curMgr->m_visibleObjects.Head(); object; object = s_curMgr->m_visibleObjects.Next(object)) {
         if (!func(object->m_key.m_guid, param)) {
@@ -228,12 +250,13 @@ int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param) {
     return 1;
 }
 
-// OFFSET: #0x004D3730
+// PROVEN: 4ea93bf0 IDENTICAL/NONE
+// OFFSET: 0x0048D190/0x1400B1000
 ObjectMgr* ClntObjMgrGetCurrent() {
     return s_curMgr;
 }
 
-// OFFSET: #0x004D37E0
+// OFFSET: 0x0048D240/0x1400B10D0
 uint32_t ClntObjMgrGetMapID() {
     ObjectMgr* mgr = s_curMgr;
 
@@ -244,7 +267,8 @@ uint32_t ClntObjMgrGetMapID() {
     return mgr->m_mapId;
 }
 
-// OFFSET: #0x004D3810
+// PROVEN: f6be13da IDENTICAL/NONE
+// OFFSET: 0x0048D270/0x1400B1100
 CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     ObjectMgr* mgr = s_curMgr;
 
@@ -255,12 +279,13 @@ CMovementGlobals* ClntObjMgrGetMovementGlobals() {
     return mgr->m_movementGlobal;
 }
 
-// OFFSET: #0x004D37C0
+// PROVEN: c765748d IDENTICAL/NONE
+// OFFSET: 0x0048D220/0x1400B10A0
 uint32_t ClntObjMgrGetPlayerType() {
     return s_curMgr->m_type;
 }
 
-// OFFSET: #0x004D4CA0
+// OFFSET: 0x0048E4B0
 void ClntObjMgrHideObject(WOWGUID guid) {
     ObjectMgr* mgr = s_curMgr;
     CGObject_C* object = mgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -270,13 +295,13 @@ void ClntObjMgrHideObject(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x004D6BC0
+// OFFSET: 0x00490740
 void ClntObjMgrLinkInNewObject(CGObject_C* object) {
     WOWGUID guid = object->m_obj->m_guid;
     s_curMgr->m_objects.Insert(object, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 }
 
-// OFFSET: #0x004D4D60
+// OFFSET: 0x0048E570
 void ClntObjMgrLockObject(WOWGUID guid) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -285,7 +310,8 @@ void ClntObjMgrLockObject(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x004D3840
+// PROVEN: e8b58fac IDENTICAL/NONE
+// OFFSET: 0x0048D2A0/0x1400B1130
 void ClntObjMgrSetMovementGlobals(CMovementGlobals* globals) {
     ObjectMgr* mgr = s_curMgr;
 
@@ -294,13 +320,13 @@ void ClntObjMgrSetMovementGlobals(CMovementGlobals* globals) {
     }
 }
 
-// OFFSET: #0x004D5BA0
+// OFFSET: 0x0048F3C0/0x1400B3B40
 void ClntObjMgrSetTypeMirrorHandler(OBJECT_TYPE_ID typeId, uint32_t fieldOffset, uint32_t fieldSize, MIRRORHANDLERFUNC function, void* param, HANDLER_PRIORITY priority, int32_t alwaysFire) {
     uint32_t mirrorOffset = TypeDescriptorToMirrorOffset(typeId, fieldOffset, fieldSize);
     AssignMirrorHandler(&s_typeMirrorHandlers[typeId][fieldOffset >> 2], fieldOffset + GetObjectTypeFieldByteOffset(typeId), mirrorOffset, fieldSize, function, param, priority, alwaysFire);
 }
 
-// OFFSET: #0x004D4D00
+// OFFSET: 0x0048E510
 void ClntObjMgrShowObject(WOWGUID guid) {
     ObjectMgr* mgr = s_curMgr;
     CGObject_C* object = mgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -310,12 +336,12 @@ void ClntObjMgrShowObject(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x004D5C40
+// OFFSET: 0x0048F460
 void ClntObjMgrUnsetTypeMirrorHandler(OBJECT_TYPE_ID typeId, uint32_t fieldOffset, MIRRORHANDLERFUNC function, void* param) {
     UnassignMirrorHandler(&s_typeMirrorHandlers[typeId][fieldOffset >> 2], function, param);
 }
 
-// OFFSET: #0x004D3C40
+// OFFSET: 0x0048D320
 static OBJECT_TYPE_ID IncTypeId(CGObject_C* object, OBJECT_TYPE_ID typeId) {
     switch (object->m_obj->m_type) {
         case TYPEMASK_OBJECT | TYPEMASK_ITEM:
@@ -367,12 +393,20 @@ static OBJECT_TYPE_ID IncTypeId(CGObject_C* object, OBJECT_TYPE_ID typeId) {
 
             break;
         }
+
+        case TYPEMASK_OBJECT | TYPEMASK_AREATRIGGER: {
+            if (typeId == ID_OBJECT) {
+                return ID_AREATRIGGER;
+            }
+
+            break;
+        }
     }
 
     return NUM_CLIENT_OBJECT_TYPES;
 }
 
-// OFFSET: #0x004D3D40
+// OFFSET: 0x0048D4B0/0x1400B1360
 static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* GetObjectMirrorList(OBJECT_TYPE_ID typeId, CGObject_C* object, uint32_t index) {
     TSList<void>* list;
 
@@ -400,8 +434,8 @@ static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* GetObjectMirrorList(O
         case ID_PLAYER: {
             CGPlayer_C* player = static_cast<CGPlayer_C*>(object);
 
-            if (player->IsActivePlayer() && index >= 176) {
-                list = &player->m_playerLocalMirrorLists[index - 176];
+            if (player->IsActivePlayer() && index >= sizeof(CGPlayerData) / sizeof(uint32_t)) {
+                list = &player->m_playerLocalMirrorLists[index - sizeof(CGPlayerData) / sizeof(uint32_t)];
             } else {
                 list = &player->m_playerMirrorLists[index];
             }
@@ -424,6 +458,11 @@ static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* GetObjectMirrorList(O
             break;
         }
 
+        case ID_AREATRIGGER: {
+            list = &static_cast<CGAreaTrigger_C*>(object)->m_areaTriggerMirrorLists[index];
+            break;
+        }
+
         default: {
             return NULL;
         }
@@ -432,39 +471,43 @@ static TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* GetObjectMirrorList(O
     return reinterpret_cast<TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >*>(list);
 }
 
-// OFFSET: #0x004D3DF0
+// OFFSET: 0x0048D580
 static uint32_t GetNumDwordBlocks(uint32_t type, WOWGUID guid) {
     switch (type) {
         case TYPEMASK_OBJECT: {
-            return 6;
+            return s_objDwordCount[ID_OBJECT];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_ITEM: {
-            return 64;
+            return s_objDwordCount[ID_ITEM];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_ITEM | TYPEMASK_CONTAINER: {
-            return 138;
+            return s_objDwordCount[ID_CONTAINER];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_UNIT: {
-            return 148;
+            return s_objDwordCount[ID_UNIT];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_UNIT | TYPEMASK_PLAYER: {
-            return guid == ClntObjMgrGetActivePlayer() ? 1326 : 324;
+            return guid == ClntObjMgrGetActivePlayer() ? s_objDwordCount[ID_PLAYER] : (sizeof(CGObjectData) + sizeof(CGUnitData) + sizeof(CGPlayerData)) / sizeof(uint32_t);
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_GAMEOBJECT: {
-            return 18;
+            return s_objDwordCount[ID_GAMEOBJECT];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_DYNAMICOBJECT: {
-            return 12;
+            return s_objDwordCount[ID_DYNAMICOBJECT];
         }
 
         case TYPEMASK_OBJECT | TYPEMASK_CORPSE: {
-            return 36;
+            return s_objDwordCount[ID_CORPSE];
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_AREATRIGGER: {
+            return s_objDwordCount[ID_AREATRIGGER];
         }
 
         default: {
@@ -473,13 +516,13 @@ static uint32_t GetNumDwordBlocks(uint32_t type, WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x004D3F10
+// OFFSET: 0x0048D750
 static int32_t ExtractDirtyMasks(CDataStore* msg, uint8_t* blockCount, uint32_t* masks) {
     uint8_t count;
     msg->Get(count);
     *blockCount = count;
 
-    if (count > 42) {
+    if (count > 44) {
         return 0;
     }
 
@@ -489,16 +532,16 @@ static int32_t ExtractDirtyMasks(CDataStore* msg, uint8_t* blockCount, uint32_t*
         msg->Get(masks[i]);
     }
 
-    if (i < 42) {
-        memset(&masks[i], 0, sizeof(uint32_t) * (42 - i));
+    if (i < 44) {
+        memset(&masks[i], 0, sizeof(uint32_t) * (44 - i));
     }
 
     return 1;
 }
 
-// OFFSET: #0x004D3F80
+// OFFSET: 0x0048D7C0/0x1400B1520
 static int32_t SkipPartialObjectUpdate(CDataStore* msg) {
-    uint32_t masks[42];
+    uint32_t masks[44];
     uint8_t blockCount;
 
     if (!ExtractDirtyMasks(msg, &blockCount, masks)) {
@@ -515,7 +558,7 @@ static int32_t SkipPartialObjectUpdate(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x004D3FF0
+// OFFSET: 0x0048D830
 static void InitObject(CGObject_C* object, const CClientObjCreate& create, uint32_t time) {
     switch (object->m_typeId) {
         case ID_ITEM: {
@@ -557,23 +600,62 @@ static void InitObject(CGObject_C* object, const CClientObjCreate& create, uint3
             object->AddWorldObject();
             break;
         }
+
+        case ID_AREATRIGGER: {
+            new (object) CGAreaTrigger_C(time, create);
+            object->AddWorldObject();
+            break;
+        }
     }
 }
 
-// OFFSET: #0x004D4090
+// OFFSET: 0x0048FBD0/0x1400B44B0
 static void DestroyRemovedObject(CGObject_C* object) {
     int32_t activePlayer = object->m_obj->m_guid == ClntObjMgrGetActivePlayer();
 
     switch (object->m_obj->m_type) {
-        case TYPEMASK_OBJECT:
-        case TYPEMASK_OBJECT | TYPEMASK_ITEM:
-        case TYPEMASK_OBJECT | TYPEMASK_ITEM | TYPEMASK_CONTAINER:
-        case TYPEMASK_OBJECT | TYPEMASK_UNIT:
-        case TYPEMASK_OBJECT | TYPEMASK_UNIT | TYPEMASK_PLAYER:
-        case TYPEMASK_OBJECT | TYPEMASK_GAMEOBJECT:
-        case TYPEMASK_OBJECT | TYPEMASK_DYNAMICOBJECT:
-        case TYPEMASK_OBJECT | TYPEMASK_CORPSE: {
+        case TYPEMASK_OBJECT: {
             object->~CGObject_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_ITEM: {
+            static_cast<CGItem_C*>(object)->~CGItem_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_ITEM | TYPEMASK_CONTAINER: {
+            static_cast<CGContainer_C*>(object)->~CGContainer_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_UNIT: {
+            static_cast<CGUnit_C*>(object)->~CGUnit_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_UNIT | TYPEMASK_PLAYER: {
+            static_cast<CGPlayer_C*>(object)->~CGPlayer_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_GAMEOBJECT: {
+            static_cast<CGGameObject_C*>(object)->~CGGameObject_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_DYNAMICOBJECT: {
+            static_cast<CGDynamicObject_C*>(object)->~CGDynamicObject_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_CORPSE: {
+            static_cast<CGCorpse_C*>(object)->~CGCorpse_C();
+            break;
+        }
+
+        case TYPEMASK_OBJECT | TYPEMASK_AREATRIGGER: {
+            static_cast<CGAreaTrigger_C*>(object)->~CGAreaTrigger_C();
             break;
         }
     }
@@ -597,56 +679,64 @@ static void SkipSetOfObjects(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x004D43F0
+// OFFSET: 0x0048DAE0
 static uint32_t ObjDescriptorToMirrorOffset(OBJECT_TYPE_ID typeId, int32_t local, uint32_t offset, uint32_t size) {
     switch (typeId) {
         case ID_CONTAINER: {
-            if (offset >= 0x100) {
-                return CGContainer::DescriptorToMirrorOffset(offset, size, 0, 0x100);
+            if (offset >= sizeof(CGObjectData) + sizeof(CGItemData)) {
+                return CGContainer::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData) + sizeof(CGItemData));
             }
         }
 
         case ID_ITEM: {
-            if (offset >= 0x18) {
-                return CGItem::DescriptorToMirrorOffset(offset, size, 0, 0x18);
+            if (offset >= sizeof(CGObjectData)) {
+                return CGItem::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData));
             }
 
             break;
         }
 
         case ID_PLAYER: {
-            if (offset >= 0x250) {
-                return CGPlayer::DescriptorToMirrorOffset(offset, size, local, 0x250);
+            if (offset >= sizeof(CGObjectData) + sizeof(CGUnitData)) {
+                return CGPlayer::DescriptorToMirrorOffset(offset, size, local, sizeof(CGObjectData) + sizeof(CGUnitData));
             }
         }
 
         case ID_UNIT: {
-            if (offset >= 0x18) {
-                return CGUnit::DescriptorToMirrorOffset(offset, size, local, 0x18);
+            if (offset >= sizeof(CGObjectData)) {
+                return CGUnit::DescriptorToMirrorOffset(offset, size, local, sizeof(CGObjectData));
             }
 
             break;
         }
 
         case ID_GAMEOBJECT: {
-            if (offset >= 0x18) {
-                return CGGameObject::DescriptorToMirrorOffset(offset, size, 0, 0x18);
+            if (offset >= sizeof(CGObjectData)) {
+                return CGGameObject::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData));
             }
 
             break;
         }
 
         case ID_DYNAMICOBJECT: {
-            if (offset >= 0x18) {
-                return CGDynamicObject::DescriptorToMirrorOffset(offset, size, 0, 0x18);
+            if (offset >= sizeof(CGObjectData)) {
+                return CGDynamicObject::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData));
             }
 
             break;
         }
 
         case ID_CORPSE: {
-            if (offset >= 0x18) {
-                return CGCorpse::DescriptorToMirrorOffset(offset, size, 0, 0x18);
+            if (offset >= sizeof(CGObjectData)) {
+                return CGCorpse::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData));
+            }
+
+            break;
+        }
+
+        case ID_AREATRIGGER: {
+            if (offset >= sizeof(CGObjectData)) {
+                return CGAreaTrigger::DescriptorToMirrorOffset(offset, size, 0, sizeof(CGObjectData));
             }
 
             break;
@@ -656,7 +746,7 @@ static uint32_t ObjDescriptorToMirrorOffset(OBJECT_TYPE_ID typeId, int32_t local
     return (offset & 3) + 4 * CGObject::GetSavedIndexFromDataIndex(offset >> 2);
 }
 
-// OFFSET: #0x004D45B0
+// OFFSET: 0x0048DCE0
 static void SetupObjectStorage(CGObject_C* object, OBJECT_TYPE_ID typeId, WOWGUID guid) {
     uint8_t* base = reinterpret_cast<uint8_t*>(object);
 
@@ -734,10 +824,18 @@ static void SetupObjectStorage(CGObject_C* object, OBJECT_TYPE_ID typeId, WOWGUI
             memset(storage, 0, size);
             break;
         }
+
+        case ID_AREATRIGGER: {
+            uint32_t size = sizeof(CGObjectData) + sizeof(CGAreaTriggerData);
+            uint32_t* storage = reinterpret_cast<uint32_t*>(base + sizeof(CGAreaTrigger_C));
+            static_cast<CGAreaTrigger_C*>(object)->SetStorage(storage, reinterpret_cast<uint32_t*>(base + sizeof(CGAreaTrigger_C) + size));
+            memset(storage, 0, size);
+            break;
+        }
     }
 }
 
-// OFFSET: #0x004D4850
+// OFFSET: 0x0048E010/0x1400B1480
 static void ExpirePendingHandlers(TSExplicitList<CMirrorHandler, offsetof(CMirrorHandler, m_link2)>* pending) {
     CMirrorHandler* handler = pending->Head();
 
@@ -752,76 +850,91 @@ static void ExpirePendingHandlers(TSExplicitList<CMirrorHandler, offsetof(CMirro
     }
 }
 
-// OFFSET: #0x004D48C0
-static void ExpireOldObjects(uint32_t expireTime, OBJECT_TYPE_ID typeId) {
+// OFFSET: 0x0048FDF0
+static void ExpireOldObjects(OBJECT_TYPE_ID typeId, uint32_t expireTime) {
     CGObject_C* object = s_curMgr->m_lazyCleanupFifo[typeId - 1].Head();
 
-    if (object && static_cast<int32_t>(OsGetAsyncTimeMs() - object->m_disableTime - expireTime) >= 0) {
+    if (object && !object->unk_00F0 && static_cast<int32_t>(FrameTime::GetCurTimeMs() - object->m_disableTime - expireTime) >= 0) {
         s_curMgr->m_lazyCleanupObjects.Unlink(object);
         object->m_link.Unlink();
         DestroyRemovedObject(object);
     }
 }
 
-// OFFSET: #0x004D4930
+// OFFSET: 0x0048FE60
 CGObject_C* ClntObjMgrAllocObject(OBJECT_TYPE_ID typeId, WOWGUID guid) {
     if (guid == ClntObjMgrGetActivePlayer()) {
-        return static_cast<CGObject_C*>(SMemAlloc(sizeof(CGPlayer_C) + s_objDwordCount[ID_PLAYER] * sizeof(uint32_t) + CGPlayer::TotalFields() * sizeof(uint32_t) + 1002 * sizeof(TSList<void>), __FILE__, __LINE__, 0));
+        return static_cast<CGObject_C*>(SMemAlloc(sizeof(CGPlayer_C) + s_objDwordCount[ID_PLAYER] * sizeof(uint32_t) + (sizeof(CGPlayerLocalData) - sizeof(CGPlayerData)) / sizeof(uint32_t) * sizeof(TSList<void>) + CGPlayer::TotalFields() * sizeof(uint32_t), __FILE__, __LINE__, 0));
     }
 
-    ExpireOldObjects(10000, typeId);
+    ExpireOldObjects(typeId, 10000);
 
     uint32_t memHandle;
+    void* object;
 
-    if (!ObjectAlloc(s_objHeapIds[typeId], &memHandle, NULL, false, __FILE__, __LINE__)) {
+    if (!ObjectAlloc(s_objHeapIds[typeId], &memHandle, &object, false, __FILE__, __LINE__)) {
         return NULL;
     }
 
-    CGObject_C* object = static_cast<CGObject_C*>(ObjectPtr(s_objHeapIds[typeId], memHandle));
-    object->m_heapIndex = memHandle;
-    return object;
+    static_cast<CGObject_C*>(object)->m_heapIndex = memHandle;
+    return static_cast<CGObject_C*>(object);
 }
 
-// OFFSET: #0x004D49E0
+// OFFSET: 0x0048E0F0/0x1400B2120
 static int32_t CCommand_ObjUsage(const char* command, const char* arguments) {
     ObjectMgr* mgr = s_curMgr;
     uint32_t visible = 0;
     uint32_t active = 0;
     uint32_t lazy = 0;
+    uint32_t items = 0;
+    uint32_t units = 0;
+    uint32_t gameObjects = 0;
 
     for (CGObject_C* object = mgr->m_visibleObjects.Head(); object; object = mgr->m_visibleObjects.Next(object)) {
         visible++;
     }
 
     for (CGObject_C* object = mgr->m_objects.m_fulllist.Head(); object; object = mgr->m_objects.m_fulllist.Next(object)) {
+        uint16_t type = object->m_obj->m_type;
         active++;
+
+        if ((type & TYPEMASK_ITEM) || (type & TYPEMASK_CONTAINER)) {
+            items++;
+        } else if (type & TYPEMASK_UNIT) {
+            units++;
+        } else if (type & TYPEMASK_GAMEOBJECT) {
+            gameObjects++;
+        }
     }
 
     for (CGObject_C* object = mgr->m_lazyCleanupObjects.m_fulllist.Head(); object; object = mgr->m_lazyCleanupObjects.m_fulllist.Next(object)) {
         lazy++;
     }
 
-    ConsoleWrite("Object manager list status:", HIGHLIGHT_COLOR);
-    ConsoleWriteA("    Active objects:              %u objects (%u visible)", HIGHLIGHT_COLOR, active, visible);
+    ConsoleWrite("Object manager list status: (use gmvision to see server onlys)", HIGHLIGHT_COLOR);
+    ConsoleWriteA("    Active objects:    %u (%u visible)", HIGHLIGHT_COLOR, active, visible);
+    ConsoleWriteA("    Units: %u,   GameObjs: %u    Items: %u,    Other: %u", HIGHLIGHT_COLOR, units, gameObjects, items, active - gameObjects - units - items);
     ConsoleWriteA("    Objects waiting to be freed: %u objects", HIGHLIGHT_COLOR, lazy);
     return 1;
 }
 
-// OFFSET: #0x004D4AC0
+// PROVEN: 7dd71eb2 IDENTICAL/NONE
+// OFFSET: 0x0048E240/0x1400B22B0
 void ClntObjMgrInitializeShared() {
     if (!s_heapsAllocated) {
         for (uint32_t i = ID_ITEM; i < NUM_CLIENT_OBJECT_TYPES; i++) {
             s_objHeapIds[i] = ObjectAllocAddHeap(s_objTotalSize[i], s_objHeapSize[i], s_objNames[i], true);
         }
 
-        s_heapsAllocated = 1;
+        s_heapsAllocated = true;
     }
 
     MirrorInitialize();
     ConsoleCommandRegister("ObjUsage", CCommand_ObjUsage, CATEGORY_GAME, NULL, NULL);
+    ConsoleCommandRegister("ShowObjUsage", CCommand_ObjUsage, CATEGORY_GAME, NULL, NULL);
 }
 
-// OFFSET: #0x004D5150
+// OFFSET: 0x0048EA80
 static void CallMirrorFunctions(TSExplicitList<CMirrorHandler, offsetof(CMirrorHandler, m_link2)>* pending, WOWGUID guid, CGObject_C* object, OBJECT_TYPE_ID typeId) {
     CMirrorHandler* handler = pending->Head();
 
@@ -846,7 +959,7 @@ static void CallMirrorFunctions(TSExplicitList<CMirrorHandler, offsetof(CMirrorH
     }
 }
 
-// OFFSET: #0x004D52B0
+// OFFSET: 0x0048DF60/0x1400B2060
 static void CopyMirrorFields(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list, CGObject_C* object) {
     int32_t local = object->m_obj->m_guid == ClntObjMgrGetActivePlayer();
 
@@ -856,7 +969,7 @@ static void CopyMirrorFields(TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >*
     }
 }
 
-// OFFSET: #0x004D5350
+// OFFSET: 0x0048E080/0x1400B11C0
 static int32_t LinkPendingNodes(TSExplicitList<CMirrorHandler, offsetof(CMirrorHandler, m_link2)>* pending, TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list) {
     if (!list || !list->Head()) {
         return 0;
@@ -871,9 +984,9 @@ static int32_t LinkPendingNodes(TSExplicitList<CMirrorHandler, offsetof(CMirrorH
     return 1;
 }
 
-// OFFSET: #0x004D53C0
+// OFFSET: 0x0048E6B0/0x1400B27F0
 static int32_t FillInPartialObjectData(CGObject_C* object, WOWGUID guid, CDataStore* msg, bool skipMirrorUpdate, bool zeroFillAbsent) {
-    uint32_t masks[42];
+    uint32_t masks[44];
     uint8_t blockCount;
 
     if (!ExtractDirtyMasks(msg, &blockCount, masks)) {
@@ -923,7 +1036,7 @@ static int32_t FillInPartialObjectData(CGObject_C* object, WOWGUID guid, CDataSt
     return 1;
 }
 
-// OFFSET: #0x004D5550
+// OFFSET: 0x0048EC40
 static int32_t CallMirrorHandlers(CDataStore* msg, bool postInit, WOWGUID guid) {
     if (!postInit) {
         SmartGUID smartGuid;
@@ -937,7 +1050,7 @@ static int32_t CallMirrorHandlers(CDataStore* msg, bool postInit, WOWGUID guid) 
         return SkipPartialObjectUpdate(msg);
     }
 
-    uint32_t masks[42];
+    uint32_t masks[44];
     uint8_t blockCount;
 
     if (!ExtractDirtyMasks(msg, &blockCount, masks)) {
@@ -972,65 +1085,102 @@ static int32_t CallMirrorHandlers(CDataStore* msg, bool postInit, WOWGUID guid) 
     return 1;
 }
 
-// OFFSET: #0x004D5720
-static void FreeMirrorHandlers(TSList<void>* lists, uint32_t count) {
+// OFFSET: 0x0048E8D0
+static void FreeMirrorHandlers(TSList<void>* lists) {
     TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list = reinterpret_cast<TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >*>(lists);
 
-    for (uint32_t i = count; i; i--, list++) {
-        for (CMirrorHandler* handler = list->Head(); handler; handler = list->Head()) {
-            list->DeleteNode(handler);
-        }
+    for (CMirrorHandler* handler = list->Head(); handler; handler = list->Head()) {
+        list->DeleteNode(handler);
     }
 }
 
-// OFFSET: #0x004D5770
+// OFFSET: 0x0048EF70/0x1400B3630
 static void ClearMirrorLists(CGObject_C* object) {
     switch (object->m_typeId) {
         case ID_CONTAINER: {
-            FreeMirrorHandlers(static_cast<CGContainer_C*>(object)->m_containerMirrorLists, 74);
+            for (uint32_t i = 0; i < sizeof(CGContainerData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGContainer_C*>(object)->m_containerMirrorLists[i]);
+            }
         }
 
         case ID_ITEM: {
-            FreeMirrorHandlers(static_cast<CGItem_C*>(object)->m_itemMirrorLists, 58);
-            FreeMirrorHandlers(object->m_objMirrorLists, 6);
-            return;
+            for (uint32_t i = 0; i < sizeof(CGItemData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGItem_C*>(object)->m_itemMirrorLists[i]);
+            }
+
+            break;
         }
 
         case ID_PLAYER: {
             CGPlayer_C* player = static_cast<CGPlayer_C*>(object);
-            FreeMirrorHandlers(player->m_playerMirrorLists, 176);
+
+            for (uint32_t i = 0; i < sizeof(CGPlayerData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&player->m_playerMirrorLists[i]);
+            }
 
             if (player->IsActivePlayer()) {
-                FreeMirrorHandlers(player->m_playerLocalMirrorLists, 1002);
+                for (uint32_t i = 0; i < (sizeof(CGPlayerLocalData) - sizeof(CGPlayerData)) / sizeof(uint32_t); i++) {
+                    FreeMirrorHandlers(&player->m_playerLocalMirrorLists[i]);
+                }
             }
         }
 
         case ID_UNIT: {
-            FreeMirrorHandlers(static_cast<CGUnit_C*>(object)->m_unitMirrorLists, 142);
-            FreeMirrorHandlers(object->m_objMirrorLists, 6);
-            return;
+            for (uint32_t i = 0; i < sizeof(CGUnitData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGUnit_C*>(object)->m_unitMirrorLists[i]);
+            }
+
+            break;
         }
 
         case ID_GAMEOBJECT: {
-            FreeMirrorHandlers(static_cast<CGGameObject_C*>(object)->m_gameObjectMirrorLists, 12);
+            for (uint32_t i = 0; i < sizeof(CGGameObjectData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGGameObject_C*>(object)->m_gameObjectMirrorLists[i]);
+            }
+
             break;
         }
 
         case ID_DYNAMICOBJECT: {
-            FreeMirrorHandlers(static_cast<CGDynamicObject_C*>(object)->m_dynamicObjectMirrorLists, 6);
+            for (uint32_t i = 0; i < sizeof(CGDynamicObjectData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGDynamicObject_C*>(object)->m_dynamicObjectMirrorLists[i]);
+            }
+
             break;
         }
 
         case ID_CORPSE: {
-            FreeMirrorHandlers(static_cast<CGCorpse_C*>(object)->m_corpseMirrorLists, 30);
+            for (uint32_t i = 0; i < sizeof(CGCorpseData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGCorpse_C*>(object)->m_corpseMirrorLists[i]);
+            }
+
+            break;
+        }
+
+        case ID_AREATRIGGER: {
+            for (uint32_t i = 0; i < sizeof(CGAreaTriggerData) / sizeof(uint32_t); i++) {
+                FreeMirrorHandlers(&static_cast<CGAreaTrigger_C*>(object)->m_areaTriggerMirrorLists[i]);
+            }
+
             break;
         }
     }
 
-    FreeMirrorHandlers(object->m_objMirrorLists, 6);
+    for (uint32_t i = 0; i < sizeof(CGObjectData) / sizeof(uint32_t); i++) {
+        FreeMirrorHandlers(&object->m_objMirrorLists[i]);
+    }
 }
 
-// OFFSET: #0x004D5950
+// OFFSET: 0x0048FF10
+static int32_t ExpireLazyObjects(const void* data, void* param) {
+    for (uint32_t typeId = ID_ITEM; typeId < NUM_CLIENT_OBJECT_TYPES; typeId++) {
+        ExpireOldObjects(static_cast<OBJECT_TYPE_ID>(typeId), 30000);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x0048FFD0
 static void DestroyAllObjects() {
     CGObject_C* object;
 
@@ -1051,12 +1201,12 @@ static void DestroyAllObjects() {
         DestroyRemovedObject(object);
     }
 
-    s_curMgr->m_realmConnection->ResetHandler(SMSG_UPDATE_OBJECT);
-    s_curMgr->m_realmConnection->ResetHandler(SMSG_COMPRESSED_UPDATE_OBJECT);
-    s_curMgr->m_realmConnection->ResetHandler(SMSG_DESTROY_OBJECT);
+    ClientServices::ClearMessageHandler(SMSG_UPDATE_OBJECT);
+    ClientServices::ClearMessageHandler(SMSG_DESTROY_OBJECT);
+    EventUnregister(EVENT_ID_IDLE, ExpireLazyObjects);
 }
 
-// OFFSET: #0x004D5A80
+// OFFSET: 0x0048F2A0/0x1400B3980
 void ClntObjMgrSetObjMirrorHandler(WOWGUID guid, OBJECT_TYPE_ID typeId, uint32_t fieldOffset, uint32_t fieldSize, MIRRORHANDLERFUNC function, void* param, HANDLER_PRIORITY priority, int32_t alwaysFire) {
     ObjectMgr* mgr = s_curMgr;
     CGObject_C* object = mgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
@@ -1070,7 +1220,7 @@ void ClntObjMgrSetObjMirrorHandler(WOWGUID guid, OBJECT_TYPE_ID typeId, uint32_t
     AssignMirrorHandler(GetObjectMirrorList(typeId, object, fieldOffset >> 2), fieldByteOffset, mirrorByteOffset, fieldSize, function, param, priority, alwaysFire);
 }
 
-// OFFSET: #0x004D5B40
+// OFFSET: 0x0048F360/0x1400B3AF0
 void ClntObjMgrUnsetObjMirrorHandler(WOWGUID guid, OBJECT_TYPE_ID typeId, uint32_t fieldOffset, MIRRORHANDLERFUNC function, void* param) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -1079,10 +1229,10 @@ void ClntObjMgrUnsetObjMirrorHandler(WOWGUID guid, OBJECT_TYPE_ID typeId, uint32
     }
 }
 
-// OFFSET: #0x004D5C80
+// OFFSET: 0x0048F490
 void ClntObjMgrDestroyShared() {
     for (uint32_t typeId = 0; typeId < NUM_CLIENT_OBJECT_TYPES; typeId++) {
-        for (uint32_t i = 0; i < 1326; i++) {
+        for (uint32_t i = 0; i < sizeof(s_typeMirrorHandlers[0]) / sizeof(s_typeMirrorHandlers[0][0]); i++) {
             TSList<CMirrorHandler, TSGetLink<CMirrorHandler> >* list = &s_typeMirrorHandlers[typeId][i];
 
             for (CMirrorHandler* handler = list->Head(); handler; handler = list->Head()) {
@@ -1094,16 +1244,16 @@ void ClntObjMgrDestroyShared() {
     ConsoleCommandUnregister("ObjUsage");
 }
 
-// OFFSET: #0x004D6170
+// OFFSET: 0x0048F9C0/0x1400B4190
 ObjectMgr::ObjectMgr(uint32_t type) {
     this->m_type = type;
     this->m_playerGuid = WOWGUID();
-    this->m_mapId = 0;
+    this->m_mapId = 0xFFFFFFFF;
     this->m_realmConnection = NULL;
     this->m_movementGlobal = NULL;
 }
 
-// OFFSET: #0x004D6290
+// OFFSET: 0x0048FAF0
 ObjectMgr::~ObjectMgr() {
     if (this->m_realmConnection) {
         this->m_realmConnection->m_objMgr = NULL;
@@ -1114,8 +1264,8 @@ ObjectMgr::~ObjectMgr() {
     }
 }
 
-// OFFSET: #0x004D63B0
-static int32_t PostInitObject(uint32_t time, CDataStore* msg, bool reenable) {
+// OFFSET: 0x0048EE20
+static int32_t PostInitObject(CGPlayer_C** activePlayer, CDataStore* msg, uint32_t time, bool reenable, bool* transport) {
     SmartGUID guid;
     *msg >> guid;
 
@@ -1132,68 +1282,35 @@ static int32_t PostInitObject(uint32_t time, CDataStore* msg, bool reenable) {
         return 0;
     }
 
+    if (!*activePlayer && (object->m_obj->m_type & TYPEMASK_PLAYER) && static_cast<CGPlayer_C*>(object)->IsActivePlayer()) {
+        *activePlayer = static_cast<CGPlayer_C*>(object);
+    }
+
+    if (!*transport && (object->m_obj->m_type & TYPEMASK_GAMEOBJECT)) {
+        *transport = static_cast<CGGameObject_C*>(object)->m_gameObject->m_typeID == 33;
+    }
+
     CClientObjCreate create;
+    create.Get(msg, true);
 
-    if (!create.Get(msg)) {
-        return 0;
+    if (object->m_modelFlags & 0x20000) {
+        object->PostReenable(create);
     }
 
-    if ((object->m_modelFlags & 0x20000) && (object->m_obj->m_type & TYPEMASK_UNIT)) {
-        static_cast<CGUnit_C*>(object)->SetClientInitData(create, object->m_obj->m_guid == ClntObjMgrGetActivePlayer());
-    }
+    int32_t result;
 
     if (object->m_modelFlags & 0x40000) {
-        return CallMirrorHandlers(msg, true, guid);
+        result = CallMirrorHandlers(msg, true, guid);
+    } else {
+        object->PostInit(time, create, reenable);
+        result = SkipPartialObjectUpdate(msg);
     }
 
-    switch (typeId) {
-        case ID_OBJECT: {
-            object->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_ITEM:
-        case ID_CONTAINER: {
-            static_cast<CGItem_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_UNIT: {
-            static_cast<CGUnit_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_PLAYER: {
-            static_cast<CGPlayer_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_GAMEOBJECT: {
-            static_cast<CGGameObject_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_DYNAMICOBJECT: {
-            static_cast<CGDynamicObject_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        case ID_CORPSE: {
-            static_cast<CGCorpse_C*>(object)->PostInit(time, create, reenable);
-            break;
-        }
-
-        default: {
-            DebugLog("PostInitObject: unknown object type %d", typeId);
-            return 0;
-        }
-    }
-
-    return SkipPartialObjectUpdate(msg);
+    return result;
 }
 
-// OFFSET: #0x004D6750
-void ClntObjMgrDestroy() {
+// OFFSET: 0x004902F0
+void ClntObjMgrDestroyStd() {
     if (!s_curMgr) {
         return;
     }
@@ -1205,7 +1322,7 @@ void ClntObjMgrDestroy() {
     delete mgr;
 }
 
-// OFFSET: #0x004D6AE0
+// OFFSET: 0x00490670
 static CGObject_C* GetUpdateObject(WOWGUID guid, int32_t* reenabled) {
     *reenabled = 0;
 
@@ -1227,28 +1344,32 @@ static CGObject_C* GetUpdateObject(WOWGUID guid, int32_t* reenabled) {
     object->m_link.Unlink();
     mgr->m_objects.Insert(object, static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
-    ObjectMgr* current = s_curMgr;
-
-    if (!current->m_visibleObjects.IsLinked(object) && !current->m_reenabledObjects.IsLinked(object)) {
+    if (!s_curMgr->m_visibleObjects.IsLinked(object) && !(object->m_modelFlags & 0x20000)) {
         *reenabled = 1;
-        current->m_reenabledObjects.LinkToTail(object);
     }
 
     return object;
 }
 
-// OFFSET: #0x004D6F10
-void ClntObjMgrReenableObject(WOWGUID guid) {
-    int32_t reenabled;
-    CGObject_C* object = GetUpdateObject(guid, &reenabled);
+// OFFSET: 0x0048EB90
+static int32_t UpdateExistingObject(CDataStore* msg, CGObject_C* object, int32_t reenabled) {
+    CClientObjCreate create;
+    create.Get(msg, true);
 
-    if (object && reenabled) {
-        object->Reenable();
+    if (!create.IsValid() || !FillInPartialObjectData(object, object->m_obj->m_guid, msg, false, true)) {
+        return 0;
     }
+
+    if (reenabled) {
+        object->Reenable(create);
+    }
+
+    s_curMgr->m_visibleObjects.LinkToTail(object);
+    return 1;
 }
 
-// OFFSET: #0x004D6C00
-static int32_t CreateObject(CDataStore* msg, uint32_t time) {
+// OFFSET: 0x00490780/0x1400B5420
+static int32_t CreateObject(uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
 
@@ -1263,26 +1384,17 @@ static int32_t CreateObject(CDataStore* msg, uint32_t time) {
     CGObject_C* object = GetUpdateObject(guid, &reenabled);
 
     if (object) {
-        CClientObjCreate::Skip(msg);
-
-        if (!FillInPartialObjectData(object, object->m_obj->m_guid, msg, false, true)) {
-            return 0;
-        }
-
-        if (reenabled) {
-            object->Reenable();
-        }
-
-        return 1;
+        return UpdateExistingObject(msg, object, reenabled);
     }
 
     CClientObjCreate create;
+    create.Get(msg, true);
 
-    if (!create.Get(msg)) {
+    if (!create.IsValid()) {
         return 0;
     }
 
-    if (create.m_updateFlags & 0x1) {
+    if (create.m_isActivePlayer) {
         s_curMgr->m_playerGuid = guid;
     }
 
@@ -1290,7 +1402,7 @@ static int32_t CreateObject(CDataStore* msg, uint32_t time) {
     SetupObjectStorage(object, static_cast<OBJECT_TYPE_ID>(typeId), guid);
     object->SetTypeID(static_cast<OBJECT_TYPE_ID>(typeId));
 
-    if (!FillInPartialObjectData(object, guid, msg, true, false)) {
+    if (!FillInPartialObjectData(object, guid, msg, true, true)) {
         return 0;
     }
 
@@ -1299,35 +1411,8 @@ static int32_t CreateObject(CDataStore* msg, uint32_t time) {
     return 1;
 }
 
-// OFFSET: #0x004D6DA0
-static void PostMovementUpdate(CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-
-    CClientMoveUpdate update;
-    *msg >> update;
-
-    if (guid == CGUnit_C::s_activeMover) {
-        return;
-    }
-
-    int32_t reenabled;
-    CGObject_C* object = GetUpdateObject(guid, &reenabled);
-
-    if (!object) {
-        DebugLog("Failed to update object movement.  Object (0x%016I64X) unknown to client!", guid.m_guid);
-        return;
-    }
-
-    static_cast<CGUnit_C*>(object)->SetUpdateInfo(update, object->m_obj->m_guid == CGUnit_C::s_activeMover);
-
-    if (reenabled) {
-        object->Reenable();
-    }
-}
-
-// OFFSET: #0x004D6E80
-static int32_t PartialUpdateFromFullUpdate(CDataStore* msg) {
+// OFFSET: 0x004908F0/0x1400B5610
+static int32_t UpdateObjectValues(CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
 
@@ -1335,7 +1420,9 @@ static int32_t PartialUpdateFromFullUpdate(CDataStore* msg) {
     CGObject_C* object = GetUpdateObject(guid, &reenabled);
 
     if (!object) {
-        DebugLog("Failed to update object data.  Object (0x%016I64X) unknown to client!", guid.m_guid);
+        PlayerObjectUpdateFailed failed;
+        memcpy(failed.m_guid, &guid.m_guid, sizeof(failed.m_guid));
+        ClientServices::Send(&failed);
         return SkipPartialObjectUpdate(msg);
     }
 
@@ -1344,35 +1431,15 @@ static int32_t PartialUpdateFromFullUpdate(CDataStore* msg) {
     }
 
     if (reenabled) {
-        object->Reenable();
+        PlayerObjectUpdateRescued rescued;
+        memcpy(rescued.m_guid, &guid.m_guid, sizeof(rescued.m_guid));
+        ClientServices::Send(&rescued);
     }
 
     return 1;
 }
 
-// OFFSET: #0x004D6F40
-static void UpdateInRangeObjects(CDataStore* msg) {
-    uint32_t count;
-    msg->Get(count);
-
-    while (count) {
-        count--;
-
-        SmartGUID guid;
-        *msg >> guid;
-
-        if (guid != ClntObjMgrGetActivePlayer()) {
-            int32_t reenabled;
-            CGObject_C* object = GetUpdateObject(guid, &reenabled);
-
-            if (object && reenabled) {
-                object->Reenable();
-            }
-        }
-    }
-}
-
-// OFFSET: #0x004D6FC0
+// OFFSET: 0x004909B0/0x1400B56E0
 static void ObjDelete(CGObject_C* object) {
     ClearMirrorLists(object);
 
@@ -1387,57 +1454,37 @@ static void ObjDelete(CGObject_C* object) {
     }
 
     mgr->m_lazyCleanupObjects.Insert(object, hashval, key);
-    s_curMgr->m_lazyCleanupFifo[object->m_typeId - 1].LinkToTail(object);
+    mgr->m_lazyCleanupFifo[object->m_typeId - 1].LinkToTail(object);
 }
 
-// OFFSET: #0x004D7050
-static int32_t ObjectUpdateFirstPass(uint32_t index, CDataStore* msg, uint32_t time, uint32_t count) {
+// OFFSET: 0x00490A40/0x1400B57E0
+static int32_t ObjectUpdateFirstPass(uint32_t index, uint32_t count, CDataStore* msg, uint32_t time) {
     for (; index < count; index++) {
         uint8_t type;
         msg->Get(type);
 
-        switch (type) {
-            case 0: {
-                if (!PartialUpdateFromFullUpdate(msg)) {
-                    return 0;
-                }
-
-                break;
-            }
-
-            case 1: {
-                SmartGUID guid;
-                *msg >> guid;
-                CClientMoveUpdate::Skip(msg);
-                break;
-            }
-
-            case 2:
-            case 3: {
-                if (!CreateObject(msg, time)) {
-                    return 0;
-                }
-
-                break;
-            }
-
-            case 5: {
-                UpdateInRangeObjects(msg);
-                break;
-            }
-
-            default: {
-                DebugLog("Unknown client update packet type (%d)!", type);
+        if (type == 0) {
+            if (!UpdateObjectValues(msg)) {
                 return 0;
             }
+        } else if (type <= 2) {
+            if (!CreateObject(time, msg)) {
+                return 0;
+            }
+        } else {
+            DebugLog("Unknown client update packet type (%d)!", type);
+            return 0;
         }
     }
 
     return 1;
 }
 
-// OFFSET: #0x004D7100
-static int32_t ObjectUpdateSecondPass(CDataStore* msg, uint32_t time, uint32_t count) {
+// OFFSET: 0x0048F0E0
+static int32_t ObjectUpdateSecondPass(CGPlayer_C** activePlayer, CDataStore* msg, bool* transport, uint32_t time, uint32_t count) {
+    *activePlayer = NULL;
+    *transport = false;
+
     for (uint32_t i = 0; i < count; i++) {
         uint8_t type;
         msg->Get(type);
@@ -1451,39 +1498,26 @@ static int32_t ObjectUpdateSecondPass(CDataStore* msg, uint32_t time, uint32_t c
                 break;
             }
 
-            case 1: {
-                PostMovementUpdate(msg);
-                break;
-            }
-
-            case 2:
-            case 3: {
-                if (!PostInitObject(time, msg, type == 3)) {
+            case 1:
+            case 2: {
+                if (!PostInitObject(activePlayer, msg, time, type == 2, transport)) {
                     return 0;
                 }
 
                 break;
             }
 
-            case 4:
-            case 5: {
+            case 3: {
                 SkipSetOfObjects(msg);
                 break;
             }
         }
     }
 
-    CGObject_C* object;
-
-    while ((object = s_curMgr->m_reenabledObjects.Head()) != NULL) {
-        s_curMgr->m_visibleObjects.LinkToTail(object);
-        object->PostReenable();
-    }
-
     return 1;
 }
 
-// OFFSET: #0x004D7230
+// OFFSET: 0x00490AB0
 static void UpdateOutOfRangeObjects(CDataStore* msg) {
     uint32_t count;
     msg->Get(count);
@@ -1541,78 +1575,63 @@ static void UpdateOutOfRangeObjects(CDataStore* msg) {
     CVehiclePassenger_C::ExecutePendingRescueTransitions();
 }
 
-// OFFSET: #0x004D73A0
+// OFFSET: 0x00490C20
 int32_t Packet_SMSG_UPDATE_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t count;
+    uint32_t start = msg->m_read;
+
+    uint16_t mapId = 0;
+    msg->Get(mapId);
+
+    uint32_t count = 0;
     msg->Get(count);
 
     uint32_t read = msg->m_read;
-    uint32_t index = 0;
-
     uint8_t type = 0;
     msg->Get(type);
 
-    if (type == 4) {
+    uint32_t index;
+
+    if (type == 3) {
         UpdateOutOfRangeObjects(msg);
         index = 1;
     } else {
         msg->m_read = read;
+        index = 0;
     }
 
     int32_t result = 0;
 
-    if (ObjectUpdateFirstPass(index, msg, time, count)) {
+    if (ObjectUpdateFirstPass(index, count, msg, time)) {
         msg->m_read = read;
-        result = ObjectUpdateSecondPass(msg, time, count);
+
+        CGPlayer_C* activePlayer;
+        bool transport;
+        result = ObjectUpdateSecondPass(&activePlayer, msg, &transport, time, count);
+
+        if (result && activePlayer) {
+            activePlayer->UpdateObjectComplete(transport);
+        }
     }
 
-    for (uint32_t typeId = ID_ITEM; typeId < NUM_CLIENT_OBJECT_TYPES; typeId++) {
-        ExpireOldObjects(120000, static_cast<OBJECT_TYPE_ID>(typeId));
+    if (mapId == s_curMgr->m_mapId) {
+        return result;
     }
 
-    return result;
+    C3Vector position(0.0f, 0.0f, 0.0f);
+    float facing = 0.0f;
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+    if (player) {
+        position = player->GetPosition();
+        facing = player->GetFacing();
+    }
+
+    ClientChangeWorld(mapId, position, facing);
+    msg->m_read = start;
+    return Packet_SMSG_UPDATE_OBJECT(NULL, SMSG_UPDATE_OBJECT, time, msg);
 }
 
-// OFFSET: #0x004D74D0
-int32_t Packet_SMSG_COMPRESSED_UPDATE_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t size;
-    msg->Get(size);
-
-    uint32_t compressedSize = msg->m_size - msg->m_read;
-    void* compressed;
-    msg->GetDataInSitu(compressed, compressedSize);
-
-    uint8_t* buffer;
-    bool stackBuffer;
-
-    if (size >= 0x2000) {
-        buffer = static_cast<uint8_t*>(SMemAlloc(size, __FILE__, __LINE__, 0));
-        stackBuffer = false;
-    } else {
-        buffer = static_cast<uint8_t*>(alloca(size));
-        stackBuffer = true;
-    }
-
-    uint32_t uncompressedSize = size;
-    int32_t result;
-
-    if (zlib_uncompress(buffer, &uncompressedSize, static_cast<const uint8_t*>(compressed), compressedSize)) {
-        result = 0;
-    } else {
-        WDataStore data;
-        data.PutData(buffer, uncompressedSize);
-        data.m_read = 0;
-        result = Packet_SMSG_UPDATE_OBJECT(NULL, SMSG_UPDATE_OBJECT, time, &data);
-    }
-
-    if (!stackBuffer) {
-        SMemFree(buffer, __FILE__, __LINE__, 0);
-    }
-
-    return result;
-}
-
-// OFFSET: #0x004D7610
+// OFFSET: 0x00490D70
 int32_t Packet_SMSG_DESTROY_OBJECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -1643,26 +1662,21 @@ int32_t Packet_SMSG_DESTROY_OBJECT(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x004D76E0
-void ClntObjMgrInitialize() {
-    s_curMgr->m_realmConnection->SetMessageHandler(SMSG_UPDATE_OBJECT, Packet_SMSG_UPDATE_OBJECT, NULL);
-    s_curMgr->m_realmConnection->SetMessageHandler(SMSG_COMPRESSED_UPDATE_OBJECT, Packet_SMSG_COMPRESSED_UPDATE_OBJECT, NULL);
-    s_curMgr->m_realmConnection->SetMessageHandler(SMSG_DESTROY_OBJECT, Packet_SMSG_DESTROY_OBJECT, NULL);
-}
-
-// OFFSET: #0x004D7750
+// OFFSET: 0x00490E40/0x1400B5D80
 void ClntObjMgrInitializeStd(uint32_t mapId) {
     CGGameUI::SetLastInstanceTime(static_cast<int32_t>(time(NULL)), CGGameUI::m_iCurrentMapID, mapId);
 
     ObjectMgr* mgr = new (__FILE__, __LINE__) ObjectMgr(0);
     g_clientConnection->m_objMgr = reinterpret_cast<ClntObjMgr*>(mgr);
-    s_curMgr = mgr;
     mgr->m_realmConnection = g_clientConnection;
-    ClntObjMgrInitialize();
+    s_curMgr = mgr;
+    ClientServices::SetMessageHandler(SMSG_UPDATE_OBJECT, Packet_SMSG_UPDATE_OBJECT, NULL);
+    ClientServices::SetMessageHandler(SMSG_DESTROY_OBJECT, Packet_SMSG_DESTROY_OBJECT, NULL);
+    EventRegisterEx(EVENT_ID_IDLE, ExpireLazyObjects, NULL, 0.0f);
     s_curMgr->m_mapId = mapId;
 }
 
-// OFFSET: #0x004D77E0
+// OFFSET: 0x00490F20/0x1400B5E90
 void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumber) {
     CGObject_C* object = s_curMgr->m_objects.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -1687,12 +1701,11 @@ void ClntObjMgrUnlockObject(WOWGUID guid, const char* fileName, int32_t lineNumb
     }
 }
 
-// OFFSET: #0x004D4C20
+// OFFSET: [0x0048E430/0x1400B24C0]
 CMirrorHandler::~CMirrorHandler() {
 }
 
-// OFFSET: #0x004038F0
+// OFFSET: 0x004031D0/0x1400066C0
 CGPlayer_C* ClntObjMgrGetActivePlayerObj() {
     return static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 }
-

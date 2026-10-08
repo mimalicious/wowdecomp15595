@@ -20,17 +20,18 @@ struct ClntObjMgr;
 
 struct ClntObjMgr {
     /* 0000 */ TSHashTable<CGObject_C, CHashKeyGUID> m_objects;
-    /* 0028 */ TSHashTable<CGObject_C, CHashKeyGUID> m_lazyCleanupObjects;
-    /* 0050 */ TSList<CGObject_C> m_lazyCleanupFifo [7];
-    /* 00A4 */ TSList<CGObject_C> m_visibleObjects;
-    /* 00B0 */ TSList<CGObject_C> m_reenabledObjects;
-    /* 00BC */ uint8_t unk_00BC[4];
-    /* 00C0 */ WOWGUID m_activePlayer;
-    /* 00C8 */ PLAYER_TYPE m_type;
-    /* 00CC */ uint32_t m_mapID;
-    /* 00D0 */ ClientConnection* m_net;
-    /* 00D4 */ uint8_t unk_00D4[4];
+    /* 002C */ TSHashTable<CGObject_C, CHashKeyGUID> m_lazyCleanupObjects;
+    /* 0058 */ TSList<CGObject_C> m_lazyCleanupFifo [8];
+    /* 00B8 */ TSList<CGObject_C> m_visibleObjects;
+    /* 00C8 */ WOWGUID m_activePlayer;
+    /* 00D0 */ PLAYER_TYPE m_type;
+    /* 00D4 */ uint32_t m_mapID;
+    /* 00D8 */ ClientConnection* m_net;
+    /* 00DC */ uint8_t unk_00DC[4];
 };
+
+void ClntObjMgrPop();
+void ClntObjMgrPush(ClntObjMgr* mgr);
 
 class AuthenticationChallenge {
     public:
@@ -158,8 +159,6 @@ class NetClient : public WowConnectionResponse {
     static bool ClientConnectionResumeCommsHandler(ClientConnectionResumeComms* msg);
     static bool ClientConnectionSuspendCommsHandler(ClientConnectionSuspendComms* msg);
     static int32_t GetMessageTarget(CDataStore* msg, CONNECTION_ID connection);
-    static void PopObjMgr();
-    static void PushObjMgr(ClntObjMgr* mgr);
     static void SendDisconnectReason(WowConnection* connection, DISCONNECT_REASON reason);
     static void SendOnConnection(JamClientMessage* msg, WowConnection* connection);
 

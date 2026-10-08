@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "WoW/Source/Object/AreaTrigger.h"
 #include "WoW/Source/Object/Container.h"
 #include "WoW/Source/Object/Corpse.h"
 #include "WoW/Source/Object/DynamicObject.h"
@@ -20,14 +21,15 @@ struct CGFieldDescriptor {
     /* 0010 */ uint32_t m_flags;
 };
 
-extern CGFieldDescriptor OBJECT_DISCRIPTORS[5];
-extern CGFieldDescriptor ITEM_DESCRIPTORS[38];
+extern CGFieldDescriptor OBJECT_DISCRIPTORS[6];
+extern CGFieldDescriptor ITEM_DESCRIPTORS[43];
 extern CGFieldDescriptor CONTAINER_DESCRIPTORS[3];
 extern CGFieldDescriptor UNIT_DESCRIPTORS[89];
-extern CGFieldDescriptor PLAYER_DESCRIPTORS[215];
+extern CGFieldDescriptor PLAYER_DESCRIPTORS[328];
 extern CGFieldDescriptor GAMEOBJECT_DESCRIPTORS[8];
 extern CGFieldDescriptor DYNAMICOBJECT_DESCRIPTORS[5];
-extern CGFieldDescriptor CORPSE_DESCRIPTORS[10];
+extern CGFieldDescriptor CORPSE_DESCRIPTORS[8];
+extern CGFieldDescriptor AREATRIGGER_DESCRIPTORS[4];
 extern CGFieldDescriptor s_objectDescriptors[sizeof(CGObjectData) / sizeof(uint32_t)];
 extern CGFieldDescriptor s_itemDescriptors[(sizeof(CGObjectData) + sizeof(CGItemData)) / sizeof(uint32_t)];
 extern CGFieldDescriptor s_containerDescriptors[(sizeof(CGObjectData) + sizeof(CGItemData) + sizeof(CGContainerData)) / sizeof(uint32_t)];
@@ -36,6 +38,7 @@ extern CGFieldDescriptor s_playerDescriptors[(sizeof(CGObjectData) + sizeof(CGUn
 extern CGFieldDescriptor s_gameObjectDescriptors[(sizeof(CGObjectData) + sizeof(CGGameObjectData)) / sizeof(uint32_t)];
 extern CGFieldDescriptor s_dynamicObjectDescriptors[(sizeof(CGObjectData) + sizeof(CGDynamicObjectData)) / sizeof(uint32_t)];
 extern CGFieldDescriptor s_corpseDescriptors[(sizeof(CGObjectData) + sizeof(CGCorpseData)) / sizeof(uint32_t)];
+extern CGFieldDescriptor s_areaTriggerDescriptors[(sizeof(CGObjectData) + sizeof(CGAreaTriggerData)) / sizeof(uint32_t)];
 
 void CopyAndExpandDescriptors(const CGFieldDescriptor* descriptors, CGFieldDescriptor* expanded, uint32_t count);
 

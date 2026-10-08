@@ -519,15 +519,15 @@ void NetClient::GetNetLatency(CONNECTION_ID connection, uint32_t& latency) {
     this->m_critSect.Leave();
 }
 
-// PROVEN: bbf9e7e1 IDENTICAL/NONE
+// PROVEN: 3007d186 IDENTICAL/NONE
 // OFFSET: 0x00487B00/0x1400A9290
 int32_t NetClient::HandleConnect() {
     if (this->m_objMgr) {
-        NetClient::PushObjMgr(this->m_objMgr);
+        ClntObjMgrPush(this->m_objMgr);
     }
 
     this->m_netState = NS_CONNECTED;
-    NetClient::PopObjMgr();
+    ClntObjMgrPop();
 
     return 1;
 }
@@ -535,26 +535,26 @@ int32_t NetClient::HandleConnect() {
 // OFFSET: 0x00487B30/0x1400A92D0
 int32_t NetClient::HandleDisconnect() {
     if (this->m_objMgr) {
-        NetClient::PushObjMgr(this->m_objMgr);
+        ClntObjMgrPush(this->m_objMgr);
     }
 
     this->m_netState = NS_INITIALIZED;
     ConsolePrintf("NetClient::HandleDisconnect()");
     CGlueMgr::NetDisconnectHandler(this);
-    NetClient::PopObjMgr();
+    ClntObjMgrPop();
 
     return 1;
 }
 
-// PROVEN: e8315bee IDENTICAL/NONE
+// PROVEN: 053c8f1e IDENTICAL/NONE
 // OFFSET: 0x00487B80/0x1400A9320
 int32_t NetClient::HandleCantConnect() {
     if (this->m_objMgr) {
-        NetClient::PushObjMgr(this->m_objMgr);
+        ClntObjMgrPush(this->m_objMgr);
     }
 
     this->m_netState = NS_INITIALIZED;
-    NetClient::PopObjMgr();
+    ClntObjMgrPop();
 
     return 1;
 }
@@ -605,7 +605,7 @@ void NetClient::HandleMultiplePackets(WowConnection* connection, uint32_t timeSt
 // OFFSET: 0x00487FA0/0x1400A91B0
 int32_t NetClient::HandleData(uint32_t timeReceived, void* data, int32_t size) {
     if (this->m_objMgr) {
-        NetClient::PushObjMgr(this->m_objMgr);
+        ClntObjMgrPush(this->m_objMgr);
     }
 
     s_stats[3] += size + 2;
@@ -615,7 +615,7 @@ int32_t NetClient::HandleData(uint32_t timeReceived, void* data, int32_t size) {
         this->ProcessMessage(timeReceived, &msg, 0);
     }
 
-    NetClient::PopObjMgr();
+    ClntObjMgrPop();
 
     return 1;
 }

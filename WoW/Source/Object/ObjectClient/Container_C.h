@@ -11,13 +11,12 @@
 class CGContainer_C : public CGItem_C, public CGContainer {
     public:
     static void Initialize();
-    /* 03E8 */ TSList<void> m_containerMirrorLists [74];
-    /* 0760 */ CGBag_C m_bag;
+    /* 0478 */ TSList<void> m_containerMirrorLists [74];
+    /* 07F0 */ CGBag_C m_bag;
 
     ~CGContainer_C();
     const CGBag_C* GetBag() const override;
     CGBag_C* GetBag() override;
-    void Reenable() override;
 
     CGContainer_C(uint32_t time, const CClientObjCreate& create);
     int32_t GetFreeSlots() const;

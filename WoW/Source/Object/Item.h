@@ -46,13 +46,12 @@ class CGItemData {
     /* 0024 */ uint32_t m_itemFieldDuration;
     /* 0028 */ int32_t m_itemFieldSpellCharges [5];
     /* 003C */ uint32_t m_itemFieldFlags;
-    /* 0040 */ ItemEnchantment m_itemFieldEnchantment [12];
-    /* 00D0 */ uint32_t m_itemFieldPropertySeed;
-    /* 00D4 */ int32_t m_itemFieldRandomPropertiesId;
-    /* 00D8 */ uint32_t m_itemFieldDurability;
-    /* 00DC */ uint32_t m_itemFieldMaxdurability;
-    /* 00E0 */ uint32_t m_itemFieldCreatePlayedTime;
-    /* 00E4 */ uint32_t m_itemFieldPad;
+    /* 0040 */ ItemEnchantment m_itemFieldEnchantment [15];
+    /* 00F4 */ uint32_t m_itemFieldPropertySeed;
+    /* 00F8 */ int32_t m_itemFieldRandomPropertiesId;
+    /* 00FC */ uint32_t m_itemFieldDurability;
+    /* 0100 */ uint32_t m_itemFieldMaxdurability;
+    /* 0104 */ uint32_t m_itemFieldCreatePlayedTime;
 };
 
 #endif
