@@ -28,11 +28,7 @@ struct Settings {
 };
 
 struct ModuleParam : public BSN::Choice {
-    union {
-        /* 0004 */ BSN::String<256> m_string;
-        /* 0004 */ uint32_t m_int;
-        /* 0004 */ uint8_t m_value[0x40C];
-    };
+    /* 0004 */ uint8_t m_value[0x40C];
 
     ModuleParam();
 };
@@ -61,22 +57,13 @@ struct Failure {
 };
 
 struct Request : public BSN::Choice {
-    union {
-        /* 0004 */ BSN::AsciiString<320> m_logon;
-        /* 0004 */ ModuleMessage m_module;
-        /* 0004 */ uint8_t m_value[0x108C];
-    };
+    /* 0004 */ uint8_t m_value[0x108C];
 
     Request();
 };
 
 struct Response : public BSN::Choice {
-    union {
-        /* 0004 */ ModuleRequest m_module;
-        /* 0004 */ Complete m_complete;
-        /* 0004 */ Failure m_failure;
-        /* 0004 */ uint8_t m_value[0x108C];
-    };
+    /* 0004 */ uint8_t m_value[0x108C];
 
     Response();
 };
@@ -84,10 +71,7 @@ struct Response : public BSN::Choice {
 
 namespace Service {
 struct State : public BSN::Choice {
-    union {
-        /* 0004 */ uint32_t m_recovered;
-        /* 0004 */ uint8_t m_value[0x4];
-    };
+    /* 0004 */ uint8_t m_value[0x4];
 
     State();
 };
@@ -124,10 +108,7 @@ struct Info {
 };
 
 struct InfoUpdate : public BSN::Choice {
-    union {
-        /* 0004 */ Info m_info;
-        /* 0004 */ uint8_t m_value[0x448];
-    };
+    /* 0004 */ uint8_t m_value[0x448];
 
     InfoUpdate();
 };
@@ -146,20 +127,13 @@ struct ListRequest {
 };
 
 struct Request : public BSN::Choice {
-    union {
-        /* 0004 */ ListRequest m_list;
-        /* 0004 */ BSN::Optional<Address> m_join;
-        /* 0004 */ uint8_t m_value[0xC];
-    };
+    /* 0004 */ uint8_t m_value[0xC];
 
     Request();
 };
 
 struct List : public BSN::Choice {
-    union {
-        /* 0004 */ BSN::Array<CharacterCount, 64> m_characterCounts;
-        /* 0004 */ uint8_t m_value[0x304];
-    };
+    /* 0004 */ uint8_t m_value[0x304];
 
     List();
 };
@@ -170,22 +144,13 @@ struct JoinInfo {
 };
 
 struct JoinResponse : public BSN::Choice {
-    union {
-        /* 0004 */ JoinInfo m_info;
-        /* 0004 */ uint32_t m_error;
-        /* 0004 */ uint8_t m_value[0x30];
-    };
+    /* 0004 */ uint8_t m_value[0x30];
 
     JoinResponse();
 };
 
 struct Response : public BSN::Choice {
-    union {
-        /* 0004 */ Update m_update;
-        /* 0004 */ List m_list;
-        /* 0004 */ JoinResponse m_join;
-        /* 0004 */ uint8_t m_value[0x454];
-    };
+    /* 0004 */ uint8_t m_value[0x454];
 
     Response();
 };
@@ -219,15 +184,7 @@ struct AccountName {
 };
 
 struct FieldVal : public BSN::Choice {
-    union {
-        /* 0004 */ bool m_bool;
-        /* 0004 */ BSN::FourCC m_fourCC;
-        /* 0004 */ int32_t m_int;
-        /* 0004 */ BSN::String<127> m_string;
-        /* 0004 */ Toon::FullName m_toonName;
-        /* 0004 */ AccountName m_accountName;
-        /* 0004 */ uint8_t m_value[0x208];
-    };
+    /* 0004 */ uint8_t m_value[0x208];
 
     FieldVal();
 };
@@ -278,10 +235,7 @@ struct FriendsOfFriendList {
 namespace Event {
 namespace Creep {
 struct Portal : public BSN::Choice {
-    union {
-        /* 0004 */ BSN::AsciiString<31> m_portal;
-        /* 0004 */ uint8_t m_value[0x24];
-    };
+    /* 0004 */ uint8_t m_value[0x24];
 
     Portal();
 };
@@ -291,13 +245,7 @@ struct Logoff {
 };
 
 struct Invoke : public BSN::Choice {
-    union {
-        /* 0004 */ Authentication::Request m_authentication;
-        /* 0004 */ Realm::Request m_realm;
-        /* 0004 */ Logoff m_logoff;
-        /* 0004 */ Portal m_portal;
-        /* 0004 */ uint8_t m_value[0xBEFF0];
-    };
+    /* 0004 */ uint8_t m_value[0xBEFF0];
 
     Invoke();
 };
@@ -305,12 +253,7 @@ struct Invoke : public BSN::Choice {
 
 namespace Larva {
 struct Invoke : public BSN::Choice {
-    union {
-        /* 0004 */ Authentication::Response m_authentication;
-        /* 0004 */ Service::State m_service;
-        /* 0004 */ Realm::Response m_realm;
-        /* 0004 */ uint8_t m_value[0x27124];
-    };
+    /* 0004 */ uint8_t m_value[0x27124];
 
     Invoke();
 };

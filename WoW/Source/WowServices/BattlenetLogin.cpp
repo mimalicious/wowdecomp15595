@@ -1337,7 +1337,7 @@ void BattlenetLogin::HandleDisconnectEvents(uint32_t index) {
 // OFFSET: #0x008C9310
 void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke) {
     if (invoke->m_tag == 0) {
-        if (invoke->m_authentication.m_tag == 0) {
+        if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 0) {
             const Battlenet::Authentication::ModuleRequest& request = invoke->Get<0, Battlenet::Authentication::Response>().Get<0, Battlenet::Authentication::ModuleRequest>();
 
             if (!SStrCmpI(request.m_name.m_data, Battlenet::Event::AuthModule::RequestPassword.m_data, STORM_MAX_STR)) {
@@ -1378,7 +1378,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
                 this->m_moduleId = request.m_moduleId;
                 this->QueueEvent(BN_EVENT_SHOW_SURVEY, NULL, 0);
             }
-        } else if (invoke->m_authentication.m_tag == 1) {
+        } else if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 1) {
             if (this->m_serviceState == 6) {
                 this->m_application->LogLevel("Ignoring Authentication Success invoke while in Service::RECOVERED state.", 4);
             } else {
@@ -1388,7 +1388,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
                 this->m_accountFlags2 = complete.m_accountFlags2;
                 this->LogonResultBN(0);
             }
-        } else if (invoke->m_authentication.m_tag == 2 && this->m_serviceState != 5) {
+        } else if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 2 && this->m_serviceState != 5) {
             char text[64];
             const Battlenet::Authentication::Failure& failure = invoke->Get<0, Battlenet::Authentication::Response>().Get<2, Battlenet::Authentication::Failure>();
 
@@ -1404,9 +1404,9 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
             }
         }
     } else if (invoke->m_tag == 1) {
-        this->m_serviceState = invoke->m_service.m_tag;
+        this->m_serviceState = invoke->Value<Battlenet::Service::State>().m_tag;
 
-        switch (invoke->m_service.m_tag) {
+        switch (invoke->Value<Battlenet::Service::State>().m_tag) {
             case 2:
                 this->QueueEvent(BN_EVENT_SERVICE_FAILED, NULL, 0);
                 break;
@@ -1435,7 +1435,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
                 break;
         }
     } else if (invoke->m_tag == 9) {
-        if (invoke->m_realm.m_tag == 0) {
+        if (invoke->Value<Battlenet::Realm::Response>().m_tag == 0) {
             int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<0, Battlenet::Realm::Update>().m_info.m_tag;
 
             if (tag == 0) {
@@ -1445,7 +1445,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
                 const Battlenet::Realm::Update& update = invoke->Get<9, Battlenet::Realm::Response>().Get<0, Battlenet::Realm::Update>();
                 this->UpdateRealmListData(update.m_region, update.m_battlegroup, update.m_id, NULL, 0, true);
             }
-        } else if (invoke->m_realm.m_tag == 1) {
+        } else if (invoke->Value<Battlenet::Realm::Response>().m_tag == 1) {
             int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<1, Battlenet::Realm::List>().m_tag;
 
             if (tag == 0) {
@@ -1476,7 +1476,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
             } else if (tag == 1) {
                 this->QueueEvent(BN_EVENT_REALM_LIST, NULL, 0);
             }
-        } else if (invoke->m_realm.m_tag == 2) {
+        } else if (invoke->Value<Battlenet::Realm::Response>().m_tag == 2) {
             int32_t tag = invoke->Get<9, Battlenet::Realm::Response>().Get<2, Battlenet::Realm::JoinResponse>().m_tag;
 
             if (tag == 0) {

@@ -97,7 +97,22 @@ Battlenet::MapKey::MapKey(const String& value) {
 }
 
 // OFFSET: #0x009C0210
-Battlenet::MapKey::MapKey(const char* value) : MapKey(String(value)) {
+Battlenet::MapKey::MapKey(const char* value) {
+    String key(value);
+    const char* string = key.GetString();
+    uint32_t hash = 0x811C9DC5;
+
+    for (uint8_t c = *string; c; c = *++string) {
+        hash = 16777619 * (c ^ hash);
+    }
+
+    this->m_hash = hash | 0x80000000;
+    this->m_value.m_block = key.m_block;
+    this->m_value.m_string = key.m_string;
+
+    if (key.m_block) {
+        key.m_block->m_refCount++;
+    }
 }
 
 // OFFSET: #0x009C0260

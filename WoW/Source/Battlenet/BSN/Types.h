@@ -146,6 +146,10 @@ class Choice {
     const T& Get() const;
     template <int32_t TAG, class T>
     T* Set();
+    template <class T>
+    T& Value();
+    template <class T>
+    const T& Value() const;
 };
 }
 
@@ -333,6 +337,18 @@ template <int32_t TAG, class T>
 T* BSN::Choice::Set() {
     this->m_tag = TAG;
     return new (this + 1) T();
+}
+
+// INLINED
+template <class T>
+T& BSN::Choice::Value() {
+    return *reinterpret_cast<T*>(this + 1);
+}
+
+// INLINED
+template <class T>
+const T& BSN::Choice::Value() const {
+    return *reinterpret_cast<const T*>(this + 1);
 }
 
 #endif
