@@ -51,7 +51,7 @@ void CSimpleSlider::RunOnMinMaxChangedScript() {
     }
 }
 
-// OFFSET: %0x00530D00
+// OFFSET: 0x00520E30
 float CSimpleSlider::SnapValueToStep(float value) {
     if (0.0f == this->m_valueStep) {
         return value;
@@ -107,7 +107,7 @@ void CSimpleSlider::UnregisterRegion(CSimpleRegion* region) {
     CSimpleFrame::UnregisterRegion(region);
 }
 
-// OFFSET: %0x00530EF0
+// OFFSET: 0x00521020/0x14016E9F0
 void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer) {
     if (texture == this->m_thumbTexture) {
         return;
@@ -126,7 +126,7 @@ void CSimpleSlider::SetThumbTexture(CSimpleTexture* texture, uint32_t drawLayer)
     this->m_thumbTexture = texture;
 }
 
-// OFFSET: %0x00530F40
+// OFFSET: 0x00521070/0x14016EA70
 void CSimpleSlider::SetOrientation(ORIENTATION orientation) {
     this->m_orientation = orientation;
 
@@ -158,7 +158,7 @@ int32_t CSimpleSlider::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return CSimpleFrame::OnLayerMouseUp(evt, btn);
 }
 
-// OFFSET: %0x00531080
+// OFFSET: 0x005211B0
 CSimpleSlider::CSimpleSlider(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_changed = 0;
     this->m_rangeSet = 0;
@@ -206,7 +206,7 @@ CSimpleSlider::~CSimpleSlider() {
     }
 }
 
-// OFFSET: %0x005311B0
+// OFFSET: 0x005212E0/0x14016ED60
 int32_t CSimpleSlider::SetThumbTexture(const char* fileName) {
     if (this->m_thumbTexture) {
         this->m_thumbTexture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
@@ -239,7 +239,7 @@ void CSimpleSlider::RunOnValueChangedScript(bool userInput) {
     }
 }
 
-// OFFSET: %0x00531260
+// OFFSET: 0x00521390/0x14016EE70
 void CSimpleSlider::SetValue(float value, bool userInput) {
     if (!this->m_rangeSet) {
         return;
@@ -261,7 +261,7 @@ void CSimpleSlider::SetValue(float value, bool userInput) {
     this->RunOnValueChangedScript(userInput);
 }
 
-// OFFSET: %0x00531360
+// OFFSET: 0x00521490/0x14016EF70
 void CSimpleSlider::SetValueStep(float step) {
     step = std::max(step, FLT_EPSILON);
 
@@ -276,7 +276,7 @@ void CSimpleSlider::SetValueStep(float step) {
     }
 }
 
-// OFFSET: %0x005313C0
+// OFFSET: 0x005214F0
 void CSimpleSlider::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -304,7 +304,7 @@ void CSimpleSlider::OnLayerUpdate(float elapsedSec) {
     this->m_changed = 0;
 }
 
-// OFFSET: %0x005314F0
+// OFFSET: 0x00521620
 int32_t CSimpleSlider::OnLayerTrackUpdate(const CMouseEvent& evt) {
     if (this->m_buttonDown && this->m_thumbTexture) {
         float length;
@@ -355,7 +355,7 @@ void CSimpleSlider::SetMinMaxValues(float min, float max) {
     }
 }
 
-// OFFSET: %0x00531720
+// OFFSET: 0x00521850/0x14016F3F0
 void CSimpleSlider::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

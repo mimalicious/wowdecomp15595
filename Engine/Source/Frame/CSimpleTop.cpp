@@ -70,7 +70,7 @@ static const char* s_colorblindModeNames[8] = {
 // STATIC: %0x00BB81F8
 static TSList<UNEEDED_TEXTURES, TSGetLink<UNEEDED_TEXTURES> > s_textureReleaseQueue;
 
-// OFFSET: %0x00511970
+// OFFSET: 0x005017B0/0x140147290
 static void PaintScreen(void* param, const RECTF* rect, const RECTF* visible, float elapsedSec) {
     CSimpleTop* top = CSimpleTop::s_instance;
     top->OnLayerUpdate(elapsedSec);
@@ -1333,6 +1333,14 @@ CSimpleTop::~CSimpleTop() {
 
     this->DisableEvents();
     HandleClose(reinterpret_cast<HOBJECT>(this->m_screenLayer));
+    ConsoleCommandUnregister("colorblindShader");
+    FFX::SetEffect(2, NULL);
+
+    if (CSimpleTop::s_colorShiftEffect) {
+        delete CSimpleTop::s_colorShiftEffect;
+    }
+
+    CSimpleTop::s_colorShiftEffect = NULL;
     CSimpleTop::s_instance = NULL;
 }
 

@@ -159,7 +159,7 @@ CSimpleSortedArray<T>::CSimpleSortedArray() {
     this->m_iterator = 0;
 }
 
-// OFFSET: %0x00510FC0
+// OFFSET: 0x00500E00/0x140146590
 template <class T>
 uint32_t CSimpleSortedArray<T>::Insert(T element) {
     uint32_t priority = element->m_priority;
@@ -195,7 +195,7 @@ uint32_t CSimpleSortedArray<T>::Insert(T element) {
     return index;
 }
 
-// OFFSET: %0x00511050
+// OFFSET: 0x00500E90
 template <class T>
 void CSimpleSortedArray<T>::Remove(uint32_t index) {
     for (uint32_t i = index; i < this->m_count - 1; i++) {

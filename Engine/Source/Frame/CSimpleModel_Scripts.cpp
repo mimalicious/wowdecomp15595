@@ -24,7 +24,7 @@ void CSimpleModel::DestroyScriptMetaTable() {
     CSimpleModel::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x00547FE0
+// OFFSET: 0x0052BEE0/0x14018E7D0
 int32_t FrameScript_GetColor(lua_State* L, int32_t index, CImVector& color) {
     float r = lua_tonumber(L, index);
     r = r < 0.0f ? 0.0f : (r >= 1.0f ? 1.0f : r);
@@ -52,7 +52,7 @@ int32_t FrameScript_GetColor(lua_State* L, int32_t index, CImVector& color) {
     return index;
 }
 
-// OFFSET: %0x00948760
+// OFFSET: 0x00536EE0/0x14018B670
 int32_t FrameScript_GetColorNoAlpha(lua_State* L, int32_t index, CImVector& color) {
     float r = lua_tonumber(L, index);
     r = r < 0.0f ? 0.0f : (r >= 1.0f ? 1.0f : r);
@@ -205,7 +205,7 @@ static int32_t Script_SetCamera(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00548650
+// OFFSET: 0x00538A70/0x14018BD50
 int32_t CSimpleModel::SetLightHelper(lua_State* L, int32_t index, CM2Light* light) {
     if (!lua_isnumber(L, index)) {
         return 0;

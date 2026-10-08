@@ -339,7 +339,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMaxAnimFramerate", &Script_GetMaxAnimFramerate },
 };
 
-// OFFSET: %0x007A58F0
+// OFFSET: 0x0083F760
 void RegisterSimpleFrameScriptMethods() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -373,7 +373,7 @@ void RegisterSimpleFrameScriptMethods() {
     CSimpleMovieFrame::CreateScriptMetaTable();
 }
 
-// OFFSET: %0x007A59A0
+// OFFSET: 0x0083F810/0x14056B440
 void UnregisterSimpleFrameScriptMethods() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

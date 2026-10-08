@@ -23,7 +23,7 @@ void CFramePoint::operator delete(void* ptr) {
     CFramePoint::s_framePointHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x0053EB00
+// OFFSET: 0x0052EAD0/0x14017F9E0
 void CFramePoint::SetRelative(CLayoutFrame* relative, FRAMEPOINT framePoint, float x, float y) {
     this->m_x = x;
     this->m_framePoint = framePoint;
@@ -38,7 +38,7 @@ void CFramePoint::SetRelative(CLayoutFrame* relative, FRAMEPOINT framePoint, flo
     }
 }
 
-// OFFSET: %0x0053EB40
+// OFFSET: 0x0052EB10/0x14017FA10
 void CFramePoint::MarkUnused() {
     this->m_framePoint = FRAMEPOINT_NUMPOINTS;
     this->m_x = 0.0f;
@@ -53,7 +53,7 @@ void CFramePoint::MarkUnused() {
     }
 }
 
-// OFFSET: %0x0053EB80
+// OFFSET: 0x0052EB50/0x14017FA40
 int32_t CFramePoint::GetRelativeRect(CRect& rect) {
     uint32_t busy = this->m_flags & 2;
     int32_t result = 0;
@@ -88,7 +88,7 @@ int32_t CFramePoint::GetRelativeRect(CRect& rect) {
     return result;
 }
 
-// OFFSET: %0x0053EC70
+// OFFSET: 0x0052EC40
 float CFramePoint::X(float scale) {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -117,7 +117,7 @@ float CFramePoint::X(float scale) {
     }
 }
 
-// OFFSET: %0x0053ED60
+// OFFSET: 0x0052ED30
 float CFramePoint::Y(float scale) {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -146,7 +146,7 @@ float CFramePoint::Y(float scale) {
     }
 }
 
-// OFFSET: %0x0053EE50
+// OFFSET: 0x0052EE20/0x14017FD70
 CFramePoint::CFramePoint(CLayoutFrame* relative, FRAMEPOINT framePoint, float x, float y) {
     this->m_x = x;
     this->m_framePoint = framePoint;

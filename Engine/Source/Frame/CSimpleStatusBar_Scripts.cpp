@@ -24,7 +24,7 @@ void CSimpleStatusBar::DestroyScriptMetaTable() {
     CSimpleStatusBar::s_metatable = LUA_NOREF;
 }
 
-// OFFSET: %0x00540990
+// OFFSET: 0x005309F0
 void CSimpleStatusBar::GetStatusBarColor(CImVector& color) {
     if (this->m_barTexture) {
         this->m_barTexture->GetVertexColor(color);
@@ -277,7 +277,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetReverseFill", &Script_SetReverseFill },
 };
 
-// OFFSET: %0x00540940
+// OFFSET: 0x005309A0
 void CSimpleStatusBar::RegisterScriptMethods(lua_State* L) {
     CSimpleFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

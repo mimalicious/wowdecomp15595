@@ -11,7 +11,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x0054B4E0
+// OFFSET: 0x0053B7D0
 void ReadOrigin(lua_State* L, int32_t index, FRAMEPOINT& point, C2Vector& offset) {
     if (!StringToFramePoint(lua_tolstring(L, index, NULL), point)) {
         point = FRAMEPOINT_CENTER;
@@ -406,7 +406,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "HookScript", &Script_HookScript },
 };
 
-// OFFSET: %0x0054B560
+// OFFSET: 0x0053B850
 void CSimpleAnim::RegisterScriptMethods(lua_State* L) {
     CScriptObject::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

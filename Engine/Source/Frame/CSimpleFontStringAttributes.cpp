@@ -17,7 +17,7 @@ CSimpleFontStringAttributes::CSimpleFontStringAttributes() {
     this->m_flags = 0;
 }
 
-// OFFSET: %0x00508A80
+// OFFSET: 0x004F8830/0x14013C120
 int32_t CSimpleFontStringAttributes::SetFont(const char* fontName, float fontHeight, uint32_t fontFlags) {
     if (!fontName) {
         return 0;
@@ -62,7 +62,7 @@ void CSimpleFontStringAttributes::SetShadowOffset(const C2Vector& offset) {
     this->SetShadow(this->m_shadowColor, offset);
 }
 
-// OFFSET: %0x00509450
+// OFFSET: 0x004F9170/0x14013CB10
 void CSimpleFontStringAttributes::Update(CSimpleFontStringAttributes& attributes, int32_t flags) {
     uint32_t mask = this->m_flags & flags;
 
@@ -96,7 +96,7 @@ void CSimpleFontStringAttributes::Update(CSimpleFontStringAttributes& attributes
     }
 }
 
-// OFFSET: %0x0050EA40
+// OFFSET: 0x004FE7A0
 void CSimpleFontStringAttributes::Update(CSimpleFontString* string, int32_t flags) {
     if (!string) {
         DebugValidate("string");
@@ -131,7 +131,7 @@ void CSimpleFontStringAttributes::Update(CSimpleFontString* string, int32_t flag
     }
 }
 
-// OFFSET: %0x00509530
+// OFFSET: 0x004F9250/0x14013CC20
 CSimpleFontStringAttributes& CSimpleFontStringAttributes::operator=(const CSimpleFontStringAttributes& source) {
     if (source.m_flags & 0x100) {
         this->SetFont(source.m_font.m_str, source.m_fontHeight, source.m_fontFlags);
@@ -165,7 +165,7 @@ CSimpleFontStringAttributes& CSimpleFontStringAttributes::operator=(const CSimpl
     return *this;
 }
 
-// OFFSET: %0x00528EF0
+// OFFSET: 0x00519160
 void CSimpleFontStringAttributes::SetJustifyH(uint8_t justify) {
     uint32_t styleFlags = (this->m_styleFlags & ~0x7u) | (justify & 0x7);
 
@@ -175,7 +175,7 @@ void CSimpleFontStringAttributes::SetJustifyH(uint8_t justify) {
     }
 }
 
-// OFFSET: %0x00535C60
+// OFFSET: 0x00525CF0
 void CSimpleFontStringAttributes::SetJustifyV(uint8_t justify) {
     uint32_t styleFlags = (this->m_styleFlags & ~0x38u) | (justify & 0x38);
 

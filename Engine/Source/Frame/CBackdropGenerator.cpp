@@ -115,7 +115,7 @@ void CBackdropGenerator::DestroyTextures() {
     }
 }
 
-// OFFSET: %0x00520CA0
+// OFFSET: 0x005108F0
 void CBackdropGenerator::LoadXML(linkObject* node, CStatus* status) {
     Backdrop* backdrop = static_cast<Backdrop*>(node);
     uint32_t pieces = (backdrop->m_backdropFlags & 4) && *backdrop->m_edgeFile.m_string ? 0xFF : 0;
@@ -277,7 +277,7 @@ void CBackdropGenerator::Generate(const CRect* rect) {
     this->SetBorderVertexColor(this->m_borderColor);
 }
 
-// OFFSET: %0x00520C00
+// OFFSET: 0x00510850/0x14015A0B0
 CBackdropGenerator::CBackdropGenerator() {
     this->m_backgroundTexture = NULL;
     this->m_leftTexture = NULL;
@@ -306,7 +306,7 @@ CBackdropGenerator::CBackdropGenerator() {
     this->m_borderColor.a = 0xFF;
 }
 
-// OFFSET: %0x00521290
+// OFFSET: 0x00510F20/0x14015AB50
 void CBackdropGenerator::SetOutput(CSimpleFrame* frame) {
     if (!frame) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);

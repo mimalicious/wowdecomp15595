@@ -146,7 +146,7 @@ void CSimpleModel::ModelLoaded(CM2Model* model, void* arg) {
     static_cast<CSimpleModel*>(arg)->OnModelLoaded(model);
 }
 
-// OFFSET: %0x0052ED50
+// OFFSET: 0x0051EDE0/0x14016BF10
 void CSimpleModel::SetCamera(CCamera* camera) {
     CCamera* newCamera = camera;
 
@@ -219,7 +219,7 @@ CM2Scene* CSimpleModel::GetScene() {
     return this->m_scene;
 }
 
-// OFFSET: %0x0052F000
+// OFFSET: 0x0051F090/0x14016C2A0
 CSimpleModel::CSimpleModel(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_scene = NULL;
     this->m_model = NULL;
@@ -243,7 +243,7 @@ CSimpleModel::CSimpleModel(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_fogColor.a = 0xFF;
 }
 
-// OFFSET: %0x0052F1A0
+// OFFSET: 0x0051F230/0x14016C480
 void CSimpleModel::LoadXML(linkObject* node, CStatus* status) {
     this->CSimpleFrame::LoadXML(node, status);
 
@@ -337,7 +337,7 @@ void CSimpleModel::SetCameraByIndex(uint32_t index) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// OFFSET: %0x0052F410
+// OFFSET: 0x0051F4B0/0x14016C780
 float CSimpleModel::GetWidth() {
     float width = this->CLayoutFrame::GetWidth();
 
@@ -348,7 +348,7 @@ float CSimpleModel::GetWidth() {
     return width;
 }
 
-// OFFSET: %0x0052F470
+// OFFSET: 0x0051F510/0x14016C7F0
 float CSimpleModel::GetHeight() {
     float height = this->CLayoutFrame::GetHeight();
 
@@ -371,12 +371,8 @@ void CSimpleModel::UpdateAlpha() {
     }
 }
 
-// OFFSET: %0x0052F520
-void CSimpleModel::UpdateModel() {
-    if (this->HasScript(this->m_onUpdateModel)) {
-        this->RunScript(this->m_onUpdateModel, 0, NULL);
-    }
-
+// OFFSET: 0x0051F5C0
+void CSimpleModel::UpdateModelTransform() {
     float height = NDCToDDCHeight(1.0f) * 1.6666666f;
     float layoutScale = this->m_layoutScale;
 
@@ -386,6 +382,16 @@ void CSimpleModel::UpdateModel() {
     position.z = layoutScale * this->m_position.z;
 
     this->m_model->SetWorldTransform(position, this->m_facing, this->m_modelScale * this->m_layoutScale * height);
+}
+
+// PROVEN: fb071cc4 IDENTICAL/NONE
+// OFFSET: 0x0051F650
+void CSimpleModel::UpdateModel() {
+    if (this->HasScript(this->m_onUpdateModel)) {
+        this->RunScript(this->m_onUpdateModel, 0, NULL);
+    }
+
+    this->UpdateModelTransform();
 }
 
 // OFFSET: 0x0051F690
@@ -477,7 +483,7 @@ void CSimpleModel::RenderModel(void* arg) {
     scene->GarbageCollectModels();
 }
 
-// OFFSET: %0x0052FA90
+// OFFSET: 0x0051FB30
 void CSimpleModel::LightingCallback(CM2Model* model, CM2Lighting* lighting, void* arg) {
     CSimpleModel* simpleModel = static_cast<CSimpleModel*>(arg);
 
@@ -490,7 +496,7 @@ void CSimpleModel::LightingCallback(CM2Model* model, CM2Lighting* lighting, void
     }
 }
 
-// OFFSET: %0x0052FB00
+// OFFSET: 0x0051FBA0
 void CSimpleModel::SetModel(CM2Model* model) {
     if (model) {
         model->m_refCount++;
@@ -518,15 +524,45 @@ void CSimpleModel::SetModel(CM2Model* model) {
     this->NotifyDrawLayerChanged(2);
 }
 
-// OFFSET: %0x0052FC00
+// OFFSET: 0x0051FC80
 void CSimpleModel::OnModelLoaded(CM2Model* model) {
-    model->SetAnimating(1);
-    model->m_scene->Animate(C3Vector());
-
     if (this->m_pendingCameraIndex != 0xFFFFFFFF) {
         this->SetCameraByIndex(this->m_pendingCameraIndex);
     } else if (this->m_pendingCameraId != 0xFFFFFFFF) {
         this->SetCameraByID(this->m_pendingCameraId);
+    }
+
+    if (!(this->m_model->m_fFlags & 0x4000)) {
+        this->UpdateModelTransform();
+    }
+
+    uint32_t animating = (model->m_attachParent ? model->m_fFlags >> 6 : model->m_fFlags >> 3) & 1;
+
+    if (model->m_attachParent) {
+        model->m_fFlags &= ~0x40;
+    } else {
+        model->m_fFlags &= ~0x8;
+    }
+
+    if (model->m_attachParent) {
+        model->m_fFlags &= ~0x10000;
+    } else {
+        model->m_fFlags &= ~0x8000;
+    }
+
+    model->SetAnimating(1);
+    model->m_scene->Animate(C3Vector());
+
+    if (model->m_attachParent) {
+        model->m_fFlags = (model->m_fFlags & ~0x40) | (animating << 6);
+    } else {
+        model->m_fFlags = (model->m_fFlags & ~0x8) | (animating << 3);
+    }
+
+    if (model->m_attachParent) {
+        model->m_fFlags = (model->m_fFlags & ~0x10000) | (animating << 16);
+    } else {
+        model->m_fFlags = (model->m_fFlags & ~0x8000) | (animating << 15);
     }
 
     this->m_bounds = model->GetBoundingBox();
@@ -543,7 +579,7 @@ void CSimpleModel::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: %0x0052FCF0
+// OFFSET: 0x0051FE10
 void CSimpleModel::OnLayerUpdate(float elapsedSec) {
     this->CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -572,7 +608,7 @@ void CSimpleModel::OnLayerUpdate(float elapsedSec) {
     this->m_scene->AdvanceTime(FloatToInt64(elapsedSec * 1000.0f));
 }
 
-// OFFSET: %0x0052FDA0
+// OFFSET: 0x0051FEC0/0x14016D540
 void CSimpleModel::ReplaceTexture(uint32_t type, const char* fileName) {
     if (this->m_model) {
         CStatus status;

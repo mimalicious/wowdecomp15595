@@ -91,7 +91,7 @@ int32_t CSimplePathAnim::FindControlPoint(int32_t order) {
     return -1;
 }
 
-// OFFSET: %0x005380E0
+// OFFSET: 0x00528010/0x140177450
 void CSimplePathAnim::UpdateControlPointPositions() {
     uint32_t count = this->m_sortedPoints.Count();
 
@@ -115,7 +115,7 @@ void CSimplePathAnim::UpdateControlPointPositions() {
     }
 }
 
-// OFFSET: %0x00538770
+// OFFSET: 0x005286B0/0x140177C00
 void CSimplePathAnim::NotifyOrderChanged(CSimpleControlPoint* point) {
     if (!point) {
         return;
@@ -131,7 +131,7 @@ void CSimplePathAnim::NotifyOrderChanged(CSimpleControlPoint* point) {
     this->UpdateControlPointPositions();
 }
 
-// OFFSET: %0x00538820
+// OFFSET: 0x00528760/0x140177D30
 void CSimplePathAnim::Apply(float progress) {
     uint32_t count = this->m_sortedPoints.Count();
 
@@ -244,7 +244,7 @@ void CSimplePathAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: %0x00538CF0
+// OFFSET: 0x00528C30/0x140178380
 int32_t CSimplePathAnim::RegisterSplineControlPoint(CSimpleControlPoint* point) {
     int32_t count = this->m_sortedPoints.Count();
 
@@ -291,12 +291,12 @@ CSimplePathAnim::~CSimplePathAnim() {
     this->m_controlPoints.Clear();
 }
 
-// OFFSET: %0x00539740
+// OFFSET: 0x0052A700/0x14017A7A0
 CSimplePathAnim::CSimplePathAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_curve = ANIM_CURVE_NONE;
 }
 
-// OFFSET: %0x005397D0
+// OFFSET: 0x00529AF0/0x140179790
 void CSimplePathAnim::LoadXML_ControlPoint(linkObject* node, CStatus* status) {
     void* mem = SMemAlloc(sizeof(CSimpleControlPoint), __FILE__, __LINE__, 0);
 
@@ -313,7 +313,7 @@ void CSimplePathAnim::LoadXML_ControlPoint(linkObject* node, CStatus* status) {
     point->LoadXML(node, status);
 }
 
-// OFFSET: %0x005391B0
+// OFFSET: 0x00529580
 void CSimplePathAnim::BuildSpline() {
     this->Stop(false);
 
@@ -369,7 +369,7 @@ void CSimplePathAnim::BuildSpline() {
     }
 }
 
-// OFFSET: %0x0053B5C0
+// OFFSET: 0x0052B540/0x14017BBF0
 void CSimplePathAnim::LoadXML(linkObject* node, CStatus* status) {
     CSimpleAnim::LoadXML(node, status);
 
@@ -402,7 +402,7 @@ void CSimplePathAnim::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00539860
+// OFFSET: 0x00529B80
 void CSimplePathAnim::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_flags ^= 1;
     this->BuildSpline();
@@ -413,7 +413,7 @@ void CSimplePathAnim::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x005398A0
+// OFFSET: 0x00529BC0/0x1401798A0
 void CSimplePathAnim::NotifyControlPointAdded(CSimpleControlPoint* point) {
     if (!point) {
         return;

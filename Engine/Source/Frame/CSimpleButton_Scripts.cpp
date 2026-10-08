@@ -32,7 +32,7 @@ static int32_t StringToButtonState(const char* string, CSimpleButtonState& state
     return 0;
 }
 
-// OFFSET: %0x00541B90
+// OFFSET: 0x00531CA0/0x140183CD0
 static int32_t SetStateTexture(lua_State* L, CSimpleButtonState state, const char* method) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
 
@@ -72,7 +72,7 @@ static int32_t SetStateTexture(lua_State* L, CSimpleButtonState state, const cha
     return 0;
 }
 
-// OFFSET: %0x00541D00
+// OFFSET: 0x00531E10/0x140183E60
 static int32_t GetStateTexture(lua_State* L, CSimpleButtonState state) {
     CSimpleButton* button = static_cast<CSimpleButton*>(FrameScript_GetObjectThis(L, CSimpleButton::GetObjectType()));
     CSimpleTexture* texture = button->m_stateTextures[state];

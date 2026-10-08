@@ -65,7 +65,7 @@ int32_t CSimpleFont::GetScriptMetaTable() {
     return CSimpleFont::s_metatable;
 }
 
-// OFFSET: %0x005367B0
+// OFFSET: 0x005267F0/0x140175A10
 CSimpleFont* CSimpleFont::GetFont(const char* name, int32_t create) {
     SIMPLEFONT* node = s_fontList.Ptr(name);
 
@@ -93,7 +93,7 @@ CSimpleFont* CSimpleFont::GetFont(const char* name, int32_t create) {
     return node->m_font;
 }
 
-// OFFSET: %0x00536070
+// OFFSET: 0x005260F0/0x140175040
 CSimpleFont::CSimpleFont() {
     this->m_name = NULL;
     this->unk_005C = 0;
@@ -122,7 +122,7 @@ void CSimpleFont::Destroy() {
     s_fontList.Clear();
 }
 
-// OFFSET: %0x0050B4D0
+// OFFSET: 0x004FB2A0/0x14013F1D0
 void CSimpleFont::RemoveFontable(CSimpleFontable* fontable) {
     this->m_fontableList.UnlinkNode(fontable);
 }
@@ -141,7 +141,7 @@ void CSimpleFont::UpdateObjects() {
     this->m_attributes.m_flags &= ~0x1Fu;
 }
 
-// OFFSET: %0x00535CE0
+// OFFSET: 0x00525D70
 CSimpleFont& CSimpleFont::operator=(const CSimpleFont& source) {
     this->unk_005C = source.unk_005C;
     this->m_attributes = source.m_attributes;
@@ -174,13 +174,13 @@ CSimpleFont& CSimpleFont::operator=(const CSimpleFont& source) {
     return *this;
 }
 
-// OFFSET: %0x00526D70
+// OFFSET: 0x00516FC0/0x1401615C0
 void CSimpleFont::FontObjectUpdated(CSimpleFontStringAttributes& attributes) {
     attributes.Update(this->m_attributes, this->m_fontableFlags);
     this->UpdateObjects();
 }
 
-// OFFSET: %0x005368B0
+// OFFSET: 0x005268F0/0x140175BE0
 void CSimpleFont::LoadXML(linkObject* node, CStatus* status) {
     if (node->m_flags & 0x2000000) {
         SIMPLEFONT* inherited = s_fontList.Ptr(node->m_inherits.m_string);

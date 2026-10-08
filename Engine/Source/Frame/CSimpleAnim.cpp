@@ -43,7 +43,7 @@ void CSimpleAnimSCurveSmoother::SetWeights(float in, float out) {
     this->m_out = out < 0.0f ? 0.0f : (out < 1.0f ? out : 1.0f);
 }
 
-// OFFSET: %0x005376E0
+// OFFSET: 0x00527650
 float CSimpleAnimSCurveSmoother::GetSmoothProgress(float progress) {
     if (fabsf(this->m_in) >= 0.001f && fabsf(this->m_out) >= 0.001f) {
         return 0.5f - cosf(progress * 3.1415927f) * 0.5f;
@@ -242,7 +242,7 @@ void CSimpleAnim::Stop(bool requested) {
     this->RunOnStopScript(requested);
 }
 
-// OFFSET: %0x00537890
+// OFFSET: 0x00527830/0x140176C00
 bool CSimpleAnim::IsDelaying() {
     if (this->m_progressWithDelay <= 0.0f || this->m_progressWithDelay >= 1.0f) {
         return false;
@@ -281,7 +281,7 @@ CScriptRegion* CSimpleAnim::GetRegionParent() {
     return this->m_group ? this->m_group->m_region : NULL;
 }
 
-// OFFSET: %0x00537CF0
+// OFFSET: 0x00527C60
 float CSimpleAnim::UpdateProgress(float elapsedSec) {
     float prevElapsed = this->m_elapsed;
     this->m_elapsed += elapsedSec;
@@ -361,7 +361,7 @@ int32_t CSimpleAnim::GetScriptMetaTable() {
     return CSimpleAnim::s_metatable;
 }
 
-// OFFSET: %0x00538440
+// OFFSET: 0x00528380
 bool CSimpleAnim::OnUpdate(float elapsedSec, float& consumed) {
     consumed = 0.0f;
 
@@ -391,7 +391,7 @@ bool CSimpleAnim::OnUpdate(float elapsedSec, float& consumed) {
     return true;
 }
 
-// OFFSET: %0x00539560
+// OFFSET: 0x0052A510/0x14017A590
 CSimpleAnim::CSimpleAnim(CSimpleAnimGroup* group) {
     this->m_startDelay = 0.0f;
     this->m_endDelay = 0.0f;
@@ -457,7 +457,7 @@ void CSimpleAnim::SetDuration(float duration, bool notify) {
     }
 }
 
-// OFFSET: %0x0053A990
+// OFFSET: 0x0052A5D0/0x14017A670
 void CSimpleAnim::SetOrder(int32_t order, bool notify, bool wrap) {
     int32_t oldOrder = this->m_order;
 
@@ -472,7 +472,7 @@ void CSimpleAnim::SetOrder(int32_t order, bool notify, bool wrap) {
     }
 }
 
-// OFFSET: %0x0053AF50
+// OFFSET: 0x0052AF10/0x14017B3E0
 void CSimpleAnim::LoadXML(linkObject* node, CStatus* status) {
     this->m_flags |= 1;
 
@@ -579,7 +579,7 @@ void CSimpleAnim::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x0053B900
+// OFFSET: 0x0052B7D0/0x14017BFB0
 bool CSimpleAnim::ChangeParent(CSimpleAnimGroup* group) {
     if (!group || this->m_group == group) {
         return false;

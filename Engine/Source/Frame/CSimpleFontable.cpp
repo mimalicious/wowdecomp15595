@@ -14,7 +14,7 @@ CSimpleFontable::~CSimpleFontable() {
     this->SetFontObject(NULL);
 }
 
-// OFFSET: %0x0050BCF0
+// OFFSET: 0x004FB3E0/0x14013F2E0
 void CSimpleFontable::SetFontObject(CSimpleFont* font) {
     if (this->m_fontObject == font) {
         return;

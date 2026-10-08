@@ -162,7 +162,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetMaxOrder", &Script_GetMaxOrder },
 };
 
-// OFFSET: %0x0054B720
+// OFFSET: 0x0053BA10
 void CSimplePathAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

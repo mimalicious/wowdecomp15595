@@ -760,7 +760,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "SetMaxLines", &Script_SetMaxLines },
 };
 
-// OFFSET: %0x0053C170
+// OFFSET: 0x0052BE90
 void CSimpleFontString::RegisterScriptMethods(lua_State* L) {
     CScriptRegion::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

@@ -73,7 +73,7 @@ FrameScript_Object::ScriptIx* CSimpleMessageScrollFrame::GetScriptByName(const c
     return NULL;
 }
 
-// OFFSET: %0x0052CC80
+// OFFSET: 0x0051CF80
 void CSimpleMessageScrollFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onMessageScrollChanged, time, count);
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
@@ -89,7 +89,7 @@ int32_t CSimpleMessageScrollFrame::GetCurrentScroll() {
     return (this->m_currentLine + this->m_numMessages - this->m_currentScroll) % this->m_numMessages;
 }
 
-// OFFSET: %0x0052CF00
+// OFFSET: 0x0051D200
 CSimpleFontStringRecord::CSimpleFontStringRecord(CSimpleFrame* frame, uint32_t drawLayer, bool show) : CSimpleFontString(frame, drawLayer, show) {
 }
 
@@ -132,7 +132,7 @@ void CSimpleMessageScrollFrame::SetFadeDuration(float duration) {
     this->m_fadeDuration = duration;
 }
 
-// OFFSET: %0x0052D030
+// OFFSET: 0x0051D470/0x140169D80
 int32_t CSimpleMessageScrollFrame::GetNumMessages(int32_t accessID) {
     if (!accessID) {
         return this->m_numMessages;
@@ -152,7 +152,7 @@ int32_t CSimpleMessageScrollFrame::GetNumMessages(int32_t accessID) {
     return count;
 }
 
-// OFFSET: %0x0052D0A0
+// OFFSET: 0x0051D4E0/0x140169DF0
 void CSimpleMessageScrollFrame::UpdateNode(CSimpleMessageScrollFrameDisplayNode* node, CSimpleMessageScrollFrameLine* line, int32_t reset) {
     if (reset || !this->m_atBottom) {
         line->m_color.a = 0xFF;
@@ -176,7 +176,7 @@ void CSimpleMessageScrollFrame::UpdateNode(CSimpleMessageScrollFrameDisplayNode*
     }
 }
 
-// OFFSET: %0x0052D140
+// OFFSET: 0x0051D580/0x140169EC0
 void CSimpleMessageScrollFrame::RefreshMessages() {
     for (int32_t i = this->m_numDisplayed; i; i--) {
         CSimpleMessageScrollFrameDisplayNode& node = this->m_displayNodes[i - 1];
@@ -195,7 +195,7 @@ void CSimpleMessageScrollFrame::RefreshMessages() {
     this->m_hyperlinksDirty = 1;
 }
 
-// OFFSET: %0x0052D310
+// OFFSET: 0x0051D7A0/0x14016A1D0
 CSimpleMessageScrollFrameLine* CSimpleMessageScrollFrame::GetMessageInfoByAccessID(uint32_t index, int32_t accessID) {
     if (accessID) {
         int32_t count = this->m_numMessages;
@@ -233,7 +233,7 @@ CSimpleMessageScrollFrameLine* CSimpleMessageScrollFrame::GetMessageInfoByAccess
     return &this->m_lines[lineIndex];
 }
 
-// OFFSET: %0x0052D3C0
+// OFFSET: 0x0051D850
 CSimpleMessageScrollFrameDisplayNode::CSimpleMessageScrollFrameDisplayNode() {
     this->m_line = NULL;
     this->m_string = new (SMemAlloc(sizeof(CSimpleFontStringRecord), __FILE__, __LINE__, 0)) CSimpleFontStringRecord(NULL, 1, true);
@@ -259,14 +259,14 @@ CSimpleMessageScrollFrameDisplayNode::CSimpleMessageScrollFrameDisplayNode(const
     this->m_string->m_refcnt++;
 }
 
-// OFFSET: %0x0052D1D0
+// OFFSET: 0x0051D660
 CSimpleMessageScrollFrameDisplayNode::~CSimpleMessageScrollFrameDisplayNode() {
     if (--this->m_string->m_refcnt == 0) {
         this->m_string->DeleteSelf();
     }
 }
 
-// OFFSET: %0x0052D5F0
+// OFFSET: 0x0051DD50/0x14016A960
 void CSimpleMessageScrollFrame::SetMaxLines(int32_t maxLines) {
     this->m_lines.Clear();
     this->m_displayNodes.Clear();
@@ -351,7 +351,7 @@ bool CSimpleMessageScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x0052E270
+// OFFSET: 0x0051D330
 void CSimpleMessageScrollFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -404,7 +404,7 @@ void CSimpleMessageScrollFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x0052D6D0
+// OFFSET: 0x0051DE30/0x14016AAB0
 void CSimpleMessageScrollFrame::ScrollMessages(int32_t scroll) {
     if (this->m_currentLine == -1) {
         return;
@@ -524,7 +524,7 @@ void CSimpleMessageScrollFrame::ScrollMessages(int32_t scroll) {
     }
 }
 
-// OFFSET: %0x0052E4E0
+// OFFSET: 0x0051DA80
 CSimpleMessageScrollFrame::CSimpleMessageScrollFrame(CSimpleFrame* parent, int32_t maxLines) : CSimpleHyperlinkedFrame(parent) {
     this->m_messageFrameArea.minY = 0.0f;
     this->m_messageFrameArea.minX = 0.0f;
@@ -614,7 +614,7 @@ void CSimpleMessageScrollFrame::RemoveLines(const int32_t* accessID, const int32
     }
 }
 
-// OFFSET: %0x0052E080
+// OFFSET: 0x0051E430/0x14016B330
 void CSimpleMessageScrollFrame::UpdateColorByID(int32_t typeID, const CImVector& color) {
     if (!typeID) {
         return;
@@ -638,7 +638,7 @@ void CSimpleMessageScrollFrame::OnScreenSizeChanged() {
     this->ScrollMessages(this->m_currentScroll);
 }
 
-// OFFSET: %0x0052E100
+// OFFSET: 0x0051E4B0/0x14016B3C0
 void CSimpleMessageScrollFrame::UpdateRect() {
     if (!(this->m_layoutFlags & 0x1)) {
         return;
@@ -748,7 +748,7 @@ void CSimpleMessageScrollFrame::ScrollToBottom() {
     }
 }
 
-// OFFSET: %0x0052E480
+// OFFSET: 0x0051E6F0/0x14016B680
 void CSimpleMessageScrollFrame::SetScrollOffset(int32_t offset) {
     int32_t count = this->m_numMessages;
 
@@ -780,7 +780,7 @@ void CSimpleMessageScrollFrame::SetInsertMode(int32_t mode) {
     this->UpdateRect();
 }
 
-// OFFSET: %0x0052E6E0
+// OFFSET: 0x0051E770
 void CSimpleMessageScrollFrame::AddMessage(const char* text, const CImVector& color, int32_t typeID, int32_t addToTop, int32_t accessID, int32_t extraData) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -854,7 +854,7 @@ void CSimpleMessageScrollFrame::OnFrameSizeChanged(const CRect& rect) {
     this->UpdateRect();
 }
 
-// OFFSET: %0x0052E840
+// OFFSET: 0x0051E8D0/0x14016B8A0
 void CSimpleMessageScrollFrame::PageUp() {
     for (int32_t i = this->m_numDisplayed; i; i--) {
         if (!this->ScrollUp()) {
@@ -865,7 +865,7 @@ void CSimpleMessageScrollFrame::PageUp() {
     this->ScrollDown();
 }
 
-// OFFSET: %0x0052E8C0
+// OFFSET: 0x0051E950/0x14016B940
 void CSimpleMessageScrollFrame::PageDown() {
     for (int32_t i = this->m_numDisplayed; i; i--) {
         if (!this->ScrollDown()) {
@@ -876,7 +876,7 @@ void CSimpleMessageScrollFrame::PageDown() {
     this->ScrollUp();
 }
 
-// OFFSET: %0x0052E940
+// OFFSET: 0x0051E9D0
 void CSimpleMessageScrollFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

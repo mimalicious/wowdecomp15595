@@ -108,7 +108,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetRadians", &Script_GetRadians },
 };
 
-// OFFSET: %0x0054B610
+// OFFSET: 0x0053B900
 void CSimpleRotationAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

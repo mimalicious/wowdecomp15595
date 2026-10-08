@@ -56,7 +56,7 @@ void CSimpleControlPoint::SetOffset(const C2Vector& offset) {
     }
 }
 
-// OFFSET: %0x00537F10
+// OFFSET: 0x00527E40/0x1401771C0
 void CSimpleControlPoint::LoadXML(linkObject* node, CStatus* status) {
     ControlPoint* point = static_cast<ControlPoint*>(node);
 
@@ -107,11 +107,11 @@ void CSimpleControlPoint::LoadXML(linkObject* node, CStatus* status) {
     this->SetOffset(offset);
 }
 
-// OFFSET: %0x00538700
+// OFFSET: 0x00528640/0x140177B60
 CSimpleControlPoint::~CSimpleControlPoint() {
 }
 
-// OFFSET: %0x00538FE0
+// OFFSET: 0x005293B0/0x140178D50
 void CSimpleControlPoint::SetOrder(int32_t order, bool notify, bool wrap) {
     int32_t oldOrder = this->m_order;
 
@@ -126,7 +126,7 @@ void CSimpleControlPoint::SetOrder(int32_t order, bool notify, bool wrap) {
     }
 }
 
-// OFFSET: %0x005396F0
+// OFFSET: 0x00529A70/0x1401796E0
 CSimpleControlPoint::CSimpleControlPoint(CSimplePathAnim* parent) {
     this->m_position = 0.0f;
     this->m_order = -1;
@@ -137,7 +137,7 @@ CSimpleControlPoint::CSimpleControlPoint(CSimplePathAnim* parent) {
     }
 }
 
-// OFFSET: %0x0053A070
+// OFFSET: 0x00529F30/0x140179D70
 bool CSimpleControlPoint::ChangeParent(CSimplePathAnim* parent) {
     if (!parent || this->m_parent == parent) {
         return false;

@@ -13,7 +13,7 @@
 // STATIC: %0x00BB80F0
 static uint16_t s_quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 
-// OFFSET: %0x00508870
+// OFFSET: 0x004F8620
 static int32_t SortByTexture(const void* elem1, const void* elem2) {
     const CSimpleBatchedMesh* mesh1 = static_cast<const CSimpleBatchedMesh*>(elem1);
     const CSimpleBatchedMesh* mesh2 = static_cast<const CSimpleBatchedMesh*>(elem2);
@@ -44,7 +44,7 @@ void CRenderBatch::Finish() {
     }
 }
 
-// OFFSET: %0x0050B020
+// OFFSET: 0x004FADF0/0x14013EC00
 void CRenderBatch::Queue(CTexture* texture, EGxBlend alphaMode, int32_t posCount, const C3Vector* position, const C2Vector* texCoord, int32_t colorCount, const CImVector* color, int32_t idxCount, const uint16_t* indices, CGxShader* shader, int8_t subLevel) {
     CGxTex* gxTex = TextureGetGxTexBlocking(texture);
 
@@ -77,13 +77,13 @@ void CRenderBatch::Queue(CTexture* texture, EGxBlend alphaMode, int32_t posCount
     this->m_count++;
 }
 
-// OFFSET: %0x0050C1B0
+// OFFSET: 0x004FC020/0x140140200
 CRenderBatch::CRenderBatch() {
     this->m_count = 0;
     this->m_stringbatch = NULL;
 }
 
-// OFFSET: %0x0050C8D0
+// OFFSET: 0x004FC580
 void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     RENDERCALLBACKNODE* node = this->m_callbacks.NewNode(2, 0, 0);
     node->m_callback = callback;
@@ -91,7 +91,7 @@ void CRenderBatch::QueueCallback(void (*callback)(void*), void* param) {
     this->m_count++;
 }
 
-// OFFSET: %0x0050CAB0
+// OFFSET: 0x004FC730/0x140140B10
 void CRenderBatch::Clear() {
     this->m_texturelist.SetCount(0);
 
@@ -109,7 +109,7 @@ CRenderBatch::~CRenderBatch() {
     this->Clear();
 }
 
-// OFFSET: %0x0050A970
+// OFFSET: 0x004FA630/0x14013E3B0
 void CRenderBatch::QueueFontString(CSimpleFontString* string) {
     CRect rect;
 
@@ -139,7 +139,7 @@ void CRenderBatch::QueueFontString(CSimpleFontString* string) {
     this->m_count++;
 }
 
-// OFFSET: %0x0050B0D0
+// OFFSET: 0x004FAEA0/0x14013ECF0
 void CRenderBatch::QueueTexture(CSimpleTexture* texture) {
     CGxTex* gxTex = TextureGetGxTex(texture->m_texture);
 

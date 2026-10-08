@@ -45,7 +45,7 @@ const char* CScriptRegion::GetObjectTypeName() {
     return CScriptRegion::s_objectTypeName;
 }
 
-// OFFSET: %0x0051FF30
+// OFFSET: 0x0050FB60/0x140158EF0
 CScriptRegion::CScriptRegion() {
     this->m_parent = NULL;
     this->m_animGroups = NULL;
@@ -64,7 +64,7 @@ void CScriptRegion::SetParent(CSimpleFrame* parent) {
     this->m_parent = parent;
 }
 
-// OFFSET: %0x0051FFA0
+// OFFSET: 0x0050FBD0/0x140158F80
 void CScriptRegion::LoadXML_Animations(linkObject* node, CStatus* status) {
     linkObject* animations = node->GetChild(XML_ANIMATIONS);
 
@@ -99,12 +99,12 @@ CLayoutFrame* CScriptRegion::GetLayoutFrameByName(const char* name) {
     return region;
 }
 
-// OFFSET: %0x005200F0
+// OFFSET: 0x0050FD20/0x140159110
 bool CScriptRegion::ProtectedFunctionsAllowed() {
     return !this->IsProtected() || !lua_tainted || CSimpleTop::s_instance->m_allowProtectedActions != 0;
 }
 
-// OFFSET: %0x00520120
+// OFFSET: 0x0050FD50/0x140159150
 bool CScriptRegion::IsMouseOver(float top, float bottom, float left, float right) {
     CSimpleTop* simpleTop = CSimpleTop::s_instance;
 
@@ -133,7 +133,7 @@ bool CScriptRegion::IsMouseOver(float top, float bottom, float left, float right
     return rect.minX * scale + left < x && rect.maxX * scale + right > x && scale * rect.minY + bottom < y && scale * rect.maxY + top > y;
 }
 
-// OFFSET: %0x00520240
+// OFFSET: 0x0050FE70/0x1401592E0
 void CScriptRegion::LoadXML(linkObject* node, CStatus* status) {
     CLayoutFrame::LoadXML(node, status);
 
@@ -207,7 +207,7 @@ int32_t CScriptRegion::HasActivePositionAnim() {
     return 0;
 }
 
-// OFFSET: %0x00520490
+// OFFSET: 0x00510080/0x1401595A0
 void CScriptRegion::OnLayerUpdate(float elapsedSec) {
     if (!this->m_animGroups) {
         return;
@@ -218,7 +218,7 @@ void CScriptRegion::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x005204F0
+// OFFSET: 0x005100F0
 void CScriptRegion::StopAnimating() {
     if (!this->m_playingAnimGroups) {
         return;
@@ -261,7 +261,7 @@ void CScriptRegion::NotifyAnimBegin(CSimpleAnimGroup* group) {
     this->m_playingAnimGroups->LinkToTail(group);
 }
 
-// OFFSET: %0x005206A0
+// OFFSET: 0x005102F0/0x1401598B0
 void CScriptRegion::RegisterAnimGroup(CSimpleAnimGroup* group) {
     if (!group) {
         return;

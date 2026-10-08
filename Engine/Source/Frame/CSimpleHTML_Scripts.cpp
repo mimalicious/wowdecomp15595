@@ -10,7 +10,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00549FE0
+// OFFSET: 0x0053A380/0x14018DB80
 static HTML_TEXT_TYPE ReadHtmlTextType(lua_State* L) {
     if (lua_type(L, 2) != LUA_TSTRING) {
         return HTML_TEXT_NORMAL;
@@ -274,7 +274,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetHyperlinkFormat", &Script_GetHyperlinkFormat },
 };
 
-// OFFSET: %0x0054A0A0
+// OFFSET: 0x0053A440
 void CSimpleHTML::RegisterScriptMethods(lua_State* L) {
     CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

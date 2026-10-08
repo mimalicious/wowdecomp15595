@@ -94,7 +94,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetScale", &Script_GetScale },
 };
 
-// OFFSET: %0x0054B670
+// OFFSET: 0x0053B960
 void CSimpleScaleAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

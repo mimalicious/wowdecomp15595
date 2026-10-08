@@ -66,7 +66,7 @@ void CSimpleHyperlinkButton::OnClick(const char* btn, int32_t down) {
     static_cast<CSimpleHyperlinkedFrame*>(this->m_parent)->OnHyperlinkClick(this->m_linkData, this->m_linkText, btn);
 }
 
-// OFFSET: %0x00546560
+// OFFSET: 0x00532E70
 void CSimpleHyperlinkButton::SetHyperlink(CSimpleFontString* fontString, const GXUFONTHYPERLINKINFO* info) {
     if (!fontString || !info) {
         this->Hide();

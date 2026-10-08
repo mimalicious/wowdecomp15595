@@ -72,7 +72,7 @@ void CSimpleHTML::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: %0x00531990
+// OFFSET: 0x00521B40/0x14016F700
 CSimpleHTML::CSimpleHTML(CSimpleFrame* parent) : CSimpleHyperlinkedFrame(parent) {
     for (int32_t i = 0; i < NUM_HTML_TEXT_TYPES; i++) {
         void* data = SMemAlloc(sizeof(CSimpleFontedFrameFont), __FILE__, __LINE__, 0);
@@ -109,7 +109,7 @@ bool CSimpleHTML::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleHTML::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x00531B50
+// OFFSET: 0x00521CF0/0x14016F910
 void CSimpleHTML::ParseIMG(XMLNode* node, CStatus* status) {
     bool floating = false;
     uint32_t justify = 1;
@@ -175,7 +175,7 @@ void CSimpleHTML::ParseIMG(XMLNode* node, CStatus* status) {
     content->m_region = texture;
 }
 
-// OFFSET: %0x00531E20
+// OFFSET: 0x00521FC0/0x14016FD10
 void CSimpleHTML::AddText(const char* text, HTML_TEXT_TYPE type, uint32_t justify) {
     void* data = CSimpleFontString::s_allocator.GetData(0, typeid(CSimpleFontString).raw_name(), SLOG_OBJECT);
     CSimpleFontString* string = data ? new (data) CSimpleFontString(this, 2, 1) : NULL;
@@ -259,7 +259,7 @@ void CSimpleHTML::ClearContent() {
     }
 }
 
-// OFFSET: %0x00532300
+// OFFSET: 0x00522360/0x1401702A0
 void CSimpleHTML::ParseP(XMLNode* node, HTML_TEXT_TYPE type, CStatus* status) {
     uint32_t justify = 1;
     const char* align = node->GetAttributeByName("align");
@@ -389,7 +389,7 @@ void CSimpleHTML::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x005329A0
+// OFFSET: 0x005228A0/0x140170850
 void CSimpleHTML::ParseBODY(XMLNode* node, CStatus* status) {
     for (XMLNode* child = node->m_child; child; child = child->m_next) {
         if (!SStrCmpI(child->m_name.m_str, "H1", STORM_MAX_STR)) {
@@ -411,7 +411,7 @@ void CSimpleHTML::ParseBODY(XMLNode* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00532AE0
+// OFFSET: 0x005229E0/0x1401709E0
 bool CSimpleHTML::SetText(const char* text, CStatus* status) {
     static CStatus s_nullStatus;
 
@@ -462,7 +462,7 @@ bool CSimpleHTML::SetText(const char* text, CStatus* status) {
     return parsed;
 }
 
-// OFFSET: %0x00532C90
+// OFFSET: 0x00522B90/0x140170C00
 void CSimpleHTML::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

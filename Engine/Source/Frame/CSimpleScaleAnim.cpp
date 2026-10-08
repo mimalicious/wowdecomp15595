@@ -52,13 +52,13 @@ void CSimpleScaleAnim::SetScale(const C2Vector& scale) {
     this->m_scaleChange.y = 1.0f - (scale.y >= 0.001f ? scale.y : 0.001f);
 }
 
-// OFFSET: %0x00537A70
+// OFFSET: 0x005279F0
 void CSimpleScaleAnim::GetScale(C2Vector& scale) {
     scale.x = 1.0f - this->m_scaleChange.x;
     scale.y = 1.0f - this->m_scaleChange.y;
 }
 
-// OFFSET: %0x00537AA0
+// OFFSET: 0x00527A20
 void CSimpleScaleAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -70,16 +70,16 @@ void CSimpleScaleAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: %0x00538FB0
+// OFFSET: 0x00529380
 CSimpleScaleAnim::~CSimpleScaleAnim() {
 }
 
-// OFFSET: %0x005396A0
+// OFFSET: 0x0052A6B0/0x14017A750
 CSimpleScaleAnim::CSimpleScaleAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_origin = FRAMEPOINT_CENTER;
 }
 
-// OFFSET: %0x0053B420
+// OFFSET: 0x0052B3A0/0x14017B9E0
 void CSimpleScaleAnim::LoadXML(linkObject* node, CStatus* status) {
     VectorAnimation* animation = static_cast<VectorAnimation*>(node);
 

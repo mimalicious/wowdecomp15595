@@ -57,12 +57,12 @@ void CSimpleButton::LockHighlight(int32_t lock) {
     this->UpdateTextState(this->m_state);
 }
 
-// OFFSET: %0x00524530
+// OFFSET: 0x00514540
 void CSimpleButton::SetMotionScriptsWhileDisabled(int32_t enabled) {
     this->m_motionScriptsWhileDisabled = enabled;
 }
 
-// OFFSET: %0x00524550
+// OFFSET: 0x00514560
 int32_t CSimpleButton::GetMotionScriptsWhileDisabled() {
     return this->m_motionScriptsWhileDisabled;
 }
@@ -528,7 +528,7 @@ void CSimpleButton::UpdateTextState(CSimpleButtonState state) {
     }
 }
 
-// OFFSET: %0x00827C60
+// OFFSET: 0x00514930/0x140148430
 const char* GetMouseButtonName(uint32_t button) {
     switch (button) {
         case 0x1:
@@ -629,7 +629,7 @@ void CSimpleButton::SetFontString(CSimpleFontString* fontString) {
     this->UpdateTextState(this->m_state);
 }
 
-// OFFSET: %0x00524C00
+// OFFSET: 0x00514E10/0x14015F260
 void CSimpleButton::SetText(const char* text) {
     if ((!text || !*text) && !this->m_fontString) {
         return;
@@ -643,7 +643,7 @@ void CSimpleButton::SetText(const char* text) {
     this->m_fontString->SetText(text, 1);
 }
 
-// OFFSET: %0x00524C70
+// OFFSET: 0x00514E80
 void CSimpleButton::SetNormalFontColor(const CImVector& color) {
     CSimpleFont* font = this->m_normalFont;
 
@@ -660,7 +660,7 @@ void CSimpleButton::SetNormalFontColor(const CImVector& color) {
     this->m_normalFont->UpdateObjects();
 }
 
-// OFFSET: %0x00524CC0
+// OFFSET: 0x00514ED0
 void CSimpleButton::SetDisabledFontColor(const CImVector& color) {
     CSimpleFont* font = this->m_disabledFont;
 
@@ -677,7 +677,7 @@ void CSimpleButton::SetDisabledFontColor(const CImVector& color) {
     this->m_disabledFont->UpdateObjects();
 }
 
-// OFFSET: %0x00524D10
+// OFFSET: 0x00514F20
 void CSimpleButton::SetHighlightFontColor(const CImVector& color) {
     CSimpleFont* font = this->m_highlightFont;
 
@@ -721,7 +721,7 @@ void CSimpleButton::SetStateTexture(CSimpleButtonState state, CSimpleTexture* te
     }
 }
 
-// OFFSET: %0x00524DF0
+// OFFSET: 0x00515000/0x14015F3D0
 int32_t CSimpleButton::SetHighlight(const char* fileName, EGxBlend blend) {
     CSimpleTexture* texture = this->m_highlightTexture;
 
@@ -748,7 +748,7 @@ int32_t CSimpleButton::SetHighlight(const char* fileName, EGxBlend blend) {
     return 1;
 }
 
-// OFFSET: %0x00524EC0
+// OFFSET: 0x005150D0/0x14015F4F0
 int32_t CSimpleButton::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     int32_t result = CSimpleFrame::OnLayerMouseDown(evt, btn);
 
@@ -789,7 +789,7 @@ int32_t CSimpleButton::OnLayerMouseDown(const CMouseEvent& evt, const char* btn)
     return 1;
 }
 
-// OFFSET: %0x00524FB0
+// OFFSET: 0x005151C0/0x14015F600
 int32_t CSimpleButton::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     int32_t result = CSimpleFrame::OnLayerMouseUp(evt, btn);
 
@@ -877,7 +877,7 @@ void CSimpleButton::OnLayerCursorExit(int32_t a2, int32_t a3) {
     }
 }
 
-// OFFSET: %0x005251D0
+// OFFSET: 0x005153E0/0x14015F840
 void CSimpleButton::OnClick(const char* btn, int32_t down) {
     if (this->m_inClick || this->m_state == BUTTONSTATE_DISABLED) {
         return;
@@ -891,7 +891,7 @@ void CSimpleButton::OnClick(const char* btn, int32_t down) {
     this->m_simpleTop->m_mouseButtonName = savedButtonName;
 }
 
-// OFFSET: %0x00525230
+// OFFSET: 0x00515440
 void CSimpleButton::OnDoubleClick(const char* btn) {
     if (this->m_inClick || this->m_state == BUTTONSTATE_DISABLED) {
         return;
@@ -905,7 +905,7 @@ void CSimpleButton::OnDoubleClick(const char* btn) {
     this->m_simpleTop->m_mouseButtonName = savedButtonName;
 }
 
-// OFFSET: %0x00525290
+// OFFSET: 0x005154A0/0x14015F920
 void CSimpleButton::SetButtonState(CSimpleButtonState state, int32_t stateLocked) {
     this->m_stateLocked = stateLocked;
 
@@ -927,7 +927,7 @@ void CSimpleButton::SetButtonState(CSimpleButtonState state, int32_t stateLocked
     this->m_state = state;
 }
 
-// OFFSET: %0x005253A0
+// OFFSET: 0x005155B0/0x14015FA60
 void CSimpleButton::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 
@@ -1080,7 +1080,7 @@ void CSimpleButton::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00525740
+// OFFSET: 0x00515950/0x14015FF70
 int32_t CSimpleButton::SetStateTexture(CSimpleButtonState state, const char* fileName) {
     if (this->m_stateTextures[state]) {
         this->m_stateTextures[state]->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
@@ -1148,7 +1148,7 @@ void CSimpleFrame::RunOnEnableScript(int32_t disabled) {
     }
 }
 
-// OFFSET: %0x005258C0
+// OFFSET: 0x00515AE0
 CSimpleButton::CSimpleButton(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_state = BUTTONSTATE_DISABLED;
     this->m_inClick = 0;

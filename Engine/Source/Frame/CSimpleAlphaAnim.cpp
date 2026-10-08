@@ -45,13 +45,13 @@ int32_t CSimpleAlphaAnim::GetScriptMetaTable() {
     return CSimpleAlphaAnim::s_metatable;
 }
 
-// OFFSET: %0x00537080
+// OFFSET: 0x005270B0/0x1401763F0
 void CSimpleAlphaAnim::SetChange(float change) {
     float value = change < -1.0f ? -1.0f : (change >= 1.0f ? 1.0f : change);
     this->m_change = static_cast<int16_t>(value * 255.0f);
 }
 
-// OFFSET: %0x00537C10
+// OFFSET: 0x00527B90
 void CSimpleAlphaAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -60,16 +60,16 @@ void CSimpleAlphaAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: %0x005393B0
+// OFFSET: 0x00529730
 CSimpleAlphaAnim::~CSimpleAlphaAnim() {
 }
 
-// OFFSET: %0x005399A0
+// OFFSET: 0x0052A760/0x14017A810
 CSimpleAlphaAnim::CSimpleAlphaAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_change = 0;
 }
 
-// OFFSET: %0x0053B6C0
+// OFFSET: 0x0052B640/0x14017BD30
 void CSimpleAlphaAnim::LoadXML(linkObject* node, CStatus* status) {
     CSimpleAnim::LoadXML(node, status);
 

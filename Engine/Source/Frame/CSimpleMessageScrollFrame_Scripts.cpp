@@ -625,7 +625,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetIndentedWordWrap", &Script_GetIndentedWordWrap },
 };
 
-// OFFSET: %0x005469D0
+// OFFSET: 0x00536E90
 void CSimpleMessageScrollFrame::RegisterScriptMethods(lua_State* L) {
     CSimpleHyperlinkedFrame::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));

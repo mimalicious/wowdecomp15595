@@ -4,7 +4,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: %0x00549850
+// OFFSET: 0x0052EE80/0x140184F10
 CScriptObject* FrameScript_GetObjectThis(lua_State* L, int32_t type) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Attempt to find 'this' in non-table object (used '.' instead of ':' ?)");

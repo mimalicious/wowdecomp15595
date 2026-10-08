@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include "Engine/Source/Frame/CSimpleTexture.h"
 
-// OFFSET: %0x0050B470
+// OFFSET: 0x004FB240
 CSimpleEmbeddedTexture::CSimpleEmbeddedTexture() {
     void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
     this->m_texture = data ? new (data) CSimpleTexture(NULL, 2, 0, true) : NULL;

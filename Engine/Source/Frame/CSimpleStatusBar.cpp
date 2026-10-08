@@ -179,7 +179,7 @@ void CSimpleStatusBar::RunOnValueChangedScript() {
     }
 }
 
-// OFFSET: %0x0051F8B0
+// OFFSET: 0x0050F520
 void CSimpleStatusBar::SetValue(float value) {
     if (!this->m_rangeSet) {
         return;
@@ -234,7 +234,7 @@ bool CSimpleStatusBar::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleStatusBar::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x0051F690
+// OFFSET: 0x0050F310/0x140158560
 CSimpleStatusBar::CSimpleStatusBar(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_changed = 0;
     this->m_rangeSet = 0;
@@ -248,7 +248,7 @@ CSimpleStatusBar::CSimpleStatusBar(CSimpleFrame* parent) : CSimpleFrame(parent) 
     this->m_value = 0.0f;
 }
 
-// OFFSET: %0x0051F740
+// OFFSET: 0x0050F3B0/0x140158620
 int32_t CSimpleStatusBar::SetBarTexture(const char* fileName, uint32_t drawLayer, int8_t subLevel) {
     CSimpleTexture* texture = this->m_barTexture;
 
@@ -273,7 +273,7 @@ int32_t CSimpleStatusBar::SetBarTexture(const char* fileName, uint32_t drawLayer
     return 1;
 }
 
-// OFFSET: %0x0051F910
+// OFFSET: 0x0050F580
 void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -355,7 +355,7 @@ void CSimpleStatusBar::OnLayerUpdate(float elapsedSec) {
     this->m_changed = 0;
 }
 
-// OFFSET: %0x0051FC80
+// OFFSET: 0x0050F880/0x140158BE0
 void CSimpleStatusBar::SetRotatesTexture(int32_t rotates) {
     if (rotates) {
         C2Vector texCoords[4];
@@ -377,7 +377,7 @@ void CSimpleStatusBar::SetRotatesTexture(int32_t rotates) {
     this->m_changed = 1;
 }
 
-// OFFSET: %0x0051FD60
+// OFFSET: 0x0050F960/0x140158CB0
 void CSimpleStatusBar::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

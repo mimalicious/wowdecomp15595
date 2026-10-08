@@ -37,7 +37,7 @@ void CSimpleScrollFrame::operator delete(void* ptr) {
     CSimpleScrollFrame::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x00530090
+// OFFSET: 0x005201B0/0x14016D870
 void CSimpleScrollFrame::RunOnHorizontalScrollScript() {
     if (this->HasScript(this->m_onHorizontalScroll)) {
         lua_State* L = FrameScript_GetContext();
@@ -46,7 +46,7 @@ void CSimpleScrollFrame::RunOnHorizontalScrollScript() {
     }
 }
 
-// OFFSET: %0x00530100
+// OFFSET: 0x00520220/0x14016D910
 void CSimpleScrollFrame::RunOnVerticalScrollScript() {
     if (this->HasScript(this->m_onVerticalScroll)) {
         lua_State* L = FrameScript_GetContext();
@@ -55,7 +55,7 @@ void CSimpleScrollFrame::RunOnVerticalScrollScript() {
     }
 }
 
-// OFFSET: %0x00530170
+// OFFSET: 0x00520290
 void CSimpleScrollFrame::RunOnScrollRangeChangedScript() {
     if (this->HasScript(this->m_onScrollRangeChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -123,7 +123,7 @@ void CSimpleScrollFrame::GetScriptTime(lua_State* L, double* time, uint32_t* cou
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x00530000
+// OFFSET: 0x00520120/0x14016D7D0
 void CSimpleScrollFrame::UpdateScrollChild() {
     if (this->m_scrollChild) {
         this->m_scrollChild->MarkFramePointsUnused();
@@ -154,7 +154,7 @@ bool CSimpleScrollFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleScrollFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x00530290
+// OFFSET: 0x005203B0
 CSimpleScrollFrame::CSimpleScrollFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_scrollChildUpdate = 0;
     this->m_scrollChild = NULL;
@@ -164,7 +164,7 @@ CSimpleScrollFrame::CSimpleScrollFrame(CSimpleFrame* parent) : CSimpleFrame(pare
     this->m_scrollOffset.y = 0.0f;
 }
 
-// OFFSET: %0x00530340
+// OFFSET: 0x00520460/0x14016DBF0
 void CSimpleScrollFrame::SetScrollChild(CSimpleFrame* child) {
     if (this->m_scrollChild) {
         this->m_scrollChild->SetBeingScrolled(0, 0);
@@ -182,7 +182,7 @@ void CSimpleScrollFrame::SetScrollChild(CSimpleFrame* child) {
     this->m_scrollChildUpdate = 1;
 }
 
-// OFFSET: %0x005303F0
+// OFFSET: 0x00520510/0x14016DC70
 void CSimpleScrollFrame::SetHorizontalScroll(float offset) {
     if (fabsf(offset - this->m_scrollOffset.x) >= 0.00000095367432f) {
         this->m_scrollOffset.x = offset;
@@ -191,7 +191,7 @@ void CSimpleScrollFrame::SetHorizontalScroll(float offset) {
     }
 }
 
-// OFFSET: %0x00530430
+// OFFSET: 0x00520550/0x14016DCB0
 void CSimpleScrollFrame::SetVerticalScroll(float offset) {
     if (fabsf(offset - this->m_scrollOffset.y) >= 0.00000095367432f) {
         this->m_scrollOffset.y = offset;
@@ -200,7 +200,7 @@ void CSimpleScrollFrame::SetVerticalScroll(float offset) {
     }
 }
 
-// OFFSET: %0x00530470
+// OFFSET: 0x00520590/0x14016DCF0
 void CSimpleScrollFrame::UpdateScrollChildRect(float width, float height) {
     if (!this->m_scrollChild) {
         return;
@@ -243,7 +243,7 @@ void CSimpleScrollFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x005305F0
+// OFFSET: 0x00520710
 void CSimpleScrollFrame::RenderScrollChild(void* param) {
     CSimpleScrollFrame* scrollFrame = static_cast<CSimpleScrollFrame*>(param);
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -335,7 +335,7 @@ void CSimpleScrollFrame::RenderScrollChild(void* param) {
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
 }
 
-// OFFSET: %0x00530A10
+// OFFSET: 0x00520B50/0x14016E560
 void CSimpleScrollFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 
@@ -380,7 +380,7 @@ void CSimpleScrollFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     }
 }
 
-// OFFSET: %0x00530B10
+// OFFSET: 0x00520C50
 bool CSimpleScrollFrame::GetBoundsRect(CRect& rect) {
     CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
 

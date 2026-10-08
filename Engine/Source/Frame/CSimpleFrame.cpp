@@ -54,7 +54,7 @@ static float s_dragThreshold = 0.0001f;
 // STATIC: %0x00CD127C
 bool CSimpleFrame::s_defaultPreload;
 
-// OFFSET: %0x00512750
+// OFFSET: 0x00502600
 static const char* KeyCodeToString(KEY key) {
     static char charBuf[8];
 
@@ -168,7 +168,7 @@ void CSimpleFrame::operator delete(void* ptr) {
     CSimpleFrame::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x00515F40
+// OFFSET: 0x00505DA0/0x14014CAF0
 CSimpleFrame::CSimpleFrame(CSimpleFrame* parent) {
     this->m_frameScale = 1.0f;
     this->m_depth = 0.0f;
@@ -508,7 +508,7 @@ void CSimpleFrame::GetClampRectInsets(float& left, float& right, float& top, flo
     bottom = this->m_clampRectInsets.minY;
 }
 
-// OFFSET: %0x00512680
+// OFFSET: 0x00502540
 bool CSimpleFrame::IsDragging() {
     return this->m_isMouseDragging || (this->m_parent && this->m_parent->IsDragging());
 }
@@ -584,7 +584,7 @@ void CSimpleFrame::AllowAttributeChanges(int32_t allow) {
     }
 }
 
-// OFFSET: %0x005126F0
+// OFFSET: 0x005025B0/0x140148010
 int32_t CSimpleFrame::AttributeChangesAllowed() {
     for (CSimpleFrame* frame = this; frame; frame = frame->m_parent) {
         if (frame->m_frameFlags & 0x8000) {
@@ -595,7 +595,7 @@ int32_t CSimpleFrame::AttributeChangesAllowed() {
     return 0;
 }
 
-// OFFSET: %0x005129B0
+// OFFSET: 0x00502860
 void CSimpleFrame::RunOnSizeChangedScript(float width, float height) {
     if (this->HasScript(this->m_onSizeChanged)) {
         lua_State* L = FrameScript_GetContext();
@@ -665,7 +665,7 @@ void CSimpleFrame::RunOnKeyUpScript(const char* key) {
     }
 }
 
-// OFFSET: %0x00512C20
+// OFFSET: 0x00502AD0/0x140148A20
 void CSimpleFrame::LoadXML_Layers(linkObject* node, CStatus* status) {
     for (linkObject* layerNode = node->m_child; layerNode; layerNode = layerNode->m_next) {
         if (layerNode->m_element != XML_LAYER) {
@@ -730,7 +730,7 @@ bool CSimpleFrame::SetFrameDepth(float depth, bool force) {
     return this->UpdateDepth(force);
 }
 
-// OFFSET: %0x00512E40
+// OFFSET: 0x00502D00/0x140148CE0
 void CSimpleFrame::Hide() {
     if (!this->ProtectedFunctionsAllowed() && this->m_simpleTop->m_actionBlockedCallback) {
         this->m_simpleTop->m_actionBlockedCallback(NULL);
@@ -745,7 +745,7 @@ void CSimpleFrame::Hide() {
     this->HideThis();
 }
 
-// OFFSET: %0x00512E90
+// OFFSET: 0x00502D50/0x140148D50
 void CSimpleFrame::Show() {
     if (!this->ProtectedFunctionsAllowed() && this->m_simpleTop->m_actionBlockedCallback) {
         this->m_simpleTop->m_actionBlockedCallback(NULL);
@@ -760,7 +760,7 @@ void CSimpleFrame::Show() {
     this->ShowThis(this->m_preload);
 }
 
-// OFFSET: %0x00512EF0
+// OFFSET: 0x00502DB0/0x140148DC0
 void CSimpleFrame::EnableEvent(CSimpleEventType eventType, int32_t priority) {
     if ((1 << eventType) & this->m_enabledEventsBitmask) {
         return;
@@ -773,7 +773,7 @@ void CSimpleFrame::EnableEvent(CSimpleEventType eventType, int32_t priority) {
     this->m_enabledEventsBitmask |= 1 << eventType;
 }
 
-// OFFSET: %0x00512F40
+// OFFSET: 0x00502E00/0x140148E20
 void CSimpleFrame::DisableEvent(CSimpleEventType eventType) {
     if (!((1 << eventType) & this->m_enabledEventsBitmask)) {
         return;
@@ -786,7 +786,7 @@ void CSimpleFrame::DisableEvent(CSimpleEventType eventType) {
     this->m_enabledEventsBitmask &= ~(1 << eventType);
 }
 
-// OFFSET: %0x00512F80
+// OFFSET: 0x00502E40
 int32_t CSimpleFrame::TestHitRect(const C2Vector& pt) {
     if (!(this->m_layoutFlags & 0x1)) {
         return 0;
@@ -829,7 +829,7 @@ void CSimpleFrame::SetHitRectInsets(float left, float right, float top, float bo
     this->m_hitRect.maxY = this->m_rect.maxY - top * this->m_layoutScale;
 }
 
-// OFFSET: %0x00513130
+// OFFSET: 0x00502FF0
 int32_t CSimpleFrame::GetHitRect(CRect& rect) {
     if (!(this->m_layoutFlags & 0x1)) {
         return 0;
@@ -839,7 +839,7 @@ int32_t CSimpleFrame::GetHitRect(CRect& rect) {
     return 1;
 }
 
-// OFFSET: %0x00515730
+// OFFSET: 0x00504EC0
 void CSimpleFrame::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     if (region != this && region) {
         for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
@@ -870,7 +870,7 @@ void CSimpleFrame::AddAnimAlpha(CScriptRegion* region, int16_t alpha) {
     }
 }
 
-// OFFSET: %0x00513170
+// OFFSET: 0x00503030
 int32_t CSimpleFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     C2Vector pt = evt.m_data.m_mousePosition;
 
@@ -897,7 +897,7 @@ int32_t CSimpleFrame::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return 1;
 }
 
-// OFFSET: %0x00513250
+// OFFSET: 0x00503120/0x140149170
 void CSimpleFrame::OnFrameSizeChanged(const CRect& rect) {
     CLayoutFrame::OnFrameSizeChanged(rect);
 
@@ -930,7 +930,7 @@ int32_t CSimpleFrame::OnLayerKeyDownRepeat(const CKeyEvent& evt) {
     return 0;
 }
 
-// OFFSET: %0x00513380
+// OFFSET: 0x00503250/0x1401492F0
 int32_t CSimpleFrame::OnLayerChar(const CCharEvent& evt) {
     if (!this->m_visible || !this->HasScript(this->m_onChar)) {
         return 0;
@@ -943,7 +943,7 @@ int32_t CSimpleFrame::OnLayerChar(const CCharEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: %0x00513400
+// OFFSET: 0x005032D0
 int32_t CSimpleFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     if (!this->m_visible || (!this->HasScript(this->m_onKeyDown) && !this->HasScript(this->m_onKeyUp))) {
         return 0;
@@ -954,7 +954,7 @@ int32_t CSimpleFrame::OnLayerKeyDown(const CKeyEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: %0x00513480
+// OFFSET: 0x00503350
 int32_t CSimpleFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     if (!this->m_visible || !this->HasScript(this->m_onKeyUp)) {
         return 0;
@@ -965,7 +965,7 @@ int32_t CSimpleFrame::OnLayerKeyUp(const CKeyEvent& evt) {
     return !(this->m_frameFlags & 0x200000) || this->IsProtected();
 }
 
-// OFFSET: %0x005134F0
+// OFFSET: 0x005033C0/0x1401494C0
 int32_t CSimpleFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     if (!btn) {
         if (this->m_dragButtons & evt.m_data.m_button) {
@@ -991,7 +991,7 @@ int32_t CSimpleFrame::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) 
     return 0;
 }
 
-// OFFSET: %0x005135B0
+// OFFSET: 0x00503480
 int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     if (!btn) {
         if (this->m_dragButtons & evt.m_data.m_button) {
@@ -1027,7 +1027,7 @@ int32_t CSimpleFrame::OnLayerMouseUp(const CMouseEvent& evt, const char* btn) {
     return 0;
 }
 
-// OFFSET: %0x00513690
+// OFFSET: 0x00503560
 int32_t CSimpleFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     if (!this->m_visible || !this->HasScript(this->m_onMouseWheel)) {
         return 0;
@@ -1037,7 +1037,7 @@ int32_t CSimpleFrame::OnLayerMouseWheel(const CMouseEvent& evt) {
     return 1;
 }
 
-// OFFSET: %0x005136E0
+// OFFSET: 0x005035B0
 void CSimpleFrame::OnDragStart(const CMouseEvent& evt) {
     uint32_t button = 0;
 
@@ -1071,7 +1071,7 @@ void CSimpleFrame::OnReceiveDrag(const CMouseEvent& evt) {
     }
 }
 
-// OFFSET: %0x005138A0
+// OFFSET: 0x00503770/0x140149990
 void CSimpleFrame::NotifyScrollParent() {
     if (!(this->m_frameFlags & 0x2000) || !this->m_visible) {
         return;
@@ -1090,7 +1090,7 @@ void CSimpleFrame::NotifyScrollParent() {
     }
 }
 
-// OFFSET: %0x00513910
+// OFFSET: 0x005037E0/0x1401499F0
 void CSimpleFrame::LoadXML_Scripts(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
 
@@ -1120,7 +1120,7 @@ void CSimpleFrame::LoadXML_Scripts(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00513A90
+// OFFSET: 0x00503960/0x140149BF0
 void CSimpleFrame::NotifyDrawLayerChanged(uint32_t drawLayer) {
     if (this->m_frameFlags & 0x2000) {
         this->m_batchDirty |= 1 << drawLayer;
@@ -1158,7 +1158,7 @@ void CSimpleFrame::OnFrameSizeChanged(float width, float height) {
     this->NotifyScrollParent();
 }
 
-// OFFSET: %0x00513BA0
+// OFFSET: 0x00503A70
 void CSimpleFrame::PreLoadXML(linkObject* node, CStatus* status) {
     if (node->m_flags & 0x1000000) {
         this->SetName(node->m_name.m_string);
@@ -1186,7 +1186,7 @@ void CSimpleFrame::PreLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00513C40
+// OFFSET: 0x00503CE0/0x14014A180
 void CSimpleFrame::PostLoadXML(linkObject* node, CStatus* status) {
     this->m_isLoading = 0;
 
@@ -1227,7 +1227,7 @@ void CSimpleFrame::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00513A30
+// OFFSET: 0x00503900/0x140149B70
 void CSimpleFrame::SetBackdrop(CBackdropGenerator* backdrop) {
     if (this->m_backdropGenerator) {
         this->m_backdropGenerator->DestroyTextures();
@@ -1255,7 +1255,7 @@ void CSimpleFrame::DisableDrawLayer(uint32_t drawLayer) {
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// OFFSET: %0x00514270
+// OFFSET: 0x00505470
 void CSimpleFrame::RegisterRegion(CSimpleRegion* region) {
     if (!region) {
         DebugValidate("region");
@@ -1266,7 +1266,7 @@ void CSimpleFrame::RegisterRegion(CSimpleRegion* region) {
     this->m_regions.LinkToTail(region);
 }
 
-// OFFSET: %0x00513E50
+// OFFSET: 0x00504110/0x14014A670
 void CSimpleFrame::UnregisterRegion(CSimpleRegion* region) {
     if (!region) {
         DebugValidate("region");
@@ -1277,14 +1277,14 @@ void CSimpleFrame::UnregisterRegion(CSimpleRegion* region) {
     this->m_regions.UnlinkNode(region);
 }
 
-// OFFSET: %0x005142B0
+// OFFSET: 0x005054B0/0x14014BE80
 void CSimpleFrame::AddFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     region->SetLayoutScale(this->m_layoutScale, false);
     this->m_drawLayers[drawLayer].LinkToTail(region);
     this->NotifyDrawLayerChanged(drawLayer);
 }
 
-// OFFSET: %0x00513E90
+// OFFSET: 0x00504150/0x14014A6F0
 void CSimpleFrame::RemoveFrameRegion(CSimpleRegion* region, uint32_t drawLayer) {
     this->m_drawLayers[drawLayer].UnlinkNode(region);
     this->NotifyDrawLayerChanged(drawLayer);
@@ -1309,7 +1309,7 @@ void CSimpleFrame::OnLayerUpdate(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x00513FA0
+// OFFSET: 0x00505050
 void CSimpleFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     if (!(this->m_drawLayerEnabled & (1 << layer))) {
         return;
@@ -1382,7 +1382,7 @@ void CSimpleFrame::LockHighlight(int32_t lock) {
     }
 }
 
-// OFFSET: %0x00514910
+// OFFSET: 0x005058F0
 void CSimpleFrame::ParentFrame(CSimpleFrame* child) {
     SIMPLEFRAMENODE* node = this->m_children.NewNode(2, 0, 0);
     node->m_frame = child;
@@ -1419,7 +1419,7 @@ void CSimpleFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, in
     }
 }
 
-// OFFSET: %0x005146D0
+// OFFSET: 0x00503E60/0x14014A340
 void CSimpleFrame::SetBeingScrolled(int32_t scrolled, int32_t a3) {
     uint32_t visible = this->m_visible;
 
@@ -1456,7 +1456,7 @@ void CSimpleFrame::SetBeingScrolled(int32_t scrolled, int32_t a3) {
     }
 }
 
-// OFFSET: %0x005147A0
+// OFFSET: 0x00503F30/0x14014A430
 void CSimpleFrame::SetFrameStrata(FRAME_STRATA strata) {
     if (strata == this->m_strata) {
         return;
@@ -1477,7 +1477,7 @@ void CSimpleFrame::SetFrameStrata(FRAME_STRATA strata) {
     }
 }
 
-// OFFSET: %0x00514830
+// OFFSET: 0x00503FC0/0x14014A4F0
 void CSimpleFrame::SetFrameLevel(int32_t level, int32_t shiftChildren) {
     if (level < 0) {
         level = 0;
@@ -1518,7 +1518,7 @@ void CSimpleFrame::SetFrameLevel(int32_t level, int32_t shiftChildren) {
     }
 }
 
-// OFFSET: %0x005149B0
+// OFFSET: 0x00505A10
 void CSimpleFrame::UnparentFrame(CSimpleFrame* child) {
     for (SIMPLEFRAMENODE* node = this->m_children.Head(); node; node = this->m_children.Next(node)) {
         if (node->m_frame == child) {
@@ -1528,7 +1528,7 @@ void CSimpleFrame::UnparentFrame(CSimpleFrame* child) {
     }
 }
 
-// OFFSET: %0x00515A20
+// OFFSET: 0x005054F0/0x14014BEE0
 void CSimpleFrame::SetParent(CSimpleFrame* parent) {
     if (parent == this->m_parent) {
         return;
@@ -1600,7 +1600,7 @@ int32_t CSimpleFrame::AreChildrenProtected(int32_t& deferred) {
     return 0;
 }
 
-// OFFSET: %0x00514A70
+// OFFSET: 0x00504220
 bool CSimpleFrame::GetBoundsRect(CRect& rect) {
     CRect frameRect = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -1690,7 +1690,7 @@ void CSimpleFrame::UpdateAlpha() {
     }
 }
 
-// OFFSET: %0x00514E00
+// OFFSET: 0x005045A0
 bool CSimpleFrame::UpdateDepth(bool force) {
     float depth = this->m_parentDepth + this->m_depth;
 
@@ -1716,7 +1716,7 @@ bool CSimpleFrame::UpdateDepth(bool force) {
     return true;
 }
 
-// OFFSET: %0x00515080
+// OFFSET: 0x00504820/0x14014AEE0
 void CSimpleFrame::HideThis() {
     if (!this->m_visible) {
         return;
@@ -1744,7 +1744,7 @@ void CSimpleFrame::HideThis() {
     this->OnLayerHide();
 }
 
-// OFFSET: %0x00515140
+// OFFSET: 0x005048E0/0x14014AFF0
 void CSimpleFrame::ShowThis(bool loadPending) {
     if (!this->m_shown || (this->m_parent && !this->m_parent->m_visible) || this->m_visible) {
         return;
@@ -1910,7 +1910,7 @@ void CSimpleFrame::AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const 
     }
 }
 
-// OFFSET: %0x00515820
+// OFFSET: 0x005050C0/0x14014B9E0
 void CSimpleFrame::OnFrameRender() {
     uint32_t dirty = this->m_batchDirty;
     this->m_batchDirty = 0;
@@ -1961,7 +1961,7 @@ void CSimpleFrame::OnFrameRender() {
     }
 }
 
-// OFFSET: %0x005166F0
+// OFFSET: 0x005056C0/0x14014C160
 bool CSimpleFrame::GetAttribute(const char* name, int32_t& luaRef) {
     FRAMEATTR* attr = this->m_attributes.Ptr(name);
 
@@ -1973,7 +1973,7 @@ bool CSimpleFrame::GetAttribute(const char* name, int32_t& luaRef) {
     return true;
 }
 
-// OFFSET: %0x00516A80
+// OFFSET: 0x00506890/0x14014DC30
 void CSimpleFrame::LoadXML_Attributes(linkObject* node, CStatus* status) {
     lua_State* L = FrameScript_GetContext();
 
@@ -2043,7 +2043,7 @@ void CSimpleFrame::LoadXML_Attributes(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00516D00
+// OFFSET: 0x00506B10/0x14014DF00
 void CSimpleFrame::SetAttribute(const char* name, int32_t luaRef) {
     FRAMEATTR* attr = this->m_attributes.Ptr(name);
 
@@ -2055,7 +2055,7 @@ void CSimpleFrame::SetAttribute(const char* name, int32_t luaRef) {
     this->RunOnAttributeChangedScript(name, luaRef);
 }
 
-// OFFSET: %0x00516D90
+// OFFSET: 0x00506BA0/0x14014DFC0
 void CSimpleFrame::LoadXML(linkObject* node, CStatus* status) {
     if (!(node->m_flags & 0x8)) {
         return;
@@ -2295,7 +2295,7 @@ void CSimpleFrame::SetTitleRegion(CScriptRegion* region) {
     }
 }
 
-// OFFSET: %0x00512DA0
+// OFFSET: 0x00502C60/0x140148C40
 void CSimpleFrame::SetForceAlpha(bool force) {
     if (force) {
         if (!this->m_forceAlpha && this->m_parentAlpha != 0xFF) {
@@ -2318,7 +2318,7 @@ void CSimpleFrame::SetForceAlpha(bool force) {
     }
 }
 
-// OFFSET: %0x005159D0
+// OFFSET: 0x00505420
 void CSimpleFrame::SetUseParentLevel(bool use) {
     if (use) {
         if (this->m_parent) {
@@ -2331,7 +2331,7 @@ void CSimpleFrame::SetUseParentLevel(bool use) {
     }
 }
 
-// OFFSET: %0x00514F00
+// OFFSET: 0x005046A0/0x14014AD10
 void CSimpleFrame::SetDontReturnDepth(int32_t dontReturn) {
     if (dontReturn) {
         this->m_frameFlags |= 0x40000;
@@ -2344,7 +2344,7 @@ void CSimpleFrame::SetDontReturnDepth(int32_t dontReturn) {
     }
 }
 
-// OFFSET: %0x00514F50
+// OFFSET: 0x005046F0/0x14014AD80
 void CSimpleFrame::SignalLoaded() {
     this->m_loadPending = 0;
 
@@ -2357,7 +2357,7 @@ void CSimpleFrame::SignalLoaded() {
     }
 }
 
-// OFFSET: %0x00514FC0
+// OFFSET: 0x00504760/0x14014AE20
 void CSimpleFrame::MarkDirty() {
     for (uint32_t layer = 0; layer < 5; layer++) {
         if (this->m_drawLayerEnabled & (1 << layer)) {
@@ -2400,7 +2400,7 @@ int32_t CSimpleFrame::IsObjectLoaded() {
     return 1;
 }
 
-// OFFSET: %0x00477E90
+// OFFSET: 0x0046A6E0/0x14007EC20
 void CSimpleFrame::DumpInfo(int32_t depth, void (*print)(char*, void*), void* param) {
     char buffer[128];
 

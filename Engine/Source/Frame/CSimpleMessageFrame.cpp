@@ -86,7 +86,7 @@ void CSimpleMessageFrame::ShowLineNode(CSimpleMessageFrameLineNode* node, float 
     this->m_numVisible++;
 }
 
-// OFFSET: %0x0052BB80
+// OFFSET: 0x0051BE80/0x140168200
 void CSimpleMessageFrame::ScrollMessages(uint32_t index) {
     CSimpleMessageFrameLineNode* last = this->m_lines[this->m_rows - 1].m_node;
     uint32_t i = this->m_rows - 1;
@@ -104,7 +104,7 @@ void CSimpleMessageFrame::ScrollMessages(uint32_t index) {
     this->HideLineNode(last);
 }
 
-// OFFSET: %0x0052BCB0
+// OFFSET: 0x0051BFB0/0x140168380
 CSimpleMessageFrameLineNode::CSimpleMessageFrameLineNode() {
     this->m_timeLeft = 0.0f;
     this->m_fadeLeft = 0.0f;
@@ -126,7 +126,7 @@ CSimpleMessageFrameLineNode::CSimpleMessageFrameLineNode() {
     }
 }
 
-// OFFSET: %0x0052BA40
+// OFFSET: 0x0051BD40/0x140168060
 CSimpleMessageFrameLineNode::~CSimpleMessageFrameLineNode() {
     delete this->m_string;
 }
@@ -154,7 +154,7 @@ CSimpleMessageFrameLine::~CSimpleMessageFrameLine() {
     }
 }
 
-// OFFSET: %0x0052BF40
+// OFFSET: 0x0051C240
 void CSimpleMessageFrame::AddPendingMessage(const char* text, const CImVector& color) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -187,7 +187,7 @@ void CSimpleMessageFrame::AddPendingMessage(const char* text, const CImVector& c
     }
 }
 
-// OFFSET: %0x0052C160
+// OFFSET: 0x0051C460/0x140168A20
 CSimpleMessageFrame::CSimpleMessageFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_messageFrameArea.minY = 0.0f;
     this->m_messageFrameArea.minX = 0.0f;
@@ -231,7 +231,7 @@ bool CSimpleMessageFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMessageFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x0052BE60
+// OFFSET: 0x0051C160
 void CSimpleMessageFrame::AddMessage(const char* text, const CImVector& color) {
     if (!text) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -259,7 +259,7 @@ void CSimpleMessageFrame::ClearPending() {
     this->m_pendingMessages.Clear();
 }
 
-// OFFSET: %0x0052C450
+// OFFSET: 0x0051C750/0x140168DA0
 void CSimpleMessageFrame::UpdateRect() {
     if (!(this->m_layoutFlags & 0x1)) {
         return;
@@ -326,7 +326,7 @@ void CSimpleMessageFrame::UpdateRect() {
     }
 }
 
-// OFFSET: %0x0052C7A0
+// OFFSET: 0x0051CAA0
 void CSimpleMessageFrame::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame::OnLayerUpdate(elapsedSec);
 
@@ -421,7 +421,7 @@ void CSimpleMessageFrame::OnFrameSizeChanged(const CRect& rect) {
     this->UpdateRect();
 }
 
-// OFFSET: %0x0052C9E0
+// OFFSET: 0x0051CCE0/0x14016B9E0
 void CSimpleMessageFrame::LoadXML(linkObject* node, CStatus* status) {
     CSimpleFrame::LoadXML(node, status);
 

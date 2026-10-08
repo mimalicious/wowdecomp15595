@@ -81,6 +81,7 @@ class CSimpleFontString : public CSimpleRegion, public CSimpleFontable {
     virtual bool IsA(const char* typeName);
     virtual const char* GetObjectTypeName();
     virtual void PreOnAnimUpdate();
+    virtual void AddAnimAlpha(CScriptRegion* region, int16_t alpha);
     virtual void AddAnimTranslation(CScriptRegion* region, const C2Vector& translation);
     virtual void AddAnimRotation(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, float radians);
     virtual void AddAnimScale(CScriptRegion* region, FRAMEPOINT origin, const C2Vector& offset, const C2Vector& scale);

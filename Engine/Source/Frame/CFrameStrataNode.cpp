@@ -2,13 +2,13 @@
 #include <cstdint>
 #include "Engine/Source/Frame/CFrameStrataNode.h"
 
-// OFFSET: %0x00511490
+// OFFSET: 0x005012D0/0x140146C50
 CFrameStrataNode::CFrameStrataNode() {
     this->m_pendingFrame = NULL;
     this->m_batchDirty = 0;
 }
 
-// OFFSET: %0x0050F5E0
+// OFFSET: 0x004FF430/0x1401441C0
 int32_t CFrameStrataNode::RemoveFrame(CSimpleFrame* frame) {
     if (!frame->m_strataLink.IsLinked()) {
         return 0;
@@ -27,7 +27,7 @@ int32_t CFrameStrataNode::RemoveFrame(CSimpleFrame* frame) {
     return this->m_batchDirty != 0;
 }
 
-// OFFSET: %0x005101C0
+// OFFSET: 0x00500010/0x140145330
 void CFrameStrataNode::OnLayerUpdate(float elapsedSec) {
     for (CSimpleFrame* frame = this->m_frames.Head(); frame; frame = this->m_pendingFrame) {
         this->m_pendingFrame = frame->m_strataLink.Next();
@@ -37,7 +37,7 @@ void CFrameStrataNode::OnLayerUpdate(float elapsedSec) {
     this->m_frames.Combine(&this->m_pendingFrames, 2, NULL);
 }
 
-// OFFSET: %0x005102A0
+// OFFSET: 0x005000F0
 int32_t CFrameStrataNode::BuildBatches() {
     int32_t batchDirty = this->m_batchDirty;
     this->m_batchDirty = 0;
@@ -77,7 +77,7 @@ int32_t CFrameStrataNode::BuildBatches() {
     return 0;
 }
 
-// OFFSET: %0x00511510
+// OFFSET: 0x00501350/0x140146D00
 CFrameStrataNode::~CFrameStrataNode() {
     this->m_frames.UnlinkAll();
     this->m_renderList.UnlinkAll();

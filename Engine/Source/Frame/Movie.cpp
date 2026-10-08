@@ -346,7 +346,7 @@ void CMovieStreamer::GetVideoInfo(MovieInfo& info) {
     info = this->m_info;
 }
 
-// OFFSET: %0x00522150
+// OFFSET: 0x00511A70
 void CMovieStreamer::InitStreamIndices() {
     for (int32_t i = 0; i < this->m_indexCount - 1; i++) {
         if (this->m_videoIndex < 0) {
@@ -364,7 +364,7 @@ void CMovieStreamer::InitStreamIndices() {
     }
 }
 
-// OFFSET: %0x005221C0
+// OFFSET: 0x00511AE0
 int32_t CMovieStreamer::NextVideoIndex() {
     int32_t last = this->m_indexCount - 1;
 
@@ -393,7 +393,7 @@ uint32_t CMovieStreamer::CurrentVideoFrameSize() {
     return this->m_index[this->m_videoIndex].m_size;
 }
 
-// OFFSET: %0x00522240
+// OFFSET: 0x00511B60
 int32_t CMovieStreamer::AdvanceVideoFrame() {
     int32_t count = this->m_indexCount;
     int32_t index = this->m_videoIndex + 1;
@@ -426,7 +426,7 @@ int32_t CMovieStreamer::AdvanceVideoFrame() {
     return this->m_videoIndex;
 }
 
-// OFFSET: %0x00522320
+// OFFSET: 0x00511C40
 int32_t CMovieStreamer::AdvanceAudioFrame() {
     int32_t count = this->m_indexCount;
     int32_t index = this->m_audioIndex + 1;
@@ -480,7 +480,7 @@ void CMovieStreamer::ReadAudioFrame(int32_t index, uint8_t* buffer) {
     }
 }
 
-// OFFSET: %0x00522530
+// OFFSET: 0x00511E10
 int32_t CMovieStreamer::IsChunkLocal(int32_t index) {
     AVIINDEXENTRY& entry = this->m_index[index];
 
@@ -525,7 +525,7 @@ void CMovieStreamer::PrefetchFrame(int32_t index, bool wait, uint8_t priority) {
     this->m_index[index].m_flags |= MOVIE_CHUNK_PREFETCHING;
 }
 
-// OFFSET: %0x00522620
+// OFFSET: 0x00512E30
 void CMovieStreamer::PrefetchVideoFrames(int32_t count, uint8_t wait) {
     int32_t end = this->m_videoPrefetchIndex;
     int32_t pending = 0;
@@ -559,7 +559,7 @@ void CMovieStreamer::PrefetchVideoFrames(int32_t count, uint8_t wait) {
     this->m_videoPrefetchIndex = index < this->m_indexCount - 1 ? index : this->m_indexCount - 1;
 }
 
-// OFFSET: %0x005226E0
+// OFFSET: 0x00512EF0
 void CMovieStreamer::PrefetchAudioFrames(int32_t count, uint8_t wait) {
     int32_t index = this->m_audioPrefetchIndex;
 
@@ -590,7 +590,7 @@ void CMovieStreamer::PrefetchAudioFrames(int32_t count, uint8_t wait) {
     }
 }
 
-// OFFSET: %0x005227A0
+// OFFSET: 0x00511E90/0x14015BD80
 int32_t CMovieStreamer::ParseAVIHeader() {
     if (!this->m_aviFile) {
         return 0;
@@ -697,7 +697,7 @@ int32_t CMovieStreamer::ParseAVIHeader() {
     return 1;
 }
 
-// OFFSET: %0x00522B30
+// OFFSET: 0x00512210
 int32_t CMovieStreamer::ParseAVIIndex() {
     if (!this->m_index || !this->m_indexCount) {
         return 0;

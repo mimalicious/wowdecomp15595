@@ -29,7 +29,7 @@ bool CScriptObject::IsA(const char* typeName) {
     return SStrCmpI(typeName, CScriptObject::s_objectTypeName, STORM_MAX_STR) == 0;
 }
 
-// OFFSET: %0x00520870
+// OFFSET: 0x005104C0/0x140159BE0
 void CScriptObject::CreateName(const char* source, char* dest, uint32_t destSize) {
     if (SStrCmpI(source, "$parent", SStrLen("$parent"))) {
         SStrCopy(dest, source, destSize);
@@ -74,7 +74,7 @@ CScriptObject* CScriptObject::GetScriptObjectByName(const char* name, int32_t ty
     return NULL;
 }
 
-// OFFSET: %0x00520830
+// OFFSET: 0x00510480/0x140159B90
 CScriptObject::CScriptObject() {
 }
 

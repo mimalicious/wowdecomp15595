@@ -45,7 +45,7 @@ int32_t CSimpleRotationAnim::GetScriptMetaTable() {
     return CSimpleRotationAnim::s_metatable;
 }
 
-// OFFSET: %0x00537A20
+// OFFSET: 0x005279A0
 void CSimpleRotationAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -54,11 +54,11 @@ void CSimpleRotationAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: %0x00538F80
+// OFFSET: 0x00529350
 CSimpleRotationAnim::~CSimpleRotationAnim() {
 }
 
-// OFFSET: %0x00539650
+// OFFSET: 0x0052A660/0x14017A710
 CSimpleRotationAnim::CSimpleRotationAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
     this->m_origin = FRAMEPOINT_CENTER;
     this->m_radians = 0.0f;

@@ -38,7 +38,7 @@ const char* CSimpleColorSelect::s_objectTypeName = "ColorSelect";
 // STATIC: 0x00DD3AC0
 CDataAllocator CSimpleColorSelect::s_allocator(sizeof(CSimpleColorSelect), 5);
 
-// OFFSET: %0x00533130
+// OFFSET: 0x00523030/0x140171170
 static void ValueTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     // STATIC: 0x00DD3AD8
     static CImVector s_texels[64];
@@ -146,7 +146,7 @@ int32_t CSimpleColorSelect::OnLayerMouseUp(const CMouseEvent& evt, const char* b
 CSimpleColorSelect::~CSimpleColorSelect() {
 }
 
-// OFFSET: %0x00532FD0
+// OFFSET: 0x00522ED0/0x140170FA0
 void CSimpleColorSelect::RunOnColorSelectScript() {
     if (!this->HasScript(this->m_onColorSelect)) {
         return;
@@ -175,7 +175,7 @@ bool CSimpleColorSelect::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleColorSelect::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x005331A0
+// OFFSET: 0x005230A0/0x140171210
 CSimpleColorSelect::CSimpleColorSelect(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_wheelTracking = false;
     this->m_valueTracking = false;
@@ -187,7 +187,7 @@ CSimpleColorSelect::CSimpleColorSelect(CSimpleFrame* parent) : CSimpleFrame(pare
     this->EnableEvent(SIMPLE_EVENT_MOUSE, -1);
 }
 
-// OFFSET: %0x00533280
+// OFFSET: 0x00523180/0x140171330
 void CSimpleColorSelect::UpdateValueTexture() {
     if (!this->m_valueTexture) {
         return;
@@ -200,7 +200,7 @@ void CSimpleColorSelect::UpdateValueTexture() {
     GxTexUpdate(this->m_valueTexture->GetGxTex(), 0, 0, 0, 0, 0);
 }
 
-// OFFSET: %0x00533310
+// OFFSET: 0x00523210/0x1401713D0
 void CSimpleColorSelect::RepositionWheelThumb() {
     if (!this->m_wheelTexture || !this->m_wheelThumbTexture) {
         return;
@@ -229,7 +229,7 @@ void CSimpleColorSelect::RepositionValueThumb() {
     this->m_valueThumbTexture->SetPoint(FRAMEPOINT_CENTER, this->m_valueTexture, FRAMEPOINT_BOTTOM, 0.0f, offsetY, 1);
 }
 
-// OFFSET: %0x00533460
+// OFFSET: 0x00523360/0x140171560
 int32_t CSimpleColorSelect::OnLayerMouseDown(const CMouseEvent& evt, const char* btn) {
     C2Vector point = evt.m_data.m_mousePosition;
 
@@ -245,7 +245,7 @@ int32_t CSimpleColorSelect::OnLayerMouseDown(const CMouseEvent& evt, const char*
     return CSimpleFrame::OnLayerMouseDown(evt, btn);
 }
 
-// OFFSET: %0x005334F0
+// OFFSET: 0x005233F0/0x140171610
 void CSimpleColorSelect::SetColorWheelThumbTexture(CSimpleTexture* texture) {
     if (texture == this->m_wheelThumbTexture) {
         return;
@@ -264,7 +264,7 @@ void CSimpleColorSelect::SetColorWheelThumbTexture(CSimpleTexture* texture) {
     this->RepositionWheelThumb();
 }
 
-// OFFSET: %0x00533540
+// OFFSET: 0x00523440/0x140171680
 void CSimpleColorSelect::SetColorValueTexture(CSimpleTexture* texture) {
     if (texture == this->m_valueTexture) {
         return;
@@ -294,7 +294,7 @@ void CSimpleColorSelect::SetColorValueTexture(CSimpleTexture* texture) {
     this->UpdateValueTexture();
 }
 
-// OFFSET: %0x00533610
+// OFFSET: 0x00523510/0x1401717A0
 void CSimpleColorSelect::SetColorValueThumbTexture(CSimpleTexture* texture) {
     if (texture == this->m_valueThumbTexture) {
         return;
@@ -322,7 +322,7 @@ void CSimpleColorSelect::UpdateColor() {
     this->RunOnColorSelectScript();
 }
 
-// OFFSET: %0x00533680
+// OFFSET: 0x00523580
 int32_t CSimpleColorSelect::OnLayerTrackUpdate(const CMouseEvent& evt) {
     if (this->m_wheelTracking || this->m_valueTracking) {
         if (this->m_wheelTracking) {
@@ -365,7 +365,7 @@ int32_t CSimpleColorSelect::OnLayerTrackUpdate(const CMouseEvent& evt) {
     return CSimpleFrame::OnLayerTrackUpdate(evt);
 }
 
-// OFFSET: %0x00533850
+// OFFSET: 0x00523750/0x140171A50
 int32_t CSimpleColorSelect::SetColorWheelThumbTexture(const char* fileName) {
     if (this->m_wheelThumbTexture) {
         this->m_wheelThumbTexture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
@@ -387,7 +387,7 @@ int32_t CSimpleColorSelect::SetColorWheelThumbTexture(const char* fileName) {
     return 1;
 }
 
-// OFFSET: %0x00533900
+// OFFSET: 0x00523800/0x140171B50
 int32_t CSimpleColorSelect::SetColorValueThumbTexture(const char* fileName) {
     if (this->m_valueThumbTexture) {
         this->m_valueThumbTexture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
@@ -409,7 +409,7 @@ int32_t CSimpleColorSelect::SetColorValueThumbTexture(const char* fileName) {
     return 1;
 }
 
-// OFFSET: %0x005339B0
+// OFFSET: 0x005238B0/0x140171C50
 void CSimpleColorSelect::SetColorWheelTexture(CSimpleTexture* texture) {
     if (texture == this->m_wheelTexture) {
         return;

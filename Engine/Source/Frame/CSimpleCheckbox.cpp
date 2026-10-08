@@ -30,7 +30,7 @@ void CSimpleCheckbox::operator delete(void* ptr) {
     CSimpleCheckbox::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x005259E0
+// OFFSET: 0x00515C10
 CSimpleCheckbox::CSimpleCheckbox(CSimpleFrame* parent) : CSimpleButton(parent) {
     this->m_checked = 0;
     this->m_checkedTexture = NULL;
@@ -158,13 +158,13 @@ void CSimpleCheckbox::SetDisabledCheckedTexture(CSimpleTexture* texture) {
     this->SetChecked(this->m_checked, 1);
 }
 
-// OFFSET: %0x00525CD0
+// OFFSET: 0x00515F00/0x140160620
 void CSimpleCheckbox::Enable(int32_t enabled) {
     CSimpleButton::Enable(enabled);
     this->SetChecked(this->m_checked, 1);
 }
 
-// OFFSET: %0x00525D00
+// OFFSET: 0x00515F30
 void CSimpleCheckbox::LoadXML(linkObject* node, CStatus* status) {
     CSimpleButton::LoadXML(node, status);
 
@@ -187,7 +187,7 @@ void CSimpleCheckbox::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x00525D90
+// OFFSET: 0x00515FC0/0x140160710
 int32_t CSimpleCheckbox::SetCheckedTexture(const char* fileName) {
     if (this->m_checkedTexture) {
         this->m_checkedTexture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
@@ -211,7 +211,7 @@ int32_t CSimpleCheckbox::SetCheckedTexture(const char* fileName) {
     return 1;
 }
 
-// OFFSET: %0x00525E50
+// OFFSET: 0x00516080/0x140160830
 int32_t CSimpleCheckbox::SetDisabledCheckedTexture(const char* fileName) {
     if (this->m_disabledCheckedTexture) {
         this->m_disabledCheckedTexture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);

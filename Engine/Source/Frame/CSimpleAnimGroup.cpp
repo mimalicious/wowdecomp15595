@@ -30,7 +30,7 @@ int32_t CSimpleAnimGroup::s_objectType;
 // STATIC: %0x00BB8BC4
 const char* CSimpleAnimGroup::s_objectTypeName = "AnimationGroup";
 
-// OFFSET: %0x005370C0
+// OFFSET: 0x005270F0/0x140176430
 void CSimpleAnimGroup::PreLoadXML(linkObject* node, CStatus* status) {
     this->m_flags |= 1;
 
@@ -110,7 +110,7 @@ FrameScript_Object::ScriptIx* CSimpleAnimGroup::GetScriptByName(const char* name
     return NULL;
 }
 
-// OFFSET: %0x00537330
+// OFFSET: 0x00527300/0x140176610
 bool CSimpleAnimGroup::IsDone() {
     if (this->m_duration <= 0.0001f) {
         return true;
@@ -127,7 +127,7 @@ bool CSimpleAnimGroup::IsDone() {
     return this->m_progress >= 1.0f;
 }
 
-// OFFSET: %0x00537380
+// OFFSET: 0x00527340/0x140176660
 void CSimpleAnimGroup::SetInitialOffset(const C2Vector& offset) {
     if (offset.x * offset.x + offset.y * offset.y <= 0.00000023841858f) {
         this->m_initialOffset.x = 0.0f;
@@ -214,7 +214,7 @@ TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::FindAnimLi
     return NULL;
 }
 
-// OFFSET: %0x00538EC0
+// OFFSET: 0x00528F70/0x140178730
 bool CSimpleAnimGroup::HasAnimOfType(int32_t type) {
     for (CSimpleAnim* anim = this->m_animations.Head(); anim; anim = this->m_animations.Next(anim)) {
         if (anim->IsA(type)) {
@@ -243,7 +243,7 @@ bool CSimpleAnimGroup::HasPositionAnim() {
     return false;
 }
 
-// OFFSET: %0x005393E0
+// OFFSET: 0x005298F0/0x140179530
 TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::RegisterAnimList(int32_t order) {
     if (order == -1) {
         return NULL;
@@ -300,7 +300,7 @@ TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* CSimpleAnimGroup::RegisterAn
     return this->m_animLists[index];
 }
 
-// OFFSET: %0x005399D0
+// OFFSET: 0x00529CC0/0x140179A50
 CSimpleAnimGroup::CSimpleAnimGroup(CScriptRegion* owner) {
     this->m_region = NULL;
     this->unk_005C = 0;
@@ -354,7 +354,7 @@ int32_t CSimpleAnimGroup::GetScriptMetaTable() {
     return CSimpleAnimGroup::s_metatable;
 }
 
-// OFFSET: %0x00539B40
+// OFFSET: 0x0052A790/0x14017A840
 void CSimpleAnimGroup::LoadXML(linkObject* node, CStatus* status) {
     AnimationGroup* group = static_cast<AnimationGroup*>(node);
 
@@ -467,7 +467,7 @@ void CSimpleAnimGroup::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x0053A0C0
+// OFFSET: 0x0052A0E0/0x140179FA0
 bool CSimpleAnimGroup::AddAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list, CSimpleAnim* anim) {
     if (!list) {
         return false;
@@ -494,7 +494,7 @@ CSimpleAnimGroup::~CSimpleAnimGroup() {
     this->m_animations.Clear();
 }
 
-// OFFSET: %0x0053A3E0
+// OFFSET: 0x00528E00
 void CSimpleAnimGroup::Pause() {
     if (!this->m_loopState || (this->m_flags & 0x4)) {
         return;
@@ -548,7 +548,7 @@ void CSimpleAnimGroup::Stop(bool requested) {
     }
 }
 
-// OFFSET: %0x0053A5E0
+// OFFSET: 0x00529050/0x140178850
 void CSimpleAnimGroup::ComputeDuration() {
     this->m_duration = 0.0f;
 
@@ -574,7 +574,7 @@ void CSimpleAnimGroup::ComputeDuration() {
     }
 }
 
-// OFFSET: %0x0053A6B0
+// OFFSET: 0x0052A400/0x14017A440
 void CSimpleAnimGroup::NotifyAnimAdded(CSimpleAnim* anim) {
     if (!anim) {
         return;
@@ -585,7 +585,7 @@ void CSimpleAnimGroup::NotifyAnimAdded(CSimpleAnim* anim) {
     }
 }
 
-// OFFSET: %0x0053A6F0
+// OFFSET: 0x0052A4C0/0x14017A4F0
 void CSimpleAnimGroup::NotifyOrderChanged(CSimpleAnim* anim, int32_t oldOrder) {
     if (!anim) {
         return;
@@ -598,7 +598,7 @@ void CSimpleAnimGroup::NotifyOrderChanged(CSimpleAnim* anim, int32_t oldOrder) {
     }
 }
 
-// OFFSET: %0x0053A740
+// OFFSET: 0x00529100
 bool CSimpleAnimGroup::AdvanceLoopState(float elapsedSec, float remaining) {
     int32_t count = this->m_animLists.Count();
     bool reverse = this->m_loopState == ANIM_LOOPSTATE_REVERSE;
@@ -662,7 +662,7 @@ bool CSimpleAnimGroup::AdvanceLoopState(float elapsedSec, float remaining) {
     return false;
 }
 
-// OFFSET: %0x0053AA20
+// OFFSET: 0x0052AC30/0x14017AFC0
 void CSimpleAnimGroup::SortAnimations() {
     if (!this->m_loopState || (this->m_flags & 0x4)) {
         this->m_loopState = ANIM_LOOPSTATE_NONE;
@@ -735,7 +735,7 @@ void CSimpleAnimGroup::SortAnimations() {
     }
 }
 
-// OFFSET: %0x0053AD00
+// OFFSET: 0x00529760
 bool CSimpleAnimGroup::DoGroupUpdateWork(float elapsedSec) {
     float remaining = elapsedSec < 0.0f ? 0.0f : (elapsedSec >= 60.0f ? 60.0f : elapsedSec);
 
@@ -787,7 +787,7 @@ bool CSimpleAnimGroup::DoGroupUpdateWork(float elapsedSec) {
     }
 }
 
-// OFFSET: %0x0053AEF0
+// OFFSET: 0x0052A440/0x14017A120
 bool CSimpleAnimGroup::RemoveAnimListNode(TSList<SIMPLEANIMNODE, TSGetLink<SIMPLEANIMNODE> >* list, CSimpleAnim* anim) {
     if (!list) {
         return false;
@@ -826,7 +826,7 @@ void CSimpleAnimGroup::PostLoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x0053B7F0
+// OFFSET: 0x00529E40/0x140179C40
 bool CSimpleAnimGroup::OnUpdate(float elapsedSec) {
     if (this->IsDone() || !this->m_loopState) {
         return true;
@@ -862,7 +862,7 @@ void CSimpleAnimGroup::NotifyAnimRemoved(CSimpleAnim* anim) {
     }
 }
 
-// OFFSET: %0x0053B950
+// OFFSET: 0x00529F80
 bool CSimpleAnimGroup::Play(bool reverse) {
     if (!this->m_animations.Head()) {
         return false;

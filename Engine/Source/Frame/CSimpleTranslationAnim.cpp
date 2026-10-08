@@ -55,7 +55,7 @@ void CSimpleTranslationAnim::SetOffset(const C2Vector& offset) {
     }
 }
 
-// OFFSET: %0x005379C0
+// OFFSET: 0x00527940
 void CSimpleTranslationAnim::Apply(float progress) {
     CScriptRegion* region = this->GetRegionParent();
 
@@ -67,15 +67,15 @@ void CSimpleTranslationAnim::Apply(float progress) {
     }
 }
 
-// OFFSET: %0x00538F50
+// OFFSET: 0x00529320
 CSimpleTranslationAnim::~CSimpleTranslationAnim() {
 }
 
-// OFFSET: %0x00539620
+// OFFSET: 0x0052A630/0x14017A6E0
 CSimpleTranslationAnim::CSimpleTranslationAnim(CSimpleAnimGroup* group) : CSimpleAnim(group) {
 }
 
-// OFFSET: %0x0053B280
+// OFFSET: 0x0052B200/0x14017B7E0
 void CSimpleTranslationAnim::LoadXML(linkObject* node, CStatus* status) {
     VectorAnimation* animation = static_cast<VectorAnimation*>(node);
 

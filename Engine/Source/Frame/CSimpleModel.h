@@ -69,6 +69,7 @@ class CSimpleModel : public CSimpleFrame {
     virtual void SetGlow(float glow);
     virtual void UpdateModel();
     virtual void OnModelLoaded(CM2Model* model);
+
     virtual void LoadXML(linkObject* node, CStatus* status);
     virtual float GetWidth();
     virtual float GetHeight();
@@ -84,6 +85,7 @@ class CSimpleModel : public CSimpleFrame {
     void SetLight(const CM2Light& light);
     void SetSequence(uint32_t sequence);
     int32_t SetSequenceTime(uint32_t sequence, int32_t time);
+    void UpdateModelTransform();
 };
 
 #include "Engine/Source/Frame/CSimpleModel.inl"

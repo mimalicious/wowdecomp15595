@@ -64,7 +64,7 @@ static FrameScript_Method s_ScriptMethods[] = {
     { "GetOffset", &Script_GetOffset },
 };
 
-// OFFSET: %0x0054B5B0
+// OFFSET: 0x0053B8A0
 void CSimpleTranslationAnim::RegisterScriptMethods(lua_State* L) {
     CSimpleAnim::RegisterScriptMethods(L);
     FrameScript_Object::FillScriptMethodTable(L, s_ScriptMethods, sizeof(s_ScriptMethods) / sizeof(s_ScriptMethods[0]));
