@@ -83,6 +83,7 @@ void QueueArchive(const char* name);
 bool QueueFile(const char* name);
 bool SetBandwidthThrottlePercentage(int32_t percent);
 void StartBGLoadThread();
+void UpdateLauncherNotification();
 bool StopBGLoadThread();
 
 }

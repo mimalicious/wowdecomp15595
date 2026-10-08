@@ -52,7 +52,7 @@ bool Blizzard::Util::Digest<N>::operator<(const Digest& other) const {
     return false;
 }
 
-// OFFSET: #0x00668750
+// OFFSET: 0x007AE890<16>
 template <int N>
 bool Blizzard::Util::Digest<N>::operator==(const Digest& other) const {
     return memcmp(this->m_data, other.m_data, N) == 0;
