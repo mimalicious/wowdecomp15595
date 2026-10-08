@@ -10,7 +10,7 @@ static HASHKEY_NONE s_memoryLookupKey;
 // STATIC: %0x00D0E180
 TSHashTable<SE3MemorySoundObject, HASHKEY_NONE> SE3::sm_MemorySoundObjectTable;
 
-// OFFSET: %0x0067B4F0
+// OFFSET: 0x007147F0/0x1403E6F30
 static FMOD_RESULT F_CALLBACK MemorySoundEndedCallback(FMOD_CHANNEL* channel, FMOD_CHANNEL_CALLBACKTYPE type, int command, unsigned int commanddata1, unsigned int commanddata2) {
     if (type == FMOD_CHANNEL_CALLBACKTYPE_END) {
         void* userdata = NULL;
@@ -38,7 +38,7 @@ void SE3MemorySoundProperties::ResetToDefaults() {
     this->m_attachMonitorDSP = 0;
 }
 
-// OFFSET: %0x0067B770
+// OFFSET: 0x00714860
 int32_t SE3::SetMemorySoundFinishedCallback(uint32_t handle, void (*callback)(SE3MemorySoundObject*, void*)) {
     SE3MemorySoundObject* sound = SE3::sm_MemorySoundObjectTable.Ptr(handle, s_memoryLookupKey);
 
@@ -81,7 +81,7 @@ SE3MemorySoundObject::SE3MemorySoundObject() {
     this->m_uUID = ++SE3::sm_uNextUniqueID;
 }
 
-// OFFSET: %0x0067BB70
+// OFFSET: 0x00714960/0x1403E7140
 int32_t SE3::IsPlaying(uint32_t handle) {
     if (!handle) {
         return 0;
@@ -107,7 +107,7 @@ int32_t SE3::IsPlaying(uint32_t handle) {
     return 0;
 }
 
-// OFFSET: %0x0067BED0
+// OFFSET: 0x00715200/0x1403E7D80
 int32_t SE3::PlaySoundFromMemory(SE3MemorySoundProperties* properties, int32_t chatSystem) {
     FMOD::System* system = chatSystem ? SE3::sm_pChatSystem : SE3::sm_pGameSystem;
 

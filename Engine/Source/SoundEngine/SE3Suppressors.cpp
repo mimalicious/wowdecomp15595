@@ -13,7 +13,7 @@ int32_t SE3::SuppressorIsPresent() {
     return s_suppressors.Head() != NULL;
 }
 
-// OFFSET: %0x0067D280
+// OFFSET: 0x00716DC0/0x1403EA260
 void SE3::UnregisterSuppressor(uint32_t uid) {
     SuppressorSound* suppressor = s_suppressors.Head();
 
@@ -28,7 +28,7 @@ void SE3::UnregisterSuppressor(uint32_t uid) {
     }
 }
 
-// OFFSET: %0x0067D2C0
+// OFFSET: 0x00716E00/0x1403EA2A0
 float SE3::GetSuppressionScalar(SE3BUS bus, uint32_t uid) {
     float scalar = 1.0f;
 
@@ -43,7 +43,7 @@ float SE3::GetSuppressionScalar(SE3BUS bus, uint32_t uid) {
     return scalar;
 }
 
-// OFFSET: %0x0067D330
+// OFFSET: 0x00716E70/0x1403EA300
 void SE3::RegisterSuppressor(SE3SoundKitObject* sko) {
     if (!sko || !sko->m_pSoundKitDef->m_pSoundKitRec) {
         return;
@@ -55,7 +55,7 @@ void SE3::RegisterSuppressor(SE3SoundKitObject* sko) {
         return;
     }
 
-    if ((advancedRec->m_duckToSfx >= 0.0f && advancedRec->m_duckToSfx < 1.0f) || (advancedRec->m_duckToMusic >= 0.0f && advancedRec->m_duckToMusic < 1.0f) || (advancedRec->m_duckToAmbience >= 0.0f && advancedRec->m_duckToAmbience < 1.0f)) {
+    if ((advancedRec->m_duckToSfx >= 0.0f && advancedRec->m_duckToSfx < 1.0f) || (advancedRec->m_duckToMusic >= 0.0f && advancedRec->m_duckToMusic < 1.0f) || (advancedRec->m_duckToAmbience >= 0.0f && advancedRec->m_duckToAmbience < 1.0f) || (advancedRec->m_duckToDialog >= 0.0f && advancedRec->m_duckToDialog < 1.0f)) {
         for (SuppressorSound* suppressor = s_suppressors.Head(); suppressor; suppressor = s_suppressors.Next(suppressor)) {
             if (suppressor->m_uUID == sko->m_uUID) {
                 return;
@@ -67,6 +67,7 @@ void SE3::RegisterSuppressor(SE3SoundKitObject* sko) {
         suppressor->m_duckTo[0] = advancedRec->m_duckToSfx;
         suppressor->m_duckTo[1] = advancedRec->m_duckToMusic;
         suppressor->m_duckTo[2] = advancedRec->m_duckToAmbience;
+        suppressor->m_duckTo[3] = advancedRec->m_duckToDialog;
         suppressor->m_timeToUnduck = advancedRec->m_timeToUnduck;
         suppressor->m_timeToDuck = advancedRec->m_timeToDuck;
         suppressor->m_innerRadius = advancedRec->m_innerRadiusOfInfluence;
@@ -75,12 +76,12 @@ void SE3::RegisterSuppressor(SE3SoundKitObject* sko) {
     }
 }
 
-// OFFSET: %0x0067D4E0
+// OFFSET: 0x00717040
 void SE3::InitSuppressorSounds() {
     s_suppressors.Clear();
 }
 
-// OFFSET: %0x0067D4F0
+// OFFSET: 0x00717050/0x1403EA5A0
 void SE3::UpdateSuppressors(int32_t elapsed) {
     C3Vector listener;
     listener.x = 0.0f;
@@ -95,7 +96,7 @@ void SE3::UpdateSuppressors(int32_t elapsed) {
         SuppressorSound* next = s_suppressors.Next(suppressor);
         C3Vector position = SE3::GetPosition(suppressor->m_uUID);
 
-        for (int32_t i = 0; i < 3; i++) {
+        for (int32_t i = 0; i < 4; i++) {
             uint32_t uid = suppressor->m_uUID;
 
             if (uid) {
@@ -136,7 +137,7 @@ void SE3::UpdateSuppressors(int32_t elapsed) {
             }
         }
 
-        if (!suppressor->m_uUID && suppressor->m_scalar[0] == 1.0f && suppressor->m_scalar[1] == 1.0f && suppressor->m_scalar[2] == 1.0f) {
+        if (!suppressor->m_uUID && suppressor->m_scalar[0] == 1.0f && suppressor->m_scalar[1] == 1.0f && suppressor->m_scalar[2] == 1.0f && suppressor->m_scalar[3] == 1.0f) {
             delete suppressor;
         }
 

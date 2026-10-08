@@ -484,7 +484,7 @@ int32_t SI2::PlaySoundFile(const char* filename, int32_t group) {
         SI2::StopSound(&s_scriptMusic, 1, -1.0f, 1);
     }
 
-    SE3::PlaySoundFile(filename, handle, SI2::s_channelGroupBus[group]);
+    SE3::PlaySoundFile(filename, handle, SI2::s_channelGroupBus[group], static_cast<SE3USAGE>((SI2::s_channelGroupBus[group] != SE3BUS_7) + 1));
 
     if (group == 5 && *handle) {
         SI2::sm_bLuaMusicPlaying = 1;

@@ -16,6 +16,11 @@ static uint32_t s_logFlags;
 // STATIC: %0x00D0E178
 static int32_t s_errorCount;
 
+// PROVEN: 22b93471 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void SE3::SoundKitDefLog(const char* format, ...) {
+}
+
 // PROVEN: 2d9dcdfa IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void SE3::SoundKitObjectLog(SE3SoundKitObject* sko, const char* file, int32_t line, const char* format, ...) {
@@ -30,7 +35,7 @@ void SE3::Log_Init() {
     OsDeleteFile("Logs\\SESound.log");
 }
 
-// OFFSET: %0x0067B2D0
+// OFFSET: 0x007145D0/0x1403E6CC0
 void SE3::Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const char* format, ...) {
     char buffer[512];
     char text[512];
@@ -77,7 +82,7 @@ void SE3::Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const c
     }
 }
 
-// OFFSET: %0x0067B470
+// OFFSET: 0x00714770/0x1403E6EA0
 void SE3::Log_Write(const char* format, ...) {
     char buffer[512];
     memset(buffer, 0, sizeof(buffer));

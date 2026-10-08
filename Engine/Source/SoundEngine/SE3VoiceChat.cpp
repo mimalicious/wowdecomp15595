@@ -57,14 +57,14 @@ static SCritSect s_heartBeatCritSect;
 // STATIC: %0x00D0E130
 char SE3::sm_sSystemDefaultName[64];
 
-// OFFSET: %0x00679110
+// OFFSET: 0x00712450
 void SE3::ErrCheck(uint32_t line, const char* file, FMOD_RESULT result) {
     if (result != FMOD_OK && result != FMOD_ERR_CHANNEL_STOLEN && result != FMOD_ERR_INVALID_HANDLE && result != FMOD_ERR_OUTPUT_DRIVERCALL) {
         SE3::Log_Write(line, file, result, "");
     }
 }
 
-// OFFSET: %0x00679140
+// OFFSET: 0x00712480
 FMOD_RESULT F_CALLBACK SE3ChatSound::DSPReadCallback(FMOD_DSP_STATE* dspState, float* inBuffer, float* outBuffer, unsigned int length, int inChannels, int outChannels) {
     void* userdata;
     FMOD_RESULT result = reinterpret_cast<FMOD::DSP*>(dspState->instance)->getUserData(&userdata);
@@ -92,7 +92,7 @@ FMOD_RESULT F_CALLBACK SE3ChatSound::DSPReadCallback(FMOD_DSP_STATE* dspState, f
     return FMOD_OK;
 }
 
-// OFFSET: %0x006791D0
+// OFFSET: 0x00712510
 FMOD_RESULT F_CALLBACK SE3ChatSound::DSPSeekCallback(FMOD_DSP_STATE* dspState, unsigned int position) {
     void* userdata;
     FMOD_RESULT result = reinterpret_cast<FMOD::DSP*>(dspState->instance)->getUserData(&userdata);
@@ -112,7 +112,7 @@ FMOD_RESULT F_CALLBACK SE3ChatSound::DSPSeekCallback(FMOD_DSP_STATE* dspState, u
     return FMOD_OK;
 }
 
-// OFFSET: %0x00679220
+// OFFSET: 0x00712560/0x1403E4370
 void SE3::CaptureWork() {
     if (!s_capturing) {
         return;
@@ -182,7 +182,7 @@ static FMOD_RESULT F_CALLBACK MonitorDSPCallback(FMOD_DSP_STATE* dspState, float
     return FMOD_OK;
 }
 
-// OFFSET: %0x006793E0
+// OFFSET: 0x007129D0/0x1403E4750
 static FMOD::DSP* CreateMonitorDSP() {
     FMOD_DSP_DESCRIPTION description;
     memset(&description, 0, sizeof(description));
@@ -197,7 +197,7 @@ static FMOD::DSP* CreateMonitorDSP() {
     return s_monitorDSP;
 }
 
-// OFFSET: %0x00679470
+// OFFSET: 0x00712720
 static int32_t DriverNameMatches(FMOD::System* system, int32_t index, const char* name, int32_t output) {
     char driverName[512];
     driverName[0] = '\0';
@@ -211,7 +211,7 @@ static int32_t DriverNameMatches(FMOD::System* system, int32_t index, const char
     return _stricmp(driverName, name) == 0;
 }
 
-// OFFSET: %0x006794D0
+// OFFSET: 0x00712780
 static int32_t FindDriverIndex(FMOD::System* system, const char* name, int32_t index, int32_t output) {
     int32_t numDrivers = output ? SE3::GetNumOutputDrivers_Cached(system) : SE3::GetNumInputDrivers(system);
 
@@ -255,7 +255,7 @@ static void LogUsingDriver(int32_t index, const char* use, int32_t output, FMOD:
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, " - Using [%d] %s for %s", index, driverName, use);
 }
 
-// OFFSET: %0x00679590
+// OFFSET: 0x00712840/0x1403E4570
 bool SE3::IsCapturing() {
     bool recording = false;
 
@@ -268,7 +268,7 @@ bool SE3::IsCapturing() {
     return recording;
 }
 
-// OFFSET: %0x006795C0
+// OFFSET: 0x00712870/0x1403E45A0
 void SE3::StartCapture() {
     if (!SE3::sm_pChatSystem) {
         return;
@@ -333,7 +333,7 @@ void SE3::ActivatePrimaryCaptureCallback() {
 void SE3StreamCallbacks::Delete() {
 }
 
-// OFFSET: %0x006796C0
+// OFFSET: 0x00712970
 void SE3StreamCallbacks::DiscardSamples(uint32_t position, uint32_t count) {
     float buffer[1024];
 
@@ -350,7 +350,7 @@ void SE3StreamCallbacks::DiscardSamples(uint32_t position, uint32_t count) {
     }
 }
 
-// OFFSET: %0x00679720
+// OFFSET: 0x00712A60/0x1403E4820
 void SE3::StopCapture() {
     if (!SE3::sm_pChatSystem || !SE3::IsChatSoundInitialized()) {
         return;
@@ -386,7 +386,7 @@ void SE3::ShutDownCapture() {
     SE3::HeartBeat(NULL, NULL);
 }
 
-// OFFSET: %0x006799D0
+// OFFSET: 0x00712DB0/0x1403E4D40
 void SE3::DestroyChatSystem() {
     if (!SE3::sm_pChatSystem) {
         return;
@@ -430,7 +430,7 @@ void SE3::DestroyChatSystem() {
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, "=> Done Shutting Down Voice Chat");
 }
 
-// OFFSET: %0x00679AD0
+// OFFSET: 0x00712EA0/0x1403E4E50
 void SE3::InitCapture(int32_t& outputDriverIndex, const char* outputDriverName, int32_t& inputDriverIndex, const char* inputDriverName, float sampleRate, int32_t& hasInputDevices, SE3SOUNDQUALITY quality, SE3MIXMODE2 mixMode) {
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, " ");
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, "=> Setting up Voice Chat:");
@@ -652,7 +652,7 @@ failed:
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, "=>###########################################################################################");
 }
 
-// OFFSET: %0x0067A640
+// OFFSET: 0x00712B10/0x1403E48F0
 void SE3::VoiceChat_Play(uint32_t handle) {
     SE3ChatSound* sound = SE3::sm_ChatSoundObjectTable.Ptr(handle, s_chatLookupKey);
 
@@ -661,7 +661,7 @@ void SE3::VoiceChat_Play(uint32_t handle) {
     }
 }
 
-// OFFSET: %0x0067A670
+// OFFSET: 0x00712B70
 void SE3::VoiceChat_StopSound(uint32_t handle) {
     SE3ChatSound* sound = SE3::sm_ChatSoundObjectTable.Ptr(handle, s_chatLookupKey);
 
@@ -670,7 +670,7 @@ void SE3::VoiceChat_StopSound(uint32_t handle) {
     }
 }
 
-// OFFSET: %0x0067A6B0
+// OFFSET: 0x00712B40/0x1403E4950
 void SE3::VoiceChat_SetFrequencyScale(uint32_t handle, float scale) {
     SE3ChatSound* sound = SE3::sm_ChatSoundObjectTable.Ptr(handle, s_chatLookupKey);
 
@@ -703,7 +703,7 @@ SE3ChatSound::~SE3ChatSound() {
     }
 }
 
-// OFFSET: %0x0067AD60
+// OFFSET: 0x00714080/0x1403E6500
 int32_t SE3::CreateChatSound(SE3StreamCallbacks* callbacks, uint32_t* handle, FMOD::System* system) {
     if (!SE3::IsChatSoundInitialized()) {
         return SE3_ERR_CHAT_NOT_INITIALIZED;

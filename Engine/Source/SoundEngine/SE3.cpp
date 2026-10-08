@@ -17,6 +17,8 @@
 #include "Engine/Source/Storm/Source/SLock.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/SoundEmitterPillPointsRec.h"
+#include "WoW/Source/DB/Rec/SoundEmittersRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesAdvancedRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesFallbacksRec.h"
 #include "WoW/Source/DB/Rec/SoundEntriesRec.h"
@@ -58,7 +60,7 @@ static float s_speakerMixSide = 0.001f;
 static uint32_t* s_soundChunkList;
 
 // STATIC: %0x00D0D7A4
-static float sm_SoundKitDefs_ClosestAsyncObjectSortVal;
+static int32_t sm_SoundKitDefs_ClosestAsyncObjectSortVal;
 
 // STATIC: %0x00D0D7A8
 static char s_gameOutputDeviceName[256];
@@ -255,7 +257,7 @@ static void F_CALLBACK FSoundFreeCallback(void* ptr, FMOD_MEMORY_TYPE type) {
     SMemFree(ptr, "FMod FSoundFreeCallback", 0, 0);
 }
 
-// OFFSET: %0x0066CF10
+// OFFSET: 0x00705580
 static float F_CALLBACK RolloffCallback(FMOD_CHANNEL* channel, float distance) {
     float minDistance;
     float maxDistance;
@@ -305,7 +307,7 @@ FMOD_RESULT SE3::GetListenerPosition(C3Vector* position) {
     return SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(position), NULL, NULL, NULL);
 }
 
-// OFFSET: %0x0066D040
+// OFFSET: 0x007056B0/0x1403D2780
 void SE3SoundKitDef::BuildPath(char* path, int32_t size, int32_t index) {
     const char* filename = this->m_pSoundKitRec->m_file[index];
 
@@ -316,8 +318,8 @@ void SE3SoundKitDef::BuildPath(char* path, int32_t size, int32_t index) {
     }
 }
 
-// OFFSET: %0x0066D0C0
-static int32_t MyFileIsLocal(char* filename, int32_t priority) {
+// OFFSET: 0x00705730
+static int32_t MyFileIsLocal(char* filename) {
     if (OsPathCheckExtension(filename, "wav")) {
         if (SFile::FileHasHigherPriority(filename, "ogg", 260)) {
             return 1;
@@ -330,37 +332,72 @@ static int32_t MyFileIsLocal(char* filename, int32_t priority) {
     return isLocal && isLocal != 2;
 }
 
-// OFFSET: %0x0066D130
-static void SoundKitDefDownloadCancelled(void* param, CAsyncObject* object) {
-    SE3SoundKitDef* def = static_cast<SE3SoundKitDef*>(param);
-
-    for (int32_t i = 0; i < 10; i++) {
-        if (def->m_aAsyncObj[i] == object) {
-            def->m_aAsyncObj[i] = NULL;
-            def->m_downloaded[i] = 1;
-            break;
-        }
+// OFFSET: 0x00705790
+int32_t SE3SoundKitDef::IsLocal(int32_t index) {
+    if (!SFile::IsStreamingMode()) {
+        return 1;
     }
 
+    char path[260];
+    this->BuildPath(path, sizeof(path), index);
+    return MyFileIsLocal(path);
+}
+
+// OFFSET: 0x007057E0/0x1403D29E0
+static void SoundKitDefDownloadCancelled(CAsyncObject* object) {
+    SE3SoundKitDef* def = static_cast<SE3SoundKitDef*>(object->m_userArg);
+    def->m_pAsyncObj = NULL;
+    def->m_downloaded = 1;
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: %0x0066D180
-static void SoundKitDefDownloadFailed(void* param, CAsyncObject* object) {
-    SE3SoundKitDef* def = static_cast<SE3SoundKitDef*>(param);
-
-    for (int32_t i = 0; i < 10; i++) {
-        if (def->m_aAsyncObj[i] == object) {
-            def->m_aAsyncObj[i] = NULL;
-            def->m_downloaded[i] = 0;
-            break;
-        }
-    }
-
+// OFFSET: 0x00705810
+static void SoundKitDefDownloadFailed(CAsyncObject* object) {
+    SE3SoundKitDef* def = static_cast<SE3SoundKitDef*>(object->m_userArg);
+    def->m_pAsyncObj = NULL;
+    def->m_downloaded = 0;
     AsyncFileReadDestroyObject(object);
 }
 
-// OFFSET: %0x0066D1D0
+// OFFSET: 0x00705840/0x1403D28A0
+int32_t SE3SoundKitDef::SelectLocalFile(int32_t* index) {
+    int32_t i = 0;
+
+    if (this->m_nNumFiles <= 0) {
+        return 0;
+    }
+
+    while (SFile::IsStreamingMode()) {
+        char path[260];
+        this->BuildPath(path, sizeof(path), i);
+
+        if (OsPathCheckExtension(path, "wav")) {
+            if (SFile::FileHasHigherPriority(path, "ogg", 260)) {
+                break;
+            }
+
+            OsPathReplaceExtension(path, 260, path, "ogg");
+        }
+
+        int32_t isLocal = SFile::FileIsLocal(path);
+
+        if (isLocal && isLocal != 2) {
+            break;
+        }
+
+        if (++i >= this->m_nNumFiles) {
+            return 0;
+        }
+    }
+
+    if (index) {
+        *index = i;
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00705920
 static int32_t GetDownloadPriority(SE3BUS bus) {
     if (bus <= SE3BUS_SFX) {
         return 5;
@@ -373,7 +410,7 @@ static int32_t GetDownloadPriority(SE3BUS bus) {
     return 6;
 }
 
-// OFFSET: %0x0066D1F0
+// OFFSET: 0x00705940/0x1403D2C40
 void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callback)(void*, char*), const char* name) {
     if (sko && callback && name) {
         sko->m_fpCustomDSPChainCallback = callback;
@@ -382,7 +419,7 @@ void SE3::SetAttachCustomDSPChainCallback(SE3SoundKitObject* sko, void (*callbac
     }
 }
 
-// OFFSET: %0x0066D260
+// OFFSET: 0x007059B0
 void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel* channel) {
     if (!sko || !channel) {
         return;
@@ -394,7 +431,7 @@ void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel
         return;
     }
 
-    FMOD_REVERB_CHANNELPROPERTIES properties = { 0, 0, 0.25f, 1.5f, 1.0f, 0, 1.0f, 0, 0, 0, 0, 1.0f, FMOD_REVERB_CHANNELFLAGS_DEFAULT };
+    FMOD_REVERB_CHANNELPROPERTIES properties = { 0, 0, 0, 0, 0, 0.0f, 0, 0.25f, 1.5f, 1.0f, 0, 1.0f, 0, 0.0f, 0.0f, 0.0f, 1.0f, FMOD_REVERB_CHANNELFLAGS_DEFAULT };
     channel->setReverbProperties(&properties);
 
     if (mode & FMOD_2D) {
@@ -411,13 +448,18 @@ void SE3::SetReverbPropertiesAndSpeakerMix(SE3SoundKitObject* sko, FMOD::Channel
     }
 }
 
-// OFFSET: %0x0066D3F0
+// OFFSET: 0x00706D90
 void SE3SoundKitObject::Set3DPosition(const C3Vector& position) {
     this->m_position = position;
 
+    C3Vector offsetPosition;
+    offsetPosition.x = this->m_positionOffset.x + position.x;
+    offsetPosition.y = this->m_positionOffset.y + position.y;
+    offsetPosition.z = this->m_positionOffset.z + position.z;
+
     for (int32_t i = 0; i < 2; i++) {
         if (this->m_channels[i].m_pFMODChannel) {
-            this->m_channels[i].m_pFMODChannel->set3DAttributes(reinterpret_cast<const FMOD_VECTOR*>(&position), NULL);
+            this->m_channels[i].m_pFMODChannel->set3DAttributes(reinterpret_cast<const FMOD_VECTOR*>(&offsetPosition), NULL);
         }
     }
 }
@@ -440,7 +482,7 @@ int32_t SE3SoundKitObject::IsPlaying() {
     return 0;
 }
 
-// OFFSET: %0x0066D480
+// OFFSET: 0x00705B90/0x1403D2F60
 int32_t SE3SoundKitObject::IsVirtual() {
     int32_t i;
 
@@ -463,14 +505,9 @@ int32_t SE3SoundKitObject::IsVirtual() {
     return isVirtual;
 }
 
-// OFFSET: %0x0066D500
+// OFFSET: 0x00705C10
 uint32_t SE3::GetModeFlags(const C3Vector* position, const SE3SoundKitDef* def, SE3SoundKitProperties* properties) {
-    int32_t is3D = 1;
-
-    if (!position || (position->x == 0.0f && position->y == 0.0f && position->z == 0.0f)) {
-        is3D = 0;
-    }
-
+    int32_t is3D = position != NULL;
     uint32_t channelMode = 0;
 
     if (properties->m_software || !is3D) {
@@ -483,7 +520,7 @@ uint32_t SE3::GetModeFlags(const C3Vector* position, const SE3SoundKitDef* def, 
 
     switch (properties->m_usage) {
         case SE3USAGE_LOOPING:
-            if (def->m_pSoundKitRec->m_flags & 0x200) {
+            if (def && (def->m_pSoundKitRec->m_flags & 0x200)) {
                 mode |= FMOD_LOOP_NORMAL;
             } else {
                 mode |= FMOD_LOOP_OFF;
@@ -524,14 +561,14 @@ int32_t SE3::GetNumOutputDrivers_Cached(FMOD::System* system) {
     return numDrivers;
 }
 
-// OFFSET: %0x0066D5F0
+// OFFSET: 0x00705CE0/0x1403D30D0
 void SE3::InitializeDefaultSystemName() {
     if (!SE3::sm_sSystemDefaultName[0]) {
         SStrCopy(SE3::sm_sSystemDefaultName, FrameScript_GetText("SYSTEM_DEFAULT", -1, GENDER_NOT_APPLICABLE), sizeof(SE3::sm_sSystemDefaultName));
     }
 }
 
-// OFFSET: %0x0066D640
+// OFFSET: 0x00705D30/0x1403D3130
 int32_t SE3::GetOutputDriverName(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     if (index < 0) {
         index = 0;
@@ -555,7 +592,7 @@ int32_t SE3::GetOutputDriverName(int32_t index, char* name, int32_t nameLength, 
     return 1;
 }
 
-// OFFSET: %0x0066D710
+// OFFSET: 0x00705E00/0x1403D3240
 int32_t SE3::GetInputDriverName(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     if (index < 0) {
         index = 0;
@@ -575,12 +612,13 @@ int32_t SE3::GetInputDriverName(int32_t index, char* name, int32_t nameLength, F
     return 1;
 }
 
-// OFFSET: %0x0066D790
+// PROVEN: eb790341 IDENTICAL/NONE
+// OFFSET: 0x00705E80/0x1403D3340
 int32_t SE3::GetOutputDriverName_Cached(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     return SE3::GetOutputDriverName(index, name, nameLength, system);
 }
 
-// OFFSET: %0x0066D7A0
+// OFFSET: 0x00705E90/0x1403D3080
 int32_t SE3::GetNumInputDrivers(FMOD::System* system) {
     int32_t numDrivers = 0;
 
@@ -595,7 +633,8 @@ int32_t SE3::GetNumInputDrivers(FMOD::System* system) {
     return numDrivers + 1;
 }
 
-// OFFSET: %0x0066D7D0
+// PROVEN: 5c41f020 IDENTICAL/NONE
+// OFFSET: 0x00705EC0/0x1403D3350
 int32_t SE3::GetInputDriverName_Cached(int32_t index, char* name, int32_t nameLength, FMOD::System* system) {
     return SE3::GetInputDriverName(index, name, nameLength, system);
 }
@@ -606,12 +645,14 @@ int32_t SE3::IsChatSoundInitialized() {
     return SE3::sm_bCaptureInitialized;
 }
 
-// OFFSET: %0x0066D7F0
+// OFFSET: 0x00705EE0/0x1403D3370
 float SE3::SoundBusGetSuppressedVolumeScalar(SE3BUS bus, uint32_t uid) {
     float scalar = 1.0f;
 
     if (SE3::SuppressorIsPresent()) {
-        if (SE3::IsBusEqualOrChild(bus, SE3BUS_SFX)) {
+        if (SE3::IsBusEqualOrChild(bus, SE3BUS_DIALOG)) {
+            scalar = SE3::GetSuppressionScalar(SE3BUS_DIALOG, uid);
+        } else if (SE3::IsBusEqualOrChild(bus, SE3BUS_SFX)) {
             scalar = SE3::GetSuppressionScalar(SE3BUS_SFX, uid);
         } else if (SE3::IsBusEqualOrChild(bus, SE3BUS_MUSIC)) {
             scalar = SE3::GetSuppressionScalar(SE3BUS_MUSIC, uid);
@@ -623,7 +664,8 @@ float SE3::SoundBusGetSuppressedVolumeScalar(SE3BUS bus, uint32_t uid) {
     return SE3::SoundBusGetVolume(bus) * scalar;
 }
 
-// OFFSET: %0x0066D870
+// PROVEN: bbaf56d1 IDENTICAL/NONE
+// OFFSET: 0x00705F80
 float SE3ChatSound::GetScaledVolume() {
     return SE3::SoundBusGetSuppressedVolumeScalar(this->m_bus, this->m_uUID) * this->m_volume;
 }
@@ -634,7 +676,7 @@ char* SE3::GetCurrentGameOutputDeviceName() {
     return s_gameOutputDeviceName;
 }
 
-// OFFSET: %0x0066D8A0
+// OFFSET: 0x00705FB0/0x1403D3440
 uint32_t SE3::EmitterManagerGetSoundChunkHandle(const C3Vector& position) {
     uint32_t x = 0;
     uint32_t y = 0;
@@ -643,7 +685,13 @@ uint32_t SE3::EmitterManagerGetSoundChunkHandle(const C3Vector& position) {
     return y | (x << 16);
 }
 
-// OFFSET: %0x0066D8D0
+// PROVEN: 9b7797cd IDENTICAL/NONE
+// OFFSET: 0x00705FE0/0x1403D3470
+static int ComparePillPoints(const void* a, const void* b) {
+    return static_cast<const SoundEmitterPillPointsRec*>(a)->m_soundEmittersID - static_cast<const SoundEmitterPillPointsRec*>(b)->m_soundEmittersID;
+}
+
+// OFFSET: 0x00706000/0x1403D3480
 void SE3::EmitterManagerBuildSoundChunkList(uint32_t x, uint32_t y) {
     uint32_t radius = s_chunkRadius;
     uint32_t diameter = 2 * s_chunkRadius + 1;
@@ -685,22 +733,21 @@ void SE3::EmitterManagerBuildSoundChunkList(uint32_t x, uint32_t y) {
     s_soundChunkList[count] = 0x75307530;
 }
 
-// OFFSET: %0x0066D990
-int32_t SE3::HasClosestAsyncObject() {
-    return sm_SoundKitDefs_ClosestAsyncObject != NULL;
+// PROVEN: 1fd55391 IDENTICAL/NONE
+// OFFSET: 0x007060C0/0x1403D3550
+static void StreamingCallback(void* param) {
+    AsyncFileReadLinkToPriority(static_cast<CAsyncObject*>(param), 1);
 }
 
-// OFFSET: %0x0066D9A0
-CAsyncObject* SE3::GetClosestAsyncObject() {
-    return sm_SoundKitDefs_ClosestAsyncObject;
+// OFFSET: 0x007060E0/0x1403D3560
+void SE3::StreamingUpdate() {
+    if (sm_SoundKitDefs_ClosestAsyncObject) {
+        AsyncFileReadAddStreamingObject(StreamingCallback, sm_SoundKitDefs_ClosestAsyncObject, sm_SoundKitDefs_ClosestAsyncObjectSortVal);
+    }
 }
 
-// OFFSET: %0x0066D9B0
-float SE3::GetClosestAsyncObjectSortVal() {
-    return sm_SoundKitDefs_ClosestAsyncObjectSortVal;
-}
-
-// OFFSET: %0x0066DB10
+// PROVEN: f716d35e IDENTICAL/NONE
+// OFFSET: 0x00706250
 static int32_t DriverNameMatches(FMOD::System* system, int32_t index, const char* name) {
     char driverName[512];
     driverName[0] = '\0';
@@ -709,7 +756,7 @@ static int32_t DriverNameMatches(FMOD::System* system, int32_t index, const char
     return _stricmp(driverName, name) == 0;
 }
 
-// OFFSET: %0x0066DB50
+// OFFSET: 0x00706290/0x1403D3770
 static int32_t FindDriverIndex(FMOD::System* system, const char* name, int32_t index) {
     int32_t numDrivers = 0;
     int32_t count = 0;
@@ -746,7 +793,7 @@ static int32_t FindDriverIndex(FMOD::System* system, const char* name, int32_t i
     return 0;
 }
 
-// OFFSET: %0x0066DC00
+// OFFSET: 0x00706340/0x1403D3860
 FMOD_RESULT SE3::SetDrivers(SE3EngineInitParams* params, FMOD::System* system) {
     int32_t index = FindDriverIndex(system, params->m_outputDriverName, params->m_outputDriverIndex);
     int32_t driver = index ? index - 1 : 0;
@@ -783,9 +830,10 @@ FMOD_RESULT SE3::SetDrivers(SE3EngineInitParams* params, FMOD::System* system) {
     return result;
 }
 
-// OFFSET: %0x0066DD20
+// OFFSET: 0x00706460/0x1403D39B0
 int32_t SE3::GetFallbackSoundKitID(int32_t soundKitID) {
     int32_t high = g_soundEntriesFallbacksDB.m_numRecords;
+    SoundEntriesFallbacksRec* records = g_soundEntriesFallbacksDB.GetRecordByIndex(0);
     int32_t low = 0;
 
     if (high <= 0) {
@@ -795,21 +843,21 @@ int32_t SE3::GetFallbackSoundKitID(int32_t soundKitID) {
     do {
         int32_t mid = (high + low) / 2;
 
-        if (g_soundEntriesFallbacksDB.m_records[mid].m_soundEntriesID >= soundKitID) {
+        if (records[mid].m_soundEntriesID >= soundKitID) {
             high = mid;
         } else {
             low = mid + 1;
         }
     } while (low < high);
 
-    if (low < g_soundEntriesFallbacksDB.m_numRecords && g_soundEntriesFallbacksDB.m_records[low].m_soundEntriesID == soundKitID) {
-        return g_soundEntriesFallbacksDB.m_records[low].m_fallbackSoundEntriesID;
+    if (low < g_soundEntriesFallbacksDB.m_numRecords && records[low].m_soundEntriesID == soundKitID) {
+        return records[low].m_fallbackSoundEntriesID;
     }
 
     return 0;
 }
 
-// OFFSET: %0x0066DD90
+// OFFSET: 0x007064D0/0x1403D3A30
 void SE3::InitGameSystemForSilence() {
     SE3::sm_eGameSystemOutputType = FMOD_OUTPUTTYPE_NOSOUND;
     FMOD::System_Create(&SE3::sm_pGameSystem);
@@ -819,9 +867,8 @@ void SE3::InitGameSystemForSilence() {
     SE3::Log_Write(__LINE__, __FILE__, FMOD_OK, " - ##############################");
 }
 
-// OFFSET: %0x0066DE00
+// OFFSET: 0x00706540/0x1403D3AB0
 void SE3SoundKitProperties::ResetToDefaults() {
-    this->unk_00C4 = -1;
     this->m_nIndexOverride = -1;
     this->unk_0004 = -1.0f;
     this->unk_002C = -1.0f;
@@ -858,7 +905,7 @@ void SE3SoundKitProperties::ResetToDefaults() {
     this->m_priority = 128;
 }
 
-// OFFSET: %0x0066DEC0
+// OFFSET: 0x00706600/0x1403D3B60
 static int32_t RandomBetween(int32_t min, int32_t max) {
     if (max > min) {
         return min + CRandom::dice_(max - min, g_rndSeed);
@@ -867,160 +914,104 @@ static int32_t RandomBetween(int32_t min, int32_t max) {
     return max;
 }
 
-// OFFSET: %0x0066DEF0
-int32_t SE3SoundKitDef::IsLocal(const SE3SoundKitProperties* properties, int32_t index) {
-    if (!SFile::IsStreamingMode()) {
-        return 0;
-    }
-
-    int32_t priority = GetDownloadPriority(properties->m_bus);
-
-    char path[260];
-    this->BuildPath(path, sizeof(path), index);
-
-    return MyFileIsLocal(path, priority) ? 0 : SE3_ERR_NOT_LOCAL;
-}
-
-// OFFSET: %0x0066DF60
-int32_t SE3SoundKitDef::SelectLocalFile(const SE3SoundKitProperties* properties, int32_t* index) {
-    for (int32_t i = 0; i < this->m_nNumFiles; i++) {
-        int32_t priority = GetDownloadPriority(properties->m_bus);
-
-        char path[260];
-        this->BuildPath(path, sizeof(path), i);
-
-        if (OsPathCheckExtension(path, "wav")) {
-            if (SFile::FileHasHigherPriority(path, "ogg", 260)) {
-                if (index) {
-                    *index = i;
-                }
-
-                return 1;
-            }
-
-            OsPathReplaceExtension(path, 260, path, "ogg");
-        }
-
-        int32_t isLocal = SFile::FileIsLocal(path);
-
-        if (isLocal && isLocal != 2) {
-            if (index) {
-                *index = i;
-            }
-
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: %0x0066E0B0
-int32_t SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int32_t* index) {
-    int32_t indexOverride = properties->m_nIndexOverride;
+// OFFSET: 0x00706630/0x1403D3BB0
+void SE3SoundKitDef::SelectNextFile(const SE3SoundKitProperties* properties, int32_t* index) {
+    *index = -1;
     uint32_t selectMode = properties->m_selectMode;
 
     if (selectMode > 2) {
-        return SE3_ERR_SELECT_FILE;
+        SE3::SoundKitDefLog("The kit %s has invalidate play style:%d!", this->m_pSoundKitRec->m_name, selectMode);
+        return;
     }
 
     int32_t numFiles = this->m_nNumFiles;
 
     if (numFiles <= 0) {
-        return SE3_ERR_SELECT_FILE;
+        SE3::SoundKitDefLog("The kit %s has no sound variant files to select from!", this->m_pSoundKitRec->m_name);
+        return;
     }
 
-    if (indexOverride > -1) {
-        int32_t selected = numFiles - 1;
+    if (properties->m_nIndexOverride > -1) {
+        int32_t selected = properties->m_nIndexOverride;
 
-        if (indexOverride < selected) {
-            selected = indexOverride;
+        if (selected >= numFiles - 1) {
+            selected = numFiles - 1;
         }
 
+        *index = selected;
         this->m_lastIndex = selected;
-
-        if (index) {
-            *index = selected;
-        }
-
-        return this->IsLocal(properties, selected);
+        return;
     }
 
     if (numFiles == 1) {
+        *index = 0;
         this->m_lastIndex = 0;
-
-        if (index) {
-            *index = 0;
-        }
-
-        return this->IsLocal(properties, 0);
+        return;
     }
 
-    uint32_t total = 0;
-    int32_t pass = 0;
+    uint32_t total;
 
-    while (true) {
+    for (int32_t pass = 0; ; pass++) {
         total = 0;
 
         if (pass == 2) {
-            this->m_lastIndex = 31;
+            this->m_lastIndex = -1;
         } else if (pass >= 3) {
-            return SE3_ERR_SELECT_FILE;
+            SE3::SoundKitDefLog("The kit %s has multiple files of zero weight!", this->m_pSoundKitRec->m_name);
+            return;
         }
 
-        int32_t count = this->m_nNumFiles;
-
-        if (count > 0) {
-            for (int32_t i = 0; i < this->m_nNumFiles; i++) {
-                if (i != this->m_lastIndex) {
-                    total += this->m_weights[i];
-                }
+        for (int32_t i = 0; i < this->m_nNumFiles; i++) {
+            if (i != this->m_lastIndex) {
+                total += this->m_weights[i];
             }
+        }
 
-            if (total) {
+        if (total) {
+            break;
+        }
+
+        switch (selectMode) {
+            case 0:
+                memset(this->m_weights, 1, sizeof(this->m_weights));
                 break;
-            }
-        }
 
-        if (selectMode) {
-            for (int32_t i = 0; i < this->m_nNumFiles; i++) {
-                this->m_weights[i] = static_cast<uint8_t>(this->m_pSoundKitRec->m_freq[i]);
-            }
-        } else {
-            memset(this->m_weights, 1, sizeof(this->m_weights));
+            case 1:
+            case 2:
+                for (int32_t i = 0; i < this->m_nNumFiles; i++) {
+                    this->m_weights[i] = static_cast<uint8_t>(this->m_pSoundKitRec->m_freq[i]);
+                }
+                break;
         }
-
-        pass++;
     }
 
-    int32_t random = total;
+    int32_t random = 0;
 
     if (selectMode) {
         random = CRandom::dice_(total, g_rndSeed);
     }
 
-    for (int32_t i = 0; i < this->m_nNumFiles; i++) {
+    int32_t i;
+
+    for (i = 0; i < this->m_nNumFiles; i++) {
         if (i != this->m_lastIndex) {
             random -= this->m_weights[i];
         }
 
         if (random < 0) {
             this->m_weights[i] = 0;
+            *index = i;
             this->m_lastIndex = i;
 
             if (selectMode == 1) {
                 memset(this->m_weights, 0, sizeof(this->m_weights));
             }
 
-            if (index) {
-                *index = i;
-            }
-
-            return this->IsLocal(properties, i);
+            return;
         }
     }
 
-    return SE3_ERR_NO_FILE;
+    SE3::SoundKitDefLog("The kit %s fail to select a variant!", this->m_pSoundKitRec->m_name);
 }
 
 // PROVEN: 0342c584 IDENTICAL/NONE
@@ -1033,7 +1024,8 @@ SE3SoundKitDef* SE3::GetSoundKitDef(int32_t soundKitID) {
     return sm_SoundKitDefArray[soundKitID];
 }
 
-// OFFSET: %0x0066E2F0
+// PROVEN: 09c24d5e IDENTICAL/NONE
+// OFFSET: 0x00706880/0x1403D3F10
 int32_t SE3::GetNumSoundsInSoundKit(int32_t soundKitID) {
     SE3SoundKitDef* def;
 
@@ -1044,7 +1036,7 @@ int32_t SE3::GetNumSoundsInSoundKit(int32_t soundKitID) {
     return 0;
 }
 
-// OFFSET: %0x0066E320
+// OFFSET: 0x007068B0/0x1403D3F40
 int32_t SE3::IsLooping_ByDef(int32_t soundKitID) {
     SE3SoundKitDef* def;
 
@@ -1055,7 +1047,7 @@ int32_t SE3::IsLooping_ByDef(int32_t soundKitID) {
     return 0;
 }
 
-// OFFSET: %0x0066E360
+// OFFSET: 0x007068F0/0x1403D3F80
 int32_t SE3::IsLoopingOrPeriodic_ByDef(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count())) {
         return 0;
@@ -1082,7 +1074,7 @@ int32_t SE3::IsLoopingOrPeriodic_ByDef(int32_t soundKitID) {
     return def->m_pSoundKitRec->m_flags & 0x200;
 }
 
-// OFFSET: %0x0066E3B0
+// OFFSET: 0x00706A40
 static int32_t IsBeyondListenerRange(const C3Vector* position, float range, float* distanceSquared) {
     C3Vector listener;
     SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(&listener), NULL, NULL, NULL);
@@ -1093,7 +1085,7 @@ static int32_t IsBeyondListenerRange(const C3Vector* position, float range, floa
     return distSq > range * range;
 }
 
-// OFFSET: %0x0066E450
+// OFFSET: 0x00706C30
 static void PeriodicSoundFinishedCallback(SE3SoundKitObject* sko) {
     if (sko) {
         const SoundEntriesAdvancedRec* advancedRec = sko->m_pSoundKitDef->m_pAdvancedSoundKitRec;
@@ -1104,7 +1096,21 @@ static void PeriodicSoundFinishedCallback(SE3SoundKitObject* sko) {
     }
 }
 
-// OFFSET: %0x0066E4A0
+// PROVEN: bc2fc375 IDENTICAL/NONE
+// OFFSET: 0x00706C90
+float SE3SoundKitObject::GetChannelVolume(int32_t index) {
+    float busVolume = SE3::SoundBusGetSuppressedVolumeScalar(this->m_properties.m_bus, this->m_uUID);
+    float recVolume = 1.0f;
+
+    if (this->m_pSoundKitDef && this->m_pSoundKitDef->m_pSoundKitRec) {
+        recVolume = this->m_pSoundKitDef->m_pSoundKitRec->m_volumeFloat;
+    }
+
+    return this->m_channels[index].m_fadeVolume * this->m_fTimeOfDayScalar * this->m_properties.m_volume * this->m_randomVolume * this->m_fadeVolume * recVolume * busVolume;
+}
+
+// PROVEN: cc44c4e8 IDENTICAL/NONE
+// OFFSET: 0x00706D00/0x1403D4230
 void SE3SoundKitObject::UpdateVolume() {
     for (int32_t i = 0; i < 2; i++) {
         SE3SoundChannel* channel = &this->m_channels[i];
@@ -1122,7 +1128,7 @@ void SE3SoundKitObject::UpdateVolume() {
     }
 }
 
-// OFFSET: %0x0066E530
+// OFFSET: 0x00706E10/0x1403D42E0
 void SE3::SetNewSoundKitObjectProperties(SE3SoundKitObject* sko, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t modeFlags) {
     sko->m_properties.m_fadeInTime = properties->m_fadeInTime;
     sko->m_properties.m_fadeOutTime = properties->m_fadeOutTime;
@@ -1169,7 +1175,8 @@ void SE3::SetNewSoundKitObjectProperties(SE3SoundKitObject* sko, const C3Vector*
     }
 }
 
-// OFFSET: %0x0066E650
+// PROVEN: 7cfe25ca IDENTICAL/NONE
+// OFFSET: 0x00706F50/0x1403D4440
 int32_t SE3::GetSoundKitUsage(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count())) {
         return SE3USAGE_ONESHOT;
@@ -1196,7 +1203,7 @@ int32_t SE3::GetSoundKitUsage(int32_t soundKitID) {
     return SE3USAGE_ONESHOT;
 }
 
-// OFFSET: %0x0066E6A0
+// OFFSET: 0x00706FA0/0x1403D4490
 int32_t SE3::ResetSoundKitOrder(int32_t soundKitID) {
     if (soundKitID >= static_cast<int32_t>(sm_SoundKitDefArray.Count())) {
         return SE3_ERR_INVALID_KIT;
@@ -1217,12 +1224,12 @@ int32_t SE3::ResetSoundKitOrder(int32_t soundKitID) {
     }
 
     memset(def->m_weights, 0, sizeof(def->m_weights));
-    def->m_lastIndex = 31;
+    def->m_lastIndex = -1;
 
     return SE3_OK;
 }
 
-// OFFSET: %0x0066E7C0
+// OFFSET: 0x007071B0/0x1403D4840
 void SE3::TrimCache() {
     while (SE3::sm_SoundCache_Stats_TotalSizeInBytes > SE3::sm_nMaxCacheSizeInBytes) {
         SE3WaveDataNode* node = SE3::sm_SoundCacheUnreferenced.Tail();
@@ -1236,7 +1243,7 @@ void SE3::TrimCache() {
     }
 }
 
-// OFFSET: %0x0066E880
+// OFFSET: 0x00707270
 void SE3::ReleaseUnusedStreams() {
     SE3WaveDataNode* node = SE3::sm_Streams.Head();
 
@@ -1251,7 +1258,7 @@ void SE3::ReleaseUnusedStreams() {
     }
 }
 
-// OFFSET: %0x0066E8C0
+// OFFSET: 0x007072B0
 void SE3::InitSoundKitDefArray(uint32_t maxID) {
     sm_SoundKitDefArray.SetCount(maxID + 1);
     memset(sm_SoundKitDefArray.Ptr(), 0, (maxID + 1) * sizeof(SE3SoundKitDef*));
@@ -1261,7 +1268,7 @@ void SE3::InitSoundKitDefArray(uint32_t maxID) {
     }
 }
 
-// OFFSET: %0x0066E960
+// OFFSET: 0x00707350/0x1403D4E50
 static void OutWithTheOldInWithTheNew(SE3SoundKitObject* sko, uint32_t waveDataID) {
     int32_t stopped = 0;
 
@@ -1353,7 +1360,7 @@ int32_t SE3::ShouldSoundPlay(SE3SoundKitDef* def, SE3SoundKitProperties* propert
     return SE3::SoundBusIsFull(properties->m_bus) ? SE3_ERR_BUS_FULL : SE3_OK;
 }
 
-// OFFSET: %0x0066EC30
+// OFFSET: 0x00707420/0x1403D5A20
 int32_t SE3::IsTooCloseToExistingSoundKit(int32_t soundKitID, const C3Vector& position) {
     for (SE3SoundKitObject* sko = sm_SoundKitObjects_Loading.Head(); sko; sko = sm_SoundKitObjects_Loading.Next(sko)) {
         if (sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec && sko->m_pSoundKitDef->m_pSoundKitRec->m_id == soundKitID) {
@@ -1391,7 +1398,7 @@ int32_t SE3::IsTooCloseToExistingSoundKit(int32_t soundKitID, const C3Vector& po
     return 0;
 }
 
-// OFFSET: %0x0066EDD0
+// OFFSET: 0x007075C0
 static FMOD_RESULT F_CALLBACK DeviceChangedCallback(FMOD_SYSTEM* system, FMOD_SYSTEM_CALLBACKTYPE type, void* commanddata1, void* commanddata2) {
     if (type != FMOD_SYSTEM_CALLBACKTYPE_DEVICELISTCHANGED || !s_deviceChangeCallback) {
         return FMOD_OK;
@@ -1423,14 +1430,14 @@ static FMOD_RESULT F_CALLBACK DeviceChangedCallback(FMOD_SYSTEM* system, FMOD_SY
     return FMOD_OK;
 }
 
-// OFFSET: %0x0066F010
+// OFFSET: 0x00707800/0x1403D5F10
 void SE3::SetDeviceChangeCallback(void (*callback)()) {
     s_deviceChangeCallback = callback;
     FMOD_RESULT result = SE3::sm_pGameSystem->setCallback(FMOD_SYSTEM_CALLBACKTYPE_DEVICELISTCHANGED, DeviceChangedCallback);
     SE3::Log_Write(__LINE__, __FILE__, result, " - Setting device callback");
 }
 
-// OFFSET: %0x0066F0C0
+// OFFSET: 0x00707B00/0x1403D4930
 void SE3::ProcessFadeList(uint32_t elapsed) {
     SE3SoundKitObject* sko = sm_SoundKitObjects_FadeList.Head();
 
@@ -1490,7 +1497,7 @@ void SE3::ProcessFadeList(uint32_t elapsed) {
     }
 }
 
-// OFFSET: %0x0066F350
+// OFFSET: 0x00707D90/0x1403D6130
 void SE3::UpdateVolumes() {
     for (SE3SoundKitObject* sko = SE3::sm_SoundKitObjects.Head(); sko; sko = SE3::sm_SoundKitObjects.Next(sko)) {
         sko->UpdateVolume();
@@ -1503,10 +1510,11 @@ void SE3::UpdateVolumes() {
     }
 }
 
-// OFFSET: %0x0066F3D0
+// OFFSET: 0x00707E10
 SE3SoundKitDef::SE3SoundKitDef() {
     this->m_nNumFiles = 0;
     memset(this->m_weights, 0, sizeof(this->m_weights));
+    this->m_lastIndex = -1;
     this->m_pSoundGroup = NULL;
     this->m_pSoundKitRec = NULL;
     this->m_pAdvancedSoundKitRec = NULL;
@@ -1514,15 +1522,12 @@ SE3SoundKitDef::SE3SoundKitDef() {
     this->m_timeOfDay[1] = 0;
     this->m_timeOfDay[2] = 0;
     this->m_timeOfDay[3] = 0;
-    this->m_lastIndex = 31;
-
-    for (int32_t i = 0; i < 10; i++) {
-        this->m_aAsyncObj[i] = NULL;
-        this->m_downloaded[i] = 0;
-    }
+    this->m_pAsyncObj = NULL;
+    this->m_downloaded = 0;
+    this->m_nPlayingCount = 0;
 }
 
-// OFFSET: %0x0066F450
+// OFFSET: 0x00707E60/0x1403D61C0
 SE3SoundKitDef::~SE3SoundKitDef() {
     if (this->m_ownsRecords) {
         SoundEntriesRec* rec = const_cast<SoundEntriesRec*>(this->m_pSoundKitRec);
@@ -1548,10 +1553,6 @@ SE3SoundKitDef::~SE3SoundKitDef() {
         SoundEntriesAdvancedRec* advancedRec = const_cast<SoundEntriesAdvancedRec*>(this->m_pAdvancedSoundKitRec);
 
         if (advancedRec) {
-            if (advancedRec->m_name) {
-                SMemFree(const_cast<char*>(advancedRec->m_name), __FILE__, __LINE__, 0);
-            }
-
             SMemFree(advancedRec, __FILE__, __LINE__, 0);
         }
     }
@@ -1560,9 +1561,11 @@ SE3SoundKitDef::~SE3SoundKitDef() {
         this->m_pSoundGroup->release();
         this->m_pSoundGroup = NULL;
     }
+
+    this->m_pAsyncObj = NULL;
 }
 
-// OFFSET: %0x0066F560
+// OFFSET: 0x00707F80/0x1403D4DA0
 static void FadeInNow(SE3SoundKitObject* sko, const char* file, int32_t line, const char* function) {
     sko->m_fadeState = SE3FADE_IN;
     SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Fade in NOW (fade time %d ms) - Link to sm_SoundKitObjects_FadeList\ncalled from\n%s(%d):\t%s", sko->m_properties.m_fadeInTime, file, line, function);
@@ -1576,7 +1579,7 @@ static void FadeOutNow(SE3SoundKitObject* sko, const char* file, int32_t line, c
     sm_SoundKitObjects_FadeList.LinkToTail(sko);
 }
 
-// OFFSET: %0x0066F5B0
+// OFFSET: 0x00708010/0x1403D4F30
 void SE3::StopOrFadeOut(SE3SoundKitObject* sko, int32_t fadeOutTime, const char* file, int32_t line, const char* function) {
     if (fadeOutTime >= 0) {
         sko->m_properties.m_fadeOutTime = fadeOutTime;
@@ -1610,7 +1613,7 @@ void SE3::StopOrFadeOut(SE3SoundKitObject* sko, int32_t fadeOutTime, const char*
     }
 }
 
-// OFFSET: %0x0066F710
+// OFFSET: 0x00708250/0x1403D51E0
 void SE3::ManageOutOfRangeSounds(int32_t elapsed) {
     static int32_t s_timer;
 
@@ -1642,7 +1645,7 @@ void SE3::ManageOutOfRangeSounds(int32_t elapsed) {
     }
 }
 
-// OFFSET: %0x0066F860
+// OFFSET: 0x00708420/0x1403D52E0
 void SE3::SoundKitObjects_Loading_Delete(uint32_t waveDataID) {
     SE3SoundKitObject* sko = sm_SoundKitObjects_Loading.Head();
 
@@ -1670,7 +1673,7 @@ void SE3::SoundKitObjects_Loading_Delete(uint32_t waveDataID) {
     }
 }
 
-// OFFSET: %0x0066F990
+// OFFSET: 0x00708570/0x1403D5470
 void SE3::SoundKitObjects_HandleWaveDataDelete(uint32_t waveDataID) {
     SE3SoundKitObject* sko = sm_SoundKitObjects_Loading.Head();
 
@@ -1748,7 +1751,7 @@ void SE3::SoundKitObjects_HandleWaveDataDelete(uint32_t waveDataID) {
     }
 }
 
-// OFFSET: %0x0066FD00
+// OFFSET: 0x007088E0/0x1403D5890
 void SE3::SoundKitObjects_Loading_Ready(uint32_t waveDataID) {
     if (SE3::sm_bShuttingDown) {
         return;
@@ -1772,7 +1775,8 @@ void SE3::SoundKitObjects_Loading_Ready(uint32_t waveDataID) {
     }
 }
 
-// OFFSET: %0x0066FE10
+// PROVEN: 0b0166a1 IDENTICAL/NONE
+// OFFSET: 0x007089F0/0x1403D59E0
 void SE3::CacheEventCallback(SE3CACHEEVENT event, uint32_t waveDataID) {
     switch (event) {
         case SE3CACHEEVENT_LOADING_FAILED:
@@ -1789,7 +1793,7 @@ void SE3::CacheEventCallback(SE3CACHEEVENT event, uint32_t waveDataID) {
     }
 }
 
-// OFFSET: %0x00670380
+// OFFSET: 0x00709130/0x1403D6F10
 SE3SoundKitObject::SE3SoundKitObject() {
     this->m_uUID = ++SE3::sm_uNextUniqueID;
     this->m_pMySKOL = NULL;
@@ -1797,24 +1801,28 @@ SE3SoundKitObject::SE3SoundKitObject() {
     this->m_position.x = 0.0f;
     this->m_position.y = 0.0f;
     this->m_position.z = 0.0f;
+    this->m_positionOffset.x = 0.0f;
+    this->m_positionOffset.y = 0.0f;
+    this->m_positionOffset.z = 0.0f;
     this->m_notCacheable = 0;
     this->m_reverb = 1;
     this->m_bit2 = 0;
-    this->unk_0060 = 0;
-    this->unk_0064 = 0;
+    this->m_hasPosition = 0;
+    this->unk_006C = 0;
+    this->unk_0070 = 0;
     this->m_modeFlags = 0;
     this->m_fadeState = SE3FADE_NONE;
     this->m_fadeVolume = 1.0f;
     this->m_fpPlayFinishedCallback = NULL;
     this->m_periodicTimer = 0;
     this->m_pSoundKitDef = NULL;
-    this->unk_0088 = 0;
-    this->unk_008C = 0;
+    this->unk_0098 = 0;
+    this->unk_009C = 0;
     this->m_fpCustomDSPChainCallback = NULL;
     this->m_sCustomDSPChainName = NULL;
     this->m_priority = 128;
     this->m_frequencyScale = 0.0f;
-    this->unk_0174 = 0;
+    this->unk_0180 = 0;
     this->m_fTimeOfDayScalar = 1.0f;
     this->m_timeOfDayOffset = 0;
     this->m_virtualTime = 0;
@@ -1822,11 +1830,11 @@ SE3SoundKitObject::SE3SoundKitObject() {
     SE3::SoundKitObjectLog(this, __FILE__, __LINE__, "Created() AS Handle [%d]", this->m_uUID);
 }
 
-// OFFSET: %0x00670510
+// OFFSET: 0x007092E0/0x1403D7130
 SE3WaveDataNode::~SE3WaveDataNode() {
 }
 
-// OFFSET: %0x00670590
+// OFFSET: 0x00709530/0x1403D7E20
 SE3SoundKitObject::~SE3SoundKitObject() {
     SE3::UnregisterSuppressor(this->m_uUID);
 
@@ -1836,15 +1844,13 @@ SE3SoundKitObject::~SE3SoundKitObject() {
     }
 }
 
-// OFFSET: %0x00670790
+// OFFSET: 0x00709730/0x1403D8120
 void SE3::FreeSoundKitDefList() {
     for (uint32_t i = 0; i < sm_SoundKitDefArray.Count(); i++) {
         if (sm_SoundKitDefArray[i]) {
-            for (int32_t j = 0; j < 10; j++) {
-                if (sm_SoundKitDefArray[i]->m_aAsyncObj[j]) {
-                    AsyncFileReadCancel(sm_SoundKitDefArray[i]->m_aAsyncObj[j], DefaultAsyncObjectCleanupCallback);
-                    sm_SoundKitDefArray[i]->m_aAsyncObj[j] = NULL;
-                }
+            if (sm_SoundKitDefArray[i]->m_pAsyncObj) {
+                AsyncFileReadCancel(sm_SoundKitDefArray[i]->m_pAsyncObj, DefaultAsyncObjectCleanupCallback);
+                sm_SoundKitDefArray[i]->m_pAsyncObj = NULL;
             }
 
             delete sm_SoundKitDefArray[i];
@@ -1855,22 +1861,22 @@ void SE3::FreeSoundKitDefList() {
     s_soundKitLookup.Clear();
 }
 
-// OFFSET: %0x006708A0
-void SE3::StopAllSounds(SE3BUS bus, float fadeOutTime) {
+// OFFSET: 0x00709830/0x1403D6370
+void SE3::StopAllSounds(SE3BUS bus, int32_t fadeOutTime) {
     SE3SoundKitObject* sko = SE3::sm_SoundKitObjects.Head();
 
     while (sko) {
         SE3SoundKitObject* next = SE3::sm_SoundKitObjects.Next(sko);
 
         if (SE3::IsBusEqualOrChild(sko->m_properties.m_bus, bus)) {
-            if (fadeOutTime <= 0.0f) {
+            if (fadeOutTime <= 0) {
                 for (int32_t i = 0; i < 2; i++) {
                     if (sko->m_channels[i].m_pFMODChannel) {
                         sko->m_channels[i].m_pFMODChannel->stop();
                     }
                 }
             } else {
-                sko->m_properties.m_fadeOutTime = static_cast<int32_t>(fadeOutTime * 1000.0f);
+                sko->m_properties.m_fadeOutTime = fadeOutTime;
                 FadeOutNow(sko, __FILE__, __LINE__, "SE3::StopAllSounds");
             }
         }
@@ -1921,7 +1927,7 @@ void SE3::StopAllSounds(SE3BUS bus, float fadeOutTime) {
     }
 }
 
-// OFFSET: %0x00671230
+// OFFSET: 0x0070A270/0x1403D9910
 void SE3::ProcessSoundKitObjectDeleteList() {
     SE3SoundKitObject* sko = sm_SoundKitObjects_DeleteList.Head();
 
@@ -1938,7 +1944,28 @@ void SE3::ProcessSoundKitObjectDeleteList() {
     }
 }
 
-// OFFSET: %0x006712C0
+// PROVEN: 3528ff77 IDENTICAL/NONE
+// OFFSET: 0x0070A300/0x1403D9A60
+static SE3StreamInfo* CreateStreamInfo(const uint8_t* key, SFileImpl* file) {
+    SE3StreamInfo* info = new (__FILE__, __LINE__) SE3StreamInfo();
+    info->m_file = file;
+    info->m_pendingReads = 0;
+    info->m_closeRequested = 0;
+    info->m_nextBlock = 0;
+    info->m_headerPosition = 0;
+    info->m_headerState = 0;
+
+    if (key) {
+        memcpy(info->m_key, key, sizeof(info->m_key));
+        info->m_encrypted = 1;
+    } else {
+        info->m_encrypted = 0;
+    }
+
+    return info;
+}
+
+// OFFSET: 0x0070A380/0x1403D8280
 void SE3::AddMessageToQueue_MemorySoundEnded(uint32_t uid) {
     if (SE3::sm_bShuttingDown) {
         return;
@@ -1953,7 +1980,7 @@ void SE3::AddMessageToQueue_MemorySoundEnded(uint32_t uid) {
     sm_MemorySoundEnded_MessageQueue_CritSect.Leave();
 }
 
-// OFFSET: %0x00671330
+// OFFSET: 0x0070A3F0
 void SE3::AddMessageToQueue_SoundEnded(FMOD::Channel* channel) {
     if (SE3::sm_bShuttingDown) {
         return;
@@ -1972,7 +1999,7 @@ void SE3::AddMessageToQueue_SoundEnded(FMOD::Channel* channel) {
     sm_SoundEnded_MessageQueue_CritSect.Leave();
 }
 
-// OFFSET: %0x006713B0
+// OFFSET: 0x0070A470/0x1403D8450
 FMOD_RESULT SE3::AddMessageToQueue_DoneLoading(FMOD_SOUND* sound, FMOD_RESULT result) {
     if (!SE3::sm_pGameSystem || SE3::sm_bShuttingDown) {
         return FMOD_OK;
@@ -1990,7 +2017,7 @@ FMOD_RESULT SE3::AddMessageToQueue_DoneLoading(FMOD_SOUND* sound, FMOD_RESULT re
     return FMOD_OK;
 }
 
-// OFFSET: %0x00671430
+// OFFSET: 0x0070A4F0/0x1403D8650
 void SE3::EmitterManagerSendMessage_MarkSoundChunkDirty(SE3SoundChunk* chunk) {
     s_emitterManagerCritSect.Enter();
 
@@ -2011,7 +2038,7 @@ void SE3::EmitterManagerSendMessage_MarkSoundChunkDirty(SE3SoundChunk* chunk) {
 }
 
 // OFFSET: %0x006714B0
-void SE3::EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties) {
+void SE3::EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties, const TSGrowableArray<C3Vector>* positions, int32_t userData) {
     if (!SE3::sm_pGameSystem || SE3::sm_eGameSystemOutputType == FMOD_OUTPUTTYPE_NOSOUND) {
         return;
     }
@@ -2031,16 +2058,27 @@ void SE3::EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChun
 
     SE3CreateSoundEmitterMessage* message = s_createEmitterMessagePool.New<SE3CreateSoundEmitterMessage>(0);
     message->m_pParentSoundChunk = chunk;
-    message->m_nSoundKitID = soundKitID;
     message->m_hSoundEmitter = *handle;
+    message->m_nSoundKitID = soundKitID;
     message->m_position = position;
     memcpy(&message->m_properties, properties, sizeof(SE3SoundKitProperties));
+
+    if (positions) {
+        uint32_t count = positions->m_count;
+        message->m_positions.SetCount(count);
+
+        for (uint32_t i = 0; i < count; i++) {
+            message->m_positions.m_data[i] = positions->m_data[i];
+        }
+    }
+
+    message->m_userData = userData;
     s_createEmitterMessages.LinkToTail(message);
 
     s_createEmitterMessagesCritSect.Leave();
 }
 
-// OFFSET: %0x00671570
+// OFFSET: 0x0070A680/0x1403D8920
 void SE3::EmitterMangerSendMessage_DestroyEmitter(uint32_t handle) {
     s_emitterManagerCritSect.Enter();
 
@@ -2060,7 +2098,7 @@ void SE3::EmitterMangerSendMessage_DestroyEmitter(uint32_t handle) {
     s_destroyEmitterMessagesCritSect.Leave();
 }
 
-// OFFSET: %0x006715F0
+// OFFSET: 0x0070A700/0x1403D8A00
 void SE3::EmitterManagerSendMessage_Set3DPosition(uint32_t handle, const C3Vector& position) {
     s_emitterManagerCritSect.Enter();
 
@@ -2081,7 +2119,7 @@ void SE3::EmitterManagerSendMessage_Set3DPosition(uint32_t handle, const C3Vecto
     s_set3DPositionMessagesCritSect.Leave();
 }
 
-// OFFSET: %0x00671FB0
+// OFFSET: 0x0070B0C0/0x1403D9090
 void SE3::ProcessMemorySoundEndedMessageQueue() {
     TSList<SE3MemorySoundEndedMessage, TSGetLink<SE3MemorySoundEndedMessage> > messages;
 
@@ -2115,7 +2153,7 @@ void SE3::ProcessMemorySoundEndedMessageQueue() {
     }
 }
 
-// OFFSET: %0x00672170
+// OFFSET: 0x0070B2B0/0x1403D9420
 void SE3::ProcessSoundEndedMessageQueue() {
     TSList<SE3SoundEndedMessage, TSGetLink<SE3SoundEndedMessage> > messages;
 
@@ -2152,7 +2190,13 @@ void SE3::ProcessSoundEndedMessageQueue() {
                         sko->m_channels[i].m_pFMODChannel = NULL;
                         sko->m_channels[i].m_waveDataID = 0;
                         found = 1;
-                    } else if (sko->m_channels[i].m_pFMODChannel) {
+
+                        if (sko->m_pSoundKitDef) {
+                            sko->m_pSoundKitDef->m_nPlayingCount--;
+                        }
+                    }
+
+                    if (sko->m_channels[i].m_pFMODChannel) {
                         numValid++;
                     }
                 }
@@ -2190,7 +2234,7 @@ void SE3::ProcessSoundEndedMessageQueue() {
     }
 }
 
-// OFFSET: %0x006724E0
+// OFFSET: 0x00707F60/0x1403D6340
 int32_t SE3::GetSoundKitID(const char* name) {
     SOUNDKITLOOKUP* lookup = s_soundKitLookup.Ptr(name);
 
@@ -2201,7 +2245,8 @@ int32_t SE3::GetSoundKitID(const char* name) {
     return 0;
 }
 
-// OFFSET: %0x00672500
+// PROVEN: 7b41e102 IDENTICAL/NONE
+// OFFSET: 0x0070B640
 static FMOD_RESULT F_CALLBACK SoundEndedCallback(FMOD_CHANNEL* channel, FMOD_CHANNEL_CALLBACKTYPE type, int command, unsigned int commanddata1, unsigned int commanddata2) {
     if (type == FMOD_CHANNEL_CALLBACKTYPE_END) {
         SE3::sm_SE3ShuttingDown_CritSec.Enter();
@@ -2212,7 +2257,7 @@ static FMOD_RESULT F_CALLBACK SoundEndedCallback(FMOD_CHANNEL* channel, FMOD_CHA
     return FMOD_OK;
 }
 
-// OFFSET: %0x00672530
+// OFFSET: 0x0070B670
 void SE3::DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message) {
     SE3::sm_DoneLoading_MessageQueue_CritSect.Enter();
     SE3::sm_DoneLoading_MessageQueue.UnlinkNode(message);
@@ -2220,7 +2265,7 @@ void SE3::DoneLoadingMessageQueuePut(SE3DoneLoadingMessage* message) {
     SE3::sm_DoneLoading_MessageQueue_CritSect.Leave();
 }
 
-// OFFSET: %0x006725A0
+// OFFSET: 0x0070B6E0/0x1403D9BE0
 SE3COMBINABLESOUNDLIST::~SE3COMBINABLESOUNDLIST() {
     SE3CombinableSoundKitPosition* position = this->m_positions.Head();
 
@@ -2232,7 +2277,56 @@ SE3COMBINABLESOUNDLIST::~SE3COMBINABLESOUNDLIST() {
     }
 }
 
-// OFFSET: %0x00672670
+// OFFSET: 0x0070B7B0
+void SE3SoundEmitter::UpdatePillPosition(C3Vector listener) {
+    int32_t segments = this->m_positions.m_count - 1;
+    float closest = -1.0f;
+
+    for (int32_t i = 0; i < segments; i++) {
+        C3Vector start = this->m_positions.m_data[i];
+        C3Vector end = this->m_positions.m_data[i + 1];
+        float dx = end.x - start.x;
+        float dy = end.y - start.y;
+        float dz = end.z - start.z;
+        float lengthSquared = dz * dz + dy * dy + dx * dx;
+        float scale = 1.0f / sqrt(lengthSquared);
+        float nx = dx * scale;
+        float ny = scale * dy;
+        float nz = scale * dz;
+        float t = (listener.z - start.z) * nz + (listener.y - start.y) * ny + (listener.x - start.x) * nx;
+        C3Vector point;
+
+        if (t > 0.0f) {
+            if (t < sqrt(lengthSquared)) {
+                float s = t / sqrt(nz * nz + ny * ny + nx * nx);
+                point.x = s * nx + start.x;
+                point.y = ny * s + start.y;
+                point.z = nz * s + start.z;
+            } else {
+                point = end;
+            }
+        } else {
+            point = start;
+        }
+
+        if (!i) {
+            this->m_position = point;
+            closest = (listener.z - this->m_position.z) * (listener.z - this->m_position.z) + (listener.y - this->m_position.y) * (listener.y - this->m_position.y) + (listener.x - this->m_position.x) * (listener.x - this->m_position.x);
+            continue;
+        }
+
+        float distance = (listener.z - point.z) * (listener.z - point.z) + (listener.y - point.y) * (listener.y - point.y) + (listener.x - point.x) * (listener.x - point.x);
+
+        if (closest > distance) {
+            this->m_position = point;
+            closest = distance;
+        }
+    }
+
+    SE3::EmitterManagerSendMessage_Set3DPosition(this->m_hSoundEmitter, this->m_position);
+}
+
+// OFFSET: 0x0070BA50/0x1403DA120
 void SE3::EmitterManagerInit(void (*callback)(const C3Vector&, uint32_t*, uint32_t*), uint32_t chunkSize, uint32_t chunkRadius) {
     _fpEmitterManagerPosToSoundChunkCoordsCallback = callback;
     s_chunkRadius = chunkRadius;
@@ -2251,7 +2345,7 @@ void SE3::EmitterManagerInit(void (*callback)(const C3Vector&, uint32_t*, uint32
     SE3::EmitterManagerBuildSoundChunkList(s_listenerChunkX, s_listenerChunkY);
 }
 
-// OFFSET: %0x00672740
+// OFFSET: 0x0070BB20
 void SE3::EmitterManagerShutDown() {
     s_emitterManagerCritSect.Enter();
     s_bEmitterManagerShutDown = 1;
@@ -2261,6 +2355,7 @@ void SE3::EmitterManagerShutDown() {
 
     for (SE3CreateSoundEmitterMessage* message = s_createEmitterMessages.Head(); message; message = s_createEmitterMessages.Head()) {
         s_createEmitterMessages.UnlinkNode(message);
+        message->~SE3CreateSoundEmitterMessage();
         s_createEmitterMessagePool.PutData(message, NULL, 0);
     }
 
@@ -2303,12 +2398,12 @@ void SE3::EmitterManagerShutDown() {
     SMemFree(s_soundChunkList, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00672A70
+// OFFSET: 0x00708B90/0x1403D6E30
 int32_t SE3::EmitterManagerEmitterExists(uint32_t handle) {
     return handle != 0x7D007D00 && s_soundEmitterTable.Ptr(handle, s_lookupKey) != NULL;
 }
 
-// OFFSET: %0x00673C50
+// OFFSET: 0x00707AB0/0x1403D60B0
 C3Vector SE3::GetPosition(uint32_t handle) {
     C3Vector position;
     position.x = 0.0f;
@@ -2324,7 +2419,7 @@ C3Vector SE3::GetPosition(uint32_t handle) {
     return position;
 }
 
-// OFFSET: %0x00673CA0
+// OFFSET: 0x00709BB0/0x1403D6840
 void SE3::FadeInNow(uint32_t handle) {
     if (!handle) {
         return;
@@ -2344,7 +2439,7 @@ void SE3::FadeInNow(uint32_t handle) {
     }
 }
 
-// OFFSET: %0x00673D10
+// OFFSET: 0x00707FD0/0x1403D6900
 int32_t SE3::GetSoundKitID(uint32_t handle) {
     SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_lookupKey);
     SE3SoundKitObject* sko;
@@ -2357,7 +2452,7 @@ int32_t SE3::GetSoundKitID(uint32_t handle) {
     return 0;
 }
 
-// OFFSET: %0x00673D50
+// OFFSET: 0x00708170/0x1403D6970
 int32_t SE3::StopSound(uint32_t handle, int32_t fadeOutTime, const char* file, int32_t line, const char* function) {
     if (!handle) {
         return 1;
@@ -2407,7 +2502,7 @@ void SE3::SetPlayFinishedCallback(uint32_t handle, void (*callback)(SE3SoundKitO
     }
 }
 
-// OFFSET: %0x00673E60
+// OFFSET: 0x007083E0/0x1403D6BA0
 int32_t SE3::IsLoopingOrPeriodic(uint32_t handle) {
     SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Ptr(handle, s_lookupKey);
 
@@ -2418,7 +2513,7 @@ int32_t SE3::IsLoopingOrPeriodic(uint32_t handle) {
     return 0;
 }
 
-// OFFSET: %0x00673EA0
+// OFFSET: 0x00708A30/0x1403D6C10
 void SE3::Set3DPosition(uint32_t handle, const C3Vector& position) {
     if (!handle) {
         return;
@@ -2431,7 +2526,7 @@ void SE3::Set3DPosition(uint32_t handle, const C3Vector& position) {
     }
 }
 
-// OFFSET: %0x00673EE0
+// OFFSET: 0x00708A70/0x1403D6C80
 void SE3::SetFrequencyScale(uint32_t handle, float scale) {
     if (!handle) {
         return;
@@ -2458,7 +2553,7 @@ void SE3::SetFrequencyScale(uint32_t handle, float scale) {
     }
 }
 
-// OFFSET: %0x00674780
+// OFFSET: 0x00709490/0x1403D7D20
 void SE3::KillVirtualSounds(int32_t elapsed) {
     SE3SoundKitObject* sko = SE3::sm_SoundKitObjects.Head();
 
@@ -2486,12 +2581,53 @@ SE3SoundEmitter::~SE3SoundEmitter() {
     SE3::StopSound(this->m_uSoundKitObjectUID, 500, __FILE__, __LINE__, "Sound Emitter Destructor, Stop Sound");
 }
 
-// OFFSET: %0x00674810
+// OFFSET: 0x00709C20
 SE3SoundChunk::~SE3SoundChunk() {
     this->m_emitters.Clear();
 }
 
-// OFFSET: %0x00674AC0
+// OFFSET: 0x0070E650/0x1403DEB30
+void SE3::CreateSoundEmitter(uint32_t* handle, const SoundEmittersRec* rec, SE3SoundKitProperties* properties) {
+    TSGrowableArray<C3Vector> positions;
+    uint32_t count = 0;
+
+    if (rec->m_emitterType == 1) {
+        SoundEmitterPillPointsRec key;
+        key.m_soundEmittersID = rec->m_id;
+        key.m_position.x = 0.0f;
+        key.m_position.y = 0.0f;
+        key.m_position.z = 0.0f;
+
+        SoundEmitterPillPointsRec* records = g_soundEmitterPillPointsDB.GetRecordByIndex(0);
+        int32_t numRecords = g_soundEmitterPillPointsDB.m_numRecords;
+        SoundEmitterPillPointsRec* point = static_cast<SoundEmitterPillPointsRec*>(bsearch(&key, records, numRecords, sizeof(SoundEmitterPillPointsRec), ComparePillPoints));
+
+        if (!point) {
+            return;
+        }
+
+        while (point >= records && point->m_soundEmittersID == rec->m_id) {
+            point--;
+        }
+
+        for (point++; point; point++) {
+            if (point->m_soundEmittersID != rec->m_id || point >= records + numRecords) {
+                break;
+            }
+
+            positions.GrowToFit(count, 0);
+            positions.m_data[count++] = point->m_position;
+        }
+    }
+
+    uint32_t x = 0;
+    uint32_t y = 0;
+    _fpEmitterManagerPosToSoundChunkCoordsCallback(rec->m_position, &x, &y);
+    SE3SoundChunk* chunk = SE3::EmitterManagerGetOrCreateSoundChunk(y | (x << 16));
+    SE3::EmitterManagerSendMessage_CreateEmitter(handle, chunk, rec->m_soundEntriesID, rec->m_position, properties, &positions, rec->m_id);
+}
+
+// OFFSET: 0x0070E7A0
 void SE3::InsertSoundKitDef(const SoundEntriesRec* rec, const SoundEntriesAdvancedRec* advancedRec, int32_t ownsRecords) {
     if (!rec) {
         return;
@@ -2560,7 +2696,7 @@ void SE3::InsertSoundKitDef(const SoundEntriesRec* rec, const SoundEntriesAdvanc
     }
 }
 
-// OFFSET: %0x00674CE0
+// OFFSET: 0x0070E9C0/0x1403DD4B0
 SE3SoundKitObject* SE3::CreateNewSoundKitObject(uint32_t* handle, SE3SoundKitProperties* properties) {
     uint32_t uid = SE3::sm_uNextUniqueID + 1;
     SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.New(uid, s_lookupKey, 0, 0);
@@ -2577,7 +2713,7 @@ SE3SoundKitObject* SE3::CreateNewSoundKitObject(uint32_t* handle, SE3SoundKitPro
     return lookup->m_pSKO;
 }
 
-// OFFSET: %0x00674DB0
+// OFFSET: 0x0070D940
 SE3SoundChunk* SE3::EmitterManagerGetOrCreateSoundChunk(uint32_t handle) {
     SE3SoundChunk* chunk = s_soundChunkTable.Ptr(handle, s_lookupKey);
 
@@ -2589,7 +2725,7 @@ SE3SoundChunk* SE3::EmitterManagerGetOrCreateSoundChunk(uint32_t handle) {
     return chunk;
 }
 
-// OFFSET: %0x00674E40
+// OFFSET: 0x0070D9D0/0x1403DD830
 void SE3::EmitterManagerProcessEmitterMessages() {
     TSList<SE3CreateSoundEmitterMessage, TSGetLink<SE3CreateSoundEmitterMessage> > createMessages;
 
@@ -2625,14 +2761,27 @@ void SE3::EmitterManagerProcessEmitterMessages() {
             emitter->m_nSoundKitID = createMessage->m_nSoundKitID;
             emitter->m_position = createMessage->m_position;
             memcpy(&emitter->m_properties, &createMessage->m_properties, sizeof(SE3SoundKitProperties));
-            emitter->m_pParentSoundChunk->m_emitters.LinkToTail(emitter);
+            uint32_t count = createMessage->m_positions.m_count;
+            emitter->m_positions.SetCount(count);
+
+            for (uint32_t i = 0; i < count; i++) {
+                emitter->m_positions.m_data[i] = createMessage->m_positions.m_data[i];
+            }
+
+            emitter->m_userData = createMessage->m_userData;
+
+            if (emitter->m_positions.m_count < 2) {
+                emitter->m_pParentSoundChunk->m_emitters.LinkToTail(emitter);
+            } else {
+                emitter->m_pParentSoundChunk->m_emitters.LinkToHead(emitter);
+            }
 
             uint32_t emitterHandle = createMessage->m_hSoundEmitter;
             SE3SoundEmitterLookup* lookup = s_soundEmitterTable.New(emitterHandle, s_lookupKey, 0, 0);
             lookup->m_pSoundEmitter = emitter;
         }
 
-        createMessages.UnlinkNode(createMessage);
+        createMessage->~SE3CreateSoundEmitterMessage();
         s_createEmitterMessagePool.PutData(createMessage, NULL, 0);
         createMessage = next;
     }
@@ -2665,7 +2814,13 @@ void SE3::EmitterManagerProcessEmitterMessages() {
                 chunk->m_emitters.UnlinkNode(lookup->m_pSoundEmitter);
 
                 SE3SoundChunk* newChunk = SE3::EmitterManagerGetOrCreateSoundChunk(newHandle);
-                newChunk->m_emitters.LinkToTail(lookup->m_pSoundEmitter);
+
+                if (lookup->m_pSoundEmitter->m_positions.m_count < 2) {
+                    newChunk->m_emitters.LinkToTail(lookup->m_pSoundEmitter);
+                } else {
+                    newChunk->m_emitters.LinkToHead(lookup->m_pSoundEmitter);
+                }
+
                 lookup->m_pSoundEmitter->m_pParentSoundChunk = newChunk;
                 SE3::EmitterManagerSendMessage_MarkSoundChunkDirty(newChunk);
             }
@@ -2821,7 +2976,7 @@ void SE3::EmitterManagerProcessEmitterMessages() {
     }
 }
 
-// OFFSET: %0x00675AE0
+// OFFSET: 0x0070EA90
 void SE3::InitSoundKitDefList() {
     SE3::InitSoundKitDefArray(g_soundEntriesDB.m_maxID);
 
@@ -2834,10 +2989,8 @@ void SE3::InitSoundKitDefList() {
     }
 }
 
-// OFFSET: %0x00675B70
-int32_t SE3SoundKitDef::BeginDownload(const char* filename, int32_t index, uint32_t* handle, SE3SoundKitProperties* properties, const C3Vector* position, int32_t local) {
-    this->m_notLocal = local;
-
+// OFFSET: 0x0070EB20/0x1403DED00
+int32_t SE3SoundKitDef::BeginDownload(const char* filename, int32_t index, uint32_t* handle, SE3SoundKitProperties* properties, const C3Vector* position) {
     SE3SoundKitObject* sko = SE3::CreateNewSoundKitObject(handle, properties);
     sko->m_pSoundKitDef = this;
 
@@ -2846,47 +2999,40 @@ int32_t SE3SoundKitDef::BeginDownload(const char* filename, int32_t index, uint3
         sko->m_timeOfDayOffset = range > -range ? CRandom::dice_(2 * range, g_rndSeed) - range : range;
     }
 
-    sko->m_channels[0].m_waveDataID = index;
+    sko->m_properties.m_nIndexOverride = index;
 
     if (position) {
+        sko->m_hasPosition = 1;
         sko->m_position = *position;
     } else {
+        sko->m_hasPosition = 0;
         sko->m_position.x = 0.0f;
         sko->m_position.y = 0.0f;
         sko->m_position.z = 0.0f;
     }
 
     sko->m_modeFlags = SE3::GetModeFlags(position, this, properties);
-    SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Link to download list");
+    SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Created for download and play ASAP. Linking to sm_SoundKitObjects_WaitingForDownloadList");
     sm_SoundKitObjects_WaitingForDownloadList.LinkToTail(sko);
 
-    if (!this->m_aAsyncObj[index]) {
-        this->m_aAsyncObj[index] = AsyncFileReadAllocObject();
-        this->m_downloadStartTime[index] = OsGetAsyncTimeMs();
-
-        SFileImpl* file = NULL;
-
-        if (!SFile::OpenEx(NULL, filename, 0, &file)) {
-            *handle = 0;
-            delete sko;
-            return SE3_ERR_FILE;
-        }
-
-        this->m_aAsyncObj[index]->m_userArg = sko->m_pSoundKitDef;
-        this->m_aAsyncObj[index]->m_userPostloadCallback = reinterpret_cast<void*>(SoundKitDefDownloadCancelled);
-        this->m_aAsyncObj[index]->m_userPostUnloadCallback = reinterpret_cast<void*>(SoundKitDefDownloadFailed);
-        this->m_aAsyncObj[index]->m_file = file;
-        this->m_aAsyncObj[index]->m_size = SFileGetFileSize(file, NULL);
-        this->m_aAsyncObj[index]->m_priority = 8 * (properties->m_highPriorityDownload == 0) + 123;
-        this->m_aAsyncObj[index]->m_buffer = NULL;
-        AsyncFileReadObject(this->m_aAsyncObj[index], 0);
+    if (this->m_pAsyncObj) {
+        return SE3_OK;
     }
 
-    return SE3_OK;
+    uint8_t priority = (!properties->m_highPriorityDownload) | 2;
+    this->m_downloadStartTime = OsGetAsyncTimeMs();
+
+    if (AsyncFileReadCreateObject(filename, priority, 1, 0, &this->m_pAsyncObj, NULL, sko->m_pSoundKitDef, SoundKitDefDownloadCancelled, SoundKitDefDownloadFailed, 0, 0, 0)) {
+        return SE3_OK;
+    }
+
+    *handle = 0;
+    delete sko;
+    return SE3_ERR_FILE;
 }
 
-// OFFSET: %0x00675D30
-int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function) {
+// OFFSET: 0x0070EC80/0x1403DF430
+int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function, int32_t streamed, const uint8_t* key) {
     if (soundKitID <= 0 && soundKitID != -128) {
         return SE3_ERR_INVALID_KIT;
     }
@@ -2948,8 +3094,28 @@ int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3Sound
         return result;
     }
 
-    if (handle && *handle && properties->m_stopPrevious && SE3::IsLoopingOrPeriodic(*handle)) {
-        SE3::StopSound(*handle, 500, __FILE__, __LINE__, "SE3::PlaySoundKit");
+    int32_t behavior = 0;
+
+    if (def && def->m_pSoundKitRec) {
+        behavior = def->m_pSoundKitRec->unk_0088;
+    }
+
+    if (handle && *handle) {
+        if (behavior) {
+            properties->m_bus = SE3BUS_DIALOG;
+
+            if (behavior != 1 && SE3::IsPlaying(*handle)) {
+                return SE3_ERR_STILL_PLAYING;
+            }
+
+            SE3::StopSound(*handle, 500, __FILE__, __LINE__, "SE3::PlaySoundKit");
+        }
+
+        uint32_t previous = *handle;
+
+        if (previous && properties->m_stopPrevious && SE3::IsLoopingOrPeriodic(previous)) {
+            SE3::StopSound(previous, 500, __FILE__, __LINE__, "SE3::PlaySoundKit");
+        }
     }
 
     int32_t index = 0;
@@ -2957,44 +3123,45 @@ int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3Sound
     char path[260];
 
     if (def && soundKitID != -128) {
-        if (def->SelectNextFile(properties, &index) == SE3_OK) {
-            def->BuildPath(path, sizeof(path), index);
-            filename = path;
-        } else {
-            int32_t localIndex = 0;
-            int32_t hasLocal = def->SelectLocalFile(properties, &localIndex);
+        def->SelectNextFile(properties, &index);
+        def->BuildPath(path, sizeof(path), index);
 
-            def->BuildPath(path, sizeof(path), index);
+        if (!streamed || !OsPathCheckExtension(path, "mp3") || SFile::IsPatchFile(path)) {
+            streamed = 0;
 
-            if (OsPathCheckExtension(path, "wav")) {
-                OsPathReplaceExtension(path, sizeof(path), path, "ogg");
+            if (!def->IsLocal(index)) {
+                if (!def->m_pAsyncObj) {
+                    if (OsPathCheckExtension(path, "wav")) {
+                        OsPathReplaceExtension(path, sizeof(path), path, "ogg");
+                    }
+
+                    def->BeginDownload(path, index, handle, properties, position);
+                }
+
+                def->m_notLocal = def->SelectLocalFile(&index) == 0;
+
+                if (def->m_notLocal) {
+                    return SE3_ERR_NOT_LOCAL;
+                }
             }
-
-            filename = path;
-            result = def->BeginDownload(path, index, handle, properties, position, hasLocal == 0);
-
-            if (properties->m_highPriorityDownload) {
-                return result;
-            }
-
-            if (!hasLocal) {
-                return SE3_ERR_NOT_LOCAL;
-            }
-
-            def->BuildPath(path, sizeof(path), localIndex);
-            filename = path;
         }
+
+        def->BuildPath(path, sizeof(path), index);
+        filename = path;
     } else {
         if (!properties->m_sFilename) {
             return SE3_ERR_FILE;
         }
 
-        int32_t priority = GetDownloadPriority(properties->m_bus);
+        if (!OsPathCheckExtension(properties->m_sFilename, "mp3")) {
+            streamed = 0;
+        }
+
         char localPath[260];
         SStrCopy(localPath, properties->m_sFilename, sizeof(localPath));
 
-        if (!MyFileIsLocal(localPath, priority)) {
-            SFile::MakeFileLocal(localPath, priority, false, -1, NULL);
+        if (!streamed && !MyFileIsLocal(localPath)) {
+            AsyncFileReadCreateObject(localPath, GetDownloadPriority(properties->m_bus), 0, 0, NULL, NULL, NULL, DefaultAsyncObjectCleanupCallback, DefaultAsyncObjectCleanupCallback, 0, 0, 0);
             return SE3_ERR_NOT_LOCAL;
         }
 
@@ -3013,9 +3180,9 @@ int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3Sound
 
     uint32_t modeFlags = SE3::GetModeFlags(position, def, properties);
 
-    char key[512];
-    SStrPrintf(key, sizeof(key), "%s%s%s", filename, (modeFlags & FMOD_2D) ? "_2D_" : "_3D_", (modeFlags & FMOD_LOOP_NORMAL) ? "_LOOP_" : "_NOLOOP_");
-    uint32_t hash = SStrHash(key, 0, 0);
+    char cacheName[512];
+    SStrPrintf(cacheName, sizeof(cacheName), "%s%s%s", filename, (modeFlags & FMOD_2D) ? "_2D_" : "_3D_", (modeFlags & FMOD_LOOP_NORMAL) ? "_LOOP_" : "_NOLOOP_");
+    uint32_t hash = SStrHash(cacheName, 0, 0);
     uint32_t waveDataID = 0;
 
     SE3::sm_SoundCache_Loading_CritSec.Enter();
@@ -3124,7 +3291,13 @@ int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3Sound
     sm_SoundKitObjects_Loading.LinkToTail(sko);
     waveDataID = 0;
 
-    int32_t error = SE3::CreateWaveData(hash, def ? def->m_pSoundGroup : NULL, modeFlags, sko->m_notCacheable, size, filename, fileHandle, &waveDataID);
+    SE3StreamInfo* streamInfo = NULL;
+
+    if (streamed) {
+        streamInfo = CreateStreamInfo(key, fileHandle);
+    }
+
+    int32_t error = SE3::CreateWaveData(hash, def ? def->m_pSoundGroup : NULL, modeFlags, sko->m_notCacheable, size, filename, fileHandle, &waveDataID, streamInfo);
 
     if (error) {
         sm_SoundKitObjects_DeleteList.LinkToTail(sko);
@@ -3139,10 +3312,10 @@ int32_t SE3::PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3Sound
 
     OutWithTheOldInWithTheNew(sko, waveDataID);
 
-    return SE3_OK;
+    return error != SE3_OK ? SE3_ERR_FMOD : SE3_OK;
 }
 
-// OFFSET: %0x006766D0
+// OFFSET: 0x0070F630/0x1403E0390
 void SE3::UpdateAdvancedProperties(SE3SoundKitObject* sko, uint32_t elapsed, int32_t retrigger) {
     SE3SoundKitDef* def = sko->m_pSoundKitDef;
 
@@ -3164,7 +3337,7 @@ void SE3::UpdateAdvancedProperties(SE3SoundKitObject* sko, uint32_t elapsed, int
     advancedRec = sko->m_pSoundKitDef->m_pAdvancedSoundKitRec;
     float distanceSquared = (listener.z - sko->m_position.z) * (listener.z - sko->m_position.z) + (listener.y - sko->m_position.y) * (listener.y - sko->m_position.y) + (listener.x - sko->m_position.x) * (listener.x - sko->m_position.x);
 
-    if ((advancedRec->m_duckToSfx < 1.0f || advancedRec->m_duckToMusic < 1.0f || advancedRec->m_duckToAmbience < 1.0f) && ((sko->m_position.x == 0.0f && sko->m_position.y == 0.0f && sko->m_position.z == 0.0f) || outerRadiusOfInfluence * outerRadiusOfInfluence >= distanceSquared)) {
+    if ((advancedRec->m_duckToSfx < 1.0f || advancedRec->m_duckToMusic < 1.0f || advancedRec->m_duckToAmbience < 1.0f || advancedRec->m_duckToDialog < 1.0f) && ((sko->m_position.x == 0.0f && sko->m_position.y == 0.0f && sko->m_position.z == 0.0f) || outerRadiusOfInfluence * outerRadiusOfInfluence >= distanceSquared)) {
         SE3::RegisterSuppressor(sko);
     }
 
@@ -3232,6 +3405,7 @@ void SE3::UpdateAdvancedProperties(SE3SoundKitObject* sko, uint32_t elapsed, int
             sko->m_periodicTimer = 0;
 
             if (static_cast<uint32_t>(sko->m_usage) <= SE3USAGE_PERIODIC) {
+                sko->m_properties.m_retriggered = 1;
                 sko->m_properties.m_pSKOToReuse = sko;
                 sko->m_properties.m_fadeInTime = 0;
 
@@ -3305,22 +3479,40 @@ void SE3::UpdateAdvancedProperties(SE3SoundKitObject* sko, uint32_t elapsed, int
     }
 }
 
-// OFFSET: %0x00676C70
+// OFFSET: 0x0070FBE0/0x1403E09C0
 void SE3::ProcessGoGoGoList() {
     SE3SoundKitObject* sko = sm_SoundKitObjects_GoGoGo.Head();
 
     while (sko) {
         SE3SoundKitObject* next = sm_SoundKitObjects_GoGoGo.Next(sko);
-        int32_t i;
+
+        if (sko->m_pSoundKitDef) {
+            const SoundEntriesAdvancedRec* advancedRec = sko->m_pSoundKitDef->m_pAdvancedSoundKitRec;
+
+            if (advancedRec && advancedRec->m_timeIntervalMax) {
+                sko->m_periodicTimer = RandomBetween(advancedRec->m_timeIntervalMin, advancedRec->m_timeIntervalMax);
+            }
+        }
+
+        if (sko->m_usage == SE3USAGE_PERIODIC && !sko->m_properties.m_retriggered) {
+            sm_SoundKitObjects_GoGoGo.UnlinkNode(sko);
+            SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Periodic sound created (won't play until retrigger)");
+            SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Unlink from sm_SoundKitObjects_GoGoGo, Link to sm_SoundKitObjects");
+            SE3::sm_SoundKitObjects.LinkToTail(sko);
+            sko = next;
+            continue;
+        }
+
+        int32_t i = 0;
         SE3WaveDataNode* node;
 
-        for (i = 0; !SE3::FindWaveDataNode(sko->m_channels[i].m_waveDataID, &node); i++) {
-            if (i + 1 >= 2) {
+        while (!SE3::FindWaveDataNode(sko->m_channels[i].m_waveDataID, &node)) {
+            if (++i >= 2) {
                 break;
             }
         }
 
-        if (i >= 2 || !SE3::FindWaveDataNode(sko->m_channels[i].m_waveDataID, &node)) {
+        if (i >= 2) {
             sko = next;
             continue;
         }
@@ -3359,7 +3551,48 @@ void SE3::ProcessGoGoGoList() {
             }
 
             channel->m_pFMODChannel->set3DMinMaxDistance(minDistance, maxDistance);
-            fmodChannel->set3DAttributes(reinterpret_cast<FMOD_VECTOR*>(&sko->m_position), NULL);
+
+            if (sko->m_usage == SE3USAGE_PERIODIC) {
+                sko->m_positionOffset.x = (static_cast<double>(CRandom::dice_(1001, g_rndSeed)) - 500.0) * 0.0020000001f;
+                sko->m_positionOffset.y = (static_cast<double>(CRandom::dice_(1001, g_rndSeed)) - 500.0) * 0.0020000001f;
+                sko->m_positionOffset.z = (static_cast<double>(CRandom::dice_(1001, g_rndSeed)) - 500.0) * 0.0020000001f;
+                float x = sko->m_positionOffset.x;
+                float y = sko->m_positionOffset.y;
+                float z = sko->m_positionOffset.z;
+                float lengthSquared = x * x + y * y + z * z;
+
+                if (lengthSquared > 0.00000023841858f) {
+                    float scale = 1.0f / sqrt(lengthSquared);
+                    sko->m_positionOffset.x = x * scale;
+                    sko->m_positionOffset.y = y * scale;
+                    sko->m_positionOffset.z = scale * z;
+                }
+
+                const SoundEntriesAdvancedRec* advancedRec = sko->m_pSoundKitDef->m_pAdvancedSoundKitRec;
+                int32_t range = 1000 * (advancedRec->m_randomOffsetMax - advancedRec->m_randomOffsetMin);
+                int32_t minOffset = advancedRec->m_randomOffsetMin;
+                float extra;
+
+                if (range <= 0) {
+                    extra = 0.0f;
+                } else {
+                    extra = CRandom::dice_(range, g_rndSeed) * 0.001;
+                }
+
+                x = sko->m_positionOffset.x;
+                y = sko->m_positionOffset.y;
+                z = sko->m_positionOffset.z;
+                float scale = (extra + minOffset) / sqrt(x * x + y * y + z * z);
+                sko->m_positionOffset.x = scale * x;
+                sko->m_positionOffset.y = scale * y;
+                sko->m_positionOffset.z = scale * z;
+            }
+
+            C3Vector position;
+            position.x = sko->m_positionOffset.x + sko->m_position.x;
+            position.y = sko->m_position.y + sko->m_positionOffset.y;
+            position.z = sko->m_position.z + sko->m_positionOffset.z;
+            fmodChannel->set3DAttributes(reinterpret_cast<FMOD_VECTOR*>(&position), NULL);
         }
 
         if (!SE3::IsBusEqualOrChild(sko->m_properties.m_bus, SE3BUS_MUSIC) && !sko->m_properties.m_noRandomStart && !sko->m_usage) {
@@ -3381,15 +3614,7 @@ void SE3::ProcessGoGoGoList() {
         }
 
         sko->m_randomVolume = randomVolume;
-
-        float busVolume = SE3::SoundBusGetSuppressedVolumeScalar(sko->m_properties.m_bus, sko->m_uUID);
-        float recVolume = 1.0f;
-
-        if (sko->m_pSoundKitDef && sko->m_pSoundKitDef->m_pSoundKitRec) {
-            recVolume = sko->m_pSoundKitDef->m_pSoundKitRec->m_volumeFloat;
-        }
-
-        fmodChannel->setVolume(channel->m_fadeVolume * sko->m_fTimeOfDayScalar * sko->m_properties.m_volume * sko->m_fadeVolume * recVolume * busVolume * sko->m_randomVolume);
+        fmodChannel->setVolume(sko->GetChannelVolume(i));
 
         if (sko->m_pSoundKitDef) {
             const SoundEntriesRec* rec = sko->m_pSoundKitDef->m_pSoundKitRec;
@@ -3404,14 +3629,6 @@ void SE3::ProcessGoGoGoList() {
         if (sko->m_properties.m_fadeInTime > 0) {
             SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Sound Handle [%d]: Fade In!", sko->m_uUID);
             ::FadeInNow(sko, __FILE__, __LINE__, "SE3::ProcessGoGoGoList");
-        }
-
-        if (sko->m_pSoundKitDef) {
-            const SoundEntriesAdvancedRec* advancedRec = sko->m_pSoundKitDef->m_pAdvancedSoundKitRec;
-
-            if (advancedRec && advancedRec->m_timeIntervalMax) {
-                sko->m_periodicTimer = RandomBetween(advancedRec->m_timeIntervalMin, advancedRec->m_timeIntervalMax);
-            }
         }
 
         SE3::UpdateAdvancedProperties(sko, 0, 0);
@@ -3444,15 +3661,19 @@ void SE3::ProcessGoGoGoList() {
             return;
         }
 
+        if (sko->m_pSoundKitDef) {
+            sko->m_pSoundKitDef->m_nPlayingCount++;
+        }
+
         SE3::SoundBusIncrementChannelCount(sko->m_properties.m_bus);
         sm_SoundKitObjects_GoGoGo.UnlinkNode(sko);
-        SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Unlink from sm_SoundKitObjects_GoGoGo, Link to SE3::sm_SoundKitObjects");
+        SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Unlink from sm_SoundKitObjects_GoGoGo, Link to sm_SoundKitObjects");
         SE3::sm_SoundKitObjects.LinkToTail(sko);
         sko = next;
     }
 }
 
-// OFFSET: %0x00677230
+// OFFSET: 0x00710410/0x1403E14F0
 void SE3::EmitterManagerHeartbeat(int32_t elapsed) {
     static int32_t s_timer;
 
@@ -3475,7 +3696,9 @@ void SE3::EmitterManagerHeartbeat(int32_t elapsed) {
     listener.z = 0.0f;
     SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(&listener), NULL, NULL, NULL);
 
-    if (listener.x == s_listenerPosition.x && listener.y == s_listenerPosition.y && listener.z == s_listenerPosition.z && !s_bListenerChunkDirty) {
+    int32_t moved = listener.x != s_listenerPosition.x || listener.y != s_listenerPosition.y || listener.z != s_listenerPosition.z;
+
+    if (!moved && !s_bListenerChunkDirty) {
         return;
     }
 
@@ -3508,6 +3731,16 @@ void SE3::EmitterManagerHeartbeat(int32_t elapsed) {
             continue;
         }
 
+        if (moved) {
+            for (SE3SoundEmitter* emitter = chunk->m_emitters.Head(); emitter; emitter = chunk->m_emitters.Next(emitter)) {
+                if (emitter->m_positions.m_count < 2) {
+                    break;
+                }
+
+                emitter->UpdatePillPosition(listener);
+            }
+        }
+
         if (s_soundChunkList[i] != 0x75307530 && (chunk->m_minX > listener.x || listener.x > chunk->m_maxX || chunk->m_minY > listener.y || listener.y > chunk->m_maxY)) {
             continue;
         }
@@ -3529,7 +3762,7 @@ void SE3::EmitterManagerHeartbeat(int32_t elapsed) {
     }
 }
 
-// OFFSET: %0x006774A0
+// OFFSET: 0x00710740/0x1403E1990
 static void UpdateSoundKitObjects(uint32_t elapsed) {
     if (sm_fpGetDayProgression) {
         s_dayProgression = sm_fpGetDayProgression();
@@ -3546,7 +3779,7 @@ static void UpdateSoundKitObjects(uint32_t elapsed) {
     }
 }
 
-// OFFSET: %0x006774F0
+// OFFSET: 0x00710790/0x1403E1A00
 void SE3::ProcessDownloadList() {
     C3Vector listener;
     listener.x = 0.0f;
@@ -3555,37 +3788,36 @@ void SE3::ProcessDownloadList() {
     SE3::sm_pGameSystem->get3DListenerAttributes(0, reinterpret_cast<FMOD_VECTOR*>(&listener), NULL, NULL, NULL);
 
     uint32_t now = OsGetAsyncTimeMs();
-    float closest = FLT_MAX;
+    int32_t closest = 0x7FFFFFFF;
     CAsyncObject* closestObject = NULL;
 
     SE3SoundKitObject* sko = sm_SoundKitObjects_WaitingForDownloadList.Head();
 
     while (sko) {
-        SE3SoundKitObject* next = sm_SoundKitObjects_WaitingForDownloadList.Next(sko);
         SE3SoundKitDef* def = sko->m_pSoundKitDef;
-        int32_t index = sko->m_channels[0].m_waveDataID;
+        SE3SoundKitObject* next = sm_SoundKitObjects_WaitingForDownloadList.Next(sko);
 
-        if (def->m_aAsyncObj[index]) {
-            float distance;
+        if (def->m_pAsyncObj) {
+            float distance = 0.0f;
 
             if (sko->m_position.x != 0.0f || sko->m_position.y != 0.0f || sko->m_position.z != 0.0f) {
                 distance = (sko->m_position.z - listener.z) * (sko->m_position.z - listener.z) + (sko->m_position.y - listener.y) * (sko->m_position.y - listener.y) + (sko->m_position.x - listener.x) * (sko->m_position.x - listener.x);
             } else if (SE3::IsBusEqualOrChild(sko->m_properties.m_bus, SE3BUS_MUSIC) || SE3::IsBusEqualOrChild(sko->m_properties.m_bus, SE3BUS_AMBIENCE)) {
                 distance = 10000.0f;
-            } else {
-                distance = 0.0f;
             }
 
-            if (closest > distance) {
-                closestObject = sko->m_pSoundKitDef->m_aAsyncObj[sko->m_channels[0].m_waveDataID];
-                closest = distance;
+            int32_t priority = AsyncFileReadComputeSoundPriority(sko->m_properties.m_highPriorityDownload, distance);
+
+            if (priority < closest) {
+                closestObject = def->m_pAsyncObj;
+                closest = priority;
             }
-        } else if ((sko->m_properties.m_highPriorityDownload || (def->m_notLocal && now - def->m_downloadStartTime[index] < 500)) && def->m_downloaded[index]) {
+        } else if (def->m_downloaded && def->m_notLocal && (sko->m_properties.m_highPriorityDownload || now - def->m_downloadStartTime < 500)) {
             sko->m_properties.m_pSKOToReuse = sko;
             SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Done downloading!");
             SE3::SoundKitObjectLog(sko, __FILE__, __LINE__, "Unlink from download list");
             sm_SoundKitObjects_WaitingForDownloadList.UnlinkNode(sko);
-            SE3::PlaySoundKit(sko->m_pSoundKitDef->m_pSoundKitRec->m_id, &sko->m_position, &sko->m_properties, NULL, __FILE__, __LINE__, "SE3::ProcessDownloadList");
+            SE3::PlaySoundKit(def->m_pSoundKitRec->m_id, sko->m_hasPosition ? &sko->m_position : NULL, &sko->m_properties, NULL, __FILE__, __LINE__, "SE3::ProcessDownloadList");
         } else {
             if (sko->m_pMySKOL) {
                 delete sko->m_pMySKOL;
@@ -3602,7 +3834,7 @@ void SE3::ProcessDownloadList() {
     sm_SoundKitDefs_ClosestAsyncObjectSortVal = closest;
 }
 
-// OFFSET: %0x00677790
+// OFFSET: 0x00710A60
 void SE3::ProcessCombinableSounds() {
     SE3COMBINABLESOUNDLIST* list = sm_CombinableSoundsTable.Head();
 
@@ -3622,9 +3854,9 @@ void SE3::ProcessCombinableSounds() {
     position.z = 0.0f;
 
     do {
-        SE3SoundKitDef* def = sm_SoundKitDefArray[list->m_nSoundKitID];
+        SE3SoundKitDef* def;
 
-        if (def) {
+        if (static_cast<uint32_t>(list->m_nSoundKitID) < sm_SoundKitDefArray.Count() && (def = sm_SoundKitDefArray[list->m_nSoundKitID]) != NULL) {
             float closest = FLT_MAX;
             int32_t allPositioned = 1;
             int32_t count = 0;
@@ -3635,7 +3867,6 @@ void SE3::ProcessCombinableSounds() {
 
                 if (!entry->m_hasPosition) {
                     allPositioned = 0;
-                    break;
                 }
 
                 float distanceSquared = (listener.z - entry->m_position.z) * (listener.z - entry->m_position.z) + (listener.y - entry->m_position.y) * (listener.y - entry->m_position.y) + (listener.x - entry->m_position.x) * (listener.x - entry->m_position.x);
@@ -3683,17 +3914,17 @@ void SE3::ProcessCombinableSounds() {
     } while (list);
 }
 
-// OFFSET: %0x006779D0
-int32_t SE3::PlaySoundFile(const char* filename, uint32_t* handle, SE3BUS bus) {
+// OFFSET: 0x00710CB0/0x1403E2200
+int32_t SE3::PlaySoundFile(const char* filename, uint32_t* handle, SE3BUS bus, SE3USAGE usage) {
     if (!filename) {
         return SE3_ERR_FILE;
     }
 
     SE3SoundKitProperties properties;
+    properties.m_usage = usage;
     properties.m_sFilename = filename;
     properties.m_bus = bus;
-    properties.m_usage = static_cast<SE3USAGE>((bus != SE3BUS_6) + 1);
-    properties.m_bit10 = bus == SE3BUS_6;
+    properties.m_bit10 = bus == SE3BUS_7;
 
     if (SE3::IsBusEqualOrChild(bus, SE3BUS_MUSIC)) {
         properties.m_reverb = 0;
@@ -3702,7 +3933,7 @@ int32_t SE3::PlaySoundFile(const char* filename, uint32_t* handle, SE3BUS bus) {
     return SE3::PlaySoundKit(-128, NULL, &properties, handle, __FILE__, __LINE__, "SE3::PlaySoundFile");
 }
 
-// OFFSET: %0x00677A90
+// OFFSET: 0x00710D70/0x1403E2390
 int32_t SE3::PlaySoundKit(const char* name, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function) {
     SOUNDKITLOOKUP* lookup = s_soundKitLookup.Ptr(name);
     int32_t soundKitID;
@@ -3714,7 +3945,7 @@ int32_t SE3::PlaySoundKit(const char* name, const C3Vector* position, SE3SoundKi
     return SE3_ERR_KIT_NAME_NOT_FOUND;
 }
 
-// OFFSET: %0x00677AE0
+// OFFSET: 0x00710DC0/0x1403E2430
 int32_t SE3::HeartBeat(const void* data, void* param) {
     static uint32_t s_lastTime = OsGetAsyncTimeMs();
     uint32_t now = OsGetAsyncTimeMs();
@@ -3758,7 +3989,7 @@ int32_t SE3::HeartBeat(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: %0x00677BD0
+// OFFSET: 0x00710EB0/0x1403E2570
 int32_t SE3::Init(SE3EngineInitParams* params) {
     SE3::sm_fFocusScalar = 1.0f;
     SE3::sm_bShuttingDown = 0;
@@ -4071,24 +4302,25 @@ int32_t SE3::Init(SE3EngineInitParams* params) {
     SE3::SoundBusSetParameters(SE3BUS_MUSIC, SE3BUS_MASTER, 0x7FFFFFFF, params->m_musicVolume, 0, params->m_musicEnabled);
     SE3::SoundBusSetParameters(SE3BUS_AMBIENCE, SE3BUS_MASTER, 0x7FFFFFFF, params->m_ambienceVolume, 0, params->m_ambienceEnabled);
     SE3::SoundBusSetParameters(SE3BUS_MOVIE, SE3BUS_NONE, 0x7FFFFFFF, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_4, SE3BUS_MASTER, 8, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_5, SE3BUS_SFX, 8, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_6, SE3BUS_MUSIC, 8, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_7, SE3BUS_AMBIENCE, 8, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_8, SE3BUS_MASTER, 1, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_9, SE3BUS_SFX, 1, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_10, SE3BUS_SFX, 2, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_11, SE3BUS_SFX, 1, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_12, SE3BUS_SFX, 2, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_5, SE3BUS_MASTER, 8, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_6, SE3BUS_SFX, 8, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_7, SE3BUS_MUSIC, 8, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_8, SE3BUS_AMBIENCE, 8, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_9, SE3BUS_MASTER, 1, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_10, SE3BUS_SFX, 1, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_11, SE3BUS_SFX, 2, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_12, SE3BUS_SFX, 1, 1.0f, 0, 1);
     SE3::SoundBusSetParameters(SE3BUS_13, SE3BUS_SFX, 2, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_14, SE3BUS_SFX, 1, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_15, SE3BUS_SFX, 6, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_16, SE3BUS_SFX, 4, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_17, SE3BUS_SFX, 1, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_18, SE3BUS_SFX, 2, 1.0f, 0, 1);
-    SE3::SoundBusSetParameters(SE3BUS_19, SE3BUS_SFX, 4, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_14, SE3BUS_SFX, 2, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_15, SE3BUS_SFX, 1, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_16, SE3BUS_SFX, 0x7FFFFFFF, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_17, SE3BUS_SFX, 4, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_18, SE3BUS_SFX, 1, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_19, SE3BUS_SFX, 2, 1.0f, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_20, SE3BUS_SFX, 4, 1.0f, 0, 1);
     SE3::SoundBusSetParameters(SE3BUS_MASTER, SE3BUS_NONE, 0x7FFFFFFF, params->m_masterVolume, 0, params->m_masterEnabled);
     SE3::SoundBusSetParameters(SE3BUS_VOICECHAT, SE3BUS_MASTER, 8, params->m_voiceChatVolume, 0, 1);
+    SE3::SoundBusSetParameters(SE3BUS_DIALOG, SE3BUS_SFX, 0x7FFFFFFF, 1.0f, 0, 1);
 
     EventRegister(EVENT_ID_POLL, SE3::HeartBeat);
 
@@ -4102,7 +4334,7 @@ int32_t SE3::Init(SE3EngineInitParams* params) {
     return SE3_OK;
 }
 
-// OFFSET: %0x00678B40
+// OFFSET: 0x00711E70/0x1403E3900
 void SE3::ShutDown() {
     SE3::Log_Write(" - Shutting Down SE3");
     EventUnregister(EVENT_ID_POLL, SE3::HeartBeat);
@@ -4111,9 +4343,10 @@ void SE3::ShutDown() {
     SE3::sm_bShuttingDown = 1;
     SE3::sm_SE3ShuttingDown_CritSec.Leave();
 
-    SE3::StopAllSounds(SE3BUS_ALL, 0.0f);
+    SE3::StopAllSounds(SE3BUS_ALL, 0);
     SE3::ProcessSoundKitObjectDeleteList();
     SE3::ProcessWaveDataNodeDeleteList(0, 1);
+    SE3::ProcessMemorySoundEndedMessageQueue();
     SE3::FreeSoundKitDefList();
     SE3::CleanUpFMODGameSystem();
 
@@ -4130,6 +4363,7 @@ void SE3::ShutDown() {
     SE3::sm_WaveDataNode_DeleteList.Clear();
 
     for (SE3SOUNDKITOBJECT_LOOKUP* lookup = SE3::sm_SoundKitObjectTable.Head(); lookup; lookup = SE3::sm_SoundKitObjectTable.Head()) {
+        lookup->m_pSKO->m_pSoundKitDef = NULL;
         lookup->m_pSKO->m_pMySKOL = NULL;
 
         if (lookup->m_pSKO) {
@@ -4185,7 +4419,7 @@ void SE3::SetFocusScalar(float scalar) {
     SE3::sm_fFocusScalar = scalar;
 }
 
-// OFFSET: %0x00678E80
+// OFFSET: 0x007121C0
 void SE3::SoundBusInitBuses() {
     for (int32_t i = 0; i < SE3BUS_LAST; i++) {
         SE3::sm_aSoundBus[i].m_parent = SE3BUS_NONE;
@@ -4197,7 +4431,7 @@ void SE3::SoundBusInitBuses() {
     }
 }
 
-// OFFSET: %0x00678ED0
+// OFFSET: 0x00712210
 void SE3::SoundBusSetParameters(SE3BUS bus, SE3BUS parent, int32_t maxChannels, float volume, int32_t muted, int32_t enabled) {
     SE3::sm_aSoundBus[bus].m_parent = parent;
     SE3::sm_aSoundBus[bus].m_maxChannels = maxChannels;
@@ -4213,7 +4447,7 @@ void SE3::SoundBusSetParameters(SE3BUS bus, SE3BUS parent, int32_t maxChannels, 
     SE3::sm_aSoundBus[bus].m_enabled = enabled;
 }
 
-// OFFSET: %0x00678F30
+// OFFSET: 0x00712270
 void SE3::SoundBusSetVolume(SE3BUS bus, float volume) {
     if (volume < 0.0f) {
         volume = 0.0f;
@@ -4236,7 +4470,7 @@ void SE3::SoundBusEnable(SE3BUS bus, int32_t enable) {
     SE3::sm_aSoundBus[bus].m_enabled = enable;
 }
 
-// OFFSET: %0x00678FB0
+// OFFSET: 0x007122F0/0x1403E4120
 float SE3::SoundBusGetVolume(SE3BUS bus) {
     float volume = SE3::sm_fFocusScalar;
 
@@ -4256,7 +4490,7 @@ float SE3::SoundBusGetVolume(SE3BUS bus) {
     return volume;
 }
 
-// OFFSET: %0x00679010
+// OFFSET: 0x00712350
 int32_t SE3::SoundBusIsFull(SE3BUS bus) {
     while (SE3::sm_aSoundBus[bus].m_channelCount < SE3::sm_aSoundBus[bus].m_maxChannels) {
         bus = SE3::sm_aSoundBus[bus].m_parent;
@@ -4269,7 +4503,7 @@ int32_t SE3::SoundBusIsFull(SE3BUS bus) {
     return 1;
 }
 
-// OFFSET: %0x00679040
+// OFFSET: 0x00712380
 int32_t SE3::SoundBusIsEnabled(SE3BUS bus) {
     while (SE3::sm_aSoundBus[bus].m_enabled) {
         bus = SE3::sm_aSoundBus[bus].m_parent;
@@ -4282,7 +4516,7 @@ int32_t SE3::SoundBusIsEnabled(SE3BUS bus) {
     return 0;
 }
 
-// OFFSET: %0x00679070
+// OFFSET: 0x007123B0/0x1403E41E0
 int32_t SE3::SoundBusIsMuted(SE3BUS bus) {
     while (!SE3::sm_aSoundBus[bus].m_muted) {
         bus = SE3::sm_aSoundBus[bus].m_parent;
@@ -4295,17 +4529,17 @@ int32_t SE3::SoundBusIsMuted(SE3BUS bus) {
     return 1;
 }
 
-// OFFSET: %0x006790A0
+// OFFSET: 0x007123E0
 void SE3::SoundBusIncrementChannelCount(SE3BUS bus) {
     SE3::sm_aSoundBus[bus].m_channelCount++;
 }
 
-// OFFSET: %0x006790C0
+// OFFSET: 0x00712400
 void SE3::SoundBusDecrementChannelCount(SE3BUS bus) {
     SE3::sm_aSoundBus[bus].m_channelCount--;
 }
 
-// OFFSET: %0x006790E0
+// OFFSET: 0x00712420/0x1403E4250
 int32_t SE3::IsBusEqualOrChild(SE3BUS bus, SE3BUS parent) {
     if (parent != SE3BUS_ALL) {
         while (bus != parent) {

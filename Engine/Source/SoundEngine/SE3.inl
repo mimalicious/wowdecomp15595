@@ -28,6 +28,7 @@ inline SE3SoundKitProperties::SE3SoundKitProperties() {
 
 // INLINED
 inline SE3SoundEmitter::SE3SoundEmitter() {
+    this->m_userData = 0;
     this->m_hSoundEmitter = 0;
     this->m_uSoundKitObjectUID = 0;
     this->m_pParentSoundChunk = NULL;
@@ -35,7 +36,20 @@ inline SE3SoundEmitter::SE3SoundEmitter() {
     this->m_position.x = 0.0f;
     this->m_position.y = 0.0f;
     this->m_position.z = 0.0f;
+    this->m_positions.Clear();
     this->m_properties.ResetToDefaults();
+}
+
+// INLINED
+inline SE3CreateSoundEmitterMessage::SE3CreateSoundEmitterMessage() {
+    this->m_userData = 0;
+    this->m_hSoundEmitter = 0;
+    this->m_pParentSoundChunk = NULL;
+    this->m_nSoundKitID = 0;
+    this->m_position.x = 0.0f;
+    this->m_position.y = 0.0f;
+    this->m_position.z = 0.0f;
+    this->m_positions.Clear();
 }
 
 // INLINED
@@ -52,9 +66,11 @@ inline SuppressorSound::SuppressorSound() {
     this->m_scalar[0] = 1.0f;
     this->m_scalar[1] = 1.0f;
     this->m_scalar[2] = 1.0f;
+    this->m_scalar[3] = 1.0f;
     this->m_duckTo[0] = 1.0f;
     this->m_duckTo[1] = 1.0f;
     this->m_duckTo[2] = 1.0f;
+    this->m_duckTo[3] = 1.0f;
     this->m_uUID = 0;
     this->m_distance = 0.0f;
     this->m_timeToUnduck = 1000;
@@ -62,7 +78,7 @@ inline SuppressorSound::SuppressorSound() {
     this->m_outerRadius = 0.0f;
 }
 
-// OFFSET: %0x0063E470
+// OFFSET: 0x0062FA30
 inline SE3EngineInitParams::SE3EngineInitParams() {
     this->m_sfxEnabled = 1;
     this->m_musicEnabled = 1;

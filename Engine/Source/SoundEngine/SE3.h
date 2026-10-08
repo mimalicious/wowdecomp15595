@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "Engine/Source/SoundEngine/fmodex/src/fmod.hpp"
 #include "Engine/Source/Storm/H/stpl.h"
+#include "Engine/Source/Services/Panama.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 
 #define SE3_ERRCHECK(result) SE3::ErrCheck(__LINE__, __FILE__, (result))
@@ -14,6 +15,7 @@ class CAsyncObject;
 class SCritSect;
 class SFileImpl;
 class SoundEntriesAdvancedRec;
+class SoundEmittersRec;
 class SoundEntriesRec;
 
 enum SE3BUS {
@@ -22,8 +24,8 @@ enum SE3BUS {
     SE3BUS_SFX = 0,
     SE3BUS_MUSIC = 1,
     SE3BUS_AMBIENCE = 2,
-    SE3BUS_MOVIE = 3,
-    SE3BUS_4 = 4,
+    SE3BUS_DIALOG = 3,
+    SE3BUS_MOVIE = 4,
     SE3BUS_5 = 5,
     SE3BUS_6 = 6,
     SE3BUS_7 = 7,
@@ -39,9 +41,10 @@ enum SE3BUS {
     SE3BUS_17 = 17,
     SE3BUS_18 = 18,
     SE3BUS_19 = 19,
-    SE3BUS_MASTER = 20,
-    SE3BUS_VOICECHAT = 21,
-    SE3BUS_LAST = 22,
+    SE3BUS_20 = 20,
+    SE3BUS_MASTER = 21,
+    SE3BUS_VOICECHAT = 22,
+    SE3BUS_LAST = 23,
 };
 
 enum SE3RESULT {
@@ -66,6 +69,7 @@ enum SE3RESULT {
     SE3_ERR_NOT_LOCAL = 23,
     SE3_ERR_NO_FILE = 24,
     SE3_ERR_NO_OUTPUT_DEVICES = 25,
+    SE3_ERR_STILL_PLAYING = 28,
 };
 
 enum SE3USAGE {
@@ -177,23 +181,23 @@ class SE3SoundKitProperties {
     /* 003C */ char m_sCustomDSPChainName[128];
     /* 00BC */ SE3SoundKitObject* m_pSKOToReuse;
     /* 00C0 */ const char* m_sFilename;
-    /* 00C4 */ int32_t unk_00C4;
-    /* 00C8 */ C3Vector m_coneOrientation;
-    /* 00D4 */ void* m_conditionArg;
-    /* 00D8 */ int32_t (*m_fpCondition)(void*);
-    /* 00DC */ uint32_t m_bit0 : 1;
-    /* 00DC */ uint32_t m_reverb : 1;
-    /* 00DC */ uint32_t m_noRandomStart : 1;
-    /* 00DC */ uint32_t m_bit3 : 1;
-    /* 00DC */ uint32_t m_software : 1;
-    /* 00DC */ uint32_t m_stopPrevious : 1;
-    /* 00DC */ uint32_t m_attachCustomDSPChain : 1;
-    /* 00DC */ uint32_t m_noStreaming : 1;
-    /* 00DC */ uint32_t m_checkRange : 1;
-    /* 00DC */ uint32_t m_combinable : 1;
-    /* 00DC */ uint32_t m_bit10 : 1;
-    /* 00DC */ uint32_t m_highPriorityDownload : 1;
-    /* 00DC */ uint32_t m_unused : 20;
+    /* 00C4 */ C3Vector m_coneOrientation;
+    /* 00D0 */ void* m_conditionArg;
+    /* 00D4 */ int32_t (*m_fpCondition)(void*);
+    /* 00D8 */ uint32_t m_bit0 : 1;
+    /* 00D8 */ uint32_t m_reverb : 1;
+    /* 00D8 */ uint32_t m_noRandomStart : 1;
+    /* 00D8 */ uint32_t m_bit3 : 1;
+    /* 00D8 */ uint32_t m_software : 1;
+    /* 00D8 */ uint32_t m_stopPrevious : 1;
+    /* 00D8 */ uint32_t m_attachCustomDSPChain : 1;
+    /* 00D8 */ uint32_t m_noStreaming : 1;
+    /* 00D8 */ uint32_t m_checkRange : 1;
+    /* 00D8 */ uint32_t m_combinable : 1;
+    /* 00D8 */ uint32_t m_bit10 : 1;
+    /* 00D8 */ uint32_t m_highPriorityDownload : 1;
+    /* 00D8 */ uint32_t m_retriggered : 1;
+    /* 00D8 */ uint32_t m_unused : 19;
 
     SE3SoundKitProperties();
     void ResetToDefaults();
@@ -229,26 +233,27 @@ class SE3SoundKitDef : public TSLinkedNode<SE3SoundKitDef> {
     public:
     /* 0008 */ FMOD::SoundGroup* m_pSoundGroup;
     /* 000C */ uint8_t m_weights[10];
-    /* 0018 */ uint32_t m_nNumFiles : 5;
-    /* 0018 */ uint32_t m_lastIndex : 5;
+    /* 0018 */ int32_t m_nNumFiles : 5;
+    /* 0018 */ int32_t m_lastIndex : 5;
     /* 0018 */ uint32_t m_ownsRecords : 1;
     /* 0018 */ uint32_t m_hasTimeOfDay : 1;
     /* 0018 */ uint32_t m_notLocal : 1;
     /* 0018 */ uint32_t m_unused : 19;
     /* 001C */ int32_t m_timeOfDay[4];
-    /* 002C */ const SoundEntriesRec* m_pSoundKitRec;
-    /* 0030 */ const SoundEntriesAdvancedRec* m_pAdvancedSoundKitRec;
-    /* 0034 */ CAsyncObject* m_aAsyncObj[10];
-    /* 005C */ int32_t m_downloaded[10];
-    /* 0084 */ uint32_t m_downloadStartTime[10];
+    /* 002C */ int32_t m_nPlayingCount;
+    /* 0030 */ const SoundEntriesRec* m_pSoundKitRec;
+    /* 0034 */ const SoundEntriesAdvancedRec* m_pAdvancedSoundKitRec;
+    /* 0038 */ CAsyncObject* m_pAsyncObj;
+    /* 003C */ int32_t m_downloaded;
+    /* 0040 */ uint32_t m_downloadStartTime;
 
     SE3SoundKitDef();
     ~SE3SoundKitDef();
-    int32_t BeginDownload(const char* filename, int32_t index, uint32_t* handle, SE3SoundKitProperties* properties, const C3Vector* position, int32_t local);
+    int32_t BeginDownload(const char* filename, int32_t index, uint32_t* handle, SE3SoundKitProperties* properties, const C3Vector* position);
     void BuildPath(char* path, int32_t size, int32_t index);
-    int32_t IsLocal(const SE3SoundKitProperties* properties, int32_t index);
-    int32_t SelectLocalFile(const SE3SoundKitProperties* properties, int32_t* index);
-    int32_t SelectNextFile(const SE3SoundKitProperties* properties, int32_t* index);
+    int32_t IsLocal(int32_t index);
+    int32_t SelectLocalFile(int32_t* index);
+    void SelectNextFile(const SE3SoundKitProperties* properties, int32_t* index);
 };
 
 struct SE3SOUNDKITOBJECT_LOOKUP : public TSHashObject<SE3SOUNDKITOBJECT_LOOKUP, HASHKEY_NONE> {
@@ -264,39 +269,42 @@ class SE3SoundKitObject : public TSLinkedNode<SE3SoundKitObject> {
     /* 004C */ float m_fadeVolume;
     /* 0050 */ float m_randomVolume;
     /* 0054 */ C3Vector m_position;
-    /* 0060 */ int32_t unk_0060;
-    /* 0064 */ int32_t unk_0064;
-    /* 0068 */ uint32_t m_modeFlags;
-    /* 006C */ void (*m_fpPlayFinishedCallback)(SE3SoundKitObject*);
-    /* 0070 */ int32_t m_priority;
-    /* 0074 */ float m_frequencyScale;
-    /* 0078 */ SE3USAGE m_usage;
-    /* 007C */ int32_t m_periodicTimer;
-    /* 0080 */ void (*m_fpCustomDSPChainCallback)(void*, char*);
-    /* 0084 */ char* m_sCustomDSPChainName;
-    /* 0088 */ int32_t unk_0088;
-    /* 008C */ int32_t unk_008C;
-    /* 0090 */ SE3SoundKitProperties m_properties;
-    /* 0170 */ SE3SOUNDKITOBJECT_LOOKUP* m_pMySKOL;
-    /* 0174 */ int32_t unk_0174;
-    /* 0178 */ uint32_t m_notCacheable : 1;
-    /* 0178 */ uint32_t m_reverb : 1;
-    /* 0178 */ uint32_t m_bit2 : 1;
-    /* 0178 */ uint32_t m_unused : 29;
-    /* 017C */ float m_fTimeOfDayScalar;
-    /* 0180 */ int32_t m_timeOfDayOffset;
-    /* 0184 */ int32_t m_virtualTime;
-    /* 0188 */ TSLink<SE3SoundKitObject> m_loadingLink;
-    /* 0190 */ TSLink<SE3SoundKitObject> m_goGoGoLink;
-    /* 0198 */ TSLink<SE3SoundKitObject> m_deleteLink;
-    /* 01A0 */ TSLink<SE3SoundKitObject> m_fadeLink;
-    /* 01A8 */ TSLink<SE3SoundKitObject> m_link5;
-    /* 01B0 */ TSLink<SE3SoundKitObject> m_downloadLink;
-    /* 01B8 */ int32_t unk_01B8;
-    /* 01BC */ int32_t unk_01BC;
+    /* 0060 */ C3Vector m_positionOffset;
+    /* 006C */ int32_t unk_006C;
+    /* 0070 */ int32_t unk_0070;
+    /* 0074 */ uint32_t m_modeFlags;
+    /* 0078 */ void (*m_fpPlayFinishedCallback)(SE3SoundKitObject*);
+    /* 007C */ void* m_playFinishedParam;
+    /* 0080 */ int32_t m_priority;
+    /* 0084 */ float m_frequencyScale;
+    /* 0088 */ SE3USAGE m_usage;
+    /* 008C */ int32_t m_periodicTimer;
+    /* 0090 */ void (*m_fpCustomDSPChainCallback)(void*, char*);
+    /* 0094 */ char* m_sCustomDSPChainName;
+    /* 0098 */ int32_t unk_0098;
+    /* 009C */ int32_t unk_009C;
+    /* 00A0 */ SE3SoundKitProperties m_properties;
+    /* 017C */ SE3SOUNDKITOBJECT_LOOKUP* m_pMySKOL;
+    /* 0180 */ int32_t unk_0180;
+    /* 0184 */ uint32_t m_notCacheable : 1;
+    /* 0184 */ uint32_t m_reverb : 1;
+    /* 0184 */ uint32_t m_bit2 : 1;
+    /* 0184 */ uint32_t m_hasPosition : 1;
+    /* 0184 */ uint32_t m_unused : 28;
+    /* 0188 */ float m_fTimeOfDayScalar;
+    /* 018C */ int32_t m_timeOfDayOffset;
+    /* 0190 */ int32_t m_virtualTime;
+    /* 0194 */ TSLink<SE3SoundKitObject> m_loadingLink;
+    /* 019C */ TSLink<SE3SoundKitObject> m_goGoGoLink;
+    /* 01A4 */ TSLink<SE3SoundKitObject> m_deleteLink;
+    /* 01AC */ TSLink<SE3SoundKitObject> m_fadeLink;
+    /* 01B4 */ TSLink<SE3SoundKitObject> m_link5;
+    /* 01BC */ TSLink<SE3SoundKitObject> m_downloadLink;
+    /* 01C4 */ int32_t unk_01C4;
 
     SE3SoundKitObject();
     ~SE3SoundKitObject();
+    float GetChannelVolume(int32_t index);
     int32_t IsPlaying();
     int32_t IsVirtual();
     void Set3DPosition(const C3Vector& position);
@@ -320,19 +328,41 @@ struct SE3COMBINABLESOUNDLIST : public TSHashObject<SE3COMBINABLESOUNDLIST, HASH
     ~SE3COMBINABLESOUNDLIST();
 };
 
+struct SE3StreamInfo;
+
+struct SE3AsyncData : public TSLinkedNode<SE3AsyncData> {
+    /* 0008 */ CAsyncObject* m_pAsyncObj;
+    /* 000C */ SE3StreamInfo* m_pStreamInfo;
+};
+
+struct SE3StreamInfo {
+    /* 0000 */ uint32_t m_nextBlock;
+    /* 0004 */ SFileImpl* m_file;
+    /* 0008 */ int32_t m_pendingReads;
+    /* 000C */ int32_t m_closeRequested;
+    /* 0010 */ TSList<SE3AsyncData, TSGetLink<SE3AsyncData> > m_asyncData;
+    /* 001C */ int32_t m_encrypted;
+    /* 0020 */ uint32_t m_headerPosition;
+    /* 0024 */ int32_t m_headerState;
+    /* 0028 */ uint8_t m_key[32];
+    /* 0048 */ uint8_t m_iv[32];
+    /* 0068 */ Crypt::PanamaCypher m_cypher;
+};
+
 class SE3WaveDataNode : public TSLinkedNode<SE3WaveDataNode> {
     public:
     /* 0008 */ SFileImpl* m_file;
     /* 000C */ FMOD::Sound* m_pFMODSound;
-    /* 0010 */ char m_name[128];
-    /* 0090 */ uint32_t m_key;
-    /* 0094 */ SE3WAVEDATASTATE m_state;
-    /* 0098 */ int32_t m_nRefCount;
-    /* 009C */ uint32_t m_size;
-    /* 00A0 */ uint32_t m_uUniqueID;
-    /* 00A4 */ int32_t m_deleteTimer;
-    /* 00A8 */ int32_t m_isStream;
-    /* 00AC */ TSLink<SE3WaveDataNode> m_unreferencedLink;
+    /* 0010 */ SE3StreamInfo* m_pStreamInfo;
+    /* 0014 */ char m_name[128];
+    /* 0094 */ uint32_t m_key;
+    /* 0098 */ SE3WAVEDATASTATE m_state;
+    /* 009C */ int32_t m_nRefCount;
+    /* 00A0 */ uint32_t m_size;
+    /* 00A4 */ uint32_t m_uUniqueID;
+    /* 00A8 */ int32_t m_deleteTimer;
+    /* 00AC */ int32_t m_isStream;
+    /* 00B0 */ TSLink<SE3WaveDataNode> m_unreferencedLink;
 
     static uint32_t sm_uNextUniqueID;
 
@@ -342,15 +372,18 @@ class SE3WaveDataNode : public TSLinkedNode<SE3WaveDataNode> {
 
 class SE3SoundEmitter : public TSLinkedNode<SE3SoundEmitter> {
     public:
-    /* 0008 */ uint32_t m_hSoundEmitter;
-    /* 000C */ uint32_t m_uSoundKitObjectUID;
-    /* 0010 */ struct SE3SoundChunk* m_pParentSoundChunk;
-    /* 0014 */ int32_t m_nSoundKitID;
-    /* 0018 */ C3Vector m_position;
-    /* 0024 */ SE3SoundKitProperties m_properties;
+    /* 0008 */ int32_t m_userData;
+    /* 000C */ uint32_t m_hSoundEmitter;
+    /* 0010 */ uint32_t m_uSoundKitObjectUID;
+    /* 0014 */ struct SE3SoundChunk* m_pParentSoundChunk;
+    /* 0018 */ int32_t m_nSoundKitID;
+    /* 001C */ C3Vector m_position;
+    /* 0028 */ TSGrowableArray<C3Vector> m_positions;
+    /* 0038 */ SE3SoundKitProperties m_properties;
 
     SE3SoundEmitter();
     ~SE3SoundEmitter();
+    void UpdatePillPosition(C3Vector listener);
 };
 
 struct SE3SoundEmitterLookup : public TSHashObject<SE3SoundEmitterLookup, HASHKEY_NONE> {
@@ -371,11 +404,15 @@ struct SE3SoundChunk : public TSHashObject<SE3SoundChunk, HASHKEY_NONE> {
 };
 
 struct SE3CreateSoundEmitterMessage : public TSLinkedNode<SE3CreateSoundEmitterMessage> {
-    /* 0008 */ uint32_t m_hSoundEmitter;
-    /* 000C */ SE3SoundChunk* m_pParentSoundChunk;
-    /* 0010 */ int32_t m_nSoundKitID;
-    /* 0014 */ C3Vector m_position;
-    /* 0020 */ SE3SoundKitProperties m_properties;
+    /* 0008 */ int32_t m_userData;
+    /* 000C */ uint32_t m_hSoundEmitter;
+    /* 0010 */ SE3SoundChunk* m_pParentSoundChunk;
+    /* 0014 */ int32_t m_nSoundKitID;
+    /* 0018 */ C3Vector m_position;
+    /* 0024 */ TSGrowableArray<C3Vector> m_positions;
+    /* 0034 */ SE3SoundKitProperties m_properties;
+
+    SE3CreateSoundEmitterMessage();
 };
 
 struct SE3Set3DPositionMessage : public TSLinkedNode<SE3Set3DPositionMessage> {
@@ -451,14 +488,14 @@ class SE3ChatSound : public TSHashObject<SE3ChatSound, HASHKEY_NONE> {
 
 struct SuppressorSound : public TSLinkedNode<SuppressorSound> {
     /* 0008 */ uint32_t m_uUID;
-    /* 000C */ float m_scalar[3];
-    /* 0018 */ float m_distance;
-    /* 001C */ float m_duckTo[3];
-    /* 0028 */ float m_innerRadius;
-    /* 002C */ float m_outerRadius;
-    /* 0030 */ int32_t m_active;
-    /* 0034 */ int32_t m_timeToDuck;
-    /* 0038 */ int32_t m_timeToUnduck;
+    /* 000C */ float m_scalar[4];
+    /* 001C */ float m_distance;
+    /* 0020 */ float m_duckTo[4];
+    /* 0030 */ float m_innerRadius;
+    /* 0034 */ float m_outerRadius;
+    /* 0038 */ int32_t m_active;
+    /* 003C */ int32_t m_timeToDuck;
+    /* 0040 */ int32_t m_timeToUnduck;
 
     SuppressorSound();
 };
@@ -518,7 +555,8 @@ class SE3 {
     static int32_t CreateChatSound(SE3StreamCallbacks* callbacks, uint32_t* handle, FMOD::System* system);
     static FMOD_RESULT CreateDSPByType(SE3_DSP_TYPE type, void** dsp);
     static SE3SoundKitObject* CreateNewSoundKitObject(uint32_t* handle, SE3SoundKitProperties* properties);
-    static int32_t CreateWaveData(uint32_t key, FMOD::SoundGroup* soundGroup, uint32_t mode, int32_t stream, uint32_t size, const char* filename, SFileImpl* file, uint32_t* waveDataID);
+    static void CreateSoundEmitter(uint32_t* handle, const SoundEmittersRec* rec, SE3SoundKitProperties* properties);
+    static int32_t CreateWaveData(uint32_t key, FMOD::SoundGroup* soundGroup, uint32_t mode, int32_t stream, uint32_t size, const char* filename, SFileImpl* file, uint32_t* waveDataID, SE3StreamInfo* streamInfo);
     static void DecrementWaveDataNodeRefCount(uint32_t waveDataID);
     static FMOD_RESULT DestroyChannelGroup(void* channelGroup);
     static void DestroyChatSystem();
@@ -532,7 +570,7 @@ class SE3 {
     static void EmitterManagerInit(void (*callback)(const C3Vector&, uint32_t*, uint32_t*), uint32_t chunkSize, uint32_t chunkRadius);
     static void EmitterManagerProcessEmitterMessages();
     static void StreamingUpdate();
-    static void EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties);
+    static void EmitterManagerSendMessage_CreateEmitter(uint32_t* handle, SE3SoundChunk* chunk, int32_t soundKitID, const C3Vector& position, SE3SoundKitProperties* properties, const TSGrowableArray<C3Vector>* positions, int32_t userData);
     static void EmitterManagerSendMessage_MarkSoundChunkDirty(SE3SoundChunk* chunk);
     static void EmitterManagerSendMessage_Set3DPosition(uint32_t handle, const C3Vector& position);
     static void EmitterManagerShutDown();
@@ -545,8 +583,6 @@ class SE3 {
     static int32_t FindWaveDataNode(uint32_t waveDataID, SE3WaveDataNode** node);
     static void FreeSoundKitDefList();
     static int32_t GetChannelGroupNumChannels(void* channelGroup);
-    static CAsyncObject* GetClosestAsyncObject();
-    static float GetClosestAsyncObjectSortVal();
     static char* GetCurrentGameOutputDeviceName();
     static int32_t GetFallbackSoundKitID(int32_t soundKitID);
     static int32_t GetInputDriverName(int32_t index, char* name, int32_t nameLength, FMOD::System* system);
@@ -565,7 +601,6 @@ class SE3 {
     static int32_t GetSoundKitID(uint32_t handle);
     static int32_t GetSoundKitUsage(int32_t soundKitID);
     static float GetSuppressionScalar(SE3BUS bus, uint32_t uid);
-    static int32_t HasClosestAsyncObject();
     static int32_t HeartBeat(const void* data, void* param);
     static int32_t Init(SE3EngineInitParams* params);
     static void InitCapture(int32_t& outputDriverIndex, const char* outputDriverName, int32_t& inputDriverIndex, const char* inputDriverName, float sampleRate, int32_t& hasInputDevices, SE3SOUNDQUALITY quality, SE3MIXMODE2 mixMode);
@@ -588,10 +623,10 @@ class SE3 {
     static void Log_Write(const char* format, ...);
     static void Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const char* format, ...);
     static void ManageOutOfRangeSounds(int32_t elapsed);
-    static int32_t PlaySoundFile(const char* filename, uint32_t* handle, SE3BUS bus);
+    static int32_t PlaySoundFile(const char* filename, uint32_t* handle, SE3BUS bus, SE3USAGE usage);
     static int32_t PlaySoundFromMemory(SE3MemorySoundProperties* properties, int32_t chatSystem);
     static int32_t PlaySoundKit(const char* name, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function);
-    static int32_t PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function);
+    static int32_t PlaySoundKit(int32_t soundKitID, const C3Vector* position, SE3SoundKitProperties* properties, uint32_t* handle, const char* file, int32_t line, const char* function, int32_t streamed = 0, const uint8_t* key = NULL);
     static void ProcessCombinableSounds();
     static void ProcessDoneLoadingMessageQueue();
     static void ProcessDownloadList();
@@ -640,12 +675,13 @@ class SE3 {
     static void SoundBusMute(SE3BUS bus, int32_t mute);
     static void SoundBusSetParameters(SE3BUS bus, SE3BUS parent, int32_t maxChannels, float volume, int32_t muted, int32_t enabled);
     static void SoundBusSetVolume(SE3BUS bus, float volume);
+    static void SoundKitDefLog(const char* format, ...);
     static void SoundKitObjectLog(SE3SoundKitObject* sko, const char* file, int32_t line, const char* format, ...);
     static void SoundKitObjects_HandleWaveDataDelete(uint32_t waveDataID);
     static void SoundKitObjects_Loading_Delete(uint32_t waveDataID);
     static void SoundKitObjects_Loading_Ready(uint32_t waveDataID);
     static void StartCapture();
-    static void StopAllSounds(SE3BUS bus, float fadeOutTime);
+    static void StopAllSounds(SE3BUS bus, int32_t fadeOutTime);
     static int32_t StopMemorySound(uint32_t handle);
     static void StopOrFadeOut(SE3SoundKitObject* sko, int32_t fadeOutTime, const char* file, int32_t line, const char* function);
     static int32_t StopSound(uint32_t handle, int32_t fadeOutTime, const char* file, int32_t line, const char* function);

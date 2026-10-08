@@ -39,10 +39,9 @@ const SE3BUS SI2::s_channelGroupBus[18] = {
     SE3BUS_SFX,
     SE3BUS_MUSIC,
     SE3BUS_AMBIENCE,
-    SE3BUS_4,
     SE3BUS_5,
     SE3BUS_6,
-    SE3BUS_8,
+    SE3BUS_7,
     SE3BUS_9,
     SE3BUS_10,
     SE3BUS_11,
@@ -54,6 +53,7 @@ const SE3BUS SI2::s_channelGroupBus[18] = {
     SE3BUS_17,
     SE3BUS_18,
     SE3BUS_19,
+    SE3BUS_20,
 };
 
 // STATIC: #0x00AC384C
