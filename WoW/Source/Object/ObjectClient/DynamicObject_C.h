@@ -25,7 +25,8 @@ class CGDynamicObject_C : public CGObject_C, public CGDynamicObject {
     /* 0178 */ uint32_t unk_0178;
     /* 017C */ float m_scale;
     /* 0180 */ BlizzardObject* m_blizzardVisual;
-    /* 0184 */ SE2SoundKitObject m_soundKit;
+    /* 0184 */ uint32_t m_soundKit;
+    /* 0188 */ uint32_t unk_0188;
 
     ~CGDynamicObject_C();
     virtual C3Vector GetPosition() const;

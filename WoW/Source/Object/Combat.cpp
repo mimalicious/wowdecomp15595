@@ -14,7 +14,7 @@ void CCombatClient::SetAttackSent(WOWGUID guid) {
     this->m_attackSent = 1;
 }
 
-// OFFSET: #0x0098E560
+// OFFSET: 0x00A29190
 void CCombat::SetClientInitData(const CClientObjCreate& create) {
-    this->m_attacking = create.m_attackTarget;
+    this->m_attacking = create.m_hasTarget ? create.m_target : WOWGUID();
 }

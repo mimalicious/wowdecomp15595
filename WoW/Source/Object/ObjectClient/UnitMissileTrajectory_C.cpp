@@ -1352,7 +1352,7 @@ void CGUnit_C::StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec*
         const char* name = vehicleRec->m_msslTrgtImpactModel[i];
 
         if (name && *name) {
-            CGUnit_C::s_trajectoryModels[i] = World::s_m2Scene->CreateModel(name, 0);
+            CGUnit_C::s_trajectoryModels[i] = World::GetScene()->CreateModel(name, 0, 3);
         }
     }
 

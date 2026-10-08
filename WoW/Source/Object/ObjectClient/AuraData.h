@@ -13,12 +13,13 @@ class AuraData {
     public:
     /* 0000 */ WOWGUID m_creator;
     /* 0008 */ int32_t m_spellId;
-    /* 000C */ uint8_t m_flags;
-    /* 000D */ uint8_t m_level;
-    /* 000E */ uint8_t m_stackCount;
-    /* 000F */ uint8_t unk_000F;
+    /* 000C */ uint16_t m_flags;
+    /* 000E */ uint8_t m_level;
+    /* 000F */ uint8_t m_stackCount;
     /* 0010 */ int32_t m_duration;
     /* 0014 */ int32_t m_endTime;
+    /* 0018 */ int32_t m_effectAmounts [3];
+    /* 0024 */ uint32_t unk_0024;
 
     void Unpack(CGUnit_C* unit, uint32_t time, CDataStore* msg);
 };

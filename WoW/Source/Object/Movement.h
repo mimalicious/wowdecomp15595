@@ -73,6 +73,7 @@ class CMovement_C : public CMovementShared {
     /* 0134 */ uint32_t m_moveStartDelay;
     /* 0138 */ CPlayerMoveQueue m_moveQueue;
     /* 0144 */ CGUnit_C* m_unit;
+    /* 0148 */ uint32_t unk_0148 [2];
 
     CMovement_C(const C3Vector& position, float facing, const WOWGUID& ownerGuid, CGUnit_C* unit);
     ~CMovement_C();

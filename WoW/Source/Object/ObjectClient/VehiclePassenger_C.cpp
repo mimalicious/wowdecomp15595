@@ -502,9 +502,9 @@ void CVehiclePassenger_C::StartMirroringVehicleAnims() {
     vehicleModel->GetBoneSequenceInfo(0xFFFFFFFF, info);
 
     if (info.m_sequenceId >= 506) {
-        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
-        model->SetBoneSequence(0xFFFFFFFF, info.m_sequenceId, info.m_variationIndex, info.m_time, info.m_speed, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, info.m_sequenceId, info.m_variationIndex, info.m_time, info.m_speed, 1, 1, 0, 0, 0);
     }
 
     for (uint32_t bone = 0; bone < 35; bone++) {
@@ -519,7 +519,7 @@ void CVehiclePassenger_C::StartMirroringVehicleAnims() {
             vehicleModel->GetBoneSequenceInfo(bone, info);
 
             if (info.m_sequenceId < 506) {
-                model->SetBoneSequence(bone, info.m_sequenceId, info.m_variationIndex, info.m_time, info.m_speed, 1, 1, 0);
+                model->SetBoneSequence(bone, info.m_sequenceId, info.m_variationIndex, info.m_time, info.m_speed, 1, 1, 0, 0, 0);
                 continue;
             }
         } else if (!hasBone) {

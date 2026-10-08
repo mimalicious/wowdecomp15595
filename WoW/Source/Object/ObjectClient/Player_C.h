@@ -85,6 +85,7 @@ struct PlayerDance {
 class DanceMovesRec;
 class CEffect;
 
+#pragma pack(push, 4)
 class CGPlayer_C : public CGUnit_C, public CGPlayer {
     public:
     void DanceMoveAnimComplete();
@@ -209,33 +210,36 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static bool UnitIsTrivial(const CGUnit_C* unit);
     static void __stdcall UnSilencePlayer(WOWGUID guid, bool silence);
 
-    /* 1010 */ TSList<void> m_playerMirrorLists [176];
-    /* 1850 */ TSList<void>* m_playerLocalMirrorLists;
-    /* 1854 */ int32_t unk_1854;
-    /* 1858 */ uint32_t m_combatModeFlags;
-    /* 185C */ TSHashTable<TRADESKILLLINE, HASHKEY_NONE> m_tradeSkillLines;
-    /* 1884 */ TSHashTable<PROFICIENCYSPELL, HASHKEY_NONE> m_proficiencySpells;
-    /* 18AC */ TSExplicitList<PlayerPendingItemExpiration, 0> m_pendingItemExpirations;
-    /* 18B8 */ uint32_t unk_18B8;
-    /* 18BC */ TSGrowableArray<int32_t> m_equipBypassSkills;
-    /* 18CC */ TSGrowableArray<int32_t> m_companionSpells;
-    /* 18DC */ uint32_t unk_18DC;
-    /* 18E0 */ WOWGUID m_lootTarget;
-    /* 18E8 */ uint8_t m_autoLoot;
-    /* 18E9 */ uint8_t unk_18E9 [3];
-    /* 18EC */ uint32_t unk_18EC;
-    /* 18F0 */ CGBag_C m_bag;
-    /* 1908 */ CGUnitVirtualItem m_virtualItems [3];
-    /* 1920 */ uint32_t m_clientStandState;
-    /* 1924 */ int32_t m_gemCounts [4];
-    /* 1934 */ uint32_t m_combatModeTime;
-    /* 1938 */ WOWGUID m_combatTarget;
-    /* 1940 */ uint32_t m_pvpCooldownTimestamp;
-    /* 1944 */ PlayerDance* m_dance;
-    /* 1948 */ int32_t m_danceMoveIndex;
-    /* 194C */ int32_t m_playedTime;
-    /* 1950 */ uint32_t m_playedTimeBase;
-    /* 1954 */ uint32_t unk_1954;
+    /* 1270 */ TSList<void> m_playerMirrorLists [302];
+    /* 2098 */ TSList<void>* m_playerLocalMirrorLists;
+    /* 209C */ int32_t unk_209C;
+    /* 20A0 */ uint32_t m_combatModeFlags;
+    /* 20A4 */ TSHashTable<TRADESKILLLINE, HASHKEY_NONE> m_tradeSkillLines;
+    /* 20D0 */ TSHashTable<PROFICIENCYSPELL, HASHKEY_NONE> m_proficiencySpells;
+    /* 20FC */ TSExplicitList<PlayerPendingItemExpiration, 0> m_pendingItemExpirations;
+    /* 2108 */ uint32_t unk_2108;
+    /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
+    /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
+    /* 212C */ uint32_t unk_212C [17];
+    /* 2170 */ TSList<void> unk_2170;
+    /* 217C */ uint32_t unk_217C;
+    /* 2180 */ WOWGUID m_lootTarget;
+    /* 2188 */ uint8_t m_autoLoot;
+    /* 2189 */ uint8_t unk_2189 [3];
+    /* 218C */ uint32_t unk_218C;
+    /* 2190 */ CGBag_C m_bag;
+    /* 21A8 */ CGUnitVirtualItem m_virtualItems [3];
+    /* 21C0 */ uint32_t m_clientStandState;
+    /* 21C4 */ int32_t m_gemCounts [4];
+    /* 21D4 */ uint32_t m_combatModeTime;
+    /* 21D8 */ uint32_t unk_21D8 [4];
+    /* 21E8 */ uint32_t m_pvpCooldownTimestamp;
+    /* 21EC */ PlayerDance* m_dance;
+    /* 21F0 */ int32_t m_danceMoveIndex;
+    /* 21F4 */ int32_t m_playedTime;
+    /* 21F8 */ uint32_t m_playedTimeBase;
+    /* 21FC */ WOWGUID m_combatTarget;
+    /* 2204 */ uint32_t unk_2204;
 
     ~CGPlayer_C();
     void Disable() override;
@@ -445,6 +449,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UnsetActiveMirrorHandlers();
     void MeleeModeLeave();
 };
+#pragma pack(pop)
 
 class PlaySpellVisuaKitData {
     public:

@@ -105,8 +105,8 @@ class CMissile {
     /* 0144 */ uint32_t m_fizzleTime;
     /* 0148 */ CMissileCollision* m_missileCollision;
     /* 014C */ C3Vector m_remoteCollisionPos;
-    /* 0158 */ CMapEntity* m_mapEntity;
-    /* 015C */ CMapEntity* m_mapEntity2;
+    /* 0158 */ uintptr_t m_mapEntity;
+    /* 015C */ uintptr_t m_mapEntity2;
     /* 0160 */ CMissile** m_prevLink;
     /* 0164 */ CMissile* m_next;
     /* 0168 */ uint32_t m_memHandle;

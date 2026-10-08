@@ -64,7 +64,7 @@ class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID
     static void Shutdown();
     static int32_t UpdateAllObjectEffectManagers();
     static CGObject_C* GetFocusObject();
-    static void PrepareToFadeInt(CMapEntity* entity, float alpha, uint64_t transportGuid);
+    static void PrepareToFadeInt(uintptr_t entity, float alpha, uint64_t transportGuid);
     static int32_t UpdateAllWorldObjects();
     static void LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
     static void EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
@@ -87,7 +87,7 @@ class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID
     /* 00C4 */ float m_height;
     /* 00C8 */ PLAYERNAMEDESC* m_nameDesc;
     /* 00CC */ CM2Model* m_worldModel;
-    /* 00D0 */ CMapEntity* m_worldObject;
+    /* 00D0 */ uintptr_t m_worldObject;
     /* 00D4 */ uint32_t m_modelFlags;
     /* 00D8 */ uint32_t m_fadeStartTime;
     /* 00DC */ uint32_t m_fadeDuration;
@@ -214,8 +214,8 @@ struct DBCACHEHASH_NAME : public TSHashObject<DBCACHEHASH_NAME, CHashKeyGUID> {
 };
 
 namespace World {
-    int32_t QueryObjectVisible(CMapEntity* entity);
-    void TickObject(CMapEntity* entity);
+    int32_t QueryObjectVisible(uintptr_t entity);
+    void TickObject(uintptr_t entity);
 }
 
 #include "WoW/Source/Object/ObjectClient/Object_C.inl"

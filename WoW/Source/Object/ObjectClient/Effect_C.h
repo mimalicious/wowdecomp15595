@@ -75,7 +75,7 @@ class CEffect {
     /* 00E4 */ float unk_00E4;
     /* 00E8 */ float unk_00E8;
     /* 00EC */ CImVector m_color;
-    /* 00F0 */ CMapEntity* m_mapEntity;
+    /* 00F0 */ uintptr_t m_mapEntity;
     /* 00F4 */ int32_t m_refCount;
     /* 00F8 */ uint32_t m_lightningRefCount;
     /* 00FC */ int32_t m_lightningState;

@@ -14,10 +14,10 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: #0x00ADB74C
+// STATIC: 0x00CA7790
 static TSExplicitList<CGGameObject_C, offsetof(CGGameObject_C, m_transportLink)> s_transports;
 
-// OFFSET: #0x0074B730
+// OFFSET: 0x005E7000
 void MovementAddTransport(CGGameObject_C* transport) {
     s_transports.LinkToTail(transport);
 }
@@ -45,7 +45,7 @@ void MovementSetGlobals(CMovementGlobals* globals) {
     ClntObjMgrSetMovementGlobals(globals);
 }
 
-// OFFSET: #0x0074B590
+// OFFSET: 0x005E6E60
 float MovementGetTransportFacing(WOWGUID transport) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -57,7 +57,7 @@ float MovementGetTransportFacing(WOWGUID transport) {
     return object->GetFacing();
 }
 
-// OFFSET: #0x0074B430
+// OFFSET: 0x005E6CD0
 int32_t MovementGetTransportMtxSafe(WOWGUID transport, C44Matrix* matrix) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -85,7 +85,7 @@ int32_t MovementGetTransportMtxSafe(WOWGUID transport, C44Matrix* matrix) {
     return 0;
 }
 
-// OFFSET: #0x0074B4C0
+// OFFSET: 0x005E6D80
 int32_t MovementGetTransportMtxX(WOWGUID transport, C44Matrix* matrix, WOWGUID owner, const char* file, int32_t line) {
     if (MovementGetTransportMtxSafe(transport, matrix)) {
         return 1;
@@ -95,7 +95,7 @@ int32_t MovementGetTransportMtxX(WOWGUID transport, C44Matrix* matrix, WOWGUID o
     return 0;
 }
 
-// OFFSET: #0x0074B510
+// OFFSET: 0x005E6DD0
 void MovementGetTransportQuat(WOWGUID transport, C4Quaternion* quat) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -111,7 +111,7 @@ void MovementGetTransportQuat(WOWGUID transport, C4Quaternion* quat) {
     quat->w = 1.0f;
 }
 
-// OFFSET: #0x0074B5E0
+// OFFSET: 0x005E6EB0
 int32_t MovementInsideTransport(WOWGUID transport, const C3Vector& point) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -122,14 +122,14 @@ int32_t MovementInsideTransport(WOWGUID transport, const C3Vector& point) {
     return object->IsPointInside(point);
 }
 
-// OFFSET: #0x0074B6E0
+// OFFSET: 0x005E6FB0
 void MovementMoveTransports(uint32_t time, uint32_t elapsed) {
     for (CGGameObject_C* transport = s_transports.Head(); transport; transport = s_transports.Next(transport)) {
         transport->m_typeData->UpdateMovement(time, elapsed);
     }
 }
 
-// OFFSET: #0x0074B670
+// OFFSET: 0x005E6F40
 void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, uint8_t seat) {
     uint32_t high = (uint32_t)(transport.m_guid >> 32);
 
@@ -147,7 +147,7 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
 void MovementNotifyZoneMgr(WOWGUID guid) {
 }
 
-// OFFSET: #0x0074B3F0
+// OFFSET: 0x005E6C90
 int32_t MovementObjIsTransport(WOWGUID guid) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -158,7 +158,7 @@ int32_t MovementObjIsTransport(WOWGUID guid) {
     return object->IsTransport();
 }
 
-// OFFSET: #0x0074B750
+// OFFSET: 0x005E7020
 void MovementRemoveTransport(CGGameObject_C* transport) {
     s_transports.UnlinkNode(transport);
 }
@@ -202,14 +202,14 @@ int32_t MovementIdleMoveUnits(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x0074B7E0
+// OFFSET: 0x005E7190
 void MovementDelSpline(CMoveSpline* spline) {
     if (spline) {
         delete spline;
     }
 }
 
-// OFFSET: #0x0074B380
+// OFFSET: 0x005E6C30
 void MovementUpdateCameraYaw(WOWGUID guid, WOWGUID transport) {
     uint32_t high = static_cast<uint32_t>(transport.m_guid >> 32);
 
@@ -224,7 +224,7 @@ void MovementUpdateCameraYaw(WOWGUID guid, WOWGUID transport) {
     }
 }
 
-// OFFSET: #0x0074B620
+// OFFSET: 0x005E6EF0
 void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
@@ -232,14 +232,14 @@ void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload
         if (preload) {
             World::Preload(position, 1);
         } else {
-            World::Update(position);
+            World::UpdateAreaOfInterest(position, 0);
         }
 
         CGObject_C::UpdateAllWorldObjects();
     }
 }
 
-// OFFSET: %0x005F38A0
+// OFFSET: 0x005E7160
 CMoveSpline* MovementNewSpline() {
     return new (SMemAlloc(sizeof(CMoveSpline), __FILE__, __LINE__, 0)) CMoveSpline();
 }

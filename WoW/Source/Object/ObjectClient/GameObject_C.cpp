@@ -345,7 +345,7 @@ void ApplyGameObjectArtKit(CM2Model* model, int32_t artKit) {
 
         for (uint32_t i = 0; i < 4; i++) {
             if (*rec->m_attachModel[i]) {
-                CM2Model* child = model->m_scene->CreateModel(rec->m_attachModel[i], 0);
+                CM2Model* child = model->m_scene->CreateModel(rec->m_attachModel[i], 0, 3);
 
                 if (child) {
                     child->AttachToParent(model, i, NULL, 0);
@@ -1086,7 +1086,7 @@ void CGGameObject_C_Type_WorldObj::SequenceFinishedHandler(CM2Model* model, uint
         }
     }
 
-    model->SetBoneSequence(0xFFFFFFFF, next, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+    model->SetBoneSequence(0xFFFFFFFF, next, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
 }
 
 // OFFSET: #0x007128D0
@@ -1108,7 +1108,7 @@ CGGameObject_C_Type_DestructibleBuilding::CGGameObject_C_Type_DestructibleBuildi
 // OFFSET: #0x0070B870
 void CGGameObject_C_Type_DestructibleBuilding::AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (!interrupted && sequenceId != 154) {
-        model->SetBoneSequence(0xFFFFFFFF, 154, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 154, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -1212,7 +1212,7 @@ uint16_t CGGameObject_C_Type_DestructibleBuilding::GetAmbientDoodadSet(int32_t s
 // OFFSET: #0x0070B800
 void CGGameObject_C_Type_DestructibleBuilding::DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
     if (!interrupted && sequenceId) {
-        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -1223,9 +1223,9 @@ void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandl
     }
 
     if (sequenceId == 153) {
-        model->SetBoneSequence(0xFFFFFFFF, 154, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 154, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
-        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -1236,9 +1236,9 @@ void CGGameObject_C_Type_DestructibleBuilding::MovedDoodadSequenceHandler(CM2Mod
     }
 
     if (sequenceId == 153 || sequenceId == 154) {
-        model->SetBoneSequence(0xFFFFFFFF, 155, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 155, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else if (sequenceId == 155) {
-        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -1355,7 +1355,7 @@ void CGGameObject_C::ShowLootEffect() {
     }
 
     const SpellVisualEffectNameRec* rec = GetSpecialSpellVisualEffectNameRec(4);
-    this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(rec->m_fileName, 0);
+    this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(rec->m_fileName, 0, 3);
 
     if (!this->m_lootEffect) {
         return;
@@ -2957,7 +2957,7 @@ effects:
         }
     }
 
-    model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, startTime, speed, this->m_animState != 0, 1, 0);
+    model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, startTime, speed, this->m_animState != 0, 1, 0, 0, 0);
 
     if (keepTime) {
         uint32_t time = model->m_scene->m_time;

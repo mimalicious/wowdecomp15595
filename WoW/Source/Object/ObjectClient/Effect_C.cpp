@@ -333,7 +333,7 @@ void CEffect::InitFromUnit(C3Vector position, uint32_t time, int32_t spellId, co
     this->unk_00A0 = a9;
     this->m_facing = unit->GetSmoothFacing();
     this->m_attachRec = attach;
-    this->m_model = World::s_m2Scene->CreateModel(this->m_effectNameRec->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(this->m_effectNameRec->m_fileName, 0, 3);
 
     if (this->m_model) {
         this->m_refCount++;
@@ -357,7 +357,7 @@ void CEffect::CreateModelFromEffect(CM2Model* model, void* arg) {
         effect->SetEmissionRateIgnoresDistance(1);
     }
 
-    model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+    model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
 }
 
 // OFFSET: #0x006F7B00
@@ -426,7 +426,7 @@ void CEffect::AddEffect(int32_t attachType, int32_t spellId, const SpellVisualKi
         this->m_flags = flags | 0x10000;
     }
 
-    this->m_model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(effectName->m_fileName, 0, 3);
 
     if (this->m_model) {
         this->m_refCount++;
@@ -556,7 +556,7 @@ void CEffect::AddSpecialEffect(int32_t type, const WOWGUID& target, void (*callb
 
     this->m_effectNameRec = g_spellVisualEffectNameDB.GetRecord(s_specialUnitEffectIDs[type]);
     CEffect::DestroyMatchingEffects(unit, this->m_effectNameRec, attachment, 0, 0, NULL);
-    this->m_model = World::s_m2Scene->CreateModel(this->m_effectNameRec->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(this->m_effectNameRec->m_fileName, 0, 3);
 
     if (this->m_model) {
         this->m_refCount++;
@@ -583,7 +583,7 @@ void CEffect::AddSpecialByPosition(int32_t type, C3Vector position, const WOWGUI
     this->m_position.z = position.z;
     this->m_transportGuid = WOWGUID();
     this->m_effectNameRec = g_spellVisualEffectNameDB.GetRecord(s_specialUnitEffectIDs[type]);
-    this->m_model = World::s_m2Scene->CreateModel(this->m_effectNameRec->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(this->m_effectNameRec->m_fileName, 0, 3);
 
     if (this->m_model) {
         this->m_refCount++;
@@ -849,7 +849,7 @@ void CEffect::AddLootEffect(CGUnit_C* unit, void (*callback)(CM2Model* model, ui
     this->m_attachmentId = 19;
     const SpellVisualEffectNameRec* effectName = GetSpecialSpellVisualEffectNameRec(4);
     this->m_effectNameRec = effectName;
-    this->m_model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(effectName->m_fileName, 0, 3);
 
     if (!this->m_model) {
         delete this;
@@ -1423,7 +1423,7 @@ void CEffect::InitAtPosition(int32_t spellId, const SpellVisualKitRec* kit, cons
     this->m_effectNameRec = effectName;
     this->m_flags = flags | 0x2;
     this->unk_00A0 = a8;
-    this->m_model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0);
+    this->m_model = World::GetScene()->CreateModel(effectName->m_fileName, 0, 3);
 
     if (this->m_model) {
         this->m_refCount++;
@@ -1546,11 +1546,11 @@ int32_t CEffect::LoadMountTransitionModel() {
         return 0;
     }
 
-    this->m_model = World::s_m2Scene->CreateModel(modelData->m_modelName, 0);
+    this->m_model = World::GetScene()->CreateModel(modelData->m_modelName, 0, 3);
     this->m_model->SetSequenceCallback(reinterpret_cast<void*>(&MountTransitionSequenceCB), reinterpret_cast<uintptr_t>(this));
     this->m_model->SetEventCallback(reinterpret_cast<void*>(&CEffect::EffectEvent), reinterpret_cast<uintptr_t>(this));
     CCharacterComponent::ReplaceMonsterSkin(this->m_model, display, modelData);
-    this->m_model->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+    this->m_model->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     CM2Model* model = this->m_model;
 
     if (model->m_attachParent) {

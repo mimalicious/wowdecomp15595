@@ -13,7 +13,7 @@ class CGObjectData;
 
 class __declspec(novtable) CGObject {
     public:
-    static const uint32_t s_savedFields[3];
+    static const uint32_t s_savedFields[6];
 
     static int32_t GetSavedIndexFromDataIndex(uint32_t index);
     static int32_t TotalFieldsSaved();

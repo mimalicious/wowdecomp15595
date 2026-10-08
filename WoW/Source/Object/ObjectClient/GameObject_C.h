@@ -11,6 +11,7 @@
 #include "WoW/Source/Game/ShipPath.h"
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Object/GameObject.h"
+#include "WoW/Source/Object/ObjectClient/AnimKitManager.h"
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/Passenger.h"
 #include "WoW/Source/SoundInterface/SoundInterface2.h"
@@ -130,7 +131,7 @@ class CGGameObject_C_Type_WorldObj : public CGGameObject_C_TypeBase {
     public:
     static void SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
 
-    /* 0010 */ CMapEntity* m_worldObject;
+    /* 0010 */ uintptr_t m_worldObject;
 
     virtual ~CGGameObject_C_Type_WorldObj();
     virtual bool CanBeSolid() const;
@@ -194,7 +195,7 @@ class CGGameObject_C_Type_MapObjTransport : public CGGameObject_C_Type_Transport
 struct DestructibleBuildingState {
     /* 0000 */ const char* m_modelName;
     /* 0004 */ int32_t m_displayId;
-    /* 0008 */ CMapEntity* m_object;
+    /* 0008 */ uintptr_t m_object;
     /* 000C */ uint8_t m_loading;
     /* 000D */ uint8_t m_animate;
     /* 000E */ uint8_t unk_000E[2];
@@ -213,8 +214,8 @@ class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_Worl
     /* 0058 */ float m_baseZ;
     /* 005C */ uint32_t m_animStartTime;
     /* 0060 */ uint32_t m_animDuration;
-    /* 0064 */ CMapEntity* m_rebuildEffect;
-    /* 0068 */ CMapEntity* m_baseCollision;
+    /* 0064 */ uintptr_t m_rebuildEffect;
+    /* 0068 */ uintptr_t m_baseCollision;
     /* 006C */ float m_sinkDepth;
     /* 0070 */ float m_previousSinkDepth;
     /* 0074 */ uint32_t unk_0074;
@@ -289,17 +290,20 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
 
     /* 0100 */ CPassenger m_passenger;
     /* 0130 */ TSList<void> m_gameObjectMirrorLists [12];
-    /* 0198 */ TSLink<CGGameObject_C> m_transportLink;
-    /* 01A0 */ CGGameObject_C_TypeBase* m_typeData;
-    /* 01A4 */ GameObjectStats* m_stats;
-    /* 01A8 */ C44Matrix m_matrix;
-    /* 01E8 */ CAaBox m_worldBounds;
-    /* 0200 */ uint32_t m_transportTimeOffset;
-    /* 0204 */ int32_t m_displayState;
-    /* 0208 */ int32_t m_pendingOneShotAnim;
-    /* 020C */ int32_t m_hasWorldBounds;
-    /* 0210 */ CM2Model* m_lootEffect;
-    /* 0214 */ uint32_t m_effectAnimState;
+    /* 01C0 */ TSLink<CGGameObject_C> m_transportLink;
+    /* 01C8 */ CGGameObject_C_TypeBase* m_typeData;
+    /* 01CC */ GameObjectStats* m_stats;
+    /* 01D0 */ C44Matrix m_matrix;
+    /* 0210 */ CAaBox m_worldBounds;
+    /* 0228 */ uint32_t m_transportTimeOffset;
+    /* 022C */ int32_t m_displayState;
+    /* 0230 */ int32_t m_pendingOneShotAnim;
+    /* 0234 */ uint8_t m_hasWorldBounds;
+    /* 0235 */ uint8_t unk_0235 [3];
+    /* 0238 */ CM2Model* m_lootEffect;
+    /* 023C */ uint32_t m_effectAnimState;
+    /* 0240 */ uint32_t unk_0240 [2];
+    /* 0248 */ CAnimKitManager m_animKitManager;
 
     virtual C3Vector GetPosition() const;
     virtual C3Vector GetRawPosition() const;
@@ -349,7 +353,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     int32_t CheckRange() const;
     void CloseInteraction();
     void UseObject();
-    CMapEntity* CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets);
+    uintptr_t CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets);
     void AddWorldDamageText(int32_t amount);
     void AddWorldHealingText(int32_t amount, const SpellRec* spell);
     const char* GetCloseText() const;

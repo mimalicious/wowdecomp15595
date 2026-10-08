@@ -126,10 +126,10 @@ void CGCorpse_C::PostInit(uint32_t time, const CClientObjCreate& create, bool a3
 
     if (World::QueryObjectLiquid(entity, &liquidType, &height, &liquidFlags) && height - position.z > 0.6666667f) {
         this->m_corpseFlags |= 0x2;
-        model->SetBoneSequence(0xFFFFFFFF, 132, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 132, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
         this->m_corpseFlags &= ~0x2;
-        model->SetBoneSequence(0xFFFFFFFF, 6, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 6, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 
     if (this->m_component) {
@@ -170,7 +170,7 @@ void CGCorpse_C::PostInit(uint32_t time, const CClientObjCreate& create, bool a3
 
     if ((this->m_corpse->m_corpseFieldDynamicFlags & 0x1) && !this->m_lootEffect) {
         const SpellVisualEffectNameRec* effect = GetSpecialSpellVisualEffectNameRec(4);
-        this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(effect->m_fileName, 0);
+        this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(effect->m_fileName, 0, 3);
 
         if (this->m_lootEffect) {
             this->m_lootEffect->AttachToParent(this->m_worldModel, 19, NULL, 0);
@@ -266,7 +266,7 @@ void CGCorpse_C::ShowLootEffect() {
     }
 
     const SpellVisualEffectNameRec* effect = GetSpecialSpellVisualEffectNameRec(4);
-    this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(effect->m_fileName, 0);
+    this->m_lootEffect = this->m_worldModel->m_scene->CreateModel(effect->m_fileName, 0, 3);
 
     if (this->m_lootEffect) {
         this->m_lootEffect->AttachToParent(this->m_worldModel, 19, NULL, 0);
@@ -298,7 +298,7 @@ void CGCorpse_C::OnFlagChanged(uint32_t oldFlags) {
         return;
     }
 
-    CM2Model* model = World::s_m2Scene->CreateModel(fileName, 0);
+    CM2Model* model = World::GetScene()->CreateModel(fileName, 0, 3);
     this->SetModel(model);
 
     if (this->m_corpse->m_corpseFieldDynamicFlags & 0x1) {
@@ -367,9 +367,9 @@ void CGCorpse_C::ModelLoaded(CM2Model* model) {
     this->CGObject_C::ModelLoaded(model);
 
     if (this->m_corpseFlags & 0x2) {
-        model->SetBoneSequence(0xFFFFFFFF, 132, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 132, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
-        model->SetBoneSequence(0xFFFFFFFF, 6, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 6, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 
     this->m_selectionRadius = model->GetBoundingSphere().r * 0.5f;

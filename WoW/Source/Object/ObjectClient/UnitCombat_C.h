@@ -30,6 +30,7 @@ class ATTACKROUNDINFO {
     /* 0068 */ uint32_t unk_0068;
     /* 006C */ float unk_006C [8];
     /* 008C */ uint32_t unk_008C [5];
+    /* 00A0 */ uint32_t unk_00A0 [2];
 
     ATTACKROUNDINFO();
     ATTACKROUNDINFO& operator=(const ATTACKROUNDINFO& other);

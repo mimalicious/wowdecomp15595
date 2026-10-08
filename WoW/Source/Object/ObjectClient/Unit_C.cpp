@@ -1058,7 +1058,7 @@ void CGUnit_C::UpdateDisplayInfo(int32_t force) {
     const char* fileName;
     this->GetModelFileName(&fileName);
 
-    CM2Model* model = World::s_m2Scene->CreateModel(fileName, 0);
+    CM2Model* model = World::GetScene()->CreateModel(fileName, 0, 3);
 
     if (!model) {
         return;
@@ -3167,9 +3167,9 @@ void CGUnit_C::ObjectNameVisibilityChanged() {
     }
 
     if (PlayerNameShowing(this->m_nameDesc) || this->m_namePlateFrame) {
-        this->m_interactIcon->SetBoneSequence(0xFFFFFFFF, 190, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        this->m_interactIcon->SetBoneSequence(0xFFFFFFFF, 190, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
-        this->m_interactIcon->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        this->m_interactIcon->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -9313,13 +9313,13 @@ void CGUnit_C::SetKeyBoneSequence(CM2Model* model, uint32_t boneId, uint32_t seq
         blend = 0;
     }
 
-    model->SetBoneSequence(boneId, sequenceId, variation, time, speed, blend, primary, 0);
+    model->SetBoneSequence(boneId, sequenceId, variation, time, speed, blend, primary, 0, 0, 0);
 
     M2BoneSequenceInfo info;
 
     if (model->IsLoaded() && model->HasBone(boneId) && (model->GetBoneSequenceInfo(boneId, info), info.m_sequenceId == sequenceId) && time && fabs(speed) > 0.001f && info.m_finished) {
         if (boneId == 0xFFFFFFFF || boneId == 26) {
-            model->SetBoneSequence(boneId, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+            model->SetBoneSequence(boneId, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
         } else {
             model->UnsetBoneSequence(boneId, blend, primary);
         }
@@ -11383,7 +11383,7 @@ void CGUnit_C::CancelRangedMode() {
     CM2Model* model = this->unk_0B40;
 
     if (model && model->IsLoaded() && model->GetBoneSequenceId(0xFFFFFFFF) != 161) {
-        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -15152,7 +15152,7 @@ void CGUnit_C::OnBaseAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequence
 
             this->m_ammoModel->DetachFromParent();
             this->m_animationState &= ~0x4000;
-            this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+            this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
             this->UpdateBaseAnimation(16, -1);
             return;
         }
@@ -19405,13 +19405,13 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
                     eventPosition = this->m_worldModel->GetAttachmentPosition(35);
 
                     if (this->unk_0B40) {
-                        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+                        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
                     }
                 } else if (IsRifleAnim(this->GetCurrentTorsoAnimId()) && this->m_worldModel->HasAttachment(36)) {
                     eventPosition = this->m_worldModel->GetAttachmentPosition(36);
 
                     if (this->unk_0B40) {
-                        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 161, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+                        this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 161, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
                     }
                 } else {
                     eventPosition = *position;
@@ -19684,7 +19684,7 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
                 SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
 
                 if (effectName && *effectName->m_fileName) {
-                    model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0x40);
+                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
                     scale = effectName->m_scale;
                 }
 
@@ -19700,7 +19700,7 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
     }
 
     if (!model) {
-        model = World::s_m2Scene->CreateModel("Spells\\ErrorCube.mdx", 0);
+        model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
     }
 
     AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
@@ -19943,7 +19943,7 @@ void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCast
                 SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
 
                 if (effectName && *effectName->m_fileName) {
-                    model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0x40);
+                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
                     scale = effectName->m_scale;
                 }
 
@@ -19959,7 +19959,7 @@ void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCast
     }
 
     if (!model) {
-        model = World::s_m2Scene->CreateModel("Spells\\ErrorCube.mdx", 0);
+        model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
     }
 
     AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
@@ -20131,7 +20131,7 @@ void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, P
                 SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
 
                 if (effectName && *effectName->m_fileName) {
-                    model = World::s_m2Scene->CreateModel(effectName->m_fileName, 0x40);
+                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
                     scale = effectName->m_scale;
                 }
 
@@ -20147,7 +20147,7 @@ void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, P
     }
 
     if (!model) {
-        model = World::s_m2Scene->CreateModel("Spells\\ErrorCube.mdx", 0);
+        model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
     }
 
     AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
@@ -22215,7 +22215,7 @@ void CGUnit_C::CreateUnitMount(int32_t a2, int32_t a3) {
         }
 
         this->m_mountScale = displayInfo->m_creatureModelScale;
-        CM2Model* mount = World::s_m2Scene->CreateModel(modelData->m_modelName, 0);
+        CM2Model* mount = World::GetScene()->CreateModel(modelData->m_modelName, 0, 3);
         mount->SetSequenceCallback(reinterpret_cast<void*>(&CGUnit_C::MountAnimEndCallback), this->m_obj->m_guid.m_guid);
         mount->SetEventCallback(reinterpret_cast<void*>(&CGUnit_C::AnimEventCallback), this->m_obj->m_guid.m_guid);
         C44Matrix transform = this->m_worldModel->m_worldTransform;
@@ -22656,7 +22656,7 @@ CM2Model* CGUnit_C::CreateItemModel(uint32_t displayId, uint32_t inventoryType, 
         SStrPrintf(fileName, sizeof(fileName), "%s%s", path, rec.m_modelName[index]);
     }
 
-    CM2Model* model = World::s_m2Scene->CreateModel(fileName, 0);
+    CM2Model* model = World::GetScene()->CreateModel(fileName, 0, 3);
 
     if (!model) {
         return NULL;
@@ -24475,7 +24475,7 @@ void CGUnit_C::AttachPrecastMissileModel(const SpellVisualRec* visual, uint8_t c
     }
 
     uint32_t attachId = raw ? visual->m_missileAttachment : s_effectAttachmentIds[visual->m_missileAttachment];
-    this->m_precastMissileModel = World::s_m2Scene->CreateModel(effectName->m_fileName, 64);
+    this->m_precastMissileModel = World::GetScene()->CreateModel(effectName->m_fileName, 64, 3);
     C44Matrix world = this->GetObjectModel()->m_worldTransform;
     C3Vector position;
     position.x = 0.0f;
@@ -24979,5 +24979,5 @@ void CGUnit_C::PlayRangedItemPull() {
     M2SequenceInfo sequence;
     sequence.Clear();
     this->unk_0B40->GetSequenceInfo(160, 0, sequence);
-    this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 160, 0, 0, static_cast<float>(static_cast<int32_t>(sequence.m_duration)) / remaining, 1, 1, 0);
+    this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 160, 0, 0, static_cast<float>(static_cast<int32_t>(sequence.m_duration)) / remaining, 1, 1, 0, 0, 0);
 }

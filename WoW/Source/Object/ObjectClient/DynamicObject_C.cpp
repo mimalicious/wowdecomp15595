@@ -37,9 +37,9 @@ static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequ
     }
 
     if (object->unk_0150 & 0x1) {
-        object->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 158, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        object->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 158, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     } else {
-        object->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        object->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -208,7 +208,7 @@ void CGDynamicObject_C::HandleOutOfRange(OUT_OF_RANGE_TYPE type) {
     if (model && model->IsLoaded() && model->HasSequence(159)) {
         ClntObjMgrLockObject(this->m_obj->m_guid);
         model->SetSequenceCallback(reinterpret_cast<void*>(&DynamicObjectDecayHandler), reinterpret_cast<uintptr_t>(this));
-        model->SetBoneSequence(0xFFFFFFFF, 159, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 159, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -297,7 +297,7 @@ void CGDynamicObject_C::ModelLoaded(CM2Model* model) {
     }
 
     if (this->GetObjectModel()->HasSequence(127)) {
-        this->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        this->GetObjectModel()->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
@@ -384,7 +384,7 @@ void CGDynamicObject_C::UpdateDisplay(uint32_t time) {
     if (model) {
         model->SetEmittersEnabled(1);
         model->SetRibbonsEnabled(1);
-        model->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+        model->SetBoneSequence(0xFFFFFFFF, 127, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
         this->ObjectVisKitProc();
     }
 }

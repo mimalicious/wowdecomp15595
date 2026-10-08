@@ -894,7 +894,7 @@ int32_t FriendList::DoLocalWho() {
             continue;
         }
 
-        if (SStrLen(this->m_whoGuild) && (!player->m_player->m_playerGuildid || !SStrStrUTF8I(player->GetPlayerGuildNameText(), this->m_whoGuild))) {
+        if (SStrLen(this->m_whoGuild) && (player->m_obj->m_dataType != 1 || !player->m_obj->m_data || !SStrStrUTF8I(player->GetPlayerGuildNameText(), this->m_whoGuild))) {
             continue;
         }
 

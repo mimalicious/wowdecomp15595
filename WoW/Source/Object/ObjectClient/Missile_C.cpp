@@ -530,7 +530,7 @@ int32_t CMissile::AttachToVictim(CGUnit_C* victim, uint32_t duration) {
     this->m_mapEntity = NULL;
     this->Link(link);
     this->m_destroyTime = destroyTime;
-    this->m_model->SetBoneSequence(0xFFFFFFFF, 191, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+    this->m_model->SetBoneSequence(0xFFFFFFFF, 191, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     this->m_model->AttachToParent(victim->m_worldModel, this->m_attachmentID, NULL, 0);
     C44Matrix attach = victim->m_worldModel->GetAttachmentWorldTransform(this->m_attachmentID);
     C44Matrix world = this->m_model->m_worldTransform;
@@ -844,7 +844,7 @@ void CMissile::BeginWaitingForModelFX(int32_t disableEffects) {
 
     if (this->m_model && this->m_model->IsLoaded() && (this->m_model->m_fFlags & 0x8000)) {
         if (!this->m_fizzleTime) {
-            this->m_model->SetBoneSequence(0xFFFFFFFF, 191, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+            this->m_model->SetBoneSequence(0xFFFFFFFF, 191, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
         }
 
         if (target) {
@@ -1030,7 +1030,7 @@ CMissile* CMissile::CopyMissile(const CMissile* source) {
     missile->m_random[1] = source->m_random[1];
     missile->m_random[2] = source->m_random[2];
     missile->m_fizzleTime = source->m_fizzleTime;
-    missile->m_model = World::s_m2Scene->DuplicateModel(source->m_model, 0);
+    missile->m_model = World::GetScene()->DuplicateModel(source->m_model, 0);
     missile->m_targets.Set(source->m_targets.m_count, source->m_targets.m_data);
     missile->m_targetHitResults.Set(source->m_targetHitResults.m_count, source->m_targetHitResults.m_data);
     missile->m_targetMissReasons.Set(source->m_targetMissReasons.m_count, source->m_targetMissReasons.m_data);
@@ -1886,7 +1886,7 @@ void CMissile::MissedTarget(CGUnit_C* target, const C3Vector* direction) {
                 this->m_transportGuid = WOWGUID();
 
                 if (this->m_model) {
-                    this->m_model->SetBoneSequence(0xFFFFFFFF, 198, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+                    this->m_model->SetBoneSequence(0xFFFFFFFF, 198, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
                 }
 
                 this->m_flags = (this->m_flags & ~0x48) | 8;
@@ -2052,7 +2052,7 @@ void CMissile::FireMissiles(const C3Vector* position) {
 
         if (!this->m_currentTarget) {
             if (this->m_initialDistance <= 0.0f) {
-                this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
+                this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
             } else {
                 float speedScale;
                 M2SequenceInfo info;
@@ -2063,7 +2063,7 @@ void CMissile::FireMissiles(const C3Vector* position) {
                     speedScale = 1.0f;
                 }
 
-                this->m_model->SetBoneSequence(0xFFFFFFFF, 144, 0, 0, speedScale, 1, 1, 0);
+                this->m_model->SetBoneSequence(0xFFFFFFFF, 144, 0, 0, speedScale, 1, 1, 0, 0, 0);
             }
         }
     }
