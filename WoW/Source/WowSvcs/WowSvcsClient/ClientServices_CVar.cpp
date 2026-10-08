@@ -41,8 +41,8 @@ void ClientServices::InitLoginServerCVars(int32_t overwrite, const char* locale)
         ClientServices::s_realmListBNVar = CVar::Register("realmListbn", "Address of Battle.net server", 0, "", NULL, CATEGORY_NET, false, NULL, false);
         SStrPrintf(path, sizeof(path), "%srealmlistbn.wtf", localeDir);
 
-        if (!CVar::Load(path, 0)) {
-            CVar::Load("realmlistbn.wtf", 0);
+        if (!CVar::Load(path, NULL, NULL)) {
+            CVar::Load("realmlistbn.wtf", NULL, NULL);
         }
     }
 
@@ -58,8 +58,8 @@ void ClientServices::InitLoginServerCVars(int32_t overwrite, const char* locale)
         ClientServices::s_realmListVar = CVar::Register("realmList", "Address of realm list server", 0, "us.logon.worldofwarcraft.com:3724", NULL, CATEGORY_NET, false, NULL, false);
         SStrPrintf(path, sizeof(path), "%srealmlist.wtf", localeDir);
 
-        if (!CVar::Load(path, 0)) {
-            CVar::Load("realmlist.wtf", 0);
+        if (!CVar::Load(path, NULL, NULL)) {
+            CVar::Load("realmlist.wtf", NULL, NULL);
         }
     }
 }

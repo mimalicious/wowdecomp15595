@@ -1748,7 +1748,7 @@ void BeginCloseGame() {
         runOnce.Execute(CVar::Delete);
     }
 
-    CVar::Destroy();
+    ConsoleDestroyClientCVar();
     ConsoleDestroyClientCommand();
     BaseDestroyGlobal();
     CloseAllArchives();

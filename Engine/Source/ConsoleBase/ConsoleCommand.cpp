@@ -6,31 +6,31 @@
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00BBD104
+// STATIC: 0x00CEFF84
 int32_t s_execState = 4;
 
-// STATIC: %0x00CD89E8
+// STATIC: 0x00E43328
 static char s_execBuffer[0x2000];
 
-// STATIC: %0x00CDA9E8
+// STATIC: 0x00E45328/0x140D2E100
 char g_commandHistory[32][1024];
 
-// STATIC: %0x00CE29E8
+// STATIC: 0x00E4D328/0x140D36100
 uint32_t g_commandHistoryIndex;
 
 // STATIC: %0x00CE29EC
 COMMANDHANDLER g_defaultCommand;
 
-// STATIC: %0x00CE29F0
+// STATIC: 0x00E4D334/0x140B90620
 TSHashTable<CONSOLECOMMAND, HASHKEY_CONSTSTRI> g_consoleCommandHash;
 
-// STATIC: %0x00CE2A20
+// STATIC: 0x00E4D360
 static char s_commandName[64];
 
-// STATIC: %0x00BBD100
+// STATIC: 0x00CEFED0
 static const char* s_noHelpText = "No help yet";
 
-// STATIC: %0x00BBD028
+// STATIC: 0x00CEFDF8
 static CATEGORYINFO s_categories[NUM_CATEGORIES] = {
     { CATEGORY_DEBUG, "debug" },
     { CATEGORY_GRAPHICS, "graphics" },

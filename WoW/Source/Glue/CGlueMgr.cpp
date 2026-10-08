@@ -315,7 +315,7 @@ static int32_t CheckTrialAccountConversion() {
 
     if (OsDirectoryExists(path)) {
         converted->Set("1", true, false, false, true);
-        CVar::SaveAll();
+        ConsoleSaveAllClientCVar();
         FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
         CGlueMgr::SetScreen("trialconvert");
         return 1;
@@ -2014,7 +2014,7 @@ void CGlueMgr::EnterWorld() {
     }
 
     LoadingScreenEnable(CGlueMgr::m_characterInfo->m_mapID, true);
-    CVar::SaveAll();
+    ConsoleSaveAllClientCVar();
     TextureGxCacheFlush();
 
     if (!ClientServices::LoginConnection()->GetLoginServerType()) {

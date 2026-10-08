@@ -5994,7 +5994,7 @@ static void AccountVariablesLoadedCallback(HOSFILE localFile, HOSFILE cacheFile,
     }
 
     if (cacheFile != reinterpret_cast<HOSFILE>(-1)) {
-        CVar::Load(cacheFile, 0);
+        CVar::Load(cacheFile, NULL, NULL);
     }
 
     s_accountDataPending &= ~flag;
@@ -7313,7 +7313,7 @@ void CGGameUI::Shutdown() {
     SaveAccountData(6, SavePlacedFrames, CGGameUI::m_simpleTop);
     SaveAccountData(0, SaveGameCVarsCallback, reinterpret_cast<void*>(16));
     SaveAccountData(1, SaveGameCVarsCallback, reinterpret_cast<void*>(32));
-    CVar::SaveAll();
+    ConsoleSaveAllClientCVar();
     CVar::DeleteCharacterCVars();
     AccountDataFlush();
     UnloadAddOns();

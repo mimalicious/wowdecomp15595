@@ -15,10 +15,10 @@ struct CVarLogBuffer {
 };
 
 struct CVar : public TSHashObject<CVar, HASHKEY_STRI> {
-    static const char* s_configFile;
     static bool m_needsSave;
     static bool m_initialized;
     static bool s_archiveCodeRegisteredOnly;
+    static bool s_loading;
 
     static void ArchiveCodeRegisteredOnly();
     static int32_t Delete(const char* fileName);
@@ -27,14 +27,14 @@ struct CVar : public TSHashObject<CVar, HASHKEY_STRI> {
     static void Destroy();
     static void Initialize();
     static int32_t IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_t (*callback)(const char* name, const char* value, void* arg), void* arg);
-    static int32_t Load(HOSFILE file, uint32_t version);
-    static int32_t Load(const char* fileName, uint32_t version);
+    static int32_t Load(HOSFILE file, bool (*sectionCallback)(const char* section, void* arg), void* arg);
+    static int32_t Load(const char* fileName, bool (*sectionCallback)(const char* section, void* arg), void* arg);
     static int32_t LogAll(char* buffer, uint32_t size, uint32_t category, uint32_t excludeFlags);
     static int32_t LogCvar(const char* name, const char* value, void* arg);
     static CVar* Lookup(const char* name);
     static CVar* LookupRegistered(const char* name);
     static CVar* Register(const char* name, const char* help, uint32_t flags, const char* value, bool (*callback)(CVar*, const char*, const char*, void*), uint32_t category, bool setCommand, void* arg, bool unk);
-    static int32_t SaveAll();
+    static int32_t SaveAll(const char* fileName);
     static int32_t SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags);
     static int32_t SaveCvar(const char* name, const char* value, void* arg);
 
@@ -85,9 +85,12 @@ class CVarIntListWrapper {
     void WriteVersionTag();
 };
 
+void ConsoleDestroyClientCVar();
 int32_t ConsoleInitializeClientCVar(const char* fileName);
 int32_t ConsoleLoadClientCVar(HOSFILE file);
 int32_t ConsoleLoadClientCVar(const char* fileName);
+int32_t ConsoleLoadClientCVarAndSave(const char* fileName);
+int32_t ConsoleSaveAllClientCVar();
 
 #include "Engine/Source/ConsoleBase/ConsoleVar.inl"
 

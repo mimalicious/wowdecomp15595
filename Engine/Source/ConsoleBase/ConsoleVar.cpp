@@ -9,22 +9,22 @@
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00CE2A60
-const char* CVar::s_configFile;
+// STATIC: 0x00DD8A4C
+static char* s_configFile;
 
-// STATIC: %0x00CE2A64
-static uint32_t s_configFileVersion;
-
-// STATIC: %0x00CE2A68
+// STATIC: 0x00E4D3A0
 bool CVar::m_needsSave;
 
-// STATIC: %0x00CE2A69
+// STATIC: 0x00E4D3A1
 bool CVar::m_initialized;
 
-// STATIC: %0x00CE2A6A
+// STATIC: 0x00E4D3A2
 bool CVar::s_archiveCodeRegisteredOnly;
 
-// STATIC: %0x00CE2A6C
+// STATIC: 0x00E4D3A3
+bool CVar::s_loading;
+
+// STATIC: 0x00E4D3A8/0x140B90750
 static TSHashTable<CVar, HASHKEY_STRI> s_registeredCVars;
 
 // OFFSET: 0x00654D80/0x1402F5A50
@@ -186,7 +186,7 @@ static int32_t CvarDefaultCommandHandler(const char* command, const char* argume
     return 1;
 }
 
-// OFFSET: %0x0061E120
+// OFFSET: 0x00656DD0
 static int32_t SetCommandHandler(const char* command, const char* arguments) {
     char name[64];
     char value[2048];
@@ -196,7 +196,7 @@ static int32_t SetCommandHandler(const char* command, const char* arguments) {
     CVar* var = CVar::Lookup(name);
 
     if (var) {
-        if (!(var->m_flags & 0x40)) {
+        if (CVar::s_loading || !(var->m_flags & 0x40) && !(var->m_flags & 0x100)) {
             var->Set(value, true, false, false, true);
         }
     } else {
@@ -206,34 +206,22 @@ static int32_t SetCommandHandler(const char* command, const char* arguments) {
     return 1;
 }
 
-// OFFSET: %0x0061C080
+// PROVEN: d65a6a36 IDENTICAL/NONE
+// OFFSET: 0x00654E50
 void CVar::ArchiveCodeRegisteredOnly() {
     CVar::s_archiveCodeRegisteredOnly = true;
 }
 
-// OFFSET: %0x00A42DC0
-static uint32_t VersionMajor(uint32_t version) {
-    return version >> 24;
-}
-
-// OFFSET: %0x00A42DD0
-static uint32_t VersionMinor(uint32_t version) {
-    return (version >> 16) & 0xFF;
-}
-
-// OFFSET: %0x00A42DE0
-static uint32_t VersionBuild(uint32_t version) {
-    return version & 0xFFFF;
-}
-
 // OFFSET: 0x00654E60/0x1402F5B50
-int32_t CVar::Load(HOSFILE file, uint32_t version) {
+int32_t CVar::Load(HOSFILE file, bool (*sectionCallback)(const char* section, void* arg), void* arg) {
     int32_t result = 1;
-    bool active = true;
+    CVar::s_loading = true;
     uint32_t size = static_cast<uint32_t>(OsGetFileSize(file));
+    bool active = true;
 
     if (!size) {
-        return 1;
+        CVar::s_loading = false;
+        return result;
     }
 
     char* buffer;
@@ -257,67 +245,12 @@ int32_t CVar::Load(HOSFILE file, uint32_t version) {
             cur += 3;
         }
 
-        uint32_t parts[3];
-
         do {
             char line[2048];
             SStrTokenize(&cur, line, sizeof(line), "\r\n", NULL);
 
             if (line[0] == '[') {
-                active = false;
-                const char* c = line;
-
-                do {
-                    uint32_t count = 0;
-
-                    while (!isdigit(*c) && *c != ']' && *c) {
-                        c++;
-                    }
-
-                    while (isdigit(*c) && count < 3) {
-                        parts[count++] = SStrToInt(c);
-
-                        while (isdigit(*c)) {
-                            c++;
-                        }
-
-                        while (*c == '-') {
-                            c++;
-                        }
-                    }
-
-                    bool match;
-
-                    switch (count) {
-                        case 0:
-                            match = true;
-                            break;
-
-                        case 1:
-                            match = VersionBuild(version) == parts[0];
-                            break;
-
-                        case 2:
-                            match = VersionMinor(version) == parts[0] && VersionBuild(version) == parts[1];
-                            break;
-
-                        case 3:
-                            match = VersionMajor(version) == parts[0] && VersionMinor(version) == parts[1] && VersionBuild(version) == parts[2];
-                            break;
-
-                        default:
-                            match = false;
-                            break;
-                    }
-
-                    if (match) {
-                        active = true;
-                    }
-
-                    while (!isdigit(*c) && *c != ']' && *c) {
-                        c++;
-                    }
-                } while (*c && *c != ']');
+                active = sectionCallback ? sectionCallback(line, arg) : false;
             } else if (active && !_strnicmp(line, "SET ", 4)) {
                 ConsoleCommandExecute(line, 0);
             }
@@ -330,37 +263,36 @@ int32_t CVar::Load(HOSFILE file, uint32_t version) {
         SMemFree(buffer, __FILE__, __LINE__, 0);
     }
 
+    CVar::s_loading = false;
+
     return result;
 }
 
-// OFFSET: %0x0061C380
-int32_t CVar::Load(const char* fileName, uint32_t version) {
-    HOSFILE file = OsCreateFile(fileName, OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+// PROVEN: 23f38139 IDENTICAL/NONE
+// OFFSET: 0x00654FE0/0x1402F5D10
+int32_t CVar::Load(const char* fileName, bool (*sectionCallback)(const char* section, void* arg), void* arg) {
+    HOSFILE file = OsCreateFile(fileName, OS_GENERIC_READ, OS_FILE_SHARE_READ, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 
     if (file == OS_INVALID_FILE) {
         char path[260];
         SStrPrintf(path, sizeof(path), "WTF\\%s", fileName);
-        file = OsCreateFile(path, OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+        file = OsCreateFile(path, OS_GENERIC_READ, OS_FILE_SHARE_READ, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 
         if (file == OS_INVALID_FILE) {
             return 0;
         }
     }
 
-    int32_t result = CVar::Load(file, version);
+    int32_t result = CVar::Load(file, sectionCallback, arg);
     OsCloseFile(file);
 
     return result;
 }
 
+// PROVEN: 55cd9cf4 IDENTICAL/NONE
 // OFFSET: 0x0060DAD0
 int32_t ConsoleLoadClientCVar(HOSFILE file) {
-    return CVar::Load(file, 0);
-}
-
-// OFFSET: %0x0061C630
-int32_t ConsoleLoadClientCVar(const char* fileName) {
-    return CVar::Load(fileName, 0);
+    return CVar::Load(file, NULL, NULL);
 }
 
 // OFFSET: 0x00655080/0x1402F5DE0
@@ -415,14 +347,16 @@ void CVar::SetReadOnly(bool readOnly) {
     }
 }
 
+// PROVEN: 2e13077c IDENTICAL/DIFFERENT
 // OFFSET: 0x00655320/0x1402F6140
 void CVarIntListWrapper::AddNextValue(uint32_t value) {
     this->m_state = 2;
 
     if (value <= 93 * 93 * 93 - 1 && this->m_pos < 0xFD) {
         this->m_buffer[this->m_pos++] = static_cast<char>(value / (93 * 93) + 35);
-        this->m_buffer[this->m_pos++] = static_cast<char>(value % (93 * 93) / 93 + 35);
-        this->m_buffer[this->m_pos++] = static_cast<char>(value % (93 * 93) % 93 + 35);
+        int32_t remainder = value % (93 * 93);
+        this->m_buffer[this->m_pos++] = static_cast<char>(remainder / 93 + 35);
+        this->m_buffer[this->m_pos++] = static_cast<char>(remainder % 93 + 35);
     }
 }
 
@@ -685,7 +619,7 @@ bool CVarArrayWrapper::RawSetValue(uint32_t index, bool value) {
 CVar::CVar() {
 }
 
-// OFFSET: #0x00766F00
+// OFFSET: 0x006558B0/0x1402F6BF0
 void CVarIntListWrapper::UpdateFromVersion(int32_t version) {
     if (version) {
         return;
@@ -775,9 +709,13 @@ int32_t CVar::SaveAll(HOSFILE file, uint32_t category, uint32_t excludeFlags) {
 }
 
 // OFFSET: 0x00655D20/0x1402F7130
-int32_t CVar::SaveAll() {
+int32_t CVar::SaveAll(const char* fileName) {
     if (!CVar::m_needsSave) {
         return 1;
+    }
+
+    if (!fileName || !*fileName) {
+        return 0;
     }
 
     CVar::m_needsSave = false;
@@ -785,7 +723,7 @@ int32_t CVar::SaveAll() {
 
     char path[260];
     SStrCopy(path, "WTF\\", sizeof(path));
-    SStrPack(path, CVar::s_configFile, sizeof(path));
+    SStrPack(path, fileName, sizeof(path));
 
     HOSFILE file = OsCreateFile(path, OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
 
@@ -805,45 +743,6 @@ int32_t CVar::LogAll(char* buffer, uint32_t size, uint32_t category, uint32_t ex
     log.m_size = size;
 
     return CVar::IterateForArchive(category, excludeFlags, CVar::LogCvar, &log);
-}
-
-// OFFSET: %0x0061D1F0
-void CVar::DeleteCharacterCVars() {
-    CVar* var = s_registeredCVars.m_fulllist.Head();
-
-    while (var) {
-        if ((var->m_flags & 0x1) && (var->m_flags & 0x30) == 0x20) {
-            var = s_registeredCVars.DeleteNode(var);
-        } else {
-            var = s_registeredCVars.Next(var);
-        }
-    }
-}
-
-// OFFSET: %0x0061D240
-void CVar::DeleteAccountCVars() {
-    CVar* var = s_registeredCVars.m_fulllist.Head();
-
-    while (var) {
-        if ((var->m_flags & 0x1) && (var->m_flags & 0x30) == 0x10) {
-            var = s_registeredCVars.DeleteNode(var);
-        } else {
-            var = s_registeredCVars.Next(var);
-        }
-    }
-}
-
-// OFFSET: %0x0061D290
-void CVar::Destroy() {
-    CVar::m_initialized = false;
-    CVar::SaveAll();
-    ConsoleCommandUnregister("set");
-    ConsoleCommandUnregister("cvar_reset");
-    ConsoleCommandUnregister("cvar_default");
-    ConsoleCommandUnregister("cvarlist");
-    s_registeredCVars.Clear();
-    SMemFree(const_cast<char*>(CVar::s_configFile), __FILE__, __LINE__, 0);
-    CVar::s_configFile = NULL;
 }
 
 // OFFSET: 0x00655E50/0x1402F72C0
@@ -870,12 +769,53 @@ CVar* CVar::LookupRegistered(const char* name) {
     return var;
 }
 
+// OFFSET: 0x00656330
+void CVar::DeleteCharacterCVars() {
+    CVar* var = s_registeredCVars.m_fulllist.Head();
+
+    while (var) {
+        CVar* next = s_registeredCVars.Next(var);
+
+        if ((var->m_flags & 0x1) && (var->m_flags & 0x30) == 0x20) {
+            s_registeredCVars.Delete(var);
+        }
+
+        var = next;
+    }
+}
+
+// OFFSET: 0x006563A0
+void CVar::DeleteAccountCVars() {
+    CVar* var = s_registeredCVars.m_fulllist.Head();
+
+    while (var) {
+        CVar* next = s_registeredCVars.Next(var);
+
+        if ((var->m_flags & 0x1) && (var->m_flags & 0x30) == 0x10) {
+            s_registeredCVars.Delete(var);
+        }
+
+        var = next;
+    }
+}
+
+// OFFSET: 0x00656410/0x1402F7970
+void CVar::Destroy() {
+    CVar::m_initialized = false;
+    ConsoleCommandUnregister("set");
+    ConsoleCommandUnregister("cvar_reset");
+    ConsoleCommandUnregister("cvar_default");
+    ConsoleCommandUnregister("cvarlist");
+    s_registeredCVars.Clear();
+}
+
 // OFFSET: 0x00656BF0
 CVar* CVar::Register(const char* name, const char* help, uint32_t flags, const char* value, bool (*callback)(CVar*, const char*, const char*, void*), uint32_t category, bool setCommand, void* arg, bool unk) {
     if (!name || !*name || !value) {
         return NULL;
     }
 
+    bool saveValue = (flags >> 11) & 1;
     CVar* var = s_registeredCVars.Ptr(name);
 
     if (var) {
@@ -891,7 +831,7 @@ CVar* CVar::Register(const char* name, const char* help, uint32_t flags, const c
             setValue = true;
         }
 
-        var->Set(value, setValue, setReset, setDefault, false);
+        var->Set(value, setValue, setReset, setDefault, saveValue && setValue);
 
         if (!setCommand) {
             var->m_flags |= 0x80000000;
@@ -919,9 +859,9 @@ CVar* CVar::Register(const char* name, const char* help, uint32_t flags, const c
     var->m_help.Copy(help);
 
     if (setCommand) {
-        var->Set(value, true, true, false, false);
+        var->Set(value, true, true, false, saveValue);
     } else {
-        var->Set(value, true, false, true, false);
+        var->Set(value, true, false, true, saveValue);
     }
 
     var->m_flags |= (flags & 0x400) ? flags : flags | 0x1;
@@ -954,12 +894,38 @@ void CVar::Initialize() {
     ConsoleCommandRegister("cvarlist", CvarListCommandHandler, CATEGORY_DEFAULT, "List cvars", NULL);
 }
 
-// OFFSET: %0x0061E360
+// PROVEN: 459a1ab2 IDENTICAL/NONE
+// OFFSET: 0x0060DA50
 int32_t ConsoleInitializeClientCVar(const char* fileName) {
     CVar::Initialize();
-    CVar::s_configFile = SStrDupA(fileName, __FILE__, __LINE__);
-    s_configFileVersion = 0;
-    return CVar::Load(CVar::s_configFile, 0);
+    s_configFile = SStrDupA(fileName, __FILE__, __LINE__);
+    return CVar::Load(fileName, NULL, NULL);
+}
+
+// PROVEN: 8d336341 IDENTICAL/NONE
+// OFFSET: 0x0060DA90/0x1402976D0
+int32_t ConsoleLoadClientCVar(const char* fileName) {
+    return CVar::Load(fileName, NULL, NULL);
+}
+
+// PROVEN: 0584b250 IDENTICAL/NONE
+// OFFSET: 0x0060DAB0
+int32_t ConsoleLoadClientCVarAndSave(const char* fileName) {
+    CVar::m_needsSave = true;
+    return CVar::Load(fileName, NULL, NULL);
+}
+
+// OFFSET: 0x0060DAF0/0x140297710
+int32_t ConsoleSaveAllClientCVar() {
+    return CVar::SaveAll(s_configFile);
+}
+
+// OFFSET: 0x0060DB00/0x140297720
+void ConsoleDestroyClientCVar() {
+    CVar::SaveAll(s_configFile);
+    CVar::Destroy();
+    SMemFree(s_configFile, __FILE__, __LINE__, 0);
+    s_configFile = NULL;
 }
 
 // OFFSET: #0x005300D0
