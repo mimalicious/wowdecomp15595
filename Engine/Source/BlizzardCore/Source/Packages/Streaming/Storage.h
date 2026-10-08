@@ -4,9 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 #include <deque>
+#include <intrin.h>
 #include <map>
 #include <string>
-#include <vector>
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
 
 namespace Blizzard {
@@ -17,21 +17,16 @@ struct StreamRecord;
 }
 
 namespace Blizzard {
+namespace Streaming {
+class CompletionCallback;
+}
+}
+
+namespace Blizzard {
 namespace Storage {
 
+class Request;
 class StorageUnit;
-
-struct ChunkState {
-    enum State {
-        CHUNK_NONE = 0,
-        CHUNK_REQUESTED = 1,
-        CHUNK_DOWNLOADING = 2,
-        CHUNK_CACHED = 3,
-        CHUNK_LOCAL = 4,
-        CHUNK_STATE_MASK = 0x7F,
-        CHUNK_CACHE_ENTRY = 0x80
-    };
-};
 
 union BufferHandle {
     /* 0000 */ uint32_t all;
@@ -39,26 +34,31 @@ union BufferHandle {
         uint32_t start : 7;
         uint32_t length : 7;
     } m;
+
+    BufferHandle();
 };
 
-struct Range {
+struct ChunkRange {
     /* 0000 */ int64_t m_offset;
-    /* 0008 */ int32_t m_length;
-    /* 0010 */ int64_t m_chunkOffset;
-    /* 0018 */ int32_t m_chunkLength;
-    /* 001C */ int32_t m_state;
+    /* 0008 */ int64_t m_length;
+    /* 0010 */ int32_t m_chunkCount;
+    /* 0014 */ bool m_complete;
+};
 
-    Range();
-    Range(int64_t offset, int32_t length, int64_t chunkOffset, int32_t chunkLength, int32_t state);
+struct ReadSegment {
+    /* 0000 */ int64_t m_offset;
+    /* 0008 */ int64_t m_length;
+    /* 0010 */ int32_t m_chunkSize;
+    /* 0014 */ int32_t m_source;
+
+    void Set(int64_t offset, int64_t length, const ChunkRange* missing);
 };
 
 struct STORAGE_CMD {
-    /* 0000 */ int32_t m_type;
-    /* 0004 */ StorageUnit* m_unit;
-    /* 0008 */ BufferHandle m_handle;
-    /* 000C */ int16_t m_tag;
-    /* 0010 */ int64_t m_offset;
-    /* 0018 */ int32_t m_length;
+    /* 0000 */ Request* m_request;
+    /* 0004 */ BufferHandle m_handle;
+    /* 0008 */ int64_t m_offset;
+    /* 0010 */ int32_t m_length;
 };
 
 class StorageSystem {
@@ -76,11 +76,11 @@ class StorageSystem {
 
     StorageSystem();
     ~StorageSystem();
-    BufferHandle AllocateChunks(int32_t size);
+    BufferHandle AllocateChunks(int32_t count);
+    BufferHandle AllocateChunksUpTo(int32_t count);
     BufferHandle AllocateSubChunks(BufferHandle handle, int32_t offset, int32_t size);
-    void EnableWriteback(bool enable);
+    BufferHandle FindFreeRun(int32_t count, int32_t start);
     uint8_t* GetBuffer(BufferHandle handle);
-    bool RecoverMemory(StorageUnit* unit, int32_t level);
     void ReleaseChunks(BufferHandle handle);
 };
 
@@ -88,10 +88,33 @@ class BitField {
     public:
     /* 0000 */ uint8_t* m_bits;
     /* 0004 */ int32_t m_length;
+    /* 0008 */ void* m_block;
+    /* 000C */ void (*m_free)(void* block);
 
-    BitField(int32_t count);
-    int32_t CountSet() const;
+    void Clear(int32_t index);
+    int64_t CountSet() const;
     bool IsSetUpTo(int32_t count) const;
+    void Set(int32_t index);
+};
+
+class BitFieldAllocator {
+    public:
+    virtual ~BitFieldAllocator();
+    virtual BitField* Attach(const char* name, int64_t bits, BitField* field) = 0;
+    virtual BitField* Create(int64_t bits) = 0;
+    virtual void Destroy(BitField* field) = 0;
+};
+
+class DefaultBitFieldAllocator : public BitFieldAllocator {
+    public:
+    BitField* Attach(const char* name, int64_t bits, BitField* field) override;
+    BitField* Create(int64_t bits) override;
+    void Destroy(BitField* field) override;
+};
+
+class SharedBitFieldAllocator : public DefaultBitFieldAllocator {
+    public:
+    BitField* Attach(const char* name, int64_t bits, BitField* field) override;
 };
 
 class PartialBlock {
@@ -100,24 +123,38 @@ class PartialBlock {
     /* 0004 */ uint32_t m_blockSize;
     /* 0008 */ uint32_t m_blockCount;
     /* 000C */ std::map<uint32_t, uint32_t> m_partial;
+    /* 002C */ std::string m_name;
 
+    PartialBlock(uint32_t blockSize, uint32_t blockCount, uint32_t lastBlockSize, std::string name);
+    ~PartialBlock();
     bool SetPartial(uint32_t block, uint32_t size);
+};
+
+class PartialBlockMap : public std::map<std::string, std::map<uint32_t, uint32_t> > {
+    public:
+    ~PartialBlockMap();
+};
+
+class LockFile {
+    public:
+    /* 0000 */ Blizzard::File::StreamRecord* m_file;
+    /* 0004 */ std::string m_path;
+
+    LockFile();
+    bool Acquire();
+    bool IsStale(uint32_t seconds);
 };
 
 class BackingStore {
     public:
-    virtual int32_t GetChunkSize() const = 0;
-    virtual int64_t GetTotalLocalSize() const = 0;
-    virtual bool Read(void* buffer, int64_t offset, int32_t size) = 0;
-    virtual bool Write(const void* buffer, int64_t offset, int32_t size) = 0;
-    virtual bool Flush() = 0;
-    virtual bool WriteUnaligned(const void* buffer, int64_t offset, int32_t size) = 0;
-    virtual bool Close() = 0;
-    virtual bool IsAvailable(int64_t offset, int64_t size) const = 0;
-    virtual bool Invalidate(int64_t offset, int64_t size) = 0;
-    virtual bool IsCompleted() const = 0;
-    virtual bool IsMatch(const char* path, int64_t size, int32_t contentId) const = 0;
+    /* 0004 */ uint8_t m_type;
+
+    BackingStore(uint8_t type);
     virtual ~BackingStore();
+    virtual bool Read(void* buffer, int64_t offset, int64_t size) = 0;
+    virtual bool FindMissing(int64_t offset, int64_t size, ChunkRange* range) = 0;
+    virtual bool GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) = 0;
+    virtual void AlignRange(ChunkRange* range) = 0;
 };
 
 class PartialFile : public BackingStore {
@@ -126,63 +163,72 @@ class PartialFile : public BackingStore {
     static bool FileIsCompletePartialFile(Blizzard::File::StreamRecord* file, int64_t archiveSize, int64_t fileSize);
     static bool ParseFileFromHeader(Blizzard::File::StreamRecord* file, BitField** locality, int32_t* chunkSize, int64_t* fileSize, int32_t* contentId);
 
-    /* 0004 */ int32_t m_chunkSize;
-    /* 0008 */ int64_t m_fileSize;
-    /* 0010 */ int32_t m_contentId;
-    /* 0014 */ Blizzard::File::StreamRecord* m_file;
-    /* 0018 */ Blizzard::File::StreamRecord* m_lockFile;
-    /* 001C */ std::string m_lockPath;
-    /* 0038 */ bool m_readOnly;
-    /* 003C */ int32_t m_dirtyStart;
-    /* 0040 */ int32_t m_dirtyEnd;
-    /* 0044 */ uint32_t m_lastFlush;
-    /* 0048 */ BitField* m_locality;
-    /* 004C */ PartialBlock* m_partialBlocks;
-    /* 0050 */ bool m_open;
-    /* 0051 */ bool m_completed;
-    /* 0052 */ bool m_assumedComplete;
-    /* 0054 */ int32_t m_invalidateCount;
+    /* 0008 */ int32_t m_chunkSize;
+    /* 0010 */ int64_t m_fileSize;
+    /* 0018 */ int32_t m_contentId;
+    /* 001C */ Blizzard::File::StreamRecord* m_file;
+    /* 0020 */ LockFile m_lock;
+    /* 0040 */ int32_t m_dirtyStart;
+    /* 0044 */ int32_t m_dirtyEnd;
+    /* 0048 */ uint32_t m_lastFlush;
+    /* 004C */ BitField* m_locality;
+    /* 0050 */ uint8_t m_localityHash[16];
+    /* 0060 */ PartialBlock* m_partialBlocks;
+    /* 0064 */ bool m_open;
+    /* 0065 */ bool m_completed;
+    /* 0066 */ bool m_assumedComplete;
+    /* 0068 */ int32_t m_invalidateCount;
 
     PartialFile();
+    ~PartialFile();
+    bool Read(void* buffer, int64_t offset, int64_t size) override;
+    bool FindMissing(int64_t offset, int64_t size, ChunkRange* range) override;
+    bool GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) override;
+    void AlignRange(ChunkRange* range) override;
     virtual int32_t GetChunkSize() const;
     virtual int64_t GetTotalLocalSize() const;
-    virtual bool Read(void* buffer, int64_t offset, int32_t size);
     virtual bool Write(const void* buffer, int64_t offset, int32_t size);
     virtual bool Flush();
-    virtual bool WriteUnaligned(const void* buffer, int64_t offset, int32_t size);
     virtual bool Close();
+    virtual bool WriteUnaligned(const void* buffer, int64_t offset, int32_t size);
+    virtual void UpdateUnaligned(int64_t offset, int32_t size);
     virtual bool IsAvailable(int64_t offset, int64_t size) const;
+    virtual int64_t GetLocalBytes(int64_t offset, int64_t size) const;
     virtual bool Invalidate(int64_t offset, int64_t size);
     virtual bool IsCompleted() const;
+    virtual bool IsReadOnly() const;
+    virtual bool GetMissingRange(int64_t offset, int64_t size, ChunkRange* range) const;
     virtual bool IsMatch(const char* path, int64_t size, int32_t contentId) const;
-    virtual ~PartialFile();
     void GetChunkRange(int32_t* chunks, int64_t offset, int64_t size);
-    void MarkDirty(int32_t first, int32_t last);
+    bool IsLocalityComplete();
+    void MakeSparse();
     bool ParseFile();
     bool RebuildHeader();
     bool RebuildLocalityMap(bool complete);
     bool UpdatePartialBlock(uint32_t block, uint32_t size);
     bool WriteLocality(int32_t first, int32_t last);
-    bool IsLocalityComplete();
 };
 
-class CacheSource {
+class CacheSource : public BackingStore {
     public:
-    /* 0004 */ StorageUnit* m_unit;
-
-    CacheSource(StorageUnit* unit);
-    virtual ~CacheSource();
-    virtual bool Read(void* buffer, int64_t offset, int32_t size);
+    CacheSource();
+    bool Read(void* buffer, int64_t offset, int64_t size) override;
+    bool FindMissing(int64_t offset, int64_t size, ChunkRange* range) override;
+    bool GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) override;
+    void AlignRange(ChunkRange* range) override;
 };
 
-class HttpSource {
+class HttpSource : public BackingStore {
     public:
-    /* 0004 */ std::string m_path;
+    /* 0008 */ std::string m_path;
     /* 0028 */ int64_t m_size;
 
     HttpSource(std::string path, int64_t size);
-    virtual ~HttpSource();
-    virtual bool Read(void* buffer, int64_t offset, int32_t size);
+    ~HttpSource();
+    bool Read(void* buffer, int64_t offset, int64_t size) override;
+    bool FindMissing(int64_t offset, int64_t size, ChunkRange* range) override;
+    bool GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) override;
+    void AlignRange(ChunkRange* range) override;
 };
 
 class StorageUnit {
@@ -192,52 +238,94 @@ class StorageUnit {
     /* 0020 */ bool m_flushed;
     /* 0028 */ int64_t m_logicalFileSize;
     /* 0030 */ int32_t m_chunkSize;
-    /* 0034 */ std::vector<uint8_t> m_chunkStates;
-    /* 004C */ Blizzard::Lock::Atomic m_refCount;
-    /* 0050 */ BackingStore* m_local;
-    /* 0054 */ CacheSource* m_cache;
-    /* 0058 */ HttpSource* m_http;
-    /* 005C */ std::deque<STORAGE_CMD>* m_cacheEntries;
-    /* 0060 */ int16_t m_cacheTag;
+    /* 0034 */ Blizzard::Lock::Atomic m_refCount;
+    /* 0038 */ PartialFile* m_local;
+    /* 003C */ BackingStore* m_cache;
+    /* 0040 */ BackingStore* m_http;
+    /* 0044 */ std::deque<STORAGE_CMD>* m_cacheEntries;
 
     StorageUnit();
     ~StorageUnit();
-    void AddCacheEntry(int16_t tag, int64_t offset, int32_t size, BufferHandle handle);
-    bool FetchDeferData(Range* range, int16_t tag);
-    void FlushCacheEntries(int16_t tag);
-    bool ReadLocal(void* buffer, int64_t offset, int32_t size);
-    void ReserveChunks();
+    bool AddCacheEntry(Request* request, int64_t offset, int64_t size, BufferHandle handle);
+    int32_t FetchRequest(Request* request, ChunkRange* range);
+    bool FindMissingRange(int64_t offset, int64_t size, ChunkRange* range);
+    bool FlushCacheEntries(int64_t maxBytes);
+    bool IsAvailable(int64_t offset, int64_t size);
+    bool QueueWrite(Request* request, BufferHandle handle, int64_t offset, int64_t size);
+    bool Read(int64_t offset, int64_t size, void* buffer);
+    bool ReadRemote(void* buffer, int64_t offset, int32_t size);
+    bool ReadRemoteUnaligned(void* buffer, int64_t offset, int32_t size);
+    bool ReadToCache(ChunkRange* range, BufferHandle* handle);
     void SetCacheSource();
     void SetHttpSource(const std::string& path, int64_t size);
-    void SetLocal(BackingStore* local, int64_t size);
+    void SetLocal(PartialFile* local, int64_t size);
+};
+
+class Request {
+    public:
+    enum State {
+        STATE_NONE = 0,
+        STATE_LOCAL = 1,
+        STATE_PENDING = 2,
+        STATE_CANCELLED = 3,
+        STATE_NO_UNIT = 4,
+        STATE_FAILED = 5
+    };
+
+    /* 0000 */ StorageUnit* m_unit;
+    /* 0008 */ int64_t m_offset;
+    /* 0010 */ int64_t m_size;
+    /* 0018 */ Blizzard::Lock::Event m_event;
+    /* 001C */ int32_t m_state;
+    /* 0020 */ bool m_cancelled;
+    /* 0024 */ Blizzard::Streaming::CompletionCallback* m_callback;
+    /* 0028 */ const int64_t* m_chunk;
+    /* 002C */ Blizzard::Lock::Atomic m_refCount;
+    /* 0030 */ Blizzard::Lock::Atomic m_pendingWrites;
+
+    static Request* Create(StorageUnit* unit, int64_t offset, int64_t size);
+
+    Request(StorageUnit* unit, int64_t offset, int64_t size);
+    ~Request();
+    void AddRef();
+    void Cancel();
+    void CheckLocal();
+    void OnWriteComplete(bool failed);
+    void Release();
+};
+
+class StorageUnitRef {
+    public:
+    /* 0000 */ StorageUnit* m_unit;
+
+    StorageUnitRef(StorageUnit* unit);
+    ~StorageUnitRef();
 };
 
 extern StorageSystem g_StorageSystem;
+extern PartialBlockMap s_partialBlockMap;
+extern Blizzard::Lock::Atomic s_partialBlockMapDestroyed;
 extern std::map<std::string, StorageUnit*>* s_StorageMap;
-extern std::deque<STORAGE_CMD>* s_CmdQueue_Storage;
 extern Blizzard::Lock::Mutex s_storageMutex;
 extern Blizzard::Lock::Event s_cmdEvent;
-extern bool s_storageReady;
 extern volatile bool s_threadShutdown;
 extern volatile bool s_threadExited;
+extern bool s_storageReady;
+extern volatile long s_initLock;
 extern int32_t s_Chunk_Size;
+extern BitFieldAllocator* s_bitFieldAllocator;
 
-StorageUnit* Acquire(const std::string& name);
-BufferHandle AllocateChunksRecovering(StorageUnit* unit, int32_t size);
+StorageUnit* Acquire(const std::string& name, bool existingOnly);
 bool Close(StorageUnit* unit);
-void FetchError(StorageUnit* unit, int64_t offset, int32_t size, ChunkState::State state);
+bool Exists(const std::string& name);
 int32_t GetChunkSize();
-int32_t GetRandomRange(StorageUnit* unit, int64_t offset, int32_t size, Range* ranges);
-Range* GetRange(StorageUnit* unit, int64_t offset, int32_t size, int32_t* count, bool lock);
-StorageUnit* GetStorageInfo(const std::string& name);
 bool Initialize();
-void QueueWriteCommand(StorageUnit* unit, int16_t tag, int64_t offset, int32_t size, BufferHandle handle);
-bool Read(StorageUnit* unit, void* buffer, int64_t offset, int32_t size);
+void InitializeBitFieldAllocator(int32_t mode);
+bool IsInitialized();
 void Release(StorageUnit* unit);
-bool SetRangeAs(StorageUnit* unit, int64_t offset, int32_t size, ChunkState::State state);
 void Shutdown();
+void ShutdownBitFieldAllocator();
 uint32_t StorageThread(void* param);
-bool Write(StorageUnit* unit, BufferHandle handle, int64_t offset, int32_t size, int16_t tag);
 
 }
 }

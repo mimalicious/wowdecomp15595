@@ -5,6 +5,7 @@
 #include <string>
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/MPQGlobals.h"
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFileArchives.h"
 #include "Engine/Source/BlizzardCore/Source/System/Debug/ErrorStack.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/Filestack.h"
@@ -24,104 +25,26 @@ static Blizzard::Using::Use s_useFile("Blizzard::File");
 // STATIC: #0x00AB7AC8
 static uint8_t s_clientInitialized = 1;
 
-// STATIC: %0x00AF2FA8
-static const int32_t s_queueOrder[6] = { 0, 1, 0, 2, 0, 1 };
+// STATIC: 0x00D06E3A
+bool Blizzard::Streaming::s_throttleProgress = true;
 
-// STATIC: %0x00AF2FC0
-static const int32_t s_queueGroupBase[2] = { 0, 4 };
-
-// STATIC: %0x00C0C251
-bool Blizzard::Streaming::s_backgroundPreloading = true;
-
-// STATIC: %0x00C0C253
-static bool s_throttleProgress = true;
-
-// STATIC: %0x00D8130C
-static Blizzard::Lock::Event s_cmdForegroundEvent;
-
-// STATIC: %0x00D81310
-static Blizzard::Lock::Mutex s_cmdMutex;
-
-// STATIC: %0x00D81328
-static Blizzard::Lock::Event s_cmdPartnerEvent[2];
-
-// STATIC: %0x00D81330
-static Blizzard::Lock::Event s_pauseEvent;
-
-// STATIC: %0x00D81334
-static Blizzard::Streaming::FILE_THREAD_CMD* s_CmdProcess[2];
-
-// STATIC: %0x00D8133C
-static std::deque<Blizzard::Streaming::FILE_THREAD_CMD>* s_CmdQueue_Streaming[Blizzard::Streaming::MAX_CMD_QUEUE];
-
-// STATIC: %0x00D8135C
-static Blizzard::Lock::Mutex s_pauseMutex;
-
-// STATIC: %0x00D81378
-static bool s_paused;
-
-// STATIC: %0x00D8137C
-static Blizzard::Lock::Event s_cmdEvent;
-
-// STATIC: %0x00D86BB4
+// STATIC: 0x00EBA233/0x140DAACD3
 bool Blizzard::Streaming::s_streamingReady;
+
+// STATIC: 0x00EBA230
+bool Blizzard::Streaming::s_streamingWrite;
 
 // STATIC: %0x00D86BB5
 bool Blizzard::Streaming::s_isStreamingTrial;
 
-// STATIC: %0x00D86BB6
-volatile bool Blizzard::Streaming::s_threadShutdown;
+// STATIC: 0x00EBA240
+Blizzard::Streaming::RequestHandler* Blizzard::Streaming::s_requestHandler;
 
-// STATIC: %0x00D86BB8
-static volatile int32_t s_threadExited;
-
-// STATIC: %0x00D86BBC
-static volatile int32_t s_threadDownloading;
-
-// STATIC: %0x00D86BC4
-Blizzard::Streaming::StreamingX::DATAREQUIRECALLBACK Blizzard::Streaming::StreamingX::g_StreamingDataRequireCallBack;
-
-// STATIC: %0x00D86BC8
-Blizzard::Streaming::StreamingX::ISENABLEP2PCALLBACK Blizzard::Streaming::StreamingX::g_IsEnableP2PCallBack;
-
-// STATIC: %0x00D86BCC
-int32_t Blizzard::Streaming::StreamingX::g_lowCommandInterval;
-
-// STATIC: %0x00D86BD0
-int32_t Blizzard::Streaming::StreamingX::g_maxLowCommandInterval;
-
-// STATIC: %0x00D86BD4
-int32_t Blizzard::Streaming::StreamingX::g_stepLowCommandInterval;
-
-// STATIC: %0x00D86BD8
-Blizzard::Lock::Atomic Blizzard::Streaming::StreamRequest::globalRequestId;
-
-// STATIC: %0x00D86BDC
-Blizzard::Lock::Atomic Blizzard::Streaming::StreamRequest::concurrentRequests;
-
-// STATIC: %0x00D86E28
+// STATIC: 0x00EBA818
 Blizzard::Streaming::DownloadProgress Blizzard::Streaming::s_progress;
-
-// STATIC: %0x00D871E0
-static int32_t s_queueRotation[2];
 
 // STATIC: #0x00B38038
 Blizzard::Time::Timestamp Blizzard::Streaming::s_elapsedSinceStart;
-
-// STATIC: #0x00B38040
-int64_t Blizzard::Streaming::s_statBytesRead;
-
-// STATIC: #0x00B38048
-int64_t Blizzard::Streaming::s_statBytesDownloaded;
-
-// STATIC: #0x00B38050
-int64_t Blizzard::Streaming::s_statBytesLocal;
-
-// STATIC: #0x00B38058
-int32_t Blizzard::Streaming::s_statRetries;
-
-// STATIC: #0x00B38060
-char Blizzard::Streaming::s_statFrameTimes[260];
 
 // OFFSET: #0x00424280
 bool Blizzard::Streaming::ScanDirectoryForManifest(const Blizzard::File::ProcessDirParms& parms) {
@@ -214,7 +137,7 @@ Blizzard::Streaming::DownloadProgress::~DownloadProgress() {
     memset(this->m_samples, 0, sizeof(this->m_samples));
 }
 
-// OFFSET: #0x00438300
+// INLINED
 void Blizzard::Streaming::DownloadProgress::ResetTime() {
     this->m_lastTime = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
 }
@@ -231,50 +154,6 @@ void SetClientInitialized(uint8_t initialized) {
     s_clientInitialized = initialized;
 }
 
-// OFFSET: %0x0070EC30
-int32_t Blizzard::Streaming::GetIdleThread() {
-    for (int32_t thread = 0; thread < 2; thread++) {
-        if (((1 << thread) & s_threadExited) && !((1 << thread) & s_threadDownloading)) {
-            return thread;
-        }
-    }
-
-    return -1;
-}
-
-// OFFSET: %0x0070EC60
-int32_t Blizzard::Streaming::StreamingX::GetLowCommandIntervalStep() {
-    int32_t step = 0;
-
-    if (g_stepLowCommandInterval > 0) {
-        int32_t left = g_maxLowCommandInterval - g_lowCommandInterval;
-
-        if (left > 0) {
-            step = g_stepLowCommandInterval;
-
-            if (left < 70 * g_stepLowCommandInterval) {
-                step = 2 * g_stepLowCommandInterval;
-            }
-
-            if (left < 50 * g_stepLowCommandInterval) {
-                step += g_stepLowCommandInterval;
-            }
-
-            if (left < 30 * g_stepLowCommandInterval) {
-                step += g_stepLowCommandInterval;
-            }
-
-            if (left < 10 * g_stepLowCommandInterval) {
-                step += g_stepLowCommandInterval;
-            }
-        } else if (g_maxLowCommandInterval == g_lowCommandInterval) {
-            g_lowCommandInterval = g_maxLowCommandInterval;
-        }
-    }
-
-    return step;
-}
-
 // PROVEN: 9c1c3fbf IDENTICAL/NONE
 // OFFSET: 0x007ABF50
 void Blizzard::Streaming::DownloadProgress::Sample(uint32_t time) {
@@ -287,48 +166,48 @@ void Blizzard::Streaming::DownloadProgress::Sample(uint32_t time) {
     this->m_samples[this->m_index].m_time = time;
 }
 
-// OFFSET: %0x0070ED20
+// OFFSET: 0x007ABFB0/0x1404A1E20
 int32_t Blizzard::Streaming::DownloadProgress::GetRate() {
-    uint32_t last = this->m_index;
-    uint32_t first;
+    int32_t index = this->m_index;
+    int32_t first;
 
-    if (last == 50) {
+    if (index == 50) {
         first = 0;
     } else {
-        first = last + 1;
+        first = index + 1;
+
+        if (!index) {
+            index = 51;
+        }
+    }
+
+    int32_t last = index - 1;
+
+    while (!this->m_samples[first].m_time) {
+        if (first == last) {
+            break;
+        }
+
+        if (static_cast<uint32_t>(++first) > 50) {
+            first = 0;
+        }
+    }
+
+    for (; !this->m_samples[last].m_time; last--) {
+        if (first == last) {
+            break;
+        }
 
         if (!last) {
             last = 51;
         }
     }
 
-    uint32_t end = last - 1;
+    int64_t bytes = this->m_samples[last].m_bytes - this->m_samples[first].m_bytes;
+    int32_t time = this->m_samples[last].m_time - this->m_samples[first].m_time;
 
-    while (!this->m_samples[first].m_time) {
-        if (first == end) {
-            break;
-        }
-
-        if (++first > 50) {
-            first = 0;
-        }
-    }
-
-    for (; !this->m_samples[end].m_time; end--) {
-        if (first == end) {
-            break;
-        }
-
-        if (!end) {
-            end = 51;
-        }
-    }
-
-    int64_t bytes = this->m_samples[end].m_bytes - this->m_samples[first].m_bytes;
-    int32_t time = this->m_samples[end].m_time - this->m_samples[first].m_time;
-
-    if (first == end) {
-        uint32_t next = end + 1;
+    if (first == last) {
+        int32_t next = last + 1;
 
         if (next == 51) {
             next = 0;
@@ -340,729 +219,380 @@ int32_t Blizzard::Streaming::DownloadProgress::GetRate() {
         }
     }
 
-    if (bytes > 0) {
-        return static_cast<int32_t>(1000 * (bytes / time));
+    if (bytes > 0 && time) {
+        return static_cast<int32_t>(1000 * (bytes / static_cast<uint32_t>(time)));
     }
 
     return 0;
 }
 
-// OFFSET: %0x00715FD0
-bool Blizzard::Streaming::IsPreloadInProgress() {
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-
-    for (int32_t i = 0; i < 2; i++) {
-        if (s_CmdProcess[i] && s_CmdProcess[i]->m_type == 1) {
-            Blizzard::Lock::MutexLeave(s_cmdMutex);
-            return true;
-        }
-    }
-
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
-    return false;
-}
-
-// OFFSET: [%0x00716020, %0x00716060]
-void Blizzard::Streaming::WaitForLoads() {
-    for (;;) {
-        Blizzard::Lock::MutexEnter(s_cmdMutex);
-
-        bool busy = false;
-
-        for (int32_t i = 0; i < 2; i++) {
-            if (s_CmdProcess[i] && s_CmdProcess[i]->m_type == 1) {
-                busy = true;
-                break;
-            }
-        }
-
-        Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-        if (!busy) {
-            return;
-        }
-
-        Blizzard::Process::Sleep(1);
-    }
-}
-
-// OFFSET: %0x00716100
-Blizzard::Streaming::StreamRequest::StreamRequest(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size) {
-    this->m_file = file;
-    this->m_offset = offset;
-    this->m_size = size;
-    this->m_ranges = NULL;
-    this->m_count = 0;
-
-    int16_t tag;
-
-    do {
-        tag = static_cast<int16_t>(globalRequestId.Increment());
-    } while (!tag);
-
-    concurrentRequests.Increment();
-    this->m_tag = tag;
-}
-
-// OFFSET: %0x0071DAA0
-int32_t Blizzard::Streaming::IsLocal(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size) {
-    if (!s_streamingReady) {
-        return 1;
-    }
-
-    if (!file->m_streaming || !file->m_streaming->m_unit) {
-        return 1;
-    }
-
-    Blizzard::Storage::StorageUnit* unit = file->m_streaming->m_unit;
-
-    if (!unit || (unit->m_local && unit->m_local->IsCompleted())) {
-        return 1;
-    }
-
-    int32_t count;
-    Blizzard::Storage::Range* ranges = Blizzard::Storage::GetRange(unit, offset, size, &count, false);
-
-    if (!ranges || !count) {
-        return 1;
-    }
-
-    int32_t result = 1;
-
-    for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-        switch (range->m_state) {
-            case 1:
-            case 3:
-                result = 2;
-                break;
-
-            case 2:
-                result = 0;
-                count = 0;
-                break;
-        }
-    }
-
-    Blizzard::Memory::Free(ranges);
-
-    return result;
-}
-
-// OFFSET: %0x0071DB60
-int64_t Blizzard::Streaming::GetIsLocalAmount(Blizzard::Storage::StorageUnit* unit, int64_t offset, uint32_t size) {
-    uint32_t local = size;
-
-    if (unit) {
-        int32_t count;
-        Blizzard::Storage::Range* ranges = Blizzard::Storage::GetRange(unit, offset, size, &count, false);
-
-        if (ranges && count) {
-            local = 0;
-
-            for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-                if (!range->m_state) {
-                    local += range->m_length;
-                }
-            }
-
-            Blizzard::Memory::Free(ranges);
-        }
-    }
-
-    return local;
-}
-
-// OFFSET: %0x0071DBC0
-void Blizzard::Streaming::StreamRequest::ReadLocalRange(Blizzard::Storage::Range* first, Blizzard::Storage::Range* last, void* buffer) {
-    if (!first) {
-        return;
-    }
-
-    int32_t size = static_cast<int32_t>(last->m_offset + last->m_length - first->m_offset);
-
-    if (this->m_file->m_streaming->m_unit->ReadLocal(static_cast<uint8_t*>(buffer) + static_cast<int32_t>(first->m_offset - this->m_offset), first->m_offset, size)) {
-        System_File::Stacked::size_local_read += size;
-    } else {
-        for (Blizzard::Storage::Range* range = first; range <= last; range++) {
-            range->m_state = 2;
-        }
-    }
-}
-
-// OFFSET: %0x0071DC30
-bool Blizzard::Streaming::StreamRequest::ReadLocalChunks(void* buffer) {
-    Blizzard::Storage::Range* first = NULL;
-    Blizzard::Storage::Range* last = NULL;
-
-    for (Blizzard::Storage::Range* range = this->m_ranges; range != this->m_ranges + this->m_count; range++) {
-        if (!range->m_state) {
-            if (!last || last->m_offset + last->m_length != range->m_offset || last - first >= 15) {
-                this->ReadLocalRange(first, last, buffer);
-                first = range;
-            }
-
-            last = range;
-        }
-    }
-
-    this->ReadLocalRange(first, last, buffer);
-
-    return true;
-}
-
-// OFFSET: %0x0071DCB0
-bool Blizzard::Streaming::StreamRequest::ReadRemoteChunks(void* buffer) {
-    bool result = true;
-    Blizzard::Storage::Range* range = this->m_ranges;
-
-    for (int32_t count = this->m_count; count > 0; count--, range++) {
-        if (range->m_state) {
-            if (!Blizzard::Storage::Read(this->m_file->m_streaming->m_unit, static_cast<uint8_t*>(buffer) + static_cast<int32_t>(range->m_offset - this->m_offset), range->m_offset, range->m_length)) {
-                result = false;
-            }
-
-            if (!range->m_state) {
-                System_File::Stacked::size_local_read += range->m_length;
-            }
-        }
-
-        if (!result) {
-            break;
-        }
-    }
-
-    return result;
-}
-
-// OFFSET: %0x0071DD50
-bool Blizzard::Streaming::StreamRequest::GetLocality() {
-    this->m_ranges = Blizzard::Storage::GetRange(this->m_file->m_streaming->m_unit, this->m_offset, this->m_size, &this->m_count, true);
-    return this->m_ranges && this->m_count;
-}
-
-// OFFSET: %0x00724BA0
-Blizzard::Streaming::FileCompletionCallback::FileCompletionCallback() {
-    Blizzard::Lock::EventCreate(this->m_event);
-}
-
-// OFFSET: %0x00724BF0
-void Blizzard::Streaming::FileCompletionCallback::Complete() {
-    Blizzard::Lock::EventSet(this->m_event);
-}
-
-// OFFSET: %0x00724C00
-Blizzard::Streaming::FileCompletionCallback::~FileCompletionCallback() {
-    Blizzard::Lock::EventDestroy(this->m_event);
-}
-
-// OFFSET: %0x00724C30
+// OFFSET: 0x007C3B60
 void Blizzard::Streaming::DownloadProgress::FireCallback() {
-    if (!this->m_enabled) {
-        return;
-    }
+    if (this->m_enabled && (!s_throttleProgress || static_cast<uint32_t>(Blizzard::Time::Milliseconds()) - this->m_lastTime >= 5000)) {
+        PROGRESSCALLBACK callback = this->m_callback;
 
-    if (s_throttleProgress && Blizzard::Time::Milliseconds() - this->m_lastTime < 5000) {
-        return;
-    }
-
-    PROGRESSCALLBACK callback = this->m_callback;
-
-    if (callback) {
-        callback(static_cast<uint32_t>(this->m_total), static_cast<uint32_t>(this->m_total >> 32), static_cast<uint32_t>(this->m_downloaded), static_cast<uint32_t>(this->m_downloaded >> 32), static_cast<uint32_t>(this->m_streamed), static_cast<uint32_t>(this->m_streamed >> 32), this->GetRate());
-    }
-}
-
-// OFFSET: %0x00726FB0
-bool Blizzard::Streaming::ResetMakeLocal(MakeLocalOption option) {
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-
-    std::deque<FILE_THREAD_CMD>& queue = *s_CmdQueue_Streaming[option];
-
-    for (std::deque<FILE_THREAD_CMD>::iterator it = queue.begin(); it != queue.end(); ++it) {
-        if (it->m_completion && it->m_type == 2) {
-            it->m_completion->m_result = static_cast<int32_t>(s_CmdQueue_Streaming[option]->size());
-            it->m_completion->m_done = true;
-            Blizzard::Lock::EventSet(*it->m_completion->m_event);
-            it->m_completion = NULL;
-        }
-
-        if (it->m_callback) {
-            it->m_callback->m_success = false;
-            it->m_callback->Release();
-            it->m_callback = NULL;
-        }
-
-        if (it->m_type) {
-            it->m_type = 0;
-
-            if (it->m_range) {
-                Blizzard::Storage::SetRangeAs(it->m_unit, it->m_range->m_chunkOffset, it->m_range->m_chunkLength, Blizzard::Storage::ChunkState::CHUNK_NONE);
-            }
+        if (callback) {
+            callback(static_cast<uint32_t>(this->m_total), static_cast<uint32_t>(this->m_total >> 32), static_cast<uint32_t>(this->m_downloaded), static_cast<uint32_t>(this->m_downloaded >> 32), static_cast<uint32_t>(this->m_streamed), static_cast<uint32_t>(this->m_streamed >> 32), this->GetRate());
         }
     }
-
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-    return true;
 }
 
-// OFFSET: %0x00727170
-bool Blizzard::Streaming::RemoveCompletion(Completion* completion, int32_t queue) {
-    if (!s_CmdQueue_Streaming[queue]->size()) {
-        return false;
-    }
-
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-
-    std::deque<FILE_THREAD_CMD>& commands = *s_CmdQueue_Streaming[queue];
-
-    for (std::deque<FILE_THREAD_CMD>::iterator it = commands.end(); it != commands.begin();) {
-        --it;
-
-        if (it->m_completion == completion) {
-            it->m_completion = NULL;
-            Blizzard::Lock::MutexLeave(s_cmdMutex);
-            return true;
-        }
-    }
-
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
-    return false;
-}
-
-// OFFSET: %0x007272A0
-bool Blizzard::Streaming::PopCommand(FILE_THREAD_CMD* command, int32_t queue) {
-    if (!s_CmdQueue_Streaming[queue]->size()) {
-        return false;
-    }
-
-    *command = s_CmdQueue_Streaming[queue]->front();
-    s_CmdQueue_Streaming[queue]->pop_front();
-
-    return true;
-}
-
-// OFFSET: %0x00727340
-bool Blizzard::Streaming::SelectQueue(FILE_THREAD_CMD* command, int32_t group, int32_t* queue) {
-    if (group >= 1 && !s_backgroundPreloading) {
-        return false;
-    }
-
-    int32_t base = s_queueGroupBase[group];
-
-    for (int32_t i = 0; i < 6; i++) {
-        *queue = base + s_queueOrder[s_queueRotation[group]];
-        s_queueRotation[group] = (s_queueRotation[group] + 1) % 6;
-
-        if (PopCommand(command, *queue)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// OFFSET: %0x007273C0
-int32_t Blizzard::Streaming::GetNextCommand(FILE_THREAD_CMD** command, int32_t thread) {
-    FILE_THREAD_CMD* next = new FILE_THREAD_CMD();
-    int32_t queue = MAX_CMD_QUEUE;
-
-    if (SelectQueue(next, 0, &queue) || PopCommand(next, queue = 3) || SelectQueue(next, 1, &queue)) {
-        StreamingX::g_lowCommandInterval = 0;
-    } else {
-        queue = 7;
-
-        if (!PopCommand(next, 7)) {
-            delete next;
-            return MAX_CMD_QUEUE;
-        }
-    }
-
-    s_CmdProcess[thread] = next;
-    *command = next;
-
-    return queue;
-}
-
-// OFFSET: %0x00727490
-void Blizzard::Streaming::AddTotal(int32_t size) {
-    s_progress.m_total += size;
-    s_progress.FireCallback();
-}
-
-// OFFSET: %0x007274B0
-void Blizzard::Streaming::AddDownloaded(int32_t size) {
-    s_progress.m_downloaded += size;
-    s_progress.FireCallback();
-}
-
-// OFFSET: %0x00729270
+// OFFSET: 0x007C8000/0x1404C3390
 std::string Blizzard::Streaming::GetBandwidthString() {
     return std::string(Blizzard::String::QuickFormat<1024>("b,%d", s_progress.GetRate()).m_buffer);
 }
 
-// OFFSET: %0x00736230
-void Blizzard::Streaming::QueueMakeLocal(int16_t tag, Blizzard::File::StreamRecord* file, Blizzard::Storage::Range* range, MakeLocalOption option, Completion* completion, CompletionCallback* callback) {
-    if (s_threadShutdown) {
-        return;
-    }
-
-    FILE_THREAD_CMD command;
-    command.m_type = 1;
-    command.m_tag = tag;
-    command.m_retries = 0;
-    command.m_unit = AcquireStorageUnit(file);
-
-    if (!command.m_unit) {
-        return;
-    }
-
-    command.m_range = static_cast<Blizzard::Storage::Range*>(Blizzard::Memory::Allocate(sizeof(Blizzard::Storage::Range)));
-    memmove(command.m_range, range, sizeof(Blizzard::Storage::Range));
-    command.m_completion = completion;
-
-    if (StreamingX::g_StreamingDataRequireCallBack) {
-        StreamingX::g_StreamingDataRequireCallBack(file, range->m_chunkOffset, range->m_chunkLength);
-    }
-
-    if (callback) {
-        callback->m_refCount.Increment();
-    }
-
-    command.m_callback = callback;
-
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-    s_CmdQueue_Streaming[option]->push_back(command);
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-    Blizzard::Storage::SetRangeAs(file->m_streaming->m_unit, range->m_chunkOffset, range->m_chunkLength, Blizzard::Storage::ChunkState::CHUNK_REQUESTED);
+// OFFSET: 0x007B4090
+Blizzard::Streaming::ScopedWorkingDirectory::ScopedWorkingDirectory() {
+    this->m_path[0] = '\0';
+    this->m_saved = Blizzard::File::GetWorkingDirectory(this->m_path, sizeof(this->m_path));
+    this->m_changed = false;
 }
 
-// OFFSET: %0x00736340
-bool Blizzard::Streaming::MakeLocal(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size, MakeLocalOption option, CompletionCallback* callback) {
-    if (!file->m_streaming || !file->m_streaming->m_unit) {
+// PROVEN: 1cead704 IDENTICAL/NONE
+// OFFSET: 0x007E99C0/0x1404F52D0
+Blizzard::Streaming::ScopedWorkingDirectory::~ScopedWorkingDirectory() {
+    if (this->m_saved && this->m_changed && !Blizzard::File::SetWorkingDirectory(this->m_path)) {
+        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to restore working directory", 1);
+    }
+}
+
+// OFFSET: 0x007B40F0
+bool Blizzard::Streaming::ScopedWorkingDirectory::ChangeToDataPath(const char* path) {
+    if (!path) {
         return false;
     }
 
-    Blizzard::Storage::StorageUnit* unit = file->m_streaming->m_unit;
+    char absolute[260];
 
-    if (!unit) {
+    if (!Blizzard::File::MakeAbsolutePath(path, absolute, sizeof(absolute), false) || Blizzard::File::Exists(absolute) != 2) {
         return false;
     }
 
-    if (unit->m_local && unit->m_local->IsCompleted()) {
+    this->m_changed = Blizzard::File::SetWorkingDirectory(absolute);
+
+    return this->m_changed;
+}
+
+// OFFSET: 0x007BC0C0
+bool Blizzard::Streaming::ScopedWorkingDirectory::ChangeToManifestPath(const char* manifest) {
+    if (!manifest || (s_httpPrefix && !_strnicmp(manifest, s_httpPrefix, strlen(s_httpPrefix)))) {
         return true;
     }
 
-    int32_t count;
-    Blizzard::Storage::Range* ranges = Blizzard::Storage::GetRange(unit, offset, size, &count, true);
+    char absolute[260];
 
-    if (!ranges || !count) {
+    if (!Blizzard::File::MakeAbsolutePath(manifest, absolute, sizeof(absolute), false)) {
         return false;
     }
 
-    bool queued = false;
+    char directory[260];
+    int32_t length = static_cast<int32_t>(Blizzard::String::FindFilename(absolute) - absolute) + 1;
+    Blizzard::String::Copy(directory, absolute, length <= 260 ? length : 260);
+    this->m_changed = Blizzard::File::SetWorkingDirectory(directory);
 
-    for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-        if (static_cast<uint32_t>(range->m_state - 2) <= 1) {
-            QueueMakeLocal(0, file, range, option, NULL, callback);
+    return this->m_changed;
+}
 
-            if (range->m_state != 3) {
-                AddTotal(range->m_chunkLength);
-            }
+// OFFSET: 0x007A5E50/0x14049ACA0
+Blizzard::Streaming::RequestHandler::~RequestHandler() {
+}
 
-            queued = true;
+// OFFSET: 0x007C6310/0x1404C14E0
+Blizzard::Streaming::RequestProcessor::RequestProcessor() {
+    this->m_paused = false;
+    this->m_shutdown = false;
+    Blizzard::Lock::EventCreate(this->m_event);
+    this->m_thread = NULL;
+    Blizzard::Lock::MutexCreate(this->m_mutex);
+}
+
+// INLINED
+Blizzard::Streaming::RequestProcessor::~RequestProcessor() {
+    Blizzard::Lock::MutexDestroy(this->m_mutex);
+    Blizzard::Lock::EventDestroy(this->m_event);
+}
+
+// PROVEN: ac69aa15 IDENTICAL/NONE
+// OFFSET: 0x007E1680/0x1404E79E0
+uint32_t Blizzard::Streaming::RequestProcessor::ThreadProc(void* param) {
+    RequestProcessor* processor = static_cast<RequestProcessor*>(param);
+
+    while (!processor->m_shutdown) {
+        if (processor->HasWork()) {
+            processor->ProcessNext();
         }
     }
 
-    if (callback) {
-        callback->Release();
+    return 0;
+}
+
+// OFFSET: 0x007EB7A0/0x1404EC9E0
+bool Blizzard::Streaming::RequestProcessor::StartThread() {
+    if (this->m_thread && this->m_thread->m_state >= 0) {
+        return true;
     }
 
-    if (queued) {
-        if (s_backgroundPreloading) {
-            Blizzard::Lock::EventSet(s_cmdEvent);
+    this->m_shutdown = false;
+    Blizzard::Thread::Create(ThreadProc, this, &this->m_thread, "StreamingProcessThread", 0, 0);
+
+    return true;
+}
+
+// OFFSET: 0x007B45B0/0x1404AA1C0
+bool Blizzard::Streaming::RequestProcessor::HasWork() {
+    if (this->m_shutdown) {
+        return false;
+    }
+
+    Blizzard::Lock::MutexEnter(this->m_mutex);
+    bool empty = this->m_queue.size() == 0;
+    Blizzard::Lock::MutexLeave(this->m_mutex);
+
+    if (!empty && !this->m_paused) {
+        return true;
+    }
+
+    while ((!Blizzard::Lock::EventWait(100, this->m_event) || this->m_paused) && !this->m_shutdown) {
+    }
+
+    if (this->m_shutdown) {
+        return false;
+    }
+
+    Blizzard::Lock::MutexEnter(this->m_mutex);
+    empty = this->m_queue.size() == 0;
+    Blizzard::Lock::MutexLeave(this->m_mutex);
+
+    return !empty;
+}
+
+// OFFSET: 0x007BFEA0
+void Blizzard::Streaming::RequestProcessor::PopFront() {
+    Blizzard::Lock::MutexEnter(this->m_mutex);
+    this->m_queue.pop_front();
+    Blizzard::Lock::MutexLeave(this->m_mutex);
+}
+
+// OFFSET: 0x007DC630
+bool Blizzard::Streaming::RequestProcessor::ProcessNext() {
+    Blizzard::Lock::MutexEnter(this->m_mutex);
+    Blizzard::Storage::Request* request = this->m_queue.front();
+    Blizzard::Lock::MutexLeave(this->m_mutex);
+
+    if (request->m_cancelled) {
+        Blizzard::Lock::MutexEnter(this->m_mutex);
+        this->m_queue.pop_front();
+        Blizzard::Lock::MutexLeave(this->m_mutex);
+
+        if (!request->m_refCount.Decrement()) {
+            delete request;
         }
+
+        return true;
+    }
+
+    int32_t result;
+
+    if (request->m_unit->m_local) {
+        Blizzard::Storage::ChunkRange range;
+        range.m_offset = request->m_offset;
+        range.m_length = request->m_size;
+        result = request->m_unit->FetchRequest(request, &range);
     } else {
-        AddDownloaded(size);
+        result = 2;
     }
 
-    Blizzard::Memory::Free(ranges);
+    if (!result) {
+        this->PopFront();
+        request->OnWriteComplete(false);
+    } else if (result == 2) {
+        request->m_state = Blizzard::Storage::Request::STATE_NO_UNIT;
+        Blizzard::Lock::EventSet(request->m_event);
+        return false;
+    }
 
     return true;
 }
 
-// OFFSET: %0x00736470
-void Blizzard::Streaming::MakeLocalCoalescing(Blizzard::File::StreamRecord* file, Blizzard::Storage::Range* ranges, int32_t count, int16_t tag) {
-    Blizzard::Storage::Range current;
-    current.m_state = 0;
-    int32_t merged = 0;
+// OFFSET: 0x007E16B0
+void Blizzard::Streaming::RequestProcessor::Shutdown() {
+    this->m_shutdown = true;
+    Blizzard::Thread::WaitForever(this->m_thread);
 
-    for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-        int32_t state = 0;
+    if (this->m_thread) {
+        Blizzard::Thread::Close(this->m_thread);
+        this->m_thread = NULL;
+    }
 
-        if (range->m_state == 3 || range->m_state == 2) {
-            state = 2;
-        }
+    Blizzard::Lock::ScopedMutex lock(this->m_mutex);
 
-        if (current.m_state == state && current.m_chunkOffset + current.m_chunkLength == range->m_chunkOffset && merged < 8) {
-            current.m_chunkLength += range->m_chunkLength;
-            merged++;
-        } else {
-            if (current.m_state == 2) {
-                QueueMakeLocal(tag, file, &current, static_cast<MakeLocalOption>(0), NULL, NULL);
-                Blizzard::Lock::EventSet(s_cmdForegroundEvent);
-                Blizzard::Lock::EventSet(s_cmdEvent);
-            }
+    for (std::deque<Blizzard::Storage::Request*>::iterator it = this->m_queue.begin(); it != this->m_queue.end(); ++it) {
+        Blizzard::Storage::Request* request = *it;
 
-            current = *range;
-            merged = 1;
+        if (!request->m_refCount.Decrement()) {
+            delete request;
         }
     }
 
-    if (current.m_state == 2) {
-        QueueMakeLocal(tag, file, &current, static_cast<MakeLocalOption>(0), NULL, NULL);
-        Blizzard::Lock::EventSet(s_cmdForegroundEvent);
-        Blizzard::Lock::EventSet(s_cmdEvent);
-    }
+    this->m_queue.clear();
 }
 
-// OFFSET: %0x00736580
-bool Blizzard::Streaming::QueueCompletion(Completion* completion, int32_t queue) {
-    if (s_threadShutdown) {
-        return false;
-    }
-
-    if (!s_CmdQueue_Streaming[queue]->size()) {
-        completion->m_result = 0;
-        completion->m_done = false;
-        return false;
-    }
-
-    FILE_THREAD_CMD command;
-    command.m_tag = 0;
-    command.m_type = 2;
-    command.m_unit = NULL;
-    command.m_retries = 0;
-    command.m_range = NULL;
-    command.m_completion = completion;
-    command.m_callback = NULL;
-
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-    s_CmdQueue_Streaming[queue]->push_back(command);
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
-    Blizzard::Lock::EventSet(s_cmdEvent);
-
-    return true;
+// INLINED
+Blizzard::Streaming::DefaultRequestHandler::DefaultRequestHandler() {
+    this->m_processor = NULL;
+    Blizzard::Lock::MutexCreate(this->m_mutex);
 }
 
-// OFFSET: %0x00736620
-void Blizzard::Streaming::ClearCommand(FILE_THREAD_CMD* command) {
-    if (command->m_completion && command->m_type == 2) {
-        command->m_completion->m_result = 0;
-        command->m_completion->m_done = true;
-        Blizzard::Lock::EventSet(*command->m_completion->m_event);
-        command->m_completion = NULL;
-    }
-
-    if (command->m_callback) {
-        command->m_callback->m_success = false;
-        command->m_callback->Release();
-        command->m_callback = NULL;
-    }
-
-    command->m_type = 0;
-    Blizzard::Memory::Free(command->m_range);
-    command->m_range = NULL;
-    Blizzard::Storage::Release(command->m_unit);
-    command->m_unit = NULL;
+// OFFSET: [0x007E37E0, 0x007E4810/0x1404EC9B0]
+Blizzard::Streaming::DefaultRequestHandler::~DefaultRequestHandler() {
+    this->Stop();
+    delete this->m_processor;
+    Blizzard::Lock::MutexDestroy(this->m_mutex);
 }
 
-// OFFSET: %0x0073BD90
-Blizzard::Streaming::StreamRequest::~StreamRequest() {
-    this->m_file->m_streaming->m_unit->FlushCacheEntries(this->m_tag);
-    Blizzard::Memory::Free(this->m_ranges);
-    concurrentRequests.Decrement();
+// OFFSET: 0x007D5250/0x1404D5C60
+void Blizzard::Streaming::DefaultRequestHandler::Queue(Blizzard::Storage::Request* request) {
+    request->m_refCount.Increment();
+    Blizzard::Lock::Mutex& mutex = this->m_processor->m_mutex;
+    Blizzard::Lock::MutexEnter(mutex);
+    this->m_processor->m_queue.push_back(request);
+
+    if (!this->m_processor->m_paused) {
+        Blizzard::Lock::EventSet(this->m_processor->m_event);
+    }
+
+    Blizzard::Lock::MutexLeave(mutex);
 }
 
-// OFFSET: %0x00744500
-bool Blizzard::Streaming::IsStreamedFile(const char* path) {
-    if (s_streamingReady && path) {
-        std::string key = System_File::GetInode(std::string(path));
+// OFFSET: 0x007EB820/0x1404ECA80
+bool Blizzard::Streaming::DefaultRequestHandler::Start(bool paused) {
+    Blizzard::Lock::ScopedMutex lock(this->m_mutex);
 
-        if (Blizzard::Storage::GetStorageInfo(key)) {
-            return true;
+    if (!this->m_processor) {
+        this->m_processor = new RequestProcessor();
+    }
+
+    if (this->m_processor->StartThread()) {
+        this->m_processor->m_paused = paused;
+
+        if (!this->m_processor->m_paused) {
+            Blizzard::Lock::EventSet(this->m_processor->m_event);
         }
+
+        return true;
     }
+
+    delete this->m_processor;
 
     return false;
 }
 
-// OFFSET: %0x007445E0
-int32_t Blizzard::Streaming::IsLocal(const char* path, int64_t offset, uint32_t size) {
-    if (!s_streamingReady) {
-        return 1;
+// OFFSET: 0x007E17C0/0x1404E7BF0
+void Blizzard::Streaming::DefaultRequestHandler::Stop() {
+    Blizzard::Lock::ScopedMutex lock(this->m_mutex);
+    this->m_processor->Shutdown();
+}
+
+// PROVEN: 34134552 IDENTICAL/NONE
+// OFFSET: 0x007AC2C0/0x1404A2110
+void Blizzard::Streaming::DefaultRequestHandler::Pause() {
+    this->m_processor->m_paused = true;
+}
+
+// PROVEN: 7da30b81 IDENTICAL/NONE
+// OFFSET: 0x007AC2D0/0x1404A2120
+void Blizzard::Streaming::DefaultRequestHandler::Resume() {
+    this->m_processor->m_paused = false;
+}
+
+// OFFSET: 0x007EDC60
+void Blizzard::Streaming::SetDefaultRequestHandler() {
+    // STATIC: 0x00EBAC50
+    static DefaultRequestHandler s_defaultHandler;
+
+    s_defaultHandler.Start(false);
+    s_requestHandler = &s_defaultHandler;
+}
+
+// OFFSET: 0x007F42B0/0x140501C40
+bool Blizzard::Streaming::InitializeStreaming(const char* manifest, const char* dataPath, RequestHandler* handler) {
+    if (s_streamingReady) {
+        return true;
     }
 
-    if (!path) {
-        return -1;
+    ScopedWorkingDirectory directory;
+
+    if (!directory.ChangeToDataPath(dataPath) && !directory.ChangeToManifestPath(manifest)) {
+        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to change working directory", 1);
+        return false;
+    }
+
+    if (!ManifestInfo::Initialize(manifest)) {
+        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Could not load manifest", 20);
+        return false;
+    }
+
+    if (!Blizzard::Storage::Initialize()) {
+        ManifestInfo::Get()->Destroy();
+        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Could not initialize storage", 20);
+        return false;
+    }
+
+    if (handler) {
+        s_requestHandler = handler;
+    } else {
+        SetDefaultRequestHandler();
+    }
+
+    System_File::Stacked::Push(&System_File::Stacked::s_streamstack);
+    Blizzard::Mopaq::SFileEnableRawRead(false);
+    s_streamingReady = true;
+
+    return true;
+}
+
+// OFFSET: 0x007F0750/0x1404FD170
+void Blizzard::Streaming::ShutdownStreaming() {
+    RequestHandler* handler = s_requestHandler;
+
+    if (handler) {
+        s_streamingReady = false;
+        s_requestHandler = NULL;
+        handler->Stop();
+    }
+
+    Blizzard::Storage::Shutdown();
+    ManifestInfo::Get()->Destroy();
+}
+
+// OFFSET: 0x007E3310/0x1404E9EA0
+bool Blizzard::Streaming::IsStreamedFile(const char* path) {
+    if (!s_streamingReady || !path) {
+        return false;
     }
 
     std::string key = System_File::GetInode(std::string(path));
-    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::GetStorageInfo(key);
 
-    if (!unit || (unit->m_local && unit->m_local->IsCompleted())) {
-        return 1;
-    }
-
-    int32_t count;
-    Blizzard::Storage::Range* ranges = Blizzard::Storage::GetRange(unit, offset, size, &count, false);
-
-    if (!ranges || !count) {
-        return 1;
-    }
-
-    int32_t result = 1;
-
-    for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-        switch (range->m_state) {
-            case 1:
-            case 3:
-                if (result == 1) {
-                    result = 2;
-                }
-
-                break;
-
-            case 2:
-                result = 0;
-                count = 0;
-                break;
-        }
-
-        if (!result) {
-            break;
-        }
-    }
-
-    Blizzard::Memory::Free(ranges);
-
-    return result;
+    return Blizzard::Storage::Exists(key);
 }
 
-// OFFSET: %0x00744780
-int64_t Blizzard::Streaming::GetIsLocalAmount(const char* path, int64_t offset, uint32_t size) {
+// OFFSET: 0x007EDDD0
+bool Blizzard::Streaming::IsInManifest(const char* path) {
+    if (!s_streamingReady || !path) {
+        return false;
+    }
+
     std::string key = System_File::GetInode(std::string(path));
-    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::GetStorageInfo(key);
 
-    if (!unit) {
-        return -1;
-    }
-
-    return GetIsLocalAmount(unit, offset, size);
+    return ManifestInfo::Get()->GetFileItem(key) != NULL;
 }
 
-// OFFSET: %0x007361B0
-int64_t Blizzard::Streaming::GetIsLocalAmount(Blizzard::File::StreamRecord* file) {
-    Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
-
-    if (!unit) {
-        return -1;
-    }
-
-    int64_t local = GetIsLocalAmount(unit, 0, static_cast<uint32_t>(unit->m_logicalFileSize));
-    Blizzard::Storage::Release(unit);
-
-    return local;
-}
-
-// OFFSET: %0x00744860
-bool Blizzard::Streaming::MakeLocalBlocking(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size, MakeLocalOption option, MakeLocalParams* params) {
-    std::string key = System_File::GetInode(std::string(file->m_pathname));
-    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::GetStorageInfo(key);
-
-    if (unit && unit->m_local && unit->m_local->IsCompleted()) {
-        return true;
-    }
-
-    int32_t count;
-    Blizzard::Storage::Range* ranges = unit ? Blizzard::Storage::GetRange(unit, offset, size, &count, true) : NULL;
-
-    if (!ranges || !count) {
-        if (params) {
-            params->m_status = 0;
-        }
-
-        return true;
-    }
-
-    Blizzard::Storage::Range request;
-    request.m_state = 0;
-
-    FileCompletionCallback* callback = new FileCompletionCallback();
-
-    if (params && params->m_budget < unit->m_chunkSize) {
-        params->m_budget = unit->m_chunkSize;
-    }
-
-    for (Blizzard::Storage::Range* range = ranges; count > 0; count--, range++) {
-        if (static_cast<uint32_t>(range->m_state - 2) > 1) {
-            continue;
-        }
-
-        if (range->m_chunkLength <= 0) {
-            Blizzard::Memory::Free(ranges);
-
-            if (params) {
-                params->m_status = 2;
-            }
-
-            return false;
-        }
-
-        request.m_state = 2;
-        request.m_chunkOffset = range->m_chunkOffset;
-        request.m_chunkLength = range->m_chunkLength;
-
-        if (params) {
-            if (params->m_budget < range->m_chunkLength) {
-                params->m_status = 1;
-                continue;
-            }
-
-            params->m_budget -= range->m_chunkLength;
-        }
-
-        QueueMakeLocal(0, file, &request, option, NULL, callback);
-        Blizzard::Lock::EventSet(s_cmdForegroundEvent);
-        Blizzard::Lock::EventSet(s_cmdEvent);
-    }
-
-    Blizzard::Memory::Free(ranges);
-
-    if (!request.m_state) {
-        delete callback;
-        return true;
-    }
-
-    callback->Release();
-    Blizzard::Lock::EventSet(s_cmdForegroundEvent);
-    Blizzard::Lock::EventSet(s_cmdEvent);
-    Blizzard::Lock::EventWaitForever(callback->m_event);
-
-    bool success = callback->m_success;
-    delete callback;
-
-    if (!success && params) {
-        params->m_status = 2;
-    }
-
-    return success;
-}
-
-// OFFSET: %0x00748220
+// OFFSET: 0x007EDCC0
 bool Blizzard::Streaming::GetStreamedFileSize(const char* path, int64_t* size) {
-    *size = 0;
+    if (size) {
+        *size = 0;
+    }
 
     if (!s_streamingReady || !path) {
         return false;
@@ -1075,319 +605,194 @@ bool Blizzard::Streaming::GetStreamedFileSize(const char* path, int64_t* size) {
         return false;
     }
 
-    *size = item->m_size;
-
-    return true;
-}
-
-// OFFSET: %0x00748320
-bool Blizzard::Streaming::StreamRequest::PrefetchData() {
-    Blizzard::Storage::Range* range = this->m_ranges;
-
-    for (int32_t count = this->m_count; count > 0; count--, range++) {
-        if (static_cast<uint32_t>(range->m_state) > 1) {
-            if (!ManifestInfo::Get()->m_servers.size()) {
-                return false;
-            }
-
-            Blizzard::Lock::MutexEnter(Blizzard::Storage::s_storageMutex);
-            Blizzard::Lock::MutexLeave(Blizzard::Storage::s_storageMutex);
-            MakeLocalCoalescing(this->m_file, this->m_ranges, this->m_count, this->m_tag);
-
-            return true;
-        }
+    if (size) {
+        *size = item->m_size;
     }
 
     return true;
 }
 
-// OFFSET: %0x00749490
-void Blizzard::Streaming::ShutdownStreaming() {
-    if (s_streamingReady) {
-        s_progress.FireCallback();
-        s_threadShutdown = true;
-        Blizzard::Lock::EventSet(s_cmdEvent);
-        Blizzard::Lock::EventSet(s_cmdForegroundEvent);
-        s_paused = false;
-        Blizzard::Lock::EventSet(s_pauseEvent);
-
-        while (s_threadExited > 0) {
-            Blizzard::Process::Sleep(10);
-        }
-
-        Blizzard::Lock::EventDestroy(s_cmdEvent);
-        Blizzard::Lock::EventDestroy(s_cmdForegroundEvent);
-
-        for (int32_t i = 0; i < 2; i++) {
-            Blizzard::Lock::EventDestroy(s_cmdPartnerEvent[i]);
-            delete s_CmdProcess[i];
-        }
-
-        Blizzard::Lock::MutexEnter(s_cmdMutex);
-
-        for (int32_t i = 0; i < MAX_CMD_QUEUE; i++) {
-            std::deque<FILE_THREAD_CMD>& queue = *s_CmdQueue_Streaming[i];
-
-            for (std::deque<FILE_THREAD_CMD>::iterator it = queue.begin(); it != queue.end(); ++it) {
-                ClearCommand(&*it);
-            }
-
-            queue.clear();
-        }
-
-        Blizzard::Lock::MutexLeave(s_cmdMutex);
-        Blizzard::Lock::MutexDestroy(s_cmdMutex);
-        Blizzard::Lock::EventDestroy(s_pauseEvent);
-        Blizzard::Lock::MutexDestroy(s_pauseMutex);
-
-        for (int32_t i = 0; i < MAX_CMD_QUEUE; i++) {
-            delete s_CmdQueue_Streaming[i];
-        }
-
-        s_streamingReady = false;
+// OFFSET: 0x007E3400
+int64_t Blizzard::Streaming::GetIsLocalAmount(const char* path, int64_t offset, int64_t size) {
+    if (!path) {
+        return size;
     }
 
-    Blizzard::Storage::Shutdown();
+    std::string key = System_File::GetInode(std::string(path));
+    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::Acquire(key, false);
 
-    delete ManifestInfo::Get();
-    ManifestInfo::s_instance = NULL;
+    if (!unit) {
+        return size;
+    }
+
+    int64_t local = unit->m_local ? unit->m_local->GetLocalBytes(offset, size) : 0;
+    Blizzard::Storage::Release(unit);
+
+    return local;
 }
 
-// OFFSET: %0x00751360
-uint32_t Blizzard::Streaming::FileThread(void* param) {
-    int32_t thread = *static_cast<int32_t*>(param);
-    delete static_cast<int32_t*>(param);
+// OFFSET: 0x007E3570
+void Blizzard::Streaming::GetLocalAmount(const char* path, int64_t* local, int64_t* total) {
+    *local = 0;
+    *total = 0;
 
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-    int32_t bit = 1 << thread;
-    s_threadExited |= bit;
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
+    Blizzard::Lock::MutexEnter(Blizzard::Storage::s_storageMutex);
+    std::string key = System_File::GetInode(std::string(path));
 
-    if (!s_threadShutdown) {
-        for (;;) {
-            if (Blizzard::Lock::EventWait(100, s_cmdEvent) || Blizzard::Lock::EventWait(5, s_cmdPartnerEvent[thread])) {
-                while (!s_threadShutdown) {
-                    if (s_paused) {
-                        Blizzard::Lock::EventWaitForever(s_pauseEvent);
-                        Blizzard::Lock::EventSet(s_pauseEvent);
-                    }
+    if (Blizzard::Storage::IsInitialized() && Blizzard::Storage::s_StorageMap->find(key) != Blizzard::Storage::s_StorageMap->end()) {
+        std::map<std::string, Blizzard::Storage::StorageUnit*>::iterator it = Blizzard::Storage::s_StorageMap->find(key);
 
-                    Blizzard::Lock::MutexEnter(s_cmdMutex);
-                    s_threadDownloading |= bit;
-
-                    FILE_THREAD_CMD* command = NULL;
-                    int32_t queue = GetNextCommand(&command, thread);
-
-                    if (queue == MAX_CMD_QUEUE) {
-                        Blizzard::Lock::MutexLeave(s_cmdMutex);
-                        break;
-                    }
-
-                    int32_t pending = 0;
-
-                    for (int32_t i = 0; i < MAX_CMD_QUEUE; i++) {
-                        pending += static_cast<int32_t>(s_CmdQueue_Streaming[i]->size());
-                    }
-
-                    if (pending > 0) {
-                        int32_t idle = GetIdleThread();
-
-                        if (idle >= 0) {
-                            Blizzard::Lock::EventSet(s_cmdPartnerEvent[idle]);
-                        }
-                    }
-
-                    Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-                    bool success = true;
-                    bool requeue = false;
-                    bool unwatched = !command->m_completion && !command->m_callback;
-
-                    if (!command->m_type) {
-                        success = false;
-                    } else if (command->m_type == 1) {
-                        if (command->m_unit->FetchDeferData(command->m_range, command->m_tag)) {
-                            command->m_type = 0;
-                        } else {
-                            success = false;
-
-                            if (unwatched && command->m_retries++ < 5) {
-                                requeue = true;
-                            }
-                        }
-                    } else if (command->m_type == 2) {
-                        command->m_type = 0;
-
-                        if (!pending) {
-                            WaitForLoads();
-                        }
-                    }
-
-                    if (!requeue) {
-                        if (command->m_type == 1) {
-                            Blizzard::Storage::SetRangeAs(command->m_unit, command->m_range->m_chunkOffset, command->m_range->m_chunkLength, Blizzard::Storage::ChunkState::CHUNK_NONE);
-                        }
-
-                        if (command->m_completion) {
-                            command->m_completion->m_result = static_cast<int32_t>(s_CmdQueue_Streaming[queue]->size());
-                            command->m_completion->m_done = false;
-                            command->m_completion->m_success = success;
-                            Blizzard::Lock::EventSet(*command->m_completion->m_event);
-                            command->m_completion = NULL;
-                        }
-
-                        if (command->m_callback) {
-                            if (!success) {
-                                command->m_callback->m_success = false;
-                            }
-
-                            command->m_callback->Release();
-                        }
-                    }
-
-                    Blizzard::Lock::MutexEnter(s_cmdMutex);
-                    s_CmdProcess[thread] = NULL;
-
-                    if (requeue) {
-                        s_CmdQueue_Streaming[queue]->push_front(*command);
-                        AddStreamed(0);
-                    } else {
-                        Blizzard::Memory::Free(command->m_range);
-                        Blizzard::Storage::Release(command->m_unit);
-                    }
-
-                    delete command;
-                    Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-                    System_File::FileError& error = System_File::s_error;
-
-                    if (error.m_errorStack) {
-                        Blizzard::Debug::FreeErrorStack(error.m_errorStack);
-                    }
-
-                    error.m_errorStack = NULL;
-
-                    if (queue > 2) {
-                        int32_t sleep;
-
-                        if (StreamingX::g_IsEnableP2PCallBack && StreamingX::g_IsEnableP2PCallBack() && queue == 6 && StreamingX::g_stepLowCommandInterval) {
-                            StreamingX::g_lowCommandInterval += StreamingX::GetLowCommandIntervalStep();
-                            sleep = StreamingX::g_lowCommandInterval;
-                        } else {
-                            sleep = FileManifest::GetBGPreloadSleep();
-                        }
-
-                        Blizzard::Lock::EventWait(sleep, s_cmdForegroundEvent);
-                    }
-                }
-            }
-
-            Blizzard::Lock::MutexEnter(s_cmdMutex);
-            s_threadDownloading &= ~bit;
-            Blizzard::Lock::MutexLeave(s_cmdMutex);
-
-            if (s_threadShutdown) {
-                break;
-            }
+        if (it != Blizzard::Storage::s_StorageMap->end() && it->second->m_local) {
+            *local = it->second->m_local->GetTotalLocalSize();
+            *total = it->second->m_logicalFileSize;
         }
     }
 
-    Blizzard::Lock::MutexEnter(s_cmdMutex);
-    s_threadExited &= ~bit;
-    Blizzard::Lock::MutexLeave(s_cmdMutex);
+    Blizzard::Lock::MutexLeave(Blizzard::Storage::s_storageMutex);
+}
+
+// OFFSET: 0x007DA020/0x1404DC7D0
+int32_t Blizzard::Streaming::IsLocal(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size) {
+    if (!s_streamingReady) {
+        return 1;
+    }
+
+    Blizzard::Storage::StorageUnitRef ref(AcquireStorageUnit(file));
+
+    if (ref.m_unit && size) {
+        return ref.m_unit->IsAvailable(offset, size) ? 1 : 0;
+    }
 
     return 1;
 }
 
-// OFFSET: %0x0075A2C0
-bool Blizzard::Streaming::InitializeStreaming(const char* manifest, const char* dataPath) {
-    if (s_streamingReady) {
-        return true;
+// OFFSET: 0x007DA140
+int64_t Blizzard::Streaming::GetIsLocalAmount(Blizzard::File::StreamRecord* file) {
+    Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
+
+    if (!unit) {
+        return -1;
     }
 
-    char cwd[260];
-    cwd[0] = '\0';
+    int64_t local = unit->m_local ? unit->m_local->GetLocalBytes(0, unit->m_logicalFileSize) : 0;
+    Blizzard::Storage::Release(unit);
 
-    if (!Blizzard::File::GetWorkingDirectory(cwd, sizeof(cwd))) {
-        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to get working directory", 20);
+    return local;
+}
+
+// OFFSET: 0x007DA210
+bool Blizzard::Streaming::MakeRemote(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size) {
+    Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
+
+    if (!unit) {
         return false;
     }
 
-    char root[260];
+    bool result = unit->m_local ? unit->m_local->Invalidate(offset, size) : false;
+    Blizzard::Storage::Release(unit);
 
-    if (!manifest || (s_httpPrefix && !_strnicmp(manifest, s_httpPrefix, strlen(s_httpPrefix)))) {
-        Blizzard::String::Copy(root, cwd, sizeof(root));
-    } else {
-        char absolute[260];
+    return result;
+}
 
-        if (!Blizzard::File::MakeAbsolutePath(manifest, absolute, sizeof(absolute), false)) {
-            Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to make absolute manifest path", 20);
-            return false;
+// OFFSET: 0x007DC200
+bool Blizzard::Streaming::MakeLocal(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size, CompletionCallback* callback, const int64_t* chunk) {
+    if (!s_requestHandler) {
+        if (callback) {
+            callback->m_success = false;
+            callback->Release();
         }
 
-        int32_t length = static_cast<int32_t>(Blizzard::String::FindFilename(absolute) - absolute + 1);
-        Blizzard::String::Copy(root, absolute, length <= 260 ? length : 260);
-    }
-
-    if (dataPath && (!Blizzard::File::MakeAbsolutePath(dataPath, root, sizeof(root), false) || !Blizzard::File::IsDirectory(dataPath))) {
-        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Invalid data path specified", 20);
-    }
-
-    if (!Blizzard::File::SetWorkingDirectory(root)) {
-        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to change working directory", 20);
         return false;
     }
 
-    bool manifestLoaded = ManifestInfo::Initialize(manifest);
-    s_isStreamingTrial = FileManifest::GetIsStreamingTrial();
+    Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
+    Blizzard::Storage::Request* request = Blizzard::Storage::Request::Create(unit, offset, size);
+    Blizzard::Storage::Release(unit);
 
-    if (!manifestLoaded) {
-        Blizzard::File::SetWorkingDirectory(cwd);
+    if (request->m_callback) {
+        request->m_callback->m_success = false;
+        request->m_callback->Release();
+    }
+
+    request->m_callback = callback;
+
+    if (callback) {
+        callback->m_refCount.Increment();
+    }
+
+    request->m_chunk = chunk;
+
+    if (request->m_state != Blizzard::Storage::Request::STATE_LOCAL) {
+        if (request->m_state != Blizzard::Storage::Request::STATE_PENDING) {
+            request->Release();
+            return unit == NULL;
+        }
+
+        s_requestHandler->Queue(request);
+    }
+
+    request->Release();
+
+    return true;
+}
+
+// OFFSET: 0x007DC3A0
+bool Blizzard::Streaming::MakeLocalBlocking(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size, MakeLocalParams* params, const int64_t* chunk) {
+    int32_t retries = 0;
+
+    if (!s_requestHandler) {
         return false;
     }
 
-    if (!Blizzard::Storage::Initialize()) {
-        Blizzard::File::SetWorkingDirectory(cwd);
-        Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Could not initialize storage", 20);
-        return false;
-    }
+    Blizzard::Storage::StorageUnit* unit = AcquireStorageUnit(file);
+    Blizzard::Storage::Request* request = Blizzard::Storage::Request::Create(unit, offset, size);
+    Blizzard::Storage::Release(unit);
+    request->m_chunk = chunk;
 
-    for (int32_t i = 0; i < MAX_CMD_QUEUE; i++) {
-        s_CmdQueue_Streaming[i] = new std::deque<FILE_THREAD_CMD>();
-    }
-
-    s_threadExited = 0;
-    s_threadShutdown = false;
-    Blizzard::Lock::MutexCreate(s_cmdMutex);
-    Blizzard::Lock::EventCreate(s_cmdEvent);
-    Blizzard::Lock::EventCreate(s_cmdForegroundEvent);
-
-    for (int32_t i = 0; i < 2; i++) {
-        s_CmdProcess[i] = NULL;
-        Blizzard::Lock::EventCreate(s_cmdPartnerEvent[i]);
-
-        int32_t* thread = new int32_t;
-        *thread = i;
-        Blizzard::Thread::CreateDetached(FileThread, thread, Blizzard::String::QuickFormat<1024>("Stream BG DL %d", i).m_buffer);
-    }
-
-    s_paused = false;
-    Blizzard::Lock::MutexCreate(s_pauseMutex);
-    Blizzard::Lock::EventCreate(s_pauseEvent);
-
-    System_File::Stacked::PushStreaming();
-
-    {
-        Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetMopaqGlobalsLock()->m_mutex);
-        System_MPQGlobals::GetMopaqGlobals()->m_disableRawRead = true;
-    }
-
-    s_streamingReady = true;
-
-    if (Blizzard::File::SetWorkingDirectory(cwd)) {
+    if (request->m_state == Blizzard::Storage::Request::STATE_LOCAL) {
+        request->Release();
         return true;
     }
 
-    Blizzard::File::AddToLastErrorStack(0, "InitializeStreaming - Failed to restore working directory", 20);
-    return false;
+    bool result;
+
+    if (request->m_state == Blizzard::Storage::Request::STATE_PENDING) {
+        s_requestHandler->Queue(request);
+
+        while (!Blizzard::Lock::EventWait(3600000, request->m_event) || request->m_state != Blizzard::Storage::Request::STATE_LOCAL) {
+            int32_t state = request->m_state;
+
+            if (state == Blizzard::Storage::Request::STATE_FAILED || state == Blizzard::Storage::Request::STATE_CANCELLED) {
+                break;
+            }
+
+            if (retries++ >= 3) {
+                request->Cancel();
+                break;
+            }
+        }
+
+        if (params) {
+            int32_t state = request->m_state;
+
+            if (state == Blizzard::Storage::Request::STATE_LOCAL) {
+                params->m_status = 0;
+            } else {
+                params->m_status = (static_cast<uint32_t>(state - 2) > 1) + 1;
+            }
+        }
+
+        int32_t state = request->m_state;
+        result = state == Blizzard::Storage::Request::STATE_LOCAL || state == Blizzard::Storage::Request::STATE_CANCELLED;
+    } else {
+        if (params) {
+            params->m_status = unit != NULL ? 3 : 0;
+        }
+
+        result = unit == NULL;
+    }
+
+    request->Release();
+
+    return result;
 }

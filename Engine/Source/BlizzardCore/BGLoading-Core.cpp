@@ -14,7 +14,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// OFFSET: %0x00760A60
+// OFFSET: 0x0079FEA0/0x140495990
 int32_t BGLoading::BGLoadManager::SkipLocalData(Blizzard::Mopaq::HSFILERecord* file, int64_t& offset, int32_t size) {
     int64_t fileSize = Blizzard::Mopaq::SFileGetFileSize(file, NULL);
 
@@ -49,14 +49,14 @@ int32_t BGLoading::BGLoadManager::SkipLocalData(Blizzard::Mopaq::HSFILERecord* f
     return 1;
 }
 
-// OFFSET: %0x00760B40
+// OFFSET: 0x007A1FD0
 bool BGLoading::BGLoadManager::Shutdown() {
     if (!this->m_thread || !Blizzard::Thread::IsRunning(this->m_thread)) {
+        this->CloseBackgroundFiles();
         return false;
     }
 
     Blizzard::Lock::EventSet(this->m_stopEvent);
-    Blizzard::Streaming::ResetMakeLocal(static_cast<Blizzard::Streaming::MakeLocalOption>(7));
 
     if (this->m_thread) {
         Blizzard::Thread::WaitForever(this->m_thread);
@@ -69,7 +69,7 @@ bool BGLoading::BGLoadManager::Shutdown() {
     return true;
 }
 
-// OFFSET: %0x00760CF0
+// OFFSET: 0x007A02D0/0x140495F10
 bool BGLoading::BGLoadManager::WaitForNextTimeSlice(int32_t& slice) {
     int32_t remaining = 0;
     int32_t maxWait = 1000;
@@ -80,7 +80,7 @@ bool BGLoading::BGLoadManager::WaitForNextTimeSlice(int32_t& slice) {
 
         int32_t wait;
 
-        if (this->m_paused || Blizzard::Streaming::IsPreloadInProgress()) {
+        if (this->m_paused) {
             wait = 1001;
         } else if (slice >= 100 && !remaining) {
             slice = 0;
@@ -115,7 +115,7 @@ bool BGLoading::BGLoadManager::WaitForNextTimeSlice(int32_t& slice) {
     return false;
 }
 
-// OFFSET: %0x007610F0
+// OFFSET: 0x007A2030
 BGLoading::BGLoadManager::~BGLoadManager() {
     this->Shutdown();
     Blizzard::Lock::EventDestroy(this->m_stopEvent);
@@ -125,7 +125,7 @@ BGLoading::BGLoadManager::~BGLoadManager() {
     this->m_sampleBytes.clear();
 }
 
-// OFFSET: %0x007618D0
+// OFFSET: 0x007A1310
 void BGLoading::BGLoadManager::QueueArchive(const char* name) {
     Blizzard::Lock::MutexEnter(this->m_mutex);
 
@@ -138,7 +138,7 @@ void BGLoading::BGLoadManager::QueueArchive(const char* name) {
     Blizzard::Lock::MutexLeave(this->m_mutex);
 }
 
-// OFFSET: %0x00761950
+// OFFSET: 0x007A1390
 bool BGLoading::BGLoadManager::QueueFile(const char* name) {
     Blizzard::Mopaq::HSFILERecord* file = NULL;
     Blizzard::Lock::ScopedMutex lock(this->m_mutex);
@@ -158,7 +158,7 @@ bool BGLoading::BGLoadManager::QueueFile(const char* name) {
     return true;
 }
 
-// OFFSET: %0x00761AA0
+// OFFSET: 0x007A14E0
 BGLoading::BGLoadManager::BGLoadManager() {
     this->m_thread = NULL;
     Blizzard::Lock::EventCreate(this->m_stopEvent);
@@ -181,7 +181,7 @@ BGLoading::BGLoadManager::BGLoadManager() {
     this->m_throttle = 33;
 }
 
-// OFFSET: %0x00761C20
+// OFFSET: 0x007A1660/0x140497DE0
 void BGLoading::BGLoadManager::AppendNewBGFiles() {
     Blizzard::Lock::ScopedMutex lock(this->m_mutex);
 
@@ -192,7 +192,7 @@ void BGLoading::BGLoadManager::AppendNewBGFiles() {
     }
 }
 
-// OFFSET: %0x00761DF0
+// OFFSET: 0x007A1830
 void BGLoading::BGLoadManager::AppendNewArchives() {
     Blizzard::Lock::ScopedMutex lock(this->m_mutex);
 
@@ -203,7 +203,7 @@ void BGLoading::BGLoadManager::AppendNewArchives() {
     }
 }
 
-// OFFSET: %0x00761FB0
+// OFFSET: 0x007A19F0/0x140498200
 void BGLoading::BGLoadManager::DownloadBackgroundFiles() {
     Blizzard::Streaming::MakeLocalParams params;
     params.m_budget = 0x20000;
@@ -228,16 +228,30 @@ void BGLoading::BGLoadManager::DownloadBackgroundFiles() {
                     this->m_sampleBytes[this->m_sample] = 0;
                     int64_t start = this->m_sampleTimes[this->m_sample] = Blizzard::Time::GetTimestamp();
                     params.m_status = 0;
-                    int32_t bytes = 0x20000;
+                    int64_t bytes = 0x20000;
+                    int64_t fileSize = Blizzard::Mopaq::SFileGetFileSize(this->m_files[i], NULL);
 
-                    if (Blizzard::Streaming::MakeLocalBlocking(this->m_files[i]->GetFileStream(), this->m_fileOffsets[i], 0x20000, static_cast<Blizzard::Streaming::MakeLocalOption>(7), &params)) {
-                        this->m_fileOffsets[i] += 0x20000;
+                    if (this->m_fileOffsets[i] + 0x20000 > fileSize) {
+                        bytes = fileSize - this->m_fileOffsets[i];
+                    }
+
+                    if (Blizzard::Streaming::MakeLocalBlocking(this->m_files[i]->GetFileStream(), this->m_fileOffsets[i], bytes, &params, NULL)) {
+                        this->m_fileOffsets[i] += bytes;
                     } else {
                         bytes = 0;
                     }
 
                     float rate = static_cast<float>(bytes) / (Blizzard::Time::GetTimestamp() - start) * 8000.0f;
                     this->m_bandwidth = this->m_bandwidth <= 0.0f ? rate : this->m_bandwidth * 0.8f + rate * 0.2f;
+
+                    if (this->m_showStatus) {
+                        char name[260];
+                        Blizzard::Mopaq::SFileGetFileName(this->m_files[i], name, sizeof(name));
+                        int64_t total = Blizzard::Mopaq::SFileGetFileSize(this->m_files[i], NULL);
+                        char state = this->m_fileOffsets[i] == total ? 'L' : 'R';
+                        Blizzard::String::Format(this->m_status + 260 * this->m_sample, 260, "%c: %3.1f%% : %s", state, static_cast<double>(this->m_fileOffsets[i]) / static_cast<double>(total) * 100.0, name);
+                    }
+
                     this->m_sampleBytes[this->m_sample] = bytes;
                     this->m_sampleTotal += bytes;
                     this->AdvanceSample();
@@ -259,9 +273,9 @@ void BGLoading::BGLoadManager::DownloadBackgroundFiles() {
     }
 }
 
-// OFFSET: %0x007622A0
+// OFFSET: 0x007A2790
 BGLoading::BGLoadManager* BGLoading::BGLoadManager::Get() {
-    // STATIC: %0x00D874E8
+    // STATIC: 0x00EB3A58
     static BGLoadManager s_manager;
     return &s_manager;
 }
@@ -280,12 +294,62 @@ void BGLoading::BGLoadManager::CloseBackgroundFiles() {
     this->m_fileOffsets.clear();
 }
 
-// OFFSET: %0x00762430
-bool BGLoading::BGLoadThreadStarted() {
-    return BGLoadManager::Get()->m_thread != NULL;
+// OFFSET: 0x007A1240
+void BGLoading::BGLoadManager::QueueArchiveFiles() {
+    Blizzard::Lock::ScopedMutex lock(this->m_mutex);
+
+    for (uint32_t i = 0; i < this->m_archives.size(); i++) {
+        Blizzard::Mopaq::HSFILERecord* file;
+        Blizzard::Mopaq::SFileGetArchiveFile(this->m_archives[i], &file);
+        this->m_fileQueue.push_back(file);
+    }
 }
 
-// OFFSET: %0x00762440
+// OFFSET: 0x007A0040
+double BGLoading::BGLoadManager::GetDownloadedPercentage() {
+    uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
+
+    if (Blizzard::Time::GetTimeElapsed(this->m_percentTime, now) > 2000) {
+        this->m_total = 0;
+        this->m_local = 0;
+
+        for (uint32_t i = 0; i < this->m_archives.size(); i++) {
+            char name[260];
+            int64_t local = 0;
+            int64_t total = 0;
+            Blizzard::Mopaq::SFileGetArchiveName(this->m_archives[i], name, sizeof(name));
+            Blizzard::Streaming::GetLocalAmount(name, &local, &total);
+            this->m_local += local;
+            this->m_total += total;
+        }
+
+        for (uint32_t i = 0; i < this->m_files.size(); i++) {
+            char name[260];
+            int64_t local = 0;
+            int64_t total = 0;
+            Blizzard::Mopaq::SFileGetFileName(this->m_files[i], name, sizeof(name));
+            Blizzard::Streaming::GetLocalAmount(name, &local, &total);
+            this->m_local += local;
+            this->m_total += total;
+        }
+
+        this->m_percentTime = now;
+    }
+
+    if (this->m_total) {
+        return static_cast<double>(this->m_local) / static_cast<double>(this->m_total) * 0.99000001f;
+    }
+
+    return 1.0;
+}
+
+// OFFSET: 0x007A2840
+bool BGLoading::BGLoadThreadStarted() {
+    Blizzard::Thread::ThreadRecord* thread = BGLoadManager::Get()->m_thread;
+    return thread && Blizzard::Thread::IsRunning(thread);
+}
+
+// OFFSET: 0x007A2890
 bool BGLoading::StopBGLoadThread() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
         return false;
@@ -294,7 +358,7 @@ bool BGLoading::StopBGLoadThread() {
     return BGLoadManager::Get()->Shutdown();
 }
 
-// OFFSET: %0x00762460
+// OFFSET: 0x007A28B0/0x140499280
 bool BGLoading::SetBandwidthThrottlePercentage(int32_t percent) {
     if (!Blizzard::Streaming::IsStreamingMode()) {
         return false;
@@ -314,33 +378,23 @@ float BGLoading::GetBandwidth() {
     return 0.0f;
 }
 
-// OFFSET: %0x007624A0
-float BGLoading::GetDownloadedPercentage() {
+// OFFSET: 0x007A28D0
+double BGLoading::GetDownloadedPercentage() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
-        return 1.0f;
+        return 1.0;
     }
 
-    BGLoadManager* manager = BGLoadManager::Get();
-    uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
-
-    if (Blizzard::Time::GetTimeElapsed(manager->m_percentTime, now) > 2000) {
-        manager->m_total = 0;
-        manager->m_local = 0;
-        Blizzard::Mopaq::SFileGetTotalIsLocalAmount(manager->m_local, manager->m_total);
-        manager->m_percentTime = now;
-    }
-
-    return static_cast<float>(static_cast<double>(manager->m_local) / static_cast<double>(manager->m_total));
+    return BGLoadManager::Get()->GetDownloadedPercentage();
 }
 
-// OFFSET: %0x007624C0
+// OFFSET: 0x007A28F0
 void BGLoading::QueueArchive(const char* name) {
     if (Blizzard::Streaming::IsStreamingMode()) {
         BGLoadManager::Get()->QueueArchive(name);
     }
 }
 
-// OFFSET: %0x007624E0
+// OFFSET: 0x007A2910
 bool BGLoading::QueueFile(const char* name) {
     if (!Blizzard::Streaming::IsStreamingMode()) {
         return false;
@@ -349,14 +403,14 @@ bool BGLoading::QueueFile(const char* name) {
     return BGLoadManager::Get()->QueueFile(name);
 }
 
-// OFFSET: %0x00762500
+// OFFSET: 0x007A2930
 void BGLoading::Pause(bool pause) {
     if (Blizzard::Streaming::IsStreamingMode()) {
         BGLoadManager::Get()->m_paused = pause;
     }
 }
 
-// OFFSET: %0x00762520
+// OFFSET: 0x007A2950/0x1404994A0
 bool BGLoading::IsStreamingInProgress() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
         return false;
@@ -365,7 +419,7 @@ bool BGLoading::IsStreamingInProgress() {
     return BGLoadManager::Get()->m_inProgress;
 }
 
-// OFFSET: 0x007A2270
+// OFFSET: 0x007A2270/0x140498A60
 uint32_t BGLoading::BGLoadManager::BGLoadThread() {
     int32_t slice = 0;
 
@@ -400,7 +454,7 @@ uint32_t BGLoading::BGLoadManager::BGLoadThread() {
                         chunk = 0x4000;
                     }
 
-                    Blizzard::Mopaq::SFileMakeFileLocal(this->m_archives[i], block, offset, chunk, 7, true);
+                    Blizzard::Mopaq::SFileMakeFileLocal(this->m_archives[i], block, offset, chunk, true);
                     offset += chunk;
                     remaining -= chunk;
 
@@ -439,6 +493,7 @@ uint32_t BGLoading::BGLoadManager::BGLoadThread() {
         this->AppendNewArchives();
 
         if (done >= this->m_archives.size()) {
+            this->QueueArchiveFiles();
             this->DownloadBackgroundFiles();
             break;
         }
@@ -460,16 +515,12 @@ uint32_t BGLoading::BGLoadManager::RunBGLoadThread(void* param) {
     return static_cast<BGLoadManager*>(param)->BGLoadThread();
 }
 
-// OFFSET: %0x00762A10
+// OFFSET: 0x007A27F0
 void BGLoading::BGLoadManager::StartThread() {
-    if (!Blizzard::Streaming::IsStreamingMode()) {
-        return;
-    }
-
     BGLoadManager* manager = Get();
     Blizzard::Lock::MutexEnter(manager->m_mutex);
 
-    if (!manager->m_thread) {
+    if (!manager->m_thread || !Blizzard::Thread::IsRunning(manager->m_thread)) {
         Blizzard::Thread::Create(RunBGLoadThread, manager, &manager->m_thread, "BGDataDownload", 0, 0);
     }
 

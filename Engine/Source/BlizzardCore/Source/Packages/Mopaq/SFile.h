@@ -41,7 +41,7 @@ bool SFileCloseFile(HSFILERecord* file);
 bool SFileCreateFile(System_SFile::ARCHIVEREC* handle, const char* name, uint32_t size, uint32_t flags, HSFILERecord** result);
 bool SFileGetArchiveFullName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size);
 bool SFileGetArchiveName(System_SFile::ARCHIVEREC* handle, char* name, uint32_t size);
-int32_t SFileFileIsLocal(HSFILERecord* file, int32_t option);
+int32_t SFileFileIsLocal(HSFILERecord* file, bool ignorePatch);
 uint32_t SFileGetFileCompressedSize(HSFILERecord* file, uint32_t* sizeHigh);
 int32_t SFileGetFilePointer(HSFILERecord* file);
 bool SFileIsFileCompressed(HSFILERecord* file);

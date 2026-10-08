@@ -9,6 +9,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Storage.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/StreamingManager.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
+#include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
 namespace Blizzard {
@@ -16,13 +17,6 @@ namespace Streaming {
 
 enum MakeLocalOption {
     MAX_CMD_QUEUE = 8
-};
-
-struct Completion {
-    /* 0000 */ Blizzard::Lock::Event* m_event;
-    /* 0004 */ int32_t m_result;
-    /* 0008 */ bool m_done;
-    /* 0009 */ bool m_success;
 };
 
 class CompletionCallback {
@@ -36,49 +30,53 @@ class CompletionCallback {
     void Release();
 };
 
-class FileCompletionCallback : public CompletionCallback {
-    public:
-    /* 000C */ Blizzard::Lock::Event m_event;
-
-    FileCompletionCallback();
-    virtual ~FileCompletionCallback();
-    virtual void Complete();
-};
-
-struct FILE_THREAD_CMD {
-    /* 0000 */ int32_t m_type;
-    /* 0004 */ Blizzard::Storage::StorageUnit* m_unit;
-    /* 0008 */ Blizzard::Storage::Range* m_range;
-    /* 000C */ Completion* m_completion;
-    /* 0010 */ CompletionCallback* m_callback;
-    /* 0014 */ int16_t m_tag;
-    /* 0016 */ int16_t m_retries;
-};
-
 struct MakeLocalParams {
     /* 0000 */ int64_t m_budget;
     /* 0008 */ int32_t m_status;
 };
 
-class StreamRequest {
+class RequestHandler {
     public:
-    static Blizzard::Lock::Atomic globalRequestId;
-    static Blizzard::Lock::Atomic concurrentRequests;
+    virtual ~RequestHandler();
+    virtual void Queue(Blizzard::Storage::Request* request) = 0;
+    virtual bool Start(bool paused) = 0;
+    virtual void Stop() = 0;
+    virtual void Pause() = 0;
+    virtual void Resume() = 0;
+};
 
-    /* 0000 */ Blizzard::File::StreamRecord* m_file;
-    /* 0008 */ int64_t m_offset;
-    /* 0010 */ uint32_t m_size;
-    /* 0014 */ Blizzard::Storage::Range* m_ranges;
-    /* 0018 */ int32_t m_count;
-    /* 001C */ int16_t m_tag;
+class RequestProcessor {
+    public:
+    static uint32_t ThreadProc(void* param);
 
-    StreamRequest(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size);
-    ~StreamRequest();
-    bool GetLocality();
-    bool PrefetchData();
-    bool ReadLocalChunks(void* buffer);
-    void ReadLocalRange(Blizzard::Storage::Range* first, Blizzard::Storage::Range* last, void* buffer);
-    bool ReadRemoteChunks(void* buffer);
+    /* 0000 */ std::deque<Blizzard::Storage::Request*> m_queue;
+    /* 0020 */ bool m_paused;
+    /* 0021 */ bool m_shutdown;
+    /* 0024 */ Blizzard::Lock::Event m_event;
+    /* 0028 */ Blizzard::Thread::ThreadRecord* m_thread;
+    /* 002C */ Blizzard::Lock::Mutex m_mutex;
+
+    RequestProcessor();
+    ~RequestProcessor();
+    bool HasWork();
+    void PopFront();
+    bool ProcessNext();
+    void Shutdown();
+    bool StartThread();
+};
+
+class DefaultRequestHandler : public RequestHandler {
+    public:
+    /* 0004 */ RequestProcessor* m_processor;
+    /* 0008 */ Blizzard::Lock::Mutex m_mutex;
+
+    DefaultRequestHandler();
+    ~DefaultRequestHandler();
+    void Queue(Blizzard::Storage::Request* request) override;
+    bool Start(bool paused) override;
+    void Stop() override;
+    void Pause() override;
+    void Resume() override;
 };
 
 struct ProgressSample {
@@ -107,66 +105,47 @@ class DownloadProgress {
     void Sample(uint32_t time);
 };
 
-namespace StreamingX {
+class ScopedWorkingDirectory {
+    public:
+    /* 0000 */ bool m_saved;
+    /* 0001 */ bool m_changed;
+    /* 0002 */ char m_path[260];
 
-typedef void (*DATAREQUIRECALLBACK)(Blizzard::File::StreamRecord* file, int64_t offset, int32_t size);
-typedef bool (*ISENABLEP2PCALLBACK)();
-
-extern DATAREQUIRECALLBACK g_StreamingDataRequireCallBack;
-extern ISENABLEP2PCALLBACK g_IsEnableP2PCallBack;
-extern int32_t g_lowCommandInterval;
-extern int32_t g_maxLowCommandInterval;
-extern int32_t g_stepLowCommandInterval;
-
-int32_t GetLowCommandIntervalStep();
-
-}
+    ScopedWorkingDirectory();
+    ~ScopedWorkingDirectory();
+    bool ChangeToDataPath(const char* path);
+    bool ChangeToManifestPath(const char* manifest);
+};
 
 extern Blizzard::Time::Timestamp s_elapsedSinceStart;
-extern int64_t s_statBytesRead;
-extern int64_t s_statBytesDownloaded;
-extern int64_t s_statBytesLocal;
-extern int32_t s_statRetries;
-extern char s_statFrameTimes[260];
-extern bool s_streamingReady;
 extern bool s_isStreamingTrial;
-extern bool s_backgroundPreloading;
-extern volatile bool s_threadShutdown;
-
+extern bool s_streamingReady;
+extern bool s_streamingWrite;
+extern bool s_throttleProgress;
+extern RequestHandler* s_requestHandler;
 extern DownloadProgress s_progress;
 
 Blizzard::Storage::StorageUnit* AcquireStorageUnit(Blizzard::File::StreamRecord* file);
-void AddDownloaded(int32_t size);
-void AddStreamed(int32_t size);
-void AddTotal(int32_t size);
-void ClearCommand(FILE_THREAD_CMD* command);
-uint32_t FileThread(void* param);
-int32_t GetIdleThread();
-int64_t GetIsLocalAmount(const char* path, int64_t offset, uint32_t size);
-int64_t GetIsLocalAmount(Blizzard::Storage::StorageUnit* unit, int64_t offset, uint32_t size);
-int64_t GetIsLocalAmount(Blizzard::File::StreamRecord* file);
-int32_t GetNextCommand(FILE_THREAD_CMD** command, int32_t thread);
+void AddStreamed(int64_t size);
 std::string GetBandwidthString();
+int64_t GetIsLocalAmount(const char* path, int64_t offset, int64_t size);
+int64_t GetIsLocalAmount(Blizzard::File::StreamRecord* file);
+void GetLocalAmount(const char* path, int64_t* local, int64_t* total);
 bool GetStreamedFileSize(const char* path, int64_t* size);
-bool InitializeStreaming(const char* manifest, const char* dataPath);
-int32_t IsLocal(const char* path, int64_t offset, uint32_t size);
-int32_t IsLocal(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size);
-bool IsPreloadInProgress();
+bool InitializeStreaming(const char* manifest, const char* dataPath, RequestHandler* handler);
+bool IsInManifest(const char* path);
+int32_t IsLocal(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size);
 bool IsStreamedFile(const char* path);
 bool IsStreamingMode();
-bool MakeLocal(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size, MakeLocalOption option, CompletionCallback* callback);
-bool MakeLocalBlocking(Blizzard::File::StreamRecord* file, int64_t offset, uint32_t size, MakeLocalOption option, MakeLocalParams* params);
-void MakeLocalCoalescing(Blizzard::File::StreamRecord* file, Blizzard::Storage::Range* ranges, int32_t count, int16_t tag);
-bool PopCommand(FILE_THREAD_CMD* command, int32_t queue);
-bool QueueCompletion(Completion* completion, int32_t queue);
-void QueueMakeLocal(int16_t tag, Blizzard::File::StreamRecord* file, Blizzard::Storage::Range* range, MakeLocalOption option, Completion* completion, CompletionCallback* callback);
-bool RemoveCompletion(Completion* completion, int32_t queue);
-bool ResetMakeLocal(MakeLocalOption option);
-bool SelectQueue(FILE_THREAD_CMD* command, int32_t group, int32_t* queue);
+bool LoadManifest(const char* path);
+bool MakeLocal(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size, CompletionCallback* callback, const int64_t* chunk);
+bool MakeLocalBlocking(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size, MakeLocalParams* params, const int64_t* chunk);
+bool MakeRemote(Blizzard::File::StreamRecord* file, int64_t offset, int64_t size);
+void SetDefaultRequestHandler();
 void ShutdownStreaming();
-void WaitForLoads();
-void SetZone(int32_t areaId, int32_t subzoneId);
+void UnloadManifest();
 bool ScanDirectoryForManifest(const Blizzard::File::ProcessDirParms& parms);
+void SetZone(int32_t areaId, int32_t subzoneId);
 
 }
 }

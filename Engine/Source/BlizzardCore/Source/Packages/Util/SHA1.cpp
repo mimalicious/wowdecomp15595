@@ -197,7 +197,7 @@ uint8_t* SHA1_InterleaveHash(uint8_t* out, const uint8_t* in, uint32_t length) {
     return out;
 }
 
-// OFFSET: 0x00658940
+// OFFSET: 0x00658940/0x14049FF90
 void Process(uint32_t* hash, const uint8_t* data) {
     uint32_t w[80];
 
@@ -265,6 +265,7 @@ void SHA1::Prepare() {
     this->m_hash[4] = 0xC3D2E1F0;
 }
 
+// PROVEN: f6e0a8d7 IDENTICAL/UNPROVEN
 // OFFSET: 0x007AA0F0/0x1404A04A0
 void SHA1::Process(const void* _data, uint32_t length) {
     const uint8_t* data = static_cast<const uint8_t*>(_data);

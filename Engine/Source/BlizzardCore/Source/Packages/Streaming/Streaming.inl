@@ -11,7 +11,7 @@ inline Blizzard::Streaming::CompletionCallback::CompletionCallback() {
 inline Blizzard::Streaming::CompletionCallback::~CompletionCallback() {
 }
 
-// OFFSET: %0x00715FB0
+// INLINED
 inline void Blizzard::Streaming::CompletionCallback::Release() {
     if (!this->m_refCount.Decrement()) {
         this->Complete();
@@ -29,7 +29,7 @@ inline Blizzard::Storage::StorageUnit* Blizzard::Streaming::AcquireStorageUnit(B
 }
 
 // INLINED
-inline void Blizzard::Streaming::AddStreamed(int32_t size) {
+inline void Blizzard::Streaming::AddStreamed(int64_t size) {
     s_progress.m_streamed += size;
 
     uint32_t now = static_cast<uint32_t>(Blizzard::Time::Milliseconds());

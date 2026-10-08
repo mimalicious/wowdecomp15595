@@ -533,7 +533,7 @@ bool System_Log::Acquire(int32_t logClass) {
     return true;
 }
 
-// OFFSET: 0x007EDEC0
+// OFFSET: 0x007EDEC0/0x1404F5910
 void Blizzard::Log::Printf(int32_t logClass, const char* name, const char* format, ...) {
     va_list args;
     va_start(args, format);

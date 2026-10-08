@@ -14,9 +14,10 @@ inline void BGLoading::BGLoadManager::AdvanceSample() {
     }
 }
 
-// INLINED
+// OFFSET: 0x007A2870
 inline void BGLoading::StartBGLoadThread() {
-    if (!BGLoadThreadStarted()) {
+    if (Blizzard::Streaming::IsStreamingMode()) {
+        BGLoadManager::Get();
         BGLoadManager::StartThread();
     }
 }

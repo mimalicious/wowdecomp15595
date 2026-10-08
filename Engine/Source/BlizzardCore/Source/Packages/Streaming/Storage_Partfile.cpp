@@ -1,12 +1,15 @@
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/MD5.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Storage.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/SharedMemory.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
-#include "Engine/Source/Storm/H/storm.h"
 
 #pragma pack(push, 4)
 struct PartialFileHeader {
@@ -18,7 +21,7 @@ struct PartialFileHeader {
 };
 #pragma pack(pop)
 
-// STATIC: %0x00AF2068
+// STATIC: 0x00BCA138
 static const uint8_t s_bitCount[256] = {
     0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
     1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5,
@@ -38,21 +41,33 @@ static const uint8_t s_bitCount[256] = {
     4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 };
 
-// STATIC: %0x00AF5030
+// STATIC: 0x00BCD184
 static const uint32_t s_retryDelays[11] = { 100, 500, 1000, 2000, 3000, 5000, 7000, 10000, 12000, 15000, 1 };
 
-// OFFSET: %0x007168B0
+// STATIC: 0x00D07424
+static Blizzard::Storage::DefaultBitFieldAllocator s_defaultBitFieldAllocator;
+
+// STATIC: 0x00D07184
+Blizzard::Storage::BitFieldAllocator* Blizzard::Storage::s_bitFieldAllocator = &s_defaultBitFieldAllocator;
+
+// STATIC: 0x00EBA768
+Blizzard::Storage::PartialBlockMap Blizzard::Storage::s_partialBlockMap;
+
+// STATIC: 0x00EBA23C
+Blizzard::Lock::Atomic Blizzard::Storage::s_partialBlockMapDestroyed;
+
+// OFFSET: 0x007B4C30/0x1404AA760
 static bool ReadExact(Blizzard::File::StreamRecord* file, void* buffer, int64_t offset, int32_t size, int32_t flags) {
     int32_t count = size;
     return Blizzard::File::Read(file, buffer, offset, &count, flags) && count == size;
 }
 
-// OFFSET: %0x00715D30
+// OFFSET: 0x007B3D00
 static bool ValidateHeader(const PartialFileHeader* header, int64_t fileSize) {
     return header->m_chunkSize && !memcmp(header->m_magic, "ptv3", 4) && header->m_fileSize == fileSize && header->m_version == 3;
 }
 
-// OFFSET: %0x0071D7D0
+// OFFSET: 0x007BB920
 static bool ValidateHeader(const PartialFileHeader* header, int64_t fileSize, int32_t contentId) {
     return header->m_chunkSize && !memcmp(header->m_magic, "ptv3", 4) && header->m_fileSize == fileSize && header->m_version == 3 && header->m_contentId == contentId;
 }
@@ -82,15 +97,26 @@ static bool EnsureParentDirectory(const char* path) {
     return true;
 }
 
-// OFFSET: %0x0071DA70
-Blizzard::Storage::BitField::BitField(int32_t count) {
-    this->m_length = (count + 7) >> 3;
-    this->m_bits = static_cast<uint8_t*>(SMemAlloc(this->m_length, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
+// OFFSET: 0x007E9860/0x1404F5070
+static Blizzard::File::StreamRecord* CreateLockFile(const char* path) {
+    Blizzard::File::StreamRecord* file = NULL;
+
+    if (Blizzard::File::Open(path, 1027, file)) {
+        return file;
+    }
+
+    Blizzard::String::QuickFormat<1024> message("%s - Fail to create lock: %s", "CreateLockFile", path);
+    Blizzard::File::AddToLastErrorStack(3, message.m_buffer, 2);
+    System_File::FileError& fileError = System_File::s_error;
+    fileError.m_lastError = 3;
+
+    return NULL;
 }
 
-// OFFSET: %0x0070EB70
-int32_t Blizzard::Storage::BitField::CountSet() const {
-    int32_t count = 0;
+// PROVEN: 8bf4389c IDENTICAL/DIFFERENT
+// OFFSET: 0x007AC1F0/0x1404A2010
+int64_t Blizzard::Storage::BitField::CountSet() const {
+    int64_t count = 0;
 
     for (const uint8_t* bits = this->m_bits; bits < this->m_bits + this->m_length; bits++) {
         count += s_bitCount[*bits];
@@ -99,7 +125,7 @@ int32_t Blizzard::Storage::BitField::CountSet() const {
     return count;
 }
 
-// OFFSET: %0x0070EAC0
+// OFFSET: 0x007AC140
 bool Blizzard::Storage::BitField::IsSetUpTo(int32_t count) const {
     int32_t words = count / 64;
     int32_t rest = count % 64;
@@ -135,7 +161,129 @@ bool Blizzard::Storage::BitField::IsSetUpTo(int32_t count) const {
     return (mask & bits[8 * words + bytes]) == mask;
 }
 
-// OFFSET: %0x00732290
+// OFFSET: 0x007AB9E0/0x1404A20A0
+Blizzard::Storage::BitFieldAllocator::~BitFieldAllocator() {
+}
+
+// PROVEN: d014b02f IDENTICAL/NONE
+// OFFSET: 0x007AC130
+Blizzard::Storage::BitField* Blizzard::Storage::DefaultBitFieldAllocator::Attach(const char* name, int64_t bits, BitField* field) {
+    return field;
+}
+
+// OFFSET: 0x007BFE50/0x1404B9230
+Blizzard::Storage::BitField* Blizzard::Storage::DefaultBitFieldAllocator::Create(int64_t bits) {
+    BitField* field = new BitField;
+
+    if (!field) {
+        return NULL;
+    }
+
+    int32_t length = (static_cast<int32_t>(bits) + 7) >> 3;
+    field->m_length = length;
+    void* block = Blizzard::Memory::Allocate(length, 1);
+    field->m_bits = static_cast<uint8_t*>(block);
+    field->m_block = block;
+    field->m_free = Blizzard::Memory::Free;
+
+    return field;
+}
+
+// PROVEN: a19d4a21 IDENTICAL/NONE
+// OFFSET: 0x007BB650/0x1404AA190
+void Blizzard::Storage::DefaultBitFieldAllocator::Destroy(BitField* field) {
+    if (field) {
+        field->m_free(field->m_block);
+        delete field;
+    }
+}
+
+// OFFSET: 0x007CCC50/0x1404C9190
+Blizzard::Storage::BitField* Blizzard::Storage::SharedBitFieldAllocator::Attach(const char* name, int64_t bits, BitField* field) {
+    uint32_t bytes = static_cast<uint32_t>((bits + 7) >> 3);
+    char path[260];
+
+    if (!Blizzard::File::MakeAbsolutePath(name, path, sizeof(path), false)) {
+        DefaultBitFieldAllocator::Destroy(field);
+        return NULL;
+    }
+
+    Blizzard::Memory::SharedMemory* memory;
+    int32_t status = Blizzard::Memory::OpenSharedMemory(path, bytes, &memory);
+
+    if (!status) {
+        DefaultBitFieldAllocator::Destroy(field);
+        return NULL;
+    }
+
+    void* data = memory->m_data;
+
+    if (status == 1 && field) {
+        Blizzard::String::MemCopy(data, field->m_bits, bytes);
+    }
+
+    BitField* shared = new BitField;
+
+    if (shared) {
+        shared->m_bits = static_cast<uint8_t*>(data);
+        shared->m_length = (static_cast<int32_t>(bits) + 7) >> 3;
+        shared->m_block = memory;
+        shared->m_free = Blizzard::Memory::CloseSharedMemory;
+    }
+
+    DefaultBitFieldAllocator::Destroy(field);
+
+    return shared;
+}
+
+// PROVEN: 72a97986 IDENTICAL/NONE
+// OFFSET: 0x007AC290/0x1404A20D0
+void Blizzard::Storage::ShutdownBitFieldAllocator() {
+    if (s_bitFieldAllocator != &s_defaultBitFieldAllocator && s_bitFieldAllocator) {
+        delete s_bitFieldAllocator;
+    }
+
+    s_bitFieldAllocator = NULL;
+}
+
+// OFFSET: 0x007BC210/0x1404B4040
+void Blizzard::Storage::InitializeBitFieldAllocator(int32_t mode) {
+    if (mode == 1) {
+        return;
+    }
+
+    BitFieldAllocator* allocator = new SharedBitFieldAllocator();
+
+    if (s_bitFieldAllocator != &s_defaultBitFieldAllocator && s_bitFieldAllocator) {
+        delete s_bitFieldAllocator;
+    }
+
+    s_bitFieldAllocator = allocator;
+}
+
+// OFFSET: 0x007E1550
+Blizzard::Storage::PartialBlock::PartialBlock(uint32_t blockSize, uint32_t blockCount, uint32_t lastBlockSize, std::string name) {
+    this->m_lastBlockSize = lastBlockSize;
+    this->m_blockSize = blockSize;
+    this->m_blockCount = blockCount;
+    this->m_name = name;
+
+    PartialBlockMap::iterator it = s_partialBlockMap.find(this->m_name);
+
+    if (it != s_partialBlockMap.end()) {
+        this->m_partial = it->second;
+        s_partialBlockMap.erase(it);
+    }
+}
+
+// OFFSET: 0x007E4760/0x1404EC920
+Blizzard::Storage::PartialBlock::~PartialBlock() {
+    if (!this->m_partial.empty()) {
+        s_partialBlockMap[this->m_name] = this->m_partial;
+    }
+}
+
+// OFFSET: 0x007D0AE0
 bool Blizzard::Storage::PartialBlock::SetPartial(uint32_t block, uint32_t size) {
     uint32_t complete = this->m_blockSize;
 
@@ -163,18 +311,50 @@ bool Blizzard::Storage::PartialBlock::SetPartial(uint32_t block, uint32_t size) 
     return false;
 }
 
-// OFFSET: %0x0070E790
+// OFFSET: 0x007EB720
+Blizzard::Storage::PartialBlockMap::~PartialBlockMap() {
+    if (s_partialBlockMapDestroyed.Increment() == 1) {
+        this->clear();
+    }
+}
+
+// PROVEN: fbfac493 IDENTICAL/NONE
+// OFFSET: 0x007E98D0
+bool Blizzard::Storage::LockFile::Acquire() {
+    if (this->m_file) {
+        return true;
+    }
+
+    this->m_file = CreateLockFile(this->m_path.c_str());
+
+    return this->m_file != NULL;
+}
+
+// PROVEN: 16593951 IDENTICAL/NONE
+// OFFSET: 0x007C3980
+bool Blizzard::Storage::LockFile::IsStale(uint32_t seconds) {
+    if (this->m_file) {
+        return false;
+    }
+
+    Blizzard::File::FileInfo info;
+    Blizzard::File::GetFileInfo(this->m_path.c_str(), &info);
+    uint32_t modified = static_cast<uint32_t>(info.m_modTime / 1000 / 1000);
+    uint32_t now = static_cast<uint32_t>(Blizzard::Time::Seconds());
+
+    if (modified > now) {
+        return seconds < now - modified - 1;
+    }
+
+    return seconds < now - modified;
+}
+
+// OFFSET: 0x007AB9B0
 Blizzard::Storage::BackingStore::~BackingStore() {
 }
 
-// OFFSET: 0x007C6220
-Blizzard::Storage::PartialFile::PartialFile() {
-    this->m_chunkSize = s_Chunk_Size;
-    this->m_fileSize = 0;
-    this->m_contentId = 0;
-    this->m_file = NULL;
-    this->m_lockFile = NULL;
-    this->m_readOnly = false;
+// OFFSET: 0x007C6220/0x1404C12B0
+Blizzard::Storage::PartialFile::PartialFile() : BackingStore(3), m_chunkSize(s_Chunk_Size), m_fileSize(0), m_contentId(0), m_file(NULL) {
     this->m_dirtyStart = -1;
     this->m_dirtyEnd = -1;
     this->m_lastFlush = static_cast<uint32_t>(Blizzard::Time::Milliseconds());
@@ -184,32 +364,105 @@ Blizzard::Storage::PartialFile::PartialFile() {
     this->m_completed = false;
     this->m_assumedComplete = false;
     this->m_invalidateCount = 0;
+    memset(this->m_localityHash, 0, sizeof(this->m_localityHash));
 }
 
-// OFFSET: %0x0073DBD0
+// OFFSET: 0x007EB5D0/0x1404F8220
 Blizzard::Storage::PartialFile::~PartialFile() {
     this->Close();
+    s_bitFieldAllocator->Destroy(this->m_locality);
+    this->m_locality = NULL;
 
-    if (this->m_locality) {
-        SMemFree(this->m_locality->m_bits, __FILE__, __LINE__, 0);
-        delete this->m_locality;
-    }
-
-    if (this->m_lockFile) {
-        Blizzard::File::Close(this->m_lockFile);
-        Blizzard::File::Delete(this->m_lockPath.c_str());
+    if (this->m_lock.m_file) {
+        Blizzard::File::Close(this->m_lock.m_file);
+        Blizzard::File::Delete(this->m_lock.m_path.c_str());
     }
 
     delete this->m_partialBlocks;
 }
 
-// PROVEN: 6b66d99c IDENTICAL/NONE
-// OFFSET: 0x007B0A90
+// OFFSET: 0x007BBB00/0x1404B38D0
+bool Blizzard::Storage::PartialFile::Read(void* buffer, int64_t offset, int64_t size) {
+    if (offset + size > this->m_fileSize || offset < 0) {
+        return false;
+    }
+
+    if (!this->m_completed && !this->IsAvailable(offset, size)) {
+        return false;
+    }
+
+    ReadExact(this->m_file, buffer, offset, static_cast<int32_t>(size), 0);
+
+    return true;
+}
+
+// OFFSET: 0x007ABD90/0x1404A1CC0
+bool Blizzard::Storage::PartialFile::FindMissing(int64_t offset, int64_t size, ChunkRange* range) {
+    int64_t step = this->m_chunkSize - range->m_offset % this->m_chunkSize;
+    int64_t end = offset + size;
+
+    while (range->m_offset < end) {
+        if (!this->IsAvailable(range->m_offset, 1)) {
+            return true;
+        }
+
+        range->m_offset += step;
+        step = this->m_chunkSize;
+    }
+
+    range->m_offset = end < range->m_offset ? end : range->m_offset;
+
+    return false;
+}
+
+// OFFSET: 0x007ABE50/0x1404A1D50
+bool Blizzard::Storage::PartialFile::GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) {
+    int64_t end = offset + size;
+    int64_t position = range->m_offset;
+
+    if (position < end) {
+        int64_t length = this->m_chunkSize - position % this->m_chunkSize;
+
+        while (position + length < end && length < range->m_length) {
+            if (this->IsAvailable(range->m_offset + length, 1)) {
+                break;
+            }
+
+            length += this->m_chunkSize;
+        }
+
+        range->m_length = length;
+        return true;
+    }
+
+    range->m_length = 0;
+
+    return false;
+}
+
+// OFFSET: 0x007BBF30/0x1404B3D30
+void Blizzard::Storage::PartialFile::AlignRange(ChunkRange* range) {
+    if (!range->m_length) {
+        range->m_chunkCount = 0;
+        return;
+    }
+
+    int64_t chunkSize = this->m_chunkSize;
+    int64_t end = range->m_length + (range->m_offset + chunkSize) - 1;
+    end = std::min(end - end % chunkSize, this->m_fileSize);
+    int64_t start = range->m_offset - range->m_offset % this->m_chunkSize;
+    range->m_offset = start;
+    range->m_length = end - start;
+    range->m_chunkCount = static_cast<int32_t>((range->m_length + this->m_chunkSize - 1) / this->m_chunkSize);
+}
+
+// PROVEN: 6b66d99c IDENTICAL/IDENTICAL
+// OFFSET: 0x00B41A60/0x1404C1350
 int32_t Blizzard::Storage::PartialFile::GetChunkSize() const {
     return this->m_chunkSize;
 }
 
-// OFFSET: 0x007B3E00
+// OFFSET: 0x007B3E00/0x1404A9610
 int64_t Blizzard::Storage::PartialFile::GetTotalLocalSize() const {
     if (this->m_completed) {
         return this->m_fileSize;
@@ -226,26 +479,7 @@ int64_t Blizzard::Storage::PartialFile::GetTotalLocalSize() const {
     return chunkSize * locality->CountSet();
 }
 
-// OFFSET: %0x0071D820
-bool Blizzard::Storage::PartialFile::Read(void* buffer, int64_t offset, int32_t size) {
-    if (offset + size > this->m_fileSize) {
-        return false;
-    }
-
-    if (offset < 0) {
-        return false;
-    }
-
-    if (!this->m_completed && !this->IsAvailable(offset, size)) {
-        return false;
-    }
-
-    ReadExact(this->m_file, buffer, offset, size, 0);
-
-    return true;
-}
-
-// OFFSET: 0x007C3A00
+// OFFSET: 0x007C3A00/0x1404BE130
 bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, int32_t size) {
     if (offset % this->GetChunkSize()) {
         return false;
@@ -271,10 +505,16 @@ bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, i
         int32_t last = static_cast<int32_t>((end - 1) / this->GetChunkSize());
 
         for (int32_t i = first; i <= last; i++) {
-            this->m_locality->m_bits[i >> 3] |= 1 << (i & 7);
+            this->m_locality->Set(i);
         }
 
-        this->MarkDirty(first, last);
+        if (this->m_dirtyStart < 0 || this->m_dirtyStart > first) {
+            this->m_dirtyStart = first;
+        }
+
+        if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < last) {
+            this->m_dirtyEnd = last;
+        }
 
         if (static_cast<uint32_t>(Blizzard::Time::Milliseconds()) - this->m_lastFlush >= static_cast<uint32_t>(offset & 0xFFF) + 28000) {
             this->Flush();
@@ -284,7 +524,8 @@ bool Blizzard::Storage::PartialFile::Write(const void* buffer, int64_t offset, i
     return result;
 }
 
-// OFFSET: 0x007EB6E0
+// PROVEN: 7dccacc3 IDENTICAL/DIFFERENT
+// OFFSET: 0x007EB6E0/0x1404F8340
 bool Blizzard::Storage::PartialFile::Flush() {
     if (this->m_dirtyStart < 0 || this->m_dirtyEnd < 0) {
         return true;
@@ -301,9 +542,40 @@ bool Blizzard::Storage::PartialFile::Flush() {
     return result;
 }
 
-// OFFSET: %0x0073DE00
+// OFFSET: 0x007B3E40
+bool Blizzard::Storage::PartialFile::Close() {
+    if (this->m_open) {
+        Blizzard::Util::MD5 md5;
+        uint8_t digest[16];
+        md5.Process(this->m_locality->m_bits, this->m_locality->m_length);
+        md5.Finish(digest);
+
+        if (memcmp(digest, this->m_localityHash, sizeof(digest))) {
+            int64_t fileSize = this->m_fileSize;
+            this->GetChunkSize();
+            int32_t last = static_cast<int32_t>((fileSize - 1) / this->GetChunkSize());
+
+            if (this->m_dirtyStart < 0 || this->m_dirtyStart > 0) {
+                this->m_dirtyStart = 0;
+            }
+
+            if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < last) {
+                this->m_dirtyEnd = last;
+            }
+
+            this->Flush();
+        }
+
+        Blizzard::File::Close(this->m_file);
+        this->m_open = false;
+    }
+
+    return false;
+}
+
+// OFFSET: 0x007BBB90/0x1404B3960
 bool Blizzard::Storage::PartialFile::WriteUnaligned(const void* buffer, int64_t offset, int32_t size) {
-    int64_t length = size;
+    int32_t length = size;
 
     if (offset + size > this->m_fileSize) {
         return false;
@@ -312,10 +584,15 @@ bool Blizzard::Storage::PartialFile::WriteUnaligned(const void* buffer, int64_t 
     int32_t count = size;
     bool result = Blizzard::File::Write(this->m_file, buffer, offset, &count, 0);
 
-    if (!result) {
-        return result;
+    if (result) {
+        this->UpdateUnaligned(offset, length);
     }
 
+    return result;
+}
+
+// OFFSET: 0x007E3150/0x1404E9D10
+void Blizzard::Storage::PartialFile::UpdateUnaligned(int64_t offset, int32_t size) {
     int64_t aligned = offset;
 
     if (offset % this->GetChunkSize()) {
@@ -325,74 +602,55 @@ bool Blizzard::Storage::PartialFile::WriteUnaligned(const void* buffer, int64_t 
     int32_t block = static_cast<int32_t>(aligned / this->GetChunkSize());
     int64_t next = aligned + this->GetChunkSize();
 
-    if (offset + size > next) {
-        int64_t head = next - offset;
-        int64_t remaining = size;
-        int32_t first = block;
-
-        if (head < this->GetChunkSize()) {
-            if (!this->UpdatePartialBlock(block++, static_cast<uint32_t>(head))) {
-                first = block;
-            }
-
-            remaining = length - head;
+    if (offset + size <= next) {
+        if (!this->UpdatePartialBlock(block, size)) {
+            return;
         }
 
-        uint8_t mask = static_cast<uint8_t>(1 << (block & 7));
-
-        while (remaining >= this->GetChunkSize()) {
-            this->m_locality->m_bits[block++ >> 3] |= mask;
-            mask = static_cast<uint8_t>((mask << 1) | (mask >> 7));
-            remaining -= this->GetChunkSize();
+        if (this->m_dirtyStart < 0 || this->m_dirtyStart > block) {
+            this->m_dirtyStart = block;
         }
 
-        if (remaining > 0 && !this->UpdatePartialBlock(block, static_cast<uint32_t>(remaining))) {
-            block--;
+        if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < block) {
+            this->m_dirtyEnd = block;
         }
 
-        if (first <= block) {
-            this->MarkDirty(first, block);
-        }
-    } else if (this->UpdatePartialBlock(block, size)) {
-        this->MarkDirty(block, block);
+        return;
     }
 
-    return result;
+    int64_t remaining = size;
+    int32_t first = block;
+    int32_t head = static_cast<int32_t>(next - offset);
+
+    if (head < this->GetChunkSize()) {
+        if (!this->UpdatePartialBlock(block++, head)) {
+            first = block;
+        }
+
+        remaining = size - head;
+    }
+
+    while (remaining >= this->GetChunkSize()) {
+        this->m_locality->Set(block++);
+        remaining -= this->GetChunkSize();
+    }
+
+    if (remaining > 0 && !this->UpdatePartialBlock(block, static_cast<uint32_t>(remaining))) {
+        block--;
+    }
+
+    if (first <= block) {
+        if (this->m_dirtyStart < 0 || this->m_dirtyStart > first) {
+            this->m_dirtyStart = first;
+        }
+
+        if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < block) {
+            this->m_dirtyEnd = block;
+        }
+    }
 }
 
-// OFFSET: %0x0073DCF0
-bool Blizzard::Storage::PartialFile::UpdatePartialBlock(uint32_t block, uint32_t size) {
-    if (!this->m_partialBlocks) {
-        int32_t count = static_cast<int32_t>((this->m_fileSize + this->GetChunkSize() - 1) / this->GetChunkSize());
-        int32_t last = static_cast<int32_t>(this->m_fileSize % this->GetChunkSize());
-        PartialBlock* partialBlocks = new PartialBlock();
-        partialBlocks->m_blockSize = this->GetChunkSize();
-        partialBlocks->m_lastBlockSize = last;
-        partialBlocks->m_blockCount = count;
-        this->m_partialBlocks = partialBlocks;
-    }
-
-    if (!this->m_partialBlocks->SetPartial(block, size)) {
-        return false;
-    }
-
-    this->m_locality->m_bits[static_cast<int32_t>(block) >> 3] |= 1 << (block & 7);
-
-    return true;
-}
-
-// OFFSET: %0x00715DC0
-bool Blizzard::Storage::PartialFile::Close() {
-    if (this->m_open) {
-        this->Flush();
-        Blizzard::File::Close(this->m_file);
-        this->m_open = false;
-    }
-
-    return false;
-}
-
-// OFFSET: 0x007BBC00
+// OFFSET: 0x007BBC00/0x1404B3A20
 bool Blizzard::Storage::PartialFile::IsAvailable(int64_t offset, int64_t size) const {
     int32_t first = static_cast<int32_t>(offset / this->GetChunkSize());
     int32_t last = static_cast<int32_t>((size + offset - 1) / this->GetChunkSize());
@@ -414,38 +672,122 @@ bool Blizzard::Storage::PartialFile::IsAvailable(int64_t offset, int64_t size) c
     return false;
 }
 
-// OFFSET: %0x00715E10
+// OFFSET: 0x007BBDE0/0x1404B3C00
+int64_t Blizzard::Storage::PartialFile::GetLocalBytes(int64_t offset, int64_t size) const {
+    int32_t first = static_cast<int32_t>(offset / this->GetChunkSize());
+    int32_t last = static_cast<int32_t>((offset + size - 1) / this->GetChunkSize());
+    int32_t i = first;
+    int64_t total = 0;
+
+    if (this->m_locality && (this->m_locality->m_bits[first >> 3] & (1 << (first & 7)))) {
+        if (first == last) {
+            total = size;
+        } else {
+            total = this->m_chunkSize - offset % this->m_chunkSize;
+        }
+
+        i = first + 1;
+    }
+
+    uint8_t mask = static_cast<uint8_t>(1 << (i & 7));
+
+    for (; i < last; i++) {
+        if (this->m_locality && (mask & this->m_locality->m_bits[i >> 3])) {
+            total += this->m_chunkSize;
+        }
+
+        mask = static_cast<uint8_t>((mask << 1) | (mask >> 7));
+    }
+
+    if (i == last && this->m_locality && (this->m_locality->m_bits[last >> 3] & (1 << (last & 7)))) {
+        return (offset + size) % this->m_chunkSize + total;
+    }
+
+    return total;
+}
+
+// PROVEN: 84bc1815 IDENTICAL/NONE
+// OFFSET: 0x007B3F50/0x1404A99A0
 bool Blizzard::Storage::PartialFile::Invalidate(int64_t offset, int64_t size) {
     if (!this->m_locality) {
         return false;
-    }
-
-    if (this->m_assumedComplete && ++this->m_invalidateCount > 16) {
-        size = this->m_fileSize;
-        offset = 0;
-        this->m_assumedComplete = false;
-        this->m_invalidateCount = 0;
     }
 
     int32_t chunks[2];
     this->GetChunkRange(chunks, offset, size);
 
     for (int32_t i = chunks[0]; i <= chunks[1]; i++) {
-        this->m_locality->m_bits[i >> 3] &= ~(1 << (i & 7));
+        this->m_locality->Clear(i);
     }
 
-    this->MarkDirty(chunks[0], chunks[1]);
+    if (this->m_dirtyStart < 0 || this->m_dirtyStart > chunks[0]) {
+        this->m_dirtyStart = chunks[0];
+    }
+
+    if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < chunks[1]) {
+        this->m_dirtyEnd = chunks[1];
+    }
+
     this->m_completed = false;
 
     return true;
 }
 
-// OFFSET: %0x00726FA0
+// PROVEN: 533e821a IDENTICAL/DIFFERENT
+// OFFSET: 0x007C6290/0x1404C1360
 bool Blizzard::Storage::PartialFile::IsCompleted() const {
     return this->m_completed;
 }
 
-// OFFSET: %0x0071D950
+// PROVEN: 22129c06 IDENTICAL/NONE
+// OFFSET: 0x007C62A0/0x1404C1370
+bool Blizzard::Storage::PartialFile::IsReadOnly() const {
+    return this->m_lock.m_file == NULL;
+}
+
+// OFFSET: 0x007BBCA0/0x1404B3AD0
+bool Blizzard::Storage::PartialFile::GetMissingRange(int64_t offset, int64_t size, ChunkRange* range) const {
+    int32_t first = static_cast<int32_t>(offset / this->GetChunkSize());
+    int32_t last = static_cast<int32_t>((offset + size - 1) / this->GetChunkSize());
+    int32_t i = first;
+    range->m_chunkCount = 0;
+    range->m_offset = 0;
+    range->m_length = 0;
+
+    if (i <= last) {
+        while (this->m_locality && (this->m_locality->m_bits[i >> 3] & (1 << (i & 7)))) {
+            if (++i > last) {
+                goto done;
+            }
+        }
+
+        range->m_offset = static_cast<int64_t>(i) * this->m_chunkSize;
+        range->m_chunkCount = 1;
+        range->m_length = this->m_chunkSize;
+        i++;
+    }
+
+done:
+    uint8_t mask = static_cast<uint8_t>(1 << (i & 7));
+
+    while (i <= last) {
+        if (this->m_locality && (mask & this->m_locality->m_bits[i >> 3])) {
+            break;
+        }
+
+        range->m_chunkCount++;
+        range->m_length += this->m_chunkSize;
+        i++;
+        mask = static_cast<uint8_t>((mask << 1) | (mask >> 7));
+    }
+
+    int64_t remaining = this->m_fileSize - range->m_offset;
+    range->m_length = remaining >= range->m_length ? range->m_length : remaining;
+
+    return i > last;
+}
+
+// OFFSET: 0x007BC000/0x1404B3DB0
 bool Blizzard::Storage::PartialFile::IsMatch(const char* path, int64_t size, int32_t contentId) const {
     if (contentId != this->m_contentId || size != this->m_fileSize) {
         return false;
@@ -489,28 +831,7 @@ void Blizzard::Storage::PartialFile::GetChunkRange(int32_t* chunks, int64_t offs
     chunks[1] = static_cast<int32_t>((size + offset - 1) / this->GetChunkSize());
 }
 
-// OFFSET: %0x0070EA30
-void Blizzard::Storage::PartialFile::MarkDirty(int32_t first, int32_t last) {
-    if (this->m_dirtyStart < 0 || this->m_dirtyStart > first) {
-        this->m_dirtyStart = first;
-    }
-
-    if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < last) {
-        this->m_dirtyEnd = last;
-    }
-}
-
-// OFFSET: %0x0071DA10
-bool Blizzard::Storage::PartialFile::WriteLocality(int32_t first, int32_t last) {
-    if (this->m_readOnly) {
-        return true;
-    }
-
-    int32_t count = (last >> 3) - (first >> 3) + 1;
-
-    return Blizzard::File::Write(this->m_file, this->m_locality->m_bits + (first >> 3), this->m_fileSize + (first >> 3), &count, 0);
-}
-
+// PROVEN: 415eaeb8 IDENTICAL/NONE
 // OFFSET: 0x007B3FE0
 bool Blizzard::Storage::PartialFile::IsLocalityComplete() {
     int64_t fileSize = this->m_fileSize;
@@ -520,32 +841,88 @@ bool Blizzard::Storage::PartialFile::IsLocalityComplete() {
     return this->m_locality && this->m_locality->IsSetUpTo(count);
 }
 
-// OFFSET: %0x00721630
-bool Blizzard::Storage::PartialFile::RebuildLocalityMap(bool complete) {
-    int32_t count = static_cast<int32_t>((this->m_chunkSize + this->m_fileSize - 1) / this->m_chunkSize);
-    this->m_locality = new BitField(count);
+// OFFSET: 0x007B3B50
+void Blizzard::Storage::PartialFile::MakeSparse() {
+    Blizzard::File::FileInfo info;
+    Blizzard::File::GetFileInfo(this->m_file, &info);
 
-    if (complete) {
-        memset(this->m_locality->m_bits, 0xFF, this->m_locality->m_length);
-        this->m_completed = true;
-        this->m_assumedComplete = true;
-    } else {
-        this->m_completed = false;
-        this->m_assumedComplete = false;
+    if (info.m_size > 0 && info.m_compressedSize < info.m_size) {
+        return;
     }
 
-    return true;
+    char directory[260];
+    Blizzard::File::GetWorkingDirectory(directory, sizeof(directory));
+
+    char root[4];
+    Blizzard::String::Copy(root, directory, sizeof(root));
+
+    if (!Blizzard::File::SupportsSparse(root)) {
+        return;
+    }
+
+    Blizzard::File::SetSparse(this->m_file, false);
+
+    int64_t offset = 0;
+    int64_t remaining = this->m_fileSize;
+
+    while (remaining > 0) {
+        ChunkRange range;
+
+        if (this->GetMissingRange(offset, remaining, &range)) {
+            break;
+        }
+
+        offset = this->m_chunkSize + range.m_length + range.m_offset;
+        Blizzard::File::ZeroRange(this->m_file, range.m_offset, range.m_length);
+        remaining = this->m_fileSize - offset;
+    }
 }
 
-// OFFSET: %0x007511C0
+// OFFSET: 0x007EDB50
+bool Blizzard::Storage::PartialFile::ParseFile() {
+    Blizzard::File::FileInfo info;
+
+    if (this->m_open || !Blizzard::File::GetFileInfo(this->m_file, &info)) {
+        return false;
+    }
+
+    if (info.m_size == this->m_fileSize) {
+        this->RebuildLocalityMap(true);
+        return this->RebuildHeader();
+    }
+
+    BitField* locality = NULL;
+    int64_t fileSize = 0;
+    int32_t chunkSize = 0;
+    int32_t contentId = 0;
+
+    if (ParseFileFromHeader(this->m_file, &locality, &chunkSize, &fileSize, &contentId) && this->m_fileSize == fileSize && this->m_contentId == contentId) {
+        this->m_locality = locality;
+
+        Blizzard::Util::MD5 md5;
+        md5.Process(locality->m_bits, locality->m_length);
+        md5.Finish(this->m_localityHash);
+
+        this->m_chunkSize = chunkSize;
+        this->m_completed = this->IsLocalityComplete();
+        return true;
+    }
+
+    s_bitFieldAllocator->Destroy(locality);
+    this->RebuildLocalityMap(false);
+
+    return this->RebuildHeader();
+}
+
+// OFFSET: 0x007EB430/0x1404F7F20
 bool Blizzard::Storage::PartialFile::RebuildHeader() {
-    if (this->m_readOnly) {
+    if (this->IsReadOnly()) {
         return false;
     }
 
     PartialFileHeader header;
-    memcpy(header.m_magic, "ptv3", sizeof(header.m_magic));
     header.m_version = 3;
+    Blizzard::String::MemCopy(header.m_magic, "ptv3", sizeof(header.m_magic));
     header.m_contentId = this->m_contentId;
     header.m_fileSize = this->m_fileSize;
     header.m_chunkSize = this->m_chunkSize;
@@ -587,7 +964,79 @@ bool Blizzard::Storage::PartialFile::RebuildHeader() {
     return result;
 }
 
-// OFFSET: %0x00724880
+// PROVEN: 591a343b IDENTICAL/NONE
+// OFFSET: 0x007B3D50
+bool Blizzard::Storage::PartialFile::RebuildLocalityMap(bool complete) {
+    Blizzard::File::FileInfo info;
+
+    if (!Blizzard::File::GetFileInfo(this->m_file, &info)) {
+        return false;
+    }
+
+    int32_t count = static_cast<int32_t>((this->m_chunkSize + this->m_fileSize - 1) / this->m_chunkSize);
+    this->m_locality = s_bitFieldAllocator->Create(count);
+
+    if (complete) {
+        memset(this->m_locality->m_bits, 0xFF, this->m_locality->m_length);
+        this->m_completed = true;
+        this->m_assumedComplete = true;
+    } else {
+        this->m_completed = false;
+        this->m_assumedComplete = false;
+    }
+
+    this->m_locality = s_bitFieldAllocator->Attach(info.m_path, count, this->m_locality);
+
+    return true;
+}
+
+// OFFSET: 0x007E3000
+bool Blizzard::Storage::PartialFile::UpdatePartialBlock(uint32_t block, uint32_t size) {
+    if (!this->m_partialBlocks) {
+        int32_t count = static_cast<int32_t>((this->m_fileSize + this->GetChunkSize() - 1) / this->GetChunkSize());
+        int32_t chunkSize = this->GetChunkSize();
+        int32_t last = static_cast<int32_t>(this->m_fileSize % chunkSize);
+        this->m_partialBlocks = new PartialBlock(this->GetChunkSize(), count, last, this->m_lock.m_path);
+    }
+
+    if (!this->m_partialBlocks->SetPartial(block, size)) {
+        return false;
+    }
+
+    if (this->m_dirtyStart < 0 || this->m_dirtyStart > static_cast<int32_t>(block)) {
+        this->m_dirtyStart = block;
+    }
+
+    if (this->m_dirtyEnd < 0 || this->m_dirtyEnd < static_cast<int32_t>(block)) {
+        this->m_dirtyEnd = block;
+    }
+
+    this->m_locality->Set(block);
+
+    return true;
+}
+
+// OFFSET: 0x007E9910/0x1404F5120
+bool Blizzard::Storage::PartialFile::WriteLocality(int32_t first, int32_t last) {
+    if (this->IsReadOnly() && this->m_lock.IsStale(50)) {
+        this->m_lock.Acquire();
+    }
+
+    if (this->IsReadOnly()) {
+        return true;
+    }
+
+    int32_t count = (last >> 3) - (first >> 3) + 1;
+    bool result = Blizzard::File::Write(this->m_file, this->m_locality->m_bits + (first >> 3), this->m_fileSize + (first >> 3), &count, 0);
+
+    if (this->m_lock.m_file) {
+        Blizzard::File::SetModificationTime(this->m_lock.m_file, Blizzard::Time::GetTimestamp());
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007BB970
 bool Blizzard::Storage::PartialFile::ParseFileFromHeader(Blizzard::File::StreamRecord* file, BitField** locality, int32_t* chunkSize, int64_t* fileSize, int32_t* contentId) {
     PartialFileHeader header;
     memset(&header, 0, sizeof(header));
@@ -613,17 +1062,21 @@ bool Blizzard::Storage::PartialFile::ParseFileFromHeader(Blizzard::File::StreamR
     }
 
     if (locality) {
-        bits = new BitField(static_cast<int32_t>((header.m_fileSize + header.m_chunkSize - 1) / header.m_chunkSize));
+        int32_t bitCount = static_cast<int32_t>((header.m_fileSize + header.m_chunkSize - 1) / header.m_chunkSize);
+        bits = s_bitFieldAllocator->Create(bitCount);
 
         if (header.m_fileSize + bits->m_length == headerOffset) {
             result = ReadExact(file, bits->m_bits, header.m_fileSize, bits->m_length, 0);
+
+            if (result) {
+                bits = s_bitFieldAllocator->Attach(info.m_path, bitCount, bits);
+            }
         } else {
             result = false;
         }
 
         if (!result) {
-            SMemFree(bits->m_bits, __FILE__, __LINE__, 0);
-            delete bits;
+            s_bitFieldAllocator->Destroy(bits);
             return result;
         }
     }
@@ -647,37 +1100,7 @@ bool Blizzard::Storage::PartialFile::ParseFileFromHeader(Blizzard::File::StreamR
     return result;
 }
 
-// OFFSET: %0x00754FC0
-bool Blizzard::Storage::PartialFile::ParseFile() {
-    Blizzard::File::FileInfo info;
-
-    if (this->m_open || !Blizzard::File::GetFileInfo(this->m_file, &info)) {
-        return false;
-    }
-
-    if (info.m_size == this->m_fileSize) {
-        this->RebuildLocalityMap(true);
-        return this->RebuildHeader();
-    }
-
-    BitField* locality = NULL;
-    int64_t fileSize = 0;
-    int32_t chunkSize = 0;
-    int32_t contentId = 0;
-
-    if (ParseFileFromHeader(this->m_file, &locality, &chunkSize, &fileSize, &contentId) && this->m_fileSize == fileSize && this->m_contentId == contentId) {
-        this->m_chunkSize = chunkSize;
-        this->m_locality = locality;
-        this->m_completed = this->IsLocalityComplete();
-        return true;
-    }
-
-    this->RebuildLocalityMap(false);
-
-    return this->RebuildHeader();
-}
-
-// OFFSET: %0x0071D630
+// OFFSET: 0x007BB750
 bool Blizzard::Storage::PartialFile::FileIsCompletePartialFile(Blizzard::File::StreamRecord* file, int64_t archiveSize, int64_t fileSize) {
     uint32_t length = static_cast<uint32_t>(fileSize - archiveSize);
     uint8_t* data = length ? new uint8_t[length] : NULL;
@@ -688,108 +1111,138 @@ bool Blizzard::Storage::PartialFile::FileIsCompletePartialFile(Blizzard::File::S
         return false;
     }
 
-    int64_t position = archiveSize;
-
-    if (data && !strncmp(reinterpret_cast<char*>(data), "NGIS", 4)) {
-        position = archiveSize + 260;
-    }
-
-    if (position == fileSize) {
-        delete[] data;
-        return true;
-    }
-
     PartialFileHeader header;
     Blizzard::String::MemCopy(&header, &data[length - sizeof(PartialFileHeader)], sizeof(PartialFileHeader));
 
-    if (!ValidateHeader(&header, position)) {
+    if (!ValidateHeader(&header, header.m_fileSize)) {
         delete[] data;
         return false;
     }
 
-    int64_t chunks = (position + header.m_chunkSize - 1) / header.m_chunkSize;
-    int32_t bits = static_cast<int32_t>(chunks) % 8;
-    int32_t bytes = static_cast<int32_t>(chunks) / 8;
-
-    if (!bits) {
-        bytes++;
+    if (header.m_fileSize == fileSize) {
+        delete[] data;
+        return true;
     }
 
-    int32_t i = 0;
+    if (header.m_fileSize > fileSize) {
+        delete[] data;
+        return false;
+    }
 
-    for (; i < bytes; i++) {
+    int32_t chunks = static_cast<int32_t>((header.m_fileSize + header.m_chunkSize - 1) / header.m_chunkSize);
+    int32_t bits = chunks % 8;
+    int32_t bytes = chunks / 8;
+    int32_t total = bits ? bytes + 1 : bytes;
+    int32_t i = length - total - sizeof(PartialFileHeader);
+    int32_t end = i + bytes;
+
+    for (; i < end; i++) {
         if (data[i] != 0xFF) {
             delete[] data;
             return false;
         }
     }
 
-    if (bits) {
-        uint8_t mask = static_cast<uint8_t>(~(-1 << bits));
-        bool result = (mask & data[i]) == mask;
+    if (!bits) {
         delete[] data;
-        return result;
+        return true;
     }
 
+    uint8_t mask = static_cast<uint8_t>(~(-1 << bits));
+    bool result = (mask & data[i]) == mask;
     delete[] data;
 
-    return true;
+    return result;
 }
 
-// OFFSET: %0x00756200
+// OFFSET: 0x007F0490/0x1404FCDC0
 Blizzard::Storage::PartialFile* Blizzard::Storage::PartialFile::CreateShared(Blizzard::File::Filesystem* fs, const char* path, int64_t size, int32_t contentId) {
     if (!EnsureParentDirectory(path)) {
         return NULL;
     }
 
     std::string lockPath = path + std::string(".lock");
-    Blizzard::File::StreamRecord* lockFile = NULL;
-
-    if (!Blizzard::File::Open(lockPath.c_str(), 1027, lockFile)) {
-        lockFile = NULL;
-    }
-
+    Blizzard::File::StreamRecord* lockFile = CreateLockFile(lockPath.c_str());
     PartialFile* partialFile = NULL;
-    bool opened = false;
+    bool result;
 
-    for (const uint32_t* delay = s_retryDelays; delay <= &s_retryDelays[10]; delay++) {
+    for (const uint32_t* delay = s_retryDelays; ; ) {
         Blizzard::File::StreamRecord* file;
-        opened = Blizzard::File::Open(fs, path, 527, file);
+        result = Blizzard::File::Open(fs, path, 527, file);
 
-        if (opened) {
+        if (result) {
             partialFile = new PartialFile();
             partialFile->m_fileSize = size;
             partialFile->m_contentId = contentId;
             partialFile->m_file = file;
-            partialFile->m_lockPath = lockPath;
-            partialFile->m_readOnly = lockFile == NULL;
-            partialFile->m_lockFile = lockFile;
+            partialFile->m_lock.m_path = lockPath;
+            partialFile->m_lock.m_file = lockFile;
 
-            if (partialFile->ParseFile()) {
-                partialFile->m_open = true;
-                return partialFile;
+            Blizzard::File::FileInfo info;
+            result = Blizzard::File::GetFileInfo(file, &info);
+
+            if (result && !info.m_compressedSize && lockFile) {
+                Blizzard::File::SetSparse(file, true);
             }
 
-            Blizzard::File::Close(partialFile->m_file);
-            partialFile->m_lockFile = NULL;
-            delete partialFile;
-            partialFile = NULL;
-            opened = false;
+            if (partialFile->ParseFile()) {
+                if (result) {
+                    partialFile->m_open = true;
+                    break;
+                }
+            } else {
+                Blizzard::File::Close(partialFile->m_file);
+                partialFile->m_lock.m_file = NULL;
+                delete partialFile;
+                partialFile = NULL;
+                result = false;
 
-            System_File::FileError& fileError = System_File::s_error;
+                System_File::FileError& fileError = System_File::s_error;
 
-            if (fileError.m_errorStack && fileError.m_errorStack->FindCategory(22)) {
-                break;
+                if (fileError.m_errorStack && fileError.m_errorStack->FindCategory(22)) {
+                    break;
+                }
             }
         }
 
         Blizzard::Process::Sleep(*delay);
+
+        if (++delay > &s_retryDelays[10]) {
+            break;
+        }
     }
 
-    if (lockFile) {
+    if (result) {
+        if (partialFile && lockFile) {
+            partialFile->MakeSparse();
+        }
+    } else if (lockFile) {
         Blizzard::File::Close(lockFile);
         Blizzard::File::Delete(lockPath.c_str());
     }
 
     return partialFile;
+}
+
+// PROVEN: ae2342d8 IDENTICAL/NONE
+// OFFSET: 0x007C3810
+bool Blizzard::Storage::CacheSource::Read(void* buffer, int64_t offset, int64_t size) {
+    return false;
+}
+
+// PROVEN: f1d862be IDENTICAL/NONE
+// OFFSET: 0x007C3810
+bool Blizzard::Storage::CacheSource::FindMissing(int64_t offset, int64_t size, ChunkRange* range) {
+    return false;
+}
+
+// PROVEN: 57fce6fc IDENTICAL/NONE
+// OFFSET: 0x007C3810
+bool Blizzard::Storage::CacheSource::GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) {
+    return false;
+}
+
+// PROVEN: f84f7257 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void Blizzard::Storage::CacheSource::AlignRange(ChunkRange* range) {
 }

@@ -2330,8 +2330,12 @@ bool Blizzard::Mopaq::SFileHasHigherPriority(const char* name, const char* other
     return priority > otherPriority;
 }
 
-// INLINED
-static uint32_t AddChunkOverhead(System_SFile::ARCHIVEREC* archive, uint32_t size) {
+// OFFSET: 0x007AC0B0
+int64_t Blizzard::Mopaq::AddChunkOverhead(int64_t size, System_SFile::ARCHIVEREC* archive) {
+    if (!archive) {
+        return size;
+    }
+
     if (archive->m_parent) {
         archive = archive->m_parent;
     }
@@ -2339,16 +2343,27 @@ static uint32_t AddChunkOverhead(System_SFile::ARCHIVEREC* archive, uint32_t siz
     int32_t chunkSize = archive->m_header.m_rawChunkSize;
 
     if (chunkSize > 0) {
-        size += 16 * ((size + chunkSize - 1) / static_cast<uint32_t>(chunkSize));
+        return size + 16 * ((size + chunkSize - 1) / chunkSize);
     }
 
     return size;
 }
 
-// OFFSET: %0x007551B0
+// OFFSET: 0x007F4460
+int64_t Blizzard::Mopaq::GetStreamedSize(System_SFile::ARCHIVEREC* handle, int64_t size) {
+    System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
+    int64_t result = AddChunkOverhead(size, archive);
+
+    if (archive) {
+        archive->RemoveInternalArchiveRef();
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007F44A0/0x140502000
 int32_t Blizzard::Mopaq::SFileFileIsLocal(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex) {
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
-    Blizzard::File::StreamRecord* file = NULL;
 
     if (!archive.m_archive) {
         return 1;
@@ -2356,53 +2371,13 @@ int32_t Blizzard::Mopaq::SFileFileIsLocal(System_SFile::ARCHIVEREC* handle, uint
 
     System_SFile::BLOCKENTRY entry = archive.m_archive->GetBlockEntry(blockIndex);
     Blizzard::Mopaq::MpqHandleRecord* fileHandle = archive.m_archive->m_file->m_handle;
+    Blizzard::File::StreamRecord* file = fileHandle ? fileHandle->m_file : NULL;
 
-    if (fileHandle) {
-        file = fileHandle->m_file;
-    }
-
-    uint32_t size = AddChunkOverhead(archive.m_archive, static_cast<uint32_t>(entry.m_compressedSize));
-
-    return Blizzard::Streaming::IsLocal(file, entry.m_offset, size);
+    return Blizzard::Streaming::IsLocal(file, entry.m_offset, AddChunkOverhead(entry.m_compressedSize, archive.m_archive));
 }
 
-// OFFSET: %0x0075C9F0
-static int32_t FileIsLocal(int32_t option, const char* name) {
-    System_SFile::ARCHIVEREC* record = NULL;
-    uint32_t blockIndex;
-
-    if (GetFileBlockEntry(NULL, name, System_SFile::s_emptyMd5, 0, NULL, &record, &blockIndex, NULL) != 1) {
-        if (record) {
-            record->RemoveInternalArchiveRef();
-        }
-
-        return -1;
-    }
-
-    System_SFile::BLOCKENTRY entry = record->GetBlockEntry(blockIndex);
-    int32_t result;
-
-    if (entry.m_patch) {
-        result = 0;
-    } else {
-        uint32_t size = static_cast<uint32_t>(entry.m_compressedSize);
-
-        if (record) {
-            size = AddChunkOverhead(record, size);
-        }
-
-        result = Blizzard::Streaming::IsLocal(record->m_name, entry.m_offset, size);
-    }
-
-    if (record) {
-        record->RemoveInternalArchiveRef();
-    }
-
-    return result;
-}
-
-// OFFSET: %0x007553A0
-bool Blizzard::Mopaq::SFileMakeFileLocal(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex, int64_t offset, uint32_t size, int32_t option, bool wait) {
+// OFFSET: 0x007F4680/0x140502170
+bool Blizzard::Mopaq::SFileMakeFileLocal(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex, int64_t offset, int64_t size, bool wait) {
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
 
     if (!archive.m_archive) {
@@ -2411,33 +2386,25 @@ bool Blizzard::Mopaq::SFileMakeFileLocal(System_SFile::ARCHIVEREC* handle, uint3
 
     System_SFile::BLOCKENTRY entry = archive.m_archive->GetBlockEntry(blockIndex);
     int64_t start = offset + entry.m_offset;
-    uint32_t streamed = GetStreamedSize(handle, static_cast<uint32_t>(entry.m_compressedSize));
+    int64_t streamed = GetStreamedSize(handle, entry.m_compressedSize);
 
     if (size > streamed) {
         size = streamed;
     }
 
-    Blizzard::File::StreamRecord* file = archive.m_archive->m_file->m_handle ? archive.m_archive->m_file->m_handle->m_file : NULL;
+    Blizzard::Mopaq::MpqHandleRecord* fileHandle = archive.m_archive->m_file->m_handle;
+    Blizzard::File::StreamRecord* file = fileHandle ? fileHandle->m_file : NULL;
 
     if (wait) {
-        return Blizzard::Streaming::MakeLocalBlocking(file, start, size, static_cast<Blizzard::Streaming::MakeLocalOption>(option), NULL);
+        return Blizzard::Streaming::MakeLocalBlocking(file, start, size, NULL, NULL);
     }
 
-    return Blizzard::Streaming::MakeLocal(file, start, size, static_cast<Blizzard::Streaming::MakeLocalOption>(option), NULL);
+    return Blizzard::Streaming::MakeLocal(file, start, size, NULL, NULL);
 }
 
-// OFFSET: %0x0075CAC0
-int32_t Blizzard::Mopaq::SFileFileIsLocal(const char* name, int32_t option) {
-    return FileIsLocal(option, name);
-}
-
-// OFFSET: %0x00744BA0
+// OFFSET: 0x007E3720
 static void AddIsLocalAmount(System_SFile::ARCHIVEREC* archive, const System_SFile::BLOCKENTRY& entry, int64_t& local, int64_t& total) {
-    uint32_t size = static_cast<uint32_t>(entry.m_compressedSize);
-
-    if (archive) {
-        size = AddChunkOverhead(archive, size);
-    }
+    int64_t size = Blizzard::Mopaq::AddChunkOverhead(entry.m_compressedSize, archive);
 
     if (Blizzard::Streaming::IsStreamedFile(archive->m_name)) {
         local += Blizzard::Streaming::GetIsLocalAmount(archive->m_name, entry.m_offset, size);
@@ -2474,7 +2441,7 @@ void Blizzard::Mopaq::SFileGetIsLocalAmount(System_SFile::ARCHIVEREC* handle, in
     System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
 
     if (archive) {
-        local = Blizzard::Streaming::GetIsLocalAmount(archive->m_name, 0, static_cast<uint32_t>(archive->m_header.m_archiveSize64));
+        local = Blizzard::Streaming::GetIsLocalAmount(archive->m_name, 0, archive->m_header.m_archiveSize64);
         total = archive->m_header.m_archiveSize64;
         archive->RemoveInternalArchiveRef();
     }
@@ -2509,10 +2476,9 @@ struct ArchiveStreamInfo {
 class DeltaCompletionCallback : public Blizzard::Streaming::CompletionCallback {
     public:
     /* 000C */ ArchiveStreamInfo m_info;
-    /* 0050 */ int32_t m_option;
-    /* 0054 */ std::string m_name;
+    /* 0050 */ std::string m_name;
 
-    DeltaCompletionCallback(const ArchiveStreamInfo& info, int32_t option, const std::string& name);
+    DeltaCompletionCallback(const ArchiveStreamInfo& info, const std::string& name);
     virtual ~DeltaCompletionCallback();
     virtual void Complete();
 };
@@ -2587,10 +2553,40 @@ static int32_t NextDeltaBase(ArchiveStreamInfo* info, const char* name) {
     return 2 - (GetArchiveStreamInfo(info->m_archive, name, source, 0x1000, info) != 0);
 }
 
-// OFFSET: %0x00729310
-DeltaCompletionCallback::DeltaCompletionCallback(const ArchiveStreamInfo& info, int32_t option, const std::string& name) {
+// OFFSET: 0x007FA460
+static int32_t FileIsLocal(const char* name) {
+    ArchiveStreamInfo info;
+
+    if (!GetArchiveStreamInfo(NULL, name, System_SFile::s_emptyMd5, 0, &info)) {
+        return -1;
+    }
+
+    int32_t result;
+
+    while (true) {
+        int64_t size = Blizzard::Mopaq::GetStreamedSize(info.m_archive, info.m_entry.m_compressedSize);
+        result = Blizzard::Streaming::IsLocal(info.m_file, info.m_entry.m_offset, size);
+
+        if (result != 1 || !info.m_entry.m_patch) {
+            break;
+        }
+
+        if (NextDeltaBase(&info, name) != 1) {
+            return -1;
+        }
+    }
+
+    return result;
+}
+
+// OFFSET: %0x0075CAC0
+int32_t Blizzard::Mopaq::SFileFileIsLocal(const char* name, int32_t option) {
+    return FileIsLocal(name);
+}
+
+// OFFSET: 0x007C8150
+DeltaCompletionCallback::DeltaCompletionCallback(const ArchiveStreamInfo& info, const std::string& name) {
     this->m_info = info;
-    this->m_option = option;
     this->m_name = name;
 }
 
@@ -2598,37 +2594,67 @@ DeltaCompletionCallback::DeltaCompletionCallback(const ArchiveStreamInfo& info, 
 DeltaCompletionCallback::~DeltaCompletionCallback() {
 }
 
-// OFFSET: %0x0075CB80
+// OFFSET: 0x007FA550
 void DeltaCompletionCallback::Complete() {
     if (this->m_success && NextDeltaBase(&this->m_info, this->m_name.c_str()) == 1) {
-        Blizzard::Streaming::MakeLocal(this->m_info.m_file, this->m_info.m_entry.m_offset, Blizzard::Mopaq::GetStreamedSize(this->m_info.m_archive, static_cast<uint32_t>(this->m_info.m_entry.m_compressedSize)), static_cast<Blizzard::Streaming::MakeLocalOption>(this->m_option), new DeltaCompletionCallback(this->m_info, this->m_option, this->m_name));
+        DeltaCompletionCallback* callback = new DeltaCompletionCallback(this->m_info, this->m_name);
+        int64_t size = Blizzard::Mopaq::GetStreamedSize(this->m_info.m_archive, this->m_info.m_entry.m_compressedSize);
+        Blizzard::Streaming::MakeLocal(this->m_info.m_file, this->m_info.m_entry.m_offset, size, callback, NULL);
     }
 
     delete this;
 }
 
-// OFFSET: %0x0075CC70
-static bool MakeArchiveStreamLocal(ArchiveStreamInfo* info, bool wait, int32_t option, const char* name, Blizzard::Streaming::MakeLocalParams* params) {
-    uint32_t size = Blizzard::Mopaq::GetStreamedSize(info->m_archive, static_cast<uint32_t>(info->m_entry.m_compressedSize));
+// OFFSET: 0x007FA640
+static bool MakeArchiveStreamLocal(ArchiveStreamInfo* info, bool wait, const char* name, Blizzard::Streaming::MakeLocalParams* params, const int64_t* chunk) {
+    int64_t size = Blizzard::Mopaq::GetStreamedSize(info->m_archive, info->m_entry.m_compressedSize);
 
     if (!wait) {
-        return Blizzard::Streaming::MakeLocal(info->m_file, info->m_entry.m_offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(option), new DeltaCompletionCallback(*info, option, name));
+        return Blizzard::Streaming::MakeLocal(info->m_file, info->m_entry.m_offset, size, new DeltaCompletionCallback(*info, std::string(name)), chunk);
     }
 
     while (true) {
-        bool result = Blizzard::Streaming::MakeLocalBlocking(info->m_file, info->m_entry.m_offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(option), params);
+        bool result = Blizzard::Streaming::MakeLocalBlocking(info->m_file, info->m_entry.m_offset, size, params, chunk);
 
         if (!result || (params && params->m_status == 1)) {
             return result;
         }
 
         int32_t next = NextDeltaBase(info, name);
-        size = Blizzard::Mopaq::GetStreamedSize(info->m_archive, static_cast<uint32_t>(info->m_entry.m_compressedSize));
+        size = Blizzard::Mopaq::GetStreamedSize(info->m_archive, info->m_entry.m_compressedSize);
 
         if (next != 1) {
             return next == 0;
         }
     }
+}
+
+// OFFSET: 0x007DC580/0x14050A7D0
+bool Blizzard::Mopaq::SFileMakeFileRangeLocal(HSFILERecord* file, int64_t offset, int64_t size, Blizzard::Streaming::MakeLocalParams* params, const int64_t* chunk) {
+    MpqHandleRecord* handle = file->m_handle;
+    System_SFile::BLOCKENTRY entry = handle->m_blockEntry;
+
+    if (!handle) {
+        return false;
+    }
+
+    int64_t total = entry.m_compressedSize;
+
+    if (total <= 0) {
+        return false;
+    }
+
+    int64_t available = total - offset;
+    size = size >= available ? available : size;
+
+    System_SFile::ARCHIVEREC* archive = handle->m_archive;
+    Blizzard::File::StreamRecord* stream = NULL;
+
+    if (archive && archive->m_file && archive->m_file->m_handle) {
+        stream = archive->m_file->m_handle->m_file;
+    }
+
+    return Blizzard::Streaming::MakeLocalBlocking(stream, offset + entry.m_offset, size, params, chunk);
 }
 
 // OFFSET: %0x0075CE10
@@ -2639,11 +2665,11 @@ bool Blizzard::Mopaq::SFileMakeFileLocal(const char* name, int32_t option, bool 
         return false;
     }
 
-    return MakeArchiveStreamLocal(&info, wait, option, name, params);
+    return MakeArchiveStreamLocal(&info, wait, name, params, NULL);
 }
 
-// OFFSET: %0x0075CE60
-bool Blizzard::Mopaq::SFileMakeFileLocal(HSFILERecord* file, int32_t option, bool wait, Blizzard::Streaming::MakeLocalParams* params) {
+// OFFSET: 0x007FA830
+bool Blizzard::Mopaq::SFileMakeFileLocal(HSFILERecord* file, bool wait, Blizzard::Streaming::MakeLocalParams* params, const int64_t* chunk) {
     if (!file) {
         return false;
     }
@@ -2658,7 +2684,7 @@ bool Blizzard::Mopaq::SFileMakeFileLocal(HSFILERecord* file, int32_t option, boo
         return true;
     }
 
-    return MakeArchiveStreamLocal(&info, wait, option, file->m_handle ? file->m_handle->m_name : "", params);
+    return MakeArchiveStreamLocal(&info, wait, file->m_handle ? file->m_handle->m_name : "", params, chunk);
 }
 
 // OFFSET: 0x007B14A0
@@ -4263,12 +4289,41 @@ uint32_t Blizzard::Mopaq::SFileGetArchiveBlockCount(System_SFile::ARCHIVEREC* ha
     return count;
 }
 
-// OFFSET: %0x00752F80
-uint32_t Blizzard::Mopaq::SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex) {
+// OFFSET: 0x007F2590
+bool Blizzard::Mopaq::SFileGetArchiveFile(System_SFile::ARCHIVEREC* handle, HSFILERecord** file) {
+    System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
+
+    if (!archive) {
+        return false;
+    }
+
+    HSFILERecord* record = new HSFILERecord;
+
+    if (record) {
+        MpqHandleRecord* mpq = archive->m_file->m_handle;
+        record->m_handle = mpq;
+
+        if (mpq) {
+            mpq->m_refCount.Increment();
+        }
+    }
+
+    *file = record;
+    archive->RemoveInternalArchiveRef();
+
+    return true;
+}
+
+// OFFSET: 0x007F3010/0x140500340
+int64_t Blizzard::Mopaq::SFileGetStreamedFileSize(System_SFile::ARCHIVEREC* handle, uint32_t blockIndex) {
     System_SFile::ArchivePtr archive(System_SFile::GetArchivePtr(handle, true));
 
     if (!archive.m_archive) {
         return 0;
+    }
+
+    while (archive.m_archive->m_parent) {
+        archive.Reset(archive.m_archive->m_parent);
     }
 
     System_SFile::BLOCKENTRY entry = archive.m_archive->GetBlockEntry(blockIndex);

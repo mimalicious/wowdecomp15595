@@ -126,6 +126,7 @@ class ManifestInfo {
     static std::string GetAbsolutePath(const std::string& path);
     static std::string GetBandwidthDataString();
     static bool ValidateMD5(const char* url, const void* data, uint32_t size);
+    static void Destroy();
     static bool Initialize(const char* path);
     static void DeactivateServer(const std::string& url, const std::string& name);
     static std::string GetParameter(const char* name);

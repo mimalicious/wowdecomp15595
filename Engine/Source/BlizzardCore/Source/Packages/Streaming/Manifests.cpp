@@ -16,7 +16,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// STATIC: #0x00AB90A4
+// STATIC: 0x00D0717C
 const char* Blizzard::Streaming::s_httpPrefix = "http://";
 
 // STATIC: #0x00AB90A8
@@ -206,7 +206,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
-// OFFSET: [#0x00437D20, %0x00724740]
+// OFFSET: [#0x00437D20, 0x007C37E0]
 Blizzard::Streaming::Manifests::ParameterItem::~ParameterItem() {
 }
 
@@ -413,7 +413,7 @@ std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
     return this->m_path + this->m_fileName;
 }
 
-// OFFSET: [#0x00444000, %0x007370D0]
+// OFFSET: [#0x00444000, 0x007D5A30/0x1404D66A0]
 Blizzard::Streaming::Manifests::ServerItem::~ServerItem() {
 }
 
@@ -1503,7 +1503,7 @@ bool Blizzard::Streaming::ManifestInfo::ReadFile(const char* path) {
     return this->ReadDirectFile(path);
 }
 
-// OFFSET: %0x0075A280
+// OFFSET: 0x007F4250
 bool Blizzard::Streaming::ManifestInfo::Initialize(const char* path) {
     ManifestInfo* info = Get();
 
@@ -1513,11 +1513,17 @@ bool Blizzard::Streaming::ManifestInfo::Initialize(const char* path) {
 
     bool result = info->ReadFile(path);
 
-    if (!result) {
-        return result;
+    if (!result || !(result &= info->FinalizeManifestItems())) {
+        Destroy();
     }
 
-    return info->FinalizeManifestItems() & result;
+    return result;
+}
+
+// OFFSET: 0x007F0360
+void Blizzard::Streaming::ManifestInfo::Destroy() {
+    delete s_instance;
+    s_instance = NULL;
 }
 
 // OFFSET: %0x00750B00

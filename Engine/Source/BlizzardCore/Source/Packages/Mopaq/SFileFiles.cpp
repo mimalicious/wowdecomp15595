@@ -280,53 +280,39 @@ bool Blizzard::Mopaq::SFileGetDeltaDigests(HSFILERecord* file, Blizzard::Util::D
     return true;
 }
 
-// OFFSET: %0x00755090
-uint32_t Blizzard::Mopaq::GetStreamedSize(System_SFile::ARCHIVEREC* handle, uint32_t size) {
-    System_SFile::ARCHIVEREC* archive = System_SFile::GetArchivePtr(handle, true);
-
-    if (!archive) {
-        return size;
-    }
-
-    System_SFile::ARCHIVEREC* owner = archive->m_parent ? archive->m_parent : archive;
-    int32_t chunkSize = owner->m_header.m_rawChunkSize;
-
-    if (chunkSize > 0) {
-        size += 16 * ((chunkSize + size - 1) / static_cast<uint32_t>(chunkSize));
-    }
-
-    archive->RemoveInternalArchiveRef();
-
-    return size;
-}
-
-// OFFSET: %0x007550E0
-int32_t Blizzard::Mopaq::SFileFileIsLocal(HSFILERecord* file, int32_t option) {
+// OFFSET: 0x007FB2D0/0x14049AE00
+int32_t Blizzard::Mopaq::SFileFileIsLocal(HSFILERecord* file, bool ignorePatch) {
     if (!file) {
         return 1;
     }
 
     MpqHandleRecord* handle = file->m_handle;
 
+    if (!ignorePatch && handle && handle->m_blockEntry.m_patch) {
+        return Blizzard::Mopaq::SFileFileIsLocal(handle->m_name, 0);
+    }
+
     if (!handle) {
         return 1;
     }
 
-    if (handle->m_blockEntry.m_patch) {
-        return 0;
-    }
-
     int64_t offset = handle->m_blockEntry.m_offset;
-    uint32_t size = static_cast<uint32_t>(handle->m_blockEntry.m_compressedSize);
+    int64_t size = handle->m_blockEntry.m_compressedSize;
+    System_SFile::ARCHIVEREC* archive = handle->m_archive;
+    Blizzard::File::StreamRecord* stream = NULL;
 
-    if (handle->m_archive) {
-        char name[260];
-        SFileGetArchiveName(handle->m_archive, name, sizeof(name));
-        return Blizzard::Streaming::IsLocal(name, offset, GetStreamedSize(handle->m_archive, size));
+    if (archive && archive->m_file && archive->m_file->m_handle) {
+        stream = archive->m_file->m_handle->m_file;
     }
 
-    if (handle->m_file) {
-        return Blizzard::Streaming::IsLocal(handle->m_file, offset, size);
+    if (stream && stream->m_streaming && stream->m_streaming->m_unit) {
+        return Blizzard::Streaming::IsLocal(stream, offset, GetStreamedSize(archive, size));
+    }
+
+    Blizzard::File::StreamRecord* local = handle->m_file;
+
+    if (local && local->m_streaming && local->m_streaming->m_unit) {
+        return Blizzard::Streaming::IsLocal(local, offset, size);
     }
 
     return 1;

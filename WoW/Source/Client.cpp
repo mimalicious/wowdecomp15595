@@ -831,7 +831,7 @@ static void LoadMFIL(const char* file) {
 
     if (OsFileExists(file) && file) {
         s_streamingDiag |= 1;
-        int32_t initialized = SFile::InitializeStreaming(file);
+        int32_t initialized = SFile::InitializeStreaming(file, NULL);
         OsDeleteFile("WoW.stor");
 
         if (initialized) {

@@ -517,14 +517,14 @@ bool Blizzard::Streaming::Transport::Read(const Manifests::TransportInfo& info, 
     return false;
 }
 
-// OFFSET: %0x00754EC0
-bool Blizzard::Storage::HttpSource::Read(void* buffer, int64_t offset, int32_t size) {
+// OFFSET: 0x007F0390/0x1404F9E80
+bool Blizzard::Storage::HttpSource::Read(void* buffer, int64_t offset, int64_t size) {
     Blizzard::Streaming::Manifests::TransportInfo info;
     info.m_uncPath = Blizzard::Streaming::ManifestInfo::Get()->GetRemotePath(this->m_path);
     info.m_item = Blizzard::Streaming::ManifestInfo::GetTransportItem(this->m_path);
     info.m_maxRetry = Blizzard::Streaming::ManifestInfo::GetServerItemMaxRetry(info.m_uncPath, this->m_path);
 
-    bool result = Blizzard::Streaming::Transport::Read(info, buffer, this->m_size, offset, size);
+    bool result = Blizzard::Streaming::Transport::Read(info, buffer, this->m_size, offset, static_cast<int32_t>(size));
 
     if (!result) {
         Blizzard::Streaming::ManifestInfo::DeactivateServer(info.m_uncPath, this->m_path);

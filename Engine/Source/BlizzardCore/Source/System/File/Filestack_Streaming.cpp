@@ -16,7 +16,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Unicode/Unicode.h"
 
-// STATIC: %0x00C0C252
+// STATIC: 0x00D06E39
 static bool s_StreamingFlush = true;
 
 // STATIC: 0x00D070F0
@@ -59,26 +59,23 @@ Blizzard::File::Filesystem System_File::Stacked::s_streamstack = {
     }
 };
 
-// STATIC: %0x00D86BA0
+// STATIC: 0x00EBA22C
 System_File::Stacked::LockAndMap* System_File::Stacked::LockAndMap::s_instance;
 
-// STATIC: %0x00D86BA4
+// STATIC: 0x00EBA230
 bool System_File::Stacked::g_callerGuaranteesStreamingWriteHasProperData;
 
-// STATIC: %0x00D86BF0
+// STATIC: 0x00EBA504
 static std::map<std::string, std::string>* s_inodes;
 
-// STATIC: %0x00D86C10
-int64_t System_File::Stacked::size_local_read;
-
-// STATIC: %0x00D86DA0
+// STATIC: 0x00EBA6B0
 static Blizzard::Lock::RMutex s_inodeLock;
 
 // INLINED
 FileStack_Streaming::FileStack_Streaming(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) : m_fs(fs), m_parms(parms), m_key(System_File::GetInode(std::string(parms->m_path))), m_unit(NULL) {
 }
 
-// OFFSET: %0x0070E820
+// OFFSET: 0x007ABA10/0x1404A1AA0
 bool System_File::Stacked::stream_read(Blizzard::File::Filesystem* fs, FileParms* parms) {
     Blizzard::File::StreamingInfo* streaming = parms->m_stream->m_streaming;
 
@@ -89,16 +86,7 @@ bool System_File::Stacked::stream_read(Blizzard::File::Filesystem* fs, FileParms
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x0071C650
-void System_File::Stacked::PushStreaming() {
-    Blizzard::File::Filesystem* fs = static_cast<Blizzard::File::Filesystem*>(malloc(sizeof(Blizzard::File::Filesystem)));
-    Blizzard::String::MemCopy(fs, &s_streamstack, sizeof(Blizzard::File::Filesystem));
-    fs->m_next = s_manager;
-    s_manager = fs;
-    HoistAll();
-}
-
-// OFFSET: 0x007C5F80
+// OFFSET: 0x007C5F80/0x1404C0F80
 Blizzard::File::StreamRecord* STORMAPI System_File::Stacked::AllocStreamingRecord(const char* path) {
     uint32_t length = path ? strlen(path) : 0;
 
@@ -111,7 +99,7 @@ Blizzard::File::StreamRecord* STORMAPI System_File::Stacked::AllocStreamingRecor
     return record;
 }
 
-// OFFSET: %0x0073AD00
+// OFFSET: 0x007D9640/0x1404DBB70
 bool System_File::Stacked::stream_flush(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (!parms->m_stream) {
         return true;
@@ -133,12 +121,12 @@ bool System_File::Stacked::stream_flush(Blizzard::File::Filesystem* fs, FileParm
     return true;
 }
 
-// OFFSET: %0x0073AD60
+// OFFSET: 0x007D96A0
 FileStack_Streaming::~FileStack_Streaming() {
     Blizzard::Storage::Release(this->m_unit);
 }
 
-// OFFSET: %0x0073ADF0
+// OFFSET: 0x007D9820/0x1404DBD20
 bool System_File::Stacked::stream_writep(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (!parms->m_stream->m_streaming) {
         if (!fs->m_next) {
@@ -153,11 +141,13 @@ bool System_File::Stacked::stream_writep(Blizzard::File::Filesystem* fs, FilePar
     if (g_callerGuaranteesStreamingWriteHasProperData) {
         Blizzard::Storage::StorageUnit* unit = Blizzard::Streaming::AcquireStorageUnit(parms->m_stream);
 
-        if (unit->m_local) {
-            result = unit->m_local->WriteUnaligned(parms->m_buffer, parms->m_pos, parms->m_amount);
-        }
+        if (unit) {
+            if (unit->m_local) {
+                result = unit->m_local->WriteUnaligned(parms->m_buffer, parms->m_pos, parms->m_amount);
+            }
 
-        Blizzard::Storage::Release(unit);
+            Blizzard::Storage::Release(unit);
+        }
     }
 
     return result;
@@ -169,7 +159,7 @@ bool StreamDirWalk::Callback(const Blizzard::File::ProcessDirParms& parms) {
     return true;
 }
 
-// OFFSET: %0x00742740
+// OFFSET: 0x007E1110
 System_File::Stacked::LockAndMap* System_File::Stacked::LockAndMap::Get() {
     if (!s_instance) {
         s_instance = new LockAndMap();
@@ -178,7 +168,7 @@ System_File::Stacked::LockAndMap* System_File::Stacked::LockAndMap::Get() {
     return s_instance;
 }
 
-// OFFSET: %0x007427B0
+// OFFSET: 0x007E1180
 Blizzard::File::StreamRecord* System_File::Stacked::LockAndMap::GetRecord(const std::string& key, const char* path) {
     Blizzard::Lock::Mutex& lock = Get()->m_mutex.m_mutex;
     Blizzard::Lock::MutexEnter(lock);
@@ -201,7 +191,7 @@ Blizzard::File::StreamRecord* System_File::Stacked::LockAndMap::GetRecord(const 
     return record;
 }
 
-// OFFSET: %0x00742920
+// OFFSET: 0x007E12F0/0x1404E7570
 bool System_File::Stacked::stream_close(Blizzard::File::Filesystem* fs, FileParms* parms) {
     Blizzard::File::StreamRecord* file = parms->m_stream;
 
@@ -224,7 +214,6 @@ bool System_File::Stacked::stream_close(Blizzard::File::Filesystem* fs, FileParm
         }
 
         LockAndMap::Get()->m_map.erase(file->m_streaming->m_name);
-        file->m_streaming->m_unit->FlushCacheEntries(0);
         Blizzard::Storage::Release(file->m_streaming->m_unit);
         file->m_streaming->m_unit = NULL;
     }
@@ -242,7 +231,7 @@ bool System_File::Stacked::stream_close(Blizzard::File::Filesystem* fs, FileParm
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x00742AE0
+// OFFSET: 0x007E14B0
 Blizzard::File::StreamRecord* FileStack_Streaming::InitRecord(Blizzard::File::StreamRecord* record, int64_t size) {
     Blizzard::String::MemCopy(&record->m_streaming->m_info, &record->m_info, sizeof(Blizzard::File::FileInfo));
     record->m_info.m_path = record->m_pathname;
@@ -254,7 +243,7 @@ Blizzard::File::StreamRecord* FileStack_Streaming::InitRecord(Blizzard::File::St
     record->m_info.m_attributes = 32;
     record->m_infoValid = true;
 
-    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::Acquire(this->m_key);
+    Blizzard::Storage::StorageUnit* unit = Blizzard::Storage::Acquire(this->m_key, false);
     this->m_unit = unit;
     record->m_streaming->m_unit = unit;
     record->m_streaming->m_name = this->m_key;
@@ -263,7 +252,7 @@ Blizzard::File::StreamRecord* FileStack_Streaming::InitRecord(Blizzard::File::St
     return record;
 }
 
-// OFFSET: %0x00742D40
+// OFFSET: 0x007E1810/0x1404E7C40
 std::string System_File::GetInode(const std::string& path) {
     Blizzard::Lock::MutexEnter(s_inodeLock.m_mutex);
 
@@ -301,7 +290,7 @@ std::string System_File::GetInode(const std::string& path) {
                 }
             }
 
-            StringToLower(normalized);
+            Blizzard::String::ToLower(normalized);
             (*s_inodes)[path].assign(normalized, strlen(normalized));
             result = (*s_inodes)[path];
         }
@@ -312,13 +301,19 @@ std::string System_File::GetInode(const std::string& path) {
     return result;
 }
 
-// OFFSET: 0x007E3880
+// OFFSET: 0x007E2930/0x1404E9450
 void System_File::Stacked::LockAndMap::Release() {
     delete s_instance;
     s_instance = NULL;
 }
 
-// OFFSET: %0x00745260
+// OFFSET: 0x007E3880/0x1404EA660
+void System_File::ReleaseInodes() {
+    delete s_inodes;
+    s_inodes = NULL;
+}
+
+// OFFSET: 0x007E44D0/0x1404EC4D0
 bool System_File::Stacked::stream_unlink(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (Blizzard::Streaming::IsStreamedFile(parms->m_path)) {
         return true;
@@ -368,7 +363,7 @@ bool StreamDirWalk::Walk(Blizzard::File::Filesystem* fs, System_File::Stacked::F
     return true;
 }
 
-// OFFSET: %0x00748C40
+// OFFSET: 0x007EF890/0x1404FBEB0
 bool System_File::Stacked::stream_exists(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (!parms->m_path) {
         parms->m_info->m_existence = 0;
@@ -390,7 +385,7 @@ bool System_File::Stacked::stream_exists(Blizzard::File::Filesystem* fs, FilePar
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x00748D90
+// OFFSET: 0x007EF9E0/0x1404FC170
 bool System_File::Stacked::stream_getfileinfo(Blizzard::File::Filesystem* fs, FileParms* parms) {
     if (!parms->m_path) {
         if (parms->m_stream) {
@@ -417,6 +412,7 @@ bool System_File::Stacked::stream_getfileinfo(Blizzard::File::Filesystem* fs, Fi
 
     if (item) {
         parms->m_info->m_size = item->m_size;
+        parms->m_info->m_compressedSize = 0;
         parms->m_info->m_path = parms->m_path;
         parms->m_info->m_createTime = 0;
         parms->m_info->m_modTime = 0;
@@ -424,6 +420,11 @@ bool System_File::Stacked::stream_getfileinfo(Blizzard::File::Filesystem* fs, Fi
         parms->m_info->m_regularFile = true;
         parms->m_info->m_existence = item->m_size > 0 ? 1 : 2;
         parms->m_info->m_attributes = 32;
+
+        if (fs->m_next) {
+            (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
+        }
+
         return true;
     }
 
@@ -434,13 +435,13 @@ bool System_File::Stacked::stream_getfileinfo(Blizzard::File::Filesystem* fs, Fi
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x0074A410
+// OFFSET: 0x007F1C40/0x1404FEB50
 bool System_File::Stacked::stream_dirwalk(Blizzard::File::Filesystem* fs, FileParms* parms) {
     StreamDirWalk walk;
     return walk.Walk(fs, parms);
 }
 
-// OFFSET: %0x0074A480
+// OFFSET: 0x007F1E70/0x1404FEE60
 void System_File::Stacked::StreamingShutdown() {
     Blizzard::Streaming::ShutdownStreaming();
 
@@ -454,7 +455,7 @@ void System_File::Stacked::StreamingShutdown() {
     }
 }
 
-// OFFSET: %0x0074A5A0
+// OFFSET: 0x007F1F90/0x1404FF060
 bool System_File::Stacked::stream_shutdown(Blizzard::File::Filesystem* fs, FileParms* parms) {
     StreamingShutdown();
     LockAndMap::Release();
@@ -466,58 +467,24 @@ bool System_File::Stacked::stream_shutdown(Blizzard::File::Filesystem* fs, FileP
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x0074FD50
+// OFFSET: 0x007D9730/0x1404DBC60
 bool System_File::Stacked::stream_readp(Blizzard::File::Filesystem* fs, FileParms* parms) {
-    Blizzard::File::StreamRecord* file = parms->m_stream;
+    Blizzard::Storage::StorageUnit* unit = Blizzard::Streaming::AcquireStorageUnit(parms->m_stream);
 
-    if (!file->m_streaming || !file->m_streaming->m_unit) {
-        if (!fs->m_next) {
-            return false;
-        }
-
-        return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
+    if (unit) {
+        bool result = unit->Read(parms->m_pos, parms->m_amount, parms->m_buffer);
+        Blizzard::Storage::Release(unit);
+        return result;
     }
 
-    void* buffer = parms->m_buffer;
-    int64_t offset = parms->m_pos;
-    Blizzard::Storage::BackingStore* local = file->m_streaming->m_unit->m_local;
-
-    if (local && local->Read(buffer, offset, parms->m_amount)) {
-        return true;
-    }
-
-    Blizzard::Streaming::StreamRequest request(file, offset, parms->m_amount);
-
-    if (!request.GetLocality()) {
-        Blizzard::File::AddToLastErrorStack(2, Blizzard::String::QuickFormat<1024>("%s - fail in GetLocality %s %lld %u ", "System_File::Stacked::stream_readp", file->m_pathname, offset, parms->m_amount).m_buffer, 20);
+    if (!fs->m_next) {
         return false;
     }
 
-    Blizzard::Storage::g_StorageSystem.EnableWriteback(false);
-
-    if (!request.PrefetchData()) {
-        Blizzard::Storage::g_StorageSystem.EnableWriteback(true);
-        Blizzard::File::AddToLastErrorStack(2, Blizzard::String::QuickFormat<1024>("%s - fail in PrefetchData %s %lld %u ", "System_File::Stacked::stream_readp", file->m_pathname, offset, parms->m_amount).m_buffer, 20);
-        return false;
-    }
-
-    if (!request.ReadLocalChunks(buffer)) {
-        Blizzard::Storage::g_StorageSystem.EnableWriteback(true);
-        Blizzard::File::AddToLastErrorStack(2, Blizzard::String::QuickFormat<1024>("%s - fail in ReadLocalChunks %s %lld %u ", "System_File::Stacked::stream_readp", file->m_pathname, offset, parms->m_amount).m_buffer, 20);
-        return false;
-    }
-
-    Blizzard::Storage::g_StorageSystem.EnableWriteback(true);
-
-    if (!request.ReadRemoteChunks(buffer)) {
-        Blizzard::File::AddToLastErrorStack(104, Blizzard::String::QuickFormat<1024>("%s - fail in ReadRemoteChunks %s %lld %u ", "System_File::Stacked::stream_readp", file->m_pathname, offset, parms->m_amount).m_buffer, 20);
-        return false;
-    }
-
-    return true;
+    return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: 0x007F1CB0
+// OFFSET: 0x007F1CB0/0x1404FEC80
 Blizzard::File::StreamRecord* FileStack_Streaming::StreamingOpen() {
     Blizzard::Streaming::Manifests::FileItem* item = Blizzard::Streaming::ManifestInfo::Get()->GetFileItem(this->m_key);
 
@@ -535,7 +502,7 @@ Blizzard::File::StreamRecord* FileStack_Streaming::StreamingOpen() {
         return record;
     }
 
-    this->m_unit = Blizzard::Storage::Acquire(this->m_key);
+    this->m_unit = Blizzard::Storage::Acquire(this->m_key, false);
 
     if (!this->m_unit->m_local || !this->m_unit->m_local->IsMatch(this->m_parms->m_path, item->m_size, atoi(item->m_fileVersion.c_str()))) {
         Blizzard::Storage::PartialFile* local = Blizzard::Storage::PartialFile::CreateShared(this->m_fs->m_next, this->m_parms->m_path, item->m_size, item->GetContentId());
@@ -557,7 +524,7 @@ Blizzard::File::StreamRecord* FileStack_Streaming::StreamingOpen() {
     return result;
 }
 
-// OFFSET: %0x007580C0
+// OFFSET: 0x007F40B0/0x1405018C0
 bool System_File::Stacked::stream_open(Blizzard::File::Filesystem* fs, FileParms* parms) {
     FileStack_Streaming stack(fs, parms);
     Blizzard::File::StreamRecord* file = stack.StreamingOpen();

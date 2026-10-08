@@ -94,7 +94,7 @@ class SFile {
     static float GetStreamingBandwidth();
     static int32_t Initialize();
     static void STORMAPI InitializeRepair(const char* path);
-    static int32_t STORMAPI InitializeStreaming(const char* mfilPath);
+    static int32_t STORMAPI InitializeStreaming(const char* mfilPath, const char* dataPath);
     static int32_t STORMAPI IsArchiveComplete(SArchive* archive);
     static int32_t IsBackgroundStreamingInProgress();
     static int32_t STORMAPI IsPatchFile(const char* name);

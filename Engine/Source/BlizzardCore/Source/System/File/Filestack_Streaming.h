@@ -34,6 +34,7 @@ class StreamDirWalk {
 namespace System_File {
 
 std::string GetInode(const std::string& path);
+void ReleaseInodes();
 
 namespace Stacked {
 
@@ -52,10 +53,8 @@ class LockAndMap {
 extern Blizzard::File::Filesystem s_streamstack;
 extern int32_t count_retry;
 extern bool g_callerGuaranteesStreamingWriteHasProperData;
-extern int64_t size_local_read;
 
 Blizzard::File::StreamRecord* STORMAPI AllocStreamingRecord(const char* path);
-void PushStreaming();
 void StreamingShutdown();
 bool stream_close(Blizzard::File::Filesystem* fs, FileParms* parms);
 bool stream_dirwalk(Blizzard::File::Filesystem* fs, FileParms* parms);

@@ -59,6 +59,7 @@ bool SetWorkingDirectory(const char* path);
 bool SimpleGlob(const char* name, const char* pattern);
 bool Write(StreamRecord* file, const void* data, int32_t* count);
 bool Write(StreamRecord* file, const void* data, int64_t offset, int32_t* count, int32_t streamFlags);
+bool ZeroRange(StreamRecord* file, int64_t offset, int64_t length);
 
 }
 }
@@ -196,6 +197,7 @@ bool SetWorkingDirectory(FileParms* parms);
 bool SupportsSparse(FileParms* parms);
 bool ZeroRange(FileParms* parms);
 void HoistAll();
+void Push(const Blizzard::File::Filesystem* fs);
 bool PassThrough(Blizzard::File::Filesystem* fs, FileParms* parms);
 bool stream_read(Blizzard::File::Filesystem* fs, FileParms* parms);
 void Throttle(int64_t bytes, int64_t elapsed);

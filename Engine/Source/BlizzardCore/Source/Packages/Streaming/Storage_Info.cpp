@@ -1,11 +1,13 @@
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include "Engine/Source/BlizzardCore/Include/Blizzard/Util/ScopeGuard.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Storage.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Streaming.h"
-#include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
-#include "Engine/Source/Storm/H/storm.h"
+#include "Engine/Source/BlizzardCore/Source/System/String/String.h"
+#include "Engine/Source/BlizzardCore/Source/System/Time/Time.h"
 
-// OFFSET: %0x007359A0
+// OFFSET: 0x007C6100
 Blizzard::Storage::StorageUnit::StorageUnit() {
     this->m_valid = true;
     this->m_flushed = false;
@@ -15,449 +17,416 @@ Blizzard::Storage::StorageUnit::StorageUnit() {
     this->m_local = NULL;
     this->m_cache = NULL;
     this->m_http = NULL;
-    this->m_cacheTag = 0;
     this->m_cacheEntries = new std::deque<STORAGE_CMD>();
 }
 
-// OFFSET: %0x0072E230
+// OFFSET: 0x007C7DB0/0x1404CEA40
 Blizzard::Storage::StorageUnit::~StorageUnit() {
+    while (this->m_cacheEntries && this->m_cacheEntries->size()) {
+        g_StorageSystem.ReleaseChunks(this->m_cacheEntries->front().m_handle);
+        this->m_cacheEntries->pop_front();
+    }
+
     delete this->m_cacheEntries;
     delete this->m_local;
     delete this->m_cache;
     delete this->m_http;
 }
 
-// OFFSET: 0x007ABBD0
-void Blizzard::Storage::StorageUnit::SetCacheSource() {
-    delete this->m_cache;
-    this->m_cache = new CacheSource(this);
+// PROVEN: 2526f65a IDENTICAL/DIFFERENT
+// OFFSET: 0x007ABBA0/0x1404A1AF0
+void Blizzard::Storage::StorageUnit::SetLocal(PartialFile* local, int64_t size) {
+    delete this->m_local;
+    this->m_logicalFileSize = size;
+    this->m_local = local;
 }
 
-// OFFSET: %0x007291D0
+// OFFSET: 0x007ABBD0/0x1404A1B50
+void Blizzard::Storage::StorageUnit::SetCacheSource() {
+    delete this->m_cache;
+    this->m_cache = new CacheSource();
+}
+
+// OFFSET: 0x007C7F60
 void Blizzard::Storage::StorageUnit::SetHttpSource(const std::string& path, int64_t size) {
     delete this->m_http;
     this->m_http = new HttpSource(path, size);
 }
 
-// OFFSET: %0x0073BAF0
-void Blizzard::Storage::StorageUnit::ReserveChunks() {
-    uint32_t count = static_cast<uint32_t>((this->m_logicalFileSize + this->m_chunkSize - 1) / this->m_chunkSize);
-    this->m_chunkStates.resize(count);
-    memset(&this->m_chunkStates[0], 0, count);
-    this->m_flushed = false;
-}
-
-// OFFSET: 0x007ABBA0
-void Blizzard::Storage::StorageUnit::SetLocal(BackingStore* local, int64_t size) {
-    delete this->m_local;
-    this->m_logicalFileSize = size;
-    this->ReserveChunks();
-    this->m_local = local;
-}
-
-// OFFSET: %0x0071CD40
-bool Blizzard::Storage::StorageUnit::ReadLocal(void* buffer, int64_t offset, int32_t size) {
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    if (!this->m_local) {
-        Blizzard::Lock::MutexLeave(s_storageMutex);
-        return false;
-    }
-
-    int32_t end = static_cast<int32_t>((offset + size) / this->m_chunkSize);
-    uint32_t index = static_cast<uint32_t>(offset / this->m_chunkSize);
-
-    if (index != end) {
-        do {
-            if (!(this->m_chunkStates[index] & ChunkState::CHUNK_STATE_MASK) && this->m_local->IsAvailable(static_cast<int64_t>(static_cast<int32_t>(index)) * this->m_chunkSize, this->m_chunkSize)) {
-                this->m_chunkStates[index] = (this->m_chunkStates[index] & ChunkState::CHUNK_CACHE_ENTRY) | ChunkState::CHUNK_LOCAL;
-            }
-
-            if ((this->m_chunkStates[index] & ChunkState::CHUNK_STATE_MASK) != ChunkState::CHUNK_LOCAL) {
-                Blizzard::Lock::MutexLeave(s_storageMutex);
-                return false;
-            }
-        } while (++index != end);
-    }
-
-    bool result = this->m_local->Read(buffer, offset, size);
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-
-    return result;
-}
-
-// OFFSET: %0x00735EB0
-void Blizzard::Storage::StorageUnit::FlushCacheEntries(int16_t tag) {
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    if (tag == this->m_cacheTag) {
-        this->m_cacheTag = 0;
-    }
-
-    if (this->m_cacheEntries) {
-        std::deque<STORAGE_CMD>::iterator it = this->m_cacheEntries->begin();
-
-        while (it != this->m_cacheEntries->end()) {
-            if (tag && tag != it->m_tag) {
-                ++it;
-                continue;
-            }
-
-            g_StorageSystem.ReleaseChunks(it->m_handle);
-            Release(it->m_unit);
-
-            if (tag) {
-                it->m_unit->m_chunkStates[static_cast<uint32_t>(it->m_offset / this->m_chunkSize)] &= ~ChunkState::CHUNK_CACHE_ENTRY;
-                it = this->m_cacheEntries->erase(it);
-            } else {
-                ++it;
-            }
-        }
-
-        if (!tag) {
-            this->m_cacheEntries->clear();
-        }
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-}
-
-// OFFSET: %0x007360F0
-void Blizzard::Storage::StorageUnit::AddCacheEntry(int16_t tag, int64_t offset, int32_t size, BufferHandle handle) {
-    if (!tag && this->m_cacheTag) {
-        g_StorageSystem.ReleaseChunks(handle);
-        return;
-    }
-
-    if (this) {
-        this->m_refCount.Increment();
-    }
-
-    STORAGE_CMD entry;
-    entry.m_type = 1;
-    entry.m_unit = this;
-    entry.m_handle = handle;
-    entry.m_tag = tag;
-    entry.m_offset = offset;
-    entry.m_length = size;
-    this->m_cacheEntries->push_back(entry);
-
-    uint32_t index = static_cast<uint32_t>(offset / this->m_chunkSize);
-    this->m_chunkStates[index] = (this->m_chunkStates[index] & ChunkState::CHUNK_CACHE_ENTRY) | ChunkState::CHUNK_CACHED;
-    this->m_chunkStates[index] |= ChunkState::CHUNK_CACHE_ENTRY;
-}
-
-// OFFSET: %0x0073BB90
-bool Blizzard::Storage::StorageUnit::FetchDeferData(Range* range, int16_t tag) {
-    int32_t count = 0;
-    Range* ranges = GetRange(this, range->m_chunkOffset, range->m_chunkLength, &count, true);
-
-    if (!ranges || !count) {
-        return false;
-    }
-
-    bool fetch = false;
-    ChunkState::State errorState = ChunkState::CHUNK_LOCAL;
-
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    for (int32_t i = 0; i < count; i++) {
-        if (ranges[i].m_state == 2) {
-            errorState = ChunkState::CHUNK_NONE;
-        } else if (ranges[i].m_state == 3) {
-            errorState = ChunkState::CHUNK_REQUESTED;
-        } else {
-            continue;
-        }
-
-        SetRangeAs(this, ranges[i].m_chunkOffset, ranges[i].m_chunkLength, ChunkState::CHUNK_DOWNLOADING);
-        fetch = true;
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-    SMemFree(ranges, __FILE__, __LINE__, 0);
-
-    if (!fetch) {
-        return true;
-    }
-
-    BufferHandle handle = AllocateChunksRecovering(this, range->m_chunkLength);
-
-    if (!handle.all) {
-        FetchError(this, range->m_chunkOffset, range->m_chunkLength, errorState);
-        return false;
-    }
-
-    bool result = false;
-
-    if (!this->m_http || !(result = this->m_http->Read(g_StorageSystem.GetBuffer(handle), range->m_chunkOffset, range->m_chunkLength)) || !(result = Write(this, handle, range->m_chunkOffset, range->m_chunkLength, tag))) {
-        FetchError(this, range->m_chunkOffset, range->m_chunkLength, errorState);
-    }
-
-    g_StorageSystem.ReleaseChunks(handle);
-
-    return result;
-}
-
-// OFFSET: %0x0071CA40
-bool Blizzard::Storage::Read(StorageUnit* unit, void* buffer, int64_t offset, int32_t size) {
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    bool result = false;
-    uint32_t index = static_cast<uint32_t>(offset / unit->m_chunkSize);
-    uint8_t state = unit->m_chunkStates[index];
-
-    if ((state & ChunkState::CHUNK_STATE_MASK) == ChunkState::CHUNK_DOWNLOADING || (state & ChunkState::CHUNK_STATE_MASK) == ChunkState::CHUNK_REQUESTED) {
-        while ((unit->m_chunkStates[index] & ChunkState::CHUNK_STATE_MASK) == ChunkState::CHUNK_DOWNLOADING || (unit->m_chunkStates[index] & ChunkState::CHUNK_STATE_MASK) == ChunkState::CHUNK_REQUESTED) {
-            Blizzard::Lock::MutexLeave(s_storageMutex);
-            Blizzard::Process::Sleep(1);
-            Blizzard::Lock::MutexEnter(s_storageMutex);
-        }
-
-        state = unit->m_chunkStates[index];
-    }
-
-    if (!(state & ChunkState::CHUNK_STATE_MASK) && unit->m_local && unit->m_local->IsAvailable(offset, size)) {
-        state = (state & ChunkState::CHUNK_CACHE_ENTRY) | ChunkState::CHUNK_LOCAL;
-        unit->m_chunkStates[index] = state;
-    }
-
-    if (!(state & ChunkState::CHUNK_CACHE_ENTRY) || !(result = unit->m_cache->Read(buffer, offset, size))) {
-        switch (state & ChunkState::CHUNK_STATE_MASK) {
-        case ChunkState::CHUNK_NONE:
-            if (unit->m_http) {
-                result = unit->m_http->Read(buffer, offset, size);
-            }
-
-            break;
-
-        case ChunkState::CHUNK_DOWNLOADING:
-            result = false;
-            break;
-
-        case ChunkState::CHUNK_CACHED:
-            if (unit->m_cache) {
-                result = unit->m_cache->Read(buffer, offset, size);
-            }
-
-            if (!result && unit->m_http) {
-                result = unit->m_http->Read(buffer, offset, size);
-            }
-
-            break;
-
-        case ChunkState::CHUNK_LOCAL:
-            result = unit->m_local->Read(buffer, offset, size);
-            break;
-
-        default:
-            if (unit->m_local && unit->m_local->IsAvailable(offset, size) && unit->m_local->Read(buffer, offset, size)) {
-                unit->m_chunkStates[index] = (unit->m_chunkStates[index] & ChunkState::CHUNK_CACHE_ENTRY) | ChunkState::CHUNK_LOCAL;
-                result = true;
-            } else {
-                result = false;
-            }
-
-            break;
-        }
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-
-    return result;
-}
-
-// OFFSET: %0x0073B850
-bool Blizzard::Storage::Write(StorageUnit* unit, BufferHandle handle, int64_t offset, int32_t size, int16_t tag) {
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    Blizzard::Streaming::AddStreamed(size);
-
-    uint32_t index = static_cast<uint32_t>(offset / unit->m_chunkSize);
-    int32_t remaining = size;
-    int32_t position = 0;
-    int32_t runStart = 0;
-    int32_t runLength = 0;
-
-    if (size > 0) {
-        do {
-            int32_t state = unit->m_chunkStates[index] & ChunkState::CHUNK_STATE_MASK;
-            int32_t length = s_Chunk_Size >= remaining ? remaining : s_Chunk_Size;
-
-            if (state == ChunkState::CHUNK_LOCAL || state == ChunkState::CHUNK_CACHED) {
-                if (runLength) {
-                    QueueWriteCommand(unit, tag, offset + runStart, runLength, g_StorageSystem.AllocateSubChunks(handle, runStart, runLength));
-                }
-
-                runLength = 0;
-                runStart = length + position;
-            } else {
-                runLength += length;
-
-                if (tag) {
-                    unit->AddCacheEntry(tag, offset + position, length, g_StorageSystem.AllocateSubChunks(handle, position, 1));
-                }
-            }
-
-            position += length;
-            index++;
-            remaining -= length;
-        } while (remaining > 0);
-
-        if (runLength) {
-            QueueWriteCommand(unit, tag, offset + runStart, runLength, g_StorageSystem.AllocateSubChunks(handle, runStart, runLength));
-        }
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-
-    return true;
-}
-
-// OFFSET: %0x0071CCA0
-void Blizzard::Storage::FetchError(StorageUnit* unit, int64_t offset, int32_t size, ChunkState::State state) {
-    int64_t chunkSize = unit->m_chunkSize;
-    int32_t first = static_cast<int32_t>(offset / chunkSize);
-    int32_t last = size <= 0 ? first : static_cast<int32_t>((offset + size - 1) / chunkSize);
-
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    for (uint32_t i = first; static_cast<int32_t>(i) <= last; i++) {
-        unit->m_chunkStates[i] = (state & ChunkState::CHUNK_STATE_MASK) | (unit->m_chunkStates[i] & ChunkState::CHUNK_CACHE_ENTRY);
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-}
-
-// OFFSET: %0x0071D3F0
-bool Blizzard::Storage::SetRangeAs(StorageUnit* unit, int64_t offset, int32_t size, ChunkState::State state) {
-    Blizzard::Lock::MutexEnter(s_storageMutex);
-
-    int64_t length = size;
-    int32_t last = static_cast<int32_t>((offset + size - 1) / unit->m_chunkSize);
-
-    for (uint32_t i = static_cast<uint32_t>(offset / unit->m_chunkSize); static_cast<int32_t>(i) <= last; i++) {
-        if (state && (unit->m_chunkStates[i] & ChunkState::CHUNK_STATE_MASK) >= state) {
-            continue;
-        }
-
-        unit->m_chunkStates[i] ^= (state ^ unit->m_chunkStates[i]) & ChunkState::CHUNK_STATE_MASK;
-    }
-
-    if (!state) {
-        unit->m_local->Invalidate(offset, length);
-    }
-
-    Blizzard::Lock::MutexLeave(s_storageMutex);
-
-    return true;
-}
-
-// OFFSET: %0x0071D2A0
-Blizzard::Storage::Range* Blizzard::Storage::GetRange(StorageUnit* unit, int64_t offset, int32_t size, int32_t* count, bool lock) {
-    int64_t start = offset >= 0 ? offset : 0;
-
-    if (unit->m_logicalFileSize < start) {
-        start = unit->m_logicalFileSize;
-    }
-
-    int64_t end = start + size;
-
-    if (end < 0) {
-        end = 0;
-    }
-
-    if (unit->m_logicalFileSize < end) {
-        end = unit->m_logicalFileSize;
-    }
-
-    int32_t length = static_cast<int32_t>(end) - static_cast<int32_t>(start);
-
-    if (static_cast<int32_t>(end) == static_cast<int32_t>(start)) {
-        *count = 0;
-        return NULL;
-    }
-
-    if (lock) {
-        Blizzard::Lock::MutexEnter(s_storageMutex);
-    }
-
-    int64_t chunkSize = unit->m_chunkSize;
-    Range* ranges = static_cast<Range*>(SMemAlloc(static_cast<uint32_t>(sizeof(Range) * ((start + length - 1) / chunkSize - start / chunkSize + 4)), __FILE__, __LINE__, 0));
-    *count = GetRandomRange(unit, start, length, ranges);
-
-    if (lock) {
-        Blizzard::Lock::MutexLeave(s_storageMutex);
-    }
-
-    return ranges;
-}
-
-// INLINED
-Blizzard::Storage::CacheSource::CacheSource(StorageUnit* unit) {
-    this->m_unit = unit;
-}
-
-// OFFSET: %0x00715D00
-Blizzard::Storage::CacheSource::~CacheSource() {
-}
-
-// OFFSET: %0x00735AB0
-bool Blizzard::Storage::CacheSource::Read(void* buffer, int64_t offset, int32_t size) {
-    StorageUnit* unit = this->m_unit;
-    int64_t chunkSize = unit->m_chunkSize;
-    int32_t index = static_cast<int32_t>(offset / chunkSize);
-    int64_t start = index * chunkSize;
-    int64_t end = static_cast<int32_t>((offset + size - 1) / chunkSize + 1) * chunkSize;
-    std::deque<STORAGE_CMD>* entries = unit->m_cacheEntries;
-
-    for (std::deque<STORAGE_CMD>::iterator it = entries->begin(); it != entries->end(); ++it) {
-        if (start >= it->m_offset && end <= it->m_offset + it->m_length) {
-            uint8_t* source = g_StorageSystem.GetBuffer(it->m_handle) + (offset - it->m_offset);
-
-            if (static_cast<uint8_t*>(buffer) >= source + size || static_cast<uint8_t*>(buffer) + size <= source) {
-                memcpy(buffer, source, size);
-            } else {
-                memmove(buffer, source, size);
-            }
-
-            it->m_unit->m_chunkStates[index] &= ~ChunkState::CHUNK_CACHE_ENTRY;
-            g_StorageSystem.ReleaseChunks(it->m_handle);
-            Release(it->m_unit);
-            entries->erase(it);
-
-            return true;
-        }
-    }
-
-    std::deque<STORAGE_CMD>* queue = s_CmdQueue_Storage;
-    int32_t count = static_cast<int32_t>(queue->size());
-
-    for (int32_t i = 0; i < count; i++) {
-        STORAGE_CMD& cmd = (*s_CmdQueue_Storage)[i];
-
-        if (this->m_unit == cmd.m_unit && start >= cmd.m_offset && end <= cmd.m_offset + cmd.m_length) {
-            uint8_t* source = g_StorageSystem.GetBuffer(cmd.m_handle) + (offset - cmd.m_offset);
-
-            if (static_cast<uint8_t*>(buffer) >= source + size || static_cast<uint8_t*>(buffer) + size <= source) {
-                memcpy(buffer, source, size);
-            } else {
-                memmove(buffer, source, size);
-            }
-
-            return true;
-        }
+// PROVEN: d7e47659 IDENTICAL/NONE
+// OFFSET: 0x007ABC10
+bool Blizzard::Storage::StorageUnit::IsAvailable(int64_t offset, int64_t size) {
+    if (this->m_local) {
+        return this->m_local->IsAvailable(offset, size);
     }
 
     return false;
 }
 
-// OFFSET: %0x00729140
-Blizzard::Storage::HttpSource::HttpSource(std::string path, int64_t size) {
+// OFFSET: 0x007ABC40
+bool Blizzard::Storage::StorageUnit::FindMissingRange(int64_t offset, int64_t size, ChunkRange* range) {
+    range->m_complete = false;
+
+    if (!this->m_local) {
+        return false;
+    }
+
+    BackingStore* sources[2];
+    sources[0] = this->m_local;
+    uint32_t count = 1;
+
+    if (this->m_cache) {
+        sources[1] = this->m_cache;
+        count = 2;
+    }
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (sources[i]->FindMissing(offset, size, range) && i) {
+            i = 0;
+        }
+    }
+
+    for (uint32_t i = 0; i < count; i++) {
+        sources[i]->GetMissingLength(offset, size, range);
+    }
+
+    this->m_local->AlignRange(range);
+
+    if (range->m_offset + range->m_length < offset + size) {
+        range->m_complete = false;
+        return false;
+    }
+
+    range->m_complete = true;
+
+    return true;
+}
+
+// OFFSET: 0x007B39C0
+void Blizzard::Storage::ReadSegment::Set(int64_t offset, int64_t length, const ChunkRange* missing) {
+    this->m_length = length;
+    this->m_source = 0;
+    this->m_offset = offset;
+
+    int64_t start = missing->m_offset;
+
+    if (offset < start) {
+        this->m_source = 1;
+        int64_t available = missing->m_offset - offset;
+        this->m_length = std::min(this->m_length, available);
+        return;
+    }
+
+    int64_t remaining = missing->m_length - offset + start;
+    this->m_length = std::min(remaining, this->m_length);
+    int64_t chunkSize = this->m_chunkSize;
+
+    if (!(offset % chunkSize) && this->m_length >= chunkSize) {
+        this->m_source = 2;
+        this->m_length -= this->m_length % chunkSize;
+        return;
+    }
+
+    this->m_source = 3;
+    int64_t next = chunkSize + offset - (chunkSize + offset) % chunkSize - offset;
+    this->m_length = std::min(next, this->m_length);
+}
+
+// OFFSET: 0x007D5060
+bool Blizzard::Storage::StorageUnit::Read(int64_t offset, int64_t size, void* buffer) {
+    if (!buffer) {
+        return false;
+    }
+
+    if (offset >= this->m_logicalFileSize) {
+        return false;
+    }
+
+    if (offset + size > this->m_logicalFileSize) {
+        size = this->m_logicalFileSize - offset;
+    }
+
+    if (!this->m_local) {
+        return this->m_http && this->m_http->Read(buffer, offset, size);
+    }
+
+    int64_t remaining = size;
+    int64_t position = offset;
+    int64_t bufferOffset = 0;
+    ChunkRange missing;
+    missing.m_offset = -1;
+    missing.m_length = 0;
+    missing.m_chunkCount = 0;
+    missing.m_complete = false;
+    ReadSegment segment;
+    segment.m_chunkSize = this->m_chunkSize;
+    bool result = true;
+
+    while (remaining) {
+        if (missing.m_offset + missing.m_length <= position) {
+            missing.m_offset = position;
+            missing.m_length = remaining;
+            this->FindMissingRange(position, remaining, &missing);
+        }
+
+        segment.Set(position, remaining, &missing);
+
+        switch (segment.m_source) {
+            case 1:
+                if (!this->m_local) {
+                    return false;
+                }
+
+                result = this->m_local->Read(static_cast<uint8_t*>(buffer) + bufferOffset, segment.m_offset, segment.m_length);
+                break;
+
+            case 3:
+                result = this->ReadRemoteUnaligned(static_cast<uint8_t*>(buffer) + bufferOffset, segment.m_offset, static_cast<int32_t>(segment.m_length));
+                break;
+
+            case 2:
+                result = this->ReadRemote(static_cast<uint8_t*>(buffer) + bufferOffset, segment.m_offset, static_cast<int32_t>(segment.m_length));
+                break;
+
+            default:
+                return false;
+        }
+
+        if (!result) {
+            return result;
+        }
+
+        position += segment.m_length;
+        bufferOffset += segment.m_length;
+        remaining -= segment.m_length;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007D4F30
+bool Blizzard::Storage::StorageUnit::ReadRemote(void* buffer, int64_t offset, int32_t size) {
+    if (!this->m_http) {
+        return false;
+    }
+
+    int64_t length = size;
+
+    if (!this->m_http->Read(buffer, offset, length)) {
+        return false;
+    }
+
+    BufferHandle handle = g_StorageSystem.AllocateChunks((this->m_chunkSize + size - 1) / this->m_chunkSize);
+
+    if (!handle.all) {
+        this->m_local->Write(buffer, offset, size);
+        return true;
+    }
+
+    Blizzard::Util::ScopeGuard guard = Blizzard::Util::MakeObjGuard(g_StorageSystem, &StorageSystem::ReleaseChunks, handle);
+    Blizzard::String::MemCopy(g_StorageSystem.GetBuffer(handle), buffer, size);
+    this->AddCacheEntry(NULL, offset, length, handle);
+
+    return true;
+}
+
+// OFFSET: 0x007D4DE0
+bool Blizzard::Storage::StorageUnit::ReadRemoteUnaligned(void* buffer, int64_t offset, int32_t size) {
+    if (!this->m_http) {
+        return false;
+    }
+
+    ChunkRange range;
+    range.m_offset = offset;
+    range.m_length = size;
+    range.m_chunkCount = 0;
+    range.m_complete = false;
+
+    if (this->m_local) {
+        this->m_local->AlignRange(&range);
+    }
+
+    BufferHandle handle = g_StorageSystem.AllocateChunksUpTo(1);
+
+    if (!handle.m.length) {
+        return false;
+    }
+
+    Blizzard::Util::ScopeGuard guard = Blizzard::Util::MakeObjGuard(g_StorageSystem, &StorageSystem::ReleaseChunks, handle);
+    uint8_t* data = g_StorageSystem.GetBuffer(handle);
+    bool result = this->m_http->Read(data, range.m_offset, static_cast<int32_t>(range.m_length));
+
+    if (result) {
+        Blizzard::String::MemCopy(buffer, data + (offset - range.m_offset), size);
+        this->QueueWrite(NULL, handle, range.m_offset, static_cast<int32_t>(range.m_length));
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007C3850
+bool Blizzard::Storage::StorageUnit::ReadToCache(ChunkRange* range, BufferHandle* handle) {
+    if (!this->m_http) {
+        return false;
+    }
+
+    handle->all = 0;
+    bool result = false;
+    *handle = g_StorageSystem.AllocateChunksUpTo(range->m_chunkCount);
+
+    if (!handle->all) {
+        return result;
+    }
+
+    uint32_t count = handle->m.length;
+
+    if (count < static_cast<uint32_t>(range->m_chunkCount)) {
+        range->m_length = count * this->m_chunkSize;
+        range->m_complete = false;
+    }
+
+    if (!handle->all) {
+        return result;
+    }
+
+    Blizzard::Util::ScopeGuard guard = Blizzard::Util::MakeObjGuard(g_StorageSystem, &StorageSystem::ReleaseChunks, *handle);
+    uint8_t* data = g_StorageSystem.GetBuffer(*handle);
+
+    if (this->m_http) {
+        result = this->m_http->Read(data, range->m_offset, range->m_length);
+
+        if (result) {
+            guard.Dismiss();
+        }
+    } else {
+        result = false;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007D4CD0/0x1404D54F0
+int32_t Blizzard::Storage::StorageUnit::FetchRequest(Request* request, ChunkRange* range) {
+    if (request->m_offset + request->m_size > this->m_logicalFileSize) {
+        return 2;
+    }
+
+    if (!this->m_local) {
+        return 2;
+    }
+
+    this->FindMissingRange(request->m_offset, request->m_size, range);
+
+    if (range->m_length) {
+        BufferHandle handle;
+
+        if (!this->ReadToCache(range, &handle)) {
+            return 2;
+        }
+
+        Blizzard::Util::ScopeGuard guard = Blizzard::Util::MakeObjGuard(g_StorageSystem, &StorageSystem::ReleaseChunks, handle);
+
+        if (!this->QueueWrite(request, handle, range->m_offset, range->m_length)) {
+            return 2;
+        }
+    }
+
+    return range->m_complete == false;
+}
+
+// OFFSET: 0x007D4B60
+bool Blizzard::Storage::StorageUnit::AddCacheEntry(Request* request, int64_t offset, int64_t size, BufferHandle handle) {
+    if (request) {
+        request->m_refCount.Increment();
+        request->m_pendingWrites.Increment();
+    }
+
+    STORAGE_CMD cmd;
+    cmd.m_request = request;
+    cmd.m_handle = g_StorageSystem.AllocateSubChunks(handle, 0, static_cast<int32_t>(size));
+    cmd.m_offset = offset;
+    cmd.m_length = static_cast<int32_t>(size);
+
+    Blizzard::Lock::ScopedMutex lock(s_storageMutex);
+    this->m_cacheEntries->push_back(cmd);
+    Blizzard::Lock::EventSet(s_cmdEvent);
+
+    return true;
+}
+
+// OFFSET: 0x007D4C20
+bool Blizzard::Storage::StorageUnit::QueueWrite(Request* request, BufferHandle handle, int64_t offset, int64_t size) {
+    Blizzard::Lock::MutexEnter(s_storageMutex);
+    Blizzard::Streaming::AddStreamed(size);
+    bool result = this->AddCacheEntry(request, offset, size, handle);
+    Blizzard::Lock::MutexLeave(s_storageMutex);
+
+    return result;
+}
+
+// OFFSET: 0x007DC0A0
+bool Blizzard::Storage::StorageUnit::FlushCacheEntries(int64_t maxBytes) {
+    Blizzard::Lock::ScopedMutex lock(s_storageMutex);
+    int64_t written = 0;
+
+    while (this->m_cacheEntries->size()) {
+        if (maxBytes < written) {
+            break;
+        }
+
+        STORAGE_CMD& cmd = this->m_cacheEntries->front();
+        bool result;
+
+        if (this->m_local) {
+            result = this->m_local->Write(g_StorageSystem.GetBuffer(cmd.m_handle), cmd.m_offset, cmd.m_length);
+        } else {
+            result = false;
+        }
+
+        written += cmd.m_length;
+
+        if (cmd.m_request) {
+            cmd.m_request->OnWriteComplete(!result);
+        }
+
+        if (cmd.m_handle.all) {
+            g_StorageSystem.ReleaseChunks(cmd.m_handle);
+        }
+
+        this->m_cacheEntries->pop_front();
+    }
+
+    return this->m_cacheEntries->size() == 0;
+}
+
+// OFFSET: 0x007D9560
+Blizzard::Storage::StorageUnitRef::~StorageUnitRef() {
+    Release(this->m_unit);
+}
+
+// OFFSET: 0x007C7ED0
+Blizzard::Storage::HttpSource::HttpSource(std::string path, int64_t size) : BackingStore(0) {
     this->m_path = path;
     this->m_size = size;
 }
 
-// OFFSET: %0x00726EF0
+// OFFSET: 0x007C61C0
 Blizzard::Storage::HttpSource::~HttpSource() {
+}
+
+// PROVEN: 0deb56f4 IDENTICAL/NONE
+// OFFSET: 0x007C3810
+bool Blizzard::Storage::HttpSource::FindMissing(int64_t offset, int64_t size, ChunkRange* range) {
+    return false;
+}
+
+// PROVEN: 17c6fa7b IDENTICAL/NONE
+// OFFSET: 0x007C3810
+bool Blizzard::Storage::HttpSource::GetMissingLength(int64_t offset, int64_t size, ChunkRange* range) {
+    return false;
+}
+
+// PROVEN: 1a827fb7 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void Blizzard::Storage::HttpSource::AlignRange(ChunkRange* range) {
 }

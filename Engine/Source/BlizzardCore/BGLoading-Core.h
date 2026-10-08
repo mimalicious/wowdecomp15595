@@ -11,6 +11,9 @@ namespace Blizzard {
 namespace Mopaq {
 struct HSFILERecord;
 }
+namespace Streaming {
+bool IsStreamingMode();
+}
 namespace Thread {
 struct ThreadRecord;
 }
@@ -62,7 +65,9 @@ class BGLoadManager {
     uint32_t BGLoadThread();
     void CloseBackgroundFiles();
     void DownloadBackgroundFiles();
+    double GetDownloadedPercentage();
     void QueueArchive(const char* name);
+    void QueueArchiveFiles();
     bool QueueFile(const char* name);
     bool Shutdown();
     int32_t SkipLocalData(Blizzard::Mopaq::HSFILERecord* file, int64_t& offset, int32_t size);
@@ -71,7 +76,7 @@ class BGLoadManager {
 
 bool BGLoadThreadStarted();
 float GetBandwidth();
-float GetDownloadedPercentage();
+double GetDownloadedPercentage();
 bool IsStreamingInProgress();
 void Pause(bool pause);
 void QueueArchive(const char* name);

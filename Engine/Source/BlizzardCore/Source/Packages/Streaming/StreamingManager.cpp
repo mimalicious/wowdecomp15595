@@ -749,7 +749,6 @@ select:
 
     if (this->m_current) {
         this->m_current->m_next = this->m_current->m_cursor;
-        Blizzard::Streaming::ResetMakeLocal(static_cast<Blizzard::Streaming::MakeLocalOption>(this->m_current->m_priority));
     }
 
     this->m_current = entry;
@@ -757,21 +756,11 @@ select:
 
 // OFFSET: #0x00421100
 uint32_t StreamingManager::Run() {
-    Blizzard::Streaming::Completion completion;
-    completion.m_event = &this->m_event;
-
-    bool cancelled = false;
-
     do {
         if (this->m_dirty) {
             Blizzard::Lock::EventWait(0, this->m_event);
             this->m_dirty = false;
             this->m_state = this->GetNextState();
-
-            if (this->m_current && (cancelled || this->m_state == 12)) {
-                Blizzard::Streaming::RemoveCompletion(&completion, this->m_current->m_priority);
-                Blizzard::Lock::EventWait(0, this->m_event);
-            }
 
             if (this->m_state == 12) {
                 break;
@@ -785,8 +774,6 @@ uint32_t StreamingManager::Run() {
             continue;
         }
 
-        completion.m_result = -1;
-        completion.m_done = false;
         int32_t queued = 0;
 
         while (!this->m_dirty) {
@@ -813,23 +800,12 @@ uint32_t StreamingManager::Run() {
             }
         }
 
-        if (queued > 0) {
-            if (this->m_dirty) {
-                continue;
-            }
-
-            if (Blizzard::Streaming::QueueCompletion(&completion, this->m_current->m_priority)) {
-                Blizzard::Lock::EventWaitForever(this->m_event);
-
-                if (this->m_dirty) {
-                    cancelled = true;
-                    continue;
-                }
-            }
+        if (queued > 0 && this->m_dirty) {
+            continue;
         }
 
         if (!this->m_dirty) {
-            if ((completion.m_result >= 0 && !completion.m_done) || !queued) {
+            {
                 this->m_current->AdvanceCursor();
 
                 if (this->m_current->m_complete) {
@@ -838,10 +814,6 @@ uint32_t StreamingManager::Run() {
             }
         }
     } while (this->m_state != 12);
-
-    if (this->m_current && this->m_dirty) {
-        Blizzard::Streaming::RemoveCompletion(&completion, this->m_current->m_priority);
-    }
 
     this->m_current = NULL;
     return 0;

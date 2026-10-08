@@ -70,6 +70,18 @@ int32_t (*System_SFile2::s_findFileCallback)(const char* name, char* path, uint3
 // STATIC: 0x00EB3C6C
 void* System_SFile2::s_findFileParam;
 
+class StreamingRequestHandler : public Blizzard::Streaming::RequestHandler {
+    public:
+    void Queue(Blizzard::Storage::Request* request) override;
+    bool Start(bool paused) override;
+    void Stop() override;
+    void Pause() override;
+    void Resume() override;
+};
+
+// STATIC: 0x00EB4098
+static StreamingRequestHandler* s_streamingHandler;
+
 // PROVEN: 4aee979d IDENTICAL/DIFFERENT
 // OFFSET: 0x00627990/0x140693B10
 void SFile::LogFileAccess(SFileImpl* file, int32_t mode, bool flag) {
@@ -142,7 +154,7 @@ void STORMAPI SFile::ConvertOggToWavInBackground(const char* name) {
 // OFFSET: 0x007A5FC0
 int32_t STORMAPI SFile::FileIsLocal(SFileImpl* file, int64_t offset, uint32_t size) {
     if (file->m_file) {
-        return Blizzard::Mopaq::SFileFileIsLocal(file->m_file, 0);
+        return Blizzard::Mopaq::SFileFileIsLocal(file->m_file, false);
     }
 
     if (file->m_stream) {
@@ -212,22 +224,26 @@ int32_t STORMAPI SFile::MakeFileLocal(SFileImpl* file, bool wait, int64_t chunk,
             return 1;
     }
 
-    Blizzard::Streaming::MakeLocalParams params;
-    params.m_budget = chunk;
-    params.m_status = 0;
     result = 0;
+    Blizzard::Streaming::MakeLocalParams params;
+    params.m_budget = 0x7FFFFFFFFFFFFFFFLL;
+    params.m_status = 0;
 
     if (file->m_file) {
-        result = Blizzard::Mopaq::SFileMakeFileLocal(file->m_file, 1, wait, &params);
+        if (size >= SFileGetFileSize(file, NULL) || Blizzard::Mopaq::SFileIsFileCompressed(file->m_file) || Blizzard::Mopaq::SFileIsPatchFile(file->m_file) || !wait) {
+            result = Blizzard::Mopaq::SFileMakeFileLocal(file->m_file, wait, &params, &chunk);
+        } else {
+            result = Blizzard::Mopaq::SFileMakeFileRangeLocal(file->m_file, offset, size, &params, &chunk);
+        }
     } else if (file->m_stream) {
         if (!size) {
             size = SFileGetFileSize(file, NULL);
         }
 
         if (wait) {
-            result = Blizzard::Streaming::MakeLocalBlocking(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(1), &params);
+            result = Blizzard::Streaming::MakeLocalBlocking(file->m_stream, offset, size, &params, &chunk);
         } else {
-            result = Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(1), NULL);
+            result = Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, NULL, &chunk);
         }
     }
 
@@ -259,10 +275,10 @@ int32_t STORMAPI SFile::MakeFileRangeLocal(SFileImpl* file, int32_t queue, bool 
     }
 
     if (wait) {
-        return Blizzard::Streaming::MakeLocalBlocking(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(queue), NULL);
+        return Blizzard::Streaming::MakeLocalBlocking(file->m_stream, offset, size, NULL, NULL);
     }
 
-    return Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, static_cast<Blizzard::Streaming::MakeLocalOption>(queue), NULL);
+    return Blizzard::Streaming::MakeLocal(file->m_stream, offset, size, NULL, NULL);
 }
 
 // PROVEN: b377e194 IDENTICAL/DIFFERENT
@@ -762,15 +778,111 @@ int32_t STORMAPI SFileUnloadFile(void* data) {
     return Blizzard::Mopaq::SFileUnloadFile(data) != 0;
 }
 
-// OFFSET: %0x00708F30
-int32_t STORMAPI SFile::InitializeStreaming(const char* mfilPath) {
-    Blizzard::File::SetLastErrorStack(0);
-    return Blizzard::Streaming::InitializeStreaming(mfilPath, NULL);
+// OFFSET: 0x007A5E80/0x14049ACD0
+void StreamingRequestHandler::Queue(Blizzard::Storage::Request* request) {
+    if (!request->m_size) {
+        return;
+    }
+
+    int64_t chunk = -1;
+
+    if (request->m_chunk) {
+        chunk = *request->m_chunk;
+    }
+
+    request->AddRef();
+
+    if (request->m_cancelled) {
+        request->Release();
+        return;
+    }
+
+    int64_t position = request->m_offset;
+
+    while (true) {
+        int64_t remaining = request->m_size + request->m_offset - position;
+        int64_t length;
+
+        if (chunk > 0) {
+            length = chunk >= remaining ? remaining : chunk;
+        } else {
+            length = remaining;
+        }
+
+        Blizzard::Storage::ChunkRange range;
+        range.m_offset = position;
+        int64_t available = request->m_unit->m_logicalFileSize - position;
+        range.m_length = length >= available ? available : length;
+        int32_t result = request->m_unit->FetchRequest(request, &range);
+
+        if (result == 2) {
+            request->m_state = Blizzard::Storage::Request::STATE_NO_UNIT;
+            break;
+        }
+
+        if (result == 1) {
+            position += range.m_length;
+            request->m_state = Blizzard::Storage::Request::STATE_CANCELLED;
+            chunk -= range.m_length;
+        } else if (!result) {
+            break;
+        }
+
+        if (chunk <= 0) {
+            break;
+        }
+    }
+
+    request->OnWriteComplete(false);
 }
 
-// OFFSET: %0x00708F50
+// PROVEN: 5002475f IDENTICAL/NONE
+// OFFSET: 0x00A332C0
+bool StreamingRequestHandler::Start(bool paused) {
+    return true;
+}
+
+// PROVEN: 9cc0a9d4 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void StreamingRequestHandler::Stop() {
+}
+
+// PROVEN: 58fa913d IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void StreamingRequestHandler::Pause() {
+}
+
+// PROVEN: 1c82bf83 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void StreamingRequestHandler::Resume() {
+}
+
+// OFFSET: 0x007A6190/0x14049B100
+int32_t STORMAPI SFile::InitializeStreaming(const char* mfilPath, const char* dataPath) {
+    s_streamingHandler = new StreamingRequestHandler();
+    Blizzard::File::SetLastErrorStack(0);
+    Blizzard::Storage::InitializeBitFieldAllocator(0);
+
+    if (Blizzard::Streaming::InitializeStreaming(mfilPath, dataPath, s_streamingHandler)) {
+        return 1;
+    }
+
+    Blizzard::Storage::ShutdownBitFieldAllocator();
+    delete s_streamingHandler;
+    s_streamingHandler = NULL;
+
+    return 0;
+}
+
+// PROVEN: 5f86426a IDENTICAL/NONE
+// OFFSET: 0x007A5BB0/0x14049A960
 void SFile::ShutdownStreaming() {
-    Blizzard::Streaming::ShutdownStreaming();
+    if (SFile::IsStreamingDataReady()) {
+        Blizzard::Streaming::ShutdownStreaming();
+        Blizzard::Storage::ShutdownBitFieldAllocator();
+        delete s_streamingHandler;
+        s_streamingHandler = NULL;
+    }
 }
 
 // PROVEN: f6c844bf IDENTICAL/UNPROVEN
@@ -1410,7 +1522,7 @@ int32_t STORMAPI SFile::FileIsLocal(const char* name) {
     int32_t result = 1;
 
     if (file->m_file) {
-        result = Blizzard::Mopaq::SFileFileIsLocal(file->m_file, 0);
+        result = Blizzard::Mopaq::SFileFileIsLocal(file->m_file, false);
         SFileCloseFile(file);
         return result;
     }

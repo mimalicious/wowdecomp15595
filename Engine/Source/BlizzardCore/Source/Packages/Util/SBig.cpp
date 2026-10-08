@@ -94,6 +94,7 @@ inline void Blizzard::BigBuffer::SetOffset(uint32_t offset) {
     }
 }
 
+// PROVEN: db204ec6 IDENTICAL/NONE
 // OFFSET: 0x007C5E60
 void Blizzard::BigBuffer::Trim() const {
     while (this->Count() && !this->m_data.back()) {

@@ -697,7 +697,7 @@ bool System_Mopaq::delta_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
-// OFFSET: 0x007F7B80
+// OFFSET: 0x007F7B80/0x140506D40
 bool System_Mopaq::delta_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     DeltaData* delta = parms->m_handle->m_delta;
 

@@ -53,6 +53,14 @@ Blizzard::Lock::RMutex* System_MPQGlobals::GetMopaqGlobalsLock() {
     return &s_globals.Get()->m_mopaqLock;
 }
 
+// OFFSET: 0x007F07A0
+bool Blizzard::Mopaq::SFileEnableRawRead(bool enable) {
+    Blizzard::Lock::ScopedMutex lock(System_MPQGlobals::GetMopaqGlobalsLock()->m_mutex);
+    System_MPQGlobals::GetMopaqGlobals()->m_disableRawRead = !enable;
+
+    return true;
+}
+
 // OFFSET: 0x007F1440/0x1404FE140
 System_SFile::ARCHIVEREC* Blizzard::Mopaq::SFileGetArchiveHandle(const char* name) {
     System_MPQGlobals::ArchiveList* archives = System_MPQGlobals::GetArchiveList();
