@@ -746,23 +746,71 @@ static bool ArchaeologyDigSiteFrame_advance(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x005017C0
+// PROVEN: 46e6e291 IDENTICAL/NONE
+// OFFSET: 0x004F0DA0/0x1401356E0
+bool Minimap::parse(MemBlock& block) {
+    const char* texture = this->m_xml->GetAttributeByName("minimapPlayerTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x1;
+        this->AddString(block, this->m_playerTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("questBlobInsideTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x2;
+        this->AddString(block, this->m_questBlobInsideTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("questBlobOutsideTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x4;
+        this->AddString(block, this->m_questBlobOutsideTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("questBlobRingTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x8;
+        this->AddString(block, this->m_questBlobRingTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("archBlobInsideTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x10;
+        this->AddString(block, this->m_questBlobRingTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("archBlobOutsideTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x20;
+        this->AddString(block, this->m_questBlobRingTexture, texture);
+    }
+
+    texture = this->m_xml->GetAttributeByName("archBlobRingTexture");
+
+    if (texture) {
+        this->m_minimapFlags |= 0x40;
+        this->AddString(block, this->m_questBlobRingTexture, texture);
+    }
+
+    this->m_size = block.m_cur - reinterpret_cast<char*>(this);
+    this->Frame::parse(block);
+
+    return true;
+}
+
+// OFFSET: 0x004F1300
 static bool Minimap_advance(linkObject* node, MemBlock& block) {
     Minimap* minimap = static_cast<Minimap*>(node);
     minimap->m_regionType = XML_MINIMAP;
     block.m_cur = reinterpret_cast<char*>(minimap) + sizeof(Minimap);
 
-    const char* texture = minimap->m_xml->GetAttributeByName("minimapPlayerTexture");
-
-    if (texture) {
-        minimap->m_minimapFlags |= 1;
-        minimap->AddString(block, minimap->m_playerTexture, texture);
-    }
-
-    minimap->m_size = block.m_cur - reinterpret_cast<char*>(minimap);
-    minimap->Frame::parse(block);
-
-    return true;
+    return minimap->parse(block);
 }
 
 // PROVEN: 84613538 IDENTICAL/NONE
@@ -2566,7 +2614,7 @@ bool StatusBar::parseValues(MemBlock& block) {
     return this->Frame::parse(block);
 }
 
-// OFFSET: %0x00505BF0
+// OFFSET: 0x004F5730/0x140138EB0
 bool StatusBar::parse(MemBlock& block) {
     this->m_flags |= 0x80;
     this->m_drawLayer = 2;
@@ -2575,7 +2623,14 @@ bool StatusBar::parse(MemBlock& block) {
 
     if (rotatesTexture && *rotatesTexture) {
         this->m_valueFlags |= 0x20;
-        this->m_valueFlags ^= (this->m_valueFlags ^ (StringToBOOL(rotatesTexture) << 6)) & 0x40;
+        this->m_valueFlags ^= (this->m_valueFlags ^ (StringToBOOL(rotatesTexture) << 7)) & 0x80;
+    }
+
+    const char* reverseFill = this->m_xml->GetAttributeByName("reverseFill");
+
+    if (reverseFill && *reverseFill) {
+        this->m_valueFlags |= 0x40;
+        this->m_valueFlags ^= (this->m_valueFlags ^ (StringToBOOL(reverseFill) << 8)) & 0x100;
     }
 
     this->m_size = block.m_cur - reinterpret_cast<char*>(this);

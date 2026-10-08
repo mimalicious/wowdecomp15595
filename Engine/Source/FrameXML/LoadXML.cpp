@@ -202,7 +202,7 @@ int32_t StringToBlendMode(const char* string, EGxBlend& blend) {
     return 0;
 }
 
-// OFFSET: %0x004FF2A0
+// OFFSET: 0x004EECC0/0x140133190
 const char* BlendModeToString(EGxBlend blend) {
     for (uint32_t i = 0; i < sizeof(s_blendModes) / sizeof(s_blendModes[0]); i++) {
         if (blend == s_blendModes[i].m_value) {
@@ -315,7 +315,7 @@ int32_t StringToLoopType(const char* string, SimpleAnimLoopType& loop) {
     return 0;
 }
 
-// OFFSET: %0x004FF4C0
+// OFFSET: 0x004EEEE0/0x140133500
 const char* LoopTypeToString(SimpleAnimLoopType loop) {
     for (uint32_t i = 0; i < sizeof(s_loopTypes) / sizeof(s_loopTypes[0]); i++) {
         if (loop == s_loopTypes[i].m_value) {
@@ -349,7 +349,7 @@ int32_t StringToCurveType(const char* string, SimpleAnimCurveType& curve) {
     return 0;
 }
 
-// OFFSET: %0x004FF570
+// OFFSET: 0x004EEF90/0x1401335F0
 const char* CurveTypeToString(SimpleAnimCurveType curve) {
     for (uint32_t i = 0; i < sizeof(s_curveTypes) / sizeof(s_curveTypes[0]); i++) {
         if (curve == s_curveTypes[i].m_value) {

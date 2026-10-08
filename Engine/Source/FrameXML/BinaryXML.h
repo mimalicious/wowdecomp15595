@@ -409,6 +409,14 @@ class Minimap : public Frame {
     public:
     /* 009C */ uint32_t m_minimapFlags;
     /* 00A0 */ XMLString m_playerTexture;
+    /* 00A8 */ XMLString m_questBlobInsideTexture;
+    /* 00B0 */ XMLString m_questBlobOutsideTexture;
+    /* 00B8 */ XMLString m_questBlobRingTexture;
+    /* 00C0 */ XMLString m_archBlobInsideTexture;
+    /* 00C8 */ XMLString m_archBlobOutsideTexture;
+    /* 00D0 */ XMLString m_archBlobRingTexture;
+
+    bool parse(MemBlock& block);
 };
 
 class SimpleHTML : public Frame {

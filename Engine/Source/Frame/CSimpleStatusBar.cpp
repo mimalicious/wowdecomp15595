@@ -424,6 +424,11 @@ void CSimpleStatusBar::LoadXML(linkObject* node, CStatus* status) {
     }
 
     if (statusBar->m_valueFlags & 0x20) {
-        this->SetRotatesTexture((statusBar->m_valueFlags >> 6) & 1);
+        this->SetRotatesTexture((statusBar->m_valueFlags >> 7) & 1);
+    }
+
+    if (statusBar->m_valueFlags & 0x40) {
+        this->m_reverseFill = (statusBar->m_valueFlags >> 8) & 1;
+        this->m_changed = 1;
     }
 }
