@@ -1,5 +1,5 @@
 /*
-** $Id: ldo.c,v 2.38 2006/06/05 19:36:14 roberto Exp $
+** $Id: ldo.c,v 2.38.1.3 2008/01/18 22:31:22 roberto Exp $
 ** Stack and Call structure of Lua
 ** See Copyright Notice in lua.h
 */
@@ -83,13 +83,14 @@ static void restore_stack_limit (lua_State *L) {
 }
 
 
-// OFFSET: %0x0042AD80
+// PROVEN: d0fddd4b IDENTICAL/DIFFERENT
+// OFFSET: 0x00420870/0x140025020
 static void resetstack (lua_State *L, int status) {
   L->ci = L->base_ci;
   L->base = L->ci->base;
   luaF_close(L, L->base);  /* close eventual pending closures */
   luaD_seterrorobj(L, status, L->base);
-  L->nCcalls = 0;
+  L->nCcalls = L->baseCcalls;
   L->allowhook = 1;
   restore_stack_limit(L);
   L->errfunc = 0;
@@ -430,19 +431,21 @@ int luaD_precall_profile (lua_State *L, StkId func, int nresults, __int64 start,
 }
 
 
-// OFFSET: #0x00855FB0
+// PROVEN: ac07dd9f IDENTICAL/NONE
+// OFFSET: 0x004205C0/0x140024CF0
 static StkId callrethooks (lua_State *L, StkId firstResult) {
   ptrdiff_t fr = savestack(L, firstResult);  /* next call may change stack */
   luaD_callhook(L, LUA_HOOKRET, -1);
   if (f_isLua(L->ci)) {  /* Lua function? */
-    while (L->ci->tailcalls--)  /* call hook for eventual tail calls */
+    while ((L->hookmask & LUA_MASKRET) && L->ci->tailcalls--) /* tail calls */
       luaD_callhook(L, LUA_HOOKTAILRET, -1);
   }
   return restorestack(L, fr);
 }
 
 
-// OFFSET: %0x0042AB30
+// PROVEN: 20942839 IDENTICAL/UNPROVEN
+// OFFSET: 0x00420620/0x140024D70
 int luaD_poscall (lua_State *L, StkId firstResult) {
   StkId res;
   int wanted, i;

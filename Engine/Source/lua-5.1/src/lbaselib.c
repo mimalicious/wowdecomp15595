@@ -1,5 +1,5 @@
 /*
-** $Id: lbaselib.c,v 1.191 2006/06/02 15:34:00 roberto Exp $
+** $Id: lbaselib.c,v 1.191.1.6 2008/02/14 16:46:22 roberto Exp $
 ** Basic library
 ** See Copyright Notice in lua.h
 */
@@ -588,12 +588,12 @@ static int luaB_yield (lua_State *L) {
 }
 
 
+// PROVEN: 389514be IDENTICAL/NONE
 // OFFSET: 0x00A2E1B0/0x1407D6FF0
 static int luaB_corunning (lua_State *L) {
   if (lua_pushthread(L))
-    return 0;  /* main thread is not a coroutine */
-  else
-    return 1;
+    lua_pushnil(L);  /* main thread is not a coroutine */
+  return 1;
 }
 
 

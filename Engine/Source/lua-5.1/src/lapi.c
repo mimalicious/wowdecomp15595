@@ -1,5 +1,5 @@
 /*
-** $Id: lapi.c,v 2.55 2006/06/07 12:37:17 roberto Exp $
+** $Id: lapi.c,v 2.55.1.5 2008/07/04 18:41:18 roberto Exp $
 ** Lua API
 ** See Copyright Notice in lua.h
 */
@@ -385,13 +385,15 @@ LUA_API lua_Number lua_tonumber (lua_State *L, int idx) {
 }
 
 
-// OFFSET: %0x004362B0
+// OFFSET: 0x0042BE40/0x1400330D0
 LUA_API lua_Integer lua_tointeger (lua_State *L, int idx) {
   TValue n;
   const TValue *o = index2adr(L, idx);
   if (tonumber(o, &n)) {
     lua_Integer res;
     lua_Number num = nvalue(o);
+    if (num > 2147483647.0 || num < -2147483648.0)
+      luaG_overflowerror(L, num);
     lua_number2integer(res, num);
     return res;
   }
@@ -864,7 +866,8 @@ LUA_API int lua_setmetatable (lua_State *L, int objindex) {
 }
 
 
-// OFFSET: %0x00436D70
+// PROVEN: 131da8b9 IDENTICAL/DIFFERENT
+// OFFSET: 0x0042C940/0x140033D90
 LUA_API int lua_setfenv (lua_State *L, int idx) {
   StkId o;
   int res = 1;
@@ -889,7 +892,7 @@ LUA_API int lua_setfenv (lua_State *L, int idx) {
       res = 0;
       break;
   }
-  luaC_objbarrier(L, gcvalue(o), hvalue(L->top - 1));
+  if (res) luaC_objbarrier(L, gcvalue(o), hvalue(L->top - 1));
   L->top--;
   lua_unlock(L);
   return res;
@@ -1106,25 +1109,29 @@ LUA_API int lua_gc (lua_State *L, int what, int data) {
   return res;
 }
 
-// OFFSET: #0x0084EE50
+// PROVEN: 1b21276d IDENTICAL/NONE
+// OFFSET: 0x0042CC50/0x1400341B0
 LUA_API void lua_gcupdatesizes (lua_State *L) {
   luaC_sizeall(L);
 }
 
 
-// OFFSET: #0x0084EE60
+// PROVEN: 8489c46e IDENTICAL/NONE
+// OFFSET: 0x0042CC60/0x1400341C0
 LUA_API lu_mem lua_gcgetsize (lua_State *L, const char *tag) {
   return luaC_getsize(L, tag);
 }
 
 
-// OFFSET: #0x0084EE70
+// PROVEN: b62bacd0 IDENTICAL/NONE
+// OFFSET: 0x0042CC70/0x1400341D0
 LUA_API void lua_gcupdatetimes (lua_State *L) {
   luaC_timeall(L);
 }
 
 
-// OFFSET: #0x0084EE80
+// PROVEN: b30e3b2b IDENTICAL/NONE
+// OFFSET: 0x0042CC80/0x1400341E0
 LUA_API double lua_gcgettime (lua_State *L, const char *tag) {
   return luaC_gettime(L, tag);
 }
@@ -1150,7 +1157,8 @@ LUA_API void lua_gcgetfunctiontime (lua_State *L, double *time, double *totaltim
 }
 
 
-// OFFSET: %0x00437150
+// PROVEN: 3257d197 IDENTICAL/NONE
+// OFFSET: 0x0042CD20
 LUA_API void lua_gcresettimes (lua_State *L) {
   luaC_timereset(L);
 }

@@ -1,5 +1,5 @@
 /*
-** $Id: lauxlib.c,v 1.159 2006/03/21 19:31:09 roberto Exp $
+** $Id: lauxlib.c,v 1.159.1.3 2008/01/21 13:20:51 roberto Exp $
 ** Auxiliary functions for building Lua libraries
 ** See Copyright Notice in lua.h
 */
@@ -206,7 +206,8 @@ LUALIB_API lua_Number luaL_optnumber (lua_State *L, int narg, lua_Number def) {
 }
 
 
-// OFFSET: %0x0096BCF0
+// PROVEN: 1b6ea427 IDENTICAL/NONE
+// OFFSET: 0x00A29C80
 LUALIB_API lua_Integer luaL_checkinteger (lua_State *L, int narg) {
   lua_Integer d = lua_tointeger(L, narg);
   if (d == 0 && !lua_isnumber(L, narg))  /* avoid extra test when d is not 0 */
@@ -267,13 +268,14 @@ static int libsize (const luaL_Reg *l) {
 }
 
 
-// OFFSET: %0x0096BD90
+// PROVEN: 9feb828e IDENTICAL/DIFFERENT
+// OFFSET: 0x00A29D20/0x1407D1CD0
 LUALIB_API void luaL_openlib (lua_State *L, const char *libname,
                               const luaL_Reg *l, int nup) {
   if (libname) {
     int size = libsize(l);
     /* check whether lib already exists */
-    luaL_findtable(L, LUA_REGISTRYINDEX, "_LOADED", size);
+    luaL_findtable(L, LUA_REGISTRYINDEX, "_LOADED", 1);
     lua_getfield(L, -1, libname);  /* get _LOADED[libname] */
     if (!lua_istable(L, -1)) {  /* not found? */
       lua_pop(L, 1);  /* remove previous result */
@@ -521,7 +523,8 @@ LUALIB_API void luaL_buffinit (lua_State *L, luaL_Buffer *B) {
 /* }====================================================== */
 
 
-// OFFSET: %0x0096B830
+// PROVEN: 5adef8c0 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A297C0/0x1407D1610
 LUALIB_API int luaL_ref (lua_State *L, int t) {
   int ref;
   int oldexpected;
@@ -595,7 +598,7 @@ static const char *getF (lua_State *L, void *ud, size_t *size) {
     return "\n";
   }
   if (feof(lf->f)) return NULL;
-  *size = fread(lf->buff, 1, LUAL_BUFFERSIZE, lf->f);
+  *size = fread(lf->buff, 1, sizeof(lf->buff), lf->f);
   return (*size > 0) ? lf->buff : NULL;
 }
 
@@ -630,9 +633,8 @@ LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
     while ((c = getc(lf.f)) != EOF && c != '\n') ;  /* skip first line */
     if (c == '\n') c = getc(lf.f);
   }
-  if (c == LUA_SIGNATURE[0] && lf.f != stdin) {  /* binary file? */
-    fclose(lf.f);
-    lf.f = fopen(filename, "rb");  /* reopen in binary mode */
+  if (c == LUA_SIGNATURE[0] && filename) {  /* binary file? */
+    lf.f = freopen(filename, "rb", lf.f);  /* reopen in binary mode */
     if (lf.f == NULL) return errfile(L, "reopen", fnameindex);
     /* skip eventual `#!...' */
    while ((c = getc(lf.f)) != EOF && c != LUA_SIGNATURE[0]) ;
@@ -641,7 +643,7 @@ LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
   ungetc(c, lf.f);
   status = lua_load(L, getF, &lf, lua_tostring(L, -1));
   readstatus = ferror(lf.f);
-  if (lf.f != stdin) fclose(lf.f);  /* close file (even in case of errors) */
+  if (filename) fclose(lf.f);  /* close file (even in case of errors) */
   if (readstatus) {
     lua_settop(L, fnameindex);  /* ignore results from `lua_load' */
     return errfile(L, "read", fnameindex);

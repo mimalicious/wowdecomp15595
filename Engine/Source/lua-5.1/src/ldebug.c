@@ -1,5 +1,5 @@
 /*
-** $Id: ldebug.c,v 2.29 2005/12/22 16:19:56 roberto Exp $
+** $Id: ldebug.c,v 2.29.1.6 2008/05/08 16:56:26 roberto Exp $
 ** Debug Interface
 ** See Copyright Notice in lua.h
 */
@@ -284,14 +284,16 @@ LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
 
 
 
+// PROVEN: 41b2e0d6 IDENTICAL/NONE
+// OFFSET: 0x00425200
 static int precheck (const Proto *pt) {
   check(pt->maxstacksize <= MAXSTACK);
-  lua_assert(pt->numparams+(pt->is_vararg & VARARG_HASARG) <= pt->maxstacksize);
-  lua_assert(!(pt->is_vararg & VARARG_NEEDSARG) ||
+  check(pt->numparams+(pt->is_vararg & VARARG_HASARG) <= pt->maxstacksize);
+  check(!(pt->is_vararg & VARARG_NEEDSARG) ||
               (pt->is_vararg & VARARG_HASARG));
   check(pt->sizeupvalues <= pt->nups);
   check(pt->sizelineinfo == pt->sizecode || pt->sizelineinfo == 0);
-  check(GET_OPCODE(pt->code[pt->sizecode-1]) == OP_RETURN);
+  check(pt->sizecode > 0 && GET_OPCODE(pt->code[pt->sizecode-1]) == OP_RETURN);
   return 1;
 }
 
@@ -664,3 +666,7 @@ void luaG_runerror (lua_State *L, const char *fmt, ...) {
   luaG_errormsg(L);
 }
 
+// OFFSET: 0x00425B30/0x14002B5C0
+void luaG_overflowerror (lua_State *L, lua_Number n) {
+  luaG_runerror(L, "integer overflow attempting to store %f", n);
+}

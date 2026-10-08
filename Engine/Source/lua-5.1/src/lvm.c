@@ -1,5 +1,5 @@
 /*
-** $Id: lvm.c,v 2.63 2006/06/05 15:58:59 roberto Exp $
+** $Id: lvm.c,v 2.63.1.3 2007/12/28 15:32:23 roberto Exp $
 ** Lua virtual machine
 ** See Copyright Notice in lua.h
 */
@@ -63,7 +63,8 @@ int luaV_tostring (lua_State *L, StkId obj) {
 }
 
 
-// OFFSET: %0x0042BA00
+// PROVEN: 832bd8d0 IDENTICAL/NONE
+// OFFSET: 0x004214F0/0x140026050
 static void traceexec (lua_State *L, const Instruction *pc) {
   lu_byte mask = L->hookmask;
   const Instruction *oldpc = L->savedpc;
@@ -179,7 +180,7 @@ static int call_binTM (lua_State *L, const TValue *p1, const TValue *p2,
   const TValue *tm = luaT_gettmbyobj(L, p1, event);  /* try first operand */
   if (ttisnil(tm))
     tm = luaT_gettmbyobj(L, p2, event);  /* try second operand */
-  if (!ttisfunction(tm)) return 0;
+  if (ttisnil(tm)) return 0;
   callTMres(L, res, tm, p1, p2);
   return 1;
 }

@@ -1,5 +1,5 @@
 /*
-** $Id: ltable.c,v 2.32 2006/01/18 11:49:02 roberto Exp $
+** $Id: ltable.c,v 2.32.1.2 2007/12/28 15:32:23 roberto Exp $
 ** Lua tables (hash)
 ** See Copyright Notice in lua.h
 */
@@ -81,12 +81,13 @@ static const Node dummynode_ = {
 /*
 ** hash for lua_Numbers
 */
-// OFFSET: #0x0085BC70
+// PROVEN: 31a221cd IDENTICAL/NONE
+// OFFSET: 0x0042A690
 static Node *hashnum (const Table *t, lua_Number n) {
   unsigned int a[numints];
   int i;
-  n += 1;  /* normalize number (avoid -0) */
-  lua_assert(sizeof(a) <= sizeof(n));
+  if (luai_numeq(n, 0))  /* avoid problems with -0 */
+    return gnode(t, 0);
   memcpy(a, &n, sizeof(a));
   for (i = 1; i < numints; i++) a[0] += a[i];
   return hashmod(t, a[0]);
@@ -98,7 +99,8 @@ static Node *hashnum (const Table *t, lua_Number n) {
 ** returns the `main' position of an element in a table (that is, the index
 ** of its hash value)
 */
-// OFFSET: %0x00434BB0
+// PROVEN: 7b122da9 IDENTICAL/NONE
+// OFFSET: 0x0042A6D0/0x140031500
 static Node *mainposition (const Table *t, const TValue *key) {
   switch (ttype(key)) {
     case LUA_TNUMBER:
@@ -119,10 +121,13 @@ static Node *mainposition (const Table *t, const TValue *key) {
 ** returns the index for `key' if `key' is an appropriate key to live in
 ** the array part of the table, -1 otherwise.
 */
+// OFFSET: 0x0042A780
 static int arrayindex (const TValue *key) {
   if (ttisnumber(key)) {
     lua_Number n = nvalue(key);
     int k;
+    if (n > 2147483647.0 || n < -2147483648.0)
+      return -1;
     lua_number2int(k, n);
     if (luai_numeq(cast_num(k), n))
       return k;
@@ -136,7 +141,8 @@ static int arrayindex (const TValue *key) {
 ** elements in the array part, then elements in the hash part. The
 ** beginning of a traversal is signalled by -1.
 */
-// OFFSET: %0x00434C60
+// PROVEN: e98776ee IDENTICAL/NONE
+// OFFSET: 0x0042A7D0/0x1400315E0
 static int findindex (lua_State *L, Table *t, StkId key) {
   int i;
   if (ttisnil(key)) return -1;  /* first iteration */
@@ -505,9 +511,11 @@ const TValue *luaH_get (Table *t, const TValue *key) {
     case LUA_TNUMBER: {
       int k;
       lua_Number n = nvalue(key);
-      lua_number2int(k, n);
-      if (luai_numeq(cast_num(k), nvalue(key))) /* index is int? */
-        return luaH_getnum(t, k);  /* use specialized version */
+      if (n <= 2147483647.0 && n >= -2147483648.0) {
+        lua_number2int(k, n);
+        if (luai_numeq(cast_num(k), nvalue(key))) /* index is int? */
+          return luaH_getnum(t, k);  /* use specialized version */
+      }
       /* else go through */
     }
     default: {

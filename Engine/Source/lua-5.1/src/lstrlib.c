@@ -1,5 +1,5 @@
 /*
-** $Id: lstrlib.c,v 1.132 2006/04/26 20:41:19 roberto Exp $
+** $Id: lstrlib.c,v 1.132.1.4 2008/07/11 17:27:21 roberto Exp $
 ** Standard library for string operations and pattern-matching
 ** See Copyright Notice in lua.h
 */
@@ -73,6 +73,73 @@ static int str_reverse (lua_State *L) {
 }
 
 
+// PROVEN: 8263cdd6 IDENTICAL/NONE
+// OFFSET: 0x00A2B490
+static unsigned int lstr_getu8 (const unsigned char *s, int *chars) {
+  unsigned int c;
+  int extra;
+  int i;
+  if (chars) *chars = 0;
+  if (!s) return 0xFFFFFFFF;
+  c = *s++;
+  if (!c) return 0xFFFFFFFF;
+  if (chars) (*chars)++;
+  if ((c & 0xFE) == 0xFC) { c &= 0x01; extra = 5; }
+  else if ((c & 0xFC) == 0xF8) { c &= 0x03; extra = 4; }
+  else if ((c & 0xF8) == 0xF0) { c &= 0x07; extra = 3; }
+  else if ((c & 0xF0) == 0xE0) { c &= 0x0F; extra = 2; }
+  else if ((c & 0xE0) == 0xC0) { c &= 0x1F; extra = 1; }
+  else if (c & 0x80) return 0x80000000;
+  else return c;
+  for (i = 0; i < extra; i++) {
+    unsigned char next = *s++;
+    if (!next) return 0xFFFFFFFF;
+    if (chars) (*chars)++;
+    if ((next & 0xC0) != 0x80) return 0x80000000;
+    c = (c << 6) | (next & 0x3F);
+  }
+  return c;
+}
+
+
+// OFFSET: 0x00A2B590/0x1400EDDD0
+static char *lstr_putu8 (unsigned int c, char *s) {
+  if (!s) return s;
+  if (c >= 0x80) {
+    if (c >= 0x800) {
+      if (c >= 0x10000) {
+        if (c >= 0x200000) {
+          if (c >= 0x400000) {
+            if (c >= 0x80000000) {
+              *s = '\0';
+              return s;
+            }
+            *s++ = (char)((c >> 30) | 0xFC);
+            *s++ = (char)(((c >> 24) & 0x3F) | 0x80);
+          }
+          else
+            *s++ = (char)((c >> 24) | 0xF8);
+          *s++ = (char)(((c >> 18) & 0x3F) | 0x80);
+        }
+        else
+          *s++ = (char)((c >> 18) | 0xF0);
+        *s++ = (char)(((c >> 12) & 0x3F) | 0x80);
+      }
+      else
+        *s++ = (char)((c >> 12) | 0xE0);
+      *s++ = (char)(((c >> 6) & 0x3F) | 0x80);
+    }
+    else
+      *s++ = (char)((c >> 6) | 0xC0);
+    *s++ = (char)((c & 0x3F) | 0x80);
+  }
+  else
+    *s++ = (char)c;
+  *s = '\0';
+  return s;
+}
+
+
 // OFFSET: 0x00A2B7F0/0x1407D3D30
 static int str_lower (lua_State *L) {
   size_t l;
@@ -85,12 +152,12 @@ static int str_lower (lua_State *L) {
     char buff[8];
     char *e;
     char *p;
-    unsigned int c = sgetu8((const unsigned char *)(s+i), &n);
+    unsigned int c = lstr_getu8((const unsigned char *)(s+i), &n);
     if ((c >= 'A' && c <= 'Z') || (c >= 0xC0 && c <= 0xDE) || (c >= 0x410 && c <= 0x42F))
       c += 32;
     else if (c == 0x401)
       c = 0x451;
-    e = sputu8(c, buff);
+    e = lstr_putu8(c, buff);
     for (p=buff; p<e; p++)
       luaL_addchar(&b, *p);
   }
@@ -111,12 +178,12 @@ static int str_upper (lua_State *L) {
     char buff[8];
     char *e;
     char *p;
-    unsigned int c = sgetu8((const unsigned char *)(s+i), &n);
+    unsigned int c = lstr_getu8((const unsigned char *)(s+i), &n);
     if ((c >= 'a' && c <= 'z') || (c >= 0xE0 && c <= 0xFE) || (c >= 0x430 && c <= 0x44F))
       c -= 32;
     else if (c == 0x451)
       c = 0x401;
-    e = sputu8(c, buff);
+    e = lstr_putu8(c, buff);
     for (p=buff; p<e; p++)
       luaL_addchar(&b, *p);
   }
@@ -499,7 +566,7 @@ static const char *match (MatchState *ms, const char *s, const char *p) {
 
 
 
-// OFFSET: #0x00853240
+// OFFSET: 0x00A2C450
 static const char *lmemfind (const char *s1, size_t l1,
                                const char *s2, size_t l2) {
   if (l2 == 0) return s1;  /* empty strings are everywhere */
@@ -611,7 +678,8 @@ static int str_match (lua_State *L) {
 }
 
 
-// OFFSET: %0x0096E850
+// PROVEN: cca5fec6 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2C7E0/0x1407D5160
 static int gmatch_aux (lua_State *L) {
   MatchState ms;
   size_t ls;

@@ -5,7 +5,7 @@
 // STATIC: #0x00A47FBC
 static const uint32_t s_blocksizes[] = { 16, 24, 32, 40, 64, 80, 128, 160, 256 };
 
-// OFFSET: %0x009703A0
+// OFFSET: 0x00A2E330/0x1407D71F0
 MemChunk::MemChunk(uint32_t blockSize, uint32_t size) {
     this->m_blockSize = blockSize;
     this->m_numBlocks = size / blockSize;
@@ -32,7 +32,7 @@ MemChunk::~MemChunk() {
 MemPool::MemPool() {
 }
 
-// OFFSET: %0x009704B0
+// OFFSET: 0x00A2E440
 int32_t MemPool::MemFree(void* ptr) {
     for (uint32_t i = 0; i < this->m_chunks.Count(); i++) {
         MemChunk* chunk = this->m_chunks[i];
@@ -48,14 +48,14 @@ int32_t MemPool::MemFree(void* ptr) {
     return 0;
 }
 
-// OFFSET: %0x00970520
+// OFFSET: 0x00A2E4B0
 MemPool::~MemPool() {
     for (uint32_t i = this->m_chunks.Count(); i; i--) {
         delete this->m_chunks[i - 1];
     }
 }
 
-// OFFSET: %0x00970590
+// OFFSET: 0x00A2E520/0x1407D7430
 void* luaM_initPool() {
     MemPool** pools = new (__FILE__, __LINE__) MemPool*[sizeof(s_blocksizes) / sizeof(s_blocksizes[0])];
 
@@ -69,7 +69,7 @@ void* luaM_initPool() {
     return pools;
 }
 
-// OFFSET: %0x00970620
+// OFFSET: 0x00A2E5B0
 void luaM_freePool(void* ud) {
     MemPool** pools = static_cast<MemPool**>(ud);
 
@@ -84,7 +84,7 @@ void luaM_freePool(void* ud) {
     SMemFree(pools, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x00970670
+// OFFSET: 0x00A2E600/0x1407D7590
 void* MemPool::MemAlloc() {
     uint32_t count = this->m_chunks.Count();
 
@@ -114,7 +114,7 @@ void* MemPool::MemAlloc() {
     return block;
 }
 
-// OFFSET: %0x00970730
+// OFFSET: 0x00A2E6C0/0x1407D76C0
 void* luaM_reallocPool(void* ud, void* ptr, size_t osize, size_t nsize) {
     MemPool** pools = static_cast<MemPool**>(ud);
     int32_t oldpool = -1;

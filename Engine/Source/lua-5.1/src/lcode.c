@@ -1,5 +1,5 @@
 /*
-** $Id: lcode.c,v 2.25 2006/03/21 19:28:49 roberto Exp $
+** $Id: lcode.c,v 2.25.1.3 2007/12/28 15:32:23 roberto Exp $
 ** Code generator for Lua
 ** See Copyright Notice in lua.h
 */
@@ -254,7 +254,8 @@ static void freeexp (FuncState *fs, expdesc *e) {
 }
 
 
-// OFFSET: %0x00438C90
+// PROVEN: 957866d9 IDENTICAL/NONE
+// OFFSET: 0x0042E860/0x140036270
 static int addk (FuncState *fs, TValue *k, TValue *v) {
   lua_State *L = fs->L;
   TValue *idx = luaH_set(L, fs->h, k);
@@ -864,7 +865,8 @@ void luaK_fixline (FuncState *fs, int line) {
 }
 
 
-// OFFSET: %0x004390D0
+// PROVEN: 2e7f95fa IDENTICAL/NONE
+// OFFSET: 0x0042ECA0/0x140036790
 static int luaK_code (FuncState *fs, Instruction i, int line) {
   Proto *f = fs->f;
   dischargejpc(fs);  /* `pc' will change */
