@@ -37,7 +37,7 @@ bool System_SFile::SignatureHashTable::GetEntry(const char* name, Blizzard::Util
     return this->Get(key, md5);
 }
 
-// OFFSET: %0x00728A90
+// OFFSET: 0x007C7920
 bool System_SFile::SignatureHashTable::AddEntry(const char* name, const Blizzard::Util::Digest<16>& md5) {
     char lower[260];
     Blizzard::String::Copy(lower, name, sizeof(lower));
@@ -47,8 +47,9 @@ bool System_SFile::SignatureHashTable::AddEntry(const char* name, const Blizzard
     }
 
     SignatureKey key(lower);
+    *this->Insert(key) = md5;
 
-    return this->Insert(key, md5);
+    return true;
 }
 
 // OFFSET: 0x007CC290

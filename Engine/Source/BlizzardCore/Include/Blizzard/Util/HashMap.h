@@ -24,7 +24,7 @@ class HashMap {
     uint32_t CopyEntries(const Entry* entries, uint32_t count);
     bool Find(const K& key, uint32_t* index);
     bool Get(const K& key, V* value);
-    bool Insert(const K& key, const V& value);
+    V* Insert(const K& key);
     bool Remove(const K& key, V* value);
     void Resize(uint32_t capacity);
     bool Shrink();
@@ -82,7 +82,7 @@ bool Blizzard::Util::HashMap<K, V>::Get(const K& key, V* value) {
     return true;
 }
 
-// OFFSET: #0x00433EC0
+// OFFSET: 0x007BDE50<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 uint32_t Blizzard::Util::HashMap<K, V>::CopyEntries(const Entry* entries, uint32_t count) {
     uint32_t copied = 0;
@@ -99,27 +99,24 @@ uint32_t Blizzard::Util::HashMap<K, V>::CopyEntries(const Entry* entries, uint32
     return copied;
 }
 
-// OFFSET: #0x0043A400
+// OFFSET: 0x007C68D0<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
-bool Blizzard::Util::HashMap<K, V>::Insert(const K& key, const V& value) {
-    if (this->m_count >= (3 * this->m_capacity) >> 2) {
+V* Blizzard::Util::HashMap<K, V>::Insert(const K& key) {
+    if (this->m_count >= 3 * this->m_capacity / 4) {
         this->Resize(std::max(2 * this->m_capacity, 8u));
     }
 
     uint32_t index = 0;
 
-    if (this->Find(key, &index)) {
-        return false;
+    if (!this->Find(key, &index)) {
+        this->m_count++;
+        this->m_entries[index].m_key = key;
     }
 
-    this->m_count++;
-    this->m_entries[index].m_key = key;
-    this->m_entries[index].m_value = value;
-
-    return true;
+    return &this->m_entries[index].m_value;
 }
 
-// OFFSET: #0x004362C0
+// OFFSET: 0x007C1090<System_SFile::SignatureKey, Blizzard::Util::Digest<16>>
 template <class K, class V>
 void Blizzard::Util::HashMap<K, V>::Resize(uint32_t capacity) {
     Entry* old = this->m_entries;
