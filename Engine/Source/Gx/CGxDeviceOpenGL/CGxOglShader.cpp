@@ -554,25 +554,24 @@ void CGxDeviceOpenGl::IShaderConstantsSend(EGxShTarget target, uint32_t index, c
     }
 }
 
+// PROVEN: 58d8c052 IDENTICAL/NONE
+// OFFSET: 0x0086A720
+void CGxDeviceOpenGl::IShaderConstantsFlush(EGxShTarget target) {
+    ShadowConstants& shadow = CGxDevice::s_shadowConstants[target];
+
+    if (shadow.dirtyMin <= shadow.dirtyMax) {
+        this->IShaderConstantsSend(target, shadow.dirtyMin, &shadow.constants[shadow.dirtyMin * 4], shadow.dirtyMax - shadow.dirtyMin + 1);
+    }
+
+    shadow.dirtyMin = 255;
+    shadow.dirtyMax = 0;
+}
+
+// PROVEN: f5efa803 IDENTICAL/NONE
 // OFFSET: 0x0086A780/0x14059E5C0
 void CGxDeviceOpenGl::IShaderConstantsFlush() {
-    ShadowConstants& vertex = CGxDevice::s_shadowConstants[GxSh_Vertex];
-
-    if (vertex.dirtyMin <= vertex.dirtyMax) {
-        this->IShaderConstantsSend(GxSh_Vertex, vertex.dirtyMin, &vertex.constants[vertex.dirtyMin * 4], vertex.dirtyMax - vertex.dirtyMin + 1);
-    }
-
-    vertex.dirtyMin = 255;
-    vertex.dirtyMax = 0;
-
-    ShadowConstants& pixel = CGxDevice::s_shadowConstants[GxSh_Pixel];
-
-    if (pixel.dirtyMin <= pixel.dirtyMax) {
-        this->IShaderConstantsSend(GxSh_Pixel, pixel.dirtyMin, &pixel.constants[pixel.dirtyMin * 4], pixel.dirtyMax - pixel.dirtyMin + 1);
-    }
-
-    pixel.dirtyMax = 0;
-    pixel.dirtyMin = 255;
+    this->IShaderConstantsFlush(GxSh_Vertex);
+    this->IShaderConstantsFlush(GxSh_Pixel);
 }
 
 // OFFSET: 0x0086A7A0/0x14059E670

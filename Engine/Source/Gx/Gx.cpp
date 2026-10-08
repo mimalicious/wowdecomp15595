@@ -1,6 +1,7 @@
 #include <cstdarg>
 #include <cstdint>
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 #include "Engine/Source/Gx/Buffer.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
@@ -1042,6 +1043,19 @@ void GxTexSetWrap(CGxTex* texId, EGxTexWrapMode wrapU, EGxTexWrapMode wrapV) {
 // OFFSET: 0x00840670
 void GxLogOpen() {
     CGxDevice::LogOpen();
+}
+
+// OFFSET: 0x00841690/0x14056D990
+void GxShutDown() {
+    for (CGxTex* texId = CGxDevice::s_textureList.Head(); texId; texId = CGxDevice::s_textureList.Next(texId)) {
+        if (texId->m_apiSpecificData) {
+            char buffer[256];
+            sprintf(buffer, "Unfreed texture (%d x %d) with user function address %p.", texId->m_width, texId->m_height, texId->m_userFunc);
+        }
+    }
+
+    CGxDevice::s_bufList.Clear();
+    CGxDevice::s_poolList.Clear();
 }
 
 // PROVEN: c00a984f IDENTICAL/NONE

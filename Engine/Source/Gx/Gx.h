@@ -113,6 +113,7 @@ uint32_t GxGetMaxFPSBk();
 int32_t GxHasContext();
 void GxLog(const char* format, ...);
 void GxLogClose();
+void GxShutDown();
 void GxLogCrashInfo(char* buffer, uint32_t size);
 void GxLogOpen();
 int32_t GxIsWindowVisible();

@@ -121,13 +121,13 @@ TSGrowableArray<GxDisplayChangeCallback> CGxDevice::s_displayChangeCallbacks;
 // STATIC: %0x00D92D6C
 TSGrowableArray<CGxDevice::ShaderModelCall> CGxDevice::s_shaderModelChangeCallbacks;
 
-// STATIC: %0x00C0E338
+// STATIC: 0x00D08FF0
 TSList<CGxPool, TSGetLink<CGxPool> > CGxDevice::s_poolList;
 
-// STATIC: %0x00C0E33C
+// STATIC: 0x00D08FFC
 TSList<CGxBuf, TSGetLink<CGxBuf> > CGxDevice::s_bufList;
 
-// STATIC: %0x00C0E348
+// STATIC: 0x00D09008
 TSExplicitList<CGxTex, offsetof(CGxTex, m_link)> CGxDevice::s_textureList;
 
 // STATIC: %0x00D92D2C

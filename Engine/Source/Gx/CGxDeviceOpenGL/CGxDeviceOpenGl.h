@@ -172,6 +172,7 @@ class CGxDeviceOpenGl : public CGxDevice {
     void IShaderDestroyPixel(CGxShaderPermute* permute);
     void IShaderDestroyVertex(CGxShaderPermute* permute);
     void IShaderConstantsFlush();
+    void IShaderConstantsFlush(EGxShTarget target);
     void ISetAlphaOp(uint32_t tmu, uint32_t op);
     void ISetCaps(const CGxFormat& format);
     void ISetColorOp(uint32_t tmu, uint32_t op);
