@@ -121,7 +121,7 @@ static const uint8_t s_signaturePublicExponent[4] = { 0x01, 0x00, 0x01, 0x00 };
 // STATIC: %0x00CC91B0
 static char s_fontFlagsString[64];
 
-// OFFSET: %0x004FF0D0
+// OFFSET: 0x004EEAF0/0x140132F10
 int32_t StringToFrameStrata(const char* string, FRAME_STRATA& strata) {
     for (uint32_t i = 0; i < sizeof(s_frameStrata) / sizeof(s_frameStrata[0]); i++) {
         if (!SStrCmpI(s_frameStrata[i].m_name, string, STORM_MAX_STR)) {
@@ -133,7 +133,7 @@ int32_t StringToFrameStrata(const char* string, FRAME_STRATA& strata) {
     return 0;
 }
 
-// OFFSET: %0x004FF120
+// OFFSET: 0x004EEB40/0x140132F80
 const char* FrameStrataToString(FRAME_STRATA strata) {
     for (uint32_t i = 0; i < sizeof(s_frameStrata) / sizeof(s_frameStrata[0]); i++) {
         if (strata == s_frameStrata[i].m_value) {
@@ -144,7 +144,7 @@ const char* FrameStrataToString(FRAME_STRATA strata) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF150
+// OFFSET: 0x004EEB70/0x140132FC0
 int32_t StringToFramePoint(const char* string, FRAMEPOINT& point) {
     for (uint32_t i = 0; i < sizeof(s_framePoints) / sizeof(s_framePoints[0]); i++) {
         if (!SStrCmpI(s_framePoints[i].m_name, string, STORM_MAX_STR)) {
@@ -156,7 +156,7 @@ int32_t StringToFramePoint(const char* string, FRAMEPOINT& point) {
     return 0;
 }
 
-// OFFSET: %0x004FF1A0
+// OFFSET: 0x004EEBC0/0x140133030
 const char* FramePointToString(FRAMEPOINT point) {
     for (uint32_t i = 0; i < sizeof(s_framePoints) / sizeof(s_framePoints[0]); i++) {
         if (point == s_framePoints[i].m_value) {
@@ -167,7 +167,7 @@ const char* FramePointToString(FRAMEPOINT point) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF1D0
+// OFFSET: 0x004EEBF0/0x140133070
 int32_t StringToDrawLayer(const char* string, uint32_t& layer) {
     for (uint32_t i = 0; i < sizeof(s_drawLayers) / sizeof(s_drawLayers[0]); i++) {
         if (!SStrCmpI(s_drawLayers[i].m_name, string, STORM_MAX_STR)) {
@@ -179,7 +179,7 @@ int32_t StringToDrawLayer(const char* string, uint32_t& layer) {
     return 0;
 }
 
-// OFFSET: %0x004FF220
+// OFFSET: 0x004EEC40
 const char* DrawLayerToString(uint32_t layer) {
     for (uint32_t i = 0; i < sizeof(s_drawLayers) / sizeof(s_drawLayers[0]); i++) {
         if (layer == s_drawLayers[i].m_value) {
@@ -190,7 +190,7 @@ const char* DrawLayerToString(uint32_t layer) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF250
+// OFFSET: 0x004EEC70/0x140133120
 int32_t StringToBlendMode(const char* string, EGxBlend& blend) {
     for (uint32_t i = 0; i < sizeof(s_blendModes) / sizeof(s_blendModes[0]); i++) {
         if (!SStrCmpI(s_blendModes[i].m_name, string, STORM_MAX_STR)) {
@@ -213,7 +213,7 @@ const char* BlendModeToString(EGxBlend blend) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF2D0
+// OFFSET: 0x004EECF0/0x1401331D0
 int32_t StringToJustify(const char* string, uint32_t& justify) {
     for (uint32_t i = 0; i < sizeof(s_justify) / sizeof(s_justify[0]); i++) {
         if (!SStrCmpI(s_justify[i].m_name, string, STORM_MAX_STR)) {
@@ -225,7 +225,7 @@ int32_t StringToJustify(const char* string, uint32_t& justify) {
     return 0;
 }
 
-// OFFSET: %0x004FF320
+// OFFSET: 0x004EED40/0x140133240
 const char* JustifyToString(uint32_t justify) {
     for (uint32_t i = 0; i < sizeof(s_justify) / sizeof(s_justify[0]); i++) {
         if (justify & s_justify[i].m_value) {
@@ -236,7 +236,7 @@ const char* JustifyToString(uint32_t justify) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF350
+// OFFSET: 0x004EED70/0x140133280
 int32_t StringToOrientation(const char* string, ORIENTATION& orientation) {
     for (uint32_t i = 0; i < sizeof(s_orientations) / sizeof(s_orientations[0]); i++) {
         if (!SStrCmpI(s_orientations[i].m_name, string, STORM_MAX_STR)) {
@@ -273,7 +273,7 @@ uint32_t StringToFontFlags(const char* string) {
     return flags;
 }
 
-// OFFSET: %0x004FF9D0
+// OFFSET: 0x004EF400/0x140133A20
 const char* FontFlagsToString(uint32_t flags) {
     s_fontFlagsString[0] = '\0';
 
@@ -290,7 +290,7 @@ const char* FontFlagsToString(uint32_t flags) {
     return s_fontFlagsString;
 }
 
-// OFFSET: %0x004FF410
+// OFFSET: 0x004EEE30
 int32_t StringToSmoothWeights(const char* string, float& in, float& out) {
     for (uint32_t i = 0; i < sizeof(s_smoothWeights) / sizeof(s_smoothWeights[0]); i++) {
         if (!SStrCmpI(s_smoothWeights[i].m_name, string, STORM_MAX_STR)) {
@@ -303,7 +303,7 @@ int32_t StringToSmoothWeights(const char* string, float& in, float& out) {
     return 0;
 }
 
-// OFFSET: %0x004FF470
+// OFFSET: 0x004EEE90/0x140133490
 int32_t StringToLoopType(const char* string, SimpleAnimLoopType& loop) {
     for (uint32_t i = 0; i < sizeof(s_loopTypes) / sizeof(s_loopTypes[0]); i++) {
         if (!SStrCmpI(s_loopTypes[i].m_name, string, STORM_MAX_STR)) {
@@ -326,7 +326,7 @@ const char* LoopTypeToString(SimpleAnimLoopType loop) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF4F0
+// OFFSET: 0x004EEF10/0x140133540
 const char* LoopStateToString(SimpleAnimLoopState state) {
     for (uint32_t i = 0; i < sizeof(s_loopStates) / sizeof(s_loopStates[0]); i++) {
         if (state == s_loopStates[i].m_value) {
@@ -337,7 +337,7 @@ const char* LoopStateToString(SimpleAnimLoopState state) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF520
+// OFFSET: 0x004EEF40/0x140133580
 int32_t StringToCurveType(const char* string, SimpleAnimCurveType& curve) {
     for (uint32_t i = 0; i < sizeof(s_curveTypes) / sizeof(s_curveTypes[0]); i++) {
         if (!SStrCmpI(s_curveTypes[i].m_name, string, STORM_MAX_STR)) {
@@ -360,7 +360,7 @@ const char* CurveTypeToString(SimpleAnimCurveType curve) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FF5A0
+// OFFSET: 0x004EEFD0/0x140133630
 static int32_t StringToBOOL(const char* string, int32_t defaultValue) {
     if (!string) {
         return defaultValue;
@@ -407,7 +407,7 @@ int32_t StringToBOOL(const char* string) {
     return StringToBOOL(string, 0);
 }
 
-// OFFSET: %0x004FF690
+// OFFSET: 0x004EF0C0/0x140133750
 int32_t StringToBOOL(lua_State* L, int32_t index, int32_t defaultValue) {
     switch (lua_type(L, index)) {
         case LUA_TNIL:
@@ -427,7 +427,7 @@ int32_t StringToBOOL(lua_State* L, int32_t index, int32_t defaultValue) {
     }
 }
 
-// OFFSET: %0x004FFA90
+// OFFSET: 0x004EF4C0/0x140133420
 const char* SmoothWeightsToString(float in, float out) {
     for (uint32_t i = 0; i < sizeof(s_smoothWeights) / sizeof(s_smoothWeights[0]); i++) {
         if (fabs(in - s_smoothWeights[i].m_in) < 0.001f && fabs(out - s_smoothWeights[i].m_out) < 0.001f) {
@@ -438,7 +438,7 @@ const char* SmoothWeightsToString(float in, float out) {
     return "UNKNOWN";
 }
 
-// OFFSET: %0x004FEEB0
+// OFFSET: 0x004EE8D0
 bool Dimension::GetDimensions(float& x, float& y, CStatus* status) {
     x = this->m_x;
     y = this->m_y;
@@ -446,7 +446,7 @@ bool Dimension::GetDimensions(float& x, float& y, CStatus* status) {
     return (this->m_dimensionFlags & 3) != 0;
 }
 
-// OFFSET: %0x004FEEE0
+// OFFSET: 0x004EE900/0x140132D00
 bool Dimension::Load(float& x, float& y, CStatus* status) {
     x = this->m_x;
     y = this->m_y;
@@ -469,7 +469,7 @@ bool Dimension::Load(float& x, float& y, CStatus* status) {
     return child->GetDimensions(x, y, status);
 }
 
-// OFFSET: %0x004FEF60
+// OFFSET: 0x004EE980/0x140132DA0
 bool Value::Load(float& value, CStatus* status) {
     value = this->m_value;
 
@@ -494,7 +494,7 @@ bool Value::Load(float& value, CStatus* status) {
     return child->m_valueFlags & 1;
 }
 
-// OFFSET: %0x004FEFF0
+// OFFSET: 0x004EEA10/0x140132E40
 bool Insets::Load(float& left, float& right, float& top, float& bottom, CStatus* status) {
     left = this->m_left;
     right = this->m_right;
@@ -541,7 +541,7 @@ int32_t LoadXML_Value(linkObject* node, float& value, CStatus* status) {
     return static_cast<Value*>(node)->Load(value, status) != 0;
 }
 
-// OFFSET: %0x004FF740
+// OFFSET: 0x004EF170/0x140133830
 int32_t LoadXML_Dimensions(linkObject* node, float& x, float& y, CStatus* status) {
     return static_cast<Dimension*>(node)->Load(x, y, status);
 }
@@ -552,7 +552,7 @@ int32_t LoadXML_Insets(linkObject* node, float& left, float& right, float& top, 
     return static_cast<Insets*>(node)->Load(left, right, top, bottom, status) != 0;
 }
 
-// OFFSET: %0x004FF7A0
+// OFFSET: 0x004EF1D0/0x140133880
 CSimpleAnimGroup* LoadXML_AnimGroup(linkObject* node, CScriptRegion* region, CStatus* status) {
     CSimpleAnimGroup* group = new CSimpleAnimGroup(region);
 
@@ -578,7 +578,7 @@ bool Color::GetColor(CImVector& color, CStatus* status) {
     return this->m_colorFlags & 1;
 }
 
-// OFFSET: %0x004FF890
+// OFFSET: 0x004EF2C0
 bool Gradient::Load(ORIENTATION& orientation, CImVector& minColor, CImVector& maxColor, CStatus* status) {
     orientation = static_cast<ORIENTATION>(this->m_orientation);
 
@@ -634,7 +634,7 @@ int32_t LoadXML_AnimOrigin(linkObject* node, FRAMEPOINT& point, C2Vector& offset
     return 1;
 }
 
-// OFFSET: %0x004FFC20
+// OFFSET: 0x004EF650/0x140133C50
 CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleTexture::s_allocator.GetData(0, typeid(CSimpleTexture).raw_name(), SLOG_OBJECT);
     CSimpleTexture* texture = data ? new (data) CSimpleTexture(frame, 2, 0, 1) : NULL;
@@ -646,7 +646,7 @@ CSimpleTexture* LoadXML_Texture(linkObject* node, CSimpleFrame* frame, CStatus* 
     return texture;
 }
 
-// OFFSET: %0x004FFC90
+// OFFSET: 0x004EF6C0/0x140133CF0
 CSimpleFontString* LoadXML_String(linkObject* node, CSimpleFrame* frame, CStatus* status) {
     void* data = CSimpleFontString::s_allocator.GetData(0, typeid(CSimpleFontString).raw_name(), SLOG_OBJECT);
     CSimpleFontString* string = data ? new (data) CSimpleFontString(frame, 2, true) : NULL;
@@ -677,7 +677,7 @@ static void ProcessTocForMakeSign(MD5_CTX* md5, const char* text, const char* ba
     } while (line[0] && *current);
 }
 
-// OFFSET: %0x004FFD70
+// OFFSET: 0x004EF7A0/0x140133D90
 static void ParseManifestTag(char* tag, int32_t length, MD5_CTX* md5, const char* basePath) {
     char* end = tag + length;
     char* name = tag;
@@ -762,7 +762,7 @@ static void ParseManifestTag(char* tag, int32_t length, MD5_CTX* md5, const char
     ProcessFileForMakeSign(md5, value, basePath);
 }
 
-// OFFSET: %0x004FFED0
+// OFFSET: 0x004EF900
 static void ProcessXMLForMakeSign(char* text, uint32_t size, MD5_CTX* md5, const char* basePath) {
     char* end = text + size;
     char* current = text;
@@ -793,7 +793,7 @@ static void ProcessXMLForMakeSign(char* text, uint32_t size, MD5_CTX* md5, const
     }
 }
 
-// OFFSET: %0x004FFFC0
+// OFFSET: 0x004EF9F0/0x140134020
 int32_t ProcessFileForMakeSign(MD5_CTX* md5, const char* filename, const char* basePath) {
     char path[260];
     SStrPrintf(path, sizeof(path), "%s%s", basePath, filename);
@@ -878,7 +878,7 @@ int32_t ProcessFileForMakeSign(MD5_CTX* md5, const char* filename, const char* b
     return 1;
 }
 
-// OFFSET: %0x00500200
+// OFFSET: 0x004EFC30/0x1401343C0
 static void CalculateSignatureMD5(const char* tocFile, const char* extraFile, uint8_t* digest) {
     MD5_CTX context;
     MD5Init(&context);
@@ -895,7 +895,7 @@ static void CalculateSignatureMD5(const char* tocFile, const char* extraFile, ui
     MD5Final(digest, &context);
 }
 
-// OFFSET: %0x004FFF30
+// OFFSET: 0x004EF960/0x140133F50
 static int32_t VerifySignature(const uint8_t* data, uint32_t size, const uint8_t* modulus, const char* name) {
     if (!modulus) {
         return 0;
@@ -912,7 +912,7 @@ static int32_t VerifySignature(const uint8_t* data, uint32_t size, const uint8_t
     return SSignatureVerifyStream_Finish(token, modulus, s_signaturePublicExponent);
 }
 
-// OFFSET: %0x00500270
+// OFFSET: 0x004EFCA0/0x140134480
 int32_t FrameXML_CheckSignature(const char* tocFile, const char* extraFile, const uint8_t* modulus, uint8_t* digest) {
 #ifdef DISABLE_SIGNATURE_CHECKS
     CalculateSignatureMD5(tocFile, extraFile, digest);

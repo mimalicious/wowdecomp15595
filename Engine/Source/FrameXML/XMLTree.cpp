@@ -23,7 +23,7 @@ static void end_element(void* userData, const char* name) {
     tree->m_current = tree->m_current->m_parent;
 }
 
-// OFFSET: %0x004FE690
+// OFFSET: 0x004EBA30/0x14012EBC0
 static void handle_body(void* userData, const char* s, int len) {
     XMLNode* node = static_cast<XMLTree*>(userData)->m_current;
 
@@ -55,7 +55,7 @@ static void handle_body(void* userData, const char* s, int len) {
     node->m_body[node->m_bodyLen] = '\0';
 }
 
-// OFFSET: %0x004FE710
+// OFFSET: 0x004EBB10/0x14012ECF0
 void XMLNode::Init(XMLNode* parent, const char* name) {
     this->m_parent = parent;
     this->m_child = NULL;
@@ -102,7 +102,7 @@ const char* XMLNode::GetAttributeByName(const char* name) {
     return NULL;
 }
 
-// OFFSET: %0x004FE810
+// OFFSET: 0x004EBC10/0x14012EE30
 void XMLTree_Cleanup() {
     if (s_parser) {
         XML_ParserFree(s_parser);
@@ -117,7 +117,7 @@ void XMLTree_Cleanup() {
     }
 }
 
-// OFFSET: %0x004FE9E0
+// OFFSET: 0x004EBDE0/0x14012F0B0
 XMLNode::~XMLNode() {
     if (this->m_userData) {
         delete this->m_userData;
@@ -146,12 +146,12 @@ void XMLNode::operator delete(void* ptr) {
     XMLNode::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x004FEB50
+// OFFSET: 0x004EBF50/0x14012F2C0
 XMLNode::XMLNode(XMLNode* parent, const char* name) {
     this->Init(parent, name);
 }
 
-// OFFSET: %0x004FEB90
+// OFFSET: 0x004EBF90/0x14012F380
 static void begin_element(void* userData, const char* name, const char** atts) {
     XMLTree* tree = static_cast<XMLTree*>(userData);
     XMLNode* node = s_freeNodes;
@@ -197,7 +197,7 @@ static void begin_element(void* userData, const char* name, const char** atts) {
     }
 }
 
-// OFFSET: %0x004FEC80
+// OFFSET: 0x004EC080/0x14012F510
 void XMLNode::SetAttribute(const char* name, const char* value) {
     uint32_t count = this->m_attributes.Count();
 
@@ -213,7 +213,7 @@ void XMLNode::SetAttribute(const char* name, const char* value) {
     this->m_attributes[count].m_value.Copy(value);
 }
 
-// OFFSET: %0x004FED20
+// OFFSET: 0x004EC120/0x14012F5C0
 void XMLNode::Recycle() {
     if (this->m_userData) {
         this->m_userData->Release();
@@ -250,7 +250,7 @@ void XMLTree_Free(XMLTree* tree) {
     SMemFree(tree, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: %0x004FEDD0
+// OFFSET: 0x004EC1D0/0x14012F6A0
 XMLTree* XMLTree_Load(const char* data, uint32_t size) {
     XMLTree* tree = static_cast<XMLTree*>(SMemAlloc(sizeof(XMLTree), __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
 
@@ -279,7 +279,7 @@ XMLNode* XMLTree_GetRoot(XMLTree* tree) {
     return tree->m_root;
 }
 
-// OFFSET: %0x0065D090
+// OFFSET: 0x006621E0
 XMLNodeData::~XMLNodeData() {
 }
 

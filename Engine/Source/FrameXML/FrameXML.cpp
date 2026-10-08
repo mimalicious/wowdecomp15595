@@ -52,7 +52,7 @@ static TSHashTable<HashedNode, HASHKEY_STRI> s_virtualNodes;
 // STATIC: %0x00CC9164
 static TSHashTable<FrameFactoryNode, HASHKEY_STRI> s_factories;
 
-// OFFSET: %0x004FC1E0
+// OFFSET: 0x004EC3B0/0x14012F8D0
 XMLTree* FrameXML_LoadXML(const char* filename, MD5_CTX* md5, CStatus* status) {
     void* data;
     uint32_t size;
@@ -87,7 +87,7 @@ int32_t FrameXML_GetDebugLevel() {
     return s_debugLevel;
 }
 
-// OFFSET: %0x004FC290
+// OFFSET: 0x004EC460/0x14012F9C0
 int32_t FrameXML_GuessNumFiles(const char* toc) {
     int32_t count = 0;
     const char* current = toc;
@@ -119,67 +119,67 @@ int32_t FrameXML_GuessNumFiles(const char* toc) {
     return count;
 }
 
-// OFFSET: %0x004FC320
+// OFFSET: 0x004EC4F0
 CSimpleFrame* Create_SimpleCheckButton(CSimpleFrame* parent) {
     void* data = CSimpleCheckbox::s_allocator.GetData(0, typeid(CSimpleCheckbox).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleCheckbox(parent) : NULL;
 }
 
-// OFFSET: %0x004FC360
+// OFFSET: 0x004EC530
 CSimpleFrame* Create_SimpleEditBox(CSimpleFrame* parent) {
     void* data = CSimpleEditBox::s_allocator.GetData(0, typeid(CSimpleEditBox).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleEditBox(parent) : NULL;
 }
 
-// OFFSET: %0x004FC3A0
+// OFFSET: 0x004EC570
 CSimpleFrame* Create_SimpleMessageFrame(CSimpleFrame* parent) {
     void* data = CSimpleMessageFrame::s_allocator.GetData(0, typeid(CSimpleMessageFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMessageFrame(parent) : NULL;
 }
 
-// OFFSET: %0x004FC3E0
+// OFFSET: 0x004EC5B0
 CSimpleFrame* Create_SimpleModel(CSimpleFrame* parent) {
     void* data = CSimpleModel::s_allocator.GetData(0, typeid(CSimpleModel).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleModel(parent) : NULL;
 }
 
-// OFFSET: %0x004FC420
+// OFFSET: 0x004EC5F0
 CSimpleFrame* Create_SimpleScrollFrame(CSimpleFrame* parent) {
     void* data = CSimpleScrollFrame::s_allocator.GetData(0, typeid(CSimpleScrollFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleScrollFrame(parent) : NULL;
 }
 
-// OFFSET: %0x004FC460
+// OFFSET: 0x004EC630
 CSimpleFrame* Create_SimpleScrollingMessageFrame(CSimpleFrame* parent) {
     void* data = CSimpleMessageScrollFrame::s_allocator.GetData(0, typeid(CSimpleMessageScrollFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMessageScrollFrame(parent, 8) : NULL;
 }
 
-// OFFSET: %0x004FC4A0
+// OFFSET: 0x004EC670
 CSimpleFrame* Create_SimpleSlider(CSimpleFrame* parent) {
     void* data = CSimpleSlider::s_allocator.GetData(0, typeid(CSimpleSlider).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleSlider(parent) : NULL;
 }
 
-// OFFSET: %0x004FC4E0
+// OFFSET: 0x004EC6B0
 CSimpleFrame* Create_SimpleHTML(CSimpleFrame* parent) {
     void* data = CSimpleHTML::s_allocator.GetData(0, typeid(CSimpleHTML).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleHTML(parent) : NULL;
 }
 
-// OFFSET: %0x004FC520
+// OFFSET: 0x004EC6F0
 CSimpleFrame* Create_SimpleStatusBar(CSimpleFrame* parent) {
     void* data = CSimpleStatusBar::s_allocator.GetData(0, typeid(CSimpleStatusBar).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleStatusBar(parent) : NULL;
 }
 
-// OFFSET: %0x004FC560
+// OFFSET: 0x004EC730
 CSimpleFrame* Create_SimpleColorSelect(CSimpleFrame* parent) {
     void* data = CSimpleColorSelect::s_allocator.GetData(0, typeid(CSimpleColorSelect).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleColorSelect(parent) : NULL;
 }
 
-// OFFSET: %0x004FC5A0
+// OFFSET: 0x004EC770
 CSimpleFrame* Create_SimpleMovieFrame(CSimpleFrame* parent) {
     void* data = CSimpleMovieFrame::s_allocator.GetData(0, typeid(CSimpleMovieFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleMovieFrame(parent) : NULL;
@@ -194,24 +194,24 @@ void FrameXML_RegisterLoadProgressCallback(void (*callback)(float progress, void
     s_progressTotal = total;
 }
 
-// OFFSET: %0x004FC2E0
+// OFFSET: 0x004EC4B0
 CSimpleFrame* Create_SimpleButton(CSimpleFrame* parent) {
     void* data = CSimpleButton::s_allocator.GetData(0, typeid(CSimpleButton).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleButton(parent) : NULL;
 }
 
-// OFFSET: %0x004FC690
+// OFFSET: 0x004EC860
 CSimpleFrame* Create_SimpleFrame(CSimpleFrame* parent) {
     void* data = CSimpleFrame::s_allocator.GetData(0, typeid(CSimpleFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleFrame(parent) : NULL;
 }
 
-// OFFSET: %0x004FCA80
+// OFFSET: 0x004ECFE0
 void FrameXML_FreeHashNodes() {
     s_virtualNodes.InternalClear(0);
 }
 
-// OFFSET: %0x004FCA90
+// OFFSET: 0x004ECFF0
 void FrameXML_ClearFactories() {
     s_factories.InternalClear(0);
     XMLTree_Cleanup();
@@ -227,7 +227,7 @@ XMLHashNodeRef::XMLHashNodeRef() {
     this->m_node = NULL;
 }
 
-// OFFSET: %0x004FCE10
+// OFFSET: 0x004ECCE0/0x140130040
 linkObject* XMLHashNodeRef::Acquire(const char* name) {
     this->m_locked = true;
     SStrCopy(this->m_name, name, sizeof(this->m_name));
@@ -247,7 +247,7 @@ linkObject* XMLHashNodeRef::Acquire(const char* name) {
     return this->m_node;
 }
 
-// OFFSET: %0x004FCE80
+// OFFSET: 0x004ECD50
 XMLHashNodeRef::~XMLHashNodeRef() {
     if (!this->m_node) {
         return;
@@ -260,12 +260,12 @@ XMLHashNodeRef::~XMLHashNodeRef() {
     this->m_node = NULL;
 }
 
-// OFFSET: %0x004FCBD0
+// OFFSET: 0x004EC9E0/0x1401300A0
 void FrameXML_ReleaseHashNode(const char* name) {
     s_virtualNodes.Ptr(name)->m_locked = false;
 }
 
-// OFFSET: %0x0087E570
+// OFFSET: 0x009240C0
 void CFrameXMLStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     char buffer[512];
 
@@ -277,7 +277,7 @@ void CFrameXMLStatus::Add(STATUS_TYPE severity, const char* format, ...) {
     DebugLog(buffer);
 }
 
-// OFFSET: %0x004FCEB0
+// OFFSET: 0x004ECD80
 const char* FindParent(const Frame* frame) {
     if (frame->m_frameFlags & 0x400000) {
         return frame->m_parent.m_string;
@@ -315,7 +315,7 @@ const char* FindParent(const Frame* frame) {
     }
 }
 
-// OFFSET: %0x004FCFC0
+// OFFSET: 0x004ECE90/0x1401306D0
 CSimpleFrame* FrameXML_CreateFrame(linkObject* node, CSimpleFrame* parent, CStatus* status) {
     if (s_debugLevel > 0) {
         if (node->m_flags & 0x1000000) {
@@ -364,7 +364,7 @@ CSimpleFrame* FrameXML_CreateFrame(linkObject* node, CSimpleFrame* parent, CStat
     return frame;
 }
 
-// OFFSET: %0x004FDB60
+// OFFSET: 0x004EDD80
 bool FrameXML_StoreHashNode(linkObject* node, const char* name, const char* taint, CStatus* status) {
     HashedNode* hashed = s_virtualNodes.Ptr(name);
 
@@ -391,7 +391,7 @@ bool FrameXML_StoreHashNode(linkObject* node, const char* name, const char* tain
     return true;
 }
 
-// OFFSET: %0x004FDCA0
+// OFFSET: 0x004EDEC0/0x140131EF0
 int32_t FrameXML_RegisterFactory(const char* name, CSimpleFrame* (*factory)(CSimpleFrame* parent), bool unique) {
     if (s_factories.Ptr(name)) {
         return 0;
@@ -441,7 +441,7 @@ static void MakeRelativePath(char* dest, const char* filename, const char* file)
     }
 }
 
-// OFFSET: %0x004FDE70
+// OFFSET: 0x004EE0A0/0x140132240
 int32_t FrameXML_ProcessFile(const char* filename, const char* wrapper, MD5_CTX* md5, CStatus* status) {
     char cleanPath[260];
 
@@ -570,7 +570,7 @@ int32_t FrameXML_ProcessFile(const char* filename, const char* wrapper, MD5_CTX*
     return 1;
 }
 
-// OFFSET: %0x004FE3A0
+// OFFSET: 0x004EE5D0/0x140132990
 int32_t FrameXML_CreateFrames(const char* tocFile, const char* wrapper, MD5_CTX* md5, CStatus* status) {
     if (!status) {
         status = &s_frameXMLStatus;

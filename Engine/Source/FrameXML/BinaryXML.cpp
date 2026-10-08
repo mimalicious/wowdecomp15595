@@ -26,7 +26,7 @@ MemBlock::~MemBlock() {
     }
 }
 
-// OFFSET: %0x00500950
+// OFFSET: 0x004F0350/0x140134AE0
 bool MemBlock::Advance() {
     if (!this->m_block || this->m_end < this->m_cur + 0x4000) {
         void* block = SMemAlloc(0x8000, __FILE__, __LINE__, 0);
@@ -40,7 +40,7 @@ bool MemBlock::Advance() {
     return true;
 }
 
-// OFFSET: %0x005008F0
+// OFFSET: 0x004F02F0/0x140134A60
 bool MemBlock::Reserve(uint32_t bytes) {
     if (!this->m_strings || bytes > static_cast<uint32_t>(this->m_stringsEnd - this->m_strings)) {
         void* block = SMemAlloc(0x8000, __FILE__, __LINE__, 0);
@@ -52,7 +52,7 @@ bool MemBlock::Reserve(uint32_t bytes) {
     return true;
 }
 
-// OFFSET: %0x004FC0E0
+// OFFSET: 0x004EC2B0
 bool linkObject::RelocateStrings(char*& dest) {
     for (int32_t offset = this->m_strings; offset; ) {
         XMLString* string = reinterpret_cast<XMLString*>(reinterpret_cast<char*>(this) + offset);
@@ -66,7 +66,7 @@ bool linkObject::RelocateStrings(char*& dest) {
     return true;
 }
 
-// OFFSET: %0x004FC140
+// OFFSET: 0x004EC310
 bool linkObject::Relocate(char*& dest) {
     char* self = dest;
     dest += this->m_size;
@@ -97,7 +97,7 @@ void FrameXML_FreeCompiled(linkObject* node, bool force) {
     }
 }
 
-// OFFSET: %0x004FC630
+// OFFSET: 0x004EC800
 uint32_t linkObject::CalculateSize() {
     uint32_t strings = 0;
 
@@ -116,7 +116,7 @@ uint32_t linkObject::CalculateSize() {
     return strings + children + this->m_size;
 }
 
-// OFFSET: %0x004FC6D0
+// OFFSET: 0x004EC8A0
 linkObject* linkObject::Compile(uint32_t& size) {
     size = this->CalculateSize();
 
@@ -154,7 +154,7 @@ linkObject* linkObject::GetChild(uint32_t element) {
     return NULL;
 }
 
-// OFFSET: %0x00500540
+// OFFSET: 0x004EFF40/0x140134770
 void linkObject::Recycle(bool force) {
     if ((this->m_flags & 1) && !force) {
         return;
@@ -178,7 +178,7 @@ void linkObject::Recycle(bool force) {
     }
 }
 
-// OFFSET: %0x005009C0
+// OFFSET: 0x004F03C0/0x140134B70
 bool linkObject::AddString(MemBlock& block, XMLString& field, const char* string) {
     uint32_t length = (strlen(string) + 4) & ~3u;
     block.Reserve(length);
@@ -191,7 +191,7 @@ bool linkObject::AddString(MemBlock& block, XMLString& field, const char* string
     return true;
 }
 
-// OFFSET: %0x00500A20
+// OFFSET: 0x004F0420/0x140134C00
 bool linkObject::parse(MemBlock& block) {
     this->AddString(block, this->m_type, this->m_xml->m_name.m_str);
 
@@ -221,7 +221,7 @@ bool linkObject::parse(MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00500AE0
+// OFFSET: 0x004F04E0/0x140134CE0
 bool linkObject::dochildren(XMLChildFunc func, MemBlock& block) {
     linkObject** tail = &this->m_child;
 
@@ -285,7 +285,7 @@ bool Function::parse(MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00500D10
+// OFFSET: 0x004F0710/0x140134F80
 static bool Script_parse(Script* node, MemBlock& block) {
     const char* file = node->m_xml->GetAttributeByName("file");
 
@@ -414,7 +414,7 @@ static float ClampColorComponent(const char* value) {
     return 0.0f;
 }
 
-// OFFSET: %0x00500E80
+// OFFSET: 0x004F0880/0x140135160
 bool Color::parse(MemBlock& block) {
     this->m_colorFlags |= 1;
     this->m_r = 0.0f;
@@ -625,6 +625,7 @@ bool BlobFrame::parse(MemBlock& block) {
     return true;
 }
 
+// OFFSET: [0x004F0F70<51, 8>, 0x004F0FA0<52, 8>, 0x004F0FD0<53, 8>, 0x004F1000<54, 8>, 0x004F1030<139, 16>, 0x004F1060<60, 8>, 0x004F1090<63, 2>, 0x004F10C0<66, 4>, 0x004F10F0<67, 4>]
 template <uint32_t ELEMENT, uint32_t SIGNATURE>
 static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     Function* function = static_cast<Function*>(node);
@@ -637,6 +638,7 @@ static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     return true;
 }
 
+// OFFSET: [0x004F1730<25>, 0x004F1760<46>, 0x004F1790<2>, 0x004F17C0<3>, 0x004F17F0<4>, 0x004F1820<5>, 0x004F1850<47>, 0x004F1880<48>, 0x004F18B0<49>, 0x004F18E0<50>, 0x004F1910<61>, 0x004F1940<62>, 0x004F1970<64>, 0x004F19A0<65>, 0x004F19D0<68>, 0x004F1A00<69>, 0x004F1A30<70>, 0x004F1A60<135>, 0x004F1A90<136>, 0x004F1AC0<137>, 0x004F1AF0<138>, 0x004F1B20<140>, 0x004F1B50<40>, 0x004F1B80<41>, 0x004F1BB0<42>, 0x004F1BE0<43>, 0x004F1C10<44>, 0x004F1C40<19>, 0x004F1C70<20>, 0x004F1CA0<21>, 0x004F1CD0<7>, 0x004F1D00<8>, 0x004F1D30<9>, 0x004F1D60<10>, 0x004F1D90<11>, 0x004F1DC0<12>, 0x004F1DF0<13>, 0x004F1E20<14>, 0x004F1E50<15>, 0x004F1E80<16>, 0x004F1EB0<17>, 0x004F1EE0<6>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     Function* function = static_cast<Function*>(node);
@@ -647,7 +649,7 @@ static bool AdvanceAndParseScript(linkObject* node, MemBlock& block) {
     return function->parse(block);
 }
 
-// OFFSET: %0x005015E0
+// OFFSET: 0x004F1120/0x140135B60
 static bool Origin_parse(linkObject* node, MemBlock& block) {
     Origin* origin = static_cast<Origin*>(node);
     origin->m_element = XML_ORIGIN;
@@ -665,7 +667,7 @@ static bool Origin_parse(linkObject* node, MemBlock& block) {
     return origin->parse(block);
 }
 
-// OFFSET: %0x00501640
+// OFFSET: 0x004F1180/0x140135BE0
 static bool RelValue_parse(linkObject* node, MemBlock& block) {
     Value* value = static_cast<Value*>(node);
     value->m_element = XML_RELVALUE;
@@ -684,7 +686,7 @@ static bool RelValue_parse(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x005016A0
+// OFFSET: 0x004F11E0
 static bool BackdropColor_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_COLOR;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Color);
@@ -692,7 +694,7 @@ static bool BackdropColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: %0x005016C0
+// OFFSET: 0x004F1200/0x140135C50
 static bool Include_parse(linkObject* node, MemBlock& block) {
     Include* include = static_cast<Include*>(node);
     include->m_element = XML_INCLUDE;
@@ -711,7 +713,7 @@ static bool Include_parse(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00501710
+// OFFSET: 0x004F1250
 static bool BlobFrame_advance(linkObject* node, MemBlock& block) {
     BlobFrame* frame = static_cast<BlobFrame*>(node);
     frame->m_regionType = XML_BLOBFRAME;
@@ -720,7 +722,7 @@ static bool BlobFrame_advance(linkObject* node, MemBlock& block) {
     return frame->parse(block);
 }
 
-// OFFSET: %0x00501740
+// OFFSET: 0x004F1280
 static bool QuestPOIFrame_advance(linkObject* node, MemBlock& block) {
     BlobFrame* frame = static_cast<BlobFrame*>(node);
     frame->m_regionType = XML_QUESTPOIFRAME;
@@ -732,7 +734,7 @@ static bool QuestPOIFrame_advance(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00501780
+// OFFSET: 0x004F12C0
 static bool ArchaeologyDigSiteFrame_advance(linkObject* node, MemBlock& block) {
     BlobFrame* frame = static_cast<BlobFrame*>(node);
     frame->m_regionType = XML_ARCHAEOLOGYDIGSITEFRAME;
@@ -803,7 +805,7 @@ static bool Dimensions_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00501930
+// OFFSET: 0x004F1440/0x140135DD0
 static bool ControlPoints_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "controlpoint", STORM_MAX_STR)) {
         return false;
@@ -815,7 +817,7 @@ static bool ControlPoints_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<ControlPoint*>(node)->parse(block);
 }
 
-// OFFSET: %0x00501990
+// OFFSET: 0x004F14A0/0x140135E30
 static bool Val_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "absvalue", STORM_MAX_STR)) {
         node->m_element = XML_ABSVALUE;
@@ -831,7 +833,7 @@ static bool Val_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00501A40
+// OFFSET: 0x004F1550/0x140135EB0
 static bool TexCoords_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "rect", STORM_MAX_STR)) {
         return false;
@@ -865,7 +867,7 @@ static bool Insets_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00500390
+// OFFSET: 0x004F6670/0x140139C00
 static bool Frames_child(linkObject* node, MemBlock& block, char* name) {
     static_cast<Region*>(node)->m_element = XML_REGION;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Region);
@@ -873,7 +875,7 @@ static bool Frames_child(linkObject* node, MemBlock& block, char* name) {
     return Region_context(node, block, name);
 }
 
-// OFFSET: %0x00501B50
+// OFFSET: 0x004F1660/0x140135FA0
 static bool ScrollFrame_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "scrollchild", STORM_MAX_STR)) {
         return false;
@@ -887,7 +889,7 @@ static bool ScrollFrame_child(linkObject* node, MemBlock& block, char* name) {
     return node->dochildren(Frames_child, block);
 }
 
-// OFFSET: %0x00501BC0
+// OFFSET: 0x004F16D0/0x140136020
 static bool Attributes_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "attribute", STORM_MAX_STR)) {
         return false;
@@ -899,7 +901,7 @@ static bool Attributes_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Attribute*>(node)->parse(block);
 }
 
-// OFFSET: %0x00502400
+// OFFSET: 0x004F1F10
 static bool HighlightColor_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_HIGHLIGHTCOLOR;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Color);
@@ -908,7 +910,7 @@ static bool HighlightColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: %0x00502430
+// OFFSET: 0x004F1F40
 static bool DisabledFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_DISABLEDFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -916,7 +918,7 @@ static bool DisabledFont_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontStyle*>(node)->parse(block);
 }
 
-// OFFSET: %0x00502450
+// OFFSET: 0x004F1F60
 static bool NormalFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_NORMALFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -924,7 +926,7 @@ static bool NormalFont_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontStyle*>(node)->parse(block);
 }
 
-// OFFSET: %0x00502470
+// OFFSET: 0x004F1F80
 static bool HighlightFont_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_HIGHLIGHTFONT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontStyle);
@@ -932,7 +934,7 @@ static bool HighlightFont_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontStyle*>(node)->parse(block);
 }
 
-// OFFSET: %0x00502490
+// OFFSET: 0x004F1FA0
 static bool NormalColor_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_NORMALCOLOR;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Color);
@@ -941,7 +943,7 @@ static bool NormalColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: %0x005024C0
+// OFFSET: 0x004F1FD0
 static bool DisabledColor_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_DISABLEDCOLOR;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Color);
@@ -950,7 +952,7 @@ static bool DisabledColor_parse(linkObject* node, MemBlock& block) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: %0x005024F0
+// OFFSET: 0x004F2000/0x140136200
 static bool Scripts_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "onclick", STORM_MAX_STR)) {
         node->m_element = XML_ONCLICK;
@@ -1187,7 +1189,7 @@ static bool Scripts_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00503410
+// OFFSET: 0x004F2F20/0x140136940
 bool TexCoords::parse(MemBlock& block) {
     const char* flip = this->m_xml->GetAttributeByName("flip");
 
@@ -1244,7 +1246,7 @@ bool TexCoords::parse(MemBlock& block) {
     return this->dochildren(TexCoords_child, block);
 }
 
-// OFFSET: %0x00503530
+// OFFSET: 0x004F3040/0x140136AA0
 static bool Gradient_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "mincolor", STORM_MAX_STR)) {
         node->m_element = XML_MINCOLOR;
@@ -1265,7 +1267,7 @@ static bool Gradient_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x005035E0
+// OFFSET: 0x004F30F0/0x140136B20
 static bool Model_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "fogcolor", STORM_MAX_STR)) {
         return false;
@@ -1278,7 +1280,7 @@ static bool Model_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Color*>(node)->parse(block);
 }
 
-// OFFSET: %0x00503640
+// OFFSET: 0x004F3150
 static bool ScrollFrame_advance(linkObject* node, MemBlock& block) {
     Frame* frame = static_cast<Frame*>(node);
     frame->m_regionType = XML_SCROLLFRAME;
@@ -1289,7 +1291,7 @@ static bool ScrollFrame_advance(linkObject* node, MemBlock& block) {
     return frame->dochildren(ScrollFrame_child, block);
 }
 
-// OFFSET: %0x00503680
+// OFFSET: 0x004F3190/0x140136BD0
 static bool Attributes_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_ATTRIBUTES;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(linkObject);
@@ -1299,7 +1301,7 @@ static bool Attributes_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Attributes_child, block);
 }
 
-// OFFSET: %0x005036C0
+// OFFSET: 0x004F31D0/0x140136C20
 static bool Path_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "controlpoints", STORM_MAX_STR)) {
         return false;
@@ -1330,12 +1332,13 @@ bool Gradient::parse(MemBlock& block) {
     return this->dochildren(Gradient_child, block);
 }
 
+// OFFSET: [0x004F32A0<158>, 0x004F32F0<159>, 0x004F3480<89>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseDimension(linkObject* node, MemBlock& block) {
     Dimension* dimension = static_cast<Dimension*>(node);
     dimension->m_element = ELEMENT;
     block.m_cur = reinterpret_cast<char*>(dimension) + sizeof(Dimension);
-    dimension->m_size = sizeof(Dimension);
+    dimension->m_size = block.m_cur - reinterpret_cast<char*>(dimension);
     dimension->m_size = block.m_cur - reinterpret_cast<char*>(dimension);
     dimension->m_size = block.m_cur - reinterpret_cast<char*>(dimension);
     dimension->parseAbsolute(block);
@@ -1343,7 +1346,7 @@ static bool AdvanceAndParseDimension(linkObject* node, MemBlock& block) {
     return dimension->dochildren(Dimensions_child, block);
 }
 
-// OFFSET: %0x00503830
+// OFFSET: 0x004F3340
 static bool Offset_parse(linkObject* node, MemBlock& block) {
     Dimension* dimension = static_cast<Dimension*>(node);
     dimension->m_element = XML_OFFSET;
@@ -1355,7 +1358,7 @@ static bool Offset_parse(linkObject* node, MemBlock& block) {
     return dimension->dochildren(Dimensions_child, block);
 }
 
-// OFFSET: %0x00503870
+// OFFSET: 0x004F3380/0x140136D20
 static bool Scripts_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_SCRIPTS;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(linkObject);
@@ -1365,31 +1368,33 @@ static bool Scripts_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Scripts_child, block);
 }
 
+// OFFSET: [0x004F33C0/0x140136D70<92>, 0x004F3400<151>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseValue(linkObject* node, MemBlock& block) {
     Value* value = static_cast<Value*>(node);
     value->m_element = ELEMENT;
     block.m_cur = reinterpret_cast<char*>(value) + sizeof(Value);
-    value->m_size = sizeof(Value);
+    value->m_size = block.m_cur - reinterpret_cast<char*>(value);
     value->m_size = block.m_cur - reinterpret_cast<char*>(value);
     value->parseAbsolute(block);
 
     return value->dochildren(Val_child, block);
 }
 
+// OFFSET: [0x004F3440<152>, 0x004F34C0/0x140136E60<31>]
 template <uint32_t ELEMENT>
 static bool AdvanceAndParseInsets(linkObject* node, MemBlock& block) {
     Insets* insets = static_cast<Insets*>(node);
     insets->m_element = ELEMENT;
     block.m_cur = reinterpret_cast<char*>(insets) + sizeof(Insets);
-    insets->m_size = sizeof(Insets);
+    insets->m_size = block.m_cur - reinterpret_cast<char*>(insets);
     insets->m_size = block.m_cur - reinterpret_cast<char*>(insets);
     insets->parseAbsolute(block);
 
     return insets->dochildren(Insets_child, block);
 }
 
-// OFFSET: %0x005039F0
+// OFFSET: 0x004F3500/0x140136EB0
 static bool ResizeBounds_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "minresize", STORM_MAX_STR)) {
         return AdvanceAndParseDimension<XML_MINRESIZE>(node, block);
@@ -1402,7 +1407,7 @@ static bool ResizeBounds_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00503A90
+// OFFSET: 0x004F35A0/0x140136F50
 static bool Anchor_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "offset", STORM_MAX_STR)) {
         return false;
@@ -1418,7 +1423,7 @@ static bool Anchor_child(linkObject* node, MemBlock& block, char* name) {
     return dimension->dochildren(Dimensions_child, block);
 }
 
-// OFFSET: %0x00503B10
+// OFFSET: 0x004F3620/0x140136FD0
 static bool Animation_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "scripts", STORM_MAX_STR)) {
         node->m_element = XML_SCRIPTS;
@@ -1436,7 +1441,7 @@ static bool Animation_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00503BD0
+// OFFSET: 0x004F36E0/0x140137070
 static bool Shadow_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "color", STORM_MAX_STR)) {
         node->m_element = XML_COLOR;
@@ -1472,7 +1477,7 @@ static bool Texture_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00503D30
+// OFFSET: 0x004F3840/0x1401371B0
 static bool Backdrop_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "edgesize", STORM_MAX_STR)) {
         Value* value = static_cast<Value*>(node);
@@ -1508,7 +1513,7 @@ static bool Backdrop_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00503ED0
+// OFFSET: 0x004F3C90/0x140137670
 static bool Path_parse(linkObject* node, MemBlock& block) {
     PathAnimation* path = static_cast<PathAnimation*>(node);
     path->m_element = XML_PATH;
@@ -1556,7 +1561,7 @@ bool Anchor::parse(MemBlock& block) {
     return this->dochildren(Anchor_child, block);
 }
 
-// OFFSET: %0x00503FE0
+// OFFSET: 0x004F3A90/0x1401373C0
 bool Animation::parse(MemBlock& block) {
     this->m_flags |= 0x2000;
 
@@ -1688,7 +1693,7 @@ bool VectorAnimation::parseScale(MemBlock& block) {
     return this->Animation::parse(block);
 }
 
-// OFFSET: %0x00504270
+// OFFSET: 0x004F3D60/0x140137790
 bool Backdrop::parse(MemBlock& block) {
     const char* bgFile = this->m_xml->GetAttributeByName("bgFile");
 
@@ -1729,7 +1734,7 @@ bool Backdrop::parse(MemBlock& block) {
     return this->dochildren(Backdrop_child, block);
 }
 
-// OFFSET: %0x00504340
+// OFFSET: 0x004F3E30/0x1401378B0
 static bool Alpha_parse(linkObject* node, MemBlock& block) {
     AlphaAnimation* alpha = static_cast<AlphaAnimation*>(node);
     alpha->m_element = XML_ALPHA;
@@ -1747,7 +1752,7 @@ static bool Alpha_parse(linkObject* node, MemBlock& block) {
     return alpha->Animation::parse(block);
 }
 
-// OFFSET: %0x00504390
+// OFFSET: 0x004F3E80
 static bool Translation_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_TRANSLATION;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(VectorAnimation);
@@ -1755,7 +1760,7 @@ static bool Translation_parse(linkObject* node, MemBlock& block) {
     return static_cast<VectorAnimation*>(node)->parseTranslation(block);
 }
 
-// OFFSET: %0x005043B0
+// OFFSET: 0x004F3EA0
 static bool Rotation_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_ROTATION;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(VectorAnimation);
@@ -1763,7 +1768,7 @@ static bool Rotation_parse(linkObject* node, MemBlock& block) {
     return static_cast<VectorAnimation*>(node)->parseRotation(block);
 }
 
-// OFFSET: %0x005043D0
+// OFFSET: 0x004F3EC0
 static bool Scale_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_SCALE;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(VectorAnimation);
@@ -1771,7 +1776,7 @@ static bool Scale_parse(linkObject* node, MemBlock& block) {
     return static_cast<VectorAnimation*>(node)->parseScale(block);
 }
 
-// OFFSET: %0x005043F0
+// OFFSET: 0x004F3F00/0x140137920
 static bool Anchors_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "anchor", STORM_MAX_STR)) {
         return false;
@@ -1783,7 +1788,7 @@ static bool Anchors_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Anchor*>(node)->parse(block);
 }
 
-// OFFSET: %0x00504450
+// OFFSET: 0x004F3F60/0x140137980
 static bool AnimationGroup_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "animation", STORM_MAX_STR)) {
         node->m_element = XML_ANIMATION;
@@ -1824,7 +1829,7 @@ static bool AnimationGroup_child(linkObject* node, MemBlock& block, char* name) 
     return false;
 }
 
-// OFFSET: %0x00504670
+// OFFSET: 0x004F4180/0x140137B10
 static bool Font_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "color", STORM_MAX_STR)) {
         node->m_element = XML_COLOR;
@@ -1849,7 +1854,7 @@ static bool Font_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00504780
+// OFFSET: 0x004F4290/0x140137BD0
 bool AnimationGroup::parse(MemBlock& block) {
     const char* parentKey = this->m_xml->GetAttributeByName("parentKey");
 
@@ -1885,7 +1890,7 @@ bool AnimationGroup::parse(MemBlock& block) {
     return this->dochildren(AnimationGroup_child, block);
 }
 
-// OFFSET: %0x00504840
+// OFFSET: 0x004F4380/0x140137CF0
 bool Font::parseFont(MemBlock& block) {
     this->m_flags |= 0x4000;
 
@@ -1951,7 +1956,7 @@ bool Font::parseFont(MemBlock& block) {
     return this->dochildren(Font_child, block);
 }
 
-// OFFSET: %0x005049C0
+// OFFSET: 0x004F4500/0x140137EC0
 bool Region::parseLayout(MemBlock& block) {
     const char* preload = this->m_xml->GetAttributeByName("preload");
 
@@ -1972,7 +1977,7 @@ bool Region::parseLayout(MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00504A50
+// OFFSET: 0x004F4590/0x140137F70
 static bool Animations_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "animationgroup", STORM_MAX_STR)) {
         return false;
@@ -1984,7 +1989,7 @@ static bool Animations_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<AnimationGroup*>(node)->parse(block);
 }
 
-// OFFSET: %0x00504AB0
+// OFFSET: 0x004F45F0/0x140137FD0
 static bool Animations_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_ANIMATIONS;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(linkObject);
@@ -1994,7 +1999,7 @@ static bool Animations_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Animations_child, block);
 }
 
-// OFFSET: %0x00504AF0
+// OFFSET: 0x004F4630/0x140138020
 static bool Region_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "size", STORM_MAX_STR)) {
         return AdvanceAndParseDimension<XML_SIZE>(node, block);
@@ -2016,7 +2021,7 @@ static bool Region_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00504C20
+// OFFSET: 0x004F4760/0x140138100
 bool Region::parse(MemBlock& block) {
     this->m_flags |= 0x10;
 
@@ -2054,7 +2059,7 @@ bool Region::parse(MemBlock& block) {
     return this->dochildren(Region_child, block);
 }
 
-// OFFSET: %0x00504D10
+// OFFSET: 0x004F4850/0x140138230
 bool Texture::parse(MemBlock& block) {
     this->m_textureFlags &= 0xFFFE9FFF;
     this->m_flags |= 0x8000;
@@ -2147,7 +2152,7 @@ bool Texture::parse(MemBlock& block) {
     return this->dochildren(Texture_child, block);
 }
 
-// OFFSET: %0x00504F60
+// OFFSET: 0x004F4AA0/0x140138530
 bool FontString::parse(MemBlock& block) {
     this->m_flags |= 0x10000;
 
@@ -2206,7 +2211,7 @@ bool FontString::parse(MemBlock& block) {
     return this->Region::parse(block);
 }
 
-// OFFSET: %0x005050B0
+// OFFSET: 0x004F4BF0
 static bool LayerFontString_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_FONTSTRING;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontString);
@@ -2214,7 +2219,7 @@ static bool LayerFontString_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontString*>(node)->parse(block);
 }
 
-// OFFSET: %0x005050E0
+// OFFSET: 0x004F4C20
 static bool Texture_advance(linkObject* node, MemBlock& block) {
     Texture* texture = static_cast<Texture*>(node);
     texture->m_regionType = XML_TEXTURE;
@@ -2223,7 +2228,7 @@ static bool Texture_advance(linkObject* node, MemBlock& block) {
     return texture->parse(block);
 }
 
-// OFFSET: %0x00505110
+// OFFSET: 0x004F4C50
 static bool FontString_advance(linkObject* node, MemBlock& block) {
     FontString* string = static_cast<FontString*>(node);
     string->m_regionType = XML_FONTSTRING;
@@ -2232,7 +2237,7 @@ static bool FontString_advance(linkObject* node, MemBlock& block) {
     return string->parse(block);
 }
 
-// OFFSET: %0x00505140
+// OFFSET: 0x004F4C80/0x1401386D0
 static bool EditBox_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "textinsets", STORM_MAX_STR)) {
         Insets* insets = static_cast<Insets*>(node);
@@ -2263,7 +2268,7 @@ static bool EditBox_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00505260
+// OFFSET: 0x004F4DA0
 static bool ColorValueThumbTexture_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_COLORVALUETHUMBTEXTURE;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Texture);
@@ -2272,7 +2277,7 @@ static bool ColorValueThumbTexture_parse(linkObject* node, MemBlock& block) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x00505290
+// OFFSET: 0x004F4DD0
 static bool HighlightTexture_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_HIGHLIGHTTEXTURE;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(Texture);
@@ -2281,7 +2286,7 @@ static bool HighlightTexture_parse(linkObject* node, MemBlock& block) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x005052C0
+// OFFSET: 0x004F4E00
 static bool ButtonText_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_BUTTONTEXT;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(FontString);
@@ -2290,7 +2295,7 @@ static bool ButtonText_parse(linkObject* node, MemBlock& block) {
     return static_cast<FontString*>(node)->parse(block);
 }
 
-// OFFSET: %0x005052F0
+// OFFSET: 0x004F4E30/0x1401387C0
 static bool FontStrings_child(linkObject* node, MemBlock& block, char* name) {
     uint32_t element;
 
@@ -2315,7 +2320,7 @@ static bool FontStrings_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<FontString*>(node)->parse(block);
 }
 
-// OFFSET: %0x00505420
+// OFFSET: 0x004F4F60/0x140138890
 static bool Layer_child(linkObject* node, MemBlock& block, char* name) {
     if (FontStrings_child(node, block, name)) {
         return true;
@@ -2331,7 +2336,7 @@ static bool Layer_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x005054A0
+// OFFSET: 0x004F4FE0/0x140138920
 static bool ColorSelect_child(linkObject* node, MemBlock& block, char* name) {
     uint32_t element;
 
@@ -2356,7 +2361,7 @@ static bool ColorSelect_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x005055D0
+// OFFSET: 0x004F5110/0x1401389D0
 static bool Slider_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "thumbtexture", STORM_MAX_STR)) {
         return false;
@@ -2369,7 +2374,7 @@ static bool Slider_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x00505630
+// OFFSET: 0x004F5170/0x140138A30
 static bool StatusBar_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "bartexture", STORM_MAX_STR)) {
         node->m_element = XML_BARTEXTURE;
@@ -2390,12 +2395,12 @@ static bool StatusBar_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x005056F0
+// OFFSET: 0x004F5230/0x140138AD0
 static bool FontFrame_child(linkObject* node, MemBlock& block, char* name) {
     return FontStrings_child(node, block, name);
 }
 
-// OFFSET: %0x00505700
+// OFFSET: 0x004F5240/0x140138AE0
 static bool Button_child(linkObject* node, MemBlock& block, char* name) {
     uint32_t element;
 
@@ -2452,7 +2457,7 @@ static bool Button_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Texture*>(node)->parse(block);
 }
 
-// OFFSET: %0x00505A50
+// OFFSET: 0x004F5590/0x140138CE0
 static bool CheckButton_child(linkObject* node, MemBlock& block, char* name) {
     uint32_t element;
 
@@ -2579,7 +2584,7 @@ bool StatusBar::parse(MemBlock& block) {
     return this->dochildren(StatusBar_child, block);
 }
 
-// OFFSET: %0x005004A0
+// OFFSET: 0x004EFEA0/0x1401346C0
 bool Cooldown::parse(MemBlock& block) {
     this->m_flags |= 0x400000;
 
@@ -2603,7 +2608,7 @@ bool Cooldown::parse(MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00505C70
+// OFFSET: 0x004F57F0/0x140138F80
 bool MessageFrame::parse(MemBlock& block) {
     this->m_flags |= 0x200;
 
@@ -2687,7 +2692,7 @@ bool SimpleHTML::parse(MemBlock& block) {
     return this->dochildren(FontFrame_child, block);
 }
 
-// OFFSET: %0x00505E70
+// OFFSET: 0x004F59F0/0x140139160
 bool EditBox::parse(MemBlock& block) {
     this->m_flags |= 0x40;
 
@@ -2762,7 +2767,7 @@ bool EditBox::parse(MemBlock& block) {
     return this->dochildren(EditBox_child, block);
 }
 
-// OFFSET: %0x005060D0
+// OFFSET: 0x004F5C50/0x140139400
 bool Button::parse(MemBlock& block) {
     this->m_flags |= 4;
 
@@ -2793,7 +2798,7 @@ bool Button::parse(MemBlock& block) {
     return this->dochildren(Button_child, block);
 }
 
-// OFFSET: %0x005061A0
+// OFFSET: 0x004F5D20/0x1401394F0
 bool CheckButton::parse(MemBlock& block) {
     this->m_flags |= 2;
 
@@ -2810,7 +2815,7 @@ bool CheckButton::parse(MemBlock& block) {
     return this->dochildren(CheckButton_child, block);
 }
 
-// OFFSET: %0x00506210
+// OFFSET: 0x004F5D90
 static bool MessageFrame_advance(linkObject* node, MemBlock& block) {
     MessageFrame* frame = static_cast<MessageFrame*>(node);
     frame->m_regionType = XML_MESSAGEFRAME;
@@ -2819,7 +2824,7 @@ static bool MessageFrame_advance(linkObject* node, MemBlock& block) {
     return frame->parse(block);
 }
 
-// OFFSET: %0x00506240
+// OFFSET: 0x004F5DC0
 static bool ScrollingMessageFrame_advance(linkObject* node, MemBlock& block) {
     ScrollingMessageFrame* frame = static_cast<ScrollingMessageFrame*>(node);
     frame->m_regionType = XML_SCROLLINGMESSAGEFRAME;
@@ -2828,7 +2833,7 @@ static bool ScrollingMessageFrame_advance(linkObject* node, MemBlock& block) {
     return frame->parse(block);
 }
 
-// OFFSET: %0x00506270
+// OFFSET: 0x004F5DF0
 static bool StatusBar_advance(linkObject* node, MemBlock& block) {
     StatusBar* bar = static_cast<StatusBar*>(node);
     bar->m_regionType = XML_STATUSBAR;
@@ -2837,7 +2842,7 @@ static bool StatusBar_advance(linkObject* node, MemBlock& block) {
     return bar->parse(block);
 }
 
-// OFFSET: %0x005062A0
+// OFFSET: 0x004F5E20
 static bool EditBox_advance(linkObject* node, MemBlock& block) {
     EditBox* editBox = static_cast<EditBox*>(node);
     editBox->m_regionType = XML_EDITBOX;
@@ -2846,7 +2851,7 @@ static bool EditBox_advance(linkObject* node, MemBlock& block) {
     return editBox->parse(block);
 }
 
-// OFFSET: %0x005062D0
+// OFFSET: 0x004F5E50
 static bool ColorSelect_advance(linkObject* node, MemBlock& block) {
     Frame* frame = static_cast<Frame*>(node);
     frame->m_regionType = XML_COLORSELECT;
@@ -2858,7 +2863,7 @@ static bool ColorSelect_advance(linkObject* node, MemBlock& block) {
     return frame->dochildren(ColorSelect_child, block);
 }
 
-// OFFSET: %0x00506320
+// OFFSET: 0x004F5EA0
 static bool SimpleHTML_advance(linkObject* node, MemBlock& block) {
     SimpleHTML* html = static_cast<SimpleHTML*>(node);
     html->m_regionType = XML_SIMPLEHTML;
@@ -2867,7 +2872,7 @@ static bool SimpleHTML_advance(linkObject* node, MemBlock& block) {
     return html->parse(block);
 }
 
-// OFFSET: %0x00506350
+// OFFSET: 0x004F5ED0/0x140139650
 static bool Layers_child(linkObject* node, MemBlock& block, char* name) {
     if (SStrCmp(name, "layer", STORM_MAX_STR)) {
         return false;
@@ -2879,28 +2884,29 @@ static bool Layers_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Layer*>(node)->parse(block);
 }
 
+// OFFSET: [0x004F01B0<106>, 0x004F01E0<117>, 0x004F0210<100>]
 template <uint32_t TYPE>
 static bool AdvanceAndParseFrame(linkObject* node, MemBlock& block) {
     Frame* frame = static_cast<Frame*>(node);
     frame->m_regionType = TYPE;
     block.m_cur = reinterpret_cast<char*>(frame) + sizeof(Frame);
-    frame->m_size = sizeof(Frame);
+    frame->m_size = block.m_cur - reinterpret_cast<char*>(frame);
 
     return frame->parse(block);
 }
 
+// OFFSET: [0x004F0080<107>, 0x004F00B0<115>, 0x004F0240<97>]
 template <uint32_t TYPE>
 static bool AdvanceAndParseModel(linkObject* node, MemBlock& block) {
     Model* model = static_cast<Model*>(node);
     model->m_regionType = TYPE;
     block.m_cur = reinterpret_cast<char*>(model) + sizeof(Model);
-    model->m_size = sizeof(Model);
     model->m_size = block.m_cur - reinterpret_cast<char*>(model);
 
     return model->parse(block);
 }
 
-// OFFSET: %0x005005C0
+// OFFSET: 0x004EFFC0
 static bool Model_advance(linkObject* node, MemBlock& block) {
     Model* model = static_cast<Model*>(node);
     model->m_regionType = XML_MODEL;
@@ -2909,7 +2915,7 @@ static bool Model_advance(linkObject* node, MemBlock& block) {
     return model->parse(block);
 }
 
-// OFFSET: %0x005005F0
+// OFFSET: 0x004EFFF0/0x140134820
 static bool ModelFFX_advance(linkObject* node, MemBlock& block) {
     ModelFFX* model = static_cast<ModelFFX*>(node);
     model->m_regionType = XML_MODELFFX;
@@ -2929,7 +2935,7 @@ static bool ModelFFX_advance(linkObject* node, MemBlock& block) {
     return true;
 }
 
-// OFFSET: %0x00500650
+// OFFSET: 0x004F0050
 static bool Cooldown_advance(linkObject* node, MemBlock& block) {
     Cooldown* cooldown = static_cast<Cooldown*>(node);
     cooldown->m_regionType = XML_COOLDOWN;
@@ -2938,7 +2944,7 @@ static bool Cooldown_advance(linkObject* node, MemBlock& block) {
     return cooldown->parse(block);
 }
 
-// OFFSET: %0x005063B0
+// OFFSET: 0x004F5F30/0x1401396A0
 static bool Region_context(linkObject* node, MemBlock& block, const char* name) {
     if (!SStrCmp(name, "button", STORM_MAX_STR)) {
         Button* button = static_cast<Button*>(node);
@@ -3063,7 +3069,7 @@ static bool Region_context(linkObject* node, MemBlock& block, const char* name) 
     return false;
 }
 
-// OFFSET: %0x00506AF0
+// OFFSET: 0x004F66A0/0x140139C20
 static bool Ui_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "include", STORM_MAX_STR)) {
         return Include_parse(node, block);
@@ -3089,7 +3095,7 @@ static bool Ui_child(linkObject* node, MemBlock& block, char* name) {
     return Region_context(node, block, name);
 }
 
-// OFFSET: %0x00506BF0
+// OFFSET: 0x004F67A0/0x140139CF0
 linkObject* FrameXML_CompileXML_Region(XMLNode* node) {
     MemBlock block;
     block.Advance();
@@ -3112,7 +3118,7 @@ linkObject* FrameXML_CompileXML_Region(XMLNode* node) {
     return region->Compile(size);
 }
 
-// OFFSET: %0x00506CB0
+// OFFSET: 0x004F6860/0x140139E90
 static bool Layers_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_LAYERS;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(linkObject);
@@ -3122,7 +3128,7 @@ static bool Layers_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Layers_child, block);
 }
 
-// OFFSET: %0x00506CF0
+// OFFSET: 0x004F68A0/0x140139EE0
 static bool Frames_parse(linkObject* node, MemBlock& block) {
     node->m_element = XML_FRAMES;
     block.m_cur = reinterpret_cast<char*>(node) + sizeof(linkObject);
@@ -3132,7 +3138,7 @@ static bool Frames_parse(linkObject* node, MemBlock& block) {
     return node->dochildren(Frames_child, block);
 }
 
-// OFFSET: %0x00506D30
+// OFFSET: 0x004F68E0/0x140139F30
 linkObject* FrameXML_CompileXML_Ui(XMLNode* node, MemBlock& block) {
     block.Advance();
 
@@ -3149,7 +3155,7 @@ linkObject* FrameXML_CompileXML_Ui(XMLNode* node, MemBlock& block) {
     return ui;
 }
 
-// OFFSET: %0x00506D80
+// OFFSET: 0x004F6930/0x140139FB0
 static bool Frame_child(linkObject* node, MemBlock& block, char* name) {
     if (!SStrCmp(name, "titleregion", STORM_MAX_STR)) {
         Region* region = static_cast<Region*>(node);
@@ -3199,7 +3205,7 @@ static bool Frame_child(linkObject* node, MemBlock& block, char* name) {
     return false;
 }
 
-// OFFSET: %0x00507000
+// OFFSET: 0x004F6BA0/0x14013A130
 bool Frame::parse(MemBlock& block) {
     this->m_flags |= 8;
 
