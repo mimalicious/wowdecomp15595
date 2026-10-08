@@ -1,7 +1,10 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
+#include <string>
+#include <windows.h>
 #include <new>
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/BackgroundCache.h"
@@ -11,6 +14,7 @@
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFileArchives.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFileEnumerators.h"
 #include "Engine/Source/BlizzardCore/Source/System/Debug/Debug.h"
+#include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Manifests.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/RepairCache.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Streaming.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/Tracker.h"
@@ -21,6 +25,7 @@
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/Thread.h"
+#include "Engine/Source/BlizzardCore/Source/System/URL/URL.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/Hash.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/MD5.h"
@@ -1534,4 +1539,182 @@ int32_t STORMAPI SFile::FileIsLocal(const char* name) {
     SFileCloseFile(file);
 
     return result;
+}
+
+// OFFSET: 0x0079FFD0
+bool SFile::IsFileCompletelyLocal(const char* name) {
+    int64_t local;
+    int64_t total;
+    Blizzard::Streaming::GetLocalAmount(name, &local, &total);
+
+    return total > 0 && local == total;
+}
+
+// OFFSET: 0x007A4DA0
+static char* EscapeURL(const char* src, char* dst, int32_t size) {
+    char* out = dst;
+    char c = *src;
+
+    if (c) {
+        for (int32_t length = 0; length < size;) {
+            if (c == ' ') {
+                *out++ = '+';
+                length++;
+            } else if ((c > 0 && c < ' ') || c == ':' || c == '/') {
+                char escaped[4];
+                Blizzard::String::Format(escaped, sizeof(escaped), "%%%02x", c);
+
+                if (length < 5) {
+                    break;
+                }
+
+                Blizzard::String::Copy(out, escaped, sizeof(escaped));
+                length += 3;
+                out += 3;
+
+                if (c == '\n') {
+                    c = '\r';
+                    continue;
+                }
+            } else {
+                *out++ = c;
+                length++;
+            }
+
+            c = *++src;
+
+            if (!c) {
+                break;
+            }
+        }
+    }
+
+    *out = '\0';
+
+    return dst;
+}
+
+// OFFSET: 0x007A4E40
+static int32_t GetBuildFromURL(const char* url) {
+    int32_t build = -1;
+    char* copy = Blizzard::String::Duplicate(url);
+    const char* start = Blizzard::String::FindI(copy, "streaming-wow/wow-", 0x7FFFFFFF);
+
+    if (start) {
+        char* number = const_cast<char*>(start) + Blizzard::String::Length("streaming-wow/wow-");
+        char* end = const_cast<char*>(Blizzard::String::FindI(number, "-internal", 0x7FFFFFFF));
+
+        if (end) {
+            *end = '\0';
+            build = atoi(number);
+        }
+    }
+
+    Blizzard::Memory::Free(copy);
+
+    return build;
+}
+
+// OFFSET: 0x007A66F0
+System_SFile2::ReportCallback::ReportCallback() {
+    this->m_shouldBlock = false;
+    this->m_timeout = 10000;
+    Blizzard::Lock::EventCreate(this->m_event);
+}
+
+// OFFSET: [0x007A6770, 0x007A6BE0]
+System_SFile2::ReportCallback::~ReportCallback() {
+    Blizzard::Lock::EventDestroy(this->m_event);
+}
+
+// OFFSET: 0x007FD0B0
+int32_t System_SFile2::ReportCallback::GetTimeout() {
+    return this->m_timeout;
+}
+
+// OFFSET: 0x007A6760
+bool System_SFile2::ReportCallback::ShouldBlock() {
+    return this->m_shouldBlock;
+}
+
+// OFFSET: 0x007FD560
+bool System_SFile2::ReportCallback::ReceivedData(const void* data, int32_t size) {
+    this->m_data.append(static_cast<const char*>(data), size);
+    return true;
+}
+
+// OFFSET: 0x007A4D90
+void System_SFile2::ReportCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
+    Blizzard::Lock::EventSet(this->m_event);
+}
+
+// OFFSET: 0x007A67E0
+void SFile::SendBuildReport(int32_t build) {
+    System_SFile2::ReportCallback callback;
+    callback.m_shouldBlock = true;
+
+    char url[260];
+    Blizzard::String::Format(url, sizeof(url), "http://streaming.corp.blizzard.net/wowreport/buildreport.php?build=%d", build);
+    Blizzard::URL::DownloadURL(url, &callback);
+    Blizzard::Lock::EventWaitForever(callback.m_event);
+}
+
+// OFFSET: 0x007A6870
+void SFile::ReportManifestURL(const char* url) {
+    int32_t build = GetBuildFromURL(url);
+
+    if (build >= 0) {
+        SendBuildReport(build);
+    }
+}
+
+// OFFSET: 0x007A6890
+void SFile::EnableBuildReports() {
+    Blizzard::Streaming::s_processUrlFunc = ReportManifestURL;
+}
+
+// OFFSET: 0x007A7020
+static std::string GetUserNameString() {
+    char name[256];
+    DWORD size = sizeof(name);
+
+    if (!GetUserNameA(name, &size)) {
+        strcpy(name, "<unknown>");
+    }
+
+    return std::string(name);
+}
+
+// OFFSET: 0x007A70B0
+static std::string GetComputerNameString() {
+    char name[256];
+    DWORD size = sizeof(name);
+
+    if (!GetComputerNameA(name, &size)) {
+        strcpy(name, "<unknown>");
+    }
+
+    return std::string(name);
+}
+
+// OFFSET: 0x007A7140
+void STORMAPI SFile::SendErrorReport(const char* error, bool block) {
+    System_SFile2::ReportCallback callback;
+    callback.m_shouldBlock = block;
+
+    std::string computer = GetComputerNameString();
+    std::string user = GetUserNameString();
+    std::string url;
+    url.append("http://streaming.corp.blizzard.net/wowreport/report.php", 55);
+    url.append("?", 1);
+
+    char escaped[2048];
+    const char* part = Blizzard::String::QuickFormat<1024>("error=%s", EscapeURL(error, escaped, sizeof(escaped) - 1)).m_buffer;
+    url.append(part, strlen(part));
+    part = Blizzard::String::QuickFormat<1024>("&computer=%s&user=%s", computer.c_str(), user.c_str()).m_buffer;
+    url.append(part, strlen(part));
+
+    if (Blizzard::URL::DownloadURL(url.c_str(), &callback)) {
+        Blizzard::Lock::EventWaitForever(callback.m_event);
+    }
 }

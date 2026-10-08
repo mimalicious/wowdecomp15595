@@ -11,6 +11,7 @@
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Buffer.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 #include "Engine/Source/Storm/H/Types.h"
+#include "Engine/Source/BlizzardCore/Source/System/URL/URL.h"
 
 namespace Blizzard { namespace Mopaq { struct HSFILERecord; } }
 class SEvent;
@@ -64,6 +65,8 @@ class SFile {
     static char m_basePath[260];
 
     static int32_t STORMAPI CloseArchive(SArchive* archive);
+    static bool DownloadURLToBuffer(const char* url, const char* postData, uint32_t timeout, char* buffer, uint32_t size, const char** status);
+    static void EnableBuildReports();
     static void STORMAPI ConvertOggToWavInBackground(const char* name);
     static int32_t STORMAPI CreateArchive(const char* path, int32_t priority, SArchive** archive);
     static void STORMAPI CreateOverlapped(SOVERLAPPED* overlapped);
@@ -97,6 +100,7 @@ class SFile {
     static int32_t STORMAPI InitializeStreaming(const char* mfilPath, const char* dataPath);
     static int32_t STORMAPI IsArchiveComplete(SArchive* archive);
     static int32_t IsBackgroundStreamingInProgress();
+    static bool IsFileCompletelyLocal(const char* name);
     static int32_t STORMAPI IsPatchFile(const char* name);
     static int32_t STORMAPI IsPatchFile(SFileImpl* file);
     static bool IsStreamingDataReady();
@@ -113,6 +117,7 @@ class SFile {
     static int32_t STORMAPI OpenEx(SArchive* archive, const char* name, uint32_t flags, SFileImpl** result);
     static int32_t STORMAPI OpenPathAsArchive(SArchive* archive, const char* path, int32_t priority, uint32_t flags, SArchive** result);
     static void STORMAPI PauseBackgroundStreaming(bool pause);
+    static void ReportManifestURL(const char* url);
     static int32_t STORMAPI Read(SFileImpl* file, void* buffer, uint32_t count, uint32_t* bytesRead);
     static int32_t STORMAPI ReadAtPosition(SFileImpl* file, void* buffer, uint32_t offset, uint32_t count, uint32_t* bytesRead);
     static int32_t STORMAPI ReadFile(SArchive* archive, const char* name, void** data, uint32_t* size, uint32_t extra, uint32_t flags);
@@ -122,6 +127,8 @@ class SFile {
     static int32_t STORMAPI SetDataPathAlternate(const char* path);
     static int32_t STORMAPI SetFilePointer(SFileImpl* file, int32_t distance, int32_t* distanceHigh, uint32_t method);
     static void STORMAPI SetReadFatal(bool fatal);
+    static void SendBuildReport(int32_t build);
+    static void STORMAPI SendErrorReport(const char* error, bool block);
     static void SetStreamingStatus(bool mfilReady, bool dataReady, bool disabled, uint32_t build, const char* text);
     static void STORMAPI SetTrial(bool trial);
     static void ShutdownStreaming();
@@ -150,6 +157,40 @@ struct FileHashCompare {
 
 typedef std::map<std::string, FileHashEntry, FileHashCompare> FileHash;
 
+class ReportCallback : public Blizzard::URL::DownloadCallback {
+    public:
+    /* 0004 */ std::string m_data;
+    /* 0020 */ uint32_t m_timeout;
+    /* 0024 */ Blizzard::Lock::Event m_event;
+    /* 0028 */ bool m_shouldBlock;
+
+    ReportCallback();
+    ~ReportCallback();
+    int32_t GetTimeout() override;
+    bool ShouldBlock() override;
+    bool ReceivedData(const void* data, int32_t size) override;
+    void Completed(Blizzard::URL::DownloadCallback::Status status) override;
+};
+
+class BufferCallback : public Blizzard::URL::DownloadCallback {
+    public:
+    /* 0004 */ char* m_postData;
+    /* 0008 */ uint32_t m_timeout;
+    /* 000C */ Blizzard::Lock::Event m_event;
+    /* 0010 */ Blizzard::URL::DownloadCallback::Status m_status;
+    /* 0014 */ char* m_buffer;
+    /* 0018 */ uint32_t m_bufferSize;
+
+    BufferCallback();
+    ~BufferCallback();
+    int32_t GetTimeout() override;
+    bool ShouldBlock() override;
+    void WaitForCompletion() override;
+    const char* GetPostData() override;
+    bool ReceivedData(const void* data, int32_t size) override;
+    void Completed(Blizzard::URL::DownloadCallback::Status status) override;
+};
+
 struct ScanDirCookie {
     /* 0000 */ uint32_t unk_0000;
     /* 0004 */ const char* m_root;
@@ -157,6 +198,7 @@ struct ScanDirCookie {
     /* 000C */ const char* m_prefix;
 };
 
+extern const char* s_downloadStatusNames[12];
 extern bool s_trial;
 extern char s_dataPath[260];
 extern char s_dataPath2[260];

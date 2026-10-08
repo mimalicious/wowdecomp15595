@@ -1,5 +1,7 @@
 #include <cstdint>
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
+#include "Engine/Source/BlizzardCore/Source/System/URL/URL.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/String.h"
 
 struct SFileStreamingStatus {
@@ -9,6 +11,9 @@ struct SFileStreamingStatus {
     /* 0004 */ uint32_t m_build;
     /* 0008 */ char m_text[2048];
 };
+
+// STATIC: 0x00D05900
+const char* System_SFile2::s_downloadStatusNames[12] = { "noError", "genericError", "timedOut", "fileNotFound", "unmodified", "dataCallbackError", "forbiddenError", "nameResolveError", "cannotConnectError", "stopped", "badrequest", "outOfDiskSpace" };
 
 // STATIC: 0x00EB4210
 static SFileStreamingStatus s_streamingStatus;
@@ -65,4 +70,81 @@ bool SFile::IsStreamingDisabled() {
 // OFFSET: 0x007A9780/0x14049F510
 const char* SFile::GetStreamingStatusText() {
     return s_streamingStatus.m_text;
+}
+
+// OFFSET: [0x007A95C0, 0x007A97F0]
+System_SFile2::BufferCallback::~BufferCallback() {
+    Blizzard::Memory::Free(this->m_postData, 0, ".\\Streaming-Core.cpp", 90);
+    Blizzard::Lock::EventDestroy(this->m_event);
+}
+
+// OFFSET: 0x007A9630
+void System_SFile2::BufferCallback::WaitForCompletion() {
+    Blizzard::Lock::EventWaitForever(this->m_event);
+}
+
+// OFFSET: 0x007A9640
+bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size) {
+    uint32_t length = Blizzard::String::Length(this->m_buffer);
+
+    if (length + size + 1 < this->m_bufferSize) {
+        Blizzard::String::MemCopy(this->m_buffer + length, data, size);
+        this->m_buffer[length + size] = '\0';
+    }
+
+    return true;
+}
+
+// OFFSET: 0x007A9690
+void System_SFile2::BufferCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
+    this->m_status = status;
+    Blizzard::Lock::EventSet(this->m_event);
+}
+
+// OFFSET: 0x00B41A60
+int32_t System_SFile2::BufferCallback::GetTimeout() {
+    return this->m_timeout;
+}
+
+// OFFSET: 0x00A3AA30
+bool System_SFile2::BufferCallback::ShouldBlock() {
+    return true;
+}
+
+// OFFSET: 0x007B0A90
+const char* System_SFile2::BufferCallback::GetPostData() {
+    return this->m_postData;
+}
+
+// OFFSET: 0x007A9790
+System_SFile2::BufferCallback::BufferCallback() {
+    this->m_postData = NULL;
+    this->m_status = Blizzard::URL::DownloadCallback::DOWNLOAD_SUCCESS;
+    this->m_bufferSize = 0;
+    this->m_buffer = NULL;
+    this->m_timeout = 3000;
+    Blizzard::Lock::EventCreate(this->m_event);
+}
+
+// OFFSET: 0x007A9820
+bool SFile::DownloadURLToBuffer(const char* url, const char* postData, uint32_t timeout, char* buffer, uint32_t size, const char** status) {
+    System_SFile2::BufferCallback callback;
+
+    if (postData) {
+        callback.m_postData = Blizzard::String::Duplicate(postData);
+    }
+
+    callback.m_bufferSize = size;
+    callback.m_buffer = buffer;
+    *buffer = '\0';
+    callback.m_timeout = timeout;
+
+    if (!Blizzard::URL::DownloadURL(url, &callback)) {
+        *status = System_SFile2::s_downloadStatusNames[callback.m_status];
+        return false;
+    }
+
+    *status = System_SFile2::s_downloadStatusNames[callback.m_status];
+
+    return callback.m_status == Blizzard::URL::DownloadCallback::DOWNLOAD_SUCCESS;
 }
