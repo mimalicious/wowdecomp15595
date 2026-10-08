@@ -298,13 +298,15 @@ void TextureEnableAtlas(int32_t enable) {
     s_atlasEnable = enable;
 }
 
-// OFFSET: %0x00551040
+// OFFSET: 0x005417A0
 CGxTexFlags TextureMakeTexFlags(CGxTexFlags texFlags, int32_t defaultFilter) {
     if (defaultFilter) {
         texFlags.m_filter = s_filterMode;
+        texFlags.m_maxAnisotropy = texFlags.m_filter == GxTex_Anisotropic ? s_maxAnisotropy : 1;
+    } else if (texFlags.m_filter == GxTex_Anisotropic && texFlags.m_maxAnisotropy > g_theGxDevicePtr->m_caps.m_maxTexAnisotropy) {
+        texFlags.m_maxAnisotropy = g_theGxDevicePtr->m_caps.m_maxTexAnisotropy;
     }
 
-    texFlags.m_maxAnisotropy = texFlags.m_filter == GxTex_Anisotropic ? s_maxAnisotropy : 1;
     texFlags.m_bit19 = defaultFilter;
 
     return texFlags;
@@ -394,7 +396,7 @@ int32_t TextureIsOpaque(CTexture* texture) {
     return texture->m_flags & 1;
 }
 
-// OFFSET: %0x005511F0
+// OFFSET: 0x00540D40/0x140193880
 int32_t TextureCalcMipCount(uint32_t width, uint32_t height) {
     int32_t count = 1;
 
@@ -416,7 +418,7 @@ int32_t TextureCalcMipCount(uint32_t width, uint32_t height) {
     return count;
 }
 
-// OFFSET: %0x00551230
+// OFFSET: 0x00540D90
 void TextureGenerateMips(uint32_t width, uint32_t height, uint32_t firstLevel, uint32_t levelCount, MipBits* images) {
     uint32_t sourceWidth = width;
     uint32_t sourceHeight = height;
@@ -511,7 +513,8 @@ int32_t TextureIsLoaded(CTexture* texture) {
     return texture && !texture->m_asyncObject;
 }
 
-// OFFSET: %0x005514B0
+// PROVEN: de8122be IDENTICAL/NONE
+// OFFSET: 0x00541010/0x140193C10
 void TextureSetTextureSubstitutions(const char* from, const char* to) {
     s_substituteFrom = const_cast<char*>(from);
     s_substituteTo = const_cast<char*>(to);
@@ -533,7 +536,8 @@ uint32_t TextureGetBytesPerBlock(PIXEL_FORMAT format) {
     return s_pixelFormatBytesPerBlock[format];
 }
 
-// OFFSET: %0x005514F0
+// PROVEN: 660b7d26 IDENTICAL/NONE
+// OFFSET: 0x00541050/0x140193C40
 int32_t TextureLoadBlob(const char* fileName) {
     return CTextureBlob::Load(fileName);
 }
@@ -631,7 +635,7 @@ void ResolveMipLevel(EGxTexCommand command, uint32_t width, uint32_t height, uin
     }
 }
 
-// OFFSET: %0x005516B0
+// OFFSET: 0x005412E0
 uint32_t LoadPredrawnMips(CTgaFile* image, const char* format, int32_t flags, MipBits* images) {
     uint32_t level = 1;
     uint32_t count = TextureCalcMipCount(image->Width(), image->Height()) - 1;
@@ -932,7 +936,7 @@ uint32_t TextureCalcGxTexSize(EGxTexFormat format, uint32_t width, uint32_t heig
     return size;
 }
 
-// OFFSET: %0x00551F40
+// OFFSET: 0x005430A0/0x1401967B0
 void CTextureAtlas::Reload() {
     for (uint32_t i = 0; i < 64; i++) {
         CTexture* texture = this->m_textures[i];
@@ -1869,6 +1873,7 @@ void AsyncTextureSuccessCallback(CAsyncObject* object) {
     texture->m_asyncObject = NULL;
 }
 
+// PROVEN: c0acde7d IDENTICAL/NONE
 // OFFSET: 0x00541EC0
 int32_t AsyncTextureStatus() {
     int32_t count = 0;

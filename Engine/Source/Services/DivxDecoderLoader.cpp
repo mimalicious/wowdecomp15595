@@ -29,11 +29,13 @@ void UnloadDivxDecoder() {
     }
 }
 
+// PROVEN: debfaccf IDENTICAL/NONE
 // OFFSET: 0x00657280/0x1402FA910
 void* DivxDecoderAlloc(uint32_t size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
 }
 
+// PROVEN: 8c8ce177 IDENTICAL/NONE
 // OFFSET: 0x006572A0
 void DivxDecoderFree(void* ptr) {
     SMemFree(ptr, __FILE__, __LINE__, 0);

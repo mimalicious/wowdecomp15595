@@ -133,22 +133,9 @@ void* ProfileCreate() {
     return new (SMemAlloc(sizeof(ProfileInternal::PROFILE), __FILE__, __LINE__, 0)) ProfileInternal::PROFILE;
 }
 
-// OFFSET: %0x00558B50
+// OFFSET: 0x00545120
 int32_t ProfileGetValue(void* profile, const char* section, const char* key, int32_t* value, uint32_t index) {
-    if (!section) {
-        DebugValidate("section");
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    if (!key) {
-        DebugValidate("key");
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return 0;
-    }
-
-    if (!value) {
-        DebugValidate("value");
+    if (!section || !key || !value) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
         return 0;
     }
