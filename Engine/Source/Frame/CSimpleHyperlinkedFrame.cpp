@@ -20,6 +20,9 @@ int32_t CSimpleHyperlinkButton::s_objectType;
 // STATIC: %0x00BB94EC
 const char* CSimpleHyperlinkButton::s_objectTypeName = "HyperLinkButton";
 
+// STATIC: 0x00CA3E14
+int32_t CSimpleHyperlinkedFrame::s_metatable;
+
 // PROVEN: 0aac88eb IDENTICAL/NONE
 // OFFSET: 0x005331A0
 bool CSimpleHyperlinkButton::IsA(int32_t type) {
@@ -128,9 +131,6 @@ CSimpleHyperlinkButton::~CSimpleHyperlinkButton() {
 }
 
 // PROVEN: 6db8490c IDENTICAL/NONE
-// STATIC: 0x00CA3E14
-int32_t CSimpleHyperlinkedFrame::s_metatable;
-
 // PROVEN: 6db8490c IDENTICAL/NONE
 // OFFSET: 0x00532D20
 void CSimpleHyperlinkedFrame::RunOnHyperlinkEnterScript(const char* link, const char* text) {
