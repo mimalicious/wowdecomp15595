@@ -35,10 +35,10 @@ class GxuDrawListState {
 class GxuDrawListItem {
     public:
     virtual ~GxuDrawListItem();
-    virtual float GetDepth(const C3Vector& viewPos) = 0;
-    virtual GxuDrawListState* GetState() = 0;
-    virtual uint32_t GetVtxStream() = 0;
-    virtual void Discard() = 0;
+    virtual float GetDepth(const C3Vector& viewPos);
+    virtual GxuDrawListState* GetState();
+    virtual uint32_t GetVtxStream();
+    virtual void Discard();
     virtual void Draw(const C3Vector& viewPos) = 0;
 };
 
@@ -130,6 +130,7 @@ void GxRsSet(EGxRenderState which, float value);
 void GxUpdateAlphaRef(EGxRenderState which);
 void GxSceneClear(uint32_t mask, CImVector color);
 void GxScenePresent(void* window);
+void GxuAddToDrawList(EGxuDrawListCategory category, GxuDrawListItem* item);
 void GxuClearDrawList(EGxuDrawListCategory category);
 void GxuFlushDrawList(EGxuDrawListCategory category, const C3Vector& viewPos);
 void GxuSortDrawList(EGxuDrawListCategory category, EGxuDrawListSorting sorting, const C3Vector& viewPos);

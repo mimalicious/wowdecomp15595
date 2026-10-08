@@ -3,8 +3,37 @@
 // STATIC: 0x00CA8554
 GxuScene g_scene;
 
-// OFFSET: #0x009A8180
+// PROVEN: 110effb7 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void GxuSceneObject::Render() {
+}
+
+// PROVEN: 61f0e1f8 IDENTICAL/NONE
+// OFFSET: 0x00847950
+void GxuSceneObject::Update(float elapsed) {
+}
+
+// PROVEN: 12e92145 IDENTICAL/DIFFERENT
+// OFFSET: 0x009FCE20/0x14090EBB0
+bool GxuSceneObject::IsAlive() {
+    return true;
+}
+
+// OFFSET: 0x00612880/0x14029DB20
+GxuSceneObject::GxuSceneObject() {
+}
+
+// OFFSET: [0x00612890/0x14029DB30, 0x006121C0/0x14029D160]
+GxuSceneObject::~GxuSceneObject() {
+}
+
+// OFFSET: [0x00612BB0/0x14029DF10, 0x00612BB0/0x14029DF10]
 GxuScene::~GxuScene() {
+}
+
+// OFFSET: 0x00612E50/0x14029E370
+void GxuScene::AddObject(GxuSceneObject* object) {
+    this->m_objects.New(object);
 }
 
 // PROVEN: 30d1ff52 IDENTICAL/IDENTICAL

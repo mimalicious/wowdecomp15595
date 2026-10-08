@@ -6,11 +6,13 @@
 
 class GxuSceneObject {
     public:
-    virtual void Unk00();
-    virtual void Release();
+    virtual ~GxuSceneObject();
+    virtual void Release() = 0;
     virtual bool IsAlive();
     virtual void Update(float elapsed);
     virtual void Render();
+
+    GxuSceneObject();
 };
 
 class GxuScene {
@@ -20,6 +22,7 @@ class GxuScene {
     /* 0014 */ uint32_t m_lastUpdateTime;
 
     virtual ~GxuScene();
+    void AddObject(GxuSceneObject* object);
     void Clear();
     void Update(uint32_t time);
 };

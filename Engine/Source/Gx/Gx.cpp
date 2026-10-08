@@ -58,11 +58,37 @@ static uint32_t s_lockIndexCount;
 // STATIC: %0x00D8BCD8
 static uint32_t s_lockVertexCount;
 
-// STATIC: %0x00CE310C
+// STATIC: 0x00DD8B10
 static bool s_drawListBusy;
 
-// STATIC: %0x00CE3110
+// STATIC: 0x00DD8B14
 static TSGrowableArray<GxDrawListEntry> s_drawLists[GxuCats_Last];
+
+// OFFSET: [0x006128B0/0x14029DB50, 0x00612220/0x14029D200]
+GxuDrawListItem::~GxuDrawListItem() {
+}
+
+// OFFSET: 0x006128C0
+float GxuDrawListItem::GetDepth(const C3Vector& viewPos) {
+    return 0.0f;
+}
+
+// PROVEN: a75f6dea IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
+GxuDrawListState* GxuDrawListItem::GetState() {
+    return NULL;
+}
+
+// PROVEN: f1cd06b0 IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
+uint32_t GxuDrawListItem::GetVtxStream() {
+    return 0;
+}
+
+// PROVEN: 3695ec31 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void GxuDrawListItem::Discard() {
+}
 
 // PROVEN: e358aa38 IDENTICAL/IDENTICAL
 // OFFSET: 0x006128D0/0x14029DB60
@@ -1203,6 +1229,13 @@ void GxuClearDrawList(EGxuDrawListCategory category) {
 
     s_drawLists[category].SetCount(0);
     s_drawListBusy = false;
+}
+
+// OFFSET: 0x00613000
+void GxuAddToDrawList(EGxuDrawListCategory category, GxuDrawListItem* item) {
+    GxDrawListEntry entry;
+    entry.m_item = item;
+    s_drawLists[category].New(entry);
 }
 
 // PROVEN: 67a59497 IDENTICAL/DIFFERENT
