@@ -8,7 +8,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00D8B760
+// STATIC: 0x00EBEF00/0x140DB0F78
 int32_t FrameScript_Object::s_objectTypes;
 
 // PROVEN: 79bbec07 IDENTICAL/NONE

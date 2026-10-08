@@ -7,7 +7,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: %0x00D8B750
+// STATIC: 0x00EBEEF0/0x140DB0F68
 static int64_t s_debugProfileStart;
 
 // OFFSET: 0x00839B20/0x140563FA0
@@ -764,6 +764,39 @@ static int32_t Script_debugtimestamp(lua_State* L) {
 }
 
 // STATIC: %0x00AF9F18
+// PROVEN: 533ad160 IDENTICAL/NONE
+// OFFSET: 0x00839920/0x140563D40
+int32_t Script_GetCurrentEventID(lua_State* L) {
+    lua_pushnumber(L, s_currentEventId);
+    return 1;
+}
+
+// OFFSET: 0x00839960/0x140563D70
+int32_t Script_GetEventTime(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetEventTime(eventID)");
+        return 0;
+    }
+
+    if (!s_eventTimes || s_eventTimeIndex < 0) {
+        return 0;
+    }
+
+    uint32_t eventId = lua_tointeger(L, 1);
+    FRAMESCRIPT_EVENTTIME* record = &s_eventTimes[(eventId + s_eventTimeIndex - s_eventTimes[s_eventTimeIndex].m_eventId) % 1000];
+
+    if (record->m_eventId != eventId) {
+        lua_pushnumber(L, -1.0);
+        return 1;
+    }
+
+    lua_pushnumber(L, record->m_time);
+    lua_pushnumber(L, record->m_handlerCount);
+    lua_pushstring(L, record->m_slowestHandler);
+    lua_pushnumber(L, record->m_slowestTime);
+    return 4;
+}
+
 const luaL_Reg s_extraFuncs[] = {
     { "strtrim", Script_strtrim },
     { "strsplit", Script_strsplit },

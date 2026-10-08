@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cfloat>
 #include <cstdint>
 #include <cstring>
 #include <malloc.h>
@@ -14,49 +15,64 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "Engine/Source/lua-5.1/src/lualib.h"
 
-// STATIC: %0x00D8B758
+// STATIC: 0x00EBEEF8/0x140DB0F70
 double s_scriptTimeDivisor;
 
-// STATIC: %0x00D8B764
+// STATIC: 0x00EBEF04
+FRAMESCRIPT_EVENTTIME* s_eventTimes;
+
+// STATIC: 0x00EBEF08
+uint32_t s_currentEventId;
+
+// STATIC: 0x00D08398
+int32_t s_eventTimeIndex = -1;
+
+// STATIC: 0x00D0839C
+static uint32_t s_nextEventId = 1;
+
+// STATIC: 0x00EBEF24
+static uint32_t s_scriptThreadId;
+
+// STATIC: 0x00EBEF0C
 static void* s_mempool;
 
-// STATIC: %0x00D8B768
+// STATIC: 0x00EBEF10
 lua_State* s_context;
 
-// STATIC: %0x00D8B770
+// STATIC: 0x00EBEF18/0x140DB0F98
 static int64_t s_scriptTimeUsed;
 
-// STATIC: %0x00D8B76C
+// STATIC: 0x00EBEF14/0x140DB0FA0
 static int32_t s_scriptProfileEnabled;
 
-// STATIC: %0x00D8B778
+// STATIC: 0x00EBEF20/0x140DB0FA4
 int32_t s_inErrorHandler;
 
-// STATIC: %0x00D8B77C
+// STATIC: 0x00EBEF28
 static PLURAL_RULE s_pluralRule;
 
-// STATIC: %0x00D8B784
+// STATIC: 0x00EBEF30/0x140BB9780
 TSHashTable<FrameScript_EventObject, HASHKEY_CONSTSTRI> s_scriptEventsHash;
 
-// STATIC: %0x00D8B7B0
+// STATIC: 0x00EBEF5C
 static TSFixedArray<FrameScript_EventObject*> s_scriptEvents;
 
-// STATIC: %0x00D8B7C0
+// STATIC: 0x00EBEF68
 static char s_printIndent[128];
 
-// STATIC: %0x00D8B840
+// STATIC: 0x00EBEFE8
 static char s_printBuffer[1024];
 
-// STATIC: %0x00D8BC40
+// STATIC: 0x00EBF3E8
 static char s_packIndent[128];
 
-// STATIC: %0x00C0D6F0
+// STATIC: 0x00D083A0/0x140BB9768
 int32_t s_errorHandlerRef = -1;
 
-// STATIC: %0x00C0D6F4
+// STATIC: 0x00D083A4/0x140BB976C
 int32_t s_errorHandlerFunc = -1;
 
-// STATIC: %0x00C0D6F8
+// STATIC: 0x00D083A8/0x140BB9770
 static int32_t s_recursiveTableHash = -1;
 
 // STATIC: 0x00D083B0
@@ -183,7 +199,8 @@ void FrameScript_MemoryCleanup() {
     lua_gc(s_context, LUA_GCRESTART, 0);
 }
 
-// OFFSET: %0x007A1190
+// PROVEN: 9f6c1499 IDENTICAL/NONE
+// OFFSET: 0x0083AD50
 void FrameScript_SetPluralRule(PLURAL_RULE rule) {
     s_pluralRule = rule;
 }
@@ -217,7 +234,8 @@ uint32_t FrameScript_GetPluralIndex(int32_t count) {
     }
 }
 
-// OFFSET: %0x007A1230
+// PROVEN: 4eeceae9 IDENTICAL/NONE
+// OFFSET: 0x0083ADF0/0x140565500
 void SetDecimalConversion(int32_t convert) {
     lua_setdecimalconversion(convert);
 }
@@ -720,6 +738,7 @@ int32_t FrameScript_PrintVariable(HOSFILE file, const char* name) {
     return 1;
 }
 
+// PROVEN: d9a7fd5b IDENTICAL/DIFFERENT
 // OFFSET: 0x0083BDA0/0x140566610
 int32_t FrameScript_LoadVariables(const char* filename, CStatus* status) {
     lua_State* L = s_context;
@@ -968,7 +987,8 @@ void FrameScript_Execute(const char* source, const char* filename, const char* t
     }
 }
 
-// OFFSET: %0x007A2700
+// PROVEN: 71bfa199 IDENTICAL/NONE
+// OFFSET: 0x0083C310/0x140566CD0
 double FrameScript_GetScriptCPUUsage() {
     return s_scriptTimeUsed * s_scriptTimeDivisor;
 }
@@ -977,6 +997,12 @@ double FrameScript_GetScriptCPUUsage() {
 // OFFSET: 0x0083C320/0x140566CF0
 int32_t FrameScript_GetErrorHandlerReference() {
     return s_errorHandlerRef;
+}
+
+// PROVEN: ad9edd7e IDENTICAL/NONE
+// OFFSET: 0x0083C330
+static bool IsIntegerNumber(double value) {
+    return _finite(value) && value >= -2147483648.0 && value <= 2147483647.0;
 }
 
 // OFFSET: 0x0083C370
@@ -1041,9 +1067,11 @@ void FrameScript_PackVariable(lua_State* L, const char* name, int32_t depth, cha
                 lua_pushnil(L);
 
                 while (lua_next(L, -2)) {
-                    if (lua_isnumber(L, -2)) {
+                    lua_Number number;
+
+                    if (lua_isnumber(L, -2) && IsIntegerNumber(number = lua_tonumber(L, -2))) {
                         char key[32];
-                        SStrPrintf(key, sizeof(key), "%d", static_cast<int32_t>(lua_tonumber(L, -2)));
+                        SStrPrintf(key, sizeof(key), "%d", static_cast<int32_t>(number));
                         FrameScript_PackVariable(L, key, 1, buffer, bufferLen);
                     } else {
                         FrameScript_PackVariable(L, lua_tostring(L, -2), 1, buffer, bufferLen);
@@ -1117,12 +1145,17 @@ static int32_t FrameScript_HandleError(lua_State* L) {
 
 // OFFSET: 0x0083D150/0x140567F20
 int32_t FrameScript_Initialize(int32_t profile) {
+    s_scriptThreadId = SGetCurrentThreadId();
     s_mempool = luaM_initPool();
     s_context = lua_newstate(luaM_reallocPool, s_mempool, profile);
     s_scriptTimeUsed = 0;
     s_scriptProfileEnabled = profile;
     s_errorHandlerFunc = -1;
     s_scriptTimeDivisor = 1000.0 / OsGetAsyncClocksPerSecond();
+
+    if (profile) {
+        s_eventTimes = static_cast<FRAMESCRIPT_EVENTTIME*>(SMemAlloc(sizeof(FRAMESCRIPT_EVENTTIME) * 1000, __FILE__, __LINE__, 0x8));
+    }
 
     lua_pushcfunction(s_context, FrameScript_HandleError);
     s_errorHandlerRef = luaL_ref(s_context, LUA_REGISTRYINDEX);
@@ -1199,6 +1232,15 @@ const char* FrameScript_GetText(const char* token, int32_t count, FRAMESCRIPT_GE
 // OFFSET: 0x0083D440/0x1405683C0
 int32_t vFrameScript_PushEventArgs(const char* format, va_list args) {
     lua_State* L = s_context;
+    int32_t needed = 0;
+
+    for (const char* c = format; *c; c++) {
+        if (*c == '%') {
+            needed++;
+        }
+    }
+
+    lua_checkstack(L, needed);
     int32_t count = 0;
 
     for (; *format; format++) {
@@ -1237,12 +1279,12 @@ int32_t vFrameScript_PushEventArgs(const char* format, va_list args) {
     return count;
 }
 
-// OFFSET: %0x007A38D0
+// OFFSET: 0x0083D590/0x1405684D0
 void FrameScript_PushEventName(uint32_t index) {
     lua_pushstring(s_context, s_scriptEvents[index]->m_key.m_str);
 }
 
-// OFFSET: %0x007A4120
+// OFFSET: 0x0083DDF0/0x1405690E0
 bool FrameScript_ShouldSignalEvent(uint32_t index) {
     if (!s_scriptEvents.Count()) {
         return false;
@@ -1330,7 +1372,7 @@ void FrameScript_GetEventCPUUsage(const char* name, double* time, uint32_t* coun
     *count = signalCount;
 }
 
-// OFFSET: %0x007A4570
+// OFFSET: 0x0083E110/0x140569470
 void FrameScript_ResetCPUUsage() {
     s_scriptTimeUsed = 0;
 
@@ -1385,14 +1427,21 @@ void FrameScript_UnregisterScriptEvent(FrameScript_Object* object, FrameScript_E
     }
 }
 
-// OFFSET: %0x007A44A0
+// OFFSET: 0x0083E410
 static void DestroyEvents() {
     s_scriptEventsHash.Clear();
     s_scriptEvents.Clear();
 }
 
-// OFFSET: %0x007A4A40
+// PROVEN: 98724317 IDENTICAL/NONE
+// OFFSET: 0x0083E810/0x140569EA0
 void FrameScript_Destroy() {
+    if (s_eventTimes) {
+        SMemFree(s_eventTimes, __FILE__, __LINE__, 0);
+        s_eventTimes = NULL;
+        s_eventTimeIndex = -1;
+    }
+
     lua_close(s_context);
     s_context = NULL;
     luaM_freePool(s_mempool);
@@ -1400,7 +1449,7 @@ void FrameScript_Destroy() {
     DestroyEvents();
 }
 
-// OFFSET: %0x007A4A80
+// OFFSET: 0x0083E870/0x140569F10
 void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
     if (!s_scriptEvents.Count()) {
         return;
@@ -1412,8 +1461,21 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
         return;
     }
 
+    uint32_t previousEventId = s_currentEventId;
     event->m_signalCount++;
     event->m_pendingSignalCount++;
+    s_currentEventId = s_nextEventId++;
+    int64_t startTime = event->m_timeUsed;
+    int32_t handlerCount = 0;
+    FRAMESCRIPT_EVENTTIME* record = NULL;
+
+    if (s_scriptProfileEnabled) {
+        s_eventTimeIndex = (s_eventTimeIndex + 1) % 1000;
+        record = &s_eventTimes[s_eventTimeIndex];
+        record->m_eventId = s_currentEventId;
+        record->m_slowestTime = 0.0f;
+    }
+
     lua_checkstack(L, argCount);
 
     EVENTLISTENERNODE* node = event->m_listeners.Head();
@@ -1437,17 +1499,46 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
                     lua_pushvalue(L, -argCount);
                 }
 
+                int64_t handlerStart = 0;
+                const char* handlerName = NULL;
+
+                if (s_scriptProfileEnabled) {
+                    handlerStart = event->m_timeUsed;
+                    handlerName = node->m_listener->GetName();
+
+                    if (!handlerName) {
+                        handlerName = "<unnamed>";
+                    }
+                }
+
                 int32_t function;
                 const char* taint;
                 node->m_listener->GetScriptFunction(script, function, taint);
                 FrameScript_Execute(function, node->m_listener, argCount, taint, event);
+
+                if (s_scriptProfileEnabled) {
+                    float time = static_cast<float>((event->m_timeUsed - handlerStart) * s_scriptTimeDivisor);
+
+                    if (record && time > record->m_slowestTime) {
+                        record->m_slowestTime = time;
+                        record->m_slowestHandler = handlerName;
+                    }
+                }
+
+                handlerCount++;
             }
         }
 
         node = next;
     }
 
+    if (s_scriptProfileEnabled) {
+        record->m_handlerCount = handlerCount;
+        record->m_time = static_cast<float>((event->m_timeUsed - startTime) * s_scriptTimeDivisor);
+    }
+
     event->m_pendingSignalCount--;
+    s_currentEventId = previousEventId;
 
     for (node = event->m_unregisterListeners.Head(); !event->m_unregisterListeners.IsEnd(node); node = event->m_unregisterListeners.DeleteNode(node)) {
         FrameScript_UnregisterScriptEvent(node->m_listener, event);
@@ -1458,7 +1549,8 @@ void FrameScript_SignalEvent(uint32_t index, lua_State* L, int32_t argCount) {
     }
 }
 
-// OFFSET: %0x007A4D20
+// PROVEN: 3d3e8f5d IDENTICAL/NONE
+// OFFSET: 0x0083EC60
 void FrameScript_Flush() {
     if (s_context) {
         FrameScript_Destroy();

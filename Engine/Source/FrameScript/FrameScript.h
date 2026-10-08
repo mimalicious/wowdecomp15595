@@ -31,7 +31,21 @@ struct FrameScript_EventObject : public TSHashObject<FrameScript_EventObject, HA
     ~FrameScript_EventObject();
 };
 
+struct FRAMESCRIPT_EVENTTIME {
+    /* 0000 */ uint32_t m_eventId;
+    /* 0004 */ float m_time;
+    /* 0008 */ int32_t m_handlerCount;
+    /* 000C */ const char* m_slowestHandler;
+    /* 0010 */ float m_slowestTime;
+};
+
 extern lua_State* s_context;
+extern FRAMESCRIPT_EVENTTIME* s_eventTimes;
+extern int32_t s_eventTimeIndex;
+extern uint32_t s_currentEventId;
+
+int32_t Script_GetCurrentEventID(lua_State* L);
+int32_t Script_GetEventTime(lua_State* L);
 extern TSHashTable<FrameScript_EventObject, HASHKEY_CONSTSTRI> s_scriptEventsHash;
 extern double s_scriptTimeDivisor;
 extern int32_t s_inErrorHandler;
