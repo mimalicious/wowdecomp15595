@@ -2,11 +2,11 @@
 #include "Engine/Source/Os/Gui.h"
 #include "Engine/Source/SteelseriesMouse/HidManager.h"
 
-// OFFSET: %0x0063EBE0
+// OFFSET: 0x006301E0/0x1402C52E0
 SteelseriesMouse::~SteelseriesMouse() {
 }
 
-// OFFSET: %0x007E4010
+// OFFSET: 0x0087EFF0
 WowMouse::WowMouse() {
     void* window = OsGuiGetWindow(0);
 
@@ -25,7 +25,7 @@ WowMouse::~WowMouse() {
     }
 }
 
-// OFFSET: %0x007E3FF0
+// OFFSET: 0x0087EFD0
 int32_t WowMouse::IsConnected() {
     return this->m_hidManager->GetDeviceCount() != 0;
 }

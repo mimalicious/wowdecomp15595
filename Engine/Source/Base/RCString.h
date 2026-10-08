@@ -34,6 +34,7 @@ class CStringManager {
     static CStringManager* s_stringManager;
 
     static void DestroyManager();
+    static int32_t IsDestroyed();
     static CStringManager* Get();
 
     CStringManager();

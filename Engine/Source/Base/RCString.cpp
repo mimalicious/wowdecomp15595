@@ -4,7 +4,7 @@
 #include "Engine/Source/Base/RCString.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00B4166C
+// STATIC: 0x00EC6B14
 CStringManager* CStringManager::s_stringManager;
 
 // INLINED
@@ -87,7 +87,13 @@ CStringManager::CStringManager() {
     memset(this->unk_0000, 0, sizeof(this->unk_0000));
 }
 
-// OFFSET: #0x0047CF40
+// PROVEN: 2e1f7de4 IDENTICAL/NONE
+// OFFSET: 0x00871FF0/0x1405A82F0
+int32_t CStringManager::IsDestroyed() {
+    return CStringManager::s_stringManager == NULL;
+}
+
+// OFFSET: 0x00872230/0x1405A8650
 void CStringManager::DestroyManager() {
     delete CStringManager::s_stringManager;
     CStringManager::s_stringManager = NULL;

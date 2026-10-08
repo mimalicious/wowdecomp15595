@@ -178,6 +178,7 @@ static float GetCharacterWidth(const char* text, uint32_t flags, uint32_t code, 
     return width;
 }
 
+// PROVEN: 23686516 IDENTICAL/NONE
 // OFFSET: 0x006176E0
 void* FreeTypeAlloc(FT_Memory memory, long size) {
     return SMemAlloc(size, __FILE__, __LINE__, 0);
@@ -191,6 +192,7 @@ void FreeTypeFree(FT_Memory memory, void* block) {
     }
 }
 
+// PROVEN: 0055a10d IDENTICAL/NONE
 // OFFSET: 0x00617720
 void* FreeTypeRealloc(FT_Memory memory, long curSize, long newSize, void* block) {
     return SMemReAlloc(block, newSize, __FILE__, __LINE__, 0);

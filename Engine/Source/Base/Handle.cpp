@@ -47,7 +47,7 @@ CHandleObject* HandleDereference(HOBJECT handle) {
     return reinterpret_cast<CHandleObject*>(handle);
 }
 
-// OFFSET: #0x0047BF70
+// OFFSET: 0x00872320
 HOBJECT HandleDuplicate(HOBJECT handle) {
     if (handle) {
         HandleDereference(handle)->m_refcount++;

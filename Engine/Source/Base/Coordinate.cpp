@@ -23,7 +23,8 @@ void CoordinateSetAspectRatio(float aspect) {
     s_ddcWidthScale = aspect * scale;
 }
 
-// OFFSET: #0x0047BFD0
+// PROVEN: 429128d8 IDENTICAL/NONE
+// OFFSET: 0x00872390/0x1405A87B0
 float CoordinateGetAspectRatio() {
     return s_aspectRatio;
 }

@@ -13,7 +13,7 @@ CDataRecycler::CDataRecycler(uint32_t nodesPerBlock, int32_t maxNodes) {
     this->m_nodesPerBlock = this->m_nodesPerBlock >= static_cast<uint32_t>(this->m_nodesRecyclable) ? this->m_nodesRecyclable : this->m_nodesPerBlock;
 }
 
-// OFFSET: [#0x0095CD70, %0x00A74000]
+// OFFSET: [0x00B41C80/0x140910000, %0x00A74000]
 CDataRecycler::~CDataRecycler() {
 }
 
@@ -101,7 +101,7 @@ void CDataRecycler::Clear() {
     }
 }
 
-// OFFSET: #0x0095CF40
+// OFFSET: 0x00B41E50/0x1409101A0
 void CDataRecycler::GetData(void*& data, uint32_t& bytes, const char* fileName, int32_t lineNumber) {
     Node* node = static_cast<Node*>(this->Unlink(reinterpret_cast<void**>(&this->m_nodeFullList)));
 

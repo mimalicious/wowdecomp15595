@@ -8,9 +8,9 @@ void BaseDestroyContext() {
     HandleDestroy();
 }
 
-// OFFSET: #0x0047B750
+// PROVEN: 307ef98b IDENTICAL/NONE
+// OFFSET: 0x00871FD0/0x1405A82D0
 void BaseDestroyGlobal() {
-    BaseFileDestroy();
     PropDestroy();
     CStringManager::DestroyManager();
 }
@@ -21,8 +21,8 @@ void BaseInitializeContext() {
     HandleInitialize();
 }
 
-// OFFSET: %0x007D6970
+// PROVEN: b5e0be3a IDENTICAL/NONE
+// OFFSET: 0x00871FC0
 void BaseInitializeGlobal() {
     PropInitialize();
-    BaseFileInitialize();
 }

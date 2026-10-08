@@ -11,7 +11,7 @@
 HidManager::~HidManager() {
 }
 
-// OFFSET: %0x007E6280
+// OFFSET: 0x00881250
 HidManager* HidManager::Create() {
     return new (SMemAlloc(sizeof(HidManagerImpl), __FILE__, __LINE__, 0)) HidManagerImpl();
 }
@@ -28,7 +28,7 @@ HidDevice::HidDevice() : m_thread(NULL), m_threadId(0), m_threadProc(NULL), m_fi
 HidDevice::HidDevice(DWORD devInst) : m_thread(NULL), m_threadId(0), m_threadProc(NULL), m_file(NULL), m_preparsedData(NULL), m_readSignal(NULL), m_stopEvent(NULL), m_devInst(devInst) {
 }
 
-// OFFSET: %0x007E5020
+// OFFSET: 0x0087FFF0
 HidDevice::HidDevice(const HidDevice& device) : m_thread(NULL), m_threadId(0), m_threadProc(NULL), m_interfaceDetail(std::move(const_cast<HidDevice&>(device).m_interfaceDetail)), m_file(device.m_file), m_openRead(device.m_openRead), m_openWrite(device.m_openWrite), m_openOverlapped(device.m_openOverlapped), m_openExclusive(device.m_openExclusive), m_preparsedData(device.m_preparsedData), m_attributes(device.m_attributes), m_caps(device.m_caps), m_writeOverlapped(device.m_writeOverlapped), m_readOverlapped(device.m_readOverlapped), m_readBuffer(std::move(const_cast<HidDevice&>(device).m_readBuffer)), m_readBufferSize(device.m_readBufferSize), m_readEvent(device.m_readEvent), m_writeEvent(device.m_writeEvent), m_readPending(device.m_readPending), m_hardwareId(device.m_hardwareId), m_manager(device.m_manager), m_readSignal(device.m_readSignal), m_stopEvent(device.m_stopEvent), m_stale(device.m_stale), m_devInst(device.m_devInst) {
     memcpy(this->unk_0040, device.unk_0040, sizeof(this->unk_0040));
     const_cast<HidDevice&>(device).m_file = NULL;
@@ -37,7 +37,7 @@ HidDevice::HidDevice(const HidDevice& device) : m_thread(NULL), m_threadId(0), m
     strcpy_s(this->m_serialNumber, sizeof(this->m_serialNumber), device.m_serialNumber);
 }
 
-// OFFSET: %0x007E4C70
+// OFFSET: 0x0087FC40/0x1405B8E90
 HidDevice::~HidDevice() {
     if (this->m_stopEvent) {
         SetEvent(this->m_stopEvent);
@@ -90,7 +90,7 @@ void HidDevice::ReleaseHandles() {
     }
 }
 
-// OFFSET: %0x007E4560
+// OFFSET: 0x0087F530/0x1405B86A0
 bool HidDevice::Open(int32_t read, int32_t write, int32_t overlapped, int32_t exclusive, int32_t query) {
     DWORD share = 0;
     DWORD access = 0;
@@ -157,7 +157,7 @@ bool HidDevice::Open(int32_t read, int32_t write, int32_t overlapped, int32_t ex
     return true;
 }
 
-// OFFSET: %0x007E4730
+// OFFSET: 0x0087F700
 bool HidDevice::Write(const void* data, uint32_t size) {
     if (!this->Open(1, 1, 0, 0, 0) || !this->m_file) {
         return false;
@@ -193,7 +193,7 @@ VOID CALLBACK HidDevice::WriteCompletion(DWORD error, DWORD bytes, LPOVERLAPPED 
     device->m_writeEvent = NULL;
 }
 
-// OFFSET: %0x007E4780
+// OFFSET: 0x0087F750/0x1405B8920
 bool HidDevice::BeginRead(uint32_t size, HANDLE event) {
     if (this->m_readPending) {
         return false;
@@ -223,7 +223,7 @@ bool HidDevice::BeginRead(uint32_t size, HANDLE event) {
     return true;
 }
 
-// OFFSET: %0x007E4860
+// OFFSET: 0x0087F830/0x1405B8AD0
 bool HidDevice::WriteEx(const void* data, uint32_t size, HANDLE event) {
     if (!this->Open(1, 1, 1, 0, 0) || !this->m_file) {
         return false;
@@ -236,7 +236,7 @@ bool HidDevice::WriteEx(const void* data, uint32_t size, HANDLE event) {
     return WriteFileEx(this->m_file, data, size, &this->m_readOverlapped, WriteCompletion) != 0;
 }
 
-// OFFSET: %0x007E48D0
+// OFFSET: 0x0087F8A0
 bool HidDevice::IsOutputInterface() const {
     char hardwareId[100];
     strcpy_s(hardwareId, sizeof(hardwareId), this->m_hardwareId.c_str());
@@ -247,7 +247,7 @@ bool HidDevice::IsOutputInterface() const {
         || !_mbsnicmp(reinterpret_cast<const unsigned char*>(hardwareId), reinterpret_cast<const unsigned char*>("HID\\VID_1038&PID_1320&REV_0000&MI_00"), 36);
 }
 
-// OFFSET: %0x007E4960
+// OFFSET: 0x0087F930
 bool HidDevice::IsInputInterface() const {
     char hardwareId[100];
     strcpy_s(hardwareId, sizeof(hardwareId), this->m_hardwareId.c_str());
@@ -258,7 +258,7 @@ bool HidDevice::IsInputInterface() const {
         || !_mbsnicmp(reinterpret_cast<const unsigned char*>(hardwareId), reinterpret_cast<const unsigned char*>("HID\\VID_1038&PID_1320&REV_0000&MI_01"), 36);
 }
 
-// OFFSET: %0x007E49F0
+// OFFSET: 0x0087F9C0/0x1405B8B80
 void HidDevice::ReadLoop() {
     this->BeginRead(3, this->m_readSignal);
     HANDLE handles[2] = { this->m_readSignal, this->m_stopEvent };
@@ -317,7 +317,7 @@ bool HidDevice::WriteWait(const void* data, uint32_t size) {
     return written;
 }
 
-// OFFSET: %0x007E4DA0
+// OFFSET: 0x0087FD70/0x1405B9000
 bool HidDevice::StartReadThread(HidManagerImpl* manager) {
     if (!this->Open(1, 1, 1, 0, 0)) {
         return false;
@@ -344,7 +344,7 @@ bool HidDevice::StartReadThread(HidManagerImpl* manager) {
     return true;
 }
 
-// OFFSET: %0x007E5220
+// OFFSET: 0x008801F0
 bool HidDevice::GetDeviceProperty(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA deviceInfoData, DWORD property, std::string& value) {
     DWORD required = 0;
     DWORD type;
@@ -376,7 +376,7 @@ bool HidDevice::GetDeviceProperty(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA devic
     return true;
 }
 
-// OFFSET: %0x007E54B0
+// OFFSET: 0x00880480
 bool HidDevice::EnumerateInterface(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA deviceInfoData, DWORD index) {
     DWORD required = 0;
     GUID hidGuid;
@@ -416,7 +416,7 @@ bool HidDevice::EnumerateInterface(HDEVINFO deviceInfoSet, PSP_DEVINFO_DATA devi
     return true;
 }
 
-// OFFSET: %0x007E61E0
+// OFFSET: 0x008811B0
 HidManagerImpl::HidManagerImpl() : unk_0010(0), unk_0014(0), m_window(NULL), m_inputDevInst(0), m_outputDevInst(0) {
 }
 
@@ -425,7 +425,7 @@ HidManagerImpl::~HidManagerImpl() {
     this->m_devices.clear();
 }
 
-// OFFSET: %0x007E5D10
+// OFFSET: 0x00880CE0
 bool HidManagerImpl::EnumerateDevices() {
     bool found = false;
 
@@ -524,7 +524,7 @@ bool HidManagerImpl::Write(const void* data, uint32_t size) {
     return this->GetDevice(this->m_outputDevInst).Write(data, size);
 }
 
-// OFFSET: %0x007E4FC0
+// OFFSET: 0x0087FF90
 bool HidManagerImpl::SetFeature(void* data, uint32_t size) {
     if (!this->m_outputDevInst) {
         return false;
@@ -539,7 +539,7 @@ bool HidManagerImpl::SetFeature(void* data, uint32_t size) {
     return HidD_SetFeature(device.m_file, data, size) != 0;
 }
 
-// OFFSET: %0x007E4ED0
+// OFFSET: 0x0087FEA0
 HidDevice& HidManagerImpl::GetDevice(DWORD devInst) {
     std::set<HidDevice>::iterator it = this->m_devices.find(HidDevice(devInst));
 

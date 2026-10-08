@@ -675,6 +675,10 @@ uint32_t CVarIntListWrapper::GetNextValue() {
 
 // OFFSET: 0x00655C30/0x1402F7000
 int32_t CVar::IterateForArchive(uint32_t category, uint32_t excludeFlags, int32_t (*callback)(const char* name, const char* value, void* arg), void* arg) {
+    if (CStringManager::IsDestroyed()) {
+        return 1;
+    }
+
     for (CVar* var = s_registeredCVars.m_fulllist.Head(); var; var = s_registeredCVars.m_fulllist.Next(var)) {
         if (!(var->m_flags & 0x1) || (var->m_flags & 0x80) || (var->m_flags & 0x30) != category || (var->m_flags & excludeFlags)) {
             continue;
