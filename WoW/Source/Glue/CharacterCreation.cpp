@@ -406,8 +406,8 @@ void CCharacterCreation::Dress() {
 
         if (display) {
             for (uint32_t slot = 0; slot < 23; slot++) {
-                int32_t displayID = display->m_characterInfo.m_inventoryItemDisplayID[slot];
-                int32_t itemVisual = display->m_characterInfo.m_inventoryItemVisualID[slot];
+                int32_t displayID = display->m_characterInfo.m_items[slot].m_displayID;
+                int32_t itemVisual = display->m_characterInfo.m_items[slot].m_visualID;
 
                 if (!displayID) {
                     continue;
@@ -432,7 +432,7 @@ void CCharacterCreation::Dress() {
                 if (slot != INVSLOT_MAINHAND && slot != INVSLOT_OFFHAND && slot != INVSLOT_RANGED) {
                     CCharacterCreation::m_character->AddItemBySlot(static_cast<INVENTORY_SLOTS>(slot), displayID, visual);
                 } else if (found) {
-                    CCharacterComponent::AddHandItem(CCharacterCreation::m_character->m_data.m_model, &itemRec, static_cast<INVENTORY_SLOTS>(slot), SHEATHE_NONE, false, display->m_characterInfo.m_inventoryItemType[slot] == INVTYPE_SHIELD, false, visual);
+                    CCharacterComponent::AddHandItem(CCharacterCreation::m_character->m_data.m_model, &itemRec, static_cast<INVENTORY_SLOTS>(slot), SHEATHE_NONE, false, display->m_characterInfo.m_items[slot].m_inventoryType == INVTYPE_SHIELD, false, visual);
                 }
 
                 if (slot == INVSLOT_TABARD && found && (itemRec.m_flags & 0x1)) {

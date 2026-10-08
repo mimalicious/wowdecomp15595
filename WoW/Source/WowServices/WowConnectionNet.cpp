@@ -26,7 +26,7 @@ static uint32_t STORMAPI WorkerThreadProc(void* param) {
 WowConnectionNet::WORKER::WORKER() : m_event(0, 0) {
 }
 
-// OFFSET: %0x005601B0
+// OFFSET: 0x005505F0/0x1401AB2C0
 void WowConnectionNet::Start() {
     char name[32];
     uint32_t i = 0;
@@ -59,7 +59,8 @@ void WowConnectionNet::Start() {
     }
 }
 
-// OFFSET: %0x0055FE80
+// PROVEN: a83d2922 IDENTICAL/NONE
+// OFFSET: 0x005502C0
 void WowConnectionNet::Service(WowConnection* connection, uint32_t flags) {
     do {
         if (flags & 0x1) {
@@ -85,7 +86,7 @@ void WowConnectionNet::Service(WowConnection* connection, uint32_t flags) {
     } while (flags);
 }
 
-// OFFSET: #0x00469160
+// OFFSET: 0x00550430
 void WowConnectionNet::RunWorker(int32_t index) {
     if (this->m_threadInit) {
         this->m_threadInit();
@@ -119,7 +120,7 @@ void WowConnectionNet::RunWorker(int32_t index) {
     }
 }
 
-// OFFSET: #0x00469220
+// OFFSET: 0x005504F0/0x1401AB170
 void WowConnectionNet::SignalWorker(WowConnection* connection, uint32_t flags) {
     if (this->m_workerSemaphore.Wait(500)) {
         return;
@@ -144,7 +145,7 @@ void WowConnectionNet::SignalWorker(WowConnection* connection, uint32_t flags) {
     }
 }
 
-// OFFSET: #0x004692C0
+// OFFSET: 0x00550590/0x1401AB240
 void WowConnectionNet::Delete(WowConnection* connection) {
     this->m_connectionsLock.Enter();
 
@@ -155,14 +156,15 @@ void WowConnectionNet::Delete(WowConnection* connection) {
     this->m_connectionsLock.Leave();
 }
 
-// OFFSET: %0x00560470
+// PROVEN: a5a8e9af IDENTICAL/NONE
+// OFFSET: 0x005508B0/0x1401AB6E0
 WowConnectionNet::WowConnectionNet(int32_t numThreads, void (*threadInit)()) : m_stopEvent(1, 0), m_workerSemaphore(0, numThreads), m_serviceSemaphore(0, 0x7FFFFFFF) {
     this->m_numWorkers = numThreads;
     this->m_threadInit = threadInit;
     this->m_stop = false;
 }
 
-// OFFSET: #0x00469420
+// OFFSET: 0x005506E0/0x1401AB3F0
 void WowConnectionNet::Add(WowConnection* connection) {
     this->m_connectionsLock.Enter();
 
@@ -174,7 +176,7 @@ void WowConnectionNet::Add(WowConnection* connection) {
     this->m_connectionsLock.Leave();
 }
 
-// OFFSET: #0x00469470
+// OFFSET: 0x00550730/0x1401AB460
 void WowConnectionNet::Remove(WowConnection* connection) {
     this->m_connectionsLock.Enter();
 
@@ -186,7 +188,7 @@ void WowConnectionNet::Remove(WowConnection* connection) {
     this->m_connectionsLock.Leave();
 }
 
-// OFFSET: #0x00469080
+// OFFSET: 0x00550350/0x1401AAF60
 void WowConnectionNet::Stop() {
     this->m_stop = true;
     this->PlatformStop();
@@ -216,6 +218,6 @@ void WowConnectionNet::Stop() {
     }
 }
 
-// OFFSET: #0x004694C0
+// OFFSET: 0x00550780/0x1401AB520
 WowConnectionNet::~WowConnectionNet() {
 }

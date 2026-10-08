@@ -21,6 +21,19 @@ CDataStore::CDataStore(uint8_t* data, uint32_t size) {
     this->m_read = 0;
 }
 
+// OFFSET: 0x00487D00
+void CDataStore::InitExternal(uint8_t* data, uint32_t size) {
+    if (this->m_alloc != -1) {
+        this->InternalDestroy(this->m_data, this->m_base, this->m_alloc);
+    }
+
+    this->m_alloc = -1;
+    this->m_data = data;
+    this->m_base = 0;
+    this->m_read = 0;
+    this->m_size = size;
+}
+
 // OFFSET: 0x00408480
 int32_t CDataStore::FetchWrite(uint32_t pos, uint32_t bytes, const char* fileName, int32_t lineNumber) {
     if (pos >= this->m_base && pos + bytes <= this->m_base + this->m_alloc) {

@@ -49,6 +49,8 @@ extern CVar* g_accountListVar;
 extern CVar* g_accountNameVar;
 extern CVar* g_accountUsesTokenVar;
 extern CVar* g_checkAddonVersionVar;
+extern CVar* g_disableServerNagleVar;
+extern CVar* g_useIPv6Var;
 extern HEVENTCONTEXT g_clientEventContext;
 extern bool g_hasIsoLocale[12];
 extern CVar* g_lastCharacterIndexVar;

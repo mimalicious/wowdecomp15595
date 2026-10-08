@@ -292,6 +292,7 @@ int32_t STORMAPI StormSetOption(int32_t optname, void* optval, uint32_t optlen);
 
 void DebugLog(const char* format, ...);
 void DebugLog(int32_t target, const char* format, ...);
+void DebugLog(int32_t target, int32_t level, const char* format, ...);
 void DebugValidate(const char* expression);
 
 #include "Engine/Source/Storm/H/storm.inl"

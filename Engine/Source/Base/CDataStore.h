@@ -45,6 +45,7 @@ class CDataStore {
     CDataStore& GetData(void* data, uint32_t bytes);
     CDataStore& GetDataInSitu(void*& data, uint32_t bytes);
     CDataStore& GetString(char* string, uint32_t maxChars);
+    void InitExternal(uint8_t* data, uint32_t size);
     CDataStore& Put(uint8_t val);
     CDataStore& Put(uint16_t val);
     CDataStore& Put(uint32_t val);

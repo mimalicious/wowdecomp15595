@@ -10,37 +10,54 @@
 #include "WoW/Source/WowServices/Types.h"
 
 class CHARACTER_INFO;
+class ClientAuthResponse;
+class ClientEnumCharactersResult;
+class ClientWaitQueueFinish;
+class ClientWaitQueueUpdate;
 class RealmConnection;
 class RealmResponse;
 struct REALM_INFO;
 
 class CHARACTER_INFO {
     public:
+    struct ITEM {
+        /* 0000 */ uint32_t m_displayID;
+        /* 0004 */ uint32_t m_inventoryType;
+        /* 0008 */ uint32_t m_visualID;
+    };
+
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ char m_name [48];
-    /* 0038 */ uint32_t m_mapID;
-    /* 003C */ uint32_t m_zoneID;
-    /* 0040 */ uint32_t m_guildID;
-    /* 0044 */ C3Vector m_position;
-    /* 0050 */ uint32_t m_inventoryItemDisplayID [23];
-    /* 00AC */ uint32_t m_inventoryItemType [23];
-    /* 0108 */ uint32_t m_inventoryItemVisualID [23];
-    /* 0164 */ uint32_t m_petDisplayInfoID;
-    /* 0168 */ uint32_t m_petExperienceLevel;
-    /* 016C */ uint32_t m_petCreatureFamilyID;
-    /* 0170 */ uint32_t m_flags;
-    /* 0174 */ uint32_t m_customizeFlags;
-    /* 0178 */ uint8_t m_raceID;
-    /* 0179 */ uint8_t m_classID;
-    /* 017A */ uint8_t m_sexID;
-    /* 017B */ uint8_t m_skinColorID;
-    /* 017C */ uint8_t m_faceID;
-    /* 017D */ uint8_t m_hairStyleID;
-    /* 017E */ uint8_t m_hairColorID;
-    /* 017F */ uint8_t m_facialHairStyleID;
-    /* 0180 */ uint8_t m_experienceLevel;
-    /* 0181 */ uint8_t m_firstLogin;
-    /* 0182 */ uint8_t unk_0182[6];
+    /* 0038 */ uint8_t m_listOrder;
+    /* 0039 */ uint8_t unk_0039[3];
+    /* 003C */ uint32_t m_mapID;
+    /* 0040 */ uint32_t m_zoneID;
+    /* 0044 */ uint8_t unk_0044[4];
+    /* 0048 */ WOWGUID m_guildGUID;
+    /* 0050 */ C3Vector m_position;
+    /* 005C */ CHARACTER_INFO::ITEM m_items [23];
+    /* 0170 */ uint32_t m_petDisplayInfoID;
+    /* 0174 */ uint32_t m_petExperienceLevel;
+    /* 0178 */ uint32_t m_petCreatureFamilyID;
+    /* 017C */ uint32_t m_flags;
+    /* 0180 */ uint32_t m_customizeFlags;
+    /* 0184 */ uint8_t m_raceID;
+    /* 0185 */ uint8_t m_classID;
+    /* 0186 */ uint8_t m_sexID;
+    /* 0187 */ uint8_t m_skinColorID;
+    /* 0188 */ uint8_t m_faceID;
+    /* 0189 */ uint8_t m_hairStyleID;
+    /* 018A */ uint8_t m_hairColorID;
+    /* 018B */ uint8_t m_facialHairStyleID;
+    /* 018C */ uint8_t m_experienceLevel;
+    /* 018D */ uint8_t m_firstLogin;
+    /* 018E */ uint8_t unk_018E[2];
+};
+
+struct CHARACTER_REORDER {
+    /* 0000 */ uint64_t m_guid;
+    /* 0008 */ uint8_t m_oldOrder;
+    /* 0009 */ uint8_t m_newOrder;
 };
 
 class RealmConnection : public NetClient {
@@ -54,33 +71,31 @@ class RealmConnection : public NetClient {
     static TSList<RealmConnection::REALMCONNECTIONNODE> s_allRealmConnections;
     static SCritSect s_allRealmConnectionsCrit;
 
+    static bool ClientAuthResponseHandler(ClientAuthResponse* msg);
+    static bool ClientEnumCharactersResultHandler(ClientEnumCharactersResult* msg);
+    static bool ClientWaitQueueFinishHandler(ClientWaitQueueFinish* msg);
+    static bool ClientWaitQueueUpdateHandler(ClientWaitQueueUpdate* msg);
     static int32_t MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static void PollNet(const void* data, void* param);
 
-    /* 2EE0 */ RealmResponse* m_realmResponse;
-    /* 2EE4 */ uint32_t m_restrictHuman;
-    /* 2EE8 */ uint32_t m_restrictDwarf;
-    /* 2EEC */ uint32_t m_restrictGnome;
-    /* 2EF0 */ uint32_t m_restrictNightElf;
-    /* 2EF4 */ uint32_t m_restrictDraenei;
-    /* 2EF8 */ uint32_t m_restrictOrc;
-    /* 2EFC */ uint32_t m_restrictTroll;
-    /* 2F00 */ uint32_t m_restrictTauren;
-    /* 2F04 */ uint32_t m_restrictUndead;
-    /* 2F08 */ uint32_t m_restrictBloodElf;
-    /* 2F0C */ TSFixedArray<CHARACTER_INFO> m_characterList;
-    /* 2F18 */ uint8_t m_authenticated;
-    /* 2F19 */ uint8_t unk_2F19[3];
-    /* 2F1C */ uint32_t m_queuePosition;
-    /* 2F20 */ uint32_t m_freeCharacterMigration;
-    /* 2F24 */ uint32_t m_billingTimeRemaining;
-    /* 2F28 */ uint32_t m_billingTimeRested;
-    /* 2F2C */ uint8_t m_billingFlags;
-    /* 2F2D */ uint8_t m_accountExpansion;
-    /* 2F2E */ uint8_t unk_2F2E[2];
-    /* 2F30 */ uint32_t unk_2F30;
-    /* 2F34 */ uint32_t unk_2F34;
-    /* 2F38 */ uint32_t unk_2F38;
+    /* 46C8 */ RealmResponse* m_realmResponse;
+    /* 46CC */ TSFixedArray<CHARACTER_INFO> m_characterList;
+    /* 46D8 */ uint8_t m_authenticated;
+    /* 46D9 */ uint8_t unk_46D9[3];
+    /* 46DC */ uint32_t m_queuePosition;
+    /* 46E0 */ uint32_t m_freeCharacterMigration;
+    /* 46E4 */ uint32_t m_billingTimeRemaining;
+    /* 46E8 */ uint32_t m_billingTimeRested;
+    /* 46EC */ uint8_t m_billingFlags;
+    /* 46ED */ uint8_t m_accountExpansion;
+    /* 46EE */ uint8_t m_activeExpansion;
+    /* 46EF */ uint8_t unk_46EF;
+    /* 46F0 */ uint32_t m_timeRemaining;
+    /* 46F4 */ uint32_t m_timeRemainingStart;
+    /* 46F8 */ uint32_t m_regionID;
+    /* 46FC */ uint32_t m_battlegroupID;
+    /* 4700 */ uint32_t m_realmID;
+    /* 4704 */ uint32_t m_factionChangeRestrictions [24];
 
     ~RealmConnection();
     void HandleAuthChallenge(AuthenticationChallenge* challenge) override;
@@ -95,17 +110,19 @@ class RealmConnection : public NetClient {
     virtual void HandleLogoutAbortAck() = 0;
 
     RealmConnection(RealmResponse* realmResponse);
+    uint32_t GetFactionChangeRestriction(uint32_t raceID);
+    uint32_t GetTimeRemaining();
     int32_t HandleAddonInfo(uint32_t msgId, uint32_t time, CDataStore* msg);
-    int32_t HandleAuthResponse(uint32_t msgId, uint32_t time, CDataStore* msg);
-    int32_t HandleCharEnum(uint32_t msgId, uint32_t time, CDataStore* msg);
-    int32_t HandleCharacterCreate(uint32_t msgId, uint32_t time, CDataStore* msg);
+    bool HandleAuthResponse(ClientAuthResponse* msg);
+    bool HandleCharEnum(ClientEnumCharactersResult* msg);
     int32_t HandleCharacterDelete(uint32_t msgId, uint32_t time, CDataStore* msg);
-    int32_t HandleCharacterLoginFailed(uint32_t msgId, uint32_t time, CDataStore* msg);
     int32_t HandleClientCacheVersion(uint32_t msgId, uint32_t time, CDataStore* msg);
     int32_t HandleLogoutResponse(uint32_t msgId, uint32_t time, CDataStore* msg);
+    bool HandleWaitQueueUpdate(ClientWaitQueueUpdate* msg);
+    bool ReorderCharacters(const uint32_t* order, uint32_t count);
     void RequestCharacterEnum();
     void RequestCharacterLogin(WOWGUID guid, int32_t a2);
-    void SetSelectedRealm(uint32_t a1, uint32_t a2, uint32_t a3);
+    void SetSelectedRealm(uint32_t regionID, uint32_t battlegroupID, uint32_t realmID);
 };
 
 class RealmResponse {

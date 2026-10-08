@@ -10,8 +10,7 @@ class CInitCritSect;
 
 class SCritSect {
     public:
-    /* 0000 */ CRITICAL_SECTION m_critsect;
-    /* 0018 */ uint8_t unk_0018[16];
+    /* 0000 */ uint8_t m_opaqueData[40];
 
     SCritSect();
     ~SCritSect();

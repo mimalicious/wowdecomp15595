@@ -1,0 +1,159 @@
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
+#include <cstring>
+#include "Engine/Source/Base/CDataStore.h"
+
+// PROVEN: 5c33784b IDENTICAL/NONE
+// OFFSET: 0x0066BC00/0x140312430
+JamUserClientReorderEntry::JamUserClientReorderEntry() {
+}
+
+// OFFSET: 0x0066BC70
+JamUserClientReorderEntry::JamUserClientReorderEntry(const JamUserClientReorderEntry& source) {
+    memcpy(this->m_guid, source.m_guid, sizeof(this->m_guid));
+    this->m_newIndex = source.m_newIndex;
+}
+
+// PROVEN: b446fdc0 IDENTICAL/NONE
+// OFFSET: 0x0066D370
+UserClientEnumCharacters::UserClientEnumCharacters() {
+}
+
+// PROVEN: 814cdb6d IDENTICAL/NONE
+// OFFSET: 0x0066B9D0
+UserClientEnumCharacters::~UserClientEnumCharacters() {
+}
+
+// PROVEN: 336aa2a7 IDENTICAL/NONE
+// OFFSET: 0x0066BB20
+void UserClientEnumCharacters::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x502));
+}
+
+// PROVEN: 71643081 IDENTICAL/NONE
+// OFFSET: 0x0066D6F0
+UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
+    memcpy(this->m_guid, &guid, sizeof(this->m_guid));
+}
+
+// PROVEN: eabc7c9b IDENTICAL/NONE
+// OFFSET: 0x0066BC20
+UserClientPlayerLogin::~UserClientPlayerLogin() {
+}
+
+// OFFSET: 0x0066DEF0
+void UserClientPlayerLogin::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x5B1));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_guid[2] != 0);
+    bits.WriteBit(this->m_guid[3] != 0);
+    bits.WriteBit(this->m_guid[0] != 0);
+    bits.WriteBit(this->m_guid[6] != 0);
+    bits.WriteBit(this->m_guid[4] != 0);
+    bits.WriteBit(this->m_guid[5] != 0);
+    bits.WriteBit(this->m_guid[1] != 0);
+    bits.WriteBit(this->m_guid[7] != 0);
+    bits.Flush();
+
+    if (this->m_guid[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[2] ^ 1));
+    }
+
+    if (this->m_guid[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[7] ^ 1));
+    }
+
+    if (this->m_guid[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[0] ^ 1));
+    }
+
+    if (this->m_guid[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[3] ^ 1));
+    }
+
+    if (this->m_guid[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[5] ^ 1));
+    }
+
+    if (this->m_guid[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[6] ^ 1));
+    }
+
+    if (this->m_guid[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[1] ^ 1));
+    }
+
+    if (this->m_guid[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_guid[4] ^ 1));
+    }
+}
+
+// PROVEN: bb06eec1 IDENTICAL/NONE
+// OFFSET: 0x00670290
+UserClientReorderCharacters::UserClientReorderCharacters() {
+}
+
+// PROVEN: 2291a9d0 IDENTICAL/NONE
+// OFFSET: 0x00670360
+UserClientReorderCharacters::~UserClientReorderCharacters() {
+}
+
+// OFFSET: 0x0066F610
+void UserClientReorderCharacters::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x593));
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<10>(this->m_entries.Count());
+
+    for (uint32_t i = 0; i < this->m_entries.Count(); i++) {
+        const JamUserClientReorderEntry& entry = this->m_entries[i];
+        bits.WriteBit(entry.m_guid[1] != 0);
+        bits.WriteBit(entry.m_guid[4] != 0);
+        bits.WriteBit(entry.m_guid[5] != 0);
+        bits.WriteBit(entry.m_guid[3] != 0);
+        bits.WriteBit(entry.m_guid[0] != 0);
+        bits.WriteBit(entry.m_guid[7] != 0);
+        bits.WriteBit(entry.m_guid[6] != 0);
+        bits.WriteBit(entry.m_guid[2] != 0);
+    }
+
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_entries.Count(); i++) {
+        const JamUserClientReorderEntry& entry = this->m_entries[i];
+
+        if (entry.m_guid[6]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[6] ^ 1));
+        }
+
+        if (entry.m_guid[5]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[5] ^ 1));
+        }
+
+        if (entry.m_guid[1]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[1] ^ 1));
+        }
+
+        if (entry.m_guid[4]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[4] ^ 1));
+        }
+
+        if (entry.m_guid[0]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[0] ^ 1));
+        }
+
+        if (entry.m_guid[3]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[3] ^ 1));
+        }
+
+        msg->Put(entry.m_newIndex);
+
+        if (entry.m_guid[2]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[2] ^ 1));
+        }
+
+        if (entry.m_guid[7]) {
+            msg->Put(static_cast<uint8_t>(entry.m_guid[7] ^ 1));
+        }
+    }
+}

@@ -208,28 +208,28 @@ void SRWLock::SURWLockLeave(volatile SURWLOCK* surwlock, int32_t fromwriting) {
     }
 }
 
-// PROVEN: b5ed1be4 IDENTICAL/IDENTICAL
+// PROVEN: 79123baa IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB400/0x1400F4220
 SCritSect::SCritSect() {
-    InitializeCriticalSection(&this->m_critsect);
+    InitializeCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: 8df3408f IDENTICAL/IDENTICAL
+// PROVEN: 58b5a765 IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB410/0x1400F4240
 SCritSect::~SCritSect() {
-    DeleteCriticalSection(&this->m_critsect);
+    DeleteCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: eb88a18d IDENTICAL/IDENTICAL
+// PROVEN: d449ea0a IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB420/0x1400F4250
 void SCritSect::Enter() {
-    EnterCriticalSection(&this->m_critsect);
+    EnterCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
-// PROVEN: 57b9e440 IDENTICAL/IDENTICAL
+// PROVEN: 03f3aaed IDENTICAL/IDENTICAL
 // OFFSET: 0x004BB430/0x1400F4260
 void SCritSect::Leave() {
-    LeaveCriticalSection(&this->m_critsect);
+    LeaveCriticalSection(reinterpret_cast<CRITICAL_SECTION*>(this->m_opaqueData));
 }
 
 // PROVEN: b04316f3 IDENTICAL/IDENTICAL

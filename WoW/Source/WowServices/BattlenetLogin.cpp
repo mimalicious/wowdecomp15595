@@ -57,7 +57,7 @@ bool BattlenetApplication::Send(uint32_t connection, const void* data, uint32_t 
         SErrDisplayAppFatalMessage("", "", 0);
     }
 
-    return this->m_wowConnection->Send(static_cast<uint8_t*>(const_cast<void*>(data)), size, true);
+    return this->m_wowConnection->SendRaw(static_cast<uint8_t*>(const_cast<void*>(data)), size);
 }
 
 // OFFSET: #0x008C51C0
@@ -446,7 +446,7 @@ void BattlenetApplication::Disconnect(uint32_t connection) {
 
     if (this->m_wowConnection) {
         this->m_wowConnection->Disconnect();
-        BattlenetLogin::LogConnectionStatus("Disconnected from %x", this->m_wowConnection->m_connectAddress);
+        BattlenetLogin::LogConnectionStatus("Disconnected from %x", this->m_wowConnection->m_connectAddress.m_ipv4);
     }
 }
 

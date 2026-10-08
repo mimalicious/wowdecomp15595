@@ -1,10 +1,8 @@
-#if defined(WOWDECOMP_ARCH_64)
-
 #include <winsock2.h>
 #include <windows.h>
 #include "WoW/Source/WowServices/WowConnectionNet.h"
 
-// OFFSET: #0x004697E0
+// OFFSET: 0x00550D00/0x1401ABC10
 void WowConnectionNet::PlatformChangeState(WowConnection* connection, WOW_CONN_STATE state) {
     long networkEvents = 0;
 
@@ -29,7 +27,7 @@ void WowConnectionNet::PlatformChangeState(WowConnection* connection, WOW_CONN_S
     SetEvent(this->m_event);
 }
 
-// OFFSET: #0x00469860
+// OFFSET: 0x00550AA0/0x1401AB930
 void WowConnectionNet::PlatformRun() {
     this->m_networkStarted = true;
 
@@ -147,7 +145,7 @@ void WowConnectionNet::PlatformInit(bool useEngine) {
     }
 }
 
-// OFFSET: %0x005605C0
+// OFFSET: 0x00550A00/0x1401AB880
 void WowConnectionNet::PlatformDestruct(WowConnection* connection) {
     if (connection->m_event) {
         WSACloseEvent(connection->m_event);
@@ -161,7 +159,7 @@ void WowConnectionNet::PlatformWorkerReady() {
     SetEvent(this->m_event);
 }
 
-// OFFSET: %0x00560600
+// OFFSET: 0x00550A40/0x1401AB8C0
 void WowConnectionNet::PlatformAdd(WowConnection* connection) {
     if (!connection->m_event) {
         connection->m_event = WSACreateEvent();
@@ -184,9 +182,7 @@ void WowConnectionNet::PlatformRemove(WowConnection* connection) {
 void WowConnectionNet::PlatformStop() {
 }
 
-// OFFSET: #0x00469730
+// INLINED
 void WowConnectionNet::PlatformDestroy() {
     WSACleanup();
 }
-
-#endif

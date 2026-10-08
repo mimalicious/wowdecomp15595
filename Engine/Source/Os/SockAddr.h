@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include "Engine/Source/Storm/H/storm.h"
 
 enum SOCKADDR_TYPE {
@@ -21,6 +22,7 @@ class SockAddr {
     };
     /* 0010 */ int32_t m_type;
 
+    SockAddr();
     ~SockAddr();
     void Normalize();
     bool Parse(const char* str);

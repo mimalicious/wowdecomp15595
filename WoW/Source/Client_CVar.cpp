@@ -142,6 +142,12 @@ static CVar* s_cvAsyncHandlerTimeout;
 // STATIC: #0x00C5DE88
 char s_localeCode[5];
 
+// STATIC: 0x00D361F0
+CVar* g_disableServerNagleVar;
+
+// STATIC: 0x00D36218
+CVar* g_useIPv6Var;
+
 // OFFSET: %0x004015C0
 static bool MouseSpeedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetMouseSpeed(SStrToFloat(value));
@@ -698,6 +704,8 @@ void ClientRegisterConsoleCommands() {
     }
 
     CVar::Register("accounttype", "Account Type", 0, "", NULL, CATEGORY_GAME, false, NULL, false);
+    g_useIPv6Var = CVar::Register("useIPv6", "Enable the usage of IPv6 sockets", 1, "0", NULL, CATEGORY_NET, false, NULL, false);
+    g_disableServerNagleVar = CVar::Register("disableServerNagle", "Disable server-side nagle algorithm", 1, "1", NULL, CATEGORY_NET, false, NULL, false);
 }
 
 // OFFSET: #0x004026B0

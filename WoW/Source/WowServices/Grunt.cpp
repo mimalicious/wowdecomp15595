@@ -85,7 +85,7 @@ void Grunt::ClientLink::Send(CDataStore& msg) {
         uint32_t size = msg.m_size;
         void* data;
         msg.GetDataInSitu(data, size);
-        this->m_connection->Send(static_cast<uint8_t*>(data), size, false);
+        this->m_connection->SendRaw(static_cast<uint8_t*>(data), size);
     }
 
     this->m_lock.Leave();
@@ -1158,7 +1158,7 @@ void Grunt::ServerLink::Send(CDataStore& msg) {
         uint32_t size = msg.m_size;
         void* data;
         msg.GetDataInSitu(data, size);
-        this->m_connection->Send(static_cast<uint8_t*>(data), size, false);
+        this->m_connection->SendRaw(static_cast<uint8_t*>(data), size);
     }
 
     this->m_lock.Leave();
@@ -1172,7 +1172,7 @@ void Grunt::ServerLink::SendConnected(CDataStore& msg) {
         uint32_t size = msg.m_size;
         void* data;
         msg.GetDataInSitu(data, size);
-        this->m_connection->Send(static_cast<uint8_t*>(data), size, false);
+        this->m_connection->SendRaw(static_cast<uint8_t*>(data), size);
     }
 
     this->m_lock.Leave();

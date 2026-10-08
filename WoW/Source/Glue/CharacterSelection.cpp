@@ -450,8 +450,8 @@ void CCharacterSelection::ShowCharacter() {
         CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_component->m_data.m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
 
         for (uint32_t slot = 0; slot < 23; slot++) {
-            int32_t displayID = CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_inventoryItemDisplayID[slot];
-            int32_t itemVisual = CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_inventoryItemVisualID[slot];
+            int32_t displayID = CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_items[slot].m_displayID;
+            int32_t itemVisual = CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_items[slot].m_visualID;
 
             if (!displayID) {
                 continue;
@@ -483,10 +483,10 @@ void CCharacterSelection::ShowCharacter() {
 
             if (slot == INVSLOT_MAINHAND || slot == INVSLOT_OFFHAND || (slot == INVSLOT_RANGED && hunter)) {
                 if (found) {
-                    GEOCOMPONENTLINKS link = CCharacterComponent::AddHandItem(CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_component->m_data.m_model, &itemRec, static_cast<INVENTORY_SLOTS>(slot), SHEATHE_NONE, false, CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_inventoryItemType[slot] == INVTYPE_SHIELD, false, visual);
+                    GEOCOMPONENTLINKS link = CCharacterComponent::AddHandItem(CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_component->m_data.m_model, &itemRec, static_cast<INVENTORY_SLOTS>(slot), SHEATHE_NONE, false, CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_items[slot].m_inventoryType == INVTYPE_SHIELD, false, visual);
 
                     if (slot == INVSLOT_RANGED) {
-                        if (CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_inventoryItemType[INVSLOT_RANGED] == INVTYPE_RANGED) {
+                        if (CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_characterInfo.m_items[INVSLOT_RANGED].m_inventoryType == INVTYPE_RANGED) {
                             for (CM2Model* attached = data.m_model->m_attachList; attached; attached = attached->m_attachNext) {
                                 if (attached->m_attachmentId == static_cast<uint32_t>(link)) {
                                     attached->SetLoadedCallback(&CCharacterSelection::ModelLoadedCallback, NULL);

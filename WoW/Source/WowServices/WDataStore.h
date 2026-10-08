@@ -4,18 +4,18 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Base/CDataStore.h"
+#include "Engine/Source/Base/ObjectAlloc.h"
 
-struct WDATASTOREBUFFER {
-    /* 0000 */ uint32_t m_memHandle;
-    /* 0004 */ uint8_t unk_0004[28];
+struct WDATASTOREBUFFERHEADER {
+    /* 0000 */ uint32_t m_handle;
+    /* 0004 */ uint8_t m_header[28];
 };
 
-class WDataStoreHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
+template <uint32_t size>
+struct WDATASTOREBUFFER : public WDATASTOREBUFFERHEADER {
+    /* 0020 */ uint8_t m_data[size];
 
-    void Delete(WDATASTOREBUFFER* buffer);
-    WDATASTOREBUFFER* New();
+    WDATASTOREBUFFER();
 };
 
 class WDataStore : public CDataStore {
@@ -25,7 +25,7 @@ class WDataStore : public CDataStore {
     static void StaticDestroy();
     static void StaticInitialize();
 
-    /* 0018 */ WDATASTOREBUFFER* m_bufferObj;
+    /* 0018 */ WDATASTOREBUFFERHEADER* m_bufferObj;
     /* 001C */ uint32_t unk_001C;
     /* 0020 */ uint32_t m_chunkSize;
 
@@ -37,5 +37,7 @@ class WDataStore : public CDataStore {
 
     WDataStore();
 };
+
+#include "WoW/Source/WowServices/WDataStore.inl"
 
 #endif

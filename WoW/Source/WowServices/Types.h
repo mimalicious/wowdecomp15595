@@ -118,6 +118,12 @@ enum Result {
 };
 }
 
+enum WC_ENCRYPT_TYPE {
+    WC_ENCRYPT_NONE = 0,
+    WC_ENCRYPT_ARC4 = 1,
+    WC_ENCRYPT_PANAMA = 2,
+};
+
 enum WOWC_TYPE {
     WOWC_TYPE_MESSAGES = 0,
     WOWC_TYPE_STREAM = 1,

@@ -62,6 +62,7 @@ target_link_libraries(Wow
         DB
         Game
         Glue
+        JamClientAutoCode
         LiquidSystem
         Magic
         Minigame
