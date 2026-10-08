@@ -176,7 +176,7 @@ Blizzard::Mopaq::MpqErrorHandler::~MpqErrorHandler() {
 Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::~MpqRepairOnDemandErrorHandler() {
 }
 
-// INLINED
+// OFFSET: 0x007D4510
 Blizzard::Mopaq::MpqStandaloneRepairErrorHandler::MpqStandaloneRepairErrorHandler() {
 }
 

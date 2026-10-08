@@ -326,7 +326,7 @@ bool System_File::Stacked::stream_unlink(Blizzard::File::Filesystem* fs, FilePar
     return (*reinterpret_cast<FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + parms->m_verb))(fs->m_next, parms);
 }
 
-// OFFSET: %0x007488F0
+// OFFSET: 0x007EF3F0
 bool StreamDirWalk::Walk(Blizzard::File::Filesystem* fs, System_File::Stacked::FileParms* parms) {
     char buffer[1024];
 
@@ -338,11 +338,19 @@ bool StreamDirWalk::Walk(Blizzard::File::Filesystem* fs, System_File::Stacked::F
         (*reinterpret_cast<System_File::Stacked::FileFunc*>(reinterpret_cast<uintptr_t>(fs->m_next) + walk.m_verb))(fs->m_next, &walk);
     }
 
-    std::vector<std::string> files = Blizzard::Streaming::FileManifest::GetFileList(parms->m_path);
+    std::vector<std::string> files = Blizzard::Streaming::GetFileList(parms->m_path);
 
     for (std::vector<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
         if (m_files.find(*it) == m_files.end()) {
             m_files[*it] = false;
+        }
+    }
+
+    std::vector<std::string> directories = Blizzard::Streaming::GetDirectoryList(parms->m_path);
+
+    for (std::vector<std::string>::iterator it = directories.begin(); it != directories.end(); ++it) {
+        if (m_files.find(*it) == m_files.end()) {
+            m_files[*it] = true;
         }
     }
 

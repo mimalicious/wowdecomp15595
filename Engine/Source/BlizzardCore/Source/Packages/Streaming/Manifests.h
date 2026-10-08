@@ -133,7 +133,6 @@ class ManifestInfo {
     static std::string GetRemotePath(const std::string& name);
     static int32_t GetServerItemMaxRetry(const std::string& url, const std::string& name);
     static Manifests::TransportItem* GetTransportItem(const std::string& name);
-    static std::vector<std::string> GetFileList(const char* path);
     static void SetFileItem(std::string name, const Manifests::FileItem& item);
     static void SetParameter(const char* name, int32_t value);
     static void SetParameter(const char* name, const char* value);
@@ -156,6 +155,8 @@ class ManifestInfo {
     Manifests::FileItem* GetFileItem(const std::string& name);
     std::string GetRandomServerLocation(const std::vector<std::string>& validServers);
     Manifests::ManifestItem* HandleBaseTag(const char* tag, const char* value);
+    std::vector<std::string> GetDirectoryList(const char* path);
+    std::vector<std::string> GetFileList(const char* path);
     bool ReadFile(const char* path);
     bool ReadDirectFile(const char* path);
     bool ReadDirectFileFromBuffer(char* buffer, int32_t size);
@@ -173,7 +174,6 @@ class FileManifest {
     };
 
     static int32_t GetBGPreloadSleep();
-    static std::vector<std::string> GetFileList(const char* path);
     static bool GetIsStreamingTrial();
     static bool ReadDirectFile(const char* path);
     static bool ReadDirectFileFromBuffer(char* buffer, int32_t size);
@@ -281,6 +281,8 @@ extern const char* s_httpPrefix;
 extern PROCESSURLFUNC s_processUrlFunc;
 extern const char* s_filePrefix;
 
+std::vector<std::string> GetDirectoryList(const char* path);
+std::vector<std::string> GetFileList(const char* path);
 bool SplitLine(char* line, char** value, char** tag, int32_t* length);
 char* STORMAPI TrimLine(char* line);
 

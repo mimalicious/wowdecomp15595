@@ -202,7 +202,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
     return true;
 }
 
-// OFFSET: 0x007C3560
+// OFFSET: [0x007C3770, 0x007C3560]
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
@@ -417,15 +417,15 @@ std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
 Blizzard::Streaming::Manifests::ServerItem::~ServerItem() {
 }
 
-// OFFSET: #0x004440A0
+// OFFSET: 0x007D4A40
 Blizzard::Streaming::Manifests::FileItem::FileItem() {
 }
 
-// OFFSET: [#0x00444130, #0x00444250]
+// OFFSET: [0x007D07F0, 0x007D4AF0]
 Blizzard::Streaming::Manifests::FileItem::~FileItem() {
 }
 
-// OFFSET: 0x007D5970
+// OFFSET: 0x007D9590
 Blizzard::Streaming::Manifests::ServerItem::ServerItem() {
     UsageSlot slot;
     slot.m_time = TimeslotItem::ParseTimestamp("0:00");
@@ -1014,6 +1014,97 @@ std::vector<std::string> Blizzard::Streaming::ManifestInfo::GetFileList(const ch
     return files;
 }
 
+// OFFSET: 0x007ED3C0
+std::vector<std::string> Blizzard::Streaming::ManifestInfo::GetDirectoryList(const char* path) {
+    std::vector<std::string> files;
+
+    char directory[260];
+    Blizzard::File::MakeAbsolutePath(path, directory, sizeof(directory), false);
+
+    char separator = Blizzard::String::FirstPathSeparator(directory);
+    int32_t length = strlen(directory);
+    char last = length > 0 ? directory[length - 1] : '\0';
+
+    if (!length || last != separator) {
+        if (last == '/' || last == '\\') {
+            length--;
+        }
+
+        if (length > 258) {
+            length = 258;
+        }
+
+        directory[length] = separator;
+        directory[length + 1] = '\0';
+    }
+
+    char normalized[260];
+    char* dst = normalized;
+    const char* src = directory;
+    uint32_t left = 260;
+
+    while (true) {
+        char c = *src++;
+        left--;
+
+        if (!c) {
+            break;
+        }
+
+        *dst++ = c == '/' ? '\\' : c;
+
+        if (!left) {
+            dst--;
+            break;
+        }
+    }
+
+    *dst = '\0';
+
+    for (std::map<std::string, Manifests::FileItem>::iterator it = Get()->m_files.begin(); it != Get()->m_files.end(); ++it) {
+        if (it->second.m_size) {
+            continue;
+        }
+
+        const char* localPath = it->second.m_localPath.c_str();
+        char localDirectory[260];
+        char fileName[260];
+
+        if (localPath) {
+            const char* name = localPath;
+
+            for (const char* cursor = localPath; *cursor; cursor++) {
+                if (*cursor == '/' || *cursor == '\\') {
+                    name = cursor + 1;
+                }
+            }
+
+            int32_t directoryLength = name - localPath + 1;
+            Blizzard::String::Copy(localDirectory, localPath, directoryLength <= 260 ? directoryLength : 260);
+            Blizzard::String::Copy(fileName, name, 260);
+        } else {
+            localDirectory[0] = '\0';
+            fileName[0] = '\0';
+        }
+
+        if (!_stricmp(normalized, localDirectory)) {
+            files.push_back(std::string(fileName));
+        }
+    }
+
+    return files;
+}
+
+// OFFSET: 0x007EDAC0
+std::vector<std::string> Blizzard::Streaming::GetFileList(const char* path) {
+    return ManifestInfo::Get()->GetFileList(path);
+}
+
+// OFFSET: 0x007EDAF0
+std::vector<std::string> Blizzard::Streaming::GetDirectoryList(const char* path) {
+    return ManifestInfo::Get()->GetDirectoryList(path);
+}
+
 // OFFSET: 0x007ED6C0/0x1404F9610
 std::string Blizzard::Streaming::ManifestInfo::GetBandwidthDataString() {
     std::string result = GetBandwidthString();
@@ -1105,11 +1196,6 @@ bool Blizzard::Streaming::FileManifest::SetSpeedTest(int32_t speedTest) {
     }
 
     return true;
-}
-
-// OFFSET: #0x004536B0
-std::vector<std::string> Blizzard::Streaming::FileManifest::GetFileList(const char* path) {
-    return ManifestInfo::GetFileList(path);
 }
 
 // OFFSET: #0x004536E0
