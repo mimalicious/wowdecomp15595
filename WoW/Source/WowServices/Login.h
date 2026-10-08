@@ -10,7 +10,7 @@ class CDataStore;
 struct LoginData;
 class LoginResponse;
 
-extern const char* g_LoginStateStringNames[18];
+extern const char* g_LoginStateStringNames[20];
 extern const char* g_LoginResultStringNames[41];
 
 class Login : public Grunt::ClientResponse {
@@ -62,7 +62,7 @@ class Login : public Grunt::ClientResponse {
     virtual void GetRealmList() = 0;
     virtual void Reconnect() = 0;
     virtual void Logon(const char* loginServer, const char* portal) = 0;
-    virtual int32_t Wait(const char* message, LoginData& loginData) = 0;
+    virtual bool Wait(const char* message, LoginData& loginData) = 0;
     virtual void ProveVersion(const uint8_t* versionChecksum) = 0;
     virtual void FileAccept(bool accept, uint64_t offset) = 0;
     virtual void FileComplete(bool success) = 0;
@@ -84,6 +84,10 @@ class Login : public Grunt::ClientResponse {
     virtual bool IsTrialAccount() = 0;
     virtual bool IsGMAccount() = 0;
     virtual bool IsProPassAccount() = 0;
+    virtual uint32_t GetOutOfBandChallengeType() = 0;
+    virtual const char* GetOutOfBandChallengeTitle() = 0;
+    virtual const char* GetOutOfBandChallengeText() = 0;
+    virtual int32_t GetOutOfBandChallengeTimeLeft() = 0;
     virtual void Update() = 0;
     virtual void Init(LoginResponse* loginResponse) = 0;
     virtual ~Login();

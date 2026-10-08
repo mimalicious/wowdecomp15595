@@ -4,7 +4,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/WowServices/LoginResponse.h"
 
-// STATIC: #0x00AB9548
+// STATIC: 0x00CA06F8
 const char* g_LoginResultStringNames[41] = {
     "LOGIN_OK",
     "LOGIN_INVALID_CHALLENGE_MESSAGE",
@@ -49,8 +49,8 @@ const char* g_LoginResultStringNames[41] = {
     "LOGIN_ACCOUNT_LOCKED",
 };
 
-// STATIC: #0x00AB95F0
-const char* g_LoginStateStringNames[18] = {
+// STATIC: 0x00CA07A0
+const char* g_LoginStateStringNames[20] = {
     "LOGIN_STATE_INITIALIZED",
     "LOGIN_STATE_CONNECTING",
     "LOGIN_STATE_HANDSHAKING",
@@ -69,6 +69,8 @@ const char* g_LoginStateStringNames[18] = {
     "RESPONSE_CONNECTED",
     "LOGIN_STATE_DISCONNECTED",
     "LOGIN_STATE_SURVEY",
+    "LOGIN_STATE_OUTOFBAND_CHALLENGE",
+    "LOGIN_STATE_OUTOFBAND_CHALLENGE_WAIT",
 };
 
 // STATIC: #0x00B38CD4
@@ -82,7 +84,7 @@ void LoginResponse::UpdateLoginStatus(LOGIN_STATE state, LOGIN_RESULT result, co
     this->m_loginState = state;
     this->m_loginResult = result;
 
-    if (static_cast<uint32_t>(state) > LOGIN_STATE_SURVEY) {
+    if (static_cast<uint32_t>(state) > LOGIN_STATE_OUTOFBAND_CHALLENGE_WAIT) {
         SStrPrintf(stateString, sizeof(stateString), "LOGIN_STATE_UNKNOWN_%d", state);
     } else {
         SStrCopy(stateString, g_LoginStateStringNames[state], sizeof(stateString));
@@ -155,7 +157,7 @@ bool Login::IsLoggedOn() {
     return this->m_loggedOn;
 }
 
-// OFFSET: #0x004658D0
+// OFFSET: 0x004C5320/0x140100460
 Login::Login() {
     this->m_loginResponse = NULL;
     this->m_password = NULL;

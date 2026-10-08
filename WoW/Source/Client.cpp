@@ -213,8 +213,8 @@ WowClientDB<Startup_StringsRec> g_startup_StringsDB;
 // STATIC: #0x00AD2FE0
 const char* s_iniLocaleNames[9] = { "enUS", "koKR", "frFR", "deDE", "zhCN", "zhTW", "esES", "esMX", "ruRU" };
 
-// STATIC: #0x00AD3004
-uint32_t s_localeIds[9] = { 'enUS', 'koKR', 'frFR', 'deDE', 'zhCN', 'zhTW', 'esES', 'esMX', 'ruRU' };
+// STATIC: 0x00C9A9CC
+uint32_t s_localeIds[15] = { 'deDE', 'enGB', 'enUS', 'esES', 'frFR', 'koKR', 'zhCN', 'zhTW', 'enCN', 'enTW', 'esMX', 'ruRU', 'enUS', 'ptBR', 'ptPT' };
 
 // STATIC: #0x00B2F99C
 int32_t s_region;

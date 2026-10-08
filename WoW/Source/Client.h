@@ -71,7 +71,7 @@ extern uint8_t s_expansionLevel;
 extern CVar* s_gammaCvar;
 extern int32_t s_locale;
 extern const char* s_iniLocaleNames[9];
-extern uint32_t s_localeIds[9];
+extern uint32_t s_localeIds[15];
 extern char s_localeCode[5];
 extern int32_t s_isPvPRealm;
 extern int32_t s_region;

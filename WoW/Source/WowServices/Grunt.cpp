@@ -30,7 +30,7 @@ static const uint8_t s_serverAuthKey[16] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
 // STATIC: #0x00B24CA0
 static const char* s_linkTypeNames[] = { "Grunt", "Battlenet" };
 
-// STATIC: #0x00B24D70
+// STATIC: 0x00D27674
 static Grunt::Command<Grunt::ServerLink> s_serverCmds[] = {
     { 0x00, {}, "ServerLink::CMD_GRUNT_AUTH_CHALLENGE", &Grunt::ServerLink::CmdGruntAuthChallenge },
     { 0x02, {}, "ServerLink::CMD_GRUNT_AUTH_VERIFY", &Grunt::ServerLink::CmdGruntAuthVerify },
@@ -43,9 +43,10 @@ static Grunt::Command<Grunt::ServerLink> s_serverCmds[] = {
     { 0x41, {}, "ServerLink::CMD_GRUNT_STRINGS", &Grunt::ServerLink::CmdGruntStrings },
     { 0x44, {}, "ServerLink::CMD_GRUNT_SUNKENUPDATE", &Grunt::ServerLink::CmdGruntSunkenUpdate },
     { 0x46, {}, "ServerLink::CMD_GRUNT_SUNKEN_ONLINE", &Grunt::ServerLink::CmdGruntSunkenOnline },
+    { 0x2C, {}, "ServerLink::CMD_GRUNT_CAISTIMEUPDATE", &Grunt::ServerLink::CmdGruntCaisTimeUpdate },
 };
 
-// STATIC: #0x00B24E48
+// STATIC: 0x00D27EC8
 static Grunt::ServerLink::Feature s_serverFeatures[] = {
     { 0x00030001, 14 },
     { 0x00030002, 14 },
@@ -54,6 +55,7 @@ static Grunt::ServerLink::Feature s_serverFeatures[] = {
     { 0x00030005, 1 },
     { 0x00030006, 14 },
     { 0x00040001, 1 },
+    { 0x00040002, 5 },
 };
 
 // INLINED
@@ -77,7 +79,8 @@ void Grunt::Timer::Shutdown() {
     this->m_lock.Leave();
 }
 
-// OFFSET: #0x008CBA40
+// PROVEN: ee7855f9 IDENTICAL/NONE
+// OFFSET: 0x00B02B00
 void Grunt::ClientLink::Send(CDataStore& msg) {
     this->m_lock.Enter();
 
@@ -126,7 +129,7 @@ void Grunt::ClientLink::SetState(int32_t state) {
     this->m_lock.Leave();
 }
 
-// OFFSET: #0x008CBB40
+// OFFSET: 0x00B02C00/0x1408C4BA0
 void Grunt::ClientLink::Connect(const char* address) {
     if (this->m_state) {
         return;
@@ -208,7 +211,7 @@ void Grunt::ClientLink::PackLogon(CDataStore& msg, const Grunt::ClientLink::Logo
     msg.Set(start, static_cast<uint16_t>(msg.m_size - start - 2));
 }
 
-// OFFSET: #0x008CD7E0
+// OFFSET: 0x00B04A10/0x1408C7330
 void Grunt::ClientLink::LogonNewSession(const Grunt::ClientLink::Logon& logon) {
     this->SetState(3);
 
@@ -239,7 +242,7 @@ void Grunt::ClientLink::LogonNewSession(const Grunt::ClientLink::Logon& logon) {
     memset(password, 0, SStrLen(password));
 }
 
-// OFFSET: #0x008CD9F0
+// OFFSET: 0x00B04C70/0x1408C75B0
 void Grunt::ClientLink::LogonStoredSession(const Grunt::ClientLink::Logon& logon) {
     this->SetState(3);
 
@@ -255,7 +258,7 @@ void Grunt::ClientLink::LogonStoredSession(const Grunt::ClientLink::Logon& logon
     this->Send(msg);
 }
 
-// OFFSET: #0x008CDB90
+// OFFSET: 0x00B04E20/0x1408C7790
 void Grunt::ClientLink::SendSurveyData(uint16_t size, uint8_t* data) {
     CDataStoreCache<1024> msg;
     msg.Put(static_cast<uint8_t>(4));
@@ -267,7 +270,7 @@ void Grunt::ClientLink::SendSurveyData(uint16_t size, uint8_t* data) {
     this->Send(msg);
 }
 
-// OFFSET: #0x008CDD00
+// OFFSET: 0x00B04F90/0x1408C7900
 void Grunt::ClientLink::SendSurveyFailed() {
     CDataStoreCache<1024> msg;
     msg.Put(static_cast<uint8_t>(4));
@@ -278,7 +281,7 @@ void Grunt::ClientLink::SendSurveyFailed() {
     this->Send(msg);
 }
 
-// OFFSET: #0x008CE5C0
+// OFFSET: 0x00B05480/0x1408C7E40
 void Grunt::Timer::Insert(Grunt::Timer::Event& event) {
     this->m_lock.Enter();
 
@@ -296,11 +299,11 @@ void Grunt::Timer::Insert(Grunt::Timer::Event& event) {
     this->m_lock.Leave();
 }
 
-// OFFSET: #0x008CE6D0
+// OFFSET: 0x00B05740
 Grunt::Pending::~Pending() {
 }
 
-// OFFSET: #0x008CED90
+// OFFSET: 0x00B056B0/0x1408C80F0
 int32_t Grunt::Timer::Pump() {
     this->m_lock.Enter();
 
@@ -327,12 +330,12 @@ int32_t Grunt::Timer::Pump() {
     return 100;
 }
 
-// OFFSET: #0x008CEE20
+// OFFSET: 0x00B05E70
 Grunt::Timer::~Timer() {
     this->Shutdown();
 }
 
-// OFFSET: #0x008CEF70
+// OFFSET: 0x00B05F10
 void Grunt::Pending::CheckExpired(bool all) {
     uint32_t now = OsGetAsyncTimeMs();
 
@@ -366,7 +369,7 @@ void Grunt::Pending::CheckExpired(bool all) {
     }
 }
 
-// OFFSET: #0x008CEEC0
+// OFFSET: 0x00B05590
 Grunt::Pending::Data* Grunt::Pending::Remove(uint32_t id) {
     this->m_lock.Enter();
 
@@ -384,7 +387,7 @@ Grunt::Pending::Data* Grunt::Pending::Remove(uint32_t id) {
     return NULL;
 }
 
-// OFFSET: #0x008CF600
+// OFFSET: 0x00B06A10
 void Grunt::ClientLink::Call() {
     this->CheckExpired(false);
 
@@ -424,7 +427,7 @@ Grunt::Timer::Timer() : m_event(0, 0) {
     SThread::Create(Grunt::Timer::ThreadProc, this, this->m_thread, const_cast<char*>("GruntTimerEvt"), 0);
 }
 
-// OFFSET: #0x008CF800
+// OFFSET: 0x00B06BE0/0x1408C9D20
 Grunt::ClientLink::ClientLink(Grunt::ClientResponse& clientResponse) : Grunt::Pending(18000), m_serverId(0), m_accountFlags(0), m_surveyId(0), m_localAddress(0), m_connection(NULL), m_clientResponse(&clientResponse) {
     this->SetState(0);
 
@@ -440,12 +443,12 @@ void Grunt::ClientLink::WCMessageReady(WowConnection* connection, uint32_t timeS
 void Grunt::ClientLink::Expired(Grunt::Pending::Data& data) {
 }
 
-// OFFSET: #0x008CBBF0
+// OFFSET: 0x00B02CD0
 bool CanReadNumBytes(CDataStore& msg, uint32_t bytes) {
     return msg.m_read <= msg.m_size && msg.m_size - msg.m_read >= bytes;
 }
 
-// OFFSET: #0x008CC250
+// OFFSET: 0x00B03420/0x1408C5660
 int32_t Grunt::ClientLink::CmdRealmList(CDataStore& msg) {
     if (msg.m_read > msg.m_size || msg.m_size - msg.m_read < 2) {
         return 0;
@@ -522,7 +525,7 @@ int32_t Grunt::ClientLink::CmdRealmList(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CC3E0
+// OFFSET: 0x00B035B0/0x1408C5870
 int32_t Grunt::ClientLink::CmdAuthLogonChallenge(CDataStore& msg) {
     if (msg.m_read > msg.m_size || msg.m_size - msg.m_read < 2) {
         return 0;
@@ -654,7 +657,7 @@ int32_t Grunt::ClientLink::CmdAuthLogonChallenge(CDataStore& msg) {
     this->SetState(2);
 
     if (result >= 33) {
-        DebugLog("Unknown grunt result %d @ %d", result, __LINE__);
+        DebugLog(1, 10, "Unknown grunt result %d @ %d", result, 1934);
         result = Grunt::GRUNT_RESULT_DISCONNECTED;
     }
 
@@ -663,7 +666,7 @@ int32_t Grunt::ClientLink::CmdAuthLogonChallenge(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CC7A0
+// OFFSET: 0x00B03970/0x1408C5DD0
 int32_t Grunt::ClientLink::CmdAuthLogonProof(CDataStore& msg) {
     if (msg.m_read >= msg.m_size) {
         return 0;
@@ -728,7 +731,7 @@ int32_t Grunt::ClientLink::CmdAuthLogonProof(CDataStore& msg) {
         this->SetState(2);
 
         if (result >= 33) {
-            DebugLog("Unknown grunt result %d @ %d", result, __LINE__);
+            DebugLog(1, 10, "Unknown grunt result %d @ %d", result, 2014);
             result = Grunt::GRUNT_RESULT_DISCONNECTED;
         }
 
@@ -738,7 +741,7 @@ int32_t Grunt::ClientLink::CmdAuthLogonProof(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CD710
+// OFFSET: 0x00B04940
 void Grunt::ClientLink::WCDataReady(WowConnection* connection, uint32_t timeStamp, uint8_t* data, int32_t length) {
     this->m_datastore.PutArray(data, length);
     this->m_datastore.Finalize();
@@ -761,7 +764,7 @@ void Grunt::ClientLink::WCDataReady(WowConnection* connection, uint32_t timeStam
     }
 }
 
-// OFFSET: #0x008CE0F0
+// OFFSET: 0x00B05370
 void Grunt::ClientLink::GetRealmList() {
     if (this->m_state != 6) {
         return;
@@ -774,7 +777,7 @@ void Grunt::ClientLink::GetRealmList() {
     this->Send(msg);
 }
 
-// OFFSET: #0x008CE720
+// OFFSET: 0x00B057C0/0x1408C8240
 void Grunt::ClientLink::ProveVersion(const uint8_t* versionChecksum) {
     CDataStoreCache<1024> msg;
     Grunt::CdKey cdKeys;
@@ -904,7 +907,7 @@ void Grunt::ClientLink::ProveVersion(const uint8_t* versionChecksum) {
     this->Send(msg);
 }
 
-// OFFSET: #0x008CC980
+// OFFSET: 0x00B03B50
 int32_t Grunt::ClientLink::CmdAuthReconnectChallenge(CDataStore& msg) {
     if (msg.m_read > msg.m_size || msg.m_size - msg.m_read < 17) {
         return 0;
@@ -933,7 +936,7 @@ int32_t Grunt::ClientLink::CmdAuthReconnectChallenge(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CCA50
+// OFFSET: 0x00B03C20
 int32_t Grunt::ClientLink::CmdAuthReconnectProof(CDataStore& msg) {
     if (msg.m_read >= msg.m_size) {
         return 0;
@@ -968,7 +971,7 @@ int32_t Grunt::ClientLink::CmdAuthReconnectProof(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CCB40
+// OFFSET: 0x00B03D10
 int32_t Grunt::ClientLink::CmdXferInitiate(CDataStore& msg) {
     if (msg.m_read >= msg.m_size) {
         return 0;
@@ -1003,7 +1006,7 @@ int32_t Grunt::ClientLink::CmdXferInitiate(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CCC20
+// OFFSET: 0x00B03DF0
 int32_t Grunt::ClientLink::CmdXferData(CDataStore& msg) {
     if (msg.m_read > msg.m_size || msg.m_size - msg.m_read < 2) {
         return 0;
@@ -1027,7 +1030,7 @@ int32_t Grunt::ClientLink::CmdXferData(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CDE60
+// OFFSET: 0x00B050E0/0x1408C7A60
 void Grunt::ClientLink::FileStatus(bool accept, uint64_t offset) {
     CDataStoreCache<1024> msg;
 
@@ -1046,7 +1049,7 @@ void Grunt::ClientLink::FileStatus(bool accept, uint64_t offset) {
     this->Send(msg);
 }
 
-// OFFSET: #0x008CDFC0
+// OFFSET: 0x00B05240/0x1408C7BC0
 void Grunt::ClientLink::FileComplete() {
     CDataStoreCache<1024> msg;
     msg.Put(static_cast<uint8_t>(0x34));
@@ -1059,9 +1062,9 @@ const char* Grunt::ServerLink::GetLinkTypeName() const {
     return this->m_linkType <= 1 ? s_linkTypeNames[this->m_linkType] : "None";
 }
 
-// OFFSET: #0x008CBC10
+// OFFSET: 0x00B02E10/0x1408C4E40
 int32_t Grunt::ServerLink::CmdGruntKick(CDataStore& msg) {
-    if (!CanReadNumBytes(msg, 9)) {
+    if (!CanReadNumBytes(msg, 13)) {
         return 0;
     }
 
@@ -1076,8 +1079,28 @@ int32_t Grunt::ServerLink::CmdGruntKick(CDataStore& msg) {
         return 1;
     }
 
-    DebugLog("received kick message for account id [%d:%I64d]", accountId, guid);
+    DebugLog(33, 10, "received kick message for account id [%d:%lld]", accountId, guid);
     this->m_response->Kick(accountId, guid, reason);
+
+    return 2;
+}
+
+// OFFSET: 0x00B02F20
+int32_t Grunt::ServerLink::CmdGruntCaisTimeUpdate(CDataStore& msg) {
+    if (!CanReadNumBytes(msg, 6)) {
+        return 0;
+    }
+
+    uint32_t accountId;
+    msg.Get(accountId);
+    uint16_t minutes;
+    msg.Get(minutes);
+
+    if (msg.m_read > msg.m_size) {
+        return 1;
+    }
+
+    this->m_response->CaisTimeUpdate(accountId, minutes);
 
     return 2;
 }
@@ -1099,7 +1122,7 @@ int32_t Grunt::ServerLink::CmdGruntPcWarning(CDataStore& msg) {
     return msg.m_read > msg.m_size ? 1 : 2;
 }
 
-// OFFSET: #0x008CBD20
+// OFFSET: 0x00B02FA0/0x1408C5000
 int32_t Grunt::ServerLink::CmdGruntAuthVerify(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 1)) {
         return 0;
@@ -1116,7 +1139,7 @@ int32_t Grunt::ServerLink::CmdGruntAuthVerify(CDataStore& msg) {
         return 0;
     }
 
-    DebugLog("%s Auth Verify. Server name=%s", this->GetLinkTypeName(), this->m_serverName);
+    DebugLog(1, 10, "%s Auth Verify. Server name=%s", this->GetLinkTypeName(), this->m_serverName);
 
     uint8_t name[32];
     msg.GetArray(name, nameLength);
@@ -1150,9 +1173,10 @@ int32_t Grunt::ServerLink::CmdGruntConnPong(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CBE60
+// PROVEN: 07b6ae68 IDENTICAL/NONE
+// OFFSET: 0x00B029E0
 void Grunt::ServerLink::Send(CDataStore& msg) {
-    this->m_lock.Enter();
+    this->m_lock->Enter();
 
     if (this->m_connection) {
         uint32_t size = msg.m_size;
@@ -1161,12 +1185,13 @@ void Grunt::ServerLink::Send(CDataStore& msg) {
         this->m_connection->SendRaw(static_cast<uint8_t*>(data), size);
     }
 
-    this->m_lock.Leave();
+    this->m_lock->Leave();
 }
 
-// OFFSET: #0x008CBEB0
+// PROVEN: 8086f7e7 IDENTICAL/NONE
+// OFFSET: 0x00B02A30
 void Grunt::ServerLink::SendConnected(CDataStore& msg) {
-    this->m_lock.Enter();
+    this->m_lock->Enter();
 
     if (this->m_connection && this->m_state == 3) {
         uint32_t size = msg.m_size;
@@ -1175,12 +1200,12 @@ void Grunt::ServerLink::SendConnected(CDataStore& msg) {
         this->m_connection->SendRaw(static_cast<uint8_t*>(data), size);
     }
 
-    this->m_lock.Leave();
+    this->m_lock->Leave();
 }
 
-// OFFSET: #0x008CBF10
+// OFFSET: 0x00B030E0/0x1408C51B0
 int32_t Grunt::ServerLink::CmdGruntSunkenUpdate(CDataStore& msg) {
-    if (!CanReadNumBytes(msg, 8)) {
+    if (!CanReadNumBytes(msg, 9)) {
         return 0;
     }
 
@@ -1192,12 +1217,12 @@ int32_t Grunt::ServerLink::CmdGruntSunkenUpdate(CDataStore& msg) {
     msg.Get(online);
 
     this->m_response->SunkenUpdate(accountId, sunkenId, online != 0);
-    DebugLog(">>>>BNet: Received SunkenUpdate for WoW Account ID: %d, Sunken ID: %d,  online: %s", accountId, sunkenId, online ? "true" : "false");
+    DebugLog(1, 10, ">>>>BNet: Received SunkenUpdate for WoW Account ID: %d, Sunken ID: %d,  online: %s", accountId, sunkenId, online ? "true" : "false");
 
     return 2;
 }
 
-// OFFSET: #0x008CBFB0
+// OFFSET: 0x00B03180/0x1408C5280
 int32_t Grunt::ServerLink::CmdGruntSunkenOnline(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 5)) {
         return 0;
@@ -1209,12 +1234,12 @@ int32_t Grunt::ServerLink::CmdGruntSunkenOnline(CDataStore& msg) {
     msg.Get(online);
 
     this->m_response->SunkenOnline(sunkenId, online != 0);
-    DebugLog(">>>>BNet: received SunkenOnline: Sunken ID : %08x, online: %s", sunkenId, online ? "true" : "false");
+    DebugLog(1, 10, ">>>>BNet: received SunkenOnline: Sunken ID : %08x, online: %s", sunkenId, online ? "true" : "false");
 
     return 2;
 }
 
-// OFFSET: #0x008CC040
+// OFFSET: 0x00B03210/0x1408C5330
 void Grunt::ServerLink::SendStrings(uint32_t id, uint32_t locale) {
     CDataStore strings;
     this->m_response->GetStrings(id, locale, &strings);
@@ -1255,7 +1280,7 @@ void Grunt::ServerLink::SendStrings(uint32_t id, uint32_t locale) {
     this->SendConnected(msg);
 }
 
-// OFFSET: #0x008CD320
+// OFFSET: 0x00B04500/0x1408C6A30
 int32_t Grunt::ServerLink::CmdGruntAuthChallenge(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 16)) {
         return 0;
@@ -1269,7 +1294,7 @@ int32_t Grunt::ServerLink::CmdGruntAuthChallenge(CDataStore& msg) {
     }
 
     uint32_t nameLength = SStrLen(this->m_serverName);
-    DebugLog("%s Auth Challenge. Server name=%s", this->GetLinkTypeName(), this->m_serverName);
+    DebugLog(1, 10, "%s Auth Challenge. Server name=%s", this->GetLinkTypeName(), this->m_serverName);
 
     uint8_t salt[16];
     OsSecureRandom(salt, sizeof(salt));
@@ -1297,7 +1322,7 @@ int32_t Grunt::ServerLink::CmdGruntAuthChallenge(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CD4C0
+// OFFSET: 0x00B046A0
 int32_t Grunt::ServerLink::CmdGruntConnPing(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 4)) {
         return 0;
@@ -1319,9 +1344,10 @@ int32_t Grunt::ServerLink::CmdGruntConnPing(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CD570
+// PROVEN: 3c2ced8d IDENTICAL/NONE
+// OFFSET: 0x00B04750/0x1408C6F00
 int32_t Grunt::ServerLink::CmdGruntStrings(CDataStore& msg) {
-    if (!CanReadNumBytes(msg, 4)) {
+    if (!CanReadNumBytes(msg, 8)) {
         return 0;
     }
 
@@ -1346,16 +1372,105 @@ int32_t Grunt::ServerLink::CmdGruntStrings(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CD610
+// OFFSET: 0x00B02980
+static void HexString(const uint8_t* data, char* text, uint32_t length, bool spaces) {
+    for (const uint8_t* end = data + length; data < end; data++) {
+        uint8_t value = *data;
+        *text++ = (value & 0xF0) >= 0xA0 ? (value >> 4) + 55 : (value >> 4) + 48;
+        *text++ = (value & 0xF) >= 0xA ? (value & 0xF) + 55 : (value & 0xF) + 48;
+
+        if (spaces) {
+            *text++ = ' ';
+        }
+    }
+
+    *text = '\0';
+}
+
+// OFFSET: 0x00B02A90/0x1408C49B0
+static void LogServerPacket(CDataStore& msg, const char* name) {
+    uint32_t read = msg.m_read;
+    uint32_t length = msg.m_size - read;
+
+    if (length >= 1364) {
+        length = 1364;
+    }
+
+    void* data;
+    msg.GetDataInSitu(data, length);
+
+    char text[4096];
+    HexString(static_cast<const uint8_t*>(data), text, length, true);
+    DebugLog(1, 10, "ServerLink: Sending %s ! [%s]", name, text);
+    msg.m_read = read;
+}
+
+// OFFSET: 0x00B02CF0/0x1408C4CB0
+static void PutServerAddresses(CDataStore& msg, const TSFixedArray<SockAddr>& addresses, const TSFixedArray<uint16_t>& ports) {
+    uint32_t count = addresses.m_count;
+    uint32_t ipv4Count = 0;
+    uint32_t ipv6Count = 0;
+
+    if (count) {
+        for (uint32_t i = 0; i < count; i++) {
+            if (addresses.m_data[i].m_type == SOCKADDR_IPV4) {
+                ipv4Count++;
+            } else if (addresses.m_data[i].m_type == SOCKADDR_IPV6) {
+                ipv6Count++;
+            }
+        }
+
+        if (ipv4Count >= 16) {
+            ipv4Count = 16;
+        }
+
+        if (ipv6Count >= 16) {
+            ipv6Count = 16;
+        }
+    }
+
+    msg.Put(static_cast<uint8_t>(ipv4Count));
+
+    uint32_t remaining = ipv4Count;
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (addresses.m_data[i].m_type == SOCKADDR_IPV4) {
+            if (!remaining--) {
+                break;
+            }
+
+            msg.PutArray(reinterpret_cast<const uint8_t*>(&addresses.m_data[i]), 4);
+            msg.Put(ports.m_data[i]);
+        }
+    }
+
+    msg.Put(static_cast<uint8_t>(ipv6Count));
+
+    remaining = ipv6Count;
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (addresses.m_data[i].m_type == SOCKADDR_IPV6) {
+            if (!remaining--) {
+                return;
+            }
+
+            msg.PutArray(reinterpret_cast<const uint8_t*>(&addresses.m_data[i]), 16);
+            msg.Put(ports.m_data[i]);
+        }
+    }
+}
+
+// OFFSET: 0x00B047F0/0x1408C6FE0
 void Grunt::ServerLink::SendFeatures() {
     CDataStoreCache<8192> msg;
     msg.Put(static_cast<uint8_t>(0x45));
     Grunt::ServerLink::PutFeatures(msg);
     msg.m_read = 0;
-    this->SendConnected(msg);
+    LogServerPacket(msg, "CMD_GRUNT_PRESENCE_ANNOUNCE");
+    this->Send(msg);
 }
 
-// OFFSET: #0x008CE200
+// OFFSET: 0x00B060B0/0x1408C8DE0
 int32_t Grunt::ServerLink::CmdGruntHello(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 4)) {
         return 0;
@@ -1373,54 +1488,43 @@ int32_t Grunt::ServerLink::CmdGruntHello(CDataStore& msg) {
     CDataStoreCache<1024> reply;
     reply.Put(static_cast<uint8_t>(0x20));
 
-    if (this->m_linkType != 0 && this->m_linkType != 1) {
+    if (this->m_linkType >= 2) {
         return 1;
     }
 
     const char* typeName;
-    uint8_t revision = 0;
 
-    switch (this->m_linkType) {
-        case 0:
-            typeName = "Grunt";
-            revision = 0x20;
-            break;
-
-        case 1:
-            typeName = "Battle.net";
-            revision = 0x21;
-            break;
-
-        default:
-            typeName = "<unknown>";
-            break;
+    if (this->m_linkType) {
+        typeName = "Battle.net";
+        this->m_revision = 0x23;
+    } else {
+        typeName = "Grunt";
+        this->m_revision = 0x20;
     }
 
-    reply.Put(revision);
+    reply.Put(this->m_revision);
     uint32_t sizePos = reply.m_size;
     reply.Put(static_cast<uint16_t>(0));
 
     Grunt::ServerHelloInfo info;
-    memset(&info, 0, sizeof(info));
     info.m_linkType = this->m_linkType;
 
     if (!this->m_response->GetHelloInfo(&info)) {
-        DebugLog("Unable to get the information necessary to identify self to %s", typeName);
+        DebugLog(1, 10, "Unable to get the information necessary to identify self to %s", typeName);
         return 1;
     }
 
-    uint8_t nameLength = static_cast<uint8_t>(SStrLen(info.m_realmName));
+    uint8_t nameLength = static_cast<uint8_t>(strlen(info.m_realmName));
     reply.Put(nameLength);
     reply.PutData(info.m_realmName, nameLength);
 
-    uint32_t address = info.m_address;
-
-    if (!address) {
-        address = this->m_publicAddress;
+    if (this->m_revision < 0x23) {
+        reply.Put(info.m_address);
+        reply.Put(info.m_port);
+    } else {
+        PutServerAddresses(reply, info.m_addresses, info.m_ports);
     }
 
-    reply.Put(address);
-    reply.Put(info.m_port);
     reply.Put(info.m_realmType);
     reply.Put(info.unk_0004);
     reply.Put(info.m_versionMajor);
@@ -1439,32 +1543,39 @@ int32_t Grunt::ServerLink::CmdGruntHello(CDataStore& msg) {
     NETADDR addr;
     char addrText[64];
     OsNetAddrMake(this->m_serverAddress, 0, &addr);
-    DebugLog("Sending HELLO to %s login server at %s", typeName, OsNetAddrToStr(&addr, addrText, sizeof(addrText)));
-    OsNetAddrMake(address, info.m_port, &addr);
-    DebugLog("My public address is %s", OsNetAddrToStr(&addr, addrText, sizeof(addrText)));
-    DebugLog("My realm name is %s", info.m_realmName);
-    DebugLog("My realm ID is %d", info.m_realmId);
-    DebugLog("My version is %d.%d.%d.%d", info.m_versionMajor, info.m_versionMinor, info.m_versionPatch, info.m_build);
-    DebugLog("My realm type is %d", info.m_realmType);
-    DebugLog("My server revision is %d", revision);
+    DebugLog(1, 10, "Sending HELLO to %s login server at %s", typeName, OsNetAddrToStr(&addr, addrText, sizeof(addrText)));
+    DebugLog(1, 10, "Reported IP addresses list");
 
-    reply.m_read = 0;
-    this->Send(reply);
-
-    if (this->m_linkType == 1) {
-        this->m_response->HelloComplete();
+    for (uint32_t i = 0; i < info.m_addresses.m_count; i++) {
+        SockAddrString address(info.m_addresses.m_data[i], info.m_ports.m_data[i]);
+        DebugLog(1, 10, "%u: %s", i, address.m_str);
     }
 
-    this->m_state = 3;
+    DebugLog(1, 10, "My realm name is %s", info.m_realmName);
+    DebugLog(1, 10, "My realm ID is %d", info.m_realmId);
+    DebugLog(1, 10, "My version is %d.%d.%d.%d", info.m_versionMajor, info.m_versionMinor, info.m_versionPatch, info.m_build);
+    DebugLog(1, 10, "My realm type is %d", info.m_realmType);
+    DebugLog(1, 10, "My server revision is %d", this->m_revision);
+
+    reply.m_read = 0;
+    LogServerPacket(reply, "CMD_GRUNT_HELLO");
+    this->Send(reply);
 
     if (this->m_linkType == 1) {
         this->SendFeatures();
     }
 
+    DebugLog(1, 10, "ServerLink: Marking B.Net / grunt connection connected !");
+    this->m_state = 3;
+
+    if (this->m_linkType == 1) {
+        this->m_response->HelloComplete();
+    }
+
     return 2;
 }
 
-// OFFSET: #0x008CF100
+// OFFSET: 0x00B06550/0x1408C9580
 int32_t Grunt::ServerLink::CmdGruntProveSession(CDataStore& msg) {
     if (!CanReadNumBytes(msg, 5)) {
         return 0;
@@ -1525,6 +1636,10 @@ int32_t Grunt::ServerLink::CmdGruntProveSession(CDataStore& msg) {
 
         msg.Get(info.m_bnetLicenseCount);
 
+        if (msg.m_read > msg.m_size) {
+            return 0;
+        }
+
         if (info.m_bnetLicenseCount >= 256) {
             return 1;
         }
@@ -1541,11 +1656,16 @@ int32_t Grunt::ServerLink::CmdGruntProveSession(CDataStore& msg) {
             }
         }
 
-        if (info.m_wowLicenseCount >= 256) {
-            return 1;
+        msg.Get(info.m_wowLicenseCount);
+
+        if (msg.m_read > msg.m_size) {
+            return 0;
         }
 
-        msg.Get(info.m_wowLicenseCount);
+        if (info.m_wowLicenseCount >= 256) {
+            DebugLog(0x10021, 10, "ERROR: Too many game licenses (%d) for account (%d)", info.m_wowLicenseCount, info.m_accountId);
+            return 1;
+        }
 
         for (uint32_t i = 0; i < info.m_wowLicenseCount; i++) {
             Grunt::ServerLicense& license = info.m_wowLicenses[i];
@@ -1564,33 +1684,31 @@ int32_t Grunt::ServerLink::CmdGruntProveSession(CDataStore& msg) {
         return 0;
     }
 
-    bool notMac = info.m_os != 'MacP' && info.m_os != 'PcaM';
-
     Grunt::ServerLink::Request* request = static_cast<Grunt::ServerLink::Request*>(this->Remove(requestId));
 
     if (!request) {
         return 2;
     }
 
-    if (!result) {
-        if (info.m_referrerAccountId) {
-            DebugLog("(Refer-A-Friend) Account [%d] was referred by account [%d]. Referral expires in %.02f minutes.", info.m_accountId, info.m_referrerAccountId, static_cast<float>(info.m_referralTime) * (1.0f / 60.0f));
-        }
-
-        DebugLog("account id [%d] has passed authentication from %s, accountflags=0x%lx, timeOptions=0x%lx, timePlayedMinutes=%d, expansionLevel=%d", info.m_accountId, this->GetLinkTypeName(), info.m_accountFlags, info.m_timeOptions, info.m_timePlayedMinutes, info.m_expansionLevel);
-
-        if (info.m_bnetLicenseCount > 0 || info.m_wowLicenseCount > 0) {
-            DebugLog("Account [%d] has numBnetAccountLicenses=%d, numWowAccountLicenses=%d", info.m_accountId, info.m_bnetLicenseCount, info.m_wowLicenseCount);
-        }
-
-        this->m_response->ProveSessionResult(request->m_context, 0, &info, this->m_linkType, notMac);
-    } else {
+    if (result) {
         if (result >= 0x21) {
-            DebugLog("Unknown result %d from %s", result, this->GetLinkTypeName());
+            DebugLog(0x10001, 10, "Unknown result %d from %s", result, this->GetLinkTypeName());
             result = 0xFF;
         }
 
-        this->m_response->ProveSessionResult(request->m_context, result, NULL, this->m_linkType, notMac);
+        this->m_response->ProveSessionResult(request->m_context, result, NULL, this->m_linkType, true);
+    } else {
+        if (info.m_referrerAccountId) {
+            DebugLog(33, 10, "(Refer-A-Friend) Account [%d] was referred by account [%d]. Referral expires in %.02f minutes.", info.m_accountId, info.m_referrerAccountId, static_cast<double>(info.m_referralTime) * 0.016666668f);
+        }
+
+        DebugLog(33, 10, "account id [%d] has passed authentication from %s, accountflags=0x%lx, timeOptions=0x%lx, timePlayedMinutes=%d, expansionLevel=%d", info.m_accountId, this->GetLinkTypeName(), info.m_accountFlags, info.m_timeOptions, info.m_timePlayedMinutes, info.m_expansionLevel);
+
+        if (info.m_bnetLicenseCount || info.m_wowLicenseCount) {
+            DebugLog(33, 10, "Account [%d] has numBnetAccountLicenses=%d, numWowAccountLicenses=%d", info.m_accountId, info.m_bnetLicenseCount, info.m_wowLicenseCount);
+        }
+
+        this->m_response->ProveSessionResult(request->m_context, 0, &info, this->m_linkType, true);
     }
 
     delete request;
@@ -1598,7 +1716,7 @@ int32_t Grunt::ServerLink::CmdGruntProveSession(CDataStore& msg) {
     return 2;
 }
 
-// OFFSET: #0x008CF940
+// OFFSET: 0x00B2F1E0/0x1408F7D30
 void Grunt::ServerLink::PutFeatures(CDataStore& msg) {
     msg.Put(static_cast<uint16_t>(sizeof(s_serverFeatures) / sizeof(s_serverFeatures[0])));
 

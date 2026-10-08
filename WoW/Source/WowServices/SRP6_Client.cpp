@@ -26,7 +26,7 @@ int32_t SRP6_Client::BeginAuthentication(const char* accountName, const char* pa
     return 0;
 }
 
-// OFFSET: #0x009A83E0
+// OFFSET: 0x00B3A580
 int32_t SRP6_Client::CalculateProof(const uint8_t* largeSafePrime, uint32_t largeSafePrimeLength, const uint8_t* generator, uint32_t generatorLength, const uint8_t* salt, uint32_t saltLength, const uint8_t* serverPublicKey, uint32_t serverPublicKeyLength, SRP6_Random& random) {
     BigData* N = BigIntegerFromBytes(largeSafePrime, largeSafePrimeLength);
     BigData* g = BigIntegerFromBytes(generator, generatorLength);

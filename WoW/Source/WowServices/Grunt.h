@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Os/OsTcp.h"
+#include "Engine/Source/Os/SockAddr.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Storm/Source/SLock.h"
@@ -60,6 +61,7 @@ class ClientResponse {
     virtual void FileData(const uint8_t* data, uint32_t size) = 0;
     virtual void RealmListResult(CDataStore* msg) = 0;
     virtual LOGIN_STATE NextSecurityState(LOGIN_STATE state) = 0;
+    virtual const char* GetAccountName() = 0;
     virtual int32_t GetServerId() = 0;
     virtual const uint8_t* GetVersionChallenge() = 0;
 };
@@ -183,20 +185,24 @@ struct ServerHelloInfo {
     /* 0008 */ uint32_t unk_0008;
     /* 000C */ uint32_t m_address;
     /* 0010 */ uint16_t m_port;
-    /* 0012 */ uint8_t m_versionMajor;
-    /* 0013 */ uint8_t m_versionMinor;
-    /* 0014 */ uint8_t m_versionPatch;
-    /* 0015 */ uint8_t unk_0015;
-    /* 0016 */ uint16_t m_build;
-    /* 0018 */ uint32_t unk_0018;
-    /* 001C */ uint32_t unk_001C;
-    /* 0020 */ uint32_t unk_0020;
-    /* 0024 */ uint32_t m_realmId;
-    /* 0028 */ uint32_t unk_0028;
-    /* 002C */ char m_realmName [32];
-    /* 004C */ uint8_t unk_004C;
-    /* 004D */ uint8_t unk_004D[3];
-    /* 0050 */ uint32_t m_linkType;
+    /* 0012 */ uint8_t unk_0012[2];
+    /* 0014 */ TSFixedArray<SockAddr> m_addresses;
+    /* 0020 */ TSFixedArray<uint16_t> m_ports;
+    /* 002C */ uint8_t m_versionMajor;
+    /* 002D */ uint8_t m_versionMinor;
+    /* 002E */ uint8_t m_versionPatch;
+    /* 002F */ uint8_t unk_002F;
+    /* 0030 */ uint16_t m_build;
+    /* 0032 */ uint8_t unk_0032[2];
+    /* 0034 */ uint32_t unk_0018;
+    /* 0038 */ uint32_t unk_001C;
+    /* 003C */ uint32_t unk_0020;
+    /* 0040 */ uint32_t m_realmId;
+    /* 0044 */ uint32_t unk_0028;
+    /* 0048 */ char m_realmName [32];
+    /* 0068 */ uint8_t unk_004C;
+    /* 0069 */ uint8_t unk_0069[3];
+    /* 006C */ uint32_t m_linkType;
 };
 
 struct ServerLicense {
@@ -252,6 +258,7 @@ class ServerResponse {
     virtual void unk_0004() = 0;
     virtual void unk_0008() = 0;
     virtual void Kick(uint32_t accountId, uint64_t guid, uint8_t reason) = 0;
+    virtual void CaisTimeUpdate(uint32_t accountId, uint16_t minutes) = 0;
     virtual bool GetHelloInfo(Grunt::ServerHelloInfo* info) = 0;
     virtual void unk_0014() = 0;
     virtual void ProveSessionResult(uint32_t context, uint8_t result, const Grunt::ServerSessionInfo* info, uint32_t linkType, bool notMac) = 0;
@@ -284,15 +291,18 @@ class ServerLink : public WowConnectionResponse, public Grunt::Pending, public G
     /* 00B0 */ int32_t m_state;
     /* 00B4 */ const char* m_serverName;
     /* 00B8 */ uint8_t unk_00B8[8];
-    /* 00C0 */ SCritSect m_lock;
-    /* 00E8 */ uint8_t unk_00E8[24];
-    /* 0100 */ WowConnection* m_connection;
-    /* 0104 */ uint8_t unk_0104[96];
-    /* 0164 */ uint32_t m_linkType;
-    /* 0168 */ Grunt::ServerResponse* m_response;
+    /* 00C0 */ SCritSect* m_lock;
+    /* 00C4 */ uint8_t unk_00C4[24];
+    /* 00DC */ WowConnection* m_connection;
+    /* 00E0 */ uint8_t unk_00E0[96];
+    /* 0140 */ uint32_t m_linkType;
+    /* 0144 */ uint8_t m_revision;
+    /* 0145 */ uint8_t unk_0145[3];
+    /* 0148 */ Grunt::ServerResponse* m_response;
 
     int32_t CmdGruntAuthChallenge(CDataStore& msg);
     int32_t CmdGruntAuthVerify(CDataStore& msg);
+    int32_t CmdGruntCaisTimeUpdate(CDataStore& msg);
     int32_t CmdGruntConnPing(CDataStore& msg);
     int32_t CmdGruntConnPong(CDataStore& msg);
     int32_t CmdGruntHello(CDataStore& msg);
@@ -310,7 +320,7 @@ class ServerLink : public WowConnectionResponse, public Grunt::Pending, public G
 };
 }
 
-// OFFSET: #0x008CD220
+// OFFSET: 0x00B04400/0x1408C7130
 template <class T>
 bool Grunt::Command<T>::Process(CDataStore& msg, Grunt::Command<T>* commands, uint32_t commandCount, T& object, uint32_t& pos) {
     while (CanReadNumBytes(msg, 1)) {
@@ -326,7 +336,7 @@ bool Grunt::Command<T>::Process(CDataStore& msg, Grunt::Command<T>* commands, ui
         }
 
         if (i >= commandCount) {
-            DebugLog("Bad command received [0x%02X] (unrecognized command)", cmd);
+            DebugLog(0x10001, 10, "Bad WoWMaster command received [0x%02X] (unrecognized command)", cmd);
         } else {
             int32_t result = (object.*commands[i].m_handler)(msg);
 
@@ -343,7 +353,7 @@ bool Grunt::Command<T>::Process(CDataStore& msg, Grunt::Command<T>* commands, ui
                 continue;
             }
 
-            DebugLog("Bad command received [0x%02X] (Corrupt)", cmd);
+            DebugLog(0x10001, 10, "Bad WoWMaster command received [0x%02X] (Corrupt)", cmd);
         }
 
         uint32_t bytes = msg.m_size - msg.m_read;
@@ -356,7 +366,7 @@ bool Grunt::Command<T>::Process(CDataStore& msg, Grunt::Command<T>* commands, ui
         msg.GetDataInSitu(data, bytes);
 
         if (data && bytes) {
-            DebugLog("%u bytes", bytes);
+            DebugLog(0x10000, 10, static_cast<const char*>(data), bytes);
         }
 
         return false;

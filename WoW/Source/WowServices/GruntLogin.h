@@ -18,6 +18,7 @@ class GruntLogin : public Login {
         /* 01EA */ uint8_t unk_01EA[6];
 
         MATRIXINPUT();
+        ~MATRIXINPUT();
         void Finish(SHA1::Digest& digest);
     };
 
@@ -57,12 +58,13 @@ class GruntLogin : public Login {
     void LogonResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) override;
     void ReconnectResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) override;
     LOGIN_STATE NextSecurityState(LOGIN_STATE state) override;
+    const char* GetAccountName() override;
     int32_t GetServerId() override;
     const uint8_t* GetVersionChallenge() override;
     void GetRealmList() override;
     void Reconnect() override;
     void Logon(const char* loginServer, const char* portal) override;
-    int32_t Wait(const char* message, LoginData& loginData) override;
+    bool Wait(const char* message, LoginData& loginData) override;
     void ProveVersion(const uint8_t* versionChecksum) override;
     void FileAccept(bool accept, uint64_t offset) override;
     void FileComplete(bool success) override;
@@ -82,6 +84,10 @@ class GruntLogin : public Login {
     bool IsTrialAccount() override;
     bool IsGMAccount() override;
     bool IsProPassAccount() override;
+    uint32_t GetOutOfBandChallengeType() override;
+    const char* GetOutOfBandChallengeTitle() override;
+    const char* GetOutOfBandChallengeText() override;
+    int32_t GetOutOfBandChallengeTimeLeft() override;
     void Update() override;
     void Init(LoginResponse* loginResponse) override;
     ~GruntLogin();

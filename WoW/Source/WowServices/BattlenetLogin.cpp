@@ -75,7 +75,8 @@ BattlenetApplication::~BattlenetApplication() {
     }
 }
 
-// OFFSET: #0x008C5270
+// PROVEN: 3dcc8d67 IDENTICAL/NONE
+// OFFSET: 0x00627510
 uint8_t BattlenetLogin::GetCharacterCount(uint32_t region, uint32_t battlegroup, uint32_t id) {
     RealmCharacterCount* counts = this->m_realmCharacterCounts;
 
@@ -92,7 +93,7 @@ uint8_t BattlenetLogin::GetCharacterCount(uint32_t region, uint32_t battlegroup,
     return 0;
 }
 
-// OFFSET: #0x008C52E0
+// OFFSET: 0x00627580/0x1402B95A0
 bool BattlenetLogin::Connected(const NETADDR& address) {
     char text[256];
     char addressString[32];
@@ -112,7 +113,7 @@ bool BattlenetLogin::Connected(const NETADDR& address) {
     return true;
 }
 
-// OFFSET: #0x008C5370
+// OFFSET: 0x00627600/0x1402B9630
 bool BattlenetLogin::Disconnected() {
     if (!g_tumorManager || !this->m_application) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -228,7 +229,7 @@ void BattlenetLogin::LogonResultBN(int32_t result) {
     this->m_surveyPending = false;
 }
 
-// OFFSET: #0x008C5BA0
+// OFFSET: 0x006276D0/0x1402B96E0
 static void GetComponentVersion(const char* name, uint32_t& version, const char* data, uint32_t size) {
     XMLTree* tree = XMLTree_Load(data, size);
 
@@ -246,7 +247,7 @@ static void GetComponentVersion(const char* name, uint32_t& version, const char*
     XMLTree_Free(tree);
 }
 
-// OFFSET: #0x008C5C50
+// OFFSET: 0x00627780/0x1402B97B0
 static uint32_t GetWowDataVersion() {
     uint32_t version = 12340;
     void* data;
@@ -262,7 +263,7 @@ static uint32_t GetWowDataVersion() {
     return version;
 }
 
-// OFFSET: #0x008C5CC0
+// OFFSET: 0x006277F0
 static uint32_t GetWowLangVersion(const char* locale) {
     char path[256];
     char fileName[32];
@@ -310,7 +311,7 @@ static uint32_t GetWowLangVersion(const char* locale) {
     return version;
 }
 
-// OFFSET: #0x008C5F60
+// OFFSET: 0x006283E0/0x1402BA470
 void BattlenetLogin::SetAuthModuleMatrixInfo(const char* info, const char* challenges) {
     this->m_matrixWidth = SStrToUnsigned(info);
 
@@ -412,7 +413,7 @@ void BattlenetLogin::SetAuthModulePinInfo(const char* keyMap) {
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_PIN, LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: #0x008C62B0
+// OFFSET: 0x00628670/0x1402BA790
 void BattlenetLogin::SetTokenInfo(bool enabled, uint8_t required) {
     if (enabled) {
         this->m_tokenRequired = true;
@@ -421,12 +422,65 @@ void BattlenetLogin::SetTokenInfo(bool enabled, uint8_t required) {
     }
 }
 
-// OFFSET: #0x008C6330
+// PROVEN: 16bc9056 IDENTICAL/NONE
+// OFFSET: 0x00627690/0x1402B96A0
+int32_t BattlenetLogin::GetOutOfBandChallengeTimeLeft() {
+    int32_t left = this->m_outOfBandTimeout - static_cast<int32_t>(OsGetAsyncTimeMs() - this->m_outOfBandStart) / 1000;
+
+    return left <= 0 ? 0 : left;
+}
+
+// PROVEN: 6d03b359 IDENTICAL/NONE
+// OFFSET: 0x006279B0
+void BattlenetLogin::SetAuthModuleOutOfBandInfo(uint32_t type, const char* title, const char* text, int32_t timeout) {
+    this->m_outOfBandType = type;
+    this->m_outOfBandTitle = static_cast<char*>(SMemAlloc(strlen(title) + 1, __FILE__, __LINE__, 0));
+    strcpy(this->m_outOfBandTitle, title);
+    this->m_outOfBandText = static_cast<char*>(SMemAlloc(strlen(text) + 1, __FILE__, __LINE__, 0));
+    strcpy(this->m_outOfBandText, text);
+    this->m_outOfBandTimeout = timeout;
+}
+
+// PROVEN: ade29f11 IDENTICAL/NONE
+// OFFSET: 0x00627A50/0x1402B9B70
+void BattlenetLogin::ClearAuthModuleOutOfBandInfo() {
+    SMemFree(this->m_outOfBandTitle, __FILE__, __LINE__, 0);
+    this->m_outOfBandTitle = NULL;
+    SMemFree(this->m_outOfBandText, __FILE__, __LINE__, 0);
+    this->m_outOfBandText = NULL;
+}
+
+// PROVEN: 4dfddb44 IDENTICAL/NONE
+// OFFSET: 0x00627AA0/0x1402B9BD0
+const char* BattlenetLogin::GetAccountName() {
+    return this->m_accountName;
+}
+
+// PROVEN: b5f242c6 IDENTICAL/NONE
+// OFFSET: 0x0062AEA0/0x1402BDFE0
+uint32_t BattlenetLogin::GetOutOfBandChallengeType() {
+    return this->m_outOfBandType;
+}
+
+// PROVEN: f60428ac IDENTICAL/NONE
+// OFFSET: 0x0062AEB0/0x1402BDFF0
+const char* BattlenetLogin::GetOutOfBandChallengeTitle() {
+    return this->m_outOfBandTitle;
+}
+
+// PROVEN: d0c3a397 IDENTICAL/NONE
+// OFFSET: 0x0062AEC0/0x1402BE000
+const char* BattlenetLogin::GetOutOfBandChallengeText() {
+    return this->m_outOfBandText;
+}
+
+// OFFSET: 0x00627AB0/0x1402B9BE0
 static bool IsInOrEnteringWorld() {
     return CGGameUI::s_inWorld || CGlueMgr::m_idleState == IDLE_ENTER_WORLD;
 }
 
-// OFFSET: #0x008C6350
+// PROVEN: 07b81ff1 IDENTICAL/NONE
+// OFFSET: 0x00627AD0/0x1402B9C00
 void BattlenetLogin::LogConnectionStatus(const char* format, ...) {
     char buffer[2048];
 
@@ -458,7 +512,7 @@ BattlenetApplication::BattlenetApplication() {
     this->m_connection = 0;
 }
 
-// OFFSET: #0x008C6A60
+// OFFSET: 0x00628970/0x1402BAA80
 bool BattlenetLogin::CantConnect() {
     ConsoleWrite("BattlenetLogin was unable to connect to Sunken", DEFAULT_COLOR);
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_SERVER_DOWN, NULL, 0);
@@ -470,7 +524,7 @@ bool BattlenetLogin::CantConnect() {
     return false;
 }
 
-// OFFSET: #0x008C6B30
+// OFFSET: 0x006286E0/0x1402BA810
 const char* BattlenetLogin::GetPatchInstruction(uint32_t index) {
     if (index < this->m_patchInstructions.m_count) {
         return this->m_patchInstructions.m_data[index].m_patch;
@@ -479,7 +533,7 @@ const char* BattlenetLogin::GetPatchInstruction(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x008C6D10
+// OFFSET: 0x006288A0/0x1402BA970
 uint32_t BattlenetApplication::Connect(const Battlenet::IP4::AddressPort& address, const uint32_t& tendrilId) {
     char buffer[64];
 
@@ -498,22 +552,26 @@ uint32_t BattlenetApplication::Connect(const Battlenet::IP4::AddressPort& addres
     return this->m_connection;
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: c1435f50 IDENTICAL/NONE
+// OFFSET: 0x00904350
 uint32_t BattlenetApplication::OpenDatagram(int32_t port, const uint32_t& tendrilId) {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 213ab6a2 IDENTICAL/NONE
+// OFFSET: 0x00904350
 void BattlenetApplication::CloseDatagram(uint32_t connection) {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 24de9826 IDENTICAL/NONE
+// OFFSET: 0x00904350
 bool BattlenetApplication::SendDatagram(uint32_t connection, const void* data, uint32_t size, const Battlenet::IP4::AddressPort& address) {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 011ff2c9 IDENTICAL/NONE
+// OFFSET: 0x00904350
 uint64_t BattlenetApplication::GetCurrentTime() const {
     SErrDisplayAppFatalMessage("", "", 0);
 }
@@ -539,7 +597,7 @@ void BattlenetApplication::CloseApplicationFile(Battlenet::ApplicationFile* file
 void BattlenetApplication::WCMessageReady(WowConnection* connection, uint32_t timeStamp, CDataStore* msg) {
 }
 
-// OFFSET: #0x008C7030
+// OFFSET: 0x00628C40/0x1402BAE90
 void BattlenetLogin::HandleUpdateInvoke(const Battlenet::Event::Update::Invoke* invoke) {
     char program[5];
     char component[5];
@@ -562,7 +620,7 @@ void BattlenetLogin::HandleUpdateInvoke(const Battlenet::Event::Update::Invoke* 
     }
 }
 
-// OFFSET: #0x008C7130
+// OFFSET: 0x00628E60/0x1402BB0F0
 void BattlenetLogin::BuildRealmListResult() {
     CDataStore* msg = new (__FILE__, __LINE__) CDataStore();
     uint16_t count = 0;
@@ -608,7 +666,7 @@ void BattlenetLogin::BuildRealmListResult() {
     delete msg;
 }
 
-// OFFSET: #0x008C7300
+// OFFSET: 0x00629050/0x1402BB330
 void BattlenetLogin::JoinRealm(uint32_t region, uint32_t battlegroup, uint32_t id) {
     this->m_joinRealmId = id;
 
@@ -632,7 +690,7 @@ void BattlenetLogin::JoinRealm(uint32_t region, uint32_t battlegroup, uint32_t i
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C73D0
+// OFFSET: 0x00629720/0x1402BBD40
 void BattlenetLogin::GetLogonMethod() {
     if (!this->m_password) {
         return;
@@ -658,7 +716,7 @@ void BattlenetLogin::GetLogonMethod() {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7530
+// OFFSET: 0x00629130/0x1402BB4A0
 void BattlenetLogin::Logoff() {
     Battlenet::Event::Creep::Invoke invoke;
     invoke.Set<9, Battlenet::Event::Creep::Logoff>();
@@ -668,7 +726,7 @@ void BattlenetLogin::Logoff() {
     }
 }
 
-// OFFSET: #0x008C7590
+// OFFSET: 0x00629200/0x1402BB5F0
 Battlenet::TumorManager* BattlenetLogin::CreateTumorManager() {
     if (g_tumorManager) {
         BattlenetUI::Uninit();
@@ -770,7 +828,7 @@ Battlenet::TumorManager* BattlenetLogin::CreateTumorManager() {
     return Battlenet::TumorManager::Create(*this->m_application, settings);
 }
 
-// OFFSET: #0x008C7AB0
+// OFFSET: 0x00629A40/0x1402BC1B0
 void BattlenetLogin::EnterPIN(int32_t count, uint8_t* digits) {
     if (!this->unk_105D[0]) {
         return;
@@ -806,7 +864,7 @@ void BattlenetLogin::EnterPIN(int32_t count, uint8_t* digits) {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7C10
+// OFFSET: 0x00629BB0/0x1402BC450
 void BattlenetLogin::EnterMatrix(uint8_t value) {
     if (!this->m_matrixEnabled) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -828,7 +886,7 @@ void BattlenetLogin::EnterMatrix(uint8_t value) {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7D00
+// OFFSET: 0x00629CA0/0x1402BC630
 void BattlenetLogin::RevertMatrix() {
     if (!this->m_matrixEnabled) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -847,7 +905,7 @@ void BattlenetLogin::RevertMatrix() {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7DC0
+// OFFSET: 0x00629D70/0x1402BC7E0
 void BattlenetLogin::CommitMatrix() {
     if (!this->m_matrixEnabled) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -866,7 +924,7 @@ void BattlenetLogin::CommitMatrix() {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7E80
+// OFFSET: 0x00629E40/0x1402BC990
 void BattlenetLogin::FinalizeMatrix() {
     if (!this->m_matrixEnabled) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -887,7 +945,7 @@ void BattlenetLogin::FinalizeMatrix() {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C7F40
+// OFFSET: 0x00629F20/0x1402BCB40
 void BattlenetLogin::EnterToken(const char* token) {
     if (!this->m_tokenRequired) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -911,7 +969,7 @@ void BattlenetLogin::EnterToken(const char* token) {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C8050
+// OFFSET: 0x0062A050/0x1402BCD50
 void BattlenetLogin::SendSurveyInfoToModule() {
     Battlenet::Event::Creep::Invoke invoke;
     Battlenet::Authentication::Request* authentication = invoke.Set<0, Battlenet::Authentication::Request>();
@@ -921,7 +979,7 @@ void BattlenetLogin::SendSurveyInfoToModule() {
     SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x008C80E0
+// OFFSET: 0x0062A250/0x1402BD0A0
 bool BattlenetLogin::SetGameAccount(uint32_t index) {
     if (index >= this->m_gameAccounts.m_count || this->m_gameAccountSelected) {
         return false;
@@ -951,7 +1009,7 @@ bool BattlenetLogin::SetGameAccount(uint32_t index) {
     return true;
 }
 
-// OFFSET: #0x008C8280
+// OFFSET: 0x00629890/0x1402BBF30
 void BattlenetLogin::Logon(const char* loginServer, const char* portal) {
     if (this->m_loggedOn) {
         return;
@@ -996,7 +1054,7 @@ void BattlenetLogin::Logon(const char* loginServer, const char* portal) {
     g_tumorManager->SendEvent<Battlenet::Event::Creep::Invoke, Protocol>(Battlenet::Event::CREEP, invoke);
 }
 
-// OFFSET: #0x008C8490
+// OFFSET: 0x0062A4C0/0x1402BD320
 void BattlenetLogin::QueueEvent(BN_EVENT_ID id, void* data, int32_t size) {
     this->m_eventLock.Enter();
 
@@ -1026,7 +1084,7 @@ void BattlenetApplication::WCConnected(WowConnection* connection, WowConnection*
     this->m_login->QueueEvent(BN_EVENT_CONNECTED, peer, sizeof(NETADDR));
 }
 
-// OFFSET: #0x008C87B0
+// OFFSET: 0x0062A7E0/0x1402BD670
 void BattlenetApplication::WCDataReady(WowConnection* connection, uint32_t timeStamp, uint8_t* data, int32_t length) {
     if (!this->m_login) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1037,17 +1095,19 @@ void BattlenetApplication::WCDataReady(WowConnection* connection, uint32_t timeS
     this->m_login->QueueEvent(BN_EVENT_DATA, copy, length);
 }
 
-// OFFSET: #0x008C8800
+// PROVEN: 03239c46 IDENTICAL/NONE
+// OFFSET: 0x0062A820/0x1402BD6E0
 void BattlenetApplication::WCCantConnect(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_login->QueueEvent(BN_EVENT_CANT_CONNECT, NULL, 0);
 }
 
-// OFFSET: #0x008C8820
+// PROVEN: ea1ef7f7 IDENTICAL/NONE
+// OFFSET: 0x0062A840/0x1402BD700
 void BattlenetApplication::WCDisconnected(WowConnection* connection, uint32_t timeStamp, const NETCONNADDR* addr) {
     this->m_login->QueueEvent(BN_EVENT_DISCONNECTED, NULL, 0);
 }
 
-// OFFSET: #0x008C8840
+// OFFSET: 0x0062A860
 void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, uint32_t id, const Battlenet::Realm::Info* info, uint8_t flags, bool remove) {
     this->m_realmLock.Enter();
 
@@ -1133,7 +1193,7 @@ void BattlenetLogin::UpdateRealmListData(uint32_t region, uint32_t battlegroup, 
     this->m_realmLock.Leave();
 }
 
-// OFFSET: #0x008C8B50
+// OFFSET: 0x0062ABE0/0x1402BDBF0
 void BattlenetLogin::GetRealmList() {
     if (this->m_realmListRequested) {
         this->QueueEvent(BN_EVENT_REALM_LIST, NULL, 0);
@@ -1151,7 +1211,7 @@ void BattlenetLogin::GetRealmList() {
     }
 }
 
-// OFFSET: #0x008C8C00
+// OFFSET: 0x0062AC80/0x1402BDD00
 BattlenetLogin::BattlenetLogin() {
     this->m_application = NULL;
     g_tumorManager = NULL;
@@ -1189,7 +1249,7 @@ BattlenetLogin::BattlenetLogin() {
     this->m_surveyTime = 0;
 }
 
-// OFFSET: #0x008C8DF0
+// OFFSET: 0x0062AED0/0x1402BE010
 void BattlenetLogin::DestroyTumorManager() {
     s_battlenetAllocator.Delete(g_tumorManager);
 
@@ -1215,7 +1275,7 @@ void BattlenetLogin::DestroyTumorManager() {
     this->m_patchInstructionLock.Leave();
 }
 
-// OFFSET: #0x008C8F00
+// OFFSET: 0x0062B010/0x1402BE1F0
 void BattlenetLogin::Init(LoginResponse* loginResponse) {
     if (!loginResponse) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1269,7 +1329,7 @@ void BattlenetLogin::Init(LoginResponse* loginResponse) {
     }
 }
 
-// OFFSET: #0x008C9140
+// OFFSET: 0x0062B250/0x1402BE490
 void BattlenetLogin::HandleDisconnectEvents(uint32_t index) {
     TSList<BN_EVENT>& events = this->m_events[index];
     bool disconnected = false;
@@ -1334,7 +1394,7 @@ void BattlenetLogin::HandleDisconnectEvents(uint32_t index) {
     BattlenetUI::Init();
 }
 
-// OFFSET: #0x008C9310
+// OFFSET: 0x0062B3A0/0x1402BE660
 void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke) {
     if (invoke->m_tag == 0) {
         if (invoke->Value<Battlenet::Authentication::Response>().m_tag == 0) {
@@ -1497,7 +1557,7 @@ void BattlenetLogin::HandleInvoke(const Battlenet::Event::Larva::Invoke* invoke)
     }
 }
 
-// OFFSET: [#0x008C9A40, #0x008CA050]
+// OFFSET: [0x0062BB90/0x1402BEEB0, 0x0062C280/0x1402BF990]
 BattlenetLogin::~BattlenetLogin() {
     this->m_patchInstructionLock.Enter();
     this->m_patchInstructions.Clear();
@@ -1532,7 +1592,7 @@ BattlenetLogin::~BattlenetLogin() {
     Battlenet::Teardown();
 }
 
-// OFFSET: #0x008C9C70
+// OFFSET: 0x0062BE30/0x1402BF2C0
 void BattlenetLogin::EventQueueUpdate() {
     uint32_t index = this->m_eventIndex;
 
@@ -1615,7 +1675,7 @@ void BattlenetLogin::EventQueueUpdate() {
     }
 }
 
-// OFFSET: #0x008C9EA0
+// OFFSET: 0x0062C080/0x1402BF580
 void BattlenetApplication::RecvEvent(const Battlenet::Event::Header& header, const BSN::EncodedObject* data) {
     if (header.m_eventType == 5) {
         BSN::BSNEncodedObject<Battlenet::Event::Larva::Invoke, Protocol> invoke;
@@ -1628,7 +1688,7 @@ void BattlenetApplication::RecvEvent(const Battlenet::Event::Header& header, con
     }
 }
 
-// OFFSET: #0x008C9F70
+// OFFSET: 0x0062C190/0x1402BF7F0
 void BattlenetLogin::Update() {
     this->EventQueueUpdate();
 
@@ -1652,37 +1712,40 @@ void BattlenetLogin::Update() {
     }
 }
 
-// OFFSET: #0x00530CE0
+// PROVEN: e206d4dc IDENTICAL/NONE
+// OFFSET: 0x009020E0
 bool BattlenetLogin::IsConnected() {
     return this->m_serviceState == 7 || this->m_serviceState == 6 || this->m_serviceState == 3;
 }
 
-// OFFSET: #0x008C52D0
+// PROVEN: 1bd8bf07 IDENTICAL/NONE
+// OFFSET: 0x00627570/0x140893650
 LOGIN_STATE BattlenetLogin::NextSecurityState(LOGIN_STATE state) {
     return static_cast<LOGIN_STATE>(14);
 }
 
-// OFFSET: #0x008C5E20
+// PROVEN: 62643042 IDENTICAL/NONE
+// OFFSET: 0x006278C0/0x1402B99E0
 const uint8_t* BattlenetLogin::GetKeyMap() {
     return &this->unk_105D[1];
 }
 
-// OFFSET: #0x008C5B40
+// OFFSET: 0x00627630/0x1402B9670
 bool BattlenetLogin::IsTrialAccount() {
     return (this->m_accountFlags & 0x8) != 0;
 }
 
-// OFFSET: #0x008C5B60
+// OFFSET: 0x00627650/0x1402B9680
 bool BattlenetLogin::IsProPassAccount() {
     return (this->m_accountFlags & 0x800000) != 0;
 }
 
-// OFFSET: #0x008C5B80
+// OFFSET: 0x00627670/0x1402B9690
 bool BattlenetLogin::IsGMAccount() {
     return (this->m_accountFlags & 0x1) != 0;
 }
 
-// OFFSET: #0x008C5E30
+// OFFSET: 0x006278D0/0x1402B99F0
 bool BattlenetLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* minDigits, uint32_t* maxDigits, bool* flipCoords, uint32_t* challengeCount) {
     if (!width || !height || !minDigits || !maxDigits || !challengeCount || !flipCoords) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1701,7 +1764,7 @@ bool BattlenetLogin::GetMatrixInfo(uint32_t* width, uint32_t* height, uint32_t* 
     return true;
 }
 
-// OFFSET: #0x008C5ED0
+// OFFSET: 0x00627930/0x1402B9A50
 bool BattlenetLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t* y) {
     if (!x || !y) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1724,12 +1787,13 @@ bool BattlenetLogin::GetMatrixCoordinates(uint32_t index, uint32_t* x, uint32_t*
     return true;
 }
 
-// OFFSET: #0x008C6AF0
+// PROVEN: ca297bcd IDENTICAL/NONE
+// OFFSET: 0x006286A0/0x1402BA7D0
 uint32_t BattlenetLogin::GetNumGameAccounts() {
     return this->m_gameAccounts.m_count;
 }
 
-// OFFSET: #0x008C6B00
+// OFFSET: 0x006286B0/0x1402BA7E0
 const char* BattlenetLogin::GetGameAccountName(uint32_t index) {
     if (index < this->m_gameAccounts.m_count) {
         return this->m_gameAccounts.m_data[index].m_name;
@@ -1738,7 +1802,7 @@ const char* BattlenetLogin::GetGameAccountName(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x008C6B60
+// OFFSET: 0x00628710/0x1402BA830
 uint32_t BattlenetLogin::GetGameAccountRegion(uint32_t index) {
     if (index < this->m_gameAccounts.m_count) {
         return this->m_gameAccounts.m_data[index].m_region;
@@ -1747,44 +1811,44 @@ uint32_t BattlenetLogin::GetGameAccountRegion(uint32_t index) {
     return 0;
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 1824d6dd IDENTICAL/NONE
+// OFFSET: [0x00847950]
 void BattlenetLogin::GetVersionProof(const uint8_t* versionChallenge) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 53fa9fca IDENTICAL/NONE
+// OFFSET: [0x00627990]
 void BattlenetLogin::SetPinInfo(bool enabled, uint32_t seed, const uint8_t* salt) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 2ef3292c IDENTICAL/NONE
+// OFFSET: [0x00627990]
 void BattlenetLogin::GetPinInfo(bool* enabled, uint8_t** salt, uint8_t** hash) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: aa631d02 IDENTICAL/NONE
+// OFFSET: [0x006279A0]
 void BattlenetLogin::SetMatrixInfo(bool enabled, uint8_t width, uint8_t height, uint8_t minDigits, uint8_t maxDigits, bool flipCoords, uint8_t challengeCount, uint64_t seed, const uint8_t* sessionKey, uint32_t sessionKeyLength) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 502a2077 IDENTICAL/NONE
+// OFFSET: [0x00841AE0]
 void BattlenetLogin::GetMatrixProof(bool* enabled, const uint8_t** proof) const {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 678e8eb7 IDENTICAL/NONE
+// OFFSET: [0x00841AE0]
 void BattlenetLogin::GetTokenInfo(bool* enabled, char* token) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 3e419357 IDENTICAL/NONE
+// OFFSET: [0x00762820]
 void BattlenetLogin::LogonResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 0dc22715 IDENTICAL/NONE
+// OFFSET: [0x00762820]
 void BattlenetLogin::ReconnectResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
 // PROVEN: 1da36603 IDENTICAL/IDENTICAL
@@ -1793,9 +1857,10 @@ int32_t BattlenetLogin::GetServerId() {
     return 0;
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 94f46783 IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
 const uint8_t* BattlenetLogin::GetVersionChallenge() {
-    SErrDisplayAppFatalMessage("", "", 0);
+    return NULL;
 }
 
 // PROVEN: 6aac27e5 IDENTICAL/IDENTICAL
@@ -1803,39 +1868,41 @@ const uint8_t* BattlenetLogin::GetVersionChallenge() {
 void BattlenetLogin::Reconnect() {
 }
 
-// OFFSET: #0x00532A60
-int32_t BattlenetLogin::Wait(const char* message, LoginData& loginData) {
-    SErrDisplayAppFatalMessage("", "", 0);
+// PROVEN: acfaa9f7 IDENTICAL/NONE
+// OFFSET: [0x006705F0]
+bool BattlenetLogin::Wait(const char* message, LoginData& loginData) {
+    return false;
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 6a8f8d4b IDENTICAL/NONE
+// OFFSET: [0x00847950]
 void BattlenetLogin::ProveVersion(const uint8_t* versionChecksum) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: a443bb74 IDENTICAL/NONE
+// OFFSET: [0x00627990]
 void BattlenetLogin::FileAccept(bool accept, uint64_t offset) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: c749a7ef IDENTICAL/NONE
+// OFFSET: [0x00847950]
 void BattlenetLogin::FileComplete(bool success) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 462e3f66 IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
 int32_t BattlenetLogin::GetSurveyId() {
-    SErrDisplayAppFatalMessage("", "", 0);
+    return 0;
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: be1d2a5e IDENTICAL/NONE
+// OFFSET: [0x00841AE0]
 void BattlenetLogin::SendSurveyData(uint16_t size, uint8_t* data) {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
-// OFFSET: #0x00532A60
+// PROVEN: 9428dbf0 IDENTICAL/IDENTICAL
+// OFFSET: [0x00401000/0x1407D7E80]
 void BattlenetLogin::SendSurveyFailed() {
-    SErrDisplayAppFatalMessage("", "", 0);
 }
 
 // PROVEN: cb179714 IDENTICAL/DIFFERENT

@@ -145,6 +145,7 @@ void WowConnectionNet::PlatformInit(bool useEngine) {
     }
 }
 
+// PROVEN: 6f9d5ebc IDENTICAL/NONE
 // OFFSET: 0x00550A00/0x1401AB880
 void WowConnectionNet::PlatformDestruct(WowConnection* connection) {
     if (connection->m_event) {
@@ -159,6 +160,7 @@ void WowConnectionNet::PlatformWorkerReady() {
     SetEvent(this->m_event);
 }
 
+// PROVEN: 43a32745 IDENTICAL/NONE
 // OFFSET: 0x00550A40/0x1401AB8C0
 void WowConnectionNet::PlatformAdd(WowConnection* connection) {
     if (!connection->m_event) {

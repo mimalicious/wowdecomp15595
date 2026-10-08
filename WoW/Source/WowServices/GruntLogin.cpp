@@ -10,6 +10,7 @@
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/MD5.h"
+#include "WoW/Source/WowServices/InstallLocation.h"
 #include "WoW/Source/WowServices/LoginResponse.h"
 
 // INLINED
@@ -17,7 +18,14 @@ GruntLogin::MATRIXINPUT::MATRIXINPUT() {
     this->m_valid = false;
 }
 
-// OFFSET: #0x008CA0B0
+// INLINED
+GruntLogin::MATRIXINPUT::~MATRIXINPUT() {
+    memset(this->m_key.m_state, 0, sizeof(this->m_key.m_state));
+    this->m_key.m_y = 0;
+    this->m_key.m_x = 0;
+}
+
+// OFFSET: 0x00626370/0x1402B7FB0
 bool GruntLogin::Connected(const NETADDR& address) {
     this->m_loggedOn = true;
 
@@ -28,7 +36,7 @@ bool GruntLogin::Connected(const NETADDR& address) {
     return true;
 }
 
-// OFFSET: #0x008CA140
+// OFFSET: 0x006263B0/0x1402B8000
 bool GruntLogin::CantConnect() {
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_FAILED, LOGIN_SERVER_DOWN, NULL, 0);
     this->m_logonStatus = 1;
@@ -39,7 +47,7 @@ bool GruntLogin::CantConnect() {
     return false;
 }
 
-// OFFSET: #0x008CA1D0
+// OFFSET: 0x006263F0/0x1402B8060
 bool GruntLogin::Disconnected() {
     this->m_loginResponse->UpdateLoginStatus(LOGIN_STATE_DISCONNECTED, LOGIN_OK, NULL, 0);
 
@@ -54,22 +62,23 @@ bool GruntLogin::Disconnected() {
     return false;
 }
 
-// OFFSET: #0x008CA580
+// OFFSET: 0x00626770/0x1402B84F0
 void GruntLogin::GetLogonMethod() {
     Grunt::ClientLink::Logon logon = {};
 
     logon.m_programId = Login::s_fourCCprogramID;
 
     if (!logon.m_programId) {
-        logon.m_programId = SFile::IsTrial() ? 'WoWS' : 'WoW';
+        InstallLocation location = GetInstallLocation();
+        logon.m_programId = location == INSTALL_LOCATION_TEST || location == INSTALL_LOCATION_BETA ? 'WoWT' : 'WoW';
     }
 
     logon.m_processor = OsGetProcessorId();
     logon.m_os = OsGetOsId();
-    logon.m_versionMajor = 3;
+    logon.m_versionMajor = 4;
     logon.m_versionMinor = 3;
-    logon.m_versionPatch = 5;
-    logon.m_build = 12340;
+    logon.m_versionPatch = 4;
+    logon.m_build = 15595;
     logon.m_locale = SFile::s_locale;
     logon.m_timeZone = OsGetTimeZone();
 
@@ -90,7 +99,7 @@ void GruntLogin::GetLogonMethod() {
     }
 }
 
-// OFFSET: #0x008CA740
+// OFFSET: 0x006268B0/0x1402B8680
 void GruntLogin::Logon(const char* loginServer, const char* portal) {
     if (this->m_loggedOn) {
         return;
@@ -133,7 +142,7 @@ void GruntLogin::Init(LoginResponse* loginResponse) {
     this->m_clientLink = new (__FILE__, __LINE__) Grunt::ClientLink(*this);
 }
 
-// OFFSET: #0x008CACA0
+// OFFSET: 0x00626290/0x1402B7EA0
 GruntLogin::GruntLogin() {
     this->m_clientLink = NULL;
     this->m_matrixChallengeCount = 0;
@@ -150,7 +159,7 @@ void GruntLogin::Logoff() {
     }
 }
 
-// OFFSET: #0x008CB160
+// OFFSET: 0x00626D70/0x1402B8CF0
 void GruntLogin::LogonResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) {
     if (this->IsReconnect()) {
         this->m_loginResponse->HandleRealmData(1, NULL);
@@ -271,7 +280,7 @@ int32_t GruntLogin::GetLoginServerType() {
     return 0;
 }
 
-// OFFSET: #0x008CA260
+// OFFSET: 0x00626440/0x1402B80D0
 void GruntLogin::GetVersionProof(const uint8_t* versionChallenge) {
     if (this->IsReconnect()) {
         uint8_t versionChecksum[20] = {};
@@ -302,7 +311,7 @@ void GruntLogin::EncodePinDigits(uint32_t seed) {
     }
 }
 
-// OFFSET: #0x008CA360
+// OFFSET: 0x00625EB0/0x1402B7A90
 void GruntLogin::SetPinInfo(bool enabled, uint32_t seed, const uint8_t* salt) {
     this->m_pinEnabled = enabled;
 
@@ -340,7 +349,7 @@ void GruntLogin::GetTokenInfo(bool* enabled, char* token) {
     SStrCopy(token, this->m_token, sizeof(this->m_token));
 }
 
-// OFFSET: #0x008CA450
+// OFFSET: 0x00626730/0x1402B84B0
 void GruntLogin::ProveVersion(const uint8_t* versionChecksum) {
     if (this->m_loggedOn) {
         this->m_clientLink->ProveVersion(versionChecksum);
@@ -348,7 +357,7 @@ void GruntLogin::ProveVersion(const uint8_t* versionChecksum) {
     }
 }
 
-// OFFSET: #0x008CA4F0
+// OFFSET: 0x00625FE0/0x1402B7B90
 LOGIN_STATE GruntLogin::NextSecurityState(LOGIN_STATE state) {
     switch (state) {
         case LOGIN_STATE_FIRST_SECURITY:
@@ -392,6 +401,36 @@ void GruntLogin::CommitMatrix() {
     memcpy(&input->m_key, &committed->m_key, sizeof(input->m_key));
 }
 
+// PROVEN: b4b6acc3 IDENTICAL/NONE
+// OFFSET: 0x00626360/0x1402B7FA0
+const char* GruntLogin::GetAccountName() {
+    return this->m_username;
+}
+
+// PROVEN: 35d7fe2b IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
+uint32_t GruntLogin::GetOutOfBandChallengeType() {
+    return 0;
+}
+
+// PROVEN: 1d060ab9 IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
+const char* GruntLogin::GetOutOfBandChallengeTitle() {
+    return NULL;
+}
+
+// PROVEN: c84858b1 IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
+const char* GruntLogin::GetOutOfBandChallengeText() {
+    return NULL;
+}
+
+// PROVEN: 9240377d IDENTICAL/IDENTICAL
+// OFFSET: [0x00842700/0x1407FDD80]
+int32_t GruntLogin::GetOutOfBandChallengeTimeLeft() {
+    return 0;
+}
+
 // PROVEN: a00d5c6f IDENTICAL/NONE
 // OFFSET: 0x00626310/0x1402B7F50
 int32_t GruntLogin::GetServerId() {
@@ -428,7 +467,7 @@ const uint8_t* GruntLogin::GetKeyMap() {
     return this->m_keyMap;
 }
 
-// OFFSET: #0x008CAD40
+// OFFSET: 0x006264D0/0x1402B8170
 void GruntLogin::SetMatrixInfo(bool enabled, uint8_t width, uint8_t height, uint8_t minDigits, uint8_t maxDigits, bool flipCoords, uint8_t challengeCount, uint64_t seed, const uint8_t* sessionKey, uint32_t sessionKeyLength) {
     this->m_matrixEnabled = enabled;
 
@@ -508,7 +547,7 @@ void GruntLogin::RevertMatrix() {
     committed->m_key = input->m_key;
 }
 
-// OFFSET: #0x008CAB40
+// OFFSET: 0x00626B00/0x1402B89C0
 void GruntLogin::EnterToken(const char* token) {
     SStrCopy(this->m_token, token, sizeof(this->m_token));
     LOGIN_STATE state = this->NextSecurityState(LOGIN_STATE_TOKEN);
@@ -593,8 +632,8 @@ void GruntLogin::FileComplete(bool success) {
     this->m_clientLink->FileComplete();
 }
 
-// OFFSET: #0x008CA7F0
-int32_t GruntLogin::Wait(const char* message, LoginData& loginData) {
+// OFFSET: 0x00626910/0x1402B8700
+bool GruntLogin::Wait(const char* message, LoginData& loginData) {
     while (this->m_logonStatus == -1) {
         OsSleep(100);
     }
@@ -610,7 +649,7 @@ int32_t GruntLogin::Wait(const char* message, LoginData& loginData) {
     return this->m_logonStatus == 0;
 }
 
-// OFFSET: #0x008CA880
+// OFFSET: 0x006269B0/0x1402B87E0
 void GruntLogin::EnterPIN(int32_t count, uint8_t* digits) {
     char pin[12];
 
@@ -637,20 +676,20 @@ void GruntLogin::EnterPIN(int32_t count, uint8_t* digits) {
     this->m_loginResponse->UpdateLoginStatus(this->NextSecurityState(LOGIN_STATE_PIN), LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: #0x008CAFA0
+// OFFSET: 0x00626A80/0x1402B8910
 void GruntLogin::EnterMatrix(uint8_t value) {
     GruntLogin::MATRIXINPUT* input = this->m_matrixCommitted;
     ProcessMatrixRC4(&value, 1, &input->m_key);
     input->m_hmac.Process(&value, 1);
 }
 
-// OFFSET: #0x008CAFE0
+// OFFSET: 0x00626AC0/0x1402B8960
 void GruntLogin::FinalizeMatrix() {
     this->m_matrixInput->Finish(*reinterpret_cast<SHA1::Digest*>(this->m_matrixProof));
     this->m_loginResponse->UpdateLoginStatus(this->NextSecurityState(LOGIN_STATE_MATRIX), LOGIN_OK, NULL, 0);
 }
 
-// OFFSET: #0x008CB020
+// OFFSET: 0x00626C50/0x1402B8B90
 void GruntLogin::ReconnectResult(Grunt::Result result, const uint8_t* sessionKey, uint32_t sessionKeyLength, uint16_t flags) {
     if (!this->IsReconnect()) {
         this->m_logonStatus = 1;

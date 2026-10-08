@@ -734,11 +734,11 @@ void RealmResponse::OnChatPlayerNotFound(RealmConnection* connection, const char
 void RealmResponse::OnCharacterRestored(RealmConnection* connection, bool success, uint32_t a3, uint32_t a4, uint32_t a5, uint64_t a6, uint64_t a7, uint32_t a8, const char* a9, uint32_t a10, CDataStore* msg, uint64_t a12, uint64_t a13) {
 }
 
-// OFFSET: #0x006B1B80
+// OFFSET: 0x004CF260
 void RealmResponse::OnChangeArenaTeamRating(RealmConnection* connection, bool success, int32_t a3, int32_t a4) {
 }
 
-// OFFSET: #0x006B1B80
+// OFFSET: 0x004CF260
 void RealmResponse::OnServerInfo(RealmConnection* connection, int32_t a2, int32_t a3, char* a4) {
 }
 
