@@ -183,7 +183,8 @@ static void std_huff_tables(j_compress_ptr cinfo) {
  * your code will still work (they'll be set to reasonable defaults).
  */
 
-// OFFSET: %0x00A903A0
+// PROVEN: 6eb78a8e IDENTICAL/NONE
+// OFFSET: 0x00B5E150/0x140926FD0
 void jpeg_set_defaults(j_compress_ptr cinfo) {
   int i;
 
@@ -275,7 +276,8 @@ void jpeg_set_defaults(j_compress_ptr cinfo) {
  * Select an appropriate JPEG colorspace for in_color_space.
  */
 
-// OFFSET: %0x00A901C0
+// PROVEN: cd5032e1 IDENTICAL/NONE
+// OFFSET: 0x00B5DF70
 void jpeg_default_colorspace(j_compress_ptr cinfo) {
   switch (cinfo->in_color_space) {
   case JCS_GRAYSCALE:
@@ -306,7 +308,8 @@ void jpeg_default_colorspace(j_compress_ptr cinfo) {
  * Set the JPEG colorspace, and choose colorspace-dependent default values.
  */
 
-// OFFSET: %0x00A8FED0
+// PROVEN: 67fe2403 IDENTICAL/NONE
+// OFFSET: 0x00B5DC80
 void jpeg_set_colorspace(j_compress_ptr cinfo, J_COLOR_SPACE colorspace) {
   jpeg_component_info * compptr;
   int ci;

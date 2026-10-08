@@ -82,7 +82,8 @@ void jpeg_destroy(j_common_ptr cinfo) {
  * (Would jutils.c be a more reasonable place to put these?)
  */
 
-// OFFSET: #0x004ACEA0
+// PROVEN: d352b17c IDENTICAL/NONE
+// OFFSET: 0x00B5F250/0x140928560
 JQUANT_TBL * jpeg_alloc_quant_table(j_common_ptr cinfo) {
   JQUANT_TBL *tbl;
 

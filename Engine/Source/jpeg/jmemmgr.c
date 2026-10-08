@@ -252,7 +252,8 @@ static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
 
 
 /* Allocate a "small" object */
-// OFFSET: %0x00A907B0
+// PROVEN: a4893248 IDENTICAL/NONE
+// OFFSET: 0x00B5E560
 static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   small_pool_ptr hdr_ptr, prev_hdr_ptr;
@@ -342,7 +343,8 @@ static void * alloc_small(j_common_ptr cinfo, int pool_id, size_t sizeofobject) 
  */
 
 /* Allocate a "large" object */
-// OFFSET: %0x00A90900
+// PROVEN: dd128d8c IDENTICAL/NONE
+// OFFSET: 0x00B5E6B0
 static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobject) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   large_pool_ptr hdr_ptr;
@@ -400,7 +402,8 @@ static void FAR * alloc_large(j_common_ptr cinfo, int pool_id, size_t sizeofobje
  */
 
 /* Allocate a 2-D sample array */
-// OFFSET: %0x00A909C0
+// PROVEN: 3e6324a1 IDENTICAL/NONE
+// OFFSET: 0x00B5E770
 static JSAMPARRAY alloc_sarray(j_common_ptr cinfo, int pool_id, JDIMENSION samplesperrow, JDIMENSION numrows) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   JSAMPARRAY result;
@@ -528,7 +531,8 @@ static JBLOCKARRAY alloc_barray(j_common_ptr cinfo, int pool_id, JDIMENSION bloc
 
 
 /* Request a virtual 2-D sample array */
-// OFFSET: #0x004AC500
+// PROVEN: 05508278 IDENTICAL/NONE
+// OFFSET: 0x00B5E8D0
 static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION samplesperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   jvirt_sarray_ptr result;
@@ -557,7 +561,8 @@ static jvirt_sarray_ptr request_virt_sarray(j_common_ptr cinfo, int pool_id, boo
 
 
 /* Request a virtual 2-D coefficient-block array */
-// OFFSET: #0x004AC570
+// PROVEN: 74ecadfe IDENTICAL/NONE
+// OFFSET: 0x00B5E940
 static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boolean pre_zero, JDIMENSION blocksperrow, JDIMENSION numrows, JDIMENSION maxaccess) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   jvirt_barray_ptr result;
@@ -586,7 +591,8 @@ static jvirt_barray_ptr request_virt_barray(j_common_ptr cinfo, int pool_id, boo
 
 
 /* Allocate the in-memory buffers for any unrealized virtual arrays */
-// OFFSET: %0x00A90C00
+// PROVEN: 950d4357 IDENTICAL/NONE
+// OFFSET: 0x00B5E9B0
 static void realize_virt_arrays(j_common_ptr cinfo) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   long space_per_minheight, maximum_space, avail_mem;
@@ -696,7 +702,8 @@ static void realize_virt_arrays(j_common_ptr cinfo) {
 
 
 /* Do backing store read or write of a virtual sample array */
-// OFFSET: #0x004AC7B0
+// PROVEN: 033bca85 IDENTICAL/NONE
+// OFFSET: 0x00B5EB70
 static void do_sarray_io(j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writing) {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
 
@@ -728,7 +735,8 @@ static void do_sarray_io(j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writi
 
 
 /* Do backing store read or write of a virtual coefficient-block array */
-// OFFSET: #0x004AC850
+// PROVEN: ccafb470 IDENTICAL/NONE
+// OFFSET: 0x00B5EC10
 static void do_barray_io(j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writing) {
   long bytesperrow, file_offset, byte_count, rows, thisrow, i;
 
@@ -945,7 +953,8 @@ static JBLOCKARRAY access_virt_barray(j_common_ptr cinfo, jvirt_barray_ptr ptr, 
  * Release all objects belonging to a specified pool.
  */
 
-// OFFSET: %0x00A911B0
+// PROVEN: 11e22da5 IDENTICAL/NONE
+// OFFSET: 0x00B5EF60
 static void free_pool(j_common_ptr cinfo, int pool_id) {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
   small_pool_ptr shdr_ptr;
@@ -1018,7 +1027,8 @@ static void free_pool(j_common_ptr cinfo, int pool_id) {
  * Note that this cannot be called unless cinfo->mem is non-NULL.
  */
 
-// OFFSET: %0x00A912C0
+// PROVEN: d0230ace IDENTICAL/NONE
+// OFFSET: 0x00B5F070
 static void self_destruct(j_common_ptr cinfo) {
   int pool;
 
@@ -1043,7 +1053,8 @@ static void self_destruct(j_common_ptr cinfo) {
  * When this is called, only the error manager pointer is valid in cinfo!
  */
 
-// OFFSET: %0x00A91300
+// PROVEN: a0887af1 IDENTICAL/NONE
+// OFFSET: 0x00B5F0B0/0x140928340
 void jinit_memory_mgr(j_common_ptr cinfo) {
   my_mem_ptr mem;
   long max_to_use;

@@ -124,7 +124,8 @@ static void term_destination(j_compress_ptr cinfo) {
  * for closing it after finishing compression.
  */
 
-// OFFSET: %0x00A8FBE0
+// PROVEN: 5e1b5784 IDENTICAL/NONE
+// OFFSET: 0x00B5D990/0x140926430
 void jpeg_stdio_dest(j_compress_ptr cinfo, FILE * outfile) {
   my_dest_ptr dest;
 

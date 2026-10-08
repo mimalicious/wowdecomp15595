@@ -466,7 +466,7 @@ static void emit_jfif_app0(j_compress_ptr cinfo) {
 
 
 /* Emit an Adobe APP14 marker */
-// OFFSET: %0x00A91F60
+// OFFSET: 0x00B5FB70
 static void emit_adobe_app14(j_compress_ptr cinfo) {
   /*
    * Length of APP14 block	(2 bytes)
@@ -572,7 +572,8 @@ static void write_marker_byte(j_compress_ptr cinfo, int val) {
  * jpeg_start_compress returns.
  */
 
-// OFFSET: #0x004AD950
+// PROVEN: ad4d24a5 IDENTICAL/NONE
+// OFFSET: 0x00B5FD10
 static void write_file_header(j_compress_ptr cinfo) {
   my_marker_ptr marker = (my_marker_ptr) cinfo->marker;
 
@@ -601,7 +602,8 @@ static void write_file_header(j_compress_ptr cinfo) {
  * try to error-check the quant table numbers as soon as they see the SOF.
  */
 
-// OFFSET: %0x00A91FC0
+// PROVEN: 25f408f0 IDENTICAL/NONE
+// OFFSET: 0x00B5FD70
 static void write_frame_header(j_compress_ptr cinfo) {
   int ci, prec;
   boolean is_baseline;
@@ -770,7 +772,8 @@ static void write_tables_only(j_compress_ptr cinfo) {
  * Initialize the marker writer module.
  */
 
-// OFFSET: %0x00A922F0
+// PROVEN: 8ffa8906 IDENTICAL/NONE
+// OFFSET: 0x00B600A0/0x140929580
 void jinit_marker_writer(j_compress_ptr cinfo) {
   my_marker_ptr marker;
 

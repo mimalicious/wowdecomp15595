@@ -102,7 +102,8 @@ METHODDEF(void) finish_pass_gather JPP((j_compress_ptr cinfo));
  * just count the Huffman symbols used and generate Huffman code tables.
  */
 
-// OFFSET: %0x00A93B50
+// PROVEN: 523bce9a IDENTICAL/NONE
+// OFFSET: 0x00B61900/0x14092B2F0
 static void start_pass_huff(j_compress_ptr cinfo, boolean gather_statistics) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   int ci, dctbl, actbl;
@@ -182,7 +183,8 @@ static void start_pass_huff(j_compress_ptr cinfo, boolean gather_statistics) {
  * Note this is also used by jcphuff.c.
  */
 
-// OFFSET: #0x004AE930
+// PROVEN: 92a7867d IDENTICAL/NONE
+// OFFSET: 0x00B60CB0
 void jpeg_make_c_derived_tbl(j_compress_ptr cinfo, boolean isDC, int tblno, c_derived_tbl ** pdtbl) {
   JHUFF_TBL *htbl;
   c_derived_tbl *dtbl;
@@ -485,7 +487,8 @@ static boolean emit_restart(working_state * state, int restart_num) {
  * Encode and output one MCU's worth of Huffman-compressed coefficients.
  */
 
-// OFFSET: %0x00A93460
+// PROVEN: 2f8db81f IDENTICAL/NONE
+// OFFSET: 0x00B61210
 static boolean encode_mcu_huff(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   working_state state;
@@ -657,7 +660,8 @@ static void htest_one_block(j_compress_ptr cinfo, JCOEFPTR block, int last_dc_va
  * No data is actually output, so no suspension return is possible.
  */
 
-// OFFSET: %0x00A93740
+// PROVEN: 5d5f6e6b IDENTICAL/NONE
+// OFFSET: 0x00B614F0
 static boolean encode_mcu_gather(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   huff_entropy_ptr entropy = (huff_entropy_ptr) cinfo->entropy;
   int blkn, ci;
@@ -910,7 +914,8 @@ static void finish_pass_gather(j_compress_ptr cinfo) {
  * Module initialization routine for Huffman entropy encoding.
  */
 
-// OFFSET: %0x00A93D00
+// PROVEN: 172b1db7 IDENTICAL/NONE
+// OFFSET: 0x00B61AB0/0x14092B4D0
 void jinit_huff_encoder(j_compress_ptr cinfo) {
   huff_entropy_ptr entropy;
   int i;

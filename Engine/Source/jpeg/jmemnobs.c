@@ -22,7 +22,8 @@ void jpeg_set_free(void (*freeFunc)(void* ptr)) {
     s_jpegFree = freeFunc;
 }
 
-// OFFSET: %0x00A8F5C0
+// PROVEN: dffa7f37 IDENTICAL/NONE
+// OFFSET: 0x00B5D360/0x140925D60
 void* jpeg_get_small(j_common_ptr cinfo, size_t sizeofobject) {
     if (s_jpegAlloc) {
         return s_jpegAlloc(sizeofobject);
@@ -31,14 +32,16 @@ void* jpeg_get_small(j_common_ptr cinfo, size_t sizeofobject) {
     return NULL;
 }
 
-// OFFSET: %0x00A8F5E0
+// PROVEN: 3b6941d9 IDENTICAL/NONE
+// OFFSET: 0x00B5D380
 void jpeg_free_small(j_common_ptr cinfo, void* object, size_t sizeofobject) {
     if (s_jpegFree) {
         s_jpegFree(object);
     }
 }
 
-// OFFSET: %0x00A8F5C0
+// PROVEN: 85b0e506 IDENTICAL/NONE
+// OFFSET: 0x00B5D360/0x140925D60
 void* jpeg_get_large(j_common_ptr cinfo, size_t sizeofobject) {
     if (s_jpegAlloc) {
         return s_jpegAlloc(sizeofobject);
@@ -47,7 +50,8 @@ void* jpeg_get_large(j_common_ptr cinfo, size_t sizeofobject) {
     return NULL;
 }
 
-// OFFSET: %0x00A8F5E0
+// PROVEN: 01ebc9d9 IDENTICAL/NONE
+// OFFSET: 0x00B5D380
 void jpeg_free_large(j_common_ptr cinfo, void* object, size_t sizeofobject) {
     if (s_jpegFree) {
         s_jpegFree(object);

@@ -34,7 +34,8 @@
  * wrong thing.
  */
 
-// OFFSET: %0x00A8F970
+// PROVEN: ed91df08 IDENTICAL/NONE
+// OFFSET: 0x00B5D720/0x140926190
 void jpeg_start_compress(j_compress_ptr cinfo, boolean write_all_tables) {
   if (cinfo->global_state != CSTATE_START) {
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);

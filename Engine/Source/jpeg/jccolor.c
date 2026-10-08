@@ -180,7 +180,8 @@ static void rgb_ycc_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMA
  * We assume rgb_ycc_start has been called (we only use the Y tables).
  */
 
-// OFFSET: #0x004B2490
+// PROVEN: 18f12c33 IDENTICAL/NONE
+// OFFSET: 0x00B64570
 static void rgb_gray_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   my_cconvert_ptr cconvert = (my_cconvert_ptr) cinfo->cconvert;
   register int r, g, b;
@@ -269,7 +270,8 @@ static void cmyk_ycck_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPI
  * The source can be either plain grayscale or YCbCr (since Y == gray).
  */
 
-// OFFSET: #0x004B2680
+// PROVEN: ffa52680 IDENTICAL/NONE
+// OFFSET: 0x00B64750
 static void grayscale_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf, JDIMENSION output_row, int num_rows) {
   register JSAMPROW inptr;
   register JSAMPROW outptr;

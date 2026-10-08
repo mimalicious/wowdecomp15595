@@ -26,7 +26,8 @@
  * The error manager must already be set up (in case memory manager fails).
  */
 
-// OFFSET: %0x00A8F620
+// PROVEN: 35654b6e IDENTICAL/NONE
+// OFFSET: 0x00B5D3D0/0x140925DC0
 void jpeg_CreateCompress(j_compress_ptr cinfo, int version, size_t structsize) {
   int i;
 

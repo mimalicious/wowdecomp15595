@@ -102,7 +102,8 @@ METHODDEF(void) finish_pass_gather_phuff JPP((j_compress_ptr cinfo));
  * Initialize for a Huffman-compressed scan using progressive JPEG.
  */
 
-// OFFSET: #0x004B03B0
+// PROVEN: 3dd4da78 IDENTICAL/NONE
+// OFFSET: 0x00B62650/0x14092C240
 static void start_pass_phuff(j_compress_ptr cinfo, boolean gather_statistics) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   boolean is_DC_band;
@@ -203,7 +204,7 @@ static void start_pass_phuff(j_compress_ptr cinfo, boolean gather_statistics) {
 
 
 /* Empty the output buffer; we do not support suspension in this module. */
-// OFFSET: #0x004AF810
+// OFFSET: 0x00B61B10
 static void dump_buffer(phuff_entropy_ptr entropy) {
   struct jpeg_destination_mgr * dest = entropy->cinfo->dest;
 
@@ -364,7 +365,7 @@ static void emit_restart(phuff_entropy_ptr entropy, int restart_num) {
  * or first pass of successive approximation).
  */
 
-// OFFSET: #0x004AFB30
+// OFFSET: 0x00B61E10
 static boolean encode_mcu_DC_first(j_compress_ptr cinfo, JBLOCKROW *MCU_data) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   register int temp, temp2;
@@ -760,7 +761,8 @@ static void finish_pass_phuff(j_compress_ptr cinfo) {
  * Finish up a statistics-gathering pass and create the new Huffman tables.
  */
 
-// OFFSET: %0x00A947C0
+// PROVEN: a180db03 IDENTICAL/NONE
+// OFFSET: 0x00B62570
 static void finish_pass_gather_phuff(j_compress_ptr cinfo) {
   phuff_entropy_ptr entropy = (phuff_entropy_ptr) cinfo->entropy;
   boolean is_DC_band;
@@ -810,7 +812,8 @@ static void finish_pass_gather_phuff(j_compress_ptr cinfo) {
  * Module initialization routine for progressive Huffman entropy encoding.
  */
 
-// OFFSET: %0x00A94A30
+// PROVEN: 306368a4 IDENTICAL/NONE
+// OFFSET: 0x00B627E0/0x14092C420
 void jinit_phuff_encoder(j_compress_ptr cinfo) {
   phuff_entropy_ptr entropy;
   int i;

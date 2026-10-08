@@ -136,7 +136,8 @@ static void start_pass_coef(j_compress_ptr cinfo, J_BUF_MODE pass_mode) {
  * which we index according to the component's SOF position.
  */
 
-// OFFSET: #0x004AE0D0
+// PROVEN: f584f21e IDENTICAL/NONE
+// OFFSET: 0x00B60470
 static boolean compress_data(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */
@@ -237,7 +238,8 @@ static boolean compress_data(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
  * at the scan-dependent variables (MCU dimensions, etc).
  */
 
-// OFFSET: #0x004AE560
+// PROVEN: 1a366bf4 IDENTICAL/NONE
+// OFFSET: 0x00B608E0
 static boolean compress_first_pass(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
@@ -332,7 +334,8 @@ static boolean compress_first_pass(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
  * NB: input_buf is ignored; it is likely to be a NULL pointer.
  */
 
-// OFFSET: #0x004AE360
+// PROVEN: 1dbd753d IDENTICAL/NONE
+// OFFSET: 0x00B60700
 static boolean compress_output(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
   my_coef_ptr coef = (my_coef_ptr) cinfo->coef;
   JDIMENSION MCU_col_num;	/* index of current MCU within row */
@@ -395,7 +398,8 @@ static boolean compress_output(j_compress_ptr cinfo, JSAMPIMAGE input_buf) {
  * Initialize coefficient buffer controller.
  */
 
-// OFFSET: %0x00A92DE0
+// PROVEN: 46efb60d IDENTICAL/NONE
+// OFFSET: 0x00B60B90/0x14092A2A0
 void jinit_c_coef_controller(j_compress_ptr cinfo, boolean need_full_buffer) {
   my_coef_ptr coef;
 
