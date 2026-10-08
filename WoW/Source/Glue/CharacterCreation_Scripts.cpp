@@ -23,6 +23,7 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/Types.h"
 
 
+// PROVEN: 0a6b3514 IDENTICAL/NONE
 // OFFSET: 0x0080D350/0x140523BE0
 static int32_t Script_SetCharCustomizeFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -132,6 +133,7 @@ static int32_t Script_GetRandomName(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f0bc9972 IDENTICAL/NONE
 // OFFSET: 0x0080D3C0/0x140523C70
 static int32_t Script_SetCharCustomizeBackground(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -242,6 +244,7 @@ int32_t Script_GetFacialHairCustomization(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f3accfab IDENTICAL/NONE
 // OFFSET: 0x0080D7B0/0x140524180
 static int32_t Script_GetSelectedRace(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::m_raceIndex + 1);
@@ -298,6 +301,7 @@ static int32_t Script_CycleCharCustomization(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 7d63dc36 IDENTICAL/NONE
 // OFFSET: 0x0080D930/0x140524340
 static int32_t Script_GetCharacterCreateFacing(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::m_charFacing * 57.29578f);
@@ -315,6 +319,7 @@ static int32_t Script_SetCharacterCreateFacing(lua_State* L) {
     return 1;
 }
 
+// PROVEN: fbf9a149 IDENTICAL/NONE
 // OFFSET: 0x0080D9D0/0x1405243F0
 static int32_t Script_CreateCharacter(lua_State* L) {
     if (lua_isstring(L, 1)) {
@@ -325,12 +330,14 @@ static int32_t Script_CreateCharacter(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 9800e3b0 IDENTICAL/NONE
 // OFFSET: 0x0080DA10/0x140524440
 static int32_t Script_PaidChange_GetCurrentRaceIndex(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::GetExistingRaceIndex() + 1);
     return 1;
 }
 
+// PROVEN: dcf0b691 IDENTICAL/NONE
 // OFFSET: 0x0080DA40/0x1405244B0
 static int32_t Script_PaidChange_GetCurrentClassIndex(lua_State* L) {
     lua_pushnumber(L, CCharacterCreation::GetExistingClassIndex() + 1);
@@ -422,7 +429,7 @@ static int32_t Script_GetClassesForRace(lua_State* L) {
     uint32_t count = CCharacterCreation::m_classes.Count();
 
     for (uint32_t i = 0; i < count; i++) {
-        ChrClassesRec* classRec = i < CCharacterCreation::m_classes.Count() ? CCharacterCreation::m_classes.m_data[i] : NULL;
+        const ChrClassesRec* classRec = i < CCharacterCreation::m_classes.Count() ? CCharacterCreation::m_classes.m_data[i] : NULL;
         const char* name = CGUnit_C::GetDisplayClassNameFromRecord(classRec, CCharacterCreation::m_character->m_data.m_preferences.m_sexID, NULL);
         bool available = ClientServices::Connection()->m_accountExpansion >= classRec->m_requiredExpansion;
 
@@ -440,6 +447,7 @@ static int32_t Script_GetClassesForRace(lua_State* L) {
     return 3 * count;
 }
 
+// PROVEN: 7d2c4032 IDENTICAL/NONE
 // OFFSET: 0x0080F060/0x140526230
 static int32_t Script_SetSelectedSex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -490,12 +498,14 @@ static int32_t Script_PaidChange_GetName(lua_State* L) {
     return 1;
 }
 
+// PROVEN: f2e8a69f IDENTICAL/NONE
 // OFFSET: 0x0080F700/0x1405269E0
 static int32_t Script_ResetCharCustomize(lua_State* L) {
     CCharacterCreation::ResetCharCustomizeInfo();
     return 0;
 }
 
+// PROVEN: e7355674 IDENTICAL/NONE
 // OFFSET: 0x0080F710/0x1405269F0
 static int32_t Script_SetSelectedRace(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -514,6 +524,7 @@ static int32_t Script_UpdateCustomizationBackground(lua_State* L) {
     return 0;
 }
 
+// PROVEN: eca4036d IDENTICAL/NONE
 // OFFSET: 0x0080F7A0/0x140526A60
 static int32_t Script_CustomizeExistingCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {

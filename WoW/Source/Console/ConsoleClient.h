@@ -56,6 +56,7 @@ int32_t ConsoleCommand_RepeatHandler(const char* command, const char* arguments)
 void ConsoleScreenDestroy();
 void ConsoleScreenInitialize(const char* title);
 void GenerateNodeString(CONSOLELINE* node);
+void ConsoleAccessSetEnabled(int32_t enable);
 const char* GetConsoleMessage();
 void SetConsoleMessage(const char* message);
 

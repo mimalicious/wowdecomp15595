@@ -65,6 +65,7 @@ void CharSelectStartRaceShutdown();
 void CharSelectSwitchStartRaceDownload(int32_t raceID, int32_t classID);
 void CharSelectGetBGModelPathFromRaceStr(const char* raceString, char* path);
 void CharSelectAttachDeathVisuals(CM2Model* model);
+void LinkModelAndTexturesToAsyncHead(CM2Model* model);
 
 void CharSelectRegisterScriptFunctions();
 void CharSelectUnregisterScriptFunctions();

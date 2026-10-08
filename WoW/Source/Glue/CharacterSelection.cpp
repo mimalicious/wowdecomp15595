@@ -96,6 +96,13 @@ void CharSelectAttachDeathVisuals(CM2Model* model) {
     CGlueMgr::ApplySpellVisualKit(CCharacterSelection::m_modelFrame, model, 989, 0);
 }
 
+// OFFSET: 0x00807E80
+void LinkModelAndTexturesToAsyncHead(CM2Model* model) {
+    if (model) {
+        model->LinkToAsyncHead();
+    }
+}
+
 // PROVEN: 2f559bd8 IDENTICAL/NONE
 // OFFSET: 0x00807EA0/0x14051D820
 void CharSelectGetBGModelPathFromRaceStr(const char* raceString, char* path) {

@@ -47,6 +47,7 @@ int32_t OsInputIsMouseButtonDown(MOUSEBUTTON button);
 void OsInputSetJoystickPollFcn(void (*pollFcn)(int32_t));
 void OsInputSetWindowResizeLock(int32_t resizeLock);
 void OsInputInstallKeyboardHook();
+void OsInputEnableKioskMode();
 float OsInputGetMouseSpeed();
 void OsInputInitialize();
 void OsInputDestroy();

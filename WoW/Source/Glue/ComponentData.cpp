@@ -1,6 +1,6 @@
 #include "ComponentData.h"
 
-// OFFSET: #0x004DFDA0
+// OFFSET: 0x00481DC0/0x1400A0AB0
 ComponentData::ComponentData() {
     this->m_flags &= ~0x3u;
     this->m_preferences.m_raceID = 0;
@@ -32,6 +32,15 @@ ComponentData::ComponentData() {
     this->m_geosets[16] = 1601;
     this->m_geosets[17] = 1701;
     this->m_geosets[18] = 1801;
+}
+
+// OFFSET: 0x006F9CC0
+void ComponentData::GetPreferences(CharacterPreferences* preferences) {
+    if (!preferences) {
+        return;
+    }
+
+    *preferences = this->m_preferences;
 }
 
 // PROVEN: 84146c69 IDENTICAL/NONE

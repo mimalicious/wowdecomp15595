@@ -20,6 +20,8 @@ class CAnimKitInst {
 
 class CAnimKitManager {
     public:
+    static CAnimKitManager* Alloc();
+    static void Free(CAnimKitManager* manager);
     static void GarbageCollect();
     static void InitSystem();
     static void UninitSystem();

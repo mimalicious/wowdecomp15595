@@ -199,6 +199,8 @@ class CCharacterComponent {
     void GetPreferences(CharacterPreferences* preferences);
     int32_t GetQuiverModelFilePath(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec);
     CharSectionsRec* GetSectionsRecord(COMPONENT_VARIATIONS variation, int32_t variationIndex, int32_t colorIndex, bool* found);
+    bool CheckForComponentChanges(ComponentData* data);
+    void CopyChoicesToAlteredFormComponent(CCharacterComponent* altered, COMPONENT_CONTEXT context);
     bool Init(ComponentData* data, const char* debug);
     void LinkToAsyncHead();
     bool IsHelmModelCorrect();
@@ -209,6 +211,7 @@ class CCharacterComponent {
     void Prep();
     void PrepSections();
     void ProcessFinishedRequest();
+    void RemoveHandItem(int32_t slot, int32_t sheatheType, int32_t shield);
     void RemoveItem(ITEM_SLOT itemSlot);
     void RemoveItemBySlot(INVENTORY_SLOTS invSlot);
     void RemoveItemByType(INVENTORY_TYPES invType);
@@ -238,6 +241,11 @@ class CCharacterComponent {
     void SetOffHandItemDisplay(int32_t displayID);
     void SetShieldItemDisplay(int32_t displayID);
     bool SetNextFace(COMPONENT_CONTEXT context, int32_t colorOffset);
+    bool SetNextFace(COMPONENT_CONTEXT context, int32_t delta, int32_t skin);
+    bool SetNextFacialFeature(COMPONENT_CONTEXT context, int32_t delta);
+    bool SetNextHairColor(COMPONENT_CONTEXT context, int32_t delta);
+    bool SetNextHairStyle(COMPONENT_CONTEXT context, int32_t delta);
+    bool SetNextSkin(COMPONENT_CONTEXT context, int32_t delta);
     bool SetNextFacialFeature(COMPONENT_CONTEXT context);
     bool SetNextHairColor(COMPONENT_CONTEXT context);
     bool SetNextHairStyle(COMPONENT_CONTEXT context);

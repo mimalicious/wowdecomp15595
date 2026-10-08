@@ -10,13 +10,17 @@ struct DictionaryRecord {
     /* 0004 */ int32_t m_count;
 };
 
+class CRndSeed;
+
 class CNameGen {
     public:
     /* 0000 */ TSFixedArray<const char*> m_names;
     /* 000C */ TSGrowableArray<DictionaryRecord> m_dictionary;
     /* 001C */ int32_t m_dictionaryCount;
 
+    CNameGen(CRndSeed& seed);
     void ClearDictionary();
+    void Destroy();
     void CreateDictionary();
     void GenerateName(char* buffer, uint32_t size);
     void LoadNames(int32_t raceID, int32_t sexID);

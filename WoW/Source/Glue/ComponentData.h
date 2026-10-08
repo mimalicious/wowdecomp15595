@@ -16,6 +16,7 @@ class ComponentData {
     /* 012C */ uint32_t m_geosets [19];
 
     ComponentData();
+    void GetPreferences(CharacterPreferences* preferences);
     void SetPreferences(const CharacterPreferences* preferences);
 };
 

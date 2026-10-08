@@ -21,6 +21,7 @@
 #include "Engine/Source/Services/SysMessage.h"
 #include "Engine/Source/Services/Texture.h"
 #include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/Console/ConsoleClient.h"
 #include "WoW/Source/ConsoleDevice/ConsoleDevice.h"
 #include "WoW/Source/Hardware.h"
 #include "WoW/Source/WowSysMessageOutput.h"
@@ -52,34 +53,34 @@ static CVar* s_M2FasterDebugVar;
 // STATIC: #0x00B2F01C
 static CVar* s_M2FasterVar;
 
-// STATIC: #0x00B2F020
+// STATIC: 0x00D361E4
 CVar* s_desktopGammaCvar;
 
-// STATIC: #0x00B2F024
+// STATIC: 0x00D361D4
 CVar* s_gammaCvar;
 
-// STATIC: #0x00B2F028
+// STATIC: 0x00D36200
 static CVar* s_cvErrorFilter;
 
-// STATIC: #0x00B2F02C
+// STATIC: 0x00D361F8
 static CVar* s_cvErrorLevelMax;
 
-// STATIC: #0x00B2F030
+// STATIC: 0x00D361E0
 static CVar* s_cvErrorLevelMin;
 
-// STATIC: #0x00B2F034
+// STATIC: 0x00D361FC
 static CVar* s_cvShowErrors;
 
-// STATIC: #0x00B2F038
+// STATIC: 0x00D36228
 static CVar* s_cvErrors;
 
-// STATIC: #0x00B2F03C
+// STATIC: 0x00D3622C
 static CVar* s_cvMouseSpeed;
 
-// STATIC: #0x00B2F04C
+// STATIC: 0x00D361C0
 static CVar* s_cvScreenshotQuality;
 
-// STATIC: #0x00B2F85C
+// STATIC: 0x00D36338
 static CVar* s_cvScreenshotFormat;
 
 // STATIC: 0x00D361DC
@@ -100,28 +101,28 @@ CVar* g_readTOSVar;
 // STATIC: 0x00D361C8
 CVar* g_installLocaleVar;
 
-// STATIC: #0x00B2F974
+// STATIC: 0x00D3621C
 CVar* g_lastCharacterIndexVar;
 
-// STATIC: #0x00B2F978
+// STATIC: 0x00D361D8
 CVar* g_checkAddonVersionVar;
 
-// STATIC: #0x00B2F97C
+// STATIC: 0x00D36224
 static CVar* s_cvMovieSubtitle;
 
-// STATIC: #0x00B2F980
-CVar* s_cvExpansionMovie;
+// STATIC: 0x00D3633C
+CVar* g_playIntroMovie;
 
-// STATIC: #0x00B2F984
-CVar* s_cvMovie;
+// STATIC: 0x00D361C4
+CVar* g_blizzconVar;
 
-// STATIC: #0x00B2F988
+// STATIC: 0x00D36344
 CVar* g_accountUsesTokenVar;
 
-// STATIC: #0x00B2F98C
+// STATIC: 0x00D36210
 CVar* g_accountListVar;
 
-// STATIC: #0x00B2F990
+// STATIC: 0x00D361F4
 CVar* g_accountNameVar;
 
 // STATIC: %0x00C3A99C
@@ -402,6 +403,7 @@ static bool ScreenshotFormatCallback(CVar* var, const char* oldValue, const char
     return true;
 }
 
+// PROVEN: 4504b5d0 IDENTICAL/NONE
 // OFFSET: 0x00401770
 static bool ScreenshotQualityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ScrnSetScreenshotQuality(SStrToInt(value));
@@ -515,7 +517,8 @@ bool ProcessAffinityMaskCallback(CVar* var, const char* oldValue, const char* va
     return true;
 }
 
-// OFFSET: %0x00401890
+// PROVEN: 40ddeda4 IDENTICAL/NONE
+// OFFSET: 0x004016D0
 bool SimdCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     int32_t requested = SStrToInt(value);
 
@@ -662,16 +665,19 @@ bool LocaleCallback(CVar* var, const char* oldValue, const char* value, void* ar
     return true;
 }
 
-// OFFSET: #0x00401B60
+// OFFSET: 0x00403CC0/0x140003770
 void ClientRegisterConsoleCommands() {
-    ConsoleCommandRegister("reloadUI", CCommand_ReloadUI, CATEGORY_GRAPHICS, NULL, NULL);
-    ConsoleCommandRegister("perf", CCommand_Perf, CATEGORY_DEBUG, NULL, NULL);
+    g_blizzconVar = CVar::Register("blizzcon", "Blizzcon special behavior", 0x100, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
+
+    if (g_blizzconVar->m_intValue) {
+        OsInputEnableKioskMode();
+        ConsoleAccessSetEnabled(0);
+    }
 
     g_accountNameVar = CVar::Register("accountName", "Saved account name", 0x40, "", NULL, CATEGORY_GAME, false, NULL, false);
     g_accountListVar = CVar::Register("accountList", "List of wow accounts for saved Blizzard account", 0, "", NULL, CATEGORY_GAME, false, NULL, false);
     g_accountUsesTokenVar = CVar::Register("g_accountUsesToken", "Saved whether uses authenticator", 0, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvMovie = CVar::Register("movie", "Show movie on startup", 0, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvExpansionMovie = CVar::Register("expansionMovie", "Show expansion movie on startup", 0, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_playIntroMovie = CVar::Register("playIntroMovie", "Starting expansion movie to play on startup", 0, "3", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvMovieSubtitle = CVar::Register("movieSubtitle", "Show movie subtitles", 0, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_checkAddonVersionVar = CVar::Register("checkAddonVersion", "Check interface addon version number", 0, "1", NULL, CATEGORY_GAME, false, NULL, false);
 
@@ -679,8 +685,8 @@ void ClientRegisterConsoleCommands() {
     SStrPrintf(mouseSpeed, sizeof(mouseSpeed), "%1.1f", OsInputGetMouseSpeed());
     s_cvMouseSpeed = CVar::Register("mouseSpeed", NULL, 0, mouseSpeed, MouseSpeedCallback, CATEGORY_GAME, false, NULL, false);
 
-    s_cvErrors = CVar::Register("Errors", NULL, 0, "0", ErrorDisplayCallback, CATEGORY_DEBUG, false, NULL, false);
-    s_cvShowErrors = CVar::Register("ShowErrors", NULL, 0, "1", ErrorDisplayShowCallback, CATEGORY_DEBUG, false, NULL, false);
+    s_cvErrors = CVar::Register("Errors", NULL, 0x400, "0", ErrorDisplayCallback, CATEGORY_DEBUG, false, NULL, false);
+    s_cvShowErrors = CVar::Register("showErrors", NULL, 0, "1", ErrorDisplayShowCallback, CATEGORY_DEBUG, false, NULL, false);
     s_cvErrorLevelMin = CVar::Register("ErrorLevelMin", NULL, 0, "2", ErrorDisplayMinLevelCallback, CATEGORY_DEBUG, false, NULL, false);
     s_cvErrorLevelMax = CVar::Register("ErrorLevelMax", NULL, 0, "3", ErrorDisplayMaxLevelCallback, CATEGORY_DEBUG, false, NULL, false);
     s_cvErrorFilter = CVar::Register("ErrorFilter", NULL, 0, "all", ErrorDisplayFilterCallback, CATEGORY_DEBUG, false, NULL, false);
@@ -701,14 +707,11 @@ void ClientRegisterConsoleCommands() {
         showToolsUI->Set("1", true, false, false, true);
     }
 
-    if (SFile::IsTrial()) {
-        CVar* converted = CVar::Register("converted", "Trial to Retail", 0, "0", NULL, CATEGORY_GAME, false, NULL, false);
-        StreamingSetEnabled(converted->m_intValue != 0);
-    }
-
     CVar::Register("accounttype", "Account Type", 0, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("expandUpgradePanel", "Controls whether the upgrade panel is expanded or collapsed.", 0, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_useIPv6Var = CVar::Register("useIPv6", "Enable the usage of IPv6 sockets", 1, "0", NULL, CATEGORY_NET, false, NULL, false);
     g_disableServerNagleVar = CVar::Register("disableServerNagle", "Disable server-side nagle algorithm", 1, "1", NULL, CATEGORY_NET, false, NULL, false);
+    g_installLocaleVar = CVar::Register("installLocale", "The locale the original install was from", 1, "", NULL, CATEGORY_GAME, false, NULL, false);
 }
 
 // OFFSET: #0x004026B0

@@ -13,12 +13,14 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
+// PROVEN: d9d3fd74 IDENTICAL/NONE
 // OFFSET: 0x0080A960/0x140520C80
 static int32_t Script_RequestRealmList(lua_State* L) {
     CGlueMgr::GetRealmList(StringToBOOL(L, 1, 0));
     return 0;
 }
 
+// PROVEN: ee014148 IDENTICAL/NONE
 // OFFSET: 0x0080A980/0x140520CA0
 static int32_t Script_RealmListUpdateRate(lua_State* L) {
     if (ClientServices::LoginConnection() && ClientServices::LoginConnection()->GetLoginServerType() == 1) {
@@ -30,12 +32,14 @@ static int32_t Script_RealmListUpdateRate(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d33a4253 IDENTICAL/NONE
 // OFFSET: 0x0080A9E0/0x140520D00
 static int32_t Script_CancelRealmListQuery(lua_State* L) {
     CGlueMgr::CancelRealmListQuery();
     return 0;
 }
 
+// PROVEN: 5753a85b IDENTICAL/NONE
 // OFFSET: 0x0080A9F0/0x140520D10
 static int32_t Script_RealmListDialogCancelled(lua_State* L) {
     CGlueMgr::RealmListDialogCancelled();
