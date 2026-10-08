@@ -49,9 +49,9 @@ bool Blizzard::Thread::Sleep(uint32_t milliseconds) {
     return true;
 }
 
-// OFFSET: %0x00710700
+// OFFSET: 0x007AE090
 bool Blizzard::Thread::IsRunning(ThreadRecord* thread) {
-    return thread->m_state >= 0;
+    return thread && thread->m_state >= 0;
 }
 
 // PROVEN: 7a87b31c IDENTICAL/DIFFERENT

@@ -1610,7 +1610,7 @@ std::string Blizzard::Streaming::ManifestInfo::GetAbsolutePath(const std::string
 }
 
 // PROVEN: 339f6610 IDENTICAL/DIFFERENT
-// OFFSET: 0x005282E0/0x14090C360
+// OFFSET: 0x007C3BC0
 int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
 }

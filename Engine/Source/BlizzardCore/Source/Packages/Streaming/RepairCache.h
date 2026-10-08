@@ -14,6 +14,7 @@ struct StreamRecord;
 namespace Blizzard {
 namespace Repair {
 
+typedef void (*REPAIRCORRUPTIONCALLBACK)(const char* name, int64_t offset, uint32_t size);
 typedef void (*REPAIRFAILCALLBACK)(const char* name, int64_t offset, uint32_t size, const char* error);
 typedef void (*REPAIRSUCCESSCALLBACK)(const char* name, int64_t offset, uint32_t size);
 
@@ -49,12 +50,15 @@ class RepairCache {
 };
 
 extern RepairCache s_repairCache;
+extern REPAIRCORRUPTIONCALLBACK s_repairCorruptionCallback;
 extern REPAIRFAILCALLBACK s_repairFailCallback;
 extern REPAIRSUCCESSCALLBACK s_repairSuccessCallback;
 
+void LogRepair(const char* format, ...);
+void ReportRepairCorruption(const char* name, int64_t offset, uint32_t size);
 void ReportRepairFail(const char* name, int64_t offset, uint32_t size, const char* error);
 void ReportRepairSuccess(const char* name, int64_t offset, uint32_t size);
-void SetRepairReportCallbacks(REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success);
+void SetRepairReportCallbacks(REPAIRCORRUPTIONCALLBACK corruption, REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success);
 
 }
 }

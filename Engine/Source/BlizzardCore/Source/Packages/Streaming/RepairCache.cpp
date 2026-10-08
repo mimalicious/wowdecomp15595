@@ -1,7 +1,9 @@
+#include <cstdarg>
 #include <cstdint>
 #include <map>
 #include "Engine/Source/BlizzardCore/Source/Packages/Streaming/RepairCache.h"
 #include "Engine/Source/BlizzardCore/Source/System/File/File.h"
+#include "Engine/Source/BlizzardCore/Source/System/Log/Log.h"
 #include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/BlizzardCore/Source/System/Process/Process.h"
 #include "Engine/Source/BlizzardCore/Source/System/String/Path.h"
@@ -22,16 +24,34 @@ static void (*s_reportCallback)(void* context, uint32_t count, uint32_t repaired
 // STATIC: #0x00B38360
 Blizzard::Repair::RepairCache Blizzard::Repair::s_repairCache;
 
-// STATIC: %0x00D86B90
+// STATIC: 0x00EBA218
+Blizzard::Repair::REPAIRCORRUPTIONCALLBACK Blizzard::Repair::s_repairCorruptionCallback;
+
+// STATIC: 0x00EBA21C
 Blizzard::Repair::REPAIRFAILCALLBACK Blizzard::Repair::s_repairFailCallback;
 
-// STATIC: %0x00D86B94
+// STATIC: 0x00EBA220
 Blizzard::Repair::REPAIRSUCCESSCALLBACK Blizzard::Repair::s_repairSuccessCallback;
 
-// OFFSET: %0x0070DE50
-void Blizzard::Repair::SetRepairReportCallbacks(REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success) {
+// OFFSET: 0x007AAF30
+void Blizzard::Repair::SetRepairReportCallbacks(REPAIRCORRUPTIONCALLBACK corruption, REPAIRFAILCALLBACK fail, REPAIRSUCCESSCALLBACK success) {
+    s_repairCorruptionCallback = corruption;
     s_repairFailCallback = fail;
     s_repairSuccessCallback = success;
+}
+
+// OFFSET: 0x007AAF50
+void Blizzard::Repair::ReportRepairCorruption(const char* name, int64_t offset, uint32_t size) {
+    if (s_repairCorruptionCallback) {
+        s_repairCorruptionCallback(name, offset, size);
+    }
+}
+
+// OFFSET: 0x007EE310
+void Blizzard::Repair::LogRepair(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    Blizzard::Log::VPrintf(0, "Logs/repair-on-demand.log", format, args);
 }
 
 // PROVEN: fcecb849 IDENTICAL/NONE

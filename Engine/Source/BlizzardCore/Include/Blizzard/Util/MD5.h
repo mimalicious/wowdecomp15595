@@ -18,6 +18,7 @@ class MD5 {
     void Process(const void* data, uint32_t size);
 };
 
+void HashData(uint8_t* digest, const void* data, uint32_t size);
 void HashString(uint8_t* digest, const char* str);
 
 }

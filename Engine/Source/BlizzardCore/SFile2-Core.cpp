@@ -931,7 +931,7 @@ void STORMAPI SFile::PauseBackgroundStreaming(bool pause) {
 
 // OFFSET: 0x007A5C70
 void STORMAPI SFile::InitializeRepair(const char* path) {
-    Blizzard::Repair::SetRepairReportCallbacks(Tracker::RepairReportFail, Tracker::RepairReportSuccess);
+    Blizzard::Repair::SetRepairReportCallbacks(NULL, Tracker::RepairReportFail, Tracker::RepairReportSuccess);
 }
 
 // PROVEN: 89a1fc5f IDENTICAL/NONE
