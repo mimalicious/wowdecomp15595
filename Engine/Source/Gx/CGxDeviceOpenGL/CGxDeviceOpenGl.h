@@ -129,6 +129,7 @@ class CGxDeviceOpenGl : public CGxDevice {
     virtual void IShaderDestroy(CGxShaderPermute* permute);
     virtual void CursorSetVisible(int32_t visible);
     virtual void CursorUnlock(uint32_t x, uint32_t y);
+    virtual int32_t ISetCursor();
     virtual void StereoSetConvergence(float convergence);
     virtual float StereoGetConvergence();
     virtual void StereoSetSeparation(float separation);

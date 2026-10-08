@@ -111,6 +111,7 @@ void CShaderEffect::AddRef() {
     this->m_refCount++;
 }
 
+// PROVEN: d4ff236e IDENTICAL/UNPROVEN
 // OFFSET: 0x00431E30/0x14003A610
 void CShaderEffect::InitEffect(const char* vertexShader, const char* hullShader, const char* domainShader, const char* pixelShader) {
     this->m_vertexShader = NULL;
@@ -127,8 +128,8 @@ void CShaderEffect::InitEffect(const char* vertexShader, const char* hullShader,
     this->m_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, pixelShader);
 
     if (hullShader && *hullShader && domainShader && *domainShader) {
-        this->m_hullShader = g_theGxDevicePtr->ShaderCreate(GxSh_Hull, hullShader);
-        this->m_domainShader = g_theGxDevicePtr->ShaderCreate(GxSh_Domain, domainShader);
+        this->m_hullShader = GxShaderCreate(GxSh_Hull, hullShader);
+        this->m_domainShader = GxShaderCreate(GxSh_Domain, domainShader);
     }
 }
 

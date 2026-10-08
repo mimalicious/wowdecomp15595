@@ -989,8 +989,8 @@ int32_t CGxDeviceD3d11::TexStretch(CGxTex* source, CGxTex* dest, const CiRect* d
     CGxBuf* vertexBuf;
     CGxBuf* indexBuf;
     StretchQuad(vertexBuf, indexBuf, 1.0f, 1.0f);
-    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_PT);
-    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+    GxPrimVertexPtr(vertexBuf, GxVBF_PT);
+    GxPrimIndexPtr(indexBuf);
 
     if (source) {
         GxRsSet(GxRs_Texture0, source);

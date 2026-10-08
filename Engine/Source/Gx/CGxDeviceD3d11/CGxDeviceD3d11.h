@@ -143,6 +143,7 @@ class CGxDeviceD3d11 : public CGxDevice {
     virtual void DeviceReadDepths(CiRect& rect, TSGrowableArray<float>& depths);
     virtual int32_t DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2);
     virtual void DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane);
+    virtual void FrameBufferSet(CGxFrameBuffer* frameBuffer);
     virtual void DeviceResolveDepthBuffer(CGxTex* texture);
     virtual void DeviceCopyTex(CGxTex* source, uint32_t sourcePlane, CGxTex* dest, uint32_t destPlane, uint32_t level);
     virtual void DeviceOverride(EGxOverride override, uint32_t value);
@@ -181,6 +182,7 @@ class CGxDeviceD3d11 : public CGxDevice {
     virtual void IShaderDestroy(CGxShaderPermute* permute);
     virtual void CursorSetVisible(int32_t visible);
     virtual void CursorUnlock(uint32_t x, uint32_t y);
+    virtual int32_t ISetCursor();
     virtual void StereoSetConvergence(float convergence);
     virtual float StereoGetConvergence();
     virtual void StereoSetSeparation(float separation);

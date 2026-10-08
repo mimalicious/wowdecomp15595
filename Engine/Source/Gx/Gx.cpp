@@ -131,12 +131,14 @@ uint32_t GxVertexSize(EGxVertexBufferFormat format) {
     return Buffer::s_vertexBufDesc[format].size;
 }
 
-// OFFSET: %0x007A6080
+// PROVEN: 4d016c89 IDENTICAL/NONE
+// OFFSET: 0x0083FF80/0x14056BD70
 int32_t GxAdapterID(uint16_t& vendorID, uint16_t& deviceID, uint32_t& driverVersionHi, uint32_t& driverVersionLo) {
     return CGxDevice::AdapterID(vendorID, deviceID, driverVersionHi, driverVersionLo);
 }
 
-// OFFSET: %0x007A6090
+// PROVEN: c9f555f7 IDENTICAL/NONE
+// OFFSET: 0x0083FF90/0x14056BD80
 int32_t GxAdapterInfer(uint16_t& deviceID) {
     return CGxDevice::AdapterInfer(deviceID);
 }
@@ -159,7 +161,8 @@ EGxApi GxGetRequestedApi() {
     return s_requestedApi;
 }
 
-// OFFSET: %0x007A6070
+// PROVEN: a03b6d50 IDENTICAL/NONE
+// OFFSET: 0x0083FF70/0x14056BD60
 void GxSetRequestedApi(EGxApi api) {
     s_requestedApi = api;
 }
@@ -411,6 +414,12 @@ void GxXformViewProjNativeTranspose(C44Matrix& matrix) {
     matrix = (view * proj).Transpose();
 }
 
+// PROVEN: 74717bce IDENTICAL/NONE
+// OFFSET: 0x0040A1F0
+CGxShader* GxShaderCreate(EGxShTarget target, const char* name) {
+    return g_theGxDevicePtr->ShaderCreate(target, name);
+}
+
 // PROVEN: f8ee56a9 IDENTICAL/NONE
 // OFFSET: 0x0040A210
 void GxShaderConstantsSet(EGxShTarget target, uint32_t index, const float* constants, uint32_t count) {
@@ -455,9 +464,22 @@ void GxXformProjection(C44Matrix& matrix) {
     matrix = g_theGxDevicePtr->m_projection;
 }
 
-// OFFSET: %0x004E6670
+// PROVEN: 8c6d6aeb IDENTICAL/NONE
+// OFFSET: 0x00481D20
+int32_t GxFrameBufferFinalize(CGxFrameBuffer* frameBuffer) {
+    return g_theGxDevicePtr->FrameBufferFinalize(frameBuffer);
+}
+
+// PROVEN: 583c8da5 IDENTICAL/NONE
+// OFFSET: 0x004E0600
 void GxXformPush(EGxXform xf) {
     g_theGxDevicePtr->XformPush(xf);
+}
+
+// PROVEN: d7b91dd2 IDENTICAL/NONE
+// OFFSET: 0x004E0620
+void GxPrimIndexPtr(CGxBuf* buf) {
+    g_theGxDevicePtr->PrimIndexPtr(buf);
 }
 
 // PROVEN: a6e192f0 DIFFERENT/IDENTICAL
@@ -777,7 +799,8 @@ int32_t GxTexCreate(const CGxTexParms& parms, CGxTex*& texId) {
     return GxTexCreate(parms.m_target, parms.m_width, parms.m_height, parms.m_depth, parms.m_format, parms.m_dataFormat, parms.m_flags, parms.m_userArg, parms.m_userFunc, "", texId);
 }
 
-// INLINED
+// PROVEN: 02d75fe8 IDENTICAL/NONE
+// OFFSET: 0x004DFBA0
 void GxPrimVertexPtr(CGxBuf* buf, EGxVertexBufferFormat format) {
     g_theGxDevicePtr->PrimVertexPtr(buf, format);
 }
@@ -1035,6 +1058,20 @@ void GxLogCrashInfo(char* buffer, uint32_t size) {
     SStrPack(buffer, "\r\n", size);
 }
 
+// PROVEN: 6b9cee2a IDENTICAL/NONE
+// OFFSET: 0x00620350
+int32_t GxBufIsReady(CGxBuf* buf) {
+    return buf->unk_001C && buf->unk_001D;
+}
+
+// PROVEN: a716fc68 IDENTICAL/NONE
+// OFFSET: 0x00620370
+void GxPoolDestroy(CGxPool* pool) {
+    if (pool) {
+        g_theGxDevicePtr->PoolDestroy(pool);
+    }
+}
+
 // PROVEN: 6db61e72 DIFFERENT/IDENTICAL
 // OFFSET: 0x00620390/0x1402AF700
 void GxBufDestroy(CGxBuf* buf) {
@@ -1049,11 +1086,6 @@ void GxFormatColor(CImVector& color) {
         CImVector formatted(color.r, color.g, color.b, color.a);
         color = formatted;
     }
-}
-
-// OFFSET: 0x004DFBA0
-void GxRenderTargetGet(EGxBuffer buffer, CGxTex*& texture) {
-    g_theGxDevicePtr->DeviceGetRenderTarget(buffer, texture);
 }
 
 // PROVEN: cb66fab0 IDENTICAL/DIFFERENT

@@ -1221,6 +1221,17 @@ int32_t CGxDeviceD3d11::DeviceWM(EGxWM wm, uintptr_t param1, uintptr_t param2) {
     return 0;
 }
 
+// PROVEN: b31065aa IDENTICAL/NONE
+// OFFSET: 0x008529E0
+int32_t CGxDeviceD3d11::ISetCursor() {
+    if (!this->m_d3dDevice || this->m_hwCursor) {
+        return 0;
+    }
+
+    SetCursor(NULL);
+    return 1;
+}
+
 // PROVEN: 3776b149 IDENTICAL/DIFFERENT
 // OFFSET: 0x00852FF0/0x140582CE0
 void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, uint32_t plane) {
@@ -1283,6 +1294,90 @@ void CGxDeviceD3d11::DeviceSetRenderTarget(EGxBuffer buffer, CGxTex* texture, ui
     GxXformSetViewport(this->m_viewport.m_x.m_l, this->m_viewport.m_x.m_h, this->m_viewport.m_y.m_l, this->m_viewport.m_y.m_h, this->m_viewport.m_z.m_l, this->m_viewport.m_z.m_h);
     this->m_viewportDirty = 1;
     this->m_scissorRectDirty = 1;
+}
+
+// PROVEN: 8d0e5d4b IDENTICAL/NONE
+// OFFSET: 0x00853280
+void CGxDeviceD3d11::FrameBufferSet(CGxFrameBuffer* frameBuffer) {
+    if (!this->m_context) {
+        return;
+    }
+
+    if (this->m_frameBuffer == frameBuffer && this->m_frameBufferVersion == frameBuffer->m_version) {
+        return;
+    }
+
+    int32_t count = frameBuffer->m_count;
+    int32_t changed = 0;
+
+    for (int32_t buffer = 0; buffer < count; buffer++) {
+        CGxDevice::TextureTarget& target = this->m_textureTarget[buffer];
+        CGxTex* texture = frameBuffer->m_targets[buffer].m_texture;
+
+        if (target.m_texture == texture && target.m_plane == frameBuffer->m_targets[buffer].m_plane) {
+            continue;
+        }
+
+        changed = 1;
+        CGxDevice::DeviceSetRenderTarget(static_cast<EGxBuffer>(buffer), texture, frameBuffer->m_targets[buffer].m_plane);
+
+        if (texture) {
+            if (texture->m_needsCreation || (!texture->m_apiSpecificData && !texture->m_apiSpecificData2)) {
+                this->ITexCreate(texture);
+            }
+
+            if (!texture->m_needsCreation && (texture->m_apiSpecificData || texture->m_apiSpecificData2)) {
+                target.m_apiSpecific = texture->m_apiSpecificData;
+            }
+        } else {
+            target.m_apiSpecific = NULL;
+        }
+    }
+
+    if (!changed) {
+        return;
+    }
+
+    for (uint32_t i = GxBuffers_Color; i <= GxBuffers_Color3; i++) {
+        TexTargetViews* views = static_cast<TexTargetViews*>(this->m_textureTarget[i].m_apiSpecific);
+
+        if (!views) {
+            continue;
+        }
+
+        this->m_targets.m_renderTargets[i - GxBuffers_Color] = static_cast<ID3D11RenderTargetView*>(views->m_targetView);
+        this->m_targets.m_numRenderTargets = i;
+
+        if (i == GxBuffers_Color) {
+            this->m_targets.m_colorTargetFormat = this->m_textureTarget[i].m_texture->m_format;
+        }
+
+        CGxTex* targetTex = this->m_textureTarget[i].m_texture;
+
+        if (targetTex->m_width != this->m_format.m_size.x || targetTex->m_height != this->m_format.m_size.y || (!targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount > 1) || (targetTex->m_flags.m_bit8 && this->m_format.m_multisampleCount == 1)) {
+            this->m_targets.m_curDepthView = NULL;
+        }
+    }
+
+    TexTargetViews* depthViews = static_cast<TexTargetViews*>(this->m_textureTarget[GxBuffers_Depth].m_apiSpecific);
+
+    if (depthViews) {
+        if (this->m_textureTarget[GxBuffers_Color].m_texture || (this->m_textureTarget[GxBuffers_Depth].m_texture->m_width == this->m_format.m_size.x && this->m_textureTarget[GxBuffers_Depth].m_texture->m_height == this->m_format.m_size.y)) {
+            this->m_targets.m_curDepthView = static_cast<ID3D11DepthStencilView*>(depthViews->m_targetView);
+        } else {
+            this->m_targets.m_curDepthView = NULL;
+        }
+    }
+
+    this->m_d3dContext->OMSetRenderTargets(this->m_targets.m_numRenderTargets, this->m_targets.m_renderTargets, this->m_targets.m_curDepthView);
+    GxXformSetViewport(this->m_viewport.m_x.m_l, this->m_viewport.m_x.m_h, this->m_viewport.m_y.m_l, this->m_viewport.m_y.m_h, this->m_viewport.m_z.m_l, this->m_viewport.m_z.m_h);
+    this->m_viewportDirty = 1;
+    this->m_scissorRectDirty = 1;
+
+    this->m_frameBuffer->m_bound = 0;
+    this->m_frameBuffer = frameBuffer;
+    frameBuffer->m_bound = 1;
+    this->m_frameBufferVersion = this->m_frameBuffer->m_version;
 }
 
 // PROVEN: 11628376 IDENTICAL/UNPROVEN

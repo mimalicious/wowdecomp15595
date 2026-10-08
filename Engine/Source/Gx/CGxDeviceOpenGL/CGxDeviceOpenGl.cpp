@@ -1265,6 +1265,17 @@ void CGxDeviceOpenGl::CursorUnlock(uint32_t x, uint32_t y) {
     this->IHwCursorCreate();
 }
 
+// PROVEN: d88d603a IDENTICAL/NONE
+// OFFSET: 0x00850D30
+int32_t CGxDeviceOpenGl::ISetCursor() {
+    if (!this->m_context || this->m_hwCursor) {
+        return 0;
+    }
+
+    SetCursor(NULL);
+    return 1;
+}
+
 // PROVEN: 7d2814df IDENTICAL/NONE
 // OFFSET: 0x00850CD0
 void CGxDeviceOpenGl::IHwCursorCreate() {
