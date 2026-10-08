@@ -1621,8 +1621,9 @@ int32_t CM2Model::HasSequence(uint32_t id) {
     return this->HasSequence(this->m_shared->m_data, id);
 }
 
-// OFFSET: %0x0077D790
-uint32_t CM2Model::ResolveSequenceFallback(uint32_t id) {
+// PROVEN: 8c72945a IDENTICAL/NONE
+// OFFSET: 0x0081C3D0/0x140535470
+uint32_t CM2Model::GetFallbackSequenceIdFromSequenceId(uint32_t id, M2SequenceFallback* fallback) {
     if (id >= ANIM_COUNT) {
         return 0xFFFFFFFF;
     }
@@ -1631,37 +1632,19 @@ uint32_t CM2Model::ResolveSequenceFallback(uint32_t id) {
         this->WaitForLoad(NULL);
     }
 
-    int32_t visited[ANIM_COUNT];
-    memset(visited, 0, sizeof(visited));
+    M2SequenceFallback local;
 
-    M2Data* data = this->m_shared->m_data;
-
-    if (this->HasSequence(data, id)) {
-        return id;
+    if (!fallback) {
+        fallback = &local;
     }
 
-    while (id < ANIM_COUNT) {
-        AnimationDataRec* rec = g_animationDataDB.GetRecord(id);
+    this->SequenceFallbackById(id, fallback);
 
-        if (visited[id] || !rec) {
-            break;
-        }
-
-        uint32_t fallback = rec->m_fallback;
-
-        if (id == fallback) {
-            break;
-        }
-
-        visited[id] = 1;
-        id = fallback;
-
-        if (this->HasSequence(data, fallback)) {
-            return id;
-        }
+    if (fallback->m_usedDefault) {
+        return 0xFFFFFFFF;
     }
 
-    return 0xFFFFFFFF;
+    return fallback->m_id;
 }
 
 // OFFSET: %0x0077D8A0
@@ -1674,7 +1657,7 @@ int32_t CM2Model::IsSequenceLoaded(uint32_t id) {
         this->WaitForLoad(NULL);
     }
 
-    return this->ResolveSequenceFallback(id) != 0xFFFFFFFF;
+    return this->GetFallbackSequenceIdFromSequenceId(id, NULL) != 0xFFFFFFFF;
 }
 
 // OFFSET: 0x008180F0/0x140531290

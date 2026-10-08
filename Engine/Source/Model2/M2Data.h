@@ -15,6 +15,8 @@ class M2Array {
     /* 0000 */ uint32_t m_count;
     /* 0004 */ uint32_t m_offset;
 
+    M2Array();
+    ~M2Array();
     T& operator[](uint32_t index) const;
     T* Data() const;
     void Relocate(const void* base);
@@ -107,6 +109,8 @@ class M2CompBone {
     /* 0024 */ M2Track<M2CompQuat> m_rotationTrack;
     /* 0038 */ M2Track<C3Vector> m_scaleTrack;
     /* 004C */ C3Vector m_pivot;
+
+    ~M2CompBone();
 };
 
 class M2VertexPNT2 {
@@ -129,6 +133,8 @@ class M2Color {
     public:
     /* 0000 */ M2Track<C3Vector> m_color;
     /* 0014 */ M2Track<fixed16> m_alpha;
+
+    ~M2Color();
 };
 
 class M2Texture {
@@ -136,11 +142,15 @@ class M2Texture {
     /* 0000 */ uint32_t m_type;
     /* 0004 */ uint32_t m_flags;
     /* 0008 */ M2Array<char> m_filename;
+
+    ~M2Texture();
 };
 
 class M2TextureWeight {
     public:
     /* 0000 */ M2Track<fixed16> m_weight;
+
+    ~M2TextureWeight();
 };
 
 class M2TextureTransform {
@@ -148,6 +158,8 @@ class M2TextureTransform {
     /* 0000 */ M2Track<C3Vector> m_translation;
     /* 0014 */ M2Track<C4Quaternion> m_rotation;
     /* 0028 */ M2Track<C3Vector> m_scaling;
+
+    ~M2TextureTransform();
 };
 
 class M2Material {
@@ -163,6 +175,8 @@ class M2Attachment {
     /* 0006 */ uint16_t unk_0006;
     /* 0008 */ C3Vector m_position;
     /* 0014 */ M2Track<uint8_t> m_animateAttached;
+
+    ~M2Attachment();
 };
 
 class M2Event {
@@ -173,6 +187,8 @@ class M2Event {
     /* 000A */ uint16_t unk_000A;
     /* 000C */ C3Vector m_position;
     /* 0018 */ M2TrackBase m_enabled;
+
+    ~M2Event();
 };
 
 class M2Light {
@@ -187,6 +203,8 @@ class M2Light {
     /* 0060 */ M2Track<float> m_attenuationStart;
     /* 0074 */ M2Track<float> m_attenuationEnd;
     /* 0088 */ M2Track<uint8_t> m_visibility;
+
+    ~M2Light();
 };
 
 class M2CameraOld {
@@ -213,6 +231,8 @@ class M2Camera {
     /* 0040 */ C3Vector m_targetPositionBase;
     /* 004C */ M2Track<M2SplineKey<float> > m_roll;
     /* 0060 */ M2Track<M2SplineKey<float> > m_fieldOfView;
+
+    ~M2Camera();
 };
 
 class M2Ribbon {
@@ -236,6 +256,8 @@ class M2Ribbon {
     /* 0098 */ M2Track<uint8_t> m_visibilityTrack;
     /* 00AC */ int16_t m_priorityPlane;
     /* 00AE */ uint16_t unk_00AE;
+
+    ~M2Ribbon();
 };
 
 class M2ParticleOld {
@@ -297,6 +319,8 @@ class M2Particle : public M2ParticleOld {
     public:
     /* 01DC */ uint16_t m_multiTextureParam0[4];
     /* 01E4 */ uint16_t m_multiTextureParam1[4];
+
+    ~M2Particle();
 };
 
 class M2ShadowBatch {
@@ -380,6 +404,9 @@ class M2Data {
     /* 0118 */ M2Array<uint16_t> m_cameraIndicesById;
     /* 0120 */ M2Array<M2Ribbon> m_ribbons;
     /* 0128 */ M2Array<M2Particle> m_particles;
+
+    M2Data();
+    ~M2Data();
 };
 
 class M2SkinProfile {
@@ -393,6 +420,19 @@ class M2SkinProfile {
     /* 002C */ uint32_t m_boneCountMax;
     /* 0030 */ M2Array<M2ShadowBatch> m_shadowBatches;
 };
+
+// INLINED
+template <class T>
+inline M2Array<T>::M2Array() : m_count(0), m_offset(0) {
+}
+
+// OFFSET: [0x0082F190<char>, 0x0082F190<C2Vector>, 0x0082F190<C3Vector>, 0x0082F190<C4Quaternion>, 0x0082F190<M2CompQuat>, 0x0082F190<M2Loop>, 0x0082F190<M2Material>, 0x0082F190<M2Sequence>, 0x0082F190<M2SplineKey<C3Vector> >, 0x0082F190<M2SplineKey<float> >, 0x0082F190<M2Vertex>, 0x0082F190<fixed16>, 0x0082F190<float>, 0x0082F190<unsigned char>, 0x0082F190<unsigned int>, 0x0082F190<unsigned short>, 0x00830A30<M2CompBone>, 0x00830A80<M2TextureTransform>, 0x00830480<M2Camera>, 0x0082F0F0<C3Vector>, 0x0082F0F0<C4Quaternion>, 0x0082F0F0<M2CompQuat>, 0x0082F0F0<M2SplineKey<C3Vector> >, 0x0082F0F0<M2SplineKey<float> >, 0x0082F0F0<fixed16>, 0x0082F0F0<float>, 0x0082F0F0<unsigned char>, 0x0082F0F0<unsigned int>, 0x0082F0F0<unsigned short>]
+template <class T>
+inline M2Array<T>::~M2Array() {
+    if (!(this->m_offset & 1) && this->m_offset) {
+        delete[] this->Data();
+    }
+}
 
 // OFFSET: [#0x0081CD50]
 template <class T>

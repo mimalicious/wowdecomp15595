@@ -8766,7 +8766,7 @@ void CGUnit_C::UpdateObjectEffectAnimationStates() {
         }
 
         if (sequences[0].m_sequenceId < 506) {
-            sequences[0].m_sequenceId = this->m_mountModel->ResolveSequenceFallback(sequences[0].m_sequenceId);
+            sequences[0].m_sequenceId = this->m_mountModel->GetFallbackSequenceIdFromSequenceId(sequences[0].m_sequenceId, NULL);
         }
     }
 
@@ -8776,11 +8776,11 @@ void CGUnit_C::UpdateObjectEffectAnimationStates() {
         }
 
         if (sequences[1].m_sequenceId < 506) {
-            sequences[1].m_sequenceId = this->m_worldModel->ResolveSequenceFallback(sequences[1].m_sequenceId);
+            sequences[1].m_sequenceId = this->m_worldModel->GetFallbackSequenceIdFromSequenceId(sequences[1].m_sequenceId, NULL);
         }
 
         if (sequences[2].m_sequenceId < 506) {
-            sequences[2].m_sequenceId = this->m_worldModel->ResolveSequenceFallback(sequences[2].m_sequenceId);
+            sequences[2].m_sequenceId = this->m_worldModel->GetFallbackSequenceIdFromSequenceId(sequences[2].m_sequenceId, NULL);
         }
     }
 

@@ -699,6 +699,7 @@ void* CM2Scene::EndHitTestCollisionWorld(const C3Vector& start, const C3Vector& 
     return owner;
 }
 
+// PROVEN: a8182422 IDENTICAL/DIFFERENT
 // OFFSET: 0x008279C0/0x1405459F0
 void CM2Scene::SelectLights(CM2Lighting* lighting) {
     for (CM2Light* light = this->m_lightList; light; light = light->m_lightNext) {
@@ -1768,9 +1769,9 @@ int32_t CM2Scene::PrefetchModel(const char* fileName, uint8_t priority) {
 
     M2Data header;
     SFile::ReadAtPosition(file, &header, 0, sizeof(header), NULL);
+    M2Texture texture;
 
     for (uint32_t i = 0; i < header.m_textures.m_count; i++) {
-        M2Texture texture;
         char name[260];
         SFile::ReadAtPosition(file, &texture, header.m_textures.m_offset + sizeof(M2Texture) * i, sizeof(texture), NULL);
         SFile::ReadAtPosition(file, name, texture.m_filename.m_offset, texture.m_filename.m_count, NULL);
@@ -1781,6 +1782,8 @@ int32_t CM2Scene::PrefetchModel(const char* fileName, uint8_t priority) {
         }
     }
 
+    memset(&header, 0, sizeof(header));
+    memset(&texture, 0, sizeof(texture));
     SFileCloseFile(file);
 
     return local;

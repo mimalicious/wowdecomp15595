@@ -880,7 +880,7 @@ int32_t M2Init<M2Particle>(uint8_t* base, uint32_t size, const M2Data& data, M2A
     return 1;
 }
 
-// OFFSET: %0x0079DD20
+// OFFSET: 0x008324F0
 CM2Shared::CM2Shared(CM2Cache* cache) {
     this->m_flags &= ~0x1FFu;
     this->m_cache = cache;

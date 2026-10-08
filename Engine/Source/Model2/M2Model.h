@@ -319,7 +319,7 @@ class CM2Model {
     int32_t HasSequence(const M2Data* data, uint32_t id);
     int32_t HasSequence(uint32_t id);
     int32_t IsSequenceLoaded(uint32_t id);
-    uint32_t ResolveSequenceFallback(uint32_t id);
+    uint32_t GetFallbackSequenceIdFromSequenceId(uint32_t id, M2SequenceFallback* fallback);
     void SetBoneFlags(uint32_t boneId, uint32_t flags, uint32_t mask);
     void UnoptimizeVisibleGeometry();
     void Animate();
