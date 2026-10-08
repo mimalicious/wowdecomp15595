@@ -1087,6 +1087,11 @@ CTextureAtlas::CTextureAtlas() {
     memset(this->m_textures, 0, sizeof(this->m_textures));
 }
 
+// OFFSET: 0x00541CB0
+void TextureCacheRemoveTexture(CTexture* texture) {
+    s_textureCache.Unlink(texture);
+}
+
 // OFFSET: 0x00541CD0/0x1401948A0
 CGxTex* TextureAllocGxTex(EGxTexTarget target, uint32_t width, uint32_t height, uint32_t depth, EGxTexFormat format, CGxTexFlags flags, void* userArg, GxTexUserFunc userFunc, EGxTexFormat dataFormat, const char* name) {
     CGxTexParms parms;
