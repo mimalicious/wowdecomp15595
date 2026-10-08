@@ -15,6 +15,8 @@ extern INITIALIZEDIVXDECODER g_initializeDivxDecoder;
 extern SETOUTPUTFORMAT g_setOutputFormat;
 extern UNINITIALIZEDIVXDECODER g_unInitializeDivxDecoder;
 
+void* DivxDecoderAlloc(uint32_t size);
+void DivxDecoderFree(void* ptr);
 int32_t LoadDivxDecoder();
 void UnloadDivxDecoder();
 

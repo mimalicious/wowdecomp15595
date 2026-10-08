@@ -73,7 +73,7 @@ static const char* s_formatNames[CGxFormat::Formats_Last] = { "Rgb565", "ArgbX88
 // STATIC: %0x00C0E360
 static C2iVector kWinMinSize = { 320, 240 };
 
-// STATIC: #0x00C5DF88
+// STATIC: 0x00EBF47C/0x140DB14F0
 CGxDevice* g_theGxDevicePtr;
 
 // STATIC: %0x00D8BCEC
@@ -926,7 +926,7 @@ const CRect& CGxDevice::DeviceCurWindow() {
     return this->m_curWindowRect;
 }
 
-// OFFSET: %0x0065DDB0
+// OFFSET: 0x00B40BA0/0x14056DDC0
 const CRect& CGxDevice::DeviceDefWindow() {
     return this->m_defWindowRect;
 }

@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "Engine/Source/Services/Panama.h"
+#include "Engine/Source/Storm/H/stpl.h"
 
 class CAsyncObject;
 class SFileImpl;
@@ -35,6 +36,31 @@ struct MoviePreload {
     MoviePreload();
 };
 
+class MoviePreloadMap {
+    public:
+    struct Node {
+        struct Value {
+            /* 0000 */ int32_t m_key;
+            /* 0008 */ MoviePreload m_preloads[3];
+        };
+
+        /* 0000 */ Node* m_next;
+        /* 0008 */ Value m_value;
+    };
+
+    /* 0000 */ uint32_t m_bucketCount;
+    /* 0004 */ Node** m_buckets;
+    /* 0008 */ uint32_t m_count;
+    /* 000C */ float m_maxLoadFactor;
+    /* 0010 */ uint32_t unk_0010;
+    /* 0014 */ uint32_t unk_0014;
+
+    MoviePreloadMap();
+    ~MoviePreloadMap();
+    MoviePreload* operator[](const int32_t& key);
+    void Rehash(uint32_t bucketCount);
+};
+
 class CMovieStreamer {
     public:
     /* 0000 */ uint8_t m_key[32];
@@ -62,21 +88,26 @@ class CMovieStreamer {
     /* 13F0 */ uint32_t m_videoFrameCount;
     /* 13F4 */ uint32_t m_maxFrameSize;
     /* 13F8 */ int32_t m_interleavedAudio;
-    /* 13FC */ SFileImpl* m_audioFile;
-    /* 1400 */ uint8_t* m_audioBuffer;
-    /* 1404 */ uint32_t m_audioReadOffset;
-    /* 1408 */ uint32_t m_audioBufferSize;
-    /* 140C */ int32_t m_audioChunkCount;
+    /* 13FC */ uint8_t* m_audioBuffer;
+    /* 1400 */ uint32_t m_audioReadOffset;
+    /* 1404 */ uint32_t m_audioBufferSize;
+    /* 1408 */ int32_t m_audioChunkCount;
+    /* 140C */ TSGrowableArray<CAsyncObject*> m_asyncObjects;
+
+    static void AsyncObjectCancelCallback(CAsyncObject* object);
+    static void FramePreloadCallback(CAsyncObject* object);
 
     CMovieStreamer();
     ~CMovieStreamer();
     int32_t AdvanceAudioFrame();
     int32_t AdvanceVideoFrame();
     void Cleanup();
+    void CleanupAsyncObjects();
     uint8_t* CurrentVideoFrameBuffer();
     uint32_t CurrentVideoFrameSize();
     uint8_t* GetAudioBuffer();
     uint32_t GetAudioBufferSize();
+    uint16_t GetFreeAsyncObjectSlot();
     void GetVideoInfo(MovieInfo& info);
     void Initialize(const char* movieName, const char* aviPath, const uint8_t* key);
     void InitStreamIndices();
@@ -87,28 +118,33 @@ class CMovieStreamer {
     int32_t ParseAVIHeader();
     int32_t ParseAVIIndex();
     void PrefetchAudioFrames(int32_t count, uint8_t wait);
-    void PrefetchChunk(int32_t index, uint8_t wait, int32_t queue);
+    void PrefetchFrame(int32_t index, bool wait, uint8_t priority);
     void PrefetchVideoFrames(int32_t count, uint8_t wait);
     int32_t PrepareForStreaming();
     void ReadAudioFrame(int32_t index, uint8_t* buffer);
-    int32_t ReadStandaloneAudio();
     void ReadVideoFrame(int32_t index, uint8_t* buffer);
     void Reset();
     void StreamAudio();
     bool StreamFrame(bool decode, bool& skipped);
 };
 
+namespace ClientStreamingMovies {
+    extern uint32_t s_handler;
+}
+
 namespace MovieStreaming {
-    extern MoviePreload s_preloads[64][3];
+    extern MoviePreloadMap s_preloads;
     extern float s_progressBase;
     extern float s_progressScale;
 
     void CancelPreloadingMovie(int32_t movieID);
     int32_t FindBestMovieResolutionFileDataID(int32_t movieID, bool localOnly);
     bool GetMovieDownloadProgress(int32_t movieID, int64_t& local, int64_t& total);
+    void InitializeGame();
     bool IsMovieLocal(int32_t movieID);
     bool IsMoviePlayable(int32_t movieID);
     void PreloadMovie(int32_t movieID);
+    void ShutdownGame();
     void WaitForDownloadingMovies(int32_t movieID);
 }
 

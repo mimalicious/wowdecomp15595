@@ -3,24 +3,33 @@
 #include <cstring>
 #include <malloc.h>
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
+#include "Engine/Source/BlizzardCore/Source/System/Memory/MemoryStorm.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
+#include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Services/AsyncFile.h"
+#include "Engine/Source/Services/DivxDecoderLoader.h"
 #include "Engine/Source/Services/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/LoadingScreen.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-#define MOVIE_CODEC_PIVX 0x58564950
+#define MOVIE_CODEC_PMVX 0x58564D50
 #define MOVIE_CHUNK_KEYFRAME 0x00000010
 #define MOVIE_CHUNK_MISSING 0x10000000
 #define MOVIE_CHUNK_SKIPPED 0x20000000
 #define MOVIE_CHUNK_PREFETCHING 0x40000000
 #define MOVIE_CHUNK_LOCAL 0x80000000
 
-// STATIC: %0x00CD1318
-MoviePreload MovieStreaming::s_preloads[64][3];
+// STATIC: 0x00BA8468
+static uint32_t s_handlerKey = 0x47BF003B;
+
+// STATIC: 0x00E4D46C
+uint32_t ClientStreamingMovies::s_handler;
+
+// STATIC: 0x00CA331C
+MoviePreloadMap MovieStreaming::s_preloads;
 
 // STATIC: %0x00CD12F8
 float MovieStreaming::s_progressBase;
@@ -34,11 +43,94 @@ static uint32_t s_bandwidthTime;
 // STATIC: %0x00CD251C
 static float s_bandwidth;
 
-// OFFSET: %0x00521C90
+// INLINED
 MoviePreload::MoviePreload() {
     this->m_object = NULL;
     this->m_local = 0;
     this->m_total = 0;
+}
+
+// INLINED
+MoviePreloadMap::MoviePreloadMap() {
+    this->m_bucketCount = 8;
+    this->m_count = 0;
+    this->m_buckets = static_cast<Node**>(Blizzard::Memory::s_allocHook(sizeof(Node*) * 8));
+
+    for (uint32_t i = 0; i < 8; i++) {
+        this->m_buckets[i] = NULL;
+    }
+
+    this->m_maxLoadFactor = 1.0f;
+}
+
+// INLINED
+MoviePreloadMap::~MoviePreloadMap() {
+    for (uint32_t i = 0; i < this->m_bucketCount; i++) {
+        for (Node* node = this->m_buckets[i]; node; ) {
+            Node* next = node->m_next;
+            Blizzard::Memory::s_freeHook(node, sizeof(Node));
+            node = next;
+        }
+    }
+
+    Blizzard::Memory::s_freeHook(this->m_buckets, sizeof(Node*) * this->m_bucketCount);
+}
+
+// OFFSET: 0x005132F0/0x14015D6C0
+MoviePreload* MoviePreloadMap::operator[](const int32_t& key) {
+    Node** bucket = &this->m_buckets[key & (this->m_bucketCount - 1)];
+
+    for (Node* node = *bucket; node; node = node->m_next) {
+        if (node->m_value.m_key == key) {
+            return node->m_value.m_preloads;
+        }
+    }
+
+    Node* node = static_cast<Node*>(Blizzard::Memory::s_allocHook(sizeof(Node)));
+
+    if (node) {
+        Node::Value value;
+        value.m_key = key;
+        node->m_value = value;
+        node->m_next = *bucket;
+    }
+
+    *bucket = node;
+
+    if (static_cast<double>(++this->m_count) / static_cast<double>(this->m_bucketCount) > this->m_maxLoadFactor) {
+        this->Rehash(2 * this->m_bucketCount);
+    }
+
+    return node->m_value.m_preloads;
+}
+
+// OFFSET: 0x00829160
+void MoviePreloadMap::Rehash(uint32_t bucketCount) {
+    uint32_t count = 8;
+
+    while (count < bucketCount) {
+        count *= 2;
+    }
+
+    Node** buckets = static_cast<Node**>(Blizzard::Memory::s_allocHook(sizeof(Node*) * count));
+
+    if (count) {
+        memset(buckets, 0, sizeof(Node*) * count);
+    }
+
+    for (uint32_t i = 0; i < this->m_bucketCount; i++) {
+        for (Node* node = this->m_buckets[i]; node; ) {
+            Node* next = node->m_next;
+            uint32_t index = static_cast<uint32_t>(node->m_value.m_key) & (count - 1);
+            node->m_next = buckets[index];
+            buckets[index] = node;
+            node = next;
+        }
+    }
+
+    Blizzard::Memory::s_freeHook(this->m_buckets, sizeof(Node*) * this->m_bucketCount);
+    this->m_bucketCount = count;
+    this->m_buckets = buckets;
 }
 
 // OFFSET: 0x00511920
@@ -68,7 +160,7 @@ static void StartPreload(MoviePreload* preload, const char* path, uint8_t priori
     }
 }
 
-// OFFSET: %0x00521DD0
+// OFFSET: 0x005135F0/0x14015DC30
 void MovieStreaming::CancelPreloadingMovie(int32_t movieID) {
     MoviePreload* preload = MovieStreaming::s_preloads[movieID];
 
@@ -85,7 +177,7 @@ static void WaitProgressCallback(float progress, int32_t param) {
     LoadingScreenAsyncCallback(MovieStreaming::s_progressScale * progress + MovieStreaming::s_progressBase, NULL);
 }
 
-// OFFSET: %0x00521E40
+// OFFSET: 0x00513910
 void MovieStreaming::WaitForDownloadingMovies(int32_t movieID) {
     MoviePreload* preload = MovieStreaming::s_preloads[movieID];
     uint32_t sizes[3];
@@ -93,16 +185,23 @@ void MovieStreaming::WaitForDownloadingMovies(int32_t movieID) {
     int32_t loading = 0;
 
     for (int32_t i = 0; i < 3; i++) {
-        if (preload[i].m_object) {
+        AsyncFileReadEnterQueueLock();
+
+        if (preload[i].m_object && preload[i].m_object->m_file) {
             sizes[i] = SFileGetFileSize(preload[i].m_object->m_file, NULL);
         } else {
             sizes[i] = 0;
         }
 
+        AsyncFileReadLeaveQueueLock();
         totalSize += sizes[i];
     }
 
     MovieStreaming::s_progressBase = 0.0f;
+
+    if (totalSize <= 0) {
+        return;
+    }
 
     for (int32_t i = 0; i < 3; i++) {
         if (preload[i].m_object) {
@@ -126,8 +225,13 @@ void MovieStreaming::WaitForDownloadingMovies(int32_t movieID) {
     }
 }
 
-// OFFSET: %0x00521F60
+// PROVEN: a5b90972 IDENTICAL/DIFFERENT
+// OFFSET: 0x00513AF0/0x14015E2A0
 void CMovieStreamer::Reset() {
+    if (this->m_aviFile) {
+        this->Cleanup();
+    }
+
     memset(this->m_key, 0, sizeof(this->m_key));
     this->m_videoIV = NULL;
     this->m_audioIV = NULL;
@@ -151,14 +255,14 @@ void CMovieStreamer::Reset() {
     this->m_videoFrameCount = 0;
     this->m_maxFrameSize = 0;
     this->m_interleavedAudio = 0;
-    this->m_audioFile = NULL;
     this->m_audioBuffer = NULL;
     this->m_audioReadOffset = 0;
     this->m_audioBufferSize = 0;
     this->m_audioChunkCount = 0;
 }
 
-// OFFSET: %0x00522050
+// PROVEN: 559c3b92 IDENTICAL/DIFFERENT
+// OFFSET: 0x00512BA0/0x14015CD60
 void CMovieStreamer::Cleanup() {
     if (this->m_index) {
         SMemFree(this->m_index, __FILE__, __LINE__, 0);
@@ -176,7 +280,7 @@ void CMovieStreamer::Cleanup() {
     }
 
     if (this->m_frameBuffers) {
-        SMemFree(this->m_frameBuffers, __FILE__, __LINE__, 0);
+        DivxDecoderFree(this->m_frameBuffers);
         this->m_frameBuffers = NULL;
     }
 
@@ -185,15 +289,55 @@ void CMovieStreamer::Cleanup() {
         this->m_audioBuffer = NULL;
     }
 
+    this->CleanupAsyncObjects();
+
     if (this->m_aviFile) {
         SFileCloseFile(this->m_aviFile);
         this->m_aviFile = NULL;
     }
+}
 
-    if (this->m_audioFile) {
-        SFileCloseFile(this->m_audioFile);
-        this->m_audioFile = NULL;
+// OFFSET: 0x00511A30
+void CMovieStreamer::AsyncObjectCancelCallback(CAsyncObject* object) {
+    object->m_file = NULL;
+    AsyncFileReadDestroyObject(object);
+}
+
+// OFFSET: 0x005129B0/0x14015CB00
+void CMovieStreamer::FramePreloadCallback(CAsyncObject* object) {
+    TSGrowableArray<CAsyncObject*>* objects = static_cast<TSGrowableArray<CAsyncObject*>*>(object->m_userArg);
+    (*objects)[object->m_userFlags] = NULL;
+    AsyncFileReadDestroyObject(object);
+}
+
+// OFFSET: 0x00512B20/0x14015CCA0
+void CMovieStreamer::CleanupAsyncObjects() {
+    for (uint32_t i = 0; i < this->m_asyncObjects.Count(); i++) {
+        CAsyncObject* object = this->m_asyncObjects[i];
+
+        if (object && !object->m_cancelled && !AsyncFileReadCancel(object, AsyncObjectCancelCallback)) {
+            while (this->m_asyncObjects[i]->m_isCurrent) {
+                OsSleep(1);
+            }
+        }
     }
+
+    this->m_asyncObjects.SetCount(0);
+}
+
+// OFFSET: 0x00512C70
+uint16_t CMovieStreamer::GetFreeAsyncObjectSlot() {
+    uint16_t slot = 0;
+
+    for (; slot < this->m_asyncObjects.Count(); slot++) {
+        if (!this->m_asyncObjects[slot]) {
+            return slot;
+        }
+    }
+
+    this->m_asyncObjects.New();
+
+    return static_cast<uint16_t>(this->m_asyncObjects.Count() - 1);
 }
 
 // PROVEN: 5dc6ffd5 IDENTICAL/IDENTICAL
@@ -314,25 +458,25 @@ int32_t CMovieStreamer::AdvanceAudioFrame() {
     return this->m_audioIndex;
 }
 
-// OFFSET: %0x005223F0
+// PROVEN: a71c07a1 IDENTICAL/NONE
+// OFFSET: 0x00511D10
 void CMovieStreamer::ReadVideoFrame(int32_t index, uint8_t* buffer) {
-    SFile::SetFilePointer(this->m_aviFile, this->m_index[index].m_offset + this->m_moviOffset + 4, NULL, 0);
-    SFile::Read(this->m_aviFile, buffer + 4, this->m_index[index].m_size, NULL);
+    SFile::ReadAtPosition(this->m_aviFile, buffer + 4, this->m_index[index].m_offset + this->m_moviOffset + 4, this->m_index[index].m_size, NULL);
 
-    if (this->m_videoCodec == MOVIE_CODEC_PIVX) {
+    if (this->m_videoCodec == MOVIE_CODEC_PMVX) {
         this->m_cypher.ProcessBuffer(buffer, this->m_index[index].m_size + 4);
     }
 }
 
-// OFFSET: %0x00522480
+// PROVEN: 87926015 IDENTICAL/NONE
+// OFFSET: 0x00511D80
 void CMovieStreamer::ReadAudioFrame(int32_t index, uint8_t* buffer) {
-    SFile::SetFilePointer(this->m_aviFile, this->m_index[index].m_offset + this->m_moviOffset + 4, NULL, 0);
-    SFile::Read(this->m_aviFile, buffer, this->m_index[index].m_size, NULL);
+    SFile::ReadAtPosition(this->m_aviFile, buffer, this->m_index[index].m_offset + this->m_moviOffset + 4, this->m_index[index].m_size, NULL);
     this->m_index[index].m_flags &= ~MOVIE_CHUNK_PREFETCHING;
     this->m_index[index].m_flags |= MOVIE_CHUNK_LOCAL;
 
-    if (this->m_videoCodec == MOVIE_CODEC_PIVX) {
-        this->m_cypher.ProcessBuffer(buffer, this->m_index[index].m_size + 4);
+    if (this->m_videoCodec == MOVIE_CODEC_PMVX) {
+        this->m_audioCypher.ProcessBuffer(buffer, this->m_index[index].m_size);
     }
 }
 
@@ -353,14 +497,32 @@ int32_t CMovieStreamer::IsChunkLocal(int32_t index) {
     return 0;
 }
 
-// OFFSET: %0x005225B0
-void CMovieStreamer::PrefetchChunk(int32_t index, uint8_t wait, int32_t queue) {
+// OFFSET: 0x00512D30
+void CMovieStreamer::PrefetchFrame(int32_t index, bool wait, uint8_t priority) {
     AVIINDEXENTRY& entry = this->m_index[index];
 
-    if (!(entry.m_flags & (MOVIE_CHUNK_LOCAL | MOVIE_CHUNK_PREFETCHING))) {
-        SFile::MakeFileRangeLocal(this->m_aviFile, queue, wait != 0, entry.m_offset + this->m_moviOffset + 4, entry.m_size);
-        this->m_index[index].m_flags |= MOVIE_CHUNK_PREFETCHING;
+    if (entry.m_flags & (MOVIE_CHUNK_LOCAL | MOVIE_CHUNK_PREFETCHING)) {
+        return;
     }
+
+    CAsyncObject* object;
+
+    if (wait) {
+        AsyncFileReadCreateObject(this->m_aviFile, priority, 1, &object, NULL, NULL, NULL, NULL, 0, entry.m_offset + this->m_moviOffset + 4, entry.m_size);
+
+        if (object) {
+            AsyncFileReadWait(object);
+        }
+    } else {
+        uint16_t slot = this->GetFreeAsyncObjectSlot();
+        AsyncFileReadCreateObject(this->m_aviFile, priority, 0, &object, NULL, &this->m_asyncObjects, FramePreloadCallback, FramePreloadCallback, slot, this->m_index[index].m_offset + this->m_moviOffset + 4, this->m_index[index].m_size);
+
+        if (object) {
+            this->m_asyncObjects[slot] = object;
+        }
+    }
+
+    this->m_index[index].m_flags |= MOVIE_CHUNK_PREFETCHING;
 }
 
 // OFFSET: %0x00522620
@@ -388,7 +550,7 @@ void CMovieStreamer::PrefetchVideoFrames(int32_t count, uint8_t wait) {
             }
 
             if (this->m_index[index].m_chunkID[2] == 'd') {
-                this->PrefetchChunk(index, wait, this->m_interleavedAudio != 0);
+                this->PrefetchFrame(index, wait != 0, 2);
                 remaining--;
             }
         }
@@ -411,7 +573,7 @@ void CMovieStreamer::PrefetchAudioFrames(int32_t count, uint8_t wait) {
         }
 
         if (this->m_index[index].m_chunkID[2] == 'w') {
-            this->PrefetchChunk(index, wait, 0);
+            this->PrefetchFrame(index, wait != 0, 1);
         }
     }
 
@@ -574,45 +736,14 @@ int32_t CMovieStreamer::ParseAVIIndex() {
     return 1;
 }
 
-// OFFSET: %0x00522C80
-int32_t CMovieStreamer::ReadStandaloneAudio() {
-    char path[256];
-    SStrCopy(path, this->m_movieName, sizeof(path));
-    SStrPack(path, ".mp3", sizeof(path));
-
-    if (!SFile::OpenEx(NULL, path, 1, &this->m_audioFile)) {
-        return 0;
-    }
-
-    uint32_t sizeHigh = 0;
-    this->m_audioBufferSize = SFileGetFileSize(this->m_audioFile, &sizeHigh);
-    this->m_audioBuffer = static_cast<uint8_t*>(SMemAlloc(this->m_audioBufferSize, __FILE__, __LINE__, 0));
-
-    if (!SFile::Read(this->m_audioFile, this->m_audioBuffer, this->m_audioBufferSize, NULL)) {
-        return 0;
-    }
-
-    uint32_t header = (this->m_audioBuffer[0] << 3) | (this->m_audioBuffer[1] >> 5);
-
-    if (header == 0x550) {
-        Crypt::PanamaCypher cypher;
-        cypher.SetKey(this->m_key, this->m_audioBuffer + this->m_audioBufferSize - 32);
-        cypher.ProcessBuffer(this->m_audioBuffer + 8, this->m_audioBufferSize - 40);
-        this->m_audioBuffer[0] = 0xFF;
-        this->m_audioBuffer[1] |= 0xE0;
-    } else if (header != 0x7FF) {
-        return 0;
-    }
-
-    return 1;
-}
-
-// OFFSET: %0x00522E10
+// PROVEN: 8b57b994 IDENTICAL/NONE
+// OFFSET: 0x00512360/0x14015C2B0
 uint8_t* CMovieStreamer::GetAudioBuffer() {
     return this->m_audioBuffer;
 }
 
-// OFFSET: %0x00522E20
+// PROVEN: 9fd12659 IDENTICAL/NONE
+// OFFSET: 0x00512370/0x14015C2C0
 uint32_t CMovieStreamer::GetAudioBufferSize() {
     return this->m_audioBufferSize;
 }
@@ -636,8 +767,16 @@ int32_t CMovieStreamer::ParseAVIFile() {
     return this->ParseAVIIndex() != 0;
 }
 
-// OFFSET: %0x00522E80
+// OFFSET: 0x005123D0
 bool CMovieStreamer::MeasureBandwidth(float& bandwidth) {
+    float streaming = AsyncFileReadGetStreamingBandwidth();
+
+    if (streaming > 0.0f) {
+        bandwidth = streaming * 128.0f;
+        s_bandwidth = bandwidth;
+        return true;
+    }
+
     if (s_bandwidth > 0.0f) {
         bandwidth = s_bandwidth;
         return true;
@@ -645,8 +784,10 @@ bool CMovieStreamer::MeasureBandwidth(float& bandwidth) {
 
     int32_t first = 0;
 
-    while (this->IsChunkLocal(first) && first < this->m_indexCount - 1) {
-        first++;
+    for (; this->IsChunkLocal(first); first++) {
+        if (first >= this->m_indexCount - 1) {
+            break;
+        }
     }
 
     int32_t last = this->m_indexCount - 1;
@@ -658,14 +799,14 @@ bool CMovieStreamer::MeasureBandwidth(float& bandwidth) {
         return false;
     }
 
-    int32_t span = first + 3 * static_cast<int32_t>(this->m_info.m_fps) * ((this->m_interleavedAudio != 0) + 1);
+    int32_t span = 3 * static_cast<int32_t>(this->m_info.m_fps) * ((this->m_interleavedAudio != 0) + 1);
 
-    if (span < last) {
-        last = span;
+    if (first + span < last) {
+        last = first + span;
     }
 
-    uint32_t start = this->m_index[first].m_offset + this->m_moviOffset;
-    uint32_t end = this->m_index[last].m_size + this->m_index[last].m_offset + this->m_moviOffset;
+    uint32_t start = this->m_moviOffset + this->m_index[first].m_offset;
+    uint32_t end = this->m_moviOffset + this->m_index[last].m_offset + this->m_index[last].m_size;
 
     int64_t localBefore = 0;
     int64_t localAfter = 0;
@@ -673,9 +814,12 @@ bool CMovieStreamer::MeasureBandwidth(float& bandwidth) {
     SFile::FileGetIsLocalAmount(this->m_aviFile, localBefore, total);
 
     uint32_t startTime = OsGetAsyncTimeMs();
-    uint32_t half = (end - start) >> 1;
-    SFile::MakeFileRangeLocal(this->m_aviFile, 0, false, start, half);
-    SFile::MakeFileRangeLocal(this->m_aviFile, 0, true, (static_cast<int64_t>(end) + start) / 2, half);
+    CAsyncObject* object;
+    AsyncFileReadCreateObject(this->m_aviFile, 2, 1, &object, NULL, NULL, AsyncFileReadDestroyObject, AsyncFileReadDestroyObject, 0, start, end - start);
+
+    if (object) {
+        AsyncFileReadWait(object);
+    }
 
     uint32_t endTime = OsGetAsyncTimeMs();
     SFile::FileGetIsLocalAmount(this->m_aviFile, localAfter, total);
@@ -685,13 +829,13 @@ bool CMovieStreamer::MeasureBandwidth(float& bandwidth) {
         return true;
     }
 
-    bandwidth = static_cast<float>(localAfter - localBefore) / static_cast<float>(endTime - startTime);
+    bandwidth = static_cast<float>(static_cast<double>(localAfter - localBefore) / static_cast<double>(endTime - startTime));
     s_bandwidth = bandwidth;
     s_bandwidthTime = OsGetAsyncTimeMs();
     return true;
 }
 
-// OFFSET: %0x00523050
+// OFFSET: 0x00512670/0x14015C670
 static int32_t FindMovieVariationIndex(int32_t movieID) {
     int32_t high = g_movieVariationDB.m_numRecords;
     int32_t low = 0;
@@ -717,7 +861,7 @@ static int32_t FindMovieVariationIndex(int32_t movieID) {
     return -1;
 }
 
-// OFFSET: %0x005230B0
+// OFFSET: 0x005126D0/0x14015C6F0
 int32_t MovieStreaming::FindBestMovieResolutionFileDataID(int32_t movieID, bool localOnly) {
     if (!g_movieDB.GetRecord(movieID)) {
         return -1;
@@ -731,15 +875,8 @@ int32_t MovieStreaming::FindBestMovieResolutionFileDataID(int32_t movieID, bool 
 
     int32_t best = -1;
     int32_t bestResolution = 0;
-    int32_t width = 0;
-    int32_t height = 0;
-    CVar* resolution = CVar::Lookup("gxResolution");
-
-    if (resolution && resolution->m_stringValue.m_str) {
-        sscanf(resolution->m_stringValue.m_str, "%dx%d", &width, &height);
-    } else {
-        width = 800;
-    }
+    const CRect& window = g_theGxDevicePtr->DeviceDefWindow();
+    int32_t width = static_cast<int32_t>(window.maxX - window.minX);
 
     for (; index < g_movieVariationDB.m_numRecords; index++) {
         MovieVariationRec* variation = g_movieVariationDB.GetRecordByIndex(index);
@@ -796,7 +933,8 @@ int32_t MovieStreaming::FindBestMovieResolutionFileDataID(int32_t movieID, bool 
     return best;
 }
 
-// OFFSET: %0x005232F0
+// PROVEN: 25875b5b IDENTICAL/DIFFERENT
+// OFFSET: 0x00513410/0x14015D850
 void MovieStreaming::PreloadMovie(int32_t movieID) {
     FileDataRec* file = g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, false));
 
@@ -808,24 +946,22 @@ void MovieStreaming::PreloadMovie(int32_t movieID) {
     SStrCopy(path, file->m_filepath, sizeof(path));
     SStrPack(path, file->m_filename, sizeof(path));
 
-    MoviePreload* preload = MovieStreaming::s_preloads[movieID];
-
-    if (!preload[0].m_object) {
-        StartPreload(&preload[0], path, 132);
+    if (!MovieStreaming::s_preloads[movieID][0].m_object) {
+        StartPreload(&MovieStreaming::s_preloads[movieID][0], path, 5);
     }
 
     MovieRec* movie = g_movieDB.GetRecord(movieID);
     SStrCopy(path, movie->m_filename, sizeof(path));
     size_t length = strlen(path);
 
-    if (!preload[1].m_object) {
+    if (!MovieStreaming::s_preloads[movieID][1].m_object) {
         strcpy(&path[length], ".mp3");
-        StartPreload(&preload[1], path, 132);
+        StartPreload(&MovieStreaming::s_preloads[movieID][1], path, 5);
     }
 
-    if (!preload[2].m_object) {
+    if (!MovieStreaming::s_preloads[movieID][2].m_object) {
         strcpy(&path[length], ".sbt");
-        StartPreload(&preload[2], path, 132);
+        StartPreload(&MovieStreaming::s_preloads[movieID][2], path, 5);
     }
 }
 
@@ -872,7 +1008,7 @@ static void GetMovieLocalAmount(int64_t& local, int64_t& total, int32_t movieID)
     total += preload[2].m_total;
 }
 
-// OFFSET: %0x005236E0
+// OFFSET: 0x00513870/0x14015DFA0
 bool MovieStreaming::GetMovieDownloadProgress(int32_t movieID, int64_t& local, int64_t& total) {
     total = 0;
     bool preloading = false;
@@ -880,13 +1016,17 @@ bool MovieStreaming::GetMovieDownloadProgress(int32_t movieID, int64_t& local, i
     local = 0;
 
     for (uint32_t i = 0; i < 3; i++) {
-        if (preload[i].m_object) {
+        AsyncFileReadEnterQueueLock();
+
+        if (preload[i].m_object && preload[i].m_object->m_file) {
             SFile::FileGetIsLocalAmount(preload[i].m_object->m_file, local, total);
             preloading = true;
         } else {
             local += preload[i].m_local;
             total += preload[i].m_total;
         }
+
+        AsyncFileReadLeaveQueueLock();
     }
 
     if (!total) {
@@ -902,12 +1042,14 @@ bool MovieStreaming::IsMovieLocal(int32_t movieID) {
     return g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, true)) != NULL;
 }
 
-// OFFSET: %0x005237C0
-CMovieStreamer::CMovieStreamer() {
+// PROVEN: 11b4d893 IDENTICAL/NONE
+// OFFSET: 0x00513C70
+CMovieStreamer::CMovieStreamer() : m_aviFile(NULL) {
     this->Reset();
 }
 
-// OFFSET: %0x005237F0
+// PROVEN: 73774957 IDENTICAL/NONE
+// OFFSET: 0x00513AB0
 CMovieStreamer::~CMovieStreamer() {
     this->Cleanup();
 }
@@ -924,7 +1066,8 @@ void CMovieStreamer::Initialize(const char* movieName, const char* aviPath, cons
     }
 }
 
-// OFFSET: %0x00523890
+// PROVEN: 864c3daa IDENTICAL/NONE
+// OFFSET: 0x00512960
 void CMovieStreamer::StreamAudio() {
     for (int32_t index = this->m_audioIndex; index >= 0; index = this->AdvanceAudioFrame()) {
         if (!this->IsChunkLocal(index)) {
@@ -935,7 +1078,7 @@ void CMovieStreamer::StreamAudio() {
     }
 }
 
-// OFFSET: %0x005238E0
+// OFFSET: 0x00512FB0/0x14015D2A0
 bool CMovieStreamer::StreamFrame(bool decode, bool& skipped) {
     int32_t current = this->m_videoIndex;
     int32_t next = this->NextVideoIndex();
@@ -948,7 +1091,7 @@ bool CMovieStreamer::StreamFrame(bool decode, bool& skipped) {
 
     if (this->m_interleavedAudio) {
         this->StreamAudio();
-        this->PrefetchAudioFrames(66, 0);
+        this->PrefetchAudioFrames(2 * static_cast<int32_t>(this->m_info.m_fps), 0);
 
         if (this->m_audioIndex >= 0 && this->m_audioIndex < next) {
             return false;
@@ -956,7 +1099,7 @@ bool CMovieStreamer::StreamFrame(bool decode, bool& skipped) {
     }
 
     if (nextMissing || nextSkipped) {
-        if (this->m_videoCodec == MOVIE_CODEC_PIVX) {
+        if (this->m_videoCodec == MOVIE_CODEC_PMVX) {
             this->m_cypher.ProcessBuffer(this->m_frameBuffers + this->m_currentBuffer * (this->m_maxFrameSize + 4), this->m_index[current].m_size + 4);
         }
     } else if (this->IsChunkLocal(next) || (decode && !this->m_interleavedAudio && (this->m_index[next].m_flags & MOVIE_CHUNK_KEYFRAME))) {
@@ -987,21 +1130,22 @@ bool CMovieStreamer::StreamFrame(bool decode, bool& skipped) {
         }
     }
 
-    this->PrefetchVideoFrames(2, 0);
+    this->PrefetchVideoFrames(static_cast<int32_t>(this->m_info.m_fps), 0);
     skipped = currentMissing || currentSkipped;
     return true;
 }
 
-// OFFSET: %0x00523B00
+// PROVEN: b8ef11e7 IDENTICAL/NONE
+// OFFSET: 0x005131E0
 int32_t CMovieStreamer::PrepareForStreaming() {
     if (!this->ParseAVIFile()) {
         return 0;
     }
 
     this->m_frameBufferCount = 2;
-    this->m_frameBuffers = static_cast<uint8_t*>(SMemAlloc(2 * this->m_maxFrameSize + 8, __FILE__, __LINE__, 0));
+    this->m_frameBuffers = static_cast<uint8_t*>(DivxDecoderAlloc(2 * this->m_maxFrameSize + 8));
 
-    if (this->m_videoCodec == MOVIE_CODEC_PIVX) {
+    if (this->m_videoCodec == MOVIE_CODEC_PMVX) {
         this->m_cypher.SetKey(this->m_key, this->m_videoIV);
     }
 
@@ -1011,30 +1155,20 @@ int32_t CMovieStreamer::PrepareForStreaming() {
 
     if (this->m_audioChunkCount && this->m_audioBufferSize) {
         this->m_interleavedAudio = 1;
+
+        if (this->m_videoCodec == MOVIE_CODEC_PMVX) {
+            this->m_audioCypher.SetKey(this->m_key, this->m_audioIV);
+        }
+
         this->m_audioBuffer = static_cast<uint8_t*>(SMemAlloc(this->m_audioBufferSize, __FILE__, __LINE__, 0));
         this->PrefetchAudioFrames(3 * static_cast<int32_t>(this->m_info.m_fps), 1);
         this->StreamAudio();
-        return 1;
     }
 
-    if (this->ReadStandaloneAudio()) {
-        return 1;
-    }
-
-    if (this->m_frameBuffers) {
-        SMemFree(this->m_frameBuffers, __FILE__, __LINE__, 0);
-    }
-
-    if (this->m_audioBuffer) {
-        SMemFree(this->m_audioBuffer, __FILE__, __LINE__, 0);
-    }
-
-    this->m_audioBuffer = NULL;
-    this->m_frameBuffers = NULL;
-    return 0;
+    return 1;
 }
 
-// OFFSET: %0x00523C50
+// OFFSET: 0x00513CC0
 bool MovieStreaming::IsMoviePlayable(int32_t movieID) {
     if (g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, true))) {
         return true;
@@ -1082,4 +1216,16 @@ bool MovieStreaming::IsMoviePlayable(int32_t movieID) {
     int64_t total;
     MovieStreaming::GetMovieDownloadProgress(movieID, local, total);
     return static_cast<double>(local) > needed;
+}
+
+// PROVEN: 37004c8c IDENTICAL/NONE
+// OFFSET: 0x00513AA0/0x14015E230
+void MovieStreaming::InitializeGame() {
+    ClientStreamingMovies::s_handler = s_handlerKey;
+}
+
+// PROVEN: 8fa8d028 IDENTICAL/NONE
+// OFFSET: 0x00511A20
+void MovieStreaming::ShutdownGame() {
+    ClientStreamingMovies::s_handler = 0;
 }
