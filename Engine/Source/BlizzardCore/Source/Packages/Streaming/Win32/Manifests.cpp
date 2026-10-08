@@ -29,6 +29,11 @@ System_Streaming::HttpCallback::~HttpCallback() {
     CloseHandle(this->m_event);
 }
 
+// OFFSET: 0x007C3BE0
+void System_Streaming::HttpCallback::WaitForCompletion() {
+    WaitForSingleObject(this->m_event, INFINITE);
+}
+
 // OFFSET: #0x004567A0
 bool Blizzard::Streaming::FileManifest::ReadIndirectFile(const char* url) {
     System_Streaming::HttpCallback* callback = new System_Streaming::HttpCallback();
@@ -40,8 +45,6 @@ bool Blizzard::Streaming::FileManifest::ReadIndirectFile(const char* url) {
         result = Blizzard::URL::DownloadURL(url, callback);
 
         if (result) {
-            WaitForSingleObject(callback->m_event, INFINITE);
-
             if (callback->m_status) {
                 result = false;
             }
@@ -86,8 +89,6 @@ bool Blizzard::Streaming::Transport::ReadIndirectFile(const char* url) {
         result = Blizzard::URL::DownloadURL(url, callback);
 
         if (result) {
-            WaitForSingleObject(callback->m_event, INFINITE);
-
             if (callback->m_status) {
                 result = false;
             }
@@ -133,8 +134,6 @@ bool Blizzard::Streaming::SourceManifest::ReadIndirectFile(const char* url) {
         result = Blizzard::URL::DownloadURL(url, callback);
 
         if (result) {
-            WaitForSingleObject(callback->m_event, INFINITE);
-
             if (callback->m_status) {
                 result = false;
             }
@@ -191,8 +190,6 @@ bool Blizzard::Streaming::ManifestInfo::ReadIndirectFile(const char* url) {
         result = Blizzard::URL::DownloadURL(url, callback);
 
         if (result) {
-            WaitForSingleObject(callback->m_event, INFINITE);
-
             if (callback->m_status) {
                 Blizzard::File::AddToLastErrorStack(callback->m_status, Blizzard::String::QuickFormat<1024>("%s - HTTP Download failed for %s. Error Code: %d", "Blizzard::Streaming::ManifestInfo::ReadIndirectFile", url, callback->m_status).m_buffer, 21);
             } else {
@@ -206,6 +203,7 @@ bool Blizzard::Streaming::ManifestInfo::ReadIndirectFile(const char* url) {
         }
 
         callback->m_data.erase(callback->m_data.begin(), callback->m_data.end());
+        callback->m_received = 0;
 
         if (callback->m_status == Blizzard::URL::DownloadCallback::DOWNLOAD_TIMEOUT) {
             callback->SetTimeOutValue(2 * callback->GetTimeout());

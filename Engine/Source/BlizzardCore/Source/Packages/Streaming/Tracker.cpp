@@ -124,7 +124,6 @@ void Tracker::RepairReportSuccess(const char* name, int64_t offset, uint32_t siz
 // OFFSET: 0x007FD050
 Tracker::TrackerHttpDataDownloadCallBack::TrackerHttpDataDownloadCallBack() {
     this->m_timeout = 10000;
-    this->m_shouldBlock = true;
     Blizzard::Lock::EventCreate(this->m_event);
 }
 
@@ -134,9 +133,14 @@ int32_t Tracker::TrackerHttpDataDownloadCallBack::GetTimeout() {
     return this->m_timeout;
 }
 
-// OFFSET: %0x00762E00
+// OFFSET: 0x007FD0C0
+void Tracker::TrackerHttpDataDownloadCallBack::WaitForCompletion() {
+    Blizzard::Lock::EventWaitForever(this->m_event);
+}
+
+// OFFSET: 0x00A3AA30
 bool Tracker::TrackerHttpDataDownloadCallBack::ShouldBlock() {
-    return this->m_shouldBlock;
+    return true;
 }
 
 // PROVEN: 6d8dcf79 IDENTICAL/NONE
@@ -145,7 +149,7 @@ void Tracker::TrackerHttpDataDownloadCallBack::SetTimeOutValue(uint32_t timeout)
     this->m_timeout = timeout;
 }
 
-// OFFSET: [#0x004625A0, %0x00762E90]
+// OFFSET: [0x007FD0E0, 0x007FD150]
 Tracker::TrackerHttpDataDownloadCallBack::~TrackerHttpDataDownloadCallBack() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
@@ -232,9 +236,7 @@ void Tracker::SendToTracker(const char* stats) {
     TrackerHttpDataDownloadCallBack callback;
     std::string url = MakeTrackerURL(stats, true);
     Blizzard::URL::DownloadURL(url.c_str(), &callback);
-    Blizzard::Lock::EventWaitForever(callback.m_event);
 
     url = MakeTrackerURL(stats, false);
     Blizzard::URL::DownloadURL(url.c_str(), &callback);
-    Blizzard::Lock::EventWaitForever(callback.m_event);
 }

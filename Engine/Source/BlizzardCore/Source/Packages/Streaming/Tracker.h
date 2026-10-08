@@ -13,11 +13,11 @@ class TrackerHttpDataDownloadCallBack : public Blizzard::URL::DownloadCallback {
     /* 0004 */ std::string m_data;
     /* 0020 */ uint32_t m_timeout;
     /* 0024 */ Blizzard::Lock::Event m_event;
-    /* 0028 */ bool m_shouldBlock;
 
     ~TrackerHttpDataDownloadCallBack();
     int32_t GetTimeout() override;
     bool ShouldBlock() override;
+    void WaitForCompletion() override;
     bool ReceivedData(const void* data, int32_t size) override;
     void Completed(Blizzard::URL::DownloadCallback::Status status) override;
     virtual void SetTimeOutValue(uint32_t timeout);

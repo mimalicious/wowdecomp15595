@@ -199,6 +199,11 @@ bool Blizzard::Streaming::Transport::TransportHttpCallback::Stop() {
     return this->m_stop;
 }
 
+// OFFSET: 0x007C36C0
+void Blizzard::Streaming::Transport::TransportHttpCallback::WaitForCompletion() {
+    Blizzard::Lock::EventWaitForever(this->m_event);
+}
+
 // OFFSET: 0x007C36D0
 Blizzard::URL::DownloadCallback::Cookie Blizzard::Streaming::Transport::TransportHttpCallback::GetCookie() {
     Cookie cookie;
@@ -395,7 +400,10 @@ bool Blizzard::Streaming::Transport::ReadHttp(const Manifests::TransportInfo& in
             result = Blizzard::URL::DownloadURL(url.m_url.c_str(), &callback);
 
             if (result) {
-                Blizzard::Lock::EventWaitForever(callback.m_event);
+                if (!GetConfig()->m_shouldBlock) {
+                    Blizzard::Lock::EventWaitForever(callback.m_event);
+                }
+
                 result = callback.m_success;
 
                 if (!result) {

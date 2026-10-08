@@ -253,6 +253,7 @@ class Transport {
         Blizzard::URL::DownloadCallback::ByteRange GetByteRange() override;
         bool Stop() override;
         bool ShouldBlock() override;
+        void WaitForCompletion() override;
         Blizzard::URL::DownloadCallback::Cookie GetCookie() override;
         bool ReceivedData(const void* data, int32_t size) override;
         void Completed(Blizzard::URL::DownloadCallback::Status status) override;
@@ -299,6 +300,7 @@ class HttpCallback : public Blizzard::URL::DownloadCallback {
     ~HttpCallback();
     int32_t GetTimeout() override;
     bool ShouldBlock() override;
+    void WaitForCompletion() override;
     bool ReceivedData(const void* data, int32_t size) override;
     void Completed(Blizzard::URL::DownloadCallback::Status status) override;
     virtual void SetTimeOutValue(uint32_t timeout);

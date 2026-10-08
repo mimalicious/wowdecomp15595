@@ -343,7 +343,7 @@ bool Blizzard::Streaming::SourceManifest::SplitItem(char* line, MANIFEST_ITEM* i
     return true;
 }
 
-// OFFSET: 0x007CCB80/0x1404C90C0
+// OFFSET: 0x007CCAB0
 bool Blizzard::Streaming::Manifests::ServerPathItem::HandleTag(const char* tag, const char* value) {
     if (!tag || _stricmp(tag, "path")) {
         return false;
@@ -353,7 +353,7 @@ bool Blizzard::Streaming::Manifests::ServerPathItem::HandleTag(const char* tag, 
     return true;
 }
 
-// OFFSET: 0x007CCAB0/0x1404C8FF0
+// OFFSET: 0x007CCB80
 bool Blizzard::Streaming::Manifests::ParameterItem::HandleTag(const char* tag, const char* value) {
     if (!tag || _stricmp(tag, "value")) {
         return false;
@@ -1460,7 +1460,7 @@ bool Blizzard::Streaming::ManifestInfo::ReadDirectFileFromBuffer(char* buffer, i
             this->m_version = atol(value);
 
             if (this->m_version == 1) {
-                return FileManifest::ReadDirectFileFromBuffer(next, size + next - buffer);
+                return false;
             }
         } else if (tag && !_stricmp(tag, "manifest")) {
             if (!this->ReadFile(value)) {
