@@ -518,7 +518,7 @@ int32_t FrameXML_ProcessFile(const char* filename, const char* wrapper, MD5_CTX*
 
                 if (script->m_bodyFlags & 1) {
                     char scriptName[271];
-                    SStrPrintf(scriptName, sizeof(scriptName), "%s:<Scripts>", filename);
+                    SStrPrintf(scriptName, "%s:<Scripts>", filename);
                     FrameScript_Execute(script->m_body.m_string, scriptName, lua_tainted);
                 }
 

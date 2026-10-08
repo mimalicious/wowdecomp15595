@@ -1562,21 +1562,26 @@ static bool Backdrop_child(linkObject* node, MemBlock& block, char* name) {
 }
 
 // OFFSET: 0x004F3C90/0x140137670
+bool PathAnimation::parse(MemBlock& block) {
+    const char* curve = this->m_xml->GetAttributeByName("curve");
+
+    if (curve && *curve) {
+        this->m_pathFlags |= 1;
+        this->AddString(block, this->m_curve, curve);
+    }
+
+    this->m_size = block.m_cur - reinterpret_cast<char*>(this);
+
+    return this->dochildren(Path_child, block);
+}
+
+// OFFSET: 0x004F3EE0
 static bool Path_parse(linkObject* node, MemBlock& block) {
     PathAnimation* path = static_cast<PathAnimation*>(node);
     path->m_element = XML_PATH;
     block.m_cur = reinterpret_cast<char*>(path) + sizeof(PathAnimation);
 
-    const char* curve = path->m_xml->GetAttributeByName("curve");
-
-    if (curve && *curve) {
-        path->m_pathFlags |= 1;
-        path->AddString(block, path->m_curve, curve);
-    }
-
-    path->m_size = block.m_cur - reinterpret_cast<char*>(path);
-
-    return path->dochildren(Path_child, block);
+    return path->parse(block);
 }
 
 // PROVEN: 3c33d430 IDENTICAL/UNPROVEN
@@ -2939,6 +2944,15 @@ static bool Layers_child(linkObject* node, MemBlock& block, char* name) {
     return static_cast<Layer*>(node)->parse(block);
 }
 
+// OFFSET: 0x004F00E0
+static bool Frame_advance(linkObject* node, MemBlock& block) {
+    Frame* frame = static_cast<Frame*>(node);
+    frame->m_regionType = XML_FRAME;
+    block.m_cur = reinterpret_cast<char*>(frame) + sizeof(Frame);
+
+    return frame->parse(block);
+}
+
 // OFFSET: [0x004F01B0<106>, 0x004F01E0<117>, 0x004F0210<100>]
 template <uint32_t TYPE>
 static bool AdvanceAndParseFrame(linkObject* node, MemBlock& block) {
@@ -3114,11 +3128,7 @@ static bool Region_context(linkObject* node, MemBlock& block, const char* name) 
     }
 
     if (!SStrCmp(name, "frame", STORM_MAX_STR)) {
-        Frame* frame = static_cast<Frame*>(node);
-        frame->m_regionType = XML_FRAME;
-        block.m_cur = reinterpret_cast<char*>(frame) + sizeof(Frame);
-
-        return frame->parse(block);
+        return Frame_advance(node, block);
     }
 
     return false;

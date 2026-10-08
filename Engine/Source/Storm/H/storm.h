@@ -239,6 +239,9 @@ void SStrInitialize();
 size_t SStrLenUTF8(const char* string);
 size_t SStrLenUTF8(const char* string, size_t maxchars);
 size_t SStrPrintf(char* dest, size_t maxchars, const char* format, ...);
+
+template <size_t N>
+size_t SStrPrintf(char (&dest)[N], const char* format, ...);
 int32_t SStrSortUTF8I(const char* string1, const char* string2, size_t maxchars);
 char* SStrStrI(const char* string, const char* search);
 const char* SStrStrUTF8I(const char* string, const char* search);

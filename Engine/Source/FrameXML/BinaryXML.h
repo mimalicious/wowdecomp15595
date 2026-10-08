@@ -608,6 +608,8 @@ class PathAnimation : public Animation {
     public:
     /* 0070 */ uint32_t m_pathFlags;
     /* 0074 */ XMLString m_curve;
+
+    bool parse(MemBlock& block);
 };
 
 class ControlPoint : public linkObject {

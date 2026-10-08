@@ -128,3 +128,11 @@ inline void* operator new[](size_t bytes, const char* filename, int32_t linenumb
 inline void operator delete[](void* ptr, const char* filename, int32_t linenumber) {
     SMemFree(ptr, filename, linenumber, 0);
 }
+
+// OFFSET: [0x004EC7E0<271>]
+template <size_t N>
+size_t SStrPrintf(char (&dest)[N], const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    return SStrVPrintf(dest, N, format, args);
+}

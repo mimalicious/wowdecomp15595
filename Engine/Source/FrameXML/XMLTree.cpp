@@ -16,6 +16,24 @@ static XMLNode* s_freeNodes;
 // STATIC: %0x00CC9198
 CDataAllocator XMLNode::s_allocator(sizeof(XMLNode), 1170);
 
+// PROVEN: c55c70e0 IDENTICAL/NONE
+// OFFSET: 0x004EBAB0
+static void* XMLTree_MemAlloc(size_t size) {
+    return SMemAlloc(size, __FILE__, __LINE__, 0);
+}
+
+// PROVEN: 73d516de IDENTICAL/NONE
+// OFFSET: 0x004EBAD0
+static void* XMLTree_MemReAlloc(void* ptr, size_t size) {
+    return SMemReAlloc(ptr, size, __FILE__, __LINE__, 0);
+}
+
+// PROVEN: 5c986334 IDENTICAL/NONE
+// OFFSET: 0x004EBAF0
+static void XMLTree_MemFree(void* ptr) {
+    SMemFree(ptr, __FILE__, __LINE__, 0);
+}
+
 // PROVEN: 914a8ef0 IDENTICAL/IDENTICAL
 // OFFSET: 0x004EBA10/0x14012EBB0
 static void end_element(void* userData, const char* name) {
@@ -257,7 +275,11 @@ XMLTree* XMLTree_Load(const char* data, uint32_t size) {
     if (s_parser) {
         XML_ParserReset(s_parser, NULL);
     } else {
-        s_parser = XML_ParserCreate(NULL);
+        XML_Memory_Handling_Suite suite;
+        suite.malloc_fcn = XMLTree_MemAlloc;
+        suite.realloc_fcn = XMLTree_MemReAlloc;
+        suite.free_fcn = XMLTree_MemFree;
+        s_parser = XML_ParserCreate_MM(NULL, &suite, NULL);
     }
 
     XML_SetElementHandler(s_parser, begin_element, end_element);
