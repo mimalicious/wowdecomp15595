@@ -1,11 +1,13 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <malloc.h>
 #include "Engine/Source/Tempest/C3Spline_CatmullRom.h"
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Tempest/C34Matrix.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "Engine/Source/Tempest/CMath.h"
+#include "Engine/Source/Storm/H/stpl.h"
 
 // STATIC: 0x00CA08E0
 static const C44Matrix s_catmullRomBasis(-0.5f, 1.0f, -0.5f, 0.0f, 1.5f, -2.5f, 0.0f, 1.0f, -1.5f, 2.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f);
@@ -259,6 +261,138 @@ uint32_t C3Spline_CatmullRom::IGetPoints(float t, C3Vector* points, uint32_t cou
     }
 
     return remaining;
+}
+
+// OFFSET: 0x004CABF0
+int32_t C3Spline_CatmullRom::Smooth(float minLength, int32_t keepStart) {
+    if (!this->m_splineMode) {
+        return 0;
+    }
+
+    int32_t segCount = this->m_pointCount - 3;
+
+    if (segCount <= 1) {
+        return 0;
+    }
+
+    uint32_t start = keepStart != 0;
+    float stepLength = this->m_segLength[start];
+
+    if (minLength > stepLength) {
+        stepLength = minLength;
+    }
+
+    for (uint32_t i = start + 1; i < this->m_pointCount - 3; i++) {
+        float length = this->GetCachedSegLength(i);
+
+        if (length > minLength && stepLength > length) {
+            stepLength = length;
+        }
+    }
+
+    int32_t maxPoints = static_cast<int32_t>(this->m_length / stepLength) + segCount + 4;
+
+    if (maxPoints > 100) {
+        return 0;
+    }
+
+    TSStackArray<C3Vector> points(static_cast<C3Vector*>(alloca(sizeof(C3Vector) * maxPoints)), maxPoints, 1);
+    points.m_data[0] = this->m_points[0];
+
+    float totalLength = this->m_length;
+    float traveled = 0.0f;
+    int32_t count = 1;
+    C3Vector pos(0.0f, 0.0f, 0.0f);
+
+    if (keepStart && maxPoints > 1) {
+        C3Vector delta = points.m_data[0] - this->m_points[1];
+
+        if (fnotequal(delta.x * delta.x + delta.z * delta.z + delta.y * delta.y, 0.0f)) {
+            points.m_data[1] = this->m_points[1];
+            traveled = this->m_segLength[0];
+            count = 2;
+        }
+    }
+
+    for (int32_t seg = start; seg < segCount; seg++) {
+        if (count >= maxPoints) {
+            break;
+        }
+
+        const C3Vector& point = this->Point(seg + 1);
+        C3Vector delta = points.m_data[count - 1] - point;
+
+        if (fabs(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z) >= 0.00000023841858f) {
+            points.m_data[count++] = this->Point(seg + 1);
+        }
+
+        float length = this->GetCachedSegLength(seg);
+
+        if (length > stepLength) {
+            int32_t steps = static_cast<int32_t>(length / stepLength);
+            float step = length / static_cast<float>(steps);
+
+            for (int32_t i = 0; i < steps - 1; i++) {
+                float t = ((static_cast<float>(i) + 1.0f) * step + traveled) * (1.0f / totalLength);
+                uint32_t mode = this->m_splineMode;
+                this->m_splineMode = 0;
+
+                if (t <= 0.0f) {
+                    pos = this->m_points[1];
+                } else if (t >= 1.0f) {
+                    if (this->m_pointCount <= 1) {
+                        pos = this->m_points[0];
+                    } else {
+                        pos = this->Point(this->m_pointCount - 2);
+                    }
+                } else {
+                    this->IPosArclength(t, pos);
+                }
+
+                this->m_splineMode = mode;
+
+                if (count < maxPoints) {
+                    C3Vector last = points.m_data[count - 1] - pos;
+
+                    if (fabs(last.x * last.x + last.y * last.y + last.z * last.z) >= 0.00000023841858f) {
+                        points.m_data[count++] = pos;
+                    }
+                }
+            }
+        }
+
+        traveled = length + traveled;
+    }
+
+    if (count >= maxPoints - 2) {
+        return 0;
+    }
+
+    C3Vector dir = points.m_data[0] - points.m_data[1];
+    float dirSq = dir.x * dir.x + dir.z * dir.z + dir.y * dir.y;
+
+    if (dirSq > 0.00000023841858f) {
+        float inv = 1.0f / sqrt(dirSq);
+        dir.x = dir.x * inv;
+        dir.y = dir.y * inv;
+        dir.z = inv * dir.z;
+    }
+
+    points.m_data[0].x = points.m_data[1].x + dir.x * stepLength;
+    points.m_data[0].y = points.m_data[1].y + dir.y * stepLength;
+    points.m_data[0].z = points.m_data[1].z + dir.z * stepLength;
+
+    points.m_data[count++] = this->Point(segCount + 1);
+    points.m_data[count++] = this->Point(segCount + 2);
+
+    this->ISetPoints(points.m_data, count);
+
+    if (this->m_pointCount > 3) {
+        this->IValidateCache();
+        this->m_length = this->ILength();
+    }
+
+    return 1;
 }
 
 // OFFSET: 0x004CB4A0/0x1401070F0

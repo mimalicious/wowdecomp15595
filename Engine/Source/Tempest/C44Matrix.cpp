@@ -365,7 +365,7 @@ C44Matrix C44Matrix::Transpose() const {
     return result;
 }
 
-// OFFSET: #0x004C2440
+// OFFSET: 0x004C7810
 C44Matrix C44Matrix::Adjoint() const {
     float a0 = this->a0;
     float a1 = this->a1;
@@ -404,6 +404,7 @@ C44Matrix C44Matrix::Adjoint() const {
     return result;
 }
 
+// PROVEN: 14aebfe7 IDENTICAL/DIFFERENT
 // OFFSET: 0x004C8690/0x140103340
 C44Matrix C44Matrix::Inverse(float determinant) const {
     return this->Adjoint() * (1.0f / determinant);
@@ -486,6 +487,36 @@ C44Matrix C44Matrix::AffineInverse(float scale) const {
     result.Translate(move);
 
     return result;
+}
+
+// OFFSET: 0x004C8E50/0x140103D20
+void C44Matrix::AffineInvertInPlace(float scale) {
+    float t = this->a1;
+    this->a1 = this->b0;
+    this->b0 = t;
+
+    t = this->a2;
+    this->a2 = this->c0;
+    this->c0 = t;
+
+    t = this->b2;
+    this->b2 = this->c1;
+    this->c1 = t;
+
+    if (fabs(scale - 1.0f) >= 0.00000095367432f) {
+        float s = 1.0f / (scale * scale);
+        this->b1 = this->b1 * s;
+        this->b2 = s * this->b2;
+        this->c0 = this->c0 * s;
+        this->c1 = this->c1 * s;
+        this->b0 = this->b0 * s;
+        this->a0 = this->a0 * s;
+        this->a2 = this->a2 * s;
+        this->c2 = s * this->c2;
+        this->a1 = s * this->a1;
+    }
+
+    this->InvertTranslation();
 }
 
 // OFFSET: #0x004C31B0

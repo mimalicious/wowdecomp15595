@@ -6908,7 +6908,7 @@ void CM2Model::AttachToParent(CM2Model* parent, uint32_t id, const C3Vector* pos
     if (position && (this->m_attachParent->m_fFlags & 1) && this->m_attachmentIndex != 0xFFFF) {
         C44Matrix transform = parent->GetAttachmentWorldTransform(id);
         float scale = sqrtf(transform.a1 * transform.a1 + transform.a2 * transform.a2 + transform.a0 * transform.a0);
-        transform = transform.AffineInverse(scale);
+        transform.AffineInvertInPlace(scale);
 
         if (!(this->m_fFlags & 0x4000)) {
             this->m_worldTransform.Identity();

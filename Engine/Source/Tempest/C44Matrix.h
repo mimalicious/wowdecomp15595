@@ -46,6 +46,7 @@ class C44Matrix {
     C44Matrix AffineInverse() const;
     C44Matrix AffineInverse(float scale) const;
     void AffineInvertInPlace();
+    void AffineInvertInPlace(float scale);
     float Determinant() const;
     void Identity();
     C44Matrix Inverse() const;
