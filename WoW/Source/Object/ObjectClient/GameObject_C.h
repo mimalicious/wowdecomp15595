@@ -22,6 +22,7 @@ class CMapBaseObj;
 class CDataStore;
 class CGGameObject_C;
 class CGTooltip;
+class CGUnit_C;
 class CM2Model;
 class CMapEntity;
 class DestructibleModelDataRec;
