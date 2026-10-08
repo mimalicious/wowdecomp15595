@@ -640,17 +640,6 @@ static bool IsInColorCode(const char* text, int32_t length) {
     return inColor;
 }
 
-// OFFSET: #0x004FD220
-char* NameCache::FullName(char* buffer, uint32_t size) {
-    if (this->m_realmName[0]) {
-        SStrPrintf(buffer, size, "%s-%s", this->m_name, this->m_realmName);
-    } else {
-        SStrCopy(buffer, this->m_name, size);
-    }
-
-    return buffer;
-}
-
 // OFFSET: #0x004FDBC0
 static void SendChatEvent(ChatChannel* channel, uint32_t language, const char* text, int32_t type, const char* senderName, const char* channelString, const char* targetName, const char* flags, uint32_t lineID, WOWGUID guid, const ChatConversation* conversation) {
     if (type >= CHAT_MSG_MAX) {

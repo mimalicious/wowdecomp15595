@@ -519,28 +519,6 @@ void ClientServices::Send2(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x006B0B80
-void ClientServices::SetMessageHandler(NETMESSAGE msgId, MESSAGE_HANDLER handler, void* param) {
-    if (!handler) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    ClientServices::s_currentConnection->SetMessageHandler(msgId, handler, param);
-}
-
-// OFFSET: #0x006B0BC0
-void ClientServices::ClearMessageHandler(NETMESSAGE msgId) {
-    if (!ClientServices::s_currentConnection) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    ClientServices::s_currentConnection->ResetHandler(msgId);
-}
-
 // PROVEN: b94c3125 IDENTICAL/NONE
 // OFFSET: 0x004CEFB0/0x14010B190
 const char* ClientServices::GetSelectedRealmName() {
@@ -1303,6 +1281,7 @@ bool ClientConnection::CharacterLoggingOut() {
     return this->m_loggingOut;
 }
 
+// PROVEN: 64003b7a IDENTICAL/NONE
 // OFFSET: 0x004D0360/0x14010CA00
 void ClientConnection::CharacterSetInGame(int32_t inGame) {
     this->Complete(1, CHAR_LOGIN_SUCCESS);
@@ -1398,6 +1377,7 @@ uint8_t ClientServices::GetCharacterSex() {
     return ClientServices::s_characterInfo.m_sexID;
 }
 
+// PROVEN: 5b5086fc IDENTICAL/NONE
 // OFFSET: 0x004CE9C0/0x14010A9D0
 void ClientConnection::HandleLogoutAbortAck() {
     if (this->m_loggingOut) {

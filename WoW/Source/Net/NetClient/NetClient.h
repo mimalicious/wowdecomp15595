@@ -215,4 +215,6 @@ struct NETCLIENTNODE : public TSLinkedNode<NETCLIENTNODE> {
     /* 0008 */ NetClient* m_client;
 };
 
+#include "WoW/Source/Net/NetClient/NetClient.inl"
+
 #endif

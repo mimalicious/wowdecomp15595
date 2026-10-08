@@ -171,4 +171,6 @@ extern ClientConnection* g_clientConnection;
 int32_t ConsoleCommand_Logout(const char* command, const char* arguments);
 
 
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.inl"
+
 #endif

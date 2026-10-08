@@ -25,14 +25,15 @@ static int32_t Script_SetWhoToUI(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B33D0
+// PROVEN: bc58d40f IDENTICAL/NONE
+// OFFSET: 0x004D2520/0x14010F7C0
 static int32_t Script_GetNumWhoResults(lua_State* L) {
     lua_pushnumber(L, FriendList::s_numWhoResults);
     lua_pushnumber(L, FriendList::s_totalWhoResults);
     return 2;
 }
 
-// OFFSET: #0x006B44F0
+// OFFSET: 0x004D3610/0x140110590
 static int32_t Script_ShowFriends(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_CONTACT_LIST));
@@ -66,7 +67,8 @@ static int32_t Script_GetNumFriends(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x004D9650
+// PROVEN: 56067868 IDENTICAL/NONE
+// OFFSET: 0x004D3690/0x140110620
 static int32_t Script_GetNumIgnores(lua_State* L) {
     if (FriendList::s_friendList) {
         lua_pushnumber(L, FriendList::s_friendList->GetNumIgnores());
@@ -128,7 +130,7 @@ static int32_t Script_GetWhoInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x006B6AF0
+// OFFSET: 0x004D59C0/0x1401136D0
 static int32_t Script_AddFriend(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     const char* note = lua_isstring(L, 2) ? lua_tolstring(L, 2, NULL) : NULL;
@@ -262,13 +264,15 @@ static int32_t Script_SetSelectedFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x004D9590
+// PROVEN: 843d200e IDENTICAL/NONE
+// OFFSET: 0x004D35D0/0x140110530
 static int32_t Script_GetSelectedFriend(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetFriendSelectionIndex() + 1);
     return 1;
 }
 
-// OFFSET: %0x004D96B0
+// PROVEN: df75fd91 IDENTICAL/NONE
+// OFFSET: 0x004D36F0/0x140110680
 static int32_t Script_GetNumMutes(lua_State* L) {
     if (FriendList::s_friendList) {
         lua_pushnumber(L, FriendList::s_friendList->GetNumMutes());
@@ -279,7 +283,7 @@ static int32_t Script_GetNumMutes(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B4620
+// OFFSET: 0x004D3750/0x1401106E0
 static int32_t Script_GetIgnoreName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetIgnoreName(index)");
@@ -310,7 +314,7 @@ static int32_t Script_GetIgnoreName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B4760
+// OFFSET: 0x004D3840/0x140110820
 static int32_t Script_GetMuteName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMuteName(index)");
@@ -379,13 +383,15 @@ static int32_t Script_SetSelectedMute(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x004D9A50
+// PROVEN: e8796e95 IDENTICAL/NONE
+// OFFSET: 0x004D3A90/0x140110A80
 static int32_t Script_GetSelectedIgnore(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetIgnoreSelectionIndex() + 1);
     return 1;
 }
 
-// OFFSET: %0x004D9A90
+// PROVEN: c0a099a5 IDENTICAL/NONE
+// OFFSET: 0x004D3AD0/0x140110AE0
 static int32_t Script_GetSelectedMute(lua_State* L) {
     lua_pushnumber(L, FriendList::s_friendList->GetMuteSelectionIndex() + 1);
     return 1;
@@ -445,7 +451,8 @@ static int32_t Script_SortWho(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6BA0
+// PROVEN: 1afc437f IDENTICAL/NONE
+// OFFSET: 0x004D5A70/0x1401137A0
 static int32_t Script_AddOrDelIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -456,7 +463,8 @@ static int32_t Script_AddOrDelIgnore(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6BD0
+// PROVEN: 807e06a5 IDENTICAL/NONE
+// OFFSET: 0x004D5AA0/0x1401137D0
 static int32_t Script_AddOrDelMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -467,7 +475,8 @@ static int32_t Script_AddOrDelMute(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6C00
+// PROVEN: d908bd54 IDENTICAL/NONE
+// OFFSET: 0x004D5AD0/0x140113800
 static int32_t Script_AddIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -478,7 +487,8 @@ static int32_t Script_AddIgnore(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B6C30
+// PROVEN: ae257bf2 IDENTICAL/NONE
+// OFFSET: 0x004D5B00/0x140113830
 static int32_t Script_AddMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -507,7 +517,7 @@ static int32_t Script_IsIgnored(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B6CF0
+// OFFSET: 0x004D5BC0/0x140113920
 static int32_t Script_IsMuted(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
 
@@ -525,7 +535,7 @@ static int32_t Script_IsMuted(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B6D80
+// OFFSET: 0x004D5C50/0x1401139A0
 static int32_t Script_IsIgnoredOrMuted(lua_State* L) {
     const char* token = lua_tolstring(L, 1, NULL);
 
@@ -543,7 +553,8 @@ static int32_t Script_IsIgnoredOrMuted(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x006B7B70
+// PROVEN: e014aa9d IDENTICAL/NONE
+// OFFSET: 0x004D6910/0x140114B60
 static int32_t Script_AddOrRemoveFriend(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     const char* notes = lua_isstring(L, 2) ? lua_tolstring(L, 2, NULL) : NULL;
@@ -620,7 +631,7 @@ static int32_t Script_SetFriendNotes(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B7D70
+// OFFSET: 0x004D6B10/0x140114D60
 static int32_t Script_DelIgnore(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -631,7 +642,8 @@ static int32_t Script_DelIgnore(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006B7DA0
+// PROVEN: 1a347170 IDENTICAL/NONE
+// OFFSET: 0x004D6B40/0x140114D90
 static int32_t Script_DelMute(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -642,7 +654,7 @@ static int32_t Script_DelMute(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AD93D8
+// STATIC: 0x00CA0B60
 static FrameScript_Method s_ScriptFunctions[] = {
     { "GetNumFriends", &Script_GetNumFriends },
     { "GetFriendInfo", &Script_GetFriendInfo },
@@ -677,14 +689,16 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "SortWho", &Script_SortWho },
 };
 
-// OFFSET: #0x006B3450
+// PROVEN: 0753ba7f IDENTICAL/NONE
+// OFFSET: 0x004D25A0
 void FriendList::RegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x006B3480
+// PROVEN: 6fc81244 IDENTICAL/NONE
+// OFFSET: 0x004D25D0
 void FriendList::UnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

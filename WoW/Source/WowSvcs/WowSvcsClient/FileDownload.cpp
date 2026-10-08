@@ -101,7 +101,7 @@ void STORMAPI GruntFileDownload::CalculateMD5(Storm::IOUnit* unit, uint64_t offs
     MD5Final(digest, &context);
 }
 
-// OFFSET: #0x006BA020
+// INLINED
 bool GruntFileDownload::VerifyMD5(uint64_t size) {
     uint8_t digest[16];
     GruntFileDownload::CalculateMD5(this->m_unit, 0, size, digest);
@@ -441,7 +441,7 @@ void BattlenetFileDownload::CompleteDownload() {
     }
 }
 
-// OFFSET: [#0x006BAD70, #0x006BAE50]
+// OFFSET: [0x00B0B220, 0x00B0B5D0]
 GruntFileDownload::~GruntFileDownload() {
     this->Close(false, false);
 }

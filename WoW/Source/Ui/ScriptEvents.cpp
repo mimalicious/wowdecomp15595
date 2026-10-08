@@ -24,7 +24,7 @@
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 
-// STATIC: #0x00C24EB0
+// STATIC: 0x00D39228
 const char* g_scriptEvents[NUM_SCRIPT_EVENTS];
 
 // STATIC: #0x00C259FC
@@ -45,7 +45,7 @@ static char s_auraToken[32];
 // STATIC: #0x00C25B5C
 static char s_tokenFromGUID[32];
 
-// OFFSET: #0x00608880
+// OFFSET: 0x0044C420/0x140059B00
 void ScriptEventsInitialize() {
 #define SCRIPT_EVENT_NAME(name, index) g_scriptEvents[SCRIPT_EVENT_##name] = #name;
 #define SCRIPT_EVENT_ALIAS_NAME(name, string, index) g_scriptEvents[SCRIPT_EVENT_##name] = string;

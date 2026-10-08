@@ -12,7 +12,7 @@
 #include "WoW/Source/Client.h"
 #include "Engine/Source/Event/Event.h"
 
-// STATIC: #0x00AD94E0
+// STATIC: 0x00CA0C60
 static AccountDataInfo s_accountData[] = {
     { false, true, NULL, "config-cache.wtf", "config-cache.old", "synchronizeConfig" },
     { false, false, NULL, "config-cache.wtf", "config-cache.old", "synchronizeConfig" },
@@ -24,13 +24,13 @@ static AccountDataInfo s_accountData[] = {
     { false, false, NULL, "chat-cache.txt", "chat-cache.old", NULL }
 };
 
-// STATIC: #0x00C7BFF0
+// STATIC: 0x00DC0C58
 static uint32_t s_accountDataTime;
 
-// STATIC: #0x00C7BFF8
+// STATIC: 0x00DC0C60
 static int32_t unk_C7BFF8;
 
-// STATIC: #0x00C7BFFC
+// STATIC: 0x00DC0C64
 static int32_t unk_C7BFFC;
 
 // PROVEN: 7e58bad5 IDENTICAL/NONE
@@ -189,7 +189,7 @@ static void UpdateCachedChecksum(int32_t type, int32_t time) {
     SaveCachedChecksums(info.m_global);
 }
 
-// OFFSET: %0x00560BD0
+// OFFSET: [0x00551020]
 static int32_t Packet_SMSG_UPDATE_ACCOUNT_DATA_COMPLETE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t type;
     msg->Get(type);
@@ -353,7 +353,7 @@ static void ScheduleAccountDataSave(int32_t type) {
     info.unk_0020 = ClientSetTimer(30000, SaveTimerHandler, reinterpret_cast<void*>(static_cast<intptr_t>(type)));
 }
 
-// OFFSET: #0x006B94C0
+// OFFSET: 0x004D84F0
 static int32_t Packet_SMSG_ACCOUNT_DATA_TIMES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint32_t serverTime = 0;
     msg->Get(serverTime);
@@ -425,7 +425,7 @@ static int32_t Packet_SMSG_ACCOUNT_DATA_TIMES(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: #0x006B9730
+// OFFSET: 0x004D8690
 static int32_t Packet_SMSG_UPDATE_ACCOUNT_DATA(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -500,15 +500,14 @@ void AccountDataInitializeBasicSystem() {
     ClientServices::SetMessageHandler(SMSG_ACCOUNT_DATA_TIMES, Packet_SMSG_ACCOUNT_DATA_TIMES, NULL);
     ClientServices::SetMessageHandler(SMSG_UPDATE_ACCOUNT_DATA, Packet_SMSG_UPDATE_ACCOUNT_DATA, NULL);
     ClientServices::SetMessageHandler(SMSG_UPDATE_ACCOUNT_DATA_COMPLETE, Packet_SMSG_UPDATE_ACCOUNT_DATA_COMPLETE, NULL);
-    ClientServices::SetMessageHandler(SMSG_CHECK_FOR_BOTS, Packet_SMSG_CHECK_FOR_BOTS, NULL);
 }
 
-// OFFSET: #0x006B8FF0
+// PROVEN: ab393978 IDENTICAL/NONE
+// OFFSET: 0x004D8160
 void AccountDataShutdownBasicSystem() {
     ClientServices::ClearMessageHandler(SMSG_ACCOUNT_DATA_TIMES);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_ACCOUNT_DATA);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_ACCOUNT_DATA_COMPLETE);
-    ClientServices::ClearMessageHandler(SMSG_CHECK_FOR_BOTS);
 }
 
 // OFFSET: 0x004D81A0/0x1401169D0
