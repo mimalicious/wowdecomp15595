@@ -43,9 +43,6 @@ extern lua_State* s_context;
 extern FRAMESCRIPT_EVENTTIME* s_eventTimes;
 extern int32_t s_eventTimeIndex;
 extern uint32_t s_currentEventId;
-
-int32_t Script_GetCurrentEventID(lua_State* L);
-int32_t Script_GetEventTime(lua_State* L);
 extern TSHashTable<FrameScript_EventObject, HASHKEY_CONSTSTRI> s_scriptEventsHash;
 extern double s_scriptTimeDivisor;
 extern int32_t s_inErrorHandler;
@@ -95,5 +92,7 @@ void FrameScript_UnregisterScriptEvent(FrameScript_Object* object, FrameScript_E
 void SetDecimalConversion(int32_t convert);
 int32_t vFrameScript_PushEventArgs(const char* format, va_list args);
 void vFrameScript_SignalEvent(uint32_t index, const char* format, va_list args);
+int32_t Script_GetCurrentEventID(lua_State* L);
+int32_t Script_GetEventTime(lua_State* L);
 
 #endif

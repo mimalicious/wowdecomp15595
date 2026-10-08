@@ -141,7 +141,6 @@ static const char* s_compatLua =
     "str.trim = strtrim\n"
     "str.split = strsplit\n"
     "str.join = strjoin\n"
-    "str.replace = strreplace\n";
 
 // PROVEN: c58de60e IDENTICAL/NONE
 // OFFSET: 0x00839900

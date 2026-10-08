@@ -138,71 +138,6 @@ static int32_t Script_strjoin(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A00E0
-static int32_t Script_strreplace(lua_State* L) {
-    size_t length;
-    size_t searchLength;
-    size_t replaceLength;
-    const char* string = luaL_checklstring(L, 1, &length);
-    const char* search = luaL_checklstring(L, 2, &searchLength);
-    const char* replace = luaL_checklstring(L, 3, &replaceLength);
-    int32_t limit = luaL_optinteger(L, 4, 0);
-
-    char buffer[4096];
-    const char* source = string;
-    int32_t count = 0;
-    char* dest = buffer;
-    size_t space = sizeof(buffer);
-
-    while (!limit || count < limit) {
-        const char* found = SStrStr(source, search);
-
-        if (!found) {
-            break;
-        }
-
-        size_t bytes = found - source;
-
-        if (bytes > space) {
-            bytes = space;
-        }
-
-        memcpy(dest, source, bytes);
-        space -= bytes;
-        dest += bytes;
-
-        bytes = replaceLength;
-
-        if (bytes > space) {
-            bytes = space;
-        }
-
-        memcpy(dest, replace, replaceLength);
-        dest += bytes;
-        space -= bytes;
-
-        count++;
-        source = found + searchLength;
-    }
-
-    if (count > 0) {
-        size_t bytes = string + length - source;
-
-        if (bytes > space) {
-            bytes = space;
-        }
-
-        memcpy(dest, source, bytes);
-        lua_pushlstring(L, buffer, dest + bytes - buffer);
-    } else {
-        lua_pushlstring(L, string, length);
-    }
-
-    lua_pushinteger(L, count);
-
-    return 2;
-}
-
 // PROVEN: 0bd04a00 IDENTICAL/UNPROVEN
 // OFFSET: 0x00839DF0/0x1405642F0
 static int32_t Script_strconcat(lua_State* L) {
@@ -763,7 +698,6 @@ static int32_t Script_debugtimestamp(lua_State* L) {
     return 0;
 }
 
-// STATIC: %0x00AF9F18
 // PROVEN: 533ad160 IDENTICAL/NONE
 // OFFSET: 0x00839920/0x140563D40
 int32_t Script_GetCurrentEventID(lua_State* L) {
@@ -797,11 +731,11 @@ int32_t Script_GetEventTime(lua_State* L) {
     return 4;
 }
 
+// STATIC: 0x00BD24A0
 const luaL_Reg s_extraFuncs[] = {
     { "strtrim", Script_strtrim },
     { "strsplit", Script_strsplit },
     { "strjoin", Script_strjoin },
-    { "strreplace", Script_strreplace },
     { "strconcat", Script_strconcat },
     { "strlenutf8", Script_strlenutf8 },
     { "issecure", Script_issecure },
