@@ -46,6 +46,7 @@ struct CHARCODEDESC : public TSHashObject<CHARCODEDESC, HASHKEY_NONE> {
     /* 0038 */ GLYPHBITMAPDATA m_bitmapData;
 
     CHARCODEDESC();
+    ~CHARCODEDESC();
     void GenerateTextureCoords(uint32_t rowNumber, uint32_t cellHeight);
     uint32_t GapToPrevious();
 };

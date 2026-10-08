@@ -74,6 +74,10 @@ GLYPHBITMAPDATA::~GLYPHBITMAPDATA() {
     this->m_data = NULL;
 }
 
+// OFFSET: 0x0061BC10
+CHARCODEDESC::~CHARCODEDESC() {
+}
+
 // OFFSET: 0x006202B0
 void CHARCODEDESC::GenerateTextureCoords(uint32_t rowNumber, uint32_t cellHeight) {
     int32_t top = rowNumber * cellHeight;
