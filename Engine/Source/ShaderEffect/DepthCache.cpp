@@ -1,24 +1,29 @@
 #include <cstdint>
 #include "Engine/Source/ShaderEffect/DepthCache.h"
+#include "Engine/Source/Gx/CGxBuf.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
+#include "Engine/Source/Gx/CGxDevice/CGxShader.h"
 #include "Engine/Source/Gx/CGxTexFlags.h"
 #include "Engine/Source/Gx/Gx.h"
+#include "Engine/Source/Gx/ViewSettings.h"
 #include "Engine/Source/Services/Texture.h"
+#include "Engine/Source/Tempest/C3Vector.h"
+#include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: %0x00E4576C
+// STATIC: 0x00F803D4/0x140E78258
 static CTexture* s_depthResolveTex;
 
-// STATIC: %0x00E45770
+// STATIC: 0x00F803D8/0x140E78260
 static CTexture* s_depthTex;
 
-// STATIC: %0x00E45774
+// STATIC: 0x00F803DC/0x140E78268
 static int32_t s_refCount;
 
-// STATIC: %0x00E45778
+// STATIC: 0x00F803E0/0x140E7826C
 static DepthCache::EDepthMode s_depthMode;
 
-// STATIC: %0x00E4577C
+// STATIC: 0x00F803E4/0x140E78270
 static int32_t s_needsCreate;
 
 // STATIC: 0x00D1C904
@@ -33,7 +38,7 @@ static CGxShader* s_depthRangeVS;
 // STATIC: 0x00F803CC
 static CGxShader* s_depthRangePS;
 
-// OFFSET: %0x00970860
+// OFFSET: 0x00A2F800
 void __fastcall DepthCache::Reset() {
     if (s_depthResolveTex) {
         TextureRelease(s_depthResolveTex);
@@ -143,12 +148,9 @@ int32_t DepthCache::IsSupported(EDepthMode* mode, EGxTexFormat* format, EGxTexFo
     return depthMode != DM_Unknown;
 }
 
-// OFFSET: 0x00A2FA40/0x1407D9780
-void DepthCache::Release() {
-    if (--s_refCount) {
-        return;
-    }
-
+// PROVEN: 743ea377 IDENTICAL/NONE
+// OFFSET: 0x00A2F9D0/0x1407D9700
+static void DestroyTextures() {
     g_theGxDevicePtr->RemoveDeviceRestoredCallback(DepthCache::Reset);
     g_theGxDevicePtr->RemoveTextureRecreationCallback(DepthCache::Reset);
 
@@ -162,7 +164,15 @@ void DepthCache::Release() {
         s_depthTex = NULL;
     }
 
-    s_depthMode = DM_Unknown;
+    s_depthMode = DepthCache::DM_Unknown;
+}
+
+// PROVEN: dbb86b33 IDENTICAL/DIFFERENT
+// OFFSET: 0x00A2FA40/0x1407D9780
+void DepthCache::Release() {
+    if (!--s_refCount) {
+        DestroyTextures();
+    }
 }
 
 // PROVEN: 7a3dc296 IDENTICAL/NONE
@@ -222,6 +232,7 @@ static void CreateTextures() {
     }
 }
 
+// PROVEN: c9632355 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A2FCA0/0x1407D9A60
 void DepthCache::AddRef() {
     if (s_refCount++) {
@@ -247,6 +258,7 @@ int32_t DepthCache::DepthRangeDumpEnabled() {
     return s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
 }
 
+// PROVEN: edd5eac5 IDENTICAL/NONE
 // OFFSET: 0x00A2FD00/0x1407D9AD0
 void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
     int32_t enabled = s_depthRangeMin >= 0.0f || s_depthRangeMax >= 0.0f;
@@ -274,4 +286,66 @@ void DepthCache::SetDepthRangeDump(float rangeMin, float rangeMax) {
 
     s_depthRangeMin = rangeMin;
     s_depthRangeMax = rangeMax;
+}
+
+// OFFSET: 0x00A2FDF0
+void DepthCache::DrawDepthRangeDump() {
+    if (s_depthRangeMin < 0.0f && s_depthRangeMax < 0.0f) {
+        return;
+    }
+
+    CGxFrameBuffer* savedFrameBuffer = g_theGxDevicePtr->FrameBufferGet();
+    GxFrameBufferSet(g_theGxDevicePtr->BackBuffer());
+    g_theGxDevicePtr->RsPush();
+
+    C4Vector viewParams = ViewSettings::CalculateParams();
+
+    C4Vector range;
+    range.x = s_depthRangeMin;
+    range.y = s_depthRangeMax;
+    range.z = 0.0f;
+    range.w = 0.0f;
+
+    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    g_theGxDevicePtr->CapsWindowSize(rect);
+    C4Vector homToScreen = ViewSettings::CalculateHomToScreen(0.5f / rect.maxX, 0.5f / rect.maxY);
+
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 0, &viewParams.x, 1);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 1, &range.x, 1);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 2, &homToScreen.x, 1);
+
+    g_theGxDevicePtr->RsSet(GxRs_VertexShader, &s_depthRangeVS->m_permutes[0]);
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &s_depthRangePS->m_permutes[s_depthMode - 1]);
+
+    CGxBuf* vertexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Vertex, sizeof(C3Vector), 4);
+    C3Vector* vertex = reinterpret_cast<C3Vector*>(g_theGxDevicePtr->BufLock(vertexBuf));
+    vertex[0] = C3Vector(-1.0f, -1.0f, 0.0f);
+    vertex[1] = C3Vector(-1.0f, 1.0f, 0.0f);
+    vertex[2] = C3Vector(1.0f, 1.0f, 0.0f);
+    vertex[3] = C3Vector(1.0f, -1.0f, 0.0f);
+    GxBufUnlock(vertexBuf, 0);
+    g_theGxDevicePtr->PrimVertexPtr(vertexBuf, GxVBF_P);
+
+    CGxBuf* indexBuf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), 4);
+    uint16_t* index = reinterpret_cast<uint16_t*>(g_theGxDevicePtr->BufLock(indexBuf));
+    index[0] = 0;
+    index[1] = 3;
+    index[2] = 1;
+    index[3] = 2;
+    GxBufUnlock(indexBuf, 0);
+    g_theGxDevicePtr->PrimIndexPtr(indexBuf);
+
+    g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(DepthCache::GetDepthSR()));
+    GxRsSet(GxRs_DepthTest, 0);
+
+    CGxBatch batch;
+    batch.m_primType = GxPrim_TriangleStrip;
+    batch.m_start = 0;
+    batch.m_count = 4;
+    batch.m_minIndex = 0;
+    batch.m_maxIndex = 3;
+    g_theGxDevicePtr->Draw(batch);
+
+    g_theGxDevicePtr->RsPop();
+    GxFrameBufferSet(savedFrameBuffer);
 }

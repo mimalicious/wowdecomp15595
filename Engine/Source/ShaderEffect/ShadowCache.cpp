@@ -785,13 +785,6 @@ CShadowCacheQueryData::CShadowCacheQueryData() {
     this->m_lastBand = -1;
 }
 
-// PROVEN: 2c08d044 IDENTICAL/DIFFERENT
-// OFFSET: 0x004370B0/0x140040C90
-static void SetFrameBuffer(CGxFrameBuffer* frameBuffer) {
-    GxRsSet(GxRs_ScissorTest, 0);
-    g_theGxDevicePtr->FrameBufferSet(frameBuffer);
-}
-
 // OFFSET: 0x00437620/0x140041210
 void CShadowCache::ClearBandTextures() {
     if (CShadowCache::s_shadowMode <= SHADOW_LOW) {
@@ -828,26 +821,26 @@ void CShadowCache::ClearBandTextures() {
     CImVector clearColor(0xFF, 0xFF, 0xFF, 0xFF);
 
     if (CShadowCache::s_extDynFrameBuffer) {
-        SetFrameBuffer(CShadowCache::s_extDynFrameBuffer);
+        GxFrameBufferSet(CShadowCache::s_extDynFrameBuffer);
         GxSceneClear(31, clearColor);
     }
 
     if (CShadowCache::s_intDynShadow) {
-        SetFrameBuffer(CShadowCache::s_intDynFrameBuffer);
+        GxFrameBufferSet(CShadowCache::s_intDynFrameBuffer);
         GxSceneClear(31, clearColor);
     }
 
     for (uint32_t i = 0; i < 3; i++) {
         for (uint32_t j = 0; j < 2; j++) {
             if (CShadowCache::s_extShadowBands[i].m_textures[j]) {
-                SetFrameBuffer(CShadowCache::s_bandFrameBuffers[i][j]);
+                GxFrameBufferSet(CShadowCache::s_bandFrameBuffers[i][j]);
                 GxSceneClear(31, clearColor);
             }
         }
     }
 
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
-    SetFrameBuffer(frameBuffer);
+    GxFrameBufferSet(frameBuffer);
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 15);
@@ -983,7 +976,7 @@ int32_t CShadowCache::Update(const C3Vector& pos, int32_t useCullFrustum) {
 
     if (CShaderEffect::s_usePcfFiltering) {
         GxRsSet(GxRs_ColorWrite, 15);
-        SetFrameBuffer(frameBuffer);
+        GxFrameBufferSet(frameBuffer);
     }
 
     return 1;
