@@ -545,6 +545,7 @@ float NTempest::DistanceFromPolygonEdge(const C3Vector& point, const C3Vector* v
     return sqrt(best);
 }
 
+// PROVEN: d2d31980 IDENTICAL/NONE
 // OFFSET: 0x00B08460
 float NTempest::DistanceFromPolygon(const C3Vector& point, const C3Vector* verts, uint32_t count, const C4Plane& plane) {
     C3Vector hit = point;

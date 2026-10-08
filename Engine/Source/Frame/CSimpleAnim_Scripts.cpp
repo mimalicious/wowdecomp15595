@@ -52,6 +52,7 @@ static int32_t Script_IsDone(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 29f807f1 IDENTICAL/NONE
 // OFFSET: 0x0053BC80
 static int32_t Script_IsPlaying(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));
@@ -59,6 +60,7 @@ static int32_t Script_IsPlaying(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 5b096820 IDENTICAL/DIFFERENT
 // OFFSET: 0x0053BCD0/0x14018FAC0
 static int32_t Script_IsPaused(lua_State* L) {
     CSimpleAnim* anim = static_cast<CSimpleAnim*>(FrameScript_GetObjectThis(L, CSimpleAnim::GetObjectType()));

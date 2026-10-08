@@ -4,6 +4,7 @@
 #include <intrin.h>
 #include "Engine/Source/Os/Atomic.h"
 
+// PROVEN: e2202f80 IDENTICAL/NONE
 // OFFSET: 0x004C5E30
 int64_t OsInterlockedAdd64(volatile int64_t* value, int64_t delta) {
     int64_t old;

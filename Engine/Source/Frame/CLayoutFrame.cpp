@@ -917,7 +917,7 @@ void CLayoutFrame::OnFrameSizeChanged(const CRect& rect) {
     }
 }
 
-// OFFSET: [%0x00518DB0, %0x005190E0]
+// OFFSET: [0x00509140/0x140150DB0, %0x005190E0]
 void CLayoutFrame::MarkFramePointsUnused() {
     for (int32_t i = 0; i < FRAMEPOINT_NUMPOINTS; i++) {
         CFramePoint* framePoint = this->m_framePoints[i];

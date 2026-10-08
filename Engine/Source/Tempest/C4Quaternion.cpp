@@ -136,6 +136,7 @@ C4Quaternion C4Quaternion::Nlerp(float t, const C4Quaternion& a, const C4Quatern
     return result;
 }
 
+// PROVEN: c40ecf29 IDENTICAL/DIFFERENT
 // OFFSET: 0x004CBD10/0x140107A90
 void C4Quaternion::FromRotationMatrix(const C33Matrix& m) {
     C33Matrix transposed;

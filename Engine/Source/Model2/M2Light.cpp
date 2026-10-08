@@ -14,6 +14,7 @@
 // STATIC: %0x00C0D1CC
 static float s_lightGridScale = 0.05f;
 
+// PROVEN: 9a8905f2 IDENTICAL/NONE
 // OFFSET: 0x00812BF0
 void CM2Light::Copy(const CM2Light& light) {
     this->m_scene = NULL;

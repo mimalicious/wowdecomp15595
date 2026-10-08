@@ -353,6 +353,7 @@ void GxXformView(C44Matrix& matrix) {
     matrix = stack.m_mtx[stack.m_level];
 }
 
+// PROVEN: 4a5f0e73 IDENTICAL/NONE
 // OFFSET: 0x00430AB0
 void GxXform(EGxXform xf, C44Matrix& matrix) {
     CGxMatrixStack& stack = g_theGxDevicePtr->m_xforms[xf];

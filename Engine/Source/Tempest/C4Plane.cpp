@@ -44,6 +44,7 @@ void C4Plane::Transform(const C44Matrix& matrix) {
     this->d = -(this->n.z * viewPoint.z + this->n.y * viewPoint.y + this->n.x * viewPoint.x);
 }
 
+// PROVEN: fb0cb9e7 IDENTICAL/NONE
 // OFFSET: 0x004CC1D0
 float C4Plane::Distance(const C3Vector& point) const {
     return point.z * this->n.z + point.y * this->n.y + point.x * this->n.x + this->d;

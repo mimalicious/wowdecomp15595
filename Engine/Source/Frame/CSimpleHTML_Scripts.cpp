@@ -225,7 +225,8 @@ static int32_t Script_SetHyperlinkFormat(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x0053AC30
+// PROVEN: 5e4e33fd IDENTICAL/NONE
+// OFFSET: 0x0053AC30/0x14018E6F0
 static int32_t Script_GetHyperlinkFormat(lua_State* L) {
     CSimpleHTML* html = static_cast<CSimpleHTML*>(FrameScript_GetObjectThis(L, CSimpleHTML::GetObjectType()));
 

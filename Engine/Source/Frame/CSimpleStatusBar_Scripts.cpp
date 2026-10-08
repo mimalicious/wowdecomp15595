@@ -33,7 +33,7 @@ void CSimpleStatusBar::GetStatusBarColor(CImVector& color) {
     }
 }
 
-// OFFSET: 0x00530A10
+// OFFSET: 0x00530A10/0x140181E30
 static int32_t Script_GetOrientation(lua_State* L) {
     CSimpleStatusBar* statusBar = static_cast<CSimpleStatusBar*>(FrameScript_GetObjectThis(L, CSimpleStatusBar::GetObjectType()));
 

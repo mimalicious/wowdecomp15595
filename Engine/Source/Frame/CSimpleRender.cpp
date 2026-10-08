@@ -584,7 +584,8 @@ void CSimpleRender::Init() {
     CSimpleRender::s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
 }
 
-// OFFSET: %0x00508C00
+// PROVEN: 2a139df0 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F89B0/0x14013C210
 void CSimpleRender::Destroy() {
     if (CSimpleRender::s_vertexShader) {
         g_theGxDevicePtr->ShaderRelease(CSimpleRender::s_vertexShader);
@@ -2303,7 +2304,8 @@ void CSimpleTexture::Init() {
     }
 }
 
-// OFFSET: %0x00508D60
+// PROVEN: 9fc44422 IDENTICAL/UNPROVEN
+// OFFSET: 0x004F8B60/0x14013C3F0
 void CSimpleTexture::Destroy() {
     for (uint32_t i = 0; i < 2; i++) {
         if (CSimpleTexture::s_imageModePixelShaders[i]) {

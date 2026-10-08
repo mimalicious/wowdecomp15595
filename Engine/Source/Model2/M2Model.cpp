@@ -614,6 +614,7 @@ uint32_t CM2Model::GetCurrentLightCount() {
     return lighting ? lighting->m_lightCount : 0;
 }
 
+// PROVEN: 968cfb59 IDENTICAL/DIFFERENT
 // OFFSET: 0x00814BE0/0x14052CCD0
 void CM2Model::ChangeEmittersFrameOfReference(const C44Matrix* matrix) {
     M2Data* data = this->m_shared->m_data;

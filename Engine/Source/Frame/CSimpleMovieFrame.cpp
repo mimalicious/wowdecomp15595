@@ -869,7 +869,8 @@ void CSimpleMovieFrame::StartMovieDelayed(bool success) {
     this->RunOnMovieFinishedScript();
 }
 
-// OFFSET: %0x005358C0
+// PROVEN: 4d4c54b5 IDENTICAL/NONE
+// OFFSET: 0x00525980/0x140174610
 void CSimpleMovieFrame::KeyChainCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (param) {
         static_cast<CSimpleMovieFrame*>(param)->StartMovieDelayed(success);
@@ -956,7 +957,8 @@ void CSimpleMovieFrame::RenderMovie(void* param) {
     }
 }
 
-// OFFSET: %0x00535BF0
+// PROVEN: b044b2b1 IDENTICAL/NONE
+// OFFSET: 0x00525CC0
 void CSimpleMovieFrame::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     CSimpleFrame::OnFrameRender(batch, layer);
 

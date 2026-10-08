@@ -343,12 +343,14 @@ double BGLoading::BGLoadManager::GetDownloadedPercentage() {
     return 1.0;
 }
 
+// PROVEN: e47cf6d3 IDENTICAL/NONE
 // OFFSET: 0x007A2840
 bool BGLoading::BGLoadThreadStarted() {
     Blizzard::Thread::ThreadRecord* thread = BGLoadManager::Get()->m_thread;
     return thread && Blizzard::Thread::IsRunning(thread);
 }
 
+// PROVEN: 58a93b1d IDENTICAL/NONE
 // OFFSET: 0x007A2890
 bool BGLoading::StopBGLoadThread() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
@@ -358,6 +360,7 @@ bool BGLoading::StopBGLoadThread() {
     return BGLoadManager::Get()->Shutdown();
 }
 
+// PROVEN: b363ddb7 IDENTICAL/DIFFERENT
 // OFFSET: 0x007A28B0/0x140499280
 bool BGLoading::SetBandwidthThrottlePercentage(int32_t percent) {
     if (!Blizzard::Streaming::IsStreamingMode()) {
@@ -378,6 +381,7 @@ float BGLoading::GetBandwidth() {
     return 0.0f;
 }
 
+// PROVEN: 5bc76dbb IDENTICAL/NONE
 // OFFSET: 0x007A28D0
 double BGLoading::GetDownloadedPercentage() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
@@ -394,6 +398,7 @@ void BGLoading::QueueArchive(const char* name) {
     }
 }
 
+// PROVEN: 1532e1f7 IDENTICAL/NONE
 // OFFSET: 0x007A2910
 bool BGLoading::QueueFile(const char* name) {
     if (!Blizzard::Streaming::IsStreamingMode()) {
@@ -403,6 +408,7 @@ bool BGLoading::QueueFile(const char* name) {
     return BGLoadManager::Get()->QueueFile(name);
 }
 
+// PROVEN: 7cb399bc IDENTICAL/NONE
 // OFFSET: 0x007A2930
 void BGLoading::Pause(bool pause) {
     if (Blizzard::Streaming::IsStreamingMode()) {
@@ -410,6 +416,7 @@ void BGLoading::Pause(bool pause) {
     }
 }
 
+// PROVEN: 9d99526e IDENTICAL/DIFFERENT
 // OFFSET: 0x007A2950/0x1404994A0
 bool BGLoading::IsStreamingInProgress() {
     if (!Blizzard::Streaming::IsStreamingMode()) {
@@ -515,6 +522,7 @@ uint32_t BGLoading::BGLoadManager::RunBGLoadThread(void* param) {
     return static_cast<BGLoadManager*>(param)->BGLoadThread();
 }
 
+// PROVEN: 968cdc19 IDENTICAL/NONE
 // OFFSET: 0x007A27F0
 void BGLoading::BGLoadManager::StartThread() {
     BGLoadManager* manager = Get();

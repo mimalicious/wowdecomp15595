@@ -829,7 +829,7 @@ void MovieStreaming::PreloadMovie(int32_t movieID) {
     }
 }
 
-// OFFSET: 0x00513640
+// OFFSET: 0x00513640/0x14015DCA0
 static void GetMovieLocalAmount(int64_t& local, int64_t& total, int32_t movieID) {
     FileDataRec* file = g_fileDataDB.GetRecord(MovieStreaming::FindBestMovieResolutionFileDataID(movieID, false));
 

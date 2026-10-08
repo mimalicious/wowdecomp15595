@@ -280,7 +280,8 @@ void CSimpleMessageScrollFrame::SetMaxLines(int32_t maxLines) {
     this->m_currentScroll = 0;
 }
 
-// OFFSET: 0x0051DDD0
+// PROVEN: a526c1a4 IDENTICAL/NONE
+// OFFSET: 0x0051DDD0/0x14016AA30
 void CSimpleMessageScrollFrame::Clear() {
     this->m_displayNodes.Clear();
     this->m_numDisplayed = 0;

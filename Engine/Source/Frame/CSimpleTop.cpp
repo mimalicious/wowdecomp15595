@@ -893,7 +893,7 @@ int32_t CSimpleTop::StartMoveOrResizeFrame(const CMouseEvent& evt, MOVERESIZE_RE
     return this->StartMoveOrResizeFrame(frame, reason, evt.m_data.m_mousePosition.x, evt.m_data.m_mousePosition.y, resize);
 }
 
-// OFFSET: 0x00500930
+// OFFSET: 0x00500930/0x140145EC0
 void CSimpleTop::OnLayerUpdate(float elapsedSec) {
     CSimpleFrame* frame;
 

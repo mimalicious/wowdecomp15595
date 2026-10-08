@@ -163,7 +163,8 @@ void CSimpleModel::SetCamera(CCamera* camera) {
     this->m_pendingCameraId = 0xFFFFFFFF;
 }
 
-// OFFSET: %0x0052EDA0
+// PROVEN: 62e96598 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051EE30/0x14016BF80
 void CSimpleModel::SetCameraByID(uint32_t id) {
     if (!this->m_model || !this->m_model->IsLoaded()) {
         this->m_pendingCameraId = id;
@@ -190,14 +191,16 @@ void CSimpleModel::SetLight(const CM2Light& light) {
     this->m_light = light;
 }
 
-// OFFSET: %0x0052EE40
+// PROVEN: cdd2e0de IDENTICAL/DIFFERENT
+// OFFSET: 0x0051EED0/0x14016C040
 void CSimpleModel::SetSequence(uint32_t sequence) {
     if (this->m_model) {
         this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0, 0, 0);
     }
 }
 
-// OFFSET: %0x0052EE70
+// PROVEN: 2d4c40d2 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051EF00/0x14016C0A0
 int32_t CSimpleModel::SetSequenceTime(uint32_t sequence, int32_t time) {
     if (this->m_model) {
         this->m_model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, time, 1.0f, 0, 1, 0, 0, 0);
@@ -290,7 +293,8 @@ void CSimpleModel::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: %0x0052F310
+// PROVEN: dfe86bf3 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051F3A0/0x14016C620
 void CSimpleModel::SetModel(const char* fileName) {
     CM2Model* model = NULL;
 
@@ -305,7 +309,8 @@ void CSimpleModel::SetModel(const char* fileName) {
     }
 }
 
-// OFFSET: %0x0052F370
+// PROVEN: c4181f50 IDENTICAL/DIFFERENT
+// OFFSET: 0x0051F400/0x14016C6A0
 void CSimpleModel::SetCameraByIndex(uint32_t index) {
     if (!this->m_model || !this->m_model->IsLoaded()) {
         this->m_pendingCameraIndex = index;

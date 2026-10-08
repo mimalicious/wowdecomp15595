@@ -227,7 +227,8 @@ void CSimpleAnim::Pause() {
     }
 }
 
-// OFFSET: 0x005277C0
+// PROVEN: 969b1f0d IDENTICAL/NONE
+// OFFSET: 0x005277C0/0x140176B70
 void CSimpleAnim::Stop(bool requested) {
     if (!this->m_playState) {
         return;

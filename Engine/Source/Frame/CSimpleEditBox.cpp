@@ -412,7 +412,8 @@ void CSimpleEditBox::SetAltArrowKeyMode(int32_t enable) {
     }
 }
 
-// OFFSET: %0x005263B0
+// PROVEN: ecb0e373 IDENTICAL/DIFFERENT
+// OFFSET: 0x005165E0/0x140160D30
 const char* CSimpleEditBox::GetInputLanguageString() {
     return CSimpleEditBox::s_inputLanguageNames[this->m_inputLanguage];
 }

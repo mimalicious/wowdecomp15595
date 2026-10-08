@@ -695,6 +695,7 @@ bool System_Mopaq::MD5VerifyData::MD5AndWrite(int64_t offset, int64_t size, Bliz
     return ok;
 }
 
+// PROVEN: 2a8f4f4c IDENTICAL/NONE
 // OFFSET: 0x007BFBC0
 bool System_Mopaq::md5verify_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     const System_SFile::BLOCKENTRY* entry = parms->m_blockEntry;
