@@ -33,7 +33,7 @@
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/WorldFrame.h"
@@ -1524,7 +1524,7 @@ void CGCamera::CancelSmoothYaw() {
 void CGCamera::CheckUnderwater() {
     float depth;
     int32_t underwater = World::SceneCamLiquidStatus(&depth);
-    SI2::SetUnderwaterStatus(underwater);
+    SI3::SetUnderwaterStatus(underwater);
 
     if (!(this->m_state & 0x2) || this->m_underwater != underwater) {
         this->m_state |= 0x2;
@@ -2284,7 +2284,7 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
         safePos = C3Vector(this->m_targetPosition.x, this->m_targetPosition.y, flightLower);
 
         if (s_aboveFlightBounds) {
-            SI2::PlaySoundKit("SpaceDeathUniversal", NULL, NULL, NULL);
+            SI3::PlaySoundKit("SpaceDeathUniversal", NULL, NULL, NULL);
         }
 
         s_aboveFlightBounds = 0;

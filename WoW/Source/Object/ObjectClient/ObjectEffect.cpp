@@ -237,7 +237,7 @@ void InitObjectEffectStateMap() {
     s_objectEffectAnimStateMap[ANIM_CUSTOM_3].m_altStateID = 0;
 }
 
-// OFFSET: #0x006F2B40
+// OFFSET: 0x005E2000
 void ObjectEffectSystem_ShutDown() {
     s_effectDefLookup.Clear();
     s_groupDefLookup.Clear();
@@ -394,7 +394,7 @@ C3Vector CObjectEffect::GetWorldPosition() {
 CObjectEffect::~CObjectEffect() {
     if (this->m_def->m_effectRecType == 1) {
         if (this->m_soundKitObject.m_handle) {
-            SI2::StopSound(&this->m_soundKitObject, 0, -1.0f, 1);
+            SI3::StopSound(&this->m_soundKitObject, 0, -1.0f, 1);
         }
     }
 }
@@ -405,7 +405,8 @@ float CObjectEffectModifier::InputNone(CObjectEffectManager* manager) {
     return -1.0f;
 }
 
-// OFFSET: #0x006F1D50
+// PROVEN: f4e17f14 IDENTICAL/NONE
+// OFFSET: 0x005E1130
 float CObjectEffectModifier::InputSpeed(CObjectEffectManager* manager) {
     return manager->m_owner->GetSpeed();
 }
@@ -434,12 +435,13 @@ float CObjectEffectModifier::MapLinear(float input, const float* params) {
 void CObjectEffectModifier::OutputNone(CObjectEffect* effect, float value) {
 }
 
-// OFFSET: #0x006F1770
+// OFFSET: 0x005E0920
 void CObjectEffectModifier::OutputPitch(CObjectEffect* effect, float value) {
-    SI2::SetPitch(&effect->m_soundKitObject, value);
+    SI3::SetPitch(&effect->m_soundKitObject, value);
 }
 
-// OFFSET: #0x006F1790
+// PROVEN: 2d6d301a IDENTICAL/NONE
+// OFFSET: 0x005E0940
 void CObjectEffectModifier::Apply(CObjectEffectManager* manager, CObjectEffect* effect) {
     if (this->m_mapType <= 0) {
         return;
@@ -450,7 +452,7 @@ void CObjectEffectModifier::Apply(CObjectEffectManager* manager, CObjectEffect* 
     CObjectEffectModifier::s_outputFuncs[this->m_outputType](effect, value);
 }
 
-// OFFSET: #0x006F17F0
+// OFFSET: 0x005E09A0/0x14025E600
 int32_t FindObjectEffectStateFromAnimID(int32_t animId, int32_t alternate) {
     if (alternate == 1) {
         return s_objectEffectAnimStateMap[animId].m_altStateID;
@@ -481,8 +483,8 @@ void CObjectEffect::PlayOneShot() {
         properties.ResetToDefaults();
         properties.m_loopMode = 2;
 
-        if (!SI2::IsPlaying(&this->m_soundKitObject)) {
-            SI2::PlaySoundKit(this->m_def->m_effectRecID, &position, &this->m_soundKitObject, &properties, 0, NULL, 0, 0);
+        if (!SI3::IsPlaying(&this->m_soundKitObject)) {
+            SI3::PlaySoundKit(this->m_def->m_effectRecID, &position, &this->m_soundKitObject, &properties, 0, NULL, 0, 0);
         }
     }
 
@@ -498,8 +500,8 @@ void CObjectEffect::TriggerLoopingEffect() {
     C3Vector position = this->GetWorldPosition();
 
     if (this->m_def->m_effectRecType == 1) {
-        if (!SI2::IsPlaying(&this->m_soundKitObject)) {
-            int32_t usage = SI2::GetSoundKitUsage(this->m_def->m_effectRecID);
+        if (!SI3::IsPlaying(&this->m_soundKitObject)) {
+            int32_t usage = SI3::GetSoundKitUsage(this->m_def->m_effectRecID);
 
             SE2SoundKitProperties properties;
             properties.ResetToDefaults();
@@ -507,7 +509,7 @@ void CObjectEffect::TriggerLoopingEffect() {
             properties.m_fadeOutTime = 0.7f;
             properties.m_loopMode = usage != 1;
 
-            SI2::PlaySoundKit(this->m_def->m_effectRecID, &position, &this->m_soundKitObject, &properties, 0, NULL, 0, 0);
+            SI3::PlaySoundKit(this->m_def->m_effectRecID, &position, &this->m_soundKitObject, &properties, 0, NULL, 0, 0);
             this->m_playCount++;
             return;
         }
@@ -526,7 +528,7 @@ void CObjectEffect::UpdateLoopingEffect(CObjectEffectManager* manager) {
 
     C3Vector position = this->GetWorldPosition();
 
-    if (SI2::IsPlaying(&this->m_soundKitObject)) {
+    if (SI3::IsPlaying(&this->m_soundKitObject)) {
         SE3::FadeInNow(this->m_soundKitObject.m_handle);
     } else {
         this->TriggerLoopingEffect();
@@ -536,7 +538,7 @@ void CObjectEffect::UpdateLoopingEffect(CObjectEffectManager* manager) {
         this->m_def->m_modifier->Apply(manager, this);
     }
 
-    SI2::Set3DPosition(&this->m_soundKitObject, &position);
+    SI3::Set3DPosition(&this->m_soundKitObject, &position);
 }
 
 // OFFSET: #0x006F3910
@@ -568,8 +570,8 @@ void CObjectEffectManager::UpdateAllPlayingEffects() {
         if (effect->m_def->m_effectRecType == 1) {
             C3Vector position = effect->GetWorldPosition();
 
-            if (SI2::IsPlaying(&effect->m_soundKitObject)) {
-                SI2::Set3DPosition(&effect->m_soundKitObject, &position);
+            if (SI3::IsPlaying(&effect->m_soundKitObject)) {
+                SI3::Set3DPosition(&effect->m_soundKitObject, &position);
                 effect = this->m_oneShotEffects.Next(effect);
                 continue;
             }
@@ -602,12 +604,12 @@ void CObjectEffectManager::UpdateAllPlayingEffects() {
     }
 }
 
-// OFFSET: #0x006F5900
+// OFFSET: 0x005E5000/0x140264940
 CObjectEffectManager::CObjectEffectManager() {
     this->m_states.SetRawData(static_cast<char*>(SMemAlloc((NUM_OBJECT_EFFECT_STATES + 7) / 8, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY)), NUM_OBJECT_EFFECT_STATES, true);
 }
 
-// OFFSET: #0x006F60E0
+// OFFSET: 0x005E5710
 void CObjectEffectManager::PlayOneShotEffect(CObjectEffectDef* def) {
     CObjectEffect* effect = new (__FILE__, __LINE__) CObjectEffect();
     effect->m_manager = this;
@@ -632,7 +634,7 @@ void CObjectEffectManager::PlayOneShotEffect(CObjectEffectDef* def) {
     }
 }
 
-// OFFSET: #0x006F61D0
+// OFFSET: 0x005E6640/0x140266AC0
 void CObjectEffectManager::ExitState(uint32_t state, int32_t playExitEffects) {
     if (!this->m_states.Get(state)) {
         return;
@@ -673,7 +675,7 @@ void CObjectEffectManager::ExitState(uint32_t state, int32_t playExitEffects) {
             this->m_oneShotEffects.LinkToTail(effect);
 
             if (effect->m_def->m_effectRecType == 1) {
-                SI2::StopSound(&effect->m_soundKitObject, 0, -1.0f, 1);
+                SI3::StopSound(&effect->m_soundKitObject, 0, -1.0f, 1);
             }
         }
 
@@ -683,7 +685,7 @@ void CObjectEffectManager::ExitState(uint32_t state, int32_t playExitEffects) {
     }
 }
 
-// OFFSET: #0x006F6420
+// OFFSET: 0x005E57F0
 void CObjectEffectManager::PlayLoopingEffect(CObjectEffectDef* def, int32_t groupId) {
     OBJ_EFFECT_GROUP_LOOKUP* group = this->m_groups.Ptr(groupId, s_hashKeyNone);
 
@@ -741,7 +743,7 @@ void CObjectEffectManager::PlayLoopingEffect(CObjectEffectDef* def, int32_t grou
     }
 }
 
-// OFFSET: #0x006F70B0
+// OFFSET: 0x005E6900/0x140267090
 void CObjectEffectManager::ShutDown() {
     for (int32_t state = 0; state < NUM_OBJECT_EFFECT_STATES; state++) {
         this->ExitState(state, 0);
@@ -772,7 +774,7 @@ void CObjectEffectManager::ShutDown() {
     }
 }
 
-// OFFSET: #0x006F7270
+// OFFSET: 0x005E6550/0x140266940
 void CObjectEffectManager::EnterState(uint32_t state, int32_t playEnterEffects, int32_t refresh) {
     if (refresh) {
         if (!this->m_states.Get(state)) {
@@ -805,12 +807,12 @@ void CObjectEffectManager::EnterState(uint32_t state, int32_t playEnterEffects, 
     }
 }
 
-// OFFSET: #0x006F7370
+// OFFSET: 0x005E6A60/0x140267360
 CObjectEffectManager::~CObjectEffectManager() {
     this->ShutDown();
 }
 
-// OFFSET: #0x006F7420
+// OFFSET: 0x005E68A0
 int32_t CObjectEffectManager::Init(int32_t packageId, CGObject_C* owner) {
     this->m_packageId = packageId;
 

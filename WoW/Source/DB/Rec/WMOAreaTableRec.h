@@ -22,9 +22,9 @@ class WMOAreaTableRec {
     /* 0024 */ int32_t m_flags;
     /* 0028 */ int32_t m_areaTableID;
     /* 002C */ DBCString m_areaName;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
+    /* 0030 */ int32_t m_uwIntroSound;
+    /* 0034 */ int32_t m_uwZoneMusic;
+    /* 0038 */ int32_t m_uwAmbienceID;
 };
 
 #endif

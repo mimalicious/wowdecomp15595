@@ -45,7 +45,7 @@ void MovementSetGlobals(CMovementGlobals* globals) {
     ClntObjMgrSetMovementGlobals(globals);
 }
 
-// OFFSET: 0x005E6E60
+// OFFSET: 0x005E6E60/0x140267860
 float MovementGetTransportFacing(WOWGUID transport) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -57,7 +57,8 @@ float MovementGetTransportFacing(WOWGUID transport) {
     return object->GetFacing();
 }
 
-// OFFSET: 0x005E6CD0
+// PROVEN: c9e9b163 IDENTICAL/NONE
+// OFFSET: 0x005E6CD0/0x140267680
 int32_t MovementGetTransportMtxSafe(WOWGUID transport, C44Matrix* matrix) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -85,7 +86,7 @@ int32_t MovementGetTransportMtxSafe(WOWGUID transport, C44Matrix* matrix) {
     return 0;
 }
 
-// OFFSET: 0x005E6D80
+// OFFSET: 0x005E6D80/0x140267780
 int32_t MovementGetTransportMtxX(WOWGUID transport, C44Matrix* matrix, WOWGUID owner, const char* file, int32_t line) {
     if (MovementGetTransportMtxSafe(transport, matrix)) {
         return 1;
@@ -111,6 +112,7 @@ void MovementGetTransportQuat(WOWGUID transport, C4Quaternion* quat) {
     quat->w = 1.0f;
 }
 
+// PROVEN: 3bb0d15a IDENTICAL/NONE
 // OFFSET: 0x005E6EB0
 int32_t MovementInsideTransport(WOWGUID transport, const C3Vector& point) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -122,7 +124,7 @@ int32_t MovementInsideTransport(WOWGUID transport, const C3Vector& point) {
     return object->IsPointInside(point);
 }
 
-// OFFSET: 0x005E6FB0
+// OFFSET: 0x005E6FB0/0x1402679D0
 void MovementMoveTransports(uint32_t time, uint32_t elapsed) {
     for (CGGameObject_C* transport = s_transports.Head(); transport; transport = s_transports.Next(transport)) {
         transport->m_typeData->UpdateMovement(time, elapsed);
@@ -147,7 +149,8 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
 void MovementNotifyZoneMgr(WOWGUID guid) {
 }
 
-// OFFSET: 0x005E6C90
+// PROVEN: 21879ace IDENTICAL/NONE
+// OFFSET: 0x005E6C90/0x140267640
 int32_t MovementObjIsTransport(WOWGUID guid) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -158,12 +161,12 @@ int32_t MovementObjIsTransport(WOWGUID guid) {
     return object->IsTransport();
 }
 
-// OFFSET: 0x005E7020
+// OFFSET: 0x005E7020/0x140267AC0
 void MovementRemoveTransport(CGGameObject_C* transport) {
     s_transports.UnlinkNode(transport);
 }
 
-// OFFSET: #0x006E8F90
+// OFFSET: 0x005716B0/0x1401D29A0
 int32_t MovementGetLastUpdateTime(uint32_t* time) {
     CMovementGlobals* globals = MovementGetGlobals();
 
@@ -176,7 +179,7 @@ int32_t MovementGetLastUpdateTime(uint32_t* time) {
     return 1;
 }
 
-// OFFSET: #0x006F1490
+// OFFSET: 0x0057B270/0x1401E0DB0
 int32_t MovementIdleMoveUnits(const void* data, void* param) {
     uint32_t now = OsGetAsyncTimeMs();
     CMovementGlobals* globals = MovementGetGlobals();
@@ -202,7 +205,7 @@ int32_t MovementIdleMoveUnits(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: 0x005E7190
+// OFFSET: 0x005E7190/0x140267C90
 void MovementDelSpline(CMoveSpline* spline) {
     if (spline) {
         delete spline;
@@ -249,7 +252,7 @@ uint32_t MovementGetIdleTime() {
     return ClntObjMgrGetMovementGlobals()->m_idleTime;
 }
 
-// OFFSET: #0x006E8F70
+// OFFSET: 0x00571690/0x1401D2970
 void MovementSetTransportUpdateTime(uint32_t time) {
     CMovementGlobals* globals = MovementGetGlobals();
     globals->m_transportTime2 = globals->m_transportTime;

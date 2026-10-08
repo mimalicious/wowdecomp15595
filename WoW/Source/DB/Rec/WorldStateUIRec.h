@@ -13,9 +13,9 @@ class WorldStateUIRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_areaID;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
+    /* 000C */ int32_t m_phaseUseFlags;
+    /* 0010 */ int32_t m_phaseID;
+    /* 0014 */ int32_t m_phaseGroupID;
     /* 0018 */ DBCString m_icon;
     /* 001C */ DBCString m_string;
     /* 0020 */ DBCString m_tooltip;

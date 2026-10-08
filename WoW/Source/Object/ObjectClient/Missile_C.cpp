@@ -75,7 +75,7 @@ void CMissile::Destroy() {
     s_missileHeap = NULL;
 }
 
-// OFFSET: #0x00703B80
+// OFFSET: 0x0058B850/0x1401F4E80
 void CMissile::Initialize() {
     s_missileHeap = new (__FILE__, __LINE__) uint32_t(ObjectAllocAddHeap(sizeof(CMissile), 64, "CMissile", true));
     CSimpleScriptManager::RegisterCallback(CMissile::ScriptManagerCallback);
@@ -560,7 +560,7 @@ void CMissile::SetReadyToFire(CMissile** list) {
     this->Link(list);
 }
 
-// OFFSET: #0x006FF6D0
+// OFFSET: 0x00586670/0x1401EE9F0
 void CMissile::UpdateImpactPos() {
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGuid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -957,7 +957,7 @@ CMissile::~CMissile() {
 
     this->m_next = NULL;
     this->m_prevLink = NULL;
-    SI2::StopSound(&this->m_missileSound, 0, 0.15000001f, 1);
+    SI3::StopSound(&this->m_missileSound, 0, 0.15000001f, 1);
     this->m_targets.SetCount(0);
     this->m_targetHitResults.SetCount(0);
     this->m_targetMissReasons.SetCount(0);
@@ -1049,7 +1049,7 @@ void CMissile::DeleteSelf() {
     ObjectFree(*heap, this->m_memHandle, this, __FILE__, __LINE__);
 }
 
-// OFFSET: #0x00703770
+// OFFSET: 0x0058B260/0x1401F4760
 void CMissile::RemoveMissiles() {
     while (CMissile::s_inFlightMissileList) {
         CMissile::s_inFlightMissileList->DeleteSelf();
@@ -1517,7 +1517,7 @@ void CMissile::HitTarget(CGUnit_C* target, const SpellRec* spell, const SpellVis
     }
 }
 
-// OFFSET: #0x00703410
+// OFFSET: 0x0058AFC0/0x1401F4320
 void CMissile::ReachedTarget(CGUnit_C* target, const C3Vector* direction) {
     this->m_progress = 1.0f;
     this->m_horizontalProgress = 1.0f;
@@ -1543,7 +1543,7 @@ void CMissile::ReachedTarget(CGUnit_C* target, const C3Vector* direction) {
         this->m_lastModelPos = C3Vector(matrix.d0, matrix.d1, matrix.d2);
     }
 
-    SI2::StopSound(&this->m_missileSound, 0, 0.15000001f, 1);
+    SI3::StopSound(&this->m_missileSound, 0, 0.15000001f, 1);
     this->m_flags &= ~0x10000;
     SpellRec spell;
 
@@ -1802,9 +1802,9 @@ void CMissile::CalcPosition(int32_t advance) {
         this->m_model->SetAnimating(1);
     }
 
-    if (SI2::IsPlaying(&this->m_missileSound)) {
+    if (SI3::IsPlaying(&this->m_missileSound)) {
         C3Vector position = this->m_model ? this->m_model->GetWorldPosition() : this->m_position;
-        SI2::Set3DPosition(&this->m_missileSound, &position);
+        SI3::Set3DPosition(&this->m_missileSound, &position);
     }
 }
 
@@ -2102,7 +2102,7 @@ void CMissile::FireMissiles(const C3Vector* position) {
         }
     }
 
-    if (!SI2::IsPlaying(&this->m_missileSound) && this->m_soundKitID) {
+    if (!SI3::IsPlaying(&this->m_missileSound) && this->m_soundKitID) {
         SE2SoundKitProperties properties;
         properties.ResetToDefaults();
         properties.m_fadeInTime = 0.5f;
@@ -2115,7 +2115,7 @@ void CMissile::FireMissiles(const C3Vector* position) {
             properties.m_priority = 110;
         }
 
-        SI2::PlaySoundKit(this->m_soundKitID, &this->m_position, &this->m_missileSound, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(this->m_soundKitID, &this->m_position, &this->m_missileSound, &properties, 0, NULL, 1, 0);
     }
 }
 

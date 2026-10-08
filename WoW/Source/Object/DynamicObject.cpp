@@ -1,7 +1,7 @@
 #include "DynamicObject.h"
 #include "WoW/Source/Object/Object.h"
 
-// OFFSET: #0x004D4340
+// OFFSET: 0x0048DA60/0x1400B1960
 uint32_t CGDynamicObject::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base) {
     int32_t total = CGObject::TotalFieldsSaved();
 

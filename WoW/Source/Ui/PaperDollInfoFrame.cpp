@@ -15,7 +15,7 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/Ui/CGBankInfo.h"
 #include "WoW/Source/Ui/GameUI.h"
@@ -436,7 +436,7 @@ void CGCharacterInfo::PickupInventoryItem(int32_t slot) {
             return;
         }
 
-        SI2::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+        SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
         msg.Put(CGMerchantInfo::m_merchant.m_guid);
@@ -476,7 +476,7 @@ void CGCharacterInfo::UseItem(int32_t slot, WOWGUID* target) {
         uint32_t cost = CGMerchantInfo::GetRepairCost(item);
 
         if (cost <= player->GetCoinage()) {
-            SI2::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+            SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
             WDataStore msg;
             msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
             msg.Put(CGMerchantInfo::m_merchant.m_guid);

@@ -5,7 +5,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Game/GameClient/ComSatThread.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
@@ -34,9 +34,9 @@ bool EnableMicrophoneHandler(CVar* var, const char* oldValue, const char* value,
     ClientServices::Send2(&msg);
 
     if (voiceChatEnabled && microphoneEnabled && CGChat::IsVoiceChatAllowed()) {
-        SI2::VoiceChat_StartCapture();
+        SI3::VoiceChat_StartCapture();
     } else {
-        SI2::VoiceChat_StopCapture();
+        SI3::VoiceChat_StopCapture();
     }
 
     return true;
@@ -165,9 +165,9 @@ bool EnableVoiceChatHandler(CVar* var, const char* oldValue, const char* value, 
     }
 
     if (enabled && microphoneEnabled && CGChat::IsVoiceChatAllowed()) {
-        SI2::VoiceChat_StartCapture();
+        SI3::VoiceChat_StartCapture();
     } else {
-        SI2::VoiceChat_StopCapture();
+        SI3::VoiceChat_StopCapture();
     }
 
     if (wasEnabled && !enabled) {

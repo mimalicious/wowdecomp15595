@@ -7,7 +7,7 @@
 
 class CGGameObject_C_Type_DungeonDifficulty : public CGGameObject_C_TypeBase {
     public:
-    /* 0010 */ SE2SoundKitObject m_sound;
+    /* 0010 */ uint32_t m_sound;
 
     virtual ~CGGameObject_C_Type_DungeonDifficulty();
     virtual bool CanUse() const;

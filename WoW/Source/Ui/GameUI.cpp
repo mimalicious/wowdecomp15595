@@ -63,7 +63,7 @@
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/AchievementInfo.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/AddOns.h"
@@ -2446,7 +2446,7 @@ void CGGameUI::ClearCursor(int32_t a1, int32_t a2) {
 
         case 2:
             CGGameUI::m_cursorMoney = 0;
-            SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+            SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
 
             if (a2) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_MONEY, NULL);
@@ -2456,37 +2456,37 @@ void CGGameUI::ClearCursor(int32_t a1, int32_t a2) {
 
         case 3:
             CGGameUI::m_cursorSpell = 0;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         case 4:
             CGGameUI::m_cursorPetAction.m_data = 0;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         case 5:
         case 6:
         case 7:
         case 9:
-            SI2::PlayItemSound(1, CGGameUI::m_cursorVirtualDisplay);
+            SI3::PlayItemSound(1, CGGameUI::m_cursorVirtualDisplay);
             CGGameUI::m_cursorVirtualID = 0;
             CGGameUI::m_cursorVirtualDisplay = 0;
             CGGameUI::m_cursorVirtualSlot = 0;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         case 8:
             CGGameUI::m_cursorMacro = 0;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         case 10:
             CGGameUI::m_cursorPet = 0;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         case 11:
-            SI2::PlayItemSound(1, CGGameUI::m_cursorVirtualDisplay);
+            SI3::PlayItemSound(1, CGGameUI::m_cursorVirtualDisplay);
 
             if (a1 && CGGameUI::m_cursorVirtualID) {
                 CGGuildBankInfo::Unlock(CGGameUI::m_cursorVirtualID, CGGameUI::m_cursorVirtualSlot);
@@ -2500,7 +2500,7 @@ void CGGameUI::ClearCursor(int32_t a1, int32_t a2) {
 
         case 12:
             CGGameUI::m_cursorMoney = 0;
-            SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+            SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
 
             if (a2) {
                 FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_MONEY, NULL);
@@ -2510,7 +2510,7 @@ void CGGameUI::ClearCursor(int32_t a1, int32_t a2) {
 
         case 13:
             CGGameUI::m_cursorEquipmentSet = -1;
-            SI2::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("INTERFACESOUND_CURSORDROPOBJECT", NULL, NULL, NULL);
             break;
 
         default:
@@ -2575,11 +2575,11 @@ void CGGameUI::HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid) {
             CGUnit_C* unit = static_cast<CGUnit_C*>(object);
 
             if (unit->IsHatedTowards(player)) {
-                SI2::PlaySoundKit("GAMEHIGHLIGHTHOSTILEUNIT", NULL, NULL, NULL);
+                SI3::PlaySoundKit("GAMEHIGHLIGHTHOSTILEUNIT", NULL, NULL, NULL);
             } else if (unit->IsFriendly(player)) {
-                SI2::PlaySoundKit("GAMEHIGHLIGHTFRIENDLYUNIT", NULL, NULL, NULL);
+                SI3::PlaySoundKit("GAMEHIGHLIGHTFRIENDLYUNIT", NULL, NULL, NULL);
             } else {
-                SI2::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
+                SI3::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
             }
 
             break;
@@ -2596,7 +2596,7 @@ void CGGameUI::HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid) {
                 CGGameUI::m_gameTooltip->SetObject(guid);
             }
 
-            SI2::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
             break;
 
         case TYPEMASK_OBJECT | TYPEMASK_CORPSE:
@@ -2605,7 +2605,7 @@ void CGGameUI::HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid) {
                 CGGameUI::m_gameTooltip->SetCorpse(guid);
             }
 
-            SI2::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
+            SI3::PlaySoundKit("GAMEHIGHLIGHTNEUTRALUNIT", NULL, NULL, NULL);
             break;
 
         default:
@@ -2820,7 +2820,7 @@ void CGGameUI::Target(WOWGUID guid) {
             return;
         }
 
-        SI2::PlaySoundKit("igCharacterSelect", NULL, NULL, NULL);
+        SI3::PlaySoundKit("igCharacterSelect", NULL, NULL, NULL);
     }
 
     bool inMelee = player && player->IsInMelee();
@@ -2994,10 +2994,10 @@ void CGGameUI::DisplayError(UIErrors error, ...) {
 
     if (info.m_vocalError == 68) {
         if (SStrCmpI(info.m_sound, "NONE", STORM_MAX_STR)) {
-            SI2::PlaySoundKit(s_errorInfo[error].m_sound, NULL, NULL, NULL);
+            SI3::PlaySoundKit(s_errorInfo[error].m_sound, NULL, NULL, NULL);
         }
     } else {
-        SI2::PlayVocalErrorSound(info.m_vocalError);
+        SI3::PlayVocalErrorSound(info.m_vocalError);
     }
 
     const char* token = s_errorInfo[error].m_token;
@@ -3111,7 +3111,7 @@ void CGGameUI::SetCursorMoney(uint32_t amount) {
     if (amount) {
         CGGameUI::m_cursorMoney = amount;
         CGGameUI::m_cursorItemType = 2;
-        SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+        SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
         CursorGrabMoney(amount);
         FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_MONEY, NULL);
     }
@@ -3131,7 +3131,7 @@ void CGGameUI::SetCursorMoney(uint32_t amount, int32_t type, int32_t event) {
 
     CGGameUI::m_cursorMoney = amount;
     CGGameUI::m_cursorItemType = type;
-    SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", 0, NULL, NULL);
+    SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", 0, NULL, NULL);
     CursorGrabMoney(amount);
 
     if (event) {
@@ -3167,7 +3167,7 @@ void CGGameUI::SetCursorSpell(int32_t spellId) {
         CGGameUI::ClearCursor(1, 1);
         CGGameUI::m_cursorSpell = spellId;
         CGGameUI::m_cursorItemType = 3;
-        SI2::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
+        SI3::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
         CursorGrabSpell(texture);
         CGActionBar::ShowGrid();
         CGGameUI::m_cursorHasAction = 1;
@@ -3236,7 +3236,7 @@ void CGGameUI::SetCursorPetAction(const PetAction* action) {
         CGGameUI::ClearCursor(1, 1);
         CGGameUI::m_cursorPetAction = *action;
         CGGameUI::m_cursorItemType = 4;
-        SI2::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
+        SI3::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
         CursorGrabSpell(texture);
         CGPetInfo::ShowGrid();
         CGGameUI::m_cursorHasAction = 1;
@@ -3252,7 +3252,7 @@ void CGGameUI::SetCursorMacro(int32_t macroId) {
         CGGameUI::ClearCursor(1, 1);
         CGGameUI::m_cursorMacro = macroId;
         CGGameUI::m_cursorItemType = 8;
-        SI2::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
+        SI3::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
         CursorGrabSpell(texture);
         CGActionBar::ShowGrid();
         CGGameUI::m_cursorHasAction = 1;
@@ -3280,7 +3280,7 @@ void CGGameUI::SetCursorPet(int32_t index) {
     if (family && *family->m_iconFile) {
         CGGameUI::m_cursorPet = index;
         CGGameUI::m_cursorItemType = 10;
-        SI2::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
+        SI3::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
         CursorGrabSpell(family->m_iconFile);
     }
 }
@@ -3309,7 +3309,7 @@ void CGGameUI::SetCursorVirtualItem(int32_t id, int32_t displayId, int32_t slot,
     }
 
     CursorGrabVirtualItem(displayId);
-    SI2::PlayItemSound(0, displayId);
+    SI3::PlayItemSound(0, displayId);
     FrameScript_SignalEvent(SCRIPT_EVENT_CURSOR_UPDATE, NULL);
 }
 
@@ -3324,7 +3324,7 @@ void CGGameUI::SetCursorEquipmentSet(int32_t setId) {
     CGGameUI::ClearCursor(1, 1);
     CGGameUI::m_cursorEquipmentSet = setId;
     CGGameUI::m_cursorItemType = 13;
-    SI2::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
+    SI3::PlaySoundKit("INTERFACESOUND_CURSORGRABOBJECT", NULL, NULL, NULL);
     CursorGrabSpell(texture);
     CGActionBar::ShowGrid();
     CGGameUI::m_cursorHasAction = 1;
@@ -3500,7 +3500,7 @@ void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId,
             CGTutorial::TriggerTutorial(11);
         }
 
-        SI2::PlayItemSound(1, stats->m_displayId);
+        SI3::PlayItemSound(1, stats->m_displayId);
     } else if ((!received || created) && showInChat) {
         if (static_cast<int32_t>(count) > 1) {
             const char* format = FrameScript_GetText(created ? "CREATED_ITEM_MULTIPLE" : "LOOT_ITEM_MULTIPLE", -1, GENDER_NOT_APPLICABLE);
@@ -5409,12 +5409,12 @@ int32_t CGGameUI::StartCinematicCamera() {
     msg.Put(static_cast<uint32_t>(CMSG_NEXT_CINEMATIC_CAMERA));
     msg.Finalize();
     ClientServices::Send2(&msg);
-    SI2::StopAllMusic();
+    SI3::StopAllMusic();
     SE2SoundKitProperties properties;
     properties.ResetToDefaults();
     properties.m_group = 6;
     properties.m_reverb = 0;
-    SI2::PlaySoundKit(record->m_soundID, NULL, &CGGameUI::m_cinematic.m_cameraMusic, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(record->m_soundID, NULL, &CGGameUI::m_cinematic.m_cameraMusic, &properties, 0, NULL, 1, 0);
     DisableFadingScreen(0.25f, NULL, NULL);
     return 1;
 }
@@ -5431,7 +5431,7 @@ void CGGameUI::OpenLoot(CGObject_C* object, int32_t coins, uint32_t lootType) {
 // OFFSET: #0x00523530
 void CGGameUI::NextCinematicInternal(void* param) {
     CGGameUI::m_cinematic.m_camera = NULL;
-    SI2::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
+    SI3::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
 
     if (CGGameUI::m_cinematic.m_sequence && ++CGGameUI::m_cinematic.m_cameraIndex < 8) {
         int32_t camera = CGGameUI::m_cinematic.m_sequence->m_camera[CGGameUI::m_cinematic.m_cameraIndex];
@@ -5865,7 +5865,7 @@ void CGGameUI::UnitNameUpdate(const WOWGUID& guid) {
 
 // OFFSET: #0x005124B0
 int32_t CGGameUI::CameraMusicIsPlaying() {
-    return SI2::IsPlaying(&CGGameUI::m_cinematic.m_cameraMusic);
+    return SI3::IsPlaying(&CGGameUI::m_cinematic.m_cameraMusic);
 }
 
 // OFFSET: #0x005128D0
@@ -6321,7 +6321,7 @@ int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, C
         case SMSG_PLAY_MUSIC: {
             uint32_t soundKitId;
             msg->Get(soundKitId);
-            SI2::PlayAIMusic(soundKitId);
+            SI3::PlayAIMusic(soundKitId);
             return 1;
         }
 
@@ -6340,7 +6340,7 @@ int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, C
                 static_cast<CGUnit_C*>(object)->PlayAISound(soundKitId);
             } else {
                 C3Vector position = object->GetPosition();
-                SI2::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
             }
 
             return 1;
@@ -6413,14 +6413,14 @@ int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, C
             CGWorldStateInfo::SetWorldState(state, value);
             CGWorldMap::RefreshCurrentMap();
             FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_WORLD_STATES, NULL);
-            SI2::ForceUpdateZoneSounds();
+            SI3::ForceUpdateZoneSounds();
             return 1;
         }
 
         case SMSG_PLAY_SOUND: {
             uint32_t soundKitId;
             msg->Get(soundKitId);
-            SI2::PlaySoundKit(soundKitId, NULL, NULL, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(soundKitId, NULL, NULL, NULL, 0, NULL, 1, 0);
             return 1;
         }
 
@@ -6457,7 +6457,7 @@ int32_t CGGameUI::MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, C
                 soundKitId = -1;
             }
 
-            SI2::SetWeatherKitID(soundKitId);
+            SI3::SetWeatherKitID(soundKitId);
             ConsolePrintf("Weather changed to %d, intensity %f\n", type, intensity);
             return 1;
         }
@@ -6656,7 +6656,7 @@ void CGGameUI::StopCinematicInternal(void* param) {
         AsyncFileReadWaitAll();
     }
 
-    SI2::StopSound(&CGGameUI::m_cinematic.m_music, 0, -1.0f, 1);
+    SI3::StopSound(&CGGameUI::m_cinematic.m_music, 0, -1.0f, 1);
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_COMPLETE_CINEMATIC));
     msg.Finalize();
@@ -7076,12 +7076,12 @@ void CGGameUI::StartCinematic(int32_t cinematic) {
 
     if (CGGameUI::m_cinematic.m_sequence) {
         if (!music || music->m_intValue) {
-            SI2::StopAllMusic();
+            SI3::StopAllMusic();
             SE2SoundKitProperties properties;
             properties.ResetToDefaults();
             properties.m_group = 3;
             properties.m_loopMode = 1;
-            SI2::PlaySoundKit(CGGameUI::m_cinematic.m_sequence->m_soundID, NULL, &CGGameUI::m_cinematic.m_music, &properties, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(CGGameUI::m_cinematic.m_sequence->m_soundID, NULL, &CGGameUI::m_cinematic.m_music, &properties, 0, NULL, 1, 0);
         }
 
         if (CGGameUI::m_cinematic.m_sequence) {
@@ -7884,8 +7884,8 @@ void CGGameUI::LeaveWorld() {
     if (CGGameUI::m_inCinematic) {
         FrameScript_SignalEvent(SCRIPT_EVENT_CINEMATIC_STOP, NULL);
         CGWorldFrame::GetActiveCamera()->ClearModelCamera();
-        SI2::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
-        SI2::StopSound(&CGGameUI::m_cinematic.m_music, 1, -1.0f, 1);
+        SI3::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
+        SI3::StopSound(&CGGameUI::m_cinematic.m_music, 1, -1.0f, 1);
         CGGameUI::m_inCinematic = 0;
         CGInputControl* input = CGInputControl::GetActive();
         input->m_mouseModeFlags &= ~0x40;

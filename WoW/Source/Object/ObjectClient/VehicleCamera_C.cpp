@@ -56,7 +56,7 @@ void CVehicleCamera_C::UninitSystem() {
     }
 }
 
-// OFFSET: #0x007599D0
+// OFFSET: 0x005E7B90/0x1402687D0
 uint64_t CVehicleCamera_C::GetRelativeTo() const {
     WOWGUID target = this->m_targetGuid;
 
@@ -85,7 +85,7 @@ uint64_t CVehicleCamera_C::GetRelativeTo() const {
     }
 }
 
-// OFFSET: #0x00759AE0
+// OFFSET: 0x005E7CA0/0x1402688E0
 int32_t CVehicleCamera_C::WouldAddingNextCameraCreateLoop(const CVehicleCamera_C* next) const {
     WOWGUID guid = next->m_nextCameraGuid;
 
@@ -320,7 +320,7 @@ int32_t CVehicleCamera_C::ConvertSmoothFacingFromWorldToRaw(float& facing, CGObj
     return 1;
 }
 
-// OFFSET: #0x0075A720
+// OFFSET: 0x005E8130/0x140268E00
 int32_t CVehicleCamera_C::AttachToHierarchy() {
     CGCamera* activeCamera = CGWorldFrame::GetActiveCamera();
 
@@ -486,7 +486,7 @@ C3Vector CVehicleCamera_C::ComputeEndWorldPosition(CGUnit_C* target) {
     return result;
 }
 
-// OFFSET: #0x00759580
+// OFFSET: 0x005E76A0/0x1402682B0
 void CVehicleCamera_C::ComputeSafeCurWorldPos() {
     this->m_flags |= 0x40;
     this->m_safeCurWorldPos = this->m_curWorldPos;
@@ -767,7 +767,7 @@ void CVehicleCamera_C::UpdateFacing(CGUnit_C* target, uint32_t time, float progr
     }
 }
 
-// OFFSET: #0x0075A630
+// OFFSET: 0x005E8040/0x140268CF0
 void CVehicleCamera_C::UpdateWorldCameraState(uint32_t time, uint32_t duration) {
     if ((this->m_flags & 0x8) || (duration && !(this->m_flags & 0x1))) {
         return;
@@ -794,7 +794,7 @@ void CVehicleCamera_C::UpdateWorldCameraState(uint32_t time, uint32_t duration) 
     }
 }
 
-// OFFSET: #0x0075A7D0
+// OFFSET: 0x005E81E0/0x140268ED0
 void CVehicleCamera_C::SetTarget(WOWGUID target, WOWGUID next) {
     this->m_flags |= 0x80;
     this->m_targetGuid = target;

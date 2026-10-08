@@ -9,7 +9,8 @@
 CGGameObject_C_Type_DungeonDifficulty::CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner) {
 }
 
-// OFFSET: #0x0070DD50
+// PROVEN: 0e1ccec7 IDENTICAL/NONE
+// OFFSET: 0x0059C6D0/0x14020B140
 float CGGameObject_C_Type_DungeonDifficulty::GetBaseAlpha() const {
     if (this->m_owner->m_gameObject->m_dynamicFlags & 2) {
         return 1.0f;
@@ -20,7 +21,7 @@ float CGGameObject_C_Type_DungeonDifficulty::GetBaseAlpha() const {
 
 // OFFSET: #0x00712870
 CGGameObject_C_Type_DungeonDifficulty::~CGGameObject_C_Type_DungeonDifficulty() {
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
 }
 
 // PROVEN: 678a7c58 IDENTICAL/IDENTICAL
@@ -29,7 +30,7 @@ bool CGGameObject_C_Type_DungeonDifficulty::CanUse() const {
     return false;
 }
 
-// OFFSET: #0x0070DD70
+// OFFSET: 0x0059C6F0/0x14020B170
 void CGGameObject_C_Type_DungeonDifficulty::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time) {
     int32_t render = 0;
     int32_t a3 = 0;
@@ -87,7 +88,7 @@ void CGGameObject_C_Type_DungeonDifficulty::UpdateDisplay(uint32_t time) {
 
     World::ObjectSetHidden(this->m_owner->m_worldObject, hidden);
 
-    if (hidden && SI2::IsPlaying(&this->m_sound)) {
-        SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    if (hidden && SI3::IsPlaying(&this->m_sound)) {
+        SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
     }
 }

@@ -16,7 +16,7 @@
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/EquipmentManager.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/PetInfo.h"
@@ -1342,7 +1342,7 @@ void CGActionBar::UseAction(int32_t slot, const WOWGUID& target, const char* but
         if (petAction && petAction->m_data) {
             WOWGUID none = { 0 };
             CGPetInfo::SendPetAction(*petAction, none, 0);
-            SI2::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
+            SI3::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
             CGActionBar::UpdateSelection();
         }
     } else {

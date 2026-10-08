@@ -43,7 +43,7 @@ void NPCText::Pack(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x0098E2C0
+// OFFSET: 0x00A28EB0/0x1407D0AF0
 void NPCText::Unpack(CDataStore* msg) {
     char buffer[3000];
 

@@ -13,7 +13,7 @@
 #include "WoW/Source/Object/Combat.h"
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/Magic/MagicClient/SpellTable.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Net/Types.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/CAaBox.h"
@@ -235,8 +235,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void InitMissileTrajectorySystem();
     static void ShutdownMissileTrajectorySystem();
     static void UpdateVehicleUISliders(CGUnit_C* unit, const VehicleRec* vehicleRec);
-    static void AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
-    static void MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
+    static void AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
+    static void MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
 
     /* 0104 */ TSList<void> m_unitMirrorLists [138];
@@ -396,7 +396,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     /* 1078 */ CAnimKitManager m_animKitManager;
     /* 1168 */ uint32_t unk_1168 [15];
     /* 11A4 */ uint16_t m_animKitIds [3];
-    /* 11AC */ uint32_t unk_11AC [8];
+    /* 11AC */ uint32_t m_currentClientRace;
+    /* 11B0 */ uint32_t m_currentClientRaceFlags;
+    /* 11B4 */ uint32_t unk_11B4 [6];
     /* 11CC */ int32_t m_predictedHealth;
     /* 11D0 */ int32_t m_predictedPower [5];
     /* 11E4 */ uint32_t m_powerRegenRemainder;
@@ -478,7 +480,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsTransport() const override;
     int32_t IsPointInside(const C3Vector& point) const override;
     void PlaySpellVisualKit_PlayAnims(const PlaySpellVisuaKitData* data) override;
-    void PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), int32_t* hasEffect, uint32_t a9, int32_t a10) override;
+    void PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect, uint32_t a9, int32_t a10) override;
     int32_t PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) override;
     void CleanUpVehicleBoneAnimsBeforeObjectModelChange() override;
     void OnReceiveMirrorImageDataFromServer(CDataStore* msg);
@@ -488,6 +490,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     const SpellVisualRec* GetAppropriateSpellVisual(const SpellRec* spell, SpellVisualRec& visual, int32_t a3, int32_t a4) const override;
     void ConnectToLightningThisFrame(uint32_t a1, int32_t a2) override;
 
+    uint32_t GetCurrentClientRace() const;
     bool IsActivePlayer();
     CGUnit_C(uint32_t time, const CClientObjCreate& create);
     ~CGUnit_C();
@@ -681,7 +684,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void UpdateSelectionRadius();
     void OnRemoteMissileTrajectoryCollision(MissileCollisionData* data);
     int32_t UnitReaction(const CGCorpse_C* corpse) const;
-    CreatureSoundDataRec* GetSoundData() const;
+    CreatureSoundDataRec* GetSoundData(int32_t ignoreOverride) const;
     void PlayNPCSound(bool greeting);
     bool CanCurrentFormMount() const;
     SummonPropertiesRec* GetSummonProperties() const;

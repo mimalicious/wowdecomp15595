@@ -23,7 +23,8 @@ int32_t CGGameObject_C_Type_Mailbox::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 15 : 41;
 }
 
-// OFFSET: %0x005A4460
+// PROVEN: 50c508d7 IDENTICAL/NONE
+// OFFSET: 0x0059AE10
 bool CGGameObject_C_Type_Mailbox::Use() {
     CGPlayer_C::TalkToMailbox(this->m_owner->m_obj->m_guid);
 

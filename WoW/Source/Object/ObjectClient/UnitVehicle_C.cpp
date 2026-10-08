@@ -13,7 +13,7 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "Engine/Source/Event/FrameTime.h"
 
-// OFFSET: #0x0074C650
+// OFFSET: 0x005EC500/0x14026DC20
 CGUnit_C* CGUnit_C::FindRootVehicle(CGUnit_C* stop) {
     CGUnit_C* unit = this;
 
@@ -56,7 +56,7 @@ CGUnit_C* CGUnit_C::FindRootVehicle(CGUnit_C* stop) {
     return NULL;
 }
 
-// OFFSET: #0x0074CC40
+// OFFSET: 0x005ECB10/0x14026E320
 CGUnit_C* CGUnit_C::FindRootVehicleOfPassengerChain(CGUnit_C* stop) {
     CGUnit_C* unit = this;
     WOWGUID guid = this->m_vehiclePassenger ? this->m_vehiclePassenger->m_transitionVehicleGuid : WOWGUID();
@@ -92,7 +92,7 @@ CGUnit_C* CGUnit_C::FindRootVehicleOfPassengerChain(CGUnit_C* stop) {
     return unit;
 }
 
-// OFFSET: #0x0074B900
+// OFFSET: 0x005EB780/0x14026CCC0
 bool CGUnit_C::IsVehiclePreventingTurning() const {
     uint32_t high = static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid >> 32);
     uint32_t low = static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid);
@@ -146,7 +146,8 @@ bool CGUnit_C::IsAlteredFormTransitionPreventingMovement() const {
     return false;
 }
 
-// OFFSET: #0x0074C550
+// PROVEN: 8f507382 IDENTICAL/NONE
+// OFFSET: 0x005EC470
 void CGUnit_C::ConvertVehicleCameraRelativeFacingToTransportRelativeFacing(float& facing) {
     if (this->m_vehicleCamera) {
         CGObject_C* relativeTo = ClntObjMgrObjectPtr(WOWGUID::Make(this->m_vehicleCamera->GetRelativeTo()), TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -309,7 +310,7 @@ int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t 
     return 1;
 }
 
-// OFFSET: #0x0074CD60
+// OFFSET: 0x005ECC30/0x14026E460
 void CGUnit_C::DestroyVehicleCamera() {
     if (!this->m_vehicleCamera) {
         return;
@@ -330,7 +331,8 @@ void CGUnit_C::DestroyVehicleCamera() {
     }
 }
 
-// OFFSET: #0x004F6230
+// PROVEN: a722881a IDENTICAL/NONE
+// OFFSET: 0x0057D160
 CGUnit_C* CGUnit_C::GetRootVehicleUnit() {
     if (this->m_vehiclePassenger) {
         return this->m_vehiclePassenger->GetStoredRootVehicleUnit();
@@ -363,7 +365,7 @@ void CGUnit_C::PlayVehicleExitEndAnimation(const VehicleSeatRec* seat, uint32_t 
     this->PlayBaseAnimation(anim, 1);
 }
 
-// OFFSET: #0x0074C4E0
+// OFFSET: 0x005EC400/0x14026DAE0
 void CGUnit_C::OnVehicleCameraPossiblyUnneeded() {
     CVehicleCamera_C* camera = this->m_vehicleCamera;
 

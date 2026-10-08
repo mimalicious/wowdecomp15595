@@ -11,7 +11,7 @@ class WorldChunkSoundsRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_generatedID;
-    /* 0004 */ int32_t m_id;
+    /* 0004 */ int32_t m_mapID;
     /* 0008 */ int32_t m_chunkX;
     /* 000C */ int32_t m_chunkY;
     /* 0010 */ int32_t m_subchunkX;

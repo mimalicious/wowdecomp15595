@@ -25,7 +25,7 @@
 #include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WorldClient/World.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitAreaModelRec.h"
 #include <cmath>
 #include "WoW/Source/DB/Rec/SpellRec.h"
@@ -736,7 +736,7 @@ Shard::~Shard() {
 // OFFSET: #0x007F9D80
 static void ShardAnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     if ((++s_shardEventCount & 3) == 0 && eventId == 0x444E5324) {
-        SI2::PlaySoundKit(data, position, NULL, NULL, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(data, position, NULL, NULL, 0, NULL, 1, 0);
     }
 }
 

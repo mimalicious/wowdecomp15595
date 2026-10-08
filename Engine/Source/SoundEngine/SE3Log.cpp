@@ -35,6 +35,12 @@ void SE3::Log_Init() {
     OsDeleteFile("Logs\\SESound.log");
 }
 
+// OFFSET: 0x007145B0
+void SE3::Log_ShutDown() {
+    SLogFlush(SE3::sm_log);
+    SLogClose(SE3::sm_log);
+}
+
 // OFFSET: 0x007145D0/0x1403E6CC0
 void SE3::Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const char* format, ...) {
     char buffer[512];

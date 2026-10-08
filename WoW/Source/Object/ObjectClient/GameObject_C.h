@@ -14,7 +14,7 @@
 #include "WoW/Source/Object/ObjectClient/AnimKitManager.h"
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/Passenger.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/WorldClient/Map.h"
 
 class SpellRec;
@@ -93,7 +93,7 @@ class CGGameObject_C_TypeAnimated : public CGGameObject_C_TypeBase {
     /* 0010 */ int32_t m_animState;
     /* 0014 */ int32_t m_pendingAnimState;
     /* 0018 */ int32_t m_nextAnimTime;
-    /* 001C */ SE2SoundKitObject m_sound;
+    /* 001C */ uint32_t m_sound;
 
     virtual ~CGGameObject_C_TypeAnimated();
     virtual bool ShouldFadeIn() const;
@@ -129,7 +129,7 @@ class CGGameObject_C_Type_Null : public CGGameObject_C_TypeBase {
 
 class CGGameObject_C_Type_WorldObj : public CGGameObject_C_TypeBase {
     public:
-    static void SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
+    static void SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
 
     /* 0010 */ uintptr_t m_worldObject;
 
@@ -203,11 +203,11 @@ struct DestructibleBuildingState {
 
 class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_WorldObj {
     public:
-    static void AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
+    static void AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
-    static void DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
-    static void ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
-    static void MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
+    static void DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
+    static void ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
+    static void MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
 
     /* 0014 */ DestructibleBuildingState m_states [4];
     /* 0054 */ int32_t m_previousState;
@@ -286,7 +286,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     static int32_t OnAnimProgressChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
     static int32_t OnFlagsChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
     static int32_t OnStateChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
-    static void SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param);
+    static void SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
 
     /* 0100 */ CPassenger m_passenger;
     /* 0130 */ TSList<void> m_gameObjectMirrorLists [12];
@@ -388,7 +388,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
 };
 
 void ApplyGameObjectArtKit(CM2Model* model, int32_t artKit);
-void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_t data, const C3Vector& position, SE2SoundKitObject* sound);
+void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_t data, const C3Vector& position, uint32_t* sound);
 int32_t Packet_SMSG_GAMEOBJECT_CUSTOM_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GAMEOBJECT_DESPAWN_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GAMEOBJECT_PAGETEXT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

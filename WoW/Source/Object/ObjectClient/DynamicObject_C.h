@@ -9,7 +9,7 @@
 #include "WoW/Source/Object/DynamicObject.h"
 #include "WoW/Source/Object/Passenger.h"
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 class BlizzardObject;
 class CClientObjCreate;

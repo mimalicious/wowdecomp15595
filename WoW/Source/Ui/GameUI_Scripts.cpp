@@ -71,7 +71,7 @@
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/AchievementInfo.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/AddOns.h"
@@ -2577,7 +2577,7 @@ static int32_t Script_GetTotemTimeLeft(lua_State* L) {
 
 // OFFSET: #0x00524980
 static int32_t Script_StopCinematic(lua_State* L) {
-    SI2::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
+    SI3::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
     EnableFadingScreen(0.25f, &CGGameUI::StopCinematicInternal, NULL);
     return 0;
 }
@@ -6206,7 +6206,7 @@ void LoadScriptFunctions() {
     UIMacrosRegisterScriptFunctions();
     InputControlRegisterScriptFunctions();
     CameraRegisterScriptFunctions();
-    SI2::RegisterScriptFunctions();
+    SI3::RegisterScriptFunctions();
     SpellRegisterScriptFunctions();
     ScriptEventsRegisterFunctions();
     MinimapRegisterScriptFunctions();
@@ -6287,7 +6287,7 @@ void UnloadScriptFunctions() {
     UIMacrosUnegisterScriptFunctions();
     InputControlUnregisterScriptFunctions();
     CameraUnregisterScriptFunctions();
-    SI2::UnregisterScriptFunctions();
+    SI3::UnregisterScriptFunctions();
     SpellUnregisterScriptFunctions();
     MinimapUnregisterScriptFunctions();
     ScriptEventsUnregisterFunctions();

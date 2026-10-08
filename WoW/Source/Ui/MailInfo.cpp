@@ -25,7 +25,7 @@
 #include "WoW/Source/Object/CreatureStats.h"
 #include "WoW/Source/Object/GameObjectStats.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
 // STATIC: #0x00BEB038

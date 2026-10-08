@@ -51,7 +51,7 @@
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/BattlefieldInfo.h"
@@ -504,7 +504,7 @@ static int32_t GetWeaponSubClassCount(int32_t* count) {
     return found;
 }
 
-// OFFSET: #0x006DA6B0
+// OFFSET: 0x0055F9E0/0x1401BD430
 static int32_t OnUpdateInebriation(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -742,7 +742,7 @@ static int32_t OnUpdatePlayerFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x006E1C60
+// OFFSET: 0x00565680/0x1401C37A0
 static int32_t OnUpdateGuildTimeStamp(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -857,7 +857,7 @@ void CGPlayer_C::Shutdown() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_PLAYER, offsetof(CGPlayerData, m_playerBytes2), OnUpdatePlayerFacialStyle, NULL);
 }
 
-// OFFSET: #0x006E8EE0
+// OFFSET: 0x00571580/0x1401D28F0
 void PlayerClientInitialize() {
     CGPlayer_C::PlayerInitializeMessageHandlers();
 
@@ -912,7 +912,7 @@ void CGPlayer_C::TurnOnGuildTabardPurchase() {
     CGGameUI::UnitModelUpdate(guid, 3);
 }
 
-// OFFSET: #0x006D2950
+// OFFSET: 0x00558480/0x1401B5650
 void CGPlayer_C::HandleRepopRequest(bool a2) {
     if (!this->IsDeadOrGhost() || !this->CheckSelfResurrect()) {
         return;
@@ -925,7 +925,7 @@ void CGPlayer_C::HandleRepopRequest(bool a2) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DCB40
+// OFFSET: 0x00561F30/0x1401BFFA0
 void CGPlayer_C::ChangeStandState(uint32_t standState) {
     if (standState >= 11) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1026,7 +1026,7 @@ void CGPlayer_C::PreAnimate(CGWorldFrame* frame) {
     }
 }
 
-// OFFSET: #0x006E0840
+// OFFSET: 0x00566140/0x1401C47C0
 void CGPlayer_C::ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) {
     this->CGUnit_C::ShouldRender(flags, culled, hidden);
 
@@ -1091,7 +1091,7 @@ CreatureModelDataRec* GetModelDataRec(uint32_t race, uint32_t gender) {
     return modelRec;
 }
 
-// OFFSET: #0x006D7AA0
+// OFFSET: 0x0055E0E0/0x1401B12A0
 bool CGPlayer_C::VehicleAllowsInteraction() const {
     if (!this->HasVehicleTransport()) {
         return true;
@@ -1120,7 +1120,7 @@ void CGPlayer_C::SetAutoLoot(int32_t autoLoot) {
     }
 }
 
-// OFFSET: #0x00729530
+// OFFSET: 0x005C5EE0/0x14023CF30
 bool CGPlayer_C::CanInteract(const CGUnit_C* unit) const {
     bool isPlayer = (this->m_obj->m_type & TYPEMASK_PLAYER) != 0;
 
@@ -1138,7 +1138,7 @@ bool CGPlayer_C::CanInteract(const CGUnit_C* unit) const {
     return !(data->m_unitFieldFlags & 0x2000000) && npcFlags && ((unit->UnitReaction(this) >= 3 && this->UnitReaction(unit) >= 3) || (unit->m_unit->m_unitFieldFlags2 & 0x4000));
 }
 
-// OFFSET: #0x004F7310
+// OFFSET: 0x0055E2D0/0x1401BB850
 uint64_t CGPlayer_C::GetFarSightGuid() const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1153,7 +1153,7 @@ void CGPlayer_C::SetFarSightFocus(CGObject_C* object) {
     this->ToggleFarSight(object);
 }
 
-// OFFSET: #0x0051A250
+// OFFSET: 0x00468FF0/0x14007D170
 uint32_t CGPlayer_C::GetSkillValue(int32_t index) const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1168,7 +1168,7 @@ uint32_t CGPlayer_C::GetSkillValue(int32_t index) const {
     return rank;
 }
 
-// OFFSET: #0x0051A2B0
+// OFFSET: 0x0044EE00/0x14005D110
 uint32_t CGPlayer_C::GetCoinage() const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1177,7 +1177,7 @@ uint32_t CGPlayer_C::GetCoinage() const {
     return this->m_player->m_playerFieldCoinage;
 }
 
-// OFFSET: #0x0052E6D0
+// OFFSET: 0x008FF7A0/0x140657270
 const char* CGPlayer_C::GetHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1192,7 +1192,7 @@ const char* CGPlayer_C::GetHairCustomizationName() {
     return "NORMAL";
 }
 
-// OFFSET: #0x0052E730
+// OFFSET: 0x008FF800/0x140657300
 const char* CGPlayer_C::GetFacialHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1207,7 +1207,7 @@ const char* CGPlayer_C::GetFacialHairCustomizationName() {
     return "NORMAL";
 }
 
-// OFFSET: #0x00594710
+// OFFSET: 0x0090FD00/0x14066B450
 uint32_t CGPlayer_C::GetSkillMaxRank(int32_t index) const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -1407,7 +1407,7 @@ int32_t CGPlayer_C::GetCombatModeFlashDuration() {
     return 500;
 }
 
-// OFFSET: #0x006CF440
+// OFFSET: 0x00554A80/0x1401B13D0
 int32_t CGPlayer_C::GetPlayedTime() const {
     if (this->m_playedTime < 0) {
         return 0;
@@ -1431,7 +1431,7 @@ int32_t SignalPetSpellPowerUpdate(WOWGUID guid) {
     return 1;
 }
 
-// OFFSET: #0x006D1D30
+// OFFSET: 0x005571B0/0x1401B3FB0
 void __stdcall CGPlayer_C::AcceptResurrectRequest(int32_t accept) {
     if (!CGPlayer_C::s_resurrectOfferer) {
         return;
@@ -1563,7 +1563,7 @@ void __stdcall CGPlayer_C::TalkToRideVehicle(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D29F0
+// OFFSET: 0x00558520/0x1401B5740
 uint8_t CGPlayer_C::FindSlotIndex(WOWGUID guid) const {
     uint32_t numSlots = this->m_bag.m_numSlots;
 
@@ -1582,7 +1582,7 @@ uint8_t CGPlayer_C::FindSlotIndex(WOWGUID guid) const {
     return 0xFF;
 }
 
-// OFFSET: #0x006D2C20
+// OFFSET: 0x00558750/0x1401B5A40
 void __stdcall CGPlayer_C::AutoStoreLootItem(uint8_t slot) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_AUTOSTORE_LOOT_ITEM));
@@ -1591,7 +1591,7 @@ void __stdcall CGPlayer_C::AutoStoreLootItem(uint8_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D2D40
+// OFFSET: 0x005587D0/0x1401B5AE0
 void CGPlayer_C::SellItem(WOWGUID vendor, WOWGUID item, uint32_t count) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_SELL_ITEM));
@@ -1728,7 +1728,7 @@ bool CGPlayer_C::HasEquipBypassSkill(int32_t skillId) const {
     return false;
 }
 
-// OFFSET: #0x006D4B90
+// OFFSET: 0x0055B220/0x1401B7FE0
 void CGPlayer_C::LootMoney() {
     if (!this->m_lootTarget) {
         return;
@@ -1740,7 +1740,7 @@ void CGPlayer_C::LootMoney() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4C10
+// OFFSET: 0x0055B2A0/0x1401B8070
 void __stdcall CGPlayer_C::QueryQuest(const WOWGUID& questGiver, int32_t questId) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_QUERY_QUEST));
@@ -1762,7 +1762,7 @@ void __stdcall CGPlayer_C::AcceptQuest(const WOWGUID& questGiver, int32_t questI
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4D40
+// OFFSET: 0x0055B3D0/0x1401B8200
 void __stdcall CGPlayer_C::CompleteQuest(const WOWGUID& questGiver, int32_t questId) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_COMPLETE_QUEST));
@@ -1772,7 +1772,7 @@ void __stdcall CGPlayer_C::CompleteQuest(const WOWGUID& questGiver, int32_t ques
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4DD0
+// OFFSET: 0x0055B470/0x1401B82D0
 void __stdcall CGPlayer_C::GiveQuestItems(const WOWGUID& questGiver, int32_t questId) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_REQUEST_REWARD));
@@ -1820,7 +1820,7 @@ void __stdcall CGPlayer_C::QueryQuestGiverStatus(const WOWGUID& questGiver) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D50C0
+// OFFSET: 0x0055B750/0x1401B86D0
 void CGPlayer_C::QueryQuestGiverStatusMultiple() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_STATUS_MULTIPLE_QUERY));
@@ -1828,7 +1828,7 @@ void CGPlayer_C::QueryQuestGiverStatusMultiple() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D5BE0
+// OFFSET: 0x0055C000/0x1401B0840
 const CGUnitVirtualItem* CGPlayer_C::GetDefendingItem() const {
     const CGBag_C* bag = this->GetBag();
     WOWGUID guid = static_cast<uint32_t>(bag->m_numSlots) > 4 ? bag->m_slots[4] : WOWGUID();
@@ -1851,7 +1851,7 @@ void __stdcall CGPlayer_C::ReadItem(uint8_t bag, uint8_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D5E70
+// OFFSET: 0x0055C280/0x1401B8FF0
 uint32_t CGPlayer_C::GetDefaultLanguage() const {
     ChrRacesRec* rec = g_chrRacesDB.GetRecord(this->m_unit->m_unitFieldBytes0[0]);
 
@@ -1902,7 +1902,7 @@ void CGPlayer_C::StartTaxiExpress(WOWGUID guid, const uint32_t* nodes, int32_t c
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D64E0
+// OFFSET: 0x0055C840/0x1401B9650
 uint32_t CGPlayer_C::GetClientStandState() const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         return this->m_clientStandState;
@@ -1950,7 +1950,7 @@ void __stdcall CGPlayer_C::RequestPetitionSignatures(WOWGUID petition) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D6E90
+// OFFSET: 0x0055D2E0/0x1401BA5D0
 int32_t CGPlayer_C::GetPVPFactionIndex() const {
     ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(this->m_unit->m_unitFieldBytes0[0]);
 
@@ -1980,7 +1980,7 @@ void __stdcall CGPlayer_C::RemoveTempEnchantment(int32_t slot) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D7200
+// OFFSET: 0x0055D780/0x1407D1010
 void __stdcall CGPlayer_C::SetPartyAssignment(uint8_t assignment, WOWGUID guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(MSG_PARTY_ASSIGNMENT));
@@ -2011,12 +2011,12 @@ uint32_t CGPlayer_C::GetCreatureTracking() const {
     return this->m_player->m_playerTrackCreatures;
 }
 
-// OFFSET: #0x006DAC10
+// OFFSET: 0x0055FFC0/0x1401BDAE0
 bool CGPlayer_C::IsDeadOrGhost() const {
     return this->m_unit->m_unitFieldHealth <= 0 || ((this->m_player->m_playerFlags >> 4) & 1);
 }
 
-// OFFSET: #0x006DC1C0
+// OFFSET: 0x005614D0/0x1401BF380
 int32_t CGPlayer_C::GetSkillIndex(int32_t skillId) const {
     int32_t index = 0;
 
@@ -2101,7 +2101,7 @@ bool CGPlayer_C::UnitIsTrivial(const CGUnit_C* unit) {
     return difference > s_trivialLevelDifference[level / 5];
 }
 
-// OFFSET: #0x006DE330
+// OFFSET: 0x005635E0/0x1401C1360
 const VisibleItem_C* CGPlayer_C::GetVisibleItem(int32_t slot) const {
     if (slot < 0 || slot >= 19) {
         return NULL;
@@ -2121,7 +2121,7 @@ void CGPlayer_C::SetPvpCooldownTimestamp(uint32_t flags) {
     }
 }
 
-// OFFSET: #0x006DE7A0
+// OFFSET: 0x00563880/0x1401C1620
 int32_t CGPlayer_C::GetPVPToggleTimer() const {
     if (!(this->m_player->m_playerFlags & 0x40000)) {
         return 300000;
@@ -2139,12 +2139,12 @@ int32_t CGPlayer_C::GetPVPToggleTimer() const {
 // OFFSET: #0x006DE7E0
 uint32_t CGPlayer_C::GetEquippedAmmoDisplayId() const {
     int32_t ammoId = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerAmmoId : 0;
-    ItemRec* rec = g_itemDB.GetRecord(ammoId);
+    ItemRec* rec = g_itemDB.GetRecord(ammoId, WOWGUID(), NULL, NULL, false);
 
     return rec ? rec->m_displayInfoID : 0;
 }
 
-// OFFSET: #0x006DE980
+// OFFSET: 0x00563BC0/0x1401C1AE0
 int32_t CGPlayer_C::IsCommentatorUberOrInArena() const {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
     uint32_t flags = this->m_player->m_playerFlags;
@@ -2205,7 +2205,7 @@ void __stdcall CGPlayer_C::OnTaxiNodeStatus(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x006D71A0
+// OFFSET: 0x0055E1B0/0x1401B5710
 int32_t CGItem::IsUsable() const {
     uint32_t flags = this->m_item->m_itemFieldFlags;
 
@@ -2217,7 +2217,7 @@ int32_t OnHonorCurrencyChanged(WOWGUID guid, uint32_t offset, uint32_t count, co
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && player->m_player->m_playerFieldHonorCurrency < *static_cast<const uint32_t*>(value)) {
-        SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+        SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
     }
 
     FrameScript_SignalEvent(SCRIPT_EVENT_HONOR_CURRENCY_UPDATE, NULL);
@@ -2231,7 +2231,7 @@ int32_t OnArenaCurrencyChanged(WOWGUID guid, uint32_t offset, uint32_t count, co
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && player->m_player->m_playerFieldArenaCurrency < *static_cast<const uint32_t*>(value)) {
-        SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+        SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
     }
 
     FrameScript_SignalEvent(SCRIPT_EVENT_HONOR_CURRENCY_UPDATE, NULL);
@@ -2286,7 +2286,7 @@ int32_t OnUpdatePlayerGlyphSlotsEnabled(WOWGUID guid, uint32_t offset, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x006DF850
+// OFFSET: 0x00565CB0/0x1401C3ED0
 uint32_t FindEmptySwapIndex() {
     uint32_t index = 0;
 
@@ -2312,7 +2312,7 @@ int32_t CGPlayer_C::GetEquipBypassSkill(uint32_t index) const {
     return 0;
 }
 
-// OFFSET: #0x005140E0
+// OFFSET: 0x00554D60/0x1401B14B0
 int32_t CGPlayer_C::IsInMelee() const {
     return (this->m_combatModeFlags & 0x2) || this->CGUnit_C::IsInMelee();
 }
@@ -2435,7 +2435,7 @@ int32_t CGPlayer_C::OnPetitionShowList(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D6B10
+// OFFSET: 0x0055CE60/0x1401BA130
 void __stdcall CGPlayer_C::BuyPetition(const WOWGUID& vendor, CGPetition* petition) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_PETITION_BUY));
@@ -2806,7 +2806,7 @@ static float ClampPitch(float pitch) {
     return pitch;
 }
 
-// OFFSET: #0x006CF3D0
+// OFFSET: 0x00554A10/0x1401B1320
 static float GetDrunkTurnOffset(uint32_t time, float drunkness) {
     if (drunkness == 0.0f) {
         return 0.0f;
@@ -2816,7 +2816,7 @@ static float GetDrunkTurnOffset(uint32_t time, float drunkness) {
     return (cosf(0.154f * phase) + cosf(phase * 0.195f) + cosf(phase * 0.093f)) * 0.333333f * (drunkness * 0.01308997f);
 }
 
-// OFFSET: #0x006DE9E0
+// OFFSET: 0x00563C20/0x1401C1B40
 int32_t CGPlayer_C::CanGrantLevel(WOWGUID guid) {
     if (!guid) {
         return 8;
@@ -2887,7 +2887,7 @@ void CGPlayer_C::UpdateActiveMoverDisplay(uint32_t time) {
     }
 }
 
-// OFFSET: #0x006D5290
+// OFFSET: 0x0055B8E0/0x1401B04A0
 static int32_t TrackingMaskUpdateProc(WOWGUID guid, void* param) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -2914,7 +2914,7 @@ static int32_t AuraVisionUpdateHandler(WOWGUID guid, void* param) {
 void CGPlayer_C::PostInitActivePlayer() {
     this->m_movementData.m_flags |= 0x200;
     this->SetActiveMirrorHandlers();
-    SI2::InitVocalErrorSounds(this->m_unit->m_unitFieldBytes0[0], this->m_player->m_playerBytes3[0]);
+    SI3::InitVocalErrorSounds(this->m_unit->m_unitFieldBytes0[0], this->m_player->m_playerBytes3[0]);
     CGSpellBook::ClearSpells();
 
     for (uint32_t i = 0; i < s_initialSpells.Count(); i++) {
@@ -3015,7 +3015,7 @@ void CGPlayer_C::CancelGiftWrap() {
     CursorSetMode(1);
 }
 
-// OFFSET: #0x006DD060
+// OFFSET: 0x005625A0/0x1401C02F0
 CGUnit_C* CGPlayer_C::GetPossessedUnit() {
     if (!(this->m_combatModeFlags & 0x1)) {
         return NULL;
@@ -3042,7 +3042,7 @@ CGUnit_C* CGPlayer_C::GetPossessedUnit() {
     return unit;
 }
 
-// OFFSET: #0x006E1660
+// OFFSET: 0x00566EF0/0x1401C57A0
 void CGPlayer_C::SetCombatMode() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
         this->StopAttack();
@@ -4482,7 +4482,7 @@ void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int
     }
 }
 
-// OFFSET: #0x006E0640
+// OFFSET: 0x00565F30/0x1401C4580
 int32_t CGPlayer_C::GetLanguageSkill(uint32_t language, uint32_t& skill) {
     skill = 0;
 
@@ -4538,7 +4538,7 @@ int32_t CGPlayer_C::GetLanguageSkill(uint32_t language, uint32_t& skill) {
     return 0;
 }
 
-// OFFSET: #0x005CD920
+// OFFSET: 0x0055E260/0x1401BB7A0
 int16_t CGPlayer_C::GetSkillModifier(int32_t index) {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -4709,7 +4709,7 @@ uint32_t Spell_C_EncodeSequenceIntoMissileTrajectory(uint32_t* pitch, uint32_t* 
     return dest[2];
 }
 
-// OFFSET: #0x0060A600
+// OFFSET: 0x0044EDD0/0x14005D0C0
 uint32_t CGPlayer_C::GetNextLevelXP() const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         return this->m_player->m_playerNextLevelXp;
@@ -5481,7 +5481,7 @@ int32_t Packet_SMSG_ARENA_TEAM_COMMAND_RESULT(void* param, NETMESSAGE msgId, uin
     return 1;
 }
 
-// OFFSET: #0x006DCA90
+// OFFSET: 0x00561E90/0x1401BFEE0
 bool CGPlayer_C::CanTrackObject(CGObject_C* object) {
     CGGameObject_C* gameObject = static_cast<CGGameObject_C*>(object);
 
@@ -5528,7 +5528,7 @@ int32_t Packet_SMSG_SEND_UNLEARN_SPELLS(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x006D74B0
+// OFFSET: 0x0055DA80/0x1401BAFA0
 void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_REPORT_PVP_PLAYER_AFK));
@@ -5545,7 +5545,7 @@ void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x006D7590
+// OFFSET: 0x0055DB90/0x1401BB0F0
 bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -5584,7 +5584,7 @@ CGBag_C* CGPlayer_C::GetBag() {
     return &this->m_bag;
 }
 
-// OFFSET: #0x006D7BB0
+// OFFSET: 0x0055E350/0x1401BB8F0
 int32_t Player_C_ZoneUpdateHandler(const void* data, void* param) {
     if (++s_zoneUpdateCounter >= 10) {
         s_zoneUpdateCounter -= 10;
@@ -5686,7 +5686,7 @@ bool CGPlayer_C::MeetsItemSetSkill(const ItemSetRec* set) const {
     return true;
 }
 
-// OFFSET: #0x006DE360
+// OFFSET: 0x00563610/0x1401C1380
 InspectItem* CGPlayer_C::GetInspectedItem(int32_t slot) {
     if (s_inspectData && s_inspectData->m_guid == this->m_obj->m_guid) {
         if (slot < 0) {
@@ -5825,7 +5825,7 @@ void __stdcall CGPlayer_C::TalkToQuestUnit(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D1F20
+// OFFSET: 0x005573A0/0x1401B41F0
 void __stdcall CGPlayer_C::TalkToTrainer(const WOWGUID& guid) {
     s_lastTrainerRequest = guid;
     WOWGUID none = { 0 };
@@ -5838,7 +5838,7 @@ void __stdcall CGPlayer_C::TalkToTrainer(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D2120
+// OFFSET: 0x005575C0/0x1401B4450
 void CGPlayer_C::TalkToBinder(const WOWGUID& guid) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid ? guid : s_binder, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -5872,7 +5872,7 @@ void CGPlayer_C::TalkToBinder(const WOWGUID& guid) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D23C0
+// OFFSET: 0x00557890/0x1401B4780
 void __stdcall CGPlayer_C::TalkToGuildBanker(const WOWGUID& guid) {
     if (CGGuildBankInfo::m_banker && CGGuildBankInfo::m_banker == guid) {
         return;
@@ -5887,7 +5887,7 @@ void __stdcall CGPlayer_C::TalkToGuildBanker(const WOWGUID& guid) {
     CGGuildBankInfo::m_pendingBanker = guid;
 }
 
-// OFFSET: #0x006D2500
+// OFFSET: 0x005579D0/0x1401B48F0
 void CGPlayer_C::TalkToTabardVendor(const WOWGUID& guid) {
     if (CGTabardCreationFrame::m_vendor == guid) {
         return;
@@ -6629,7 +6629,7 @@ void CGPlayer_C::BuyItem(WOWGUID vendor, const MerchantItem* item, uint32_t coun
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DC3F0
+// OFFSET: 0x005616D0/0x1401BF5E0
 int32_t CGPlayer_C::CanUseItem(const ItemStats_C* stats, int32_t& error) {
     error = ERR_MAX_VALUE;
 
@@ -7112,7 +7112,7 @@ struct QuestCompleteRewards {
     /* 0010 */ int32_t m_arenaPoints;
 };
 
-// OFFSET: #0x006CFFF0
+// OFFSET: 0x0056BA60/0x1401CB680
 static void CrossedInebriationThresholdItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     int32_t threshold = static_cast<int32_t>(reinterpret_cast<intptr_t>(param));
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -7472,7 +7472,7 @@ static void QuestCompleteCallback(int32_t id, const WOWGUID& guid, void* param, 
     }
 
     CGGameUI::DisplayError(ERR_QUEST_COMPLETE_S, quest->m_name);
-    SI2::PlaySoundKit("igQuestListComplete", NULL, NULL, NULL);
+    SI3::PlaySoundKit("igQuestListComplete", NULL, NULL, NULL);
 
     if (rewards->m_xp) {
         CGGameUI::DisplayError(ERR_QUEST_REWARD_EXP_I, rewards->m_xp);
@@ -7569,7 +7569,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestComplete(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x00518B30
+// OFFSET: 0x00468F10/0x14007D0C0
 uint32_t CGItem::GetEnchantmentId(int32_t slot) {
     if (this->GetItemStaticFlags(0) & 0x2000) {
         return 0;
@@ -7863,7 +7863,7 @@ void CGPlayer_C::ExitAutoCombatMode() {
     CGGameUI::UpdateCombatMode();
 }
 
-// OFFSET: #0x006D5F70
+// OFFSET: 0x0055C340/0x1401B90B0
 void CGPlayer_C::MeleeModeLeave() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
         this->StopAttack();
@@ -7976,7 +7976,7 @@ void CGPlayer_C::ToggleSheathe() {
     }
 }
 
-// OFFSET: #0x006E2610
+// OFFSET: 0x00568140/0x1401C6DF0
 void CGPlayer_C::MeleeModeEnter(const WOWGUID& target) {
     if (!CGGameUI::CanPerformAction(1)) {
         return;
@@ -8052,7 +8052,7 @@ void CGPlayer_C::MeleeModeEnter(const WOWGUID& target) {
     // WoWFix335 melee-swing-right-click: original ends with UpdateBaseAnimation(0x40, -1)
 }
 
-// OFFSET: #0x006E2BE0
+// OFFSET: 0x005686C0/0x1401C75B0
 int32_t CGPlayer_C::AutoCombatModeEventHandler(const void* data, void* param) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -8224,7 +8224,7 @@ int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006CEDD0
+// OFFSET: 0x00554680/0x1401B0820
 void CGPlayer_C::ClearLootingObject() {
     this->m_lootTarget = WOWGUID();
     this->UpdateBaseAnimation(0, -1);
@@ -8495,7 +8495,7 @@ void CGPlayer_C::LootUnit(CGUnit_C* unit, bool autoInteract) {
     this->PlayBaseAnimation(ANIM_LOOT, 0);
 }
 
-// OFFSET: #0x006D51F0
+// OFFSET: 0x0055B840/0x1401B87F0
 static int32_t InteractUpdateProc(WOWGUID guid, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(param);
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -8530,7 +8530,7 @@ static int32_t InteractUpdateProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: #0x006DC5A0
+// OFFSET: 0x005618C0/0x1401BF7F0
 void SendQuestGiverStatusMultipleQuery() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -8664,7 +8664,7 @@ static void __stdcall DisplayDismountResult(uint32_t result) {
     }
 }
 
-// OFFSET: #0x006CB990
+// OFFSET: 0x00550EA0/0x1401ABCA0
 static void RandomRollNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     uint32_t* roll = static_cast<uint32_t*>(param);
 
@@ -8859,7 +8859,7 @@ int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
             msg->Get(binder.m_guid);
             msg->Get(areaId);
             s_lastBinderGuid = binder;
-            SI2::PlaySoundKit(0x475, NULL, NULL, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(0x475, NULL, NULL, NULL, 0, NULL, 1, 0);
             AreaTableRec* area = g_areaTableDB.GetRecord(areaId);
 
             if (area) {
@@ -9100,7 +9100,7 @@ int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
             ChrRacesRec* race = g_chrRacesDB.GetRecord(player->m_unit->m_unitFieldBytes0[0]);
 
             if (race && race->m_explorationSoundID) {
-                SI2::PlaySoundKit(race->m_explorationSoundID, NULL, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(race->m_explorationSoundID, NULL, NULL, NULL, 0, NULL, 1, 0);
             }
 
             return 1;
@@ -9490,7 +9490,7 @@ int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
             }
 
             if (soundId) {
-                SI2::PlaySoundKit(soundId, &position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(soundId, &position, NULL, NULL, 0, NULL, 1, 0);
             }
 
             return 1;
@@ -9540,7 +9540,7 @@ uint8_t CGPlayer_C::FindItemSlot(WOWGUID container, const CGItem_C* item) {
     return 0xFF;
 }
 
-// OFFSET: #0x006DB7C0
+// OFFSET: 0x0056C5A0/0x1401CC5F0
 static void AutoEquipItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID none = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false);
@@ -9621,7 +9621,7 @@ void CGPlayer_C::SplitItem(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot,
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DB6F0
+// OFFSET: 0x0056C4D0/0x1401CC4D0
 static void SwapItemsStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID none = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(id, none, NULL, NULL, false);
@@ -9672,7 +9672,7 @@ void CGPlayer_C::GiftWrap(CGItem_C* item) {
     CGPlayer_C::CancelGiftWrap();
 }
 
-// OFFSET: #0x006DF890
+// OFFSET: 0x0056C660/0x1401CC6F0
 void CGPlayer_C::SwapItems(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot, WOWGUID dstContainer, uint32_t dstSlot, int32_t ignoreBind) {
     if (srcSlot > 255 || dstSlot > 255) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -9802,7 +9802,7 @@ void CGPlayer_C::AutoStoreItemInBag(WOWGUID item, WOWGUID srcContainer, uint32_t
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006DBBE0
+// OFFSET: 0x0056CA00/0x1401CCB70
 static void AutoEquipStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -9825,7 +9825,7 @@ static void AutoEquipStatsCallback(int32_t id, const WOWGUID& guid, void* param,
     }
 }
 
-// OFFSET: #0x006DFC40
+// OFFSET: 0x0056CA80/0x1401CCC10
 void CGPlayer_C::AutoEquipCursorItem(int32_t ignoreBind) {
     if (!CGGameUI::CanPerformAction(22)) {
         return;
@@ -9948,11 +9948,11 @@ void CGPlayer_C::UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_
 // OFFSET: #0x006DE7E0
 uint32_t CGPlayer_C::GetEquippedItemDisplayId() {
     int32_t ammo = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerAmmoId : 0;
-    ItemRec* rec = g_itemDB.GetRecord(ammo);
+    ItemRec* rec = g_itemDB.GetRecord(ammo, WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_displayInfoID : 0;
 }
 
-// OFFSET: #0x006DFEE0
+// OFFSET: 0x0056CCA0/0x1401CCE90
 void CGPlayer_C::AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3) {
     CGObject_C* object = ClntObjMgrObjectPtr(container, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -10426,7 +10426,7 @@ void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool 
     }
 }
 
-// OFFSET: #0x006DB6A0
+// OFFSET: 0x00558360/0x1401B5510
 const char* CGPlayer_C::GetPlayerGuildNameText() {
     if (!this->m_player->m_playerGuildid) {
         return NULL;
@@ -10540,7 +10540,7 @@ static bool AreaTriggerContains(const AreaTriggerRec* rec, const C3Vector& posit
     return dy * dy + dz * dz + dx * dx <= rec->m_radius * rec->m_radius;
 }
 
-// OFFSET: #0x006D2F70
+// OFFSET: 0x00558940/0x1401B5CC0
 void AreaTriggersInitialize(uint32_t mapId) {
     int32_t start = -1;
     int32_t i = 0;
@@ -10570,7 +10570,7 @@ void AreaTriggersInitialize(uint32_t mapId) {
     s_areaTriggerTimer = ClientSetTimer(100, AreaTriggerCheck, NULL);
 }
 
-// OFFSET: #0x006DBE30
+// OFFSET: 0x00560CF0/0x1401BEB10
 int32_t AreaTriggerCheck(const void* data, void* param) {
     s_areaTriggerTimer = ClientSetTimer(100, AreaTriggerCheck, NULL);
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -10710,7 +10710,7 @@ int32_t CGPlayer_C::UpdateMountedCollisionBox(float mountHeight, int32_t force) 
     return 1;
 }
 
-// OFFSET: #0x006D78C0
+// OFFSET: 0x0055DF10/0x1401BB4C0
 int32_t CGPlayer_C::UpdateUnitCollisionBox(int32_t a2, int32_t a3) {
     CreatureDisplayInfoRec* displayInfo = g_creatureDisplayInfoDB.GetRecord(this->m_unit->m_unitFieldNativedisplayid);
     CreatureModelDataRec* modelData = displayInfo ? g_creatureModelDataDB.GetRecord(displayInfo->m_modelID) : NULL;
@@ -10796,7 +10796,7 @@ uint32_t GetVisibleAuraEffectFlags() {
 void PlayerShutdownSounds() {
 }
 
-// OFFSET: #0x006DFF90
+// OFFSET: 0x0056CD50/0x1401CCF60
 void CGPlayer_C::AutoEquipItemToSlot(CGItem_C* item, uint32_t slot, int32_t ignoreBind) {
     if (!item) {
         return;
@@ -10891,7 +10891,7 @@ void CGPlayer_C::ClearPendingEquip(uint32_t index, int32_t equip) {
     swap->m_dstSlot = 0xFFFFFFFF;
 }
 
-// OFFSET: #0x006E0300
+// OFFSET: 0x00565CF0/0x1401C3F20
 void PlayerClientShutdown() {
     CGPlayer_C::PlayerShutdownMessageHandlers();
     PlayerShutdownSounds();
@@ -11071,7 +11071,7 @@ void CGPlayer_C::PlayerShutdownMessageHandlers() {
     ClientServices::ClearMessageHandler(SMSG_COMBAT_LOG_MULTIPLE);
 }
 
-// OFFSET: #0x006DB320
+// OFFSET: 0x00565A40/0x1401C3BF0
 void CGPlayer_C::SaveTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background, WOWGUID npc) {
     if (emblemStyle < 0 || emblemColor < 0 || borderStyle < 0 || borderColor < 0 || background < 0 || emblemStyle >= 170 || emblemColor >= 17 || borderStyle >= 6 || borderColor >= 17 || background >= 51) {
         CGGameUI::DisplayError(ERR_GUILDEMBLEM_INVALID_TABARD_COLORS);
@@ -11315,7 +11315,7 @@ int32_t Packet_SMSG_GROUP_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDa
     Script_SendUniqueSignal(SCRIPT_EVENT_PARTY_MEMBERS_CHANGED);
 
     if (joined) {
-        SI2::PlaySoundKit("igPlayerInviteAccept", NULL, NULL, NULL);
+        SI3::PlaySoundKit("igPlayerInviteAccept", NULL, NULL, NULL);
 
         if (!wasInGroup && leader == ClntObjMgrGetActivePlayer() && name[0]) {
             CGGameUI::DisplayError(ERR_JOINED_GROUP_S, name);
@@ -11732,9 +11732,9 @@ int32_t OnUpdateShapeshiftForm(WOWGUID guid, uint32_t offset, uint32_t count, co
                     properties.ResetToDefaults();
                     properties.m_volumeScale = listenerAtCharacter ? 0.64999998f : 1.0f;
                     properties.m_priority = 110;
-                    SI2::PlaySoundKit(10063, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
+                    SI3::PlaySoundKit(10063, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
                 } else {
-                    SI2::PlaySoundKit(10063, &position, NULL, NULL, 0, NULL, 1, 0);
+                    SI3::PlaySoundKit(10063, &position, NULL, NULL, 0, NULL, 1, 0);
                 }
             }
         }
@@ -11809,7 +11809,7 @@ int32_t SignalPlayerSkillStatEventsAndRefresh(WOWGUID guid, uint32_t offset, uin
     return 1;
 }
 
-// OFFSET: #0x006D9F20
+// OFFSET: 0x0055F310/0x1401BCC20
 int32_t ReportDailyQuestsRemaining(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -11852,7 +11852,7 @@ int32_t ReportDailyQuestsRemaining(WOWGUID guid, uint32_t offset, uint32_t count
 
 // OFFSET: #0x006DA070
 int32_t OnUpdateMoney(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
-    SI2::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
+    SI3::PlaySoundKit("LOOTWINDOWCOINSOUND", NULL, NULL, NULL);
     CGClassTrainer::RefreshList();
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_MONEY, NULL);
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -12219,7 +12219,7 @@ void CGPlayer_C::UpdateRepopTimer() {
     }
 }
 
-// OFFSET: #0x006DC0F0
+// OFFSET: 0x00561400/0x1401BF280
 void CGPlayer_C::OnDeath() {
     if (this->m_unit->m_unitDynamicFlags & 0x20) {
         return;
@@ -12681,7 +12681,7 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x006DF710
+// OFFSET: 0x005659B0/0x1401C3B60
 void CGPlayer_C::UpdateGhostStatus() {
     if (this->m_player->m_playerFlags & 0x10) {
         CGTutorial::TriggerTutorial(24);
@@ -12700,7 +12700,7 @@ void CGPlayer_C::UpdateGhostStatus() {
     this->UpdateReaction(false);
 }
 
-// OFFSET: #0x006E0FD0
+// OFFSET: 0x005667A0/0x1401C4FC0
 void CGPlayer_C::TogglePlayerFlag(uint32_t oldFlags) {
     uint32_t changed = oldFlags ^ this->m_player->m_playerFlags;
 
@@ -12847,11 +12847,11 @@ void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
     uint32_t sound;
 
     if (this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
-        sound = SI2::GetTextEmoteSoundIndex(emote->m_id, this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[2]);
+        sound = SI3::GetTextEmoteSoundIndex(emote->m_id, this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[2]);
     } else {
         uint32_t sex = this->GetDisplaySex();
         uint32_t race = this->GetDisplayRace();
-        sound = SI2::GetTextEmoteSoundIndex(emote->m_id, race, sex);
+        sound = SI3::GetTextEmoteSoundIndex(emote->m_id, race, sex);
     }
 
     msg.Put(sound);
@@ -12873,7 +12873,7 @@ void CGPlayer_C::StopDance() {
     this->m_dance = NULL;
 }
 
-// OFFSET: #0x006DE870
+// OFFSET: 0x0055D970/0x1401BADC0
 void CGPlayer_C::Dance() {
     PlayerDance* dance = this->m_dance;
 
@@ -12921,7 +12921,7 @@ void CGPlayer_C::StartDance(PlayerDance* dance) {
     this->Dance();
 }
 
-// OFFSET: #0x006E17C0
+// OFFSET: 0x00563910/0x1401C16D0
 void CGPlayer_C::DanceMoveComplete() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         WDataStore msg;
@@ -12946,7 +12946,7 @@ static int32_t DanceTimerCallback(const void* data, uint64_t guid, void* param) 
     return 1;
 }
 
-// OFFSET: #0x006E18D0
+// OFFSET: 0x00563A20/0x1401C1810
 void CGPlayer_C::PlayDanceMove(const DanceMovesRec* move) {
     switch (move->m_type) {
         case 0:
@@ -12969,7 +12969,7 @@ void CGPlayer_C::PlayDanceMove(const DanceMovesRec* move) {
             CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
             if (player && (CGPartyInfo::IsMember(this->m_obj->m_guid) || player->m_unit->m_unitFieldTarget == this->m_obj->m_guid || ClntObjMgrGetActivePlayer() == this->m_obj->m_guid)) {
-                SI2::PlaySoundKit(move->m_param, &position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(move->m_param, &position, NULL, NULL, 0, NULL, 1, 0);
             }
 
             this->DanceMoveComplete();
@@ -13328,7 +13328,7 @@ void CGPlayer_C::PlayUnitSound(uint32_t soundType, int32_t force) {
         return;
     }
 
-    int32_t soundKitId = GetSoundID(this->GetSoundData(), soundType);
+    int32_t soundKitId = GetSoundID(this->GetSoundData(0), soundType);
 
     if (!soundKitId) {
         return;
@@ -13363,7 +13363,7 @@ void CGPlayer_C::PlayUnitSound(uint32_t soundType, int32_t force) {
             properties.m_maxAudibleBehavior = 0;
         } else if (soundType != 5 && soundType != 6 && soundType != 10 && soundType != 11 && soundType != 12 && soundType != 13 && this->m_unit->m_unitFieldBytes0[1] == 6) {
             properties.m_useDspChain = 1;
-            SI2::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
+            SI3::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
         }
 
         soundPosition = listenerAtCharacter ? NULL : &position;
@@ -13373,13 +13373,13 @@ void CGPlayer_C::PlayUnitSound(uint32_t soundType, int32_t force) {
 
         if (soundType != 5 && soundType != 6 && soundType != 7 && soundType != 10 && soundType != 11 && soundType != 12 && soundType != 13 && this->m_unit->m_unitFieldBytes0[1] == 6) {
             properties.m_useDspChain = 1;
-            SI2::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
+            SI3::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
         }
 
         soundPosition = &position;
     }
 
-    SI2::PlaySoundKit(soundKitId, soundPosition, NULL, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, soundPosition, NULL, &properties, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x007633F0
@@ -13393,7 +13393,7 @@ void CGPlayer_C::PlayFoleySound() {
         if (chest) {
             int32_t local = this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
             C3Vector position = this->GetPosition();
-            SI2::PlayFoleySound(chest->GetMaterial(), &position, local);
+            SI3::PlayFoleySound(chest->GetMaterial(), &position, local);
         }
     }
 }
@@ -13814,7 +13814,7 @@ int32_t OnUpdatePlayerRuneRegen(WOWGUID guid, uint32_t offset, uint32_t count, c
     return 1;
 }
 
-// OFFSET: #0x006DB1C0
+// OFFSET: 0x005605F0/0x1401BE1C0
 void CGPlayer_C::TalkToTalentMaster(const WOWGUID& guid, uint32_t cost) {
     WOWGUID target = guid ? guid : s_talentMaster;
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -13874,7 +13874,7 @@ void CGPlayer_C::TurnOffGuildTabardPurchase() {
     CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
 }
 
-// OFFSET: #0x006DC640
+// OFFSET: 0x00554460/0x1401B04F0
 void CGPlayer_C::SetAFK(const char* message) {
     const char* text = message;
 
@@ -13911,7 +13911,7 @@ void CGPlayer_C::OpenWrappedItem(CGItem_C* item) {
         return;
     }
 
-    SI2::PlaySoundKit("UnwrapGift", NULL, NULL, NULL);
+    SI3::PlaySoundKit("UnwrapGift", NULL, NULL, NULL);
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_OPEN_ITEM));
     msg.Put(bag);

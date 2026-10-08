@@ -23,7 +23,7 @@ float CMovementShared::s_safeFallTerminalVelocity = 7.0f;
 // STATIC: #0x00B2D9F0
 float CMovementShared::s_twoPi = 6.2831855f;
 
-// OFFSET: #0x00986F00
+// OFFSET: 0x00A1FD20/0x1407C5DC0
 float __stdcall CMovementShared::CalcFallDistance(float time, int32_t safeFall, float velocity) {
     float terminal = safeFall ? s_safeFallTerminalVelocity : s_terminalVelocity;
 
@@ -487,7 +487,7 @@ void CMovementShared::ForceStopStrafe() {
     this->UpdateAnchors(0);
 }
 
-// OFFSET: #0x00987570
+// OFFSET: 0x00A1F8C0/0x1407C5AA0
 float CMovementShared::GetBaseSpeed(int32_t walk) const {
     uint32_t flags = this->m_flags;
 
@@ -1197,7 +1197,7 @@ int32_t CMovementShared::StopAscensionDescension() {
     return 1;
 }
 
-// OFFSET: #0x00988490
+// OFFSET: 0x00A21840/0x1407C7A00
 void CMovementShared::StopFalling() {
     uint32_t flags = this->m_flags;
     uint32_t falling = flags & MOVEMENTFLAG_FALLING;

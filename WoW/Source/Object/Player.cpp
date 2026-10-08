@@ -75,14 +75,14 @@ const uint32_t CGPlayer::s_localMirrorFields[870] = {
     0x495, 0x496, 0x497, 0x498, 0x499, 0x49A
 };
 
-// OFFSET: #0x004D4200
+// OFFSET: 0x0048D920/0x1400B1730
 uint32_t CGPlayer::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base) {
     int32_t total = CGUnit::TotalFields();
 
     return (offset & 3) + 4 * (total + CGPlayer::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// OFFSET: #0x004F5550
+// OFFSET: 0x00A27D70/0x1407CF550
 uint32_t CGPlayer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]); i++) {
         if (CGPlayer::s_mirrorFields[i] == index) {
@@ -101,7 +101,7 @@ uint32_t CGPlayer::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, in
     return 1178;
 }
 
-// OFFSET: #0x004F7290
+// OFFSET: 0x0043F470/0x14004A690
 float CGPlayer::GetDrunknessTurnValue() {
     int32_t drunk = this->m_player->m_playerBytes3[1];
     int32_t fakeDrunk = this->m_player->m_playerFakeInebriation;
@@ -133,12 +133,13 @@ int32_t CGPlayer::TotalRemoteFields() {
     return CGUnit::TotalFields() + sizeof(CGPlayer::s_mirrorFields) / sizeof(CGPlayer::s_mirrorFields[0]);
 }
 
-// OFFSET: #0x004FFD80
+// PROVEN: a51ceb3b IDENTICAL/NONE
+// OFFSET: 0x0044ED80
 bool CGPlayer::IsDrunk() {
     return this->m_player->m_playerBytes3[1] || this->m_player->m_playerFakeInebriation;
 }
 
-// OFFSET: #0x00584B00
+// OFFSET: 0x00968090
 uint32_t CGPlayer::GetBuybackPrice(uint32_t slot) {
     if (slot < 12) {
         return this->m_player->m_playerFieldBuybackPrice1[slot];
@@ -147,7 +148,7 @@ uint32_t CGPlayer::GetBuybackPrice(uint32_t slot) {
     return 0;
 }
 
-// OFFSET: #0x0061DCB0
+// OFFSET: 0x00468FC0
 bool CGPlayer::HasPvpMedal(uint8_t medal) {
     return (this->m_player->m_playerFieldPvpMedals & (1 << (medal - 1))) != 0;
 }
@@ -157,7 +158,7 @@ bool CGPlayer::HasAuraVision(uint8_t vision) {
     return (reinterpret_cast<const uint8_t*>(&this->m_player->m_playerFieldBytes2)[3] & (1 << (vision - 1))) != 0;
 }
 
-// OFFSET: #0x005E0870
+// OFFSET: 0x0055E1F0
 PlayerQuestLogEntry* CGPlayer::GetQuestLogEntry(uint32_t slot) {
     if (slot > 25) {
         return NULL;

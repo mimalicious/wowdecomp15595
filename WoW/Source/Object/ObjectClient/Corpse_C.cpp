@@ -221,7 +221,7 @@ int32_t CGCorpse_C::CanBeLooted() const {
     return this->m_corpse->m_corpseFieldDynamicFlags & 0x1;
 }
 
-// OFFSET: #0x00705A80
+// OFFSET: 0x00597EE0/0x140205F10
 uint32_t CGCorpse_C::GetFactionTemplate() const {
     ChrRacesRec* rec = g_chrRacesDB.GetRecord(this->m_corpse->m_corpseFieldBytes1[1]);
 
@@ -253,7 +253,7 @@ int32_t CGCorpse_C::CanHighlight() const {
     return !(this->m_corpse->m_corpseFieldFlags & 0x1) || (this->m_corpse->m_corpseFieldDynamicFlags & 0x1);
 }
 
-// OFFSET: #0x007062C0
+// OFFSET: 0x00598850/0x140206A00
 void CGCorpse_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_CORPSE, offsetof(CGCorpseData, m_corpseFieldFlags), sizeof(uint32_t), CorpseFlagUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetTypeMirrorHandler(ID_CORPSE, offsetof(CGCorpseData, m_corpseFieldDynamicFlags), sizeof(uint32_t), CorpseDynamicFlagUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
@@ -381,7 +381,7 @@ void CGCorpse_C::PostReenable() {
     CGObject_C::PostReenable();
 }
 
-// OFFSET: #0x00705670
+// OFFSET: 0x005979A0/0x140205830
 int32_t CGCorpse_C::GetModelFileName(const char** name) const {
     static char s_modelName[260];
 

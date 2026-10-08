@@ -626,6 +626,7 @@ class SE3 {
     static int32_t IsTooCloseToExistingSoundKit(int32_t soundKitID, const C3Vector& position);
     static void KillVirtualSounds(int32_t elapsed);
     static void Log_Init();
+    static void Log_ShutDown();
     static int32_t PreloadSoundKit(int32_t soundKitID, int32_t wait);
     static void Log_Write(const char* format, ...);
     static void Log_Write(uint32_t line, const char* file, FMOD_RESULT result, const char* format, ...);

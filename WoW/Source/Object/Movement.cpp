@@ -55,7 +55,7 @@ static CAaBox s_queryBox;
 // STATIC: #0x00C9ECC8
 static int32_t s_flushingQueue;
 
-// OFFSET: #0x006EBC70
+// OFFSET: 0x00577230/0x1401DBE50
 CPlayerMoveEvent* CPlayerMoveQueue::AllocEvent(uint32_t eventTime, MoveEventId eventId) {
     CPlayerMoveEvent* event = s_freeList.Head();
 
@@ -71,7 +71,7 @@ CPlayerMoveEvent* CPlayerMoveQueue::AllocEvent(uint32_t eventTime, MoveEventId e
     return event;
 }
 
-// OFFSET: #0x006EC090
+// OFFSET: 0x005756E0/0x1401D9A40
 void CPlayerMoveQueue::Enqueue(CPlayerMoveEvent* event) {
     for (CPlayerMoveEvent* node = this->Head(); node; node = node->m_link.Next()) {
         if ((int32_t)(event->m_eventTime - node->m_eventTime) < 0) {
@@ -103,7 +103,7 @@ CMovementGlobals::CMovementGlobals() {
     this->m_hasTransportTime2 = 0;
 }
 
-// OFFSET: #0x006EC2C0
+// OFFSET: 0x0057ADA0/0x1401E0730
 void MovementInitialize(const char* logFile) {
     MovementSetGlobals(new (SMemAlloc(sizeof(CMovementGlobals), __FILE__, __LINE__, 0)) CMovementGlobals());
 
@@ -159,7 +159,7 @@ int32_t CPlayerMoveQueue::HasEventBetween(MoveEventId first, MoveEventId last) {
     return 0;
 }
 
-// OFFSET: #0x006EB590
+// OFFSET: 0x00575860/0x1401D9C90
 void CPlayerMoveQueue::UnlinkEventById(MoveEventId eventId) {
     for (CPlayerMoveEvent* event = this->Head(); event; event = event->m_link.Next()) {
         if (event->m_eventId == eventId) {
@@ -238,7 +238,7 @@ void CMovement_C::BuildCollisionBox(const C3Vector& position, CAaBox& box) const
     box.t.z = this->m_collisionHeight + box.t.z;
 }
 
-// OFFSET: #0x0075C8F0
+// OFFSET: 0x00602DD0/0x140289F70
 void CMovement_C::BuildCollisionVolumePlanes(const C3Vector& position, float height, float radius, C4Plane* planes) const {
     planes[0].n.x = -1.0f;
     planes[0].n.y = 0.0f;
@@ -702,7 +702,7 @@ void CMovement_C::SetSplineFaceTarget(const WOWGUID& target) {
     this->m_spline->m_face.m_target = target;
 }
 
-// OFFSET: #0x006ECAE0
+// OFFSET: 0x00577760/0x1401DC230
 void CMovement_C::AddPlayerChangeSeatsEvent(uint32_t eventTime, MoveEventId eventId, bool needAck, WOWGUID transport, uint8_t seat) {
     CPlayerMoveEvent* event = CPlayerMoveQueue::AllocEvent(eventTime, eventId);
     event->m_facing = 0.0f;
@@ -745,7 +745,7 @@ void CMovement_C::OnAscendDescendStartLocal(uint32_t eventTime, int32_t ascend) 
     this->AddPlayerMoveEvent(eventTime, ascend ? MOVEEVENT_START_ASCEND : MOVEEVENT_START_DESCEND, true, 0, 0.0f, 0.0f, 0);
 }
 
-// OFFSET: #0x006EF310
+// OFFSET: 0x00579160/0x1401DE5D0
 void CMovement_C::OnAscendDescendStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_ASCEND, true, 0, 0.0f, 0.0f, 0);
 }
@@ -918,7 +918,7 @@ void CMovement_C::SetUpdateInfo(uint32_t time, const CClientMoveUpdate* update, 
     MovementUpdateCameraYaw(*this->m_ownerGuid, WOWGUID::Make(this->m_unit->GetCameraRelativeTo()));
 }
 
-// OFFSET: #0x006ECCF0
+// OFFSET: 0x005779C0/0x1401DC4B0
 void CMovement_C::OnFallLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_START_FALLING, true, 0, 0.0f, 0.0f, 0);
 }
@@ -1031,7 +1031,7 @@ void CMovement_C::OnMoveStartLocal(uint32_t eventTime, int32_t forward) {
     this->AddPlayerMoveEvent(eventTime, (MoveEventId)(forward == 0), true, 0, 0.0f, 0.0f, 0);
 }
 
-// OFFSET: #0x006ECDE0
+// OFFSET: 0x00577A90/0x1401DC5C0
 void CMovement_C::OnMoveStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP, true, 0, 0.0f, 0.0f, 0);
 }
@@ -1068,7 +1068,7 @@ void CMovement_C::OnPitchRateChangeLocal(uint32_t eventTime, uint32_t ackCounter
     }
 }
 
-// OFFSET: #0x006EECA0
+// OFFSET: 0x00578F60/0x1401DE170
 void CMovement_C::OnPitchStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_PITCH, true, 0, 0.0f, 0.0f, 0);
     this->m_moveQueue.UnlinkEventById(MOVEEVENT_STOP_PITCH_AT_ANGLE);
@@ -1217,7 +1217,7 @@ void CMovement_C::OnStrafeStartLocal(uint32_t eventTime, int32_t left) {
     this->AddPlayerMoveEvent(eventTime, left ? MOVEEVENT_START_STRAFE_LEFT : MOVEEVENT_START_STRAFE_RIGHT, true, 0, 0.0f, 0.0f, 0);
 }
 
-// OFFSET: #0x006ECE40
+// OFFSET: 0x00577B00/0x1401DC630
 void CMovement_C::OnStrafeStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_STRAFE, true, 0, 0.0f, 0.0f, 0);
 }
@@ -1333,7 +1333,7 @@ void CMovement_C::OnTurnRateChangeLocal(uint32_t eventTime, uint32_t ackCounter,
     }
 }
 
-// OFFSET: #0x006ECEA0
+// OFFSET: 0x00577B70/0x1401DC6A0
 void CMovement_C::OnTurnStopLocal(uint32_t eventTime) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_STOP_TURN, true, 0, 0.0f, 0.0f, 0);
     this->m_moveQueue.UnlinkEventById(MOVEEVENT_STOP_TURN_AT_ANGLE);
@@ -1443,7 +1443,7 @@ uint32_t CMovement_C::GetFacetQueryFlags() const {
     return flags;
 }
 
-// OFFSET: #0x0075CA80
+// OFFSET: 0x00602FF0/0x14028A1C0
 void CMovement_C::BuildCollisionVolume(const C3Vector& position, float height, C4Plane* planes, C3Vector* points, uint8_t* faces) const {
     this->BuildCollisionVolumePlanes(position, height, this->m_collisionRadius, planes);
 
@@ -1545,12 +1545,12 @@ void CMovement_C::OnFeatherFall(int32_t enable) {
     this->PostFeatherFall();
 }
 
-// OFFSET: #0x006EF5A0
+// OFFSET: 0x005793A0/0x1401DE8C0
 void CMovement_C::OnChangeSeatsOnControlledVehicleLocal(uint32_t eventTime, WOWGUID transport, uint8_t seat) {
     this->AddPlayerChangeSeatsEvent(eventTime, MOVEEVENT_CHANGE_SEAT, true, transport, seat);
 }
 
-// OFFSET: #0x006E9570
+// OFFSET: 0x00571D50/0x1401D2FE0
 void CMovement_C::SetCollisionBox(float width, float height, float scale, float referenceScale, int32_t force) {
     float stepUpScale = 1.0f;
 
@@ -1933,7 +1933,7 @@ static int32_t IsTooSteepForUnit(const CGUnit_C* unit, uint32_t facet) {
     return !(s_moveFacets.facets.m_data[facet].plane.n.z > 0.17364818f);
 }
 
-// OFFSET: #0x0075B710
+// OFFSET: 0x00601910/0x1402885D0
 static void ClipPolygonToPlane(ClipPolygon& polygon, int32_t planeIndex, const C4Plane& plane) {
     float minDist = 3.402823466e38f;
     float maxDist = -3.402823466e38f;
@@ -2302,7 +2302,7 @@ int32_t CMovement_C::BoxDoesntFit(float height, float radius) {
     return ClipBoxAgainstPlanes(this->m_position, planes, 9);
 }
 
-// OFFSET: #0x006E8FF0
+// OFFSET: 0x00571700/0x1401D2A20
 int32_t CMovement_C::CollisionBoxDoesntFit(float width, float height, float scale) {
     float radius = width * scale * 0.5f;
 
@@ -2354,7 +2354,7 @@ static int32_t ClipMovementPyramid(World::FacetData* facets, const C3Vector& dir
     return found;
 }
 
-// OFFSET: #0x0075CD70
+// OFFSET: 0x00603630/0x14028A7C0
 static void __stdcall DistanceToMovePyramid(World::FacetData* facets, const C3Vector& direction, float distance, const C3Vector& move, const C4Plane* volumePlanes, const C3Vector* volumePoints, const uint8_t* volumeFaces, uint32_t* facetIndex, C4Plane* hitPlanes, uint32_t* hitCount, float* hitDistance) {
     C4Plane extruded[4];
 
@@ -2499,7 +2499,7 @@ static int32_t CheckFallingConditions(const C4Plane* planes, uint32_t count) {
     return 0;
 }
 
-// OFFSET: #0x0075DE80
+// OFFSET: 0x00604D00/0x14028C0B0
 static int32_t GetBoxPushNormal(const C4Plane* planes, uint32_t count, C3Vector& normal) {
     if (!count || count > 4) {
         return 0;
@@ -2748,7 +2748,7 @@ void CMovement_C::GroundNormal() {
     this->m_groundNormal = ::GetGroundNormal(planes, 6);
 }
 
-// OFFSET: #0x0075F0A0
+// OFFSET: 0x00606BA0/0x14028E8B0
 int32_t CMovement_C::ValidateTestVsFacetQuery(C3Vector move) const {
     C44Matrix transform;
     C3Vector position = this->m_position;
@@ -2816,7 +2816,7 @@ int32_t CMovement_C::ValidateTestVsFacetQuery(C3Vector move) const {
     return 1;
 }
 
-// OFFSET: #0x0075F520
+// OFFSET: 0x00607020/0x14028EF30
 int32_t CMovement_C::GetCurrentHoverHeight(float* height, int32_t* noGround, uint64_t* facetId) const {
     C4Plane hitPlanes[7];
 
@@ -4391,7 +4391,7 @@ int32_t CMovement_C::HeartBeat(const CPlayerMoveEvent* event) {
     return 1;
 }
 
-// OFFSET: #0x006EAF50
+// OFFSET: 0x00573E60/0x1401D5350
 void CMovement_C::RemoveFromMoversList(int32_t a1) {
     if (!this->m_globalUnitsLink.IsLinked()) {
         return;
@@ -5084,7 +5084,7 @@ void CMovement_C::ApplyMovement(uint32_t time, uint32_t elapsed) {
     }
 }
 
-// OFFSET: #0x006F09F0
+// OFFSET: 0x0057AB20/0x1401E0490
 void CMovement_C::ExecuteMovement(uint32_t time, uint32_t lastTime) {
     uint32_t cursor = lastTime;
     uint32_t delta = time - lastTime;
@@ -5176,7 +5176,7 @@ done:
     this->m_unit->m_modelFlags &= ~0x800000u;
 }
 
-// OFFSET: #0x006F13E0
+// OFFSET: 0x0057B1A0/0x1401E0CC0
 void CMovement_C::MoveUnits(uint32_t time, uint32_t lastUpdateTime) {
     CMovementGlobals* globals = MovementGetGlobals();
 
@@ -6320,7 +6320,7 @@ void CMovement_C::SetSplineAnimation(uint8_t animType, uint32_t effectStartTime)
     }
 }
 
-// OFFSET: #0x006EB650
+// OFFSET: 0x00575A80/0x1401D9F50
 int32_t CMovement_C::TryStartFallingLocal() {
     if (!this->TryStartFalling()) {
         return 0;

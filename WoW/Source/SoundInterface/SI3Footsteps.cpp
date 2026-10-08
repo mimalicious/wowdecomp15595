@@ -1,30 +1,26 @@
 #include <cstddef>
 #include <cstdint>
-#include "WoW/Source/SoundInterface/SoundInterface2Footsteps.h"
+#include "WoW/Source/SoundInterface/SI3Footsteps.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
-// STATIC: #0x00B4AE04
+// STATIC: 0x00E28858
 static HASHKEY_NONE s_footstepKey;
 
-// STATIC: #0x00B4AE10
+// STATIC: 0x00E2885C
 static TSHashTable<FOOTSTEPSNDCACHE, HASHKEY_NONE> s_footstepSounds;
 
-// OFFSET: #0x004CEE50
-bool CGUnit_C::IsActivePlayer() {
-    return this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
-}
-
-// OFFSET: #0x004CF060
-void SI2::FreeFootstepSounds() {
+// OFFSET: 0x00633C50
+void SI3::ShutDownFootstepSounds() {
     s_footstepSounds.Clear();
 }
 
-// OFFSET: #0x004CF100
-static uint32_t GetFootstepSound(int32_t terrainType, int32_t footstepId, int32_t splash) {
+// OFFSET: 0x006338C0
+static uint32_t GetFootstepSound(uint32_t terrainType, int32_t footstepId, int32_t splash) {
     TerrainTypeRec* terrain = g_terrainTypeDB.GetRecord(terrainType);
 
     if (!terrain) {
@@ -45,15 +41,9 @@ static uint32_t GetFootstepSound(int32_t terrainType, int32_t footstepId, int32_
     return cache->m_sounds[index];
 }
 
-// OFFSET: #0x004CF170
-void SI2::PlayFootstepSound(int32_t footstepId, const C3Vector* position, int32_t terrainType, int32_t splash, int32_t loud, CGUnit_C* unit) {
-    if (!unit) {
-        return;
-    }
-
-    static CVar* s_listenerAtCharacter = CVar::Lookup("Sound_ListenerAtCharacter");
-
-    if (!s_listenerAtCharacter) {
+// OFFSET: 0x00633930/0x1402C9610
+void SI3::PlayFootstepSound(int32_t footstepId, const C3Vector* position, uint32_t terrainType, int32_t splash, int32_t loud, CGObject_C* object) {
+    if (!object) {
         return;
     }
 
@@ -67,36 +57,37 @@ void SI2::PlayFootstepSound(int32_t footstepId, const C3Vector* position, int32_
         }
     }
 
-    SE2SoundKitProperties properties;
+    CGObjectData* data = object->m_obj;
 
-    if ((unit->m_obj->m_type & TYPEMASK_PLAYER) && unit->IsActivePlayer() && s_listenerAtCharacter->m_intValue) {
-        properties.ResetToDefaults();
-        properties.m_maxDistance = loud ? 50.0f : 20.0f;
-        properties.m_volumeScale = 0.65f;
-        properties.m_group = 17;
-        properties.m_priority = 115;
-        SI2::PlaySoundKit(soundKitId, NULL, NULL, &properties, 0, NULL, 1, 0);
-    } else if ((unit->m_obj->m_type & TYPEMASK_PLAYER) && unit->IsActivePlayer()) {
-        properties.ResetToDefaults();
-        properties.m_group = 17;
-        properties.m_priority = 115;
-        SI2::PlaySoundKit(soundKitId, position, NULL, &properties, 0, NULL, 1, 0);
+    if ((data->m_type & TYPEMASK_PLAYER) && data->m_guid == ClntObjMgrGetActivePlayer()) {
+        if (SI3::sm_pCVar_Sound_ListenerAtCharacter && SI3::sm_pCVar_Sound_ListenerAtCharacter->m_intValue) {
+            SE3SoundKitProperties properties;
+            properties.unk_002C = loud ? 50.0f : 20.0f;
+            properties.m_bus = SE3BUS_20;
+            properties.m_priority = 115;
+            SE3::PlaySoundKit(soundKitId, NULL, &properties, NULL, __FILE__, __LINE__, "Player's Footstep Sound (2D)");
+        } else {
+            SE3SoundKitProperties properties;
+            properties.m_bus = SE3BUS_20;
+            properties.m_priority = 115;
+            SE3::PlaySoundKit(soundKitId, position, &properties, NULL, __FILE__, __LINE__, "Player's Footstep Sound (3D)");
+        }
     } else {
-        properties.ResetToDefaults();
-        properties.m_group = 13;
-        properties.m_maxAudibleBehavior = 0;
-        SI2::PlaySoundKit(soundKitId, position, NULL, &properties, 0, NULL, 1, 0);
+        SE3SoundKitProperties properties;
+        properties.m_bus = SE3BUS_16;
+        properties.m_priority = 128;
+        SE3::PlaySoundKit(soundKitId, position, &properties, NULL, __FILE__, __LINE__, "Footstep Sound");
     }
 }
 
-// OFFSET: %0x00643400
+// INLINED
 FOOTSTEPSNDCACHE::FOOTSTEPSNDCACHE() {
     this->m_sounds.Clear();
     this->m_splashSounds.Clear();
 }
 
-// OFFSET: #0x004CF990
-void SI2::InitFootstepSounds() {
+// OFFSET: 0x00634400/0x1402CA4D0
+void SI3::InitFootstepSounds() {
     s_footstepSounds.Clear();
 
     uint32_t count = g_terrainTypeSoundsDB.m_maxID + 1;

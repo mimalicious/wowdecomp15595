@@ -25,7 +25,7 @@ static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId
 }
 
 // OFFSET: #0x00704AF0
-static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+static void AnimFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
     }
@@ -55,7 +55,7 @@ CGDynamicObject_C::~CGDynamicObject_C() {
         SpellVisualsBlizzardStop(&this->m_blizzardVisual);
     }
 
-    SI2::StopSound(&this->m_soundKit, 0, 3.0f, 1);
+    SI3::StopSound(&this->m_soundKit, 0, 3.0f, 1);
 }
 
 // OFFSET: #0x00705230
@@ -119,7 +119,7 @@ C3Vector CGDynamicObject_C::GetRawPosition() const {
     return this->m_passenger.m_position;
 }
 
-// OFFSET: #0x007049D0
+// OFFSET: 0x005969C0/0x140205A20
 void CGDynamicObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     CGObject_C::ShouldRender(flags, render, a3);
 
@@ -143,7 +143,7 @@ float CGDynamicObject_C::GetRawFacing() const {
     return this->m_passenger.m_facing;
 }
 
-// OFFSET: #0x007064E0
+// OFFSET: 0x005977E0/0x140206DB0
 C3Vector CGDynamicObject_C::GetPosition() const {
     return this->m_passenger.GetPosition(this->m_passenger.m_position);
 }
@@ -178,7 +178,7 @@ void CGDynamicObject_C::Disable() {
         SpellVisualsBlizzardStop(&this->m_blizzardVisual);
     }
 
-    SI2::StopSound(&this->m_soundKit, 0, 3.0f, 1);
+    SI3::StopSound(&this->m_soundKit, 0, 3.0f, 1);
 }
 
 // OFFSET: #0x00704990
@@ -189,7 +189,7 @@ void CGDynamicObject_C::Reenable() {
 }
 
 // OFFSET: #0x00704A40
-static void DynamicObjectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+static void DynamicObjectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGDynamicObject_C* object = reinterpret_cast<CGDynamicObject_C*>(static_cast<uintptr_t>(param));
 
     if (object) {
@@ -251,7 +251,7 @@ void CGDynamicObject_C::HandleAnimEvent(uint32_t eventId, uint32_t data, const C
     SpellEffectCameraShakesRec* shakes = g_spellEffectCameraShakesDB.GetRecord(data);
 
     if (eventId == 0x444E5324) {
-        SI2::PlaySoundKit(data, position, NULL, NULL, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(data, position, NULL, NULL, 0, NULL, 1, 0);
         return;
     }
 
@@ -335,13 +335,13 @@ void CGDynamicObject_C::ObjectVisKitProc() {
     }
 
     if (kit->m_soundID) {
-        SI2::StopSound(&this->m_soundKit, 0, 3.0f, 1);
+        SI3::StopSound(&this->m_soundKit, 0, 3.0f, 1);
         C3Vector position = this->GetPosition();
         SE2SoundKitProperties properties;
         properties.ResetToDefaults();
         properties.m_fadeInTime = 2.0f;
         properties.m_loopMode = 1;
-        SI2::PlaySoundKit(kit->m_soundID, &position, &this->m_soundKit, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(kit->m_soundID, &position, &this->m_soundKit, &properties, 0, NULL, 1, 0);
     }
 }
 

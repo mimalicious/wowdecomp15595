@@ -50,7 +50,7 @@ void DanceCache::Pack(CDataStore* msg) {
     msg->Put(this->unk_0098);
 }
 
-// OFFSET: #0x0098D300
+// OFFSET: 0x00A28740/0x1407D0240
 void DanceCache::Unpack(CDataStore* msg) {
     msg->Get(reinterpret_cast<uint32_t&>(this->m_id));
 

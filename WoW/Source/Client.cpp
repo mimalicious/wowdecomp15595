@@ -82,7 +82,7 @@
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/ObjectAlloc/ObjectAlloc.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/AddOns.h"
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/BattlenetUI.h"
@@ -515,10 +515,10 @@ static void WowClientDestroy() {
     CCharacterComponent::Destroy();
     FrameXML_FreeHashNodes();
     FrameXML_ClearFactories();
-    SI2::VoiceChat_StopPlayingLoopbackSound();
+    SI3::VoiceChat_StopPlayingLoopbackSound();
     ComSatClient_Shutdown();
     ObjectEffectSystem_ShutDown();
-    SI2::ShutDown(0);
+    SI3::ShutDown(0);
     FrameScript_Destroy();
     LoadingScreenShutdown();
     WowSysMessageOutput::Shutdown();
@@ -893,7 +893,7 @@ static int32_t LoadNewWorld(const void* data, void* param) {
         World::s_weather->Reset();
     }
 
-    SI2::SetWeatherKitID(-1);
+    SI3::SetWeatherKitID(-1);
     Spell_C_ClearCooldowns();
     ClntObjMgrInitializeStd(s_zoneID);
     MovementInit();
@@ -991,7 +991,7 @@ static void InitializeClient() {
     ClientDBInitialize();
     LoadingScreenInitialize();
     FrameScript_Initialize(0);
-    SI2::Init(0);
+    SI3::Init(0);
     ObjectEffectSystem_Initialize();
     FrameXML_RegisterDefault();
     GlueScriptEventsInitialize();
@@ -1239,7 +1239,7 @@ void ClientInitializeGame(uint32_t mapId, C3Vector position) {
         World::s_weather->Reset();
     }
 
-    SI2::SetWeatherKitID(-1);
+    SI3::SetWeatherKitID(-1);
 
     REALM_INFO* realm = ClientServices::GetSelectedRealm();
 
@@ -1256,8 +1256,8 @@ void ClientInitializeGame(uint32_t mapId, C3Vector position) {
     ClntObjMgrInitializeShared();
     ClntObjMgrInitializeStd(mapId);
     CGUnit_C::ClientInitialize();
-    SI2::InitZoneSoundsHandler();
-    SI2::InitZoneIntros();
+    SI3::InitZoneSoundsHandler();
+    SI3::InitZoneIntros();
     LootInitialize();
     CGGameUI::InitializeGame();
     CGWorldFrame::GetActiveCamera()->m_position = position;
@@ -1569,10 +1569,10 @@ void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogi
     WorldTextShutdown();
     CGGameUI::ShutdownGame();
     ClientDestroyGameTime();
-    SI2::ShutdownZoneSoundsHandler();
-    SI2::StopAllSounds();
-    SI2::FreeZoneIntros();
-    SI2::ClearSuppressorSounds();
+    SI3::ShutdownZoneSoundsHandler();
+    SI3::StopAllSounds();
+    SI3::FreeZoneIntros();
+    SI3::ClearSuppressorSounds();
     ClntObjMgrDestroyShared();
     AccountDataDestroy(false);
     s_gameInitialized = 0;

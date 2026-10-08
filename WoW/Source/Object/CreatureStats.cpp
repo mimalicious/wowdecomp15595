@@ -42,7 +42,7 @@ void CreatureStats::Pack(CDataStore* msg) const {
     msg->Put(this->m_movementId);
 }
 
-// OFFSET: #0x0098D4C0
+// OFFSET: 0x00A28950/0x1407D04C0
 void CreatureStats::Unpack(CDataStore* msg) {
     char buffer[1024];
 

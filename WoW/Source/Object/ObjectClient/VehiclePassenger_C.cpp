@@ -103,7 +103,7 @@ void CVehiclePassenger_C::LockWorldFacingNextFrame(float facing) {
     this->m_lockedWorldFacing = facing;
 }
 
-// OFFSET: #0x00747FF0
+// OFFSET: 0x005ED8F0/0x14026F300
 CGUnit_C* CVehiclePassenger_C::GetVehicleUnit() const {
     if (!this->m_transitionVehicleGuid) {
         return static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_vehicleGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -787,7 +787,7 @@ void CVehiclePassenger_C::OnSetActiveMover(CGUnit_C* unit) {
     CGUnit_C::UpdateVehicleUISliders(unit, vehicleRec);
 }
 
-// OFFSET: #0x00748230
+// OFFSET: 0x005F1680/0x140273E10
 void CVehiclePassenger_C::StopWaitingForVehicleTransitionAnim() {
     if (!(this->m_flags & 0x200)) {
         return;
@@ -997,7 +997,7 @@ static void SignalVehicleTransitionEvent(WOWGUID guid, const VehicleRec* vehicle
     }
 }
 
-// OFFSET: #0x007489C0
+// OFFSET: 0x005EF300/0x140271240
 void CVehiclePassenger_C::SetState(uint32_t state, CGUnit_C* vehicle, uint8_t seat, VehicleSeatRec* seatRec, uint32_t time, WOWGUID relativeGuid) {
     if (this->m_flags & 0x800) {
         this->m_flags &= ~0x800;

@@ -4,14 +4,14 @@
 // STATIC: #0x00AC5C1C
 uint32_t CGGameObject::s_mirrorFieldIndex[4] = { 3, 8, 11, 12 };
 
-// OFFSET: #0x004D4300
+// OFFSET: 0x0048DA20/0x1400B18F0
 uint32_t CGGameObject::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base) {
     int32_t total = CGObject::TotalFieldsSaved();
 
     return (offset & 3) + 4 * (total + CGGameObject::MirrorIndexFromFieldIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// OFFSET: #0x004F55C0
+// OFFSET: 0x00A27DD0/0x1407CF5D0
 uint32_t CGGameObject::MirrorIndexFromFieldIndex(uint32_t fieldIndex, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < 4; i++) {
         if (s_mirrorFieldIndex[i] == fieldIndex) {

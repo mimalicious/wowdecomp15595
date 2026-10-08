@@ -218,7 +218,7 @@ void CEffect::InitLightningEndpoint() {
     this->SetEnabled(0);
 }
 
-// OFFSET: #0x006F7900
+// OFFSET: 0x00580CC0/0x1401E7B50
 void CEffect::ConnectToLightningThisFrame() {
     if (!this->m_lightningState && this->m_model) {
         this->m_model->m_lastAnimTime = 0;
@@ -307,7 +307,7 @@ void CEffect::MoveToOrphanList() {
     this->LinkTo(&s_orphanedEffects);
 }
 
-// OFFSET: #0x006FA390
+// OFFSET: 0x00584E50/0x1401ED0C0
 void CEffect::Release() {
     if (this->m_refCount-- == 1) {
         delete this;
@@ -315,7 +315,7 @@ void CEffect::Release() {
 }
 
 // OFFSET: #0x006F7C40
-void CEffect::InitFromUnit(C3Vector position, uint32_t time, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, const WOWGUID* guid, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), uint32_t a9, const SpellVisualKitModelAttachRec* attach, WOWGUID transport) {
+void CEffect::InitFromUnit(C3Vector position, uint32_t time, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, const WOWGUID* guid, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), uint32_t a9, const SpellVisualKitModelAttachRec* attach, WOWGUID transport) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (!unit) {
@@ -360,7 +360,7 @@ void CEffect::CreateModelFromEffect(CM2Model* model, void* arg) {
     model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
 }
 
-// OFFSET: #0x006F7B00
+// OFFSET: 0x005811B0/0x1401E8070
 void CEffect::EffectEvent(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
     CGUnit_C* object = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(effect->m_targetGuid, TYPEMASK_OBJECT, __FILE__, __LINE__));
@@ -383,21 +383,21 @@ void CEffect::EffectEvent(CM2Model* model, uint32_t boneId, uint32_t eventId, ui
             }
 
             properties.m_priority = 110;
-            SI2::PlaySoundKit(data, listenerAtCharacter ? NULL : position, &effect->m_soundKitObject, &properties, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(data, listenerAtCharacter ? NULL : position, &effect->m_soundKitObject, &properties, 0, NULL, 1, 0);
         } else {
-            SI2::PlaySoundKit(data, position, &effect->m_soundKitObject, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(data, position, &effect->m_soundKitObject, NULL, 0, NULL, 1, 0);
         }
 
         if (!(effect->m_flags & 0x200000)) {
-            SI2::AttachToObject(&effect->m_soundKitObject, object->m_obj->m_guid);
+            SI3::AttachToObject(&effect->m_soundKitObject, object->m_obj->m_guid);
         }
     } else if (eventId == 0x54494824 && (object->m_obj->m_type & 0x8)) {
         object->PlayWoundAnimKit(0);
     }
 }
 
-// OFFSET: #0x006F94C0
-void CEffect::AddEffect(int32_t attachType, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, const WOWGUID* target, const WOWGUID* source, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), const C3Vector* position, uint32_t a10, const SpellVisualKitModelAttachRec* attach) {
+// OFFSET: 0x00583A30/0x1401EB6F0
+void CEffect::AddEffect(int32_t attachType, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, const WOWGUID* target, const WOWGUID* source, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), const C3Vector* position, uint32_t a10, const SpellVisualKitModelAttachRec* attach) {
     CGObject_C* object = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(*source, TYPEMASK_OBJECT, __FILE__, __LINE__));
 
     if (!object) {
@@ -498,10 +498,10 @@ void CEffect::AddSoundEffect(int32_t soundId, int32_t a2, int32_t spellId, const
         }
     }
 
-    SI2::PlaySoundKit(soundId, soundPosition, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundId, soundPosition, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
 
     if (!(this->m_flags & 0x200000)) {
-        SI2::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
+        SI3::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
     }
 
     this->m_flags |= 0x100800;
@@ -532,7 +532,7 @@ void CEffect::ReleaseLightningRef() {
 }
 
 // OFFSET: #0x006F9260
-void CEffect::AddSpecialEffect(int32_t type, const WOWGUID& target, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param)) {
+void CEffect::AddSpecialEffect(int32_t type, const WOWGUID& target, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7)) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(target, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (!unit || static_cast<uint32_t>(type) >= 12) {
@@ -569,7 +569,7 @@ void CEffect::AddSpecialEffect(int32_t type, const WOWGUID& target, void (*callb
 }
 
 // OFFSET: #0x006F93A0
-void CEffect::AddSpecialByPosition(int32_t type, C3Vector position, const WOWGUID* guid, uint32_t flags, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param)) {
+void CEffect::AddSpecialByPosition(int32_t type, C3Vector position, const WOWGUID* guid, uint32_t flags, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7)) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (!unit) {
@@ -612,7 +612,7 @@ void CEffect::ClearLightning() {
 
 // OFFSET: #0x006F8600
 void CEffect::ApplyItemVisualByItemId(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    ItemRec* item = g_itemDB.GetRecord(id);
+    ItemRec* item = g_itemDB.GetRecord(id, WOWGUID(), NULL, NULL, false);
 
     if (!item) {
         return;
@@ -653,7 +653,7 @@ void CEffect::ClearItemVisualEffect() {
     this->m_itemSlot = 12;
 }
 
-// OFFSET: #0x006F87C0
+// OFFSET: 0x00583060/0x1401EA9A0
 void CEffect::MoveToDestroyList() {
     this->LinkTo(&s_destroyedEffects);
     this->m_flags |= 0x900;
@@ -676,10 +676,10 @@ void CEffect::MoveToDestroyList() {
         }
     }
 
-    if (SI2::IsLooping(&this->m_soundKitObject)) {
-        SI2::StopSound(&this->m_soundKitObject, 0, 0.15000001f, 1);
+    if (SI3::IsLooping(&this->m_soundKitObject)) {
+        SI3::StopSound(&this->m_soundKitObject, 0, 0.15000001f, 1);
     } else {
-        SI2::Detach(&this->m_soundKitObject);
+        SI3::Detach(&this->m_soundKitObject);
     }
 
     if (this->m_mountTransition) {
@@ -734,7 +734,7 @@ void CEffect::MoveToDestroyList() {
     }
 }
 
-// OFFSET: #0x006F9EC0
+// OFFSET: 0x005846F0/0x1401EC6F0
 CEffect::~CEffect() {
     if (this->m_model) {
         if (this->m_model->m_attachParent) {
@@ -775,10 +775,10 @@ CEffect::~CEffect() {
         World::ObjectDestroy(this->m_mapEntity);
     }
 
-    if (SI2::IsLooping(&this->m_soundKitObject)) {
-        SI2::StopSound(&this->m_soundKitObject, 0, 0.15000001f, 1);
+    if (SI3::IsLooping(&this->m_soundKitObject)) {
+        SI3::StopSound(&this->m_soundKitObject, 0, 0.15000001f, 1);
     } else {
-        SI2::Detach(&this->m_soundKitObject);
+        SI3::Detach(&this->m_soundKitObject);
     }
 
     if (this->m_mountTransition) {
@@ -843,7 +843,7 @@ void CEffect::CleanUpStaticLists() {
 }
 
 // OFFSET: #0x006FA5B0
-void CEffect::AddLootEffect(CGUnit_C* unit, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param)) {
+void CEffect::AddLootEffect(CGUnit_C* unit, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7)) {
     this->m_sourceGuid = unit->m_obj->m_guid;
     this->m_flags = 0x8;
     this->m_attachmentId = 19;
@@ -1027,7 +1027,7 @@ C44Matrix* CEffect::TransformPosition(C44Matrix* matrix, CGObject_C* object) {
     return matrix;
 }
 
-// OFFSET: #0x006F8C50
+// OFFSET: 0x005833F0/0x1401EAE20
 int32_t CEffect::UpdateAttachment() {
     if (this->m_attachmentId == -1) {
         if (this->m_model && this->m_model->m_attachParent) {
@@ -1224,12 +1224,12 @@ void CEffect::EffectUpdate() {
         this->MoveToDestroyList();
     }
 
-    if ((this->m_flags & 0x100000) && !SI2::IsPlaying(&this->m_soundKitObject)) {
+    if ((this->m_flags & 0x100000) && !SI3::IsPlaying(&this->m_soundKitObject)) {
         this->MoveToDestroyList();
     }
 }
 
-// OFFSET: #0x006F8970
+// OFFSET: 0x00583280/0x1401EAC70
 void CEffect::UpdateWorldObject(float elapsed, uint32_t flags) {
     if ((!this->unk_00C8 || static_cast<int32_t>(FrameTime::s_curTimeMs - this->unk_00C8) > 0) && this->m_model) {
         this->m_model->SetAnimating(1);
@@ -1357,7 +1357,7 @@ void CEffect::PostInitialize() {
     if (this->m_flags & 0x1) {
         if (!object) {
             C3Vector position = this->TransformPositionByTransport();
-            SI2::PlaySoundKit(this->m_kitRec->m_soundID, &position, &this->m_soundKitObject, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(this->m_kitRec->m_soundID, &position, &this->m_soundKitObject, NULL, 0, NULL, 1, 0);
             return;
         }
 
@@ -1369,10 +1369,10 @@ void CEffect::PostInitialize() {
         }
 
         properties.m_noRandomStart = 1;
-        SI2::PlaySoundKit(this->m_kitRec->m_soundID, &position, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(this->m_kitRec->m_soundID, &position, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
 
         if (!(this->m_flags & 0x200000)) {
-            SI2::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
+            SI3::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
         }
 
         return;
@@ -1390,15 +1390,15 @@ void CEffect::PostInitialize() {
         soundPosition = &position;
     }
 
-    SI2::PlaySoundKit(this->m_kitRec->m_soundID, soundPosition, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(this->m_kitRec->m_soundID, soundPosition, &this->m_soundKitObject, &properties, 0, NULL, 1, 0);
 
     if (!listenerAtCharacter && !(this->m_flags & 0x200000) && object) {
-        SI2::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
+        SI3::AttachToObject(&this->m_soundKitObject, object->m_obj->m_guid);
     }
 }
 
 // OFFSET: %0x0058E520
-static void MountTransitionSequenceCB(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+static void MountTransitionSequenceCB(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (sequenceId != 127) {
         return;
     }
@@ -1411,7 +1411,7 @@ static void MountTransitionSequenceCB(CM2Model* model, uint32_t boneId, uint32_t
 }
 
 // OFFSET: #0x006F7D60
-void CEffect::InitAtPosition(int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), const C3Vector* position, uint32_t a8, WOWGUID transport) {
+void CEffect::InitAtPosition(int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), const C3Vector* position, uint32_t a8, WOWGUID transport) {
     this->m_effectNameRec = effectName;
     this->m_attachmentId = -1;
     this->m_sourceGuid = WOWGUID();
@@ -1528,7 +1528,7 @@ void CEffect::ApplyItemVisual() {
     }
 }
 
-// OFFSET: #0x006F83D0
+// OFFSET: 0x00581D30/0x1401E91C0
 int32_t CEffect::LoadMountTransitionModel() {
     if (!this->m_displayId) {
         return 0;
@@ -1640,7 +1640,7 @@ void CEffect::DrawFishingString(CM2Model* model, const CM2Lighting* lighting, vo
     g_theGxDevicePtr->RsPop();
 }
 
-// OFFSET: #0x006F9610
+// OFFSET: 0x00583EF0/0x1401EBD50
 void CEffect::MountTransitionCacheCB(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CEffect* effect = static_cast<CEffect*>(param);
     WOWGUID key = { static_cast<uint64_t>(effect->m_spellId) | 0x1FE0000000000000ull };

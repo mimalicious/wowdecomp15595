@@ -38,11 +38,11 @@ uint32_t VisibleItem_C::GetInventoryType() {
         return stats->m_inventoryType;
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId));
+    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId), WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_inventoryType : 0;
 }
 
-// OFFSET: #0x00758E50
+// OFFSET: 0x005FF420/0x140288250
 uint32_t VisibleItem_C::GetDisplayID() {
     WOWGUID guid = WOWGUID();
     ItemStats_C* stats = g_itemDBCache.GetRecord(abs(this->m_itemId), guid, &VisibleItemCacheCallback, NULL, true);
@@ -51,7 +51,7 @@ uint32_t VisibleItem_C::GetDisplayID() {
         return stats->m_displayId;
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId));
+    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId), WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_displayInfoID : 0;
 }
 
@@ -64,7 +64,7 @@ uint32_t VisibleItem_C::GetMaterial() {
         return stats->m_material;
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId));
+    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId), WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_material : 0;
 }
 
@@ -77,7 +77,7 @@ uint32_t VisibleItem_C::GetSheatheType() {
         return stats->m_sheatheType;
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId));
+    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId), WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_sheatheType : 0;
 }
 
@@ -90,11 +90,11 @@ uint32_t VisibleItem_C::GetSoundOverrideSubclassID() {
         return stats->m_soundOverrideSubclass;
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId));
+    ItemRec* rec = g_itemDB.GetRecord(abs(this->m_itemId), WOWGUID(), NULL, NULL, false);
     return rec ? rec->m_soundOverrideSubclassID : 0;
 }
 
-// OFFSET: #0x00759050
+// OFFSET: 0x005FF600/0x1402884D0
 int32_t VisibleItem_C::GetItemEnchantmentVisualID() {
     ItemDisplayInfoRec displayRec;
 

@@ -77,7 +77,7 @@ void CSimpleScriptManager::Destroy() {
     s_instance = NULL;
 }
 
-// OFFSET: #0x007581F0
+// OFFSET: 0x0060B420/0x140294850
 int32_t CSimpleScriptManager::RegisterCallback(void (*callback)(uint32_t)) {
     uint32_t count = s_callbackCount;
 
@@ -169,7 +169,8 @@ int32_t CSimpleScriptManager::CallFunction(uint32_t handle, const SimpleScriptIO
     return 1;
 }
 
-// OFFSET: #0x00758220
+// PROVEN: da5d4460 IDENTICAL/NONE
+// OFFSET: 0x0060B450
 void CSimpleScriptManager::CopyGlobal(const char* name) {
     lua_State* L = FrameScript_GetContext();
     lua_rawgeti(L, LUA_REGISTRYINDEX, this->m_envRef);
@@ -180,7 +181,8 @@ void CSimpleScriptManager::CopyGlobal(const char* name) {
     lua_settop(L, -2);
 }
 
-// OFFSET: #0x00758280
+// PROVEN: a0394a20 IDENTICAL/NONE
+// OFFSET: 0x0060B4B0
 int32_t CSimpleScriptManager::Execute(const char* script, const char* name) {
     lua_State* L = FrameScript_GetContext();
     lua_rawgeti(L, LUA_REGISTRYINDEX, FrameScript_GetErrorHandlerReference());
@@ -220,7 +222,7 @@ uint32_t CSimpleScriptManager::FindFunction(int32_t id) {
     return 0xFFFFFFFF;
 }
 
-// OFFSET: #0x00758B80
+// OFFSET: 0x0060BDE0
 int32_t CSimpleScriptManager::Init(uint32_t bits) {
     this->Uninit();
 
@@ -239,7 +241,7 @@ int32_t CSimpleScriptManager::Init(uint32_t bits) {
     return 1;
 }
 
-// OFFSET: #0x007586E0
+// OFFSET: 0x0060B940
 void CSimpleScriptManager::Uninit() {
     if (this->m_hashMask == -1) {
         return;
@@ -261,7 +263,7 @@ void CSimpleScriptManager::Uninit() {
     this->m_hashMask = -1;
 }
 
-// OFFSET: #0x00758390
+// OFFSET: 0x0060B680
 SimpleScriptFunction* CSimpleScriptManager::GetFunction(uint32_t handle) {
     if (handle == 0xFFFFFFFF) {
         return NULL;
@@ -276,7 +278,7 @@ SimpleScriptFunction* CSimpleScriptManager::GetFunction(uint32_t handle) {
     return &list->m_data[handle];
 }
 
-// OFFSET: #0x007587D0
+// OFFSET: 0x0060BA30/0x140294F70
 uint32_t CSimpleScriptManager::CreateFunction(int32_t id, const SimpleScriptFunctionDesc& desc) {
     CDynamicString script;
     script.SetCapacity(512);

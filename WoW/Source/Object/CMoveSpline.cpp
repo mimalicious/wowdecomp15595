@@ -33,7 +33,7 @@ CMoveSpline::CMoveSpline() {
     this->m_finalDestination.z = 0.0f;
 }
 
-// OFFSET: #0x004D4F00
+// OFFSET: 0x005E70E0/0x140267B90
 CMoveSpline::~CMoveSpline() {
 }
 

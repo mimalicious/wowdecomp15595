@@ -12,7 +12,7 @@
 #include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/WGUID.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/PartyFrame.h"
 #include "WoW/Source/Ui/TotemInfo.h"
 #include "WoW/Source/Ui/Types.h"
@@ -122,17 +122,16 @@ struct UIErrorInfo {
 struct SAVEDVARIABLE : public TSHashObject<SAVEDVARIABLE, HASHKEY_STR> {
 };
 
-class SE2SoundKitObject;
 class CM2Model;
 class CinematicCameraRec;
 class CinematicSequencesRec;
 struct CinematicInfo {
     /* 0000 */ CinematicSequencesRec* m_sequence;
-    /* 0004 */ SE2SoundKitObject m_music;
-    /* 0018 */ uint32_t m_cameraIndex;
-    /* 001C */ CinematicCameraRec* m_camera;
-    /* 0020 */ SE2SoundKitObject m_cameraMusic;
-    /* 0034 */ uint32_t unk_0034;
+    /* 0004 */ uint32_t m_music;
+    /* 0008 */ uint32_t m_cameraIndex;
+    /* 000C */ CinematicCameraRec* m_camera;
+    /* 0010 */ uint32_t m_cameraMusic;
+    /* 0014 */ uint32_t unk_0014;
 };
 
 class CGGameUI {
@@ -163,7 +162,7 @@ class CGGameUI {
     static int32_t HandleMouseDown(const CMouseEvent& evt);
     static void OnClientControlChanged(int32_t control);
     static void SetMinimapZoneText(const char* text);
-    static void NewZoneFeedback(int32_t areaId, int32_t subzoneId, int32_t wmoGroupId, const char* zoneText, const char* subZoneText, const char* realZoneText, int32_t inside);
+    static void NewZoneFeedback(int32_t areaId, int32_t subzoneId, int32_t wmoGroupId, const char* zoneText, const char* subZoneText, int32_t inside);
     static int32_t HandleSpriteClick(const CSpriteClickEvent& evt);
     static void HandleSpriteTrack(const CObjectTrackEvent& evt);
     static int32_t HandleTerrainClick(const CTerrainClickEvent& evt);

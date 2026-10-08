@@ -2,7 +2,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x00668550
+// OFFSET: 0x0049B320/0x1400C7000
 PageTextCache::~PageTextCache() {
     if (this->m_text) {
         SMemFree(this->m_text, __FILE__, __LINE__, 0);

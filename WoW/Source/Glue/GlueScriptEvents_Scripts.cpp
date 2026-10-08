@@ -23,7 +23,7 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/AddOns.h"
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowServices/WDataStore.h"
@@ -128,7 +128,7 @@ static int32_t Script_PlayGlueMusic(lua_State* L) {
         return 0;
     }
 
-    SI2::StartGlueMusic(lua_tolstring(L, 1, NULL));
+    SI3::StartGlueMusic(lua_tolstring(L, 1, NULL));
     return 0;
 }
 
@@ -140,20 +140,20 @@ static int32_t Script_PlayGlueAmbience(lua_State* L) {
     }
 
     float fadeInTime = lua_isnumber(L, 2) ? static_cast<float>(lua_tonumber(L, 2)) : -1.0f;
-    SI2::StartGlueAmbience(lua_tolstring(L, 1, NULL), fadeInTime);
+    SI3::StartGlueAmbience(lua_tolstring(L, 1, NULL), fadeInTime);
     return 0;
 }
 
 // OFFSET: #0x004DC130
 static int32_t Script_StopGlueAmbience(lua_State* L) {
-    SI2::StopGlueAmbience(1.0f);
+    SI3::StopGlueAmbience(1.0f);
     return 0;
 }
 
 // OFFSET: #0x004DC1A0
 static int32_t Script_StopGlueMusic(lua_State* L) {
-    SI2::StopCreditsMusic();
-    SI2::StopGlueMusic(-1.0f);
+    SI3::StopCreditsMusic();
+    SI3::StopGlueMusic(-1.0f);
     return 0;
 }
 
@@ -323,7 +323,7 @@ static int32_t Script_ShowChangedOptionWarnings(lua_State* L) {
 
 // OFFSET: #0x004DD380
 static int32_t Script_StopAllSFX(lua_State* L) {
-    SI2::StopAllSounds(static_cast<float>(lua_tonumber(L, 1)));
+    SI3::StopAllSounds(static_cast<float>(lua_tonumber(L, 1)));
     return 0;
 }
 
@@ -890,7 +890,7 @@ static int32_t Script_PlayCreditsMusic(lua_State* L) {
         return 0;
     }
 
-    SI2::StartCreditsMusic(lua_tolstring(L, 1, NULL));
+    SI3::StartCreditsMusic(lua_tolstring(L, 1, NULL));
     return 0;
 }
 

@@ -11,19 +11,19 @@ class PhaseShiftZoneSoundsRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ int32_t unk_0028;
-    /* 002C */ int32_t unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
+    /* 0004 */ int32_t m_areaID;
+    /* 0008 */ int32_t m_wmoAreaID;
+    /* 000C */ int32_t m_phaseID;
+    /* 0010 */ int32_t m_phaseGroupID;
+    /* 0014 */ int32_t m_phaseUseFlags;
+    /* 0018 */ int32_t m_zoneIntroMusicID;
+    /* 001C */ int32_t m_zoneMusicID;
+    /* 0020 */ int32_t m_soundAmbienceID;
+    /* 0024 */ int32_t m_soundProviderPreferencesID;
+    /* 0028 */ int32_t m_uwZoneIntroMusicID;
+    /* 002C */ int32_t m_uwZoneMusicID;
+    /* 0030 */ int32_t m_uwSoundAmbienceID;
+    /* 0034 */ int32_t m_uwSoundProviderPreferencesID;
 };
 
 #endif

@@ -63,7 +63,7 @@ void GameObjectStats::Pack(CDataStore* msg) {
     }
 }
 
-// OFFSET: #0x0098D750
+// OFFSET: 0x00A28C80/0x1407D0880
 void GameObjectStats_C::Unpack(CDataStore* msg) {
     char buffer[1024];
 

@@ -26,7 +26,7 @@
 #include "WoW/Source/Game/ValidateName.h"
 #include "WoW/Source/Client.h"
 #include "Engine/Source/FrameXML/LoadXML.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 // OFFSET: #0x005D4EC0
 static int32_t Script_GetPetActionInfo(lua_State* L) {
@@ -691,7 +691,7 @@ static int32_t Script_CastPetAction(lua_State* L) {
 
         if (Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true)) {
             CGPetInfo::SendPetAction(*action, target, 0);
-            SI2::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
+            SI3::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
         }
     }
 

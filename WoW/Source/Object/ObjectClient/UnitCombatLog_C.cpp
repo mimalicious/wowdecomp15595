@@ -234,7 +234,7 @@ int32_t IsCombatTextActiveUnit(WOWGUID guid) {
     return s_combatTextActiveUnit == guid;
 }
 
-// OFFSET: #0x0074D460
+// OFFSET: 0x005F38F0/0x140276660
 void SendToCombatText(int32_t type, const char* text, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d", s_combatTextTypes[type], text, amount);
 }
@@ -249,7 +249,7 @@ void SendToCombatText(int32_t type, int32_t amount, int32_t overflow) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d%d", s_combatTextTypes[type], amount, overflow);
 }
 
-// OFFSET: #0x0074D4F0
+// OFFSET: 0x005F39B0/0x1402766A0
 void SendToCombatText(int32_t type, int32_t amount) {
     FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%d", s_combatTextTypes[type], amount);
 }
@@ -384,7 +384,7 @@ PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGU
     return data;
 }
 
-// OFFSET: #0x0074F400
+// OFFSET: 0x005F5F10/0x140279790
 void UnitCombatLogInvalidateName(const char* name) {
     InvalidatedName* node = s_invalidatedNames.NewNode(2, 0, 0);
     node->m_name = SStrDupA(name, __FILE__, __LINE__);
@@ -400,7 +400,7 @@ void UnitCombatLogInvalidateName(const char* name) {
     }
 }
 
-// OFFSET: #0x0074D0D0
+// OFFSET: 0x005F3540/0x1402764B0
 char* GUIDToHexString(WOWGUID guid, char* buffer) {
     buffer[0] = '0';
     buffer[1] = 'x';
@@ -817,7 +817,7 @@ CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, in
     return entry;
 }
 
-// OFFSET: #0x0074F6C0
+// OFFSET: 0x005F5970/0x1402790D0
 bool CombatLogEntry::MatchesFilter() {
     CombatLogFilter* filter = s_filters.Head();
 
@@ -1170,7 +1170,7 @@ void UnitCombatLogDamageShield(const WOWGUID& victimGuid, const WOWGUID& casterG
     }
 }
 
-// OFFSET: #0x0074D120
+// OFFSET: 0x005F3590/0x140276500
 WOWGUID StringToGuid(const char* string) {
     uint64_t value = 0;
 
@@ -1198,7 +1198,7 @@ WOWGUID StringToGuid(const char* string) {
     return WOWGUID::Make(value);
 }
 
-// OFFSET: #0x0074E290
+// OFFSET: 0x005F3EA0/0x140276B80
 int32_t CombatLogEntry::PushEvent(lua_State* L) {
     char name[305];
     char guid[20];
@@ -1939,7 +1939,7 @@ int32_t CombatLog::HandleSpellLogEnergizeLog(CDataStore* msg, int32_t timeOffset
     return 1;
 }
 
-// OFFSET: #0x00750860
+// OFFSET: 0x005F7010/0x14027AFF0
 void SendHealEvent(int32_t event, const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t amount, int32_t overheal, int32_t absorbed, bool crit, uint32_t timeOffset) {
     CombatLogEntry* entry = GetCombatLogEntry(source, dest, event, spell);
     entry->m_infoFlags |= 0x20;
@@ -2721,7 +2721,7 @@ static bool CombatLogFlagsMatch(uint32_t filterFlags, uint32_t flags) {
     return (matched & 0xFC00) != 0;
 }
 
-// OFFSET: #0x0074E1A0
+// OFFSET: 0x005F5870/0x140278F50
 bool CombatLogFilter::MatchesFilter(int32_t event, const WOWGUID& sourceGuid, uint32_t sourceFlags, const WOWGUID& destGuid, uint32_t destFlags, int32_t spellId, const char* spellName) {
     uint32_t index = static_cast<uint32_t>(event);
 
@@ -2913,7 +2913,7 @@ static inline void PackUnit(char*& cursor, uint32_t& remaining, const WOWGUID& g
     PackHex(cursor, remaining, flags);
 }
 
-// OFFSET: #0x0074E880
+// OFFSET: 0x005F4590/0x1402773A0
 void CombatLogEntry::PackEvent(char* buffer, uint32_t size) {
     char* cursor = buffer;
     uint32_t remaining = size;

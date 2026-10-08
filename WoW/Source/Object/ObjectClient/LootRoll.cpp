@@ -31,7 +31,7 @@ static int32_t s_nextLootRollId;
 // STATIC: #0x00CA0694
 uint32_t s_numShownLootRolls;
 
-// OFFSET: #0x006FA770
+// OFFSET: 0x0057B460/0x1401E0FB0
 WOWGUID GetMasterLootCandidate(uint32_t index) {
     if (index >= sizeof(s_masterLootCandidates) / sizeof(s_masterLootCandidates[0])) {
         return WOWGUID();
@@ -40,7 +40,7 @@ WOWGUID GetMasterLootCandidate(uint32_t index) {
     return s_masterLootCandidates[index];
 }
 
-// OFFSET: #0x006FB150
+// OFFSET: 0x0057B580/0x1401E1090
 PendingLootRoll* FindRoll(int32_t id) {
     for (PendingLootRoll* roll = s_pendingLootRolls.Head(); roll; roll = roll->Next()) {
         if (roll->m_id == id) {
@@ -51,7 +51,7 @@ PendingLootRoll* FindRoll(int32_t id) {
     return NULL;
 }
 
-// OFFSET: #0x006FB180
+// OFFSET: 0x0057B5B0/0x1401E10C0
 void LootRollShowPending() {
     if (s_numShownLootRolls >= 4) {
         return;
@@ -72,7 +72,7 @@ void LootRollShowPending() {
     }
 }
 
-// OFFSET: #0x006FBC70
+// OFFSET: 0x0057C790/0x1401E27E0
 void LootRoll(int32_t id, int32_t rollType, bool confirmed) {
     for (PendingLootRoll* roll = s_pendingLootRolls.Head(); roll; roll = s_pendingLootRolls.Next(roll)) {
         if (roll->m_id != id) {
@@ -198,7 +198,7 @@ int32_t LootRollMasterList(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006FA7A0
+// OFFSET: 0x0057B490/0x1401E0FD0
 static void LootRollCalculateReasons(PendingLootRoll* roll, const ItemStats_C* stats) {
     roll->unk_0051 = 0;
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -222,7 +222,7 @@ static void LootRollCalculateReasons(PendingLootRoll* roll, const ItemStats_C* s
     }
 }
 
-// OFFSET: #0x006FA840
+// OFFSET: 0x0057B9B0/0x1401E1540
 static void RolledStatsAndName(const NameCache* name, PendingLootRoll* roll, const ItemStats_C* stats) {
     if (!g_showLootSpamCVar->m_intValue && (roll->m_rollerGuid != ClntObjMgrGetActivePlayer() || !roll->m_autoPass)) {
         delete roll;
@@ -347,7 +347,7 @@ static PendingLootRoll* FindRollBySlot(WOWGUID lootGuid, uint32_t slot) {
     return NULL;
 }
 
-// OFFSET: #0x006FB1F0
+// OFFSET: 0x0057C0A0/0x1401E1F10
 static void StartCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     PendingLootRoll* roll = static_cast<PendingLootRoll*>(param);
 
@@ -412,7 +412,7 @@ int32_t LootRollStart(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006FB470
+// OFFSET: 0x0057B620/0x1401E1140
 static void AllPassedStats(PendingLootRoll* roll, const ItemStats_C* stats) {
     char text[3000];
     SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_ROLL_ALL_PASSED", -1, GENDER_NOT_APPLICABLE), CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix));
@@ -477,7 +477,7 @@ int32_t LootRollAllPassed(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006FB700
+// OFFSET: 0x0057B700/0x1401E1250
 static void WonStatsAndName(const NameCache* name, PendingLootRoll* roll, const ItemStats_C* stats) {
     char text[3000];
 

@@ -8,7 +8,7 @@
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Storm/Source/SLock.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 namespace ComSat {
 namespace Sound {

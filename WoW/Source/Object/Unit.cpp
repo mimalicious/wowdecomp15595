@@ -15,7 +15,7 @@ const uint32_t CGUnit::s_mirrorFieldIndices[123] = {
     0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8E,
 };
 
-// OFFSET: #0x004F52D0
+// OFFSET: 0x00A27820/0x1407CEF80
 uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     for (uint32_t i = 0; i < sizeof(s_mirrorFieldIndices) / sizeof(s_mirrorFieldIndices[0]); i++) {
         if (s_mirrorFieldIndices[i] == fieldIndex) {
@@ -84,7 +84,8 @@ int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* sta
     return 1;
 }
 
-// OFFSET: #0x004F54D0
+// PROVEN: 0497d0ca IDENTICAL/NONE
+// OFFSET: 0x00A278A0/0x1407CF000
 void CGUnit::GetResistanceAndBuffs(int32_t school, int32_t* baseValue, int32_t* total, int32_t* effective, int32_t* positive, int32_t* negative) const {
     int32_t resistance = this->m_unit->m_unitFieldResistances[school];
     *effective = resistance;
@@ -122,12 +123,14 @@ float CGUnit::GetMeleeRange(const CGUnit* target) const {
     return range;
 }
 
-// OFFSET: #0x005774B0
+// PROVEN: ac7dd20c IDENTICAL/NONE
+// OFFSET: 0x0044E370
 int32_t CGUnit::GetEffectiveStat(int32_t stat) const {
     return this->m_unit->m_unitFieldStat[stat] < 0 ? 0 : this->m_unit->m_unitFieldStat[stat];
 }
 
-// OFFSET: #0x00716160
+// PROVEN: 450a766e IDENTICAL/NONE
+// OFFSET: 0x00554C90
 int32_t CGUnit::HasAuraState(int32_t state) const {
     return (this->m_unit->m_unitFieldAurastate & (1 << (state - 1))) != 0;
 }
@@ -143,29 +146,29 @@ int32_t CGUnit::IsOnFlyingSpline() const {
     return 0;
 }
 
-// OFFSET: #0x005F9810
+// OFFSET: 0x0043B820
 int32_t CGUnit::IsOnSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
     return spline && !(spline->m_flags & 0x400);
 }
 
-// OFFSET: #0x005FEE10
+// OFFSET: 0x0043B7F0
 int32_t CGUnit::IsJumping() const {
     return (this->m_movement->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_movement->m_fallVelocity;
 }
 
-// OFFSET: #0x005FA9E0
+// OFFSET: 0x00448D50/0x140055870
 int32_t CGUnit::CanMove() const {
     return this->m_unit->m_unitFieldHealth > 0 && !(this->m_movement->m_flags & 0x100A00) && this->m_unit->m_unitFieldBytes1[0] != 7;
 }
 
-// OFFSET: #0x004D4240
+// OFFSET: 0x0048D960/0x1400B17A0
 uint32_t CGUnit::DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t a3, uint32_t base) {
     int32_t objectFields = CGObject::TotalFieldsSaved();
     return (offset & 3) + 4 * (objectFields + MirrorIndexFromFieldIndex((offset - base) >> 2));
 }
 
-// OFFSET: #0x004F52C0
+// OFFSET: 0x00A27810/0x1407CEF60
 int32_t CGUnit::TotalFields() {
     return CGObject::TotalFieldsSaved() + 123;
 }
@@ -217,13 +220,13 @@ bool CGUnit::HasSummoner() const {
     return this->m_unit->m_unitFieldSummonedby.m_guid != 0;
 }
 
-// OFFSET: #0x004F5F80
+// OFFSET: 0x00554CC0
 bool CGUnit::IsGuildMaster() const {
     uint32_t flags = this->m_unit->m_unitNpcFlags;
     return (flags & 0x40000) && (flags & 0x80000);
 }
 
-// OFFSET: #0x004F5F00
+// OFFSET: 0x0044E330
 bool CGUnit::IsCharmed() const {
     return this->m_unit->m_unitFieldCharmedby != WOWGUID();
 }
@@ -258,7 +261,7 @@ float CGUnit::GetSpellCostMultiplier(int32_t schoolMask) const {
     return result + 1.0f;
 }
 
-// OFFSET: #0x0058AAB0
+// OFFSET: 0x00945040/0x1406B1E20
 int32_t CGUnit::GetQuestGreenRange() const {
     static const int32_t s_questGreenRange[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
     uint32_t band = static_cast<int32_t>(this->m_unit->m_unitFieldLevel) / 5;

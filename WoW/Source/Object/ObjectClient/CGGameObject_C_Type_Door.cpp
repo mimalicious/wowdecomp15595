@@ -39,7 +39,7 @@ bool CGGameObject_C_Type_Door::CheckPropState() const {
     return this->m_animState != 3;
 }
 
-// OFFSET: #0x007119D0
+// OFFSET: 0x005A1CE0/0x140211E00
 bool CGGameObject_C_Type_Door::CanUseNow(GAME_ERROR_TYPE* error, float* distance) const {
     if (this->CheckPropState()) {
         return CGGameObject_C_TypeBase::CanUseNow(error, distance, NULL);

@@ -3,14 +3,13 @@
 #include <cstring>
 #include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
+#include "WoW/Source/SoundInterface/SI3ZoneSounds.h"
 
-// STATIC: #0x00B4AF2C
-static const char* s_reverbDescription;
+// STATIC: 0x00E283B4
+int32_t SI3::sm_bReverbEnabled;
 
-static int32_t s_reverbEnabled;
-
-// OFFSET: #0x004D1EC0
+// OFFSET: 0x006345C0
 static void GetReverbProperties(SoundProviderPreferencesRec* rec, FMOD_REVERB_PROPERTIES* properties) {
     if (!properties) {
         return;
@@ -20,7 +19,6 @@ static void GetReverbProperties(SoundProviderPreferencesRec* rec, FMOD_REVERB_PR
 
     if (!rec) {
         memcpy(properties, &off, sizeof(FMOD_REVERB_PROPERTIES));
-        s_reverbDescription = NULL;
         return;
     }
 
@@ -55,26 +53,47 @@ static void GetReverbProperties(SoundProviderPreferencesRec* rec, FMOD_REVERB_PR
     properties->ReverbPan[0] = 0.0f;
     properties->ReverbPan[1] = 0.0f;
     properties->ReverbPan[2] = 0.0f;
-
-    s_reverbDescription = rec->m_description;
 }
 
-// OFFSET: #0x004D2050
-void SI2::ApplyReverbSettings() {
-    if (!s_reverbEnabled) {
-        return;
+// OFFSET: 0x00634790
+int32_t SI3::GetZoneReverb() {
+    int32_t type = SI3ZONESOUNDTYPE_LAST - 1;
+
+    while (SI3::sm_aZoneSoundInfo[type].m_reverb < 0 || (SI3::IsUnderwaterZoneSoundType(type) && !SI3::sm_bCameraIsUnderwater) || (type == SI3ZONESOUNDTYPE_8 && SI3::sm_bPlayerIsIndoors)) {
+        if (--type < 0) {
+            return 0;
+        }
     }
 
+    return SI3::sm_aZoneSoundInfo[type].m_reverb;
+}
+
+// PROVEN: f6c49d19 IDENTICAL/NONE
+// OFFSET: 0x006347F0
+void SI3::EnableReverb(int32_t enable) {
+    SI3::sm_bReverbEnabled = enable;
+}
+
+// OFFSET: 0x00634800
+void SI3::UpdateReverb() {
     FMOD_REVERB_PROPERTIES properties;
-    GetReverbProperties(g_soundProviderPreferencesDB.GetRecord(SI2::GetZoneReverb()), &properties);
+
+    if (SI3::sm_bReverbEnabled) {
+        SoundProviderPreferencesRec* rec = g_soundProviderPreferencesDB.GetRecord(SI3::GetZoneReverb());
+
+        if (rec) {
+            GetReverbProperties(rec, &properties);
+            SE3::SetReverb(&properties);
+            return;
+        }
+    }
+
+    GetReverbProperties(NULL, &properties);
     SE3::SetReverb(&properties);
 }
 
-void SI2::EnableReverb(int32_t enable) {
-    s_reverbEnabled = enable;
-}
-
-// OFFSET: #0x004D20A0
-void SI2::UpdateReverb() {
-    SI2::ApplyReverbSettings();
+// PROVEN: 30f52b84 IDENTICAL/NONE
+// OFFSET: 0x00634880
+void SI3::ReverbUnderwaterChanged() {
+    SI3::UpdateReverb();
 }

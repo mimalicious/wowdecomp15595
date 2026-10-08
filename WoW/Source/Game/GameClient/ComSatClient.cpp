@@ -17,7 +17,7 @@
 #include "Engine/Source/Storm/Source/SLock.h"
 #include "Engine/Source/Storm/Source/SThread.h"
 #include "WoW/Source/Game/GameClient/ComSatThread.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/UIBindings.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ScriptEvents.h"
@@ -347,21 +347,21 @@ static void ResetVoiceVolumeState() {
 
     if (s_cvarSoundSFXVolume) {
         s_sfxVolumeBase = s_cvarSoundSFXVolume->m_floatValue;
-        SI2::SetChannelGroupVolume(0, s_sfxVolumeBase);
+        SI3::SetChannelGroupVolume(0, s_sfxVolumeBase);
     } else {
         s_sfxVolumeBase = 0.0f;
     }
 
     if (s_cvarSoundMusicVolume) {
         s_musicVolumeBase = s_cvarSoundMusicVolume->m_floatValue;
-        SI2::SetChannelGroupVolume(1, s_musicVolumeBase);
+        SI3::SetChannelGroupVolume(1, s_musicVolumeBase);
     } else {
         s_musicVolumeBase = 0.0f;
     }
 
     if (s_cvarSoundAmbienceVolume) {
         s_ambienceVolumeBase = s_cvarSoundAmbienceVolume->m_floatValue;
-        SI2::SetChannelGroupVolume(2, s_ambienceVolumeBase);
+        SI3::SetChannelGroupVolume(2, s_ambienceVolumeBase);
     } else {
         s_ambienceVolumeBase = 0.0f;
     }
@@ -428,7 +428,7 @@ void ComSatClient_Shutdown() {
     }
 
     ResetVoiceVolumeState();
-    SI2::VoiceChat_DestroyChatSystem();
+    SI3::VoiceChat_DestroyChatSystem();
 }
 
 // OFFSET: #0x007DC9C0
@@ -1236,9 +1236,9 @@ static void InitSoundGroupFadeRates() {
     s_voiceFadeDelayRate = 0.0f == delay ? 0.0f : 1.0f / delay;
     float time = s_cvarStartTalkingTime ? s_cvarStartTalkingTime->m_floatValue : 0.2f;
     s_voiceFadeRate = 0.0f != time ? 1.0f / time : 0.0f;
-    s_sfxVolumeBase = SI2::GetChannelGroupVolume(0);
-    s_musicVolumeBase = SI2::GetChannelGroupVolume(1);
-    s_ambienceVolumeBase = SI2::GetChannelGroupVolume(2);
+    s_sfxVolumeBase = SI3::GetChannelGroupVolume(0);
+    s_musicVolumeBase = SI3::GetChannelGroupVolume(1);
+    s_ambienceVolumeBase = SI3::GetChannelGroupVolume(2);
 
     if (s_cvarSoundSFXVolume && s_cvarChatSoundVolume) {
         s_sfxVolumeDelta = s_cvarChatSoundVolume->m_floatValue * s_cvarSoundSFXVolume->m_floatValue - s_sfxVolumeBase;
@@ -1265,9 +1265,9 @@ static void UpdateSoundGroupFadeRates() {
     s_voiceFadeDelayRate = 0.0f == delay ? 0.0f : 1.0f / delay;
     float time = s_cvarStopTalkingTime ? s_cvarStopTalkingTime->m_floatValue : 3.0f;
     s_voiceFadeRate = 0.0f != time ? 1.0f / time : 0.0f;
-    s_sfxVolumeBase = SI2::GetChannelGroupVolume(0);
-    s_musicVolumeBase = SI2::GetChannelGroupVolume(1);
-    s_ambienceVolumeBase = SI2::GetChannelGroupVolume(2);
+    s_sfxVolumeBase = SI3::GetChannelGroupVolume(0);
+    s_musicVolumeBase = SI3::GetChannelGroupVolume(1);
+    s_ambienceVolumeBase = SI3::GetChannelGroupVolume(2);
 
     if (s_cvarSoundSFXVolume) {
         s_sfxVolumeDelta = s_cvarSoundSFXVolume->m_floatValue - s_sfxVolumeBase;
@@ -1390,7 +1390,7 @@ static bool IsVoiceActive() {
 
     WOWGUID player = s_localPlayer;
 
-    if (!s_talkingPlayers.Ptr(static_cast<uint32_t>(player.m_guid), CHashKeyGUID(player.m_guid)) && !SI2::VoiceChat_IsRecordingLoopbackSound() && !SI2::VoiceChat_IsPlayingLoopbackSound()) {
+    if (!s_talkingPlayers.Ptr(static_cast<uint32_t>(player.m_guid), CHashKeyGUID(player.m_guid)) && !SI3::VoiceChat_IsRecordingLoopbackSound() && !SI3::VoiceChat_IsPlayingLoopbackSound()) {
         return false;
     }
 
@@ -1407,24 +1407,24 @@ static void ApplySoundGroupFade(uint32_t time) {
                 if (s_cvarSoundSFXVolume && s_cvarChatSoundVolume) {
                     float volume = s_cvarChatSoundVolume->m_floatValue * s_cvarSoundSFXVolume->m_floatValue;
 
-                    if (volume != SI2::GetChannelGroupVolume(0)) {
-                        SI2::SetChannelGroupVolume(0, s_cvarChatSoundVolume->m_floatValue * s_cvarSoundSFXVolume->m_floatValue);
+                    if (volume != SI3::GetChannelGroupVolume(0)) {
+                        SI3::SetChannelGroupVolume(0, s_cvarChatSoundVolume->m_floatValue * s_cvarSoundSFXVolume->m_floatValue);
                     }
                 }
 
                 if (s_cvarSoundMusicVolume && s_cvarChatMusicVolume) {
                     float volume = s_cvarChatMusicVolume->m_floatValue * s_cvarSoundMusicVolume->m_floatValue;
 
-                    if (volume != SI2::GetChannelGroupVolume(1)) {
-                        SI2::SetChannelGroupVolume(1, s_cvarChatMusicVolume->m_floatValue * s_cvarSoundMusicVolume->m_floatValue);
+                    if (volume != SI3::GetChannelGroupVolume(1)) {
+                        SI3::SetChannelGroupVolume(1, s_cvarChatMusicVolume->m_floatValue * s_cvarSoundMusicVolume->m_floatValue);
                     }
                 }
 
                 if (s_cvarSoundAmbienceVolume && s_cvarChatAmbienceVolume) {
                     float volume = s_cvarChatAmbienceVolume->m_floatValue * s_cvarSoundAmbienceVolume->m_floatValue;
 
-                    if (volume != SI2::GetChannelGroupVolume(2)) {
-                        SI2::SetChannelGroupVolume(2, s_cvarChatAmbienceVolume->m_floatValue * s_cvarSoundAmbienceVolume->m_floatValue);
+                    if (volume != SI3::GetChannelGroupVolume(2)) {
+                        SI3::SetChannelGroupVolume(2, s_cvarChatAmbienceVolume->m_floatValue * s_cvarSoundAmbienceVolume->m_floatValue);
                     }
                 }
             }
@@ -1437,9 +1437,9 @@ static void ApplySoundGroupFade(uint32_t time) {
                 s_voiceFadeStartTime = 0.0f;
             }
 
-            SI2::SetChannelGroupVolume(0, fade * s_sfxVolumeDelta + s_sfxVolumeBase);
-            SI2::SetChannelGroupVolume(1, s_musicVolumeDelta * fade + s_musicVolumeBase);
-            SI2::SetChannelGroupVolume(2, s_ambienceVolumeDelta * fade + s_ambienceVolumeBase);
+            SI3::SetChannelGroupVolume(0, fade * s_sfxVolumeDelta + s_sfxVolumeBase);
+            SI3::SetChannelGroupVolume(1, s_musicVolumeDelta * fade + s_musicVolumeBase);
+            SI3::SetChannelGroupVolume(2, s_ambienceVolumeDelta * fade + s_ambienceVolumeBase);
         }
     } else if (s_voiceFadeDelayRate * (now - s_voiceFadeStartTime) >= 1.0) {
         s_voiceFadeDelayRate = 0.0f;

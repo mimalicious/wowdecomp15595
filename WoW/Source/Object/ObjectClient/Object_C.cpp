@@ -20,7 +20,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 #include "WoW/Source/UIUtil/Camera.h"
-#include "WoW/Source/WorldClient/DayNight__DNInfo.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 #include "Engine/Source/Model2/M2Data.h"
@@ -38,7 +38,7 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include <cmath>
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/DB/Rec/SpellVisualKitRec.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "WoW/Source/Magic/MagicClient/SpellVisuals.h"
@@ -141,7 +141,7 @@ void CGObject_C::ModelLoaded(CM2Model* model) {
     }
 }
 
-// OFFSET: #0x00743760
+// OFFSET: 0x005DC5B0/0x1402588D0
 void CGObject_C::AddWorldObject() {
     if (!this->m_worldModel) {
         const char* fileName;
@@ -205,7 +205,7 @@ void CGObject_C::AddWorldObject() {
     }
 }
 
-// OFFSET: #0x00745DA0
+// OFFSET: 0x005DF9E0/0x14025CED0
 void CGObject_C::UpdateInteractIcon() {
     if (this->m_interactIcon) {
         if (this->m_interactIcon->m_attachParent) {
@@ -244,7 +244,7 @@ void CGObject_C::UpdateInteractIcon() {
     this->SetInteractIconVisible(CGGameUI::m_visible);
 }
 
-// OFFSET: #0x007444E0
+// OFFSET: 0x005DD5D0/0x140259BE0
 void CGObject_C::UpdateInteractIconScale() {
     if (!this->m_interactIcon || !this->m_interactIcon->m_attachParent || !this->m_worldModel || !this->m_worldModel->IsLoaded()) {
         return;
@@ -273,7 +273,7 @@ void CGObject_C::UpdateInteractIconScale() {
     }
 }
 
-// OFFSET: #0x00743490
+// OFFSET: 0x005DC0C0/0x140258230
 void CGObject_C::ObjectNameVisibilityChanged() {
     if (!this->m_interactIcon) {
         return;
@@ -432,7 +432,7 @@ void CGObject_C::SetModelFinish(CM2Model* model) {
     }
 }
 
-// OFFSET: #0x007438E0
+// OFFSET: 0x005DC720/0x140258AA0
 void CGObject_C::UpdateWorldObject(int32_t a2) {
     if (!this->m_worldObject) {
         return;
@@ -465,7 +465,7 @@ void CGObject_C::UpdateWorldObject(int32_t a2) {
     CMap::ObjectUpdate(this->m_worldObject, mat, box, sphere, vec, a2, 0xFFFFFFFF);
 }
 
-// OFFSET: #0x00743110
+// OFFSET: 0x005DBD20/0x140257E90
 void CGObject_C::ModelLoadedCallback(CM2Model* model, void* arg) {
     CGObject_C* object = static_cast<CGObject_C*>(arg);
 
@@ -475,7 +475,7 @@ void CGObject_C::ModelLoadedCallback(CM2Model* model, void* arg) {
 }
 
 // OFFSET: #0x007435A0
-void CGObject_C::LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
     if (!interrupted && effect && effect->m_model) {
@@ -503,7 +503,7 @@ int32_t CGObject_C::ShouldFadeout() {
 void CGObject_C::UpdateDisplayInfo(int32_t a2) {
 }
 
-// OFFSET: #0x007451B0
+// OFFSET: 0x005DE890/0x14025B480
 C3Vector CGObject_C::GetNamePosition() const {
     if (this->m_worldModel->HasAttachment(18)) {
         return this->m_worldModel->GetAttachmentPosition(18);
@@ -561,7 +561,7 @@ uint64_t CGObject_C::GetTransportGUID() const {
     return 0;
 }
 
-// OFFSET: #0x004D5F20
+// OFFSET: 0x0048F770/0x1400B3F00
 C4Quaternion CGObject_C::GetRotation() const {
     C4Quaternion rotation;
     rotation.x = 0.0f;
@@ -572,7 +572,7 @@ C4Quaternion CGObject_C::GetRotation() const {
     return rotation;
 }
 
-// OFFSET: #0x00744380
+// OFFSET: 0x005DD470/0x1402599D0
 void CGObject_C::SetFrameOfReference(const C44Matrix* matrix) {
     CM2Model* model = this->m_worldModel;
 
@@ -599,7 +599,7 @@ int32_t CGObject_C::IsQuestGiver() const {
 void CGObject_C::RefreshInteractIcon() {
 }
 
-// OFFSET: #0x00744460
+// OFFSET: 0x005DD550/0x140259B40
 void CGObject_C::UpdateInteractIconAttach() {
     if (!this->m_interactIcon || !this->m_worldModel || !this->m_worldModel->IsLoaded()) {
         return;
@@ -654,7 +654,7 @@ int32_t CGObject_C::GetSelectionHighlightColor(CImVector* color) const {
     return 1;
 }
 
-// OFFSET: #0x004D5F90
+// OFFSET: 0x0048F7F0/0x140206E00
 float CGObject_C::GetTrueScale() const {
     return this->m_scaleModifier * this->m_scale;
 }
@@ -679,7 +679,7 @@ void CGObject_C::ApplyAlpha(uint32_t time) {
     model->m_fadeAlpha = static_cast<float>(this->m_alphaScale) * this->m_alpha * (1.0f / 65025.0f);
 }
 
-// OFFSET: #0x00743330
+// OFFSET: 0x005DBF60/0x140207360
 int32_t CGObject_C::Animate(float elapsed) {
     CM2Model* model = this->GetObjectModel();
 
@@ -757,7 +757,7 @@ C44Matrix CGObject_C::GetMatrix() const {
     return C44Matrix();
 }
 
-// OFFSET: #0x007434E0
+// OFFSET: 0x005DC120/0x1402582B0
 int32_t CGObject_C::UpdateObjectNameString(int32_t a1, char* buffer, uint32_t size) {
     if (this->GetObjectName()) {
         SStrPrintf(buffer, size, "%s", this->GetObjectName());
@@ -768,7 +768,7 @@ int32_t CGObject_C::UpdateObjectNameString(int32_t a1, char* buffer, uint32_t si
     return 1;
 }
 
-// OFFSET: #0x00743530
+// OFFSET: 0x005DC170/0x140258320
 int32_t CGObject_C::ShouldRenderObjectName(uint32_t flags) const {
     if (this->m_interactIcon) {
         return 0;
@@ -777,7 +777,7 @@ int32_t CGObject_C::ShouldRenderObjectName(uint32_t flags) const {
     return (flags >> 11) & 0x1;
 }
 
-// OFFSET: #0x004D5FE0
+// OFFSET: 0x0048F880/0x1400B3FF0
 CM2Model* CGObject_C::GetObjectModel() const {
     return this->m_worldModel;
 }
@@ -840,7 +840,7 @@ void CGObject_C::PlaySpellVisualKit_PlayAnims(const SpellRec* spell, const Spell
 }
 
 // OFFSET: #0x00743560
-void CGObject_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), int32_t* hasEffect) {
+void CGObject_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect) {
 }
 
 // OFFSET: #0x00743570
@@ -934,7 +934,7 @@ int32_t CGObject_C::GetQuestGiverCursor(int32_t highlighted) {
     }
 }
 
-// OFFSET: #0x00743BC0
+// OFFSET: 0x005DCB20/0x140258F70
 void CGObject_C::HideHighlightType(int32_t type) {
     this->m_modelFlags &= ~(1 << (type + 24));
 
@@ -956,12 +956,12 @@ void CGObject_C::HideHighlightType(int32_t type) {
     }
 }
 
-// OFFSET: #0x007433D0
+// OFFSET: 0x005DC000/0x140258180
 int32_t CGObject_C::IsObjectLocked() {
     return (this->m_modelFlags & 0xFFFF) != 0;
 }
 
-// OFFSET: #0x00743390
+// OFFSET: 0x005DBFC0/0x140258130
 int32_t CGObject_C::IsObjectModelLoaded() {
     if (this->GetObjectModel() && this->GetObjectModel()->IsLoaded()) {
         return 1;
@@ -1014,7 +1014,7 @@ void CGObject_C::ReleaseModel() {
     this->m_worldModel = NULL;
 }
 
-// OFFSET: #0x007443D0
+// OFFSET: 0x005DD4C0/0x140259A80
 void CGObject_C::RemoveInteractIcon() {
     if (!this->m_interactIcon) {
         return;
@@ -1033,7 +1033,7 @@ void CGObject_C::SetBlock(int32_t index, uint32_t value) {
     reinterpret_cast<uint32_t*>(this->m_obj)[index] = value;
 }
 
-// OFFSET: #0x00743320
+// OFFSET: 0x005DBF50/0x1402580A0
 void CGObject_C::SetBoundsDirty() {
     this->m_modelFlags |= 0x200000;
 }
@@ -1047,7 +1047,7 @@ void CGObject_C::SetDisablePending(int32_t pending) {
     }
 }
 
-// OFFSET: #0x00745140
+// OFFSET: 0x005DE820/0x14025B410
 void CGObject_C::SetInteractIconVisible(int32_t visible) {
     CM2Model* icon = this->m_interactIcon;
 
@@ -1082,7 +1082,7 @@ CM2Model* CGObject_C::SetModelStart(CM2Model* model) {
     return previous;
 }
 
-// OFFSET: #0x007433E0
+// OFFSET: 0x005DC010/0x140258190
 void CGObject_C::SetObjectLocked(int32_t locked) {
     uint32_t count = this->m_modelFlags;
 
@@ -1294,7 +1294,7 @@ CGObject_C::CGObject_C(uint32_t time, const CClientObjCreate& create) {
     this->m_scale = this->m_obj->m_scale;
 }
 
-// OFFSET: #0x007460C0
+// OFFSET: 0x005E0620/0x14025E110
 void CGObject_C::Initialize() {
     CGObject_C::s_cvObjectSelectionCircle = CVar::Register("ObjectSelectionCircle", NULL, 0, "1", NULL, 0, false, NULL, false);
 
@@ -1325,7 +1325,7 @@ const SpellVisualRec* CGObject_C::GetAppropriateSpellVisual(const SpellRec* spel
     return GetSpellVisual(spell);
 }
 
-// OFFSET: #0x00744330
+// OFFSET: 0x005DD420/0x140259970
 void CGObject_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
     for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
         if (effect->m_spellId == a1 && (effect->m_flags & 0x40000) && effect->unk_008C == a2) {
@@ -1360,9 +1360,9 @@ CGObject_C* CGObject_C::GetFocusObject() {
     return target ? target : object;
 }
 
-// PROVEN: 1928cbac IDENTICAL/NONE
+// PROVEN: ad14dc82 IDENTICAL/NONE
 // OFFSET: 0x005DBE60/0x140257F80
-void CGObject_C::AuraDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::AuraDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted) {
         reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param))->MoveToDestroyList();
     }
@@ -1378,15 +1378,15 @@ void CGObject_C::OnSpellEffectClear(CEffect* effect) {
     }
 
     if (effect->m_flags & 0x40) {
-        SI2::StopSound(&effect->m_soundKitObject, 0, 0.3f, 1);
+        SI3::StopSound(&effect->m_soundKitObject, 0, 0.3f, 1);
     }
 
     effect->MoveToDestroyList();
 }
 
-// PROVEN: 4c06bc30 IDENTICAL/NONE
+// PROVEN: 16cd810e IDENTICAL/NONE
 // OFFSET: 0x005DC1A0/0x140258340
-void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
     if (!interrupted && effect) {
@@ -1395,7 +1395,7 @@ void CGObject_C::EffectDecayHandler(CM2Model* model, uint32_t boneId, uint32_t s
 }
 
 // OFFSET: #0x00744920
-void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
     if (interrupted || !effect || !effect->m_model) {
@@ -1417,7 +1417,7 @@ void CGObject_C::AuraEffectHoldHandler(CM2Model* model, uint32_t boneId, uint32_
 }
 
 // OFFSET: #0x007449C0
-void CGObject_C::AuraEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::AuraEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
     if (interrupted || !effect || !effect->m_model) {
@@ -1434,7 +1434,7 @@ void CGObject_C::AuraEffectHandler(CM2Model* model, uint32_t boneId, uint32_t se
 }
 
 // OFFSET: #0x00744790
-void CGObject_C::PlayEffectName(int32_t attachType, uint32_t a3, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, uint32_t* flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), const C3Vector* position, WOWGUID target, uint32_t a11, const SpellVisualKitModelAttachRec* attach) {
+void CGObject_C::PlayEffectName(int32_t attachType, uint32_t a3, int32_t spellId, const SpellVisualKitRec* kit, const SpellVisualEffectNameRec* effectName, uint32_t* flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), const C3Vector* position, WOWGUID target, uint32_t a11, const SpellVisualKitModelAttachRec* attach) {
     CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
     effect->m_expireTime = a3;
 
@@ -1486,13 +1486,13 @@ void CGObject_C::PlaySpellVisualKit(const PlaySpellVisuaKitData& data) {
         }
     }
 
-    void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t) = NULL;
+    void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t) = NULL;
 
     if (data.m_impactVisualKit->m_shakeID) {
         flags = 0x10;
     }
 
-    if (SI2::IsSoundKitLooping(data.m_impactVisualKit->m_soundID)) {
+    if (SI3::IsSoundKitLooping(data.m_impactVisualKit->m_soundID)) {
         flags |= 0x1;
     }
 
@@ -1766,7 +1766,7 @@ attachments:
 }
 
 // OFFSET: #0x00744870
-void CGObject_C::EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGObject_C::EffectOnceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CEffect* effect = reinterpret_cast<CEffect*>(static_cast<uintptr_t>(param));
 
     if (interrupted || !effect) {

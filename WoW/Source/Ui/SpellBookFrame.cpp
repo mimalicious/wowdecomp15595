@@ -27,7 +27,7 @@
 #include "WoW/Source/Ui/Tutorial.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/Ui/UIMacros.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Magic/Spell.h"
 #include "WoW/Source/Object/ObjectClient/AuraData.h"
 #include "WoW/Source/DB/Rec/SkillRaceClassInfoRec.h"
@@ -1608,7 +1608,7 @@ void CGSpellBook::PickupSpell(int32_t slot, int32_t petSpell) {
 
     if (spellId == cursorSpell) {
         if (spellId) {
-            SI2::PlaySoundKit("igSpellBookSpellIconDrop", NULL, NULL, NULL);
+            SI3::PlaySoundKit("igSpellBookSpellIconDrop", NULL, NULL, NULL);
         }
     } else if (cursorSpell <= 0 && spellId) {
         if (petSpell) {
@@ -1617,7 +1617,7 @@ void CGSpellBook::PickupSpell(int32_t slot, int32_t petSpell) {
             CGGameUI::SetCursorSpell(spellId);
         }
 
-        SI2::PlaySoundKit("igSpellBookSpellIconPickup", NULL, NULL, NULL);
+        SI3::PlaySoundKit("igSpellBookSpellIconPickup", NULL, NULL, NULL);
     }
 }
 
@@ -1632,10 +1632,10 @@ void CGSpellBook::PickupCompanion(int32_t type, uint32_t index) {
     CGGameUI::ClearCursor(1, 1);
 
     if (spellId == cursorSpell) {
-        SI2::PlaySoundKit("igSpellBookSpellIconDrop", NULL, NULL, NULL);
+        SI3::PlaySoundKit("igSpellBookSpellIconDrop", NULL, NULL, NULL);
     } else if (cursorSpell <= 0) {
         CGGameUI::SetCursorSpell(spellId);
-        SI2::PlaySoundKit("igSpellBookSpellIconPickup", NULL, NULL, NULL);
+        SI3::PlaySoundKit("igSpellBookSpellIconPickup", NULL, NULL, NULL);
     }
 }
 

@@ -10,7 +10,7 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
@@ -441,7 +441,7 @@ void CGLootInfo::DoAutoLoot(int32_t a1) {
         ItemStats_C* stats = g_itemDBCache.GetRecord(slot.m_itemID, CGLootInfo::m_lootObj, NULL, NULL, false);
 
         if (stats->m_bonding != 1 || stats->m_quality < 2 || (stats->m_flags[0] & 0x800) || slotType == 4) {
-            SI2::PlayItemSound(0, stats->m_displayId);
+            SI3::PlayItemSound(0, stats->m_displayId);
             CGPlayer_C::AutoStoreLootItem(slot.m_slot);
         } else if (!confirmShown) {
             FrameScript_SignalEvent(SCRIPT_EVENT_LOOT_BIND_CONFIRM, "%u", CGLootInfo::m_coins ? i + 2 : i + 1);
@@ -529,7 +529,7 @@ void CGLootInfo::LootSlot(uint32_t slot) {
         }
 
         if (stats->m_bonding != 1 || stats->m_quality < 2 || (stats->m_flags[0] & 0x800) || slotType == 4) {
-            SI2::PlayItemSound(0, stats->m_displayId);
+            SI3::PlayItemSound(0, stats->m_displayId);
             CGPlayer_C::AutoStoreLootItem(entry.m_slot);
         } else if (player->GetBag()->ItemCountValid(entry.m_itemID, stats, entry.m_count, true)) {
             FrameScript_SignalEvent(SCRIPT_EVENT_LOOT_BIND_CONFIRM, "%u", CGLootInfo::m_coins ? slot + 2 : slot + 1);
@@ -560,7 +560,7 @@ void CGLootInfo::ConfirmLootSlot(uint32_t slot) {
     }
 
     ItemStats_C* stats = g_itemDBCache.GetRecord(CGLootInfo::m_slots[slot].m_itemID, CGLootInfo::m_lootObj, NULL, NULL, false);
-    SI2::PlayItemSound(0, stats->m_displayId);
+    SI3::PlayItemSound(0, stats->m_displayId);
     CGPlayer_C::AutoStoreLootItem(CGLootInfo::m_slots[slot].m_slot);
     s_bindConfirmSlot = -1;
 }

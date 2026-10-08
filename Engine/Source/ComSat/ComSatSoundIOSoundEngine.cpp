@@ -30,7 +30,7 @@ ComSat::Sound::CaptureChannel::~CaptureChannel() {
 
 // OFFSET: 0x00A3AEB0/0x1407E7950
 void ComSat::Sound::CaptureChannel::ProcessData(int16_t* data, uint32_t samples) {
-    SI2::VoiceChat_AmplifyMicrophoneInput(data, samples);
+    SI3::VoiceChat_AmplifyMicrophoneInput(data, samples);
     this->m_buffer.Write(data, samples);
 }
 
@@ -102,10 +102,10 @@ int32_t ComSat::Sound::IOSoundEngine::GetPlaybackBlockSize(uint8_t player) {
     return this->m_samplesPerFrame * this->m_bitsPerSample / 8;
 }
 
-// PROVEN: 8a119638 IDENTICAL/UNPROVEN
+// PROVEN: e593f0a3 IDENTICAL/UNPROVEN
 // OFFSET: 0x00A3AA60/0x1407E7440
 int32_t ComSat::Sound::IOSoundEngine::EnumerateOutputDevices(ComSat::DeviceInfo* devices, int32_t maxDevices) {
-    int32_t count = SI2::VoiceChat_GetNumOutputDrivers();
+    int32_t count = SI3::VoiceChat_GetNumOutputDrivers();
     if (maxDevices < count) {
         count = maxDevices;
     }
@@ -144,18 +144,18 @@ int32_t ComSat::Sound::IOSoundEngine::LocalPlayerGetCurrentCaptureDeviceIndex(ui
 void ComSat::Sound::IOSoundEngine::ShutDownCapture() {
     for (uint32_t i = 0; i < this->m_channels.Count(); i++) {
         if (this->m_channels[i]) {
-            SI2::VoiceChat_StopSound(this->m_channels[i]->m_handle);
+            SI3::VoiceChat_StopSound(this->m_channels[i]->m_handle);
             this->m_channels[i] = NULL;
         }
     }
-    SI2::VoiceChat_ShutDownCapture();
-    SI2::VoiceChat_CleanUpLoopbackSound();
+    SI3::VoiceChat_ShutDownCapture();
+    SI3::VoiceChat_CleanUpLoopbackSound();
 }
 
-// PROVEN: 16e26fa7 IDENTICAL/UNPROVEN
+// PROVEN: ece9809f IDENTICAL/UNPROVEN
 // OFFSET: 0x00A3AE80/0x1407E7930
 void ComSat::Sound::IOSoundEngine::SetPlayerPlaybackVolume(uint8_t player, int32_t channel, float volume) {
-    SI2::SetVolume(this->m_channels[channel]->m_handle, volume);
+    SI3::SetVolume(this->m_channels[channel]->m_handle, volume);
 }
 
 // OFFSET: 0x00A3B0F0/0x1407E7CC0
@@ -197,23 +197,23 @@ int32_t ComSat::Sound::IOSoundEngine::GetAvailableDataBytes(uint8_t player) {
 
 // OFFSET: 0x00A3AF20/0x1407E7A60
 void ComSat::Sound::IOSoundEngine::InitCapture() {
-    SI2::VoiceChat_InitCapture(this->m_sampleRate);
-    SI2::VoiceChat_SetPrimaryCaptureCallback(&this->m_captureChannel);
-    SI2::VoiceChat_ActivatePrimaryCaptureCallback();
+    SI3::VoiceChat_InitCapture(this->m_sampleRate);
+    SI3::VoiceChat_SetPrimaryCaptureCallback(&this->m_captureChannel);
+    SI3::VoiceChat_ActivatePrimaryCaptureCallback();
     // STATIC: #0x00D439A0
     static CVar* s_enableMicrophone = CVar::Lookup("EnableMicrophone");
     // STATIC: #0x00D4399C
     static CVar* s_enableVoiceChat = CVar::Lookup("EnableVoiceChat");
     if (s_enableVoiceChat && s_enableVoiceChat->m_intValue && s_enableMicrophone && s_enableMicrophone->m_intValue && !ComSatClient_IsComsatDisabledByClient()) {
-        SI2::VoiceChat_StartCapture();
+        SI3::VoiceChat_StartCapture();
     }
-    if (SI2::VoiceChat_IsVoiceChatInitialized()) {
+    if (SI3::VoiceChat_IsVoiceChatInitialized()) {
         for (uint32_t i = 0; i < this->m_channels.Count(); i++) {
             this->m_channels[i] = new (this->m_allocator->Alloc(sizeof(ComSat::Sound::OutputChannel))) ComSat::Sound::OutputChannel(*this->m_allocator);
             ComSat::Sound::OutputChannel* channel = this->m_channels[i];
-            SI2::VoiceChat_CreateChatSound(channel->m_handle, channel, 1);
-            SI2::VoiceChat_SetFrequencyScale(channel->m_handle, this->m_sampleRate);
-            SI2::VoiceChat_Play(channel->m_handle);
+            SI3::VoiceChat_CreateChatSound(channel->m_handle, channel, 1);
+            SI3::VoiceChat_SetFrequencyScale(channel->m_handle, this->m_sampleRate);
+            SI3::VoiceChat_Play(channel->m_handle);
         }
     }
 }
@@ -234,8 +234,8 @@ bool ComSat::Sound::IOSoundEngine::InitLocalPlayer(uint8_t player, int32_t outpu
 bool ComSat::Sound::IOSoundEngine::LocalPlayerChangeOutputDevice(uint8_t player, int32_t device) {
     this->ShutDownCapture();
     this->m_outputDevice = device;
-    SI2::VoiceChat_SetOutputDevice(device);
-    SI2::VoiceChat_DestroyChatSystem();
+    SI3::VoiceChat_SetOutputDevice(device);
+    SI3::VoiceChat_DestroyChatSystem();
     this->InitCapture();
     return true;
 }
@@ -244,8 +244,8 @@ bool ComSat::Sound::IOSoundEngine::LocalPlayerChangeOutputDevice(uint8_t player,
 bool ComSat::Sound::IOSoundEngine::LocalPlayerChangeCaptureDevice(uint8_t player, int32_t device) {
     this->ShutDownCapture();
     this->m_captureDevice = device;
-    SI2::VoiceChat_SetCaptureDevice(device);
-    SI2::VoiceChat_DestroyChatSystem();
+    SI3::VoiceChat_SetCaptureDevice(device);
+    SI3::VoiceChat_DestroyChatSystem();
     this->InitCapture();
     return true;
 }

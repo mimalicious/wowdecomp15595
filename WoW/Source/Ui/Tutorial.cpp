@@ -2,7 +2,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include <cstring>
@@ -139,7 +139,7 @@ void CGTutorial::TriggerTutorial(uint32_t tutorial) {
     }
 
     if (CVar::Lookup("showTutorials")->m_intValue) {
-        SI2::PlaySoundKit("TutorialPopup", NULL, NULL, NULL);
+        SI3::PlaySoundKit("TutorialPopup", NULL, NULL, NULL);
         FrameScript_SignalEvent(SCRIPT_EVENT_TUTORIAL_TRIGGER, "%d", tutorial + 1);
         CGTutorial::m_tutorialShown.m_bits.m_data[index] |= bit;
     } else {

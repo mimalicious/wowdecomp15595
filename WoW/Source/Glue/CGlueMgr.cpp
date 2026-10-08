@@ -52,7 +52,7 @@
 #include "WoW/Source/Glue/RealmList.h"
 #include "WoW/Source/LoadingScreen.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/CAccountMsgHeaders.h"
 #include "WoW/Source/Ui/CKBSystem.h"
 #include "WoW/Source/Ui/KnowledgeBase.h"
@@ -698,7 +698,7 @@ void CGlueMgr::Resume() {
     CharSelectRegisterScriptFunctions();
     CharacterCreateRegisterScriptFunctions();
     RealmListRegisterScriptFunctions();
-    SI2::RegisterScriptFunctions();
+    SI3::RegisterScriptFunctions();
     AccountMsg_RegisterScriptFunctions();
     CGVideoOptions::RegisterScriptFunctions();
     CGlueMgr::s_scriptFunctionsLoaded = 1;
@@ -1565,8 +1565,8 @@ int32_t CGlueMgr::Idle(const void* data, void* param) {
         if (CGlueMgr::m_suspended) {
             CGlueMgr::m_idleState = IDLE_NONE;
             CGlueMgr::m_showedDisconnect = 0;
-            SI2::StopGlueMusic(3.0f);
-            SI2::StopGlueAmbience(-1.0f);
+            SI3::StopGlueMusic(3.0f);
+            SI3::StopGlueAmbience(-1.0f);
             ClientServices::Connection()->CharacterLogin(s_activeCharacterGuid, 0);
             return 1;
         }
@@ -1655,7 +1655,7 @@ void CGlueMgr::Suspend() {
     CharSelectUnregisterScriptFunctions();
     CharacterCreateUnregisterScriptFunctions();
     RealmListUnregisterScriptFunctions();
-    SI2::UnregisterScriptFunctions();
+    SI3::UnregisterScriptFunctions();
     AccountMsg_UnregisterScriptFunctions();
     CGVideoOptions::UnregisterScriptFunctions();
     CGlueMgr::s_scriptFunctionsLoaded = 0;

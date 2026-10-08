@@ -36,7 +36,7 @@
 #include "WoW/Source/DB/Rec/SpellMissileRec.h"
 #include "WoW/Source/Object/ObjectClient/UnitCombat_C.h"
 #include "WoW/Source/Object/WGUID.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/ContainerFrame.h"
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/UIUtil/InputControl.h"
@@ -1516,7 +1516,7 @@ int32_t Packet_SMSG_SPELL_FAILURE(void* param, NETMESSAGE msgId, uint32_t time, 
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(caster, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
-        SI2::PlaySpellFizzleSound(spellId, unit);
+        SI3::PlaySpellFizzleSound(spellId, unit);
 
         if (unit->IsActivePlayer() && (reason == 52 || reason == 53 || reason == 54)) {
             Spell_C_CancelAutoRepeat(true);
@@ -6185,7 +6185,7 @@ void Spell_C_SpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player && reason != 27) {
-        SI2::PlaySpellFizzleSound(spellId, player);
+        SI3::PlaySpellFizzleSound(spellId, player);
     }
 
     UIErrors error = GetSpellFailedError(reason, spell, misc1);
@@ -8282,7 +8282,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
                 SE2SoundKitProperties properties;
                 properties.ResetToDefaults();
                 properties.m_suppressorMode = 2;
-                SI2::PlaySoundKit("igPlayerInviteDecline", NULL, NULL, &properties);
+                SI3::PlaySoundKit("igPlayerInviteDecline", NULL, NULL, &properties);
             }
 
             ReleasePendingSpellCast(cast);
@@ -8373,9 +8373,9 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
     if (item) {
         SndInterfacePlayItemSound(2, const_cast<CGItem_C*>(item));
     } else if (spell.m_attributes & 0x10) {
-        SI2::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
+        SI3::PlaySoundKit("GAMEABILITYACTIVATE", NULL, NULL, NULL);
     } else {
-        SI2::PlaySoundKit("GAMESPELLACTIVATE", NULL, NULL, NULL);
+        SI3::PlaySoundKit("GAMESPELLACTIVATE", NULL, NULL, NULL);
     }
 
     if (!Spell_C_BeginCast(unit, &spell, target, cast, confirmed)) {

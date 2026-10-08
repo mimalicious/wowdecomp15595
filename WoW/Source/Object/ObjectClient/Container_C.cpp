@@ -12,17 +12,20 @@ CGContainer_C::CGContainer_C(uint32_t time, const CClientObjCreate& create) : CG
 CGContainer_C::~CGContainer_C() {
 }
 
+// PROVEN: 86f17985 IDENTICAL/NONE
 // OFFSET: [0x00599100]
 const CGBag_C* CGContainer_C::GetBag() const {
     return &this->m_bag;
 }
 
+// PROVEN: ea30920d IDENTICAL/NONE
 // OFFSET: [0x00599100]
 CGBag_C* CGContainer_C::GetBag() {
     return &this->m_bag;
 }
 
-// OFFSET: 0x00599010
+// PROVEN: 8d2fbe73 IDENTICAL/NONE
+// OFFSET: 0x00599010/0x140207480
 int32_t CGContainer_C::GetFreeSlots() const {
     if (!this->m_container) {
         return 0;

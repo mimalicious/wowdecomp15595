@@ -8,7 +8,7 @@ const uint32_t CGItem::s_mirrorFields[47] = {
     0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x36, 0x37
 };
 
-// OFFSET: #0x004F51D0
+// OFFSET: 0x00A27CE0/0x1407CF490
 uint32_t CGItem::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int32_t local) {
     for (uint32_t i = 0; i < sizeof(CGItem::s_mirrorFields) / sizeof(CGItem::s_mirrorFields[0]); i++) {
         if (CGItem::s_mirrorFields[i] == index) {
@@ -19,14 +19,14 @@ uint32_t CGItem::GetSavedIndexFromDataIndex(uint32_t index, uint32_t count, int3
     return 58;
 }
 
-// OFFSET: #0x004D42C0
+// OFFSET: 0x0048D9E0/0x1400B1880
 uint32_t CGItem::DescriptorToMirrorOffset(uint32_t offset, uint32_t size, int32_t local, uint32_t base) {
     int32_t total = CGObject::TotalFieldsSaved();
 
     return (offset & 3) + 4 * (total + CGItem::GetSavedIndexFromDataIndex((offset - base) >> 2, (size + 3) >> 2, local));
 }
 
-// OFFSET: #0x004F51C0
+// OFFSET: 0x00A27CD0/0x1407CF470
 int32_t CGItem::TotalFieldsSaved() {
     return CGObject::TotalFieldsSaved() + sizeof(CGItem::s_mirrorFields) / sizeof(CGItem::s_mirrorFields[0]);
 }

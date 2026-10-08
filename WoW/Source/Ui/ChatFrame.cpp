@@ -48,7 +48,7 @@
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/DB/DBClient/GameObjectStats_C.h"
 #include "WoW/Source/Object/ObjectClient/Effect_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 // STATIC: #0x00BCEFEC
 int32_t CGChat::m_afk;
@@ -5681,7 +5681,7 @@ int32_t CGChat::OnVoiceStatusChanged(void* param, NETMESSAGE msgId, uint32_t tim
         static CVar* s_enableVoiceChat = CVar::Lookup("EnableVoiceChat");
 
         if (s_enableVoiceChat && s_enableVoiceChat->m_intValue && s_enableMicrophone && s_enableMicrophone->m_intValue && !ComSatClient_IsComsatDisabledByClient()) {
-            SI2::VoiceChat_StartCapture();
+            SI3::VoiceChat_StartCapture();
         }
 
         return 1;
@@ -5700,7 +5700,7 @@ int32_t CGChat::OnVoiceStatusChanged(void* param, NETMESSAGE msgId, uint32_t tim
     }
 
     ComSatClient_LeaveAllSessions(player->m_obj->m_guid);
-    SI2::VoiceChat_StopCapture();
+    SI3::VoiceChat_StopCapture();
     return 1;
 }
 

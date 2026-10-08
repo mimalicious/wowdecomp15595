@@ -15,7 +15,7 @@
 // STATIC: #0x00A37B10
 static const BAGSLOTRANGE s_bagSlotRanges[8] = { { 23, 38 }, { 19, 22 }, { 86, 117 }, { 39, 66 }, { 67, 73 }, { 118, 149 }, { 0, 18 }, { 74, 85 } };
 
-// OFFSET: #0x00753B00
+// OFFSET: 0x005F2080/0x140274A30
 static int32_t FindBagFamilyCallback(const CGItem_C* item, void* param) {
     return *static_cast<uint32_t*>(param) & item->GetBagFamily();
 }
@@ -49,7 +49,7 @@ int32_t CGBag_C::FindItemSlot(WOWGUID guid) const {
     return -1;
 }
 
-// OFFSET: #0x00754040
+// OFFSET: 0x005F25D0/0x140274F70
 int32_t CGBag_C::FindItemSlot(const CGItem_C* item) const {
     if (!item) {
         return -1;
@@ -66,7 +66,7 @@ int32_t CGBag_C::FindItemSlot(const CGItem_C* item) const {
     return -1;
 }
 
-// OFFSET: #0x00754390
+// OFFSET: 0x005F27B0/0x1402751B0
 const CGItem_C* CGBag_C::GetItemPointer(int32_t slot) const {
     if ((this->m_hasBank && ((slot >= 39 && slot <= 66) || static_cast<uint32_t>(slot - 67) <= 6) && !CGBankInfo::m_banker) || slot >= this->m_numSlots) {
         return NULL;
@@ -77,7 +77,7 @@ const CGItem_C* CGBag_C::GetItemPointer(int32_t slot) const {
     return static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 }
 
-// OFFSET: #0x00754400
+// OFFSET: 0x005F2820/0x140275210
 CGItem_C* CGBag_C::GetItemPointer(int32_t slot) {
     if ((this->m_hasBank && ((slot >= 39 && slot <= 66) || static_cast<uint32_t>(slot - 67) <= 6) && !CGBankInfo::m_banker) || slot >= this->m_numSlots) {
         return NULL;
@@ -88,7 +88,7 @@ CGItem_C* CGBag_C::GetItemPointer(int32_t slot) {
     return static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 }
 
-// OFFSET: #0x00754470
+// OFFSET: 0x005F2890/0x140275270
 int32_t CGBag_C::GetNumFreeInvSlots() {
     int32_t freeSlots = 0;
 
@@ -118,7 +118,8 @@ int32_t CGBag_C::GetNumFreeInvSlots() {
     return freeSlots;
 }
 
-// OFFSET: #0x00754560
+// PROVEN: ee90f4a4 IDENTICAL/NONE
+// OFFSET: 0x005F2960/0x140275390
 int32_t GetItemTypeCountCallback(const CGItem_C* item, void* param) {
     ItemTypeCountParam* count = static_cast<ItemTypeCountParam*>(param);
 
@@ -129,7 +130,7 @@ int32_t GetItemTypeCountCallback(const CGItem_C* item, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00754940
+// OFFSET: 0x005F2D20
 uint32_t CGBag_C::GetAvgEquippedDurability() const {
     int32_t durability = 0;
     int32_t maxDurability = 0;
@@ -157,7 +158,7 @@ uint32_t CGBag_C::GetAvgEquippedDurability() const {
     return static_cast<float>(durability) / maxDurability * 100.0f;
 }
 
-// OFFSET: #0x005125B0
+// OFFSET: 0x00554C00
 int32_t CGBag_C::GetNumItems() const {
     int32_t count = 0;
 
@@ -183,7 +184,7 @@ static int32_t FindItemFullNameCallback(const CGItem_C* item, void* param) {
     return SStrCmpUTF8I(static_cast<const char*>(param), fullName, STORM_MAX_STR) == 0;
 }
 
-// OFFSET: #0x00753BB0
+// OFFSET: 0x005F2130/0x140274B10
 int32_t GetDisplayErrorByInventoryError(int32_t error) {
     switch (error) {
         case 0:
@@ -432,7 +433,8 @@ int32_t GetDisplayErrorByInventoryError(int32_t error) {
     }
 }
 
-// OFFSET: %0x005FE960
+// PROVEN: 3b11856d IDENTICAL/NONE
+// OFFSET: 0x005F24F0/0x140274E90
 int32_t GetItemTypeChargesCallback(const CGItem_C* item, void* param) {
     ItemTypeCountParam* count = static_cast<ItemTypeCountParam*>(param);
 
@@ -449,12 +451,13 @@ int32_t GetItemTypeChargesCallback(const CGItem_C* item, void* param) {
     return 0;
 }
 
-// OFFSET: %0x005FEA20
+// PROVEN: 52ee0590 IDENTICAL/NONE
+// OFFSET: 0x005F25B0/0x140274F60
 int32_t FindItemIDCallback(const CGItem_C* item, void* param) {
     return static_cast<int32_t>(item->m_obj->m_entryID) == *static_cast<int32_t*>(param);
 }
 
-// OFFSET: #0x007541F0
+// OFFSET: 0x005F32C0/0x1402761F0
 bool CGBag_C::FindTotemCategory(int32_t type, int32_t& mask, bool recurse, uint32_t flags) {
     if (!(flags & 0x7)) {
         flags |= 0x7;
@@ -560,7 +563,8 @@ bool CGBag_C::ContainsItem(WOWGUID guid, bool recurse, uint32_t flags) const {
     return false;
 }
 
-// OFFSET: #0x007548F0
+// PROVEN: c06373e7 IDENTICAL/NONE
+// OFFSET: 0x005F34A0/0x140276450
 bool CGBag_C::FindTotemCategory(int32_t category, uint32_t flags) {
     TotemCategoryRec* rec = g_totemCategoryDB.GetRecord(category);
 
@@ -630,7 +634,7 @@ CGItem_C* CGBag_C::FindItemOfClass(int32_t classId, uint32_t subclassMask, uint3
     return this->FindItem(FindItemClassCallback, param, container, slot, flags);
 }
 
-// OFFSET: #0x00512590
+// OFFSET: 0x0044E310
 uint64_t CGBag_C::GetItemGuid(uint32_t slot) const {
     if (slot < static_cast<uint32_t>(this->m_numSlots)) {
         return this->m_slots[slot].m_guid;
@@ -639,7 +643,7 @@ uint64_t CGBag_C::GetItemGuid(uint32_t slot) const {
     return 0;
 }
 
-// OFFSET: #0x007545D0
+// OFFSET: 0x005F29D0/0x140275410
 static int32_t FindItemLinkCallback(const CGItem_C* item, void* param) {
     const ItemLinkInfo* link = static_cast<const ItemLinkInfo*>(param);
     CGItem_C* object = const_cast<CGItem_C*>(item);
@@ -697,7 +701,7 @@ static int32_t FindItemNameCallback(const CGItem_C* item, void* param) {
     return SStrCmpUTF8I(name, fullName, length) == 0;
 }
 
-// OFFSET: #0x00754AF0
+// OFFSET: 0x005F2EC0/0x140275AA0
 CGItem_C* CGBag_C::FindItemByName(const char* name, uint32_t flags) {
     if (!name || !*name) {
         return NULL;
@@ -716,7 +720,7 @@ CGItem_C* CGBag_C::FindItemByName(const char* name, uint32_t flags) {
     return this->FindItem(&FindItemLinkCallback, &link, container, slot, flags);
 }
 
-// OFFSET: #0x00754B90
+// OFFSET: 0x005F2F60/0x140275C30
 CGItem_C* CGBag_C::GetItemIdByName(const char* name, WOWGUID& container, uint32_t& slot, uint32_t flags) {
     if (!name || !*name) {
         return NULL;
@@ -755,7 +759,7 @@ CGItem_C* CGBag_C::FindItem(int32_t (*callback)(const CGItem_C* item, void* para
     return this->FindItem(callback, param, container, flags, flags);
 }
 
-// OFFSET: #0x007546F0
+// OFFSET: 0x005F2AF0/0x140275590
 CGItem_C* CGBag_C::FindItem(int32_t (*callback)(const CGItem_C* item, void* param), void* param, WOWGUID& container, uint32_t& slot, uint32_t flags) {
     if (this->m_hasBank && !(flags & 0x247)) {
         flags |= 0x247;
@@ -828,7 +832,7 @@ CGItem_C* CGBag_C::FindItem(int32_t (*callback)(const CGItem_C* item, void* para
     }
 }
 
-// OFFSET: #0x00754590
+// OFFSET: 0x005F2990/0x1402753C0
 int32_t GetItemLimitCategoryCallback(const CGItem_C* item, void* param) {
     int32_t* data = static_cast<int32_t*>(param);
 
@@ -839,7 +843,7 @@ int32_t GetItemLimitCategoryCallback(const CGItem_C* item, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00754DD0
+// OFFSET: 0x005F31A0/0x140276060
 bool CGBag_C::ItemCountValid(int32_t itemId, const ItemStats_C* stats, int32_t count, bool showError) {
     if (stats->m_maxCount) {
         int32_t current;
@@ -893,7 +897,7 @@ void CGBag_C::UnlockItemsOfType(int32_t itemId, uint32_t flags) {
     this->FindItem(UnlockItemTypeCallback, &param, container, slot, flags);
 }
 
-// OFFSET: #0x00754AC0
+// OFFSET: 0x005F2E90/0x140275A60
 CGItem_C* CGBag_C::FindItemOfBagFamily(uint32_t bagFamily, uint32_t flags) {
     WOWGUID container;
     uint32_t slot;

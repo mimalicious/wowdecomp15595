@@ -54,7 +54,7 @@
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/Object/ObjectClient/Vehicle_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/UIUtil/InputControl.h"
@@ -1270,7 +1270,7 @@ void CGWorldFrame::SetScreenEffect(int32_t effect) {
         DayNight::ClearOverrideFog();
         FFX::SetEffect(1, CGWorldFrame::ffxEffectGlow);
         DayNight::ClearOverrideLightParamsID();
-        SI2::SetOverrideZoneSounds(0, 0);
+        SI3::SetOverrideZoneSounds(0, 0);
         return;
     }
 
@@ -1323,7 +1323,7 @@ void CGWorldFrame::SetScreenEffect(int32_t effect) {
     }
 
     DayNight::SetOverrideLightParamsID(rec->m_lightParamsID);
-    SI2::SetOverrideZoneSounds(rec->m_soundAmbienceID, rec->m_zoneMusicID);
+    SI3::SetOverrideZoneSounds(rec->m_soundAmbienceID, rec->m_zoneMusicID);
 }
 
 // OFFSET: #0x004F8730
@@ -1991,16 +1991,16 @@ void CGWorldFrame::OnWorldUpdate() {
                 listener = C3Vector(position.x - offset.x, position.y - offset.y, position.z - offset.z + upDist);
             }
 
-            SI2::SetListenerAttributes(&listener, &facing, &s_listenerUp, NULL);
+            SI3::SetListenerAttributes(&listener, &facing, &s_listenerUp, NULL);
         } else {
             C3Vector up = this->m_camera->Up();
             C3Vector cameraForward = this->m_camera->Forward();
-            SI2::SetListenerAttributes(&camPos, &cameraForward, &up, NULL);
+            SI3::SetListenerAttributes(&camPos, &cameraForward, &up, NULL);
         }
     } else {
         C3Vector up = this->m_camera->Up();
         C3Vector cameraForward = this->m_camera->Forward();
-        SI2::SetListenerAttributes(&camPos, &cameraForward, &up, NULL);
+        SI3::SetListenerAttributes(&camPos, &cameraForward, &up, NULL);
     }
 
     CGObject_C::UpdateAllObjectEffectManagers();
@@ -2026,8 +2026,8 @@ void CGWorldFrame::OnWorldUpdate() {
     }
 
     ClientUpdateTaxiBenchmarkMode();
-    SI2::UpdateTaxiSounds(elapsedSec);
-    SI2::DSP_MakeDSPsExpire(elapsedSec);
+    SI3::UpdateTaxiSounds(elapsedSec);
+    SI3::DSP_MakeDSPsExpire(elapsedSec);
 
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 

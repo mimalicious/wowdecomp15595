@@ -20,7 +20,7 @@ CDataStore& operator>>(CDataStore& msg, SmartGUID& guid) {
     return msg;
 }
 
-// OFFSET: #0x0076DC80
+// OFFSET: 0x00438CE0/0x140043120
 CDataStore& SmartGUID::Put(CDataStore& msg) const {
     uint8_t mask = 0;
     uint32_t maskPos = msg.m_size;

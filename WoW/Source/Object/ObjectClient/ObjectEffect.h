@@ -6,7 +6,7 @@
 #include "Engine/Source/Base/BitArray.h"
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C3Vector.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 class CGObject_C;
 class CObjectEffectDef;
@@ -17,11 +17,11 @@ class ObjectEffectModifierRec;
 
 class CObjectEffect : public TSLinkedNode<CObjectEffect> {
     public:
-    /* 0008 */ SE2SoundKitObject m_soundKitObject;
-    /* 001C */ CObjectEffectDef* m_def;
-    /* 0020 */ CObjectEffectManager* m_manager;
-    /* 0024 */ int32_t m_playCount;
-    /* 0028 */ int32_t m_refCount;
+    /* 0008 */ uint32_t m_soundKitObject;
+    /* 000C */ CObjectEffectDef* m_def;
+    /* 0010 */ CObjectEffectManager* m_manager;
+    /* 0014 */ int32_t m_playCount;
+    /* 0018 */ int32_t m_refCount;
 
     CObjectEffect();
     ~CObjectEffect();

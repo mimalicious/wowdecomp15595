@@ -11,7 +11,7 @@
 
 extern TSList<CombatLogFilter, TSGetLink<CombatLogFilter> > s_filters;
 
-// OFFSET: #0x0074FA60
+// OFFSET: 0x005F6240/0x140279B80
 static int32_t Script_CombatLogResetFilter(lua_State* L) {
     s_filters.Clear();
     return 0;
@@ -25,7 +25,7 @@ static int32_t Script_CombatLogGetRetentionTime(lua_State* L) {
 
 extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
 
-// OFFSET: #0x00751120
+// OFFSET: 0x005F7760/0x14027B900
 static int32_t Script_CombatLogClearEntries(lua_State* L) {
     CombatLogEntry* entry = s_entries.Head();
 
@@ -38,7 +38,7 @@ static int32_t Script_CombatLogClearEntries(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0074D5B0
+// OFFSET: 0x005F3A70/0x140276730
 static int32_t Script_CombatLogSetRetentionTime(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CombatLogSetRetentionTime(seconds)");
@@ -143,13 +143,14 @@ static int32_t Script_CombatLogGetNumEntries(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0074D580
+// PROVEN: b7848753 IDENTICAL/NONE
+// OFFSET: 0x005F3A40/0x140276700
 static int32_t Script_CombatTextSetActiveUnit(lua_State* L) {
     s_combatTextActiveUnit = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
     return 0;
 }
 
-// OFFSET: #0x0074FAE0
+// OFFSET: 0x005F5B90/0x140279370
 static int32_t Script_CombatLogSetCurrentEntry(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CombatLogSetCurrentEntry(index [,ignoreFilter])");
@@ -187,7 +188,7 @@ static int32_t Script_CombatLogSetCurrentEntry(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0074F2B0
+// OFFSET: 0x005F5020/0x140278580
 static int32_t Script_CombatLogGetCurrentEntry(lua_State* L) {
     if (!s_currentEntry) {
         return 0;
@@ -196,7 +197,7 @@ static int32_t Script_CombatLogGetCurrentEntry(lua_State* L) {
     return s_currentEntry->PushEvent(L);
 }
 
-// OFFSET: #0x0074FC20
+// OFFSET: 0x005F5CD0/0x140279520
 static int32_t Script_CombatLogAdvanceEntry(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CombatLogAdvanceEntry(count [,ignoreFilter])");

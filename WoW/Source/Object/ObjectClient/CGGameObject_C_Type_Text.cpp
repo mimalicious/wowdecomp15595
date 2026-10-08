@@ -22,7 +22,8 @@ int32_t CGGameObject_C_Type_Text::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 7 : 33;
 }
 
-// OFFSET: %0x005A4170
+// PROVEN: 0fc69faa IDENTICAL/NONE
+// OFFSET: 0x0059AB20
 bool CGGameObject_C_Type_Text::Use() {
     WOWGUID guid = this->m_owner->m_obj->m_guid;
     CGItemText::SetItem(guid, 0);
@@ -30,7 +31,8 @@ bool CGGameObject_C_Type_Text::Use() {
     return true;
 }
 
-// OFFSET: %0x005A41A0
+// PROVEN: 4ad9ea77 IDENTICAL/NONE
+// OFFSET: 0x0059AB50
 void CGGameObject_C_Type_Text::PostInitWithStats() {
     if (CGItemText::m_itemGUID == this->m_owner->m_obj->m_guid) {
         WOWGUID guid = this->m_owner->m_obj->m_guid;

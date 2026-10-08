@@ -15,7 +15,7 @@
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/AuctionHouse.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"

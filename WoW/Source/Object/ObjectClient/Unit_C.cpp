@@ -62,7 +62,7 @@
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/BattlefieldInfo.h"
 #include "WoW/Source/Ui/ChatBubbleFrame.h"
@@ -867,7 +867,7 @@ void CGUnit_C::UpdateDisplay(uint32_t time) {
     }
 }
 
-// OFFSET: #0x0071C050
+// OFFSET: 0x005B4DF0/0x140228520
 static float GetExtraDisplayScale(const CreatureDisplayInfoRec* displayInfo) {
     CreatureDisplayInfoExtraRec* extra = g_creatureDisplayInfoExtraDB.GetRecord(displayInfo->m_extendedDisplayInfoID);
 
@@ -900,7 +900,7 @@ static float GetExtraDisplayScale(const CreatureDisplayInfoRec* displayInfo) {
     return rec ? rec->m_creatureModelScale : 1.0f;
 }
 
-// OFFSET: #0x0071C110
+// OFFSET: 0x005B4ED0/0x140228600
 float CGUnit_C::GetModelScale(const CreatureDisplayInfoRec* displayInfo, const CreatureModelDataRec* modelData) {
     CreatureFamilyRec* family = g_creatureFamilyDB.GetRecord(this->m_creatureCacheEntry ? this->m_creatureCacheEntry->m_family : 0);
     float scale = GetExtraDisplayScale(displayInfo) * displayInfo->m_creatureModelScale * modelData->m_modelScale;
@@ -1270,7 +1270,7 @@ void CGUnit_C::ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) {
     }
 }
 
-// OFFSET: #0x0073E840
+// OFFSET: 0x005D70B0/0x140251ED0
 void CGUnit_C::ModelLoaded(CM2Model* model) {
     this->CGObject_C::ModelLoaded(model);
 
@@ -2197,7 +2197,7 @@ void CGUnit_C::Render() {
     this->RenderAutoTrackCursor();
 }
 
-// OFFSET: #0x0073D2B0
+// OFFSET: 0x005AFC70/0x140222AC0
 void CGUnit_C::PlayFallLandAnimation(uint32_t oldFlags, int32_t jumping) {
     uint32_t landing = this->m_animationState & 0x1000000;
     this->m_animationState &= ~0x1000000;
@@ -2238,7 +2238,7 @@ void CGUnit_C::PlayFallLandAnimation(uint32_t oldFlags, int32_t jumping) {
     this->UpdateBaseAnimation(false, -1);
 }
 
-// OFFSET: #0x0073D3D0
+// OFFSET: 0x005B85A0/0x14022C340
 void CGUnit_C::OnCollideFallLand(uint32_t a1, int32_t a2) {
     this->PlayFallLandAnimation(a1, a2);
 
@@ -2705,7 +2705,7 @@ uint32_t CGUnit_C::ChooseAnimation(uint32_t mask, uint32_t* animFlags, int32_t* 
     return anim;
 }
 
-// OFFSET: #0x0073AC30
+// OFFSET: 0x005FBB20/0x140280FB0
 void CGUnit_C::UpdateBaseAnimation(uint32_t animFlags, int32_t mask) {
     if (this->m_worldModel && !this->m_worldModel->IsLoaded()) {
         return;
@@ -2842,7 +2842,7 @@ void CGUnit_C::UpdateClientStandState(uint32_t standState) {
     }
 }
 
-// OFFSET: #0x0071F770
+// OFFSET: 0x005B8BF0/0x14022CA20
 int32_t CGUnit_C::UnitReaction(int32_t factionTemplate, const CGUnit_C* unit) {
     FactionTemplateRec* faction = g_factionTemplateDB.GetRecord(factionTemplate);
     CGUnitData* data = unit->m_unit;
@@ -2877,7 +2877,7 @@ int32_t CGUnit_C::UnitReaction(int32_t factionTemplate, const CGUnit_C* unit) {
     return FactionTemplateReaction(faction, other);
 }
 
-// OFFSET: #0x007251C0
+// OFFSET: 0x005BEB70/0x1402340D0
 int32_t CGUnit_C::UnitReaction(const CGUnit_C* unit) const {
     if (unit == this) {
         return 4;
@@ -3015,7 +3015,7 @@ float CGUnit_C::GetPlayerDiscount(const CGUnit_C* unit) const {
     }
 }
 
-// OFFSET: #0x004FD0E0
+// OFFSET: 0x005BFB50/0x140235420
 const char* CGUnit_C::GetVisibleUnitName(const char** realm, int32_t a2) {
     if (!(this->m_unit->m_unitFieldFlags & 0x2000000)) {
         return this->GetUnitName(realm, a2);
@@ -3030,7 +3030,7 @@ const char* CGUnit_C::GetVisibleUnitName(const char** realm, int32_t a2) {
     return NULL;
 }
 
-// OFFSET: #0x00514050
+// OFFSET: 0x0044E390/0x14005C630
 bool CGUnit_C::IsFriendly(const CGUnit_C* unit) const {
     return this->UnitReaction(unit) >= 4 || this->IsTreatAsRaidUnit();
 }
@@ -3041,7 +3041,7 @@ bool CGUnit_C::IsHatedTowards(const CGUnit_C* unit) const {
     return this->UnitReaction(unit) <= 1;
 }
 
-// OFFSET: #0x00729740
+// OFFSET: 0x005C6110/0x14023D1E0
 bool CGUnit_C::CanAttack(const CGUnit_C* unit) const {
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(this)->m_player->m_playerFlags & 0x80000)) {
         return false;
@@ -3190,7 +3190,7 @@ int32_t CGUnit_C::CanHighlight() const {
     return 1;
 }
 
-// OFFSET: #0x00718AC0
+// OFFSET: 0x005AFFD0/0x140222E60
 int32_t CGUnit_C::GetSelectionHighlightColor(CImVector* color) const {
     if (this->m_clientFlags & 0x10) {
         *color = *reinterpret_cast<const CImVector*>(s_attackTargetColor);
@@ -3218,7 +3218,7 @@ float CalculateFacingTo(const C3Vector* from, const C3Vector* to) {
     return 0.0f <= dy ? 0.5f * 3.1415927f : 1.5f * 3.1415927f;
 }
 
-// OFFSET: #0x0071B700
+// OFFSET: 0x005B4210/0x140227770
 uint64_t CGUnit_C::GetComboPointTarget() const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         return static_cast<const CGPlayer_C*>(this)->m_lootTarget.m_guid;
@@ -3289,7 +3289,7 @@ void CSmoothAngle::Chase(const float* target, float rate, float elapsed) {
     this->m_velocity = (this->m_velocity - rate * change) * damping;
 }
 
-// OFFSET: #0x00735F60
+// OFFSET: 0x005BE260/0x140233740
 void CGUnit_C::UpdateSmoothFacing(float* facingOffset) {
     float facing = this->m_movementData.m_facing;
 
@@ -4685,12 +4685,12 @@ int32_t CGUnit_C::ShouldRenderObjectName(uint32_t flags) const {
     return (flags >> 1) & 0x1;
 }
 
-// OFFSET: #0x0071B090
+// OFFSET: 0x005B3BE0/0x140227160
 bool CGUnit_C::CanAutoStand() const {
     return this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && g_autoStandCVar->m_intValue;
 }
 
-// OFFSET: #0x00721F50
+// OFFSET: 0x005BB6F0/0x14022FFC0
 bool CGUnit_C::CanAutoInteract() const {
     return this->m_unit->m_unitFieldHealth > 0 && this->m_obj->m_guid == CGUnit_C::s_activeMover && g_cvAutoInteract->m_intValue;
 }
@@ -4742,7 +4742,7 @@ int32_t CGUnit_C::GetCursorOverride(int32_t unable) {
     return mode ? mode : 53;
 }
 
-// OFFSET: #0x0071B130
+// OFFSET: 0x005C1D20/0x140237DE0
 bool CGUnit_C::CanAutoUnshift() const {
     if (this->m_unit->m_unitFieldFlags & 0x100000) {
         return false;
@@ -4760,7 +4760,7 @@ bool CGUnit_C::CanAutoUnshift() const {
     return !form || !(form->m_flags & 0x100);
 }
 
-// OFFSET: #0x0071C570
+// OFFSET: 0x005B6140/0x140229AE0
 int32_t CGUnit_C::IsInPartyOrRaid() const {
     if (!(this->m_unit->m_unitNpcFlags & 0x1000000) || (this->m_unit->m_unitFieldFlags2 & 0x2000)) {
         return 0;
@@ -4780,7 +4780,7 @@ int32_t CGUnit_C::IsInPartyOrRaid() const {
     return CGRaidInfo::IsPlayerOrPetInRaid(raidGuid) ? 1 : 0;
 }
 
-// OFFSET: #0x00723050
+// OFFSET: 0x005BCBD0/0x140231770
 bool CGUnit_C::CanBeSpellClickedByLocalPlayer(const CGPlayer_C* player) const {
     if (!(this->m_obj->m_type & TYPEMASK_PLAYER)) {
         return false;
@@ -5047,7 +5047,7 @@ void CGUnit_C::UnregisterMirrorHandlers() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_UNIT, offsetof(CGUnitData, m_unitFieldHoverheight), HoverHeightChangeHandler, NULL);
 }
 
-// OFFSET: #0x00742220
+// OFFSET: 0x005DB500/0x140257560
 void CGUnit_C::Initialize() {
     ClientServices::SetMessageHandler(MSG_MOVE_START_FORWARD, CGUnit_C::HandleMovementPacket, NULL);
     ClientServices::SetMessageHandler(MSG_MOVE_START_BACKWARD, CGUnit_C::HandleMovementPacket, NULL);
@@ -5397,7 +5397,7 @@ const char* CGUnit_C::GetDisplayRaceNameFromRecord(const ChrRacesRec* rec, int32
     return rec->m_name;
 }
 
-// OFFSET: #0x007159E0
+// OFFSET: 0x005ABE00/0x14021E2E0
 const char* CGUnit_C::GetDisplayClassNameFromRecord(const ChrClassesRec* rec, int32_t sex, int32_t* displaySex) {
     if (displaySex) {
         *displaySex = sex;
@@ -5441,7 +5441,7 @@ int32_t CGUnit_C::IsActiveMover() const {
     return this->m_obj->m_guid == s_activeMover;
 }
 
-// OFFSET: #0x004F61D0
+// OFFSET: 0x00554CF0/0x1401B1170
 float CGUnit_C::GetDistanceToPos(const C3Vector& pos) const {
     C3Vector position = this->GetPosition();
     float dy = position.y - pos.y;
@@ -5459,7 +5459,7 @@ VehicleRec* CGUnit_C::GetVehicleRec() const {
     return NULL;
 }
 
-// OFFSET: #0x004F8850
+// OFFSET: 0x00459560/0x140069590
 uint32_t CGUnit_C::GetAuraCount() const {
     if (this->m_auras.m_count == 0xFFFFFFFF) {
         return this->m_auras.Dynamic().m_count;
@@ -5478,7 +5478,7 @@ int32_t CGUnit_C::IsMounted() const {
     return this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000);
 }
 
-// OFFSET: #0x00556E10
+// OFFSET: 0x00459580/0x1400695B0
 AuraData* CGUnit_C::GetAura(uint32_t index) {
     if (index >= this->GetAuraCount()) {
         return NULL;
@@ -5492,7 +5492,7 @@ uint8_t CGUnit_C::GetAuraFlags(uint32_t index) {
     return this->m_auras[index].m_flags;
 }
 
-// OFFSET: #0x005D3310
+// OFFSET: 0x00950240/0x1406C05F0
 int32_t CGUnit_C::IsControllable() const {
     uint32_t flags = this->m_unit->m_unitFieldFlags;
     return !(flags & 0x40000) && !(flags & 0x800000) && !(flags & 0x400000);
@@ -5507,7 +5507,7 @@ VehicleSeatRec* CGUnit_C::GetVehicleSeatRec(uint8_t seat) const {
     return NULL;
 }
 
-// OFFSET: #0x006D1DE0
+// OFFSET: 0x00557260/0x1401B4070
 int32_t __stdcall CGUnit_C::UnitCanGossip(CGUnit_C* unit) {
     return unit->IsQuestGiver() && unit->m_questStatus >= 2;
 }
@@ -5517,12 +5517,12 @@ int32_t CGUnit_C::CanBeTargetted() const {
     return this->CanHighlight();
 }
 
-// OFFSET: #0x006E6ED0
+// OFFSET: 0x0056E070/0x1401CEC60
 int32_t CGUnit_C::IsHighlightSuppressed() const {
     return (this->m_clientFlags >> 25) & 1;
 }
 
-// OFFSET: #0x006E6F10
+// OFFSET: 0x0056E0B0/0x1401CECB0
 C3Vector CGUnit_C::GetRawPosition() const {
     return this->m_movement->m_position;
 }
@@ -5537,7 +5537,7 @@ uint64_t CGUnit_C::GetTransportGUID() const {
     return this->m_movementData.m_transportGuid.m_guid;
 }
 
-// OFFSET: #0x006E6F80
+// OFFSET: 0x0056E120/0x1401CED10
 CM2Model* CGUnit_C::GetObjectModel() const {
     if (this->m_mountModel) {
         return this->m_mountModel;
@@ -5575,7 +5575,7 @@ void CGUnit_C::StopUpdatingMissileTrajectory(int32_t spellId) {
     }
 }
 
-// OFFSET: #0x006FBEB0
+// OFFSET: 0x0057CCB0/0x1401E2E40
 int32_t CGUnit_C::IsUpdatingMissileTrajectory() const {
     return this->m_missileTrajectoryCastId && this->m_missileTrajectoryStart;
 }
@@ -5597,7 +5597,7 @@ void CGUnit_C::SetMissileTrajectoryTargetingSpell(uint32_t spellId) {
     s_missileTrajectoryTargetingSpell = spellId;
 }
 
-// OFFSET: #0x00714AC0
+// OFFSET: 0x005AA530/0x14021C9A0
 bool CGUnit_C::IsLocalClientControlled() const {
     return (this->m_clientFlags >> 10) & 1;
 }
@@ -5611,7 +5611,7 @@ void CGUnit_C::FreeComponent() {
     }
 }
 
-// OFFSET: #0x00714C40
+// OFFSET: 0x005AA640/0x14021CAC0
 int32_t CGUnit_C::ShouldFadeout() {
     int32_t render = 0;
     int32_t fade = 0;
@@ -5810,7 +5810,7 @@ void CGUnit_C::NamePlateUpdateColor(bool enable) {
     }
 }
 
-// OFFSET: #0x007153E0
+// OFFSET: 0x005AB840/0x14021DD20
 uint32_t CGUnit_C::GetCreatureFamily() const {
     if (this->m_creatureCacheEntry) {
         return this->m_creatureCacheEntry->m_family;
@@ -5983,7 +5983,7 @@ bool CGUnit_C::IsBossMob() const {
     return false;
 }
 
-// OFFSET: #0x00715D90
+// OFFSET: 0x005AC370/0x14021E8C0
 bool CGUnit_C::IsLinkAll() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags >> 22) & 1;
@@ -5992,7 +5992,7 @@ bool CGUnit_C::IsLinkAll() const {
     return false;
 }
 
-// OFFSET: #0x00715DB0
+// OFFSET: 0x005AC390/0x14021E8E0
 bool CGUnit_C::HasNoShadowBlob() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags >> 25) & 1;
@@ -6001,12 +6001,12 @@ bool CGUnit_C::HasNoShadowBlob() const {
     return false;
 }
 
-// OFFSET: #0x00715DD0
+// OFFSET: 0x005AC3B0/0x14021E900
 bool CGUnit_C::ShowFactionTooltip() const {
     return !this->m_creatureCacheEntry || !(this->m_creatureCacheEntry->m_typeFlags & 0x10);
 }
 
-// OFFSET: #0x00715DF0
+// OFFSET: 0x005AC3D0/0x14021E920
 bool CGUnit_C::IsTreatAsRaidUnit() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags >> 26) & 1;
@@ -6015,7 +6015,7 @@ bool CGUnit_C::IsTreatAsRaidUnit() const {
     return false;
 }
 
-// OFFSET: #0x00715E10
+// OFFSET: 0x005AC3F0/0x14021E940
 bool CGUnit_C::IsForceGossip() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags >> 27) & 1;
@@ -6029,7 +6029,7 @@ bool CGUnit_C::CanInteractWhileDead() const {
     return this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags & 0x80);
 }
 
-// OFFSET: #0x00715E50
+// OFFSET: 0x005AC430/0x14021E980
 uint32_t CGUnit_C::GetSkinningType() const {
     if (!this->m_creatureCacheEntry) {
         return 0;
@@ -6059,7 +6059,7 @@ void CGUnit_C::GetCursorFile(int32_t unable, char* buffer, uint32_t size) const 
     }
 }
 
-// OFFSET: #0x00715F70
+// OFFSET: 0x005AC4D0/0x14021E9F0
 bool CGUnit_C::MountedCombatAllowed() const {
     if (this->m_creatureCacheEntry) {
         return (this->m_creatureCacheEntry->m_typeFlags >> 11) & 1;
@@ -6116,7 +6116,7 @@ float CGUnit_C::GetMaxCameraHeight() const {
     return 2.0277777f - 0.16666667f;
 }
 
-// OFFSET: #0x00718A00
+// OFFSET: 0x005AFE80/0x140222CF0
 uint32_t CGUnit_C::GetCreatureClassification() const {
     if (!this->m_creatureCacheEntry || this->m_unit->m_unitFieldPetnumber) {
         return 0;
@@ -6157,13 +6157,13 @@ uint32_t CGUnit_C::GetVirtualItemDisplayID(uint32_t slot) const {
     return this->m_virtualItemDisplayId[slot];
 }
 
-// OFFSET: #0x00718B30
+// OFFSET: 0x005B0200/0x1402230A0
 bool CGUnit_C::FactionHasReputation(int32_t factionId) {
     FactionRec* faction = g_factionDB.GetRecord(factionId);
     return faction && faction->m_reputationIndex >= 0;
 }
 
-// OFFSET: #0x00718B70
+// OFFSET: 0x005B0240/0x1402230E0
 CGUnit_C* CGUnit_C::GetControllingPlayer() {
     CGUnit_C* unit = this;
     const WOWGUID* controller = this->GetCharmerOrCreatorGuid();
@@ -6189,7 +6189,7 @@ CGUnit_C* CGUnit_C::GetControllingPlayer() {
     return unit;
 }
 
-// OFFSET: #0x00718FC0
+// OFFSET: 0x005B0710/0x140223650
 int32_t CGUnit_C::IsDisarmed(int32_t hand) const {
     if (hand == 2) {
         return 0;
@@ -6214,12 +6214,12 @@ int32_t CGUnit_C::IsDisarmed(int32_t hand) const {
     return hand == 1 && (this->m_unit->m_unitFieldFlags2 & 0x80);
 }
 
-// OFFSET: #0x007192C0
+// OFFSET: 0x005B0AE0/0x140223A70
 int32_t CGUnit_C::IsQuestGiver() const {
     return (this->m_unit->m_unitNpcFlags >> 1) & 1;
 }
 
-// OFFSET: #0x007192E0
+// OFFSET: 0x005B0B00/0x140223A90
 void CGUnit_C::UpdateInteractIcon() {
     if (this->m_unit->m_unitFieldHealth > 0 || (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags & 0x80))) {
         CGObject_C::UpdateInteractIcon();
@@ -6291,7 +6291,7 @@ int32_t __stdcall CGUnit_C::GetRecordForTitle(int32_t maskId) {
     return 0;
 }
 
-// OFFSET: #0x00719950
+// OFFSET: 0x005B11B0/0x140224400
 const char* CGUnit_C::GetUnitTitle() const {
     if (!this->m_creatureCacheEntry) {
         return NULL;
@@ -6429,7 +6429,7 @@ int32_t CGUnit_C::GetSpellCastingTime(const SpellRec* spell) const {
     return time <= 0 ? 0 : time;
 }
 
-// OFFSET: #0x0071AF70
+// OFFSET: 0x005B3A60/0x140226FC0
 uint32_t CGUnit_C::GetShapeshiftForm() const {
     if (this->m_shapeshiftSuppressed) {
         return 0;
@@ -6438,12 +6438,12 @@ uint32_t CGUnit_C::GetShapeshiftForm() const {
     return this->m_unit->m_unitFieldBytes2[3];
 }
 
-// OFFSET: #0x0071AF90
+// OFFSET: 0x005B3AC0/0x140227020
 int32_t CGUnit_C::IsInMelee() const {
     return static_cast<bool>(this->m_combat.m_attacking);
 }
 
-// OFFSET: #0x0071AFB0
+// OFFSET: 0x005B3AE0/0x140227030
 int32_t CGUnit_C::IsInCombat() const {
     if (this->m_unit->m_unitFieldFlags & 0x800) {
         return 1;
@@ -6470,7 +6470,7 @@ uint64_t CGUnit_C::GetCreatorGuid() const {
     return unit->m_unitFieldCreatedby.m_guid;
 }
 
-// OFFSET: #0x0071B630
+// OFFSET: 0x005B4160/0x1402276C0
 bool CGUnit_C::CanGainXP() const {
     CGUnitData* unit = this->m_unit;
 
@@ -6482,7 +6482,7 @@ bool CGUnit_C::CanGainXP() const {
     return owner && owner->m_unit->m_unitFieldBytes0[1] == 3;
 }
 
-// OFFSET: #0x0071B680
+// OFFSET: 0x005B41E0/0x140227740
 int32_t CGUnit_C::IsPVPLeader() const {
     if (!(this->m_unit->m_unitFieldBytes2[1] & 0x1)) {
         return 0;
@@ -6536,7 +6536,7 @@ uint32_t CGUnit_C::GetCanFly() const {
     return this->m_movementData.m_flags & MOVEMENTFLAG_CAN_FLY;
 }
 
-// OFFSET: #0x0071B820
+// OFFSET: 0x005B44A0/0x140227A40
 int32_t CGUnit_C::IsInMeleeRange(CGUnit_C* target) const {
     CGUnit* targetUnit = target ? static_cast<CGUnit*>(target) : NULL;
     float range = this->m_unit->m_unitFieldCombatreach + targetUnit->m_unit->m_unitFieldCombatreach + 1.3333334f;
@@ -6553,7 +6553,7 @@ int32_t CGUnit_C::IsInMeleeRange(CGUnit_C* target) const {
     return range * range > dx * dx + dz * dz + dy * dy;
 }
 
-// OFFSET: #0x00716710
+// OFFSET: 0x005AD100/0x14021F600
 bool CGUnit_C::IsClientControlled() const {
     if (!(this->m_unit->m_unitFieldFlags & 0x2) && (this->m_unit->m_unitFieldFlags & 0xC00004)) {
         return false;
@@ -6578,6 +6578,20 @@ bool CGUnit_C::IsClientControlled() const {
     }
 
     return !(flags & 0x1);
+}
+
+// OFFSET: 0x005AD1B0/0x14005C680
+bool CGUnit_C::IsActivePlayer() {
+    return this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
+}
+
+// OFFSET: 0x005B5050/0x140228770
+uint32_t CGUnit_C::GetCurrentClientRace() const {
+    if (!this->m_currentClientRace || (this->m_currentClientRaceFlags & 1)) {
+        return this->m_unit->m_unitFieldBytes0[0];
+    }
+
+    return this->m_currentClientRace;
 }
 
 // OFFSET: #0x00716F10
@@ -6636,7 +6650,7 @@ int32_t CGUnit_C::ChooseEmoteAnim(uint32_t flags, uint32_t* anim) const {
     return 1;
 }
 
-// OFFSET: #0x00717260
+// OFFSET: 0x005AE270/0x140220AC0
 uint32_t CGUnit_C::GetCurrentTorsoAnimId() const {
     if (!this->m_worldModel || !this->m_worldModel->IsLoaded()) {
         return 0xFFFFFFFF;
@@ -6794,7 +6808,7 @@ int32_t CGUnit_C::FindDefaultAnimForTier(int32_t tier, uint32_t* anim) const {
     return 1;
 }
 
-// OFFSET: #0x00717A20
+// OFFSET: 0x005BDEC0/0x140233240
 CreatureModelDataRec* CGUnit_C::GetModelData() const {
     int32_t displayId = this->m_displayId;
 
@@ -6819,7 +6833,7 @@ CreatureModelDataRec* CGUnit_C::GetModelData() const {
     return modelData;
 }
 
-// OFFSET: #0x00717B60
+// OFFSET: 0x005AE930/0x140221280
 int32_t CGUnit_C::CanBeLooted(uint32_t time) const {
     CGUnitData* unit = this->m_unit;
     return unit->m_unitFieldHealth <= 0 && (!this->m_lootableTime || static_cast<int32_t>(time - this->m_lootableTime) >= 0) && (unit->m_unitDynamicFlags & 0x1);
@@ -6911,7 +6925,7 @@ int32_t CGUnit_C::OverrideAnimForFlying(uint32_t* anim) const {
     return 1;
 }
 
-// OFFSET: #0x0071F300
+// OFFSET: 0x005B8800/0x14022C5E0
 int32_t CGUnit_C::GetCreatureType() const {
     uint32_t form = this->m_shapeshiftSuppressed ? 0 : this->m_unit->m_unitFieldBytes2[3];
     SpellShapeshiftFormRec* shapeshift = g_spellShapeshiftFormDB.GetRecord(form);
@@ -6976,7 +6990,7 @@ int32_t CGUnit_C::IsControlledByViewer() const {
     return this->m_obj->m_guid == ClntObjMgrGetActivePlayer() || this->m_obj->m_guid == s_activeMover || (this->m_clientFlags & 0x1000);
 }
 
-// OFFSET: #0x007202C0
+// OFFSET: 0x005B9D30/0x14022DE60
 int32_t CGUnit_C::CanEquipItemsInThisForm() const {
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && this->m_modelData && (this->m_modelData->m_flags & 0x4) && this->m_displayInfoExtra && (this->m_displayInfoExtra->m_flags & 0x1)) {
         return 1;
@@ -6995,7 +7009,7 @@ int32_t CGUnit_C::CanEquipItemsInThisForm() const {
     return unit->m_unitFieldNativedisplayid == unit->m_unitFieldDisplayid;
 }
 
-// OFFSET: #0x00720AF0
+// OFFSET: 0x005BA430/0x14022E7A0
 uint32_t CGUnit_C::GetVoiceSex() const {
     if (this->m_displayInfoExtra) {
         return this->m_displayInfoExtra->m_displaySexID;
@@ -7008,7 +7022,7 @@ uint32_t CGUnit_C::GetVoiceSex() const {
     return this->m_unit->m_unitFieldBytes0[2];
 }
 
-// OFFSET: #0x00721CA0
+// OFFSET: 0x005BB3E0/0x14022FBB0
 bool CGUnit_C::IsShapeShifted() const {
     if (this->m_shapeshiftSuppressed) {
         return false;
@@ -7048,7 +7062,7 @@ void CGUnit_C::PreemptivelyCancelShapeshift() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
 }
 
-// OFFSET: #0x00721E70
+// OFFSET: 0x005BB690/0x14022FF60
 bool CGUnit_C::IsCancelShapeshiftAtFlightMaster() const {
     if (this->m_shapeshiftSuppressed) {
         return false;
@@ -7100,7 +7114,7 @@ void CGUnit_C::TrackingMakeRelativeTo(const C44Matrix* transform, float facing) 
     }
 }
 
-// OFFSET: #0x007225E0
+// OFFSET: 0x005BBBF0/0x140230500
 const char* CGUnit_C::GetFrameScriptText(const char* token, int32_t count) const {
     uint32_t sex;
 
@@ -7142,10 +7156,10 @@ uint64_t CGUnit_C::GetAuraCaster(uint32_t index) {
 
 // OFFSET: #0x00746340
 void CGUnit_C::KillCreatureLoopSound() {
-    SI2::StopSound(&this->m_loopSound, 0, 0.5f, 1);
+    SI3::StopSound(&this->m_loopSound, 0, 0.5f, 1);
 }
 
-// OFFSET: #0x00746360
+// OFFSET: 0x0060C160/0x140283F20
 bool CGUnit_C::GetWeaponSwingType(bool offhand, int32_t* swingType) const {
     if (!this->GetVirtualItemDisplayID(offhand == false)) {
         *swingType = 0;
@@ -7182,7 +7196,7 @@ void CGUnit_C::PlayFoleySound() {
 
     if (s_enableArmorFoley && s_enableArmorFoley->m_intValue) {
         C3Vector position = this->GetPosition();
-        SI2::PlayFoleySound(this->m_modelData->m_foleyMaterialID, &position, 0);
+        SI3::PlayFoleySound(this->m_modelData->m_foleyMaterialID, &position, 0);
     }
 }
 
@@ -7193,7 +7207,7 @@ void CGUnit_C::PlayStandSound() {
     }
 }
 
-// OFFSET: #0x00746900
+// OFFSET: 0x0060C870/0x1402961A0
 int32_t CGUnit_C::GetNewNPCSoundCount(int32_t count, int32_t* soundKitId, int32_t* soundIndex) const {
     if (!this->m_displayInfo) {
         return -1;
@@ -7211,7 +7225,7 @@ int32_t CGUnit_C::GetNewNPCSoundCount(int32_t count, int32_t* soundKitId, int32_
         return count + 1;
     }
 
-    if (count - 5 < SI2::GetNumSoundsInSoundKit(sounds->m_soundID[2])) {
+    if (count - 5 < SI3::GetNumSoundsInSoundKit(sounds->m_soundID[2])) {
         *soundIndex = count - 5;
         *soundKitId = sounds->m_soundID[2];
         return count + 1;
@@ -7227,7 +7241,7 @@ void CGUnit_C::PlayEmoteStateSound(const C3Vector* position) {
     EmotesRec* emote = g_emotesDB.GetRecord(this->m_unit->m_unitNpcEmotestate);
 
     if (emote && emote->m_emoteSpecProc == 2) {
-        SI2::PlaySoundKit(emote->m_eventSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(emote->m_eventSoundID, position, NULL, NULL, 0, NULL, 1, 0);
     }
 }
 
@@ -7261,7 +7275,7 @@ void CGUnit_C::VehiclePassengerOnUninit() {
     this->m_vehiclePassenger = NULL;
 }
 
-// OFFSET: #0x0074B8B0
+// OFFSET: 0x005EB730/0x14026CC70
 int32_t CGUnit_C::HasVehicleTransport() const {
     uint32_t high = static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid >> 32);
     return (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid)));
@@ -7272,7 +7286,7 @@ uint32_t CGUnit_C::IsStrafingDisabled() const {
     return this->m_movementData.m_flags2 & MOVEMENTFLAG2_NO_STRAFE;
 }
 
-// OFFSET: #0x0074BB90
+// OFFSET: 0x005EBAE0/0x14026D040
 uint32_t CGUnit_C::IsVehicleCurrentlyUnstoppable() const {
     VehicleRec* vehicle = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
 
@@ -7283,7 +7297,7 @@ uint32_t CGUnit_C::IsVehicleCurrentlyUnstoppable() const {
     return vehicle->m_flags & ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) ? 0x100 : 0x80);
 }
 
-// OFFSET: #0x00754EF0
+// OFFSET: 0x005FF6F0/0x1402837F0
 const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     const CGUnitVirtualItem* item = this->GetVirtualItem(0, false);
 
@@ -7298,7 +7312,7 @@ const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
     return item;
 }
 
-// OFFSET: #0x00754F40
+// OFFSET: 0x005FF740/0x140283850
 int32_t CGUnit_C::GetUnitSize() const {
     int32_t size = this->m_displayInfo->m_sizeClass;
 
@@ -7309,7 +7323,7 @@ int32_t CGUnit_C::GetUnitSize() const {
     return size;
 }
 
-// OFFSET: #0x00755540
+// OFFSET: 0x005FFB60/0x140283D60
 const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool requireLoadedModel) const {
     if (!this->m_sheatheState) {
         return NULL;
@@ -7352,7 +7366,7 @@ const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool require
     return NULL;
 }
 
-// OFFSET: #0x007559E0
+// OFFSET: 0x00600100/0x140284440
 void CGUnit_C::StopAttack() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_ATTACK_STOP));
@@ -7434,7 +7448,7 @@ int32_t Packet_SMSG_PET_DISMISS_SOUND(void* param, NETMESSAGE msgId, uint32_t ti
 
         if (soundData && soundData->m_soundPetDismissID) {
             position.z = position.z + 1.0f;
-            SI2::PlaySoundKit(soundData->m_soundPetDismissID, &position, NULL, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(soundData->m_soundPetDismissID, &position, NULL, NULL, 0, NULL, 1, 0);
         }
     }
 
@@ -7552,7 +7566,7 @@ void CGUnit_C::GetSwimMatrix(C44Matrix& matrix) const {
     matrix.d2 = position.z;
 }
 
-// OFFSET: #0x0071B6B0
+// OFFSET: 0x005B4250/0x1402277B0
 int32_t CGUnit_C::IsLooting() const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         const WOWGUID& target = static_cast<const CGPlayer_C*>(this)->m_lootTarget;
@@ -7583,7 +7597,7 @@ void CGUnit_C::ClearPrecastMissileModel(uint8_t castCount) {
     this->m_clientFlags &= ~0x1000000;
 }
 
-// OFFSET: #0x0071C4D0
+// OFFSET: 0x005B60A0/0x140229A20
 uint64_t CGUnit_C::GetCameraRelativeTo() const {
     if (this->m_vehicleCamera && this->m_vehicleCamera->m_state) {
         return this->m_vehicleCamera->GetRelativeTo();
@@ -7790,12 +7804,12 @@ void CGUnit_C::PlaySplashSound(const C3Vector* position) {
     }
 
     properties.m_group = 8;
-    SI2::PlaySoundKit(this->m_splashSoundKitId, listenerAtCharacter ? NULL : position, NULL, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(this->m_splashSoundKitId, listenerAtCharacter ? NULL : position, NULL, &properties, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x007469C0
 void CGUnit_C::PlayAISound(int32_t soundKitId) {
-    SI2::StopSound(&this->m_npcSound, 1, -1.0f, 1);
+    SI3::StopSound(&this->m_npcSound, 1, -1.0f, 1);
 
     static CVar* s_listenerAtCharacter = CVar::Lookup("Sound_ListenerAtCharacter");
 
@@ -7804,11 +7818,11 @@ void CGUnit_C::PlayAISound(int32_t soundKitId) {
         properties.ResetToDefaults();
         properties.m_volumeScale = 0.64999998f;
         properties.m_priority = 110;
-        SI2::PlaySoundKit(soundKitId, NULL, &this->m_aiSound, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(soundKitId, NULL, &this->m_aiSound, &properties, 0, NULL, 1, 0);
     } else {
         C3Vector position = this->GetPosition();
-        SI2::PlaySoundKit(soundKitId, &position, &this->m_aiSound, NULL, 0, NULL, 1, 0);
-        SI2::AttachToObject(&this->m_aiSound, this->m_obj->m_guid);
+        SI3::PlaySoundKit(soundKitId, &position, &this->m_aiSound, NULL, 0, NULL, 1, 0);
+        SI3::AttachToObject(&this->m_aiSound, this->m_obj->m_guid);
     }
 }
 
@@ -7840,20 +7854,20 @@ void CGUnit_C::PlayDismountSound() {
         }
     }
 
-    SI2::PlaySoundKit(s_dismountSoundKitId, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(s_dismountSoundKitId, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
 }
 
-// OFFSET: #0x0074B840
+// OFFSET: 0x005EB660/0x14026CBB0
 int32_t CGUnit_C::VehiclePassengerIsTransitionAllowed(const VehicleSeatRec* seat, int32_t checkSeat) const {
     return (this->m_clientFlags & 0x20000000) || (checkSeat && seat && (seat->m_flagsB & 0x1000000));
 }
 
-// OFFSET: #0x0074BB60
+// OFFSET: 0x005EBAB0/0x14026D020
 int32_t CGUnit_C::ShouldUseVehicleSeatExitAnimation(const VehicleSeatRec* seat) const {
     return seat->m_flags & ((this->m_movementData.m_flags2 & 0x40) ? 0x8 : 0x8000);
 }
 
-// OFFSET: #0x00716650
+// OFFSET: 0x005AD040/0x14021F510
 int32_t CGUnit_C::ShouldFadeIn() const {
     CGUnitData* unit = this->m_unit;
 
@@ -7875,7 +7889,7 @@ int32_t CGUnit_C::ShouldFadeIn() const {
     return (seat && seat->m_attachmentID < 0) || transport->m_fadeDuration == 0;
 }
 
-// OFFSET: #0x00716FA0
+// OFFSET: 0x005ADF40/0x140220720
 int32_t CGUnit_C::IsRunning() const {
     return this->m_movementData.m_walkSpeed + this->m_movementData.m_walkSpeed >= this->m_movementData.GetBaseSpeed(0);
 }
@@ -7951,7 +7965,7 @@ float CGUnit_C::GetStandHeight() const {
     return this->GetTrueScale() * height;
 }
 
-// OFFSET: #0x00717B20
+// OFFSET: 0x005BE0C0/0x1402334B0
 int32_t CGUnit_C::GetModelFileName(const char** name) const {
     CreatureModelDataRec* modelData = this->GetModelData();
 
@@ -8224,7 +8238,7 @@ bool CGUnit_C::DoNotPlayWoundAnim() const {
     return this->GetCurrentTorsoAnimId() == 121;
 }
 
-// OFFSET: #0x007221D0
+// OFFSET: 0x005BB8F0/0x140230170
 void CGUnit_C::CreateFishingLineEffect() {
     CGObject_C* bobber = ClntObjMgrObjectPtr(this->m_unit->m_unitFieldChannelObject, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -8335,7 +8349,7 @@ bool CGUnit_C::IsPetBarUsed() const {
     return !seat || seat->m_vehicleAbilityDisplay != 0;
 }
 
-// OFFSET: #0x006E6F40
+// OFFSET: 0x0056E0E0/0x1401CECD0
 float CGUnit_C::GetFacing() const {
     return this->m_movement->GetFacing(this->m_movement->m_facing);
 }
@@ -8356,7 +8370,7 @@ void CGUnit_C::ResetSmoothFacing() {
     this->unk_08D8 = 0.0f;
 }
 
-// OFFSET: #0x00717E50
+// OFFSET: 0x005AECD0/0x140221690
 float CGUnit_C::GetSmoothFacing() const {
     float facing = 0.0f;
     const CGUnit_C* unit = this;
@@ -8430,7 +8444,7 @@ void CGUnit_C::UpdateSelectionRadius() {
     }
 }
 
-// OFFSET: #0x0074B810
+// OFFSET: 0x005EB850/0x14026CD90
 int32_t CGUnit_C::AddPassenger(CPassenger* passenger, int32_t a2) {
     if (!this->m_vehicle) {
         return 0;
@@ -8470,22 +8484,16 @@ bool CGUnit_C::IsDeadOrGhost() const {
     return this->m_unit->m_unitFieldHealth <= 0;
 }
 
-// OFFSET: #0x0071A3F0
-CreatureSoundDataRec* CGUnit_C::GetSoundData() const {
-    if (this->m_soundDataOverride) {
+// OFFSET: 0x005ABCC0/0x14021E130
+CreatureSoundDataRec* CGUnit_C::GetSoundData(int32_t ignoreOverride) const {
+    if (this->m_soundDataOverride && !ignoreOverride) {
         return this->m_soundDataOverride;
     }
 
-    CreatureSoundDataRec* soundData = this->m_soundData;
-
-    if (soundData && this->m_unit->m_unitFieldPetnumber && soundData->m_creatureSoundDataIdpet > 0) {
-        return g_creatureSoundDataDB.GetRecord(soundData->m_creatureSoundDataIdpet);
-    }
-
-    return soundData;
+    return this->m_soundData;
 }
 
-// OFFSET: #0x00720860
+// OFFSET: 0x005BA140/0x14022E420
 void CGUnit_C::PlayNPCSound(bool greeting) {
     if (this->m_obj->m_type & TYPEMASK_PLAYER) {
         return;
@@ -8495,7 +8503,7 @@ void CGUnit_C::PlayNPCSound(bool greeting) {
 
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player || player->IsDeadOrGhost() || SI2::IsPlaying(&this->m_npcInteractSound)) {
+    if (!player || player->IsDeadOrGhost() || SI3::IsPlaying(&this->m_npcInteractSound)) {
         return;
     }
 
@@ -8510,7 +8518,7 @@ void CGUnit_C::PlayNPCSound(bool greeting) {
     }
 
     C3Vector position = this->GetPosition();
-    SI2::PlaySoundKit(greeting ? sounds->m_soundID[0] : sounds->m_soundID[1], &position, &this->m_npcInteractSound, NULL, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(greeting ? sounds->m_soundID[0] : sounds->m_soundID[1], &position, &this->m_npcInteractSound, NULL, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x00721DA0
@@ -8619,7 +8627,7 @@ void CGUnit_C::UpdateAmmoModel(uint32_t displayId, uint32_t invType) {
     }
 }
 
-// OFFSET: #0x006E6EF0
+// OFFSET: 0x0056E090/0x1401CEC80
 C3Vector CGUnit_C::GetPosition() const {
     return this->m_movement->GetPosition(this->m_movement->m_position);
 }
@@ -8633,24 +8641,24 @@ void CGUnit_C::OnFlightLocal(uint32_t eventTime, int32_t flying) {
     }
 }
 
-// OFFSET: #0x0071AE50
+// OFFSET: 0x005B3650/0x140226A90
 void CGUnit_C::ToggleRunModeLocal(uint32_t eventTime) {
     this->m_movementData.OnSetRunModeLocal(eventTime, this->m_movementData.m_flags & MOVEMENTFLAG_WALKING);
 }
 
-// OFFSET: #0x0071F890
+// OFFSET: 0x005B8D30/0x14022CBC0
 bool CGUnit_C::CanAssist(const CGCorpse_C* corpse) const {
     return this->UnitReaction(corpse) >= 4;
 }
 
 // OFFSET: #0x007467F0
 void CGUnit_C::CheckLoopSound() {
-    CreatureSoundDataRec* soundData = this->GetSoundData();
+    CreatureSoundDataRec* soundData = this->GetSoundData(0);
 
-    if (this->m_unit->m_unitFieldHealth > 0 && !(this->m_unit->m_unitFieldFlags2 & 0x1) && soundData && soundData->m_loopSoundID && !SI2::IsPlaying(&this->m_loopSound)) {
+    if (this->m_unit->m_unitFieldHealth > 0 && !(this->m_unit->m_unitFieldFlags2 & 0x1) && soundData && soundData->m_loopSoundID && !SI3::IsPlaying(&this->m_loopSound)) {
         C3Vector position = this->GetPosition();
 
-        if (SI2::IsPlaying(&this->m_loopSound) || SI2::IsTooCloseToExistingSoundKit(soundData->m_loopSoundID, &position)) {
+        if (SI3::IsPlaying(&this->m_loopSound) || SI3::IsTooCloseToExistingSoundKit(soundData->m_loopSoundID, &position)) {
             return;
         }
 
@@ -8659,12 +8667,12 @@ void CGUnit_C::CheckLoopSound() {
         properties.m_loopMode = 1;
         properties.m_maxAudibleBehavior = 0;
         properties.m_streaming = true;
-        SI2::PlaySoundKit(soundData->m_loopSoundID, &position, &this->m_loopSound, &properties, 0, NULL, 1, 0);
-        SI2::AttachToObject(&this->m_loopSound, this->m_obj->m_guid);
+        SI3::PlaySoundKit(soundData->m_loopSoundID, &position, &this->m_loopSound, &properties, 0, NULL, 1, 0);
+        SI3::AttachToObject(&this->m_loopSound, this->m_obj->m_guid);
         return;
     }
 
-    SI2::StopSound(&this->m_loopSound, 0, 0.5f, 1);
+    SI3::StopSound(&this->m_loopSound, 0, 0.5f, 1);
 }
 
 // OFFSET: #0x00746BD0
@@ -9681,7 +9689,7 @@ CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
     this->InitPredictedPower();
 
     for (int32_t i = 0; i < 3; i++) {
-        ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[i]);
+        ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[i], WOWGUID(), NULL, NULL, false);
         CGUnitVirtualItem item;
 
         if (rec) {
@@ -9778,7 +9786,7 @@ void CGUnit_C::CreateVehicleData(const CClientObjCreate* create, int32_t vehicle
     }
 }
 
-// OFFSET: #0x0072D940
+// OFFSET: 0x005CC430/0x140244970
 void CGUnit_C::RefreshDataPointers() {
     int32_t displayId = this->m_displayId;
 
@@ -10036,7 +10044,7 @@ void CGUnit_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reen
     }
 }
 
-// OFFSET: #0x00722AE0
+// OFFSET: 0x005BBF30/0x140239B10
 float CGUnit_C::GetModelScale(uint32_t displayId) {
     CreatureDisplayInfoRec* displayInfo = g_creatureDisplayInfoDB.GetRecord(displayId);
 
@@ -10161,7 +10169,7 @@ void CGUnit_C::Reenable() {
     this->ShowLootEffect();
 
     for (int32_t i = 0; i < 3; i++) {
-        ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[i]);
+        ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[i], WOWGUID(), NULL, NULL, false);
         CGUnitVirtualItem item;
 
         if (rec) {
@@ -10303,15 +10311,15 @@ void CGUnit_C::OnDeath() {
     }
 
     this->ClearEffectList(0);
-    SI2::StopSound(&this->m_npcInteractSound, 1, -1.0f, 1);
-    SI2::StopSound(&this->m_reactionSound, 1, -1.0f, 1);
+    SI3::StopSound(&this->m_npcInteractSound, 1, -1.0f, 1);
+    SI3::StopSound(&this->m_reactionSound, 1, -1.0f, 1);
     this->ClearTrackingTarget(false, true);
 
     guid = this->m_obj->m_guid;
     CGGameUI::ClearInteractTarget(guid, 1);
 }
 
-// OFFSET: #0x007272C0
+// OFFSET: 0x005C1DE0/0x140237EB0
 void CGUnit_C::ClearTrackingTarget(bool a2, bool a3) {
     if (this->m_obj->m_guid != CGUnit_C::s_activeMover || CGUnit_C::s_trackingType == 13) {
         return;
@@ -10350,7 +10358,7 @@ void CGUnit_C::ClearTrackingTarget(bool a2, bool a3) {
     CGUnit_C::s_trackingType = 13;
 }
 
-// OFFSET: #0x00715B70
+// OFFSET: 0x005AC030/0x1401207B0
 void CGUnit_C::ClearWeaponTrailHandles() {
     for (int32_t i = 0; i < 2; i++) {
         if (this->m_weaponTrails[i]) {
@@ -10396,7 +10404,7 @@ CGUnit_C::~CGUnit_C() {
     }
 
     this->RemoveMountModel();
-    SI2::StopSound(&this->m_npcInteractSound, 1, -1.0f, 1);
+    SI3::StopSound(&this->m_npcInteractSound, 1, -1.0f, 1);
     this->KillCreatureLoopSound();
     this->DestroyNamePlate();
 
@@ -10684,7 +10692,7 @@ void CGUnit_C::Disable() {
         }
     }
 
-    SI2::StopSound(&this->m_npcInteractSound, 0, 2.0f, 1);
+    SI3::StopSound(&this->m_npcInteractSound, 0, 2.0f, 1);
     this->ClearTrackingTarget(false, true);
 
     this->unk_0B34[1] = 0;
@@ -10822,29 +10830,29 @@ void CGUnit_C::OnFallLocal(uint32_t eventTime) {
     this->m_movementData.OnFallLocal(eventTime);
 }
 
-// OFFSET: #0x0071A360
+// OFFSET: 0x005B22A0/0x1402256D0
 void CGUnit_C::ChangeStandState(uint32_t standState) {
     if (this->m_obj->m_type & TYPEMASK_PLAYER) {
         static_cast<CGPlayer_C*>(this)->ChangeStandState(standState);
     }
 }
 
-// OFFSET: #0x0071AE10
+// OFFSET: 0x005B35E0/0x140226A20
 void CGUnit_C::OnMoveStopLocal(uint32_t eventTime) {
     this->m_movementData.OnMoveStopLocal(eventTime);
 }
 
-// OFFSET: #0x0071AE20
+// OFFSET: 0x005B35F0/0x140226A30
 void CGUnit_C::OnStrafeStopLocal(uint32_t eventTime) {
     this->m_movementData.OnStrafeStopLocal(eventTime);
 }
 
-// OFFSET: #0x0071AE30
+// OFFSET: 0x005B3600/0x140226A40
 void CGUnit_C::OnAscendDescendStopLocal(uint32_t eventTime) {
     this->m_movementData.OnAscendDescendStopLocal(eventTime);
 }
 
-// OFFSET: #0x0071AE40
+// OFFSET: 0x005B3610/0x140226A50
 void CGUnit_C::OnTurnStopLocal(uint32_t eventTime) {
     this->m_movementData.OnTurnStopLocal(eventTime);
 }
@@ -10866,7 +10874,7 @@ void CGUnit_C::OnMoveStartLocal(uint32_t eventTime, int32_t forward) {
     this->m_movementData.OnMoveStartLocal(eventTime, forward);
 }
 
-// OFFSET: #0x0072E680
+// OFFSET: 0x005CD2E0/0x140245CE0
 void CGUnit_C::OnStrafeStartLocal(uint32_t eventTime, int32_t left) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13 && !(CGUnit_C::s_trackingFlags & 0x1)) {
         this->ClearTrackingTarget(false, true);
@@ -10940,7 +10948,7 @@ void CGUnit_C::OnPitchStartLocal(uint32_t eventTime, int32_t up) {
     this->m_movementData.OnPitchStartLocal(eventTime, up);
 }
 
-// OFFSET: #0x0072E9B0
+// OFFSET: 0x005CD610/0x140245EF0
 void CGUnit_C::OnPitchStopLocal(uint32_t eventTime) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13 && !(CGUnit_C::s_trackingFlags & 0x1)) {
         this->ClearTrackingTarget(false, true);
@@ -11153,7 +11161,7 @@ int32_t CGUnit_C::HandleFloodsafePitchEvent(uint32_t time, uint32_t msgId) {
     return 1;
 }
 
-// OFFSET: #0x00721B90
+// OFFSET: 0x005B3910/0x140226E40
 void CGUnit_C::UpdateFloodsafeMoveEvents(uint32_t time) {
     if (this->unk_0948[2] && time - this->unk_0948[0] > 100) {
         this->SendMovementUpdate(time, this->unk_0948[2], 0.0f, 0, 0, 255);
@@ -11189,12 +11197,12 @@ int32_t CGUnit_C::FlushFloodsafeMoveEvents(uint32_t time) {
     return sent;
 }
 
-// OFFSET: #0x0071C8B0
+// OFFSET: 0x005B67D0/0x140229CA0
 int32_t CGUnit_C::IsBelowHalfBaseSpeed() const {
     return this->m_movementData.m_walkSpeed + this->m_movementData.m_walkSpeed < this->m_movementData.GetBaseSpeed(0);
 }
 
-// OFFSET: #0x00721300
+// OFFSET: 0x005BAC20/0x14022F0E0
 void CGUnit_C::UpdateObjectEffectMovementStates() {
     if (!this->m_effectManager) {
         return;
@@ -11366,7 +11374,7 @@ void CGUnit_C::UpdateObjectEffectMovementStates() {
     }
 }
 
-// OFFSET: #0x0072AFE0
+// OFFSET: 0x005C85D0/0x14023FC50
 void CGUnit_C::CancelRangedMode() {
     this->m_animationState &= ~0x4000u;
 
@@ -11607,7 +11615,7 @@ void CGUnit_C::SetAnimType(uint8_t animTier) {
     this->m_animTier = animTier;
 }
 
-// OFFSET: #0x007158C0
+// OFFSET: 0x005ABCE0/0x14021E150
 void CGUnit_C::RegisterScript(uint32_t flags) {
     if (!this->m_scriptRegistration) {
         ScriptEventsRegisterUnit(this);
@@ -11616,7 +11624,7 @@ void CGUnit_C::RegisterScript(uint32_t flags) {
     this->m_scriptRegistration |= flags;
 }
 
-// OFFSET: #0x00715900
+// OFFSET: 0x005ABD20/0x14021E190
 void CGUnit_C::UnregisterScript(uint32_t flags) {
     if (this->m_scriptRegistration) {
         this->m_scriptRegistration &= ~flags;
@@ -11627,14 +11635,14 @@ void CGUnit_C::UnregisterScript(uint32_t flags) {
     }
 }
 
-// OFFSET: #0x00715B20
+// OFFSET: 0x005ABF90/0x14021E490
 void CGUnit_C::StopNamePlateSpellbar() {
     if (this->m_namePlateFrame) {
         this->m_namePlateFrame->SetCastBarValues(0.0f, 0.0f, 0.0f, 0, false, false);
     }
 }
 
-// OFFSET: #0x0071AB20
+// OFFSET: 0x005B2F20/0x140226360
 bool CGUnit_C::IsCastNotInterruptible() const {
     if (!(this->unk_0A34 & 0x8)) {
         return false;
@@ -11647,7 +11655,7 @@ bool CGUnit_C::IsCastNotInterruptible() const {
     return CGSpellBook::m_interruptSchoolMask || interruptSpecial || CGSpellBook::m_silenceSchoolMask || silenceSpecial;
 }
 
-// OFFSET: #0x0071B0C0
+// OFFSET: 0x005B3C10/0x1402271A0
 bool CGUnit_C::CanAutoDismount() const {
     if (this->m_unit->m_unitFieldFlags & 0x100000) {
         return false;
@@ -11828,7 +11836,7 @@ bool CGUnit_C::IsNotHostileTo(const CGUnit_C* unit) const {
     return this->UnitReaction(unit) >= 3;
 }
 
-// OFFSET: #0x007293D0
+// OFFSET: 0x005C5D40/0x14023CD20
 bool CGUnit_C::CanAssist(const CGUnit_C* unit, bool ignoreFlags) const {
     uint32_t flags = unit->m_unit->m_unitFieldFlags;
 
@@ -11891,7 +11899,7 @@ bool CGUnit_C::CanAttackNow(const CGUnit_C* unit) const {
     return this->CanAttack(unit);
 }
 
-// OFFSET: #0x00729B30
+// OFFSET: 0x005C65C0/0x14023D740
 bool CGUnit_C::CanCooperate(const CGUnit_C* unit) const {
     if (unit == this) {
         return false;
@@ -11911,13 +11919,13 @@ bool CGUnit_C::CanCooperate(const CGUnit_C* unit) const {
     return !this->CanAttack(unit);
 }
 
-// OFFSET: #0x0072A680
+// OFFSET: 0x005C7C70/0x14023F160
 void CGUnit_C::HandleNPCFeedback() {
     if (this->m_obj->m_type & TYPEMASK_PLAYER) {
         return;
     }
 
-    if (SI2::IsPlaying(&this->m_npcInteractSound) || this->IsDeadOrAttachmentDying() || this->GetClientStandState() == 3) {
+    if (SI3::IsPlaying(&this->m_npcInteractSound) || this->IsDeadOrAttachmentDying() || this->GetClientStandState() == 3) {
         return;
     }
 
@@ -11951,14 +11959,14 @@ void CGUnit_C::HandleNPCFeedback() {
     SE2SoundKitProperties properties;
     properties.ResetToDefaults();
     properties.m_fileIndex = fileIndex;
-    SI2::PlaySoundKit(soundKitId, &position, &this->m_npcInteractSound, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, &position, &this->m_npcInteractSound, &properties, 0, NULL, 1, 0);
 
-    if (SI2::IsPlaying(&this->m_npcInteractSound)) {
+    if (SI3::IsPlaying(&this->m_npcInteractSound)) {
         s_lastNPCSoundCount = count;
     }
 }
 
-// OFFSET: #0x0074CE40
+// OFFSET: 0x005ECF80/0x14026E870
 void CGUnit_C::OnVehicleCameraPossiblyNeeded() {
     if (!this->m_vehiclePassenger || !this->m_vehiclePassenger->m_state || this->m_vehicleCamera) {
         return;
@@ -11982,12 +11990,12 @@ void CGUnit_C::OnVehicleCameraPossiblyNeeded() {
     }
 }
 
-// OFFSET: #0x0071B7F0
+// OFFSET: 0x005B4390/0x140227900
 bool CGUnit_C::IsOutdoors() const {
     return World::QueryOutdoors(this->m_worldObject) != 0;
 }
 
-// OFFSET: #0x0071C2C0
+// OFFSET: 0x005B5820/0x140229140
 int32_t CGUnit_C::GetPredictedHealth() const {
     if (g_predictedHealthCVar->m_intValue) {
         return this->m_predictedHealth;
@@ -12009,7 +12017,7 @@ int32_t CGUnit_C::GetPredictedPower(int32_t powerType) const {
     return this->m_unit->m_unitFieldPower[powerType];
 }
 
-// OFFSET: #0x0072AAF0
+// OFFSET: 0x005C7E10/0x14023F3F0
 bool CGUnit_C::IgnoresAuraState(const SpellRec* spell) const {
     const CGUnit_C* unit = this;
 
@@ -13700,7 +13708,7 @@ int32_t Packet_AuraUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataSto
     return 1;
 }
 
-// OFFSET: #0x0071A670
+// OFFSET: 0x005B2560/0x1402259C0
 SkillLineAbilityRec* CGUnit_C::LookupAbility(int32_t spellId) {
     if (!this->m_creatureCacheEntry) {
         return SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], spellId);
@@ -13722,7 +13730,7 @@ SkillLineAbilityRec* CGUnit_C::LookupAbility(int32_t spellId) {
     return ability;
 }
 
-// OFFSET: #0x0072ED80
+// OFFSET: 0x005CDC70/0x140246640
 void CGUnit_C::SpellInterrupted(uint8_t castCount, int32_t spellId) {
     if (!this->m_castSpellId || spellId != this->m_castSpellId || castCount != this->m_castCount) {
         return;
@@ -14031,13 +14039,13 @@ void CGUnit_C::PlayVictimRound(const ATTACKROUNDINFO& info) {
     } else if (info.m_victimState == 8) {
         C3Vector position = this->GetPosition();
         position.z += 2.0f;
-        SI2::PlaySoundKit("(DONOTRENAME)ShieldWoodImpact", &position, NULL, NULL);
+        SI3::PlaySoundKit("(DONOTRENAME)ShieldWoodImpact", &position, NULL, NULL);
     }
 
     if ((info.m_hitInfo & 0xA0) || info.m_victimState == 7) {
         C3Vector position = this->GetPosition();
         position.z += 2.0f;
-        SI2::PlaySoundKit("(DONOTRENAME)AbsorbGetHit", &position, NULL, NULL);
+        SI3::PlaySoundKit("(DONOTRENAME)AbsorbGetHit", &position, NULL, NULL);
     } else if (info.m_hitInfo & 0x2) {
         if (info.m_hitInfo & 0x20000) {
             this->PlayUnitSound(9, 0);
@@ -14273,7 +14281,7 @@ int32_t CGUnit_C::InitializeComponent() {
 }
 
 
-// OFFSET: #0x0071AAB0
+// OFFSET: 0x005BA760/0x14022EBC0
 void CGUnit_C::BowModelLoaded(CM2Model* model, void* arg) {
     if (model->HasEvent('TTW$') && model->HasEvent('BTW$')) {
         model->m_fFlags |= 0x20;
@@ -14767,7 +14775,7 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
                 bool oneHand = !CGUnit_C::IsTwoHanded(attacker->GetVirtualItem(0, false));
                 int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
                 C3Vector position = attacker->GetPosition();
-                SI2::PlayMissedSound(oneHand, &position, self);
+                SI3::PlayMissedSound(oneHand, &position, self);
             }
         }
 
@@ -14806,7 +14814,7 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
         if (attacker && victim) {
             int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
             C3Vector position = victim->GetPosition();
-            SI2::PlayHitSound(attacker->GetAttackingWeapon((info.m_hitInfo >> 2) & 1, true), victim->GetImpactType(), info.m_hitInfo & 0x200, &position, self);
+            SI3::PlayHitSound(attacker->GetAttackingWeapon((info.m_hitInfo >> 2) & 1, true), victim->GetImpactType(), info.m_hitInfo & 0x200, &position, self);
         }
 
         WOWGUID source = info.m_attacker;
@@ -14835,7 +14843,7 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
             bool oneHand = !CGUnit_C::IsTwoHanded(attacker->GetVirtualItem(0, false));
             int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
             C3Vector position = attacker->GetPosition();
-            SI2::PlayMissedSound(oneHand, &position, self);
+            SI3::PlayMissedSound(oneHand, &position, self);
             CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
             return;
         }
@@ -14845,7 +14853,7 @@ void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
 }
 
 // OFFSET: #0x0073C090
-void CGUnit_C::AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGUnit_C::AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
@@ -15366,10 +15374,10 @@ void CGUnit_C::ExchangeSheathedWeapon(const C3Vector* position, uint32_t hand, u
 
     if (state != 2) {
         this->SheatheHandItem(hand, sheathe);
-        SI2::PlaySheatheSound(item, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
+        SI3::PlaySheatheSound(item, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
     } else if (!ranged || (ranged->m_inventoryType == INVTYPE_RANGED ? hand != 0 : (static_cast<uint8_t>(ranged->m_inventoryType - INVTYPE_THROWN) > 1 || hand != 1))) {
         this->ShowRangedWeapon(sheathe, NULL);
-        SI2::PlaySheatheSound(ranged, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
+        SI3::PlaySheatheSound(ranged, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
     }
 
     if (this->m_previousSheatheState == 2) {
@@ -15643,7 +15651,7 @@ int32_t Packet_SMSG_POWER_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x00718D70
+// OFFSET: 0x005B04C0/0x1402233C0
 bool CGUnit_C::IsInMyParty(const CGUnit_C* unit) const {
     if (unit == this) {
         return true;
@@ -15710,7 +15718,7 @@ void CGUnit_C::ExecuteClientControlUpdate(WOWGUID guid, uint8_t state) {
     }
 }
 
-// OFFSET: #0x00718CA0
+// OFFSET: 0x005B03F0/0x1402232C0
 bool CGUnit_C::IsInMyPartyOrRaid(const CGUnit_C* unit) const {
     if (unit == this) {
         return true;
@@ -15778,7 +15786,7 @@ void CGUnit_C::OnVisFlagChanged(uint8_t oldFlags) {
     }
 }
 
-// OFFSET: #0x007260E0
+// OFFSET: 0x005C0650/0x140236200
 bool CGUnit_C::IsSpellKnown(int32_t spellId) {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         if (static_cast<uint32_t>(spellId) <= static_cast<uint32_t>(g_spellDB.m_maxID)) {
@@ -15885,7 +15893,7 @@ int32_t CGUnit_C::GetDisplayClassGender(const CGUnit_C* unit, const NameCache* n
     return displaySex;
 }
 
-// OFFSET: #0x007283A0
+// OFFSET: 0x005C2EB0/0x140239290
 bool CGUnit_C::AffectedByAura(int32_t auraType, const SpellRec* spell) const {
     SpellRec auraSpell;
 
@@ -15906,7 +15914,7 @@ bool CGUnit_C::AffectedByAura(int32_t auraType, const SpellRec* spell) const {
     return false;
 }
 
-// OFFSET: #0x00726160
+// OFFSET: 0x005C0700/0x1402362F0
 bool CGUnit_C::IsSpellSuperceded(int32_t spellId) {
     SkillLineAbilityRec* ability = this->LookupAbility(spellId);
 
@@ -15996,7 +16004,7 @@ const char* CGUnit_C::GetDisplayRaceName(const CGUnit_C* unit, const NameCache* 
     return CGUnit_C::GetDisplayRaceName(unit, name, NULL);
 }
 
-// OFFSET: #0x0072AAB0
+// OFFSET: 0x005C0610/0x140022960
 const char* CGUnit_C::GetDisplayClassName(const CGUnit_C* unit, const NameCache* name) {
     if (unit) {
         if (!(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
@@ -16084,7 +16092,7 @@ void CGUnit_C::UpdateChainTargets(const TSStackArray<WOWGUID>& targets, int32_t 
     this->OnChannelSpellChanged(spellId);
 }
 
-// OFFSET: #0x0074C7F0
+// OFFSET: 0x005EC6C0/0x14026DE20
 void CGUnit_C::VehicleExit() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -16295,7 +16303,7 @@ int32_t CGUnit_C::SwitchToVehicleSeat(CGUnit_C* vehicle, int32_t virtualSeat) {
     return 1;
 }
 
-// OFFSET: #0x0074CCE0
+// OFFSET: 0x005ECBB0/0x14026E3D0
 void CGUnit_C::CheckVehicleExitOnCast() {
     VehicleSeatRec* seat = this->m_vehiclePassenger ? this->m_vehiclePassenger->m_seatRec : NULL;
 
@@ -16319,7 +16327,7 @@ uint8_t CGUnit_C::GetActivePlayerFieldBytes0() {
     return static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0];
 }
 
-// OFFSET: #0x00720B30
+// OFFSET: 0x005B2630/0x140225AD0
 bool CGUnit_C::GetSpellRequiredLevel(int32_t spellId, int32_t* level) {
     SpellRec spell;
 
@@ -16350,7 +16358,7 @@ bool CGUnit_C::GetSpellRequiredLevel(int32_t spellId, int32_t* level) {
     return true;
 }
 
-// OFFSET: #0x00739650
+// OFFSET: 0x005D8880/0x140253E60
 bool CGUnit_C::CheckAndReportSpellInhibitFlags(PendingSpellCast* cast, const SpellRec* spell, const CGItem_C* item) {
     if (!spell) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -16887,7 +16895,7 @@ void CGUnit_C::ReleaseAurasBySpell(int32_t spellId) {
     }
 }
 
-// OFFSET: #0x0071BB70
+// OFFSET: 0x005B47C0/0x140227D60
 float CGUnit_C::GetSpellChanceToCrit() const {
     float base = GetGameTableValue(5, 0, this->m_unit->m_unitFieldBytes0[1] - 1);
     float ratio = GetGameTableValue(4, this->m_unit->m_unitFieldLevel - 1, this->m_unit->m_unitFieldBytes0[1] - 1);
@@ -17388,7 +17396,7 @@ void CGUnit_C::PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source
         case 4: {
             this->PlayParryAnimation();
             C3Vector position = this->GetPosition();
-            SI2::PlayParrySound(weapon, this->GetParryingItem(false), 0, &position, mover == source);
+            SI3::PlayParrySound(weapon, this->GetParryingItem(false), 0, &position, mover == source);
             break;
         }
 
@@ -17402,7 +17410,7 @@ void CGUnit_C::PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source
             }
 
             C3Vector position = this->GetPosition();
-            SI2::PlayParrySound(NULL, shield, 0, &position, mover == source);
+            SI3::PlayParrySound(NULL, shield, 0, &position, mover == source);
             break;
         }
 
@@ -17435,7 +17443,7 @@ void CGUnit_C::HandleSpellEventSound() {
     if (visual->m_animEventSoundID) {
         C3Vector position = this->GetPosition();
         position.z += 1.0f;
-        SI2::PlaySoundKit(visual->m_animEventSoundID, &position, NULL, NULL, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(visual->m_animEventSoundID, &position, NULL, NULL, 0, NULL, 1, 0);
     }
 }
 
@@ -17450,7 +17458,7 @@ int32_t CGUnit_C::PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell
 }
 
 // OFFSET: #0x0073A6C0
-void CGUnit_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t), int32_t* hasEffect) {
+void CGUnit_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect) {
     int32_t spellId = 0;
 
     if (spell) {
@@ -17609,7 +17617,7 @@ void CGUnit_C::PlaySpellVisualKit_PlayAnims(const SpellRec* spell, const SpellVi
     }
 }
 
-// OFFSET: #0x00736640
+// OFFSET: 0x005FB3E0/0x140280680
 void CGUnit_C::PlayWoundAnimKit(int32_t crit) {
     if (this->IsDeadOrAttachmentDying() || !this->m_worldModel || !this->m_worldModel->IsLoaded() || this->DoNotPlayWoundAnim()) {
         return;
@@ -17660,7 +17668,7 @@ void CGUnit_C::TriggerDamageFeedback() {
     }
 }
 
-// OFFSET: #0x0072BDB0
+// OFFSET: 0x005C99E0/0x1402415E0
 int32_t CGUnit_C::VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int32_t checkRange, bool autoTarget, bool showErrors) {
     if (this->IsDeadOrGhost()) {
         CGPlayer_C* player;
@@ -17965,7 +17973,7 @@ bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
     return true;
 }
 
-// OFFSET: #0x007191A0
+// OFFSET: 0x005B08F0/0x140223800
 void CGUnit_C::AddWorldXPGainText(int32_t amount) {
     char text[64] = {};
     char label[64];
@@ -17989,7 +17997,7 @@ UnitThreat* UnitThreatHeap::New() {
     return threat;
 }
 
-// OFFSET: #0x007374C0
+// OFFSET: 0x005CA870/0x1402427E0
 bool CGUnit_C::CalculateThreat(const WOWGUID& guid, uint8_t* status, uint8_t* rawPercent, float* percent, int32_t* threat) {
     UnitThreat* entry = this->m_threats.Ptr(static_cast<uint32_t>(guid.m_guid), CHashKeyGUID(guid.m_guid));
 
@@ -18066,7 +18074,7 @@ void CGUnit_C::ClearThreatList() {
     CGGameUI::UnitTooltipUpdate(this->m_obj->m_guid);
 }
 
-// OFFSET: #0x00719220
+// OFFSET: 0x005B0990/0x1402238E0
 void CGUnit_C::AddWorldThreatUpdateText(int32_t oldStatus, int32_t newStatus) {
     if (!CGGameUI::m_threatWarningEnabled || !g_threatWorldTextCVar->m_intValue) {
         return;
@@ -18132,7 +18140,7 @@ bool CGUnit_C::UpdateThreatEntry(UnitThreat* entry, int32_t highestThreat, bool 
     if (status != entry->m_status) {
         if (activePlayer) {
             if (s_cvThreatPlaySounds->m_intValue && status == 2 && entry->m_status == 1) {
-                SI2::PlayUISound(15262);
+                SI3::PlayUISound(15262);
             }
 
             if (!(this->m_clientFlags & 0x8)) {
@@ -18174,7 +18182,7 @@ void CGUnit_C::UpdateThreatStatus() {
             this->AddWorldThreatUpdateText(highest->m_status, status);
 
             if (s_cvThreatPlaySounds->m_intValue) {
-                SI2::PlayUISound(15263);
+                SI3::PlayUISound(15263);
             }
         }
 
@@ -18338,13 +18346,13 @@ void CGUnit_C::OnAiReaction(int32_t reaction) {
         return;
     }
 
-    if (!this->m_soundData || SI2::IsPlaying(&this->m_aiSound)) {
+    if (!this->m_soundData || SI3::IsPlaying(&this->m_aiSound)) {
         return;
     }
 
     SE2SoundKitObject* object = &this->m_npcSound;
 
-    if (SI2::IsPlaying(object) && reaction <= static_cast<int32_t>(this->m_reactionSoundPriority)) {
+    if (SI3::IsPlaying(object) && reaction <= static_cast<int32_t>(this->m_reactionSoundPriority)) {
         return;
     }
 
@@ -18407,7 +18415,7 @@ void CGUnit_C::OnAiReaction(int32_t reaction) {
 
         if (player && player->m_unit->m_unitFieldBytes0[1] == 6) {
             properties.m_useDspChain = 1;
-            SI2::DK_GetPlayerFilterName(player, properties.m_dspChainName, sizeof(properties.m_dspChainName));
+            SI3::DK_GetPlayerFilterName(player, properties.m_dspChainName, sizeof(properties.m_dspChainName));
         }
 
         if (listenerAtCharacter) {
@@ -18415,7 +18423,7 @@ void CGUnit_C::OnAiReaction(int32_t reaction) {
         }
     }
 
-    SI2::PlaySoundKit(soundKitId, listenerAtCharacter ? NULL : &position, object, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, listenerAtCharacter ? NULL : &position, object, &properties, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x00716B10
@@ -19034,7 +19042,7 @@ void CGUnit_C::UpdateChannelEffects() {
     this->CreateFishingLineEffect();
 }
 
-// OFFSET: #0x0071F8B0
+// OFFSET: 0x005B8D50/0x14022CBE0
 bool CGUnit_C::CanInteract(const CGGameObject_C* gameObject) const {
     return (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !(static_cast<const CGPlayer_C*>(this)->m_player->m_playerFlags & 0x10)) && gameObject->ObjectReaction(this) >= 3;
 }
@@ -19062,7 +19070,7 @@ static int32_t UnitColorUpdateProc(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: #0x0071F8F0
+// OFFSET: 0x005B8D90/0x14022CC30
 void CGUnit_C::UpdateReaction(bool a1) {
     PlayerNameTriggerColorUpdate(this->m_nameDesc);
 
@@ -19180,7 +19188,7 @@ void CGUnit_C::OnFlagChanged(uint32_t oldFlags) {
     }
 }
 
-// OFFSET: #0x00734A40
+// OFFSET: 0x005D59D0/0x1402502F0
 void CGUnit_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -19195,7 +19203,7 @@ void CGUnit_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t even
     unit->HandleAnimEvent(boneId, eventId, data, position, time);
 }
 
-// OFFSET: #0x00732650
+// OFFSET: 0x005D3E00/0x14024E060
 void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time) {
     switch (eventId) {
         case 0x48414324:
@@ -19307,7 +19315,7 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x44435324:
             if (this->m_soundData) {
-                SI2::PlaySoundKit(this->m_soundData->m_spellCastDirectedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(this->m_soundData->m_spellCastDirectedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
             }
             return;
 
@@ -19347,13 +19355,13 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x474D5324:
             if (this->m_soundData) {
-                SI2::PlaySoundKit(this->m_soundData->m_submergeSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(this->m_soundData->m_submergeSoundID, position, NULL, NULL, 0, NULL, 1, 0);
             }
             return;
 
         case 0x444D5324:
             if (this->m_soundData) {
-                SI2::PlaySoundKit(this->m_soundData->m_submergedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(this->m_soundData->m_submergedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
             }
             return;
 
@@ -19385,7 +19393,7 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x54524224:
             if (this->m_soundData) {
-                SI2::PlaySoundKit(this->m_soundData->m_birthSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(this->m_soundData->m_birthSoundID, position, NULL, NULL, 0, NULL, 1, 0);
             }
             return;
 
@@ -19457,19 +19465,19 @@ void CGUnit_C::HandleCombatAnimEvent(uint32_t eventId, uint32_t data, const C3Ve
 
                 switch (eventId) {
                     case 0x30484124:
-                        SI2::PlaySoundKit(attacker->m_soundData->m_customAttack[0], position, NULL, &properties, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[0], position, NULL, &properties, 0, NULL, 1, 0);
                         break;
 
                     case 0x31484124:
-                        SI2::PlaySoundKit(attacker->m_soundData->m_customAttack[1], position, NULL, &properties, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[1], position, NULL, &properties, 0, NULL, 1, 0);
                         break;
 
                     case 0x32484124:
-                        SI2::PlaySoundKit(attacker->m_soundData->m_customAttack[2], position, NULL, &properties, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[2], position, NULL, &properties, 0, NULL, 1, 0);
                         break;
 
                     case 0x33484124:
-                        SI2::PlaySoundKit(attacker->m_soundData->m_customAttack[3], position, NULL, &properties, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[3], position, NULL, &properties, 0, NULL, 1, 0);
                         break;
                 }
 
@@ -19487,10 +19495,10 @@ void CGUnit_C::HandleCombatAnimEvent(uint32_t eventId, uint32_t data, const C3Ve
                 if (this->m_obj->m_type & TYPEMASK_PLAYER) {
                     static_cast<CGPlayer_C*>(this)->HandleSpellEventSound();
                 } else {
-                    CreatureSoundDataRec* soundData = this->GetSoundData();
+                    CreatureSoundDataRec* soundData = this->GetSoundData(0);
 
                     if (soundData) {
-                        SI2::PlaySoundKit(soundData->m_soundExertionID, position, NULL, NULL, 0, NULL, 0, 0);
+                        SI3::PlaySoundKit(soundData->m_soundExertionID, position, NULL, NULL, 0, NULL, 0, 0);
                     }
                 }
             }
@@ -19518,7 +19526,7 @@ void CGUnit_C::HandleCombatAnimEvent(uint32_t eventId, uint32_t data, const C3Ve
 
             if (this->GetWeaponSwingType(!(this->m_lastAttackRound.m_hitInfo & 4), &swingType) && this->m_lastAttackRound.m_victimState) {
                 int32_t self = CGUnit_C::s_activeMover == this->m_lastAttackRound.m_attacker || CGUnit_C::s_activeMover == this->m_lastAttackRound.m_target;
-                SI2::PlayWeaponSwooshSound(swingType, this->m_lastAttackRound.m_hitInfo & 0x200, position, this->m_lastAttackRound.m_hitInfo & 0x10, self);
+                SI3::PlayWeaponSwooshSound(swingType, this->m_lastAttackRound.m_hitInfo & 0x200, position, this->m_lastAttackRound.m_hitInfo & 0x10, self);
             }
 
             return;
@@ -19641,7 +19649,7 @@ void CGUnit_C::PlayParryAnimation() {
     }
 }
 
-// OFFSET: #0x00732FF0
+// OFFSET: 0x005D12C0/0x14024AB30
 void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, int32_t hit, uint32_t missReason, uint32_t reflectResult, const SpellVisualRec* visual, int32_t spellId, const TSStackArray<WOWGUID>* targets, const TSStackArray<uint32_t>* missReasons, const TSStackArray<uint32_t>* reflectResults, uint32_t delay) {
     SpellRec spell;
 
@@ -20265,7 +20273,7 @@ void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, P
     }
 }
 
-// OFFSET: #0x007157E0
+// OFFSET: 0x005ABB90/0x14021E0B0
 void CGUnit_C::ChatBubbleRemove() {
     if (this->m_chatBubble) {
         CGChatBubbleFrame::Remove(this->m_chatBubble);
@@ -20273,7 +20281,7 @@ void CGUnit_C::ChatBubbleRemove() {
     }
 }
 
-// OFFSET: #0x00720010
+// OFFSET: 0x005B9800/0x14022D7D0
 void CGUnit_C::ChatBubbleShow(int32_t type, const char* text) {
     if (this->m_namePlateFrame || !text || !*text || !this->m_worldObject) {
         return;
@@ -20492,7 +20500,7 @@ CGUnit_C* CGUnit_C::GetVehicleUnit() const {
     return this->m_vehiclePassenger ? this->m_vehiclePassenger->GetVehicleUnit() : NULL;
 }
 
-// OFFSET: #0x0071BAE0
+// OFFSET: 0x005B4730/0x140227CD0
 float CGUnit_C::GetMeleeChanceToCrit() const {
     float base = GetGameTableValue(3, 0, this->m_unit->m_unitFieldBytes0[1] - 1);
     float ratio = GetGameTableValue(2, this->m_unit->m_unitFieldLevel - 1, this->m_unit->m_unitFieldBytes0[1] - 1);
@@ -20505,7 +20513,7 @@ float CGUnit_C::GetMeleeChanceToCrit() const {
     return (ratio * agility + base) * 100.0f;
 }
 
-// OFFSET: #0x0071B8D0
+// OFFSET: 0x005B4580/0x140227B20
 double CGUnit_C::GetHealthModifier() {
     if (this->m_unit->m_unitFieldPetnumber) {
         CGUnit_C* owner = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unit->m_unitFieldCreatedby, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -20525,7 +20533,7 @@ double CGUnit_C::GetHealthModifier() {
     return 0.0;
 }
 
-// OFFSET: #0x0071B960
+// OFFSET: 0x005B4620/0x140227BC0
 double CGUnit_C::GetPowerModifier() {
     if (this->m_unit->m_unitFieldPetnumber) {
         CGUnit_C* owner = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_unit->m_unitFieldCreatedby, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -20545,7 +20553,7 @@ double CGUnit_C::GetPowerModifier() {
     return 0.0;
 }
 
-// OFFSET: #0x0071B9F0
+// OFFSET: 0x005B46C0/0x140227C60
 float CGUnit_C::GetManaRegenRateFromSpirit() const {
     int32_t spirit = this->m_unit->m_unitFieldStat[4] < 0 ? 0 : this->m_unit->m_unitFieldStat[4];
     int32_t intellect = this->m_unit->m_unitFieldStat[3] < 0 ? 0 : this->m_unit->m_unitFieldStat[3];
@@ -20563,7 +20571,7 @@ float CGUnit_C::GetHealthRegenRateFromSpirit() const {
     return ratio * (spirit - baseSpirit) + baseSpirit * baseRatio;
 }
 
-// OFFSET: #0x00715500
+// OFFSET: 0x005AB960/0x14021DE30
 void CGUnit_C::UpdateUnitNameText() {
     if (this->m_nameDesc) {
         PlayerNameTriggerNameRegenerate(this->m_nameDesc);
@@ -20597,7 +20605,7 @@ void NameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succes
     }
 }
 
-// OFFSET: #0x0072D4F0
+// OFFSET: 0x005C7570/0x14023E830
 int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char* buffer, uint32_t size, uint32_t a5) {
     if (a5 && (unit->m_auraEffectMask[279 / 8] & (1 << (279 % 8)))) {
         SpellRec spellRec;
@@ -20689,7 +20697,7 @@ int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char
 static void ObjectNameCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
-// OFFSET: #0x0074D750
+// OFFSET: 0x005F3C10/0x1402768B0
 const char* GetObjectNameFromGuid(const WOWGUID& guid) {
     const char* name = NULL;
     uint32_t high = static_cast<uint32_t>(guid.m_guid >> 32);
@@ -20763,7 +20771,7 @@ static float NamePlateScreenCenterDistanceSquared(C3Vector position) {
     return delta2.x * delta2.x + delta2.y * delta2.y;
 }
 
-// OFFSET: #0x00715C40
+// OFFSET: 0x009E8FD0/0x140781DD0
 void CGUnit_C::ClearNamePlateFocus() {
     if (CGUnit_C::s_namePlateFocus) {
         CGUnit_C::s_namePlateFocus->OnLoseFocus();
@@ -20779,7 +20787,7 @@ void CGUnit_C::NamePlateUpdateRaidTarget() {
     }
 }
 
-// OFFSET: #0x00719050
+// OFFSET: 0x0059CC50/0x14020B860
 void CGUnit_C::RecreateNamePlate() {
     if (this->m_nameDesc) {
         PlayerNameDelete(this->m_nameDesc);
@@ -20880,7 +20888,7 @@ void CGUnit_C::UnitNameplatesReposition(CGWorldFrame* worldFrame) {
     CLayoutFrame::ResizePending();
 }
 
-// OFFSET: #0x00726E10
+// OFFSET: 0x005C1850/0x1402377E0
 void CGUnit_C::CancelOpenStable() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !this->HasAuraEffect(292)) {
         return;
@@ -21129,7 +21137,7 @@ int32_t CGUnit_C::ShouldShowNamePlate(CGWorldFrame* worldFrame, C3Vector* positi
     return 1;
 }
 
-// OFFSET: #0x007155D0
+// OFFSET: 0x005ABA40/0x14021DF30
 void CGUnit_C::AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char* victimName) {
     char text[64];
     memset(text, 0, sizeof(text));
@@ -21153,7 +21161,7 @@ void CGUnit_C::AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char*
     PlayerNameCreateText(this->m_nameDesc, 5, text, NULL, &pvpRank);
 }
 
-// OFFSET: #0x00722440
+// OFFSET: 0x005BBB50/0x140230440
 void CGUnit_C::AddWorldHealingText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, int32_t a6) {
     bool isPlayer;
 
@@ -21313,7 +21321,7 @@ void CGUnit_C::UpdateFlightStatus(uint32_t time) {
                     this->PlayWoundAnimKit(0);
                 }
 
-                CreatureSoundDataRec* sound = this->IsMounted() ? this->m_soundDataOverride : this->GetSoundData();
+                CreatureSoundDataRec* sound = this->IsMounted() ? this->m_soundDataOverride : this->GetSoundData(0);
 
                 if (sound) {
                     C3Vector position = this->GetPosition();
@@ -21327,9 +21335,9 @@ void CGUnit_C::UpdateFlightStatus(uint32_t time) {
                         properties.ResetToDefaults();
                         properties.m_volumeScale = atCharacter ? 0.65f : 1.0f;
                         properties.m_priority = 110;
-                        SI2::PlaySoundKit(sound->m_soundExertionID, atCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(sound->m_soundExertionID, atCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
                     } else {
-                        SI2::PlaySoundKit(sound->m_soundExertionID, &position, NULL, NULL, 0, NULL, 1, 0);
+                        SI3::PlaySoundKit(sound->m_soundExertionID, &position, NULL, NULL, 0, NULL, 1, 0);
                     }
                 }
 
@@ -21476,7 +21484,7 @@ static int32_t IsArenaOpponent(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: #0x00720960
+// OFFSET: 0x005BA270/0x14022E600
 void CGUnit_C::UpdateScriptRegistration() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t flags = 0;
@@ -21544,7 +21552,7 @@ void CGUnit_C::UpdateScriptRegistration() {
     this->m_scriptRegistration = flags;
 }
 
-// OFFSET: #0x00725DF0
+// OFFSET: 0x005BFE80/0x140235880
 void CGUnit_C::CreateOrDestroyObjectEffectManager() {
     int32_t displayId = this->m_mountDisplayId;
 
@@ -21623,7 +21631,7 @@ void CGUnit_C::UpdatePartyMemberPetState() {
     CGPlayer_C::DispatchPartyMemberStatsChanges(newState.m_guid, changes, &oldState, &newState);
 }
 
-// OFFSET: #0x0074C0E0
+// OFFSET: 0x005EC000/0x14026D650
 void CGUnit_C::VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, VehicleSeatRec* seatRec, uint32_t startTime, uint32_t endTime) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
@@ -21745,7 +21753,7 @@ void CGUnit_C::VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, Ve
     }
 }
 
-// OFFSET: #0x0074BBD0
+// OFFSET: 0x005EBB20/0x14026D080
 void CGUnit_C::SignalPlayerGainsVehicleDataEvent() {
     VehicleRec* vehicleRec = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
     WOWGUID guid = this->m_obj->m_guid;
@@ -22014,7 +22022,7 @@ void CGUnit_C::UpdateCritterDisplay() {
     this->UpdateDisplayInfo(0);
 }
 
-// OFFSET: #0x00746280
+// OFFSET: 0x0060C030/0x140295730
 int32_t CreatureSoundDataGetFidgetSound(const CreatureSoundDataRec* rec, uint32_t index) {
     if (rec && index < 5) {
         return rec->m_soundFidget[index];
@@ -22281,7 +22289,7 @@ void CGUnit_C::CreateUnitMount(int32_t a2, int32_t a3) {
 }
 
 // OFFSET: #0x0073C140
-void CGUnit_C::MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGUnit_C::MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (!unit) {
@@ -22596,7 +22604,7 @@ int32_t CGUnit_C::OverrideMissileFirePos(C3Vector* position, const SpellRec* spe
     return 1;
 }
 
-// OFFSET: #0x00732100
+// OFFSET: 0x005D2F70/0x14024CEA0
 CM2Model* CGUnit_C::CreateItemModel(uint32_t displayId, uint32_t inventoryType, float* scale) {
     if (scale) {
         *scale = 1.0f;
@@ -22718,8 +22726,8 @@ UnitBloodRec* CGUnit_C::GetBloodRecord() {
 
 // OFFSET: #0x00725010
 void CGUnit_C::OnVirtualItemChanged(uint32_t slot, int32_t oldItemId) {
-    ItemRec* oldRec = g_itemDB.GetRecord(oldItemId);
-    ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[slot]);
+    ItemRec* oldRec = g_itemDB.GetRecord(oldItemId, WOWGUID(), NULL, NULL, false);
+    ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[slot], WOWGUID(), NULL, NULL, false);
     this->m_virtualItemDisplayId[slot] = rec ? rec->m_displayInfoID : 0;
     CGUnitVirtualItem item;
     item.m_pad[0] = 0;
@@ -22763,7 +22771,7 @@ void CGUnit_C::OnVirtualItemChanged(uint32_t slot, int32_t oldItemId) {
     }
 }
 
-// OFFSET: #0x00746D60
+// OFFSET: 0x0060CEE0/0x140296850
 void CGUnit_C::PlayEmoteSound(int32_t soundKitId, bool checkCVars, int32_t fileIndex) {
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && this->m_unit->m_unitFieldHealth <= 0) {
         return;
@@ -22826,17 +22834,17 @@ void CGUnit_C::PlayEmoteSound(int32_t soundKitId, bool checkCVars, int32_t fileI
 
     if (soundKitId != 6576 && this->m_unit->m_unitFieldBytes0[1] == 6) {
         properties.m_useDspChain = 1;
-        SI2::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
+        SI3::DK_GetPlayerFilterName(this, properties.m_dspChainName, sizeof(properties.m_dspChainName));
     }
 
-    SI2::PlaySoundKit(soundKitId, atCharacter ? NULL : &position, &this->m_reactionSound, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, atCharacter ? NULL : &position, &this->m_reactionSound, &properties, 0, NULL, 1, 0);
 
     if (!atCharacter) {
-        SI2::AttachToObject(&this->m_reactionSound, this->m_obj->m_guid);
+        SI3::AttachToObject(&this->m_reactionSound, this->m_obj->m_guid);
     }
 }
 
-// OFFSET: #0x00726CE0
+// OFFSET: 0x005C1710/0x140237650
 void CGUnit_C::CancelShapeshift() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_shapeshiftSuppressed) {
         return;
@@ -23269,7 +23277,7 @@ int32_t Packet_SMSG_CANCEL_AUTO_REPEAT(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x00747000
+// OFFSET: 0x0060D130/0x140296B60
 void CGUnit_C::PlayTextEmoteSound(uint32_t emote, uint32_t emoteNum) {
     CVar* cvar = CVar::Lookup("Sound_EnableEmoteSounds");
 
@@ -23285,7 +23293,7 @@ void CGUnit_C::PlayTextEmoteSound(uint32_t emote, uint32_t emoteNum) {
         }
     }
 
-    int32_t soundKitId = SI2::GetTextEmoteSoundID(emote, this->GetDisplayRace(), this->GetVoiceSex());
+    int32_t soundKitId = SI3::GetTextEmoteSoundID(emote, this->GetDisplayRace(), this->GetVoiceSex());
 
     if (this->IsShapeShifted()) {
         SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(this->GetShapeshiftForm());
@@ -23355,7 +23363,7 @@ static void __stdcall DisableTrackingPitch(uint32_t time) {
     CGInputControl::GetActive()->ToggleControlBit(0x400000, 0, time, 0);
 }
 
-// OFFSET: #0x00715C70
+// OFFSET: 0x005AC250/0x14021E7A0
 bool CGUnit_C::CanMoveTo(int32_t action, const C3Vector& position) {
     if (!s_clickToMoveActions[action].m_enabled || 0.0f == s_clickToMoveActions[action].m_stopDistanceSq) {
         return true;
@@ -23374,7 +23382,7 @@ bool CGUnit_C::CanMoveTo(int32_t action, const C3Vector& position) {
     return false;
 }
 
-// OFFSET: #0x0071AEE0
+// OFFSET: 0x005B39A0/0x140226EE0
 void CGUnit_C::TrackingStopMove(uint32_t time) {
     if ((this->m_unit->m_unitFieldFlags2 & 0x40) || this->IsVehicleCurrentlyUnstoppable()) {
         return;
@@ -23390,7 +23398,7 @@ void CGUnit_C::TrackingStopMove(uint32_t time) {
     }
 }
 
-// OFFSET: #0x0071B3B0
+// OFFSET: 0x005B3E50/0x140227420
 bool CGUnit_C::GetInteractDistanceOfAction(int32_t action, const WOWGUID& guid, float* distance) {
     if (!s_clickToMoveActions[action].m_enabled || s_clickToMoveActions[action].unk_0009) {
         return true;
@@ -23470,7 +23478,7 @@ bool CGUnit_C::GetInteractDistanceOfAction(int32_t action, const WOWGUID& guid, 
     return true;
 }
 
-// OFFSET: #0x00727400
+// OFFSET: 0x005C1F20/0x140238030
 bool CGPlayer_C::ClickToMove(int32_t type, const WOWGUID* guid, const C3Vector* position, float facing) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13) {
         if (CGUnit_C::s_trackingType == 3) {
@@ -23511,7 +23519,7 @@ bool CGPlayer_C::ClickToMove(int32_t type, const WOWGUID* guid, const C3Vector* 
     return true;
 }
 
-// OFFSET: #0x00729BD0
+// OFFSET: 0x005C6670/0x14023D810
 bool CGUnit_C::IsValidFollowTarget(CGUnit_C* unit) {
     if (unit == this || !(unit->m_obj->m_type & TYPEMASK_PLAYER) || unit->m_unit->m_unitFieldCharmedby) {
         return false;
@@ -23566,7 +23574,7 @@ void CGUnit_C::HandleTrackingMoveThreshold() {
     }
 }
 
-// OFFSET: #0x0072B4A0
+// OFFSET: 0x005C8AC0/0x140240320
 bool CGUnit_C::SetTrackingTarget(const WOWGUID& target, int32_t type) {
     if (target == this->m_obj->m_guid || this->m_obj->m_guid != CGUnit_C::s_activeMover) {
         return false;
@@ -24487,7 +24495,7 @@ void CGUnit_C::AttachPrecastMissileModel(const SpellVisualRec* visual, uint8_t c
     this->m_precastCastCount = castCount;
 }
 
-// OFFSET: #0x00727860
+// OFFSET: 0x005C23C0/0x1402385E0
 bool CGUnit_C::CheckSelfResurrect() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -24917,7 +24925,7 @@ void CGUnit_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
     vehicle->m_forceFacingGuid = WOWGUID();
 }
 
-// OFFSET: #0x0074CDF0
+// OFFSET: 0x005ECF30/0x14026E800
 CVehicleCamera_C* CGUnit_C::CreateVehicleCamera() {
     this->DestroyVehicleCamera();
     this->m_vehicleCamera = CVehicleCamera_C::Create(this, FrameTime::s_curTimeMs);

@@ -14,7 +14,7 @@
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/Ui/CGBankInfo.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Cursor.h"
 #include "WoW/Source/Ui/AuctionHouse.h"
 #include "WoW/Source/Ui/GameUI.h"
@@ -306,7 +306,7 @@ static int32_t Script_UseContainerItem(lua_State* L) {
         uint32_t cost = CGMerchantInfo::GetRepairCost(item);
 
         if (cost <= player->GetCoinage()) {
-            SI2::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+            SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
             CDataStore msg;
             msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
             msg.Put(CGMerchantInfo::m_merchant.m_guid);
@@ -533,7 +533,7 @@ static int32_t Script_PickupContainerItem(lua_State* L) {
         uint32_t cost = CGMerchantInfo::GetRepairCost(item);
 
         if (cost <= player->GetCoinage()) {
-            SI2::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
+            SI3::PlaySoundKit("ITEM_REPAIR", NULL, NULL, NULL);
             CDataStore msg;
             msg.Put(static_cast<uint32_t>(CMSG_REPAIR_ITEM));
             msg.Put(CGMerchantInfo::m_merchant.m_guid);

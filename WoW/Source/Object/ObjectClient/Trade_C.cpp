@@ -223,7 +223,7 @@ bool CGTradeInfo::SetMoney(uint32_t amount) {
     return true;
 }
 
-// OFFSET: #0x007048D0
+// OFFSET: 0x0096A2C0/0x1406E0CB0
 void Trade_C_Initialize() {
     s_unk_CA0FE0 = 0;
     s_unk_CA0FE4 = 0;

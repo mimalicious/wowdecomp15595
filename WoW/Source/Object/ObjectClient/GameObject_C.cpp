@@ -69,7 +69,7 @@
 #include "WoW/Source/Object/Passenger.h"
 #include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/ItemTextFrame.h"
 #include "WoW/Source/Ui/MinimapFrame.h"
@@ -288,7 +288,7 @@ int32_t Packet_SMSG_GAMEOBJECT_PAGETEXT(void* param, NETMESSAGE msgId, uint32_t 
     return 1;
 }
 
-// OFFSET: #0x00711210
+// OFFSET: 0x005A2C60/0x140212FB0
 void CGGameObject_C::CheckForPassiveHighlight() {
     CGPlayer_C* player;
 
@@ -401,7 +401,7 @@ void CGGameObject_C::Shutdown() {
 }
 
 // OFFSET: #0x0070CB10
-void CGGameObject_C::SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGGameObject_C::SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
     if (!object) {
@@ -415,7 +415,7 @@ void CGGameObject_C::SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t
     }
 }
 
-// OFFSET: #0x0070BA40
+// OFFSET: 0x00599A30/0x140207DE0
 void CGGameObject_C::AddToolTipInfo(CGTooltip* tooltip) {
     if (this->m_typeData) {
         this->m_typeData->AddToolTipInfo(tooltip);
@@ -480,7 +480,7 @@ void CGGameObject_C::GetCursorFile(char* buffer, uint32_t size) const {
     }
 }
 
-// OFFSET: #0x0070BAD0
+// OFFSET: 0x00599AC0/0x140207E90
 float CGGameObject_C::GetInteractDistanceSquared() const {
     if (!this->m_typeData) {
         return 0.0f;
@@ -528,7 +528,7 @@ int32_t CGGameObject_C::GetModelFileName(const char** name) const {
     }
 }
 
-// OFFSET: #0x0070CDF0
+// OFFSET: 0x0059B1E0/0x1402099D0
 const char* CGGameObject_C::GetObjectName() const {
     if (this->m_stats) {
         return this->m_stats->m_name[0];
@@ -617,7 +617,7 @@ bool CGGameObject_C::IsTransport() const {
     return (this->m_gameObject->m_flags >> 3) & 1;
 }
 
-// OFFSET: #0x0070EF90
+// OFFSET: 0x0059E2A0/0x14020D460
 bool CGGameObject_C::IsValidOpenAction(int32_t action) const {
     if (action == 4) {
         return this->m_displayState != 2;
@@ -703,7 +703,7 @@ void CGGameObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) 
     this->m_typeData->ShouldRender(flags, render, a3);
 }
 
-// OFFSET: #0x0070BAB0
+// OFFSET: 0x00599AA0/0x140207E50
 void CGGameObject_C::StartInteraction() {
     this->m_typeData->StartInteraction();
 }
@@ -769,7 +769,7 @@ float CGGameObject_C_TypeBase::GetInteractDistance() const {
     return this->m_interactDistance;
 }
 
-// OFFSET: #0x0070C2E0
+// OFFSET: 0x0059A550/0x140208CF0
 C3Vector CGGameObject_C_TypeBase::GetRawPosition() const {
     return this->m_owner->m_passenger.m_position;
 }
@@ -791,7 +791,7 @@ CGGameObject_C_TypeAnimated::CGGameObject_C_TypeAnimated(CGGameObject_C* owner) 
 
 // OFFSET: #0x00713D10
 CGGameObject_C_TypeAnimated::~CGGameObject_C_TypeAnimated() {
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
 }
 
 // OFFSET: #0x0070C480
@@ -814,7 +814,7 @@ const char* CGGameObject_C_TypeAnimated::DebugStatus() {
 
 // OFFSET: #0x0070C350
 void CGGameObject_C_TypeAnimated::Disable() {
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
 }
 
 // OFFSET: #0x0070C3C0
@@ -926,7 +926,7 @@ bool CGGameObject_C_TypeAnimated::ShouldFadeIn() const {
 // OFFSET: #0x0070B230
 void CGGameObject_C_TypeAnimated::UpdateDisplay(uint32_t time) {
     C3Vector position = this->GetPosition();
-    SI2::Set3DPosition(&this->m_sound, &position);
+    SI3::Set3DPosition(&this->m_sound, &position);
 }
 
 // OFFSET: #0x0070D690
@@ -935,7 +935,7 @@ void CGGameObject_C_TypeAnimated::UpdateState(int32_t oldState, int32_t newState
         return;
     }
 
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
 
     switch (newState) {
         case 0: {
@@ -1034,7 +1034,7 @@ void CGGameObject_C_Type_MapObjTransport::AddPassenger(CPassenger* passenger, in
 CGGameObject_C_Type_MapObjTransport::CGGameObject_C_Type_MapObjTransport(CGGameObject_C* owner) : CGGameObject_C_Type_TransportBase(owner), m_currentLeg(0) {
 }
 
-// OFFSET: #0x00714230
+// OFFSET: 0x005A45C0/0x140215130
 ShipPath* CGGameObject_C_Type_MapObjTransport::GetShipPath() const {
     return (ShipPath*)&this->m_shipPath;
 }
@@ -1053,7 +1053,7 @@ void CGGameObject_C_Type_WorldObj::DestroyWorldObj() {
 }
 
 // OFFSET: #0x0070B2B0
-void CGGameObject_C_Type_WorldObj::SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGGameObject_C_Type_WorldObj::SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
     }
@@ -1105,14 +1105,14 @@ CGGameObject_C_Type_DestructibleBuilding::CGGameObject_C_Type_DestructibleBuildi
     this->m_previousState = -1;
 }
 
-// OFFSET: #0x0070B870
-void CGGameObject_C_Type_DestructibleBuilding::AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+// OFFSET: 0x00599850/0x140207BB0
+void CGGameObject_C_Type_DestructibleBuilding::AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted && sequenceId != 154) {
         model->SetBoneSequence(0xFFFFFFFF, 154, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
-// OFFSET: #0x0070CA40
+// OFFSET: 0x0059AF50/0x140209670
 void CGGameObject_C_Type_DestructibleBuilding::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -1210,14 +1210,14 @@ uint16_t CGGameObject_C_Type_DestructibleBuilding::GetAmbientDoodadSet(int32_t s
 }
 
 // OFFSET: #0x0070B800
-void CGGameObject_C_Type_DestructibleBuilding::DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGGameObject_C_Type_DestructibleBuilding::DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted && sequenceId) {
         model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
-// OFFSET: #0x0070B830
-void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+// OFFSET: 0x00599800/0x140207B40
+void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
     }
@@ -1230,7 +1230,7 @@ void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandl
 }
 
 // OFFSET: #0x0070B8B0
-void CGGameObject_C_Type_DestructibleBuilding::MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param) {
+void CGGameObject_C_Type_DestructibleBuilding::MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
     }
@@ -1242,7 +1242,7 @@ void CGGameObject_C_Type_DestructibleBuilding::MovedDoodadSequenceHandler(CM2Mod
     }
 }
 
-// OFFSET: #0x0070CA90
+// OFFSET: 0x0059B0D0/0x140209860
 int32_t CGGameObject_C_Type_DestructibleBuilding::IsHighlightSuppressed() const {
     if (this->m_modelData && this->m_modelData->m_doNotHighlight) {
         return 1;
@@ -1447,7 +1447,7 @@ CGGameObject_C_Type_DestructibleBuilding::~CGGameObject_C_Type_DestructibleBuild
         this->m_baseCollision = NULL;
     }
 
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
 }
 
 // OFFSET: #0x00712AC0
@@ -1521,7 +1521,7 @@ void CGGameObject_C_Type_MapObjTransport::PostReenable() {
     this->InitializeMovement();
 }
 
-// OFFSET: #0x0070C2B0
+// OFFSET: 0x0059A520/0x140208CC0
 C3Vector CGGameObject_C_TypeBase::GetPosition() const {
     return this->m_owner->m_passenger.GetPosition(this->m_owner->m_passenger.m_position);
 }
@@ -2090,7 +2090,7 @@ void CGGameObject_C_Type_DestructibleBuilding::PostInit(bool a1) {
     }
 }
 
-// OFFSET: #0x0070DF30
+// OFFSET: 0x0059CCA0/0x14020B8A0
 bool CGGameObject_C_Type_DestructibleBuilding::CanHighlight() const {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -2101,7 +2101,7 @@ bool CGGameObject_C_Type_DestructibleBuilding::CanHighlight() const {
     return this->m_modelData && !this->m_modelData->m_doNotHighlight;
 }
 
-// OFFSET: #0x0070DFA0
+// OFFSET: 0x0059CD10/0x14020B920
 void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
     int32_t current = 0;
 
@@ -2119,7 +2119,7 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
         return;
     }
 
-    SI2::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
     DestructibleBuildingState& entry = this->m_states[state];
     CMapEntity* object = entry.m_object;
 
@@ -2295,7 +2295,7 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
     }
 }
 
-// OFFSET: #0x0070E6A0
+// OFFSET: 0x0059D510/0x14020C2B0
 void CGGameObject_C_Type_DestructibleBuilding::OnUpdateFlags(uint32_t changed) {
     if (!this->m_modelData || !(changed & 0xF00)) {
         return;
@@ -2591,7 +2591,7 @@ float CGGameObject_C_TypeBase::GetRawFacing() const {
     return this->m_owner->m_passenger.GetRawFacingFromRotation();
 }
 
-// OFFSET: #0x0070C310
+// OFFSET: 0x0059A580/0x140208D20
 float CGGameObject_C_TypeBase::GetFacing() const {
     CPassenger& passenger = this->m_owner->m_passenger;
     return passenger.GetFacing(passenger.GetRawFacingFromRotation());
@@ -2610,7 +2610,7 @@ int32_t CGGameObject_C_TypeAnimated::HandleAnimInterrupted() {
     return 0;
 }
 
-// OFFSET: #0x0070EF30
+// OFFSET: 0x0059E240/0x14020D3E0
 LockRec* CGGameObject_C::GetLockRec() const {
     if (!this->m_stats) {
         return NULL;
@@ -2713,7 +2713,7 @@ void CGGameObject_C_Type_TransportBase::AddPassenger(CPassenger* passenger, int3
     }
 }
 
-// OFFSET: #0x007102C0
+// OFFSET: 0x005A0750/0x1402101E0
 int32_t CGGameObject_C::GetPageTextLanguage() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 16));
 }
@@ -2743,7 +2743,7 @@ void CGGameObject_C::Reenable() {
     }
 }
 
-// OFFSET: #0x0070EDD0
+// OFFSET: 0x0059E0B0/0x14020D240
 int32_t CGGameObject_C::ObjectReaction(const CGUnit_C* unit) const {
     CGUnit_C* creator = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_gameObject->m_createdBy, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -2988,7 +2988,7 @@ bool CGGameObject_C::IsCreatorOnlyUse() const {
     return creatorOnlyStats && creatorOnlyIndex < 24 && creatorOnlyStats->m_propValue[creatorOnlyIndex];
 }
 
-// OFFSET: #0x007112A0
+// OFFSET: 0x005A16B0/0x1402116D0
 bool CGGameObject_C_TypeBase::CanUse() const {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3045,7 +3045,7 @@ void CGGameObject_C_TypeAnimated::HandleAnimEvent(uint32_t eventId, uint32_t dat
     GameObject_C_ProcessAnimEvent(eventId, this->m_owner->m_gameObject->m_displayID, data, position, &this->m_sound);
 }
 
-// OFFSET: #0x007110B0
+// OFFSET: 0x005A1440/0x1402113E0
 CMapEntity* CGGameObject_C::CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets) {
     const char* name = this->GetModelFileNameInternal();
 
@@ -3203,14 +3203,14 @@ static void GameObject_C_PlayAnimatedSound(uint32_t displayId, int32_t index, co
     int32_t soundKitId = displayInfo->m_sound[index];
     SE2SoundKitProperties properties;
 
-    if (!SI2::IsSoundKitLooping(soundKitId)) {
+    if (!SI3::IsSoundKitLooping(soundKitId)) {
         properties.ResetToDefaults();
         properties.m_maxAudibleBehavior = 0;
-        SI2::PlaySoundKit(soundKitId, &position, NULL, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(soundKitId, &position, NULL, &properties, 0, NULL, 1, 0);
         return;
     }
 
-    if (!sound || SI2::IsPlaying(sound) || SI2::IsTooCloseToExistingSoundKit(soundKitId, &position)) {
+    if (!sound || SI3::IsPlaying(sound) || SI3::IsTooCloseToExistingSoundKit(soundKitId, &position)) {
         return;
     }
 
@@ -3219,10 +3219,10 @@ static void GameObject_C_PlayAnimatedSound(uint32_t displayId, int32_t index, co
     properties.m_streaming = true;
     properties.m_software = 1;
     properties.m_maxAudibleBehavior = 0;
-    SI2::PlaySoundKit(soundKitId, &position, sound, &properties, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, &position, sound, &properties, 0, NULL, 1, 0);
 }
 
-// OFFSET: #0x0070C050
+// OFFSET: 0x0059A230/0x140208860
 void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_t data, const C3Vector& position, SE2SoundKitObject* sound) {
     switch (eventId) {
         case '0OG$':
@@ -3267,11 +3267,11 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
 
         case 'DNS$':
         case 'OSD$':
-            SI2::PlaySoundKit(data, &position, NULL, NULL, 0, NULL, 1, 0);
+            SI3::PlaySoundKit(data, &position, NULL, NULL, 0, NULL, 1, 0);
             break;
 
         case 'LSD$':
-            if (sound && !SI2::IsPlaying(sound) && !SI2::IsTooCloseToExistingSoundKit(data, &position)) {
+            if (sound && !SI3::IsPlaying(sound) && !SI3::IsTooCloseToExistingSoundKit(data, &position)) {
                 SE2SoundKitProperties properties;
                 properties.ResetToDefaults();
                 properties.m_fadeInTime = 1.0f;
@@ -3280,7 +3280,7 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
                 properties.m_maxAudibleBehavior = 0;
                 properties.m_streaming = true;
                 properties.m_software = 1;
-                SI2::PlaySoundKit(data, &position, sound, &properties, 0, NULL, 1, 0);
+                SI3::PlaySoundKit(data, &position, sound, &properties, 0, NULL, 1, 0);
             }
 
             break;
@@ -3474,7 +3474,7 @@ uint32_t CGGameObject_C::GetProperty(int32_t prop) const {
     return 0;
 }
 
-// OFFSET: #0x0070F160
+// OFFSET: 0x0059E460/0x14020D660
 bool CGGameObject_C::IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* requiredSkill, CGItem_C** key, uint32_t* entry) const {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3882,7 +3882,7 @@ void CGGameObject_C::RefreshInteractIcon() {
     }
 }
 
-// OFFSET: #0x00711470
+// OFFSET: 0x005A1880/0x1402118C0
 bool CGGameObject_C_TypeBase::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -3979,7 +3979,7 @@ bool CGGameObject_C_TypeBase::CanUseNow(GAME_ERROR_TYPE* error, float* distance,
     return result;
 }
 
-// OFFSET: #0x007116C0
+// OFFSET: 0x005A4250/0x140214C70
 bool CGGameObject_C_TypeBase::Use() {
     int32_t spellId = 0;
     CGItem_C* key = NULL;

@@ -101,7 +101,7 @@ const CGameObjectDef::TypeInfo CGameObjectDef::s_typeInfo[36] = {
     { "trapdoor", 3, s_props35, NULL },
 };
 
-// OFFSET: #0x00746190
+// OFFSET: 0x005E6B30/0x140267490
 int32_t CGameObjectDef::GetPropNum(int32_t typeId, int32_t prop) {
     if (typeId >= 36 || prop >= 129) {
         return -1;

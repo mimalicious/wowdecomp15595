@@ -10,7 +10,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 
 // STATIC: #0x00B6B48C
 CDataAllocator CSimpleModelFFX::s_simpleModelFFXHeap(sizeof(CSimpleModelFFX), 5);
@@ -18,7 +18,7 @@ CDataAllocator CSimpleModelFFX::s_simpleModelFFXHeap(sizeof(CSimpleModelFFX), 5)
 // OFFSET: #0x004E5EA0
 static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     if (eventId == 0x4F534424) {
-        SI2::PlaySoundKit(static_cast<int32_t>(data), NULL, NULL, NULL, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(static_cast<int32_t>(data), NULL, NULL, NULL, 0, NULL, 1, 0);
     }
 }
 

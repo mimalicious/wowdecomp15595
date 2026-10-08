@@ -39,7 +39,7 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/LoadingScreen.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
@@ -828,8 +828,8 @@ void LoadingScreenDisable() {
 
     s_textFont = NULL;
 
-    SI2::StopAllMusic();
-    SI2::StopZoneAmbience();
+    SI3::StopAllMusic();
+    SI3::StopZoneAmbience();
 
     if (SFile::IsStreamingMode()) {
         CGSpellBook::MakeKnownSpellModelsLocal();

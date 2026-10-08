@@ -16,5 +16,5 @@ const DBCMeta PhaseRec::s_meta = { "DBFilesClient\\Phase.dbc", 3, 12, PhaseRec::
 // OFFSET: 0x00A2EBA0/0x1407D8330
 void PhaseRec::FixupStrings(void* record, const char* strings) {
     PhaseRec* rec = static_cast<PhaseRec*>(record);
-    DBCFixupString(rec->unk_0004, strings);
+    DBCFixupString(rec->m_name, strings);
 }

@@ -12,7 +12,7 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/CurrencyTypes.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
@@ -283,7 +283,7 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
         ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID);
 
         if (item) {
-            SI2::PlayItemSound(1, item->m_displayInfoID);
+            SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
 
@@ -335,7 +335,7 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
         ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID);
 
         if (item) {
-            SI2::PlayItemSound(1, item->m_displayInfoID);
+            SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
 

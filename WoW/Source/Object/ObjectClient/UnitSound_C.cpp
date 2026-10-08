@@ -10,7 +10,7 @@
 #include "WoW/Source/Object/ObjectClient/UnitCombat_C.h"
 #include "WoW/Source/Object/ObjectClient/VehiclePassenger_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/SoundInterface/SoundInterface2.h"
+#include "WoW/Source/SoundInterface/SI3.h"
 #include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 
@@ -49,7 +49,7 @@ static void UnitSoundLoadDeathThuds() {
     }
 }
 
-// OFFSET: #0x00746540
+// OFFSET: 0x0060C430/0x140295BF0
 void CGUnit_C::SetImpactKitEffect(bool offhand, const ATTACKROUNDINFO* info, const C3Vector* position) {
     CGUnit_C* attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info->m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
     const CGUnitVirtualItem* weapon = attacker ? attacker->GetAttackingWeapon((info->m_hitInfo >> 2) & 1, false) : NULL;
@@ -57,7 +57,7 @@ void CGUnit_C::SetImpactKitEffect(bool offhand, const ATTACKROUNDINFO* info, con
 
     if (parry) {
         int32_t self = s_activeMover == info->m_attacker || s_activeMover == info->m_target;
-        SI2::PlayParrySound(weapon, parry, info->m_hitInfo & 0x200, position, self);
+        SI3::PlayParrySound(weapon, parry, info->m_hitInfo & 0x200, position, self);
     }
 }
 
@@ -85,7 +85,7 @@ void UnitSoundShutdown() {
     }
 }
 
-// OFFSET: #0x007461E0
+// OFFSET: 0x0060BF90/0x140295690
 int32_t GetSoundID(const CreatureSoundDataRec* soundData, uint32_t soundType) {
     if (!soundData) {
         return 0;
@@ -137,7 +137,7 @@ int32_t CheckUnitSoundTimer(uint32_t soundType) {
 
 // OFFSET: #0x007462E0
 void CGUnit_C::PlayFidgetSound(uint32_t index) {
-    CreatureSoundDataRec* soundData = this->GetSoundData();
+    CreatureSoundDataRec* soundData = this->GetSoundData(0);
 
     if (!soundData || index >= 5) {
         return;
@@ -151,7 +151,7 @@ void CGUnit_C::PlayFidgetSound(uint32_t index) {
 
     C3Vector position = this->GetPosition();
     position.z += 2.0f;
-    SI2::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x00746610
@@ -187,7 +187,7 @@ void CGUnit_C::PlayDeathThud() {
         SysMsgPrintf(STATUS_WARNING, 2, "INVALID DEATH THUD SOUND: DEFAULTING TO ID %d", soundKitId);
     }
 
-    SI2::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
+    SI3::PlaySoundKit(soundKitId, &position, NULL, NULL, 0, NULL, 1, 0);
 }
 
 // OFFSET: #0x007471A0
@@ -212,7 +212,7 @@ void CGUnit_C::HandlePlayStandSound(uint32_t eventId, int32_t a3) {
         case 0x37444624:
         case 0x38444624:
         case 0x39444624:
-            this->GetSoundData();
+            this->GetSoundData(0);
             break;
         case 0x58444624:
             this->PlayStandSound();
@@ -236,10 +236,10 @@ void CGUnit_C::HandleFootfallAnimEvent(const C3Vector& position) {
 
     this->PlayFoleySound();
 
-    CreatureSoundDataRec* soundData = this->GetSoundData();
+    CreatureSoundDataRec* soundData = this->GetSoundData(0);
 
     if (soundData && soundData->m_soundFootstepID && s_cvFootstepSounds && s_cvFootstepSounds->m_intValue) {
-        SI2::PlayFootstepSound(soundData->m_soundFootstepID, &position, this->m_terrainTypeId, this->IsSplashing(position), this->GetUnitSize() >= 3, this);
+        SI3::PlayFootstepSound(soundData->m_soundFootstepID, &position, this->m_terrainTypeId, this->IsSplashing(position), this->GetUnitSize() >= 3, this);
     }
 }
 
@@ -257,7 +257,7 @@ void CGUnit_C::PlayUnitSound(uint32_t soundType, int32_t force) {
         s_lastStandSoundTime = FrameTime::s_curTimeMs;
     }
 
-    int32_t soundKitId = GetSoundID(this->GetSoundData(), soundType);
+    int32_t soundKitId = GetSoundID(this->GetSoundData(0), soundType);
 
     if (!soundKitId) {
         return;
@@ -278,7 +278,7 @@ void CGUnit_C::PlayUnitSound(uint32_t soundType, int32_t force) {
         }
 
         properties.m_priority = 110;
-        SI2::PlaySoundKit(soundKitId, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(soundKitId, listenerAtCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
     } else {
         SE2SoundKitProperties properties;
         properties.ResetToDefaults();
@@ -288,6 +288,6 @@ void CGUnit_C::PlayUnitSound(uint32_t soundType, int32_t force) {
         }
 
         properties.m_group = this->GetUnitSoundKitIndex(soundType);
-        SI2::PlaySoundKit(soundKitId, &position, NULL, &properties, 0, NULL, 1, 0);
+        SI3::PlaySoundKit(soundKitId, &position, NULL, &properties, 0, NULL, 1, 0);
     }
 }

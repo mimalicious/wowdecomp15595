@@ -51,7 +51,7 @@ int32_t CVehicle_C::InstallBoneAnimListener(WOWGUID guid, uint32_t boneId, void 
     return 1;
 }
 
-// OFFSET: #0x00756D70
+// OFFSET: 0x005E9AA0/0x14026AAA0
 void CVehicle_C::UninstallBoneAnimListener(WOWGUID guid) {
     for (uint32_t i = 0; i < 16; i++) {
         if (this->m_boneAnimListeners[i].m_guid == guid) {
@@ -76,7 +76,7 @@ bool CVehicle_C::IsMirroringAnimsToPassengers() const {
     return this->m_mirroringAnimsMask != 0;
 }
 
-// OFFSET: #0x00756DF0
+// OFFSET: 0x005E9B20/0x14026AB00
 void CVehicle_C::OnPassengerStartMirroringAnims(uint8_t seat) {
     this->m_mirroringAnimsMask |= 1 << seat;
 }
@@ -108,7 +108,8 @@ void CVehicle_C::UninitSystem() {
     }
 }
 
-// OFFSET: #0x00756EC0
+// PROVEN: 241f9d65 IDENTICAL/NONE
+// OFFSET: 0x005E9B60/0x14026AB40
 VehicleSeatRec* CVehicle_C::GetVehicleSeatRec(uint8_t seat) const {
     if (seat >= 8 || !this->m_vehicleRec) {
         return NULL;
@@ -117,7 +118,7 @@ VehicleSeatRec* CVehicle_C::GetVehicleSeatRec(uint8_t seat) const {
     return g_vehicleSeatDB.GetRecord(this->m_vehicleRec->m_seatID[seat]);
 }
 
-// OFFSET: #0x00756F00
+// OFFSET: 0x005E9BA0
 int32_t CVehicle_C::IsSuppressingCameraPitchWhileMouseAiming() const {
     if (!(this->m_unit->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && this->m_vehicleRec && (this->m_vehicleRec->m_flags & 0x40040000) == 0x40000) {
         return 1;
@@ -172,7 +173,7 @@ int32_t CVehicle_C::HasHighPriorityAnim() const {
     return 1;
 }
 
-// OFFSET: #0x00757200
+// OFFSET: 0x005EA030
 void CVehicle_C::EjectPassenger(WOWGUID guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_EJECT_PASSENGER));
@@ -229,7 +230,7 @@ int32_t CVehicle_C::GetVirtualSeatCount() const {
     return count;
 }
 
-// OFFSET: #0x00757550
+// OFFSET: 0x005EA870
 int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remaining, const CVehicle_C*& vehicle, uint8_t& seat) const {
     if (!this->m_vehicleRec) {
         return 0;
@@ -265,7 +266,7 @@ int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remainin
     return 0;
 }
 
-// OFFSET: #0x00757680
+// OFFSET: 0x005EA9A0
 CGUnit_C* CVehicle_C::FindPassengerUnit(uint8_t seat) {
     for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -317,7 +318,7 @@ int32_t CVehicle_C::GetVirtualSeatInfo(int32_t virtualSeat, const char*& type, c
 CVehicle_C::CVehicle_C() {
 }
 
-// OFFSET: #0x00757BE0
+// OFFSET: 0x005EA0B0/0x14026B140
 void CVehicle_C::BuildWorldMatrix(const C44Matrix* parent) {
     C44Matrix* matrix = &this->m_worldMatrix;
     matrix->d3 = 1.0f;
@@ -361,7 +362,7 @@ void CVehicle_C::BuildWorldMatrix(const C44Matrix* parent) {
     }
 }
 
-// OFFSET: #0x00757D10
+// OFFSET: 0x005EA200/0x14026B2D0
 void CVehicle_C::UpdateLargestPassengerBoundsRadius() {
     CVehicle_C* vehicle = this;
 
@@ -449,7 +450,7 @@ int32_t CVehicle_C::GetVehicleAndSeatFromVirtualSeat(int32_t virtualSeat, const 
     return this->GetVehicleAndSeatFromVirtualSeatsRemaining(virtualSeat, vehicle, seat);
 }
 
-// OFFSET: #0x00757980
+// OFFSET: 0x005EADD0/0x14026C110
 int32_t CVehicle_C::AddPassenger(CPassenger* passenger) {
     if (!(passenger->unk_002C & 0x1)) {
         return 0;
@@ -469,7 +470,7 @@ void CVehicle_C::Destroy(int32_t removePassengers) {
     CVehicle_C::s_vehiclePool->Delete(this);
 }
 
-// OFFSET: #0x00757FA0
+// OFFSET: 0x005EB480
 CVehicle_C* CVehicle_C::Create(const CClientObjCreate* create, CGUnit_C* unit, int32_t vehicleId) {
     CVehicle_C* vehicle;
     uint32_t memHandle;
@@ -520,13 +521,13 @@ CVehicle_C* CVehicle_C::Create(const CClientObjCreate* create, CGUnit_C* unit, i
     return vehicle;
 }
 
-// OFFSET: #0x007580F0
+// OFFSET: 0x005EAC40
 void CVehicle_C::ReceiveVehicleRecIDFromServer(int32_t vehicleId) {
     this->m_vehicleRec = g_vehicleDB.GetRecord(vehicleId);
     this->UpdateFreeSeatMask();
 }
 
-// OFFSET: #0x00758130
+// OFFSET: 0x005EAC80/0x14026BFD0
 void CVehicle_C::UpdateWorldMatrix() {
     if (!this->m_unit->GetTransportGUID()) {
         this->BuildWorldMatrix(NULL);
@@ -564,7 +565,7 @@ CVehicle_C* CVehicle_C::FindVehicleToPlayBoneAnim() {
     return unit->m_vehicle ? unit->m_vehicle : this;
 }
 
-// OFFSET: #0x00757E70
+// OFFSET: 0x005EA610
 void CVehicle_C::StartMirroringAnimsToPassengers() {
     for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -663,7 +664,7 @@ void CVehicle_C::PlayBoneAnimOrFallback(CM2Model* model, uint32_t boneId) {
     }
 }
 
-// OFFSET: #0x007577E0
+// OFFSET: 0x005EACF0/0x14026C050
 void CVehicle_C::RemoveBoneAnimListener(uint32_t boneId, WOWGUID guid) {
     CM2Model* model = this->m_unit->GetObjectModel();
 
