@@ -926,6 +926,7 @@ const CRect& CGxDevice::DeviceCurWindow() {
     return this->m_curWindowRect;
 }
 
+// PROVEN: f251e73d IDENTICAL/NONE
 // OFFSET: 0x00B40BA0/0x14056DDC0
 const CRect& CGxDevice::DeviceDefWindow() {
     return this->m_defWindowRect;
