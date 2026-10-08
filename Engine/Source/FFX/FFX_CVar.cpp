@@ -5,10 +5,10 @@
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/FFX/EffectGlow.h"
 
-// STATIC: %0x00D95214
+// STATIC: 0x00EC6FEC/0x140DB9408
 CVar* FFX::s_cvarFFXRectangle;
 
-// STATIC: %0x00D95218
+// STATIC: 0x00EC6FF0/0x140DB9410
 CVar* FFX::s_cvarFFX;
 
 // PROVEN: 2d04aead IDENTICAL/IDENTICAL
@@ -26,7 +26,7 @@ bool FFX::CVarCallback(CVar* var, const char* oldValue, const char* value, void*
     return true;
 }
 
-// OFFSET: %0x00801890
+// OFFSET: 0x0089D110/0x1405DD4B0
 void FFX::InitCVars() {
     FFX::s_defaultEnabled = true;
     FFX::s_cvarFFX = CVar::Register("ffx", "full screen effects", 1, "1", FFX::CVarCallback, 1, false, NULL, false);

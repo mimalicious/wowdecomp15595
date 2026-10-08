@@ -108,6 +108,7 @@ void CSimpleModelFFX::Render(void* arg) {
 
     FFX::DoPass(0);
     FFX::DoPass(1);
+    FFX::Finish();
 }
 
 // OFFSET: [#0x004E6230, #0x004E62D0]

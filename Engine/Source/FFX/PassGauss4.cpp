@@ -4,7 +4,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
-// OFFSET: %0x00803EC0
+// OFFSET: 0x0089F790/0x1405E07E0
 PassGauss4::PassGauss4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_permute = 0;
 
@@ -15,7 +15,7 @@ PassGauss4::PassGauss4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxB
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXGauss4");
 }
 
-// OFFSET: %0x00803F20
+// OFFSET: 0x0089F7F0/0x1405E0850
 PassGauss4::~PassGauss4() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -23,12 +23,12 @@ PassGauss4::~PassGauss4() {
     }
 }
 
-// OFFSET: %0x00803F70
+// OFFSET: 0x0089F840/0x1405E08C0
 bool PassGauss4::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00803FA0
+// OFFSET: 0x0089F870/0x1405E0900
 void PassGauss4::Execute() {
     C2Vector horizontal[4] = { C2Vector(-2.5f, 0.0f), C2Vector(-0.5f, 0.0f), C2Vector(0.5f, 0.0f), C2Vector(2.5f, 0.0f) };
     C2Vector vertical[4] = { C2Vector(0.0f, -2.5f), C2Vector(0.0f, -0.5f), C2Vector(0.0f, 0.5f), C2Vector(0.0f, 2.5f) };
@@ -54,8 +54,7 @@ void PassGauss4::Execute() {
     CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
     FFX::SetupVB_PCT4(white, posMtx, texMtx, horizontal, this->m_inputs[0]->m_texelSize);
 
-    GxRenderTargetSet(GxBuffers_Color, FFX::s_quart[2].m_texture ? TextureGetGxTex(FFX::s_quart[2].m_texture) : NULL, 0);
-    GxRenderTargetSet(GxBuffers_Depth, FFX::s_quart[2].m_depthTexture ? TextureGetGxTex(FFX::s_quart[2].m_depthTexture) : NULL, 0);
+    GxFrameBufferSet(FFX::s_quart[2].m_frameBuffer);
     GxXformSetViewport(0.0f, static_cast<float>(FFX::s_quart[2].m_size.x) / FFX::s_quart[2].m_texSize.x, 0.0f, static_cast<float>(FFX::s_quart[2].m_size.y) / FFX::s_quart[2].m_texSize.y, 0.0f, 1.0f);
 
     g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(this->m_inputs[0]->m_texture));
@@ -66,8 +65,7 @@ void PassGauss4::Execute() {
 
     FFX::SetupVB_PCT4(white, posMtx, texMtx, vertical, this->m_inputs[0]->m_texelSize);
 
-    GxRenderTargetSet(GxBuffers_Color, this->m_output->m_texture ? TextureGetGxTex(this->m_output->m_texture) : NULL, 0);
-    GxRenderTargetSet(GxBuffers_Depth, this->m_output->m_depthTexture ? TextureGetGxTex(this->m_output->m_depthTexture) : NULL, 0);
+    GxFrameBufferSet(this->m_output->m_frameBuffer);
     GxXformSetViewport(0.0f, static_cast<float>(this->m_output->m_size.x) / this->m_output->m_texSize.x, 0.0f, static_cast<float>(this->m_output->m_size.y) / this->m_output->m_texSize.y, 0.0f, 1.0f);
 
     g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(FFX::s_quart[2].m_texture));

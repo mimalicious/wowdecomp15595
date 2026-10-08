@@ -48,7 +48,7 @@ PassWaterWindow::~PassWaterWindow() {
     }
 }
 
-// OFFSET: %0x00802830
+// OFFSET: 0x0089E080/0x1405DEB30
 PassWaterWindow::VertexConstants::VertexConstants() {
     this->m_time.x = 0.0f;
     this->m_time.y = 0.0f;
@@ -56,7 +56,7 @@ PassWaterWindow::VertexConstants::VertexConstants() {
     this->m_time.w = 0.0f;
 }
 
-// OFFSET: %0x008029B0
+// OFFSET: 0x0089E200/0x1405DEC90
 bool PassWaterWindow::Valid() {
     if (g_theGxDevicePtr->m_caps.m_shaderModel < 4 || !this->m_type) {
         return true;
@@ -71,7 +71,7 @@ bool PassWaterWindow::Valid() {
     return valid != 0;
 }
 
-// OFFSET: %0x00802A20
+// OFFSET: 0x0089E270/0x1405DED20
 void PassWaterWindow::Execute() {
     uint32_t time = FFX::s_curTimeMs;
     VertexConstants constants;
@@ -184,7 +184,7 @@ void PassWaterWindow::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00803040
+// OFFSET: 0x0089E8A0/0x1405DF410
 PassWaterWindow::PassWaterWindow(uint32_t type, int32_t submarine, FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_type = type;
     this->m_submarine = submarine;

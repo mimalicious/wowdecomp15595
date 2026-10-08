@@ -19,6 +19,10 @@ class CSimpleFrame;
 class CSizeEvent;
 class CTexture;
 class CFocusEvent;
+
+namespace FFX {
+    class Effect;
+}
 struct MipBits;
 
 struct UNEEDED_TEXTURES : public TSLinkedNode<UNEEDED_TEXTURES> {
@@ -65,6 +69,8 @@ class CSimpleTop : public CLayoutFrame {
     public:
     static CSimpleTop* s_instance;
     static uint32_t s_eventTime;
+    static FFX::Effect* s_colorShiftEffect;
+    static int32_t s_colorblindMode;
 
     static CSimpleTop* GetInstance();
     static int32_t OnChar(const void* data, void* param);
@@ -83,6 +89,7 @@ class CSimpleTop : public CLayoutFrame {
     static float RoundToPixelWidth(float ddcWidth);
     static void PurgeTextureReleaseQueue();
     static void QueueTextureRelease(CTexture* texture);
+    static void SetColorblindShader();
 
     /* 0078 */ TSExplicitList<CSimpleFrame, offsetof(CSimpleFrame, m_loadLink)> m_loadingObjects;
     /* 0084 */ HLAYER m_screenLayer;

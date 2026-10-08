@@ -5,6 +5,14 @@
 #include <cstdint>
 #include "Engine/Source/FFX/FFX.h"
 
+class EffectColorShift : public FFX::Effect {
+    public:
+    virtual ~EffectColorShift();
+    virtual void SetParameters(int32_t count, const int32_t* params);
+
+    EffectColorShift();
+};
+
 class EffectDeath : public FFX::Effect {
     public:
     virtual ~EffectDeath();

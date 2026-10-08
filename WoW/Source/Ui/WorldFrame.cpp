@@ -1743,6 +1743,7 @@ void CGWorldFrame::OnWorldRender() {
     CGChatBubbleFrame::OnWorldRender(this);
     GxXformSetViewport(minX, maxX, minY, maxY, minZ, maxZ);
     FFX::DoPass(1);
+    FFX::Finish();
     CVehiclePassenger_C::PostRenderUpdateAll();
 }
 

@@ -15,7 +15,7 @@ void PassGlowFade::BeginFadeOut() {
     this->m_fadingOut = true;
 }
 
-// OFFSET: %0x008031F0
+// OFFSET: 0x0089EAC0/0x1405DF6E0
 PassGlow::PassGlow(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : PassGlowBase(inputs, count, output, blend) {
     this->m_permute = 0;
 
@@ -26,7 +26,7 @@ PassGlow::PassGlow(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXGlow");
 }
 
-// OFFSET: %0x00803250
+// OFFSET: 0x0089EB20/0x1405DF7C0
 PassGlowFade::PassGlowFade(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : PassGlowBase(inputs, count, output, blend) {
     this->m_fadeColor = CImVector(0, 0, 0, 0);
     this->m_fadingOut = false;
@@ -42,7 +42,7 @@ PassGlowFade::PassGlowFade(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, 
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXGlowFade");
 }
 
-// OFFSET: %0x008032C0
+// OFFSET: 0x0089EB90/0x1405DF850
 PassGlow::~PassGlow() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -50,7 +50,7 @@ PassGlow::~PassGlow() {
     }
 }
 
-// OFFSET: %0x00803310
+// OFFSET: 0x0089EBE0/0x1405DF8C0
 void PassGlow::Execute() {
     FFX::SetupGx(this->m_output, 0);
 
@@ -80,17 +80,17 @@ void PassGlow::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x008035F0
+// OFFSET: 0x0089EEC0/0x1405DFC20
 bool PassGlow::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x008035F0
+// OFFSET: 0x0089EEC0/0x1405DFC20
 bool PassGlowFade::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00803A20
+// OFFSET: 0x0089F2F0/0x1405E01E0
 PassGlowFade::~PassGlowFade() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -98,7 +98,7 @@ PassGlowFade::~PassGlowFade() {
     }
 }
 
-// OFFSET: %0x00803A70
+// OFFSET: 0x0089F340/0x1405E0250
 void PassGlowFade::Execute() {
     float step = FFX::s_tickTimeSec;
 

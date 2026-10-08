@@ -3,6 +3,9 @@
 #include <cstring>
 #include "Engine/Source/Base/Coordinate.h"
 #include "Engine/Source/Base/Handle.h"
+#include "Engine/Source/ConsoleBase/ConsoleCommand.h"
+#include "Engine/Source/ConsoleBase/IConsole.h"
+#include "Engine/Source/FFX/FFX.h"
 #include "Engine/Source/BLPFile/Types.h"
 #include "Engine/Source/Event/CCharEvent.h"
 #include "Engine/Source/Event/CFocusEvent.h"
@@ -26,12 +29,43 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CMath.h"
 #include "Engine/Source/Tempest/CRect.h"
+#include "WoW/Source/Game/GameClient/FFXEffects.h"
 
 // STATIC: %0x00CD1284
 CSimpleTop* CSimpleTop::s_instance;
 
 // STATIC: %0x00CD1280
 uint32_t CSimpleTop::s_eventTime;
+
+// STATIC: 0x00DD3908
+FFX::Effect* CSimpleTop::s_colorShiftEffect;
+
+// STATIC: 0x00DD390C
+int32_t CSimpleTop::s_colorblindMode;
+
+// STATIC: 0x00CA2CF8
+static float s_colorShiftMatrices[8][9] = {
+    { 0.567f, 0.433f, 0.0f, 0.558f, 0.442f, 0.0f, 0.0f, 0.242f, 0.758f },
+    { 0.817f, 0.183f, 0.0f, 0.333f, 0.667f, 0.0f, 0.0f, 0.125f, 0.875f },
+    { 0.625f, 0.375f, 0.0f, 0.7f, 0.3f, 0.0f, 0.0f, 0.3f, 0.7f },
+    { 0.8f, 0.2f, 0.0f, 0.258f, 0.742f, 0.0f, 0.0f, 0.142f, 0.858f },
+    { 0.95f, 0.05f, 0.0f, 0.0f, 0.433f, 0.567f, 0.0f, 0.475f, 0.525f },
+    { 0.967f, 0.033f, 0.0f, 0.0f, 0.733f, 0.267f, 0.0f, 0.183f, 0.817f },
+    { 0.299f, 0.587f, 0.114f, 0.299f, 0.587f, 0.114f, 0.299f, 0.587f, 0.114f },
+    { 0.618f, 0.32f, 0.062f, 0.163f, 0.775f, 0.062f, 0.163f, 0.32f, 0.516f }
+};
+
+// STATIC: 0x00CA2E18
+static const char* s_colorblindModeNames[8] = {
+    "Protanopia          (1% of males)",
+    "Protanomaly         (1% of males, 0.01% of females)",
+    "Deuteranopia        (1% of males)",
+    "Deuteranomaly       (6% of males, 0.4% of females)",
+    "Tritanopia          (rare)",
+    "Tritanomaly         (rare)",
+    "Achromatopsia       (very rare)",
+    "Achromatomaly       (very rare)"
+};
 
 // STATIC: %0x00BB81F8
 static TSList<UNEEDED_TEXTURES, TSGetLink<UNEEDED_TEXTURES> > s_textureReleaseQueue;
@@ -43,6 +77,12 @@ static void PaintScreen(void* param, const RECTF* rect, const RECTF* visible, fl
     top->OnLayerRender();
     CSimpleTop::PurgeTextureReleaseQueue();
     top->CheckLoadingObjectsQueue();
+
+    if (CSimpleTop::s_colorblindMode) {
+        FFX::Start();
+        FFX::DoPass(2);
+        FFX::Finish();
+    }
 }
 
 // OFFSET: 0x005015F0
@@ -119,6 +159,49 @@ void CSimpleTop::StopMoveOrResizeFrame() {
 
     this->m_moveResizeReason = MOVERESIZE_REASON_NONE;
     this->m_moveResizeFrame = NULL;
+}
+
+// PROVEN: f0370228 IDENTICAL/NONE
+// OFFSET: 0x004FEE00/0x140143C10
+void CSimpleTop::SetColorblindShader() {
+    if (CSimpleTop::s_colorblindMode) {
+        if (CSimpleTop::s_colorblindMode > 0 && static_cast<uint32_t>(CSimpleTop::s_colorblindMode) <= 8) {
+            if (CSimpleTop::s_colorShiftEffect) {
+                CSimpleTop::s_colorShiftEffect->SetParameters(9, reinterpret_cast<const int32_t*>(s_colorShiftMatrices[CSimpleTop::s_colorblindMode - 1]));
+            }
+
+            FFX::SetEffect(2, CSimpleTop::s_colorShiftEffect);
+            return;
+        }
+
+        CSimpleTop::s_colorblindMode = 0;
+    }
+
+    FFX::SetEffect(2, NULL);
+}
+
+// OFFSET: 0x004FF0B0/0x140143E70
+static int32_t ConsoleCommand_ColorblindShader(const char* command, const char* arguments) {
+    if (arguments && *arguments) {
+        int32_t mode = SStrToInt(arguments);
+
+        if (mode < 0 || mode > 8) {
+            ConsolePrintf("Invalid colorblind mode.");
+            return 0;
+        }
+
+        CSimpleTop::s_colorblindMode = mode;
+        CSimpleTop::SetColorblindShader();
+        return 1;
+    }
+
+    ConsolePrintf("Colorblind Shader is %d.", CSimpleTop::s_colorblindMode);
+
+    for (uint32_t i = 0; i < 8; i++) {
+        ConsolePrintf("   %d - %s", i + 1, s_colorblindModeNames[i]);
+    }
+
+    return 1;
 }
 
 // PROVEN: 12f2bf1c IDENTICAL/DIFFERENT
@@ -1166,6 +1249,9 @@ CSimpleTop::CSimpleTop() {
     this->m_actionBlockedCallback = NULL;
 
     CSimpleTop::s_instance = this;
+    ConsoleCommandRegister("colorblindShader", ConsoleCommand_ColorblindShader, CATEGORY_DEBUG, NULL);
+    CSimpleTop::s_colorShiftEffect = new (__FILE__, __LINE__) EffectColorShift();
+    CSimpleTop::SetColorblindShader();
     ScrnLayerCreate(NULL, 1.0f, 4, NULL, &PaintScreen, &this->m_screenLayer);
     this->EnableEvents();
 

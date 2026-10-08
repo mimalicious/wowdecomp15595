@@ -12,130 +12,121 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CRect.h"
 
-// STATIC: %0x00D95210
+// STATIC: 0x00EC6FE8/0x140DB9400
 bool FFX::s_useRECT;
 
-// STATIC: %0x00D95211
+// STATIC: 0x00EC6FE9/0x140DB9401
 bool FFX::s_defaultEnabled;
 
-// STATIC: %0x00D9521C
+// STATIC: 0x00EC6FF4
 float FFX::s_oldMaxZ;
 
-// STATIC: %0x00D95220
+// STATIC: 0x00EC6FF8
 float FFX::s_oldMinZ;
 
-// STATIC: %0x00D95224
+// STATIC: 0x00EC6FFC
 float FFX::s_oldMaxY;
 
-// STATIC: %0x00D95228
+// STATIC: 0x00EC7000
 float FFX::s_oldMinY;
 
-// STATIC: %0x00D9522C
+// STATIC: 0x00EC7004
 float FFX::s_oldMaxX;
 
-// STATIC: %0x00D95230
+// STATIC: 0x00EC7008
 float FFX::s_oldMinX;
 
-// STATIC: %0x00D95234
+// STATIC: 0x00EC700C
 const uint16_t* FFX::s_idx;
 
-// STATIC: %0x00D95238
+// STATIC: 0x00EC7010
 const C2Vector* FFX::s_tex;
 
-// STATIC: %0x00D9523C
+// STATIC: 0x00EC7014
 const CImVector* FFX::s_col1;
 
-// STATIC: %0x00D95240
+// STATIC: 0x00EC7018
 const CImVector* FFX::s_col0;
 
-// STATIC: %0x00D95244
+// STATIC: 0x00EC701C
 const C3Vector* FFX::s_normal;
 
-// STATIC: %0x00D95248
+// STATIC: 0x00EC7020
 const C3Vector* FFX::s_geo;
 
-// STATIC: %0x00D9524C
+// STATIC: 0x00EC7024
 CGxShader* FFX::s_passThrough_PCT4;
 
-// STATIC: %0x00D95250
+// STATIC: 0x00EC7028
 CGxShader* FFX::s_passThrough_PCT3;
 
-// STATIC: %0x00D95254
+// STATIC: 0x00EC702C
 CGxShader* FFX::s_passThrough_PCT2;
 
-// STATIC: %0x00D95258
+// STATIC: 0x00EC7030
 CGxShader* FFX::s_passThrough_PCT;
 
-// STATIC: %0x00D9525C
+// STATIC: 0x00EC7034
 FFX::PortalEffect* FFX::s_portalEffect;
 
 // STATIC: 0x00EC7038/0x140DB9488
 FFX::Effect* FFX::s_effect[3];
 
-// STATIC: %0x00D95268
+// STATIC: 0x00EC7044
 uint32_t FFX::s_curTimeMs;
 
-// STATIC: %0x00D9526C
+// STATIC: 0x00EC7048
 float FFX::s_tickTimeSec;
 
-// STATIC: %0x00D95270
-CGxTex* FFX::s_oldFrameBuffer;
+// STATIC: 0x00EC704C
+CGxFrameBuffer* FFX::s_oldFrameBuffer;
 
-// STATIC: %0x00D95274
-CGxTex* FFX::s_oldDepthBuffer;
-
-// STATIC: %0x00D95278
+// STATIC: 0x00EC7050
 C3Vector FFX::s_camPos;
 
-// STATIC: %0x00D95284
+// STATIC: 0x00EC705C
 FFX::Tex FFX::s_waveTex;
 
-// STATIC: %0x00D952A4
+// STATIC: 0x00EC707C
 FFX::Tex FFX::s_screen;
 
-// STATIC: %0x00D952C8
+// STATIC: 0x00EC70A0
 C4Vector FFX::psProcWaterConsts[15];
 
-// STATIC: %0x00D953B8
+// STATIC: 0x00EC7190
 TSGrowableArray<FFX::PortalEffect> FFX::s_portalEffects;
 
-// STATIC: %0x00D953C8
+// STATIC: 0x00EC71A0
 FFX::Tex FFX::s_full[2];
 
-// STATIC: %0x00D95408
-FFX::Tex FFX::s_half[2];
-
-// STATIC: %0x00D95448
+// STATIC: 0x00EC71E0
 FFX::Tex FFX::s_quart[3];
 
 // STATIC: %0x00D954FC
 static void* s_waveTexData;
 
-// STATIC: %0x00C0FF08
-static float s_viewportMaxZ = 1.0f;
-
-// STATIC: %0x00C0FF0C
+// STATIC: 0x00D0ABAC
 C2iVector FFX::s_wavePeriod = { 3174, 2805 };
 
-// STATIC: %0x00C0FF14
+// STATIC: 0x00D0ABB4
 float FFX::s_waveScaleX = 1.0f;
 
-// STATIC: %0x00C0FF18
+// STATIC: 0x00D0ABB8
 float FFX::s_waveScaleY = 0.88f;
 
-// STATIC: %0x00C0FF1C
+// STATIC: 0x00D0ABBC
 CGxBatch FFX::s_batch = { GxPrim_Triangles, 0, 0, 0, 0 };
 
-// STATIC: %0x00C0FF30
+// STATIC: 0x00D0ABD0
 C44Matrix FFX::s_oldProjMtxNative;
 
-// STATIC: %0x00C0FF70
+// STATIC: 0x00D0AC10
 C44Matrix FFX::s_oldProjMtx;
 
-// STATIC: %0x00C0FFB0
+// STATIC: 0x00D0AC50
 C44Matrix FFX::s_oldViewMtx;
 
-// STATIC: %0x00C10028
+// STATIC: 0x00D0AB98
 static const uint16_t s_quadIndices[6] = { 0, 1, 2, 2, 1, 3 };
 
 // INLINED
@@ -158,7 +149,7 @@ static EGxTexTarget GetTexTarget() {
 // INLINED
 static void ResetTex(FFX::Tex& tex) {
     tex.m_texture = NULL;
-    tex.m_depthTexture = NULL;
+    tex.m_frameBuffer = NULL;
     tex.m_texSize.x = 0;
     tex.m_texSize.y = 0;
     tex.m_size.x = 0;
@@ -268,7 +259,7 @@ void FFX::SetEffect(uint32_t index, Effect* effect) {
     }
 }
 
-// OFFSET: %0x007FE410
+// OFFSET: 0x00899DE0/0x1405D9500
 FFX::Pass::Pass(Tex** inputs, uint32_t count, Tex* output, EGxBlend blend) {
     memset(this->m_inputs, 0, sizeof(this->m_inputs));
     this->m_output = NULL;
@@ -281,20 +272,20 @@ FFX::Pass::Pass(Tex** inputs, uint32_t count, Tex* output, EGxBlend blend) {
     this->m_blend = blend;
 }
 
-// OFFSET: %0x007FE520
+// OFFSET: 0x00899EF0
 static void DestroyTex(FFX::Tex& tex) {
     if (tex.m_texture) {
         TextureRelease(tex.m_texture);
     }
 
-    if (tex.m_depthTexture) {
-        TextureRelease(tex.m_depthTexture);
+    if (tex.m_frameBuffer) {
+        g_theGxDevicePtr->FrameBufferDelete(tex.m_frameBuffer);
     }
 
     ResetTex(tex);
 }
 
-// OFFSET: %0x007FE590
+// OFFSET: 0x00899F60
 void FFX::Destroy() {
     if (FFX::s_passThrough_PCT) {
         g_theGxDevicePtr->ShaderRelease(FFX::s_passThrough_PCT);
@@ -319,20 +310,19 @@ void FFX::Destroy() {
     DestroyTex(FFX::s_waveTex);
     DestroyTex(FFX::s_full[0]);
     DestroyTex(FFX::s_full[1]);
-    DestroyTex(FFX::s_half[0]);
-    DestroyTex(FFX::s_half[1]);
     DestroyTex(FFX::s_quart[0]);
     DestroyTex(FFX::s_quart[1]);
     DestroyTex(FFX::s_quart[2]);
+    FFX::s_screen.m_frameBuffer = NULL;
     DestroyTex(FFX::s_screen);
 }
 
-// OFFSET: %0x007FE660
+// OFFSET: 0x0089A020/0x1405D9A00
 void FFX::SetupGeo_Quad(const C2iVector& size, C44Matrix* matrix) {
-    // STATIC: %0x00D954C8
+    // STATIC: 0x00EC72A0
     static const C3Vector s_quadPos[4] = { C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, 1.0f, 0.0f), C3Vector(1.0f, 0.0f, 0.0f), C3Vector(1.0f, 1.0f, 0.0f) };
 
-    // STATIC: %0x00D954A8
+    // STATIC: 0x00EC7280
     static const C2Vector s_quadTex[4] = { C2Vector(0.0f, 0.0f), C2Vector(0.0f, 1.0f), C2Vector(1.0f, 0.0f), C2Vector(1.0f, 1.0f) };
 
     FFX::s_batch.m_primType = GxPrim_Triangles;
@@ -357,7 +347,7 @@ void FFX::SetupGeo_Quad(const C2iVector& size, C44Matrix* matrix) {
     matrix->Scale(C3Vector(2.0f, -2.0f, 1.0f));
 }
 
-// OFFSET: %0x007FE860
+// OFFSET: 0x0089A220/0x1405D9C30
 void FFX::SetupGeo_PortalEffect(C44Matrix* modelView, C44Matrix* projection, C44Matrix* model) {
     C44Matrix camera;
     camera.Translate(C3Vector(-FFX::s_camPos.x, -FFX::s_camPos.y, -FFX::s_camPos.z));
@@ -375,7 +365,7 @@ void FFX::SetupGeo_PortalEffect(C44Matrix* modelView, C44Matrix* projection, C44
     FFX::s_batch = FFX::s_portalEffect->m_batch;
 }
 
-// OFFSET: %0x007FE9C0
+// OFFSET: 0x0089A380/0x1405D9F50
 void FFX::SetupTexMtx(const C2iVector& size, const C2iVector& texSize, C44Matrix* matrix, int32_t allowRect) {
     float width = static_cast<float>(size.x);
     float height = static_cast<float>(size.y);
@@ -403,7 +393,7 @@ void FFX::SetupTexMtx(const C2iVector& size, const C2iVector& texSize, C44Matrix
     }
 }
 
-// OFFSET: %0x007FEBC0
+// OFFSET: 0x0089A580/0x1405DA1F0
 void FFX::SetupVB_PNCT() {
     struct Vertex {
         C3Vector p;
@@ -427,7 +417,7 @@ void FFX::SetupVB_PNCT() {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PNCT);
 }
 
-// OFFSET: %0x007FECF0
+// OFFSET: 0x0089A6B0/0x1405DA350
 void FFX::SetupVB_PNC2T_TS() {
     struct Vertex {
         C3Vector p;
@@ -455,7 +445,7 @@ void FFX::SetupVB_PNC2T_TS() {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PNC2T_TS);
 }
 
-// OFFSET: %0x007FEE20
+// OFFSET: 0x0089A7E0/0x1405DA4C0
 void FFX::SetupVB_PT(const C44Matrix& posMtx, const C44Matrix& texMtx) {
     struct Vertex {
         C3Vector p;
@@ -475,7 +465,7 @@ void FFX::SetupVB_PT(const C44Matrix& posMtx, const C44Matrix& texMtx) {
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PT);
 }
 
-// OFFSET: %0x007FF0B0
+// OFFSET: 0x0089AA70
 void FFX::SetupVB_PCT(const CImVector& color, const C44Matrix& posMtx, const C44Matrix& texMtx) {
     struct Vertex {
         C3Vector p;
@@ -497,7 +487,7 @@ void FFX::SetupVB_PCT(const CImVector& color, const C44Matrix& posMtx, const C44
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PCT);
 }
 
-// OFFSET: %0x007FF380
+// OFFSET: 0x0089AD40/0x1405DAAE0
 void FFX::SetupVB_PCT2(const CImVector& color, const C44Matrix& posMtx, const C44Matrix& tex0Mtx, const C44Matrix& tex1Mtx) {
     struct Vertex {
         C3Vector p;
@@ -520,7 +510,7 @@ void FFX::SetupVB_PCT2(const CImVector& color, const C44Matrix& posMtx, const C4
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PCT2);
 }
 
-// OFFSET: %0x007FF730
+// OFFSET: 0x0089B0F0/0x1405DAF00
 void FFX::SetupVB_PCT3(const CImVector& color, const C44Matrix& posMtx, const C44Matrix& tex0Mtx, const C44Matrix& tex1Mtx, const C44Matrix& tex2Mtx) {
     struct Vertex {
         C3Vector p;
@@ -544,7 +534,7 @@ void FFX::SetupVB_PCT3(const CImVector& color, const C44Matrix& posMtx, const C4
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PCT3);
 }
 
-// OFFSET: %0x007FFBE0
+// OFFSET: 0x0089B5A0/0x1405DB430
 void FFX::SetupVB_PCT4(const CImVector& color, const C44Matrix& posMtx, const C44Matrix& texMtx, const C2Vector* offsets, const C2Vector& scale) {
     struct Vertex {
         C3Vector p;
@@ -571,7 +561,7 @@ void FFX::SetupVB_PCT4(const CImVector& color, const C44Matrix& posMtx, const C4
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PCT4);
 }
 
-// OFFSET: %0x007FFEF0
+// OFFSET: 0x0089B8B0/0x1405DB7D0
 void FFX::SetupVB_PCT(const C44Matrix& posMtx, const C44Matrix& texMtx, const float* shade) {
     struct Vertex {
         C3Vector p;
@@ -599,7 +589,7 @@ void FFX::SetupVB_PCT(const C44Matrix& posMtx, const C44Matrix& texMtx, const fl
     g_theGxDevicePtr->PrimVertexPtr(buf, GxVBF_PCT);
 }
 
-// OFFSET: %0x008001A0
+// OFFSET: 0x0089BB60/0x1405DBB40
 void FFX::SetupIB() {
     uint32_t count = FFX::s_batch.m_count;
     CGxBuf* buf = g_theGxDevicePtr->BufStream(GxPoolTarget_Index, sizeof(uint16_t), count);
@@ -613,7 +603,7 @@ void FFX::SetupIB() {
     g_theGxDevicePtr->PrimIndexPtr(buf);
 }
 
-// OFFSET: %0x00800230
+// OFFSET: 0x0089BBF0/0x1405DBC10
 void FFX::Render() {
     CGxBatch batch;
     batch.m_primType = FFX::s_batch.m_primType;
@@ -644,7 +634,7 @@ void FFX::DoPass(uint32_t pass) {
     FFX::s_effect[pass]->Execute();
 }
 
-// OFFSET: %0x00800300
+// OFFSET: 0x0089BD20/0x1405DBD80
 C44Matrix FFX::GetWaveMtx(const C2iVector& size) {
     C44Matrix matrix;
 
@@ -685,7 +675,7 @@ C4Vector FFX::GetWaveAmplitude(const C2Vector& texelSize, float amplitude) {
     return result;
 }
 
-// OFFSET: %0x008004A0
+// OFFSET: 0x0089BEC0/0x1405DBF20
 void FFX::CreateTex(Tex& tex, const C2iVector& size, const char* name, bool depth, bool renderTarget) {
     EGxTexFormat format;
 
@@ -699,7 +689,7 @@ void FFX::CreateTex(Tex& tex, const C2iVector& size, const char* name, bool dept
         format = GxTex_Unknown;
     }
 
-    EGxTexFormat depthFormat = g_theGxDevicePtr->DeviceFormat().m_depthFormat == CGxFormat::Fmt_Ds320 ? GxTex_D32 : GxTex_D24X8;
+    g_theGxDevicePtr->DeviceFormat();
 
     CGxTexFlags flags;
     flags.m_renderTarget = renderTarget;
@@ -735,15 +725,14 @@ void FFX::CreateTex(Tex& tex, const C2iVector& size, const char* name, bool dept
             tex.m_texture = NULL;
         }
 
-        if (tex.m_depthTexture) {
-            TextureRelease(tex.m_depthTexture);
-            tex.m_depthTexture = NULL;
+        if (tex.m_frameBuffer) {
+            g_theGxDevicePtr->FrameBufferDelete(tex.m_frameBuffer);
         }
 
         tex.m_texture = TextureCreate(target, width, height, 0, format, format, flags, NULL, GxTexNullUserFunc, name, 0);
 
-        if (depth) {
-            tex.m_depthTexture = TextureCreate(target, width, height, 0, depthFormat, depthFormat, flags, NULL, GxTexNullUserFunc, name, 0);
+        if (renderTarget) {
+            tex.m_frameBuffer = GxFrameBufferCreate(NULL, TextureGetGxTex(tex.m_texture));
         }
     }
 
@@ -755,7 +744,7 @@ void FFX::CreateTex(Tex& tex, const C2iVector& size, const char* name, bool dept
     tex.m_texelSize.y = 1.0f / height;
 }
 
-// OFFSET: %0x008006C0
+// OFFSET: 0x0089C0B0/0x1405DC1E0
 bool FFX::Effect::Valid() {
     if (!this->m_passes.Count()) {
         return false;
@@ -782,12 +771,10 @@ void FFX::Effect::Execute() {
     }
 }
 
-// OFFSET: %0x008008D0
+// OFFSET: 0x0089C2C0/0x1405DC3C0
 void FFX::Init() {
     ResetTex(FFX::s_full[0]);
     ResetTex(FFX::s_full[1]);
-    ResetTex(FFX::s_half[0]);
-    ResetTex(FFX::s_half[1]);
     ResetTex(FFX::s_quart[0]);
     ResetTex(FFX::s_quart[1]);
     ResetTex(FFX::s_quart[2]);
@@ -806,18 +793,26 @@ void FFX::Init() {
     FFX::s_useRECT = GetTexTarget() == GxTex_Rectangle;
 }
 
-// OFFSET: %0x00800BE0
+// OFFSET: 0x0089BC40/0x1405DBC60
 void FFX::SetupReset() {
     g_theGxDevicePtr->RsPop();
     g_theGxDevicePtr->XformSetView(FFX::s_oldViewMtx);
     g_theGxDevicePtr->XformSetProjection(FFX::s_oldProjMtx);
     GxXformPop(GxXform_World);
-    GxRenderTargetSet(GxBuffers_Color, FFX::s_oldFrameBuffer, 0);
-    GxRenderTargetSet(GxBuffers_Depth, FFX::s_oldDepthBuffer, 0);
+}
+
+// PROVEN: 47b242e9 IDENTICAL/NONE
+// OFFSET: 0x0089C550/0x1405DC6D0
+void FFX::Finish() {
+    if (!FFX::s_cvarFFX->m_intValue) {
+        return;
+    }
+
+    GxFrameBufferSet(FFX::s_oldFrameBuffer);
     GxXformSetViewport(FFX::s_oldMinX, FFX::s_oldMaxX, FFX::s_oldMinY, FFX::s_oldMaxY, FFX::s_oldMinZ, FFX::s_oldMaxZ);
 }
 
-// OFFSET: %0x00800D00
+// OFFSET: 0x0089C5B0/0x1405DC740
 static void WaveTexCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     EGxTexFormat format = static_cast<EGxTexFormat>(reinterpret_cast<uintptr_t>(userArg));
     uint32_t bytesPerTexel = 2 * (format == GxTex_Argb8888) + 2;
@@ -906,7 +901,7 @@ static void WaveTexCallback(EGxTexCommand command, uint32_t width, uint32_t heig
     }
 }
 
-// OFFSET: %0x008011D0
+// OFFSET: 0x0089CA80/0x1405DCC50
 void FFX::AllocTex() {
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
     g_theGxDevicePtr->CapsWindowSize(rect);
@@ -920,6 +915,7 @@ void FFX::AllocTex() {
     FFX::s_screen.m_size.y = height;
     FFX::s_screen.m_texSize.x = width;
     FFX::s_screen.m_texSize.y = height;
+    FFX::s_screen.m_frameBuffer = g_theGxDevicePtr->BackBuffer();
 
     EGxTexTarget target = GetTexTarget();
     int32_t maxSize = static_cast<int32_t>(g_theGxDevicePtr->m_caps.m_texMaxSize[target]);
@@ -938,11 +934,6 @@ void FFX::AllocTex() {
     C2iVector size = { width, height };
     FFX::CreateTex(FFX::s_full[0], size, "FFX Full 0", true, true);
     FFX::CreateTex(FFX::s_full[1], size, "FFX Full 1", false, true);
-
-    size.x = width / 2;
-    size.y = height / 2;
-    FFX::CreateTex(FFX::s_half[0], size, "FFX Half 0", false, true);
-    FFX::CreateTex(FFX::s_half[1], size, "FFX Half 1", false, true);
 
     size.x = width / 4;
     size.y = height / 4;
@@ -969,23 +960,30 @@ void FFX::AllocTex() {
     FFX::s_waveTex.m_texelSize.y = 1.0f / 128.0f;
 }
 
-// OFFSET: %0x008018F0
+// OFFSET: 0x0089D170/0x1405DD560
 void FFX::Start() {
     if (!FFX::s_cvarFFX->m_intValue) {
         return;
     }
 
+    FFX::s_oldFrameBuffer = g_theGxDevicePtr->FrameBufferGet();
+    FFX::s_oldMinX = g_theGxDevicePtr->m_viewport.m_x.m_l;
+    FFX::s_oldMaxX = g_theGxDevicePtr->m_viewport.m_x.m_h;
+    FFX::s_oldMinY = g_theGxDevicePtr->m_viewport.m_y.m_l;
+    FFX::s_oldMaxY = g_theGxDevicePtr->m_viewport.m_y.m_h;
+    FFX::s_oldMinZ = g_theGxDevicePtr->m_viewport.m_z.m_l;
+    FFX::s_oldMaxZ = g_theGxDevicePtr->m_viewport.m_z.m_h;
+
     bool active = false;
 
     for (uint32_t i = 0; i < 3; i++) {
-        if (FFX::s_effect[i] && FFX::s_effect[i]->Valid()) {
-            active = true;
+        if (active) {
             break;
         }
-    }
 
-    if (!active && !FFX::s_portalEffects.Count()) {
-        return;
+        if (FFX::s_effect[i] && FFX::s_effect[i]->Valid()) {
+            active = true;
+        }
     }
 
     CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -1009,7 +1007,7 @@ void FFX::Start() {
     GxXformSetViewport(0.0f, scaleX, 0.0f, scaleY, 0.0f, 1.0f);
 }
 
-// OFFSET: %0x00801A30
+// OFFSET: 0x0089D310/0x1405DD770
 void FFX::FlushPortalEffects() {
     if (!FFX::s_portalEffects.Count() || !FFX::s_full[0].m_texture) {
         return;
@@ -1034,7 +1032,7 @@ void FFX::FlushPortalEffects() {
     FFX::s_portalEffects.SetCount(0);
 }
 
-// OFFSET: %0x00801AF0
+// OFFSET: 0x0089D3D0/0x1405DD880
 void FFX::AddPortalEffect(Effect* effect, const C44Matrix& matrix, const C3Vector* geo, const C3Vector* normal, const CImVector* col0, const CImVector* col1, const C2Vector* tex, const C4Vector* tangent, const uint16_t* idx, const CGxBatch& batch) {
     PortalEffect* portalEffect = FFX::s_portalEffects.New();
     portalEffect->m_effect = effect;
@@ -1054,11 +1052,11 @@ void FFX::AddPortalEffect(Effect* effect, const C44Matrix& matrix, const C3Vecto
 FFX::Effect::Effect() : m_cvar(NULL) {
 }
 
-// OFFSET: %0x00801B80
+// OFFSET: 0x0089D460/0x1405DD9D0
 FFX::Effect::~Effect() {
 }
 
-// OFFSET: %0x00801BD0
+// OFFSET: 0x0089D4B0/0x1405DDA40
 void FFX::SetupGx(Tex* target, int32_t depth) {
     FFX::s_oldProjMtx = g_theGxDevicePtr->m_projection;
     FFX::s_oldProjMtxNative = g_theGxDevicePtr->m_projNative;
@@ -1073,6 +1071,14 @@ void FFX::SetupGx(Tex* target, int32_t depth) {
     GxXformView(FFX::s_oldViewMtx);
 
     C44Matrix projection;
+
+    if (g_theGxDevicePtr->m_caps.m_shaderTargets[0] == 1 && g_theGxDevicePtr->m_caps.m_texelCenterOnEdge && target->m_frameBuffer != g_theGxDevicePtr->BackBuffer()) {
+        projection.a1 = projection.a1 * -1.0f;
+        projection.b1 = projection.b1 * -1.0f;
+        projection.c1 = projection.c1 * -1.0f;
+        projection.d1 = projection.d1 * -1.0f;
+    }
+
     g_theGxDevicePtr->XformSetProjection(projection);
 
     C44Matrix view;
@@ -1088,20 +1094,9 @@ void FFX::SetupGx(Tex* target, int32_t depth) {
     GxRsSet(GxRs_DepthTest, depth);
     GxRsSet(GxRs_DepthWrite, depth);
 
-    g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Color, FFX::s_oldFrameBuffer);
-    g_theGxDevicePtr->DeviceGetRenderTarget(GxBuffers_Depth, FFX::s_oldDepthBuffer);
+    GxFrameBufferSet(target->m_frameBuffer);
 
-    GxRenderTargetSet(GxBuffers_Color, target->m_texture ? TextureGetGxTex(target->m_texture) : NULL, 0);
-    GxRenderTargetSet(GxBuffers_Depth, target->m_depthTexture ? TextureGetGxTex(target->m_depthTexture) : NULL, 0);
-
-    FFX::s_oldMinX = g_theGxDevicePtr->m_viewport.m_x.m_l;
-    FFX::s_oldMaxX = g_theGxDevicePtr->m_viewport.m_x.m_h;
-    FFX::s_oldMinY = g_theGxDevicePtr->m_viewport.m_y.m_l;
-    FFX::s_oldMaxY = g_theGxDevicePtr->m_viewport.m_y.m_h;
-    FFX::s_oldMinZ = g_theGxDevicePtr->m_viewport.m_z.m_l;
-    FFX::s_oldMaxZ = g_theGxDevicePtr->m_viewport.m_z.m_h;
-
-    GxXformSetViewport(0.0f, static_cast<float>(target->m_size.x) / target->m_texSize.x, 0.0f, static_cast<float>(target->m_size.y) / target->m_texSize.y, 0.0f, s_viewportMaxZ);
+    GxXformSetViewport(0.0f, static_cast<float>(target->m_size.x) / target->m_texSize.x, 0.0f, static_cast<float>(target->m_size.y) / target->m_texSize.y, 0.0f, 0.94f);
 }
 
 // PROVEN: 606608f5 IDENTICAL/IDENTICAL

@@ -6,7 +6,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
-// OFFSET: %0x00803580
+// OFFSET: 0x0089EE50/0x1405DFBD0
 PassGlowWave::~PassGlowWave() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -19,12 +19,12 @@ PassGlowWave::~PassGlowWave() {
     }
 }
 
-// OFFSET: %0x008035F0
+// OFFSET: 0x0089EEC0/0x1405DFC20
 bool PassGlowWave::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x00803620
+// OFFSET: 0x0089EEF0/0x1405DFC60
 void PassGlowWave::Execute() {
     CGxTex* mask = TextureGetGxTex(this->m_maskTex);
 
@@ -72,7 +72,7 @@ void PassGlowWave::Execute() {
     FFX::SetupReset();
 }
 
-// OFFSET: %0x00803DF0
+// OFFSET: 0x0089F6C0/0x1405E06E0
 PassGlowWave::PassGlowWave(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : PassGlowBase(inputs, count, output, blend) {
     this->m_permute = 0;
 

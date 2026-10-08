@@ -42,7 +42,7 @@ void EffectGlow::Execute() {
     }
 }
 
-// OFFSET: %0x00802340
+// OFFSET: 0x0089DB90/0x1405DE560
 void EffectGlow::SetParameters(int32_t count, const int32_t* params) {
     this->m_mode = params[0];
 
@@ -55,7 +55,7 @@ void EffectGlow::InitCVars() {
     EffectGlow::s_cvarGlow = CVar::Register("ffxGlow", "full screen glow effect", 1, FFX::s_defaultEnabled ? "1" : "0", FFX::CVarCallback, 1, false, NULL, false);
 }
 
-// OFFSET: %0x008023E0
+// OFFSET: 0x0089DC30/0x1405DE650
 EffectGlow::EffectGlow() {
     this->m_cvar = EffectGlow::s_cvarGlow;
 

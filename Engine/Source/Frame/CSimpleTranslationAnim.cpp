@@ -45,7 +45,7 @@ int32_t CSimpleTranslationAnim::GetScriptMetaTable() {
     return CSimpleTranslationAnim::s_metatable;
 }
 
-// OFFSET: 0x005278E0
+// OFFSET: 0x005278E0/0x140176CA0
 void CSimpleTranslationAnim::SetOffset(const C2Vector& offset) {
     if (offset.x * offset.x + offset.y * offset.y <= 0.00000023841858f) {
         this->m_offset.x = 0.0f;

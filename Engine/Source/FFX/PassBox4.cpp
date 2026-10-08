@@ -4,7 +4,7 @@
 #include "Engine/Source/Gx/Gx.h"
 #include "Engine/Source/Services/Texture.h"
 
-// OFFSET: %0x008044F0
+// OFFSET: 0x0089FCE0/0x1405E0DA0
 PassBox4::PassBox4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
     this->m_permute = 0;
 
@@ -15,7 +15,7 @@ PassBox4::PassBox4(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend
     this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXBox4");
 }
 
-// OFFSET: %0x00804550
+// OFFSET: 0x0089FD40/0x1405E0E10
 PassBox4::~PassBox4() {
     if (this->m_shader) {
         g_theGxDevicePtr->ShaderRelease(this->m_shader);
@@ -23,12 +23,12 @@ PassBox4::~PassBox4() {
     }
 }
 
-// OFFSET: %0x00803F70
+// OFFSET: 0x0089F840/0x1405E08C0
 bool PassBox4::Valid() {
     return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
 }
 
-// OFFSET: %0x008045A0
+// OFFSET: 0x0089FD90/0x1405E0E80
 void PassBox4::Execute() {
     // STATIC: %0x00D9558C
     static const C2Vector s_offsets[4] = { C2Vector(-1.5f, -1.5f), C2Vector(0.5f, -1.5f), C2Vector(0.5f, 0.5f), C2Vector(-1.5f, 0.5f) };

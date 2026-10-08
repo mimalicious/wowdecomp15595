@@ -16,12 +16,13 @@
 #include "Engine/Source/Tempest/CiRect.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "Engine/Source/Tempest/NTempest.h"
+#include "WoW/Source/Game/GameClient/PassColorShift.h"
 #include "WoW/Source/Game/GameClient/PassDeath.h"
 #include "WoW/Source/Game/GameClient/PassFogCombine.h"
 #include "WoW/Source/Game/GameClient/PassFogSeed.h"
 #include "WoW/Source/Game/GameClient/PassNetherBlur.h"
 #include "WoW/Source/Game/GameClient/PassPropagateFog.h"
-#include "WoW/Source/WorldClient/DayNight__DNInfo.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "Engine/Source/Event/FrameTime.h"
 
 // STATIC: %0x00C2B574
@@ -544,7 +545,7 @@ void PassDeath::Execute() {
     g_theGxDevicePtr->RsSet(GxRs_Texture1, TextureGetGxTex(this->m_inputs[1]->m_texture));
 
     CImVector color;
-    color.a = static_cast<uint8_t>(static_cast<int32_t>(DayNight::GetInfo()->m_bands.m_glow * 255.0f));
+    color.a = static_cast<uint8_t>(static_cast<int32_t>(DayNight::GetGlow() * 255.0f));
     color.b = 0xA8;
     color.g = 0x93;
     color.r = 0x53;
@@ -871,7 +872,7 @@ EffectNetherWorld::~EffectNetherWorld() {
 // OFFSET: %0x00A4FF60
 EffectSwirlingFog::EffectSwirlingFog() {
     this->m_fogTex.m_texture = NULL;
-    this->m_fogTex.m_depthTexture = NULL;
+    this->m_fogTex.m_frameBuffer = NULL;
     this->m_fogTex.m_texSize.x = 0;
     this->m_fogTex.m_texSize.y = 0;
     this->m_fogTex.m_size.x = 0;
@@ -879,7 +880,7 @@ EffectSwirlingFog::EffectSwirlingFog() {
     this->m_fogTex.m_texelSize.x = 0.0f;
     this->m_fogTex.m_texelSize.y = 0.0f;
     this->m_seedTex.m_texture = NULL;
-    this->m_seedTex.m_depthTexture = NULL;
+    this->m_seedTex.m_frameBuffer = NULL;
     this->m_seedTex.m_texSize.x = 0;
     this->m_seedTex.m_texSize.y = 0;
     this->m_seedTex.m_size.x = 0;
@@ -934,8 +935,8 @@ EffectSwirlingFog::~EffectSwirlingFog() {
         TextureRelease(this->m_fogTex.m_texture);
     }
 
-    if (this->m_fogTex.m_depthTexture) {
-        TextureRelease(this->m_fogTex.m_depthTexture);
+    if (this->m_fogTex.m_frameBuffer) {
+        g_theGxDevicePtr->FrameBufferDelete(this->m_fogTex.m_frameBuffer);
     }
 
     this->m_fogTex.m_texSize.y = 0;
@@ -945,14 +946,14 @@ EffectSwirlingFog::~EffectSwirlingFog() {
     this->m_fogTex.m_size.x = 0;
     this->m_fogTex.m_texelSize.x = 0.0f;
     this->m_fogTex.m_texelSize.y = 0.0f;
-    this->m_fogTex.m_depthTexture = NULL;
+    this->m_fogTex.m_frameBuffer = NULL;
 
     if (this->m_seedTex.m_texture) {
         TextureRelease(this->m_seedTex.m_texture);
     }
 
-    if (this->m_seedTex.m_depthTexture) {
-        TextureRelease(this->m_seedTex.m_depthTexture);
+    if (this->m_seedTex.m_frameBuffer) {
+        g_theGxDevicePtr->FrameBufferDelete(this->m_seedTex.m_frameBuffer);
     }
 
     this->m_seedTex.m_texSize.x = 0;
@@ -960,7 +961,7 @@ EffectSwirlingFog::~EffectSwirlingFog() {
     this->m_seedTex.m_size.x = 0;
     this->m_seedTex.m_size.y = 0;
     this->m_seedTex.m_texture = NULL;
-    this->m_seedTex.m_depthTexture = NULL;
+    this->m_seedTex.m_frameBuffer = NULL;
     this->m_seedTex.m_texelSize.x = 0.0f;
     this->m_seedTex.m_texelSize.y = 0.0f;
 }
@@ -985,6 +986,106 @@ EffectUnconscious::EffectUnconscious() {
 
 // OFFSET: [%0x00A503E0, %0x00A504C0]
 EffectUnconscious::~EffectUnconscious() {
+    for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
+        if (this->m_passes[i]) {
+            delete this->m_passes[i];
+        }
+    }
+}
+
+// PROVEN: cbda88b5 IDENTICAL/NONE
+// OFFSET: 0x00B0B750
+void PassColorShift::SetParameters(int32_t count, const float* params) {
+    if (count != 9) {
+        return;
+    }
+
+    this->m_matrix[0].x = params[0];
+    this->m_matrix[0].y = params[1];
+    this->m_matrix[0].z = params[2];
+    this->m_matrix[1].x = params[3];
+    this->m_matrix[1].y = params[4];
+    this->m_matrix[1].z = params[5];
+    this->m_matrix[2].x = params[6];
+    this->m_matrix[2].y = params[7];
+    this->m_matrix[2].z = params[8];
+}
+
+// OFFSET: 0x00B0C210
+PassColorShift::PassColorShift(FFX::Tex** inputs, uint32_t count, FFX::Tex* output, EGxBlend blend) : FFX::Pass(inputs, count, output, blend) {
+    this->m_permute = 0;
+
+    if (FFX::s_useRECT) {
+        this->m_permute = 1;
+    }
+
+    this->m_matrix[0] = C4Vector(1.0f, 0.0f, 0.0f, 1.0f);
+    this->m_matrix[1] = C4Vector(0.0f, 1.0f, 0.0f, 1.0f);
+    this->m_matrix[2] = C4Vector(0.0f, 0.0f, 1.0f, 1.0f);
+    this->m_shader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "FFXColorShift");
+}
+
+// PROVEN: 00a46f95 IDENTICAL/NONE
+// OFFSET: 0x00B0C610
+void EffectColorShift::SetParameters(int32_t count, const int32_t* params) {
+    if (count == 9) {
+        static_cast<PassColorShift*>(this->m_passes[0])->SetParameters(9, reinterpret_cast<const float*>(params));
+    }
+}
+
+// OFFSET: [0x00B0E500, 0x00B0E500]
+PassColorShift::~PassColorShift() {
+    if (this->m_shader) {
+        g_theGxDevicePtr->ShaderRelease(this->m_shader);
+        this->m_shader = NULL;
+    }
+}
+
+// OFFSET: 0x00B0E550
+bool PassColorShift::Valid() {
+    return this->m_shader && this->m_shader->m_permutes[this->m_permute].Valid();
+}
+
+// OFFSET: 0x00B0E580
+void PassColorShift::Execute() {
+    FFX::SetupGx(this->m_output, 0);
+
+    C44Matrix posMtx;
+    FFX::SetupGeo_Quad(this->m_output->m_size, &posMtx);
+
+    C44Matrix texMtx;
+    FFX::SetupTexMtx(this->m_inputs[0]->m_size, this->m_inputs[0]->m_texSize, &texMtx, 1);
+
+    g_theGxDevicePtr->RsSet(GxRs_Texture0, TextureGetGxTex(this->m_inputs[0]->m_texture));
+
+    if (FFX::s_passThrough_PCT) {
+        g_theGxDevicePtr->RsSet(GxRs_VertexShader, &FFX::s_passThrough_PCT->m_permutes[0]);
+    } else {
+        GxRsSet(GxRs_VertexShader, 0);
+    }
+
+    g_theGxDevicePtr->RsSet(GxRs_PixelShader, &this->m_shader->m_permutes[this->m_permute]);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 0, &this->m_matrix[0].x, 4);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 1, &this->m_matrix[1].x, 4);
+    g_theGxDevicePtr->ShaderConstantsSet(GxSh_Pixel, 2, &this->m_matrix[2].x, 4);
+
+    CImVector white(0xFF, 0xFF, 0xFF, 0xFF);
+    FFX::SetupVB_PCT(white, posMtx, texMtx);
+    FFX::SetupIB();
+    FFX::Render();
+    FFX::SetupReset();
+}
+
+// OFFSET: 0x00B0EFE0/0x1408D4180
+EffectColorShift::EffectColorShift() {
+    FFX::Tex* inputs[] = { &FFX::s_full[0] };
+
+    FFX::Pass* pass = new (__FILE__, __LINE__) PassColorShift(inputs, 1, &FFX::s_screen, GxBlend_Opaque);
+    this->m_passes.New(pass);
+}
+
+// OFFSET: [0x00B0F060, 0x00B0F170]
+EffectColorShift::~EffectColorShift() {
     for (uint32_t i = 0; i < this->m_passes.Count(); i++) {
         if (this->m_passes[i]) {
             delete this->m_passes[i];

@@ -13,6 +13,7 @@
 #include "Engine/Source/Tempest/C4Vector.h"
 #include "Engine/Source/Tempest/CImVector.h"
 
+class CGxFrameBuffer;
 class CGxShader;
 class CGxTex;
 class CTexture;
@@ -21,7 +22,7 @@ struct CVar;
 namespace FFX {
     struct Tex {
         /* 0000 */ CTexture* m_texture;
-        /* 0004 */ CTexture* m_depthTexture;
+        /* 0004 */ CGxFrameBuffer* m_frameBuffer;
         /* 0008 */ C2iVector m_texSize;
         /* 0010 */ C2iVector m_size;
         /* 0018 */ C2Vector m_texelSize;
@@ -94,15 +95,13 @@ namespace FFX {
     extern Effect* s_effect[3];
     extern uint32_t s_curTimeMs;
     extern float s_tickTimeSec;
-    extern CGxTex* s_oldFrameBuffer;
-    extern CGxTex* s_oldDepthBuffer;
+    extern CGxFrameBuffer* s_oldFrameBuffer;
     extern C3Vector s_camPos;
     extern Tex s_waveTex;
     extern Tex s_screen;
     extern C4Vector psProcWaterConsts[15];
     extern TSGrowableArray<PortalEffect> s_portalEffects;
     extern Tex s_full[2];
-    extern Tex s_half[2];
     extern Tex s_quart[3];
     extern C2iVector s_wavePeriod;
     extern float s_waveScaleX;
@@ -118,6 +117,7 @@ namespace FFX {
     bool CVarCallback(CVar* var, const char* oldValue, const char* value, void* arg);
     void Destroy();
     void DoPass(uint32_t pass);
+    void Finish();
     int32_t EffectIsSet(Effect* effect);
     void FlushPortalEffects();
     C44Matrix* GetOldViewMtx();
