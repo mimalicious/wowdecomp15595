@@ -140,7 +140,7 @@ static const char* s_compatLua =
     "-- Add custom string functions to the string table\n"
     "str.trim = strtrim\n"
     "str.split = strsplit\n"
-    "str.join = strjoin\n"
+    "str.join = strjoin\n";
 
 // PROVEN: c58de60e IDENTICAL/NONE
 // OFFSET: 0x00839900
