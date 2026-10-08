@@ -53,7 +53,7 @@ Blizzard::Jobs::Job::Job(int32_t dependencyCount) {
     }
 }
 
-// OFFSET: [0x007B8340, 0x007BF000]
+// OFFSET: [0x007B8340, 0x007BF000/0x1404B7E60]
 Blizzard::Jobs::Job::~Job() {
 }
 
@@ -85,7 +85,7 @@ bool Blizzard::Jobs::WorkerPool::RunJob(RefPtr<Job> job) {
     return false;
 }
 
-// OFFSET: 0x007BF030
+// OFFSET: 0x007BF030/0x1404B7E90
 Blizzard::Jobs::RefPtr<Blizzard::Jobs::Job> Blizzard::Jobs::WorkerPool::GetCompletedJob() {
     Job* completed;
 

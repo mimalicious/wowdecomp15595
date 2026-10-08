@@ -133,12 +133,14 @@ int32_t Tracker::TrackerHttpDataDownloadCallBack::GetTimeout() {
     return this->m_timeout;
 }
 
+// PROVEN: a007f919 IDENTICAL/NONE
 // OFFSET: 0x007FD0C0
 void Tracker::TrackerHttpDataDownloadCallBack::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }
 
-// OFFSET: 0x00A3AA30
+// PROVEN: bd2f932c IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool Tracker::TrackerHttpDataDownloadCallBack::ShouldBlock() {
     return true;
 }

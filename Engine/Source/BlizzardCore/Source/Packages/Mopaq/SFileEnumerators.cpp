@@ -177,7 +177,7 @@ Blizzard::Mopaq::MPQEnumerator::MPQEnumerator(System_SFile::ARCHIVEREC* handle, 
     this->m_directories.insert(base);
 }
 
-// OFFSET: %0x0074A0F0
+// OFFSET: 0x007F1850
 Blizzard::Mopaq::MPQEnumerator::~MPQEnumerator() {
     System_SFile::ARCHIVEREC* archive = this->m_archive;
     Blizzard::Lock::MutexEnter(archive->m_mutex.m_mutex);
@@ -185,14 +185,14 @@ Blizzard::Mopaq::MPQEnumerator::~MPQEnumerator() {
     Blizzard::Lock::MutexLeave(archive->m_mutex.m_mutex);
 }
 
-// OFFSET: %0x007577E0
+// OFFSET: 0x007F55B0/0x140503700
 bool Blizzard::Mopaq::MPQEnumerator::Initialize() {
     System_SFile::ARCHIVEREC* archive = this->m_archive;
     Blizzard::Lock::MutexEnter(archive->m_mutex.m_mutex);
 
     bool complete = archive->AcquireListfile();
     this->m_complete = complete;
-    this->m_current = archive->m_listfile.begin();
+    this->m_current = archive->m_listfileEntries.begin();
 
     Blizzard::Lock::MutexLeave(archive->m_mutex.m_mutex);
 
@@ -231,24 +231,24 @@ std::string Blizzard::Mopaq::MPQEnumerator::SynthesizeDirectories(const char* pa
     return previous;
 }
 
-// OFFSET: %0x0075D030
+// OFFSET: 0x007FAA00
 int32_t Blizzard::Mopaq::MPQEnumerator::Enumerate(char* name, uint32_t size) {
-    System_SFile::ARCHIVEREC::Listfile& listfile = this->m_archive->m_listfile;
+    std::vector<System_SFile::ListFileEntry>& listfile = this->m_archive->m_listfileEntries;
 
     for (; this->m_current != listfile.end(); ++this->m_current) {
-        if (this->m_current->second == -1) {
+        if (this->m_current->m_blockIndex == -1) {
             continue;
         }
 
-        const std::string& entry = this->m_current->first;
+        const char* entry = this->m_current->m_name;
         size_t prefix = this->m_path.size();
 
-        if (prefix && _strnicmp(entry.c_str(), this->m_path.c_str(), prefix)) {
+        if (prefix && _strnicmp(entry, this->m_path.c_str(), prefix)) {
             continue;
         }
 
         if (this->m_flags & 4) {
-            std::string directory = this->SynthesizeDirectories(entry.c_str());
+            std::string directory = this->SynthesizeDirectories(entry);
 
             if (directory.size()) {
                 if (directory.size() - prefix >= size) {
@@ -270,13 +270,13 @@ int32_t Blizzard::Mopaq::MPQEnumerator::Enumerate(char* name, uint32_t size) {
             continue;
         }
 
-        if (!(this->m_flags & 1) && strchr(entry.c_str() + prefix, '\\')) {
+        if (!(this->m_flags & 1) && strchr(entry + prefix, '\\')) {
             continue;
         }
 
         int32_t result = 2;
 
-        if (SFileFileIsDeleted(this->m_archive, entry.c_str(), 16)) {
+        if (SFileFileIsDeleted(this->m_archive, entry, 16)) {
             if (!(this->m_flags & 8)) {
                 continue;
             }
@@ -284,9 +284,9 @@ int32_t Blizzard::Mopaq::MPQEnumerator::Enumerate(char* name, uint32_t size) {
             result = 4;
         }
 
-        Blizzard::String::Copy(name, entry.c_str() + prefix, size);
+        Blizzard::String::Copy(name, entry + prefix, size);
 
-        if (entry.size() - prefix < size) {
+        if ((entry ? strlen(entry) : 0) - prefix < size) {
             ++this->m_current;
             return result;
         }
@@ -308,7 +308,7 @@ bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::BlockToList::operator<(const Bloc
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::MPQEnumeratorBlockOrder(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags) : MPQEnumerator(handle, path, flags) {
 }
 
-// OFFSET: %0x0074D490
+// OFFSET: [0x007F1920, 0x007F1970]
 Blizzard::Mopaq::MPQEnumeratorBlockOrder::~MPQEnumeratorBlockOrder() {
 }
 
@@ -320,11 +320,11 @@ bool Blizzard::Mopaq::MPQEnumeratorBlockOrder::Initialize() {
     this->m_complete = archive->AcquireListfile();
     this->m_blocks.clear();
 
-    for (System_SFile::ARCHIVEREC::Listfile::iterator it = archive->m_listfile.begin(); it != archive->m_listfile.end(); ++it) {
-        if (it->second != -1) {
+    for (std::vector<System_SFile::ListFileEntry>::iterator it = archive->m_listfileEntries.begin(); it != archive->m_listfileEntries.end(); ++it) {
+        if (it->m_blockIndex != -1) {
             BlockToList block;
-            block.m_blockIndex = it->second;
-            block.m_name = it->first;
+            block.m_blockIndex = it->m_blockIndex;
+            block.m_name = it->m_name;
             this->m_blocks.push_back(block);
         }
     }
@@ -344,15 +344,15 @@ int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t
             continue;
         }
 
-        const std::string& entry = this->m_block->m_name;
+        const char* entry = this->m_block->m_name;
         size_t prefix = this->m_path.size();
 
-        if (prefix && _strnicmp(entry.c_str(), this->m_path.c_str(), prefix)) {
+        if (prefix && _strnicmp(entry, this->m_path.c_str(), prefix)) {
             continue;
         }
 
         if (this->m_flags & 4) {
-            std::string directory = this->SynthesizeDirectories(entry.c_str());
+            std::string directory = this->SynthesizeDirectories(entry);
 
             if (directory.size()) {
                 if (directory.size() - prefix >= size) {
@@ -374,13 +374,13 @@ int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t
             continue;
         }
 
-        if (!(this->m_flags & 1) && strchr(entry.c_str() + prefix, '\\')) {
+        if (!(this->m_flags & 1) && strchr(entry + prefix, '\\')) {
             continue;
         }
 
         int32_t result = 2;
 
-        if (SFileFileIsDeleted(this->m_archive, entry.c_str(), 0)) {
+        if (SFileFileIsDeleted(this->m_archive, entry, 0)) {
             if (!(this->m_flags & 8)) {
                 continue;
             }
@@ -388,9 +388,9 @@ int32_t Blizzard::Mopaq::MPQEnumeratorBlockOrder::Enumerate(char* name, uint32_t
             result = 4;
         }
 
-        Blizzard::String::Copy(name, entry.c_str() + prefix, size);
+        Blizzard::String::Copy(name, entry + prefix, size);
 
-        if (entry.size() - prefix < size) {
+        if ((entry ? strlen(entry) : 0) - prefix < size) {
             ++this->m_block;
             return result;
         }

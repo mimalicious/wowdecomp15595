@@ -15,7 +15,7 @@
 Blizzard::Thread::LocalObject<System_SFile::RawReadInfo> System_SFile::s_rawReadInfo;
 
 // STATIC: #0x00AB9090
-static const char* s_specialFiles[3] = { "(signature)", "(listfile)", "(attributes)" };
+const char* System_SFile::ListFileParser::k_specialFiles[3] = { "(signature)", "(listfile)", "(attributes)" };
 
 // INLINED
 System_SFile::RawReadInfo::RawReadInfo() {
@@ -142,97 +142,210 @@ bool Blizzard::Mopaq::SFileLoadFile(System_SFile::ARCHIVEREC* handle, const char
     return result;
 }
 
-// OFFSET: %0x0070DA20
-bool System_SFile::ListfileParser::Next() {
-    this->m_token = this->m_data + this->m_pos;
+// INLINED
+System_SFile::ListFileBlock::ListFileBlock(uint32_t size) {
+    this->m_data = new char[size];
+    this->m_size = size;
+    this->m_free = size;
+    this->m_next = NULL;
+    memset(this->m_data, 0, size);
+}
 
-    while (this->m_pos < this->m_size) {
-        char c = this->m_data[this->m_pos];
+// OFFSET: 0x007B1C90
+void System_SFile::ListFile::FreeBlocks(ListFileBlock* blocks) {
+    while (blocks) {
+        ListFileBlock* block = blocks;
+        blocks = blocks->m_next;
+        delete[] block->m_data;
+        delete block;
+    }
+}
+
+// INLINED
+System_SFile::ListFile::ListFile() {
+    this->m_blocks = NULL;
+}
+
+// INLINED
+System_SFile::ListFile::~ListFile() {
+    FreeBlocks(this->m_blocks);
+}
+
+// OFFSET: 0x007D3960
+void System_SFile::ListFile::Parse(char* data, int64_t size) {
+    char* start = data;
+
+    for (int64_t pos = 0; pos < size; pos++) {
+        char c = data[pos];
 
         if (c == '\r' || c == '\n') {
-            this->m_data[this->m_pos] = '\0';
-            this->m_pos++;
+            data[pos] = '\0';
+            pos++;
 
-            if (this->m_pos < this->m_size && this->m_data[this->m_pos] == '\n') {
-                this->m_pos++;
+            if (pos < size && data[pos] == '\n') {
+                data[pos] = '\0';
+                pos++;
             }
 
-            return false;
+            this->m_names.push_back(start);
+            start = data + pos;
+        }
+    }
+}
+
+// OFFSET: 0x007D3A50
+bool System_SFile::ListFile::Set(const char* data, int64_t size) {
+    this->m_names.clear();
+
+    if (this->m_blocks) {
+        FreeBlocks(this->m_blocks);
+    }
+
+    this->m_blocks = new ListFileBlock(static_cast<uint32_t>(size));
+    memcpy(this->m_blocks->m_data, data, static_cast<uint32_t>(size));
+    this->m_blocks->m_free = 0;
+    this->Parse(this->m_blocks->m_data, size);
+
+    return true;
+}
+
+// OFFSET: 0x007D3B60
+const char* System_SFile::ListFile::Add(const char* name) {
+    if (!this->m_blocks) {
+        this->m_blocks = new ListFileBlock(260000);
+    }
+
+    ListFileBlock* block = this->m_blocks;
+    char* copy;
+
+    do {
+        uint32_t length = Blizzard::String::Length(name);
+        copy = NULL;
+
+        if (length + 1 < block->m_free) {
+            copy = block->m_data + block->m_size - block->m_free;
+            memcpy(copy, name, length);
+            block->m_free -= length + 1;
         }
 
-        this->m_pos++;
+        if (!block->m_next) {
+            block->m_next = new ListFileBlock(260000);
+        }
+
+        block = block->m_next;
+    } while (!copy);
+
+    this->m_names.push_back(copy);
+
+    return copy;
+}
+
+// OFFSET: 0x007F4A80
+bool System_SFile::ListFile::Load(ARCHIVEREC* archive) {
+    Blizzard::Mopaq::HSFILERecord* file = NULL;
+    bool result = false;
+
+    if (Blizzard::Mopaq::SFileOpenFileEx(archive, "(listfile)", s_emptyMd5, 16, &file) != 1) {
+        return false;
     }
 
-    if (this->m_special >= 2) {
-        return true;
+    uint32_t size = static_cast<uint32_t>(file->GetFileSize());
+    this->m_blocks = new ListFileBlock(size);
+
+    if (Blizzard::Mopaq::SFileReadFile(file, this->m_blocks->m_data, size, NULL)) {
+        this->m_blocks->m_free = 0;
+        this->Parse(this->m_blocks->m_data, size);
+        result = true;
     }
 
-    this->m_special++;
-    this->m_token = s_specialFiles[this->m_special];
-    this->m_isSpecial = true;
+    if (file) {
+        if (file->m_handle && !file->m_handle->Release()) {
+            file->m_handle = NULL;
+        }
+
+        delete file;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x007D36B0
+System_SFile::ListFileParser::ListFileParser(ListFile* listfile) {
+    this->m_listfile = listfile;
+    this->unk_000C = 0;
+    this->m_token = NULL;
+    this->m_isSpecial = false;
+    this->m_current = listfile->m_names.begin();
+
+    for (int32_t i = 0; i < 3; i++) {
+        this->m_specials.insert(k_specialFiles[i]);
+    }
+}
+
+// OFFSET: 0x007D01F0
+bool System_SFile::ListFileParser::Next() {
+    if (this->m_current == this->m_listfile->m_names.end()) {
+        if (this->m_specials.empty()) {
+            return true;
+        }
+
+        this->m_token = *this->m_specials.begin();
+        this->m_specials.erase(this->m_specials.begin());
+        this->m_isSpecial = true;
+
+        return false;
+    }
+
+    this->m_token = *this->m_current;
+    this->m_isSpecial = false;
+    ++this->m_current;
+
+    for (int32_t i = 0; i < 3 && !this->m_isSpecial; i++) {
+        if (k_specialFiles[i] && this->m_token && !strcmp(k_specialFiles[i], this->m_token)) {
+            this->m_isSpecial = true;
+            this->m_specials.erase(k_specialFiles[i]);
+        }
+    }
 
     return false;
 }
 
 // OFFSET: 0x007F5340/0x140503350
 bool System_SFile::ARCHIVEREC::FillNewHashTable(int32_t hashBits, char* listfile, int32_t size) {
-    bool loaded = false;
-    void* data = NULL;
-    uint32_t loadedSize = 0;
-
-    if (listfile) {
-        data = listfile;
-    } else {
-        loaded = true;
-
-        if (!Blizzard::Mopaq::SFileLoadFile(this, "(listfile)", &data, &loadedSize, 0, 16)) {
-            return Blizzard::Mopaq::SFileFileExists(this, "(listfile)", 16, NULL) == 0;
-        }
-
-        size = loadedSize;
+    if (!this->m_listfile) {
+        this->m_listfile = new ListFile();
     }
 
-    ListfileParser parser;
-    parser.m_data = static_cast<char*>(data);
-    parser.m_pos = 0;
-    parser.m_size = size;
-    parser.m_special = 0;
-    parser.m_token = NULL;
-    parser.m_isSpecial = false;
+    if (listfile) {
+        this->m_listfile->Set(listfile, size);
+    } else if (!this->m_listfile->Load(this)) {
+        return Blizzard::Mopaq::SFileFileExists(this, "(listfile)", 16, NULL) == 0;
+    }
+
+    ListFileParser parser(this->m_listfile);
 
     while (!parser.Next()) {
         const char* name = parser.m_token;
         uint32_t hashIndex = SearchHashTable(this, name, true);
 
         if (hashIndex == -1) {
-            if (parser.m_isSpecial) {
-                continue;
+            if (!parser.m_isSpecial) {
+                return false;
             }
 
-            if (loaded) {
-                SMemFree(data, __FILE__, __LINE__, 0);
-            }
-
-            return false;
+            continue;
         }
 
         if (!this->m_hashEntryTable->AddEntry(name, this->m_hashTable[hashIndex].m_blockIndex, this->m_blockEntryTable)) {
             if (!this->IncreaseHashBits(&hashBits)) {
-                if (loaded) {
-                    SMemFree(data, __FILE__, __LINE__, 0);
-                }
-
                 return false;
             }
 
-            parser.m_pos = 0;
-            parser.m_special = 0;
+            parser.unk_000C = 0;
+            parser.m_current = parser.m_listfile->m_names.begin();
+            parser.m_token = NULL;
             parser.m_isSpecial = false;
         }
-    }
-
-    if (loaded) {
-        SMemFree(data, __FILE__, __LINE__, 0);
     }
 
     return true;

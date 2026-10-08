@@ -19,7 +19,7 @@ static bool IsStreamedFile(Blizzard::Mopaq::HSFILERecord* file) {
     return stream && stream->m_streaming && stream->m_streaming->m_unit;
 }
 
-// OFFSET: 0x007EE330
+// OFFSET: 0x007EE330/0x1404F5E70
 static bool MarkOffsetRemote(Blizzard::Mopaq::MpqHandleRecord* handle, int64_t offset, uint32_t size) {
     System_Mopaq::IOHandler* handler = handle->m_handler;
     Blizzard::Mopaq::MpqHandleRecord* base = handler->m_base.m_handle;
@@ -41,7 +41,7 @@ static bool MarkOffsetRemote(Blizzard::Mopaq::MpqHandleRecord* handle, int64_t o
     return true;
 }
 
-// OFFSET: 0x007EE3E0
+// OFFSET: 0x007EE3E0/0x1404F5F60
 static bool RepairChunk(Blizzard::Mopaq::HSFILERecord* file, int64_t offset, uint32_t size) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected bad section: offset = %lld, length = %d\n", offset, size);
     Blizzard::Repair::ReportRepairCorruption("Section_corrupted", offset, size);
@@ -64,7 +64,7 @@ static bool RepairChunk(Blizzard::Mopaq::HSFILERecord* file, int64_t offset, uin
     return result;
 }
 
-// OFFSET: 0x007DBE90
+// OFFSET: 0x007DBE90/0x1404DF2D0
 static bool MakeSectionRemote(Blizzard::Mopaq::MpqHandleRecord* handle, int64_t offset, uint32_t size) {
     Blizzard::Mopaq::MpqHandleRecord* archiveHandle = handle->m_archive->m_file->m_handle;
     Blizzard::File::StreamRecord* stream = archiveHandle ? archiveHandle->m_file : NULL;
@@ -84,7 +84,7 @@ static bool MakeSectionRemote(Blizzard::Mopaq::MpqHandleRecord* handle, int64_t 
     return Blizzard::Streaming::MakeRemote(stream, handle->m_blockEntry.m_offset + compressedSize, static_cast<uint32_t>(16 * chunks)) != 0;
 }
 
-// OFFSET: 0x007F9E10
+// OFFSET: 0x007F9E10/0x140509B20
 static bool RepairCacheFile(Blizzard::Mopaq::MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t size) {
     bool deleted = Blizzard::Mopaq::SFileDeleteFile(handle->m_archive, handle->m_name, 0) != 0;
     const char* fileName = handle->m_name;
@@ -132,7 +132,7 @@ static bool RepairCacheFile(Blizzard::Mopaq::MpqHandleRecord* handle, uint8_t* b
     return true;
 }
 
-// OFFSET: 0x007FA010
+// OFFSET: 0x007FA010/0x140509D50
 static bool RepairFile(Blizzard::Mopaq::MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t size) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected corruption of %s in section: offset = %lld, length = %d\n", handle->m_name, offset, size);
     Blizzard::Repair::ReportRepairCorruption("Section_corrupted", offset, size);
@@ -211,7 +211,7 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleLoadAndVerify(HSFILER
     return result;
 }
 
-// OFFSET: 0x007EE520
+// OFFSET: 0x007EE520/0x1404F60E0
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMPQHeaderV3Error(HSFILERecord* file, uint8_t* buffer, int64_t offset, uint32_t size) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected Mopaq v3 header error: offset = %lld, length = %d\n", offset, size);
 
@@ -259,7 +259,7 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMPQHeaderV3Error(HSFI
     }
 }
 
-// OFFSET: 0x007EE960
+// OFFSET: 0x007EE960/0x1404F6BC0
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMD5BlockError(MpqHandleRecord* handle, uint8_t* buffer, int64_t md5Offset, uint32_t block, int32_t blockSize, uint32_t size, uint8_t* md5) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected corruption for MD5 block #%d, amount = %d\n", block, size);
     Blizzard::Repair::ReportRepairCorruption("MD5block_corrupted", block, size);
@@ -329,7 +329,8 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleMD5BlockError(MpqHand
     return result;
 }
 
-// OFFSET: 0x007FA280
+// PROVEN: 192ac859 IDENTICAL/NONE
+// OFFSET: 0x007FA280/0x14050A050
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleInitSectorTableError(MpqHandleRecord* handle, uint8_t* table, int64_t offset, uint32_t size) {
     Blizzard::Log::Printf(0, "Logs/repair-on-demand.log", "Detected MPQ sector table error: offset = %lld, length = %d\n", offset, size);
 
@@ -345,12 +346,13 @@ bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleInitSectorTableError(
     return RepairFile(handle, table, offset, size);
 }
 
+// PROVEN: 3d0c94c1 IDENTICAL/NONE
 // OFFSET: 0x007FA310
 bool Blizzard::Mopaq::MpqRepairOnDemandErrorHandler::HandleNonStreamableFileError(MpqHandleRecord* handle, uint8_t* buffer, int64_t offset, uint32_t count) {
     return RepairCacheFile(handle, buffer, offset, count);
 }
 
-// OFFSET: 0x007EEE80
+// OFFSET: 0x007EEE80/0x1404F70D0
 bool Blizzard::Mopaq::HSFILERecord::Repair() {
     MpqHandleRecord* handle = this->m_handle;
 
@@ -375,7 +377,7 @@ bool Blizzard::Mopaq::HSFILERecord::Repair() {
     return false;
 }
 
-// OFFSET: 0x007F3340
+// OFFSET: 0x007F3340/0x1405006A0
 bool PurgeCacheFile(Blizzard::Mopaq::HSFILERecord* file) {
     Blizzard::Mopaq::MpqHandleRecord* handle = file->m_handle;
 

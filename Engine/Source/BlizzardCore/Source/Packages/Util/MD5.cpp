@@ -62,7 +62,7 @@ void Blizzard::Util::MD5::Finish(uint8_t* digest) {
     }
 }
 
-// OFFSET: 0x007A9970
+// OFFSET: 0x007A9970/0x14049F6F0
 void Blizzard::Util::MD5::Process(const uint8_t* block) {
     uint32_t a = this->m_state[0];
     uint32_t b = this->m_state[1];
@@ -153,7 +153,7 @@ void Blizzard::Util::MD5::Process(const uint8_t* block) {
     this->m_state[3] += d;
 }
 
-// OFFSET: 0x007B01C0
+// OFFSET: 0x007B01C0/0x1404A4FA0
 void Blizzard::Util::MD5::Process(const void* data, uint32_t size) {
     const uint8_t* p = static_cast<const uint8_t*>(data);
     uint32_t left = size;

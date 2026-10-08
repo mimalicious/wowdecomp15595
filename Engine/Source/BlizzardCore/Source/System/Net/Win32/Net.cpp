@@ -11,7 +11,7 @@
 // STATIC: 0x00EB57D4
 int32_t System_Net::s_lastError;
 
-// OFFSET: 0x007AD900
+// OFFSET: 0x007AD900/0x1404A3590
 int32_t Blizzard::Net::TranslateError(int32_t context) {
     int32_t error = WSAGetLastError();
 
@@ -54,7 +54,7 @@ bool Blizzard::Net::SetNonBlocking(Socket s) {
     return result == 0;
 }
 
-// OFFSET: 0x007AD790
+// OFFSET: 0x007AD790/0x1404A33B0
 bool Blizzard::Net::Select(Socket* readSockets, Socket* writeSockets, int64_t timeout) {
     fd_set readSet;
     fd_set writeSet;

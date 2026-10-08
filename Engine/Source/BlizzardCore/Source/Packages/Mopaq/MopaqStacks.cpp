@@ -399,6 +399,7 @@ bool System_Mopaq::base_close(Blizzard::Mopaq::Mpqsystem* system, MpqParams* par
     return true;
 }
 
+// PROVEN: de0749db IDENTICAL/NONE
 // OFFSET: 0x007B24E0
 bool System_Mopaq::base_read(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     return Blizzard::File::Read(parms->m_handle->m_file, parms->m_buffer, parms->m_offset, &parms->m_count, 0);
@@ -816,6 +817,7 @@ bool System_Mopaq::align_write(Blizzard::Mopaq::Mpqsystem* system, MpqParams* pa
     return result;
 }
 
+// PROVEN: 7e82188f IDENTICAL/NONE
 // OFFSET: 0x007AB500
 bool System_Mopaq::align_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_align->m_size;
@@ -1260,6 +1262,7 @@ bool System_Mopaq::verify_flush(Blizzard::Mopaq::Mpqsystem* system, MpqParams* p
     return CallNext(system, parms);
 }
 
+// PROVEN: 2b711040 IDENTICAL/NONE
 // OFFSET: 0x007AB5D0
 bool System_Mopaq::verify_getfilesize(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     parms->m_offset = parms->m_handle->m_verify->m_size;

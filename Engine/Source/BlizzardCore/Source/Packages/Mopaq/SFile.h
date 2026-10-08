@@ -2,6 +2,8 @@
 #define ENGINE_SOURCE_BLIZZARDCORE_SOURCE_PACKAGES_MOPAQ_SFILE_H
 
 #include <cstdint>
+#include <set>
+#include <vector>
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Digest.h"
 #include "Engine/Source/BlizzardCore/Source/System/Thread/ThreadLocalStorage.h"
 
@@ -15,16 +17,42 @@ struct RawReadInfo {
     RawReadInfo();
 };
 
-struct ListfileParser {
+struct ListFileBlock {
     /* 0000 */ char* m_data;
-    /* 0004 */ uint32_t m_pos;
-    /* 0008 */ uint32_t m_size;
-    /* 000C */ uint32_t m_special;
-    /* 0010 */ char unk_0010[260];
-    /* 0114 */ const char* m_token;
-    /* 0118 */ bool m_isSpecial;
-    /* 0119 */ uint8_t unk_0119[3];
+    /* 0004 */ uint32_t m_size;
+    /* 0008 */ uint32_t m_free;
+    /* 000C */ ListFileBlock* m_next;
 
+    ListFileBlock(uint32_t size);
+};
+
+class ListFile {
+    public:
+    static void FreeBlocks(ListFileBlock* blocks);
+
+    /* 0000 */ std::vector<const char*> m_names;
+    /* 0018 */ ListFileBlock* m_blocks;
+
+    ListFile();
+    ~ListFile();
+    const char* Add(const char* name);
+    bool Load(ARCHIVEREC* archive);
+    void Parse(char* data, int64_t size);
+    bool Set(const char* data, int64_t size);
+};
+
+struct ListFileParser {
+    static const char* k_specialFiles[3];
+
+    /* 0000 */ std::set<const char*> m_specials;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ const char* m_token;
+    /* 0014 */ bool m_isSpecial;
+    /* 0015 */ uint8_t unk_0015[3];
+    /* 0018 */ ListFile* m_listfile;
+    /* 001C */ std::vector<const char*>::iterator m_current;
+
+    ListFileParser(ListFile* listfile);
     bool Next();
 };
 

@@ -47,7 +47,7 @@ static void HexEncode(int32_t count, const uint8_t* src, char* dst) {
     }
 }
 
-// OFFSET: 0x007A2970
+// OFFSET: 0x007A2970/0x1404994F0
 static void NotifyLauncher() {
     if (!s_requestInitialized) {
         DWORD processId = GetCurrentProcessId();
@@ -154,7 +154,8 @@ static void NotifyLauncher() {
     }
 }
 
-// OFFSET: 0x007A2D80
+// PROVEN: 0adbddc5 IDENTICAL/NONE
+// OFFSET: 0x007A2D80/0x140499910
 void BGLoading::UpdateLauncherNotification() {
     NotifyLauncher();
 }

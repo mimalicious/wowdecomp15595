@@ -42,7 +42,7 @@ class MPQEnumerator : public Enumerator {
     public:
     /* 0028 */ bool m_complete;
     /* 0029 */ uint8_t unk_0029[3];
-    /* 002C */ System_SFile::ARCHIVEREC::Listfile::iterator m_current;
+    /* 002C */ std::vector<System_SFile::ListFileEntry>::iterator m_current;
     /* 0034 */ std::set<std::string> m_directories;
 
     MPQEnumerator(System_SFile::ARCHIVEREC* handle, const char* path, uint32_t flags);
@@ -56,7 +56,7 @@ class MPQEnumeratorBlockOrder : public MPQEnumerator {
     public:
     struct BlockToList {
         /* 0000 */ uint32_t m_blockIndex;
-        /* 0004 */ std::string m_name;
+        /* 0004 */ const char* m_name;
 
         bool operator<(const BlockToList& other) const;
     };

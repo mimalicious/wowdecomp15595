@@ -417,6 +417,8 @@ System_SFile::ARCHIVEREC::~ARCHIVEREC() {
 
         this->m_file = NULL;
     }
+
+    delete this->m_listfile;
 }
 
 // OFFSET: 0x007DBD60
@@ -430,6 +432,7 @@ System_SFile::ARCHIVEREC::ARCHIVEREC() {
     this->m_minFileSize = 0;
     this->m_blockEntryTable = NULL;
     this->m_hashEntryTable = NULL;
+    this->m_listfile = NULL;
     this->m_writeReservationEnd = -1;
     this->m_header.m_rawChunkSize = 0;
 }
@@ -647,7 +650,7 @@ static void FixupOldHeader(System_SFile::MPQHEADER* header) {
     }
 }
 
-// OFFSET: %0x00713CD0
+// OFFSET: 0x007B1840
 static bool ValidateHeader(System_SFile::ARCHIVEREC* archive, int64_t fileSize) {
     System_SFile::MPQHEADER* header = &archive->m_header;
 
@@ -679,7 +682,7 @@ static bool ValidateHeader(System_SFile::ARCHIVEREC* archive, int64_t fileSize) 
 
     FixupOldHeader(header);
 
-    int64_t available = fileSize - archive->m_archiveOffset;
+    int64_t available = fileSize;
     int64_t hashPos = (static_cast<int64_t>(header->m_hashTablePosHi) << 32) | header->m_hashTablePos;
     int64_t blockPos = (static_cast<int64_t>(header->m_blockTablePosHi) << 32) | header->m_blockTablePos;
     int64_t hiBlockPos = static_cast<int64_t>(header->m_hiBlockTablePos);
@@ -2032,6 +2035,7 @@ bool Blizzard::Mopaq::SFileCreateArchive(HSFILERecord* file, const char* name, i
     archive->WriteArchiveHeader();
     ArchiveCheckpoint::CreateRestorePoint(archive);
     archive->m_closeCallback = System_SFile::ARCHIVEREC::WriteArchiveChanges;
+    archive->m_listfile = new System_SFile::ListFile();
     archive->m_listfileLoaded = true;
     archive->m_listfileRefcount = 1;
     archive->m_patchMetadataLoaded = false;
@@ -3034,10 +3038,27 @@ char* System_SFile::BackslashPath(const char* path, char* buffer, uint32_t size)
     return buffer;
 }
 
-// OFFSET: 0x007C8510
+// OFFSET: 0x007B1CC0
+bool System_SFile::ListFileEntry::operator<(const ListFileEntry& other) const {
+    int32_t compare;
+
+    if (this->m_name == other.m_name) {
+        compare = 0;
+    } else if (!this->m_name) {
+        compare = -1;
+    } else if (!other.m_name) {
+        compare = 1;
+    } else {
+        compare = _stricmp(this->m_name, other.m_name);
+    }
+
+    return compare < 0 || (compare <= 0 && this->m_blockIndex < other.m_blockIndex);
+}
+
+// INLINED
 void System_SFile::ARCHIVEREC::ReleaseListfile() {
     if (--this->m_listfileRefcount <= 0) {
-        this->m_listfile.clear();
+        this->m_listfileEntries.clear();
         this->m_listfileLoaded = false;
     }
 }
@@ -3102,7 +3123,7 @@ static uint64_t HashName(const char* name) {
     return System_MPQEncrypt::Hash(name, 1) | static_cast<uint64_t>(System_MPQEncrypt::Hash(name, 2)) << 32;
 }
 
-// OFFSET: %0x007556D0
+// OFFSET: 0x007D3CC0/0x1404D3B40
 void System_SFile::ARCHIVEREC::AcquireListfileUncompressedBlockHash() {
     std::vector<BlockHash> hashes;
     uint32_t count = static_cast<uint32_t>(this->m_hashTable.size());
@@ -3121,6 +3142,8 @@ void System_SFile::ARCHIVEREC::AcquireListfileUncompressedBlockHash() {
     std::sort(hashes.begin(), hashes.end());
 
     uint32_t unlisted = static_cast<uint32_t>(hashes.size());
+    this->m_listfileEntries.reserve(4);
+
     const char* special[4];
     special[0] = "(listfile)";
     special[1] = "(attributes)";
@@ -3137,7 +3160,10 @@ void System_SFile::ARCHIVEREC::AcquireListfileUncompressedBlockHash() {
         std::vector<BlockHash>::iterator it = std::lower_bound(hashes.begin(), hashes.end(), probe);
 
         if (it != hashes.end() && it->m_hash == probe.m_hash) {
-            this->m_listfile.insert(std::pair<const std::string, uint32_t>(name, -1));
+            ListFileEntry entry;
+            entry.m_name = name;
+            entry.m_blockIndex = -1;
+            this->m_listfileEntries.push_back(entry);
 
             do {
                 if (!it->m_listed) {
@@ -3150,77 +3176,37 @@ void System_SFile::ARCHIVEREC::AcquireListfileUncompressedBlockHash() {
         }
     }
 
-    Blizzard::Util::Digest<16> md5 = s_emptyMd5;
-    Blizzard::Mopaq::HSFILERecord* file = NULL;
+    this->m_listfileEntries.reserve(this->m_listfile->m_names.size());
 
-    if (Blizzard::Mopaq::SFileOpenFileEx(this, "(listfile)", md5, 16, &file) == 1) {
-        uint32_t size = static_cast<uint32_t>(file->GetFileSize());
+    for (std::vector<const char*>::iterator name = this->m_listfile->m_names.begin(); name != this->m_listfile->m_names.end(); ++name) {
+        BlockHash probe;
+        probe.m_index = -1;
+        probe.m_hash = HashName(*name);
+        probe.m_listed = false;
 
-        if (size != 0xFFFFFFFF) {
-            char buffer[4096];
-            char line[1024];
-            char* cursor = line;
-            uint32_t pos = 0;
-            uint32_t loaded = 0;
+        std::vector<BlockHash>::iterator it = std::lower_bound(hashes.begin(), hashes.end(), probe);
 
-            while (pos < size) {
-                if (pos < loaded) {
-                    char c = buffer[pos & 0xFFF];
+        if (it != hashes.end() && it->m_hash == probe.m_hash) {
+            ListFileEntry entry;
+            entry.m_name = *name;
+            entry.m_blockIndex = this->m_hashTable[it->m_index].m_blockIndex;
+            this->m_listfileEntries.push_back(entry);
 
-                    if (c == '\r' || c == '\n') {
-                        if (cursor != line) {
-                            *cursor = 0;
-
-                            BlockHash probe;
-                            probe.m_index = -1;
-                            probe.m_hash = HashName(line);
-                            probe.m_listed = false;
-
-                            std::vector<BlockHash>::iterator it = std::lower_bound(hashes.begin(), hashes.end(), probe);
-
-                            if (it != hashes.end() && it->m_hash == probe.m_hash) {
-                                this->m_listfile.insert(std::pair<const std::string, uint32_t>(line, this->m_hashTable[it->m_index].m_blockIndex));
-
-                                do {
-                                    if (!it->m_listed) {
-                                        unlisted--;
-                                        it->m_listed = true;
-                                    }
-
-                                    ++it;
-                                } while (it != hashes.end() && it->m_hash == probe.m_hash);
-                            } else {
-                                Blizzard::String::QuickFormat<1024> message("Listfile references unknown file \"%s\"!\n", line);
-                                fputs(message.m_buffer, stderr);
-                            }
-
-                            cursor = line;
-                        }
-                    } else {
-                        *cursor++ = c;
-
-                        if (cursor >= line + sizeof(line)) {
-                            pos = size;
-                            continue;
-                        }
-                    }
-
-                    pos++;
-                    continue;
+            do {
+                if (!it->m_listed) {
+                    unlisted--;
+                    it->m_listed = true;
                 }
 
-                uint32_t end = std::min(loaded + 4096, size);
-
-                if (loaded >= end || !Blizzard::Mopaq::SFileReadFile(file, buffer, end - loaded, NULL)) {
-                    break;
-                }
-
-                loaded = end;
-            }
+                ++it;
+            } while (it != hashes.end() && it->m_hash == probe.m_hash);
+        } else {
+            Blizzard::String::QuickFormat<1024> message("Listfile references unknown file \"%s\"!\n", *name);
+            fputs(message.m_buffer, stderr);
         }
-
-        Blizzard::Mopaq::SFileCloseFile(file);
     }
+
+    std::sort(this->m_listfileEntries.begin(), this->m_listfileEntries.end());
 
     if (unlisted) {
         Blizzard::String::QuickFormat<1024> message("Archive \"%s\" has an incomplete listfile!\n", this->m_name);
@@ -3231,53 +3217,40 @@ void System_SFile::ARCHIVEREC::AcquireListfileUncompressedBlockHash() {
     }
 }
 
-// OFFSET: %0x007567F0
+// OFFSET: 0x007D4430
 void System_SFile::ARCHIVEREC::AcquireListfileCompressedBlockHash() {
-    void* data = NULL;
-    uint32_t size = 0;
-
-    if (!Blizzard::Mopaq::SFileLoadFile(this, "(listfile)", &data, &size, 0, 16)) {
-        this->m_listfileLoaded = false;
-        return;
-    }
-
-    ListfileParser parser;
-    parser.m_data = static_cast<char*>(data);
-    parser.m_pos = 0;
-    parser.m_size = size;
-    parser.m_special = 0;
-    parser.m_token = NULL;
-    parser.m_isSpecial = false;
+    ListFileParser parser(this->m_listfile);
 
     while (!parser.Next()) {
         if (parser.m_isSpecial) {
             continue;
         }
 
-        const char* name = parser.m_token;
-        uint64_t hash = HashEntryTable::CalculateHash(name);
-        uint32_t blockIndex = this->m_hashEntryTable->GetEntry(hash, this->m_blockEntryTable);
-        this->m_listfile.insert(std::pair<const std::string, uint32_t>(name, blockIndex));
+        uint64_t hash = HashEntryTable::CalculateHash(parser.m_token);
+        ListFileEntry entry;
+        entry.m_name = parser.m_token;
+        entry.m_blockIndex = this->m_hashEntryTable->GetEntry(hash, this->m_blockEntryTable);
+        this->m_listfileEntries.push_back(entry);
     }
 
     this->m_listfileLoaded = true;
-
-    if (data) {
-        SMemFree(data, __FILE__, __LINE__, 0);
-    }
 }
 
-// OFFSET: %0x00756970
+// OFFSET: 0x007F4BE0/0x140502820
 bool System_SFile::ARCHIVEREC::AcquireListfile() {
     if (this->m_listfileRefcount++ <= 0) {
         this->InitializeTables();
 
-        if (this->m_hashTable.empty() && this->m_hashEntryTable) {
-            this->AcquireListfileCompressedBlockHash();
-            return this->m_listfileLoaded;
+        if (!this->m_listfile) {
+            this->m_listfile = new ListFile();
+            this->m_listfile->Load(this);
         }
 
-        this->AcquireListfileUncompressedBlockHash();
+        if (!this->m_hashTable.empty() || !this->m_hashEntryTable) {
+            this->AcquireListfileUncompressedBlockHash();
+        } else {
+            this->AcquireListfileCompressedBlockHash();
+        }
     }
 
     return this->m_listfileLoaded;
@@ -3291,17 +3264,15 @@ bool System_SFile::RebuildHashTable(ARCHIVEREC* archive, uint32_t hashSize) {
     }
 
     std::vector<NameHash> names;
-    names.reserve(archive->m_listfile.size());
+    names.reserve(archive->m_listfileEntries.size());
 
-    for (ARCHIVEREC::Listfile::iterator it = archive->m_listfile.begin(); it != archive->m_listfile.end(); ++it) {
-        const char* name = it->first.c_str();
+    for (std::vector<ListFileEntry>::iterator it = archive->m_listfileEntries.begin(); it != archive->m_listfileEntries.end(); ++it) {
+        const char* name = it->m_name;
         NameHash entry;
         entry.m_hash = HashName(name);
         entry.m_name = name;
         names.push_back(entry);
     }
-
-    archive->ReleaseListfile();
 
     std::sort(names.begin(), names.end());
 
@@ -3322,7 +3293,7 @@ bool System_SFile::RebuildHashTable(ARCHIVEREC* archive, uint32_t hashSize) {
         std::vector<NameHash>::iterator found = std::lower_bound(names.begin(), names.end(), probe);
 
         if (found == names.end() || found->m_hash != probe.m_hash) {
-            return false;
+            continue;
         }
 
         uint32_t start = System_MPQEncrypt::Hash(found->m_name, 0) & (hashSize - 1);
@@ -3340,6 +3311,7 @@ bool System_SFile::RebuildHashTable(ARCHIVEREC* archive, uint32_t hashSize) {
     }
 
     archive->m_hashTable.swap(table);
+    archive->ReleaseListfile();
     archive->m_header.m_hashTableSize = hashSize;
 
     return true;
@@ -3347,7 +3319,17 @@ bool System_SFile::RebuildHashTable(ARCHIVEREC* archive, uint32_t hashSize) {
 
 // INLINED
 static void DeleteHashEntry(System_SFile::ARCHIVEREC* archive, uint32_t hashIndex, const char* name) {
-    archive->m_listfile.erase(std::string(name));
+    for (size_t i = archive->m_listfileEntries.size(); i;) {
+        i--;
+
+        if (archive->m_listfileEntries[i].m_name && name && !_stricmp(archive->m_listfileEntries[i].m_name, name)) {
+            std::swap(archive->m_listfileEntries[i], archive->m_listfileEntries.back());
+
+            if (!archive->m_listfileEntries.empty()) {
+                archive->m_listfileEntries.pop_back();
+            }
+        }
+    }
 
     System_SFile::HASHENTRY& hash = archive->m_hashTable[hashIndex];
     System_SFile::BLOCKENTRY entry = archive->GetBlockEntry(hash.m_blockIndex);
@@ -3408,7 +3390,7 @@ int64_t System_SFile::ARCHIVEREC::GetWriteReservationLimit() {
     return ((static_cast<int64_t>(high) << 32) | 0xFFFFFFFF)
         - static_cast<uint32_t>(sizeof(BLOCKENTRY) * this->m_blockTable.size())
         - static_cast<uint32_t>(sizeof(HASHENTRY) * this->m_hashTable.size())
-        - static_cast<uint32_t>(262 * this->m_listfile.size())
+        - static_cast<uint32_t>(262 * this->m_listfileEntries.size())
         - this->m_writeReservationPending
         - this->m_writeReservationEnd
         - 0x10000;
@@ -3611,7 +3593,10 @@ bool Blizzard::Mopaq::SFileCreateFile(System_SFile::ARCHIVEREC* handle, const ch
     System_Mopaq::CreateArchiveFile(fileName, archive.m_archive, createFlags, entry, blockIndex, result);
 
     if (*result) {
-        archive.m_archive->m_listfile.insert(std::pair<const std::string, uint32_t>(fileName, 1));
+        System_SFile::ListFileEntry listed;
+        listed.m_name = archive.m_archive->m_listfile->Add(fileName);
+        listed.m_blockIndex = blockIndex;
+        archive.m_archive->m_listfileEntries.push_back(listed);
         return true;
     }
 
@@ -3677,14 +3662,15 @@ static uint32_t GetHashTableSize(System_SFile::ARCHIVEREC* archive) {
 // OFFSET: 0x007F65A0/0x140504F80
 static bool WriteListfile(std::vector<char>& data, System_SFile::ARCHIVEREC* archive) {
     bool result = true;
-    data.reserve(260 * archive->m_listfile.size());
+    std::sort(archive->m_listfileEntries.begin(), archive->m_listfileEntries.end());
+    data.reserve(260 * archive->m_listfileEntries.size());
 
-    for (System_SFile::ARCHIVEREC::Listfile::iterator it = archive->m_listfile.begin(); it != archive->m_listfile.end(); ++it) {
-        if (it->second == -1) {
+    for (std::vector<System_SFile::ListFileEntry>::iterator it = archive->m_listfileEntries.begin(); it != archive->m_listfileEntries.end(); ++it) {
+        if (it->m_blockIndex == -1) {
             continue;
         }
 
-        data.insert(data.end(), it->first.begin(), it->first.end());
+        data.insert(data.end(), it->m_name, it->m_name + (it->m_name ? strlen(it->m_name) : 0));
         data.push_back('\r');
         data.push_back('\n');
     }

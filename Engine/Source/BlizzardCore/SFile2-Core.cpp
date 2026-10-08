@@ -934,6 +934,7 @@ void STORMAPI SFile::PauseBackgroundStreaming(bool pause) {
     BGLoading::Pause(pause);
 }
 
+// PROVEN: 486e103e IDENTICAL/NONE
 // OFFSET: 0x007A5C70
 void STORMAPI SFile::InitializeRepair(const char* path) {
     Blizzard::Repair::SetRepairReportCallbacks(NULL, Tracker::RepairReportFail, Tracker::RepairReportSuccess);
@@ -1541,6 +1542,7 @@ int32_t STORMAPI SFile::FileIsLocal(const char* name) {
     return result;
 }
 
+// PROVEN: 38e7cbd5 IDENTICAL/NONE
 // OFFSET: 0x0079FFD0
 bool SFile::IsFileCompletelyLocal(const char* name) {
     int64_t local;
@@ -1550,7 +1552,7 @@ bool SFile::IsFileCompletelyLocal(const char* name) {
     return total > 0 && local == total;
 }
 
-// OFFSET: 0x007A4DA0
+// OFFSET: 0x007A4DA0/0x1404999A0
 static char* EscapeURL(const char* src, char* dst, int32_t size) {
     char* out = dst;
     char c = *src;
@@ -1594,7 +1596,7 @@ static char* EscapeURL(const char* src, char* dst, int32_t size) {
     return dst;
 }
 
-// OFFSET: 0x007A4E40
+// OFFSET: 0x007A4E40/0x140499AA0
 static int32_t GetBuildFromURL(const char* url) {
     int32_t build = -1;
     char* copy = Blizzard::String::Duplicate(url);
@@ -1627,11 +1629,13 @@ System_SFile2::ReportCallback::~ReportCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
+// PROVEN: b8e9f132 IDENTICAL/NONE
 // OFFSET: 0x007FD0B0
 int32_t System_SFile2::ReportCallback::GetTimeout() {
     return this->m_timeout;
 }
 
+// PROVEN: 25db3799 IDENTICAL/NONE
 // OFFSET: 0x007A6760
 bool System_SFile2::ReportCallback::ShouldBlock() {
     return this->m_shouldBlock;
@@ -1643,12 +1647,13 @@ bool System_SFile2::ReportCallback::ReceivedData(const void* data, int32_t size)
     return true;
 }
 
+// PROVEN: e2dca4d8 IDENTICAL/NONE
 // OFFSET: 0x007A4D90
 void System_SFile2::ReportCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     Blizzard::Lock::EventSet(this->m_event);
 }
 
-// OFFSET: 0x007A67E0
+// OFFSET: 0x007A67E0/0x14049B6F0
 void SFile::SendBuildReport(int32_t build) {
     System_SFile2::ReportCallback callback;
     callback.m_shouldBlock = true;
@@ -1659,7 +1664,8 @@ void SFile::SendBuildReport(int32_t build) {
     Blizzard::Lock::EventWaitForever(callback.m_event);
 }
 
-// OFFSET: 0x007A6870
+// PROVEN: 21c522d4 IDENTICAL/NONE
+// OFFSET: 0x007A6870/0x14049B7C0
 void SFile::ReportManifestURL(const char* url) {
     int32_t build = GetBuildFromURL(url);
 
@@ -1668,7 +1674,7 @@ void SFile::ReportManifestURL(const char* url) {
     }
 }
 
-// OFFSET: 0x007A6890
+// OFFSET: 0x007A6890/0x14049B7E0
 void SFile::EnableBuildReports() {
     Blizzard::Streaming::s_processUrlFunc = ReportManifestURL;
 }
@@ -1697,7 +1703,7 @@ static std::string GetComputerNameString() {
     return std::string(name);
 }
 
-// OFFSET: 0x007A7140
+// OFFSET: 0x007A7140/0x14049C4B0
 void STORMAPI SFile::SendErrorReport(const char* error, bool block) {
     System_SFile2::ReportCallback callback;
     callback.m_shouldBlock = block;

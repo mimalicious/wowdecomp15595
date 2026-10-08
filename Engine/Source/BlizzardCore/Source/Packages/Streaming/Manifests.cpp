@@ -202,7 +202,7 @@ bool Blizzard::Streaming::Manifests::TimeslotItem::HandleTag(const char* tag, co
     return true;
 }
 
-// OFFSET: [0x007C3770, 0x007C3560]
+// OFFSET: [0x007C3770/0x1404BDDA0, 0x007C3560]
 Blizzard::Streaming::Manifests::ManifestItem::~ManifestItem() {
 }
 
@@ -343,7 +343,7 @@ bool Blizzard::Streaming::SourceManifest::SplitItem(char* line, MANIFEST_ITEM* i
     return true;
 }
 
-// OFFSET: 0x007CCAB0
+// OFFSET: 0x007CCAB0/0x1404C8FF0
 bool Blizzard::Streaming::Manifests::ServerPathItem::HandleTag(const char* tag, const char* value) {
     if (!tag || _stricmp(tag, "path")) {
         return false;
@@ -353,7 +353,7 @@ bool Blizzard::Streaming::Manifests::ServerPathItem::HandleTag(const char* tag, 
     return true;
 }
 
-// OFFSET: 0x007CCB80
+// OFFSET: 0x007CCB80/0x1404C90C0
 bool Blizzard::Streaming::Manifests::ParameterItem::HandleTag(const char* tag, const char* value) {
     if (!tag || _stricmp(tag, "value")) {
         return false;
@@ -417,15 +417,15 @@ std::string Blizzard::Streaming::Manifests::FileItem::GetRemotePath() {
 Blizzard::Streaming::Manifests::ServerItem::~ServerItem() {
 }
 
-// OFFSET: 0x007D4A40
+// OFFSET: 0x007D4A40/0x1404D51B0
 Blizzard::Streaming::Manifests::FileItem::FileItem() {
 }
 
-// OFFSET: [0x007D07F0, 0x007D4AF0]
+// OFFSET: [0x007D07F0/0x1404CE850, 0x007D4AF0/0x1404D52B0]
 Blizzard::Streaming::Manifests::FileItem::~FileItem() {
 }
 
-// OFFSET: 0x007D9590
+// OFFSET: 0x007D9590/0x1404DBA10
 Blizzard::Streaming::Manifests::ServerItem::ServerItem() {
     UsageSlot slot;
     slot.m_time = TimeslotItem::ParseTimestamp("0:00");
@@ -1695,8 +1695,8 @@ std::string Blizzard::Streaming::ManifestInfo::GetAbsolutePath(const std::string
     return std::string(normalized);
 }
 
-// PROVEN: 339f6610 IDENTICAL/DIFFERENT
-// OFFSET: 0x007C3BC0
+// PROVEN: 339f6610 IDENTICAL/NONE
+// OFFSET: 0x007C3BC0/0x140177130
 int32_t System_Streaming::HttpCallback::GetTimeout() {
     return this->m_timeout;
 }

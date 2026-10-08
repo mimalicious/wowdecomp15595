@@ -296,7 +296,7 @@ static void CreateErrorHandler(Blizzard::Mopaq::MpqHandleRecord* handle, void* m
     }
 }
 
-// OFFSET: 0x007EEFE0
+// OFFSET: 0x007EEFE0/0x1404FB110
 bool System_Mopaq::mopaq_open(Blizzard::Mopaq::Mpqsystem* system, MpqParams* parms) {
     Blizzard::Mopaq::MpqHandleRecord* handle = parms->m_handle;
     InitializeHandle(handle, parms);

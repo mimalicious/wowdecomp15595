@@ -29,7 +29,8 @@ System_Streaming::HttpCallback::~HttpCallback() {
     CloseHandle(this->m_event);
 }
 
-// OFFSET: 0x007C3BE0
+// PROVEN: f39d5e44 IDENTICAL/NONE
+// OFFSET: 0x007C3BE0/0x1404BE300
 void System_Streaming::HttpCallback::WaitForCompletion() {
     WaitForSingleObject(this->m_event, INFINITE);
 }

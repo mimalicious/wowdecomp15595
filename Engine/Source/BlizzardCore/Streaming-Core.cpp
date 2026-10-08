@@ -78,11 +78,13 @@ System_SFile2::BufferCallback::~BufferCallback() {
     Blizzard::Lock::EventDestroy(this->m_event);
 }
 
+// PROVEN: 37933cfc IDENTICAL/NONE
 // OFFSET: 0x007A9630
 void System_SFile2::BufferCallback::WaitForCompletion() {
     Blizzard::Lock::EventWaitForever(this->m_event);
 }
 
+// PROVEN: 639bf0de IDENTICAL/NONE
 // OFFSET: 0x007A9640
 bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size) {
     uint32_t length = Blizzard::String::Length(this->m_buffer);
@@ -95,22 +97,26 @@ bool System_SFile2::BufferCallback::ReceivedData(const void* data, int32_t size)
     return true;
 }
 
+// PROVEN: 74ad38df IDENTICAL/NONE
 // OFFSET: 0x007A9690
 void System_SFile2::BufferCallback::Completed(Blizzard::URL::DownloadCallback::Status status) {
     this->m_status = status;
     Blizzard::Lock::EventSet(this->m_event);
 }
 
-// OFFSET: 0x00B41A60
+// PROVEN: 668e1246 IDENTICAL/IDENTICAL
+// OFFSET: 0x00B41A60/0x1404C1350
 int32_t System_SFile2::BufferCallback::GetTimeout() {
     return this->m_timeout;
 }
 
-// OFFSET: 0x00A3AA30
+// PROVEN: 0267456b IDENTICAL/IDENTICAL
+// OFFSET: 0x00A3AA30/0x1404BDD20
 bool System_SFile2::BufferCallback::ShouldBlock() {
     return true;
 }
 
+// PROVEN: f12eadb5 IDENTICAL/NONE
 // OFFSET: 0x007B0A90
 const char* System_SFile2::BufferCallback::GetPostData() {
     return this->m_postData;

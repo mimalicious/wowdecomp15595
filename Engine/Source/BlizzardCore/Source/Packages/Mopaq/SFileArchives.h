@@ -8,6 +8,7 @@
 #include <vector>
 #include "Engine/Source/BlizzardCore/Include/Blizzard/STL/CaseInsensitive.h"
 #include "Engine/Source/BlizzardCore/Include/Blizzard/Util/Digest.h"
+#include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/SFile.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Mopaq/Types.h"
 #include "Engine/Source/BlizzardCore/Source/Packages/Util/SBig.h"
 #include "Engine/Source/BlizzardCore/Source/System/Lock/Lock.h"
@@ -209,10 +210,15 @@ struct ArchiveBuffers {
     ~ArchiveBuffers();
 };
 
+struct ListFileEntry {
+    /* 0000 */ const char* m_name;
+    /* 0004 */ uint32_t m_blockIndex;
+
+    bool operator<(const ListFileEntry& other) const;
+};
+
 class ARCHIVEREC {
     public:
-    typedef std::map<std::string, uint32_t, Blizzard::STL::CaseInsensitive> Listfile;
-
     static bool LoadOldTable(ARCHIVEREC* archive, void* table, Blizzard::Util::Buffer<4096, char>& buffer, uint32_t diskSize, uint32_t size, int64_t offset, uint32_t key, const Blizzard::Util::Digest<16>& md5);
     static bool LoadTable(ARCHIVEREC* archive, Blizzard::Util::Buffer<4096, char>& buffer, Blizzard::Util::Buffer<4096, char>& output, int64_t offset, uint32_t size, char** data, uint32_t* dataSize, uint32_t key, uint32_t signature, const Blizzard::Util::Digest<16>& md5);
     static bool WriteArchiveChanges(ARCHIVEREC* archive);
@@ -255,14 +261,16 @@ class ARCHIVEREC {
     /* 02D8 */ ArchiveBuffers* m_buffers;
     /* 02DC */ bool (*m_closeCallback)(ARCHIVEREC* archive);
     /* 02E0 */ uint32_t unk_02E0;
-    /* 02E4 */ Listfile m_listfile;
-    /* 0304 */ bool m_listfileLoaded;
-    /* 0305 */ uint8_t unk_0305[3];
-    /* 0308 */ int32_t m_listfileRefcount;
-    /* 030C */ Blizzard::Util::Array<uint8_t> m_patchMetadata;
-    /* 0314 */ bool m_patchMetadataLoaded;
-    /* 0315 */ uint8_t unk_0315[3];
-    /* 0318 */ Blizzard::Lock::RMutex m_patchLock;
+    /* 02E4 */ ListFile* m_listfile;
+    /* 02E8 */ std::vector<ListFileEntry> m_listfileEntries;
+    /* 0300 */ bool m_listfileLoaded;
+    /* 0301 */ uint8_t unk_0301[3];
+    /* 0304 */ int32_t m_listfileRefcount;
+    /* 0308 */ Blizzard::Util::Array<uint8_t> m_patchMetadata;
+    /* 0310 */ bool m_patchMetadataLoaded;
+    /* 0311 */ uint8_t unk_0311[3];
+    /* 0314 */ Blizzard::Lock::RMutex m_patchLock;
+    /* 032C */ uint32_t unk_032C;
     /* 0330 */ int64_t m_writeReservationEnd;
     /* 0338 */ int64_t m_writeReservationPending;
     /* 0340 */ Blizzard::Lock::RMutex m_writeLock;

@@ -367,7 +367,7 @@ Blizzard::Storage::PartialFile::PartialFile() : BackingStore(3), m_chunkSize(s_C
     memset(this->m_localityHash, 0, sizeof(this->m_localityHash));
 }
 
-// OFFSET: [0x007EB5D0/0x1404F8220, 0x007EDB20]
+// OFFSET: [0x007EB5D0/0x1404F8220, 0x007EDB20/0x1404F9FF0]
 Blizzard::Storage::PartialFile::~PartialFile() {
     this->Close();
     s_bitFieldAllocator->Destroy(this->m_locality);
