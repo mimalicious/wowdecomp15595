@@ -176,7 +176,8 @@ bool ComSat::Manager::IsTalkerTalkingInSession(uint64_t session, uint8_t localTa
     return this->m_soundManager->IsLocalPlayerTalking(localTalker);
 }
 
-// OFFSET: #0x0087FD00
+// PROVEN: 6b64af7e IDENTICAL/NONE
+// OFFSET: 0x00A332B0
 bool ComSat::Manager::DoesTalkerHaveHeadset(uint64_t talker) {
     return true;
 }
