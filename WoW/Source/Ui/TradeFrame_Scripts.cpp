@@ -20,7 +20,7 @@
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// OFFSET: #0x00586730
+// OFFSET: 0x0096AC20/0x1406E1540
 static int32_t Script_CancelTradeAccept(lua_State* L) {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted) {
         CGTradeInfo::m_playerAccepted = 0;
@@ -31,20 +31,20 @@ static int32_t Script_CancelTradeAccept(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00586780
+// OFFSET: 0x0096A7D0/0x1406E10B0
 static int32_t Script_GetPlayerTradeMoney(lua_State* L) {
     uint32_t money = CGTradeInfo::m_tradingPlayer ? CGTradeInfo::GetPlayerTradeMoney() : 0;
     lua_pushnumber(L, money);
     return 1;
 }
 
-// OFFSET: #0x005867D0
+// OFFSET: 0x0096A840/0x1406E1100
 static int32_t Script_GetTargetTradeMoney(lua_State* L) {
     lua_pushnumber(L, CGTradeInfo::GetTargetTradeMoney());
     return 1;
 }
 
-// OFFSET: #0x005865F0
+// OFFSET: 0x0096C240/0x1406E2EC0
 static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeTargetItemLink(index)");
@@ -80,7 +80,7 @@ static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005866E0
+// OFFSET: 0x0096ABD0/0x1406E14C0
 static int32_t Script_AcceptTrade(lua_State* L) {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted != 1) {
         CGTradeInfo::m_playerAccepted = 1;
@@ -91,7 +91,7 @@ static int32_t Script_AcceptTrade(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00586810
+// OFFSET: 0x0096A8A0/0x1406E1130
 static int32_t Script_PickupTradeMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupTradeMoney(amount)");
@@ -108,7 +108,7 @@ static int32_t Script_PickupTradeMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00586870
+// OFFSET: 0x0096B2A0/0x1406E1D00
 static int32_t Script_SetTradeMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetTradeMoney(amount)");
@@ -119,7 +119,7 @@ static int32_t Script_SetTradeMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00586C80
+// OFFSET: 0x0096B1F0/0x1406E1C50
 static int32_t Script_ClickTargetTradeButton(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ClickTargetTradeButton(index)");
@@ -137,7 +137,7 @@ static int32_t Script_ClickTargetTradeButton(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00586D00
+// OFFSET: 0x0096AB40/0x1406E1420
 static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradePlayerItemLink(index)");
@@ -156,7 +156,7 @@ static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00586D90
+// OFFSET: 0x0096B270/0x1406E1CD0
 static int32_t Script_AddTradeMoney(lua_State* L) {
     if (CGGameUI::m_cursorMoney && CGTradeInfo::AddMoney(CGGameUI::m_cursorMoney)) {
         CGGameUI::ClearCursor(1, 0);
@@ -165,7 +165,7 @@ static int32_t Script_AddTradeMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00587940
+// OFFSET: 0x0096B8A0/0x1406E23B0
 static int32_t Script_CloseTrade(lua_State* L) {
     if (!CGTradeInfo::m_supressMoneyEvent) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_TRADE_MONEY, NULL);
@@ -187,7 +187,7 @@ static int32_t Script_CloseTrade(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005879D0
+// OFFSET: 0x0096BD30/0x1406E28C0
 static int32_t Script_ClickTradeButton(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ClickTradeButton(index)");
@@ -282,7 +282,7 @@ static int32_t Script_ClickTradeButton(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00587C60
+// OFFSET: 0x0096C010/0x1406E2BF0
 static int32_t Script_GetTradeTargetItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeTargetItemInfo(index)");
@@ -338,7 +338,7 @@ static int32_t Script_GetTradeTargetItemInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x00587EB0
+// OFFSET: 0x0096C340/0x1406E3020
 static int32_t Script_GetTradePlayerItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradePlayerItemInfo(index)");

@@ -60,6 +60,7 @@ class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID
     static CVar* s_cvObjectSelectionCircle;
 
     static void Initialize();
+    static void ReplaceGuildTextures(CM2Model* model, WOWGUID guildGUID, int32_t factionIndex);
     static void ModelLoadedCallback(CM2Model* model, void* arg);
     static void Shutdown();
     static int32_t UpdateAllObjectEffectManagers();

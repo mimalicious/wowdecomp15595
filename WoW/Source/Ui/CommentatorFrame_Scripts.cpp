@@ -16,7 +16,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// OFFSET: #0x00569230
+// OFFSET: 0x009298F0/0x14068F810
 static int32_t Script_CommentatorGetMode(lua_State* L) {
     int32_t mode = 0;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -37,7 +37,7 @@ static int32_t Script_CommentatorGetMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00569180
+// OFFSET: 0x00929840/0x14068F730
 static int32_t Script_CommentatorToggleMode(lua_State* L) {
     WDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_COMMENTATOR_ENABLE));
@@ -47,7 +47,7 @@ static int32_t Script_CommentatorToggleMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005690A0
+// OFFSET: 0x00929760/0x14068F610
 static int32_t Script_CommentatorSetMode(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         int32_t mode = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -67,13 +67,13 @@ static int32_t Script_CommentatorSetMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00568730
+// OFFSET: 0x00928410/0x14068DEA0
 static int32_t Script_CommentatorGetNumMaps(lua_State* L) {
     lua_pushnumber(L, CGCommentator::s_Commentator.m_maps.Count());
     return 1;
 }
 
-// OFFSET: #0x005693E0
+// OFFSET: 0x00929AA0/0x14068FC00
 static int32_t Script_CommentatorGetMapInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -101,7 +101,7 @@ static int32_t Script_CommentatorGetMapInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x0056AFC0
+// OFFSET: 0x0092B6B0/0x140692050
 static int32_t Script_CommentatorGetSkirmishQueuePlayerInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -132,7 +132,7 @@ static int32_t Script_CommentatorGetSkirmishQueuePlayerInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0056AF60
+// OFFSET: 0x0092B650/0x140691FF0
 static int32_t Script_CommentatorGetSkirmishQueueCount(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -144,7 +144,7 @@ static int32_t Script_CommentatorGetSkirmishQueueCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056AF00
+// OFFSET: 0x0092B5F0/0x140691F90
 static int32_t Script_CommentatorGetSkirmishMode(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -156,7 +156,7 @@ static int32_t Script_CommentatorGetSkirmishMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056A2A0
+// OFFSET: 0x0092A970/0x140690DE0
 static int32_t Script_CommentatorGetCamera(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -179,7 +179,7 @@ static int32_t Script_CommentatorGetCamera(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x0056AB70
+// OFFSET: 0x0092B280/0x140691A20
 static int32_t Script_CommentatorSetCameraCollision(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -200,7 +200,7 @@ static int32_t Script_CommentatorSetCameraCollision(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056AC10
+// OFFSET: 0x0092B320/0x140691AD0
 static int32_t Script_CommentatorSetTargetHeightOffset(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -216,7 +216,7 @@ static int32_t Script_CommentatorSetTargetHeightOffset(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056AA10
+// OFFSET: 0x0092B0E0/0x140691880
 static int32_t Script_CommentatorSetBattlemaster(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -247,7 +247,7 @@ static int32_t Script_CommentatorSetBattlemaster(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00568770
+// OFFSET: 0x00928450/0x14068DED0
 static int32_t Script_CommentatorZoomIn(lua_State* L) {
     float fov = CGCommentator::s_Commentator.m_fov;
 
@@ -273,7 +273,7 @@ static int32_t Script_CommentatorZoomIn(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00568810
+// OFFSET: 0x009284E0
 static int32_t Script_CommentatorZoomOut(lua_State* L) {
     float fov = CGCommentator::s_Commentator.m_fov;
 
@@ -299,7 +299,7 @@ static int32_t Script_CommentatorZoomOut(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005692A0
+// OFFSET: 0x00929960
 static int32_t Script_CommentatorUpdatePlayerInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     CGCommentator::MapInfo* map;
@@ -317,7 +317,7 @@ static int32_t Script_CommentatorUpdatePlayerInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569340
+// OFFSET: 0x00929A00/0x14068FAB0
 static int32_t Script_CommentatorUpdateMapInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -338,7 +338,7 @@ static int32_t Script_CommentatorUpdateMapInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569520
+// OFFSET: 0x00929BE0/0x14068FD30
 static int32_t Script_CommentatorGetInstanceInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -374,7 +374,7 @@ static int32_t Script_CommentatorGetInstanceInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005696E0
+// OFFSET: 0x00929DA0/0x14068FED0
 static int32_t Script_CommentatorEnterInstance(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -400,7 +400,7 @@ static int32_t Script_CommentatorEnterInstance(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005697B0
+// OFFSET: 0x00929E70/0x140690110
 static int32_t Script_CommentatorExitInstance(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -414,7 +414,7 @@ static int32_t Script_CommentatorExitInstance(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569820
+// OFFSET: 0x00929EE0/0x140690230
 static int32_t Script_CommentatorGetNumPlayers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CommentatorGetNumPlayers(faction)");
@@ -441,7 +441,7 @@ static int32_t Script_CommentatorGetNumPlayers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00569910
+// OFFSET: 0x00929FC0/0x140690320
 static int32_t Script_CommentatorGetPlayerInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -492,7 +492,7 @@ static int32_t Script_CommentatorGetPlayerInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x00569B50
+// OFFSET: 0x0092A200/0x140690570
 static int32_t Script_CommentatorFollowPlayer(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -537,7 +537,7 @@ static int32_t Script_CommentatorFollowPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569CD0
+// OFFSET: 0x0092A380/0x140690700
 static int32_t Script_CommentatorLookatPlayer(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -582,7 +582,7 @@ static int32_t Script_CommentatorLookatPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569E50
+// OFFSET: 0x0092A500/0x140690880
 static int32_t Script_CommentatorSetMapAndInstanceIndex(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -618,7 +618,7 @@ static int32_t Script_CommentatorSetMapAndInstanceIndex(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00569FA0
+// OFFSET: 0x0092A650/0x1406909D0
 static int32_t Script_CommentatorSetPlayerIndex(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -657,7 +657,7 @@ static int32_t Script_CommentatorSetPlayerIndex(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056A0F0
+// OFFSET: 0x0092A7A0/0x140690B40
 static int32_t Script_CommentatorSetCamera(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -704,7 +704,7 @@ static int32_t Script_CommentatorSetCamera(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056A380
+// OFFSET: 0x0092AA50/0x140690EF0
 static int32_t Script_CommentatorGetCurrentMapID(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     CGCommentator::MapInfo* map;
@@ -718,7 +718,7 @@ static int32_t Script_CommentatorGetCurrentMapID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056A410
+// OFFSET: 0x0092AAE0/0x140691020
 static int32_t Script_CommentatorStartInstance(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -762,7 +762,7 @@ static int32_t Script_CommentatorStartInstance(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056A640
+// OFFSET: 0x0092AD10/0x1406912D0
 static int32_t Script_CommentatorAddPlayer(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -822,7 +822,7 @@ static int32_t Script_CommentatorAddPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056A860
+// OFFSET: 0x0092AF30/0x1406915A0
 static int32_t Script_CommentatorRemovePlayer(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -873,7 +873,7 @@ static int32_t Script_CommentatorRemovePlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056AAF0
+// OFFSET: 0x0092B1C0/0x140691960
 static int32_t Script_CommentatorSetMoveSpeed(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -889,7 +889,7 @@ static int32_t Script_CommentatorSetMoveSpeed(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056AC90
+// OFFSET: 0x0092B3A0/0x140691B60
 static int32_t Script_CommentatorSetSkirmishMatchmakingMode(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -913,7 +913,7 @@ static int32_t Script_CommentatorSetSkirmishMatchmakingMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056ADA0
+// OFFSET: 0x0092B4B0/0x140691CF0
 static int32_t Script_CommentatorRequestSkirmishQueueData(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -932,7 +932,7 @@ static int32_t Script_CommentatorRequestSkirmishQueueData(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056AE50
+// OFFSET: 0x0092B550/0x140691E40
 static int32_t Script_CommentatorRequestSkirmishMode(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -951,7 +951,7 @@ static int32_t Script_CommentatorRequestSkirmishMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056B0B0
+// OFFSET: 0x0092B7A0/0x140692140
 static int32_t Script_CommentatorStartSkirmishMatch(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

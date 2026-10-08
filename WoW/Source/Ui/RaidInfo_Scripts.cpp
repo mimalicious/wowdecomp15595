@@ -25,19 +25,19 @@
 #include "WoW/Source/Object/Unit.h"
 #include "Engine/Source/FrameScript/Types.h"
 
-// OFFSET: #0x00572B40
+// OFFSET: 0x0092D1A0/0x140694130
 static int32_t Script_GetNumRaidMembers(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::m_numMembers);
     return 1;
 }
 
-// OFFSET: %0x00888960
+// OFFSET: 0x0092D1E0/0x140694160
 static int32_t Script_GetRealNumRaidMembers(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::m_realNumMembers);
     return 1;
 }
 
-// OFFSET: #0x00573A60
+// OFFSET: 0x0092E260/0x140695680
 static int32_t Script_IsRaidLeader(lua_State* L) {
     if (ClntObjMgrGetActivePlayer() == CGPartyInfo::m_leader) {
         lua_pushnumber(L, 1.0);
@@ -48,7 +48,7 @@ static int32_t Script_IsRaidLeader(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008899F0
+// OFFSET: 0x0092E2B0/0x1406956D0
 static int32_t Script_IsRealRaidLeader(lua_State* L) {
     if (ClntObjMgrGetActivePlayer() == CGPartyInfo::m_realLeader) {
         lua_pushnumber(L, 1.0);
@@ -59,7 +59,7 @@ static int32_t Script_IsRealRaidLeader(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00572BC0
+// OFFSET: 0x0092D220/0x140694190
 static int32_t Script_SetRaidRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetRaidRosterSelection(index)");
@@ -77,7 +77,7 @@ static int32_t Script_SetRaidRosterSelection(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00888A60
+// OFFSET: 0x0092D2E0/0x140694270
 static int32_t Script_GetReadyCheckTimeLeft(lua_State* L) {
     if (CGRaidInfo::m_numMembers || CGPartyInfo::m_members[0]) {
         uint32_t now = OsGetAsyncTimeMs();
@@ -97,7 +97,7 @@ static int32_t Script_GetReadyCheckTimeLeft(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00574A00
+// OFFSET: 0x0092FE70/0x140697B90
 static int32_t Script_ConvertToRaid(lua_State* L) {
     if (CGPartyInfo::m_members[0] && CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
         CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -113,7 +113,7 @@ static int32_t Script_ConvertToRaid(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005740C0
+// OFFSET: 0x0092E600/0x140695B00
 static int32_t Script_ConfirmReadyCheck(lua_State* L) {
     if (CGRaidInfo::m_numMembers || CGPartyInfo::m_members[0]) {
         uint32_t now = OsGetAsyncTimeMs();
@@ -152,7 +152,7 @@ static int32_t Script_IsRaidOfficer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00574180
+// OFFSET: 0x0092E6C0/0x140695BF0
 static int32_t Script_GetReadyCheckStatus(lua_State* L) {
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
     const char* status = NULL;
@@ -228,7 +228,7 @@ static int32_t Script_GetReadyCheckStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00572AB0
+// OFFSET: 0x0092D110/0x140694080
 static int32_t Script_GetRaidTargetIndex(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetRaidTargetIndex(unit)");
@@ -246,13 +246,13 @@ static int32_t Script_GetRaidTargetIndex(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00888A30
+// OFFSET: 0x0092D2B0/0x140694210
 static int32_t Script_GetRaidRosterSelection(lua_State* L) {
     lua_pushnumber(L, CGRaidInfo::GetSelectedMemberIndex() + 1);
     return 1;
 }
 
-// OFFSET: #0x00573690
+// OFFSET: 0x0092DEF0/0x140695200
 static int32_t Script_GetRaidRosterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetRaidRosterInfo(index)");
@@ -372,7 +372,7 @@ static int32_t Script_GetRaidRosterInfo(lua_State* L) {
     return 14;
 }
 
-// OFFSET: #0x00573B50
+// OFFSET: 0x0092FB70/0x140697680
 static int32_t Script_SetRaidSubgroup(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetRaidSubgroup(index, subgroup)");
@@ -413,7 +413,7 @@ static int32_t Script_SetRaidSubgroup(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00573C90
+// OFFSET: 0x0092FCD0/0x1406978B0
 static int32_t Script_SwapRaidSubgroup(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SwapRaidSubgroup(index1, index2)");
@@ -450,7 +450,7 @@ static int32_t Script_SwapRaidSubgroup(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00573E10
+// OFFSET: 0x0092E350/0x1406957A0
 static int32_t Script_PromoteToLeader(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: PromoteToLeader(name)");
@@ -471,7 +471,7 @@ static int32_t Script_PromoteToLeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00573EF0
+// OFFSET: 0x0092E430/0x1406958B0
 static int32_t Script_PromoteToAssistant(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: PromoteToAssistant(name)");
@@ -493,7 +493,7 @@ static int32_t Script_PromoteToAssistant(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00573FD0
+// OFFSET: 0x0092E510/0x1406959D0
 static int32_t Script_DemoteAssistant(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: DemoteAssistant(name)");
@@ -515,13 +515,13 @@ static int32_t Script_DemoteAssistant(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00889FF0
+// OFFSET: 0x0092E5F0/0x140695AF0
 static int32_t Script_DoReadyCheck(lua_State* L) {
     CGRaidInfo::SendReadyCheck();
     return 0;
 }
 
-// OFFSET: #0x00574AB0
+// OFFSET: 0x00930090/0x140697DD0
 static int32_t Script_SetRaidTarget(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetRaidTarget(unit, index)");

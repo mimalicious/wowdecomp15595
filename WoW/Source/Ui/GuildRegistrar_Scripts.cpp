@@ -11,13 +11,13 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// OFFSET: #0x00599F40
+// OFFSET: 0x009EB6C0/0x14077D610
 static int32_t Script_GetGuildCharterCost(lua_State* L) {
     lua_pushnumber(L, CGGuildRegistrar::m_petition.m_cost);
     return 1;
 }
 
-// OFFSET: #0x00599F00
+// OFFSET: 0x009EB680/0x14077D5D0
 static int32_t Script_CloseGuildRegistrar(lua_State* L) {
     if (CGGuildRegistrar::m_registrar) {
         CGGameUI::ClearInteractTarget(CGGuildRegistrar::m_registrar, 0);
@@ -28,7 +28,7 @@ static int32_t Script_CloseGuildRegistrar(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059A130
+// OFFSET: 0x009EB860/0x14077D860
 static int32_t Script_BuyGuildCharter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: BuyGuildCharter(guildName)");
@@ -49,7 +49,7 @@ static int32_t Script_BuyGuildCharter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059A1C0
+// OFFSET: 0x009EB8F0/0x14077D900
 static int32_t Script_TurnInGuildCharter(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -60,7 +60,7 @@ static int32_t Script_TurnInGuildCharter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059A1F0
+// OFFSET: 0x009EB920
 static int32_t Script_GetTabardInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

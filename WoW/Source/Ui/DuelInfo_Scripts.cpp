@@ -9,7 +9,7 @@
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// OFFSET: #0x005CF950
+// OFFSET: 0x009F05D0/0x14078A3E0
 static int32_t Script_StartDuel(lua_State* L) {
     int32_t exact = StringToBOOL(L, 2, 0);
     WOWGUID guid = CGGameUI::ClosestObjectMatch(lua_tolstring(L, 1, NULL), TYPEMASK_PLAYER, 0, exact, FLT_MAX, 0);
@@ -22,19 +22,19 @@ static int32_t Script_StartDuel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x009321D0
+// OFFSET: 0x009F0AA0/0x14078A960
 static int32_t Script_AcceptDuel(lua_State* L) {
     CGDuelInfo::AcceptDuel();
     return 0;
 }
 
-// OFFSET: %0x009321E0
+// OFFSET: 0x009F0AB0/0x14078A970
 static int32_t Script_CancelDuel(lua_State* L) {
     CGDuelInfo::CancelDuel();
     return 0;
 }
 
-// STATIC: #0x00AD0AC4
+// STATIC: 0x00D16DE8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "StartDuel", &Script_StartDuel },
     { "AcceptDuel", &Script_AcceptDuel },

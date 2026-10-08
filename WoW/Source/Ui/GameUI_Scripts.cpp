@@ -182,25 +182,25 @@ static int32_t s_setTitleCount = 10;
 // STATIC: #0x00BD0CB8
 static float s_setTitleTime;
 
-// OFFSET: #0x005109D0
+// OFFSET: 0x008C25A0/0x140631DB0
 static int32_t Script_BeginTrade(lua_State* L) {
     Trade_C_BeginTrade();
     return 0;
 }
 
-// OFFSET: #0x005109E0
+// OFFSET: 0x008C25B0/0x140631DC0
 static int32_t Script_CancelTrade(lua_State* L) {
     Trade_C_CancelTrade();
     return 0;
 }
 
-// OFFSET: #0x00510A00
+// OFFSET: 0x008C25D0/0x140631DF0
 static int32_t Script_ForceQuit(lua_State* L) {
     ClientPostClose(0);
     return 0;
 }
 
-// OFFSET: #0x00510B90
+// OFFSET: 0x00481710/0x1400A0300
 static int32_t Script_GetTimeToWellRested(lua_State* L) {
     lua_pushnil(L);
     return 1;
@@ -218,67 +218,68 @@ int32_t Script_RestoreVideoEffectsDefaults(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511830
+// OFFSET: 0x008C30B0/0x140632B20
 static int32_t Script_ResetCPUUsage(lua_State* L) {
     FrameScript_ResetCPUUsage();
     return 0;
 }
 
-// OFFSET: #0x00515560
+// OFFSET: 0x008C6FF0/0x140636F60
 static int32_t Script_TargetDirectionFinished(lua_State* L) {
     CGGameUI::m_directionalTarget = WOWGUID();
     return 0;
 }
 
-// OFFSET: #0x00517D20
+// OFFSET: 0x008C9090/0x140639290
 static int32_t Script_DeclineLevelGrant(lua_State* L) {
     CGGameUI::m_pendingLevelGranter = WOWGUID();
     return 0;
 }
 
-// OFFSET: #0x00522F90
+// OFFSET: 0x008D4560/0x14063F2B0
 static int32_t Script_NotWhileDeadError(lua_State* L) {
     CGGameUI::DisplayError(ERR_PLAYER_DEAD);
     return 0;
 }
 
-// OFFSET: #0x0050FE80
+// PROVEN: dc2798fd IDENTICAL/NONE
+// OFFSET: 0x00807310/0x140631100
 static int32_t Script_IsDebugBuild(lua_State* L) {
     lua_pushboolean(L, 0);
     return 1;
 }
 
-// OFFSET: #0x00510DE0
+// OFFSET: 0x008C27A0/0x140632190
 static int32_t Script_SetEuropeanNumbers(lua_State* L) {
     SetDecimalConversion(StringToBOOL(L, 1, 1));
     return 0;
 }
 
-// OFFSET: #0x00510E00
+// OFFSET: 0x008C27C0/0x140632220
 static int32_t Script_GetRealmName(lua_State* L) {
     lua_pushstring(L, ClientServices::GetSelectedRealmName());
     return 1;
 }
 
-// OFFSET: #0x00511510
+// OFFSET: 0x008C2DA0/0x140632830
 static int32_t Script_UpdateAddOnMemoryUsage(lua_State* L) {
     lua_gcupdatesizes(L);
     return 0;
 }
 
-// OFFSET: #0x00511640
+// OFFSET: 0x008C2EC0/0x140632940
 static int32_t Script_UpdateAddOnCPUUsage(lua_State* L) {
     lua_gcupdatetimes(L);
     return 0;
 }
 
-// OFFSET: #0x00511A40
+// OFFSET: 0x008C32C0/0x140632D50
 static int32_t Script_ResetDisabledAddOns(lua_State* L) {
     LoadAddOnEnableState(ClientServices::GetCharacterName());
     return 0;
 }
 
-// OFFSET: #0x0051A3B0
+// OFFSET: 0x008CC380/0x14063D2A0
 static int32_t Script_ClearCursor(lua_State* L) {
     CGGameUI::ClearCursor(1, 1);
     return 1;
@@ -312,13 +313,13 @@ static int32_t Script_GetBaseMip(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511610
+// OFFSET: 0x008C2E90/0x140632910
 static int32_t Script_GetScriptCPUUsage(lua_State* L) {
     lua_pushnumber(L, FrameScript_GetScriptCPUUsage());
     return 1;
 }
 
-// OFFSET: #0x00511FB0
+// OFFSET: 0x008C37D0/0x1406332E0
 static int32_t Script_IsDesaturateSupported(lua_State* L) {
     if (!CSimpleTexture::GetImageModePixelShader(ImageMode_Desaturate)) {
         return 0;
@@ -328,19 +329,19 @@ static int32_t Script_IsDesaturateSupported(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515570
+// OFFSET: 0x008C7000/0x140631C40
 static int32_t Script_GetZoneText(lua_State* L) {
     lua_pushstring(L, CGGameUI::m_zoneText ? CGGameUI::m_zoneText : "");
     return 1;
 }
 
-// OFFSET: #0x005155A0
+// OFFSET: 0x008C7030/0x140636F70
 static int32_t Script_GetRealZoneText(lua_State* L) {
     lua_pushstring(L, CGGameUI::m_realZoneText ? CGGameUI::m_realZoneText : "");
     return 1;
 }
 
-// OFFSET: #0x0051AA90
+// OFFSET: 0x008CC980/0x14063DEC0
 static int32_t Script_RepopMe(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -351,7 +352,7 @@ static int32_t Script_RepopMe(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AAC0
+// OFFSET: 0x008CC9B0/0x14063DF00
 static int32_t Script_AcceptResurrect(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::AcceptResurrectRequest(1);
@@ -360,7 +361,7 @@ static int32_t Script_AcceptResurrect(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AAF0
+// OFFSET: 0x008CC9E0/0x14063DF40
 static int32_t Script_DeclineResurrect(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::AcceptResurrectRequest(0);
@@ -378,7 +379,7 @@ static int32_t Script_DeclineGroup(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051ABD0
+// OFFSET: 0x008CCA10/0x14063DF80
 static int32_t Script_AcceptGuild(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::AcceptGuild();
@@ -387,7 +388,7 @@ static int32_t Script_AcceptGuild(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AC00
+// OFFSET: 0x008CCA40/0x14063DFC0
 static int32_t Script_DeclineGuild(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::DeclineGuild();
@@ -396,7 +397,7 @@ static int32_t Script_DeclineGuild(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AC30
+// OFFSET: 0x008CCA70/0x14063E000
 static int32_t Script_AcceptArenaTeam(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::AcceptArenaTeam();
@@ -405,7 +406,7 @@ static int32_t Script_AcceptArenaTeam(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AC60
+// OFFSET: 0x008CCAA0/0x14063E040
 static int32_t Script_DeclineArenaTeam(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::DeclineArenaTeam();
@@ -414,7 +415,7 @@ static int32_t Script_DeclineArenaTeam(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522950
+// OFFSET: 0x008D5E00/0x14064A040
 static int32_t Script_DropCursorMoney(lua_State* L) {
     if (CGGameUI::m_cursorMoney && CGGameUI::m_hasControl && CGGameUI::m_cursorItemType == 2) {
         CGGameUI::ClearCursor(1, 1);
@@ -430,19 +431,19 @@ static int32_t Script_GetWaterDetail(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511C40
+// OFFSET: 0x00807AB0/0x14051D330
 int32_t Script_GetBillingTimeRested(lua_State* L) {
     lua_pushnumber(L, ClientServices::Connection()->m_billingTimeRested);
     return 1;
 }
 
-// OFFSET: #0x005150E0
+// OFFSET: 0x008C6ED0/0x140636F30
 static int32_t Script_Screenshot(lua_State* L) {
     ScrnScreenshot(&CGGameUI::HandleScreenshot, reinterpret_cast<uint8_t*>(ClientServices::GetClientStamp()), 88, NULL, NULL);
     return 0;
 }
 
-// OFFSET: #0x00515100
+// OFFSET: 0x008C6EF0/0x140631B40
 static int32_t Script_CursorHasItem(lua_State* L) {
     if (CGGameUI::m_cursorItemType == 1 || CGGameUI::m_cursorItemType == 9) {
         lua_pushnumber(L, 1.0);
@@ -453,7 +454,7 @@ static int32_t Script_CursorHasItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515140
+// OFFSET: 0x008C6F30/0x140631B80
 static int32_t Script_CursorHasSpell(lua_State* L) {
     if (CGGameUI::m_cursorItemType == 3) {
         lua_pushnumber(L, 1.0);
@@ -464,7 +465,7 @@ static int32_t Script_CursorHasSpell(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515180
+// OFFSET: 0x008C6F70/0x140631BC0
 static int32_t Script_CursorHasMacro(lua_State* L) {
     if (CGGameUI::m_cursorItemType == 8) {
         lua_pushnumber(L, 1.0);
@@ -475,7 +476,7 @@ static int32_t Script_CursorHasMacro(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005151C0
+// OFFSET: 0x008C6FB0/0x140631C00
 static int32_t Script_CursorHasMoney(lua_State* L) {
     if (CGGameUI::m_cursorItemType == 2) {
         lua_pushnumber(L, 1.0);
@@ -486,13 +487,13 @@ static int32_t Script_CursorHasMoney(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515750
+// OFFSET: 0x008C7250/0x140637150
 static int32_t Script_GetInstanceDifficulty(lua_State* L) {
     lua_pushnumber(L, CGGameUI::m_instanceDifficulty + 1);
     return 1;
 }
 
-// OFFSET: #0x00516760
+// OFFSET: 0x008C8200/0x1406320A0
 static int32_t Script_InCinematic(lua_State* L) {
     if (CGGameUI::m_inCinematic) {
         lua_pushnumber(L, 1.0);
@@ -503,7 +504,7 @@ static int32_t Script_InCinematic(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00517D30
+// OFFSET: 0x008C90A0/0x1406333D0
 static int32_t Script_IsThreatWarningEnabled(lua_State* L) {
     if (CGGameUI::m_threatWarningEnabled) {
         lua_pushnumber(L, 1.0);
@@ -514,7 +515,7 @@ static int32_t Script_IsThreatWarningEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00512090
+// OFFSET: 0x008C38B0/0x140633410
 static int32_t Script_ConsoleAddMessage(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: ConsoleAddMessage(string)");
@@ -529,7 +530,7 @@ static int32_t Script_ConsoleAddMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0050F830
+// OFFSET: 0x008C16B0/0x140630BF0
 static int32_t Script_FrameXML_Debug(lua_State* L) {
     int32_t level = FrameXML_GetDebugLevel();
 
@@ -542,7 +543,7 @@ static int32_t Script_FrameXML_Debug(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005144C0
+// OFFSET: 0x008C66A0/0x140636700
 static int32_t Script_IsLeftShiftKeyDown(lua_State* L) {
     int32_t down;
 
@@ -561,7 +562,7 @@ static int32_t Script_IsLeftShiftKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514520
+// OFFSET: 0x008C6700/0x140636760
 static int32_t Script_IsRightShiftKeyDown(lua_State* L) {
     int32_t down;
 
@@ -580,7 +581,7 @@ static int32_t Script_IsRightShiftKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514610
+// OFFSET: 0x008C67F0/0x140636850
 static int32_t Script_IsLeftControlKeyDown(lua_State* L) {
     int32_t down;
 
@@ -599,7 +600,7 @@ static int32_t Script_IsLeftControlKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514670
+// OFFSET: 0x008C6850/0x1406368B0
 static int32_t Script_IsRightControlKeyDown(lua_State* L) {
     int32_t down;
 
@@ -618,7 +619,7 @@ static int32_t Script_IsRightControlKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514760
+// OFFSET: 0x008C6940/0x1406369A0
 static int32_t Script_IsLeftAltKeyDown(lua_State* L) {
     int32_t down;
 
@@ -637,7 +638,7 @@ static int32_t Script_IsLeftAltKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005147C0
+// OFFSET: 0x008C69A0/0x140636A00
 static int32_t Script_IsRightAltKeyDown(lua_State* L) {
     int32_t down;
 
@@ -656,7 +657,7 @@ static int32_t Script_IsRightAltKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00516280
+// OFFSET: 0x008C7C50/0x140637C30
 static int32_t Script_GetCorpseRecoveryDelay(lua_State* L) {
     int32_t remaining;
 
@@ -668,7 +669,7 @@ static int32_t Script_GetCorpseRecoveryDelay(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005162E0
+// OFFSET: 0x008C7CB0/0x140637C80
 static int32_t Script_GetInstanceBootTimeRemaining(lua_State* L) {
     int32_t remaining;
 
@@ -680,7 +681,7 @@ static int32_t Script_GetInstanceBootTimeRemaining(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005164B0
+// OFFSET: 0x008C7E50/0x140637E20
 static int32_t Script_GetSummonConfirmTimeLeft(lua_State* L) {
     int32_t remaining;
 
@@ -692,7 +693,7 @@ static int32_t Script_GetSummonConfirmTimeLeft(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00516580
+// OFFSET: 0x008C7F20/0x140637E70
 static int32_t Script_GetSummonConfirmAreaName(lua_State* L) {
     const AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_summonConfirmArea);
 
@@ -705,7 +706,7 @@ static int32_t Script_GetSummonConfirmAreaName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005167E0
+// OFFSET: 0x008C8440/0x140638510
 static int32_t Script_IsSubZonePVPPOI(lua_State* L) {
     const AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
 
@@ -718,7 +719,7 @@ static int32_t Script_IsSubZonePVPPOI(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00516B90
+// OFFSET: 0x008C87E0/0x140638970
 static int32_t Script_GetAreaSpiritHealerTime(lua_State* L) {
     int32_t remaining = 0;
 
@@ -734,7 +735,7 @@ static int32_t Script_GetAreaSpiritHealerTime(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B6E0
+// OFFSET: 0x008CD450/0x14063F0A0
 static int32_t Script_CheckSpiritHealerDist(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -747,7 +748,7 @@ static int32_t Script_CheckSpiritHealerDist(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B740
+// OFFSET: 0x008CD4B0/0x14063F110
 static int32_t Script_CheckTalentMasterDist(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -760,7 +761,7 @@ static int32_t Script_CheckTalentMasterDist(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B7A0
+// OFFSET: 0x008CD510/0x14063F180
 static int32_t Script_CheckBinderDist(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -773,7 +774,7 @@ static int32_t Script_CheckBinderDist(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051BD00
+// OFFSET: 0x008CDA30/0x14063F7B0
 static int32_t Script_GetPVPTimer(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t timer = player ? player->GetPVPToggleTimer() + 1000 : 0;
@@ -794,7 +795,7 @@ int32_t Script_CanHearthAndResurrectFromArea(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510AC0
+// OFFSET: 0x008C2610/0x140631F70
 static int32_t Script_GetNetStats(lua_State* L) {
     float bytesIn;
     float bytesOut;
@@ -806,7 +807,7 @@ static int32_t Script_GetNetStats(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005117C0
+// OFFSET: 0x008C3040/0x140632AB0
 static int32_t Script_GetEventCPUUsage(lua_State* L) {
     double time = 0.0;
     uint32_t count = 0;
@@ -816,7 +817,7 @@ static int32_t Script_GetEventCPUUsage(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00514BA0
+// OFFSET: 0x008C6D80/0x140636DA0
 static int32_t Script_GetMouseButtonName(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         lua_pushstring(L, GetMouseButtonName(IndexToMouseButton(static_cast<uint32_t>(lua_tonumber(L, 1)))));
@@ -832,7 +833,7 @@ static int32_t Script_GetMouseButtonName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515630
+// OFFSET: 0x008C7130/0x140637030
 static int32_t Script_ResetInstances(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_RESET_INSTANCES));
@@ -841,7 +842,7 @@ static int32_t Script_ResetInstances(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515810
+// OFFSET: 0x008C7350/0x1406371E0
 static int32_t Script_GetRaidDifficulty(lua_State* L) {
     uint32_t difficulty = CGPartyInfo::m_raidDifficulty;
 
@@ -854,7 +855,7 @@ static int32_t Script_GetRaidDifficulty(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00515B70
+// OFFSET: 0x008D43C0/0x14063E870
 static int32_t Script_GuildLeave(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_LEAVE));
@@ -863,7 +864,7 @@ static int32_t Script_GuildLeave(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515BE0
+// OFFSET: 0x008C25E0/0x140631E40
 static int32_t Script_GuildDisband(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_DISBAND));
@@ -881,7 +882,7 @@ static int32_t Script_GuildInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516210
+// OFFSET: 0x008C7BE0/0x140637BC0
 static int32_t Script_GetReleaseTimeRemaining(lua_State* L) {
     int32_t remaining;
 
@@ -895,7 +896,7 @@ static int32_t Script_GetReleaseTimeRemaining(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005166F0
+// OFFSET: 0x008C8190/0x140638190
 static int32_t Script_OpeningCinematic(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_OPENING_CINEMATIC));
@@ -904,7 +905,7 @@ static int32_t Script_OpeningCinematic(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516840
+// OFFSET: 0x008C84A0/0x140638570
 static int32_t Script_TogglePVP(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_TOGGLE_PVP));
@@ -913,7 +914,7 @@ static int32_t Script_TogglePVP(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516B20
+// OFFSET: 0x008C8770/0x1406388E0
 static int32_t Script_GetBindLocation(lua_State* L) {
     const AreaTableRec* area = g_areaTableDB.GetRecord(CGPlayer_C::GetBindAreaID());
 
@@ -926,7 +927,7 @@ static int32_t Script_GetBindLocation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051BD60
+// OFFSET: 0x008CDA90/0x14063F810
 static int32_t Script_IsPVPTimerRunning(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -939,7 +940,7 @@ static int32_t Script_IsPVPTimerRunning(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051BFD0
+// OFFSET: 0x008CDCF0/0x14063FA90
 static int32_t Script_ShowingHelm(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -952,7 +953,7 @@ static int32_t Script_ShowingHelm(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051C040
+// OFFSET: 0x008CDD60/0x14063FB00
 static int32_t Script_ShowingCloak(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -965,7 +966,7 @@ static int32_t Script_ShowingCloak(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051D100
+// OFFSET: 0x008CE830/0x140640790
 static int32_t Script_GetTaxiBenchmarkMode(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -978,7 +979,7 @@ static int32_t Script_GetTaxiBenchmarkMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051D5A0
+// OFFSET: 0x008CEC80/0x140640F80
 static int32_t Script_GetAllowLowLevelRaid(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -991,7 +992,7 @@ static int32_t Script_GetAllowLowLevelRaid(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051CB30
+// OFFSET: 0x008CE240/0x140640080
 static int32_t Script_PartialPlayTime(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t partial;
@@ -1005,7 +1006,7 @@ static int32_t Script_PartialPlayTime(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051CBA0
+// OFFSET: 0x008CE2B0/0x1406400F0
 static int32_t Script_NoPlayTime(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t none;
@@ -1019,7 +1020,7 @@ static int32_t Script_NoPlayTime(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051BCA0
+// OFFSET: 0x008CD9D0/0x14063F750
 static int32_t Script_GetPVPDesired(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t desired = player ? (player->m_player->m_playerFlags >> 9) & 1 : 0;
@@ -1069,7 +1070,7 @@ static int32_t Script_SetBaseMip(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515790
+// OFFSET: 0x008C72D0/0x140637180
 static int32_t Script_GetDungeonDifficulty(lua_State* L) {
     uint32_t difficulty;
 
@@ -1082,7 +1083,7 @@ static int32_t Script_GetDungeonDifficulty(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00515880
+// OFFSET: 0x008C7450/0x1406372B0
 static int32_t Script_RequestTimePlayed(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PLAYED_TIME));
@@ -1115,7 +1116,7 @@ static int32_t Script_AcceptGroup(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00517B50
+// OFFSET: 0x008C8EC0/0x1406390D0
 static int32_t Script_SetTaxiBenchmarkMode(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_SET_TAXI_BENCHMARK_MODE));
@@ -1125,7 +1126,7 @@ static int32_t Script_SetTaxiBenchmarkMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00517D70
+// OFFSET: 0x008C90E0/0x1406392A0
 static int32_t Script_CanMapChangeDifficulty(lua_State* L) {
     int32_t mapId;
 
@@ -1146,7 +1147,7 @@ static int32_t Script_CanMapChangeDifficulty(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005262E0
+// OFFSET: 0x008D7B30/0x14064A210
 static int32_t Script_TargetTotem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TargetTotem(slot)");
@@ -1170,7 +1171,7 @@ static int32_t Script_TargetTotem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511720
+// OFFSET: 0x008C2FA0/0x140632A00
 static int32_t Script_GetFunctionCPUUsage(lua_State* L) {
     if (lua_type(L, 1) != LUA_TFUNCTION) {
         luaL_error(L, "Usage: GetFunctionCPUUsage(function[, includeSubroutines])");
@@ -1202,7 +1203,7 @@ static int32_t Script_GetDamageBonusStat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B800
+// OFFSET: 0x008CD570/0x14063F1F0
 static int32_t Script_RetrieveCorpse(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::AcceptResurrectRequest(0);
@@ -1216,7 +1217,7 @@ static int32_t Script_RetrieveCorpse(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005168B0
+// OFFSET: 0x008C8510/0x1406385F0
 static int32_t Script_SetPVP(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_TOGGLE_PVP));
@@ -1234,7 +1235,7 @@ static int32_t Script_SetPVP(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051B110
+// OFFSET: 0x008C7F80/0x140637EE0
 static int32_t Script_CancelSummon(lua_State* L) {
     WDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_SUMMON_RESPONSE));
@@ -1245,7 +1246,7 @@ static int32_t Script_CancelSummon(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522A20
+// OFFSET: 0x008D3F20/0x140647610
 static int32_t Script_GuildInvite(lua_State* L) {
     const char* target = lua_tolstring(L, 1, NULL);
 
@@ -1267,7 +1268,7 @@ static int32_t Script_GuildInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522AF0
+// OFFSET: 0x008D4070/0x14063E3E0
 static int32_t Script_GuildUninvite(lua_State* L) {
     const char* target = lua_tolstring(L, 1, NULL);
 
@@ -1289,7 +1290,7 @@ static int32_t Script_GuildUninvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522BC0
+// OFFSET: 0x008D4160/0x14063E4E0
 static int32_t Script_GuildPromote(lua_State* L) {
     const char* target = lua_tolstring(L, 1, NULL);
 
@@ -1311,7 +1312,7 @@ static int32_t Script_GuildPromote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522C90
+// OFFSET: 0x008D4200/0x14063E590
 static int32_t Script_GuildDemote(lua_State* L) {
     const char* target = lua_tolstring(L, 1, NULL);
 
@@ -1333,7 +1334,7 @@ static int32_t Script_GuildDemote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522D60
+// OFFSET: 0x008D42F0/0x14063E690
 static int32_t Script_GuildSetLeader(lua_State* L) {
     const char* target = lua_tolstring(L, 1, NULL);
 
@@ -1355,7 +1356,7 @@ static int32_t Script_GuildSetLeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516610
+// OFFSET: 0x008C80B0/0x140638040
 static int32_t Script_RandomRoll(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: RandomRoll(\"max\") or RandomRoll(\"min\", \"max\")");
@@ -1378,7 +1379,7 @@ static int32_t Script_RandomRoll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0050FF50
+// OFFSET: 0x008C1D60/0x140631210
 static int32_t Script_GetCVarInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetCVarInfo(\"cvar\")");
@@ -1413,7 +1414,7 @@ static int32_t Script_GetCVarInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x0051D600
+// OFFSET: 0x008CECE0/0x140640FF0
 static int32_t Script_SetAllowLowLevelRaid(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         uint8_t allow = StringToBOOL(L, 1, 1) != 0;
@@ -1432,7 +1433,7 @@ static int32_t Script_SetAllowLowLevelRaid(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005148B0
+// OFFSET: 0x008C6A90/0x140636AF0
 static int32_t Script_IsMouseButtonDown(lua_State* L) {
     int32_t down;
 
@@ -1453,7 +1454,7 @@ static int32_t Script_IsMouseButtonDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510E20
+// OFFSET: 0x008C27E0/0x140632250
 static int32_t Script_GetItemQualityColor(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetItemQualityColor(index)");
@@ -1469,7 +1470,7 @@ static int32_t Script_GetItemQualityColor(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00511B30
+// OFFSET: 0x008C33B0/0x140632E30
 static int32_t Script_IsAddOnLoaded(lua_State* L) {
     const char* name;
 
@@ -1504,13 +1505,13 @@ static int32_t Script_IsAddOnLoaded(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00515A50
+// OFFSET: 0x008C7620/0x140631E10
 static int32_t Script_GetCursorMoney(lua_State* L) {
     lua_pushnumber(L, CGGameUI::m_cursorMoney);
     return 1;
 }
 
-// OFFSET: #0x00510040
+// OFFSET: 0x008C1E50/0x140631310
 static int32_t Script_GetCVar(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetCVar(\"cvar\")");
@@ -1528,7 +1529,7 @@ static int32_t Script_GetCVar(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005100C0
+// OFFSET: 0x008C1ED0/0x140631390
 static int32_t Script_GetCVarBool(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetCVarBool(\"cvar\")");
@@ -1546,7 +1547,7 @@ static int32_t Script_GetCVarBool(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510150
+// OFFSET: 0x008C1F60/0x140631420
 static int32_t Script_GetCVarDefault(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetCVarDefault(\"cvar\")");
@@ -1564,7 +1565,7 @@ static int32_t Script_GetCVarDefault(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510A10
+// OFFSET: 0x008067B0/0x140631ED0
 static int32_t Script_GetCursorPosition(lua_State* L) {
     float x = 0.0f;
     float y = 0.0f;
@@ -1579,7 +1580,7 @@ static int32_t Script_GetCursorPosition(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00514430
+// OFFSET: 0x008C6620/0x140636680
 static int32_t Script_IsModifierKeyDown(lua_State* L) {
     for (int32_t key = KEY_LSHIFT; key <= KEY_RALT; key++) {
         if (CGGameUI::IsKeyDown(static_cast<KEY>(key))) {
@@ -1592,7 +1593,7 @@ static int32_t Script_IsModifierKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514580
+// OFFSET: 0x008C6760/0x1406367C0
 static int32_t Script_IsShiftKeyDown(lua_State* L) {
     if (CGGameUI::IsKeyDown(KEY_LSHIFT) || CGGameUI::IsKeyDown(KEY_RSHIFT)) {
         lua_pushnumber(L, 1.0);
@@ -1603,7 +1604,7 @@ static int32_t Script_IsShiftKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005146D0
+// OFFSET: 0x008C68B0/0x140636910
 static int32_t Script_IsControlKeyDown(lua_State* L) {
     if (CGGameUI::IsKeyDown(KEY_LCONTROL) || CGGameUI::IsKeyDown(KEY_RCONTROL)) {
         lua_pushnumber(L, 1.0);
@@ -1614,7 +1615,7 @@ static int32_t Script_IsControlKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514820
+// OFFSET: 0x008C6A00/0x140636A60
 static int32_t Script_IsAltKeyDown(lua_State* L) {
     if (CGGameUI::IsKeyDown(KEY_LALT) || CGGameUI::IsKeyDown(KEY_RALT)) {
         lua_pushnumber(L, 1.0);
@@ -1625,7 +1626,7 @@ static int32_t Script_IsAltKeyDown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00514C10
+// OFFSET: 0x008CC0E0/0x14063CF30
 static int32_t Script_SetCVar(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetCVar(\"cvar\", value [, \"scriptCvar\")");
@@ -1730,7 +1731,7 @@ static int32_t Script_GetCVarMax(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051AEF0
+// OFFSET: 0x008CCD10/0x140637AC0
 static int32_t Script_GetScreenWidth(lua_State* L) {
     float width = NDCToDDCWidth(1.0f);
     float scale = CGGameUI::m_UISimpleParent ? CGGameUI::m_UISimpleParent->m_layoutScale : 1.0f;
@@ -1738,7 +1739,7 @@ static int32_t Script_GetScreenWidth(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051AF50
+// OFFSET: 0x008CCD80/0x140637B40
 static int32_t Script_GetScreenHeight(lua_State* L) {
     float height = NDCToDDCHeight(1.0f);
     float scale = CGGameUI::m_UISimpleParent ? CGGameUI::m_UISimpleParent->m_layoutScale : 1.0f;
@@ -1746,7 +1747,7 @@ static int32_t Script_GetScreenHeight(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00528920
+// OFFSET: 0x008DAD50/0x14064EE00
 static int32_t Script_LoadAddOn(lua_State* L) {
     const char* name;
 
@@ -1802,19 +1803,19 @@ static int32_t Script_LoadAddOn(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005155D0
+// OFFSET: 0x008C70D0/0x140631C70
 static int32_t Script_GetSubZoneText(lua_State* L) {
     lua_pushstring(L, CGGameUI::m_subZoneText ? CGGameUI::m_subZoneText : "");
     return 1;
 }
 
-// OFFSET: #0x00515600
+// OFFSET: 0x008C7100/0x140631CA0
 static int32_t Script_GetMinimapZoneText(lua_State* L) {
     lua_pushstring(L, CGGameUI::m_minimapZoneText ? CGGameUI::m_minimapZoneText : "");
     return 1;
 }
 
-// OFFSET: #0x005156A0
+// OFFSET: 0x008C71A0/0x1406370B0
 static int32_t Script_IsInInstance(lua_State* L) {
     MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
 
@@ -1835,7 +1836,7 @@ static int32_t Script_IsInInstance(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00516BF0
+// OFFSET: 0x008C8840/0x1406321B0
 static int32_t Script_GetMouseFocus(lua_State* L) {
     if (!CSimpleTop::s_instance) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1856,7 +1857,7 @@ static int32_t Script_GetMouseFocus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051BA50
+// OFFSET: 0x008CD7C0/0x14063F4C0
 static int32_t Script_GetZonePVPInfo(lua_State* L) {
     int32_t flags = -1;
     int32_t subzone = 0;
@@ -1930,7 +1931,7 @@ static int32_t Script_GetZonePVPInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0050F950
+// OFFSET: 0x008C17C0/0x140630D10
 static int32_t Script_GetMouseButtonClicked(lua_State* L) {
     if (!CSimpleTop::s_instance) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1951,7 +1952,7 @@ static int32_t ToggleInteractModelIcon(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: #0x00517C20
+// OFFSET: 0x008C8F90/0x140639180
 static int32_t Script_SetUIVisibility(lua_State* L) {
     int32_t visible = StringToBOOL(L, 1, 1);
 
@@ -1964,7 +1965,7 @@ static int32_t Script_SetUIVisibility(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AC90
+// OFFSET: 0x008D3DF0/0x1406475C0
 static int32_t Script_CancelLogout(lua_State* L) {
     if (lua_tainted && CGGameUI::m_simpleTop && !CGGameUI::m_simpleTop->unk_1260) {
         CGGameUI::ShowBlockedActionFeedback(NULL, 1);
@@ -1975,7 +1976,7 @@ static int32_t Script_CancelLogout(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522480
+// OFFSET: 0x008D5DA0/0x140649C60
 static int32_t Script_FocusUnit(lua_State* L) {
     WOWGUID guid;
 
@@ -1986,7 +1987,7 @@ static int32_t Script_FocusUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0050F8F0
+// OFFSET: 0x008C1770/0x140630CB0
 static int32_t Script_SetLayoutMode(lua_State* L) {
     int32_t enabled = 1;
 
@@ -2002,7 +2003,7 @@ static int32_t Script_SetLayoutMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511CC0
+// OFFSET: 0x008C34B0/0x140632F30
 static int32_t Script_InCombatLockdown(lua_State* L) {
     if (!CSimpleTop::s_instance) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -2017,7 +2018,7 @@ static int32_t Script_InCombatLockdown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051D520
+// OFFSET: 0x008CEBF0/0x140640EF0
 static int32_t Script_DestroyTotem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DestroyTotem(slot)");
@@ -2035,7 +2036,7 @@ static int32_t Script_DestroyTotem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515CC0
+// OFFSET: 0x008C7680/0x140637480
 static int32_t Script_ArenaTeamInviteByName(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: ArenaTeamInviteByName(team, name)");
@@ -2064,7 +2065,7 @@ static int32_t Script_ArenaTeamInviteByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515DD0
+// OFFSET: 0x008C77A0/0x140637600
 static int32_t Script_ArenaTeamLeave(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ArenaTeamLeave(team)");
@@ -2081,7 +2082,7 @@ static int32_t Script_ArenaTeamLeave(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515EB0
+// OFFSET: 0x008C7880/0x1406376F0
 static int32_t Script_ArenaTeamUninviteByName(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: ArenaTeamUninviteByName(team, name)");
@@ -2106,7 +2107,7 @@ static int32_t Script_ArenaTeamUninviteByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00515FF0
+// OFFSET: 0x008C79C0/0x140637860
 static int32_t Script_ArenaTeamSetLeaderByName(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: ArenaTeamSetLeaderByName(team, name)");
@@ -2131,7 +2132,7 @@ static int32_t Script_ArenaTeamSetLeaderByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516130
+// OFFSET: 0x008C7B00/0x1406379D0
 static int32_t Script_ArenaTeamDisband(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ArenaTeamDisband(team)");
@@ -2148,7 +2149,7 @@ static int32_t Script_ArenaTeamDisband(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051D1B0
+// OFFSET: 0x008CE8E0/0x140640850
 static int32_t Script_IsReferAFriendLinked(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -2162,7 +2163,7 @@ static int32_t Script_IsReferAFriendLinked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511D30
+// OFFSET: 0x008C3500/0x140632FC0
 static int32_t Script_GetSummonFriendCooldown(lua_State* L) {
     uint32_t start = 0;
     uint32_t duration = 0;
@@ -2174,7 +2175,7 @@ static int32_t Script_GetSummonFriendCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0051D330
+// OFFSET: 0x008CEA60/0x140640D00
 static int32_t Script_GetTotemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTotemInfo(slot)");
@@ -2248,7 +2249,7 @@ static int32_t Script_GetExistingLocales(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x0051A8C0
+// OFFSET: 0x008CC760/0x14063DC70
 static int32_t Script_GetInstanceInfo(lua_State* L) {
     int32_t mapId = CGGameUI::m_iCurrentMapID;
     MapRec* map = g_mapDB.GetRecord(mapId);
@@ -2285,7 +2286,7 @@ static int32_t Script_GetInstanceInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x0051B8B0
+// OFFSET: 0x008CD620/0x14063F2D0
 static int32_t Script_GetRestState(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     ExhaustionRec* rec = player ? g_exhaustionDB.GetRecord(player->m_player->m_playerBytes2[3]) : NULL;
@@ -2303,7 +2304,7 @@ static int32_t Script_GetRestState(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0051B960
+// OFFSET: 0x008CD6D0/0x14063F3B0
 static int32_t Script_GetXPExhaustion(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     ExhaustionRec* rested = g_exhaustionDB.GetRecord(1);
@@ -2318,7 +2319,7 @@ static int32_t Script_GetXPExhaustion(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00525FC0
+// OFFSET: 0x008D7810
 static int32_t Script_ClearTarget(lua_State* L) {
     int32_t hadTarget = CGGameUI::m_lockedTarget != WOWGUID();
     CGGameUI::unk_BD08CC = 0;
@@ -2341,13 +2342,13 @@ static int32_t Script_ClearTarget(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510450
+// OFFSET: 0x008C2020/0x140631510
 static int32_t Script_Quit(lua_State* L) {
     ClientServices::Connection()->CharacterLogout(true, false);
     return 0;
 }
 
-// OFFSET: #0x0052B470
+// OFFSET: 0x008DE300/0x140653040
 static int32_t Script_RegisterForSave(lua_State* L) {
     if (lua_tainted) {
         luaL_error(L, "RegisterForSave() is only available to Blizzard scripts");
@@ -2363,7 +2364,7 @@ static int32_t Script_RegisterForSave(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052B4E0
+// OFFSET: 0x008DE370/0x1406530B0
 static int32_t Script_RegisterForSavePerCharacter(lua_State* L) {
     if (lua_tainted) {
         luaL_error(L, "RegisterForSavePerCharacter() is only available to Blizzard scripts");
@@ -2379,7 +2380,7 @@ static int32_t Script_RegisterForSavePerCharacter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051CC10
+// OFFSET: 0x008CE320/0x140640160
 static int32_t Script_GetMirrorTimerInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMirrorTimerInfo(\"timer\")");
@@ -2403,19 +2404,19 @@ static int32_t Script_GetMirrorTimerInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x00510470
+// OFFSET: 0x008C2040/0x140631530
 static int32_t Script_GetFramerate(lua_State* L) {
     lua_pushnumber(L, World::GetFramerate());
     return 1;
 }
 
-// OFFSET: #0x005165E0
+// OFFSET: 0x008C8040/0x140637FD0
 static int32_t Script_GetNumTitles(lua_State* L) {
     lua_pushnumber(L, g_charTitlesDB.m_maxID + 1);
     return 1;
 }
 
-// OFFSET: #0x0051B3B0
+// OFFSET: 0x008CD0C0/0x14063EC60
 static int32_t Script_GetCurrentTitle(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2428,7 +2429,7 @@ static int32_t Script_GetCurrentTitle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510FC0
+// OFFSET: 0x008C2900/0x140632380
 static int32_t Script_GetItemCooldown(lua_State* L) {
     int32_t itemId = 0;
 
@@ -2458,7 +2459,7 @@ static int32_t Script_GetItemCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00516C60
+// OFFSET: 0x008D9B80/0x14064D5E0
 static int32_t Script_GetItemInfo(lua_State* L) {
     ItemLinkInfo linkInfo;
     linkInfo.Clear();
@@ -2525,7 +2526,7 @@ static int32_t Script_GetItemInfo(lua_State* L) {
     return 11;
 }
 
-// OFFSET: #0x00517100
+// OFFSET: 0x008C88A0/0x1406389D0
 static int32_t Script_GetItemSpell(lua_State* L) {
     SpellRec spell;
     int32_t itemId = 0;
@@ -2550,7 +2551,7 @@ static int32_t Script_GetItemSpell(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00517C60
+// OFFSET: 0x008C8FD0/0x1406391C0
 static int32_t Script_GetTotemTimeLeft(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTotemTimeLeft(slot)");
@@ -2575,14 +2576,14 @@ static int32_t Script_GetTotemTimeLeft(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00524980
+// OFFSET: 0x008D5F00/0x14064A1C0
 static int32_t Script_StopCinematic(lua_State* L) {
     SI3::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
     EnableFadingScreen(0.25f, &CGGameUI::StopCinematicInternal, NULL);
     return 0;
 }
 
-// OFFSET: #0x00525A90
+// OFFSET: 0x008D7320/0x140649670
 static int32_t Script_TargetNearest(lua_State* L) {
     if (CGUIMacros::IsActionAllowed(5)) {
         TargetNearestEnemy(StringToBOOL(L, 1, 0), 0);
@@ -2592,7 +2593,7 @@ static int32_t Script_TargetNearest(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525AD0
+// OFFSET: 0x008D7360/0x1406496B0
 static int32_t Script_TargetNearestEnemy(lua_State* L) {
     if (CGUIMacros::IsActionAllowed(5)) {
         TargetNearestEnemy(StringToBOOL(L, 1, 0), 1);
@@ -2602,7 +2603,7 @@ static int32_t Script_TargetNearestEnemy(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525B10
+// OFFSET: 0x008D73A0/0x1406496F0
 static int32_t Script_TargetNearestEnemyPlayer(lua_State* L) {
     if (CGUIMacros::IsActionAllowed(5)) {
         TargetNearestEnemy(StringToBOOL(L, 1, 0), 2);
@@ -2612,7 +2613,7 @@ static int32_t Script_TargetNearestEnemyPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525B50
+// OFFSET: 0x008D73E0/0x140649730
 static int32_t Script_TargetNearestFriend(lua_State* L) {
     if (CGUIMacros::IsActionAllowed(5)) {
         TargetNearestEnemy(StringToBOOL(L, 1, 0), 3);
@@ -2622,7 +2623,7 @@ static int32_t Script_TargetNearestFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525B90
+// OFFSET: 0x008D7420/0x140649770
 static int32_t Script_TargetNearestFriendPlayer(lua_State* L) {
     if (CGUIMacros::IsActionAllowed(5)) {
         TargetNearestEnemy(StringToBOOL(L, 1, 0), 4);
@@ -2632,19 +2633,19 @@ static int32_t Script_TargetNearestFriendPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525BD0
+// OFFSET: 0x008D7460/0x1406497B0
 static int32_t Script_TargetNearestPartyMember(lua_State* L) {
     TargetNearestEnemy(StringToBOOL(L, 1, 0), 5);
     return 0;
 }
 
-// OFFSET: #0x00525C00
+// OFFSET: 0x008D7490/0x1406497E0
 static int32_t Script_TargetNearestRaidMember(lua_State* L) {
     TargetNearestEnemy(StringToBOOL(L, 1, 0), 6);
     return 0;
 }
 
-// OFFSET: #0x00511FE0
+// OFFSET: 0x008C3800/0x140633320
 static int32_t Script_GetThreatStatusColor(lua_State* L) {
     uint32_t color = *CGTooltip::GetThreatStateColor(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1) + 1.0)));
     lua_pushnumber(L, ((color >> 16) & 0xFF) * 0.0039215689);
@@ -2653,13 +2654,13 @@ static int32_t Script_GetThreatStatusColor(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00510920
+// OFFSET: 0x008C24F0/0x140631B30
 static int32_t Script_ResetCursor(lua_State* L) {
     CursorResetMode();
     return 0;
 }
 
-// OFFSET: #0x00515200
+// OFFSET: 0x008D96D0/0x14064D0B0
 static int32_t Script_GetCursorInfo(lua_State* L) {
     switch (CGGameUI::m_cursorItemType) {
         case 1: {
@@ -2769,7 +2770,7 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
     }
 }
 
-// OFFSET: #0x0051A680
+// OFFSET: 0x008CC660/0x14063D730
 static int32_t Script_AutoEquipCursorItem(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2780,7 +2781,7 @@ static int32_t Script_AutoEquipCursorItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051AE80
+// OFFSET: 0x008CCBC0/0x14063E360
 static int32_t Script_HasKey(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2793,7 +2794,7 @@ static int32_t Script_HasKey(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B410
+// OFFSET: 0x008CD120/0x14063ECD0
 static int32_t Script_IsTitleKnown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsTitleKnown(titleMaskID)");
@@ -2812,7 +2813,7 @@ static int32_t Script_IsTitleKnown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B4E0
+// OFFSET: 0x008CD1F0/0x14063ED90
 static int32_t Script_GetTitleName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTitleName(titleMaskID)");
@@ -2871,7 +2872,7 @@ static int32_t Script_GetTitleName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B1D0
+// OFFSET: 0x008CCEB0/0x14063EA30
 static int32_t Script_SitStandOrDescendStart(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2894,7 +2895,7 @@ static int32_t Script_SitStandOrDescendStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005104A0
+// OFFSET: 0x008C2070/0x140631560
 static int32_t Script_SetCursor(lua_State* L) {
     struct CursorName {
         uint32_t m_mode;
@@ -2932,7 +2933,7 @@ static int32_t Script_SetCursor(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00516970
+// OFFSET: 0x008C85D0/0x1406386B0
 static int32_t Script_SetPortraitToTexture(lua_State* L) {
     CSimpleTexture* texture;
 
@@ -2967,13 +2968,13 @@ static int32_t Script_SetPortraitToTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00510430
+// OFFSET: 0x008C2000/0x1406314F0
 static int32_t Script_Logout(lua_State* L) {
     ClientServices::Connection()->CharacterLogout(false, false);
     return 0;
 }
 
-// OFFSET: #0x0050F890
+// OFFSET: 0x008C1710/0x140630C50
 static int32_t Script_GetBuildInfo(lua_State* L) {
     lua_pushstring(L, "3.3.5");
     lua_pushstring(L, "12340");
@@ -2982,7 +2983,7 @@ static int32_t Script_GetBuildInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x0050F990
+// OFFSET: 0x008C17F0/0x140630D40
 static int32_t Script_SetConsoleKey(lua_State* L) {
     KEY key = KEY_LAST;
 
@@ -3154,18 +3155,18 @@ static int32_t RegisterCVar(lua_State* L, uint32_t flags) {
     return 0;
 }
 
-// OFFSET: #0x0050FF30
+// OFFSET: 0x008C1D40/0x140631200
 static int32_t Script_RegisterCVar(lua_State* L) {
     return RegisterCVar(L, 0);
 }
 
-// OFFSET: #0x00510410
+// OFFSET: 0x008C1FE0/0x1406314C0
 static int32_t Script_Stuck(lua_State* L) {
     Spell_C::CastSpell(CGSpellBook::m_stuckSpell, NULL, WOWGUID(), false);
     return 0;
 }
 
-// OFFSET: #0x00510930
+// OFFSET: 0x008C2500/0x140631D10
 static int32_t Script_ReportBug(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: ReportBug(\"description\")");
@@ -3176,7 +3177,7 @@ static int32_t Script_ReportBug(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00510980
+// OFFSET: 0x008C2550/0x140631D60
 static int32_t Script_ReportSuggestion(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: ReportSuggestion(\"description\")");
@@ -3187,13 +3188,13 @@ static int32_t Script_ReportSuggestion(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005109F0
+// OFFSET: 0x008C25C0/0x140631DD0
 static int32_t Script_ForceLogout(lua_State* L) {
     ClientServices::Connection()->CharacterForceLogout();
     return 0;
 }
 
-// OFFSET: #0x00510B30
+// OFFSET: 0x008C26F0/0x140632050
 static int32_t Script_RunScript(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -3208,7 +3209,7 @@ static int32_t Script_RunScript(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00510B80
+// OFFSET: 0x008C2740/0x140632120
 static int32_t Script_ReplaceTradeEnchant(lua_State* L) {
     Spell_C_TargetTradeItem();
     return 0;
@@ -3220,13 +3221,13 @@ static int32_t Script_IsLinuxClient(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510BB0
+// OFFSET: 0x0044BD50/0x140632130
 static int32_t Script_GMRequestPlayerInfo(lua_State* L) {
     luaL_error(L, "Access Denied");
     return 0;
 }
 
-// OFFSET: #0x00510BD0
+// OFFSET: 0x008C8280/0x140638210
 static int32_t Script_GetCoinIcon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCoinIcon(amount)");
@@ -3239,7 +3240,7 @@ static int32_t Script_GetCoinIcon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510C60
+// OFFSET: 0x008C8300/0x1406382F0
 static int32_t Script_GetCoinText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCoinText(amount [,separator])");
@@ -3253,7 +3254,7 @@ static int32_t Script_GetCoinText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510D00
+// OFFSET: 0x008C8390/0x140638400
 static int32_t Script_GetCoinTextureString(lua_State* L) {
     int32_t height = 14;
 
@@ -3272,13 +3273,13 @@ static int32_t Script_GetCoinTextureString(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510DB0
+// OFFSET: 0x008C2750/0x140632150
 static int32_t Script_ConfirmBindOnUse(lua_State* L) {
     CGItem_C::ConfirmBindOnUse();
     return 0;
 }
 
-// OFFSET: #0x00510F20
+// OFFSET: 0x008DA1F0/0x14064E000
 static int32_t Script_GetItemFamily(lua_State* L) {
     WOWGUID none = WOWGUID();
     int32_t itemId = 0;
@@ -3299,7 +3300,7 @@ static int32_t Script_GetItemFamily(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005110D0
+// OFFSET: 0x008C2A10/0x140632480
 static int32_t Script_IsCurrentItem(lua_State* L) {
     int32_t itemId;
 
@@ -3323,7 +3324,7 @@ static int32_t Script_IsCurrentItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511150
+// OFFSET: 0x008DA860/0x14064E7D0
 static int32_t Script_IsEquippableItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -3345,7 +3346,7 @@ static int32_t Script_IsEquippableItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511240
+// OFFSET: 0x008C2AD0/0x140632540
 static int32_t Script_GetAddOnInfo(lua_State* L) {
     const char* name;
 
@@ -3413,7 +3414,7 @@ static int32_t Script_GetAddOnInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x00511430
+// OFFSET: 0x008C2CC0/0x140632740
 static int32_t Script_GetAddOnMetadata(lua_State* L) {
     const char* name;
 
@@ -3435,7 +3436,7 @@ static int32_t Script_GetAddOnMetadata(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511530
+// OFFSET: 0x008C2DC0/0x140632840
 static int32_t Script_GetAddOnMemoryUsage(lua_State* L) {
     const char* name;
 
@@ -3459,7 +3460,7 @@ static int32_t Script_GetAddOnMemoryUsage(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511660
+// OFFSET: 0x008C2EE0/0x140632950
 static int32_t Script_GetAddOnCPUUsage(lua_State* L) {
     const char* name;
 
@@ -3483,7 +3484,7 @@ static int32_t Script_GetAddOnCPUUsage(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511840
+// OFFSET: 0x008C30C0/0x140632B30
 static int32_t Script_EnableAddOn(lua_State* L) {
     const char* name;
 
@@ -3507,7 +3508,7 @@ static int32_t Script_EnableAddOn(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511900
+// OFFSET: 0x008C3180
 static int32_t Script_EnableAllAddOns(lua_State* L) {
     for (uint32_t i = 0; i < GetNumAddOns(); i++) {
         SetAddOnEnableState(GetAddOnByIndex(i), ClientServices::GetCharacterName(), 2);
@@ -3516,7 +3517,7 @@ static int32_t Script_EnableAllAddOns(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511940
+// OFFSET: 0x008C31C0/0x140632C40
 static int32_t Script_DisableAddOn(lua_State* L) {
     const char* name;
 
@@ -3540,7 +3541,7 @@ static int32_t Script_DisableAddOn(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511A00
+// OFFSET: 0x008C3280/0x140632D00
 static int32_t Script_DisableAllAddOns(lua_State* L) {
     for (uint32_t i = 0; i < GetNumAddOns(); i++) {
         SetAddOnEnableState(GetAddOnByIndex(i), ClientServices::GetCharacterName(), 0);
@@ -3549,7 +3550,7 @@ static int32_t Script_DisableAllAddOns(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00511A60
+// OFFSET: 0x008C32E0/0x140632D70
 static int32_t Script_IsAddOnLoadOnDemand(lua_State* L) {
     const char* name;
 
@@ -3583,19 +3584,19 @@ static int32_t Script_IsAddOnLoadOnDemand(lua_State* L) {
 static void VoicePushToTalkNoop() {
 }
 
-// OFFSET: #0x00511D20
+// OFFSET: 0x008C34F0/0x140632F70
 static int32_t Script_VoicePushToTalkStart(lua_State* L) {
     VoicePushToTalkNoop();
     return 0;
 }
 
-// OFFSET: #0x00511D20
+// OFFSET: 0x008C34F0/0x140632F70
 static int32_t Script_VoicePushToTalkStop(lua_State* L) {
     VoicePushToTalkNoop();
     return 0;
 }
 
-// OFFSET: #0x00511DD0
+// OFFSET: 0x008C35A0/0x140633060
 static int32_t Script_GetNumDeclensionSets(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetNumDeclensionSets(\"name\", gender)");
@@ -3620,7 +3621,7 @@ static int32_t Script_GetNumDeclensionSets(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00511E80
+// OFFSET: 0x008C3650/0x140633120
 static int32_t Script_DeclineName(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: DeclineName(\"name\", gender, declensionSet)");
@@ -3658,13 +3659,13 @@ static int32_t Script_DeclineName(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x00511F90
+// OFFSET: 0x008C3760/0x140633260
 static int32_t Script_UploadSettings(lua_State* L) {
     UploadAccountData();
     return 0;
 }
 
-// OFFSET: #0x00511FA0
+// OFFSET: 0x008C3770/0x140633270
 static int32_t Script_DownloadSettings(lua_State* L) {
     DownloadAccountData();
     return 0;
@@ -3726,7 +3727,7 @@ static void ResurrectNameQueryCallback(int32_t id, const WOWGUID& guid, void* pa
     }
 }
 
-// OFFSET: #0x00515950
+// OFFSET: 0x008C7520/0x140637390
 static int32_t Script_ResurrectGetOfferer(lua_State* L) {
     WOWGUID offerer = CGPlayer_C::s_resurrectOfferer;
     NameCache* name;
@@ -3740,7 +3741,7 @@ static int32_t Script_ResurrectGetOfferer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005159C0
+// OFFSET: 0x008C7590/0x140637400
 static int32_t Script_ResurrectHasSickness(lua_State* L) {
     if (CGPlayer_C::s_resurrectOfferSickness) {
         lua_pushnumber(L, 1.0);
@@ -3751,7 +3752,7 @@ static int32_t Script_ResurrectHasSickness(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515A00
+// OFFSET: 0x008C75D0/0x140637440
 static int32_t Script_ResurrectHasTimer(lua_State* L) {
     if (CGBattlefieldInfo::m_instanceType == 4 || !CGPlayer_C::s_resurrectOfferUseTimer) {
         lua_pushnil(L);
@@ -3762,7 +3763,7 @@ static int32_t Script_ResurrectHasTimer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00515A90
+// OFFSET: 0x008CCC30/0x14063E780
 static int32_t Script_GuildSetMOTD(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GuildSetMOTD(\"message\")");
@@ -3785,7 +3786,7 @@ static int32_t Script_GuildSetMOTD(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516340
+// OFFSET: 0x008C7D10/0x140637CD0
 static int32_t Script_GetInstanceLockTimeRemaining(lua_State* L) {
     int32_t remaining;
     uint32_t completedMask;
@@ -3810,7 +3811,7 @@ static int32_t Script_GetInstanceLockTimeRemaining(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00516410
+// OFFSET: 0x008C7DD0/0x140637D90
 static int32_t Script_GetInstanceLockTimeRemainingEncounter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInstanceLockTimeRemainingEncounter(encounterIndex)");
@@ -3835,7 +3836,7 @@ static int32_t Script_GetInstanceLockTimeRemainingEncounter(lua_State* L) {
 static void SummonConfirmNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
 }
 
-// OFFSET: #0x00516510
+// OFFSET: 0x008C7EB0/0x140631E70
 static int32_t Script_GetSummonConfirmSummoner(lua_State* L) {
     WOWGUID summoner = CGGameUI::m_summonConfirmGUID;
     NameCache* name = g_nameDBCache.GetRecord(CGGameUI::m_summonConfirmGUID.m_guid, summoner, &SummonConfirmNameCallback, NULL, false);
@@ -3849,7 +3850,7 @@ static int32_t Script_GetSummonConfirmSummoner(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005167A0
+// OFFSET: 0x008C8240/0x1406320E0
 static int32_t Script_ReplaceEnchant(lua_State* L) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGGameUI::m_lastItemSpellTarget, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -3860,7 +3861,7 @@ static int32_t Script_ReplaceEnchant(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00516AA0
+// OFFSET: 0x008C86F0/0x140638830
 static int32_t Script_GetGMTicketCategories(lua_State* L) {
     int32_t count = g_gmTicketCategoryDB.m_numRecords;
     int32_t results = 2 * count;
@@ -3875,7 +3876,7 @@ static int32_t Script_GetGMTicketCategories(lua_State* L) {
     return results;
 }
 
-// OFFSET: #0x00516ED0
+// OFFSET: 0x008D9FC0/0x14064DCE0
 static int32_t Script_GetItemUniqueness(lua_State* L) {
     ItemLinkInfo linkInfo;
     linkInfo.Clear();
@@ -3928,7 +3929,7 @@ static int32_t Script_GetItemUniqueness(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00517020
+// OFFSET: 0x008DA110/0x14064DF00
 static int32_t Script_GetItemIcon(lua_State* L) {
     int32_t itemId = 0;
 
@@ -3952,7 +3953,7 @@ static int32_t Script_GetItemIcon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005171F0
+// OFFSET: 0x008C8970/0x140638AE0
 static int32_t Script_IsHelpfulItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -3975,7 +3976,7 @@ static int32_t Script_IsHelpfulItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005172E0
+// OFFSET: 0x008C8A40/0x140638BC0
 static int32_t Script_IsHarmfulItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -3998,7 +3999,7 @@ static int32_t Script_IsHarmfulItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005173E0
+// OFFSET: 0x008DA710/0x14064E640
 static int32_t Script_IsConsumableItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -4065,7 +4066,7 @@ static int32_t GetItemSpell(int32_t itemId) {
     return CGItem_C::GetUseSpell(itemId);
 }
 
-// OFFSET: #0x00517530
+// OFFSET: 0x008DA910/0x14064E890
 static int32_t Script_IsDressableItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -4133,7 +4134,7 @@ static int32_t Script_IsDressableItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00517890
+// OFFSET: 0x008C8B10/0x140638CA0
 static int32_t Script_GetFrameCPUUsage(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: GetFrameCPUUsage(frame[, includeChildren])");
@@ -4162,7 +4163,7 @@ static int32_t Script_GetFrameCPUUsage(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005179B0
+// OFFSET: 0x008C8C30/0x140638DF0
 static int32_t Script_GetAddOnDependencies(lua_State* L) {
     const char* name;
 
@@ -4197,7 +4198,7 @@ static int32_t Script_GetAddOnDependencies(lua_State* L) {
     return dependencies->m_count;
 }
 
-// OFFSET: #0x00517AA0
+// OFFSET: 0x008C8E10/0x140639010
 static int32_t Script_GetMirrorTimerProgress(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetMirrorTimerInfo(\"timer\")");
@@ -4221,7 +4222,7 @@ static int32_t Script_GetMirrorTimerProgress(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051A3D0
+// OFFSET: 0x008CC3A0/0x14063D2C0
 static int32_t Script_EquipCursorItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: EquipCursorItem(slot)");
@@ -4270,7 +4271,7 @@ static int32_t Script_EquipCursorItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A530
+// OFFSET: 0x008CC500/0x14063D5C0
 static int32_t Script_EquipPendingItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: EquipPendingItem(index)");
@@ -4286,7 +4287,7 @@ static int32_t Script_EquipPendingItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A5C0
+// OFFSET: 0x008CC590/0x14063D650
 static int32_t Script_CancelPendingEquip(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CancelPendingEquip(index)");
@@ -4302,7 +4303,7 @@ static int32_t Script_CancelPendingEquip(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A650
+// OFFSET: 0x008CC620/0x14063D6E0
 static int32_t Script_AttackTarget(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4313,7 +4314,7 @@ static int32_t Script_AttackTarget(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A6B0
+// OFFSET: 0x008CC690/0x14063D770
 static int32_t Script_ToggleSheath(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4390,7 +4391,7 @@ static int32_t Script_UninviteUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A880
+// OFFSET: 0x008CC720/0x14063DC30
 static int32_t Script_CanShowResetInstances(lua_State* L) {
     if (CGGameUI::CanResetInstance()) {
         lua_pushnumber(L, 1.0);
@@ -4401,7 +4402,7 @@ static int32_t Script_CanShowResetInstances(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051ACD0
+// OFFSET: 0x008CCAD0/0x14063E080
 static int32_t Script_HasSoulstone(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4429,7 +4430,7 @@ static int32_t Script_HasSoulstone(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051ADD0
+// OFFSET: 0x008D3E30/0x14063E1C0
 static int32_t Script_UseSoulstone(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4459,7 +4460,7 @@ static int32_t Script_UseSoulstone(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051B050
+// OFFSET: 0x008CCDF0/0x14063E8D0
 static int32_t Script_ConfirmSummon(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4482,7 +4483,7 @@ static int32_t Script_ConfirmSummon(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051B240
+// OFFSET: 0x008CCF20/0x14063EAC0
 static int32_t Script_CheckInteractDistance(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CheckInteractDistance(\"unit\", distIndex)");
@@ -4508,7 +4509,7 @@ static int32_t Script_CheckInteractDistance(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051B6A0
+// OFFSET: 0x008CD410/0x14063F050
 static int32_t Script_AcceptXPLoss(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4519,7 +4520,7 @@ static int32_t Script_AcceptXPLoss(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051BDD0
+// OFFSET: 0x008CDB00/0x14063F880
 static int32_t Script_DropItemOnUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: DropItemOnUnit(\"unit\")");
@@ -4564,7 +4565,7 @@ static int32_t Script_DropItemOnUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051BF50
+// OFFSET: 0x008CDC70/0x14063F9F0
 static int32_t Script_ConfirmTalentWipe(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4575,7 +4576,7 @@ static int32_t Script_ConfirmTalentWipe(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051BF90
+// OFFSET: 0x008CDCB0/0x14063FA40
 static int32_t Script_ConfirmBinder(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4586,7 +4587,7 @@ static int32_t Script_ConfirmBinder(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051C0B0
+// OFFSET: 0x008CDDD0/0x14063FB70
 static int32_t Script_ShowHelm(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4603,7 +4604,7 @@ static int32_t Script_ShowHelm(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051C100
+// OFFSET: 0x008CDE70/0x14063FC30
 static int32_t Script_ShowCloak(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4620,7 +4621,7 @@ static int32_t Script_ShowCloak(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051C150
+// OFFSET: 0x008D9E30/0x14064DA20
 static int32_t Script_GetItemGem(lua_State* L) {
     int32_t enchantId = 0;
 
@@ -4679,7 +4680,7 @@ static int32_t Script_GetItemGem(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0051C2E0
+// OFFSET: 0x008DA290/0x14064E0B0
 static int32_t Script_GetItemCount(lua_State* L) {
     int32_t includeBank = StringToBOOL(L, 2, 0);
     int32_t includeCharges = StringToBOOL(L, 3, 0);
@@ -4737,7 +4738,7 @@ static int32_t Script_GetItemCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051C450
+// OFFSET: 0x008DA4E0/0x14064E350
 static int32_t Script_IsUsableItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -4863,7 +4864,7 @@ int32_t FindItemClassTypeCallback(const CGItem_C* item, void* param) {
     return 0;
 }
 
-// OFFSET: #0x0051C690
+// OFFSET: 0x008CDF10/0x14063FCF0
 static int32_t Script_IsEquippedItem(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4886,7 +4887,7 @@ static int32_t Script_IsEquippedItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051C740
+// OFFSET: 0x008DAC20/0x14064EC60
 static int32_t Script_IsEquippedItemType(lua_State* L) {
     const char* type = lua_tolstring(L, 1, NULL);
 
@@ -4927,7 +4928,7 @@ static int32_t Script_IsEquippedItemType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051C870
+// OFFSET: 0x008CDFC0/0x14063FDC0
 static int32_t Script_ItemHasRange(lua_State* L) {
     int32_t itemId = 0;
 
@@ -4958,7 +4959,7 @@ static int32_t Script_ItemHasRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051C9C0
+// OFFSET: 0x008CE0F0/0x14063FF10
 static int32_t Script_IsItemInRange(lua_State* L) {
     int32_t itemId = 0;
 
@@ -4990,7 +4991,7 @@ static int32_t Script_IsItemInRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051CD00
+// OFFSET: 0x008CE400/0x140640270
 static int32_t Script_UseItemByName(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -5015,7 +5016,7 @@ static int32_t Script_UseItemByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051CDB0
+// OFFSET: 0x008CE4E0/0x140640380
 static int32_t Script_EquipItemByName(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -5109,7 +5110,7 @@ static int32_t Script_EquipItemByName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051D0B0
+// OFFSET: 0x008CE7E0/0x140640730
 static int32_t Script_StopAttack(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -5120,7 +5121,7 @@ static int32_t Script_StopAttack(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051D170
+// OFFSET: 0x008CE8A0/0x140640800
 static int32_t Script_Dismount(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -5131,7 +5132,7 @@ static int32_t Script_Dismount(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051D230
+// OFFSET: 0x008CE960/0x1406408F0
 static int32_t Script_CanGrantLevel(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -5145,7 +5146,7 @@ static int32_t Script_CanGrantLevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051D2B0
+// OFFSET: 0x008CE9E0/0x140640AF0
 static int32_t Script_CanSummonFriend(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -5159,13 +5160,13 @@ static int32_t Script_CanSummonFriend(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0051D590
+// OFFSET: 0x008CEC70/0x140640F70
 static int32_t Script_GameMovieFinished(lua_State* L) {
     CGGameUI::StopMovie();
     return 0;
 }
 
-// OFFSET: #0x005222E0
+// OFFSET: 0x008D5D60/0x140649570
 static int32_t Script_ReloadUI(lua_State* L) {
     if (lua_tainted && CGGameUI::m_simpleTop && !CGGameUI::m_simpleTop->unk_1260) {
         CGGameUI::ShowBlockedActionFeedback(NULL, 1);
@@ -5176,7 +5177,7 @@ static int32_t Script_ReloadUI(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522320
+// OFFSET: 0x008D37E0/0x14063D420
 static int32_t Script_DeleteCursorItem(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -5218,7 +5219,7 @@ static int32_t Script_DeleteCursorItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005224C0
+// OFFSET: 0x008D3940/0x140647470
 static int32_t Script_FollowUnit(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     WOWGUID guid = CGGameUI::ClosestObjectMatch(name, TYPEMASK_PLAYER, 3, StringToBOOL(L, 2, 0), FLT_MAX, 0);
@@ -5249,14 +5250,14 @@ static int32_t Script_FollowUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005225E0
+// OFFSET: 0x008D5DE0/0x140649D60
 static int32_t Script_ClearFocus(lua_State* L) {
     WOWGUID guid = WOWGUID();
     CGGameUI::SetFocusTarget(guid);
     return 0;
 }
 
-// OFFSET: #0x00522600
+// OFFSET: 0x008D3A60/0x14063D810
 static int32_t Script_InitiateTrade(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: InitiateTrade(\"unit\")");
@@ -5295,7 +5296,7 @@ static int32_t Script_InitiateTrade(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522710
+// OFFSET: 0x008D3B70/0x14063D960
 static int32_t Script_CanInspect(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: CanInspect(unit [, showError])");
@@ -5335,7 +5336,7 @@ static int32_t Script_CanInspect(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00522870
+// OFFSET: 0x008D3D10/0x14063DB20
 static int32_t Script_NotifyInspect(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: NotifyInspect(unit)");
@@ -5357,7 +5358,7 @@ static int32_t Script_NotifyInspect(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522980
+// OFFSET: 0x008D5E30/0x14064A080
 static int32_t Script_PickupPlayerMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupPlayerMoney(amount)");
@@ -5377,7 +5378,7 @@ static int32_t Script_PickupPlayerMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522E30
+// OFFSET: 0x008D4410/0x140647770
 static int32_t Script_SetCurrentTitle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetCurrentTitle(titleMaskID)");
@@ -5416,19 +5417,19 @@ static int32_t Script_SetCurrentTitle(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00522F70
+// OFFSET: 0x008DCE60/0x140651860
 static int32_t Script_BindEnchant(lua_State* L) {
     CGGameUI::CastItemSpell(CGGameUI::m_lastItemSpellTarget, 1);
     return 0;
 }
 
-// OFFSET: #0x00522FA0
+// OFFSET: 0x008D4570
 static int32_t Script_CancelAreaSpiritHeal(lua_State* L) {
     CGGameUI::CastSpiritHealSpell();
     return 0;
 }
 
-// OFFSET: #0x00522FB0
+// OFFSET: 0x008DA400/0x14064E250
 static int32_t Script_PickupItem(lua_State* L) {
     int32_t itemId = 0;
 
@@ -5444,7 +5445,7 @@ static int32_t Script_PickupItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00523090
+// OFFSET: 0x008D4580/0x140647980
 static int32_t Script_StartAttack(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     int32_t hasTarget = 0;
@@ -5471,7 +5472,7 @@ static int32_t Script_StartAttack(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00523160
+// OFFSET: 0x008D4650/0x140640990
 static int32_t Script_GrantLevel(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -5506,7 +5507,7 @@ static void SummonFriendErrorCallback(int32_t id, const WOWGUID& guid, void* par
     }
 }
 
-// OFFSET: #0x00523260
+// OFFSET: 0x008D4750/0x140640BE0
 static int32_t Script_SummonFriend(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     WOWGUID guid = GetGuidByKeyword(lua_tolstring(L, 1, NULL));
@@ -5544,13 +5545,13 @@ static int32_t Script_SummonFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00523360
+// OFFSET: 0x008CEC60/0x140640F60
 static int32_t Script_AcceptLevelGrant(lua_State* L) {
     CGGameUI::AcceptLevelGrant();
     return 0;
 }
 
-// OFFSET: #0x00523370
+// OFFSET: 0x008DCE80/0x140651880
 static int32_t Script_EndRefund(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -5570,7 +5571,7 @@ static int32_t Script_EndRefund(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005233D0
+// OFFSET: 0x008DCEE0/0x1406518E0
 static int32_t Script_EndBoundTradeable(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: EndBoundTradeable(\"type\")");
@@ -5604,7 +5605,7 @@ static void TargetIfValid(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: #0x00525A30
+// OFFSET: 0x008D72C0
 static int32_t Script_TargetUnit(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     int32_t exact = StringToBOOL(L, 2, 0);
@@ -5617,7 +5618,7 @@ static int32_t Script_TargetUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525C30
+// OFFSET: 0x008D74C0/0x140649810
 static int32_t Script_TargetDirectionEnemy(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TargetDirectionEnemy(facing)");
@@ -5634,7 +5635,7 @@ static int32_t Script_TargetDirectionEnemy(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525CD0
+// OFFSET: 0x008D7560/0x1406498C0
 static int32_t Script_TargetDirectionFriend(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TargetDirectionFriend(facing)");
@@ -5651,7 +5652,7 @@ static int32_t Script_TargetDirectionFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525D70
+// OFFSET: 0x008D7600
 static int32_t Script_TargetLastTarget(lua_State* L) {
     if (CGGameUI::m_lastTarget) {
         TargetIfValid(CGGameUI::m_lastTarget);
@@ -5663,19 +5664,19 @@ static int32_t Script_TargetLastTarget(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00525DF0
+// OFFSET: 0x008D7640/0x140649A40
 static int32_t Script_TargetLastEnemy(lua_State* L) {
     TargetIfValid(CGGameUI::m_lastEnemyTarget);
     return 0;
 }
 
-// OFFSET: #0x00525E50
+// OFFSET: 0x008D76A0/0x140649AA0
 static int32_t Script_TargetLastFriend(lua_State* L) {
     TargetIfValid(CGGameUI::m_lastFriendTarget);
     return 0;
 }
 
-// OFFSET: #0x00525EB0
+// OFFSET: 0x008D7700/0x140649B00
 static int32_t Script_AssistUnit(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     int32_t exact = StringToBOOL(L, 2, 0);
@@ -5709,7 +5710,7 @@ static int32_t Script_AssistUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00526050
+// OFFSET: 0x008D7870/0x140649D80
 static int32_t Script_SetDungeonDifficulty(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetDungeonDifficulty(difficulty)");
@@ -5743,7 +5744,7 @@ static int32_t Script_SetDungeonDifficulty(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005261A0
+// OFFSET: 0x008D79F0/0x140649F00
 static int32_t Script_SetRaidDifficulty(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetRaidDifficulty(difficulty)");
@@ -5771,13 +5772,13 @@ static int32_t Script_SetRaidDifficulty(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005262D0
+// OFFSET: 0x008D7B20/0x14064AFB0
 static int32_t Script_AcceptAreaSpiritHeal(lua_State* L) {
     CGGameUI::AcceptAreaSpiritHeal();
     return 0;
 }
 
-// OFFSET: #0x00527F00
+// OFFSET: 0x008D8D40/0x14064AEB0
 static int32_t Script_InteractUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: InteractUnit(unitToken[, exactMatch])");

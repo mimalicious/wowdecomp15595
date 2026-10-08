@@ -176,7 +176,7 @@ static HTEXTFONT s_textFont;
 // STATIC: #0x00B2FEE4
 static CGxString* s_tipStr;
 
-// STATIC: #0x00B2FEE8
+// STATIC: 0x00D365E8
 static const char* s_gameTip;
 
 // STATIC: #0x00B2FEEC
@@ -197,8 +197,8 @@ static TSGrowableArray<DYNAMICELEMENTVERT> s_dynamicElements;
 // STATIC: #0x00B302D0
 static CLoadingScreenShipInfo<TaxiPathNodeRec> s_shipInfo;
 
-// STATIC: #0x00B302F0
-static char s_raceDataTipText[1024];
+// STATIC: 0x00D369E8
+static char s_raceDataTipText[260];
 
 // OFFSET: #0x00407C50
 static void BuildTiles() {
@@ -313,16 +313,10 @@ void LoadingScreenSetTip(const char* tip) {
     s_gameTip = tip;
 }
 
-// OFFSET: #0x00407E40
-void LoadingScreenSetScreenTipForRaceData(bool show) {
-    const char* text = FrameScript_GetText("TRIAL_LOADING_MESSAGE", -1, GENDER_NOT_APPLICABLE);
-    s_spellProgress = 0.0f;
-    s_raceDataTip = show;
-
-    if (show) {
-        SStrPrintf(s_raceDataTipText, sizeof(s_raceDataTipText), text);
-        s_gameTip = s_raceDataTipText;
-    }
+// OFFSET: 0x0040AD90/0x14000D6C0
+void LoadingScreenSetScreenTipForRaceData() {
+    SStrCopy(s_raceDataTipText, FrameScript_GetText("TRIAL_LOADING_MESSAGE", -1, GENDER_NOT_APPLICABLE), sizeof(s_raceDataTipText));
+    s_gameTip = s_raceDataTipText;
 }
 
 // PROVEN: 01c1912d IDENTICAL/NONE

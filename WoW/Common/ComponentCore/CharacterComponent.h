@@ -167,11 +167,14 @@ class CCharacterComponent {
     void AddHelm(int32_t itemVisual);
     void AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, int32_t itemVisual);
     void AddItem(ITEM_SLOT itemSlot, int32_t displayID, int32_t itemVisual);
+    GEOCOMPONENTLINKS AddHandItem(const ItemDisplayInfoRec* displayRec, int32_t invSlot, int32_t sheatheType, bool sheathed, bool shield, bool ranged, int32_t itemVisual);
     void AddItemBySlot(INVENTORY_SLOTS invSlot, int32_t displayID, int32_t itemVisual);
     void AddItemByType(INVENTORY_TYPES invType, int32_t displayID);
     void AddQuiver(int32_t itemVisual);
     void AddShoulders(int32_t itemVisual);
     void ApplyGuildColor(int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background);
+    void ApplyGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background);
+    void ApplyShoulderGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background);
     int32_t AreShoulderModelsCorrect();
     int32_t BuildShoulderItemPaths(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec, char* leftModel, char* rightModel, char* leftTexture, char* rightTexture);
     void ClearGuildTexture(int32_t count);

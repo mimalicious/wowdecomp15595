@@ -6,7 +6,8 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "WoW/Source/Ui/CAccountMsgBody.h"
 
-// OFFSET: #0x0054FDE0
+// PROVEN: b9d90b3b IDENTICAL/NONE
+// OFFSET: 0x009FA1D0/0x140797610
 static int32_t Script_AccountMsg_GetNumTotalMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetNumTotalMsgs() failed because the headers are not loaded");
@@ -17,7 +18,7 @@ static int32_t Script_AccountMsg_GetNumTotalMsgs(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054FE20
+// OFFSET: 0x009FA210/0x140797650
 static int32_t Script_AccountMsg_GetHeaderSubject(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetHeaderSubject() failed because the headers are not loaded");
@@ -40,7 +41,7 @@ static int32_t Script_AccountMsg_GetHeaderSubject(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054FEC0
+// OFFSET: 0x009FA2B0/0x140797740
 static int32_t Script_AccountMsg_GetHeaderPriority(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetHeaderPriority() failed because the headers are not loaded");
@@ -63,7 +64,7 @@ static int32_t Script_AccountMsg_GetHeaderPriority(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054FF70
+// OFFSET: 0x009FAA80/0x140798120
 static int32_t Script_AccountMsg_LoadBody(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_LoadBody() failed because the headers are not loaded");
@@ -90,7 +91,7 @@ static int32_t Script_AccountMsg_LoadBody(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00550020
+// OFFSET: 0x009FA360/0x140797810
 static int32_t Script_AccountMsg_GetBody(lua_State* L) {
     if (g_accountMsgBody.m_state != 2) {
         luaL_error(L, "AccountMsg_GetBody() failed because the body was not loaded");
@@ -105,7 +106,8 @@ static int32_t Script_AccountMsg_GetBody(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00550360
+// PROVEN: ff18d8d2 IDENTICAL/NONE
+// OFFSET: 0x009FA840/0x140797E90
 static int32_t Script_AccountMsg_GetNumUnreadMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetNumUnreadMsgs() failed because the headers are not loaded");
@@ -124,7 +126,8 @@ static int32_t Script_AccountMsg_GetNumUnreadMsgs(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005503E0
+// PROVEN: e1d6379d IDENTICAL/NONE
+// OFFSET: 0x009FA8B0/0x140797F00
 static int32_t Script_AccountMsg_GetNumUnreadUrgentMsgs(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetNumUnreadMsgs() failed because the headers are not loaded");
@@ -135,7 +138,7 @@ static int32_t Script_AccountMsg_GetNumUnreadUrgentMsgs(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00550430
+// OFFSET: 0x009FA900/0x140797F50
 static int32_t Script_AccountMsg_GetIndexHighestPriorityUnreadMsg(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetHeaderSubject() failed because the headers are not loaded");
@@ -148,7 +151,7 @@ static int32_t Script_AccountMsg_GetIndexHighestPriorityUnreadMsg(lua_State* L) 
     return 2;
 }
 
-// OFFSET: #0x005504E0
+// OFFSET: 0x009FA9B0/0x140798000
 static int32_t Script_AccountMsg_GetIndexNextUnreadMsg(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_GetHeaderSubject() failed because the headers are not loaded");
@@ -167,7 +170,7 @@ static int32_t Script_AccountMsg_GetIndexNextUnreadMsg(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005505B0
+// OFFSET: 0x009FAB30/0x1407981E0
 static int32_t Script_AccountMsg_SetMsgRead(lua_State* L) {
     if (g_accountMsgHeaders.m_state != 2) {
         luaL_error(L, "AccountMsg_SetMsgRead() failed because the headers are not loaded");
@@ -194,7 +197,8 @@ static int32_t Script_AccountMsg_SetMsgRead(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00550910
+// PROVEN: d5f27551 IDENTICAL/NONE
+// OFFSET: 0x009FADA0/0x140798500
 static int32_t Script_AccountMsg_LoadHeaders(lua_State* L) {
     if (!g_accountMsgHeaders.LoadHeaders()) {
         luaL_error(L, "AccountMsg_LoadHeaders() failed");

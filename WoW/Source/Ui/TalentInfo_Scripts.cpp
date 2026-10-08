@@ -23,7 +23,7 @@
 // STATIC: #0x00AD05E8
 static int32_t s_activateTalentGroupSpells[2] = { 63645, 63644 };
 
-// OFFSET: #0x005C5CC0
+// OFFSET: 0x0099A300/0x14071C170
 static int32_t Script_GetNumTalentTabs(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
     int32_t pet = StringToBOOL(L, 2, 0);
@@ -44,7 +44,7 @@ static int32_t Script_GetNumTalentTabs(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C5D40
+// OFFSET: 0x0099A480/0x14071C350
 static int32_t Script_GetNumTalents(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNumTalents(tabIndex[, isInspect[, isPet]])");
@@ -59,7 +59,7 @@ static int32_t Script_GetNumTalents(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C5DF0
+// OFFSET: 0x0099A530/0x14071C450
 static int32_t Script_GetNumTalentGroups(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
     int32_t pet = StringToBOOL(L, 2, 0);
@@ -77,7 +77,7 @@ static int32_t Script_GetNumTalentGroups(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C5E70
+// OFFSET: 0x0099AF30/0x14071D1B0
 static int32_t Script_SetActiveTalentGroup(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetActiveTalentGroup(groupIndex)");
@@ -93,7 +93,7 @@ static int32_t Script_SetActiveTalentGroup(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005C6150
+// OFFSET: 0x0099AB80/0x14071CC50
 static int32_t Script_GetTalentTabInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTalentTabInfo(tabIndex[, isInspect[, isPet[, groupIndex]]])");
@@ -140,7 +140,7 @@ static int32_t Script_GetTalentTabInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005C6310
+// OFFSET: 0x0099AE80/0x14071D100
 static int32_t Script_GetUnspentTalentPoints(lua_State* L) {
     int32_t inspect = StringToBOOL(L, 1, 0);
     int32_t pet = StringToBOOL(L, 2, 0);
@@ -149,7 +149,7 @@ static int32_t Script_GetUnspentTalentPoints(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C6420
+// OFFSET: 0x0099B090/0x14071D360
 static int32_t Script_GetGroupPreviewTalentPointsSpent(lua_State* L) {
     int32_t pet = StringToBOOL(L, 1, 0);
     uint32_t group = TalentInfoGetScriptGroupIndex(L, 2);
@@ -157,7 +157,7 @@ static int32_t Script_GetGroupPreviewTalentPointsSpent(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C6A10
+// OFFSET: 0x0099D080/0x14071FEB0
 static int32_t Script_LearnPreviewTalents(lua_State* L) {
     int32_t pet = StringToBOOL(L, 1, 0);
     CGTalentGroup_C* group = CGTalentInfo::GetTalentGroup(CGTalentInfo::GetActiveTalentGroup(pet), pet);
@@ -222,7 +222,7 @@ static int32_t Script_LearnPreviewTalents(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005C7130
+// OFFSET: 0x0099CEE0/0x14071FA60
 static int32_t Script_ResetPreviewTalentPoints(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ResetPreviewTalentPoints(tabIndex[, isPet[, groupIndex]])");
@@ -243,7 +243,7 @@ static int32_t Script_ResetPreviewTalentPoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005C7200
+// OFFSET: 0x0099CFB0/0x14071FC60
 static int32_t Script_ResetGroupPreviewTalentPoints(lua_State* L) {
     int32_t pet = StringToBOOL(L, 1, 0);
     uint32_t group = TalentInfoGetScriptGroupIndex(L, 2);
@@ -258,7 +258,7 @@ static int32_t Script_ResetGroupPreviewTalentPoints(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005C7800
+// OFFSET: 0x0099C460/0x14071ED50
 static int32_t Script_GetTalentInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTalentInfo(tabIndex, talentIndex[, isInspect[, isPet[, groupIndex]]])");
@@ -382,7 +382,7 @@ static int32_t Script_GetTalentInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x005C7ED0
+// OFFSET: 0x0099CAB0/0x14071F510
 static int32_t Script_GetTalentPrereqs(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTalentPrereqs(tabIndex, talentIndex[, isInspect[, isPet[, groupIndex]]])");
@@ -444,7 +444,7 @@ static int32_t Script_GetTalentPrereqs(lua_State* L) {
     return 4 * count;
 }
 
-// OFFSET: #0x005C7CE0
+// OFFSET: 0x0099C8F0/0x14071F2B0
 static int32_t Script_GetTalentLink(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTalentLink(tabIndex, talentIndex[, isInspect[, isPet[, groupIndex[, isPreview]]]])");
@@ -482,7 +482,7 @@ static int32_t Script_GetTalentLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C80E0
+// OFFSET: 0x0099CCA0/0x14071F7C0
 static int32_t Script_LearnTalent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: LearnTalent(tabIndex, talentIndex[, isPet])");
@@ -540,7 +540,7 @@ static int32_t Script_LearnTalent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005C9590
+// OFFSET: 0x0099EB30/0x1407225E0
 static int32_t Script_AddPreviewTalentPoints(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: AddPreviewTalentPoints(tabIndex, talentIndex, points[, isPet[, groupIndex]])");
@@ -580,7 +580,7 @@ static int32_t Script_GetActiveTalentGroup(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C63B0
+// OFFSET: 0x0099B000/0x14071D2A0
 static int32_t Script_GetPreviewTalentPointsSpent(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPreviewTalentPointsSpent(tabIndex[, isPet[, groupIndex]])");

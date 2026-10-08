@@ -6,21 +6,21 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/QuestLog.h"
 
-// OFFSET: #0x0058E800
+// OFFSET: 0x00A00530/0x14079EB50
 static int32_t Script_EnableSmoothing(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     frame->m_smoothing = lua_toboolean(L, 2);
     return 0;
 }
 
-// OFFSET: #0x0058E850
+// OFFSET: 0x00A00580/0x14079EBB0
 static int32_t Script_EnableMerging(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     frame->m_merging = lua_toboolean(L, 2);
     return 0;
 }
 
-// OFFSET: #0x0058E8A0
+// OFFSET: 0x00A005D0/0x14079EC10
 static int32_t Script_SetMergeThreshold(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     double threshold = lua_tonumber(L, 2);
@@ -35,7 +35,7 @@ static int32_t Script_SetMergeThreshold(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058E920
+// OFFSET: 0x00A00660/0x14079ECC0
 static int32_t Script_SetNumSplinePoints(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     int32_t points = lua_tointeger(L, 2);
@@ -56,14 +56,14 @@ static int32_t Script_UpdateQuestPOI(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058FE50
+// OFFSET: 0x00A016B0/0x1407A0180
 static int32_t Script_SetFillTexture(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     frame->SetFillTexture(lua_tolstring(L, 2, NULL));
     return 0;
 }
 
-// OFFSET: #0x0058FEA0
+// OFFSET: 0x00A01700/0x1407A01E0
 static int32_t Script_SetBorderTexture(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     frame->SetBorderTexture(lua_tolstring(L, 2, NULL));
@@ -104,7 +104,7 @@ void CGQuestPOIFrame::CreateScriptMetaTable() {
     CGQuestPOIFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGQuestPOIFrame::RegisterScriptMethods);
 }
 
-// OFFSET: #0x0058E660
+// OFFSET: 0x00A002C0/0x14079E8D0
 static int32_t Script_SetFillAlpha(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     double value = lua_tonumber(L, 2);
@@ -120,7 +120,7 @@ static int32_t Script_SetFillAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058E6F0
+// OFFSET: 0x00A00360/0x14079E960
 static int32_t Script_SetBorderAlpha(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     double value = lua_tonumber(L, 2);
@@ -136,7 +136,7 @@ static int32_t Script_SetBorderAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058E780
+// OFFSET: 0x00A00400/0x14079E9F0
 static int32_t Script_SetBorderScalar(lua_State* L) {
     CGQuestPOIFrame* frame = static_cast<CGQuestPOIFrame*>(FrameScript_GetObjectThis(L, CGQuestPOIFrame::GetObjectType()));
     double scalar = lua_tonumber(L, 2);

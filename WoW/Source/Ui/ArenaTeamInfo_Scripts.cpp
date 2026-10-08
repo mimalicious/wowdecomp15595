@@ -18,7 +18,7 @@
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// OFFSET: #0x005A2A00
+// OFFSET: 0x009A9200/0x140730330
 static int32_t Script_GetArenaTeamRosterShowOffline(lua_State* L) {
     if (CGArenaTeamInfo::m_showOffline) {
         lua_pushnumber(L, 1.0);
@@ -29,7 +29,7 @@ static int32_t Script_GetArenaTeamRosterShowOffline(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A2930
+// OFFSET: 0x009A9130/0x140730280
 static int32_t Script_GetNumArenaTeamMembers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNumArenaTeamMembers(team [,showOffline])");
@@ -52,7 +52,7 @@ static int32_t Script_GetNumArenaTeamMembers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A3260
+// OFFSET: 0x009A9A30/0x140730C10
 static int32_t Script_GetArenaTeamGdfInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetArenaTeamGdfInfo(team, index)");
@@ -81,7 +81,7 @@ static void ArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void* param,
     }
 }
 
-// OFFSET: #0x005A3860
+// OFFSET: 0x009AA030/0x140731290
 static int32_t Script_GetArenaTeam(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetArenaTeam(team)");
@@ -148,7 +148,7 @@ static int32_t Script_GetPreviousArenaSeason(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A2FC0
+// OFFSET: 0x009A97D0/0x1407309B0
 static int32_t Script_GetArenaTeamRosterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetArenaTeamRosterInfo(team, index)");
@@ -205,7 +205,7 @@ static int32_t Script_GetArenaTeamRosterInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x005A3370
+// OFFSET: 0x009A9B30/0x140730D00
 static int32_t Script_SetArenaTeamRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetArenaTeamRosterSelection(team, index)");
@@ -218,7 +218,8 @@ static int32_t Script_SetArenaTeamRosterSelection(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A3410
+// PROVEN: 391468f0 IDENTICAL/NONE
+// OFFSET: 0x009A9BD0/0x140730DC0
 static int32_t Script_GetArenaTeamRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetArenaTeamRosterSelection(team)");
@@ -230,7 +231,7 @@ static int32_t Script_GetArenaTeamRosterSelection(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A3490
+// OFFSET: 0x009A9C50/0x140730E70
 static int32_t Script_SortArenaTeamRoster(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usgae: SortArenaTeamRoster(\"type\")");
@@ -278,7 +279,7 @@ static int32_t Script_SortArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008FEC00
+// OFFSET: 0x009A9D90/0x140730F80
 static int32_t Script_SetArenaTeamRosterShowOffline(lua_State* L) {
     CGArenaTeamInfo::SetRosterShowOffline(StringToBOOL(L, 1, 1));
     return 0;
@@ -290,7 +291,8 @@ static int32_t Script_CloseArenaTeamRoster(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A3CF0
+// PROVEN: 5c5f2a90 IDENTICAL/NONE
+// OFFSET: 0x009AA4C0/0x140731720
 static int32_t Script_ArenaTeamRoster(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ArenaTeamRoster(team)");

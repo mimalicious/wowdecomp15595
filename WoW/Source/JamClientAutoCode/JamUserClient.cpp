@@ -157,3 +157,20 @@ void UserClientReorderCharacters::Put(CDataStore* msg) {
         }
     }
 }
+
+// OFFSET: 0x0066DE40/0x140315030
+UserClientGenerateRandomCharacterName::UserClientGenerateRandomCharacterName(uint8_t raceID, uint8_t sexID) {
+    this->m_raceID = raceID;
+    this->m_sexID = sexID;
+}
+
+// OFFSET: 0x0066B960/0x140312160
+UserClientGenerateRandomCharacterName::~UserClientGenerateRandomCharacterName() {
+}
+
+// OFFSET: 0x0066D8E0
+void UserClientGenerateRandomCharacterName::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2413));
+    msg->Put(this->m_raceID);
+    msg->Put(this->m_sexID);
+}

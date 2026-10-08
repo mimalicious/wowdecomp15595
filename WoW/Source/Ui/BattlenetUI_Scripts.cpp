@@ -12,7 +12,7 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// OFFSET: #0x00530EC0
+// OFFSET: 0x00902320/0x14065A930
 static int32_t Script_BNConnected(lua_State* L) {
     bool connected = false;
     Login* login = ClientServices::LoginConnection();
@@ -29,14 +29,14 @@ static int32_t Script_BNConnected(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00530F20
+// OFFSET: 0x00902380/0x14065A9A0
 static int32_t Script_IsBNLogin(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
     lua_pushboolean(L, login && login->GetLoginServerType() == 1);
     return 1;
 }
 
-// OFFSET: #0x005343F0
+// OFFSET: 0x009055E0/0x14065E310
 static int32_t Script_BNGetInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -75,7 +75,7 @@ static int32_t Script_BNGetInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x00534590
+// OFFSET: 0x00905780/0x14065E4D0
 static int32_t Script_BNGetNumFriends(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -107,7 +107,7 @@ static int32_t Script_BNGetNumFriends(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005349F0
+// OFFSET: 0x00905A30/0x14065E7D0
 static int32_t Script_BNGetNumFriendToons(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -144,7 +144,7 @@ static int32_t Script_BNGetNumFriendToons(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00534ED0
+// OFFSET: 0x009060B0/0x14065EEB0
 static int32_t Script_BNRemoveFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -161,7 +161,7 @@ static int32_t Script_BNRemoveFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00534F80
+// OFFSET: 0x00906160/0x14065EF50
 static int32_t Script_BNSetFriendNote(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -189,7 +189,7 @@ static int32_t Script_BNSetFriendNote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535080
+// OFFSET: 0x00906260/0x14065F070
 static int32_t Script_BNGetNumFriendInvites(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -210,7 +210,7 @@ static int32_t Script_BNGetNumFriendInvites(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00535180
+// OFFSET: 0x0090C940/0x140667610
 static int32_t Script_BNGetFriendInviteInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -266,7 +266,7 @@ static int32_t Script_BNGetFriendInviteInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x00535380
+// OFFSET: 0x00906330/0x14065F140
 static int32_t Script_BNSendFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -300,7 +300,7 @@ static int32_t Script_BNSendFriendInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535490
+// OFFSET: 0x00906450/0x14065F290
 static int32_t Script_BNSendFriendInviteByID(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -334,7 +334,7 @@ static int32_t Script_BNSendFriendInviteByID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005355C0
+// OFFSET: 0x00906580/0x14065F3E0
 static int32_t Script_BNAcceptFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -349,7 +349,7 @@ static int32_t Script_BNAcceptFriendInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535660
+// OFFSET: 0x00906620/0x14065F480
 static int32_t Script_BNDeclineFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -364,7 +364,7 @@ static int32_t Script_BNDeclineFriendInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535700
+// OFFSET: 0x009066C0/0x14065F520
 static int32_t Script_BNReportFriendInvite(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -379,7 +379,7 @@ static int32_t Script_BNReportFriendInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005357A0
+// OFFSET: 0x00906760/0x14065F5C0
 static int32_t Script_BNSetAFK(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -398,7 +398,7 @@ static int32_t Script_BNSetAFK(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535860
+// OFFSET: 0x00906820/0x14065F6A0
 static int32_t Script_BNSetDND(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -417,7 +417,7 @@ static int32_t Script_BNSetDND(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535920
+// OFFSET: 0x009068E0/0x14065F780
 static int32_t Script_BNSetCustomMessage(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -457,7 +457,7 @@ static int32_t Script_BNSetCustomMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535AA0
+// OFFSET: 0x00906A60/0x14065F950
 static int32_t Script_BNGetCustomMessageTable(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
     uint32_t i = 0;
@@ -507,7 +507,7 @@ static int32_t Script_BNGetCustomMessageTable(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00535C60
+// OFFSET: 0x00906C00/0x14065FB40
 static int32_t Script_BNSetFocus(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -520,7 +520,7 @@ static int32_t Script_BNSetFocus(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00535CE0
+// OFFSET: 0x00906C80/0x14065FBC0
 static int32_t Script_BNCreateConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -564,7 +564,7 @@ static int32_t Script_BNCreateConversation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00535EB0
+// OFFSET: 0x00906E40/0x14065FD80
 static int32_t Script_BNInviteToConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -604,7 +604,7 @@ static int32_t Script_BNInviteToConversation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536030
+// OFFSET: 0x00906FB0/0x14065FEE0
 static int32_t Script_BNLeaveConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -630,7 +630,7 @@ static int32_t Script_BNLeaveConversation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536110
+// OFFSET: 0x00907090/0x14065FFA0
 static int32_t Script_BNSendConversationMessage(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -657,7 +657,7 @@ static int32_t Script_BNSendConversationMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536220
+// OFFSET: 0x009071C0/0x140660100
 static int32_t Script_BNGetNumConversationMembers(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -688,7 +688,7 @@ static int32_t Script_BNGetNumConversationMembers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536330
+// OFFSET: 0x009072D0/0x140660210
 static int32_t Script_BNGetConversationInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -711,7 +711,7 @@ static int32_t Script_BNGetConversationInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536400
+// OFFSET: 0x009073A0/0x1406602E0
 static int32_t Script_BNGetNumBlocked(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -732,7 +732,7 @@ static int32_t Script_BNGetNumBlocked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005364E0
+// OFFSET: 0x00907480/0x1406603A0
 static int32_t Script_BNIsBlocked(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -752,7 +752,7 @@ static int32_t Script_BNIsBlocked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005365B0
+// OFFSET: 0x00907550/0x140660480
 static int32_t Script_BNSetBlocked(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -776,7 +776,7 @@ static int32_t Script_BNSetBlocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005366A0
+// OFFSET: 0x00907690/0x1406605B0
 static int32_t Script_BNSetSelectedBlock(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -805,7 +805,7 @@ static int32_t Script_BNSetSelectedBlock(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536790
+// OFFSET: 0x00907780/0x1406606B0
 static int32_t Script_BNGetSelectedBlock(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -829,7 +829,7 @@ static int32_t Script_BNGetSelectedBlock(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536890
+// OFFSET: 0x00907870/0x140660770
 static int32_t Script_BNGetNumBlockedToons(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -850,7 +850,7 @@ static int32_t Script_BNGetNumBlockedToons(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536970
+// OFFSET: 0x00907950/0x140660840
 static int32_t Script_BNGetBlockedToonInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -879,7 +879,7 @@ static int32_t Script_BNGetBlockedToonInfo(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00536A90
+// OFFSET: 0x00907A70/0x140660980
 static int32_t Script_BNIsToonBlocked(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -899,7 +899,7 @@ static int32_t Script_BNIsToonBlocked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536B60
+// OFFSET: 0x00907B40/0x140660A60
 static int32_t Script_BNSetToonBlocked(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -923,7 +923,7 @@ static int32_t Script_BNSetToonBlocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536C50
+// OFFSET: 0x00907C80/0x140660B90
 static int32_t Script_BNSetSelectedToonBlock(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -952,7 +952,7 @@ static int32_t Script_BNSetSelectedToonBlock(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00536D40
+// OFFSET: 0x00907D70/0x140660C90
 static int32_t Script_BNGetSelectedToonBlock(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -976,7 +976,7 @@ static int32_t Script_BNGetSelectedToonBlock(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00536E40
+// OFFSET: 0x00907E60/0x140660D60
 static int32_t Script_BNReportPlayer(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1020,21 +1020,21 @@ static int32_t Script_BNReportPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00537010
+// OFFSET: 0x00908010
 static int32_t Script_BNFeaturesEnabledAndConnected(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
     lua_pushboolean(L, login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled() && static_cast<BattlenetLogin*>(login)->IsConnected());
     return 1;
 }
 
-// OFFSET: #0x00537070
+// OFFSET: 0x00908070/0x140660F50
 static int32_t Script_BNFeaturesEnabled(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
     lua_pushboolean(L, login && login->GetLoginServerType() == 1 && !login->IsTrialAccount() && BattlenetAPI::IsRIDEnabled());
     return 1;
 }
 
-// OFFSET: #0x005370D0
+// OFFSET: 0x009080D0/0x140660FC0
 static int32_t Script_BNGetNumFOF(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1074,7 +1074,7 @@ static int32_t Script_BNGetNumFOF(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00537240
+// OFFSET: 0x0090D2F0/0x1406681F0
 static int32_t Script_BNGetFOFInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1155,7 +1155,7 @@ static int32_t Script_BNGetFOFInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00537510
+// OFFSET: 0x009081D0/0x1406610F0
 static int32_t Script_BNSetSelectedFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1187,7 +1187,7 @@ static int32_t Script_BNSetSelectedFriend(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00537600
+// OFFSET: 0x009082C0/0x1406611E0
 static int32_t Script_BNGetSelectedFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1207,7 +1207,7 @@ static int32_t Script_BNGetSelectedFriend(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005376C0
+// OFFSET: 0x00908460/0x140661380
 static int32_t Script_BNSetMatureLanguageFilter(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1230,7 +1230,7 @@ static int32_t Script_BNSetMatureLanguageFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005377C0
+// OFFSET: 0x00908560/0x1406614A0
 static int32_t Script_BNGetMatureLanguageFilter(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1250,7 +1250,7 @@ static int32_t Script_BNGetMatureLanguageFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005378A0
+// OFFSET: 0x00908640/0x140661600
 static int32_t Script_BNIsSelf(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1266,7 +1266,7 @@ static int32_t Script_BNIsSelf(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00537950
+// OFFSET: 0x009086F0/0x1406616A0
 static int32_t Script_BNIsFriend(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1282,7 +1282,7 @@ static int32_t Script_BNIsFriend(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00537A00
+// OFFSET: 0x009087A0/0x140661740
 static int32_t Script_BNGetMaxPlayersInConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1294,7 +1294,7 @@ static int32_t Script_BNGetMaxPlayersInConversation(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00539BF0
+// OFFSET: 0x0090DFF0/0x1406692D0
 static int32_t Script_BNGetFriendInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1319,7 +1319,7 @@ static int32_t Script_BNGetFriendInfo(lua_State* L) {
     return BattlenetUI::BNGetFriendInfoHelper(L, static_cast<uint32_t>(index - 1));
 }
 
-// OFFSET: #0x00539CC0
+// OFFSET: 0x0090E0C0/0x1406693A0
 static int32_t Script_BNGetFriendInfoByID(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1340,7 +1340,7 @@ static int32_t Script_BNGetFriendInfoByID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00539D70
+// OFFSET: 0x00909410/0x1406627A0
 static int32_t Script_BNGetFriendToonInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1399,7 +1399,7 @@ static int32_t Script_BNGetFriendToonInfo(lua_State* L) {
     return BattlenetUI::BNGetToonInfoHelper(L, toon);
 }
 
-// OFFSET: #0x00539F90
+// OFFSET: 0x00909620/0x140662A10
 static int32_t Script_BNGetToonInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1414,7 +1414,7 @@ static int32_t Script_BNGetToonInfo(lua_State* L) {
     return BattlenetUI::BNGetToonInfoHelper(L, static_cast<uint32_t>(lua_tonumber(L, 1)));
 }
 
-// OFFSET: #0x0053A030
+// OFFSET: 0x0090CB10/0x140667820
 static int32_t Script_BNSendWhisper(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1443,7 +1443,7 @@ static int32_t Script_BNSendWhisper(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0053A150
+// OFFSET: 0x0090CC50/0x140667990
 static int32_t Script_BNGetConversationMemberInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1483,7 +1483,7 @@ static int32_t Script_BNGetConversationMemberInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0053A300
+// OFFSET: 0x0090CE10/0x140667B50
 static int32_t Script_BNListConversation(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1534,7 +1534,7 @@ static int32_t Script_BNListConversation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0053A540
+// OFFSET: 0x0090D0B0/0x140667F80
 static int32_t Script_BNGetBlockedInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 
@@ -1563,7 +1563,7 @@ static int32_t Script_BNGetBlockedInfo(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0053A660
+// OFFSET: 0x0090D1D0/0x1406680B0
 static int32_t Script_BNRequestFOFInfo(lua_State* L) {
     Login* login = ClientServices::LoginConnection();
 

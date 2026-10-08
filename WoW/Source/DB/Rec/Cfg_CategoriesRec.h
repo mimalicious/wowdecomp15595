@@ -13,7 +13,7 @@ class Cfg_CategoriesRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_localeMask;
     /* 0008 */ int32_t m_createCharsetMask;
-    /* 000C */ int32_t unk_000C;
+    /* 000C */ int32_t m_existingCharsetMask;
     /* 0010 */ int32_t m_flags;
     /* 0014 */ DBCString m_name;
 };

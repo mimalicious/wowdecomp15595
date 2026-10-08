@@ -499,6 +499,11 @@ const char* ClientServices::GetPatchListURL() {
     return ClientServices::s_patchListVar->m_stringValue.m_str;
 }
 
+// OFFSET: 0x004CEFF0
+bool ClientServices::HasNextRealmAddress() {
+    return ClientServices::m_selectRealmInfo.m_addresses[1].m_type != 0;
+}
+
 // PROVEN: f071a55f IDENTICAL/NONE
 // OFFSET: 0x004CF000
 void ClientServices::AdvanceRealmAddress() {
@@ -1135,7 +1140,7 @@ void ClientConnection::HandleAuthResult(int32_t result) {
     this->Complete(result == 12, result);
 }
 
-// OFFSET: #0x006B14C0
+// OFFSET: 0x004D00E0
 void ClientConnection::GetCharacterList() {
     this->Initiate(COP_GET_CHARACTERS, CHAR_LIST_RETRIEVING, NULL);
 

@@ -7,7 +7,7 @@
 #include "Engine/Source/Frame/CSimpleTexture.h"
 #include "WoW/Source/DB/Rec/TaxiNodesRec.h"
 
-// OFFSET: #0x00590D10
+// OFFSET: 0x009E2720/0x1407799B0
 static int32_t Script_SetTaxiMap(lua_State* L) {
     if (CGTaxiMap::m_mapTexture) {
         CTexture* texture = CGTaxiMap::m_mapTexture;
@@ -17,13 +17,13 @@ static int32_t Script_SetTaxiMap(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00590710
+// OFFSET: 0x009E2300/0x1407794A0
 static int32_t Script_NumTaxiNodes(lua_State* L) {
     lua_pushnumber(L, CGTaxiMap::m_numNodes);
     return 1;
 }
 
-// OFFSET: #0x00590D60
+// OFFSET: 0x009E2760/0x140779A00
 static int32_t Script_TaxiNodeName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TaxiNodeName(slot)");
@@ -41,7 +41,7 @@ static int32_t Script_TaxiNodeName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00590E00
+// OFFSET: 0x009E2800/0x140779AA0
 static int32_t Script_TaxiNodePosition(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TaxiNodePosition(slot)");
@@ -62,7 +62,7 @@ static int32_t Script_TaxiNodePosition(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005911C0
+// OFFSET: 0x009E2BF0/0x140779DF0
 static int32_t Script_GetNumRoutes(lua_State* L) {
     uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
     uint32_t routes;
@@ -78,7 +78,7 @@ static int32_t Script_GetNumRoutes(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00590F40
+// OFFSET: 0x009E2930/0x140779BB0
 static int32_t Script_TaxiGetSrcX(lua_State* L) {
     int32_t line = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
     int32_t node = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -94,7 +94,7 @@ static int32_t Script_TaxiGetSrcX(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00590FE0
+// OFFSET: 0x009E29E0/0x140779C40
 static int32_t Script_TaxiGetSrcY(lua_State* L) {
     int32_t line = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
     int32_t node = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -110,7 +110,7 @@ static int32_t Script_TaxiGetSrcY(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00591080
+// OFFSET: 0x009E2A90/0x140779CD0
 static int32_t Script_TaxiGetDestX(lua_State* L) {
     int32_t line = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
     int32_t node = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -126,7 +126,7 @@ static int32_t Script_TaxiGetDestX(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00591120
+// OFFSET: 0x009E2B40/0x140779D60
 static int32_t Script_TaxiGetDestY(lua_State* L) {
     int32_t line = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
     int32_t node = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
@@ -142,13 +142,13 @@ static int32_t Script_TaxiGetDestY(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0092E650
+// OFFSET: 0x009E46D0/0x14077BF00
 static int32_t Script_CloseTaxiMap(lua_State* L) {
     CGTaxiMap::CloseMap();
     return 0;
 }
 
-// OFFSET: #0x00590ED0
+// OFFSET: 0x009E28C0/0x140779B50
 static int32_t Script_TaxiNodeGetType(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TaxiNodeGetType(slot)");
@@ -160,7 +160,8 @@ static int32_t Script_TaxiNodeGetType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005915E0
+// PROVEN: 554cefc6 IDENTICAL/NONE
+// OFFSET: 0x009E3010/0x14077A240
 static int32_t Script_TaxiNodeCost(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TaxiNodeCost(slot)");
@@ -178,7 +179,7 @@ static int32_t Script_TaxiNodeCost(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00591680
+// OFFSET: 0x009E30B0/0x14077A2C0
 static int32_t Script_TakeTaxiNode(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TakeTaxiNode(slot)");
@@ -190,7 +191,7 @@ static int32_t Script_TakeTaxiNode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00591E60
+// OFFSET: 0x009E4020/0x14077B6B0
 static int32_t Script_TaxiNodeSetCurrent(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TaxiNodeSetCurrent(slot)");

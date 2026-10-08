@@ -40,19 +40,19 @@ static char s_packageTexture[260];
 // STATIC: #0x00BEB420
 static char s_headerTexture[260];
 
-// OFFSET: #0x0056D5D0
+// OFFSET: 0x0096DB10/0x1406E4B30
 static int32_t Script_GetSendMailMoney(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_sendMoney);
     return 1;
 }
 
-// OFFSET: #0x0056D690
+// OFFSET: 0x0096DBD0/0x1406E4BD0
 static int32_t Script_GetSendMailCOD(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_sendCOD);
     return 1;
 }
 
-// OFFSET: #0x0056F350
+// OFFSET: 0x0096DC90/0x1406E4C40
 static int32_t Script_HasNewMail(lua_State* L) {
     if (fabsf(CGMailInfo::m_nextMailTime) >= 2.3841858e-7f) {
         lua_pushnil(L);
@@ -63,14 +63,14 @@ static int32_t Script_HasNewMail(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056D6D0
+// OFFSET: 0x0096DC30/0x1406E4C00
 static int32_t Script_GetInboxNumItems(lua_State* L) {
     lua_pushnumber(L, CGMailInfo::m_numInboxItems);
     lua_pushnumber(L, CGMailInfo::m_totalInboxItems);
     return 2;
 }
 
-// OFFSET: #0x0056E170
+// OFFSET: 0x0096E730/0x1406E5920
 static int32_t Script_GetSelectedStationeryTexture(lua_State* L) {
     const StationeryRec* rec;
 
@@ -83,7 +83,7 @@ static int32_t Script_GetSelectedStationeryTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056E310
+// OFFSET: 0x0096E920/0x1406E5B60
 static int32_t Script_SelectPackage(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectPackage(index)");
@@ -102,7 +102,7 @@ static int32_t Script_SelectPackage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056E440
+// OFFSET: 0x0096EA50/0x1406E5C70
 static int32_t Script_CheckInbox(lua_State* L) {
     if (CGMailInfo::m_commandPending) {
         return 0;
@@ -131,7 +131,7 @@ static int32_t Script_CheckInbox(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056EDF0
+// OFFSET: 0x0096EE90/0x1406E6140
 static int32_t Script_TakeInboxMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TakeInboxMoney(index)");
@@ -163,7 +163,7 @@ static int32_t Script_TakeInboxMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056EEF0
+// OFFSET: 0x0096EFA0/0x1406E62A0
 static int32_t Script_TakeInboxTextItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TakeInboxTextItem(index)");
@@ -195,7 +195,7 @@ static int32_t Script_TakeInboxTextItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056E0E0
+// OFFSET: 0x0096E6A0/0x1406E58A0
 static int32_t Script_SelectStationery(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectStationery(index)");
@@ -213,7 +213,7 @@ static int32_t Script_SelectStationery(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056DF80
+// OFFSET: 0x00971A10/0x1406E95F0
 static int32_t Script_GetStationeryInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetStationeryInfo(index)");
@@ -246,7 +246,7 @@ static int32_t Script_GetStationeryInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0056D570
+// OFFSET: 0x0096DAB0/0x1406E4AC0
 static int32_t Script_SetSendMailShowing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
         luaL_error(L, "Usage: SetSendMailShowing(bool)");
@@ -257,7 +257,7 @@ static int32_t Script_SetSendMailShowing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056E210
+// OFFSET: 0x0096E7D0/0x1406E59C0
 static int32_t Script_GetPackageInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPackageInfo(index)");
@@ -285,13 +285,13 @@ static int32_t Script_GetPackageInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0056E1E0
+// OFFSET: 0x0096E7A0/0x1406E59A0
 static int32_t Script_GetNumPackages(lua_State* L) {
     lua_pushnumber(L, g_packageDB.m_numRecords);
     return 1;
 }
 
-// OFFSET: #0x00571B00
+// OFFSET: 0x00972AE0/0x1406EAB10
 static int32_t Script_GetSendMailPrice(lua_State* L) {
     uint32_t price = 30;
     uint32_t itemPrice = 30 * CGMailInfo::GetNumSendItems();
@@ -330,13 +330,13 @@ static int32_t Script_GetSendMailPrice(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008C6670
+// OFFSET: 0x0096DB00/0x1406E4B10
 static int32_t Script_ClearSendMail(lua_State* L) {
     CGMailInfo::ClearSendMail(true);
     return 0;
 }
 
-// OFFSET: #0x0056D610
+// OFFSET: 0x0096DB70/0x1406E4B60
 static int32_t Script_SetSendMailCOD(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSendMailCOD(amount)");
@@ -353,7 +353,7 @@ static int32_t Script_SetSendMailCOD(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056E3A0
+// OFFSET: 0x0096E9B0/0x1406E5BE0
 static int32_t Script_GetSendMailItemLink(lua_State* L) {
     uint32_t index;
 
@@ -383,7 +383,7 @@ static int32_t Script_GetSendMailItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056E520
+// OFFSET: 0x00971D60/0x1406E9970
 static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInboxHeaderInfo(index)");
@@ -517,7 +517,7 @@ static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
     return 14;
 }
 
-// OFFSET: #0x0056E9B0
+// OFFSET: 0x0096EB30/0x1406E5D70
 static int32_t Script_GetInboxInvoiceInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInboxInvoiceInfo(index)");
@@ -586,7 +586,7 @@ static int32_t Script_GetInboxInvoiceInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x0056ECA0
+// OFFSET: 0x009725F0/0x1406EA430
 static int32_t Script_GetInboxItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInboxItemLink(messageIndex, attachIndex)");
@@ -623,7 +623,7 @@ static int32_t Script_GetInboxItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056F000
+// OFFSET: 0x0096F0C0/0x1406E6410
 static int32_t Script_ReturnInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ReturnInboxItem(index)");
@@ -664,7 +664,7 @@ static int32_t Script_ReturnInboxItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056F140
+// OFFSET: 0x0096F210/0x1406E65A0
 static int32_t Script_DeleteInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DeleteInboxItem(index)");
@@ -709,7 +709,7 @@ static int32_t Script_DeleteInboxItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0056F280
+// OFFSET: 0x0096F350/0x1406E6730
 static int32_t Script_InboxItemCanDelete(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: InboxItemCanDelete(index)");
@@ -728,7 +728,7 @@ static int32_t Script_InboxItemCanDelete(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0056F3A0
+// OFFSET: 0x0096F420/0x1406E6800
 static int32_t Script_GetLatestThreeSenders(lua_State* L) {
     int32_t count = 0;
 
@@ -744,7 +744,7 @@ static int32_t Script_GetLatestThreeSenders(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x0056F410
+// OFFSET: 0x0096F480/0x1406E6890
 static int32_t Script_RespondMailLockSendItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: RespondMailLockSendItem(slot, keepItem)");
@@ -780,7 +780,7 @@ static int32_t Script_RespondMailLockSendItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00570550
+// OFFSET: 0x009718A0/0x1406E9470
 static int32_t Script_ClickSendMailItemButton(lua_State* L) {
     uint32_t index = lua_isnumber(L, 1) ? static_cast<int32_t>(lua_tonumber(L, 1) - 1.0) : -1;
 
@@ -828,7 +828,7 @@ static int32_t Script_ClickSendMailItemButton(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005706C0
+// OFFSET: 0x0096FD40/0x1406E7340
 static int32_t Script_SetSendMailMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSendMailMoney(amount)");
@@ -844,7 +844,7 @@ static int32_t Script_SetSendMailMoney(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00570750
+// OFFSET: 0x00971B90/0x1406E9780
 static int32_t Script_GetSendMailItem(lua_State* L) {
     uint32_t index;
 
@@ -891,7 +891,7 @@ static int32_t Script_GetSendMailItem(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00570910
+// OFFSET: 0x00970830/0x1406E7FC0
 static int32_t Script_SendMail(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SendMail(target, subject, body)");
@@ -985,7 +985,7 @@ static int32_t Script_SendMail(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00570BD0
+// OFFSET: 0x0096FDD0/0x1406E73E0
 static int32_t Script_GetInboxText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInboxText(index)");
@@ -1075,7 +1075,7 @@ static int32_t Script_GetInboxText(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00570F10
+// OFFSET: 0x00972360/0x1406EA110
 static int32_t Script_GetInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInboxItem(messageIndex, attachIndex)");
@@ -1138,7 +1138,7 @@ static int32_t Script_GetInboxItem(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005711C0
+// OFFSET: 0x00970140/0x1406E77E0
 static int32_t Script_TakeInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TakeInboxItem(messageIndex, attachIndex)");
@@ -1192,7 +1192,7 @@ static int32_t Script_TakeInboxItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00571350
+// OFFSET: 0x009702D0/0x1406E79C0
 static int32_t Script_ComplainInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ComplainInboxItem(index)");
@@ -1203,7 +1203,7 @@ static int32_t Script_ComplainInboxItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005713C0
+// OFFSET: 0x00970340/0x1406E7A10
 static int32_t Script_CanComplainInboxItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: InboxItemCanComplain(index)");
@@ -1219,7 +1219,7 @@ static int32_t Script_CanComplainInboxItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00571450
+// OFFSET: 0x009703D0/0x1406E7A90
 static int32_t Script_AutoLootMailItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: AutoLootMailItem(index)");
@@ -1233,7 +1233,7 @@ static int32_t Script_AutoLootMailItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00571A40
+// OFFSET: 0x0096FCD0
 static int32_t Script_CloseMail(lua_State* L) {
     CGMailInfo::ClearSendMail(false);
 
@@ -1251,7 +1251,7 @@ static int32_t Script_CloseMail(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008CB5B0
+// OFFSET: 0x00972A90/0x1406EAAD0
 static int32_t Script_GetNumStationeries(lua_State* L) {
     if (!CGMailInfo::m_pendingStationeryCallbacks) {
         CGMailInfo::UpdateStationeryList();

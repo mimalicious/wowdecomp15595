@@ -18,7 +18,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/UIUtil/Types.h"
 
-// OFFSET: #0x005FBF80
+// OFFSET: 0x0044A3A0/0x140057260
 static int32_t Script_JumpOrAscendStart(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -63,7 +63,7 @@ static int32_t Script_JumpOrAscendStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC0A0
+// OFFSET: 0x0044A510/0x140057430
 static int32_t Script_AscendStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -75,7 +75,7 @@ static int32_t Script_AscendStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC140
+// OFFSET: 0x0044A5B0/0x1400574F0
 static int32_t Script_DescendStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -87,7 +87,7 @@ static int32_t Script_DescendStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FAAE0
+// OFFSET: 0x00448E70/0x140055A30
 static int32_t Script_ToggleRun(lua_State* L) {
     if (!CGGameUI::CanPerformAction(0)) {
         return 0;
@@ -108,7 +108,7 @@ static int32_t Script_ToggleRun(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC190
+// OFFSET: 0x0044A600/0x140057550
 static int32_t Script_ToggleAutoRun(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
     int32_t enable = !(input->m_flags & 0x1000);
@@ -121,7 +121,7 @@ static int32_t Script_ToggleAutoRun(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC200
+// OFFSET: 0x0044A670/0x1400575F0
 static int32_t Script_MoveForwardStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -133,7 +133,7 @@ static int32_t Script_MoveForwardStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC250
+// OFFSET: 0x0044A6C0/0x140057660
 static int32_t Script_MoveForwardStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -145,7 +145,7 @@ static int32_t Script_MoveForwardStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC290
+// OFFSET: 0x0044A700/0x1400576C0
 static int32_t Script_MoveBackwardStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -157,7 +157,7 @@ static int32_t Script_MoveBackwardStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC2E0
+// OFFSET: 0x0044A750/0x140057730
 static int32_t Script_MoveBackwardStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -169,7 +169,7 @@ static int32_t Script_MoveBackwardStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC320
+// OFFSET: 0x0044A790/0x140057790
 static int32_t Script_TurnLeftStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -181,7 +181,7 @@ static int32_t Script_TurnLeftStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC360
+// OFFSET: 0x0044A7D0/0x1400577F0
 static int32_t Script_TurnLeftStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -193,7 +193,7 @@ static int32_t Script_TurnLeftStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC3B0
+// OFFSET: 0x0044A820/0x140057850
 static int32_t Script_TurnRightStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -205,7 +205,7 @@ static int32_t Script_TurnRightStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC3F0
+// OFFSET: 0x0044A860/0x1400578B0
 static int32_t Script_TurnRightStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -217,7 +217,7 @@ static int32_t Script_TurnRightStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC440
+// OFFSET: 0x0044A8B0/0x140057910
 static int32_t Script_StrafeLeftStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -229,7 +229,7 @@ static int32_t Script_StrafeLeftStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC490
+// OFFSET: 0x0044A900/0x140057980
 static int32_t Script_StrafeLeftStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -241,7 +241,7 @@ static int32_t Script_StrafeLeftStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC4D0
+// OFFSET: 0x0044A940/0x1400579E0
 static int32_t Script_StrafeRightStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -253,7 +253,7 @@ static int32_t Script_StrafeRightStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC520
+// OFFSET: 0x0044A990/0x140057A50
 static int32_t Script_StrafeRightStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -265,7 +265,7 @@ static int32_t Script_StrafeRightStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC570
+// OFFSET: 0x0044A9E0/0x140057F70
 static int32_t Script_VehicleAimUpStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -277,7 +277,7 @@ static int32_t Script_VehicleAimUpStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC5C0
+// OFFSET: 0x0044AD80/0x140057B10
 static int32_t Script_VehicleAimDownStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -289,7 +289,7 @@ static int32_t Script_VehicleAimDownStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC8E0
+// OFFSET: 0x0044AD40/0x140057F10
 static int32_t Script_VehicleAimUpStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -301,7 +301,7 @@ static int32_t Script_VehicleAimUpStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC920
+// OFFSET: 0x0044AA30/0x140057AB0
 static int32_t Script_VehicleAimDownStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -313,7 +313,7 @@ static int32_t Script_VehicleAimDownStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC610
+// OFFSET: 0x0044AA70/0x140057B70
 static int32_t Script_TurnOrActionStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -337,7 +337,7 @@ static int32_t Script_TurnOrActionStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC680
+// OFFSET: 0x0044AAE0/0x140057BF0
 static int32_t Script_TurnOrActionStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -352,7 +352,7 @@ static int32_t Script_TurnOrActionStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC6C0
+// OFFSET: 0x0044AB20/0x140057C50
 static int32_t Script_CameraOrSelectOrMoveStart(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -376,7 +376,7 @@ static int32_t Script_CameraOrSelectOrMoveStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC730
+// OFFSET: 0x0044AB90/0x140057CD0
 static int32_t Script_CameraOrSelectOrMoveStop(lua_State* L) {
     CGInputControl* input = CGInputControl::s_inputControl;
 
@@ -425,7 +425,7 @@ static int32_t Script_MouselookStart(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005F9550
+// OFFSET: 0x004478F0/0x140054110
 static int32_t Script_VehicleAimGetNormPower(lua_State* L) {
     lua_pushnumber(L, s_vehicleAimNormPower);
     return 1;
@@ -443,7 +443,7 @@ static int32_t Script_IsMouselooking(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005F9E10
+// OFFSET: 0x004480F0/0x140054A40
 static int32_t Script_VehicleAimGetAngle(lua_State* L) {
     CGUnit_C* vehicle = GetVehicleUnitPtr();
 
@@ -456,7 +456,7 @@ static int32_t Script_VehicleAimGetAngle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00454580
+// OFFSET: 0x00449D60/0x140056B20
 static int32_t Script_IsUsingVehicleControls(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x800000)) {
         lua_pushnumber(L, 1.0);
@@ -467,7 +467,7 @@ static int32_t Script_IsUsingVehicleControls(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x004545D0
+// OFFSET: 0x00449DB0/0x140056B70
 static int32_t Script_CanExitVehicle(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x2000000)) {
         lua_pushnumber(L, 1.0);
@@ -478,7 +478,7 @@ static int32_t Script_CanExitVehicle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00454620
+// OFFSET: 0x00449E00/0x140056BC0
 static int32_t Script_CanSwitchVehicleSeats(lua_State* L) {
     if (CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x4000000)) {
         lua_pushnumber(L, 1.0);
@@ -489,7 +489,7 @@ static int32_t Script_CanSwitchVehicleSeats(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005F9F10
+// OFFSET: 0x00448210/0x140054B60
 static int32_t Script_VehicleAimSetNormPower(lua_State* L) {
     if (!GetVehicleUnitPtr() || !lua_isnumber(L, 1)) {
         return 0;
@@ -507,7 +507,7 @@ static int32_t Script_VehicleAimSetNormPower(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FC830
+// OFFSET: 0x0044AC90/0x140057E20
 static int32_t Script_MoveAndSteerStop(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::s_inputControl;
 
@@ -526,7 +526,7 @@ static int32_t Script_MoveAndSteerStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005F9F70
+// OFFSET: 0x00448280/0x140054BE0
 static int32_t Script_IsVehicleAimAngleAdjustable(lua_State* L) {
     CGUnit_C* unit = GetVehicleUnitPtr();
     VehicleRec* rec = unit && unit->m_vehicle ? unit->m_vehicle->m_vehicleRec : NULL;
@@ -540,7 +540,7 @@ static int32_t Script_IsVehicleAimAngleAdjustable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005F9FE0
+// OFFSET: 0x004482F0/0x140054C50
 static int32_t Script_IsVehicleAimPowerAdjustable(lua_State* L) {
     CGUnit_C* unit = GetVehicleUnitPtr();
     VehicleRec* rec = unit && unit->m_vehicle ? unit->m_vehicle->m_vehicleRec : NULL;
@@ -554,7 +554,7 @@ static int32_t Script_IsVehicleAimPowerAdjustable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005FD550
+// OFFSET: 0x0044BA80/0x140059170
 static int32_t Script_SetMouselookOverrideBinding(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::s_inputControl;
 
@@ -570,7 +570,7 @@ static int32_t Script_SetMouselookOverrideBinding(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005F9E60
+// OFFSET: 0x00448140/0x140054A90
 static int32_t Script_VehicleAimGetNormAngle(lua_State* L) {
     CGUnit_C* unit = GetVehicleUnitPtr();
 
@@ -597,7 +597,7 @@ static int32_t Script_VehicleAimGetNormAngle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005FB820
+// OFFSET: 0x00449C00/0x140056980
 static int32_t Script_VehicleAimRequestAngle(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::s_inputControl;
     uint32_t time = CSimpleTop::s_eventTime;
@@ -614,7 +614,7 @@ static int32_t Script_VehicleAimRequestAngle(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB8C0
+// OFFSET: 0x00449CA0/0x140056A40
 static int32_t Script_VehicleAimRequestNormAngle(lua_State* L) {
     CGInputControl* inputControl = CGInputControl::s_inputControl;
     uint32_t time = CSimpleTop::s_eventTime;
@@ -656,7 +656,7 @@ static int32_t Script_DetectWowMouse(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB660
+// OFFSET: 0x00449A10/0x140056720
 static int32_t Script_VehicleExit(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -673,7 +673,7 @@ static int32_t Script_VehicleExit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB6D0
+// OFFSET: 0x00449AA0/0x1400567E0
 static int32_t Script_VehiclePrevSeat(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -684,7 +684,7 @@ static int32_t Script_VehiclePrevSeat(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB720
+// OFFSET: 0x00449AF0/0x140056840
 static int32_t Script_VehicleNextSeat(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -695,7 +695,7 @@ static int32_t Script_VehicleNextSeat(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB770
+// OFFSET: 0x00449B40/0x1400568A0
 static int32_t Script_VehicleAimIncrement(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGInputControl* input = CGInputControl::s_inputControl;
@@ -709,7 +709,7 @@ static int32_t Script_VehicleAimIncrement(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FB7D0
+// OFFSET: 0x00449BA0/0x140056910
 static int32_t Script_VehicleAimDecrement(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGInputControl* input = CGInputControl::s_inputControl;

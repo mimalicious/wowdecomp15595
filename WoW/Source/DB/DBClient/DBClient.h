@@ -679,6 +679,8 @@ int32_t GetPhysicalDamageClassID();
 uint32_t GetPhysicalDamageClassMask();
 int32_t GetMapResetTime(int32_t mapId, uint32_t difficulty);
 int32_t LocaleNameToIndex(const char* locale);
+int32_t LocaleIdToIndex(uint32_t locale);
+int32_t GetCurrentLocaleIndex();
 void DBCache_ClearTemporaryCaches();
 const char* ClientDBStringLookup(uint32_t lookup);
 

@@ -17,7 +17,7 @@ static int32_t Script_CombatLogResetFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0074D9E0
+// OFFSET: 0x005F5000/0x140278560
 static int32_t Script_CombatLogGetRetentionTime(lua_State* L) {
     lua_pushinteger(L, g_combatLogRetentionTimeCVar->m_intValue);
     return 1;
@@ -49,7 +49,7 @@ static int32_t Script_CombatLogSetRetentionTime(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0074D600
+// OFFSET: 0x005F3AC0/0x140276790
 static int32_t Script_CombatLog_Object_IsA(lua_State* L) {
     uint32_t flags = static_cast<uint32_t>(lua_tonumber(L, 1));
     flags &= static_cast<uint32_t>(lua_tonumber(L, 2));
@@ -63,7 +63,7 @@ static int32_t Script_CombatLog_Object_IsA(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0074FF70
+// OFFSET: 0x005F6570/0x14027A010
 static int32_t Script_CombatLogAddFilter(lua_State* L) {
     WOWGUID sourceGuid = WOWGUID();
     WOWGUID destGuid = WOWGUID();
@@ -128,7 +128,7 @@ static int32_t Script_CombatLogAddFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0074FA70
+// OFFSET: 0x005F5B20/0x1402792E0
 static int32_t Script_CombatLogGetNumEntries(lua_State* L) {
     int32_t all = StringToBOOL(L, 1, 0);
     int32_t count = 0;

@@ -35,13 +35,13 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/Net/Types.h"
 
-// OFFSET: %0x0090FEE0
+// OFFSET: 0x009BB3C0/0x140746BF0
 static int32_t Script_GetMaxArenaCurrency(lua_State* L) {
     lua_pushnumber(L, 10000.0);
     return 1;
 }
 
-// OFFSET: #0x005D6F60
+// OFFSET: 0x009BB330/0x140746B60
 static int32_t Script_ContainerIDToInventoryID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ContainerIDToInventoryID(containerID)");
@@ -60,7 +60,7 @@ static int32_t Script_ContainerIDToInventoryID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D7590
+// OFFSET: 0x009BB900/0x1407471F0
 static int32_t Script_GetContainerNumFreeSlots(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetContainerFreeSlots(index)");
@@ -106,7 +106,7 @@ static int32_t Script_GetContainerNumFreeSlots(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D74A0
+// OFFSET: 0x009BB820/0x1407470E0
 static int32_t Script_GetContainerNumSlots(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetContainerNumSlots(index)");
@@ -137,7 +137,7 @@ static int32_t Script_GetContainerNumSlots(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D8C70
+// OFFSET: 0x009BDFC0/0x140749E90
 static int32_t Script_GetBagName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBagName(index)");
@@ -170,7 +170,7 @@ static int32_t Script_GetBagName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D7A90
+// OFFSET: 0x009BEA70/0x14074ABB0
 static int32_t Script_GetContainerItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemInfo(index, slot)");
@@ -227,7 +227,7 @@ static int32_t Script_GetContainerItemInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005D7D90
+// OFFSET: 0x009BBF00/0x140747770
 static int32_t Script_GetContainerItemCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemCooldown(index, slot)");
@@ -256,7 +256,7 @@ static int32_t Script_GetContainerItemCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005D8650
+// OFFSET: 0x009BDA90/0x1407498A0
 static int32_t Script_UseContainerItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: UseContainerItem(index, slot[, target])");
@@ -403,7 +403,7 @@ static int32_t Script_UseContainerItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D7FF0
+// OFFSET: 0x009BD5A0/0x140749200
 static int32_t Script_PickupContainerItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: PickupContainerItem(index, slot)");
@@ -566,7 +566,7 @@ static int32_t Script_PickupContainerItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D8BD0
+// OFFSET: 0x009BC380/0x140747C70
 static int32_t Script_ShowContainerSellCursor(lua_State* L) {
     if (Spell_C_IsTargeting() || CursorGetResetMode() != 1) {
         return 0;
@@ -595,7 +595,7 @@ static int32_t Script_ShowContainerSellCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D7180
+// OFFSET: 0x009BB590/0x140746DF0
 static int32_t Script_SetBagPortraitTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
 
@@ -629,7 +629,7 @@ static int32_t Script_SetBagPortraitTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D9400
+// OFFSET: 0x009BE370/0x14074A350
 static int32_t Script_GetContainerItemQuestInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemQuestInfo(index, slot)");
@@ -667,7 +667,7 @@ static int32_t Script_GetContainerItemQuestInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005D8D80
+// OFFSET: 0x009BC420/0x140747D10
 static int32_t Script_GetContainerItemPurchaseInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemPurchaseInfo(index, slot[, isEquipped])");
@@ -735,7 +735,7 @@ static int32_t Script_GetContainerItemPurchaseInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005D7C80
+// OFFSET: 0x009BBDF0/0x140747650
 static int32_t Script_GetContainerItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemLink(index, slot)");
@@ -760,7 +760,7 @@ static int32_t Script_GetContainerItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D84F0
+// OFFSET: 0x009BC160/0x140747A00
 static int32_t Script_SplitContainerItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: SplitContainerItem(index, slot, amount)");
@@ -802,7 +802,7 @@ static int32_t Script_SplitContainerItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D8B10
+// OFFSET: 0x009BC2C0/0x140747BA0
 static int32_t Script_SocketContainerItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SocketContainerItem(index, slot)");
@@ -848,7 +848,7 @@ static bool BuildItemIconPath(int32_t itemId, char* buffer, uint32_t size) {
     return true;
 }
 
-// OFFSET: #0x005D7820
+// OFFSET: 0x009BBB90/0x1407473B0
 static int32_t Script_GetContainerFreeSlots(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetContainerFreeSlots(index [, returnTable])");
@@ -929,7 +929,7 @@ static int32_t Script_GetContainerFreeSlots(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D7D00
+// OFFSET: 0x009BBE70/0x1407476E0
 static int32_t Script_GetContainerItemID(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemID(index, slot)");
@@ -954,7 +954,7 @@ static int32_t Script_GetContainerItemID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D7EF0
+// OFFSET: 0x009BC060/0x140747900
 static int32_t Script_GetContainerItemDurability(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemDurability(index, slot)");
@@ -987,7 +987,7 @@ static int32_t Script_GetContainerItemDurability(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005D8F70
+// OFFSET: 0x009BE150/0x14074A090
 static int32_t Script_GetContainerItemPurchaseItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: ContainerItemPurchaseItem(bag, slot, itemIndex[, isEquipped])");
@@ -1074,7 +1074,7 @@ static int32_t Script_GetContainerItemPurchaseItem(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005D91B0
+// OFFSET: 0x009BC7E0/0x1407481A0
 static int32_t Script_ContainerRefundItemPurchase(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ContainerRefundItemPurchase(index, slot[, isEquipped])");
@@ -1119,7 +1119,7 @@ static int32_t Script_ContainerRefundItemPurchase(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D9300
+// OFFSET: 0x009BC930/0x1407483C0
 static int32_t Script_GetContainerItemGems(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetContainerItemGems(bag, slot)");

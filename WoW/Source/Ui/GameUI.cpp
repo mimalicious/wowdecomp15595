@@ -2224,7 +2224,7 @@ void CGGameUI::ScaleToScreenSize(int32_t width, int32_t height, int32_t force) {
 }
 
 // OFFSET: #0x005240E0
-void CGGameUI::HandleDisplaySizeChanged(const CSizeEvent& evt) {
+int32_t CGGameUI::HandleDisplaySizeChanged(const CSizeEvent& evt) {
     if (g_useUiScaleCVar->m_intValue) {
         float scale = g_uiScaleCVar->m_floatValue;
 
@@ -2241,12 +2241,13 @@ void CGGameUI::HandleDisplaySizeChanged(const CSizeEvent& evt) {
                 CGGameUI::m_aspect = aspect;
             }
 
-            return;
+            return 1;
         }
     }
 
     CGGameUI::ScaleToScreenSize(evt.m_data.m_w, evt.m_data.m_h, 0);
     FrameScript_SignalEvent(SCRIPT_EVENT_DISPLAY_SIZE_CHANGED, NULL);
+    return 1;
 }
 
 // OFFSET: #0x00512D60

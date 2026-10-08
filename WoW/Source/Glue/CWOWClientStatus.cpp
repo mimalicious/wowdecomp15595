@@ -10,7 +10,7 @@ CWOWClientStatus::CWOWClientStatus(const char* logFileName) {
     }
 }
 
-// OFFSET: #0x004DA580
+// OFFSET: 0x008043D0
 CWOWClientStatus::CWOWClientStatus(const char* logFileName, int32_t append) {
     this->m_log = NULL;
 
@@ -19,7 +19,7 @@ CWOWClientStatus::CWOWClientStatus(const char* logFileName, int32_t append) {
     }
 }
 
-// OFFSET: [#0x004DA2D0, #0x004DA330]
+// OFFSET: [0x00803700/0x140518420, 0x00803760/0x140518490]
 CWOWClientStatus::~CWOWClientStatus() {
     if (!this->m_log) {
         return;

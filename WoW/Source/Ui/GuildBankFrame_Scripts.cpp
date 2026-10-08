@@ -33,13 +33,13 @@
 // STATIC: #0x00A15EEC
 static const uint32_t s_guildBankTabCosts[6] = { 1000000, 2500000, 5000000, 10000000, 25000000, 50000000 };
 
-// OFFSET: %0x009134B0
+// OFFSET: 0x009C0490/0x14074CD90
 static int32_t Script_GetCurrentGuildBankTab(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_currentTab + 1);
     return 1;
 }
 
-// OFFSET: #0x005A44A0
+// OFFSET: 0x009C0580/0x14074CE20
 static int32_t Script_GetGuildBankWithdrawMoney(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_remainingWithdrawMoney);
     return 1;
@@ -52,13 +52,13 @@ static int32_t Script_GetNumGuildBankTabs(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A45B0
+// OFFSET: 0x009C0730/0x14074CFA0
 static int32_t Script_GetNumGuildBankMoneyTransactions(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_numLogEntries[6]);
     return 1;
 }
 
-// OFFSET: #0x005A43C0
+// OFFSET: 0x009C0440/0x14074CD30
 static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetCurrentTab(tab)");
@@ -74,13 +74,13 @@ static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A4440
+// OFFSET: 0x009C04C0/0x14074CDC0
 static int32_t Script_GetGuildBankMoney(lua_State* L) {
     lua_pushnumber(L, static_cast<double>(CGGuildBankInfo::m_money));
     return 1;
 }
 
-// OFFSET: #0x005A6B20
+// OFFSET: 0x009C1B90/0x14074E740
 static int32_t Script_GetGuildBankTabCost(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -99,7 +99,7 @@ static int32_t Script_GetGuildBankTabCost(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A5F60
+// OFFSET: 0x009C17A0/0x14074E280
 static int32_t Script_CanWithdrawGuildBankMoney(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -116,7 +116,7 @@ static int32_t Script_CanWithdrawGuildBankMoney(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A4330
+// OFFSET: 0x009C03A0/0x14074CC80
 static int32_t Script_PickupGuildBankMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupGuildBankMoney(amount)");
@@ -132,14 +132,14 @@ static int32_t Script_PickupGuildBankMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00913570
+// OFFSET: 0x009C0610/0x14074CE70
 static int32_t Script_CloseGuildBankFrame(lua_State* L) {
     WOWGUID none = WOWGUID();
     CGGuildBankInfo::SetGuildBanker(none);
     return 0;
 }
 
-// OFFSET: #0x005A4520
+// OFFSET: 0x009C06B0/0x14074CF30
 static int32_t Script_GetNumGuildBankTransactions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNumGuildBankTransactions(tab)");
@@ -151,7 +151,7 @@ static int32_t Script_GetNumGuildBankTransactions(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A45E0
+// OFFSET: 0x009C0760/0x14074CFC0
 static int32_t Script_GetGuildBankText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildBankText(tab)");
@@ -172,7 +172,7 @@ static int32_t Script_GetGuildBankText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A4D30
+// OFFSET: 0x009C2CE0/0x14074FC70
 static int32_t Script_GetGuildBankItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetGuildBankItemLink(tab, slot)");
@@ -203,7 +203,7 @@ static int32_t Script_GetGuildBankItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A4E50
+// OFFSET: 0x009C1310/0x14074DD70
 static int32_t Script_GetGuildBankMoneyTransaction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildBankMoneyTransaction(index)");
@@ -248,7 +248,7 @@ static int32_t Script_GetGuildBankMoneyTransaction(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005A5CE0
+// OFFSET: 0x009C1230/0x14074DC80
 static int32_t Script_QueryGuildBankTab(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: QueryGuildBankTab(tab)");
@@ -264,7 +264,7 @@ static int32_t Script_QueryGuildBankTab(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A5D30
+// OFFSET: 0x009C1640/0x14074E0E0
 static int32_t Script_BuyGuildBankTab(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -284,7 +284,7 @@ static int32_t Script_BuyGuildBankTab(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A5E20
+// OFFSET: 0x009C16C0/0x14074E190
 static int32_t Script_DepositGuildBankMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DepositGuildBankMoney(money)");
@@ -303,7 +303,7 @@ static int32_t Script_DepositGuildBankMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A5EF0
+// OFFSET: 0x009C1280/0x14074DCE0
 static int32_t Script_WithdrawGuildBankMoney(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: WithdrawGuildBankMoney(money)");
@@ -314,7 +314,7 @@ static int32_t Script_WithdrawGuildBankMoney(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A6000
+// OFFSET: 0x009C2AE0/0x14074FA10
 static int32_t Script_GetGuildBankItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetGuildBankItemInfo(tab, slot)");
@@ -350,7 +350,7 @@ static int32_t Script_GetGuildBankItemInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005A6200
+// OFFSET: 0x009C2DF0/0x14074FD90
 static int32_t Script_PickupGuildBankItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: PickupGuildBankItem(tab, slot)");
@@ -413,7 +413,7 @@ static int32_t Script_PickupGuildBankItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A63F0
+// OFFSET: 0x009C18E0/0x14074E3F0
 static int32_t Script_AutoStoreGuildBankItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: AutoStoreGuildBankItem(tab, slot)");
@@ -475,7 +475,7 @@ static int32_t Script_AutoStoreGuildBankItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A6600
+// OFFSET: 0x009C2FF0/0x14074FFD0
 static int32_t Script_SplitGuildBankItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: SplitGuildBankItem(tab, slot, amount)");
@@ -535,7 +535,7 @@ static int32_t Script_SplitGuildBankItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A67F0
+// OFFSET: 0x009C3200/0x140750210
 static int32_t Script_GetGuildBankTabInfo(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -601,7 +601,7 @@ static int32_t Script_GetGuildBankTabInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x005A6A00
+// OFFSET: 0x009C1AE0/0x14074E650
 static int32_t Script_SetGuildBankTabInfo(lua_State* L) {
     if (!ClntObjMgrGetActivePlayerObj()) {
         return 0;
@@ -631,7 +631,7 @@ static int32_t Script_SetGuildBankTabInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A6BA0
+// OFFSET: 0x009C1C10/0x14074E7C0
 static int32_t Script_GetGuildTabardFileNames(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -672,7 +672,7 @@ static int32_t Script_GetGuildTabardFileNames(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x005A6D50
+// OFFSET: 0x009C0630/0x14074CEC0
 static int32_t Script_QueryGuildBankLog(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: QueryGuildBankLog(tab)");
@@ -683,7 +683,7 @@ static int32_t Script_QueryGuildBankLog(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A6DC0
+// OFFSET: 0x009C34C0/0x140750530
 static int32_t Script_GetGuildBankTransaction(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetGuildBankTransaction(tab, index)");
@@ -760,7 +760,7 @@ static int32_t Script_GetGuildBankTransaction(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x005A7110
+// OFFSET: 0x009C1520/0x14074DFC0
 static int32_t Script_QueryGuildBankText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: QueryGuildBankLog(tab)");
@@ -771,7 +771,7 @@ static int32_t Script_QueryGuildBankText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A7180
+// OFFSET: 0x009C1570/0x14074E010
 static int32_t Script_SetGuildBankText(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetGuildBankText(tab, text)");

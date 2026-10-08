@@ -18,7 +18,7 @@ static int32_t Script_CanAlterSkin(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0052E850
+// OFFSET: 0x008FF920/0x140657470
 static int32_t Script_GetBarberShopStyleInfo(lua_State* L) {
     if (!CGBarberShop::m_barberShopEnabled) {
         return 0;
@@ -65,31 +65,31 @@ static int32_t Script_GetBarberShopStyleInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0085ED00
+// OFFSET: 0x008FFEE0/0x140657B40
 static int32_t Script_GetBarberShopTotalCost(lua_State* L) {
     lua_pushinteger(L, CGBarberShop::GetTotalCost());
     return 1;
 }
 
-// OFFSET: %0x0085F070
+// OFFSET: 0x00900420/0x140658220
 static int32_t Script_CancelBarberShop(lua_State* L) {
     CGBarberShop::DisableBarberShop();
     return 0;
 }
 
-// OFFSET: %0x0085F060
+// OFFSET: 0x00900410/0x140658210
 static int32_t Script_ApplyBarberShopStyle(lua_State* L) {
     CGBarberShop::ApplyAppearanceChange();
     return 0;
 }
 
-// OFFSET: #0x0052F900
+// OFFSET: 0x00900430/0x140658230
 static int32_t Script_BarberShopReset(lua_State* L) {
     CGBarberShop::Reset();
     return 1;
 }
 
-// OFFSET: #0x0052FDD0
+// OFFSET: 0x00900AC0/0x140658A70
 static int32_t Script_SetNextBarberShopStyle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetNextBarberShopStyle(type[, backward])");
@@ -106,13 +106,13 @@ static int32_t Script_SetNextBarberShopStyle(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052E9B0
+// OFFSET: 0x008FFAA0/0x140657630
 static int32_t Script_GetHairCustomization(lua_State* L) {
     lua_pushstring(L, CGPlayer_C::GetHairCustomizationName());
     return 1;
 }
 
-// OFFSET: #0x0052E9D0
+// OFFSET: 0x008FFAC0/0x140657660
 static int32_t Script_GetFacialHairCustomization(lua_State* L) {
     lua_pushstring(L, CGPlayer_C::GetFacialHairCustomizationName());
     return 1;

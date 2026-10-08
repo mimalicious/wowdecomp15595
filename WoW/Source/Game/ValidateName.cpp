@@ -651,7 +651,7 @@ void ValidateNameDestroy() {
 }
 
 // OFFSET: #0x007E2250
-void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask) {
+void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t existingCharsetMask) {
     if (s_charsetCached) {
         if (localeMask == s_cachedLocaleMask && charsetMask == s_cachedCharsetMask) {
             return;

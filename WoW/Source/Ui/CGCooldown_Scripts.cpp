@@ -6,35 +6,35 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// OFFSET: #0x005EC9A0
+// OFFSET: 0x009FF650/0x14079DC90
 static int32_t Script_SetReverse(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
     cooldown->m_reverse = StringToBOOL(L, 2, 1);
     return 0;
 }
 
-// OFFSET: #0x005EC9F0
+// OFFSET: 0x009FF6A0/0x14079DCF0
 static int32_t Script_GetReverse(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
     lua_pushboolean(L, cooldown->m_reverse);
     return 1;
 }
 
-// OFFSET: #0x005ECA30
+// OFFSET: 0x009FF6E0/0x14079DD40
 static int32_t Script_SetDrawEdge(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
     cooldown->m_drawEdge = StringToBOOL(L, 2, 1);
     return 0;
 }
 
-// OFFSET: #0x005ECA80
+// OFFSET: 0x009FF730/0x14079DDA0
 static int32_t Script_GetDrawEdge(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
     lua_pushboolean(L, cooldown->m_drawEdge);
     return 1;
 }
 
-// OFFSET: #0x005ECE80
+// OFFSET: 0x009FFBD0/0x14079E1F0
 static int32_t Script_SetCooldown(lua_State* L) {
     CGCooldown* cooldown = static_cast<CGCooldown*>(FrameScript_GetObjectThis(L, CGCooldown::GetObjectType()));
 

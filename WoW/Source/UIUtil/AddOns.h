@@ -64,6 +64,7 @@ struct ADDONSTATELIST : public TSLinkedNode<ADDONSTATELIST> {
 };
 
 void DeleteInterfaceFiles();
+void ExportInterfaceFiles(int32_t code);
 void GetAddOnInfoRequest(CDataStore* msg);
 void SetAddOnInfoRequest(CDataStore* msg);
 

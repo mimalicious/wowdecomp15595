@@ -118,6 +118,7 @@ bool SI3::IsUnderwaterZoneSoundType(int32_t type) {
     return type == SI3ZONESOUNDTYPE_9 || type == SI3ZONESOUNDTYPE_10 || type == SI3ZONESOUNDTYPE_11 || type == SI3ZONESOUNDTYPE_12;
 }
 
+// PROVEN: 159a1522 IDENTICAL/NONE
 // OFFSET: 0x0062CD70
 bool SI3::IsZoneMusicZoneSoundType(uint32_t type) {
     return type == SI3ZONESOUNDTYPE_0 || type == SI3ZONESOUNDTYPE_1 || type == SI3ZONESOUNDTYPE_2 || type == SI3ZONESOUNDTYPE_3;

@@ -28,7 +28,7 @@
 #include "Engine/Source/FrameXML/LoadXML.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
-// OFFSET: #0x005D4EC0
+// OFFSET: 0x009523D0/0x1406C2BC0
 static int32_t Script_GetPetActionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionInfo(index)");
@@ -143,19 +143,19 @@ static int32_t Script_GetPetActionInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: %0x008ACB70
+// OFFSET: 0x00952B10/0x1406C33D0
 static int32_t Script_PetStopAttack(lua_State* L) {
     CGPetInfo::PetClearTarget();
     return 0;
 }
 
-// OFFSET: #0x005D3160
+// OFFSET: 0x00950080/0x1406C03E0
 static int32_t Script_IsPetAttackActive(lua_State* L) {
     lua_pushboolean(L, CGPetInfo::m_attackingTarget);
     return 1;
 }
 
-// OFFSET: #0x005D3180
+// OFFSET: 0x009500A0/0x1406C0400
 static int32_t Script_GetPetTimeRemaining(lua_State* L) {
     uint32_t expiration = CGPetInfo::m_expirationTime;
 
@@ -169,7 +169,7 @@ static int32_t Script_GetPetTimeRemaining(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D3780
+// OFFSET: 0x00950AE0/0x1406C0F40
 static int32_t Script_PetCanBeAbandoned(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -182,7 +182,7 @@ static int32_t Script_PetCanBeAbandoned(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D3820
+// OFFSET: 0x00950B80/0x1406C0FF0
 static int32_t Script_PetCanBeDismissed(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
     SummonPropertiesRec* properties;
@@ -196,7 +196,7 @@ static int32_t Script_PetCanBeDismissed(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D38C0
+// OFFSET: 0x00950C20/0x1406C10A0
 static int32_t Script_PetCanBeRenamed(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -209,7 +209,7 @@ static int32_t Script_PetCanBeRenamed(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D3CE0
+// OFFSET: 0x00950F70/0x1406C1420
 static int32_t Script_GetPetIcon(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
     CreatureFamilyRec* family;
@@ -223,7 +223,7 @@ static int32_t Script_GetPetIcon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D3960
+// OFFSET: 0x00950CC0/0x1406C1150
 static int32_t Script_HasPetUI(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -244,7 +244,7 @@ static int32_t Script_HasPetUI(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005D3A20
+// OFFSET: 0x00950D80/0x1406C1210
 static int32_t Script_GetPetExperience(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -259,7 +259,7 @@ static int32_t Script_GetPetExperience(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005D5A10
+// OFFSET: 0x00952EB0/0x1406C3850
 static int32_t Script_IsPetAttackAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsPetAttackAction(index)");
@@ -270,7 +270,7 @@ static int32_t Script_IsPetAttackAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D5280
+// OFFSET: 0x00952700/0x1406C2FD0
 static int32_t Script_GetPetActionCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionCooldown(index)");
@@ -297,7 +297,7 @@ static int32_t Script_GetPetActionCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005D3720
+// OFFSET: 0x00952370/0x1406C2B60
 static int32_t Script_PetHasActionBar(lua_State* L) {
     if (s_pets.Count() && s_pets.m_data[0] && !(CGActionBar::m_tempPageActiveFlags & 1) && CGPetInfo::IsPetBarUsed()) {
         lua_pushnumber(L, 1.0);
@@ -308,7 +308,7 @@ static int32_t Script_PetHasActionBar(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D5820
+// OFFSET: 0x00952D10/0x1406C35F0
 static int32_t Script_GetPossessInfo(lua_State* L) {
     if (lua_tonumber(L, 1) == 0.0) {
         luaL_error(L, "Usage: GetPossessInfo(index)");
@@ -381,7 +381,7 @@ static int32_t Script_GetPetHappiness(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005D3BD0
+// OFFSET: 0x00950E60/0x1406C12C0
 static int32_t Script_GetPetFoodTypes(lua_State* L) {
     int32_t count = 0;
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -409,7 +409,7 @@ static int32_t Script_GetPetFoodTypes(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005D3D80
+// OFFSET: 0x00951010/0x1406C14F0
 static int32_t Script_GetPetTalentTree(lua_State* L) {
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
     CreatureFamilyRec* family;
@@ -429,7 +429,7 @@ static int32_t Script_GetPetTalentTree(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D53C0
+// OFFSET: 0x00952840/0x1406C3100
 static int32_t Script_GetPetActionsUsable(lua_State* L) {
     if (CGPetInfo::PetActionsUsable(false)) {
         lua_pushnumber(L, 1.0);
@@ -440,7 +440,7 @@ static int32_t Script_GetPetActionsUsable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D5400
+// OFFSET: 0x00952890/0x1406C3150
 static int32_t Script_GetPetActionSlotUsable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetActionSlotsUsable(index)");
@@ -456,7 +456,7 @@ static int32_t Script_GetPetActionSlotUsable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008AC9C0
+// OFFSET: 0x00952950/0x1406C31F0
 static int32_t Script_PetPassiveMode(lua_State* L) {
     WOWGUID target = WOWGUID();
     PetAction action;
@@ -465,7 +465,7 @@ static int32_t Script_PetPassiveMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008AC9F0
+// OFFSET: 0x00952980/0x1406C3220
 static int32_t Script_PetDefensiveMode(lua_State* L) {
     WOWGUID target = WOWGUID();
     PetAction action;
@@ -474,7 +474,8 @@ static int32_t Script_PetDefensiveMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008ACA20
+// PROVEN: 1bdb4f8b IDENTICAL/IDENTICAL
+// OFFSET: 0x00842700/0x1407FDD80
 static int32_t Script_PetAggressiveMode(lua_State* L) {
     WOWGUID target = WOWGUID();
     PetAction action;
@@ -483,7 +484,7 @@ static int32_t Script_PetAggressiveMode(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008ACA50
+// OFFSET: 0x009529E0/0x1406C3280
 static int32_t Script_PetWait(lua_State* L) {
     WOWGUID target = WOWGUID();
     PetAction action;
@@ -492,7 +493,7 @@ static int32_t Script_PetWait(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008ACA80
+// OFFSET: 0x00952A10/0x1406C32B0
 static int32_t Script_PetFollow(lua_State* L) {
     WOWGUID target = WOWGUID();
     PetAction action;
@@ -501,7 +502,7 @@ static int32_t Script_PetFollow(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D55B0
+// OFFSET: 0x00952A70/0x1406C3310
 static int32_t Script_PetAttack(lua_State* L) {
     int32_t a3 = 0;
     WOWGUID target = WOWGUID();
@@ -521,19 +522,19 @@ static int32_t Script_PetAttack(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008ACB80
+// OFFSET: 0x00952B20/0x1406C33E0
 static int32_t Script_PetAbandon(lua_State* L) {
     CGPetInfo::PetAbandon();
     return 0;
 }
 
-// OFFSET: %0x008ACB90
+// OFFSET: 0x00952B30/0x1406C33F0
 static int32_t Script_PetDismiss(lua_State* L) {
     CGPetInfo::PetDismiss();
     return 0;
 }
 
-// OFFSET: #0x005D5670
+// OFFSET: 0x00952B40/0x1406C3400
 static int32_t Script_PetRename(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
     CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -587,7 +588,7 @@ static int32_t Script_PetRename(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D65C0
+// OFFSET: 0x00953C70/0x1406C4920
 static int32_t Script_PickupPetAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupPetAction(index)");
@@ -632,7 +633,7 @@ static int32_t Script_PickupPetAction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D66F0
+// OFFSET: 0x00953DA0/0x1406C4B80
 static int32_t Script_TogglePetAutocast(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TogglePetAutocast(index)");
@@ -658,7 +659,7 @@ static int32_t Script_TogglePetAutocast(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D67B0
+// OFFSET: 0x00953E60/0x1406C4C40
 static int32_t Script_CastPetAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CastPetAction(index, target)");

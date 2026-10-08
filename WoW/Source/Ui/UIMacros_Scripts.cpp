@@ -31,13 +31,13 @@ static int32_t Script_StopMacro(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00564C70
+// OFFSET: 0x009C3DE0/0x1407511A0
 static int32_t Script_GetRunningMacroButton(lua_State* L) {
     lua_pushstring(L, CGUIMacros::m_macroRunning);
     return 1;
 }
 
-// OFFSET: %0x00916E50
+// OFFSET: 0x009C3D30/0x140751100
 static int32_t Script_GetNumMacros(lua_State* L) {
     lua_pushnumber(L, CGUIMacros::m_numMacros[0]);
     lua_pushnumber(L, CGUIMacros::m_numMacros[1]);
@@ -73,7 +73,7 @@ static MACRONODE* GetMacroFromLua(lua_State* L) {
     return NULL;
 }
 
-// OFFSET: #0x00567320
+// OFFSET: 0x009C5880/0x140753690
 static int32_t Script_SetMacroSpell(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetMacroSpell(macro, spell [,target])");
@@ -116,7 +116,7 @@ static int32_t Script_SetMacroSpell(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00567450
+// OFFSET: 0x009C59B0
 static int32_t Script_GetMacroSpell(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
@@ -137,7 +137,7 @@ static int32_t Script_GetMacroSpell(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00564AE0
+// OFFSET: 0x009C3C60/0x140751000
 static int32_t Script_SecureCmdOptionParse(lua_State* L) {
     const char* options = lua_tolstring(L, 1, NULL);
 
@@ -206,7 +206,7 @@ static int32_t Script_GetMacroItemIconInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00566400
+// OFFSET: 0x009C5630/0x140753350
 static int32_t Script_RunMacroText(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: RunMacroText(\"text\" [, \"button\"])");
@@ -239,7 +239,7 @@ static int32_t Script_GetNumMacroItemIcons(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005666A0
+// OFFSET: 0x009C5C30/0x140753BB0
 static int32_t Script_GetMacroIndexByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetMacroIndexByName(name)");
@@ -250,7 +250,7 @@ static int32_t Script_GetMacroIndexByName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00566E80
+// OFFSET: 0x009C5600
 static int32_t Script_RunMacro(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
@@ -261,7 +261,7 @@ static int32_t Script_RunMacro(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00566EB0
+// OFFSET: 0x009C6460
 static int32_t Script_GetMacroInfo(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
@@ -283,7 +283,7 @@ static int32_t Script_GetMacroInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00566F40
+// OFFSET: 0x009C56E0
 static int32_t Script_GetMacroBody(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
@@ -295,7 +295,7 @@ static int32_t Script_GetMacroBody(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00566F70
+// OFFSET: 0x009C5710/0x140753510
 static int32_t Script_DeleteMacro(lua_State* L) {
     if (CGGameUI::CanPerformAction(12)) {
         MACRONODE* macro = GetMacroFromLua(L);
@@ -308,7 +308,7 @@ static int32_t Script_DeleteMacro(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00566FA0
+// OFFSET: 0x009C5F70/0x140754060
 static int32_t Script_EditMacro(lua_State* L) {
     if (!CGGameUI::CanPerformAction(12)) {
         return 0;
@@ -364,7 +364,7 @@ static int32_t Script_EditMacro(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005670D0
+// OFFSET: 0x009C5750/0x140753550
 static int32_t Script_SetMacroItem(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetMacroItem(macro, item [,target])");
@@ -402,7 +402,7 @@ static int32_t Script_SetMacroItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00567200
+// OFFSET: 0x009C64F0/0x140754830
 static int32_t Script_GetMacroItem(lua_State* L) {
     MACRONODE* macro = GetMacroFromLua(L);
 
@@ -449,7 +449,7 @@ static int32_t Script_PickupMacro(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00568160
+// OFFSET: 0x009C7220/0x140755B00
 static int32_t Script_CreateMacro(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CreateMacro(name, iconIndex, body, perCharacter)");

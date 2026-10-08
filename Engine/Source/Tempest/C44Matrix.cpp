@@ -66,26 +66,6 @@ void C44Matrix::Identity() {
     this->a1 = 0.0f;
 }
 
-// OFFSET: #0x00407F40
-C44Matrix::C44Matrix() {
-    this->a0 = 1.0f;
-    this->a1 = 0.0f;
-    this->a2 = 0.0f;
-    this->a3 = 0.0f;
-    this->b0 = 0.0f;
-    this->b2 = 0.0f;
-    this->b3 = 0.0f;
-    this->c0 = 0.0f;
-    this->c1 = 0.0f;
-    this->c3 = 0.0f;
-    this->d0 = 0.0f;
-    this->d1 = 0.0f;
-    this->d2 = 0.0f;
-    this->b1 = 1.0f;
-    this->c2 = 1.0f;
-    this->d3 = 1.0f;
-}
-
 // PROVEN: 924b82a2 IDENTICAL/DIFFERENT
 // OFFSET: 0x00409A60/0x14000C650
 C44Matrix& C44Matrix::operator=(const C44Matrix& m) {

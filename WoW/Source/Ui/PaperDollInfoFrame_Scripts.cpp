@@ -33,7 +33,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "Engine/Source/Frame/CSimpleTexture.h"
 
-// OFFSET: #0x005E9BC0
+// OFFSET: 0x0097EB00/0x1406F8A50
 static int32_t Script_GetInventoryItemTexture(lua_State* L) {
     const char* token;
     int32_t slot = 0;
@@ -87,13 +87,13 @@ static int32_t Script_GetInventoryItemTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008D5F80
+// OFFSET: 0x0097DCE0/0x1406F7950
 static int32_t Script_UpdateInventoryAlertStatus(lua_State* L) {
     CGCharacterInfo::UpdateInventoryAlerts();
     return 0;
 }
 
-// OFFSET: #0x005E7780
+// OFFSET: 0x0097B410/0x1406F4A10
 static int32_t Script_HasInspectHonorData(lua_State* L) {
     if (CGCharacterInfo::m_hasHonorData) {
         lua_pushnumber(L, 1.0);
@@ -115,7 +115,7 @@ static int32_t Script_KeyRingButtonIDToInvSlotID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EAC10
+// OFFSET: 0x0097DCF0/0x1406F7960
 static int32_t Script_OffhandHasWeapon(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGItem_C* item = player ? player->m_bag.GetItemPointer(16) : NULL;
@@ -129,7 +129,7 @@ static int32_t Script_OffhandHasWeapon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005E7FA0
+// OFFSET: 0x0097BFF0/0x1406F5770
 static int32_t Script_GetInventoryAlertStatus(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInventoryAlertStatus(index)");
@@ -142,7 +142,7 @@ static int32_t Script_GetInventoryAlertStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EAE90
+// OFFSET: 0x0097DEE0/0x1406F7BB0
 static int32_t Script_HasWandEquipped(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -159,7 +159,7 @@ static int32_t Script_HasWandEquipped(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005E77C0
+// OFFSET: 0x0097B450/0x1406F4A50
 static int32_t Script_GetInspectHonorData(lua_State* L) {
     lua_pushnumber(L, CGCharacterInfo::m_inspectTodayHonorableKills);
     lua_pushnumber(L, CGCharacterInfo::m_inspectTodayHonor);
@@ -170,7 +170,7 @@ static int32_t Script_GetInspectHonorData(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x005E7D60
+// OFFSET: 0x0097BBD0/0x1406F5180
 static int32_t Script_GetInventorySlotInfo(lua_State* L) {
     if (lua_isstring(L, 1)) {
         const char* name = lua_tolstring(L, 1, NULL);
@@ -198,7 +198,7 @@ static int32_t Script_GetInventorySlotInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA6E0
+// OFFSET: 0x0097D8C0/0x1406F74D0
 static int32_t Script_IsInventoryItemLocked(lua_State* L) {
     int32_t slot = 0;
 
@@ -218,7 +218,7 @@ static int32_t Script_IsInventoryItemLocked(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005E7E60
+// OFFSET: 0x0097BCC0
 static int32_t Script_GetInventoryItemCooldown(lua_State* L) {
     const char* unitName;
     int32_t slot = 0;
@@ -247,7 +247,7 @@ static int32_t Script_GetInventoryItemCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005E9D80
+// OFFSET: 0x0097D340
 static int32_t Script_GetInventoryItemBroken(lua_State* L) {
     const char* unitName;
     int32_t slot = 0;
@@ -268,7 +268,7 @@ static int32_t Script_GetInventoryItemBroken(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005E9E40
+// OFFSET: 0x0097D400
 static int32_t Script_GetInventoryItemCount(lua_State* L) {
     const char* unitName;
     int32_t slot = 0;
@@ -339,7 +339,7 @@ static int32_t Script_GetInventoryItemCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EA5F0
+// OFFSET: 0x0097D7D0/0x1406F7400
 static int32_t Script_PickupInventoryItem(lua_State* L) {
     int32_t slot = 0;
 
@@ -362,7 +362,7 @@ static int32_t Script_PutItemInBackpack(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EA880
+// OFFSET: 0x0097DA60/0x1406F7670
 static int32_t Script_CursorCanGoInSlot(lua_State* L) {
     int32_t slot = 0;
 
@@ -381,7 +381,7 @@ static int32_t Script_CursorCanGoInSlot(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EACA0
+// OFFSET: 0x0097DD70/0x1406F79F0
 static int32_t Script_GetWeaponEnchantInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -418,7 +418,7 @@ static int32_t Script_GetWeaponEnchantInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x005EAAF0
+// OFFSET: 0x0097DB90/0x1406F77C0
 static int32_t Script_GetGuildInfo(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetGuildInfo(\"unit\")");
@@ -452,7 +452,7 @@ static int32_t Script_GetGuildInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005EA780
+// OFFSET: 0x0097D960/0x1406F7570
 static int32_t Script_PutItemInBag(lua_State* L) {
     int32_t slot = 0;
 
@@ -476,7 +476,7 @@ static void InspectArenaTeamCacheCallback(int32_t id, const WOWGUID& guid, void*
     }
 }
 
-// OFFSET: #0x005E7890
+// OFFSET: 0x0097B4F0/0x1406F4AE0
 static int32_t Script_ClearInspectPlayer(lua_State* L) {
     WOWGUID none = WOWGUID();
 
@@ -493,7 +493,7 @@ static int32_t Script_ClearInspectPlayer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005E8030
+// OFFSET: 0x0097C090/0x1406F5800
 static int32_t Script_GetInspectArenaTeamData(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInspectArenaTeamData(index)");
@@ -543,7 +543,7 @@ static int32_t Script_GetInspectArenaTeamData(lua_State* L) {
     return 18;
 }
 
-// OFFSET: #0x005E95C0
+// OFFSET: 0x0097E6E0/0x1406F8590
 static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
     uint32_t slot = 0;
 
@@ -694,7 +694,7 @@ static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EA040
+// OFFSET: 0x0097EC80
 static int32_t Script_GetInventoryItemQuality(lua_State* L) {
     const char* token;
     int32_t slot = 0;
@@ -748,7 +748,7 @@ static int32_t Script_GetInventoryItemQuality(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005EA170
+// OFFSET: 0x0097D5A0/0x1406F71B0
 static int32_t Script_GetInventoryItemDurability(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetInventoryItemDurability(slot)");
@@ -784,7 +784,7 @@ static int32_t Script_GetInventoryItemDurability(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005EA270
+// OFFSET: 0x0097ED50
 static int32_t Script_GetInventoryItemLink(lua_State* L) {
     const char* token;
     int32_t slot = 0;
@@ -835,7 +835,7 @@ static int32_t Script_GetInventoryItemLink(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA3E0
+// OFFSET: 0x0097BDF0
 static int32_t Script_GetInventoryItemID(lua_State* L) {
     const char* token;
     int32_t slot = 0;
@@ -885,7 +885,7 @@ static int32_t Script_GetInventoryItemID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA4F0
+// OFFSET: 0x0097D6B0/0x1406F72D0
 static int32_t Script_GetInventoryItemGems(lua_State* L) {
     int32_t slot;
 
@@ -923,7 +923,7 @@ static int32_t Script_GetInventoryItemGems(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005EA630
+// OFFSET: 0x0097D810/0x1406F7430
 static int32_t Script_UseInventoryItem(lua_State* L) {
     int32_t slot = 0;
 
@@ -940,7 +940,7 @@ static int32_t Script_UseInventoryItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA6A0
+// OFFSET: 0x0097D880/0x1406F74A0
 static int32_t Script_SocketInventoryItem(lua_State* L) {
     int32_t slot = 0;
 
@@ -951,7 +951,7 @@ static int32_t Script_SocketInventoryItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA840
+// OFFSET: 0x0097DA20/0x1406F7630
 static int32_t Script_PickupBagFromSlot(lua_State* L) {
     int32_t slot = 0;
 
@@ -962,7 +962,7 @@ static int32_t Script_PickupBagFromSlot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA930
+// OFFSET: 0x0097DB00/0x1406F7720
 static int32_t Script_ShowInventorySellCursor(lua_State* L) {
     if (Spell_C_IsTargeting() || CursorGetResetMode() != 1) {
         return 0;
@@ -989,7 +989,7 @@ static int32_t Script_ShowInventorySellCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EA9B0
+// OFFSET: 0x0097BED0/0x1406F5600
 static int32_t Script_SetInventoryPortraitTexture(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     texture->SetTexture(static_cast<CTexture*>(NULL));
@@ -1023,7 +1023,7 @@ static int32_t Script_SetInventoryPortraitTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005EAC90
+// OFFSET: 0x0097C080/0x1406F57F0
 static int32_t Script_RequestInspectHonorData(lua_State* L) {
     CGCharacterInfo::RequestInspectHonorData();
     return 0;

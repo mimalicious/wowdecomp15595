@@ -10,9 +10,12 @@ class ThrottleObject {
     /* 0008 */ uint32_t m_count;
     /* 000C */ uint32_t m_startTime;
 
+    ThrottleObject(uint32_t limit, uint32_t period);
     bool Check() const;
     bool IncrementAndCheck();
     void Restore(const ThrottleObject& saved);
 };
+
+#include "WoW/Common/ThrottleObject.inl"
 
 #endif

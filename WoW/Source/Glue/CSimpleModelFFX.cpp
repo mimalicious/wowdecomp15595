@@ -10,25 +10,27 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Glue/CGlueMgr.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 
 // STATIC: #0x00B6B48C
 CDataAllocator CSimpleModelFFX::s_simpleModelFFXHeap(sizeof(CSimpleModelFFX), 5);
 
-// OFFSET: #0x004E5EA0
-static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
+// OFFSET: 0x00811030/0x140528800
+static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position) {
     if (eventId == 0x4F534424) {
-        SI3::PlaySoundKit(static_cast<int32_t>(data), NULL, NULL, NULL, 0, NULL, 1, 0);
+        SE3SoundKitProperties properties;
+        SE3::PlaySoundKit(static_cast<int32_t>(data), position, &properties, NULL, __FILE__, __LINE__, "Simple Model Anim Event: $DSO");
     }
 }
 
-// OFFSET: #0x004E5ED0
+// OFFSET: 0x008110A0
 void CSimpleModelFFX::SetModel(CM2Model* model) {
     this->CSimpleModel::SetModel(model);
     this->m_model->SetEventCallback(reinterpret_cast<void*>(AnimEventCallback), reinterpret_cast<uintptr_t>(this));
 }
 
-// OFFSET: #0x004E5F00
+// OFFSET: 0x00810FC0/0x140528780
 void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
     this->CSimpleModel::LoadXML(node, status);
 
@@ -43,7 +45,7 @@ void CSimpleModelFFX::LoadXML(linkObject* node, CStatus* status) {
     }
 }
 
-// OFFSET: #0x004E5F50
+// OFFSET: 0x00811010
 void CSimpleModelFFX::OnLayerShow() {
     FFX::SetEffect(1, CGlueMgr::m_glowEffect);
     this->CSimpleFrame::OnLayerShow();
@@ -58,7 +60,7 @@ CM2LightArray::CM2LightArray() {
     this->unk_01BC = 0;
 }
 
-// OFFSET: #0x004E5F70
+// OFFSET: 0x008110D0/0x1405288C0
 CSimpleModelFFX::CSimpleModelFFX(CSimpleFrame* parent) : CSimpleModel(parent) {
     this->m_glow = 0.3f;
     this->m_lightArray1[0].m_modelFrame = this;
@@ -81,12 +83,12 @@ int32_t CSimpleModelFFX::GetScriptMetaTable() {
     return CSimpleModelFFX::s_metatable;
 }
 
-// OFFSET: #0x004E6190
+// OFFSET: 0x00811250
 void CSimpleModelFFX::Render(void* arg) {
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(arg);
 
     CImVector clearColor(0x00, 0x00, 0x00, 0xFF);
-    GxSceneClear(3, clearColor);
+    GxSceneClear(31, clearColor);
 
     int32_t params[3];
     params[0] = 0;
@@ -100,7 +102,7 @@ void CSimpleModelFFX::Render(void* arg) {
     clearColor.g = 0x00;
     clearColor.r = 0x00;
     clearColor.a = 0xFF;
-    GxSceneClear(3, clearColor);
+    GxSceneClear(31, clearColor);
 
     if (model->m_model) {
         CSimpleModel::RenderModel(model);
@@ -111,7 +113,7 @@ void CSimpleModelFFX::Render(void* arg) {
     FFX::Finish();
 }
 
-// OFFSET: [#0x004E6230, #0x004E62D0]
+// OFFSET: [0x00811320/0x140528B50, 0x008113C0/0x140528C30]
 CSimpleModelFFX::~CSimpleModelFFX() {
 }
 
@@ -120,13 +122,13 @@ void CSimpleModelFFX::operator delete(void* ptr) {
     CSimpleModelFFX::s_simpleModelFFXHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x004E6300
+// OFFSET: 0x008113F0/0x140528C80
 CSimpleFrame* CSimpleModelFFX::Create(CSimpleFrame* parent) {
     void* data = CSimpleModelFFX::s_simpleModelFFXHeap.GetData(0, typeid(CSimpleModelFFX).raw_name(), SLOG_OBJECT);
     return data ? new (data) CSimpleModelFFX(parent) : NULL;
 }
 
-// OFFSET: #0x004E6330
+// OFFSET: 0x00811430
 void CSimpleModelFFX::OnFrameRender(CRenderBatch* batch, uint32_t layer) {
     this->CSimpleFrame::OnFrameRender(batch, layer);
 

@@ -11,7 +11,7 @@
 #include <malloc.h>
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x0055E9B0
+// OFFSET: 0x00922A50/0x140686260
 static int32_t Script_GetBindingKey(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetBindingKey(\"COMMAND\"[, mode])");
@@ -47,19 +47,20 @@ static int32_t Script_GetNumBindings(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0055DC30
+// OFFSET: 0x00921400/0x140683BF0
 static int32_t Script_GetCurrentBindingSet(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_saveSet);
     return 1;
 }
 
-// OFFSET: %0x0087C9A0
+// OFFSET: 0x00921430/0x140683C20
 static int32_t Script_GetNumModifiedClickActions(lua_State* L) {
     lua_pushnumber(L, CGUIBindings::s_bindings->m_numModifiedClicks);
     return 1;
 }
 
-// OFFSET: #0x00564070
+// PROVEN: 7edc48f3 IDENTICAL/NONE
+// OFFSET: 0x009278A0/0x14068D280
 static int32_t Script_LoadBindings(lua_State* L) {
     int32_t set = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -72,7 +73,7 @@ static int32_t Script_LoadBindings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0055EA70
+// OFFSET: 0x00922D40/0x1406866E0
 static int32_t Script_GetModifiedClickAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetModifiedClickAction(index)");
@@ -83,7 +84,7 @@ static int32_t Script_GetModifiedClickAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0055FCC0
+// OFFSET: 0x00922ED0/0x140686940
 static int32_t Script_IsModifiedClick(lua_State* L) {
     if (CGUIBindings::s_bindings->IsModifiedClick(lua_tolstring(L, 1, NULL))) {
         lua_pushnumber(L, 1.0);
@@ -94,7 +95,8 @@ static int32_t Script_IsModifiedClick(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005640C0
+// PROVEN: 088accb5 IDENTICAL/NONE
+// OFFSET: 0x009278F0/0x14068D2D0
 static int32_t Script_SaveBindings(lua_State* L) {
     int32_t set = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -114,7 +116,7 @@ static int32_t Script_SaveBindings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0055FB90
+// OFFSET: 0x00922DA0/0x1406867A0
 static int32_t Script_SetModifiedClick(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetModifiedClick(\"action\", \"binding\")");
@@ -134,7 +136,7 @@ static int32_t Script_SetModifiedClick(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0055FC20
+// OFFSET: 0x00922E30/0x140686870
 static int32_t Script_GetModifiedClick(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetModifiedClick(\"action\")");
@@ -156,7 +158,7 @@ static int32_t Script_GetModifiedClick(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00562550
+// OFFSET: 0x00922B10/0x140686350
 static int32_t Script_GetBindingAction(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetBindingAction(\"KEY\"[, checkOverride][, mode])");
@@ -185,7 +187,7 @@ static int32_t Script_GetBindingAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00560560
+// OFFSET: 0x00923AE0/0x140687A60
 static int32_t Script_ClearOverrideBindings(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -204,7 +206,7 @@ static int32_t Script_ClearOverrideBindings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005625F0
+// OFFSET: 0x00922BC0/0x140686430
 static int32_t Script_GetBindingByKey(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetBindingByKey(\"action\"[, mode])");
@@ -233,7 +235,7 @@ static int32_t Script_GetBindingByKey(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0055FAD0
+// OFFSET: 0x00922C70
 static int32_t Script_RunBinding(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: RunBinding(\"COMMAND\")");
@@ -256,7 +258,7 @@ static int32_t Script_RunBinding(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00563520
+// OFFSET: 0x00926CE0/0x14068C450
 static int32_t Script_SetBinding(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetBinding(\"KEY\"[, \"COMMAND\"][, mode])");
@@ -286,7 +288,7 @@ static int32_t Script_SetBinding(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0055E8D0
+// OFFSET: 0x00922970/0x140686120
 static int32_t Script_GetBinding(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBinding(index[, mode])");
@@ -318,7 +320,7 @@ static int32_t Script_GetBinding(lua_State* L) {
     return count + 1;
 }
 
-// OFFSET: #0x00563A90
+// OFFSET: 0x009272C0/0x14068CAF0
 static int32_t Script_SetOverrideBinding(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -345,7 +347,7 @@ static int32_t Script_SetOverrideBinding(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005635E0
+// OFFSET: 0x00926DB0/0x14068C550
 static int32_t Script_SetBindingSpell(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetBindingSpell(\"KEY\", \"spellname\"[, mode])");
@@ -378,7 +380,7 @@ static int32_t Script_SetBindingSpell(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00563700
+// OFFSET: 0x00926EE0/0x14068C6A0
 static int32_t Script_SetBindingItem(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetBindingItem(\"KEY\", \"itemname\"[, mode])");
@@ -411,7 +413,7 @@ static int32_t Script_SetBindingItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00563820
+// OFFSET: 0x00927010/0x14068C7F0
 static int32_t Script_SetBindingMacro(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetBindingMacro(\"KEY\", \"macroname\"|macroid[, mode])");
@@ -444,7 +446,7 @@ static int32_t Script_SetBindingMacro(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00563940
+// OFFSET: 0x00927140/0x14068C940
 static int32_t Script_SetBindingClick(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetBindingClick(\"KEY\", \"buttonName\"[, \"mouseButton\"][, mode])");
@@ -483,7 +485,7 @@ static int32_t Script_SetBindingClick(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00563B80
+// OFFSET: 0x009273B0/0x14068CC40
 static int32_t Script_SetOverrideBindingSpell(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -508,7 +510,7 @@ static int32_t Script_SetOverrideBindingSpell(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00563CB0
+// OFFSET: 0x009274E0/0x14068CDC0
 static int32_t Script_SetOverrideBindingItem(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -533,7 +535,7 @@ static int32_t Script_SetOverrideBindingItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00563DE0
+// OFFSET: 0x00927610/0x14068CF40
 static int32_t Script_SetOverrideBindingMacro(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -558,7 +560,7 @@ static int32_t Script_SetOverrideBindingMacro(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00563F10
+// OFFSET: 0x00927740/0x14068D0C0
 static int32_t Script_SetOverrideBindingClick(lua_State* L) {
     CScriptObject* owner = NULL;
 
@@ -589,7 +591,7 @@ static int32_t Script_SetOverrideBindingClick(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00564130
+// OFFSET: 0x00927960/0x14068D350
 static int32_t Script_GetClickFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetClickFrame(\"name\")");

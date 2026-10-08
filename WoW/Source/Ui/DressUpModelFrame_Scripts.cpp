@@ -25,21 +25,21 @@ void CGDressUpModelFrame::CreateScriptMetaTable() {
     CGDressUpModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGDressUpModelFrame::RegisterScriptMethods);
 }
 
-// OFFSET: #0x00597E90
+// OFFSET: 0x00A04D20/0x1407A4440
 static int32_t Script_Undress(lua_State* L) {
     CGDressUpModelFrame* frame = static_cast<CGDressUpModelFrame*>(FrameScript_GetObjectThis(L, CGDressUpModelFrame::GetObjectType()));
     frame->Undress();
     return 0;
 }
 
-// OFFSET: #0x00597ED0
+// OFFSET: 0x00A04D60/0x1407A4480
 static int32_t Script_Dress(lua_State* L) {
     CGDressUpModelFrame* frame = static_cast<CGDressUpModelFrame*>(FrameScript_GetObjectThis(L, CGDressUpModelFrame::GetObjectType()));
     frame->RefreshUnit(frame->m_unitGuid);
     return 0;
 }
 
-// OFFSET: #0x00598830
+// OFFSET: 0x00A05880/0x1407A5260
 static int32_t Script_TryOn(lua_State* L) {
     CGDressUpModelFrame* frame = static_cast<CGDressUpModelFrame*>(FrameScript_GetObjectThis(L, CGDressUpModelFrame::GetObjectType()));
 

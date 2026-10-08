@@ -57,7 +57,8 @@ static int32_t Script_GetGamma(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054EA90
+// PROVEN: 50c8b549 IDENTICAL/NONE
+// OFFSET: 0x009F81A0/0x1407950F0
 static int32_t Script_SetGamma(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetGamma(value)");
@@ -105,7 +106,7 @@ static int32_t Script_IsPlayerResolutionAvailable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054EE60
+// OFFSET: 0x009F8BE0/0x140795BE0
 static int32_t Script_GetVideoCaps(lua_State* L) {
     CGxCaps& caps = g_theGxDevicePtr->Caps();
 
@@ -150,7 +151,7 @@ static int32_t Script_GetVideoCaps(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x0054EF90
+// OFFSET: 0x009F8D40/0x140795D20
 static int32_t Script_IsStereoVideoAvailable(lua_State* L) {
     if (g_theGxDevicePtr->Caps().m_stereoAvailable) {
         lua_pushnumber(L, 1.0);
@@ -286,7 +287,7 @@ static void SetupMultisampleFormats() {
     }
 }
 
-// OFFSET: #0x0054F430
+// OFFSET: 0x009F9260/0x140796430
 static int32_t Script_GetScreenResolutions(lua_State* L) {
     SetupFormats();
     lua_checkstack(L, s_resolutions.Count());
@@ -300,7 +301,7 @@ static int32_t Script_GetScreenResolutions(lua_State* L) {
     return s_resolutions.Count();
 }
 
-// OFFSET: #0x0054F4A0
+// OFFSET: 0x009F9300/0x1407964F0
 static int32_t Script_GetCurrentResolution(lua_State* L) {
     SetupFormats();
 
@@ -324,7 +325,7 @@ static int32_t Script_GetCurrentResolution(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054F690
+// OFFSET: 0x009F9BF0/0x140797110
 static int32_t Script_GetRefreshRates(lua_State* L) {
     SetupFormats();
 
@@ -369,7 +370,7 @@ static int32_t Script_GetRefreshRates(lua_State* L) {
     return results;
 }
 
-// OFFSET: #0x0054F820
+// OFFSET: 0x009F93E0/0x1407965D0
 static int32_t Script_GetMultisampleFormats(lua_State* L) {
     SetupMultisampleFormats();
     lua_checkstack(L, 3 * s_multisampleFormats.Count());
@@ -383,7 +384,7 @@ static int32_t Script_GetMultisampleFormats(lua_State* L) {
     return 3 * s_multisampleFormats.Count();
 }
 
-// OFFSET: #0x0054F8B0
+// OFFSET: 0x009F94B0/0x1407966A0
 static int32_t Script_GetCurrentMultisampleFormat(lua_State* L) {
     SetupMultisampleFormats();
 
@@ -420,7 +421,7 @@ static int32_t Script_GetCurrentMultisampleFormat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0054ED80
+// OFFSET: 0x009F89D0/0x140795990
 static int32_t Script_SetupFullscreenScale(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: SetupFullscreenScale(frame)");
@@ -452,7 +453,7 @@ static int32_t Script_SetupFullscreenScale(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0054F570
+// OFFSET: 0x009F88D0/0x140795890
 static int32_t Script_SetScreenResolution(lua_State* L) {
     SetupFormats();
 
@@ -481,7 +482,7 @@ static int32_t Script_SetScreenResolution(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0054F980
+// OFFSET: 0x009F95C0/0x1407967A0
 static int32_t Script_SetMultisampleFormat(lua_State* L) {
     SetupMultisampleFormats();
 

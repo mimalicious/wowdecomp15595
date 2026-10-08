@@ -18,13 +18,13 @@
 #include "WoW/Source/Ui/GuildRegistrar.h"
 #include "WoW/Source/Ui/Types.h"
 
-// OFFSET: #0x005CEAC0
+// OFFSET: 0x009E01C0/0x140776D40
 static int32_t Script_GetNumPetitionNames(lua_State* L) {
     lua_pushnumber(L, CGPetitionInfo::m_numPetitionNames);
     return 1;
 }
 
-// OFFSET: #0x005CF140
+// OFFSET: 0x009E0870/0x140777520
 static int32_t Script_SignPetition(lua_State* L) {
     uint8_t slot = 1;
 
@@ -47,7 +47,7 @@ static int32_t Script_SignPetition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CF040
+// OFFSET: 0x009E0770/0x140777420
 static int32_t Script_CanSignPetition(lua_State* L) {
     CGPetition* petition = CGPetitionInfo::m_petition;
     int32_t canSign = 1;
@@ -80,13 +80,13 @@ static int32_t Script_CanSignPetition(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CF020
+// OFFSET: 0x009E0750
 static int32_t Script_ClosePetition(lua_State* L) {
     CGPetitionInfo::SetPetition(WOWGUID(), 0, WOWGUID());
     return 0;
 }
 
-// OFFSET: #0x005CECE0
+// OFFSET: 0x009E0410/0x140777090
 static int32_t Script_GetPetitionInfo(lua_State* L) {
     CGPetition* petition = CGPetitionInfo::m_petition;
 
@@ -131,7 +131,7 @@ static int32_t Script_GetPetitionInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005CEE30
+// OFFSET: 0x009E0560/0x1407771E0
 static int32_t Script_GetPetitionNameInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPetitionNameInfo(index)");
@@ -152,7 +152,7 @@ static int32_t Script_GetPetitionNameInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CF220
+// OFFSET: 0x009E0950/0x140777610
 static int32_t Script_OfferPetition(lua_State* L) {
     WOWGUID petitionGuid = CGPetitionInfo::m_petitionGUID;
 
@@ -229,7 +229,7 @@ static int32_t Script_OfferPetition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CF450
+// OFFSET: 0x009E0B80/0x1407778C0
 static int32_t Script_RenamePetition(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage(RenamePetition(\"name\")");

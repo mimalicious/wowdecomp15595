@@ -28,7 +28,7 @@ void CGTabardModelFrame::CreateScriptMetaTable() {
     CGTabardModelFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGTabardModelFrame::RegisterScriptMethods);
 }
 
-// OFFSET: #0x00598FA0
+// OFFSET: 0x00A05EC0/0x1407A5A50
 static int32_t Script_CanSaveTabardNow(lua_State* L) {
     if (CGPlayer_C::CanSaveTabardNow()) {
         lua_pushnumber(L, 1.0);
@@ -39,7 +39,7 @@ static int32_t Script_CanSaveTabardNow(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005991D0
+// OFFSET: 0x00A06060/0x1407A5C00
 static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
@@ -48,7 +48,7 @@ static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00599240
+// OFFSET: 0x00A060D0/0x1407A5C70
 static int32_t Script_GetLowerBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
@@ -57,7 +57,7 @@ static int32_t Script_GetLowerBackgroundFileName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005992B0
+// OFFSET: 0x00A06140/0x1407A5CE0
 static int32_t Script_GetUpperEmblemFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
@@ -66,7 +66,7 @@ static int32_t Script_GetUpperEmblemFileName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00599320
+// OFFSET: 0x00A061B0/0x1407A5D50
 static int32_t Script_GetLowerEmblemFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
@@ -75,14 +75,14 @@ static int32_t Script_GetLowerEmblemFileName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005994C0
+// OFFSET: 0x00A06340/0x1407A5F20
 static int32_t Script_Save(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     frame->Save();
     return 0;
 }
 
-// OFFSET: #0x00599500
+// OFFSET: 0x00A06380/0x1407A5F60
 static int32_t Script_CycleVariation(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
 
@@ -102,7 +102,7 @@ static int32_t Script_CycleVariation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005997C0
+// OFFSET: 0x00A06690/0x1407A62F0
 static int32_t Script_InitializeTabardColors(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
@@ -114,7 +114,7 @@ static int32_t Script_InitializeTabardColors(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00599890
+// OFFSET: 0x00A066F0/0x1407A6360
 static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
 
@@ -174,7 +174,7 @@ static int32_t Script_GetUpperEmblemTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00599B20
+// OFFSET: 0x00A06990/0x1407A6780
 static int32_t Script_GetLowerEmblemTexture(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
 

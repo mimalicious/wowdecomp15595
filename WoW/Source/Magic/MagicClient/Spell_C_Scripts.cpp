@@ -13,7 +13,7 @@
 #include "WoW/Source/UIUtil/InputControl.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 
-// OFFSET: #0x007FDCD0
+// OFFSET: 0x008A5A60/0x1405E8660
 static int32_t Script_SpellIsTargeting(lua_State* L) {
     if (s_targetingSpell) {
         lua_pushnumber(L, 1.0);
@@ -36,7 +36,7 @@ static int32_t Script_SpellCanTargetItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007FDD60
+// OFFSET: 0x008A5AF0/0x1405E86E0
 static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
     if (s_targetingSpell && (s_needTargets & 0x20000)) {
         lua_pushnumber(L, 1.0);
@@ -47,7 +47,7 @@ static int32_t Script_SpellCanTargetGlyph(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00802270
+// OFFSET: 0x008AB020
 static int32_t Script_CannotBeResurrected(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -60,7 +60,7 @@ static int32_t Script_CannotBeResurrected(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x008007E0
+// OFFSET: 0x008A85D0/0x1405EB870
 static int32_t Script_SpellTargetItem(lua_State* L) {
     if (!CGGameUI::CanPerformAction(2) || !s_targetingSpell || !(s_needTargets & 0x4010)) {
         return 0;
@@ -90,7 +90,7 @@ static int32_t Script_SpellTargetItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0080DC00
+// OFFSET: 0x008B7A00/0x1405FF4E0
 static int32_t Script_SpellTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return luaL_error(L, "Usage: SpellTargetUnit(\"unit\")");
@@ -115,7 +115,7 @@ static int32_t Script_SpellTargetUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00804190
+// OFFSET: 0x008B7970/0x1405FF450
 static int32_t Script_SpellCanTargetUnit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return luaL_error(L, "Usage: SpellCanTargetUnit(\"unit\")");
@@ -132,7 +132,7 @@ static int32_t Script_SpellCanTargetUnit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00809E30
+// OFFSET: 0x008B47E0/0x1405FBAC0
 static int32_t Script_SpellStopTargeting(lua_State* L) {
     if (CGGameUI::CanPerformAction(2)) {
         bool targeting = s_targetingSpell != NULL;
@@ -151,7 +151,7 @@ static int32_t Script_SpellStopTargeting(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00809EA0
+// OFFSET: 0x008B4860/0x1405FBB40
 static int32_t Script_SpellStopCasting(lua_State* L) {
     if (!CGGameUI::CanPerformAction(2)) {
         lua_pushnil(L);
@@ -186,7 +186,7 @@ static int32_t Script_SpellStopCasting(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x008021D0
+// OFFSET: 0x008A86C0/0x1405EB980
 static int32_t Script_CancelItemTempEnchantment(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -212,7 +212,7 @@ static int32_t Script_CancelItemTempEnchantment(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00804220
+// OFFSET: 0x008AAE40/0x1405EE9F0
 static int32_t Script_CancelUnitBuff(lua_State* L) {
     ScriptAuraInfo info;
 

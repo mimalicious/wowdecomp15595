@@ -36,13 +36,13 @@ static const char* s_gossipTypes[22] = {
     NULL,
 };
 
-// OFFSET: #0x0058A920
+// OFFSET: 0x009E1350/0x140778040
 static int32_t Script_GetNumGossipOptions(lua_State* L) {
     lua_pushnumber(L, CGGossipInfo::m_gossipOptionsCount);
     return 1;
 }
 
-// OFFSET: #0x0058AB50
+// OFFSET: 0x009E1790/0x1407786E0
 static int32_t Script_ForceGossip(lua_State* L) {
     bool force = false;
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGGossipInfo::m_gossip, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -55,13 +55,13 @@ static int32_t Script_ForceGossip(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058A900
+// OFFSET: 0x009E1330/0x140778020
 static int32_t Script_GetGossipText(lua_State* L) {
     lua_pushstring(L, CGGossipInfo::m_gossipText);
     return 1;
 }
 
-// OFFSET: #0x0058A9E0
+// OFFSET: 0x009E1410/0x140778130
 static int32_t Script_GetGossipOptions(lua_State* L) {
     int32_t count = 0;
 
@@ -77,26 +77,27 @@ static int32_t Script_GetGossipOptions(lua_State* L) {
     return 2 * count;
 }
 
-// OFFSET: #0x0058A960
+// OFFSET: 0x009E1390/0x140778070
 static int32_t Script_GetNumGossipAvailableQuests(lua_State* L) {
     lua_pushnumber(L, CGGossipInfo::GetNumAvailableQuests());
     return 1;
 }
 
-// OFFSET: #0x0058A9A0
+// OFFSET: 0x009E13D0/0x1407780D0
 static int32_t Script_GetNumGossipActiveQuests(lua_State* L) {
     lua_pushnumber(L, CGGossipInfo::GetNumActiveQuests());
     return 1;
 }
 
-// OFFSET: #0x0058AA40
+// OFFSET: 0x009E1660/0x1407784D0
 static int32_t Script_CloseGossip(lua_State* L) {
     WOWGUID none = { 0 };
     CGGossipInfo::SetGossip(none);
     return 0;
 }
 
-// OFFSET: #0x0058B3A0
+// PROVEN: d6917a3a IDENTICAL/NONE
+// OFFSET: 0x009E1470/0x1407781C0
 static int32_t Script_GetGossipAvailableQuests(lua_State* L) {
     uint32_t total = static_cast<uint32_t>(CGGossipInfo::GetNumAvailableQuests());
     int32_t count = 0;
@@ -136,7 +137,7 @@ static int32_t Script_GetGossipAvailableQuests(lua_State* L) {
     return 5 * count;
 }
 
-// OFFSET: #0x0058B490
+// OFFSET: 0x009E1560/0x140778340
 static int32_t Script_GetGossipActiveQuests(lua_State* L) {
     uint32_t total = static_cast<uint32_t>(CGGossipInfo::GetNumActiveQuests());
     int32_t count = 0;
@@ -172,7 +173,7 @@ static int32_t Script_GetGossipActiveQuests(lua_State* L) {
     return 4 * count;
 }
 
-// OFFSET: #0x0058B590
+// OFFSET: 0x009E1FB0/0x140779100
 static int32_t Script_SelectGossipOption(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipOption(index)");
@@ -184,7 +185,7 @@ static int32_t Script_SelectGossipOption(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058B600
+// OFFSET: 0x009E2020/0x140779190
 static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipAvailableQuest(index)");
@@ -194,7 +195,7 @@ static int32_t Script_SelectGossipAvailableQuest(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058B670
+// OFFSET: 0x009E2090/0x1407791E0
 static int32_t Script_SelectGossipActiveQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: SelectGossipActiveQuest(index)");

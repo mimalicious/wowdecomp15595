@@ -66,7 +66,7 @@ static const uint32_t s_timeLeftThresholds[3] = { 1800000, 7200000, 43200000 };
 // STATIC: #0x00A15248
 static const uint32_t AUCTION_RUN_TIMES[3] = { 720, 1440, 2880 };
 
-// OFFSET: #0x0059B0B0
+// OFFSET: 0x009739B0/0x1406EB920
 static int32_t Script_SetAuctionsTabShowing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TBOOLEAN) {
         luaL_error(L, "Usage: SetAuctionsTabShowing(bool)");
@@ -77,7 +77,8 @@ static int32_t Script_SetAuctionsTabShowing(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059BC90
+// PROVEN: be315713 IDENTICAL/NONE
+// OFFSET: 0x00974300/0x1406EC410
 static int32_t Script_GetAuctionHouseDepositRate(lua_State* L) {
     const AuctionHouseRec* rec = g_auctionHouseDB.GetRecord(CGAuctionHouse::m_auctionHouseID);
 
@@ -90,7 +91,7 @@ static int32_t Script_GetAuctionHouseDepositRate(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059C420
+// OFFSET: 0x00974BD0/0x1406ECC50
 static int32_t Script_GetAuctionItemClasses(lua_State* L) {
     int32_t count = 0;
 
@@ -106,7 +107,7 @@ static int32_t Script_GetAuctionItemClasses(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x0059C480
+// OFFSET: 0x00974C30/0x1406ECCF0
 static int32_t Script_GetAuctionItemSubClasses(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAuctionItemSubClasses(index)");
@@ -134,7 +135,7 @@ static int32_t Script_GetAuctionItemSubClasses(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x0059C590
+// OFFSET: 0x00974D40/0x1406ECE60
 static int32_t Script_GetAuctionInvTypes(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAuctionInvTypes(classIndex, subClassIndex)");
@@ -191,7 +192,7 @@ static int32_t Script_GetAuctionInvTypes(lua_State* L) {
     return 28;
 }
 
-// OFFSET: #0x0059C9F0
+// OFFSET: 0x00975180/0x1406ED3B0
 static int32_t Script_CanCancelAuction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CanCancelAuction(index)");
@@ -214,7 +215,7 @@ static int32_t Script_CanCancelAuction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059DDF0
+// OFFSET: 0x00975240/0x1406ED450
 static int32_t Script_CancelAuction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedAuctionItem(index)");
@@ -261,7 +262,7 @@ static int32_t Script_CancelAuction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059C1A0
+// OFFSET: 0x00974900/0x1406ECA20
 static int32_t Script_GetNumAuctionItems(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetNumAuctionItems(\"type\")");
@@ -288,7 +289,7 @@ static int32_t Script_GetNumAuctionItems(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0059AB90
+// OFFSET: 0x009734C0/0x1406EB340
 static int32_t Script_IsAuctionSortReversed(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: IsAuctionSortReversed(\"type\", \"sort\")");
@@ -337,7 +338,7 @@ static int32_t Script_IsAuctionSortReversed(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0059AD40
+// OFFSET: 0x00973660/0x1406EB570
 static int32_t Script_GetAuctionSort(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAuctionSort(\"type\", \"index\")");
@@ -375,7 +376,8 @@ static int32_t Script_GetAuctionSort(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0059AE70
+// PROVEN: 67d50cbe IDENTICAL/NONE
+// OFFSET: 0x00973780/0x1406EB6D0
 static int32_t Script_SortAuctionClearSort(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SortAuctionClearSort(\"type\")");
@@ -395,7 +397,7 @@ static int32_t Script_SortAuctionClearSort(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059AF10
+// OFFSET: 0x00973810/0x1406EB7C0
 static int32_t Script_SortAuctionSetSort(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SortAuctionAddSort(\"type\", \"sort\", \"reverse\")");
@@ -422,7 +424,7 @@ static int32_t Script_SortAuctionSetSort(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059B040
+// OFFSET: 0x00973940
 static int32_t Script_CancelSell(lua_State* L) {
     if (CGAuctionHouse::m_havePendingSell) {
         CGAuctionHouse::OnMultisellFailure(false);
@@ -431,7 +433,7 @@ static int32_t Script_CancelSell(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059BCF0
+// OFFSET: 0x00974360/0x1406EC470
 static int32_t Script_QueryAuctionItems(lua_State* L) {
     WOWGUID auctioneer = CGAuctionHouse::m_auctioneer;
 
@@ -559,7 +561,7 @@ static int32_t Script_QueryAuctionItems(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059C2D0
+// OFFSET: 0x00977EE0/0x1406F02F0
 static int32_t Script_GetAuctionItemLink(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAuctionItemLink(\"type\", index)");
@@ -599,7 +601,7 @@ static int32_t Script_GetAuctionItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059C740
+// OFFSET: 0x00974EF0
 static int32_t Script_CanSendAuctionQuery(lua_State* L) {
     int32_t type = 0;
 
@@ -622,7 +624,7 @@ static int32_t Script_CanSendAuctionQuery(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0059C830
+// OFFSET: 0x00974FE0/0x1406ED180
 static int32_t Script_SetSelectedAuctionItem(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetSelectedAuctionItem(\"type\", index)");
@@ -643,7 +645,7 @@ static int32_t Script_SetSelectedAuctionItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059C920
+// OFFSET: 0x009750C0/0x1406ED2A0
 static int32_t Script_GetSelectedAuctionItem(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetSelectedAuctionItem(\"type\")");
@@ -665,7 +667,7 @@ static int32_t Script_GetSelectedAuctionItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059CAB0
+// OFFSET: 0x009783D0/0x1406F0860
 static int32_t Script_SortAuctionApplySort(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SortAuctionApplySort(\"type\")");
@@ -686,7 +688,7 @@ static int32_t Script_SortAuctionApplySort(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059D270
+// OFFSET: 0x00977570/0x1406EF900
 static int32_t Script_CalculateAuctionDeposit(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalculateAuctionDeposit(runTime)");
@@ -717,7 +719,7 @@ static int32_t Script_CalculateAuctionDeposit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0059D410
+// OFFSET: 0x00977760/0x1406EFAE0
 static int32_t Script_ClickAuctionSellItemButton(lua_State* L) {
     WOWGUID item;
     WOWGUID container;
@@ -747,7 +749,7 @@ static int32_t Script_ClickAuctionSellItemButton(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059D4F0
+// OFFSET: 0x00974810/0x1406EC950
 static int32_t Script_GetOwnerAuctionItems(lua_State* L) {
     if (CGAuctionHouse::m_auctioneer && CGAuctionHouse::m_canGetOwnerList && CGAuctionHouse::CanSendQuery(2)) {
         CGAuctionHouse::GetOwnerList();
@@ -756,7 +758,7 @@ static int32_t Script_GetOwnerAuctionItems(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059D540
+// OFFSET: 0x00974860/0x1406EC9A0
 static int32_t Script_GetBidderAuctionItems(lua_State* L) {
     if (CGAuctionHouse::m_auctioneer && CGAuctionHouse::m_canGetBidderList && CGAuctionHouse::CanSendQuery(1)) {
         int32_t page = 0;
@@ -771,7 +773,7 @@ static int32_t Script_GetBidderAuctionItems(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059D5E0
+// OFFSET: 0x00977840/0x1406EFBB0
 static int32_t Script_GetAuctionItemInfo(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAuctionItemInfo(\"type\", index)");
@@ -876,7 +878,7 @@ static int32_t Script_GetAuctionItemInfo(lua_State* L) {
     return 13;
 }
 
-// OFFSET: #0x0059DA40
+// OFFSET: 0x00978030/0x1406F0490
 static int32_t Script_PlaceAuctionBid(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: PlaceAuctionBid(\"type\", index, bid)");
@@ -964,7 +966,7 @@ static int32_t Script_PlaceAuctionBid(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059DD00
+// OFFSET: 0x00979DC0/0x1406F2AF0
 static int32_t Script_SortAuctionItems(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SortAuctionItems(\"type\", \"sort\")");
@@ -990,13 +992,13 @@ static int32_t Script_SortAuctionItems(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008CE510
+// OFFSET: 0x00975BE0/0x1406EDFA0
 static int32_t Script_CloseAuctionHouse(lua_State* L) {
     CGAuctionHouse::CloseAuctionHouse();
     return 0;
 }
 
-// OFFSET: #0x0059F760
+// OFFSET: 0x00979720/0x1406F2380
 static int32_t Script_GetAuctionSellItemInfo(lua_State* L) {
     WOWGUID sellItem = CGAuctionHouse::m_sellItem;
     CGItem_C* item;
@@ -1043,7 +1045,7 @@ static int32_t Script_GetAuctionSellItemInfo(lua_State* L) {
     return 9;
 }
 
-// OFFSET: #0x0059F990
+// OFFSET: 0x00979960/0x1406F2630
 static int32_t Script_StartAuction(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: StartAuction(minBid, buyoutPrice, runTime, count)");
@@ -1147,7 +1149,7 @@ static int32_t Script_StartAuction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0059FD60
+// OFFSET: 0x00975BF0/0x1406EDFB0
 static int32_t Script_GetAuctionItemTimeLeft(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAuctionItemTimeLeft(\"type\", index)");

@@ -10,6 +10,9 @@ bool (*ClientWaitQueueUpdate::s_handler)(ClientWaitQueueUpdate* msg);
 // STATIC: 0x00E4D52C
 bool (*ClientWaitQueueFinish::s_handler)(ClientWaitQueueFinish* msg);
 
+// STATIC: 0x00E4D758
+bool (*ClientGenerateRandomCharacterNameResult::s_handler)(ClientGenerateRandomCharacterNameResult* msg);
+
 // STATIC: 0x00E4D5E0
 bool (*ClientEnumCharactersResult::s_handler)(ClientEnumCharactersResult* msg);
 
@@ -385,4 +388,38 @@ bool ClientEnumCharactersResult::Handle() {
     }
 
     return ClientEnumCharactersResult::s_handler(this);
+}
+
+// OFFSET: 0x006BE090/0x140372C80
+ClientGenerateRandomCharacterNameResult::ClientGenerateRandomCharacterNameResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0FF0/0x14034E250
+ClientGenerateRandomCharacterNameResult::~ClientGenerateRandomCharacterNameResult() {
+}
+
+// OFFSET: 0x006B5480/0x1403677B0
+void ClientGenerateRandomCharacterNameResult::Unpack(CDataStore* msg, bool full) {
+    uint8_t value = 0;
+    msg->Get(value);
+    this->m_success = (value >> 7) != 0;
+
+    JamBitReader bits(msg);
+    bits.m_value = value << 1;
+    bits.m_bits = 1;
+
+    uint32_t length = bits.ReadBits<7>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = '\0';
+}
+
+// OFFSET: 0x006A4D80/0x140352C70
+bool ClientGenerateRandomCharacterNameResult::Handle() {
+    if (!ClientGenerateRandomCharacterNameResult::s_handler) {
+        return false;
+    }
+
+    return ClientGenerateRandomCharacterNameResult::s_handler(this);
 }

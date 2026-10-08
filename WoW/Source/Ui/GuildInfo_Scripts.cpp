@@ -54,13 +54,13 @@ static int32_t Script_SetGuildRosterShowOffline(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CA350
+// OFFSET: 0x009321A0/0x14069A5C0
 static int32_t Script_GetNumGuildEvents(lua_State* L) {
     lua_pushnumber(L, CGGuildInfo::m_numEventLogEntries);
     return 1;
 }
 
-// OFFSET: %0x0088EB90
+// OFFSET: 0x00931BE0/0x140699EF0
 static int32_t Script_GetGuildRosterShowOffline(lua_State* L) {
     if (g_guildShowOfflineCVar->m_intValue) {
         lua_pushnumber(L, 1.0);
@@ -71,13 +71,13 @@ static int32_t Script_GetGuildRosterShowOffline(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CA220
+// OFFSET: 0x00931C20/0x140699F30
 static int32_t Script_GuildControlGetNumRanks(lua_State* L) {
     lua_pushnumber(L, CGGuildInfo::m_numRanks);
     return 1;
 }
 
-// OFFSET: #0x005CA2B0
+// OFFSET: 0x00934050/0x14069C760
 static int32_t Script_GuildControlSetRankFlag(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GuildControlSetRankFlag(index, enabled)");
@@ -93,7 +93,7 @@ static int32_t Script_GuildControlSetRankFlag(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CB3F0
+// OFFSET: 0x00934560/0x14069CDB0
 static int32_t Script_GuildControlDelRank(lua_State* L) {
     if (CGGuildInfo::m_numRanks > 5) {
         CDataStore msg;
@@ -105,7 +105,7 @@ static int32_t Script_GuildControlDelRank(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CC360
+// OFFSET: 0x00936800/0x14069F990
 static int32_t Script_CanEditGuildEvent(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -118,7 +118,7 @@ static int32_t Script_CanEditGuildEvent(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBCF0
+// OFFSET: 0x00936110/0x14069EFA0
 static int32_t Script_CanGuildPromote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -131,7 +131,7 @@ static int32_t Script_CanGuildPromote(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBD80
+// OFFSET: 0x009361A0/0x14069F070
 static int32_t Script_CanGuildDemote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -144,7 +144,7 @@ static int32_t Script_CanGuildDemote(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBE10
+// OFFSET: 0x00936230/0x14069F140
 static int32_t Script_CanGuildInvite(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -157,7 +157,7 @@ static int32_t Script_CanGuildInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBEA0
+// OFFSET: 0x009362C0/0x14069F210
 static int32_t Script_CanGuildRemove(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -170,7 +170,7 @@ static int32_t Script_CanGuildRemove(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBF30
+// OFFSET: 0x00936350/0x14069F2E0
 static int32_t Script_CanEditMOTD(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -183,7 +183,7 @@ static int32_t Script_CanEditMOTD(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CBFC0
+// OFFSET: 0x009363E0/0x14069F3B0
 static int32_t Script_CanEditPublicNote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -196,7 +196,7 @@ static int32_t Script_CanEditPublicNote(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CC050
+// OFFSET: 0x00936470/0x14069F480
 static int32_t Script_CanEditOfficerNote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -209,7 +209,7 @@ static int32_t Script_CanEditOfficerNote(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CC0E0
+// OFFSET: 0x00936500/0x14069F550
 static int32_t Script_CanViewOfficerNote(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -222,7 +222,7 @@ static int32_t Script_CanViewOfficerNote(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CC170
+// OFFSET: 0x00936590/0x14069F620
 static int32_t Script_CanEditGuildInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -235,7 +235,7 @@ static int32_t Script_CanEditGuildInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CC200
+// OFFSET: 0x00936620/0x14069F6F0
 static int32_t Script_CanGuildBankRepair(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -248,7 +248,7 @@ static int32_t Script_CanGuildBankRepair(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CC3E0
+// OFFSET: 0x00936930/0x14069FB20
 static int32_t Script_GuildControlGetRankFlags(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     uint32_t rights = CGGuildInfo::m_rankInfo[s_guildControlRank].m_rights;
@@ -311,7 +311,7 @@ static int32_t Script_SetGuildBankTabWithdraw(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CC470
+// OFFSET: 0x00936BD0/0x14069FE50
 static int32_t Script_QueryGuildEventLog(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -325,7 +325,7 @@ static int32_t Script_QueryGuildEventLog(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CC290
+// OFFSET: 0x00936740/0x14069F890
 static int32_t Script_CanEditGuildTabInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CanEditGuildTabInfo(tab)");
@@ -344,7 +344,7 @@ static int32_t Script_CanEditGuildTabInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CB470
+// OFFSET: 0x00934970/0x14069D230
 static int32_t Script_SetGuildBankTabPermissions(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetGuildTabPermissions(tab, index, enabled)");
@@ -367,7 +367,7 @@ static int32_t Script_SetGuildBankTabPermissions(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CAF40
+// OFFSET: 0x00933F30/0x14069C620
 static int32_t Script_SetGuildRosterSelection(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetGuildRosterSelection(index)");
@@ -385,33 +385,33 @@ static int32_t Script_SetGuildRosterSelection(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CA190
+// OFFSET: 0x00931B00/0x140699E00
 static int32_t Script_GetGuildRosterMOTD(lua_State* L) {
     lua_pushstring(L, CGGuildInfo::m_motd);
     return 1;
 }
 
-// OFFSET: #0x005CB810
+// OFFSET: 0x00937EA0/0x1406A1490
 int32_t Script_GuildRoster(lua_State* L) {
     CGGuildInfo::QueryRosterAndRanks();
 
     return 0;
 }
 
-// OFFSET: #0x005CA130
+// OFFSET: 0x00931AA0/0x140699DC0
 static int32_t Script_GetNumGuildMembers(lua_State* L) {
     int32_t all = StringToBOOL(L, 1, 0);
     lua_pushnumber(L, CGGuildInfo::m_showOffline || all ? CGGuildInfo::m_numMembers : CGGuildInfo::m_numOnlineMembers);
     return 1;
 }
 
-// OFFSET: %0x0088EB00
+// OFFSET: 0x00933FC0/0x14069C6A0
 static int32_t Script_GetGuildRosterSelection(lua_State* L) {
     lua_pushnumber(L, CGGuildInfo::GetSelectedMemberIndex() + 1);
     return 1;
 }
 
-// OFFSET: #0x005CC9C0
+// OFFSET: 0x00935A50/0x14069E800
 static int32_t Script_GetGuildRosterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildRosterInfo(index)");
@@ -511,7 +511,7 @@ static void SetGuildControlRank(uint32_t rank) {
     }
 }
 
-// OFFSET: #0x005CA260
+// OFFSET: 0x00931C60/0x140699F60
 static int32_t Script_GuildControlSetRank(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GuildControlSetRank(rank)");
@@ -522,13 +522,13 @@ static int32_t Script_GuildControlSetRank(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CA330
+// OFFSET: 0x00932160/0x14069A570
 static int32_t Script_GetGuildInfoText(lua_State* L) {
     lua_pushstring(L, CGGuildInfo::m_infoText);
     return 1;
 }
 
-// OFFSET: #0x005CABB0
+// OFFSET: 0x00933CE0/0x14069C3C0
 static int32_t Script_GetGuildRosterLastOnline(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildRosterLastOnline(index)");
@@ -559,7 +559,7 @@ static int32_t Script_GetGuildRosterLastOnline(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005CAD00
+// OFFSET: 0x00935E10/0x14069EC80
 static int32_t Script_GuildRosterSetPublicNote(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: GuildRosterSetPublicNote(index, note)");
@@ -597,7 +597,7 @@ static int32_t Script_GuildRosterSetPublicNote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CAE20
+// OFFSET: 0x00935F90/0x14069EE10
 static int32_t Script_GuildRosterSetOfficerNote(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: GuildRosterSetOfficerNote(index, note)");
@@ -635,7 +635,7 @@ static int32_t Script_GuildRosterSetOfficerNote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CB000
+// OFFSET: 0x00939620/0x1406A3860
 static int32_t Script_SortGuildRoster(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SortGuildRoster(\"type\")");
@@ -685,7 +685,7 @@ static int32_t Script_SortGuildRoster(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CB170
+// OFFSET: 0x009342E0/0x14069C9C0
 static int32_t Script_GuildControlSaveRank(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GuildControlSaveRank(name)");
@@ -733,7 +733,7 @@ static int32_t Script_GuildControlSaveRank(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CB330
+// OFFSET: 0x00931D10/0x14069A040
 static int32_t Script_GuildControlAddRank(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GuildControlAddRank(name)");
@@ -760,7 +760,7 @@ static int32_t Script_GuildControlAddRank(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CB560
+// OFFSET: 0x00932010/0x14069A3C0
 static int32_t Script_GetGuildBankTabPermissions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildBankTabPermissions(tab)");
@@ -792,7 +792,7 @@ static int32_t Script_GetGuildBankTabPermissions(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005CB820
+// OFFSET: 0x00936AF0/0x14069FD60
 static int32_t Script_SetGuildInfoText(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetGuildInfoText(text)");
@@ -815,7 +815,7 @@ static int32_t Script_SetGuildInfoText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005CCC90
+// OFFSET: 0x00936840/0x14069F9D0
 static int32_t Script_GuildControlGetRankName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GuildControlGetRankName(index)");
@@ -839,7 +839,7 @@ static int32_t Script_GuildControlGetRankName(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005CCD90
+// OFFSET: 0x00936C30/0x14069FEB0
 static int32_t Script_GetGuildEventInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGuildEventInfo(index)");

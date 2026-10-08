@@ -18,6 +18,7 @@ class CCharacterSelection {
     static int32_t s_selectionIndex;
     static int32_t s_characterCount;
     static float s_charFacing;
+    static int32_t m_enterWorldIndex;
     static uint32_t s_raceRestrictions[10];
 
     static void ClearCharacterList();
@@ -28,10 +29,14 @@ class CCharacterSelection {
     static int32_t Idle(const void* data, void* param);
     static void Initialize();
     static void ModelLoadedCallback(CM2Model* model, void* arg);
+    static bool IsStreamingDataReady();
     static void OnHide();
+    static void OnShow();
+    static void SetModelFrame(CSimpleModelFFX* modelFrame);
     static void SetBackgroundModel(const char* modelName);
     static void ShowCharacter();
     static void Shutdown();
+    static void TransferComponentToWorld();
     static void UpdateCharacterList(const TSFixedArray<CHARACTER_INFO>& characters);
     static void UpdateCharacterName(WOWGUID guid, const char* name);
     static void UpdateCharacterInfo(WOWGUID guid, const char* name, uint8_t sexID, uint8_t skinColorID, uint8_t faceID, uint8_t hairStyleID, uint8_t hairColorID, uint8_t facialHairStyleID, uint8_t raceID);

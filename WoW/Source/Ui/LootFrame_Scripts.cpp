@@ -21,7 +21,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// OFFSET: #0x00588CC0
+// OFFSET: 0x00959EE0/0x1406CC440
 static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLootRollTimeLeft(id)");
@@ -39,7 +39,7 @@ static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00588750
+// OFFSET: 0x00959BA0/0x1406CC150
 static int32_t Script_LootSlotIsItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LootSlotIsItem(slot)");
@@ -69,7 +69,7 @@ static int32_t Script_LootSlotIsItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00588810
+// OFFSET: 0x00959D20/0x1406CC290
 static int32_t Script_LootSlotIsCoin(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LootSlotIsCoin(slot)");
@@ -87,7 +87,7 @@ static int32_t Script_LootSlotIsCoin(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005888E0
+// OFFSET: 0x00959DF0/0x1406CC350
 static int32_t Script_IsFishingLoot(lua_State* L) {
     if (CGLootInfo::m_lootType == 3) {
         lua_pushnumber(L, 1.0);
@@ -98,7 +98,7 @@ static int32_t Script_IsFishingLoot(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005889D0
+// OFFSET: 0x0095B320/0x1406CDC70
 static int32_t Script_GetLootRollItemInfo(lua_State* L) {
     char buffer[256];
 
@@ -167,7 +167,7 @@ static void MasterLootCandidateNameCallback(int32_t id, const WOWGUID& guid, voi
     }
 }
 
-// OFFSET: #0x00588920
+// OFFSET: 0x00959E30/0x1406CC390
 static int32_t Script_GetMasterLootCandidate(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMasterLootCandidate(index)");
@@ -186,13 +186,13 @@ static int32_t Script_GetMasterLootCandidate(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00588540
+// OFFSET: 0x00959B70/0x1406CC0F0
 static int32_t Script_GetNumLootItems(lua_State* L) {
     lua_pushnumber(L, CGLootWindow::GetNumLootItems());
     return 1;
 }
 
-// OFFSET: #0x00588570
+// OFFSET: 0x0095AF20/0x1406CD8B0
 static int32_t Script_GetLootSlotInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLootSlotInfo(slot)");
@@ -228,7 +228,7 @@ static int32_t Script_GetLootSlotInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005886D0
+// OFFSET: 0x0095B1C0/0x1406CDB60
 static int32_t Script_GetLootSlotLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLootSlotLink(slot)");
@@ -247,7 +247,7 @@ static int32_t Script_CloseLoot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00588C00
+// OFFSET: 0x0095B570/0x1406CDEF0
 static int32_t Script_GetLootRollItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLootRollItemLink(id)");
@@ -271,7 +271,7 @@ static int32_t Script_GetLootRollItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00588D60
+// OFFSET: 0x00959F80/0x1406CC4D0
 static int32_t Script_RollOnLoot(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: RollOnLoot(id, rollType)");
@@ -283,7 +283,7 @@ static int32_t Script_RollOnLoot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00588DD0
+// OFFSET: 0x00959FF0/0x1406CC550
 static int32_t Script_ConfirmLootRoll(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ConfirmLootRoll(id, rollType)");
@@ -295,7 +295,7 @@ static int32_t Script_ConfirmLootRoll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00589520
+// OFFSET: 0x0095B240/0x1406CDBD0
 static int32_t Script_LootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LootSlot(slot)");
@@ -306,7 +306,7 @@ static int32_t Script_LootSlot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00589590
+// OFFSET: 0x0095B2B0/0x1406CDC20
 static int32_t Script_ConfirmLootSlot(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: LootSlot(slot)");
@@ -317,7 +317,7 @@ static int32_t Script_ConfirmLootSlot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00589600
+// OFFSET: 0x0095A810/0x1406CD000
 static int32_t Script_GiveMasterLoot(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GiveMasterLoot(slot, index)");
@@ -334,7 +334,7 @@ static int32_t Script_GiveMasterLoot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00588F00
+// OFFSET: 0x0095A540/0x1406CCBF0
 static int32_t Script_SetLootPortrait(lua_State* L) {
     CSimpleTexture* texture = static_cast<CSimpleTexture*>(FrameScript_GetObjectThis(L, CSimpleTexture::GetObjectType()));
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGLootInfo::m_lootObj, TYPEMASK_UNIT, __FILE__, __LINE__));

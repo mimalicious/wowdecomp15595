@@ -15,6 +15,7 @@ class CDrawBowString {
     static void UnitDrawBowStringCB(CM2Model* model, const CM2Lighting* lighting, void* arg);
 };
 
+bool GuildGetGuildTabard(WOWGUID guid, WOWGUID guildGUID, void (*callback)(const WOWGUID& guid, const WOWGUID& guildGUID, void* param, bool success), void* param, int32_t& emblemStyle, int32_t& emblemColor, int32_t& borderStyle, int32_t& borderColor, int32_t& background);
 bool GuildGetGuildTabard(WOWGUID guid, int32_t guildID, void (*callback)(int32_t guildID, const WOWGUID& guid, void* param, bool success), void* param, int32_t& emblemStyle, int32_t& emblemColor, int32_t& borderStyle, int32_t& borderColor, int32_t& background);
 
 #endif

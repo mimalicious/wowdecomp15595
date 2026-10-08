@@ -14,12 +14,12 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/FileDownload.h"
 #include "ThirdParty/zlib/zlib.h"
 
-// STATIC: #0x009F6418
+// STATIC: 0x00BD135C
 static const uint8_t s_surveyExponent[4] = {
     0x01, 0x00, 0x01, 0x00,
 };
 
-// STATIC: #0x00AC4430
+// STATIC: 0x00D07C08
 static uint8_t s_surveyModulus[256] = {
     0x9D, 0x6B, 0x29, 0x8C, 0x12, 0x0B, 0x73, 0x4D, 0x94, 0x5F, 0x17, 0xB5, 0xB2, 0xC8, 0x21, 0xB2,
     0x52, 0xE8, 0x01, 0x96, 0x39, 0x3D, 0xE2, 0xD5, 0xB8, 0xE3, 0x28, 0x0D, 0x30, 0x49, 0x57, 0x2B,
@@ -39,19 +39,19 @@ static uint8_t s_surveyModulus[256] = {
     0x30, 0xDE, 0x11, 0x6A, 0xAA, 0x2D, 0xB3, 0x8A, 0x2C, 0x47, 0xA7, 0x1E, 0x0D, 0x75, 0x8B, 0x9C,
 };
 
-// STATIC: #0x00B6B248
+// STATIC: 0x00EBC468
 uint32_t CGlueMgr::m_surveyTimer;
 
-// STATIC: #0x00B6B24C
+// STATIC: 0x00EBC46C
 uint8_t CGlueMgr::m_executedSurvey;
 
-// STATIC: #0x00B6B250
+// STATIC: 0x00EBC470
 FileDownload* CGlueMgr::m_surveyDownload;
 
-// STATIC: #0x00B6B254
+// STATIC: 0x00EBC474
 uint8_t* CGlueMgr::m_surveyData;
 
-// STATIC: #0x00B6B258
+// STATIC: 0x00EBC478
 uint16_t CGlueMgr::m_surveyDataSize;
 
 // PROVEN: 5ad1976d IDENTICAL/NONE
@@ -62,7 +62,7 @@ void CGlueMgr::SurveyDownloadFeed(const uint8_t* data, uint32_t size) {
     }
 }
 
-// OFFSET: #0x004E48A0
+// OFFSET: 0x0080FFD0/0x140527440
 void CGlueMgr::SurveySendResults() {
     if (CGlueMgr::m_surveyData && CGlueMgr::m_surveyDataSize) {
         DebugLog("Sending survey result\n");
@@ -70,7 +70,7 @@ void CGlueMgr::SurveySendResults() {
     }
 }
 
-// OFFSET: #0x004E48E0
+// OFFSET: 0x00810360/0x1405278C0
 void CGlueMgr::SurveyDownloadStart() {
     if (ClientServices::LoginConnection()->GetLoginServerType()) {
         return;
@@ -82,8 +82,7 @@ void CGlueMgr::SurveyDownloadStart() {
     SStrPack(path, "Cache", sizeof(path));
     OsCreateDirectory(path, 1);
 
-    CGlueMgr::m_idleState = IDLE_12;
-    CGlueMgr::m_showedDisconnect = 0;
+    CGlueMgr::SetIdleState(IDLE_PATCH_DOWNLOAD);
 
     if (CGlueMgr::m_surveyDownload) {
         delete CGlueMgr::m_surveyDownload;
@@ -104,7 +103,7 @@ void CGlueMgr::SurveyDownloadStart() {
     ClientServices::FileAccept(accept, offset);
 }
 
-// OFFSET: %0x00775DF0
+// OFFSET: 0x0080FEA0/0x1405272E0
 void CGlueMgr::SurveyDownloadCancel() {
     CGlueMgr::m_surveyDownload->StopDownload();
 
@@ -114,38 +113,37 @@ void CGlueMgr::SurveyDownloadCancel() {
 
     CGlueMgr::m_surveyDownload = NULL;
     ClientServices::LoginConnection()->FileComplete(false);
-    CGlueMgr::m_idleState = IDLE_NONE;
-    CGlueMgr::m_showedDisconnect = 0;
+    CGlueMgr::SetIdleState(IDLE_NONE);
     ClientServices::LoginConnection()->Logoff();
 }
 
-// OFFSET: #0x004E4AA0
-void CGlueMgr::SurveyDownloadIdle() {
-    int32_t status = CGlueMgr::m_surveyDownload->GetStatus();
+// OFFSET: 0x0080FF20/0x140527380
+bool CGlueMgr::SurveyDownloadIdle() {
+    switch (CGlueMgr::m_surveyDownload->GetStatus()) {
+        case 2:
+            if (CGlueMgr::m_surveyDownload->Accepted()) {
+                ClientServices::LoginConnection()->FileComplete(true);
+            }
 
-    if (status == 2) {
-        if (CGlueMgr::m_surveyDownload->Accepted()) {
-            ClientServices::LoginConnection()->FileComplete(true);
-        }
+            CGlueMgr::m_surveyDownload->CompleteDownload();
+            CGlueMgr::SetIdleState(IDLE_SURVEY_DOWNLOAD);
+            return true;
 
-        CGlueMgr::m_surveyDownload->CompleteDownload();
-    } else {
-        if (status != 3) {
-            return;
-        }
+        case 3:
+            if (CGlueMgr::m_surveyDownload->Accepted()) {
+                ClientServices::LoginConnection()->FileComplete(false);
+            }
 
-        if (CGlueMgr::m_surveyDownload->Accepted()) {
-            ClientServices::LoginConnection()->FileComplete(false);
-        }
+            CGlueMgr::m_surveyDownload->Destroy(true);
+            CGlueMgr::SetIdleState(IDLE_SURVEY_DOWNLOAD);
+            return true;
 
-        CGlueMgr::m_surveyDownload->Destroy(true);
+        default:
+            return false;
     }
-
-    CGlueMgr::m_showedDisconnect = 0;
-    CGlueMgr::m_idleState = IDLE_13;
 }
 
-// OFFSET: #0x004E4B30
+// OFFSET: 0x00810010/0x140527480
 bool CGlueMgr::SurveyExecute() {
     char currentDirectory[260];
     OsGetCurrentDirectory(sizeof(currentDirectory), currentDirectory);
@@ -228,7 +226,7 @@ bool CGlueMgr::SurveyExecute() {
                             }
                         }
 
-                        delete data;
+                        SMemFree(data, "delete", -1, 0);
                     }
                 }
             }
@@ -263,7 +261,7 @@ bool CGlueMgr::SurveyExecute() {
     return success;
 }
 
-// OFFSET: #0x004E4E80
+// OFFSET: 0x00810560/0x140527B50
 void CGlueMgr::SurveyDownloadEnd() {
     CGlueMgr::m_executedSurvey = 0;
 
@@ -280,6 +278,5 @@ void CGlueMgr::SurveyDownloadEnd() {
     }
 
     ClientServices::CreateLoginResponse()->UpdateLoginStatus(LOGIN_STATE_AUTHENTICATED, LOGIN_OK, NULL, 0);
-    CGlueMgr::m_showedDisconnect = 0;
-    CGlueMgr::m_idleState = IDLE_LOGIN_SERVER_LOGIN;
+    CGlueMgr::SetIdleState(IDLE_LOGIN_SERVER_LOGIN);
 }

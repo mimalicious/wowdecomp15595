@@ -20,7 +20,7 @@
 #include "WoW/Source/Glue/Types.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 
-// OFFSET: #0x004E2F60
+// OFFSET: 0x008087D0/0x14051E300
 static int32_t Script_SetCharSelectModelFrame(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetCharSelectModelFrame(\"frameName\")");
@@ -36,13 +36,13 @@ static int32_t Script_SetCharSelectModelFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E3140
+// OFFSET: 0x00808E00/0x14051EA40
 static int32_t Script_GetNumCharacters(lua_State* L) {
     lua_pushnumber(L, CCharacterSelection::s_characterList.Count());
     return 1;
 }
 
-// OFFSET: #0x004E2FD0
+// OFFSET: 0x00808840/0x14051E390
 static int32_t Script_UpdateSelectionCustomizationScene(lua_State* L) {
     if (CCharacterSelection::s_selectionIndex < static_cast<int32_t>(CCharacterSelection::s_characterList.Count())) {
         CCharacterComponent* component = CCharacterSelection::s_characterList[CCharacterSelection::s_selectionIndex].m_component;
@@ -55,13 +55,13 @@ static int32_t Script_UpdateSelectionCustomizationScene(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E3000
+// OFFSET: 0x00808850/0x14051E3A0
 static int32_t Script_GetCharacterSelectFacing(lua_State* L) {
     lua_pushnumber(L, CCharacterSelection::s_charFacing * 57.29578f);
     return 1;
 }
 
-// OFFSET: #0x004E3030
+// OFFSET: 0x00808880/0x14051E3D0
 static int32_t Script_SetCharacterSelectFacing(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetCharacterSelectFacing(degrees)");
@@ -72,7 +72,7 @@ static int32_t Script_SetCharacterSelectFacing(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004E3170
+// OFFSET: 0x00808E40/0x14051EA60
 static int32_t Script_GetCharacterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCharacterInfo(index)");
@@ -123,7 +123,7 @@ static int32_t Script_GetCharacterInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x004E33A0
+// OFFSET: 0x00809AE0/0x14051FA40
 static int32_t Script_DeleteCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DeleteCharacter(index)");
@@ -139,7 +139,7 @@ static int32_t Script_DeleteCharacter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E3410
+// OFFSET: 0x008090B0/0x14051ED30
 static int32_t Script_RenameCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: RenameCharacter(index, name)");
@@ -182,7 +182,7 @@ static int32_t Script_RenameCharacter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004E3530
+// OFFSET: 0x008091D0/0x14051EEA0
 static int32_t Script_DeclineCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DeclineCharacter(index, name1, name2, name3, name4, name5)");
@@ -220,7 +220,7 @@ static int32_t Script_DeclineCharacter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004E3620
+// OFFSET: 0x008092C0
 static int32_t Script_GetSelectBackgroundModel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetSelectBackgroundModel(index)");
@@ -273,7 +273,7 @@ static int32_t Script_GetSelectBackgroundModel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004E44E0
+// OFFSET: 0x00809A90/0x14051F9F0
 static int32_t Script_SetCharSelectBackground(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetCharSelectBackground(\"filename\")");
@@ -284,7 +284,7 @@ static int32_t Script_SetCharSelectBackground(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E4530
+// OFFSET: 0x0080A950/0x140520C70
 static int32_t Script_GetCharacterListUpdate(lua_State* L) {
     CCharacterSelection::s_characterList.SetCount(0);
 
@@ -300,7 +300,7 @@ static int32_t Script_GetCharacterListUpdate(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E4580
+// OFFSET: 0x0080A1E0/0x140520400
 static int32_t Script_SelectCharacter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectCharacter(index)");
@@ -342,14 +342,16 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "GetSelectBackgroundModel", &Script_GetSelectBackgroundModel },
 };
 
-// OFFSET: %0x00773310
+// PROVEN: e65f2480 IDENTICAL/NONE
+// OFFSET: 0x00807F50
 void CharSelectRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x00773340
+// PROVEN: b22ea559 IDENTICAL/NONE
+// OFFSET: 0x00807F80/0x14051D930
 void CharSelectUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_scriptFunctions[i].m_name);

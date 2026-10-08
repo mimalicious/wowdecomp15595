@@ -9,7 +9,7 @@
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// OFFSET: #0x006017E0
+// OFFSET: 0x0043F4C0/0x14004A6E0
 static int32_t Script_CameraZoomIn(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     double distance = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 1.0;
@@ -22,7 +22,7 @@ static int32_t Script_CameraZoomIn(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00601840
+// OFFSET: 0x0043F540/0x14004A760
 static int32_t Script_CameraZoomOut(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     double distance = lua_isnumber(L, 1) ? lua_tonumber(L, 1) : 1.0;
@@ -48,12 +48,12 @@ static int32_t MoveViewStart(lua_State* L, uint32_t motion) {
     return 0;
 }
 
-// OFFSET: #0x005FF080
+// OFFSET: 0x0043BE10/0x140046840
 static int32_t Script_MoveViewInStart(lua_State* L) {
     return MoveViewStart(L, 0);
 }
 
-// OFFSET: #0x005FF0A0
+// OFFSET: 0x0043BE30/0x140046850
 static int32_t Script_MoveViewInStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -66,12 +66,12 @@ static int32_t Script_MoveViewInStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF0D0
+// OFFSET: 0x0043BE60/0x140046880
 static int32_t Script_MoveViewOutStart(lua_State* L) {
     return MoveViewStart(L, 1);
 }
 
-// OFFSET: #0x005FF0F0
+// OFFSET: 0x0043BE80/0x140046890
 static int32_t Script_MoveViewOutStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -84,12 +84,12 @@ static int32_t Script_MoveViewOutStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF170
+// OFFSET: 0x0043BF00/0x140046900
 static int32_t Script_MoveViewLeftStart(lua_State* L) {
     return MoveViewStart(L, 3);
 }
 
-// OFFSET: #0x005FF190
+// OFFSET: 0x0043BF20/0x140046910
 static int32_t Script_MoveViewLeftStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -102,12 +102,12 @@ static int32_t Script_MoveViewLeftStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF120
+// OFFSET: 0x0043BEB0/0x1400468C0
 static int32_t Script_MoveViewRightStart(lua_State* L) {
     return MoveViewStart(L, 2);
 }
 
-// OFFSET: #0x005FF140
+// OFFSET: 0x0043BED0/0x1400468D0
 static int32_t Script_MoveViewRightStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -120,12 +120,12 @@ static int32_t Script_MoveViewRightStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF1C0
+// OFFSET: 0x0043BF50/0x140046950
 static int32_t Script_MoveViewUpStart(lua_State* L) {
     return MoveViewStart(L, 4);
 }
 
-// OFFSET: #0x005FF1E0
+// OFFSET: 0x0043BF70/0x140046960
 static int32_t Script_MoveViewUpStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -138,12 +138,12 @@ static int32_t Script_MoveViewUpStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF210
+// OFFSET: 0x0043BFA0/0x1400469A0
 static int32_t Script_MoveViewDownStart(lua_State* L) {
     return MoveViewStart(L, 5);
 }
 
-// OFFSET: #0x005FF230
+// OFFSET: 0x0043BFC0/0x1400469B0
 static int32_t Script_MoveViewDownStop(lua_State* L) {
     uint32_t time = CSimpleTop::s_eventTime;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -156,7 +156,8 @@ static int32_t Script_MoveViewDownStop(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006039B0
+// PROVEN: b7cc5169 IDENTICAL/NONE
+// OFFSET: 0x00441B40/0x14004D0D0
 static int32_t Script_SetView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetView(viewModeIndex)");
@@ -172,7 +173,8 @@ static int32_t Script_SetView(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF260
+// PROVEN: 1e5a17a5 IDENTICAL/NONE
+// OFFSET: 0x0043BFF0/0x1400469F0
 static int32_t Script_SaveView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SaveView(viewModeIndex)");
@@ -188,7 +190,8 @@ static int32_t Script_SaveView(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00604C80
+// PROVEN: dc932a6e IDENTICAL/NONE
+// OFFSET: 0x004430D0/0x14004E660
 static int32_t Script_ResetView(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ResetView(viewModeIndex)");
@@ -204,7 +207,7 @@ static int32_t Script_ResetView(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00604CE0
+// OFFSET: 0x00443130/0x14004E6C0
 static int32_t Script_NextView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
     int32_t view = camera->m_viewIndex;
@@ -216,7 +219,7 @@ static int32_t Script_NextView(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00604D10
+// OFFSET: 0x00443160/0x14004E700
 static int32_t Script_PrevView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
     int32_t view = camera->m_viewIndex;
@@ -228,7 +231,7 @@ static int32_t Script_PrevView(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF2C0
+// OFFSET: 0x0043C050/0x140046A70
 static int32_t Script_FlipCameraYaw(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: FlipCameraYaw(degrees)");
@@ -241,12 +244,12 @@ static int32_t Script_FlipCameraYaw(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x006018A0
+// OFFSET: 0x0043F5C0/0x14004A7E0
 static int32_t Script_VehicleCameraZoomIn(lua_State* L) {
     return Script_CameraZoomIn(L);
 }
 
-// OFFSET: #0x006018B0
+// OFFSET: 0x0043F5D0/0x14004A7F0
 static int32_t Script_VehicleCameraZoomOut(lua_State* L) {
     return Script_CameraZoomOut(L);
 }

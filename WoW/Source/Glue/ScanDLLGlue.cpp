@@ -1,4 +1,5 @@
 #include "ScanDLLGlue.h"
+#include <intrin.h>
 #include <new>
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
@@ -43,7 +44,7 @@ SThread CGlueMgr::m_scandllThread;
 // STATIC: #0x009F6628
 static ScanDLLThreadParams s_scanThreadParams = { ".\\Scan.dll", &CGlueMgr::m_scandllStatus, &CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, sizeof(((CGlueMgr*)0)->m_scandllHackName), &CGlueMgr::m_scandllOkayToLogIn, &CGlueMgr::m_scandllShouldBlockPlaying };
 
-// OFFSET: #0x004E5860
+// OFFSET: 0x0080F810/0x140526AB0
 void CGlueMgr::ScanDLLContinueAnyway() {
     if (CGlueMgr::m_scandllShouldBlockPlaying) {
         return;
@@ -54,12 +55,13 @@ void CGlueMgr::ScanDLLContinueAnyway() {
     }
 }
 
-// OFFSET: #0x004E5880
+// OFFSET: 0x0080F830/0x140526AE0
 bool CGlueMgr::IsScanDLLFinished() {
     return CGlueMgr::m_scandllOkayToLogIn;
 }
 
-// OFFSET: #0x004E58D0
+// PROVEN: 03dda93c IDENTICAL/NONE
+// OFFSET: 0x0080F880
 static uint32_t STORMAPI ScanThreadProc(void* param) {
     ScanDLLThreadParams* params = static_cast<ScanDLLThreadParams*>(param);
 
@@ -68,26 +70,24 @@ static uint32_t STORMAPI ScanThreadProc(void* param) {
     const char* result;
 
     if (!ScanFileForHack(params->m_dllName, &hackFound, &shouldBlockPlaying, &result, params->m_hackName, params->m_hackNameSize)) {
-        InterlockedExchange(params->m_status, 2);
+        _InterlockedExchange(params->m_status, 2);
         return 0;
     }
 
     *params->m_result = result;
     *params->m_okayToLogIn = hackFound == 0;
     *params->m_shouldBlockPlaying = shouldBlockPlaying;
-    InterlockedExchange(params->m_status, 3);
+    _InterlockedExchange(params->m_status, 3);
     return 0;
 }
 
-// OFFSET: #0x004E5940
+// OFFSET: 0x0080F8F0/0x140526BD0
 void CGlueMgr::ScanDLLFinished() {
-    CGlueMgr::m_idleState = IDLE_NONE;
-    CGlueMgr::m_showedDisconnect = 0;
+    CGlueMgr::SetIdleState(IDLE_NONE);
 
     if (CGlueMgr::m_scandllStatus == 2) {
-        CGlueMgr::m_idleState = IDLE_NONE;
-        CGlueMgr::m_showedDisconnect = 0;
-        InterlockedExchange(&CGlueMgr::m_scandllStatus, 2);
+        CGlueMgr::SetIdleState(IDLE_NONE);
+        _InterlockedExchange(&CGlueMgr::m_scandllStatus, 2);
         FrameScript_SignalEvent(GLUE_EVENT_SCANDLL_ERROR, "%s", FrameScript_GetText("SCANDLL_MESSAGE_ERROR", -1, GENDER_NOT_APPLICABLE));
         return;
     }
@@ -95,7 +95,7 @@ void CGlueMgr::ScanDLLFinished() {
     FrameScript_SignalEvent(GLUE_EVENT_SCANDLL_FINISHED, "%s%s%d", CGlueMgr::m_scandllResult, CGlueMgr::m_scandllHackName, CGlueMgr::m_scandllShouldBlockPlaying != 0);
 }
 
-// OFFSET: #0x004E59C0
+// OFFSET: 0x0080F970
 static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     HOSFILE file = static_cast<HOSFILE>(param);
 
@@ -105,7 +105,7 @@ static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bo
         if (!OsWriteFile(file, data, size, &written) || written != size) {
             OsCloseFile(file);
             OsDeleteFile(".\\Scan.dll");
-            InterlockedExchange(&s_downloadComplete, 1);
+            _InterlockedExchange(&s_downloadComplete, 1);
             return false;
         }
     }
@@ -117,13 +117,13 @@ static bool DownloadDllCallback(void* param, const char* data, uint32_t size, bo
             OsDeleteFile(".\\Scan.dll");
         }
 
-        InterlockedExchange(&s_downloadComplete, 1);
+        _InterlockedExchange(&s_downloadComplete, 1);
     }
 
     return true;
 }
 
-// OFFSET: #0x004E5A50
+// OFFSET: 0x0080FA00
 static bool VersionDownloadCallback(void* param, const char* data, uint32_t size, bool done, HTTPError::ErrorCode error) {
     CDataStore* msg = static_cast<CDataStore*>(param);
     bool failed = true;
@@ -205,7 +205,7 @@ static bool VersionDownloadCallback(void* param, const char* data, uint32_t size
                         version[length] = '\0';
 
                         if (s_localVersion && !SStrCmp(s_localVersion, version, STORM_MAX_STR)) {
-                            InterlockedExchange(&s_downloadComplete, 1);
+                            _InterlockedExchange(&s_downloadComplete, 1);
                             failed = false;
                         } else {
                             HOSFILE file = OsCreateFile(".\\Scan.dll.new", OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
@@ -237,19 +237,19 @@ static bool VersionDownloadCallback(void* param, const char* data, uint32_t size
     s_localVersion = NULL;
 
     if (failed) {
-        InterlockedExchange(&s_downloadComplete, 1);
+        _InterlockedExchange(&s_downloadComplete, 1);
     }
 
     return true;
 }
 
-// OFFSET: #0x004E5CB0
+// OFFSET: 0x0080FCA0/0x140527070
 void CGlueMgr::ScanDLLStart(const char* versionURL, const char* dllURL) {
     if (CGlueMgr::m_scandllStatus || s_downloadComplete) {
         return;
     }
 
-    InterlockedExchange(&s_downloadComplete, 0);
+    _InterlockedExchange(&s_downloadComplete, 0);
     s_localVersion = static_cast<char*>(SMemAlloc(24, __FILE__, __LINE__, 0));
 
     bool updated = false;
@@ -284,20 +284,18 @@ void CGlueMgr::ScanDLLStart(const char* versionURL, const char* dllURL) {
         s_dllURL = NULL;
         delete[] s_localVersion;
         s_localVersion = NULL;
-        InterlockedExchange(&s_downloadComplete, 1);
+        _InterlockedExchange(&s_downloadComplete, 1);
     }
 
-    InterlockedExchange(&CGlueMgr::m_scandllStatus, 1);
+    _InterlockedExchange(&CGlueMgr::m_scandllStatus, 1);
 
     if (!SThread::Create(ScanThreadProc, &s_scanThreadParams, CGlueMgr::m_scandllThread, const_cast<char*>("ScanThread"), 0)) {
-        CGlueMgr::m_idleState = IDLE_NONE;
-        CGlueMgr::m_showedDisconnect = 0;
-        InterlockedExchange(&CGlueMgr::m_scandllStatus, 2);
+        CGlueMgr::SetIdleState(IDLE_NONE);
+        _InterlockedExchange(&CGlueMgr::m_scandllStatus, 2);
         FrameScript_SignalEvent(GLUE_EVENT_SCANDLL_ERROR, "%s", FrameScript_GetText("SCANDLL_MESSAGE_ERROR", -1, GENDER_NOT_APPLICABLE));
         return;
     }
 
     FrameScript_SignalEvent(GLUE_EVENT_SCANDLL_DOWNLOADING, "%s", FrameScript_GetText("SCANDLL_MESSAGE_SCANNING", -1, GENDER_NOT_APPLICABLE));
-    CGlueMgr::m_idleState = IDLE_14;
-    CGlueMgr::m_showedDisconnect = 0;
+    CGlueMgr::SetIdleState(IDLE_SCANDLL);
 }

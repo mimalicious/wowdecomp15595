@@ -42,13 +42,14 @@ const char* s_weekdayNames[7] = { "WEEKDAY_SUNDAY", "WEEKDAY_MONDAY", "WEEKDAY_T
 // STATIC: #0x00A18684
 static const int32_t s_expansionMaxLevels[3] = { 60, 70, 80 };
 
-// OFFSET: #0x005B8C10
+// OFFSET: 0x009AB8E0/0x140732B50
 static int32_t Script_CalendarIsActionPending(lua_State* L) {
     lua_pushboolean(L, CGCalendar::m_actionPending);
     return 1;
 }
 
-// OFFSET: #0x005B80E0
+// PROVEN: 2e225121 IDENTICAL/NONE
+// OFFSET: 0x009AAE60/0x140732020
 static int32_t Script_CalendarGetMonthNames(lua_State* L) {
     lua_checkstack(L, 12);
 
@@ -59,7 +60,7 @@ static int32_t Script_CalendarGetMonthNames(lua_State* L) {
     return 12;
 }
 
-// OFFSET: #0x005B8120
+// OFFSET: 0x009AAEA0/0x140732090
 static int32_t Script_CalendarGetWeekdayNames(lua_State* L) {
     lua_checkstack(L, 7);
 
@@ -80,13 +81,13 @@ static int32_t Script_CalendarGetDate(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x00907AC0
+// OFFSET: 0x009B1060/0x140739520
 static int32_t Script_CalendarGetNumPendingInvites(lua_State* L) {
     lua_pushnumber(L, CGCalendar::CountPendingInvites());
     return 1;
 }
 
-// OFFSET: %0x008FFDD0
+// OFFSET: 0x009AAF60/0x140732180
 static int32_t Script_CalendarGetMinDate(lua_State* L) {
     WowTime date;
     date.m_month = 10;
@@ -101,7 +102,7 @@ static int32_t Script_CalendarGetMinDate(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B84A0
+// OFFSET: 0x009AB1D0/0x140732410
 static int32_t Script_CalendarCloseEvent(lua_State* L) {
     CGCalendar::m_selectedEvent.m_eventID = 0;
     CGCalendar::m_selectedEvent.m_startTime = 0;
@@ -111,7 +112,7 @@ static int32_t Script_CalendarCloseEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B8970
+// OFFSET: 0x009AB6C0/0x1407328C0
 static int32_t Script_CalendarEventGetTypes(lua_State* L) {
     lua_checkstack(L, 5);
 
@@ -122,7 +123,8 @@ static int32_t Script_CalendarEventGetTypes(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005B89C0
+// PROVEN: 4e40dacc IDENTICAL/NONE
+// OFFSET: 0x009AB770/0x1407329A0
 static int32_t Script_CalendarEventGetRepeatOptions(lua_State* L) {
     lua_checkstack(L, 4);
 
@@ -133,7 +135,7 @@ static int32_t Script_CalendarEventGetRepeatOptions(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B99F0
+// OFFSET: 0x009AC9E0/0x140733E60
 static int32_t Script_CalendarGetMonth(lua_State* L) {
     int32_t offset = 0;
 
@@ -154,7 +156,7 @@ static int32_t Script_CalendarGetMonth(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B9F80
+// OFFSET: 0x009AD0A0
 static int32_t Script_CalendarGetEventIndex(lua_State* L) {
     int32_t monthOffset;
     int32_t day;
@@ -173,7 +175,7 @@ static int32_t Script_CalendarGetEventIndex(lua_State* L) {
     return 3;
 }
 
-// OFFSET: %0x00901D20
+// OFFSET: 0x009AD7B0
 static int32_t Script_CalendarContextGetEventIndex(lua_State* L) {
     int32_t monthOffset;
     int32_t day;
@@ -192,7 +194,7 @@ static int32_t Script_CalendarContextGetEventIndex(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005BCDA0
+// OFFSET: 0x009AFF90/0x1407381E0
 static int32_t Script_CalendarDefaultGuildFilter(lua_State* L) {
     if (ClntObjMgrGetActivePlayerObj()) {
         double level = s_expansionMaxLevels[ClientServices::Connection()->m_accountExpansion];
@@ -208,7 +210,7 @@ static int32_t Script_CalendarDefaultGuildFilter(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005C43B0
+// OFFSET: 0x009B7BD0/0x1407421B0
 static int32_t Script_CalendarSetAbsMonth(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarSetAbsMonth(month[, year])");
@@ -238,7 +240,7 @@ static int32_t Script_CalendarSetAbsMonth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008FFFF0
+// OFFSET: 0x009AB140/0x140732370
 static int32_t Script_CalendarGetMaxCreateDate(lua_State* L) {
     WowTime date;
     GameCalendarGetMaxCreateDate(&date);
@@ -249,7 +251,7 @@ static int32_t Script_CalendarGetMaxCreateDate(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B8B30
+// OFFSET: 0x009AEBB0/0x1407366F0
 static int32_t Script_CalendarCanSendInvite(lua_State* L) {
     uint32_t now;
 
@@ -262,7 +264,7 @@ static int32_t Script_CalendarCanSendInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BCC00
+// OFFSET: 0x009AFDF0/0x140738080
 static int32_t Script_CalendarSetMonth(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarSetMonth(offsetMonths)");
@@ -275,7 +277,7 @@ static int32_t Script_CalendarSetMonth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B9BF0
+// OFFSET: 0x009ACBE0/0x1407341C0
 static int32_t Script_CalendarGetNumDayEvents(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CalendarGetNumDayEvents([-1,0,1], monthDay)");
@@ -288,7 +290,7 @@ static int32_t Script_CalendarGetNumDayEvents(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B9E10
+// OFFSET: 0x009ACE00/0x1407343E0
 static int32_t Script_CalendarGetFirstPendingInvite(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CalendarGetDay([-1,0,1], monthDay)");
@@ -346,7 +348,7 @@ static bool IsSignUpInvite(const CalendarDayEvent* event) {
     return (event->m_type & 0x400) && (event->m_flags & 0x8);
 }
 
-// OFFSET: %0x008FFE80
+// OFFSET: 0x009AAFF0/0x140732210
 static int32_t Script_CalendarGetMaxDate(lua_State* L) {
     WowTime date;
     date.m_month = 0;
@@ -378,13 +380,13 @@ static int32_t Script_CalendarGetMinHistoryDate(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x009000B0
+// OFFSET: 0x009AB200/0x140732430
 static int32_t Script_CalendarEventGetNumInvites(lua_State* L) {
     lua_pushnumber(L, CGCalendar::m_curEvent ? CGCalendar::m_curEvent->m_numInvites : 0);
     return 1;
 }
 
-// OFFSET: %0x009000F0
+// OFFSET: 0x009AB280/0x1407324A0
 static int32_t Script_CalendarContextDeselectEvent(lua_State* L) {
     CGCalendar::m_contextEvent.m_eventID = 0;
     CGCalendar::m_contextEvent.m_startTime = 0;
@@ -395,13 +397,13 @@ static int32_t Script_CalendarContextDeselectEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B8540
+// OFFSET: 0x009AB2B0/0x1407324C0
 static int32_t Script_CalendarContextEventClipboard(lua_State* L) {
     lua_pushboolean(L, s_eventClipboard.m_eventID != 0);
     return 1;
 }
 
-// OFFSET: #0x005B8570
+// OFFSET: 0x009AB2E0/0x1407324E0
 static int32_t Script_CalendarEventSortInvites(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: CalendarEventSortInvites(\"criteria\", reverse)");
@@ -434,7 +436,7 @@ static int32_t Script_CalendarEventSortInvites(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B8690
+// OFFSET: 0x009AB3F0/0x140732610
 static int32_t Script_CalendarEventGetInviteSortCriterion(lua_State* L) {
     InviteSortCriterion* criterion = CGCalendar::m_curEvent ? &CGCalendar::m_curEvent->m_sortCriteria[CGCalendar::m_curEvent->m_sortType] : NULL;
     uint8_t reverse = 0;
@@ -475,7 +477,7 @@ static int32_t Script_CalendarEventGetInviteSortCriterion(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005B8730
+// OFFSET: 0x009AB490/0x1407326E0
 static int32_t Script_CalendarEventSetStatus(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CalendarEventSetStatus(index, status)");
@@ -488,7 +490,7 @@ static int32_t Script_CalendarEventSetStatus(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B87D0
+// OFFSET: 0x009AB530/0x140732760
 static int32_t Script_CalendarEventSetModerator(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventSetModerator(index)");
@@ -499,7 +501,7 @@ static int32_t Script_CalendarEventSetModerator(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B8840
+// OFFSET: 0x009AB5A0/0x1407327C0
 static int32_t Script_CalendarEventClearModerator(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventClearModerator(index)");
@@ -517,7 +519,7 @@ static int32_t Script_CalendarEventIsModerator(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B88E0
+// OFFSET: 0x009AB640/0x140732850
 static int32_t Script_CalendarEventCanModerate(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventCanModerate(index)");
@@ -541,7 +543,7 @@ static int32_t Script_CalendarEventHaveSettingsChanged(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B8A50
+// OFFSET: 0x009AB800/0x140732A40
 static int32_t Script_CalendarEventCanEdit(lua_State* L) {
     bool canEdit = false;
 
@@ -553,7 +555,8 @@ static int32_t Script_CalendarEventCanEdit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B8AA0
+// PROVEN: e6efb57c IDENTICAL/NONE
+// OFFSET: 0x009AB850/0x140732AA0
 static int32_t Script_CalendarEventGetCalendarType(lua_State* L) {
     if (CGCalendar::m_curEvent) {
         lua_pushstring(L, CGCalendar::GetCalendarTypeString(CGCalendar::m_curEvent->m_flags));
@@ -564,7 +567,7 @@ static int32_t Script_CalendarEventGetCalendarType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B8AE0
+// OFFSET: 0x009AB890/0x140732AF0
 static int32_t Script_CalendarEventSelectInvite(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventSelectInvite(index)");
@@ -580,7 +583,7 @@ static int32_t Script_CalendarEventSelectInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B8BA0
+// OFFSET: 0x009AEC20/0x140736760
 static int32_t Script_CalendarCanAddEvent(lua_State* L) {
     uint32_t now;
 
@@ -593,7 +596,7 @@ static int32_t Script_CalendarCanAddEvent(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B9AC0
+// OFFSET: 0x009ACAB0/0x140733FF0
 static int32_t Script_CalendarGetAbsMonth(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarGetAbsMonth(month[, year])");
@@ -630,7 +633,7 @@ static int32_t Script_CalendarGetAbsMonth(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B9CA0
+// OFFSET: 0x009ACC90/0x140734290
 static int32_t Script_CalendarGetDayEventSequenceInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarGetDayEventSequenceInfo([-1.0.1], monthDay, index)");
@@ -655,7 +658,7 @@ static int32_t Script_CalendarGetDayEventSequenceInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005B9EB0
+// OFFSET: 0x009ACFE0/0x1407345D0
 static int32_t Script_CalendarOpenEvent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarOpenEvent([-1,0,1], monthDay, index)");
@@ -669,7 +672,7 @@ static int32_t Script_CalendarOpenEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BA000
+// OFFSET: 0x009AD120/0x140734810
 static int32_t Script_CalendarGetRaidInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarGetRaidInfo([-1,0,1], monthDay, index)");
@@ -712,7 +715,7 @@ static int32_t Script_CalendarGetRaidInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005BA220
+// OFFSET: 0x009AD340/0x140734A90
 static int32_t Script_CalendarEventGetInvite(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventGetInvite(index)");
@@ -770,7 +773,8 @@ static int32_t Script_CalendarEventGetInvite(lua_State* L) {
     return 9;
 }
 
-// OFFSET: #0x005BA420
+// PROVEN: 7150bd92 IDENTICAL/NONE
+// OFFSET: 0x009AD540/0x140734D10
 static int32_t Script_CalendarEventGetInviteResponseTime(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventGetInviteResponseTime(index)");
@@ -801,13 +805,13 @@ static int32_t Script_CalendarEventGetInviteResponseTime(lua_State* L) {
     return 6;
 }
 
-// OFFSET: %0x00901D10
+// OFFSET: 0x009AD6B0/0x140734EB0
 static int32_t Script_CalendarRemoveEvent(lua_State* L) {
     CGCalendar::RemoveEvent();
     return 0;
 }
 
-// OFFSET: #0x005BA5B0
+// OFFSET: 0x009AD6F0/0x140734F10
 static int32_t Script_CalendarContextSelectEvent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarContextSelectEvent([-1.0.1], monthDay, index)");
@@ -821,7 +825,7 @@ static int32_t Script_CalendarContextSelectEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BA700
+// OFFSET: 0x009AD830/0x140735150
 static int32_t Script_CalendarContextInviteIsPending(lua_State* L) {
     uint8_t pending = 0;
 
@@ -842,7 +846,7 @@ static int32_t Script_CalendarContextInviteIsPending(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BA7F0
+// OFFSET: 0x009AD920/0x140735240
 static int32_t Script_CalendarContextInviteModeratorStatus(lua_State* L) {
     if (lua_isnumber(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3)) {
         uint32_t offset = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -869,7 +873,7 @@ static int32_t Script_CalendarContextInviteModeratorStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BA910
+// OFFSET: 0x009ADA40/0x140735350
 static int32_t Script_CalendarContextInviteStatus(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -896,7 +900,7 @@ static int32_t Script_CalendarContextInviteStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BAA20
+// OFFSET: 0x009ADB40/0x140735440
 static int32_t Script_CalendarContextInviteType(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -928,7 +932,7 @@ static int32_t Script_CalendarContextInviteType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BAB50
+// OFFSET: 0x009ADC70/0x140735550
 static int32_t Script_CalendarContextInviteAvailable(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -965,7 +969,7 @@ static int32_t Script_CalendarContextInviteAvailable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BAD00
+// OFFSET: 0x009ADE20/0x140735710
 static int32_t Script_CalendarContextInviteDecline(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1002,7 +1006,7 @@ static int32_t Script_CalendarContextInviteDecline(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BAEB0
+// OFFSET: 0x009B08B0/0x140738B30
 static int32_t Script_CalendarContextEventCanEdit(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1029,7 +1033,7 @@ static int32_t Script_CalendarContextEventCanEdit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BAFC0
+// OFFSET: 0x009ADFD0/0x1407358D0
 static int32_t Script_CalendarContextEventGetCalendarType(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1055,7 +1059,8 @@ static int32_t Script_CalendarContextEventGetCalendarType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BB0C0
+// PROVEN: 31788cfe IDENTICAL/NONE
+// OFFSET: 0x009AE0D0/0x1407359C0
 static int32_t Script_CalendarEventRemoveInvite(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventRemoveInvite(index)");
@@ -1066,7 +1071,7 @@ static int32_t Script_CalendarEventRemoveInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB130
+// OFFSET: 0x009AE140/0x140735A10
 static int32_t Script_CalendarEventGetStatusOptions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventGetStatusOptions(index)");
@@ -1098,7 +1103,7 @@ static int32_t Script_CalendarEventGetStatusOptions(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005BB210
+// OFFSET: 0x009AE220/0x140735B70
 static int32_t Script_CalendarEventSetTitle(lua_State* L) {
     const char* title = NULL;
 
@@ -1122,7 +1127,7 @@ static int32_t Script_CalendarEventSetTitle(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB280
+// OFFSET: 0x009AE290/0x140735C00
 static int32_t Script_CalendarEventSetDescription(lua_State* L) {
     const char* description = NULL;
 
@@ -1146,7 +1151,7 @@ static int32_t Script_CalendarEventSetDescription(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB2F0
+// OFFSET: 0x009AE300/0x140735C90
 static int32_t Script_CalendarEventSetType(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -1170,7 +1175,7 @@ static int32_t Script_CalendarEventSetType(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB380
+// OFFSET: 0x009AE390/0x140735D10
 static int32_t Script_CalendarEventSetRepeatOption(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -1194,7 +1199,7 @@ static int32_t Script_CalendarEventSetRepeatOption(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB410
+// OFFSET: 0x009AE420/0x140735D90
 static int32_t Script_CalendarEventSetSize(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -1218,7 +1223,8 @@ static int32_t Script_CalendarEventSetSize(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB4A0
+// PROVEN: d92a0d07 IDENTICAL/NONE
+// OFFSET: 0x009AE4B0/0x140735E10
 static int32_t Script_CalendarEventSetDate(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarEventSetDate(month, day, year)");
@@ -1236,7 +1242,8 @@ static int32_t Script_CalendarEventSetDate(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB5A0
+// PROVEN: 8ad2f7d9 IDENTICAL/NONE
+// OFFSET: 0x009AE5B0/0x140735F40
 static int32_t Script_CalendarEventSetTime(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CalendarEventSetTime(hour, minute)");
@@ -1253,7 +1260,8 @@ static int32_t Script_CalendarEventSetTime(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB650
+// PROVEN: ce7dcfd0 IDENTICAL/NONE
+// OFFSET: 0x009AE660/0x140736030
 static int32_t Script_CalendarEventSetLockoutDate(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarEventSetLockoutDate(month, day, year)");
@@ -1271,7 +1279,8 @@ static int32_t Script_CalendarEventSetLockoutDate(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB750
+// PROVEN: c5c18a26 IDENTICAL/NONE
+// OFFSET: 0x009AE760/0x140736160
 static int32_t Script_CalendarEventSetLockoutTime(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: CalendarEvenSettLockoutTime(hour, minute)");
@@ -1288,7 +1297,8 @@ static int32_t Script_CalendarEventSetLockoutTime(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB800
+// PROVEN: 59e3b087 IDENTICAL/NONE
+// OFFSET: 0x009AE810/0x140736250
 static int32_t Script_CalendarEventSetTextureID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventSetTextureID(textureIndex)");
@@ -1299,7 +1309,7 @@ static int32_t Script_CalendarEventSetTextureID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB870
+// OFFSET: 0x009AE880/0x1407362A0
 static int32_t Script_CalendarEventSetLocked(lua_State* L) {
     if (!CGCalendar::m_curEvent) {
         return 0;
@@ -1317,7 +1327,7 @@ static int32_t Script_CalendarEventSetLocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB8B0
+// OFFSET: 0x009AE8C0/0x1407362F0
 static int32_t Script_CalendarEventClearLocked(lua_State* L) {
     if (!CGCalendar::m_curEvent) {
         return 0;
@@ -1335,7 +1345,7 @@ static int32_t Script_CalendarEventClearLocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB8F0
+// OFFSET: 0x009AE900/0x140736340
 static int32_t Script_CalendarEventSetAutoApprove(lua_State* L) {
     if (!CGCalendar::m_curEvent) {
         return 0;
@@ -1353,7 +1363,7 @@ static int32_t Script_CalendarEventSetAutoApprove(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB930
+// OFFSET: 0x009AE940/0x140736390
 static int32_t Script_CalendarEventClearAutoApprove(lua_State* L) {
     if (!CGCalendar::m_curEvent) {
         return 0;
@@ -1371,7 +1381,7 @@ static int32_t Script_CalendarEventClearAutoApprove(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BB970
+// OFFSET: 0x009AE980/0x1407363E0
 static int32_t Script_CalendarEventGetTextures(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarEventGetTextures(eventType)");
@@ -1435,7 +1445,7 @@ static int32_t Script_CalendarEventGetSelectedInvite(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00904310
+// OFFSET: 0x009AFE60/0x1407380D0
 static int32_t Script_CalendarAddEvent(lua_State* L) {
     if ((unk_BD09AC && unk_BD09AC->m_intValue) || CGGameUI::CanPerformAction(19)) {
         CGCalendar::AddEvent();
@@ -1444,13 +1454,14 @@ static int32_t Script_CalendarAddEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00904340
+// OFFSET: 0x009AFE90/0x140738100
 static int32_t Script_CalendarNewEvent(lua_State* L) {
     CGCalendar::CreatePlayerEvent();
     return 0;
 }
 
-// OFFSET: #0x005BCCB0
+// PROVEN: d9666a65 IDENTICAL/NONE
+// OFFSET: 0x009AFEA0/0x140738110
 static int32_t Script_CalendarMassInviteGuild(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2) && !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarMassInviteGuild(minLevel, maxLevel, minRank)");
@@ -1464,19 +1475,20 @@ static int32_t Script_CalendarMassInviteGuild(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BCD80
+// OFFSET: 0x009AFF70/0x1407381C0
 static int32_t Script_CalendarNewGuildAnnouncement(lua_State* L) {
     CGCalendar::CreateGuildAnnouncement();
     return 0;
 }
 
-// OFFSET: #0x005BCD90
+// OFFSET: 0x009AFF80/0x1407381D0
 static int32_t Script_CalendarNewGuildEvent(lua_State* L) {
     CGCalendar::CreateGuildEvent();
     return 0;
 }
 
-// OFFSET: #0x005BCE60
+// PROVEN: 4e55717f IDENTICAL/NONE
+// OFFSET: 0x009B0050/0x140738290
 static int32_t Script_CalendarMassInviteArenaTeam(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CalendarNewArenaTeamEvent(index)");
@@ -1487,7 +1499,7 @@ static int32_t Script_CalendarMassInviteArenaTeam(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00904570
+// OFFSET: 0x009B00C0/0x1407382E0
 static int32_t Script_CalendarUpdateEvent(lua_State* L) {
     if ((unk_BD09AC && unk_BD09AC->m_intValue) || CGGameUI::CanPerformAction(19)) {
         CGCalendar::UpdateEvent();
@@ -1496,7 +1508,8 @@ static int32_t Script_CalendarUpdateEvent(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BCF00
+// PROVEN: 5e6b659f IDENTICAL/NONE
+// OFFSET: 0x009B00F0/0x140738310
 static int32_t Script_CalendarEventInvite(lua_State* L) {
     const char* name = lua_tolstring(L, 1, NULL);
 
@@ -1507,7 +1520,7 @@ static int32_t Script_CalendarEventInvite(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BCF30
+// OFFSET: 0x009B0120/0x140738340
 static int32_t Script_CalendarContextInviteTentative(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1538,7 +1551,7 @@ static int32_t Script_CalendarContextInviteTentative(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD040
+// OFFSET: 0x009B0230/0x140738440
 static int32_t Script_CalendarContextInviteRemove(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1567,7 +1580,7 @@ static int32_t Script_CalendarContextInviteRemove(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD130
+// OFFSET: 0x009B0320/0x140738520
 static int32_t Script_CalendarContextEventSignUp(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1596,7 +1609,7 @@ static int32_t Script_CalendarContextEventSignUp(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD220
+// OFFSET: 0x009B0410/0x140738600
 static int32_t Script_CalendarContextEventRemove(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1629,7 +1642,7 @@ static int32_t Script_CalendarContextEventRemove(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD340
+// OFFSET: 0x009B0520/0x140738770
 static int32_t Script_CalendarContextEventCopy(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1662,7 +1675,7 @@ static int32_t Script_CalendarContextEventCopy(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD460
+// OFFSET: 0x009B0630/0x1407388E0
 static int32_t Script_CalendarContextEventPaste(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: Script_CalendarContextEventPaste([-1.0.1], monthDay)");
@@ -1675,7 +1688,7 @@ static int32_t Script_CalendarContextEventPaste(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD4F0
+// OFFSET: 0x009B06C0/0x140738960
 static int32_t Script_CalendarContextEventCanComplain(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1702,7 +1715,7 @@ static int32_t Script_CalendarContextEventCanComplain(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005BD600
+// OFFSET: 0x009B07D0/0x140738A60
 static int32_t Script_CalendarContextEventComplain(lua_State* L) {
     CalendarDayEvent* event;
 
@@ -1724,7 +1737,7 @@ static int32_t Script_CalendarContextEventComplain(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD6E0
+// OFFSET: 0x009B0A70
 static int32_t Script_CalendarEventAvailable(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -1744,7 +1757,7 @@ static int32_t Script_CalendarEventTentative(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD760
+// OFFSET: 0x009B0A90
 static int32_t Script_CalendarEventDecline(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -1757,7 +1770,7 @@ static int32_t Script_CalendarEventDecline(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00905820
+// OFFSET: 0x009B0AA0/0x140738E30
 static int32_t Script_CalendarEventSignUp(lua_State* L) {
     CGCalendar::EventSignUp();
     return 0;
@@ -1773,7 +1786,7 @@ static int32_t Script_OpenCalendar(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005BD8A0
+// OFFSET: 0x009B0B50/0x140738F40
 static int32_t Script_CalendarGetEventInfo(lua_State* L) {
     CGCalendarEvent* event = CGCalendar::m_curEvent;
 
@@ -1901,7 +1914,7 @@ static void PushDayEventTexture(lua_State* L, CalendarDayEvent* event) {
     lua_pushstring(L, texture);
 }
 
-// OFFSET: #0x005C1070
+// OFFSET: 0x009B2550
 static int32_t Script_CalendarGetDayEvent(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarGetDayEvent([-1.0.1], monthDay, index)");
@@ -1978,7 +1991,7 @@ static int32_t Script_CalendarGetDayEvent(lua_State* L) {
     return 15;
 }
 
-// OFFSET: #0x005C1480
+// OFFSET: 0x009B2B80/0x14073B820
 static int32_t Script_CalendarGetHolidayInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: CalendarGetHolidayInfo([-1,0,1], monthDay, index)");

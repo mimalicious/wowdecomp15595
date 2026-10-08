@@ -15,7 +15,7 @@
 #include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// OFFSET: #0x0057B940
+// OFFSET: 0x009EE7A0/0x140787DA0
 static int32_t Script_BankButtonIDToInvSlotID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BankButtonIDToInvSlotID(buttonID)");
@@ -35,7 +35,7 @@ static int32_t Script_BankButtonIDToInvSlotID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0057BAB0
+// OFFSET: 0x009EE910/0x140787F60
 static int32_t Script_GetNumBankSlots(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t slots = player ? player->m_player->m_playerBytes2[2] : 0;
@@ -50,7 +50,7 @@ static int32_t Script_GetNumBankSlots(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0057BB30
+// OFFSET: 0x009EE990/0x140787FF0
 static int32_t Script_GetBankSlotCost(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     const BankBagSlotPricesRec* rec;
@@ -66,7 +66,7 @@ static int32_t Script_GetBankSlotCost(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008D7170
+// OFFSET: 0x009EE820/0x140787E20
 static int32_t Script_CloseBankFrame(lua_State* L) {
     WOWGUID none = WOWGUID();
     CGBankInfo::SetBanker(none);
@@ -84,7 +84,7 @@ static uint32_t GetBankSlotCost(int32_t slot) {
     return 0;
 }
 
-// OFFSET: #0x0057BBC0
+// OFFSET: 0x009EEA20/0x140788080
 static int32_t Script_PurchaseSlot(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

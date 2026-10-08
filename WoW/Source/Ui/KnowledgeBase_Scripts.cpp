@@ -11,25 +11,25 @@
 #include "Engine/Source/FrameXML/XMLTree.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x00551FB0
+// OFFSET: 0x009FC540/0x14079A030
 static int32_t Script_KBSystem_GetMOTD(lua_State* L) {
     lua_pushstring(L, s_motd.m_buffer);
     return 1;
 }
 
-// OFFSET: #0x00551FD0
+// OFFSET: 0x009FC560/0x14079A050
 static int32_t Script_KBSystem_GetServerStatus(lua_State* L) {
     lua_pushstring(L, s_serverStatus.m_buffer);
     return 1;
 }
 
-// OFFSET: #0x00551FF0
+// OFFSET: 0x009FC580/0x14079A070
 static int32_t Script_KBSystem_GetServerNotice(lua_State* L) {
     lua_pushstring(L, s_serverNotice.m_buffer);
     return 1;
 }
 
-// OFFSET: %0x0093D5D0
+// OFFSET: 0x009FBCB0/0x140799360
 static int32_t Script_KBSetup_BeginLoading(lua_State* L) {
     int32_t numArticles = static_cast<int32_t>(lua_tonumber(L, 1));
     int32_t pageNumber = static_cast<int32_t>(lua_tonumber(L, 2));
@@ -37,25 +37,25 @@ static int32_t Script_KBSetup_BeginLoading(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00551760
+// OFFSET: 0x009FBCF0/0x1407993B0
 static int32_t Script_KBSetup_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseSetup.m_state == 2);
     return 1;
 }
 
-// OFFSET: #0x00551B90
+// OFFSET: 0x009FC120/0x1407999D0
 static int32_t Script_KBQuery_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseQuery.m_state == 2);
     return 1;
 }
 
-// OFFSET: #0x00551DA0
+// OFFSET: 0x009FC330/0x140799D00
 static int32_t Script_KBArticle_IsLoaded(lua_State* L) {
     lua_pushboolean(L, g_KnowledgeBaseArticle.m_state == 2);
     return 1;
 }
 
-// OFFSET: #0x00551790
+// OFFSET: 0x009FBD20/0x1407993D0
 static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetLanguageCount() failed because setup is not loaded");
@@ -65,7 +65,7 @@ static int32_t Script_KBSetup_GetLanguageCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005518C0
+// OFFSET: 0x009FBE50/0x140799570
 static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetCategoryCount() failed because setup is not loaded");
@@ -75,7 +75,7 @@ static int32_t Script_KBSetup_GetCategoryCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005519F0
+// OFFSET: 0x009FBF80/0x140799710
 static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         return luaL_error(L, "KBSetup_GetArticleHeaderCount() failed because setup is not loaded");
@@ -85,7 +85,7 @@ static int32_t Script_KBSetup_GetArticleHeaderCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00551BC0
+// OFFSET: 0x009FC150/0x1407999F0
 static int32_t Script_KBQuery_GetArticleHeaderCount(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         return luaL_error(L, "KBQuery_GetArticleHeaderCount() failed because query is not loaded");
@@ -95,7 +95,7 @@ static int32_t Script_KBQuery_GetArticleHeaderCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005517D0
+// OFFSET: 0x009FBD60/0x140799410
 static int32_t Script_KBSetup_GetLanguageData(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetLanguageData() failed because setup is not loaded");
@@ -114,7 +114,7 @@ static int32_t Script_KBSetup_GetLanguageData(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00551900
+// OFFSET: 0x009FBE90/0x1407995B0
 static int32_t Script_KBSetup_GetCategoryData(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetCategoryData() failed because setup is not loaded");
@@ -133,7 +133,7 @@ static int32_t Script_KBSetup_GetCategoryData(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00551A30
+// OFFSET: 0x009FBFC0
 static int32_t Script_KBSetup_GetArticleHeaderData(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetArticleHeaderData() failed because setup is not loaded");
@@ -154,7 +154,7 @@ static int32_t Script_KBSetup_GetArticleHeaderData(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00551B40
+// OFFSET: 0x009FC0D0
 static int32_t Script_KBSetup_GetTotalArticleCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetTotalArticleCount() failed because setup is not loaded");
@@ -165,7 +165,7 @@ static int32_t Script_KBSetup_GetTotalArticleCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00551C00
+// OFFSET: 0x009FC190
 static int32_t Script_KBQuery_GetArticleHeaderData(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         luaL_error(L, "KBQuery_GetArticleHeaderData() failed because query is not loaded");
@@ -186,7 +186,7 @@ static int32_t Script_KBQuery_GetArticleHeaderData(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00551D10
+// OFFSET: 0x009FC2A0
 static int32_t Script_KBQuery_GetTotalArticleCount(lua_State* L) {
     if (g_KnowledgeBaseQuery.m_state != 2) {
         luaL_error(L, "KBQuery_GetTotalArticleCount() failed because query is not loaded");
@@ -197,7 +197,7 @@ static int32_t Script_KBQuery_GetTotalArticleCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0093DC10
+// OFFSET: 0x009FC2F0/0x140799CB0
 static int32_t Script_KBArticle_BeginLoading(lua_State* L) {
     int32_t articleId = static_cast<int32_t>(lua_tonumber(L, 1));
     int32_t searchType = static_cast<int32_t>(lua_tonumber(L, 2));
@@ -205,7 +205,7 @@ static int32_t Script_KBArticle_BeginLoading(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00551DD0
+// OFFSET: 0x009FC360/0x140799D20
 static int32_t Script_KBArticle_GetData(lua_State* L) {
     if (g_KnowledgeBaseArticle.m_state != 2) {
         luaL_error(L, "KBArticle_GetData() failed because article is not loaded");
@@ -222,7 +222,7 @@ static int32_t Script_KBArticle_GetData(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005523A0
+// OFFSET: 0x009FC9E0/0x14079A610
 static int32_t Script_KBSetup_GetSubCategoryCount(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetSubCategoryCount() failed because setup is not loaded");
@@ -245,7 +245,7 @@ static int32_t Script_KBSetup_GetSubCategoryCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00552440
+// OFFSET: 0x009FCA80/0x14079A6A0
 static int32_t Script_KBSetup_GetSubCategoryData(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBSetup_GetSubCategoryData() failed because setup is not loaded");
@@ -266,7 +266,7 @@ static int32_t Script_KBSetup_GetSubCategoryData(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00552580
+// OFFSET: 0x009FCBC0/0x14079A800
 static int32_t Script_KBQuery_BeginLoading(lua_State* L) {
     if (g_KnowledgeBaseSetup.m_state != 2) {
         luaL_error(L, "KBQuery_BeginLoading() failed because setup is not loaded");

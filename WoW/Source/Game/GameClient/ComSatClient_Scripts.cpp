@@ -15,7 +15,7 @@ int32_t s_currentOutputDevice;
 // STATIC: #0x00D31A90
 int32_t s_currentCaptureDevice;
 
-// OFFSET: %0x004E2370
+// OFFSET: 0x004DC2E0/0x14011A7A0
 static int32_t Script_VoiceIsDisabledByClient(lua_State* L) {
     if (s_comsatDisabledByClient) {
         lua_pushnumber(L, 1.0);
@@ -26,7 +26,7 @@ static int32_t Script_VoiceIsDisabledByClient(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DAFE0
+// OFFSET: 0x004DA900/0x140118DE0
 static int32_t Script_VoiceGetCurrentCaptureDevice(lua_State* L) {
     if (ComSatThread::s_comsat) {
         lua_pushnumber(L, s_currentCaptureDevice);
@@ -37,7 +37,7 @@ static int32_t Script_VoiceGetCurrentCaptureDevice(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DAB80
+// OFFSET: 0x004DA570/0x1401189F0
 static int32_t Script_VoiceEnumerateOutputDevices(lua_State* L) {
     ComSat::DeviceInfo devices[20];
 
@@ -66,7 +66,7 @@ static int32_t Script_VoiceEnumerateOutputDevices(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DAC40
+// OFFSET: 0x004DA630/0x140118AD0
 static int32_t Script_VoiceEnumerateCaptureDevices(lua_State* L) {
     ComSat::DeviceInfo devices[20];
 
@@ -94,7 +94,7 @@ static int32_t Script_VoiceEnumerateCaptureDevices(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DACF0
+// OFFSET: 0x004DA6E0/0x140118BC0
 static int32_t Script_VoiceSelectOutputDevice(lua_State* L) {
     ComSat::DeviceInfo devices[20];
 
@@ -121,7 +121,7 @@ static int32_t Script_VoiceSelectOutputDevice(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x007DAE40
+// OFFSET: 0x004DA7D0/0x140118CB0
 static int32_t Script_VoiceSelectCaptureDevice(lua_State* L) {
     ComSat::DeviceInfo devices[20];
 
@@ -148,7 +148,7 @@ static int32_t Script_VoiceSelectCaptureDevice(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x007DB030
+// OFFSET: 0x004DA950/0x140118E20
 static int32_t Script_GetNumVoiceSessions(lua_State* L) {
     int32_t count = 0;
 
@@ -162,7 +162,7 @@ static int32_t Script_GetNumVoiceSessions(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DB1F0
+// OFFSET: 0x004DAB00/0x140118FC0
 static int32_t Script_GetVoiceCurrentSessionID(lua_State* L) {
     if (s_currentSession < 0) {
         lua_pushnil(L);
@@ -186,7 +186,7 @@ static int32_t Script_GetVoiceCurrentSessionID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DB0B0
+// OFFSET: 0x004DA9D0/0x140118E60
 static int32_t Script_GetVoiceSessionInfo(lua_State* L) {
     uint32_t id;
 
@@ -233,7 +233,7 @@ static int32_t Script_GetVoiceSessionInfo(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DB370
+// OFFSET: 0x004DAC80/0x1401190F0
 static int32_t Script_GetNumVoiceSessionMembersBySessionID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -257,7 +257,7 @@ static int32_t Script_GetNumVoiceSessionMembersBySessionID(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x007DF0B0
+// OFFSET: 0x004DDF10/0x14011C830
 static int32_t Script_UnitIsTalking(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -275,7 +275,7 @@ static int32_t Script_UnitIsTalking(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DB8D0
+// OFFSET: 0x004DB1F0/0x140119740
 static int32_t Script_GetVoiceStatus(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -311,7 +311,7 @@ static int32_t Script_GetVoiceStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x007DAF90
+// OFFSET: 0x004DA8B0/0x140118DA0
 static int32_t Script_VoiceGetCurrentOutputDevice(lua_State* L) {
     if (ComSatThread::s_comsat) {
         lua_pushnumber(L, s_currentOutputDevice);
@@ -390,7 +390,7 @@ void VoiceUnregisterScriptFunctions() {
     }
 }
 
-// OFFSET: #0x007DEEF0
+// OFFSET: 0x004DDD50/0x14011C630
 int32_t Script_GetVoiceSessionMemberInfoBySessionID(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         return 0;

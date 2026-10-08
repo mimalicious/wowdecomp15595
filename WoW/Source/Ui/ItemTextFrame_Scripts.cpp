@@ -14,13 +14,13 @@
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 
-// OFFSET: %0x009285C0
+// OFFSET: 0x009DDF20/0x140773FF0
 static int32_t Script_ItemTextGetPage(lua_State* L) {
     lua_pushnumber(L, CGItemText::m_currentPage + 1);
     return 1;
 }
 
-// OFFSET: #0x00589C40
+// OFFSET: 0x009DDFD0/0x1407740D0
 static int32_t Script_ItemTextGetItem(lua_State* L) {
     const char* name = NULL;
     CGObject_C* object = ClntObjMgrObjectPtr(CGItemText::m_itemGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
@@ -33,7 +33,7 @@ static int32_t Script_ItemTextGetItem(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00589B90
+// OFFSET: 0x009DDF60/0x140774020
 static int32_t Script_ItemTextGetText(lua_State* L) {
     lua_pushstring(L, CGItemText::m_text);
     return 1;
@@ -51,7 +51,7 @@ static int32_t Script_ItemTextHasNextPage(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058A480
+// OFFSET: 0x009DE830/0x140774A20
 static int32_t Script_ItemTextGetCreator(lua_State* L) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemText::m_itemGUID, TYPEMASK_ITEM, __FILE__, __LINE__));
     NameCache* name;
@@ -65,7 +65,7 @@ static int32_t Script_ItemTextGetCreator(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00589C90
+// OFFSET: 0x009DE3E0/0x140774590
 static int32_t Script_ItemTextGetMaterial(lua_State* L) {
     CGObject_C* object = ClntObjMgrObjectPtr(CGItemText::m_itemGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -103,7 +103,7 @@ static int32_t Script_ItemTextGetMaterial(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058A110
+// OFFSET: 0x009DE4C0/0x140774680
 static int32_t Script_ItemTextPrevPage(lua_State* L) {
     if (CGItemText::m_itemGUID && !CGItemText::m_hasItemText && CGItemText::m_currentPage) {
         CGItemText::m_currentPage--;

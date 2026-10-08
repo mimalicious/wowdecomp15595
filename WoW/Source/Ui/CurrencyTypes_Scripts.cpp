@@ -16,13 +16,13 @@
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
-// OFFSET: #0x005AFD10
+// OFFSET: 0x0099FCD0/0x140723F30
 static int32_t Script_GetCurrencyListSize(lua_State* L) {
     lua_pushnumber(L, CGCurrencyTypes::m_listSize);
     return 1;
 }
 
-// OFFSET: #0x005B0A90
+// OFFSET: 0x009A0B50/0x1407250B0
 static int32_t Script_GetBackpackCurrencyInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetBackpackCurrencyInfo(index)");
@@ -92,7 +92,7 @@ static int32_t Script_GetBackpackCurrencyInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005B0680
+// OFFSET: 0x009A0790/0x140724C60
 int32_t Script_GetCurrencyListInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCurrencyListInfo(index)");
@@ -179,7 +179,7 @@ int32_t Script_GetCurrencyListInfo(lua_State* L) {
     return 9;
 }
 
-// OFFSET: #0x005B0940
+// OFFSET: 0x009A0270/0x140724570
 static int32_t Script_ExpandCurrencyList(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ExpandCurrencyList(index,expand)");
@@ -192,7 +192,7 @@ static int32_t Script_ExpandCurrencyList(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B09B0
+// OFFSET: 0x009A0A30/0x140724F90
 static int32_t Script_SetCurrencyUnused(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetCurrencyUnused(index,unused)");
@@ -205,7 +205,7 @@ static int32_t Script_SetCurrencyUnused(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B0A20
+// OFFSET: 0x009A0AC0/0x140725020
 static int32_t Script_SetCurrencyBackpack(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetCurrencyBackpack(index,backpack)");

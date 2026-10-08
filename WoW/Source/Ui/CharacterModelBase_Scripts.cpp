@@ -21,7 +21,7 @@ void CGCharacterModelBase::CreateScriptMetaTable() {
     CGCharacterModelBase::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGCharacterModelBase::RegisterScriptMethods);
 }
 
-// OFFSET: #0x00597960
+// OFFSET: 0x00A03F80/0x1407A3410
 static int32_t Script_SetCreature(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
 
@@ -45,7 +45,7 @@ static int32_t Script_SetCreature(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00597A10
+// OFFSET: 0x00A03670/0x1407A28D0
 static int32_t Script_SetRotation(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
 
@@ -58,7 +58,7 @@ static int32_t Script_SetRotation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005978E0
+// OFFSET: 0x00A035F0/0x1407A2830
 static int32_t Script_ModelSetUnit(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
 
@@ -76,7 +76,7 @@ static int32_t Script_ModelSetUnit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00597B00
+// OFFSET: 0x00A04240/0x1407A3720
 static int32_t Script_RefreshUnit(lua_State* L) {
     CGCharacterModelBase* model = static_cast<CGCharacterModelBase*>(FrameScript_GetObjectThis(L, CGCharacterModelBase::GetObjectType()));
     model->RefreshUnit(model->m_unitGuid);

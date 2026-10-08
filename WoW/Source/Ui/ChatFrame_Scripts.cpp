@@ -41,7 +41,7 @@ static const char* s_channelCategories[3] = { "CHANNEL_CATEGORY_GROUP", "CHANNEL
 // STATIC: 0x00D101DC
 static const char* s_chatLogNames[2] = { "Logs\\WoWChatLog.txt", "Logs\\WoWCombatLog.txt" };
 
-// OFFSET: #0x0050D170
+// OFFSET: 0x008F9C10/0x14062D3D0
 static int32_t Script_SendChatMessage(lua_State* L) {
     if (!CGGameUI::CanPerformAction(10)) {
         return 0;
@@ -268,7 +268,7 @@ static int32_t Script_SendChatMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00848420
+// OFFSET: 0x008E74F0/0x140615810
 static int32_t Script_IsVoiceChatAllowedByServer(lua_State* L) {
     if (CGChat::m_voiceChatSystemStatus) {
         lua_pushnumber(L, 1.0);
@@ -279,7 +279,7 @@ static int32_t Script_IsVoiceChatAllowedByServer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00504E10
+// OFFSET: 0x008E73F0/0x140615710
 static int32_t Script_GetNumDisplayChannels(lua_State* L) {
     RebuildDisplayChannelList(0);
     lua_pushnumber(L, s_numDisplayChannels);
@@ -298,7 +298,7 @@ static int32_t Script_GetActiveVoiceChannel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0050D8A0
+// OFFSET: 0x008FA340/0x14062DC10
 static int32_t Script_SendSystemMessage(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SendSystemMessage(\"message\")");
@@ -309,7 +309,7 @@ static int32_t Script_SendSystemMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FFC50
+// OFFSET: 0x008EAF30/0x140619E70
 static int32_t Script_ClearChannelWatch(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_CLEAR_CHANNEL_WATCH));
@@ -318,7 +318,7 @@ static int32_t Script_ClearChannelWatch(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00500910
+// OFFSET: 0x008EBBB0/0x14061ACC0
 static int32_t Script_GetDefaultLanguage(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -358,7 +358,7 @@ static void ChannelDisplayCommand(lua_State* L, uint32_t msgId, const char* name
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00504E50
+// OFFSET: 0x008F1290/0x140621CE0
 static int32_t Script_SetSelectedDisplayChannel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -388,7 +388,7 @@ static int32_t Script_SetSelectedDisplayChannel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005052E0
+// OFFSET: 0x008F1710/0x140622250
 static int32_t Script_CollapseChannelHeader(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -406,7 +406,7 @@ static int32_t Script_CollapseChannelHeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00505360
+// OFFSET: 0x008F1790/0x1406222C0
 static int32_t Script_ExpandChannelHeader(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -424,7 +424,7 @@ static int32_t Script_ExpandChannelHeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC660
+// OFFSET: 0x008E6DF0/0x140615180
 static int32_t Script_SetChatWindowLocked(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetChatWindowLocked(index, locked)");
@@ -440,7 +440,7 @@ static int32_t Script_SetChatWindowLocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC6E0
+// OFFSET: 0x008E6E70/0x140615200
 static int32_t Script_SetChatWindowUninteractable(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetChatWindowUninteractable(index, uninteractable)");
@@ -456,7 +456,7 @@ static int32_t Script_SetChatWindowUninteractable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC810
+// OFFSET: 0x008E6FA0/0x140615320
 static int32_t Script_SetChatWindowShown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetChatWindowShown(index, shown)");
@@ -472,7 +472,7 @@ static int32_t Script_SetChatWindowShown(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC020
+// OFFSET: 0x008E6850/0x140614BB0
 static int32_t Script_GetChatWindowSavedDimensions(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChatWindowSavedDimensions(index)");
@@ -490,7 +490,7 @@ static int32_t Script_GetChatWindowSavedDimensions(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x004FC330
+// OFFSET: 0x008EA660/0x140619420
 static int32_t Script_SetChatWindowName(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetChatWindowName(index, \"name\")");
@@ -512,7 +512,7 @@ static int32_t Script_SetChatWindowName(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC3D0
+// OFFSET: 0x008E6B60/0x140614F20
 static int32_t Script_SetChatWindowSize(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetChatWindowSize(index, size)");
@@ -541,7 +541,7 @@ static int32_t Script_RequestRaidInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC5B0
+// OFFSET: 0x008E6D40/0x1406150E0
 static int32_t Script_SetChatWindowAlpha(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetChatWindowAlpha(index, alpha)");
@@ -557,7 +557,7 @@ static int32_t Script_SetChatWindowAlpha(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC760
+// OFFSET: 0x008E6EF0/0x140615280
 static int32_t Script_SetChatWindowDocked(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetChatWindowDocked(index, docked)");
@@ -579,7 +579,7 @@ static int32_t Script_SetChatWindowDocked(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC9A0
+// OFFSET: 0x008E7130/0x1406154F0
 static int32_t Script_SetChatWindowSavedDimensions(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3)) {
         luaL_error(L, "Usage: SetChatWindowSavedDimensions(index, width, height)");
@@ -600,7 +600,7 @@ static int32_t Script_SetChatWindowSavedDimensions(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FBF60
+// OFFSET: 0x008E6790/0x140614AD0
 static int32_t Script_GetChatWindowSavedPosition(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChatWindowSavedPosition(index)");
@@ -619,7 +619,7 @@ static int32_t Script_GetChatWindowSavedPosition(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00500760
+// OFFSET: 0x008EBA10/0x14061AAB0
 static int32_t Script_GetNumLanguages(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -643,7 +643,7 @@ static int32_t Script_GetNumLanguages(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00500810
+// OFFSET: 0x008EBAB0/0x14061AB80
 static int32_t Script_GetLanguageByIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetLanguageByIndex(index)");
@@ -673,7 +673,7 @@ static int32_t Script_GetLanguageByIndex(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC890
+// OFFSET: 0x008E7020/0x1406153A0
 static int32_t Script_SetChatWindowSavedPosition(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4)) {
         luaL_error(L, "Usage: SetChatWindowSavedPosition(index, \"point\", xOffsetRatio, yOffsetRatio)");
@@ -703,7 +703,7 @@ static int32_t Script_SetChatWindowSavedPosition(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0050DAE0
+// OFFSET: 0x008FA580/0x14062DEA0
 static int32_t Script_ListChannels(lua_State* L) {
     char text[3000];
     text[0] = 0;
@@ -728,7 +728,7 @@ static int32_t Script_ListChannels(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC470
+// OFFSET: 0x008E6C00/0x140614FC0
 static int32_t Script_SetChatWindowColor(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4)) {
         luaL_error(L, "Usage: SetChatWindowColor(index, r, g, b)");
@@ -748,7 +748,7 @@ static int32_t Script_SetChatWindowColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FBD90
+// OFFSET: 0x008E65C0/0x140614900
 static int32_t Script_GetChatWindowInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChatWindowInfo(index)");
@@ -821,13 +821,13 @@ static void ChannelCommand(lua_State* L, uint32_t msgId, const char* name) {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x004FFCC0
+// OFFSET: 0x008EAFA0/0x140619EF0
 static int32_t Script_DeclineInvite(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_DECLINE_INVITE, "DeclineInvite");
     return 0;
 }
 
-// OFFSET: #0x00500560
+// OFFSET: 0x008EB850/0x14061A8E0
 static int32_t Script_SendAddonMessage(lua_State* L) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return 0;
@@ -889,7 +889,7 @@ static int32_t Script_SendAddonMessage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FEAF0
+// OFFSET: 0x008E9F50/0x140618BC0
 static int32_t Script_ChangeChatColor(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2) || !lua_isnumber(L, 3) || !lua_isnumber(L, 4)) {
         luaL_error(L, "Usage: ChangeChatColor(chatType, r, g, b)");
@@ -929,7 +929,7 @@ static int32_t Script_ChangeChatColor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FEDC0
+// OFFSET: 0x008EA240/0x140618F00
 static int32_t Script_SetChatColorNameByClass(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetChatColorNameByClass(chatType, colorNameByClass)");
@@ -963,7 +963,7 @@ static int32_t Script_SetChatColorNameByClass(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FEEE0
+// OFFSET: 0x008EA350/0x140619040
 static int32_t Script_GetChatTypeIndex(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetChatTypeIndex(type)");
@@ -990,7 +990,7 @@ static int32_t Script_GetChatTypeIndex(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FE650
+// OFFSET: 0x008E9240/0x140617AB0
 static int32_t Script_GetChannelList(lua_State* L) {
     int32_t count = 0;
 
@@ -1014,7 +1014,7 @@ static int32_t Script_GetChannelList(lua_State* L) {
     return 2 * count;
 }
 
-// OFFSET: #0x004FE850
+// OFFSET: 0x008E9530/0x140617E70
 static int32_t Script_GetChannelName(lua_State* L) {
     ChatChannel* channel;
 
@@ -1072,7 +1072,7 @@ static int32_t Script_IsVoiceChatEnabled(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FC0C0
+// OFFSET: 0x008E68F0/0x140614C50
 static int32_t Script_GetChatWindowMessages(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChatWindowMessages(index)");
@@ -1098,7 +1098,7 @@ static int32_t Script_GetChatWindowMessages(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x004FC170
+// OFFSET: 0x008E69A0/0x140614D20
 static int32_t Script_AddChatWindowMessages(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: AddChatWindowMessages(index, \"messageGroup\")");
@@ -1123,7 +1123,7 @@ static int32_t Script_AddChatWindowMessages(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FC250
+// OFFSET: 0x008E6A80/0x140614E20
 static int32_t Script_RemoveChatWindowMessages(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: RemoveChatWindowMessages(index, \"messageGroup\")");
@@ -1148,7 +1148,7 @@ static int32_t Script_RemoveChatWindowMessages(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FF580
+// OFFSET: 0x008EA870/0x140619770
 static int32_t Script_GetChannelDisplayInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChannelDisplayInfo(index)");
@@ -1283,7 +1283,7 @@ static int32_t Script_GetSelectedDisplayChannel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FEFF0
+// OFFSET: 0x008EA450/0x140619150
 static int32_t Script_GetChatWindowChannels(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetChatWindowChannels(index)");
@@ -1317,7 +1317,7 @@ static int32_t Script_GetNumSavedInstances(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FCDF0
+// OFFSET: 0x008E7630/0x140615960
 static int32_t Script_GetMuteStatus(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -1334,7 +1334,7 @@ static int32_t Script_GetMuteStatus(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00504F30
+// OFFSET: 0x008F1360/0x140621E60
 static int32_t Script_GetChannelRosterInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         return 0;
@@ -1461,7 +1461,7 @@ static int32_t Script_LoggingCombat(lua_State* L) {
     return EnableLogging(L, 1);
 }
 
-// OFFSET: #0x004FCCF0
+// OFFSET: 0x008E7530/0x140615850
 static int32_t Script_UnitIsSilenced(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -1527,13 +1527,13 @@ static void ChannelPlayerCommand(lua_State* L, uint32_t msgId, const char* name)
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x004FE630
+// OFFSET: 0x008E91A0/0x140617A10
 static int32_t Script_ListChannelByName(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_LIST, "ListChannelByName");
     return 0;
 }
 
-// OFFSET: #0x004FE720
+// OFFSET: 0x008E9310/0x140617BE0
 static int32_t Script_SetChannelPassword(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: SetChannelPassword(\"name\", \"password\")");
@@ -1555,97 +1555,97 @@ static int32_t Script_SetChannelPassword(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FE810
+// OFFSET: 0x008E93B0/0x140617CA0
 static int32_t Script_SetChannelOwner(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_SET_OWNER, "SetChannelOwner");
     return 0;
 }
 
-// OFFSET: #0x004FE830
+// OFFSET: 0x008E9490/0x140617DD0
 static int32_t Script_DisplayChannelOwner(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_OWNER, "DisplayChannelOwner");
     return 0;
 }
 
-// OFFSET: #0x004FE950
+// OFFSET: 0x008E9610/0x140617F80
 static int32_t Script_ChannelModerator(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_MODERATOR, "ChannelModerator");
     return 0;
 }
 
-// OFFSET: #0x004FE970
+// OFFSET: 0x008E96F0/0x1406180B0
 static int32_t Script_ChannelUnmoderator(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_UNMODERATOR, "ChannelUnmoderator");
     return 0;
 }
 
-// OFFSET: #0x004FE990
+// OFFSET: 0x008E97D0/0x1406181E0
 static int32_t Script_ChannelMute(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_MUTE, "ChannelMute");
     return 0;
 }
 
-// OFFSET: #0x004FE9B0
+// OFFSET: 0x008E98B0/0x140618310
 static int32_t Script_ChannelUnmute(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_UNMUTE, "ChannelUnmute");
     return 0;
 }
 
-// OFFSET: #0x004FE9D0
+// OFFSET: 0x008E9990/0x140618440
 static int32_t Script_ChannelInvite(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_INVITE, "ChannelInvite");
     return 0;
 }
 
-// OFFSET: #0x004FE9F0
+// OFFSET: 0x008E9A70/0x140618570
 static int32_t Script_ChannelKick(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_KICK, "ChannelKick");
     return 0;
 }
 
-// OFFSET: #0x004FEA10
+// OFFSET: 0x008E9B50/0x1406186A0
 static int32_t Script_ChannelBan(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_BAN, "ChannelBan");
     return 0;
 }
 
-// OFFSET: #0x004FEA30
+// OFFSET: 0x008E9C30/0x1406187D0
 static int32_t Script_ChannelUnban(lua_State* L) {
     ChannelPlayerCommand(L, CMSG_CHAT_CHANNEL_UNBAN, "ChannelUnban");
     return 0;
 }
 
-// OFFSET: #0x004FEA50
+// OFFSET: 0x008E9D10/0x140618900
 static int32_t Script_ChannelToggleAnnouncements(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_ANNOUNCEMENTS, "ChannelToggleAnnouncements");
     return 0;
 }
 
-// OFFSET: #0x004FEA70
+// OFFSET: 0x008E9DB0/0x1406189A0
 static int32_t Script_ChannelVoiceOn(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_VOICE_ON, "ChannelVoiceOn");
     return 0;
 }
 
-// OFFSET: #0x004FEA90
+// OFFSET: 0x008E9E60/0x140618A90
 static int32_t Script_ChannelVoiceOff(lua_State* L) {
     ChannelCommand(L, CMSG_CHAT_CHANNEL_VOICE_OFF, "ChannelVoiceOff");
     return 0;
 }
 
-// OFFSET: #0x004FEAB0
+// OFFSET: 0x008E9F10/0x140618B80
 static int32_t Script_DisplayChannelVoiceOn(lua_State* L) {
     ChannelDisplayCommand(L, CMSG_CHAT_CHANNEL_VOICE_ON, "DisplayChannelVoiceOn");
     return 0;
 }
 
-// OFFSET: #0x004FEAD0
+// OFFSET: 0x008E9F30/0x140618BA0
 static int32_t Script_DisplayChannelVoiceOff(lua_State* L) {
     ChannelDisplayCommand(L, CMSG_CHAT_CHANNEL_VOICE_OFF, "DisplayChannelVoiceOff");
     return 0;
 }
 
-// OFFSET: #0x004FED10
+// OFFSET: 0x008EA170/0x140618E00
 static int32_t Script_ResetChatColors(lua_State* L) {
     for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
         SStrCopy(s_chatColors[i].m_name, s_chatTypeInfo[i].m_name, sizeof(s_chatColors[i].m_name));
@@ -1663,7 +1663,7 @@ static int32_t Script_ResetChatColors(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FF0D0
+// OFFSET: 0x008EA530/0x140619280
 static int32_t Script_RemoveChatWindowChannel(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: RemoveChatWindowChannel(index, \"channel\")");
@@ -1707,7 +1707,7 @@ static int32_t Script_RemoveChatWindowChannel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004FF200
+// OFFSET: 0x008EA720/0x140619500
 static int32_t Script_EnumerateServerChannels(lua_State* L) {
     int32_t count = g_chatChannelsDB.m_numRecords;
     lua_checkstack(L, count);
@@ -1778,7 +1778,7 @@ static int32_t Script_GetSavedInstanceInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x004FFA70
+// OFFSET: 0x008EAD50/0x140619C80
 static int32_t Script_IsDisplayChannelOwner(lua_State* L) {
     uint32_t index = CGChat::FindDisplayChannelIndex(CGChat::s_activeDisplayChannelName, s_activeDisplayChannelType);
 
@@ -1791,7 +1791,7 @@ static int32_t Script_IsDisplayChannelOwner(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FFAE0
+// OFFSET: 0x008EADC0/0x140619CF0
 static int32_t Script_IsDisplayChannelModerator(lua_State* L) {
     uint32_t index = CGChat::FindDisplayChannelIndex(CGChat::s_activeDisplayChannelName, s_activeDisplayChannelType);
 
@@ -1804,7 +1804,7 @@ static int32_t Script_IsDisplayChannelModerator(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FFB50
+// OFFSET: 0x008EAE30/0x140619D60
 static int32_t Script_IsSilenced(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         return 0;
@@ -1839,13 +1839,13 @@ static int32_t Script_IsSilenced(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004FFC30
+// OFFSET: 0x008EAF10/0x140619E50
 static int32_t Script_SetChannelWatch(lua_State* L) {
     ChannelCommand(L, CMSG_SET_CHANNEL_WATCH, "SetChannelWatch");
     return 0;
 }
 
-// OFFSET: #0x00500980
+// OFFSET: 0x008EBC20/0x14061AD50
 static int32_t Script_DoEmote(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: DoEmote(\"emote\"[, \"target\"])");
@@ -1897,7 +1897,7 @@ static int32_t Script_DoEmote(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00500AE0
+// OFFSET: 0x008EBDF0/0x14061AF60
 static int32_t Script_SetActiveVoiceChannel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return 0;
@@ -1926,7 +1926,7 @@ static int32_t Script_SetActiveVoiceChannel(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00500C80
+// OFFSET: 0x008EBEF0/0x14061B050
 static int32_t Script_CanComplainChat(lua_State* L) {
     const char* text = NULL;
     ChatRecord* record;
@@ -1957,7 +1957,7 @@ static int32_t Script_CanComplainChat(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00501140
+// OFFSET: 0x008EC3C0/0x14061B710
 static int32_t Script_ChannelSilenceVoice(lua_State* L) {
     const char* channel = CGChat::GetChannelString(lua_tolstring(L, 1, NULL));
 
@@ -1974,7 +1974,7 @@ static int32_t Script_ChannelSilenceVoice(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00501250
+// OFFSET: 0x008EC580/0x14061B950
 static int32_t Script_ChannelSilenceAll(lua_State* L) {
     const char* channel = CGChat::GetChannelString(lua_tolstring(L, 1, NULL));
 
@@ -1991,7 +1991,7 @@ static int32_t Script_ChannelSilenceAll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005012F0
+// OFFSET: 0x008EC6E0/0x14061BB30
 static int32_t Script_ChannelUnSilenceVoice(lua_State* L) {
     const char* channel = CGChat::GetChannelString(lua_tolstring(L, 1, NULL));
 
@@ -2008,7 +2008,7 @@ static int32_t Script_ChannelUnSilenceVoice(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00501400
+// OFFSET: 0x008EC8A0/0x14061BD70
 static int32_t Script_ChannelUnSilenceAll(lua_State* L) {
     const char* channel = CGChat::GetChannelString(lua_tolstring(L, 1, NULL));
 
@@ -2025,7 +2025,7 @@ static int32_t Script_ChannelUnSilenceAll(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00501DB0
+// OFFSET: 0x008EDC00/0x14061D420
 static int32_t Script_AddChatWindowChannel(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isstring(L, 2)) {
         luaL_error(L, "Usage: AddChatWindowChannel(index, \"channel\")");
@@ -2064,7 +2064,7 @@ static int32_t Script_AddChatWindowChannel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00501F00
+// OFFSET: 0x008EDD50/0x14061D5E0
 static int32_t Script_ResetChatWindows(lua_State* L) {
     for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
         SStrCopy(s_chatColors[i].m_name, s_chatTypeInfo[i].m_name, sizeof(s_chatColors[i].m_name));
@@ -2142,7 +2142,7 @@ static int32_t Script_ResetChatWindows(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00505190
+// OFFSET: 0x008F15C0/0x1406220D0
 static int32_t Script_GetNumChannelMembers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         lua_pushnil(L);
@@ -2199,7 +2199,7 @@ static int32_t Script_GetNumChannelMembers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005096D0
+// OFFSET: 0x008F47C0/0x140626830
 static int32_t Script_LeaveChannelByName(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: LeaveChannelByName(\"name\")");
@@ -2257,17 +2257,17 @@ static int32_t JoinChannelFromScript(lua_State* L, int32_t permanent) {
     return 2;
 }
 
-// OFFSET: #0x0050DAA0
+// OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinChannelByName(lua_State* L) {
     return JoinChannelFromScript(L, 0);
 }
 
-// OFFSET: #0x0050DAA0
+// OFFSET: 0x008FA540/0x14062DE80
 static int32_t Script_JoinTemporaryChannel(lua_State* L) {
     return JoinChannelFromScript(L, 0);
 }
 
-// OFFSET: #0x0050DAC0
+// OFFSET: 0x008FA560/0x14062DE90
 static int32_t Script_JoinPermanentChannel(lua_State* L) {
     return JoinChannelFromScript(L, 1);
 }

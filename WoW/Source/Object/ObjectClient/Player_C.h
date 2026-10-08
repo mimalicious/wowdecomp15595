@@ -16,6 +16,7 @@
 #include "WoW/Source/Ui/TradeSkillFrame.h"
 
 class CGPartyMemberState;
+class ChrClassesRec;
 class CClientObjCreate;
 class CDataStore;
 class CGItem_C;
@@ -326,6 +327,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void GetPendingEnchantTime(CGItem_C* item);
     int32_t GetPlayedTime() const;
     int32_t GetPVPFactionIndex() const;
+    static int32_t GetPVPFactionIndex(uint8_t raceID);
+    static void GetSpellTextureBlobName(const ChrClassesRec* rec, char* name);
     const char* GetPVPRankString(int32_t rank) const;
     int32_t GetPVPToggleTimer() const;
     int32_t GetSkillIndex(int32_t skillId) const;

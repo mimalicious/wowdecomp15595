@@ -7,6 +7,7 @@
 #include "WoW/Source/DB/WowClientDB2.h"
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Os/OsFile.h"
+#include "Engine/Source/Os/Locale.h"
 #include "Engine/Source/Services/AsyncFile.h"
 #include <ctime>
 
@@ -1618,6 +1619,149 @@ void ClientDBInitialize() {
     g_hotfixNotifyBlobHandler = WowClientDB2_Base::HotfixNotifyBlob;
     g_hotfixNotifyMultiplexHandler = WowClientDB2_Base::HotfixNotifyMultiplex;
     g_dbReplyMultiplexHandler = WowClientDB2_Base::DBReplyMultiplex;
+}
+
+// OFFSET: 0x0048A5D0/0x1400ACCF0
+int32_t LocaleIdToIndex(uint32_t locale) {
+    switch (locale) {
+        case 0x45446564:
+            return 0;
+        case 0x42476E65:
+            return 1;
+        case 0x53556E65:
+            return 2;
+        case 0x53457365:
+            return 3;
+        case 0x52467266:
+            return 4;
+        case 0x524B6F6B:
+            return 5;
+        case 0x4E43687A:
+            return 6;
+        case 0x5754687A:
+            return 7;
+        case 0x4E436E65:
+            return 8;
+        case 0x57546E65:
+            return 9;
+        case 0x584D7365:
+            return 10;
+        case 0x55527572:
+            return 11;
+        case 0x52427470:
+            return 13;
+        case 0x54507470:
+            return 14;
+        default:
+            return 15;
+    }
+}
+
+// OFFSET: 0x0048A790/0x1400ACEA0
+int32_t GetCurrentLocaleIndex() {
+    uint32_t locale = OsGetCurrentLocale();
+    int32_t index = LocaleIdToIndex(locale);
+
+    if (index != 15) {
+        return index;
+    }
+
+    switch (locale) {
+        case 0x45496167:
+            return 1;
+        case 0x41437266:
+            return 2;
+        case 0x53457565:
+            return 3;
+        case 0x554C626C:
+            return 4;
+        case 0x4E4D6E6D:
+            return 6;
+    }
+
+    const char* name = reinterpret_cast<const char*>(&locale);
+
+    switch (name[0]) {
+        case 'd':
+            if (name[1] == 'e') {
+                return 0;
+            }
+
+            break;
+
+        case 'e':
+            if (name[1] == 'n') {
+                return 2;
+            }
+
+            if (name[1] == 's') {
+                return 10;
+            }
+
+            break;
+
+        case 'f':
+            if (name[1] == 'r') {
+                return 4;
+            }
+
+            break;
+
+        case 'k':
+            if (name[1] == 'o') {
+                return 5;
+            }
+
+            break;
+
+        case 'p':
+            if (name[1] == 't') {
+                return 13;
+            }
+
+            break;
+
+        case 'r':
+            if (name[1] == 'u') {
+                return 11;
+            }
+
+            break;
+
+        case 'z':
+            if (name[1] == 'h') {
+                return 6;
+            }
+
+            break;
+    }
+
+    switch (name[2]) {
+        case 'B':
+            return name[3] == 'R' ? 13 : 2;
+        case 'C':
+            return name[3] == 'N' ? 6 : 2;
+        case 'D':
+            return name[3] == 'E' ? 0 : 2;
+        case 'E':
+            return name[3] == 'S' ? 3 : 2;
+        case 'F':
+            return name[3] == 'R' ? 4 : 2;
+        case 'G':
+            return name[3] == 'B' ? 1 : 2;
+        case 'K':
+            return name[3] == 'R' ? 5 : 2;
+        case 'M':
+            return name[3] == 'X' ? 10 : 2;
+        case 'P':
+            return name[3] == 'T' ? 14 : 2;
+        case 'R':
+            return name[3] == 'U' ? 11 : 2;
+        case 'T':
+            return name[3] == 'W' ? 7 : 2;
+        default:
+            return 2;
+    }
 }
 
 // OFFSET: #0x00635D90

@@ -52,7 +52,7 @@ void CGMinimapFrame::CreateScriptMetaTable() {
     CGMinimapFrame::s_metatable = FrameScript_Object::CreateScriptMetaTable(L, &CGMinimapFrame::RegisterScriptMethods);
 }
 
-// OFFSET: #0x0057F170
+// OFFSET: 0x009D2940/0x140763FD0
 static int32_t Script_GetNumTrackingTypes(lua_State* L) {
     uint32_t spells = s_trackingSpells.Count();
     lua_pushnumber(L, spells + CGMinimapFrame::CountAvailableTrackingTypes());
@@ -84,7 +84,7 @@ static int32_t Script_GetTrackingTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0057E1C0
+// OFFSET: 0x009D1240/0x140762660
 static int32_t Script_SetPlayerTextureHeight(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -104,7 +104,7 @@ static int32_t Script_SetPlayerTextureHeight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057E280
+// OFFSET: 0x009D1300/0x140762740
 static int32_t Script_SetPlayerTextureWidth(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -124,7 +124,7 @@ static int32_t Script_SetPlayerTextureWidth(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057F1B0
+// OFFSET: 0x009D2980/0x140764010
 static int32_t Script_GetTrackingInfo(lua_State* L) {
     int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
 
@@ -176,19 +176,19 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: %0x0091DE30
+// OFFSET: 0x009CED80/0x14075F8D0
 static int32_t Script_GetZoomLevels(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(MinimapGetZoomLevels()));
     return 1;
 }
 
-// OFFSET: %0x0091DE70
+// OFFSET: 0x009CEDC0/0x14075F900
 static int32_t Script_GetZoom(lua_State* L) {
     lua_pushnumber(L, static_cast<uint32_t>(MinimapGetZoom()));
     return 1;
 }
 
-// OFFSET: #0x0057BFD0
+// OFFSET: 0x009CEE00/0x14075F930
 static int32_t Script_SetZoom(lua_State* L) {
     if (!lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetZoom(level)");
@@ -199,7 +199,7 @@ static int32_t Script_SetZoom(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057E100
+// OFFSET: 0x009D1180/0x140762560
 static int32_t Script_SetPlayerTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -216,7 +216,7 @@ static int32_t Script_SetPlayerTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057ED70
+// OFFSET: 0x009D2410/0x140763940
 static int32_t Script_PingLocation(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -267,7 +267,7 @@ static int32_t Script_PingLocation(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0057EFE0
+// OFFSET: 0x009D2720/0x140763D00
 static int32_t Script_GetPingPosition(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -298,7 +298,7 @@ static int32_t Script_GetPingPosition(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0057F380
+// OFFSET: 0x009D9340/0x14076DAD0
 static int32_t Script_SetTracking(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         int32_t spellId = CGMinimapFrame::s_trackingSpell;
@@ -344,7 +344,7 @@ static int32_t Script_SetTracking(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583860
+// OFFSET: 0x009DAE10/0x14076FF20
 static int32_t Script_SetMaskTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -369,7 +369,7 @@ static int32_t Script_SetMaskTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583980
+// OFFSET: 0x009DAF40/0x140770080
 static int32_t Script_SetPOIArrowTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -394,7 +394,7 @@ static int32_t Script_SetPOIArrowTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583AA0
+// OFFSET: 0x009DB060/0x1407701E0
 static int32_t Script_SetStaticPOIArrowTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -419,7 +419,7 @@ static int32_t Script_SetStaticPOIArrowTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583BC0
+// OFFSET: 0x009DB180/0x140770340
 static int32_t Script_SetCorpsePOIArrowTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -444,7 +444,7 @@ static int32_t Script_SetCorpsePOIArrowTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583CE0
+// OFFSET: 0x009DB2A0/0x1407704A0
 static int32_t Script_SetIconTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -469,7 +469,7 @@ static int32_t Script_SetIconTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583E00
+// OFFSET: 0x009DB3C0/0x140770600
 static int32_t Script_SetBlipTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 
@@ -501,7 +501,7 @@ static int32_t Script_SetBlipTexture(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00583F60
+// OFFSET: 0x009DB510/0x1407707A0
 static int32_t Script_SetClassBlipTexture(lua_State* L) {
     CGMinimapFrame* minimap = static_cast<CGMinimapFrame*>(FrameScript_GetObjectThis(L, CGMinimapFrame::GetObjectType()));
 

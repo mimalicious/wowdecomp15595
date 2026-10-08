@@ -111,4 +111,17 @@ class ClientEnumCharactersResult : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
+class ClientGenerateRandomCharacterNameResult : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientGenerateRandomCharacterNameResult* msg);
+
+    /* 0010 */ bool m_success;
+    /* 0011 */ char m_name[48];
+
+    ClientGenerateRandomCharacterNameResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientGenerateRandomCharacterNameResult();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
 #endif

@@ -19,13 +19,13 @@
 #include "WoW/Source/Ui/TalentInfo.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// OFFSET: #0x005B71E0
+// OFFSET: 0x009EEB00/0x1407881E0
 static int32_t Script_GetNumGlyphSockets(lua_State* L) {
     lua_pushnumber(L, 6.0);
     return 1;
 }
 
-// OFFSET: #0x005B7260
+// OFFSET: 0x009EF8C0/0x140789390
 static int32_t Script_GetGlyphSocketInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGlyphSocketInfo(index[, talentGroup])");
@@ -73,7 +73,7 @@ static int32_t Script_GetGlyphSocketInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005B7410
+// OFFSET: 0x009EFAA0/0x140789600
 static int32_t Script_GlyphMatchesSocket(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GlyphMatchesSocket(socketIndex)");
@@ -118,7 +118,7 @@ static int32_t Script_GlyphMatchesSocket(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B75A0
+// OFFSET: 0x009EFC30/0x140789800
 static int32_t Script_PlaceGlyphInSocket(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PlaceGlyphInSocket(index)");
@@ -141,7 +141,7 @@ static int32_t Script_PlaceGlyphInSocket(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B7660
+// OFFSET: 0x009EFDC0/0x1407899B0
 static int32_t Script_RemoveGlyphFromSocket(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: RemoveGlyphFromSocket(index)");
@@ -162,7 +162,7 @@ static int32_t Script_RemoveGlyphFromSocket(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B7740
+// OFFSET: 0x009EFE90/0x140789A70
 static int32_t Script_GetGlyphLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGlyphLink(index[, talentGroup])");

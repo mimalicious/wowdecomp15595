@@ -21,7 +21,7 @@ static StaticConstant s_staticConstants[7] = {
     { "Spell", 6 },
 };
 
-// OFFSET: #0x005AC320
+// OFFSET: 0x009E58E0/0x14077DCC0
 static int32_t Script_RegisterStaticConstants(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: RegisterStaticConstants(table)");
@@ -37,7 +37,7 @@ static int32_t Script_RegisterStaticConstants(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AD1C0
+// OFFSET: 0x009E6900/0x14077F030
 static int32_t Script_GetGMStatus(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GM_TICKET_GET_SYSTEM_STATUS));
@@ -46,13 +46,13 @@ static int32_t Script_GetGMStatus(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x009480B0
+// OFFSET: 0x009E67B0/0x14077EEA0
 static int32_t Script_GetGMTicket(lua_State* L) {
     SendGetTicketOpcode();
     return 0;
 }
 
-// OFFSET: #0x005AC390
+// OFFSET: 0x009E5950/0x14077DD60
 static int32_t Script_GMSurveyAnswerSubmit(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2) || !lua_isstring(L, 3)) {
         luaL_error(L, "Usage: GMSurveyAnswerSubmit(question, rank, comment)");
@@ -72,7 +72,8 @@ static int32_t Script_GMSurveyAnswerSubmit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AC480
+// PROVEN: 7919c813 IDENTICAL/NONE
+// OFFSET: 0x009E5A40/0x14077DE50
 static int32_t Script_GMSurveyCommentSubmit(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GMSurveyCommentSubmit(comment)");
@@ -83,7 +84,7 @@ static int32_t Script_GMSurveyCommentSubmit(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AC750
+// OFFSET: 0x009E5E20/0x14077E370
 static int32_t Script_GMSurveyQuestion(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GMSurveyGetQuestion(index)");
@@ -102,7 +103,7 @@ static int32_t Script_GMSurveyQuestion(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AC7D0
+// OFFSET: 0x009E5EA0/0x14077E3F0
 static int32_t Script_GMSurveyAnswer(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GMSurveyGetAnswer(questionIndex, answerIndex)");
@@ -122,7 +123,7 @@ static int32_t Script_GMSurveyAnswer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AC870
+// OFFSET: 0x009E5F40/0x14077E4A0
 static int32_t Script_GMSurveyNumAnswers(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GMSurveyGetNumAnswers(questionIndex)");
@@ -140,7 +141,8 @@ static int32_t Script_GMSurveyNumAnswers(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AD020
+// PROVEN: 97492f0b IDENTICAL/NONE
+// OFFSET: 0x009E6760/0x14077EE50
 static int32_t Script_GMReportLag(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GMReportLag(number)");
@@ -151,7 +153,7 @@ static int32_t Script_GMReportLag(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AD080
+// OFFSET: 0x009E67C0/0x14077EEB0
 static int32_t Script_NewGMTicket(lua_State* L) {
     if (!lua_isstring(L, 1) || lua_type(L, 2) != LUA_TBOOLEAN) {
         luaL_error(L, "Usage: NewGMTicket(ticketDescription, needResponse)");
@@ -166,7 +168,8 @@ static int32_t Script_NewGMTicket(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AD0F0
+// PROVEN: d831d114 IDENTICAL/NONE
+// OFFSET: 0x009E6830/0x14077EF40
 static int32_t Script_UpdateGMTicket(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: UpdateGMTicket(ticketDescription)");
@@ -180,13 +183,13 @@ static int32_t Script_UpdateGMTicket(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x00948180
+// OFFSET: 0x009E6880/0x14077EFA0
 static int32_t Script_DeleteGMTicket(lua_State* L) {
     SendGMTicketDeleteTicket();
     return 0;
 }
 
-// OFFSET: #0x005AD150
+// OFFSET: 0x009E6890/0x14077EFB0
 static int32_t Script_GMResponseNeedMoreHelp(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GMResponseNeedMoreHelp(newTicketDescription)");
@@ -200,13 +203,13 @@ static int32_t Script_GMResponseNeedMoreHelp(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AD1B0
+// OFFSET: 0x009E68F0/0x14077F020
 static int32_t Script_GMResponseResolve(lua_State* L) {
     SendGMResponseResolve();
     return 0;
 }
 
-// OFFSET: %0x00948270
+// OFFSET: 0x009E6970/0x14077F0B0
 static int32_t Script_GMSurveySubmit(lua_State* L) {
     CGGMSurveyInfo::Submit();
     return 0;

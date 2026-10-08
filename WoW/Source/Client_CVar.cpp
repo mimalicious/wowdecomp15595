@@ -82,20 +82,23 @@ static CVar* s_cvScreenshotQuality;
 // STATIC: #0x00B2F85C
 static CVar* s_cvScreenshotFormat;
 
-// STATIC: #0x00B2F960
+// STATIC: 0x00D361DC
 CVar* g_readContestVar;
 
-// STATIC: #0x00B2F964
+// STATIC: 0x00D36348
 CVar* g_readScanningVar;
 
-// STATIC: #0x00B2F968
+// STATIC: 0x00D36330
 CVar* g_readTerminationWithoutNoticeVar;
 
-// STATIC: #0x00B2F96C
+// STATIC: 0x00D361D0
 CVar* g_readEULAVar;
 
-// STATIC: #0x00B2F970
+// STATIC: 0x00D36204
 CVar* g_readTOSVar;
+
+// STATIC: 0x00D361C8
+CVar* g_installLocaleVar;
 
 // STATIC: #0x00B2F974
 CVar* g_lastCharacterIndexVar;

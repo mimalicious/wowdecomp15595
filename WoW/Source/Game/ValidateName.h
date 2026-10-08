@@ -25,7 +25,7 @@ int32_t ValidatePetName(uint32_t language, const char* name, bool profanity, boo
 int32_t RussianNameNeedsDeclensions(const char* name);
 bool IsRussian(uint16_t c);
 void ValidateNameDestroy();
-void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask);
+void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t existingCharsetMask);
 
 bool ValidateStringIsUTF8(const char* string);
 bool TruncateNewLines(char* text);

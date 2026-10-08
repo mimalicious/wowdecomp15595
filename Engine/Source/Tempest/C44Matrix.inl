@@ -1,3 +1,23 @@
+// INLINED
+inline C44Matrix::C44Matrix() {
+    this->a0 = 1.0f;
+    this->a1 = 0.0f;
+    this->a2 = 0.0f;
+    this->a3 = 0.0f;
+    this->b0 = 0.0f;
+    this->b1 = 1.0f;
+    this->b2 = 0.0f;
+    this->b3 = 0.0f;
+    this->c0 = 0.0f;
+    this->c1 = 0.0f;
+    this->c2 = 1.0f;
+    this->c3 = 0.0f;
+    this->d0 = 0.0f;
+    this->d1 = 0.0f;
+    this->d2 = 0.0f;
+    this->d3 = 1.0f;
+}
+
 // PROVEN: 50d4481f IDENTICAL/NONE
 // OFFSET: 0x0043B6C0
 inline C44Matrix::C44Matrix(const C34Matrix& m) {

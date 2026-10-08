@@ -21,13 +21,13 @@
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Common/WowTime.h"
 
-// OFFSET: #0x005B0CE0
+// OFFSET: 0x009478D0/0x1406B4E90
 static int32_t Script_CanShowAchievementUI(lua_State* L) {
     lua_pushboolean(L, CGAchievementInfo::m_showAchievementUI);
     return 1;
 }
 
-// OFFSET: #0x005B1BB0
+// OFFSET: 0x00948C20/0x1406B6530
 static int32_t Script_QueryQuestsCompleted(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUERY_QUESTS_COMPLETED));
@@ -36,7 +36,7 @@ static int32_t Script_QueryQuestsCompleted(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B1690
+// OFFSET: 0x00948700/0x1406B5EF0
 static int32_t Script_GetPreviousAchievement(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPreviousAchievement(achievementID)");
@@ -53,7 +53,7 @@ static int32_t Script_GetPreviousAchievement(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B18E0
+// OFFSET: 0x00948950/0x1406B6210
 static int32_t Script_GetAchievementCategory(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementCategory(achievementID)");
@@ -70,7 +70,7 @@ static int32_t Script_GetAchievementCategory(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B1970
+// OFFSET: 0x009489E0/0x1406B62A0
 static int32_t Script_GetAchievementNumRewards(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementNumRewards(achievementID)");
@@ -88,7 +88,7 @@ static int32_t Script_GetAchievementNumRewards(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B1A00
+// OFFSET: 0x00948A70/0x1406B6340
 static int32_t Script_GetAchievementReward(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetAchievementNumRewards(achievementID, rewardIndex)");
@@ -108,7 +108,7 @@ static int32_t Script_GetAchievementReward(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B1AB0
+// OFFSET: 0x00948B20/0x1406B6410
 static int32_t Script_SetAchievementComparisonUnit(lua_State* L) {
     WOWGUID guid = WOWGUID();
 
@@ -135,7 +135,7 @@ static int32_t Script_SetAchievementComparisonUnit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B2040
+// OFFSET: 0x0094A360/0x1406B8360
 static int32_t Script_GetTrackedAchievements(lua_State* L) {
     int32_t count = 0;
 
@@ -147,13 +147,13 @@ static int32_t Script_GetTrackedAchievements(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005B1EC0
+// OFFSET: 0x00948FB0/0x1406B68E0
 static int32_t Script_HasCompletedAnyAchievement(lua_State* L) {
     lua_pushboolean(L, s_completedAchievements.Head() != NULL);
     return 1;
 }
 
-// OFFSET: #0x005B1390
+// OFFSET: 0x009482D0/0x1406B5A00
 static int32_t Script_GetCategoryList(lua_State* L) {
     int32_t count = 1;
 
@@ -188,7 +188,7 @@ static int32_t Script_GetCategoryList(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B15C0
+// OFFSET: 0x00948630/0x1406B5E10
 static int32_t Script_GetCategoryInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetCategoryInfo(categoryID)");
@@ -207,7 +207,7 @@ static int32_t Script_GetCategoryInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005B1DC0
+// OFFSET: 0x00948E90/0x1406B67B0
 static int32_t Script_GetTotalAchievementPoints(lua_State* L) {
     int32_t points = 0;
 
@@ -223,7 +223,7 @@ static int32_t Script_GetTotalAchievementPoints(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B38E0
+// OFFSET: 0x00949440/0x1406B6F00
 static int32_t Script_GetCategoryNumAchievements(lua_State* L) {
     int32_t total = 0;
     int32_t pending = 0;
@@ -319,7 +319,7 @@ static int32_t Script_GetCategoryNumAchievements(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005B3CA0
+// OFFSET: 0x00949800/0x1406B73D0
 static int32_t Script_GetNumCompletedAchievements(lua_State* L) {
     int32_t total = 0;
     int32_t completed = 0;
@@ -396,7 +396,8 @@ static CLIENT_ACHIEVEMENTS* GetInspectAchievement(int32_t id) {
     return NULL;
 }
 
-// OFFSET: #0x005B14B0
+// PROVEN: e8e0b2db IDENTICAL/NONE
+// OFFSET: 0x00948520/0x1406B5CC0
 static int32_t Script_GetStatisticsCategoryList(lua_State* L) {
     int32_t count = 1;
 
@@ -431,7 +432,7 @@ static int32_t Script_GetStatisticsCategoryList(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B1720
+// OFFSET: 0x00948790/0x1406B5F80
 static int32_t Script_GetAchievementInfoFromCriteria(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementInfoFromCriteria(criteriaID)");
@@ -468,7 +469,7 @@ static int32_t Script_GetAchievementInfoFromCriteria(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005B1C20
+// OFFSET: 0x00948CD0/0x1406B65F0
 static int32_t Script_GetLatestCompletedAchievements(lua_State* L) {
     int32_t count = 0;
 
@@ -484,7 +485,7 @@ static int32_t Script_GetLatestCompletedAchievements(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005B1C90
+// OFFSET: 0x00948D60/0x1406B6680
 static int32_t Script_GetLatestUpdatedStats(lua_State* L) {
     int32_t count = 0;
 
@@ -496,7 +497,7 @@ static int32_t Script_GetLatestUpdatedStats(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005B1CF0
+// OFFSET: 0x00948DC0/0x1406B66E0
 static int32_t Script_GetLatestCompletedComparisonAchievements(lua_State* L) {
     int32_t count = 0;
 
@@ -512,7 +513,7 @@ static int32_t Script_GetLatestCompletedComparisonAchievements(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005B1D60
+// OFFSET: 0x00948E30/0x1406B6750
 static int32_t Script_GetLatestUpdatedComparisonStats(lua_State* L) {
     int32_t count = 0;
 
@@ -524,7 +525,7 @@ static int32_t Script_GetLatestUpdatedComparisonStats(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005B1E40
+// OFFSET: 0x00948F30/0x1406B6860
 static int32_t Script_GetComparisonAchievementPoints(lua_State* L) {
     int32_t points = 0;
 
@@ -540,7 +541,7 @@ static int32_t Script_GetComparisonAchievementPoints(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B2090
+// OFFSET: 0x0094A3B0/0x1406B83C0
 static int32_t Script_IsTrackedAchievement(lua_State* L) {
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -557,7 +558,7 @@ static int32_t Script_IsTrackedAchievement(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B2120
+// OFFSET: 0x0094A440/0x1406B8440
 static int32_t Script_GetNumTrackedAchievements(lua_State* L) {
     int32_t count = 0;
 
@@ -569,7 +570,7 @@ static int32_t Script_GetNumTrackedAchievements(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B3B30
+// OFFSET: 0x00949690/0x1406B7220
 static int32_t Script_GetComparisonCategoryNumAchievements(lua_State* L) {
     int32_t count = 0;
 
@@ -615,7 +616,7 @@ static int32_t Script_GetComparisonCategoryNumAchievements(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B3DC0
+// OFFSET: 0x00949920/0x1406B7530
 static int32_t Script_GetNumComparisonCompletedAchievements(lua_State* L) {
     int32_t total = 0;
     int32_t completed = 0;
@@ -659,7 +660,7 @@ static int32_t Script_GetNumComparisonCompletedAchievements(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005B3EF0
+// OFFSET: 0x00949A50/0x1406B7680
 static int32_t Script_GetNextAchievement(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNextAchievement(achievementID)");
@@ -690,7 +691,7 @@ static int32_t Script_GetNextAchievement(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B3FC0
+// OFFSET: 0x00949B00/0x1406B7780
 static int32_t Script_GetAchievementInfo(lua_State* L) {
     int32_t previous = 0;
     int32_t id = -1;
@@ -952,13 +953,13 @@ static int32_t Script_GetAchievementInfo(lua_State* L) {
     return 11;
 }
 
-// OFFSET: %0x008A5100
+// OFFSET: 0x0094C930/0x1406BB7C0
 static int32_t Script_ClearAchievementComparisonUnit(lua_State* L) {
     CGAchievementInfo::ReleaseInspect();
     return 0;
 }
 
-// OFFSET: #0x005B4770
+// OFFSET: 0x0094A260/0x1406B8210
 static int32_t Script_GetAchievementComparisonInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementComparisonInfo(achievementID)");
@@ -986,7 +987,7 @@ static int32_t Script_GetAchievementComparisonInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005B4870
+// OFFSET: 0x0094D970/0x1406BCF20
 static int32_t Script_AddTrackedAchievement(lua_State* L) {
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -999,7 +1000,7 @@ static int32_t Script_AddTrackedAchievement(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B48D0
+// OFFSET: 0x0094D9B0/0x1406BCF60
 static int32_t Script_RemoveTrackedAchievement(lua_State* L) {
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
 
@@ -1012,7 +1013,7 @@ static int32_t Script_RemoveTrackedAchievement(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005B5290
+// OFFSET: 0x0094A490/0x1406B8490
 static int32_t Script_GetQuestsCompleted(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         lua_createtable(L, 0, 0);
@@ -1029,7 +1030,7 @@ static int32_t Script_GetQuestsCompleted(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B5530
+// OFFSET: 0x0094BE30/0x1406BA740
 static int32_t Script_GetAchievementNumCriteria(lua_State* L) {
     int32_t count = 0;
     int32_t result = 0;
@@ -1069,7 +1070,7 @@ static int32_t Script_GetAchievementNumCriteria(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B5620
+// OFFSET: 0x0094BFF0/0x1406BA9F0
 static int32_t Script_GetStatistic(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetStatistic(achievementID)");
@@ -1156,7 +1157,7 @@ static int32_t Script_GetStatistic(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B58B0
+// OFFSET: 0x0094C280/0x1406BAE10
 static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementCrieriaInfo(achievementID, criteriaIndex)");
@@ -1345,7 +1346,7 @@ static int32_t Script_GetAchievementCriteriaInfo(lua_State* L) {
     return 10;
 }
 
-// OFFSET: #0x005B5E70
+// OFFSET: 0x0094C940/0x1406BB7D0
 static int32_t Script_GetComparisonStatistic(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetComparisonStatistic(achievementID)");
@@ -1434,7 +1435,7 @@ static int32_t Script_GetComparisonStatistic(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B6110
+// OFFSET: 0x0094CBE0/0x1406BBBE0
 static int32_t Script_GetAchievementLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAchievementLink(achievementID)");

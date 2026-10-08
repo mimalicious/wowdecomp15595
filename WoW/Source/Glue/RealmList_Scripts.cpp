@@ -13,13 +13,13 @@
 #include "WoW/Source/WowServices/Login.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// OFFSET: %0x0076E220
+// OFFSET: 0x0080A960/0x140520C80
 static int32_t Script_RequestRealmList(lua_State* L) {
     CGlueMgr::GetRealmList(StringToBOOL(L, 1, 0));
     return 0;
 }
 
-// OFFSET: #0x004DE450
+// OFFSET: 0x0080A980/0x140520CA0
 static int32_t Script_RealmListUpdateRate(lua_State* L) {
     if (ClientServices::LoginConnection() && ClientServices::LoginConnection()->GetLoginServerType() == 1) {
         lua_pushnumber(L, 4.0);
@@ -30,19 +30,19 @@ static int32_t Script_RealmListUpdateRate(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0076E2A0
+// OFFSET: 0x0080A9E0/0x140520D00
 static int32_t Script_CancelRealmListQuery(lua_State* L) {
-    CancelRealmListQuery();
+    CGlueMgr::CancelRealmListQuery();
     return 0;
 }
 
-// OFFSET: #0x004DE4C0
+// OFFSET: 0x0080A9F0/0x140520D10
 static int32_t Script_RealmListDialogCancelled(lua_State* L) {
     CGlueMgr::RealmListDialogCancelled();
     return 0;
 }
 
-// OFFSET: #0x004DEAF0
+// OFFSET: 0x0080B060/0x140521490
 static int32_t Script_GetNumRealms(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = GetCategoryIndex(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
@@ -65,7 +65,7 @@ static int32_t Script_GetNumRealms(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DEBC0
+// OFFSET: 0x0080B130/0x140521560
 static int32_t Script_GetRealmInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetRealmInfo(category, index)");
@@ -187,7 +187,7 @@ static int32_t Script_GetRealmInfo(lua_State* L) {
     return 14;
 }
 
-// OFFSET: #0x004DEFB0
+// OFFSET: 0x0080B580/0x1405219A0
 static int32_t Script_ChangeRealm(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ChangeRealm(category, index)");
@@ -238,7 +238,7 @@ static int32_t Script_ChangeRealm(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004DF110
+// OFFSET: 0x0080B6E0/0x140521B20
 static int32_t Script_GetRealmCategories(lua_State* L) {
     uint32_t count = CRealmList::m_categories.Count();
     lua_checkstack(L, count);
@@ -264,7 +264,7 @@ static int32_t Script_GetRealmCategories(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DF1C0
+// OFFSET: 0x0080B790/0x140521C30
 static int32_t Script_IsInvalidTournamentRealmCategory(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsInvalidTournamentRealmCategory(category)");
@@ -291,7 +291,7 @@ static int32_t Script_IsInvalidTournamentRealmCategory(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DF270
+// OFFSET: 0x0080B840/0x140521CE0
 static int32_t Script_IsTournamentRealmCategory(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsTournamentRealmCategory(category)");
@@ -314,7 +314,7 @@ static int32_t Script_IsTournamentRealmCategory(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DF2F0
+// OFFSET: 0x0080B8C0/0x140521D70
 static int32_t Script_IsInvalidLocale(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Script_IsInvalidLocale(category)");
@@ -345,7 +345,7 @@ static int32_t Script_IsInvalidLocale(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x004DF3A0
+// OFFSET: 0x0080B970/0x140521E20
 static int32_t Script_SetPreferredInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetPreferredInfo(index, pvp, rp)");
@@ -360,7 +360,7 @@ static int32_t Script_SetPreferredInfo(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004DF420
+// OFFSET: 0x0080B9F0/0x140521EB0
 static int32_t Script_SortRealms(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usgae: SortRealms(\"type\")");
@@ -391,7 +391,7 @@ static int32_t Script_SortRealms(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004DF4F0
+// OFFSET: 0x0080BAB0/0x140521F70
 static int32_t Script_GetSelectedCategory(lua_State* L) {
     int32_t visible = -1;
 
@@ -430,16 +430,14 @@ static FrameScript_Method s_scriptFunctions[] = {
     { "IsInvalidLocale", &Script_IsInvalidLocale },
 };
 
-// PROVEN: 745fcfb5 IDENTICAL/NONE
-// OFFSET: 0x00807F50/0x14051D8E0
+// OFFSET: 0x0080AA00
 void RealmListRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_scriptFunctions[i].m_name, s_scriptFunctions[i].m_method);
     }
 }
 
-// PROVEN: 9616674b IDENTICAL/NONE
-// OFFSET: 0x00807F80/0x14051D930
+// OFFSET: 0x0080AA30/0x140520D70
 void RealmListUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_scriptFunctions) / sizeof(s_scriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_scriptFunctions[i].m_name);

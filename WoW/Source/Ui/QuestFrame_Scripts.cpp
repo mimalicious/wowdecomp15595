@@ -25,103 +25,103 @@
 #include "WoW/Source/Object/ObjectClient/GameObject_C.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// OFFSET: #0x0058C3A0
+// OFFSET: 0x00944BF0/0x1406B19F0
 static int32_t Script_QuestChooseRewardError(lua_State* L) {
     CGGameUI::DisplayError(ERR_QUEST_MUST_CHOOSE);
     return 0;
 }
 
-// OFFSET: #0x0058BD10
+// OFFSET: 0x00944690/0x1406B1570
 static int32_t Script_GetTitleText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_questTitle);
     return 1;
 }
 
-// OFFSET: #0x0058BD30
+// OFFSET: 0x009446B0/0x1406B1590
 static int32_t Script_GetGreetingText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_greetingText);
     return 1;
 }
 
-// OFFSET: #0x0058BD50
+// OFFSET: 0x009446D0/0x1406B15B0
 static int32_t Script_GetQuestText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_questText);
     return 1;
 }
 
-// OFFSET: #0x0058BD70
+// OFFSET: 0x009446F0/0x1406B15D0
 static int32_t Script_GetObjectiveText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_questLogText);
     return 1;
 }
 
-// OFFSET: #0x0058BD90
+// OFFSET: 0x00944710/0x1406B15F0
 static int32_t Script_GetProgressText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_progressText);
     return 1;
 }
 
-// OFFSET: #0x0058BDB0
+// OFFSET: 0x00944730/0x1406B1610
 static int32_t Script_GetRewardText(lua_State* L) {
     lua_pushstring(L, CGQuestInfo::m_rewardText);
     return 1;
 }
 
-// OFFSET: #0x0058C140
+// OFFSET: 0x00944AB0/0x1406B18F0
 static int32_t Script_GetRewardTalents(lua_State* L) {
     lua_pushinteger(L, CGQuestInfo::m_rewardTalents);
     return 1;
 }
 
-// OFFSET: #0x0058BDD0
+// OFFSET: 0x00944750/0x1406B1630
 static int32_t Script_GetNumAvailableQuests(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_numQuests);
     return 1;
 }
 
-// OFFSET: %0x0089E1A0
+// OFFSET: 0x00944780/0x1406B1650
 static int32_t Script_GetNumActiveQuests(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_numInProgress);
     return 1;
 }
 
-// OFFSET: #0x0058C0B0
+// OFFSET: 0x00944A30/0x1406B1890
 static int32_t Script_GetRewardMoney(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_rewardMoney);
     return 1;
 }
 
-// OFFSET: #0x0058C0E0
+// OFFSET: 0x00944A60/0x1406B18B0
 static int32_t Script_GetRewardXP(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_rewardXP);
     return 1;
 }
 
-// OFFSET: #0x0058C110
+// OFFSET: 0x00944A90/0x1406B18D0
 static int32_t Script_GetRewardHonor(lua_State* L) {
     lua_pushinteger(L, CGQuestInfo::m_rewardHonor / 10);
     return 1;
 }
 
-// OFFSET: #0x0058C160
+// OFFSET: 0x00944AD0/0x1406B1910
 static int32_t Script_GetQuestMoneyToGet(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_requiredMoney);
     return 1;
 }
 
-// OFFSET: #0x0058C3B0
+// OFFSET: 0x00944C00/0x1406B1A10
 static int32_t Script_GetSuggestedGroupNum(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_suggestedGroupNum);
     return 1;
 }
 
-// OFFSET: %0x0089E760
+// OFFSET: 0x00944D40/0x1406B1B30
 static int32_t Script_GetMaxDailyQuests(lua_State* L) {
     lua_pushnumber(L, 25.0);
     return 1;
 }
 
-// OFFSET: #0x0058C4A0
+// OFFSET: 0x00944D70/0x1406B1B50
 static int32_t Script_GetRewardArenaPoints(lua_State* L) {
     lua_pushnumber(L, CGQuestInfo::m_rewardArenaPoints);
     return 1;
@@ -175,7 +175,7 @@ static int32_t Script_QuestFlagsPVP(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058C910
+// OFFSET: 0x00945B40/0x1406B2B10
 static int32_t Script_ConfirmAcceptQuest(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_CONFIRM_ACCEPT));
@@ -185,7 +185,7 @@ static int32_t Script_ConfirmAcceptQuest(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058C190
+// OFFSET: 0x00944B00/0x1406B1930
 static int32_t Script_GetNumQuestRewards(lua_State* L) {
     uint32_t count = 0;
 
@@ -201,7 +201,7 @@ static int32_t Script_GetNumQuestRewards(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058C1F0
+// OFFSET: 0x00944B50/0x1406B1970
 static int32_t Script_GetNumQuestChoices(lua_State* L) {
     uint32_t count = 0;
 
@@ -217,7 +217,7 @@ static int32_t Script_GetNumQuestChoices(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058C250
+// OFFSET: 0x00944BA0/0x1406B19B0
 static int32_t Script_GetNumQuestItems(lua_State* L) {
     uint32_t count = 0;
 
@@ -233,7 +233,7 @@ static int32_t Script_GetNumQuestItems(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058BE30
+// OFFSET: 0x009447B0/0x1406B1670
 static int32_t Script_GetAvailableTitle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAvailableTitle(index)");
@@ -251,7 +251,7 @@ static int32_t Script_GetAvailableTitle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058BF70
+// OFFSET: 0x009448F0/0x1406B1790
 static int32_t Script_GetAvailableLevel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGetAvailableLevel(index)");
@@ -271,7 +271,7 @@ static int32_t Script_GetAvailableLevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058C010
+// OFFSET: 0x00944990/0x1406B1810
 static int32_t Script_GetActiveLevel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetGetActiveLevel(index)");
@@ -291,7 +291,7 @@ static int32_t Script_GetActiveLevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058DB30
+// OFFSET: 0x009469C0/0x1406B3C30
 static int32_t Script_GetDailyQuestsCompleted(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     int32_t count = 0;
@@ -308,7 +308,7 @@ static int32_t Script_GetDailyQuestsCompleted(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058BED0
+// OFFSET: 0x00944850/0x1406B1700
 static int32_t Script_GetActiveTitle(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActiveTitle(index)");
@@ -321,7 +321,7 @@ static int32_t Script_GetActiveTitle(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0058C2B0
+// OFFSET: 0x00947640/0x1406B4BD0
 static int32_t Script_GetQuestItemLink(lua_State* L) {
     if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetQuestItemLink(\"type\", index)");
@@ -342,7 +342,7 @@ static int32_t Script_GetQuestItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058C990
+// OFFSET: 0x00947730/0x1406B4CE0
 static int32_t Script_GetQuestBackgroundMaterial(lua_State* L) {
     CGObject_C* object = ClntObjMgrObjectPtr(CGQuestInfo::m_npc, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -377,13 +377,13 @@ static int32_t Script_GetQuestBackgroundMaterial(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058D350
+// OFFSET: 0x00946450/0x1406B36A0
 static int32_t Script_CloseQuest(lua_State* L) {
     CGQuestInfo::QuestGiverFinished(0, CGQuestInfo::m_currentQuest, 1);
     return 0;
 }
 
-// OFFSET: #0x0058D370
+// OFFSET: 0x00946470/0x1406B36C0
 static int32_t Script_IsAvailableQuestTrivial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAvailableQuestTrivial(index)");
@@ -402,7 +402,7 @@ static int32_t Script_IsAvailableQuestTrivial(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058D420
+// OFFSET: 0x00946520/0x1406B3750
 static int32_t Script_IsActiveQuestTrivial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsActiveQuestTrivial(index)");
@@ -421,7 +421,7 @@ static int32_t Script_IsActiveQuestTrivial(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058D4D0
+// OFFSET: 0x009465D0/0x1406B37E0
 static int32_t Script_SelectAvailableQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectAvailableQuest(index)");
@@ -432,7 +432,7 @@ static int32_t Script_SelectAvailableQuest(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058D540
+// OFFSET: 0x00946640/0x1406B3830
 static int32_t Script_SelectActiveQuest(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectActiveQuest(index)");
@@ -443,19 +443,19 @@ static int32_t Script_SelectActiveQuest(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058D5B0
+// OFFSET: 0x00946770/0x1406B3950
 static int32_t Script_AcceptQuest(lua_State* L) {
     CGQuestInfo::AcceptQuest();
     return 0;
 }
 
-// OFFSET: %0x008A00A0
+// OFFSET: 0x00946780/0x1406B3960
 static int32_t Script_DeclineQuest(lua_State* L) {
     CGQuestInfo::DeclineQuest();
     return 0;
 }
 
-// OFFSET: %0x008A00B0
+// OFFSET: 0x00946790/0x1406B3970
 static int32_t Script_IsQuestCompletable(lua_State* L) {
     if (CGQuestInfo::IsCompletable()) {
         lua_pushnumber(L, 1.0);
@@ -466,13 +466,13 @@ static int32_t Script_IsQuestCompletable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008A00F0
+// OFFSET: 0x009467D0/0x1406B39B0
 static int32_t Script_CompleteQuest(lua_State* L) {
     CGQuestInfo::GiveQuestItems();
     return 0;
 }
 
-// OFFSET: #0x0058D620
+// OFFSET: 0x009467E0/0x1406B39C0
 static int32_t Script_GetQuestReward(lua_State* L) {
     int32_t choice = -1;
 
@@ -488,7 +488,7 @@ static int32_t Script_GetQuestReward(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0058D670
+// OFFSET: 0x009458C0/0x1406B27C0
 static int32_t Script_GetRewardSpell(lua_State* L) {
     int32_t spellId = CGQuestInfo::m_rewardSpell;
 
@@ -545,7 +545,7 @@ static int32_t Script_GetRewardSpell(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x0058D810
+// OFFSET: 0x00946830/0x1406B3A20
 static int32_t Script_GetRewardTitle(lua_State* L) {
     int32_t titleId = CGQuestInfo::m_rewardTitle;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -580,7 +580,7 @@ static int32_t Script_GetRewardTitle(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058D980
+// OFFSET: 0x00947510/0x1406B4A60
 static int32_t Script_GetQuestItemInfo(lua_State* L) {
     char name[256];
     char texture[260];
@@ -607,7 +607,7 @@ static int32_t Script_GetQuestItemInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x0058DAB0
+// OFFSET: 0x00945AE0/0x1406B2AA0
 static int32_t Script_GetQuestSpellLink(lua_State* L) {
     int32_t spellId = CGQuestInfo::m_rewardSpell;
     SpellRec spell;
@@ -621,7 +621,7 @@ static int32_t Script_GetQuestSpellLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0058DBC0
+// OFFSET: 0x00946A50/0x1406B3CA0
 static int32_t Script_GetAvailableQuestInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetAvailableQuestInfo(index)");

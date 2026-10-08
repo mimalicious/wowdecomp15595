@@ -21,7 +21,7 @@
 #include "WoW/Source/Ui/PetInfo.h"
 #include "WoW/Source/DB/Rec/TotemCategoryRec.h"
 
-// OFFSET: #0x005A7E60
+// OFFSET: 0x009545F0/0x1406C5410
 static int32_t Script_IsUsableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsUsableAction(slot)");
@@ -47,7 +47,7 @@ static int32_t Script_IsUsableAction(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005A8220
+// OFFSET: 0x00954B50/0x1406C5A90
 static int32_t Script_HasAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: HasAction(slot)");
@@ -65,7 +65,7 @@ static int32_t Script_HasAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A8F10
+// OFFSET: 0x00955810/0x1406C6BF0
 static int32_t Script_GetActionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionInfo(slot)");
@@ -139,7 +139,7 @@ static int32_t Script_GetActionInfo(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005A91C0
+// OFFSET: 0x00957FB0/0x1406C9E80
 static int32_t Script_GetActionCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionCooldown(slot)");
@@ -157,7 +157,7 @@ static int32_t Script_GetActionCooldown(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005A9B30
+// OFFSET: 0x00957F40/0x1406C9E10
 static int32_t Script_GetActionTexture(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionTexture(slot)");
@@ -176,7 +176,7 @@ static int32_t Script_GetActionTexture(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AAD40
+// OFFSET: 0x00956960/0x1406C8170
 static int32_t Script_IsCurrentAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsCurrentAction(slot)");
@@ -194,7 +194,7 @@ static int32_t Script_IsCurrentAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AC090
+// OFFSET: 0x009598E0/0x1406CBF00
 static int32_t Script_PickupAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PickupAction(slot)");
@@ -205,7 +205,7 @@ static int32_t Script_PickupAction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005AC000
+// OFFSET: 0x00959850/0x1406CBE60
 static int32_t Script_UseAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: UseAction(slot, [, target] [, button])");
@@ -222,7 +222,7 @@ static int32_t Script_UseAction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A7D90
+// OFFSET: 0x00954520/0x1406C5330
 static int32_t Script_GetActionText(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionText(slot)");
@@ -254,13 +254,13 @@ static int32_t Script_GetActionText(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A7F20
+// OFFSET: 0x009546B0/0x1406C54E0
 static int32_t Script_GetBonusBarOffset(lua_State* L) {
     lua_pushnumber(L, CGActionBar::m_bonusBarOffset);
     return 1;
 }
 
-// OFFSET: #0x005A7FD0
+// OFFSET: 0x00954790/0x1406C55B0
 static int32_t Script_GetActionBarPage(lua_State* L) {
     if (CGActionBar::m_tempPageActiveFlags) {
         lua_pushinteger(L, 1);
@@ -271,7 +271,7 @@ static int32_t Script_GetActionBarPage(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AB840
+// OFFSET: 0x00959090/0x1406CB410
 static int32_t Script_PlaceAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: PlaceAction(slot)");
@@ -288,7 +288,7 @@ static int32_t Script_PlaceAction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A7F60
+// OFFSET: 0x00954720/0x1406C5530
 static int32_t Script_ChangeActionBarPage(lua_State* L) {
     int32_t page = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
@@ -306,7 +306,7 @@ static int32_t Script_ChangeActionBarPage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A7D10
+// OFFSET: 0x009544A0/0x1406C52B0
 static int32_t Script_GetActionCount(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionCount(slot)");
@@ -319,7 +319,7 @@ static int32_t Script_GetActionCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A8790
+// OFFSET: 0x00955100/0x1406C6230
 static int32_t Script_GetActionBarToggles(lua_State* L) {
     uint8_t toggles = 0;
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -341,7 +341,7 @@ static int32_t Script_GetActionBarToggles(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005A8290
+// OFFSET: 0x00954BC0/0x1406C5B10
 static int32_t Script_SetActionBarToggles(lua_State* L) {
     uint8_t toggles = 0;
 
@@ -359,7 +359,7 @@ static int32_t Script_SetActionBarToggles(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005A8BC0
+// OFFSET: 0x00958160/0x1406CA040
 static int32_t Script_IsEquippedAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsEquippedAction(slot)");
@@ -377,7 +377,7 @@ static int32_t Script_IsEquippedAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A9C80
+// OFFSET: 0x00958080/0x1406C9F40
 static int32_t Script_IsConsumableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsConsumableAction(slot)");
@@ -395,7 +395,7 @@ static int32_t Script_IsConsumableAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A8720
+// OFFSET: 0x009580F0/0x1406C9FC0
 static int32_t Script_IsStackableAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsStackableAction(slot)");
@@ -413,7 +413,7 @@ static int32_t Script_IsStackableAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A8820
+// OFFSET: 0x00954C60/0x1406C5C00
 static int32_t Script_IsPossessBarVisible(lua_State* L) {
     int32_t spellId = CGPetInfo::m_possessSpell;
 
@@ -428,13 +428,13 @@ static int32_t Script_IsPossessBarVisible(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005B71E0
+// OFFSET: 0x009546F0/0x14065A910
 static int32_t Script_GetMultiCastBarOffset(lua_State* L) {
     lua_pushnumber(L, 6.0);
     return 1;
 }
 
-// OFFSET: #0x005A9BA0
+// OFFSET: 0x00956450/0x1406C7A60
 static int32_t Script_IsAttackAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAttackAction(slot)");
@@ -452,7 +452,7 @@ static int32_t Script_IsAttackAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A9C10
+// OFFSET: 0x009564C0/0x1406C7AE0
 static int32_t Script_IsAutoRepeatAction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsAutorepeatAction(slot)");
@@ -470,7 +470,7 @@ static int32_t Script_IsAutoRepeatAction(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A9D50
+// OFFSET: 0x00956590/0x1406C7BC0
 static int32_t Script_IsActionInRange(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
@@ -488,7 +488,7 @@ static int32_t Script_IsActionInRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005A8330
+// OFFSET: 0x00954CE0/0x1406C5C90
 static int32_t Script_GetMultiCastTotemSpells(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMultiCastTotemSpells(slot)");
@@ -513,7 +513,7 @@ static int32_t Script_GetMultiCastTotemSpells(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005A9290
+// OFFSET: 0x00955AE0/0x1406C6F20
 static int32_t Script_GetActionAutocast(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetActionAutocast(slot)");
@@ -540,7 +540,7 @@ static int32_t Script_GetActionAutocast(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005A9CF0
+// OFFSET: 0x00956530/0x1406C7B60
 static int32_t Script_ActionHasRange(lua_State* L) {
     if (lua_isnumber(L, 1) && CGActionBar::ActionHasRange(static_cast<int32_t>(lua_tonumber(L, 1)) - 1)) {
         lua_pushnumber(L, 1.0);
@@ -551,7 +551,7 @@ static int32_t Script_ActionHasRange(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005AB8A0
+// OFFSET: 0x009590F0/0x1406CB470
 static int32_t Script_SetMultiCastSpell(lua_State* L) {
     if (!lua_isnumber(L, 1) && !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetMultiCastSpell(slot, spellID)");

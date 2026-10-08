@@ -15,31 +15,31 @@
 #include "Engine/Source/Os/Time.h"
 #include <ctime>
 
-// OFFSET: #0x0052C110
+// OFFSET: 0x008FCAC0/0x140653D90
 static int32_t Script_GetNumPartyMembers(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::GetNumPartyMembers());
     return 1;
 }
 
-// OFFSET: %0x0085C390
+// OFFSET: 0x008FCD50/0x140653F90
 static int32_t Script_HasLFGRestrictions(lua_State* L) {
     lua_pushboolean(L, CGPartyInfo::m_lfgRestricted);
     return 1;
 }
 
-// OFFSET: #0x0052C270
+// OFFSET: 0x008FCC20/0x140653E80
 static int32_t Script_GetPartyLeaderIndex(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_leaderIndex + 1);
     return 1;
 }
 
-// OFFSET: %0x0085C2E0
+// OFFSET: 0x008FCC50/0x140653EB0
 static int32_t Script_GetLootThreshold(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_lootThreshold);
     return 1;
 }
 
-// OFFSET: #0x0052D990
+// OFFSET: 0x008FDAF0/0x140655280
 static int32_t Script_LeaveParty(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGPlayer_C::LeaveGroup();
@@ -48,13 +48,13 @@ static int32_t Script_LeaveParty(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0085C1D0
+// OFFSET: 0x008FCB40/0x140653DD0
 static int32_t Script_GetRealNumPartyMembers(lua_State* L) {
     lua_pushnumber(L, CGPartyInfo::m_realNumMembers);
     return 1;
 }
 
-// OFFSET: #0x0052C2D0
+// OFFSET: 0x008FCC80/0x140653ED0
 static int32_t Script_GetOptOutOfLoot(lua_State* L) {
     if (CGPartyInfo::m_optOutOfLoot) {
         lua_pushnumber(L, 1.0);
@@ -65,7 +65,7 @@ static int32_t Script_GetOptOutOfLoot(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0085C350
+// OFFSET: 0x008FCCC0/0x140653F10
 static int32_t Script_IsPartyLFG(lua_State* L) {
     if (CGPartyInfo::m_lfgSlot) {
         lua_pushnumber(L, 1.0);
@@ -76,7 +76,7 @@ static int32_t Script_IsPartyLFG(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0052CCD0
+// OFFSET: 0x008FDA30/0x1406551C0
 static int32_t Script_IsPartyLeader(lua_State* L) {
     if (CGPartyInfo::m_leader && CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
         lua_pushnumber(L, 1.0);
@@ -87,7 +87,7 @@ static int32_t Script_IsPartyLeader(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0052CD30
+// OFFSET: 0x008FDA90/0x140655220
 static int32_t Script_IsRealPartyLeader(lua_State* L) {
     if (CGPartyInfo::m_realLeader && CGPartyInfo::m_realLeader == ClntObjMgrGetActivePlayer()) {
         lua_pushnumber(L, 1.0);
@@ -98,7 +98,7 @@ static int32_t Script_IsRealPartyLeader(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0052C1D0
+// OFFSET: 0x008FCB80/0x140653E00
 static int32_t Script_GetPartyMember(lua_State* L) {
     uint32_t index;
 
@@ -116,7 +116,7 @@ static int32_t Script_GetPartyMember(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x0052DE60
+// OFFSET: 0x008FEBB0/0x140656410
 static int32_t Script_SetLootThreshold(lua_State* L) {
     if (!CGPartyInfo::m_members[0] && !CGRaidInfo::m_numMembers) {
         CGGameUI::DisplayError(ERR_NOT_IN_GROUP);
@@ -147,7 +147,7 @@ static int32_t Script_SetLootThreshold(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052CD90
+// OFFSET: 0x008FDB00/0x140655290
 static int32_t Script_GetLootMethod(lua_State* L) {
     const char* method;
 
@@ -214,7 +214,7 @@ static int32_t Script_GetLootMethod(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x0052CF00
+// OFFSET: 0x008FDC60/0x1406553E0
 static int32_t Script_SetOptOutOfLoot(lua_State* L) {
     int32_t optOut = lua_toboolean(L, 1);
     CGPartyInfo::SetOptOutOfLoot(optOut);
@@ -222,7 +222,7 @@ static int32_t Script_SetOptOutOfLoot(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052CF60
+// OFFSET: 0x008FDCB0/0x140655430
 static int32_t Script_GetPartyAssignment(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetPartyAssignment(\"assignment\" [,\"raidmember\"] [,exactMatch])");
@@ -252,7 +252,7 @@ static int32_t Script_CanChangePlayerDifficulty(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x0052D9C0
+// OFFSET: 0x008FE700/0x140655F10
 static int32_t Script_SilenceMember(lua_State* L) {
     if ((!CGRaidInfo::m_numMembers && !CGPartyInfo::m_members[0]) || !lua_isstring(L, 1)) {
         return 0;
@@ -286,7 +286,7 @@ static int32_t Script_SilenceMember(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052DAF0
+// OFFSET: 0x008FE840/0x140656040
 static int32_t Script_UnSilenceMember(lua_State* L) {
     if ((!CGRaidInfo::m_numMembers && !CGPartyInfo::m_members[0]) || !lua_isstring(L, 1)) {
         return 0;
@@ -320,7 +320,7 @@ static int32_t Script_UnSilenceMember(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0052DC20
+// OFFSET: 0x008FE980/0x140656170
 static int32_t Script_SetLootMethod(lua_State* L) {
     if (!CGPartyInfo::m_members[0] && !CGRaidInfo::m_numMembers) {
         CGGameUI::DisplayError(ERR_NOT_IN_GROUP);
@@ -463,12 +463,12 @@ static int32_t SetOrClearAssignment(lua_State* L, bool set) {
     return 0;
 }
 
-// OFFSET: #0x0052E1B0
+// OFFSET: 0x008FEF00/0x1406567D0
 static int32_t Script_SetPartyAssignment(lua_State* L) {
     return SetOrClearAssignment(L, true);
 }
 
-// OFFSET: #0x0052E400
+// OFFSET: 0x008FF140/0x140656A30
 static int32_t Script_ClearPartyAssignment(lua_State* L) {
     return SetOrClearAssignment(L, false);
 }

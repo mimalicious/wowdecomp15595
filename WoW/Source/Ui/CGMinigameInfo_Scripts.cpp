@@ -7,10 +7,11 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "WoW/Source/Minigame/Minigame_c.h"
 
-// STATIC: #0x00AD05C8
+// STATIC: 0x00D17A04
 static const char* s_minigameNames[] = { "TicTacToe", NULL };
 
-// OFFSET: #0x005C5500
+// PROVEN: a1c93ff7 IDENTICAL/NONE
+// OFFSET: 0x00A09FD0/0x1407AAFF0
 static int32_t Script_GetMinigameType(lua_State* L) {
     CMinigame_C* minigame = CGMinigameInfo::m_minigame;
 
@@ -23,7 +24,7 @@ static int32_t Script_GetMinigameType(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C5550
+// OFFSET: 0x00A0A020/0x1407AB040
 static int32_t Script_MakeMinigameMove(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: MakeMinigameMove(moveType, param)");

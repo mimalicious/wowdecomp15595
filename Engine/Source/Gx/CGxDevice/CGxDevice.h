@@ -180,6 +180,7 @@ class CGxDevice {
     virtual void LogCrashInfo(char* buffer, uint32_t size);
     static int32_t AdapterIsPresent();
     static void AdapterLogCrashInfo(char* buffer, uint32_t size);
+    float CapsAspectRatio(int32_t window);
     virtual void ScenePresent(void* window);
     virtual void SceneClear(uint32_t mask, CImVector color);
     virtual void SceneClearToViewport(uint32_t mask, CImVector color);
@@ -249,6 +250,8 @@ class CGxDevice {
     static TSList<CGxPool, TSGetLink<CGxPool> > s_poolList;
     static TSList<CGxBuf, TSGetLink<CGxBuf> > s_bufList;
     static TSExplicitList<CGxTex, offsetof(CGxTex, m_link)> s_textureList;
+    static float kWinAspect;
+    static int32_t kWinAspectForce;
     static int32_t s_cursorVisible;
     static uint32_t s_cursorHotspotX;
     static uint32_t s_cursorHotspotY;

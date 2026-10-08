@@ -29,19 +29,19 @@
 // STATIC: #0x00A1B788
 static const char s_difficultyNames[4][32] = { "optimal", "medium", "easy", "trivial" };
 
-// OFFSET: #0x005DA120
+// OFFSET: 0x0098D3C0/0x14070B860
 static int32_t Script_GetNumTradeSkills(lua_State* L) {
     lua_pushnumber(L, CGTradeSkillInfo::m_filteredSkills);
     return 1;
 }
 
-// OFFSET: #0x005DA150
+// OFFSET: 0x0098D3F0/0x14070B880
 static int32_t Script_GetTradeSkillItemNameFilter(lua_State* L) {
     lua_pushstring(L, CGTradeSkillInfo::m_itemNameFilter);
     return 1;
 }
 
-// OFFSET: #0x005DA2E0
+// OFFSET: 0x0098D580/0x14070BA30
 static int32_t Script_StopTradeSkillRepeat(lua_State* L) {
     if (CGTradeSkillInfo::m_recastSpellID || CGTradeSkillInfo::m_pendingRecastSpellID) {
         CGTradeSkillInfo::m_recastSpellID = 0;
@@ -52,7 +52,7 @@ static int32_t Script_StopTradeSkillRepeat(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DA170
+// OFFSET: 0x0098D410/0x14070B8A0
 static int32_t Script_GetTradeSkillItemLevelFilter(lua_State* L) {
     int32_t maxLevel = CGTradeSkillInfo::m_itemMaxLevelFilter;
     lua_pushnumber(L, CGTradeSkillInfo::m_itemMinLevelFilter);
@@ -60,7 +60,7 @@ static int32_t Script_GetTradeSkillItemLevelFilter(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005DA8B0
+// OFFSET: 0x0098DE50
 static int32_t Script_CloseTradeSkill(lua_State* L) {
     CGTradeSkillInfo::m_spellID = 0;
     CGTradeSkillInfo::m_skillLineID = 0;
@@ -96,7 +96,7 @@ static int32_t Script_GetTradeskillRepeatCount(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DA1B0
+// OFFSET: 0x0098D450/0x14070B8F0
 static int32_t Script_GetTradeSkillSubClassFilter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillSubClassFilter(index)");
@@ -132,7 +132,7 @@ static int32_t Script_GetTradeSkillSubClassFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DA310
+// OFFSET: 0x0098D5B0/0x14070BA70
 static int32_t Script_IsTradeSkillLinked(lua_State* L) {
     if (CGTradeSkillInfo::m_linkData) {
         lua_pushnumber(L, 1.0);
@@ -147,7 +147,7 @@ static int32_t Script_IsTradeSkillLinked(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005DA900
+// OFFSET: 0x0098E0E0/0x14070C860
 static int32_t Script_SelectTradeSkill(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectTradeSkill(index)");
@@ -168,13 +168,13 @@ static int32_t Script_SelectTradeSkill(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DA970
+// OFFSET: 0x0098E150/0x14070C8E0
 static int32_t Script_GetTradeSkillSelectionIndex(lua_State* L) {
     lua_pushnumber(L, CGTradeSkillInfo::GetSelectionIndex() + 1);
     return 1;
 }
 
-// OFFSET: #0x005DA9A0
+// OFFSET: 0x0098E1B0/0x14070C950
 static int32_t Script_GetTradeSkillCooldown(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillCooldown(index)");
@@ -197,7 +197,7 @@ static int32_t Script_GetTradeSkillCooldown(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DAA70
+// OFFSET: 0x0098E720
 static int32_t Script_GetTradeSkillSubClasses(lua_State* L) {
     uint32_t count = CGTradeSkillInfo::m_numSubClasses;
 
@@ -234,7 +234,7 @@ static int32_t Script_GetTradeSkillSubClasses(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005DAB70
+// OFFSET: 0x0098E820/0x14070D190
 static int32_t Script_GetFirstTradeSkill(lua_State* L) {
     for (uint32_t i = 0; i < static_cast<uint32_t>(CGTradeSkillInfo::m_filteredSkills); i++) {
         TradeSkillInfo* info;
@@ -249,7 +249,7 @@ static int32_t Script_GetFirstTradeSkill(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DAC00
+// OFFSET: 0x0098E8B0/0x14070D210
 static int32_t Script_DoTradeSkill(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: DoTradeSkill(index [, repeat])");
@@ -282,7 +282,7 @@ static int32_t Script_DoTradeSkill(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DB2A0
+// OFFSET: 0x0098DE60/0x14070C4F0
 static int32_t Script_GetTradeSkillInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillInfo(index)");
@@ -363,7 +363,7 @@ static int32_t Script_GetTradeSkillInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005DB550
+// OFFSET: 0x0098F300/0x14070DE30
 static int32_t Script_GetTradeSkillIcon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillIcon(index)");
@@ -403,7 +403,7 @@ static int32_t Script_GetTradeSkillIcon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DB6E0
+// OFFSET: 0x0098E310/0x14070CB10
 static int32_t Script_GetTradeSkillNumMade(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillNumMade(index)");
@@ -440,7 +440,7 @@ static int32_t Script_GetTradeSkillNumMade(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005DB810
+// OFFSET: 0x0098EE10/0x14070D820
 static int32_t Script_GetTradeSkillLine(lua_State* L) {
     SkillLineRec* skillLine = g_skillLineDB.GetRecord(CGTradeSkillInfo::m_skillLineID);
 
@@ -466,7 +466,7 @@ static int32_t Script_GetTradeSkillLine(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005DB920
+// OFFSET: 0x0098E400/0x14070CC30
 static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillRecipeLink(index)");
@@ -505,7 +505,7 @@ static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DBA70
+// OFFSET: 0x0098F490/0x14070E020
 static int32_t Script_GetTradeSkillItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillItemLink(index)");
@@ -551,7 +551,7 @@ static int32_t Script_GetTradeSkillItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DBBA0
+// OFFSET: 0x0098E530/0x14070CDF0
 static int32_t Script_GetTradeSkillNumReagents(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillNumReagents(index)");
@@ -581,7 +581,7 @@ static int32_t Script_GetTradeSkillNumReagents(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DBCC0
+// OFFSET: 0x0098F5B0/0x14070E1E0
 static int32_t Script_GetTradeSkillReagentItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTradeReagentSkillItemLink(index, reagentIndex)");
@@ -620,7 +620,7 @@ static int32_t Script_GetTradeSkillReagentItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DBE10
+// OFFSET: 0x0098E640/0x14070CEE0
 static int32_t Script_GetTradeSkillDescription(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillDescription(index)");
@@ -648,7 +648,7 @@ static int32_t Script_GetTradeSkillDescription(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DBF10
+// OFFSET: 0x0098EF40/0x14070D970
 static int32_t Script_GetTradeSkillInvSlots(lua_State* L) {
     int32_t count = 0;
     TradeSkillSubClassInfo* subClass;
@@ -672,7 +672,7 @@ static int32_t Script_GetTradeSkillInvSlots(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005DBF90
+// OFFSET: 0x0098EFC0/0x14070DA20
 static int32_t Script_GetTradeSkillInvSlotFilter(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillInvSlotFilter(index)");
@@ -725,7 +725,7 @@ static int32_t Script_GetTradeSkillInvSlotFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DC0B0
+// OFFSET: 0x0098F0E0/0x14070DB60
 static int32_t Script_GetTradeSkillListLink(lua_State* L) {
     char link[256];
 
@@ -738,13 +738,13 @@ static int32_t Script_GetTradeSkillListLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005DD070
+// OFFSET: 0x00990720/0x14070F850
 static int32_t Script_SetTradeSkillItemNameFilter(lua_State* L) {
     CGTradeSkillInfo::SetItemNameFilter(lua_tostring(L, 1));
     return 0;
 }
 
-// OFFSET: #0x005DD090
+// OFFSET: 0x00990740/0x14070F870
 static int32_t Script_SetTradeSkillItemLevelFilter(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: SetTradeSkillItemLevelFilter(minLevel, maxLevel)");
@@ -757,7 +757,7 @@ static int32_t Script_SetTradeSkillItemLevelFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD0F0
+// OFFSET: 0x009907A0/0x14070F910
 static int32_t Script_SetTradeSkillSubClassFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetTradeSkillSubClassFilter(index [, on\\off, exclusive])");
@@ -797,7 +797,7 @@ static int32_t Script_SetTradeSkillSubClassFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD230
+// OFFSET: 0x009908E0/0x14070FA80
 static int32_t Script_SetTradeSkillInvSlotFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetTradeSkillInvSlotFilter(index [, on\\off, exclusive])");
@@ -858,7 +858,7 @@ static int32_t Script_SetTradeSkillInvSlotFilter(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD3E0
+// OFFSET: 0x00990A90/0x14070FC20
 static int32_t Script_TradeSkillOnlyShowMakeable(lua_State* L) {
     int32_t value = StringToBOOL(L, 1, 1);
 
@@ -871,7 +871,7 @@ static int32_t Script_TradeSkillOnlyShowMakeable(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD420
+// OFFSET: 0x00990AD0/0x14070FC60
 static int32_t Script_TradeSkillOnlyShowSkillUps(lua_State* L) {
     int32_t value = StringToBOOL(L, 1, 1);
 
@@ -884,7 +884,7 @@ static int32_t Script_TradeSkillOnlyShowSkillUps(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD460
+// OFFSET: 0x00990B10/0x14070FCA0
 static int32_t Script_CollapseTradeSkillSubClass(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CollapseTradeSkillSubClass(index)");
@@ -911,7 +911,7 @@ static int32_t Script_CollapseTradeSkillSubClass(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005DD500
+// OFFSET: 0x00990BB0/0x14070FD40
 static int32_t Script_ExpandTradeSkillSubClass(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ExpandTradeSkillSubClass(index)");
@@ -946,7 +946,7 @@ static void TradeSkillItemCallback(int32_t id, const WOWGUID& guid, void* param,
     }
 }
 
-// OFFSET: #0x005DE400
+// OFFSET: 0x00991E30/0x1407112F0
 static int32_t Script_GetTradeSkillReagentInfo(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTradeSkillReagentInfo(index, reagentIndex)");
@@ -1000,7 +1000,7 @@ static int32_t Script_GetTradeSkillReagentInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x005DE620
+// OFFSET: 0x00992060/0x1407115D0
 static int32_t Script_GetTradeSkillTools(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTradeSkillTools(index)");

@@ -6,7 +6,7 @@
 #include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// OFFSET: #0x00530750
+// OFFSET: 0x00901D00/0x14065A290
 static int32_t Script_FlagTutorial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: FlagTutorial(\"tutorial\")");
@@ -22,7 +22,7 @@ static int32_t Script_FlagTutorial(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005308D0
+// OFFSET: 0x00901F20/0x14065A540
 static int32_t Script_TriggerTutorial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: TriggerTutorial(\"tutorial\")");
@@ -38,7 +38,7 @@ static int32_t Script_TriggerTutorial(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005307A0
+// OFFSET: 0x00901D50/0x14065A2E0
 static int32_t Script_IsTutorialFlagged(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: Trigger(\"tutorial\")");
@@ -76,19 +76,19 @@ static int32_t Script_CanResetTutorials(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00860C90
+// OFFSET: 0x00901DD0/0x14065A380
 static int32_t Script_ClearTutorials(lua_State* L) {
     CGTutorial::ClearTutorials();
     return 0;
 }
 
-// OFFSET: %0x00860CA0
+// OFFSET: 0x00901DE0/0x14065A390
 static int32_t Script_ResetTutorials(lua_State* L) {
     CGTutorial::ResetTutorials();
     return 0;
 }
 
-// OFFSET: #0x005301D0
+// OFFSET: 0x00901750/0x140659B90
 static int32_t Script_GetNextCompleatedTutorial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNextCompleatedTutorial(\"tutorial\")");
@@ -106,7 +106,7 @@ static int32_t Script_GetNextCompleatedTutorial(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00530240
+// OFFSET: 0x009017C0/0x140659C00
 static int32_t Script_GetPrevCompleatedTutorial(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetPrevCompleatedTutorial(\"tutorial\")");

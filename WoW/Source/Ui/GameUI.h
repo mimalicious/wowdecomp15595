@@ -248,7 +248,7 @@ class CGGameUI {
 
     static int32_t FilterMouseDown(CMouseEvent* evt);
     static int32_t FilterMouseMotion(CMouseEvent* evt);
-    static void HandleDisplaySizeChanged(const CSizeEvent& evt);
+    static int32_t HandleDisplaySizeChanged(const CSizeEvent& evt);
     static void DisplayError(UIErrors error, ...);
     static int32_t IsAutoLooting();
     static void ShowCombatFeedback(const WOWGUID& guid, int32_t amount, uint32_t schoolMask, uint32_t flags);

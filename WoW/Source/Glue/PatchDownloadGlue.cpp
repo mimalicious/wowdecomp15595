@@ -51,7 +51,7 @@ FileDownload* CGlueMgr::m_patchDownload;
 // STATIC: #0x00B6B260
 bool CGlueMgr::m_deleteLocalPatch;
 
-// OFFSET: #0x004E4F70
+// OFFSET: 0x00810680/0x140527C70
 bool CGlueMgr::PatchDownloadExtractCommand(SArchive* archive, const char* name) {
     void* data;
     uint32_t size;
@@ -75,7 +75,7 @@ bool CGlueMgr::PatchDownloadExtractCommand(SArchive* archive, const char* name) 
     return true;
 }
 
-// OFFSET: #0x004E5000
+// OFFSET: 0x00810710/0x140527D20
 bool CGlueMgr::PatchDownloadDeleteCommand(const char* path) {
     if (OsFileExists(path)) {
         if (SStrCmpI(path, "wow-patch.mpq", STORM_MAX_STR)) {
@@ -94,7 +94,7 @@ bool CGlueMgr::PatchDownloadDeleteCommand(const char* path) {
     return true;
 }
 
-// OFFSET: #0x004E5070
+// OFFSET: 0x00810780/0x140527D90
 bool CGlueMgr::PatchDownloadExecutePrepatch(SArchive* archive) {
     bool result = true;
     void* data = NULL;
@@ -129,24 +129,24 @@ bool CGlueMgr::PatchDownloadExecutePrepatch(SArchive* archive) {
     return result;
 }
 
-// OFFSET: #0x004E51C0
+// PROVEN: ab06e423 IDENTICAL/NONE
+// OFFSET: 0x00810940/0x140527FA0
 void CGlueMgr::PatchDownloadFeed(const uint8_t* data, uint32_t size) {
     if (CGlueMgr::m_patchDownload) {
         CGlueMgr::m_patchDownload->Proceed(data, size);
     }
 }
 
-// OFFSET: #0x004E51E0
+// OFFSET: 0x00810960/0x140527FD0
 size_t CGlueMgr::GetPatchFolder(char* buffer, uint32_t size) {
     return SStrCopy(buffer, OsFileGetDownloadFolder(), size);
 }
 
-// OFFSET: #0x004E5200
+// OFFSET: 0x008109A0/0x140528040
 void CGlueMgr::PatchDownloadStart() {
     FrameScript_SignalEvent(GLUE_EVENT_CLOSE_STATUS_DIALOG, NULL);
-    CGlueMgr::m_idleState = IDLE_12;
-    CGlueMgr::m_showedDisconnect = 0;
-    CGlueMgr::SetScreen("patchdownload");
+    CGlueMgr::SetIdleState(IDLE_PATCH_DOWNLOAD);
+    CGlueMgr::SetScreen(GLUE_SCREEN_PATCHDOWNLOAD);
     CGlueMgr::m_patchStartTime = OsGetAsyncTimeMs();
     CGlueMgr::m_patchLastUpdate = OsGetAsyncTimeMs();
 
@@ -184,7 +184,7 @@ void CGlueMgr::PatchDownloadStart() {
     }
 }
 
-// OFFSET: #0x004E53A0
+// OFFSET: 0x00810600/0x140527BE0
 void CGlueMgr::PatchDownloadCancel() {
     CGlueMgr::m_patchDownload->StopDownload();
 
@@ -198,18 +198,16 @@ void CGlueMgr::PatchDownloadCancel() {
         ClientServices::LoginConnection()->FileComplete(false);
     }
 
-    CGlueMgr::m_idleState = IDLE_NONE;
-    CGlueMgr::m_showedDisconnect = 0;
+    CGlueMgr::SetIdleState(IDLE_NONE);
     ClientServices::LoginConnection()->Logoff();
-    CGlueMgr::SetScreen("login");
+    CGlueMgr::SetScreen(GLUE_SCREEN_LOGIN);
 }
 
-// OFFSET: #0x004E5420
+// OFFSET: 0x008108A0/0x140527EE0
 void CGlueMgr::PatchFailed(int32_t reason, uint32_t data) {
     ClientServices::LoginConnection()->Logoff();
-    CGlueMgr::m_idleState = IDLE_NONE;
-    CGlueMgr::m_showedDisconnect = 0;
-    CGlueMgr::SetScreen("login");
+    CGlueMgr::SetIdleState(IDLE_NONE);
+    CGlueMgr::SetScreen(GLUE_SCREEN_LOGIN);
 
     char buffer[1024];
     const char* text;
@@ -230,7 +228,7 @@ void CGlueMgr::PatchFailed(int32_t reason, uint32_t data) {
     FrameScript_SignalEvent(GLUE_EVENT_OPEN_STATUS_DIALOG, "%s%s", "OKAY", text);
 }
 
-// OFFSET: #0x004E54D0
+// OFFSET: 0x00810D10/0x140528460
 void CGlueMgr::PatchDownloadIdle() {
     switch (CGlueMgr::m_patchDownload->GetStatus()) {
         case 2: {
@@ -248,8 +246,7 @@ void CGlueMgr::PatchDownloadIdle() {
                 int32_t reason = CGlueMgr::m_patchDownload->GetReason(&data);
                 CGlueMgr::PatchFailed(reason, data);
             } else {
-                CGlueMgr::m_idleState = IDLE_NONE;
-                CGlueMgr::m_showedDisconnect = 0;
+                CGlueMgr::SetIdleState(IDLE_NONE);
             }
 
             if (CGlueMgr::m_patchDownload) {
@@ -285,8 +282,7 @@ void CGlueMgr::PatchDownloadIdle() {
             }
 
             CGlueMgr::m_patchDownload = NULL;
-            CGlueMgr::m_idleState = IDLE_LOGIN_SERVER_LOGIN;
-            CGlueMgr::m_showedDisconnect = 0;
+            CGlueMgr::SetIdleState(IDLE_LOGIN_SERVER_LOGIN);
 
             Login* login = ClientServices::LoginConnection();
             const char* password = ClientServices::LoginConnection()->m_password;
@@ -320,7 +316,7 @@ void CGlueMgr::PatchDownloadIdle() {
     }
 }
 
-// OFFSET: #0x004E5730
+// OFFSET: 0x00810BC0/0x1405282C0
 void CGlueMgr::PatchDownloadApply() {
     char currentDirectory[260];
     OsGetCurrentDirectory(sizeof(currentDirectory), currentDirectory);

@@ -9,7 +9,7 @@
 // STATIC: #0x00AC467C
 int32_t CSimpleModelFFX::s_metatable = LUA_NOREF;
 
-// OFFSET: #0x004E6BE0
+// OFFSET: 0x00811A10/0x1405293E0
 static int32_t Script_ResetLights(lua_State* L) {
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
 
@@ -25,7 +25,7 @@ static int32_t Script_ResetLights(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E6C60
+// OFFSET: 0x00811A90/0x140529460
 static int32_t Script_AddLight(lua_State* L) {
     const char* name = "model";
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -62,7 +62,7 @@ static int32_t Script_AddLight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E6D60
+// OFFSET: 0x00811B90/0x140529580
 static int32_t Script_AddCharacterLight(lua_State* L) {
     const char* name = "model";
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));
@@ -99,7 +99,7 @@ static int32_t Script_AddCharacterLight(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x004E6E60
+// OFFSET: 0x00811C90/0x1405296A0
 static int32_t Script_AddPetLight(lua_State* L) {
     const char* name = "model";
     CSimpleModelFFX* model = static_cast<CSimpleModelFFX*>(FrameScript_GetObjectThis(L, CSimpleModel::GetObjectType()));

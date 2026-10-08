@@ -50,6 +50,7 @@ class CLoadingScreenShipInfo {
 int32_t IsStillLoading();
 void LoadingScreenAsyncCallback(float progress, void* param);
 bool LoadingScreenDrawing();
+void LoadingScreenInitializeInGame();
 void LoadingScreenDisable();
 void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg);
 void LoadingScreenEnable(int32_t mapID, bool loadingWorld);
@@ -62,7 +63,7 @@ void LoadingScreenMiniDisable();
 void LoadingScreenMiniEnable();
 void LoadingScreenMiniUpdate(float progress);
 void LoadingScreenSetMap(int32_t mapId);
-void LoadingScreenSetScreenTipForRaceData(bool show);
+void LoadingScreenSetScreenTipForRaceData();
 void LoadingScreenSetTip(const char* tip);
 void LoadingScreenSetTransparent(bool transparent);
 void LoadingScreenShutdown();

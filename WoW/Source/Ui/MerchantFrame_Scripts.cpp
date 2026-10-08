@@ -28,13 +28,13 @@
 #include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// OFFSET: #0x005841D0
+// OFFSET: 0x00967D80/0x1406DE2B0
 static int32_t Script_GetMerchantNumItems(lua_State* L) {
     lua_pushnumber(L, CGMerchantInfo::m_numMerchantItems);
     return 1;
 }
 
-// OFFSET: #0x005843F0
+// OFFSET: 0x00967E10/0x1406DE340
 static int32_t Script_GetNumBuybackItems(lua_State* L) {
     if (CGMerchantInfo::m_merchant) {
         lua_pushnumber(L, CGMerchantInfo::m_numBuybackItems);
@@ -45,7 +45,7 @@ static int32_t Script_GetNumBuybackItems(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005849F0
+// OFFSET: 0x00967FC0/0x1406DE530
 static int32_t Script_CanMerchantRepair(lua_State* L) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGMerchantInfo::m_merchant, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -70,7 +70,7 @@ static int32_t Script_InRepairMode(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005842D0
+// OFFSET: 0x00969CD0/0x1406E05A0
 static int32_t Script_GetMerchantItemMaxStack(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemMaxStack(index)");
@@ -92,7 +92,7 @@ static int32_t Script_GetMerchantItemMaxStack(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005846E0
+// OFFSET: 0x009693E0/0x1406DFB40
 static int32_t Script_GetMerchantItemCostInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMerchantItemCostInfo(index)");
@@ -141,7 +141,7 @@ static void BuybackItemStatsCallback(int32_t id, const WOWGUID& guid, void* para
     FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
 }
 
-// OFFSET: #0x00584200
+// OFFSET: 0x00969BF0/0x1406E0490
 static int32_t Script_GetMerchantItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: GetMerchantItemLink(index)");
@@ -181,13 +181,13 @@ static int32_t Script_HideRepairCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008C1210
+// OFFSET: 0x00967FB0/0x1406DE520
 static int32_t Script_CloseMerchant(lua_State* L) {
     CGMerchantInfo::CloseMerchant();
     return 0;
 }
 
-// OFFSET: #0x00584820
+// OFFSET: 0x00969540/0x1406DFC70
 static int32_t Script_GetMerchantItemCostItem(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         return luaL_error(L, "Usage: GetMerchantItemCostItem(index, itemIndex)");
@@ -243,7 +243,7 @@ static int32_t Script_GetMerchantItemCostItem(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00584A60
+// OFFSET: 0x00968030/0x1406DE5A0
 static int32_t Script_ShowRepairCursor(lua_State* L) {
     if (Spell_C_IsTargeting()) {
         return 0;
@@ -260,7 +260,7 @@ static int32_t Script_ShowRepairCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00584E10
+// OFFSET: 0x00968FC0/0x1406DF650
 static int32_t Script_GetMerchantItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: GetMerchantItemInfo(index)");
@@ -321,7 +321,7 @@ static int32_t Script_GetMerchantItemInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x00585070
+// OFFSET: 0x009699A0/0x1406E01E0
 static int32_t Script_GetBuybackItemInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: GetBuybackItemInfo(slot)");
@@ -364,7 +364,7 @@ static int32_t Script_GetBuybackItemInfo(lua_State* L) {
     return 6;
 }
 
-// OFFSET: #0x005852C0
+// OFFSET: 0x009683C0/0x1406DE870
 static int32_t Script_GetBuybackItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: GetBuybackItemLink(slot)");
@@ -388,7 +388,7 @@ static int32_t Script_GetBuybackItemLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005853A0
+// OFFSET: 0x009684A0/0x1406DE950
 static int32_t Script_PickupMerchantItem(lua_State* L) {
     if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         return 0;
@@ -426,7 +426,7 @@ static int32_t Script_PickupMerchantItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005854C0
+// OFFSET: 0x009685C0/0x1406DEAE0
 static int32_t Script_BuyMerchantItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: BuyMerchantItem(index)");
@@ -461,7 +461,7 @@ static int32_t Script_BuyMerchantItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005855C0
+// OFFSET: 0x00968700/0x1406DEC60
 static int32_t Script_BuybackItem(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         return luaL_error(L, "Usage: BuybackItem(slot)");
@@ -489,7 +489,7 @@ static int32_t Script_BuybackItem(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005856D0
+// OFFSET: 0x00969D90/0x1406E0680
 static int32_t Script_ShowMerchantSellCursor(lua_State* L) {
     if (Spell_C_IsTargeting() || CursorGetResetMode() != 1) {
         return 0;
@@ -557,7 +557,7 @@ static int32_t Script_ShowMerchantSellCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00585890
+// OFFSET: 0x00968800/0x1406DEDC0
 static int32_t Script_ShowBuybackSellCursor(lua_State* L) {
     if (Spell_C_IsTargeting() || CursorGetResetMode() != 1) {
         return 0;
@@ -585,7 +585,7 @@ static int32_t Script_ShowBuybackSellCursor(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00585990
+// OFFSET: 0x00968910/0x1406DEED0
 static int32_t Script_GetRepairAllCost(lua_State* L) {
     CGUnit_C* merchant = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGMerchantInfo::m_merchant, TYPEMASK_UNIT, __FILE__, __LINE__));
     CGPlayer_C* player;
@@ -659,7 +659,7 @@ static int32_t Script_GetRepairAllCost(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00585C90
+// OFFSET: 0x00968C10/0x1406DF200
 static int32_t Script_RepairAllItems(lua_State* L) {
     CGUnit_C* merchant = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGMerchantInfo::m_merchant, TYPEMASK_UNIT, __FILE__, __LINE__));
 

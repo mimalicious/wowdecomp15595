@@ -150,6 +150,7 @@ class ClientServices : public LoginResponse {
     static const char* GetDefaultPatchListString();
     static const char* GetPatchListURL();
     static void AdvanceRealmAddress();
+    static bool HasNextRealmAddress();
     static void Send(JamClientMessage* msg);
     static int32_t Report(uint32_t suggestion, const char* text);
     static void LoadCDKey();

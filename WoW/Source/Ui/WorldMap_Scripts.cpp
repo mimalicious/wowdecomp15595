@@ -28,19 +28,19 @@
 #include "WoW/Source/Ui/GameUI.h"
 #include "Engine/Source/Frame/CSimpleFrame.h"
 
-// OFFSET: #0x00543020
+// OFFSET: 0x00919D40/0x14067AC90
 static int32_t Script_GetNumMapLandmarks(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::m_numLandmarks);
     return 1;
 }
 
-// OFFSET: #0x00543060
+// OFFSET: 0x00919D80/0x14067ACC0
 static int32_t Script_GetNumMapOverlays(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::m_numOverlays);
     return 1;
 }
 
-// OFFSET: #0x005430A0
+// OFFSET: 0x00919DC0/0x14067ACF0
 static int32_t Script_PositionWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerArrowFrame;
     CSimpleModel* effect = CGWorldMap::m_playerArrowEffectFrame;
@@ -99,7 +99,7 @@ static int32_t Script_PositionWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005432C0
+// OFFSET: 0x00919FE0/0x14067AFA0
 static int32_t Script_PositionMiniWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerMiniArrowFrame;
     CSimpleModel* effect = CGWorldMap::m_playerMiniArrowEffectFrame;
@@ -158,7 +158,7 @@ static int32_t Script_PositionMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00544B20
+// OFFSET: 0x0091B790/0x14067CC10
 static int32_t Script_GetMapContinents(lua_State* L) {
     uint32_t count = CGWorldMap::m_continents.Count();
 
@@ -170,7 +170,7 @@ static int32_t Script_GetMapContinents(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x00544D40
+// OFFSET: 0x0091BAA0/0x14067CF80
 static int32_t Script_GetCurrentMapContinent(lua_State* L) {
     int32_t dungeonMap = CGWorldMap::m_currentOrphanZone == -1 ? -1 : CGWorldMap::m_currentDungeonMap;
     DungeonMapRec* rec = g_dungeonMapDB.GetRecord(dungeonMap);
@@ -190,7 +190,7 @@ static int32_t Script_GetCurrentMapContinent(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00544E10
+// OFFSET: 0x0091BBC0/0x14067D0D0
 static int32_t Script_GetCurrentMapAreaID(lua_State* L) {
     int32_t areaID;
 
@@ -208,7 +208,7 @@ static int32_t Script_GetCurrentMapAreaID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00544E80
+// OFFSET: 0x0091BC20/0x14067D140
 static int32_t Script_GetCurrentMapZone(lua_State* L) {
     if (CGWorldMap::m_currentZone < 0) {
         int32_t areaID = CGWorldMap::m_currentContinent < 0 ? CGWorldMap::m_currentOrphanZone : CGWorldMap::m_continents.m_data[CGWorldMap::m_currentContinent].m_areaID;
@@ -240,7 +240,7 @@ static int32_t Script_GetCurrentMapZone(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00544FC0
+// OFFSET: 0x0091BE40/0x14067D350
 static int32_t Script_GetCurrentMapDungeonLevel(lua_State* L) {
     int32_t dungeonMap = CGWorldMap::m_currentOrphanZone == -1 ? -1 : CGWorldMap::m_currentDungeonMap;
     DungeonMapRec* rec = g_dungeonMapDB.GetRecord(dungeonMap);
@@ -255,7 +255,7 @@ static int32_t Script_GetCurrentMapDungeonLevel(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00544C40
+// OFFSET: 0x0091B920/0x14067CDE0
 static int32_t Script_DungeonUsesTerrainMap(lua_State* L) {
     WorldMapAreaRec* area = g_worldMapAreaDB.GetRecord(CGWorldMap::m_currentOrphanZone);
 
@@ -268,7 +268,7 @@ static int32_t Script_DungeonUsesTerrainMap(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00876150
+// OFFSET: 0x0091A200/0x14067B250
 static int32_t Script_ShowWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerArrowFrame;
     CSimpleModel* effect = CGWorldMap::m_playerArrowEffectFrame;
@@ -287,7 +287,7 @@ static int32_t Script_ShowWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008761B0
+// OFFSET: 0x0091A260/0x14067B2C0
 static int32_t Script_ShowMiniWorldMapArrowFrame(lua_State* L) {
     CSimpleModel* frame = CGWorldMap::m_playerMiniArrowFrame;
     CSimpleModel* effect = CGWorldMap::m_playerMiniArrowEffectFrame;
@@ -306,7 +306,7 @@ static int32_t Script_ShowMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00545050
+// OFFSET: 0x0091BF80/0x14067D540
 static int32_t Script_IsZoomOutAvailable(lua_State* L) {
     bool available = true;
     int32_t dungeonMap = CGWorldMap::m_currentOrphanZone == -1 ? -1 : CGWorldMap::m_currentDungeonMap;
@@ -340,19 +340,19 @@ static int32_t Script_HasDebugZoneMap(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x0087B780
+// OFFSET: 0x009201F0/0x1406826A0
 static int32_t Script_SetMapToCurrentZone(lua_State* L) {
     CGWorldMap::SetMapToCurrentZone(0);
     return 0;
 }
 
-// OFFSET: #0x00546290
+// OFFSET: 0x0091DC00/0x14067F840
 static int32_t Script_GetNumDungeonMapLevels(lua_State* L) {
     lua_pushnumber(L, CGWorldMap::GetNumDungeonLevels());
     return 1;
 }
 
-// OFFSET: #0x00544CA0
+// OFFSET: 0x0091B990/0x14067CE50
 static int32_t Script_GetMapInfo(lua_State* L) {
     lua_pushstring(L, CGWorldMap::GetCurrentMapName());
     int32_t height = CGWorldMap::GetCurrentMapHeight();
@@ -372,7 +372,7 @@ static int32_t Script_GetMapInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00545880
+// OFFSET: 0x0091DC30/0x14067F870
 static int32_t Script_GetPlayerMapPosition(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetPlayerMapPosition(\"player\")");
@@ -408,7 +408,7 @@ static int32_t Script_GetWintergraspWaitTime(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00545A30
+// OFFSET: 0x0091C020/0x14067D600
 static int32_t Script_GetMapLandmarkInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMapLandmarkInfo(index)");
@@ -479,7 +479,7 @@ static int32_t Script_GetMapLandmarkInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x00545110
+// OFFSET: 0x0091DFE0/0x14067FCB0
 static int32_t Script_UpdateMapHighlight(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: UpdateMapHighlight(x, y)");
@@ -691,7 +691,7 @@ static int32_t Script_UpdateMapHighlight(lua_State* L) {
     return 8;
 }
 
-// OFFSET: #0x00544B90
+// OFFSET: 0x0091B7D0/0x14067CC60
 static int32_t Script_GetMapZones(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMapZones(continentIndex)");
@@ -709,7 +709,7 @@ static int32_t Script_GetMapZones(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x00545C80
+// OFFSET: 0x0091C370/0x14067DA70
 static int32_t Script_GetMapOverlayInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetMapOverlayInfo(index)");
@@ -755,7 +755,7 @@ static int32_t Script_GetMapOverlayInfo(lua_State* L) {
     return 7;
 }
 
-// OFFSET: #0x005469E0
+// OFFSET: 0x0091F630/0x1406817F0
 static int32_t Script_SetMapZoom(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetMapZoom(continentIndex [,zoneIndex])");
@@ -779,7 +779,7 @@ static int32_t Script_SetMapZoom(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00545E60
+// OFFSET: 0x0091C470/0x14067DB90
 static int32_t Script_CreateWorldMapArrowFrame(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: CreateWorldMapArrowFrame(parent)");
@@ -804,7 +804,7 @@ static int32_t Script_CreateWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00545FF0
+// OFFSET: 0x0091C5E0/0x14067DD60
 static int32_t Script_InitWorldMapPing(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: InitWorldMapPing(parent)");
@@ -854,7 +854,7 @@ static int32_t Script_CanQueueForWintergrasp(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00878DF0
+// OFFSET: 0x0091E850/0x1406807F0
 static int32_t Script_GetCorpseMapPosition(lua_State* L) {
     C3Vector position(0.0f, 0.0f, 0.0f);
     int32_t mapID;
@@ -868,7 +868,7 @@ static int32_t Script_GetCorpseMapPosition(lua_State* L) {
     return 2;
 }
 
-// OFFSET: %0x00878E70
+// OFFSET: 0x0091E8D0/0x1406808A0
 static int32_t Script_GetDeathReleasePosition(lua_State* L) {
     C3Vector position(0.0f, 0.0f, 0.0f);
     int32_t mapID;
@@ -881,7 +881,7 @@ static int32_t Script_GetDeathReleasePosition(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00545F20
+// OFFSET: 0x0091C520/0x14067DC70
 static int32_t Script_CreateMiniWorldMapArrowFrame(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         luaL_error(L, "Usage: CreateMiniWorldMapArrowFrame(parent)");
@@ -906,13 +906,13 @@ static int32_t Script_CreateMiniWorldMapArrowFrame(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00545FE0
+// OFFSET: 0x0091C5D0/0x14067DD50
 static int32_t Script_UpdateWorldMapArrowFrames(lua_State* L) {
     CGWorldMap::UpdateArrowFrames();
     return 0;
 }
 
-// OFFSET: #0x00546A90
+// OFFSET: 0x0091F6D0
 static int32_t Script_ZoomOut(lua_State* L) {
     int32_t parent;
 
@@ -976,7 +976,7 @@ static int32_t Script_ZoomOut(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00546C50
+// OFFSET: 0x0091FA00
 static int32_t Script_SetMapByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetMapByID(mapID)");
@@ -1045,7 +1045,7 @@ static int32_t Script_SetMapByID(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00546E80
+// OFFSET: 0x0091FC10/0x140681F10
 static int32_t Script_ProcessMapClick(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: ProcessMapClick(x, y)");
@@ -1058,7 +1058,7 @@ static int32_t Script_ProcessMapClick(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00546EF0
+// OFFSET: 0x0091FC80/0x140681F90
 static int32_t Script_ClickLandmark(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ClickLandmark(mapLinkID)");
@@ -1084,7 +1084,7 @@ static int32_t Script_ClickLandmark(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00547B80
+// OFFSET: 0x00920160/0x140682600
 static int32_t Script_SetDungeonMapLevel(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetDungeonMapLevel(level)");

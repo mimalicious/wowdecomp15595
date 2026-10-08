@@ -23,19 +23,19 @@
 #include "WoW/Source/Ui/QuestTextParser.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 
-// OFFSET: #0x00593D90
+// OFFSET: 0x009B9100/0x140743F30
 static int32_t Script_GetTrainerGreetingText(lua_State* L) {
     lua_pushstring(L, CGClassTrainer::m_greetingText);
     return 1;
 }
 
-// OFFSET: #0x00593D10
+// OFFSET: 0x009B9080/0x140743EC0
 static int32_t Script_GetNumTrainerServices(lua_State* L) {
     lua_pushnumber(L, CGClassTrainer::m_filteredServices);
     return 1;
 }
 
-// OFFSET: #0x00593D50
+// OFFSET: 0x009B90C0/0x140743EF0
 static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     if (CGClassTrainer::m_trainerType == 2) {
         lua_pushnumber(L, 1.0);
@@ -46,7 +46,7 @@ static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005943A0
+// OFFSET: 0x009B95B0/0x1407445D0
 static int32_t Script_SelectTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SelectTrainerService(index)");
@@ -62,7 +62,7 @@ static int32_t Script_SelectTrainerService(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00594480
+// OFFSET: 0x009B9D80/0x140744F20
 static int32_t Script_GetTrainerServiceCost(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceCost(index)");
@@ -90,7 +90,7 @@ static int32_t Script_GetTrainerServiceCost(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x00594530
+// OFFSET: 0x009B96C0/0x1407446F0
 static int32_t Script_GetTrainerServiceLevelReq(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceLevelReq(index)");
@@ -112,7 +112,7 @@ static int32_t Script_GetTrainerServiceLevelReq(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005945B0
+// OFFSET: 0x009B9740/0x140744770
 static int32_t Script_GetTrainerServiceNumAbilityReq(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceAbilityReq(index)");
@@ -220,7 +220,7 @@ static int32_t Script_GetTrainerSkillLineFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005952F0
+// OFFSET: 0x009B9C10/0x140744D00
 static int32_t Script_GetTrainerServiceSkillLine(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceSkillLine(index)");
@@ -286,7 +286,7 @@ static int32_t GetServiceTypeFromString(const char* type) {
     return SStrCmpI(type, "used", STORM_MAX_STR) ? 6 : 2;
 }
 
-// OFFSET: #0x00593E10
+// OFFSET: 0x009B97E0/0x140744810
 static int32_t Script_GetTrainerServiceTypeFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceTypeFilter(\"type\")");
@@ -309,14 +309,14 @@ static int32_t Script_GetTrainerServiceTypeFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00594370
+// OFFSET: 0x009B9580/0x140744580
 static int32_t Script_CloseTrainer(lua_State* L) {
     WOWGUID none = WOWGUID();
     CGClassTrainer::SetTrainer(none, 0);
     return 0;
 }
 
-// OFFSET: #0x00594430
+// OFFSET: 0x009B9640/0x140744650
 static int32_t Script_GetTrainerSelectionIndex(lua_State* L) {
     if (CGClassTrainer::GetSelectionIndex() < 0) {
         lua_pushnil(L);
@@ -327,7 +327,7 @@ static int32_t Script_GetTrainerSelectionIndex(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00595040
+// OFFSET: 0x009B9BC0/0x140744CB0
 static int32_t Script_OpenTrainer(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -339,7 +339,7 @@ static int32_t Script_OpenTrainer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00595090
+// OFFSET: 0x009BABC0/0x140746250
 static int32_t Script_GetTrainerServiceInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceInfo(index)");
@@ -360,7 +360,7 @@ static int32_t Script_GetTrainerServiceInfo(lua_State* L) {
     return 4;
 }
 
-// OFFSET: #0x00595150
+// OFFSET: 0x009BADD0/0x1407464F0
 static int32_t Script_GetTrainerServiceIcon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceIcon(index)");
@@ -403,7 +403,7 @@ static int32_t Script_GetTrainerServiceIcon(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00595470
+// OFFSET: 0x009B9E60/0x140745020
 static int32_t Script_GetTrainerServiceSkillReq(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceSkillReq(index)");
@@ -455,7 +455,7 @@ static int32_t Script_GetTrainerServiceSkillReq(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005955E0
+// OFFSET: 0x009B9FD0/0x1407451F0
 static int32_t Script_GetTrainerServiceAbilityReq(lua_State* L) {
     if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
         luaL_error(L, "Usage: GetTrainerServiceAbilityReq(index)");
@@ -563,7 +563,7 @@ static int32_t Script_GetTrainerServiceStepReq(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x005959D0
+// OFFSET: 0x009BAF70/0x1407466E0
 static int32_t Script_GetTrainerServiceDescription(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceDescription(index)");
@@ -664,7 +664,7 @@ static int32_t Script_GetTrainerServiceStepIncrease(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00595E60
+// OFFSET: 0x009BA1C0/0x140745480
 static int32_t Script_BuyTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: BuyTrainerService(index)");
@@ -682,7 +682,7 @@ static int32_t Script_BuyTrainerService(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00595EC0
+// OFFSET: 0x009BA220/0x140745500
 static int32_t Script_SetTrainerServiceTypeFilter(lua_State* L) {
     if (!lua_isstring(L, 1)) {
         luaL_error(L, "Usage: SetTrainerServiceTypeFilter(\"type\", on/off [, exclusive])");
@@ -822,7 +822,7 @@ static int32_t Script_ExpandTrainerSkillLine(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00596290
+// OFFSET: 0x009BB0E0/0x1407468E0
 static int32_t Script_GetTrainerServiceItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetTrainerServiceItemLink(index)");

@@ -29,7 +29,7 @@ class ChrRacesRec {
     /* 0040 */ DBCString m_nameMale;
     /* 0044 */ DBCString m_facialHairCustomization [2];
     /* 004C */ DBCString m_hairCustomization;
-    /* 0050 */ int32_t unk_0050;
+    /* 0050 */ int32_t m_requiredExpansion;
     /* 0054 */ int32_t unk_0054;
     /* 0058 */ int32_t unk_0058;
     /* 005C */ int32_t unk_005C;

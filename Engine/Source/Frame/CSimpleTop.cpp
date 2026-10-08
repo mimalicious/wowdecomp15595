@@ -1068,7 +1068,7 @@ int32_t CSimpleTop::OnMouseDown(const void* data, void* param) {
 int32_t CSimpleTop::OnDisplaySizeChanged(const void* data, void* param) {
     const EVENT_DATA_SIZE* sizeData = static_cast<const EVENT_DATA_SIZE*>(data);
     CSimpleTop* top = static_cast<CSimpleTop*>(param);
-    void (*callback)(const CSizeEvent&) = top->m_displaySizeCallback;
+    int32_t (*callback)(const CSizeEvent&) = top->m_displaySizeCallback;
 
     GxuFontWindowSizeChanged();
 

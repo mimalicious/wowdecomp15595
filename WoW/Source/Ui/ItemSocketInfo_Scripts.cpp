@@ -14,7 +14,7 @@
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/Ui/GameUI.h"
 
-// OFFSET: #0x005C4550
+// OFFSET: 0x0097A230/0x1406F37A0
 static int32_t Script_GetSocketTypes(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetSocketType(index)");
@@ -47,13 +47,13 @@ static int32_t Script_GetSocketTypes(lua_State* L) {
     return count;
 }
 
-// OFFSET: #0x005C49C0
+// OFFSET: 0x0097AC10/0x1406F4180
 static int32_t Script_CloseSocketInfo(lua_State* L) {
     CGItemSocketInfo::SetItem(WOWGUID());
     return 0;
 }
 
-// OFFSET: #0x005C49D0
+// OFFSET: 0x0097A3C0/0x1406F3920
 static int32_t Script_GetSocketItemInfo(lua_State* L) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
     ItemStats_C* stats = CGItemSocketInfo::m_socketItemStats;
@@ -76,7 +76,7 @@ static int32_t Script_GetSocketItemInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005C4AF0
+// OFFSET: 0x0097A500/0x1406F3A70
 static int32_t Script_GetNumSockets(lua_State* L) {
     int32_t count = 0;
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
@@ -89,7 +89,7 @@ static int32_t Script_GetNumSockets(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C4B60
+// OFFSET: 0x0097AF40/0x1406F4500
 static int32_t Script_GetNewSocketInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNewSocketInfo(index)");
@@ -131,7 +131,7 @@ static int32_t Script_GetNewSocketInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005C4D10
+// OFFSET: 0x0097A570/0x1406F3AD0
 static int32_t Script_GetNewSocketLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetNewSocketLink(index)");
@@ -150,7 +150,7 @@ static int32_t Script_GetNewSocketLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C4DC0
+// OFFSET: 0x0097B100/0x1406F46F0
 static int32_t Script_ClickSocketButton(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ClickSocketButton(index)");
@@ -178,7 +178,7 @@ static int32_t Script_ClickSocketButton(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008D2A80
+// OFFSET: 0x0097A620
 static int32_t Script_GetSocketItemBoundTradeable(lua_State* L) {
     if (CGItemSocketInfo::IsSocketItemBoundTradeable()) {
         lua_pushnumber(L, 1.0);
@@ -189,7 +189,7 @@ static int32_t Script_GetSocketItemBoundTradeable(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005C5160
+// OFFSET: 0x0097AC20/0x1406F41A0
 static int32_t Script_GetExistingSocketInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetExistingSocketInfo(index)");
@@ -235,7 +235,7 @@ static int32_t Script_GetExistingSocketInfo(lua_State* L) {
     return 3;
 }
 
-// OFFSET: #0x005C5340
+// OFFSET: 0x0097AE20/0x1406F43C0
 static int32_t Script_GetExistingSocketLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetExistingSocketLink(index)");
@@ -266,13 +266,13 @@ static int32_t Script_GetExistingSocketLink(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x008D2C70
+// OFFSET: 0x0097A820/0x1406F3DD0
 static int32_t Script_AcceptSockets(lua_State* L) {
     CGItemSocketInfo::Accept();
     return 0;
 }
 
-// OFFSET: %0x008D2C80
+// OFFSET: 0x0097A830/0x1406F3DE0
 static int32_t Script_GetSocketItemRefundable(lua_State* L) {
     if (CGItemSocketInfo::IsSocketItemRefundable()) {
         lua_pushnumber(L, 1.0);

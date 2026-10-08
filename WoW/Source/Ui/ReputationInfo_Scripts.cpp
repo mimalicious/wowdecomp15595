@@ -23,13 +23,13 @@ static int32_t Script_ExpandAllFactionHeaders(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008FA950
+// OFFSET: 0x009A5A90/0x14072BE80
 static int32_t Script_GetNumFactions(lua_State* L) {
     lua_pushnumber(L, CGReputationInfo::m_numShownFactions);
     return 1;
 }
 
-// OFFSET: #0x005D1F70
+// OFFSET: 0x009A7EB0/0x14072EB00
 static int32_t Script_CollapseFactionHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: CollapseFactionHeader(index)");
@@ -40,7 +40,7 @@ static int32_t Script_CollapseFactionHeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D2000
+// OFFSET: 0x009A7F40/0x14072EB90
 static int32_t Script_ExpandFactionHeader(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: ExpandFactionHeader(index)");
@@ -51,7 +51,7 @@ static int32_t Script_ExpandFactionHeader(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D0740
+// OFFSET: 0x009A6160/0x14072C630
 static int32_t Script_IsFactionInactive(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: IsFactionInactive(index)");
@@ -67,7 +67,7 @@ static int32_t Script_IsFactionInactive(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005D07B0
+// OFFSET: 0x009A61D0/0x14072C6B0
 static int32_t Script_SetSelectedFaction(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetSelectedFaction(index)");
@@ -85,13 +85,13 @@ static int32_t Script_SetSelectedFaction(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x008FB100
+// OFFSET: 0x009A6240/0x14072C730
 static int32_t Script_GetSelectedFaction(lua_State* L) {
     lua_pushnumber(L, CGReputationInfo::GetSelectedFactionIndex() + 1);
     return 1;
 }
 
-// OFFSET: #0x005D1150
+// OFFSET: 0x009A6D30/0x14072D530
 static int32_t Script_GetFactionInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetFactionInfo(index)");
@@ -103,7 +103,7 @@ static int32_t Script_GetFactionInfo(lua_State* L) {
     return GetFactionInfoHelper(L, faction);
 }
 
-// OFFSET: #0x005D11E0
+// OFFSET: 0x009A6DC0/0x14072D5B0
 static int32_t Script_GetFactionInfoByID(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: GetFactionInfoByID(id)");
@@ -113,7 +113,7 @@ static int32_t Script_GetFactionInfoByID(lua_State* L) {
     return GetFactionInfoHelper(L, static_cast<int32_t>(lua_tonumber(L, 1)));
 }
 
-// OFFSET: #0x005D1240
+// OFFSET: 0x009A6E20/0x14072D600
 static int32_t Script_GetWatchedFactionInfo(lua_State* L) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     FactionRec* rec = NULL;
@@ -145,7 +145,7 @@ static int32_t Script_GetWatchedFactionInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x005D1390
+// OFFSET: 0x009A6F90/0x14072D800
 static int32_t Script_FactionToggleAtWar(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: FactionToggleAtWar(index)");
@@ -162,7 +162,7 @@ static int32_t Script_FactionToggleAtWar(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D1420
+// OFFSET: 0x009A7020/0x14072D8C0
 static int32_t Script_SetWatchedFactionIndex(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetWatchedFactionIndex(index)");
@@ -180,7 +180,7 @@ static int32_t Script_SetWatchedFactionIndex(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D1E50
+// OFFSET: 0x009A7DB0/0x14072EA20
 static int32_t Script_SetFactionInactive(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetFactionInactive(index)");
@@ -200,7 +200,7 @@ static int32_t Script_SetFactionInactive(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005D1EE0
+// OFFSET: 0x009A7E30/0x14072EA90
 static int32_t Script_SetFactionActive(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
         luaL_error(L, "Usage: SetFactionActive(index)");

@@ -43,4 +43,15 @@ class UserClientReorderCharacters : public JamClientMessage {
     ~UserClientReorderCharacters();
 };
 
+class UserClientGenerateRandomCharacterName : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_raceID;
+    /* 0011 */ uint8_t m_sexID;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientGenerateRandomCharacterName(uint8_t raceID, uint8_t sexID);
+    ~UserClientGenerateRandomCharacterName();
+};
+
 #endif

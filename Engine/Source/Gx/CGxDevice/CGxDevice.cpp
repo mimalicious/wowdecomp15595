@@ -91,11 +91,11 @@ static uint32_t s_nextFrameTime;
 // STATIC: %0x00C0E4CC
 const char* CGxDevice::s_shaderPaths[GxShTargets_Last] = { "Shaders\\Vertex", "Shaders\\Hull", "Shaders\\Domain", "Shaders\\Geometry", "Shaders\\Pixel", "Shaders\\Compute" };
 
-// STATIC: %0x00C0E32C
-static float kWinAspect;
+// STATIC: 0x00D08FEC
+float CGxDevice::kWinAspect = 1.0f;
 
-// STATIC: %0x00D92D30
-static int32_t kWinAspectEnabled;
+// STATIC: 0x00EC6508
+int32_t CGxDevice::kWinAspectForce;
 
 // STATIC: %0x00D8BCE8
 CGxShader* CGxDevice::s_uiVertexShader;
@@ -465,8 +465,8 @@ int32_t CGxDevice::DeviceSetFormat(const CGxFormat& format) {
         this->m_format.m_size = kWinMinSize;
     }
 
-    kWinAspect = static_cast<float>(this->m_format.m_size.x) / static_cast<float>(this->m_format.m_size.y);
-    kWinAspectEnabled = this->m_format.m_aspect;
+    CGxDevice::kWinAspect = static_cast<float>(this->m_format.m_size.x) / static_cast<float>(this->m_format.m_size.y);
+    CGxDevice::kWinAspectForce = this->m_format.m_aspect;
 
     return 1;
 }
@@ -1695,29 +1695,29 @@ void CGxDevice::ClampRectToWindow(CiRect& rect) {
 
 // OFFSET: 0x00842E50
 void CGxDevice::ClampRectTopByAspect(CiRect& windowRect) {
-    if (kWinAspectEnabled) {
-        windowRect.minY = windowRect.maxY - static_cast<int32_t>(static_cast<float>(windowRect.maxX - windowRect.minX - s_clientAdjust.x) / kWinAspect + 0.5f + s_clientAdjust.y);
+    if (CGxDevice::kWinAspectForce) {
+        windowRect.minY = windowRect.maxY - static_cast<int32_t>(static_cast<float>(windowRect.maxX - windowRect.minX - s_clientAdjust.x) / CGxDevice::kWinAspect + 0.5f + s_clientAdjust.y);
     }
 }
 
 // OFFSET: 0x00842EA0
 void CGxDevice::ClampRectBottomByAspect(CiRect& windowRect) {
-    if (kWinAspectEnabled) {
-        windowRect.maxY = windowRect.minY + static_cast<int32_t>(static_cast<float>(windowRect.maxX - windowRect.minX - s_clientAdjust.x) / kWinAspect + 0.5f + s_clientAdjust.y);
+    if (CGxDevice::kWinAspectForce) {
+        windowRect.maxY = windowRect.minY + static_cast<int32_t>(static_cast<float>(windowRect.maxX - windowRect.minX - s_clientAdjust.x) / CGxDevice::kWinAspect + 0.5f + s_clientAdjust.y);
     }
 }
 
 // OFFSET: 0x00842EF0
 void CGxDevice::ClampRectLeftByAspect(CiRect& windowRect) {
-    if (kWinAspectEnabled) {
-        windowRect.minX = windowRect.maxX - static_cast<int32_t>(kWinAspect * static_cast<float>(windowRect.maxY - windowRect.minY - s_clientAdjust.y) + 0.5f + s_clientAdjust.x);
+    if (CGxDevice::kWinAspectForce) {
+        windowRect.minX = windowRect.maxX - static_cast<int32_t>(CGxDevice::kWinAspect * static_cast<float>(windowRect.maxY - windowRect.minY - s_clientAdjust.y) + 0.5f + s_clientAdjust.x);
     }
 }
 
 // OFFSET: 0x00842F40
 void CGxDevice::ClampRectRightByAspect(CiRect& windowRect) {
-    if (kWinAspectEnabled) {
-        windowRect.maxX = windowRect.minX + static_cast<int32_t>(kWinAspect * static_cast<float>(windowRect.maxY - windowRect.minY - s_clientAdjust.y) + 0.5f + s_clientAdjust.x);
+    if (CGxDevice::kWinAspectForce) {
+        windowRect.maxX = windowRect.minX + static_cast<int32_t>(CGxDevice::kWinAspect * static_cast<float>(windowRect.maxY - windowRect.minY - s_clientAdjust.y) + 0.5f + s_clientAdjust.x);
     }
 }
 
@@ -2591,4 +2591,15 @@ int32_t CGxDevice::AdapterInfer(uint16_t& deviceID) {
 void CGxDevice::AdapterResetMonitors() {
     CGxDevice::s_monitorsInit = 0;
     CGxDevice::s_monitors.m_count = 0;
+}
+
+// OFFSET: 0x008435D0/0x14056FB20
+float CGxDevice::CapsAspectRatio(int32_t window) {
+    if (!window || CGxDevice::kWinAspectForce) {
+        return CGxDevice::kWinAspect;
+    }
+
+    CRect rect = { 0.0f, 0.0f, 0.0f, 0.0f };
+    this->CapsWindowSize(rect);
+    return (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
 }

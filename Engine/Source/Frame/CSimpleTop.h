@@ -110,7 +110,7 @@ class CSimpleTop : public CLayoutFrame {
     /* 1244 */ const char* m_mouseButtonName;
     /* 1248 */ int32_t (*m_mouseButtonCallback)(CMouseEvent* evt);
     /* 124C */ int32_t (*m_mouseMoveCallback)(CMouseEvent* evt);
-    /* 1250 */ void (*m_displaySizeCallback)(const CSizeEvent& evt);
+    /* 1250 */ int32_t (*m_displaySizeCallback)(const CSizeEvent& evt);
     /* 1254 */ void (*m_focusChangedCallback)(const CFocusEvent& evt);
     /* 1258 */ void (*m_keyDownCallback)(const CKeyEvent& evt);
     /* 125C */ int32_t m_allowProtectedActions;

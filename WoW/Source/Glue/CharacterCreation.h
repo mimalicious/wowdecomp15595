@@ -43,9 +43,11 @@ class CCharacterCreation {
     static void Initialize();
     static bool IsClassAvailable(int32_t classID);
     static void OnHide();
+    static void OnShow();
     static void RandomizeCharCustomization();
     static void ResetCharCustomizeInfo();
     static void SetCharacterFacing(float facing);
+    static void SetCharCustomizeFrame(CSimpleModelFFX* modelFrame);
     static void SetCharCustomizeModel(const char* modelName);
     static void SetSelectedClass(int32_t classID);
     static void SetSelectedRace(uint32_t raceIndex);
