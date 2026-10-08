@@ -10,7 +10,7 @@
 // STATIC: %0x00D8B750
 static int64_t s_debugProfileStart;
 
-// OFFSET: %0x0079FE10
+// OFFSET: 0x00839B20/0x140563FA0
 static int32_t Script_strtrim(lua_State* L) {
     const char* string = luaL_checkstring(L, 1);
     const char* chars = luaL_optstring(L, 2, " \t\r\n");
@@ -63,7 +63,7 @@ static int32_t Script_strtrim(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0079FF10
+// OFFSET: 0x00839C20/0x1405640E0
 static int32_t Script_strsplit(lua_State* L) {
     const char* delimiters = luaL_checkstring(L, 1);
     const char* string = luaL_checkstring(L, 2);
@@ -106,7 +106,7 @@ static int32_t Script_strsplit(lua_State* L) {
     return count + 1;
 }
 
-// OFFSET: %0x007A0010
+// OFFSET: 0x00839D20/0x1405641F0
 static int32_t Script_strjoin(lua_State* L) {
     size_t length;
     const char* separator = luaL_checklstring(L, 1, &length);
@@ -222,7 +222,7 @@ static int32_t Script_issecure(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A0280
+// OFFSET: 0x00839E50/0x140564360
 static int32_t Script_issecurevariable(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         lua_pushvalue(L, LUA_GLOBALSINDEX);
@@ -319,7 +319,7 @@ static int32_t Script_securecall(lua_State* L) {
     return top;
 }
 
-// OFFSET: %0x007A05F0
+// OFFSET: 0x0083A1D0/0x140564770
 static int32_t Script_hooksecurefunc(lua_State* L) {
     if (lua_type(L, 1) != LUA_TTABLE) {
         lua_pushvalue(L, LUA_GLOBALSINDEX);
@@ -409,7 +409,7 @@ static int32_t Script_debugprofilestop(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A0830
+// OFFSET: 0x0083A410/0x140564A20
 static int32_t Script_seterrorhandler(lua_State* L) {
     if (lua_type(L, 1) != LUA_TFUNCTION) {
         luaL_error(L, "Usage: seterrorhandler(errfunc)");
@@ -433,7 +433,7 @@ static int32_t Script_geterrorhandler(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A08C0
+// OFFSET: 0x0083A4A0/0x140564AB0
 static int32_t Script_date(lua_State* L) {
     const char* format = luaL_optstring(L, 1, "%c");
     time_t t = lua_isnoneornil(L, 2) ? time(NULL) : static_cast<time_t>(luaL_checknumber(L, 2));
@@ -487,7 +487,7 @@ static int32_t Script_date(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A0AD0
+// OFFSET: 0x0083A6B0/0x140564D40
 static int32_t Script_time(lua_State* L) {
     time_t t;
 
@@ -561,7 +561,7 @@ static int32_t Script_difftime(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A0D90
+// OFFSET: 0x0083A950/0x140565050
 static int32_t Script_debugstack(lua_State* L) {
     lua_State* L1 = L;
     uint32_t level = 1;
@@ -651,7 +651,7 @@ static int32_t Script_debugstack(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A1080
+// OFFSET: 0x0083AC40/0x140565350
 static int32_t Script_scrub(lua_State* L) {
     int32_t top = lua_gettop(L);
     lua_checkstack(L, 1);

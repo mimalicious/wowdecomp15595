@@ -80,7 +80,7 @@ int32_t FrameScript_Object::SetScriptFunction(FrameScript_Object::ScriptIx& scri
     return previous;
 }
 
-// OFFSET: %0x007A2E10
+// OFFSET: 0x0083CA70
 bool FrameScript_Object::GetScriptFunction(const FrameScript_Object::ScriptIx& script, int32_t& function, const char*& taint) {
     if (!this->HasScript(script)) {
         function = 0;
@@ -225,7 +225,7 @@ void FrameScript_Object::GetScriptTime(lua_State* L, const FrameScript_Object::S
     *calls += functionCalls;
 }
 
-// OFFSET: %0x007A3A80
+// OFFSET: 0x0083D750/0x1405686F0
 int32_t FrameScript_Object::GetScript(lua_State* L) {
     if (!lua_isstring(L, 2)) {
         luaL_error(L, "Usage: %s:GetScript(\"type\")", this->GetDisplayName());
@@ -257,7 +257,7 @@ int32_t FrameScript_Object::GetScript(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x007A3B90
+// OFFSET: 0x0083D860/0x1405688A0
 int32_t FrameScript_Object::SetScript(lua_State* L) {
     if (!lua_isstring(L, 2) || (lua_type(L, 3) != LUA_TFUNCTION && lua_type(L, 3) != LUA_TNIL)) {
         luaL_error(L, "Usage: %s:SetScript(\"type\", function)", this->GetDisplayName());
@@ -292,7 +292,7 @@ int32_t FrameScript_Object::SetScript(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x007A3CE0
+// OFFSET: 0x0083D9B0/0x140568AA0
 int32_t FrameScript_Object::HookScript(lua_State* L) {
     if (!lua_isstring(L, 2) || lua_type(L, 3) != LUA_TFUNCTION) {
         luaL_error(L, "Usage: %s:HookScript(\"type\", function)", this->GetDisplayName());
@@ -362,7 +362,7 @@ int32_t FrameScript_Object::HookScript(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x007A3F40
+// OFFSET: 0x0083DC10/0x140568E30
 void FrameScript_Object::LoadFunction(lua_State* L, Function* function, CStatus* status) {
     const char* body = function->m_body.m_string;
     const char* name = function->m_type.m_string;
@@ -423,7 +423,7 @@ void FrameScript_Object::RunScript(const FrameScript_Object::ScriptIx& script, i
     FrameScript_Execute(function, this, argCount, taint, NULL);
 }
 
-// OFFSET: %0x007A53A0
+// OFFSET: 0x0083E020/0x140569360
 int32_t FrameScript_Object::IsScriptEventRegistered(const char* name) {
     FrameScript_EventObject* event = s_scriptEventsHash.Ptr(name);
 
@@ -438,7 +438,7 @@ int32_t FrameScript_Object::IsScriptEventRegistered(const char* name) {
     return 0;
 }
 
-// OFFSET: %0x007A53F0
+// OFFSET: 0x0083E570/0x140569A70
 int32_t FrameScript_Object::RegisterScriptEvent(const char* name) {
     FrameScript_EventObject* event = s_scriptEventsHash.Ptr(name);
 
@@ -466,7 +466,7 @@ int32_t FrameScript_Object::RegisterScriptEvent(const char* name) {
     return 1;
 }
 
-// OFFSET: %0x007A5480
+// OFFSET: 0x0083E6F0/0x140569C60
 void FrameScript_Object::UnregisterScriptEvent(const char* name) {
     FrameScript_EventObject* event = s_scriptEventsHash.Ptr(name);
 

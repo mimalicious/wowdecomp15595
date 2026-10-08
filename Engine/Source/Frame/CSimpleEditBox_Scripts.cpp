@@ -172,7 +172,7 @@ static int32_t Script_GetIndentedWordWrap(lua_State* L) {
     return CSimpleFont_GetIndentedWordWrap(name ? name : "<unnamed>", font, L);
 }
 
-// OFFSET: %0x00544570
+// OFFSET: 0x00535130
 static int32_t Script_SetAutoFocus(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetAutoFocus(StringToBOOL(L, 2, 1));
@@ -234,7 +234,7 @@ static int32_t Script_IsMultiLine(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x00544780
+// OFFSET: 0x00535340
 static int32_t Script_SetNumeric(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetNumeric(StringToBOOL(L, 2, 1));
@@ -547,7 +547,7 @@ static int32_t Script_ToggleInputLanguage(lua_State* L) {
     return 0;
 }
 
-// OFFSET: %0x005453F0
+// OFFSET: 0x00535FA0
 static int32_t Script_SetAltArrowKeyMode(lua_State* L) {
     CSimpleEditBox* editBox = static_cast<CSimpleEditBox*>(FrameScript_GetObjectThis(L, CSimpleEditBox::GetObjectType()));
     editBox->SetAltArrowKeyMode(StringToBOOL(L, 2, 1));

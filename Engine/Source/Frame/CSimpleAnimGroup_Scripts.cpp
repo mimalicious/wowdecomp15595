@@ -190,19 +190,19 @@ static int32_t Script_HasScript(lua_State* L) {
     return 1;
 }
 
-// OFFSET: %0x0054DAB0
+// OFFSET: 0x0053DC70
 static int32_t Script_GetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->GetScript(L) : 0;
 }
 
-// OFFSET: %0x0054DAF0
+// OFFSET: 0x0053DCB0
 static int32_t Script_SetScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->SetScript(L) : 0;
 }
 
-// OFFSET: %0x0054DB30
+// OFFSET: 0x0053DCF0
 static int32_t Script_HookScript(lua_State* L) {
     CSimpleAnimGroup* group = static_cast<CSimpleAnimGroup*>(FrameScript_GetObjectThis(L, CSimpleAnimGroup::GetObjectType()));
     return group ? group->HookScript(L) : 0;
