@@ -62,6 +62,7 @@ int32_t SPIRIT_IP_MR_V3_NAME_37(float* lsp, const int32_t* indices, int16_t lost
     return result;
 }
 
+// PROVEN: 5637c87b IDENTICAL/NONE
 // OFFSET: 0x00B532C0
 void SPIRIT_IP_MR_V3_NAME_29(const float* a, const float* coeffs, float* h) {
     SPIRIT_IP_MR_V3_NAME_389(coeffs, h, a);

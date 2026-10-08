@@ -201,7 +201,7 @@ uint32_t ComSat::Map<K, V>::Reinsert(const Entry* entries, uint32_t count) {
         if (entries->m_key.m_hash) {
             uint32_t index;
             this->Find(entries->m_key, index);
-            new (&this->m_entries[index]) Entry(*entries);
+            new (&this->m_entries[index]) Entry(entries->m_key, entries->m_value);
             inserted++;
         }
         entries++;
@@ -224,7 +224,7 @@ bool ComSat::Map<K, V>::Remove(const ComSat::MapKey<K>& key, V& value) {
             Entry* entry = &this->m_entries[i];
             uint32_t slot;
             if (!this->Find(entry->m_key, slot)) {
-                new (&this->m_entries[slot]) Entry(*entry);
+                new (&this->m_entries[slot]) Entry(entry->m_key, entry->m_value);
                 this->m_entries[i].m_key.m_hash = 0;
             }
         }

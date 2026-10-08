@@ -108,6 +108,7 @@ void SPIRIT_IP_MR_V3_NAME_63(SPIRIT_IPMR_UNK114* state, SPIRIT_IPMR_SUBFRAME* su
     }
 }
 
+// PROVEN: f75c00db IDENTICAL/NONE
 // OFFSET: 0x00B4D2C0
 void SPIRIT_IP_MR_V3_UpdateGainHistory(int16_t lost, SPIRIT_IPMR_UNK114* state, const SPIRIT_IPMR_SUBFRAME* subframe) {
     if (!subframe) {

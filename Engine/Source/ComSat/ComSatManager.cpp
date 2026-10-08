@@ -284,7 +284,6 @@ bool ComSat::Manager::UnpackBitpackedVariableBitrateData(uint64_t session, uint6
     return true;
 }
 
-// PROVEN: b3b932af IDENTICAL/DIFFERENT
 // OFFSET: 0x00A335E0/0x1407DDAF0
 void ComSat::Manager::IncomingVoiceData(uint64_t session, uint64_t talker, const uint8_t* data, uint32_t size) {
     if (this->m_soundManager->IsUsingVariableBitrateCodec()) {
