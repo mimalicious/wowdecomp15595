@@ -264,7 +264,7 @@ static const uint8_t s_defaultKey[32] = { 0xD7, 0xC8, 0xD9, 0xA0, 0xC8, 0xC5, 0x
 // STATIC: %0x00AC7ECC
 static uint16_t s_indices[4] = { 0, 1, 2, 3 };
 
-// OFFSET: %0x00533C40
+// OFFSET: 0x00523B40
 static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     if (param) {
         bool playing = false;
@@ -276,7 +276,17 @@ static void MovieSoundFinished(SE3MemorySoundObject* object, void* param) {
     }
 }
 
-// OFFSET: %0x00533C80
+// PROVEN: b83e0506 IDENTICAL/NONE
+// OFFSET: 0x00523B80
+static void MovieSoundKitFinished(SE3SoundKitObject* sko) {
+    CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(sko->m_playFinishedParam);
+
+    if (movieFrame && !SE3::IsPlaying(movieFrame->m_sound)) {
+        movieFrame->m_finished = 1;
+    }
+}
+
+// OFFSET: 0x00523BB0/0x140172130
 static void MovieTextureUpdate(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     if (command == GxTex_Latch) {
         MOVIETEXTUREDATA* data = static_cast<MOVIETEXTUREDATA*>(userArg);
@@ -290,7 +300,8 @@ void CSimpleMovieFrame::operator delete(void* ptr) {
     CSimpleMovieFrame::s_allocator.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: %0x00533CB0
+// PROVEN: 1ea1c914 IDENTICAL/NONE
+// OFFSET: 0x00523BE0/0x140172160
 FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* name, FrameScript_Object::ScriptData& data) {
     FrameScript_Object::ScriptIx* script = CSimpleFrame::GetScriptByName(name, data);
 
@@ -314,7 +325,8 @@ FrameScript_Object::ScriptIx* CSimpleMovieFrame::GetScriptByName(const char* nam
     return NULL;
 }
 
-// OFFSET: %0x00533DA0
+// PROVEN: 93efb220 IDENTICAL/NONE
+// OFFSET: 0x00523CD0
 void CSimpleMovieFrame::GetScriptTime(lua_State* L, double* time, uint32_t* count, int32_t recurse) {
     FrameScript_Object::GetScriptTime(L, this->m_onMovieFinished, time, count);
     FrameScript_Object::GetScriptTime(L, this->m_onMovieShowSubtitle, time, count);
@@ -322,7 +334,7 @@ void CSimpleMovieFrame::GetScriptTime(lua_State* L, double* time, uint32_t* coun
     CSimpleFrame::GetScriptTime(L, time, count, recurse);
 }
 
-// OFFSET: %0x00533E10
+// OFFSET: 0x00523D40/0x1401722B0
 void CSimpleMovieFrame::CloseVideo() {
     if (this->m_decoder) {
         g_unInitializeDivxDecoder(this->m_decoder);
@@ -343,8 +355,8 @@ void CSimpleMovieFrame::CloseVideo() {
     }
 }
 
-// OFFSET: %0x00533E90
-int32_t CSimpleMovieFrame::OpenAudio(uint32_t position) {
+// OFFSET: 0x005243E0/0x140172A60
+int32_t CSimpleMovieFrame::OpenAudio() {
     CSimpleMovieFrame::s_currentMovieFrame = this;
 
     s_sfxWasMuted = SE3::SoundBusIsMuted(SE3BUS_SFX);
@@ -356,15 +368,41 @@ int32_t CSimpleMovieFrame::OpenAudio(uint32_t position) {
     SE3::SoundBusMute(SE3BUS_AMBIENCE, 1);
     SE3::SoundBusMute(SE3BUS_VOICECHAT, 1);
 
-    SE3MemorySoundProperties properties;
-    properties.ResetToDefaults();
-    properties.m_bus = SE3BUS_MOVIE;
-    properties.m_fpPlayFinishedCallback = MovieSoundFinished;
-    properties.m_playFinishedParam = this;
-    properties.m_data = reinterpret_cast<const char*>(this->m_streamer.GetAudioBuffer());
-    properties.m_length = this->m_streamer.GetAudioBufferSize();
+    if (this->m_streamer.m_interleavedAudio) {
+        SE3MemorySoundProperties properties;
+        properties.ResetToDefaults();
+        properties.m_bus = SE3BUS_MOVIE;
+        properties.m_fpPlayFinishedCallback = MovieSoundFinished;
+        properties.m_playFinishedParam = this;
+        properties.m_data = reinterpret_cast<const char*>(this->m_streamer.GetAudioBuffer());
+        properties.m_length = this->m_streamer.GetAudioBufferSize();
 
+        float volume = this->m_volume * 0.0039215689f;
+
+        if (volume < 0.0f) {
+            volume = 0.0f;
+        } else if (volume >= 1.0f) {
+            volume = 1.0f;
+        }
+
+        properties.m_volume = volume;
+        properties.m_position = 0;
+        properties.m_handle = &this->m_sound;
+        SE3::PlaySoundFromMemory(&properties, 0);
+        return 1;
+    }
+
+    char path[260];
+    SStrCopy(path, this->m_movieName, sizeof(path));
+    SStrPack(path, ".mp3", sizeof(path));
+
+    SE3SoundKitProperties properties;
     float volume = this->m_volume * 0.0039215689f;
+    properties.m_reverb = 0;
+    properties.m_bit0 = 1;
+    properties.m_bit10 = 1;
+    properties.m_sFilename = path;
+    properties.m_bus = SE3BUS_MOVIE;
 
     if (volume < 0.0f) {
         volume = 0.0f;
@@ -372,28 +410,40 @@ int32_t CSimpleMovieFrame::OpenAudio(uint32_t position) {
         volume = 1.0f;
     }
 
-    properties.m_volume = volume;
-    properties.m_position = position;
-    properties.m_handle = &this->m_sound;
-    SE3::PlaySoundFromMemory(&properties, 0);
+    properties.unk_0004 = volume;
+    SE3::PlaySoundKit(-128, NULL, &properties, &this->m_sound, __FILE__, __LINE__, "CSimpleMovieFrame::OpenAudio", 1, this->m_key);
+    SE3::SetPlayFinishedCallback(this->m_sound, MovieSoundKitFinished, this);
     return 1;
 }
 
-// OFFSET: %0x00533F90
+// OFFSET: 0x00523DB0
 void CSimpleMovieFrame::AudioDeviceChanged_ShutDown() {
     if (CSimpleMovieFrame::s_currentMovieFrame) {
         CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart = 1;
     }
 }
 
-// OFFSET: %0x00533FB0
+// OFFSET: 0x00523DD0
 void CSimpleMovieFrame::AudioDeviceChanged_Restart() {
     if (CSimpleMovieFrame::s_currentMovieFrame && CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart) {
         CSimpleMovieFrame::s_currentMovieFrame->m_audioRestart = 0;
     }
 }
 
-// OFFSET: %0x00533FD0
+// OFFSET: 0x00523DF0
+void CSimpleMovieFrame::CloseAudio() {
+    CSimpleMovieFrame::s_currentMovieFrame = NULL;
+
+    if (this->m_streamer.m_interleavedAudio) {
+        SE3::SetMemorySoundFinishedCallback(this->m_sound, NULL);
+    } else {
+        SE3::SetPlayFinishedCallback(this->m_sound, NULL, NULL);
+    }
+
+    SE3::StopMemorySound(this->m_sound);
+}
+
+// OFFSET: 0x00523E50
 bool CSimpleMovieFrame::DecodeFrame(bool render) {
     bool skipped;
 
@@ -423,19 +473,22 @@ bool CSimpleMovieFrame::DecodeFrame(bool render) {
     return true;
 }
 
-// OFFSET: %0x00534110
+// PROVEN: 555b6dd5 IDENTICAL/NONE
+// OFFSET: 0x00523F90
 bool CSimpleMovieFrame::SubtitlesVisible() {
     return this->m_subtitlesEnabled || !SE3::IsPlaying(this->m_sound);
 }
 
-// OFFSET: %0x005341F0
+// PROVEN: 58471d3c IDENTICAL/NONE
+// OFFSET: 0x00524070/0x140172610
 void CSimpleMovieFrame::RunOnMovieFinishedScript() {
     if (this->HasScript(this->m_onMovieFinished)) {
         this->RunScript(this->m_onMovieFinished, 0, NULL);
     }
 }
 
-// OFFSET: %0x00534220
+// PROVEN: 711ac025 IDENTICAL/NONE
+// OFFSET: 0x005240A0
 void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     if (this->HasScript(this->m_onMovieShowSubtitle)) {
         lua_State* L = FrameScript_GetContext();
@@ -444,14 +497,15 @@ void CSimpleMovieFrame::RunOnMovieShowSubtitleScript(const char* text) {
     }
 }
 
-// OFFSET: %0x00534270
+// PROVEN: 82ad950b IDENTICAL/NONE
+// OFFSET: 0x005240F0
 void CSimpleMovieFrame::RunOnMovieHideSubtitleScript() {
     if (this->HasScript(this->m_onMovieHideSubtitle)) {
         this->RunScript(this->m_onMovieHideSubtitle, 0, NULL);
     }
 }
 
-// OFFSET: %0x005342A0
+// OFFSET: 0x00524120/0x140172700
 int32_t CSimpleMovieFrame::OpenVideo() {
     int32_t result = 0;
 
@@ -522,7 +576,7 @@ int32_t CSimpleMovieFrame::OpenVideo() {
     return result;
 }
 
-// OFFSET: %0x00534560
+// OFFSET: 0x00524620
 CSimpleMovieFrame::CSimpleMovieFrame(CSimpleFrame* parent) : CSimpleFrame(parent) {
     this->m_sound = 0;
     this->m_isPlaying = 0;
@@ -564,7 +618,7 @@ bool CSimpleMovieFrame::IsA(const char* typeName) {
     return !SStrCmpI(typeName, CSimpleMovieFrame::s_objectTypeName, STORM_MAX_STR) || CSimpleFrame::IsA(typeName);
 }
 
-// OFFSET: %0x00534700
+// OFFSET: 0x005247C0/0x140172FD0
 int32_t CSimpleMovieFrame::OpenCaptions() {
     char path[260];
     SStrCopy(path, this->m_movieName, sizeof(path));
@@ -641,7 +695,8 @@ int32_t CSimpleMovieFrame::OpenCaptions() {
     return 1;
 }
 
-// OFFSET: %0x00534A50
+// PROVEN: ac91373a IDENTICAL/NONE
+// OFFSET: 0x00524B10/0x140173370
 void CSimpleMovieFrame::CloseCaptions() {
     if (this->m_currentCaption >= 0) {
         this->RunOnMovieHideSubtitleScript();
@@ -655,7 +710,7 @@ void CSimpleMovieFrame::CloseCaptions() {
     this->m_captions.Clear();
 }
 
-// OFFSET: %0x00534B10
+// OFFSET: 0x00524BD0/0x140173460
 void CSimpleMovieFrame::Cleanup() {
     SE3::SoundBusMute(SE3BUS_SFX, s_sfxWasMuted);
     SE3::SoundBusMute(SE3BUS_MUSIC, s_musicWasMuted);
@@ -667,9 +722,7 @@ void CSimpleMovieFrame::Cleanup() {
     }
 
     this->CloseVideo();
-    CSimpleMovieFrame::s_currentMovieFrame = NULL;
-    SE3::SetMemorySoundFinishedCallback(this->m_sound, NULL);
-    SE3::StopMemorySound(this->m_sound);
+    this->CloseAudio();
     this->CloseCaptions();
     UnloadDivxDecoder();
     this->m_finished = 0;
@@ -677,7 +730,8 @@ void CSimpleMovieFrame::Cleanup() {
     this->m_streamer.Cleanup();
 }
 
-// OFFSET: %0x00534BC0
+// PROVEN: cc54c1ba IDENTICAL/NONE
+// OFFSET: 0x00524C60/0x140173520
 void CSimpleMovieFrame::StopMovie() {
     if (this->m_isPlaying) {
         this->Cleanup();
@@ -685,7 +739,7 @@ void CSimpleMovieFrame::StopMovie() {
     }
 }
 
-// OFFSET: %0x00534C00
+// OFFSET: 0x00524CA0
 bool CSimpleMovieFrame::UpdateTiming() {
     int32_t playing = SE3::IsPlaying(this->m_sound);
 
@@ -696,11 +750,11 @@ bool CSimpleMovieFrame::UpdateTiming() {
         this->m_elapsedMs = OsGetAsyncTimeMs() - this->m_startTime;
     }
 
-    int32_t frame = static_cast<int32_t>(static_cast<float>(this->m_elapsedMs) * this->m_info.m_fps * 0.001f + 0.5f);
+    int32_t frame = static_cast<int32_t>(static_cast<double>(this->m_elapsedMs) * this->m_info.m_fps * 0.001 + 0.5);
 
     if (playing) {
         uint32_t position = SE3::GetPositionInMS(this->m_sound);
-        int32_t audioFrame = static_cast<int32_t>(static_cast<float>(position) * this->m_info.m_fps * 0.001f + 0.5f);
+        int32_t audioFrame = static_cast<int32_t>(static_cast<double>(position) * this->m_info.m_fps * 0.001 + 0.5);
         int32_t drift = audioFrame - this->m_frameOffset - frame;
         int32_t absDrift = abs(drift);
 
@@ -769,7 +823,7 @@ bool CSimpleMovieFrame::UpdateTiming() {
     return true;
 }
 
-// OFFSET: %0x00534E80
+// OFFSET: 0x00524F20
 void CSimpleMovieFrame::Render() {
     float aspect = CoordinateGetAspectCompensation();
 
@@ -830,7 +884,7 @@ CSimpleMovieFrame::~CSimpleMovieFrame() {
     this->Cleanup();
 }
 
-// OFFSET: %0x00535780
+// OFFSET: 0x00525840/0x140174470
 void CSimpleMovieFrame::StartMovieDelayed(bool success) {
     MovieRec* movie = g_movieDB.GetRecord(this->m_movieID);
     this->m_waitingForKey = 0;
@@ -858,7 +912,7 @@ void CSimpleMovieFrame::StartMovieDelayed(bool success) {
     this->m_streamer.GetVideoInfo(this->m_info);
 
     if (this->OpenVideo()) {
-        this->OpenAudio(0);
+        this->OpenAudio();
         this->OpenCaptions();
         this->m_isPlaying = 1;
         return;
@@ -877,7 +931,7 @@ void CSimpleMovieFrame::KeyChainCallback(int32_t id, const WOWGUID& guid, void* 
     }
 }
 
-// OFFSET: %0x005358E0
+// OFFSET: 0x005259A0/0x140174700
 int32_t CSimpleMovieFrame::StartMovie(int32_t movieID) {
     if (!LoadDivxDecoder()) {
         return 1;
@@ -895,6 +949,7 @@ int32_t CSimpleMovieFrame::StartMovie(int32_t movieID) {
         return 2;
     }
 
+    MovieStreaming::CancelPreloadingMovie(this->m_movieID);
     this->m_volume = movie->m_volume;
     SStrCopy(this->m_moviePath, file->m_filepath, sizeof(this->m_moviePath));
     SStrPack(this->m_moviePath, file->m_filename, sizeof(this->m_moviePath));
@@ -933,13 +988,13 @@ int32_t CSimpleMovieFrame::StartMovie(int32_t movieID) {
         return 4;
     }
 
-    this->OpenAudio(0);
+    this->OpenAudio();
     this->OpenCaptions();
     this->m_isPlaying = 1;
     return 0;
 }
 
-// OFFSET: %0x00535BD0
+// OFFSET: 0x00525CA0
 void CSimpleMovieFrame::RenderMovie(void* param) {
     CSimpleMovieFrame* movieFrame = static_cast<CSimpleMovieFrame*>(param);
 

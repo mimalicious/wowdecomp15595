@@ -2348,7 +2348,7 @@ void SE3SoundEmitter::UpdatePillPosition(C3Vector listener) {
     SE3::EmitterManagerSendMessage_Set3DPosition(this->m_hSoundEmitter, this->m_position);
 }
 
-// OFFSET: 0x0070BE10
+// OFFSET: 0x0070BE10/0x1403DA7D0
 void SE3::EmitterManagerDestroyAllEmitters() {
     for (SE3SoundChunk* chunk = s_soundChunkTable.Head(); chunk; chunk = s_soundChunkTable.Next(chunk)) {
         SE3SoundEmitter* emitter = chunk->m_emitters.Head();
