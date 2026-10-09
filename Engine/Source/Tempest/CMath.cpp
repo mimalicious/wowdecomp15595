@@ -327,6 +327,11 @@ int32_t IsNaN(double value) {
     return _isnan(value);
 }
 
+// OFFSET: 0x00585370
+int32_t IsFinite(double value) {
+    return _finite(value);
+}
+
 // PROVEN: 495853f5 IDENTICAL/DIFFERENT
 // OFFSET: 0x0041EDF0/0x1404356C0
 int32_t fequalz(float a, float b, float z) {

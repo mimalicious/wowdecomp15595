@@ -8,6 +8,10 @@
 class NetClient;
 class WowConnection;
 
+template <bool wide>
+struct JamBitCount {
+};
+
 class JamBitReader {
     public:
     /* 0000 */ CDataStore* m_msg;
@@ -15,13 +19,13 @@ class JamBitReader {
     /* 0005 */ uint8_t m_bits;
 
     JamBitReader(CDataStore* msg);
-    bool ReadBit();
+    uint32_t ReadBit();
     template <uint32_t count>
     uint32_t ReadBits();
-};
-
-template <bool wide>
-struct JamBitCount {
+    template <uint32_t count>
+    uint32_t ReadBits(JamBitCount<false>);
+    template <uint32_t count>
+    uint32_t ReadBits(JamBitCount<true>);
 };
 
 class JamBitWriter {

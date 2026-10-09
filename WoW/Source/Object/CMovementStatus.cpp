@@ -1,6 +1,7 @@
 #include "WoW/Source/Object/CMovementStatus.h"
 #include <cfloat>
 #include <cmath>
+#include "Engine/Source/Tempest/CMath.h"
 #include "WoW/Source/Object/Types.h"
 
 // OFFSET: 0x00696B10
@@ -39,8 +40,8 @@ bool CMovementStatus::TransportInfo::IsValid() const {
         && this->m_facing < 6.2831864f
         && _finite(this->m_facing)
         && _finite(this->m_position.z)
-        && _finite(this->m_position.y)
-        && _finite(this->m_position.x);
+        && IsFinite(this->m_position.y)
+        && IsFinite(this->m_position.x);
 }
 
 // OFFSET: 0x00697340
@@ -57,7 +58,7 @@ bool CMovementStatus::IsValid() const {
         return false;
     }
 
-    if (this->m_facing < 0.0f || this->m_facing >= 6.2831864f || !_finite(this->m_facing) || !_finite(this->m_position.z) || !_finite(this->m_position.y) || !_finite(this->m_position.x)) {
+    if (this->m_facing < 0.0f || this->m_facing >= 6.2831864f || !IsFinite(this->m_facing) || !IsFinite(this->m_position.z) || !IsFinite(this->m_position.y) || !IsFinite(this->m_position.x)) {
         return false;
     }
 

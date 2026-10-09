@@ -61,6 +61,7 @@ int32_t RoundToInt64(float value);
 void ClampInPlace(float& value, float min, float max);
 bool fnotequal(float a, float b);
 int32_t IsNaN(double value);
+int32_t IsFinite(double value);
 
 float OrganicSmooth(float from, float to, float t);
 
