@@ -9257,6 +9257,7 @@ AuraData* CGUnit_C::GetAura(uint32_t index) {
     return &this->m_auras[index];
 }
 
+// PROVEN: 7a42221d IDENTICAL/NONE
 // OFFSET: 0x0046A670
 uint16_t CGUnit_C::GetAuraFlags(uint32_t index) {
     return this->m_auras[index].m_flags;
@@ -12011,7 +12012,7 @@ float CGUnit_C::GetDisplayFacing() const {
     return this->m_movementData.GetFacing(this->m_renderFacing);
 }
 
-// OFFSET: #0x00715810
+// INLINED
 void CGUnit_C::ResetSmoothFacing() {
     this->unk_08D4 = 0.0f;
     this->unk_09FC &= ~0x7u;
