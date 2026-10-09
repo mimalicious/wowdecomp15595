@@ -24989,3 +24989,15 @@ void CGUnit_C::PlayRangedItemPull() {
     this->unk_0B40->GetSequenceInfo(160, 0, sequence);
     this->unk_0B40->SetBoneSequence(0xFFFFFFFF, 160, 0, 0, static_cast<float>(static_cast<int32_t>(sequence.m_duration)) / remaining, 1, 1, 0, 0, 0);
 }
+
+// OFFSET: 0x005B01B0
+void CGUnit_C::UpdateEffectVirtualItemFlag() {
+    this->unk_09FC &= ~0x400;
+
+    for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
+        if ((effect->m_flags & 0x80000) && effect->m_data.m_virtualItem) {
+            this->unk_09FC |= 0x400;
+            return;
+        }
+    }
+}

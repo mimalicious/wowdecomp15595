@@ -382,7 +382,7 @@ void CWorldMap::UpdateEntityLinks(const CAaBox& box) {
 }
 
 // OFFSET: 0x0072D240/0x140406590
-uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9) {
+uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a9) {
     CMapEntity* entity = CMap::AllocEntity();
     entity->m_worldMap = this;
 
@@ -468,7 +468,7 @@ uintptr_t CWorldMap::AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_L
 }
 
 // OFFSET: 0x0072D4B0/0x140406860
-uintptr_t CWorldMap::AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* a8, int32_t a9) {
+uintptr_t CWorldMap::AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* a8, int32_t a9) {
     CM2Model* model = CWorldScene::LoadModel(name, matrix, NULL, 0, NULL, NULL, 0, 0, 0, 0);
     CMapEntity* entity = reinterpret_cast<CMapEntity*>(this->AddEntity(model, matrix, callback, param, param64, param32, flags, a8, a9));
     model->Release();

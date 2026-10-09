@@ -513,6 +513,48 @@ void CCharacterComponent::RemoveLinkpt(CM2Model* model, GEOCOMPONENTLINKS link) 
     }
 }
 
+// OFFSET: 0x006F8F80
+INVENTORY_SLOTS CCharacterComponent::GetInvSlotForInvType(INVENTORY_TYPES invType) {
+    switch (invType) {
+        case INVTYPE_HEAD:
+            return INVSLOT_HEAD;
+        case INVTYPE_SHOULDERS:
+            return INVSLOT_SHOULDER;
+        case INVTYPE_BODY:
+            return INVSLOT_BODY;
+        case INVTYPE_CHEST:
+        case INVTYPE_ROBE:
+            return INVSLOT_CHEST;
+        case INVTYPE_WAIST:
+            return INVSLOT_WAIST;
+        case INVTYPE_LEGS:
+            return INVSLOT_LEGS;
+        case INVTYPE_FEET:
+            return INVSLOT_FEET;
+        case INVTYPE_WRISTS:
+            return INVSLOT_WRIST;
+        case INVTYPE_HANDS:
+            return INVSLOT_HAND;
+        case INVTYPE_WEAPON:
+        case INVTYPE_2HWEAPON:
+        case INVTYPE_WEAPONMAINHAND:
+            return INVSLOT_MAINHAND;
+        case INVTYPE_SHIELD:
+        case INVTYPE_WEAPONOFFHAND:
+            return INVSLOT_OFFHAND;
+        case INVTYPE_RANGED:
+        case INVTYPE_HOLDABLE:
+        case INVTYPE_RANGEDRIGHT:
+            return INVSLOT_RANGED;
+        case INVTYPE_CLOAK:
+            return INVSLOT_BACK;
+        case INVTYPE_TABARD:
+            return INVSLOT_TABARD;
+        default:
+            return static_cast<INVENTORY_SLOTS>(86);
+    }
+}
+
 // OFFSET: #0x004E7A30
 ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
     switch (invType) {

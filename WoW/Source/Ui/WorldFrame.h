@@ -117,7 +117,7 @@ class CGWorldFrame : public CSimpleFrame {
     static void RenderWorld(void* param);
     static int32_t ObjectEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
     static int32_t MissileEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
-    static int32_t SpellEffectEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
+    static int32_t SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4);
 
     /* 029C */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_modelList;
     /* 02A8 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_hitModelList;

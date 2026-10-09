@@ -17,8 +17,8 @@ class SpellVisualEffectNameRec {
     /* 0010 */ float m_scale;
     /* 0014 */ float m_minAllowedScale;
     /* 0018 */ float m_maxAllowedScale;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ float unk_0020;
+    /* 001C */ int32_t m_type;
+    /* 0020 */ float m_alpha;
 };
 
 #endif

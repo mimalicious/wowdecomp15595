@@ -394,7 +394,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     /* 1074 */ uint8_t m_precastCastCount;
     /* 1075 */ uint8_t unk_1075 [3];
     /* 1078 */ CAnimKitManager m_animKitManager;
-    /* 1168 */ uint32_t unk_1168 [15];
+    /* 1168 */ CAnimKitManager* m_mountAnimKitManager;
+    /* 116C */ uint32_t unk_116C [14];
     /* 11A4 */ uint16_t m_animKitIds [3];
     /* 11AC */ uint32_t m_currentClientRace;
     /* 11B0 */ uint32_t m_currentClientRaceFlags;
@@ -611,6 +612,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsControlledByViewer() const;
     bool CanAttack(const CGUnit_C* unit) const;
     int32_t CanEquipItemsInThisForm() const;
+    void UpdateEffectVirtualItemFlag();
     uint32_t GetVoiceSex() const;
     bool IsShapeShifted() const;
     void PreemptivelyCancelShapeshift();

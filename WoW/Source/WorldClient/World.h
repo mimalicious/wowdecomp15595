@@ -24,7 +24,7 @@ class CTexture;
 class WMOAreaTableRec;
 class WeatherRec;
 
-typedef int32_t (*WORLD_LOAD_CALLBACK)(void* param, uintptr_t object, uint64_t param64, uint32_t param32);
+typedef int32_t (*WORLD_LOAD_CALLBACK)(void* param, uintptr_t object, uint64_t param64, uintptr_t param32);
 typedef void (*WORLD_PROGRESS_CALLBACK)(float progress, void* param);
 typedef void (*WORLD_MODEL_EVENT_CALLBACK)(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time, uint64_t param);
 typedef void (*WORLD_SEQUENCE_CALLBACK)(CM2Model* model, uint32_t a2, uint32_t a3, int32_t a4, uint32_t a5, uint64_t param, int32_t a7);
@@ -256,9 +256,9 @@ namespace World {
     void GetTris(const CAaBox& box, TriData& tris, uint32_t flags);
     int32_t GetFacets(const CFrustum& frustum, FacetData& facets, uint32_t flags);
     int32_t IsFacetQueryValid();
-    uintptr_t ObjectCreate(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9);
+    uintptr_t ObjectCreate(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a9);
     uintptr_t ObjectCreate(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t snap, uint64_t param64, uint32_t param32, int32_t a8, uint16_t* a9, float* a10, int32_t a11);
-    uintptr_t ObjectCreate(CM2Model* model, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a8);
+    uintptr_t ObjectCreate(CM2Model* model, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a8);
     void SetWeather(int32_t type, float intensity, const WeatherRec* rec, bool a4, float a5);
     void NewFootprint(uint32_t a1, const C2Vector& a2, const C3Vector& a3, float a4, int32_t a5, uint32_t a6, int32_t a7);
     int32_t IsInfiniteOcean();

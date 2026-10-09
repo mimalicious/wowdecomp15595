@@ -1915,3 +1915,25 @@ int32_t CGObject_C::SetCircleRenderStates() {
     GxRsSet(GxRs_AlphaOp1, 0);
     return 1;
 }
+
+// OFFSET: 0x0044E2F0
+WOWGUID CGObject_C::GetGuildGUID() const {
+    if (this->m_obj->m_dataType == 1) {
+        return this->m_obj->m_data;
+    }
+
+    return WOWGUID();
+}
+
+// OFFSET: 0x005DD2A0/0x140259790
+void CGObject_C::GuildTextureCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!success) {
+        return;
+    }
+
+    CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
+
+    if (object) {
+        object->LoadGuildTextures();
+    }
+}

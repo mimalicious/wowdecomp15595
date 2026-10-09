@@ -996,7 +996,6 @@ static void InitializeClient() {
     FrameXML_RegisterDefault();
     GlueScriptEventsInitialize();
     ScriptEventsInitialize();
-    SpecialUnitEffectsInitialize();
     CCharacterComponent::Initialize();
     ClientServices::Initialize();
     ClientServices::SetMessageHandler(SMSG_TUTORIAL_FLAGS, CGTutorial::OnTutorialFlags, NULL);

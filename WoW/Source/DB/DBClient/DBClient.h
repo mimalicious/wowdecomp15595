@@ -2,6 +2,7 @@
 #define WOW_SOURCE_DB_DBCLIENT_DBCLIENT_H
 
 #include "WoW/Source/DB/WowClientDB.h"
+#include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/DB/Rec/AchievementRec.h"
 #include "WoW/Source/DB/Rec/Achievement_CategoryRec.h"
 #include "WoW/Source/DB/Rec/Achievement_CriteriaRec.h"
@@ -674,6 +675,10 @@ void InitLights(bool transform);
 void InitResistances();
 void InitTerrainTypeFlags();
 void InitSpellEffects();
+const SpellEffectRec* SpellGetEffect(uint32_t spellID, uint32_t index);
+const TSGrowableArray<const SpellEffectRec*>* SpellGetEffects(uint32_t spellID, uint32_t& count);
+uint32_t SpellGetEffectCount(uint32_t spellID);
+const SpellActivationOverlayRec* GetSpellActivationOverlayRec(int32_t spellID);
 void InitSpellActivationOverlays();
 void InitWeaponSubclasses();
 void SDBItemSubclassInitialize();

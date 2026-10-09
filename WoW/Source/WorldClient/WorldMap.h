@@ -192,8 +192,8 @@ class CWorldMap {
     ~CWorldMap();
     void AddChildMaps(int32_t mapId);
     int32_t AddMap(const char* directory, int32_t mapId, int32_t preload);
-    uintptr_t AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9);
-    uintptr_t AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* a8, int32_t a9);
+    uintptr_t AddEntity(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a9);
+    uintptr_t AddEntity(const char* name, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* a8, int32_t a9);
     CMapObjDef* CreateMapObjDef(const char* name, C3Vector& pos, float facing, int32_t a4, int32_t a5, uint16_t* a6, float* a7, int32_t a8);
     int32_t LinkObjectToMapExterior(CMapBaseObj* object, const CAaBox& box, int32_t linkChunks, int32_t linkMapObjs);
     bool LinkIntersectMapObjDef(CMapObjDef* mapObjDef, const C3Vector& start, const C3Vector& end, const C3Vector& pos, MapObjIntersectData* front, MapObjIntersectData* back);

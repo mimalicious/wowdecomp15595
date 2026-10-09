@@ -104,6 +104,7 @@ class CCharacterComponent {
     static void FreeComponent(CCharacterComponent* component);
     static INVENTORY_SLOTS GetInvSlotForItemSlot(ITEM_SLOT itemSlot);
     static ITEM_SLOT GetItemSlotForInvSlot(INVENTORY_SLOTS invSlot);
+    static INVENTORY_SLOTS GetInvSlotForInvType(INVENTORY_TYPES invType);
     static ITEM_SLOT GetItemSlotForInvType(INVENTORY_TYPES invType);
     static int32_t GetNthFacialFeatureIndex(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairColorID, int32_t facialHairID, int32_t index, COMPONENT_SELECTION selection);
     static int32_t GetNumFacesForSkin(int32_t raceID, int32_t sexID, int32_t classID, int32_t skinID, COMPONENT_CONTEXT context);

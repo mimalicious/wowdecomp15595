@@ -646,7 +646,7 @@ void CWorldScene::RenderLowDetailMapObjDefs(CWorldView* view, const C44Matrix& w
 }
 
 // OFFSET: 0x00727BE0
-int32_t CWorldScene::FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uint32_t param32) {
+int32_t CWorldScene::FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uintptr_t param32) {
     SObjectFadeout* fadeout = static_cast<SObjectFadeout*>(param);
     CM2Model* model = fadeout->m_entity->m_model;
 

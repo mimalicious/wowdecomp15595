@@ -134,6 +134,10 @@ extern CVar* s_spellEffectLevelVar;
 
 void SpellVisualsBlizzardStop(BlizzardObject** object);
 BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radius, int32_t spellId, int32_t density, float rate);
+BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radius, float angle, int32_t spellId, int32_t areaModelID);
+void SpellVisualsBlizzardSetDeletedCallback(BlizzardObject* object, void (*callback)(BlizzardObject* object, void* param), void* param);
+void SpellVisualsBlizzardStop(BlizzardObject* object);
+void SpellVisualClearLightning(LightningObject* lightning);
 void SpellVisualsInitialize();
 void SpellVisualsInitializeModelAttachLookup();
 void SpellVisualsRender();

@@ -60,11 +60,14 @@ class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID
     static CVar* s_cvObjectSelectionCircle;
 
     static void Initialize();
+    static void GuildTextureCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
     static void ReplaceGuildTextures(CM2Model* model, WOWGUID guildGUID, int32_t factionIndex);
     static void ModelLoadedCallback(CM2Model* model, void* arg);
     static void Shutdown();
     static int32_t UpdateAllObjectEffectManagers();
     static CGObject_C* GetFocusObject();
+
+    WOWGUID GetGuildGUID() const;
     static void PrepareToFadeInt(uintptr_t entity, float alpha, uint64_t transportGuid);
     static int32_t UpdateAllWorldObjects();
     static void LoopEffectHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);

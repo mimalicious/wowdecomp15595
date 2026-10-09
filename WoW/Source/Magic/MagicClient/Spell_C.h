@@ -344,6 +344,8 @@ bool SpellAppliesNonStanceShapeshift(const SpellRec* spell);
 void Spell_C_SetAutoRepeatingSpell(int32_t spellId);
 SpellVisualKitRec* Spell_C_GetAppropriateImpactKit(const SpellVisualRec* visual, int32_t caster);
 float Spell_C_GetSpellRadius();
+float Spell_C_GetEffectRadius(const SpellRec* spell, uint32_t level);
+float Spell_C_GetConeAngle(const SpellRec* spell);
 void Spell_C_ModifyCooldown(int32_t spellId, uint32_t time, int32_t index, int32_t remove);
 void Spell_C_DelayCooldown(int32_t index, int32_t spellId, int32_t delay);
 bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable);

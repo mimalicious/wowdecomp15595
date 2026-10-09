@@ -55,7 +55,8 @@ int32_t WowClientDB<T>::GetRecordByIndex(int32_t index, void* rec) const {
     return 1;
 }
 
-// OFFSET: [%0x00564E40]
+// PROVEN: 423e017b IDENTICAL/NONE
+// OFFSET: [0x00A06F50/0x14090B320, 0x00A06F50/0x14090B320<CreatureModelDataRec>]
 template <class T>
 T* WowClientDB<T>::GetRecord(int32_t id) const {
     if (id < this->m_minID || id > this->m_maxID) {
@@ -104,7 +105,8 @@ int32_t WowClientDB_RLE<T>::GetRecordByIndex(int32_t index, T* rec) const {
     return 1;
 }
 
-// INLINED
+// PROVEN: 0ea2e991 IDENTICAL/NONE
+// OFFSET: [0x00554B30<ItemDisplayInfoRec>]
 template <class T>
 int32_t WowClientDB_RLE<T>::GetRecord(int32_t id, T* rec) const {
     uint8_t buffer[sizeof(T)];

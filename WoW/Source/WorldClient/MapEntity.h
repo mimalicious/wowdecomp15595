@@ -20,7 +20,7 @@ class CMapEntity : public CMapStaticEntity {
     /* 00A8 */ uint32_t m_cullStamp;
     /* 00AC */ uint32_t unk_00AC;
     /* 00B0 */ uint64_t m_param64;
-    /* 00B8 */ uint32_t m_param32;
+    /* 00B8 */ uintptr_t m_param32;
     /* 00BC */ int32_t unk_00BC;
     /* 00C0 */ uint32_t unk_00C0;
     /* 00C4 */ uint32_t unk_00C4;

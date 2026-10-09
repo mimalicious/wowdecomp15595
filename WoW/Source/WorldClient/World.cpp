@@ -1300,13 +1300,13 @@ int32_t World::ObjectIsWMO(uintptr_t object) {
 }
 
 // OFFSET: 0x00723000/0x1403F9800
-uintptr_t World::ObjectCreate(CM2Model* model, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a8) {
+uintptr_t World::ObjectCreate(CM2Model* model, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a8) {
     C44Matrix matrix;
     return ActiveWorldMap()->AddEntity(model, matrix, callback, param, param64, param32, flags, name, a8);
 }
 
 // OFFSET: 0x007230A0/0x1403F98E0
-uintptr_t World::ObjectCreate(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uint32_t param32, uint32_t flags, const char* name, int32_t a9) {
+uintptr_t World::ObjectCreate(CM2Model* model, const C44Matrix& matrix, WORLD_LOAD_CALLBACK callback, void* param, uint64_t param64, uintptr_t param32, uint32_t flags, const char* name, int32_t a9) {
     return ActiveWorldMap()->AddEntity(model, matrix, callback, param, param64, param32, flags, name, a9);
 }
 

@@ -2420,12 +2420,12 @@ int32_t CGWorldFrame::MissileEnumProc(void* param, uint32_t flags, uint64_t guid
     return !missile || missile->m_mapEntity != NULL;
 }
 
-// OFFSET: #0x004F5930
-int32_t CGWorldFrame::SpellEffectEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4) {
+// OFFSET: 0x008DEB20/0x14060B8A0
+int32_t CGWorldFrame::SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4) {
     CEffect* effect = reinterpret_cast<CEffect*>(a4);
 
     if (effect) {
-        effect->UpdateWorldObject(CGWorldFrame::s_currentWorldFrame->m_elapsedSec, flags);
+        effect->UpdateWorldObject(CGWorldFrame::s_currentWorldFrame->m_elapsedSec, static_cast<uint32_t>(flags));
     }
 
     return 1;

@@ -85,7 +85,7 @@ class CWorldScene {
     static void RemoveRenderCallback(uint32_t pass, WORLD_RENDER_CALLBACK callback, void* param);
     static void FreeSceneLights();
     static void RenderPortalList(const CPortalView* portalViews, uint32_t count, const C3Vector* verts, int32_t interior);
-    static int32_t FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uint32_t param32);
+    static int32_t FadeoutUpdateCallback(void* param, uintptr_t flags, uint64_t param64, uintptr_t param32);
 
     static void CallRenderCallbacks(uint32_t pass);
     static void ClearBarriers();

@@ -33,6 +33,16 @@ static TSFixedArray<const ResistancesRec*> s_resistances;
 // STATIC: #0x00C5D674
 static TSFixedArray<uint32_t> s_terrainTypeSoundIDs;
 
+struct SPELLACTIVATIONOVERLAY : public TSHashObject<SPELLACTIVATIONOVERLAY, HASHKEY_NONE> {
+    /* 0018 */ const SpellActivationOverlayRec* m_rec;
+};
+
+// STATIC: 0x00D97EBC
+static TSGrowableArray<TSGrowableArray<const SpellEffectRec*> > s_spellEffects;
+
+// STATIC: 0x00D97ECC
+static TSHashTable<SPELLACTIVATIONOVERLAY, HASHKEY_NONE> s_spellActivationOverlays;
+
 // STATIC: 0x00D97EB0
 static TSFixedArray<const ItemSubClassRec*> s_weaponSubclasses;
 
@@ -1555,10 +1565,113 @@ void ClientDBUnloadTables() {
     }
 }
 
+// OFFSET: 0x004953B0/0x1400BAE80
+const SpellEffectRec* SpellGetEffect(uint32_t spellID, uint32_t index) {
+    if (spellID >= s_spellEffects.Count()) {
+        return NULL;
+    }
+
+    TSGrowableArray<const SpellEffectRec*>& effects = s_spellEffects[spellID];
+    uint32_t count = effects.Count();
+
+    if (count >= 3) {
+        count = 3;
+    }
+
+    if (index >= count) {
+        return NULL;
+    }
+
+    return effects[index];
+}
+
+// OFFSET: 0x004953F0/0x1400BAEC0
+const TSGrowableArray<const SpellEffectRec*>* SpellGetEffects(uint32_t spellID, uint32_t& count) {
+    if (spellID >= s_spellEffects.Count()) {
+        count = 0;
+        return NULL;
+    }
+
+    count = s_spellEffects[spellID].Count();
+
+    if (!count) {
+        return NULL;
+    }
+
+    if (count >= 3) {
+        count = 3;
+    }
+
+    return &s_spellEffects[spellID];
+}
+
+// OFFSET: 0x00495440/0x1400BAF10
+uint32_t SpellGetEffectCount(uint32_t spellID) {
+    if (spellID < s_spellEffects.Count()) {
+        return s_spellEffects[spellID].Count();
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00495910/0x1400BB530
+const SpellActivationOverlayRec* GetSpellActivationOverlayRec(int32_t spellID) {
+    SPELLACTIVATIONOVERLAY* overlay = s_spellActivationOverlays.Ptr(spellID, HASHKEY_NONE());
+
+    if (!overlay) {
+        return NULL;
+    }
+
+    return overlay->m_rec;
+}
+
+// OFFSET: 0x00496010
+void InitSpellEffects() {
+    s_spellEffects.SetCount(g_spellDB.m_maxID + 1);
+
+    for (uint32_t i = 0; i < s_spellEffects.Count(); i++) {
+        s_spellEffects[i].m_count = 0;
+    }
+
+    int32_t lastSpellID = 0;
+
+    for (int32_t i = 0; i < g_spellEffectDB.m_numRecords; i++) {
+        const SpellEffectRec* rec = g_spellEffectDB.GetRecordByIndex(i);
+        int32_t spellID = rec->m_spellID;
+
+        if (!g_spellDB.GetRecord(spellID)) {
+            continue;
+        }
+
+        if (spellID != lastSpellID) {
+            TSGrowableArray<const SpellEffectRec*>& effects = s_spellEffects[spellID];
+            effects.SetCount(rec->m_effectIndex + 1);
+            lastSpellID = rec->m_spellID;
+
+            for (int32_t j = 0; j < rec->m_effectIndex; j++) {
+                s_spellEffects[spellID][j] = NULL;
+            }
+        }
+
+        s_spellEffects[spellID][rec->m_effectIndex] = rec;
+    }
+}
+
+// OFFSET: 0x00496660
+void InitSpellActivationOverlays() {
+    for (int32_t i = 0; i < g_spellActivationOverlayDB.m_numRecords; i++) {
+        const SpellActivationOverlayRec* rec = g_spellActivationOverlayDB.GetRecordByIndex(i);
+        SPELLACTIVATIONOVERLAY* overlay = s_spellActivationOverlays.New(rec->m_spellID, HASHKEY_NONE(), 0, 0);
+        overlay->m_rec = rec;
+    }
+}
+
 // OFFSET: 0x00495CE0
 void ClientDBShutdown() {
     s_resistances.Clear();
     s_terrainTypeSoundIDs.Clear();
+    s_spellEffects.Clear();
+    s_spellActivationOverlays.Clear();
     ClientDBUnloadTables();
     ClientDBReply::s_handler = NULL;
     ClientHotfixNotify::s_handler = NULL;
