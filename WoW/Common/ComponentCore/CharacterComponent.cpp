@@ -14,6 +14,7 @@
 #include "Engine/Source/Base/Handle.h"
 #include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/Base/Prop.h"
+#include "Engine/Source/Base/SIMD.h"
 #include "Engine/Source/Base/Status.h"
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
@@ -49,128 +50,149 @@
 #include "WoW/Source/DB/Rec/ParticleColorRec.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 
-// STATIC: #0x009F6A00
+// STATIC: 0x00BC28E0
 static int32_t s_itemPriority[NUM_ITEM_SLOTS][NUM_COMPONENT_SECTIONS] = {
     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
     { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-    { 0, 0, -1, 0, 0, -1, -1, -1, -1, -1 },
-    { 1, 1, -1, 1, 1, 1, 1, -1, -1, -1 },
-    { -1, -1, -1, -1, 5, 2, -1, -1, -1, -1 },
+    { 2, 2, -1, 2, 2, -1, -1, -1, -1, -1 },
+    { 3, 3, -1, 3, 3, 1, 1, -1, -1, -1 },
+    { -1, -1, -1, -1, 7, 2, -1, -1, -1, -1 },
     { -1, -1, -1, -1, -1, 0, 0, -1, -1, -1 },
     { -1, -1, -1, -1, -1, -1, 2, 0, -1, -1 },
-    { -1, 2, -1, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, 3, 0, -1, -1, -1, -1, -1, -1, -1 },
-    { -1, -1, -1, 4, 4, -1, -1, -1, -1, -1 },
+    { -1, 4, -1, -1, -1, -1, -1, -1, -1, -1 },
+    { -1, 5, 0, -1, -1, -1, -1, -1, -1, -1 },
+    { -1, -1, -1, 6, 6, -1, -1, -1, -1, -1 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 };
 
-// STATIC: #0x00AC4680
+// STATIC: 0x00BC32E4
+static COMPONENT_SECTIONS s_tabardSections[2] = { SECTION_TORSO_UPPER, SECTION_TORSO_LOWER };
+
+// STATIC: 0x00BC32EC
+static COMPONENT_SECTIONS s_shirtSections[4] = { SECTION_TORSO_UPPER, SECTION_TORSO_LOWER, SECTION_ARM_UPPER, SECTION_ARM_LOWER };
+
+// STATIC: 0x00CFFD44
 static const char* s_componentSections[8] = { "ArmUpperTexture", "ArmLowerTexture", "HandTexture", "TorsoUpperTexture", "TorsoLowerTexture", "LegUpperTexture", "LegLowerTexture", "FootTexture" };
 
-// STATIC: #0x00AC46A0
+// STATIC: 0x00CFFD64
 static const char* s_fileDecorations[3] = { "M", "F", "U" };
 
-// STATIC: #0x00AC46D0
+// STATIC: 0x00CFFDA0
 static CStatus s_status;
+
+// STATIC: 0x00CFFDB4
+static TSExplicitList<CCharacterComponent, offsetof(CCharacterComponent, m_link)> s_queue;
+
+// STATIC: 0x00CFFDC0
+static TSExplicitList<CCharacterComponent, offsetof(CCharacterComponent, m_componentLink)> s_componentList;
+
+// STATIC: 0x00CFFDCC
+static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestList;
+
+// STATIC: 0x00CFFDD8
+static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_finishedList;
+
+// STATIC: 0x00CFFDE4
+static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestFreeList;
+
+// STATIC: 0x00CFFDF0
+static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsFreeList;
+
+// STATIC: 0x00CFFDFC
+static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsCompressedFreeList;
 
 // STATIC: 0x00CFFE08
 static const char* s_proceduralEmblemFormat = "Textures\\GuildEmblems\\emblem_%02i";
 
-// STATIC: #0x00AC46E4
-TSExplicitList<CCharacterComponent, 0> CCharacterComponent::s_queue;
+// STATIC: 0x00E4D858
+static int32_t s_closestComponentSortVal;
 
-// STATIC: #0x00AC46F0
-static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestList;
+// STATIC: 0x00E4D85C
+static CCharacterComponent* s_closestComponent;
 
-// STATIC: #0x00AC46FC
-static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_finishedList;
-
-// STATIC: #0x00AC4708
-static TSExplicitList<CComponentRequest, offsetof(CComponentRequest, m_link)> s_requestFreeList;
-
-// STATIC: #0x00AC4714
-static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsFreeList;
-
-// STATIC: #0x00AC4720
-static TSExplicitList<CComponentMipBits, offsetof(CComponentMipBits, m_link)> s_mipBitsCompressedFreeList;
-
-// STATIC: #0x00B6B4B8
+// STATIC: 0x00E4D860
 void (CCharacterComponent::*CCharacterComponent::s_requestFunc[NUM_COMPONENT_SECTIONS])();
 
-// STATIC: #0x00B6B4E0
+// STATIC: 0x00E4D888
 static HPROPCONTEXT s_threadPropContext;
 
-// STATIC: #0x00B6B4E4
+// STATIC: 0x00E4D88C
 int32_t CCharacterComponent::s_bComponentCompression;
 
-// STATIC: #0x00B6B4E8
+// STATIC: 0x00E4D890
 int32_t CCharacterComponent::s_bComponentThread;
 
-// STATIC: #0x00B6B4EC
+// STATIC: 0x00E4D894
 static char* s_pathEnd2;
 
-// STATIC: #0x00B6B4F0
+// STATIC: 0x00E4D898
 static char* s_pathEnd;
 
-// STATIC: #0x00B6B4F4
-uint32_t CCharacterComponent::s_mipLevels;
+// STATIC: 0x00E4D89C
+static int32_t s_useCompression;
 
-// STATIC: #0x00B6B4F8
+// STATIC: 0x00E4D8A0
 static char s_path2[260];
 
-// STATIC: #0x00B6B5FC
-static uint32_t s_textureSize;
+// STATIC: 0x00E4D9A4
+uint32_t CCharacterComponent::s_mipLevels;
 
-// STATIC: #0x00B6B600
+// STATIC: 0x00E4D9A8
 static char s_path[260];
 
-// STATIC: #0x00B6B704
+// STATIC: 0x00E4DAAC
 EGxTexFormat CCharacterComponent::s_gxFormatHigh;
 
-// STATIC: #0x00B6B708
+// STATIC: 0x00E4DAB0
 static char s_buffer[260];
 
-// STATIC: #0x00B6B80C
+// STATIC: 0x00E4DBB4
 void (CCharacterComponent::*CCharacterComponent::m_itemFunc[NUM_COMPONENT_SECTIONS])(ITEM_SLOT, const ItemDisplayInfoRec*, bool);
 
-// STATIC: #0x00B6B834
+// STATIC: 0x00E4DBDC
 void (CCharacterComponent::*CCharacterComponent::m_prepFunc[NUM_COMPONENT_SECTIONS])();
 
-// STATIC: #0x00B6B85C
+// STATIC: 0x00E4DC04
 EGxTexFormat CCharacterComponent::s_gxFormat;
 
-// STATIC: #0x00B6B860
+// STATIC: 0x00E4DC08
 uint32_t* CCharacterComponent::s_characterFacialHairStylesList;
 
-// STATIC: #0x00B6B864
+// STATIC: 0x00E4DC0C
 st_race* CCharacterComponent::s_chrVarArray;
 
-// STATIC: #0x00B6B868
+// STATIC: 0x00E4DC10
 static MipBits* s_threadTextureBuffer;
 
-// STATIC: #0x00B6B86C
+// STATIC: 0x00E4DC14
 static MipBits* s_compressedTextureBuffer;
 
-// STATIC: #0x00B6B870
+// STATIC: 0x00E4DC18
 MipBits* CCharacterComponent::s_textureBuffer;
 
-// STATIC: #0x00B6B874
+// STATIC: 0x00E4DC1C
 uint32_t CCharacterComponent::s_chrVarArrayLength;
 
 // STATIC: 0x00E4DC20
 CCharacterComponent* CCharacterComponent::m_activePlayerComponent;
 
-// STATIC: #0x00B6B880
-static uint32_t* s_componentHeap;
+// STATIC: 0x00E4DC28
+static TSObjectAllocPool<CCharacterComponent>* s_componentPool;
 
-// STATIC: #0x00B6B884
+// STATIC: 0x00E4DC2C
+static CVar* s_textureLevelVar;
+
+// STATIC: 0x00E4DC30
 int32_t CCharacterComponent::s_bInRenderPrep;
 
-// STATIC: #0x00B6B888
+// STATIC: 0x00E4DC34
+static SThread s_thread;
+
+// STATIC: 0x00E4DC38
 static CompSectionInfo s_sectionInfo[NUM_COMPONENT_SECTIONS];
 
-// STATIC: #0x00B6B928
+// STATIC: 0x00E4DCD8
 CompSectionInfo CCharacterComponent::s_sectionInfoRaw[NUM_COMPONENT_SECTIONS] = {
     { { 0, 0 }, { 256, 128 } },
     { { 0, 128 }, { 256, 128 } },
@@ -184,30 +206,73 @@ CompSectionInfo CCharacterComponent::s_sectionInfoRaw[NUM_COMPONENT_SECTIONS] = 
     { { 0, 384 }, { 256, 128 } },
 };
 
-// STATIC: #0x00B6B9C8
-static SThread s_thread;
-
-// STATIC: #0x00B6B9CC
+// STATIC: 0x00E4DD78
 static SEvent s_threadBeginEvent(0, 0);
 
-// STATIC: #0x00B6B9D0
+// STATIC: 0x00E4DD7C
 static SCritSect s_requestListCritSect;
 
-// STATIC: #0x00B6B9F8
+// STATIC: 0x00E4DDA4
 static SCritSect s_finishedListCritSect;
 
-// STATIC: #0x00B6BA20
+// STATIC: 0x00E4DDCC
 static SCritSect s_mipBitsCritSect;
 
-// OFFSET: #0x00401FF0
-bool CCharacterComponent::Initialize() {
-    CCharacterComponent::g_componentTextureLevelVar = CVar::Register("componentTextureLevel", "Number of mip levels used for character component textures", 0x1, "8", &ComponentVarHandler, 0, false, NULL, false);
-    CCharacterComponent::g_componentThreadVar = CVar::Register("componentThread", "Multi thread character component processing", 0x1, "1", &ComponentVarHandler, 0, false, NULL, false);
-    CCharacterComponent::g_componentCompressVar = CVar::Register("componentCompress", "Character component texture compression", 0x1, "1", &ComponentVarHandler, 0, false, NULL, false);
+// INLINED
+void CComponentRequest::AddLayer(uint8_t section, void* texture) {
+    if (this->m_layerCount < sizeof(this->m_layerTextures) / sizeof(this->m_layerTextures[0])) {
+        this->m_layerTextures[this->m_layerCount] = TextureCacheCopyTexture(texture);
+        this->m_layerSections[this->m_layerCount++] = section;
+    }
+}
 
-    uint32_t mipLevels = CCharacterComponent::g_componentTextureLevelVar->m_intValue;
-    int32_t useThread = CCharacterComponent::g_componentThreadVar->m_intValue;
-    int32_t useCompression = CCharacterComponent::g_componentCompressVar->m_intValue;
+// INLINED
+inline CharacterSection::CharacterSection() {
+    for (int32_t layer = 0; layer < 8; layer++) {
+        this->m_layerTex[layer] = NULL;
+        this->m_layerItemDisplayId[layer] = 0;
+    }
+
+    this->m_layerMask = 0;
+}
+
+// INLINED
+inline CharacterSection::~CharacterSection() {
+    for (int32_t layer = 0; layer < 8; layer++) {
+        if (this->m_layerTex[layer]) {
+            TextureCacheDestroyTexture(this->m_layerTex[layer]);
+        }
+
+        this->m_layerTex[layer] = NULL;
+        this->m_layerItemDisplayId[layer] = 0;
+    }
+}
+
+// INLINED
+inline CharacterBaseVariation::~CharacterBaseVariation() {
+    for (int32_t i = 0; i < 3; i++) {
+        if (this->m_texture[i]) {
+            TextureCacheDestroyTexture(this->m_texture[i]);
+        }
+
+        this->m_texture[i] = NULL;
+    }
+}
+
+// INLINED
+void CCharacterComponent::ResetClosestComponent() {
+    s_closestComponent = NULL;
+    s_closestComponentSortVal = 0x7FFFFFFF;
+}
+
+// OFFSET: 0x00401800/0x140003F70
+bool CCharacterComponent::Initialize() {
+    CVar* textureLevelVar = CVar::Lookup("componentTextureLevel");
+    CVar* threadVar = CVar::Lookup("componentThread");
+    CVar* compressVar = CVar::Lookup("componentCompress");
+    uint32_t mipLevels = textureLevelVar->m_intValue;
+    int32_t useThread = threadVar->m_intValue;
+    int32_t useCompression = compressVar->m_intValue;
 
     if (OsGetNumberOfProcessors() < 2) {
         useThread = 0;
@@ -230,21 +295,118 @@ bool CCharacterComponent::Initialize() {
     return CCharacterComponent::Initialize(GxTex_Rgb565, mipLevels, useThread, useCompression);
 }
 
-// OFFSET: #0x004DFED0
-void CCharacterComponent::GetPreferences(CharacterPreferences* preferences) {
-    if (preferences) {
-        *preferences = this->m_data.m_preferences;
+// PROVEN: 3b7c062b IDENTICAL/NONE
+// OFFSET: 0x006F8340
+void CComponentRequest::DestroyCachedTextures() {
+    for (uint32_t i = 0; i < NUM_COMPONENT_SECTIONS; i++) {
+        if (this->m_baseTextures[i]) {
+            TextureCacheDestroyTexture(this->m_baseTextures[i]);
+            this->m_baseTextures[i] = NULL;
+        }
+    }
+
+    for (uint32_t i = 0; i < this->m_layerCount; i++) {
+        if (this->m_layerTextures[i]) {
+            TextureCacheDestroyTexture(this->m_layerTextures[i]);
+            this->m_layerTextures[i] = NULL;
+        }
+
+        this->m_layerSections[i] = 0xFF;
+    }
+
+    this->m_layerCount = 0;
+}
+
+// PROVEN: cb1a1897 IDENTICAL/NONE
+// OFFSET: 0x006F83B0
+void CCharacterComponent::ResetCounts() {
+    TextureCacheResetLoadCount();
+}
+
+// OFFSET: 0x006F83F0/0x1403C1360
+static void DestroyVariationArrays() {
+    for (uint32_t i = 0; i < CCharacterComponent::s_chrVarArrayLength; i++) {
+        for (int32_t variation = 0; variation < NUM_COMPONENT_VARIATIONS; variation++) {
+            CharVariationList& list = CCharacterComponent::s_chrVarArray[i].m_variation[variation];
+
+            for (int32_t j = 0; j < list.m_numVariations; j++) {
+                delete[] list.m_variation[j].m_color;
+            }
+
+            delete[] list.m_variation;
+        }
+    }
+
+    delete[] CCharacterComponent::s_chrVarArray;
+    CCharacterComponent::s_chrVarArray = NULL;
+    CCharacterComponent::s_chrVarArrayLength = 0;
+
+    if (CCharacterComponent::s_characterFacialHairStylesList) {
+        SMemFree(CCharacterComponent::s_characterFacialHairStylesList, __FILE__, __LINE__, 0);
     }
 }
 
-// OFFSET: #0x004E6F90
-static int32_t CopyStringToBuffer(const char* src, char* dst) {
-    strcpy(dst, src);
+// PROVEN: 1c129337 IDENTICAL/NONE
+// OFFSET: 0x006F84D0
+void CCharacterComponent::TextureBufferInitialize() {
+    uint32_t size = 1 << CCharacterComponent::s_mipLevels;
+    CCharacterComponent::s_textureBuffer = TextureAllocMippedImg(PIXEL_ARGB8888, size, size);
 
-    return 1;
+    if (CCharacterComponent::s_bComponentCompression) {
+        s_compressedTextureBuffer = TextureAllocMippedImg(PIXEL_DXT1, size, size);
+    }
+
+    if (CCharacterComponent::s_bComponentThread && CCharacterComponent::s_bComponentCompression) {
+        s_threadTextureBuffer = TextureAllocMippedImg(PIXEL_ARGB8888, size, size);
+    }
 }
 
-// OFFSET: #0x004E6FB0
+// PROVEN: 8df01310 IDENTICAL/NONE
+// OFFSET: 0x006F8530
+static void TextureBufferDestroy() {
+    uint32_t size = 1 << CCharacterComponent::s_mipLevels;
+
+    if (CCharacterComponent::s_textureBuffer) {
+        TextureFreeMippedImg(CCharacterComponent::s_textureBuffer, PIXEL_ARGB8888, size, size);
+        CCharacterComponent::s_textureBuffer = NULL;
+    }
+
+    if (s_compressedTextureBuffer) {
+        TextureFreeMippedImg(s_compressedTextureBuffer, PIXEL_DXT1, size, size);
+        s_compressedTextureBuffer = NULL;
+    }
+
+    if (s_threadTextureBuffer) {
+        TextureFreeMippedImg(s_threadTextureBuffer, PIXEL_ARGB8888, size, size);
+        s_threadTextureBuffer = NULL;
+    }
+}
+
+// OFFSET: 0x006F85A0/0x1403C1530
+static void ComputeSectionInfo(uint32_t mipLevels) {
+    if (mipLevels > 9) {
+        mipLevels = 9;
+    } else if (mipLevels < 7) {
+        mipLevels = 7;
+    }
+
+    if (!s_useCompression && mipLevels > 8) {
+        mipLevels = 8;
+    }
+
+    CCharacterComponent::s_mipLevels = mipLevels;
+    uint32_t shift = 9 - mipLevels;
+
+    for (uint32_t i = 0; i < NUM_COMPONENT_SECTIONS; i++) {
+        s_sectionInfo[i].m_pos.x = CCharacterComponent::s_sectionInfoRaw[i].m_pos.x >> shift;
+        s_sectionInfo[i].m_pos.y = CCharacterComponent::s_sectionInfoRaw[i].m_pos.y >> shift;
+        s_sectionInfo[i].m_size.x = CCharacterComponent::s_sectionInfoRaw[i].m_size.x >> shift;
+        s_sectionInfo[i].m_size.y = CCharacterComponent::s_sectionInfoRaw[i].m_size.y >> shift;
+    }
+}
+
+// PROVEN: bc8e1539 IDENTICAL/NONE
+// OFFSET: 0x006F87F0
 void* CCharacterComponent::LoadItemComponentTexture(const ItemDisplayInfoRec* displayRec, COMPONENT_SECTIONS section) {
     SStrPrintf(s_path, sizeof(s_path), "Item\\TextureComponents\\%s\\%s_%s.blp", s_componentSections[section], displayRec->m_texture[section], s_fileDecorations[2]);
 
@@ -255,132 +417,78 @@ void* CCharacterComponent::LoadItemComponentTexture(const ItemDisplayInfoRec* di
     return TextureCacheCreateTexture(s_path);
 }
 
-// OFFSET: #0x004E7030
-static void CompressBlockSSE(const uint8_t* src, uint32_t stride, uint32_t* out) {
-    const __m128i zero = _mm_setzero_si128();
-    const __m128 scale = _mm_set1_ps(1.0f / 255.0f);
-
-    __m128i row0 = _mm_load_si128(reinterpret_cast<const __m128i*>(src));
-    __m128i row1 = _mm_load_si128(reinterpret_cast<const __m128i*>(src + stride));
-    __m128i row2 = _mm_load_si128(reinterpret_cast<const __m128i*>(src + 2 * stride));
-    __m128i row3 = _mm_load_si128(reinterpret_cast<const __m128i*>(src + 3 * stride));
-
-    __m128i sum = _mm_add_epi16(_mm_unpacklo_epi8(row0, zero), _mm_unpackhi_epi8(row0, zero));
-    sum = _mm_add_epi16(sum, _mm_unpacklo_epi8(row1, zero));
-    sum = _mm_add_epi16(sum, _mm_unpackhi_epi8(row1, zero));
-    sum = _mm_add_epi16(sum, _mm_unpacklo_epi8(row2, zero));
-    sum = _mm_add_epi16(sum, _mm_unpackhi_epi8(row2, zero));
-    sum = _mm_add_epi16(sum, _mm_unpacklo_epi8(row3, zero));
-    sum = _mm_add_epi16(sum, _mm_unpackhi_epi8(row3, zero));
-
-    __m128 mean = _mm_mul_ps(_mm_cvtepi32_ps(_mm_unpacklo_epi16(_mm_srli_epi16(_mm_add_epi16(sum, _mm_shuffle_epi32(sum, 0x4E)), 4), zero)), scale);
-
-    __m128 cov0 = _mm_setzero_ps();
-    __m128 cov1 = _mm_setzero_ps();
-    __m128 cov2 = _mm_setzero_ps();
-    const uint8_t* row = src;
-
-    for (int32_t y = 0; y < 4; y++, row += stride) {
-        __m128i pixels = _mm_load_si128(reinterpret_cast<const __m128i*>(row));
-        __m128i high = _mm_unpackhi_epi8(pixels, zero);
-        __m128i low = _mm_unpacklo_epi8(pixels, zero);
-        __m128 d3 = _mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpackhi_epi16(high, zero)), scale), mean);
-        __m128 d2 = _mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpacklo_epi16(high, zero)), scale), mean);
-        __m128 d1 = _mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpackhi_epi16(low, zero)), scale), mean);
-        __m128 d0 = _mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpacklo_epi16(low, zero)), scale), mean);
-
-        cov0 = _mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(d3, d3, 0x00), d3), cov0), _mm_mul_ps(_mm_shuffle_ps(d2, d2, 0x00), d2)), _mm_mul_ps(_mm_shuffle_ps(d1, d1, 0x00), d1)), _mm_mul_ps(_mm_shuffle_ps(d0, d0, 0x00), d0));
-        cov1 = _mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(d3, d3, 0x55), d3), cov1), _mm_mul_ps(_mm_shuffle_ps(d2, d2, 0x55), d2)), _mm_mul_ps(_mm_shuffle_ps(d1, d1, 0x55), d1)), _mm_mul_ps(_mm_shuffle_ps(d0, d0, 0x55), d0));
-        cov2 = _mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(d3, d3, 0xAA), d3), cov2), _mm_mul_ps(_mm_shuffle_ps(d2, d2, 0xAA), d2)), _mm_mul_ps(_mm_shuffle_ps(d1, d1, 0xAA), d1)), _mm_mul_ps(_mm_shuffle_ps(d0, d0, 0xAA), d0));
+// PROVEN: 171d13e4 IDENTICAL/NONE
+// OFFSET: 0x006F8870/0x1403C17A0
+void CCharacterComponent::ApplyExtraTextures() {
+    if (this->m_extraSkinTexture) {
+        this->m_data.m_model->ReplaceTexture(8, this->m_extraSkinTexture);
+        TextureRelease(this->m_extraSkinTexture);
     }
 
-    const __m128 zeroPs = _mm_setzero_ps();
-    __m128 axis = _mm_set1_ps(1.0f);
-
-    for (int32_t i = 0; i < 8; i++) {
-        __m128 next = _mm_add_ps(_mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(axis, axis, 0xAA), cov2), _mm_mul_ps(_mm_shuffle_ps(axis, axis, 0x55), cov1)), _mm_mul_ps(_mm_shuffle_ps(axis, axis, 0x00), cov0));
-        __m128 largest = _mm_max_ps(next, _mm_shuffle_ps(next, next, 0xB1));
-        largest = _mm_max_ps(largest, _mm_shuffle_ps(largest, largest, 0x4E));
-        axis = _mm_mul_ps(_mm_and_ps(_mm_cmpneq_ps(zeroPs, largest), _mm_rcp_ps(largest)), next);
+    if (this->m_hairTexture) {
+        this->m_data.m_model->ReplaceTexture(6, this->m_hairTexture);
+        TextureRelease(this->m_hairTexture);
     }
-
-    __m128 length = _mm_mul_ps(axis, axis);
-    length = _mm_add_ps(_mm_shuffle_ps(length, length, 0xB1), length);
-    length = _mm_add_ps(_mm_shuffle_ps(length, length, 0x4E), length);
-    axis = _mm_and_ps(_mm_mul_ps(_mm_rsqrt_ps(length), axis), _mm_cmpneq_ps(zeroPs, length));
-
-    __m128 minProj = _mm_set_ss(1.0f);
-    __m128 maxProj = _mm_set_ss(-1.0f);
-    __m128 axisX = _mm_shuffle_ps(axis, axis, 0x00);
-    __m128 axisY = _mm_shuffle_ps(axis, axis, 0x55);
-    __m128 axisZ = _mm_shuffle_ps(axis, axis, 0xAA);
-    __m128 meanX = _mm_shuffle_ps(mean, mean, 0x00);
-    __m128 meanY = _mm_shuffle_ps(mean, mean, 0x55);
-    __m128 meanZ = _mm_shuffle_ps(mean, mean, 0xAA);
-    __m128 proj[4];
-    row = src;
-
-    for (int32_t y = 0; y < 4; y++, row += stride) {
-        __m128i pixels = _mm_load_si128(reinterpret_cast<const __m128i*>(row));
-        __m128i shuffled = _mm_unpackhi_epi8(_mm_shuffle_epi32(pixels, 0x8D), _mm_shuffle_epi32(pixels, 0xD8));
-        __m128i planar = _mm_unpackhi_epi16(_mm_slli_si128(shuffled, 8), shuffled);
-        __m128i channels = _mm_unpacklo_epi8(planar, zero);
-        __m128 p = _mm_add_ps(_mm_mul_ps(_mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpacklo_epi16(channels, zero)), scale), meanX), axisX), _mm_mul_ps(_mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpackhi_epi16(channels, zero)), scale), meanY), axisY));
-        p = _mm_add_ps(p, _mm_mul_ps(_mm_sub_ps(_mm_mul_ps(_mm_cvtepi32_ps(_mm_unpacklo_epi16(_mm_unpackhi_epi8(planar, zero), zero)), scale), meanZ), axisZ));
-        proj[y] = p;
-        minProj = _mm_min_ps(minProj, p);
-        maxProj = _mm_max_ps(maxProj, p);
-    }
-
-    minProj = _mm_min_ps(minProj, _mm_shuffle_ps(minProj, minProj, 0xB1));
-    maxProj = _mm_max_ps(maxProj, _mm_shuffle_ps(maxProj, maxProj, 0xB1));
-    minProj = _mm_min_ps(minProj, _mm_shuffle_ps(minProj, minProj, 0x4E));
-    maxProj = _mm_max_ps(maxProj, _mm_shuffle_ps(maxProj, maxProj, 0x4E));
-
-    const __m128 k255 = _mm_set1_ps(255.0f);
-    __m128i endpoints = _mm_packs_epi32(_mm_cvtps_epi32(_mm_mul_ps(_mm_add_ps(_mm_mul_ps(minProj, axis), mean), k255)), _mm_cvtps_epi32(_mm_mul_ps(_mm_add_ps(_mm_mul_ps(maxProj, axis), mean), k255)));
-    uint32_t maxColor = _mm_cvtsi128_si32(_mm_packus_epi16(_mm_srli_si128(endpoints, 8), zero));
-    uint32_t minColor = _mm_cvtsi128_si32(_mm_packus_epi16(endpoints, zero));
-    uint32_t color0 = ((maxColor & 0xF8) | (((maxColor & 0xFC00) | ((maxColor >> 3) & 0x1F0000)) >> 2)) >> 3;
-    uint32_t color1 = ((minColor & 0xF8) | (((minColor & 0xFC00) | ((minColor >> 3) & 0x1F0000)) >> 2)) >> 3;
-    uint32_t indices = 0;
-
-    if (color0 != color1) {
-        __m128 indexScale = _mm_div_ps(_mm_set1_ps(3.0f), _mm_sub_ps(maxProj, minProj));
-        __m128i index01 = _mm_packs_epi32(_mm_cvtps_epi32(_mm_mul_ps(_mm_sub_ps(proj[0], minProj), indexScale)), _mm_cvtps_epi32(_mm_mul_ps(_mm_sub_ps(proj[1], minProj), indexScale)));
-        __m128i index23 = _mm_packs_epi32(_mm_cvtps_epi32(_mm_mul_ps(_mm_sub_ps(proj[2], minProj), indexScale)), _mm_cvtps_epi32(_mm_mul_ps(_mm_sub_ps(proj[3], minProj), indexScale)));
-        __m128i one = _mm_cvtsi32_si128(1);
-        one = _mm_shuffle_epi32(_mm_unpacklo_epi16(one, one), 0x00);
-        __m128i packed = _mm_packs_epi16(_mm_add_epi16(index01, _mm_srli_epi16(_mm_add_epi16(index01, one), 1)), _mm_add_epi16(index23, _mm_srli_epi16(_mm_add_epi16(index23, one), 1)));
-
-        int32_t bits0 = _mm_cvtsi128_si32(packed);
-        int32_t result = (bits0 & 0x3) | (((bits0 & 0x300) | (((bits0 & 0x30000) | ((bits0 >> 6) & 0xC0000)) >> 6)) >> 6);
-        packed = _mm_srli_si128(packed, 4);
-        int32_t bits1 = _mm_cvtsi128_si32(packed);
-        result |= (4 * ((bits1 & 0x300) | ((bits1 & 0x3) << 6))) | (((bits1 & 0x30000) | ((bits1 >> 6) & 0xC0000)) >> 4);
-        packed = _mm_srli_si128(packed, 4);
-        int32_t bits2 = _mm_cvtsi128_si32(packed);
-        int32_t bits3 = _mm_cvtsi128_si32(_mm_srli_si128(packed, 4));
-        result |= (0xC00000 & (bits2 >> 2)) | (16 * ((bits2 & 0x30000) | (((bits2 & 0x300) | ((bits2 & 0x3) << 6)) << 6)));
-        result |= ((bits3 & static_cast<int32_t>(0xFF000000)) | (((bits3 & 0x30000) | (((bits3 & 0x300) | ((bits3 & 0x3) << 6)) << 6)) << 6)) << 6;
-        indices = result ^ 0x55555555;
-
-        if (color0 < color1) {
-            uint32_t swap = color0;
-            color0 = color1;
-            color1 = swap;
-            indices ^= 0x55555555;
-        }
-    }
-
-    out[0] = color0 | (color1 << 16);
-    out[1] = indices;
 }
 
-// OFFSET: #0x004E7650
+// OFFSET: 0x006F88C0/0x1403C1810
+static void CompressMipLevels(MipBits* src, MipBits* dst, uint32_t mipLevels) {
+    uint32_t size = 1 << mipLevels;
+
+    for (uint32_t level = 0; level < mipLevels; level++) {
+        if (size >= 4) {
+            int32_t blocks = size / 4;
+            uint32_t stride = size * 4;
+            const uint8_t* srcRow = reinterpret_cast<const uint8_t*>(src->m_mip[level]);
+            uint8_t* out = reinterpret_cast<uint8_t*>(dst->m_mip[level]);
+
+            for (int32_t y = 0; y < blocks; y++) {
+                for (int32_t x = 0; x < blocks; x++) {
+                    SIMD::s_functions.CompressDXT1(srcRow, stride, out);
+                    out += 8;
+                    srcRow += 16;
+                }
+
+                srcRow += 3 * stride;
+            }
+        } else {
+            SIMD::s_functions.CompressDXT1(reinterpret_cast<const uint8_t*>(src->m_mip[mipLevels - 2]), 16, reinterpret_cast<uint8_t*>(dst->m_mip[level]));
+        }
+
+        size >>= 1;
+    }
+}
+
+// PROVEN: 34201937 IDENTICAL/NONE
+// OFFSET: 0x006F8990
+int32_t CCharacterComponent::SetClosestComponent(CCharacterComponent* component, int32_t a2, float distance) {
+    int32_t sortVal = AsyncFileReadComputePriority(3, 0, a2, distance);
+
+    if (sortVal < s_closestComponentSortVal) {
+        s_closestComponent = component;
+        s_closestComponentSortVal = sortVal;
+    }
+
+    return sortVal;
+}
+
+// PROVEN: b112e3f9 IDENTICAL/NONE
+// OFFSET: 0x006F89F0/0x1403C19C0
+CCharacterComponent* CCharacterComponent::GetClosestComponent() {
+    return s_closestComponent;
+}
+
+// PROVEN: 31427ac3 IDENTICAL/NONE
+// OFFSET: 0x006F8A00/0x1403C19D0
+int32_t CCharacterComponent::GetClosestComponentSortVal() {
+    return s_closestComponentSortVal;
+}
+
+// PROVEN: d4707b22 IDENTICAL/NONE
+// OFFSET: 0x006F8A10
 void CCharacterComponent::DestroyRenderTextures() {
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        for (int32_t layer = 0; layer < 7; layer++) {
+        for (int32_t layer = 0; layer < 8; layer++) {
             if (this->m_section[section].m_layerItemDisplayId[layer] && this->m_section[section].m_layerTex[layer]) {
                 TextureCacheDestroyTexture(this->m_section[section].m_layerTex[layer]);
                 this->m_section[section].m_layerTex[layer] = NULL;
@@ -389,9 +497,112 @@ void CCharacterComponent::DestroyRenderTextures() {
     }
 }
 
-// OFFSET: #0x004E76D0
+// OFFSET: 0x006F8A80
 CharSectionsRec* CCharacterComponent::GetSectionsRecord(COMPONENT_VARIATIONS variation, int32_t variationIndex, int32_t colorIndex, bool* found) {
     return ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, variation, variationIndex, colorIndex, found);
+}
+
+// OFFSET: 0x006F8AB0
+bool CCharacterComponent::CheckForComponentChanges(ComponentData* data) {
+    if (!data) {
+        return false;
+    }
+
+    CharacterPreferences& prefs = data->m_preferences;
+
+    if (!prefs.m_raceID && !prefs.m_sexID && !prefs.m_skinID && !prefs.m_faceId && !prefs.m_hairStyleId && !prefs.m_hairColorId && !prefs.m_facialHairId) {
+        return true;
+    }
+
+    if (prefs.m_raceID != this->m_data.m_preferences.m_raceID || prefs.m_sexID != this->m_data.m_preferences.m_sexID || prefs.m_skinID != this->m_data.m_preferences.m_skinID || prefs.m_faceId != this->m_data.m_preferences.m_faceId || prefs.m_hairStyleId != this->m_data.m_preferences.m_hairStyleId || prefs.m_hairColorId != this->m_data.m_preferences.m_hairColorId || prefs.m_facialHairId != this->m_data.m_preferences.m_facialHairId) {
+        return true;
+    }
+
+    if (prefs.m_classId != this->m_data.m_preferences.m_classId && (prefs.m_classId == 6 || this->m_data.m_preferences.m_classId == 6)) {
+        return true;
+    }
+
+    return false;
+}
+
+// OFFSET: 0x006F8B40/0x1403C5380
+void CCharacterComponent::ReplaceExtraSkinTexture(const char* debug) {
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID)) {
+        return;
+    }
+
+    const char* textureName = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[VARIATION_SKIN].m_variation[0].m_color[this->m_data.m_preferences.m_skinID]->m_textureName[1];
+
+    if (!*textureName) {
+        return;
+    }
+
+    strcpy(s_pathEnd, textureName);
+
+    if (this->m_extraSkinTexture) {
+        TextureRelease(this->m_extraSkinTexture);
+    }
+
+    CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
+    this->m_extraSkinTexture = TextureCreate(s_path, flags, &s_status, 0, NULL, 3);
+}
+
+// OFFSET: 0x006F8BF0/0x1403C5490
+void CCharacterComponent::ReplaceHairTexture(int32_t hairStyleID, const char* debug) {
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId)) {
+        return;
+    }
+
+    CharSectionsRec* rec = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[VARIATION_HAIR].m_variation[hairStyleID].m_color[this->m_data.m_preferences.m_hairColorId];
+
+    if (!rec || !*rec->m_textureName[0]) {
+        return;
+    }
+
+    strcpy(s_pathEnd, rec->m_textureName[0]);
+
+    if (this->m_hairTexture) {
+        TextureRelease(this->m_hairTexture);
+    }
+
+    CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
+    this->m_hairTexture = TextureCreate(s_path, flags, &s_status, 0, NULL, 3);
+}
+
+// OFFSET: 0x006F8CB0
+uint32_t CCharacterComponent::GetHandItemAttachIDs(uint32_t* ids, uint32_t maxCount) const {
+    uint32_t count = 0;
+
+    if (!this->m_attachMask) {
+        return count;
+    }
+
+    if ((this->m_attachMask & 0x1) && maxCount) {
+        ids[0] = 6;
+        count = 1;
+    }
+
+    if ((this->m_attachMask & 0x2) && count < maxCount) {
+        ids[count++] = 5;
+    }
+
+    if ((this->m_attachMask & 0x4) && count < maxCount) {
+        ids[count++] = ATTACH_HELM;
+    }
+
+    if ((this->m_attachMask & 0x8) && count < maxCount) {
+        ids[count++] = ATTACH_HANDRIGHT;
+    }
+
+    if ((this->m_attachMask & 0x10) && count < maxCount) {
+        ids[count++] = ATTACH_HANDLEFT;
+    }
+
+    if ((this->m_attachMask & 0x20) && count < maxCount) {
+        ids[count++] = ATTACH_SHIELD;
+    }
+
+    return count;
 }
 
 // OFFSET: 0x006F8D40
@@ -430,7 +641,7 @@ void CCharacterComponent::ComponentOpenFingers(CM2Model* model, COMP_HAND_SLOT h
     }
 }
 
-// OFFSET: #0x004E7790
+// OFFSET: 0x006F8DD0/0x1403C1C90
 void CCharacterComponent::ApplyMonsterGeosets(CM2Model* model, const CreatureDisplayInfoRec* displayRec) {
     if (!model || !displayRec || !displayRec->m_creatureGeosetData) {
         return;
@@ -446,33 +657,6 @@ void CCharacterComponent::ApplyMonsterGeosets(CM2Model* model, const CreatureDis
     }
 
     model->OptimizeVisibleGeometry();
-}
-
-// OFFSET: #0x004E7800
-int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec, const ItemDisplayInfoRec* displayRec, char* buffer, uint32_t size) {
-    char path[260];
-    strcpy(path, "Item\\ObjectComponents\\Head\\");
-    strcat(path, displayRec->m_modelName[0]);
-
-    char* ext = &path[strlen(path)];
-
-    for (; ext > path; ext--) {
-        if (*ext == '.') {
-            break;
-        }
-    }
-
-    if (ext == path) {
-        ext = &path[strlen(path)];
-    }
-
-    *ext = '_';
-    strcpy(ext + 1, raceRec->m_clientPrefix);
-    strcat(path, s_fileDecorations[this->m_data.m_preferences.m_sexID]);
-    strcat(path, ".mdx");
-    strcpy(buffer, path);
-
-    return 1;
 }
 
 // OFFSET: 0x006F8E40
@@ -495,23 +679,54 @@ GEOCOMPONENTLINKS CCharacterComponent::GetSheatheLink(SHEATHE_TYPE sheatheType, 
     }
 }
 
-// OFFSET: #0x004E79A0
-void CCharacterComponent::RemoveLinkpt(CM2Model* model, GEOCOMPONENTLINKS link) {
+// OFFSET: 0x006F8EA0/0x1403C1D80
+void CCharacterComponent::RemoveLinkpt(CM2Model* model, uint8_t* attachMask, GEOCOMPONENTLINKS link) {
     if (link == ATTACH_NONE) {
         return;
     }
 
-    if (link == ATTACH_SHIELD || link == ATTACH_HANDLEFT) {
-        for (uint32_t bone = 13; bone <= 17; bone++) {
-            model->UnsetBoneSequence(bone, 0, 1);
-        }
-    } else if (link == ATTACH_HANDRIGHT) {
-        for (uint32_t bone = 8; bone <= 12; bone++) {
-            model->UnsetBoneSequence(bone, 0, 1);
-        }
+    switch (link) {
+        case ATTACH_SHIELD:
+            for (uint32_t bone = 13; bone <= 17; bone++) {
+                model->UnsetBoneSequence(bone, 0, 1);
+            }
+
+            *attachMask &= ~0x20;
+            break;
+
+        case ATTACH_HANDRIGHT:
+            for (uint32_t bone = 8; bone <= 12; bone++) {
+                model->UnsetBoneSequence(bone, 0, 1);
+            }
+
+            *attachMask &= ~0x8;
+            break;
+
+        case ATTACH_HANDLEFT:
+            for (uint32_t bone = 13; bone <= 17; bone++) {
+                model->UnsetBoneSequence(bone, 0, 1);
+            }
+
+            *attachMask &= ~0x10;
+            break;
+
+        case ATTACH_SHOULDERRIGHT:
+            *attachMask &= ~0x2;
+            break;
+
+        case ATTACH_SHOULDERLEFT:
+            *attachMask &= ~0x1;
+            break;
+
+        case ATTACH_HELM:
+            *attachMask &= ~0x4;
+            break;
+
+        default:
+            break;
     }
 
-    if (model && model->IsLoaded() && model->HasAttachment(link)) {
+    if (model) {
         model->DetachAllChildrenById(link);
     }
 }
@@ -559,41 +774,40 @@ INVENTORY_SLOTS CCharacterComponent::GetInvSlotForInvType(INVENTORY_TYPES invTyp
     }
 }
 
-// OFFSET: #0x004E7A30
-ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
-    switch (invType) {
-        case INVTYPE_HEAD:
+// OFFSET: 0x006F9060
+ITEM_SLOT CCharacterComponent::GetItemSlotForInvSlot(INVENTORY_SLOTS invSlot) {
+    switch (invSlot) {
+        case INVSLOT_HEAD:
             return ITEMSLOT_HEAD;
 
-        case INVTYPE_SHOULDERS:
+        case INVSLOT_SHOULDER:
             return ITEMSLOT_SHOULDER;
 
-        case INVTYPE_BODY:
+        case INVSLOT_BODY:
             return ITEMSLOT_SHIRT;
 
-        case INVTYPE_CHEST:
-        case INVTYPE_ROBE:
+        case INVSLOT_CHEST:
             return ITEMSLOT_CHEST;
 
-        case INVTYPE_WAIST:
+        case INVSLOT_WAIST:
             return ITEMSLOT_BELT;
 
-        case INVTYPE_LEGS:
+        case INVSLOT_LEGS:
             return ITEMSLOT_PANTS;
 
-        case INVTYPE_FEET:
+        case INVSLOT_FEET:
             return ITEMSLOT_BOOTS;
 
-        case INVTYPE_WRISTS:
+        case INVSLOT_WRIST:
             return ITEMSLOT_BRACERS;
 
-        case INVTYPE_HANDS:
+        case INVSLOT_HAND:
             return ITEMSLOT_GLOVES;
 
-        case INVTYPE_CLOAK:
+        case INVSLOT_BACK:
             return ITEMSLOT_CAPE;
 
-        case INVTYPE_TABARD:
+        case INVSLOT_TABARD:
             return ITEMSLOT_TABARD;
 
         default:
@@ -601,48 +815,7 @@ ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
     }
 }
 
-// OFFSET: #0x004E7AF0
-INVENTORY_SLOTS CCharacterComponent::GetInvSlotForItemSlot(ITEM_SLOT itemSlot) {
-    switch (itemSlot) {
-        case ITEMSLOT_HEAD:
-            return INVSLOT_HEAD;
-
-        case ITEMSLOT_SHOULDER:
-            return INVSLOT_SHOULDER;
-
-        case ITEMSLOT_SHIRT:
-            return INVSLOT_BODY;
-
-        case ITEMSLOT_CHEST:
-            return INVSLOT_CHEST;
-
-        case ITEMSLOT_BELT:
-            return INVSLOT_WAIST;
-
-        case ITEMSLOT_PANTS:
-            return INVSLOT_LEGS;
-
-        case ITEMSLOT_BOOTS:
-            return INVSLOT_FEET;
-
-        case ITEMSLOT_BRACERS:
-            return INVSLOT_WRIST;
-
-        case ITEMSLOT_GLOVES:
-            return INVSLOT_HAND;
-
-        case ITEMSLOT_TABARD:
-            return INVSLOT_TABARD;
-
-        case ITEMSLOT_CAPE:
-            return INVSLOT_BACK;
-
-        default:
-            return INVSLOT_NONE;
-    }
-}
-
-// OFFSET: #0x004E7B80
+// OFFSET: 0x006F9110/0x1403C2040
 int32_t CCharacterComponent::GetNumSkins(int32_t raceID, int32_t sexID, int32_t classID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
     int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_SKIN, 0);
@@ -664,7 +837,7 @@ int32_t CCharacterComponent::GetNumSkins(int32_t raceID, int32_t sexID, int32_t 
     return count;
 }
 
-// OFFSET: #0x004E7C10
+// OFFSET: 0x006F91A0/0x1403C2110
 int32_t CCharacterComponent::GetNumHairStylesForColor(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairColorID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_HAIR);
@@ -686,7 +859,7 @@ int32_t CCharacterComponent::GetNumHairStylesForColor(int32_t raceID, int32_t se
     return count;
 }
 
-// OFFSET: #0x004E7CB0
+// OFFSET: 0x006F9240/0x1403C21E0
 int32_t CCharacterComponent::GetNumHairColorsForStyle(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairStyleID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
     int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_HAIR, hairStyleID);
@@ -708,7 +881,7 @@ int32_t CCharacterComponent::GetNumHairColorsForStyle(int32_t raceID, int32_t se
     return count;
 }
 
-// OFFSET: #0x004E7D50
+// OFFSET: 0x006F92E0/0x1403C22C0
 int32_t CCharacterComponent::GetNumFacesForSkin(int32_t raceID, int32_t sexID, int32_t classID, int32_t skinID, COMPONENT_CONTEXT context) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, classID);
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_FACE);
@@ -753,7 +926,7 @@ int32_t CCharacterComponent::GetNumFacialFeaturesForHairColor(int32_t raceID, in
     return count;
 }
 
-// OFFSET: #0x004E7E90
+// OFFSET: 0x006F9420/0x1403C2480
 static int32_t ComponentGetSkinColor(int32_t raceID, int32_t sexID, int32_t index, COMPONENT_SELECTION selection) {
     int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_SKIN, 0);
 
@@ -778,7 +951,7 @@ static int32_t ComponentGetSkinColor(int32_t raceID, int32_t sexID, int32_t inde
     return -1;
 }
 
-// OFFSET: #0x004E7F20
+// OFFSET: 0x006F94B0/0x1403C2550
 static int32_t ComponentGetHairVariation(int32_t raceID, int32_t sexID, int32_t hairColorID, int32_t index, COMPONENT_SELECTION selection) {
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_HAIR);
 
@@ -803,7 +976,7 @@ static int32_t ComponentGetHairVariation(int32_t raceID, int32_t sexID, int32_t 
     return -1;
 }
 
-// OFFSET: #0x004E7FB0
+// OFFSET: 0x006F9540/0x1403C2630
 static int32_t ComponentGetHairColor(int32_t raceID, int32_t sexID, int32_t hairStyleID, int32_t index, COMPONENT_SELECTION selection) {
     int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_HAIR, hairStyleID);
 
@@ -828,7 +1001,7 @@ static int32_t ComponentGetHairColor(int32_t raceID, int32_t sexID, int32_t hair
     return -1;
 }
 
-// OFFSET: #0x004E8050
+// OFFSET: 0x006F95D0/0x1403C2710
 static int32_t ComponentGetFaceVariation(int32_t raceID, int32_t sexID, int32_t skinID, int32_t index, COMPONENT_SELECTION selection) {
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_FACE);
 
@@ -853,7 +1026,7 @@ static int32_t ComponentGetFaceVariation(int32_t raceID, int32_t sexID, int32_t 
     return -1;
 }
 
-// OFFSET: #0x004E80E0
+// OFFSET: 0x006F9660/0x1403C27F0
 int32_t CCharacterComponent::GetNthFacialFeatureIndex(int32_t raceID, int32_t sexID, int32_t classID, int32_t hairColorID, int32_t facialHairID, int32_t index, COMPONENT_SELECTION selection) {
     bool found;
     ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, raceID, sexID, VARIATION_FACIAL_HAIR, facialHairID, hairColorID, &found);
@@ -889,11 +1062,23 @@ int32_t CCharacterComponent::GetNthFacialFeatureIndex(int32_t raceID, int32_t se
     return -1;
 }
 
-// OFFSET: #0x004E81C0
-char* CCharacterComponent::GetTabardBackgroundFileName(COMPONENT_SECTIONS section, int32_t background, char* buffer, int32_t size) {
+// OFFSET: 0x006F9740/0x1403C2960
+char* CCharacterComponent::GetTabardBackgroundFileName(uint32_t flags, COMPONENT_SECTIONS section, int32_t background, char* buffer, int32_t size) {
     *buffer = '\0';
 
-    if (section == SECTION_TORSO_UPPER) {
+    if (flags & 0x10) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\EpicBG_%02d_TU_U", background);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\EpicBG_%02d_TL_U", background);
+        }
+    } else if (flags & 0x8) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\RareBG_%02d_TU_U", background);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\RareBG_%02d_TL_U", background);
+        }
+    } else if (section == SECTION_TORSO_UPPER) {
         SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Background_%02d_TU_U", background);
     } else if (section == SECTION_TORSO_LOWER) {
         SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Background_%02d_TL_U", background);
@@ -902,7 +1087,7 @@ char* CCharacterComponent::GetTabardBackgroundFileName(COMPONENT_SECTIONS sectio
     return buffer;
 }
 
-// OFFSET: #0x004E8210
+// OFFSET: 0x006F9810/0x1403C2A40
 char* CCharacterComponent::GetTabardEmblemFileName(COMPONENT_SECTIONS section, int32_t emblem, int32_t color, char* buffer, int32_t size) {
     *buffer = '\0';
 
@@ -925,11 +1110,23 @@ int32_t CCharacterComponent::GetProceduralEmblemFileName(int32_t emblem, char* b
     return 1;
 }
 
-// OFFSET: #0x004E8260
-char* CCharacterComponent::GetTabardBorderFileName(COMPONENT_SECTIONS section, int32_t border, int32_t color, char* buffer, int32_t size) {
+// OFFSET: 0x006F98A0/0x1403C2AE0
+char* CCharacterComponent::GetTabardBorderFileName(uint32_t flags, COMPONENT_SECTIONS section, int32_t border, int32_t color, char* buffer, int32_t size) {
     *buffer = '\0';
 
-    if (section == SECTION_TORSO_UPPER) {
+    if (flags & 0x10) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\EpicBorder_%02d_TU_U", color);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\EpicBorder_%02d_TL_U", color);
+        }
+    } else if (flags & 0x8) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\RareBorder_%02d_TU_U", color);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\RareBorder_%02d_TL_U", color);
+        }
+    } else if (section == SECTION_TORSO_UPPER) {
         SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Border_%02d_%02d_TU_U", border, color);
     } else if (section == SECTION_TORSO_LOWER) {
         SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Border_%02d_%02d_TL_U", border, color);
@@ -938,14 +1135,1845 @@ char* CCharacterComponent::GetTabardBorderFileName(COMPONENT_SECTIONS section, i
     return buffer;
 }
 
-// INLINED
-void CCharacterComponent::SetItemSlotUsingAttachSlot(ITEM_SLOT itemSlot, GEOCOMPONENTLINKS link) {
-    if (static_cast<uint32_t>(link) < NUM_ATTACH_LINKS) {
-        this->m_itemSlotForAttachSlot[link] = itemSlot;
+// OFFSET: 0x006F9980/0x1403C2BB0
+char* CCharacterComponent::GetShirtBackgroundFileName(uint32_t flags, COMPONENT_SECTIONS section, int32_t background, char* buffer, int32_t size) {
+    *buffer = '\0';
+
+    if (flags & 0x10) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBG_%02d_TU_U", background);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBG_%02d_TL_U", background);
+        } else if (section == SECTION_ARM_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBG_%02d_AU_U", background);
+        } else if (section == SECTION_ARM_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBG_%02d_AL_U", background);
+        }
+    } else if (flags & 0x8) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBG_%02d_TU_U", background);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBG_%02d_TL_U", background);
+        } else if (section == SECTION_ARM_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBG_%02d_AU_U", background);
+        } else if (section == SECTION_ARM_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBG_%02d_AL_U", background);
+        }
+    } else if (section == SECTION_TORSO_UPPER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBG_%02d_TU_U", background);
+    } else if (section == SECTION_TORSO_LOWER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBG_%02d_TL_U", background);
+    } else if (section == SECTION_ARM_UPPER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBG_%02d_AU_U", background);
+    } else if (section == SECTION_ARM_LOWER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBG_%02d_AL_U", background);
+    }
+
+    return buffer;
+}
+
+// OFFSET: 0x006F9B00/0x1403C2D60
+char* CCharacterComponent::GetShirtBorderFileName(uint32_t flags, COMPONENT_SECTIONS section, int32_t border, int32_t color, char* buffer, int32_t size) {
+    *buffer = '\0';
+
+    if (flags & 0x10) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBorder_%02d_TU_U", color);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBorder_%02d_TL_U", color);
+        } else if (section == SECTION_ARM_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBorder_%02d_AU_U", color);
+        } else if (section == SECTION_ARM_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_EpicBorder_%02d_AL_U", color);
+        }
+    } else if (flags & 0x8) {
+        if (section == SECTION_TORSO_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBorder_%02d_TU_U", color);
+        } else if (section == SECTION_TORSO_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBorder_%02d_TL_U", color);
+        } else if (section == SECTION_ARM_UPPER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBorder_%02d_AU_U", color);
+        } else if (section == SECTION_ARM_LOWER) {
+            SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_RareBorder_%02d_AL_U", color);
+        }
+    } else if (section == SECTION_TORSO_UPPER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBorder_%02d_TU_U", color);
+    } else if (section == SECTION_TORSO_LOWER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBorder_%02d_TL_U", color);
+    } else if (section == SECTION_ARM_UPPER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBorder_%02d_AU_U", color);
+    } else if (section == SECTION_ARM_LOWER) {
+        SStrPrintf(buffer, size, "Textures\\GuildEmblems\\Shirt01_CommonBorder_%02d_AL_U", color);
+    }
+
+    return buffer;
+}
+
+// OFFSET: 0x006F9D00
+void CCharacterComponent::GetPreferences(CharacterPreferences* preferences) {
+    if (preferences) {
+        *preferences = this->m_data.m_preferences;
     }
 }
 
-// OFFSET: #0x004E82D0
+// PROVEN: 634ec5a8 IDENTICAL/NONE
+// OFFSET: 0x006F9D40
+void CCharacterComponent::SetDirtySections(uint32_t mask) {
+    this->m_dirtySections |= mask;
+
+    if (this->m_request) {
+        this->m_request->m_active = 0;
+        this->m_request = NULL;
+    }
+
+    this->m_flags &= ~0x8;
+}
+
+// PROVEN: 36684900 IDENTICAL/NONE
+// OFFSET: 0x006F9D70
+void CCharacterComponent::SetTexturesDirty() {
+    this->m_flags |= 0x1;
+
+    if (this->m_request) {
+        this->m_request->m_active = 0;
+        this->m_request = NULL;
+    }
+
+    this->m_flags &= ~0x8;
+}
+
+// PROVEN: feb0fd8a IDENTICAL/NONE
+// OFFSET: 0x006F9D90
+void CCharacterComponent::ReleaseBaseTexture() {
+    if (this->m_baseTexture) {
+        GxTexSetCannotUpdate(TextureGetGxTex(this->m_baseTexture));
+        TextureRelease(this->m_baseTexture);
+        this->m_baseTexture = NULL;
+    }
+}
+
+// OFFSET: 0x006F9DC0
+bool CCharacterComponent::ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group, ItemDisplayInfoRec& rec) {
+    if (!displayID) {
+        return false;
+    }
+
+    return g_itemDisplayInfoDB.GetRecord(displayID, &rec) && rec.m_geosetGroup[group];
+}
+
+// OFFSET: 0x006F9E20
+bool CCharacterComponent::ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group) {
+    ItemDisplayInfoRec rec;
+
+    return this->ItemDisplayHasGeosetGroup(displayID, group, rec);
+}
+
+// OFFSET: 0x006F9E40
+void CCharacterComponent::GeosRenderPrep() {
+    bool eyeGlow = false;
+
+    if (this->m_data.m_preferences.m_classId == 6) {
+        eyeGlow = true;
+    } else {
+        CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, this->m_data.m_preferences.m_faceId, this->m_data.m_preferences.m_skinID, NULL);
+
+        if (faceRec && (faceRec->m_flags & 0x4)) {
+            eyeGlow = true;
+        }
+    }
+
+    CM2Model* model = this->m_data.m_model;
+    model->SetGeometryVisible(0, 2000, 0);
+    model->SetGeometryVisible(0, 0, 1);
+
+    for (int32_t i = 0; i < 19; i++) {
+        if (i == 17 && eyeGlow) {
+            this->m_data.m_model->SetGeometryVisible(1703, 1703, 1);
+        } else {
+            this->m_data.m_model->SetGeometryVisible(this->m_data.m_geosets[i], this->m_data.m_geosets[i], 1);
+        }
+    }
+
+    ItemDisplayInfoRec rec;
+
+    if (this->m_itemDisplayID[ITEMSLOT_GLOVES] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_GLOVES], &rec) && rec.m_geosetGroup[0]) {
+        this->m_data.m_model->SetGeometryVisible(401, 499, 0);
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 401, rec.m_geosetGroup[0] + 401, 1);
+    } else if (this->m_itemDisplayID[ITEMSLOT_CHEST] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CHEST], &rec) && rec.m_geosetGroup[0]) {
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 801, rec.m_geosetGroup[0] + 801, 1);
+    }
+
+    int32_t layer;
+
+    for (layer = 3; layer < 8; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_ARM_LOWER].m_layerMask) {
+            break;
+        }
+    }
+
+    if (layer >= 8 && this->m_itemDisplayID[ITEMSLOT_SHIRT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHIRT], &rec) && rec.m_geosetGroup[0]) {
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 801, rec.m_geosetGroup[0] + 801, 1);
+    }
+
+    bool robe = false;
+    bool dress = false;
+    bool tabard = false;
+
+    if (this->m_itemDisplayID[ITEMSLOT_CHEST] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CHEST], &rec) && rec.m_geosetGroup[2]) {
+        this->m_data.m_model->SetGeometryVisible(501, 599, 0);
+        this->m_data.m_model->SetGeometryVisible(902, 999, 0);
+        this->m_data.m_model->SetGeometryVisible(1100, 1199, 0);
+        this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[2] + 1301, rec.m_geosetGroup[2] + 1301, 1);
+        robe = true;
+    } else if (this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[2] && !(this->m_flags & 0x20)) {
+        this->m_data.m_model->SetGeometryVisible(501, 599, 0);
+        this->m_data.m_model->SetGeometryVisible(902, 999, 0);
+        this->m_data.m_model->SetGeometryVisible(1100, 1199, 0);
+        this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[2] + 1301, rec.m_geosetGroup[2] + 1301, 1);
+        dress = true;
+    } else {
+        if (this->m_itemDisplayID[ITEMSLOT_BOOTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_BOOTS], &rec) && rec.m_geosetGroup[0]) {
+            this->m_data.m_model->SetGeometryVisible(501, 599, 0);
+            this->m_data.m_model->SetGeometryVisible(901, 901, 1);
+            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 501, rec.m_geosetGroup[0] + 501, 1);
+        } else if (this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[1] && !(this->m_flags & 0x20)) {
+            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[1] + 901, rec.m_geosetGroup[1] + 901, 1);
+        } else {
+            this->m_data.m_model->SetGeometryVisible(901, 901, 1);
+        }
+
+        if (this->m_itemDisplayID[ITEMSLOT_TABARD] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_TABARD], &rec) && rec.m_geosetGroup[0]) {
+            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1201, rec.m_geosetGroup[0] + 1201, 1);
+            tabard = true;
+        }
+    }
+
+    if (this->m_flags & 0x40) {
+        this->m_data.m_model->SetGeometryVisible(1201, 1201, 1);
+
+        if (!robe && !dress) {
+            this->m_data.m_model->SetGeometryVisible(1202, 1202, 1);
+        }
+    }
+
+    if (!robe) {
+        if (!tabard) {
+            if (this->m_itemDisplayID[ITEMSLOT_CHEST] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CHEST], &rec) && rec.m_geosetGroup[1]) {
+                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[1] + 1001, rec.m_geosetGroup[1] + 1001, 1);
+            } else if (this->m_itemDisplayID[ITEMSLOT_SHIRT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHIRT], &rec) && rec.m_geosetGroup[1]) {
+                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[1] + 1001, rec.m_geosetGroup[1] + 1001, 1);
+            }
+        }
+
+        if (!(this->m_flags & 0x20) && this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[0]) {
+            if (rec.m_geosetGroup[0] > 2) {
+                this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
+                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1101, rec.m_geosetGroup[0] + 1101, 1);
+            } else if (!tabard) {
+                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1101, rec.m_geosetGroup[0] + 1101, 1);
+            }
+        }
+    }
+
+    if (this->m_itemDisplayID[ITEMSLOT_CAPE] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CAPE], &rec) && rec.m_geosetGroup[0]) {
+        this->m_data.m_model->SetGeometryVisible(1500, 1599, 0);
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1501, rec.m_geosetGroup[0] + 1501, 1);
+    }
+
+    if (this->m_itemDisplayID[ITEMSLOT_BELT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_BELT], &rec) && rec.m_geosetGroup[0]) {
+        this->m_data.m_model->SetGeometryVisible(1800, 1899, 0);
+        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1801, rec.m_geosetGroup[0] + 1801, 1);
+    }
+
+    this->m_data.m_model->OptimizeVisibleGeometry();
+    this->m_flags &= ~0x4;
+}
+
+// OFFSET: 0x006FA550
+void CCharacterComponent::PrepSections() {
+    uint32_t size = 1 << this->m_mipLevels;
+
+    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
+        if (!((1 << section) & this->m_dirtySections)) {
+            continue;
+        }
+
+        (this->*CCharacterComponent::m_prepFunc[section])();
+
+        if (!(this->m_flags & 0x1) && this->m_gxTexFormat != GxTex_Dxt1) {
+            const CompSectionInfo& info = s_sectionInfo[section];
+            GxTexUpdate(TextureGetGxTex(this->m_baseTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
+        }
+    }
+
+    if (!(this->m_flags & 0x1) && this->m_gxTexFormat != GxTex_Dxt1) {
+        return;
+    }
+
+    if (this->m_gxTexFormat == GxTex_Dxt1) {
+        CompressMipLevels(CCharacterComponent::s_textureBuffer, s_compressedTextureBuffer, this->m_mipLevels);
+    }
+
+    if (this->m_flags & 0x1) {
+        GxTexUpdate(TextureGetGxTex(this->m_baseTexture), 0, 0, size, size, 1);
+        return;
+    }
+
+    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
+        if ((1 << section) & this->m_dirtySections) {
+            const CompSectionInfo& info = s_sectionInfo[section];
+            GxTexUpdate(TextureGetGxTex(this->m_baseTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
+        }
+    }
+}
+
+// OFFSET: 0x006FA690
+void CCharacterComponent::CreateRequestAU() {
+    this->m_request->m_baseTextures[SECTION_ARM_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    for (int32_t layer = 0; layer < 4; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_ARM_UPPER].m_layerMask) {
+            this->m_request->AddLayer(SECTION_ARM_UPPER, this->m_section[SECTION_ARM_UPPER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FA720
+void CCharacterComponent::CreateRequestAL() {
+    this->m_request->m_baseTextures[SECTION_ARM_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    for (int32_t layer = 0; layer < 8; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_ARM_LOWER].m_layerMask) {
+            this->m_request->AddLayer(SECTION_ARM_LOWER, this->m_section[SECTION_ARM_LOWER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FA7B0
+void CCharacterComponent::CreateRequestHA() {
+    this->m_request->m_baseTextures[SECTION_HAND] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    if (this->m_section[SECTION_HAND].m_layerMask & 0x1) {
+        this->m_request->AddLayer(SECTION_HAND, this->m_section[SECTION_HAND].m_layerTex[0]);
+    }
+}
+
+// OFFSET: 0x006FA810
+void CCharacterComponent::CreateRequestHU() {
+    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
+
+    if (skinRec && (skinRec->m_flags & 0x8)) {
+        this->m_request->m_baseTextures[SECTION_HEAD_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+    }
+
+    if (this->m_baseVariation[VARIATION_FACE].m_texture[1]) {
+        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACE].m_texture[1]);
+    }
+
+    if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1]) {
+        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1]);
+    }
+
+    if (this->m_baseVariation[VARIATION_HAIR].m_texture[2]) {
+        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_HAIR].m_texture[2]);
+    }
+}
+
+// OFFSET: 0x006FA900
+void CCharacterComponent::CreateRequestHL() {
+    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
+
+    if (skinRec && (skinRec->m_flags & 0x8)) {
+        this->m_request->m_baseTextures[SECTION_HEAD_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+    }
+
+    if (this->m_baseVariation[VARIATION_FACE].m_texture[0]) {
+        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACE].m_texture[0]);
+    }
+
+    if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0]) {
+        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0]);
+    }
+
+    if (this->m_baseVariation[VARIATION_HAIR].m_texture[1]) {
+        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_HAIR].m_texture[1]);
+    }
+}
+
+// OFFSET: 0x006FA9F0
+void CCharacterComponent::CreateRequestTU() {
+    this->m_request->m_baseTextures[SECTION_TORSO_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+    uint32_t mask = this->m_section[SECTION_TORSO_UPPER].m_layerMask & 0x7F;
+
+    if (!mask && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
+        this->m_request->AddLayer(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]);
+    }
+
+    for (int32_t layer = 0; layer < 7; layer++) {
+        if ((1 << layer) & mask) {
+            this->m_request->AddLayer(SECTION_TORSO_UPPER, this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FAAE0
+void CCharacterComponent::CreateRequestTL() {
+    this->m_request->m_baseTextures[SECTION_TORSO_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    for (int32_t layer = 0; layer < 8; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_TORSO_LOWER].m_layerMask) {
+            this->m_request->AddLayer(SECTION_TORSO_LOWER, this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FAB70
+void CCharacterComponent::CreateRequestLU() {
+    this->m_request->m_baseTextures[SECTION_LEG_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    if (((this->m_flags & 0x20) || !(this->m_section[SECTION_LEG_UPPER].m_layerMask & 0x3)) && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
+        this->m_request->AddLayer(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]);
+    }
+
+    int32_t first = (this->m_flags & 0x20) != 0;
+    int32_t last = 3 - first;
+
+    for (int32_t layer = first; layer < last; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_LEG_UPPER].m_layerMask) {
+            this->m_request->AddLayer(SECTION_LEG_UPPER, this->m_section[SECTION_LEG_UPPER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FAC60
+void CCharacterComponent::CreateRequestLL() {
+    this->m_request->m_baseTextures[SECTION_LEG_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    int32_t first = (this->m_flags & 0x20) != 0;
+    int32_t last = 2 * ((this->m_flags & 0x20) == 0) + 4;
+
+    for (int32_t layer = first; layer < last; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_LEG_LOWER].m_layerMask) {
+            this->m_request->AddLayer(SECTION_LEG_LOWER, this->m_section[SECTION_LEG_LOWER].m_layerTex[layer]);
+        }
+    }
+}
+
+// OFFSET: 0x006FAD10
+void CCharacterComponent::CreateRequestFO() {
+    this->m_request->m_baseTextures[SECTION_FOOT] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
+
+    if (this->m_section[SECTION_FOOT].m_layerMask & 0x1) {
+        this->m_request->AddLayer(SECTION_FOOT, this->m_section[SECTION_FOOT].m_layerTex[0]);
+    }
+}
+
+// PROVEN: ddea1587 IDENTICAL/NONE
+// OFFSET: 0x006FAD70
+void CCharacterComponent::UpdateSections() {
+    uint32_t size = 1 << this->m_mipLevels;
+
+    if (this->m_flags & 0x1) {
+        GxTexUpdate(TextureGetGxTex(this->m_baseTexture), 0, 0, size, size, 1);
+        return;
+    }
+
+    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
+        if ((1 << section) & this->m_dirtySections) {
+            const CompSectionInfo& info = s_sectionInfo[section];
+            GxTexUpdate(TextureGetGxTex(this->m_baseTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
+        }
+    }
+}
+
+// OFFSET: 0x006FAE00/0x1403C4FA0
+void CCharacterComponent::ValidateComponentData(ComponentData* data, COMPONENT_CONTEXT context) {
+    CharacterPreferences& prefs = data->m_preferences;
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, prefs.m_classId);
+
+    if (!ComponentValidateSkin(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, context)) {
+        int32_t numSkins = CCharacterComponent::GetNumSkins(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, context);
+
+        if (numSkins <= 0) {
+            prefs.m_skinID = 0;
+        } else {
+            prefs.m_skinID = ComponentGetSkinColor(prefs.m_raceID, prefs.m_sexID, static_cast<int32_t>(prefs.m_skinID) % numSkins, selection);
+        }
+    }
+
+    if (!ComponentValidateFace(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, prefs.m_faceId, context)) {
+        int32_t numFaces = CCharacterComponent::GetNumFacesForSkin(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, context);
+
+        if (numFaces <= 0) {
+            prefs.m_faceId = 0;
+        } else {
+            prefs.m_faceId = ComponentGetFaceVariation(prefs.m_raceID, prefs.m_sexID, prefs.m_skinID, static_cast<int32_t>(prefs.m_faceId) % numFaces, selection);
+        }
+    }
+
+    if (!ComponentValidateHair(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_hairStyleId, context)) {
+        int32_t numStyles = CCharacterComponent::GetNumHairStylesForColor(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, context);
+
+        if (numStyles > 0) {
+            prefs.m_hairStyleId = ComponentGetHairVariation(prefs.m_raceID, prefs.m_sexID, prefs.m_hairColorId, static_cast<int32_t>(prefs.m_hairStyleId) % numStyles, selection);
+        } else {
+            int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, VARIATION_HAIR);
+            int32_t* numColors = static_cast<int32_t*>(alloca(sizeof(int32_t) * numVariations));
+            int32_t numValid = 0;
+
+            for (int32_t i = 0; i < numVariations; i++) {
+                numColors[i] = CCharacterComponent::GetNumHairColorsForStyle(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, i, context);
+
+                if (numColors[i] > 0) {
+                    numValid++;
+                }
+            }
+
+            if (numValid <= 0) {
+                prefs.m_hairColorId = 0;
+                prefs.m_hairStyleId = 0;
+            } else {
+                for (int32_t i = 0; i < numVariations; i++) {
+                    if (numColors[i] > 0 && static_cast<int32_t>(prefs.m_hairStyleId) % numValid == i) {
+                        prefs.m_hairStyleId = i;
+                        break;
+                    }
+                }
+
+                prefs.m_hairColorId = ComponentGetHairColor(prefs.m_raceID, prefs.m_sexID, prefs.m_hairStyleId, static_cast<int32_t>(prefs.m_hairColorId) % numColors[prefs.m_hairStyleId], selection);
+            }
+        }
+    }
+
+    if (!ComponentValidateFacialFeature(CCharacterComponent::s_chrVarArray, CCharacterComponent::s_characterFacialHairStylesList, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_facialHairId, context)) {
+        int32_t numFeatures = CCharacterComponent::GetNumFacialFeaturesForHairColor(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, context);
+
+        if (numFeatures <= 0) {
+            prefs.m_facialHairId = 0;
+        } else {
+            prefs.m_facialHairId = CCharacterComponent::GetNthFacialFeatureIndex(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_facialHairId, static_cast<int32_t>(prefs.m_facialHairId) % numFeatures, selection);
+        }
+    }
+}
+
+// OFFSET: 0x006FB0B0/0x1403C52A0
+static CharacterFacialHairStylesRec* GetConditionalFacialHairStyle(CharacterPreferences* prefs) {
+    for (int32_t i = 0; i < g_characterFacialHairStylesDB.m_numRecords; i++) {
+        CharacterFacialHairStylesRec* rec = g_characterFacialHairStylesDB.GetRecordByIndex(i);
+
+        if (!rec) {
+            return NULL;
+        }
+
+        if (prefs->m_raceID == rec->m_raceID && prefs->m_sexID == rec->m_sexID && prefs->m_facialHairId == rec->m_variationID) {
+            return rec;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x006FB100/0x1403C5300
+static int32_t GetConditionalGeoset(CharacterPreferences* prefs) {
+    for (int32_t i = 0; i < g_charHairGeosetsDB.m_numRecords; i++) {
+        CharHairGeosetsRec* rec = g_charHairGeosetsDB.GetRecordByIndex(i);
+
+        if (!rec) {
+            return 1;
+        }
+
+        if (prefs->m_raceID == rec->m_raceID && prefs->m_sexID == rec->m_sexID && prefs->m_hairStyleId == rec->m_variationID) {
+            if (rec->m_geosetID > 0) {
+                return rec->m_geosetID;
+            }
+
+            return 1;
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x006FB160/0x1403C55C0
+void CCharacterComponent::LoadBaseVariation(COMPONENT_VARIATIONS variation, int32_t textureIndex, int32_t variationIndex, int32_t colorIndex, COMPONENT_SECTIONS section, const char* debug) {
+    void*& texture = this->m_baseVariation[variation].m_texture[textureIndex];
+
+    if (texture) {
+        TextureCacheDestroyTexture(texture);
+        texture = NULL;
+    }
+
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, variation, variationIndex, colorIndex)) {
+        return;
+    }
+
+    CharSectionsRec* rec = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[variation].m_variation[variationIndex].m_color[colorIndex];
+
+    if (!rec) {
+        return;
+    }
+
+    const char* textureName = rec->m_textureName[textureIndex];
+
+    if (*textureName) {
+        strcpy(s_pathEnd, textureName);
+        texture = TextureCacheCreateTexture(s_path);
+
+        if (!texture) {
+            DebugLog("**** Unable to Load Texture %s\n", s_path);
+        }
+    }
+
+    this->SetDirtySections(1 << section);
+}
+
+// OFFSET: 0x006FB260/0x1403C5740
+void CCharacterComponent::SetHairColor(int32_t hairColorID, bool loadHair, const char* debug) {
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId, hairColorID)) {
+        return;
+    }
+
+    this->m_data.m_preferences.m_hairColorId = hairColorID;
+    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(this->m_data.m_preferences.m_raceID);
+
+    if (!this->m_data.m_preferences.m_sexID && !this->m_data.m_preferences.m_hairStyleId && (raceRec->m_flags & 0x8)) {
+        this->ReplaceHairTexture(1, debug);
+    }
+
+    this->ReplaceHairTexture(this->m_data.m_preferences.m_hairStyleId, debug);
+
+    if (this->m_data.m_flags & 0x1) {
+        return;
+    }
+
+    if (loadHair) {
+        this->LoadBaseVariation(VARIATION_HAIR, 1, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
+        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
+    }
+
+    this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 0, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
+    this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 1, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
+}
+
+// OFFSET: 0x006FB350/0x1403C58B0
+void CCharacterComponent::SetHairStyle(int32_t hairStyleID, const char* debug) {
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId)) {
+        return;
+    }
+
+    this->m_data.m_preferences.m_hairStyleId = hairStyleID;
+    this->m_data.m_geosets[0] = GetConditionalGeoset(&this->m_data.m_preferences);
+
+    if (!(this->m_data.m_flags & 0x1)) {
+        this->LoadBaseVariation(VARIATION_HAIR, 1, hairStyleID, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
+        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
+    }
+
+    this->SetHairColor(this->m_data.m_preferences.m_hairColorId, false, debug);
+    this->m_flags |= 0x4;
+    this->SetDirtySections(0x300);
+}
+
+// OFFSET: 0x006FB400/0x1403C59B0
+void CCharacterComponent::SetFace(int32_t faceID, bool loadHair, const char* debug) {
+    if (this->m_data.m_flags & 0x1) {
+        return;
+    }
+
+    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
+
+    if (skinRec && (skinRec->m_flags & 0x8)) {
+        return;
+    }
+
+    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, this->m_data.m_preferences.m_skinID)) {
+        return;
+    }
+
+    this->m_data.m_preferences.m_faceId = faceID;
+    this->LoadBaseVariation(VARIATION_FACE, 0, faceID, this->m_data.m_preferences.m_skinID, SECTION_HEAD_LOWER, debug);
+    this->LoadBaseVariation(VARIATION_FACE, 1, this->m_data.m_preferences.m_faceId, this->m_data.m_preferences.m_skinID, SECTION_HEAD_UPPER, debug);
+
+    if (loadHair) {
+        this->LoadBaseVariation(VARIATION_HAIR, 1, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
+        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
+    }
+
+    this->m_flags |= 0x4;
+    this->SetDirtySections(0x300);
+}
+
+// OFFSET: 0x006FB500/0x1403C5B30
+void CCharacterComponent::SetBeardStyle(int32_t facialHairID, bool loadVariation, const char* debug) {
+    if (facialHairID < 0 || facialHairID > static_cast<int32_t>(CCharacterComponent::s_characterFacialHairStylesList[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID])) {
+        return;
+    }
+
+    this->m_data.m_preferences.m_facialHairId = facialHairID;
+    CharacterFacialHairStylesRec* styleRec = GetConditionalFacialHairStyle(&this->m_data.m_preferences);
+
+    if (styleRec) {
+        this->m_data.m_geosets[1] = styleRec->m_geoset[0] + 100;
+        this->m_data.m_geosets[3] = styleRec->m_geoset[1] + 300;
+        this->m_data.m_geosets[2] = styleRec->m_geoset[2] + 200;
+        this->m_data.m_geosets[16] = styleRec->m_geoset[3] + 1600;
+        this->m_flags |= 0x4;
+        this->m_data.m_geosets[17] = styleRec->m_geoset[4] + 1700;
+
+        if ((styleRec->m_geoset[0] || styleRec->m_geoset[1] || styleRec->m_geoset[2]) && (!this->m_baseVariation[VARIATION_HAIR].m_texture[1] || !this->m_baseVariation[VARIATION_HAIR].m_texture[2])) {
+            this->ReplaceHairTexture(1, debug);
+        }
+    }
+
+    if (this->m_data.m_flags & 0x1) {
+        return;
+    }
+
+    if (loadVariation) {
+        this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 0, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
+        this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 1, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
+    }
+
+    this->SetDirtySections(0x300);
+}
+
+// OFFSET: 0x006FB620/0x1403C5CA0
+void CCharacterComponent::SetSkinColor(int32_t skinID, bool loadHair, bool renderAll, const char* debug) {
+    this->m_data.m_preferences.m_skinID = skinID;
+
+    if ((this->m_data.m_flags & 0x1) || !ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID)) {
+        return;
+    }
+
+    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0);
+    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
+
+    if (skinID < numColors && skinRec && !(skinRec->m_flags & 0x8)) {
+        CharSectionsRec* underwearRec = this->GetSectionsRecord(VARIATION_UNDERWEAR, 0, skinID, NULL);
+
+        if (this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
+            TextureCacheDestroyTexture(this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]);
+            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0] = NULL;
+        }
+
+        if (this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
+            TextureCacheDestroyTexture(this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]);
+            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1] = NULL;
+        }
+
+        if (underwearRec) {
+            if (*underwearRec->m_textureName[0]) {
+                strcpy(s_pathEnd, underwearRec->m_textureName[0]);
+                this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0] = TextureCacheCreateTexture(s_path);
+
+                if (!this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
+                    DebugLog("**** Unable to Load Texture %s\n", s_path);
+                }
+            }
+
+            if (*underwearRec->m_textureName[1]) {
+                strcpy(s_pathEnd, underwearRec->m_textureName[1]);
+                this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1] = TextureCacheCreateTexture(s_path);
+
+                if (!this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
+                    DebugLog("**** Unable to Load Texture %s\n", s_path);
+                }
+            }
+        }
+    }
+
+    this->ReplaceExtraSkinTexture(debug);
+    this->LoadBaseVariation(VARIATION_SKIN, 0, 0, this->m_data.m_preferences.m_skinID, SECTION_TORSO_UPPER, debug);
+    this->SetFace(this->m_data.m_preferences.m_faceId, loadHair, debug);
+
+    if (renderAll) {
+        this->SetTexturesDirty();
+    }
+
+    this->m_dirtySections = 0xFFFFFFFF;
+
+    if (this->m_request) {
+        this->m_request->m_active = 0;
+        this->m_request = NULL;
+    }
+
+    this->m_flags &= ~0x8;
+}
+
+// OFFSET: 0x006FB7F0/0x1403C5F30
+void CCharacterComponent::CopyChoicesToAlteredFormComponent(CCharacterComponent* altered, COMPONENT_CONTEXT context) {
+    if (!altered) {
+        return;
+    }
+
+    CharacterPreferences prefs = this->m_data.m_preferences;
+    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(prefs.m_raceID);
+
+    if (!raceRec || !raceRec->m_alteredFormRaceID) {
+        return;
+    }
+
+    ComponentData data;
+    data.SetPreferences(&prefs);
+    data.m_preferences.m_raceID = raceRec->m_alteredFormRaceID;
+    CCharacterComponent::ValidateComponentData(&data, context);
+    altered->SetSkinColor(data.m_preferences.m_skinID, false, true, NULL);
+    altered->SetHairColor(data.m_preferences.m_hairColorId, false, NULL);
+    altered->SetHairStyle(data.m_preferences.m_hairStyleId, NULL);
+    altered->SetFace(data.m_preferences.m_faceId, false, NULL);
+    altered->SetBeardStyle(data.m_preferences.m_facialHairId, true, NULL);
+}
+
+// OFFSET: 0x006FB910
+int32_t CCharacterComponent::UpdateTextureSlot(COMPONENT_SECTIONS section, const ItemDisplayInfoRec* displayRec, int32_t layer) {
+    if (this->m_data.m_flags & 0x1) {
+        return 0;
+    }
+
+    CharacterSection& sectionData = this->m_section[section];
+
+    if (sectionData.m_layerItemDisplayId[layer]) {
+        ItemDisplayInfoRec rec;
+
+        if (g_itemDisplayInfoDB.GetRecord(sectionData.m_layerItemDisplayId[layer], &rec) && rec.m_texture[section] == displayRec->m_texture[section]) {
+            return 0;
+        }
+    }
+
+    sectionData.m_layerMask &= ~(1 << layer);
+
+    if (sectionData.m_layerTex[layer]) {
+        TextureCacheDestroyTexture(sectionData.m_layerTex[layer]);
+        sectionData.m_layerTex[layer] = NULL;
+    }
+
+    sectionData.m_layerItemDisplayId[layer] = displayRec->m_id;
+
+    return 1;
+}
+
+// OFFSET: 0x006FB9D0
+void CCharacterComponent::FreeSectionTexture(COMPONENT_SECTIONS section, int32_t layer) {
+    if (layer == -1) {
+        return;
+    }
+
+    if (this->m_section[section].m_layerTex[layer]) {
+        TextureCacheDestroyTexture(this->m_section[section].m_layerTex[layer]);
+        this->m_section[section].m_layerTex[layer] = NULL;
+    }
+
+    this->m_section[section].m_layerItemDisplayId[layer] = 0;
+    this->m_section[section].m_layerMask &= ~(1 << layer);
+}
+
+// OFFSET: 0x006FBA40
+void CCharacterComponent::UpdateItem(ITEM_SLOT itemSlot, COMPONENT_SECTIONS section, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][section];
+
+    switch (section) {
+        case SECTION_ARM_LOWER:
+            if (displayRec && displayRec->m_geosetGroup[0]) {
+                switch (itemSlot) {
+                    case ITEMSLOT_CHEST:
+                        layer = 6;
+                        break;
+
+                    case ITEMSLOT_GLOVES:
+                        layer = 7;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            break;
+
+        case SECTION_LEG_LOWER:
+            switch (itemSlot) {
+                case ITEMSLOT_CHEST:
+                    if (displayRec && displayRec->m_geosetGroup[2]) {
+                        layer = 4;
+                        this->m_flags |= 0x4;
+                    }
+
+                    break;
+
+                case ITEMSLOT_PANTS:
+                    if (displayRec && displayRec->m_geosetGroup[2]) {
+                        uint32_t chestID = this->m_itemDisplayID[ITEMSLOT_CHEST];
+
+                        if (chestID && this->ItemDisplayHasGeosetGroup(chestID, 2)) {
+                            layer = 3;
+                        } else {
+                            layer = 4;
+                        }
+
+                        this->m_flags |= 0x4;
+                    }
+
+                    break;
+
+                case ITEMSLOT_BOOTS:
+                    if (displayRec && displayRec->m_geosetGroup[0]) {
+                        this->m_flags |= 0x4;
+                        layer = 3;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            break;
+
+        case SECTION_FOOT:
+            if (this->m_flags & 0x10) {
+                apply = false;
+                this->FreeSectionTexture(section, layer);
+                goto updated;
+            }
+
+            break;
+
+        default:
+            break;
+    }
+
+    if (!apply) {
+        this->FreeSectionTexture(section, layer);
+    } else if (!this->UpdateTextureSlot(section, displayRec, layer)) {
+        return;
+    }
+
+updated:
+    if (section == SECTION_LEG_LOWER && !apply) {
+        ItemDisplayInfoRec rec;
+
+        switch (itemSlot) {
+            case ITEMSLOT_CHEST:
+                if (this->ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_PANTS], 2, rec)) {
+                    this->FreeSectionTexture(SECTION_LEG_LOWER, 3);
+                    this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 4);
+                }
+
+                if (this->ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_BOOTS], 0, rec)) {
+                    this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 3);
+                }
+
+                break;
+
+            case ITEMSLOT_PANTS:
+                if (this->ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_PANTS], 2, rec)) {
+                    this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 4);
+                }
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << section);
+    }
+}
+
+// PROVEN: d545bcbf IDENTICAL/NONE
+// OFFSET: 0x006FBC30
+void CCharacterComponent::UpdateItemAU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_UPPER];
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_ARM_UPPER, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_ARM_UPPER, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_ARM_UPPER);
+    }
+}
+
+// PROVEN: d5766acf IDENTICAL/NONE
+// OFFSET: 0x006FBC90
+void CCharacterComponent::UpdateItemAL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_LOWER];
+
+    if (displayRec && displayRec->m_geosetGroup[0]) {
+        switch (itemSlot) {
+            case ITEMSLOT_CHEST:
+                layer = 6;
+                break;
+
+            case ITEMSLOT_GLOVES:
+                layer = 7;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_ARM_LOWER, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_ARM_LOWER, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_ARM_LOWER);
+    }
+}
+
+// PROVEN: f4af80ec IDENTICAL/NONE
+// OFFSET: 0x006FBD10
+void CCharacterComponent::UpdateItemHA(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_HAND];
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_HAND, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_HAND, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_HAND);
+    }
+}
+
+// PROVEN: 90aa2b97 IDENTICAL/NONE
+// OFFSET: 0x006FBD70
+void CCharacterComponent::UpdateItemTU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_UPPER];
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_TORSO_UPPER, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_TORSO_UPPER, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_TORSO_UPPER);
+    }
+}
+
+// PROVEN: f35990fc IDENTICAL/NONE
+// OFFSET: 0x006FBDD0
+void CCharacterComponent::UpdateItemTL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_LOWER];
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_TORSO_LOWER, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_TORSO_LOWER, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_TORSO_LOWER);
+    }
+}
+
+// PROVEN: 649ca295 IDENTICAL/NONE
+// OFFSET: 0x006FBE30
+void CCharacterComponent::UpdateItemLU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_LEG_UPPER];
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_LEG_UPPER, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_LEG_UPPER, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_LEG_UPPER);
+    }
+}
+
+// PROVEN: 428b3977 IDENTICAL/NONE
+// OFFSET: 0x006FBEB0
+void CCharacterComponent::UpdateItemFO(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    int32_t layer = s_itemPriority[itemSlot][SECTION_FOOT];
+
+    if (this->m_flags & 0x10) {
+        apply = false;
+    }
+
+    if (!apply) {
+        this->FreeSectionTexture(SECTION_FOOT, layer);
+    } else if (!this->UpdateTextureSlot(SECTION_FOOT, displayRec, layer)) {
+        return;
+    }
+
+    if (layer != -1) {
+        this->SetDirtySections(1 << SECTION_FOOT);
+    }
+}
+
+// PROVEN: d2465183 IDENTICAL/NONE
+// OFFSET: 0x006FBF20/0x1403C68C0
+void CCharacterComponent::ComponentUtilAddItemVisual(CM2Model* model, int32_t itemVisual) {
+    while (model->m_attachList) {
+        model->m_attachList->DetachFromParent();
+    }
+
+    ItemVisualsRec* visualRec = g_itemVisualsDB.GetRecord(itemVisual);
+
+    if (!visualRec) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        ItemVisualEffectsRec* effectRec = g_itemVisualEffectsDB.GetRecord(visualRec->m_slot[i]);
+
+        if (effectRec && *effectRec->m_model) {
+            strcpy(s_pathEnd, effectRec->m_model);
+            CM2Model* effectModel = model->m_scene->CreateModel(s_path, 0, 3);
+
+            if (effectModel) {
+                effectModel->ForceAdditiveParticleSort();
+                effectModel->AttachToParent(model, i, NULL, 0);
+                effectModel->Release();
+            }
+        }
+    }
+}
+
+// OFFSET: 0x006FC010/0x1403C6A30
+static void ReplaceParticleColor(int32_t particleColorID, CM2Model* model) {
+    if (!model || !particleColorID) {
+        return;
+    }
+
+    ParticleColorRec* colorRec = g_particleColorDB.GetRecord(particleColorID);
+
+    if (colorRec) {
+        for (uint32_t i = 0; i < 3; i++) {
+            model->ReplaceParticleColor(i + 11, *reinterpret_cast<CImVector*>(&colorRec->m_start[i]), *reinterpret_cast<CImVector*>(&colorRec->m_mid[i]), *reinterpret_cast<CImVector*>(&colorRec->m_end[i]));
+        }
+    } else {
+        CImVector green;
+        *reinterpret_cast<uint32_t*>(&green) = 0xFF00FF00;
+
+        for (uint32_t i = 0; i < 3; i++) {
+            model->ReplaceParticleColor(i + 11, green, green, green);
+        }
+    }
+}
+
+// OFFSET: 0x006FC0A0
+CM2Model* CCharacterComponent::AddLink(CM2Model* parent, uint8_t* attachMask, GEOCOMPONENTLINKS link, const char* modelPath, const char* texturePath, int32_t itemVisual, const ItemDisplayInfoRec* displayRec) {
+    if (!parent) {
+        return NULL;
+    }
+
+    CM2Model* model = parent->m_scene->CreateModel(modelPath, 0, 3);
+
+    if (!model) {
+        return NULL;
+    }
+
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
+    CTexture* texture = TextureCreate(texturePath, flags, &s_status, 0, NULL, 3);
+
+    if (!texture) {
+        model->Release();
+        return NULL;
+    }
+
+    model->ReplaceTexture(2, texture);
+    TextureRelease(texture);
+
+    if (itemVisual > 0) {
+        CCharacterComponent::ComponentUtilAddItemVisual(model, itemVisual);
+    }
+
+    parent->DetachAllChildrenById(link);
+    model->AttachToParent(parent, link, NULL, 0);
+    uint8_t hide = (displayRec->m_flags >> 6) & 1;
+
+    switch (link) {
+        case ATTACH_SHIELD:
+            *attachMask = (*attachMask & ~0x20) | (hide << 5);
+            break;
+
+        case ATTACH_HANDRIGHT:
+            CCharacterComponent::ComponentCloseFingers(parent, COMP_HAND_RIGHT);
+            *attachMask = (*attachMask & ~0x8) | (hide << 3);
+            break;
+
+        case ATTACH_HANDLEFT:
+            CCharacterComponent::ComponentCloseFingers(parent, COMP_HAND_LEFT);
+            *attachMask = (*attachMask & ~0x10) | (hide << 4);
+            break;
+
+        case ATTACH_SHOULDERRIGHT:
+            *attachMask = (*attachMask & ~0x2) | (hide << 1);
+            break;
+
+        case ATTACH_SHOULDERLEFT:
+            *attachMask = (*attachMask & ~0x1) | hide;
+            break;
+
+        case ATTACH_HELM:
+            *attachMask = (*attachMask & ~0x4) | (hide << 2);
+            break;
+
+        default:
+            break;
+    }
+
+    ReplaceParticleColor(displayRec->m_particleColorID, model);
+    model->Release();
+
+    return model;
+}
+
+// PROVEN: 1e9a0da9 IDENTICAL/NONE
+// OFFSET: 0x006FC230/0x1403C6D00
+int32_t CCharacterComponent::GetShoulderDisplayInfo(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec) {
+    if (!g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHOULDER], &rec)) {
+        return 0;
+    }
+
+    displayRec = &rec;
+
+    return 1;
+}
+
+// OFFSET: 0x006FC290/0x1403C6D90
+int32_t CCharacterComponent::BuildShoulderItemPaths(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec, char* leftModel, char* rightModel, char* leftTexture, char* rightTexture) {
+    *leftModel = '\0';
+    *rightModel = '\0';
+
+    if (leftTexture) {
+        *leftTexture = '\0';
+    }
+
+    if (rightTexture) {
+        *rightTexture = '\0';
+    }
+
+    if (!this->m_itemDisplayID[ITEMSLOT_SHOULDER] || !this->GetShoulderDisplayInfo(rec, displayRec)) {
+        return 0;
+    }
+
+    SStrCopy(s_buffer, "Item\\ObjectComponents\\Shoulder\\", sizeof(s_buffer));
+    char* end = s_buffer + strlen(s_buffer);
+
+    if (*displayRec->m_modelName[0]) {
+        strcpy(end, displayRec->m_modelName[0]);
+        strcpy(leftModel, s_buffer);
+
+        if (leftTexture) {
+            strcpy(end, displayRec->m_modelTexture[0]);
+            strcat(end, ".blp");
+            strcpy(leftTexture, s_buffer);
+        }
+    }
+
+    if (*displayRec->m_modelName[1]) {
+        strcpy(end, displayRec->m_modelName[1]);
+        strcpy(rightModel, s_buffer);
+
+        if (rightTexture) {
+            strcpy(end, displayRec->m_modelTexture[1]);
+            strcat(end, ".blp");
+            strcpy(rightTexture, s_buffer);
+        }
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x006FC430
+int32_t CCharacterComponent::AreShoulderModelsCorrect() {
+    CM2Model* list = this->m_data.m_model->m_attachList;
+    CM2Model* left = list;
+
+    if (!left) {
+        return 0;
+    }
+
+    while (left->m_attachmentId != ATTACH_SHOULDERLEFT) {
+        left = left->m_attachNext;
+
+        if (!left) {
+            return 0;
+        }
+    }
+
+    CM2Model* right = list;
+
+    if (!right) {
+        return 0;
+    }
+
+    while (right->m_attachmentId != ATTACH_SHOULDERRIGHT) {
+        right = right->m_attachNext;
+
+        if (!right) {
+            return 0;
+        }
+    }
+
+    ItemDisplayInfoRec rec;
+    const ItemDisplayInfoRec* displayRec;
+
+    if (!left->IsDrawable() || !right->IsDrawable() || (left->m_fFlags & 0x2000) || (right->m_fFlags & 0x2000) || !this->BuildShoulderItemPaths(rec, displayRec, s_path, s_path2, NULL, NULL)) {
+        return 0;
+    }
+
+    OsPathReplaceExtension(s_path, sizeof(s_path), s_path, "m2");
+    OsPathReplaceExtension(s_path2, sizeof(s_path2), s_path2, "m2");
+
+    return !_stricmp(left->m_shared->m_fileName, s_path) && !_stricmp(right->m_shared->m_fileName, s_path2);
+}
+
+// PROVEN: a90fb84f IDENTICAL/NONE
+// OFFSET: 0x006FC550
+static void ShoulderSequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary) {
+    if (!model || !primary || !model->m_attachParent) {
+        return;
+    }
+
+    for (CM2Model* child = model->m_attachParent->m_attachList; child; child = child->m_attachNext) {
+        if (child->m_attachmentId == ATTACH_SHOULDERLEFT) {
+            if (child == reinterpret_cast<CM2Model*>(param)) {
+                child->SetBoneSequence(boneId, sequenceId, variation, time, 1.0f, 1, 1, 0, 0, 0);
+            }
+
+            return;
+        }
+    }
+}
+
+// OFFSET: 0x006FC5B0
+void CCharacterComponent::LinkShoulderAnimations(CM2Model* left, CM2Model* right, const ItemDisplayInfoRec* displayRec) {
+    if (!right || !left || !(displayRec->m_flags & 0x80)) {
+        return;
+    }
+
+    this->m_attachMask &= ~0x1;
+    right->SetSequenceStartCallback(ShoulderSequenceStartCallback, reinterpret_cast<intptr_t>(left));
+    right->SetBoneSequence(-1, 0, -1, 0, 1.0f, 1, 1, 0, 0, 0);
+}
+
+// OFFSET: 0x006FC610/0x1403C7340
+CM2Model* CCharacterComponent::MakeAmmoModel(CM2Model* model, const ItemDisplayInfoRec* displayRec, uint32_t invType) {
+    if (!displayRec) {
+        return NULL;
+    }
+
+    const char* modelName = displayRec->m_modelName[1];
+
+    if (!*modelName || !*displayRec->m_modelTexture[1]) {
+        return NULL;
+    }
+
+    const char* folder;
+
+    if (invType == INVTYPE_AMMO) {
+        folder = "Item\\ObjectComponents\\Ammo\\";
+    } else if (invType == INVTYPE_THROWN) {
+        folder = "Item\\ObjectComponents\\Weapon\\";
+    } else {
+        return NULL;
+    }
+
+    char path[260];
+    strcpy(path, folder);
+    size_t length = strlen(path);
+    strcpy(path + length, modelName);
+
+    CM2Model* ammoModel = model->m_scene->CreateModel(path, 0, 3);
+
+    if (!ammoModel) {
+        return NULL;
+    }
+
+    strcpy(path + length, displayRec->m_modelTexture[1]);
+
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
+    CTexture* texture = TextureCreate(path, flags, &s_status, 0, NULL, 3);
+
+    if (!texture) {
+        ammoModel->Release();
+        return NULL;
+    }
+
+    ammoModel->ReplaceTexture(2, texture);
+    TextureRelease(texture);
+    CCharacterComponent::ComponentUtilAddItemVisual(ammoModel, displayRec->m_itemVisual);
+
+    return ammoModel;
+}
+
+// OFFSET: 0x006FC740
+GEOCOMPONENTLINKS CCharacterComponent::AddHandItem(CM2Model* model, uint8_t* attachMask, const ItemDisplayInfoRec* displayRec, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
+    if (!model || !displayRec || static_cast<uint32_t>(invSlot) > INVSLOT_TABARD) {
+        return ATTACH_NONE;
+    }
+
+    const char* folder = "Item\\ObjectComponents\\Weapon\\";
+    GEOCOMPONENTLINKS hand;
+    GEOCOMPONENTLINKS sheath;
+
+    if (invSlot == INVSLOT_MAINHAND || (invSlot == INVSLOT_RANGED && mainHand)) {
+        hand = ATTACH_HANDRIGHT;
+        sheath = CCharacterComponent::GetSheatheLink(sheatheType, true);
+    } else if (invSlot == INVSLOT_OFFHAND) {
+        hand = ATTACH_HANDLEFT;
+        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
+
+        if (shield) {
+            folder = "Item\\ObjectComponents\\Shield\\";
+            hand = ATTACH_SHIELD;
+        }
+    } else if (invSlot == INVSLOT_RANGED) {
+        hand = ATTACH_HANDLEFT;
+        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
+    } else {
+        return ATTACH_NONE;
+    }
+
+    CCharacterComponent::RemoveLinkpt(model, attachMask, hand);
+    CCharacterComponent::RemoveLinkpt(model, attachMask, sheath);
+
+    GEOCOMPONENTLINKS link = sheathed ? sheath : hand;
+
+    if (model->IsLoaded() && !model->HasAttachment(link)) {
+        return ATTACH_NONE;
+    }
+
+    SStrPrintf(s_buffer, "%s%s", folder, displayRec->m_modelName[0]);
+    strcpy(s_pathEnd, s_buffer);
+    SStrPrintf(s_buffer, "%s%s.blp", folder, displayRec->m_modelTexture[0]);
+    strcpy(s_pathEnd2, s_buffer);
+
+    CCharacterComponent::AddLink(model, attachMask, link, s_path, s_path2, itemVisual ? itemVisual : displayRec->m_itemVisual, displayRec);
+
+    return link;
+}
+
+// OFFSET: 0x006FC950/0x1403C7760
+void CCharacterComponent::RemoveVisuals(CM2Model* model) {
+    model->DetachAllChildrenById(15);
+    model->DetachAllChildrenById(16);
+    model->DetachAllChildrenById(17);
+    model->DetachAllChildrenById(18);
+    model->DetachAllChildrenById(29);
+    model->DetachAllChildrenById(19);
+    model->DetachAllChildrenById(20);
+    model->DetachAllChildrenById(38);
+    model->DetachAllChildrenById(21);
+    model->DetachAllChildrenById(22);
+    model->DetachAllChildrenById(23);
+    model->DetachAllChildrenById(24);
+    model->DetachAllChildrenById(25);
+    model->DetachAllChildrenById(34);
+    model->DetachAllChildrenById(35);
+    model->DetachAllChildrenById(47);
+    model->DetachAllChildrenById(48);
+    model->DetachAllChildrenById(12);
+    model->m_emissiveTintR = 0.0f;
+    model->m_emissiveTintG = 0.0f;
+    model->m_fadeAlpha = 1.0f;
+    model->m_emissiveTintB = 0.0f;
+    model->m_diffuseTintR = 1.0f;
+    model->m_diffuseTintG = 1.0f;
+    model->m_diffuseTintB = 1.0f;
+}
+
+// OFFSET: 0x006FCA70/0x1403C78D0
+void CCharacterComponent::RemoveHandItem(CM2Model* model, uint8_t* attachMask, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
+    if (!model || static_cast<uint32_t>(invSlot - INVSLOT_BACK) > 4) {
+        return;
+    }
+
+    GEOCOMPONENTLINKS hand = ATTACH_NONE;
+    GEOCOMPONENTLINKS sheath = ATTACH_NONE;
+
+    if (invSlot == INVSLOT_MAINHAND) {
+        hand = ATTACH_HANDRIGHT;
+        sheath = CCharacterComponent::GetSheatheLink(sheatheType, true);
+    } else if (invSlot > INVSLOT_MAINHAND && invSlot <= INVSLOT_RANGED) {
+        hand = ATTACH_HANDLEFT;
+        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
+
+        if (shield) {
+            hand = ATTACH_SHIELD;
+        }
+    }
+
+    CCharacterComponent::RemoveLinkpt(model, attachMask, hand);
+    CCharacterComponent::RemoveLinkpt(model, attachMask, sheath);
+}
+
+// OFFSET: 0x006FCB60
+bool CCharacterComponent::SetNextSkin(COMPONENT_CONTEXT context, int32_t step) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0);
+
+    if (numColors <= 0) {
+        return false;
+    }
+
+    int32_t skinID = this->m_data.m_preferences.m_skinID + step;
+
+    if (skinID >= numColors) {
+        skinID = 0;
+    } else if (skinID < 0) {
+        skinID = numColors - 1;
+    }
+
+    if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
+        return false;
+    }
+
+    CharSectionsRec* skinRec;
+
+    while (true) {
+        skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
+        CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, this->m_data.m_preferences.m_faceId, skinID, NULL);
+        CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
+
+        if (skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
+            break;
+        }
+
+        skinID += step;
+
+        if (skinID >= numColors) {
+            skinID = 0;
+        } else if (skinID < 0) {
+            skinID = numColors - 1;
+        }
+
+        if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
+            return false;
+        }
+    }
+
+    this->SetSkinColor(skinRec->m_colorIndex, true, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FCCC0/0x1403C7B70
+bool CCharacterComponent::SetRandomSkin(COMPONENT_CONTEXT context) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numSkins = CCharacterComponent::GetNumSkins(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, context);
+    int32_t index = numSkins > 0 ? CRandom::dice_(numSkins, g_rndSeed) : 0;
+    int32_t skinID = ComponentGetSkinColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, index, selection);
+
+    if (skinID < 0) {
+        return false;
+    }
+
+    this->SetSkinColor(skinID, true, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FCD50/0x1403C7C20
+bool CCharacterComponent::SetRandomHairStyle(COMPONENT_CONTEXT context) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numStyles = CCharacterComponent::GetNumHairStylesForColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, context);
+    int32_t index = numStyles > 0 ? CRandom::dice_(numStyles, g_rndSeed) : 0;
+    int32_t hairStyleID = ComponentGetHairVariation(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_hairColorId, index, selection);
+
+    if (hairStyleID < 0) {
+        return false;
+    }
+
+    this->SetHairStyle(hairStyleID, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FCDE0
+bool CCharacterComponent::SetNextHairColor(COMPONENT_CONTEXT context, int32_t step) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId);
+
+    if (numColors <= 0) {
+        return false;
+    }
+
+    int32_t hairColorID = this->m_data.m_preferences.m_hairColorId + step;
+
+    if (hairColorID >= numColors) {
+        hairColorID = 0;
+    } else if (hairColorID < 0) {
+        hairColorID = numColors - 1;
+    }
+
+    if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
+        return false;
+    }
+
+    CharSectionsRec* rec;
+
+    while (true) {
+        rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId, hairColorID, NULL);
+
+        if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
+            break;
+        }
+
+        hairColorID += step;
+
+        if (hairColorID >= numColors) {
+            hairColorID = 0;
+        } else if (hairColorID < 0) {
+            hairColorID = numColors - 1;
+        }
+
+        if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
+            return false;
+        }
+    }
+
+    this->SetHairColor(rec->m_colorIndex, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FCEC0/0x1403C7DE0
+bool CCharacterComponent::SetRandomHairColor(COMPONENT_CONTEXT context) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numColors = CCharacterComponent::GetNumHairColorsForStyle(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairStyleId, context);
+    int32_t index = numColors > 0 ? CRandom::dice_(numColors, g_rndSeed) : 0;
+    int32_t hairColorID = ComponentGetHairColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_hairStyleId, index, selection);
+
+    if (hairColorID < 0) {
+        return false;
+    }
+
+    this->SetHairColor(hairColorID, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FCF50
+bool CCharacterComponent::SetNextFace(COMPONENT_CONTEXT context, int32_t step, int32_t colorOffset) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE);
+
+    if (numVariations <= 0) {
+        return false;
+    }
+
+    int32_t faceID = this->m_data.m_preferences.m_faceId + step;
+
+    if (faceID >= numVariations) {
+        faceID = 0;
+    } else if (faceID < 0) {
+        faceID = numVariations - 1;
+    }
+
+    if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
+        return false;
+    }
+
+    int32_t skinID;
+
+    while (true) {
+        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID);
+        bool matched = false;
+
+        for (int32_t i = 0; i < numColors; i = skinID + 1) {
+            skinID = (i + colorOffset) % numColors;
+            CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, skinID, NULL);
+            CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
+            CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
+
+            if (faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
+                matched = true;
+                break;
+            }
+        }
+
+        if (matched) {
+            break;
+        }
+
+        faceID += step;
+
+        if (faceID >= numVariations) {
+            faceID = 0;
+        } else if (faceID < 0) {
+            faceID = numVariations - 1;
+        }
+
+        if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
+            return false;
+        }
+    }
+
+    CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, this->m_data.m_preferences.m_skinID, NULL);
+    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
+    CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, this->m_data.m_preferences.m_skinID, NULL);
+
+    if (!faceRec || !ComponentFlagsMatch(faceRec->m_flags, selection) || !skinRec || !ComponentFlagsMatch(skinRec->m_flags, selection) || (context != COMPONENT_CONTEXT_2 && (!underwearRec || !ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
+        this->SetSkinColor(skinID, false, true, NULL);
+    }
+
+    this->SetFace(faceID, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FD1F0/0x1403C8160
+bool CCharacterComponent::SetRandomFace(COMPONENT_CONTEXT context) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numFaces = CCharacterComponent::GetNumFacesForSkin(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_skinID, context);
+    int32_t index = numFaces > 0 ? CRandom::dice_(numFaces, g_rndSeed) : 0;
+    int32_t faceID = ComponentGetFaceVariation(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_skinID, index, selection);
+
+    if (faceID < 0) {
+        return false;
+    }
+
+    this->SetFace(faceID, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FD280
+bool CCharacterComponent::SetNextFacialFeature(COMPONENT_CONTEXT context, int32_t step) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    bool found;
+    ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, &found);
+
+    if (!found) {
+        int32_t count = CCharacterComponent::s_characterFacialHairStylesList[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID];
+        int32_t facialHairID = step + this->m_data.m_preferences.m_facialHairId;
+
+        if (facialHairID >= count) {
+            facialHairID = 0;
+        } else if (facialHairID < 0) {
+            facialHairID = count - 1;
+        }
+
+        this->SetBeardStyle(facialHairID, true, NULL);
+
+        return true;
+    }
+
+    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR);
+
+    if (numVariations <= 0) {
+        return false;
+    }
+
+    int32_t facialHairID = this->m_data.m_preferences.m_facialHairId + step;
+
+    if (facialHairID >= numVariations) {
+        facialHairID = 0;
+    } else if (facialHairID < 0) {
+        facialHairID = numVariations - 1;
+    }
+
+    if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
+        return false;
+    }
+
+    CharSectionsRec* rec = NULL;
+
+    while (true) {
+        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID);
+        int32_t color;
+
+        for (color = 0; color < numColors; color++) {
+            rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, color, NULL);
+
+            if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
+                break;
+            }
+        }
+
+        if (color < numColors) {
+            break;
+        }
+
+        facialHairID += step;
+
+        if (facialHairID >= numVariations) {
+            facialHairID = 0;
+        } else if (facialHairID < 0) {
+            facialHairID = numVariations - 1;
+        }
+
+        if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
+            return false;
+        }
+    }
+
+    CharSectionsRec* keepRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, this->m_data.m_preferences.m_hairColorId, NULL);
+
+    if (keepRec && ComponentFlagsMatch(keepRec->m_flags, selection)) {
+        this->SetBeardStyle(keepRec->m_variationIndex, true, NULL);
+    } else {
+        this->SetHairColor(rec->m_colorIndex, false, NULL);
+        this->SetBeardStyle(rec->m_variationIndex, true, NULL);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x006FD470/0x1403C8460
+bool CCharacterComponent::SetRandomFacialFeature(COMPONENT_CONTEXT context) {
+    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
+    int32_t numFeatures = CCharacterComponent::GetNumFacialFeaturesForHairColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, context);
+    int32_t index = numFeatures > 0 ? CRandom::dice_(numFeatures, g_rndSeed) : 0;
+    int32_t facialHairID = CCharacterComponent::GetNthFacialFeatureIndex(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, this->m_data.m_preferences.m_facialHairId, index, selection);
+
+    if (facialHairID < 0) {
+        return false;
+    }
+
+    this->SetBeardStyle(facialHairID, true, NULL);
+
+    return true;
+}
+
+// OFFSET: 0x006FD500/0x1403C8520
+void CCharacterComponent::ClearSectionLayer(COMPONENT_SECTIONS section, int32_t layer) {
+    if (this->m_section[section].m_layerTex[layer]) {
+        TextureCacheDestroyTexture(this->m_section[section].m_layerTex[layer]);
+        this->m_section[section].m_layerTex[layer] = NULL;
+    }
+
+    this->m_section[section].m_layerMask &= ~(1 << layer);
+    this->m_section[section].m_layerItemDisplayId[layer] = 0;
+    this->SetDirtySections(1 << section);
+}
+
+// OFFSET: 0x006FD590
+void CCharacterComponent::LoadSectionLayer(const char* fileName, COMPONENT_SECTIONS section, int32_t layer) {
+    if (this->m_section[section].m_layerTex[layer]) {
+        TextureCacheDestroyTexture(this->m_section[section].m_layerTex[layer]);
+    }
+
+    this->m_section[section].m_layerTex[layer] = TextureCacheCreateTexture(fileName);
+    this->m_section[section].m_layerItemDisplayId[layer] = 0;
+    this->m_section[section].m_layerMask &= ~(1 << layer);
+
+    if (!this->m_section[section].m_layerTex[layer]) {
+        DebugLog("**** Unable to Load Texture %s\n", fileName);
+    }
+}
+
+// OFFSET: 0x006FD620
 void CCharacterComponent::PasteCrappyGreen(MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, int32_t dstMipOffset) {
     uint32_t width = srcSize.x;
     uint32_t height = srcSize.y;
@@ -969,7 +2997,7 @@ void CCharacterComponent::PasteCrappyGreen(MipBits* dstMips, C2iVector& dstPos, 
     }
 }
 
-// OFFSET: #0x004E83A0
+// OFFSET: 0x006FD6F0
 void CCharacterComponent::PasteOpaque(void* texture, const BlpPalPixel* pal, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, int32_t dstMipOffset) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -1003,7 +3031,7 @@ void CCharacterComponent::PasteOpaque(void* texture, const BlpPalPixel* pal, Mip
     }
 }
 
-// OFFSET: #0x004E84F0
+// OFFSET: 0x006FD830
 void CCharacterComponent::PasteTransparent1Bit(void* texture, const BlpPalPixel* pal, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, int32_t dstMipOffset) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -1041,7 +3069,7 @@ void CCharacterComponent::PasteTransparent1Bit(void* texture, const BlpPalPixel*
     }
 }
 
-// OFFSET: #0x004E8660
+// OFFSET: 0x006FD990
 void CCharacterComponent::PasteTransparent4Bit(void* texture, const BlpPalPixel* pal, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, int32_t dstMipOffset) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -1083,7 +3111,7 @@ void CCharacterComponent::PasteTransparent4Bit(void* texture, const BlpPalPixel*
     }
 }
 
-// OFFSET: #0x004E8840
+// OFFSET: 0x006FDB70
 void CCharacterComponent::PasteTransparent8Bit(void* texture, const BlpPalPixel* pal, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, int32_t dstMipOffset) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -1123,7 +3151,7 @@ void CCharacterComponent::PasteTransparent8Bit(void* texture, const BlpPalPixel*
     }
 }
 
-// OFFSET: #0x004E89F0
+// OFFSET: 0x006FDD10
 void CCharacterComponent::PasteOpaqueScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcWidth = srcInfo.m_width;
     uint32_t width = srcSize.x;
@@ -1216,1676 +3244,7 @@ void CCharacterComponent::PasteOpaqueScale(void* texture, MipBits* dstMips, C2iV
     CCharacterComponent::PasteOpaque(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: #0x004E8D30
-CTexture* CreateTexture(const char* fileName, CStatus* status) {
-    CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
-
-    return TextureCreate(fileName, flags, status, 0, NULL, 2);
-}
-
-// OFFSET: #0x004E8D70
-void CComponentRequest::AddLayer(uint8_t section, void* texture) {
-    if (this->m_layerCount < sizeof(this->m_layerTextures) / sizeof(this->m_layerTextures[0])) {
-        this->m_layerTextures[this->m_layerCount] = TextureCacheCopyTexture(texture);
-        this->m_layerSections[this->m_layerCount++] = section;
-    }
-}
-
-// OFFSET: #0x004E8DB0
-void CComponentRequest::DestroyCachedTextures() {
-    for (uint32_t i = 0; i < NUM_COMPONENT_SECTIONS; i++) {
-        TextureCacheDestroyTexture(this->m_baseTextures[i]);
-        this->m_baseTextures[i] = NULL;
-    }
-
-    for (uint32_t i = 0; i < this->m_layerCount; i++) {
-        TextureCacheDestroyTexture(this->m_layerTextures[i]);
-        this->m_layerTextures[i] = NULL;
-        this->m_layerSections[i] = 0xFF;
-    }
-
-    this->m_layerCount = 0;
-}
-
-// OFFSET: #0x004E8E20
-void CCharacterComponent::SetDirtySections(uint32_t mask) {
-    this->m_dirtySections |= mask;
-
-    if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
-        this->m_request = NULL;
-    }
-
-    this->m_flags &= ~0x8;
-}
-
-// OFFSET: #0x004E8E50
-void CCharacterComponent::SetTexturesDirty() {
-    this->m_flags |= 0x1;
-
-    if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
-        this->m_request = NULL;
-    }
-
-    this->m_flags &= ~0x8;
-}
-
-// OFFSET: #0x004E8E70
-void CCharacterComponent::CreateRequestAU() {
-    this->m_request->m_baseTextures[SECTION_ARM_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    for (int32_t layer = 0; layer < 2; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_ARM_UPPER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_ARM_UPPER, this->m_section[SECTION_ARM_UPPER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E8F00
-void CCharacterComponent::CreateRequestAL() {
-    this->m_request->m_baseTextures[SECTION_ARM_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    for (int32_t layer = 0; layer < 7; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_ARM_LOWER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_ARM_LOWER, this->m_section[SECTION_ARM_LOWER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E8F90
-void CCharacterComponent::CreateRequestHA() {
-    this->m_request->m_baseTextures[SECTION_HAND] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    if (this->m_section[SECTION_HAND].m_layerMask & 0x1) {
-        this->m_request->AddLayer(SECTION_HAND, this->m_section[SECTION_HAND].m_layerTex[0]);
-    }
-}
-
-// OFFSET: #0x004E8FF0
-void CCharacterComponent::CreateRequestHU() {
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
-
-    if (skinRec && (skinRec->m_flags & 0x8)) {
-        this->m_request->m_baseTextures[SECTION_HEAD_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-    }
-
-    if (this->m_baseVariation[VARIATION_FACE].m_texture[1]) {
-        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACE].m_texture[1]);
-    }
-
-    if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1]) {
-        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1]);
-    }
-
-    if (this->m_baseVariation[VARIATION_HAIR].m_texture[2]) {
-        this->m_request->AddLayer(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_HAIR].m_texture[2]);
-    }
-}
-
-// OFFSET: #0x004E90E0
-void CCharacterComponent::CreateRequestHL() {
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
-
-    if (skinRec && (skinRec->m_flags & 0x8)) {
-        this->m_request->m_baseTextures[SECTION_HEAD_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-    }
-
-    if (this->m_baseVariation[VARIATION_FACE].m_texture[0]) {
-        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACE].m_texture[0]);
-    }
-
-    if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0]) {
-        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0]);
-    }
-
-    if (this->m_baseVariation[VARIATION_HAIR].m_texture[1]) {
-        this->m_request->AddLayer(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_HAIR].m_texture[1]);
-    }
-}
-
-// OFFSET: #0x004E91D0
-void CCharacterComponent::CreateRequestTU() {
-    this->m_request->m_baseTextures[SECTION_TORSO_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    if (!(this->m_section[SECTION_TORSO_UPPER].m_layerMask & 0x7) && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
-        this->m_request->AddLayer(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]);
-    }
-
-    for (int32_t layer = 0; layer < 5; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_TORSO_UPPER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_TORSO_UPPER, this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E9280
-void CCharacterComponent::CreateRequestTL() {
-    this->m_request->m_baseTextures[SECTION_TORSO_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    for (int32_t layer = 0; layer < 7; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_TORSO_LOWER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_TORSO_LOWER, this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E9310
-void CCharacterComponent::CreateRequestLU() {
-    this->m_request->m_baseTextures[SECTION_LEG_UPPER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    if (((this->m_flags & 0x20) || !(this->m_section[SECTION_LEG_UPPER].m_layerMask & 0x3)) && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
-        this->m_request->AddLayer(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]);
-    }
-
-    int32_t first = (this->m_flags & 0x20) != 0;
-    int32_t last = 3 - first;
-
-    for (int32_t layer = first; layer < last; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_LEG_UPPER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_LEG_UPPER, this->m_section[SECTION_LEG_UPPER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E9400
-void CCharacterComponent::CreateRequestLL() {
-    this->m_request->m_baseTextures[SECTION_LEG_LOWER] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    int32_t first = (this->m_flags & 0x20) != 0;
-    int32_t last = 2 * ((this->m_flags & 0x20) == 0) + 4;
-
-    for (int32_t layer = first; layer < last; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_LEG_LOWER].m_layerMask) {
-            this->m_request->AddLayer(SECTION_LEG_LOWER, this->m_section[SECTION_LEG_LOWER].m_layerTex[layer]);
-        }
-    }
-}
-
-// OFFSET: #0x004E94B0
-void CCharacterComponent::CreateRequestFO() {
-    this->m_request->m_baseTextures[SECTION_FOOT] = TextureCacheCopyTexture(this->m_baseVariation[VARIATION_SKIN].m_texture[0]);
-
-    if (this->m_section[SECTION_FOOT].m_layerMask & 0x1) {
-        this->m_request->AddLayer(SECTION_FOOT, this->m_section[SECTION_FOOT].m_layerTex[0]);
-    }
-}
-
-// OFFSET: #0x004E9510
-void CCharacterComponent::UpdateSections() {
-    if (this->m_flags & 0x1) {
-        GxTexUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture), 0, 0, s_textureSize, s_textureSize, 1);
-        return;
-    }
-
-    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        if ((1 << section) & this->m_dirtySections) {
-            const CompSectionInfo& info = s_sectionInfo[section];
-            GxTexUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
-        }
-    }
-}
-
-// OFFSET: #0x004E95B0
-static void CompressBlock(const uint8_t* src, uint32_t stride, uint8_t* out) {
-    float colors[16][3];
-
-    for (int32_t y = 0; y < 4; y++) {
-        for (int32_t x = 0; x < 4; x++) {
-            const uint8_t* pixel = src + y * stride + 4 * x;
-            float* color = colors[y * 4 + x];
-            color[0] = pixel[0] * 0.0039215689f;
-            color[1] = pixel[1] * 0.0039215689f;
-            color[2] = pixel[2] * 0.0039215689f;
-        }
-    }
-
-    float mean[3] = { 0.0f, 0.0f, 0.0f };
-
-    for (int32_t i = 0; i < 16; i++) {
-        mean[0] = mean[0] + colors[i][0] * 0.0625f;
-        mean[1] = mean[1] + colors[i][1] * 0.0625f;
-        mean[2] = mean[2] + colors[i][2] * 0.0625f;
-    }
-
-    float c00 = 0.0f;
-    float c01 = 0.0f;
-    float c02 = 0.0f;
-    float c11 = 0.0f;
-    float c12 = 0.0f;
-    float c22 = 0.0f;
-
-    for (int32_t i = 0; i < 16; i++) {
-        float d0 = colors[i][0] - mean[0];
-        float d1 = colors[i][1] - mean[1];
-        float d2 = colors[i][2] - mean[2];
-        c00 = c00 + d0 * d0;
-        c02 = c02 + d0 * d2;
-        c11 = d1 * d1 + c11;
-        c01 = c01 + d1 * d0;
-        c12 = c12 + d1 * d2;
-        c22 = d2 * d2 + c22;
-    }
-
-    float axis[3] = { 1.0f, 1.0f, 1.0f };
-
-    for (int32_t i = 0; i < 8; i++) {
-        float x = c00 * axis[0] + axis[2] * c02 + axis[1] * c01;
-        float y = axis[2] * c12 + axis[1] * c11 + axis[0] * c01;
-        float z = axis[2] * c22 + axis[1] * c12 + axis[0] * c02;
-        float largest = x <= y ? y : x;
-
-        if (largest <= z) {
-            largest = z;
-        }
-
-        float inv = 0.0f == largest ? 0.0f : 1.0f / largest;
-        axis[1] = y * inv;
-        axis[0] = x * inv;
-        axis[2] = z * inv;
-    }
-
-    float length = axis[2] * axis[2] + axis[1] * axis[1] + axis[0] * axis[0];
-
-    if (0.0f != length) {
-        float inv = 1.0f / sqrt(length);
-        axis[0] = axis[0] * inv;
-        axis[1] = axis[1] * inv;
-        axis[2] = axis[2] * inv;
-    }
-
-    float minProj = 1.0f;
-    float maxProj = -1.0f;
-
-    for (int32_t i = 0; i < 16; i++) {
-        float proj = (colors[i][0] - mean[0]) * axis[0] + (colors[i][1] - mean[1]) * axis[1] + (colors[i][2] - mean[2]) * axis[2];
-
-        if (proj < minProj) {
-            minProj = proj;
-        }
-
-        if (maxProj < proj) {
-            maxProj = proj;
-        }
-    }
-
-    uint8_t low[4];
-    uint8_t high[3];
-
-    for (int32_t i = 0; i < 3; i++) {
-        int32_t value = static_cast<int32_t>((minProj * axis[i] + mean[i]) * 255.0f + 0.5f);
-        low[i] = value < 0 ? 0 : (value > 255 ? 0xFF : value);
-        value = static_cast<int32_t>((maxProj * axis[i] + mean[i]) * 255.0f + 0.5f);
-        high[i] = value < 0 ? 0 : (value > 255 ? 0xFF : value);
-    }
-
-    uint32_t color0 = (((((high[2] & ~7) << 5) | high[1]) & ~3) << 3) | (high[0] >> 3);
-    uint32_t color1 = (((((low[2] & ~7) << 5) | low[1]) & ~3) << 3) | (low[0] >> 3);
-    int32_t map[4] = { 1, 3, 2, 0 };
-
-    if (color0 < color1) {
-        uint32_t swap = color0;
-        color0 = color1;
-        color1 = swap;
-        map[0] = 0;
-        map[1] = 2;
-        map[2] = 3;
-        map[3] = 1;
-    }
-
-    out[0] = color0;
-    out[1] = color0 >> 8;
-    out[2] = color1;
-    out[3] = color1 >> 8;
-
-    if (color0 == color1) {
-        out[6] = 0;
-        out[5] = 0;
-        out[4] = 0;
-        out[7] = 0;
-        return;
-    }
-
-    float indexScale = 3.0f / (maxProj - minProj);
-    uint32_t indices = 0;
-
-    for (uint32_t i = 0; i < 16; i++) {
-        float proj = (colors[i][0] - mean[0]) * axis[0] + (colors[i][1] - mean[1]) * axis[1] + (colors[i][2] - mean[2]) * axis[2];
-        uint32_t index = static_cast<uint32_t>((proj - minProj) * indexScale + 0.5f);
-        indices |= map[index] << (2 * i);
-    }
-
-    out[4] = indices;
-    out[7] = indices >> 24;
-    out[5] = indices >> 8;
-    out[6] = indices >> 16;
-}
-
-// OFFSET: #0x004E9BA0
-static void ComputeMipLevels(MipBits* src, MipBits* dst) {
-    int32_t size = s_textureSize;
-
-    if ((OsGetProcessorFeatures() & 0x14) == 0x14) {
-        for (uint32_t level = 0; level < CCharacterComponent::s_mipLevels; level++, size >>= 1) {
-            if (size < 4) {
-                CompressBlockSSE(reinterpret_cast<const uint8_t*>(src->m_mip[CCharacterComponent::s_mipLevels - 2]), 16, reinterpret_cast<uint32_t*>(dst->m_mip[level]));
-                continue;
-            }
-
-            int32_t blocks = size / 4;
-            uint32_t stride = 4 * size;
-            const uint8_t* in = reinterpret_cast<const uint8_t*>(src->m_mip[level]);
-            uint32_t* out = reinterpret_cast<uint32_t*>(dst->m_mip[level]);
-
-            for (int32_t by = 0; by < blocks; by++) {
-                for (int32_t bx = 0; bx < blocks; bx++) {
-                    CompressBlockSSE(in, stride, out);
-                    out += 2;
-                    in += 16;
-                }
-
-                in += 3 * stride;
-            }
-        }
-    } else {
-        for (uint32_t level = 0; level < CCharacterComponent::s_mipLevels; level++, size >>= 1) {
-            if (size < 4) {
-                CompressBlock(reinterpret_cast<const uint8_t*>(src->m_mip[CCharacterComponent::s_mipLevels - 2]), 16, reinterpret_cast<uint8_t*>(dst->m_mip[level]));
-                continue;
-            }
-
-            int32_t blocks = size / 4;
-            uint32_t stride = 4 * size;
-            const uint8_t* in = reinterpret_cast<const uint8_t*>(src->m_mip[level]);
-            uint8_t* out = reinterpret_cast<uint8_t*>(dst->m_mip[level]);
-
-            for (int32_t by = 0; by < blocks; by++) {
-                for (int32_t bx = 0; bx < blocks; bx++) {
-                    CompressBlock(in, stride, out);
-                    out += 8;
-                    in += 16;
-                }
-
-                in += 3 * stride;
-            }
-        }
-    }
-}
-
-// OFFSET: #0x004E9D50
-void CCharacterComponent::ValidateComponentData(ComponentData* data, COMPONENT_CONTEXT context) {
-    CharacterPreferences& prefs = data->m_preferences;
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, prefs.m_classId);
-
-    if (!ComponentValidateSkin(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, context)) {
-        int32_t numSkins = CCharacterComponent::GetNumSkins(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, context);
-
-        if (numSkins <= 0) {
-            prefs.m_skinID = 0;
-        } else {
-            prefs.m_skinID = ComponentGetSkinColor(prefs.m_raceID, prefs.m_sexID, static_cast<int32_t>(prefs.m_skinID) % numSkins, selection);
-        }
-    }
-
-    if (!ComponentValidateFace(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, prefs.m_faceId, context)) {
-        int32_t numFaces = CCharacterComponent::GetNumFacesForSkin(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_skinID, context);
-
-        if (numFaces <= 0) {
-            prefs.m_faceId = 0;
-        } else {
-            prefs.m_faceId = ComponentGetFaceVariation(prefs.m_raceID, prefs.m_sexID, prefs.m_skinID, static_cast<int32_t>(prefs.m_faceId) % numFaces, selection);
-        }
-    }
-
-    if (!ComponentValidateHair(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_hairStyleId, context)) {
-        int32_t numStyles = CCharacterComponent::GetNumHairStylesForColor(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, context);
-
-        if (numStyles > 0) {
-            prefs.m_hairStyleId = ComponentGetHairVariation(prefs.m_raceID, prefs.m_sexID, prefs.m_hairColorId, static_cast<int32_t>(prefs.m_hairStyleId) % numStyles, selection);
-        } else {
-            int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, prefs.m_raceID, prefs.m_sexID, VARIATION_HAIR);
-            int32_t* numColors = static_cast<int32_t*>(alloca(sizeof(int32_t) * numVariations));
-            int32_t numValid = 0;
-
-            for (int32_t i = 0; i < numVariations; i++) {
-                numColors[i] = CCharacterComponent::GetNumHairColorsForStyle(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, i, context);
-
-                if (numColors[i] > 0) {
-                    numValid++;
-                }
-            }
-
-            if (numValid <= 0) {
-                prefs.m_hairColorId = 0;
-                prefs.m_hairStyleId = 0;
-            } else {
-                for (int32_t i = 0; i < numVariations; i++) {
-                    if (numColors[i] > 0 && static_cast<int32_t>(prefs.m_hairStyleId) % numValid == i) {
-                        prefs.m_hairStyleId = i;
-                        break;
-                    }
-                }
-
-                prefs.m_hairColorId = ComponentGetHairColor(prefs.m_raceID, prefs.m_sexID, prefs.m_hairStyleId, static_cast<int32_t>(prefs.m_hairColorId) % numColors[prefs.m_hairStyleId], selection);
-            }
-        }
-    }
-
-    if (!ComponentValidateFacialFeature(CCharacterComponent::s_chrVarArray, CCharacterComponent::s_characterFacialHairStylesList, prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_facialHairId, context)) {
-        int32_t numFeatures = CCharacterComponent::GetNumFacialFeaturesForHairColor(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, context);
-
-        if (numFeatures <= 0) {
-            prefs.m_facialHairId = 0;
-        } else {
-            prefs.m_facialHairId = CCharacterComponent::GetNthFacialFeatureIndex(prefs.m_raceID, prefs.m_sexID, prefs.m_classId, prefs.m_hairColorId, prefs.m_facialHairId, static_cast<int32_t>(prefs.m_facialHairId) % numFeatures, selection);
-        }
-    }
-}
-
-// OFFSET: #0x004EA000
-static CharacterFacialHairStylesRec* GetConditionalFacialHairStyle(CharacterPreferences* prefs) {
-    for (int32_t i = 0; i < g_characterFacialHairStylesDB.m_numRecords; i++) {
-        CharacterFacialHairStylesRec* rec = g_characterFacialHairStylesDB.GetRecordByIndex(i);
-
-        if (!rec) {
-            return NULL;
-        }
-
-        if (prefs->m_raceID == rec->m_raceID && prefs->m_sexID == rec->m_sexID && prefs->m_facialHairId == rec->m_variationID) {
-            return rec;
-        }
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x004EA050
-static int32_t GetConditionalGeoset(CharacterPreferences* prefs) {
-    for (int32_t i = 0; i < g_charHairGeosetsDB.m_numRecords; i++) {
-        CharHairGeosetsRec* rec = g_charHairGeosetsDB.GetRecordByIndex(i);
-
-        if (!rec) {
-            return 1;
-        }
-
-        if (prefs->m_raceID == rec->m_raceID && prefs->m_sexID == rec->m_sexID && prefs->m_hairStyleId == rec->m_variationID) {
-            if (rec->m_geosetID > 0) {
-                return rec->m_geosetID;
-            }
-
-            return 1;
-        }
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x004EA0B0
-void CCharacterComponent::ReplaceExtraSkinTexture(const char* debug) {
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID)) {
-        return;
-    }
-
-    const char* textureName = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[VARIATION_SKIN].m_variation[0].m_color[this->m_data.m_preferences.m_skinID]->m_textureName[1];
-
-    if (!*textureName) {
-        return;
-    }
-
-    strcpy(s_pathEnd, textureName);
-    CTexture* texture = CreateTexture(s_path, &s_status);
-
-    if (texture) {
-        this->m_data.m_model->ReplaceTexture(8, texture);
-        TextureRelease(texture);
-    }
-}
-
-// OFFSET: #0x004EA150
-void CCharacterComponent::ReplaceHairTexture(int32_t hairStyleID, const char* debug) {
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId)) {
-        return;
-    }
-
-    const char* textureName = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[VARIATION_HAIR].m_variation[hairStyleID].m_color[this->m_data.m_preferences.m_hairColorId]->m_textureName[0];
-
-    if (!*textureName) {
-        return;
-    }
-
-    strcpy(s_pathEnd, textureName);
-    CTexture* texture = CreateTexture(s_path, &s_status);
-
-    if (texture) {
-        this->m_data.m_model->ReplaceTexture(6, texture);
-        TextureRelease(texture);
-    }
-}
-
-// OFFSET: #0x004EA1F0
-void CCharacterComponent::LoadBaseVariation(COMPONENT_VARIATIONS variation, int32_t textureIndex, int32_t variationIndex, int32_t colorIndex, COMPONENT_SECTIONS section, const char* debug) {
-    void*& texture = this->m_baseVariation[variation].m_texture[textureIndex];
-
-    if (texture) {
-        TextureCacheDestroyTexture(texture);
-        texture = NULL;
-    }
-
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, variation, variationIndex, colorIndex)) {
-        return;
-    }
-
-    const char* textureName = CCharacterComponent::s_chrVarArray[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID].m_variation[variation].m_variation[variationIndex].m_color[colorIndex]->m_textureName[textureIndex];
-
-    if (*textureName) {
-        strcpy(s_pathEnd, textureName);
-        texture = TextureCacheCreateTexture(s_path);
-
-        if (!texture) {
-            DebugLog("**** Unable to Load Texture %s\n", s_path);
-        }
-    }
-
-    this->SetDirtySections(1 << section);
-}
-
-// OFFSET: #0x004EA2F0
-void CCharacterComponent::SetHairColor(int32_t hairColorID, bool loadHair, const char* debug) {
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId, hairColorID)) {
-        return;
-    }
-
-    this->m_data.m_preferences.m_hairColorId = hairColorID;
-    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(this->m_data.m_preferences.m_raceID);
-
-    if (!this->m_data.m_preferences.m_sexID && !this->m_data.m_preferences.m_hairStyleId && (raceRec->m_flags & 0x8)) {
-        this->ReplaceHairTexture(1, debug);
-    }
-
-    this->ReplaceHairTexture(this->m_data.m_preferences.m_hairStyleId, debug);
-
-    if (this->m_data.m_flags & 0x1) {
-        return;
-    }
-
-    if (loadHair) {
-        this->LoadBaseVariation(VARIATION_HAIR, 1, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
-        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
-    }
-
-    this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 0, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
-    this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 1, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
-}
-
-// OFFSET: #0x004EA3E0
-void CCharacterComponent::SetHairStyle(int32_t hairStyleID, const char* debug) {
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId)) {
-        return;
-    }
-
-    this->m_data.m_preferences.m_hairStyleId = hairStyleID;
-    this->m_data.m_geosets[0] = GetConditionalGeoset(&this->m_data.m_preferences);
-
-    if (!(this->m_data.m_flags & 0x1)) {
-        this->LoadBaseVariation(VARIATION_HAIR, 1, hairStyleID, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
-        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
-    }
-
-    this->SetHairColor(this->m_data.m_preferences.m_hairColorId, false, debug);
-    this->m_flags |= 0x4;
-    this->SetDirtySections(0x300);
-}
-
-// OFFSET: #0x004EA490
-void CCharacterComponent::SetFace(int32_t faceID, bool loadHair, const char* debug) {
-    if (this->m_data.m_flags & 0x1) {
-        return;
-    }
-
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
-
-    if (skinRec && (skinRec->m_flags & 0x8)) {
-        return;
-    }
-
-    if (!ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, this->m_data.m_preferences.m_skinID)) {
-        return;
-    }
-
-    this->m_data.m_preferences.m_faceId = faceID;
-    this->LoadBaseVariation(VARIATION_FACE, 0, faceID, this->m_data.m_preferences.m_skinID, SECTION_HEAD_LOWER, debug);
-    this->LoadBaseVariation(VARIATION_FACE, 1, this->m_data.m_preferences.m_faceId, this->m_data.m_preferences.m_skinID, SECTION_HEAD_UPPER, debug);
-
-    if (loadHair) {
-        this->LoadBaseVariation(VARIATION_HAIR, 1, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
-        this->LoadBaseVariation(VARIATION_HAIR, 2, this->m_data.m_preferences.m_hairStyleId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
-    }
-
-    this->m_flags |= 0x4;
-    this->SetDirtySections(0x300);
-}
-
-// OFFSET: #0x004EA590
-void CCharacterComponent::SetBeardStyle(int32_t facialHairID, bool loadVariation, const char* debug) {
-    if (facialHairID < 0 || facialHairID > static_cast<int32_t>(CCharacterComponent::s_characterFacialHairStylesList[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID])) {
-        return;
-    }
-
-    this->m_data.m_preferences.m_facialHairId = facialHairID;
-    CharacterFacialHairStylesRec* styleRec = GetConditionalFacialHairStyle(&this->m_data.m_preferences);
-
-    if (styleRec) {
-        this->m_data.m_geosets[1] = styleRec->m_geoset[0] + 100;
-        this->m_data.m_geosets[3] = styleRec->m_geoset[1] + 300;
-        this->m_data.m_geosets[2] = styleRec->m_geoset[2] + 200;
-        this->m_data.m_geosets[16] = styleRec->m_geoset[3] + 1600;
-        this->m_flags |= 0x4;
-        this->m_data.m_geosets[17] = styleRec->m_geoset[4] + 1700;
-
-        if ((styleRec->m_geoset[0] || styleRec->m_geoset[1] || styleRec->m_geoset[2]) && (!this->m_baseVariation[VARIATION_HAIR].m_texture[1] || !this->m_baseVariation[VARIATION_HAIR].m_texture[2])) {
-            this->ReplaceHairTexture(1, debug);
-        }
-    }
-
-    if (this->m_data.m_flags & 0x1) {
-        return;
-    }
-
-    if (loadVariation) {
-        this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 0, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_LOWER, debug);
-        this->LoadBaseVariation(VARIATION_FACIAL_HAIR, 1, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, SECTION_HEAD_UPPER, debug);
-    }
-
-    this->SetDirtySections(0x300);
-}
-
-// OFFSET: #0x004EA6B0
-void CCharacterComponent::SetSkinColor(int32_t skinID, bool loadHair, bool renderAll, const char* debug) {
-    this->m_data.m_preferences.m_skinID = skinID;
-
-    if ((this->m_data.m_flags & 0x1) || !ComponentValidateBase(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID)) {
-        return;
-    }
-
-    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0);
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
-
-    if (skinID < numColors && skinRec && !(skinRec->m_flags & 0x8)) {
-        CharSectionsRec* underwearRec = this->GetSectionsRecord(VARIATION_UNDERWEAR, 0, skinID, NULL);
-
-        if (this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
-            TextureCacheDestroyTexture(this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]);
-            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0] = NULL;
-        }
-
-        if (this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
-            TextureCacheDestroyTexture(this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]);
-            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1] = NULL;
-        }
-
-        if (*underwearRec->m_textureName[0] && CopyStringToBuffer(underwearRec->m_textureName[0], s_pathEnd)) {
-            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0] = TextureCacheCreateTexture(s_path);
-
-            if (!this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
-                DebugLog("**** Unable to Load Texture %s\n", s_path);
-            }
-        }
-
-        if (*underwearRec->m_textureName[1] && CopyStringToBuffer(underwearRec->m_textureName[1], s_pathEnd)) {
-            this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1] = TextureCacheCreateTexture(s_path);
-
-            if (!this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
-                DebugLog("**** Unable to Load Texture %s\n", s_path);
-            }
-        }
-    }
-
-    this->ReplaceExtraSkinTexture(debug);
-    this->LoadBaseVariation(VARIATION_SKIN, 0, 0, this->m_data.m_preferences.m_skinID, SECTION_TORSO_UPPER, debug);
-    this->SetFace(this->m_data.m_preferences.m_faceId, loadHair, debug);
-
-    if (renderAll) {
-        this->SetTexturesDirty();
-    }
-
-    this->m_dirtySections = 0xFFFFFFFF;
-
-    if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
-        this->m_request = NULL;
-    }
-
-    this->m_flags &= ~0x8;
-}
-
-// OFFSET: #0x004EA880
-void CCharacterComponent::FreeSectionTexture(COMPONENT_SECTIONS section, int32_t layer) {
-    if (layer == -1) {
-        return;
-    }
-
-    if (this->m_section[section].m_layerTex[layer]) {
-        TextureCacheDestroyTexture(this->m_section[section].m_layerTex[layer]);
-        this->m_section[section].m_layerTex[layer] = NULL;
-    }
-
-    this->m_section[section].m_layerItemDisplayId[layer] = 0;
-    this->m_section[section].m_layerMask &= ~(1 << layer);
-}
-
-// OFFSET: #0x004EA8F0
-void CCharacterComponent::ComponentUtilAddItemVisual(CM2Model* model, int32_t itemVisual) {
-    while (model->m_attachList) {
-        model->m_attachList->DetachFromParent();
-    }
-
-    ItemVisualsRec* visualRec = g_itemVisualsDB.GetRecord(itemVisual);
-
-    if (!visualRec) {
-        return;
-    }
-
-    for (uint32_t i = 0; i < 5; i++) {
-        ItemVisualEffectsRec* effectRec = g_itemVisualEffectsDB.GetRecord(visualRec->m_slot[i]);
-
-        if (effectRec && *effectRec->m_model) {
-            strcpy(s_pathEnd, effectRec->m_model);
-            CM2Model* effectModel = model->m_scene->CreateModel(s_path, 0, 3);
-
-            if (effectModel) {
-                effectModel->AttachToParent(model, i, NULL, 0);
-                effectModel->Release();
-            }
-        }
-    }
-}
-
-// OFFSET: #0x004EA9E0
-static void ReplaceParticleColor(int32_t particleColorID, CM2Model* model) {
-    if (!model || !particleColorID) {
-        return;
-    }
-
-    ParticleColorRec* colorRec = g_particleColorDB.GetRecord(particleColorID);
-
-    if (colorRec) {
-        for (uint32_t i = 0; i < 3; i++) {
-            model->ReplaceParticleColor(i + 11, *reinterpret_cast<CImVector*>(&colorRec->m_start[i]), *reinterpret_cast<CImVector*>(&colorRec->m_mid[i]), *reinterpret_cast<CImVector*>(&colorRec->m_end[i]));
-        }
-    } else {
-        CImVector green;
-        *reinterpret_cast<uint32_t*>(&green) = 0xFF00FF00;
-
-        for (uint32_t i = 0; i < 3; i++) {
-            model->ReplaceParticleColor(i + 11, green, green, green);
-        }
-    }
-}
-
-// OFFSET: #0x004EAA70
-void CCharacterComponent::AddLink(CM2Model* parent, GEOCOMPONENTLINKS link, const char* modelPath, const char* texturePath, int32_t itemVisual, const ItemDisplayInfoRec* displayRec) {
-    if (!parent) {
-        return;
-    }
-
-    CM2Model* model = parent->m_scene->CreateModel(modelPath, 0, 3);
-
-    if (!model) {
-        return;
-    }
-
-    CTexture* texture = CreateTexture(texturePath, &s_status);
-
-    if (!texture) {
-        model->Release();
-        return;
-    }
-
-    model->ReplaceTexture(2, texture);
-    TextureRelease(texture);
-
-    if (itemVisual > 0) {
-        CCharacterComponent::ComponentUtilAddItemVisual(model, itemVisual);
-    }
-
-    parent->DetachAllChildrenById(link);
-    model->AttachToParent(parent, link, NULL, 0);
-
-    if (link == ATTACH_HANDRIGHT) {
-        CCharacterComponent::ComponentCloseFingers(parent, COMP_HAND_RIGHT);
-    } else if (link == ATTACH_HANDLEFT) {
-        CCharacterComponent::ComponentCloseFingers(parent, COMP_HAND_LEFT);
-    }
-
-    ReplaceParticleColor(displayRec->m_particleColorID, model);
-    model->Release();
-}
-
-// OFFSET: #0x004EAB50
-CM2Model* CCharacterComponent::MakeAmmoModel(CM2Model* model, const ItemDisplayInfoRec* displayRec, uint32_t invType) {
-    if (!displayRec) {
-        return NULL;
-    }
-
-    const char* modelName = displayRec->m_modelName[1];
-
-    if (!*modelName || !*displayRec->m_modelTexture[1] || (invType != INVTYPE_AMMO && invType != INVTYPE_THROWN)) {
-        return NULL;
-    }
-
-    const char* folder = "Item\\ObjectComponents\\Ammo\\";
-
-    if (invType == INVTYPE_THROWN) {
-        folder = "Item\\ObjectComponents\\Weapon\\";
-    }
-
-    char modelPath[260];
-    strcpy(modelPath, folder);
-    strcat(modelPath, modelName);
-
-    char texturePath[260];
-    strcpy(texturePath, folder);
-    strcat(texturePath, displayRec->m_modelTexture[1]);
-
-    CM2Model* ammoModel = model->m_scene->CreateModel(modelPath, 0, 3);
-
-    if (!ammoModel) {
-        return NULL;
-    }
-
-    CTexture* texture = CreateTexture(texturePath, &s_status);
-
-    if (!texture) {
-        ammoModel->Release();
-        return NULL;
-    }
-
-    ammoModel->ReplaceTexture(2, texture);
-    TextureRelease(texture);
-    CCharacterComponent::ComponentUtilAddItemVisual(ammoModel, displayRec->m_itemVisual);
-
-    return ammoModel;
-}
-
-// OFFSET: #0x004EACD0
-GEOCOMPONENTLINKS CCharacterComponent::AddHandItem(CM2Model* model, const ItemDisplayInfoRec* displayRec, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
-    if (!model || !displayRec || static_cast<uint32_t>(invSlot) > INVSLOT_TABARD) {
-        return ATTACH_NONE;
-    }
-
-    const char* folder = "Item\\ObjectComponents\\Weapon\\";
-    GEOCOMPONENTLINKS hand;
-    GEOCOMPONENTLINKS sheath;
-
-    if (invSlot == INVSLOT_MAINHAND || (invSlot == INVSLOT_RANGED && mainHand)) {
-        hand = ATTACH_HANDRIGHT;
-        sheath = CCharacterComponent::GetSheatheLink(sheatheType, true);
-    } else if (invSlot == INVSLOT_OFFHAND) {
-        hand = ATTACH_HANDLEFT;
-        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
-
-        if (shield) {
-            folder = "Item\\ObjectComponents\\Shield\\";
-            hand = ATTACH_SHIELD;
-        }
-    } else if (invSlot == INVSLOT_RANGED) {
-        hand = ATTACH_HANDLEFT;
-        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
-    } else {
-        return ATTACH_NONE;
-    }
-
-    CCharacterComponent::RemoveLinkpt(model, hand);
-    CCharacterComponent::RemoveLinkpt(model, sheath);
-
-    GEOCOMPONENTLINKS link = sheathed ? sheath : hand;
-
-    if (model->IsLoaded() && !model->HasAttachment(link)) {
-        return ATTACH_NONE;
-    }
-
-    strcpy(s_buffer, folder);
-    strcat(s_buffer, displayRec->m_modelName[0]);
-    strcpy(s_pathEnd, s_buffer);
-
-    strcpy(s_buffer, folder);
-    strcat(s_buffer, displayRec->m_modelTexture[0]);
-    strcat(s_buffer, ".blp");
-    strcpy(s_pathEnd2, s_buffer);
-
-    CCharacterComponent::AddLink(model, link, s_path, s_path2, itemVisual ? itemVisual : displayRec->m_itemVisual, displayRec);
-
-    return link;
-}
-
-// OFFSET: #0x004EAF70
-void CCharacterComponent::RemoveVisuals(CM2Model* model) {
-    model->DetachAllChildrenById(15);
-    model->DetachAllChildrenById(16);
-    model->DetachAllChildrenById(17);
-    model->DetachAllChildrenById(18);
-    model->DetachAllChildrenById(29);
-    model->DetachAllChildrenById(19);
-    model->DetachAllChildrenById(20);
-    model->DetachAllChildrenById(38);
-    model->DetachAllChildrenById(21);
-    model->DetachAllChildrenById(22);
-    model->DetachAllChildrenById(23);
-    model->DetachAllChildrenById(24);
-    model->DetachAllChildrenById(25);
-    model->DetachAllChildrenById(34);
-    model->DetachAllChildrenById(35);
-    model->DetachAllChildrenById(12);
-    model->m_emissiveTintR = 0.0f;
-    model->m_emissiveTintG = 0.0f;
-    model->m_fadeAlpha = 1.0f;
-    model->m_emissiveTintB = 0.0f;
-    model->m_diffuseTintR = 1.0f;
-    model->m_diffuseTintG = 1.0f;
-    model->m_diffuseTintB = 1.0f;
-}
-
-// OFFSET: #0x004EB070
-void CCharacterComponent::RemoveHandItem(CM2Model* model, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
-    if (!model || static_cast<uint32_t>(invSlot - INVSLOT_BACK) > 4) {
-        return;
-    }
-
-    GEOCOMPONENTLINKS hand = ATTACH_NONE;
-    GEOCOMPONENTLINKS sheath = ATTACH_NONE;
-
-    if (invSlot == INVSLOT_MAINHAND) {
-        hand = ATTACH_HANDRIGHT;
-        sheath = CCharacterComponent::GetSheatheLink(sheatheType, true);
-    } else if (invSlot > INVSLOT_MAINHAND && invSlot <= INVSLOT_RANGED) {
-        hand = ATTACH_HANDLEFT;
-        sheath = CCharacterComponent::GetSheatheLink(sheatheType, false);
-
-        if (shield) {
-            hand = ATTACH_SHIELD;
-        }
-    }
-
-    CCharacterComponent::RemoveLinkpt(model, hand);
-    CCharacterComponent::RemoveLinkpt(model, sheath);
-}
-
-// OFFSET: #0x004EB150
-bool CCharacterComponent::SetNextSkin(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0);
-
-    if (numColors <= 0) {
-        return false;
-    }
-
-    int32_t skinID = this->m_data.m_preferences.m_skinID + 1;
-
-    if (skinID >= numColors) {
-        skinID = 0;
-    }
-
-    if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
-        return false;
-    }
-
-    CharSectionsRec* skinRec;
-
-    while (true) {
-        skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
-        CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, this->m_data.m_preferences.m_faceId, skinID, NULL);
-        CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
-
-        if (skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-            break;
-        }
-
-        if (++skinID >= numColors) {
-            skinID = 0;
-        }
-
-        if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
-            return false;
-        }
-    }
-
-    this->SetSkinColor(skinRec->m_colorIndex, true, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB290
-bool CCharacterComponent::SetPrevSkin(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0);
-
-    if (numColors <= 0) {
-        return false;
-    }
-
-    int32_t skinID = this->m_data.m_preferences.m_skinID - 1;
-
-    if (skinID < 0) {
-        skinID = numColors - 1;
-    }
-
-    if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
-        return false;
-    }
-
-    CharSectionsRec* skinRec;
-
-    while (true) {
-        skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
-        CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, this->m_data.m_preferences.m_faceId, skinID, NULL);
-        CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
-
-        if (skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-            break;
-        }
-
-        if (--skinID < 0) {
-            skinID = numColors - 1;
-        }
-
-        if (skinID == static_cast<int32_t>(this->m_data.m_preferences.m_skinID)) {
-            return false;
-        }
-    }
-
-    this->SetSkinColor(skinRec->m_colorIndex, true, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB3E0
-bool CCharacterComponent::SetRandomSkin(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numSkins = CCharacterComponent::GetNumSkins(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, context);
-    int32_t index = numSkins > 0 ? CRandom::dice_(numSkins, g_rndSeed) : 0;
-    int32_t skinID = ComponentGetSkinColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, index, selection);
-
-    if (skinID < 0) {
-        return false;
-    }
-
-    this->SetSkinColor(skinID, true, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB470
-bool CCharacterComponent::SetRandomHairStyle(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numStyles = CCharacterComponent::GetNumHairStylesForColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, context);
-    int32_t index = numStyles > 0 ? CRandom::dice_(numStyles, g_rndSeed) : 0;
-    int32_t hairStyleID = ComponentGetHairVariation(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_hairColorId, index, selection);
-
-    if (hairStyleID < 0) {
-        return false;
-    }
-
-    this->SetHairStyle(hairStyleID, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB500
-bool CCharacterComponent::SetNextHairColor(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId);
-
-    if (numColors <= 0) {
-        return false;
-    }
-
-    int32_t hairColorID = this->m_data.m_preferences.m_hairColorId + 1;
-
-    if (hairColorID >= numColors) {
-        hairColorID = 0;
-    }
-
-    if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
-        return false;
-    }
-
-    CharSectionsRec* rec;
-
-    while (true) {
-        rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId, hairColorID, NULL);
-
-        if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
-            break;
-        }
-
-        if (++hairColorID >= numColors) {
-            hairColorID = 0;
-        }
-
-        if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
-            return false;
-        }
-    }
-
-    this->SetHairColor(rec->m_colorIndex, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB5C0
-bool CCharacterComponent::SetPrevHairColor(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId);
-
-    if (numColors <= 0) {
-        return false;
-    }
-
-    int32_t hairColorID = this->m_data.m_preferences.m_hairColorId - 1;
-
-    if (hairColorID < 0) {
-        hairColorID = numColors - 1;
-    }
-
-    if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
-        return false;
-    }
-
-    CharSectionsRec* rec;
-
-    while (true) {
-        rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, this->m_data.m_preferences.m_hairStyleId, hairColorID, NULL);
-
-        if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
-            break;
-        }
-
-        if (--hairColorID < 0) {
-            hairColorID = numColors - 1;
-        }
-
-        if (hairColorID == static_cast<int32_t>(this->m_data.m_preferences.m_hairColorId)) {
-            return false;
-        }
-    }
-
-    this->SetHairColor(rec->m_colorIndex, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB680
-bool CCharacterComponent::SetRandomHairColor(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numColors = CCharacterComponent::GetNumHairColorsForStyle(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairStyleId, context);
-    int32_t index = numColors > 0 ? CRandom::dice_(numColors, g_rndSeed) : 0;
-    int32_t hairColorID = ComponentGetHairColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_hairStyleId, index, selection);
-
-    if (hairColorID < 0) {
-        return false;
-    }
-
-    this->SetHairColor(hairColorID, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB710
-bool CCharacterComponent::SetNextFace(COMPONENT_CONTEXT context, int32_t colorOffset) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE);
-
-    if (numVariations <= 0) {
-        return false;
-    }
-
-    int32_t faceID = this->m_data.m_preferences.m_faceId + 1;
-
-    if (faceID >= numVariations) {
-        faceID = 0;
-    }
-
-    if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
-        return false;
-    }
-
-    int32_t skinID;
-
-    while (true) {
-        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID);
-        bool matched = false;
-
-        for (int32_t i = 0; i < numColors; i = skinID + 1) {
-            skinID = (i + colorOffset) % numColors;
-            CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, skinID, NULL);
-            CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
-            CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
-
-            if (faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-                matched = true;
-                break;
-            }
-        }
-
-        if (matched) {
-            break;
-        }
-
-        if (++faceID >= numVariations) {
-            faceID = 0;
-        }
-
-        if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
-            return false;
-        }
-    }
-
-    CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, this->m_data.m_preferences.m_skinID, NULL);
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
-    CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, this->m_data.m_preferences.m_skinID, NULL);
-
-    if (!faceRec || !ComponentFlagsMatch(faceRec->m_flags, selection) || !skinRec || !ComponentFlagsMatch(skinRec->m_flags, selection) || (context != COMPONENT_CONTEXT_2 && (!underwearRec || !ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-        this->SetSkinColor(skinID, false, true, NULL);
-    }
-
-    this->SetFace(faceID, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EB990
-bool CCharacterComponent::SetPrevFace(COMPONENT_CONTEXT context, int32_t colorOffset) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE);
-
-    if (numVariations <= 0) {
-        return false;
-    }
-
-    int32_t faceID = this->m_data.m_preferences.m_faceId - 1;
-
-    if (faceID < 0) {
-        faceID = numVariations - 1;
-    }
-
-    if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
-        return false;
-    }
-
-    int32_t skinID;
-
-    while (true) {
-        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID);
-        bool matched = false;
-
-        for (int32_t i = 0; i < numColors; i = skinID + 1) {
-            skinID = (i + colorOffset) % numColors;
-            CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, skinID, NULL);
-            CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, skinID, NULL);
-            CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, skinID, NULL);
-
-            if (faceRec && ComponentFlagsMatch(faceRec->m_flags, selection) && skinRec && ComponentFlagsMatch(skinRec->m_flags, selection) && (context == COMPONENT_CONTEXT_2 || (underwearRec && ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-                matched = true;
-                break;
-            }
-        }
-
-        if (matched) {
-            break;
-        }
-
-        if (--faceID < 0) {
-            faceID = numVariations - 1;
-        }
-
-        if (faceID == static_cast<int32_t>(this->m_data.m_preferences.m_faceId)) {
-            return false;
-        }
-    }
-
-    CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, faceID, this->m_data.m_preferences.m_skinID, NULL);
-    CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
-    CharSectionsRec* underwearRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_UNDERWEAR, 0, this->m_data.m_preferences.m_skinID, NULL);
-
-    if (!faceRec || !ComponentFlagsMatch(faceRec->m_flags, selection) || !skinRec || !ComponentFlagsMatch(skinRec->m_flags, selection) || (context != COMPONENT_CONTEXT_2 && (!underwearRec || !ComponentFlagsMatch(underwearRec->m_flags, selection)))) {
-        this->SetSkinColor(skinID, false, true, NULL);
-    }
-
-    this->SetFace(faceID, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EBC10
-bool CCharacterComponent::SetRandomFace(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numFaces = CCharacterComponent::GetNumFacesForSkin(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_skinID, context);
-    int32_t index = numFaces > 0 ? CRandom::dice_(numFaces, g_rndSeed) : 0;
-    int32_t faceID = ComponentGetFaceVariation(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_skinID, index, selection);
-
-    if (faceID < 0) {
-        return false;
-    }
-
-    this->SetFace(faceID, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EBCA0
-bool CCharacterComponent::SetNextFacialFeature(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    bool found;
-    ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, &found);
-
-    if (!found) {
-        int32_t count = CCharacterComponent::s_characterFacialHairStylesList[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID];
-        int32_t facialHairID = this->m_data.m_preferences.m_facialHairId + 1;
-        this->SetBeardStyle(facialHairID >= count ? 0 : facialHairID, true, NULL);
-
-        return true;
-    }
-
-    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR);
-
-    if (numVariations <= 0) {
-        return false;
-    }
-
-    int32_t facialHairID = this->m_data.m_preferences.m_facialHairId + 1;
-
-    if (facialHairID >= numVariations) {
-        facialHairID = 0;
-    }
-
-    if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
-        return false;
-    }
-
-    CharSectionsRec* rec = NULL;
-
-    while (true) {
-        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID);
-        int32_t color;
-
-        for (color = 0; color < numColors; color++) {
-            rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, color, NULL);
-
-            if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
-                break;
-            }
-        }
-
-        if (color < numColors) {
-            break;
-        }
-
-        if (++facialHairID >= numVariations) {
-            facialHairID = 0;
-        }
-
-        if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
-            return false;
-        }
-    }
-
-    CharSectionsRec* keepRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, this->m_data.m_preferences.m_hairColorId, NULL);
-
-    if (keepRec && ComponentFlagsMatch(keepRec->m_flags, selection)) {
-        this->SetBeardStyle(keepRec->m_variationIndex, true, NULL);
-    } else {
-        this->SetHairColor(rec->m_colorIndex, false, NULL);
-        this->SetBeardStyle(rec->m_variationIndex, true, NULL);
-    }
-
-    return true;
-}
-
-// OFFSET: #0x004EBE80
-bool CCharacterComponent::SetPrevFacialFeature(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    bool found;
-    ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, this->m_data.m_preferences.m_facialHairId, this->m_data.m_preferences.m_hairColorId, &found);
-
-    if (!found) {
-        uint32_t count = CCharacterComponent::s_characterFacialHairStylesList[this->m_data.m_preferences.m_raceID * 2 + this->m_data.m_preferences.m_sexID];
-        int32_t facialHairID = this->m_data.m_preferences.m_facialHairId - 1;
-        this->SetBeardStyle(facialHairID >= 0 ? facialHairID : count - 1, true, NULL);
-
-        return true;
-    }
-
-    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR);
-
-    if (numVariations <= 0) {
-        return false;
-    }
-
-    int32_t facialHairID = this->m_data.m_preferences.m_facialHairId - 1;
-
-    if (facialHairID < 0) {
-        facialHairID = numVariations - 1;
-    }
-
-    if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
-        return false;
-    }
-
-    CharSectionsRec* rec = NULL;
-
-    while (true) {
-        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID);
-        int32_t color;
-
-        for (color = 0; color < numColors; color++) {
-            rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, color, NULL);
-
-            if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
-                break;
-            }
-        }
-
-        if (color < numColors) {
-            break;
-        }
-
-        if (--facialHairID < 0) {
-            facialHairID = numVariations - 1;
-        }
-
-        if (facialHairID == static_cast<int32_t>(this->m_data.m_preferences.m_facialHairId)) {
-            return false;
-        }
-    }
-
-    CharSectionsRec* keepRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACIAL_HAIR, facialHairID, this->m_data.m_preferences.m_hairColorId, NULL);
-
-    if (ComponentFlagsMatch(keepRec->m_flags, selection)) {
-        this->SetBeardStyle(keepRec->m_variationIndex, true, NULL);
-    } else {
-        this->SetHairColor(rec->m_colorIndex, false, NULL);
-        this->SetBeardStyle(rec->m_variationIndex, true, NULL);
-    }
-
-    return true;
-}
-
-// OFFSET: #0x004EC050
-bool CCharacterComponent::SetRandomFacialFeature(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numFeatures = CCharacterComponent::GetNumFacialFeaturesForHairColor(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, context);
-    int32_t index = numFeatures > 0 ? CRandom::dice_(numFeatures, g_rndSeed) : 0;
-    int32_t facialHairID = CCharacterComponent::GetNthFacialFeatureIndex(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, this->m_data.m_preferences.m_facialHairId, index, selection);
-
-    if (facialHairID < 0) {
-        return false;
-    }
-
-    this->SetBeardStyle(facialHairID, true, NULL);
-
-    return true;
-}
-
-// OFFSET: #0x004EC0E0
-void CCharacterComponent::ClearGuildTexture(int32_t count) {
-    for (int32_t layer = count; layer > 1; layer--) {
-        if (this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer]) {
-            TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer]);
-            this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer] = NULL;
-        }
-
-        this->m_section[SECTION_TORSO_UPPER].m_layerMask &= ~(1 << layer);
-        this->m_section[SECTION_TORSO_UPPER].m_layerItemDisplayId[layer] = 0;
-        this->SetDirtySections(1 << SECTION_TORSO_UPPER);
-    }
-
-    for (int32_t layer = count; layer > 1; layer--) {
-        if (this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer]) {
-            TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer]);
-            this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer] = NULL;
-        }
-
-        this->m_section[SECTION_TORSO_LOWER].m_layerMask &= ~(1 << layer);
-        this->m_section[SECTION_TORSO_LOWER].m_layerItemDisplayId[layer] = 0;
-        this->SetDirtySections(1 << SECTION_TORSO_LOWER);
-    }
-}
-
-// OFFSET: #0x004EC1C0
-void CCharacterComponent::ApplyGuildColor(int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
-    this->ClearGuildTexture(4);
-
-    CCharacterComponent::GetTabardBackgroundFileName(SECTION_TORSO_UPPER, background, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_UPPER].m_layerTex[2]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_UPPER].m_layerTex[2]);
-    }
-
-    this->m_section[SECTION_TORSO_UPPER].m_layerTex[2] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_UPPER].m_layerItemDisplayId[2] = 0;
-    this->m_section[SECTION_TORSO_UPPER].m_layerMask &= ~(1 << 2);
-
-    if (!this->m_section[SECTION_TORSO_UPPER].m_layerTex[2]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    CCharacterComponent::GetTabardBackgroundFileName(SECTION_TORSO_LOWER, background, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_LOWER].m_layerTex[2]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_LOWER].m_layerTex[2]);
-    }
-
-    this->m_section[SECTION_TORSO_LOWER].m_layerTex[2] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_LOWER].m_layerItemDisplayId[2] = 0;
-    this->m_section[SECTION_TORSO_LOWER].m_layerMask &= ~(1 << 2);
-
-    if (!this->m_section[SECTION_TORSO_LOWER].m_layerTex[2]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    CCharacterComponent::GetTabardEmblemFileName(SECTION_TORSO_UPPER, emblem, emblemColor, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_UPPER].m_layerTex[4]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_UPPER].m_layerTex[4]);
-    }
-
-    this->m_section[SECTION_TORSO_UPPER].m_layerTex[4] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_UPPER].m_layerItemDisplayId[4] = 0;
-    this->m_section[SECTION_TORSO_UPPER].m_layerMask &= ~(1 << 4);
-
-    if (!this->m_section[SECTION_TORSO_UPPER].m_layerTex[4]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    CCharacterComponent::GetTabardEmblemFileName(SECTION_TORSO_LOWER, emblem, emblemColor, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_LOWER].m_layerTex[4]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_LOWER].m_layerTex[4]);
-    }
-
-    this->m_section[SECTION_TORSO_LOWER].m_layerTex[4] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_LOWER].m_layerItemDisplayId[4] = 0;
-    this->m_section[SECTION_TORSO_LOWER].m_layerMask &= ~(1 << 4);
-
-    if (!this->m_section[SECTION_TORSO_LOWER].m_layerTex[4]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    CCharacterComponent::GetTabardBorderFileName(SECTION_TORSO_UPPER, border, borderColor, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_UPPER].m_layerTex[3]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_UPPER].m_layerTex[3]);
-    }
-
-    this->m_section[SECTION_TORSO_UPPER].m_layerTex[3] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_UPPER].m_layerItemDisplayId[3] = 0;
-    this->m_section[SECTION_TORSO_UPPER].m_layerMask &= ~(1 << 3);
-
-    if (!this->m_section[SECTION_TORSO_UPPER].m_layerTex[3]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    CCharacterComponent::GetTabardBorderFileName(SECTION_TORSO_LOWER, border, borderColor, s_buffer, sizeof(s_buffer));
-    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
-    if (this->m_section[SECTION_TORSO_LOWER].m_layerTex[3]) {
-        TextureCacheDestroyTexture(this->m_section[SECTION_TORSO_LOWER].m_layerTex[3]);
-    }
-
-    this->m_section[SECTION_TORSO_LOWER].m_layerTex[3] = TextureCacheCreateTexture(s_buffer);
-    this->m_section[SECTION_TORSO_LOWER].m_layerItemDisplayId[3] = 0;
-    this->m_section[SECTION_TORSO_LOWER].m_layerMask &= ~(1 << 3);
-
-    if (!this->m_section[SECTION_TORSO_LOWER].m_layerTex[3]) {
-        DebugLog("**** Unable to Load Texture %s\n", s_buffer);
-    }
-
-    this->SetDirtySections((1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
-}
-
-// OFFSET: #0x004EC510
-void CCharacterComponent::TurnOffGuildTabardPurchase() {
-    if (!(this->m_flags & 0x40)) {
-        return;
-    }
-
-    this->m_flags = (this->m_flags & ~0x44) | 0x4;
-    this->ClearGuildTexture(4);
-    this->SetDirtySections((1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
-}
-
-// OFFSET: #0x004EC550
-void CCharacterComponent::Paste(void* texture, MipBits* dstMips, const C2iVector& dstPos, const C2iVector& srcPos, const C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel) {
-    C2iVector pos = dstPos;
-    C2iVector src = srcPos;
-    C2iVector size = srcSize;
-    uint32_t stride = 4 * s_textureSize;
-    BlpPalPixel* pal = TextureCacheGetPal(texture);
-
-    if (!pal) {
-        CCharacterComponent::PasteCrappyGreen(dstMips, pos, stride, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
-        return;
-    }
-
-    switch (srcInfo.m_alphaSize) {
-        case 0:
-            CCharacterComponent::PasteOpaque(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
-            break;
-
-        case 1:
-            CCharacterComponent::PasteTransparent1Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
-            break;
-
-        case 4:
-            CCharacterComponent::PasteTransparent4Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
-            break;
-
-        case 8:
-            CCharacterComponent::PasteTransparent8Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
-            break;
-    }
-}
-
-// OFFSET: #0x004EC690
+// OFFSET: 0x006FE050
 void CCharacterComponent::PasteTransparent1BitScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcRowPitch = srcInfo.m_width;
     uint32_t copyWidth = srcSize.x;
@@ -3019,7 +3378,7 @@ void CCharacterComponent::PasteTransparent1BitScale(void* texture, MipBits* dstM
     CCharacterComponent::PasteTransparent1Bit(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: #0x004ECC20
+// OFFSET: 0x006FE5D0
 void CCharacterComponent::PasteTransparent4BitScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcRowPitch = srcInfo.m_width;
     uint32_t copyWidth = srcSize.x;
@@ -3169,7 +3528,7 @@ void CCharacterComponent::PasteTransparent4BitScale(void* texture, MipBits* dstM
     CCharacterComponent::PasteTransparent4Bit(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: #0x004ED200
+// OFFSET: 0x006FEBA0
 void CCharacterComponent::PasteTransparent8BitScale(void* texture, MipBits* dstMips, C2iVector& dstPos, uint32_t dstStride, C2iVector& srcPos, C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
     uint32_t srcRowPitch = srcInfo.m_width;
     uint32_t copyWidth = srcSize.x;
@@ -3298,7 +3657,16 @@ void CCharacterComponent::PasteTransparent8BitScale(void* texture, MipBits* dstM
     CCharacterComponent::PasteTransparent8Bit(texture, pal, dstMips, dstPos, dstStride >> 1, srcPos, srcSize, srcInfo, 0, 1);
 }
 
-// OFFSET: #0x004ED640
+// PROVEN: d21b0506 IDENTICAL/NONE
+// OFFSET: 0x006FF010/0x1403C99C0
+CHelmPathSuffix::CHelmPathSuffix(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    this->m_length = SStrVPrintf(this->m_buffer, sizeof(this->m_buffer), format, args);
+}
+
+// PROVEN: 831e559e IDENTICAL/NONE
+// OFFSET: 0x006FF040/0x1403C9A00
 bool CCharacterComponent::VariationsLoaded(int32_t wait) {
     TCTEXTUREINFO info;
     info.m_width = 0;
@@ -3320,7 +3688,7 @@ bool CCharacterComponent::VariationsLoaded(int32_t wait) {
     return true;
 }
 
-// OFFSET: #0x004ED6D0
+// OFFSET: 0x006FF0D0
 bool CCharacterComponent::ItemsLoaded(int32_t wait) {
     bool loaded = true;
     TCTEXTUREINFO info;
@@ -3337,7 +3705,7 @@ bool CCharacterComponent::ItemsLoaded(int32_t wait) {
 
         CharacterSection& sectionData = this->m_section[section];
 
-        for (int32_t layer = 0; layer < 7; layer++) {
+        for (int32_t layer = 0; layer < 8; layer++) {
             if (sectionData.m_layerItemDisplayId[layer]) {
                 if (!sectionData.m_layerTex[layer]) {
                     ItemDisplayInfoRec rec;
@@ -3372,171 +3740,37 @@ bool CCharacterComponent::ItemsLoaded(int32_t wait) {
     return loaded;
 }
 
-// OFFSET: #0x004ED8C0
-static bool __stdcall ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group, ItemDisplayInfoRec& rec) {
-    if (!displayID) {
-        return false;
-    }
+// OFFSET: 0x006FF2F0
+void CCharacterComponent::LinkToAsyncHead() {
+    TCTEXTUREINFO info;
+    info.m_width = 0;
+    info.m_height = 0;
+    info.m_mipCount = 0;
+    info.m_alphaSize = 0;
+    info.m_opaque = 1;
 
-    return g_itemDisplayInfoDB.GetRecord(displayID, &rec) && rec.m_geosetGroup[group];
-}
+    for (int32_t variation = 0; variation < NUM_COMPONENT_VARIATIONS; variation++) {
+        for (int32_t i = 0; i < 3; i++) {
+            void* texture = this->m_baseVariation[variation].m_texture[i];
 
-// OFFSET: #0x004ED900
-void CCharacterComponent::GeosRenderPrep() {
-    bool eyeGlow = false;
-
-    if (this->m_data.m_preferences.m_classId == 6) {
-        eyeGlow = true;
-    } else {
-        CharSectionsRec* faceRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_FACE, this->m_data.m_preferences.m_faceId, this->m_data.m_preferences.m_skinID, NULL);
-
-        if (faceRec && (faceRec->m_flags & 0x4)) {
-            eyeGlow = true;
-        }
-    }
-
-    CM2Model* model = this->m_data.m_model;
-    model->SetGeometryVisible(0, 2000, 0);
-    model->SetGeometryVisible(0, 0, 1);
-
-    for (int32_t i = 0; i < 19; i++) {
-        if (i == 17 && eyeGlow) {
-            this->m_data.m_model->SetGeometryVisible(1703, 1703, 1);
-        } else {
-            this->m_data.m_model->SetGeometryVisible(this->m_data.m_geosets[i], this->m_data.m_geosets[i], 1);
-        }
-    }
-
-    ItemDisplayInfoRec rec;
-
-    if (this->m_itemDisplayID[ITEMSLOT_GLOVES] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_GLOVES], &rec) && rec.m_geosetGroup[0]) {
-        this->m_data.m_model->SetGeometryVisible(401, 499, 0);
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 401, rec.m_geosetGroup[0] + 401, 1);
-    } else if (this->m_itemDisplayID[ITEMSLOT_CHEST] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CHEST], &rec) && rec.m_geosetGroup[0]) {
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 801, rec.m_geosetGroup[0] + 801, 1);
-    }
-
-    int32_t layer;
-
-    for (layer = 1; layer < 7; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_ARM_LOWER].m_layerMask) {
-            break;
-        }
-    }
-
-    if (layer >= 7 && this->m_itemDisplayID[ITEMSLOT_SHIRT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHIRT], &rec) && rec.m_geosetGroup[0]) {
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 801, rec.m_geosetGroup[0] + 801, 1);
-    }
-
-    bool robe = false;
-    bool dress = false;
-    bool tabard = false;
-
-    if (this->m_itemDisplayID[ITEMSLOT_CHEST] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CHEST], &rec) && rec.m_geosetGroup[2]) {
-        this->m_data.m_model->SetGeometryVisible(501, 599, 0);
-        this->m_data.m_model->SetGeometryVisible(902, 999, 0);
-        this->m_data.m_model->SetGeometryVisible(1100, 1199, 0);
-        this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[2] + 1301, rec.m_geosetGroup[2] + 1301, 1);
-        robe = true;
-    } else if (this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[2] && !(this->m_flags & 0x20)) {
-        this->m_data.m_model->SetGeometryVisible(501, 599, 0);
-        this->m_data.m_model->SetGeometryVisible(902, 999, 0);
-        this->m_data.m_model->SetGeometryVisible(1100, 1199, 0);
-        this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[2] + 1301, rec.m_geosetGroup[2] + 1301, 1);
-        dress = true;
-    } else {
-        if (this->m_itemDisplayID[ITEMSLOT_BOOTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_BOOTS], &rec) && rec.m_geosetGroup[0]) {
-            this->m_data.m_model->SetGeometryVisible(501, 599, 0);
-            this->m_data.m_model->SetGeometryVisible(901, 901, 1);
-            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 501, rec.m_geosetGroup[0] + 501, 1);
-        } else if (this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[1] && !(this->m_flags & 0x20)) {
-            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[1] + 901, rec.m_geosetGroup[1] + 901, 1);
-        } else {
-            this->m_data.m_model->SetGeometryVisible(901, 901, 1);
-        }
-
-        if (this->m_itemDisplayID[ITEMSLOT_TABARD] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_TABARD], &rec) && rec.m_geosetGroup[0]) {
-            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1201, rec.m_geosetGroup[0] + 1201, 1);
-            tabard = true;
-        }
-    }
-
-    if (this->m_flags & 0x40) {
-        this->m_data.m_model->SetGeometryVisible(1201, 1201, 1);
-
-        if (!robe && !dress) {
-            this->m_data.m_model->SetGeometryVisible(1202, 1202, 1);
-        }
-    }
-
-    if (!robe) {
-        if (!tabard && this->m_itemDisplayID[ITEMSLOT_SHIRT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHIRT], &rec) && rec.m_geosetGroup[1]) {
-            this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[1] + 1001, rec.m_geosetGroup[1] + 1001, 1);
-        }
-
-        if (!(this->m_flags & 0x20) && this->m_itemDisplayID[ITEMSLOT_PANTS] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_PANTS], &rec) && rec.m_geosetGroup[0]) {
-            if (rec.m_geosetGroup[0] > 2) {
-                this->m_data.m_model->SetGeometryVisible(1300, 1399, 0);
-                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1101, rec.m_geosetGroup[0] + 1101, 1);
-            } else if (!tabard) {
-                this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1101, rec.m_geosetGroup[0] + 1101, 1);
+            if (texture && !TextureCacheGetInfo(texture, info, 0)) {
+                TextureCacheIncreasePriority(texture);
             }
         }
     }
 
-    if (this->m_itemDisplayID[ITEMSLOT_CAPE] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_CAPE], &rec) && rec.m_geosetGroup[0]) {
-        this->m_data.m_model->SetGeometryVisible(1500, 1599, 0);
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1501, rec.m_geosetGroup[0] + 1501, 1);
-    }
-
-    if (this->m_itemDisplayID[ITEMSLOT_BELT] && g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_BELT], &rec) && rec.m_geosetGroup[0]) {
-        this->m_data.m_model->SetGeometryVisible(1800, 1899, 0);
-        this->m_data.m_model->SetGeometryVisible(rec.m_geosetGroup[0] + 1801, rec.m_geosetGroup[0] + 1801, 1);
-    }
-
-    this->m_data.m_model->OptimizeVisibleGeometry();
-    this->m_flags &= ~0x4;
-}
-
-// OFFSET: #0x004EE0D0
-void CCharacterComponent::PrepSections() {
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        if (!((1 << section) & this->m_dirtySections)) {
-            continue;
-        }
+        for (int32_t layer = 0; layer < 8; layer++) {
+            void* texture = this->m_section[section].m_layerTex[layer];
 
-        (this->*CCharacterComponent::m_prepFunc[section])();
-
-        if (!(this->m_flags & 0x1) && this->m_gxTexFormat != GxTex_Dxt1) {
-            const CompSectionInfo& info = s_sectionInfo[section];
-            GxTexUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
-        }
-    }
-
-    if (!(this->m_flags & 0x1) && this->m_gxTexFormat != GxTex_Dxt1) {
-        return;
-    }
-
-    if (this->m_gxTexFormat == GxTex_Dxt1) {
-        ComputeMipLevels(CCharacterComponent::s_textureBuffer, s_compressedTextureBuffer);
-    }
-
-    if (this->m_flags & 0x1) {
-        GxTexUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture), 0, 0, s_textureSize, s_textureSize, 1);
-        return;
-    }
-
-    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        if ((1 << section) & this->m_dirtySections) {
-            const CompSectionInfo& info = s_sectionInfo[section];
-            GxTexUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture), info.m_pos.x, info.m_pos.y, info.m_pos.x + info.m_size.x, info.m_pos.y + info.m_size.y, 1);
+            if (texture && !TextureCacheGetInfo(texture, info, 0)) {
+                TextureCacheIncreasePriority(texture);
+            }
         }
     }
 }
 
-// OFFSET: #0x004EE200
+// OFFSET: 0x006FF3B0/0x1403C9F50
 CComponentMipBits* CCharacterComponent::AllocComponentMipBits(EGxTexFormat format) {
     s_mipBitsCritSect.Enter();
 
@@ -3551,13 +3785,13 @@ CComponentMipBits* CCharacterComponent::AllocComponentMipBits(EGxTexFormat forma
     return mipBits;
 }
 
-// OFFSET: #0x004EE2A0
+// OFFSET: 0x006FF450
 void CCharacterComponent::RenderPrepAll() {
     this->SetTexturesDirty();
     this->m_dirtySections = 0xFFFFFFFF;
 
     if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
+        this->m_request->m_active = 0;
         this->m_request = NULL;
     }
 
@@ -3570,7 +3804,7 @@ void CCharacterComponent::RenderPrepAll() {
     }
 
     if (this->m_gxTexFormat == GxTex_Dxt1) {
-        ComputeMipLevels(CCharacterComponent::s_textureBuffer, s_compressedTextureBuffer);
+        CompressMipLevels(CCharacterComponent::s_textureBuffer, s_compressedTextureBuffer, this->m_mipLevels);
     }
 
     this->m_flags &= ~0x1;
@@ -3579,179 +3813,26 @@ void CCharacterComponent::RenderPrepAll() {
     this->m_link.Unlink();
 }
 
-// OFFSET: #0x004EE380
-int32_t CCharacterComponent::UpdateTextureSlot(COMPONENT_SECTIONS section, const ItemDisplayInfoRec* displayRec, int32_t layer) {
-    if (this->m_data.m_flags & 0x1) {
-        return 0;
-    }
-
-    CharacterSection& sectionData = this->m_section[section];
-
-    if (sectionData.m_layerItemDisplayId[layer]) {
-        ItemDisplayInfoRec rec;
-
-        if (g_itemDisplayInfoDB.GetRecord(sectionData.m_layerItemDisplayId[layer], &rec) && rec.m_texture[section] == displayRec->m_texture[section]) {
-            return 0;
-        }
-    }
-
-    sectionData.m_layerMask &= ~(1 << layer);
-
-    if (sectionData.m_layerTex[layer]) {
-        TextureCacheDestroyTexture(sectionData.m_layerTex[layer]);
-        sectionData.m_layerTex[layer] = NULL;
-    }
-
-    sectionData.m_layerItemDisplayId[layer] = displayRec->m_id;
+// OFFSET: 0x006FF530/0x1403CA120
+int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec, const ItemDisplayInfoRec* displayRec, char* buffer, uint32_t size) {
+    char path[260];
+    SStrPrintf(path, "Item\\ObjectComponents\\Head\\%s", displayRec->m_modelName[0]);
+    OsPathReplaceExtension(path, sizeof(path), path, "");
+    CHelmPathSuffix suffix("_%s%s.m2", raceRec->m_clientPrefix, s_fileDecorations[this->m_data.m_preferences.m_sexID]);
+    SStrPack(path, suffix.m_buffer, sizeof(path));
+    strcpy(buffer, path);
 
     return 1;
 }
 
-// INLINED
-inline ITEM_SLOT CCharacterComponent::GetItemSlotForInvSlot(INVENTORY_SLOTS invSlot) {
-    switch (invSlot) {
-        case INVSLOT_HEAD:
-            return ITEMSLOT_HEAD;
-
-        case INVSLOT_SHOULDER:
-            return ITEMSLOT_SHOULDER;
-
-        case INVSLOT_BODY:
-            return ITEMSLOT_SHIRT;
-
-        case INVSLOT_CHEST:
-            return ITEMSLOT_CHEST;
-
-        case INVSLOT_WAIST:
-            return ITEMSLOT_BELT;
-
-        case INVSLOT_LEGS:
-            return ITEMSLOT_PANTS;
-
-        case INVSLOT_FEET:
-            return ITEMSLOT_BOOTS;
-
-        case INVSLOT_WRIST:
-            return ITEMSLOT_BRACERS;
-
-        case INVSLOT_HAND:
-            return ITEMSLOT_GLOVES;
-
-        case INVSLOT_BACK:
-            return ITEMSLOT_CAPE;
-
-        case INVSLOT_TABARD:
-            return ITEMSLOT_TABARD;
-
-        default:
-            return NUM_ITEM_SLOTS;
-    }
-}
-
-// OFFSET: #0x004EE460
-void CCharacterComponent::RemoveItem(ITEM_SLOT itemSlot) {
-    if (!this->m_itemDisplayID[itemSlot]) {
-        return;
-    }
-
-    this->m_flags |= 0x4;
-
-    switch (itemSlot) {
-        case ITEMSLOT_HEAD: {
-            this->m_data.m_geosets[0] = GetConditionalGeoset(&this->m_data.m_preferences);
-            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, ATTACH_HELM);
-            CharacterFacialHairStylesRec* styleRec = GetConditionalFacialHairStyle(&this->m_data.m_preferences);
-
-            if (styleRec) {
-                this->m_data.m_geosets[1] = styleRec->m_geoset[0] + 100;
-                this->m_data.m_geosets[3] = styleRec->m_geoset[1] + 300;
-                this->m_data.m_geosets[2] = styleRec->m_geoset[2] + 200;
-                this->m_data.m_geosets[7] = 702;
-                this->m_data.m_geosets[16] = styleRec->m_geoset[3] + 1600;
-                this->m_data.m_geosets[17] = styleRec->m_geoset[4] + 1700;
-            }
-
-            this->m_itemDisplayID[itemSlot] = 0;
-            return;
-        }
-
-        case ITEMSLOT_SHOULDER:
-            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(6));
-            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(5));
-            this->m_itemDisplayID[itemSlot] = 0;
-            return;
-
-        case ITEMSLOT_CHEST:
-            this->m_flags &= ~0x20;
-            break;
-
-        case ITEMSLOT_TABARD:
-            if (this->m_flags & 0x40) {
-                this->m_itemDisplayID[itemSlot] = 0;
-                return;
-            }
-
-            this->m_data.m_geosets[15] = 1501;
-            this->ClearGuildTexture(4);
-            break;
-
-        case ITEMSLOT_CAPE:
-            this->m_data.m_geosets[15] = 1501;
-            this->m_itemDisplayID[itemSlot] = 0;
-            return;
-
-        case ITEMSLOT_11:
-            if (this->m_itemSlotForAttachSlot[ATTACH_SHEATH_MAINHAND] == ITEMSLOT_11) {
-                CCharacterComponent::RemoveLinkpt(this->m_data.m_model, ATTACH_SHEATH_MAINHAND);
-                this->m_itemSlotForAttachSlot[ATTACH_SHEATH_MAINHAND] = -1;
-            }
-
-            this->m_itemDisplayID[itemSlot] = 0;
-            return;
-
-        default:
-            break;
-    }
-
-    const ItemDisplayInfoRec* displayRec = NULL;
-    ItemDisplayInfoRec rec;
-
-    if (g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[itemSlot], &rec)) {
-        displayRec = &rec;
-    }
-
-    this->m_itemDisplayID[itemSlot] = 0;
-
-    for (int32_t section = 0; section < 8; section++) {
-        (this->*CCharacterComponent::m_itemFunc[section])(itemSlot, displayRec, false);
-    }
-}
-
-// OFFSET: #0x004EE6D0
-void CCharacterComponent::RemoveItemBySlot(INVENTORY_SLOTS invSlot) {
-    ITEM_SLOT itemSlot = CCharacterComponent::GetItemSlotForInvSlot(invSlot);
-
-    if (itemSlot != NUM_ITEM_SLOTS) {
-        this->RemoveItem(itemSlot);
-    }
-}
-
-// OFFSET: #0x004EEB30
-void CCharacterComponent::RemoveItemByType(INVENTORY_TYPES invType) {
-    ITEM_SLOT itemSlot = CCharacterComponent::GetItemSlotForInvType(invType);
-
-    if (itemSlot != NUM_ITEM_SLOTS) {
-        this->RemoveItem(itemSlot);
-    }
-}
-
-// OFFSET: #0x004EEFA0
+// PROVEN: 4801c2c0 IDENTICAL/NONE
+// OFFSET: 0x006FF600
 int32_t CCharacterComponent::GetHelmModelFilePath(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec) {
     if (!this->m_itemDisplayID[ITEMSLOT_HEAD]) {
         return 0;
     }
 
-    if (!g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_HEAD], &rec) || !*rec.m_modelName[0]) {
+    if (!g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_HEAD], &rec) || !rec.m_modelName[0] || !*rec.m_modelName[0]) {
         return 0;
     }
 
@@ -3765,31 +3846,46 @@ int32_t CCharacterComponent::GetHelmModelFilePath(ItemDisplayInfoRec& rec, const
     return this->ComposeHelmModelFilePath(raceRec, &rec, s_pathEnd, 260);
 }
 
-// OFFSET: #0x004EF020
+// OFFSET: 0x006FF6A0
 bool CCharacterComponent::IsHelmModelCorrect() {
     CM2Model* attached = this->m_data.m_model->m_attachList;
-
-    while (attached && attached->m_attachmentId != ATTACH_HELM) {
-        attached = attached->m_attachNext;
-    }
 
     if (!attached) {
         return false;
     }
 
+    while (attached->m_attachmentId != ATTACH_HELM) {
+        attached = attached->m_attachNext;
+
+        if (!attached) {
+            return false;
+        }
+    }
+
     ItemDisplayInfoRec rec;
     const ItemDisplayInfoRec* displayRec;
 
-    if (!this->GetHelmModelFilePath(rec, displayRec)) {
+    if (!attached->IsDrawable() || (attached->m_fFlags & 0x2000) || !this->GetHelmModelFilePath(rec, displayRec)) {
         return false;
     }
 
-    strcpy(OsPathFindExtensionWithoutDot(s_path), "m2");
+    bool hideHair = false;
+    HelmetGeosetVisDataRec* visRec = g_helmetGeosetVisDataDB.GetRecord(displayRec->m_helmetGeosetVisID[this->m_data.m_preferences.m_sexID]);
 
-    return SStrCmpI(attached->m_shared->m_fileName, s_path, 0x7FFFFFFF) == 0;
+    if (visRec) {
+        hideHair = ((1 << this->m_data.m_preferences.m_raceID) & visRec->m_hideGeoset[0]) != 0;
+    }
+
+    if (hideHair != (this->m_data.m_geosets[0] == 1)) {
+        return false;
+    }
+
+    OsPathReplaceExtension(s_path, sizeof(s_path), s_path, "m2");
+
+    return _stricmp(attached->m_shared->m_fileName, s_path) == 0;
 }
 
-// OFFSET: #0x004EF0D0
+// OFFSET: 0x006FF770/0x1403CA470
 void CCharacterComponent::AddHelm(int32_t itemVisual) {
     ItemDisplayInfoRec rec;
     const ItemDisplayInfoRec* displayRec;
@@ -3798,12 +3894,10 @@ void CCharacterComponent::AddHelm(int32_t itemVisual) {
         return;
     }
 
-    strcpy(s_buffer, "Item\\ObjectComponents\\Head\\");
-    strcat(s_buffer, displayRec->m_modelTexture[0]);
-    strcat(s_buffer, ".blp");
+    SStrPrintf(s_buffer, "Item\\ObjectComponents\\Head\\%s.blp", displayRec->m_modelTexture[0]);
     strcpy(s_pathEnd2, s_buffer);
 
-    CCharacterComponent::AddLink(this->m_data.m_model, ATTACH_HELM, s_path, s_path2, itemVisual, displayRec);
+    CCharacterComponent::AddLink(this->m_data.m_model, &this->m_attachMask, ATTACH_HELM, s_path, s_path2, itemVisual, displayRec);
 
     HelmetGeosetVisDataRec* visRec = g_helmetGeosetVisDataDB.GetRecord(displayRec->m_helmetGeosetVisID[this->m_data.m_preferences.m_sexID]);
 
@@ -3842,154 +3936,7 @@ void CCharacterComponent::AddHelm(int32_t itemVisual) {
     }
 }
 
-// OFFSET: #0x004EF250
-int32_t CCharacterComponent::GetQuiverModelFilePath(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec) {
-    if (!this->m_itemDisplayID[ITEMSLOT_11]) {
-        return 0;
-    }
-
-    if (!g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_11], &rec) || !*rec.m_modelName[0]) {
-        return 0;
-    }
-
-    displayRec = &rec;
-    strcpy(s_buffer, "Item\\ObjectComponents\\Quiver\\");
-    strcat(s_buffer, displayRec->m_modelName[0]);
-    strcpy(s_pathEnd, s_buffer);
-
-    return 1;
-}
-
-// OFFSET: #0x004EF300
-bool CCharacterComponent::IsQuiverModelCorrect() {
-    CM2Model* attached = this->m_data.m_model->m_attachList;
-
-    while (attached && attached->m_attachmentId != ATTACH_SHEATH_MAINHAND) {
-        attached = attached->m_attachNext;
-    }
-
-    if (!attached) {
-        return false;
-    }
-
-    ItemDisplayInfoRec rec;
-    const ItemDisplayInfoRec* displayRec;
-
-    if (!this->GetQuiverModelFilePath(rec, displayRec)) {
-        return false;
-    }
-
-    strcpy(OsPathFindExtensionWithoutDot(s_path), "m2");
-
-    return SStrCmpI(attached->m_shared->m_fileName, s_path, 0x7FFFFFFF) == 0;
-}
-
-// OFFSET: #0x004EF3B0
-void CCharacterComponent::AddQuiver(int32_t itemVisual) {
-    ItemDisplayInfoRec rec;
-    const ItemDisplayInfoRec* displayRec;
-
-    if (!this->GetQuiverModelFilePath(rec, displayRec)) {
-        return;
-    }
-
-    strcpy(s_buffer, "Item\\ObjectComponents\\Quiver\\");
-    strcat(s_buffer, displayRec->m_modelTexture[0]);
-    strcat(s_buffer, ".blp");
-    strcpy(s_pathEnd2, s_buffer);
-
-    this->m_itemSlotForAttachSlot[ATTACH_SHEATH_MAINHAND] = ITEMSLOT_11;
-    CCharacterComponent::AddLink(this->m_data.m_model, ATTACH_SHEATH_MAINHAND, s_path, s_path2, itemVisual, displayRec);
-}
-
-// OFFSET: #0x004EF4B0
-int32_t CCharacterComponent::BuildShoulderItemPaths(ItemDisplayInfoRec& rec, const ItemDisplayInfoRec*& displayRec, char* leftModel, char* rightModel, char* leftTexture, char* rightTexture) {
-    *leftModel = '\0';
-    *rightModel = '\0';
-
-    if (leftTexture) {
-        *leftTexture = '\0';
-    }
-
-    if (rightTexture) {
-        *rightTexture = '\0';
-    }
-
-    if (!this->m_itemDisplayID[ITEMSLOT_SHOULDER] || !g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[ITEMSLOT_SHOULDER], &rec)) {
-        return 0;
-    }
-
-    displayRec = &rec;
-
-    if (*rec.m_modelName[0]) {
-        strcpy(s_buffer, "Item\\ObjectComponents\\Shoulder\\");
-        strcat(s_buffer, displayRec->m_modelName[0]);
-        strcpy(leftModel, s_buffer);
-
-        if (leftTexture) {
-            strcpy(s_buffer, "Item\\ObjectComponents\\Shoulder\\");
-            strcat(s_buffer, displayRec->m_modelTexture[0]);
-            strcat(s_buffer, ".blp");
-            strcpy(leftTexture, s_buffer);
-        }
-    }
-
-    if (*displayRec->m_modelName[1]) {
-        strcpy(s_buffer, "Item\\ObjectComponents\\Shoulder\\");
-        strcat(s_buffer, displayRec->m_modelName[1]);
-        strcpy(rightModel, s_buffer);
-
-        if (rightTexture) {
-            strcpy(s_buffer, "Item\\ObjectComponents\\Shoulder\\");
-            strcat(s_buffer, displayRec->m_modelTexture[1]);
-            strcat(s_buffer, ".blp");
-            strcpy(rightTexture, s_buffer);
-        }
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x004EF710
-int32_t CCharacterComponent::AreShoulderModelsCorrect() {
-    CM2Model* left = this->m_data.m_model->m_attachList;
-
-    while (left && left->m_attachmentId != 6) {
-        left = left->m_attachNext;
-    }
-
-    if (!left) {
-        return 0;
-    }
-
-    CM2Model* right = this->m_data.m_model->m_attachList;
-
-    while (right && right->m_attachmentId != 5) {
-        right = right->m_attachNext;
-    }
-
-    if (!right) {
-        return 0;
-    }
-
-    ItemDisplayInfoRec rec;
-    const ItemDisplayInfoRec* displayRec;
-
-    if (!this->BuildShoulderItemPaths(rec, displayRec, s_path, s_path2, NULL, NULL)) {
-        return 0;
-    }
-
-    strcpy(OsPathFindExtensionWithoutDot(s_path), "m2");
-    strcpy(OsPathFindExtensionWithoutDot(s_path2), "m2");
-
-    if (SStrCmpI(left->m_shared->m_fileName, s_path, 0x7FFFFFFF) || SStrCmpI(right->m_shared->m_fileName, s_path2, 0x7FFFFFFF)) {
-        return 0;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x004EF840
+// OFFSET: 0x006FF940
 void CCharacterComponent::AddShoulders(int32_t itemVisual) {
     ItemDisplayInfoRec rec;
     const ItemDisplayInfoRec* displayRec;
@@ -4002,66 +3949,248 @@ void CCharacterComponent::AddShoulders(int32_t itemVisual) {
         return;
     }
 
-    if (leftModel[0]) {
-        CCharacterComponent::AddLink(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(6), leftModel, leftTexture, itemVisual, displayRec);
-    }
+    CM2Model* left = NULL;
+    CM2Model* right = NULL;
 
     if (rightModel[0]) {
-        CCharacterComponent::AddLink(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(5), rightModel, rightTexture, itemVisual, displayRec);
+        right = CCharacterComponent::AddLink(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERRIGHT, rightModel, rightTexture, itemVisual, displayRec);
     }
+
+    if (leftModel[0]) {
+        left = CCharacterComponent::AddLink(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERLEFT, leftModel, leftTexture, itemVisual, displayRec);
+    }
+
+    this->LinkShoulderAnimations(left, right, displayRec);
 }
 
-// OFFSET: #0x004EF900
+// OFFSET: 0x006FFAB0
+void CCharacterComponent::RelinkShoulderAnimations(CM2Model* model) {
+    ItemDisplayInfoRec rec;
+    const ItemDisplayInfoRec* displayRec = NULL;
+
+    if (!this->GetShoulderDisplayInfo(rec, displayRec)) {
+        return;
+    }
+
+    CM2Model* left = model->m_attachList;
+
+    while (left && left->m_attachmentId != ATTACH_SHOULDERLEFT) {
+        left = left->m_attachNext;
+    }
+
+    CM2Model* right = model->m_attachList;
+
+    while (right && right->m_attachmentId != ATTACH_SHOULDERRIGHT) {
+        right = right->m_attachNext;
+    }
+
+    this->LinkShoulderAnimations(left, right, displayRec);
+}
+
+// OFFSET: 0x006FFB30
 void CCharacterComponent::SetHandItemDisplay(int32_t displayID, uint32_t hand, INVENTORY_SLOTS invSlot, bool shield) {
     ItemDisplayInfoRec rec;
 
     if (g_itemDisplayInfoDB.GetRecord(displayID, &rec)) {
         this->m_handItemDisplayID[hand] = displayID;
-        CCharacterComponent::AddHandItem(this->m_data.m_model, &rec, invSlot, SHEATHE_NONE, false, shield, false, 0);
+        CCharacterComponent::AddHandItem(this->m_data.m_model, &this->m_attachMask, &rec, invSlot, SHEATHE_NONE, false, shield, false, 0);
     }
 }
 
-// OFFSET: #0x004EF970
+// PROVEN: fdc670b6 IDENTICAL/NONE
+// OFFSET: 0x006FFBB0
 void CCharacterComponent::SetMainHandItemDisplay(int32_t displayID) {
     this->SetHandItemDisplay(displayID, 0, INVSLOT_MAINHAND, false);
 }
 
-// OFFSET: #0x004EF990
+// PROVEN: 22db7984 IDENTICAL/NONE
+// OFFSET: 0x006FFBD0
 void CCharacterComponent::SetOffHandItemDisplay(int32_t displayID) {
     this->SetHandItemDisplay(displayID, 1, INVSLOT_OFFHAND, false);
 }
 
-// OFFSET: #0x004EF9B0
+// PROVEN: aae38eaa IDENTICAL/NONE
+// OFFSET: 0x006FFBF0
 void CCharacterComponent::SetShieldItemDisplay(int32_t displayID) {
     this->SetHandItemDisplay(displayID, 1, INVSLOT_OFFHAND, true);
 }
 
-// OFFSET: #0x004EF9D0
-void CCharacterComponent::PasteScale(void* texture, MipBits* dstMips, const C2iVector& dstPos, const C2iVector& srcPos, const C2iVector& srcSize, TCTEXTUREINFO& srcInfo) {
+// PROVEN: adb9674e IDENTICAL/NONE
+// OFFSET: 0x006FFC10
+GEOCOMPONENTLINKS CCharacterComponent::AddHandItem(const ItemDisplayInfoRec* displayRec, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
+    return CCharacterComponent::AddHandItem(this->m_data.m_model, &this->m_attachMask, displayRec, invSlot, sheatheType, sheathed, shield, mainHand, itemVisual);
+}
+
+// PROVEN: 7d9cd055 IDENTICAL/NONE
+// OFFSET: 0x006FFC50/0x1403CAD80
+void CCharacterComponent::RemoveHandItem(INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
+    CCharacterComponent::RemoveHandItem(this->m_data.m_model, &this->m_attachMask, invSlot, sheatheType, shield);
+}
+
+// PROVEN: 7b1c32bf IDENTICAL/NONE
+// OFFSET: 0x006FFC80
+void CCharacterComponent::ClearGuildTabard(int32_t count) {
+    for (int32_t layer = count; layer > 3; layer--) {
+        this->ClearSectionLayer(SECTION_TORSO_UPPER, layer);
+    }
+
+    for (int32_t layer = count; layer > 3; layer--) {
+        this->ClearSectionLayer(SECTION_TORSO_LOWER, layer);
+    }
+}
+
+// PROVEN: 002c784d IDENTICAL/NONE
+// OFFSET: 0x006FFCC0
+void CCharacterComponent::ClearGuildShirt(int32_t count) {
+    for (int32_t layer = count; layer >= 0; layer--) {
+        this->ClearSectionLayer(SECTION_TORSO_UPPER, layer);
+    }
+
+    for (int32_t layer = count; layer >= 0; layer--) {
+        this->ClearSectionLayer(SECTION_TORSO_LOWER, layer);
+    }
+
+    for (int32_t layer = count; layer >= 0; layer--) {
+        this->ClearSectionLayer(SECTION_ARM_UPPER, layer);
+    }
+
+    for (int32_t layer = count; layer >= 0; layer--) {
+        this->ClearSectionLayer(SECTION_ARM_LOWER, layer);
+    }
+}
+
+// OFFSET: 0x006FFD30
+void CCharacterComponent::ApplyGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
+    this->ClearGuildTabard(6);
+
+    for (int32_t i = 0; i < 2; i++) {
+        COMPONENT_SECTIONS section = s_tabardSections[i];
+        CCharacterComponent::GetTabardBackgroundFileName(flags, section, background, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 4);
+    }
+
+    for (int32_t i = 0; i < 2; i++) {
+        COMPONENT_SECTIONS section = s_tabardSections[i];
+        CCharacterComponent::GetTabardEmblemFileName(section, emblem, emblemColor, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 5);
+    }
+
+    for (int32_t i = 0; i < 2; i++) {
+        COMPONENT_SECTIONS section = s_tabardSections[i];
+        CCharacterComponent::GetTabardBorderFileName(flags, section, border, borderColor, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 6);
+    }
+
+    this->SetDirtySections((1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
+}
+
+// OFFSET: 0x006FFF10
+void CCharacterComponent::ApplyShirtGuildColor(uint32_t flags, int32_t emblem, int32_t emblemColor, int32_t border, int32_t borderColor, int32_t background) {
+    this->ClearGuildShirt(2);
+
+    for (int32_t i = 0; i < 4; i++) {
+        COMPONENT_SECTIONS section = s_shirtSections[i];
+        CCharacterComponent::GetShirtBackgroundFileName(flags, section, background, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 0);
+    }
+
+    for (int32_t i = 0; i < 4; i++) {
+        COMPONENT_SECTIONS section = s_shirtSections[i];
+        CCharacterComponent::GetTabardEmblemFileName(section, emblem, emblemColor, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 1);
+    }
+
+    for (int32_t i = 0; i < 4; i++) {
+        COMPONENT_SECTIONS section = s_shirtSections[i];
+        CCharacterComponent::GetShirtBorderFileName(flags, section, border, borderColor, s_buffer, sizeof(s_buffer));
+        SStrPack(s_buffer, ".blp", sizeof(s_buffer));
+        this->LoadSectionLayer(s_buffer, section, 2);
+    }
+
+    this->SetDirtySections((1 << SECTION_ARM_UPPER) | (1 << SECTION_ARM_LOWER) | (1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
+}
+
+// PROVEN: 7b1d2e33 IDENTICAL/NONE
+// OFFSET: 0x007000F0/0x1403CB770
+void CCharacterComponent::TurnOffGuildTabardPurchase() {
+    if (!(this->m_flags & 0x40)) {
+        return;
+    }
+
+    this->m_flags = (this->m_flags & ~0x44) | 0x4;
+    this->ClearGuildTabard(6);
+    this->SetDirtySections((1 << SECTION_TORSO_UPPER) | (1 << SECTION_TORSO_LOWER));
+}
+
+// OFFSET: 0x00700160/0x1403C85E0
+void CCharacterComponent::Paste(void* texture, MipBits* dstMips, const C2iVector& dstPos, const C2iVector& srcPos, const C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t srcMipLevel, uint32_t mipLevels) {
     C2iVector pos = dstPos;
     C2iVector src = srcPos;
     C2iVector size = srcSize;
+    uint32_t stride = 4 * (1 << mipLevels);
+    BlpPalPixel* pal = TextureCacheGetPal(texture);
+
+    if (!pal) {
+        CCharacterComponent::PasteCrappyGreen(dstMips, pos, stride, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
+        return;
+    }
 
     switch (srcInfo.m_alphaSize) {
         case 0:
-            CCharacterComponent::PasteOpaqueScale(texture, dstMips, pos, 4 * s_textureSize, src, size, srcInfo);
+            CCharacterComponent::PasteOpaque(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
             break;
 
         case 1:
-            CCharacterComponent::PasteTransparent1BitScale(texture, dstMips, pos, 4 * s_textureSize, src, size, srcInfo);
+            CCharacterComponent::PasteTransparent1Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
             break;
 
         case 4:
-            CCharacterComponent::PasteTransparent4BitScale(texture, dstMips, pos, 4 * s_textureSize, src, size, srcInfo);
+            CCharacterComponent::PasteTransparent4Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
             break;
 
         case 8:
-            CCharacterComponent::PasteTransparent8BitScale(texture, dstMips, pos, 4 * s_textureSize, src, size, srcInfo);
+            CCharacterComponent::PasteTransparent8Bit(texture, pal, dstMips, pos, stride, src, size, srcInfo, srcMipLevel, -static_cast<int32_t>(srcMipLevel));
             break;
     }
 }
 
-// OFFSET: #0x004EFAB0
+// OFFSET: 0x007002B0/0x1403CB810
+void CCharacterComponent::PasteScale(void* texture, MipBits* dstMips, const C2iVector& dstPos, const C2iVector& srcPos, const C2iVector& srcSize, TCTEXTUREINFO& srcInfo, uint32_t mipLevels) {
+    C2iVector pos = dstPos;
+    C2iVector src = srcPos;
+    C2iVector size = srcSize;
+    uint32_t stride = 4 * (1 << mipLevels);
+
+    if (!TextureCacheGetPal(texture)) {
+        CCharacterComponent::PasteCrappyGreen(dstMips, pos, stride, size, srcInfo, 0, 0);
+        return;
+    }
+
+    switch (srcInfo.m_alphaSize) {
+        case 0:
+            CCharacterComponent::PasteOpaqueScale(texture, dstMips, pos, stride, src, size, srcInfo);
+            break;
+
+        case 1:
+            CCharacterComponent::PasteTransparent1BitScale(texture, dstMips, pos, stride, src, size, srcInfo);
+            break;
+
+        case 4:
+            CCharacterComponent::PasteTransparent4BitScale(texture, dstMips, pos, stride, src, size, srcInfo);
+            break;
+
+        case 8:
+            CCharacterComponent::PasteTransparent8BitScale(texture, dstMips, pos, stride, src, size, srcInfo);
+            break;
+    }
+}
+
+// OFFSET: 0x007003C0
 void CCharacterComponent::ComputeLoadProgress(int64_t& local, int64_t& total) {
     for (int32_t variation = 0; variation < NUM_COMPONENT_VARIATIONS; variation++) {
         for (int32_t i = 0; i < 3; i++) {
@@ -4072,87 +4201,60 @@ void CCharacterComponent::ComputeLoadProgress(int64_t& local, int64_t& total) {
     }
 
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        for (int32_t layer = 0; layer < 7; layer++) {
+        for (int32_t layer = 0; layer < 8; layer++) {
             if (this->m_section[section].m_layerTex[layer]) {
                 TextureCacheComputeLoadProgress(this->m_section[section].m_layerTex[layer], local, total);
             }
         }
     }
 
+    if (local == total && !(this->m_flags & 0x1)) {
+        return;
+    }
+
     total += 0x2000;
 
-    if (!this->m_link.m_next && this->m_baseSkinTexture && !(this->m_dirtySections | -static_cast<int32_t>(this->m_flags & 0x1))) {
+    if (!this->m_link.m_next && this->m_baseTexture && !(this->m_dirtySections | -static_cast<int32_t>(this->m_flags & 0x1))) {
         local += 0x2000;
     }
 }
 
-// OFFSET: #0x004EFB80
-static bool __stdcall ItemDisplayHasGeosetGroup(uint32_t displayID, int32_t group) {
-    ItemDisplayInfoRec rec;
-
-    return displayID && g_itemDisplayInfoDB.GetRecord(displayID, &rec) && rec.m_geosetGroup[group];
-}
-
-// INLINED
-inline CharacterSection::CharacterSection() {
-    for (int32_t layer = 0; layer < 7; layer++) {
-        this->m_layerTex[layer] = NULL;
-        this->m_layerItemDisplayId[layer] = 0;
-    }
-
-    this->m_layerMask = 0;
-}
-
-// INLINED
-inline CharacterSection::~CharacterSection() {
-    for (int32_t layer = 0; layer < 7; layer++) {
-        if (this->m_layerTex[layer]) {
-            TextureCacheDestroyTexture(this->m_layerTex[layer]);
-        }
-
-        this->m_layerTex[layer] = NULL;
-        this->m_layerItemDisplayId[layer] = 0;
-    }
-}
-
-// INLINED
-inline CharacterBaseVariation::~CharacterBaseVariation() {
-    void** texture = this->m_texture;
-
-    for (int32_t i = 0; i < 7; i++) {
-        if (texture[i]) {
-            TextureCacheDestroyTexture(texture[i]);
-        }
-
-        texture[i] = NULL;
-    }
-}
-
-// OFFSET: #0x004EFBE0
+// OFFSET: 0x007004B0
 CCharacterComponent::CCharacterComponent() {
+    this->m_attachMask = 0;
     memset(this->m_baseVariation, 0, sizeof(this->m_baseVariation));
     this->m_flags |= 0x7;
     this->m_dirtySections = 0xFFFFFFFF;
     this->m_request = NULL;
-    this->m_baseSkinTexture = NULL;
+    this->m_baseTexture = NULL;
+    this->m_extraSkinTexture = NULL;
+    this->m_hairTexture = NULL;
     this->m_gxTexFormat = CCharacterComponent::s_gxFormat;
+    this->m_mipLevels = CCharacterComponent::s_mipLevels;
     memset(this->m_itemDisplayID, 0, sizeof(this->m_itemDisplayID));
-    memset(this->m_itemSlotForAttachSlot, 0xFF, sizeof(this->m_itemSlotForAttachSlot));
+    this->m_handItemDisplayID[0] = 0;
+    this->m_handItemDisplayID[1] = 0;
+    this->m_handItemDisplayID[2] = 0;
     this->m_flags &= ~0x20;
     this->m_data.m_model = NULL;
+    s_componentList.LinkToTail(this);
 }
 
-// OFFSET: #0x004EFCA0
+// OFFSET: 0x007005A0
 CCharacterComponent::~CCharacterComponent() {
     if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
+        this->m_request->m_active = 0;
         this->m_request = NULL;
     }
 
-    if (this->m_baseSkinTexture) {
-        GxTexSetCannotUpdate(TextureGetGxTexBlocking(this->m_baseSkinTexture));
-        TextureRelease(this->m_baseSkinTexture);
-        this->m_baseSkinTexture = NULL;
+    this->ReleaseBaseTexture();
+
+    if (this->m_extraSkinTexture) {
+        TextureRelease(this->m_extraSkinTexture);
+    }
+
+    if (this->m_hairTexture) {
+        TextureRelease(this->m_hairTexture);
     }
 
     if (this->m_data.m_model) {
@@ -4161,9 +4263,14 @@ CCharacterComponent::~CCharacterComponent() {
     }
 
     this->m_link.Unlink();
+    this->m_componentLink.Unlink();
+
+    if (s_closestComponent == this) {
+        CCharacterComponent::ResetClosestComponent();
+    }
 }
 
-// OFFSET: #0x004EFDF0
+// OFFSET: 0x00700790/0x1403CBF60
 void CCharacterComponent::UpdateBaseTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels) {
     CCharacterComponent* component = static_cast<CCharacterComponent*>(userArg);
 
@@ -4177,12 +4284,7 @@ void CCharacterComponent::UpdateBaseTexture(EGxTexCommand command, uint32_t widt
 
         case GxTex_Latch:
             if (component->m_gxTexFormat == GxTex_Dxt1) {
-                uint32_t blockSize = TextureGetBytesPerBlock(PIXEL_DXT1);
-                texelStrideInBytes = blockSize * (width >> 2);
-
-                if (texelStrideInBytes < blockSize) {
-                    texelStrideInBytes = blockSize;
-                }
+                texelStrideInBytes = GxCalcTexelStrideInBytes(GxTex_Dxt1, width);
             } else {
                 texelStrideInBytes = 4 * width;
             }
@@ -4214,7 +4316,7 @@ void CCharacterComponent::UpdateBaseTexture(EGxTexCommand command, uint32_t widt
     }
 }
 
-// OFFSET: #0x004EFED0
+// OFFSET: 0x00700850
 void CCharacterComponent::Prep() {
     if (this->m_data.m_flags & 0x1) {
         if (this->m_flags & 0x4) {
@@ -4226,14 +4328,15 @@ void CCharacterComponent::Prep() {
 
     if (this->m_dirtySections || (this->m_flags & 0x1)) {
         if (!this->m_link.m_next) {
-            CCharacterComponent::s_queue.LinkToTail(this);
+            s_queue.LinkToTail(this);
         }
     } else if (this->m_flags & 0x4) {
         this->GeosRenderPrep();
     }
 }
 
-// OFFSET: #0x004EFF10
+// PROVEN: 12bb3fe5 IDENTICAL/NONE
+// OFFSET: 0x00700890/0x1403CC240
 void CCharacterComponent::CreateBaseTexture() {
     EGxTexFormat dataFormat = GxTex_Argb8888;
 
@@ -4241,232 +4344,114 @@ void CCharacterComponent::CreateBaseTexture() {
         dataFormat = GxTex_Dxt1;
     }
 
-    CGxTexFlags flags(GxTex_LinearMipLinear, 0, 0, 0, 0, 1);
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
 
     if (g_theGxDevicePtr->DeviceApi() == GxApi_GLL) {
         flags.m_bit14 = 1;
     }
 
-    this->m_baseSkinTexture = TextureCreate(s_textureSize, s_textureSize, this->m_gxTexFormat, dataFormat, flags, this, &CCharacterComponent::UpdateBaseTexture, "CharacterBaseSkin", 1);
-    this->m_data.m_model->ReplaceTexture(1, this->m_baseSkinTexture);
+    this->m_baseTexture = TextureCreate(1 << this->m_mipLevels, 1 << this->m_mipLevels, this->m_gxTexFormat, dataFormat, flags, this, &CCharacterComponent::UpdateBaseTexture, "CharacterBaseSkin", 1);
+    this->m_data.m_model->ReplaceTexture(1, this->m_baseTexture);
 }
 
-// OFFSET: #0x004EFFA0
-void CCharacterComponent::UpdateItem(ITEM_SLOT itemSlot, COMPONENT_SECTIONS section, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][section];
-
-    if (section == SECTION_ARM_LOWER) {
-        if (displayRec && displayRec->m_geosetGroup[0]) {
-            if (itemSlot == ITEMSLOT_CHEST) {
-                layer = 5;
-            } else if (itemSlot == ITEMSLOT_GLOVES) {
-                layer = 6;
-            }
-        }
-    } else if (section == SECTION_LEG_LOWER) {
-        if (itemSlot == ITEMSLOT_CHEST) {
-            if (displayRec && displayRec->m_geosetGroup[2]) {
-                layer = 4;
-                this->m_flags |= 0x4;
-            }
-        } else if (itemSlot == ITEMSLOT_PANTS) {
-            if (displayRec && displayRec->m_geosetGroup[2]) {
-                uint32_t chestID = this->m_itemDisplayID[ITEMSLOT_CHEST];
-
-                if (chestID && ItemDisplayHasGeosetGroup(chestID, 2)) {
-                    layer = 3;
-                } else {
-                    layer = 4;
-                }
-
-                this->m_flags |= 0x4;
-            }
-        } else if (itemSlot == ITEMSLOT_BOOTS && displayRec && displayRec->m_geosetGroup[0]) {
-            this->m_flags |= 0x4;
-            layer = 3;
-        }
-    } else if (section == SECTION_FOOT && (this->m_flags & 0x10)) {
-        apply = false;
-        this->FreeSectionTexture(section, s_itemPriority[itemSlot][section]);
+// OFFSET: 0x00700920/0x1403CC300
+void CCharacterComponent::RemoveItem(ITEM_SLOT itemSlot) {
+    if (!this->m_itemDisplayID[itemSlot]) {
+        return;
     }
 
-    if (section != SECTION_FOOT || !(this->m_flags & 0x10)) {
-        if (apply) {
-            if (!this->UpdateTextureSlot(section, displayRec, layer)) {
+    this->m_flags |= 0x4;
+
+    switch (itemSlot) {
+        case ITEMSLOT_HEAD: {
+            this->m_data.m_geosets[0] = GetConditionalGeoset(&this->m_data.m_preferences);
+            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_HELM);
+            CharacterFacialHairStylesRec* styleRec = GetConditionalFacialHairStyle(&this->m_data.m_preferences);
+
+            if (styleRec) {
+                this->m_data.m_geosets[1] = styleRec->m_geoset[0] + 100;
+                this->m_data.m_geosets[3] = styleRec->m_geoset[1] + 300;
+                this->m_data.m_geosets[2] = styleRec->m_geoset[2] + 200;
+                this->m_data.m_geosets[7] = 702;
+                this->m_data.m_geosets[16] = styleRec->m_geoset[3] + 1600;
+                this->m_data.m_geosets[17] = styleRec->m_geoset[4] + 1700;
+            }
+
+            this->m_itemDisplayID[itemSlot] = 0;
+            return;
+        }
+
+        case ITEMSLOT_SHOULDER:
+            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERLEFT);
+            CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERRIGHT);
+            this->m_itemDisplayID[itemSlot] = 0;
+            return;
+
+        case ITEMSLOT_SHIRT:
+            this->ClearGuildShirt(2);
+            break;
+
+        case ITEMSLOT_CHEST:
+            this->m_flags &= ~0x20;
+            break;
+
+        case ITEMSLOT_TABARD:
+            if (this->m_flags & 0x40) {
+                this->m_itemDisplayID[itemSlot] = 0;
                 return;
             }
-        } else {
-            this->FreeSectionTexture(section, layer);
-        }
-    }
 
-    if (section == SECTION_LEG_LOWER && !apply) {
-        ItemDisplayInfoRec rec;
+            this->m_data.m_geosets[15] = 1501;
+            this->ClearGuildTabard(6);
+            break;
 
-        if (itemSlot == ITEMSLOT_CHEST) {
-            if (ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_PANTS], 2, rec)) {
-                this->FreeSectionTexture(SECTION_LEG_LOWER, 3);
-                this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 4);
-            }
-
-            if (ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_BOOTS], 0, rec)) {
-                this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 3);
-            }
-        } else if (itemSlot == ITEMSLOT_PANTS && ItemDisplayHasGeosetGroup(this->m_itemDisplayID[ITEMSLOT_PANTS], 2, rec)) {
-            this->UpdateTextureSlot(SECTION_LEG_LOWER, &rec, 4);
-        }
-    }
-
-    if (layer != -1) {
-        this->SetDirtySections(1 << section);
-    }
-}
-
-// OFFSET: #0x004F01A0
-void CCharacterComponent::UpdateItemAU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_UPPER];
-
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_ARM_UPPER, displayRec, layer)) {
+        case ITEMSLOT_CAPE:
+            this->m_data.m_geosets[15] = 1501;
+            this->m_itemDisplayID[itemSlot] = 0;
             return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_ARM_UPPER, layer);
-    }
 
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_ARM_UPPER);
-    }
-}
-
-// OFFSET: #0x004F0200
-void CCharacterComponent::UpdateItemAL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_ARM_LOWER];
-
-    if (displayRec && displayRec->m_geosetGroup[0]) {
-        if (itemSlot == ITEMSLOT_CHEST) {
-            layer = 5;
-        } else if (itemSlot == ITEMSLOT_GLOVES) {
-            layer = 6;
-        }
-    }
-
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_ARM_LOWER, displayRec, layer)) {
+        case ITEMSLOT_11:
             return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_ARM_LOWER, layer);
+
+        default:
+            break;
     }
 
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_ARM_LOWER);
-    }
-}
+    const ItemDisplayInfoRec* displayRec = NULL;
+    ItemDisplayInfoRec rec;
 
-// OFFSET: #0x004F0280
-void CCharacterComponent::UpdateItemHA(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_HAND];
-
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_HAND, displayRec, layer)) {
-            return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_HAND, layer);
+    if (g_itemDisplayInfoDB.GetRecord(this->m_itemDisplayID[itemSlot], &rec)) {
+        displayRec = &rec;
     }
 
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_HAND);
+    this->m_itemDisplayID[itemSlot] = 0;
+
+    for (int32_t section = 0; section < 8; section++) {
+        (this->*CCharacterComponent::m_itemFunc[section])(itemSlot, displayRec, false);
     }
 }
 
-// PROVEN: 48c37d5b IDENTICAL/DIFFERENT
-// OFFSET: 0x00627990/0x140693B10
-void CCharacterComponent::UpdateItemHU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-}
+// OFFSET: 0x00700B90/0x1403CC610
+void CCharacterComponent::RemoveItemBySlot(INVENTORY_SLOTS invSlot) {
+    ITEM_SLOT itemSlot = CCharacterComponent::GetItemSlotForInvSlot(invSlot);
 
-// PROVEN: 00cdc5bc IDENTICAL/DIFFERENT
-// OFFSET: 0x00627990/0x140693B10
-void CCharacterComponent::UpdateItemHL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-}
-
-// OFFSET: #0x004F02E0
-void CCharacterComponent::UpdateItemTU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_UPPER];
-
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_TORSO_UPPER, displayRec, layer)) {
-            return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_TORSO_UPPER, layer);
-    }
-
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_TORSO_UPPER);
+    if (itemSlot != NUM_ITEM_SLOTS) {
+        this->RemoveItem(itemSlot);
     }
 }
 
-// OFFSET: #0x004F0340
-void CCharacterComponent::UpdateItemTL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_TORSO_LOWER];
+// OFFSET: 0x00701070
+void CCharacterComponent::RemoveItemByType(INVENTORY_TYPES invType) {
+    ITEM_SLOT itemSlot = CCharacterComponent::GetItemSlotForInvType(invType);
 
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_TORSO_LOWER, displayRec, layer)) {
-            return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_TORSO_LOWER, layer);
-    }
-
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_TORSO_LOWER);
+    if (itemSlot != NUM_ITEM_SLOTS) {
+        this->RemoveItem(itemSlot);
     }
 }
 
-// OFFSET: #0x004F03A0
-void CCharacterComponent::UpdateItemLU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_LEG_UPPER];
-
-    if (apply) {
-        if (!this->UpdateTextureSlot(SECTION_LEG_UPPER, displayRec, layer)) {
-            return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_LEG_UPPER, layer);
-    }
-
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_LEG_UPPER);
-    }
-}
-
-// PROVEN: f28fa65e IDENTICAL/NONE
-// OFFSET: 0x006FBE90/0x1403C6820
-void CCharacterComponent::UpdateItemLL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    this->UpdateItem(itemSlot, SECTION_LEG_LOWER, displayRec, apply);
-}
-
-// OFFSET: #0x004F0420
-void CCharacterComponent::UpdateItemFO(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
-    int32_t layer = s_itemPriority[itemSlot][SECTION_FOOT];
-
-    if (!(this->m_flags & 0x10) && apply) {
-        if (!this->UpdateTextureSlot(SECTION_FOOT, displayRec, layer)) {
-            return;
-        }
-    } else {
-        this->FreeSectionTexture(SECTION_FOOT, layer);
-    }
-
-    if (layer != -1) {
-        this->SetDirtySections(1 << SECTION_FOOT);
-    }
-}
-
-// OFFSET: #0x004F0490
-bool CCharacterComponent::SetNextHairStyle(COMPONENT_CONTEXT context) {
+// OFFSET: 0x007015E0/0x1403C79C0
+bool CCharacterComponent::SetNextHairStyle(COMPONENT_CONTEXT context, int32_t step) {
     COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
     int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR);
 
@@ -4474,74 +4459,11 @@ bool CCharacterComponent::SetNextHairStyle(COMPONENT_CONTEXT context) {
         return false;
     }
 
-    int32_t hairStyleID = this->m_data.m_preferences.m_hairStyleId + 1;
+    int32_t hairStyleID = this->m_data.m_preferences.m_hairStyleId + step;
 
     if (hairStyleID >= numVariations) {
         hairStyleID = 0;
-    }
-
-    if (hairStyleID == static_cast<int32_t>(this->m_data.m_preferences.m_hairStyleId)) {
-        return false;
-    }
-
-    CharSectionsRec* rec = NULL;
-
-    while (true) {
-        int32_t numColors = ComponentGetNumColors(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID);
-        int32_t color;
-
-        for (color = 0; color < numColors; color++) {
-            rec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, color, NULL);
-
-            if (rec && ComponentFlagsMatch(rec->m_flags, selection)) {
-                break;
-            }
-        }
-
-        if (color < numColors) {
-            break;
-        }
-
-        if (++hairStyleID >= numVariations) {
-            hairStyleID = 0;
-        }
-
-        if (hairStyleID == static_cast<int32_t>(this->m_data.m_preferences.m_hairStyleId)) {
-            return false;
-        }
-    }
-
-    CharSectionsRec* keepRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR, hairStyleID, this->m_data.m_preferences.m_hairColorId, NULL);
-
-    if (keepRec && ComponentFlagsMatch(keepRec->m_flags, selection)) {
-        this->SetHairStyle(keepRec->m_variationIndex, NULL);
-        return true;
-    }
-
-    this->SetHairColor(rec->m_colorIndex, true, NULL);
-    this->SetHairStyle(rec->m_variationIndex, NULL);
-
-    int32_t facialHairID = CCharacterComponent::GetNthFacialFeatureIndex(this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, this->m_data.m_preferences.m_classId, this->m_data.m_preferences.m_hairColorId, this->m_data.m_preferences.m_facialHairId, 0, GetSelectionFromContext(context, this->m_data.m_preferences.m_classId));
-
-    if (facialHairID >= 0) {
-        this->SetBeardStyle(facialHairID, true, NULL);
-    }
-
-    return true;
-}
-
-// OFFSET: #0x004F0630
-bool CCharacterComponent::SetPrevHairStyle(COMPONENT_CONTEXT context) {
-    COMPONENT_SELECTION selection = GetSelectionFromContext(context, this->m_data.m_preferences.m_classId);
-    int32_t numVariations = ComponentGetNumVariations(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_HAIR);
-
-    if (numVariations <= 0) {
-        return false;
-    }
-
-    int32_t hairStyleID = this->m_data.m_preferences.m_hairStyleId - 1;
-
-    if (hairStyleID < 0) {
+    } else if (hairStyleID < 0) {
         hairStyleID = numVariations - 1;
     }
 
@@ -4567,7 +4489,11 @@ bool CCharacterComponent::SetPrevHairStyle(COMPONENT_CONTEXT context) {
             break;
         }
 
-        if (--hairStyleID < 0) {
+        hairStyleID += step;
+
+        if (hairStyleID >= numVariations) {
+            hairStyleID = 0;
+        } else if (hairStyleID < 0) {
             hairStyleID = numVariations - 1;
         }
 
@@ -4595,8 +4521,8 @@ bool CCharacterComponent::SetPrevHairStyle(COMPONENT_CONTEXT context) {
     return true;
 }
 
-// OFFSET: #0x004F07D0
-void CCharacterComponent::PasteFromSkin(COMPONENT_SECTIONS section, void* texture, MipBits* dstMips) {
+// OFFSET: 0x007017A0/0x1403CD5A0
+void CCharacterComponent::PasteFromSkin(COMPONENT_SECTIONS section, void* texture, MipBits* dstMips, uint32_t mipLevels) {
     if (!TextureCacheHasMips(texture)) {
         return;
     }
@@ -4610,24 +4536,25 @@ void CCharacterComponent::PasteFromSkin(COMPONENT_SECTIONS section, void* textur
     TextureCacheGetInfo(texture, info, 1);
     uint32_t width = info.m_width;
     info.m_alphaSize = 0;
+    uint32_t size = 1 << mipLevels;
 
-    if (info.m_width < s_textureSize && info.m_height < s_textureSize) {
-        CCharacterComponent::PasteScale(texture, dstMips, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_size, info);
+    if (info.m_width < size && info.m_height < size) {
+        CCharacterComponent::PasteScale(texture, dstMips, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_size, info, mipLevels);
         return;
     }
 
     uint32_t mipLevel = 0;
 
-    while (width != s_textureSize) {
+    while (width > size) {
         width >>= 1;
         mipLevel++;
     }
 
-    CCharacterComponent::Paste(texture, dstMips, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_size, info, mipLevel);
+    CCharacterComponent::Paste(texture, dstMips, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_pos, s_sectionInfo[section].m_size, info, mipLevel, mipLevels);
 }
 
-// OFFSET: #0x004F08A0
-void CCharacterComponent::PasteToSection(COMPONENT_SECTIONS section, void* texture, MipBits* dstMips) {
+// OFFSET: 0x00701880/0x1403CD6C0
+void CCharacterComponent::PasteToSection(COMPONENT_SECTIONS section, void* texture, MipBits* dstMips, uint32_t mipLevels) {
     if (!TextureCacheHasMips(texture)) {
         return;
     }
@@ -4643,179 +4570,171 @@ void CCharacterComponent::PasteToSection(COMPONENT_SECTIONS section, void* textu
     uint32_t sectionWidth = s_sectionInfo[section].m_size.x;
     C2iVector srcPos;
 
-    if (info.m_width < sectionWidth && info.m_height < static_cast<uint32_t>(s_sectionInfo[section].m_size.y)) {
+    if (info.m_width < sectionWidth || info.m_height < static_cast<uint32_t>(s_sectionInfo[section].m_size.y)) {
         srcPos.x = 0;
         srcPos.y = 0;
-        CCharacterComponent::PasteScale(texture, dstMips, s_sectionInfo[section].m_pos, srcPos, s_sectionInfo[section].m_size, info);
+        CCharacterComponent::PasteScale(texture, dstMips, s_sectionInfo[section].m_pos, srcPos, s_sectionInfo[section].m_size, info, mipLevels);
         return;
     }
 
     uint32_t mipLevel = 0;
 
-    while (width != sectionWidth) {
+    while (width > sectionWidth) {
         width >>= 1;
         mipLevel++;
     }
 
     srcPos.x = 0;
     srcPos.y = 0;
-    CCharacterComponent::Paste(texture, dstMips, s_sectionInfo[section].m_pos, srcPos, s_sectionInfo[section].m_size, info, mipLevel);
+    CCharacterComponent::Paste(texture, dstMips, s_sectionInfo[section].m_pos, srcPos, s_sectionInfo[section].m_size, info, mipLevel, mipLevels);
 }
 
-// OFFSET: #0x004F0980
-CCharacterComponent* CCharacterComponent::AllocComponent() {
-    uint32_t memHandle;
-    void* object = NULL;
-
-    if (!ObjectAlloc(*s_componentHeap, &memHandle, &object, false, __FILE__, __LINE__)) {
-        return NULL;
-    }
-
-    CCharacterComponent* component = new (object) CCharacterComponent();
-    component->m_heapIndex = memHandle;
-
-    return component;
-}
-
-// OFFSET: #0x004F09D0
+// PROVEN: 203b11e5 IDENTICAL/NONE
+// OFFSET: 0x007019E0
 void CCharacterComponent::RenderPrepAU() {
-    CCharacterComponent::PasteFromSkin(SECTION_ARM_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_ARM_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
-    for (int32_t layer = 0; layer < 2; layer++) {
+    for (int32_t layer = 0; layer < 4; layer++) {
         if ((1 << layer) & this->m_section[SECTION_ARM_UPPER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_ARM_UPPER, this->m_section[SECTION_ARM_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
+            CCharacterComponent::PasteToSection(SECTION_ARM_UPPER, this->m_section[SECTION_ARM_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
         }
     }
 }
 
-// OFFSET: #0x004F0A30
+// PROVEN: ea1d907f IDENTICAL/NONE
+// OFFSET: 0x00701A50
 void CCharacterComponent::RenderPrepAL() {
-    CCharacterComponent::PasteFromSkin(SECTION_ARM_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_ARM_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
-    for (int32_t layer = 0; layer < 7; layer++) {
+    for (int32_t layer = 0; layer < 8; layer++) {
         if ((1 << layer) & this->m_section[SECTION_ARM_LOWER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_ARM_LOWER, this->m_section[SECTION_ARM_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
+            CCharacterComponent::PasteToSection(SECTION_ARM_LOWER, this->m_section[SECTION_ARM_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
         }
     }
 }
 
-// OFFSET: #0x004F0A90
+// PROVEN: f5c86075 IDENTICAL/NONE
+// OFFSET: 0x00701AC0
 void CCharacterComponent::RenderPrepHA() {
-    CCharacterComponent::PasteFromSkin(SECTION_HAND, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_HAND, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
     if (this->m_section[SECTION_HAND].m_layerMask & 0x1) {
-        CCharacterComponent::PasteToSection(SECTION_HAND, this->m_section[SECTION_HAND].m_layerTex[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HAND, this->m_section[SECTION_HAND].m_layerTex[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 }
 
-// OFFSET: #0x004F0AD0
+// PROVEN: e88e774c IDENTICAL/NONE
+// OFFSET: 0x00701B10
 void CCharacterComponent::RenderPrepHU() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
     if (skinRec && (skinRec->m_flags & 0x8)) {
-        CCharacterComponent::PasteFromSkin(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteFromSkin(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_FACE].m_texture[1]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACE].m_texture[1], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACE].m_texture[1], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[1], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_HAIR].m_texture[2]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_HAIR].m_texture[2], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_UPPER, this->m_baseVariation[VARIATION_HAIR].m_texture[2], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 }
 
-// OFFSET: #0x004F0B70
+// PROVEN: e39df29c IDENTICAL/NONE
+// OFFSET: 0x00701BC0
 void CCharacterComponent::RenderPrepHL() {
     CharSectionsRec* skinRec = ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, VARIATION_SKIN, 0, this->m_data.m_preferences.m_skinID, NULL);
 
     if (skinRec && (skinRec->m_flags & 0x8)) {
-        CCharacterComponent::PasteFromSkin(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteFromSkin(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_FACE].m_texture[0]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACE].m_texture[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACE].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_FACIAL_HAIR].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     if (this->m_baseVariation[VARIATION_HAIR].m_texture[1]) {
-        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_HAIR].m_texture[1], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_HEAD_LOWER, this->m_baseVariation[VARIATION_HAIR].m_texture[1], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 }
 
-// OFFSET: #0x004F0C10
+// OFFSET: 0x00701C70
 void CCharacterComponent::RenderPrepTU() {
-    CCharacterComponent::PasteFromSkin(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
     if (!(this->m_section[SECTION_TORSO_UPPER].m_layerMask & 0x7) && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1]) {
-        CCharacterComponent::PasteToSection(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_TORSO_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[1], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
-
-    for (int32_t layer = 0; layer < 5; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_TORSO_UPPER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_TORSO_UPPER, this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
-        }
-    }
-}
-
-// OFFSET: #0x004F0CA0
-void CCharacterComponent::RenderPrepTL() {
-    CCharacterComponent::PasteFromSkin(SECTION_TORSO_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
 
     for (int32_t layer = 0; layer < 7; layer++) {
-        if ((1 << layer) & this->m_section[SECTION_TORSO_LOWER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_TORSO_LOWER, this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
+        if ((1 << layer) & this->m_section[SECTION_TORSO_UPPER].m_layerMask) {
+            CCharacterComponent::PasteToSection(SECTION_TORSO_UPPER, this->m_section[SECTION_TORSO_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
         }
     }
 }
 
-// OFFSET: #0x004F0D00
+// PROVEN: b4d7d56a IDENTICAL/NONE
+// OFFSET: 0x00701D10
+void CCharacterComponent::RenderPrepTL() {
+    CCharacterComponent::PasteFromSkin(SECTION_TORSO_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
+
+    for (int32_t layer = 0; layer < 8; layer++) {
+        if ((1 << layer) & this->m_section[SECTION_TORSO_LOWER].m_layerMask) {
+            CCharacterComponent::PasteToSection(SECTION_TORSO_LOWER, this->m_section[SECTION_TORSO_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
+        }
+    }
+}
+
+// OFFSET: 0x00701D80
 void CCharacterComponent::RenderPrepLU() {
-    CCharacterComponent::PasteFromSkin(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
     if (((this->m_flags & 0x20) || !(this->m_section[SECTION_LEG_UPPER].m_layerMask & 0x3)) && this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0]) {
-        CCharacterComponent::PasteToSection(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_LEG_UPPER, this->m_baseVariation[VARIATION_UNDERWEAR].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 
     int32_t last = 3 - ((this->m_flags & 0x20) != 0);
 
     for (int32_t layer = (this->m_flags & 0x20) != 0; layer < last; layer++) {
         if ((1 << layer) & this->m_section[SECTION_LEG_UPPER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_LEG_UPPER, this->m_section[SECTION_LEG_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
+            CCharacterComponent::PasteToSection(SECTION_LEG_UPPER, this->m_section[SECTION_LEG_UPPER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
         }
     }
 }
 
-// OFFSET: #0x004F0DB0
+// OFFSET: 0x00701E40
 void CCharacterComponent::RenderPrepLL() {
-    CCharacterComponent::PasteFromSkin(SECTION_LEG_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_LEG_LOWER, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
     int32_t last = 2 * ((this->m_flags & 0x20) == 0) + 4;
 
     for (int32_t layer = (this->m_flags & 0x20) != 0; layer < last; layer++) {
         if ((1 << layer) & this->m_section[SECTION_LEG_LOWER].m_layerMask) {
-            CCharacterComponent::PasteToSection(SECTION_LEG_LOWER, this->m_section[SECTION_LEG_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer);
+            CCharacterComponent::PasteToSection(SECTION_LEG_LOWER, this->m_section[SECTION_LEG_LOWER].m_layerTex[layer], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
         }
     }
 }
 
-// OFFSET: #0x004F0E40
+// PROVEN: ad27985f IDENTICAL/NONE
+// OFFSET: 0x00701ED0
 void CCharacterComponent::RenderPrepFO() {
-    CCharacterComponent::PasteFromSkin(SECTION_FOOT, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer);
+    CCharacterComponent::PasteFromSkin(SECTION_FOOT, this->m_baseVariation[VARIATION_SKIN].m_texture[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
 
     if (this->m_section[SECTION_FOOT].m_layerMask & 0x1) {
-        CCharacterComponent::PasteToSection(SECTION_FOOT, this->m_section[SECTION_FOOT].m_layerTex[0], CCharacterComponent::s_textureBuffer);
+        CCharacterComponent::PasteToSection(SECTION_FOOT, this->m_section[SECTION_FOOT].m_layerTex[0], CCharacterComponent::s_textureBuffer, this->m_mipLevels);
     }
 }
 
-// OFFSET: #0x004F0E80
+// OFFSET: 0x00701F20
 void CCharacterComponent::ProcessFinishedRequest() {
     CCharacterComponent::s_bInRenderPrep = 1;
 
@@ -4823,12 +4742,13 @@ void CCharacterComponent::ProcessFinishedRequest() {
         this->GeosRenderPrep();
     }
 
-    if (!this->m_baseSkinTexture) {
+    if (!this->m_baseTexture) {
         this->CreateBaseTexture();
     }
 
     this->UpdateSections();
-    this->m_request->m_flags &= ~0x1;
+    this->ApplyExtraTextures();
+    this->m_request->m_active = 0;
     this->m_flags &= ~0x1;
     this->m_request = NULL;
     this->m_dirtySections = 0;
@@ -4836,7 +4756,7 @@ void CCharacterComponent::ProcessFinishedRequest() {
     CCharacterComponent::s_bInRenderPrep = 0;
 }
 
-// OFFSET: #0x004F0EE0
+// OFFSET: 0x00701F90/0x1403CDF00
 void CCharacterComponent::ProcessComponentRequest(CComponentRequest* request) {
     MipBits* dstMips = request->m_mipBits->m_mipBits;
 
@@ -4846,20 +4766,20 @@ void CCharacterComponent::ProcessComponentRequest(CComponentRequest* request) {
 
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
         if (request->m_baseTextures[section]) {
-            CCharacterComponent::PasteFromSkin(static_cast<COMPONENT_SECTIONS>(section), request->m_baseTextures[section], dstMips);
+            CCharacterComponent::PasteFromSkin(static_cast<COMPONENT_SECTIONS>(section), request->m_baseTextures[section], dstMips, request->m_mipLevels);
         }
     }
 
     for (uint32_t i = 0; i < request->m_layerCount; i++) {
-        CCharacterComponent::PasteToSection(static_cast<COMPONENT_SECTIONS>(request->m_layerSections[i]), request->m_layerTextures[i], dstMips);
+        CCharacterComponent::PasteToSection(static_cast<COMPONENT_SECTIONS>(request->m_layerSections[i]), request->m_layerTextures[i], dstMips, request->m_mipLevels);
     }
 
     if (request->m_format == GxTex_Dxt1) {
-        ComputeMipLevels(dstMips, request->m_mipBits->m_mipBits);
+        CompressMipLevels(dstMips, request->m_mipBits->m_mipBits, request->m_mipLevels);
     }
 }
 
-// OFFSET: #0x004F0F70
+// OFFSET: 0x00702030/0x1403CDFE0
 void CCharacterComponent::CreateComponentFreeLists() {
     int32_t count = 10;
     int32_t compressedCount = 0;
@@ -4869,20 +4789,27 @@ void CCharacterComponent::CreateComponentFreeLists() {
         compressedCount = 9;
     }
 
+    s_mipBitsCritSect.Enter();
+    uint32_t size = 1 << CCharacterComponent::s_mipLevels;
+
     for (int32_t i = 0; i < count; i++) {
         CComponentMipBits* mipBits = s_mipBitsFreeList.NewNode(2, 0, 0);
         mipBits->m_format = PIXEL_ARGB8888;
-        mipBits->m_mipBits = TextureAllocMippedImg(PIXEL_ARGB8888, s_textureSize, s_textureSize);
+        mipBits->m_mipLevels = CCharacterComponent::s_mipLevels;
+        mipBits->m_mipBits = TextureAllocMippedImg(PIXEL_ARGB8888, size, size);
     }
 
     for (int32_t i = 0; i < compressedCount; i++) {
         CComponentMipBits* mipBits = s_mipBitsCompressedFreeList.NewNode(2, 0, 0);
         mipBits->m_format = PIXEL_DXT1;
-        mipBits->m_mipBits = TextureAllocMippedImg(PIXEL_DXT1, s_textureSize, s_textureSize);
+        mipBits->m_mipLevels = CCharacterComponent::s_mipLevels;
+        mipBits->m_mipBits = TextureAllocMippedImg(PIXEL_DXT1, size, size);
     }
+
+    s_mipBitsCritSect.Leave();
 }
 
-// OFFSET: #0x004F10E0
+// OFFSET: 0x007021F0/0x1403CE210
 CComponentRequest* CCharacterComponent::AllocComponentRequest() {
     CComponentRequest* request = s_requestFreeList.Head();
 
@@ -4891,21 +4818,23 @@ CComponentRequest* CCharacterComponent::AllocComponentRequest() {
     }
 
     request->m_link.Unlink();
-    request->m_flags = (request->m_flags & ~0x3) | 0x1;
+    request->m_ready = 0;
+    request->m_mipLevels = 0;
     request->m_mipBits = NULL;
     request->m_layerCount = 0;
+    request->m_active = 1;
 
     return request;
 }
 
-// OFFSET: #0x004F1180
+// OFFSET: 0x00702290/0x1403CE430
 void CCharacterComponent::ProcessComponentFinishedList(int32_t all) {
     s_finishedListCritSect.Enter();
 
     for (CComponentRequest* request = s_finishedList.Head(); request;) {
         CComponentRequest* next = s_finishedList.Next(request);
 
-        if (all || !(request->m_flags & 0x1)) {
+        if (all || !request->m_active) {
             request->m_link.Unlink();
             request->DestroyCachedTextures();
 
@@ -4931,7 +4860,7 @@ void CCharacterComponent::ProcessComponentFinishedList(int32_t all) {
     s_finishedListCritSect.Leave();
 }
 
-// OFFSET: #0x004F12B0
+// OFFSET: 0x007023C0/0x1403CE530
 uint32_t STORMAPI CCharacterComponent::ThreadProc(void* param) {
     PropSelectContext(s_threadPropContext);
     s_threadBeginEvent.Wait(0xFFFFFFFF);
@@ -4951,11 +4880,11 @@ uint32_t STORMAPI CCharacterComponent::ThreadProc(void* param) {
                 break;
             }
 
-            if (!(request->m_flags & 0x1)) {
+            if (!request->m_active) {
                 s_finishedListCritSect.Enter();
                 s_finishedList.LinkToTail(request);
                 s_finishedListCritSect.Leave();
-                request->m_flags |= 0x2;
+                request->m_ready = 1;
                 continue;
             }
 
@@ -4974,18 +4903,18 @@ uint32_t STORMAPI CCharacterComponent::ThreadProc(void* param) {
             s_finishedListCritSect.Enter();
             s_finishedList.LinkToTail(request);
             s_finishedListCritSect.Leave();
-            request->m_flags |= 0x2;
+            request->m_ready = 1;
             OsSleep(1);
         }
 
-        OsSleep(1);
+        OsSleep(10);
         s_threadBeginEvent.Wait(0xFFFFFFFF);
     }
 
     return 0;
 }
 
-// OFFSET: #0x004F14A0
+// OFFSET: 0x007025B0
 void CCharacterComponent::RenderPrepSections() {
     CCharacterComponent::s_bInRenderPrep = 1;
 
@@ -4993,11 +4922,12 @@ void CCharacterComponent::RenderPrepSections() {
         this->GeosRenderPrep();
     }
 
-    if (!this->m_baseSkinTexture) {
+    if (!this->m_baseTexture) {
         this->CreateBaseTexture();
     }
 
     this->PrepSections();
+    this->ApplyExtraTextures();
     this->m_flags &= ~0x1;
     this->m_dirtySections = 0;
     this->DestroyRenderTextures();
@@ -5005,7 +4935,7 @@ void CCharacterComponent::RenderPrepSections() {
     CCharacterComponent::s_bInRenderPrep = 0;
 }
 
-// OFFSET: #0x004F1520
+// OFFSET: 0x00702630/0x1403CE940
 bool CCharacterComponent::RenderPrep(int32_t wait) {
     if (this->m_data.m_flags & 0x1) {
         if (this->m_flags & 0x4) {
@@ -5025,7 +4955,7 @@ bool CCharacterComponent::RenderPrep(int32_t wait) {
 
     if (!(this->m_flags & 0x1)) {
         if (!this->m_link.m_next) {
-            CCharacterComponent::s_queue.LinkToTail(this);
+            s_queue.LinkToTail(this);
         }
 
         return true;
@@ -5033,14 +4963,14 @@ bool CCharacterComponent::RenderPrep(int32_t wait) {
 
     if (!wait) {
         if (!this->m_link.m_next) {
-            CCharacterComponent::s_queue.LinkToTail(this);
+            s_queue.LinkToTail(this);
         }
 
         return false;
     }
 
     if (this->m_request) {
-        this->m_request->m_flags &= ~0x1;
+        this->m_request->m_active = 0;
         this->m_request = NULL;
     }
 
@@ -5053,14 +4983,13 @@ bool CCharacterComponent::RenderPrep(int32_t wait) {
     return true;
 }
 
-// OFFSET: %0x0066A320
-void CCharacterComponent::FreeComponent(CCharacterComponent* component) {
-    uint32_t* heap = s_componentHeap;
-    component->~CCharacterComponent();
-    ObjectFree(*heap, component->m_heapIndex, component, __FILE__, __LINE__);
+// PROVEN: 97286b15 IDENTICAL/NONE
+// OFFSET: 0x007027E0/0x1403CEC70
+CCharacterComponent* CCharacterComponent::AllocComponent() {
+    return s_componentPool->New("", 0);
 }
 
-// OFFSET: #0x004F16F0
+// OFFSET: 0x00702800/0x1403CEC80
 int32_t CCharacterComponent::ThreadInitialize() {
     CCharacterComponent::s_requestFunc[SECTION_ARM_UPPER] = &CCharacterComponent::CreateRequestAU;
     CCharacterComponent::s_requestFunc[SECTION_ARM_LOWER] = &CCharacterComponent::CreateRequestAL;
@@ -5079,10 +5008,11 @@ int32_t CCharacterComponent::ThreadInitialize() {
     return SThread::Create(&CCharacterComponent::ThreadProc, NULL, s_thread, const_cast<char*>("Component"), 0);
 }
 
-// OFFSET: #0x004F1790
+// OFFSET: 0x007028A0/0x1403CED60
 void CCharacterComponent::CreateComponentRequest() {
     this->m_request = CCharacterComponent::AllocComponentRequest();
     this->m_request->m_format = this->m_gxTexFormat;
+    this->m_request->m_mipLevels = this->m_mipLevels;
 
     for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
         if ((1 << section) & this->m_dirtySections) {
@@ -5091,46 +5021,139 @@ void CCharacterComponent::CreateComponentRequest() {
     }
 
     s_requestListCritSect.Enter();
-    s_requestList.LinkToTail(this->m_request);
+
+    if (this->m_data.m_flags & 0x2) {
+        s_requestList.LinkToHead(this->m_request);
+    } else {
+        s_requestList.LinkToTail(this->m_request);
+    }
+
     s_requestListCritSect.Leave();
     s_threadBeginEvent.Set();
 }
 
-// OFFSET: #0x004F1850
+// OFFSET: 0x00702990
 void CCharacterComponent::DestroyComponentFreeLists() {
+    s_mipBitsCritSect.Enter();
+
     for (CComponentMipBits* mipBits = s_mipBitsFreeList.Head(); mipBits; mipBits = s_mipBitsFreeList.Next(mipBits)) {
-        TextureFreeMippedImg(mipBits->m_mipBits, mipBits->m_format, s_textureSize, s_textureSize);
+        TextureFreeMippedImg(mipBits->m_mipBits, mipBits->m_format, 1 << mipBits->m_mipLevels, 1 << mipBits->m_mipLevels);
     }
 
     for (CComponentMipBits* mipBits = s_mipBitsCompressedFreeList.Head(); mipBits; mipBits = s_mipBitsCompressedFreeList.Next(mipBits)) {
-        TextureFreeMippedImg(mipBits->m_mipBits, mipBits->m_format, s_textureSize, s_textureSize);
+        TextureFreeMippedImg(mipBits->m_mipBits, mipBits->m_format, 1 << mipBits->m_mipLevels, 1 << mipBits->m_mipLevels);
     }
 
     s_mipBitsFreeList.Clear();
     s_mipBitsCompressedFreeList.Clear();
-    s_requestFreeList.Clear();
+    s_mipBitsCritSect.Leave();
 }
 
-// OFFSET: #0x004F18F0
+// PROVEN: 33bd4cb8 IDENTICAL/NONE
+// OFFSET: 0x00702A40/0x1403CF010
+void CCharacterComponent::FreeComponent(CCharacterComponent* component) {
+    s_componentPool->Delete(component);
+}
+
+// OFFSET: 0x00702A80
+void CCharacterComponent::ThreadDestroy() {
+    CCharacterComponent::s_bComponentThread = 0;
+    s_threadBeginEvent.Set();
+    s_thread.Wait(0xFFFFFFFF);
+
+    for (CComponentRequest* request = s_requestList.Head(); request;) {
+        CComponentRequest* next = s_requestList.Next(request);
+        request->m_active = 0;
+        s_finishedList.LinkToTail(request);
+        request = next;
+    }
+
+    CCharacterComponent::ProcessComponentFinishedList(1);
+    CCharacterComponent::DestroyComponentFreeLists();
+    s_requestFreeList.Clear();
+
+    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
+        CCharacterComponent::s_requestFunc[section] = NULL;
+    }
+}
+
+// OFFSET: 0x00702B80/0x1403CF260
+void CCharacterComponent::SetMipLevels(uint32_t mipLevels) {
+    if (mipLevels == CCharacterComponent::s_mipLevels) {
+        return;
+    }
+
+    for (CCharacterComponent* component = s_componentList.Head(); component; component = s_componentList.Next(component)) {
+        if (!(component->m_data.m_flags & 0x1)) {
+            component->SetTexturesDirty();
+            component->SetDirtySections(0xFFFFFFFF);
+        }
+    }
+
+    int32_t useThread = CCharacterComponent::s_bComponentThread;
+
+    if (useThread) {
+        CCharacterComponent::ThreadDestroy();
+    }
+
+    TextureBufferDestroy();
+    ComputeSectionInfo(mipLevels);
+    CCharacterComponent::s_bComponentThread = useThread;
+
+    if (useThread) {
+        CCharacterComponent::ThreadInitialize();
+    }
+
+    CCharacterComponent::TextureBufferInitialize();
+
+    for (CCharacterComponent* component = s_componentList.Head(); component; component = s_componentList.Next(component)) {
+        if (component->m_data.m_flags & 0x1) {
+            continue;
+        }
+
+        if (component->m_baseTexture) {
+            component->ReleaseBaseTexture();
+            component->m_mipLevels = CCharacterComponent::s_mipLevels;
+            component->CreateBaseTexture();
+        } else {
+            component->m_mipLevels = CCharacterComponent::s_mipLevels;
+        }
+    }
+}
+
+// OFFSET: 0x00702CB0/0x1403CF9C0
 int32_t CCharacterComponent::Update(const void* data, void* param) {
     int32_t hasContext = g_theGxDevicePtr ? g_theGxDevicePtr->CapsHasContext(-1) : 0;
 
-    for (CCharacterComponent* component = CCharacterComponent::s_queue.Head(); component;) {
-        CCharacterComponent* next = CCharacterComponent::s_queue.Next(component);
+    if (s_textureLevelVar || (s_textureLevelVar = CVar::Lookup("componentTextureLevel"))) {
+        uint32_t mipLevels = s_textureLevelVar->m_intValue;
+
+        if (mipLevels != CCharacterComponent::s_mipLevels) {
+            CCharacterComponent::SetMipLevels(mipLevels);
+        }
+    }
+
+    for (CCharacterComponent* component = s_queue.Head(); component;) {
+        CCharacterComponent* next = s_queue.Next(component);
 
         if (component->m_request) {
-            if (hasContext && (component->m_request->m_flags & 0x2)) {
+            if (hasContext && component->m_request->m_ready) {
                 component->ProcessFinishedRequest();
                 component->m_link.Unlink();
             }
-        } else if (component->VariationsLoaded(0) & component->ItemsLoaded(0)) {
-            component->m_flags |= 0x8;
+        } else {
+            bool variationsLoaded = component->VariationsLoaded(0);
+            bool itemsLoaded = component->ItemsLoaded(0);
 
-            if (CCharacterComponent::s_bComponentThread) {
-                component->CreateComponentRequest();
-            } else if (hasContext) {
-                component->RenderPrepSections();
-                component->m_link.Unlink();
+            if (variationsLoaded && itemsLoaded) {
+                component->m_flags |= 0x8;
+
+                if (CCharacterComponent::s_bComponentThread) {
+                    component->CreateComponentRequest();
+                } else if (hasContext) {
+                    component->RenderPrepSections();
+                    component->m_link.Unlink();
+                }
             }
         }
 
@@ -5144,9 +5167,17 @@ int32_t CCharacterComponent::Update(const void* data, void* param) {
     return 1;
 }
 
-// OFFSET: #0x004F1A20
+// OFFSET: 0x00702E30/0x1403CFB80
 bool CCharacterComponent::Initialize(EGxTexFormat format, uint32_t mipLevels, int32_t useThread, int32_t useCompression) {
-    s_componentHeap = new (__FILE__, __LINE__) uint32_t(ObjectAllocAddHeap(sizeof(CCharacterComponent), 32, "CCharacterComponent", true));
+    s_useCompression = useCompression;
+    void* pool = SMemAlloc(sizeof(TSObjectAllocPool<CCharacterComponent>), __FILE__, __LINE__, 0);
+    s_componentPool = pool ? new (pool) TSObjectAllocPool<CCharacterComponent>("CCharacterComponent", 32) : NULL;
+
+    uint32_t count = 2 * g_chrRacesDB.m_maxID + 2;
+    CCharacterComponent::s_chrVarArrayLength = count;
+    BuildComponentArray(count, &CCharacterComponent::s_chrVarArray);
+    CountFacialFeatures(count, &CCharacterComponent::s_characterFacialHairStylesList);
+
     s_pathEnd = s_path;
     s_pathEnd2 = s_path2;
 
@@ -5172,39 +5203,15 @@ bool CCharacterComponent::Initialize(EGxTexFormat format, uint32_t mipLevels, in
     CCharacterComponent::m_itemFunc[SECTION_LEG_LOWER] = &CCharacterComponent::UpdateItemLL;
     CCharacterComponent::m_itemFunc[SECTION_FOOT] = &CCharacterComponent::UpdateItemFO;
 
-    if (mipLevels > 9) {
-        mipLevels = 9;
-    } else if (mipLevels < 6) {
-        mipLevels = 6;
-    }
-
-    if (!useCompression && mipLevels > 8) {
-        mipLevels = 8;
-    }
-
-    CCharacterComponent::s_mipLevels = mipLevels;
-    s_textureSize = 1 << mipLevels;
-
-    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        s_sectionInfo[section].m_pos.x = CCharacterComponent::s_sectionInfoRaw[section].m_pos.x >> (9 - mipLevels);
-        s_sectionInfo[section].m_pos.y = CCharacterComponent::s_sectionInfoRaw[section].m_pos.y >> (9 - mipLevels);
-        s_sectionInfo[section].m_size.x = CCharacterComponent::s_sectionInfoRaw[section].m_size.x >> (9 - mipLevels);
-        s_sectionInfo[section].m_size.y = CCharacterComponent::s_sectionInfoRaw[section].m_size.y >> (9 - mipLevels);
-    }
-
+    ComputeSectionInfo(mipLevels);
     TextureCacheResetLoadCount();
-
-    uint32_t count = 2 * g_chrRacesDB.m_maxID + 2;
-    CCharacterComponent::s_chrVarArrayLength = count;
-    BuildComponentArray(count, &CCharacterComponent::s_chrVarArray);
-    CountFacialFeatures(count, &CCharacterComponent::s_characterFacialHairStylesList);
 
     CCharacterComponent::s_bComponentThread = useThread;
     CCharacterComponent::s_bComponentCompression = 0;
     CCharacterComponent::s_gxFormat = format;
 
     if (useThread) {
-        if (useCompression) {
+        if (s_useCompression) {
             CCharacterComponent::s_bComponentCompression = 1;
             CCharacterComponent::s_gxFormat = GxTex_Dxt1;
         }
@@ -5220,43 +5227,37 @@ bool CCharacterComponent::Initialize(EGxTexFormat format, uint32_t mipLevels, in
     CCharacterComponent::s_textureBuffer = NULL;
     s_compressedTextureBuffer = NULL;
     s_threadTextureBuffer = NULL;
-    CCharacterComponent::s_textureBuffer = TextureAllocMippedImg(PIXEL_ARGB8888, s_textureSize, s_textureSize);
-
-    if (CCharacterComponent::s_bComponentCompression) {
-        s_compressedTextureBuffer = TextureAllocMippedImg(PIXEL_DXT1, s_textureSize, s_textureSize);
-    }
-
-    if (CCharacterComponent::s_bComponentThread && CCharacterComponent::s_bComponentCompression) {
-        s_threadTextureBuffer = TextureAllocMippedImg(PIXEL_ARGB8888, s_textureSize, s_textureSize);
-    }
+    CCharacterComponent::TextureBufferInitialize();
 
     EventRegisterEx(EVENT_ID_POLL, &CCharacterComponent::Update, NULL, 0.0f);
+    CCharacterComponent::ResetClosestComponent();
 
     return true;
 }
 
-// OFFSET: #0x004F1ED0
-void CCharacterComponent::ThreadDestroy() {
-    CCharacterComponent::s_bComponentThread = 0;
-    s_threadBeginEvent.Set();
-    s_thread.Wait(0xFFFFFFFF);
-
-    for (CComponentRequest* request = s_requestList.Head(); request;) {
-        CComponentRequest* next = s_requestList.Next(request);
-        request->m_flags &= ~0x1;
-        s_finishedList.LinkToTail(request);
-        request = next;
+// OFFSET: 0x007030D0
+bool CCharacterComponent::Destroy() {
+    if (CCharacterComponent::m_activePlayerComponent) {
+        CCharacterComponent::FreeComponent(CCharacterComponent::m_activePlayerComponent);
+        CCharacterComponent::m_activePlayerComponent = NULL;
     }
 
-    CCharacterComponent::ProcessComponentFinishedList(1);
-    CCharacterComponent::DestroyComponentFreeLists();
-
-    for (int32_t section = 0; section < NUM_COMPONENT_SECTIONS; section++) {
-        CCharacterComponent::s_requestFunc[section] = NULL;
+    if (CCharacterComponent::s_bComponentThread) {
+        CCharacterComponent::ThreadDestroy();
     }
+
+    TextureBufferDestroy();
+    DestroyVariationArrays();
+    TextureCacheDestroy();
+    delete s_componentPool;
+    s_componentPool = NULL;
+    CGPlayer_C::s_displayId = 0;
+    EventUnregisterEx(EVENT_ID_POLL, &CCharacterComponent::Update, NULL, 0xFFFFFFFF);
+
+    return true;
 }
 
-// OFFSET: #0x004F1FC0
+// OFFSET: 0x007031B0
 bool CCharacterComponent::SkinNpc(const char* debug) {
     this->m_data.m_flags &= ~0x1;
 
@@ -5266,8 +5267,9 @@ bool CCharacterComponent::SkinNpc(const char* debug) {
 
     CStatus status;
     strcpy(s_pathEnd, this->m_data.m_npcSkinTexture);
-    CGxTexFlags flags(GxTex_LinearMipNearest, 0, 0, 0, 0, 1);
-    CTexture* texture = TextureCreate(s_path, flags, &status, 0, NULL, 2);
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
+    CTexture* texture = TextureCreate(s_path, flags, &status, 0, NULL, 3);
 
     if (!texture) {
         return false;
@@ -5283,25 +5285,26 @@ bool CCharacterComponent::SkinNpc(const char* debug) {
     return true;
 }
 
-// OFFSET: #0x004F20C0
+// OFFSET: 0x007032A0/0x1403CF570
 void CCharacterComponent::ReplaceMonsterSkin(CM2Model* model, const CreatureDisplayInfoRec* displayRec, const CreatureModelDataRec* modelRec) {
     if (!model || !displayRec || !modelRec) {
         return;
     }
 
-    CStatus status;
     char path[260];
-    strcpy(path, modelRec->m_modelName);
+    SStrCopy(path, modelRec->m_modelName, sizeof(path));
 
-    char* fileName = strrchr(path, '\\');
-    fileName = fileName ? fileName + 1 : path;
-
-    CGxTexFlags flags(GxTex_LinearMipLinear, 1, 1, 0, 0, 1);
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
+    flags.m_wrapU = 1;
+    flags.m_wrapV = 1;
 
     for (uint32_t i = 0; i < 3; i++) {
         if (*displayRec->m_textureVariation[i]) {
-            strcpy(fileName, displayRec->m_textureVariation[i]);
-            CTexture* texture = TextureCreate(path, flags, &status, 0, NULL, 2);
+            *OsPathFindFilename(path) = '\0';
+            SStrPack(path, displayRec->m_textureVariation[i], sizeof(path));
+            CStatus status;
+            CTexture* texture = TextureCreate(path, flags, &status, 0, NULL, 3);
 
             if (texture) {
                 model->ReplaceTexture(i + 11, texture);
@@ -5313,7 +5316,7 @@ void CCharacterComponent::ReplaceMonsterSkin(CM2Model* model, const CreatureDisp
     ReplaceParticleColor(displayRec->m_particleColorID, model);
 }
 
-// OFFSET: #0x004F21E0
+// OFFSET: 0x00703410/0x1403CF790
 void CCharacterComponent::AddCape() {
     if (!this->m_itemDisplayID[ITEMSLOT_CAPE]) {
         return;
@@ -5325,13 +5328,15 @@ void CCharacterComponent::AddCape() {
         return;
     }
 
-    strcpy(s_buffer, "Item\\ObjectComponents\\Cape\\");
-    strcat(s_buffer, rec.m_modelTexture[0]);
-    strcat(s_buffer, ".blp");
+    SStrCopy(s_buffer, "Item\\ObjectComponents\\Cape\\", sizeof(s_buffer));
+    SStrPack(s_buffer, rec.m_modelTexture[0], sizeof(s_buffer));
+    SStrPack(s_buffer, ".blp", sizeof(s_buffer));
     strcpy(s_pathEnd, s_buffer);
 
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipLinear;
     CStatus status;
-    CTexture* texture = CreateTexture(s_path, &status);
+    CTexture* texture = TextureCreate(s_path, flags, &status, 0, NULL, 3);
 
     if (texture) {
         this->m_data.m_model->ReplaceTexture(2, texture);
@@ -5339,62 +5344,7 @@ void CCharacterComponent::AddCape() {
     }
 }
 
-// OFFSET: #0x004F2320
-bool CCharacterComponent::Destroy() {
-    if (CCharacterComponent::m_activePlayerComponent) {
-        CCharacterComponent::FreeComponent(CCharacterComponent::m_activePlayerComponent);
-        CCharacterComponent::m_activePlayerComponent = NULL;
-    }
-
-    if (CCharacterComponent::s_bComponentThread) {
-        CCharacterComponent::ThreadDestroy();
-    }
-
-    if (CCharacterComponent::s_textureBuffer) {
-        TextureFreeMippedImg(CCharacterComponent::s_textureBuffer, PIXEL_ARGB8888, s_textureSize, s_textureSize);
-        CCharacterComponent::s_textureBuffer = NULL;
-    }
-
-    if (s_compressedTextureBuffer) {
-        TextureFreeMippedImg(s_compressedTextureBuffer, PIXEL_DXT1, s_textureSize, s_textureSize);
-        s_compressedTextureBuffer = NULL;
-    }
-
-    if (s_threadTextureBuffer) {
-        TextureFreeMippedImg(s_threadTextureBuffer, PIXEL_ARGB8888, s_textureSize, s_textureSize);
-        s_threadTextureBuffer = NULL;
-    }
-
-    for (uint32_t i = 0; i < CCharacterComponent::s_chrVarArrayLength; i++) {
-        for (int32_t variation = 0; variation < NUM_COMPONENT_VARIATIONS; variation++) {
-            CharVariationList& list = CCharacterComponent::s_chrVarArray[i].m_variation[variation];
-
-            for (int32_t j = 0; j < list.m_numVariations; j++) {
-                delete[] list.m_variation[j].m_color;
-            }
-
-            delete[] list.m_variation;
-        }
-    }
-
-    delete[] CCharacterComponent::s_chrVarArray;
-    CCharacterComponent::s_chrVarArray = NULL;
-    CCharacterComponent::s_chrVarArrayLength = 0;
-    TextureCacheDestroy();
-
-    if (CCharacterComponent::s_characterFacialHairStylesList) {
-        SMemFree(CCharacterComponent::s_characterFacialHairStylesList, __FILE__, __LINE__, 0);
-    }
-
-    delete s_componentHeap;
-    s_componentHeap = NULL;
-    CGPlayer_C::s_displayId = 0;
-    EventUnregisterEx(EVENT_ID_POLL, &CCharacterComponent::Update, NULL, 0xFFFFFFFF);
-
-    return true;
-}
-
-// OFFSET: #0x004F24D0
+// OFFSET: 0x007035C0/0x1403CFFE0
 bool CCharacterComponent::Init(ComponentData* data, const char* debug) {
     if (this->m_data.m_model) {
         this->m_data.m_model->Release();
@@ -5411,13 +5361,13 @@ bool CCharacterComponent::Init(ComponentData* data, const char* debug) {
         return false;
     }
 
+    this->m_attachMask = 0;
     this->m_flags = (this->m_flags & ~0x45) | 0x5;
     this->m_dirtySections = 0xFFFFFFFF;
     this->m_request = NULL;
 
-    if (!(this->m_data.m_flags & 0x1) && this->m_baseSkinTexture) {
-        TextureRelease(this->m_baseSkinTexture);
-        this->m_baseSkinTexture = NULL;
+    if (!(this->m_data.m_flags & 0x1) && this->m_baseTexture) {
+        this->ReleaseBaseTexture();
     }
 
     uint32_t dataFlags = this->m_data.m_flags;
@@ -5437,10 +5387,14 @@ bool CCharacterComponent::Init(ComponentData* data, const char* debug) {
     this->SetHairStyle(this->m_data.m_preferences.m_hairStyleId, debug);
     this->SetBeardStyle(this->m_data.m_preferences.m_facialHairId, false, debug);
 
+    if (this->m_data.m_flags & 0x1) {
+        this->ApplyExtraTextures();
+    }
+
     return true;
 }
 
-// OFFSET: #0x004F2640
+// OFFSET: 0x00703740/0x1403D0190
 void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, int32_t itemVisual) {
     this->m_flags |= 0x4;
     this->m_itemDisplayID[itemSlot] = displayRec->m_id;
@@ -5449,7 +5403,7 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* 
         case ITEMSLOT_HEAD:
             if (!this->IsHelmModelCorrect()) {
                 if (this->m_itemDisplayID[ITEMSLOT_HEAD]) {
-                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, ATTACH_HELM);
+                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_HELM);
                 }
 
                 this->AddHelm(itemVisual);
@@ -5460,8 +5414,8 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* 
         case ITEMSLOT_SHOULDER:
             if (!this->AreShoulderModelsCorrect()) {
                 if (this->m_itemDisplayID[ITEMSLOT_SHOULDER]) {
-                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(6));
-                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, static_cast<GEOCOMPONENTLINKS>(5));
+                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERLEFT);
+                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, &this->m_attachMask, ATTACH_SHOULDERRIGHT);
                 }
 
                 this->AddShoulders(itemVisual);
@@ -5474,15 +5428,7 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* 
             break;
 
         case ITEMSLOT_11:
-            if (!this->IsQuiverModelCorrect()) {
-                if (this->m_itemDisplayID[ITEMSLOT_11]) {
-                    CCharacterComponent::RemoveLinkpt(this->m_data.m_model, ATTACH_SHEATH_MAINHAND);
-                }
-
-                this->AddQuiver(itemVisual);
-            }
-
-            break;
+            return;
 
         default:
             if (itemSlot == ITEMSLOT_CHEST) {
@@ -5503,7 +5449,7 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* 
     }
 }
 
-// OFFSET: #0x004F2830
+// OFFSET: 0x00703890/0x1403D0310
 void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, int32_t displayID, int32_t itemVisual) {
     if (displayID <= 0) {
         return;
@@ -5516,7 +5462,7 @@ void CCharacterComponent::AddItem(ITEM_SLOT itemSlot, int32_t displayID, int32_t
     }
 }
 
-// OFFSET: #0x004F2880
+// OFFSET: 0x00703900/0x1403D03A0
 void CCharacterComponent::AddItemBySlot(INVENTORY_SLOTS invSlot, int32_t displayID, int32_t itemVisual) {
     switch (invSlot) {
         case INVSLOT_HEAD:
@@ -5568,7 +5514,7 @@ void CCharacterComponent::AddItemBySlot(INVENTORY_SLOTS invSlot, int32_t display
     }
 }
 
-// OFFSET: #0x004F29C0
+// OFFSET: 0x00703A40
 void CCharacterComponent::AddItemByType(INVENTORY_TYPES invType, int32_t displayID) {
     this->RemoveItemByType(invType);
 
@@ -5639,4 +5585,103 @@ void CCharacterComponent::AddItemByType(INVENTORY_TYPES invType, int32_t display
         default:
             break;
     }
+}
+
+// OFFSET: #0x004E7A30
+ITEM_SLOT CCharacterComponent::GetItemSlotForInvType(INVENTORY_TYPES invType) {
+    switch (invType) {
+        case INVTYPE_HEAD:
+            return ITEMSLOT_HEAD;
+
+        case INVTYPE_SHOULDERS:
+            return ITEMSLOT_SHOULDER;
+
+        case INVTYPE_BODY:
+            return ITEMSLOT_SHIRT;
+
+        case INVTYPE_CHEST:
+        case INVTYPE_ROBE:
+            return ITEMSLOT_CHEST;
+
+        case INVTYPE_WAIST:
+            return ITEMSLOT_BELT;
+
+        case INVTYPE_LEGS:
+            return ITEMSLOT_PANTS;
+
+        case INVTYPE_FEET:
+            return ITEMSLOT_BOOTS;
+
+        case INVTYPE_WRISTS:
+            return ITEMSLOT_BRACERS;
+
+        case INVTYPE_HANDS:
+            return ITEMSLOT_GLOVES;
+
+        case INVTYPE_CLOAK:
+            return ITEMSLOT_CAPE;
+
+        case INVTYPE_TABARD:
+            return ITEMSLOT_TABARD;
+
+        default:
+            return NUM_ITEM_SLOTS;
+    }
+}
+
+// OFFSET: #0x004E7AF0
+INVENTORY_SLOTS CCharacterComponent::GetInvSlotForItemSlot(ITEM_SLOT itemSlot) {
+    switch (itemSlot) {
+        case ITEMSLOT_HEAD:
+            return INVSLOT_HEAD;
+
+        case ITEMSLOT_SHOULDER:
+            return INVSLOT_SHOULDER;
+
+        case ITEMSLOT_SHIRT:
+            return INVSLOT_BODY;
+
+        case ITEMSLOT_CHEST:
+            return INVSLOT_CHEST;
+
+        case ITEMSLOT_BELT:
+            return INVSLOT_WAIST;
+
+        case ITEMSLOT_PANTS:
+            return INVSLOT_LEGS;
+
+        case ITEMSLOT_BOOTS:
+            return INVSLOT_FEET;
+
+        case ITEMSLOT_BRACERS:
+            return INVSLOT_WRIST;
+
+        case ITEMSLOT_GLOVES:
+            return INVSLOT_HAND;
+
+        case ITEMSLOT_TABARD:
+            return INVSLOT_TABARD;
+
+        case ITEMSLOT_CAPE:
+            return INVSLOT_BACK;
+
+        default:
+            return INVSLOT_NONE;
+    }
+}
+
+// PROVEN: 48c37d5b IDENTICAL/DIFFERENT
+// OFFSET: 0x00627990/0x140693B10
+void CCharacterComponent::UpdateItemHU(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+}
+
+// PROVEN: 00cdc5bc IDENTICAL/DIFFERENT
+// OFFSET: 0x00627990/0x140693B10
+void CCharacterComponent::UpdateItemHL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+}
+
+// PROVEN: f28fa65e IDENTICAL/NONE
+// OFFSET: 0x006FBE90/0x1403C6820
+void CCharacterComponent::UpdateItemLL(ITEM_SLOT itemSlot, const ItemDisplayInfoRec* displayRec, bool apply) {
+    this->UpdateItem(itemSlot, SECTION_LEG_LOWER, displayRec, apply);
 }

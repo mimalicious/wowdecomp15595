@@ -43,7 +43,7 @@ static int32_t Script_CanSaveTabardNow(lua_State* L) {
 static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
-    CCharacterComponent::GetTabardBackgroundFileName(SECTION_TORSO_UPPER, frame->m_variations[4], fileName, sizeof(fileName));
+    CCharacterComponent::GetTabardBackgroundFileName(1, SECTION_TORSO_UPPER, frame->m_variations[4], fileName, sizeof(fileName));
     lua_pushstring(L, fileName);
     return 1;
 }
@@ -52,7 +52,7 @@ static int32_t Script_GetUpperBackgroundFileName(lua_State* L) {
 static int32_t Script_GetLowerBackgroundFileName(lua_State* L) {
     CGTabardModelFrame* frame = static_cast<CGTabardModelFrame*>(FrameScript_GetObjectThis(L, CGTabardModelFrame::GetObjectType()));
     char fileName[260];
-    CCharacterComponent::GetTabardBackgroundFileName(SECTION_TORSO_LOWER, frame->m_variations[4], fileName, sizeof(fileName));
+    CCharacterComponent::GetTabardBackgroundFileName(1, SECTION_TORSO_LOWER, frame->m_variations[4], fileName, sizeof(fileName));
     lua_pushstring(L, fileName);
     return 1;
 }

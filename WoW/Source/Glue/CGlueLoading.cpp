@@ -99,7 +99,7 @@ int32_t CGlueLoading::Idle(CCharacterComponent** components, int32_t count) {
                 }
 
                 CM2Model* model = component->m_data.m_model;
-                uint32_t visible = component->m_baseSkinTexture != NULL;
+                uint32_t visible = component->m_baseTexture != NULL;
 
                 if (model->m_attachParent) {
                     model->m_fFlags = (model->m_fFlags & ~0x40u) | (visible << 6);
@@ -143,7 +143,7 @@ int32_t CGlueLoading::Idle(CCharacterComponent** components, int32_t count) {
                     }
 
                     CM2Model* model = component->m_data.m_model;
-                    uint32_t visible = component->m_baseSkinTexture != NULL;
+                    uint32_t visible = component->m_baseTexture != NULL;
 
                     if (model->m_attachParent) {
                         model->m_fFlags = (model->m_fFlags & ~0x40u) | (visible << 6);
@@ -218,7 +218,7 @@ void CGlueLoading::StartLoad(CCharacterComponent** components, uint32_t count, i
                 }
 
                 CM2Model* model = component->m_data.m_model;
-                uint32_t visible = component->m_baseSkinTexture != NULL;
+                uint32_t visible = component->m_baseTexture != NULL;
 
                 if (model->m_attachParent) {
                     model->m_fFlags = (model->m_fFlags & ~0x40u) | (visible << 6);

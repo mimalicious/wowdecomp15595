@@ -121,10 +121,10 @@ void CCharacterCreation::UndressComponent(CCharacterComponent* component) {
         component->RemoveItem(static_cast<ITEM_SLOT>(i));
     }
 
-    component->RemoveHandItem(15, 0, 0);
-    component->RemoveHandItem(16, 0, 0);
-    component->RemoveHandItem(16, 0, 1);
-    component->RemoveHandItem(17, 0, 0);
+    component->RemoveHandItem(INVSLOT_MAINHAND, SHEATHE_NONE, false);
+    component->RemoveHandItem(INVSLOT_OFFHAND, SHEATHE_NONE, false);
+    component->RemoveHandItem(INVSLOT_OFFHAND, SHEATHE_NONE, true);
+    component->RemoveHandItem(INVSLOT_RANGED, SHEATHE_NONE, false);
 }
 
 // OFFSET: 0x0080C0C0

@@ -213,7 +213,7 @@ const char* CGCorpse_C::GetPortraitTexture() const {
 
 // OFFSET: #0x007058B0
 int32_t CGCorpse_C::ShouldFadeout() {
-    return !this->m_component || (TextureIsReadyNow(this->m_component->m_baseSkinTexture) && this->m_component->RenderPrep(0));
+    return !this->m_component || (TextureIsReadyNow(this->m_component->m_baseTexture) && this->m_component->RenderPrep(0));
 }
 
 // OFFSET: #0x007058F0

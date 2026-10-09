@@ -12,11 +12,11 @@ class CAsyncObject;
 
 class CACHEENTRY : public TSHashObject<CACHEENTRY, HASHKEY_NONE> {
     public:
-    /* 0018 */ CAsyncObject* m_asyncObject;
-    /* 001C */ TCTEXTUREINFO m_info;
-    /* 0024 */ char m_fileName [128];
-    /* 00A4 */ int32_t m_refCount;
-    /* 00A8 */ uint32_t m_memHandle;
+    /* 0018 */ uint32_t m_handle;
+    /* 001C */ CAsyncObject* m_asyncObject;
+    /* 0020 */ TCTEXTUREINFO m_info;
+    /* 0028 */ char m_fileName [128];
+    /* 00A8 */ int32_t m_refCount;
     /* 00AC */ BLPHeader* m_data;
     /* 00B0 */ uint32_t m_size : 20;
     /* 00B0 */ uint32_t m_loadFailed : 1;
@@ -36,6 +36,7 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait);
 void* TextureCacheGetMip(void* handle, uint32_t mipLevel);
 BlpPalPixel* TextureCacheGetPal(void* handle);
 int32_t TextureCacheHasMips(void* handle);
+void TextureCacheIncreasePriority(void* handle);
 void TextureCacheResetLoadCount();
 
 #endif

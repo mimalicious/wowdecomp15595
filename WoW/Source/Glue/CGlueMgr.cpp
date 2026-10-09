@@ -1933,7 +1933,7 @@ CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* inf
         if (slot == 15 || slot == 16 || slot == 17) {
             if (StoreHandItemType(slot, inventoryType, hunter, &types)) {
                 bool ranged = inventoryType == 26 || inventoryType == 25;
-                GEOCOMPONENTLINKS link = component->AddHandItem(&displayRec, slot, 0, 0, inventoryType == 14, ranged, itemVisual);
+                GEOCOMPONENTLINKS link = component->AddHandItem(&displayRec, static_cast<INVENTORY_SLOTS>(slot), SHEATHE_NONE, false, inventoryType == 14, ranged, itemVisual);
 
                 if (slot == 17) {
                     if (inventoryType == 15 && loadedCallback) {
@@ -1965,7 +1965,7 @@ CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* inf
                 } else if (slot == 14) {
                     CGObject_C::ReplaceGuildTextures(component->m_data.m_model, info->m_guildGUID.m_guid, CGPlayer_C::GetPVPFactionIndex(info->m_raceID));
                 } else {
-                    component->ApplyShoulderGuildColor(displayRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
+                    component->ApplyShirtGuildColor(displayRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
                 }
             }
         }

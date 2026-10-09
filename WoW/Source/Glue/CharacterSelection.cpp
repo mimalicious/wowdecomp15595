@@ -497,7 +497,7 @@ void CCharacterSelection::GuildCallback(const WOWGUID& guildGUID, const WOWGUID&
         flags = CCharacterSelection::GetEquippedGuildTabardFlags(3, i);
 
         if (flags) {
-            component->ApplyShoulderGuildColor(flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
+            component->ApplyShirtGuildColor(flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
         }
     }
 }

@@ -180,7 +180,7 @@ int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t t
                 }
             }
 
-            CCharacterComponent::RemoveHandItem(attached, INVSLOT_OFFHAND, static_cast<SHEATHE_TYPE>(offhand->GetSheatheType()), offhand->GetInventoryType() == INVTYPE_SHIELD);
+            CCharacterComponent::RemoveHandItem(attached, &component->m_attachMask, INVSLOT_OFFHAND, static_cast<SHEATHE_TYPE>(offhand->GetSheatheType()), offhand->GetInventoryType() == INVTYPE_SHIELD);
 
             if (attached) {
                 attached->AttachToParent(attached, 2, NULL, 0);
@@ -188,7 +188,7 @@ int32_t Packet_SMSG_ENABLE_BARBER_SHOP(void* param, NETMESSAGE msgId, uint32_t t
             }
         } else {
             CM2Model* model = player->m_worldModel;
-            CCharacterComponent::RemoveHandItem(model, INVSLOT_OFFHAND, static_cast<SHEATHE_TYPE>(offhand->GetSheatheType()), offhand->GetInventoryType() == INVTYPE_SHIELD);
+            CCharacterComponent::RemoveHandItem(model, &component->m_attachMask, INVSLOT_OFFHAND, static_cast<SHEATHE_TYPE>(offhand->GetSheatheType()), offhand->GetInventoryType() == INVTYPE_SHIELD);
         }
     }
 
@@ -250,35 +250,35 @@ void CGBarberShop::SetNextBarberShopStyle(int32_t type, bool backward) {
     switch (type) {
         case 0:
             if (!backward) {
-                component->SetNextHairStyle(COMPONENT_CONTEXT_1);
+                component->SetNextHairStyle(COMPONENT_CONTEXT_1, 1);
             } else {
-                component->SetPrevHairStyle(COMPONENT_CONTEXT_1);
+                component->SetNextHairStyle(COMPONENT_CONTEXT_1, -1);
             }
 
             CGBarberShop::m_currentHairStyle = CGBarberShop::GetStyle(0, player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[2], component->m_data.m_preferences.m_hairStyleId);
             break;
         case 1:
             if (!backward) {
-                component->SetNextHairColor(COMPONENT_CONTEXT_1);
+                component->SetNextHairColor(COMPONENT_CONTEXT_1, 1);
             } else {
-                component->SetPrevHairColor(COMPONENT_CONTEXT_1);
+                component->SetNextHairColor(COMPONENT_CONTEXT_1, -1);
             }
 
             break;
         case 2:
             if (!backward) {
-                component->SetNextFacialFeature(COMPONENT_CONTEXT_1);
+                component->SetNextFacialFeature(COMPONENT_CONTEXT_1, 1);
             } else {
-                component->SetPrevFacialFeature(COMPONENT_CONTEXT_1);
+                component->SetNextFacialFeature(COMPONENT_CONTEXT_1, -1);
             }
 
             CGBarberShop::m_currentFacialHair = CGBarberShop::GetStyle(2, player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[2], component->m_data.m_preferences.m_facialHairId);
             break;
         case 3:
             if (!backward) {
-                component->SetNextSkin(COMPONENT_CONTEXT_1);
+                component->SetNextSkin(COMPONENT_CONTEXT_1, 1);
             } else {
-                component->SetPrevSkin(COMPONENT_CONTEXT_1);
+                component->SetNextSkin(COMPONENT_CONTEXT_1, -1);
             }
 
             CGBarberShop::m_currentSkinColor = CGBarberShop::GetStyle(3, player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[2], component->m_data.m_preferences.m_skinID);

@@ -2,10 +2,10 @@
 #include "Engine/Source/Base/SIMD.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: %0x00C988D8
+// STATIC: 0x00D97E64
 SIMD::FunctionTable SIMD::s_functions;
 
-// STATIC: %0x00BAEDA0
+// STATIC: 0x00C9AD14
 static void (*const s_binders[])(SIMD::FunctionTable*) = {
     SIMD::Init_C,
     SIMD::Init_SSE,

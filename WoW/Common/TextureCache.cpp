@@ -10,26 +10,26 @@
 #include "Engine/Source/Services/Types.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// STATIC: #0x00B6BA48
+// STATIC: 0x00E4DDF4
 static HASHKEY_NONE s_cacheKey;
 
-// STATIC: #0x00B6BA4C
-static uint32_t* s_entryHeap;
+// STATIC: 0x00E4DDF8
+static TSObjectAllocPool<CACHEENTRY>* s_entryPool;
 
-// STATIC: #0x00B6BA50
+// STATIC: 0x00E4DDFC
 static int32_t s_loadCount;
 
-// STATIC: #0x00B6BA54
+// STATIC: 0x00E4DE00
 static TSHashTable<CACHEENTRY, HASHKEY_NONE> s_cacheTable;
 
-// OFFSET: %0x0066B690
+// OFFSET: 0x00703BC0/0x1403D0630
 static void FreeRequest(CAsyncObject* object) {
     void* buffer = object->m_buffer;
     AsyncFileReadDestroyObject(object);
     SMemFree(buffer, __FILE__, __LINE__, 0);
 }
 
-// OFFSET: #0x004F2B70
+// OFFSET: 0x00703BF0/0x1403D0670
 static void LoadSuccessCallback(CAsyncObject* object) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(object->m_userArg);
 
@@ -45,7 +45,20 @@ static void LoadSuccessCallback(CAsyncObject* object) {
     entry->m_info.m_mipCount = TextureCalcMipCount(entry->m_info.m_width, entry->m_info.m_height);
 }
 
-// OFFSET: #0x004F2BE0
+// OFFSET: 0x00703C60/0x1403D0700
+static void LoadFailedCallback(CAsyncObject* object) {
+    CACHEENTRY* entry = static_cast<CACHEENTRY*>(object->m_userArg);
+    void* buffer = entry->m_asyncObject->m_buffer;
+
+    AsyncFileReadDestroyObject(entry->m_asyncObject);
+    entry->m_asyncObject = NULL;
+    SMemFree(buffer, __FILE__, __LINE__, 0);
+    entry->m_data = NULL;
+    entry->m_size = 0;
+    entry->m_loadFailed = 1;
+}
+
+// OFFSET: 0x00703CC0/0x1403D0770
 int32_t CACHEENTRY::LoadTexture() {
     SFileImpl* file = NULL;
 
@@ -61,32 +74,28 @@ int32_t CACHEENTRY::LoadTexture() {
         return 0;
     }
 
-    this->m_asyncObject = AsyncFileReadAllocObject();
-    this->m_asyncObject->m_userArg = this;
-    this->m_asyncObject->m_userPostloadCallback = &LoadSuccessCallback;
-    this->m_asyncObject->m_file = file;
-    this->m_asyncObject->m_size = SFileGetFileSize(file, NULL);
-    this->m_asyncObject->m_priority = 130;
-    this->m_size = this->m_asyncObject->m_size;
+    this->m_size = SFileGetFileSize(file, NULL);
     this->m_data = static_cast<BLPHeader*>(SMemAlloc(this->m_size, __FILE__, __LINE__, 0));
-    this->m_asyncObject->m_buffer = this->m_data;
-    AsyncFileReadObject(this->m_asyncObject, 0);
+    AsyncFileReadCreateObject(file, 3, 0, &this->m_asyncObject, this->m_data, this, &LoadSuccessCallback, &LoadFailedCallback, 0, 0, 0);
 
     return 1;
 }
 
-// OFFSET: #0x004F2CE0
+// PROVEN: 0a85dc2e IDENTICAL/NONE
+// OFFSET: 0x00703DA0
 void* TextureCacheCopyTexture(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
-    if (entry) {
-        entry->m_refCount++;
+    if (!entry) {
+        return entry;
     }
+
+    entry->m_refCount++;
 
     return entry;
 }
 
-// OFFSET: #0x004F2D00
+// OFFSET: 0x00703DC0
 void* TextureCacheGetMip(void* handle, uint32_t mipLevel) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -97,7 +106,7 @@ void* TextureCacheGetMip(void* handle, uint32_t mipLevel) {
     return reinterpret_cast<uint8_t*>(entry->m_data) + entry->m_data->m_mipOffsets[mipLevel];
 }
 
-// OFFSET: #0x004F2D40
+// OFFSET: 0x00703E00
 BlpPalPixel* TextureCacheGetPal(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -108,46 +117,14 @@ BlpPalPixel* TextureCacheGetPal(void* handle) {
     return entry->m_data->m_extended.m_palette;
 }
 
-// OFFSET: #0x004F2D80
+// OFFSET: 0x00703E40/0x1403D0930
 int32_t TextureCacheHasMips(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
     return entry && entry->m_data && !entry->m_loadFailed;
 }
 
-// PROVEN: 2587d302 IDENTICAL/NONE
-// OFFSET: 0x00703F60/0x1403D0A50
-void TextureCacheResetLoadCount() {
-    s_loadCount = 0;
-}
-
-// OFFSET: #0x004F2DC0
-void TextureCacheComputeLoadProgress(void* handle, int64_t& local, int64_t& total) {
-    CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
-
-    if (!entry) {
-        return;
-    }
-
-    if (!entry->m_loadFailed && !entry->m_data) {
-        entry->LoadTexture();
-    }
-
-    SFile::FileGetIsLocalAmount(entry->m_fileName, local, total);
-    total++;
-
-    if (!entry->m_asyncObject) {
-        local++;
-    }
-}
-
-// OFFSET: #0x004F2E20
-void TextureCacheDestroy() {
-    delete s_entryHeap;
-    s_entryHeap = NULL;
-}
-
-// OFFSET: #0x004F2E50
+// OFFSET: 0x00703E70/0x1403D0960
 int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
@@ -160,19 +137,19 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
             entry->LoadTexture();
         }
 
-        if (!entry->m_loadFailed && !entry->m_info.m_width && entry->m_asyncObject) {
-            if (!wait) {
-                if (SFile::IsStreamingMode()) {
-                    AsyncFileReadEnterQueueLock();
-                    AsyncFileReadLinkToPriority(entry->m_asyncObject, 1);
-
-                    AsyncFileReadLeaveQueueLock();
+        if (!entry->m_loadFailed) {
+            if (!entry->m_info.m_width && entry->m_asyncObject) {
+                if (!wait) {
+                    return 0;
                 }
 
-                return 0;
+                DebugLog("TextureCacheGetInfo() Wait: %s\n", entry->m_fileName);
+                AsyncFileReadWait(entry->m_asyncObject);
             }
 
-            AsyncFileReadWait(entry->m_asyncObject);
+            info = entry->m_info;
+
+            return 1;
         }
     }
 
@@ -181,7 +158,49 @@ int32_t TextureCacheGetInfo(void* handle, TCTEXTUREINFO& info, int32_t wait) {
     return 1;
 }
 
-// OFFSET: #0x004F2EF0
+// PROVEN: 76cf2643 IDENTICAL/NONE
+// OFFSET: 0x00703F10
+void TextureCacheIncreasePriority(void* handle) {
+    CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
+
+    if (entry && !entry->m_loadFailed && !entry->m_info.m_width && entry->m_asyncObject) {
+        AsyncFileReadEnterQueueLock();
+        AsyncFileReadLinkToPriority(entry->m_asyncObject, 1);
+        AsyncFileReadLeaveQueueLock();
+    }
+}
+
+// PROVEN: 2587d302 IDENTICAL/NONE
+// OFFSET: 0x00703F60/0x1403D0A50
+void TextureCacheResetLoadCount() {
+    s_loadCount = 0;
+}
+
+// PROVEN: 7d5e49e3 IDENTICAL/NONE
+// OFFSET: 0x00703F70
+void TextureCacheComputeLoadProgress(void* handle, int64_t& local, int64_t& total) {
+    CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
+
+    if (!entry) {
+        return;
+    }
+
+    if (!entry->m_loadFailed && !entry->m_data) {
+        entry->LoadTexture();
+    }
+
+    SFile::FileGetIsLocalAmount(entry->m_fileName, local, total);
+
+    if (local != total) {
+        total++;
+
+        if (!entry->m_asyncObject) {
+            local++;
+        }
+    }
+}
+
+// OFFSET: 0x00704070/0x1403D0AD0
 CACHEENTRY::~CACHEENTRY() {
     int32_t freeData = 1;
 
@@ -199,58 +218,53 @@ CACHEENTRY::~CACHEENTRY() {
     this->m_fileName[0] = '\0';
 }
 
-// OFFSET: #0x004F2F60
+// OFFSET: 0x007040E0
 CACHEENTRY::CACHEENTRY() {
     this->m_info.m_mipCount = 0;
     this->m_info.m_opaque = 1;
+    this->m_info.m_alphaSize = 0;
     this->m_info.m_width = 0;
     this->m_info.m_height = 0;
-    this->m_info.m_alphaSize = 0;
     this->m_size = 0;
     this->m_loadFailed = 0;
     this->m_asyncObject = NULL;
     this->m_fileName[0] = '\0';
     this->m_refCount = 0;
-    this->m_memHandle = 0;
     this->m_data = NULL;
 }
 
-// OFFSET: #0x004F3110
-static CACHEENTRY* TextureCacheAllocEntry() {
-    if (!s_entryHeap) {
-        s_entryHeap = new (__FILE__, __LINE__) uint32_t(ObjectAllocAddHeap(sizeof(CACHEENTRY), 1024, "TCACHEENTRY", true));
-    }
-
-    uint32_t memHandle;
-    void* object = NULL;
-
-    if (!ObjectAlloc(*s_entryHeap, &memHandle, &object, false, __FILE__, __LINE__)) {
-        return NULL;
-    }
-
-    CACHEENTRY* entry = new (object) CACHEENTRY();
-    entry->m_memHandle = memHandle;
-
-    return entry;
+// OFFSET: 0x00704370
+static void TextureCacheFreeEntry(CACHEENTRY* entry) {
+    s_entryPool->Delete(entry);
 }
 
-// OFFSET: #0x004F31A0
+// OFFSET: 0x007043B0/0x1403D0DE0
 void TextureCacheDestroyTexture(void* handle) {
     CACHEENTRY* entry = static_cast<CACHEENTRY*>(handle);
 
-    if (!entry) {
-        return;
-    }
-
-    if (--entry->m_refCount <= 0) {
+    if (entry && --entry->m_refCount <= 0) {
         s_cacheTable.Unlink(entry);
-        uint32_t* heap = s_entryHeap;
-        entry->~CACHEENTRY();
-        ObjectFree(*heap, entry->m_memHandle, entry, __FILE__, __LINE__);
+        TextureCacheFreeEntry(entry);
     }
 }
 
-// OFFSET: #0x004F3930
+// OFFSET: 0x00704480/0x1403D0F10
+static CACHEENTRY* TextureCacheAllocEntry() {
+    if (!s_entryPool) {
+        void* pool = SMemAlloc(sizeof(TSObjectAllocPool<CACHEENTRY>), __FILE__, __LINE__, 0);
+        s_entryPool = pool ? new (pool) TSObjectAllocPool<CACHEENTRY>("TCACHEENTRY", 1024) : NULL;
+    }
+
+    return s_entryPool->New("", 0);
+}
+
+// OFFSET: 0x007044E0
+void TextureCacheDestroy() {
+    delete s_entryPool;
+    s_entryPool = NULL;
+}
+
+// OFFSET: 0x00704BB0
 void* TextureCacheCreateTexture(const char* fileName) {
     uint32_t hashval = SStrHash(fileName, 0, 0);
     CACHEENTRY* entry = s_cacheTable.Ptr(hashval, s_cacheKey);
