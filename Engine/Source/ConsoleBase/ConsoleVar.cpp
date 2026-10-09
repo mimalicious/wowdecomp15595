@@ -939,3 +939,27 @@ void CVarIntListWrapper::WriteVersionTag() {
     this->m_buffer[this->m_pos] = 0;
     this->m_cvar->Set(this->m_buffer, true, false, false, true);
 }
+
+// OFFSET: 0x008C6590
+CVarArrayWrapper::CVarArrayWrapper(CVar* cvar, bool defaultValue) {
+    this->m_cvar = cvar;
+    this->m_defaultValue = defaultValue;
+
+    if (cvar) {
+        if (*cvar->m_stringValue.m_str != 2) {
+            this->UpdateFromVersion(static_cast<uint8_t>(*cvar->m_stringValue.m_str));
+        }
+    } else {
+        this->UpdateFromVersion(0);
+    }
+}
+
+// OFFSET: 0x008C1470
+bool CVarArrayWrapper::GetValue(uint32_t index) const {
+    return this->RawGetValue(index) != static_cast<bool>(this->m_defaultValue);
+}
+
+// OFFSET: 0x008C1450
+bool CVarArrayWrapper::SetValue(uint32_t index, bool value) {
+    return this->RawSetValue(index, value != static_cast<bool>(this->m_defaultValue));
+}

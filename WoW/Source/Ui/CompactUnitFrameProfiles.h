@@ -3,6 +3,7 @@
 
 class CGCompactUnitFrameProfiles {
     public:
+    static void ShutdownGame();
     static void EnterWorld(bool reload);
     static void InitializeGame();
 };

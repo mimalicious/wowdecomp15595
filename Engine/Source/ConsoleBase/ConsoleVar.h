@@ -67,6 +67,9 @@ class CVarArrayWrapper {
     /* 0004 */ uint8_t m_defaultValue;
 
     CVarArrayWrapper(CVar* cvar);
+    CVarArrayWrapper(CVar* cvar, bool defaultValue);
+    bool GetValue(uint32_t index) const;
+    bool SetValue(uint32_t index, bool value);
     bool RawGetValue(uint32_t index) const;
     bool RawSetValue(uint32_t index, bool value);
     void UpdateFromVersion(int32_t version);

@@ -1,4 +1,5 @@
 #include "WoW/Source/DB/Rec/ItemRecSparse.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
 
 // STATIC: 0x00C1C6E8
 static const int32_t s_fieldOffsets[] = { 0, 4, 8, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 136, 176, 216, 256, 260, 264, 268, 272, 292, 312, 332, 352, 372, 392, 396, 400, 404, 408, 412, 416, 420, 424, 428, 432, 436, 440, 444, 448, 452, 456, 460, 464, 468, 472, 484, 496, 500, 504, 508, 512, 516, 520, 524, 528 };
@@ -15,4 +16,48 @@ const DB2Meta ItemRecSparse::s_meta = { "DBFilesClient\\Item-sparse.db2", "Item-
 // PROVEN: 96001d76 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
 void ItemRecSparse::FixupRecord(void* record) {
+}
+
+// OFFSET: 0x004B19B0
+const char* ItemRecSparse::GetName(int32_t index) const {
+    switch (index) {
+        case 0:
+            if (this->m_name && *this->m_name) {
+                return this->m_name;
+            }
+
+            break;
+
+        case 1:
+            if (this->m_name && *this->m_name2) {
+                return this->m_name2;
+            }
+
+            break;
+
+        case 2:
+            if (this->m_name && *this->m_name3) {
+                return this->m_name3;
+            }
+
+            break;
+
+        case 3:
+            if (this->m_name && *this->m_name4) {
+                return this->m_name4;
+            }
+
+            break;
+
+        default:
+            break;
+    }
+
+    return this->m_name;
+}
+
+// OFFSET: 0x00A2E7F0
+ItemRec* ItemRecSparse::GetNonSparse() const {
+    WOWGUID none = WOWGUID();
+    return g_itemDB.GetRecord(this->m_ID, none, NULL, NULL, false);
 }

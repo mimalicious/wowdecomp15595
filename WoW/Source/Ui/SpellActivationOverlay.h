@@ -7,6 +7,7 @@ class SpellRec;
 
 class CGSpellActivationOverlay {
     public:
+    static void ShutdownGame();
     static void EnterWorld();
     static void UpdateUsable();
     static void UpdateActiveMoverOverlays();

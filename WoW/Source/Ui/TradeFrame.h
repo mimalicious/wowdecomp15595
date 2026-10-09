@@ -35,6 +35,7 @@ struct TRADE_ITEM {
 
 class CGTradeInfo {
     public:
+    static void ShutdownGame();
     static void InitializeGame();
     static void SetTradePartner(WOWGUID partner, int32_t a2);
     static void SetEnchantingItem(CGItem_C* item);

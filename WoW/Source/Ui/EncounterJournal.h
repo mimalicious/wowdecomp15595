@@ -3,6 +3,7 @@
 
 class CGEncounterJournal {
     public:
+    static void ShutdownGame();
     static void InitializeGame();
 };
 

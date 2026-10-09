@@ -268,6 +268,32 @@ void UserClientWorldPortResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2411));
 }
 
+// OFFSET: 0x006709E0
+UserClientReturnToGraveyard::UserClientReturnToGraveyard() {
+}
+
+// OFFSET: 0x00670750
+UserClientReturnToGraveyard::~UserClientReturnToGraveyard() {
+}
+
+// OFFSET: 0x006704C0
+void UserClientReturnToGraveyard::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x301E));
+}
+
+// OFFSET: 0x00670870
+UserClientQueryBattlefieldState::UserClientQueryBattlefieldState() {
+}
+
+// OFFSET: 0x006705E0
+UserClientQueryBattlefieldState::~UserClientQueryBattlefieldState() {
+}
+
+// OFFSET: 0x00670730
+void UserClientQueryBattlefieldState::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7202));
+}
+
 // OFFSET: 0x00670610
 UserClientRequestCemeteryList::UserClientRequestCemeteryList() {
 }

@@ -36,6 +36,7 @@ struct LootSlot {
 
 class CGLootInfo {
     public:
+    static bool IsPlayerIneligible(int32_t itemId);
     static uint32_t m_itemsPending;
     static uint32_t m_lootType;
     static LootSlot m_slots[18];

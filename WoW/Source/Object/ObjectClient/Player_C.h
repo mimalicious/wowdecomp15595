@@ -87,6 +87,8 @@ class DanceMovesRec;
 class CEffect;
 
 #pragma pack(push, 4)
+class CGVoidStorage_C;
+
 class CGPlayer_C : public CGUnit_C, public CGPlayer {
     public:
     void ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background);
@@ -369,6 +371,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void ChangeStandState(uint32_t standState);
     void SendTextEmote(const EmotesTextRec* emote, WOWGUID target, int32_t silent);
     void SetAFK(const char* message);
+    CGVoidStorage_C* GetVoidStorage();
     static uint32_t GetPendingCinematic();
     void UpdateActiveMoverDisplay(uint32_t time);
     void SetPvpCooldownTimestamp(uint32_t flags);
@@ -520,7 +523,6 @@ int32_t OnUpdatePlayerGlyph(WOWGUID guid, uint32_t offset, uint32_t count, const
 int32_t OnUpdatePlayerGlyphSlotsEnabled(WOWGUID guid, uint32_t offset, uint32_t count, const void* value);
 int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId, uint32_t suffixFactor, uint32_t randomPropertyId, uint32_t received, uint32_t created, uint32_t showInChat, uint32_t count);
 int32_t Packet_Group_10(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t PH_LOOT_OPCODES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_LEARNED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

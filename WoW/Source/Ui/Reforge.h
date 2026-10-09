@@ -5,6 +5,7 @@
 
 class CGReforge {
     public:
+    static void ShutdownGame();
     static void EnterWorld();
     static void LeaveWorld();
     static WOWGUID m_forgeMaster;

@@ -10,6 +10,9 @@ class ItemRecSparse {
 
     static void FixupRecord(void* record);
 
+    const char* GetName(int32_t index) const;
+    class ItemRec* GetNonSparse() const;
+
     /* 0000 */ int32_t m_ID;
     /* 0004 */ int32_t m_quality;
     /* 0008 */ int32_t m_flags[2];

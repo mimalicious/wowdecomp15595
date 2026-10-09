@@ -467,7 +467,7 @@ bool CVarHandler_useUiScale(CVar* var, const char* oldValue, const char* value, 
     return true;
 }
 
-// OFFSET: #0x0052A930
+// OFFSET: 0x008DDB00/0x140652640
 bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) > 0) {
         if (s_taintLog || SLogCreate("Logs\\taint.log", 0, &s_taintLog)) {

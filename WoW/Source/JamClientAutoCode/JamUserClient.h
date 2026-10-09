@@ -41,6 +41,22 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+class UserClientReturnToGraveyard : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientReturnToGraveyard();
+    ~UserClientReturnToGraveyard();
+};
+
+class UserClientQueryBattlefieldState : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientQueryBattlefieldState();
+    ~UserClientQueryBattlefieldState();
+};
+
 class UserClientRequestCemeteryList : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;

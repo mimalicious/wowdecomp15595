@@ -1,4 +1,6 @@
 #include "GameUI.h"
+#include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
 #include "WoW/Source/StaticSingleton.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include "Engine/Source/Event/FrameTime.h"
@@ -7,6 +9,7 @@
 #include "WoW/Source/Ui/GlyphInfo.h"
 #include "WoW/Source/Ui/Reforge.h"
 #include "WoW/Source/Ui/Transmogrify.h"
+#include "WoW/Source/Ui/IncomingResurrection.h"
 #include "WoW/Source/Ui/VoidStorageInfo.h"
 #include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include "WoW/Source/Ui/TalentInfo.h"
@@ -1007,7 +1010,22 @@ int32_t CGGameUI::m_areaMountFlags = -1;
 int32_t CGGameUI::m_billingActive;
 
 // STATIC: 0x00ED74F2
-uint8_t CGGameUI::unk_ED74F2;
+uint8_t CGGameUI::m_hasTravelPass;
+
+// STATIC: 0x00ED74F3
+uint8_t CGGameUI::s_canSendSoR;
+
+// STATIC: 0x00ED7564
+int32_t CGGameUI::s_numSoRRemaining;
+
+// STATIC: 0x00ED753C
+int32_t CGGameUI::s_tournamentRealm;
+
+// STATIC: 0x00ED7558
+uint32_t CGGameUI::s_restrictedLevel;
+
+// STATIC: 0x00ED755C
+uint32_t CGGameUI::s_restrictedMoney;
 
 
 // STATIC: 0x00D0BD1C
@@ -2240,6 +2258,41 @@ void CGGameUI::SetCursorMoney(uint64_t amount) {
 void CCapturePointUIManager::Clear() {
     this->m_nodes.Clear();
 }
+
+// OFFSET: 0x008DBEA0
+void CGGameUI::SetCursorVoidStorageItem(WOWGUID guid) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return;
+    }
+
+    CGVoidStorage_C* storage = player->GetVoidStorage();
+
+    if (!storage) {
+        return;
+    }
+
+    VoidStorageItem* item = storage->GetItem(guid);
+
+    if (!item) {
+        return;
+    }
+
+    CGGameUI::ClearCursor(1, 1);
+    CGGameUI::m_cursorVoidStorageItem = guid;
+    CGGameUI::m_cursorItemType = 15;
+    WOWGUID none = WOWGUID();
+    ItemRec* rec = g_itemDB.GetRecord(item->m_entryID, none, NULL, NULL, false);
+    CursorGrabVirtualItem(rec ? rec->m_displayInfoID : 0);
+
+    if (rec) {
+        SI3::PlayItemSound(0, rec->m_displayInfoID);
+        CGGameUI::m_cursorVirtualDisplay = rec->m_displayInfoID;
+    }
+
+    CGGameUI::m_cursorHasAction = 0;
+}
 #endif
 
     CGGameUI::m_UISimpleParent = static_cast<CSimpleFrame*>(CScriptObject::GetScriptObjectByName("UIParent", CSimpleFrame::GetObjectType()));
@@ -2373,8 +2426,8 @@ void CGGameUI::InitializeGame() {
     MovieStreaming::InitializeGame();
     CGEncounterJournal::InitializeGame();
     CGCompactUnitFrameProfiles::InitializeGame();
-    CGGameUI::InitializeGameUnk9FD1E0();
-    CGGameUI::InitializeGameUnk9BEC70();
+    CGIncomingResurrection::Reset();
+    CGTransmogrify::InitializeGame();
 
     CGGameUI::m_cinematic.m_music = 0;
     CGGameUI::m_cinematic.m_cameraMusic = 0;
@@ -2397,7 +2450,7 @@ void CGGameUI::InitializeGame() {
     CGGameUI::m_lastRegenTime = 0;
     CGGameUI::m_comboTarget = WOWGUID();
     CGGameUI::m_comboPoints = 0;
-    CGGameUI::unk_ED74F2 = 0;
+    CGGameUI::m_hasTravelPass = 0;
 
     for (int32_t i = 0; i < 5; i++) {
         TotemInfo& totem = CGGameUI::m_totems[i];
@@ -2708,7 +2761,7 @@ int32_t CGGameUI::OnSpriteRightClick(WOWGUID guid) {
     return 1;
 }
 
-// OFFSET: #0x00527830
+// OFFSET: 0x008DD4A0
 int32_t CGGameUI::HandleTerrainClick(const CTerrainClickEvent& evt) {
     if (evt.m_button == MOUSE_BUTTON_RIGHT || CGGameUI::m_cursorVirtualID) {
         CGGameUI::ClearCursor(1, 1);
@@ -2718,7 +2771,7 @@ int32_t CGGameUI::HandleTerrainClick(const CTerrainClickEvent& evt) {
     return 1;
 }
 
-// OFFSET: #0x00527870
+// OFFSET: 0x008DD4E0
 int32_t CGGameUI::HandleSpriteClick(const CSpriteClickEvent& evt) {
     if (CGGameUI::m_cursorVirtualID) {
         CGGameUI::ClearCursor(1, 1);
@@ -2733,7 +2786,7 @@ int32_t CGGameUI::HandleSpriteClick(const CSpriteClickEvent& evt) {
     return 1;
 }
 
-// OFFSET: #0x005278C0
+// OFFSET: 0x008DD530
 int32_t CGGameUI::HandleWorldClick(const CWorldClickEvent& evt) {
     int32_t noCursorItem = CGGameUI::m_cursorItemType == 0;
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -2755,16 +2808,7 @@ int32_t CGGameUI::HandleWorldClick(const CWorldClickEvent& evt) {
         }
 
         if (noCursorItem && g_deselectOnClickCVar->m_intValue) {
-            CGGameUI::unk_BD08CC = 0;
-
-            if (CGGameUI::m_lockedTarget) {
-                CGGameUI::m_lastTarget = CGGameUI::m_lockedTarget;
-                CGGameUI::ClearTarget(CGGameUI::m_lockedTarget, 1);
-
-                if (Spell_C_GetAutoRepeatingSpell()) {
-                    Spell_C_CancelAutoRepeat(true);
-                }
-            }
+            CGGameUI::Target(WOWGUID());
         }
     }
 
@@ -3113,7 +3157,7 @@ void CGGameUI::ClearTarget(WOWGUID guid, int32_t a2) {
     }
 }
 
-// OFFSET: #0x00524650
+// OFFSET: 0x008DBF70
 void CGGameUI::DeleteCursorItem() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGGameUI::m_cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -3126,11 +3170,11 @@ void CGGameUI::DeleteCursorItem() {
         return;
     }
 
-    WOWGUID none = { 0 };
-    ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+    WOWGUID none = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
 
-    if (stats) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_DELETE_ITEM_CONFIRM, "%s%d", stats->m_name[0], stats->m_quality);
+    if (rec) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_DELETE_ITEM_CONFIRM, "%s%d", rec->GetName(0), rec->m_quality);
     }
 }
 
@@ -3270,10 +3314,14 @@ void CGGameUI::Target(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x00527360
+// OFFSET: 0x008DCFD0
 int32_t CGGameUI::OnTerrainClick(const CTerrainClickEvent& evt) {
     if (evt.m_button == MOUSE_BUTTON_LEFT) {
         if (Spell_C_HandleTerrainClick(evt)) {
+            return 1;
+        }
+
+        if (evt.m_button == MOUSE_BUTTON_LEFT && CGPetInfo::HandleMoveToTerrainRay(evt)) {
             return 1;
         }
 
@@ -3284,16 +3332,7 @@ int32_t CGGameUI::OnTerrainClick(const CTerrainClickEvent& evt) {
             }
 
             if (g_deselectOnClickCVar->m_intValue) {
-                CGGameUI::unk_BD08CC = 0;
-
-                if (CGGameUI::m_lockedTarget) {
-                    CGGameUI::m_lastTarget = CGGameUI::m_lockedTarget;
-                    CGGameUI::ClearTarget(CGGameUI::m_lockedTarget, 1);
-
-                    if (Spell_C_GetAutoRepeatingSpell()) {
-                        Spell_C_CancelAutoRepeat(true);
-                    }
-                }
+                CGGameUI::Target(WOWGUID());
             }
 
             return 1;
@@ -3322,7 +3361,7 @@ int32_t CGGameUI::OnTerrainClick(const CTerrainClickEvent& evt) {
     return 1;
 }
 
-// OFFSET: #0x005274F0
+// OFFSET: 0x008DD1B0
 int32_t CGGameUI::OnSpriteLeftClick(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -3407,6 +3446,11 @@ npc:
     }
 
     CGGameUI::Target(guid);
+
+    if (g_interactOnLeftClickCVar->m_intValue >= 1) {
+        object->OnInteract();
+    }
+
     return 1;
 }
 
@@ -3814,18 +3858,19 @@ static void ItemPushItemStatsCallback(int32_t id, const WOWGUID& guid, void* par
     }
 
     if (success) {
-        OnItemPushResult(data->m_guid, data->m_bag, data->m_slot, id, data->m_suffixFactor, data->m_randomPropertyId, data->m_received, data->m_created, data->m_showInChat, data->m_count);
+        CGGameUI::OnItemPush(data->m_guid, data->m_bag, data->m_slot, id, data->m_suffixFactor, data->m_randomPropertyId, data->m_received, data->m_created, data->m_showInChat, data->m_count);
     }
 
     SMemFree(data, "delete", SLOG_FUNCTION, 0);
 }
 
-// OFFSET: #0x00523900
-void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId, uint32_t suffixFactor, uint32_t randomPropertyId, uint32_t received, uint32_t created, uint32_t showInChat, uint32_t count) {
+// OFFSET: 0x008DBA40
+void CGGameUI::OnItemPush(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId, uint32_t suffixFactor, uint32_t randomPropertyId, uint32_t received, uint32_t created, uint32_t showInChat, uint32_t count) {
     WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* sparse = g_itemSparseDB.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRec* item;
 
-    if (!stats) {
+    if (!sparse || !(item = sparse->GetNonSparse())) {
         ItemPushData* data = static_cast<ItemPushData*>(SMemAlloc(sizeof(ItemPushData), __FILE__, __LINE__, 0));
         data->m_guid = guid;
         data->m_bag = bag;
@@ -3836,11 +3881,7 @@ void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId,
         data->m_suffixFactor = suffixFactor;
         data->m_randomPropertyId = randomPropertyId;
         data->m_count = count;
-
-        if (g_itemDBCache.GetRecord(itemId, guid, ItemPushItemStatsCallback, data, false)) {
-            SErrDisplayAppFatalMessage("", "", 0);
-        }
-
+        g_itemSparseDB.GetRecord(itemId, guid, ItemPushItemStatsCallback, data, false);
         return;
     }
 
@@ -3855,39 +3896,38 @@ void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId,
     if (guid == ClntObjMgrGetActivePlayer()) {
         const char* path = ClientDBStringLookup(3);
         const char* separator = *path ? "\\" : "";
-        SStrPrintf(text, sizeof(text), "%s%s%s", path, separator, CGItem_C::GetInventoryArt(stats->m_displayId));
-        int32_t slotIndex = bag;
-
-        if (bag == 255) {
-            slotIndex = slot - 86 > 31 ? -1 : -3;
-        }
-
+        SStrPrintf(text, sizeof(text), "%s%s%s", path, separator, CGItem_C::GetInventoryArt(item->m_displayInfoID));
+        int32_t slotIndex = bag == 255 ? -1 : bag;
         FrameScript_SignalEvent(SCRIPT_EVENT_ITEM_PUSH, "%d%s", slotIndex + 1, text);
 
         if (showInChat) {
             if (static_cast<int32_t>(count) > 1) {
                 const char* token = created ? "LOOT_ITEM_CREATED_SELF_MULTIPLE" : received ? "LOOT_ITEM_PUSHED_SELF_MULTIPLE" : "LOOT_ITEM_SELF_MULTIPLE";
                 const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
-                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, randomPropertyId, suffixFactor), count);
+                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor), count);
             } else {
                 const char* token = created ? "LOOT_ITEM_CREATED_SELF" : received ? "LOOT_ITEM_PUSHED_SELF" : "LOOT_ITEM_SELF";
                 const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
-                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, randomPropertyId, suffixFactor));
+                SStrPrintf(text, sizeof(text), format, CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor));
             }
 
-            CGChat::AddChatMessage(text, 27, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+            CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(27), NULL);
         }
 
-        CGTutorial::TriggerTutorial(7);
+        int32_t level = player->m_unit->m_unitFieldLevel;
+
+        if (level >= 4) {
+            CGTutorial::TriggerTutorial(7);
+        }
 
         for (uint32_t i = 0; i < 5; i++) {
-            if (stats->m_spellId[i] && !stats->m_spellTrigger[i] && (stats->m_class || (stats->m_subClass != 4 && stats->m_subClass != 5))) {
+            if (level >= 4 && sparse->m_spellID[i] && !sparse->m_spellTrigger[i] && (item->m_classID || (item->m_subclassID != 4 && item->m_subclassID != 5))) {
                 CGTutorial::TriggerTutorial(8);
                 break;
             }
         }
 
-        uint32_t slots = s_inventoryTypeSlots[stats->m_inventoryType];
+        uint32_t slots = s_inventoryTypeSlots[sparse->m_inventoryType];
 
         for (uint32_t i = 0; i < 23; i++) {
             if (((1 << i) & slots) && IsTutorialFlagged(55)) {
@@ -3896,39 +3936,32 @@ void OnItemPushResult(WOWGUID guid, uint8_t bag, uint32_t slot, uint32_t itemId,
             }
         }
 
-        if (stats->m_class == 1) {
-            CGTutorial::TriggerTutorial(9);
-        }
-
-        if (bag == 255 && slot - 86 <= 31) {
-            CGTutorial::TriggerTutorial(49);
-        }
-
         if (itemId == 6948) {
             CGTutorial::TriggerTutorial(30);
         }
 
-        if (player->m_unit->m_unitFieldLevel >= 2 && !stats->m_class && (stats->m_subClass == 4 || stats->m_subClass == 5)) {
-            CGTutorial::TriggerTutorial(10);
-            CGTutorial::TriggerTutorial(11);
-        }
-
-        SI3::PlayItemSound(1, stats->m_displayId);
+        SI3::PlayItemSound(1, item->m_displayInfoID);
     } else if ((!received || created) && showInChat) {
         if (static_cast<int32_t>(count) > 1) {
             const char* format = FrameScript_GetText(created ? "CREATED_ITEM_MULTIPLE" : "LOOT_ITEM_MULTIPLE", -1, GENDER_NOT_APPLICABLE);
-            const char* link = CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, randomPropertyId, suffixFactor);
+            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor);
             SStrPrintf(text, sizeof(text), format, player->GetUnitName(NULL, 1), link, count);
         } else {
-            const char* format = FrameScript_GetText(created ? "CREATED_ITEM" : "LOOT_ITEM", -1, GENDER_NOT_APPLICABLE);
-            const char* link = CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, randomPropertyId, suffixFactor);
+            const char* token = created ? "CREATED_ITEM" : CGLootInfo::IsPlayerIneligible(itemId) ? "LOOT_ITEM_WHILE_PLAYER_INELIGIBLE" : "LOOT_ITEM";
+            const char* format = FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE);
+            const char* link = CGTooltip::GetItemHyperlinkString(itemId, sparse->m_quality, 0, randomPropertyId, suffixFactor);
             SStrPrintf(text, sizeof(text), format, player->GetUnitName(NULL, 1), link);
         }
 
-        CGChat::AddChatMessage(text, 27, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
+        CGChat::AddChatMessage(text, static_cast<SLASH_COMMAND_ID>(27), NULL);
     }
 
-    if ((guid == ClntObjMgrGetActivePlayer() && (stats->m_inventoryType == 15 || stats->m_inventoryType == 26) && player->m_unit->m_unitFieldBytes0[1] != 3) || (stats->m_class == 2 && stats->m_subClass == 19)) {
+    if (guid == ClntObjMgrGetActivePlayer() && (sparse->m_inventoryType == 15 || sparse->m_inventoryType == 26) && player->m_unit->m_unitFieldBytes0[1] != 3) {
+        CGTutorial::TriggerTutorial(43);
+        return;
+    }
+
+    if (item->m_classID == 2 && item->m_subclassID == 19) {
         CGTutorial::TriggerTutorial(43);
     }
 }
@@ -4539,7 +4572,7 @@ void CGGameUI::NewZoneFeedback(int32_t areaId, int32_t subzoneId, int32_t wmoGro
     CGSpellBook::UpdateUsable();
 }
 
-// OFFSET: #0x0052AED0
+// OFFSET: 0x008DE0C0/0x140652D90
 void CGGameUI::RegisterSavedVariable(const char* name, int32_t perCharacter) {
     if (!CGGameUI::s_savedVariables[perCharacter].Ptr(name)) {
         CGGameUI::s_savedVariables[perCharacter].New(name, 0, 0);
@@ -7405,15 +7438,18 @@ void CGGameUI::LoadMinimapTrackingState(const char* state) {
     }
 }
 
-// OFFSET: #0x00529160
+// OFFSET: 0x008DB580
 void CGGameUI::ShutdownGame() {
     CGGameUI::Shutdown();
     PortraitShutdown();
     CGMinimapFrame::ShutdownGame();
     CGChat::ShutdownGame();
     CGPartyInfo::ShutdownGame();
+    CGGlyphInfo::InitializeGame();
     CGSpellBook::ShutdownGame();
+    CGSpellActivationOverlay::ShutdownGame();
     CGActionBar::ShutdownGame();
+    CFlyout::ShutdownGame();
     CGLootInfo::ShutdownGame();
     CGItemText::ShutdownGame();
     CGGossipInfo::ShutdownGame();
@@ -7425,9 +7461,8 @@ void CGGameUI::ShutdownGame() {
     CGWorldMap::ShutdownGame();
     CGReputationInfo::ShutdownGame();
     CGDuelInfo::ShutdownGame();
-    CGTutorial::ShutdownGame();
-    CGSkillInfo::ShutdownGame();
     CGGuildInfo::ShutdownGame();
+    CGLFGuildInfo::ShutdownGame();
     CGMailInfo::ShutdownGame();
     CGBattlefieldInfo::ShutdownGame();
     CGTalentInfo::ShutdownGame();
@@ -7448,12 +7483,21 @@ void CGGameUI::ShutdownGame() {
     CGBarberShop::ShutdownGame();
     CGGuildBankInfo::ShutdownGame();
     CGAchievementInfo::ShutdownGame();
-    CGRuneInfo::ShutdownGame();
     CGCurrencyTypes::ShutdownGame();
     CGEquipmentManager::ShutdownGame();
     CGAutoCompleteName::m_list.Clear();
     CGGMTicketInfo::ShutdownGame();
     CGGMSurveyInfo::ShutdownGame();
+    CGReforge::ShutdownGame();
+    CGTradeInfo::ShutdownGame();
+    CGResearchFrame::ShutdownGame();
+    PhaseShift_C_ShutdownGame();
+    MovieStreaming::ShutdownGame();
+    CGEncounterJournal::ShutdownGame();
+    CGCompactUnitFrameProfiles::ShutdownGame();
+    CGIncomingResurrection::Reset();
+    CGTransmogrify::ShutdownGame();
+    CGVoidStorageInfo::ShutdownGame();
     FrameScript_Flush();
 
     for (uint32_t i = 0; i < sizeof(s_readOnlyCVars) / sizeof(s_readOnlyCVars[0]); i++) {
@@ -7480,18 +7524,12 @@ void CGGameUI::ShutdownGame() {
 
     CGGameUI::m_subZoneText = NULL;
 
-    if (CGGameUI::m_realZoneText) {
-        SMemFree(const_cast<char*>(CGGameUI::m_realZoneText), __FILE__, __LINE__, 0);
-    }
-
-    CGGameUI::m_realZoneText = NULL;
-
     if (CGGameUI::m_minimapZoneText) {
         SMemFree(const_cast<char*>(CGGameUI::m_minimapZoneText), __FILE__, __LINE__, 0);
     }
 
     CGGameUI::m_minimapZoneText = NULL;
-    CGGameUI::s_threatMap.Clear();
+    CGGameUI::m_areaMountFlags = -1;
 
     for (int32_t i = 0; i < 3; i++) {
         MirrorTimerInfo& timer = CGGameUI::m_mirrorTimerInfo[i];
@@ -7507,12 +7545,11 @@ void CGGameUI::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_PVP_CREDIT);
     ClientServices::ClearMessageHandler(MSG_CORPSE_QUERY);
     ClientServices::ClearMessageHandler(SMSG_CORPSE_RECLAIM_DELAY);
-    ClientServices::ClearMessageHandler(SMSG_GM_PLAYER_INFO);
     ClientServices::ClearMessageHandler(CMSG_GM_REQUEST_PLAYER_INFO);
+    ClientServices::ClearMessageHandler(SMSG_GM_PLAYER_INFO);
     ClientServices::ClearMessageHandler(SMSG_PLAY_MUSIC);
     ClientServices::ClearMessageHandler(SMSG_PLAY_SOUND);
     ClientServices::ClearMessageHandler(SMSG_PLAY_OBJECT_SOUND);
-    ClientServices::ClearMessageHandler(SMSG_TRIGGER_MOVIE);
     ClientServices::ClearMessageHandler(SMSG_AREA_TRIGGER_MESSAGE);
     ClientServices::ClearMessageHandler(SMSG_AREA_TRIGGER_NO_CORPSE);
     ClientServices::ClearMessageHandler(SMSG_INIT_WORLD_STATES);
@@ -7521,11 +7558,9 @@ void CGGameUI::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_INVALID_PROMOTION_CODE);
     ClientServices::ClearMessageHandler(SMSG_WEATHER);
     ClientServices::ClearMessageHandler(SMSG_OVERRIDE_LIGHT);
-    ClientServices::ClearMessageHandler(SMSG_INSTANCE_DIFFICULTY);
     ClientServices::ClearMessageHandler(MSG_SET_DUNGEON_DIFFICULTY);
     ClientServices::ClearMessageHandler(MSG_SET_RAID_DIFFICULTY);
     ClientServices::ClearMessageHandler(SMSG_UPDATE_COMBO_POINTS);
-    ClientServices::ClearMessageHandler(SMSG_PHASE_SHIFT_CHANGE);
     ClientServices::ClearMessageHandler(SMSG_TOTEM_CREATED);
     ClientServices::ClearMessageHandler(SMSG_START_MIRROR_TIMER);
     ClientServices::ClearMessageHandler(SMSG_PAUSE_MIRROR_TIMER);
@@ -7535,9 +7570,13 @@ void CGGameUI::ShutdownGame() {
     ClientServices::ClearMessageHandler(SMSG_REFER_A_FRIEND_EXPIRED);
     ClientServices::ClearMessageHandler(SMSG_BREAK_TARGET);
     ClientServices::ClearMessageHandler(SMSG_CORPSE_MAP_POSITION_QUERY_RESPONSE);
-    ClientServices::ClearMessageHandler(SMSG_REMOVED_FROM_PVP_QUEUE);
     ClientServices::ClearMessageHandler(SMSG_UI_TIME);
     ClientServices::ClearMessageHandler(SMSG_TALENTS_INVOLUNTARILY_RESET);
+    ClientDifferentInstanceFromParty::s_handler = NULL;
+    ClientMoneyNotify::s_handler = NULL;
+    ClientDisplayGameError::s_handler = NULL;
+    ClientWorldServerInfo::s_handler = NULL;
+    ClientFailedPlayerCondition::s_handler = NULL;
 }
 
 // OFFSET: 0x008DAF20
@@ -7655,7 +7694,7 @@ static void PrintTaintEvent(TAINTEVENT* event) {
     }
 }
 
-// OFFSET: #0x0052A650
+// OFFSET: 0x008DD800/0x1406521D0
 void TaintEventCallback(lua_State* L, int32_t event, const char* name, const char* taint) {
     if (taint == g_macroTaint) {
         taint = "MACRO_TAINT";

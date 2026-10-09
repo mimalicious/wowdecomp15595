@@ -5,6 +5,7 @@
 
 class CGResearchFrame {
     public:
+    static void ShutdownGame();
     static void EnterWorld();
     static void LeaveWorld();
     static uint8_t s_enteredWorld;

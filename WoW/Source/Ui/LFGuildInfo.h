@@ -3,6 +3,7 @@
 
 class CGLFGuildInfo {
     public:
+    static void ShutdownGame();
     static void InitializeGame();
 };
 

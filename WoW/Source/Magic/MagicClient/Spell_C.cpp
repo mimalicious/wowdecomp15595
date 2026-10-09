@@ -584,7 +584,7 @@ int32_t Spell_C_NeedsCooldownEvent(int32_t itemId) {
 }
 
 // OFFSET: #0x0080B5D0
-bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID& target, const ItemStats_C* item, bool ignoreControl) {
+bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID& target, const ItemRecSparse* item, bool ignoreControl) {
     if (!unit) {
         return false;
     }

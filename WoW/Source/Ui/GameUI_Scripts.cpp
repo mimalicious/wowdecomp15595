@@ -1,4 +1,7 @@
 #include "GameUI.h"
+#include "WoW/Source/Ui/BlobFrame.h"
+#include "WoW/Source/Ui/ArchaeologyDigSiteFrame.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 #include <cmath>
 #include <cstdarg>
 #include <cstring>
@@ -285,34 +288,6 @@ static int32_t Script_ClearCursor(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x005101D0
-static int32_t Script_SetWaterDetail(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetWaterDetail(value)");
-        return 0;
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x00510200
-static int32_t Script_GetFarclip(lua_State* L) {
-    lua_pushnumber(L, CVar::Lookup("farclip")->m_floatValue);
-    return 1;
-}
-
-// OFFSET: #0x005102B0
-static int32_t Script_GetTexLodBias(lua_State* L) {
-    lua_pushnumber(L, CVar::Lookup("texLodBias")->m_floatValue);
-    return 1;
-}
-
-// OFFSET: #0x00510360
-static int32_t Script_GetBaseMip(lua_State* L) {
-    lua_pushnumber(L, 1.0 - CVar::Lookup("baseMip")->m_floatValue);
-    return 1;
-}
-
 // OFFSET: 0x008C2E90/0x140632910
 static int32_t Script_GetScriptCPUUsage(lua_State* L) {
     lua_pushnumber(L, FrameScript_GetScriptCPUUsage());
@@ -370,15 +345,6 @@ static int32_t Script_DeclineResurrect(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051ABA0
-static int32_t Script_DeclineGroup(lua_State* L) {
-    if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
-        CGPlayer_C::DeclineGroup();
-    }
-
-    return 0;
-}
-
 // OFFSET: 0x008CCA10/0x14063DF80
 static int32_t Script_AcceptGuild(lua_State* L) {
     if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
@@ -422,13 +388,6 @@ static int32_t Script_DropCursorMoney(lua_State* L) {
     }
 
     return 0;
-}
-
-// PROVEN: ffacd99c IDENTICAL/NONE
-// OFFSET: 0x0080C320/0x1405229B0
-static int32_t Script_GetWaterDetail(lua_State* L) {
-    lua_pushnumber(L, 0.0);
-    return 1;
 }
 
 // OFFSET: 0x00807AB0/0x14051D330
@@ -799,12 +758,17 @@ int32_t Script_CanHearthAndResurrectFromArea(lua_State* L) {
 static int32_t Script_GetNetStats(lua_State* L) {
     float bytesIn;
     float bytesOut;
-    uint32_t latency;
-    ClientServices::Connection()->GetNetStats(bytesIn, bytesOut, latency);
+    ClientServices::Connection()->GetNetBandwidth(bytesIn, bytesOut);
     lua_pushnumber(L, bytesIn);
     lua_pushnumber(L, bytesOut);
-    lua_pushnumber(L, latency);
-    return 3;
+
+    for (int32_t i = 0; i < 2; i++) {
+        uint32_t latency;
+        ClientServices::Connection()->GetNetLatency(static_cast<CONNECTION_ID>(i), latency);
+        lua_pushnumber(L, static_cast<double>(latency));
+    }
+
+    return 4;
 }
 
 // OFFSET: 0x008C3040/0x140632AB0
@@ -868,15 +832,6 @@ static int32_t Script_GuildLeave(lua_State* L) {
 static int32_t Script_GuildDisband(lua_State* L) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_DISBAND));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    return 0;
-}
-
-// OFFSET: #0x00515C50
-static int32_t Script_GuildInfo(lua_State* L) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_INFO));
     msg.Finalize();
     ClientServices::Send2(&msg);
     return 0;
@@ -1028,48 +983,6 @@ static int32_t Script_GetPVPDesired(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00510230
-static int32_t Script_SetFarclip(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetFarclip(value)");
-        return 0;
-    }
-
-    CVar* var = CVar::Lookup("farclip");
-    char value[16];
-    SStrPrintf(value, sizeof(value), "%f", lua_tonumber(L, 1));
-    var->Set(value, true, false, false, true);
-    return 0;
-}
-
-// OFFSET: #0x005102E0
-static int32_t Script_SetTexLodBias(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetTexLodBias(value)");
-        return 0;
-    }
-
-    CVar* var = CVar::Lookup("texLodBias");
-    char value[16];
-    SStrPrintf(value, sizeof(value), "%f", lua_tonumber(L, 1));
-    var->Set(value, true, false, false, true);
-    return 0;
-}
-
-// OFFSET: #0x00510390
-static int32_t Script_SetBaseMip(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetBaseMip(value)");
-        return 0;
-    }
-
-    CVar* var = CVar::Lookup("baseMip");
-    char value[16];
-    SStrPrintf(value, sizeof(value), "%d", 1.0 - lua_tonumber(L, 1));
-    var->Set(value, true, false, false, true);
-    return 0;
-}
-
 // OFFSET: 0x008C72D0/0x140637180
 static int32_t Script_GetDungeonDifficulty(lua_State* L) {
     uint32_t difficulty;
@@ -1090,29 +1003,6 @@ static int32_t Script_RequestTimePlayed(lua_State* L) {
     msg.Put(static_cast<uint8_t>(1));
     msg.Finalize();
     ClientServices::Send2(&msg);
-    return 0;
-}
-
-// OFFSET: #0x0051AB20
-static int32_t Script_AcceptGroup(lua_State* L) {
-    if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
-        uint32_t roles = 0;
-
-        if (StringToBOOL(L, 1, 0)) {
-            roles = 2;
-        }
-
-        if (StringToBOOL(L, 2, 0)) {
-            roles |= 4;
-        }
-
-        if (StringToBOOL(L, 3, 0)) {
-            roles |= 8;
-        }
-
-        CGPlayer_C::AcceptGroup(roles);
-    }
-
     return 0;
 }
 
@@ -1187,20 +1077,6 @@ static int32_t Script_GetFunctionCPUUsage(lua_State* L) {
     lua_pushnumber(L, includeSubroutines ? totalTime : time);
     lua_pushnumber(L, static_cast<uint32_t>(calls));
     return 2;
-}
-
-// OFFSET: #0x0051AFB0
-static int32_t Script_GetDamageBonusStat(lua_State* L) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    const ChrClassesRec* rec;
-
-    if (player && (rec = g_chrClassesDB.GetRecord(player->m_unit->m_unitFieldBytes0[1]))) {
-        lua_pushnumber(L, rec->m_damageBonusStat + 1);
-        return 1;
-    }
-
-    lua_pushnumber(L, 0.0);
-    return 1;
 }
 
 // OFFSET: 0x008CD570/0x14063F1F0
@@ -1664,71 +1540,6 @@ static int32_t Script_SetCVar(lua_State* L) {
     }
 
     return 0;
-}
-
-// OFFSET: #0x00514D40
-static int32_t Script_GetCVarMin(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: GetCVarMin(\"cvar\")");
-        return 0;
-    }
-
-    CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
-
-    if (!var || (var->m_flags & 0x40)) {
-        luaL_error(L, "Couldn't find CVar named '%s'", lua_tolstring(L, 1, NULL));
-        return 0;
-    }
-
-    const char* name = var->m_key.m_str;
-
-    if (!SStrCmpI(name, "extShadowQuality", STORM_MAX_STR)) {
-        lua_pushnumber(L, 0.0);
-    } else if (!SStrCmpI(name, "farclip", STORM_MAX_STR)) {
-        lua_pushnumber(L, 177.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00514E30
-static int32_t Script_GetCVarMax(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: GetCVarMax(\"cvar\")");
-        return 0;
-    }
-
-    CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
-
-    if (!var || (var->m_flags & 0x40)) {
-        luaL_error(L, "Couldn't find CVar named '%s'", lua_tolstring(L, 1, NULL));
-        return 0;
-    }
-
-    const char* name = var->m_key.m_str;
-
-    if (!SStrCmpI(name, "extShadowQuality", STORM_MAX_STR)) {
-        uint32_t mode = 0;
-        uint32_t maxMode = CShadowCache::GetMaxShadowMode();
-
-        do {
-            if (CShadowCache::ValidateShadowMode(static_cast<EShadowMode>(mode))) {
-                break;
-            }
-
-            mode++;
-        } while (mode <= maxMode);
-
-        lua_pushnumber(L, mode - 1);
-    } else if (!SStrCmpI(name, "farclip", STORM_MAX_STR)) {
-        lua_pushnumber(L, 1277.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
 }
 
 // OFFSET: 0x008CCD10/0x140637AC0
@@ -2235,20 +2046,6 @@ static int32_t Script_GetTotemInfo(lua_State* L) {
     return 5;
 }
 
-// OFFSET: #0x00511C80
-static int32_t Script_GetExistingLocales(lua_State* L) {
-    int32_t count = 0;
-
-    for (int32_t i = 0; i < 12; i++) {
-        if (g_hasIsoLocale[i]) {
-            lua_pushstring(L, g_localeNames[i]);
-            count++;
-        }
-    }
-
-    return count;
-}
-
 // OFFSET: 0x008CC760/0x14063DC70
 static int32_t Script_GetInstanceInfo(lua_State* L) {
     int32_t mapId = CGGameUI::m_iCurrentMapID;
@@ -2528,7 +2325,7 @@ static int32_t Script_GetItemInfo(lua_State* L) {
 
 // OFFSET: 0x008C88A0/0x1406389D0
 static int32_t Script_GetItemSpell(lua_State* L) {
-    SpellRec spell;
+    const SpellRec* spell = NULL;
     int32_t itemId = 0;
 
     if (lua_isnumber(L, 1)) {
@@ -2540,9 +2337,9 @@ static int32_t Script_GetItemSpell(lua_State* L) {
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
     int32_t spellId = item ? item->GetEnchantmentSpell(0) : CGItem_C::GetUseSpell(itemId);
 
-    if (g_spellDB.GetRecord(spellId, &spell)) {
-        lua_pushstring(L, spell.m_name);
-        lua_pushstring(L, spell.m_nameSubtext);
+    if ((spell = g_spellDB.GetRecord(spellId))) {
+        lua_pushstring(L, spell->m_name);
+        lua_pushstring(L, spell->m_nameSubtext);
     } else {
         lua_pushnil(L);
         lua_pushnil(L);
@@ -2578,7 +2375,7 @@ static int32_t Script_GetTotemTimeLeft(lua_State* L) {
 
 // OFFSET: 0x008D5F00/0x14064A1C0
 static int32_t Script_StopCinematic(lua_State* L) {
-    SI3::StopSound(&CGGameUI::m_cinematic.m_cameraMusic, 1, -1.0f, 1);
+    SE3::StopSound(CGGameUI::m_cinematic.m_cameraMusic, 0, __FILE__, __LINE__, "CGGameUI::StopCinematic");
     EnableFadingScreen(0.25f, &CGGameUI::StopCinematicInternal, NULL);
     return 0;
 }
@@ -2678,82 +2475,87 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
 
         case 2:
             lua_pushstring(L, "money");
-            lua_pushnumber(L, CGGameUI::m_cursorMoney);
+            lua_pushnumber(L, static_cast<double>(CGGameUI::m_cursorMoney));
             return 2;
 
         case 3: {
             int32_t spellId = CGGameUI::m_cursorSpell;
-            SpellRec spell;
-            g_spellDB.GetRecord(spellId, &spell);
+            const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-            if (SpellRec::WillSummonCritter(&spell)) {
-                int32_t type = CGSpellBook::GetCompanionType(&spell);
+            if (spell && SpellRec::WillSummonCritter(spell)) {
+                int32_t type = CGSpellBook::GetCompanionType(spell);
                 lua_pushstring(L, "companion");
                 lua_pushnumber(L, CGSpellBook::FindCompanionSlotByID(spellId, type) + 1);
 
                 if (type == 0) {
                     lua_pushstring(L, "CRITTER");
-                } else {
-                    if (type != 1) {
-                        lua_pushstring(L, "UNKNOWN");
-                        SErrDisplayAppFatalMessage("", "", 0);
-                    }
-
+                } else if (type == 1) {
                     lua_pushstring(L, "MOUNT");
-                }
-            } else {
-                int32_t petSpell = 0;
-                int32_t slot = GetSpellSlot(spellId, 0);
-
-                if (slot < 0) {
-                    slot = GetSpellSlot(spellId, 1);
-
-                    if (slot >= 0) {
-                        petSpell = 1;
-                    }
+                } else {
+                    lua_pushstring(L, "UNKNOWN");
                 }
 
-                lua_pushstring(L, "spell");
-                lua_pushnumber(L, slot + 1);
-                lua_pushstring(L, petSpell ? "pet" : "spell");
+                return 3;
             }
 
-            return 3;
+            int32_t petSpell = 0;
+            int32_t slot = GetSpellSlot(spellId, 0);
+
+            if (slot < 0) {
+                slot = GetSpellSlot(spellId, 1);
+
+                if (slot >= 0) {
+                    petSpell = 1;
+                }
+            }
+
+            lua_pushstring(L, "spell");
+            lua_pushnumber(L, slot + 1);
+            lua_pushstring(L, petSpell ? "pet" : "spell");
+            lua_pushnumber(L, spellId);
+            return 4;
         }
+
+        case 4:
+            lua_pushstring(L, "petaction");
+            return 1;
 
         case 5:
             lua_pushstring(L, "merchant");
             lua_pushnumber(L, CGGameUI::m_cursorVirtualSlot + 1);
             return 2;
 
-        case 7:
-        case 9:
-        case 11: {
+        case 6:
+        case 10: {
             int32_t itemId = CGGameUI::m_cursorVirtualID;
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+            ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
-            if (!stats) {
+            if (!rec) {
                 return 0;
             }
 
             lua_pushstring(L, "item");
             lua_pushnumber(L, itemId);
-            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, 0, 0, 0));
+            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, 0, 0, 0));
             return 3;
         }
 
-        case 8:
+        case 7:
             lua_pushstring(L, "macro");
             lua_pushnumber(L, CGUIMacros::GetMacroIndexByID(CGGameUI::m_cursorMacro) + 1);
             return 2;
 
-        case 12:
-            lua_pushstring(L, "guildbankmoney");
-            lua_pushnumber(L, CGGameUI::m_cursorMoney);
+        case 9:
+            lua_pushstring(L, "pet");
+            lua_pushnumber(L, static_cast<uint32_t>(CGGameUI::m_cursorPet + 1));
             return 2;
 
-        case 13: {
+        case 11:
+            lua_pushstring(L, "guildbankmoney");
+            lua_pushnumber(L, static_cast<double>(CGGameUI::m_cursorMoney));
+            return 2;
+
+        case 12: {
             const EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGGameUI::m_cursorEquipmentSet);
 
             if (!set) {
@@ -2763,6 +2565,39 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
             lua_pushstring(L, "equipmentset");
             lua_pushstring(L, set->m_name);
             return 2;
+        }
+
+        case 13: {
+            CurrencyTypesRec* currency = g_currencyTypesDB.GetRecord(CGGameUI::m_cursorCurrency);
+
+            if (!currency) {
+                return 0;
+            }
+
+            lua_pushstring(L, "currency");
+            lua_pushnumber(L, currency->m_id);
+            lua_pushstring(L, CGCurrencyTypes::GetCurrencyIcon(currency));
+            return 3;
+        }
+
+        case 14: {
+            SpellFlyoutRec* flyout = g_spellFlyoutDB.GetRecord(CGGameUI::m_cursorFlyout);
+
+            if (!flyout) {
+                return 0;
+            }
+
+            SpellIconRec* icon = g_spellIconDB.GetRecord(flyout->m_spellIconID);
+            const char* texture = NULL;
+
+            if (icon) {
+                texture = icon->m_textureFilename;
+            }
+
+            lua_pushstring(L, "flyout");
+            lua_pushnumber(L, flyout->m_id);
+            lua_pushstring(L, texture);
+            return 3;
         }
 
         default:
@@ -3173,7 +3008,7 @@ static int32_t Script_ReportBug(lua_State* L) {
         return 0;
     }
 
-    SendBugOpcode(0, lua_tolstring(L, 1, NULL));
+    ClientServices::Report(0, lua_tolstring(L, 1, NULL));
     return 0;
 }
 
@@ -3184,7 +3019,7 @@ static int32_t Script_ReportSuggestion(lua_State* L) {
         return 0;
     }
 
-    SendBugOpcode(1, lua_tolstring(L, 1, NULL));
+    ClientServices::Report(1, lua_tolstring(L, 1, NULL));
     return 0;
 }
 
@@ -3213,12 +3048,6 @@ static int32_t Script_RunScript(lua_State* L) {
 static int32_t Script_ReplaceTradeEnchant(lua_State* L) {
     Spell_C_TargetTradeItem();
     return 0;
-}
-
-// OFFSET: #0x00510B90
-static int32_t Script_IsLinuxClient(lua_State* L) {
-    lua_pushnil(L);
-    return 1;
 }
 
 // OFFSET: 0x0044BD50/0x140632130
@@ -3671,52 +3500,6 @@ static int32_t Script_DownloadSettings(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00514F60
-static int32_t Script_GetCVarAbsoluteMin(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: GetCVarAbsoluteMin(\"cvar\")");
-        return 0;
-    }
-
-    CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
-
-    if (!var || (var->m_flags & 0x40)) {
-        luaL_error(L, "Couldn't find CVar named '%s'", lua_tolstring(L, 1, NULL));
-        return 0;
-    }
-
-    if (SStrCmpI(var->m_key.m_str, "extShadowQuality", STORM_MAX_STR)) {
-        lua_pushnil(L);
-    } else {
-        lua_pushnumber(L, 0.0);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00515010
-static int32_t Script_GetCVarAbsoluteMax(lua_State* L) {
-    if (!lua_isstring(L, 1)) {
-        luaL_error(L, "Usage: GetCVarAbsoluteMax(\"cvar\")");
-        return 0;
-    }
-
-    CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
-
-    if (!var || (var->m_flags & 0x40)) {
-        luaL_error(L, "Couldn't find CVar named '%s'", lua_tolstring(L, 1, NULL));
-        return 0;
-    }
-
-    if (SStrCmpI(var->m_key.m_str, "extShadowQuality", STORM_MAX_STR)) {
-        lua_pushnil(L);
-    } else {
-        lua_pushnumber(L, CShadowCache::GetMaxShadowMode());
-    }
-
-    return 1;
-}
-
 // OFFSET: #0x00515900
 static void ResurrectNameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     WOWGUID offerer = CGPlayer_C::s_resurrectOfferer;
@@ -3939,7 +3722,7 @@ static int32_t Script_GetItemIcon(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    ItemRec* item = g_itemDB.GetRecord(itemId);
+    ItemRec* item = g_itemDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
     if (!item) {
         return 0;
@@ -3965,9 +3748,9 @@ static int32_t Script_IsHelpfulItem(lua_State* L) {
 
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
     int32_t spellId = item ? item->GetEnchantmentSpell(0) : CGItem_C::GetUseSpell(itemId);
-    SpellRec spell;
+    const SpellRec* spell = NULL;
 
-    if (g_spellDB.GetRecord(spellId, &spell) && SpellRec::IsHelpfulOrHarmful(&spell) == 1) {
+    if ((spell = g_spellDB.GetRecord(spellId)) && SpellRec::IsHelpfulOrHarmful(spell) == 1) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -3988,9 +3771,9 @@ static int32_t Script_IsHarmfulItem(lua_State* L) {
 
     CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
     int32_t spellId = item ? item->GetEnchantmentSpell(0) : CGItem_C::GetUseSpell(itemId);
-    SpellRec spell;
+    const SpellRec* spell = NULL;
 
-    if (g_spellDB.GetRecord(spellId, &spell) && SpellRec::IsHelpfulOrHarmful(&spell) == 2) {
+    if ((spell = g_spellDB.GetRecord(spellId)) && SpellRec::IsHelpfulOrHarmful(spell) == 2) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -4009,38 +3792,43 @@ static int32_t Script_IsConsumableItem(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
-    if (!stats) {
+    if (!rec) {
         lua_pushnil(L);
         return 1;
     }
 
-    if (stats->m_inventoryType != 24 && stats->m_inventoryType != 25) {
+    if (rec->m_inventoryType != 25) {
         uint32_t i;
 
         for (i = 0; i < 5; i++) {
-            if (!stats->m_spellId[i] || stats->m_spellTrigger[i]) {
+            if (!rec->m_spellID[i] || rec->m_spellTrigger[i]) {
                 continue;
             }
 
-            SpellRec spell;
+            const SpellRec* spell = g_spellDB.GetRecord(rec->m_spellID[i]);
 
-            if (!g_spellDB.GetRecord(stats->m_spellId[i], &spell)) {
+            if (!spell) {
                 continue;
             }
 
             int32_t reagents = 0;
 
-            for (uint32_t j = 0; j < 8; j++) {
-                if (spell.m_reagent[j] && spell.m_reagentCount[j] > 0) {
-                    reagents = 1;
-                    break;
+            if (spell->m_spellReagentsID) {
+                const SpellReagentsRec* reagent = g_spellReagentsDB.GetRecord(spell->m_spellReagentsID);
+
+                if (reagent) {
+                    for (uint32_t j = 0; j < 8; j++) {
+                        if (reagent->m_reagent[j] && reagent->m_reagentCount[j] > 0) {
+                            reagents = 1;
+                            break;
+                        }
+                    }
                 }
             }
 
-            if (stats->m_spellCharges[i] < 0 || reagents) {
+            if (rec->m_spellCharges[i] < 0 || reagents) {
                 break;
             }
         }
@@ -4076,55 +3864,49 @@ static int32_t Script_IsDressableItem(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
 
-    if (!stats) {
+    if (!rec) {
         lua_pushnil(L);
         return 1;
     }
 
-    if (stats->m_inventoryType) {
+    if (rec->m_inventoryType) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
 
     for (uint32_t i = 0; i < 5; i++) {
-        if (!stats->m_spellId[i]) {
+        if (!rec->m_spellID[i]) {
             continue;
         }
 
-        SpellRec spell;
+        const SpellEffectRec* effect = SpellGetEffect(rec->m_spellID[i], 0);
 
-        if (!g_spellDB.GetRecord(stats->m_spellId[i], &spell)) {
+        if (!effect || effect->m_effect != 36) {
             continue;
         }
 
-        SpellRec learned;
-
-        if (spell.m_effect[0] != 36) {
-            continue;
-        }
-
-        int32_t learnedId = spell.m_effectTriggerSpell[0];
+        int32_t learnedId = effect->m_effectTriggerSpell;
 
         if (!learnedId) {
             for (uint32_t j = 0; j < 5; j++) {
-                if (stats->m_spellTrigger[j] == 6) {
-                    learnedId = stats->m_spellId[j];
+                if (rec->m_spellTrigger[j] == 6) {
+                    learnedId = rec->m_spellID[j];
                     break;
                 }
             }
         }
 
-        if (!g_spellDB.GetRecord(learnedId, &learned) || learned.m_effect[0] != 24) {
+        const SpellEffectRec* learned = SpellGetEffect(learnedId, 0);
+
+        if (!learned || learned->m_effect != 24) {
             continue;
         }
 
-        WOWGUID created = WOWGUID();
-        ItemStats_C* createdStats = g_itemDBCache.GetRecord(learned.m_effectItemType[0], created, NULL, NULL, false);
+        ItemRecSparse* created = g_itemSparseDB.GetRecord(learned->m_effectItemType, WOWGUID(), NULL, NULL, false);
 
-        if (createdStats && createdStats->m_inventoryType) {
+        if (created && created->m_inventoryType) {
             lua_pushnumber(L, 1.0);
             return 1;
         }
@@ -4325,72 +4107,6 @@ static int32_t Script_ToggleSheath(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x0051A6E0
-static int32_t Script_InviteUnit(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (!player) {
-        return 0;
-    }
-
-    const char* name = lua_tolstring(L, 1, NULL);
-
-    if (!name) {
-        return 0;
-    }
-
-    if (SStrLen(name) > 48) {
-        luaL_error(L, "Name too long");
-        return 0;
-    }
-
-    uint32_t flags = 0;
-
-    if (StringToBOOL(L, 2, 0)) {
-        flags = 2;
-    }
-
-    if (StringToBOOL(L, 3, 0)) {
-        flags |= 4;
-    }
-
-    if (StringToBOOL(L, 4, 0)) {
-        flags |= 8;
-    }
-
-    player->GroupInvite(name, flags);
-    return 0;
-}
-
-// OFFSET: #0x0051A7A0
-static int32_t Script_UninviteUnit(lua_State* L) {
-    if (!ClntObjMgrGetActivePlayerObj()) {
-        return 0;
-    }
-
-    if (lua_tainted && CGGameUI::m_simpleTop && !CGGameUI::m_simpleTop->unk_1260) {
-        CGGameUI::ShowBlockedActionFeedback(NULL, 1);
-        return 0;
-    }
-
-    const char* token = lua_tolstring(L, 1, NULL);
-    const char* reason = lua_tolstring(L, 2, NULL);
-    char scrubbed[256];
-    scrubbed[0] = 0;
-
-    if (reason && *reason) {
-        ScrubString(reason, scrubbed, 64, sizeof(scrubbed), 1);
-    }
-
-    WOWGUID guid;
-
-    if (Script_GetGUIDFromToken(token, guid, true)) {
-        CGPlayer_C::Uninvite(guid, scrubbed);
-    }
-
-    return 0;
-}
-
 // OFFSET: 0x008CC720/0x14063DC30
 static int32_t Script_CanShowResetInstances(lua_State* L) {
     if (CGGameUI::CanResetInstance()) {
@@ -4425,8 +4141,8 @@ static int32_t Script_HasSoulstone(lua_State* L) {
         return 1;
     }
 
-    SpellRec spell;
-    lua_pushstring(L, g_spellDB.GetRecord(player->m_player->m_playerSelfResSpell, &spell) ? spell.m_name : "UNKNOWN");
+    const SpellRec* spell = NULL;
+    lua_pushstring(L, (spell = g_spellDB.GetRecord(player->m_player->m_playerSelfResSpell)) ? spell->m_name : "UNKNOWN");
     return 1;
 }
 
@@ -4753,14 +4469,13 @@ static int32_t Script_IsUsableItem(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player && itemId && player->m_bag.GetItemTypeCount(itemId, 0) && !Spell_C_NeedsCooldownEvent(itemId)) {
-        WOWGUID none = WOWGUID();
-        ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+        ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
         bool check = true;
 
-        if (stats) {
-            MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
+        if (rec) {
+            bool arena = false;
 
-            if (map && map->m_instanceType == 4 && !(stats->m_flags[0] & 0x200000)) {
+            if (CGGameUI::IsInArenaOrRatedBattleground(&arena) && arena && !((rec->m_flags[0] & 0x200000) && (rec->m_flags[1] & 0x8000))) {
                 CGItem_C* item = CGActionBar::FindUseEnchantItemPtr(itemId);
                 uint32_t cooldown;
                 uint32_t categoryCooldown;
@@ -4775,6 +4490,8 @@ static int32_t Script_IsUsableItem(lua_State* L) {
                     CGItem_C::GetCooldowns(itemId, cooldown, categoryCooldown, category);
                 }
 
+                Spell_C_AdjustCategoryCooldown(reinterpret_cast<int32_t*>(&categoryCooldown), category, 1);
+
                 if (charges < 0 || static_cast<int32_t>(cooldown) > 900000 || static_cast<int32_t>(categoryCooldown) > 900000) {
                     check = false;
                 }
@@ -4782,19 +4499,15 @@ static int32_t Script_IsUsableItem(lua_State* L) {
         }
 
         if (check) {
-            SpellRec spell;
+            const SpellRec* spell = g_spellDB.GetRecord(GetItemSpell(itemId));
 
-            if (g_spellDB.GetRecord(GetItemSpell(itemId), &spell)) {
-                WOWGUID target = WOWGUID();
-
-                if (Spell_C_IsUsableAction(player, &spell, target, stats, false)) {
-                    int32_t powerType;
-                    int32_t requirement;
-                    usable = Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
-                    noMana = !usable;
-                }
-            } else {
+            if (!spell) {
                 usable = true;
+            } else if (Spell_C_IsUsableAction(player, spell, WOWGUID(), rec, false)) {
+                int32_t powerType;
+                int32_t requirement;
+                usable = Spell_C_HaveSpellPower(player, spell, powerType, requirement);
+                noMana = !usable;
             }
         }
     }
@@ -4940,15 +4653,15 @@ static int32_t Script_ItemHasRange(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(GetItemSpell(itemId));
 
-    if (g_spellDB.GetRecord(GetItemSpell(itemId), &spell)) {
+    if (spell) {
         CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
         if (player) {
             float minRange;
             float maxRange;
-            Spell_C_GetMinMaxRange(player, &spell, &minRange, &maxRange, NULL);
+            Spell_C_GetMinMaxRange(player, spell, &minRange, &maxRange, NULL);
 
             if (fnotequal(minRange, 0.0f) || fnotequal(maxRange, 0.0f)) {
                 lua_pushnumber(L, 1.0);
@@ -4971,14 +4684,14 @@ static int32_t Script_IsItemInRange(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(GetItemSpell(itemId));
 
-    if (g_spellDB.GetRecord(GetItemSpell(itemId), &spell)) {
+    if (spell) {
         CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
         WOWGUID target;
         uint8_t inRange;
 
-        if (player && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true) && Spell_C_RangeCheckSelected(player, &spell, target, &inRange, false, NULL)) {
+        if (player && Script_GetGUIDFromToken(lua_tolstring(L, 2, NULL), target, true) && Spell_C_RangeCheckSelected(player, spell, target, &inRange, false, NULL)) {
             if (inRange) {
                 lua_pushnumber(L, 1.0);
             } else {
@@ -5441,7 +5154,7 @@ static int32_t Script_PickupItem(lua_State* L) {
         itemId = GetItemIDByName(lua_tolstring(L, 1, NULL));
     }
 
-    ItemRec* rec = g_itemDB.GetRecord(itemId);
+    ItemRec* rec = g_itemDB.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
     int32_t displayId = rec ? rec->m_displayInfoID : 0;
     CGGameUI::SetCursorVirtualItem(itemId, displayId, 0, 7, 0);
     return 0;
@@ -5695,7 +5408,7 @@ static int32_t Script_AssistUnit(lua_State* L) {
                 CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
                 if (player) {
-                    player->CombatModeEnter(target, 0, 0);
+                    player->CombatModeEnter(target, 0, 0, 0, 0);
                 }
             }
         }
@@ -5876,7 +5589,327 @@ static int32_t Script_ToggleTris(lua_State* L) {
     return 0;
 }
 
-// STATIC: #0x00AC80B0
+// OFFSET: 0x008C2760
+static int32_t Script_ConfirmOnUse(lua_State* L) {
+    CGItem_C::ConfirmBindOnUse();
+    return 0;
+}
+
+// OFFSET: 0x008C26A0
+static int32_t Script_GetNetIpTypes(lua_State* L) {
+    for (uint32_t i = 0; i < 2; i++) {
+        lua_pushnumber(L, static_cast<double>(ClientServices::Connection()->GetLocalAddress(i)));
+    }
+
+    return 2;
+}
+
+// OFFSET: 0x008C3900
+static int32_t Script_GetBackgroundLoadingStatus(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(static_cast<uint32_t>(SFile::IsBackgroundStreamingInProgress())));
+    return 1;
+}
+
+// OFFSET: 0x008C3940
+static int32_t Script_GetAvailableBandwidth(lua_State* L) {
+    lua_pushnumber(L, AsyncFileReadGetStreamingBandwidth());
+    return 1;
+}
+
+// OFFSET: 0x008C3970
+static int32_t Script_GetDownloadedPercentage(lua_State* L) {
+    lua_pushnumber(L, SFile::GetBGStreamingDownloadedPercentage());
+    return 1;
+}
+
+// OFFSET: 0x008C39A0
+static int32_t Script_GetMaxSpellStartRecoveryOffset(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(Spell_C_GetMaxSpellStartRecoveryOffset()));
+    return 1;
+}
+
+// OFFSET: 0x008C39D0
+static int32_t Script_ValidateTimer(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: Script_ValidateTimer(TimerType)");
+    }
+
+    if (!lua_tointeger(L, 1)) {
+        UserClientQueryBattlefieldState msg;
+        ClientServices::Send(&msg);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x008C3A30
+static int32_t Script_GetRestrictedAccountData(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(CGGameUI::s_restrictedLevel));
+    lua_pushnumber(L, static_cast<double>(CGGameUI::s_restrictedMoney));
+    lua_pushnumber(L, 100.0);
+    return 3;
+}
+
+// OFFSET: 0x008C6DF0
+static int32_t Script_GetCVarBitfield(lua_State* L) {
+    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: GetCVarBitfield(\"cvar\", index)");
+    }
+
+    int32_t index = lua_tointeger(L, 2);
+
+    if (index < 1) {
+        luaL_error(L, "Index out of range");
+    }
+
+    CVar* var = CVar::LookupRegistered(lua_tolstring(L, 1, NULL));
+
+    if (!var || (var->m_flags & 0x40)) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    CVarArrayWrapper wrapper(var, false);
+    lua_pushboolean(L, wrapper.GetValue(index - 1));
+    return 1;
+}
+
+// OFFSET: 0x008C7290
+static int32_t Script_IsOnTournamentRealm(lua_State* L) {
+    if (CGGameUI::s_tournamentRealm) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x008C73C0
+static int32_t Script_GetDefaultRaidDifficulty(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(CGGameUI::m_raidDifficulty + 1));
+    return 1;
+}
+
+// OFFSET: 0x008C7400
+static int32_t Script_GetCurrentRaidDifficulty(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(CGGameUI::GetCurrentRaidDifficulty() + 1));
+    return 1;
+}
+
+// OFFSET: 0x008C8D20
+static int32_t Script_GetAddOnOptionalDependencies(lua_State* L) {
+    const char* name;
+
+    if (lua_isnumber(L, 1)) {
+        name = GetAddOnByIndex(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1);
+
+        if (!name) {
+            luaL_error(L, "AddOn index must be in the range of 1 to %d", GetNumAddOns());
+        }
+    } else {
+        if (!lua_isstring(L, 1)) {
+            luaL_error(L, "Usage: GetAddOnOptionalDependencies(index or \"name\")");
+        }
+
+        name = lua_tolstring(L, 1, NULL);
+    }
+
+    TSGrowableArray<char*>* dependencies = GetAddonOptionalDeps(name);
+
+    if (!dependencies) {
+        return 0;
+    }
+
+    lua_checkstack(L, dependencies->m_count);
+
+    for (uint32_t i = 0; i < dependencies->m_count; i++) {
+        lua_pushstring(L, dependencies->m_data[i]);
+    }
+
+    return dependencies->m_count;
+}
+
+// OFFSET: 0x008C9170
+static int32_t Script_GetCemeteryPreference(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(CGGameUI::s_cemeteryPreference));
+    return 1;
+}
+
+// OFFSET: 0x008C91B0
+static int32_t Script_SetCemeteryPreference(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: Script_SetCemeteryPreference(cemeteryID)");
+    }
+
+    CGGameUI::SetCemeteryPreference(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+    return 0;
+}
+
+// OFFSET: 0x008C9220
+static int32_t Script_IsCemeterySelectionAvailable(lua_State* L) {
+    if (CGGameUI::s_numCemeteries) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x008C9260
+static int32_t Script_GetFileStreamingStatus(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(static_cast<uint32_t>(CGGameUI::s_streamingIcon)));
+    return 1;
+}
+
+// OFFSET: 0x008C92A0
+static int32_t Script_MouseOverrideCinematicDisable(lua_State* L) {
+    int32_t disable = StringToBOOL(L, 1, 0);
+    CGInputControl* input = CGInputControl::GetActive();
+
+    if (disable) {
+        input->m_mouseModeFlags |= 0x80;
+    } else {
+        input->m_mouseModeFlags &= ~0x80u;
+    }
+
+    input->UpdateMouseMode(0);
+    return 0;
+}
+
+// OFFSET: 0x008C92F0
+static int32_t Script_HasTravelPass(lua_State* L) {
+    lua_pushboolean(L, CGGameUI::m_hasTravelPass);
+    return 1;
+}
+
+// OFFSET: 0x008C9310
+static int32_t Script_CanSendSoRByText(lua_State* L) {
+    lua_pushboolean(L, CGGameUI::s_canSendSoR);
+    return 1;
+}
+
+// OFFSET: 0x008C9330
+static int32_t Script_GetNumSoRRemaining(lua_State* L) {
+    lua_pushinteger(L, CGGameUI::s_numSoRRemaining);
+    return 1;
+}
+
+// OFFSET: 0x008CC210
+static int32_t Script_SetCVarBitfield(lua_State* L) {
+    if (!lua_isstring(L, 1)) {
+        luaL_error(L, "Usage: SetCVarBitfield(\"cvar\", index, value, [, \"scriptCvar\")");
+    }
+
+    const char* name = lua_tolstring(L, 1, NULL);
+    CVar* var = CVar::LookupRegistered(name);
+
+    if (!var || (var->m_flags & 0x40)) {
+        luaL_error(L, "Couldn't find CVar named '%s'", name);
+    }
+
+    if ((var->m_flags & 0x4) || (var->m_flags & 0x100)) {
+        luaL_error(L, "\"%s\" is read-only", name);
+    }
+
+    if ((var->m_flags & 0x8) && !CSimpleTop::s_instance->m_allowProtectedActions) {
+        CGGameUI::ShowBlockedActionFeedback(NULL, 2);
+        return 0;
+    }
+
+    int32_t index = lua_tointeger(L, 2);
+
+    if (index < 1) {
+        luaL_error(L, "Index out of range");
+    }
+
+    int32_t value = lua_toboolean(L, 3);
+    CVarArrayWrapper wrapper(var, false);
+
+    if (!wrapper.SetValue(index - 1, value != 0)) {
+        luaL_error(L, "Index out of range");
+    }
+
+    if (lua_isstring(L, 4)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_CVAR_UPDATE, "%s%s", lua_tolstring(L, 4, NULL), lua_tolstring(L, 3, NULL));
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x008CC6C0
+static int32_t Script_GetSheathState(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    lua_pushnumber(L, static_cast<double>(player->m_unit->m_unitFieldBytes2[0] + 1));
+    return 1;
+}
+
+// OFFSET: 0x008CEDF0
+static int32_t Script_GetAutoDeclineGuildInvites(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player && (player->m_player->m_playerFlags & 0x8000000)) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x008CEE60
+static int32_t Script_SetAutoDeclineGuildInvites(lua_State* L) {
+    if (ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        int32_t decline = StringToBOOL(L, 1, 1);
+        CDataStore msg;
+        msg.Put(static_cast<uint32_t>(CMSG_AUTO_DECLINE_GUILD_INVITES));
+        msg.Put(static_cast<uint8_t>(decline != 0));
+        msg.Finalize();
+        ClientServices::Send2(&msg);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x008D3760
+static int32_t Script_PortGraveyard(lua_State* L) {
+    if (lua_tainted) {
+        CGGameUI::ShowBlockedActionFeedback(NULL, 0);
+        return 0;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player && (player->m_player->m_playerFlags & 0x10)) {
+        UserClientReturnToGraveyard msg;
+        ClientServices::Send(&msg);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x00842700
+static int32_t Script_GetDebugAnimationStats(lua_State* L) {
+    return 0;
+}
+
+// OFFSET: 0x00842700
+static int32_t Script_GetDebugSpellEffects(lua_State* L) {
+    return 0;
+}
+
+// OFFSET: 0x00842700
+static int32_t Script_ToggleAnimKitDisplay(lua_State* L) {
+    return 0;
+}
+
+// STATIC: 0x00D0B2B8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "FrameXML_Debug", &Script_FrameXML_Debug },
     { "GetBuildInfo", &Script_GetBuildInfo },
@@ -5905,31 +5938,24 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "TogglePerformanceValues", &Script_TogglePerformanceValues },
     { "ResetPerformanceValues", &Script_ResetPerformanceValues },
     { "GetDebugStats", &Script_GetDebugStats },
+    { "GetDebugAnimationStats", &Script_GetDebugAnimationStats },
+    { "GetDebugSpellEffects", &Script_GetDebugSpellEffects },
     { "IsDebugBuild", &Script_IsDebugBuild },
     { "RegisterCVar", &Script_RegisterCVar },
     { "GetCVarInfo", &Script_GetCVarInfo },
     { "SetCVar", &Script_SetCVar },
     { "GetCVar", &Script_GetCVar },
+    { "SetCVarBitfield", &Script_SetCVarBitfield },
+    { "GetCVarBitfield", &Script_GetCVarBitfield },
     { "GetCVarBool", &Script_GetCVarBool },
     { "GetCVarDefault", &Script_GetCVarDefault },
-    { "GetCVarMin", &Script_GetCVarMin },
-    { "GetCVarMax", &Script_GetCVarMax },
-    { "GetCVarAbsoluteMin", &Script_GetCVarAbsoluteMin },
-    { "GetCVarAbsoluteMax", &Script_GetCVarAbsoluteMax },
-    { "GetWaterDetail", &Script_GetWaterDetail },
-    { "SetWaterDetail", &Script_SetWaterDetail },
-    { "GetFarclip", &Script_GetFarclip },
-    { "SetFarclip", &Script_SetFarclip },
-    { "GetTexLodBias", &Script_GetTexLodBias },
-    { "SetTexLodBias", &Script_SetTexLodBias },
-    { "SetBaseMip", &Script_SetBaseMip },
-    { "GetBaseMip", &Script_GetBaseMip },
     { "ToggleTris", &Script_ToggleTris },
     { "TogglePortals", &Script_TogglePortals },
     { "ToggleCollision", &Script_ToggleCollision },
     { "ToggleCollisionDisplay", &Script_ToggleCollisionDisplay },
     { "TogglePlayerBounds", &Script_TogglePlayerBounds },
     { "Stuck", &Script_Stuck },
+    { "PortGraveyard", &Script_PortGraveyard },
     { "Logout", &Script_Logout },
     { "Quit", &Script_Quit },
     { "SetCursor", &Script_SetCursor },
@@ -5967,6 +5993,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ClearFocus", &Script_ClearFocus },
     { "AutoEquipCursorItem", &Script_AutoEquipCursorItem },
     { "ToggleSheath", &Script_ToggleSheath },
+    { "GetSheathState", &Script_GetSheathState },
     { "GetZoneText", &Script_GetZoneText },
     { "GetRealZoneText", &Script_GetRealZoneText },
     { "GetSubZoneText", &Script_GetSubZoneText },
@@ -5974,8 +6001,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "InitiateTrade", &Script_InitiateTrade },
     { "CanInspect", &Script_CanInspect },
     { "NotifyInspect", &Script_NotifyInspect },
-    { "InviteUnit", &Script_InviteUnit },
-    { "UninviteUnit", &Script_UninviteUnit },
     { "RequestTimePlayed", &Script_RequestTimePlayed },
     { "RepopMe", &Script_RepopMe },
     { "AcceptResurrect", &Script_AcceptResurrect },
@@ -5985,8 +6010,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ResurrectHasTimer", &Script_ResurrectHasTimer },
     { "BeginTrade", &Script_BeginTrade },
     { "CancelTrade", &Script_CancelTrade },
-    { "AcceptGroup", &Script_AcceptGroup },
-    { "DeclineGroup", &Script_DeclineGroup },
     { "AcceptGuild", &Script_AcceptGuild },
     { "DeclineGuild", &Script_DeclineGuild },
     { "AcceptArenaTeam", &Script_AcceptArenaTeam },
@@ -6008,7 +6031,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GuildSetMOTD", &Script_GuildSetMOTD },
     { "GuildLeave", &Script_GuildLeave },
     { "GuildDisband", &Script_GuildDisband },
-    { "GuildInfo", &Script_GuildInfo },
     { "ArenaTeamInviteByName", &Script_ArenaTeamInviteByName },
     { "ArenaTeamLeave", &Script_ArenaTeamLeave },
     { "ArenaTeamUninviteByName", &Script_ArenaTeamUninviteByName },
@@ -6016,7 +6038,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "ArenaTeamDisband", &Script_ArenaTeamDisband },
     { "GetScreenWidth", &Script_GetScreenWidth },
     { "GetScreenHeight", &Script_GetScreenHeight },
-    { "GetDamageBonusStat", &Script_GetDamageBonusStat },
     { "GetReleaseTimeRemaining", &Script_GetReleaseTimeRemaining },
     { "GetCorpseRecoveryDelay", &Script_GetCorpseRecoveryDelay },
     { "GetInstanceBootTimeRemaining", &Script_GetInstanceBootTimeRemaining },
@@ -6029,6 +6050,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CancelSummon", &Script_CancelSummon },
     { "GetCursorPosition", &Script_GetCursorPosition },
     { "GetNetStats", &Script_GetNetStats },
+    { "GetNetIpTypes", &Script_GetNetIpTypes },
     { "SitStandOrDescendStart", &Script_SitStandOrDescendStart },
     { "StopCinematic", &Script_StopCinematic },
     { "RunScript", &Script_RunScript },
@@ -6036,9 +6058,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "RandomRoll", &Script_RandomRoll },
     { "OpeningCinematic", &Script_OpeningCinematic },
     { "InCinematic", &Script_InCinematic },
-    { "IsWindowsClient", &Script_IsWindowsClient },
-    { "IsMacClient", &Script_IsMacClient },
-    { "IsLinuxClient", &Script_IsLinuxClient },
     { "AcceptXPLoss", &Script_AcceptXPLoss },
     { "CheckSpiritHealerDist", &Script_CheckSpiritHealerDist },
     { "CheckTalentMasterDist", &Script_CheckTalentMasterDist },
@@ -6063,14 +6082,12 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetPVPTimer", &Script_GetPVPTimer },
     { "IsPVPTimerRunning", &Script_IsPVPTimerRunning },
     { "ConfirmBindOnUse", &Script_ConfirmBindOnUse },
+    { "ConfirmOnUse", &Script_ConfirmOnUse },
     { "SetPortraitToTexture", &Script_SetPortraitToTexture },
     { "GetLocale", &Script_GetLocale },
     { "GetGMTicketCategories", &Script_GetGMTicketCategories },
     { "DropItemOnUnit", &Script_DropItemOnUnit },
     { "RestartGx", &Script_RestartGx },
-    { "RestoreVideoResolutionDefaults", &Script_RestoreVideoResolutionDefaults },
-    { "RestoreVideoEffectsDefaults", &Script_RestoreVideoEffectsDefaults },
-    { "RestoreVideoStereoDefaults", &Script_RestoreVideoStereoDefaults },
     { "GetBindLocation", &Script_GetBindLocation },
     { "ConfirmTalentWipe", &Script_ConfirmTalentWipe },
     { "ConfirmBinder", &Script_ConfirmBinder },
@@ -6117,7 +6134,10 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetFrameCPUUsage", &Script_GetFrameCPUUsage },
     { "GetEventCPUUsage", &Script_GetEventCPUUsage },
     { "ResetCPUUsage", &Script_ResetCPUUsage },
+    { "GetCurrentEventID", &Script_GetCurrentEventID },
+    { "GetEventTime", &Script_GetEventTime },
     { "GetAddOnDependencies", &Script_GetAddOnDependencies },
+    { "GetAddOnOptionalDependencies", &Script_GetAddOnOptionalDependencies },
     { "EnableAddOn", &Script_EnableAddOn },
     { "EnableAllAddOns", &Script_EnableAllAddOns },
     { "DisableAddOn", &Script_DisableAddOn },
@@ -6134,6 +6154,7 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "IsInInstance", &Script_IsInInstance },
     { "GetInstanceDifficulty", &Script_GetInstanceDifficulty },
     { "GetInstanceInfo", &Script_GetInstanceInfo },
+    { "IsOnTournamentRealm", &Script_IsOnTournamentRealm },
     { "GetDungeonDifficulty", &Script_GetDungeonDifficulty },
     { "SetDungeonDifficulty", &Script_SetDungeonDifficulty },
     { "GetRaidDifficulty", &Script_GetRaidDifficulty },
@@ -6149,7 +6170,6 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTitleName", &Script_GetTitleName },
     { "UseItemByName", &Script_UseItemByName },
     { "EquipItemByName", &Script_EquipItemByName },
-    { "GetExistingLocales", &Script_GetExistingLocales },
     { "InCombatLockdown", &Script_InCombatLockdown },
     { "StartAttack", &Script_StartAttack },
     { "StopAttack", &Script_StopAttack },
@@ -6185,12 +6205,31 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "EndRefund", &Script_EndRefund },
     { "EndBoundTradeable", &Script_EndBoundTradeable },
     { "CanMapChangeDifficulty", &Script_CanMapChangeDifficulty },
-    { "GetExpansionLevel", &Script_GetAccountExpansionLevel },
+    { "ToggleAnimKitDisplay", &Script_ToggleAnimKitDisplay },
+    { "GetDefaultRaidDifficulty", &Script_GetDefaultRaidDifficulty },
+    { "GetCurrentRaidDifficulty", &Script_GetCurrentRaidDifficulty },
     { "GetAllowLowLevelRaid", &Script_GetAllowLowLevelRaid },
     { "SetAllowLowLevelRaid", &Script_SetAllowLowLevelRaid },
+    { "GetAutoDeclineGuildInvites", &Script_GetAutoDeclineGuildInvites },
+    { "SetAutoDeclineGuildInvites", &Script_SetAutoDeclineGuildInvites },
+    { "GetCemeteryPreference", &Script_GetCemeteryPreference },
+    { "SetCemeteryPreference", &Script_SetCemeteryPreference },
+    { "IsCemeterySelectionAvailable", &Script_IsCemeterySelectionAvailable },
+    { "GetFileStreamingStatus", &Script_GetFileStreamingStatus },
+    { "GetBackgroundLoadingStatus", &Script_GetBackgroundLoadingStatus },
+    { "GetAvailableBandwidth", &Script_GetAvailableBandwidth },
+    { "GetDownloadedPercentage", &Script_GetDownloadedPercentage },
+    { "MouseOverrideCinematicDisable", &Script_MouseOverrideCinematicDisable },
+    { "GetMaxSpellStartRecoveryOffset", &Script_GetMaxSpellStartRecoveryOffset },
+    { "ValidateTimer", &Script_ValidateTimer },
+    { "GetRestrictedAccountData", &Script_GetRestrictedAccountData },
+    { "HasTravelPass", &Script_HasTravelPass },
+    { "SendSoRByText", &Script_SendSoRByText },
+    { "CanSendSoRByText", &Script_CanSendSoRByText },
+    { "GetNumSoRRemaining", &Script_GetNumSoRRemaining },
 };
 
-// OFFSET: #0x005120E0
+// OFFSET: 0x008C3AA0
 void LoadScriptFunctions() {
     RegisterSimpleFrameScriptMethods();
     CGTooltip::CreateScriptMetaTable();
@@ -6199,7 +6238,9 @@ void LoadScriptFunctions() {
     CGCharacterModelBase::CreateScriptMetaTable();
     CGDressUpModelFrame::CreateScriptMetaTable();
     CGTabardModelFrame::CreateScriptMetaTable();
+    CGBlobFrame::CreateScriptMetaTable();
     CGQuestPOIFrame::CreateScriptMetaTable();
+    CGArchaeologyDigSiteFrame::CreateScriptMetaTable();
 
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
@@ -6215,6 +6256,8 @@ void LoadScriptFunctions() {
     MinimapRegisterScriptFunctions();
     UnitCombatLogRegisterScriptFunctions();
     ActionBarRegisterScriptFunctions();
+    SpellActivationOverlayRegisterScriptFunctions();
+    FlyoutRegisterScriptFunctions();
     CGPartyInfo::RegisterScriptFunctions();
     ChatRegisterScriptFunctions();
     AutoCompleteRegisterScriptFunctions();
@@ -6243,6 +6286,7 @@ void LoadScriptFunctions() {
     PetitionInfoRegisterScriptFunctions();
     SkillInfoRegisterScriptFunctions();
     GuildInfoRegisterScriptFunctions();
+    LFGuildRegisterScriptFunctions();
     MailInfoRegisterScriptFunctions();
     BattlefieldInfoRegisterScriptFunctions();
     TalentInfoRegisterScriptFunctions();
@@ -6269,9 +6313,16 @@ void LoadScriptFunctions() {
     EquipmentManagerRegisterScriptFunctions();
     GMTicketInfoRegisterScriptFunctions();
     BattlenetUI_RegisterScriptFunctions();
+    ReforgeRegisterScriptFunctions();
+    ResearchRegisterScriptFunctions();
+    NamePlateRegisterScriptFunctions();
+    EncounterJournalRegisterScriptFunctions();
+    CompactUnitFrameProfilesRegisterScriptFunctions();
+    IncomingResurrectionRegisterScriptFunctions();
+    TransmogrifyRegisterScriptFunctions();
 }
 
-// OFFSET: #0x00512280
+// OFFSET: 0x008C3C80
 void UnloadScriptFunctions() {
     UnregisterSimpleFrameScriptMethods();
     CGTooltip::DestroyScriptMetaTable();
@@ -6280,7 +6331,9 @@ void UnloadScriptFunctions() {
     CGCharacterModelBase::DestroyScriptMetaTable();
     CGDressUpModelFrame::DestroyScriptMetaTable();
     CGTabardModelFrame::DestroyScriptMetaTable();
+    CGBlobFrame::DestroyScriptMetaTable();
     CGQuestPOIFrame::DestroyScriptMetaTable();
+    CGArchaeologyDigSiteFrame::DestroyScriptMetaTable();
 
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);
@@ -6296,6 +6349,8 @@ void UnloadScriptFunctions() {
     ScriptEventsUnregisterFunctions();
     UnitCombatLogUnregisterScriptFunctions();
     ActionBarUnregisterScriptFunctions();
+    SpellActivationOverlayUnregisterScriptFunctions();
+    FlyoutUnregisterScriptFunctions();
     CGPartyInfo::UnregisterScriptFunctions();
     ChatUnregisterScriptFunctions();
     AutoCompleteUnregisterScriptFunctions();
@@ -6350,4 +6405,11 @@ void UnloadScriptFunctions() {
     EquipmentManagerUnregisterScriptFunctions();
     GMTicketInfoUnregisterScriptFunctions();
     BattlenetUI_UnregisterScriptFunctions();
+    ReforgeUnregisterScriptFunctions();
+    ResearchUnregisterScriptFunctions();
+    NamePlateUnregisterScriptFunctions();
+    EncounterJournalUnregisterScriptFunctions();
+    CompactUnitFrameProfilesUnregisterScriptFunctions();
+    IncomingResurrectionUnregisterScriptFunctions();
+    TransmogrifyUnregisterScriptFunctions();
 }

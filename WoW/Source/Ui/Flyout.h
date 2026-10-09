@@ -3,6 +3,7 @@
 
 class CFlyout {
     public:
+    static void ShutdownGame();
     static void InitializeGame();
 };
 

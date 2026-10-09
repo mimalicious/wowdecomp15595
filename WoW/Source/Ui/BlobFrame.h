@@ -6,6 +6,8 @@ class CSimpleFrame;
 class CGBlobFrame {
     public:
     static CSimpleFrame* Create(CSimpleFrame* parent);
+    static void CreateScriptMetaTable();
+    static void DestroyScriptMetaTable();
 };
 
 #endif
