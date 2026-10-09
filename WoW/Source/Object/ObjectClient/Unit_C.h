@@ -664,7 +664,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SetCastingAnim(bool enable);
     int32_t GetCastTimeRemaining() const;
     void OnAnimTierChanged();
-    void UpdateEmoteStateAnimKit();
     void UpdateCombatReadyAnimKit(int32_t a2);
     bool IsBossMob() const;
     bool IsLinkAll() const;
@@ -711,7 +710,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t OnCollideFallReset(uint32_t time);
     int32_t OnCollideFallLandNotify(uint32_t time, uint32_t oldFlags, int32_t jumping);
     void SendSplineDone(uint32_t time, uint32_t splineId);
-    void RequestMirrorImageData();
+    bool IsMirrorImage() const;
+    void RequestMirrorImageDataFromServer();
     int32_t ChooseSpecialIdleAnim(uint32_t flags, uint32_t* anim) const;
     int32_t ChooseEmoteAnim(uint32_t flags, uint32_t* anim) const;
     uint32_t GetCurrentTorsoAnimId() const;
@@ -984,7 +984,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void OnDisplayModelLoaded(CM2Model* model);
     void StopDisplayTransition();
     void ExpediteDisplayTransition(int32_t a2);
-    void UpdateAnimReplacementSets();
     void UpdateDeathAnimKit();
     void ShutdownAnims();
     void SetMovementAnimKitID(uint16_t id);
@@ -1094,7 +1093,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t DisplayInfoNeedsUpdate(int32_t* texturesChanged);
     CreatureSoundDataRec* GetSoundDataForID(int32_t soundId) const;
     int32_t IsMountSelf(int32_t checkCasting);
-    void RecreateNamePlate();
     void ScanAuraSpellsOnDisplayUpdate();
     void OnCollideFallLand(uint32_t a1, int32_t a2);
     void VehiclePassengerOnUpdateTransport(WOWGUID transport, uint8_t seat, int32_t a3);
@@ -1148,9 +1146,10 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t HasAnim466();
     int32_t GetSpellVisualKitAnim(uint32_t* anim, uint32_t* kitFlags);
     uint32_t ResolveAnimForModel(uint32_t animId, CM2Model* model);
-    void ClearLockedTarget();
     static int32_t UnitReaction(int32_t factionTemplate, const CGUnit_C* unit);
     bool IsFriendly(const CGUnit_C* unit) const;
+    bool IsAlteredFormTransitionPreventingAction() const;
+    void CancelGrowthAura();
     bool IsHatedTowards(const CGUnit_C* unit) const;
     uint64_t GetComboPointTarget() const;
     bool IsVehiclePassengerSeated() const;
@@ -1190,7 +1189,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void UpdatePetReaction();
     void ClearThreatList();
     bool IsDuelingWith(CGUnit_C* unit);
-    void PlayEmoteAnimation(uint32_t emote);
+    void PlayEmoteAnimation(uint32_t emote, int32_t force, int32_t ignoreChannel);
     void OnMovementInitiated(bool clearTracking, bool keepLoot);
     void SendMovementHeartbeat();
     static void SetActiveMover(uint64_t guid);
@@ -1208,7 +1207,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ResetUIChannelSpell();
     void DelayUICastingSpell(int32_t delay);
     void OnKeyBoneAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequenceId);
-    int32_t OnAttackIconPressed(WOWGUID target, int32_t a3);
+    int32_t OnAttackIconPressed(WOWGUID target, int32_t a3, int32_t a4 = 0, int32_t a5 = 0);
     int32_t VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int32_t checkRange, bool autoTarget, bool showErrors);
     void AddAuraSlot(uint8_t slot);
     void SortAuras();

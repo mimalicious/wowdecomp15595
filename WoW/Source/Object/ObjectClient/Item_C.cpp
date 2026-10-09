@@ -215,7 +215,8 @@ static int32_t OnUpdateDurability(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     return 1;
 }
 
-// OFFSET: %0x005AE190
+// PROVEN: 1cb9ebc6 IDENTICAL/NONE
+// OFFSET: 0x005AD3C0
 static int32_t OnUpdateEnchantments(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
