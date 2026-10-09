@@ -72,7 +72,8 @@ class CSimpleFontString : public CSimpleRegion, public CSimpleFontable {
     /* 0118 */ uint32_t m_styleFlags;
     /* 011C */ uint32_t m_settableStyleFlags;
     /* 0120 */ uint32_t m_maxLines : 24;
-    /* 0120 */ uint32_t m_maxLinesUnused : 8;
+    /* 0120 */ uint32_t m_useFontObject : 1;
+    /* 0120 */ uint32_t m_maxLinesUnused : 7;
     /* 0124 */ TSExplicitList<CSimpleEmbeddedTexture, offsetof(CSimpleEmbeddedTexture, m_link)> m_textures;
 
     virtual ~CSimpleFontString();

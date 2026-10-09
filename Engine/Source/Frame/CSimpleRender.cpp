@@ -1031,7 +1031,8 @@ CSimpleFontString::CSimpleFontString(CSimpleFrame* frame, uint32_t drawLayer, bo
     this->m_alphaGradientStart = -1;
     this->m_styleFlags = 0x212;
     this->m_settableStyleFlags = 0x2107F;
-    this->m_maxLines = (this->m_maxLines & 0xFE000000) | 0x1000000;
+    this->m_maxLines = 0;
+    this->m_useFontObject = 1;
     s_fontStringCount++;
 }
 
@@ -1896,7 +1897,7 @@ void CSimpleFontString::LoadXML(linkObject* node, CStatus* status) {
         CSimpleFont* font = CSimpleFont::GetFont(node->m_inherits.m_string, 0);
 
         if (font) {
-            if (this->m_maxLines & 0x1000000) {
+            if (this->m_useFontObject) {
                 this->SetFontObject(font);
             }
         } else {
@@ -1956,10 +1957,10 @@ void CSimpleFontString::LoadXML(linkObject* node, CStatus* status) {
     }
 
     if (fontString->m_stringFlags & 0x2) {
-        this->m_maxLines = (this->m_maxLines & ~0xFFFFFFu) | (fontString->m_maxLines & 0xFFFFFF);
+        this->m_maxLines = fontString->m_maxLines & 0xFFFFFF;
     }
 
-    if (!(this->m_maxLines & 0x1000000)) {
+    if (!this->m_useFontObject) {
         return;
     }
 
