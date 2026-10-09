@@ -119,13 +119,23 @@ const EGxTexFilter CWorldParam::s_textureFilteringModes[6] = { GxTex_LinearMipNe
 // STATIC: 0x00D02964
 const uint32_t CWorldParam::s_textureFilteringAnisotropy[6] = { 1, 1, 2, 4, 8, 16 };
 
+// OFFSET: 0x0076B5A0/0x140453660
+const CWorldParam::DefaultSetting* CWorldParam::GetDefaultSettings(uint32_t level) {
+    return CWorldParam::s_defaults[level];
+}
+
+// OFFSET: 0x0076B5B0/0x140453670
+const CWorldParam::DefaultSetting* CWorldParam::GetCurrentDefaultSettings() {
+    return CWorldParam::s_defaults[ConsoleDeviceGetDefaultSettings()->m_graphicsQuality];
+}
+
 // OFFSET: 0x0076B5C0/0x140453690
 void CWorldParam::SetDefaults(OPTION_PAGE page) {
     if (page != OPTION_PAGE_0) {
         return;
     }
 
-    const DefaultSetting* setting = CWorldParam::s_defaults[*reinterpret_cast<uint32_t*>(ConsoleDeviceGetDefaultSettings())];
+    const DefaultSetting* setting = CWorldParam::s_defaults[ConsoleDeviceGetDefaultSettings()->m_graphicsQuality];
 
     for (; setting->m_name; setting++) {
         CVar::Lookup(setting->m_name)->Set(setting->m_value, true, false, false, true);

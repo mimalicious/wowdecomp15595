@@ -83,6 +83,8 @@ class CWorldParam {
     static bool TerrainMipLevelCallback(CVar* var, const char* oldValue, const char* value, void* arg);
     static bool TextureFilteringCallback(CVar* var, const char* oldValue, const char* value, void* arg);
     static uint32_t ValidateTextureFilteringMode(uint32_t mode);
+    static const DefaultSetting* GetDefaultSettings(uint32_t level);
+    static const DefaultSetting* GetCurrentDefaultSettings();
     static bool WaterDetailCallback(CVar* var, const char* oldValue, const char* value, void* arg);
     static bool WorldPoolUsageCallback(CVar* var, const char* oldValue, const char* value, void* arg);
 };

@@ -61,7 +61,7 @@ static int32_t Script_GetBuildInfo(lua_State* L) {
     lua_pushstring(L, FrameScript_GetText("VERSION", -1, GENDER_NOT_APPLICABLE));
 
     const char* release = FrameScript_GetText("RELEASE_BUILD", -1, GENDER_NOT_APPLICABLE);
-    const char* platform = FrameScript_GetText("X86_BUILD", -1, GENDER_NOT_APPLICABLE);
+    const char* platform = FrameScript_GetText(sizeof(void*) == 8 ? "X64_BUILD" : "X86_BUILD", -1, GENDER_NOT_APPLICABLE);
     size_t size = strlen(platform) + strlen(release) + 2;
     char* build = static_cast<char*>(_alloca(size));
     SStrPrintf(build, size, "%s%s%s", release, *platform ? " " : "", platform);
