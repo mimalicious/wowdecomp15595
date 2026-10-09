@@ -22696,7 +22696,7 @@ void CGUnit_C::HandleTracking(float drunkness, float turnOffset) {
     float dz = position.z - target.z;
     float distSq2 = dx * dx + dy * dy;
     float distSq3 = dz * dz + distSq2;
-    float distSq = ((this->m_movement->m_flags & 0x2200000) || (this->m_movementData.m_flags & 0x1000000)) ? distSq3 : distSq2;
+    float distSq = ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (this->m_movementData.m_flags & MOVEMENTFLAG_CAN_FLY)) ? distSq3 : distSq2;
 
     if (s_clickToMoveActions[CGUnit_C::s_trackingType].m_enabled && 0.0f != s_clickToMoveActions[CGUnit_C::s_trackingType].m_stopDistanceSq && !(distSq < s_clickToMoveActions[CGUnit_C::s_trackingType].m_stopDistanceSq)) {
         this->ClearTrackingTarget(false, true);
@@ -22768,7 +22768,7 @@ void CGUnit_C::HandleTracking(float drunkness, float turnOffset) {
     bool pitching = false;
     uint32_t moveFlags = this->m_movement->m_flags;
 
-    if ((moveFlags & 0x2200000) && useTarget && s_trackingStuckDistanceSq < distSq3) {
+    if ((moveFlags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && useTarget && s_trackingStuckDistanceSq < distSq3) {
         float pitch;
 
         if (moving && (moveFlags & 0x3) && (CGUnit_C::s_trackingFlags & 0x4)) {
@@ -22833,7 +22833,7 @@ void CGUnit_C::HandleTracking(float drunkness, float turnOffset) {
     // STATIC: #0x00CA12A8
     static float s_flightAngleCos = cos(0.7853981852531433);
 
-    if (!pitching && useTarget && !(this->m_movement->m_flags & 0x2200000) && (this->m_movementData.m_flags & 0x1000000)) {
+    if (!pitching && useTarget && !(this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && (this->m_movementData.m_flags & MOVEMENTFLAG_CAN_FLY)) {
         C3Vector dir;
         dir.x = target.x - position.x;
         dir.y = target.y - position.y;
