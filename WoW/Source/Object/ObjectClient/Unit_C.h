@@ -619,7 +619,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t SendFloodsafePitchEvent(uint32_t time);
     void PostAnimate(CGWorldFrame* worldFrame);
     AuraData* GetAura(uint32_t index);
-    uint8_t GetAuraFlags(uint32_t index);
+    uint16_t GetAuraFlags(uint32_t index);
     uint8_t GetAuraLevel(uint32_t index);
     uint8_t GetAuraStackCount(uint32_t index);
     int32_t IsControllable() const;
@@ -746,7 +746,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t GetUnitSoundKitIndex(uint32_t soundType) const;
     void VehiclePassengerOnUninit();
     int32_t HasVehicleTransport() const;
-    int32_t IsSeatedInVehicle() const;
     uint32_t IsStrafingDisabled() const;
     uint32_t IsVehicleCurrentlyUnstoppable() const;
     const CGUnitVirtualItem* GetParryingItem(bool offhand) const;

@@ -118,7 +118,7 @@ bool Script_GetGUIDFromToken(const char* token, WOWGUID& guid, bool defaultToTar
         guid = player ? player->m_obj->m_guid : WOWGUID();
     } else if (!SStrCmpI(token, "vehicle", 7)) {
         token += 7;
-        guid = player && player->IsSeatedInVehicle() ? WOWGUID::Make(player->GetTransportGUID()) : WOWGUID();
+        guid = player && player->IsVehiclePassengerSeated() ? WOWGUID::Make(player->GetTransportGUID()) : WOWGUID();
     } else if (!SStrCmpI(token, "pet", 3)) {
         token += 3;
 
@@ -587,7 +587,7 @@ const char* Script_GetTokenFromGUID(const WOWGUID* guid) {
         return "player";
     }
 
-    if (player->IsSeatedInVehicle() && guid->m_guid == player->GetTransportGUID()) {
+    if (player->IsVehiclePassengerSeated() && guid->m_guid == player->GetTransportGUID()) {
         return "vehicle";
     }
 
@@ -673,7 +673,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
         return "player";
     }
 
-    if (player->IsSeatedInVehicle() && guid->m_guid == player->GetTransportGUID()) {
+    if (player->IsVehiclePassengerSeated() && guid->m_guid == player->GetTransportGUID()) {
         return "vehicle";
     }
 
@@ -754,7 +754,7 @@ const char* Script_GetAuraTokenFromGUID(const WOWGUID* guid) {
         return "player";
     }
 
-    if (player->IsSeatedInVehicle()) {
+    if (player->IsVehiclePassengerSeated()) {
         if (owner && owner.m_guid == player->GetTransportGUID()) {
             return "vehicle";
         }
@@ -859,7 +859,7 @@ char** Script_GetTokenIDsFromGUID(const WOWGUID& guid, int32_t* count) {
         SStrCopy(s_tokenIDs[(*count)++], "player", sizeof(s_tokenBuffers[0]));
     }
 
-    if (player->IsSeatedInVehicle() && guid.m_guid == player->GetTransportGUID()) {
+    if (player->IsVehiclePassengerSeated() && guid.m_guid == player->GetTransportGUID()) {
         SStrCopy(s_tokenIDs[(*count)++], "vehicle", sizeof(s_tokenBuffers[0]));
     }
 

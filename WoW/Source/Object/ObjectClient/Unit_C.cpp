@@ -6890,7 +6890,8 @@ int32_t CGUnit_C::IsSplitbodyAnim(uint32_t anim) {
     return (rec->m_flags >> 16) & 1;
 }
 
-// OFFSET: #0x004F6250
+// PROVEN: b3e6a157 IDENTICAL/NONE
+// OFFSET: 0x0043BA10
 bool CGUnit_C::IsVehiclePassengerSeated() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state == 3;
 }
@@ -9215,7 +9216,8 @@ float CGUnit_C::GetDistanceToPos(const C3Vector& pos) const {
     return dx * dx + dz * dz + dy * dy;
 }
 
-// OFFSET: #0x004F6210
+// PROVEN: 7fbdbf3c IDENTICAL/NONE
+// OFFSET: 0x0043B9F0
 VehicleRec* CGUnit_C::GetVehicleRec() const {
     if (this->m_vehicle) {
         return this->m_vehicle->m_vehicleRec;
@@ -9234,7 +9236,8 @@ uint32_t CGUnit_C::GetAuraCount() const {
     return this->m_auras.m_count;
 }
 
-// OFFSET: #0x004F8870
+// PROVEN: b152876c IDENTICAL/NONE
+// OFFSET: 0x004595D0
 int32_t CGUnit_C::GetAuraSpellId(uint32_t index) {
     return this->m_auras[index].m_spellId;
 }
@@ -9254,8 +9257,8 @@ AuraData* CGUnit_C::GetAura(uint32_t index) {
     return &this->m_auras[index];
 }
 
-// OFFSET: #0x00565510
-uint8_t CGUnit_C::GetAuraFlags(uint32_t index) {
+// OFFSET: 0x0046A670
+uint16_t CGUnit_C::GetAuraFlags(uint32_t index) {
     return this->m_auras[index].m_flags;
 }
 
@@ -9265,7 +9268,8 @@ int32_t CGUnit_C::IsControllable() const {
     return !(flags & 0x40000) && !(flags & 0x800000) && !(flags & 0x400000);
 }
 
-// OFFSET: #0x005D3340
+// PROVEN: 6b3ae695 IDENTICAL/NONE
+// OFFSET: 0x00447B50
 VehicleSeatRec* CGUnit_C::GetVehicleSeatRec(uint8_t seat) const {
     if (this->m_vehicle) {
         return this->m_vehicle->GetVehicleSeatRec(seat);
@@ -9330,7 +9334,8 @@ void CGUnit_C::PreStartUpdatingMissileTrajectory(int32_t spellId, uint32_t castI
     this->m_missileTrajectoryCastId = castId;
 }
 
-// OFFSET: #0x006FBE50
+// PROVEN: 0e6c0af5 IDENTICAL/NONE
+// OFFSET: 0x0057CC40
 void CGUnit_C::StartUpdatingMissileTrajectory(int32_t spellId, uint32_t start, uint32_t end) {
     if (spellId == this->m_missileTrajectorySpell) {
         this->m_missileTrajectoryStart = start;
@@ -9354,7 +9359,8 @@ int32_t CGUnit_C::IsUpdatingMissileTrajectory() const {
     return this->m_missileTrajectoryCastId && this->m_missileTrajectoryStart;
 }
 
-// OFFSET: #0x006FBED0
+// PROVEN: f6851cb1 IDENTICAL/NONE
+// OFFSET: 0x0057CCD0
 int32_t CGUnit_C::IsMissileTrajectoryUpdateWaitingForMissileRelease() const {
     return this->m_missileTrajectoryCastId && this->m_missileTrajectoryStart && this->m_missileTrajectoryReleased;
 }
@@ -10991,7 +10997,8 @@ uint64_t CGUnit_C::GetAuraCaster(uint32_t index) {
     return creator.m_guid;
 }
 
-// OFFSET: #0x0056C220
+// PROVEN: 15602227 IDENTICAL/NONE
+// OFFSET: 0x0044E450
 bool CGUnit_C::IsInVehicle() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state;
 }
@@ -12057,7 +12064,8 @@ void CGUnit_C::UpdateSelectionRadius() {
     }
 }
 
-// OFFSET: #0x006FC290
+// PROVEN: cee95fe9 IDENTICAL/NONE
+// OFFSET: 0x0057D2F0
 void CGUnit_C::OnRemoteMissileTrajectoryCollision(MissileCollisionData* data) {
     for (CMissile* missile = this->m_missiles; missile; missile = missile->m_next) {
         if (missile->m_casterGuid == data->m_casterGuid && missile->m_castID == data->m_castID) {
@@ -12788,12 +12796,14 @@ int32_t CGUnit_C::UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t
     return result;
 }
 
-// OFFSET: #0x0061F890
+// PROVEN: 5d742678 IDENTICAL/NONE
+// OFFSET: 0x0046A5F0
 uint8_t CGUnit_C::GetAuraLevel(uint32_t index) {
     return this->m_auras[index].m_level;
 }
 
-// OFFSET: #0x0061F8D0
+// PROVEN: c67e8991 IDENTICAL/NONE
+// OFFSET: 0x0046A630
 uint8_t CGUnit_C::GetAuraStackCount(uint32_t index) {
     return this->m_auras[index].m_stackCount;
 }
@@ -17186,11 +17196,6 @@ void CGUnit_C::UpdateModelScale(const CreatureModelDataRec* modelRec) {
     }
 }
 
-// OFFSET: #0x004F6250
-int32_t CGUnit_C::IsSeatedInVehicle() const {
-    return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state == 3;
-}
-
 // PROVEN: 4444db38 IDENTICAL/NONE
 // OFFSET: 0x005AD7F0
 int32_t Packet_SMSG_FORCE_DISPLAY_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
@@ -17430,7 +17435,7 @@ bool CGUnit_C::IsSpellKnown(int32_t spellId) {
     return false;
 }
 
-// OFFSET: #0x0071A4B0
+// OFFSET: 0x005B23A0
 const char* CGUnit_C::GetDisplayRaceName(const CGUnit_C* unit, const NameCache* name, int32_t* displaySex) {
     int32_t sex = 2;
     ChrRacesRec* rec;
@@ -17644,7 +17649,7 @@ void CGUnit_C::PlayEmotes(const QUESTGIVEREMOTEQUEUE& emotes) {
     this->SetEmoteQueue(emotes.m_nodes, emotes.m_count);
 }
 
-// OFFSET: #0x0072AA70
+// OFFSET: 0x005C05D0
 const char* CGUnit_C::GetDisplayRaceName(const CGUnit_C* unit, const NameCache* name) {
     if (unit) {
         if (!(unit->m_obj->m_type & TYPEMASK_PLAYER)) {
@@ -17701,7 +17706,7 @@ void WriteMovementPacket(CGUnit_C* unit, CDataStore* msg) {
     status.WriteEmbedded(msg);
 }
 
-// OFFSET: #0x0071C8F0
+// OFFSET: 0x0055E310
 uint8_t CGUnit_C::GetActivePlayerFieldBytes0() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -20394,7 +20399,7 @@ void CGUnit_C::NamePlateClearAll() {
     }
 }
 
-// OFFSET: #0x007271D0
+// OFFSET: 0x009E8EE0
 void CGUnit_C::SetNamePlateFocus(const C2Vector& position) {
     if (CGInputControl::GetActive()->m_flags & 0x6000003) {
         return;
