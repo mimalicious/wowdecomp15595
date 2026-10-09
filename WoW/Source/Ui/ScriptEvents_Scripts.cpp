@@ -4183,7 +4183,7 @@ static int32_t Script_UnitSwitchToVehicleSeat(lua_State* L) {
     CGUnit_C* root = vehicle->FindRootVehicle(NULL);
 
     if (root) {
-        unit->SwitchToVehicleSeat(root, static_cast<int32_t>(seat - 1.0));
+        unit->VehiclePassengerRequestSwitchToVirtualSeat(root, static_cast<int32_t>(seat - 1.0));
     }
 
     return 0;

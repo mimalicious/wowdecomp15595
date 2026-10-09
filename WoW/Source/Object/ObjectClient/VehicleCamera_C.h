@@ -75,7 +75,7 @@ class CVehicleCamera_C {
     float GetTransitionProgress(uint32_t time) const;
     int32_t AttachToHierarchy();
     void DetachFromHierarchy();
-    void BeginTransition(uint32_t time);
+    void BeginTransition(CGUnit_C* vehicle, WOWGUID transport, uint32_t time);
     void ComputeSafeCurWorldPos();
     void Update(uint32_t time);
     C3Vector ComputeEndWorldPosition(CGUnit_C* target);

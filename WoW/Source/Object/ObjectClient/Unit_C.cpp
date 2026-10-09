@@ -270,15 +270,6 @@ C3Vector CGUnit_C::s_trackingPosition;
 // STATIC: #0x00CA11EC
 float CGUnit_C::s_trackingDirection;
 
-// STATIC: #0x00CA1370
-VehicleSeatRec* CGUnit_C::s_vehiclePassengerCameraSeat;
-
-// STATIC: #0x00CA1374
-VehicleRec* CGUnit_C::s_vehiclePassengerCameraVehicle;
-
-// STATIC: #0x00CA1378
-uint32_t CGUnit_C::s_vehiclePassengerCameraActive;
-
 // STATIC: #0x00CA12CC
 int32_t CGUnit_C::s_dismountSoundKitId;
 
@@ -9926,41 +9917,6 @@ uint64_t CGUnit_C::GetAuraCaster(uint32_t index) {
     return creator.m_guid;
 }
 
-// PROVEN: c208e849 IDENTICAL/NONE
-// OFFSET: 0x005EB6A0/0x14026CBE0
-void CGUnit_C::VehiclePassengerInitWorldCameraState() {
-    CGUnit_C::s_vehiclePassengerCameraActive = 0;
-    CGUnit_C::s_vehiclePassengerCameraVehicle = NULL;
-    CGUnit_C::s_vehiclePassengerCameraSeat = NULL;
-}
-
-// OFFSET: #0x0074B8A0
-void CGUnit_C::VehiclePassengerOnUninit() {
-    this->m_vehiclePassenger = NULL;
-}
-
-// OFFSET: 0x005EB730/0x14026CC70
-int32_t CGUnit_C::HasVehicleTransport() const {
-    uint32_t high = static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid >> 32);
-    return (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid)));
-}
-
-// OFFSET: #0x0074B9A0
-uint32_t CGUnit_C::IsStrafingDisabled() const {
-    return this->m_movementData.m_flags2 & MOVEMENTFLAG2_NO_STRAFE;
-}
-
-// OFFSET: 0x005EBAE0/0x14026D040
-uint32_t CGUnit_C::IsVehicleCurrentlyUnstoppable() const {
-    VehicleRec* vehicle = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
-
-    if (!vehicle) {
-        return 0;
-    }
-
-    return vehicle->m_flags & ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) ? 0x100 : 0x80);
-}
-
 // OFFSET: #0x0056C220
 bool CGUnit_C::IsInVehicle() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state;
@@ -10408,16 +10364,6 @@ void CGUnit_C::SetMaxAlpha(float alpha) {
             }
         }
     }
-}
-
-// OFFSET: 0x005EB660/0x14026CBB0
-int32_t CGUnit_C::VehiclePassengerIsTransitionAllowed(const VehicleSeatRec* seat, int32_t checkSeat) const {
-    return (this->m_clientFlags & 0x20000000) || (checkSeat && seat && (seat->m_flagsB & 0x1000000));
-}
-
-// OFFSET: 0x005EBAB0/0x14026D020
-int32_t CGUnit_C::ShouldUseVehicleSeatExitAnimation(const VehicleSeatRec* seat) const {
-    return seat->m_flags & ((this->m_movementData.m_flags2 & 0x20) ? 0x8 : 0x8000);
 }
 
 // OFFSET: 0x005AD040/0x14021F510
@@ -11130,15 +11076,6 @@ void CGUnit_C::UpdateSelectionRadius() {
     }
 }
 
-// OFFSET: 0x005EB850/0x14026CD90
-int32_t CGUnit_C::AddPassenger(CPassenger* passenger, int32_t a2) {
-    if (!this->m_vehicle) {
-        return 0;
-    }
-
-    return this->m_vehicle->AddPassenger(passenger);
-}
-
 // OFFSET: #0x006FC290
 void CGUnit_C::OnRemoteMissileTrajectoryCollision(MissileCollisionData* data) {
     for (CMissile* missile = this->m_missiles; missile; missile = missile->m_next) {
@@ -11762,16 +11699,6 @@ int32_t CGUnit_C::IsMountSelf(int32_t checkCasting) {
     return mountDisplayId == static_cast<int32_t>(this->GetLocalDisplayID());
 }
 
-// OFFSET: #0x0074B9B0
-void CGUnit_C::SetVehicleExitVoluntary(int32_t enable) {
-    this->m_movementData.SetVehicleExitVoluntary(enable);
-}
-
-// OFFSET: #0x0074BB20
-void CGUnit_C::OnDismissControlledVehicleLocal(uint32_t eventTime) {
-    this->m_movementData.OnDismissControlledVehicleLocal(eventTime);
-}
-
 // OFFSET: 0x005B2010
 void CGUnit_C::SetEmoteQueue(const QUESTGIVEREMOTENODE* nodes, uint32_t count) {
     this->m_emoteQueue[0].m_emote = -1;
@@ -11848,11 +11775,6 @@ int32_t CGUnit_C::ChooseLootAnim(uint32_t flags, uint32_t* animId) {
 
     *animId = 50;
     return 1;
-}
-
-// OFFSET: #0x0074BB30
-void CGUnit_C::OnChangeSeatsOnControlledVehicleLocal(uint32_t eventTime, WOWGUID transport, uint8_t seat) {
-    this->m_movementData.OnChangeSeatsOnControlledVehicleLocal(eventTime, transport, seat);
 }
 
 // OFFSET: 0x005B4A40
@@ -12356,20 +12278,6 @@ void CGUnit_C::OnCollideFalling(uint32_t moveFlags) {
     }
 }
 
-// OFFSET: #0x0074C750
-void CGUnit_C::CreateVehicleData(const CClientObjCreate* create, int32_t vehicleId) {
-    if (this->m_vehicle) {
-        this->m_vehicle->ReceiveVehicleRecIDFromServer(vehicleId);
-        return;
-    }
-
-    this->m_vehicle = CVehicle_C::Create(create, this, vehicleId);
-
-    if ((this->m_modelFlags & 0x40000) && this->IsActivePlayer()) {
-        this->SignalPlayerGainsVehicleDataEvent();
-    }
-}
-
 // OFFSET: 0x005CC430/0x140244970
 void CGUnit_C::RefreshDataPointers() {
     uint32_t displayId = this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid ? this->GetCurrentClientNativeDisplayID() : this->m_unit->m_unitFieldDisplayid;
@@ -12639,27 +12547,6 @@ void CGUnit_C::OnMoveUpdate(uint32_t time, int32_t a3, int32_t a4) {
     }
 }
 
-// OFFSET: 0x005EB6E0
-void CGUnit_C::VehiclePassengerInit() {
-    if (this->m_vehiclePassenger) {
-        this->m_vehiclePassenger->Free();
-        this->m_vehiclePassenger = NULL;
-    }
-
-    CVehiclePassenger_C::Init(this);
-
-    if (!this->m_vehicleCamera) {
-        this->OnVehicleCameraPossiblyNeeded();
-        return;
-    }
-
-    this->m_vehicleCamera->BeginTransition(FrameTime::s_curTimeMs);
-
-    if (!this->m_vehicleCamera->m_state) {
-        this->DestroyVehicleCamera();
-    }
-}
-
 // OFFSET: #0x007179D0
 void CGUnit_C::SetCharacterModel(CM2Model* model) {
     if (this->m_worldModel == model) {
@@ -12822,7 +12709,7 @@ void CGUnit_C::PostReenable(const CClientObjCreate& create) {
     }
 
     if (this->m_vehicle && this->m_vehicle->m_vehicleRec) {
-        this->m_vehicle->UpdateFreeSeatMask();
+        this->m_vehicle->UpdateSeatVacancy();
     }
 }
 
@@ -12977,31 +12864,6 @@ void CGUnit_C::ClearWeaponTrailHandles() {
             WeaponTrailClose(this->m_weaponTrails[i]);
             this->m_weaponTrails[i] = NULL;
         }
-    }
-}
-
-// OFFSET: #0x0074BC50
-void CGUnit_C::SignalPlayerLosesVehicleDataEvent() {
-    WOWGUID guid = this->m_obj->m_guid;
-    int32_t count;
-    char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
-
-    for (int32_t i = 0; i < count; i++) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_LOSES_VEHICLE_DATA, "%s", tokens[i]);
-    }
-}
-
-// OFFSET: #0x0074C7B0
-void CGUnit_C::DestroyVehicleData(int32_t removePassengers) {
-    if (!this->m_vehicle) {
-        return;
-    }
-
-    this->m_vehicle->Destroy(removePassengers);
-    this->m_vehicle = NULL;
-
-    if (this->IsActivePlayer()) {
-        this->SignalPlayerLosesVehicleDataEvent();
     }
 }
 
@@ -14629,30 +14491,6 @@ void CGUnit_C::HandleNPCFeedback() {
     }
 }
 
-// OFFSET: 0x005ECF80/0x14026E870
-void CGUnit_C::OnVehicleCameraPossiblyNeeded() {
-    if (!this->m_vehiclePassenger || !this->m_vehiclePassenger->m_state || this->m_vehicleCamera) {
-        return;
-    }
-
-    CGCamera* camera = CGWorldFrame::GetActiveCamera();
-
-    if (!camera) {
-        return;
-    }
-
-    CVehicleCamera_C* activeVehicleCamera = camera->m_vehicleCamera;
-    CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (this->IsActivePlayer() || this->m_obj->m_guid == camera->m_targetGUID || (player && player->FindRootVehicleOfPassengerChain(this) == this) || (activeVehicleCamera && activeVehicleCamera->m_unit && activeVehicleCamera->m_unit != player && activeVehicleCamera->m_unit->FindRootVehicleOfPassengerChain(this) == this)) {
-        this->CreateVehicleCamera();
-
-        if (this->m_vehicleCamera && this->m_vehicleCamera != camera->m_vehicleCamera && !this->m_vehicleCamera->AttachToHierarchy()) {
-            this->DestroyVehicleCamera();
-        }
-    }
-}
-
 // OFFSET: 0x005B4390/0x140227900
 bool CGUnit_C::IsOutdoors() const {
     return World::QueryOutdoors(this->m_worldObject) != 0;
@@ -15744,18 +15582,6 @@ void CGUnit_C::SetLocalClientControl(bool control) {
         if (this->m_clientFlags & 0x400) {
             this->VehiclePassengerUpdateWorldCameraStateInstantly();
         }
-    }
-}
-
-// OFFSET: #0x0074C4A0
-void CGUnit_C::VehiclePassengerUpdateWorldCameraStateInstantly() {
-    CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
-    VehicleRec* vehicleRec = passenger ? passenger->m_vehicleRec : NULL;
-
-    if (passenger) {
-        this->VehiclePassengerUpdateWorldCameraState(vehicleRec, passenger->m_seatRec, FrameTime::s_curTimeMs, FrameTime::s_curTimeMs);
-    } else {
-        this->VehiclePassengerUpdateWorldCameraState(vehicleRec, NULL, FrameTime::s_curTimeMs, FrameTime::s_curTimeMs);
     }
 }
 
@@ -17419,21 +17245,6 @@ void CGUnit_C::DelayCast(int32_t delay) {
     this->UpdateSpellCastBars();
 }
 
-// OFFSET: 0x005EC6C0/0x14026DE20
-void CGUnit_C::VehicleExit() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover && player && player->GetTransportGUID() == this->m_obj->m_guid.m_guid) {
-        CGPetInfo::PetDismiss();
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_VEHICLE_EXIT));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
 // OFFSET: %0x005BEE10
 void WriteMovementPacket(CGUnit_C* unit, uint32_t msgId, CDataStore* msg, int32_t include) {
     if (!include || !unit || !unit->IsAllowedToSendMessage(msgId)) {
@@ -17546,103 +17357,6 @@ bool CGUnit_C::HasDispellableAura(int32_t dispelType, int32_t harmful, bool mech
     }
 
     return false;
-}
-
-// OFFSET: #0x0074C8B0
-void CGUnit_C::VehiclePrevSeat() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    WOWGUID guid = this->m_obj->m_guid;
-
-    if (guid == CGUnit_C::s_activeMover && player && player->GetTransportGUID() == guid.m_guid) {
-        if (player->m_vehiclePassenger) {
-            player->m_vehiclePassenger->StopMovement();
-        }
-
-        this->m_movementData.OnChangeSeatsOnControlledVehicleLocal(FrameTime::s_curTimeMs, WOWGUID(), 0xFF);
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_VEHICLE_PREV_SEAT));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x0074C9A0
-void CGUnit_C::VehicleNextSeat() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    WOWGUID guid = this->m_obj->m_guid;
-
-    if (guid == CGUnit_C::s_activeMover && player && player->GetTransportGUID() == guid.m_guid) {
-        if (player->m_vehiclePassenger) {
-            player->m_vehiclePassenger->StopMovement();
-        }
-
-        this->m_movementData.OnChangeSeatsOnControlledVehicleLocal(FrameTime::s_curTimeMs, WOWGUID(), 1);
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_VEHICLE_NEXT_SEAT));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x0074CA90
-int32_t CGUnit_C::SwitchToVehicleSeat(CGUnit_C* vehicle, int32_t virtualSeat) {
-    CVehicle_C* root = vehicle->m_vehicle;
-    const CVehicle_C* target;
-    uint8_t seat;
-
-    if (!root || !root->m_vehicleRec || !root->GetVehicleAndSeatFromVirtualSeat(virtualSeat, target, seat)) {
-        return 0;
-    }
-
-    VehicleSeatRec* seatRec = target->GetVehicleSeatRec(seat);
-
-    if (!seatRec || const_cast<CVehicle_C*>(target)->FindPassengerUnit(seat) || !(seatRec->m_flags & 0x4000000) || !CGInputControl::GetActive() || !CGInputControl::GetActive()->IsVehicleSeatFlagSet(0x4000000)) {
-        return 0;
-    }
-
-    if (this->GetTransportGUID() != CGUnit_C::s_activeMover.m_guid) {
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(CMSG_REQUEST_VEHICLE_SWITCH_SEAT));
-        SmartGUID guid;
-        guid.m_guid = target->m_unit->m_obj->m_guid.m_guid;
-        msg << guid;
-        msg.Put(seat);
-        msg.Finalize();
-        ClientServices::Send2(&msg);
-        return 1;
-    }
-
-    CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!mover) {
-        return 1;
-    }
-
-    if (this->m_vehiclePassenger) {
-        this->m_vehiclePassenger->StopMovement();
-    }
-
-    mover->OnChangeSeatsOnControlledVehicleLocal(FrameTime::s_curTimeMs, target->m_unit->m_obj->m_guid, seat);
-    return 1;
-}
-
-// OFFSET: 0x005ECBB0/0x14026E3D0
-void CGUnit_C::CheckVehicleExitOnCast() {
-    VehicleSeatRec* seat = this->m_vehiclePassenger ? this->m_vehiclePassenger->m_seatRec : NULL;
-
-    if (!seat || !(seat->m_flagsB & 0x100000)) {
-        return;
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (this->m_obj->m_guid != CGUnit_C::s_activeMover || !player || player->GetTransportGUID() != this->m_obj->m_guid.m_guid) {
-        this->VehicleExit();
-    }
 }
 
 // OFFSET: #0x0071C8F0
@@ -20363,7 +20077,7 @@ void CGUnit_C::AddHandItem(int32_t hand) {
     }
 }
 
-// OFFSET: #0x005140A0
+// OFFSET: 0x0044E430
 CGUnit_C* CGUnit_C::GetVehicleUnit() const {
     return this->m_vehiclePassenger ? this->m_vehiclePassenger->GetVehicleUnit() : NULL;
 }
@@ -21324,140 +21038,6 @@ void CGUnit_C::UpdatePartyMemberPetState() {
     this->FillPartyMemberPetState(&newState.m_pet);
     uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(&oldState, &newState);
     CGPlayer_C::DispatchPartyMemberStatsChanges(newState.m_guid, changes, &oldState, &newState);
-}
-
-// OFFSET: 0x005EC000/0x14026D650
-void CGUnit_C::VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, VehicleSeatRec* seatRec, uint32_t startTime, uint32_t endTime) {
-    CGCamera* camera = CGWorldFrame::GetActiveCamera();
-
-    if (!camera) {
-        return;
-    }
-
-    uint32_t active = 0;
-
-    if (this->m_vehiclePassenger && (this->m_vehiclePassenger->m_state == 1 || this->m_vehiclePassenger->m_state == 2 || this->m_vehiclePassenger->m_state == 3)) {
-        active = 1;
-    }
-
-    if (CGUnit_C::s_vehiclePassengerCameraActive == active && CGUnit_C::s_vehiclePassengerCameraVehicle == vehicleRec && CGUnit_C::s_vehiclePassengerCameraSeat == seatRec) {
-        return;
-    }
-
-    uint32_t restoreZoom = camera->m_flags & 0x20;
-    CGUnit_C::s_vehiclePassengerCameraVehicle = vehicleRec;
-    CGUnit_C::s_vehiclePassengerCameraActive = active;
-    CGUnit_C::s_vehiclePassengerCameraSeat = seatRec;
-    int32_t resetMin = 1;
-    int32_t resetMax = 1;
-    float duration = static_cast<float>(endTime - startTime) * 0.001f;
-
-    if (!active) {
-        camera->SetVehicleZoomEnabled(0, duration, restoreZoom == 0);
-        camera->SetDesiredVehicleYawOffset(0.0f, startTime, endTime);
-        camera->SetDesiredVehiclePitchOffset(0.0f, startTime, endTime);
-        camera->SetVehicleTrackingStyle(0);
-    } else {
-        if (seatRec && (seatRec->m_flags & 0x1000000)) {
-            camera->SetVehicleZoomEnabled(1, duration, 1);
-            restoreZoom = 0;
-        } else if (seatRec && (seatRec->m_flagsB & 0x400)) {
-            camera->SetVehicleZoomEnabled(0, duration, 0);
-            float current = camera->m_distance;
-            float target = current;
-            uint32_t flagsB = seatRec->m_flagsB;
-            int32_t hasMin = flagsB & 0x4000;
-            int32_t hasMax = flagsB & 0x8000;
-            uint32_t wasRestore = restoreZoom;
-            restoreZoom = 0;
-            float minDistance = hasMin ? seatRec->m_cameraSeatZoomMin : camera->GetDefaultZoomMinDistance();
-            float maxDistance = hasMax ? seatRec->m_cameraSeatZoomMax : CGCamera::GetDefaultZoomMaxDistance();
-
-            if (seatRec->m_flagsB & 0x800) {
-                float preferred = seatRec->m_cameraEnteringZoom;
-
-                if (preferred > current && !(seatRec->m_flagsB & 0x1000)) {
-                    target = preferred;
-                }
-
-                if (preferred < target && !(seatRec->m_flagsB & 0x2000)) {
-                    target = preferred;
-                }
-
-                if (!hasMin && minDistance > preferred) {
-                    hasMin = 1;
-                    minDistance = preferred;
-                }
-
-                if (!hasMax && maxDistance < preferred) {
-                    hasMax = 1;
-                    maxDistance = preferred;
-                }
-            }
-
-            if (hasMin) {
-                resetMin = 0;
-                camera->SetVehicleSeatZoomMinDistance(minDistance);
-
-                if (minDistance > target) {
-                    target = minDistance;
-                }
-            }
-
-            if (hasMax) {
-                resetMax = 0;
-                camera->SetVehicleSeatZoomMaxDistance(maxDistance);
-
-                if (maxDistance < target) {
-                    target = maxDistance;
-                }
-            }
-
-            if (fnotequalz(current, target, 0.001f)) {
-                if (!wasRestore) {
-                    camera->SetVehicleExitZoomDistance(current);
-                }
-
-                camera->ZoomToDistance(target, startTime, duration, 1);
-            }
-        } else {
-            camera->SetVehicleZoomEnabled(0, duration, restoreZoom == 0);
-        }
-
-        camera->SetDesiredVehicleYawOffset(vehicleRec ? vehicleRec->m_cameraYawOffset : 0.0f, startTime, endTime);
-        camera->SetDesiredVehiclePitchOffset(vehicleRec ? vehicleRec->m_cameraPitchOffset : 0.0f, startTime, endTime);
-
-        if (seatRec && (seatRec->m_flags & 0x800) && (seatRec->m_flagsB & 0x80001)) {
-            camera->SetVehicleTrackingStyle(1);
-        } else {
-            camera->SetVehicleTrackingStyle(2);
-        }
-    }
-
-    if (restoreZoom) {
-        camera->ZoomToDistance(camera->m_vehicleExitZoomDistance, startTime, duration, 1);
-        camera->ClearVehicleExitZoomDistance();
-    }
-
-    if (resetMin) {
-        camera->SetVehicleSeatZoomMinDistanceToDefault();
-    }
-
-    if (resetMax) {
-        camera->SetVehicleSeatZoomMaxDistanceToDefault();
-    }
-}
-
-// OFFSET: 0x005EBB20/0x14026D080
-void CGUnit_C::SignalPlayerGainsVehicleDataEvent() {
-    VehicleRec* vehicleRec = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
-    WOWGUID guid = this->m_obj->m_guid;
-    int32_t count;
-    char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
-
-    for (int32_t i = 0; i < count; i++) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_GAINS_VEHICLE_DATA, "%s%d", tokens[i], vehicleRec ? vehicleRec->m_vehicleUiindicatorID : 0);
-    }
 }
 
 // OFFSET: #0x0072CC30
@@ -24083,62 +23663,6 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
     if ((changed & 0x40) && this->m_obj->m_guid == CGUnit_C::s_activeMover) {
         CGInputControl::GetActive()->UpdatePlayer(OsGetAsyncTimeMs(), 1);
     }
-}
-
-// OFFSET: 0x005EB650/0x14026CB90
-void CGUnit_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
-    CVehicle_C* vehicle = this->m_vehicle;
-
-    if (!vehicle || !(vehicle->m_flags & 0x1)) {
-        return;
-    }
-
-    CM2Model* model = vehicle->m_unit->GetObjectModel();
-
-    if (!model) {
-        return;
-    }
-
-    if (model->IsLoaded()) {
-        for (uint32_t bone = 0; bone < 35; bone++) {
-            if (vehicle->m_playingBoneAnims[bone >> 5] & (1 << (bone & 0x1F))) {
-                vehicle->PlayBoneAnimOrFallback(model, bone);
-            }
-        }
-    }
-
-    vehicle->m_playingBoneAnims[0] = 0;
-    vehicle->m_playingBoneAnims[1] = 0;
-
-    for (uint32_t i = 0; i < 16; i++) {
-        vehicle->m_boneAnimListeners[i].m_guid = WOWGUID();
-    }
-
-    vehicle->m_flags &= ~0x1;
-    vehicle->m_forceFacingGuid = WOWGUID();
-}
-
-// OFFSET: 0x005ECF30/0x14026E800
-CVehicleCamera_C* CGUnit_C::CreateVehicleCamera() {
-    this->DestroyVehicleCamera();
-    this->m_vehicleCamera = CVehicleCamera_C::Create(this, FrameTime::s_curTimeMs);
-
-    if (!this->m_vehicleCamera) {
-        return NULL;
-    }
-
-    if (!this->m_vehicleCamera->m_state) {
-        this->DestroyVehicleCamera();
-        return NULL;
-    }
-
-    CGCamera* camera = CGWorldFrame::GetActiveCamera();
-
-    if (camera) {
-        camera->PickVehicleCamera();
-    }
-
-    return this->m_vehicleCamera;
 }
 
 // OFFSET: 0x005B01B0

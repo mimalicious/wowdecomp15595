@@ -320,7 +320,7 @@ int32_t __stdcall CGInputControl::CanControl(CGUnit_C* unit) {
         return 0;
     }
 
-    return !unit->AnimSuppressesMovement() && (!unit->IsActivePlayer() || !(static_cast<CGPlayer_C*>(unit)->m_combatModeFlags & 0x1)) && !unit->IsAlteredFormTransitionPreventingMovement();
+    return !unit->AnimSuppressesMovement() && (!unit->IsActivePlayer() || !(static_cast<CGPlayer_C*>(unit)->m_combatModeFlags & 0x1)) && !unit->IsVehicleTransitionPreventingAction();
 }
 
 // OFFSET: #0x005FA6B0
@@ -344,7 +344,7 @@ int32_t CGInputControl::CameraCanTurnPlayer() const {
             return 0;
         }
 
-        if ((mover->m_unit->m_unitFieldFlags & 0x40000) || mover->IsAlteredFormTransitionPreventingMovement() || mover->GetClientStandState()) {
+        if ((mover->m_unit->m_unitFieldFlags & 0x40000) || mover->IsVehicleTransitionPreventingAction() || mover->GetClientStandState()) {
             return 0;
         }
 
@@ -490,7 +490,7 @@ int32_t CGInputControl::CameraCanPitchPlayer() {
         return 0;
     }
 
-    if (mover->IsAlteredFormTransitionPreventingMovement() || (mover->m_unit->m_unitFieldFlags & 0x40000) || mover->GetClientStandState()) {
+    if (mover->IsVehicleTransitionPreventingAction() || (mover->m_unit->m_unitFieldFlags & 0x40000) || mover->GetClientStandState()) {
         return 0;
     }
 

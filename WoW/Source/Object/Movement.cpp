@@ -366,7 +366,7 @@ int32_t CMovement_C::UpdateTransportStatus(WOWGUID transport, uint8_t seat, int3
             CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_transportGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (vehicle && vehicle->m_vehicle) {
-                vehicle->m_vehicle->UpdateFreeSeatMask();
+                vehicle->m_vehicle->UpdateSeatVacancy();
             }
         } else {
             unitTransport = 0;
@@ -6532,7 +6532,7 @@ int32_t CMovement_C::ForceSetTransportInt(WOWGUID transport, uint8_t seat, int32
             CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_transportGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (vehicle && vehicle->m_vehicle) {
-                vehicle->m_vehicle->UpdateFreeSeatMask();
+                vehicle->m_vehicle->UpdateSeatVacancy();
             }
         } else {
             this->FixupQueuedSetFacingEvents(facing);

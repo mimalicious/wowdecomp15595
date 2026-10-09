@@ -1009,7 +1009,7 @@ void CVehiclePassenger_C::SetState(uint32_t state, CGUnit_C* vehicle, uint8_t se
                 VehicleSeatRec* oldSeat = vehicle->m_vehicle->GetVehicleSeatRec(this->m_seat);
 
                 if (oldSeat && (oldSeat->m_vehicleRideAnimKitID > 0 || (oldSeat->m_flags & 0x20000))) {
-                    boneVehicle->RemoveBoneAnimListener(this->m_boneAnimBone, this->m_unit->m_obj->m_guid);
+                    boneVehicle->StopBoneAnim(this->m_boneAnimBone, this->m_unit->m_obj->m_guid);
                 }
             }
 
@@ -1882,7 +1882,7 @@ int32_t CVehiclePassenger_C::PostSetState(CGUnit_C* vehicle, const VehicleSeatRe
     this->m_prevState = this->m_state;
 
     if (vehicle && vehicle->m_vehicle) {
-        vehicle->m_vehicle->UpdateFreeSeatMask();
+        vehicle->m_vehicle->UpdateSeatVacancy();
     }
 
     return this->m_state || (this->m_flags & 0x200);
@@ -2065,7 +2065,7 @@ void CVehiclePassenger_C::Free() {
     s_passengerPool->Delete(this);
 }
 
-// PROVEN: 39d00fcc IDENTICAL/NONE
+// PROVEN: 81e14b44 IDENTICAL/NONE
 // OFFSET: 0x005F19F0
 void CVehiclePassenger_C::Uninit() {
     if (this->m_flags & 0x8800) {
@@ -2075,7 +2075,7 @@ void CVehiclePassenger_C::Uninit() {
     CVehicle_C* vehicle = this->GetVehicle();
 
     if (vehicle) {
-        vehicle->UpdateFreeSeatMask();
+        vehicle->UpdateSeatVacancy();
     }
 
     this->Free();

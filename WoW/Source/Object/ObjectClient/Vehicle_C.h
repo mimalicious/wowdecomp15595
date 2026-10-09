@@ -7,7 +7,9 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
 #include "WoW/Source/Object/Passenger.h"
+#include "Engine/Source/Base/ObjectAlloc.h"
 
+class CAnimKitInst;
 class CM2Model;
 class CClientObjCreate;
 class CGUnit_C;
@@ -15,32 +17,26 @@ class CVehiclePassenger_C;
 class VehicleRec;
 class VehicleSeatRec;
 
-class CVehicle_C;
-
-class CVehicleHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
-
-    void Delete(CVehicle_C* vehicle);
-};
-
 class CVehicle_C {
     public:
-    static void EnterWorld();
     struct BoneAnimListener {
         /* 0000 */ WOWGUID m_guid;
         /* 0008 */ uint32_t m_boneId;
         /* 000C */ void (*m_callback)(CGUnit_C* unit, int32_t& a2, TSGrowableArray<CVehiclePassenger_C*>& passengers);
     };
 
-    static CVehicleHeap* s_vehiclePool;
+    static TSObjectAllocPool<CVehicle_C>* s_vehiclePool;
 
     static void InitSystem();
     static void UninitSystem();
+    static void EnterWorld();
     static void EjectPassenger(WOWGUID guid);
     static CVehicle_C* Create(const CClientObjCreate* create, CGUnit_C* unit, int32_t vehicleId);
+    static int32_t RecHasVehicleEnterAnim(const VehicleSeatRec* seatRec);
+    static int32_t RecHasVehicleExitAnim(const VehicleSeatRec* seatRec, const CGUnit_C* unit);
+    static void VehicleBoneAnimKitStopCallback(CAnimKitInst* kit, uint64_t param);
 
-    /* 0000 */ uint32_t m_memHandle;
+    /* 0000 */ uint32_t m_handle;
     /* 0004 */ CGUnit_C* m_unit;
     /* 0008 */ uint32_t m_flags;
     /* 000C */ VehicleRec* m_vehicleRec;
@@ -51,53 +47,51 @@ class CVehicle_C {
     /* 0060 */ BoneAnimListener m_boneAnimListeners [16];
     /* 0160 */ WOWGUID m_forceFacingGuid;
     /* 0168 */ uint32_t m_forceFacingBone;
-    /* 016C */ uint8_t m_mirroringAnimsMask;
-    /* 016D */ uint8_t m_freeSeatMask;
-    /* 0170 */ TSExplicitList<CPassenger, offsetof(CPassenger, m_link)> m_passengers;
-    /* 017C */ uint32_t unk_017C;
+    /* 016C */ TSCGrowableArray<CAnimKitInst*, 3> m_boneAnimKits;
+    /* 0180 */ uint8_t m_mirroringAnimsMask;
+    /* 0181 */ uint8_t m_freeSeatMask;
+    /* 0184 */ TSExplicitList<CPassenger, offsetof(CPassenger, m_link)> m_passengers;
 
     CVehicle_C();
+    ~CVehicle_C();
     VehicleSeatRec* GetVehicleSeatRec(uint8_t seat) const;
-    uint32_t IsSpecialBoneAnimPlaying() const;
     int32_t InstallBoneAnimListener(WOWGUID guid, uint32_t boneId, void (*callback)(CGUnit_C* unit, int32_t& a2, TSGrowableArray<CVehiclePassenger_C*>& passengers));
     void UninstallBoneAnimListener(WOWGUID guid);
-    void RemoveBoneAnimListener(uint32_t boneId, WOWGUID guid);
-    int32_t CanPlayBoneAnim(uint32_t animId) const;
+    void StopBoneAnim(uint32_t boneId, WOWGUID guid);
+    void StopVehicleBoneAnimKit(uint32_t boneId);
     void SetBoneAnimForceFacing(WOWGUID guid, uint32_t boneId);
     bool IsMirroringAnimsToPassengers() const;
     void OnPassengerStartMirroringAnims(uint8_t seat);
     void OnPassengerStopMirroringAnims(uint8_t seat);
     int32_t IsSuppressingCameraPitchWhileMouseAiming() const;
     int32_t HasHighPriorityCastingAnim() const;
-    void FreeAnimKits();
-    uint32_t IsBoneAnimPlaying(uint32_t bone) const;
-    void BoneAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time);
-    void PlayBoneAnimOrFallback(CM2Model* model, uint32_t boneId);
     int32_t HasHighPriorityAnim() const;
+    void FreeAnimKits();
+    void CleanUpBoneAnimsBeforeObjectModelChange();
+    int32_t HasAPlayerAsPassenger() const;
+    uint32_t IsBoneAnimPlaying(uint32_t bone) const;
+    int32_t CanPlayBoneAnim() const;
+    void BoneAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time);
     int32_t GetVirtualSeatCount() const;
     int32_t GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remaining, const CVehicle_C*& vehicle, uint8_t& seat) const;
-    CGUnit_C* FindPassengerUnit(uint8_t seat);
-    void BuildWorldMatrix(const C44Matrix* parent);
-    void UpdatePassengerSoundPositions();
-    void UpdateLargestPassengerBoundsRadius();
-    void UpdateFreeSeatMask();
     int32_t GetVehicleAndSeatFromVirtualSeat(int32_t virtualSeat, const CVehicle_C*& vehicle, uint8_t& seat) const;
     int32_t GetVirtualSeatInfo(int32_t virtualSeat, const char*& type, const char*& occupant, const char*& realm, int32_t& canEject, int32_t& canSwitch) const;
+    CGUnit_C* FindPassengerUnit(uint8_t seat) const;
+    void BuildWorldMatrix(const C44Matrix* parent);
+    void UpdateWorldMatrix();
+    void UpdatePassengerSoundPositions();
+    void UpdateLargestPassengerBoundsRadius();
+    void UpdateSeatVacancy();
     int32_t AddPassenger(CPassenger* passenger);
     void ReceiveVehicleRecIDFromServer(int32_t vehicleId);
-    void UpdateWorldMatrix();
-    CVehicle_C* FindVehicleToPlayBoneAnim();
     CVehicle_C* FindVehicleToPlayBoneAnim(int32_t passengerAnim, const VehicleSeatRec* seatRec, CGUnit_C* passenger);
     const CVehicle_C* FindVehicleToPlayBoneAnim(int32_t passengerAnim, const VehicleSeatRec* seatRec, const CGUnit_C* passenger) const;
-    int32_t CanPlayBoneAnim() const;
-    static int32_t RecHasVehicleEnterAnim(const VehicleSeatRec* seatRec);
-    static int32_t RecHasVehicleExitAnim(const VehicleSeatRec* seatRec, const CGUnit_C* unit);
     void StartMirroringAnimsToPassengers();
-    int32_t PlayBoneAnim(uint32_t boneId, uint32_t animId);
+    void PlayVehicleBoneAnimKit(uint32_t type, uint8_t seat, uint32_t& bone, uint32_t anim, int32_t animKitID);
     int32_t PlayBoneAnim(uint32_t type, uint8_t seat, const VehicleSeatRec* seatRec, uint32_t& bone);
     void HandleBoneAnimGrabEvent(uint32_t boneId, uint32_t eventId);
     void HandleBoneAnimThrowEvent(uint32_t boneId, uint32_t eventId);
-    void RemoveAllPassengersLocally();
+    void RemoveAllPassengersLocally(int32_t force);
     void Destroy(int32_t removePassengers);
 };
 

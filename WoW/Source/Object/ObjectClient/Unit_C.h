@@ -292,7 +292,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static float __fastcall ComputeTrackingElevationAngle(const C3Vector& position, const C3Vector& target);
     static void InitMissileTrajectorySystem();
     static void ShutdownMissileTrajectorySystem();
-    static void UpdateVehicleUISliders(CGUnit_C* unit, const VehicleRec* vehicleRec);
     static void HideVehicleUISliders();
     static void AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
@@ -746,7 +745,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void Dismount();
     CGUnit_C* FindRootVehicle(CGUnit_C* stop);
     CGUnit_C* GetRootVehicleUnit();
-    void PlayVehicleExitEndAnimation(const VehicleSeatRec* seat, uint32_t anim);
     int32_t PlayVehiclePassengerExitAnimEnd(const VehicleSeatRec* seat, uint32_t anim, int32_t a3);
     void UpdateVehicleUISliders();
     void VehicleCameraOnUpdateTransport(WOWGUID transport, uint8_t seat);
@@ -778,7 +776,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool HasAuraActive(int32_t spellId);
     int32_t GetAuraIndex(int32_t spellId);
     bool IsVehiclePreventingTurning() const;
-    bool IsAlteredFormTransitionPreventingMovement() const;
+    bool IsVehicleTransitionPreventingAction() const;
+    int32_t HasAPlayerAsPassenger() const;
     void SetImpactKitEffect(bool offhand, const ATTACKROUNDINFO* info, const C3Vector* position);
     bool IsPetBarUsed() const;
     void ConvertVehicleCameraRelativeFacingToTransportRelativeFacing(float& facing);
@@ -872,10 +871,11 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsFacingUnchangedSinceSent() const;
     bool ShouldKneelForLoot() const;
     void SetVehicleExitVoluntary(int32_t enable);
-    void VehicleExit();
-    void VehiclePrevSeat();
-    void VehicleNextSeat();
-    int32_t SwitchToVehicleSeat(CGUnit_C* vehicle, int32_t virtualSeat);
+    int32_t IsVehicleExitVoluntary() const;
+    void VehiclePassengerRequestExit();
+    void VehiclePassengerRequestPrevSeat();
+    void VehiclePassengerRequestNextSeat();
+    int32_t VehiclePassengerRequestSwitchToVirtualSeat(const CGUnit_C* vehicle, int32_t virtualSeat);
     bool HasDispellableAura(int32_t dispelType, int32_t harmful, bool mechanic, bool steal);
     void CheckVehicleExitOnCast();
     uint8_t GetActivePlayerFieldBytes0();
@@ -1043,6 +1043,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     float GetHeightAboveGround();
     void VehiclePassengerInit();
     void DestroyVehicleCamera();
+    void OnVehicleCameraNoLongerInUse();
     void OnVehicleCameraPossiblyNeeded();
     void UpdateDisplay(uint32_t time);
     void UpdateMissileTrajectory();

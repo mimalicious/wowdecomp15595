@@ -891,7 +891,7 @@ void CVehicleCamera_C::MaybeChangeTarget(CGUnit_C* vehicle, VehicleSeatRec* seat
 }
 
 // OFFSET: #0x0075AAC0
-void CVehicleCamera_C::BeginTransition(uint32_t time) {
+void CVehicleCamera_C::BeginTransition(CGUnit_C* vehicle, WOWGUID transport, uint32_t time) {
     CVehiclePassenger_C* passenger = this->m_unit->m_vehiclePassenger;
 
     if (!passenger) {
@@ -1154,7 +1154,7 @@ CVehicleCamera_C* CVehicleCamera_C::Create(CGUnit_C* unit, uint32_t time) {
     camera->m_rawFacingChaser.m_velocity = 0.0f;
     camera->m_endFacingChaser.m_value = camera->m_startFacing;
     camera->m_endFacingChaser.m_velocity = 0.0f;
-    camera->BeginTransition(time);
+    camera->BeginTransition(NULL, WOWGUID(), time);
 
     if (camera->m_state) {
         return camera;

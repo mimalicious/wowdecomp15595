@@ -150,7 +150,7 @@ void MovementNotifyTransportUnitRemoved(WOWGUID passenger, WOWGUID transport, ui
         CGUnit_C* unit = (CGUnit_C*)ClntObjMgrObjectPtr(transport, TYPEMASK_UNIT, __FILE__, __LINE__);
 
         if (unit && unit->m_vehicle) {
-            unit->m_vehicle->UpdateFreeSeatMask();
+            unit->m_vehicle->UpdateSeatVacancy();
         }
     }
 }

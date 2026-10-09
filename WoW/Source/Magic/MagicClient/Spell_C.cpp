@@ -5281,7 +5281,7 @@ void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex
                         CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
                         if (mover) {
-                            mover->VehicleExit();
+                            mover->VehiclePassengerRequestExit();
 
                             if (auraIndex >= 0 && unit->m_obj->m_guid.m_guid == unit->GetAuraCaster(auraIndex)) {
                                 return;
@@ -5303,7 +5303,7 @@ void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex
             CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (mover && input->IsVehicleSeatFlagSet(0x2000000)) {
-                mover->VehicleExit();
+                mover->VehiclePassengerRequestExit();
             }
         }
     }
@@ -8166,7 +8166,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
         unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*owner, TYPEMASK_UNIT, __FILE__, __LINE__));
     }
 
-    if (!unit || unit->IsAlteredFormTransitionPreventingMovement()) {
+    if (!unit || unit->IsVehicleTransitionPreventingAction()) {
         return false;
     }
 

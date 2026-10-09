@@ -40,7 +40,7 @@ static int32_t Script_JumpOrAscendStart(lua_State* L) {
 
     CheckToCancelCurrentChannelSpell();
 
-    if (mover->m_unit->m_unitFieldHealth <= 0 || mover->IsOnSpline() || mover->IsAlteredFormTransitionPreventingMovement() || !mover->CanMove() || mover->AnimSuppressesMovement()) {
+    if (mover->m_unit->m_unitFieldHealth <= 0 || mover->IsOnSpline() || mover->IsVehicleTransitionPreventingAction() || !mover->CanMove() || mover->AnimSuppressesMovement()) {
         return 0;
     }
 
@@ -101,7 +101,7 @@ static int32_t Script_ToggleRun(lua_State* L) {
 
     uint32_t time = CSimpleTop::s_eventTime;
 
-    if (mover->m_unit->m_unitFieldHealth > 0 && !mover->m_movement->IsOnSpline() && !mover->IsAlteredFormTransitionPreventingMovement() && mover->CanMove()) {
+    if (mover->m_unit->m_unitFieldHealth > 0 && !mover->m_movement->IsOnSpline() && !mover->IsVehicleTransitionPreventingAction() && mover->CanMove()) {
         mover->ToggleRunModeLocal(time);
     }
 
@@ -669,7 +669,7 @@ static int32_t Script_VehicleExit(lua_State* L) {
         return 0;
     }
 
-    mover->VehicleExit();
+    mover->VehiclePassengerRequestExit();
     return 0;
 }
 
@@ -678,7 +678,7 @@ static int32_t Script_VehiclePrevSeat(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (mover && CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x4000000)) {
-        mover->VehiclePrevSeat();
+        mover->VehiclePassengerRequestPrevSeat();
     }
 
     return 0;
@@ -689,7 +689,7 @@ static int32_t Script_VehicleNextSeat(lua_State* L) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (mover && CGInputControl::s_inputControl->IsVehicleSeatFlagSet(0x4000000)) {
-        mover->VehicleNextSeat();
+        mover->VehiclePassengerRequestNextSeat();
     }
 
     return 0;
