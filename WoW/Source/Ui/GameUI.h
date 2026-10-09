@@ -276,7 +276,7 @@ class CGGameUI {
     static void AutoMouseOver();
     static void ClearCursor(int32_t a1, int32_t a2);
     static void UpdateThreatWarningEnabled(int32_t value);
-    static void UpdateUnitHighlights();
+    static void UpdateUnitHighlights(int32_t force);
     static void UpdateAreaSpiritHealerDistance();
     static void UpdateCorpseDistance();
     static void UpdateInteractTarget();

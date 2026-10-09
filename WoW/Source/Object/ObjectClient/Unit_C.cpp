@@ -35,6 +35,7 @@
 #include "WoW/Common/ComponentCore/CharacterComponent.h"
 #include "WoW/Source/DB/DBClient/CreatureStats_C.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/Ui/CGTabardCreationFrame.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/AnimationDataRec.h"
 #include "WoW/Source/DB/Rec/AreaGroupRec.h"
@@ -165,7 +166,7 @@
 #include "WoW/Source/WorldClient/Map.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00ADAC04
+// STATIC: 0x00CA64E4
 static INVENTORY_SLOTS s_virtualItemInvSlots[2] = { INVSLOT_MAINHAND, INVSLOT_OFFHAND };
 
 // STATIC: #0x00CA1398
@@ -224,6 +225,18 @@ static uint32_t s_swimStartTime;
 
 // STATIC: 0x00DD621C
 static uint32_t s_swimStopTime;
+
+// STATIC: 0x00CA627C
+static uint32_t s_swimTransitionDelay = 2000;
+
+// STATIC: 0x00CA6280
+static uint32_t s_flightTransitionDelay = 2000;
+
+// STATIC: 0x00CA6284
+static uint32_t s_swimTransitionDelayFlag = 100;
+
+// STATIC: 0x00CA6288
+static uint32_t s_flightTransitionDelayFlag = 100;
 
 // STATIC: 0x00DD61D4
 uint32_t CGUnit_C::s_trackingType;
@@ -437,6 +450,15 @@ uint32_t CGUnit_C::NextVisualKitSequence() {
     return sequence;
 }
 
+// OFFSET: 0x005AC630/0x14021EB10
+void CGUnit_C::FlipDisplayTransitionState() {
+    uint32_t flags = this->m_currentClientRaceFlags;
+
+    if (flags & 0x2) {
+        this->m_currentClientRaceFlags = flags ^ 0x1;
+    }
+}
+
 // OFFSET: 0x005AC920
 ATTACKROUNDINFO::ATTACKROUNDINFO() {
     this->m_attacker = WOWGUID();
@@ -470,6 +492,13 @@ ATTACKROUNDINFO::ATTACKROUNDINFO() {
         this->m_absorbed[i] = 0;
         this->m_resisted[i] = 0;
     }
+}
+
+// OFFSET: 0x005AC9E0
+static CTexture* CreateTexture(const char* fileName, CStatus* status) {
+    CGxTexFlags flags;
+    flags.m_filter = GxTex_LinearMipNearest;
+    return TextureCreate(fileName, flags, status, 0, NULL, 2);
 }
 
 // OFFSET: 0x005ACED0/0x14021F2B0
@@ -553,6 +582,62 @@ void CGUnit_C::RemoveHandItemModel(int32_t invSlot, int32_t sheatheType, bool sh
 
     uint8_t attachMask = 0;
     CCharacterComponent::RemoveHandItem(this->m_worldModel, &attachMask, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
+}
+
+// OFFSET: 0x005ADC50
+void CGUnit_C::TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (!key || !success) {
+        return;
+    }
+
+    if (!g_guildInfoCache.GetRecord(key, WOWGUID(), NULL, NULL, false)) {
+        return;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return;
+    }
+
+    void (*noCallback)(const uint64_t& key, const WOWGUID& guid, void* param, bool success) = NULL;
+    int32_t emblemStyle;
+    int32_t emblemColor;
+    int32_t borderStyle;
+    int32_t borderColor;
+    int32_t background;
+
+    if (GuildGetGuildTabard(guid, WOWGUID::Make(key), noCallback, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background) && unit->m_characterComponent) {
+        unit->m_characterComponent->ApplyGuildColor(reinterpret_cast<uintptr_t>(param), emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
+}
+
+// OFFSET: 0x005ADD20
+void CGUnit_C::ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (!key || !success) {
+        return;
+    }
+
+    if (!g_guildInfoCache.GetRecord(key, WOWGUID(), NULL, NULL, false)) {
+        return;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return;
+    }
+
+    void (*noCallback)(const uint64_t& key, const WOWGUID& guid, void* param, bool success) = NULL;
+    int32_t emblemStyle;
+    int32_t emblemColor;
+    int32_t borderStyle;
+    int32_t borderColor;
+    int32_t background;
+
+    if (GuildGetGuildTabard(guid, WOWGUID::Make(key), noCallback, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background) && unit->m_characterComponent) {
+        unit->m_characterComponent->ApplyShirtGuildColor(reinterpret_cast<uintptr_t>(param), emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
 }
 
 // OFFSET: 0x005AE0D0/0x1402208D0
@@ -1064,6 +1149,110 @@ void CGUnit_C::UpdateAlphaEffectAlpha() {
         this->DoMountFade(mountAlpha, mountTime);
     } else {
         this->DoMountFade(1.0f, 0);
+    }
+}
+
+// OFFSET: 0x005B3620/0x140226A60
+void CGUnit_C::OnSwimStartLocal(uint32_t time) {
+    this->m_movementData.OnSwimStartLocal(time);
+    CGTutorial::TriggerTutorial(27);
+    s_swimStartTime = time;
+}
+
+// OFFSET: 0x005B8710
+void CGUnit_C::UpdateSwimmingStatusFlightStyle(uint32_t time, float depth, float swimDepth, float exitDepth) {
+    if (this->m_obj->m_guid != CGUnit_C::s_activeMover) {
+        return;
+    }
+
+    uint32_t delay = (this->m_unit->m_unitFieldFlags & 0x8) ? s_swimTransitionDelayFlag : s_swimTransitionDelay;
+
+    if (this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) {
+        if (exitDepth > depth || ((this->m_movementData.m_flags2 & 0x800) && time - s_swimStartTime > delay)) {
+            this->m_movementData.OnSwimStopLocal(time);
+        }
+    } else if (time - s_swimStopTime > delay && depth > swimDepth && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800)) {
+        if ((this->m_movementData.m_flags & (MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)) || this->m_movementData.HasFallVelocity()) {
+            this->OnSwimStartLocal(time);
+        }
+    }
+}
+
+// OFFSET: 0x005BEA20
+void CGUnit_C::UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float depth, float swimDepth, float exitDepth) {
+    if ((this->m_obj->m_type & TYPEMASK_PLAYER) && this->m_obj->m_guid != CGUnit_C::s_activeMover) {
+        return;
+    }
+
+    if (this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) {
+        if (exitDepth > depth) {
+            this->OnSwimStop(time, spline);
+        }
+    } else if (depth > swimDepth && !this->m_movementData.IsJumpingUp()) {
+        this->OnSwimStart(time, spline);
+    }
+}
+
+// OFFSET: 0x005C4380/0x14023ADA0
+void CGUnit_C::PlayFlightBoundsFeedback(uint32_t time) {
+    // STATIC: 0x00DD62D0
+    static uint32_t s_nextFlightSoundTime = time + 2000;
+
+    if (static_cast<int32_t>(time - s_nextFlightSoundTime) < 0) {
+        return;
+    }
+
+    float bound;
+
+    if (!World::GetFlightBoundsUpper(this->GetPosition(), bound)) {
+        return;
+    }
+
+    float collisionHeight = this->m_movementData.m_collisionHeight;
+
+    if (bound - 2.0f >= this->GetPosition().z + collisionHeight) {
+        return;
+    }
+
+    if (!this->m_vehicle || !this->m_vehicle->m_vehicleRec || !this->m_vehicle->HasHighPriorityAnim()) {
+        const UnitAnimationSet* animations = this->SelectAnimationSet();
+        this->PlayMovementAnimKit(6, animations->m_move[0].m_backward, 0xFFFFFFFF, 0);
+        this->PlayWoundAnimKit(0);
+    }
+
+    CreatureSoundDataRec* sound;
+
+    if (this->m_mountDisplayId <= 0 || (this->m_clientFlags & 0x10000000) || this->IsMountSelf(0)) {
+        sound = this->m_soundDataOverride;
+
+        if (!sound) {
+            sound = this->m_soundData;
+        }
+    } else {
+        sound = this->m_soundDataOverride;
+    }
+
+    if (sound) {
+        C3Vector position = this->GetPosition();
+
+        if (this->IsActivePlayer()) {
+            bool atCharacter = SI3::sm_pCVar_Sound_ListenerAtCharacter && SI3::sm_pCVar_Sound_ListenerAtCharacter->m_intValue;
+            SE3SoundKitProperties properties;
+            properties.m_priority = 110;
+            SE3::PlaySoundKit(sound->m_soundExertionID, atCharacter ? NULL : &position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::PlayFlightBoundsFeedback");
+        } else {
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit(sound->m_soundExertionID, &position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::PlayFlightBoundsFeedback");
+        }
+    }
+
+    s_nextFlightSoundTime = time + 2000;
+}
+
+// OFFSET: 0x005D8850
+void CGUnit_C::DismountIfMountRulesFail() {
+    if (this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000) && !this->CheckCurrentMountRules()) {
+        this->Dismount();
     }
 }
 
@@ -4674,6 +4863,47 @@ void CGUnit_C::OnDisplayModelLoaded(CM2Model* model) {
     this->CreateOrDestroyObjectEffectManager();
     this->UpdateAnimReplacementSets();
     this->UpdateEmoteStateAnimKit();
+}
+
+// OFFSET: 0x005B55E0/0x140228E00
+void CGUnit_C::OnDisplayTransitionBeginAnimation() {
+    this->UpdateWorldObject(0);
+    CM2Model* model = this->m_worldModel;
+    CM2Scene* scene = model->m_scene;
+    CM2Model* transitionModel = this->m_displayTransition ? this->m_displayTransition->m_model : NULL;
+
+    if (scene && transitionModel && (this->m_currentClientRaceFlags & 0x4) && !(this->m_currentClientRaceFlags & 0x1)) {
+        uint32_t ids[2] = { 5, 6 };
+        uint32_t attachments[2] = { 51, 52 };
+
+        for (uint32_t i = 0; i < 2; i++) {
+            uint32_t attachment = attachments[i];
+
+            if (!transitionModel->HasAttachment(attachment)) {
+                continue;
+            }
+
+            for (CM2Model* child = model->m_attachList; child; child = child->m_attachNext) {
+                if (child->m_attachmentId == ids[i]) {
+                    scene->DuplicateModel(child, 0)->AttachToParent(transitionModel, attachment, NULL, 0);
+                }
+            }
+        }
+    }
+
+    if (!this->m_soundData) {
+        return;
+    }
+
+    int32_t soundKitID = (this->m_currentClientRaceFlags & 0x4) ? this->m_soundData->unk_009C : this->m_soundData->unk_0098;
+
+    if (!soundKitID) {
+        return;
+    }
+
+    C3Vector position = this->GetPosition();
+    SE3SoundKitProperties properties;
+    SE3::PlaySoundKit(soundKitID, &position, &properties, &this->m_displayTransitionSound, __FILE__, __LINE__, "CGUnit_C::OnDisplayTransitionBeginAnimation");
 }
 
 // OFFSET: 0x005B5580/0x140228D80
@@ -9827,7 +10057,7 @@ bool CGUnit_C::IsStandStateSplitBody() const {
     return result;
 }
 
-// OFFSET: #0x00715930
+// OFFSET: 0x005ABD50
 const char* CGUnit_C::GetDisplayBakeName() const {
     if (this->m_displayInfoExtra) {
         return this->m_displayInfoExtra->m_bakeName;
@@ -10909,7 +11139,7 @@ void CGUnit_C::SetManaRegenInterrupt() {
     this->m_manaRegenInterruptTime = FrameTime::s_curTimeMs + 5000;
 }
 
-// OFFSET: #0x0071C500
+// OFFSET: 0x005B60D0
 int32_t CGUnit_C::UsesNpcBakedTexture() const {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         return 0;
@@ -12603,35 +12833,6 @@ void CGUnit_C::UpdateAuraEffectMask() {
                 this->m_auraEffectMask[auraType / 8] |= 1 << (auraType % 8);
             }
         }
-    }
-}
-
-// OFFSET: #0x00716E50
-void CGUnit_C::ApplyGuildTabard(int32_t guildId, const WOWGUID& guid, void* param, bool apply) {
-    if (!guildId || !apply) {
-        return;
-    }
-
-    WOWGUID cacheGuid = WOWGUID();
-
-    if (!g_guildInfoCache.GetRecord(guildId, cacheGuid, NULL, NULL, false)) {
-        return;
-    }
-
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!unit) {
-        return;
-    }
-
-    int32_t emblemStyle;
-    int32_t emblemColor;
-    int32_t borderStyle;
-    int32_t borderColor;
-    int32_t background;
-
-    if (GuildGetGuildTabard(guid, guildId, NULL, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background) && unit->m_characterComponent) {
-        unit->m_characterComponent->ApplyGuildColor(emblemStyle, emblemColor, borderStyle, borderColor, background);
     }
 }
 
@@ -14839,18 +15040,16 @@ static int32_t AckMessageHasValue(uint32_t msgId) {
         || msgId == CMSG_MOVE_SET_COLLISION_HGT_ACK;
 }
 
-// OFFSET: #0x00717D90
+// OFFSET: 0x005AEC60/0x140221620
 void CGUnit_C::SendTimeSkip(uint32_t skip) {
-    if (this->m_movement->IsOnSpline() || (this->m_movementData.m_flags & MOVEMENTFLAG_ONTRANSPORT)) {
+    if (this->m_movement->IsOnSpline() || (this->m_movementData.m_flags & MOVEMENTFLAG_UNK_40000000) || !skip) {
         return;
     }
 
-    CDataStore msg;
-    SmartGUID guid;
-    guid.m_guid = this->m_obj->m_guid.m_guid;
-    (msg.Put(static_cast<uint32_t>(CMSG_MOVE_TIME_SKIPPED)) << guid).Put(skip);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
+    PlayerMoveTimeSkipped msg;
+    msg.m_guid = this->m_obj->m_guid;
+    msg.m_timeSkipped = skip;
+    ClientServices::Send(&msg);
 }
 
 // OFFSET: #0x0071EF20
@@ -16963,7 +17162,7 @@ int32_t CGUnit_C::InitializeExtendedDisplay(CGPlayer_C* player, int32_t hasDispl
     return 1;
 }
 
-// OFFSET: #0x00716E20
+// OFFSET: 0x005ADB60/0x140220230
 void CGUnit_C::ApplyComponentItemsFromEffects() {
     for (CEffect* effect = this->m_effectList; effect;) {
         CEffect* next = effect->m_next;
@@ -21627,121 +21826,100 @@ void CGUnit_C::RemoveChannelEffects(int32_t spellId) {
     }
 }
 
-// OFFSET: #0x00730D10
-void CGUnit_C::UpdateSwimmingStatus(uint32_t time, int32_t a3) {
-    if (this->m_movement->m_flags2 & 0x4) {
+// OFFSET: 0x005D9F10/0x1402559E0
+void CGUnit_C::UpdateSwimmingStatus(uint32_t time, int32_t spline) {
+    if (this->m_movement->m_flags & MOVEMENTFLAG_DISABLE_COLLISION) {
         return;
     }
 
-    int32_t liquidType;
+    if ((this->m_vehiclePassenger && this->m_vehiclePassenger->m_state) || (this->m_movementData.m_flags2 & 0x1000)) {
+        return;
+    }
+
+    CMoveSpline* moveSpline = this->m_movement->m_spline;
+    int32_t canSwim = moveSpline && !(moveSpline->m_flags & 0x80) ? this->m_movementData.IsOnSwimSpline() : this->CanSwim();
+
+    if (!canSwim) {
+        if (this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) {
+            this->OnSwimStop(time, spline);
+        }
+
+        uint32_t wasUnder = this->m_clientFlags & 0x200000;
+        this->m_clientFlags &= ~0x200000;
+
+        if (this->IsActivePlayer() && wasUnder != (this->m_clientFlags & 0x200000)) {
+            CGSpellBook::UpdateUsable();
+        }
+
+        return;
+    }
+
+    uint32_t liquidType;
     float height;
     int32_t liquidFlags;
-    int32_t inLiquid = World::QueryObjectLiquid(this->m_worldObject, &liquidType, &height, &liquidFlags);
+    int32_t inLiquid = World::QueryObjectLiquid(this->m_worldObject, liquidType, height, liquidFlags);
     float depth = 0.0f;
 
     if (inLiquid) {
         depth = height - this->GetPosition().z;
     }
 
-    int32_t canSwim = this->CanSwim() && !this->GetTransportGUID();
     float swimDepth = this->m_movementData.m_collisionHeight * 0.75f;
     float exitDepth = swimDepth - 0.027777778f;
-    uint32_t flags = this->m_movement->m_flags;
 
-    if (flags & 0x200000) {
-        if ((flags & 0x400000) && depth - swimDepth <= 0.33333334f && this->IsActiveMover()) {
-            this->TryJumpOrAscend(time);
-        }
-
-        if (!(this->m_movementData.m_flags & 0x2000000) && (!inLiquid || exitDepth > depth || !canSwim)) {
-            this->OnSwimStop(time, a3);
-        }
+    if (!(this->m_clientFlags & 0x80000000)) {
+        this->UpdateSwimmingStatusDefault(time, spline, depth, swimDepth, exitDepth);
     } else {
-        if (swimDepth < depth && canSwim && !this->m_movementData.IsJumpingUp()) {
-            this->OnSwimStart(time, a3);
-        }
-
-        if ((this->m_movementData.m_collisionHeight * 0.4f < depth) != (this->m_movementData.m_collisionHeight * 0.4f < this->m_swimDepth)) {
-            C3Vector position = this->GetPosition();
-            this->PlaySplashSound(&position);
-            this->CreateRipple(201);
-        }
-
-        this->m_swimDepth = depth;
+        this->UpdateSwimmingStatusFlightStyle(time, depth, swimDepth, exitDepth);
     }
 
-    uint32_t wasSwimming = this->m_clientFlags & 0x200000;
+    uint32_t flags = this->m_clientFlags;
+    uint32_t wasUnder = flags & 0x200000;
 
-    if ((this->m_movement->m_flags & 0x200000) || (swimDepth < depth && canSwim)) {
-        this->m_clientFlags |= 0x200000;
+    if ((this->m_movement->m_flags & MOVEMENTFLAG_SWIMMING) || depth > swimDepth) {
+        flags |= 0x200000;
     } else {
-        this->m_clientFlags &= ~0x200000;
+        flags &= ~0x200000;
     }
 
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && wasSwimming != (this->m_clientFlags & 0x200000)) {
+    uint32_t wasSurface = flags & 0x4000000;
+    flags &= ~0x4000000;
+    this->m_clientFlags = flags;
+
+    if (inLiquid && depth - swimDepth <= 0.33333334f) {
+        this->m_clientFlags = flags | 0x4000000;
+    }
+
+    if (this->IsActivePlayer() && (this->m_modelFlags & 0x40000) && (wasUnder != (this->m_clientFlags & 0x200000) || wasSurface != (this->m_clientFlags & 0x4000000))) {
+        this->DismountIfMountRulesFail();
         CGSpellBook::UpdateUsable();
     }
 }
 
-// OFFSET: #0x0073A890
+// OFFSET: 0x005C4550/0x14023B030
 void CGUnit_C::UpdateFlightStatus(uint32_t time) {
-    uint32_t flags = this->m_movementData.m_flags;
-
-    if (!(flags & 0x1000000)) {
+    if (!(this->m_movementData.m_flags & MOVEMENTFLAG_CAN_FLY)) {
         return;
     }
 
-    if (!(flags & 0x2000000)) {
-        if (!this->m_movementData.IsJumpingUp() && (this->m_movementData.m_flags & 0x1000) && this->IsActiveMover() && this->GetHeightAboveGround() >= 1.5f) {
-            this->m_movementData.OnFlightLocal(time, 1);
-            CGUnit_C::s_flightStatusTime = time;
-        }
+    if (this->m_movementData.m_flags & MOVEMENTFLAG_FLYING) {
+        this->PlayFlightBoundsFeedback(time);
+    }
 
+    if (this->m_obj->m_guid != CGUnit_C::s_activeMover) {
         return;
     }
 
-    // STATIC: #0x00CA12B4
-    static uint32_t s_nextFlightSoundTime = time + 2000;
+    uint32_t delay = (this->m_unit->m_unitFieldFlags & 0x8) ? s_flightTransitionDelayFlag : s_flightTransitionDelay;
 
-    if (static_cast<int32_t>(time - s_nextFlightSoundTime) >= 0) {
-        float bound;
-
-        if (CMap::QueryFlightBounds(this->GetPosition(), &bound)) {
-            float collisionHeight = this->m_movementData.m_collisionHeight;
-
-            if (bound - 2.0f < this->GetPosition().z + collisionHeight) {
-                if (!this->GetVehicleRec() || !this->m_vehicle->HasHighPriorityAnim()) {
-                    this->PlayBaseAnimation(45, 0);
-                    this->PlayWoundAnimKit(0);
-                }
-
-                CreatureSoundDataRec* sound = this->IsMounted() ? this->m_soundDataOverride : this->GetSoundData(0);
-
-                if (sound) {
-                    C3Vector position = this->GetPosition();
-
-                    if (this->IsActivePlayer()) {
-                        // STATIC: #0x00CA12B0
-                        static CVar* s_listenerAtCharacter = CVar::Lookup("Sound_ListenerAtCharacter");
-
-                        int32_t atCharacter = s_listenerAtCharacter->m_intValue;
-                        SE2SoundKitProperties properties;
-                        properties.ResetToDefaults();
-                        properties.m_volumeScale = atCharacter ? 0.65f : 1.0f;
-                        properties.m_priority = 110;
-                        SI3::PlaySoundKit(sound->m_soundExertionID, atCharacter ? NULL : &position, NULL, &properties, 0, NULL, 1, 0);
-                    } else {
-                        SI3::PlaySoundKit(sound->m_soundExertionID, &position, NULL, NULL, 0, NULL, 1, 0);
-                    }
-                }
-
-                s_nextFlightSoundTime = time + 2000;
-            }
+    if (this->m_movementData.m_flags & MOVEMENTFLAG_FLYING) {
+        if (time - s_swimStartTime > delay && (this->m_movementData.m_flags2 & 0x800) && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !static_cast<CGPlayer_C*>(this)->IsCommentatorUberOrInArena())) {
+            this->m_movementData.OnFlightLocal(time, 0);
+            s_swimStopTime = time;
         }
-    }
-
-    if (time - CGUnit_C::s_flightStatusTime > 2000 && this->m_obj->m_guid == CGUnit_C::s_activeMover && this->GetHeightAboveGround() < 1.5f && (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !static_cast<CGPlayer_C*>(this)->IsCommentatorUberOrInArena())) {
-        this->m_movementData.OnFlightLocal(time, 0);
+    } else if (time - s_swimStopTime > delay && !this->m_movementData.IsJumpingUp() && !(this->m_movementData.m_flags2 & 0x800) && ((this->m_movementData.m_flags & (MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR)) || this->m_movementData.HasFallVelocity())) {
+        this->m_movementData.OnFlightLocal(time, 1);
+        s_swimStartTime = time;
     }
 }
 
@@ -22361,9 +22539,9 @@ void CGUnit_C::PostShutdown() {
     CGUnit_C::ShutdownMissileTrajectorySystem();
 }
 
-// OFFSET: #0x00723A50
+// OFFSET: 0x005BD220
 void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
-    if (this->m_unit->m_unitFieldPetnumber || (this->m_movement->m_flags & 0x40000000) || (this->m_unit->m_unitFieldBytes1[2] & 0x2) || this->GetTransportGUID()) {
+    if (this->m_unit->m_unitFieldPetnumber || (this->m_movement->m_flags & MOVEMENTFLAG_HOVER) || (this->m_unit->m_unitFieldBytes1[2] & 0x2) || this->GetTransportGUID()) {
         return;
     }
 
@@ -22371,72 +22549,90 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
         return;
     }
 
-    const C3Vector& cameraPos = CGWorldFrame::GetActiveCamera()->m_position;
-    float dx = position->x - cameraPos.x;
+    const C3Vector& cameraPos = StaticSingleton<CCameraManager>::Instance()->m_shot.m_position;
     float dy = position->y - cameraPos.y;
+    float dx = position->x - cameraPos.x;
     float dz = position->z - cameraPos.z;
-    float distanceSquared = dx * dx + (dy * dy + dz * dz);
+    float distanceSquared = dz * dz + dy * dy + dx * dx;
 
     if (distanceSquared > 2500.0f) {
         return;
     }
 
-    if ((CWorld::enables & 0x400) && !(this->m_modelData->m_flags & 0x20)) {
-        float size[2];
-        size[0] = 0.0f;
-        size[1] = 0.0f;
+    if (!(this->m_modelData->m_flags & 0x20)) {
+        C2Vector size(0.0f, 0.0f);
         int32_t textureId;
-        this->GetFootprintInfo(&textureId, size);
-        WOWGUID guid = this->m_obj->m_guid;
-        int32_t activePlayer = guid == ClntObjMgrGetActivePlayer() ? 1 : 0;
-        World::NewFootprint(textureId, size, position, this->GetFacing(), left == 0, this->m_terrainTypeId, activePlayer);
+        this->GetFootprintInfo(&textureId, &size.x);
+        int32_t activePlayer = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? 1 : 0;
+        float facing = this->GetFacing();
+        uint32_t moveFlags = this->m_movement->m_flags;
+
+        if (moveFlags & MOVEMENTFLAG_STRAFE_LEFT) {
+            if (moveFlags & MOVEMENTFLAG_FORWARD) {
+                facing = facing + 0.78539819f;
+            } else if (moveFlags & MOVEMENTFLAG_BACKWARD) {
+                facing = facing - 0.78539819f;
+            } else {
+                facing = facing + 1.5707964f;
+            }
+        } else if (moveFlags & MOVEMENTFLAG_STRAFE_RIGHT) {
+            if (moveFlags & MOVEMENTFLAG_FORWARD) {
+                facing = facing - 0.78539819f;
+            } else if (moveFlags & MOVEMENTFLAG_BACKWARD) {
+                facing = facing + 0.78539819f;
+            } else {
+                facing = facing - 1.5707964f;
+            }
+        }
+
+        World::NewFootprint(textureId, size, *position, facing, left == 0, this->m_terrainTypeId, activePlayer);
     }
 
     if (this->m_modelData->m_footstepShakeSize) {
         StaticSingleton<CCameraManager>::Instance()->AddShakeById(this->m_modelData->m_footstepShakeSize, *position);
     }
 
-    if (distanceSquared > 625.0f || (this->m_movement->m_flags & 0x2) || (this->m_modelData->m_flags & 0x1) || !CGUnit_C::s_cvShowFootPrintParticles->m_intValue) {
+    if (distanceSquared > 625.0f || (this->m_movement->m_flags & MOVEMENTFLAG_BACKWARD) || (this->m_modelData->m_flags & 0x1) || !CGUnit_C::s_cvShowFootPrintParticles->m_intValue) {
         return;
     }
 
-    int32_t liquidType;
+    const TerrainTypeRec* terrain = g_terrainTypeDB.GetRecord(this->m_terrainTypeId);
+    uint32_t liquidType;
     float liquidHeight;
     int32_t liquidFlags;
+    int32_t spray;
 
-    if (World::QueryObjectLiquid(this->m_worldObject, &liquidType, &liquidHeight, &liquidFlags)) {
+    if (!World::QueryObjectLiquid(this->m_worldObject, liquidType, liquidHeight, liquidFlags)) {
+        if (!terrain) {
+            return;
+        }
+
+        spray = terrain->m_flags & 0x1;
+    } else {
         int32_t flag8;
         int32_t flag9;
-        World::QueryObjectLiquidFlags(this->m_worldObject, &flag8, &flag9);
-
-        if (!flag9) {
-            return;
-        }
-
+        World::QueryObjectLiquidFlags(this->m_worldObject, flag8, flag9);
         float depth = liquidHeight - this->GetPosition().z;
 
-        if (this->m_movementData.m_collisionHeight * 0.5f <= depth) {
+        if (flag9 && this->m_movementData.m_collisionHeight * 0.5f > depth) {
+            C3Vector splash(position->x, position->y, position->z + depth);
+            CEffect* effect = CEffect::Create();
+            effect->AddSpecialByPosition(!this->IsRunning(), splash, this->m_obj->m_guid, 0x220, CGObject_C::EffectOnceHandler);
+            effect->Release();
+        }
+
+        if (!terrain || !(terrain->m_flags & 0x2) || depth <= 1.1920929e-7f) {
             return;
         }
 
-        C3Vector splash;
-        splash.x = position->x;
-        splash.y = position->y;
-        splash.z = depth + position->z;
-        CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-        WOWGUID owner = this->m_obj->m_guid;
-        effect->AddSpecialByPosition(!this->IsRunning(), splash, &owner, 0x220, CGObject_C::EffectOnceHandler);
-        effect->Release();
+        spray = this->m_movement->m_flags2 & 0x800;
+    }
+
+    if (!spray) {
         return;
     }
 
-    TerrainTypeRec* terrain = g_terrainTypeDB.GetRecord(this->m_terrainTypeId);
-
-    if (!terrain) {
-        return;
-    }
-
-    SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(this->IsRunning() ? terrain->m_footstepSprayWalk : terrain->m_footstepSprayRun);
+    const SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(this->IsRunning() ? terrain->m_footstepSprayWalk : terrain->m_footstepSprayRun);
 
     if (!effectName) {
         return;
@@ -22447,12 +22643,11 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
     if (this->GetTransportGUID()) {
         C44Matrix transport;
         MovementGetTransportMtxX(WOWGUID::Make(this->GetTransportGUID()), &transport, this->m_obj->m_guid, __FILE__, __LINE__);
-        effectPosition *= transport.AffineInverse();
+        effectPosition = effectPosition * transport.AffineInverse();
     }
 
-    CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-    WOWGUID owner = this->m_obj->m_guid;
-    effect->InitFromUnit(effectPosition, OsGetAsyncTimeMs(), 0, NULL, effectName, &owner, 0x220, CGObject_C::EffectOnceHandler, 0, NULL, WOWGUID::Make(this->GetTransportGUID()));
+    CEffect* effect = CEffect::Create();
+    effect->AddEffectByPosition(effectPosition, NULL, CGWorldFrame::s_currentWorldFrame->GetSceneTime(), 0, NULL, effectName, this->m_obj->m_guid, WOWGUID(), 0x220, CGObject_C::EffectOnceHandler, 0, NULL, WOWGUID::Make(this->GetTransportGUID()), -1, 0, 0);
     effect->Release();
 }
 
@@ -22684,12 +22879,21 @@ UnitBloodRec* CGUnit_C::GetBloodRecord() {
 
 // OFFSET: 0x005D48B0
 void CGUnit_C::OnVirtualItemChanged(uint32_t slot, int32_t oldItemId) {
+    if (this->m_displayTransition) {
+        if (!this->m_displayTransition->UpdateState(1)) {
+            this->StopDisplayTransition();
+        }
+
+        if (this->m_displayTransition) {
+            this->m_displayTransition->Expedite(1);
+            this->StopDisplayTransition();
+        }
+    }
+
     ItemRec* oldRec = g_itemDB.GetRecord(oldItemId, WOWGUID(), NULL, NULL, false);
     ItemRec* rec = g_itemDB.GetRecord(this->m_unit->m_unitVirtualItemSlotId[slot], WOWGUID(), NULL, NULL, false);
     this->m_virtualItemDisplayId[slot] = rec ? rec->m_displayInfoID : 0;
     CGUnitVirtualItem item;
-    item.m_pad[0] = 0;
-    item.m_pad[1] = 0;
 
     if (rec) {
         item.m_classID = static_cast<uint8_t>(rec->m_classID);
@@ -22707,24 +22911,21 @@ void CGUnit_C::OnVirtualItemChanged(uint32_t slot, int32_t oldItemId) {
         item.m_sheatheType = 0;
     }
 
+    item.m_pad[0] = 0;
+    item.m_pad[1] = 0;
     this->m_virtualItem[slot] = item;
-    SHEATHE_TYPE sheatheType = static_cast<SHEATHE_TYPE>(oldRec ? oldRec->m_sheatheType : 0);
-    CCharacterComponent::RemoveHandItem(this->m_worldModel, s_virtualItemInvSlots[slot], sheatheType, false);
+    int32_t sheatheType = oldRec ? oldRec->m_sheatheType : 0;
+    this->RemoveHandItemModel(s_virtualItemInvSlots[slot], sheatheType, false);
 
     if (slot == 1) {
-        CCharacterComponent::RemoveHandItem(this->m_worldModel, s_virtualItemInvSlots[1], sheatheType, true);
+        this->RemoveHandItemModel(s_virtualItemInvSlots[1], sheatheType, true);
     }
 
     const CGUnitVirtualItem* current = this->GetVirtualItem(slot, false);
     ItemDisplayInfoRec displayRec;
 
     if (current && this->GetVirtualItemDisplayRec(slot, displayRec)) {
-        GEOCOMPONENTLINKS link = CCharacterComponent::AddHandItem(this->m_worldModel, &displayRec, s_virtualItemInvSlots[slot], static_cast<SHEATHE_TYPE>(current->m_sheatheType), this->m_sheatheState == 0, current->m_inventoryType == 14, false, 0);
-
-        if (this->m_characterComponent) {
-            this->m_characterComponent->SetItemSlotUsingAttachSlot(static_cast<ITEM_SLOT>(-1), link);
-        }
-
+        this->AddHandItemModel(&displayRec, s_virtualItemInvSlots[slot], current->m_sheatheType, this->m_sheatheState == 0, current->m_inventoryType == 14, false, 0);
         this->SetWeaponTrail(this->m_worldModel, slot);
     }
 }
@@ -23152,37 +23353,6 @@ void CGUnit_C::UpdateUnitNameColor() {
     }
 }
 
-// OFFSET: #0x00724410
-int32_t CGUnit_C::CanPlayEmoteAnim() {
-    if (this->AppearsDead(1) || this->IsDeadOrGhost() || this->GetClientStandState() == 9) {
-        return 0;
-    }
-
-    uint32_t flags = this->m_movementData.m_flags;
-
-    if ((flags & 0x1000) && (flags & 0x2000)) {
-        return 0;
-    }
-
-    if (this->IsJumping() || !(flags & 0xF)) {
-        return 0;
-    }
-
-    if (this->IsLooting() && this->ShouldKneelForLoot()) {
-        return 0;
-    }
-
-    if (this->m_unit->m_unitChannelSpell || (this->m_animationState & 0x400) || this->IsInMelee() || this->CanPlayTurnAnim()) {
-        return 0;
-    }
-
-    if (this->m_sheatheState == 2 && (this->m_animationState & 0x200)) {
-        return 0;
-    }
-
-    return !this->GetClientStandState() && !this->unk_09F8;
-}
-
 // PROVEN: ee3ea77b IDENTICAL/NONE
 // OFFSET: 0x005B2720/0x140225C20
 int32_t CGUnit_C::GetAbilitySkillLine(int32_t spellId) {
@@ -23578,13 +23748,15 @@ bool CGPlayer_C::CTMAttackUnit(CGUnit_C* unit) {
     box.b = target;
     box.t = target;
 
-    // STATIC: #0x00CA1284
+    // STATIC: 0x00DD62D8
     static World::FacetData s_facets;
 
     s_facets.facets.SetCount(0);
     s_facets.facetIds.m_count = 0;
+    s_facets.facetFlags.m_count = 0;
+    s_facets.m_status = 0;
 
-    if (World::GetFacets(&box, &s_facets, 0x100111, NULL) && s_facets.facets.m_count) {
+    if (World::GetFacets(box, s_facets, 0x100111) && s_facets.facets.m_count && s_facets.facets.m_data[0].plane.n.z > 0.0000099999997f) {
         const C4Plane& plane = s_facets.facets.m_data[0].plane;
         target.z = -((plane.n.y * target.y + plane.n.x * target.x + plane.d) / plane.n.z);
     }
@@ -23645,10 +23817,10 @@ void CGUnit_C::SetTrackingDirection(const C3Vector& direction) {
 
 // OFFSET: 0x005CE180
 bool CGUnit_C::HandleTrackingPitch(float targetZ, float z, float pitch, float maxStep, uint32_t time, bool* overshoot) {
-    int32_t liquidType;
+    uint32_t liquidType;
     int32_t liquidFlags;
 
-    if (z < targetZ && World::QueryObjectLiquid(this->m_worldObject, &liquidType, &targetZ, &liquidFlags) && targetZ > z && fabs(targetZ - z - this->m_movementData.m_collisionHeight * 0.75f) < 0.001f) {
+    if (z < targetZ && World::QueryObjectLiquid(this->m_worldObject, liquidType, targetZ, liquidFlags) && targetZ > z && fabs(targetZ - z - this->m_movementData.m_collisionHeight * 0.75f) < 0.001f) {
         if (0.0f != this->GetPitch()) {
             EnableTrackingPitch(time, 0.0f);
             this->TrackingSetPitch(time, 0.0f);
@@ -24353,10 +24525,16 @@ void CGUnit_C::FillPartyMemberPetState(CGPartyPetState* state) {
     memset(&state->m_auras[count], 0, sizeof(state->m_auras[0]) * (64 - count));
 }
 
-// OFFSET: #0x00730290
+// OFFSET: 0x005CFA00
 void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
+    uint32_t clientFlags = this->m_clientFlags;
+
+    if (!(clientFlags & 0x20000)) {
+        return;
+    }
+
     ComponentData data;
-    this->m_clientFlags &= ~0x20000;
+    this->m_clientFlags = clientFlags & ~0x20000;
 
     if (!this->m_worldModel || !this->m_worldModel->IsLoaded()) {
         return;
@@ -24370,6 +24548,7 @@ void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
         return;
     }
 
+    this->FreeComponent();
     uint8_t value;
     msg->Get(value);
     data.m_preferences.m_raceID = value;
@@ -24390,8 +24569,8 @@ void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
         msg->Get(value);
         data.m_preferences.m_facialHairId = value;
 
-        uint32_t guildId;
-        msg->Get(guildId);
+        uint64_t guildGuid;
+        msg->Get(guildGuid);
 
         this->m_characterComponent = CCharacterComponent::AllocComponent();
         data.m_model = this->m_worldModel;
@@ -24418,6 +24597,16 @@ void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
 
         if (itemDisplayId) {
             this->m_characterComponent->AddItemBySlot(INVSLOT_BODY, itemDisplayId, 0);
+            ItemDisplayInfoRec itemRec;
+            int32_t emblemStyle;
+            int32_t emblemColor;
+            int32_t borderStyle;
+            int32_t borderColor;
+            int32_t background;
+
+            if (g_itemDisplayInfoDB.GetRecord(itemDisplayId, &itemRec) && (itemRec.m_flags & 0x19) && GuildGetGuildTabard(this->m_obj->m_guid, WOWGUID::Make(guildGuid), &CGUnit_C::ShirtTabardDrawCallback, reinterpret_cast<void*>(itemRec.m_flags & 0x19), emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+                this->m_characterComponent->ApplyShirtGuildColor(itemRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
+            }
         }
 
         msg->Get(itemDisplayId);
@@ -24460,6 +24649,11 @@ void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
 
         if (itemDisplayId) {
             this->m_characterComponent->AddItemBySlot(INVSLOT_BACK, itemDisplayId, 0);
+            ItemDisplayInfoRec itemRec;
+
+            if (g_itemDisplayInfoDB.GetRecord(itemDisplayId, &itemRec) && (itemRec.m_flags & 0x19)) {
+                this->LoadGuildTextures(guildGuid);
+            }
         }
 
         msg->Get(itemDisplayId);
@@ -24473,8 +24667,8 @@ void CGUnit_C::OnReceiveMirrorImageDataFromServer(CDataStore* msg) {
             int32_t borderColor;
             int32_t background;
 
-            if (g_itemDisplayInfoDB.GetRecord(itemDisplayId, &itemRec) && (itemRec.m_flags & 0x1) && GuildGetGuildTabard(this->m_obj->m_guid, guildId, CGUnit_C::ApplyGuildTabard, this, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
-                this->m_characterComponent->ApplyGuildColor(emblemStyle, emblemColor, borderStyle, borderColor, background);
+            if (g_itemDisplayInfoDB.GetRecord(itemDisplayId, &itemRec) && (itemRec.m_flags & 0x19) && GuildGetGuildTabard(this->m_obj->m_guid, WOWGUID::Make(guildGuid), &CGUnit_C::TabardDrawCallback, reinterpret_cast<void*>(itemRec.m_flags & 0x19), emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+                this->m_characterComponent->ApplyGuildColor(itemRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
             }
         }
     } else if (this->m_displayInfoExtra) {
@@ -24624,7 +24818,7 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
     if (changed & 0x1) {
         if (flags & 0x1) {
             if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
-                CGInputControl::GetActive()->UpdatePlayer(OsGetAsyncTimeMs(), 0);
+                CGInputControl::GetActive()->UpdatePlayer(FrameTime::GetCurTimeMs(), 0);
             }
 
             this->CheckLoopSound();
@@ -24632,7 +24826,7 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
             this->PlayDeathAnim(1);
         } else {
             this->CheckLoopSound();
-            this->UpdateBaseAnimation(0, -1);
+            this->UpdateDeathAnimKit();
         }
     }
 
@@ -24667,7 +24861,7 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
             }
 
             if (hide && this->m_sheatheState <= 1) {
-                CCharacterComponent::RemoveHandItem(this->m_worldModel, INVSLOT_OFFHAND, static_cast<SHEATHE_TYPE>(this->m_sheatheState ? 0 : offHand->m_sheatheType), offHand->m_inventoryType == 14);
+                this->RemoveHandItemModel(INVSLOT_OFFHAND, this->m_sheatheState ? 0 : offHand->m_sheatheType, offHand->m_inventoryType == 14);
             } else {
                 this->AddHandItem(1);
             }
@@ -24699,7 +24893,26 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
     }
 
     if ((changed & 0x40) && this->m_obj->m_guid == CGUnit_C::s_activeMover) {
-        CGInputControl::GetActive()->UpdatePlayer(OsGetAsyncTimeMs(), 1);
+        CGInputControl::GetActive()->UpdatePlayer(FrameTime::GetCurTimeMs(), 1);
+    }
+
+    if (changed & 0x10000000) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if ((this->m_unit->m_unitFieldFlags2 & 0x10000000) && player && !player->IsFriendly(this)) {
+            CGGameUI::BreakTarget(this->m_obj->m_guid);
+            Script_SendUniqueSignal(this->m_obj->m_guid, 146);
+        }
+    }
+
+    if (changed & 0x80000) {
+        if ((this->m_modelData->m_flags & 0x40) || (this->m_unit->m_unitFieldFlags2 & 0x80000)) {
+            this->m_clientFlags |= 0x2000000;
+        } else {
+            this->m_clientFlags &= ~0x2000000;
+        }
+
+        CGGameUI::UpdateUnitHighlights(1);
     }
 }
 

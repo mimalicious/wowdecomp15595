@@ -1958,7 +1958,7 @@ static int32_t Script_SetUIVisibility(lua_State* L) {
 
     if (CGGameUI::m_visible != visible) {
         CGGameUI::m_visible = visible;
-        CGGameUI::UpdateUnitHighlights();
+        CGGameUI::UpdateUnitHighlights(0);
         ClntObjMgrEnumVisibleObjects(ToggleInteractModelIcon, NULL);
     }
 

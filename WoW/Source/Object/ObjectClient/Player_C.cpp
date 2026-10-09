@@ -393,8 +393,11 @@ static const UIErrors s_dismountResultErrors[] = { ERR_DISMOUNT_NOPET, ERR_DISMO
 // STATIC: #0x00A32618
 static const UIErrors s_buyBankSlotErrors[] = { ERR_BANKSLOT_FAILED_TOO_MANY, ERR_BANKSLOT_INSUFFICIENT_FUNDS, ERR_BANKSLOT_NOTBANKER };
 
-// STATIC: #0x00ADA2E0
+// STATIC: 0x00CA56D0
 static uint32_t s_textEmoteStandStates = 0x10B;
+
+// STATIC: 0x00CA52D0
+static uint32_t s_textEmoteCooldown = 250;
 
 // STATIC: #0x00ADBA74
 static const uint32_t s_playerSoundChance[14] = { 35, 100, 30, 100, 100, 40, 100, 100, 100, 100, 100, 100, 100, 0 };
@@ -4656,7 +4659,7 @@ int32_t GetModalNextSpell() {
     return s_cvAutoRangedCombat->m_intValue ? CGSpellBook::m_autoRangedSpell : 0;
 }
 
-// OFFSET: #0x006DE840
+// OFFSET: 0x005638C0
 int32_t CGPlayer_C::IsXRayVisionActive() {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -12812,8 +12815,8 @@ void CGPlayer_C::TogglePlayerFlag(uint32_t oldFlags) {
     }
 }
 
-// OFFSET: #0x006DD9E0
-void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
+// OFFSET: 0x00562AE0/0x1401C0840
+void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target, int32_t silent) {
     if (!emote || (this->m_unit->m_unitFieldFlags & 0x1000000)) {
         return;
     }
@@ -12825,15 +12828,21 @@ void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
     }
 
     int32_t standUp;
-
     int32_t stopCombat;
 
-    if (!this->CanPlayEmote(rec->m_emoteFlags, 1, &standUp, 0, &stopCombat, 0)) {
+    if (!this->CanPlayEmote(rec->m_emoteFlags, 1, &standUp, this->m_combat.m_attacking != 0, &stopCombat, (this->m_animationState >> 4) & 1)) {
         return;
     }
 
-    if (standUp && this->IsClientControlled()) {
-        CGGameUI::DisplayError(ERR_NOEMOTEWHILERUNNING);
+    if ((standUp || stopCombat) && this->IsClientControlled()) {
+        if (!silent) {
+            if (standUp) {
+                CGGameUI::DisplayError(ERR_NOEMOTEWHILERUNNING);
+            } else if (stopCombat) {
+                CGGameUI::DisplayError(static_cast<UIErrors>(469));
+            }
+        }
+
         return;
     }
 
@@ -12841,32 +12850,37 @@ void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
         return;
     }
 
+    uint32_t now = FrameTime::GetCurTimeMs();
+
+    if (!(rec->m_emoteFlags & 0x800000) && now < this->unk_217C) {
+        return;
+    }
+
+    this->unk_217C = now + s_textEmoteCooldown;
+
     if (target == this->m_obj->m_guid) {
         target = WOWGUID();
     }
 
-    this->SetSheatheState(0, 1, 0);
-
     if (rec->m_emoteSpecProc == 1 && ((1 << rec->m_emoteSpecProcParam) & s_textEmoteStandStates)) {
         this->ChangeStandState(rec->m_emoteSpecProcParam);
-    } else if (rec->m_animID && this->CanPlayEmoteAnim()) {
-        this->PlayBaseAnimation(rec->m_animID, 0);
     }
 
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_SEND_TEXT_EMOTE));
     msg.Put(static_cast<uint32_t>(emote->m_id));
-    uint32_t sound;
+    uint32_t sex;
+    uint32_t race;
 
     if (this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
-        sound = SI3::GetTextEmoteSoundIndex(emote->m_id, this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[2]);
+        sex = this->m_unit->m_unitFieldBytes0[2];
+        race = this->GetCurrentClientRace();
     } else {
-        uint32_t sex = this->GetDisplaySex();
-        uint32_t race = this->GetDisplayRace();
-        sound = SI3::GetTextEmoteSoundIndex(emote->m_id, race, sex);
+        sex = this->GetDisplaySex();
+        race = this->GetDisplayRace();
     }
 
-    msg.Put(sound);
+    msg.Put(SI3::GetTextEmoteSoundIndex(emote->m_id, race, sex));
     msg.Put(target.m_guid);
     msg.Finalize();
     ClientServices::Send2(&msg);
@@ -13508,15 +13522,49 @@ int32_t __stdcall CGPlayer_C::OnTrainerList(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D2840
-void CGPlayer_C::TabardDrawCallback(int32_t guildID, const WOWGUID& guid, void* param, bool success) {
-    if (!guildID || !success) {
+// OFFSET: 0x00557D40/0x1401B4D80
+void CGPlayer_C::ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background) {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->ApplyGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        CImVector backgroundColor(0);
+        CImVector border(0);
+        CImVector emblem(0);
+        char fileName[64];
+        CGObject_C::GetGuildLogoInfo(background, borderColor, emblemColor, emblemStyle, backgroundColor, border, emblem, fileName, 64);
+        CGObject_C::ReplaceGuildTextures(this->m_characterComponent->m_data.m_model, backgroundColor, border, emblem, fileName);
+        CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
+    }
+
+    if (this->m_displayTransition) {
+        this->m_displayTransition->ApplyGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
+}
+
+// OFFSET: 0x00557E10
+void CGPlayer_C::ApplyShirtGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background) {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->ApplyShirtGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        CImVector backgroundColor(0);
+        CImVector border(0);
+        CImVector emblem(0);
+        char fileName[64];
+        CGObject_C::GetGuildLogoInfo(background, borderColor, emblemColor, emblemStyle, backgroundColor, border, emblem, fileName, 64);
+        CGObject_C::ReplaceGuildTextures(this->m_characterComponent->m_data.m_model, backgroundColor, border, emblem, fileName);
+        CGGameUI::UnitModelUpdate(this->m_obj->m_guid, 3);
+    }
+
+    if (this->m_displayTransition) {
+        this->m_displayTransition->ApplyShirtGuildColor(1, emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
+}
+
+// OFFSET: 0x00557EE0/0x1401B5020
+void CGPlayer_C::TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (!key || !success) {
         return;
     }
 
-    WOWGUID none = WOWGUID();
-
-    if (!g_guildInfoCache.GetRecord(guildID, none, NULL, NULL, false)) {
+    if (!g_guildInfoCache.GetRecord(key, WOWGUID(), NULL, NULL, false)) {
         return;
     }
 
@@ -13526,14 +13574,43 @@ void CGPlayer_C::TabardDrawCallback(int32_t guildID, const WOWGUID& guid, void* 
         return;
     }
 
+    void (*noCallback)(const uint64_t& key, const WOWGUID& guid, void* param, bool success) = NULL;
     int32_t emblemStyle;
     int32_t emblemColor;
     int32_t borderStyle;
     int32_t borderColor;
     int32_t background;
 
-    if (GuildGetGuildTabard(guid, guildID, NULL, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background) && player->m_characterComponent) {
-        player->m_characterComponent->ApplyGuildColor(emblemStyle, emblemColor, borderStyle, borderColor, background);
+    if (GuildGetGuildTabard(guid, WOWGUID::Make(key), noCallback, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+        player->ApplyGuildTabard(emblemStyle, emblemColor, borderStyle, borderColor, background);
+    }
+}
+
+// OFFSET: 0x00557FA0
+void CGPlayer_C::ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success) {
+    if (!key || !success) {
+        return;
+    }
+
+    if (!g_guildInfoCache.GetRecord(key, WOWGUID(), NULL, NULL, false)) {
+        return;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return;
+    }
+
+    void (*noCallback)(const uint64_t& key, const WOWGUID& guid, void* param, bool success) = NULL;
+    int32_t emblemStyle;
+    int32_t emblemColor;
+    int32_t borderStyle;
+    int32_t borderColor;
+    int32_t background;
+
+    if (GuildGetGuildTabard(guid, WOWGUID::Make(key), noCallback, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+        player->ApplyShirtGuildTabard(emblemStyle, emblemColor, borderStyle, borderColor, background);
     }
 }
 

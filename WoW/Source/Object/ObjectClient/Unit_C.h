@@ -306,7 +306,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static int32_t __stdcall MaybeDeferTeleport(const WOWGUID* transport);
     static void VehiclePassengerInitWorldCameraState();
     static bool __stdcall CheckSpellPvPUsability(const SpellRec* spell, int32_t* error = NULL);
-    static void ApplyGuildTabard(int32_t guildId, const WOWGUID& guid, void* param, bool apply);
+    static void ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
+    static void TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
     static int32_t __stdcall ResolveSheathState(int32_t hand, const CGUnitVirtualItem* mainHand, const CGUnitVirtualItem* offHand);
     static bool __stdcall CheckIsInArea(int32_t areaId, int32_t areaGroupId, int32_t* checked);
     static float __fastcall ComputeTrackingElevationAngle(const C3Vector& position, const C3Vector& target);
@@ -646,10 +647,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SetCastingSpell(const PendingSpellCast* cast);
     void DestroyLiquidPerturbator();
     void SetupFootprints();
-    void ApplyEffectItemVisuals();
     void FlipDisplayTransitionState();
-    const char* GetBakedTextureName() const;
-    bool IsUsingBakedNpcTexture() const;
     void OnDisplayTransitionBeginAnimation();
     void RetargetEffects(uint32_t spellId, uint64_t oldTarget, uint64_t newTarget);
     void UpdateAnimKitsBeforeMountModelChange(int32_t mounting);
@@ -1070,6 +1068,11 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void UpdateSoundPosition();
     void OnSwimStart(uint32_t time, int32_t spline);
     void OnSwimStop(uint32_t time, int32_t spline);
+    void OnSwimStartLocal(uint32_t time);
+    void UpdateSwimmingStatusFlightStyle(uint32_t time, float depth, float swimDepth, float exitDepth);
+    void UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float depth, float swimDepth, float exitDepth);
+    void PlayFlightBoundsFeedback(uint32_t time);
+    void DismountIfMountRulesFail();
     float GetHeightAboveGround();
     void VehiclePassengerInit();
     void DestroyVehicleCamera();
@@ -1134,7 +1137,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SmoothFacingAngle(float facing);
     void RotateWheels();
     int32_t CanPlayTurnAnim();
-    int32_t CanPlayEmoteAnim();
     void UpdateDelayedSpellVisualKits();
     void PlayFallLandAnimation(uint32_t oldFlags, int32_t jumping);
     void HandleEnvironmentDamage(uint32_t type, int32_t damage, int32_t absorbed, int32_t resisted);

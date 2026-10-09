@@ -3893,8 +3893,8 @@ void CGGameUI::SetUIScale(float scale) {
     }
 }
 
-// OFFSET: #0x00513CF0
-void CGGameUI::UpdateUnitHighlights() {
+// OFFSET: 0x008C5C70/0x1406359C0
+void CGGameUI::UpdateUnitHighlights(int32_t force) {
     bool show = CGGameUI::m_visible || (g_unitHighlightsCVar && g_unitHighlightsCVar->m_intValue);
 
     if (CGGameUI::m_currentObjectTrack) {
@@ -3902,9 +3902,9 @@ void CGGameUI::UpdateUnitHighlights() {
 
         if (object) {
             if (show) {
-                object->ShowHighlightType(1, 0);
+                object->ShowHighlightType(1, force);
             } else {
-                object->HideHighlightType(1, 0);
+                object->HideHighlightType(1, force);
             }
         }
     }
@@ -3914,9 +3914,9 @@ void CGGameUI::UpdateUnitHighlights() {
 
         if (object) {
             if (show) {
-                object->ShowHighlightType(0, 0);
+                object->ShowHighlightType(0, force);
             } else {
-                object->HideHighlightType(0, 0);
+                object->HideHighlightType(0, force);
             }
         }
     }

@@ -1891,7 +1891,7 @@ static int32_t Script_DoEmote(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player) {
-        player->SendTextEmote(rec, target);
+        player->SendTextEmote(rec, target, 0);
     }
 
     return 0;

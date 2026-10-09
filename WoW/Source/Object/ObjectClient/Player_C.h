@@ -89,6 +89,8 @@ class CEffect;
 #pragma pack(push, 4)
 class CGPlayer_C : public CGUnit_C, public CGPlayer {
     public:
+    void ApplyGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background);
+    void ApplyShirtGuildTabard(int32_t emblemStyle, int32_t emblemColor, int32_t borderStyle, int32_t borderColor, int32_t background);
     void DanceMoveAnimComplete();
     void HandleSpellEventSound();
     static int32_t IsXRayVisionActive();
@@ -365,7 +367,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void SetFarSightFocus(CGObject_C* object);
     void SetPlayedTime(int32_t playedTime);
     void ChangeStandState(uint32_t standState);
-    void SendTextEmote(const EmotesTextRec* emote, WOWGUID target);
+    void SendTextEmote(const EmotesTextRec* emote, WOWGUID target, int32_t silent);
     void SetAFK(const char* message);
     void UpdateActiveMoverDisplay(uint32_t time);
     void SetPvpCooldownTimestamp(uint32_t flags);

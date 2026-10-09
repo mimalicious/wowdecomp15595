@@ -789,6 +789,12 @@ int32_t CMovementShared::IsOnParabolicSpline() const {
     return 0;
 }
 
+// PROVEN: 05c18660 IDENTICAL/NONE
+// OFFSET: 0x0043B770
+int32_t CMovementShared::HasFallVelocity() const {
+    return (this->m_flags & MOVEMENTFLAG_FALLING) && this->m_fallVelocity != 0.0f;
+}
+
 // PROVEN: b1ccd881 IDENTICAL/NONE
 // OFFSET: 0x0043B7A0
 int32_t CMovementShared::IsOnSpline() const {

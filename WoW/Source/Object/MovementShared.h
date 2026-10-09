@@ -102,6 +102,7 @@ class CMovementShared : public CPassenger {
     int32_t IsOnFallingSpline() const;
     int32_t IsOnFlyingSpline() const;
     int32_t IsOnParabolicSpline() const;
+    int32_t HasFallVelocity() const;
     int32_t IsOnSpline() const;
     int32_t IsSplineFlyerOrFlyingOrSwimming() const;
     int32_t IsSplineFlyerOrHovering() const;

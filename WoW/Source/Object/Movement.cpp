@@ -237,6 +237,7 @@ void CMovement_C::ClampFacingToRange(float& facing, float min, float max) {
     facing = CMath::normalizeangle0to2pi_(clamped);
 }
 
+// PROVEN: b3bd85e0 IDENTICAL/NONE
 // OFFSET: 0x00572170
 void CMovement_C::SkipTime(uint32_t time) {
     if (this->m_unit->m_obj->m_guid != CGUnit_C::s_activeMover || !(this->m_flags & 0x6008FF)) {
@@ -472,6 +473,7 @@ void CMovement_C::OnHover(int32_t enable) {
     CMovementShared::Hover(enable);
 }
 
+// PROVEN: 111b6f57 IDENTICAL/NONE
 // OFFSET: 0x00574070
 int32_t CMovement_C::SendTeleportAck(int32_t send, uint32_t time, uint32_t oldFlags, uint32_t ackIndex) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 1, 0, 0);
@@ -488,6 +490,7 @@ int32_t CMovement_C::SendTeleportAck(int32_t send, uint32_t time, uint32_t oldFl
     return 1;
 }
 
+// PROVEN: 605ecabf IDENTICAL/NONE
 // OFFSET: 0x005740F0
 int32_t CMovement_C::SendSpeedChangeAck(int32_t send, uint32_t time, uint32_t oldFlags, NETMESSAGE msgId, JamMoveSpeedAck* data, JamClientMessage* msg, float speed, uint32_t ackIndex) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 1, 0);
@@ -523,6 +526,7 @@ int32_t CMovement_C::SendSetCollisionHeightAck(uint32_t time, const CPlayerMoveE
     return 1;
 }
 
+// PROVEN: a70c51f3 IDENTICAL/NONE
 // OFFSET: 0x00574230
 int32_t CMovement_C::SendSetVehicleRecIdAck(uint32_t time, const CPlayerMoveEvent* event, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -540,6 +544,7 @@ int32_t CMovement_C::SendSetVehicleRecIdAck(uint32_t time, const CPlayerMoveEven
     return 1;
 }
 
+// PROVEN: e1b8427f IDENTICAL/NONE
 // OFFSET: 0x005742D0
 int32_t CMovement_C::SendChangeSeatsOnControlledVehicle(uint32_t time, const CPlayerMoveEvent* event, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1074,6 +1079,7 @@ void CMovement_C::OnUnsetActiveMover() {
     this->m_flags &= ~MOVEMENTFLAG_STATUS_APPLIED;
 }
 
+// PROVEN: 4a971f39 IDENTICAL/NONE
 // OFFSET: 0x00576B30
 int32_t CMovement_C::ProcessHeartbeat(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1085,6 +1091,7 @@ int32_t CMovement_C::ProcessHeartbeat(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
+// PROVEN: a7a08da2 IDENTICAL/NONE
 // OFFSET: 0x00576B70
 int32_t CMovement_C::ProcessStartForward(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1096,6 +1103,7 @@ int32_t CMovement_C::ProcessStartForward(int32_t send, uint32_t time, uint32_t o
     return 0;
 }
 
+// PROVEN: b185c324 IDENTICAL/NONE
 // OFFSET: 0x00576BB0
 int32_t CMovement_C::ProcessStartBackward(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1107,6 +1115,7 @@ int32_t CMovement_C::ProcessStartBackward(int32_t send, uint32_t time, uint32_t 
     return 0;
 }
 
+// PROVEN: c205d6dc IDENTICAL/NONE
 // OFFSET: 0x00576BF0
 int32_t CMovement_C::ProcessStop(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1118,6 +1127,7 @@ int32_t CMovement_C::ProcessStop(int32_t send, uint32_t time, uint32_t oldFlags)
     return 0;
 }
 
+// PROVEN: f32a1d60 IDENTICAL/NONE
 // OFFSET: 0x00576C30
 int32_t CMovement_C::ProcessStartStrafeLeft(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1129,6 +1139,7 @@ int32_t CMovement_C::ProcessStartStrafeLeft(int32_t send, uint32_t time, uint32_
     return 0;
 }
 
+// PROVEN: 7c6132eb IDENTICAL/NONE
 // OFFSET: 0x00576C70
 int32_t CMovement_C::ProcessStartStrafeRight(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1140,6 +1151,7 @@ int32_t CMovement_C::ProcessStartStrafeRight(int32_t send, uint32_t time, uint32
     return 0;
 }
 
+// PROVEN: cbbd7c5f IDENTICAL/NONE
 // OFFSET: 0x00576CB0
 int32_t CMovement_C::ProcessStopStrafe(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1151,6 +1163,7 @@ int32_t CMovement_C::ProcessStopStrafe(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
+// PROVEN: f1eb9a83 IDENTICAL/NONE
 // OFFSET: 0x00576CF0
 int32_t CMovement_C::ProcessStartAscend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1162,6 +1175,7 @@ int32_t CMovement_C::ProcessStartAscend(int32_t send, uint32_t time, uint32_t ol
     return 0;
 }
 
+// PROVEN: 05f1bc3d IDENTICAL/NONE
 // OFFSET: 0x00576D30
 int32_t CMovement_C::ProcessStartDescend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1173,6 +1187,7 @@ int32_t CMovement_C::ProcessStartDescend(int32_t send, uint32_t time, uint32_t o
     return 0;
 }
 
+// PROVEN: 0c5585a4 IDENTICAL/NONE
 // OFFSET: 0x00576D70
 int32_t CMovement_C::ProcessStopAscend(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1184,6 +1199,7 @@ int32_t CMovement_C::ProcessStopAscend(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
+// PROVEN: 6fec32c3 IDENTICAL/NONE
 // OFFSET: 0x00576DB0
 int32_t CMovement_C::ProcessJump(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1243,6 +1259,7 @@ int32_t CMovement_C::ProcessStopTurn(int32_t send, uint32_t time, uint32_t oldFl
     return sent;
 }
 
+// PROVEN: 9efaa6e0 IDENTICAL/NONE
 // OFFSET: 0x00576F10
 int32_t CMovement_C::ProcessSetRunMode(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1254,6 +1271,7 @@ int32_t CMovement_C::ProcessSetRunMode(int32_t send, uint32_t time, uint32_t old
     return 0;
 }
 
+// PROVEN: fed7ec6d IDENTICAL/NONE
 // OFFSET: 0x00576F50
 int32_t CMovement_C::ProcessSetWalkMode(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1265,6 +1283,7 @@ int32_t CMovement_C::ProcessSetWalkMode(int32_t send, uint32_t time, uint32_t ol
     return 0;
 }
 
+// PROVEN: 1c23f3ff IDENTICAL/NONE
 // OFFSET: 0x00576F90
 int32_t CMovement_C::ProcessSetFacing(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1276,6 +1295,7 @@ int32_t CMovement_C::ProcessSetFacing(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
+// PROVEN: 20791775 IDENTICAL/NONE
 // OFFSET: 0x00576FD0
 int32_t CMovement_C::ProcessStartSwim(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1287,6 +1307,7 @@ int32_t CMovement_C::ProcessStartSwim(int32_t send, uint32_t time, uint32_t oldF
     return 0;
 }
 
+// PROVEN: 90c86f24 IDENTICAL/NONE
 // OFFSET: 0x00577010
 int32_t CMovement_C::ProcessStopSwim(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1346,6 +1367,7 @@ int32_t CMovement_C::ProcessStopPitch(int32_t send, uint32_t time, uint32_t oldF
     return sent;
 }
 
+// PROVEN: 44c4675b IDENTICAL/NONE
 // OFFSET: 0x00577170
 int32_t CMovement_C::ProcessToggleCollisionCheat(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1357,6 +1379,7 @@ int32_t CMovement_C::ProcessToggleCollisionCheat(int32_t send, uint32_t time, ui
     return 0;
 }
 
+// PROVEN: c9f56b7b IDENTICAL/NONE
 // OFFSET: 0x005771B0
 int32_t CMovement_C::ProcessSetFly(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -1368,6 +1391,7 @@ int32_t CMovement_C::ProcessSetFly(int32_t send, uint32_t time, uint32_t oldFlag
     return 0;
 }
 
+// PROVEN: 28a60bc0 IDENTICAL/NONE
 // OFFSET: 0x005771F0
 int32_t CMovement_C::ProcessDismissControlledVehicle(int32_t send, uint32_t time, uint32_t oldFlags) {
     this->m_unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
@@ -4117,6 +4141,7 @@ C2Vector CMovement_C::CalcFallObstaclePush(const C3Vector& direction, float dist
     return C2Vector(push.x * (scale + 0.001f), push.y * (scale + 0.001f));
 }
 
+// PROVEN: 75ae52ac IDENTICAL/NONE
 // OFFSET: 0x00571960
 int32_t CMovement_C::SendFallReset(uint32_t time) {
     return this->m_unit->OnCollideFallReset(time);
@@ -6903,6 +6928,7 @@ void CMovement_C::FlushMoveEvent(CPlayerMoveEvent* event, int32_t removeSpline) 
     CPlayerMoveQueue::s_freeList.LinkToTail(event);
 }
 
+// PROVEN: a3e4bf89 IDENTICAL/NONE
 // OFFSET: 0x00576360
 void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     if (s_flushingQueue) {
@@ -7463,4 +7489,11 @@ void CMovement_C::PassengerMove(uint32_t time, uint32_t elapsed, float distance,
     this->QueueFallEvent(eventTime);
     globals->m_transportTime2 = globals->m_transportTime;
     globals->m_transportTime = savedTime;
+}
+
+// PROVEN: 35dca905 IDENTICAL/NONE
+// OFFSET: 0x005B6480
+int32_t CMovement_C::IsOnSwimSpline() const {
+    CMoveSpline* spline = this->m_spline;
+    return spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200000);
 }

@@ -227,8 +227,8 @@ int32_t CUnitDisplayTransition_C::MaybeCreateCharacterComponent() {
         data.m_preferences.m_hairColorId = this->m_displayInfoExtra->m_hairColorID;
         data.m_preferences.m_facialHairId = this->m_displayInfoExtra->m_facialHairID;
 
-        if (!CGPlayer_C::IsXRayVisionActive() || !this->m_unit->IsUsingBakedNpcTexture()) {
-            const char* bakeName = this->m_unit->GetBakedTextureName();
+        if (!CGPlayer_C::IsXRayVisionActive() || !this->m_unit->UsesNpcBakedTexture()) {
+            const char* bakeName = this->m_unit->GetDisplayBakeName();
 
             if (!bakeName || !*bakeName) {
                 return 0;
@@ -249,7 +249,7 @@ int32_t CUnitDisplayTransition_C::MaybeCreateCharacterComponent() {
     if ((this->m_unit->m_obj->m_type & TYPEMASK_PLAYER) && this->m_unit->CanEquipItemsInThisForm()) {
         CGPlayer_C* owner = static_cast<CGPlayer_C*>(this->m_unit);
 
-        if (CGPlayer_C::IsXRayVisionActive() && owner->IsUsingBakedNpcTexture()) {
+        if (CGPlayer_C::IsXRayVisionActive() && owner->UsesNpcBakedTexture()) {
             return 1;
         }
 
@@ -433,7 +433,7 @@ void CUnitDisplayTransition_C::PerformSwap() {
         effect = next;
     }
 
-    this->m_unit->ApplyEffectItemVisuals();
+    this->m_unit->ApplyComponentItemsFromEffects();
     CMissile::UpdateAttachments(this->m_unit->m_obj->m_guid);
 
     CM2Model* precastModel = this->m_unit->m_precastMissileModel;

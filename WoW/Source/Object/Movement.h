@@ -277,6 +277,7 @@ class CMovement_C : public CMovementShared {
     void OnTurnStartLocal(uint32_t eventTime, int32_t left);
     void OnPitchStartLocal(uint32_t eventTime, int32_t up);
     void OnSwimStartLocal(uint32_t eventTime);
+    int32_t IsOnSwimSpline() const;
     void OnSwimStopLocal(uint32_t eventTime);
     int32_t OnWalkSpeedChange(float value);
     void OnWalkSpeedChange(uint32_t eventTime, float value);
