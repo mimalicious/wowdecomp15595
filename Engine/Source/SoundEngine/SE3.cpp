@@ -1533,6 +1533,9 @@ SE3SoundKitDef::SE3SoundKitDef() {
     this->m_nNumFiles = 0;
     memset(this->m_weights, 0, sizeof(this->m_weights));
     this->m_lastIndex = -1;
+    this->m_ownsRecords = 0;
+    this->m_hasTimeOfDay = 0;
+    this->m_notLocal = 0;
     this->m_pSoundGroup = NULL;
     this->m_pSoundKitRec = NULL;
     this->m_pAdvancedSoundKitRec = NULL;
