@@ -1,4 +1,7 @@
 #include "Unit_C.h"
+#include "Engine/Source/Base/ObjectAlloc.h"
+#include "WoW/Source/JamClientAutoCode/JamClientMove.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/DB/Rec/SpellAuraRestrictionsRec.h"
 #include "WoW/Source/DB/Rec/SpellCastingRequirementsRec.h"
@@ -177,10 +180,10 @@ static int32_t s_baseSpiritRegenCap = 50;
 // STATIC: #0x00ADAA14
 static const char* s_genderSuffix[2] = { "M", "F" };
 
-// STATIC: #0x00CA11A8
+// STATIC: 0x00DD6188
 static WOWGUID s_pendingInteractTarget;
 
-// STATIC: #0x00CA11B0
+// STATIC: 0x00DD6190
 static WOWGUID s_pendingSkinTarget;
 
 // STATIC: 0x00E283B8
@@ -192,25 +195,25 @@ int32_t CGUnit_C::s_powerTypeBySlot[12][5];
 // STATIC: 0x00DD5F64
 int32_t CGUnit_C::s_powerSlotByType[12][11];
 
-// STATIC: #0x00CA11B8
+// STATIC: 0x00DD6198
 static WOWGUID s_pendingUseObject;
 
-// STATIC: #0x00CA11C0
+// STATIC: 0x00DD61A0
 static WOWGUID s_pendingLootTarget;
 
-// STATIC: #0x00CA11C8
+// STATIC: 0x00DD61A8
 static WOWGUID s_pendingAttackTarget;
 
-// STATIC: #0x00CA120C
+// STATIC: 0x00DD61E4
 int32_t g_environmentalDamageVisualKits[6];
 
 // STATIC: #0x00CA1224
 static EmotesRec* s_talkEmotes[5];
 
-// STATIC: #0x00CA1244
-static UnitThreatHeap* s_unitThreatPool;
+// STATIC: 0x00DD6220
+static TSObjectAllocPool<UnitThreat>* s_unitThreatPool;
 
-// STATIC: #0x00CA1254
+// STATIC: 0x00DD6230
 int32_t CGUnit_C::s_initialized;
 
 // STATIC: 0x00DD6210
@@ -222,7 +225,7 @@ static uint32_t s_swimStartTime;
 // STATIC: 0x00DD621C
 static uint32_t s_swimStopTime;
 
-// STATIC: #0x00CA11F4
+// STATIC: 0x00DD61D4
 uint32_t CGUnit_C::s_trackingType;
 
 // STATIC: 0x00DD6318
@@ -273,22 +276,25 @@ float CGUnit_C::s_trackingDirection;
 // STATIC: #0x00CA12CC
 int32_t CGUnit_C::s_dismountSoundKitId;
 
-// STATIC: #0x00CA1198
+// STATIC: 0x00DD6178
 WOWGUID CGUnit_C::s_lastNPCSoundGUID;
 
-// STATIC: #0x00CA1248
+// STATIC: 0x00DD6228
 WOWGUID CGUnit_C::s_deferredClientControlUpdateGUID;
 
-// STATIC: #0x00CA1250
+// STATIC: 0x00DD6224
 uint8_t CGUnit_C::s_deferredClientControlUpdateState;
 
-// STATIC: #0x00CA1240
+// STATIC: 0x00DD6218
 uint32_t CGUnit_C::s_flightStatusTime;
+
+// STATIC: 0x00DD621C
+uint32_t CGUnit_C::s_flightEndTime;
 
 // STATIC: #0x00CA11D0
 float CGUnit_C::s_unk_CA11D0;
 
-// STATIC: #0x00CA11D4
+// STATIC: 0x00DD61B4
 uint32_t CGUnit_C::s_unk_CA11D4;
 
 // STATIC: #0x00CA11F8
@@ -7598,7 +7604,7 @@ void CGUnit_C::OnRightClick() {
     this->OnRightClick(true);
 }
 
-// OFFSET: #0x007165D0
+// OFFSET: 0x005ACE50/0x14021F220
 static void CacheEmoteRecords() {
     int32_t index = g_emotesDB.m_numRecords;
 
@@ -7696,115 +7702,1277 @@ void CGUnit_C::UnregisterMirrorHandlers() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_UNIT, offsetof(CGUnitData, m_unitFieldHoverheight), HoverHeightChangeHandler, NULL);
 }
 
+// OFFSET: 0x005AC190
+void CGUnit_C::OnStopFlying() {
+    this->PlayUnitSound(12, 1, 0);
+    this->UpdateMovementAnimKit(0);
+}
+
+// OFFSET: 0x005AFE10
+int32_t CGUnit_C::OnTeleportUpdate(uint32_t time, const CMovementStatus& status) {
+    if (this->m_vehiclePassenger && (status.m_moveExtraFlags & 0x200)) {
+        if (status.m_hasTransport) {
+            this->VehiclePassengerStartWaitingForVehicleTransitionAnim(status.m_transport.m_guid.m_guid, status.m_transport.m_seat);
+        } else {
+            this->VehiclePassengerStartWaitingForVehicleTransitionAnim(0, 0xFF);
+        }
+    }
+
+    return this->m_movementData.OnTeleport(time, status);
+}
+
+// OFFSET: 0x005BB310
+void CGUnit_C::OnStartFlying() {
+    this->ResetSmoothFacing();
+
+    if (this->GetCurrentTorsoAnimId() == ANIM_FALL || this->GetCurrentTorsoAnimId() == 648 || this->GetCurrentMountAnimId() == ANIM_FALL) {
+        this->UpdateMovementAnimKit(0);
+        return;
+    }
+
+    this->PlayUnitSound(11, 1, 0);
+
+    if (this->m_vehicle && this->m_vehicle->m_vehicleRec && this->m_vehicle->HasHighPriorityAnim()) {
+        this->UpdateMovementAnimKit(0);
+        return;
+    }
+
+    const UnitAnimationSet* set = this->SelectAnimationSet();
+    this->PlayMovementAnimKit(6, set->m_jumpStart, 0xFFFFFFFF, 0);
+}
+
+// OFFSET: 0x005CD980
+void CGUnit_C::OnMovementFlagsChanged(uint32_t time, uint32_t oldFlags, int32_t teleport, int32_t a4, int32_t knockBack) {
+    uint32_t flags = this->m_movement->m_flags;
+    uint32_t added = flags & ~oldFlags;
+    uint32_t changed = oldFlags ^ flags;
+    uint32_t removed = oldFlags & ~flags;
+    int32_t jumped = (added & MOVEMENTFLAG_FALLING) && this->m_movementData.m_fallVelocity != 0.0f;
+
+    if (added & 0x60080F) {
+        this->CancelRangedMode();
+
+        if ((added & 0x60000F) && (this->m_obj->m_type & TYPEMASK_PLAYER)) {
+            static_cast<CGPlayer_C*>(this)->ChangeStandState(0);
+        }
+    }
+
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        if (changed & 0x1100400) {
+            CGInputControl::GetActive()->UpdatePlayer(time, 1);
+        }
+
+        if (removed & 0x60080F) {
+            this->HandlePendingTrackEvents();
+        }
+
+        if (teleport) {
+            CGInputControl::GetActive()->UpdateHalted();
+            CGInputControl::GetActive()->UpdatePlayer(time, 1);
+            this->m_nextBreathCheckTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+
+            if (this->m_obj->m_guid == CGUnit_C::s_activeMover && CGUnit_C::s_trackingType != 13) {
+                this->ClearTrackingTarget(false, true);
+            }
+        }
+    }
+
+    if (knockBack) {
+        const UnitAnimationSet* set = this->SelectAnimationSet();
+        this->PlayMovementAnimKit(2, set->m_fall, 0xFFFFFFFF, 0);
+    } else if (jumped) {
+        this->PlayUnitSound(11, 1, 0);
+        const UnitAnimationSet* set = this->SelectAnimationSet();
+        this->PlayMovementAnimKit(3, set->m_jump, set->m_jumpStart, 0);
+    } else if (added & MOVEMENTFLAG_FLYING) {
+        this->OnStartFlying();
+    } else if (removed & MOVEMENTFLAG_FLYING) {
+        this->OnStopFlying();
+    } else if (!teleport && !(changed & 0x3110073F) && (!a4 || !(this->m_movement->m_flags & 0x60080F))) {
+        if (added & MOVEMENTFLAG_FALLING) {
+            this->OnCollideFalling(oldFlags);
+        }
+    } else {
+        this->UpdateMovementAnimKit(0);
+    }
+
+    if (teleport || (changed & 0x3170063F)) {
+        this->UpdateDeathAnimKit();
+    }
+}
+
+// OFFSET: 0x005C2AD0
+void CGUnit_C::SetAuraEffectAmount(uint32_t auraIndex, uint32_t effectIndex, int32_t amount) {
+    if (auraIndex < this->m_auras.Count() && effectIndex < 3) {
+        this->m_auras[auraIndex].m_effectAmounts[effectIndex] = amount;
+    }
+}
+
+// OFFSET: 0x005B7A20
+static bool ClientMoveUpdateRunSpeedHandler(ClientMoveUpdateRunSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnRunSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnRunSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7AB0
+static bool ClientMoveUpdateRunBackSpeedHandler(ClientMoveUpdateRunBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnRunBackSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnRunBackSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7B30
+static bool ClientMoveUpdateWalkSpeedHandler(ClientMoveUpdateWalkSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnWalkSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnWalkSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7BB0
+static bool ClientMoveUpdateSwimSpeedHandler(ClientMoveUpdateSwimSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnSwimSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnSwimSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7C40
+static bool ClientMoveUpdateSwimBackSpeedHandler(ClientMoveUpdateSwimBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnSwimBackSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnSwimBackSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7CD0
+static bool ClientMoveUpdateFlightSpeedHandler(ClientMoveUpdateFlightSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnFlightSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnFlightSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7D60
+static bool ClientMoveUpdateFlightBackSpeedHandler(ClientMoveUpdateFlightBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnFlightBackSpeedChange(time, msg->m_speed);
+            return true;
+        }
+
+        unit->m_movementData.OnFlightBackSpeedChange(time, msg->m_status, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7DF0
+static bool ClientMoveUpdateTurnRateHandler(ClientMoveUpdateTurnRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnTurnRateChange(time, msg->m_rate);
+            return true;
+        }
+
+        unit->m_movementData.OnTurnRateChange(time, msg->m_status, msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7E70
+static bool ClientMoveUpdatePitchRateHandler(ClientMoveUpdatePitchRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnPitchRateChange(time, msg->m_rate);
+            return true;
+        }
+
+        unit->m_movementData.OnPitchRateChange(time, msg->m_status, msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005B7EF0
+static bool ClientMoveUpdateCollisionHeightHandler(ClientMoveUpdateCollisionHeight* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+
+        if (unit->m_obj->m_guid == CGUnit_C::s_activeMover) {
+            unit->m_movementData.OnSetCollisionHeight(time, msg->m_height);
+            return true;
+        }
+
+        unit->m_movementData.OnSetCollisionHeight(time, msg->m_status, msg->m_height);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0640
+static bool ClientMoveUpdateHandler(ClientMoveUpdate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+        int32_t root;
+
+        if (!(unit->m_movement->m_flags & MOVEMENTFLAG_ROOT) || (msg->m_status.m_moveFlags & MOVEMENTFLAG_ROOT)) {
+            root = 0;
+        } else {
+            unit->m_clientFlags |= 0x20000000;
+            root = 1;
+        }
+
+        uint32_t oldFlags = unit->m_movement->m_flags;
+
+        if (unit->m_movementData.OnHeartBeat(time, msg->m_status)) {
+            unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 0);
+        }
+
+        if (root) {
+            unit->m_clientFlags &= ~0x20000000;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D06F0
+static bool ClientMoveUpdateTeleportHandler(ClientMoveUpdateTeleport* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+        uint32_t oldFlags = unit->m_movement->m_flags;
+
+        if (unit->OnTeleportUpdate(time, msg->m_status)) {
+            unit->OnMovementFlagsChanged(time, oldFlags, 1, 0, 0);
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0760
+static bool ClientMoveUpdateKnockBackHandler(ClientMoveUpdateKnockBack* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_status.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+        uint32_t oldFlags = unit->m_movement->m_flags;
+
+        if (unit->m_movementData.OnLaunch(time, msg->m_status)) {
+            unit->OnMovementFlagsChanged(time, oldFlags, 0, 0, 1);
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF000
+static bool ClientSplineMoveSetRunSpeedHandler(ClientSplineMoveSetRunSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRunSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF040
+static bool ClientSplineMoveSetRunBackSpeedHandler(ClientSplineMoveSetRunBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRunBackSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF080
+static bool ClientSplineMoveSetSwimSpeedHandler(ClientSplineMoveSetSwimSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSwimSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF0C0
+static bool ClientSplineMoveSetSwimBackSpeedHandler(ClientSplineMoveSetSwimBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSwimBackSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF100
+static bool ClientSplineMoveSetFlightSpeedHandler(ClientSplineMoveSetFlightSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFlightSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF140
+static bool ClientSplineMoveSetFlightBackSpeedHandler(ClientSplineMoveSetFlightBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFlightBackSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF180
+static bool ClientSplineMoveSetWalkSpeedHandler(ClientSplineMoveSetWalkSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnWalkSpeedChange(msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF1C0
+static bool ClientSplineMoveSetTurnRateHandler(ClientSplineMoveSetTurnRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnTurnRateChange(msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF200
+static bool ClientSplineMoveSetPitchRateHandler(ClientSplineMoveSetPitchRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnPitchRateChange(msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D07D0
+static bool ClientSplineMoveRootHandler(ClientSplineMoveRoot* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnRoot();
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0840
+static bool ClientSplineMoveUnrootHandler(ClientSplineMoveUnroot* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnUnRoot();
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D08B0
+static bool ClientSplineMoveGravityDisableHandler(ClientSplineMoveGravityDisable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSplineEnableGravity(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0920
+static bool ClientSplineMoveGravityEnableHandler(ClientSplineMoveGravityEnable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSplineEnableGravity(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0990
+static bool ClientSplineMoveCollisionDisableHandler(ClientSplineMoveCollisionDisable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.EnableCollision(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0A00
+static bool ClientSplineMoveCollisionEnableHandler(ClientSplineMoveCollisionEnable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.EnableCollision(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0A70
+static bool ClientSplineMoveSetFeatherFallHandler(ClientSplineMoveSetFeatherFall* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnFeatherFall(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0AE0
+static bool ClientSplineMoveSetNormalFallHandler(ClientSplineMoveSetNormalFall* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnFeatherFall(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0B50
+static bool ClientSplineMoveSetHoverHandler(ClientSplineMoveSetHover* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnHover(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0BC0
+static bool ClientSplineMoveUnsetHoverHandler(ClientSplineMoveUnsetHover* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnHover(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0C30
+static bool ClientSplineMoveSetWaterWalkHandler(ClientSplineMoveSetWaterWalk* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnWaterWalk(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0CA0
+static bool ClientSplineMoveSetLandWalkHandler(ClientSplineMoveSetLandWalk* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnWaterWalk(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0D10
+static bool ClientSplineMoveStartSwimHandler(ClientSplineMoveStartSwim* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSplineStartSwim();
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0D80
+static bool ClientSplineMoveStopSwimHandler(ClientSplineMoveStopSwim* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSplineStopSwim();
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0DF0
+static bool ClientSplineMoveSetRunModeHandler(ClientSplineMoveSetRunMode* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSetRunMode(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0E60
+static bool ClientSplineMoveSetWalkModeHandler(ClientSplineMoveSetWalkMode* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.OnSetRunMode(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0ED0
+static bool ClientSplineMoveSetFlyingHandler(ClientSplineMoveSetFlying* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.SplineToggleEnableFlying(1);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005D0F40
+static bool ClientSplineMoveUnsetFlyingHandler(ClientSplineMoveUnsetFlying* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t oldFlags = unit->m_movement->m_flags;
+        unit->m_movementData.FlushMoveQueue(0, 0);
+        unit->m_movementData.SplineToggleEnableFlying(0);
+        unit->OnMovementFlagsChanged(FrameTime::GetCurTimeMs(), oldFlags, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF280
+static bool ClientMoveSetRunSpeedHandler(ClientMoveSetRunSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRunSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF2D0
+static bool ClientMoveSetRunBackSpeedHandler(ClientMoveSetRunBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRunBackSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF320
+static bool ClientMoveSetSwimSpeedHandler(ClientMoveSetSwimSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSwimSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF370
+static bool ClientMoveSetSwimBackSpeedHandler(ClientMoveSetSwimBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSwimBackSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF3C0
+static bool ClientMoveSetFlightSpeedHandler(ClientMoveSetFlightSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFlightSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF410
+static bool ClientMoveSetFlightBackSpeedHandler(ClientMoveSetFlightBackSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFlightBackSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF460
+static bool ClientMoveSetWalkSpeedHandler(ClientMoveSetWalkSpeed* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnWalkSpeedChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_speed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF4B0
+static bool ClientMoveSetTurnRateHandler(ClientMoveSetTurnRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnTurnRateChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF500
+static bool ClientMoveSetPitchRateHandler(ClientMoveSetPitchRate* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnPitchRateChangeLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_rate);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF550
+static bool ClientMoveRootHandler(ClientMoveRoot* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRootLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF5A0
+static bool ClientMoveUnrootHandler(ClientMoveUnroot* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnRootLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF5F0
+static bool ClientMoveSetWaterWalkHandler(ClientMoveSetWaterWalk* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnWaterWalkLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF640
+static bool ClientMoveSetLandWalkHandler(ClientMoveSetLandWalk* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnWaterWalkLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF690
+static bool ClientMoveSetFeatherFallHandler(ClientMoveSetFeatherFall* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFeatherFallLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF6E0
+static bool ClientMoveSetNormalFallHandler(ClientMoveSetNormalFall* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnFeatherFallLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF730
+static bool ClientMoveSetHoverHandler(ClientMoveSetHover* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnHoverLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF780
+static bool ClientMoveUnsetHoverHandler(ClientMoveUnsetHover* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnHoverLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF7D0
+static bool ClientMoveKnockBackHandler(ClientMoveKnockBack* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnLaunchLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_direction, msg->m_horizontalSpeed, msg->m_verticalSpeed);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF830
+static bool ClientMoveSetCanFlyHandler(ClientMoveSetCanFly* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnCanFlyLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF880
+static bool ClientMoveUnsetCanFlyHandler(ClientMoveUnsetCanFly* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnCanFlyLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF8D0
+static bool ClientMoveSetCanTransitionBetweenSwimAndFlyHandler(ClientMoveSetCanTransitionBetweenSwimAndFly* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnCanTransitionBetweenSwimAndFlyLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF920
+static bool ClientMoveUnsetCanTransitionBetweenSwimAndFlyHandler(ClientMoveUnsetCanTransitionBetweenSwimAndFly* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnCanTransitionBetweenSwimAndFlyLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF970
+static bool ClientMoveGravityDisableHandler(ClientMoveGravityDisable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnDisableGravityLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AF9C0
+static bool ClientMoveGravityEnableHandler(ClientMoveGravityEnable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnDisableGravityLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AFA10
+static bool ClientMoveCollisionDisableHandler(ClientMoveCollisionDisable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnEnableCollisionLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AFA60
+static bool ClientMoveCollisionEnableHandler(ClientMoveCollisionEnable* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnEnableCollisionLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, 1);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AFAB0
+static bool ClientMoveSetCollisionHeightHandler(ClientMoveSetCollisionHeight* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSetCollisionHeightLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_height, msg->m_reason);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AFB00
+static bool ClientMoveSetVehicleRecIdHandler(ClientMoveSetVehicleRecId* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSetVehicleRecIdLocal(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_vehicleRecId);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005AFB50
+static bool ClientMoveSkipTimeHandler(ClientMoveSkipTime* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->m_movementData.OnSkipTime(msg->m_time);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005ADB00
+static bool ClientSuppressNPCGreetingsHandler(ClientSuppressNPCGreetings* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return true;
+    }
+
+    bool suppressed = msg->m_suppressed != 0;
+    unit->SetFootstepSoundsSuppressed(suppressed);
+
+    if (suppressed) {
+        s_npcFeedbackSuppressCount++;
+    } else {
+        s_npcFeedbackSuppressCount--;
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005C4340
+static bool ClientAuraPointsDepletedHandler(ClientAuraPointsDepleted* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->SetAuraEffectAmount(msg->m_slot, msg->m_effectIndex, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005CC200
+static bool ClientMoveTeleportHandler(ClientMoveTeleport* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return true;
+    }
+
+    if (ClntObjMgrGetPlayerType()) {
+        PlayerMoveTeleportAck ack;
+        ack.m_time = FrameTime::GetCurTimeMs();
+        ack.m_guid = msg->m_guid;
+        ack.m_ackIndex = msg->m_ackIndex;
+        ClientServices::Send(&ack);
+        return true;
+    }
+
+    unit->OnMovementInitiated(true, false);
+
+    if (msg->m_hasVehicle) {
+        unit->m_movementData.AddPlayerTeleportEvent(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_hasTransport ? msg->m_transportGuid : WOWGUID(), msg->m_position, msg->m_facing, msg->m_seat, msg->m_exitVoluntary, msg->m_awaitTransition);
+        return true;
+    }
+
+    unit->m_movementData.AddPlayerTeleportEvent(FrameTime::GetCurTimeMs(), msg->m_ackIndex, msg->m_hasTransport ? msg->m_transportGuid : WOWGUID(), msg->m_position, msg->m_facing, 0xFF, 0, 0);
+    return true;
+}
+
+// OFFSET: [0x005B6500<ClientMoveSetRunSpeed>, 0x005B6550<ClientMoveSetRunBackSpeed>, 0x005B65A0<ClientMoveSetSwimSpeed>, 0x005B65F0<ClientMoveSetSwimBackSpeed>, 0x005B6640<ClientMoveSetFlightSpeed>, 0x005B6690<ClientMoveSetFlightBackSpeed>, 0x005B66E0<ClientMoveSetWalkSpeed>, 0x005B6730<ClientMoveSetTurnRate>, 0x005B6780<ClientMoveSetPitchRate>]
+template <class T>
+static bool HandleCompoundSpeedChange(WOWGUID guid, const JamMoveStateChange& change) {
+    T msg(guid, change.m_ackIndex, *(change.m_hasSpeed ? &change.m_speed : NULL));
+    return msg.Handle();
+}
+
+// OFFSET: 0x005AFB90
+static bool HandleCompoundKnockBack(WOWGUID guid, const JamMoveStateChange& change) {
+    const JamMoveKnockBack* knockBack = change.m_hasKnockBack ? &change.m_knockBack : NULL;
+    ClientMoveKnockBack msg(guid, change.m_ackIndex, knockBack->m_direction, knockBack->m_horizontalSpeed, knockBack->m_verticalSpeed);
+    return msg.Handle();
+}
+
+// OFFSET: 0x005AFBE0
+static bool HandleCompoundCollisionHeight(WOWGUID guid, const JamMoveStateChange& change) {
+    const JamMoveCollisionHeight* height = change.m_hasCollisionHeight ? &change.m_collisionHeight : NULL;
+    ClientMoveSetCollisionHeight msg(guid, change.m_ackIndex, height->m_height, height->m_reason);
+    return msg.Handle();
+}
+
+// OFFSET: 0x005AFC30
+static bool HandleCompoundVehicleRecId(WOWGUID guid, const JamMoveStateChange& change) {
+    ClientMoveSetVehicleRecId msg(guid, change.m_ackIndex, *(change.m_hasVehicleRecId ? &change.m_vehicleRecId : NULL));
+    return msg.Handle();
+}
+
+// OFFSET: 0x005B7F70
+static bool ClientMoveSetCompoundStateHandler(ClientMoveSetCompoundState* msg) {
+    if (!ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__)) {
+        return true;
+    }
+
+    for (uint32_t i = 0; i < msg->m_changes.Count(); i++) {
+        const JamMoveStateChange& change = msg->m_changes[i];
+
+        switch (change.m_messageId) {
+            case 0x3DB5:
+                HandleCompoundSpeedChange<ClientMoveSetRunSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x71B1:
+                HandleCompoundSpeedChange<ClientMoveSetRunBackSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x15A7:
+                HandleCompoundSpeedChange<ClientMoveSetSwimSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x5CA6:
+                HandleCompoundSpeedChange<ClientMoveSetSwimBackSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x71A6:
+                HandleCompoundSpeedChange<ClientMoveSetFlightSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x30A2:
+                HandleCompoundSpeedChange<ClientMoveSetFlightBackSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x1DA4:
+                HandleCompoundSpeedChange<ClientMoveSetWalkSpeed>(msg->m_guid, change);
+                break;
+
+            case 0x30A5:
+                HandleCompoundSpeedChange<ClientMoveSetTurnRate>(msg->m_guid, change);
+                break;
+
+            case 0x75B0:
+                HandleCompoundSpeedChange<ClientMoveSetPitchRate>(msg->m_guid, change);
+                break;
+
+            case 0x5CB4:
+                HandleCompoundKnockBack(msg->m_guid, change);
+                break;
+
+            case 0x11B0:
+                HandleCompoundCollisionHeight(msg->m_guid, change);
+                break;
+
+            case 0x70A1:
+                HandleCompoundVehicleRecId(msg->m_guid, change);
+                break;
+
+            case 0x7DA0: {
+                ClientMoveRoot move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x7DB4: {
+                ClientMoveUnroot move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x75B1: {
+                ClientMoveSetWaterWalk move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x34B7: {
+                ClientMoveSetLandWalk move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x79B0: {
+                ClientMoveSetFeatherFall move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x51B6: {
+                ClientMoveSetNormalFall move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x5CB3: {
+                ClientMoveSetHover move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x51B3: {
+                ClientMoveUnsetHover move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x3DA1: {
+                ClientMoveSetCanFly move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x15A2: {
+                ClientMoveUnsetCanFly move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x59A2: {
+                ClientMoveSetCanTransitionBetweenSwimAndFly move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x7DB2: {
+                ClientMoveUnsetCanTransitionBetweenSwimAndFly move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x75B2: {
+                ClientMoveGravityDisable move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x30B3: {
+                ClientMoveGravityEnable move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x31B0: {
+                ClientMoveCollisionDisable move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+
+            case 0x11A7: {
+                ClientMoveCollisionEnable move(msg->m_guid, change.m_ackIndex);
+                move.Handle();
+                break;
+            }
+        }
+    }
+
+    return true;
+}
+
 // OFFSET: 0x005DB500/0x140257560
 void CGUnit_C::Initialize() {
-    ClientServices::SetMessageHandler(MSG_MOVE_START_FORWARD, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_BACKWARD, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_STRAFE_LEFT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_STRAFE_RIGHT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_STRAFE, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_ASCEND, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_DESCEND, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_ASCEND, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_JUMP, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_TURN_LEFT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_TURN_RIGHT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_TURN, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_PITCH_UP, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_PITCH_DOWN, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_PITCH, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_RUN_MODE, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_WALK_MODE, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_TELEPORT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_FACING, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_PITCH, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_TOGGLE_COLLISION_CHEAT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_GRAVITY_CHNG, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_RUN_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_RUN_BACK_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_WALK_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_SWIM_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_SWIM_BACK_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_FLIGHT_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_FLIGHT_BACK_SPEED, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_TURN_RATE, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_PITCH_RATE, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_SET_COLLISION_HGT, CGUnit_C::HandleSpeedChangePacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_ROOT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_UNROOT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_SWIM, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_SWIM, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_START_SWIM_CHEAT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_STOP_SWIM_CHEAT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_HEARTBEAT, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_FALL_LAND, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_UPDATE_CAN_FLY, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_UPDATE_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_TELEPORT_ACK, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_TIME_SKIPPED, Packet_MSG_MOVE_TIME_SKIPPED, NULL);
     ClientServices::SetMessageHandler(SMSG_ON_MONSTER_MOVE, CGUnit_C::HandleMonsterMovePacket, NULL);
     ClientServices::SetMessageHandler(SMSG_MONSTER_MOVE_TRANSPORT, CGUnit_C::HandleMonsterMovePacket, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_RUN_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_RUN_BACK_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_SWIM_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_SWIM_BACK_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_FLIGHT_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_WALK_SPEED_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_TURN_RATE_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_PITCH_RATE_CHANGE, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_MOVE_ROOT, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_MOVE_UNROOT, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_WATER_WALK, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_LAND_WALK, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_FEATHER_FALL, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_NORMAL_FALL, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_HOVERING, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_UNSET_HOVERING, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_DISABLE_GRAVITY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_ENABLE_GRAVITY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_COLLISION_HGT, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SET_CAN_FLY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_UNSET_CAN_FLY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_ENABLE_TRANSITION_BETWEEN_SWIM_AND_FLY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_DISABLE_TRANSITION_BETWEEN_SWIM_AND_FLY, Packet_MoveMode, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_KNOCK_BACK, Packet_MoveMode, NULL);
     ClientServices::SetMessageHandler(SMSG_MOUNT_SPECIAL_ANIM, Packet_SMSG_MOUNTSPECIAL_ANIM, NULL);
     ClientServices::SetMessageHandler(SMSG_AI_REACTION, Packet_SMSG_AI_REACTION, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_KNOCK_BACK, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_HOVER, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_FEATHER_FALL, CGUnit_C::HandleMovementPacket, NULL);
-    ClientServices::SetMessageHandler(MSG_MOVE_WATER_WALK, CGUnit_C::HandleMovementPacket, NULL);
     ClientServices::SetMessageHandler(SMSG_PET_ACTION_SOUND, Packet_SMSG_PET_ACTION_SOUND, NULL);
     ClientServices::SetMessageHandler(SMSG_PET_DISMISS_SOUND, Packet_SMSG_PET_DISMISS_SOUND, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_ROOT, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_DISABLE_GRAVITY, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_ENABLE_GRAVITY, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_UNROOT, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_FEATHER_FALL, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_NORMAL_FALL, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_HOVER, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_UNSET_HOVER, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_WATER_WALK, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_LAND_WALK, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_START_SWIM, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_STOP_SWIM, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_MODE, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_WALK_MODE, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_FLYING, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_UNSET_FLYING, Packet_SplineMoveEffect, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_BACK_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_SWIM_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_SWIM_BACK_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_FLIGHT_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_FLIGHT_BACK_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_WALK_BACK_SPEED, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_TURN_RATE, Packet_SplineSpeedChange, NULL);
-    ClientServices::SetMessageHandler(SMSG_MOVE_SPLINE_SET_PITCH_RATE, Packet_SplineSpeedChange, NULL);
     ClientServices::SetMessageHandler(SMSG_STAND_STATE_UPDATE, Packet_SMSG_STANDSTATE_UPDATE, NULL);
-    ClientServices::SetMessageHandler(SMSG_COMPRESSED_MOVES, Packet_SMSG_COMPRESSED_MOVES, NULL);
     ClientServices::SetMessageHandler(SMSG_MULTIPLE_MOVES, Packet_SMSG_MULTIPLE_MOVES, NULL);
     ClientServices::SetMessageHandler(SMSG_CONTROL_UPDATE, Packet_SMSG_CLIENT_CONTROL_UPDATE, NULL);
     ClientServices::SetMessageHandler(SMSG_FLIGHT_SPLINE_SYNC, Packet_SMSG_FLIGHT_SPLINE_SYNC, NULL);
@@ -7824,12 +8992,93 @@ void CGUnit_C::Initialize() {
     ClientServices::SetMessageHandler(SMSG_PRE_RESSURECT, Packet_SMSG_PRE_RESURRECT, NULL);
     ClientServices::SetMessageHandler(SMSG_PLAYER_VEHICLE_DATA, Packet_SMSG_PLAYER_VEHICLE_DATA, NULL);
     ClientServices::SetMessageHandler(SMSG_MULTIPLE_PACKETS_2, Packet_SMSG_MULTIPLE_PACKETS, NULL);
-    ClientServices::SetMessageHandler(SMSG_FORCE_ANIM, Packet_SMSG_UNKNOWN_1240, NULL);
+    ClientServices::SetMessageHandler(SMSG_FORCE_ANIM, Packet_SMSG_FORCE_ANIM, NULL);
+    ClientServices::SetMessageHandler(SMSG_SET_AI_ANIM_KIT, Packet_SMSG_SET_AI_ANIM_KIT, NULL);
+    ClientServices::SetMessageHandler(SMSG_PLAY_ONE_SHOT_ANIM_KIT, Packet_SMSG_PLAY_ONE_SHOT_ANIM_KIT, NULL);
+    ClientServices::SetMessageHandler(SMSG_SET_MOVEMENT_ANIM_KIT, Packet_SMSG_SET_MOVEMENT_ANIM_KIT, NULL);
+    ClientServices::SetMessageHandler(SMSG_SET_MELEE_ANIM_KIT, Packet_SMSG_SET_MELEE_ANIM_KIT, NULL);
+    ClientServices::SetMessageHandler(SMSG_SET_ANIM_TIER, Packet_SMSG_SET_ANIM_TIER, NULL);
     UnitSoundInitialize();
     Spell_C_Initialize();
     UnitCombatClientInitialize();
     CGUnit_C::RegisterMirrorHandlers();
     CacheEmoteRecords();
+    CGUnit_C::InitPowerTypeSlots();
+    ClientSuppressNPCGreetings::s_handler = ClientSuppressNPCGreetingsHandler;
+    ClientAuraPointsDepleted::s_handler = ClientAuraPointsDepletedHandler;
+    ClientPlaySpellVisual::s_handler = ClientPlaySpellVisualHandler;
+    ClientSetPlayHoverAnim::s_handler = ClientSetPlayHoverAnimHandler;
+    ClientMoveUpdateRunSpeed::s_handler = ClientMoveUpdateRunSpeedHandler;
+    ClientMoveUpdateRunBackSpeed::s_handler = ClientMoveUpdateRunBackSpeedHandler;
+    ClientMoveUpdateWalkSpeed::s_handler = ClientMoveUpdateWalkSpeedHandler;
+    ClientMoveUpdateSwimSpeed::s_handler = ClientMoveUpdateSwimSpeedHandler;
+    ClientMoveUpdateSwimBackSpeed::s_handler = ClientMoveUpdateSwimBackSpeedHandler;
+    ClientMoveUpdateFlightSpeed::s_handler = ClientMoveUpdateFlightSpeedHandler;
+    ClientMoveUpdateFlightBackSpeed::s_handler = ClientMoveUpdateFlightBackSpeedHandler;
+    ClientMoveUpdateTurnRate::s_handler = ClientMoveUpdateTurnRateHandler;
+    ClientMoveUpdatePitchRate::s_handler = ClientMoveUpdatePitchRateHandler;
+    ClientMoveUpdateCollisionHeight::s_handler = ClientMoveUpdateCollisionHeightHandler;
+    ClientMoveUpdate::s_handler = ClientMoveUpdateHandler;
+    ClientMoveUpdateTeleport::s_handler = ClientMoveUpdateTeleportHandler;
+    ClientMoveUpdateKnockBack::s_handler = ClientMoveUpdateKnockBackHandler;
+    ClientSplineMoveSetRunSpeed::s_handler = ClientSplineMoveSetRunSpeedHandler;
+    ClientSplineMoveSetRunBackSpeed::s_handler = ClientSplineMoveSetRunBackSpeedHandler;
+    ClientSplineMoveSetSwimSpeed::s_handler = ClientSplineMoveSetSwimSpeedHandler;
+    ClientSplineMoveSetSwimBackSpeed::s_handler = ClientSplineMoveSetSwimBackSpeedHandler;
+    ClientSplineMoveSetFlightSpeed::s_handler = ClientSplineMoveSetFlightSpeedHandler;
+    ClientSplineMoveSetFlightBackSpeed::s_handler = ClientSplineMoveSetFlightBackSpeedHandler;
+    ClientSplineMoveSetWalkSpeed::s_handler = ClientSplineMoveSetWalkSpeedHandler;
+    ClientSplineMoveSetTurnRate::s_handler = ClientSplineMoveSetTurnRateHandler;
+    ClientSplineMoveSetPitchRate::s_handler = ClientSplineMoveSetPitchRateHandler;
+    ClientSplineMoveRoot::s_handler = ClientSplineMoveRootHandler;
+    ClientSplineMoveUnroot::s_handler = ClientSplineMoveUnrootHandler;
+    ClientSplineMoveGravityDisable::s_handler = ClientSplineMoveGravityDisableHandler;
+    ClientSplineMoveGravityEnable::s_handler = ClientSplineMoveGravityEnableHandler;
+    ClientSplineMoveCollisionDisable::s_handler = ClientSplineMoveCollisionDisableHandler;
+    ClientSplineMoveCollisionEnable::s_handler = ClientSplineMoveCollisionEnableHandler;
+    ClientSplineMoveSetFeatherFall::s_handler = ClientSplineMoveSetFeatherFallHandler;
+    ClientSplineMoveSetNormalFall::s_handler = ClientSplineMoveSetNormalFallHandler;
+    ClientSplineMoveSetHover::s_handler = ClientSplineMoveSetHoverHandler;
+    ClientSplineMoveUnsetHover::s_handler = ClientSplineMoveUnsetHoverHandler;
+    ClientSplineMoveSetWaterWalk::s_handler = ClientSplineMoveSetWaterWalkHandler;
+    ClientSplineMoveSetLandWalk::s_handler = ClientSplineMoveSetLandWalkHandler;
+    ClientSplineMoveStartSwim::s_handler = ClientSplineMoveStartSwimHandler;
+    ClientSplineMoveStopSwim::s_handler = ClientSplineMoveStopSwimHandler;
+    ClientSplineMoveSetRunMode::s_handler = ClientSplineMoveSetRunModeHandler;
+    ClientSplineMoveSetWalkMode::s_handler = ClientSplineMoveSetWalkModeHandler;
+    ClientSplineMoveSetFlying::s_handler = ClientSplineMoveSetFlyingHandler;
+    ClientSplineMoveUnsetFlying::s_handler = ClientSplineMoveUnsetFlyingHandler;
+    ClientMoveSetRunSpeed::s_handler = ClientMoveSetRunSpeedHandler;
+    ClientMoveSetRunBackSpeed::s_handler = ClientMoveSetRunBackSpeedHandler;
+    ClientMoveSetSwimSpeed::s_handler = ClientMoveSetSwimSpeedHandler;
+    ClientMoveSetSwimBackSpeed::s_handler = ClientMoveSetSwimBackSpeedHandler;
+    ClientMoveSetFlightSpeed::s_handler = ClientMoveSetFlightSpeedHandler;
+    ClientMoveSetFlightBackSpeed::s_handler = ClientMoveSetFlightBackSpeedHandler;
+    ClientMoveSetWalkSpeed::s_handler = ClientMoveSetWalkSpeedHandler;
+    ClientMoveSetTurnRate::s_handler = ClientMoveSetTurnRateHandler;
+    ClientMoveSetPitchRate::s_handler = ClientMoveSetPitchRateHandler;
+    ClientMoveRoot::s_handler = ClientMoveRootHandler;
+    ClientMoveUnroot::s_handler = ClientMoveUnrootHandler;
+    ClientMoveSetWaterWalk::s_handler = ClientMoveSetWaterWalkHandler;
+    ClientMoveSetLandWalk::s_handler = ClientMoveSetLandWalkHandler;
+    ClientMoveSetFeatherFall::s_handler = ClientMoveSetFeatherFallHandler;
+    ClientMoveSetNormalFall::s_handler = ClientMoveSetNormalFallHandler;
+    ClientMoveSetHover::s_handler = ClientMoveSetHoverHandler;
+    ClientMoveUnsetHover::s_handler = ClientMoveUnsetHoverHandler;
+    ClientMoveKnockBack::s_handler = ClientMoveKnockBackHandler;
+    ClientMoveTeleport::s_handler = ClientMoveTeleportHandler;
+    ClientMoveSetCanFly::s_handler = ClientMoveSetCanFlyHandler;
+    ClientMoveUnsetCanFly::s_handler = ClientMoveUnsetCanFlyHandler;
+    ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler = ClientMoveSetCanTransitionBetweenSwimAndFlyHandler;
+    ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler = ClientMoveUnsetCanTransitionBetweenSwimAndFlyHandler;
+    ClientMoveGravityDisable::s_handler = ClientMoveGravityDisableHandler;
+    ClientMoveGravityEnable::s_handler = ClientMoveGravityEnableHandler;
+    ClientMoveCollisionDisable::s_handler = ClientMoveCollisionDisableHandler;
+    ClientMoveCollisionEnable::s_handler = ClientMoveCollisionEnableHandler;
+    ClientMoveSetCollisionHeight::s_handler = ClientMoveSetCollisionHeightHandler;
+    ClientMoveSetVehicleRecId::s_handler = ClientMoveSetVehicleRecIdHandler;
+    ClientMoveSkipTime::s_handler = ClientMoveSkipTimeHandler;
+    ClientMoveSetCompoundState::s_handler = ClientMoveSetCompoundStateHandler;
 
     memset(g_environmentalDamageVisualKits, 0, sizeof(g_environmentalDamageVisualKits));
 
@@ -7852,129 +9101,30 @@ void CGUnit_C::Initialize() {
     s_pendingInteractTarget = WOWGUID();
     CGUnit_C::s_activeMover = WOWGUID();
     CMissile::Initialize();
+    CUnitDisplayTransition_C::InitSystem();
     CVehicle_C::InitSystem();
     CVehiclePassenger_C::InitSystem();
     CVehicleCamera_C::InitSystem();
     CGUnit_C::InitMissileTrajectorySystem();
     CGUnit_C::VehiclePassengerInitWorldCameraState();
-    s_unitThreatPool = new (__FILE__, __LINE__) UnitThreatHeap;
-    s_unitThreatPool->m_heapId = ObjectAllocAddHeap(sizeof(UnitThreat), 16, "Unit Threat", true);
+    void* pool = SMemAlloc(sizeof(TSObjectAllocPool<UnitThreat>), __FILE__, __LINE__, 0);
+    s_unitThreatPool = pool ? new (pool) TSObjectAllocPool<UnitThreat>("Unit Threat", 16) : NULL;
     CGUnit_C::s_deferredClientControlUpdateGUID = WOWGUID();
     CGUnit_C::s_deferredClientControlUpdateState = 0;
     CGUnit_C::s_initialized = 1;
 }
 
-// OFFSET: #0x00742BB0
+// OFFSET: 0x005DA690
 void CGUnit_C::Shutdown() {
     CGUnit_C::s_initialized = 0;
     CMissile::RemoveMissiles();
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_FORWARD);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_BACKWARD);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_STRAFE_LEFT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_STRAFE_RIGHT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_STRAFE);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_ASCEND);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_DESCEND);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_ASCEND);
-    ClientServices::ClearMessageHandler(MSG_MOVE_JUMP);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_TURN_LEFT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_TURN_RIGHT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_TURN);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_PITCH_UP);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_PITCH_DOWN);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_PITCH);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_RUN_MODE);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_WALK_MODE);
-    ClientServices::ClearMessageHandler(MSG_MOVE_TELEPORT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_FACING);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_PITCH);
-    ClientServices::ClearMessageHandler(MSG_MOVE_TOGGLE_COLLISION_CHEAT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_GRAVITY_CHNG);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_RUN_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_RUN_BACK_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_WALK_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_SWIM_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_SWIM_BACK_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_FLIGHT_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_FLIGHT_BACK_SPEED);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_TURN_RATE);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_PITCH_RATE);
-    ClientServices::ClearMessageHandler(MSG_MOVE_SET_COLLISION_HGT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_ROOT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_UNROOT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_SWIM);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_SWIM);
-    ClientServices::ClearMessageHandler(MSG_MOVE_START_SWIM_CHEAT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_STOP_SWIM_CHEAT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_HEARTBEAT);
-    ClientServices::ClearMessageHandler(MSG_MOVE_FALL_LAND);
-    ClientServices::ClearMessageHandler(MSG_MOVE_UPDATE_CAN_FLY);
-    ClientServices::ClearMessageHandler(MSG_MOVE_UPDATE_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY);
-    ClientServices::ClearMessageHandler(MSG_MOVE_TELEPORT_ACK);
-    ClientServices::ClearMessageHandler(MSG_MOVE_TIME_SKIPPED);
     ClientServices::ClearMessageHandler(SMSG_ON_MONSTER_MOVE);
     ClientServices::ClearMessageHandler(SMSG_MONSTER_MOVE_TRANSPORT);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_RUN_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_RUN_BACK_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_SWIM_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_SWIM_BACK_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_FLIGHT_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_WALK_SPEED_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_TURN_RATE_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_PITCH_RATE_CHANGE);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_MOVE_ROOT);
-    ClientServices::ClearMessageHandler(SMSG_FORCE_MOVE_UNROOT);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_WATER_WALK);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_LAND_WALK);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_FEATHER_FALL);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_NORMAL_FALL);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_HOVERING);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_UNSET_HOVERING);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_DISABLE_GRAVITY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_ENABLE_GRAVITY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_COLLISION_HGT);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SET_CAN_FLY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_UNSET_CAN_FLY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_ENABLE_TRANSITION_BETWEEN_SWIM_AND_FLY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_DISABLE_TRANSITION_BETWEEN_SWIM_AND_FLY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_KNOCK_BACK);
     ClientServices::ClearMessageHandler(SMSG_MOUNT_SPECIAL_ANIM);
     ClientServices::ClearMessageHandler(SMSG_AI_REACTION);
-    ClientServices::ClearMessageHandler(MSG_MOVE_KNOCK_BACK);
-    ClientServices::ClearMessageHandler(MSG_MOVE_HOVER);
-    ClientServices::ClearMessageHandler(MSG_MOVE_FEATHER_FALL);
-    ClientServices::ClearMessageHandler(MSG_MOVE_WATER_WALK);
     ClientServices::ClearMessageHandler(SMSG_PET_ACTION_SOUND);
     ClientServices::ClearMessageHandler(SMSG_PET_DISMISS_SOUND);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_ROOT);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_DISABLE_GRAVITY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_ENABLE_GRAVITY);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_UNROOT);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_FEATHER_FALL);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_NORMAL_FALL);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_HOVER);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_UNSET_HOVER);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_WATER_WALK);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_LAND_WALK);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_START_SWIM);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_STOP_SWIM);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_MODE);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_WALK_MODE);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_FLYING);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_UNSET_FLYING);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_RUN_BACK_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_SWIM_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_SWIM_BACK_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_FLIGHT_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_FLIGHT_BACK_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_WALK_BACK_SPEED);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_TURN_RATE);
-    ClientServices::ClearMessageHandler(SMSG_MOVE_SPLINE_SET_PITCH_RATE);
     ClientServices::ClearMessageHandler(SMSG_STAND_STATE_UPDATE);
-    ClientServices::ClearMessageHandler(SMSG_COMPRESSED_MOVES);
     ClientServices::ClearMessageHandler(SMSG_MULTIPLE_MOVES);
     ClientServices::ClearMessageHandler(SMSG_CONTROL_UPDATE);
     ClientServices::ClearMessageHandler(SMSG_FLIGHT_SPLINE_SYNC);
@@ -7995,6 +9145,84 @@ void CGUnit_C::Shutdown() {
     ClientServices::ClearMessageHandler(SMSG_PLAYER_VEHICLE_DATA);
     ClientServices::ClearMessageHandler(SMSG_MULTIPLE_PACKETS_2);
     ClientServices::ClearMessageHandler(SMSG_FORCE_ANIM);
+    ClientServices::ClearMessageHandler(SMSG_SET_AI_ANIM_KIT);
+    ClientServices::ClearMessageHandler(SMSG_PLAY_ONE_SHOT_ANIM_KIT);
+    ClientServices::ClearMessageHandler(SMSG_SET_MOVEMENT_ANIM_KIT);
+    ClientServices::ClearMessageHandler(SMSG_SET_MELEE_ANIM_KIT);
+    ClientServices::ClearMessageHandler(SMSG_SET_ANIM_TIER);
+    ClientAuraPointsDepleted::s_handler = NULL;
+    ClientPlaySpellVisual::s_handler = NULL;
+    ClientMoveUpdateRunSpeed::s_handler = NULL;
+    ClientMoveUpdateRunBackSpeed::s_handler = NULL;
+    ClientMoveUpdateWalkSpeed::s_handler = NULL;
+    ClientMoveUpdateSwimSpeed::s_handler = NULL;
+    ClientMoveUpdateSwimBackSpeed::s_handler = NULL;
+    ClientMoveUpdateFlightSpeed::s_handler = NULL;
+    ClientMoveUpdateFlightBackSpeed::s_handler = NULL;
+    ClientMoveUpdateTurnRate::s_handler = NULL;
+    ClientMoveUpdatePitchRate::s_handler = NULL;
+    ClientMoveUpdateCollisionHeight::s_handler = NULL;
+    ClientMoveUpdate::s_handler = NULL;
+    ClientMoveUpdateTeleport::s_handler = NULL;
+    ClientMoveUpdateKnockBack::s_handler = NULL;
+    ClientSplineMoveSetRunSpeed::s_handler = NULL;
+    ClientSplineMoveSetRunBackSpeed::s_handler = NULL;
+    ClientSplineMoveSetSwimSpeed::s_handler = NULL;
+    ClientSplineMoveSetSwimBackSpeed::s_handler = NULL;
+    ClientSplineMoveSetFlightSpeed::s_handler = NULL;
+    ClientSplineMoveSetFlightBackSpeed::s_handler = NULL;
+    ClientSplineMoveSetWalkSpeed::s_handler = NULL;
+    ClientSplineMoveSetTurnRate::s_handler = NULL;
+    ClientSplineMoveSetPitchRate::s_handler = NULL;
+    ClientSplineMoveRoot::s_handler = NULL;
+    ClientSplineMoveUnroot::s_handler = NULL;
+    ClientSplineMoveGravityDisable::s_handler = NULL;
+    ClientSplineMoveGravityEnable::s_handler = NULL;
+    ClientSplineMoveCollisionDisable::s_handler = NULL;
+    ClientSplineMoveCollisionEnable::s_handler = NULL;
+    ClientSplineMoveSetFeatherFall::s_handler = NULL;
+    ClientSplineMoveSetNormalFall::s_handler = NULL;
+    ClientSplineMoveSetHover::s_handler = NULL;
+    ClientSplineMoveUnsetHover::s_handler = NULL;
+    ClientSplineMoveSetWaterWalk::s_handler = NULL;
+    ClientSplineMoveSetLandWalk::s_handler = NULL;
+    ClientSplineMoveStartSwim::s_handler = NULL;
+    ClientSplineMoveStopSwim::s_handler = NULL;
+    ClientSplineMoveSetRunMode::s_handler = NULL;
+    ClientSplineMoveSetWalkMode::s_handler = NULL;
+    ClientSplineMoveSetFlying::s_handler = NULL;
+    ClientSplineMoveUnsetFlying::s_handler = NULL;
+    ClientMoveSetRunSpeed::s_handler = NULL;
+    ClientMoveSetRunBackSpeed::s_handler = NULL;
+    ClientMoveSetSwimSpeed::s_handler = NULL;
+    ClientMoveSetSwimBackSpeed::s_handler = NULL;
+    ClientMoveSetFlightSpeed::s_handler = NULL;
+    ClientMoveSetFlightBackSpeed::s_handler = NULL;
+    ClientMoveSetWalkSpeed::s_handler = NULL;
+    ClientMoveSetTurnRate::s_handler = NULL;
+    ClientMoveSetPitchRate::s_handler = NULL;
+    ClientMoveRoot::s_handler = NULL;
+    ClientMoveUnroot::s_handler = NULL;
+    ClientMoveSetWaterWalk::s_handler = NULL;
+    ClientMoveSetLandWalk::s_handler = NULL;
+    ClientMoveSetFeatherFall::s_handler = NULL;
+    ClientMoveSetNormalFall::s_handler = NULL;
+    ClientMoveSetHover::s_handler = NULL;
+    ClientMoveUnsetHover::s_handler = NULL;
+    ClientMoveKnockBack::s_handler = NULL;
+    ClientMoveTeleport::s_handler = NULL;
+    ClientMoveSetCanFly::s_handler = NULL;
+    ClientMoveUnsetCanFly::s_handler = NULL;
+    ClientMoveSetCanTransitionBetweenSwimAndFly::s_handler = NULL;
+    ClientMoveUnsetCanTransitionBetweenSwimAndFly::s_handler = NULL;
+    ClientMoveGravityDisable::s_handler = NULL;
+    ClientMoveGravityEnable::s_handler = NULL;
+    ClientMoveCollisionDisable::s_handler = NULL;
+    ClientMoveCollisionEnable::s_handler = NULL;
+    ClientMoveSetCollisionHeight::s_handler = NULL;
+    ClientMoveSetVehicleRecId::s_handler = NULL;
+    ClientMoveSkipTime::s_handler = NULL;
+    ClientMoveSetCompoundState::s_handler = NULL;
     UnitSoundShutdown();
     Spell_C_Destroy();
     UnitCombatClientShutdown();
@@ -9932,11 +11160,91 @@ int32_t Packet_SMSG_MULTIPLE_PACKETS(void* param, NETMESSAGE msgId, uint32_t tim
 }
 
 // OFFSET: 0x005AA590
-int32_t Packet_SMSG_UNKNOWN_1240(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+int32_t Packet_SMSG_FORCE_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     char text[512];
     msg->Get(guid.m_guid);
     msg->GetString(text, sizeof(text));
+    return 1;
+}
+
+// OFFSET: 0x005AD900
+int32_t Packet_SMSG_SET_AI_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    SmartGUID guid;
+    *msg >> guid;
+    uint16_t animKitId = 0;
+    msg->Get(animKitId);
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        unit->SetAIAnimKitID(animKitId);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x005AD960
+int32_t Packet_SMSG_PLAY_ONE_SHOT_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    SmartGUID guid;
+    *msg >> guid;
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint16_t animKitId = 0;
+        msg->Get(animKitId);
+        CAnimKitManager* manager = unit->m_mountAnimKitManager ? unit->m_mountAnimKitManager : &unit->m_animKitManager;
+        manager->PlayAndForget(animKitId, 0xFFFFFFFF, NULL);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x005AD9D0
+int32_t Packet_SMSG_SET_MOVEMENT_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    SmartGUID guid;
+    *msg >> guid;
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint16_t animKitId = 0;
+        msg->Get(animKitId);
+        unit->SetMovementAnimKitID(animKitId);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x005ADA30
+int32_t Packet_SMSG_SET_MELEE_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    SmartGUID guid;
+    *msg >> guid;
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint16_t animKitId = 0;
+        msg->Get(animKitId);
+        unit->SetMeleeAnimKitID(animKitId);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x005ADA90
+int32_t Packet_SMSG_SET_ANIM_TIER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    SmartGUID guid;
+    *msg >> guid;
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        int32_t animTier = 0;
+        msg->Get(animTier);
+
+        if (animTier != unit->m_animTier) {
+            unit->m_animTier = animTier;
+            unit->UpdateAnimKitMgrTier();
+        }
+    }
+
     return 1;
 }
 
@@ -10531,7 +11839,7 @@ bool CGUnit_C::AnimSuppressesMovement() const {
     return (g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId())->m_flags >> 2) & 1;
 }
 
-// OFFSET: #0x0071CB30
+// OFFSET: 0x005B6970
 int32_t Packet_SMSG_MOUNTSPECIAL_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -11213,12 +12521,14 @@ C3Vector CGUnit_C::GetPosition() const {
     return this->m_movement->GetPosition(this->m_movement->m_position);
 }
 
-// OFFSET: #0x00718860
+// OFFSET: 0x005AF240/0x140221F90
 void CGUnit_C::OnFlightLocal(uint32_t eventTime, int32_t flying) {
     this->m_movementData.OnFlightLocal(eventTime, flying);
 
     if (flying) {
         CGUnit_C::s_flightStatusTime = eventTime;
+    } else {
+        CGUnit_C::s_flightEndTime = eventTime;
     }
 }
 
@@ -15313,7 +16623,7 @@ void CGUnit_C::OnTeleportAck(uint32_t time, uint32_t ackCounter, CDataStore* msg
     this->m_movementData.OnTeleportLocal(time, ackCounter, status);
 }
 
-// OFFSET: #0x007300A0
+// OFFSET: 0x005CF610
 int32_t Packet_AuraUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -16793,20 +18103,23 @@ int32_t CGUnit_C::IsSeatedInVehicle() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state == 3;
 }
 
-// OFFSET: #0x00716CD0
+// OFFSET: 0x005AD7F0
 int32_t Packet_SMSG_FORCE_DISPLAY_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
+    uint32_t displayId = 0;
     *msg >> guid;
+    msg->Get(displayId);
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (unit) {
+    if (unit && unit->m_unit->m_unitFieldDisplayid == displayId) {
         unit->UpdateDisplayInfo(1);
+        unit->m_clientFlags |= 0x8000000;
     }
 
     return 1;
 }
 
-// OFFSET: #0x00716940
+// OFFSET: 0x005AD4D0
 int32_t Packet_SMSG_FLIGHT_SPLINE_SYNC(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     float progress;
     SmartGUID guid;
@@ -16821,7 +18134,7 @@ int32_t Packet_SMSG_FLIGHT_SPLINE_SYNC(void* param, NETMESSAGE msgId, uint32_t t
     return 1;
 }
 
-// OFFSET: #0x00716D20
+// OFFSET: 0x005B69E0
 int32_t Packet_SMSG_HEALTH_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     uint32_t health;
@@ -16829,25 +18142,50 @@ int32_t Packet_SMSG_HEALTH_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, 
     msg->Get(health);
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (unit) {
+    if (unit && unit->m_predictedHealth != health) {
         unit->m_predictedHealth = health;
+        WOWGUID target = unit->m_obj->m_guid;
+        Script_SendUniqueSignal(target, SCRIPT_EVENT_UNIT_HEALTH_FREQUENT);
     }
 
     return 1;
 }
 
-// OFFSET: #0x007236C0
+// OFFSET: 0x005C4260
 int32_t Packet_SMSG_POWER_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
-    uint8_t powerType;
-    uint32_t value;
     *msg >> guid;
-    msg->Get(powerType);
-    msg->Get(value);
+    uint32_t count;
+    msg->Get(count);
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (unit) {
-        unit->SetPredictedPower(powerType, value);
+    if (!unit) {
+        msg->m_read = msg->m_size;
+        return 1;
+    }
+
+    for (int32_t i = 0; i < static_cast<int32_t>(count); i++) {
+        uint8_t powerType;
+        int32_t value;
+        msg->Get(powerType);
+        msg->Get(value);
+        int32_t slot;
+
+        if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
+            slot = CGUnit_C::s_powerSlotByType[unit->m_unit->m_unitFieldBytes0[1]][powerType];
+
+            if (slot == -1) {
+                continue;
+            }
+        } else if (powerType == unit->m_unit->m_unitFieldBytes0[3]) {
+            slot = 0;
+        } else if (powerType == 10) {
+            slot = 1;
+        } else {
+            continue;
+        }
+
+        unit->SetPredictedPowerSlot(slot, powerType, value, false);
     }
 
     return 1;
@@ -17892,20 +19230,7 @@ void CGUnit_C::AddWorldXPGainText(int32_t amount) {
     PlayerNameCreateText(this->m_nameDesc, 4, text, NULL, NULL);
 }
 
-// OFFSET: #0x0072CD90
-UnitThreat* UnitThreatHeap::New() {
-    uint32_t memHandle;
-    void* memory = NULL;
 
-    if (!ObjectAlloc(this->m_heapId, &memHandle, &memory, false, __FILE__, __LINE__)) {
-        return NULL;
-    }
-
-    UnitThreat* threat = memory ? new (memory) UnitThreat : NULL;
-    threat->m_memHandle = memHandle;
-
-    return threat;
-}
 
 // OFFSET: 0x005CA870/0x1402427E0
 bool CGUnit_C::CalculateThreat(const WOWGUID& guid, uint8_t* status, uint8_t* rawPercent, float* percent, int32_t* threat) {
@@ -17974,9 +19299,7 @@ void CGUnit_C::ClearThreatList() {
         Script_SendUniqueSignal(target, SCRIPT_EVENT_UNIT_THREAT_SITUATION_UPDATE);
         CGGameUI::ThreatMapRemove(this->m_obj->m_guid, target);
         this->m_threats.Unlink(entry);
-        UnitThreatHeap* heap = s_unitThreatPool;
-        entry->~UnitThreat();
-        ObjectFree(heap->m_heapId, entry->m_memHandle, entry, __FILE__, __LINE__);
+        s_unitThreatPool->Delete(entry);
     }
 
     this->m_highestThreatGuid = WOWGUID();
@@ -18012,7 +19335,7 @@ UnitThreat* CGUnit_C::CreateThreatEntry(const WOWGUID& guid) {
         return entry;
     }
 
-    entry = s_unitThreatPool->New();
+    entry = s_unitThreatPool->New("", 0);
     entry->m_status = 1;
     entry->m_percent = 0xFF;
     entry->m_threat = 0;
@@ -18189,9 +19512,7 @@ void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
 
     CGGameUI::ThreatMapRemove(this->m_obj->m_guid, guid);
     this->m_threats.Unlink(entry);
-    UnitThreatHeap* heap = s_unitThreatPool;
-    entry->~UnitThreat();
-    ObjectFree(heap->m_heapId, entry->m_memHandle, entry, __FILE__, __LINE__);
+    s_unitThreatPool->Delete(entry);
     Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_THREAT_SITUATION_UPDATE);
 
     if (update) {
@@ -18205,7 +19526,7 @@ void CGUnit_C::RemoveThreat(const WOWGUID& guid) {
     }
 }
 
-// OFFSET: #0x00741C90
+// OFFSET: 0x005DB490
 int32_t Packet_ThreatUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -18220,7 +19541,7 @@ int32_t Packet_ThreatUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataS
     return 1;
 }
 
-// OFFSET: #0x00737B20
+// OFFSET: 0x005D79A0
 int32_t Packet_SMSG_THREAT_REMOVE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -18237,7 +19558,7 @@ int32_t Packet_SMSG_THREAT_REMOVE(void* param, NETMESSAGE msgId, uint32_t time, 
     return 1;
 }
 
-// OFFSET: #0x00734B00
+// OFFSET: 0x005D7A20
 int32_t Packet_SMSG_THREAT_CLEAR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -18250,7 +19571,7 @@ int32_t Packet_SMSG_THREAT_CLEAR(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x00716B10
+// OFFSET: 0x005AD5F0
 int32_t Packet_SMSG_AI_REACTION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -18269,7 +19590,7 @@ int32_t Packet_SMSG_AI_REACTION(void* param, NETMESSAGE msgId, uint32_t time, CD
     return 1;
 }
 
-// OFFSET: #0x00716B90
+// OFFSET: 0x005AD670
 int32_t Packet_SMSG_PET_ACTION_SOUND(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -18500,7 +19821,7 @@ void CGUnit_C::ReadLootList(CDataStore* msg) {
     this->m_looter = guid;
 }
 
-// OFFSET: #0x0071CA50
+// OFFSET: 0x005AD470
 int32_t Packet_SMSG_LOOT_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -21154,7 +22475,7 @@ void CGUnit_C::DisengageFromActivePlayer() {
     CGGameUI::Target(WOWGUID());
 }
 
-// OFFSET: #0x0071B1E0
+// OFFSET: 0x005B3C80
 void CGUnit_C::HandlePendingTrackEvents() {
     if (s_pendingAttackTarget) {
         if (ClntObjMgrObjectPtr(s_pendingAttackTarget, TYPEMASK_UNIT, __FILE__, __LINE__) && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
@@ -21917,51 +23238,33 @@ void CGUnit_C::ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32
 }
 
 // OFFSET: 0x005AD530
-static int32_t UnpackAndProcessOpcodes(CDataStore* msg, uint32_t time, int32_t compressed) {
-    uint32_t size;
-    msg->Get(size);
-    uint32_t unpackedSize = size;
-    void* data;
-
-    if (compressed) {
-        uint8_t* buffer = static_cast<uint8_t*>(alloca(size));
-        uint32_t packedSize = msg->m_size - msg->m_read;
-        void* packed;
-        msg->GetDataInSitu(packed, packedSize);
-        zlib_uncompress(buffer, &unpackedSize, static_cast<const uint8_t*>(packed), packedSize);
-        data = buffer;
-    } else {
-        unpackedSize = msg->m_size - msg->m_read;
-        msg->GetDataInSitu(data, unpackedSize);
-    }
-
-    CDataStore stream(static_cast<uint8_t*>(data), unpackedSize);
-
-    if (unpackedSize) {
-        do {
-            uint8_t length;
-            stream.Get(length);
-            void* message;
-            stream.GetDataInSitu(message, length);
-            CDataStore packet(static_cast<uint8_t*>(message), length);
-            ClientServices::Connection()->ProcessMessage(time, &packet, 0);
-        } while (stream.m_read != stream.m_size);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00716AD0
-int32_t Packet_SMSG_COMPRESSED_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    return UnpackAndProcessOpcodes(msg, time, 1);
-}
-
-// OFFSET: #0x00716AF0
 int32_t Packet_SMSG_MULTIPLE_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    return UnpackAndProcessOpcodes(msg, time, 0);
+    if (msg->IsRead()) {
+        return 1;
+    }
+
+    while (true) {
+        uint8_t size;
+        msg->Get(size);
+        uint8_t* data;
+        msg->GetDataInSitu(reinterpret_cast<void*&>(data), size);
+
+        if (!data) {
+            break;
+        }
+
+        CDataStore move(data, size);
+        ClientServices::Connection()->ProcessMessage(time, &move, 0);
+
+        if (msg->IsRead()) {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
-// OFFSET: %0x005B5260
+// OFFSET: 0x005AD870
 int32_t Packet_SMSG_PRE_RESURRECT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -22137,7 +23440,7 @@ void CGUnit_C::SetDeferredClientControl(WOWGUID guid, uint8_t state) {
     }
 }
 
-// OFFSET: #0x0072D0B0
+// OFFSET: 0x005CB150
 int32_t Packet_SMSG_CLIENT_CONTROL_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     uint8_t state;
@@ -22154,7 +23457,7 @@ int32_t Packet_SMSG_CLIENT_CONTROL_UPDATE(void* param, NETMESSAGE msgId, uint32_
     return 1;
 }
 
-// OFFSET: #0x0072D130
+// OFFSET: 0x005CB1D0
 int32_t Packet_SMSG_CANCEL_AUTO_REPEAT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -22165,7 +23468,11 @@ int32_t Packet_SMSG_CANCEL_AUTO_REPEAT(void* param, NETMESSAGE msgId, uint32_t t
             Spell_C_CancelAutoRepeat(false);
         }
 
-        unit->m_animationState &= ~0x200;
+        if (unit->m_animationState & 0x8) {
+            unit->m_animationState &= ~0x8;
+            unit->UpdateCombatReadyAnimKit(0);
+        }
+
         unit->CancelRangedMode();
     }
 
@@ -23211,21 +24518,16 @@ const SpellVisualRec* CGUnit_C::GetAppropriateSpellVisual(const SpellRec* spell,
     return &visual;
 }
 
-// OFFSET: #0x00716DB0
+// OFFSET: 0x005AD8A0
 int32_t Packet_SMSG_PLAYER_VEHICLE_DATA(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
     uint32_t vehicleId;
     msg->Get(vehicleId);
-
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
-        if (vehicleId) {
-            unit->CreateVehicleData(NULL, vehicleId);
-        } else {
-            unit->DestroyVehicleData(1);
-        }
+        unit->SetVehicleRecID(vehicleId);
     }
 
     return 1;
@@ -23565,7 +24867,7 @@ CM2Model* CGUnit_C::CreateItemModel(uint32_t hand, float* scale) {
     return this->CreateItemModel(this->GetVirtualItemDisplayID(hand), item->m_inventoryType, scale);
 }
 
-// OFFSET: #0x007324B0
+// OFFSET: 0x005D34A0
 int32_t Packet_SMSG_MIRRORIMAGE_DATA(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);

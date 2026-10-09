@@ -28,6 +28,7 @@ class CGChatBubbleFrame;
 class CGGameObject_C;
 class CGNamePlateFrame;
 class CUnitDisplayTransition_C;
+class ClientSetPlayHoverAnim;
 
 namespace Liquid {
     struct DisplMapPerturbation;
@@ -166,7 +167,7 @@ struct ActiveHeadLook {
 };
 
 struct UnitThreatHandle {
-    /* 0000 */ uint32_t m_memHandle;
+    /* 0000 */ uint32_t m_handle;
 };
 
 struct UnitThreat : public UnitThreatHandle, public TSHashObject<UnitThreat, CHashKeyGUID> {
@@ -174,13 +175,6 @@ struct UnitThreat : public UnitThreatHandle, public TSHashObject<UnitThreat, CHa
     /* 0029 */ uint8_t m_percent;
     /* 002A */ uint8_t unk_002A[2];
     /* 002C */ int32_t m_threat;
-};
-
-class UnitThreatHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
-
-    UnitThreat* New();
 };
 
 class CGUnitVirtualItem {
@@ -251,6 +245,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static int32_t s_dismountSoundKitId;
     static WOWGUID s_lastNPCSoundGUID;
     static uint32_t s_flightStatusTime;
+    static uint32_t s_flightEndTime;
     static uintptr_t s_trajectoryWorldObjects[2];
     static CM2Model* s_trajectoryModels[2];
     static C3Vector* s_trajectoryPoints;
@@ -817,7 +812,11 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t BuildMovementUpdate(uint32_t time, uint32_t msgId, CDataStore* msg, float value, uint32_t index);
     int32_t IsAllowedToSendMessage(uint32_t msgId) const;
     void SendTimeSkip(uint32_t skip);
-    void OnMovementFlagsChanged(uint32_t time, uint32_t oldFlags, int32_t a3, int32_t a4, int32_t a5);
+    void OnMovementFlagsChanged(uint32_t time, uint32_t oldFlags, int32_t teleport, int32_t a4, int32_t knockBack);
+    void OnStartFlying();
+    void OnStopFlying();
+    int32_t OnTeleportUpdate(uint32_t time, const CMovementStatus& status);
+    void SetAuraEffectAmount(uint32_t auraIndex, uint32_t effectIndex, int32_t amount);
     void PlayJumpSplineAnimKit();
     void PlayJumpStartAnimKit();
     void UpdateLastSentMovement();
@@ -1276,7 +1275,12 @@ extern int32_t g_environmentalDamageVisualKits[6];
 void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
 int32_t FactionTemplateReaction(const FactionTemplateRec* faction, const FactionTemplateRec* other);
 int32_t Packet_SMSG_MULTIPLE_PACKETS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_UNKNOWN_1240(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_FORCE_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_SET_AI_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_PLAY_ONE_SHOT_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_SET_MOVEMENT_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_SET_MELEE_ANIM_KIT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+int32_t Packet_SMSG_SET_ANIM_TIER(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_PET_DISMISS_SOUND(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_MOUNTSPECIAL_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 float CopySign(float value, float sign);
@@ -1312,7 +1316,6 @@ int32_t Packet_AuraUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataSto
 int32_t Packet_SMSG_AI_REACTION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CANCEL_AUTO_REPEAT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CLIENT_CONTROL_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_COMPRESSED_MOVES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_DISMOUNT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_FLIGHT_SPLINE_SYNC(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_FORCE_DISPLAY_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -1391,5 +1394,7 @@ float CreatureSoundDataGetFidgetDelayMin(const CreatureSoundDataRec* rec);
 float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec);
 
 int32_t MissileTrajectoryObjectCallback(void* param, uint32_t a2, uint64_t a3, uintptr_t a4);
+
+bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg);
 
 #endif

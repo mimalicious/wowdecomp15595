@@ -1,4 +1,5 @@
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
+#include "WoW/Source/JamClientAutoCode/JamClientMove.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Tempest/CRandom.h"
 #include "WoW/Common/ComponentCore/CharacterComponent.h"
@@ -264,6 +265,7 @@ void CGUnit_C::UpdateAnimKitIDsFromClientInitData(const uint16_t* ids) {
     this->m_meleeAnimKitID = ids[2];
 }
 
+// PROVEN: d51272a8 IDENTICAL/NONE
 // OFFSET: 0x005FB200
 void CGUnit_C::SetAnimKitSplitBody(const CreatureModelDataRec* modelData, CAnimKitManager* manager, int32_t checkTier) {
     int32_t blocked = 0;
@@ -296,6 +298,7 @@ void CGUnit_C::SetAnimKitSplitBody(const CreatureModelDataRec* modelData, CAnimK
     }
 }
 
+// PROVEN: 6adbddda IDENTICAL/NONE
 // OFFSET: 0x005FB270/0x140280480
 void CGUnit_C::DeathAnimKitStopCallback(CAnimKitInst* inst, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1174,6 +1177,7 @@ void CGUnit_C::HandItemAnimCallback(CM2Model* model, uint32_t boneId, uint32_t s
     }
 }
 
+// PROVEN: 6822d352 IDENTICAL/NONE
 // OFFSET: 0x005FC9D0/0x140282260
 void CGUnit_C::UpdateAnimKitsBeforeMountModelChange(int32_t mounting) {
     if (!mounting || !this->m_mountAnimKitManager) {
@@ -1428,6 +1432,22 @@ void CGUnit_C::EmoteSpellVisualKitStopCallback(CAnimKitInst* inst, uint64_t para
     if (unit) {
         unit->StopEmoteAnimKit();
     }
+}
+
+// OFFSET: 0x005FD3E0
+bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit) {
+        uint32_t state = msg->m_playHoverAnim ? (unit->m_animationState | 0x40000) : (unit->m_animationState & ~0x40000);
+
+        if (unit->m_animationState != state) {
+            unit->m_animationState = state;
+            unit->UpdateMovementAnimKit(0);
+        }
+    }
+
+    return true;
 }
 
 // PROVEN: 124b4646 IDENTICAL/NONE
