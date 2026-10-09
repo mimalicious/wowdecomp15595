@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "WoW/Source/Object/WGUID.h"
+#include "Engine/Source/Base/ObjectAlloc.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/Object/ObjectClient/Missile_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
@@ -14,18 +15,9 @@ class VehicleRec;
 class VehicleSeatRec;
 class CGInputControl;
 
-class CVehicleCamera_C;
-
-class CVehicleCameraHeap {
-    public:
-    /* 0000 */ uint32_t m_heapId;
-
-    CVehicleCamera_C* New();
-};
-
 class CVehicleCamera_C {
     public:
-    static CVehicleCameraHeap* s_cameraPool;
+    static TSObjectAllocPool<CVehicleCamera_C>* s_cameraPool;
     static uint32_t s_cameraCount;
 
     static void InitSystem();
@@ -37,7 +29,7 @@ class CVehicleCamera_C {
     static int32_t ConvertSmoothFacingFromRawToWorld(float& facing, CGObject_C* relativeTo);
     static int32_t ConvertSmoothFacingFromWorldToRaw(float& facing, CGObject_C* relativeTo);
 
-    /* 0000 */ uint32_t m_memHandle;
+    /* 0000 */ uint32_t m_handle;
     /* 0004 */ CGUnit_C* m_unit;
     /* 0008 */ uint32_t m_flags;
     /* 000C */ VehicleRec* m_vehicleRec;
@@ -76,6 +68,7 @@ class CVehicleCamera_C {
     int32_t AttachToHierarchy();
     void DetachFromHierarchy();
     void BeginTransition(CGUnit_C* vehicle, WOWGUID transport, uint32_t time);
+    void BeginTransition(uint32_t time);
     void ComputeSafeCurWorldPos();
     void Update(uint32_t time);
     C3Vector ComputeEndWorldPosition(CGUnit_C* target);
@@ -83,7 +76,7 @@ class CVehicleCamera_C {
     void UpdateFacing(CGUnit_C* target, uint32_t time, float progress, CGObject_C* relativeTo);
     void UpdateWorldCameraState(uint32_t time, uint32_t duration);
     void SetTarget(WOWGUID target, WOWGUID next);
-    void MaybeChangeTarget(CGUnit_C* vehicle, VehicleSeatRec* seat, int32_t exiting, WOWGUID& relativeTo);
+    void MaybeChangeTarget(const CGUnit_C* vehicle, WOWGUID transport, const VehicleSeatRec* seat, int32_t exiting, WOWGUID& relativeTo);
     void OnPassengerTransitionMotionBegin(uint32_t time, uint32_t duration);
 };
 

@@ -125,17 +125,9 @@ int32_t CVehicle_C::IsSuppressingCameraPitchWhileMouseAiming() const {
     return 0;
 }
 
-// OFFSET: #0x00756F40
+// OFFSET: 0x005E99C0
 int32_t CVehicle_C::HasHighPriorityCastingAnim() const {
-    if (this->m_vehicleRec && (this->m_vehicleRec->m_flags & 0x10000)) {
-        CGUnit_C* unit = this->m_unit;
-
-        if ((unit->m_animationState & 0x400) || unit->m_specialIdleAnim != -1) {
-            return 1;
-        }
-    }
-
-    return 0;
+    return this->m_vehicleRec && (this->m_vehicleRec->m_flags & 0x10000);
 }
 
 // OFFSET: 0x005E9BE0/0x14026ABC0
