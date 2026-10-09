@@ -434,7 +434,7 @@ void CUnitDisplayTransition_C::PerformSwap() {
     }
 
     this->m_unit->ApplyEffectItemVisuals();
-    CMissile::UpdateUnitAttachments(this->m_unit->m_obj->m_guid);
+    CMissile::UpdateAttachments(this->m_unit->m_obj->m_guid);
 
     CM2Model* precastModel = this->m_unit->m_precastMissileModel;
 

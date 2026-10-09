@@ -64,7 +64,9 @@ struct SpellCastTargetPoint {
     /* 000C */ uint32_t unk_000C;
     /* 0010 */ WOWGUID m_transport;
     /* 0018 */ C3Vector m_worldPosition;
-    /* 0024 */ uint32_t unk_0024;
+    /* 0024 */ C3Vector unk_0024;
+
+    SpellCastTargetPoint();
 };
 
 struct NotifyDestLocSpellCastData {
@@ -262,8 +264,9 @@ bool OnCancelCombat();
 
 void Spell_C_ClearCooldowns();
 void Spell_C_ClearPetCooldowns();
-const SpellVisualRec* GetSpellVisual(const SpellRec* spell);
-const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit);
+const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit = NULL);
+bool CanPlaySpellVisualForPlayer(uint64_t caster, uint64_t target, int32_t casterIsPlayer, int32_t targetIsPlayer);
+bool CanPlaySpellVisual(uint64_t caster, uint64_t target, const SpellVisualRec* visual);
 bool CanPlaySpellVisualKit(uint64_t caster, uint64_t target, const SpellVisualKitRec* kit, const SpellVisualRec* visual);
 void Spell_C_Destroy();
 void Spell_C_Initialize();

@@ -2512,15 +2512,79 @@ const char* GetPowerString(uint32_t powerType) {
     return "";
 }
 
+// INLINED
+SpellCastTargetPoint::SpellCastTargetPoint() {
+    this->m_position = C3Vector(0.0f, 0.0f, 0.0f);
+    this->m_transport = WOWGUID();
+    this->m_worldPosition = C3Vector(0.0f, 0.0f, 0.0f);
+    this->unk_0024 = C3Vector(0.0f, 0.0f, 1.0f);
+}
+
+// OFFSET: 0x008BC1A0/0x140604D60
+bool CanPlaySpellVisualForPlayer(uint64_t caster, uint64_t target, int32_t casterIsPlayer, int32_t targetIsPlayer) {
+    if (caster) {
+        if (casterIsPlayer && caster != ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+
+        if (targetIsPlayer && caster == ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+    }
+
+    if (target) {
+        if (targetIsPlayer && target != ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+
+        if (casterIsPlayer && target == ClntObjMgrGetActivePlayer().m_guid) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x008BC220/0x140604DF0
+bool CanPlaySpellVisual(uint64_t caster, uint64_t target, const SpellVisualRec* visual) {
+    if (!visual) {
+        return false;
+    }
+
+    return CanPlaySpellVisualForPlayer(caster, target, visual->m_flags & 0x800, visual->m_flags & 0x1000);
+}
+
+// OFFSET: 0x008BC260/0x140604E20
+bool CanPlaySpellVisualKit(uint64_t caster, uint64_t target, const SpellVisualKitRec* kit, const SpellVisualRec* visual) {
+    if (!kit || (visual && !CanPlaySpellVisualForPlayer(caster, target, visual->m_flags & 0x800, visual->m_flags & 0x1000))) {
+        return false;
+    }
+
+    return CanPlaySpellVisualForPlayer(caster, target, kit->m_flags & 0x1000, kit->m_flags & 0x2000);
+}
+
 // OFFSET: 0x008BC6D0/0x140605480
-const SpellVisualRec* GetSpellVisual(const SpellRec* spell) {
+const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit) {
     int32_t visualId = spell->m_spellVisualID[0];
 
     if (ViolenceGetLevel() < 2 && spell->m_spellVisualID[1]) {
         visualId = spell->m_spellVisualID[1];
     }
 
-    return g_spellVisualDB.GetRecord(visualId);
+    const SpellVisualRec* visual = g_spellVisualDB.GetRecord(visualId);
+
+    if (!unit || !visual || !visual->unk_0080) {
+        return visual;
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || player->IsFriendly(unit)) {
+        return visual;
+    }
+
+    const SpellVisualRec* hostile = g_spellVisualDB.GetRecord(visual->unk_0080);
+    return hostile ? hostile : visual;
 }
 
 // PROVEN: eac9ea42 IDENTICAL/NONE
@@ -9240,14 +9304,14 @@ void Spell_C_PlayDestLocVisualsWithoutCaster(NotifyDestLocSpellCastData* data) {
             missile->m_flags |= 0x10800;
         }
 
-        missile->unk_0114 = missileCount;
+        missile->m_missileCount = missileCount;
 
         if (missileCount > 1) {
-            missile->unk_0110 = 0;
+            missile->m_missileIndex = 0;
 
             for (int32_t i = 1; i < missileCount; i++) {
                 missile = CMissile::CopyMissile(missile);
-                missile->unk_0110 = i;
+                missile->m_missileIndex = i;
                 missile->SetReadyToFire(&missiles);
             }
         }

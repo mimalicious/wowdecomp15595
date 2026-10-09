@@ -430,6 +430,13 @@ void CGUnit_C::ResetFloodsafeMoveEvents() {
     this->m_floodsafeOpcode[1] = 8229;
 }
 
+// OFFSET: 0x005AC510
+uint32_t CGUnit_C::NextVisualKitSequence() {
+    uint32_t sequence = this->unk_1020;
+    this->unk_1020 = sequence + 2;
+    return sequence;
+}
+
 // OFFSET: 0x005AC920
 ATTACKROUNDINFO::ATTACKROUNDINFO() {
     this->m_attacker = WOWGUID();
@@ -12244,14 +12251,14 @@ bool CGUnit_C::CheckCurrentMountRules() {
     return true;
 }
 
-// OFFSET: #0x00728300
-bool CGUnit_C::HasAuraActive(int32_t spellId) {
+// OFFSET: 0x005C2E00
+bool CGUnit_C::HasAuraActive(int32_t spellId, WOWGUID caster) {
     uint32_t count = this->GetAuraCount();
 
     for (uint32_t i = 0; i < count; i++) {
         AuraData* aura = this->GetAura(i);
 
-        if (aura->m_spellId == spellId) {
+        if (aura->m_spellId == spellId && (!caster || aura->m_creator == caster)) {
             for (uint32_t effect = 0; effect < 3; effect++) {
                 if ((1 << effect) & aura->m_flags) {
                     return true;
@@ -14324,7 +14331,7 @@ void CGUnit_C::Disable() {
     this->DestroyVehicleCamera();
 
     if (this->m_vehicle) {
-        this->m_vehicle->RemoveAllPassengersLocally();
+        this->m_vehicle->RemoveAllPassengersLocally(1);
     }
 
     this->m_chainSpellTargets.Clear();
@@ -20807,14 +20814,14 @@ flagsDone:
         missile->m_flags |= 0x200000;
     }
 
-    missile->unk_0114 = missileCount;
+    missile->m_missileCount = missileCount;
 
     if (missileCount > 1) {
-        missile->unk_0110 = 0;
+        missile->m_missileIndex = 0;
 
         for (int32_t i = 1; i < missileCount; i++) {
             missile = CMissile::CopyMissile(missile);
-            missile->unk_0110 = i;
+            missile->m_missileIndex = i;
             missile->SetReadyToFire(&this->m_missiles);
         }
     }
@@ -20995,14 +21002,14 @@ void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCast
         missile->m_flags |= 0x200000;
     }
 
-    missile->unk_0114 = missileCount;
+    missile->m_missileCount = missileCount;
 
     if (missileCount > 1) {
-        missile->unk_0110 = 0;
+        missile->m_missileIndex = 0;
 
         for (int32_t i = 1; i < missileCount; i++) {
             missile = CMissile::CopyMissile(missile);
-            missile->unk_0110 = i;
+            missile->m_missileIndex = i;
             missile->SetReadyToFire(&this->m_missiles);
         }
     }
@@ -21172,14 +21179,14 @@ void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, P
         missile->m_flags |= 0x200000;
     }
 
-    missile->unk_0114 = missileCount;
+    missile->m_missileCount = missileCount;
 
     if (missileCount > 1) {
-        missile->unk_0110 = 0;
+        missile->m_missileIndex = 0;
 
         for (int32_t i = 1; i < missileCount; i++) {
             missile = CMissile::CopyMissile(missile);
-            missile->unk_0110 = i;
+            missile->m_missileIndex = i;
             missile->SetReadyToFire(&this->m_missiles);
         }
     }

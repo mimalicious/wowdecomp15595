@@ -773,7 +773,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static int32_t __stdcall FindMountTypeIDFromSpell(const SpellRec* spell);
     bool FlyingMountAllowed(bool checkContinent) const;
     bool CheckCurrentMountRules();
-    bool HasAuraActive(int32_t spellId);
+    bool HasAuraActive(int32_t spellId, WOWGUID caster);
     int32_t GetAuraIndex(int32_t spellId);
     bool IsVehiclePreventingTurning() const;
     bool IsVehicleTransitionPreventingAction() const;
@@ -826,6 +826,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void PlayJumpStartAnimKit();
     void UpdateLastSentMovement();
     void ResetFloodsafeMoveEvents();
+    uint32_t NextVisualKitSequence();
     void MarkFallingSent();
     void OnTeleported();
     void SetVehicleRecID(uint32_t vehicleRecId);
