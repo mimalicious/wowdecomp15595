@@ -16,14 +16,18 @@ class CMovementStatus {
         /* 001C */ uint32_t m_time;
         /* 0020 */ bool m_hasTime2;
         /* 0024 */ uint32_t m_time2;
-        /* 0028 */ bool m_hasTime3;
-        /* 002C */ uint32_t m_time3;
+        /* 0028 */ bool m_hasVehicleId;
+        /* 002C */ uint32_t m_vehicleId;
+
+        bool IsValid() const;
     };
 
     struct FallDirection {
         /* 0000 */ float m_sinAngle;
         /* 0004 */ float m_cosAngle;
         /* 0008 */ float m_xySpeed;
+
+        bool IsValid() const;
     };
 
     struct FallInfo {
@@ -31,6 +35,8 @@ class CMovementStatus {
         /* 0004 */ float m_zSpeed;
         /* 0008 */ bool m_hasDirection;
         /* 000C */ FallDirection m_direction;
+
+        bool IsValid() const;
     };
 
     /* 0000 */ WOWGUID m_guid;
@@ -50,6 +56,8 @@ class CMovementStatus {
     /* 0085 */ bool m_heightChangeFailed;
 
     CMovementStatus();
+    ~CMovementStatus();
+    bool IsValid() const;
 };
 
 #endif

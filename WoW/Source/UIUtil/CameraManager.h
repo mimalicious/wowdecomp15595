@@ -4,6 +4,15 @@
 #include <cstddef>
 #include <cstdint>
 
-class CCameraManager;
+#include "WoW/Source/Object/WGUID.h"
+
+class CCameraManager {
+    public:
+    static CCameraManager* s_instance;
+
+    static CCameraManager* Get();
+    CCameraManager();
+    void ResetCameras(WOWGUID guid);
+};
 
 #endif

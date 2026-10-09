@@ -8,6 +8,8 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/Object/WGUID.h"
 
+class CClientMoveSpline;
+
 class CDataStore;
 
 #pragma pack(push, 4)
@@ -44,6 +46,7 @@ class CMoveSpline {
     CMoveSpline();
     ~CMoveSpline();
     CMoveSpline& CopyFrom(const CMoveSpline& source);
+    CMoveSpline& InitFromClientSpline(const CClientMoveSpline& source);
 };
 
 CDataStore& operator>>(CDataStore& msg, C3Vector& vector);

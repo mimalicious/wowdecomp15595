@@ -22,17 +22,20 @@ class CPlayerMoveEvent {
     /* 0028 */ WOWGUID m_transportGuid;
     /* 0030 */ uint32_t m_moveFlags;
     /* 0034 */ uint16_t m_moveExtraFlags;
-    /* 0036 */ uint16_t unk_0036;
+    /* 0036 */ uint8_t m_seat;
+    /* 0037 */ uint8_t m_hasStatus : 1;
+    /* 0037 */ uint8_t m_needAck : 1;
+    /* 0037 */ uint8_t m_reason : 2;
     /* 0038 */ uint32_t m_fallTime;
-    /* 003C */ float m_value;
+    /* 003C */ float m_launchDirX;
     /* 0040 */ float m_launchDirY;
     /* 0044 */ float m_launchSpeed;
     /* 0048 */ float m_launchVerticalSpeed;
-    /* 004C */ uint32_t m_ackCounter;
-    /* 0050 */ uint8_t unk_0050;
-    /* 0051 */ uint8_t m_needAck;
-    /* 0052 */ uint8_t m_seat;
-    /* 0053 */ uint8_t unk_0053;
+    union {
+        /* 004C */ float m_value;
+        /* 004C */ uint32_t m_vehicleRecId;
+    };
+    /* 0050 */ uint32_t m_ackCounter;
     /* 0054 */ uint32_t unk_0054;
 
     void FromMoveStatus(const CMovementStatus& status);

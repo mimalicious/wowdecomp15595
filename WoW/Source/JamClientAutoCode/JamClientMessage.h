@@ -20,6 +20,10 @@ class JamBitReader {
     uint32_t ReadBits();
 };
 
+template <bool wide>
+struct JamBitCount {
+};
+
 class JamBitWriter {
     public:
     /* 0000 */ CDataStore* m_msg;
@@ -28,9 +32,13 @@ class JamBitWriter {
 
     JamBitWriter(CDataStore* msg);
     void Flush();
-    void WriteBit(bool value);
+    void WriteBit(uint32_t value);
     template <uint32_t count>
     void WriteBits(uint32_t value);
+    template <uint32_t count>
+    void WriteBits(uint32_t value, JamBitCount<false>);
+    template <uint32_t count>
+    void WriteBits(uint32_t value, JamBitCount<true>);
 };
 
 struct JAMMESSAGEINFO {

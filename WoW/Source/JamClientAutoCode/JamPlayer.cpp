@@ -11,6 +11,7 @@ PlayerObjectUpdateFailed::PlayerObjectUpdateFailed() {
 PlayerObjectUpdateFailed::~PlayerObjectUpdateFailed() {
 }
 
+// PROVEN: 43a4694a IDENTICAL/NONE
 // OFFSET: 0x00674820
 void PlayerObjectUpdateFailed::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3808));
@@ -69,6 +70,7 @@ PlayerObjectUpdateRescued::PlayerObjectUpdateRescued() {
 PlayerObjectUpdateRescued::~PlayerObjectUpdateRescued() {
 }
 
+// PROVEN: 54159ac2 IDENTICAL/NONE
 // OFFSET: 0x00674650
 void PlayerObjectUpdateRescued::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x3906));

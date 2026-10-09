@@ -21,7 +21,7 @@ class CClientObjCreate {
     /* 0008 */ bool m_hasMovement;
     /* 0010 */ CClientMoveUpdate m_move;
     /* 0138 */ bool m_hasGOTransport;
-    /* 0140 */ CClientMoveTransport m_goTransport;
+    /* 0140 */ CMovementStatus::TransportInfo m_goTransport;
     /* 0170 */ bool m_hasStationaryPosition;
     /* 0174 */ C3Vector m_stationaryPosition;
     /* 0180 */ float m_stationaryFacing;

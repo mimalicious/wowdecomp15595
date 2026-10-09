@@ -80,6 +80,7 @@ class CGCamera : public CSimpleCamera {
     void CommentatorSetViewAndPosition(const C3Vector& position, float facing, float pitch);
     void BarberShopSetView(float distance, float facing, float pitch);
     int32_t FinishLoadingModel();
+    void OnTargetTeleported(float oldFacing);
 
     /* 0048 */ CM2Model* m_model;
     /* 004C */ uint32_t m_someTime;

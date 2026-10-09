@@ -40,6 +40,7 @@ UserClientPlayerLogin::UserClientPlayerLogin(uint64_t guid) {
 UserClientPlayerLogin::~UserClientPlayerLogin() {
 }
 
+// PROVEN: 54ede3e3 IDENTICAL/NONE
 // OFFSET: 0x0066DEF0
 void UserClientPlayerLogin::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x5B1));

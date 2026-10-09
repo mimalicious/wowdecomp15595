@@ -5,6 +5,7 @@
 #include "WoW/Source/DB/Rec/SpellInterruptsRec.h"
 #include "WoW/Source/DB/Rec/SpellTargetRestrictionsRec.h"
 #include "WoW/Source/DB/Rec/World_PVP_AreaRec.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "WoW/Source/Object/ObjectClient/UnitDisplayTransition_C.h"
 #include <cmath>
@@ -419,6 +420,18 @@ void CGUnit_C::RetargetAuraEffects(int32_t spellId, const WOWGUID& oldCaster, co
     CGObject_C::RetargetEffects(this->m_auraEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
 }
 
+// OFFSET: 0x005AB780
+void CGUnit_C::MarkFallingSent() {
+    this->m_clientFlags |= 0x80;
+}
+
+// OFFSET: 0x005AC0C0
+void CGUnit_C::ResetFloodsafeMoveEvents() {
+    this->unk_09FC &= ~0x80;
+    this->m_floodsafeOpcode[0] = 8229;
+    this->m_floodsafeOpcode[1] = 8229;
+}
+
 // OFFSET: 0x005AC920
 ATTACKROUNDINFO::ATTACKROUNDINFO() {
     this->m_attacker = WOWGUID();
@@ -612,6 +625,23 @@ void CGUnit_C::PlayTaxiDismountKit() {
     }
 }
 
+// OFFSET: 0x005AEB30
+void CGUnit_C::UpdateLastSentMovement() {
+    this->m_lastSentFacing = this->GetRawFacing();
+
+    if ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (this->m_movement->m_flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING)) {
+        this->m_lastSentPitch = this->GetPitch();
+    }
+
+    if (this->m_movement->m_flags & (MOVEMENTFLAG_TURN_LEFT | MOVEMENTFLAG_TURN_RIGHT)) {
+        this->unk_09FC |= 0x100;
+    }
+
+    if (this->m_movement->m_flags & (MOVEMENTFLAG_PITCH_UP | MOVEMENTFLAG_PITCH_DOWN)) {
+        this->unk_09FC |= 0x200;
+    }
+}
+
 // OFFSET: 0x005B00E0/0x140222F90
 CEffectVirtualItem* CGUnit_C::FindVirtualItemEffect(int32_t hand) const {
     if (!(this->unk_09FC & 0x400)) {
@@ -761,6 +791,11 @@ void CGUnit_C::DoMountFade(float alpha, uint32_t time) {
     if (!time) {
         this->m_mountAlpha = target;
     }
+}
+
+// OFFSET: 0x005B3680
+int32_t CGUnit_C::IsPitchUnchangedSinceSent() {
+    return (!(this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) && !(this->m_movement->m_flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING)) || fabs(this->GetPitch() - this->m_lastSentPitch) < 0.1f;
 }
 
 // OFFSET: 0x005B4850/0x140227DF0
@@ -5932,14 +5967,12 @@ void CGUnit_C::OnCollideFallReset(uint32_t time) {
     }
 }
 
-// OFFSET: #0x0071F210
+// OFFSET: 0x005AEBE0
 void CGUnit_C::SendSplineDone(uint32_t time, uint32_t splineId) {
-    CDataStore msg;
-    this->BuildMovementUpdate(time, CMSG_MOVE_SPLINE_DONE, &msg, 0.0f, 0);
-    msg.Put(splineId);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    this->m_movementData.UpdateHeartbeatTimerA(time);
+    PlayerMoveSplineDone msg;
+    this->m_movementData.GetMoveStatus(CMSG_MOVE_SPLINE_DONE, time, &msg.m_status);
+    msg.m_splineId = splineId;
+    this->m_movementData.SendMoveMessage(time, &msg);
     CGInputControl* input = CGInputControl::GetActive();
     input->UpdateHalted();
     input->UpdatePlayer(time, 1);
@@ -12383,7 +12416,7 @@ void CGUnit_C::InitializeActivePlayerComponent() {
 // OFFSET: 0x005DAB60/0x140256A80
 void CGUnit_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
     this->m_animKitManager.SetModel(this->m_worldModel, 0);
-    this->m_movementData.UpdateTransportStatus(create);
+    this->m_movementData.UpdateTransportStatus(create.m_move.m_status);
     this->m_modelScale = this->GetModelScale(this->m_unit->m_unitFieldDisplayid);
 
     if (!(this->m_obj->m_type & TYPEMASK_PLAYER)) {
@@ -13141,7 +13174,7 @@ void CGUnit_C::Disable() {
         camera->MakeRelativeTo(WOWGUID());
     }
 
-    this->m_movementData.Disable();
+    this->m_movementData.OnUnitDisable();
 
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
         if (CGUnit_C::s_trackingType != 13) {
@@ -15151,34 +15184,34 @@ int32_t CGUnit_C::OnSpeedChangeEvent(NETMESSAGE msgId, uint32_t time, CDataStore
 
     switch (msgId) {
         case MSG_MOVE_SET_RUN_SPEED:
-            changed = this->m_movementData.OnRunSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnRunSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_RUN_BACK_SPEED:
-            changed = this->m_movementData.OnRunBackSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnRunBackSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_WALK_SPEED:
-            changed = this->m_movementData.OnWalkSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnWalkSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_SWIM_SPEED:
-            changed = this->m_movementData.OnSwimSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnSwimSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_SWIM_BACK_SPEED:
-            changed = this->m_movementData.OnSwimBackSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnSwimBackSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_TURN_RATE:
-            changed = this->m_movementData.OnTurnRateChangeOther(now, status, value);
+            changed = this->m_movementData.OnTurnRateChange(now, status, value);
             break;
         case MSG_MOVE_SET_FLIGHT_SPEED:
-            changed = this->m_movementData.OnFlightSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnFlightSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_FLIGHT_BACK_SPEED:
-            changed = this->m_movementData.OnFlightBackSpeedChangeOther(now, status, value);
+            changed = this->m_movementData.OnFlightBackSpeedChange(now, status, value);
             break;
         case MSG_MOVE_SET_PITCH_RATE:
-            changed = this->m_movementData.OnPitchRateChangeOther(now, status, value);
+            changed = this->m_movementData.OnPitchRateChange(now, status, value);
             break;
         case MSG_MOVE_SET_COLLISION_HGT:
-            changed = this->m_movementData.OnSetCollisionHeightOther(now, status, value);
+            changed = this->m_movementData.OnSetCollisionHeight(now, status, value);
             break;
         default:
             return 0;
@@ -15308,10 +15341,10 @@ int32_t CGUnit_C::OnSplineMoveEffectPacket(NETMESSAGE msgId) {
 
     switch (msgId) {
         case SMSG_MOVE_SPLINE_ROOT:
-            movement->OnSplineRoot();
+            movement->OnRoot();
             break;
         case SMSG_MOVE_SPLINE_UNROOT:
-            movement->OnSplineUnRoot();
+            movement->OnUnRoot();
             break;
         case SMSG_MOVE_SPLINE_SET_FEATHER_FALL:
             movement->OnFeatherFall(1);
@@ -15320,10 +15353,10 @@ int32_t CGUnit_C::OnSplineMoveEffectPacket(NETMESSAGE msgId) {
             movement->OnFeatherFall(0);
             break;
         case SMSG_MOVE_SPLINE_SET_HOVER:
-            movement->OnSplineToggleHover(1);
+            movement->OnHover(1);
             break;
         case SMSG_MOVE_SPLINE_UNSET_HOVER:
-            movement->OnSplineToggleHover(0);
+            movement->OnHover(0);
             break;
         case SMSG_MOVE_SPLINE_SET_WATER_WALK:
             movement->OnWaterWalk(1);
@@ -15539,7 +15572,7 @@ void CGUnit_C::FaceTarget(const WOWGUID& target, int32_t flush) {
     if (object) {
         C3Vector targetPosition = object->GetPosition();
         C3Vector position = this->GetPosition();
-        this->m_movementData.SetFacingAndFlush(CalculateFacingTo(&position, &targetPosition), flush);
+        this->m_movementData.OnSetFacing(CalculateFacingTo(&position, &targetPosition), flush);
     }
 }
 
@@ -15850,14 +15883,14 @@ void CGUnit_C::OnMonsterMove(CDataStore* msg, NETMESSAGE msgId, uint64_t transpo
             case 2: {
                 C3Vector target = this->m_movementData.CPassenger::GetPosition(facePoint);
                 C3Vector position = this->GetPosition();
-                this->m_movementData.SetFacingAndFlush(CalculateFacingTo(&position, &target), flush);
+                this->m_movementData.OnSetFacing(CalculateFacingTo(&position, &target), flush);
                 break;
             }
             case 3:
                 this->FaceTarget(faceTarget, flush);
                 break;
             case 4:
-                this->m_movementData.SetFacingAndFlush(this->m_movement->GetFacing(faceAngle), flush);
+                this->m_movementData.OnSetFacing(this->m_movement->GetFacing(faceAngle), flush);
                 break;
         }
 

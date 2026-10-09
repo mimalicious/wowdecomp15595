@@ -17,17 +17,28 @@
 // STATIC: 0x00CA7790
 static TSExplicitList<CGGameObject_C, offsetof(CGGameObject_C, m_transportLink)> s_transports;
 
+// OFFSET: 0x00571920/0x1401D2B80
+uint32_t MovementGetIdleTime() {
+    return MovementGetGlobals()->m_idleTime;
+}
+
 // OFFSET: 0x005E7000
 void MovementAddTransport(CGGameObject_C* transport) {
     s_transports.LinkToTail(transport);
 }
 
-// OFFSET: #0x0074B340
+// OFFSET: 0x005E6BA0
 int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t a3, int32_t reason, int32_t vehicleId) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (!object) {
         return 0;
+    }
+
+    uint32_t high = static_cast<uint32_t>(transport.m_guid >> 32);
+
+    if (((high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(transport.m_guid)))) && vehicleId && !static_cast<CGUnit_C*>(object)->m_vehicle) {
+        static_cast<CGUnit_C*>(object)->CreateVehicleData(NULL, vehicleId);
     }
 
     return object->AddPassenger(passenger, a3);
@@ -245,11 +256,6 @@ void MovementUpdateWorld(WOWGUID guid, const C3Vector& position, int32_t preload
 // OFFSET: 0x005E7160
 CMoveSpline* MovementNewSpline() {
     return new (SMemAlloc(sizeof(CMoveSpline), __FILE__, __LINE__, 0)) CMoveSpline();
-}
-
-// OFFSET: #0x006E9230
-uint32_t MovementGetIdleTime() {
-    return ClntObjMgrGetMovementGlobals()->m_idleTime;
 }
 
 // OFFSET: 0x00571690/0x1401D2970

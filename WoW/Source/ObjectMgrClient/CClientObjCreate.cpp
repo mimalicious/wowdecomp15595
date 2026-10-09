@@ -38,7 +38,7 @@ static void GetGuidByte(CDataStore* msg, uint8_t& value) {
 
 // OFFSET: 0x00698320
 void CClientObjCreate::Get(CDataStore* msg, bool a2) {
-    CClientMoveStatus& status = this->m_move.m_status;
+    CMovementStatus& status = this->m_move.m_status;
     CClientMoveSplineData& spline = this->m_move.m_spline.m_data;
     uint8_t* guid = reinterpret_cast<uint8_t*>(&status.m_guid.m_guid);
     uint8_t* transportGuid = reinterpret_cast<uint8_t*>(&status.m_transport.m_guid.m_guid);
@@ -74,14 +74,14 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
             status.m_moveFlags = bits.ReadBits<30>();
         }
 
-        status.unk_0084 = bits.ReadBit();
+        status.m_hasSpline = bits.ReadBit();
         status.m_pitch = bits.ReadBit() ? 0.0f : 1.0f;
         this->m_move.m_hasSpline = bits.ReadBit();
         status.m_hasFall = bits.ReadBit();
         status.m_splineElevation = bits.ReadBit() ? 0.0f : 1.0f;
         guid[5] = bits.ReadBit();
         status.m_hasTransport = bits.ReadBit();
-        status.m_time = !bits.ReadBit();
+        status.m_gameTime = !bits.ReadBit();
 
         if (status.m_hasTransport) {
             transportGuid[1] = bits.ReadBit();
@@ -89,7 +89,7 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
             transportGuid[4] = bits.ReadBit();
             transportGuid[0] = bits.ReadBit();
             transportGuid[6] = bits.ReadBit();
-            status.m_transport.m_hasTime3 = bits.ReadBit();
+            status.m_transport.m_hasVehicleId = bits.ReadBit();
             transportGuid[7] = bits.ReadBit();
             transportGuid[5] = bits.ReadBit();
             transportGuid[3] = bits.ReadBit();
@@ -131,7 +131,7 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
 
         guid[0] = bits.ReadBit();
         guid[1] = bits.ReadBit();
-        status.unk_0085 = bits.ReadBit();
+        status.m_heightChangeFailed = bits.ReadBit();
         status.m_moveExtraFlags = !bits.ReadBit();
 
         if (status.m_moveExtraFlags) {
@@ -141,7 +141,7 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
 
     if (this->m_hasGOTransport) {
         goTransportGuid[5] = bits.ReadBit();
-        this->m_goTransport.m_hasTime3 = bits.ReadBit();
+        this->m_goTransport.m_hasVehicleId = bits.ReadBit();
         goTransportGuid[0] = bits.ReadBit();
         goTransportGuid[3] = bits.ReadBit();
         goTransportGuid[6] = bits.ReadBit();
@@ -181,13 +181,13 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
 
         if (status.m_hasFall) {
             if (status.m_fall.m_hasDirection) {
-                msg->Get(status.m_fall.m_direction.m_speed);
-                msg->Get(status.m_fall.m_direction.m_direction.x);
-                msg->Get(status.m_fall.m_direction.m_direction.y);
+                msg->Get(status.m_fall.m_direction.m_xySpeed);
+                msg->Get(status.m_fall.m_direction.m_sinAngle);
+                msg->Get(status.m_fall.m_direction.m_cosAngle);
             }
 
-            msg->Get(status.m_fall.m_fallTime);
-            msg->Get(status.m_fall.m_jumpVelocity);
+            msg->Get(status.m_fall.m_time);
+            msg->Get(status.m_fall.m_zSpeed);
         }
 
         msg->Get(this->m_move.m_swimBackSpeed);
@@ -267,8 +267,8 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
             msg->Get(status.m_transport.m_position.z);
             GetGuidByte(msg, transportGuid[0]);
 
-            if (status.m_transport.m_hasTime3) {
-                msg->Get(status.m_transport.m_time3);
+            if (status.m_transport.m_hasVehicleId) {
+                msg->Get(status.m_transport.m_vehicleId);
             }
 
             msg->Get(status.m_transport.m_seat);
@@ -289,8 +289,8 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
         GetGuidByte(msg, guid[2]);
         msg->Get(this->m_move.m_walkSpeed);
 
-        if (status.m_time) {
-            msg->Get(status.m_time);
+        if (status.m_gameTime) {
+            msg->Get(status.m_gameTime);
         }
 
         msg->Get(this->m_move.m_turnRate);
@@ -319,8 +319,8 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
         GetGuidByte(msg, goTransportGuid[0]);
         GetGuidByte(msg, goTransportGuid[5]);
 
-        if (this->m_goTransport.m_hasTime3) {
-            msg->Get(this->m_goTransport.m_time3);
+        if (this->m_goTransport.m_hasVehicleId) {
+            msg->Get(this->m_goTransport.m_vehicleId);
         }
 
         GetGuidByte(msg, goTransportGuid[3]);

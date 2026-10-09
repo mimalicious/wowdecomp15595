@@ -1580,74 +1580,6 @@ int32_t CMovementShared::StopMove(uint32_t moveFlags) {
     return 1;
 }
 
-// OFFSET: #0x00990370
-int32_t AckMessageNeedsIndex(uint32_t msgId) {
-    return msgId == CMSG_FORCE_MOVE_ROOT_ACK
-        || msgId == CMSG_FORCE_MOVE_UNROOT_ACK
-        || msgId == MSG_MOVE_TELEPORT_ACK
-        || msgId == CMSG_FORCE_RUN_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_SWIM_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_FLIGHT_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_WALK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_TURN_RATE_CHANGE_ACK
-        || msgId == CMSG_FORCE_PITCH_RATE_CHANGE_ACK
-        || msgId == CMSG_MOVE_HOVER_ACK
-        || msgId == CMSG_MOVE_SET_CAN_FLY_ACK
-        || msgId == CMSG_MOVE_FEATHER_FALL_ACK
-        || msgId == CMSG_MOVE_WATER_WALK_ACK
-        || msgId == CMSG_MOVE_KNOCK_BACK_ACK
-        || msgId == CMSG_MOVE_GRAVITY_DISABLE_ACK
-        || msgId == CMSG_MOVE_GRAVITY_ENABLE_ACK
-        || msgId == CMSG_MOVE_SET_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY_ACK
-        || msgId == CMSG_MOVE_SET_COLLISION_HGT_ACK;
-}
-
-// OFFSET: #0x00990420
-int32_t IsAckMessage(uint32_t msgId) {
-    return msgId == CMSG_FORCE_MOVE_ROOT_ACK
-        || msgId == CMSG_FORCE_MOVE_UNROOT_ACK
-        || msgId == MSG_MOVE_TELEPORT_ACK
-        || msgId == CMSG_FORCE_RUN_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_RUN_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_SWIM_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_SWIM_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_FLIGHT_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_WALK_SPEED_CHANGE_ACK
-        || msgId == CMSG_FORCE_TURN_RATE_CHANGE_ACK
-        || msgId == CMSG_FORCE_PITCH_RATE_CHANGE_ACK
-        || msgId == CMSG_MOVE_HOVER_ACK
-        || msgId == CMSG_MOVE_SET_CAN_FLY_ACK
-        || msgId == CMSG_MOVE_FEATHER_FALL_ACK
-        || msgId == CMSG_MOVE_WATER_WALK_ACK
-        || msgId == CMSG_MOVE_KNOCK_BACK_ACK
-        || msgId == CMSG_MOVE_NOT_ACTIVE_MOVER
-        || msgId == CMSG_MOVE_GRAVITY_DISABLE_ACK
-        || msgId == CMSG_MOVE_GRAVITY_ENABLE_ACK
-        || msgId == CMSG_MOVE_SET_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY_ACK
-        || msgId == CMSG_MOVE_SET_COLLISION_HGT_ACK;
-}
-
-// OFFSET: #0x009904E0
-int32_t IsMessageAllowedWhileOnSpline(uint32_t msgId) {
-    switch (msgId) {
-        case MSG_MOVE_START_SWIM:
-        case MSG_MOVE_STOP_SWIM:
-        case MSG_MOVE_TOGGLE_COLLISION_CHEAT:
-        case CMSG_MOVE_START_SWIM_CHEAT:
-        case CMSG_MOVE_STOP_SWIM_CHEAT:
-        case CMSG_MOVE_SET_FLY:
-        case CMSG_DISMISS_CONTROLLED_VEHICLE:
-        case CMSG_CHANGE_SEATS_ON_CONTROLLED_VEHICLE:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
 // PROVEN: c3f342cc IDENTICAL/NONE
 // OFFSET: 0x00A21E30/0x1407CD4A0
 void CMovementShared::RemoveSpline() {
@@ -1823,16 +1755,16 @@ float CMovementShared::AddToTransport(WOWGUID transport, int32_t seat, C44Matrix
 }
 
 // OFFSET: 0x00A22600/0x1407C88A0
-int32_t CMovementShared::UpdateTransportStatus(const CMovementStatus& status) {
+WOWGUID CMovementShared::UpdateTransportStatus(const CMovementStatus& status) {
     if (!status.m_hasTransport) {
-        return 0;
+        return WOWGUID();
     }
 
     WOWGUID transport = status.m_transport.m_guid;
 
     if (transport) {
         if (!MovementObjIsTransport(transport)) {
-            return 0;
+            return WOWGUID();
         }
 
         this->m_position = status.m_transport.m_position;
@@ -1844,7 +1776,7 @@ int32_t CMovementShared::UpdateTransportStatus(const CMovementStatus& status) {
         this->m_transportSeat = status.m_transport.m_seat;
     }
 
-    return static_cast<int32_t>(transport.m_guid);
+    return transport;
 }
 
 // OFFSET: 0x00A261C0
@@ -2060,7 +1992,7 @@ void CMovementShared::StopSwim() {
         this->m_pitch = 0.0f;
     }
 
-    if (!(flags2 & MOVEMENTFLAG2_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY) && !this->IsFallingSwimmingFlying(MOVEMENTFLAG_SWIMMING) && !(this->m_flags & MOVEMENTFLAG_FALLING)) {
+    if (!(flags2 & MOVEMENTFLAG2_UNK_0800) && !this->IsFallingSwimmingFlying(MOVEMENTFLAG_SWIMMING) && !(this->m_flags & MOVEMENTFLAG_FALLING)) {
         this->StartFallingIgnoring(MOVEMENTFLAG_SWIMMING, 0.0f);
     }
 
@@ -2075,7 +2007,7 @@ void CMovementShared::StopFlight() {
     this->m_anchorPitch = 0.0f;
     this->m_pitch = 0.0f;
 
-    if (!(this->m_flags2 & MOVEMENTFLAG2_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY) && !this->IsFallingSwimmingFlying(MOVEMENTFLAG_FLYING | MOVEMENTFLAG_ROOT) && !(this->m_flags & MOVEMENTFLAG_FALLING)) {
+    if (!(this->m_flags2 & MOVEMENTFLAG2_UNK_0800) && !this->IsFallingSwimmingFlying(MOVEMENTFLAG_FLYING | MOVEMENTFLAG_ROOT) && !(this->m_flags & MOVEMENTFLAG_FALLING)) {
         this->StartFallingIgnoring(MOVEMENTFLAG_FLYING | MOVEMENTFLAG_ROOT, 0.0f);
     }
 

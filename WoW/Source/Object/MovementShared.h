@@ -165,7 +165,7 @@ class CMovementShared : public CPassenger {
     void UpdateBaseStatus(const CMovementStatus& status);
     void UpdateFallState(const CMovementStatus& status);
     void UpdateFallingFar();
-    int32_t UpdateTransportStatus(const CMovementStatus& status);
+    WOWGUID UpdateTransportStatus(const CMovementStatus& status);
     void WalkOnWater(int32_t enable);
     void Teleport(const C3Vector& position, float facing, int32_t removeSpline);
     void TransformSpline(const C44Matrix& matrix, float facing);
@@ -178,7 +178,6 @@ class CMovementShared : public CPassenger {
     C3Vector ComputeSplineNormal(uint32_t duration, const C44Matrix& frame) const;
 };
 
-int32_t AckMessageNeedsIndex(uint32_t msgId);
 int32_t IsAckMessage(uint32_t msgId);
 int32_t IsMessageAllowedWhileOnSpline(uint32_t msgId);
 
