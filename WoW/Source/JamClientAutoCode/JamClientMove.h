@@ -2,6 +2,7 @@
 #define WOW_SOURCE_JAMCLIENTAUTOCODE_JAMCLIENTMOVE_H
 
 #include <cstdint>
+#include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C2Vector.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 #include "WoW/Source/Object/CMovementStatus.h"
@@ -16,6 +17,7 @@ class ClientMoveCollisionDisable : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveCollisionDisable(WOWGUID guid, uint32_t ackIndex);
     ClientMoveCollisionDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveCollisionDisable();
     bool Get(CDataStore* msg, bool full) override;
@@ -31,6 +33,7 @@ class ClientMoveCollisionEnable : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveCollisionEnable(WOWGUID guid, uint32_t ackIndex);
     ClientMoveCollisionEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveCollisionEnable();
     bool Get(CDataStore* msg, bool full) override;
@@ -46,6 +49,7 @@ class ClientMoveGravityDisable : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveGravityDisable(WOWGUID guid, uint32_t ackIndex);
     ClientMoveGravityDisable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveGravityDisable();
     bool Get(CDataStore* msg, bool full) override;
@@ -61,6 +65,7 @@ class ClientMoveGravityEnable : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveGravityEnable(WOWGUID guid, uint32_t ackIndex);
     ClientMoveGravityEnable(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveGravityEnable();
     bool Get(CDataStore* msg, bool full) override;
@@ -79,6 +84,7 @@ class ClientMoveKnockBack : public JamClientMessage {
     /* 0020 */ float m_verticalSpeed;
     /* 0024 */ C2Vector m_direction;
 
+    ClientMoveKnockBack(WOWGUID guid, uint32_t ackIndex, const C2Vector& direction, float horizontalSpeed, float verticalSpeed);
     ClientMoveKnockBack(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveKnockBack();
     bool Get(CDataStore* msg, bool full) override;
@@ -95,6 +101,7 @@ class ClientMoveRoot : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveRoot(WOWGUID guid, uint32_t ackIndex);
     ClientMoveRoot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveRoot();
     bool Get(CDataStore* msg, bool full) override;
@@ -110,6 +117,7 @@ class ClientMoveSetCanFly : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetCanFly(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetCanFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetCanFly();
     bool Get(CDataStore* msg, bool full) override;
@@ -125,6 +133,7 @@ class ClientMoveSetCanTransitionBetweenSwimAndFly : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetCanTransitionBetweenSwimAndFly(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetCanTransitionBetweenSwimAndFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetCanTransitionBetweenSwimAndFly();
     bool Get(CDataStore* msg, bool full) override;
@@ -142,6 +151,7 @@ class ClientMoveSetCollisionHeight : public JamClientMessage {
     /* 001C */ uint32_t m_ackIndex;
     /* 0020 */ uint32_t m_reason;
 
+    ClientMoveSetCollisionHeight(WOWGUID guid, uint32_t ackIndex, float height, uint32_t reason);
     ClientMoveSetCollisionHeight(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetCollisionHeight();
     bool Get(CDataStore* msg, bool full) override;
@@ -157,6 +167,7 @@ class ClientMoveSetFeatherFall : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetFeatherFall(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetFeatherFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetFeatherFall();
     bool Get(CDataStore* msg, bool full) override;
@@ -173,6 +184,7 @@ class ClientMoveSetFlightBackSpeed : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ float m_speed;
 
+    ClientMoveSetFlightBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetFlightBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetFlightBackSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -189,6 +201,7 @@ class ClientMoveSetFlightSpeed : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ float m_speed;
 
+    ClientMoveSetFlightSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetFlightSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetFlightSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -204,6 +217,7 @@ class ClientMoveSetHover : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetHover(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetHover();
     bool Get(CDataStore* msg, bool full) override;
@@ -219,6 +233,7 @@ class ClientMoveSetLandWalk : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetLandWalk(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetLandWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetLandWalk();
     bool Get(CDataStore* msg, bool full) override;
@@ -234,6 +249,7 @@ class ClientMoveSetNormalFall : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetNormalFall(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetNormalFall(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetNormalFall();
     bool Get(CDataStore* msg, bool full) override;
@@ -250,6 +266,7 @@ class ClientMoveSetPitchRate : public JamClientMessage {
     /* 0018 */ float m_rate;
     /* 001C */ uint32_t m_ackIndex;
 
+    ClientMoveSetPitchRate(WOWGUID guid, uint32_t ackIndex, float rate);
     ClientMoveSetPitchRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetPitchRate();
     bool Get(CDataStore* msg, bool full) override;
@@ -266,6 +283,7 @@ class ClientMoveSetRunBackSpeed : public JamClientMessage {
     /* 0018 */ float m_speed;
     /* 001C */ uint32_t m_ackIndex;
 
+    ClientMoveSetRunBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetRunBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetRunBackSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -282,6 +300,7 @@ class ClientMoveSetRunSpeed : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ float m_speed;
 
+    ClientMoveSetRunSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetRunSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetRunSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -298,6 +317,7 @@ class ClientMoveSetSwimBackSpeed : public JamClientMessage {
     /* 0018 */ float m_speed;
     /* 001C */ uint32_t m_ackIndex;
 
+    ClientMoveSetSwimBackSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetSwimBackSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetSwimBackSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -314,6 +334,7 @@ class ClientMoveSetSwimSpeed : public JamClientMessage {
     /* 0018 */ float m_speed;
     /* 001C */ uint32_t m_ackIndex;
 
+    ClientMoveSetSwimSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetSwimSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetSwimSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -330,6 +351,7 @@ class ClientMoveSetTurnRate : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ float m_rate;
 
+    ClientMoveSetTurnRate(WOWGUID guid, uint32_t ackIndex, float rate);
     ClientMoveSetTurnRate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetTurnRate();
     bool Get(CDataStore* msg, bool full) override;
@@ -346,6 +368,7 @@ class ClientMoveSetVehicleRecId : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ uint32_t m_vehicleRecId;
 
+    ClientMoveSetVehicleRecId(WOWGUID guid, uint32_t ackIndex, uint32_t vehicleRecId);
     ClientMoveSetVehicleRecId(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetVehicleRecId();
     bool Get(CDataStore* msg, bool full) override;
@@ -362,6 +385,7 @@ class ClientMoveSetWalkSpeed : public JamClientMessage {
     /* 0018 */ uint32_t m_ackIndex;
     /* 001C */ float m_speed;
 
+    ClientMoveSetWalkSpeed(WOWGUID guid, uint32_t ackIndex, float speed);
     ClientMoveSetWalkSpeed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetWalkSpeed();
     bool Get(CDataStore* msg, bool full) override;
@@ -377,6 +401,7 @@ class ClientMoveSetWaterWalk : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveSetWaterWalk(WOWGUID guid, uint32_t ackIndex);
     ClientMoveSetWaterWalk(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetWaterWalk();
     bool Get(CDataStore* msg, bool full) override;
@@ -431,6 +456,7 @@ class ClientMoveUnroot : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveUnroot(WOWGUID guid, uint32_t ackIndex);
     ClientMoveUnroot(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveUnroot();
     bool Get(CDataStore* msg, bool full) override;
@@ -446,6 +472,7 @@ class ClientMoveUnsetCanFly : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveUnsetCanFly(WOWGUID guid, uint32_t ackIndex);
     ClientMoveUnsetCanFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveUnsetCanFly();
     bool Get(CDataStore* msg, bool full) override;
@@ -461,6 +488,7 @@ class ClientMoveUnsetCanTransitionBetweenSwimAndFly : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveUnsetCanTransitionBetweenSwimAndFly(WOWGUID guid, uint32_t ackIndex);
     ClientMoveUnsetCanTransitionBetweenSwimAndFly(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveUnsetCanTransitionBetweenSwimAndFly();
     bool Get(CDataStore* msg, bool full) override;
@@ -476,6 +504,7 @@ class ClientMoveUnsetHover : public JamClientMessage {
     /* 0010 */ WOWGUID m_guid;
     /* 0018 */ uint32_t m_ackIndex;
 
+    ClientMoveUnsetHover(WOWGUID guid, uint32_t ackIndex);
     ClientMoveUnsetHover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveUnsetHover();
     bool Get(CDataStore* msg, bool full) override;
@@ -1129,4 +1158,46 @@ class ClientUnitClearSlotValue : public JamClientMessage {
     bool Read(CDataStore* msg, bool full);
     void Unpack(CDataStore* msg, bool full);
 };
+struct JamMoveKnockBack {
+    /* 0000 */ float m_horizontalSpeed;
+    /* 0004 */ C2Vector m_direction;
+    /* 000C */ float m_verticalSpeed;
+
+    bool IsValid() const;
+};
+
+struct JamMoveCollisionHeight {
+    /* 0000 */ float m_height;
+    /* 0004 */ uint32_t m_reason;
+};
+
+struct JamMoveStateChange {
+    /* 0000 */ uint16_t m_messageId;
+    /* 0004 */ uint32_t m_ackIndex;
+    /* 0008 */ bool m_hasSpeed;
+    /* 000C */ float m_speed;
+    /* 0010 */ bool m_hasKnockBack;
+    /* 0014 */ JamMoveKnockBack m_knockBack;
+    /* 0024 */ bool m_hasVehicleRecId;
+    /* 0028 */ uint32_t m_vehicleRecId;
+    /* 002C */ bool m_hasCollisionHeight;
+    /* 0030 */ JamMoveCollisionHeight m_collisionHeight;
+};
+
+class ClientMoveSetCompoundState : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientMoveSetCompoundState* msg);
+
+    /* 0010 */ WOWGUID m_guid;
+    /* 0018 */ TSGrowableArray<JamMoveStateChange> m_changes;
+
+    ClientMoveSetCompoundState(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientMoveSetCompoundState();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Handle();
+    bool IsValid();
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
+};
+
 #endif
