@@ -33,7 +33,7 @@ uint32_t CGPlayer_C::GetImpactType() const {
     return (static_cast<int8_t>(rec->m_flags) & 0x4) >> 2;
 }
 
-// OFFSET: 0x0060B2A0
+// OFFSET: 0x0060B2A0/0x140294610
 void CGPlayer_C::HandleSpellEventSound() {
     if (!this->m_castSpellId) {
         return;

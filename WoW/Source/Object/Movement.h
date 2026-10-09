@@ -59,21 +59,23 @@ class CMovement_C : public CMovementShared {
     static void MoveUnits(uint32_t time, uint32_t lastUpdateTime);
     static void WrapFacingToRange(float& facing, float min, float max);
 
-    /* 00C4 */ uint32_t m_gameTime;
-    /* 00C8 */ float m_collisionRadius;
-    /* 00CC */ float m_collisionHeight;
-    /* 00D0 */ float m_stepUpHeight;
-    /* 00D4 */ C3Vector m_interpolationPos;
-    /* 00E0 */ float m_interpolationFacing;
-    /* 00E4 */ float m_interpolationPitch;
-    /* 00E8 */ int16_t m_timeSkewSamples [32];
-    /* 0128 */ uint32_t m_timeSkewIndex;
-    /* 012C */ uint32_t m_timeSkew;
-    /* 0130 */ uint32_t m_interpolation;
-    /* 0134 */ uint32_t m_moveStartDelay;
-    /* 0138 */ CPlayerMoveQueue m_moveQueue;
-    /* 0144 */ CGUnit_C* m_unit;
-    /* 0148 */ uint32_t unk_0148 [2];
+    /* 00B8 */ uint32_t m_gameTime;
+    /* 00BC */ uint32_t unk_00BC;
+    /* 00C0 */ C3Vector m_groundNormal;
+    /* 00CC */ float m_collisionRadius;
+    /* 00D0 */ float m_collisionHeight;
+    /* 00D4 */ float m_stepUpHeight;
+    /* 00D8 */ C3Vector m_interpolationPos;
+    /* 00E4 */ float m_interpolationFacing;
+    /* 00E8 */ float m_interpolationPitch;
+    /* 00EC */ int16_t m_timeSkewSamples [32];
+    /* 012C */ uint32_t m_timeSkewIndex;
+    /* 0130 */ uint32_t m_timeSkew;
+    /* 0134 */ uint32_t m_interpolation;
+    /* 0138 */ uint32_t m_moveStartDelay;
+    /* 013C */ CPlayerMoveQueue m_moveQueue;
+    /* 0148 */ CGUnit_C* m_unit;
+    /* 014C */ uint32_t unk_014C;
 
     CMovement_C(const C3Vector& position, float facing, const WOWGUID& ownerGuid, CGUnit_C* unit);
     ~CMovement_C();
@@ -93,6 +95,7 @@ class CMovement_C : public CMovementShared {
     void GetMoveStatus(NETMESSAGE msgId, uint32_t gameTime, CMovementStatus* status) const;
     float GetTimeJustFallen(float elapsed, float timeFallen, C3Vector* move, float* distance, int32_t force, float speed);
     uint32_t GetFacetQueryFlags() const;
+    C3Vector GetGroundNormal() const;
     float GetRemainingStepUpHeight() const;
     float GetStepUpHeight() const;
     int32_t HandlePendingActions();

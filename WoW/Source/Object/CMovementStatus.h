@@ -6,38 +6,50 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/Object/WGUID.h"
 
-class CDataStore;
-
 class CMovementStatus {
     public:
-    /* 0000 */ uint32_t m_gameTime;
-    /* 0004 */ uint32_t unk_0004;
-    /* 0008 */ WOWGUID m_transportGuid;
-    /* 0010 */ uint32_t m_moveFlags;
-    /* 0014 */ uint16_t m_moveExtraFlags;
-    /* 0016 */ uint8_t m_transportSeat;
-    /* 0017 */ uint8_t m_uint17;
-    /* 0018 */ C3Vector m_transportPosition;
-    /* 0024 */ float m_transportFacing;
-    /* 0028 */ C3Vector m_position;
-    /* 0034 */ float m_facing;
-    /* 0038 */ float m_pitch;
-    /* 003C */ uint32_t m_fallTime;
-    /* 0040 */ float m_zSpeed;
-    /* 0044 */ float m_sinAngle;
-    /* 0048 */ float m_cosAngle;
-    /* 004C */ float m_xySpeed;
-    /* 0050 */ float m_splineElevation;
-    /* 0054 */ uint32_t m_transportTime;
-    /* 0058 */ uint32_t m_transportTime2;
-    /* 005C */ float unk_005C;
+    struct TransportInfo {
+        /* 0000 */ WOWGUID m_guid;
+        /* 0008 */ C3Vector m_position;
+        /* 0014 */ float m_facing;
+        /* 0018 */ uint8_t m_seat;
+        /* 001C */ uint32_t m_time;
+        /* 0020 */ bool m_hasTime2;
+        /* 0024 */ uint32_t m_time2;
+        /* 0028 */ bool m_hasTime3;
+        /* 002C */ uint32_t m_time3;
+    };
 
-    static uint32_t Skip(CDataStore* msg);
+    struct FallDirection {
+        /* 0000 */ float m_sinAngle;
+        /* 0004 */ float m_cosAngle;
+        /* 0008 */ float m_xySpeed;
+    };
+
+    struct FallInfo {
+        /* 0000 */ uint32_t m_time;
+        /* 0004 */ float m_zSpeed;
+        /* 0008 */ bool m_hasDirection;
+        /* 000C */ FallDirection m_direction;
+    };
+
+    /* 0000 */ WOWGUID m_guid;
+    /* 0008 */ uint32_t m_moveFlags;
+    /* 000C */ uint16_t m_moveExtraFlags;
+    /* 0010 */ uint32_t m_gameTime;
+    /* 0014 */ C3Vector m_position;
+    /* 0020 */ float m_facing;
+    /* 0024 */ uint32_t unk_0024;
+    /* 0028 */ bool m_hasTransport;
+    /* 0030 */ TransportInfo m_transport;
+    /* 0060 */ float m_pitch;
+    /* 0064 */ bool m_hasFall;
+    /* 0068 */ FallInfo m_fall;
+    /* 0080 */ float m_splineElevation;
+    /* 0084 */ bool m_hasSpline;
+    /* 0085 */ bool m_heightChangeFailed;
 
     CMovementStatus();
 };
-
-CDataStore& operator>>(CDataStore& msg, CMovementStatus& status);
-CDataStore& operator<<(CDataStore& msg, const CMovementStatus& status);
 
 #endif

@@ -4549,7 +4549,7 @@ bool Spell_C_CancelsPacify(const CGUnit_C* unit, const SpellRec* spell, int32_t*
     return Spell_C_CancelsAuraEffect(unit, spell, 25, reason) || Spell_C_CancelsAuraEffect(unit, spell, 60, reason);
 }
 
-// OFFSET: 0x008AB460
+// OFFSET: 0x008AB460/0x1405EF2A0
 bool Spell_C_CancelsNoActions(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4558,7 +4558,7 @@ bool Spell_C_CancelsNoActions(const CGUnit_C* unit, const SpellRec* spell, int32
     return Spell_C_CancelsAuraEffect(unit, spell, 321, reason);
 }
 
-// OFFSET: 0x008AB490
+// OFFSET: 0x008AB490/0x1405EF2C0
 bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4567,7 +4567,7 @@ bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* r
     return Spell_C_CancelsAuraEffect(unit, spell, 7, reason);
 }
 
-// OFFSET: 0x008AB4C0
+// OFFSET: 0x008AB4C0/0x1405EF2E0
 bool Spell_C_CancelsConfuse(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;

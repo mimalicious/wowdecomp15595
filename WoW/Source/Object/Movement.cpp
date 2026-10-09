@@ -55,6 +55,23 @@ static CAaBox s_queryBox;
 // STATIC: #0x00C9ECC8
 static int32_t s_flushingQueue;
 
+// OFFSET: 0x00571BB0
+C3Vector CMovement_C::GetGroundNormal() const {
+    WOWGUID transport = this->m_transportGuid;
+
+    if (!transport) {
+        return this->m_groundNormal;
+    }
+
+    C44Matrix matrix;
+    MovementGetTransportMtxX(transport, &matrix, *this->m_ownerGuid, __FILE__, __LINE__);
+
+    return C3Vector(
+        this->m_groundNormal.x * matrix.a0 + matrix.c0 * this->m_groundNormal.z + matrix.b0 * this->m_groundNormal.y,
+        this->m_groundNormal.x * matrix.a1 + matrix.c1 * this->m_groundNormal.z + matrix.b1 * this->m_groundNormal.y,
+        this->m_groundNormal.x * matrix.a2 + matrix.c2 * this->m_groundNormal.z + matrix.b2 * this->m_groundNormal.y);
+}
+
 // OFFSET: 0x00577230/0x1401DBE50
 CPlayerMoveEvent* CPlayerMoveQueue::AllocEvent(uint32_t eventTime, MoveEventId eventId) {
     CPlayerMoveEvent* event = s_freeList.Head();
@@ -1422,7 +1439,7 @@ uint32_t CMovement_C::GetFacetQueryFlags() const {
 
     uint32_t moveFlags = this->m_flags;
 
-    if ((moveFlags & MOVEMENTFLAG_WATERWALKING) && !(moveFlags & MOVEMENTFLAG_SWIMMING) && (-0.6457718f < this->m_pitch || (this->m_flags2 & MOVEMENTFLAG2_UNK_0200))) {
+    if ((moveFlags & MOVEMENTFLAG_WATERWALKING) && !(moveFlags & MOVEMENTFLAG_SWIMMING) && (-0.6457718f < this->m_pitch || (this->m_flags2 & MOVEMENTFLAG2_UNK_0100))) {
         flags |= 0x10000;
     }
 
@@ -4465,7 +4482,7 @@ falling:
 
 // OFFSET: #0x006EBB40
 int32_t CMovement_C::FallStateChangedLocal(uint32_t time, uint32_t msgId, uint32_t oldFlags, uint32_t oldFlags2, bool needAck, float value) {
-    if (this->IsFallingSwimmingFlying()) {
+    if (this->IsFallingSwimmingFlying(0)) {
         if (this->m_flags & MOVEMENTFLAG_FALLING) {
             int32_t jumping = 0.0f != this->m_fallVelocity;
             this->StopFalling();
@@ -5341,7 +5358,7 @@ int32_t CMovement_C::ForceSetTransportInt(WOWGUID transport, uint8_t seat, int32
 
 // OFFSET: #0x006ECF80
 void CMovement_C::Teleport(WOWGUID transport, const C3Vector& position, float facing, int32_t removeSpline, int32_t needAck, uint8_t seat) {
-    if (this->m_flags2 & MOVEMENTFLAG2_UNK_2000) {
+    if (this->m_flags2 & MOVEMENTFLAG2_AWAITING_LOAD) {
         this->m_unit->m_clientFlags |= 0x20000000;
     } else {
         this->m_unit->m_clientFlags &= ~0x20000000;

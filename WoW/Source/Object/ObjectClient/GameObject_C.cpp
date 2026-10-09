@@ -3498,7 +3498,7 @@ void CGGameObject_C_Type_TransportBase::AddPassenger(CPassenger* passenger, int3
     this->m_passengers.LinkToTail(passenger);
 
     if (a2 && (passenger->unk_002C & 1) && (!this->m_worldObject || !World::ObjectIsLoaded(this->m_worldObject))) {
-        static_cast<CMovementShared*>(passenger)->SetSplineEnabled();
+        static_cast<CMovementShared*>(passenger)->MarkAwaitingLoad();
     }
 
     if (*passenger->m_ownerGuid == CGUnit_C::s_activeMover) {
@@ -3925,7 +3925,7 @@ void CGGameObject_C_Type_TransportBase::Disable() {
 
         if (passenger->unk_002C & 0x1) {
             CMovement_C* movement = static_cast<CMovement_C*>(passenger);
-            movement->ClearSplineEnabled();
+            movement->UnMarkAwaitingLoad();
 
             if (*passenger->m_ownerGuid == CGUnit_C::s_activeMover) {
                 movement->OnFallLocal(time);
@@ -4258,7 +4258,7 @@ void CGGameObject_C_Type_TransportBase::MarkTransportLoaded() {
             CMovementShared* movement = static_cast<CMovementShared*>(passenger);
 
             if (movement->m_flags2 & MOVEMENTFLAG2_INTERPOLATED_PITCHING) {
-                movement->ClearInterpolatedPitching();
+                movement->UnMarkAwaitingLoad();
             }
         }
     }

@@ -534,7 +534,7 @@ void CGUnit_C::RemoveHandItemModel(int32_t invSlot, int32_t sheatheType, bool sh
     CCharacterComponent::RemoveHandItem(this->m_worldModel, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
 }
 
-// OFFSET: 0x005AE0D0
+// OFFSET: 0x005AE0D0/0x1402208D0
 uint8_t CGUnit_C::KitFlagsToPlayFlags(const SpellRec* spell, const SpellVisualRec* visual, const SpellVisualKitRec* kit) {
     uint8_t playFlags = 0;
 
@@ -612,7 +612,7 @@ void CGUnit_C::PlayTaxiDismountKit() {
     }
 }
 
-// OFFSET: 0x005B00E0
+// OFFSET: 0x005B00E0/0x140222F90
 CEffectVirtualItem* CGUnit_C::FindVirtualItemEffect(int32_t hand) const {
     if (!(this->unk_09FC & 0x400)) {
         return NULL;
@@ -662,7 +662,7 @@ bool IsGuildPerkSpell(int32_t spellId) {
     return false;
 }
 
-// OFFSET: 0x005B2630
+// OFFSET: 0x005B2630/0x140225AD0
 bool CGUnit_C::CanLearnSpell(int32_t spellId, int32_t& level, bool a4) {
     const SpellRec* spell = g_spellDB.GetRecord(spellId);
 
@@ -742,7 +742,7 @@ void CGUnit_C::ReleaseAurasBySpell(int32_t spellId, WOWGUID caster) {
     }
 }
 
-// OFFSET: 0x005B3160
+// OFFSET: 0x005B3160/0x140226530
 void CGUnit_C::DoMountFade(float alpha, uint32_t time) {
     uint8_t target = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f));
 
@@ -763,7 +763,7 @@ void CGUnit_C::DoMountFade(float alpha, uint32_t time) {
     }
 }
 
-// OFFSET: 0x005B4850
+// OFFSET: 0x005B4850/0x140227DF0
 void CGUnit_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
     CGObject_C::ConnectToLightningThisFrame(a1, a2);
     const SpellRec* spell = NULL;
@@ -979,7 +979,7 @@ void CGUnit_C::UpdateRangedWeaponOrientation() {
     this->UpdateRangedWeaponRotation(anim);
 }
 
-// OFFSET: 0x005BA920
+// OFFSET: 0x005BA920/0x14022ED70
 void CGUnit_C::UpdateAlphaEffectAlpha() {
     bool separate = this->GetObjectModel() != this->m_worldModel;
     bool foundWorld = false;
@@ -1641,7 +1641,7 @@ void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, in
     }
 }
 
-// OFFSET: 0x005C1710
+// OFFSET: 0x005C1710/0x140237650
 void CGUnit_C::CancelShapeshift() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_shapeshiftSuppressed) {
         return;
@@ -1675,7 +1675,7 @@ void CGUnit_C::CancelShapeshift() {
     }
 }
 
-// OFFSET: 0x005C1850
+// OFFSET: 0x005C1850/0x1402377E0
 void CGUnit_C::CancelOpenStable() {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !this->HasAuraEffect(292)) {
         return;
@@ -1781,7 +1781,7 @@ int32_t CGUnit_C::IsSplineDestinationInLiquid() {
     return World::QueryLiquid(destination, liquidType, liquidHeight) && liquidHeight - standHeight * 0.5f + 0.1f >= destination.z;
 }
 
-// OFFSET: 0x005C23C0
+// OFFSET: 0x005C23C0/0x1402385E0
 bool CGUnit_C::CheckSelfResurrect() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -1819,7 +1819,7 @@ bool CGUnit_C::CheckSelfResurrect() {
     return true;
 }
 
-// OFFSET: 0x005C2B30
+// OFFSET: 0x005C2B30/0x140238E10
 DelayedSpellVisualKit* CGUnit_C::DelaySpellVisualKit(int32_t spellId, int32_t kitId, int32_t kitType, const C3Vector* position, WOWGUID targetGuid, int32_t a7, int32_t a8, int32_t delay, int32_t delayType, int32_t startTime, int32_t displayId, int32_t inventoryType) {
     uint32_t index;
 
@@ -2498,7 +2498,7 @@ void CGUnit_C::AddAuraEffect(uint32_t index, const SpellRec* spell) {
     }
 }
 
-// OFFSET: 0x005C6110
+// OFFSET: 0x005C6110/0x14023D1E0
 bool CGUnit_C::CanAttack(const CGUnit_C* unit, bool ignoreFlags) const {
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(this)->m_player->m_playerFlags & 0x80000)) {
         return false;
@@ -2609,7 +2609,7 @@ bool CGUnit_C::CanAttack(const CGUnit_C* unit, bool ignoreFlags) const {
     return !this->IsFriendly(unit);
 }
 
-// OFFSET: 0x005C7570
+// OFFSET: 0x005C7570/0x14023E830
 int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char* buffer, uint32_t size, uint32_t a5) {
     if (a5 && (unit->m_auraEffectMask[279 / 8] & (1 << (279 % 8)))) {
         for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
@@ -2796,7 +2796,7 @@ void CGUnit_C::SetUIChannelDirect(const SpellRec* spell, uint32_t start, uint32_
     this->UpdateSpellCastBars();
 }
 
-// OFFSET: 0x005C8540
+// OFFSET: 0x005C8540/0x14023FB50
 int32_t CGUnit_C::PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) {
     if (!spell || !visual || !Spell_C_SpellVisualHasChainEffect(visual) || a8 || !(kit->m_flags & 0x1)) {
         return 0;
@@ -2913,7 +2913,7 @@ void CGUnit_C::UpdateAuraHealPrediction(uint32_t index, AuraData* aura) {
     }
 }
 
-// OFFSET: 0x005C9750
+// OFFSET: 0x005C9750/0x140241220
 void CGUnit_C::UpdateChannelEffects() {
     this->m_clientFlags &= ~0x8000u;
     const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
@@ -2989,7 +2989,7 @@ void CGUnit_C::AuraVisionUpdated(uint8_t vision) {
     }
 }
 
-// OFFSET: 0x005CB270
+// OFFSET: 0x005CB270/0x1402432F0
 void CGUnit_C::ScanAuraSpellsOnDisplayUpdate() {
     for (uint32_t i = this->GetAuraCount(); i; ) {
         i--;
@@ -3427,7 +3427,7 @@ void CGUnit_C::UpdateDisplay(uint32_t time) {
     PlayerNameUpdateDrawCallback(this->m_nameDesc);
 }
 
-// OFFSET: 0x005D5130
+// OFFSET: 0x005D5130/0x14024F6D0
 void CGUnit_C::PlaySpellVisualKit_PlayAnims(const PlaySpellVisualKitAnimData* data) {
     int32_t spellId = 0;
 
@@ -3543,7 +3543,7 @@ finish:
     }
 }
 
-// OFFSET: 0x005D5520
+// OFFSET: 0x005D5520/0x14024FB80
 void CGUnit_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect, uint32_t a9, int32_t a10) {
     int32_t spellId = 0;
 
@@ -3814,7 +3814,7 @@ int32_t ChannelSpellOrObjectChangeHandler(WOWGUID guid, uint32_t fieldOffset, ui
     return 1;
 }
 
-// OFFSET: 0x005D8880
+// OFFSET: 0x005D8880/0x140253E60
 bool CGUnit_C::CheckAndReportSpellInhibitFlags(PendingSpellCast* cast, const SpellRec* spell, const CGItem_C* item, int32_t ignorePower) {
     if (!spell) {
         SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
@@ -9067,7 +9067,7 @@ int32_t CGUnit_C::GetSpellRank(const SpellRec* spell) const {
     return rank;
 }
 
-// OFFSET: 0x005B2FE0
+// OFFSET: 0x005B2FE0/0x1402263C0
 void CGUnit_C::ApplyAlpha(uint32_t time) {
     CM2Model* model = this->GetObjectModel();
     CM2Model* worldModel = this->m_worldModel;
@@ -16146,7 +16146,7 @@ void CGUnit_C::AddAuraSlot(uint8_t slot) {
     }
 }
 
-// OFFSET: 0x005D2D30
+// OFFSET: 0x005D2D30/0x14024CB20
 void CGUnit_C::SetSheatheState(uint32_t showWeapons, int32_t instant, int32_t noSend) {
     if (this->IsPlayingWeaponAnim()) {
         showWeapons = CGUnit_C::ResolveSheathState(showWeapons, this->GetVirtualItem(0, false), this->GetVirtualItem(1, false));
@@ -17801,7 +17801,7 @@ int32_t CGUnit_C::GetDisplayClassGender(const CGUnit_C* unit, const NameCache* n
     return displaySex;
 }
 
-// OFFSET: 0x005C2EB0
+// OFFSET: 0x005C2EB0/0x140239290
 bool CGUnit_C::HasAuraMatchingSpellClass(int32_t auraType, const SpellRec* spell) const {
     if (!this->HasAuraEffect(auraType)) {
         return false;
