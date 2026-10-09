@@ -40,7 +40,7 @@ class CreatureSoundDataRec {
     /* 0088 */ int32_t m_spellCastDirectedSoundID;
     /* 008C */ int32_t m_submergeSoundID;
     /* 0090 */ int32_t unk_0090;
-    /* 0094 */ int32_t unk_0094;
+    /* 0094 */ int32_t m_creatureSoundDataIDPet;
     /* 0098 */ int32_t unk_0098;
     /* 009C */ int32_t unk_009C;
 };

@@ -964,7 +964,7 @@ CMissile::~CMissile() {
     this->m_targetPoints.SetCount(0);
 }
 
-// OFFSET: #0x00702B10
+// OFFSET: 0x00589910
 CMissile* CMissile::NewMissile() {
     uint32_t memHandle;
     CMissile* missile = NULL;

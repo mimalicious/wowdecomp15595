@@ -878,7 +878,7 @@ void PlayerClientInitialize() {
 void PlayerInitializeSounds() {
 }
 
-// OFFSET: #0x006D5080
+// OFFSET: 0x0055B720
 void CGPlayer_C::UpdateQuestStatus(CGObject_C* object) {
     if (!object) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -888,7 +888,7 @@ void CGPlayer_C::UpdateQuestStatus(CGObject_C* object) {
     CGPlayer_C::QueryQuestGiverStatus(guid);
 }
 
-// OFFSET: #0x006D5130
+// OFFSET: 0x0055B7C0/0x1401B8750
 void CGPlayer_C::UpdateTaxiStatus(CGUnit_C* unit) {
     if (unit->UnitReaction(this) <= 1 || !(unit->m_unit->m_unitNpcFlags & 0x2000)) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -972,7 +972,7 @@ void CGPlayer_C::ChangeStandState(uint32_t standState) {
     this->UpdateClientStandState(standState);
 }
 
-// OFFSET: #0x006E2B30
+// OFFSET: 0x00568640
 void CGPlayer_C::SetClientStandState(uint32_t standState) {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -1273,7 +1273,7 @@ bool CGPlayer_C::CanDualWield() {
     return s_dualWieldSpell != 0;
 }
 
-// OFFSET: #0x006D5A60
+// OFFSET: 0x0055BE10
 int32_t CGPlayer_C::CanLoot(const CGObject_C* object) {
     if (!object) {
         SErrDisplayAppFatalMessage("", "", 0);
@@ -4414,7 +4414,7 @@ void CGPlayer_C::PlayerInitializeMessageHandlers() {
 }
 
 // OFFSET: #0x006E4950
-void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent) {
+void CGPlayer_C::CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent, int32_t a4, int32_t a5) {
     if (!CGGameUI::CanPerformAction(1)) {
         return;
     }
@@ -4650,7 +4650,7 @@ void CGPlayer_C::AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t 
     }
 }
 
-// OFFSET: #0x006D71E0
+// OFFSET: 0x00554970/0x1401B11C0
 int32_t GetModalNextSpell() {
     return s_cvAutoRangedCombat->m_intValue ? CGSpellBook::m_autoRangedSpell : 0;
 }
@@ -10157,7 +10157,7 @@ void CGPlayer_C::ShowCloak() {
     }
 }
 
-// OFFSET: #0x006E1290
+// OFFSET: 0x00566AE0
 void CGPlayer_C::UpdateHandItemVisual(GEOCOMPONENTLINKS link, int32_t hand) {
     uint32_t slot;
 
@@ -12825,7 +12825,9 @@ void CGPlayer_C::SendTextEmote(const EmotesTextRec* emote, WOWGUID target) {
 
     int32_t standUp;
 
-    if (!this->CanPlayEmote(rec->m_emoteFlags, 1, &standUp)) {
+    int32_t stopCombat;
+
+    if (!this->CanPlayEmote(rec->m_emoteFlags, 1, &standUp, 0, &stopCombat, 0)) {
         return;
     }
 

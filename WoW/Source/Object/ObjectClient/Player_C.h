@@ -417,7 +417,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void HandleSkinning(CGObject_C* object, bool autoInteract, bool a4);
     void HandleOnRightClick(CGUnit_C* unit, bool autoInteract);
     bool CTMAttackUnit(CGUnit_C* unit);
-    void CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent);
+    void CombatModeEnter(const WOWGUID& target, int32_t queueRanged, int32_t silent, int32_t a4, int32_t a5);
     void MeleeModeEnter(const WOWGUID& target);
     void ExitAutoCombatMode();
     void OnLevelChange();
@@ -474,10 +474,9 @@ class PlaySpellVisuaKitData {
     /* 0044 */ uint32_t m_timeOffset;
     /* 0048 */ uint32_t unk_0048;
     /* 004C */ uint32_t m_flags;
-    /* 0050 */ uint32_t unk_0050;
+    /* 0050 */ AnimKitStopCallback m_stopCallback;
     /* 0054 */ uint32_t unk_0054;
-    /* 0058 */ uint32_t unk_0058;
-    /* 005C */ uint32_t unk_005C;
+    /* 0058 */ uint64_t m_stopParam;
 
     PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t kitType);
 };

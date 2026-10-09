@@ -352,7 +352,7 @@ static int32_t PlayerQuestLogChangedHandler(WOWGUID guid, uint32_t fieldOffset, 
     return 1;
 }
 
-// OFFSET: #0x00614190
+// OFFSET: 0x004592C0/0x1400692F0
 void ScriptEventsRegisterUnit(CGUnit_C* unit) {
     for (uint32_t i = 0; i < sizeof(unit->m_unitMirrorLists) / sizeof(unit->m_unitMirrorLists[0]); i++) {
         if (!g_scriptEvents[i]) {
@@ -388,7 +388,7 @@ void ScriptEventsRegisterUnit(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: #0x00614300
+// OFFSET: 0x00459420/0x1400694C0
 void ScriptEventsUnregisterUnit(CGUnit_C* unit) {
     for (uint32_t i = 0; i < sizeof(unit->m_unitMirrorLists) / sizeof(unit->m_unitMirrorLists[0]); i++) {
         if (g_scriptEvents[i]) {

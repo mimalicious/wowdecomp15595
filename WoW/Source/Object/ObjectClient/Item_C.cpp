@@ -1872,7 +1872,7 @@ void CGItem_C::UpdateSockets(uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
     this->UpdateEnchantments();
 }
 
-// OFFSET: #0x0070AFC0
+// OFFSET: 0x005AA0B0
 void CGItem_C::Disable() {
     CGObject_C::Disable();
 

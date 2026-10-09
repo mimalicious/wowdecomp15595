@@ -1272,7 +1272,7 @@ int32_t CGSpellBook::GetCompanionType(const SpellRec* spell) {
     return (spell->m_effectAura[0] != 78) + 1;
 }
 
-// OFFSET: #0x0053BCE0
+// OFFSET: 0x0090EC40/0x14066A030
 int32_t CGSpellBook::GetSkinningSpell(const CGObject_C* object) {
     uint32_t type = object->m_obj->m_type;
 

@@ -308,7 +308,7 @@ CGUnit_C* GetVehicleUnitPtr() {
     return vehicle;
 }
 
-// OFFSET: #0x005FA060
+// OFFSET: 0x00448370/0x140054CE0
 int32_t __stdcall CGInputControl::CanControl(CGUnit_C* unit) {
     if (!unit || unit->m_unit->m_unitFieldHealth <= 0) {
         return 0;
@@ -1173,7 +1173,7 @@ void CGInputControl::PitchPlayer(uint32_t time, CGUnit_C* unit) {
     }
 }
 
-// OFFSET: #0x005FBBC0
+// OFFSET: 0x00449FD0/0x140056DE0
 void CGInputControl::UpdatePlayer(uint32_t time, int32_t a2) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 

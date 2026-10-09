@@ -394,7 +394,7 @@ CharSectionsRec* CCharacterComponent::GetSectionsRecord(COMPONENT_VARIATIONS var
     return ComponentGetSectionsRecord(CCharacterComponent::s_chrVarArray, this->m_data.m_preferences.m_raceID, this->m_data.m_preferences.m_sexID, variation, variationIndex, colorIndex, found);
 }
 
-// OFFSET: #0x004E7700
+// OFFSET: 0x006F8D40
 void CCharacterComponent::ComponentCloseFingers(CM2Model* model, COMP_HAND_SLOT hand) {
     uint32_t first;
     uint32_t last;
@@ -412,7 +412,7 @@ void CCharacterComponent::ComponentCloseFingers(CM2Model* model, COMP_HAND_SLOT 
     }
 }
 
-// OFFSET: #0x004E7750
+// OFFSET: 0x006F8D90
 void CCharacterComponent::ComponentOpenFingers(CM2Model* model, COMP_HAND_SLOT hand) {
     uint32_t first;
     uint32_t last;
@@ -475,7 +475,7 @@ int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec
     return 1;
 }
 
-// OFFSET: #0x004E7940
+// OFFSET: 0x006F8E40
 GEOCOMPONENTLINKS CCharacterComponent::GetSheatheLink(SHEATHE_TYPE sheatheType, bool mainHand) {
     switch (sheatheType) {
         case SHEATHE_MAINHAND:
@@ -938,7 +938,7 @@ char* CCharacterComponent::GetTabardBorderFileName(COMPONENT_SECTIONS section, i
     return buffer;
 }
 
-// OFFSET: #0x004E82B0
+// OFFSET: 0x005ADB90
 void CCharacterComponent::SetItemSlotUsingAttachSlot(ITEM_SLOT itemSlot, GEOCOMPONENTLINKS link) {
     if (static_cast<uint32_t>(link) < NUM_ATTACH_LINKS) {
         this->m_itemSlotForAttachSlot[link] = itemSlot;
@@ -2185,7 +2185,7 @@ void CCharacterComponent::RemoveVisuals(CM2Model* model) {
     model->m_diffuseTintB = 1.0f;
 }
 
-// OFFSET: #0x004EB070
+// OFFSET: 0x005ADC00
 void CCharacterComponent::RemoveHandItem(CM2Model* model, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
     if (!model || static_cast<uint32_t>(invSlot - INVSLOT_BACK) > 4) {
         return;

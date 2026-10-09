@@ -41,9 +41,10 @@ bool CGUnit::CanSwim() const {
     return (flags >> 15) & 1;
 }
 
-// OFFSET: #0x004F5410
-int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* standUp) const {
+// OFFSET: 0x00A27950/0x1407CF0B0
+int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* standUp, int32_t inCombat, int32_t* stopCombat, int32_t restricted) const {
     *standUp = 0;
+    *stopCombat = 0;
 
     if (targeted && (emoteFlags & 0x400)) {
         return 0;
@@ -53,19 +54,47 @@ int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* sta
         return 0;
     }
 
-    if ((emoteFlags & 0x80) && (this->m_movement->m_flags & 0x200000)) {
+    if ((emoteFlags & 0x80) && (this->m_movement->m_flags & 0x100000)) {
         return 0;
     }
 
     if (emoteFlags & 0x8000) {
         CMoveSpline* spline = this->m_movement->m_spline;
 
-        if (spline && !(spline->m_flags & 0x400) && (spline->m_flags & 0x2000)) {
+        if (spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200)) {
             return 0;
         }
 
-        if (this->m_movement->m_flags & 0x2000000) {
+        if (this->m_movement->m_flags & 0x1000000) {
             return 0;
+        }
+    }
+
+    if ((emoteFlags & 0x10000) && this->m_unit->m_unitFieldMountdisplayid > 0) {
+        return 0;
+    }
+
+    if ((emoteFlags & 0x4) && this->m_unit->m_unitChannelSpell) {
+        return 0;
+    }
+
+    if ((emoteFlags & 0x800) && restricted) {
+        return 0;
+    }
+
+    if (emoteFlags & 0x200000) {
+        uint64_t transport = this->m_movement->m_transportGuid.m_guid;
+
+        if (transport) {
+            uint32_t high = static_cast<uint32_t>(transport >> 32);
+
+            if ((high & 0xF0F00000) == 0xF0500000) {
+                return 0;
+            }
+
+            if (!(high & 0xF0000000) && ((high & 0xF07FFFFF) || static_cast<uint32_t>(transport))) {
+                return 0;
+            }
         }
     }
 
@@ -77,8 +106,12 @@ int32_t CGUnit::CanPlayEmote(uint32_t emoteFlags, int32_t targeted, int32_t* sta
         }
     }
 
-    if ((emoteFlags & 0x4000) && (this->m_movement->m_flags & 0xC010FF)) {
+    if ((emoteFlags & 0x4000) && (this->m_movement->m_flags & 0x6008FF)) {
         *standUp = 1;
+    }
+
+    if ((emoteFlags & 0x400000) && (((this->m_unit->m_unitFieldFlags >> 11) & 1) || inCombat)) {
+        *stopCombat = 1;
     }
 
     return 1;
@@ -112,7 +145,7 @@ const WOWGUID* CGUnit::GetCharmerOrCreatorGuid() const {
     return &unit->m_unitFieldCreatedby;
 }
 
-// OFFSET: #0x004F5F40
+// OFFSET: 0x00554C30/0x1401AF360
 float CGUnit::GetMeleeRange(const CGUnit* target) const {
     float range = target->m_unit->m_unitFieldCombatreach + this->m_unit->m_unitFieldCombatreach + 1.3333334f;
 
@@ -149,12 +182,18 @@ int32_t CGUnit::IsOnFlyingSpline() const {
 // OFFSET: 0x0043B820
 int32_t CGUnit::IsOnSpline() const {
     CMoveSpline* spline = this->m_movement->m_spline;
-    return spline && !(spline->m_flags & 0x400);
+    return spline && !(spline->m_flags & 0x80);
+}
+
+// OFFSET: 0x0043B840
+int32_t CGUnit::IsOnFallingSpline() const {
+    CMoveSpline* spline = this->m_movement->m_spline;
+    return spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200);
 }
 
 // OFFSET: 0x0043B7F0
 int32_t CGUnit::IsJumping() const {
-    return (this->m_movement->m_flags & MOVEMENTFLAG_FALLING) && 0.0f != this->m_movement->m_fallVelocity;
+    return (this->m_movement->m_flags & 0x800) && 0.0f != this->m_movement->m_fallVelocity;
 }
 
 // OFFSET: 0x00448D50/0x140055870

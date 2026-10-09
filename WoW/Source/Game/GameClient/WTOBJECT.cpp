@@ -39,7 +39,7 @@ void WeaponTrailsShutdown() {
     s_freeSwings.Clear(typeid(SWING).raw_name(), SLOG_OBJECT, 1);
 }
 
-// OFFSET: #0x007E4BF0
+// OFFSET: 0x004E02C0
 WTOBJECT* WeaponTrailCreate(CM2Model* model) {
     s_count++;
     WTOBJECT* trail = static_cast<WTOBJECT*>(s_freeTrails.GetData(0, typeid(WTOBJECT).raw_name(), SLOG_OBJECT));
@@ -54,7 +54,7 @@ WTOBJECT* WeaponTrailCreate(CM2Model* model) {
     return trail;
 }
 
-// OFFSET: #0x007E4CC0
+// OFFSET: 0x004E0430
 void WeaponTrailClose(WTOBJECT* trail) {
     s_count--;
     s_freeTrails.Delete(trail);
@@ -211,7 +211,7 @@ void WTOBJECT::SetDrawTrail(const uint32_t* color, uint32_t duration) {
     this->m_swing->m_lastTime = this->m_swing->m_startTime;
 }
 
-// OFFSET: #0x007E5080
+// OFFSET: 0x004E0460
 void WeaponTrailSetDrawTrail(WTOBJECT* trail, const uint32_t* a2, uint32_t a3) {
     if (a3 && trail) {
         trail->SetDrawTrail(a2, a3);

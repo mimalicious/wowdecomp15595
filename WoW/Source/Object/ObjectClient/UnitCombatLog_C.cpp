@@ -2706,7 +2706,7 @@ void UnitCombatLogUnitDead(CGUnit_C* unit) {
     QueueCombatLogEntry(entry, 0);
 }
 
-// OFFSET: #0x0074D1A0
+// OFFSET: 0x005F3620
 static bool CombatLogFlagsMatch(uint32_t filterFlags, uint32_t flags) {
     uint32_t matched = filterFlags & flags;
 

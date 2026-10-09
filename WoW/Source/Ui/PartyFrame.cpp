@@ -474,7 +474,7 @@ void CGPartyInfo::CheckClearLFGSlot() {
     }
 }
 
-// OFFSET: #0x0052D210
+// OFFSET: 0x008FE240/0x140655A20
 int32_t CGPartyInfo::IsMemberPet(const WOWGUID& guid, int32_t* index) {
     if (!guid) {
         return 0;
@@ -575,7 +575,7 @@ uint32_t CGPartyInfo::GetGroupRole(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: #0x0052C8C0
+// OFFSET: 0x008FD620/0x140654B80
 int32_t CGPartyInfo::IsPlayerOrPetInParty(const WOWGUID& guid) {
     if (!static_cast<uint32_t>(guid.m_guid)) {
         return static_cast<uint32_t>(guid.m_guid >> 32);

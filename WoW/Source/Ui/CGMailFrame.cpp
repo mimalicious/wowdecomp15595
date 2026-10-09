@@ -29,7 +29,7 @@ void CGMailInfo::ClearSendMail(bool signal) {
     }
 }
 
-// OFFSET: #0x0056DA60
+// OFFSET: 0x0096E030/0x1406E5110
 void CGPlayer_C::TalkToMailbox(WOWGUID guid) {
     CGGameUI::SetInteractTarget(guid);
     CGMailInfo::m_object = guid;

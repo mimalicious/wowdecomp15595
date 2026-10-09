@@ -405,7 +405,7 @@ int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit) {
     return cost <= 0 ? 0 : cost;
 }
 
-// OFFSET: #0x008017E0
+// OFFSET: 0x008B1C40/0x1405F7930
 bool Spell_C_HaveSpellPower(CGUnit_C* unit, const SpellRec* spell) {
     if (!unit) {
         return false;
@@ -994,7 +994,7 @@ void StartSpellCastVisuals(CGUnit_C* unit, PendingSpellCast* cast, const SpellRe
     }
 
     if (!unit->m_castSpellId && !cast->unk_0139) {
-        unit->SetCastingSpell(cast->m_data.m_castCount, cast->m_data.m_spellId);
+        unit->SetCastingSpell(cast);
         SpellVisualsHandleCastStart(unit, &cast->m_data, spell);
     }
 
@@ -1014,7 +1014,7 @@ void StartSpellCastVisuals(CGUnit_C* unit, PendingSpellCast* cast, const SpellRe
         if (showCastBar) {
             if (cast->m_data.m_spellId != unit->m_castSpellId) {
                 ClearSpellCastState(unit, cast, spell);
-                unit->SetCastingSpell(cast->m_data.m_castCount, cast->m_data.m_spellId);
+                unit->SetCastingSpell(cast);
                 SpellVisualsHandleCastStart(unit, &cast->m_data, spell);
             }
 
@@ -1218,7 +1218,7 @@ void CGUnit_C::SetPredictedPower(int32_t powerType, int32_t value) {
     }
 }
 
-// OFFSET: #0x0072E240
+// OFFSET: 0x005CCD70
 void CGUnit_C::ReleaseMissiles() {
     C3Vector position;
     position = this->GetMissileFirePosition();
@@ -2454,7 +2454,7 @@ const char* GetPowerString(uint32_t powerType) {
     return "";
 }
 
-// OFFSET: #0x007FA290
+// OFFSET: 0x008BC6D0/0x140605480
 const SpellVisualRec* GetSpellVisual(const SpellRec* spell) {
     int32_t visualId = spell->m_spellVisualID[0];
 
@@ -2682,7 +2682,7 @@ void Spell_C_GetMinMaxRange(CGUnit_C* caster, const SpellRec* spell, float* minR
     Spell_C_GetMinMaxRange(caster, spell, minRange, maxRange, friendly, target);
 }
 
-// OFFSET: #0x00802C30
+// OFFSET: 0x008B5100/0x1405FC450
 void Spell_C::GetSpellRange(CGUnit_C* caster, int32_t spellId, float* minRange, float* maxRange, CGObject_C* target) {
     SpellRec spell;
 
@@ -3383,7 +3383,7 @@ const int32_t* SpellRec::GetClassMask(const SpellRec* spell, int32_t effect) {
     return NULL;
 }
 
-// OFFSET: #0x007FDEC0
+// OFFSET: 0x008AB1B0/0x1405EEF40
 bool SpellRec::IsAffectedBy(const SpellRec* spell, const SpellRec* modifier, int32_t effect) {
     if (!spell || !modifier || spell->m_spellClassSet != modifier->m_spellClassSet) {
         return false;
@@ -3400,7 +3400,7 @@ bool SpellRec::IsAffectedBy(const SpellRec* spell, const SpellRec* modifier, int
     return false;
 }
 
-// OFFSET: #0x007FE850
+// OFFSET: 0x008A9C80/0x1405ED470
 bool SpellRec::UsableInShapeshift(const SpellRec* spell, int32_t form) {
     return form >= 0 && (spell->m_shapeshiftMask[form / 32] & (1 << (form & 0x1F)));
 }
@@ -4283,7 +4283,7 @@ uint32_t GetRequiredAuraVisionBitmask(const SpellRec* spell) {
     return mask;
 }
 
-// OFFSET: #0x007FE890
+// OFFSET: 0x008A9CF0
 bool SpellRec::NotUsableInShapeshiftForm(const SpellRec* spell, int32_t form) {
     if (form < 0) {
         return false;
@@ -4336,7 +4336,7 @@ void SpellMissingItemsCallback(int32_t itemId, const WOWGUID& guid, void* param,
     CGGameUI::DisplayError(ERR_SPELL_FAILED_S, text);
 }
 
-// OFFSET: #0x007FEF10
+// OFFSET: 0x008A6B50/0x1405E7BA0
 void GetCustomSpellFailedString(char* buffer, uint32_t size, int32_t customError) {
     char token[64];
     SStrPrintf(token, sizeof(token), "%s_%d", "SPELL_FAILED_CUSTOM_ERROR", customError);
@@ -4503,7 +4503,7 @@ bool Spell_C_CancelsPacify(const CGUnit_C* unit, const SpellRec* spell, int32_t*
     return Spell_C_CancelsAuraEffect(unit, spell, 25, reason) || Spell_C_CancelsAuraEffect(unit, spell, 60, reason);
 }
 
-// OFFSET: #0x00804660
+// OFFSET: 0x008AB460/0x1405EF2A0
 bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4512,7 +4512,7 @@ bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* r
     return Spell_C_CancelsAuraEffect(unit, spell, 7, reason);
 }
 
-// OFFSET: #0x00804690
+// OFFSET: 0x008AB490/0x1405EF2C0
 bool Spell_C_CancelsConfuse(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -5107,7 +5107,7 @@ bool Spell_C_IsActiveSpell(const SpellRec* spell, const CGUnit_C* unit) {
     return active;
 }
 
-// OFFSET: #0x00802F80
+// OFFSET: 0x008AA210/0x1405EDA20
 void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex) {
     if (!spell || !unit) {
         return;
@@ -6157,7 +6157,7 @@ static UIErrors GetSpellFailedError(int32_t reason, const SpellRec* spell, int32
     }
 }
 
-// OFFSET: #0x00808200
+// OFFSET: 0x008B3200/0x1405F9AD0
 void Spell_C_SpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t reason, int32_t misc1, int32_t misc2, bool resetCooldown) {
     int32_t spellId = cast->m_data.m_spellId;
     bool suppress = false;
@@ -7168,7 +7168,7 @@ void Spell_C_AddPeriodicClientTrigger(WOWGUID caster, int32_t auraSpellId, int32
     trigger->m_caster = caster;
 }
 
-// OFFSET: #0x0080DFE0
+// OFFSET: 0x008B9550
 void Spell_C_RemovePeriodicClientTrigger(WOWGUID caster, int32_t auraSpellId) {
     PeriodicClientTrigger* trigger = s_periodicClientTriggers.Head();
 
@@ -9264,7 +9264,7 @@ void Spell_C_ExpireDestLocSpellCasts(uint32_t time) {
     }
 }
 
-// OFFSET: #0x0080DE60
+// OFFSET: 0x008B9330
 int32_t Spell_C_SendDelayedMissileTrajectoryCast(CGUnit_C* unit) {
     PendingSpellCast* cast = s_delayedTrajectoryCast;
 

@@ -1092,7 +1092,7 @@ void CMovementShared::SetRunMode(int32_t run) {
     this->CalcCurrentSpeed(0);
 }
 
-// OFFSET: %0x0095B870
+// OFFSET: 0x00A20330/0x1407C63D0
 void CMovementShared::SetSplineEnabled() {
     this->m_flags |= MOVEMENTFLAG_SPLINE_ENABLED;
 }
@@ -2163,7 +2163,7 @@ void CMovementShared::AddSpline(const C3Vector& position) {
     this->m_spline->m_finalDestination = position;
 }
 
-// OFFSET: #0x006E9A60
+// OFFSET: 0x00572080
 void CMovementShared::ResetFallOnControlLoss() {
     if (!(this->m_flags & 0x100000)) {
         return;

@@ -306,7 +306,7 @@ CEffect::CEffect() {
     this->m_expireTime = 0;
     this->unk_00F0 = 0;
     this->unk_00F4 = 0.0f;
-    this->unk_00F8 = 0;
+    this->m_tintColor = 0;
     this->m_mapEntity = 0;
     this->m_refCount = 1;
     this->m_lightningRefCount = 0;
@@ -722,11 +722,11 @@ void CEffect::MoveToOrphanList(int32_t stopAnimKit) {
 
 // OFFSET: 0x00580E30
 void CEffect::PlayAnimKit(CGUnit_C* unit, AnimKitStopCallback callback, uint64_t param) {
-    if (!this->m_kitRec || this->m_kitRec->unk_000C <= 0 || !unit || !(unit->m_obj->m_type & TYPEMASK_UNIT)) {
+    if (!this->m_kitRec || this->m_kitRec->m_animKitID <= 0 || !unit || !(unit->m_obj->m_type & TYPEMASK_UNIT)) {
         return;
     }
 
-    CAnimKitInst* inst = unit->m_animKitManager.PlayAndMaintain(this->m_kitRec->unk_000C, -1, NULL);
+    CAnimKitInst* inst = unit->m_animKitManager.PlayAndMaintain(this->m_kitRec->m_animKitID, -1, NULL);
 
     if (inst) {
         inst->SetStopCallback(callback, param);

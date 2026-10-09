@@ -35,6 +35,10 @@ class SpellVisualKitRec;
 class SpellVisualEffectNameRec;
 class SpellVisualKitModelAttachRec;
 class SpellVisualRec;
+class CAnimKitInst;
+
+typedef void (*AnimKitStopCallback)(CAnimKitInst* inst, uint64_t param);
+
 enum OUT_OF_RANGE_TYPE : int32_t {
 };
 enum SPELL_VISUAL_KIT_TYPE : int32_t {
@@ -62,10 +66,9 @@ class PlaySpellVisualKitAnimData {
     /* 0024 */ const SpellVisualRec* m_visual;
     /* 0028 */ uint32_t m_flags;
     /* 002C */ int32_t m_hasEffect;
-    /* 0030 */ uint32_t unk_0030;
+    /* 0030 */ AnimKitStopCallback m_stopCallback;
     /* 0034 */ uint32_t unk_0034;
-    /* 0038 */ uint32_t unk_0038;
-    /* 003C */ uint32_t unk_003C;
+    /* 0038 */ uint64_t m_stopParam;
     /* 0040 */ uint32_t unk_0040;
 };
 

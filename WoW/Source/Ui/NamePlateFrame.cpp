@@ -75,7 +75,7 @@ CGNamePlateFrame* CGNamePlateFrame::GetNamePlateFocus() {
     return CGUnit_C::s_namePlateFocus;
 }
 
-// OFFSET: #0x0098E580
+// OFFSET: 0x009E7360/0x14077FD20
 void CGNamePlateFrame::UpdateNameDisplay(const CGUnit_C* unit) {
     this->m_unitNameText->SetText(const_cast<CGUnit_C*>(unit)->GetUnitName(NULL, 1), 1);
 }
@@ -326,7 +326,7 @@ void CGNamePlateFrame::OnLayerUpdate(float elapsedSec) {
     this->m_castBar->SetValue(value);
 }
 
-// OFFSET: #0x0098EE30
+// OFFSET: 0x009E87F0/0x1407815C0
 void CGNamePlateFrame::UpdateColorDisplay(CGUnit_C* unit) {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -374,7 +374,7 @@ void CGNamePlateFrame::UpdateLevelDisplay(CGUnit_C* unit) {
     this->m_levelText->SetText(text, 1);
 }
 
-// OFFSET: #0x0098F040
+// OFFSET: 0x009E8A30/0x1407818F0
 void CGNamePlateFrame::SetCastBarValues(float minValue, float maxValue, float value, int32_t spellId, bool channel, bool notInterruptible) {
     if (maxValue < value) {
         return;

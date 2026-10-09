@@ -24,7 +24,7 @@ class CreatureDisplayInfoRec {
     /* 0034 */ int32_t m_particleColorID;
     /* 0038 */ int32_t m_creatureGeosetData;
     /* 003C */ int32_t m_objectEffectPackageID;
-    /* 0040 */ int32_t unk_0040;
+    /* 0040 */ int32_t m_animReplacementSetID;
 };
 
 #endif

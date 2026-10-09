@@ -23,6 +23,7 @@ class CGNamePlateFrame : public TSLinkedNode<CGNamePlateFrame>, public CSimpleFr
     static void operator delete(void* ptr);
     static CGNamePlateFrame* GetNamePlateFocus();
     static CGNamePlateFrame* GetNewNameplateFrame(CSimpleFrame* parent);
+    static void ReleaseNameplateFrame(CGNamePlateFrame* frame);
 
     /* 02A4 */ uint32_t unk_02A4;
     /* 02A8 */ WOWGUID m_guid;

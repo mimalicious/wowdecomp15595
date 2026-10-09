@@ -17,7 +17,7 @@ class EmotesRec {
     /* 0010 */ int32_t m_emoteSpecProc;
     /* 0014 */ int32_t m_emoteSpecProcParam;
     /* 0018 */ int32_t m_eventSoundID;
-    /* 001C */ int32_t unk_001C;
+    /* 001C */ int32_t m_spellVisualKitID;
 };
 
 #endif

@@ -56,7 +56,7 @@ CGameTime::CGameTime() {
     this->m_running = 0;
 }
 
-// OFFSET: #0x004C9850
+// OFFSET: 0x005D78E0/0x140252BB0
 bool CGameTime::IsDaytime() {
     CGameTime time;
     time.SetHourAndMinutes(this->GetHourAndMinutes());

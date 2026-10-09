@@ -1887,9 +1887,8 @@ attachments:
     anim.m_visual = visual;
     anim.m_flags = flags;
     anim.m_hasEffect = hasEffect;
-    anim.unk_0030 = data.unk_0050;
-    anim.unk_0038 = data.unk_0058;
-    anim.unk_003C = data.unk_005C;
+    anim.m_stopCallback = data.m_stopCallback;
+    anim.m_stopParam = data.m_stopParam;
     anim.unk_0040 = data.unk_0048;
     this->PlaySpellVisualKit_PlayAnims(&anim);
 

@@ -108,7 +108,7 @@ class CEffect {
     /* 00EC */ uint32_t m_expireTime;
     /* 00F0 */ uint32_t unk_00F0;
     /* 00F4 */ float unk_00F4;
-    /* 00F8 */ uint32_t unk_00F8;
+    /* 00F8 */ uint32_t m_tintColor;
     /* 00FC */ uintptr_t m_mapEntity;
     /* 0100 */ int32_t m_refCount;
     /* 0104 */ int32_t m_lightningRefCount;

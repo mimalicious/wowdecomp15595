@@ -71,7 +71,7 @@ void CVehicle_C::SetBoneAnimForceFacing(WOWGUID guid, uint32_t boneId) {
     this->m_forceFacingBone = boneId;
 }
 
-// OFFSET: #0x00756DE0
+// OFFSET: 0x005E9B10
 bool CVehicle_C::IsMirroringAnimsToPassengers() const {
     return this->m_mirroringAnimsMask != 0;
 }
@@ -415,7 +415,7 @@ void CVehicle_C::UpdateLargestPassengerBoundsRadius() {
     }
 }
 
-// OFFSET: #0x00757EF0
+// OFFSET: 0x005EA690/0x14026B8D0
 void CVehicle_C::UpdateFreeSeatMask() {
     this->m_freeSeatMask = 0;
 
@@ -552,7 +552,7 @@ void CVehicleHeap::Delete(CVehicle_C* vehicle) {
 CVehicle_C* CVehicle_C::FindVehicleToPlayBoneAnim() {
     CGUnit_C* unit = this->m_unit;
 
-    while (unit->m_vehiclePassenger && unit->m_vehiclePassenger->OverridesModelAnimation()) {
+    while (unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
         CGUnit_C* vehicleUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(unit->m_vehiclePassenger->m_transitionVehicleGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
         if (!vehicleUnit) {
@@ -570,7 +570,7 @@ void CVehicle_C::StartMirroringAnimsToPassengers() {
     for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-        if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->OverridesModelAnimation()) {
+        if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
             unit->m_vehiclePassenger->StartMirroringVehicleAnims();
         }
     }

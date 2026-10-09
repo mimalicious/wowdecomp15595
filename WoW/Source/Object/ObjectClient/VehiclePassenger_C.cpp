@@ -472,7 +472,7 @@ CGUnit_C* CVehiclePassenger_C::GetStoredRootVehicleUnit() const {
     return this->m_unit->FindRootVehicle(NULL);
 }
 
-// OFFSET: #0x00748620
+// OFFSET: 0x005EF160/0x140270F80
 void CVehiclePassenger_C::StartMirroringVehicleAnims() {
     if (this->m_transitionSeat >= 8) {
         return;
@@ -729,7 +729,7 @@ C3Vector CVehiclePassenger_C::ComputeInterpolatedUnitPosition() const {
 }
 
 // OFFSET: #0x007487E0
-int32_t CVehiclePassenger_C::OverridesModelAnimation() const {
+int32_t CVehiclePassenger_C::IsCurrentlyMirroringVehicleAnims() const {
     return (this->m_flags & 0x800) && this->m_unit->m_unit->m_unitFieldHealth > 0;
 }
 
@@ -805,7 +805,7 @@ void CVehiclePassenger_C::StopWaitingForVehicleTransitionAnim() {
     }
 }
 
-// OFFSET: #0x00747990
+// OFFSET: 0x005F0A00/0x140272C60
 void CVehiclePassenger_C::ExecuteAllDeferredVehicleTransitionAnimSplines() {
     CDataStore* spline = this->m_deferredTransitionSpline;
     WOWGUID transport = this->m_transitionAnimGuid;

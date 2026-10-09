@@ -13,7 +13,7 @@ class SpellVisualKitRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_startAnimID;
     /* 0008 */ int32_t m_animID;
-    /* 000C */ int32_t unk_000C;
+    /* 000C */ int32_t m_animKitID;
     /* 0010 */ int32_t m_headEffect;
     /* 0014 */ int32_t m_chestEffect;
     /* 0018 */ int32_t m_baseEffect;

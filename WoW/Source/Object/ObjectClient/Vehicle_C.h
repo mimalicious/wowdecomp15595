@@ -69,6 +69,7 @@ class CVehicle_C {
     void OnPassengerStopMirroringAnims(uint8_t seat);
     int32_t IsSuppressingCameraPitchWhileMouseAiming() const;
     int32_t HasHighPriorityCastingAnim() const;
+    void FreeAnimKits();
     uint32_t IsBoneAnimPlaying(uint32_t bone) const;
     void BoneAnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time);
     void PlayBoneAnimOrFallback(CM2Model* model, uint32_t boneId);

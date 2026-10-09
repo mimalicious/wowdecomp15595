@@ -125,7 +125,7 @@ void CGTutorial::ResetTutorials() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00530840
+// OFFSET: 0x00901DF0/0x14065A3A0
 void CGTutorial::TriggerTutorial(uint32_t tutorial) {
     if (!CGTutorial::m_tutorialShown.m_count) {
         return;

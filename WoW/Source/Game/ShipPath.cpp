@@ -369,7 +369,7 @@ bool ShipPath::TimeInRange(uint32_t start, uint32_t end, uint32_t time) {
     return true;
 }
 
-// OFFSET: #0x007F7810
+// OFFSET: 0x00B0F580
 uint32_t ShipPath::GetPathTime(uint32_t time) const {
     uint32_t total = this->m_totalPathTime;
 
@@ -723,7 +723,7 @@ void ShipPath::FindLegAndSegment(uint32_t pathTime, uint32_t* leg, uint32_t* seg
     *segment = 0;
 }
 
-// OFFSET: #0x007F8000
+// OFFSET: 0x00B0FDF0/0x1408D5130
 void ShipPath::WaitAtNextPausePoint(uint32_t time, bool pause) {
     uint32_t total = this->m_totalPathTime;
 

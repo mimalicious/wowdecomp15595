@@ -227,7 +227,7 @@ int32_t CMovement_C::AddTimeSkewSample(uint32_t localTime, uint32_t serverTime) 
     return skew;
 }
 
-// OFFSET: %0x0060D960
+// OFFSET: 0x006032F0
 void CMovement_C::BuildCollisionBox(const C3Vector& position, CAaBox& box) const {
     box.b = position;
     box.t = position;
@@ -1207,7 +1207,7 @@ void CMovement_C::OnSetPitchLocal(uint32_t eventTime, float pitch) {
     this->AddPlayerMoveEvent(eventTime, MOVEEVENT_SET_PITCH, true, 0, 0.0f, pitch, 0);
 }
 
-// OFFSET: #0x006ECF10
+// OFFSET: 0x00577BF0
 void CMovement_C::OnSetRunModeLocal(uint32_t eventTime, int32_t run) {
     this->AddPlayerMoveEvent(eventTime, run ? MOVEEVENT_SET_RUN_MODE : MOVEEVENT_SET_WALK_MODE, true, 0, 0.0f, 0.0f, 0);
 }
@@ -1633,7 +1633,7 @@ float CMovement_C::GetTimeJustFallen(float elapsed, float timeFallen, C3Vector* 
     return remaining;
 }
 
-// OFFSET: #0x0072FE00
+// OFFSET: 0x005CF320
 CMovement_C::~CMovement_C() {
     this->Disable();
 }
@@ -2730,7 +2730,7 @@ static C3Vector __stdcall GetGroundNormal(const C4Plane* planes, uint32_t count)
     return C3Vector(x * scale, y * scale, z * scale);
 }
 
-// OFFSET: #0x0075EE60
+// OFFSET: 0x00605FD0/0x14028D6C0
 void CMovement_C::GroundNormal() {
     C4Plane planes[6];
     planes[0].n = C3Vector(1.0f, 0.0f, 0.0f);
@@ -6607,7 +6607,7 @@ int32_t CMovement_C::OnLaunch(uint32_t time, const CMovementStatus& status, cons
     return 1;
 }
 
-// OFFSET: #0x0075EFE0
+// OFFSET: 0x006061B0/0x14028D910
 void CMovement_C::SnapToGroundIfCloseEnough() {
     if (!(this->m_flags & MOVEMENTFLAG_ROOT) || this->m_transportGuid.m_guid) {
         return;

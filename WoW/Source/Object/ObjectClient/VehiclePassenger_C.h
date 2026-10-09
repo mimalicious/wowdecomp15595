@@ -124,7 +124,12 @@ class CVehiclePassenger_C {
     void OnAnimEnd(uint32_t anim);
     int32_t PickHighPriorityAnimation(int32_t a2, uint32_t* anim) const;
     C3Vector ComputeInterpolatedUnitPosition() const;
-    int32_t OverridesModelAnimation() const;
+    int32_t IsCurrentlyMirroringVehicleAnims() const;
+    void FreeAnimKit();
+    float ComputeTrainCarRawFacing(const C3Vector& position, float facing);
+    uint32_t IsMirroringVehicleAnims() const;
+    uint32_t MirrorsVehicleAnimTier() const;
+    void UpdateVehicleAnimMirroring();
 
     void UpdateModel();
     int32_t IsInTransitionMotion() const;

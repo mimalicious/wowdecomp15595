@@ -656,7 +656,7 @@ void CVehicleCamera_C::UpdateFacing(CGUnit_C* target, uint32_t time, float progr
         relative.m_guid = target->m_vehicleCamera->GetRelativeTo();
     } else {
         CGUnit_C* unit = target ? target : this->m_unit;
-        unit->UpdateSmoothFacing(NULL);
+        unit->UpdateSmoothFacing(NULL, NULL);
         targetFacing = unit->m_smoothTarget.m_value;
         relative.m_guid = unit->GetTransportGUID();
     }
@@ -1142,7 +1142,7 @@ CVehicleCamera_C* CVehicleCamera_C::Create(CGUnit_C* unit, uint32_t time) {
     camera->m_rawPosChaser.m_velocity = C3Vector(0.0f, 0.0f, 0.0f);
     camera->m_endPosChaser.m_position = C3Vector(0.0f, 0.0f, 0.0f);
     camera->m_endPosChaser.m_velocity = C3Vector(0.0f, 0.0f, 0.0f);
-    unit->UpdateSmoothFacing(NULL);
+    unit->UpdateSmoothFacing(NULL, NULL);
     float facing = unit->GetSmoothFacing();
     camera->m_startFacing = facing;
     camera->m_worldFacing = facing;

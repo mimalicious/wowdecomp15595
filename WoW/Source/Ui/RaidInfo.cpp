@@ -331,7 +331,7 @@ CGPartyPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
     return NULL;
 }
 
-// OFFSET: #0x00573150
+// OFFSET: 0x0092D8F0/0x140694A00
 int32_t CGRaidInfo::IsPetInRaid(const WOWGUID& guid, int32_t* index) {
     if (!guid) {
         return 0;
@@ -932,7 +932,7 @@ CGRaidMember* CGRaidInfo::FindMemberByGuid(WOWGUID guid) {
     return NULL;
 }
 
-// OFFSET: #0x00573200
+// OFFSET: 0x0092D9A0/0x140694AF0
 int32_t CGRaidInfo::IsPlayerOrPetInRaid(const WOWGUID& guid) {
     if (!static_cast<uint32_t>(guid.m_guid)) {
         return static_cast<uint32_t>(guid.m_guid >> 32);

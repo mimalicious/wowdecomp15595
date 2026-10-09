@@ -251,7 +251,7 @@ void ItemStats_C::Pack(CDataStore* msg) {
     msg->Put(this->m_holidayId);
 }
 
-// OFFSET: #0x004FD200
+// OFFSET: 0x005ACC80
 const char* ItemStats_C::GetName(int32_t index) const {
     const char* name = this->m_name[index];
 

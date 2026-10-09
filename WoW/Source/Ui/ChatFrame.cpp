@@ -3314,7 +3314,7 @@ int32_t CGChat::OnChannelList(void* param, NETMESSAGE msgId, uint32_t time, CDat
     return 1;
 }
 
-// OFFSET: #0x004FB530
+// OFFSET: 0x008E5CC0
 void CGChat::UpdateLanguages() {
     FrameScript_SignalEvent(SCRIPT_EVENT_LANGUAGE_LIST_CHANGED, NULL);
 }
@@ -4286,7 +4286,7 @@ void CGChat::UpdateGuildStatus() {
     }
 }
 
-// OFFSET: #0x00508090
+// OFFSET: 0x008F4AE0/0x140626880
 void CGChat::ZoneUpdate() {
     if (!CGChat::m_loaded) {
         return;
@@ -4921,7 +4921,7 @@ bool CGChat::ChatTokenToGUID(const char* token, WOWGUID& guid) {
     return true;
 }
 
-// OFFSET: #0x004FB9C0
+// OFFSET: 0x008E8F00/0x140617700
 CImVector CGChat::GetChatColor(int32_t type) {
     CImVector color;
 
@@ -5927,7 +5927,7 @@ int32_t CGChat::OnUserListRemove(void* param, NETMESSAGE msgId, uint32_t time, C
     return 1;
 }
 
-// OFFSET: #0x0050B6D0
+// OFFSET: 0x008F7F60/0x14062AFA0
 void CGChat::LogHonorGain(CGUnit_C* unit, const WOWGUID& victim, int32_t rank, int32_t honor) {
     char text[3000];
 

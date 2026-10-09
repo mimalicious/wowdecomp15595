@@ -233,7 +233,7 @@ PLAYERNAMEDESC* PlayerNameCreate(const WOWGUID& guid) {
     return desc;
 }
 
-// OFFSET: #0x007E6320
+// OFFSET: 0x004E1C80/0x1401228A0
 void PlayerNameDelete(PLAYERNAMEDESC* desc) {
     if (!desc) {
         return;
@@ -620,7 +620,7 @@ void PLAYERNAMEDESC::CreateWorldText(uint32_t type, const char* text, const CImV
     this->m_worldText[slot] = WorldTextCreate(type, position, text, color, pvpRank);
 }
 
-// OFFSET: #0x007E5FD0
+// OFFSET: 0x004E1BD0/0x140122730
 PLAYERNAMEDESC* ObjectNameCreate(const WOWGUID& guid) {
     if (!guid || !ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__)) {
         return NULL;
@@ -634,7 +634,7 @@ PLAYERNAMEDESC* ObjectNameCreate(const WOWGUID& guid) {
     return desc;
 }
 
-// OFFSET: #0x007E6030
+// OFFSET: 0x004E0D10/0x1401210B0
 void PlayerNameCreateText(PLAYERNAMEDESC* desc, uint32_t type, const char* text, const CImVector* color, const int32_t* pvpRank) {
     if (!desc) {
         return;

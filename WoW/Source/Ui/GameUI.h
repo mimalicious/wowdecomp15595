@@ -252,6 +252,7 @@ class CGGameUI {
     static int32_t HandleDisplaySizeChanged(const CSizeEvent& evt);
     static void DisplayError(UIErrors error, ...);
     static int32_t IsAutoLooting();
+    static bool IsInArenaOrRatedBattleground(bool* arena);
     static void ShowCombatFeedback(const WOWGUID& guid, int32_t amount, uint32_t schoolMask, uint32_t flags);
     static void ShowSpellMissFeedback(const WOWGUID& guid, int32_t reason);
     static void ShowHealingFeedback(const WOWGUID& guid, int32_t amount, bool crit);

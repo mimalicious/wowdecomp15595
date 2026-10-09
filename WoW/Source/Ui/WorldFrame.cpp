@@ -139,7 +139,7 @@ uint32_t CGWorldFrame::GetSceneTime() const {
     return World::GetScene() ? World::GetScene()->m_time : 0;
 }
 
-// OFFSET: #0x004F5960
+// OFFSET: 0x008DEB50/0x14060B8D0
 CGCamera* CGWorldFrame::GetActiveCamera() {
     if (CGWorldFrame::s_currentWorldFrame) {
         return CGWorldFrame::s_currentWorldFrame->m_camera;

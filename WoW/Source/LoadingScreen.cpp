@@ -777,7 +777,7 @@ static void ClearDynamicData() {
     s_dynamicElements.Clear();
 }
 
-// OFFSET: #0x00409550
+// OFFSET: 0x0040BBE0/0x14000EA90
 void LoadingScreenDisable() {
     if (s_loadingScreenLayer) {
         HandleClose(reinterpret_cast<HOBJECT>(s_loadingScreenLayer));
@@ -1224,7 +1224,7 @@ void LoadingScreenEnableShip(uint32_t transportEntry, int32_t transportMap, int3
     InitializeProgressBar(true);
 }
 
-// OFFSET: #0x0040AE30
+// OFFSET: 0x0040D880
 void LoadingScreenEnableShipLeg(int32_t entryId, uint32_t leg) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 

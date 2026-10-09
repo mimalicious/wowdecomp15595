@@ -395,7 +395,7 @@ bool CGBarberShop::IsCurrentStyle(int32_t type) {
     }
 }
 
-// OFFSET: #0x0052E9F0
+// OFFSET: 0x008FFF80/0x140657C00
 void CGBarberShop::DisableBarberShop() {
     if (!CGBarberShop::m_barberShopEnabled) {
         return;

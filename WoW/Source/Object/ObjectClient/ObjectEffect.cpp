@@ -541,7 +541,7 @@ void CObjectEffect::UpdateLoopingEffect(CObjectEffectManager* manager) {
     SI3::Set3DPosition(&this->m_soundKitObject, &position);
 }
 
-// OFFSET: #0x006F3910
+// OFFSET: 0x005E14D0
 void CObjectEffectManager::PropertyChanged(int32_t modifierId) {
     OBJ_EFFECT_REF_LIST_LOOKUP* refList = this->m_refLists.Ptr(modifierId, s_hashKeyNone);
 

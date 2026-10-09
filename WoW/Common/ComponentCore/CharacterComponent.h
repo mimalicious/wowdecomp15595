@@ -148,6 +148,7 @@ class CCharacterComponent {
     static void UpdateBaseTexture(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t face, uint32_t level, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
     static void ValidateComponentData(ComponentData* data, COMPONENT_CONTEXT context);
     static uint32_t ValidateComponentTextureLevel(uint32_t level);
+    uint32_t GetHandItemAttachIDs(uint32_t* ids, uint32_t maxCount) const;
 
     /* 0000 */ TSLink<CCharacterComponent> m_link;
     /* 0008 */ uint32_t m_flags;

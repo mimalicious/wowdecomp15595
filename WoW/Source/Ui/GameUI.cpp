@@ -2393,7 +2393,7 @@ void CGGameUI::UnlockItem(WOWGUID guid) {
     CGActionBar::UpdateUsable();
 }
 
-// OFFSET: #0x005186A0
+// OFFSET: 0x008C9D60/0x14063A080
 void CGGameUI::ResetCamera(WOWGUID guid) {
     WOWGUID target = guid;
 
@@ -2735,7 +2735,7 @@ void CGGameUI::AcceptAreaSpiritHeal() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00524BF0
+// OFFSET: 0x008D6240/0x140648190
 void CGGameUI::Target(WOWGUID guid) {
     if (!guid) {
         CGGameUI::unk_BD08CC = 0;
@@ -3058,7 +3058,7 @@ uint8_t CGGameUI::GetComboPoints(WOWGUID target) {
     return 0;
 }
 
-// OFFSET: #0x00512A00
+// OFFSET: 0x008C45C0/0x140634150
 int32_t CGGameUI::IsPartyMember(const WOWGUID& guid) {
     if (CGPartyInfo::IsMember(guid)) {
         return 1;
@@ -3760,7 +3760,7 @@ void CGGameUI::EnterWorld() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x00512B50
+// OFFSET: 0x008C46C0/0x140634250
 void CGGameUI::UnitModelUpdate(const WOWGUID& guid, uint32_t flags) {
     UpdateModelForUI(guid, flags);
 }
@@ -3823,7 +3823,7 @@ void CGGameUI::CancelPartyInvite() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PARTY_INVITE_CANCEL, NULL);
 }
 
-// OFFSET: #0x005129F0
+// OFFSET: 0x008C45B0/0x140634140
 int32_t CGGameUI::IsInParty(const WOWGUID& guid) {
     return CGPartyInfo::IsMember(guid);
 }
@@ -3843,7 +3843,7 @@ void CGGameUI::ShowBlockedFrameFeedback(CScriptRegion* region) {
     CGGameUI::ShowBlockedActionFeedback(region, 2);
 }
 
-// OFFSET: #0x00513900
+// OFFSET: 0x008C57E0/0x1406354A0
 uint32_t CGGameUI::GetCurrentRaidDifficulty() {
     if (!CGRaidInfo::m_numMembers) {
         return CGGameUI::m_raidDifficulty;
@@ -5283,7 +5283,7 @@ void CGGameUI::ThreatMapAdd(const WOWGUID& unit, const WOWGUID& target) {
     }
 }
 
-// OFFSET: #0x00512AB0
+// OFFSET: 0x008C4670
 void CGGameUI::UnitTooltipUpdate(const WOWGUID& guid) {
     if (CGGameUI::m_gameTooltip && CGGameUI::m_gameTooltip->m_unitGuid == guid && !CGGameUI::m_gameTooltip->m_fading) {
         WOWGUID none = WOWGUID();
@@ -5348,7 +5348,7 @@ void CGGameUI::DoPowerRegen() {
     }
 }
 
-// OFFSET: #0x00512A30
+// OFFSET: 0x008C45F0/0x140634180
 int32_t CGGameUI::IsRaidMemberOrPet(const WOWGUID& guid) {
     if (CGPartyInfo::IsMemberOrPet(guid)) {
         return 1;
@@ -5447,7 +5447,7 @@ void CGGameUI::NextCinematicInternal(void* param) {
     }
 }
 
-// OFFSET: #0x00523640
+// OFFSET: 0x008D4B30/0x140641770
 void CGGameUI::CloseLoot(bool a1, bool a2, bool a3) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     WOWGUID guid = CGLootInfo::m_lootObj;
@@ -5521,7 +5521,7 @@ void CGGameUI::LockItem(WOWGUID guid) {
     CGActionBar::UpdateUsable();
 }
 
-// OFFSET: #0x00520E40
+// OFFSET: 0x008D2A30
 void CGGameUI::UnlockAllItems() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -5852,7 +5852,7 @@ void CGGameUI::GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color,
     }
 }
 
-// OFFSET: #0x00512B00
+// OFFSET: 0x008CA1E0/0x14063A530
 void CGGameUI::UnitNameUpdate(const WOWGUID& guid) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -7986,7 +7986,7 @@ void CGGameUI::LeaveWorld() {
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_LEAVING_WORLD, NULL);
 }
 
-// OFFSET: #0x00529550
+// OFFSET: 0x008DC580
 void CCapturePointUIManager::RemoveCapturePoint(CGGameObject_C* object) {
     if (!object) {
         SErrDisplayAppFatalMessage("", "", 0);
