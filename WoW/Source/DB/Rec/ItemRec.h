@@ -6,6 +6,10 @@
 
 class ItemRec {
     public:
+    static const DB2Meta s_meta;
+
+    static void FixupRecord(void* record);
+
     /* 0000 */ int32_t m_ID;
     /* 0004 */ int32_t m_classID;
     /* 0008 */ int32_t m_subclassID;

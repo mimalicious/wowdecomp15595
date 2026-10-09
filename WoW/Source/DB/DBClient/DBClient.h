@@ -136,6 +136,8 @@
 #include "WoW/Source/DB/Rec/ItemDisenchantLootRec.h"
 #include "WoW/Source/DB/Rec/ItemDisplayInfoRec.h"
 #include "WoW/Source/DB/Rec/ItemExtendedCostRec.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/DB/Rec/ItemGroupSoundsRec.h"
 #include "WoW/Source/DB/Rec/ItemLimitCategoryRec.h"
 #include "WoW/Source/DB/Rec/ItemNameDescriptionRec.h"
@@ -153,6 +155,7 @@
 #include "WoW/Source/DB/Rec/JournalEncounterRec.h"
 #include "WoW/Source/DB/Rec/JournalEncounterCreatureRec.h"
 #include "WoW/Source/DB/Rec/JournalEncounterItemRec.h"
+#include "WoW/Source/DB/Rec/KeyChainRec.h"
 #include "WoW/Source/DB/Rec/JournalEncounterSectionRec.h"
 #include "WoW/Source/DB/Rec/JournalInstanceRec.h"
 #include "WoW/Source/DB/Rec/LanguagesRec.h"
@@ -435,7 +438,7 @@ extern WowClientDB<ItemArmorShieldRec> g_itemArmorShieldDB;
 extern WowClientDB<ItemArmorTotalRec> g_itemArmorTotalDB;
 extern WowClientDB<ItemBagFamilyRec> g_itemBagFamilyDB;
 extern WowClientDB<ItemClassRec> g_itemClassDB;
-extern WowClientDB<ItemCurrencyCostRec> g_itemCurrencyCostDB;
+extern WowClientDB2<ItemCurrencyCostRec> g_itemCurrencyCostDB;
 extern WowClientDB<ItemDamageAmmoRec> g_itemDamageAmmoDB;
 extern WowClientDB<ItemDamageOneHandRec> g_itemDamageOneHandDB;
 extern WowClientDB<ItemDamageOneHandCasterRec> g_itemDamageOneHandCasterDB;
@@ -446,7 +449,7 @@ extern WowClientDB<ItemDamageTwoHandCasterRec> g_itemDamageTwoHandCasterDB;
 extern WowClientDB<ItemDamageWandRec> g_itemDamageWandDB;
 extern WowClientDB<ItemDisenchantLootRec> g_itemDisenchantLootDB;
 extern WowClientDB_RLE<ItemDisplayInfoRec> g_itemDisplayInfoDB;
-extern WowClientDB<ItemExtendedCostRec> g_itemExtendedCostDB;
+extern WowClientDB2<ItemExtendedCostRec> g_itemExtendedCostDB;
 extern WowClientDB<ItemGroupSoundsRec> g_itemGroupSoundsDB;
 extern WowClientDB<ItemLimitCategoryRec> g_itemLimitCategoryDB;
 extern WowClientDB<ItemNameDescriptionRec> g_itemNameDescriptionDB;
@@ -680,6 +683,8 @@ uint32_t GetPhysicalDamageClassMask();
 int32_t GetMapRaidDuration(int32_t mapId, uint32_t difficulty);
 int32_t LocaleNameToIndex(const char* locale);
 int32_t LocaleIdToIndex(uint32_t locale);
+int32_t LocaleIndexToDB2Locale(int32_t index);
+int32_t LocaleNameToDB2Locale(const char* locale);
 int32_t GetCurrentLocaleIndex();
 void DBCache_ClearTemporaryCaches();
 const char* ClientDBStringLookup(uint32_t lookup);

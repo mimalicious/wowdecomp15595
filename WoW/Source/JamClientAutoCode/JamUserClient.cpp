@@ -158,19 +158,98 @@ void UserClientReorderCharacters::Put(CDataStore* msg) {
     }
 }
 
+// PROVEN: 31fdb30f IDENTICAL/NONE
 // OFFSET: 0x0066DE40/0x140315030
 UserClientGenerateRandomCharacterName::UserClientGenerateRandomCharacterName(uint8_t raceID, uint8_t sexID) {
     this->m_raceID = raceID;
     this->m_sexID = sexID;
 }
 
+// PROVEN: b94f0e1c IDENTICAL/NONE
 // OFFSET: 0x0066B960/0x140312160
 UserClientGenerateRandomCharacterName::~UserClientGenerateRandomCharacterName() {
 }
 
+// PROVEN: 960528f1 IDENTICAL/NONE
 // OFFSET: 0x0066D8E0
 void UserClientGenerateRandomCharacterName::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2413));
     msg->Put(this->m_raceID);
     msg->Put(this->m_sexID);
+}
+
+// PROVEN: 6fb75a99 IDENTICAL/NONE
+// OFFSET: 0x0066BC00/0x140312430
+DBQuery::DBQuery() {
+}
+
+// PROVEN: 179ddb96 IDENTICAL/NONE
+// OFFSET: 0x00670340
+UserClientDBQueryBulk::UserClientDBQueryBulk() {
+}
+
+// PROVEN: 4d39b4f5 IDENTICAL/NONE
+// OFFSET: 0x006702E0/0x140317440
+UserClientDBQueryBulk::~UserClientDBQueryBulk() {
+}
+
+// OFFSET: 0x0066FC20/0x140316CF0
+void UserClientDBQueryBulk::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2401));
+    msg->Put(this->m_tableHash);
+
+    JamBitWriter bits(msg);
+    bits.WriteBits<23>(this->m_queries.Count());
+
+    for (uint32_t i = 0; i < this->m_queries.Count(); i++) {
+        const DBQuery& query = this->m_queries[i];
+        bits.WriteBit(query.m_guid[0] != 0);
+        bits.WriteBit(query.m_guid[4] != 0);
+        bits.WriteBit(query.m_guid[7] != 0);
+        bits.WriteBit(query.m_guid[2] != 0);
+        bits.WriteBit(query.m_guid[5] != 0);
+        bits.WriteBit(query.m_guid[3] != 0);
+        bits.WriteBit(query.m_guid[6] != 0);
+        bits.WriteBit(query.m_guid[1] != 0);
+    }
+
+    bits.Flush();
+
+    for (uint32_t i = 0; i < this->m_queries.Count(); i++) {
+        const DBQuery& query = this->m_queries[i];
+
+        if (query.m_guid[5]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[5] ^ 1));
+        }
+
+        if (query.m_guid[6]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[6] ^ 1));
+        }
+
+        if (query.m_guid[7]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[7] ^ 1));
+        }
+
+        if (query.m_guid[0]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[0] ^ 1));
+        }
+
+        if (query.m_guid[1]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[1] ^ 1));
+        }
+
+        if (query.m_guid[3]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[3] ^ 1));
+        }
+
+        if (query.m_guid[4]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[4] ^ 1));
+        }
+
+        msg->Put(static_cast<uint32_t>(query.m_id));
+
+        if (query.m_guid[2]) {
+            msg->Put(static_cast<uint8_t>(query.m_guid[2] ^ 1));
+        }
+    }
 }

@@ -143,7 +143,7 @@ static CVar* s_cvAsyncThreadSleep;
 // STATIC: #0x00B2FA08
 static CVar* s_cvAsyncHandlerTimeout;
 
-// STATIC: #0x00C5DE88
+// STATIC: 0x00D732E4
 char s_localeCode[5];
 
 // STATIC: 0x00D361F0

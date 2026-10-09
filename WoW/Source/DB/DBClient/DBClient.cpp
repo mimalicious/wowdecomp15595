@@ -5,6 +5,10 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "WoW/Source/DB/Rec/MapDifficultyRec.h"
 #include "WoW/Source/DB/WowClientDB2.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
+#include "WoW/Source/DB/Rec/KeyChainRec.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
 #include "Engine/Source/Os/OsFile.h"
 #include "Engine/Source/Os/Locale.h"
@@ -995,9 +999,26 @@ WowClientDB<DeclinedWordRec> g_declinedWordDB;
 // STATIC: %0x00C99154
 WowClientDB<DeclinedWordCasesRec> g_declinedWordCasesDB;
 
-WowClientDB<ItemCurrencyCostRec> g_itemCurrencyCostDB;
+// STATIC: 0x00D98648
+WowClientDB2<ItemRec> g_itemDB;
 
-WowClientDB<ItemExtendedCostRec> g_itemExtendedCostDB;
+// STATIC: 0x00D986E8
+WowClientDB2<ItemRecSparse> g_itemSparseDB;
+
+// STATIC: 0x00D98788
+WowClientDB2<ItemCurrencyCostRec> g_itemCurrencyCostDB;
+
+// STATIC: 0x00D98828
+WowClientDB2<ItemExtendedCostRec> g_itemExtendedCostDB;
+
+// STATIC: 0x00D988C8
+WowClientDB2<KeyChainRec> g_keyChainDB;
+
+// STATIC: 0x00C9AD64
+WowClientDB2_Base* g_clientDB2Tables[] = { &g_keyChainDB, NULL };
+
+// STATIC: 0x00C9AD6C
+WowClientDB2_Base* g_clientDB2GameTables[] = { &g_itemDB, &g_itemSparseDB, &g_itemCurrencyCostDB, &g_itemExtendedCostDB, NULL };
 
 WowClientDB<PetPersonalityRec> g_petPersonalityDB;
 
@@ -1470,6 +1491,7 @@ void ClientDBInitializeGlue() {
     }
 }
 
+// PROVEN: 6369db2d IDENTICAL/NONE
 // OFFSET: 0x00495070
 void ClientDBUnloadTables() {
     char path[260];
@@ -1538,9 +1560,9 @@ void ClientDBShutdown() {
     s_resistances.Clear();
     s_terrainTypeSoundIDs.Clear();
     ClientDBUnloadTables();
-    g_hotfixNotifyBlobHandler = NULL;
-    g_hotfixNotifyMultiplexHandler = NULL;
-    g_dbReplyMultiplexHandler = NULL;
+    ClientDBReply::s_handler = NULL;
+    ClientHotfixNotify::s_handler = NULL;
+    ClientHotfixNotifyBlob::s_handler = NULL;
 }
 
 // OFFSET: 0x00496790
@@ -1616,9 +1638,9 @@ void ClientDBInitialize() {
     InitResistances();
     InitWeaponSubclasses();
     SDBItemSubclassInitialize();
-    g_hotfixNotifyBlobHandler = WowClientDB2_Base::HotfixNotifyBlob;
-    g_hotfixNotifyMultiplexHandler = WowClientDB2_Base::HotfixNotifyMultiplex;
-    g_dbReplyMultiplexHandler = WowClientDB2_Base::DBReplyMultiplex;
+    ClientHotfixNotifyBlob::s_handler = WowClientDB2_Base::HotfixNotifyBlob;
+    ClientHotfixNotify::s_handler = WowClientDB2_Base::HotfixNotifyMultiplex;
+    ClientDBReply::s_handler = WowClientDB2_Base::DBReplyMultiplex;
 }
 
 // OFFSET: 0x0048A5D0/0x1400ACCF0
@@ -1655,6 +1677,47 @@ int32_t LocaleIdToIndex(uint32_t locale) {
         default:
             return 15;
     }
+}
+
+// PROVEN: 7375dc07 IDENTICAL/NONE
+// OFFSET: 0x0048A6C0
+int32_t LocaleIndexToDB2Locale(int32_t index) {
+    switch (index) {
+        case 0:
+            return 3;
+        case 3:
+            return 6;
+        case 4:
+            return 2;
+        case 5:
+            return 1;
+        case 6:
+        case 8:
+            return 4;
+        case 7:
+        case 9:
+            return 5;
+        case 10:
+            return 7;
+        case 11:
+            return 8;
+        case 13:
+        case 14:
+            return 10;
+        default:
+            return 0;
+    }
+}
+
+// OFFSET: 0x0048A760
+int32_t LocaleNameToDB2Locale(const char* locale) {
+    int32_t index = LocaleIdToIndex(*reinterpret_cast<const uint32_t*>(locale));
+
+    if (index == 15) {
+        index = 2;
+    }
+
+    return LocaleIndexToDB2Locale(index);
 }
 
 // OFFSET: 0x0048A790/0x1400ACEA0

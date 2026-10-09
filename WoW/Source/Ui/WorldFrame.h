@@ -97,6 +97,7 @@ struct KEYDOWNSTATE {
 class CGWorldFrame : public CSimpleFrame {
     public:
     int32_t SetupDefaultAction();
+    uint32_t GetSceneTime() const;
     static CDataAllocator s_worldFrameHeap;
     static FFX::Effect* ffxEffectSwirlingFog;
     static FFX::Effect* ffxEffectNetherWorld;

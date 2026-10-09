@@ -54,4 +54,23 @@ class UserClientGenerateRandomCharacterName : public JamClientMessage {
     ~UserClientGenerateRandomCharacterName();
 };
 
+struct DBQuery {
+    /* 0000 */ uint8_t m_guid[8];
+    /* 0008 */ int32_t m_id;
+    /* 000C */ uint8_t unk_000C[4];
+
+    DBQuery();
+};
+
+class UserClientDBQueryBulk : public JamClientMessage {
+    public:
+    /* 0010 */ TSGrowableArray<DBQuery> m_queries;
+    /* 0020 */ uint32_t m_tableHash;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientDBQueryBulk();
+    ~UserClientDBQueryBulk();
+};
+
 #endif

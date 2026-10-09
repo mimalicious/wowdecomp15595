@@ -6,7 +6,11 @@
 
 class KeyChainRec {
     public:
-    /* 0000 */ int32_t m_id;
+    static const DB2Meta s_meta;
+
+    static void FixupRecord(void* record);
+
+    /* 0000 */ int32_t m_ID;
     /* 0004 */ uint8_t m_key[32];
 };
 

@@ -125,7 +125,7 @@ FFX::Effect* CGWorldFrame::ffxEffectGlow;
 // STATIC: #0x00B74368
 FFX::Effect* CGWorldFrame::ffxEffectDeath;
 
-// STATIC: #0x00B7436C
+// STATIC: 0x00ED7A10
 CGWorldFrame* CGWorldFrame::s_currentWorldFrame;
 
 // STATIC: #0x00B74394
@@ -133,6 +133,11 @@ CDataAllocator CGWorldFrame::s_worldFrameHeap(sizeof(CGWorldFrame), 1);
 
 // STATIC: #0x00B743A8
 static char s_keyNameBuffer[8];
+
+// OFFSET: 0x008DF7D0/0x14060C520
+uint32_t CGWorldFrame::GetSceneTime() const {
+    return World::GetScene() ? World::GetScene()->m_time : 0;
+}
 
 // OFFSET: #0x004F5960
 CGCamera* CGWorldFrame::GetActiveCamera() {

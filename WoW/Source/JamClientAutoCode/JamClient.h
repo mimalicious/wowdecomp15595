@@ -6,6 +6,7 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
+#include "WoW/Source/WowServices/WDataStore.h"
 
 struct JamClientCharacterListItem {
     /* 0000 */ uint32_t m_displayID;
@@ -120,6 +121,53 @@ class ClientGenerateRandomCharacterNameResult : public JamClientMessage {
 
     ClientGenerateRandomCharacterNameResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientGenerateRandomCharacterNameResult();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
+struct HotfixNotify {
+    /* 0000 */ uint32_t m_tableHash;
+    /* 0004 */ int32_t m_recordID;
+    /* 0008 */ uint32_t m_timestamp;
+};
+
+class ClientDBReply : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientDBReply* msg);
+
+    /* 0010 */ uint32_t m_tableHash;
+    /* 0014 */ int32_t m_recordID;
+    /* 0018 */ uint32_t m_timestamp;
+    /* 001C */ WDataStore m_data;
+
+    ClientDBReply(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientDBReply();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
+class ClientHotfixNotify : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientHotfixNotify* msg);
+
+    /* 0010 */ TSGrowableArray<HotfixNotify> m_hotfixes;
+
+    ClientHotfixNotify(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientHotfixNotify();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
+class ClientHotfixNotifyBlob : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientHotfixNotifyBlob* msg);
+
+    /* 0010 */ uint32_t m_tableHash;
+    /* 0014 */ int32_t m_recordID;
+    /* 0018 */ uint32_t m_timestamp;
+
+    ClientHotfixNotifyBlob(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientHotfixNotifyBlob();
     bool Handle();
     void Unpack(CDataStore* msg, bool full);
 };

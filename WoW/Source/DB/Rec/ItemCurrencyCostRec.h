@@ -2,16 +2,16 @@
 #define WOW_SOURCE_DB_REC_ITEMCURRENCYCOSTREC_H
 
 #include <cstdint>
-#include "WoW/Source/DB/WowClientDB.h"
+#include "WoW/Source/DB/WowClientDB2.h"
 
 class ItemCurrencyCostRec {
     public:
-    static const DBCMeta s_meta;
+    static const DB2Meta s_meta;
 
-    static void FixupStrings(void* record, const char* strings);
+    static void FixupRecord(void* record);
 
-    /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
+    /* 0000 */ int32_t m_ID;
+    /* 0004 */ int32_t m_itemID;
 };
 
 #endif

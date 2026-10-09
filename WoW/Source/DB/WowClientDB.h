@@ -15,6 +15,7 @@ class DBCRelativeString {
     DBCRelativeString();
     DBCRelativeString(const DBCRelativeString& other);
     DBCRelativeString& operator=(const DBCRelativeString& other);
+    DBCRelativeString& operator=(const char* value);
     void Set(const DBCRelativeString& other);
     operator const char*() const;
 };

@@ -16,6 +16,15 @@ bool (*ClientGenerateRandomCharacterNameResult::s_handler)(ClientGenerateRandomC
 // STATIC: 0x00E4D5E0
 bool (*ClientEnumCharactersResult::s_handler)(ClientEnumCharactersResult* msg);
 
+// STATIC: 0x00E4D7E0
+bool (*ClientDBReply::s_handler)(ClientDBReply* msg);
+
+// STATIC: 0x00E4D674
+bool (*ClientHotfixNotify::s_handler)(ClientHotfixNotify* msg);
+
+// STATIC: 0x00E4D6D8
+bool (*ClientHotfixNotifyBlob::s_handler)(ClientHotfixNotifyBlob* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -422,4 +431,121 @@ bool ClientGenerateRandomCharacterNameResult::Handle() {
     }
 
     return ClientGenerateRandomCharacterNameResult::s_handler(this);
+}
+
+// OFFSET: 0x006BAE70/0x14036EB20
+ClientDBReply::ClientDBReply(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006B0480/0x140361210
+ClientDBReply::~ClientDBReply() {
+}
+
+// OFFSET: 0x006B1CB0/0x1403630A0
+bool ClientDBReply::Handle() {
+    if (!ClientDBReply::s_handler) {
+        return false;
+    }
+
+    return ClientDBReply::s_handler(this);
+}
+
+// OFFSET: 0x006AFA80/0x140360530
+void ClientDBReply::Unpack(CDataStore* msg, bool full) {
+    uint32_t recordID = 0;
+    msg->Get(recordID);
+    this->m_recordID = recordID;
+
+    uint32_t tableHash = 0;
+    msg->Get(tableHash);
+    this->m_tableHash = tableHash;
+
+    uint32_t timestamp = 0;
+    msg->Get(timestamp);
+    this->m_timestamp = timestamp;
+
+    uint32_t size = 0;
+    msg->Get(size);
+
+    void* data;
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.PutData(data, size);
+        this->m_data.Finalize();
+    }
+}
+
+// OFFSET: 0x006E1E10/0x1403A2620
+ClientHotfixNotify::ClientHotfixNotify(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DDEB0/0x14039D900
+ClientHotfixNotify::~ClientHotfixNotify() {
+}
+
+// OFFSET: 0x006C09F0/0x140375DE0
+bool ClientHotfixNotify::Handle() {
+    if (!ClientHotfixNotify::s_handler) {
+        return false;
+    }
+
+    return ClientHotfixNotify::s_handler(this);
+}
+
+// OFFSET: 0x006DC4D0/0x14039B670
+void ClientHotfixNotify::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_hotfixes.SetCount(bits.ReadBits<22>());
+
+    for (uint32_t i = 0; i < this->m_hotfixes.Count(); i++) {
+        uint32_t recordID = 0;
+        msg->Get(recordID);
+        this->m_hotfixes[i].m_recordID = recordID;
+
+        uint32_t timestamp = 0;
+        msg->Get(timestamp);
+        this->m_hotfixes[i].m_timestamp = timestamp;
+
+        uint32_t tableHash = 0;
+        msg->Get(tableHash);
+        this->m_hotfixes[i].m_tableHash = tableHash;
+    }
+}
+
+// OFFSET: 0x006BE7A0/0x14034FE70
+ClientHotfixNotifyBlob::ClientHotfixNotifyBlob(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2280/0x14034F780
+ClientHotfixNotifyBlob::~ClientHotfixNotifyBlob() {
+}
+
+// OFFSET: 0x006C0DE0/0x1403762B0
+bool ClientHotfixNotifyBlob::Handle() {
+    if (!ClientHotfixNotifyBlob::s_handler) {
+        return false;
+    }
+
+    return ClientHotfixNotifyBlob::s_handler(this);
+}
+
+// OFFSET: 0x006A5360/0x14034DDF0
+void ClientHotfixNotifyBlob::Unpack(CDataStore* msg, bool full) {
+    uint32_t tableHash = 0;
+    msg->Get(tableHash);
+    this->m_tableHash = tableHash;
+
+    uint32_t timestamp = 0;
+    msg->Get(timestamp);
+    this->m_timestamp = timestamp;
+
+    uint32_t recordID = 0;
+    msg->Get(recordID);
+    this->m_recordID = recordID;
 }

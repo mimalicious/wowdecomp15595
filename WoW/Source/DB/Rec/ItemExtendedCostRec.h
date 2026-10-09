@@ -2,45 +2,29 @@
 #define WOW_SOURCE_DB_REC_ITEMEXTENDEDCOSTREC_H
 
 #include <cstdint>
-#include "WoW/Source/DB/WowClientDB.h"
+#include "WoW/Source/DB/WowClientDB2.h"
 
 class ItemExtendedCostRec {
     public:
-    static const DBCMeta s_meta;
+    static const DB2Meta s_meta;
 
-    static void FixupStrings(void* record, const char* strings);
+    static void FixupRecord(void* record);
 
-    /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ int32_t unk_0014;
-    /* 0018 */ int32_t unk_0018;
-    /* 001C */ int32_t unk_001C;
-    /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
-    /* 0028 */ int32_t unk_0028;
-    /* 002C */ int32_t unk_002C;
-    /* 0030 */ int32_t unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
-    /* 0044 */ int32_t unk_0044;
-    /* 0048 */ int32_t unk_0048;
-    /* 004C */ int32_t unk_004C;
-    /* 0050 */ int32_t unk_0050;
-    /* 0054 */ int32_t unk_0054;
-    /* 0058 */ int32_t unk_0058;
-    /* 005C */ int32_t unk_005C;
-    /* 0060 */ int32_t unk_0060;
-    /* 0064 */ int32_t unk_0064;
-    /* 0068 */ int32_t unk_0068;
-    /* 006C */ int32_t unk_006C;
-    /* 0070 */ int32_t unk_0070;
-    /* 0074 */ int32_t unk_0074;
-    /* 0078 */ int32_t unk_0078;
+    /* 0000 */ int32_t m_ID;
+    /* 0004 */ int32_t m_honorPoints;
+    /* 0008 */ int32_t m_arenaPoints;
+    /* 000C */ int32_t m_arenaBracket;
+    /* 0010 */ int32_t m_itemID[5];
+    /* 0024 */ int32_t m_itemCount[5];
+    /* 0038 */ int32_t m_requiredArenaRating;
+    /* 003C */ int32_t m_itemPurchaseGroup;
+    /* 0040 */ int32_t m_currencyID[5];
+    /* 0054 */ int32_t m_currencyCount[5];
+    /* 0068 */ int32_t m_requiredFactionID;
+    /* 006C */ int32_t m_requiredFactionStanding;
+    /* 0070 */ int32_t m_flags;
+    /* 0074 */ int32_t m_requiredGuildLevel;
+    /* 0078 */ int32_t m_requiredAchievement;
 };
 
 #endif

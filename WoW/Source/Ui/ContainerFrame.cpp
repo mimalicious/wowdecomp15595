@@ -280,7 +280,7 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID);
+        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, WOWGUID(), NULL, NULL, false);
 
         if (item) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
@@ -332,7 +332,7 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID);
+        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, WOWGUID(), NULL, NULL, false);
 
         if (item) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
