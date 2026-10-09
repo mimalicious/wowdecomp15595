@@ -148,17 +148,15 @@ void CSimpleModel::ModelLoaded(CM2Model* model, void* arg) {
 
 // OFFSET: 0x0051EDE0/0x14016BF10
 void CSimpleModel::SetCamera(CCamera* camera) {
-    CCamera* newCamera = camera;
-
     if (camera) {
-        newCamera = reinterpret_cast<CCamera*>(HandleDuplicate(reinterpret_cast<HOBJECT>(camera)));
+        CameraAddRef(camera);
     }
 
     if (this->m_camera) {
         CameraRelease(this->m_camera);
     }
 
-    this->m_camera = newCamera;
+    this->m_camera = camera;
     this->m_pendingCameraIndex = 0xFFFFFFFF;
     this->m_pendingCameraId = 0xFFFFFFFF;
 }

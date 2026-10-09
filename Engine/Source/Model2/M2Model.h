@@ -493,6 +493,8 @@ class M2ModelCamera {
     /* 0028 */ M2ModelTrack<float> m_rollTrack;
     /* 0034 */ M2ModelTrack<float> m_fieldOfViewTrack;
     /* 0040 */ CCamera* m_camera;
+
+    M2ModelCamera();
 };
 
 class M2ModelColor {

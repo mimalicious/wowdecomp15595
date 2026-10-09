@@ -3243,6 +3243,11 @@ void M2AnimateTrack<M2CompQuat, C4Quaternion>(CM2Model* model, M2ModelBone* bone
     }
 }
 
+// INLINED
+M2ModelCamera::M2ModelCamera() {
+    this->m_camera = NULL;
+}
+
 // OFFSET: 0x0081A480
 void CM2Model::AnimateST() {
     if (!(this->m_fFlags & 1) || (this->m_fFlags & 0x800000)) {
