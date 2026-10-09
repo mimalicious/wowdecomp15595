@@ -135,6 +135,8 @@ void DisplayQuestPoint(float x, float y, int32_t importance, const char* name);
 
 class CGMinimapFrame : public CSimpleFrame {
     public:
+    static void SaveShapeshiftTracking();
+    static void LoadTrackingState();
     static void EnterWorld();
     static void ShutdownGame();
     static void LeaveWorld();

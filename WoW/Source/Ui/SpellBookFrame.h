@@ -44,8 +44,10 @@ class SpellRec;
 
 class CGSpellBook {
     public:
+    static void LeaveWorld(bool reload);
     static void GetAppropriateSpellRank(uint32_t* spellId, CGUnit_C* caster, CGUnit_C* target);
     static const char* GetSpellTexture(int32_t slot, int32_t petSpell);
+    static const char* GetSpellTexture(int32_t spellId);
     static int32_t IsSelectedSlot(int32_t slot, int32_t petSpell);
     static int32_t FindSpellByName(const char* name, const char* subtext, int32_t* petSpell);
     static int32_t m_autoRangedSpell;

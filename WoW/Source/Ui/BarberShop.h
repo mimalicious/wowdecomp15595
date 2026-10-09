@@ -16,6 +16,7 @@ int32_t Packet_SMSG_BARBER_SHOP_RESULT(void* param, NETMESSAGE msgId, uint32_t t
 
 class CGBarberShop {
     public:
+    static void LeaveWorld();
     static void EnterWorld();
     static STYLEREC* GetStyle(int32_t type, int32_t race, int32_t sex, int32_t data);
     static float GetMinCameraDistance();

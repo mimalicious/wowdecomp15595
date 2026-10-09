@@ -11,7 +11,7 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 
 // STATIC: #0x00C0F480
-StablePetInfo CGStableInfo::m_pets[6];
+StablePetInfo CGStableInfo::m_pets[25];
 
 // STATIC: #0x00C0F6C0
 WOWGUID CGStableInfo::m_stableMaster;

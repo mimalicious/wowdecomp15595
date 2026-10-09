@@ -267,3 +267,30 @@ UserClientWorldPortResponse::~UserClientWorldPortResponse() {
 void UserClientWorldPortResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2411));
 }
+
+// OFFSET: 0x00670610
+UserClientRequestCemeteryList::UserClientRequestCemeteryList() {
+}
+
+// OFFSET: 0x00670720
+UserClientRequestCemeteryList::~UserClientRequestCemeteryList() {
+}
+
+// OFFSET: 0x00670E10
+void UserClientRequestCemeteryList::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x720A));
+}
+
+// OFFSET: 0x00670860
+UserClientSetPreferredCemetery::UserClientSetPreferredCemetery() {
+}
+
+// OFFSET: 0x00670970
+UserClientSetPreferredCemetery::~UserClientSetPreferredCemetery() {
+}
+
+// OFFSET: 0x00670EC0
+void UserClientSetPreferredCemetery::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x311E));
+    msg->Put(this->m_cemeteryID);
+}

@@ -11,9 +11,9 @@ class SpellEquippedItemsRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
+    /* 0004 */ int32_t m_equippedItemClass;
+    /* 0008 */ int32_t m_equippedItemInvTypes;
+    /* 000C */ int32_t m_equippedItemSubclass;
 };
 
 #endif

@@ -19,7 +19,7 @@ struct StablePetInfo {
 class CGStableInfo {
     public:
     static void ShutdownGame();
-    static StablePetInfo m_pets[6];
+    static StablePetInfo m_pets[25];
     static WOWGUID m_stableMaster;
     static uint32_t m_numPets;
     static int32_t m_numSlots;

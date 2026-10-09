@@ -1,4 +1,5 @@
 #include "GameUI.h"
+#include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/ConsoleBase/Types.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
@@ -24,286 +25,307 @@
 // STATIC: #0x00BD0794
 HSLOG s_taintLog;
 
-// STATIC: #0x00BD08E4
+// STATIC: 0x00ED7614
 CVar* g_taintLogCVar;
 
 // STATIC: 0x00ED7688
 CVar* g_emphasizeMySpellEffectsCVar;
 
-// STATIC: #0x00BD08E8
+// STATIC: 0x00ED7618
 CVar* g_scriptErrorsCVar;
 
-// STATIC: #0x00BD08EC
+// STATIC: 0x00ED761C
 CVar* g_scriptProfileCVar;
 
-// STATIC: #0x00BD08F0
+// STATIC: 0x00ED7620
 CVar* g_deselectOnClickCVar;
 
-// STATIC: #0x00BD08F4
+// STATIC: 0x00ED7624
 CVar* g_cvAutoInteract;
 
-// STATIC: #0x00BD08F8
+// STATIC: 0x00ED7628
 CVar* g_autoStandCVar;
 
-// STATIC: #0x00BD08FC
+// STATIC: 0x00ED762C
 CVar* g_autoDismountCVar;
 
-// STATIC: #0x00BD0900
+// STATIC: 0x00ED7630
 CVar* g_autoDismountFlyingCVar;
 
-// STATIC: #0x00BD0904
+// STATIC: 0x00ED7634
 CVar* g_autoUnshiftCVar;
 
-// STATIC: #0x00BD0908
+// STATIC: 0x00ED7638
 CVar* g_autoClearAFKCVar;
 
-// STATIC: #0x00BD090C
+// STATIC: 0x00ED763C
 CVar* g_blockTradesCVar;
 
-// STATIC: #0x00BD0910
+// STATIC: 0x00ED7640
 CVar* g_lootUnderMouseCVar;
 
-// STATIC: #0x00BD0914
+// STATIC: 0x00ED7644
 CVar* g_autoLootDefaultCVar;
 
-// STATIC: #0x00BD0918
+// STATIC: 0x00ED764C
 CVar* g_assistAttackCVar;
 
 // STATIC: #0x00BD091C
 CVar* s_cvAutoRangedCombat;
 
-// STATIC: #0x00BD0920
+// STATIC: 0x00ED7650
 CVar* g_autoSelfCastCVar;
 
-// STATIC: #0x00BD0924
+// STATIC: 0x00ED7654
 CVar* g_stopAutoAttackOnTargetChangeCVar;
 
-// STATIC: #0x00BD0928
+// STATIC: 0x00ED7658
 CVar* g_showTargetOfTargetCVar;
 
-// STATIC: #0x00BD092C
+// STATIC: 0x00ED765C
 CVar* g_targetOfTargetModeCVar;
 
-// STATIC: #0x00BD0930
+// STATIC: 0x00ED7660
 CVar* g_showTargetCastbarCVar;
 
-// STATIC: #0x00BD0934
+// STATIC: 0x00ED7664
 CVar* g_showVKeyCastbarCVar;
 
-// STATIC: #0x00BD0938
+// STATIC: 0x00ED7668
 CVar* g_buffDurationsCVar;
 
-// STATIC: #0x00BD093C
+// STATIC: 0x00ED766C
 CVar* g_rotateMinimapCVar;
 
-// STATIC: #0x00BD0940
+// STATIC: 0x00ED7670
 CVar* g_minimapZoomCVar;
 
-// STATIC: #0x00BD0944
+// STATIC: 0x00ED7674
 CVar* g_minimapInsideZoomCVar;
 
 // STATIC: #0x00BD0948
 CVar* g_minimapPortalMaxCVar;
 
-// STATIC: #0x00BD094C
+// STATIC: 0x00ED7678
 CVar* g_screenEdgeFlashCVar;
 
-// STATIC: #0x00BD0950
+// STATIC: 0x00ED767C
 CVar* g_showLootSpamCVar;
 
-// STATIC: #0x00BD0954
+// STATIC: 0x00ED7680
 CVar* g_displayFreeBagSlotsCVar;
 
-// STATIC: #0x00BD0958
+// STATIC: 0x00ED7684
 CVar* g_displayWorldPVPObjectivesCVar;
 
-// STATIC: #0x00BD095C
+// STATIC: 0x00ED768C
 CVar* g_profanityFilterCVar;
 
-// STATIC: #0x00BD0960
+// STATIC: 0x00ED7690
 CVar* g_spamFilterCVar;
 
-// STATIC: #0x00BD0964
+// STATIC: 0x00ED7694
 CVar* g_chatBubblesCVar;
 
-// STATIC: #0x00BD0968
+// STATIC: 0x00ED7698
 CVar* g_chatBubblesPartyCVar;
 
-// STATIC: #0x00BD096C
+// STATIC: 0x00ED769C
 CVar* g_removeChatDelayCVar;
 
-// STATIC: #0x00BD0970
+// STATIC: 0x00ED76A0
 CVar* g_guildShowOfflineCVar;
 
-// STATIC: #0x00BD0974
+// STATIC: 0x00ED76A4
 CVar* g_guildMemberNotifyCVar;
 
 // STATIC: #0x00BD0978
 CVar* g_guildRecruitmentChannelCVar;
 
-// STATIC: #0x00BD097C
+// STATIC: 0x00ED76B0
 CVar* g_secureAbilityToggleCVar;
 
-// STATIC: #0x00BD0980
+// STATIC: 0x00ED76B4
 CVar* g_combatDamageCVar;
 
-// STATIC: #0x00BD0984
+// STATIC: 0x00ED76B8
 CVar* s_cvCombatLogPeriodicSpells;
 
-// STATIC: #0x00BD0988
+// STATIC: 0x00ED76BC
 CVar* g_petMeleeDamageCVar;
 
-// STATIC: #0x00BD098C
+// STATIC: 0x00ED76C0
 CVar* g_petSpellDamageCVar;
 
-// STATIC: #0x00BD0990
+// STATIC: 0x00ED76C4
 CVar* g_combatHealingCVar;
 
-// STATIC: #0x00BD0998
+// STATIC: 0x00ED76CC
 CVar* s_cvCalendarShowWeeklyHolidays;
 
-// STATIC: #0x00BD099C
+// STATIC: 0x00ED76D0
 CVar* s_cvCalendarShowDarkmoon;
 
-// STATIC: #0x00BD09A0
+// STATIC: 0x00ED76D4
 CVar* s_cvCalendarShowBattlegrounds;
 
-// STATIC: #0x00BD09A4
+// STATIC: 0x00ED76D8
 CVar* s_cvCalendarShowLockouts;
 
-// STATIC: #0x00BD09A8
+// STATIC: 0x00ED76DC
 CVar* s_cvCalendarShowResets;
 
 // STATIC: #0x00BD09AC
 CVar* unk_BD09AC;
 
-// STATIC: #0x00BD09B0
+// STATIC: 0x00ED76E4
 CVar* g_useUiScaleCVar;
 
-// STATIC: #0x00BD09B4
+// STATIC: 0x00ED76E8
 CVar* g_uiScaleCVar;
 
-// STATIC: #0x00BD09B8
+// STATIC: 0x00ED76EC
 CVar* g_nameplateShowEnemiesCVar;
 
-// STATIC: #0x00BD09BC
+// STATIC: 0x00ED76F0
 CVar* g_nameplateShowEnemyPetsCVar;
 
-// STATIC: #0x00BD09C0
+// STATIC: 0x00ED76F4
 CVar* g_nameplateShowEnemyGuardiansCVar;
 
-// STATIC: #0x00BD09C4
+// STATIC: 0x00ED76F8
 CVar* g_nameplateShowEnemyTotemsCVar;
 
-// STATIC: #0x00BD09C8
+// STATIC: 0x00ED76FC
 CVar* g_nameplateShowFriendsCVar;
 
-// STATIC: #0x00BD09CC
+// STATIC: 0x00ED7700
 CVar* g_nameplateShowFriendlyPetsCVar;
 
-// STATIC: #0x00BD09D0
+// STATIC: 0x00ED7704
 CVar* g_nameplateShowFriendlyGuardiansCVar;
 
-// STATIC: #0x00BD09D4
+// STATIC: 0x00ED7708
 CVar* g_nameplateShowFriendlyTotemsCVar;
 
 // STATIC: #0x00BD09D8
 CVar* s_cvNameplateAllowOverlap;
 
-// STATIC: #0x00BD09DC
+// STATIC: 0x00ED770C
 CVar* g_unitHighlightsCVar;
 
-// STATIC: #0x00BD09E0
+// STATIC: 0x00ED7714
 CVar* g_enablePVPNotifyAFKCVar;
 
-// STATIC: #0x00BD09E4
+// STATIC: 0x00ED7718
 CVar* g_serviceTypeFilterCVar;
 
-// STATIC: #0x00BD09E8
+// STATIC: 0x00ED771C
 CVar* g_autojoinPartyVoiceCVar;
 
-// STATIC: #0x00BD09EC
+// STATIC: 0x00ED7720
 CVar* g_autojoinBGVoiceCVar;
 
-// STATIC: #0x00BD09F0
+// STATIC: 0x00ED7724
 CVar* g_combatLogRetentionTimeCVar;
 
-// STATIC: #0x00BD09F4
+// STATIC: 0x00ED7728
 CVar* g_currencyTokensUnused1CVar;
 
-// STATIC: #0x00BD09F8
+// STATIC: 0x00ED772C
 CVar* g_currencyTokensUnused2CVar;
 
-// STATIC: #0x00BD09FC
+// STATIC: 0x00ED7730
 CVar* g_currencyTokensBackpack1CVar;
 
-// STATIC: #0x00BD0A00
+// STATIC: 0x00ED7734
 CVar* g_currencyTokensBackpack2CVar;
 
-// STATIC: #0x00BD0A04
+// STATIC: 0x00ED7738
 CVar* g_predictedHealthCVar;
 
-// STATIC: #0x00BD0A08
+// STATIC: 0x00ED773C
 CVar* g_predictedPowerCVar;
 
-// STATIC: #0x00BD0A0C
+// STATIC: 0x00ED7740
 CVar* g_threatWarningCVar;
 
-// STATIC: #0x00BD0A10
+// STATIC: 0x00ED7744
 CVar* g_threatWorldTextCVar;
 
-// STATIC: #0x00BD0A14
+// STATIC: 0x00ED7748
 CVar* s_cvThreatShowNumeric;
 
-// STATIC: #0x00BD0A18
+// STATIC: 0x00ED774C
 CVar* s_cvThreatPlaySounds;
 
 // STATIC: #0x00BD0A1C
 CVar* s_cvShowAllSpellRanks;
 
-// STATIC: #0x00BD0A20
+// STATIC: 0x00ED7750
 CVar* g_ShowClassColorInNameplateCVar;
 
 // STATIC: #0x00BD0A24
 CVar* g_previewTalentsCVar;
 
-// STATIC: #0x00BD0A28
+// STATIC: 0x00ED7758
 CVar* s_cvLfgSelectedRoles;
 
-// STATIC: #0x00BD0A2C
+// STATIC: 0x00ED775C
 CVar* s_cvLfdCollapsedHeaders;
 
-// STATIC: #0x00BD0A30
+// STATIC: 0x00ED7760
 CVar* s_cvLfdSelectedDungeons;
 
 // STATIC: #0x00BD0A34
 CVar* s_cvQuestLogCollapseFilter;
 
-// STATIC: #0x00BD0A38
+// STATIC: 0x00ED7768
 CVar* s_cvAutoFilledMultiCastSlots;
 
-// STATIC: #0x00BD0A3C
+// STATIC: 0x00ED776C
 CVar* g_questPOICVar;
 
-// STATIC: #0x00BD0A40
+// STATIC: 0x00ED7770
 CVar* g_trackerSortingCVar;
 
-// STATIC: #0x00BD0A44
+// STATIC: 0x00ED7774
 CVar* s_cvShowToastFriendRequest;
 
-// STATIC: #0x00BD0A48
+// STATIC: 0x00ED7778
 CVar* s_cvShowToastOnline;
 
-// STATIC: #0x00BD0A4C
+// STATIC: 0x00ED777C
 CVar* s_cvShowToastOffline;
 
-// STATIC: #0x00BD0A50
+// STATIC: 0x00ED7780
 CVar* s_cvShowToastBroadcast;
 
-// STATIC: #0x00BD0A54
+// STATIC: 0x00ED7784
 CVar* s_cvShowToastConversation;
 
-// OFFSET: #0x00512700
+// STATIC: 0x00ED7788
+CVar* g_spellTooltip_DisplayAvgValuesCVar;
+
+// STATIC: 0x00ED7648
+CVar* g_interactOnLeftClickCVar;
+
+// STATIC: 0x00ED7764
+CVar* g_questLogCollapseHeaderFilterCVar;
+
+// STATIC: 0x00ED76A8
+CVar* g_guildRewardsUsableCVar;
+
+// STATIC: 0x00ED76AC
+CVar* g_guildRewardsCategoryCVar;
+
+// STATIC: 0x00ED7710
+CVar* g_talentPointsSpentCVar;
+
+// STATIC: 0x00ED7754
+CVar* g_previewTalentsOptionCVar;
+
+// OFFSET: 0x008C4230
 bool AutoInteractStateChangedCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
@@ -347,41 +369,61 @@ bool SetCalendarFilterCVarCallback(CVar* var, const char* oldValue, const char* 
     return true;
 }
 
-// OFFSET: #0x005127D0
+// OFFSET: 0x008C42F0
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg) {
-    int32_t spent = CGTalentInfo::SumPreviewPointsSpent(0);
-    CGTalentInfo::RecalculatePreviewPoints(0);
+    int32_t spent = CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(0);
+    CGTalentInfo::ResetAllGroupPreviewTalentPoints(0);
     FrameScript_SignalEvent(SCRIPT_EVENT_PREVIEW_TALENT_POINTS_CHANGED, "%d%d%d%d", 0, 0, 0, -spent);
 
-    int32_t petSpent = CGTalentInfo::SumPreviewPointsSpent(1);
-    CGTalentInfo::RecalculatePreviewPoints(1);
+    int32_t petSpent = CGTalentInfo::GetAllGroupPreviewTalentPointsSpent(1);
+    CGTalentInfo::ResetAllGroupPreviewTalentPoints(1);
     FrameScript_SignalEvent(SCRIPT_EVENT_PREVIEW_PET_TALENT_POINTS_CHANGED, "%d%d%d%d", 0, 0, 0, -petSpent);
 
+    CGTalentInfo::ResetAllGroupPreviewPrimaryTalentTree(0);
+    CGTalentInfo::ResetAllGroupPreviewPrimaryTalentTree(1);
+    FrameScript_SignalEvent(SCRIPT_EVENT_PREVIEW_TALENT_PRIMARY_TREE_CHANGED, "%d", 0);
     return true;
 }
 
-// OFFSET: #0x00512830
+// OFFSET: 0x008C4370
 bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_resortNamesOnRecency = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
-// OFFSET: #0x00512850
+// OFFSET: 0x008C43A0
 bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_whenEditingFromCenter = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
-// OFFSET: #0x00512870
+// OFFSET: 0x008C43D0
 bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGAutoCompleteName::s_useContext = SStrToInt(value) != 0;
     CGAutoCompleteName::ResortAll();
     return true;
 }
 
-// OFFSET: #0x00518B60
+// OFFSET: 0x008C4400
+bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg) {
+    CVar* reduced = CVar::Lookup("reducedLagTolerance");
+    CVar* offset = CVar::Lookup("maxSpellStartRecoveryOffset");
+
+    if (reduced && offset) {
+        if (reduced->m_intValue) {
+            Spell_C_SetMaxSpellStartRecoveryOffset(offset->m_intValue);
+            return true;
+        }
+
+        Spell_C_SetMaxSpellStartRecoveryOffset(400);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x008CA050
 bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (g_useUiScaleCVar && g_useUiScaleCVar->m_intValue) {
         float scale = SStrToFloat(value);
@@ -406,7 +448,7 @@ bool CGGameUI::UnitHighlightsCVarCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// OFFSET: #0x005237E0
+// OFFSET: 0x008D5FB0
 bool CVarHandler_useUiScale(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {
         float scale = g_uiScaleCVar->m_floatValue;
@@ -439,15 +481,15 @@ bool SetTaintLogCallback(CVar* var, const char* oldValue, const char* value, voi
 }
 
 // PROVEN: 09d7d072 IDENTICAL/NONE
-// OFFSET: 0x008CF190/0x140633F30
+// OFFSET: 0x008CF190
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg) {
     CGGameUI::UpdateThreatWarningEnabled(SStrToInt(value));
     return true;
 }
 
-// OFFSET: #0x0051D9B0
+// OFFSET: 0x008CF1C0
 void CGGameUI::RegisterGameCVars() {
-    g_deselectOnClickCVar = CVar::Register("deselectOnClick", "Clear the target when clicking on terrain", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_deselectOnClickCVar = CVar::Register("deselectOnClick", "Clear the target when clicking on terrain", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_cvAutoInteract = CVar::Register("autoInteract", "Toggles auto-move to interact target", 0x10, s_locale == 1 ? "1" : "0", AutoInteractStateChangedCallback, CATEGORY_GAME, false, NULL, false);
     g_autoStandCVar = CVar::Register("autoStand", "Automatically stand when needed", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_autoDismountCVar = CVar::Register("autoDismount", "Automatically dismount when needed", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
@@ -456,35 +498,39 @@ void CGGameUI::RegisterGameCVars() {
     g_autoClearAFKCVar = CVar::Register("autoClearAFK", "Automatically clear AFK when moving or chatting", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_blockTradesCVar = CVar::Register("blockTrades", "Whether to automatically block trade requests", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_lootUnderMouseCVar = CVar::Register("lootUnderMouse", "Whether the loot window should open under the mouse", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_autoLootDefaultCVar = CVar::Register("autoLootDefault", "Automatically loot items when the loot window opens", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_autoLootDefaultCVar = CVar::Register("autoLootDefault", "Automatically loot items when the loot window opens", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("alwaysCompareItems", "Always show item comparison tooltips", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("equipmentManager", "Enables the equipment management UI", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_spellTooltip_DisplayAvgValuesCVar = CVar::Register("SpellTooltip_DisplayAvgValues", "Toggles the spread from (min-max) to (avg)", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_interactOnLeftClickCVar = CVar::Register("interactOnLeftClick", "Test CVar for interacting with NPC's on left click", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_assistAttackCVar = CVar::Register("assistAttack", "Whether to start attacking after an assist", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvAutoRangedCombat = CVar::Register("autoRangedCombat", "Whether your character will automatically switch between auto attack and auto shot", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_autoSelfCastCVar = CVar::Register("autoSelfCast", "Whether spells should automatically be cast on you if you don't have a valid target", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_stopAutoAttackOnTargetChangeCVar = CVar::Register("stopAutoAttackOnTargetChange", "Whether to stop attacking when changing targets", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_showTargetOfTargetCVar = CVar::Register("showTargetOfTarget", "Whether the target of target frame should be shown", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_targetOfTargetModeCVar = CVar::Register("targetOfTargetMode", "The conditions under which target of target should be shown", 0x10, "5", NULL, CATEGORY_GAME, false, NULL, false);
     g_showTargetCastbarCVar = CVar::Register("showTargetCastbar", "Show the spell your current target is casting", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_showVKeyCastbarCVar = CVar::Register("showVKeyCastbar", "If the V key display is up for your current target, show the enemy cast bar with the target's health bar in the game field", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("displaySpellActivationOverlays", "Whether to display Spell Activation Overlays (a.k.a. Spell Alerts)", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("spellActivationOverlayOpacity", "The opacity of the Spell Activation Overlays (a.k.a. Spell Alerts)", 0x10, "0.65", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("reducedLagTolerance", "Enables the Reduced Lag Tolerance slider. (Doesn't actually change anything. Use \"MaxSpellStartRecoveryOffset\" for that.)", 0x210, "0", CVarHandler_reducedLagTolerance, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("maxSpellStartRecoveryOffset", "Determines how far ahead of the end of a spell start recovery the spell system can be before allowing spell request to be sent to the server", 0x210, "0", CVarHandler_reducedLagTolerance, CATEGORY_GAME, false, NULL, false);
     g_rotateMinimapCVar = CVar::Register("rotateMinimap", "Whether to rotate the entire minimap instead of the player arrow", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    g_minimapZoomCVar = CVar::Register("minimapZoom", "The current outdoor minimap zoom level", 0x20, "3", NULL, CATEGORY_GAME, false, NULL, false);
-    g_minimapInsideZoomCVar = CVar::Register("minimapInsideZoom", "The current indoor minimap zoom level", 0x20, "3", NULL, CATEGORY_GAME, false, NULL, false);
-    g_minimapPortalMaxCVar = CVar::Register("minimapPortalMax", "Max Number of Portals to traverse for minimap", 0x20, "99", NULL, CATEGORY_GAME, false, NULL, false);
-    g_scriptErrorsCVar = CVar::Register("scriptErrors", "Whether or not the UI shows Lua errors", 0x10, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
+    g_minimapZoomCVar = CVar::Register("minimapZoom", "The current outdoor minimap zoom level", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_minimapInsideZoomCVar = CVar::Register("minimapInsideZoom", "The current indoor minimap zoom level", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_scriptErrorsCVar = CVar::Register("scriptErrors", "Whether or not the UI shows Lua errors", 0x10, "0", NULL, 5, false, NULL, false);
     g_screenEdgeFlashCVar = CVar::Register("screenEdgeFlash", "Whether to show a red flash while you are in combat with the world map up", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_showLootSpamCVar = CVar::Register("showLootSpam", "Whether to show verbose loot rolls", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_displayFreeBagSlotsCVar = CVar::Register("displayFreeBagSlots", "Whether or not the backpack button should indicate how many inventory slots you've got free", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_displayFreeBagSlotsCVar = CVar::Register("displayFreeBagSlots", "Whether or not the backpack button should indicate how many inventory slots you've got free", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_displayWorldPVPObjectivesCVar = CVar::Register("displayWorldPVPObjectives", "Whether to show world PvP objectives", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("showClock", "Whether to display the time manager's clock button", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("colorblindMode", "Enables colorblind accessibility features in the game", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("questFadingDisable", "Whether to disable quest text slowly fading in", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("enableMovePad", "Enables the MovePad accessibility feature in the game", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("streamStatusMessage", "Whether to display status messages while streaming content", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_emphasizeMySpellEffectsCVar = CVar::Register("emphasizeMySpellEffects", "Whether other player's spell impacts are toned down or not.", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("autoQuestWatch", "Whether to automatically watch all quests when you obtain them", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("autoQuestProgress", "Whether to automatically watch all quests when they are updated", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showQuestTrackingTooltips", "Displays quest tracking information in unit and object tooltips", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("mapQuestDifficulty", "Whether to color quest titles by difficulty in the World Map", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvQuestLogCollapseFilter = CVar::Register("questLogCollapseFilter", "bit filed for saving off the state of the headers in Quest Log", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvQuestLogCollapseFilter->Set(-1, true, false, false, true);
+    g_questLogCollapseHeaderFilterCVar = CVar::Register("questLogCollapseHeaderFilter", "bit filed for saving off the state of the headers in Quest Log", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("autoQuestPopUps", "Saves current pop-ups for quests that are automatically acquired or completed.", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("advancedWatchFrame", "Enables advanced Objectives tracking features", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("watchFrameIgnoreCursor", "Disables Objectives frame mouseover and title dropdown.", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("watchFrameBaseAlpha", "Objectives frame opacity.", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
@@ -492,10 +538,10 @@ void CGGameUI::RegisterGameCVars() {
     CVar::Register("showQuestObjectivesOnMap", "Shows quest POIs on the main map.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("trackedQuests", "Internal cvar for saving tracked quests in order", 0x120, "", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("trackedAchievements", "Internal cvar for saving tracked achievements in order", 0x120, "", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("flaggedTutorials", "Internal cvar for saving compleated tutorials in order", 0x110, "", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("advancedWorldMap", "Enables advanced World Map features", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("flaggedTutorials", "Internal cvar for saving completed tutorials in order", 0x110, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("lockedWorldMap", "Whether the world map is locked when sized down", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("worldMapOpacity", "Opacity for the world map when sized down", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("watchFrameWidth", "Controls objectives frame width", 0x0, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("watchFrameWidth", "Controls objectives frame width", 0, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_trackerSortingCVar = CVar::Register("trackerSorting", "sorting option for the objectives tracker", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("trackerFilter", "filter option for the objectives tracker", 0x20, "7", NULL, CATEGORY_GAME, false, NULL, false);
     g_profanityFilterCVar = CVar::Register("profanityFilter", "Whether to enable mature language filtering", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
@@ -504,15 +550,18 @@ void CGGameUI::RegisterGameCVars() {
     g_chatBubblesPartyCVar = CVar::Register("chatBubblesParty", "Whether to show in-game chat bubbles for party chat", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_removeChatDelayCVar = CVar::Register("removeChatDelay", "Remove Chat Hover Delay", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_guildShowOfflineCVar = CVar::Register("guildShowOffline", "Show offline guild members in the guild UI", 0x10, "1", GuildShowOfflineCallback, CATEGORY_GAME, false, NULL, false);
-    g_guildMemberNotifyCVar = CVar::Register("guildMemberNotify", "Receive notification when guild members log on/off", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    g_guildRecruitmentChannelCVar = CVar::Register("guildRecruitmentChannel", "Whether to automatically join the guild recruitment channel when not in a guild", 0x10, "1", CVarHandler_guildRecruitmentChannel, CATEGORY_GAME, false, NULL, false);
+    g_guildMemberNotifyCVar = CVar::Register("guildMemberNotify", "Receive notification when guild members log on/off", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_guildRewardsUsableCVar = CVar::Register("guildRewardsUsable", "Show usable guild rewards only", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_guildRewardsCategoryCVar = CVar::Register("guildRewardsCategory", "Show category of guild rewards", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("lfgAutoFill", "Whether to automatically add party members while looking for a group", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("lfgAutoJoin", "Whether to automatically join a party while looking for a group", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("friendsViewButtons", "Whether to show the friends list view buttons", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("friendsSmallView", "Whether to use smaller buttons in the friends list", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("chatStyle", "The style of Edit Boxes for the ChatFrame. Valid values: \"classic\", \"im\"", 0x10, "im", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("wholeChatWindowClickable", "Whether the user may click anywhere on a chat window to change EditBox focus (only works in IM style)", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("conversationMode", "The action new Real ID Conversations take by default: \"popout\", \"inline\"", 0x10, "popout", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("conversationMode", "The action new Real ID Conversations take by default: \"popout\", \"inline\", \"popout_and_inline\"", 0x10, "popout", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("bnWhisperMode", "The action new Real ID Whispers take by default: \"popout\", \"inline\", \"popout_and_inline\"", 0x10, "inline", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("whisperMode", "The action new whispers take by default: \"popout\", \"inline\", \"popout_and_inline\"", 0x10, "inline", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showTimestamps", "The format of timestamps in chat or \"none\"", 0x10, "none", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("chatMouseScroll", "Whether the user can use the mouse wheel to scroll through chat", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("lockActionBars", "Whether the action bars should be locked, preventing changes", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
@@ -526,41 +575,41 @@ void CGGameUI::RegisterGameCVars() {
     g_combatHealingCVar = CVar::Register("CombatHealing", "Display amount of healing you did to the target", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("enableCombatText", "Whether to show floating combat text", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("combatTextFloatMode", "The combat text float mode", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctCombatState", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctDodgeParryMiss", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctDamageReduction", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctRepChanges", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctReactives", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctFriendlyHealers", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctComboPoints", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctLowManaHealth", NULL, 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctEnergyGains", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctPeriodicEnergyGains", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctHonorGains", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctAuras", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctAllSpellMechanics", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctSpellMechanics", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fctSpellMechanicsOther", NULL, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctCombatState", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctDodgeParryMiss", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctDamageReduction", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctRepChanges", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctReactives", 0, 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctFriendlyHealers", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctComboPoints", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctLowManaHealth", 0, 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctEnergyGains", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctPeriodicEnergyGains", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctHonorGains", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctAuras", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctAllSpellMechanics", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctSpellMechanics", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fctSpellMechanicsOther", 0, 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("xpBarText", "Whether the XP bar shows the numeric experience value", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("playerStatusText", "Whether the player portrait shows numeric health/mana values", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("petStatusText", "Whether the pet portrait shows numeric health/mana values", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("partyStatusText", "Whether the party portraits shows numeric health/mana values", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("targetStatusText", "Whether the target portrait shows numeric health/mana values", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("alternateResourceText", "Whether the alternate power bars show numeric values", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("statusTextPercentage", "Whether numeric health/mana values are shown as raw values or percentages", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showPartyBackground", "Show a background behind party members", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("partyBackgroundOpacity", "The opacity of the party background", 0x10, "0.5", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("hidePartyInRaid", "Whether to hide the party UI while in a raid", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showPartyPets", "Whether to show pets in the party UI", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("showRaidRange", "Show range indicator in raid UI", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showArenaEnemyFrames", "Show arena enemy frames while in an Arena", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showArenaEnemyCastbar", "Show the spell enemies are casting on the Arena Enemy frames", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showArenaEnemyPets", "Show the enemy team's pets on the ArenaEnemy frames", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("fullSizeFocusFrame", "Increases the size of the focus frame to that of the target frame", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("fullSizeFocusFrame", "Increases the size of the focus frame to that of the target frame", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("useCompactPartyFrames", "Use the new raid frames for parties", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     g_buffDurationsCVar = CVar::Register("buffDurations", "Whether to show buff durations", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showDispelDebuffs", "Show only Debuffs that the player can dispel.  Only applies to raids.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showCastableBuffs", "Show only Buffs the player can cast.  Only applies to raids.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("consolidateBuffs", "Consolidates buffs displayed for the player.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("showCastableDebuffs", "Show only debuffs the player can apply.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("consolidateBuffs", "Consolidates buffs displayed for the player.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("showAllEnemyDebuffs", "Show all debuffs on enemy targets.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvShowToastOnline = CVar::Register("showToastOnline", "Whether to show Battle.net message for friend coming online", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvShowToastOffline = CVar::Register("showToastOffline", "Whether to show Battle.net message for friend going offline", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvShowToastBroadcast = CVar::Register("showToastBroadcast", "Whether to show Battle.net message for broadcasts", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
@@ -571,29 +620,41 @@ void CGGameUI::RegisterGameCVars() {
     CameraRegisterCVars();
     CVar::Register("showNewbieTips", "Show beginner tooltips", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("UberTooltips", "Show verbose tooltips", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("showItemLevel", "Show item level in the tooltip", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("showTutorials", "display tutorials", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionSortMode", "The way to sort raid frames", 0x20, "role", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionKeepGroupsTogether", "The way to group raid frames", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionLocked", "Whether the raid frames are locked", 0x20, "lock", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionDisplayPets", "Whether to display pets on the raid frames", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionDisplayMainTankAndAssist", "Whether to display main tank and main assist units in the raid frames", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionIsShown", "Whether the Raid Frames are shown", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesDisplayIncomingHeals", "Whether to display incoming heals on Raid Frames", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesDisplayAggroHighlight", "Whether to display aggro highlights on Raid Frames", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesDisplayOnlyDispellableDebuffs", "Whether to display only dispellable debuffs on Raid Frames", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesDisplayPowerBars", "Whether to display mana, rage, etc. on Raid Frames", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesPosition", "Where the raid frames should be placed", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesHeight", "The height of the individual raid frames", 0x20, "36", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesWidth", "The width of the individual raid frames", 0x20, "72", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesHealthText", "How to display health text on the raid frames", 0x20, "none", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidOptionShowBorders", "Displays borders around the raid frames.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("raidFramesDisplayClassColor", "Colors raid frames with the class color", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvCalendarShowWeeklyHolidays = CVar::Register("calendarShowWeeklyHolidays", "Whether weekly holidays should appear in the calendar", 0x20, "1", SetCalendarFilterCVarCallback, CATEGORY_GAME, false, NULL, false);
     s_cvCalendarShowDarkmoon = CVar::Register("calendarShowDarkmoon", "Whether Darkmoon Faire holidays should appear in the calendar", 0x20, "1", SetCalendarFilterCVarCallback, CATEGORY_GAME, false, NULL, false);
     s_cvCalendarShowBattlegrounds = CVar::Register("calendarShowBattlegrounds", "Whether Battleground holidays should appear in the calendar", 0x20, "0", SetCalendarFilterCVarCallback, CATEGORY_GAME, false, NULL, false);
     s_cvCalendarShowLockouts = CVar::Register("calendarShowLockouts", "Whether raid lockouts should appear in the calendar", 0x20, "1", SetCalendarFilterCVarCallback, CATEGORY_GAME, false, NULL, false);
     s_cvCalendarShowResets = CVar::Register("calendarShowResets", "Whether raid resets should appear in the calendar", 0x20, "0", SetCalendarFilterCVarCallback, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowEnemiesCVar = CVar::Register("nameplateShowEnemies", NULL, 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowEnemyPetsCVar = CVar::Register("nameplateShowEnemyPets", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowEnemyGuardiansCVar = CVar::Register("nameplateShowEnemyGuardians", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowEnemyTotemsCVar = CVar::Register("nameplateShowEnemyTotems", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowFriendsCVar = CVar::Register("nameplateShowFriends", NULL, 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowFriendlyPetsCVar = CVar::Register("nameplateShowFriendlyPets", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowFriendlyGuardiansCVar = CVar::Register("nameplateShowFriendlyGuardians", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    g_nameplateShowFriendlyTotemsCVar = CVar::Register("nameplateShowFriendlyTotems", NULL, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
-    s_cvNameplateAllowOverlap = CVar::Register("nameplateAllowOverlap", "switches between overlapping nameplates or the (old) never overlapping version", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowEnemiesCVar = CVar::Register("nameplateShowEnemies", 0, 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowEnemyPetsCVar = CVar::Register("nameplateShowEnemyPets", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowEnemyGuardiansCVar = CVar::Register("nameplateShowEnemyGuardians", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowEnemyTotemsCVar = CVar::Register("nameplateShowEnemyTotems", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowFriendsCVar = CVar::Register("nameplateShowFriends", 0, 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowFriendlyPetsCVar = CVar::Register("nameplateShowFriendlyPets", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowFriendlyGuardiansCVar = CVar::Register("nameplateShowFriendlyGuardians", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    g_nameplateShowFriendlyTotemsCVar = CVar::Register("nameplateShowFriendlyTotems", 0, 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_unitHighlightsCVar = CVar::Register("unitHighlights", "Whether the highlight circle around units should be displayed", 0x10, "1", CGGameUI::UnitHighlightsCVarCallback, CATEGORY_GAME, false, NULL, false);
     g_enablePVPNotifyAFKCVar = CVar::Register("enablePVPNotifyAFK", "The ability to shutdown the AFK notification system", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
-
     char serviceTypeFilter[128];
-    SStrPrintf(serviceTypeFilter, sizeof(serviceTypeFilter), "%d", 3);
+    SStrPrintf(serviceTypeFilter, sizeof(serviceTypeFilter), "%d", 6);
     g_serviceTypeFilterCVar = CVar::Register("serviceTypeFilter", "Which trainer services to show", 0x10, serviceTypeFilter, NULL, CATEGORY_GAME, false, NULL, false);
-
     g_autojoinPartyVoiceCVar = CVar::Register("autojoinPartyVoice", "Automatically join the voice session in party/raid chat", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_autojoinBGVoiceCVar = CVar::Register("autojoinBGVoice", "Automatically join the voice session in battleground chat", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("PushToTalkSound", "Play a sound when voice recording activates and deactivates", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
@@ -603,22 +664,12 @@ void CGGameUI::RegisterGameCVars() {
     CVar::Register("playerStatLeftDropdown", "The player stat selected in the left dropdown", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("playerStatRightDropdown", "The player stat selected in the right dropdown", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("talentFrameShown", "The talent UI has been shown", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    g_talentPointsSpentCVar = CVar::Register("talentPointsSpent", "The player has spent a talent point", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("auctionDisplayOnCharacter", "Show auction items on the dress-up paperdoll", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("addFriendInfoShown", "The info for Add Friend has been shown", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("pendingInviteInfoShown", "The info for pending invites has been shown", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-
-    const char* militaryTime = "1";
-
-    switch (LocaleNameToIndex(s_localeCode)) {
-        case 2:
-        case 5:
-        case 10: {
-            militaryTime = "0";
-            break;
-        }
-    }
-
-    CVar::Register("timeMgrUseMilitaryTime", "Toggles the display of either 12 or 24 hour time", 0x10, militaryTime, NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("guildRosterView", "The current guild roster display mode", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("timeMgrUseMilitaryTime", "Toggles the display of either 12 or 24 hour time", 0x10, s_locale >= 0 && (s_locale <= 1 || s_locale == 7) ? "0" : "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("timeMgrUseLocalTime", "Toggles the use of either the realm time or your system time", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("timeMgrAlarmTime", "The time manager's alarm time in minutes", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("timeMgrAlarmMessage", "The time manager's alarm message", 0x10, "", NULL, CATEGORY_GAME, false, NULL, false);
@@ -637,9 +688,8 @@ void CGGameUI::RegisterGameCVars() {
     s_cvThreatShowNumeric = CVar::Register("threatShowNumeric", "Whether or not to show numeric threat on the target and focus frames", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvThreatPlaySounds = CVar::Register("threatPlaySounds", "Whether or not to sounds when certain threat transitions occur", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     ViolenceLevelsRegisterCVars();
-    s_cvShowAllSpellRanks = CVar::Register("ShowAllSpellRanks", "show either all spell ranks, or only the highest rank", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_ShowClassColorInNameplateCVar = CVar::Register("ShowClassColorInNameplate", "use this to display the class color in the nameplate health bar", 0x20, "0", ShowClassColorInNameplateCallback, CATEGORY_GAME, false, NULL, false);
-    g_previewTalentsCVar = CVar::Register("previewTalents", "Toggles the ability to preview talents before spending talent points.", 0x20, "0", CVarHandler_previewTalents, CATEGORY_GAME, false, NULL, false);
+    g_previewTalentsOptionCVar = CVar::Register("previewTalentsOption", "Toggles the ability to preview talents before spending talent points.", 0x20, "1", CVarHandler_previewTalents, CATEGORY_GAME, false, NULL, false);
     s_cvLfgSelectedRoles = CVar::Register("lfgSelectedRoles", "Stores what roles the player is willing to take on.", 0x120, "0", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvLfdCollapsedHeaders = CVar::Register("lfdCollapsedHeaders", "Stores which LFD headers are collapsed.", 0x120, "", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvLfdSelectedDungeons = CVar::Register("lfdSelectedDungeons", "Stores which LFD dungeons are selected.", 0x120, "", NULL, CATEGORY_GAME, false, NULL, false);
@@ -649,14 +699,27 @@ void CGGameUI::RegisterGameCVars() {
     CVar::Register("autoCompleteUseContext", "The system will, for example, only show people in your guild when you are typing /gpromote. Names will also never be removed.", 0x10, "1", CVarHandler_autoCompleteUseContext, CATEGORY_GAME, false, NULL, false);
     CVar::Register("colorChatNamesByClass", "If enabled, the name of a player speaking in chat will be colored according to his class.", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
     s_cvAutoFilledMultiCastSlots = CVar::Register("autoFilledMultiCastSlots", "Bitfield that saves whether multi-cast slots have been automatically filled.", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
-    CVar::Register("minimapTrackedInfo", "Stores the minimap tracking that was active last session.", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("minimapTrackedInfov2", "Stores the minimap tracking that was active last session.", 0x20, "491528", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("minimapShapeshiftTracking", "Stores shapeshift-specific tracking spells that were active last session.", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("showBosses", "If enabled, boss icons will be shown on dungeon maps", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     g_questPOICVar = CVar::Register("questPOI", "If enabled, the quest POI system will be used.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("digSites", "If enabled, the archaeological dig site system will be used.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("miniWorldMap", "Whether or not the world map has been toggled to smaller size", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("characterFrameCollapsed", "Whether or not the Character Frame has been collapsed to a smaller size", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("statCategoriesCollapsed", "Bitfield for whether or not each stat category on the Character Frame has been collapsed", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("statCategoriesCollapsed_2", "Bitfield for whether or not each stat category on the Character Frame has been collapsed in your secondary spec", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("petStatCategoriesCollapsed", "Bitfield for whether or not each stat category on the Character Frame has been collapsed", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("statCategoryOrder", "Integer list for the order of stat categories on the character sheet", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("statCategoryOrder_2", "Integer list for the order of stat categories on the character sheet", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("petStatCategoryOrder", "Integer list for the order of stat categories on the character sheet", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("reputationsCollapsed", "List of reputation categories that have been collapsed in the Reputation tab", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
     CVar::Register("dontShowEquipmentSetsOnItems", "Don't show which equipment sets an item is associated with", 0x10, "0", NULL, CATEGORY_GAME, false, NULL, false);
-}
-
-// OFFSET: #0x005238A0
-void CGGameUI::Initialize() {
-    g_uiScaleCVar = CVar::Register("uiScale", "The current UI scale", 0, "1.0", CVarHandler_uiScale, 4, false, NULL, false);
-    g_useUiScaleCVar = CVar::Register("useUiScale", "Whether or not the UI scale should be used", 0, "0", CVarHandler_useUiScale, 4, false, NULL, false);
+    CVar::Register("guildNewsFilter", "Stores the guild news filters", 0x120, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("ActionButtonUseKeyDown", "Activate the action button on a keydown", 0x10, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("lfGuildSettings", "Bit field of Looking For Guild player settings", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("lfGuildComment", "Stores the player's Looking For Guild comment", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("activeCUFProfile", "The last active CUF Profile.", 0x20, "", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("lastVoidStorageTutorial", "Stores the last void storage tutorial the player has accepted", 0x20, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("minimapShowQuestBlobs", "Stores whether to show the quest blobs on the minimap.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
+    CVar::Register("minimapShowArchBlobs", "Stores whether to show the quest blobs on the minimap.", 0x20, "1", NULL, CATEGORY_GAME, false, NULL, false);
 }

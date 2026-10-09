@@ -52,7 +52,7 @@ void CGDressUpModelFrame::operator delete(void* ptr) {
     CGDressUpModelFrame::s_dressUpModelHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x00514300
+// OFFSET: 0x008C6510
 CSimpleFrame* CGDressUpModelFrame::Create(CSimpleFrame* parent) {
     if (CGDressUpModelFrame::s_dressUpModelHeap.m_bytesPerData < sizeof(CGDressUpModelFrame)) {
         SErrDisplayAppFatalMessage("", "", 0);

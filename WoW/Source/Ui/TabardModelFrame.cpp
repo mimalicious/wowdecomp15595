@@ -39,7 +39,7 @@ void CGTabardModelFrame::operator delete(void* ptr) {
     CGTabardModelFrame::s_tabardModelHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x00514350
+// OFFSET: 0x008C6550
 CSimpleFrame* CGTabardModelFrame::Create(CSimpleFrame* parent) {
     if (CGTabardModelFrame::s_tabardModelHeap.m_bytesPerData < sizeof(CGTabardModelFrame)) {
         SErrDisplayAppFatalMessage("", "", 0);

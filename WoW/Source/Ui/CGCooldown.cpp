@@ -59,7 +59,7 @@ void CGCooldown::operator delete(void* ptr) {
     CGCooldown::s_cooldownHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x0051A380
+// OFFSET: 0x008C6390
 CSimpleFrame* CGCooldown::Create(CSimpleFrame* parent) {
     void* data = CGCooldown::s_cooldownHeap.GetData(0, typeid(CGCooldown).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGCooldown(parent) : NULL;

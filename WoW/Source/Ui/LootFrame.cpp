@@ -144,8 +144,8 @@ void GetCurrencyText(int32_t amount, char* buffer, uint32_t size, const char* se
     }
 }
 
-// OFFSET: #0x007E7CC0
-void GetCurrencyIcon(int32_t amount, char* buffer, uint32_t size) {
+// OFFSET: 0x004E3A40
+void GetCurrencyIcon(uint64_t amount, char* buffer, uint32_t size) {
     const char* path = ClientDBStringLookup(3);
     SStrPrintf(buffer, size, "%s%s", path, *path ? "\\" : "");
 

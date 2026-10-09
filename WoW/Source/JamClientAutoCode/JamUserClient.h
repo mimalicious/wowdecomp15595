@@ -41,6 +41,24 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+class UserClientRequestCemeteryList : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientRequestCemeteryList();
+    ~UserClientRequestCemeteryList();
+};
+
+class UserClientSetPreferredCemetery : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_cemeteryID;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientSetPreferredCemetery();
+    ~UserClientSetPreferredCemetery();
+};
+
 class UserClientReorderCharacters : public JamClientMessage {
     public:
     /* 0010 */ TSGrowableArray<JamUserClientReorderEntry> m_entries;

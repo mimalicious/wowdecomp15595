@@ -655,7 +655,7 @@ int32_t ItemLinkInfo::GetItemIdFromLink(const char* link) {
     return this->m_itemId;
 }
 
-// OFFSET: #0x005143A0
+// OFFSET: 0x008C65E0
 CSimpleFrame* CGTooltip::Create(CSimpleFrame* parent) {
     if (CGTooltip::s_tooltipHeap.m_bytesPerData < sizeof(CGTooltip)) {
         SErrDisplayAppFatalMessage("", "", 0);

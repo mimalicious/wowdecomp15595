@@ -4177,7 +4177,7 @@ int32_t Packet_SMSG_GUILD_INVITE(void* param, NETMESSAGE msgId, uint32_t time, C
     char inviter[48];
     msg->GetString(inviter, sizeof(inviter));
     msg->GetString(guild, sizeof(guild));
-    CGGameUI::OpenGuildInvite(inviter, guild);
+    CGGameUI::OpenGuildInvite(inviter, guild, 0, "");
     CGGameUI::DisplayError(ERR_INVITED_TO_GUILD_SSS, inviter, inviter, guild);
     return 1;
 }
@@ -7971,6 +7971,36 @@ void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool 
     if (unit) {
         unit->UpdateUnitNameText();
     }
+}
+
+// OFFSET: 0x005614D0/0x1401BF380
+int32_t CGPlayer_C::GetSkillIndex(int32_t skillId) const {
+    uint32_t index = 0;
+
+    for (; index < 128; index++) {
+        uint16_t line = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerSkillLineid0[index] : 0;
+
+        if (line == skillId) {
+            break;
+        }
+    }
+
+    return index == 128 ? -1 : index;
+}
+
+// OFFSET: 0x00468FF0/0x14007D170
+uint32_t CGPlayer_C::GetSkillValue(int32_t index) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    uint32_t value = this->m_player->m_playerSkillRank0[index];
+
+    if (value) {
+        value += this->m_player->m_playerSkillTalent0[index];
+    }
+
+    return value;
 }
 
 // OFFSET: #0x006D6660

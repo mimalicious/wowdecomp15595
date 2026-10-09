@@ -54,6 +54,7 @@ struct GuildRankFlag {
 
 class CGGuildInfo {
     public:
+    static void ResetEnterWorld();
     static uint32_t GetGuildBankTabPermissionsByRankID(uint8_t tab, uint32_t rank);
     static int32_t GetNumGuildBankTabItemWithdrawalsByRankID(uint8_t tab, uint32_t rank);
     static void SetMOTD(const char* motd);

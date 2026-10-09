@@ -94,6 +94,9 @@ bool CheckDataFilesExist();
 void ClientChangeWorld(uint32_t mapId, const C3Vector& position, float facing);
 void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogin);
 void ClientInitializeGame(uint32_t mapId, C3Vector position);
+
+class PreloadList;
+extern PreloadList* s_startWorldCommonList;
 void ClientPostClose(int32_t reason);
 uint32_t ClientBeginInitializingArchives(uint8_t expansion);
 int32_t ClientContinueInitializingArchives(int32_t* stalled);

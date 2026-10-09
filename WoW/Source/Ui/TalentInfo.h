@@ -99,6 +99,9 @@ class CGTalentInfo {
     static void ResetPreviewTalentPoints(uint32_t group, uint32_t tab, int32_t pet);
     static void ResetGroupPreviewTalentPoints(uint32_t group, int32_t pet);
     static void RecalculatePreviewPoints(int32_t pet);
+    static int32_t GetAllGroupPreviewTalentPointsSpent(int32_t pet);
+    static void ResetAllGroupPreviewTalentPoints(int32_t pet);
+    static void ResetAllGroupPreviewPrimaryTalentTree(int32_t pet);
     static int32_t SumPreviewPointsSpent(int32_t pet);
     static void ResetTabInfo(int32_t pet);
     static void ResetTalentGroups(int32_t pet);

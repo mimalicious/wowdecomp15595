@@ -107,7 +107,7 @@ bool CGWorldStateInfo::InitWorldStates(uint32_t mapId, uint32_t zoneId, uint32_t
 }
 
 // OFFSET: #0x00549440
-bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value) {
+bool CGWorldStateInfo::SetWorldState(uint32_t state, uint32_t value, bool hidden) {
     WORLDSTATE* worldState = CGWorldStateInfo::m_worldStates.Ptr(state, HASHKEY_NONE());
 
     if (!worldState) {

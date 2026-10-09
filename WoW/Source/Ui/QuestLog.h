@@ -92,6 +92,7 @@ class CGQuestLog {
     static uint8_t m_trackedQuestsLoaded;
     static void FilterAndSortQuests();
     static void LoadTrackedQuests();
+    static void LoadTrackedQuests(bool force);
     static bool HasQuestPOI(int32_t questId);
     static int32_t IsSelectedQuestExpired();
     static void RemoveQuestWatch(int32_t questId);

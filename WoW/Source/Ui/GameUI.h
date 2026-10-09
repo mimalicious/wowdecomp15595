@@ -109,6 +109,13 @@ extern CVar* g_autoSelfCastCVar;
 extern CVar* g_secureAbilityToggleCVar;
 extern CVar* g_predictedHealthCVar;
 extern const char* g_macroTaint;
+extern CVar* g_spellTooltip_DisplayAvgValuesCVar;
+extern CVar* g_interactOnLeftClickCVar;
+extern CVar* g_questLogCollapseHeaderFilterCVar;
+extern CVar* g_guildRewardsUsableCVar;
+extern CVar* g_guildRewardsCategoryCVar;
+extern CVar* g_talentPointsSpentCVar;
+extern CVar* g_previewTalentsOptionCVar;
 
 void SignalEvent_EVENT_PARTY_INVITE_REQUEST(const char* name);
 
@@ -134,6 +141,12 @@ struct CinematicInfo {
     /* 0010 */ uint32_t m_cameraMusic;
     /* 0014 */ uint32_t unk_0014;
 };
+
+class ClientDifferentInstanceFromParty;
+class ClientMoneyNotify;
+class ClientWorldServerInfo;
+class ClientDisplayGameError;
+class ClientFailedPlayerCondition;
 
 class CGGameUI {
     public:
@@ -177,6 +190,7 @@ class CGGameUI {
     static void HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid);
     static int32_t OnTerrainClick(const CTerrainClickEvent& evt);
     static void Target(WOWGUID guid);
+    static void SetLockedTarget(WOWGUID guid, bool inMelee);
     static void DeleteCursorItem();
     static int32_t m_cursorItemType;
     static int32_t m_threatWarningEnabled;
@@ -193,7 +207,7 @@ class CGGameUI {
     static int32_t m_cursorPet;
     static void GetCursorItem(WOWGUID& item, WOWGUID& container, uint32_t& slot);
     static void SendTarget(WOWGUID guid);
-    static uint8_t GetComboPoints(WOWGUID target);
+    static uint8_t GetComboPoints(WOWGUID target, bool anyTarget = false);
     static void UpdateCombatMode();
     static int32_t m_cursorVirtualID;
     static WOWGUID m_cursorItemContainer;
@@ -211,7 +225,7 @@ class CGGameUI {
     static void OpenResurrectRequest(const char* name);
     static void CancelPartyInvite();
     static void SetSummonRequest(WOWGUID summoner, uint32_t area, uint32_t timeout);
-    static uint32_t m_cursorMoney;
+    static uint64_t m_cursorMoney;
     static int32_t m_phaseMask;
     static int32_t m_hasControl;
     static uint8_t m_currentlyReloadingUI;
@@ -246,7 +260,7 @@ class CGGameUI {
     static uint32_t m_lastRegenTime;
     static WOWGUID m_comboTarget;
     static uint16_t m_accountDataGeneration;
-    static TotemInfo m_totems[4];
+    static TotemInfo m_totems[5];
     static MirrorTimerInfo m_mirrorTimerInfo[3];
     static MirrorTimerInfo* MirrorTimerGetInfo(uint32_t index);
     static uint32_t GetInstanceDifficulty();
@@ -265,10 +279,10 @@ class CGGameUI {
     static void ShowCombatFeedbackAttackRoundInfo(const ATTACKROUNDINFO* info);
     static void HandleFocusChanged(const CFocusEvent& evt);
     static int32_t Idle(const void* data, void* param);
+    static void DoUiReload();
     static int32_t MessageHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnMirrorTimerEvent(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static void Initialize();
-    static void InitializeFrameXML();
     static void InitializeGame();
     static void RegisterGameCVars();
     static void ScaleToScreenSize(int32_t width, int32_t height, int32_t force);
@@ -295,7 +309,7 @@ class CGGameUI {
     static void UpdateMountFlags();
     static int32_t s_loadingScreen;
     static bool IsInArea(int32_t areaID);
-    static void SetAreaSpiritHealer(WOWGUID guid);
+    static void SetAreaSpiritHealer(WOWGUID guid, bool cancel = true);
     static void UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time);
     static void DisplayPvPQueueRemovedError(int32_t reason);
     static void SetCorpseReclaimDelay(uint32_t delay);
@@ -305,7 +319,7 @@ class CGGameUI {
     static const char* GetErrorToken(int32_t error);
     static void SetDungeonDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inGroup);
     static void ShowDungeonDifficultyChanged();
-    static void SetRaidDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inGroup);
+    static bool SetRaidDifficulty(uint32_t difficulty, uint32_t unk, uint32_t inGroup, int32_t force = 0);
     static void UpdateComboPoints(const WOWGUID& guid, uint32_t points);
     static void StartMovie(uint32_t movieId);
     static void SetPhaseShift(uint32_t phase);
@@ -313,20 +327,67 @@ class CGGameUI {
     static void SetCorpseMapPosition(const C3Vector& position, const float& facing);
     static void CastSpiritHealSpell();
     static void StopMovie();
-    static void OpenGuildInvite(const char* inviter, const char* guild);
+    static void OpenGuildInvite(const char* inviter, const char* guild, int32_t guildLevel, const char* oldGuild);
+    static void CancelGuildInvite();
+    static void UpdateBillingTime();
+    static float GetUIScale();
+    static void CheckThreatTutorial(const WOWGUID& guid);
+    static int32_t GetCurrentAreaMountFlags();
+    static void OnWorldStateChanged(int32_t worldState);
+    static void SetCemeteryList(uint32_t count, const uint32_t* cemeteries);
+    static uint32_t s_cemeteryListRequestTime;
+    static int32_t GetWeeklyTimeRemaining();
+    static int32_t s_weeklyResetTime;
+    static void SetSessionTimeAlert(bool enabled, int32_t interval, int32_t intervalAlt, int32_t alertTime);
+    static void UpdateSessionTimeAlert();
+    static bool s_sessionAlertEnabled;
+    static int32_t s_sessionAlertInterval;
+    static int32_t s_sessionAlertIntervalAlt;
+    static int32_t s_sessionAlertTime;
+    static void UpdateParentalControls();
+    static void UpdatePlayerAFK(uint32_t now, CGPlayer_C* player);
+    static void ClearStreamingWait();
+    static int32_t GetStreamingWait();
+    static void UpdateStreamingIcon();
+    static void SetInstanceDifficulty(uint32_t difficulty);
+    static int32_t s_parentalControlsWarning;
+    static int32_t s_streamingWait;
+    static int32_t s_streamingIcon;
+    static int32_t StartCinematicSound();
+    static void SetCemeteryPreference(uint32_t cemeteryID);
+    static uint32_t GetCemetery(uint32_t index);
+    static uint32_t s_numCemeteries;
+    static uint32_t s_cemeteries[16];
+    static uint32_t s_cemeteryPreference;
     static void AcceptLevelGrant();
     static void AcceptAreaSpiritHeal();
     static void TargetDirection(float facing, float angle, int32_t type);
     static WOWGUID ClosestObjectMatch(const char* name, uint32_t typeMask, int32_t targetType, int32_t exact, float maxDistance, int32_t ignoreHostileTotems);
     static bool CanInspect(CGUnit_C* unit);
-    static void SetCursorMoney(uint32_t amount);
-    static void SetCursorMoney(uint32_t amount, int32_t type, int32_t event);
+    static void SetCursorMoney(uint64_t amount);
+    static void SetCursorMoney(uint64_t amount, int32_t type, int32_t event);
+    static void SetCursorCurrency(int32_t currencyId);
+    static void SetCursorFlyout(int32_t flyoutId);
+    static void DropCursorVoidStorageItem();
+    static int32_t m_cursorCurrency;
+    static int32_t m_cursorFlyout;
+    static WOWGUID m_cursorVoidStorageItem;
     static int32_t VirtualItemIsLocked(int32_t id, uint32_t virtualSlot, int32_t a3);
     static void LockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3);
     static void TargetTradeItem();
     static void SetCursorItem(WOWGUID item, WOWGUID container, uint32_t slot, int32_t a4, int32_t stackSplit, int32_t playSound);
     static WOWGUID m_lockedTarget;
     static int32_t m_visible;
+    static int32_t m_areaMountFlags;
+    static int32_t m_billingActive;
+    static uint8_t unk_ED74F2;
+    static bool OnDifferentInstanceFromParty(ClientDifferentInstanceFromParty* msg);
+    static bool OnMoneyNotify(ClientMoneyNotify* msg);
+    static bool OnWorldServerInfo(ClientWorldServerInfo* msg);
+    static bool OnDisplayGameError(ClientDisplayGameError* msg);
+    static bool OnFailedPlayerCondition(ClientFailedPlayerCondition* msg);
+    static void InitializeGameUnk9FD1E0();
+    static void InitializeGameUnk9BEC70();
     static WOWGUID m_lastEnemyTarget;
     static WOWGUID m_corpseGUID;
     static int32_t m_initialized;
@@ -356,6 +417,9 @@ class CGGameUI {
     static const char* LastErrorMessage();
     static void SetLastEnchantSpellID(int32_t spellId);
     static void SetLastItemSpellTarget(WOWGUID guid);
+    static void SetLastEnchantItem(WOWGUID guid);
+    static WOWGUID m_lastEnchantItem;
+    static void SetInstanceLockWarning(uint32_t completedMask);
     static int32_t m_lastEnchantSpellID;
     static WOWGUID m_lastItemSpellTarget;
     static void OnMouseModeNormal();
@@ -392,7 +456,7 @@ class CGGameUI {
     static void EnterWorld();
     static void RegisterSavedVariable(const char* name, int32_t perCharacter);
     static void BreakTarget(WOWGUID guid);
-    static void DestroyTotem(int32_t slot);
+    static void DestroyTotem(int32_t slot, WOWGUID guid = WOWGUID());
     static void ClearTarget(WOWGUID guid, int32_t a2);
     static int32_t IsPartyMember(const WOWGUID& guid);
     static int32_t IsInParty(const WOWGUID& guid);
@@ -410,7 +474,7 @@ class CGGameUI {
     static void UnlockVirtualItem(int32_t id, uint32_t virtualSlot, int32_t a3);
     static int32_t GetCursorVirtualItemOfType(int32_t type);
     static void DropCursorSpell();
-    static void SetCursorSpell(int32_t spellId);
+    static void SetCursorSpell(int32_t spellId, int32_t displaySpellId = 0);
     static void SetCursorPetAction(const PetAction* action);
     static void SetCursorPet(int32_t index);
     static void SetCursorMacro(int32_t macroId);
@@ -489,6 +553,7 @@ class CCapturePointUIManager {
     void AddCapturePoint(CGGameObject_C* object, uint32_t worldState, uint32_t radius);
     void RemoveCapturePoint(CGGameObject_C* object);
     void DeleteNode(CapturePointUIManagerNode* node);
+    void Clear();
     void Update();
 };
 
@@ -505,6 +570,7 @@ bool CVarHandler_autoCompleteResortNamesOnRecency(CVar* var, const char* oldValu
 bool CVarHandler_autoCompleteUseContext(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_autoCompleteWhenEditingFromCenter(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_guildRecruitmentChannel(CVar* var, const char* oldValue, const char* value, void* arg);
+bool CVarHandler_reducedLagTolerance(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_previewTalents(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_threatWarning(CVar* var, const char* oldValue, const char* value, void* arg);
 bool CVarHandler_uiScale(CVar* var, const char* oldValue, const char* value, void* arg);
@@ -578,7 +644,14 @@ const char* MirrorTimerTypeToken(int32_t type);
 const char* GetMirrorTimerLabel(int32_t type, int32_t spellId);
 
 void BroadcastUIError(int32_t error, const char* name);
+void DBClient_ClearDB2Caches();
+void DBClient_Idle();
+int32_t Script_GetMoney(lua_State* L, int32_t index, uint64_t* money);
+uint32_t MouseButtonNumberToMask(int32_t button);
+bool SessionTime_IsAlternate();
+int32_t SessionTime_GetElapsed();
+void SessionTime_ResetElapsed();
+void SessionTime_ResetAlternate();
 
-void OnGxRestartClearWorld();
 
 #endif

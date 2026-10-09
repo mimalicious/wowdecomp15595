@@ -14,7 +14,7 @@ class SpellFlyoutRec {
     /* 0004 */ int32_t unk_0004;
     /* 0008 */ int32_t unk_0008;
     /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
+    /* 0010 */ int32_t m_spellIconID;
     /* 0014 */ DBCString unk_0014;
     /* 0018 */ DBCString unk_0018;
 };

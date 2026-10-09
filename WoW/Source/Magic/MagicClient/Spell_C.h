@@ -15,6 +15,7 @@ class CGGameObject_C;
 class CGCorpse_C;
 class CDataStore;
 class SpellRec;
+class SpellItemEnchantmentRec;
 class SpellVisualRec;
 class SpellVisualKitRec;
 class ItemSubClassRec;
@@ -328,6 +329,8 @@ bool Spell_C_GetItemCooldown(int32_t itemId, uint32_t* duration, uint32_t* start
 const char* GetSpellFailedResult(int32_t reason);
 bool Spell_C_SpellUsesReagent(const SpellRec* spell, int32_t itemId);
 PendingSpellCast* Spell_C_GetTargetingSpellCast();
+void Spell_C_SetMaxSpellStartRecoveryOffset(int32_t offset);
+int32_t Spell_C_GetEnchantmentSlot(int32_t slot, const SpellItemEnchantmentRec* enchant);
 int32_t Spell_C_CanTargetItems();
 CM2Model* Spell_C_GetCursorWorldObjectModel();
 void Spell_C_SetCursorWorldObjectPosition(const C3Vector& position);

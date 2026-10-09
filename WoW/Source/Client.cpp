@@ -284,7 +284,7 @@ static int32_t s_startBGLoadThread;
 static uint32_t s_numUpdateArchives;
 
 // STATIC: 0x00ED742C
-static PreloadList* s_startWorldCommonList;
+PreloadList* s_startWorldCommonList;
 
 // STATIC: #0x00AB6350
 WowClientDB<Startup_StringsRec> g_startup_StringsDB;

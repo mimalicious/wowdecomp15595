@@ -21,6 +21,7 @@ bool WorldStateParseText(const char* text, char* buffer, uint32_t size);
 
 class CGWorldStateInfo {
     public:
+    static void LeaveWorld(bool reload);
     static int32_t m_mapID;
     static int32_t m_areaID;
     static int32_t m_subAreaID;
@@ -34,7 +35,7 @@ class CGWorldStateInfo {
     static void InitializeGame();
     static void ShutdownGame();
     static bool InitWorldStates(uint32_t mapId, uint32_t zoneId, uint32_t areaId);
-    static bool SetWorldState(uint32_t state, uint32_t value);
+    static bool SetWorldState(uint32_t state, uint32_t value, bool hidden = false);
     static void OnUITime(uint32_t time);
     static void ResetWorldStateUI();
 };

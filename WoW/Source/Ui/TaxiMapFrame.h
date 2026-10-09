@@ -43,6 +43,7 @@ struct TAXIROUTELINE {
 
 class CGTaxiMap {
     public:
+    static void EnterWorld();
     static void CloseMap();
     static void LeaveWorld();
     static CTexture* m_mapTexture;

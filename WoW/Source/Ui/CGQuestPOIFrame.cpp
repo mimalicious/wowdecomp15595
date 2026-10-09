@@ -46,7 +46,7 @@ void CGQuestPOIFrame::operator delete(void* ptr) {
     CGQuestPOIFrame::s_questPOIHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x00514260
+// OFFSET: 0x008C6450
 CSimpleFrame* CGQuestPOIFrame::Create(CSimpleFrame* parent) {
     if (CGQuestPOIFrame::s_questPOIHeap.m_bytesPerData < sizeof(CGQuestPOIFrame)) {
         SErrDisplayAppFatalMessage("", "", 0);

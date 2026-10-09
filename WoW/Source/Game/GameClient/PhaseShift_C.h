@@ -46,6 +46,7 @@ int32_t PhaseShift_C_HasSharedPhase(const AreaTriggerRec* rec);
 int32_t PhaseShift_C_HasSharedPhase(const CPhaseShift* phaseShift);
 int32_t PhaseShift_C_HasSharedPhase(const WorldStateUIRec* rec);
 void PhaseShift_C_InitDB();
+void PhaseShift_C_InitializeGame();
 int32_t PhaseShift_C_IsPhasedWorldMapActive(int32_t worldMapAreaID);
 void PhaseShift_C_LeaveWorld(int32_t reload);
 

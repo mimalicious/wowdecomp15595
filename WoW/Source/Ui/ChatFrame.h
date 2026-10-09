@@ -275,6 +275,7 @@ int32_t Packet_SMSG_LOG_XPGAIN(void* param, NETMESSAGE msgId, uint32_t time, CDa
 
 class CGChat {
     public:
+    static void Shutdown();
     static void InformTargetIcon(WOWGUID setter, WOWGUID target, int32_t index);
     static void JoiningParty(bool raid, int32_t pvp);
     static void SaveChatSettings();

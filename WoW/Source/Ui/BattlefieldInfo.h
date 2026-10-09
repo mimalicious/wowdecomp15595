@@ -85,6 +85,7 @@ class CGBattlefieldInfo {
     static void JoinBattlefield(uint32_t index, int32_t asGroup, int32_t isRated);
     static void RequestBattlegroundInstanceInfo(uint32_t index);
     static void SetBattlemaster(WOWGUID battlemaster);
+    static bool IsRatedBattleground();
     static void EnterWorld();
     static void LeaveWorld();
     static void InitializeGame();

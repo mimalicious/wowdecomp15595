@@ -57,7 +57,7 @@ void CGCharacterModelBase::operator delete(void* ptr) {
     CGCharacterModelBase::s_characterModelHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x005142B0
+// OFFSET: 0x008C64D0
 CSimpleFrame* CGCharacterModelBase::Create(CSimpleFrame* parent) {
     if (CGCharacterModelBase::s_characterModelHeap.m_bytesPerData < sizeof(CGCharacterModelBase)) {
         SErrDisplayAppFatalMessage("", "", 0);

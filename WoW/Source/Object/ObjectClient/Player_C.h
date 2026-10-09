@@ -369,6 +369,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void ChangeStandState(uint32_t standState);
     void SendTextEmote(const EmotesTextRec* emote, WOWGUID target, int32_t silent);
     void SetAFK(const char* message);
+    static uint32_t GetPendingCinematic();
     void UpdateActiveMoverDisplay(uint32_t time);
     void SetPvpCooldownTimestamp(uint32_t flags);
     void TalkToBinder(const WOWGUID& guid);

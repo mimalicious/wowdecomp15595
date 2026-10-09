@@ -14,6 +14,7 @@ PetAction* GetPetAction(uint32_t index);
 
 class CGActionBar {
     public:
+    static void LeaveWorld(bool reload);
     static void LeaveWorld();
     static void SignalUpdateCooldown();
     static uint32_t m_tempPageActiveFlags;

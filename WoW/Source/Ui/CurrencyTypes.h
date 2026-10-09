@@ -25,6 +25,7 @@ class CurrencyTypesRec;
 
 class CGCurrencyTypes {
     public:
+    static const char* GetCurrencyIcon(const CurrencyTypesRec* rec);
     static void LeaveWorld();
     static CurrencyTypesRec* GetCurrencyRec(int32_t index);
     static int32_t IsCurrencyShown(int32_t index);

@@ -389,7 +389,7 @@ void CGMinimapFrame::operator delete(void* ptr) {
     CGMinimapFrame::s_minimapHeap.PutData(ptr, NULL, 0);
 }
 
-// OFFSET: #0x00514230
+// OFFSET: 0x008C6410
 CSimpleFrame* CGMinimapFrame::Create(CSimpleFrame* parent) {
     void* data = CGMinimapFrame::s_minimapHeap.GetData(0, typeid(CGMinimapFrame).raw_name(), SLOG_OBJECT);
     return data ? new (data) CGMinimapFrame(parent) : NULL;

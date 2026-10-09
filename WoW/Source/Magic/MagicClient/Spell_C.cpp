@@ -327,6 +327,19 @@ int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec) {
     return 0;
 }
 
+// OFFSET: 0x008A6160
+int32_t Spell_C_GetEnchantmentSlot(int32_t slot, const SpellItemEnchantmentRec* enchant) {
+    if (enchant && !slot) {
+        for (uint32_t i = 0; i < 3; i++) {
+            if (enchant->m_effect[i] == 7) {
+                return 7;
+            }
+        }
+    }
+
+    return slot;
+}
+
 // OFFSET: #0x008012F0
 int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit) {
     if (!unit) {
