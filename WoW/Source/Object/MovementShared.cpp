@@ -437,7 +437,7 @@ float CMovementShared::CalcTimeFallen(float distance, int32_t upward) const {
     return result;
 }
 
-// OFFSET: #0x0075EE00
+// OFFSET: 0x00605F60
 int32_t CMovementShared::CanCollideWhileFlying() const {
     if (this->IsSplineFlyerOrFlyingOrSwimming()) {
         return 1;

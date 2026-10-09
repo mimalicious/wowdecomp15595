@@ -420,12 +420,12 @@ void CGUnit_C::RetargetAuraEffects(int32_t spellId, const WOWGUID& oldCaster, co
     CGObject_C::RetargetEffects(this->m_auraEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
 }
 
-// OFFSET: 0x005AB780
+// OFFSET: 0x005AB780/0x14021DC00
 void CGUnit_C::MarkFallingSent() {
     this->m_clientFlags |= 0x80;
 }
 
-// OFFSET: 0x005AC0C0
+// OFFSET: 0x005AC0C0/0x14021E5B0
 void CGUnit_C::ResetFloodsafeMoveEvents() {
     this->unk_09FC &= ~0x80;
     this->m_floodsafeOpcode[0] = 8229;
@@ -625,7 +625,7 @@ void CGUnit_C::PlayTaxiDismountKit() {
     }
 }
 
-// OFFSET: 0x005AEB30
+// OFFSET: 0x005AEB30/0x1402214B0
 void CGUnit_C::UpdateLastSentMovement() {
     this->m_lastSentFacing = this->GetRawFacing();
 
@@ -5967,7 +5967,7 @@ void CGUnit_C::OnCollideFallReset(uint32_t time) {
     }
 }
 
-// OFFSET: 0x005AEBE0
+// OFFSET: 0x005AEBE0/0x140221580
 void CGUnit_C::SendSplineDone(uint32_t time, uint32_t splineId) {
     PlayerMoveSplineDone msg;
     this->m_movementData.GetMoveStatus(CMSG_MOVE_SPLINE_DONE, time, &msg.m_status);
