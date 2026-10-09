@@ -113,10 +113,10 @@ static C2Vector s_pathTexCoords[4] = {
 // STATIC: #0x00AB6470
 static CSizeEvent s_sizeEvent;
 
-// STATIC: %0x00C3AAB4
+// STATIC: 0x00D3654C
 static CGxShader* s_pixelShader;
 
-// STATIC: %0x00C3AAB8
+// STATIC: 0x00D36550
 static CGxShader* s_vertexShader;
 
 // STATIC: #0x00B2FE6C
@@ -164,6 +164,9 @@ static HLAYER s_loadingScreenLayer;
 // STATIC: #0x00B2FED8
 static bool s_usingWideScreen;
 
+// STATIC: 0x00D365D4
+static int32_t s_backgroundLocal;
+
 // STATIC: #0x00B2FED9
 static bool s_raceDataTip;
 
@@ -185,10 +188,10 @@ static CGxStringBatch* s_batch;
 // STATIC: #0x00B2FEF0
 static int32_t s_sizeEventPosted;
 
-// STATIC: #0x00B2FF00
+// STATIC: 0x00D365F8
 static C3Vector s_tileVertices[12][4];
 
-// STATIC: #0x00B30140
+// STATIC: 0x00D36838
 static C2Vector s_tileTexCoords[12][4];
 
 // STATIC: #0x00B302C0
@@ -200,7 +203,7 @@ static CLoadingScreenShipInfo<TaxiPathNodeRec> s_shipInfo;
 // STATIC: 0x00D369E8
 static char s_raceDataTipText[260];
 
-// OFFSET: #0x00407C50
+// OFFSET: 0x0040AB80
 static void BuildTiles() {
     for (int32_t row = 0; row < 3; row++) {
         for (int32_t col = 0; col < 4; col++) {
@@ -242,11 +245,10 @@ static void BuildTiles() {
     }
 }
 
-// OFFSET: #0x0040B2B0
+// OFFSET: 0x0040AE40/0x14000D790
 void LoadingScreenInitialize() {
     s_vertexShader = g_theGxDevicePtr->ShaderCreate(GxSh_Vertex, "UI");
     s_pixelShader = g_theGxDevicePtr->ShaderCreate(GxSh_Pixel, "UI");
-    s_shipInfo.Initialize(&g_taxiPathNodeDB, g_taxiPathDB.m_maxID + 1);
     BuildTiles();
 }
 
@@ -438,64 +440,71 @@ static void PaintLoadingBar(const BackgroundImage* images, int32_t count, CTextu
     }
 }
 
-// OFFSET: #0x00409ED0
+// OFFSET: 0x0040A3B0/0x14000CB90
+bool LoadingScreenGetBackgroundTexturePath(int32_t mapID, char* path, uint32_t size, bool* isWide) {
+    LoadingScreensRec* screenRec = g_loadingScreensDB.GetRecord(mapID);
+
+    if (!screenRec) {
+        return false;
+    }
+
+    if (size) {
+        SStrCopy(path, screenRec->m_fileName, size);
+    }
+
+    if (!screenRec->m_hasWideScreen || CoordinateGetAspectRatio() <= s_normalAspect + 0.001f) {
+        return SFile::FileExists(screenRec->m_fileName) != 0;
+    }
+
+    const char* extension = strrchr(screenRec->m_fileName, '.');
+
+    if (!extension) {
+        return SFile::FileExists(screenRec->m_fileName) != 0;
+    }
+
+    path[extension - screenRec->m_fileName] = 0;
+    SStrPack(path, "Wide", size);
+    SStrPack(path, extension, size);
+
+    if (!SFile::FileExists(path)) {
+        return SFile::FileExists(screenRec->m_fileName) != 0;
+    }
+
+    if (isWide) {
+        *isWide = true;
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0040C750
 static bool LoadSimpleBackgroundTexture() {
-    CStatus status;
-    MapRec* mapRec = g_mapDB.GetRecord(s_simpleMapID);
+    s_backgroundLocal = 1;
+    bool result = false;
+    char path[260];
 
-    if (mapRec) {
-        LoadingScreensRec* screenRec = g_loadingScreensDB.GetRecord(mapRec->m_loadingScreenID);
-
-        if (screenRec) {
-            s_usingWideScreen = false;
-            s_simpleBackgroundTexture = NULL;
-
-            if (CoordinateGetAspectRatio() >= s_normalAspect + 0.001f && screenRec->m_hasWideScreen) {
-                char* path = static_cast<char*>(alloca(strlen(screenRec->m_fileName) + 32));
-                const char* extension = strchr(screenRec->m_fileName, '.');
-                strcpy(path, screenRec->m_fileName);
-
-                if (extension) {
-                    path[extension - screenRec->m_fileName] = '\0';
-                }
-
-                strcat(path, "Wide");
-
-                if (extension) {
-                    strcat(path, extension);
-                }
-
-                if (SFile::FileExistsInArchives(path)) {
-                    if (!SFile::IsTrial() || SFile::FileIsLocal(path, 6) == 1) {
-                        CGxTexFlags flags;
-                        s_simpleBackgroundTexture = TextureCreate(path, flags, &status, 1, NULL, 2);
-
-                        if (s_simpleBackgroundTexture) {
-                            s_usingWideScreen = true;
-                        }
-                    } else {
-                        SFile::MakeFileLocal(path, 6, false, -1, NULL);
-                    }
-                }
-            }
-
-            if (!s_simpleBackgroundTexture && SFile::FileExistsInArchives(screenRec->m_fileName)) {
-                if (!SFile::IsTrial() || SFile::FileIsLocal(screenRec->m_fileName, 6) == 1) {
-                    CGxTexFlags flags;
-                    s_simpleBackgroundTexture = TextureCreate(screenRec->m_fileName, flags, &status, 1, NULL, 2);
-                } else {
-                    SFile::MakeFileLocal(screenRec->m_fileName, 6, false, -1, NULL);
-                }
-            }
+    if (LoadingScreenGetBackgroundTexturePath(s_simpleMapID, path, sizeof(path), &s_usingWideScreen)) {
+        if (SFile::IsStreamingMode() && SFile::FileIsLocal(path) != 1) {
+            s_backgroundLocal = 0;
+            s_simpleMapID = 0;
+            AsyncFileReadCreateObject(path, 5, 0, 0, NULL, NULL, NULL, AsyncFileReadDestroyObject, AsyncFileReadDestroyObject, 0, 0, 0);
+            SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
         }
+    } else {
+        s_backgroundLocal = 0;
+        s_simpleMapID = 0;
+        SStrCopy(path, "Interface\\Glues\\loading", sizeof(path));
     }
 
-    if (!s_simpleBackgroundTexture) {
-        CGxTexFlags flags;
-        s_simpleBackgroundTexture = TextureCreate("Interface\\Glues\\loading", flags, &status, 1, NULL, 2);
+    CStatus status;
+    CGxTexFlags flags;
+    s_simpleBackgroundTexture = TextureCreate(path, flags, &status, 1, NULL, 2);
+
+    if (s_simpleBackgroundTexture && s_backgroundLocal) {
+        result = true;
     }
 
-    return s_simpleBackgroundTexture != NULL;
+    return result;
 }
 
 // OFFSET: #0x00409800

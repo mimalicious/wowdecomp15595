@@ -1775,15 +1775,15 @@ void CWorldView::AddOccluder(const C3Vector& start, const C3Vector& end) {
         return;
     }
 
-    C3Vector near;
-    C3Vector far;
+    C3Vector nearPoint;
+    C3Vector farPoint;
 
     if (startEntry <= endEntry) {
-        near = occluder->m_start;
-        far = end;
+        nearPoint = occluder->m_start;
+        farPoint = end;
     } else {
-        near = end;
-        far = occluder->m_start;
+        nearPoint = end;
+        farPoint = occluder->m_start;
         int32_t swap = startEntry;
         startEntry = endEntry;
         endEntry = swap;
@@ -1799,26 +1799,26 @@ void CWorldView::AddOccluder(const C3Vector& start, const C3Vector& end) {
 
     for (int32_t entry = startEntry; entry < endEntry; entry++) {
         const C4Plane& plane = this->m_sortTable->m_entries.m_data[entry + 1].m_plane;
-        float farDist = far.z * plane.n.z + far.y * plane.n.y + far.x * plane.n.x + plane.d;
-        float nearDist = near.z * plane.n.z + near.y * plane.n.y + near.x * plane.n.x + plane.d;
+        float farDist = farPoint.z * plane.n.z + farPoint.y * plane.n.y + farPoint.x * plane.n.x + plane.d;
+        float nearDist = nearPoint.z * plane.n.z + nearPoint.y * plane.n.y + nearPoint.x * plane.n.x + plane.d;
         C3Vector split;
 
         if (farDist - nearDist <= 0.0000099999997f) {
-            split = far;
+            split = farPoint;
         } else {
             float t = farDist / (farDist - nearDist);
-            split = far + (near - far) * t;
+            split = farPoint + (nearPoint - farPoint) * t;
         }
 
         CWorldOccluder* piece = CWorldOccluder::Alloc();
-        piece->m_start = near;
+        piece->m_start = nearPoint;
         piece->m_end = split;
         this->m_sortTable->m_entries.m_data[entry].m_occluders.LinkToTail(piece);
-        near = split;
+        nearPoint = split;
     }
 
-    occluder->m_start = near;
-    occluder->m_end = far;
+    occluder->m_start = nearPoint;
+    occluder->m_end = farPoint;
     this->m_sortTable->m_entries.m_data[endEntry].m_occluders.LinkToTail(occluder);
 }
 

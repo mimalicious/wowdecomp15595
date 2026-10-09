@@ -540,7 +540,7 @@ int32_t NetClient::HandleDisconnect() {
 
     this->m_netState = NS_INITIALIZED;
     ConsolePrintf("NetClient::HandleDisconnect()");
-    CGlueMgr::NetDisconnectHandler(this);
+    CGlueMgr::NetDisconnectHandler(this, NULL);
     ClntObjMgrPop();
 
     return 1;
