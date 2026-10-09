@@ -220,8 +220,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void Shutdown();
     static void PostShutdown();
     static int32_t HandleMonsterMovePacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    static int32_t HandleMovementPacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    static int32_t HandleSpeedChangePacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static void RegisterMirrorHandlers();
     static void UnregisterMirrorHandlers();
     static int32_t s_initialized;
@@ -295,6 +293,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void InitMissileTrajectorySystem();
     static void ShutdownMissileTrajectorySystem();
     static void UpdateVehicleUISliders(CGUnit_C* unit, const VehicleRec* vehicleRec);
+    static void HideVehicleUISliders();
     static void AnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void MountAnimEndCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
@@ -682,7 +681,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     uint32_t GetCanFly() const;
     int32_t IsInMeleeRange(CGUnit_C* target) const;
     bool IsClientControlled() const;
-    void OnCollideFallReset(uint32_t time);
+    int32_t OnCollideFallReset(uint32_t time);
     int32_t OnCollideFallLandNotify(uint32_t time, uint32_t oldFlags, int32_t jumping);
     void SendSplineDone(uint32_t time, uint32_t splineId);
     void RequestMirrorImageData();
@@ -748,6 +747,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     CGUnit_C* FindRootVehicle(CGUnit_C* stop);
     CGUnit_C* GetRootVehicleUnit();
     void PlayVehicleExitEndAnimation(const VehicleSeatRec* seat, uint32_t anim);
+    int32_t PlayVehiclePassengerExitAnimEnd(const VehicleSeatRec* seat, uint32_t anim, int32_t a3);
+    void UpdateVehicleUISliders();
+    void VehicleCameraOnUpdateTransport(WOWGUID transport, uint8_t seat);
     CGUnit_C* FindRootVehicleOfPassengerChain(CGUnit_C* stop);
     int32_t VehiclePassengerIsTransitionAllowed(const VehicleSeatRec* seat, int32_t checkSeat) const;
     int32_t ShouldUseVehicleSeatExitAnimation(const VehicleSeatRec* seat) const;
@@ -1158,22 +1160,13 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ClearThreatList();
     bool IsDuelingWith(CGUnit_C* unit);
     void PlayEmoteAnimation(uint32_t emote);
-    int32_t OnMoveEvent(NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    int32_t OnSpeedChangeEvent(NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-    int32_t OnMoveModePacket(uint32_t time, NETMESSAGE msgId, CDataStore* msg);
-    int32_t OnSplineMoveEffectPacket(NETMESSAGE msgId);
-    int32_t OnSplineSpeedChange(NETMESSAGE msgId, float value);
-    int32_t OnTurnStart(uint32_t time, const CMovementStatus& status, int32_t left);
-    int32_t OnPitchStart(uint32_t time, const CMovementStatus& status, int32_t up);
-    int32_t OnMoveUnRoot(uint32_t time, const CMovementStatus& status);
-    int32_t OnUnitMoveEvent(uint32_t time, const CMovementStatus& status);
-    int32_t OnKnockBack(uint32_t time, const CMovementStatus& status, CDataStore* msg);
     void OnTeleportAck(uint32_t time, uint32_t ackCounter, CDataStore* msg);
     void OnKnockBackLocal(uint32_t time, uint32_t ackCounter, CDataStore* msg);
     void OnMovementInitiated(bool clearTracking, bool keepLoot);
     int32_t SendMovementUpdate(uint32_t msgId);
     static void SetActiveMover(uint64_t guid);
     static void StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec* vehicleRec);
+    static void StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec);
     int32_t VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t transport, uint8_t seat);
     void ClearAttackRound();
     void SetUICastingSpell(const SpellRec* spell, const WOWGUID& target, int32_t castTime);
@@ -1253,7 +1246,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void PlayVictimWorldFeedback(const ATTACKROUNDINFO& info);
     void OnMonsterMove(CDataStore* msg, NETMESSAGE msgId, uint64_t transport, uint8_t seat, int32_t flush);
     void FaceTarget(const WOWGUID& target, int32_t flush);
-    int32_t DeferVehicleTransitionSpline(CDataStore* msg, uint64_t transport, uint8_t seat);
+    int32_t VehiclePassengerStartWaitingForVehicleTransitionAnimFromSpline(CDataStore* msg, uint64_t transport, uint8_t seat);
     int32_t VehiclePassengerShouldWaitForVehicleTransitionAnim(uint64_t transport, uint8_t seat) const;
     void AddWorldDamageText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, bool periodic, bool spellColor);
     void UpdateSpellCastBars();
@@ -1315,8 +1308,6 @@ int32_t UnitPvPFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fi
 int32_t UnitVisFlagUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t VirtualItemIDMirrorHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t Packet_AuraUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_MoveMode(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_MSG_MOVE_TIME_SKIPPED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_AI_REACTION(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CANCEL_AUTO_REPEAT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CLIENT_CONTROL_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -1335,8 +1326,6 @@ int32_t Packet_SMSG_PRE_RESURRECT(void* param, NETMESSAGE msgId, uint32_t time, 
 int32_t Packet_SMSG_STANDSTATE_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_THREAT_CLEAR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_THREAT_REMOVE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SplineMoveEffect(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SplineSpeedChange(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_ThreatUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 
 int32_t GetAnimBehaviorId(uint32_t animId);

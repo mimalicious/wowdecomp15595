@@ -87,8 +87,14 @@ class CVehicle_C {
     void ReceiveVehicleRecIDFromServer(int32_t vehicleId);
     void UpdateWorldMatrix();
     CVehicle_C* FindVehicleToPlayBoneAnim();
+    CVehicle_C* FindVehicleToPlayBoneAnim(int32_t passengerAnim, const VehicleSeatRec* seatRec, CGUnit_C* passenger);
+    const CVehicle_C* FindVehicleToPlayBoneAnim(int32_t passengerAnim, const VehicleSeatRec* seatRec, const CGUnit_C* passenger) const;
+    int32_t CanPlayBoneAnim() const;
+    static int32_t RecHasVehicleEnterAnim(const VehicleSeatRec* seatRec);
+    static int32_t RecHasVehicleExitAnim(const VehicleSeatRec* seatRec, const CGUnit_C* unit);
     void StartMirroringAnimsToPassengers();
     int32_t PlayBoneAnim(uint32_t boneId, uint32_t animId);
+    int32_t PlayBoneAnim(uint32_t type, uint8_t seat, const VehicleSeatRec* seatRec, uint32_t& bone);
     void HandleBoneAnimGrabEvent(uint32_t boneId, uint32_t eventId);
     void HandleBoneAnimThrowEvent(uint32_t boneId, uint32_t eventId);
     void RemoveAllPassengersLocally();

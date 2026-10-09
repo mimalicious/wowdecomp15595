@@ -4118,8 +4118,8 @@ C2Vector CMovement_C::CalcFallObstaclePush(const C3Vector& direction, float dist
 }
 
 // OFFSET: 0x00571960
-void CMovement_C::SendFallReset(uint32_t time) {
-    this->m_unit->OnCollideFallReset(time);
+int32_t CMovement_C::SendFallReset(uint32_t time) {
+    return this->m_unit->OnCollideFallReset(time);
 }
 
 // OFFSET: 0x00603BE0
@@ -6914,7 +6914,7 @@ void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     CVehiclePassenger_C* passenger = unit->m_vehiclePassenger;
     s_flushingQueue = 1;
 
-    if (passenger && passenger->m_deferredTransitionSpline) {
+    if (passenger && passenger->m_deferredSplines.Count() > 0) {
         if ((unit->m_modelFlags & 0x10000) || !(passenger->m_flags & 0x200)) {
             passenger->DeleteAllDeferredVehicleTransitionAnimSplines();
         } else {

@@ -137,6 +137,7 @@ class CMovement_C : public CMovementShared {
     int32_t SendRootAck(int32_t send, uint32_t time, uint32_t oldFlags, uint32_t ackIndex);
     int32_t SendUnrootAck(int32_t send, uint32_t time, uint32_t oldFlags, uint32_t ackIndex);
     int32_t SendSetCanTransitionBetweenSwimAndFlyAck(int32_t send, uint32_t time, uint32_t oldFlags, uint32_t ackIndex);
+    int32_t SendFallResetMessage(uint32_t time);
     int32_t SendHeartbeat(uint32_t time);
     int32_t SendChangeTransport(uint32_t time);
     int32_t SendSetPitch(uint32_t time);
@@ -334,7 +335,7 @@ class CMovement_C : public CMovementShared {
     int32_t OnSplineEnableGravity(int32_t enable);
     void SnapToGroundIfCloseEnough();
     void Disable();
-    void SendFallReset(uint32_t time);
+    int32_t SendFallReset(uint32_t time);
     void GroundNormal();
     uint32_t UseWalkableRedirection(uint32_t facet, int32_t* cleared);
     void MoveSplineMoverWithoutCollision(const C3Vector& position, uint32_t time, uint32_t elapsed);

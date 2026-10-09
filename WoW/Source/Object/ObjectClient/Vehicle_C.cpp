@@ -571,7 +571,7 @@ void CVehicle_C::StartMirroringAnimsToPassengers() {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
         if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-            unit->m_vehiclePassenger->StartMirroringVehicleAnims();
+            unit->m_vehiclePassenger->StartMirroringVehicleAnims(unit->m_vehiclePassenger->MirrorsVehicleAnimTier());
         }
     }
 }

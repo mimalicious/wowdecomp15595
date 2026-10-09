@@ -4910,7 +4910,7 @@ void CGUnit_C::ModelLoaded(CM2Model* model) {
         }
 
         if (this->m_vehiclePassenger && this->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-            this->m_vehiclePassenger->StartMirroringVehicleAnims();
+            this->m_vehiclePassenger->StartMirroringVehicleAnims(this->m_vehiclePassenger->MirrorsVehicleAnimTier());
         }
     }
 }
@@ -5950,12 +5950,17 @@ void CGUnit_C::OnCollideFallLand(uint32_t a1, int32_t a2) {
 }
 
 // OFFSET: 0x005B8650
-int32_t CGUnit_C::OnCollideFallLandNotify(uint32_t time, uint32_t oldFlags, uint32_t oldFlags2, int32_t jumping) {
+int32_t CGUnit_C::OnCollideFallLandNotify(uint32_t time, uint32_t oldFlags, int32_t jumping) {
     this->OnCollideFallLand(oldFlags, jumping);
     int32_t sent = 0;
 
-    if (((this->m_clientFlags & 0x80) || this->m_movementData.GetDistanceFallen() > 0.027777778f) && this->SendMovementUpdate(time, MSG_MOVE_FALL_LAND, 0.0f, 0, 0, 0xFF)) {
-        sent = 1;
+    if ((this->m_clientFlags & 0x80) || this->m_movementData.GetDistanceFallen() > 0.027777778f) {
+        PlayerMoveFallLand msg;
+
+        if (this->m_movementData.SendMoveStatus(time, MSG_MOVE_FALL_LAND, &msg.m_status, &msg)) {
+            this->m_clientFlags &= ~0x80;
+            sent = 1;
+        }
     }
 
     if (this->m_clientFlags & 0x100000) {
@@ -5966,11 +5971,19 @@ int32_t CGUnit_C::OnCollideFallLandNotify(uint32_t time, uint32_t oldFlags, uint
     return sent;
 }
 
-// OFFSET: #0x0071F2C0
-void CGUnit_C::OnCollideFallReset(uint32_t time) {
-    if (this->m_clientFlags & 0x80) {
-        this->SendMovementUpdate(time, CMSG_MOVE_FALL_RESET, 0.0f, 0, 0, 0xFF);
+// OFFSET: 0x005ACBD0
+int32_t CMovement_C::SendFallResetMessage(uint32_t time) {
+    PlayerMoveFallReset msg;
+    return this->SendMoveStatus(time, CMSG_MOVE_FALL_RESET, &msg.m_status, &msg);
+}
+
+// OFFSET: 0x005AFD80
+int32_t CGUnit_C::OnCollideFallReset(uint32_t time) {
+    if (!(this->m_clientFlags & 0x80)) {
+        return 0;
     }
+
+    return this->m_movementData.SendFallResetMessage(time);
 }
 
 // OFFSET: 0x005AEBE0/0x140221580
@@ -10404,7 +10417,7 @@ int32_t CGUnit_C::VehiclePassengerIsTransitionAllowed(const VehicleSeatRec* seat
 
 // OFFSET: 0x005EBAB0/0x14026D020
 int32_t CGUnit_C::ShouldUseVehicleSeatExitAnimation(const VehicleSeatRec* seat) const {
-    return seat->m_flags & ((this->m_movementData.m_flags2 & 0x40) ? 0x8 : 0x8000);
+    return seat->m_flags & ((this->m_movementData.m_flags2 & 0x20) ? 0x8 : 0x8000);
 }
 
 // OFFSET: 0x005AD040/0x14021F510
@@ -14886,566 +14899,6 @@ void CGUnit_C::SetHandItemSpellEffectsVisible(int32_t visible) {
     }
 }
 
-// OFFSET: %0x005E6D80
-int32_t CGUnit_C::HandleMovementPacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        return unit->OnMoveEvent(msgId, time, msg);
-    }
-
-    msg->m_read = msg->m_size;
-    return 0;
-}
-
-// OFFSET: #0x00741B00
-int32_t CGUnit_C::HandleSpeedChangePacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        return unit->OnSpeedChangeEvent(msgId, time, msg);
-    }
-
-    msg->m_read = msg->m_size;
-    return 0;
-}
-
-// OFFSET: #0x00732450
-int32_t Packet_MoveMode(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        return unit->OnMoveModePacket(time, msgId, msg);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00741C30
-int32_t Packet_SplineMoveEffect(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        return unit->OnSplineMoveEffectPacket(msgId);
-    }
-
-    msg->m_read = msg->m_size;
-    return 0;
-}
-
-// OFFSET: #0x00741BC0
-int32_t Packet_SplineSpeedChange(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    float value;
-    msg->Get(value);
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        return unit->OnSplineSpeedChange(msgId, value);
-    }
-
-    msg->m_read = msg->m_size;
-    return 0;
-}
-
-// OFFSET: #0x0071CAB0
-int32_t Packet_MSG_MOVE_TIME_SKIPPED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    SmartGUID guid;
-    *msg >> guid;
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!unit) {
-        msg->m_read = msg->m_size;
-        return 0;
-    }
-
-    uint32_t skipped = 0;
-    msg->Get(skipped);
-    unit->m_movementData.OnSkipTime(skipped);
-    return 1;
-}
-
-// OFFSET: #0x00718890
-int32_t CGUnit_C::OnTurnStart(uint32_t time, const CMovementStatus& status, int32_t left) {
-    if (this->m_unit->m_unitFieldFlags & 0x40000) {
-        return 0;
-    }
-
-    return this->m_movementData.OnTurnStart(time, status, left);
-}
-
-// OFFSET: #0x007188C0
-int32_t CGUnit_C::OnPitchStart(uint32_t time, const CMovementStatus& status, int32_t up) {
-    if (this->m_unit->m_unitFieldFlags & 0x40000) {
-        return 0;
-    }
-
-    return this->m_movementData.OnPitchStart(time, status, up);
-}
-
-// OFFSET: #0x007188F0
-int32_t CGUnit_C::OnMoveUnRoot(uint32_t time, const CMovementStatus& status) {
-    this->m_clientFlags |= 0x20000000;
-    int32_t result = this->m_movementData.OnMoveUnRoot(time, status);
-    this->m_clientFlags &= ~0x20000000;
-    return result;
-}
-
-// OFFSET: #0x007189A0
-int32_t CGUnit_C::OnUnitMoveEvent(uint32_t time, const CMovementStatus& status) {
-    if (this->m_vehiclePassenger && (status.m_moveExtraFlags & 0x2000)) {
-        this->VehiclePassengerStartWaitingForVehicleTransitionAnim(status.m_transportGuid.m_guid, status.m_transportSeat);
-    }
-
-    return this->m_movementData.OnTeleport(time, status);
-}
-
-// OFFSET: #0x007187F0
-int32_t CGUnit_C::OnKnockBack(uint32_t time, const CMovementStatus& status, CDataStore* msg) {
-    C2Vector direction(0.0f, 0.0f);
-    float speed;
-    float verticalSpeed;
-    msg->Get(direction.x);
-    msg->Get(direction.y);
-    msg->Get(speed);
-    msg->Get(verticalSpeed);
-    return this->m_movementData.OnLaunch(time, status, direction, speed, verticalSpeed);
-}
-
-// OFFSET: #0x00740D30
-int32_t CGUnit_C::OnMoveEvent(NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    CMovementStatus status;
-    *msg >> status;
-    uint32_t now = OsGetAsyncTimeMs();
-    int32_t changed;
-
-    switch (msgId) {
-        case MSG_MOVE_START_FORWARD:
-            changed = this->m_movementData.OnMoveStart(now, status, 1);
-            break;
-        case MSG_MOVE_START_BACKWARD:
-            changed = this->m_movementData.OnMoveStart(now, status, 0);
-            break;
-        case MSG_MOVE_STOP:
-            changed = this->m_movementData.OnMoveStop(now, status);
-            break;
-        case MSG_MOVE_START_STRAFE_LEFT:
-            changed = this->m_movementData.OnStrafeStart(now, status, 1);
-            break;
-        case MSG_MOVE_START_STRAFE_RIGHT:
-            changed = this->m_movementData.OnStrafeStart(now, status, 0);
-            break;
-        case MSG_MOVE_STOP_STRAFE:
-            changed = this->m_movementData.OnStrafeStop(now, status);
-            break;
-        case MSG_MOVE_JUMP:
-            changed = this->m_movementData.OnJump(now, status);
-            break;
-        case MSG_MOVE_START_TURN_LEFT:
-            changed = this->OnTurnStart(now, status, 1);
-            break;
-        case MSG_MOVE_START_TURN_RIGHT:
-            changed = this->OnTurnStart(now, status, 0);
-            break;
-        case MSG_MOVE_STOP_TURN:
-            changed = this->m_movementData.OnTurnStop(now, status);
-            break;
-        case MSG_MOVE_START_PITCH_UP:
-            changed = this->OnPitchStart(now, status, 1);
-            break;
-        case MSG_MOVE_START_PITCH_DOWN:
-            changed = this->OnPitchStart(now, status, 0);
-            break;
-        case MSG_MOVE_STOP_PITCH:
-            changed = this->m_movementData.OnPitchStop(now, status);
-            break;
-        case MSG_MOVE_SET_RUN_MODE:
-            changed = this->m_movementData.OnSetRunMode(now, status, 1);
-            break;
-        case MSG_MOVE_SET_WALK_MODE:
-            changed = this->m_movementData.OnSetRunMode(now, status, 0);
-            break;
-        case MSG_MOVE_TELEPORT:
-            changed = this->OnUnitMoveEvent(now, status);
-            break;
-        case MSG_MOVE_FALL_LAND:
-        case MSG_MOVE_HEARTBEAT:
-            changed = this->m_movementData.OnHeartBeat(now, status);
-            break;
-        case MSG_MOVE_START_SWIM:
-        case MSG_MOVE_START_SWIM_CHEAT:
-            changed = this->m_movementData.OnStartSwim(now, status);
-            break;
-        case MSG_MOVE_STOP_SWIM:
-        case MSG_MOVE_STOP_SWIM_CHEAT:
-            changed = this->m_movementData.OnStopSwim(now, status);
-            break;
-        case MSG_MOVE_TOGGLE_COLLISION_CHEAT:
-            return 1;
-        case MSG_MOVE_SET_FACING:
-            changed = this->m_movementData.OnSetFacing(now, status);
-            break;
-        case MSG_MOVE_SET_PITCH:
-            changed = this->m_movementData.OnSetPitch(now, status);
-            break;
-        case MSG_MOVE_ROOT:
-            changed = this->m_movementData.OnMoveRoot(now, status);
-            break;
-        case MSG_MOVE_UNROOT:
-            changed = this->OnMoveUnRoot(now, status);
-            break;
-        case MSG_MOVE_KNOCK_BACK:
-            changed = this->OnKnockBack(now, status, msg);
-            break;
-        case MSG_MOVE_HOVER:
-            changed = this->m_movementData.OnMoveHover(now, status);
-            break;
-        case MSG_MOVE_FEATHER_FALL:
-            changed = this->m_movementData.OnSetFeatherFall(now, status);
-            break;
-        case MSG_MOVE_WATER_WALK:
-            changed = this->m_movementData.OnSetWaterWalk(now, status);
-            break;
-        case MSG_MOVE_UPDATE_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY:
-            changed = this->m_movementData.OnUpdateCanTransitionBetweenSwimAndFly(now, status);
-            break;
-        case MSG_MOVE_START_ASCEND:
-            changed = this->m_movementData.OnStartAscendDescend(now, status, 1);
-            break;
-        case MSG_MOVE_STOP_ASCEND:
-            changed = this->m_movementData.OnStopAscend(now, status);
-            break;
-        case MSG_MOVE_START_DESCEND:
-            changed = this->m_movementData.OnStartAscendDescend(now, status, 0);
-            break;
-        case MSG_MOVE_UPDATE_CAN_FLY:
-            changed = this->m_movementData.OnUpdateCanFly(now, status);
-            break;
-        case MSG_MOVE_GRAVITY_CHNG:
-            changed = this->m_movementData.OnGravityChange(now, status);
-            break;
-        default:
-            return 0;
-    }
-
-    if (changed) {
-        this->MoveEventHappened(msgId);
-        this->UpdateBaseAnimation(0, -1);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x007406A0
-int32_t CGUnit_C::OnSpeedChangeEvent(NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    CMovementStatus status;
-    *msg >> status;
-    uint32_t now = OsGetAsyncTimeMs();
-    float value;
-    msg->Get(value);
-
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
-        switch (msgId) {
-            case MSG_MOVE_SET_RUN_SPEED:
-                this->m_movementData.OnRunSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_RUN_BACK_SPEED:
-                this->m_movementData.OnRunBackSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_WALK_SPEED:
-                this->m_movementData.OnWalkSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_SWIM_SPEED:
-                this->m_movementData.OnSwimSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_SWIM_BACK_SPEED:
-                this->m_movementData.OnSwimBackSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_TURN_RATE:
-                this->m_movementData.OnTurnRateChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_FLIGHT_SPEED:
-                this->m_movementData.OnFlightSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_FLIGHT_BACK_SPEED:
-                this->m_movementData.OnFlightBackSpeedChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_PITCH_RATE:
-                this->m_movementData.OnPitchRateChange(now, value);
-                return 1;
-            case MSG_MOVE_SET_COLLISION_HGT:
-                this->m_movementData.OnSetCollisionHeight(now, value);
-                return 1;
-            default:
-                return 0;
-        }
-    }
-
-    int32_t changed;
-
-    switch (msgId) {
-        case MSG_MOVE_SET_RUN_SPEED:
-            changed = this->m_movementData.OnRunSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_RUN_BACK_SPEED:
-            changed = this->m_movementData.OnRunBackSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_WALK_SPEED:
-            changed = this->m_movementData.OnWalkSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_SWIM_SPEED:
-            changed = this->m_movementData.OnSwimSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_SWIM_BACK_SPEED:
-            changed = this->m_movementData.OnSwimBackSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_TURN_RATE:
-            changed = this->m_movementData.OnTurnRateChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_FLIGHT_SPEED:
-            changed = this->m_movementData.OnFlightSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_FLIGHT_BACK_SPEED:
-            changed = this->m_movementData.OnFlightBackSpeedChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_PITCH_RATE:
-            changed = this->m_movementData.OnPitchRateChange(now, status, value);
-            break;
-        case MSG_MOVE_SET_COLLISION_HGT:
-            changed = this->m_movementData.OnSetCollisionHeight(now, status, value);
-            break;
-        default:
-            return 0;
-    }
-
-    if (changed) {
-        this->MoveEventHappened(msgId);
-        this->UpdateBaseAnimation(0, -1);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x007307A0
-int32_t CGUnit_C::OnMoveModePacket(uint32_t time, NETMESSAGE msgId, CDataStore* msg) {
-    uint32_t now = OsGetAsyncTimeMs();
-    uint32_t ackCounter = 0;
-    msg->Get(ackCounter);
-    float value;
-
-    switch (msgId) {
-        case MSG_MOVE_TELEPORT_ACK:
-            this->OnTeleportAck(now, ackCounter, msg);
-            return 1;
-        case SMSG_MOVE_SET_WATER_WALK:
-            this->m_movementData.OnWaterWalkLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_SET_LAND_WALK:
-            this->m_movementData.OnWaterWalkLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_FORCE_RUN_SPEED_CHANGE: {
-            uint8_t forced;
-            msg->Get(forced);
-            msg->Get(value);
-
-            if (forced) {
-                s_forcedRunSpeed = value;
-            }
-
-            this->m_movementData.OnRunSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        }
-        case SMSG_FORCE_RUN_BACK_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnRunBackSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_SWIM_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnSwimSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_MOVE_ROOT:
-            this->m_movementData.OnRootLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_FORCE_MOVE_UNROOT:
-            this->m_movementData.OnRootLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_MOVE_KNOCK_BACK:
-            this->OnKnockBackLocal(now, ackCounter, msg);
-            return 1;
-        case SMSG_MOVE_SET_FEATHER_FALL:
-            this->m_movementData.OnFeatherFallLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_SET_NORMAL_FALL:
-            this->m_movementData.OnFeatherFallLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_MOVE_SET_HOVERING:
-            this->m_movementData.OnHoverLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_UNSET_HOVERING:
-            this->m_movementData.OnHoverLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_FORCE_WALK_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnWalkSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_SWIM_BACK_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnSwimBackSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_TURN_RATE_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnTurnRateChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_MOVE_ENABLE_TRANSITION_BETWEEN_SWIM_AND_FLY:
-            this->m_movementData.OnCanTransitionBetweenSwimAndFlyLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_DISABLE_TRANSITION_BETWEEN_SWIM_AND_FLY:
-            this->m_movementData.OnCanTransitionBetweenSwimAndFlyLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_MOVE_SET_CAN_FLY:
-            this->m_movementData.OnCanFlyLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_UNSET_CAN_FLY:
-            this->m_movementData.OnCanFlyLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_FORCE_FLIGHT_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnFlightSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnFlightBackSpeedChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_FORCE_PITCH_RATE_CHANGE:
-            msg->Get(value);
-            this->m_movementData.OnPitchRateChangeLocal(now, ackCounter, value);
-            return 1;
-        case SMSG_MOVE_DISABLE_GRAVITY:
-            this->m_movementData.OnDisableGravityLocal(now, ackCounter, 1);
-            return 1;
-        case SMSG_MOVE_ENABLE_GRAVITY:
-            this->m_movementData.OnDisableGravityLocal(now, ackCounter, 0);
-            return 1;
-        case SMSG_MOVE_SET_COLLISION_HGT:
-            msg->Get(value);
-            this->m_movementData.OnSetCollisionHeightLocal(now, ackCounter, value);
-            return 1;
-        default:
-            return 1;
-    }
-}
-
-// OFFSET: #0x00740BA0
-int32_t CGUnit_C::OnSplineMoveEffectPacket(NETMESSAGE msgId) {
-    CMovement_C* movement = &this->m_movementData;
-    movement->FlushMoveQueue(0, 0);
-
-    switch (msgId) {
-        case SMSG_MOVE_SPLINE_ROOT:
-            movement->OnRoot();
-            break;
-        case SMSG_MOVE_SPLINE_UNROOT:
-            movement->OnUnRoot();
-            break;
-        case SMSG_MOVE_SPLINE_SET_FEATHER_FALL:
-            movement->OnFeatherFall(1);
-            break;
-        case SMSG_MOVE_SPLINE_SET_NORMAL_FALL:
-            movement->OnFeatherFall(0);
-            break;
-        case SMSG_MOVE_SPLINE_SET_HOVER:
-            movement->OnHover(1);
-            break;
-        case SMSG_MOVE_SPLINE_UNSET_HOVER:
-            movement->OnHover(0);
-            break;
-        case SMSG_MOVE_SPLINE_SET_WATER_WALK:
-            movement->OnWaterWalk(1);
-            break;
-        case SMSG_MOVE_SPLINE_SET_LAND_WALK:
-            movement->OnWaterWalk(0);
-            break;
-        case SMSG_MOVE_SPLINE_START_SWIM:
-            movement->OnSplineStartSwim();
-            break;
-        case SMSG_MOVE_SPLINE_STOP_SWIM:
-            movement->OnSplineStopSwim();
-            break;
-        case SMSG_MOVE_SPLINE_SET_RUN_MODE:
-            movement->OnSetRunMode(1);
-            break;
-        case SMSG_MOVE_SPLINE_SET_WALK_MODE:
-            movement->OnSetRunMode(0);
-            break;
-        case SMSG_MOVE_SPLINE_SET_FLYING:
-            movement->SplineToggleEnableFlying(1);
-            break;
-        case SMSG_MOVE_SPLINE_UNSET_FLYING:
-            movement->SplineToggleEnableFlying(0);
-            break;
-        case SMSG_MOVE_SPLINE_DISABLE_GRAVITY:
-            movement->OnSplineEnableGravity(0);
-            break;
-        case SMSG_MOVE_SPLINE_ENABLE_GRAVITY:
-            movement->OnSplineEnableGravity(1);
-            break;
-        default:
-            return 0;
-    }
-
-    this->MoveEventHappened(msgId);
-    this->UpdateBaseAnimation(0, -1);
-    return 1;
-}
-
-// OFFSET: #0x00740A60
-int32_t CGUnit_C::OnSplineSpeedChange(NETMESSAGE msgId, float value) {
-    switch (msgId) {
-        case SMSG_MOVE_SPLINE_SET_RUN_SPEED:
-            this->m_movementData.OnRunSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_RUN_BACK_SPEED:
-            this->m_movementData.OnRunBackSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_SWIM_SPEED:
-            this->m_movementData.OnSwimSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_WALK_BACK_SPEED:
-            this->m_movementData.OnWalkSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_SWIM_BACK_SPEED:
-            this->m_movementData.OnSwimBackSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_TURN_RATE:
-            this->m_movementData.OnTurnRateChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_FLIGHT_SPEED:
-            this->m_movementData.OnFlightSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_FLIGHT_BACK_SPEED:
-            this->m_movementData.OnFlightBackSpeedChange(value);
-            break;
-        case SMSG_MOVE_SPLINE_SET_PITCH_RATE:
-            this->m_movementData.OnPitchRateChange(value);
-            break;
-        default:
-            return 0;
-    }
-
-    this->MoveEventHappened(msgId);
-    this->UpdateBaseAnimation(0, -1);
-    return 1;
-}
-
 // OFFSET: #0x007152B0
 C3Vector* ReadPackedVector3(CDataStore* msg, const C3Vector& base, C3Vector* out) {
     uint32_t packed;
@@ -15586,35 +15039,7 @@ void CGUnit_C::FaceTarget(const WOWGUID& target, int32_t flush) {
     }
 }
 
-// OFFSET: #0x0074C040
-int32_t CGUnit_C::DeferVehicleTransitionSpline(CDataStore* msg, uint64_t transport, uint8_t seat) {
-    if (this->m_vehiclePassenger) {
-        this->m_vehiclePassenger->DeleteAllDeferredVehicleTransitionAnimSplines();
-        this->m_vehiclePassenger->StopWaitingForVehicleTransitionAnim();
-    }
-
-    int32_t result = this->VehiclePassengerShouldWaitForVehicleTransitionAnim(transport, seat);
-
-    if (!result) {
-        return result;
-    }
-
-    this->m_movementData.FlushMoveQueue(0, 0);
-
-    if (!this->m_vehiclePassenger) {
-        this->m_vehiclePassenger = CVehiclePassenger_C::Alloc(this);
-    }
-
-    this->m_vehiclePassenger->StartDeferringVehicleTransitionAnimSpline(msg);
-
-    if (!this->VehiclePassengerStartWaitingForVehicleTransitionAnim(transport, seat)) {
-        this->m_vehiclePassenger->ExecuteAllDeferredVehicleTransitionAnimSplines();
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0073F590
+// OFFSET: 0x005CF680
 int32_t CGUnit_C::HandleMonsterMovePacket(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
     *msg >> guid;
@@ -15640,7 +15065,7 @@ int32_t CGUnit_C::HandleMonsterMovePacket(void* param, NETMESSAGE msgId, uint32_
     msg->Get(exitVoluntary);
     unit->SetVehicleExitVoluntary(exitVoluntary);
 
-    if (!unit->DeferVehicleTransitionSpline(msg, transport.m_guid, seat)) {
+    if (!unit->VehiclePassengerStartWaitingForVehicleTransitionAnimFromSpline(msg, transport.m_guid, seat)) {
         unit->OnMonsterMove(msg, msgId, transport.m_guid, seat, 1);
     }
 

@@ -104,3 +104,9 @@ inline void C3Vector::Normalize() {
     this->y = this->y * scale;
     this->z = scale * this->z;
 }
+
+// OFFSET: 0x005EE500
+inline C3Vector C3Vector::Normalized() const {
+    float scale = 1.0f / sqrt(this->x * this->x + this->y * this->y + this->z * this->z);
+    return C3Vector(this->x * scale, this->y * scale, this->z * scale);
+}

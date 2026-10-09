@@ -197,14 +197,14 @@ void CGUnit_C::UpdateVehicleUISliders(CGUnit_C* unit, const VehicleRec* vehicleR
     }
 }
 
-// OFFSET: #0x0074BCB0
+// OFFSET: 0x005EBC00
 int32_t CGUnit_C::VehiclePassengerShouldWaitForVehicleTransitionAnim(uint64_t transport, uint8_t seat) const {
     if (transport == this->GetTransportGUID() && seat == this->m_movementData.m_transportSeat) {
         return 0;
     }
 
     uint32_t high = static_cast<uint32_t>(transport >> 32);
-    bool entering = (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(transport)));
+    int32_t entering = (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(transport)));
     WOWGUID guid;
 
     if (entering) {
@@ -235,31 +235,24 @@ int32_t CGUnit_C::VehiclePassengerShouldWaitForVehicleTransitionAnim(uint64_t tr
         return 0;
     }
 
-    CVehicle_C* animVehicle = vehicle->FindVehicleToPlayBoneAnim();
+    const CVehicle_C* animVehicle = vehicle->FindVehicleToPlayBoneAnim(entering, seatRec, this);
 
-    if (entering) {
-        if (!(seatRec->m_flags & 0x400000)) {
-            return 0;
-        }
-
-        uint32_t anim = seatRec->m_vehicleEnterAnim;
-
-        if (anim > 0x1F9) {
-            return 0;
-        }
-
-        return animVehicle->CanPlayBoneAnim(anim) ? 1 : 0;
-    }
-
-    if (!(seatRec->m_flags & ((this->m_movementData.m_flags2 & 0x40) ? 0x40000 : 0x80000))) {
+    if (!animVehicle) {
         return 0;
     }
 
-    uint32_t anim = seatRec->m_vehicleExitAnim;
-    return anim <= 0x1F9 && animVehicle->CanPlayBoneAnim(anim);
+    if (!entering) {
+        return CVehicle_C::RecHasVehicleExitAnim(seatRec, this) && animVehicle->CanPlayBoneAnim();
+    }
+
+    if (!CVehicle_C::RecHasVehicleEnterAnim(seatRec)) {
+        return 0;
+    }
+
+    return animVehicle->CanPlayBoneAnim() ? 1 : 0;
 }
 
-// OFFSET: #0x0074BE10
+// OFFSET: 0x005EBD40
 int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t transport, uint8_t seat) {
     uint32_t high = static_cast<uint32_t>(transport >> 32);
     int32_t entering = (high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && ((high & 0xF07FFFFF) | static_cast<uint32_t>(transport)));
@@ -297,35 +290,72 @@ int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t 
         this->m_vehiclePassenger->StopWaitingForVehicleTransitionAnim();
     }
 
-    CVehicle_C* animVehicle = vehicle->FindVehicleToPlayBoneAnim();
+    CVehicle_C* animVehicle = vehicle->FindVehicleToPlayBoneAnim(entering, seatRec, this);
+
+    if (!animVehicle) {
+        return 0;
+    }
+
+    uint32_t bone;
 
     if (entering) {
-        if (!(seatRec->m_flags & 0x400000) || static_cast<uint32_t>(seatRec->m_vehicleEnterAnim) > 0x1F9 || !animVehicle->PlayBoneAnim(seatRec->m_vehicleEnterAnimBone, seatRec->m_vehicleEnterAnim)) {
+        if (!CVehicle_C::RecHasVehicleEnterAnim(seatRec) || !animVehicle->PlayBoneAnim(0, seat, seatRec, bone)) {
             return 0;
         }
 
-        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, seatRec->m_vehicleEnterAnimBone, &CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
+        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, bone, CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
 
         if (seatRec->m_flagsB & 0x800000) {
-            animVehicle->SetBoneAnimForceFacing(this->m_obj->m_guid, seatRec->m_vehicleEnterAnimBone);
+            animVehicle->SetBoneAnimForceFacing(this->m_obj->m_guid, bone);
         }
     } else {
-        if (!(seatRec->m_flags & ((this->m_movementData.m_flags2 & 0x40) ? 0x40000 : 0x80000)) || static_cast<uint32_t>(seatRec->m_vehicleExitAnim) > 0x1F9 || !animVehicle->PlayBoneAnim(seatRec->m_vehicleExitAnimBone, seatRec->m_vehicleExitAnim)) {
+        if (!CVehicle_C::RecHasVehicleExitAnim(seatRec, this) || !animVehicle->PlayBoneAnim(2, this->m_movementData.m_transportSeat, seatRec, bone)) {
             return 0;
         }
 
-        if (this->m_vehiclePassenger) {
-            this->m_vehiclePassenger->StopBoneAnimIfSameBone(animVehicle->m_unit->m_obj->m_guid, seatRec);
-        }
-
-        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, seatRec->m_vehicleExitAnimBone, &CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
+        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, bone, CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
     }
 
     if (!this->m_vehiclePassenger) {
         this->m_vehiclePassenger = CVehiclePassenger_C::Alloc(this);
     }
 
-    this->m_vehiclePassenger->StartWaitingForVehicleTransitionAnim(WOWGUID::Make(transport), seat, seatRec, entering, animVehicle);
+    this->m_vehiclePassenger->StartWaitingForVehicleTransitionAnim(seatRec, entering, animVehicle);
+    return 1;
+}
+
+// OFFSET: 0x005EBF10
+int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnimFromSpline(CDataStore* msg, uint64_t transport, uint8_t seat) {
+    CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
+
+    if (passenger && (passenger->m_flags & 0x200)) {
+        if (passenger->IsWaitingForSameVehicleTransitionAnim(WOWGUID::Make(transport), seat)) {
+            passenger->StartDeferringVehicleTransitionAnimSpline(msg, WOWGUID::Make(transport), seat);
+            return 1;
+        }
+
+        this->m_vehiclePassenger->DeleteAllDeferredVehicleTransitionAnimSplines();
+        this->m_vehiclePassenger->StopWaitingForVehicleTransitionAnim();
+    }
+
+    int32_t result = this->VehiclePassengerShouldWaitForVehicleTransitionAnim(transport, seat);
+
+    if (!result) {
+        return result;
+    }
+
+    this->m_movementData.FlushMoveQueue(0, 0);
+
+    if (!this->m_vehiclePassenger) {
+        this->m_vehiclePassenger = CVehiclePassenger_C::Alloc(this);
+    }
+
+    this->m_vehiclePassenger->StartDeferringVehicleTransitionAnimSpline(msg, WOWGUID::Make(transport), seat);
+
+    if (!this->VehiclePassengerStartWaitingForVehicleTransitionAnim(transport, seat)) {
+        this->m_vehiclePassenger->ExecuteAllDeferredVehicleTransitionAnimSplines();
+    }
+
     return 1;
 }
 
