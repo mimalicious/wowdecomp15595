@@ -312,7 +312,7 @@ void SE3SoundKitDef::BuildPath(char* path, int32_t size, int32_t index) {
     const char* filename = this->m_pSoundKitRec->m_file[index];
 
     if (*this->m_pSoundKitRec->m_directoryBase) {
-        SStrPrintf(path, size, "%s\\%s", this->m_pSoundKitRec->m_directoryBase, filename);
+        SStrPrintf(path, size, "%s\\%s", static_cast<const char*>(this->m_pSoundKitRec->m_directoryBase), filename);
     } else {
         SStrCopy(path, filename, size);
     }

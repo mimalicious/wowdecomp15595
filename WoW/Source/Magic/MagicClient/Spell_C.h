@@ -208,7 +208,7 @@ bool Spell_C_SpellHasShapeshiftMask(const SpellRec* spell, int32_t form);
 void Spell_C_UpdateOverrideSpell(int32_t spellId);
 
 void Spell_C_CancelSpellByCaster(const WOWGUID& caster);
-void Spell_C_CancelCastingSpellByMovement();
+void Spell_C_CancelCastingSpellByMovement(CGUnit_C* unit);
 void Spell_C_CancelChannelSpell(int32_t spellId);
 int32_t Spell_C_GetAutoRepeatingSpell();
 void Spell_C_SetCooldownLeft(int32_t spellId, uint32_t itemId, uint32_t category, int32_t cooldownLeft, int32_t categoryCooldownLeft, bool onHold, int32_t pet);

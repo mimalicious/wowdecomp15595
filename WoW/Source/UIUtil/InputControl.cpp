@@ -775,7 +775,7 @@ void CGInputControl::OnTurnToAngleStop() {
     }
 }
 
-// OFFSET: #0x005FAA40
+// OFFSET: 0x00448DB0/0x140055940
 void CheckToCancelCurrentChannelSpell() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -783,16 +783,22 @@ void CheckToCancelCurrentChannelSpell() {
         return;
     }
 
-    Spell_C_CancelCastingSpellByMovement();
+    Spell_C_CancelCastingSpellByMovement(player);
     int32_t channelSpell = player->m_unit->m_unitChannelSpell;
 
     if (!channelSpell) {
         return;
     }
 
-    SpellRec spell;
+    SpellRec* spell = g_spellDB.GetRecord(channelSpell);
 
-    if (g_spellDB.GetRecord(channelSpell, &spell) && (spell.m_channelInterruptFlags & 0x8)) {
+    if (!spell || !spell->m_spellInterruptsID) {
+        return;
+    }
+
+    SpellInterruptsRec* interrupts = g_spellInterruptsDB.GetRecord(spell->m_spellInterruptsID);
+
+    if (interrupts && (interrupts->m_channelInterruptFlags & 0x8) && !player->HasAuraMatchingSpellClass(330, spell)) {
         Spell_C_CancelChannelSpell(channelSpell);
     }
 }
