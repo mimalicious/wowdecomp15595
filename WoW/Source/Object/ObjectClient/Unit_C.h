@@ -1067,7 +1067,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void PlayMountVisualKit();
     void ShowLootEffect();
     void CompleteMountTransition();
-    void RefreshComponentItem(int32_t itemSlot);
+    void RefreshComponentItem(int32_t invSlot);
     void UpdateReaction(bool a1);
     void DoMountFade(float alpha, uint32_t time);
     void ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32_t a3);
