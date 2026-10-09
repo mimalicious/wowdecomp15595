@@ -43,6 +43,7 @@ class CMissile {
     static CMissile* NewMissile();
     static CMissile* CopyMissile(const CMissile* source);
     static void ClearInFlightMissilesWithTarget(WOWGUID target);
+    static void UpdateUnitAttachments(WOWGUID unit);
     static uint32_t* s_missileHeap;
 
     static void AdjustAllMissileTrajectoryDurations(uint8_t castID, uint32_t duration);

@@ -324,9 +324,9 @@ static int32_t ReceiveGuildInfo(void* param, NETMESSAGE msgId, uint32_t time, CD
     guild.Unpack(msg);
 
     if (guild.m_name[0]) {
-        g_guildInfoCache.AddItem(&guild, guild.m_id);
+        g_guildInfoCache.AddItem(&guild, guild.m_guildGuid);
     } else {
-        g_guildInfoCache.DenyItem(guild.m_id);
+        g_guildInfoCache.DenyItem(guild.m_guildGuid);
     }
 
     return 1;

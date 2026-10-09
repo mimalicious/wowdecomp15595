@@ -529,20 +529,23 @@ int32_t DisplayIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fiel
 // OFFSET: 0x005ADB90
 int32_t CGUnit_C::AddHandItemModel(const ItemDisplayInfoRec* displayRec, int32_t invSlot, int32_t sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
     if (this->m_characterComponent) {
-        return this->m_characterComponent->AddHandItem(displayRec, invSlot, sheatheType, sheathed, shield, mainHand, itemVisual);
+        return this->m_characterComponent->AddHandItem(displayRec, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), sheathed, shield, mainHand, itemVisual);
     }
 
-    return CCharacterComponent::AddHandItem(this->m_worldModel, displayRec, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), sheathed, shield, mainHand, itemVisual);
+    uint8_t attachMask = 0;
+
+    return CCharacterComponent::AddHandItem(this->m_worldModel, &attachMask, displayRec, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), sheathed, shield, mainHand, itemVisual);
 }
 
 // OFFSET: 0x005ADC00
 void CGUnit_C::RemoveHandItemModel(int32_t invSlot, int32_t sheatheType, bool shield) {
     if (this->m_characterComponent) {
-        this->m_characterComponent->RemoveHandItem(invSlot, sheatheType, shield);
+        this->m_characterComponent->RemoveHandItem(static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
         return;
     }
 
-    CCharacterComponent::RemoveHandItem(this->m_worldModel, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
+    uint8_t attachMask = 0;
+    CCharacterComponent::RemoveHandItem(this->m_worldModel, &attachMask, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
 }
 
 // OFFSET: 0x005AE0D0/0x1402208D0
@@ -4449,7 +4452,7 @@ void CGUnit_C::UpdateWorldObject(int32_t a2) {
         World::ObjectUpdate(this->m_worldObject, matrix, box, sphere, vec, a2, this->m_torsoKeyBone);
 
         if (this->m_displayTransition) {
-            this->m_displayTransition->UpdateWorldObject(matrix, box, sphere, vec, a2, this->m_torsoKeyBone);
+            this->m_displayTransition->MirrorTransformToSwapWorldObject(matrix, box, sphere, vec, a2, this->m_torsoKeyBone);
         }
     }
 
@@ -4579,7 +4582,7 @@ void CGUnit_C::OnDisplayModelLoaded(CM2Model* model) {
         }
 
         if (this->m_displayTransition) {
-            this->m_displayTransition->Complete(0);
+            this->m_displayTransition->Expedite(0);
             this->StopDisplayTransition();
         }
     }
@@ -4736,7 +4739,7 @@ int32_t CGUnit_C::Animate(float elapsed) {
     this->UpdateMountTransitionModel();
 
     if (this->m_displayTransition) {
-        this->m_displayTransition->UpdateTransform(matrix);
+        this->m_displayTransition->MirrorTransformToSwapModel();
     }
 
     return 1;
@@ -21356,13 +21359,22 @@ void CGUnit_C::AddHandItem(int32_t hand) {
         invSlot = static_cast<INVENTORY_SLOTS>(16);
         mainHand = false;
     } else {
-        if (this->m_sheatheState != 2) {
-            CCharacterComponent::RemoveHandItem(this->m_worldModel, static_cast<INVENTORY_SLOTS>(17), static_cast<SHEATHE_TYPE>(0), false);
-            return;
-        }
+        if (this->m_sheatheState == 2) {
+            if (!this->IsDisarmed(!ranged)) {
+                this->ShowRangedWeapon(false, NULL);
+            }
+        } else if (ranged) {
+            const CGUnitVirtualItem* offItem;
 
-        if (!this->IsDisarmed(!ranged)) {
-            this->ShowRangedWeapon(false, NULL);
+            if (this->m_sheatheState != 1 || !this->GetVirtualItem(1, false) || ((this->m_unit->m_unitFieldFlags & 0x200000) && (this->GetVirtualItem(0, true), !this->IsDisarmed(0)) && (offItem = this->GetVirtualItem(1, true)) && offItem->m_classID == 2) || (this->m_unit->m_unitFieldFlags2 & 0x80)) {
+                this->RemoveHandItemModel(16, 0, false);
+            }
+        } else {
+            const CGUnitVirtualItem* mainItem;
+
+            if (this->m_sheatheState != 1 || !this->GetVirtualItem(0, false) || ((this->m_unit->m_unitFieldFlags & 0x200000) && (mainItem = this->GetVirtualItem(0, true)) && mainItem->m_classID == 2)) {
+                this->RemoveHandItemModel(15, 0, false);
+            }
         }
 
         return;
@@ -21381,11 +21393,7 @@ void CGUnit_C::AddHandItem(int32_t hand) {
         }
     }
 
-    GEOCOMPONENTLINKS link = CCharacterComponent::AddHandItem(this->m_worldModel, &displayRec, invSlot, sheatheType, sheathed, shield, ranged, 0);
-
-    if (this->m_characterComponent) {
-        this->m_characterComponent->SetItemSlotUsingAttachSlot(static_cast<ITEM_SLOT>(-1), link);
-    }
+    this->AddHandItemModel(&displayRec, invSlot, sheatheType, sheathed, shield, ranged, 0);
 
     if (this->m_obj->m_type & TYPEMASK_PLAYER) {
         GEOCOMPONENTLINKS visualLink = sheathed ? CCharacterComponent::GetSheatheLink(static_cast<SHEATHE_TYPE>(item->m_sheatheType), mainHand) : static_cast<GEOCOMPONENTLINKS>(attachId);

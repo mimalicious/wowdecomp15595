@@ -31,8 +31,8 @@ class ChrRacesRec {
     /* 004C */ DBCString m_hairCustomization;
     /* 0050 */ int32_t m_requiredExpansion;
     /* 0054 */ int32_t m_alteredFormRaceID;
-    /* 0058 */ int32_t unk_0058;
-    /* 005C */ int32_t unk_005C;
+    /* 0058 */ int32_t m_maleSoundDataID;
+    /* 005C */ int32_t m_femaleSoundDataID;
 };
 
 #endif

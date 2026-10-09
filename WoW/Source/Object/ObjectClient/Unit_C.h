@@ -621,6 +621,11 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SetCastingSpell(const PendingSpellCast* cast);
     void DestroyLiquidPerturbator();
     void SetupFootprints();
+    void ApplyEffectItemVisuals();
+    void FlipDisplayTransitionState();
+    const char* GetBakedTextureName() const;
+    bool IsUsingBakedNpcTexture() const;
+    void OnDisplayTransitionBeginAnimation();
     void RetargetEffects(uint32_t spellId, uint64_t oldTarget, uint64_t newTarget);
     void UpdateAnimKitsBeforeMountModelChange(int32_t mounting);
     void UpdateAnimKitsAfterMountModelChange(int32_t mounting);

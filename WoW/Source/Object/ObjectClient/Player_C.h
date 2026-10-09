@@ -92,6 +92,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void DanceMoveAnimComplete();
     void HandleSpellEventSound();
     static int32_t IsXRayVisionActive();
+    static void ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
+    static void TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
     void AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t a4);
     void AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3);
     void TurnOffGuildTabardPurchase();
@@ -443,7 +445,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t GetAttackPowerContributionFromStat(int32_t stat, int32_t value);
     float GetCombatRatingPct(int32_t rating);
     bool LoadGuildTextures(int32_t displayId);
-    static void TabardDrawCallback(int32_t guildID, const WOWGUID& guid, void* param, bool success);
     void UpdateHandItemVisual(GEOCOMPONENTLINKS link, int32_t hand);
     void UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONENTLINKS link);
     void UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_t slot);
