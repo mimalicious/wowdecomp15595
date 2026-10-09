@@ -5492,111 +5492,6 @@ void CGUnit_C::UpdateActiveHeadLook() {
     }
 }
 
-// OFFSET: #0x0071D940
-int32_t IsEmoteAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-    int32_t behavior = rec ? rec->m_behaviorID : 506;
-
-    switch (behavior) {
-        case 60:
-        case 61:
-        case 62:
-        case 63:
-        case 64:
-        case 65:
-        case 66:
-        case 67:
-        case 68:
-        case 69:
-        case 70:
-        case 71:
-        case 72:
-        case 73:
-        case 74:
-        case 76:
-        case 77:
-        case 78:
-        case 80:
-        case 81:
-        case 82:
-        case 83:
-        case 84:
-        case 113:
-        case 136:
-        case 137:
-        case 138:
-        case 178:
-        case 185:
-        case 186:
-        case 195:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
-// OFFSET: #0x0071D380
-int32_t IsSpellCastAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-    int32_t behavior = rec ? rec->m_behaviorID : 506;
-
-    switch (behavior) {
-        case 2:
-        case 32:
-        case 33:
-        case 53:
-        case 54:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
-// OFFSET: #0x0071DA20
-int32_t IsThrownWeaponAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior == 107 || (behavior > 110 && behavior <= 112)) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DA60
-int32_t IsBowAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior == 46 || behavior == 105 || behavior == 109) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DAA0
-int32_t IsRifleAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior == 49 || behavior == 106 || behavior == 110) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
 // OFFSET: 0x005B8F90/0x14022CEA0
 void CGUnit_C::UpdateBreathState(uint32_t time) {
     uint32_t liquidType;
@@ -6304,157 +6199,6 @@ void CGUnit_C::SendSplineDone(uint32_t time, uint32_t splineId) {
     input->UpdatePlayer(time, 1);
 }
 
-// OFFSET: #0x00714CE0
-void ApplyKitAnimFlags(uint32_t kitFlags, uint32_t* animFlags) {
-    if (!animFlags) {
-        return;
-    }
-
-    if (kitFlags & 0x4) {
-        *animFlags |= 0x2;
-    }
-
-    if (kitFlags & 0x8) {
-        *animFlags |= 0x4;
-    }
-
-    if (kitFlags & 0x10) {
-        *animFlags |= 0x8;
-    }
-
-    if (kitFlags & 0x100) {
-        *animFlags |= 0x20;
-    }
-}
-
-// OFFSET: #0x0071DFC0
-int32_t CGUnit_C::HasAnim466() {
-    uint32_t animId = this->ResolveAnimForModel(ANIM_DEATH_START, NULL);
-    return this->m_worldModel && this->m_worldModel->HasSequence(animId);
-}
-
-// OFFSET: #0x00724060
-int32_t CGUnit_C::ChooseDeathAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags) {
-    if (!this->AppearsDead(1)) {
-        return (mask & ~0x1) == 0;
-    }
-
-    if (this->m_vehiclePassenger && this->m_vehiclePassenger->m_state == 3 && !(this->m_unit->m_unitFieldFlags2 & 0x20000)) {
-        return (mask & ~0x1) == 0;
-    }
-
-    uint32_t flags = 0;
-
-    for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
-        const SpellVisualKitRec* kit = effect->m_kitRec;
-
-        if (kit && IsDeadOrDyingAnim(kit->m_animID)) {
-            if (kit->m_flags & 0x4) {
-                flags |= 0x2;
-            }
-
-            if (kit->m_flags & 0x8) {
-                flags |= 0x4;
-            }
-
-            if (kit->m_flags & 0x10) {
-                flags |= 0x8;
-            }
-
-            if (kit->m_flags & 0x100) {
-                flags |= 0x20;
-            }
-
-            if (flags & 0x2) {
-                *anim = effect->m_kitRec->m_animID;
-
-                if (animFlags) {
-                    *animFlags |= 0x2;
-                }
-
-                return 1;
-            }
-        }
-    }
-
-    uint32_t torsoAnim = this->GetCurrentTorsoAnimId();
-
-    if ((this->m_animationState & 0x4000000) && IsDeadOrDyingAnim(torsoAnim)) {
-        return 1;
-    }
-
-    if (this->HasAnim466()) {
-        if ((this->m_movement->m_flags & MOVEMENTFLAG_FALLING) || this->m_movementData.IsOnFallingSpline() || this->m_movementData.IsOnParabolicSpline()) {
-            *anim = ANIM_DEATH_START;
-        } else {
-            *anim = ANIM_DEATH_END_HOLD;
-        }
-
-        return 1;
-    }
-
-    uint32_t moveFlags = this->m_movementData.m_flags;
-
-    if ((!(moveFlags & MOVEMENTFLAG_FALLING) || !(moveFlags & MOVEMENTFLAG_FALLING_FAR)) && !IsDyingAnim(torsoAnim) && (mask & 0x1)) {
-        *anim = (moveFlags & MOVEMENTFLAG_SWIMMING) ? 132 : 6;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00724330
-int32_t CGUnit_C::ChooseSpellVisualKitAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags) {
-    if ((!this->m_unit->m_unitChannelSpell && !(this->m_animationState & 0x400)) || !(this->m_animationState & 0x60) || this->m_mountModel) {
-        return (mask & ~0x1F) == 0;
-    }
-
-    uint32_t kitAnim;
-    uint32_t kitFlags = 0;
-
-    if (!this->GetSpellVisualKitAnim(&kitAnim, &kitFlags)) {
-        return (mask & ~0x1F) == 0;
-    }
-
-    ApplyKitAnimFlags(kitFlags, animFlags);
-
-    if (kitAnim == this->GetCurrentTorsoAnimId() && this->GetCurrentTorsoAnimId() != this->GetCurrentBaseAnimId()) {
-        *anim = kitAnim;
-        return 1;
-    }
-
-    if (kitAnim != this->GetCurrentTorsoAnimId()) {
-        if (mask & 0x10) {
-            *anim = kitAnim;
-        }
-
-        return 1;
-    }
-
-    if ((*animFlags & 0x10) && (kitFlags & 0x40)) {
-        *anim = kitAnim;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0071E180
-int32_t CGUnit_C::ChooseShuffleAnim(uint32_t mask, uint32_t* anim) {
-    if (!this->CanPlayTurnAnim()) {
-        return (mask & ~0x7F) == 0;
-    }
-
-    if ((this->m_animationState & 0x70) && (mask & 0x40)) {
-        if (!(this->m_movementData.m_flags & MOVEMENTFLAG_TURN_LEFT) && !(this->m_animationState & 0x800)) {
-            *anim = ANIM_SHUFFLE_RIGHT;
-            return 1;
-        }
-
-        *anim = ANIM_SHUFFLE_LEFT;
-    }
-
-    return 1;
-}
-
 // OFFSET: 0x005C82E0/0x14023F850
 void CGUnit_C::PlayDeathAnim(int32_t force) {
     if (!force && this->m_deathAnimKit) {
@@ -7093,123 +6837,6 @@ void CGUnit_C::UpdateSmoothFacing(const C44Matrix* matrix, float* facingOffset) 
     }
 }
 
-// OFFSET: #0x0071DD30
-int32_t IsMeleeOrReadyAnim(uint32_t animId) {
-    if (IsMeleeAttackAnim(animId)) {
-        return 1;
-    }
-
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (!rec) {
-        return 0;
-    }
-
-    int32_t behavior = rec->m_behaviorID;
-
-    if (behavior < 25 || behavior > 29) {
-        return 0;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0071DC70
-int32_t IsSpellCastOrPrecastAnim(uint32_t animId) {
-    if (IsSpellCastAnim(animId)) {
-        return 1;
-    }
-
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (!rec) {
-        return 0;
-    }
-
-    int32_t behavior = rec->m_behaviorID;
-
-    if (behavior < 51 || behavior > 52) {
-        return 0;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0071D410
-int32_t IsSpellPrecastAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 51 && behavior <= 52) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DAE0
-int32_t IsWeaponReadyAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 25 && behavior <= 29) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071D7C0
-int32_t IsJumpAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 37 && (behavior <= 39 || behavior == 187)) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071D2A0
-int32_t IsJumpLandAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior == 39 || behavior == 187) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DE50
-int32_t IsFishingAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 133 && behavior <= 134) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
 // OFFSET: 0x005ADF70/0x140220760
 int32_t AnimationDataHasFlags(uint32_t anim, uint32_t flags) {
     AnimationDataRec* rec = g_animationDataDB.GetRecord(anim);
@@ -7266,15 +6893,6 @@ int32_t CGUnit_C::IsSplitbodyAnim(uint32_t anim) {
 // OFFSET: #0x004F6250
 bool CGUnit_C::IsVehiclePassengerSeated() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state == 3;
-}
-
-// OFFSET: #0x005140C0
-const VehicleSeatRec* CGUnit_C::GetPassengerSeatRec() const {
-    if (this->m_vehiclePassenger) {
-        return this->m_vehiclePassenger->m_seatRec;
-    }
-
-    return NULL;
 }
 
 // PROVEN: 98d4afc9 IDENTICAL/NONE
@@ -7366,92 +6984,6 @@ int32_t CGUnit_C::ApplyAttachmentAnimOverride(const M2BoneSequenceInfo* mount, c
     }
 
     return 1;
-}
-
-// OFFSET: #0x00737EF0
-void CGUnit_C::ProcessAnimationEvent(M2BoneSequenceInfo* slot, uint32_t currentAnim, int32_t torso, uint32_t previousAnim, int32_t blend, int32_t keepVariation) {
-    uint32_t anim = slot->m_sequenceId;
-    uint32_t playing = anim;
-    bool casting = this->m_unit->m_unitChannelSpell || (this->m_animationState & 0x400);
-
-    if (this->m_combat.m_attacking.m_guid || casting || IsSpellCastOrPrecastAnim(previousAnim) || IsMeleeOrReadyAnim(previousAnim)) {
-        AnimationDataRec* rec = g_animationDataDB.GetRecord(anim);
-
-        if ((rec && rec->m_behaviorID >= 25 && rec->m_behaviorID <= 29) || !anim) {
-            slot->m_variationIndex = 0;
-        }
-    }
-
-    if (IsDeadOrDyingAnim(anim)) {
-        slot->m_speed = 1.0f;
-    }
-
-    if (!(this->m_clientFlags & 0x80000)) {
-        blend = 0;
-    }
-
-    if (!keepVariation && anim != 0xFFFFFFFF && slot->m_variationIndex != 0xFFFFFFFF) {
-        M2SequenceInfo info;
-        info.Clear();
-        this->m_worldModel->GetSequenceInfo(anim, 0, info);
-        playing = slot->m_sequenceId;
-
-        if (info.m_animId != slot->m_sequenceId) {
-            slot->m_variationIndex = 0;
-        }
-    }
-
-    uint32_t bone = torso ? this->m_torsoKeyBone : 0xFFFFFFFF;
-
-    if (currentAnim == playing) {
-        if (!(fabsf(this->m_worldModel->GetBoneSequenceSpeed(bone) - slot->m_speed) < 2.3841858e-7f)) {
-            this->SetKeyBoneSequenceSpeed(this->m_worldModel, bone, slot->m_speed, 0);
-        }
-
-        return;
-    }
-
-    if (playing == 0xFFFFFFFF || (torso && this->m_torsoKeyBone == -1)) {
-        return;
-    }
-
-    this->SetKeyBoneSequence(this->m_worldModel, bone, playing, slot->m_variationIndex, slot->m_time, slot->m_speed, blend, 1, 0);
-
-    switch (GetAnimBehaviorId(anim)) {
-        case 39:
-            this->m_animationState |= 0x4;
-            break;
-        case 121:
-            this->m_animationState |= 0x80000;
-            break;
-        case 127:
-            this->m_animationState |= 0x8;
-            break;
-        case 192:
-        case 200:
-            this->m_animationState |= 0x40000;
-            break;
-        case 201:
-            this->m_animationState |= 0x400000;
-            break;
-        case 458:
-        case 459:
-        case 460:
-            this->m_animationState |= 0x2000000;
-            break;
-        default:
-            break;
-    }
-
-    if (IsSubmergedDeathAnim(anim) && this->m_animTier == 3 && (this->m_movementData.m_flags & 0x2201000)) {
-        this->m_animationState |= 0x4000000;
-    } else {
-        this->m_animationState &= ~0x4000000;
-    }
-
-    if ((this->m_animationState & 0x20000) && (IsMeleeAttackAnim(anim) || IsSpellCastAnim(anim))) {
-        this->m_animationState |= 0x2000;
-    }
 }
 
 // OFFSET: 0x005D3A20
@@ -9968,51 +9500,6 @@ void CGUnit_C::RetargetEffects(uint32_t spellId, uint64_t oldTarget, uint64_t ne
     CGObject_C::RetargetEffects(this->m_auraEffects, spellId, oldTarget, newTarget);
 }
 
-// OFFSET: #0x00714F90
-int32_t CGUnit_C::ChooseRangedLoadAnim(uint32_t flags, uint32_t* anim) const {
-    if (this->m_sheatheState != 2 || !(this->m_animationState & 0x200)) {
-        return (flags & 0xFFFFFF00) == 0;
-    }
-
-    if (!(flags & 0x80) || (this->m_animationState & 0x4000)) {
-        return 1;
-    }
-
-    *anim = ANIM_READY_UNARMED;
-    const CGUnitVirtualItem* item = this->GetVirtualItem(2, false);
-
-    if (!item || item->m_classID != 2) {
-        return 1;
-    }
-
-    switch (item->m_subclassID) {
-        case 2: {
-            *anim = 105;
-            return 1;
-        }
-
-        case 3:
-        case 18: {
-            *anim = 106;
-            return 1;
-        }
-
-        case 16: {
-            *anim = 112;
-            return 1;
-        }
-
-        case 19: {
-            *anim = 111;
-            return 1;
-        }
-
-        default: {
-            return 1;
-        }
-    }
-}
-
 // PROVEN: e3eb58e4 IDENTICAL/NONE
 // OFFSET: 0x005AA910/0x14021CDB0
 void CGUnit_C::RemoveMountModel() {
@@ -10189,23 +9676,6 @@ void CGUnit_C::StartMountTransition(const MountTransitionObject* transition, CEf
 void CGUnit_C::StopMountTransition() {
     this->m_mountTransition = NULL;
     this->m_mountTransitionEffect = NULL;
-}
-
-// OFFSET: #0x00715880
-bool CGUnit_C::IsStandStateSplitBody() const {
-    bool result = false;
-
-    switch (this->GetClientStandState()) {
-        case 0:
-        case 1:
-        case 4:
-        case 5:
-        case 6:
-            result = true;
-            break;
-    }
-
-    return result;
 }
 
 // PROVEN: d6b179d8 IDENTICAL/NONE
@@ -11058,33 +10528,6 @@ void CGUnit_C::RequestMirrorImageDataFromServer() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x007171C0
-int32_t CGUnit_C::ChooseEmoteAnim(uint32_t flags, uint32_t* anim) const {
-    uint32_t state = this->m_animationState;
-
-    if ((!(state & 0x40) || this->m_mountModel) && !(state & 0x20)) {
-        return (flags & 0x200) == 0;
-    }
-
-    int32_t emoteState = this->m_unit->m_unitNpcEmotestate;
-
-    if (!emoteState) {
-        return (flags & 0x200) == 0;
-    }
-
-    EmotesRec* emote = g_emotesDB.GetRecord(emoteState);
-
-    if (!emote || (CGGameUI::m_interactTarget == this->m_obj->m_guid && (emote->m_emoteFlags & 0x2000))) {
-        return (flags & 0x200) == 0;
-    }
-
-    if (flags & 0x200) {
-        *anim = emote->m_animID;
-    }
-
-    return 1;
-}
-
 // OFFSET: 0x005AE270/0x140220AC0
 uint32_t CGUnit_C::GetCurrentTorsoAnimId() const {
     if (!this->m_worldModel || !this->m_worldModel->IsLoaded()) {
@@ -11115,16 +10558,7 @@ int32_t CGUnit_C::HasDeathSequence() {
     return this->m_worldModel && this->m_worldModel->HasSequence(anim);
 }
 
-// OFFSET: #0x007172B0
-uint32_t CGUnit_C::GetCurrentBaseAnimId() const {
-    if (this->m_worldModel && this->m_worldModel->IsLoaded()) {
-        return this->m_worldModel->GetBoneSequenceId(0xFFFFFFFF);
-    }
-
-    return 0xFFFFFFFF;
-}
-
-// OFFSET: #0x007172E0
+// INLINED
 uint32_t CGUnit_C::GetCurrentMountAnimId() const {
     if (this->m_mountModel && this->m_mountModel->IsLoaded()) {
         return this->m_mountModel->GetBoneSequenceId(0xFFFFFFFF);
@@ -11344,24 +10778,6 @@ int32_t CGUnit_C::UsesNpcBakedTexture() const {
 // OFFSET: 0x005B61D0
 int32_t __stdcall CGUnit_C::MaybeDeferTeleport(const WOWGUID* transport) {
     return *transport && !ClntObjMgrObjectPtr(*transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
-}
-
-// OFFSET: #0x0071DF30
-int32_t CGUnit_C::OverrideAnimForFlying(uint32_t* anim) const {
-    if (anim[0] == 0xFFFFFFFF) {
-        return 0;
-    }
-
-    M2SequenceInfo info = {};
-    this->m_worldModel->GetSequenceInfo(anim[0], anim[1], info);
-
-    if (info.m_animId && info.m_animId != 8 && info.m_animId != 25) {
-        return 0;
-    }
-
-    anim[0] = 193;
-    anim[1] = 0xFFFFFFFF;
-    return 1;
 }
 
 // PROVEN: e3ac226c IDENTICAL/NONE
@@ -11759,49 +11175,6 @@ int32_t Packet_SMSG_PET_DISMISS_SOUND(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
-// OFFSET: #0x00717310
-float CGUnit_C::GetTorsoAnimProgress() const {
-    if (!this->m_worldModel || !this->m_worldModel->IsLoaded()) {
-        return 0.0f;
-    }
-
-    M2BoneSequenceInfo info;
-    info.m_sequenceId = 0;
-    info.m_variationIndex = 0;
-    info.m_time = 0;
-    info.m_speed = 0.0f;
-    info.m_startTime = 0;
-    info.m_finished = 0;
-    info.m_complete = 0;
-    info.m_endTime = 0;
-
-    if (this->m_torsoKeyBone != -1) {
-        this->m_worldModel->GetBoneSequenceInfo(this->m_torsoKeyBone, info);
-    }
-
-    if (info.m_sequenceId == 0xFFFFFFFF) {
-        this->m_worldModel->GetBoneSequenceInfo(0xFFFFFFFF, info);
-    }
-
-    float duration = static_cast<float>(static_cast<int32_t>(info.m_endTime - info.m_startTime));
-
-    if (duration < 0.00000011920929f) {
-        return 0.0f;
-    }
-
-    float progress = info.m_time / duration;
-
-    if (progress < 0.0f) {
-        return 0.0f;
-    }
-
-    if (progress >= 1.0f) {
-        return 1.0f;
-    }
-
-    return progress;
-}
-
 // OFFSET: #0x00717EC0
 void CGUnit_C::BuildSmoothMatrix(C44Matrix& matrix) const {
     matrix = C44Matrix::RotationAroundZ(this->m_smoothTarget.m_value);
@@ -12023,57 +11396,6 @@ int32_t HoverHeightChangeHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fi
     return 1;
 }
 
-// OFFSET: #0x0071DB70
-int32_t IsSubmergedDeathAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 466 && (behavior <= 468 || behavior == 472)) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DC20
-int32_t IsAirborneAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec) {
-        int32_t behavior = rec->m_behaviorID;
-
-        if (behavior >= 37 && (behavior <= 40 || behavior == 467)) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x0071DD80
-int32_t IsDyingAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (!rec) {
-        return 0;
-    }
-
-    int32_t behavior = rec->m_behaviorID;
-
-    if (behavior > 131) {
-        if (behavior < 466 || behavior > 467) {
-            return 0;
-        }
-    } else if (behavior != 131 && behavior != 1) {
-        return 0;
-    }
-
-    return 1;
-}
-
 // PROVEN: 38ee30d1 IDENTICAL/NONE
 // OFFSET: 0x005D6390
 void CGUnit_C::GetDefenseSkillRank(int32_t& rank, int32_t& bonus) const {
@@ -12142,61 +11464,6 @@ int32_t CGUnit_C::ShouldFadeIn() const {
 // OFFSET: 0x005ADF40/0x140220720
 int32_t CGUnit_C::IsRunning() const {
     return this->m_movementData.m_walkSpeed + this->m_movementData.m_walkSpeed >= this->m_movementData.GetBaseSpeed(0);
-}
-
-// OFFSET: #0x00717050
-int32_t CGUnit_C::ChooseMovementAnim(uint32_t flags, uint32_t* anim) const {
-    uint32_t moveFlags = this->m_movementData.m_flags;
-
-    if (!(moveFlags & (MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD | MOVEMENTFLAG_STRAFE_LEFT | MOVEMENTFLAG_STRAFE_RIGHT))) {
-        return (flags & 0xFFFFFFF8) == 0;
-    }
-
-    uint32_t state = this->m_animationState;
-
-    if (!(state & 0x70) || !(flags & 0x4) || (state & 0x800000) || (state & 0x2000000)) {
-        return 1;
-    }
-
-    if (moveFlags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) {
-        if (moveFlags & (MOVEMENTFLAG_STRAFE_LEFT | MOVEMENTFLAG_STRAFE_RIGHT)) {
-            *anim = ANIM_SWIM_RIGHT - ((moveFlags & MOVEMENTFLAG_STRAFE_LEFT) != 0);
-            return 1;
-        }
-
-        *anim = (moveFlags & MOVEMENTFLAG_BACKWARD) ? ANIM_SWIM_BACKWARDS : ANIM_SWIM;
-        return 1;
-    }
-
-    if (this->IsOnFlyingSpline()) {
-        *anim = ANIM_FLY;
-        return 1;
-    }
-
-    if (moveFlags & MOVEMENTFLAG_BACKWARD) {
-        *anim = ANIM_WALKBACKWARDS;
-        return 1;
-    }
-
-    if (this->m_unit->m_unitFieldBytes1[2] & 0x2) {
-        *anim = ANIM_STEALTH_WALK;
-        return 1;
-    }
-
-    float speed = this->m_movementData.GetBaseSpeed(0);
-
-    if (speed >= 11.0f) {
-        *anim = ANIM_SPRINT;
-        return 1;
-    }
-
-    if (this->m_movementData.m_walkSpeed + this->m_movementData.m_walkSpeed < speed) {
-        *anim = ANIM_RUN;
-        return 1;
-    }
-
-    *anim = ANIM_WALK;
-    return 1;
 }
 
 // OFFSET: #0x00717AD0
@@ -12440,19 +11707,6 @@ void CGUnit_C::CreateFishingLineEffect() {
             return;
         }
     }
-}
-
-// OFFSET: #0x00724200
-int32_t CGUnit_C::ChooseFallAnim(uint32_t* anim) const {
-    int32_t falling = this->m_movementData.IsFalling();
-
-    if (!falling) {
-        return falling;
-    }
-
-    uint32_t current = (this->m_worldModel && this->m_worldModel->IsLoaded()) ? this->m_worldModel->GetBoneSequenceId(0xFFFFFFFF) : 0xFFFFFFFF;
-    *anim = IsAirborneAnim(current) ? ANIM_COUNT : ANIM_FALL;
-    return 1;
 }
 
 // OFFSET: #0x00724F50
@@ -12775,38 +12029,6 @@ float CGUnit_C::GetSmoothFacing() const {
     }
 
     return unit->m_movement->GetFacing(facing);
-}
-
-// OFFSET: #0x0071E340
-void CGUnit_C::ChooseDefaultAnim(uint32_t& anim, int32_t force) const {
-    CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
-
-    if (passenger && passenger->m_state == 3 && passenger->GetLowerAnim(passenger->m_seatRec) != 506) {
-        return;
-    }
-
-    if (this->m_animationState & 0x800004) {
-        return;
-    }
-
-    uint32_t torso = this->GetCurrentTorsoAnimId();
-
-    if (!force && GetAnimBehaviorId(torso) == 464) {
-        anim = torso;
-        return;
-    }
-
-    if (this->m_movementData.m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) {
-        anim = ANIM_SWIM_IDLE;
-        return;
-    }
-
-    if (this->m_unit->m_unitFieldBytes1[2] & 0x2) {
-        anim = ANIM_STEALTH_STAND;
-        return;
-    }
-
-    anim = this->m_movement->IsSplineFlyerOrHovering() ? ANIM_HOVER : ANIM_STAND;
 }
 
 // OFFSET: 0x005C0130/0x140235BB0
@@ -13490,34 +12712,6 @@ bool CGUnit_C::IsMovingToward(CGObject_C* target) const {
     return direction.x * delta.x + direction.y * delta.y + direction.z * delta.z >= 0.0f;
 }
 
-// OFFSET: #0x00724280
-int32_t CGUnit_C::ChooseLootAnim(uint32_t flags, uint32_t* animId) {
-    if (this->m_mountModel || !(this->m_animationState & 0x40) || !this->ShouldKneelForLoot()) {
-        return (flags & 0xFFFFFFF0) == 0;
-    }
-
-    uint32_t torso = this->GetCurrentTorsoAnimId();
-
-    if (!this->IsLooting()) {
-        if (torso != 188) {
-            return (flags & 0xFFFFFFF0) == 0;
-        }
-
-        if (flags & 0x8) {
-            *animId = 189;
-        }
-
-        return 1;
-    }
-
-    if (!(flags & 0x8) || torso == 188 || torso == 50) {
-        return 1;
-    }
-
-    *animId = 50;
-    return 1;
-}
-
 // OFFSET: 0x005B4A40
 int32_t CGUnit_C::IsInFrontOfTargetWithGuid(const WOWGUID& guid) const {
     CGObject_C* target = ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__);
@@ -13558,21 +12752,6 @@ void CGUnit_C::UpdateWorldTransform(float elapsed) {
     model->SetWorldTransform(this->GetPosition(), facing, scale, this->m_groundNormal, animFlags ? 3 : 0xFFFFFFFF);
 }
 
-// OFFSET: #0x007178E0
-void CGUnit_C::ReleaseEffectsBySpell(int32_t spellId) {
-    CEffect* effect = this->m_procEffects;
-
-    while (effect) {
-        CEffect* next = effect->m_next;
-
-        if (effect->m_spellId == spellId) {
-            effect->Release();
-        }
-
-        effect = next;
-    }
-}
-
 // OFFSET: #0x00735A60
 int32_t CGUnit_C::UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t blend, int32_t primary, int32_t force) {
     if (!model) {
@@ -13605,100 +12784,6 @@ int32_t CGUnit_C::UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t
     }
 
     return result;
-}
-
-// OFFSET: #0x00735BB0
-void CGUnit_C::SetBoneSequenceTimeRecursive(CM2Model* model, uint32_t boneId, uint32_t time, int32_t force) {
-    if (!model) {
-        return;
-    }
-
-    if (!force && this->m_vehiclePassenger && this->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-        return;
-    }
-
-    model->SetBoneSequenceTime(boneId, time);
-
-    CVehicle_C* vehicle = this->m_vehicle;
-
-    if (!vehicle || !vehicle->m_vehicleRec || !vehicle->IsMirroringAnimsToPassengers() || model != this->GetObjectModel()) {
-        return;
-    }
-
-    for (CPassenger* passenger = this->m_vehicle->m_passengers.Head(); passenger; passenger = this->m_vehicle->m_passengers.Next(passenger)) {
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-            unit->SetBoneSequenceTimeRecursive(unit->GetObjectModel(), boneId, time, 1);
-        }
-    }
-}
-
-// OFFSET: #0x00735DD0
-void CGUnit_C::UpdateBoneSequenceFlags(CM2Model* model, int32_t freeze, int32_t force) {
-    if (!model) {
-        return;
-    }
-
-    if (!force && this->m_vehiclePassenger && this->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-        return;
-    }
-
-    if (freeze) {
-        uint32_t time = model->m_scene->m_time;
-        model->m_lastAnimTime = time ? time : 1;
-    } else {
-        model->m_lastAnimTime = 0;
-    }
-
-    CVehicle_C* vehicle = this->m_vehicle;
-
-    if (!vehicle || !vehicle->m_vehicleRec || !vehicle->IsMirroringAnimsToPassengers() || model != this->GetObjectModel()) {
-        return;
-    }
-
-    for (CPassenger* passenger = this->m_vehicle->m_passengers.Head(); passenger; passenger = this->m_vehicle->m_passengers.Next(passenger)) {
-        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-            unit->UpdateBoneSequenceFlags(unit->GetObjectModel(), freeze, 1);
-        }
-    }
-}
-
-// OFFSET: #0x00738440
-void CGUnit_C::ResetKeyBoneSequences() {
-    CM2Model* model = this->m_worldModel;
-
-    if (model) {
-        if (this->m_animationState & 0x80) {
-            uint32_t torsoBone = this->m_torsoKeyBone;
-
-            if (!this->m_vehiclePassenger || !this->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-                if (model->IsLoaded() && model->BoneHasParent(torsoBone)) {
-                    model->UnsetBoneSequence(torsoBone, 1, 1);
-                }
-
-                CVehicle_C* vehicle = this->m_vehicle;
-
-                if (vehicle && vehicle->m_vehicleRec && vehicle->IsMirroringAnimsToPassengers() && model == this->GetObjectModel()) {
-                    for (CPassenger* passenger = this->m_vehicle->m_passengers.Head(); passenger; passenger = this->m_vehicle->m_passengers.Next(passenger)) {
-                        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                        if (unit && unit->m_vehiclePassenger && unit->m_vehiclePassenger->IsCurrentlyMirroringVehicleAnims()) {
-                            unit->UnsetKeyBoneSequence(unit->GetObjectModel(), torsoBone, 1, 1, 1);
-                        }
-                    }
-                }
-            }
-        }
-
-        this->SetKeyBoneSequence(model, 0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
-    }
-
-    if (this->m_mountModel) {
-        this->SetKeyBoneSequence(this->m_mountModel, 0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0);
-    }
 }
 
 // OFFSET: #0x0061F890
@@ -17821,288 +16906,6 @@ void CGUnit_C::AnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenc
     }
 }
 
-// OFFSET: #0x0073B510
-void CGUnit_C::OnBaseAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequenceId) {
-    CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
-
-    if (passenger && passenger->m_state == 3 && this->m_unit->m_unitFieldHealth > 0) {
-        const VehicleSeatRec* seat = passenger->m_seatRec;
-
-        if (seat) {
-            bool ride;
-
-            if (passenger->GetLowerAnim(seat) != 506) {
-                ride = (seat->m_flags & 0x2) && (static_cast<int32_t>(sequenceId) == seat->m_rideAnimStart || static_cast<int32_t>(sequenceId) == seat->m_rideAnimLoop);
-            } else {
-                ride = (seat->m_flags & 0x4) && (static_cast<int32_t>(sequenceId) == seat->m_rideUpperAnimStart || static_cast<int32_t>(sequenceId) == seat->m_rideUpperAnimLoop);
-            }
-
-            if (ride) {
-                this->UpdateBaseAnimation(0, -1);
-                return;
-            }
-        }
-    }
-
-    uint32_t next = 506;
-    AnimationDataRec* anim = g_animationDataDB.GetRecord(sequenceId);
-    int32_t behavior = anim ? anim->m_behaviorID : 506;
-
-    if (behavior >= 458 && behavior <= 460) {
-        this->PlayBaseAnimation(464, 16);
-        return;
-    }
-
-    switch (behavior) {
-        case 1: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            M2BoneSequenceInfo info;
-            model->GetBoneSequenceInfo(boneId, info);
-            this->SetKeyBoneSequence(model, 0xFFFFFFFF, 6, info.m_variationIndex, 0, 1.0f, 1, 1, 0);
-            this->UpdateObjectEffectAnimationStates();
-            return;
-        }
-
-        case 6:
-        case 472: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            this->UpdateObjectEffectAnimationStates();
-            return;
-        }
-
-        case 37:
-        case 38: {
-            if (this->m_movement->m_flags & 0x2000000) {
-                break;
-            }
-
-            this->PlayBaseAnimation(38, 16);
-            return;
-        }
-
-        case 39: {
-            this->m_animationState &= ~0x4;
-            this->UpdateBaseAnimation(16, -1);
-            return;
-        }
-
-        case 40: {
-            this->PlayBaseAnimation(40, 16);
-            return;
-        }
-
-        case 50: {
-            this->PlayBaseAnimation(188, 16);
-            return;
-        }
-
-        case 69: {
-            if (this->IsInCombat() || this->m_combat.m_attacking.m_guid) {
-                break;
-            }
-
-            this->PlayBaseAnimation(69, 16);
-            return;
-        }
-
-        case 96:
-        case 97: {
-            next = (this->GetClientStandState() != 1) + 97;
-
-            if (next == 506) {
-                break;
-            }
-
-            this->PlayBaseAnimation(next, 16);
-            return;
-        }
-
-        case 99:
-        case 100: {
-            next = (this->GetClientStandState() != 3) + 100;
-
-            if (next == 506) {
-                break;
-            }
-
-            this->PlayBaseAnimation(next, 16);
-            return;
-        }
-
-        case 102: {
-            if (this->GetClientStandState() != 4) {
-                break;
-            }
-
-            this->PlayBaseAnimation(102, 16);
-            return;
-        }
-
-        case 103: {
-            if (this->GetClientStandState() != 5) {
-                break;
-            }
-
-            this->PlayBaseAnimation(103, 16);
-            return;
-        }
-
-        case 104: {
-            if (this->GetClientStandState() != 6) {
-                break;
-            }
-
-            this->PlayBaseAnimation(104, 16);
-            return;
-        }
-
-        case 105: {
-            this->PlayBaseAnimation(109, 16);
-            return;
-        }
-
-        case 106: {
-            this->PlayBaseAnimation(110, 16);
-            return;
-        }
-
-        case 109: {
-            if (!this->m_rangedWeaponModel) {
-                break;
-            }
-
-            if (this->m_unit->m_unitChannelSpell || (this->m_animationState & 0x600)) {
-                this->PlayBaseAnimation(109, 16);
-                return;
-            }
-
-            if (!this->m_rangedWeaponModel || !this->m_ammoModel || !this->m_ammoModel->m_attachParent) {
-                break;
-            }
-
-            this->m_ammoModel->DetachFromParent();
-            this->m_animationState &= ~0x4000;
-            this->m_rangedWeaponModel->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
-            this->UpdateBaseAnimation(16, -1);
-            return;
-        }
-
-        case 110: {
-            if (!this->m_rangedWeaponModel || (!this->m_unit->m_unitChannelSpell && !(this->m_animationState & 0x400))) {
-                break;
-            }
-
-            this->PlayBaseAnimation(110, 16);
-            return;
-        }
-
-        case 111:
-        case 112: {
-            if (!this->m_rangedWeaponModel || (!this->m_unit->m_unitChannelSpell && !(this->m_animationState & 0x400))) {
-                break;
-            }
-
-            this->PlayBaseAnimation(111, 16);
-            return;
-        }
-
-        case 114:
-        case 115: {
-            next = (this->GetClientStandState() != 8) + 115;
-
-            if (next == 506) {
-                break;
-            }
-
-            this->PlayBaseAnimation(next, 16);
-            return;
-        }
-
-        case 127: {
-            this->m_animationState &= ~0x8;
-            this->UpdateBaseAnimation(16, -1);
-            return;
-        }
-
-        case 131: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            M2BoneSequenceInfo info;
-            model->GetBoneSequenceInfo(boneId, info);
-            this->SetKeyBoneSequence(model, 0xFFFFFFFF, 132, info.m_variationIndex, 0, 1.0f, 1, 1, 0);
-            this->UpdateObjectEffectAnimationStates();
-            return;
-        }
-
-        case 132: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            return;
-        }
-
-        case 133: {
-            this->CreateFishingLineEffect();
-            this->PlayBaseAnimation(134, 16);
-            return;
-        }
-
-        case 201: {
-            this->m_animationState &= ~0x400000;
-            this->PlayBaseAnimation(202, 16);
-            return;
-        }
-
-        case 464: {
-            this->ChooseDefaultAnim(next, 1);
-
-            if (next == 506) {
-                break;
-            }
-
-            this->PlayBaseAnimation(next, 16);
-            return;
-        }
-
-        case 466:
-        case 467: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            this->PlayBaseAnimation((this->m_animationState & 0x4000000) ? 467 : 468, 16);
-            return;
-        }
-
-        case 468: {
-            if (!this->AppearsDead(1)) {
-                break;
-            }
-
-            M2BoneSequenceInfo info;
-            model->GetBoneSequenceInfo(boneId, info);
-            this->SetKeyBoneSequence(model, 0xFFFFFFFF, this->ResolveAnimForModel(472, NULL), info.m_variationIndex, 0, 1.0f, 1, 1, 0);
-            this->UpdateObjectEffectAnimationStates();
-            return;
-        }
-
-        default: {
-            break;
-        }
-    }
-
-    this->UpdateBaseAnimation(16, -1);
-}
-
 // OFFSET: #0x00737BD0
 void CGUnit_C::OnKeyBoneAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequenceId) {
     if (sequenceId == 15) {
@@ -20682,13 +19485,13 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
             if (this->m_missiles) {
                 C3Vector eventPosition;
 
-                if (IsBowAnim(this->GetCurrentTorsoAnimId()) && this->m_worldModel->HasAttachment(35)) {
+                if (AnimationDataHasFlags(this->GetCurrentTorsoAnimId(), 0x20000) && this->m_worldModel->HasAttachment(35)) {
                     eventPosition = this->m_worldModel->GetAttachmentPosition(35);
 
                     if (this->m_rangedWeaponModel) {
                         this->m_rangedWeaponModel->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
                     }
-                } else if (IsRifleAnim(this->GetCurrentTorsoAnimId()) && this->m_worldModel->HasAttachment(36)) {
+                } else if (AnimationDataHasFlags(this->GetCurrentTorsoAnimId(), 0x40000) && this->m_worldModel->HasAttachment(36)) {
                     eventPosition = this->m_worldModel->GetAttachmentPosition(36);
 
                     if (this->m_rangedWeaponModel) {
@@ -21098,24 +19901,6 @@ bool CGUnit_C::IsTracked() const {
     return CGMinimapFrame::s_trackingInfo && CGMinimapFrame::s_trackingInfo->m_type == 1 && (this->m_unit->m_unitNpcFlags & CGMinimapFrame::s_trackingInfo->m_npcFlags);
 }
 
-// OFFSET: #0x0071D450
-int32_t IsUnarmedAnim(uint32_t animId) {
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-    int32_t behavior = rec ? rec->m_behaviorID : 506;
-
-    switch (behavior) {
-        case 16:
-        case 20:
-        case 25:
-        case 117:
-        case 118:
-            return 1;
-
-        default:
-            return 0;
-    }
-}
-
 // PROVEN: 581d65ff IDENTICAL/NONE
 // OFFSET: 0x005ABC90
 void CGUnit_C::ClearWeaponTrail(int32_t hand) {
@@ -21123,19 +19908,6 @@ void CGUnit_C::ClearWeaponTrail(int32_t hand) {
         WeaponTrailClose(this->m_weaponTrails[hand]);
         this->m_weaponTrails[hand] = NULL;
     }
-}
-
-// OFFSET: #0x00721ED0
-int32_t CGUnit_C::IsPlayingUnarmedAnim() {
-    uint32_t sequence = 0xFFFFFFFF;
-
-    if (this->m_worldModel && this->m_worldModel->IsLoaded()) {
-        if (this->m_torsoKeyBone == -1 || (sequence = this->m_worldModel->GetBoneSequenceId(this->m_torsoKeyBone)) == 0xFFFFFFFF) {
-            sequence = this->m_worldModel->GetBoneSequenceId(0xFFFFFFFF);
-        }
-    }
-
-    return IsUnarmedAnim(sequence) || (IsMeleeAttackAnim(sequence) && !this->GetVirtualItem(0, false));
 }
 
 // OFFSET: 0x005CC660
@@ -21799,19 +20571,6 @@ void CGUnit_C::AddWorldHealingText(const WOWGUID& source, int32_t amount, const 
     }
 }
 
-// OFFSET: #0x00714B60
-float CGUnit_C::GetHeightAboveGround() {
-    C3Vector start = this->GetPosition();
-    C3Vector end = start;
-    start.z += 1.0f;
-    end.z -= 1.0f;
-    C3Vector hit = end;
-    float distance = 1.0f;
-    World::Intersect(start, end, &hit, &distance, 0x100111, NULL);
-
-    return start.z - hit.z;
-}
-
 // OFFSET: 0x005BAA70
 void CGUnit_C::RemoveChannelEffects(int32_t spellId) {
     for (uint32_t i = 0; i < (this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count); i++) {
@@ -22264,24 +21023,6 @@ float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec) {
     return 0.0f;
 }
 
-// OFFSET: #0x0071D450
-static int32_t IsWeaponAnimBehavior(uint32_t animId) {
-    AnimationDataRec* animation = g_animationDataDB.GetRecord(animId);
-    int32_t behavior = animation ? animation->m_behaviorID : 506;
-
-    switch (behavior) {
-        case 16:
-        case 20:
-        case 25:
-        case 117:
-        case 118:
-            return 1;
-
-        default:
-            return 0;
-    }
-}
-
 // OFFSET: 0x005B3B10
 bool CGUnit_C::IsPlayingWeaponAnim() const {
     uint32_t anim = this->GetCurrentTorsoAnimId();
@@ -22651,27 +21392,6 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
     CEffect* effect = CEffect::Create();
     effect->AddEffectByPosition(effectPosition, NULL, CGWorldFrame::s_currentWorldFrame->GetSceneTime(), 0, NULL, effectName, this->m_obj->m_guid, WOWGUID(), 0x220, CGObject_C::EffectOnceHandler, 0, NULL, WOWGUID::Make(this->GetTransportGUID()), -1, 0, 0);
     effect->Release();
-}
-
-// OFFSET: #0x0071DCC0
-int32_t IsSpecialIdleAnim(uint32_t animId) {
-    if (IsSpellCastAnim(animId)) {
-        return 1;
-    }
-
-    AnimationDataRec* rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec && rec->m_behaviorID == 107) {
-        return 1;
-    }
-
-    rec = g_animationDataDB.GetRecord(animId);
-
-    if (rec && rec->m_behaviorID == 46) {
-        return 1;
-    }
-
-    return GetAnimBehaviorId(animId) == 49;
 }
 
 // OFFSET: #0x0072CDE0

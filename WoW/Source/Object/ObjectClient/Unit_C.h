@@ -220,7 +220,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ApplyComponentItemsFromEffects();
     void AddHandItem(int32_t hand);
     void ClearWeaponTrail(int32_t hand);
-    int32_t IsPlayingUnarmedAnim();
     float GetMeleeChanceToCrit() const;
     float GetHealthRegenRateFromSpirit() const;
     float GetManaRegenRateFromSpirit() const;
@@ -638,14 +637,12 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsLocalClientControlled() const;
     void FreeComponent();
     uint32_t GetCombatReadyAnim() const;
-    int32_t ChooseRangedLoadAnim(uint32_t flags, uint32_t* anim) const;
     void RemoveMountModel();
     void RotateFacing(float delta);
     uint32_t GetCreatureFamily() const;
     void SaveChainSpellLocation(const C3Vector* location);
     void StartMountTransition(const MountTransitionObject* transition, CEffect* effect);
     void StopMountTransition();
-    bool IsStandStateSplitBody() const;
     const char* GetDisplayBakeName() const;
     const char* GetPortraitTextureName() const;
     void SetAnimEventPosition(const C3Vector* position);
@@ -713,9 +710,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsMirrorImage() const;
     void RequestMirrorImageDataFromServer();
     int32_t ChooseSpecialIdleAnim(uint32_t flags, uint32_t* anim) const;
-    int32_t ChooseEmoteAnim(uint32_t flags, uint32_t* anim) const;
     uint32_t GetCurrentTorsoAnimId() const;
-    uint32_t GetCurrentBaseAnimId() const;
     uint32_t GetCurrentMountAnimId() const;
     void GetCurrentAnimationInfo(M2BoneSequenceInfo* mount, M2BoneSequenceInfo* base, M2BoneSequenceInfo* torso, int32_t keepFinished) const;
     int32_t FindDefaultAnimForTier(int32_t tier, uint32_t* anim) const;
@@ -725,7 +720,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void InitPredictedPower();
     void SetManaRegenInterrupt();
     int32_t UsesNpcBakedTexture() const;
-    int32_t OverrideAnimForFlying(uint32_t* anim) const;
     int32_t GetCreatureType() const;
     PetPersonalityRec* GetPetPersonality() const;
     void GetFootprintInfo(int32_t* textureId, float* size) const;
@@ -760,7 +754,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     const CGUnitVirtualItem* GetAttackingWeapon(int32_t hand, bool requireLoadedModel) const;
     void StopAttack(bool send);
     bool IsInVehicle() const;
-    float GetTorsoAnimProgress() const;
     void BuildSmoothMatrix(C44Matrix& matrix) const;
     void GetSwimMatrix(C44Matrix& matrix) const;
     int32_t IsLooting() const;
@@ -780,7 +773,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t VehiclePassengerIsTransitionAllowed(const VehicleSeatRec* seat, int32_t checkSeat) const;
     int32_t ShouldUseVehicleSeatExitAnimation(const VehicleSeatRec* seat) const;
     int32_t IsRunning() const;
-    int32_t ChooseMovementAnim(uint32_t flags, uint32_t* anim) const;
     float GetStandHeight() const;
     C3Vector BuildSmoothPosition() const;
     C3Vector GetMissileFirePosition() const;
@@ -791,7 +783,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     uint32_t GetHappinessIndex() const;
     bool DoNotPlayWoundAnim() const;
     void CreateFishingLineEffect();
-    int32_t ChooseFallAnim(uint32_t* anim) const;
     void SaveChainSpellTargets(const TSStackArray<WOWGUID>& targets);
     bool HasAura(int32_t spellId, WOWGUID caster);
     int32_t FindMountTypeID(int32_t& spellId);
@@ -812,7 +803,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ResetSmoothFacing();
     float GetSmoothFacing() const;
     void UpdateSmoothFacing(const C44Matrix* matrix, float* facingOffset);
-    void ChooseDefaultAnim(uint32_t& anim, int32_t force) const;
     void UpdateSelectionRadius();
     void OnRemoteMissileTrajectoryCollision(MissileCollisionData* data);
     int32_t UnitReaction(const CGCorpse_C* corpse) const;
@@ -914,17 +904,12 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     DelayedSpellVisualKit* DelaySpellVisualKit(int32_t spellId, int32_t kitId, int32_t kitType, const C3Vector* position, WOWGUID targetGuid, int32_t a7, int32_t a8, int32_t delay, int32_t delayType, int32_t startTime, int32_t displayId, int32_t inventoryType);
     C3Vector GetGroundNormal() const;
     bool IsMovingToward(CGObject_C* target) const;
-    int32_t ChooseLootAnim(uint32_t flags, uint32_t* animId);
     void OnChangeSeatsOnControlledVehicleLocal(uint32_t eventTime, WOWGUID transport, uint8_t seat);
     int32_t IsInFrontOfTargetWithGuid(const WOWGUID& guid) const;
     void UpdateWorldTransform(float elapsed);
     void SetKeyBoneSequenceSpeed(CM2Model* model, uint32_t boneId, float speed, int32_t force);
-    void ReleaseEffectsBySpell(int32_t spellId);
     void SetKeyBoneSequence(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, float speed, int32_t blend, int32_t primary, int32_t force);
     int32_t UnsetKeyBoneSequence(CM2Model* model, uint32_t boneId, int32_t blend, int32_t primary, int32_t force);
-    void SetBoneSequenceTimeRecursive(CM2Model* model, uint32_t boneId, uint32_t time, int32_t force);
-    void UpdateBoneSequenceFlags(CM2Model* model, int32_t freeze, int32_t force);
-    void ResetKeyBoneSequences();
     void OnCollideFalling(uint32_t moveFlags = 0);
     void CreateVehicleData(const CClientObjCreate* create, int32_t vehicleId);
     void RefreshDataPointers();
@@ -1070,7 +1055,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void UpdateSwimmingStatusDefault(uint32_t time, int32_t spline, float depth, float swimDepth, float exitDepth);
     void PlayFlightBoundsFeedback(uint32_t time);
     void DismountIfMountRulesFail();
-    float GetHeightAboveGround();
     void VehiclePassengerInit();
     void DestroyVehicleCamera();
     void OnVehicleCameraNoLongerInUse();
@@ -1138,12 +1122,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void HandleEnvironmentDamage(uint32_t type, int32_t damage, int32_t absorbed, int32_t resisted);
     bool CheckSelfResurrect();
     uint32_t ChooseAnimation(uint32_t mask, uint32_t* animFlags, int32_t* usedDefault);
-    int32_t ChooseDeathAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags);
-    int32_t ChooseSpellVisualKitAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags);
     int32_t ChooseCombatAnim(uint32_t mask, uint32_t* anim, uint32_t* animFlags);
-    int32_t ChooseShuffleAnim(uint32_t mask, uint32_t* anim);
     int32_t ChooseStandStateAnim(uint32_t mask, uint32_t* anim);
-    int32_t HasAnim466();
     int32_t GetSpellVisualKitAnim(uint32_t* anim, uint32_t* kitFlags);
     uint32_t ResolveAnimForModel(uint32_t animId, CM2Model* model);
     static int32_t UnitReaction(int32_t factionTemplate, const CGUnit_C* unit);
@@ -1155,10 +1135,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsVehiclePassengerSeated() const;
     int32_t IsVehiclePassenger(WOWGUID guid) const;
     bool IsNPCTracked() const;
-    const VehicleSeatRec* GetPassengerSeatRec() const;
     void UpdateWeaponTrails(const uint32_t* a2, uint32_t a3);
     int32_t ApplyAttachmentAnimOverride(const M2BoneSequenceInfo* mount, const M2BoneSequenceInfo* base, const M2BoneSequenceInfo* torso, int32_t hasTorso, M2BoneSequenceInfo* mountOut, M2BoneSequenceInfo* baseOut, M2BoneSequenceInfo* torsoOut, int32_t* keepBase, int32_t* keepTorso);
-    void ProcessAnimationEvent(M2BoneSequenceInfo* slot, uint32_t currentAnim, int32_t torso, uint32_t previousAnim, int32_t blend, int32_t keepVariation);
     int32_t ShouldSplitTorsoAnimation(uint32_t animId, uint32_t currentAnim);
     void UpdateHandItemAnimEffects(uint32_t anim);
     void ShowHandItemSpellEffects(int32_t a1, int32_t a2);
@@ -1251,7 +1229,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t UnsheatheRightWeapon();
     int32_t UnsheatheLeftWeapon();
     void AnimEndHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time);
-    void OnBaseAnimEnd(CM2Model* model, uint32_t boneId, uint32_t sequenceId);
     void ExchangeSheathedWeapon(const C3Vector* position, uint32_t hand, uint32_t flag);
     static void BowModelLoaded(CM2Model* model, void* arg);
     void PlayWoundAnimKit(int32_t crit);
@@ -1360,31 +1337,13 @@ int32_t Packet_ThreatUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataS
 
 int32_t GetAnimBehaviorId(uint32_t animId);
 int32_t IsBirthAnim(uint32_t animId);
-int32_t IsSubmergedDeathAnim(uint32_t animId);
 int32_t IsCorpseAnim(uint32_t animId);
-int32_t IsAirborneAnim(uint32_t animId);
-int32_t IsDyingAnim(uint32_t animId);
-int32_t IsSpecialIdleAnim(uint32_t animId);
 int32_t IsDeadOrDyingAnim(uint32_t animId);
-int32_t IsEmoteAnim(uint32_t animId);
-int32_t IsSpellCastAnim(uint32_t animId);
-int32_t IsThrownWeaponAnim(uint32_t animId);
-int32_t IsBowAnim(uint32_t animId);
-int32_t IsRifleAnim(uint32_t animId);
 int32_t IsMeleeAttackAnim(uint32_t animId);
-int32_t IsUnarmedAnim(uint32_t animId);
-void ApplyKitAnimFlags(uint32_t kitFlags, uint32_t* animFlags);
 int32_t IsFullBodyAnim(uint32_t animId);
 int32_t IsLocomotionAnimId(uint32_t animId);
-int32_t IsMeleeOrReadyAnim(uint32_t animId);
-int32_t IsSpellCastOrPrecastAnim(uint32_t animId);
-int32_t IsSpellPrecastAnim(uint32_t animId);
 int32_t IsUpperBodyAnim(uint32_t animId);
-int32_t IsWeaponReadyAnim(uint32_t animId);
 int32_t IsWeaponSpecialAnim(uint32_t animId);
-int32_t IsJumpAnim(uint32_t animId);
-int32_t IsJumpLandAnim(uint32_t animId);
-int32_t IsFishingAnim(uint32_t animId);
 int32_t IsRangedWeaponAnim(uint32_t animId);
 
 namespace AnimationData {
