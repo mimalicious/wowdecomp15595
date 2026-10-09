@@ -252,6 +252,11 @@ void LoadingScreenInitialize() {
     BuildTiles();
 }
 
+// OFFSET: 0x0040DD70
+void LoadingScreenInitializeInGame() {
+    s_shipInfo.Initialize(&g_taxiPathNodeDB, g_taxiPathDB.m_maxID + 1);
+}
+
 // PROVEN: b1ef4bb2 IDENTICAL/NONE
 // OFFSET: 0x00409520/0x14000BC20
 static int32_t SizeEvent(const void* data, void* param) {
@@ -722,7 +727,7 @@ void LoadingScreenEnable(int32_t mapID, bool loadingWorld) {
     InitializeProgressBar(loadingWorld);
 }
 
-// OFFSET: #0x0040AEF0
+// OFFSET: 0x0040D940
 void LoadingScreenAsyncCallback(float progress, void* param) {
     if (progress <= s_asyncProgress) {
         return;
@@ -732,7 +737,7 @@ void LoadingScreenAsyncCallback(float progress, void* param) {
     UpdateProgressBar(1.0f == progress);
 }
 
-// OFFSET: #0x0040AF40
+// OFFSET: 0x0040D990
 void LoadingScreenWorldCallback(float progress, void* param) {
     if (progress <= s_worldProgress) {
         return;

@@ -319,6 +319,8 @@ class ClientNotification : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientNotification* msg);
 
+    /* 0010 */ char m_text[8192];
+
     ClientNotification(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientNotification();
     bool Handle();
@@ -345,6 +347,9 @@ class ClientGuildInvite : public JamClientMessage {
 class ClientSuspendToken : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientSuspendToken* msg);
+
+    /* 0010 */ uint32_t m_sequence;
+    /* 0014 */ uint8_t m_reason;
 
     ClientSuspendToken(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientSuspendToken();
@@ -445,9 +450,17 @@ class ClientTransferPending : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientTransferPending* msg);
 
+    /* 0010 */ uint8_t m_hasTransferSpellID;
+    /* 0014 */ uint32_t m_transferSpellID;
+    /* 0018 */ uint32_t m_mapID;
+    /* 001C */ uint8_t m_hasShip;
+    /* 0020 */ uint32_t m_shipID;
+    /* 0024 */ uint32_t m_shipOriginMapID;
+
     ClientTransferPending(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTransferPending();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientVoidStorageFailed : public JamClientMessage {
@@ -633,6 +646,8 @@ class ClientCurrencyLootRestored : public JamClientMessage {
 class ClientMessageBox : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMessageBox* msg);
+
+    /* 0010 */ WDataStore m_text;
 
     ClientMessageBox(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMessageBox();
@@ -1660,9 +1675,14 @@ class ClientNewWorld : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientNewWorld* msg);
 
+    /* 0010 */ C3Vector m_position;
+    /* 001C */ float m_facing;
+    /* 0020 */ uint32_t m_mapID;
+
     ClientNewWorld(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientNewWorld();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildMaxDailyXp : public JamClientMessage {

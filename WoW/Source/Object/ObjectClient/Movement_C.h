@@ -33,6 +33,8 @@ int32_t MovementObjIsTransport(WOWGUID guid);
 void MovementRemoveTransport(CGGameObject_C* transport);
 
 void MovementDestroy();
+void MovementSuspendActiveMover();
+void MovementResumeActiveMover();
 int32_t MovementIdleMoveUnits(const void* data, void* param);
 void MovementDelSpline(CMoveSpline* spline);
 CMoveSpline* MovementNewSpline();

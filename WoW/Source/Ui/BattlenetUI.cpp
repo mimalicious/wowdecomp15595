@@ -1900,7 +1900,7 @@ void BattlenetUI::Init() {
     DebugLog("BNUI: Init");
 }
 
-// OFFSET: #0x0053B370
+// OFFSET: 0x0090DF70
 void BattlenetUI_EnterRealm() {
     Login* login = ClientServices::LoginConnection();
 

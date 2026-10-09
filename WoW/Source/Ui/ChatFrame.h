@@ -18,6 +18,8 @@ class SpellRec;
 class ItemStats_C;
 class GameObjectStats_C;
 
+struct ChatMessageParams;
+
 enum SLASH_COMMAND_ID {
     CHAT_MSG_SYSTEM = 0,
     CHAT_MSG_SAY = 1,
@@ -311,6 +313,7 @@ class CGChat {
     static void LogPetHappinessDecrease(const WOWGUID& caster, const WOWGUID& target, int32_t amount);
     static void LogDismissPet(const WOWGUID& guid, const WOWGUID& pet);
     static void LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId);
+    static int32_t AddChatMessage(const char* text, SLASH_COMMAND_ID type, ChatMessageParams* params);
     static void AddChatMessage(const char* text, int32_t type, const char* senderName, uint32_t language, const char* channelName, const char* targetName, const char* flags, WOWGUID senderGuid, uint32_t senderUnk, WOWGUID targetGuid, int32_t achievementID, bool isGM, const ChatConversation* conversation);
     static int32_t OnMessageChat(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
     static int32_t OnGMMessageChat(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);

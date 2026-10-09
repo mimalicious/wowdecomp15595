@@ -33,6 +33,14 @@ class UserClientPlayerLogin : public JamClientMessage {
     ~UserClientPlayerLogin();
 };
 
+class UserClientWorldPortResponse : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    UserClientWorldPortResponse();
+    ~UserClientWorldPortResponse();
+};
+
 class UserClientReorderCharacters : public JamClientMessage {
     public:
     /* 0010 */ TSGrowableArray<JamUserClientReorderEntry> m_entries;

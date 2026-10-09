@@ -254,3 +254,16 @@ void UserClientDBQueryBulk::Put(CDataStore* msg) {
         }
     }
 }
+
+// OFFSET: 0x0066E720
+UserClientWorldPortResponse::UserClientWorldPortResponse() {
+}
+
+// OFFSET: 0x0066BC60
+UserClientWorldPortResponse::~UserClientWorldPortResponse() {
+}
+
+// OFFSET: 0x0066B9A0
+void UserClientWorldPortResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x2411));
+}

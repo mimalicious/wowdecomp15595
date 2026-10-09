@@ -31,6 +31,24 @@ bool (*ClientGameObjectActivateAnimKit::s_handler)(ClientGameObjectActivateAnimK
 // STATIC: 0x00E4D520
 bool (*ClientMapObjEvents::s_handler)(ClientMapObjEvents* msg);
 
+// STATIC: 0x00E4D5B0
+bool (*ClientNotification::s_handler)(ClientNotification* msg);
+
+// STATIC: 0x00E4D460
+bool (*ClientSuspendToken::s_handler)(ClientSuspendToken* msg);
+
+// STATIC: 0x00E4D764
+bool (*ClientNewWorldAbort::s_handler)(ClientNewWorldAbort* msg);
+
+// STATIC: 0x00E4D590
+bool (*ClientTransferPending::s_handler)(ClientTransferPending* msg);
+
+// STATIC: 0x00E4D54C
+bool (*ClientMessageBox::s_handler)(ClientMessageBox* msg);
+
+// STATIC: 0x00E4D784
+bool (*ClientNewWorld::s_handler)(ClientNewWorld* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -678,4 +696,126 @@ void ClientMapObjEvents::Unpack(CDataStore* msg, bool full) {
         this->m_data.PutData(data, size);
         this->m_data.Finalize();
     }
+}
+
+// OFFSET: 0x006A9870/0x140358BD0
+bool ClientNotification::Handle() {
+    if (!ClientNotification::s_handler) {
+        return false;
+    }
+
+    return ClientNotification::s_handler(this);
+}
+
+// OFFSET: 0x006BE000/0x140372BC0
+bool ClientSuspendToken::Handle() {
+    if (!ClientSuspendToken::s_handler) {
+        return false;
+    }
+
+    return ClientSuspendToken::s_handler(this);
+}
+
+// OFFSET: 0x006A6E00/0x140355740
+bool ClientNewWorldAbort::Handle() {
+    if (!ClientNewWorldAbort::s_handler) {
+        return false;
+    }
+
+    return ClientNewWorldAbort::s_handler(this);
+}
+
+// OFFSET: 0x006CCA40/0x140385B90
+ClientTransferPending::ClientTransferPending(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_hasTransferSpellID = false;
+    this->m_hasShip = false;
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006B2270/0x140363830
+bool ClientTransferPending::Handle() {
+    if (!ClientTransferPending::s_handler) {
+        return false;
+    }
+
+    return ClientTransferPending::s_handler(this);
+}
+
+// OFFSET: 0x006B5BF0/0x140368130
+void ClientTransferPending::Unpack(CDataStore* msg, bool full) {
+    uint8_t bits = 0;
+    msg->Get(bits);
+
+    uint8_t value = bits << 1;
+    this->m_hasTransferSpellID = (bits >> 7) != 0;
+    this->m_hasShip = value >> 7;
+
+    if (this->m_hasShip) {
+        uint32_t shipOriginMapID = 0;
+        msg->Get(shipOriginMapID);
+        this->m_shipOriginMapID = shipOriginMapID;
+
+        uint32_t shipID = 0;
+        msg->Get(shipID);
+        this->m_shipID = shipID;
+    }
+
+    if (this->m_hasTransferSpellID) {
+        uint32_t transferSpellID = 0;
+        msg->Get(transferSpellID);
+        this->m_transferSpellID = transferSpellID;
+    }
+
+    uint32_t mapID = 0;
+    msg->Get(mapID);
+    this->m_mapID = mapID;
+}
+
+// OFFSET: 0x006B05D0/0x140361340
+bool ClientMessageBox::Handle() {
+    if (!ClientMessageBox::s_handler) {
+        return false;
+    }
+
+    return ClientMessageBox::s_handler(this);
+}
+
+// OFFSET: 0x006A5BF0/0x140353BB0
+ClientNewWorld::ClientNewWorld(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_position.x = 0.0f;
+    this->m_position.y = 0.0f;
+    this->m_position.z = 0.0f;
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A9260/0x1403583C0
+bool ClientNewWorld::Handle() {
+    if (!ClientNewWorld::s_handler) {
+        return false;
+    }
+
+    return ClientNewWorld::s_handler(this);
+}
+
+// OFFSET: 0x006A2530/0x14034FA60
+void ClientNewWorld::Unpack(CDataStore* msg, bool full) {
+    float x = 0.0f;
+    msg->Get(x);
+    this->m_position.x = x;
+
+    float facing = 0.0f;
+    msg->Get(facing);
+    this->m_facing = facing;
+
+    float y = 0.0f;
+    msg->Get(y);
+    this->m_position.y = y;
+
+    uint32_t mapID = 0;
+    msg->Get(mapID);
+    this->m_mapID = mapID;
+
+    float z = 0.0f;
+    msg->Get(z);
+    this->m_position.z = z;
 }
