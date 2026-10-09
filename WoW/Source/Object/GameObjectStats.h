@@ -13,10 +13,11 @@ class GameObjectStats {
     /* 0008 */ char* m_iconName;
     /* 000C */ char* m_castBarCaption;
     /* 0010 */ char* m_closeText;
-    /* 0014 */ uint32_t m_propValue[24];
-    /* 0074 */ float m_scale;
-    /* 0078 */ uint32_t m_questItems[6];
-    /* 0090 */ char* m_name[4];
+    /* 0014 */ uint32_t m_propValue[32];
+    /* 0094 */ float m_scale;
+    /* 0098 */ uint32_t m_questItems[6];
+    /* 00B0 */ uint32_t m_requiredLevel;
+    /* 00B4 */ char* m_name[4];
 
     ~GameObjectStats();
     const char* GetName(int32_t index);

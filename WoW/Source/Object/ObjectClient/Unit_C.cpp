@@ -6594,6 +6594,16 @@ uint32_t CGUnit_C::GetCurrentClientRace() const {
     return this->m_currentClientRace;
 }
 
+// OFFSET: 0x005B5070/0x140228790
+uint32_t CGUnit_C::GetCurrentClientNativeDisplayID() const {
+    if (!this->m_currentClientRace || (this->m_currentClientRaceFlags & 1)) {
+        return this->m_unit->m_unitFieldNativedisplayid;
+    }
+
+    ChrRacesRec* race = g_chrRacesDB.GetRecord(this->m_currentClientRace);
+    return this->m_unit->m_unitFieldBytes0[2] ? race->m_femaleDisplayID : race->m_maleDisplayID;
+}
+
 // OFFSET: #0x00716F10
 void CGUnit_C::RequestMirrorImageData() {
     this->m_clientFlags |= 0x20000;
@@ -20787,6 +20797,7 @@ void CGUnit_C::NamePlateUpdateRaidTarget() {
     }
 }
 
+// PROVEN: 41cb8a54 IDENTICAL/NONE
 // OFFSET: 0x0059CC50/0x14020B860
 void CGUnit_C::RecreateNamePlate() {
     if (this->m_nameDesc) {
@@ -24999,5 +25010,19 @@ void CGUnit_C::UpdateEffectVirtualItemFlag() {
             this->unk_09FC |= 0x400;
             return;
         }
+    }
+}
+
+// OFFSET: 0x0060D820/0x140297400
+void CGUnit_C::UpdateSoundPosition() {
+    C3Vector position = this->GetPosition();
+    SE3::Set3DPosition(this->m_npcInteractSound, position);
+    SE3::Set3DPosition(this->m_npcSound, position);
+    SE3::Set3DPosition(this->m_loopSound, position);
+    SE3::Set3DPosition(this->unk_11B4[0], position);
+    CVehicle_C* vehicle = this->m_vehicle;
+
+    if (vehicle && vehicle->m_vehicleRec) {
+        vehicle->UpdatePassengerSoundPositions();
     }
 }

@@ -7,7 +7,7 @@
 
 class CGGameObject_C_Type_Binder : public CGGameObject_C_TypeBase {
     public:
-    CGGameObject_C_Type_Binder(CGGameObject_C* owner);
+    CGGameObject_C_Type_Binder(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

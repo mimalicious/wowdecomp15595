@@ -7,7 +7,7 @@
 
 class CGGameObject_C_Type_MapObj : public CGGameObject_C_Type_WorldObj {
     public:
-    CGGameObject_C_Type_MapObj(CGGameObject_C* owner);
+    CGGameObject_C_Type_MapObj(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

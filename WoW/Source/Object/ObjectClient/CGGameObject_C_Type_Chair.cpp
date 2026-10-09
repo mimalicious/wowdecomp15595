@@ -7,21 +7,21 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/Types.h"
 
-// OFFSET: #0x0070C6A0
-CGGameObject_C_Type_Chair::CGGameObject_C_Type_Chair(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner) {
+// OFFSET: 0x0059A910
+CGGameObject_C_Type_Chair::CGGameObject_C_Type_Chair(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create) {
     this->m_interactDistance = 3.0f;
 }
 
-// OFFSET: #0x00710240
+// OFFSET: 0x005A06D0/0x140210140
 uint32_t CGGameObject_C_Type_Chair::GetNumSlots() const {
     uint32_t slotsIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 11);
     GameObjectStats* slotsStats = this->m_owner->m_stats;
-    uint32_t slots = (slotsStats && slotsIndex < 24) ? slotsStats->m_propValue[slotsIndex] : 0;
+    uint32_t slots = (slotsStats && slotsIndex < 32) ? slotsStats->m_propValue[slotsIndex] : 0;
 
     return slots;
 }
 
-// OFFSET: #0x0070C700
+// OFFSET: 0x0059A990/0x140209130
 void CGGameObject_C_Type_Chair::PostInitWithStats() {
     uint32_t count = this->GetNumSlots();
 
@@ -37,7 +37,7 @@ void CGGameObject_C_Type_Chair::PostInitWithStats() {
     }
 }
 
-// OFFSET: #0x00711CE0
+// OFFSET: 0x005A21F0/0x1402123E0
 bool CGGameObject_C_Type_Chair::CanUse() const {
     if (!CGGameObject_C_TypeBase::CanUse()) {
         return false;
@@ -68,7 +68,7 @@ bool CGGameObject_C_Type_Chair::CanUse() const {
     return true;
 }
 
-// OFFSET: #0x00711DB0
+// OFFSET: 0x005A22F0/0x140212500
 bool CGGameObject_C_Type_Chair::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     if (!CGGameObject_C_TypeBase::CanUseNow(error, distance, errorText)) {
         return false;
@@ -81,9 +81,18 @@ bool CGGameObject_C_Type_Chair::CanUseNow(GAME_ERROR_TYPE* error, float* distanc
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    uint32_t count;
 
-    if (player && (count = this->GetNumSlots()) != 0) {
+    if (player) {
+        if ((player->m_unit->m_unitFieldFlags & 0x80000) || player->HasAuraEffect(94)) {
+            if (error) {
+                *error = static_cast<GAME_ERROR_TYPE>(ERR_NOT_IN_COMBAT);
+            }
+
+            return false;
+        }
+
+        uint32_t count = this->GetNumSlots();
+
         while (count) {
             count--;
             C3Vector slot = this->m_owner->m_passenger.GetPosition(this->m_slots[count]);
@@ -92,7 +101,7 @@ bool CGGameObject_C_Type_Chair::CanUseNow(GAME_ERROR_TYPE* error, float* distanc
             float dy = position.y - slot.y;
             float dz = position.z - slot.z;
 
-            if (dx * dx + dz * dz + dy * dy < rangeSquared) {
+            if (rangeSquared > dx * dx + dz * dz + dy * dy) {
                 return true;
             }
         }

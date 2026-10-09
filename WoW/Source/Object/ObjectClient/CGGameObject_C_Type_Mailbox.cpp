@@ -1,16 +1,16 @@
 #include "CGGameObject_C_Type_Mailbox.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 
-// OFFSET: #0x00712750
-CGGameObject_C_Type_Mailbox::CGGameObject_C_Type_Mailbox(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A2840/0x140212B40
+CGGameObject_C_Type_Mailbox::CGGameObject_C_Type_Mailbox(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: #0x0070C9F0
+// OFFSET: 0x0059DC40
 void CGGameObject_C_Type_Mailbox::StartInteraction() {
     CGGameObject_C* owner = this->m_owner;
 
     if (owner->IsObjectModelLoaded()) {
-        owner->m_typeData->ActivateOneShotAnim(8);
+        owner->m_typeData->ActivateOneShotAnim(2);
         owner->m_pendingOneShotAnim = 0;
     } else {
         owner->m_pendingOneShotAnim = 2;

@@ -16,6 +16,7 @@ class CGameObjectDef {
     static const TypeInfo s_typeInfo[36];
 
     static int32_t GetPropNum(int32_t typeId, int32_t prop);
+    static const char* NameFromTypeId(int32_t typeId);
 };
 
 #endif

@@ -41,7 +41,7 @@ class CClientObjCreate {
     /* 01C8 */ bool m_hasAreaTrigger;
     /* 01CC */ float m_areaTrigger[16];
     /* 020C */ uint8_t unk_020C;
-    /* 0210 */ TSGrowableArray<uint32_t> unk_0210;
+    /* 0210 */ TSGrowableArray<uint32_t> m_stopFrames;
 
     CClientObjCreate();
     ~CClientObjCreate();

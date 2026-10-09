@@ -13,7 +13,7 @@ class CGGameObject_C_Type_Text : public CGGameObject_C_TypeAnimated {
     virtual void StartInteraction();
     virtual void CloseInteraction();
 
-    CGGameObject_C_Type_Text(CGGameObject_C* owner);
+    CGGameObject_C_Type_Text(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

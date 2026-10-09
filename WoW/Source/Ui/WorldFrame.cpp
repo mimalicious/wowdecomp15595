@@ -1404,7 +1404,7 @@ void CGWorldFrame::OnFrameSizeChanged(const CRect& rect) {
 static int32_t ObjectCollisionProc(WOWGUID* guid, uintptr_t param, World::ObjectCollisionData* data, uint32_t flags) {
     CGObject_C* object = ClntObjMgrObjectPtr(*guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
-    if (!object || !object->IsCollidable(flags) || !(object->m_obj->m_type & TYPEMASK_GAMEOBJECT)) {
+    if (!object || !object->IsSolidCollidable(flags) || !(object->m_obj->m_type & TYPEMASK_GAMEOBJECT)) {
         return 0;
     }
 

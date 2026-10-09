@@ -492,6 +492,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ConnectToLightningThisFrame(uint32_t a1, int32_t a2) override;
 
     uint32_t GetCurrentClientRace() const;
+    uint32_t GetCurrentClientNativeDisplayID() const;
     bool IsActivePlayer();
     CGUnit_C(uint32_t time, const CClientObjCreate& create);
     ~CGUnit_C();
@@ -830,6 +831,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void OnMoveUpdate(uint32_t time, int32_t a3, int32_t a4);
     void UpdateFlightStatus(uint32_t time);
     void UpdateSwimmingStatus(uint32_t time, int32_t a3);
+    void UpdateSoundPosition();
     void StartSwimming(uint32_t time, int32_t spline);
     void StopSwimming(uint32_t time, int32_t spline);
     float GetHeightAboveGround();

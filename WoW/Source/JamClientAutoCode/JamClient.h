@@ -172,4 +172,30 @@ class ClientHotfixNotifyBlob : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
+class ClientGameObjectActivateAnimKit : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientGameObjectActivateAnimKit* msg);
+
+    /* 0010 */ uint8_t m_objectGUID[8];
+    /* 0018 */ uint32_t m_animKitID;
+
+    ClientGameObjectActivateAnimKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientGameObjectActivateAnimKit();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
+class ClientMapObjEvents : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientMapObjEvents* msg);
+
+    /* 0010 */ uint32_t m_uniqueID;
+    /* 0014 */ WDataStore m_data;
+
+    ClientMapObjEvents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientMapObjEvents();
+    bool Handle();
+    void Unpack(CDataStore* msg, bool full);
+};
+
 #endif

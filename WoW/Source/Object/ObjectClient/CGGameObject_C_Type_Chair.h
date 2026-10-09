@@ -16,7 +16,7 @@ class CGGameObject_C_Type_Chair : public CGGameObject_C_TypeBase {
     virtual void PostInitWithStats();
     virtual uint32_t GetNumSlots() const;
 
-    CGGameObject_C_Type_Chair(CGGameObject_C* owner);
+    CGGameObject_C_Type_Chair(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

@@ -7,7 +7,7 @@
 
 class CGGameObject_C_Type_Camera : public CGGameObject_C_TypeBase {
     public:
-    CGGameObject_C_Type_Camera(CGGameObject_C* owner);
+    CGGameObject_C_Type_Camera(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

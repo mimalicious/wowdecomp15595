@@ -101,6 +101,15 @@ const CGameObjectDef::TypeInfo CGameObjectDef::s_typeInfo[36] = {
     { "trapdoor", 3, s_props35, NULL },
 };
 
+// OFFSET: 0x005E6B10/0x140267470
+const char* CGameObjectDef::NameFromTypeId(int32_t typeId) {
+    if (static_cast<uint32_t>(typeId) <= 35) {
+        return CGameObjectDef::s_typeInfo[typeId].m_name;
+    }
+
+    return NULL;
+}
+
 // OFFSET: 0x005E6B30/0x140267490
 int32_t CGameObjectDef::GetPropNum(int32_t typeId, int32_t prop) {
     if (typeId >= 36 || prop >= 129) {

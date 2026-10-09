@@ -263,7 +263,7 @@ class CMovement_C : public CMovementShared {
     void MoveSplineMoverWithoutCollision(const C3Vector& position, uint32_t time, uint32_t elapsed);
     int32_t ValidateTestVsFacetQuery(C3Vector move) const;
     int32_t GetCurrentHoverHeight(float* height, int32_t* noGround, uint64_t* facetId) const;
-    void CollideWithTransport(uint32_t time, uint32_t elapsed, float distance, const C3Vector& direction, const C44Matrix& transportMatrix);
+    void PassengerMove(uint32_t time, uint32_t elapsed, float distance, const C3Vector& direction, const C44Matrix& transportMatrix);
     int32_t DistanceToMove(World::FacetData* facets, const C3Vector& direction, float distance, uint32_t* facetIndex, C4Plane* planes, uint32_t* planeCount, float* moveDistance, const C3Vector* position) const;
     void CallMoveEventHandlers(uint32_t time, uint32_t remaining, uint32_t oldFlags, uint32_t oldFlags2, int32_t jumping, int32_t transportChanged);
     int32_t GetMoveFacets(float distance, uint32_t elapsed, C3Vector direction);

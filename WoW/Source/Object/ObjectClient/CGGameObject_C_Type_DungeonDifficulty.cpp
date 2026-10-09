@@ -6,7 +6,7 @@
 #include "WoW/Source/Ui/GameUI.h"
 
 // OFFSET: 0x0059AE40
-CGGameObject_C_Type_DungeonDifficulty::CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner) {
+CGGameObject_C_Type_DungeonDifficulty::CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create) {
     this->m_sound = 0;
     this->m_disabled = 1;
 }
@@ -32,6 +32,7 @@ bool CGGameObject_C_Type_DungeonDifficulty::CanUse() const {
     return false;
 }
 
+// PROVEN: 88d86cb7 IDENTICAL/NONE
 // OFFSET: 0x00599670/0x140207A70
 void CGGameObject_C_Type_DungeonDifficulty::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     a3 = this->m_disabled;
@@ -48,6 +49,7 @@ void CGGameObject_C_Type_DungeonDifficulty::HandleAnimEvent(uint32_t eventId, ui
     }
 }
 
+// PROVEN: 25d6ef25 IDENTICAL/NONE
 // OFFSET: 0x00599660/0x140207A60
 void CGGameObject_C_Type_DungeonDifficulty::PostInitWithStats() {
     this->UpdateDisabled();

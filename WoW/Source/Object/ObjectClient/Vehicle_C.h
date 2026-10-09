@@ -77,6 +77,7 @@ class CVehicle_C {
     int32_t GetVehicleAndSeatFromVirtualSeatsRemaining(int32_t& remaining, const CVehicle_C*& vehicle, uint8_t& seat) const;
     CGUnit_C* FindPassengerUnit(uint8_t seat);
     void BuildWorldMatrix(const C44Matrix* parent);
+    void UpdatePassengerSoundPositions();
     void UpdateLargestPassengerBoundsRadius();
     void UpdateFreeSeatMask();
     int32_t GetVehicleAndSeatFromVirtualSeat(int32_t virtualSeat, const CVehicle_C*& vehicle, uint8_t& seat) const;

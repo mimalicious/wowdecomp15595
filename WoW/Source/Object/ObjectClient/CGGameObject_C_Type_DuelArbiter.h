@@ -10,7 +10,7 @@ class CGGameObject_C_Type_DuelArbiter : public CGGameObject_C_TypeAnimated {
     virtual bool CanHighlight() const;
     virtual bool CanUse() const;
 
-    CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner);
+    CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

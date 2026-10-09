@@ -55,7 +55,7 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
     this->m_isActivePlayer = bits.ReadBit();
     this->m_hasVehicle = bits.ReadBit();
     this->m_hasMovement = bits.ReadBit();
-    this->unk_0210.SetCount(bits.ReadBits<24>());
+    this->m_stopFrames.SetCount(bits.ReadBits<24>());
     this->unk_0001 = bits.ReadBit();
     this->m_hasGOTransport = bits.ReadBit();
     this->m_hasStationaryPosition = bits.ReadBit();
@@ -169,10 +169,10 @@ void CClientObjCreate::Get(CDataStore* msg, bool a2) {
         this->m_animKits[2] = !bits.ReadBit();
     }
 
-    for (uint32_t i = 0; i < this->unk_0210.Count(); i++) {
+    for (uint32_t i = 0; i < this->m_stopFrames.Count(); i++) {
         uint32_t value = 0;
         msg->Get(value);
-        this->unk_0210[i] = value;
+        this->m_stopFrames[i] = value;
     }
 
     if (this->m_hasMovement) {

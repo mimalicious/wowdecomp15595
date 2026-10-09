@@ -7,7 +7,9 @@
 
 class CGGameObject_C_Type_SpellCaster : public CGGameObject_C_TypeAnimated {
     public:
-    CGGameObject_C_Type_SpellCaster(CGGameObject_C* owner);
+    virtual bool CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const;
+
+    CGGameObject_C_Type_SpellCaster(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

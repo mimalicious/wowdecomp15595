@@ -67,7 +67,7 @@ class CGGameObject_C_TypeBase {
     virtual float GetSpeed() const;
     virtual void AddPassenger(CPassenger* passenger, int32_t a2);
     virtual int32_t IsPointInside(const C3Vector& point) const;
-    virtual CMapBaseObj* GetMapObjectTransportID() const;
+    virtual uintptr_t GetMapObjectTransportID() const;
     virtual void PostInit(bool a1);
     virtual void PostInitWithStats();
     virtual void Reenable();
@@ -85,21 +85,28 @@ class CGGameObject_C_TypeBase {
     virtual uint32_t GetTransportUpdateTime() const;
     virtual float GetInteractDistance() const;
 
-    CGGameObject_C_TypeBase(CGGameObject_C* owner);
+    CGGameObject_C_TypeBase(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C_TypeAnimated : public CGGameObject_C_TypeBase {
     public:
     static uint32_t s_animSequenceIds[13];
     static const char* s_animStateNames[13];
+    static const char* s_displayStateNames[3];
+    static uint32_t s_oneShotAnimKitIds[7];
+    static uint32_t s_oneShotAnimKitAnims[7];
+
+    static void BaseAnimKitStopped(CAnimKitInst* inst, uint64_t param);
+    static void StateAnimKitStopped(CAnimKitInst* inst, uint64_t param);
+    static void OneShotAnimKitStopped(CAnimKitInst* inst, uint64_t param);
 
     /* 0010 */ int32_t m_animState;
     /* 0014 */ int32_t m_pendingAnimState;
     /* 0018 */ int32_t m_nextAnimTime;
     /* 001C */ uint32_t m_sound;
-    /* 0020 */ uint32_t unk_0020;
-    /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ uint32_t unk_0028;
+    /* 0020 */ CAnimKitInst* m_baseKit;
+    /* 0024 */ CAnimKitInst* m_stateKit;
+    /* 0028 */ CAnimKitInst* m_oneShotKit;
 
     virtual ~CGGameObject_C_TypeAnimated();
     virtual bool ShouldFadeIn() const;
@@ -121,9 +128,16 @@ class CGGameObject_C_TypeAnimated : public CGGameObject_C_TypeBase {
     virtual void UpdateAnimState(uint32_t state);
     virtual void UpdateSolidity();
 
-    CGGameObject_C_TypeAnimated(CGGameObject_C* owner);
+    CGGameObject_C_TypeAnimated(CGGameObject_C* owner, const CClientObjCreate& create);
     void SetSequence(CM2Model* model);
     void ResetAnimState();
+    void CloseLoopingSound();
+    bool IsIdle() const;
+    void SetAnimPaused(CM2Model* model, int32_t paused);
+    void StopAnimKits();
+    int32_t UpdateObjectLock();
+    void PlayStateAnimKits(int32_t transition);
+    bool PlayOneShotAnimKit(uint32_t animKitID, uint32_t anim);
 };
 
 class CGGameObject_C_Type_Null : public CGGameObject_C_TypeBase {
@@ -132,7 +146,7 @@ class CGGameObject_C_Type_Null : public CGGameObject_C_TypeBase {
     virtual const char* DebugStatus();
     virtual bool CanUseNow(GAME_ERROR_TYPE* error, float* distance) const;
 
-    CGGameObject_C_Type_Null(CGGameObject_C* owner);
+    CGGameObject_C_Type_Null(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C_Type_WorldObj : public CGGameObject_C_TypeBase {
@@ -145,14 +159,14 @@ class CGGameObject_C_Type_WorldObj : public CGGameObject_C_TypeBase {
     virtual bool CanBeSolid() const;
     virtual bool CanHighlight() const;
     virtual bool CanUse() const;
-    virtual CMapBaseObj* GetMapObjectTransportID() const;
+    virtual uintptr_t GetMapObjectTransportID() const;
     virtual void PostInitWithStats();
     virtual void Disable();
     virtual void PostReenable();
     virtual void CreateWorldObj();
     virtual void DestroyWorldObj();
 
-    CGGameObject_C_Type_WorldObj(CGGameObject_C* owner);
+    CGGameObject_C_Type_WorldObj(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C_Type_TransportBase : public CGGameObject_C_Type_WorldObj {
@@ -161,8 +175,9 @@ class CGGameObject_C_Type_TransportBase : public CGGameObject_C_Type_WorldObj {
     /* 0020 */ C3Vector m_position;
     /* 002C */ float m_speed;
     /* 0030 */ uint32_t m_pathTime;
-    /* 0034 */ uint32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
+    /* 0034 */ uint32_t m_isLoaded : 1;
+    /* 0034 */ uint32_t m_inLiquid : 1;
+    /* 0038 */ int32_t m_transportState;
     /* 003C */ uint32_t m_transportUpdateTime;
 
     virtual ~CGGameObject_C_Type_TransportBase();
@@ -177,7 +192,8 @@ class CGGameObject_C_Type_TransportBase : public CGGameObject_C_Type_WorldObj {
     virtual void PostReenable();
     virtual uint32_t GetTransportUpdateTime() const;
 
-    CGGameObject_C_Type_TransportBase(CGGameObject_C* owner);
+    CGGameObject_C_Type_TransportBase(CGGameObject_C* owner, const CClientObjCreate& create);
+    void MarkTransportLoaded();
     void MovePassengers(int32_t* moved);
     float UpdateCurrentVelocity(uint32_t elapsed, const C3Vector& position, C3Vector* direction);
 };
@@ -187,6 +203,7 @@ class CGGameObject_C_Type_MapObjTransport : public CGGameObject_C_Type_Transport
     /* 0040 */ ShipPath m_shipPath;
     /* 0080 */ uint32_t m_currentLeg;
 
+    virtual ~CGGameObject_C_Type_MapObjTransport();
     virtual void UpdateState(int32_t oldState, int32_t newState);
     virtual void AddPassenger(CPassenger* passenger, int32_t a2);
     virtual void PostInitWithStats();
@@ -195,7 +212,7 @@ class CGGameObject_C_Type_MapObjTransport : public CGGameObject_C_Type_Transport
     virtual void UpdateMovement(uint32_t time, uint32_t elapsed);
     virtual uint32_t GetSequenceTimeFromRealTime(uint32_t time) const;
 
-    CGGameObject_C_Type_MapObjTransport(CGGameObject_C* owner);
+    CGGameObject_C_Type_MapObjTransport(CGGameObject_C* owner, const CClientObjCreate& create);
     void InitializeMovement();
     void UpdateObjectEffectState(uint32_t anim);
 };
@@ -212,7 +229,7 @@ struct DestructibleBuildingState {
 class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_WorldObj {
     public:
     static void AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
-    static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
+    static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time, uint64_t param);
     static void DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
     static void MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
@@ -226,11 +243,11 @@ class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_Worl
     /* 0068 */ uintptr_t m_baseCollision;
     /* 006C */ float m_sinkDepth;
     /* 0070 */ float m_previousSinkDepth;
-    /* 0074 */ uint32_t unk_0074;
-    /* 0078 */ uint32_t unk_0078;
+    /* 0074 */ uint32_t m_sound;
+    /* 0078 */ DestructibleModelDataRec* m_modelData;
     /* 007C */ uint8_t m_loadPending;
     /* 007D */ uint8_t m_animating;
-    /* 0080 */ DestructibleModelDataRec* m_modelData;
+    /* 0080 */ float m_boundingRadius;
 
     virtual ~CGGameObject_C_Type_DestructibleBuilding();
     virtual bool CanHighlight() const;
@@ -246,7 +263,7 @@ class CGGameObject_C_Type_DestructibleBuilding : public CGGameObject_C_Type_Worl
     virtual void DestroyWorldObj();
     C3Vector GetNamePosition() const;
 
-    CGGameObject_C_Type_DestructibleBuilding(CGGameObject_C* owner);
+    CGGameObject_C_Type_DestructibleBuilding(CGGameObject_C* owner, const CClientObjCreate& create);
     uint16_t GetImpactEffectDoodadSet(int32_t state) const;
     uint16_t GetDestructionDoodadSet(int32_t state) const;
     uint16_t GetAmbientDoodadSet(int32_t state) const;
@@ -257,7 +274,7 @@ class CGGameObject_C_Type_FishingNode : public CGGameObject_C_TypeAnimated {
     public:
     virtual bool CanUse() const;
 
-    CGGameObject_C_Type_FishingNode(CGGameObject_C* owner);
+    CGGameObject_C_Type_FishingNode(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C_Type_GuildBank : public CGGameObject_C_TypeAnimated {
@@ -266,7 +283,7 @@ class CGGameObject_C_Type_GuildBank : public CGGameObject_C_TypeAnimated {
     virtual bool Use();
     virtual void StartInteraction();
 
-    CGGameObject_C_Type_GuildBank(CGGameObject_C* owner);
+    CGGameObject_C_Type_GuildBank(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C_Type_MeetingStone : public CGGameObject_C_TypeAnimated {
@@ -274,7 +291,7 @@ class CGGameObject_C_Type_MeetingStone : public CGGameObject_C_TypeAnimated {
     virtual bool Use();
     virtual void AddToolTipInfo(CGTooltip* tooltip);
 
-    CGGameObject_C_Type_MeetingStone(CGGameObject_C* owner);
+    CGGameObject_C_Type_MeetingStone(CGGameObject_C* owner, const CClientObjCreate& create);
     int32_t CheckUseRange(uint32_t level) const;
 };
 
@@ -282,12 +299,18 @@ class CGGameObject_C_Type_Ritual : public CGGameObject_C_TypeAnimated {
     public:
     virtual bool CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const;
 
-    CGGameObject_C_Type_Ritual(CGGameObject_C* owner);
+    CGGameObject_C_Type_Ritual(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 class CGGameObject_C : public CGObject_C, public CGGameObject {
     public:
+    static CVar* s_cvUseAnimKits;
+    static CVar* s_cvForceMouseOver;
+
     static void Initialize();
+    static void UpdateDungeonDifficulty();
+    static void UpdateMapObjSpeeds();
+    static bool UseAnimKitsChangedCallback(CVar* var, const char* oldValue, const char* value, void* arg);
     static void Shutdown();
     bool IsTracked() const;
     static void AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param);
@@ -295,6 +318,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     static int32_t OnFlagsChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
     static int32_t OnStateChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
     static void SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7);
+    static void SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary);
 
     /* 0100 */ CPassenger m_passenger;
     /* 0130 */ TSList<void> m_gameObjectMirrorLists [12];
@@ -306,8 +330,9 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     /* 0228 */ uint32_t m_transportTimeOffset;
     /* 022C */ int32_t m_displayState;
     /* 0230 */ int32_t m_pendingOneShotAnim;
-    /* 0234 */ uint8_t m_hasWorldBounds;
-    /* 0235 */ uint8_t unk_0235 [3];
+    /* 0234 */ int8_t m_hasWorldBounds;
+    /* 0235 */ uint8_t m_animLocked;
+    /* 0236 */ uint8_t unk_0236 [2];
     /* 0238 */ uint32_t m_animKitID;
     /* 023C */ CM2Model* m_lootEffect;
     /* 0240 */ uint32_t m_effectAnimState;
@@ -326,7 +351,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     virtual void UpdateInteractIconAttach();
     virtual int32_t Animate(float elapsed);
     virtual int32_t IsSolidSelectable() const;
-    int32_t IsCollidable(int32_t a1) const;
+    int32_t IsSolidCollidable(uint32_t flags) const;
     virtual int32_t IsHighlightSuppressed() const;
     virtual int32_t GetModelFileName(const char** name) const;
     virtual void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3);
@@ -358,11 +383,11 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     bool CanUse() const;
     bool IsCreatorOnlyUse() const;
     void CheckForPassiveHighlight();
-    int32_t CanUseNow() const;
+    bool CanUseNow() const;
     int32_t CheckRange() const;
     void CloseInteraction();
     void UseObject();
-    uintptr_t CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets);
+    uintptr_t CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets, int32_t a7);
     void AddWorldDamageText(int32_t amount);
     void AddWorldHealingText(int32_t amount, const SpellRec* spell);
     const char* GetCloseText() const;
@@ -374,7 +399,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     int32_t GetPageTextMaterial() const;
     int32_t GetPageTextLanguage() const;
     bool IsValidOpenAction(int32_t action) const;
-    void LoadBaseObject(GameObjectStats_C* stats);
+    void SetStats(GameObjectStats_C* stats);
     void PlayCustomAnim(uint32_t anim);
     void ResetDisplayState();
     void SetDisplayState(int32_t state);
@@ -386,6 +411,7 @@ class CGGameObject_C : public CGObject_C, public CGGameObject {
     void SetStorage(uint32_t* storage, uint32_t* saved);
     void ShowLootEffect();
     void StartInteraction();
+    void SetAnimLocked(int32_t locked);
     void UpdateObjectEffectAnimationStates(uint32_t anim);
     CAaBox GetWorldBounds() const;
     void UpdateDisplay(uint32_t time);

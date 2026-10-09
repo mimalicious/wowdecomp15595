@@ -1,7 +1,7 @@
 #include "CGGameObject_C_Type_AuraGenerator.h"
 
-// OFFSET: #0x00712800
-CGGameObject_C_Type_AuraGenerator::CGGameObject_C_Type_AuraGenerator(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A2530/0x140212800
+CGGameObject_C_Type_AuraGenerator::CGGameObject_C_Type_AuraGenerator(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
 // PROVEN: 40e17f90 IDENTICAL/IDENTICAL

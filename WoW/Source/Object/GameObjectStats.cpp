@@ -52,7 +52,7 @@ void GameObjectStats::Pack(CDataStore* msg) {
     msg->PutString(this->m_castBarCaption);
     msg->PutString(this->m_closeText);
 
-    for (int32_t i = 0; i < 24; i++) {
+    for (int32_t i = 0; i < 32; i++) {
         msg->Put(this->m_propValue[i]);
     }
 
@@ -61,8 +61,11 @@ void GameObjectStats::Pack(CDataStore* msg) {
     for (int32_t i = 0; i < 6; i++) {
         msg->Put(this->m_questItems[i]);
     }
+
+    msg->Put(this->m_requiredLevel);
 }
 
+// PROVEN: 178c07b1 IDENTICAL/NONE
 // OFFSET: 0x00A28C80/0x1407D0880
 void GameObjectStats_C::Unpack(CDataStore* msg) {
     char buffer[1024];
@@ -87,7 +90,7 @@ void GameObjectStats_C::Unpack(CDataStore* msg) {
     msg->GetString(buffer, sizeof(buffer));
     this->m_closeText = SStrDupA(buffer, __FILE__, __LINE__);
 
-    for (int32_t i = 0; i < 24; i++) {
+    for (int32_t i = 0; i < 32; i++) {
         msg->Get(this->m_propValue[i]);
     }
 
@@ -96,4 +99,6 @@ void GameObjectStats_C::Unpack(CDataStore* msg) {
     for (int32_t i = 0; i < 6; i++) {
         msg->Get(this->m_questItems[i]);
     }
+
+    msg->Get(this->m_requiredLevel);
 }

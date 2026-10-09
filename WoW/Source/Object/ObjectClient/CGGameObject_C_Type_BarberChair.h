@@ -11,7 +11,7 @@ class CGGameObject_C_Type_BarberChair : public CGGameObject_C_Type_Chair {
     virtual bool CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const;
     virtual uint32_t GetNumSlots() const;
 
-    CGGameObject_C_Type_BarberChair(CGGameObject_C* owner);
+    CGGameObject_C_Type_BarberChair(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

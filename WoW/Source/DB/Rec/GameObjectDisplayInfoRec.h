@@ -16,8 +16,8 @@ class GameObjectDisplayInfoRec {
     /* 0030 */ float m_geoBoxMin [3];
     /* 003C */ float m_geoBoxMax [3];
     /* 0048 */ int32_t m_objectEffectPackageID;
-    /* 004C */ float unk_004C;
-    /* 0050 */ float unk_0050;
+    /* 004C */ float m_overrideLootEffectScale;
+    /* 0050 */ float m_overrideNameScale;
 };
 
 #endif

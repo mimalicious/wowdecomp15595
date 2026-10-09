@@ -14,7 +14,7 @@ class CMovementGlobals;
 class CPassenger;
 
 void MovementAddTransport(CGGameObject_C* transport);
-int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t reason);
+int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t a3, int32_t reason, int32_t vehicleId);
 CMovementGlobals* MovementGetGlobals();
 uint32_t MovementGetIdleTime();
 void MovementSetGlobals(CMovementGlobals* globals);

@@ -509,7 +509,7 @@ int32_t IsStillLoading() {
     CGGameObject_C* transport = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(player->GetTransportGUID()), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
 
     if (transport) {
-        CMapBaseObj* object = transport->m_typeData->GetMapObjectTransportID();
+        uintptr_t object = transport->m_typeData->GetMapObjectTransportID();
 
         if (!object || !World::ObjectIsDrawable(object)) {
             return 1;

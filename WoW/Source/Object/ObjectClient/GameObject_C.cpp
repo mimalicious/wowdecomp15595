@@ -7,11 +7,13 @@
 #include "Engine/Source/Base/Status.h"
 #include "Engine/Source/Base/Types.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Gx/CGxTexFlags.h"
 #include "Engine/Source/Model2/M2Data.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Model2/M2Scene.h"
 #include "Engine/Source/Model2/M2Shared.h"
+#include "Engine/Source/Os/System.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Services/AsyncFile.h"
 #include "Engine/Source/Services/SysMessage.h"
@@ -28,6 +30,8 @@
 #include "WoW/Source/DB/Rec/SpellEffectCameraShakesRec.h"
 #include "WoW/Source/DB/Rec/SpellVisualEffectNameRec.h"
 #include "WoW/Source/Game/GameClient/PlayerName.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/WowServices/WDataStore.h"
 #include "WoW/Source/LoadingScreen.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "WoW/Source/Object/GameObjectDef.h"
@@ -87,30 +91,55 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00A335E8
+// STATIC: 0x00BB15EC
 static const uint32_t s_oneShotAnims[7] = { 0xFFFFFFFF, 0, 8, 9, 10, 11, 12 };
 
 // STATIC: #0x00ADA974
 static uint32_t s_buildingDamageColor = 0xFFFF8400;
 
-// STATIC: #0x00ADA938
+// STATIC: 0x00CA5FF8
 uint32_t CGGameObject_C_TypeAnimated::s_animSequenceIds[13] = { 145, 147, 148, 149, 146, 150, 151, 152, 153, 154, 155, 156, 157 };
 
-// STATIC: #0x00ADA978
+// STATIC: 0x00CA6180
 const char* CGGameObject_C_TypeAnimated::s_animStateNames[13] = { "Spawn", "Closed", "Opening", "Open", "Closing", "Destroying", "Destroyed", "Rebuilding", "Custom0", "Custom1", "Custom2", "Custom3", "Despawn" };
 
-// OFFSET: #0x00712AE0
+// STATIC: 0x00CA61B4
+const char* CGGameObject_C_TypeAnimated::s_displayStateNames[3] = { "Open", "Closed", "Destroyed" };
+
+// STATIC: 0x00CA5FC0
+uint32_t CGGameObject_C_TypeAnimated::s_oneShotAnimKitIds[7] = { 0, 1577, 1584, 1584, 1584, 1584, 1589 };
+
+// STATIC: 0x00CA5FDC
+uint32_t CGGameObject_C_TypeAnimated::s_oneShotAnimKitAnims[7] = { 0xFFFFFFFF, 145, 153, 154, 155, 156, 157 };
+
+struct MapObjSpeedTransition {
+    /* 0000 */ uint32_t m_uniqueID;
+    /* 0004 */ uint32_t m_duration;
+    /* 0008 */ uint32_t m_remaining;
+    /* 000C */ float m_startSpeed;
+    /* 0010 */ float m_targetSpeed;
+    /* 0014 */ uint32_t m_applied;
+};
+
+// STATIC: 0x00DD5D40
+static TSCGrowableArray<MapObjSpeedTransition, 8> s_mapObjSpeedTransitions;
+
+// STATIC: 0x00CA61C0
+static uint32_t s_mapObjSpeedTransitionTime = 4000;
+
+// OFFSET: 0x005A35F0
 static void GameObjectStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
     WOWGUID requester = WOWGUID();
     GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(id, requester, NULL, NULL, false);
 
     if (stats) {
-        object->LoadBaseObject(stats);
+        object->SetStats(stats);
     }
 }
 
-// OFFSET: #0x0070CAC0
+// PROVEN: 45221240 IDENTICAL/NONE
+// OFFSET: 0x0059B100
 void CGGameObject_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -119,7 +148,8 @@ void CGGameObject_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_
     }
 }
 
-// OFFSET: #0x0070CB60
+// PROVEN: 360e0662 IDENTICAL/NONE
+// OFFSET: 0x0059B1A0
 int32_t CGGameObject_C::OnAnimProgressChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -130,7 +160,8 @@ int32_t CGGameObject_C::OnAnimProgressChanged(WOWGUID guid, uint32_t fieldOffset
     return 1;
 }
 
-// OFFSET: #0x0070ED00
+// PROVEN: cd985646 IDENTICAL/NONE
+// OFFSET: 0x0059DD00
 int32_t CGGameObject_C::OnFlagsChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -141,123 +172,21 @@ int32_t CGGameObject_C::OnFlagsChanged(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: #0x00710BE0
+// PROVEN: e87f9121 IDENTICAL/NONE
+// OFFSET: 0x0059CC50/0x14020B860
 void CGGameObject_C_Type_DestructibleBuilding::PostInitWithStats() {
     CGGameObject_C* owner = this->m_owner;
-    this->m_states[0].m_displayId = owner->m_stats->m_displayID;
-    GameObjectDisplayInfoRec* display = g_gameObjectDisplayInfoDB.GetRecord(this->m_states[0].m_displayId);
 
-    if (display) {
-        this->m_states[0].m_modelName = display->m_modelName;
-    } else {
-        SysMsgPrintf(STATUS_ERROR, 2, "Destructible building - Game object id %d is missing its display record %d", owner->m_obj->m_entryID, owner->m_gameObject->m_displayID);
+    if (owner->m_nameDesc) {
+        PlayerNameDelete(owner->m_nameDesc);
     }
 
-    this->m_modelData = g_destructibleModelDataDB.GetRecord(this->m_owner->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 124)));
-
-    if (this->m_modelData) {
-        this->m_states[1].m_displayId = this->m_modelData->m_state1WMO;
-        this->m_states[2].m_displayId = this->m_modelData->m_state2WMO;
-        this->m_states[3].m_displayId = this->m_modelData->m_state3WMO;
-
-        for (int32_t i = 1; i < 4; i++) {
-            DestructibleBuildingState& entry = this->m_states[i];
-
-            if (entry.m_displayId) {
-                GameObjectDisplayInfoRec* stateDisplay = g_gameObjectDisplayInfoDB.GetRecord(entry.m_displayId);
-
-                if (stateDisplay) {
-                    entry.m_modelName = stateDisplay->m_modelName;
-                    continue;
-                }
-
-                SysMsgPrintf(STATUS_ERROR, 2, "Destructible building - Game object id %d is missing its display record %d for state %d", this->m_owner->m_obj->m_entryID, this->m_owner->m_gameObject->m_displayID, i);
-            }
-
-            entry.m_displayId = this->m_states[i - 1].m_displayId;
-            entry.m_modelName = this->m_states[i - 1].m_modelName;
-        }
-    }
-
-    C3Vector position = this->m_owner->m_passenger.GetPosition(this->m_owner->m_passenger.m_position);
-
-    for (int32_t i = 0; i < 4; i++) {
-        DestructibleBuildingState& entry = this->m_states[i];
-
-        if (entry.m_object || !entry.m_modelName) {
-            continue;
-        }
-
-        int16_t doodadSets[3];
-        doodadSets[0] = this->GetDestructionDoodadSet(2 * i);
-        doodadSets[1] = this->GetImpactEffectDoodadSet(2 * i);
-        doodadSets[2] = this->GetAmbientDoodadSet(2 * i);
-        uint32_t uniqueId = i ? 0 : this->m_proxy.m_uniqueId;
-        uint64_t guid = this->m_owner->m_obj->m_guid.m_guid;
-        entry.m_object = static_cast<CMapEntity*>(CWorld::ObjectCreate(entry.m_modelName, position, this->m_owner->GetFacing(), 0, 0, guid, 3, doodadSets, &this->m_proxy.m_sphere.r, uniqueId));
-
-        if (entry.m_object) {
-            World::ObjectSetRenderEnabled(entry.m_object, 0);
-            World::ObjectEnableCollision(entry.m_object, 0);
-        }
-
-        entry.m_loading = 1;
-    }
-
-    this->m_worldObject = this->m_states[((this->m_owner->m_gameObject->m_flags >> 8) & 0xE) >> 1].m_object;
-
-    if (this->m_worldObject) {
-        World::ObjectSetRenderEnabled(this->m_worldObject, 1);
-        World::ObjectEnableCollision(this->m_worldObject, 1);
-    }
-
-    this->m_loadPending = 1;
-
-    if (this->m_modelData) {
-        int32_t repairFx = this->m_modelData->m_repairGroundFx;
-
-        if (repairFx) {
-            GameObjectDisplayInfoRec* fxDisplay = g_gameObjectDisplayInfoDB.GetRecord(repairFx);
-
-            if (fxDisplay) {
-                this->m_rebuildEffect = static_cast<CMapEntity*>(CWorld::ObjectCreate(fxDisplay->m_modelName, position, this->m_owner->GetFacing(), 0, 0, 0, 0, NULL, NULL, 0));
-
-                if (this->m_rebuildEffect) {
-                    World::ObjectSetAlwaysExterior(this->m_rebuildEffect, 1);
-                    World::ObjectSetRenderEnabled(this->m_rebuildEffect, 0);
-                    World::ObjectEnableCollision(this->m_rebuildEffect, 0);
-                }
-            } else {
-                SysMsgPrintf(STATUS_ERROR, 2, "Destructible building - Game object id %d is missing its rebuild FX display record %d", this->m_owner->m_obj->m_entryID, this->m_owner->m_gameObject->m_displayID);
-            }
-        }
-
-        if (this->m_states[0].m_modelName) {
-            uint64_t guid = this->m_owner->m_obj->m_guid.m_guid;
-            this->m_baseCollision = static_cast<CMapEntity*>(CWorld::ObjectCreate(this->m_states[0].m_modelName, position, this->m_owner->GetFacing(), 0, 0, guid, 0, NULL, NULL, 0));
-
-            if (this->m_baseCollision) {
-                World::ObjectSetRenderEnabled(this->m_baseCollision, 0);
-                World::ObjectEnableCollision(this->m_baseCollision, 0);
-            }
-        }
-    }
-
-    CGGameObject_C* object = this->m_owner;
-
-    if (object->m_nameDesc) {
-        PlayerNameDelete(object->m_nameDesc);
-    }
-
-    WOWGUID guid = object->m_obj->m_guid;
-    object->m_nameDesc = ObjectNameCreate(guid);
-
-    if (!this->m_proxy.m_uniqueId || !(this->m_owner->m_modelFlags & 0x10000)) {
-        World::FreeDestructibleProxy(&this->m_proxy);
-    }
+    WOWGUID guid = owner->m_obj->m_guid;
+    owner->m_nameDesc = ObjectNameCreate(guid);
 }
 
-// OFFSET: #0x00711050
+// PROVEN: f408ffa5 IDENTICAL/NONE
+// OFFSET: 0x005A13E0
 int32_t CGGameObject_C::OnStateChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
     int32_t state = object->m_gameObject->m_state;
@@ -274,7 +203,7 @@ int32_t CGGameObject_C::OnStateChanged(WOWGUID guid, uint32_t fieldOffset, uint3
     return 1;
 }
 
-// OFFSET: %0x005A3640
+// OFFSET: 0x0059A060
 int32_t Packet_SMSG_GAMEOBJECT_PAGETEXT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -286,6 +215,193 @@ int32_t Packet_SMSG_GAMEOBJECT_PAGETEXT(void* param, NETMESSAGE msgId, uint32_t 
     }
 
     return 1;
+}
+
+// OFFSET: 0x0059A0C0
+static bool OnGameObjectActivateAnimKit(ClientGameObjectActivateAnimKit* msg) {
+    CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(*reinterpret_cast<const WOWGUID*>(msg->m_objectGUID), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+
+    if (object) {
+        uint32_t animKitID = msg->m_animKitID;
+        object->m_animKitID = animKitID;
+        object->m_typeData->ActivateOneShotAnimKit(animKitID);
+    }
+
+    return true;
+}
+
+// PROVEN: ca51077f IDENTICAL/NONE
+// OFFSET: 0x00599920
+static void MapObjSequenceFinishedCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
+    if (!interrupted) {
+        model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
+    }
+}
+
+// OFFSET: 0x005A2CF0
+static void SetMapObjSpeed(uint32_t uniqueID, float speed) {
+    uint32_t index = 0;
+    uint32_t count = s_mapObjSpeedTransitions.Count();
+    MapObjSpeedTransition* transition = NULL;
+    float current;
+
+    for (; index < count; index++) {
+        if (s_mapObjSpeedTransitions[index].m_uniqueID == uniqueID) {
+            break;
+        }
+    }
+
+    if (index < count && index != 0xFFFFFFFF) {
+        transition = &s_mapObjSpeedTransitions[index];
+
+        if (transition->m_duration) {
+            float t = 1.0f - static_cast<float>(static_cast<double>(transition->m_remaining) / static_cast<double>(transition->m_duration));
+            current = t * transition->m_targetSpeed + (1.0f - t) * transition->m_startSpeed;
+        } else {
+            current = transition->m_targetSpeed;
+        }
+    } else {
+        transition = s_mapObjSpeedTransitions.New();
+        current = 1.0f;
+    }
+
+    transition->m_uniqueID = uniqueID;
+    transition->m_startSpeed = current;
+    transition->m_duration = s_mapObjSpeedTransitionTime;
+    transition->m_remaining = s_mapObjSpeedTransitionTime;
+    transition->m_targetSpeed = speed;
+    transition->m_applied = 0;
+}
+
+// OFFSET: 0x005A2FB0
+static bool OnMapObjEvents(ClientMapObjEvents* msg) {
+    uintptr_t object = World::ObjectFind(msg->m_uniqueID);
+
+    if (!object) {
+        return true;
+    }
+
+    WDataStore& data = msg->m_data;
+    uint8_t count = 0;
+    data.Get(count);
+
+    for (uint32_t i = count; i; i--) {
+        uint8_t type = 0;
+        data.Get(type);
+
+        if (type == 0) {
+            uint32_t sequence = 0;
+            data.Get(sequence);
+            World::ObjectSetSequence(object, sequence, 0, 0);
+            World::ObjectSetSequenceFinishedCallback(object, MapObjSequenceFinishedCallback, 0, 0);
+        } else if (type == 1) {
+            uint32_t speed = 0;
+            data.Get(speed);
+            SetMapObjSpeed(msg->m_uniqueID, static_cast<float>(static_cast<int32_t>(speed)) * 0.01f);
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0059B4D0
+static void UpdateMapObjSpeedsInternal() {
+    int32_t elapsed = static_cast<int32_t>(CGWorldFrame::s_currentWorldFrame->m_elapsedSec * 1000.0f);
+
+    for (uint32_t i = 0; i < s_mapObjSpeedTransitions.Count(); i++) {
+        MapObjSpeedTransition& transition = s_mapObjSpeedTransitions[i];
+        uintptr_t object = World::ObjectFind(transition.m_uniqueID);
+
+        if (!object) {
+            transition.m_applied = 0;
+            continue;
+        }
+
+        uint32_t remaining = transition.m_remaining;
+
+        if (!remaining && transition.m_applied) {
+            continue;
+        }
+
+        remaining = static_cast<int32_t>(remaining) >= elapsed ? remaining - elapsed : 0;
+        uint32_t duration = transition.m_duration;
+        transition.m_remaining = remaining;
+        float speed;
+
+        if (duration) {
+            double t = 1.0 - static_cast<double>(remaining) / static_cast<double>(duration);
+            speed = static_cast<float>(t * transition.m_targetSpeed + (1.0 - t) * transition.m_startSpeed);
+        } else {
+            speed = transition.m_targetSpeed;
+        }
+
+        World::ObjectSetSequenceSpeed(object, speed, 0, 0);
+        transition.m_applied = 1;
+    }
+}
+
+// PROVEN: d3e5025a IDENTICAL/NONE
+// OFFSET: 0x0059EC70
+void CGGameObject_C::UpdateMapObjSpeeds() {
+    UpdateMapObjSpeedsInternal();
+}
+
+// OFFSET: 0x00599E50/0x140208380
+static void GameObjectModelEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time, uint64_t param) {
+    switch (eventId) {
+        case 'VNE$': {
+            CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+
+            if (object && object->IsTransport() && object->m_effectManager) {
+                object->m_effectManager->EnterState(4, 1, 0);
+                object->m_effectManager->ExitState(3, 1);
+                object->m_effectManager->ExitState(2, 1);
+                object->m_effectManager->ExitState(5, 1);
+            }
+
+            break;
+        }
+
+        case 'TWE$': {
+            CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+
+            if (object && object->IsTransport() && object->m_effectManager) {
+                object->m_effectManager->EnterState(2, 1, 0);
+                object->m_effectManager->ExitState(3, 1);
+                object->m_effectManager->ExitState(4, 1);
+                object->m_effectManager->ExitState(5, 1);
+            }
+
+            break;
+        }
+
+        case 'CAE$': {
+            CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+
+            if (object && object->IsTransport() && object->m_effectManager) {
+                object->m_effectManager->EnterState(3, 1, 0);
+                object->m_effectManager->ExitState(2, 1);
+                object->m_effectManager->ExitState(4, 1);
+                object->m_effectManager->ExitState(5, 1);
+            }
+
+            break;
+        }
+
+        case 'CDE$': {
+            CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+
+            if (object && object->IsTransport() && object->m_effectManager) {
+                object->m_effectManager->EnterState(5, 1, 0);
+                object->m_effectManager->ExitState(3, 1);
+                object->m_effectManager->ExitState(4, 1);
+                object->m_effectManager->ExitState(2, 1);
+            }
+
+            break;
+        }
+
+    }
 }
 
 // OFFSET: 0x005A2C60/0x140212FB0
@@ -309,8 +425,9 @@ void CGGameObject_C::CheckForPassiveHighlight() {
     }
 }
 
-// OFFSET: #0x00712B40
-static int32_t OnUpdateDynamicFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
+// PROVEN: 0932682d IDENTICAL/NONE
+// OFFSET: 0x005A37C0
+static int32_t OnGameObjectDynamicFlagsChanged(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
 
     if ((static_cast<uint8_t>(object->m_gameObject->m_dynamicFlags) ^ *static_cast<const uint8_t*>(oldValue)) & 0x8) {
@@ -320,7 +437,7 @@ static int32_t OnUpdateDynamicFlags(WOWGUID guid, uint32_t fieldOffset, uint32_t
     return 1;
 }
 
-// OFFSET: #0x00713DA0
+// OFFSET: 0x005A3650
 void ApplyGameObjectArtKit(CM2Model* model, int32_t artKit) {
     GameObjectArtKitRec* rec = g_gameObjectArtKitDB.GetRecord(artKit);
 
@@ -356,7 +473,7 @@ void ApplyGameObjectArtKit(CM2Model* model, int32_t artKit) {
     }
 }
 
-// OFFSET: #0x00713ED0
+// OFFSET: 0x005A3770
 static int32_t OnUpdateArtKit(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGGameObject_C* object = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
 
@@ -367,17 +484,15 @@ static int32_t OnUpdateArtKit(WOWGUID guid, uint32_t fieldOffset, uint32_t field
     return 1;
 }
 
-// OFFSET: #0x0070D040
+// PROVEN: 07eba844 IDENTICAL/NONE
+// OFFSET: 0x00599B10
 void CGGameObject_C::UpdateDisplay(uint32_t time) {
     this->m_typeData->UpdateDisplay(time);
-
-    if (this->m_worldObject) {
-        World::TickObject(this->m_worldObject);
-    }
 }
 
-// OFFSET: #0x007140A0
+// OFFSET: 0x005A4080/0x1402149E0
 void CGGameObject_C::Initialize() {
+    ClientGameObjectActivateAnimKit::s_handler = OnGameObjectActivateAnimKit;
     ClientServices::SetMessageHandler(SMSG_PAGE_TEXT, Packet_SMSG_GAMEOBJECT_PAGETEXT, NULL);
     ClientServices::SetMessageHandler(SMSG_GAME_OBJECT_CUSTOM_ANIM, Packet_SMSG_GAMEOBJECT_CUSTOM_ANIM, NULL);
     ClientServices::SetMessageHandler(SMSG_GAMEOBJECT_DESPAWN_ANIM, Packet_SMSG_GAMEOBJECT_DESPAWN_ANIM, NULL);
@@ -385,10 +500,15 @@ void CGGameObject_C::Initialize() {
     ClntObjMgrSetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_flags), sizeof(uint32_t), CGGameObject_C::OnFlagsChanged, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_artKit), sizeof(int8_t), OnUpdateArtKit, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
     ClntObjMgrSetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_pathProgress), sizeof(uint16_t), CGGameObject_C::OnAnimProgressChanged, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    ClntObjMgrSetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_dynamicFlags), sizeof(uint16_t), OnUpdateDynamicFlags, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    ClntObjMgrSetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_dynamicFlags), sizeof(uint16_t), OnGameObjectDynamicFlagsChanged, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    CGGameObject_C::s_cvUseAnimKits = CVar::Register("GameObjUseAnimKits", "0=off 1=on", 0x200, "1", CGGameObject_C::UseAnimKitsChangedCallback, CATEGORY_DEFAULT, false, NULL, false);
+    CGGameObject_C::s_cvForceMouseOver = CVar::Register("GameObjForceMouseOver", "0=off 1=on", 0, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
+    World::SetUserModelEventCallback(GameObjectModelEventCallback);
+    ClientMapObjEvents::s_handler = OnMapObjEvents;
 }
 
-// OFFSET: #0x00714150
+// PROVEN: d4313aca IDENTICAL/NONE
+// OFFSET: 0x005A41C0
 void CGGameObject_C::Shutdown() {
     ClientServices::ClearMessageHandler(SMSG_PAGE_TEXT);
     ClientServices::ClearMessageHandler(SMSG_GAME_OBJECT_CUSTOM_ANIM);
@@ -397,10 +517,12 @@ void CGGameObject_C::Shutdown() {
     ClntObjMgrUnsetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_flags), CGGameObject_C::OnFlagsChanged, NULL);
     ClntObjMgrUnsetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_artKit), OnUpdateArtKit, NULL);
     ClntObjMgrUnsetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_pathProgress), CGGameObject_C::OnAnimProgressChanged, NULL);
-    ClntObjMgrUnsetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_dynamicFlags), OnUpdateDynamicFlags, NULL);
+    ClntObjMgrUnsetTypeMirrorHandler(ID_GAMEOBJECT, offsetof(CGGameObjectData, m_dynamicFlags), OnGameObjectDynamicFlagsChanged, NULL);
+    ClientMapObjEvents::s_handler = NULL;
 }
 
-// OFFSET: #0x0070CB10
+// PROVEN: 6bcabb39 IDENTICAL/NONE
+// OFFSET: 0x0059DC80
 void CGGameObject_C::SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
@@ -408,13 +530,30 @@ void CGGameObject_C::SequenceCallback(CM2Model* model, uint32_t boneId, uint32_t
         return;
     }
 
-    if (interrupted) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        object->m_animKitManager.OnModelSequenceCallback(boneId, sequenceId, interrupted, a7);
+    } else if (interrupted) {
         object->m_typeData->HandleAnimInterrupted();
-    } else {
+    } else if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
         object->m_typeData->HandleAnimFinished();
     }
 }
 
+// PROVEN: dcade347 IDENTICAL/NONE
+// OFFSET: 0x0059B150
+void CGGameObject_C::SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary) {
+    if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
+    CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
+
+    if (object) {
+        object->m_animKitManager.OnModelSequenceStartCallback(boneId);
+    }
+}
+
+// PROVEN: e1f5c99d IDENTICAL/NONE
 // OFFSET: 0x00599A30/0x140207DE0
 void CGGameObject_C::AddToolTipInfo(CGTooltip* tooltip) {
     if (this->m_typeData) {
@@ -422,43 +561,77 @@ void CGGameObject_C::AddToolTipInfo(CGTooltip* tooltip) {
     }
 }
 
-// OFFSET: #0x00712EB0
+// PROVEN: 47bfd9d0 IDENTICAL/NONE
+// OFFSET: 0x005A3B40
 int32_t CGGameObject_C::AddPassenger(CPassenger* passenger, int32_t a2) {
     this->m_typeData->AddPassenger(passenger, a2);
     return 1;
 }
 
-// OFFSET: #0x0070B930
+// PROVEN: a26984e2 IDENTICAL/NONE
+// OFFSET: 0x00599950
 int32_t CGGameObject_C::Animate(float elapsed) {
     return this->m_typeData->Animate(elapsed) != 0;
 }
 
-// OFFSET: #0x0070BA00
+// PROVEN: 671ca8cb IDENTICAL/NONE
+// OFFSET: 0x0059B200/0x1402099F0
 bool CGGameObject_C::CanUse() const {
+    if (CGGameObject_C::s_cvForceMouseOver && CGGameObject_C::s_cvForceMouseOver->m_intValue) {
+        return true;
+    }
+
     return this->m_typeData->CanUse();
 }
 
-// OFFSET: #0x0070BA10
-int32_t CGGameObject_C::CanUseNow() const {
+// PROVEN: 4a02f334 IDENTICAL/NONE
+// OFFSET: 0x0059B220
+bool CGGameObject_C::CanUseNow() const {
+    if (CGGameObject_C::s_cvForceMouseOver && CGGameObject_C::s_cvForceMouseOver->m_intValue) {
+        return true;
+    }
+
     return this->m_typeData->CanUseNow(NULL, NULL, NULL);
 }
 
-// OFFSET: #0x0070BA30
+// PROVEN: d0ead98d IDENTICAL/NONE
+// OFFSET: 0x00599A20
 int32_t CGGameObject_C::CheckRange() const {
     return this->m_typeData->CheckRange();
 }
 
-// OFFSET: #0x0070BAC0
+// PROVEN: 97716f6e IDENTICAL/NONE
+// OFFSET: 0x00599AB0/0x140207E70
 void CGGameObject_C::CloseInteraction() {
     this->m_typeData->CloseInteraction();
 }
 
-// OFFSET: #0x0070B9A0
+// OFFSET: 0x0059AED0/0x1402095F0
+static int32_t DungeonDifficultyEnumProc(WOWGUID guid, void* param) {
+    CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
+
+    if (object && (object->m_obj->m_type & TYPEMASK_GAMEOBJECT)) {
+        CGGameObject_C* gameObject = static_cast<CGGameObject_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_GAMEOBJECT, __FILE__, __LINE__));
+        gameObject->m_typeData->UpdateDisabled();
+    }
+
+    return 1;
+}
+
+// PROVEN: 5f829874 IDENTICAL/NONE
+// OFFSET: 0x0059AF40/0x140209660
+void CGGameObject_C::UpdateDungeonDifficulty() {
+    ClntObjMgrEnumVisibleObjects(&DungeonDifficultyEnumProc, NULL);
+}
+
+// PROVEN: d225bd7f IDENTICAL/NONE
+// OFFSET: 0x005999C0
 float CGGameObject_C::GetBaseAlpha() const {
     return this->m_typeData->GetBaseAlpha();
 }
 
-// OFFSET: #0x0070BA90
+// PROVEN: 1dd067f1 IDENTICAL/NONE
+// OFFSET: 0x00599A80
 const char* CGGameObject_C::GetCloseText() const {
     if (this->m_stats) {
         return this->m_stats->m_closeText;
@@ -467,13 +640,14 @@ const char* CGGameObject_C::GetCloseText() const {
     return NULL;
 }
 
-// OFFSET: #0x0070CEC0
+// PROVEN: 83ceab92 IDENTICAL/NONE
+// OFFSET: 0x0059EBD0
 void CGGameObject_C::GetCursorFile(char* buffer, uint32_t size) const {
     if (!this->m_stats) {
         return;
     }
 
-    if (this->m_typeData->CanUseNow(NULL, NULL, NULL)) {
+    if ((CGGameObject_C::s_cvForceMouseOver && CGGameObject_C::s_cvForceMouseOver->m_intValue) || this->m_typeData->CanUseNow(NULL, NULL, NULL)) {
         SStrPrintf(buffer, size, "Interface\\Cursor\\%s.blp", this->m_stats->m_iconName);
     } else {
         SStrPrintf(buffer, size, "Interface\\Cursor\\Unable%s.blp", this->m_stats->m_iconName);
@@ -491,14 +665,21 @@ float CGGameObject_C::GetInteractDistanceSquared() const {
     return type->GetInteractDistance() * distance;
 }
 
-// OFFSET: #0x00712EE0
+// PROVEN: 80a527a9 IDENTICAL/NONE
+// OFFSET: 0x005A3B70
 C44Matrix CGGameObject_C::GetMatrix() const {
     return this->m_matrix;
 }
 
-// OFFSET: #0x0070EE30
+// OFFSET: 0x0059E110/0x14020D2C0
 const char* CGGameObject_C::GetModelFileNameInternal() const {
     int32_t displayID = this->m_gameObject->m_displayID;
+
+    if (!displayID) {
+        OsOutputDebugString("Game object id %d (type %s) has a NULL display ID", this->m_obj->m_entryID, CGameObjectDef::NameFromTypeId(this->m_gameObject->m_typeID));
+        return NULL;
+    }
+
     GameObjectDisplayInfoRec* rec = g_gameObjectDisplayInfoDB.GetRecord(displayID);
 
     if (rec) {
@@ -509,7 +690,8 @@ const char* CGGameObject_C::GetModelFileNameInternal() const {
     return NULL;
 }
 
-// OFFSET: #0x0070EE80
+// PROVEN: e716e6de IDENTICAL/NONE
+// OFFSET: 0x0059E190
 int32_t CGGameObject_C::GetModelFileName(const char** name) const {
     switch (this->m_gameObject->m_typeID) {
         case 11:
@@ -528,6 +710,7 @@ int32_t CGGameObject_C::GetModelFileName(const char** name) const {
     }
 }
 
+// PROVEN: 14710a12 IDENTICAL/NONE
 // OFFSET: 0x0059B1E0/0x1402099D0
 const char* CGGameObject_C::GetObjectName() const {
     if (this->m_stats) {
@@ -537,7 +720,8 @@ const char* CGGameObject_C::GetObjectName() const {
     return "";
 }
 
-// OFFSET: #0x0070BA70
+// PROVEN: edc928ef IDENTICAL/NONE
+// OFFSET: 0x00599A60
 const char* CGGameObject_C::GetOpenText() const {
     if (this->m_stats) {
         return this->m_stats->m_castBarCaption;
@@ -546,22 +730,24 @@ const char* CGGameObject_C::GetOpenText() const {
     return NULL;
 }
 
-// OFFSET: #0x0070B9B0
+// PROVEN: 8f49abbd IDENTICAL/NONE
+// OFFSET: 0x005999D0
 uint32_t CGGameObject_C::GetPropertyValue(uint32_t index) const {
-    if (this->m_stats && index < 24) {
+    if (this->m_stats && index < 32) {
         return this->m_stats->m_propValue[index];
     }
 
     return 0;
 }
 
-// OFFSET: #0x00712D50
+// OFFSET: 0x005A39E0
 C3Vector CGGameObject_C::GetRawPosition() const {
     C3Vector position = this->m_typeData ? this->m_typeData->GetRawPosition() : this->m_passenger.m_position;
     return position;
 }
 
-// OFFSET: #0x00712E40
+// PROVEN: 8f231009 IDENTICAL/NONE
+// OFFSET: 0x005A3AD0
 ShipPath* CGGameObject_C::GetShipPath() const {
     if (this->m_typeData) {
         return this->m_typeData->GetShipPath();
@@ -570,7 +756,7 @@ ShipPath* CGGameObject_C::GetShipPath() const {
     return NULL;
 }
 
-// OFFSET: #0x00712F00
+// OFFSET: 0x005A3B90
 float CGGameObject_C::GetSpeed() const {
     if (this->m_typeData) {
         return this->m_typeData->GetSpeed();
@@ -579,27 +765,31 @@ float CGGameObject_C::GetSpeed() const {
     return -1.0f;
 }
 
-// OFFSET: #0x00706560
+// PROVEN: 8de7bad7 IDENTICAL/NONE
+// OFFSET: 0x00598B70/0x1402142E0
 uint64_t CGGameObject_C::GetTransportGUID() const {
     return this->m_passenger.m_transportGuid.m_guid;
 }
 
-// OFFSET: #0x00712E80
+// PROVEN: 7ea7425c IDENTICAL/NONE
+// OFFSET: 0x005A3B10
 int32_t CGGameObject_C::IsHighlightSuppressed() const {
     return this->m_typeData->IsHighlightSuppressed();
 }
 
-// OFFSET: #0x00712E90
+// PROVEN: f6ebc09e IDENTICAL/NONE
+// OFFSET: 0x005A3B20
 int32_t CGGameObject_C::IsPointInside(const C3Vector& point) const {
     return this->m_typeData->IsPointInside(point);
 }
 
-// OFFSET: #0x0070F7B0
+// PROVEN: 4ce42d85 IDENTICAL/NONE
+// OFFSET: 0x0059EC50
 int32_t CGGameObject_C::IsQuestGiver() const {
     return this->m_gameObject->m_typeID == 2;
 }
 
-// OFFSET: #0x00712E60
+// OFFSET: 0x005A3AF0
 int32_t CGGameObject_C::IsSolidSelectable() const {
     if (this->m_hasWorldBounds) {
         return 1;
@@ -612,7 +802,8 @@ int32_t CGGameObject_C::IsSolidSelectable() const {
     return 0;
 }
 
-// OFFSET: #0x00712F20
+// PROVEN: d4f7834d IDENTICAL/NONE
+// OFFSET: 0x005A3BD0
 bool CGGameObject_C::IsTransport() const {
     return (this->m_gameObject->m_flags >> 3) & 1;
 }
@@ -648,19 +839,20 @@ bool CGGameObject_C::IsValidOpenAction(int32_t action) const {
     return true;
 }
 
-// OFFSET: #0x0070BDE0
+// OFFSET: 0x0059B3D0
 void CGGameObject_C::PlayCustomAnim(uint32_t anim) {
     uint32_t pending = anim + 2;
 
     if (this->IsObjectModelLoaded()) {
-        this->m_typeData->ActivateOneShotAnim(s_oneShotAnims[pending]);
+        this->m_typeData->ActivateOneShotAnim(pending);
         this->m_pendingOneShotAnim = 0;
     } else {
         this->m_pendingOneShotAnim = pending;
     }
 }
 
-// OFFSET: #0x0070F810
+// PROVEN: 1896237a IDENTICAL/NONE
+// OFFSET: 0x0059ECC0
 void CGGameObject_C::ResetDisplayState() {
     int32_t state = this->m_gameObject->m_state;
     int32_t oldState = this->m_displayState;
@@ -674,7 +866,8 @@ void CGGameObject_C::ResetDisplayState() {
     }
 }
 
-// OFFSET: #0x0070F7D0
+// PROVEN: 01492e39 IDENTICAL/NONE
+// OFFSET: 0x0059EC80
 void CGGameObject_C::SetDisplayState(int32_t state) {
     int32_t oldState = this->m_displayState;
 
@@ -687,37 +880,42 @@ void CGGameObject_C::SetDisplayState(int32_t state) {
     }
 }
 
-// OFFSET: #0x0070D010
+// OFFSET: 0x0059B390
 void CGGameObject_C::SetPathProgress(float progress) {
     this->m_gameObject->m_pathProgress = (int32_t)(float)(progress * 65535.0f);
 }
 
-// OFFSET: #0x0070B9E0
+// PROVEN: 9c5ea5e7 IDENTICAL/NONE
+// OFFSET: 0x00599A00
 int32_t CGGameObject_C::ShouldFadeIn() const {
     return this->m_typeData->ShouldFadeIn();
 }
 
-// OFFSET: #0x0070B960
+// PROVEN: 47635946 IDENTICAL/NONE
+// OFFSET: 0x00599980
 void CGGameObject_C::ShouldRender(uint32_t flags, int32_t& render, int32_t& a3) {
     CGObject_C::ShouldRender(flags, render, a3);
     this->m_typeData->ShouldRender(flags, render, a3);
 }
 
+// PROVEN: a241bb95 IDENTICAL/NONE
 // OFFSET: 0x00599AA0/0x140207E50
 void CGGameObject_C::StartInteraction() {
     this->m_typeData->StartInteraction();
 }
 
-// OFFSET: #0x0070F550
-int32_t CGGameObject_C::IsCollidable(int32_t a1) const {
-    if ((a1 & 0x8000) && !this->m_gameObject->m_typeID) {
+// PROVEN: cfd8eb7a IDENTICAL/NONE
+// OFFSET: 0x0059E800
+int32_t CGGameObject_C::IsSolidCollidable(uint32_t flags) const {
+    if ((flags & 0x8000) && !this->m_gameObject->m_typeID) {
         return 0;
     }
 
     return this->m_hasWorldBounds;
 }
 
-// OFFSET: #0x0070CF30
+// PROVEN: 51a47f0b IDENTICAL/NONE
+// OFFSET: 0x0059B250
 void CGGameObject_C::UpdateInteractIconAttach() {
     if (!this->m_interactIcon) {
         return;
@@ -753,13 +951,13 @@ void CGGameObject_C::UpdateInteractIconAttach() {
 }
 
 // INLINED
-CGGameObject_C_TypeBase::CGGameObject_C_TypeBase(CGGameObject_C* owner) {
+CGGameObject_C_TypeBase::CGGameObject_C_TypeBase(CGGameObject_C* owner, const CClientObjCreate& create) {
     this->m_owner = owner;
     this->m_useErrorType = 243;
     this->m_interactDistance = 5.0f;
 }
 
-// INLINED
+// OFFSET: 0x0059C030/0x14020B100
 CGGameObject_C_TypeBase::~CGGameObject_C_TypeBase() {
 }
 
@@ -775,7 +973,7 @@ C3Vector CGGameObject_C_TypeBase::GetRawPosition() const {
 }
 
 // INLINED
-CGGameObject_C_Type_Null::CGGameObject_C_Type_Null(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner) {
+CGGameObject_C_Type_Null::CGGameObject_C_Type_Null(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create) {
 }
 
 // PROVEN: b303883d IDENTICAL/NONE
@@ -785,56 +983,88 @@ const char* CGGameObject_C_Type_Null::DebugStatus() {
 }
 
 // OFFSET: #0x007124B0
-CGGameObject_C_TypeAnimated::CGGameObject_C_TypeAnimated(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner), m_animState(-1), m_pendingAnimState(-1), m_nextAnimTime(-1) {
+CGGameObject_C_TypeAnimated::CGGameObject_C_TypeAnimated(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create), m_animState(-1), m_pendingAnimState(-1), m_nextAnimTime(-1) {
     this->ResetAnimState();
 }
 
-// OFFSET: #0x00713D10
+// OFFSET: 0x005A2590/0x140211F40
 CGGameObject_C_TypeAnimated::~CGGameObject_C_TypeAnimated() {
-    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
+    this->CloseLoopingSound();
 }
 
-// OFFSET: #0x0070C480
+// OFFSET: 0x005A1B70/0x140211C50
 void CGGameObject_C_TypeAnimated::ActivateOneShotAnim(uint32_t anim) {
-    if (!this->m_owner->m_worldModel->HasSequence(s_animSequenceIds[anim])) {
-        return;
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        if (!this->PlayOneShotAnimKit(CGGameObject_C_TypeAnimated::s_oneShotAnimKitIds[anim], CGGameObject_C_TypeAnimated::s_oneShotAnimKitAnims[anim])) {
+            return;
+        }
+    } else {
+        uint32_t state = s_oneShotAnims[anim];
+
+        if (!this->m_owner->m_worldModel->HasSequence(CGGameObject_C_TypeAnimated::s_animSequenceIds[state])) {
+            return;
+        }
+
+        this->UpdateAnimState(state);
     }
 
-    this->UpdateAnimState(anim);
-
-    if (!anim) {
+    if (anim == 1) {
         this->m_owner->DoFade(this->m_owner->GetBaseAlpha(), 0);
     }
 }
 
-// OFFSET: #0x0070B260
+// PROVEN: d9f16295 IDENTICAL/NONE
+// OFFSET: 0x0059A720/0x140208F10
 const char* CGGameObject_C_TypeAnimated::DebugStatus() {
-    return s_animStateNames[this->m_animState];
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return CGGameObject_C_TypeAnimated::s_displayStateNames[this->m_owner->m_displayState];
+    }
+
+    return CGGameObject_C_TypeAnimated::s_animStateNames[this->m_animState];
 }
 
-// OFFSET: #0x0070C350
+// PROVEN: 1995b3da IDENTICAL/NONE
+// OFFSET: 0x0059A5C0/0x140208D70
 void CGGameObject_C_TypeAnimated::Disable() {
-    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
+    this->CloseLoopingSound();
 }
 
-// OFFSET: #0x0070C3C0
+// OFFSET: 0x0059BD70/0x14020A7B0
 int32_t CGGameObject_C_TypeAnimated::Animate(float elapsed) {
     CGGameObject_C* owner = this->m_owner;
 
-    if (owner->m_modelFlags & 0x100000) {
-        CM2Model* model = owner->m_worldModel;
+    if (!(owner->m_modelFlags & 0x100000)) {
+        return 1;
+    }
 
-        if (model && model->IsLoaded() && !model->m_animatePrev) {
-            if (model->m_lastAnimTime || (this->m_nextAnimTime != -1 && (int32_t)(FrameTime::s_curTimeMs - this->m_nextAnimTime) >= 0)) {
-                return this->HandleAnimInterrupted();
-            }
+    CM2Model* model = owner->m_worldModel;
+
+    if (!model || !model->IsLoaded() || model->m_animatePrev) {
+        return 1;
+    }
+
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        if (this->m_owner->m_animKitManager.IsFrozen() || this->IsIdle()) {
+            return this->UpdateObjectLock();
         }
+
+        return 1;
+    }
+
+    uint32_t time = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+
+    if (model->m_lastAnimTime) {
+        return this->HandleAnimInterrupted();
+    }
+
+    if (this->m_nextAnimTime != -1 && static_cast<int32_t>(time - this->m_nextAnimTime) >= 0) {
+        return this->HandleAnimInterrupted();
     }
 
     return 1;
 }
 
-// OFFSET: #0x0070D160
+// OFFSET: 0x0059B6E0/0x140209FF0
 void CGGameObject_C_TypeAnimated::OnUpdateFlags(uint32_t changed) {
     if (!(changed & 0x80)) {
         return;
@@ -846,27 +1076,27 @@ void CGGameObject_C_TypeAnimated::OnUpdateFlags(uint32_t changed) {
         return;
     }
 
-    int32_t state = this->m_animState;
-
-    if (state != 2 && state != 4 && state != 5 && state != 7) {
-        return;
-    }
-
-    if ((this->m_owner->m_gameObject->m_flags >> 7) & 1) {
-        uint32_t time = model->m_scene->m_time;
-
-        if (!time) {
-            time = 1;
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        if (!this->m_stateKit) {
+            return;
         }
-
-        model->m_lastAnimTime = time;
     } else {
-        model->m_lastAnimTime = 0;
+        int32_t state = this->m_animState;
+
+        if (state != 2 && state != 4 && state != 5 && state != 7) {
+            return;
+        }
     }
+
+    this->SetAnimPaused(model, (this->m_owner->m_gameObject->m_flags >> 7) & 1);
 }
 
-// OFFSET: #0x0070C370
+// OFFSET: 0x005A1AE0/0x140211BA0
 void CGGameObject_C_TypeAnimated::PostInit(bool a1) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->ResetAnimState();
+    }
+
     if (!a1) {
         return;
     }
@@ -874,14 +1104,15 @@ void CGGameObject_C_TypeAnimated::PostInit(bool a1) {
     CGGameObject_C* owner = this->m_owner;
 
     if (owner->IsObjectModelLoaded()) {
-        owner->m_typeData->ActivateOneShotAnim(0);
+        owner->m_typeData->ActivateOneShotAnim(1);
         owner->m_pendingOneShotAnim = 0;
     } else {
         owner->m_pendingOneShotAnim = 1;
     }
 }
 
-// OFFSET: #0x0070FCE0
+// PROVEN: 46dc8c9d IDENTICAL/NONE
+// OFFSET: 0x005A1B40/0x140211C20
 void CGGameObject_C_TypeAnimated::PostReenable() {
     CM2Model* model = this->m_owner->m_worldModel;
 
@@ -890,55 +1121,76 @@ void CGGameObject_C_TypeAnimated::PostReenable() {
     }
 }
 
-// OFFSET: #0x0070D600
+// OFFSET: 0x0059F870/0x14020F010
 void CGGameObject_C_TypeAnimated::ResetAnimState() {
-    CGGameObject_C* owner = this->m_owner;
-    int32_t state = -1;
-
-    switch (owner->m_displayState) {
-        case 0: {
-            state = (owner->m_gameObject->m_pathProgress == 0xFFFF) + 2;
-            break;
-        }
-
-        case 1: {
-            state = owner->m_gameObject->m_pathProgress != 0xFFFF ? 4 : 1;
-            break;
-        }
-
-        case 2: {
-            state = (owner->m_gameObject->m_pathProgress == 0xFFFF) + 5;
-            break;
-        }
-    }
-
     this->m_animState = -1;
     this->m_pendingAnimState = -1;
     this->m_nextAnimTime = -1;
-    this->UpdateAnimState(state);
+
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->StopAnimKits();
+        this->PlayStateAnimKits(this->m_owner->m_gameObject->m_pathProgress != 0xFFFF);
+
+        if (this->m_owner->m_animKitID) {
+            this->ActivateOneShotAnimKit(this->m_owner->m_animKitID);
+        }
+
+        return;
+    }
+
+    CGGameObject_C* owner = this->m_owner;
+
+    switch (owner->m_displayState) {
+        case 0:
+            this->UpdateAnimState((owner->m_gameObject->m_pathProgress == 0xFFFF) + 2);
+            break;
+
+        case 1:
+            this->UpdateAnimState(owner->m_gameObject->m_pathProgress != 0xFFFF ? 4 : 1);
+            break;
+
+        case 2:
+            this->UpdateAnimState((owner->m_gameObject->m_pathProgress == 0xFFFF) + 5);
+            break;
+
+        default:
+            OsOutputDebugString("FIXME: Unhandled display state");
+            this->UpdateAnimState(-1);
+            break;
+    }
 }
 
-// OFFSET: %0x005A3C30
+// PROVEN: 4b31ddf3 IDENTICAL/NONE
+// OFFSET: 0x0059A5E0/0x140208DA0
 bool CGGameObject_C_TypeAnimated::ShouldFadeIn() const {
-    return this->m_animState != 0;
+    if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return this->m_animState != 0;
+    }
+
+    return !this->m_oneShotKit || this->m_oneShotKit->GetID() != 1577;
 }
 
-// OFFSET: #0x0070B230
+// OFFSET: 0x00599140/0x1402075B0
 void CGGameObject_C_TypeAnimated::UpdateDisplay(uint32_t time) {
-    C3Vector position = this->GetPosition();
-    SI3::Set3DPosition(&this->m_sound, &position);
+    SE3::Set3DPosition(this->m_sound, this->GetPosition());
 }
 
-// OFFSET: #0x0070D690
+// OFFSET: 0x0059F990/0x14020F1C0
 void CGGameObject_C_TypeAnimated::UpdateState(int32_t oldState, int32_t newState) {
     if (this->m_owner->m_modelFlags & 0x20000) {
         return;
     }
 
-    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
+    this->CloseLoopingSound();
+
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->PlayStateAnimKits(1);
+        this->UpdateSolidity();
+        return;
+    }
 
     switch (newState) {
-        case 0: {
+        case 0:
             if (oldState == 1 || this->m_owner->m_gameObject->m_pathProgress != 0xFFFF) {
                 this->UpdateAnimState(2);
             } else {
@@ -946,32 +1198,22 @@ void CGGameObject_C_TypeAnimated::UpdateState(int32_t oldState, int32_t newState
             }
 
             break;
-        }
 
         case 1: {
             int32_t state = this->m_owner->m_gameObject->m_pathProgress == 0xFFFF ? oldState : 0;
 
-            switch (state) {
-                case 0: {
-                    this->UpdateAnimState(4);
-                    break;
-                }
-
-                case 2: {
-                    this->UpdateAnimState(7);
-                    break;
-                }
-
-                default: {
-                    this->UpdateAnimState(1);
-                    break;
-                }
+            if (!state) {
+                this->UpdateAnimState(4);
+            } else if (state == 2) {
+                this->UpdateAnimState(7);
+            } else {
+                this->UpdateAnimState(1);
             }
 
             break;
         }
 
-        case 2: {
+        case 2:
             if (oldState == 1 || this->m_owner->m_gameObject->m_pathProgress != 0xFFFF) {
                 this->UpdateAnimState(5);
             } else {
@@ -979,11 +1221,401 @@ void CGGameObject_C_TypeAnimated::UpdateState(int32_t oldState, int32_t newState
             }
 
             break;
+    }
+}
+
+// PROVEN: 30f8e5fc IDENTICAL/NONE
+// OFFSET: 0x005A1C00/0x140211CE0
+void CGGameObject_C_TypeAnimated::ActivateOneShotAnimKit(uint32_t animKitID) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->PlayOneShotAnimKit(animKitID, 0xFFFFFFFF);
+    }
+}
+
+// PROVEN: a68a74e1 IDENTICAL/IDENTICAL
+// OFFSET: 0x00401000/0x1407D7E80
+void CGGameObject_C_TypeAnimated::UpdateSolidity() {
+}
+
+// INLINED
+void CGGameObject_C_TypeAnimated::CloseLoopingSound() {
+    SE3::StopSound(this->m_sound, -1, __FILE__, __LINE__, "CGGameObject_C_TypeAnimated::CloseLoopingSound");
+}
+
+// PROVEN: 166b2aec IDENTICAL/NONE
+// OFFSET: 0x00599170
+bool CGGameObject_C_TypeAnimated::IsIdle() const {
+    return this->m_baseKit && !this->m_stateKit && !this->m_oneShotKit;
+}
+
+// PROVEN: cd691e9d IDENTICAL/NONE
+// OFFSET: 0x0059A620/0x140208DF0
+void CGGameObject_C_TypeAnimated::SetAnimPaused(CM2Model* model, int32_t paused) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        CAnimKitManager* manager = &this->m_owner->m_animKitManager;
+
+        if (paused) {
+            manager->Freeze(0xFFFFFFFF);
+        } else {
+            manager->Unfreeze();
+        }
+    } else if (paused) {
+        uint32_t time = model->m_scene->m_time;
+        model->m_lastAnimTime = time ? time : 1;
+    } else {
+        model->m_lastAnimTime = 0;
+    }
+}
+
+// PROVEN: 03018c2c IDENTICAL/NONE
+// OFFSET: 0x0059A680
+void CGGameObject_C_TypeAnimated::StopAnimKits() {
+    if (this->m_baseKit) {
+        this->m_baseKit->SetStopCallback(NULL, 0);
+        this->m_baseKit->Stop(1, NULL);
+
+        if (this->m_baseKit) {
+            this->m_baseKit->Release();
+            this->m_baseKit = NULL;
+        }
+    }
+
+    if (this->m_stateKit) {
+        this->m_stateKit->SetStopCallback(NULL, 0);
+        this->m_stateKit->Stop(1, NULL);
+
+        if (this->m_stateKit) {
+            this->m_stateKit->Release();
+            this->m_stateKit = NULL;
+        }
+    }
+
+    if (this->m_oneShotKit) {
+        this->m_oneShotKit->SetStopCallback(NULL, 0);
+        this->m_oneShotKit->Stop(1, NULL);
+
+        if (this->m_oneShotKit) {
+            this->m_oneShotKit->Release();
+            this->m_oneShotKit = NULL;
         }
     }
 }
 
-// OFFSET: #0x00712030
+// OFFSET: 0x0059BAF0/0x14020A4D0
+int32_t CGGameObject_C_TypeAnimated::UpdateObjectLock() {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        if ((!this->m_baseKit || this->m_stateKit || this->m_oneShotKit) && !this->m_owner->m_animKitID) {
+            this->m_owner->SetObjectLocked(1);
+            return 1;
+        }
+
+        CGGameObject_C* owner = this->m_owner;
+
+        if (owner->m_animLocked) {
+            owner->m_animLocked = 0;
+            ClntObjMgrUnlockObject(owner->m_obj->m_guid, __FILE__, __LINE__);
+        }
+
+        return 0;
+    }
+
+    int32_t pending = this->m_pendingAnimState;
+
+    if (pending == -1 || pending == 3 || pending == 1 || pending == 6) {
+        return 1;
+    }
+
+    ClntObjMgrUnlockObject(this->m_owner->m_obj->m_guid, __FILE__, __LINE__);
+    return 0;
+}
+
+// PROVEN: 08ed79d9 IDENTICAL/NONE
+// OFFSET: 0x0059BBA0
+void CGGameObject_C_TypeAnimated::BaseAnimKitStopped(CAnimKitInst* inst, uint64_t param) {
+    CGGameObject_C_TypeAnimated* animated = reinterpret_cast<CGGameObject_C_TypeAnimated*>(static_cast<uintptr_t>(param));
+
+    if (!animated) {
+        return;
+    }
+
+    if (inst == animated->m_baseKit && animated->m_baseKit) {
+        animated->m_baseKit->SetStopCallback(NULL, 0);
+        animated->m_baseKit->Stop(1, NULL);
+
+        if (animated->m_baseKit) {
+            animated->m_baseKit->Release();
+            animated->m_baseKit = NULL;
+        }
+    }
+
+    animated->UpdateObjectLock();
+    animated->UpdateSolidity();
+}
+
+// PROVEN: 0a6b4656 IDENTICAL/NONE
+// OFFSET: 0x0059BC00
+void CGGameObject_C_TypeAnimated::StateAnimKitStopped(CAnimKitInst* inst, uint64_t param) {
+    CGGameObject_C_TypeAnimated* animated = reinterpret_cast<CGGameObject_C_TypeAnimated*>(static_cast<uintptr_t>(param));
+
+    if (!animated) {
+        return;
+    }
+
+    if (inst == animated->m_stateKit && animated->m_stateKit) {
+        animated->m_stateKit->SetStopCallback(NULL, 0);
+        animated->m_stateKit->Stop(1, NULL);
+
+        if (animated->m_stateKit) {
+            animated->m_stateKit->Release();
+            animated->m_stateKit = NULL;
+        }
+    }
+
+    animated->UpdateObjectLock();
+    animated->UpdateSolidity();
+}
+
+// OFFSET: 0x0059F4A0/0x14020EC30
+void CGGameObject_C_TypeAnimated::PlayStateAnimKits(int32_t transition) {
+    if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
+    if (this->m_owner->m_animKitID) {
+        return;
+    }
+
+    uint32_t baseID = this->m_baseKit ? this->m_baseKit->GetID() : 0;
+    uint32_t stateID = 0;
+    float stateProgress = 0.0f;
+
+    if (this->m_stateKit) {
+        stateID = this->m_stateKit->GetID();
+        stateProgress = this->m_stateKit->GetSegmentProgress(0);
+    }
+
+    uint32_t transitionKit = 0;
+    uint32_t idleKit = 0;
+
+    switch (this->m_owner->m_displayState) {
+        case 0:
+            transitionKit = 1585;
+            idleKit = 1576;
+            break;
+
+        case 1:
+            idleKit = 1590;
+            transitionKit = 2 * (baseID == 1591) + 1592;
+            break;
+
+        case 2:
+            transitionKit = 1593;
+            idleKit = 1591;
+            break;
+    }
+
+    if (this->m_baseKit && this->m_baseKit->GetID() == idleKit) {
+        return;
+    }
+
+    if (transition && transitionKit && this->m_stateKit && this->m_stateKit->GetID() == transitionKit) {
+        return;
+    }
+
+    if (this->m_baseKit) {
+        this->m_baseKit->SetStopCallback(NULL, 0);
+        this->m_baseKit->Stop(1, NULL);
+
+        if (this->m_baseKit) {
+            this->m_baseKit->Release();
+            this->m_baseKit = NULL;
+        }
+    }
+
+    if (this->m_stateKit) {
+        this->m_stateKit->SetStopCallback(NULL, 0);
+        this->m_stateKit->Stop(1, NULL);
+
+        if (this->m_stateKit) {
+            this->m_stateKit->Release();
+            this->m_stateKit = NULL;
+        }
+    }
+
+    if (this->m_oneShotKit) {
+        this->m_oneShotKit->SetStopCallback(NULL, 0);
+        this->m_oneShotKit->Stop(1, NULL);
+
+        if (this->m_oneShotKit) {
+            this->m_oneShotKit->Release();
+            this->m_oneShotKit = NULL;
+        }
+    }
+
+    if (transition && transitionKit) {
+        int32_t reverse = 0;
+
+        if (this->m_stateKit) {
+            switch (transitionKit) {
+                case 1585:
+                    reverse = stateID == 1592;
+                    break;
+
+                case 1592:
+                    reverse = stateID == 1585;
+                    break;
+
+                case 1593:
+                    reverse = stateID == 1594;
+                    break;
+
+                default:
+                    reverse = transitionKit == 1594 && stateID == 1593;
+                    break;
+            }
+        }
+
+        AnimKitExtraPlayParams params;
+        params.boneSetID = -1;
+        params.startTime = 0;
+        params.startFraction = reverse ? 1.0f - stateProgress : 0.0f;
+        params.oneShot = 0;
+        params.blendTimeMode = 0;
+        params.blendTime = 0;
+        this->m_stateKit = this->m_owner->m_animKitManager.PlayAndMaintain(transitionKit, 0xFFFFFFFF, &params);
+
+        if (this->m_stateKit) {
+            if (this->m_stateKit->IsStoppedOrPendingDestroy()) {
+                this->m_stateKit->Release();
+                this->m_stateKit = NULL;
+            } else {
+                this->m_stateKit->SetStopCallback(&CGGameObject_C_TypeAnimated::StateAnimKitStopped, reinterpret_cast<uintptr_t>(this));
+            }
+        }
+    }
+
+    if (idleKit) {
+        this->m_baseKit = this->m_owner->m_animKitManager.PlayAndMaintain(idleKit, 0xFFFFFFFF, NULL);
+
+        if (this->m_baseKit) {
+            this->m_baseKit->SetStopCallback(&CGGameObject_C_TypeAnimated::BaseAnimKitStopped, reinterpret_cast<uintptr_t>(this));
+        }
+    }
+
+    this->UpdateObjectLock();
+    this->UpdateSolidity();
+}
+
+// OFFSET: 0x0059F760/0x14020EF70
+void CGGameObject_C_TypeAnimated::OneShotAnimKitStopped(CAnimKitInst* inst, uint64_t param) {
+    CGGameObject_C_TypeAnimated* animated = reinterpret_cast<CGGameObject_C_TypeAnimated*>(static_cast<uintptr_t>(param));
+
+    if (!animated) {
+        return;
+    }
+
+    uint32_t id = inst->GetID();
+
+    if (inst == animated->m_oneShotKit && animated->m_oneShotKit) {
+        animated->m_oneShotKit->SetStopCallback(NULL, 0);
+        animated->m_oneShotKit->Stop(1, NULL);
+
+        if (animated->m_oneShotKit) {
+            animated->m_oneShotKit->Release();
+            animated->m_oneShotKit = NULL;
+        }
+    }
+
+    if (inst && id == animated->m_owner->m_animKitID) {
+        animated->m_owner->m_animKitID = 0;
+    }
+
+    if (id == 1589) {
+        AnimKitExtraPlayParams params;
+        params.boneSetID = -1;
+        params.startTime = 0;
+        params.startFraction = 1.0f;
+        params.oneShot = 0;
+        params.blendTimeMode = 0;
+        params.blendTime = 0;
+        animated->m_baseKit = animated->m_owner->m_animKitManager.PlayAndMaintain(1589, 157, &params);
+
+        if (animated->m_baseKit) {
+            animated->m_baseKit->SetSpeed(0, 1, 0.0f);
+        }
+    } else {
+        animated->PlayStateAnimKits(animated->m_owner->m_gameObject->m_pathProgress != 0xFFFF);
+    }
+
+    animated->UpdateObjectLock();
+    animated->UpdateSolidity();
+}
+
+// OFFSET: 0x0059FAE0/0x14020F300
+bool CGGameObject_C_TypeAnimated::PlayOneShotAnimKit(uint32_t animKitID, uint32_t anim) {
+    if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return false;
+    }
+
+    uint32_t kitID = this->m_owner->m_animKitID;
+
+    if (kitID) {
+        if (this->m_oneShotKit && this->m_oneShotKit->GetID() == kitID) {
+            return true;
+        }
+    } else {
+        kitID = animKitID;
+    }
+
+    if (this->m_oneShotKit) {
+        this->m_oneShotKit->Stop(1, NULL);
+
+        if (this->m_oneShotKit) {
+            this->m_oneShotKit->Release();
+            this->m_oneShotKit = NULL;
+        }
+    }
+
+    this->m_oneShotKit = this->m_owner->m_animKitManager.PlayAndMaintain(kitID, anim, NULL);
+
+    if (this->m_oneShotKit) {
+        if (this->m_oneShotKit->IsStoppedOrPendingDestroy()) {
+            this->m_oneShotKit->Release();
+            this->m_oneShotKit = NULL;
+        } else {
+            this->m_oneShotKit->SetStopCallback(&CGGameObject_C_TypeAnimated::OneShotAnimKitStopped, reinterpret_cast<uintptr_t>(this));
+        }
+    }
+
+    if (this->m_oneShotKit) {
+        if (this->m_baseKit) {
+            this->m_baseKit->Stop(1, NULL);
+
+            if (this->m_baseKit) {
+                this->m_baseKit->Release();
+                this->m_baseKit = NULL;
+            }
+        }
+
+        if (this->m_stateKit) {
+            this->m_stateKit->Stop(1, NULL);
+
+            if (this->m_stateKit) {
+                this->m_stateKit->Release();
+                this->m_stateKit = NULL;
+            }
+        }
+    } else {
+        this->PlayStateAnimKits(0);
+    }
+
+    this->UpdateObjectLock();
+    this->UpdateSolidity();
+    return this->m_oneShotKit != NULL;
+}
+
+// PROVEN: 38c7dec2 IDENTICAL/NONE
+// OFFSET: 0x005A2640
 bool CGGameObject_C_Type_FishingNode::CanUse() const {
     CGObject_C* player = ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__);
 
@@ -1000,10 +1632,11 @@ int32_t CGGameObject_C_Type_GuildBank::CanChangeCursor() const {
     return this->CanUseNow(NULL, NULL, NULL) ? 3 : 29;
 }
 
-// OFFSET: #0x0070C540
+// PROVEN: 6590c841 IDENTICAL/NONE
+// OFFSET: 0x0059A7B0/0x140208F60
 void CGGameObject_C_Type_TransportBase::Reenable() {
-    this->unk_0038 = -1;
-    this->unk_0034 = 0;
+    this->m_isLoaded = 0;
+    this->m_transportState = -1;
 }
 
 // PROVEN: 6aae4f10 IDENTICAL/NONE
@@ -1030,29 +1663,35 @@ void CGGameObject_C_Type_MapObjTransport::AddPassenger(CPassenger* passenger, in
     CGGameObject_C_Type_TransportBase::AddPassenger(passenger, a2);
 }
 
-// OFFSET: #0x007141D0
-CGGameObject_C_Type_MapObjTransport::CGGameObject_C_Type_MapObjTransport(CGGameObject_C* owner) : CGGameObject_C_Type_TransportBase(owner), m_currentLeg(0) {
+// OFFSET: 0x005A5010/0x140215ED0
+CGGameObject_C_Type_MapObjTransport::~CGGameObject_C_Type_MapObjTransport() {
 }
 
+// OFFSET: 0x005A4550/0x1402150A0
+CGGameObject_C_Type_MapObjTransport::CGGameObject_C_Type_MapObjTransport(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_TransportBase(owner, create), m_currentLeg(0) {
+}
+
+// PROVEN: 9cff0fde IDENTICAL/NONE
 // OFFSET: 0x005A45C0/0x140215130
 ShipPath* CGGameObject_C_Type_MapObjTransport::GetShipPath() const {
     return (ShipPath*)&this->m_shipPath;
 }
 
 // INLINED
-CGGameObject_C_Type_WorldObj::CGGameObject_C_Type_WorldObj(CGGameObject_C* owner) : CGGameObject_C_TypeBase(owner) {
+CGGameObject_C_Type_WorldObj::CGGameObject_C_Type_WorldObj(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create) {
     this->m_worldObject = NULL;
 }
 
-// OFFSET: #0x0070B290
+// PROVEN: 79887fb8 IDENTICAL/NONE
+// OFFSET: 0x005991B0/0x140207600
 void CGGameObject_C_Type_WorldObj::DestroyWorldObj() {
     if (this->m_worldObject) {
-        CWorld::ObjectDestroy(this->m_worldObject);
+        World::ObjectDestroy(this->m_worldObject);
         this->m_worldObject = NULL;
     }
 }
 
-// OFFSET: #0x0070B2B0
+// OFFSET: 0x005991D0
 void CGGameObject_C_Type_WorldObj::SequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
@@ -1089,22 +1728,25 @@ void CGGameObject_C_Type_WorldObj::SequenceFinishedHandler(CM2Model* model, uint
     model->SetBoneSequence(0xFFFFFFFF, next, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
 }
 
-// OFFSET: #0x007128D0
-CGGameObject_C_Type_DestructibleBuilding::CGGameObject_C_Type_DestructibleBuilding(CGGameObject_C* owner) : CGGameObject_C_Type_WorldObj(owner) {
+// OFFSET: 0x0059AFA0/0x1402096D0
+CGGameObject_C_Type_DestructibleBuilding::CGGameObject_C_Type_DestructibleBuilding(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_WorldObj(owner, create) {
     memset(this->m_states, 0, sizeof(this->m_states));
-    this->m_baseZ = 0.0f;
-    this->m_sinkDepth = 0.0f;
     this->m_animStartTime = 0;
     this->m_animDuration = 0;
-    this->m_previousSinkDepth = 0.0f;
     this->m_animating = 0;
-    this->m_rebuildEffect = NULL;
-    this->m_baseCollision = NULL;
+    this->m_rebuildEffect = 0;
+    this->m_baseCollision = 0;
     this->m_modelData = NULL;
+    this->m_sound = 0;
     this->m_loadPending = 1;
     this->m_previousState = -1;
+    this->m_baseZ = 0.0f;
+    this->m_sinkDepth = 0.0f;
+    this->m_previousSinkDepth = 0.0f;
+    this->m_boundingRadius = 0.0f;
 }
 
+// PROVEN: 3e60e922 IDENTICAL/NONE
 // OFFSET: 0x00599850/0x140207BB0
 void CGGameObject_C_Type_DestructibleBuilding::AmbientSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted && sequenceId != 154) {
@@ -1112,44 +1754,36 @@ void CGGameObject_C_Type_DestructibleBuilding::AmbientSequenceFinishedHandler(CM
     }
 }
 
+// PROVEN: 199d58d1 IDENTICAL/NONE
 // OFFSET: 0x0059AF50/0x140209670
-void CGGameObject_C_Type_DestructibleBuilding::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
+void CGGameObject_C_Type_DestructibleBuilding::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time, uint64_t param) {
     CGGameObject_C* object = (CGGameObject_C*)ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_GAMEOBJECT, __FILE__, __LINE__);
 
     if (object) {
-        object->m_typeData->HandleAnimEvent(eventId, data, *position, time);
+        object->m_typeData->HandleAnimEvent(eventId, data, position, time);
     }
 }
 
-// OFFSET: #0x0070B6A0
+// PROVEN: 0777a622 IDENTICAL/NONE
+// OFFSET: 0x005996C0/0x140207A80
 void CGGameObject_C_Type_DestructibleBuilding::PostReenable() {
-    if (!this->m_worldObject) {
-        return;
-    }
-
-    World::ObjectSetRenderEnabled(this->m_worldObject, 1);
-    World::ObjectEnableCollision(this->m_worldObject, 1);
-
-    if (this->m_proxy.m_uniqueId) {
-        World::FreeDestructibleProxy(&this->m_proxy);
+    if (this->m_worldObject) {
+        World::ObjectSetRenderEnabled(this->m_worldObject, 1);
+        World::ObjectEnableCollision(this->m_worldObject, 1);
     }
 }
 
-// OFFSET: #0x0070B6E0
+// PROVEN: a4eb9e03 IDENTICAL/NONE
+// OFFSET: 0x005996F0/0x140207AB0
 void CGGameObject_C_Type_DestructibleBuilding::Disable() {
-    if (!this->m_worldObject) {
-        return;
-    }
-
-    World::ObjectSetRenderEnabled(this->m_worldObject, 0);
-    World::ObjectEnableCollision(this->m_worldObject, 0);
-
-    if (this->m_proxy.m_uniqueId) {
-        World::FindOrCreateDestructibleProxy(&this->m_proxy);
+    if (this->m_worldObject) {
+        World::ObjectSetRenderEnabled(this->m_worldObject, 0);
+        World::ObjectEnableCollision(this->m_worldObject, 0);
     }
 }
 
-// OFFSET: #0x0070B720
+// PROVEN: 785bbc5e IDENTICAL/NONE
+// OFFSET: 0x00599720
 uint16_t CGGameObject_C_Type_DestructibleBuilding::GetImpactEffectDoodadSet(int32_t state) const {
     if (this->m_modelData) {
         switch (state >> 1) {
@@ -1167,7 +1801,7 @@ uint16_t CGGameObject_C_Type_DestructibleBuilding::GetImpactEffectDoodadSet(int3
     return 0;
 }
 
-// OFFSET: #0x0070B760
+// INLINED
 uint16_t CGGameObject_C_Type_DestructibleBuilding::GetDestructionDoodadSet(int32_t state) const {
     if (this->m_modelData) {
         switch (state >> 1) {
@@ -1185,7 +1819,8 @@ uint16_t CGGameObject_C_Type_DestructibleBuilding::GetDestructionDoodadSet(int32
     return 0;
 }
 
-// OFFSET: #0x0070B7A0
+// PROVEN: fcd47cb0 IDENTICAL/NONE
+// OFFSET: 0x00599760
 uint16_t CGGameObject_C_Type_DestructibleBuilding::GetAmbientDoodadSet(int32_t state) const {
     if (!this->m_modelData) {
         return 0;
@@ -1209,13 +1844,15 @@ uint16_t CGGameObject_C_Type_DestructibleBuilding::GetAmbientDoodadSet(int32_t s
     }
 }
 
-// OFFSET: #0x0070B800
+// PROVEN: 41c75495 IDENTICAL/NONE
+// OFFSET: 0x005997C0
 void CGGameObject_C_Type_DestructibleBuilding::DestructSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (!interrupted && sequenceId) {
         model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 1, 1, 0, 0, 0);
     }
 }
 
+// PROVEN: d3ff62f8 IDENTICAL/NONE
 // OFFSET: 0x00599800/0x140207B40
 void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
@@ -1229,7 +1866,8 @@ void CGGameObject_C_Type_DestructibleBuilding::ImpactEffectSequenceFinishedHandl
     }
 }
 
-// OFFSET: #0x0070B8B0
+// PROVEN: d9480551 IDENTICAL/NONE
+// OFFSET: 0x00599890
 void CGGameObject_C_Type_DestructibleBuilding::MovedDoodadSequenceHandler(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param, int32_t a7) {
     if (interrupted) {
         return;
@@ -1257,15 +1895,15 @@ int32_t CGGameObject_C_Type_DestructibleBuilding::IsHighlightSuppressed() const 
     return 1;
 }
 
-// OFFSET: #0x0070C550
+// OFFSET: 0x0059A7C0
 float CGGameObject_C_Type_TransportBase::UpdateCurrentVelocity(uint32_t elapsed, const C3Vector& position, C3Vector* direction) {
     float dx = position.x - this->m_position.x;
     float dy = position.y - this->m_position.y;
     float dz = position.z - this->m_position.z;
-    float distance = sqrt(dx * dx + dy * dy + dz * dz);
-    float speed = distance / ((float)elapsed * 0.001f);
+    float distance = sqrt(dz * dz + dy * dy + dx * dx);
+    float speed = elapsed ? distance / ((float)elapsed * 0.001f) : 0.0f;
 
-    if (this->m_speed != speed && this->m_owner->m_effectManager) {
+    if (speed != this->m_speed && this->m_owner->m_effectManager) {
         this->m_owner->m_effectManager->PropertyChanged(1);
     }
 
@@ -1273,15 +1911,15 @@ float CGGameObject_C_Type_TransportBase::UpdateCurrentVelocity(uint32_t elapsed,
 
     if (direction && !(fabs(distance) < 2.3841858e-7f)) {
         float scale = 1.0f / distance;
-        direction->x = dx * scale;
-        direction->y = dy * scale;
+        direction->x = scale * dx;
+        direction->y = scale * dy;
         direction->z = scale * dz;
     }
 
     return distance;
 }
 
-// OFFSET: #0x0070BEF0
+// OFFSET: 0x0059B660
 int32_t Packet_SMSG_GAMEOBJECT_DESPAWN_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     msg->Get(guid.m_guid);
@@ -1294,14 +1932,15 @@ int32_t Packet_SMSG_GAMEOBJECT_DESPAWN_ANIM(void* param, NETMESSAGE msgId, uint3
             return 1;
         }
 
-        object->m_typeData->ActivateOneShotAnim(12);
+        object->m_typeData->ActivateOneShotAnim(6);
         object->m_pendingOneShotAnim = 0;
     }
 
     return 1;
 }
 
-// OFFSET: #0x0070B390
+// PROVEN: 240f5180 IDENTICAL/NONE
+// OFFSET: 0x00599320
 void CGGameObject_C_Type_MapObjTransport::UpdateObjectEffectState(uint32_t anim) {
     CObjectEffectManager* manager = this->m_owner->m_effectManager;
 
@@ -1344,7 +1983,7 @@ void CGGameObject_C_Type_MapObjTransport::UpdateObjectEffectState(uint32_t anim)
     }
 }
 
-// OFFSET: #0x0070D080
+// OFFSET: 0x0059ED20
 void CGGameObject_C::ShowLootEffect() {
     if (this->m_lootEffect) {
         return;
@@ -1362,17 +2001,24 @@ void CGGameObject_C::ShowLootEffect() {
     }
 
     this->m_lootEffect->AttachToParent(this->m_worldModel, 19, NULL, 1);
+    GameObjectDisplayInfoRec* displayInfo = g_gameObjectDisplayInfoDB.GetRecord(this->m_gameObject->m_displayID);
+    float scale;
 
-    float scale = fclamp(this->GetScale() * this->m_height * 1.15f, 1.0f, 5.0f);
+    if (displayInfo && displayInfo->m_overrideLootEffectScale > 0.0f) {
+        scale = displayInfo->m_overrideLootEffectScale;
+    } else {
+        scale = fclamp(this->m_height * 1.15f, 1.0f, 5.0f);
+    }
+
     C44Matrix matrix;
     matrix.Scale(scale);
-
     CM2Model* effect = this->m_lootEffect;
-    effect->m_fFlags |= 0x8000;
+    effect->m_fFlags |= 0x4000;
     effect->m_worldTransform = matrix;
 }
 
-// OFFSET: #0x0070BB10
+// PROVEN: e6130465 IDENTICAL/NONE
+// OFFSET: 0x00599B30
 void CGGameObject_C::UpdateObjectEffectAnimationStates(uint32_t anim) {
     if (!this->m_effectManager) {
         return;
@@ -1417,52 +2063,48 @@ void CGGameObject_C::UpdateObjectEffectAnimationStates(uint32_t anim) {
     this->m_effectAnimState = state;
 }
 
-// OFFSET: #0x00712700
-CGGameObject_C_Type_FishingNode::CGGameObject_C_Type_FishingNode(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A25E0/0x140212870
+CGGameObject_C_Type_FishingNode::CGGameObject_C_Type_FishingNode(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
     this->m_interactDistance = 100.0f;
 }
 
-// OFFSET: [#0x00712980, #0x00713D70]
+// OFFSET: [0x0059B020/0x140209780, 0x0059C750/0x14020B200]
 CGGameObject_C_Type_DestructibleBuilding::~CGGameObject_C_Type_DestructibleBuilding() {
-    if (this->m_proxy.m_uniqueId) {
-        World::FindOrCreateDestructibleProxy(&this->m_proxy);
-    }
-
     for (uint32_t i = 0; i < 4; i++) {
         if (this->m_states[i].m_object) {
-            CWorld::ObjectDestroy(this->m_states[i].m_object);
-            this->m_states[i].m_object = NULL;
+            World::ObjectDestroy(this->m_states[i].m_object);
+            this->m_states[i].m_object = 0;
         }
     }
 
     if (this->m_rebuildEffect) {
-        CWorld::ObjectDestroy(this->m_rebuildEffect);
-        this->m_rebuildEffect = NULL;
+        World::ObjectDestroy(this->m_rebuildEffect);
+        this->m_rebuildEffect = 0;
     }
 
-    this->m_worldObject = NULL;
+    this->m_worldObject = 0;
 
     if (this->m_baseCollision) {
-        CWorld::ObjectDestroy(this->m_baseCollision);
-        this->m_baseCollision = NULL;
+        World::ObjectDestroy(this->m_baseCollision);
+        this->m_baseCollision = 0;
     }
 
-    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SE3::StopSound(this->m_sound, -1, __FILE__, __LINE__, "CGGameObject_C_Type_DestructibleBuilding::~CGGameObject_C_Type_DestructibleBuilding");
 }
 
-// OFFSET: #0x00712AC0
-CGGameObject_C_Type_GuildBank::CGGameObject_C_Type_GuildBank(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A2BF0/0x140212F30
+CGGameObject_C_Type_GuildBank::CGGameObject_C_Type_GuildBank(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: #0x00712790
-CGGameObject_C_Type_MeetingStone::CGGameObject_C_Type_MeetingStone(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A2A80/0x140212DE0
+CGGameObject_C_Type_MeetingStone::CGGameObject_C_Type_MeetingStone(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: #0x00712730
-CGGameObject_C_Type_Ritual::CGGameObject_C_Type_Ritual(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A2690/0x140212940
+CGGameObject_C_Type_Ritual::CGGameObject_C_Type_Ritual(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
-// OFFSET: #0x007130A0
+// OFFSET: 0x005A3F60
 void CGGameObject_C::Disable() {
     CGObject_C::Disable();
 
@@ -1490,18 +2132,21 @@ void CGGameObject_C::Disable() {
     this->m_nameDesc = NULL;
 }
 
-// OFFSET: #0x00713250
-CGGameObject_C_Type_TransportBase::CGGameObject_C_Type_TransportBase(CGGameObject_C* owner) : CGGameObject_C_Type_WorldObj(owner) {
+// OFFSET: 0x005A3230/0x140213840
+CGGameObject_C_Type_TransportBase::CGGameObject_C_Type_TransportBase(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_WorldObj(owner, create) {
     this->m_position = C3Vector(0.0f, 0.0f, 0.0f);
+    this->m_isLoaded = 0;
+    this->m_inLiquid = 0;
     this->m_pathTime = 0;
-    this->unk_0034 = 0;
-    this->m_speed = 0.0f;
     this->m_transportUpdateTime = 0;
-    this->unk_0038 = -1;
+    this->m_speed = 0.0f;
+    this->m_transportState = -1;
     this->m_position = owner->m_passenger.GetPosition(owner->m_passenger.m_position);
+    owner->m_hasWorldBounds = 1;
 }
 
-// OFFSET: #0x0070B330
+// PROVEN: e97e6050 IDENTICAL/NONE
+// OFFSET: 0x00599260
 void CGGameObject_C_Type_TransportBase::PostInitWithStats() {
     this->CreateWorldObj();
 
@@ -1510,12 +2155,13 @@ void CGGameObject_C_Type_TransportBase::PostInitWithStats() {
     }
 }
 
-// OFFSET: #0x00710190
+// OFFSET: 0x005A02E0/0x14020FD30
 void CGGameObject_C_Type_MapObjTransport::PostReenable() {
     this->CreateWorldObj();
 
     if (this->m_worldObject) {
         MovementAddTransport(this->m_owner);
+        World::ObjectUpdate(this->m_worldObject, this->m_owner->GetMatrix());
     }
 
     this->InitializeMovement();
@@ -1526,7 +2172,7 @@ C3Vector CGGameObject_C_TypeBase::GetPosition() const {
     return this->m_owner->m_passenger.GetPosition(this->m_owner->m_passenger.m_position);
 }
 
-// OFFSET: [#0x00712B80, #0x00713F20]
+// OFFSET: 0x005A3800
 CGGameObject_C::~CGGameObject_C() {
     if (!this->m_stats) {
         g_gameObjectDBCache.CancelCallback(this->m_obj->m_entryID, &GameObjectStatsCallback, this);
@@ -1554,7 +2200,7 @@ CGGameObject_C::~CGGameObject_C() {
     }
 }
 
-// OFFSET: #0x00712CF0
+// OFFSET: 0x005A3980
 C3Vector CGGameObject_C::GetPosition() const {
     if (this->m_typeData) {
         return this->m_typeData->GetPosition();
@@ -1563,7 +2209,7 @@ C3Vector CGGameObject_C::GetPosition() const {
     return this->m_passenger.GetPosition(this->m_passenger.m_position);
 }
 
-// OFFSET: %0x005A36A0
+// OFFSET: 0x0059B600
 int32_t Packet_SMSG_GAMEOBJECT_CUSTOM_ANIM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint32_t anim;
@@ -1655,6 +2301,11 @@ void CGGameObject_C_TypeBase::HandleAnimFinished() {
 void CGGameObject_C_TypeBase::ActivateOneShotAnim(uint32_t anim) {
 }
 
+// PROVEN: 7880ab7b IDENTICAL/NONE
+// OFFSET: 0x00847950
+void CGGameObject_C_TypeBase::ActivateOneShotAnimKit(uint32_t animKitID) {
+}
+
 // PROVEN: 2e572263 IDENTICAL/NONE
 // OFFSET: 0x00599130/0x1402075A0
 const char* CGGameObject_C_TypeBase::DebugStatus() {
@@ -1678,9 +2329,9 @@ int32_t CGGameObject_C_TypeBase::IsPointInside(const C3Vector& point) const {
     return 0;
 }
 
-// PROVEN: fee94f89 IDENTICAL/IDENTICAL
+// PROVEN: 8b8dff6c IDENTICAL/IDENTICAL
 // OFFSET: 0x00842700/0x1407FDD80
-CMapBaseObj* CGGameObject_C_TypeBase::GetMapObjectTransportID() const {
+uintptr_t CGGameObject_C_TypeBase::GetMapObjectTransportID() const {
     return NULL;
 }
 
@@ -1768,6 +2419,7 @@ bool CGGameObject_C_Type_Null::CanUse() const {
     return false;
 }
 
+// PROVEN: 2c35ebff IDENTICAL/DIFFERENT
 // OFFSET: 0x005A1AD0/0x140211B90
 void CGGameObject_C_TypeAnimated::ModelLoaded() {
     this->ResetAnimState();
@@ -1780,125 +2432,128 @@ void CGGameObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_gameObjectMirror = saved + CGObject::TotalFieldsSaved();
 }
 
-// OFFSET: #0x00714250
-CGGameObject_C::CGGameObject_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(time, create), m_passenger(create.m_move.m_status.m_transportGuid, create.m_move.m_status.m_transportPosition, this->m_obj->m_guid), m_typeData(NULL), m_stats(NULL) {
+// OFFSET: 0x005A4770/0x1402152D0
+CGGameObject_C::CGGameObject_C(uint32_t time, const CClientObjCreate& create) : CGObject_C(time, create), m_passenger(create.m_hasGOTransport ? create.m_goTransport.m_guid : WOWGUID(), create.m_hasGOTransport ? create.m_goTransport.m_position : create.m_stationaryPosition, this->m_obj->m_guid), m_typeData(NULL), m_stats(NULL) {
     this->m_worldBounds.b = C3Vector(0.0f, 0.0f, 0.0f);
     this->m_worldBounds.t = C3Vector(0.0f, 0.0f, 0.0f);
+    this->m_displayState = this->m_gameObject->m_state;
     this->m_pendingOneShotAnim = 0;
     this->m_hasWorldBounds = 0;
+    this->m_animLocked = 0;
+    this->m_animKitID = 0;
     this->m_lootEffect = NULL;
-    this->m_displayState = this->m_gameObject->m_state;
-    *reinterpret_cast<uint64_t*>(&this->m_passenger.m_facing) = create.m_packedRotation;
+    this->m_animKitManager.SetGameObjectMode(1);
+    *reinterpret_cast<uint64_t*>(&this->m_passenger.m_facing) = create.m_hasRotation ? create.m_packedRotation : 0;
     this->m_passenger.unk_002C |= 0x2;
 
     ClntObjMgrHideObject(this->m_obj->m_guid);
 
-    if (create.m_updateFlags & 0x2) {
+    if (create.m_hasTransportTime) {
         this->m_transportTimeOffset = create.m_transportTime - time;
     }
 
     switch (this->m_gameObject->m_typeID) {
         case 0:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Door), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Door(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Door), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Door(this, create);
             break;
         case 1:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Button), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Button(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Button), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Button(this, create);
             break;
         case 3:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Chest), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Chest(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Chest), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Chest(this, create);
             break;
         case 6:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Trap), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Trap(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Trap), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Trap(this, create);
             break;
         case 12:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_AreaDamage), __FILE__, __LINE__, 0)) CGGameObject_C_Type_AreaDamage(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_AreaDamage), __FILE__, __LINE__, 0)) CGGameObject_C_Type_AreaDamage(this, create);
             break;
         case 2:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_QuestGiver), __FILE__, __LINE__, 0)) CGGameObject_C_Type_QuestGiver(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_QuestGiver), __FILE__, __LINE__, 0)) CGGameObject_C_Type_QuestGiver(this, create);
             break;
         case 4:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Binder), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Binder(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Binder), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Binder(this, create);
             break;
         case 5:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Generic), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Generic(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Generic), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Generic(this, create);
             break;
         case 7:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Chair), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Chair(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Chair), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Chair(this, create);
             break;
         case 8:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_SpellFocus), __FILE__, __LINE__, 0)) CGGameObject_C_Type_SpellFocus(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_SpellFocus), __FILE__, __LINE__, 0)) CGGameObject_C_Type_SpellFocus(this, create);
             break;
         case 9:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Text), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Text(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Text), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Text(this, create);
             break;
         case 10:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Goober), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Goober(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Goober), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Goober(this, create);
             break;
         case 11:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Transport), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Transport(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Transport), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Transport(this, create);
             break;
         case 35:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_TrapDoor), __FILE__, __LINE__, 0)) CGGameObject_C_Type_TrapDoor(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_TrapDoor), __FILE__, __LINE__, 0)) CGGameObject_C_Type_TrapDoor(this, create);
             break;
         case 13:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Camera), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Camera(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Camera), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Camera(this, create);
             break;
         case 14:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MapObj), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MapObj(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MapObj), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MapObj(this, create);
             break;
         case 15:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MapObjTransport), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MapObjTransport(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MapObjTransport), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MapObjTransport(this, create);
             break;
         case 16:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DuelArbiter), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DuelArbiter(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DuelArbiter), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DuelArbiter(this, create);
             break;
         case 25:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FishingHole), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FishingHole(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FishingHole), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FishingHole(this, create);
             break;
         case 17:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FishingNode), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FishingNode(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FishingNode), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FishingNode(this, create);
             break;
         case 18:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Ritual), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Ritual(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Ritual), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Ritual(this, create);
             break;
         case 19:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Mailbox), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Mailbox(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Mailbox), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Mailbox(this, create);
             break;
         case 22:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_SpellCaster), __FILE__, __LINE__, 0)) CGGameObject_C_Type_SpellCaster(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_SpellCaster), __FILE__, __LINE__, 0)) CGGameObject_C_Type_SpellCaster(this, create);
             break;
         case 23:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MeetingStone), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MeetingStone(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MeetingStone), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MeetingStone(this, create);
             break;
         case 24:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FlagStand), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FlagStand(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FlagStand), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FlagStand(this, create);
             break;
         case 26:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FlagDrop), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FlagDrop(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_FlagDrop), __FILE__, __LINE__, 0)) CGGameObject_C_Type_FlagDrop(this, create);
             break;
         case 27:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MiniGame), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MiniGame(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_MiniGame), __FILE__, __LINE__, 0)) CGGameObject_C_Type_MiniGame(this, create);
             break;
         case 29:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_CapturePoint), __FILE__, __LINE__, 0)) CGGameObject_C_Type_CapturePoint(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_CapturePoint), __FILE__, __LINE__, 0)) CGGameObject_C_Type_CapturePoint(this, create);
             break;
         case 30:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_AuraGenerator), __FILE__, __LINE__, 0)) CGGameObject_C_Type_AuraGenerator(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_AuraGenerator), __FILE__, __LINE__, 0)) CGGameObject_C_Type_AuraGenerator(this, create);
             break;
         case 31:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DungeonDifficulty), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DungeonDifficulty(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DungeonDifficulty), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DungeonDifficulty(this, create);
             break;
         case 32:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_BarberChair), __FILE__, __LINE__, 0)) CGGameObject_C_Type_BarberChair(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_BarberChair), __FILE__, __LINE__, 0)) CGGameObject_C_Type_BarberChair(this, create);
             break;
         case 33:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DestructibleBuilding), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DestructibleBuilding(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_DestructibleBuilding), __FILE__, __LINE__, 0)) CGGameObject_C_Type_DestructibleBuilding(this, create);
             break;
         case 34:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_GuildBank), __FILE__, __LINE__, 0)) CGGameObject_C_Type_GuildBank(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_GuildBank), __FILE__, __LINE__, 0)) CGGameObject_C_Type_GuildBank(this, create);
             break;
         default:
-            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Null), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Null(this);
+            this->m_typeData = new (SMemAlloc(sizeof(CGGameObject_C_Type_Null), __FILE__, __LINE__, 0)) CGGameObject_C_Type_Null(this, create);
             SysMsgPrintf(STATUS_FATAL, 2, "BADBASEGAMEOBJECT|%d", this->m_gameObject->m_typeID);
             break;
     }
@@ -1906,16 +2561,21 @@ CGGameObject_C::CGGameObject_C(uint32_t time, const CClientObjCreate& create) : 
     this->m_effectAnimState = 0;
 }
 
-// OFFSET: #0x00712F30
+// OFFSET: 0x005A3D70
 void CGGameObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
-    this->m_passenger.PostInit(create.m_move.m_status.m_position);
+    this->m_passenger.PostInit(create.m_stationaryPosition);
     this->CGObject_C::PostInit(time, create, reenable);
-
     CM2Model* model = this->m_worldModel;
 
     if (model) {
+        if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+            this->m_animKitManager.SetExpressionsBlocked(1, 1);
+        }
+
+        this->m_animKitManager.SetModel(model, 0);
         ClntObjMgrShowObject(this->m_obj->m_guid);
         model->SetEventCallback(reinterpret_cast<void*>(&CGGameObject_C::AnimEventCallback), this->m_obj->m_guid.m_guid);
+        model->SetSequenceStartCallback(&CGGameObject_C::SequenceStartCallback, this->m_obj->m_guid.m_guid);
         model->SetSequenceCallback(reinterpret_cast<void*>(&CGGameObject_C::SequenceCallback), this->m_obj->m_guid.m_guid);
 
         if (model->IsLoaded()) {
@@ -1929,18 +2589,27 @@ void CGGameObject_C::PostInit(uint32_t time, const CClientObjCreate& create, boo
             CWorldMath::TransformAABox(this->m_matrix, bounds, this->m_worldBounds);
 
             if (this->m_typeData->CanBeSolid()) {
-                this->m_hasWorldBounds = !this->m_worldBounds.IsEmpty();
+                this->m_hasWorldBounds = this->m_worldBounds.t.x > this->m_worldBounds.b.x && this->m_worldBounds.t.y > this->m_worldBounds.b.y && this->m_worldBounds.t.z > this->m_worldBounds.b.z;
             }
         }
     }
 
     this->m_typeData->PostInit(reenable);
 
+    if (create.m_hasAnimKits) {
+        uint32_t animKitID = create.m_animKits[0];
+
+        if (animKitID) {
+            this->m_animKitID = animKitID;
+            this->m_typeData->ActivateOneShotAnimKit(animKitID);
+        }
+    }
+
     WOWGUID guid = this->m_obj->m_guid;
     GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(this->m_obj->m_entryID, guid, &GameObjectStatsCallback, this, false);
 
     if (stats) {
-        this->LoadBaseObject(stats);
+        this->SetStats(stats);
     }
 }
 
@@ -1950,10 +2619,10 @@ bool CGGameObject_C_Type_Null::CanUseNow(GAME_ERROR_TYPE* error, float* distance
     return false;
 }
 
-// OFFSET: #0x0070D900
+// OFFSET: 0x0059C060/0x14020AB40
 CGGameObject_C_Type_WorldObj::~CGGameObject_C_Type_WorldObj() {
     if (this->m_worldObject) {
-        CWorld::ObjectDestroy(this->m_worldObject);
+        World::ObjectDestroy(this->m_worldObject);
         this->m_worldObject = NULL;
     }
 }
@@ -1976,28 +2645,31 @@ bool CGGameObject_C_Type_WorldObj::CanUse() const {
     return false;
 }
 
-// PROVEN: 860afd28 IDENTICAL/DIFFERENT
+// PROVEN: ae2e8844 IDENTICAL/DIFFERENT
 // OFFSET: 0x00B41A40/0x14090FD00
-CMapBaseObj* CGGameObject_C_Type_WorldObj::GetMapObjectTransportID() const {
+uintptr_t CGGameObject_C_Type_WorldObj::GetMapObjectTransportID() const {
     return this->m_worldObject;
 }
 
-// OFFSET: #0x0070B270
+// PROVEN: 4450928f IDENTICAL/NONE
+// OFFSET: 0x00599190/0x1402075E0
 void CGGameObject_C_Type_WorldObj::PostInitWithStats() {
     this->CreateWorldObj();
 }
 
-// OFFSET: #0x0070B280
+// PROVEN: 910dae4b IDENTICAL/NONE
+// OFFSET: 0x005991A0/0x1402075F0
 void CGGameObject_C_Type_WorldObj::Disable() {
     this->DestroyWorldObj();
 }
 
-// OFFSET: #0x0070B270
+// PROVEN: 087412bb IDENTICAL/NONE
+// OFFSET: 0x00599190/0x1402075E0
 void CGGameObject_C_Type_WorldObj::PostReenable() {
     this->CreateWorldObj();
 }
 
-// OFFSET: #0x00712610
+// OFFSET: [0x005A2EF0/0x140213400, 0x005A3300]
 CGGameObject_C_Type_TransportBase::~CGGameObject_C_Type_TransportBase() {
     if (this->m_worldObject) {
         MovementRemoveTransport(this->m_owner);
@@ -2010,29 +2682,31 @@ C3Vector CGGameObject_C_Type_TransportBase::GetPosition() const {
     return this->m_position;
 }
 
-// OFFSET: #0x0070B360
+// PROVEN: b635ed38 IDENTICAL/NONE
+// OFFSET: 0x005992E0/0x140207740
 int32_t CGGameObject_C_Type_TransportBase::IsPointInside(const C3Vector& point) const {
     if (!this->m_worldObject) {
         return 1;
     }
 
-    return World::ObjectTestConvexVolume(this->m_worldObject, point);
+    return static_cast<uint8_t>(World::ObjectTestConvexVolume(this->m_worldObject, point, 1.6404123f));
 }
 
-// OFFSET: #0x0070B330
+// OFFSET: 0x00599290
 void CGGameObject_C_Type_TransportBase::PostReenable() {
     this->CreateWorldObj();
 
     if (this->m_worldObject) {
         MovementAddTransport(this->m_owner);
+        World::ObjectUpdate(this->m_worldObject, this->m_owner->GetMatrix());
     }
 }
 
-// OFFSET: #0x007101C0
+// OFFSET: 0x005A0650/0x1402100B0
 void CGGameObject_C_Type_MapObjTransport::UpdateState(int32_t oldState, int32_t newState) {
     uint32_t pausePointsIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 128);
     GameObjectStats* pausePointsStats = this->m_owner->m_stats;
-    uint32_t pausePoints = (pausePointsStats && pausePointsIndex < 24) ? pausePointsStats->m_propValue[pausePointsIndex] : 0;
+    uint32_t pausePoints = (pausePointsStats && pausePointsIndex < 32) ? pausePointsStats->m_propValue[pausePointsIndex] : 0;
 
     if (!pausePoints) {
         return;
@@ -2047,57 +2721,153 @@ void CGGameObject_C_Type_MapObjTransport::UpdateState(int32_t oldState, int32_t 
     this->m_shipPath.WaitAtNextPausePoint(this->m_pathTime, closed);
 }
 
-// OFFSET: #0x0070DDD0
+// OFFSET: 0x0059C780/0x14020B250
 void CGGameObject_C_Type_DestructibleBuilding::PostInit(bool a1) {
-    GameObjectDisplayInfoRec* display = g_gameObjectDisplayInfoDB.GetRecord(this->m_owner->m_gameObject->m_displayID);
+    const GameObjectDisplayInfoRec* display = g_gameObjectDisplayInfoDB.GetRecord(this->m_owner->m_gameObject->m_displayID);
 
     if (display) {
-        CGGameObject_C* owner = this->m_owner;
-        C3Vector position = owner->m_passenger.GetPosition(owner->m_passenger.m_position);
-        this->m_proxy.m_sphere.c = position;
-        float x = display->m_geoBoxMax[0] * display->m_geoBoxMax[0];
-        float minX = display->m_geoBoxMin[0] * display->m_geoBoxMin[0];
-
-        if (minX >= x) {
-            x = minX;
-        }
-
+        float x = display->m_geoBoxMax[0] * display->m_geoBoxMax[0] <= display->m_geoBoxMin[0] * display->m_geoBoxMin[0] ? display->m_geoBoxMin[0] * display->m_geoBoxMin[0] : display->m_geoBoxMax[0] * display->m_geoBoxMax[0];
         x = sqrt(x);
-        float y = display->m_geoBoxMax[1] * display->m_geoBoxMax[1];
-        float minY = display->m_geoBoxMin[1] * display->m_geoBoxMin[1];
-
-        if (minY >= y) {
-            y = minY;
-        }
-
+        float y = display->m_geoBoxMax[1] * display->m_geoBoxMax[1] <= display->m_geoBoxMin[1] * display->m_geoBoxMin[1] ? display->m_geoBoxMin[1] * display->m_geoBoxMin[1] : display->m_geoBoxMax[1] * display->m_geoBoxMax[1];
         y = sqrt(y);
-        float z = display->m_geoBoxMax[2] * display->m_geoBoxMax[2];
-        float minZ = display->m_geoBoxMin[2] * display->m_geoBoxMin[2];
-
-        if (minZ >= z) {
-            z = minZ;
-        }
-
+        float z = display->m_geoBoxMax[2] * display->m_geoBoxMax[2] <= display->m_geoBoxMin[2] * display->m_geoBoxMin[2] ? display->m_geoBoxMin[2] * display->m_geoBoxMin[2] : display->m_geoBoxMax[2] * display->m_geoBoxMax[2];
         z = sqrt(z);
-        this->m_proxy.m_sphere.r = sqrt(z * z + y * y + x * x);
-        this->m_proxy.m_uniqueId = reinterpret_cast<const uint32_t&>(this->m_owner->m_gameObject->m_parentRotation[0]) == 0x5476ED ? 0x5476ED : 0;
+        this->m_boundingRadius = sqrt(x * x + y * y + z * z);
 
-        if (this->m_proxy.m_sphere.r < 0.001f) {
-            this->m_proxy.m_sphere.r = 50.0f;
-            SysMsgPrintf(STATUS_ERROR, 2, "Destructible building WMO(%s) has invalid geobox", display->m_modelName);
+        if (this->m_boundingRadius < 0.001f) {
+            this->m_boundingRadius = 50.0f;
+            SysMsgPrintf(STATUS_ERROR, 2, "Destructible building WMO(%s) has invalid geobox", static_cast<const char*>(display->m_modelName));
         }
-
-        World::FindOrCreateDestructibleProxy(&this->m_proxy);
     }
 
     if (this->m_owner) {
         this->m_owner->UpdateWorldObject(0);
     }
+
+    this->m_modelData = g_destructibleModelDataDB.GetRecord(reinterpret_cast<const int32_t&>(this->m_owner->m_gameObject->m_parentRotation[0]));
+
+    if (this->m_modelData) {
+        this->m_states[0].m_displayId = this->m_modelData->m_state0WMO;
+        this->m_states[1].m_displayId = this->m_modelData->m_state1WMO;
+        this->m_states[2].m_displayId = this->m_modelData->m_state2WMO;
+        this->m_states[3].m_displayId = this->m_modelData->m_state3WMO;
+
+        for (int32_t i = 0; i < 4; i++) {
+            DestructibleBuildingState& entry = this->m_states[i];
+
+            if (entry.m_displayId) {
+                const GameObjectDisplayInfoRec* stateDisplay = g_gameObjectDisplayInfoDB.GetRecord(entry.m_displayId);
+
+                if (stateDisplay) {
+                    entry.m_modelName = stateDisplay->m_modelName;
+                    continue;
+                }
+
+                SysMsgPrintf(STATUS_ERROR, 2, "Destructible building - Game object id %d is missing its display record %d for state %d", this->m_owner->m_obj->m_entryID, this->m_owner->m_gameObject->m_displayID, i);
+            }
+
+            entry.m_displayId = this->m_states[i - 1].m_displayId;
+            entry.m_modelName = this->m_states[i - 1].m_modelName;
+        }
+    }
+
+    C3Vector position = this->m_owner->m_passenger.GetPosition(this->m_owner->m_passenger.m_position);
+
+    for (int32_t i = 0; i < 4; i++) {
+        DestructibleBuildingState& entry = this->m_states[i];
+
+        if (entry.m_object || !entry.m_modelName) {
+            continue;
+        }
+
+        uint16_t doodadSets[3];
+        doodadSets[0] = this->GetDestructionDoodadSet(2 * i);
+        doodadSets[1] = this->GetImpactEffectDoodadSet(2 * i);
+        doodadSets[2] = this->GetAmbientDoodadSet(2 * i);
+        int32_t nameSet;
+
+        if (!this->m_modelData) {
+            nameSet = 0;
+        } else {
+            switch (i) {
+                case 1:
+                    nameSet = this->m_modelData->m_state1NameSet;
+                    break;
+
+                case 2:
+                    nameSet = this->m_modelData->m_state2NameSet;
+                    break;
+
+                case 3:
+                    nameSet = this->m_modelData->m_state3NameSet;
+                    break;
+
+                default:
+                    nameSet = this->m_modelData->m_state0NameSet;
+                    break;
+            }
+        }
+
+        uint64_t guid = this->m_owner->m_obj->m_guid.m_guid;
+        entry.m_object = World::ObjectCreate(entry.m_modelName, position, this->m_owner->GetFacing(), 0, 0, guid, 0, 3, doodadSets, &this->m_boundingRadius, nameSet);
+
+        if (entry.m_object) {
+            World::ObjectSetRenderEnabled(entry.m_object, 0);
+            World::ObjectEnableCollision(entry.m_object, 0);
+
+            if (reinterpret_cast<const int32_t&>(this->m_owner->m_gameObject->m_parentRotation[0]) == 114) {
+                World::ObjectSetMoveable(entry.m_object, 1);
+            }
+        }
+
+        this->m_states[i].m_loading = 1;
+    }
+
+    this->m_worldObject = this->m_states[((this->m_owner->m_gameObject->m_flags >> 8) & 0xE) >> 1].m_object;
+
+    if (this->m_worldObject) {
+        World::ObjectSetRenderEnabled(this->m_worldObject, 1);
+        World::ObjectEnableCollision(this->m_worldObject, 1);
+    }
+
+    this->m_loadPending = 1;
+
+    if (!this->m_modelData) {
+        return;
+    }
+
+    int32_t repairFx = this->m_modelData->m_repairGroundFx;
+
+    if (repairFx) {
+        const GameObjectDisplayInfoRec* fxDisplay = g_gameObjectDisplayInfoDB.GetRecord(repairFx);
+
+        if (fxDisplay) {
+            this->m_rebuildEffect = World::ObjectCreate(fxDisplay->m_modelName, position, this->m_owner->GetFacing(), 0, 0, 0, 0, 0, NULL, NULL, 0);
+
+            if (this->m_rebuildEffect) {
+                World::ObjectSetAlwaysExterior(this->m_rebuildEffect, 1);
+                World::ObjectSetRenderEnabled(this->m_rebuildEffect, 0);
+                World::ObjectEnableCollision(this->m_rebuildEffect, 0);
+            }
+        } else {
+            SysMsgPrintf(STATUS_ERROR, 2, "Destructible building - Game object id %d is missing its rebuild FX display record %d", this->m_owner->m_obj->m_entryID, repairFx);
+        }
+    }
+
+    if (this->m_states[0].m_modelName) {
+        uint64_t guid = this->m_owner->m_obj->m_guid.m_guid;
+        this->m_baseCollision = World::ObjectCreate(this->m_states[0].m_modelName, position, this->m_owner->GetFacing(), 0, 0, guid, 0, 0, NULL, NULL, 0);
+
+        if (this->m_baseCollision) {
+            World::ObjectSetRenderEnabled(this->m_baseCollision, 0);
+            World::ObjectEnableCollision(this->m_baseCollision, 0);
+        }
+    }
 }
 
 // OFFSET: 0x0059CCA0/0x14020B8A0
 bool CGGameObject_C_Type_DestructibleBuilding::CanHighlight() const {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player && this->m_owner->m_obj->m_guid.m_guid == World::QueryObjectParentParam64(player->m_worldObject)) {
         return false;
@@ -2124,9 +2894,9 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
         return;
     }
 
-    SI3::StopSound(&this->m_sound, 0, -1.0f, 1);
+    SE3::StopSound(this->m_sound, -1, __FILE__, __LINE__, "CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState");
     DestructibleBuildingState& entry = this->m_states[state];
-    CMapEntity* object = entry.m_object;
+    uintptr_t object = entry.m_object;
 
     if (object) {
         World::ObjectSetRenderEnabled(object, 1);
@@ -2136,20 +2906,25 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
     if (this->m_worldObject) {
         World::ObjectSetRenderEnabled(this->m_worldObject, 0);
         World::ObjectEnableCollision(this->m_worldObject, 0);
+        uint16_t destruction = this->GetDestructionDoodadSet(2 * current);
+
+        if (destruction) {
+            World::ObjectSetDoodadsEnabled(this->m_worldObject, 0, destruction);
+        }
     }
 
     if (this->m_worldObject && state > current && state != 3 && state) {
         CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-        if (mover && !mover->HasVehicleTransport() && !(mover->m_movement->m_flags & 0x2000000)) {
+        if (mover && !mover->HasVehicleTransport() && !(mover->m_movement->m_flags & 0x1000000)) {
             CAaBox extents;
             extents.b = C3Vector(0.0f, 0.0f, 0.0f);
             extents.t = C3Vector(0.0f, 0.0f, 0.0f);
-            World::ObjectGetExtents(this->m_worldObject, &extents);
+            World::ObjectGetExtents(this->m_worldObject, extents);
             C44Matrix inverse = this->m_owner->GetMatrix().AffineInverse();
 
             if (extents.ContainsPointExclusive(mover->GetPosition() * inverse)) {
-                mover->OnFallLocal(OsGetAsyncTimeMs());
+                mover->OnFallLocal(FrameTime::GetCurTimeMs());
             }
         }
     }
@@ -2213,19 +2988,19 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
                 CAaBox extents;
                 extents.b = C3Vector(0.0f, 0.0f, 0.0f);
                 extents.t = C3Vector(0.0f, 0.0f, 0.0f);
-                World::ObjectGetExtents(this->m_worldObject, &extents);
+                World::ObjectGetExtents(this->m_worldObject, extents);
                 this->m_sinkDepth = extents.t.z - extents.b.z;
                 float z = this->m_owner->GetPosition().z;
                 C3Vector position(z, z, z);
                 this->m_baseZ = z;
-                World::ObjectUpdate(this->m_worldObject, &position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+                World::ObjectUpdate(this->m_worldObject, position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
                 this->m_animating = 1;
                 this->m_baseZ = position.z;
-                this->m_animStartTime = FrameTime::s_curTimeMs;
+                this->m_animStartTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
                 this->m_animDuration = static_cast<uint32_t>((extents.t.z - extents.b.z) / (speed * 0.33333334f) * 1000.0f);
 
                 if (this->m_previousState != -1 && effect != 3) {
-                    World::ObjectGetExtents(this->m_states[this->m_previousState].m_object, &extents);
+                    World::ObjectGetExtents(this->m_states[this->m_previousState].m_object, extents);
                     this->m_previousSinkDepth = extents.t.z - extents.b.z;
                     World::ObjectSetRenderEnabled(this->m_states[this->m_previousState].m_object, 1);
                     World::ObjectEnableCollision(this->m_states[this->m_previousState].m_object, 1);
@@ -2300,6 +3075,7 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDestructibleState() {
     }
 }
 
+// PROVEN: e85731ae IDENTICAL/NONE
 // OFFSET: 0x0059D510/0x14020C2B0
 void CGGameObject_C_Type_DestructibleBuilding::OnUpdateFlags(uint32_t changed) {
     if (!this->m_modelData || !(changed & 0xF00)) {
@@ -2320,7 +3096,7 @@ void CGGameObject_C_Type_DestructibleBuilding::OnUpdateFlags(uint32_t changed) {
     this->UpdateDestructibleState();
 }
 
-// OFFSET: #0x0070E750
+// OFFSET: 0x0059D5C0/0x14020C390
 void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
     if (this->m_loadPending) {
         this->m_loadPending = 0;
@@ -2392,13 +3168,13 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
 
                 C3Vector target = position;
                 target.z = this->m_baseZ - (1.0f - sink) * this->m_sinkDepth;
-                World::ObjectUpdate(this->m_worldObject, &target, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+                World::ObjectUpdate(this->m_worldObject, target, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
 
                 if (this->m_previousState != -1) {
                     float scale = progress >= 0.5f ? 1.0f : progress * (progress * progress) * 8.0f;
                     C3Vector previous = this->m_owner->GetPosition();
                     previous.z = this->m_baseZ - this->m_previousSinkDepth * scale;
-                    World::ObjectUpdate(this->m_states[this->m_previousState].m_object, &previous, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+                    World::ObjectUpdate(this->m_states[this->m_previousState].m_object, previous, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
                 }
 
                 goto rebuild;
@@ -2409,12 +3185,12 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
             C3Vector target = position;
             float remaining = 1.0f - progress;
             target.z = this->m_baseZ - (1.0f - (1.0f - remaining * (remaining * remaining))) * this->m_sinkDepth;
-            World::ObjectUpdate(this->m_worldObject, &target, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+            World::ObjectUpdate(this->m_worldObject, target, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
 
             if (this->m_previousState != -1 && effect == 2) {
                 C3Vector previous = this->m_owner->GetPosition();
                 previous.z = this->m_baseZ - progress * (progress * progress) * this->m_previousSinkDepth;
-                World::ObjectUpdate(this->m_states[this->m_previousState].m_object, &previous, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+                World::ObjectUpdate(this->m_states[this->m_previousState].m_object, previous, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
             }
         }
 
@@ -2422,7 +3198,7 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
         if (this->m_rebuildEffect) {
             World::ObjectSetRenderEnabled(this->m_rebuildEffect, 1);
             World::ObjectEnableCollision(this->m_rebuildEffect, 1);
-            World::ObjectUpdate(this->m_rebuildEffect, &position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+            World::ObjectUpdate(this->m_rebuildEffect, position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
         }
 
         return;
@@ -2430,20 +3206,20 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
 
     if (this->m_rebuildEffect) {
         C3Vector position = this->m_owner->GetPosition();
-        World::ObjectUpdate(this->m_rebuildEffect, &position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+        World::ObjectUpdate(this->m_rebuildEffect, position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
         World::ObjectSetRenderEnabled(this->m_rebuildEffect, 0);
         World::ObjectEnableCollision(this->m_rebuildEffect, 0);
     }
 
     C3Vector position = this->m_owner->GetPosition();
     position.z = this->m_baseZ;
-    World::ObjectUpdate(this->m_worldObject, &position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+    World::ObjectUpdate(this->m_worldObject, position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
     this->m_animating = 0;
 
     if (this->m_previousState != -1) {
         World::ObjectSetRenderEnabled(this->m_states[this->m_previousState].m_object, 0);
         World::ObjectEnableCollision(this->m_states[this->m_previousState].m_object, 0);
-        World::ObjectUpdate(this->m_states[this->m_previousState].m_object, &position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
+        World::ObjectUpdate(this->m_states[this->m_previousState].m_object, position, this->m_owner->GetFacing(), 0.0f, 0.0f, 0);
     }
 
     if (this->m_baseCollision) {
@@ -2451,7 +3227,7 @@ void CGGameObject_C_Type_DestructibleBuilding::UpdateDisplay(uint32_t time) {
     }
 }
 
-// OFFSET: #0x0070EC80
+// OFFSET: 0x0059DBC0/0x14020CB40
 void CGGameObject_C_Type_DestructibleBuilding::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time) {
     GameObject_C_ProcessAnimEvent(eventId, this->m_owner->m_gameObject->m_displayID, data, position, &this->m_sound);
 }
@@ -2466,7 +3242,7 @@ void CGGameObject_C_Type_DestructibleBuilding::CreateWorldObj() {
 void CGGameObject_C_Type_DestructibleBuilding::DestroyWorldObj() {
 }
 
-// OFFSET: #0x0070ECB0
+// OFFSET: 0x0059DBF0
 bool CGGameObject_C_Type_GuildBank::Use() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -2478,35 +3254,37 @@ bool CGGameObject_C_Type_GuildBank::Use() {
     return true;
 }
 
-// OFFSET: #0x0070C9F0
+// OFFSET: 0x0059DC40
 void CGGameObject_C_Type_GuildBank::StartInteraction() {
     CGGameObject_C* owner = this->m_owner;
 
     if (owner->IsObjectModelLoaded()) {
-        owner->m_typeData->ActivateOneShotAnim(8);
+        owner->m_typeData->ActivateOneShotAnim(2);
         owner->m_pendingOneShotAnim = 0;
     } else {
         owner->m_pendingOneShotAnim = 2;
     }
 }
 
-// OFFSET: #0x004F58A0
+// PROVEN: 128c4b18 IDENTICAL/NONE
+// OFFSET: 0x008DEAB0
 CAaBox CGGameObject_C::GetWorldBounds() const {
     return this->m_worldBounds;
 }
 
-// OFFSET: #0x0070CBE0
+// OFFSET: 0x0059DD50
 void CGGameObject_C::UpdateWorldObject(int32_t a2) {
-    this->m_matrix.Identity();
+    this->m_matrix = C44Matrix();
     this->m_matrix.Translate(this->GetPosition());
     this->m_matrix.Rotate(this->GetRotation());
     this->m_matrix.Scale(this->GetScale());
     CM2Model* model = this->m_worldModel;
+    C3Vector center(0.0f, 0.0f, 0.0f);
     CAaBox box(C3Vector(0.0f, 0.0f, 0.0f), C3Vector(0.0f, 0.0f, 0.0f));
     CAaSphere sphere;
     sphere.c = C3Vector(0.0f, 0.0f, 0.0f);
     sphere.r = 0.0f;
-    C3Vector center(0.0f, 0.0f, 0.0f);
+    C3Vector position(0.0f, 0.0f, 0.0f);
 
     if (model) {
         if (model->IsLoaded()) {
@@ -2516,21 +3294,28 @@ void CGGameObject_C::UpdateWorldObject(int32_t a2) {
 
             CAaBox bounds = model->m_shared->m_data->m_collisionBounds.m_extent;
             CWorldMath::TransformAABox(this->m_matrix, bounds, this->m_worldBounds);
-            box = model->GetBoundingBox();
-            sphere = model->GetBoundingSphere();
-            center = C3Vector((bounds.t.x + bounds.b.x) * 0.5f, (bounds.t.y + bounds.b.y) * 0.5f, 0.5f * (bounds.t.z + bounds.b.z));
+            model->GetCombinedBounds(box, sphere);
+            center.x = (bounds.t.x + bounds.b.x) * 0.5f;
+            center.y = (bounds.t.y + bounds.b.y) * 0.5f;
+            center.z = (bounds.t.z + bounds.b.z) * 0.5f;
+            position = center;
         }
 
-        model->m_fFlags |= 0x8000;
+        model->m_fFlags |= 0x4000;
         model->m_worldTransform = this->m_matrix;
     }
 
     if (this->m_worldObject) {
-        CMap::ObjectUpdate(this->m_worldObject, this->m_matrix, box, sphere, center, a2, 0xFFFFFFFF);
+        if (!this->m_gameObject->m_typeID && static_cast<CGGameObject_C_Type_Door*>(this->m_typeData)->m_linkAll) {
+            World::ObjectSetLinkAll(this->m_worldObject, 1);
+        }
+
+        World::ObjectUpdate(this->m_worldObject, this->m_matrix, box, sphere, position, a2, 0xFFFFFFFF);
     }
 }
 
-// OFFSET: #0x00712DB0
+// PROVEN: 2a41aaae IDENTICAL/NONE
+// OFFSET: 0x005A3A40
 float CGGameObject_C::GetFacing() const {
     if (this->m_typeData) {
         return this->m_typeData->GetFacing();
@@ -2539,7 +3324,8 @@ float CGGameObject_C::GetFacing() const {
     return this->m_passenger.GetFacing(this->m_passenger.GetRawFacingFromRotation());
 }
 
-// OFFSET: #0x00712DF0
+// PROVEN: 881618e2 IDENTICAL/NONE
+// OFFSET: 0x005A3A80
 float CGGameObject_C::GetRawFacing() const {
     if (this->m_typeData) {
         return this->m_typeData->GetRawFacing();
@@ -2548,26 +3334,28 @@ float CGGameObject_C::GetRawFacing() const {
     return this->m_passenger.GetRawFacingFromRotation();
 }
 
-// OFFSET: #0x00712E20
+// PROVEN: f60daa33 IDENTICAL/NONE
+// OFFSET: 0x005A3AB0
 C4Quaternion CGGameObject_C::GetRotation() const {
     return this->m_passenger.GetRotation();
 }
 
-// OFFSET: #0x00713F50
+// OFFSET: 0x005A3BE0
 void CGGameObject_C::ModelLoaded(CM2Model* model) {
     CAaBox box = model->GetBoundingBox();
-    this->m_height = box.t.z - box.b.z;
+    this->m_height = (box.t.x < box.b.x || box.t.y < box.b.y || box.t.z < box.b.z) ? 0.0f : box.t.z - box.b.z;
 
     if ((this->m_modelFlags & 0x40000) && !(this->m_modelFlags & 0x10000)) {
         this->UpdateWorldObject(0);
     }
 
     if (this->m_typeData->CanBeSolid()) {
-        this->m_hasWorldBounds = !this->m_worldBounds.IsEmpty();
+        this->m_hasWorldBounds = this->m_worldBounds.t.x > this->m_worldBounds.b.x && this->m_worldBounds.t.y > this->m_worldBounds.b.y && this->m_worldBounds.t.z > this->m_worldBounds.b.z;
     }
 
     ApplyGameObjectArtKit(model, this->m_gameObject->m_artKit);
     this->m_typeData->ModelLoaded();
+    this->m_animKitManager.OnModelLoaded();
     this->UpdateInteractIconAttach();
 
     if (this->m_modelFlags & 0x400000) {
@@ -2578,41 +3366,38 @@ void CGGameObject_C::ModelLoaded(CM2Model* model) {
     int32_t pending = this->m_pendingOneShotAnim;
 
     if (pending) {
-        if (!this->IsObjectModelLoaded()) {
+        if (this->IsObjectModelLoaded()) {
+            this->m_typeData->ActivateOneShotAnim(pending);
+            this->m_pendingOneShotAnim = 0;
+        } else {
             this->m_pendingOneShotAnim = pending;
-            model->m_fFlags |= 0x4;
-            return;
         }
-
-        this->m_typeData->ActivateOneShotAnim(s_oneShotAnims[pending]);
-        this->m_pendingOneShotAnim = 0;
     }
 
     model->m_fFlags |= 0x4;
+    this->LoadGuildTextures(this->GetGuildGUID().m_guid);
 }
 
-// OFFSET: #0x0070C330
+// OFFSET: 0x0059A5A0/0x140208D50
 float CGGameObject_C_TypeBase::GetRawFacing() const {
     return this->m_owner->m_passenger.GetRawFacingFromRotation();
 }
 
+// PROVEN: 3c026556 IDENTICAL/NONE
 // OFFSET: 0x0059A580/0x140208D20
 float CGGameObject_C_TypeBase::GetFacing() const {
     CPassenger& passenger = this->m_owner->m_passenger;
     return passenger.GetFacing(passenger.GetRawFacingFromRotation());
 }
 
-// OFFSET: #0x0070C430
+// OFFSET: 0x0059BE40/0x14020A8E0
 int32_t CGGameObject_C_TypeAnimated::HandleAnimInterrupted() {
-    int32_t state = this->m_pendingAnimState;
-
-    if (state == -1 || state == 3 || state == 1 || state == 6) {
-        this->m_pendingAnimState = -1;
-        return 1;
+    if (!this->UpdateObjectLock()) {
+        return 0;
     }
 
-    ClntObjMgrUnlockObject(this->m_owner->m_obj->m_guid, __FILE__, __LINE__);
-    return 0;
+    this->m_pendingAnimState = -1;
+    return 1;
 }
 
 // OFFSET: 0x0059E240/0x14020D3E0
@@ -2625,7 +3410,7 @@ LockRec* CGGameObject_C::GetLockRec() const {
     return lockId ? g_lockDB.GetRecord(lockId) : NULL;
 }
 
-// OFFSET: #0x0070F010
+// OFFSET: 0x0059E320
 bool CGGameObject_C::IsValidTargetForSpell(const WOWGUID& item, int32_t spellId) const {
     LockRec* lock = this->GetLockRec();
 
@@ -2633,16 +3418,19 @@ bool CGGameObject_C::IsValidTargetForSpell(const WOWGUID& item, int32_t spellId)
         return false;
     }
 
-    SpellRec spell;
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spellId, count);
 
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
+    if (!count) {
         return false;
     }
 
     CGItem_C* key = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    for (uint32_t i = 0; i < 3; i++) {
-        if (spell.m_effect[i] != 33) {
+    for (uint32_t i = 0; i < count; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect || effect->m_effect != 33) {
             continue;
         }
 
@@ -2656,14 +3444,14 @@ bool CGGameObject_C::IsValidTargetForSpell(const WOWGUID& item, int32_t spellId)
                     break;
 
                 case 2:
-                    if (spell.m_effectMiscValue[i] != lock->m_index[j]) {
+                    if (effect->m_effectMiscValue != lock->m_index[j]) {
                         continue;
                     }
 
                     break;
 
                 case 3:
-                    if (spell.m_id != lock->m_index[j]) {
+                    if (spellId != lock->m_index[j]) {
                         continue;
                     }
 
@@ -2682,9 +3470,9 @@ bool CGGameObject_C::IsValidTargetForSpell(const WOWGUID& item, int32_t spellId)
     return false;
 }
 
-// OFFSET: #0x0070CE10
+// OFFSET: 0x0059EB00
 int32_t CGGameObject_C::CanChangeCursor() const {
-    if (!this->m_typeData->CanUse()) {
+    if ((!CGGameObject_C::s_cvForceMouseOver || !CGGameObject_C::s_cvForceMouseOver->m_intValue) && !this->m_typeData->CanUse()) {
         return 0;
     }
 
@@ -2694,7 +3482,7 @@ int32_t CGGameObject_C::CanChangeCursor() const {
 
     char name[40];
 
-    if (this->m_typeData->CanUseNow(NULL, NULL, NULL)) {
+    if (this->CanUseNow()) {
         SStrCopy(name, this->m_stats->m_iconName, sizeof(name));
     } else {
         SStrPrintf(name, sizeof(name), "Unable%s", this->m_stats->m_iconName);
@@ -2704,7 +3492,7 @@ int32_t CGGameObject_C::CanChangeCursor() const {
     return mode ? mode : 53;
 }
 
-// OFFSET: #0x00711AB0
+// OFFSET: 0x005A1FC0/0x140212160
 void CGGameObject_C_Type_TransportBase::AddPassenger(CPassenger* passenger, int32_t a2) {
     passenger->m_link.Unlink();
     this->m_passengers.LinkToTail(passenger);
@@ -2728,9 +3516,18 @@ int32_t CGGameObject_C::GetPageTextMaterial() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 17));
 }
 
-// OFFSET: #0x0070ED50
-void CGGameObject_C::Reenable() {
-    CGObject_C::Reenable();
+// OFFSET: 0x0059DFA0
+void CGGameObject_C::Reenable(const CClientObjCreate& create) {
+    if (create.m_hasGOTransport) {
+        this->m_passenger.Reenable(create.m_goTransport.m_guid, create.m_goTransport.m_position);
+    } else {
+        WOWGUID none;
+        this->m_passenger.Reenable(none, create.m_stationaryPosition);
+    }
+
+    *reinterpret_cast<uint64_t*>(&this->m_passenger.m_facing) = create.m_hasRotation ? create.m_packedRotation : 0;
+    this->m_passenger.unk_002C |= 0x2;
+    CGObject_C::Reenable(create);
 
     if (this->m_stats) {
         this->m_typeData->Reenable();
@@ -2746,8 +3543,12 @@ void CGGameObject_C::Reenable() {
         WOWGUID guid = this->m_obj->m_guid;
         this->m_nameDesc = ObjectNameCreate(guid);
     }
+
+    this->m_animKitID = create.m_hasAnimKits ? create.m_animKits[0] : 0;
+    this->m_typeData->ActivateOneShotAnimKit(this->m_animKitID);
 }
 
+// PROVEN: 8fb6a007 IDENTICAL/NONE
 // OFFSET: 0x0059E0B0/0x14020D240
 int32_t CGGameObject_C::ObjectReaction(const CGUnit_C* unit) const {
     CGUnit_C* creator = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_gameObject->m_createdBy, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -2768,7 +3569,7 @@ bool CGGameObject_C::IsTracked() const {
     return CGMinimapFrame::s_trackingInfo && CGMinimapFrame::s_trackingInfo->m_type == 2 && CGMinimapFrame::s_trackingInfo->m_npcFlags == static_cast<uint32_t>(this->m_gameObject->m_typeID);
 }
 
-// OFFSET: #0x0070F880
+// OFFSET: 0x0059EE80
 void CGGameObject_C::AddWorldDamageText(int32_t amount) {
     if (amount && g_combatDamageCVar->m_intValue && this->m_gameObject->m_typeID == 33) {
         char text[32];
@@ -2777,7 +3578,7 @@ void CGGameObject_C::AddWorldDamageText(int32_t amount) {
     }
 }
 
-// OFFSET: #0x0070F8E0
+// OFFSET: 0x0059EEE0
 void CGGameObject_C::AddWorldHealingText(int32_t amount, const SpellRec* spell) {
     if (amount && g_combatHealingCVar->m_intValue && this->m_gameObject->m_typeID == 33) {
         char text[32];
@@ -2786,8 +3587,8 @@ void CGGameObject_C::AddWorldHealingText(int32_t amount, const SpellRec* spell) 
     }
 }
 
-// OFFSET: #0x00712400
-void CGGameObject_C::LoadBaseObject(GameObjectStats_C* stats) {
+// OFFSET: 0x005A3080/0x140213620
+void CGGameObject_C::SetStats(GameObjectStats_C* stats) {
     this->m_stats = stats;
     this->m_typeData->PostInitWithStats();
 
@@ -2796,15 +3597,23 @@ void CGGameObject_C::LoadBaseObject(GameObjectStats_C* stats) {
     if (displayInfo && displayInfo->m_objectEffectPackageID) {
         void* mem = SMemAlloc(sizeof(CObjectEffectManager), __FILE__, __LINE__, 0);
         this->m_effectManager = mem ? new (mem) CObjectEffectManager() : NULL;
-        this->m_effectManager->Init(displayInfo->m_objectEffectPackageID, this);
+
+        if (!this->m_effectManager->Init(displayInfo->m_objectEffectPackageID, this)) {
+            delete this->m_effectManager;
+            this->m_effectManager = NULL;
+        }
     }
 
     this->CheckForPassiveHighlight();
 }
 
-// OFFSET: #0x0070D510
+// OFFSET: 0x0059BC60/0x14020A670
 void CGGameObject_C_TypeAnimated::UpdateAnimState(uint32_t state) {
-    if (static_cast<int32_t>(state) == this->m_animState) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
+    if (state == this->m_animState) {
         return;
     }
 
@@ -2821,8 +3630,7 @@ void CGGameObject_C_TypeAnimated::UpdateAnimState(uint32_t state) {
                 model->GetBoneSequenceInfo(0xFFFFFFFF, info);
 
                 if (static_cast<int32_t>(info.m_endTime - info.m_startTime) > 0) {
-                    uint32_t elapsed = model->m_scene->m_time - info.m_startTime;
-                    float progress = static_cast<float>(elapsed) / static_cast<float>(info.m_endTime - info.m_startTime);
+                    float progress = static_cast<float>(model->m_scene->m_time - info.m_startTime) / static_cast<float>(info.m_endTime - info.m_startTime);
 
                     if (progress <= 1.0f) {
                         this->m_owner->SetPathProgress(1.0f - progress);
@@ -2839,7 +3647,7 @@ void CGGameObject_C_TypeAnimated::UpdateAnimState(uint32_t state) {
     }
 }
 
-// OFFSET: #0x00711B50
+// OFFSET: 0x005A2060/0x140212220
 void CGGameObject_C_Type_MapObjTransport::PostInitWithStats() {
     this->CreateWorldObj();
 
@@ -2849,20 +3657,20 @@ void CGGameObject_C_Type_MapObjTransport::PostInitWithStats() {
 
     uint32_t physicsIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 99);
     GameObjectStats* physicsStats = this->m_owner->m_stats;
-    int32_t physicsId = (physicsStats && physicsIndex < 24) ? physicsStats->m_propValue[physicsIndex] : 0;
+    int32_t physicsId = (physicsStats && physicsIndex < 32) ? physicsStats->m_propValue[physicsIndex] : 0;
     TransportPhysicsRec* physics = g_transportPhysicsDB.GetRecord(physicsId);
 
     uint32_t accelRateIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 43);
     GameObjectStats* accelRateStats = this->m_owner->m_stats;
-    int32_t accelRate = (accelRateStats && accelRateIndex < 24) ? accelRateStats->m_propValue[accelRateIndex] : 0;
+    int32_t accelRate = (accelRateStats && accelRateIndex < 32) ? accelRateStats->m_propValue[accelRateIndex] : 0;
 
     uint32_t moveSpeedIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 36);
     GameObjectStats* moveSpeedStats = this->m_owner->m_stats;
-    int32_t moveSpeed = (moveSpeedStats && moveSpeedIndex < 24) ? moveSpeedStats->m_propValue[moveSpeedIndex] : 0;
+    int32_t moveSpeed = (moveSpeedStats && moveSpeedIndex < 32) ? moveSpeedStats->m_propValue[moveSpeedIndex] : 0;
 
     uint32_t taxiPathIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 35);
     GameObjectStats* taxiPathStats = this->m_owner->m_stats;
-    uint32_t taxiPathId = (taxiPathStats && taxiPathIndex < 24) ? taxiPathStats->m_propValue[taxiPathIndex] : 0;
+    uint32_t taxiPathId = (taxiPathStats && taxiPathIndex < 32) ? taxiPathStats->m_propValue[taxiPathIndex] : 0;
 
     this->m_shipPath.Init(taxiPathId, static_cast<float>(moveSpeed), static_cast<float>(accelRate), physics);
     this->m_shipPath.SetTotalPathTime(this->m_owner->m_gameObject->m_level);
@@ -2873,12 +3681,18 @@ void CGGameObject_C_Type_MapObjTransport::PostInitWithStats() {
     }
 }
 
-// OFFSET: #0x0070D1E0
+// OFFSET: 0x0059B760/0x14020A0A0
 void CGGameObject_C_TypeAnimated::SetSequence(CM2Model* model) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
     float speed = 1.0f;
     uint32_t sequence = CGGameObject_C_TypeAnimated::s_animSequenceIds[this->m_animState];
 
     if (model->IsLoaded() && !model->HasSequence(sequence)) {
+        int32_t fallback = 0;
+
         switch (sequence) {
             case 146:
                 if (!model->HasSequence(148)) {
@@ -2889,20 +3703,20 @@ void CGGameObject_C_TypeAnimated::SetSequence(CM2Model* model) {
 
             case 147:
                 if (!model->HasSequence(146)) {
-                    if (!model->HasSequence(148)) {
+                    if (model->HasSequence(148)) {
+                        sequence = 148;
+                        speed = 0.0f;
+                    } else {
                         sequence = 0;
-                        goto effects;
+                        fallback = 1;
                     }
-
-                    sequence = 148;
-                    speed = 0.0f;
                 }
 
                 break;
 
             case 148:
                 if (!model->HasSequence(146)) {
-                    sequence = model->HasSequence(150) ? 150 : 149;
+                    sequence = (model->HasSequence(150) != 0) + 149;
                 }
 
                 break;
@@ -2918,14 +3732,16 @@ void CGGameObject_C_TypeAnimated::SetSequence(CM2Model* model) {
                 }
 
                 break;
+
+            default:
+                break;
         }
 
-        if (sequence == model->GetBoneSequenceId(0xFFFFFFFF)) {
+        if (!fallback && sequence == model->GetBoneSequenceId(0xFFFFFFFF)) {
             return;
         }
     }
 
-effects:
     if (this->m_owner->m_effectManager) {
         uint32_t current = model->GetBoneSequenceId(0xFFFFFFFF);
 
@@ -2945,32 +3761,28 @@ effects:
     }
 
     M2SequenceInfo info;
-    info.m_radius = 0.0f;
+    memset(&info, 0, sizeof(info));
     model->GetSequenceInfo(sequence, 0, info);
 
     int32_t state = this->m_animState;
-    int32_t startTime = 0;
-    uint32_t keepTime = 0;
+    uint32_t startTime = 0;
+    int32_t paused;
 
     if (state == 2 || state == 4 || state == 5 || state == 7) {
-        keepTime = (this->m_owner->m_gameObject->m_flags >> 7) & 1;
-        uint16_t progress = this->m_owner->m_gameObject->m_pathProgress;
+        CGGameObjectData* data = this->m_owner->m_gameObject;
+        paused = (data->m_flags >> 7) & 1;
+        uint16_t progress = data->m_pathProgress;
 
         if (progress != 0xFFFF) {
-            startTime = CMath::fint_(static_cast<float>(progress) * 1.5259022e-05f * static_cast<float>(info.m_duration));
-            this->m_owner->SetPathProgress(1.0f);
+            startTime = static_cast<int32_t>(static_cast<double>(progress) * static_cast<double>(info.m_duration) * 0.000015259022);
+            data->m_pathProgress = static_cast<int32_t>(65535.0f);
         }
+    } else {
+        paused = 0;
     }
 
     model->SetBoneSequence(0xFFFFFFFF, sequence, 0xFFFFFFFF, startTime, speed, this->m_animState != 0, 1, 0, 0, 0);
-
-    if (keepTime) {
-        uint32_t time = model->m_scene->m_time;
-        model->m_lastAnimTime = time ? time : 1;
-    } else {
-        model->m_lastAnimTime = 0;
-    }
-
+    this->SetAnimPaused(model, paused);
     state = this->m_animState;
 
     if (state != 3 && state != 1 && state != 6) {
@@ -2980,13 +3792,14 @@ effects:
     this->m_pendingAnimState = this->m_animState;
 
     if (speed > 0.0f) {
-        this->m_nextAnimTime = FrameTime::s_curTimeMs + static_cast<uint32_t>(static_cast<float>(info.m_duration - startTime) / speed);
+        uint32_t time = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+        this->m_nextAnimTime = static_cast<int64_t>(static_cast<double>(info.m_duration - startTime) / speed) + time;
     } else {
-        this->m_nextAnimTime = FrameTime::s_curTimeMs;
+        this->m_nextAnimTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     }
 }
 
-// OFFSET: #0x00710410
+// OFFSET: 0x005A08A0
 bool CGGameObject_C::IsCreatorOnlyUse() const {
     uint32_t creatorOnlyIndex = CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 94);
     GameObjectStats* creatorOnlyStats = this->m_stats;
@@ -3042,42 +3855,49 @@ bool CGGameObject_C_TypeBase::CanUse() const {
         return false;
     }
 
-    return true;
+    return !(this->m_owner->m_gameObject->m_dynamicFlags & 0x20);
 }
 
-// OFFSET: #0x0070D7B0
+// OFFSET: 0x0059BE10/0x14020A890
 void CGGameObject_C_TypeAnimated::HandleAnimEvent(uint32_t eventId, uint32_t data, const C3Vector& position, uint32_t time) {
     GameObject_C_ProcessAnimEvent(eventId, this->m_owner->m_gameObject->m_displayID, data, position, &this->m_sound);
 }
 
 // OFFSET: 0x005A1440/0x1402113E0
-CMapEntity* CGGameObject_C::CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets) {
+uintptr_t CGGameObject_C::CreateWorldObject(uint64_t guid, int32_t a4, uint32_t doodadSetCount, const int16_t* doodadSets, int32_t a7) {
     const char* name = this->GetModelFileNameInternal();
 
     if (!name) {
-        return NULL;
+        return 0;
     }
 
     C3Vector position = this->m_passenger.GetPosition(this->m_passenger.m_position);
-    CMapBaseObj* object = CWorld::ObjectCreate(name, position, this->GetFacing(), a4, 0, guid, doodadSetCount, doodadSets, NULL, 0);
+    uintptr_t object = World::ObjectCreate(name, position, this->GetFacing(), a4, 0, guid, 0, doodadSetCount, reinterpret_cast<uint16_t*>(const_cast<int16_t*>(doodadSets)), NULL, a7);
 
     if (!object) {
         SysMsgPrintf(STATUS_ERROR, 2, "Game object (%d): failed to load: \"%s\"", this->m_obj->m_entryID, name);
     }
 
-    return static_cast<CMapEntity*>(object);
+    return object;
 }
 
-// OFFSET: #0x00711A10
+// OFFSET: 0x005A1F00/0x140212090
 void CGGameObject_C_Type_WorldObj::CreateWorldObj() {
     switch (this->m_owner->m_gameObject->m_typeID) {
         case 11:
         case 15:
         case 35:
-            this->m_worldObject = this->m_owner->CreateWorldObject(this->m_owner->m_obj->m_guid.m_guid, 0, 0, NULL);
+            this->m_worldObject = this->m_owner->CreateWorldObject(this->m_owner->m_obj->m_guid.m_guid, 0, 0, NULL, 0);
 
-            if (this->m_worldObject && this->m_owner->m_gameObject->m_typeID == 11) {
-                World::ObjectSetMoveable(this->m_worldObject, 1);
+            if (this->m_worldObject) {
+                int8_t type = this->m_owner->m_gameObject->m_typeID;
+
+                if (type == 11) {
+                    World::ObjectSetAcceptProjTex(this->m_worldObject, 1);
+                    World::ObjectSetMoveable(this->m_worldObject, 1);
+                } else if (type == 15) {
+                    World::ObjectSetMoveable(this->m_worldObject, 1);
+                }
             }
 
             break;
@@ -3086,12 +3906,12 @@ void CGGameObject_C_Type_WorldObj::CreateWorldObj() {
             return;
 
         default:
-            this->m_worldObject = this->m_owner->CreateWorldObject(0, 0, 0, NULL);
+            this->m_worldObject = this->m_owner->CreateWorldObject(0, 0, 0, NULL, 0);
             break;
     }
 }
 
-// OFFSET: #0x0070FFD0
+// OFFSET: 0x0059FF60/0x14020F930
 void CGGameObject_C_Type_TransportBase::Disable() {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
     uint32_t time = OsGetAsyncTimeMs();
@@ -3115,7 +3935,7 @@ void CGGameObject_C_Type_TransportBase::Disable() {
 
             movement->ForceSetTransport(WOWGUID(), 255, 1);
         } else {
-            passenger->SetTransport(WOWGUID());
+            passenger->ForceSetTransport(WOWGUID());
         }
 
         passenger = next;
@@ -3150,8 +3970,12 @@ void CGGameObject_C_Type_MapObjTransport::InitializeMovement() {
     this->UpdateMovement(time, 0);
 }
 
-// OFFSET: #0x0070D7E0
+// OFFSET: 0x0059BE60/0x14020A910
 void CGGameObject_C_TypeAnimated::HandleAnimFinished() {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
     int32_t state = this->m_animState;
     int32_t pending = this->m_pendingAnimState;
     this->m_pendingAnimState = -1;
@@ -3186,6 +4010,13 @@ void CGGameObject_C_TypeAnimated::HandleAnimFinished() {
         case 5:
             this->UpdateAnimState(6);
             break;
+
+        case 12:
+            break;
+
+        default:
+            OsOutputDebugString("Unhandled anim state: (%d)", state);
+            break;
     }
 
     if (pending != -1 && pending != 3 && pending != 1 && pending != 6) {
@@ -3193,42 +4024,43 @@ void CGGameObject_C_TypeAnimated::HandleAnimFinished() {
     }
 }
 
-// OFFSET: #0x0070BF70
-static void GameObject_C_PlayAnimatedSound(uint32_t displayId, int32_t index, const C3Vector& position, SE2SoundKitObject* sound) {
+// OFFSET: 0x0059A110/0x140208680
+static void GameObject_C_PlayAnimatedSound(uint32_t displayId, int32_t index, const C3Vector& position, uint32_t* sound) {
     if (index == -1) {
         return;
     }
 
-    GameObjectDisplayInfoRec* displayInfo = g_gameObjectDisplayInfoDB.GetRecord(displayId);
+    const GameObjectDisplayInfoRec* displayInfo = g_gameObjectDisplayInfoDB.GetRecord(displayId);
 
     if (!displayInfo) {
         return;
     }
 
     int32_t soundKitId = displayInfo->m_sound[index];
-    SE2SoundKitProperties properties;
 
-    if (!SI3::IsSoundKitLooping(soundKitId)) {
-        properties.ResetToDefaults();
-        properties.m_maxAudibleBehavior = 0;
-        SI3::PlaySoundKit(soundKitId, &position, NULL, &properties, 0, NULL, 1, 0);
+    if (!SE3::IsLooping_ByDef(soundKitId)) {
+        SE3SoundKitProperties properties;
+        properties.m_maxAudibleBehavior = 1;
+        properties.m_priority = 128;
+        SE3::PlaySoundKit(soundKitId, &position, &properties, NULL, __FILE__, __LINE__, "GameObject_C_PlayAnimatedSound() - One Shot");
         return;
     }
 
-    if (!sound || SI3::IsPlaying(sound) || SI3::IsTooCloseToExistingSoundKit(soundKitId, &position)) {
+    if (!sound || SE3::IsPlaying(*sound) || SE3::IsTooCloseToExistingSoundKit(soundKitId, position)) {
         return;
     }
 
-    properties.ResetToDefaults();
-    properties.m_loopMode = 1;
-    properties.m_streaming = true;
+    SE3SoundKitProperties properties;
+    properties.m_bit0 = 1;
     properties.m_software = 1;
-    properties.m_maxAudibleBehavior = 0;
-    SI3::PlaySoundKit(soundKitId, &position, sound, &properties, 0, NULL, 1, 0);
+    properties.m_usage = 1;
+    properties.m_maxAudibleBehavior = 1;
+    properties.m_priority = 128;
+    SE3::PlaySoundKit(soundKitId, &position, &properties, sound, __FILE__, __LINE__, "GameObject_C_PlayAnimatedSound() - Looping");
 }
 
 // OFFSET: 0x0059A230/0x140208860
-void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_t data, const C3Vector& position, SE2SoundKitObject* sound) {
+void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_t data, const C3Vector& position, uint32_t* sound) {
     switch (eventId) {
         case '0OG$':
             GameObject_C_PlayAnimatedSound(displayId, 0, position, sound);
@@ -3270,28 +4102,35 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
             GameObject_C_PlayAnimatedSound(displayId, 9, position, sound);
             break;
 
-        case 'DNS$':
-        case 'OSD$':
-            SI3::PlaySoundKit(data, &position, NULL, NULL, 0, NULL, 1, 0);
+        case 'OSD$': {
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit(data, &position, &properties, NULL, __FILE__, __LINE__, "GameObject Anim Event $DSO");
             break;
+        }
 
         case 'LSD$':
-            if (sound && !SI3::IsPlaying(sound) && !SI3::IsTooCloseToExistingSoundKit(data, &position)) {
-                SE2SoundKitProperties properties;
-                properties.ResetToDefaults();
-                properties.m_fadeInTime = 1.0f;
-                properties.m_fadeOutTime = 1.0f;
-                properties.m_loopMode = 1;
-                properties.m_maxAudibleBehavior = 0;
-                properties.m_streaming = true;
+            if (sound && !SE3::IsPlaying(*sound) && !SE3::IsTooCloseToExistingSoundKit(data, position)) {
+                SE3SoundKitProperties properties;
+                properties.m_bit0 = 1;
                 properties.m_software = 1;
-                SI3::PlaySoundKit(data, &position, sound, &properties, 0, NULL, 1, 0);
+                properties.m_usage = 1;
+                properties.m_maxAudibleBehavior = 1;
+                properties.m_priority = 128;
+                properties.m_fadeInTime = 1000;
+                properties.m_fadeOutTime = 1000;
+                SE3::PlaySoundKit(data, &position, &properties, sound, __FILE__, __LINE__, "GameObject Anim Event $DSL");
             }
 
             break;
 
+        case 'DNS$': {
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit(data, &position, &properties, NULL, __FILE__, __LINE__, "GameObject Anim Event $SND");
+            break;
+        }
+
         case 'KHS$': {
-            SpellEffectCameraShakesRec* shakes = g_spellEffectCameraShakesDB.GetRecord(data);
+            const SpellEffectCameraShakesRec* shakes = g_spellEffectCameraShakesDB.GetRecord(data);
 
             if (shakes) {
                 for (int32_t i = 0; i < 3; i++) {
@@ -3304,11 +4143,11 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
     }
 }
 
-// OFFSET: #0x007134A0
+// OFFSET: 0x005A0330/0x14020FD80
 void CGGameObject_C_Type_MapObjTransport::UpdateMovement(uint32_t time, uint32_t elapsed) {
     C3Vector position(0.0f, 0.0f, 0.0f);
     int32_t mapId = -1;
-    int32_t initial = this->unk_0038 == -1;
+    int32_t initial = this->m_transportState == -1;
     uint32_t pathTime = this->m_owner->m_transportTimeOffset + time;
     uint32_t sequence;
     float facing;
@@ -3367,14 +4206,14 @@ void CGGameObject_C_Type_MapObjTransport::UpdateMovement(uint32_t time, uint32_t
     if (this->m_worldObject) {
         World::ObjectUpdate(this->m_worldObject, matrix);
 
-        if (!this->unk_0034 && World::ObjectIsLoaded(this->m_worldObject)) {
+        if (!this->m_isLoaded && World::ObjectIsLoaded(this->m_worldObject)) {
             World::ObjectSetSequenceFinishedCallback(this->m_worldObject, CGGameObject_C_Type_WorldObj::SequenceFinishedHandler, 0, 0);
-            this->unk_0034 = 1;
+            this->MarkTransportLoaded();
         }
 
-        if (this->unk_0034 && this->unk_0038 != static_cast<int32_t>(sequence)) {
+        if (this->m_isLoaded && this->m_transportState != static_cast<int32_t>(sequence)) {
             World::ObjectSetSequence(this->m_worldObject, sequence, 0, 0);
-            this->unk_0038 = sequence;
+            this->m_transportState = sequence;
             this->UpdateObjectEffectState(sequence);
         }
     }
@@ -3410,14 +4249,29 @@ uint32_t CGGameObject_C_Type_MapObjTransport::GetSequenceTimeFromRealTime(uint32
     return this->m_shipPath.GetPathTime(time);
 }
 
-// OFFSET: #0x007132E0
+// OFFSET: 0x005A0050
+void CGGameObject_C_Type_TransportBase::MarkTransportLoaded() {
+    this->m_isLoaded = 1;
+
+    for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
+        if (passenger->unk_002C & 0x1) {
+            CMovementShared* movement = static_cast<CMovementShared*>(passenger);
+
+            if (movement->m_flags2 & MOVEMENTFLAG2_INTERPOLATED_PITCHING) {
+                movement->ClearInterpolatedPitching();
+            }
+        }
+    }
+}
+
+// OFFSET: 0x005A00A0
 void CGGameObject_C_Type_TransportBase::MovePassengers(int32_t* moved) {
     *moved = 0;
-    C44Matrix& matrix = this->m_owner->m_matrix;
+    C44Matrix* matrix = &this->m_owner->m_matrix;
     int32_t isWMO = 0;
 
     if (this->m_worldObject) {
-        World::ObjectUpdate(this->m_worldObject, matrix);
+        World::ObjectUpdate(this->m_worldObject, *matrix);
         isWMO = World::ObjectIsWMO(this->m_worldObject);
     }
 
@@ -3425,30 +4279,25 @@ void CGGameObject_C_Type_TransportBase::MovePassengers(int32_t* moved) {
     CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
-        CMovementShared* movement = static_cast<CMovementShared*>(passenger);
+        CGObject_C* object = ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
-        if (this->unk_0034 && (passenger->unk_002C & 0x1) && (movement->m_flags & 0x8000000)) {
-            movement->ClearSplineEnabled();
+        if (passenger->unk_002C & 0x1) {
+            CGUnit_C* unit = static_cast<CGUnit_C*>(object);
+            CVehicle_C* vehicle = unit->m_vehicle;
+
+            if (vehicle && vehicle->m_vehicleRec) {
+                vehicle->BuildWorldMatrix(matrix);
+            }
+
+            unit->UpdateSoundPosition();
         }
 
         if (*passenger->m_ownerGuid == cameraTarget) {
             *moved = 1;
         }
 
-        CGObject_C* object = static_cast<CGObject_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_OBJECT, __FILE__, __LINE__));
-        uint64_t guid = passenger->m_ownerGuid->m_guid;
-        uint32_t high = static_cast<uint32_t>(guid >> 32);
-
-        if ((high & 0xF0F00000) == 0xF0500000 || (!(high & 0xF0000000) && (guid & 0xF07FFFFFFFFFFFFFull))) {
-            CVehicle_C* vehicle = static_cast<CGUnit_C*>(object)->m_vehicle;
-
-            if (vehicle && vehicle->m_vehicleRec) {
-                vehicle->BuildWorldMatrix(&matrix);
-            }
-        }
-
         object->UpdateWorldObject(object != mover && isWMO);
-        object->SetFrameOfReference(&matrix);
+        object->SetFrameOfReference(matrix);
     }
 
     if (mover && mover->GetTransportGUID() == this->m_owner->m_obj->m_guid.m_guid) {
@@ -3456,23 +4305,23 @@ void CGGameObject_C_Type_TransportBase::MovePassengers(int32_t* moved) {
     }
 }
 
-// OFFSET: #0x0070EC10
+// OFFSET: 0x0059DB40
 C3Vector CGGameObject_C_Type_DestructibleBuilding::GetNamePosition() const {
-    uint32_t state = (this->m_owner->m_gameObject->m_flags >> 9) & 0x7;
+    uintptr_t object = this->m_states[((this->m_owner->m_gameObject->m_flags >> 8) & 0xE) >> 1].m_object;
     CAaBox extents;
     extents.b = C3Vector(0.0f, 0.0f, 0.0f);
     extents.t = C3Vector(0.0f, 0.0f, 0.0f);
-    World::ObjectGetExtents(this->m_states[state].m_object, &extents);
+    World::ObjectGetExtents(object, extents);
     C3Vector position = this->GetPosition();
     position.z = extents.t.y - extents.b.y + position.z;
     return position;
 }
 
-// OFFSET: #0x0070EEF0
+// OFFSET: 0x0059E200
 uint32_t CGGameObject_C::GetProperty(int32_t prop) const {
     uint32_t index = CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, prop);
 
-    if (this->m_stats && index < 24) {
+    if (this->m_stats && index < 32) {
         return this->m_stats->m_propValue[index];
     }
 
@@ -3510,18 +4359,21 @@ bool CGGameObject_C::IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* re
             }
 
             for (uint32_t j = 0; j < s_openLockSpells.m_count; j++) {
-                SpellRec spell;
-                g_spellDB.GetRecord(s_openLockSpells.m_data[j], &spell);
+                const SpellRec* spell = g_spellDB.GetRecord(s_openLockSpells.m_data[j]);
+                uint32_t count;
+                const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
 
-                for (uint32_t effect = 0; effect < 3; effect++) {
-                    if (spell.m_effect[effect] != 33 || spell.m_effectMiscValue[effect] != lock->m_index[i]) {
+                for (uint32_t effect = 0; effect < count; effect++) {
+                    const SpellEffectRec* rec = effects->m_data[effect];
+
+                    if (!rec || rec->m_effect != 33 || rec->m_effectMiscValue != lock->m_index[i]) {
                         continue;
                     }
 
                     int32_t required = lock->m_skill[i] ? lock->m_skill[i] : 5 * this->m_gameObject->m_level;
                     int32_t minPoints;
                     int32_t maxPoints;
-                    Spell_C_GetMinMaxPoints(&spell, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
+                    Spell_C_GetMinMaxPoints(spell, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
 
                     if (spellId) {
                         *spellId = s_openLockSpells.m_data[j];
@@ -3546,18 +4398,21 @@ bool CGGameObject_C::IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* re
 
                 if (Spell_C_IsTargeting()) {
                     int32_t targetingSpell = Spell_C_GetTargetingSpell();
-                    SpellRec targeting;
-                    g_spellDB.GetRecord(targetingSpell, &targeting);
+                    const SpellRec* targeting = g_spellDB.GetRecord(targetingSpell);
+                    uint32_t targetingCount;
+                    const TSGrowableArray<const SpellEffectRec*>* targetingEffects = SpellGetEffects(targeting->m_id, targetingCount);
 
-                    for (uint32_t effect = 0; effect < 3; effect++) {
-                        if (targeting.m_effect[effect] != 33 || targeting.m_effectMiscValue[effect] != lock->m_index[i]) {
+                    for (uint32_t effect = 0; effect < targetingCount; effect++) {
+                        const SpellEffectRec* rec = targetingEffects->m_data[effect];
+
+                        if (!rec || rec->m_effect != 33 || rec->m_effectMiscValue != lock->m_index[i]) {
                             continue;
                         }
 
                         int32_t required = lock->m_skill[i] ? lock->m_skill[i] : 5 * this->m_gameObject->m_level;
                         int32_t minPoints;
                         int32_t maxPoints;
-                        Spell_C_GetMinMaxPoints(&targeting, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
+                        Spell_C_GetMinMaxPoints(targeting, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
 
                         if (spellId) {
                             *spellId = targetingSpell;
@@ -3588,13 +4443,13 @@ bool CGGameObject_C::IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* re
                 continue;
             }
 
-            SpellRec spell;
-            g_spellDB.GetRecord(lock->m_index[i], &spell);
+            uint32_t count;
+            const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(lock->m_index[i], count);
 
-            for (uint32_t effect = 0; effect < 3; effect++) {
-                if (spell.m_effect[effect] == 33) {
+            for (uint32_t effect = 0; effect < count; effect++) {
+                if (effects->m_data[effect] && effects->m_data[effect]->m_effect == 33) {
                     if (spellId) {
-                        *spellId = spell.m_id;
+                        *spellId = lock->m_index[i];
                     }
 
                     if (entry) {
@@ -3634,7 +4489,7 @@ bool CGGameObject_C::IsLocked(int32_t* spellId, int32_t* skillValue, int32_t* re
     return locked;
 }
 
-// OFFSET: #0x0070F580
+// OFFSET: 0x0059E830
 int32_t CGGameObject_C::CanHighlight() const {
     if (!this->m_typeData->CanHighlight()) {
         return 0;
@@ -3661,16 +4516,36 @@ int32_t CGGameObject_C::CanHighlight() const {
     return 0;
 }
 
-// OFFSET: #0x0070F630
+// OFFSET: 0x0059E8F0
 int32_t CGGameObject_C::FloatingTooltip() const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 19)) != 0;
 }
 
-// OFFSET: #0x0070F680
+// OFFSET: 0x0059E940/0x14020DD50
 void CGGameObject_C::UseObject() {
-    GAME_ERROR_TYPE error;
-    float distance;
+    GAME_ERROR_TYPE error = static_cast<GAME_ERROR_TYPE>(834);
+    float distance = 0.0f;
     const char* errorText = NULL;
+    GameObjectStats* stats = this->m_stats;
+
+    if (!stats) {
+        return;
+    }
+
+    if (stats->m_requiredLevel) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (!player) {
+            return;
+        }
+
+        if (player->m_unit->m_unitFieldLevel < this->m_stats->m_requiredLevel) {
+            char buffer[512];
+            SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("ITEM_MIN_LEVEL", -1, GENDER_NOT_APPLICABLE), this->m_stats->m_requiredLevel);
+            CGGameUI::DisplayError(static_cast<UIErrors>(48), buffer);
+            return;
+        }
+    }
 
     if (this->m_typeData->CanUseNow(&error, &distance, &errorText)) {
         this->m_typeData->Use();
@@ -3684,9 +4559,8 @@ void CGGameObject_C::UseObject() {
 
     if (error == ERR_USE_TOO_FAR && this->m_gameObject->m_typeID != 17) {
         WOWGUID guid = this->m_obj->m_guid;
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-        if (player->CTMInteractGO(guid, distance)) {
+        if (ClntObjMgrGetActivePlayerObj()->CTMInteractGO(guid, distance)) {
             return;
         }
     }
@@ -3698,7 +4572,8 @@ void CGGameObject_C::UseObject() {
     }
 }
 
-// OFFSET: #0x0070F940
+// PROVEN: 112b131a IDENTICAL/NONE
+// OFFSET: 0x0059EF40
 C3Vector CGGameObject_C::GetNamePosition() const {
     if (this->m_gameObject->m_typeID == 33) {
         return static_cast<CGGameObject_C_Type_DestructibleBuilding*>(this->m_typeData)->GetNamePosition();
@@ -3709,7 +4584,7 @@ C3Vector CGGameObject_C::GetNamePosition() const {
     return position;
 }
 
-// OFFSET: #0x0070F9B0
+// OFFSET: 0x0059F010/0x14020E5B0
 int32_t CGGameObject_C_TypeBase::CanChangeCursor() const {
     bool canUse = this->CanUseNow(NULL, NULL, NULL);
     LockRec* lock = this->m_owner->GetLockRec();
@@ -3733,7 +4608,7 @@ int32_t CGGameObject_C_TypeBase::CanChangeCursor() const {
     return canUse ? 5 : 31;
 }
 
-// OFFSET: #0x0070FA70
+// OFFSET: 0x0059F100/0x14020E720
 int32_t CGGameObject_C_TypeBase::CheckRange() const {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -3764,6 +4639,10 @@ int32_t CGGameObject_C_TypeBase::CheckRange() const {
     CAaBox box;
 
     if (!owner->m_gameObject->m_typeID) {
+        if (!model->IsLoaded()) {
+            return 0;
+        }
+
         M2BoneSequenceInfo info;
         model->GetBoneSequenceInfo(0xFFFFFFFF, info);
         M2SequenceInfo sequence;
@@ -3799,26 +4678,34 @@ int32_t CGGameObject_C_TypeBase::CheckRange() const {
     return box.ContainsPointExclusive(local);
 }
 
-// OFFSET: #0x0070FD10
+// PROVEN: cdb3e7bf IDENTICAL/NONE
+// OFFSET: 0x0059F450/0x14020EBE0
 void CGGameObject_C_TypeAnimated::OnUpdateAnimProgress() {
-    CGGameObject_C* owner = this->m_owner;
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
 
-    if (!(owner->m_modelFlags & 0x20000) && owner->IsObjectModelLoaded() && this->m_owner->m_worldModel) {
+    if (this->m_owner->m_modelFlags & 0x20000) {
+        return;
+    }
+
+    if (this->m_owner->IsObjectModelLoaded() && this->m_owner->m_worldModel) {
         this->SetSequence(this->m_owner->m_worldModel);
     }
 }
 
-// OFFSET: #0x00710280
+// OFFSET: 0x005A0710
 int32_t CGGameObject_C::GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const {
     return this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 15));
 }
 
-// OFFSET: #0x00710340
+// OFFSET: 0x005A07D0
 bool CGGameObject_C::IsUsableInCombat() const {
     return !this->GetPropertyValue(CGameObjectDef::GetPropNum(this->m_gameObject->m_typeID, 62));
 }
 
-// OFFSET: #0x00710390
+// PROVEN: 59160ec3 IDENTICAL/NONE
+// OFFSET: 0x005A0820
 bool CGGameObject_C::IsUsableMounted() const {
     int8_t type = this->m_gameObject->m_typeID;
 
@@ -3833,7 +4720,8 @@ bool CGGameObject_C::IsUsableMounted() const {
     return this->GetProperty(91) != 0;
 }
 
-// OFFSET: #0x007103C0
+// PROVEN: 496c437d IDENTICAL/NONE
+// OFFSET: 0x005A0850
 bool CGGameObject_C::IsUsableWhileImmune() const {
     int8_t type = this->m_gameObject->m_typeID;
 
@@ -3844,7 +4732,7 @@ bool CGGameObject_C::IsUsableWhileImmune() const {
     return !this->GetPropertyValue(CGameObjectDef::GetPropNum(type, 57));
 }
 
-// OFFSET: #0x007108D0
+// OFFSET: 0x005A1040
 void CGGameObject_C_Type_MeetingStone::AddToolTipInfo(CGTooltip* tooltip) {
     CGGameObject_C* owner = this->m_owner;
     AreaTableRec* area = g_areaTableDB.GetRecord(owner->GetPropertyValue(CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 53)));
@@ -3854,7 +4742,7 @@ void CGGameObject_C_Type_MeetingStone::AddToolTipInfo(CGTooltip* tooltip) {
     }
 }
 
-// OFFSET: #0x00711140
+// OFFSET: 0x005A1560
 void CGGameObject_C::OnRightClick() {
     if (!this->m_typeData->CanUse()) {
         return;
@@ -3870,7 +4758,27 @@ void CGGameObject_C::OnRightClick() {
     this->UseObject();
 }
 
-// OFFSET: #0x007111A0
+// OFFSET: 0x0059B330
+void CGGameObject_C::SetAnimLocked(int32_t locked) {
+    if ((locked != 0) == (this->m_animLocked != 0)) {
+        return;
+    }
+
+    if (locked) {
+        this->m_animLocked = 1;
+        ClntObjMgrLockObject(this->m_obj->m_guid);
+    } else {
+        this->m_animLocked = 0;
+        ClntObjMgrUnlockObject(this->m_obj->m_guid, __FILE__, __LINE__);
+    }
+}
+
+// OFFSET: 0x005A2C50
+void CGGameObject_C::OnInteract() {
+    this->OnRightClick();
+}
+
+// OFFSET: 0x005A15C0
 void CGGameObject_C::RefreshInteractIcon() {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
@@ -4013,10 +4921,10 @@ bool CGGameObject_C_TypeBase::Use() {
                     CGGameUI::DisplayError(ERR_USE_LOCKED_WITH_SPELL_S, lockType ? lockType->m_name : "UNKNOWN");
                 }
             } else if (lock->m_type[0] == 3) {
-                SpellRec spell;
+                const SpellRec* spell = g_spellDB.GetRecord(lock->m_index[0]);
 
-                if (g_spellDB.GetRecord(lock->m_index[0], &spell)) {
-                    CGGameUI::DisplayError(ERR_USE_LOCKED_WITH_SPELL_S, spell.m_name);
+                if (spell) {
+                    CGGameUI::DisplayError(ERR_USE_LOCKED_WITH_SPELL_S, static_cast<const char*>(spell->m_name));
                 }
             } else {
                 CGGameUI::DisplayError(ERR_USE_CANT_OPEN);
@@ -4076,36 +4984,36 @@ bool CGGameObject_C_TypeBase::Use() {
     return true;
 }
 
-// OFFSET: #0x00712080
+// OFFSET: 0x005A26F0
 bool CGGameObject_C_Type_Ritual::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!player) {
-        return false;
-    }
+    if (player) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_owner->GetProperty(10));
 
-    SpellRec spell;
-    CGGameObject_C* owner = this->m_owner;
-    int32_t spellId = owner->GetPropertyValue(CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 10));
+        if (!spell || !(spell->m_attributes & 0x10000000) || !player->IsInCombat() || player->IgnoresAuraState(spell)) {
+            const WOWGUID& creator = this->m_owner->m_gameObject->m_createdBy;
 
-    if (g_spellDB.GetRecord(spellId, &spell) && (spell.m_attributes & 0x10000000) && player->IsInCombat() && !player->IgnoresAuraState(&spell)) {
-        return false;
-    }
+            if ((creator.m_guid & 0xF000000000000000ULL) || !(creator.m_guid & 0xF07FFFFFFFFFFFFFULL)) {
+                return CGGameObject_C_TypeBase::CanUseNow(error, distance, errorText);
+            }
 
-    const WOWGUID& creator = this->m_owner->m_gameObject->m_createdBy;
+            CGUnit_C* caster = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(creator, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
-    if (!(creator.m_guid & 0xF000000000000000ULL) && (creator.m_guid & 0xF07FFFFFFFFFFFFFULL)) {
-        CGUnit_C* caster = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(creator, TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-        if (!caster || (!player->IsInMyPartyOrRaid(caster) && !player->IsInMyParty(caster))) {
-            return false;
+            if (caster && (player->IsInMyPartyOrRaid(caster) || player->IsInMyParty(caster))) {
+                return CGGameObject_C_TypeBase::CanUseNow(error, distance, errorText);
+            }
         }
     }
 
-    return CGGameObject_C_TypeBase::CanUseNow(error, distance, errorText);
+    if (error) {
+        *error = static_cast<GAME_ERROR_TYPE>(176);
+    }
+
+    return false;
 }
 
-// OFFSET: #0x007121E0
+// OFFSET: 0x005A29F0
 int32_t CGGameObject_C_Type_MeetingStone::CheckUseRange(uint32_t level) const {
     CGGameObject_C* owner = this->m_owner;
 
@@ -4117,7 +5025,7 @@ int32_t CGGameObject_C_Type_MeetingStone::CheckUseRange(uint32_t level) const {
     return level <= owner->GetPropertyValue(CGameObjectDef::GetPropNum(owner->m_gameObject->m_typeID, 52));
 }
 
-// OFFSET: #0x00712270
+// OFFSET: 0x005A45E0
 bool CGGameObject_C_Type_MeetingStone::Use() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -4181,10 +5089,10 @@ void CGGameObject_C::UpdateInteractIcon() {
     this->CheckForPassiveHighlight();
 }
 
-// OFFSET: #0x00713130
-void CGGameObject_C::PostReenable() {
-    this->m_passenger.Reenable();
-    this->CGObject_C::PostReenable();
+// OFFSET: 0x005A3FF0
+void CGGameObject_C::PostReenable(const CClientObjCreate& create) {
+    this->m_passenger.PostInit(create.m_stationaryPosition);
+    CGObject_C::PostReenable(create);
 
     if (this->m_stats) {
         this->m_typeData->PostReenable();
@@ -4193,9 +5101,9 @@ void CGGameObject_C::PostReenable() {
     }
 
     WOWGUID guid = this->m_obj->m_guid;
-    GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(this->m_obj->m_entryID, guid, GameObjectStatsCallback, this, false);
+    GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(this->m_obj->m_entryID, guid, &GameObjectStatsCallback, this, false);
 
     if (stats) {
-        this->LoadBaseObject(stats);
+        this->SetStats(stats);
     }
 }

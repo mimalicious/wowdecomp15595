@@ -1,7 +1,7 @@
 #include "CGGameObject_C_Type_FishingHole.h"
 
 // OFFSET: #0x00712800
-CGGameObject_C_Type_FishingHole::CGGameObject_C_Type_FishingHole(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+CGGameObject_C_Type_FishingHole::CGGameObject_C_Type_FishingHole(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
 // PROVEN: fd34c74a IDENTICAL/IDENTICAL

@@ -12,7 +12,7 @@ class CGGameObject_C_Type_TrapDoor : public CGGameObject_C_Type_TransportBase {
     virtual void PostReenable();
     virtual void UpdateMovement(uint32_t time, uint32_t elapsed);
 
-    CGGameObject_C_Type_TrapDoor(CGGameObject_C* owner);
+    CGGameObject_C_Type_TrapDoor(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

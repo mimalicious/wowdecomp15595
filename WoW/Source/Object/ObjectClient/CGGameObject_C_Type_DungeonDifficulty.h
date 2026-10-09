@@ -18,7 +18,7 @@ class CGGameObject_C_Type_DungeonDifficulty : public CGGameObject_C_TypeBase {
     virtual void PostInitWithStats();
     virtual void UpdateDisabled();
 
-    CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner);
+    CGGameObject_C_Type_DungeonDifficulty(CGGameObject_C* owner, const CClientObjCreate& create);
     int32_t GetMapID() const;
     int32_t GetDifficulty() const;
 };

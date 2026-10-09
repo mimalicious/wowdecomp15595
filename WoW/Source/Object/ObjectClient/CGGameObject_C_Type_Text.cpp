@@ -1,19 +1,28 @@
 #include "CGGameObject_C_Type_Text.h"
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "WoW/Source/Ui/ItemTextFrame.h"
 
-// OFFSET: #0x007126D0
-CGGameObject_C_Type_Text::CGGameObject_C_Type_Text(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A24D0/0x140212720
+CGGameObject_C_Type_Text::CGGameObject_C_Type_Text(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
     this->m_interactDistance = 5.5555553f;
 }
 
-// OFFSET: #0x0070B570
+// OFFSET: 0x005A0950
 void CGGameObject_C_Type_Text::CloseInteraction() {
-    this->UpdateAnimState(4);
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->m_owner->SetDisplayState(1);
+    } else {
+        this->UpdateAnimState(4);
+    }
 }
 
-// OFFSET: #0x0070B560
+// OFFSET: 0x005A08F0
 void CGGameObject_C_Type_Text::StartInteraction() {
-    this->UpdateAnimState(2);
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        this->m_owner->SetDisplayState(0);
+    } else {
+        this->UpdateAnimState(2);
+    }
 }
 
 // PROVEN: e7bc6bee IDENTICAL/NONE

@@ -822,7 +822,7 @@ int32_t CMovement_C::UpdateTransportStatus(WOWGUID transport, uint8_t seat) {
     if (transport) {
         int32_t reason = !(this->m_unit->m_modelFlags & 0x40000) && (!this->m_spline || (this->m_spline->m_flags & 0x400));
 
-        if (!MovementAddToTransport(this, transport, reason)) {
+        if (!MovementAddToTransport(this, transport, reason, 0, 0)) {
             return 0;
         }
 
@@ -6658,7 +6658,7 @@ void CMovement_C::Disable() {
 }
 
 // OFFSET: #0x00760720
-void CMovement_C::CollideWithTransport(uint32_t time, uint32_t elapsed, float distance, const C3Vector& direction, const C44Matrix& transportMatrix) {
+void CMovement_C::PassengerMove(uint32_t time, uint32_t elapsed, float distance, const C3Vector& direction, const C44Matrix& transportMatrix) {
     C3Vector position = this->m_position * transportMatrix;
     World::IsValidPosition(position.x, position.y, position.z, 0.0f);
     CAaBox box;

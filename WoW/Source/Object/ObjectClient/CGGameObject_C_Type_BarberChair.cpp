@@ -4,8 +4,8 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/Types.h"
 
-// OFFSET: #0x0070C7F0
-CGGameObject_C_Type_BarberChair::CGGameObject_C_Type_BarberChair(CGGameObject_C* owner) : CGGameObject_C_Type_Chair(owner) {
+// OFFSET: 0x0059AAA0
+CGGameObject_C_Type_BarberChair::CGGameObject_C_Type_BarberChair(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_Chair(owner, create) {
 }
 
 // PROVEN: 5da0a073 IDENTICAL/DIFFERENT
@@ -14,7 +14,7 @@ uint32_t CGGameObject_C_Type_BarberChair::GetNumSlots() const {
     return 1;
 }
 
-// OFFSET: #0x00711EB0
+// OFFSET: 0x005A2440
 bool CGGameObject_C_Type_BarberChair::CanUseNow(GAME_ERROR_TYPE* error, float* distance, const char** errorText) const {
     if (!CGGameObject_C_Type_Chair::CanUseNow(error, distance, errorText)) {
         return false;
@@ -22,7 +22,7 @@ bool CGGameObject_C_Type_BarberChair::CanUseNow(GAME_ERROR_TYPE* error, float* d
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
-    if (player->m_unit->m_unitFieldDisplayid == player->m_unit->m_unitFieldNativedisplayid && !player->IsShapeShifted()) {
+    if (player->m_unit->m_unitFieldDisplayid == player->m_unit->m_unitFieldNativedisplayid && !player->IsShapeShifted() && player->m_unit->m_unitFieldNativedisplayid == player->GetCurrentClientNativeDisplayID()) {
         return true;
     }
 

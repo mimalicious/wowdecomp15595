@@ -1,39 +1,80 @@
 #include "CGGameObject_C_Type_Door.h"
 #include "WoW/Source/Object/GameObjectDef.h"
 #include "WoW/Source/Object/GameObjectStats.h"
+#include "WoW/Source/ObjectMgrClient/CClientObjCreate.h"
+#include "WoW/Source/WorldClient/World.h"
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
-// OFFSET: #0x00712520
-CGGameObject_C_Type_Door::CGGameObject_C_Type_Door(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
-    this->m_useErrorType = 235;
+// OFFSET: 0x005A1C30/0x140211D40
+CGGameObject_C_Type_Door::CGGameObject_C_Type_Door(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
+    this->m_linkAll = create.unk_0002;
+    this->m_useErrorType = 244;
 }
 
-// OFFSET: %0x005A8580
+// OFFSET: 0x005A1CA0/0x140211DC0
 bool CGGameObject_C_Type_Door::CanBeSolid() const {
-    return this->m_animState == 1;
+    if (this->m_owner->m_displayState != 1) {
+        return false;
+    }
+
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return this->m_oneShotKit || (this->m_baseKit && !this->m_stateKit);
+    }
+
+    return this->m_animState != 4;
 }
 
-// OFFSET: #0x0070D8D0
+// PROVEN: 7acb43ae IDENTICAL/NONE
+// OFFSET: 0x0059BF70/0x14020AA60
 void CGGameObject_C_Type_Door::UpdateAnimState(uint32_t state) {
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return;
+    }
+
     CGGameObject_C_TypeAnimated::UpdateAnimState(state);
-    this->m_owner->m_hasWorldBounds = this->m_animState == 1;
+    this->UpdateSolidity();
 }
 
-// OFFSET: #0x0070FD50
-bool CGGameObject_C_Type_Door::CheckPropState() const {
-    uint32_t lockedIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 3);
-    GameObjectStats* lockedStats = this->m_owner->m_stats;
-    uint32_t locked = (lockedStats && lockedIndex < 24) ? lockedStats->m_propValue[lockedIndex] : 0;
+// OFFSET: 0x0059BFA0/0x14020AAA0
+void CGGameObject_C_Type_Door::UpdateSolidity() {
+    CGGameObject_C* owner = this->m_owner;
+    bool solid;
 
-    if (!locked) {
+    if (owner->m_displayState != 1) {
+        solid = false;
+    } else if (!CGGameObject_C::s_cvUseAnimKits || !CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        solid = this->m_animState != 4;
+    } else if (this->m_oneShotKit) {
+        solid = true;
+    } else {
+        solid = this->m_baseKit && !this->m_stateKit;
+    }
+
+    if (solid != (owner->m_hasWorldBounds != 0)) {
+        this->m_owner->m_hasWorldBounds = solid;
+
+        if (this->m_owner->m_worldObject && this->m_linkAll) {
+            World::ObjectEnablePortals(this->m_owner->m_worldObject, !solid);
+        }
+    }
+}
+
+// OFFSET: 0x0059FC00/0x14020F480
+bool CGGameObject_C_Type_Door::CheckPropState() const {
+    if (!this->m_owner->GetProperty(3)) {
         return true;
     }
 
-    uint32_t startOpenIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 1);
-    GameObjectStats* startOpenStats = this->m_owner->m_stats;
-    uint32_t startOpen = (startOpenStats && startOpenIndex < 24) ? startOpenStats->m_propValue[startOpenIndex] : 0;
+    if (this->m_owner->GetProperty(1)) {
+        if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+            return this->m_owner->m_displayState == 1 && this->m_baseKit && !this->m_stateKit;
+        }
 
-    if (startOpen) {
         return this->m_animState != 1;
+    }
+
+    if (CGGameObject_C::s_cvUseAnimKits && CGGameObject_C::s_cvUseAnimKits->m_intValue) {
+        return !this->m_owner->m_displayState && this->m_baseKit && !this->m_stateKit;
     }
 
     return this->m_animState != 3;
@@ -46,7 +87,7 @@ bool CGGameObject_C_Type_Door::CanUseNow(GAME_ERROR_TYPE* error, float* distance
     }
 
     if (error) {
-        *error = static_cast<GAME_ERROR_TYPE>(242);
+        *error = static_cast<GAME_ERROR_TYPE>(251);
     }
 
     return false;

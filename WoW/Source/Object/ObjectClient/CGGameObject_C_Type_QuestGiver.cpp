@@ -3,8 +3,8 @@
 #include "WoW/Source/Object/GameObjectStats.h"
 #include "Engine/Source/Model2/M2Model.h"
 
-// OFFSET: #0x007125C0
-CGGameObject_C_Type_QuestGiver::CGGameObject_C_Type_QuestGiver(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+// OFFSET: 0x005A1E40/0x140211FB0
+CGGameObject_C_Type_QuestGiver::CGGameObject_C_Type_QuestGiver(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
     this->m_interactDistance = 5.5555553f;
 }
 
@@ -20,11 +20,11 @@ int32_t CGGameObject_C_Type_QuestGiver::CanChangeCursor() const {
     return cursor;
 }
 
-// OFFSET: #0x0070FF20
+// OFFSET: 0x0059FEE0
 void CGGameObject_C_Type_QuestGiver::CloseInteraction() {
     uint32_t keepOpenIndex = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 22);
     GameObjectStats* keepOpenStats = this->m_owner->m_stats;
-    uint32_t keepOpen = (keepOpenStats && keepOpenIndex < 24) ? keepOpenStats->m_propValue[keepOpenIndex] : 0;
+    uint32_t keepOpen = (keepOpenStats && keepOpenIndex < 32) ? keepOpenStats->m_propValue[keepOpenIndex] : 0;
 
     if (keepOpen) {
         return;
@@ -35,7 +35,7 @@ void CGGameObject_C_Type_QuestGiver::CloseInteraction() {
     }
 }
 
-// OFFSET: #0x0070FE10
+// OFFSET: 0x0059FDA0
 void CGGameObject_C_Type_QuestGiver::StartInteraction() {
     uint32_t index = CGameObjectDef::GetPropNum(this->m_owner->m_gameObject->m_typeID, 22);
     GameObjectStats* stats = this->m_owner->m_stats;

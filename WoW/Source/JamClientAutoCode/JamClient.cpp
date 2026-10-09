@@ -25,6 +25,12 @@ bool (*ClientHotfixNotify::s_handler)(ClientHotfixNotify* msg);
 // STATIC: 0x00E4D6D8
 bool (*ClientHotfixNotifyBlob::s_handler)(ClientHotfixNotifyBlob* msg);
 
+// STATIC: 0x00E4D5BC
+bool (*ClientGameObjectActivateAnimKit::s_handler)(ClientGameObjectActivateAnimKit* msg);
+
+// STATIC: 0x00E4D520
+bool (*ClientMapObjEvents::s_handler)(ClientMapObjEvents* msg);
+
 // OFFSET: 0x006C98F0/0x140381330
 ClientAuthResponse::ClientAuthResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasSuccessInfo = false;
@@ -548,4 +554,128 @@ void ClientHotfixNotifyBlob::Unpack(CDataStore* msg, bool full) {
     uint32_t recordID = 0;
     msg->Get(recordID);
     this->m_recordID = recordID;
+}
+
+// OFFSET: 0x006BE8D0/0x140373690
+ClientGameObjectActivateAnimKit::ClientGameObjectActivateAnimKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2EB0/0x1403503B0
+ClientGameObjectActivateAnimKit::~ClientGameObjectActivateAnimKit() {
+}
+
+// OFFSET: 0x006BF780/0x1403748E0
+bool ClientGameObjectActivateAnimKit::Handle() {
+    if (!ClientGameObjectActivateAnimKit::s_handler) {
+        return false;
+    }
+
+    return ClientGameObjectActivateAnimKit::s_handler(this);
+}
+
+// OFFSET: 0x006B50D0/0x1403672E0
+void ClientGameObjectActivateAnimKit::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+
+    this->m_objectGUID[5] = bits.ReadBit();
+    this->m_objectGUID[1] = bits.ReadBit();
+    this->m_objectGUID[0] = bits.ReadBit();
+    this->m_objectGUID[4] = bits.ReadBit();
+    this->m_objectGUID[7] = bits.ReadBit();
+    this->m_objectGUID[2] = bits.ReadBit();
+    this->m_objectGUID[3] = bits.ReadBit();
+    this->m_objectGUID[6] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_objectGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[5] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[1] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[0] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[3] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[4] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[6] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[2] ^= byteValue;
+    }
+
+    if (this->m_objectGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_objectGUID[7] ^= byteValue;
+    }
+
+    uint32_t animKitID = 0;
+    msg->Get(animKitID);
+    this->m_animKitID = animKitID;
+}
+
+// OFFSET: 0x006B2750/0x140363E60
+ClientMapObjEvents::ClientMapObjEvents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006B19D0/0x140362CE0
+ClientMapObjEvents::~ClientMapObjEvents() {
+}
+
+// OFFSET: 0x006BE300/0x140372FB0
+bool ClientMapObjEvents::Handle() {
+    if (!ClientMapObjEvents::s_handler) {
+        return false;
+    }
+
+    return ClientMapObjEvents::s_handler(this);
+}
+
+// OFFSET: 0x006A9B60/0x140358FC0
+void ClientMapObjEvents::Unpack(CDataStore* msg, bool full) {
+    uint32_t uniqueID = 0;
+    msg->Get(uniqueID);
+    this->m_uniqueID = uniqueID;
+
+    uint32_t size = 0;
+    msg->Get(size);
+
+    void* data;
+    msg->GetDataInSitu(data, size);
+
+    if (full) {
+        this->m_data.InitExternal(static_cast<uint8_t*>(data), size);
+    } else {
+        this->m_data.PutData(data, size);
+        this->m_data.Finalize();
+    }
 }

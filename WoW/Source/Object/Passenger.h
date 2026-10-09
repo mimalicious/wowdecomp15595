@@ -24,7 +24,7 @@ class CPassenger {
 
     CPassenger(const WOWGUID& transportGuid, const C3Vector& position, const WOWGUID& ownerGuid);
     void PostInit(const C3Vector& position);
-    void Reenable();
+    void Reenable(const WOWGUID& transportGuid, const C3Vector& position);
     float GetFacing(float facing) const;
     float GetRawFacing(float facing) const;
     C3Vector GetPosition(const C3Vector& position) const;
@@ -33,7 +33,7 @@ class CPassenger {
     float GetRawFacingFromRotation() const;
     float RemoveFromTransportFinish(const C44Matrix& matrix);
     float AddToTransport(WOWGUID transport, C44Matrix* inverse, C44Matrix* transportMatrix);
-    void SetTransport(WOWGUID transport);
+    void ForceSetTransport(WOWGUID transport);
     float RemoveFromTransport(C44Matrix* matrix);
 };
 #pragma pack(pop)

@@ -11,7 +11,7 @@ class CGGameObject_C_Type_Mailbox : public CGGameObject_C_TypeAnimated {
     virtual bool Use();
     virtual void StartInteraction();
 
-    CGGameObject_C_Type_Mailbox(CGGameObject_C* owner);
+    CGGameObject_C_Type_Mailbox(CGGameObject_C* owner, const CClientObjCreate& create);
 };
 
 #endif

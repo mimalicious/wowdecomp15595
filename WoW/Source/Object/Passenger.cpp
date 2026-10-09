@@ -12,35 +12,35 @@ CPassenger::CPassenger(const WOWGUID& transportGuid, const C3Vector& position, c
     this->unk_002C = 0;
 }
 
-// OFFSET: #0x004F4230
+// OFFSET: 0x0041EB90
 void CPassenger::PostInit(const C3Vector& position) {
     if (this->m_transportGuid) {
-        if (!MovementAddToTransport(this, this->m_transportGuid, 1)) {
+        if (!MovementAddToTransport(this, this->m_transportGuid, 1, 1, 0)) {
             this->m_transportGuid = WOWGUID();
             this->m_position = position;
         }
     }
 }
 
-// OFFSET: #0x004F4280
-void CPassenger::Reenable() {
-    WOWGUID transport = this->m_transportGuid;
-
-    if (transport) {
-        MovementAddToTransport(this, transport, 1);
-    }
+// PROVEN: 5ac83f0c IDENTICAL/NONE
+// OFFSET: 0x0041EBE0
+void CPassenger::Reenable(const WOWGUID& transportGuid, const C3Vector& position) {
+    this->m_transportGuid = transportGuid;
+    this->m_position = position;
 }
 
-// OFFSET: #0x004F42A0
+// OFFSET: 0x0041EC10/0x140022B50
 float CPassenger::GetFacing(float facing) const {
-    if (!this->m_transportGuid) {
+    WOWGUID transport = this->m_transportGuid;
+
+    if (!transport || transport == *this->m_ownerGuid) {
         return facing;
     }
 
-    return CMath::normalizeangle0to2pi_(MovementGetTransportFacing(this->m_transportGuid) + facing);
+    return CMath::normalizeangle0to2pi_(MovementGetTransportFacing(transport) + facing);
 }
 
-// OFFSET: #0x004F42E0
+// OFFSET: 0x0041EC60
 float CPassenger::GetRawFacing(float facing) const {
     if (!this->m_transportGuid) {
         return facing;
@@ -49,7 +49,7 @@ float CPassenger::GetRawFacing(float facing) const {
     return CMath::normalizeangle0to2pi_(facing - MovementGetTransportFacing(this->m_transportGuid));
 }
 
-// OFFSET: #0x004F4460
+// OFFSET: 0x0041F090/0x140022E00
 C3Vector CPassenger::GetPosition(const C3Vector& position) const {
     WOWGUID transport = this->m_transportGuid;
 
@@ -62,7 +62,7 @@ C3Vector CPassenger::GetPosition(const C3Vector& position) const {
     return position * matrix;
 }
 
-// OFFSET: #0x004F4500
+// OFFSET: 0x0041F1D0
 C3Vector CPassenger::GetRawPosition(const C3Vector& position) const {
     WOWGUID transport = this->m_transportGuid;
 
@@ -75,7 +75,7 @@ C3Vector CPassenger::GetRawPosition(const C3Vector& position) const {
     return position * matrix.AffineInverse();
 }
 
-// OFFSET: #0x004F45B0
+// OFFSET: 0x0041ECA0
 C4Quaternion CPassenger::GetRotation() const {
     C4Quaternion rotation(*reinterpret_cast<const C4QuaternionCompressed*>(&this->m_facing));
 
@@ -92,7 +92,7 @@ C4Quaternion CPassenger::GetRotation() const {
     return rotation;
 }
 
-// OFFSET: #0x004F4630
+// OFFSET: 0x0041F330/0x140023110
 float CPassenger::GetRawFacingFromRotation() const {
     C4Quaternion rotation = this->GetRotation();
     float x = 1.0f - (rotation.z * rotation.z + rotation.y * rotation.y) * 2.0f;
@@ -109,7 +109,7 @@ float CPassenger::GetRawFacingFromRotation() const {
     return 0.0f <= y ? 0.5f * 3.1415927f : 1.5f * 3.1415927f;
 }
 
-// OFFSET: #0x004F46E0
+// OFFSET: 0x0041F420
 float CPassenger::RemoveFromTransportFinish(const C44Matrix& matrix) {
     float facing = MovementGetTransportFacing(this->m_transportGuid);
     this->m_position *= matrix;
@@ -131,13 +131,13 @@ float CPassenger::RemoveFromTransportFinish(const C44Matrix& matrix) {
     return facing;
 }
 
-// OFFSET: #0x004F4930
+// OFFSET: 0x0041F930
 float CPassenger::RemoveFromTransport(C44Matrix* matrix) {
     MovementGetTransportMtxX(this->m_transportGuid, matrix, *this->m_ownerGuid, __FILE__, __LINE__);
     return this->RemoveFromTransportFinish(*matrix);
 }
 
-// OFFSET: #0x004F47B0
+// OFFSET: 0x0041F650
 float CPassenger::AddToTransport(WOWGUID transport, C44Matrix* inverse, C44Matrix* transportMatrix) {
     float facing = -MovementGetTransportFacing(transport);
 
@@ -167,8 +167,8 @@ float CPassenger::AddToTransport(WOWGUID transport, C44Matrix* inverse, C44Matri
     return facing;
 }
 
-// OFFSET: #0x004F4970
-void CPassenger::SetTransport(WOWGUID transport) {
+// OFFSET: 0x0041F970/0x140023BE0
+void CPassenger::ForceSetTransport(WOWGUID transport) {
     if (transport == this->m_transportGuid || (transport && !MovementObjIsTransport(transport))) {
         return;
     }

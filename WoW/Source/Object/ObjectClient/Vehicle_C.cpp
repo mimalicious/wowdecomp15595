@@ -783,3 +783,14 @@ void CVehicle_C::RemoveAllPassengersLocally() {
         passenger = next;
     }
 }
+
+// OFFSET: 0x005EAB70/0x14026BE10
+void CVehicle_C::UpdatePassengerSoundPositions() {
+    for (CPassenger* passenger = this->m_passengers.Head(); passenger; passenger = this->m_passengers.Next(passenger)) {
+        CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*passenger->m_ownerGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+        if (unit) {
+            unit->UpdateSoundPosition();
+        }
+    }
+}

@@ -23,14 +23,14 @@ void MovementAddTransport(CGGameObject_C* transport) {
 }
 
 // OFFSET: #0x0074B340
-int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t reason) {
+int32_t MovementAddToTransport(CPassenger* passenger, WOWGUID transport, int32_t a3, int32_t reason, int32_t vehicleId) {
     CGObject_C* object = ClntObjMgrObjectPtr(transport, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (!object) {
         return 0;
     }
 
-    return object->AddPassenger(passenger, reason);
+    return object->AddPassenger(passenger, a3);
 }
 
 // PROVEN: 8e5bc963 IDENTICAL/NONE

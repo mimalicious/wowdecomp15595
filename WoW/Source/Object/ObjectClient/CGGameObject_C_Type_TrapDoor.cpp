@@ -8,7 +8,7 @@
 #include "WoW/Source/UIUtil/Camera.h"
 #include "WoW/Source/Ui/WorldFrame.h"
 
-// OFFSET: #0x0070D980
+// OFFSET: 0x0059C0B0
 void CGGameObject_C_Type_TrapDoor::PostInitWithStats() {
     this->CreateWorldObj();
 
@@ -35,7 +35,7 @@ void CGGameObject_C_Type_TrapDoor::PostInitWithStats() {
     }
 }
 
-// OFFSET: #0x00710460
+// OFFSET: 0x005A09B0
 void CGGameObject_C_Type_TrapDoor::UpdateState(int32_t oldState, int32_t newState) {
     if (!this->m_worldObject) {
         return;
@@ -71,16 +71,17 @@ void CGGameObject_C_Type_TrapDoor::UpdateState(int32_t oldState, int32_t newStat
     World::ObjectEnableCollision(this->m_worldObject, 0);
 }
 
-// OFFSET: #0x00713790
-CGGameObject_C_Type_TrapDoor::CGGameObject_C_Type_TrapDoor(CGGameObject_C* owner) : CGGameObject_C_Type_TransportBase(owner) {
+// OFFSET: 0x005A32D0
+CGGameObject_C_Type_TrapDoor::CGGameObject_C_Type_TrapDoor(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_Type_TransportBase(owner, create) {
 }
 
-// OFFSET: #0x0070B580
+// OFFSET: 0x005994F0
 void CGGameObject_C_Type_TrapDoor::PostReenable() {
     this->CreateWorldObj();
 
     if (this->m_worldObject) {
         MovementAddTransport(this->m_owner);
+        World::ObjectUpdate(this->m_worldObject, this->m_owner->GetMatrix());
     }
 
     if (this->m_worldObject) {
@@ -88,18 +89,12 @@ void CGGameObject_C_Type_TrapDoor::PostReenable() {
     }
 }
 
-// OFFSET: #0x007137B0
+// OFFSET: 0x005A0AD0
 void CGGameObject_C_Type_TrapDoor::UpdateMovement(uint32_t time, uint32_t elapsed) {
-    if (!this->m_worldObject) {
-        return;
-    }
-
-    if (!this->unk_0034 && World::ObjectIsLoaded(this->m_worldObject)) {
-        this->unk_0034 = 1;
+    if (this->m_worldObject && !this->m_isLoaded && World::ObjectIsLoaded(this->m_worldObject)) {
+        this->MarkTransportLoaded();
         int32_t moved;
         this->MovePassengers(&moved);
-        return;
+        World::ObjectUpdate(this->m_worldObject, this->m_owner->GetMatrix());
     }
-
-    World::ObjectUpdate(this->m_worldObject, this->m_owner->GetMatrix());
 }

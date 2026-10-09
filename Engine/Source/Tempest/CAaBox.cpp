@@ -7,7 +7,7 @@ bool CAaBox::IsValid() const {
     return this->t.x > this->b.x && this->t.y > this->b.y && this->t.z > this->b.z;
 }
 
-// OFFSET: #0x0070BD20
+// OFFSET: 0x00599680
 bool CAaBox::IsEmpty() const {
     return this->t.x <= this->b.x || this->t.y <= this->b.y || this->t.z <= this->b.z;
 }

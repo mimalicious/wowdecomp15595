@@ -79,6 +79,7 @@ class CMovementShared : public CPassenger {
     int32_t ChangeWalkSpeed(float speed);
     void AddSpline(const C3Vector& position);
     void ClearSplineEnabled();
+    void ClearInterpolatedPitching();
     void RemoveSpline();
     void ComputeSplineDurationModifier(float progress);
     int32_t EnableGravity(int32_t enable);

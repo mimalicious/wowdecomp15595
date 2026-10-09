@@ -1,7 +1,7 @@
 #include "CGGameObject_C_Type_DuelArbiter.h"
 
 // OFFSET: #0x00712800
-CGGameObject_C_Type_DuelArbiter::CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner) : CGGameObject_C_TypeAnimated(owner) {
+CGGameObject_C_Type_DuelArbiter::CGGameObject_C_Type_DuelArbiter(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeAnimated(owner, create) {
 }
 
 // PROVEN: 33ae85df IDENTICAL/IDENTICAL

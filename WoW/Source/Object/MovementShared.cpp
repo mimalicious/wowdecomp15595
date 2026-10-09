@@ -1946,7 +1946,7 @@ float CMovementShared::AddToTransport(WOWGUID transport, C44Matrix* inverse, C44
     C3Vector oldPosition = this->m_position;
     float facing = CPassenger::AddToTransport(transport, inverse, transportMatrix);
     this->TransportTransform(*inverse, facing, oldPosition);
-    MovementAddToTransport(this, transport, 0);
+    MovementAddToTransport(this, transport, 0, 0, 0);
     return facing;
 }
 
@@ -2201,4 +2201,9 @@ void CMovementShared::Disable() {
     }
 
     this->m_flags &= 0x77FFFFFF;
+}
+
+// OFFSET: 0x00A20340/0x1407C63E0
+void CMovementShared::ClearInterpolatedPitching() {
+    this->m_flags2 &= ~MOVEMENTFLAG2_INTERPOLATED_PITCHING;
 }
