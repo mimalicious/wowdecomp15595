@@ -28,6 +28,7 @@ class CGChatBubbleFrame;
 class CGGameObject_C;
 class CGNamePlateFrame;
 class CUnitDisplayTransition_C;
+class ClientPlaySpellVisual;
 class ClientSetPlayHoverAnim;
 
 namespace Liquid {
@@ -75,6 +76,30 @@ class CreatureModelDataRec;
 class CreatureSoundDataRec;
 class CreatureStats_C;
 class UnitBloodLevelsRec;
+
+struct CreateMissileParams {
+    /* 0000 */ PendingSpellCastData* m_data;
+    /* 0004 */ uint32_t m_ammoDisplayId;
+    /* 0008 */ uint32_t m_ammoInventoryType;
+    /* 000C */ const SpellVisualRec* m_visual;
+    /* 0010 */ const SpellRec* m_spell;
+    /* 0014 */ uint32_t m_delay;
+    /* 0018 */ float m_speed;
+    /* 001C */ uint32_t m_flags;
+    union {
+        /* 0020 */ WOWGUID m_target;
+        struct {
+            /* 0020 */ const SpellCastTargetPoint* m_point;
+            /* 0024 */ const TSStackArray<SpellCastTargetPoint>* m_points;
+        };
+    };
+    /* 0028 */ const TSStackArray<WOWGUID>* m_targets;
+    /* 002C */ int32_t m_hit;
+    /* 0030 */ uint32_t m_missReason;
+    /* 0034 */ uint32_t m_reflectResult;
+    /* 0038 */ const TSStackArray<uint32_t>* m_missReasons;
+    /* 003C */ const TSStackArray<uint32_t>* m_reflectResults;
+};
 
 struct AnimSlot {
     /* 0000 */ uint32_t m_animId;
@@ -1240,11 +1265,9 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void AddWorldHealingText(const WOWGUID& source, int32_t amount, const SpellRec* spell, bool crit, int32_t a6);
     void AddWorldHonorGainText(int32_t honor, int32_t pvpRank, const char* victimName);
     void PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source);
-    void CreateMissile(const SpellCastTargetPoint* point, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, const SpellVisualRec* visual, int32_t spellId, uint32_t delay);
-    void CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, const SpellVisualRec* visual, int32_t spellId, uint32_t delay);
     CM2Model* CreateItemModel(uint32_t displayId, uint32_t inventoryType, float* scale);
     CM2Model* CreateItemModel(uint32_t hand, float* scale);
-    void CreateMissile(const WOWGUID* target, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, int32_t hit, uint32_t missReason, uint32_t reflectResult, const SpellVisualRec* visual, int32_t spellId, const TSStackArray<WOWGUID>* targets, const TSStackArray<uint32_t>* missReasons, const TSStackArray<uint32_t>* reflectResults, uint32_t delay);
+    void CreateMissile(const CreateMissileParams& params);
     void OnAuraUpdate(CDataStore* msg, bool updateAll);
     void OnAttackStop(uint64_t target, int32_t faceTarget);
     void PlayAttackerRound(const ATTACKROUNDINFO& info);
@@ -1401,6 +1424,7 @@ float CreatureSoundDataGetFidgetDelayMax(const CreatureSoundDataRec* rec);
 
 int32_t MissileTrajectoryObjectCallback(void* param, uint32_t a2, uint64_t a3, uintptr_t a4);
 
+bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg);
 bool ClientSetPlayHoverAnimHandler(ClientSetPlayHoverAnim* msg);
 
 #endif

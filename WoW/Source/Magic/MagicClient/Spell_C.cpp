@@ -2248,7 +2248,17 @@ void PendingSpellCast::OnSpellGo(CDataStore* msg) {
                     LaunchMissileVisual(hits, misses, unit, &spell, visual, ammoDisplayId, ammoInventoryType, &this->m_data, missReasons, reflectResults, delay);
 
                     if ((visual->m_hasMissile || ammoDisplayId) && points.m_count) {
-                        unit->CreateMissile(&points, &this->m_data, ammoDisplayId, ammoInventoryType, visual, spell.m_id, delay);
+                        CreateMissileParams params;
+                        memset(&params, 0, sizeof(params));
+                        params.m_flags |= 1;
+                        params.m_data = &this->m_data;
+                        params.m_ammoDisplayId = ammoDisplayId;
+                        params.m_ammoInventoryType = ammoInventoryType;
+                        params.m_visual = visual;
+                        params.m_spell = &spell;
+                        params.m_delay = delay;
+                        params.m_points = &points;
+                        unit->CreateMissile(params);
                     }
                 } else {
                     CreateMissilesForTargets(hits, unit, &spell, visual, ammoDisplayId, ammoInventoryType, &this->m_data, NULL, NULL, delay);
@@ -2257,7 +2267,7 @@ void PendingSpellCast::OnSpellGo(CDataStore* msg) {
                         CreateMissilesForTargets(misses, unit, &spell, visual, ammoDisplayId, ammoInventoryType, &this->m_data, &missReasons, &reflectResults, delay);
                     }
 
-                    CreateMissilesForTargetPoints(points, unit, &spell, visual, ammoDisplayId, ammoInventoryType, &this->m_data, delay);
+                    CreateMissilesForTargetPoints(unit, &spell, visual, ammoDisplayId, ammoInventoryType, &this->m_data, points, delay);
                 }
 
                 if (visual->m_hasMissile && (!castKit || castKit->m_animID <= 0)) {
@@ -8968,42 +8978,76 @@ bool Spell_C_HandleItemDrop(CGItem_C* item, CGUnit_C* unit) {
     return Spell_C_HandleSpriteClick(item, NULL);
 }
 
-// OFFSET: #0x007FFFB0
+// OFFSET: 0x008A7D70
 void CreateMissilesForTargets(const TSStackArray<WOWGUID>& targets, CGUnit_C* unit, const SpellRec* spell, const SpellVisualRec* visual, uint32_t ammoDisplayId, uint32_t ammoInventoryType, PendingSpellCastData* data, const TSStackArray<uint32_t>* missReasons, const TSStackArray<uint32_t>* reflectResults, uint32_t delay) {
     if (!unit || (!visual->m_hasMissile && !ammoDisplayId)) {
         return;
     }
 
-    uint32_t targetFlags = data->m_targetFlags;
     int32_t hit = missReasons == NULL;
+    uint32_t targetFlags = data->m_targetFlags;
     bool unitTargets = !(targetFlags & 0x60) || (visual->m_flags & 0x1);
 
     if (targets.m_count && (targetFlags & 0x802) && unitTargets) {
         for (uint32_t i = 0; i < targets.m_count; i++) {
-            if (ClntObjMgrObjectPtr(targets.m_data[i], TYPEMASK_OBJECT, __FILE__, __LINE__)) {
-                uint32_t reflectResult = reflectResults ? reflectResults->m_data[i] : 0;
-                uint32_t missReason = missReasons ? missReasons->m_data[i] : 1;
-                unit->CreateMissile(&targets.m_data[i], data, ammoDisplayId, ammoInventoryType, hit, missReason, reflectResult, visual, spell->m_id, &targets, NULL, NULL, delay);
+            if (CanPlaySpellVisual(0, targets.m_data[i].m_guid, visual) && ClntObjMgrObjectPtr(targets.m_data[i], TYPEMASK_OBJECT, __FILE__, __LINE__)) {
+                CreateMissileParams params;
+                memset(&params, 0, sizeof(params));
+                params.m_ammoInventoryType = ammoInventoryType;
+                params.m_data = data;
+                params.m_ammoDisplayId = ammoDisplayId;
+                params.m_visual = visual;
+                params.m_spell = spell;
+                params.m_delay = delay;
+                params.m_target = targets.m_data[i];
+                params.m_hit = hit;
+                params.m_missReason = missReasons ? missReasons->m_data[i] : 1;
+                params.m_reflectResult = reflectResults ? reflectResults->m_data[i] : 0;
+                params.m_targets = &targets;
+                unit->CreateMissile(params);
             }
         }
     } else if ((targetFlags & 0x60) && (targets.m_count || !(visual->m_flags & 0x100))) {
-        WOWGUID none = { 0 };
-        unit->CreateMissile(&none, data, ammoDisplayId, ammoInventoryType, missReasons == NULL, 1, 0, visual, spell->m_id, &targets, missReasons, reflectResults, delay);
+        CreateMissileParams params;
+        memset(&params, 0, sizeof(params));
+        params.m_ammoDisplayId = ammoDisplayId;
+        params.m_ammoInventoryType = ammoInventoryType;
+        params.m_data = data;
+        params.m_delay = delay;
+        params.m_hit = hit;
+        params.m_spell = spell;
+        params.m_reflectResults = reflectResults;
+        params.m_visual = visual;
+        params.m_targets = &targets;
+        params.m_missReason = 1;
+        params.m_reflectResult = 0;
+        params.m_missReasons = missReasons;
+        unit->CreateMissile(params);
     }
 }
 
-// OFFSET: #0x00800120
-void CreateMissilesForTargetPoints(const TSStackArray<SpellCastTargetPoint>& points, CGUnit_C* unit, const SpellRec* spell, const SpellVisualRec* visual, uint32_t ammoDisplayId, uint32_t ammoInventoryType, PendingSpellCastData* data, uint32_t delay) {
+// OFFSET: 0x008A7F60
+void CreateMissilesForTargetPoints(CGUnit_C* unit, const SpellRec* spell, const SpellVisualRec* visual, uint32_t ammoDisplayId, uint32_t ammoInventoryType, PendingSpellCastData* data, const TSStackArray<SpellCastTargetPoint>& points, uint32_t delay) {
     if (!unit || (!visual->m_hasMissile && !ammoDisplayId)) {
         return;
     }
 
     for (uint32_t i = 0; i < points.m_count; i++) {
-        unit->CreateMissile(&points.m_data[i], data, ammoDisplayId, ammoInventoryType, visual, spell->m_id, delay);
+        CreateMissileParams params;
+        memset(&params, 0, sizeof(params));
+        params.m_flags |= 1;
+        params.m_data = data;
+        params.m_ammoDisplayId = ammoDisplayId;
+        params.m_ammoInventoryType = ammoInventoryType;
+        params.m_visual = visual;
+        params.m_spell = spell;
+        params.m_delay = delay;
+        params.m_point = &points.m_data[i];
+        unit->CreateMissile(params);
     }
 }
 
-// OFFSET: #0x00800180
+// OFFSET: 0x008A7FF0
 void LaunchMissileVisual(const TSStackArray<WOWGUID>& hits, const TSStackArray<WOWGUID>& misses, CGUnit_C* unit, const SpellRec* spell, const SpellVisualRec* visual, uint32_t ammoDisplayId, uint32_t ammoInventoryType, PendingSpellCastData* data, const TSStackArray<uint32_t>& missReasons, const TSStackArray<uint32_t>& reflectResults, uint32_t delay) {
     if (!unit || (!visual->m_hasMissile && !ammoDisplayId)) {
         return;
@@ -9045,8 +9089,21 @@ void LaunchMissileVisual(const TSStackArray<WOWGUID>& hits, const TSStackArray<W
         }
     }
 
-    WOWGUID none = { 0 };
-    unit->CreateMissile(&none, data, ammoDisplayId, ammoInventoryType, 1, 1, 0, visual, spell->m_id, &targets, &reasons, &reflects, delay);
+    CreateMissileParams params;
+    memset(&params, 0, sizeof(params));
+    params.m_data = data;
+    params.m_visual = visual;
+    params.m_ammoDisplayId = ammoDisplayId;
+    params.m_ammoInventoryType = ammoInventoryType;
+    params.m_targets = &targets;
+    params.m_spell = spell;
+    params.m_delay = delay;
+    params.m_hit = 1;
+    params.m_missReason = 1;
+    params.m_reflectResult = 0;
+    params.m_missReasons = &reasons;
+    params.m_reflectResults = &reflects;
+    unit->CreateMissile(params);
 }
 
 // OFFSET: #0x00800DD0

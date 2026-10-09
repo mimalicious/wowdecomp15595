@@ -328,7 +328,7 @@ static ClickToMoveActionInfo s_clickToMoveActions[12] = {
     { 1, { 0, 0, 0 }, 0.0f, 1, 0, { 0, 0 } },
 };
 
-// STATIC: #0x00ADAA20
+// STATIC: 0x00CA6290
 static const uint32_t s_effectAttachmentIds[16] = { 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16, 37, 38, 22, 47, 48 };
 
 // STATIC: #0x00CA1190
@@ -20574,60 +20574,28 @@ void CGUnit_C::PlayParryAnim() {
 }
 
 // OFFSET: 0x005D12C0/0x14024AB30
-void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, int32_t hit, uint32_t missReason, uint32_t reflectResult, const SpellVisualRec* visual, int32_t spellId, const TSStackArray<WOWGUID>* targets, const TSStackArray<uint32_t>* missReasons, const TSStackArray<uint32_t>* reflectResults, uint32_t delay) {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
-        return;
-    }
-
+void CGUnit_C::CreateMissile(const CreateMissileParams& params) {
     float scale = 1.0f;
-    CM2Model* model = NULL;
+    float alpha = 1.0f;
+    CM2Model* model = this->m_precastMissileModel;
 
-    if (this->m_precastMissileModel && !(this->m_clientFlags & 0x1000000)) {
-        this->m_precastMissileModel->m_refCount++;
+    if (model && !(this->m_clientFlags & 0x1000000)) {
+        model->m_refCount++;
         this->m_clientFlags |= 0x1000000;
+        const SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(params.m_visual->m_missileModel);
         model = this->m_precastMissileModel;
-        SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
 
         if (effectName && *effectName->m_fileName) {
             scale = effectName->m_scale;
         }
-    } else if (visual->m_missileModel) {
-        switch (visual->m_missileModel) {
-            case -5:
-            case -4:
-                model = this->CreateItemModel(ammoDisplayId, ammoInventoryType, NULL);
-                break;
-
-            case -3:
-                model = this->CreateItemModel(2, &scale);
-                break;
-
-            case -2:
-                model = this->CreateItemModel(1, &scale);
-                break;
-
-            case -1:
-                model = this->CreateItemModel(0, &scale);
-                break;
-
-            default: {
-                SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
-
-                if (effectName && *effectName->m_fileName) {
-                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
-                    scale = effectName->m_scale;
-                }
-
-                break;
-            }
-        }
-    } else if (ammoDisplayId) {
+    } else if (params.m_visual->m_missileModel) {
+        model = CEffect::CreateModelFromEffect(params.m_visual->m_missileModel, &scale, &alpha, this->m_obj->m_guid, params.m_ammoDisplayId, params.m_ammoInventoryType);
+    } else {
         ItemDisplayInfoRec displayRec;
+        model = NULL;
 
-        if (g_itemDisplayInfoDB.GetRecord(ammoDisplayId, &displayRec)) {
-            model = CCharacterComponent::MakeAmmoModel(this->m_worldModel, &displayRec, ammoInventoryType);
+        if (params.m_ammoDisplayId && g_itemDisplayInfoDB.GetRecord(params.m_ammoDisplayId, &displayRec)) {
+            model = CCharacterComponent::MakeAmmoModel(this->m_worldModel, &displayRec, params.m_ammoInventoryType);
         }
     }
 
@@ -20635,28 +20603,31 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
         model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
     }
 
-    AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
-
-    if (animation && (animation->m_behaviorID == 49 || animation->m_behaviorID == 106 || animation->m_behaviorID == 110)) {
+    if (AnimationDataHasFlags(this->GetCurrentTorsoAnimId(), 0x40000)) {
         model->m_fadeAlpha = 0.0f;
     }
 
+    int32_t pointMode = params.m_flags & 1;
     CMissile* missile = CMissile::NewMissile();
     missile->m_model = model;
     missile->m_casterGuid = this->m_obj->m_guid;
-    missile->m_targetGuid = *target;
-    missile->m_spellID = spell.m_id;
-    missile->m_castID = data->m_castCount;
-    missile->m_speed = spell.m_speed;
-    missile->m_baseSpeed = spell.m_speed;
-    missile->m_hitResult = missReason;
-    missile->m_missReason = reflectResult;
+    missile->m_sourceGuid = this->m_obj->m_guid;
+    missile->m_targetGuid = pointMode ? WOWGUID() : params.m_target;
+    missile->m_spellID = params.m_spell ? params.m_spell->m_id : 0;
+    missile->m_spellVisualID = params.m_visual->m_id;
+    missile->m_castID = params.m_data ? params.m_data->m_castCount : 0;
+    float speed = params.m_spell ? params.m_spell->m_speed : params.m_speed;
+    missile->m_speed = speed;
+    missile->m_baseSpeed = speed;
+    missile->m_launchSpeed = speed;
+    missile->m_hitResult = pointMode ? 0 : params.m_missReason;
+    missile->m_missReason = pointMode ? 0 : params.m_reflectResult;
 
-    if (hit) {
+    if (pointMode || params.m_hit) {
         missile->m_flags |= 1;
     }
 
-    if (spell.m_attributes & 2) {
+    if (params.m_spell && (params.m_spell->m_attributes & 2)) {
         const CGUnitVirtualItem* item = this->GetVirtualItem(2, false);
 
         if (item && item->m_classID == 2 && (item->m_subclassID == 2 || item->m_subclassID == 18 || item->m_subclassID == 16)) {
@@ -20664,13 +20635,14 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
         }
     }
 
-    if (missReason == 11 && (spell.m_attributesExG & 0x20000000)) {
+    if (!pointMode && params.m_spell && params.m_missReason == 11 && (params.m_spell->m_attributesExG & 0x20000000)) {
         missile->m_flags |= 0x8000000;
     }
 
+    missile->m_soundKitID = params.m_visual->m_missileSound;
     missile->m_scale = scale;
-    missile->m_soundKitID = visual->m_missileSound;
-    const SpellVisualRec* spellVisual = GetSpellVisual(&spell);
+    missile->m_alpha = alpha;
+    const SpellVisualRec* spellVisual = params.m_spell ? GetSpellVisual(params.m_spell, this) : params.m_visual;
 
     if (spellVisual) {
         float height = spellVisual->m_missileFollowGroundHeight * 0.001f;
@@ -20682,12 +20654,12 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
         missile->m_groundOffset = height;
         float rate = spellVisual->m_missileFollowGroundDropSpeed * 0.001f;
 
-        if (rate <= 0.01f) {
-            rate = 0.01f;
+        if (rate <= 0.0099999998f) {
+            rate = 0.0099999998f;
         }
 
         missile->m_followGroundRate = rate;
-        float approach = 0.001f * spellVisual->m_missileFollowGroundApproach;
+        float approach = spellVisual->m_missileFollowGroundApproach * 0.001f;
 
         if (approach < 0.0f) {
             approach = 0.0f;
@@ -20703,86 +20675,123 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
         }
     }
 
+    const SpellVisualRec* visual = params.m_visual;
     int32_t attachment = (visual->m_flags & 0x200) ? visual->m_missileDestinationAttachment : s_effectAttachmentIds[visual->m_missileDestinationAttachment];
     C3Vector offset(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
-    bool hasOffset = 0.0f != offset.x || 0.0f != offset.y || offset.z != 0.0f;
+    int32_t hasOffset = 0.0f != offset.x || 0.0f != offset.y || 0.0f != offset.z;
 
-    if (*target) {
-        missile->m_attachmentID = attachment;
-        missile->m_attachOffset = offset;
-        CGObject_C* object = ClntObjMgrObjectPtr(*target, TYPEMASK_OBJECT, __FILE__, __LINE__);
-
-        if (object) {
-            missile->m_impactPos = object->GetPosition();
+    if (pointMode) {
+        if (params.m_points) {
+            const SpellCastTargetPoint* point = params.m_points->m_data;
+            missile->m_impactPos = point->m_position;
+            missile->unk_0074 = point->unk_0024;
+            missile->m_transportGuid = point->m_transport;
+            missile->m_flags |= 1;
+            missile->m_attachmentID = attachment;
+            missile->m_attachOffset = offset;
+            missile->m_targetPoints.Set(params.m_points->m_count, params.m_points->m_data);
+            missile->m_flags |= 0x200;
+            goto flagsDone;
         }
+
+        const SpellCastTargetPoint* point = params.m_point;
+        missile->m_impactPos = point->m_position;
+        missile->unk_0074 = point->unk_0024;
+        missile->m_transportGuid = point->m_transport;
     } else {
-        if ((data->m_targetFlags & 0x60) == 0x60) {
-            missile->m_position = data->m_sourcePos;
-            missile->m_impactPos = data->m_destPos;
-            missile->m_transportGuid = data->m_destTarget;
-        } else if (data->m_targetFlags & 0x40) {
-            missile->m_impactPos = data->m_destPos;
-            missile->m_transportGuid = data->m_destTarget;
-        } else if (data->m_targetFlags & 0x20) {
-            missile->m_impactPos = data->m_sourcePos;
-            missile->m_transportGuid = data->m_sourceTarget;
+        CGObject_C* object;
+
+        if (params.m_target) {
+            missile->m_attachmentID = attachment;
+            missile->m_attachOffset = offset;
+            object = ClntObjMgrObjectPtr(params.m_target, TYPEMASK_OBJECT, __FILE__, __LINE__);
         } else {
-            if (!targets->m_count) {
+            PendingSpellCastData* data = params.m_data;
+            uint32_t targetFlags = data ? data->m_targetFlags : 0;
+
+            if (data && (targetFlags & 0x60) == 0x60) {
+                missile->m_position = data->m_sourcePos;
+                missile->m_impactPos = data->m_destPos;
+                missile->m_transportGuid = data->m_destTarget;
+                goto locationTarget;
+            }
+
+            if (data && (targetFlags & 0x40)) {
+                missile->m_impactPos = data->m_destPos;
+                missile->m_transportGuid = data->m_destTarget;
+                goto locationTarget;
+            }
+
+            if (data && (targetFlags & 0x20)) {
+                missile->m_impactPos = data->m_sourcePos;
+                missile->m_transportGuid = data->m_sourceTarget;
+                goto locationTarget;
+            }
+
+            if (!params.m_targets->m_count) {
                 missile->DeleteSelf();
                 return;
             }
 
-            missile->m_targetGuid = targets->m_data[0];
+            missile->m_targetGuid = params.m_targets->m_data[0];
             missile->m_attachmentID = attachment;
             missile->m_attachOffset = offset;
-            CGObject_C* object = ClntObjMgrObjectPtr(targets->m_data[0], TYPEMASK_OBJECT, __FILE__, __LINE__);
+            object = ClntObjMgrObjectPtr(params.m_targets->m_data[0], TYPEMASK_OBJECT, __FILE__, __LINE__);
+        }
 
-            if (object) {
-                missile->m_impactPos = object->GetPosition();
+        if (object) {
+            missile->m_impactPos = object->GetPosition();
+        }
+
+        goto unitTarget;
+    }
+
+locationTarget:
+    missile->m_flags |= 1;
+    missile->m_attachmentID = -1;
+
+    if (hasOffset) {
+        C44Matrix matrix = this->m_vehiclePassenger ? this->GetModelMatrix() : this->GetMatrix();
+        float x = matrix.c0 * offset.z + matrix.b0 * offset.y + matrix.a0 * offset.x;
+        float y = matrix.c1 * offset.z + matrix.a1 * offset.x + matrix.b1 * offset.y;
+        float z = matrix.c2 * offset.z + matrix.a2 * offset.x + matrix.b2 * offset.y;
+        missile->m_impactPos.x = missile->m_impactPos.x + x;
+        missile->m_impactPos.y = y + missile->m_impactPos.y;
+        missile->m_impactPos.z = z + missile->m_impactPos.z;
+    }
+
+    if (pointMode) {
+        missile->m_flags &= ~0x200u;
+        goto flagsDone;
+    }
+
+unitTarget:
+    {
+        int32_t multiTarget = params.m_spell && (params.m_spell->m_attributesExD & 0x40000);
+        int32_t areaTarget = params.m_data && (params.m_data->m_targetFlags & 0x60);
+
+        if (!params.m_target && params.m_targets->m_count) {
+            if (!multiTarget && !areaTarget) {
+                missile->m_flags &= ~0x200u;
+                goto flagsDone;
             }
 
-            goto targetsDone;
+            missile->m_targets.Set(params.m_targets->m_count, reinterpret_cast<const uint64_t*>(params.m_targets->m_data));
+
+            if (params.m_missReasons && params.m_missReasons->m_count) {
+                missile->m_targetHitResults.Set(params.m_missReasons->m_count, params.m_missReasons->m_data);
+            }
+
+            if (params.m_reflectResults && params.m_reflectResults->m_count) {
+                missile->m_targetMissReasons.Set(params.m_reflectResults->m_count, params.m_reflectResults->m_data);
+            }
         }
 
-        missile->m_flags |= 1;
-        missile->m_attachmentID = -1;
-
-        if (hasOffset) {
-            C44Matrix matrix = this->m_vehiclePassenger ? this->GetModelMatrix() : this->GetMatrix();
-            matrix.d0 = 0.0f;
-            matrix.d1 = 0.0f;
-            matrix.d2 = 0.0f;
-            C3Vector rotated = offset * matrix;
-            missile->m_impactPos.x = missile->m_impactPos.x + rotated.x;
-            missile->m_impactPos.y = rotated.y + missile->m_impactPos.y;
-            missile->m_impactPos.z = rotated.z + missile->m_impactPos.z;
-        }
-    }
-
-targetsDone:
-    uint32_t multiTarget = spell.m_attributesExD & 0x40000;
-
-    if (!*target && targets->m_count) {
-        if (!multiTarget && !(data->m_targetFlags & 0x60)) {
+        if (multiTarget) {
+            missile->m_flags |= 0x200;
+        } else {
             missile->m_flags &= ~0x200u;
-            goto flagsDone;
         }
-
-        missile->m_targets.Set(targets->m_count, reinterpret_cast<const uint64_t*>(targets->m_data));
-
-        if (missReasons && missReasons->m_count) {
-            missile->m_targetHitResults.Set(missReasons->m_count, missReasons->m_data);
-        }
-
-        if (reflectResults && reflectResults->m_count) {
-            missile->m_targetMissReasons.Set(reflectResults->m_count, reflectResults->m_data);
-        }
-    }
-
-    if (multiTarget) {
-        missile->m_flags |= 0x200;
-    } else {
-        missile->m_flags &= ~0x200u;
     }
 
 flagsDone:
@@ -20792,210 +20801,27 @@ flagsDone:
     if (spellVisual && spellVisual->m_missileMotion) {
         missile->m_flags |= 0x3800;
         missile->InstallMotionScriptFunction(spellVisual->m_missileMotion);
-        SpellMissileMotionRec* motion = g_spellMissileMotionDB.GetRecord(spellVisual->m_missileMotion);
+        const SpellMissileMotionRec* motion = g_spellMissileMotionDB.GetRecord(spellVisual->m_missileMotion);
 
-        if (motion && motion->m_missileCount >= 1) {
-            missileCount = motion->m_missileCount;
-        }
-    }
+        if (motion) {
+            missileCount = 1;
 
-    missile->m_castTime = OsGetAsyncTimeMs();
-    missile->SetReadyToFire(&this->m_missiles);
-    this->m_lastMissileTime = missile->m_castTime;
-
-    if (data->m_castFlags & 0x20000) {
-        missile->m_pitch = data->m_elevation;
-        missile->m_flags |= 0x10800;
-        missile->m_trajectorySpeed = data->unk_0120;
-        missile->m_arrivalTime = delay + missile->m_castTime;
-    }
-
-    if ((this->m_clientFlags & 0x400) || (this->m_obj->m_guid == CGPetInfo::GetPet(0) && !this->m_unit->m_unitFieldCharmedby)) {
-        missile->m_flags |= 0x200000;
-    }
-
-    missile->m_missileCount = missileCount;
-
-    if (missileCount > 1) {
-        missile->m_missileIndex = 0;
-
-        for (int32_t i = 1; i < missileCount; i++) {
-            missile = CMissile::CopyMissile(missile);
-            missile->m_missileIndex = i;
-            missile->SetReadyToFire(&this->m_missiles);
-        }
-    }
-
-    if (visual->m_flags & 4) {
-        C3Vector position = this->GetMissileFirePosition();
-        this->ReleaseMissiles(position);
-    }
-}
-
-// OFFSET: #0x00733820
-void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, const SpellVisualRec* visual, int32_t spellId, uint32_t delay) {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
-        return;
-    }
-
-    float scale = 1.0f;
-    CM2Model* model = NULL;
-
-    if (this->m_precastMissileModel && !(this->m_clientFlags & 0x1000000)) {
-        this->m_precastMissileModel->m_refCount++;
-        this->m_clientFlags |= 0x1000000;
-        model = this->m_precastMissileModel;
-        SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
-
-        if (effectName && *effectName->m_fileName) {
-            scale = effectName->m_scale;
-        }
-    } else if (visual->m_missileModel) {
-        switch (visual->m_missileModel) {
-            case -5:
-            case -4:
-                model = this->CreateItemModel(ammoDisplayId, ammoInventoryType, NULL);
-                break;
-
-            case -3:
-                model = this->CreateItemModel(2, &scale);
-                break;
-
-            case -2:
-                model = this->CreateItemModel(1, &scale);
-                break;
-
-            case -1:
-                model = this->CreateItemModel(0, &scale);
-                break;
-
-            default: {
-                SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
-
-                if (effectName && *effectName->m_fileName) {
-                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
-                    scale = effectName->m_scale;
-                }
-
-                break;
+            if (motion->m_missileCount >= 1) {
+                missileCount = motion->m_missileCount;
             }
         }
-    } else if (ammoDisplayId) {
-        ItemDisplayInfoRec displayRec;
-
-        if (g_itemDisplayInfoDB.GetRecord(ammoDisplayId, &displayRec)) {
-            model = CCharacterComponent::MakeAmmoModel(this->m_worldModel, &displayRec, ammoInventoryType);
-        }
     }
 
-    if (!model) {
-        model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
-    }
-
-    AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
-
-    if (animation && (animation->m_behaviorID == 49 || animation->m_behaviorID == 106 || animation->m_behaviorID == 110)) {
-        model->m_fadeAlpha = 0.0f;
-    }
-
-    CMissile* missile = CMissile::NewMissile();
-    missile->m_model = model;
-    missile->m_casterGuid = this->m_obj->m_guid;
-    missile->m_targetGuid = WOWGUID();
-    missile->m_spellID = spell.m_id;
-    missile->m_castID = data->m_castCount;
-    missile->m_speed = spell.m_speed;
-    missile->m_baseSpeed = spell.m_speed;
-    missile->m_flags |= 1;
-    missile->m_hitResult = 0;
-    missile->m_missReason = 0;
-
-    if (spell.m_attributes & 2) {
-        const CGUnitVirtualItem* item = this->GetVirtualItem(2, false);
-
-        if (item && item->m_classID == 2 && (item->m_subclassID == 2 || item->m_subclassID == 18 || item->m_subclassID == 16)) {
-            missile->m_flags |= 4;
-        }
-    }
-
-    missile->m_scale = scale;
-    missile->m_soundKitID = visual->m_missileSound;
-    const SpellVisualRec* spellVisual = GetSpellVisual(&spell);
-
-    if (spellVisual) {
-        float height = spellVisual->m_missileFollowGroundHeight * 0.001f;
-
-        if (height <= 0.25f) {
-            height = 0.25f;
-        }
-
-        missile->m_groundOffset = height;
-        float rate = spellVisual->m_missileFollowGroundDropSpeed * 0.001f;
-
-        if (rate <= 0.01f) {
-            rate = 0.01f;
-        }
-
-        missile->m_followGroundRate = rate;
-        float approach = 0.001f * spellVisual->m_missileFollowGroundApproach;
-
-        if (approach < 0.0f) {
-            approach = 0.0f;
-        } else if (approach >= 1.0f) {
-            approach = 1.0f;
-        }
-
-        missile->m_followGroundStart = approach;
-        missile->m_motionFlags = spellVisual->m_missileFollowGroundFlags;
-
-        if (spellVisual->m_missileFollowGroundFlags & 1) {
-            missile->m_flags |= 0x7800;
-        }
-    }
-
-    C3Vector offset(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
-    bool hasOffset = 0.0f != offset.x || 0.0f != offset.y || offset.z != 0.0f;
-    missile->m_impactPos = point->m_position;
-    missile->m_transportGuid = point->m_transport;
-    missile->m_flags |= 1;
-    missile->m_attachmentID = -1;
-
-    if (hasOffset) {
-        C44Matrix matrix = this->m_vehiclePassenger ? this->GetModelMatrix() : this->GetMatrix();
-        matrix.d0 = 0.0f;
-        matrix.d1 = 0.0f;
-        matrix.d2 = 0.0f;
-        C3Vector rotated = offset * matrix;
-        missile->m_impactPos.x = missile->m_impactPos.x + rotated.x;
-        missile->m_impactPos.y = rotated.y + missile->m_impactPos.y;
-        missile->m_impactPos.z = rotated.z + missile->m_impactPos.z;
-    }
-
-    missile->m_flags &= ~0x200u;
-    missile->m_currentTarget = 0;
-    int32_t missileCount = 1;
-
-    if (spellVisual && spellVisual->m_missileMotion) {
-        missile->m_flags |= 0x3800;
-        missile->InstallMotionScriptFunction(spellVisual->m_missileMotion);
-        SpellMissileMotionRec* motion = g_spellMissileMotionDB.GetRecord(spellVisual->m_missileMotion);
-
-        if (motion && motion->m_missileCount >= 1) {
-            missileCount = motion->m_missileCount;
-        }
-    }
-
-    missile->m_castTime = OsGetAsyncTimeMs();
+    missile->m_castTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
     missile->SetReadyToFire(&this->m_missiles);
     this->m_lastMissileTime = missile->m_castTime;
+    PendingSpellCastData* data = params.m_data;
 
-    if (data->m_castFlags & 0x20000) {
+    if (data && (data->m_castFlags & 0x20000)) {
         missile->m_pitch = data->m_elevation;
-        missile->m_flags |= 0x10800;
         missile->m_trajectorySpeed = data->unk_0120;
-        missile->m_arrivalTime = delay + missile->m_castTime;
+        missile->m_flags |= 0x10800;
+        missile->m_arrivalTime = missile->m_castTime + params.m_delay;
     }
 
     if ((this->m_clientFlags & 0x400) || (this->m_obj->m_guid == CGPetInfo::GetPet(0) && !this->m_unit->m_unitFieldCharmedby)) {
@@ -21014,184 +20840,7 @@ void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCast
         }
     }
 
-    if (visual->m_flags & 4) {
-        C3Vector position = this->GetMissileFirePosition();
-        this->ReleaseMissiles(position);
-    }
-}
-
-// OFFSET: #0x00733E20
-void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, PendingSpellCastData* data, uint32_t ammoDisplayId, uint32_t ammoInventoryType, const SpellVisualRec* visual, int32_t spellId, uint32_t delay) {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
-        return;
-    }
-
-    float scale = 1.0f;
-    CM2Model* model = NULL;
-
-    if (this->m_precastMissileModel && !(this->m_clientFlags & 0x1000000)) {
-        this->m_precastMissileModel->m_refCount++;
-        this->m_clientFlags |= 0x1000000;
-        model = this->m_precastMissileModel;
-        SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
-
-        if (effectName && *effectName->m_fileName) {
-            scale = effectName->m_scale;
-        }
-    } else if (visual->m_missileModel) {
-        switch (visual->m_missileModel) {
-            case -5:
-            case -4:
-                model = this->CreateItemModel(ammoDisplayId, ammoInventoryType, NULL);
-                break;
-
-            case -3:
-                model = this->CreateItemModel(2, &scale);
-                break;
-
-            case -2:
-                model = this->CreateItemModel(1, &scale);
-                break;
-
-            case -1:
-                model = this->CreateItemModel(0, &scale);
-                break;
-
-            default: {
-                SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
-
-                if (effectName && *effectName->m_fileName) {
-                    model = World::GetScene()->CreateModel(effectName->m_fileName, 0x40, 3);
-                    scale = effectName->m_scale;
-                }
-
-                break;
-            }
-        }
-    } else if (ammoDisplayId) {
-        ItemDisplayInfoRec displayRec;
-
-        if (g_itemDisplayInfoDB.GetRecord(ammoDisplayId, &displayRec)) {
-            model = CCharacterComponent::MakeAmmoModel(this->m_worldModel, &displayRec, ammoInventoryType);
-        }
-    }
-
-    if (!model) {
-        model = World::GetScene()->CreateModel("Spells\\ErrorCube.mdx", 0, 3);
-    }
-
-    AnimationDataRec* animation = g_animationDataDB.GetRecord(this->GetCurrentTorsoAnimId());
-
-    if (animation && (animation->m_behaviorID == 49 || animation->m_behaviorID == 106 || animation->m_behaviorID == 110)) {
-        model->m_fadeAlpha = 0.0f;
-    }
-
-    CMissile* missile = CMissile::NewMissile();
-    missile->m_model = model;
-    missile->m_casterGuid = this->m_obj->m_guid;
-    missile->m_targetGuid = WOWGUID();
-    missile->m_spellID = spell.m_id;
-    missile->m_castID = data->m_castCount;
-    missile->m_speed = spell.m_speed;
-    missile->m_baseSpeed = spell.m_speed;
-    missile->m_flags |= 1;
-    missile->m_hitResult = 0;
-    missile->m_missReason = 0;
-
-    if (spell.m_attributes & 2) {
-        const CGUnitVirtualItem* item = this->GetVirtualItem(2, false);
-
-        if (item && item->m_classID == 2 && (item->m_subclassID == 2 || item->m_subclassID == 18 || item->m_subclassID == 16)) {
-            missile->m_flags |= 4;
-        }
-    }
-
-    missile->m_scale = scale;
-    missile->m_soundKitID = visual->m_missileSound;
-    const SpellVisualRec* spellVisual = GetSpellVisual(&spell);
-
-    if (spellVisual) {
-        float height = spellVisual->m_missileFollowGroundHeight * 0.001f;
-
-        if (height <= 0.25f) {
-            height = 0.25f;
-        }
-
-        missile->m_groundOffset = height;
-        float rate = spellVisual->m_missileFollowGroundDropSpeed * 0.001f;
-
-        if (rate <= 0.01f) {
-            rate = 0.01f;
-        }
-
-        missile->m_followGroundRate = rate;
-        float approach = 0.001f * spellVisual->m_missileFollowGroundApproach;
-
-        if (approach < 0.0f) {
-            approach = 0.0f;
-        } else if (approach >= 1.0f) {
-            approach = 1.0f;
-        }
-
-        missile->m_followGroundStart = approach;
-        missile->m_motionFlags = spellVisual->m_missileFollowGroundFlags;
-
-        if (spellVisual->m_missileFollowGroundFlags & 1) {
-            missile->m_flags |= 0x7800;
-        }
-    }
-
-    int32_t attachment = (visual->m_flags & 0x200) ? visual->m_missileDestinationAttachment : s_effectAttachmentIds[visual->m_missileDestinationAttachment];
-    missile->m_impactPos = points->m_data[0].m_position;
-    missile->m_transportGuid = points->m_data[0].m_transport;
-    missile->m_flags |= 1;
-    missile->m_attachmentID = attachment;
-    missile->m_attachOffset = C3Vector(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
-    missile->m_targetPoints.Set(points->m_count, points->m_data);
-    missile->m_flags |= 0x200;
-    missile->m_currentTarget = 0;
-    int32_t missileCount = 1;
-
-    if (spellVisual && spellVisual->m_missileMotion) {
-        missile->m_flags |= 0x3800;
-        missile->InstallMotionScriptFunction(spellVisual->m_missileMotion);
-        SpellMissileMotionRec* motion = g_spellMissileMotionDB.GetRecord(spellVisual->m_missileMotion);
-
-        if (motion && motion->m_missileCount >= 1) {
-            missileCount = motion->m_missileCount;
-        }
-    }
-
-    missile->m_castTime = OsGetAsyncTimeMs();
-    missile->SetReadyToFire(&this->m_missiles);
-    this->m_lastMissileTime = missile->m_castTime;
-
-    if (data->m_castFlags & 0x20000) {
-        missile->m_pitch = data->m_elevation;
-        missile->m_flags |= 0x10800;
-        missile->m_trajectorySpeed = data->unk_0120;
-        missile->m_arrivalTime = delay + missile->m_castTime;
-    }
-
-    if ((this->m_clientFlags & 0x400) || (this->m_obj->m_guid == CGPetInfo::GetPet(0) && !this->m_unit->m_unitFieldCharmedby)) {
-        missile->m_flags |= 0x200000;
-    }
-
-    missile->m_missileCount = missileCount;
-
-    if (missileCount > 1) {
-        missile->m_missileIndex = 0;
-
-        for (int32_t i = 1; i < missileCount; i++) {
-            missile = CMissile::CopyMissile(missile);
-            missile->m_missileIndex = i;
-            missile->SetReadyToFire(&this->m_missiles);
-        }
-    }
-
-    if (visual->m_flags & 4) {
+    if (params.m_visual->m_flags & 4) {
         C3Vector position = this->GetMissileFirePosition();
         this->ReleaseMissiles(position);
     }
@@ -24893,6 +24542,78 @@ int32_t Packet_SMSG_MIRRORIMAGE_DATA(void* param, NETMESSAGE msgId, uint32_t tim
     }
 
     return 1;
+}
+
+// OFFSET: 0x005D34F0
+bool ClientPlaySpellVisualHandler(ClientPlaySpellVisual* msg) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(msg->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return true;
+    }
+
+    const SpellVisualRec* visual = g_spellVisualDB.GetRecord(msg->m_spellVisualId);
+
+    if (!CanPlaySpellVisual(msg->m_guid.m_guid, 0, visual)) {
+        return true;
+    }
+
+    if (visual->m_castKit) {
+        const SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_castKit);
+
+        if (kit && CanPlaySpellVisualKit(msg->m_guid.m_guid, msg->m_targetGuid.m_guid, kit, NULL)) {
+            PlaySpellVisuaKitData data(NULL, kit, 0);
+            unit->PlaySpellVisualKit(data);
+        }
+    }
+
+    if (!visual->m_hasMissile || msg->m_travelSpeed <= 0.0f) {
+        return true;
+    }
+
+    C3Vector position = msg->m_targetPosition;
+    C3Vector normal(0.0f, 0.0f, 1.0f);
+
+    if (msg->m_targetGuid) {
+        CGObject_C* target = ClntObjMgrObjectPtr(msg->m_targetGuid, TYPEMASK_UNIT, __FILE__, __LINE__);
+
+        if (!target) {
+            return true;
+        }
+
+        position = target->GetPosition();
+    } else if (visual->m_flags & 0x400) {
+        C3Vector ground;
+        position = *MissileFindGroundPosition(&ground, position, normal);
+    }
+
+    float speed = 0.0f;
+    int32_t time = 0;
+    unit->CalcMissileTravel(position, msg->m_travelSpeed, msg->m_speedAsTime, &speed, &time);
+    CreateMissileParams params;
+    memset(&params, 0, sizeof(params));
+    SpellCastTargetPoint point;
+    TSStackArray<WOWGUID> targets(&msg->m_targetGuid, 1, 0);
+    params.m_visual = visual;
+    params.m_speed = speed;
+
+    if (msg->m_targetGuid) {
+        params.m_target = msg->m_targetGuid;
+        params.m_targets = &targets;
+        params.m_hit = 1;
+        params.m_missReason = msg->m_reflectStatus;
+        params.m_reflectResult = msg->m_missReason;
+    } else {
+        params.m_flags |= 1;
+        point.m_position = position;
+        point.m_worldPosition = position;
+        point.unk_0024 = normal;
+        point.m_transport = WOWGUID();
+        params.m_point = &point;
+    }
+
+    unit->CreateMissile(params);
+    return true;
 }
 
 // OFFSET: 0x005D0320

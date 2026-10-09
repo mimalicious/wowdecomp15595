@@ -45,6 +45,7 @@ class CGUnit {
     int32_t IsOnFallingSpline() const;
     int32_t CanMove() const;
     float GetFacing(float facing) const;
+    void CalcMissileTravel(const C3Vector& target, float speed, bool speedAsTime, float* outSpeed, int32_t* outTime) const;
 };
 
 class CGUnitData {

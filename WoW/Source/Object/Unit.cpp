@@ -302,3 +302,36 @@ C3Vector CGUnit::GetVelocity() const {
     float speed = this->m_movement->m_currentSpeed;
     return C3Vector(this->m_movement->m_moveDir.x * speed, this->m_movement->m_moveDir.y * speed, speed * this->m_movement->m_moveDir.z);
 }
+
+// OFFSET: 0x00A27AC0
+void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAsTime, float* outSpeed, int32_t* outTime) const {
+    if (speedAsTime) {
+        if (speed <= 0.0f) {
+            *outSpeed = 10.0f;
+        } else {
+            C3Vector position = this->m_movement->GetPosition(this->m_movement->m_position);
+            float dz = target.z - position.z;
+            float dy = target.y - position.y;
+            float dx = target.x - position.x;
+            *outSpeed = sqrt(dx * dx + (dy * dy + dz * dz)) / speed;
+        }
+
+        if (outTime) {
+            *outTime = static_cast<int32_t>(speed * 1000.0f);
+        }
+    } else {
+        *outSpeed = speed;
+
+        if (outTime) {
+            if (speed <= 0.0f) {
+                *outTime = 0;
+            } else {
+                C3Vector position = this->m_movement->GetPosition(this->m_movement->m_position);
+                float dz = target.z - position.z;
+                float dy = target.y - position.y;
+                float dx = target.x - position.x;
+                *outTime = static_cast<int32_t>(sqrt(dx * dx + (dy * dy + dz * dz)) / speed * 1000.0f);
+            }
+        }
+    }
+}
