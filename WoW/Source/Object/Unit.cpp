@@ -26,7 +26,7 @@ uint32_t CGUnit::MirrorIndexFromFieldIndex(uint32_t fieldIndex) {
     return 142;
 }
 
-// OFFSET: #0x004F53D0
+// OFFSET: 0x00A27850
 bool CGUnit::CanSwim() const {
     uint32_t flags = this->m_unit->m_unitFieldFlags;
 
@@ -34,7 +34,15 @@ bool CGUnit::CanSwim() const {
         return false;
     }
 
-    if ((flags & 0x8) || (flags & 0x800) || (flags & 0x10)) {
+    if (flags & 0x8) {
+        return true;
+    }
+
+    if (this->m_unit->m_unitFieldFlags2 & 0x1000000) {
+        return false;
+    }
+
+    if ((flags & 0x800) || (flags & 0x10)) {
         return true;
     }
 

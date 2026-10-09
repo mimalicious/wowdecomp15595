@@ -156,6 +156,8 @@ class CGGameUI {
     static void ThreatMapRemove(const WOWGUID& unit, const WOWGUID& target);
     static void ThreatMapAdd(const WOWGUID& unit, const WOWGUID& target);
     static void UnitTooltipUpdate(const WOWGUID& guid);
+    static int32_t FoundHiddenHostile();
+    static void SetFoundHiddenHostile();
     static void UnlockAllItems();
     static void SetRegenEnabled(int32_t enabled);
 
@@ -288,6 +290,8 @@ class CGGameUI {
     static void SetInteractTarget(const WOWGUID& guid);
     static void CloseInteraction();
     static AreaTableRec* GetCurrentSubzoneRec();
+    static void UpdateMountFlags();
+    static int32_t s_loadingScreen;
     static bool IsInArea(int32_t areaID);
     static void SetAreaSpiritHealer(WOWGUID guid);
     static void UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time);

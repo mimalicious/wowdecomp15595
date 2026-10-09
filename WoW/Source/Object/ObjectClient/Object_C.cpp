@@ -223,7 +223,7 @@ int32_t CGObject_C::Animate(float elapsed) {
 
     if (model) {
         float scale = this->GetTrueScale();
-        float facing = this->GetRenderFacing();
+        float facing = this->GetDisplayFacing();
         model->SetWorldTransform(this->GetPosition(), facing, scale);
     }
 
@@ -398,7 +398,7 @@ CM2Model* CGObject_C::SetModelStart(CM2Model* model) {
 
     if (initialized && model) {
         float scale = this->GetTrueScale();
-        float facing = this->GetRenderFacing();
+        float facing = this->GetDisplayFacing();
         model->SetWorldTransform(this->GetPosition(), facing, scale);
     }
 
@@ -1260,7 +1260,7 @@ void CGObject_C::PostInit(uint32_t time, const CClientObjCreate& create, bool re
 
     if (model) {
         float scale = this->GetTrueScale();
-        float facing = this->GetRenderFacing();
+        float facing = this->GetDisplayFacing();
         model->SetWorldTransform(this->GetPosition(), facing, scale);
     }
 
@@ -2451,9 +2451,9 @@ float CGObject_C::GetTrueScale() const {
     return this->m_scaleModifier * this->m_scale;
 }
 
-// PROVEN: d033a6fc IDENTICAL/NONE
+// PROVEN: 07784588 IDENTICAL/NONE
 // OFFSET: 0x0048F800/0x1400B3F90
-float CGObject_C::GetRenderFacing() const {
+float CGObject_C::GetDisplayFacing() const {
     return this->GetFacing();
 }
 

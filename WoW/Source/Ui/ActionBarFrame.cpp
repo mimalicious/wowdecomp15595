@@ -379,7 +379,9 @@ int32_t CGActionBar::UpdateUsableAction(uint32_t slot, int32_t& noMana) {
             return 0;
         }
 
-        noMana = !Spell_C_HaveSpellPower(caster, &spell);
+        int32_t powerType;
+        int32_t requirement;
+        noMana = !Spell_C_HaveSpellPower(caster, &spell, powerType, requirement);
         return 1;
     }
 
@@ -1725,7 +1727,9 @@ void CGActionBar::UpdateUsablePower() {
             CGUnit_C* caster = petSpell ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : player;
 
             if (caster) {
-                noMana = !Spell_C_HaveSpellPower(caster, &spell);
+                int32_t powerType;
+                int32_t requirement;
+                noMana = !Spell_C_HaveSpellPower(caster, &spell, powerType, requirement);
             }
         }
 

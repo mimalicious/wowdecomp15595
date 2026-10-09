@@ -281,14 +281,14 @@ int32_t CGUnit_C::VehiclePassengerStartWaitingForVehicleTransitionAnim(uint64_t 
     CVehicle_C* animVehicle = vehicle->FindVehicleToPlayBoneAnim();
 
     if (entering) {
-        if (!(seatRec->m_flags & 0x400000) || static_cast<uint32_t>(seatRec->m_vehicleEnterAnim) > 0x1F9 || !animVehicle->PlayBoneAnim(seatRec->m_field33512213034, seatRec->m_vehicleEnterAnim)) {
+        if (!(seatRec->m_flags & 0x400000) || static_cast<uint32_t>(seatRec->m_vehicleEnterAnim) > 0x1F9 || !animVehicle->PlayBoneAnim(seatRec->m_vehicleEnterAnimBone, seatRec->m_vehicleEnterAnim)) {
             return 0;
         }
 
-        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, seatRec->m_field33512213034, &CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
+        animVehicle->InstallBoneAnimListener(this->m_obj->m_guid, seatRec->m_vehicleEnterAnimBone, &CVehiclePassenger_C::OnVehicleTransitionAnimEnd);
 
         if (seatRec->m_flagsB & 0x800000) {
-            animVehicle->SetBoneAnimForceFacing(this->m_obj->m_guid, seatRec->m_field33512213034);
+            animVehicle->SetBoneAnimForceFacing(this->m_obj->m_guid, seatRec->m_vehicleEnterAnimBone);
         }
     } else {
         if (!(seatRec->m_flags & ((this->m_movementData.m_flags2 & 0x40) ? 0x40000 : 0x80000)) || static_cast<uint32_t>(seatRec->m_vehicleExitAnim) > 0x1F9 || !animVehicle->PlayBoneAnim(seatRec->m_vehicleExitAnimBone, seatRec->m_vehicleExitAnim)) {

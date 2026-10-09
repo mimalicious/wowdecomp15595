@@ -418,37 +418,6 @@ char* GUIDToHexString(WOWGUID guid, char* buffer) {
     return buffer;
 }
 
-// OFFSET: #0x00756BD0
-void UnitCombatClientInitialize() {
-    ClientServices::SetMessageHandler(SMSG_ATTACK_START, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACK_STOP, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACKER_STATE_UPDATE, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACKSWING_NOTINRANGE, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACKSWING_BADFACING, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACKSWING_DEADTARGET, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ATTACKSWING_CANT_ATTACK, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_ENVIRONMENTAL_DAMAGE_LOG, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_CLEAR_TARGET, Packet_Group_29, NULL);
-    ClientServices::SetMessageHandler(SMSG_COMBAT_EVENT_FAILED, Packet_Group_29, NULL);
-    s_entries.Clear();
-    s_freeEntries.Clear();
-    s_pendingEntries = NULL;
-    s_currentEntry = NULL;
-    s_filters.Clear();
-    s_pendingData.Clear();
-    s_freePendingData.Clear();
-    s_invalidatedNames.Clear();
-    s_startTime = static_cast<uint32_t>(time(NULL));
-    s_startTimeMs = FrameTime::s_curTimeMs;
-    ClientServices::SetMessageHandler(SMSG_SPELL_PERIODIC_AURA_LOG, Packet_SMSG_PERIODICAURALOG, NULL);
-    ClientServices::SetMessageHandler(SMSG_ENCHANTMENT_LOG, Packet_SMSG_ENCHANTMENTLOG, NULL);
-    ClientServices::SetMessageHandler(SMSG_PARTY_KILL_LOG, Packet_SMSG_PARTYKILLLOG, NULL);
-    ClientServices::SetMessageHandler(SMSG_PROC_RESIST, Packet_SMSG_PROCRESIST, NULL);
-    ClientServices::SetMessageHandler(SMSG_DISPEL_FAILED, Packet_SMSG_DISPEL_FAILED, NULL);
-    ClientServices::SetMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, NULL);
-    s_combatTextActiveUnit = WOWGUID::Make(0);
-}
-
 // OFFSET: #0x00750270
 void CombatLogEntry::CancelPendingCallbacks() {
     PendingCombatLogData* data = s_pendingData.Head();
@@ -2757,8 +2726,8 @@ bool CombatLogFilter::MatchesFilter(int32_t event, const WOWGUID& sourceGuid, ui
     return !name || (spellName && !SStrCmpUTF8I(spellName, name, 0x7FFFFFFF));
 }
 
-// OFFSET: #0x00753980
-static void UnitCombatLogShutdown() {
+// OFFSET: 0x005F9A80
+void UnitCombatLogReset() {
     s_entries.Clear();
     s_freeEntries.Clear();
     s_pendingEntries = NULL;
@@ -2767,27 +2736,31 @@ static void UnitCombatLogShutdown() {
     s_pendingData.Clear();
     s_freePendingData.Clear();
     s_invalidatedNames.Clear();
+}
+
+// INLINED
+void UnitCombatLogInitialize() {
+    UnitCombatLogReset();
+    s_startTime = static_cast<uint32_t>(time(NULL));
+    s_startTimeMs = FrameTime::GetCurTimeMs();
+    ClientServices::SetMessageHandler(SMSG_SPELL_PERIODIC_AURA_LOG, Packet_SMSG_PERIODICAURALOG, NULL);
+    ClientServices::SetMessageHandler(SMSG_ENCHANTMENT_LOG, Packet_SMSG_ENCHANTMENTLOG, NULL);
+    ClientServices::SetMessageHandler(SMSG_PARTY_KILL_LOG, Packet_SMSG_PARTYKILLLOG, NULL);
+    ClientServices::SetMessageHandler(SMSG_PROC_RESIST, Packet_SMSG_PROCRESIST, NULL);
+    ClientServices::SetMessageHandler(SMSG_DISPEL_FAILED, Packet_SMSG_DISPEL_FAILED, NULL);
+    s_combatTextActiveUnit = WOWGUID::Make(0);
+    ClientServices::SetMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE, NULL);
+}
+
+// INLINED
+void UnitCombatLogShutdown() {
+    UnitCombatLogReset();
     ClientServices::ClearMessageHandler(SMSG_SPELL_PERIODIC_AURA_LOG);
     ClientServices::ClearMessageHandler(SMSG_ENCHANTMENT_LOG);
     ClientServices::ClearMessageHandler(SMSG_PARTY_KILL_LOG);
     ClientServices::ClearMessageHandler(SMSG_PROC_RESIST);
     ClientServices::ClearMessageHandler(SMSG_DISPEL_FAILED);
     ClientServices::ClearMessageHandler(SMSG_DESTRUCTIBLE_BUILDING_DAMAGE);
-}
-
-// OFFSET: #0x00754F60
-void UnitCombatClientShutdown() {
-    ClientServices::ClearMessageHandler(SMSG_ATTACK_START);
-    ClientServices::ClearMessageHandler(SMSG_ATTACK_STOP);
-    ClientServices::ClearMessageHandler(SMSG_ATTACKER_STATE_UPDATE);
-    ClientServices::ClearMessageHandler(SMSG_ATTACKSWING_NOTINRANGE);
-    ClientServices::ClearMessageHandler(SMSG_ATTACKSWING_BADFACING);
-    ClientServices::ClearMessageHandler(SMSG_ATTACKSWING_DEADTARGET);
-    ClientServices::ClearMessageHandler(SMSG_ATTACKSWING_CANT_ATTACK);
-    ClientServices::ClearMessageHandler(SMSG_ENVIRONMENTAL_DAMAGE_LOG);
-    ClientServices::ClearMessageHandler(SMSG_CLEAR_TARGET);
-    ClientServices::ClearMessageHandler(SMSG_COMBAT_EVENT_FAILED);
-    UnitCombatLogShutdown();
 }
 
 // OFFSET: #0x0074D280

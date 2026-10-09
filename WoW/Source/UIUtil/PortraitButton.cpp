@@ -513,7 +513,7 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
             return;
         }
     } else {
-        uint32_t displayId = unit->GetPortraitDisplayId();
+        uint32_t displayId = unit->GetLocalDisplayID();
         HASHKEY_DWORD displayKey = { displayId };
         UNITPORTRAIT* portrait = s_unitPortraits.Ptr(displayId, displayKey);
 
@@ -640,7 +640,7 @@ void RenderPortraitTexture(CSimpleTexture* texture, CGUnit_C* unit) {
         cache = &portrait->m_cache;
         PortraitCacheTouch(&s_playerPortraitCache, cache);
     } else {
-        uint32_t displayId = unit->GetPortraitDisplayId();
+        uint32_t displayId = unit->GetLocalDisplayID();
         HASHKEY_DWORD displayKey = { displayId };
         UNITPORTRAIT* portrait = s_unitPortraits.Ptr(displayId, displayKey);
 

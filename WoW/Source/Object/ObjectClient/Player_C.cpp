@@ -2645,7 +2645,7 @@ void CGPlayer_C::UpdateAttackPosition(const CGUnit_C* target) {
     float dz = position.z - targetPosition.z;
 
     if (range * range <= dx * dx + dz * dz + dy * dy) {
-        this->StopAttack();
+        this->StopAttack(true);
     }
 }
 
@@ -3054,7 +3054,7 @@ CGUnit_C* CGPlayer_C::GetPossessedUnit() {
 // OFFSET: 0x00566EF0/0x1401C57A0
 void CGPlayer_C::SetCombatMode() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
-        this->StopAttack();
+        this->StopAttack(true);
         Spell_C_CancelMeleeSpells();
     }
 
@@ -7875,7 +7875,7 @@ void CGPlayer_C::ExitAutoCombatMode() {
 // OFFSET: 0x0055C340/0x1401B90B0
 void CGPlayer_C::MeleeModeLeave() {
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (this->CGUnit_C::IsInMelee() || this->m_combat.m_attackSent)) {
-        this->StopAttack();
+        this->StopAttack(true);
         Spell_C_CancelMeleeSpells();
     }
 }
@@ -11722,7 +11722,7 @@ int32_t OnUpdateShapeshiftForm(WOWGUID guid, uint32_t offset, uint32_t count, co
                 for (uint32_t i = 0; i < s_trackingSpells.m_count; i++) {
                     g_spellDB.GetRecord(s_trackingSpells.m_data[i], &spell);
 
-                    if (SpellRec::UsableInShapeshift(&spell, shapeshift - 1)) {
+                    if (Spell_C_SpellHasShapeshiftMask(&spell, shapeshift - 1)) {
                         Spell_C::CastSpell(s_trackingSpells.m_data[i], NULL, WOWGUID(), false);
                         break;
                     }

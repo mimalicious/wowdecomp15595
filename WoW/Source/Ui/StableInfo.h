@@ -32,6 +32,8 @@ class CGStableInfo {
     static StablePetInfo* GetPet(uint32_t index);
     static void SelectPet(uint32_t index);
     static int32_t GetSelectedPetIndex();
+    static int32_t GetNumActivePets();
+    static int32_t FindPetIndexBySpellID(int32_t spellId, int32_t effectIndex);
 };
 
 void StableInfoRegisterScriptFunctions();

@@ -1607,7 +1607,7 @@ int32_t CGItem_C::UseItem(WOWGUID* target, int32_t a2) {
             return 0;
         }
 
-        if (SpellRec::HasAura(&spell, 78) && !player->CanCurrentFormMount() && player->CanAutoUnshift()) {
+        if (SpellHasAuraEffect(&spell, 78) && !player->CanCurrentFormMount() && player->CanAutoUnshift()) {
             player->CancelShapeshiftForMount();
         }
     }

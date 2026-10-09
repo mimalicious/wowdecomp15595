@@ -1272,6 +1272,9 @@ static const char* s_victimStateTokens[9] = { "MISS", "WOUND", "DODGE", "PARRY",
 // STATIC: #0x00BD0BD4
 TSHashTable<CGGameUI::THREATMAP, CHashKeyGUID> CGGameUI::s_threatMap;
 
+// STATIC: 0x00ED74AC
+int32_t CGGameUI::s_loadingScreen;
+
 // OFFSET: #0x00512570
 void CGGameUI::OpenGuildInvite(const char* inviter, const char* guild) {
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILD_INVITE_REQUEST, "%s%s", inviter, guild);

@@ -189,7 +189,7 @@ class CGObject_C : public CGObject, public TSHashObject<CGObject_C, CHashKeyGUID
     virtual void PreAnimate(CGWorldFrame* frame);
     virtual int32_t Animate(float elapsed);
     virtual void ShouldRender(uint32_t flags, int32_t& render, int32_t& a3);
-    virtual float GetRenderFacing() const;
+    virtual float GetDisplayFacing() const;
     virtual void OnSpecialMountAnim();
     virtual int32_t IsSolidSelectable() const;
     virtual int32_t CanHighlight() const;

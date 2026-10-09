@@ -200,6 +200,10 @@ int32_t Spell_C_IsSpellInTransit(WOWGUID caster, uint32_t spellId, uint32_t cast
 
 void Spell_C_CancelSpellByTarget(const WOWGUID& target, int32_t reason);
 const char* Spell_C_GetPowerTypeToken(uint32_t powerType);
+bool SpellHasAuraEffect(const SpellRec* spell, int32_t aura);
+int32_t Spell_C_GetCastTime(const SpellRec* spell, int32_t isPet, int32_t isUnit, int32_t allowNegative);
+bool Spell_C_SpellHasShapeshiftMask(const SpellRec* spell, int32_t form);
+void Spell_C_UpdateOverrideSpell(int32_t spellId);
 
 void Spell_C_CancelSpellByCaster(const WOWGUID& caster);
 void Spell_C_CancelCastingSpellByMovement();
@@ -228,7 +232,7 @@ bool Spell_C_IsRestrictedAbility(const SpellRec* spell);
 bool Spell_C_HasEffect(const SpellRec* spell, int32_t effect);
 int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec);
 int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit);
-bool Spell_C_HaveSpellPower(CGUnit_C* unit, const SpellRec* spell);
+bool Spell_C_HaveSpellPower(CGUnit_C* unit, const SpellRec* spell, int32_t& powerType, int32_t& requirement);
 int32_t Spell_C_IsActionOnHold(const int32_t* spellId, int32_t index);
 int32_t Spell_C_NeedsCooldownEvent(int32_t itemId);
 bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID& target, const ItemStats_C* item, bool ignoreControl);
@@ -237,6 +241,7 @@ bool Spell_C_CancelsAuraEffect(const CGUnit_C* unit, const SpellRec* spell, int3
 bool Spell_C_CancelsStun(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
 bool Spell_C_CancelsSilence(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
 bool Spell_C_CancelsPacify(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
+bool Spell_C_CancelsNoActions(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
 bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
 bool Spell_C_CancelsConfuse(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
 bool Spell_C_CancelsCharm(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason);
@@ -347,6 +352,9 @@ void Spell_C_CancelSpell(PendingSpellCast* cast, bool stopRecast, bool notifySer
 void Spell_C_CancelRangedSpells();
 void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex);
 void Spell_C_PetTameFailure(uint8_t reason);
+int32_t Spell_C_SpellGetSpellIDForDifficulty(int32_t spellId);
+int32_t Spell_C_GetMaxStartRecoveryOffset();
+int32_t Spell_C_GetSpellCategoryWeeklyUses(const SpellRec* spell, uint8_t& used, uint8_t& maximum);
 bool SpellAppliesNonStanceShapeshift(const SpellRec* spell);
 void Spell_C_SetAutoRepeatingSpell(int32_t spellId);
 SpellVisualKitRec* Spell_C_GetAppropriateImpactKit(const SpellVisualRec* visual, int32_t caster);
@@ -355,7 +363,7 @@ float Spell_C_GetEffectRadius(const SpellRec* spell, uint32_t level);
 float Spell_C_GetConeAngle(const SpellRec* spell);
 void Spell_C_ModifyCooldown(int32_t spellId, uint32_t time, int32_t index, int32_t remove);
 void Spell_C_DelayCooldown(int32_t index, int32_t spellId, int32_t delay);
-bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable);
+bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable, int32_t* remaining = NULL);
 bool Spell_C_IsActiveSpell(const SpellRec* spell, const CGUnit_C* unit);
 uint32_t Spell_C_GetPowerDisplayMod(uint32_t powerType);
 const char* GetPowerString(uint32_t powerType);

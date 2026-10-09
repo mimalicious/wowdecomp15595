@@ -4991,7 +4991,7 @@ bool CGGameObject_C_Type_Ritual::CanUseNow(GAME_ERROR_TYPE* error, float* distan
     if (player) {
         const SpellRec* spell = g_spellDB.GetRecord(this->m_owner->GetProperty(10));
 
-        if (!spell || !(spell->m_attributes & 0x10000000) || !player->IsInCombat() || player->IgnoresAuraState(spell)) {
+        if (!spell || !(spell->m_attributes & 0x10000000) || !player->IsInCombat() || player->HasIgnoreAuraState(spell)) {
             const WOWGUID& creator = this->m_owner->m_gameObject->m_createdBy;
 
             if ((creator.m_guid & 0xF000000000000000ULL) || !(creator.m_guid & 0xF07FFFFFFFFFFFFFULL)) {

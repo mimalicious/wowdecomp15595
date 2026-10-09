@@ -543,7 +543,7 @@ void CGUnit_C::HandleFootfallAnimEvent(const C3Vector& position) {
 
     CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
 
-    if (passenger && passenger->m_state && passenger->m_seatRec && !(passenger->m_seatRec->unk_0104 & 0x1)) {
+    if (passenger && passenger->m_state && passenger->m_seatRec && !(passenger->m_seatRec->m_flagsC & 0x1)) {
         return;
     }
 

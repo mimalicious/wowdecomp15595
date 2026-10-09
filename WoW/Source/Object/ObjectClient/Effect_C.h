@@ -107,7 +107,7 @@ class CEffect {
     /* 00E8 */ uint32_t m_startTime;
     /* 00EC */ uint32_t m_expireTime;
     /* 00F0 */ uint32_t unk_00F0;
-    /* 00F4 */ float unk_00F4;
+    /* 00F4 */ float m_fadeAlpha;
     /* 00F8 */ uint32_t m_tintColor;
     /* 00FC */ uintptr_t m_mapEntity;
     /* 0100 */ int32_t m_refCount;
@@ -173,5 +173,6 @@ class CEffect {
 };
 
 const SpellVisualEffectNameRec* GetSpecialSpellVisualEffectNameRec(int32_t id);
+int32_t GetSpecialUnitEffectAttachment(int32_t id);
 
 #endif

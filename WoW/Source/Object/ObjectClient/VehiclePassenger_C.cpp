@@ -286,7 +286,7 @@ void CVehiclePassenger_C::StopBoneAnimIfSameBone(WOWGUID guid, const VehicleSeat
         return;
     }
 
-    int32_t enterBone = seat->m_vehicleEnterAnimBone;
+    int32_t enterBone = seat->m_vehicleRideAnimLoopBone;
 
     if (enterBone >= 35) {
         enterBone = 26;
@@ -312,7 +312,7 @@ void CVehiclePassenger_C::StartWaitingForVehicleTransitionAnim(WOWGUID guid, uin
     this->m_transitionAnimSeat = seat;
 
     if (seatRec->m_flags & (entering ? 0x8000000 : 0x10000000)) {
-        float duration = entering ? seatRec->m_field33512213037 : seatRec->m_field33512213038;
+        float duration = entering ? seatRec->m_vehicleEnterAnimDelay : seatRec->m_vehicleExitAnimDelay;
         uint32_t timeout = static_cast<uint32_t>(duration * 1000.0f);
 
         if (timeout > 3000) {
@@ -1022,7 +1022,7 @@ void CVehiclePassenger_C::SetState(uint32_t state, CGUnit_C* vehicle, uint8_t se
                 VehicleSeatRec* oldSeat = vehicle->m_vehicle->GetVehicleSeatRec(this->m_seat);
 
                 if (oldSeat && (oldSeat->m_flags & 0x20000)) {
-                    boneVehicle->RemoveBoneAnimListener(oldSeat->m_vehicleEnterAnimBone, this->m_unit->m_obj->m_guid);
+                    boneVehicle->RemoveBoneAnimListener(oldSeat->m_vehicleRideAnimLoopBone, this->m_unit->m_obj->m_guid);
                 }
             }
 
@@ -1198,8 +1198,8 @@ void CVehiclePassenger_C::SetState(uint32_t state, CGUnit_C* vehicle, uint8_t se
     if (this->m_state == 3 && vehicleObject && seatRec && (seatRec->m_flags & 0x20000) && seatRec->m_vehicleRideAnimLoop < 506) {
         CVehicle_C* boneVehicle = vehicleObject->FindVehicleToPlayBoneAnim();
 
-        if (boneVehicle->PlayBoneAnim(seatRec->m_vehicleEnterAnimBone, seatRec->m_vehicleRideAnimLoop)) {
-            boneVehicle->InstallBoneAnimListener(this->m_unit->m_obj->m_guid, seatRec->m_vehicleEnterAnimBone, CVehiclePassenger_C::OnVehicleRideLoopAnimEnd);
+        if (boneVehicle->PlayBoneAnim(seatRec->m_vehicleRideAnimLoopBone, seatRec->m_vehicleRideAnimLoop)) {
+            boneVehicle->InstallBoneAnimListener(this->m_unit->m_obj->m_guid, seatRec->m_vehicleRideAnimLoopBone, CVehiclePassenger_C::OnVehicleRideLoopAnimEnd);
             this->m_boneAnimGuid = boneVehicle->m_unit->m_obj->m_guid;
         }
     }
@@ -1225,10 +1225,10 @@ void CVehiclePassenger_C::ComputeModelTransform(C44Matrix& matrix, CM2Model*& mo
     }
 
     int32_t hasAttachment = model->HasAttachment(attachment);
-    matrix.RotateAroundZ(facing - seat->m_field33512213027);
+    matrix.RotateAroundZ(facing - seat->m_passengerYaw);
 
-    if (0.0f != seat->m_field33512213029) {
-        matrix.RotateAroundX(seat->m_field33512213029);
+    if (0.0f != seat->m_passengerRoll) {
+        matrix.RotateAroundX(seat->m_passengerRoll);
     }
 
     if (0.0f != seat->m_passengerPitch) {
@@ -1380,7 +1380,7 @@ void CVehiclePassenger_C::SignalTransitionUIEvents(WOWGUID guid, const VehicleRe
         const char* sound = "";
         SoundEntriesRec* soundRec;
 
-        if (seatRec && (soundRec = g_soundEntriesDB.GetRecord(seatRec->m_field33512213041)) != NULL) {
+        if (seatRec && (soundRec = g_soundEntriesDB.GetRecord(seatRec->m_exitUisoundID)) != NULL) {
             sound = soundRec->m_name;
         }
 
@@ -1435,14 +1435,14 @@ void CVehiclePassenger_C::BeginTransition(WOWGUID vehicleGuid, uint8_t seat, uin
     if (instant && seatRec) {
         if (!entering) {
             if (this->m_unit->ShouldUseVehicleSeatExitAnimation(seatRec) && seatRec->m_exitSpeed > 0.0001f) {
-                state = seatRec->m_field33512213017 <= 0.0001f ? 5 : 4;
+                state = seatRec->m_exitPreDelay <= 0.0001f ? 5 : 4;
             }
 
             lookup = this->m_vehicleGuid;
         } else if (!(seatRec->m_flags & 0x1) || seatRec->m_enterSpeed <= 0.0001f) {
             lookup = vehicleGuid;
         } else {
-            state = seatRec->m_field33512213004 <= 0.0001f ? 2 : 1;
+            state = seatRec->m_enterPreDelay <= 0.0001f ? 2 : 1;
             lookup = vehicleGuid;
         }
     } else {
@@ -1626,13 +1626,13 @@ void CVehiclePassenger_C::ComputeEndValues(CGUnit_C* vehicle, VehicleSeatRec* se
 
     switch (state) {
         case 1: {
-            float duration = seatRec->m_field33512213004 < 10.0f ? seatRec->m_field33512213004 : 10.0f;
+            float duration = seatRec->m_enterPreDelay < 10.0f ? seatRec->m_enterPreDelay : 10.0f;
             this->m_endTime = this->m_startTime - static_cast<int32_t>(duration * -1000.0f);
             return;
         }
 
         case 4: {
-            float duration = seatRec->m_field33512213017 < 10.0f ? seatRec->m_field33512213017 : 10.0f;
+            float duration = seatRec->m_exitPreDelay < 10.0f ? seatRec->m_exitPreDelay : 10.0f;
             this->m_endTime = this->m_startTime - static_cast<int32_t>(duration * -1000.0f);
             return;
         }

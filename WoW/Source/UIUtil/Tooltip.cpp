@@ -2686,7 +2686,7 @@ static int32_t AddSpellCastTimeLine(CGTooltip* tooltip, const SpellRec* spell, i
         return 0;
     }
 
-    int32_t time = SpellRec::GetCastTime(spell, isPet, isInspect, 1);
+    int32_t time = Spell_C_GetCastTime(spell, isPet, isInspect, 1);
     int32_t minutes = time >= 60000;
 
     if (time > 0) {
@@ -2876,7 +2876,7 @@ static void AddSpellFormLine(CGTooltip* tooltip, const SpellRec* spell, CGUnit_C
         }
 
         for (uint32_t i = 0; i < count; i++) {
-            if (!SpellRec::UsableInShapeshift(spell, i) || static_cast<int32_t>(i) >= g_spellShapeshiftFormDB.m_numRecords) {
+            if (!Spell_C_SpellHasShapeshiftMask(spell, i) || static_cast<int32_t>(i) >= g_spellShapeshiftFormDB.m_numRecords) {
                 continue;
             }
 
@@ -2896,7 +2896,7 @@ static void AddSpellFormLine(CGTooltip* tooltip, const SpellRec* spell, CGUnit_C
         }
     }
 
-    int32_t usable = !caster || SpellRec::UsableInShapeshift(spell, caster->GetShapeshiftForm() - 1) || (needsForm && !caster->IsShapeShifted()) || caster->AffectedByAura(275, spell);
+    int32_t usable = !caster || Spell_C_SpellHasShapeshiftMask(spell, caster->GetShapeshiftForm() - 1) || (needsForm && !caster->IsShapeShifted()) || caster->HasAuraMatchingSpellClass(275, spell);
 
     if (first || (usable && brief)) {
         return;
@@ -4810,7 +4810,7 @@ static int32_t AddItemSocketLines(CGTooltip* tooltip, const ItemStats_C* stats, 
         if (enchant->m_effect[0] == 3 && owner == ClntObjMgrGetActivePlayer()) {
             SpellRec spell;
 
-            if (g_spellDB.GetRecord(enchant->m_effectArg[0], &spell) && ownerPlayer && !CGUnit_C::IsSpellAllowedInArena(&spell)) {
+            if (g_spellDB.GetRecord(enchant->m_effectArg[0], &spell) && ownerPlayer && !CGUnit_C::CheckSpellPvPUsability(&spell)) {
                 continue;
             }
         }

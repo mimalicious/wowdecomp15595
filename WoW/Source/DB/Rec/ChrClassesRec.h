@@ -18,7 +18,7 @@ class ChrClassesRec {
     /* 0014 */ DBCString m_nameMale;
     /* 0018 */ DBCString m_filename;
     /* 001C */ int32_t m_spellClassSet;
-    /* 0020 */ int32_t unk_0020;
+    /* 0020 */ int32_t m_flags;
     /* 0024 */ int32_t m_cinematicSequenceID;
     /* 0028 */ int32_t m_requiredExpansion;
     /* 002C */ int32_t unk_002C;

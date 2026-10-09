@@ -142,6 +142,8 @@ class CGMinimapFrame : public CSimpleFrame {
     static void SetPingPosition(const WOWGUID& guid, const C2Vector& position);
     static void MinimapTextureCallback(EGxTexCommand command, uint32_t width, uint32_t height, uint32_t depth, uint32_t mipLevel, void* userArg, uint32_t& texelStrideInBytes, const void*& texels);
     static void SetTrackingSpell(int32_t spellId);
+    static void UpdateTrackingSpell();
+    static void AddShapeshiftTrackingSpell(int32_t spellId);
     static void LoadTrackingInfo(const TrackingTypeInfo* info);
     static int32_t s_metatable;
     static int32_t s_objectType;

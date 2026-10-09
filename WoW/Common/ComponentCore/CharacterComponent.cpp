@@ -938,7 +938,7 @@ char* CCharacterComponent::GetTabardBorderFileName(COMPONENT_SECTIONS section, i
     return buffer;
 }
 
-// OFFSET: 0x005ADB90
+// INLINED
 void CCharacterComponent::SetItemSlotUsingAttachSlot(ITEM_SLOT itemSlot, GEOCOMPONENTLINKS link) {
     if (static_cast<uint32_t>(link) < NUM_ATTACH_LINKS) {
         this->m_itemSlotForAttachSlot[link] = itemSlot;
@@ -2185,7 +2185,7 @@ void CCharacterComponent::RemoveVisuals(CM2Model* model) {
     model->m_diffuseTintB = 1.0f;
 }
 
-// OFFSET: 0x005ADC00
+// OFFSET: #0x004EB070
 void CCharacterComponent::RemoveHandItem(CM2Model* model, INVENTORY_SLOTS invSlot, SHEATHE_TYPE sheatheType, bool shield) {
     if (!model || static_cast<uint32_t>(invSlot - INVSLOT_BACK) > 4) {
         return;

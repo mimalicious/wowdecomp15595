@@ -4788,7 +4788,9 @@ static int32_t Script_IsUsableItem(lua_State* L) {
                 WOWGUID target = WOWGUID();
 
                 if (Spell_C_IsUsableAction(player, &spell, target, stats, false)) {
-                    usable = Spell_C_HaveSpellPower(player, &spell);
+                    int32_t powerType;
+                    int32_t requirement;
+                    usable = Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
                     noMana = !usable;
                 }
             } else {

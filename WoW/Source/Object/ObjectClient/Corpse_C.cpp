@@ -575,7 +575,7 @@ int32_t CGCorpse_C::Animate(float elapsed) {
 
     if (model) {
         C3Vector up = this->GetGroundNormal();
-        model->SetWorldTransform(this->GetPosition(), this->GetRenderFacing(), this->GetTrueScale(), up, 0xFFFFFFFF);
+        model->SetWorldTransform(this->GetPosition(), this->GetDisplayFacing(), this->GetTrueScale(), up, 0xFFFFFFFF);
     }
 
     return 1;

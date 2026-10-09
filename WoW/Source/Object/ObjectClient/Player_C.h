@@ -90,6 +90,7 @@ class CEffect;
 class CGPlayer_C : public CGUnit_C, public CGPlayer {
     public:
     void DanceMoveAnimComplete();
+    void HandleSpellEventSound();
     static int32_t IsXRayVisionActive();
     void AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t a4);
     void AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3);
@@ -241,10 +242,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 21F8 */ uint32_t m_playedTimeBase;
     /* 21FC */ WOWGUID m_combatTarget;
     /* 2204 */ uint32_t unk_2204;
-    /* 2208 */ uint8_t unk_2208 [442];
-    /* 23C2 */ uint8_t m_disabledPowerRegenMask;
-    /* 23C3 */ uint8_t unk_23C3 [505];
-    /* 25BC */ float m_regenHasteModifier;
 
     ~CGPlayer_C();
     void Disable() override;
@@ -438,6 +435,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static uint32_t BuildPartyMemberStatsChanges(const CGPartyMemberState* oldState, const CGPartyMemberState* newState);
     static void DispatchPartyMemberStatsChanges(const WOWGUID& guid, uint32_t changes, const CGPartyMemberState* oldState, const CGPartyMemberState* newState);
     const char* GetPlayerGuildNameText();
+    void GetPlayerGuildNameTextWithTitle(char* buffer, uint32_t size, bool showRank);
     void TogglePlayerFlag(uint32_t oldFlags);
     void UpdateGhostStatus();
     void UpdateInventoryComponent(INVENTORY_SLOTS slot, const VisibleItem_C* oldItem);

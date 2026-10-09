@@ -12,9 +12,9 @@ class SpellInterruptsRec {
 
     /* 0000 */ int32_t m_id;
     /* 0004 */ int32_t m_auraInterruptFlags;
-    /* 0008 */ int32_t unk_0008;
+    /* 0008 */ int32_t m_auraInterruptFlags2;
     /* 000C */ int32_t m_channelInterruptFlags;
-    /* 0010 */ int32_t unk_0010;
+    /* 0010 */ int32_t m_channelInterruptFlags2;
     /* 0014 */ int32_t m_interruptFlags;
 };
 

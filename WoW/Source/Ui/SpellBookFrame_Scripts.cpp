@@ -641,11 +641,13 @@ static int32_t Script_IsUsableSpell(lua_State* L) {
     SpellRec spell;
     int32_t spellId = static_cast<int32_t>(slot) < 0 ? 0 : petSpell ? (slot < 1024 ? s_petSpellList[slot] : 0) : (slot < s_numSpells ? s_spellList[slot] : 0);
     CGUnit_C* caster;
+    int32_t powerType;
+    int32_t requirement;
 
     if (g_spellDB.GetRecord(spellId, &spell)
         && (caster = petSpell ? static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGPetInfo::GetPet(0), TYPEMASK_UNIT, __FILE__, __LINE__)) : static_cast<CGUnit_C*>(ClntObjMgrGetActivePlayerObj()))
         && Spell_C_IsUsableAction(caster, &spell, WOWGUID::Make(0), NULL, false)
-        && !(noMana = !Spell_C_HaveSpellPower(caster, &spell))) {
+        && !(noMana = !Spell_C_HaveSpellPower(caster, &spell, powerType, requirement))) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
@@ -1203,7 +1205,7 @@ static int32_t Script_GetSpellInfo(lua_State* L) {
     if (spell.m_attributes & 0x40) {
         lua_pushnumber(L, 0.0);
     } else {
-        lua_pushnumber(L, static_cast<uint32_t>(SpellRec::GetCastTime(&spell, petSpell, 0, 1)));
+        lua_pushnumber(L, static_cast<uint32_t>(Spell_C_GetCastTime(&spell, petSpell, 0, 1)));
     }
 
     if (!player || !caster) {

@@ -31,7 +31,7 @@ class AreaTableRec {
     /* 0054 */ int32_t m_uwIntroSound;
     /* 0058 */ int32_t m_uwZoneMusic;
     /* 005C */ int32_t m_uwAmbienceID;
-    /* 0060 */ int32_t unk_0060;
+    /* 0060 */ int32_t m_worldPvpID;
     /* 0064 */ int32_t unk_0064;
 };
 

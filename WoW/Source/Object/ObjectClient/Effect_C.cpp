@@ -60,6 +60,11 @@ static CDataAllocator s_curveAllocator(sizeof(CEffectCurve), 16);
 // STATIC: 0x00DD5854
 static CDataAllocator s_curvePointAllocator(sizeof(CEffectCurvePoint), 64);
 
+// OFFSET: 0x0057FDC0
+int32_t GetSpecialUnitEffectAttachment(int32_t id) {
+    return s_specialUnitEffectAttachments[id];
+}
+
 // PROVEN: 19b4b8e6 IDENTICAL/NONE
 // OFFSET: 0x0057FDD0
 void CEffect::UnrootFromCaster() {
@@ -305,7 +310,7 @@ CEffect::CEffect() {
     this->m_startTime = 0;
     this->m_expireTime = 0;
     this->unk_00F0 = 0;
-    this->unk_00F4 = 0.0f;
+    this->m_fadeAlpha = 0.0f;
     this->m_tintColor = 0;
     this->m_mapEntity = 0;
     this->m_refCount = 1;

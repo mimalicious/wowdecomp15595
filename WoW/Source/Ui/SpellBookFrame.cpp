@@ -153,7 +153,9 @@ void CGSpellBook::UpdateUsable() {
 
             WOWGUID target = { 0 };
             bool usable = Spell_C_IsUsableAction(player, &spell, target, NULL, false);
-            bool power = Spell_C_HaveSpellPower(player, &spell);
+            int32_t powerType;
+            int32_t requirement;
+            bool power = Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
             bool noMana = !power;
 
             if ((usable && power) != (entry.m_usable && !entry.m_noMana) && usable && !noMana) {
@@ -173,7 +175,9 @@ void CGSpellBook::UpdateUsable() {
 
                 WOWGUID target = { 0 };
                 bool usable = Spell_C_IsUsableAction(player, &spell, target, NULL, false);
-                bool power = Spell_C_HaveSpellPower(player, &spell);
+                int32_t powerType;
+                int32_t requirement;
+                bool power = Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
 
                 if ((usable && power) != (entry.m_usable && !entry.m_noMana)) {
                     changed = 1;
@@ -441,7 +445,9 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
                     s_shapeshiftSpells.m_data[i].m_spellId = spellId;
                     WOWGUID target = WOWGUID();
                     s_shapeshiftSpells.m_data[i].m_usable = Spell_C_IsUsableAction(player, &spell, target, NULL, false);
-                    s_shapeshiftSpells.m_data[i].m_noMana = !Spell_C_HaveSpellPower(player, &spell);
+                    int32_t powerType;
+                    int32_t requirement;
+                    s_shapeshiftSpells.m_data[i].m_noMana = !Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
                     Script_SendUniqueSignal(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORMS);
                     break;
                 }
@@ -459,7 +465,9 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
                     s_shapeshiftSpells.m_data[count].m_spellId = spellId;
                     WOWGUID target = WOWGUID();
                     s_shapeshiftSpells.m_data[count].m_usable = Spell_C_IsUsableAction(player, &spell, target, NULL, false);
-                    s_shapeshiftSpells.m_data[count].m_noMana = !Spell_C_HaveSpellPower(player, &spell);
+                    int32_t powerType;
+                    int32_t requirement;
+                    s_shapeshiftSpells.m_data[count].m_noMana = !Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
                     qsort(s_shapeshiftSpells.m_data, s_shapeshiftSpells.Count(), sizeof(s_shapeshiftSpells.m_data[0]), SortSpellUsableInfo);
                     Script_SendUniqueSignal(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORMS);
                 }
@@ -669,7 +677,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
             }
         }
 
-        if (player && player->m_unit->m_unitFieldLevel <= 10 && CGSpellBook::GetSpellProgressionRank(&spell) <= 1 && !(spell.m_attributes & 0x40) && !(spell.m_attributesExB & 0x10) && !SpellRec::HasAura(&spell, 36)) {
+        if (player && player->m_unit->m_unitFieldLevel <= 10 && CGSpellBook::GetSpellProgressionRank(&spell) <= 1 && !(spell.m_attributes & 0x40) && !(spell.m_attributesExB & 0x10) && !SpellHasAuraEffect(&spell, 36)) {
             int32_t offset = GetActionBarPageOffset(player, &spell);
 
             for (int32_t slot = offset; slot < offset + 12; slot++) {
@@ -1783,7 +1791,9 @@ void CGSpellBook::UpdateUsablePower() {
         }
 
         g_spellDB.GetRecord(info->m_spellId, &spell);
-        bool havePower = Spell_C_HaveSpellPower(player, &spell);
+        int32_t powerType;
+        int32_t requirement;
+        bool havePower = Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
 
         if (!havePower != info->m_noMana) {
             if (havePower) {
@@ -1804,7 +1814,9 @@ void CGSpellBook::UpdateUsablePower() {
         }
 
         g_spellDB.GetRecord(info->m_spellId, &spell);
-        uint8_t noMana = !Spell_C_HaveSpellPower(player, &spell);
+        int32_t powerType;
+        int32_t requirement;
+        uint8_t noMana = !Spell_C_HaveSpellPower(player, &spell, powerType, requirement);
 
         if (noMana != info->m_noMana) {
             changed = 1;

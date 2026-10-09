@@ -645,7 +645,7 @@ void EclipseState::Update(uint32_t time) {
 
 // OFFSET: #0x007FA450
 void SpellVisualsHandleEclipse(const CImVector* color, float fadeIn, const SpellRec* spell) {
-    uint32_t castTime = SpellRec::GetCastTime(spell, 0, 0, 0);
+    uint32_t castTime = Spell_C_GetCastTime(spell, 0, 0, 0);
     s_eclipse.m_color = *color;
     uint32_t now = OsGetAsyncTimeMs();
     s_eclipse.m_start = now;
@@ -994,7 +994,7 @@ int32_t MountTransitionObject::UpdateCharacterData() {
     }
 
     this->m_jumpRate = 1.0f / (this->m_jumpEnd - this->m_jumpStart);
-    this->m_facing = unit->GetRenderFacing();
+    this->m_facing = unit->GetDisplayFacing();
     this->m_verticalSpeed = 0.0f;
     this->m_flags |= 0x1;
     return 1;
@@ -1018,7 +1018,7 @@ bool MountTransitionObject::Tick() {
     float t = static_cast<float>(OsGetAsyncTimeMs() - this->m_startTime) * this->m_animRate;
 
     if (this->m_riseStart > 0.0f && t > this->m_riseStart) {
-        this->m_facing = unit->GetRenderFacing();
+        this->m_facing = unit->GetDisplayFacing();
         this->m_height = (t - this->m_riseStart) * this->m_riseRate;
 
         if (this->m_height >= 1.0f) {

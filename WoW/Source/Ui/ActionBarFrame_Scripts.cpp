@@ -424,7 +424,7 @@ static int32_t Script_IsPossessBarVisible(lua_State* L) {
 
     SpellRec spell;
     g_spellDB.GetRecord(spellId, &spell);
-    lua_pushboolean(L, !SpellRec::HasAura(&spell, 236));
+    lua_pushboolean(L, !SpellHasAuraEffect(&spell, 236));
     return 1;
 }
 

@@ -30,6 +30,8 @@ class CGActionBar {
 
     static int32_t IsMacro(uint32_t slot);
     static void OnAuraChanged(int32_t spellId);
+    static bool ClearOverrideSpellclass(int32_t spellId);
+    static bool SetOverrideSpellclass(const SpellRec* spell, uint32_t effectIndex, int32_t spellId);
     static uint32_t GetMacroID(uint32_t slot);
     static int32_t IsItem(uint32_t slot);
     static int32_t IsPetAction(uint32_t slot);

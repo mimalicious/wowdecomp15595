@@ -7,7 +7,9 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/MapRec.h"
 #include "WoW/Source/DB/Rec/OverrideSpellDataRec.h"
+#include "WoW/Source/DB/Rec/SpellPowerRec.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
+#include "WoW/Source/DB/Rec/UnitPowerBarRec.h"
 #include "WoW/Source/DB/Rec/SpellDifficultyRec.h"
 #include "WoW/Source/DB/Rec/SpellShapeshiftFormRec.h"
 #include "WoW/Source/Object/ItemStats.h"
@@ -416,25 +418,93 @@ int32_t Spell_C_GetPowerCost(const SpellRec* spell, const CGUnit_C* unit) {
     return cost <= 0 ? 0 : cost;
 }
 
+// OFFSET: 0x008A9180/0x1405EC660
+uint32_t GetRequiredAuraVisionBitmask(const SpellRec* spell) {
+    uint32_t mask = 0;
+
+    if (spell->m_spellCastingRequirementsID) {
+        SpellCastingRequirementsRec* requirements = g_spellCastingRequirementsDB.GetRecord(spell->m_spellCastingRequirementsID);
+
+        if (requirements && requirements->m_requiredAuraVision > 0) {
+            mask = 1 << (requirements->m_requiredAuraVision - 1);
+        }
+    }
+
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect) {
+            continue;
+        }
+
+        if (effect->m_effectAura == 17) {
+            mask |= 0x20;
+        }
+
+        if (effect->m_effectAura == 19 && (!effect->m_effectMiscValue || effect->m_effectMiscValue == 10)) {
+            mask |= 0x40;
+        }
+    }
+
+    return mask;
+}
+
 // OFFSET: 0x008B1C40/0x1405F7930
-bool Spell_C_HaveSpellPower(CGUnit_C* unit, const SpellRec* spell) {
+bool Spell_C_HaveSpellPower(CGUnit_C* unit, const SpellRec* spell, int32_t& powerType, int32_t& requirement) {
+    powerType = spell->m_powerType;
+    requirement = -1;
+
     if (!unit) {
         return false;
     }
 
-    int32_t powerType = spell->m_powerType;
-
-    if (powerType == -2) {
+    if (spell->m_powerType == -2) {
         int32_t cost = Spell_C_GetPowerCost(spell, unit);
-        return cost < static_cast<int32_t>(unit->GetPredictedHealth());
+        return cost < unit->GetPredictedHealth();
     }
 
-    if (powerType == 5) {
+    if (spell->m_powerType == 5) {
         return unit->IsActivePlayer() && CGRuneInfo::HasRunesForSpell(spell->m_id, NULL);
     }
 
-    int32_t power = unit->GetPredictedPower(powerType);
-    return Spell_C_GetPowerCost(spell, unit) <= power;
+    bool wrongBar = false;
+    int32_t cost = Spell_C_GetPowerCost(spell, unit);
+    bool inverted = spell->m_powerType == 8;
+
+    if (spell->m_powerType == 10 && cost && spell->m_spellPowerID) {
+        SpellPowerRec* power = g_spellPowerDB.GetRecord(spell->m_spellPowerID);
+
+        if (power && power->m_unitPowerBarID) {
+            if (power->m_unitPowerBarID != unit->m_powerBarID) {
+                wrongBar = true;
+            }
+
+            UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(power->m_unitPowerBarID);
+
+            if (bar && bar->m_centerPower > bar->m_minPower) {
+                inverted = true;
+            }
+        }
+    }
+
+    if (cost < 0) {
+        requirement = 1;
+
+        if (!wrongBar && (!inverted || cost >= unit->GetPredictedPower(spell->m_powerType))) {
+            return true;
+        }
+    } else {
+        requirement = 0;
+
+        if (!wrongBar && cost <= unit->GetPredictedPower(spell->m_powerType)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // OFFSET: #0x00802850
@@ -568,7 +638,7 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
     }
 
     if (spell->m_attributesEx & 0x500000) {
-        if (unit->IsActivePlayer() && !CGGameUI::GetComboPoints(target) && !unit->IgnoresAuraState(spell)) {
+        if (unit->IsActivePlayer() && !CGGameUI::GetComboPoints(target) && !unit->HasIgnoreAuraState(spell)) {
             return false;
         }
 
@@ -583,27 +653,27 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
         return false;
     }
 
-    if (!unit->CheckStealthRules(spell, &reason) || ((spell->m_attributes & 0x10000000) && (unit->m_unit->m_unitFieldFlags & 0x80000) && !unit->IgnoresAuraState(spell))) {
+    if (!unit->CheckStealthRules(spell, &reason) || ((spell->m_attributes & 0x10000000) && (unit->m_unit->m_unitFieldFlags & 0x80000) && !unit->HasIgnoreAuraState(spell))) {
         return false;
     }
 
-    if (spell->m_casterAuraState && !unit->HasAuraState(spell->m_casterAuraState) && !unit->IgnoresAuraState(spell)) {
+    if (spell->m_casterAuraState && !unit->HasAuraState(spell->m_casterAuraState) && !unit->HasIgnoreAuraState(spell)) {
         return false;
     }
 
-    if (spell->m_excludeCasterAuraState && unit->HasAuraState(spell->m_excludeCasterAuraState) && !unit->IgnoresAuraState(spell)) {
+    if (spell->m_excludeCasterAuraState && unit->HasAuraState(spell->m_excludeCasterAuraState) && !unit->HasIgnoreAuraState(spell)) {
         return false;
     }
 
     int32_t casterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_casterAuraSpell);
 
-    if (casterAura && !unit->HasAura(casterAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
+    if (casterAura && !unit->HasAura(casterAura, WOWGUID()) && !unit->HasIgnoreAuraState(spell)) {
         return false;
     }
 
     int32_t excludeCasterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_excludeCasterAuraSpell);
 
-    if (excludeCasterAura && unit->HasAura(excludeCasterAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
+    if (excludeCasterAura && unit->HasAura(excludeCasterAura, WOWGUID()) && !unit->HasIgnoreAuraState(spell)) {
         return false;
     }
 
@@ -628,19 +698,19 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
         }
 
         if (targetUnit) {
-            if (spell->m_targetAuraState && !targetUnit->HasAuraState(spell->m_targetAuraState) && !unit->IgnoresAuraState(spell)) {
+            if (spell->m_targetAuraState && !targetUnit->HasAuraState(spell->m_targetAuraState) && !unit->HasIgnoreAuraState(spell)) {
                 return false;
             }
 
-            if (spell->m_excludeTargetAuraState && targetUnit->HasAuraState(spell->m_excludeTargetAuraState) && !unit->IgnoresAuraState(spell)) {
+            if (spell->m_excludeTargetAuraState && targetUnit->HasAuraState(spell->m_excludeTargetAuraState) && !unit->HasIgnoreAuraState(spell)) {
                 return false;
             }
 
-            if (targetAura && !targetUnit->HasAura(targetAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
+            if (targetAura && !targetUnit->HasAura(targetAura, WOWGUID()) && !unit->HasIgnoreAuraState(spell)) {
                 return false;
             }
 
-            if (excludeTargetAura && targetUnit->HasAura(excludeTargetAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
+            if (excludeTargetAura && targetUnit->HasAura(excludeTargetAura, WOWGUID()) && !unit->HasIgnoreAuraState(spell)) {
                 return false;
             }
 
@@ -1029,7 +1099,7 @@ void StartSpellCastVisuals(CGUnit_C* unit, PendingSpellCast* cast, const SpellRe
                 SpellVisualsHandleCastStart(unit, &cast->m_data, spell);
             }
 
-            unit->SetUICastingSpell(cast->m_data.m_spellId, cast->m_data.m_objectTarget, castTime);
+            unit->SetUICastingSpell(g_spellDB.GetRecord(cast->m_data.m_spellId), cast->m_data.m_objectTarget, castTime);
             Script_SendUnitSpellSignal(unit->m_obj->m_guid, cast->m_data.m_castCount, spell, 324);
         }
     }
@@ -2089,7 +2159,7 @@ void PendingSpellCast::OnSpellGo(CDataStore* msg) {
             if (impactKit && (!visual->m_hasMissile || spell.m_speed <= 0.0f) && !Spell_C_SpellVisualHasChainEffect(visual)) {
                 if (unit) {
                     if (spell.m_speed > 0.0f) {
-                        unit->DelaySpellVisualKit(spellId, impactKitId, 3, &this->m_data.m_destPos, this->m_data.m_destTarget, 0, 0, -1, 1, arrival);
+                        unit->DelaySpellVisualKit(spellId, impactKitId, 3, &this->m_data.m_destPos, this->m_data.m_destTarget, 0, 0, -1, 1, arrival, 0, 0);
                     } else {
                         PlaySpellVisuaKitData kitData(&spell, impactKit, 3);
                         kitData.m_position = &this->m_data.m_destPos;
@@ -2134,7 +2204,7 @@ void PendingSpellCast::OnSpellGo(CDataStore* msg) {
 
                 if (unit) {
                     if (spell.m_speed > 0.0f) {
-                        unit->DelaySpellVisualKit(spellId, impactKitId, 3, &point.m_position, point.m_transport, 0, 0, -1, 1, arrival);
+                        unit->DelaySpellVisualKit(spellId, impactKitId, 3, &point.m_position, point.m_transport, 0, 0, -1, 1, arrival, 0, 0);
                     } else {
                         PlaySpellVisuaKitData kitData(&spell, impactKit, 3);
                         kitData.m_position = &point.m_position;
@@ -2962,10 +3032,15 @@ void Spell_C_CancelAutoRepeat(bool a1) {
     }
 }
 
-// OFFSET: #0x007FDE50
-bool SpellRec::HasAura(const SpellRec* spell, int32_t aura) {
-    for (int32_t i = 0; i < 3; i++) {
-        if (spell->m_effectAura[i] == aura) {
+// OFFSET: 0x008A8900/0x1405EBC40
+bool SpellHasAuraEffect(const SpellRec* spell, int32_t aura) {
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (effect && effect->m_effectAura == aura) {
             return true;
         }
     }
@@ -3261,7 +3336,7 @@ bool SpellHistory::GetSpellCooldown(int32_t spellId, int32_t itemId, uint32_t* d
 }
 
 // OFFSET: #0x00809000
-bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable) {
+bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable, int32_t* remaining) {
     return s_spellHistory[petSpell].GetSpellCooldown(spellId, 0, duration, start, enable);
 }
 
@@ -3389,7 +3464,7 @@ bool SpellRec::IsAffectedBy(const SpellRec* spell, const SpellRec* modifier, int
 }
 
 // OFFSET: 0x008A9C80/0x1405ED470
-bool SpellRec::UsableInShapeshift(const SpellRec* spell, int32_t form) {
+bool Spell_C_SpellHasShapeshiftMask(const SpellRec* spell, int32_t form) {
     return form >= 0 && (spell->m_shapeshiftMask[form / 32] & (1 << (form & 0x1F)));
 }
 
@@ -3431,7 +3506,7 @@ int32_t Spell_C_GetPowerCostPerSecond(const SpellRec* spell, const CGUnit_C* uni
 }
 
 // OFFSET: #0x007FF180
-int32_t SpellRec::GetCastTime(const SpellRec* spell, int32_t isPet, int32_t isUnit, int32_t allowNegative) {
+int32_t Spell_C_GetCastTime(const SpellRec* spell, int32_t isPet, int32_t isUnit, int32_t allowNegative) {
     if (!spell) {
         return 0;
     }
@@ -3731,7 +3806,7 @@ int32_t Spell_C_GetDuration(const SpellRec* spell, int32_t isPet, int32_t isUnit
 
     for (uint32_t i = 0; i < 3; i++) {
         if (spell->m_effectAuraPeriod[i]) {
-            if (((spell->m_attributesExE & 0x2000) || player->AffectedByAura(316, spell)) && !(spell->m_attributesExC & 0x20000000) && player->m_unit->m_unitModCastSpeed >= 0.001f) {
+            if (((spell->m_attributesExE & 0x2000) || player->HasAuraMatchingSpellClass(316, spell)) && !(spell->m_attributesExC & 0x20000000) && player->m_unit->m_unitModCastSpeed >= 0.001f) {
                 duration = CMath::fint_(duration * player->m_unit->m_unitModCastSpeed);
             }
 
@@ -4254,23 +4329,6 @@ static bool SpellCancelsAura(const SpellRec* spell, const SpellRec* aura, uint32
     return false;
 }
 
-// OFFSET: #0x007FE3E0
-uint32_t GetRequiredAuraVisionBitmask(const SpellRec* spell) {
-    uint32_t mask = spell->m_requiredAuraVision > 0 ? 1 << (spell->m_requiredAuraVision - 1) : 0;
-
-    for (uint32_t i = 0; i < sizeof(spell->m_effectAura) / sizeof(spell->m_effectAura[0]); i++) {
-        if (spell->m_effectAura[i] == 17) {
-            mask |= 0x20;
-        }
-
-        if (spell->m_effectAura[i] == 19 && (!spell->m_effectMiscValue[i] || spell->m_effectMiscValue[i] == 10)) {
-            mask |= 0x40;
-        }
-    }
-
-    return mask;
-}
-
 // OFFSET: 0x008A9CF0
 bool SpellRec::NotUsableInShapeshiftForm(const SpellRec* spell, int32_t form) {
     if (form < 0) {
@@ -4491,7 +4549,16 @@ bool Spell_C_CancelsPacify(const CGUnit_C* unit, const SpellRec* spell, int32_t*
     return Spell_C_CancelsAuraEffect(unit, spell, 25, reason) || Spell_C_CancelsAuraEffect(unit, spell, 60, reason);
 }
 
-// OFFSET: 0x008AB460/0x1405EF2A0
+// OFFSET: 0x008AB460
+bool Spell_C_CancelsNoActions(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
+    if (reason) {
+        *reason = 0;
+    }
+
+    return Spell_C_CancelsAuraEffect(unit, spell, 321, reason);
+}
+
+// OFFSET: 0x008AB490
 bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4500,7 +4567,7 @@ bool Spell_C_CancelsFear(const CGUnit_C* unit, const SpellRec* spell, int32_t* r
     return Spell_C_CancelsAuraEffect(unit, spell, 7, reason);
 }
 
-// OFFSET: 0x008AB490/0x1405EF2C0
+// OFFSET: 0x008AB4C0
 bool Spell_C_CancelsConfuse(const CGUnit_C* unit, const SpellRec* spell, int32_t* reason) {
     if (reason) {
         *reason = 0;
@@ -4975,10 +5042,10 @@ int32_t Packet_SMSG_UNIT_SPELLCAST_START(void* param, NETMESSAGE msgId, uint32_t
             int32_t signal;
 
             if (spell.m_attributesEx & 0x4) {
-                unit->SetUIChannelDirect(spellId, start, end);
+                unit->SetUIChannelDirect(g_spellDB.GetRecord(spellId), start, end);
                 signal = 331;
             } else {
-                unit->SetUICastingDirect(spellId, target, start, end);
+                unit->SetUICastingDirect(g_spellDB.GetRecord(spellId), target, start, end);
                 signal = 324;
             }
 
@@ -5072,7 +5139,7 @@ bool Spell_C_IsActiveSpell(const SpellRec* spell, const CGUnit_C* unit) {
             continue;
         }
 
-        if (self->IsActivePlayer() && SpellRec::HasAura(spell, 36) && unit->m_shapeshiftSuppressed) {
+        if (self->IsActivePlayer() && SpellHasAuraEffect(spell, 36) && unit->m_shapeshiftSuppressed) {
             break;
         }
 
@@ -5138,7 +5205,7 @@ void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex
         return;
     }
 
-    if (unit->m_mountDisplayId > 0 && !(unit->m_clientFlags & 0x10000000) && SpellRec::HasAura(spell, 78)) {
+    if (unit->m_mountDisplayId > 0 && !(unit->m_clientFlags & 0x10000000) && SpellHasAuraEffect(spell, 78)) {
         SpellRec mount;
 
         for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
@@ -5151,7 +5218,7 @@ void Spell_C_CancelAura(const SpellRec* spell, CGUnit_C* unit, int32_t auraIndex
         unit->OnMountDisplayChanged(0);
     }
 
-    if (unit->GetShapeshiftForm() && SpellRec::HasAura(spell, 36)) {
+    if (unit->GetShapeshiftForm() && SpellHasAuraEffect(spell, 36)) {
         if (lua_tainted) {
             for (uint32_t i = s_shapeshiftSpells.Count(); i; ) {
                 i--;
@@ -5374,7 +5441,7 @@ bool Spell_C_IsCurrentSpell(int32_t spellId) {
         return false;
     }
 
-    if (!SpellRec::WillSummonCritter(&spell) && !SpellRec::HasAura(&spell, 36)) {
+    if (!SpellRec::WillSummonCritter(&spell) && !SpellHasAuraEffect(&spell, 36)) {
         return false;
     }
 
@@ -5771,7 +5838,7 @@ void ShowPetSpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t r
             }
 
             for (uint32_t i = 0; i < count; i++) {
-                if (!SpellRec::UsableInShapeshift(spell, i)) {
+                if (!Spell_C_SpellHasShapeshiftMask(spell, i)) {
                     continue;
                 }
 
@@ -6432,7 +6499,7 @@ void Spell_C_SpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t 
             bool first = true;
 
             for (uint32_t i = 0; i < count; i++) {
-                if (!SpellRec::UsableInShapeshift(spell, i)) {
+                if (!Spell_C_SpellHasShapeshiftMask(spell, i)) {
                     continue;
                 }
 
@@ -7296,11 +7363,11 @@ static bool ValidateSpellTarget(CGUnit_C* caster, const SpellRec* spell, uint32_
                 break;
             }
 
-            if (spell->m_targetAuraState && !(target->m_unit->m_unitFieldAurastate & (1 << (spell->m_targetAuraState - 1))) && !caster->IgnoresAuraState(spell)) {
+            if (spell->m_targetAuraState && !(target->m_unit->m_unitFieldAurastate & (1 << (spell->m_targetAuraState - 1))) && !caster->HasIgnoreAuraState(spell)) {
                 continue;
             }
 
-            if (spell->m_excludeTargetAuraState && (target->m_unit->m_unitFieldAurastate & (1 << (spell->m_excludeTargetAuraState - 1))) && !caster->IgnoresAuraState(spell)) {
+            if (spell->m_excludeTargetAuraState && (target->m_unit->m_unitFieldAurastate & (1 << (spell->m_excludeTargetAuraState - 1))) && !caster->HasIgnoreAuraState(spell)) {
                 continue;
             }
 
@@ -7424,7 +7491,7 @@ int32_t Spell_C_PrepareMissileTrajectoryCast(CGUnit_C* caster, PendingSpellCast*
         return 0;
     }
 
-    int32_t instant = SpellRec::GetCastTime(spell, caster->m_unit->m_unitFieldPetnumber != 0, 0, 1) <= 0;
+    int32_t instant = Spell_C_GetCastTime(spell, caster->m_unit->m_unitFieldPetnumber != 0, 0, 1) <= 0;
     SpellVisualRec visualRec;
     const SpellVisualRec* visual = caster->GetAppropriateSpellVisual(spell, visualRec, 0, 0);
     SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual ? visual->m_castKit : 0);
@@ -7606,7 +7673,7 @@ void Spell_C::SendPendingCast(PendingSpellCast* cast, bool hideVisuals) {
                 return;
             }
 
-            if ((spell.m_interruptFlags & 0x1) && !(spell.m_attributesExB & 0x20) && (SpellRec::GetCastTime(&spell, caster->m_unit->m_unitFieldPetnumber != 0, 0, 0) || (spell.m_auraInterruptFlags & 0x18))) {
+            if ((spell.m_interruptFlags & 0x1) && !(spell.m_attributesExB & 0x20) && (Spell_C_GetCastTime(&spell, caster->m_unit->m_unitFieldPetnumber != 0, 0, 0) || (spell.m_auraInterruptFlags & 0x18))) {
                 Spell_C_SpellFailed(cast, &spell, 51, -1, -1, false);
                 return;
             }
@@ -8163,7 +8230,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
                     required = 0x2000;
                 }
 
-                if (SpellRec::HasAura(&spell, 78)) {
+                if (SpellHasAuraEffect(&spell, 78)) {
                     required |= 0x1000;
                 }
 
@@ -8324,7 +8391,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
             noComboPoints = unit->m_obj->m_guid == CGPetInfo::GetPet(0) && !CGPetInfo::GetComboPoints(target);
         }
 
-        if (noComboPoints && !unit->IgnoresAuraState(&spell)) {
+        if (noComboPoints && !unit->HasIgnoreAuraState(&spell)) {
             Spell_C_SpellFailed(cast, &spell, unit->m_unit->m_unitFieldBytes0[1] == 1 ? 22 : 78, -1, -1, false);
             return false;
         }
@@ -8353,7 +8420,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
         return false;
     }
 
-    if (!unit->CheckAndReportSpellInhibitFlags(cast, &spell, item)) {
+    if (!unit->CheckAndReportSpellInhibitFlags(cast, &spell, item, 0)) {
         ReleasePendingSpellCast(cast);
         return false;
     }
@@ -8972,7 +9039,7 @@ int32_t Packet_MSG_CHANNEL_START(void* param, NETMESSAGE msgId, uint32_t time, C
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
         if (unit) {
-            unit->SetUIChannelSpell(spellId, duration);
+            unit->SetUIChannelSpell(g_spellDB.GetRecord(spellId), duration);
             WOWGUID signalGuid = guid;
             Script_SendUnitSpellSignal(signalGuid, 0, &spell, SCRIPT_EVENT_UNIT_SPELLCAST_CHANNEL_START);
         }

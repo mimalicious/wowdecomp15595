@@ -39,6 +39,8 @@ class CUnitDisplayTransition_C {
     int32_t GetTargetDisplayID() const;
     int32_t UpdateState(int32_t a2);
     void Expedite(int32_t a2);
+
+    static CUnitDisplayTransition_C* Create(CGUnit_C* unit, int32_t race, int32_t displayId, int32_t a4, uint32_t anim, uint32_t endAnim, const char* modelName, int32_t attachment, int32_t fadeTime);
     void Complete(int32_t swap);
     void Destroy();
     void UpdateTransform(C44Matrix matrix);

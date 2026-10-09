@@ -1,4 +1,10 @@
 #include "Unit_C.h"
+#include "WoW/Source/DB/Rec/SpellAuraRestrictionsRec.h"
+#include "WoW/Source/DB/Rec/SpellCastingRequirementsRec.h"
+#include "WoW/Source/DB/Rec/SpellCategoriesRec.h"
+#include "WoW/Source/DB/Rec/SpellInterruptsRec.h"
+#include "WoW/Source/DB/Rec/SpellTargetRestrictionsRec.h"
+#include "WoW/Source/DB/Rec/World_PVP_AreaRec.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "WoW/Source/Object/ObjectClient/UnitDisplayTransition_C.h"
 #include <cmath>
@@ -16,6 +22,7 @@
 #include "Engine/Source/Os/System.h"
 #include "Engine/Source/Os/TimeManager.h"
 #include "Engine/Source/Services/SysMessage.h"
+#include "Engine/Source/SoundEngine/SE3.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Tempest/C33Matrix.h"
 #include "Engine/Source/Tempest/CMath.h"
@@ -68,6 +75,10 @@
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/Ui/ActionBarFrame.h"
+#include "WoW/Source/Ui/CGWorldStateInfo.h"
+#include "WoW/Source/Ui/InstanceEncounter_C.h"
+#include "WoW/Source/Ui/ResearchFrame.h"
+#include "WoW/Source/Ui/SpellActivationOverlay.h"
 #include "WoW/Source/Ui/BattlefieldInfo.h"
 #include "WoW/Source/Ui/ChatBubbleFrame.h"
 #include "WoW/Source/Ui/GameUI.h"
@@ -203,13 +214,19 @@ int32_t CGUnit_C::s_initialized;
 // STATIC: 0x00DD6210
 WOWGUID CGUnit_C::s_activeMover;
 
+// STATIC: 0x00DD6218
+static uint32_t s_swimStartTime;
+
+// STATIC: 0x00DD621C
+static uint32_t s_swimStopTime;
+
 // STATIC: #0x00CA11F4
 uint32_t CGUnit_C::s_trackingType;
 
-// STATIC: #0x00CA12BC
+// STATIC: 0x00DD6318
 static int32_t s_attackFlashToggle;
 
-// STATIC: #0x00CA12C0
+// STATIC: 0x00DD631C
 static uint32_t s_attackFlashTime;
 
 // STATIC: #0x00A2D394
@@ -230,7 +247,7 @@ static uint32_t s_trackCursorPeriod = 500;
 // STATIC: 0x00CA64CC
 static uint8_t s_rippleDirectional[4] = { 0, 0, 1, 0 };
 
-// STATIC: #0x00ADAA98
+// STATIC: 0x00CA630C
 static uint8_t s_attackTargetColor[4] = { 0x00, 0x00, 0xFF, 0xFF };
 
 // STATIC: #0x00CA11D8
@@ -357,9 +374,6 @@ static float s_trackingDefaultInteractDistanceSq = s_trackingFollowDistance * s_
 // STATIC: #0x00ADAC18
 static uint32_t s_spellInterruptTrackingMask = 1;
 
-// STATIC: #0x00CA1600
-static uint32_t s_nextVictimImpactTime;
-
 // STATIC: #0x00ADBFDC
 static const char* s_combatTextTokens[12] = { "COMBAT_TEXT_NONE", "COMBAT_TEXT_MISS", "COMBAT_TEXT_RESIST", "COMBAT_TEXT_DODGE", "COMBAT_TEXT_PARRY", "COMBAT_TEXT_BLOCK", "COMBAT_TEXT_EVADE", "COMBAT_TEXT_IMMUNE", "COMBAT_TEXT_IMMUNE", "COMBAT_TEXT_DEFLECT", "COMBAT_TEXT_ABSORB", "COMBAT_TEXT_REFLECT" };
 
@@ -396,6 +410,48 @@ static CDataAllocator s_activeHeadLookAllocator(sizeof(ActiveHeadLook), 8);
 // OFFSET: 0x00599DD0
 bool CGUnit_C::IsPowerRegenInterrupted() const {
     return (this->m_unit->m_unitFieldFlags & 0x80000) || (this->m_auraEffectMask[11] & 0x40);
+}
+
+// OFFSET: 0x005AA8A0
+void CGUnit_C::RetargetAuraEffects(int32_t spellId, const WOWGUID& oldCaster, const WOWGUID& newCaster) {
+    CGObject_C::RetargetEffects(this->m_effectList, spellId, oldCaster.m_guid, newCaster.m_guid);
+    CGObject_C::RetargetEffects(this->m_procEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
+    CGObject_C::RetargetEffects(this->m_auraEffects, spellId, oldCaster.m_guid, newCaster.m_guid);
+}
+
+// OFFSET: 0x005AC920
+ATTACKROUNDINFO::ATTACKROUNDINFO() {
+    this->m_attacker = WOWGUID();
+    this->m_target = WOWGUID();
+    this->m_hitInfo = 0;
+    this->m_victimState = 0;
+    this->unk_005C = 0;
+    this->m_meleeSpellId = 0;
+    this->m_blocked = 0;
+    this->m_rageGained = 0;
+    this->unk_006C = 0;
+
+    for (int32_t i = 0; i < 8; i++) {
+        this->unk_0070[i] = 0.0f;
+    }
+
+    for (int32_t i = 0; i < 5; i++) {
+        this->unk_0090[i] = 0;
+    }
+
+    this->m_damage = 0;
+    this->m_overkill = -1;
+    this->unk_001C = 0;
+
+    for (int32_t i = 0; i < 2; i++) {
+        this->m_schoolMask[i] = 0;
+        this->unk_0028[i] = 0.0f;
+        this->unk_0030[i] = 0.0f;
+        this->m_subDamage[i] = 0.0f;
+        this->m_subDamageInt[i] = 0;
+        this->m_absorbed[i] = 0;
+        this->m_resisted[i] = 0;
+    }
 }
 
 // OFFSET: 0x005ACED0/0x14021F2B0
@@ -457,6 +513,353 @@ int32_t DisplayIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fiel
     }
 
     return 1;
+}
+
+// OFFSET: 0x005ADB90
+int32_t CGUnit_C::AddHandItemModel(const ItemDisplayInfoRec* displayRec, int32_t invSlot, int32_t sheatheType, bool sheathed, bool shield, bool mainHand, int32_t itemVisual) {
+    if (this->m_characterComponent) {
+        return this->m_characterComponent->AddHandItem(displayRec, invSlot, sheatheType, sheathed, shield, mainHand, itemVisual);
+    }
+
+    return CCharacterComponent::AddHandItem(this->m_worldModel, displayRec, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), sheathed, shield, mainHand, itemVisual);
+}
+
+// OFFSET: 0x005ADC00
+void CGUnit_C::RemoveHandItemModel(int32_t invSlot, int32_t sheatheType, bool shield) {
+    if (this->m_characterComponent) {
+        this->m_characterComponent->RemoveHandItem(invSlot, sheatheType, shield);
+        return;
+    }
+
+    CCharacterComponent::RemoveHandItem(this->m_worldModel, static_cast<INVENTORY_SLOTS>(invSlot), static_cast<SHEATHE_TYPE>(sheatheType), shield);
+}
+
+// OFFSET: 0x005AE0D0
+uint8_t CGUnit_C::KitFlagsToPlayFlags(const SpellRec* spell, const SpellVisualRec* visual, const SpellVisualKitRec* kit) {
+    uint8_t playFlags = 0;
+
+    if (kit->m_flags & 0x4) {
+        playFlags = 2;
+    }
+
+    if (kit->m_flags & 0x8) {
+        playFlags |= 0x4;
+    }
+
+    if (kit->m_flags & 0x10) {
+        playFlags |= 0x8;
+    }
+
+    if (kit->m_flags & 0x100) {
+        playFlags |= 0x20;
+    }
+
+    if (spell && (spell->m_attributes & 0x40000)) {
+        playFlags |= 0x20;
+    }
+
+    if (visual) {
+        SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(visual->m_missileModel);
+
+        if (effectName && (static_cast<uint8_t>(effectName->m_type) == 1 || static_cast<uint8_t>(effectName->m_type) == 2)) {
+            return playFlags | 0x20;
+        }
+    }
+
+    return playFlags;
+}
+
+// OFFSET: 0x005AE3A0
+void CGUnit_C::UpdateRangedWeaponRotation(uint32_t anim) {
+    if (!this->m_rangedWeaponModel) {
+        return;
+    }
+
+    float rotation = 0.0f;
+    ItemDisplayInfoRec displayRec;
+
+    if (AnimationDataHasFlags(anim, 0x4000000) && this->GetVirtualItem(2, false) && this->GetVirtualItemDisplayRec(2, displayRec) && (displayRec.m_flags & 0x20)) {
+        rotation = 3.1415927f;
+    }
+
+    C3Vector position(0.0f, 0.0f, 0.0f);
+    this->m_rangedWeaponModel->SetWorldTransform(position, rotation, 1.0f);
+}
+
+// OFFSET: 0x005AE680
+void CGUnit_C::ReleaseProcEffectsBySpell(int32_t spellId, WOWGUID caster) {
+    CEffect* effect = this->m_procEffects;
+
+    while (effect) {
+        CEffect* next = effect->m_next;
+
+        if (effect->m_spellId == spellId && (!caster || !effect->m_targetGuid || caster == effect->m_targetGuid)) {
+            effect->Release();
+        }
+
+        effect = next;
+    }
+}
+
+// OFFSET: 0x005AE7E0
+void CGUnit_C::PlayTaxiDismountKit() {
+    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(19519);
+
+    if (kit) {
+        PlaySpellVisuaKitData data(NULL, kit, 1);
+        data.m_someGUID = this->m_obj->m_guid;
+        this->PlaySpellVisualKit(data);
+    }
+}
+
+// OFFSET: 0x005B00E0
+CEffectVirtualItem* CGUnit_C::FindVirtualItemEffect(int32_t hand) const {
+    if (!(this->unk_09FC & 0x400)) {
+        return NULL;
+    }
+
+    for (CEffect* effect = this->m_effectList; effect; effect = effect->m_next) {
+        if ((effect->m_flags & 0x80000) && effect->m_data.m_virtualItem && effect->m_data.m_virtualItem->m_hand == hand) {
+            return effect->m_data.m_virtualItem;
+        }
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x005B1F40/0x140234400
+void CGUnit_C::UpdateAmmoModel(int32_t effectId) {
+    if (this->m_ammoDisplayId == static_cast<uint32_t>(effectId) && this->m_ammoModel) {
+        return;
+    }
+
+    if (this->m_ammoModel) {
+        if (this->m_ammoModel->m_attachParent) {
+            this->m_ammoModel->DetachFromParent();
+        }
+
+        this->m_ammoModel->Release();
+        this->m_ammoModel = NULL;
+    }
+
+    this->m_ammoDisplayId = effectId;
+
+    if (effectId) {
+        this->m_ammoModel = CEffect::CreateModelFromEffect(effectId, NULL, NULL, this->m_obj->m_guid, 0, 0);
+    }
+}
+
+// OFFSET: 0x005B25E0
+bool IsGuildPerkSpell(int32_t spellId) {
+    for (int32_t i = 0; i < g_guildPerkSpellsDB.m_numRecords; i++) {
+        GuildPerkSpellsRec* rec = g_guildPerkSpellsDB.GetRecordByIndex(i);
+
+        if (rec && rec->m_spellID == spellId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x005B2630
+bool CGUnit_C::CanLearnSpell(int32_t spellId, int32_t& level, bool a4) {
+    const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+    if (!spell) {
+        return false;
+    }
+
+    SkillLineAbilityRec* ability = this->LookupAbility(spellId);
+
+    if (!ability || IsGuildPerkSpell(spellId)) {
+        return false;
+    }
+
+    int32_t spellLevel = 0;
+
+    if (spell->m_spellLevelsID) {
+        SpellLevelsRec* levels = g_spellLevelsDB.GetRecord(spell->m_spellLevelsID);
+
+        if (levels) {
+            spellLevel = levels->m_spellLevel;
+        }
+    }
+
+    const SkillRaceClassInfoRec* info = SpellTableLookupInfo(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], ability->m_skillLine);
+
+    if (!info) {
+        level = spellLevel;
+        return true;
+    }
+
+    if (((this->m_obj->m_type & TYPEMASK_PLAYER) && (info->m_flags & 0x800)) || (a4 && info->m_availability == 2)) {
+        return false;
+    }
+
+    int32_t required = info->m_minLevel;
+
+    if (spellLevel > required) {
+        required = spellLevel;
+    }
+
+    level = required;
+    return true;
+}
+
+// OFFSET: 0x005B29F0
+void CGUnit_C::StartFlash(const CImVector& color, uint32_t delay, uint32_t duration) {
+    this->m_flashStartTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+    this->m_flashColor = color;
+    this->m_flashDelay = delay;
+    this->m_flashDuration = duration;
+}
+
+// OFFSET: 0x005B2A30
+void CGUnit_C::StartProceduralFade(uint8_t alpha, uint32_t type, uint32_t time, uint32_t hold, uint32_t endAlpha) {
+    if (type < 13) {
+        this->m_proceduralFadeAlpha = alpha;
+        this->m_proceduralFadeType = type;
+        this->m_proceduralFadeStart = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+        this->m_proceduralFadeDuration = time + hold;
+        this->m_proceduralFadeEndAlpha = endAlpha;
+        this->DoFade(static_cast<float>(this->m_proceduralFadeAlpha), time);
+    }
+}
+
+// OFFSET: 0x005B2F80
+void CGUnit_C::ReleaseAurasBySpell(int32_t spellId, WOWGUID caster) {
+    CEffect* effect = this->m_auraEffects;
+
+    while (effect) {
+        CEffect* next = effect->m_next;
+
+        if (effect->m_spellId == spellId && (!caster || !effect->m_targetGuid || caster == effect->m_targetGuid)) {
+            effect->Release();
+        }
+
+        effect = next;
+    }
+}
+
+// OFFSET: 0x005B3160
+void CGUnit_C::DoMountFade(float alpha, uint32_t time) {
+    uint8_t target = static_cast<uint8_t>(static_cast<int32_t>(alpha * 255.0f));
+
+    if (target == this->m_mountAlpha) {
+        this->m_mountFadeEndAlpha = target;
+        this->m_mountFadeDuration = 0;
+        this->m_mountAlpha = target;
+        return;
+    }
+
+    this->m_mountFadeStartTime = CGWorldFrame::s_currentWorldFrame->GetSceneTime();
+    this->m_mountFadeStartAlpha = this->m_mountAlpha;
+    this->m_mountFadeDuration = time;
+    this->m_mountFadeEndAlpha = target;
+
+    if (!time) {
+        this->m_mountAlpha = target;
+    }
+}
+
+// OFFSET: 0x005B4850
+void CGUnit_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
+    CGObject_C::ConnectToLightningThisFrame(a1, a2);
+    const SpellRec* spell = NULL;
+
+    for (uint32_t i = 0; i < this->m_delayedSpellVisualKits.m_count; i++) {
+        DelayedSpellVisualKit* delayed = &this->m_delayedSpellVisualKits.m_data[i];
+
+        if (!(delayed->m_flags & 0x8) || delayed->m_delayType || delayed->m_spellId != static_cast<int32_t>(a1) || delayed->m_delay != a2) {
+            continue;
+        }
+
+        if (spell || (spell = g_spellDB.GetRecord(a1)) != NULL) {
+            SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(delayed->m_kitId);
+
+            if (kit) {
+                PlaySpellVisuaKitData data(spell, kit, delayed->m_kitType);
+
+                if (delayed->m_flags & 0x1) {
+                    data.m_position = &delayed->m_position;
+                    data.m_transportGUID = delayed->m_targetGuid;
+                }
+
+                data.unk_0024 = (delayed->m_flags >> 2) & 0x1;
+                data.m_animParam = (delayed->m_flags >> 1) & 0x1;
+                data.unk_0028 = 1;
+                data.unk_002C = delayed->m_delay;
+                this->PlaySpellVisualKit(data);
+            }
+        }
+
+        this->m_delayedSpellVisualKits.m_data[i].m_flags &= ~0x8;
+    }
+}
+
+// OFFSET: 0x005B5110
+void CGUnit_C::UpdateCamouflage() {
+    bool found = false;
+    float fadeIn = 15.0f;
+    float fadeOut = 15.0f;
+
+    for (CEffect* effect = this->m_effectList; effect; ) {
+        CEffect* next = effect->m_next;
+
+        if (effect->GetCamouflage(fadeIn, fadeOut)) {
+            found = true;
+
+            if (fadeIn >= 15.0f) {
+                fadeIn = 15.0f;
+            }
+
+            if (fadeOut >= 15.0f) {
+                fadeOut = 15.0f;
+            }
+        }
+
+        effect = next;
+    }
+
+    float tick = FrameTime::GetTickTimeSec();
+    float camouflage;
+
+    if (found) {
+        this->m_camouflageFadeIn = fadeIn;
+        this->m_camouflageFadeOut = fadeOut;
+
+        if (fadeIn <= 0.00000011920929f) {
+            camouflage = 1.0f;
+        } else {
+            camouflage = tick / fadeIn + this->m_camouflage;
+
+            if (camouflage > 1.0f) {
+                camouflage = 1.0f;
+            }
+        }
+    } else if (this->m_camouflageFadeOut <= 0.00000011920929f) {
+        camouflage = 0.0f;
+    } else {
+        camouflage = this->m_camouflage - tick / this->m_camouflageFadeOut;
+
+        if (camouflage < 0.0f) {
+            camouflage = 0.0f;
+        }
+    }
+
+    CM2Model* worldModel = this->m_worldModel;
+    this->m_camouflage = camouflage;
+    CM2Model* mountModel = this->m_mountModel;
+    float alpha = (3.0f - camouflage * 2.0f) * camouflage * camouflage;
+
+    if (worldModel) {
+        worldModel->m_baseAlpha3 = alpha;
+    }
+
+    if (mountModel) {
+        mountModel->m_baseAlpha3 = alpha;
+    }
 }
 
 // OFFSET: 0x005B5870
@@ -532,6 +935,27 @@ int32_t CGUnit_C::GetMaxPower(int32_t powerType) const {
     return slot == -1 ? 0 : this->m_unit->m_unitFieldMaxpower[slot];
 }
 
+// OFFSET: 0x005B5B00
+void CGUnit_C::SubtractChanneledHealPrediction(int32_t spellId, const WOWGUID& caster, int32_t amount) {
+    uint32_t count = this->m_healPredictions.Count();
+
+    for (uint32_t index = 0; index < count; index++) {
+        HealPredictionInfo& info = this->m_healPredictions[index];
+
+        if (info.m_caster == caster && (info.m_spellID == spellId || info.unk_000C == spellId) && info.m_channeled == 1) {
+            info.m_amount -= amount;
+
+            if (info.m_amount < 0) {
+                info.m_amount = 0;
+            }
+
+            WOWGUID guid = this->m_obj->m_guid;
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEAL_PREDICTION);
+            return;
+        }
+    }
+}
+
 // PROVEN: ac89fbbf IDENTICAL/NONE
 // OFFSET: 0x005B68F0
 int32_t NPCFlagsHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
@@ -542,6 +966,225 @@ int32_t NPCFlagsHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, 
     }
 
     return 1;
+}
+
+// OFFSET: 0x005B74E0
+void CGUnit_C::UpdateRangedWeaponOrientation() {
+    if (!this->m_rangedWeaponModel) {
+        return;
+    }
+
+    uint32_t boneDataID = 0xFFFFFFFF;
+    uint32_t anim = this->m_animKitManager.GetExpressingHandItemAnim(boneDataID, 1, 1);
+    this->UpdateRangedWeaponRotation(anim);
+}
+
+// OFFSET: 0x005BA920
+void CGUnit_C::UpdateAlphaEffectAlpha() {
+    bool separate = this->GetObjectModel() != this->m_worldModel;
+    bool foundWorld = false;
+    bool foundMount = false;
+    float worldAlpha = this->GetBaseAlpha();
+    uint32_t worldTime = 1000;
+    float mountAlpha = this->GetBaseAlpha();
+    uint32_t mountTime = 1000;
+
+    for (CEffect* effect = this->m_auraEffects; effect; effect = effect->m_next) {
+        if (!foundWorld && (!separate || (effect->m_kitRec && (effect->m_kitRec->m_flags & 0x400)))) {
+            worldAlpha = effect->m_fadeAlpha * worldAlpha;
+            foundWorld = true;
+
+            if (effect->m_param) {
+                worldTime = effect->m_param;
+            }
+
+            continue;
+        }
+
+        if (foundWorld && foundMount) {
+            break;
+        }
+
+        if (!foundMount && separate && (!effect->m_kitRec || !(effect->m_kitRec->m_flags & 0x400))) {
+            mountAlpha = effect->m_fadeAlpha * mountAlpha;
+            foundMount = true;
+
+            if (effect->m_param) {
+                mountTime = effect->m_param;
+            }
+        }
+    }
+
+    this->DoFade(worldAlpha, worldTime);
+
+    if (separate) {
+        this->DoMountFade(mountAlpha, mountTime);
+    } else {
+        this->DoMountFade(1.0f, 0);
+    }
+}
+
+// OFFSET: 0x005BAB00
+void CGUnit_C::OnSwimStart(uint32_t time, int32_t spline) {
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        this->m_movementData.OnSwimStartLocal(time);
+        CGTutorial::TriggerTutorial(27);
+        s_swimStartTime = time;
+    } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x80))) {
+        this->m_movementData.OnSplineStartSwim();
+        this->UpdateMovementAnimKit(0);
+    } else {
+        this->m_movementData.OnSwimStart(time);
+    }
+}
+
+// OFFSET: 0x005BAB90
+void CGUnit_C::OnSwimStop(uint32_t time, int32_t spline) {
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        this->m_movementData.OnSwimStopLocal(time);
+        s_swimStopTime = time;
+    } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x80))) {
+        this->m_movementData.OnSplineStopSwim();
+        this->UpdateMovementAnimKit(0);
+    } else {
+        this->m_movementData.OnSwimStop(time);
+    }
+}
+
+// OFFSET: 0x005BBC50
+bool CGUnit_C::IsControlledByMountedPlayer() const {
+    const WOWGUID* controller = &this->m_unit->m_unitFieldCharmedby;
+
+    if (!*controller) {
+        controller = &this->m_unit->m_unitFieldCreatedby;
+    }
+
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*controller, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (!unit) {
+        return false;
+    }
+
+    MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
+
+    if ((unit->m_obj->m_type & TYPEMASK_PLAYER) && static_cast<int32_t>(unit->m_unit->m_unitFieldMountdisplayid) > 0 && map && map->m_instanceType != 3 && map->m_instanceType != 4) {
+        return true;
+    }
+
+    return false;
+}
+
+// OFFSET: 0x005BC0D0/0x140230AD0
+void CGUnit_C::UpdateAlteredForm(int32_t mode) {
+    if (!this->m_currentClientRace || !this->m_worldModel) {
+        return;
+    }
+
+    uint32_t altered = this->HasAuraEffect(358);
+
+    if (this->m_unit->m_unitFieldNativedisplayid != this->m_unit->m_unitFieldDisplayid) {
+        if (altered) {
+            this->m_currentClientRaceFlags |= 0x1;
+        } else {
+            this->m_currentClientRaceFlags &= ~0x1u;
+        }
+
+        return;
+    }
+
+    if (this->m_displayTransition && !this->m_displayTransition->UpdateState(1)) {
+        this->StopDisplayTransition();
+    }
+
+    uint32_t inForm = this->m_currentClientRaceFlags & 0x1;
+    CUnitDisplayTransition_C* transition = this->m_displayTransition;
+
+    if (transition) {
+        if (!(this->m_currentClientRaceFlags & 0x2)) {
+            if (altered) {
+                this->m_currentClientRaceFlags |= 0x1;
+            } else {
+                this->m_currentClientRaceFlags &= ~0x1u;
+            }
+
+            return;
+        }
+
+        bool finished = transition->m_state == 5;
+
+        if (altered == (inForm == finished)) {
+            return;
+        }
+
+        this->StopDisplayTransition();
+
+        if (!finished) {
+            return;
+        }
+    }
+
+    if (altered == inForm) {
+        return;
+    }
+
+    int32_t race;
+    int32_t displayId;
+    int32_t a4;
+    uint32_t anim;
+    uint32_t endAnim;
+
+    if (this->m_currentClientRaceFlags & 0x1) {
+        race = this->m_currentClientRace;
+        ChrRacesRec* rec = g_chrRacesDB.GetRecord(race);
+        displayId = this->m_unit->m_unitFieldBytes0[2] ? rec->m_femaleDisplayID : rec->m_maleDisplayID;
+        anim = 487;
+        endAnim = 497;
+        a4 = -1;
+    } else {
+        race = this->m_unit->m_unitFieldBytes0[0];
+        displayId = this->m_unit->m_unitFieldNativedisplayid;
+
+        if (mode == 2) {
+            anim = 0xFFFFFFFF;
+            endAnim = 0xFFFFFFFF;
+        } else {
+            anim = 486;
+            endAnim = 496;
+        }
+
+        a4 = 50;
+    }
+
+    uint32_t filtered = mode && this->m_worldModel->IsLoaded() ? this->m_animKitManager.FilterAnim(anim, 0) : 0xFFFFFFFF;
+    int32_t effectId = (filtered != 0xFFFFFFFF) + 12;
+    const SpellVisualEffectNameRec* effectName = GetSpecialSpellVisualEffectNameRec(effectId);
+    const char* fileName;
+    int32_t attachment;
+    int32_t fadeTime;
+
+    if (effectName) {
+        fileName = effectName->m_fileName;
+        attachment = GetSpecialUnitEffectAttachment(effectId);
+        fadeTime = effectId != 12 ? 0 : 250;
+    } else {
+        fileName = NULL;
+        attachment = -1;
+        fadeTime = 0;
+    }
+
+    this->m_displayTransition = CUnitDisplayTransition_C::Create(this, race, displayId, a4, filtered, endAnim, fileName, attachment, fadeTime);
+
+    if (this->m_displayTransition) {
+        this->m_currentClientRaceFlags |= 0x2;
+
+        if (filtered == 0xFFFFFFFF) {
+            this->m_currentClientRaceFlags &= ~0x4u;
+        } else {
+            this->m_currentClientRaceFlags |= 0x4;
+        }
+    } else {
+        this->m_currentClientRaceFlags &= 0xFFFFFFF9;
+    }
 }
 
 // OFFSET: 0x005BC380/0x140230E20
@@ -599,7 +1242,7 @@ float CGUnit_C::GetPowerRegen(int32_t powerType, bool interrupted) const {
     }
 
     if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (powerType == 3 || powerType == 2)) {
-        float haste = static_cast<const CGPlayer_C*>(this)->m_regenHasteModifier;
+        float haste = static_cast<const CGPlayer_C*>(this)->m_player->m_playerFieldModHasteRegen;
 
         if (haste > 0.0099999998f) {
             return regen / haste;
@@ -639,6 +1282,60 @@ int32_t UnitMaxPowerUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t f
     unit->SetPredictedPowerSlot(slot, powerType, unit->GetPower(powerType), 0);
     Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_MAXPOWER, "%s", Spell_C_GetPowerTypeToken(powerType));
     return 1;
+}
+
+// OFFSET: 0x005BDB50
+void CGUnit_C::OnAuraAddedSpecial(const SpellRec* spell, AuraData* aura, int32_t a4) {
+    bool active = this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
+    bool updateSpells = false;
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect) {
+            continue;
+        }
+
+        if (effect->m_effectAura == 332 || effect->m_effectAura == 333) {
+            if (active && CGActionBar::SetOverrideSpellclass(spell, i, aura->m_effectAmounts[i]) && !updateSpells) {
+                updateSpells = true;
+            }
+        } else if (effect->m_effectAura == 358) {
+            if (a4 || CGGameUI::s_loadingScreen) {
+                this->ExpediteDisplayTransition(1);
+                this->m_currentClientRaceFlags = 1;
+                this->UpdateDisplayInfo(0);
+            } else {
+                this->UpdateAlteredForm(aura->m_effectAmounts[i]);
+            }
+        }
+    }
+
+    if (!active) {
+        return;
+    }
+
+    CGActionBar::OnAuraChanged(spell->m_id);
+
+    if (updateSpells) {
+        CGSpellBook::UpdateSpells(1, 0, 0);
+    }
+
+    if (CGSpellBook::IsTrackingSpell(spell->m_id)) {
+        CGMinimapFrame::UpdateTrackingSpell();
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+        int32_t form = player->m_shapeshiftSuppressed ? 0 : player->m_unit->m_unitFieldBytes2[3];
+
+        if (Spell_C_SpellHasShapeshiftMask(spell, form - 1)) {
+            CGMinimapFrame::AddShapeshiftTrackingSpell(spell->m_id);
+        }
+    }
+
+    if (!a4 && CGSpellBook::IsShapeshiftSpell(spell->m_id) && !SpellHasAuraEffect(spell, 36)) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
+    }
 }
 
 // OFFSET: 0x005BF7E0/0x140235060
@@ -687,6 +1384,382 @@ const char* CGUnit_C::GetAuraOverrideName(const char** realm) {
     return name;
 }
 
+// OFFSET: 0x005C0750
+void CGUnit_C::ResetUICastingSpell() {
+    this->m_castingSpellId = 0;
+    this->m_castStartTime = 0;
+    this->m_castEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C0770
+void CGUnit_C::ResetUIChannelSpell() {
+    this->m_channelSpellId = 0;
+    this->m_channelStartTime = 0;
+    this->m_channelEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C0790
+void CGUnit_C::DelayUICastingSpell(int32_t delay) {
+    this->m_castStartTime += delay;
+    this->m_castEndTime += delay;
+    this->m_channelSpellId = 0;
+    this->m_channelStartTime = 0;
+    this->m_channelEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C0D40
+void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, int32_t a3) {
+    uint32_t spellId = data->m_spellRec ? data->m_spellRec->m_id : 0;
+
+    for (uint32_t i = 0; i < 4; i++) {
+        const SpellVisualKitRec* kit = data->m_kit;
+
+        switch (kit->m_charProc[i]) {
+            case 0:
+            case 12: {
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddLightning(a3, spellId, data->m_kit, owner, data->m_guid, data->m_flags & 0x300001);
+                effect->Release();
+
+                CGUnit_C* target = this;
+                WOWGUID source = WOWGUID();
+                const WOWGUID* targets;
+                uint32_t count;
+
+                if ((data->m_flags & 0x1000) && data->m_guid && data->m_guid != this->m_obj->m_guid) {
+                    target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(data->m_guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+                    if (!target) {
+                        break;
+                    }
+
+                    source = this->m_obj->m_guid;
+                    targets = &source;
+                    count = 1;
+                } else if (this->m_clientFlags & 0x800000) {
+                    targets = NULL;
+                    count = 0;
+                } else if (spellId == static_cast<uint32_t>(this->m_unit->m_unitChannelSpell) && this->m_unit->m_unitFieldChannelObject && this->m_chainSpellTargets.Count() <= 1) {
+                    targets = &this->m_unit->m_unitFieldChannelObject;
+                    count = 1;
+                } else {
+                    count = this->m_chainSpellTargets.Count();
+
+                    if (!count) {
+                        this->m_chainSpellTargets.SetCount(0);
+                        break;
+                    }
+
+                    targets = this->m_chainSpellTargets.m_data;
+                }
+
+                uint32_t sequence = this->unk_1020;
+                this->unk_1020 = sequence + 2;
+                const C3Vector* location = (this->m_clientFlags & 0x800000) ? &this->m_chainSpellLocation : NULL;
+                SpellVisualsCreateChainLightning(target, effect, static_cast<int32_t>(data->m_kit->m_charParamZero[i]), data->m_kit->m_charParamTwo[i] != 0.0f, data->m_kit->m_charParamThree[i] != 0.0f, spellId, targets, count, effect->m_lightning, 12, location, sequence);
+                this->m_chainSpellTargets.SetCount(0);
+
+                if ((this->m_clientFlags & 0x800000) && data->m_spellRec && data->m_visual && data->m_visual->m_impactAreaKit != data->m_kit->m_id) {
+                    SpellVisualKitRec* areaKit = g_spellVisualKitDB.GetRecord(data->m_visual->m_impactAreaKit);
+                    C3Vector position = this->m_chainSpellLocation;
+
+                    if (target && CanPlaySpellVisualKit(target->m_obj->m_guid.m_guid, 0, areaKit, data->m_visual)) {
+                        PlaySpellVisuaKitData kitData(data->m_spellRec, areaKit, 3);
+                        kitData.m_position = &position;
+                        kitData.m_orientation = NULL;
+                        kitData.unk_0014 = sequence;
+                        this->PlaySpellVisualKit(kitData);
+                    }
+                }
+
+                break;
+            }
+
+            case 1: {
+                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellRec::IsHelpfulOrHarmful(data->m_spellRec) == 2) {
+                    break;
+                }
+
+                this->ReleaseProcEffectsBySpell(spellId, WOWGUID());
+                CEffect* effect = CEffect::Create();
+                effect->m_spellId = spellId;
+                effect->m_kitRec = data->m_kit;
+                effect->m_targetGuid = data->m_guid;
+                effect->m_tintColor = static_cast<uint32_t>(static_cast<int64_t>(data->m_kit->m_charParamZero[i])) | 0xFF000000;
+                effect->LinkTo(&this->m_procEffects);
+                break;
+            }
+
+            case 6: {
+                CImVector color;
+                *reinterpret_cast<uint32_t*>(&color) = static_cast<uint32_t>(static_cast<int64_t>(kit->m_charParamZero[i])) | 0xFF000000;
+                SpellVisualsHandleEclipse(&color, kit->m_charParamOne[i], data->m_spellRec);
+                break;
+            }
+
+            case 8: {
+                this->unk_0AE4[0] = static_cast<uint32_t>(static_cast<int64_t>(kit->m_charParamZero[i])) | (static_cast<uint32_t>(static_cast<int64_t>(kit->m_charParamThree[i])) << 24);
+                this->unk_0AE4[1] = static_cast<uint32_t>(static_cast<int64_t>(data->m_kit->m_charParamTwo[i]));
+                break;
+            }
+
+            case 9: {
+                CEffect* effect = CEffect::Create();
+                C3Vector position = this->GetPosition();
+                uint32_t flags = data->m_flags;
+
+                if (data->m_position) {
+                    position = *data->m_position;
+                    flags &= 0x4000;
+                }
+
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddBlizzard(a3, &position, spellId, i, data->m_kit, owner, data->m_guid, flags);
+                effect->Release();
+                break;
+            }
+
+            case 11: {
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddFreeze(a3, data->m_kit->m_charParamZero[i], spellId, data->m_kit, owner, data->m_guid, data->m_flags & 0x300001);
+                effect->Release();
+                break;
+            }
+
+            case 13: {
+                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && data->m_spellRec && SpellRec::IsHelpfulOrHarmful(data->m_spellRec) == 2) {
+                    break;
+                }
+
+                CImVector color;
+                *reinterpret_cast<uint32_t*>(&color) = static_cast<uint32_t>(static_cast<int64_t>(data->m_kit->m_charParamZero[i])) | 0xFF000000;
+                int32_t duration = FloatToInt64(data->m_kit->m_charParamTwo[i] * 1000.0f);
+                int32_t delay = FloatToInt64(data->m_kit->m_charParamOne[i] * 1000.0f);
+                this->StartFlash(color, delay, duration);
+                break;
+            }
+
+            case 14: {
+                this->ReleaseAurasBySpell(spellId, WOWGUID());
+                float alpha = kit->m_charParamZero[i];
+
+                if (alpha >= 0.0f && alpha <= 1.0f) {
+                    CEffect* effect = CEffect::Create();
+                    effect->m_spellId = spellId;
+                    effect->m_kitRec = data->m_kit;
+                    effect->m_targetGuid = data->m_guid;
+
+                    if (data->m_kit->m_flags & 0x200) {
+                        effect->m_flags |= 0x2000000;
+                    }
+
+                    effect->m_param = FloatToInt64(data->m_kit->m_charParamTwo[i] * 1000.0f);
+                    effect->m_fadeAlpha = data->m_kit->m_charParamZero[i];
+                    effect->LinkTo(&this->m_auraEffects);
+                }
+
+                this->UpdateAlphaEffectAlpha();
+                break;
+            }
+
+            case 15: {
+                uint8_t alpha = static_cast<uint8_t>(FloatToInt64(this->GetBaseAlpha() * kit->m_charParamZero[i]));
+                int32_t endAlpha = FloatToInt64(kit->m_charParamTwo[i]);
+                int32_t hold = FloatToInt64(kit->m_charParamThree[i]);
+                int32_t type = FloatToInt64(kit->m_charParamOne[i]);
+                this->StartProceduralFade(alpha, type, 500, hold, endAlpha);
+                break;
+            }
+
+            case 16: {
+                if (this->IsMounted() || this->m_mountModel) {
+                    break;
+                }
+
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddMountTransition(spellId, data->m_kit, owner, data->m_guid);
+                effect->m_flags |= data->m_flags & 0xC0;
+                effect->Release();
+                break;
+            }
+
+            case 17: {
+                if (!data->m_kitType) {
+                    break;
+                }
+
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddItemVisual(a3, static_cast<int32_t>(static_cast<int64_t>(data->m_kit->m_charParamOne[i])), spellId, data->m_kit, owner, data->m_guid, data->m_flags);
+                effect->Release();
+                break;
+            }
+
+            case 18: {
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddCamouflage(a3, data->m_kit->m_charParamZero[0], data->m_kit->m_charParamOne[0], spellId, data->m_kit, owner, data->m_guid, data->m_flags);
+                effect->Release();
+                break;
+            }
+
+            case 19: {
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddOrientation(a3, data->m_kit->m_charParamZero[0], data->m_kit->m_charParamOne[0], spellId, data->m_kit, owner, data->m_guid, data->m_flags);
+                effect->Release();
+                break;
+            }
+
+            case 20: {
+                WOWGUID owner = this->m_obj->m_guid;
+
+                if (owner == ClntObjMgrGetActivePlayer() && data->unk_0040) {
+                    CEffectCurve* curve = CEffectCurve::New();
+                    curve->AddPoint(0.0f, 1.0f, 0.0f, 0.0f);
+                    curve->AddPoint(data->m_kit->m_charParamZero[0], data->m_kit->m_charParamOne[0], 0.0f, 0.0f);
+                    curve->AddPoint(data->m_kit->m_charParamTwo[0], data->m_kit->m_charParamThree[0], 0.0f, 0.0f);
+                    curve->AddPoint(1.0f, 1.0f, 0.0f, 0.0f);
+                    CEffect* effect = CEffect::Create();
+                    effect->AddCurveEffect(data->unk_0040, curve, spellId, data->m_kit, owner, data->m_guid, data->m_flags);
+                    effect->Release();
+                }
+
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
+    }
+}
+
+// OFFSET: 0x005C1710
+void CGUnit_C::CancelShapeshift() {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_shapeshiftSuppressed) {
+        return;
+    }
+
+    if (!this->m_unit->m_unitFieldBytes2[3]) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        if (!(this->GetAura(i)->m_flags & 0x10)) {
+            continue;
+        }
+
+        const SpellRec* spell = g_spellDB.GetRecord(this->GetAura(i)->m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 36 && effect->m_effectMiscValue == static_cast<int32_t>(this->GetShapeshiftForm())) {
+                Spell_C_CancelAura(spell, this, -1);
+            }
+        }
+    }
+}
+
+// OFFSET: 0x005C1850
+void CGUnit_C::CancelOpenStable() {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !this->HasAuraEffect(292)) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        if (!(this->GetAura(i)->m_flags & 0x10)) {
+            continue;
+        }
+
+        const SpellRec* spell = g_spellDB.GetRecord(this->GetAura(i)->m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 292) {
+                Spell_C_CancelAura(spell, this, -1);
+            }
+        }
+    }
+}
+
+// OFFSET: 0x005C1980
+void CGUnit_C::CancelShapeshiftForMount() {
+    if (this->IsShapeShifted()) {
+        this->CancelShapeshift();
+    }
+
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        AuraData& aura = this->m_auras[i];
+
+        if (!(aura.m_flags & 0x10)) {
+            continue;
+        }
+
+        const SpellRec* spell = g_spellDB.GetRecord(aura.m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (!effect || effect->m_effectAura != 36) {
+                continue;
+            }
+
+            SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(effect->m_effectMiscValue);
+
+            if (!form) {
+                continue;
+            }
+
+            for (uint32_t d = 0; d < 4; d++) {
+                if (!form->m_creatureDisplayID[d]) {
+                    continue;
+                }
+
+                CreatureDisplayInfoRec* display = g_creatureDisplayInfoDB.GetRecord(form->m_creatureDisplayID[d]);
+                CreatureModelDataRec* model = display ? g_creatureModelDataDB.GetRecord(display->m_modelID) : NULL;
+
+                if (model && static_cast<int8_t>(model->m_flags) >= 0) {
+                    Spell_C_CancelAura(spell, this, -1);
+                }
+            }
+        }
+    }
+}
+
 // OFFSET: 0x005C1C40
 int32_t CGUnit_C::IsSplineDestinationInLiquid() {
     if (!this->m_movement->m_spline) {
@@ -708,12 +1781,164 @@ int32_t CGUnit_C::IsSplineDestinationInLiquid() {
     return World::QueryLiquid(destination, liquidType, liquidHeight) && liquidHeight - standHeight * 0.5f + 0.1f >= destination.z;
 }
 
+// OFFSET: 0x005C23C0
+bool CGUnit_C::CheckSelfResurrect() {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || !(this->m_auraEffectMask[314 / 8] & (1 << (314 % 8)))) {
+        return true;
+    }
+
+    const SpellRec* selfRes = g_spellDB.GetRecord(player->m_player->m_playerSelfResSpell);
+
+    if (selfRes && (selfRes->m_attributesExG & 0x8000000)) {
+        return true;
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_auras[i].m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 314) {
+                char buffer[1024];
+                GetCustomSpellFailedString(buffer, sizeof(buffer), effects->m_data[j]->m_effectMiscValue);
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x005C2B30
+DelayedSpellVisualKit* CGUnit_C::DelaySpellVisualKit(int32_t spellId, int32_t kitId, int32_t kitType, const C3Vector* position, WOWGUID targetGuid, int32_t a7, int32_t a8, int32_t delay, int32_t delayType, int32_t startTime, int32_t displayId, int32_t inventoryType) {
+    uint32_t index;
+
+    for (index = 0; index < this->m_delayedSpellVisualKits.m_count; index++) {
+        if (!(this->m_delayedSpellVisualKits.m_data[index].m_flags & 0x8)) {
+            break;
+        }
+    }
+
+    if (index == this->m_delayedSpellVisualKits.m_count) {
+        this->m_delayedSpellVisualKits.SetCount(this->m_delayedSpellVisualKits.m_count + 1);
+    }
+
+    DelayedSpellVisualKit* kit = &this->m_delayedSpellVisualKits.m_data[index];
+    kit->m_kitId = kitId;
+    kit->m_spellId = spellId;
+    kit->m_kitType = kitType;
+
+    if (position) {
+        kit->m_position = *position;
+        kit->m_flags |= 0x1;
+        kit->m_targetGuid = targetGuid;
+    } else {
+        kit->m_position.x = 0.0f;
+        kit->m_position.y = 0.0f;
+        kit->m_position.z = 0.0f;
+        kit->m_flags &= ~0x1u;
+        kit->m_targetGuid = WOWGUID();
+    }
+
+    kit->m_inventoryType = inventoryType;
+    kit->m_displayId = displayId;
+    kit->m_delay = delay;
+    kit->m_flags = (kit->m_flags & ~0x6u) | (((a7 != 0) | (((a8 != 0) | 2) << 1)) << 1);
+    kit->m_delayType = delayType;
+    kit->m_startTime = startTime;
+    return kit;
+}
+
+// OFFSET: 0x005C3520
+void CGUnit_C::CheckApplyPeriodicClientTriggers() {
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_auras[i].m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 48) {
+                int32_t period = effect->m_effectAuraPeriod;
+                Spell_C_ModifySpellValue(spell, period, 19);
+                Spell_C_AddPeriodicClientTrigger(this->m_obj->m_guid, spell->m_id, effects->m_data[j]->m_effectTriggerSpell, period);
+            }
+        }
+    }
+}
+
 // OFFSET: 0x005C3680
 void CGUnit_C::SetPredictedPower(int32_t powerType, int32_t value, bool force) {
     int32_t slot = this->GetPowerTypeSlot(powerType);
 
     if (slot != -1) {
         this->SetPredictedPowerSlot(slot, powerType, value, force);
+    }
+}
+
+// OFFSET: 0x005C37C0
+void CGUnit_C::AddHealPrediction(int32_t spellId, int32_t a3, const WOWGUID& caster, int32_t amount, bool periodic, bool channeled) {
+    uint32_t count = this->m_healPredictions.Count();
+    uint32_t index = 0;
+
+    for (; index < count; index++) {
+        HealPredictionInfo& info = this->m_healPredictions[index];
+
+        if (info.m_caster == caster && info.m_spellID == spellId && info.m_periodic == periodic && info.m_channeled == channeled) {
+            break;
+        }
+    }
+
+    if (index == count) {
+        this->m_healPredictions.SetCount(count + 1);
+    }
+
+    HealPredictionInfo& info = this->m_healPredictions[index];
+    info.m_caster = caster;
+    info.m_spellID = spellId;
+    info.unk_000C = a3;
+    info.m_amount = amount;
+    info.m_periodic = periodic;
+    info.m_channeled = channeled;
+    WOWGUID guid = this->m_obj->m_guid;
+    Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEAL_PREDICTION);
+}
+
+// OFFSET: 0x005C3900/0x14023A180
+void CGUnit_C::RemoveHealPrediction(int32_t spellId, const WOWGUID& caster, bool periodic, bool channeled) {
+    uint32_t count = this->m_healPredictions.Count();
+
+    for (uint32_t index = 0; index < count; index++) {
+        HealPredictionInfo& info = this->m_healPredictions[index];
+
+        if (info.m_caster == caster && info.m_spellID == spellId && info.m_periodic == periodic && info.m_channeled == channeled) {
+            uint32_t last = count - 1;
+
+            if (index < last) {
+                memcpy(&this->m_healPredictions[index], &this->m_healPredictions[index + 1], sizeof(HealPredictionInfo) * (last - index));
+            }
+
+            this->m_healPredictions.SetCount(last);
+            WOWGUID guid = this->m_obj->m_guid;
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEAL_PREDICTION);
+            return;
+        }
     }
 }
 
@@ -783,6 +2008,1578 @@ int32_t UnitCharmedUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fi
     }
 
     return 1;
+}
+
+// OFFSET: 0x005C4670/0x14023B180
+void CGUnit_C::RemoveAuraEffect(uint32_t index, const SpellRec* spell, const AuraData* aura) {
+    uint32_t count = this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count;
+
+    if (index >= count) {
+        return;
+    }
+
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        for (uint32_t i = 0; i < effectCount; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
+
+            if (!effect) {
+                continue;
+            }
+
+            switch (effect->m_effectAura) {
+                case 76:
+                    CGWorldFrame::GetActiveCamera()->SetTelescope(0);
+                    break;
+
+                case 78:
+                    CGSpellBook::SendCompanionUpdate(1);
+                    break;
+
+                case 260:
+                    CGWorldFrame::UpdateScreenEffect();
+                    break;
+
+                case 262:
+                    CGSpellActivationOverlay::UpdateUsable();
+                    CGSpellBook::UpdateUsable();
+                    break;
+
+                case 273:
+                    CGPlayer_C::UpdateXRayVision(spell);
+                    break;
+
+                case 275:
+                    CGSpellBook::UpdateUsable();
+                    break;
+
+                case 292:
+                    CGStableInfo::CloseStables(true);
+                    break;
+
+                case 334:
+                    CGSpellBook::UpdateUsable();
+                    CGWorldFrame::UpdateScreenEffect();
+                    break;
+
+                case 336:
+                    CGGameUI::UpdateMountFlags();
+                    break;
+
+                case 341:
+                    Spell_C_UpdateOverrideSpell(effect->m_effectMiscValue);
+                    break;
+
+                case 357: {
+                    WOWGUID caster = WOWGUID::Make(this->GetAuraCaster(index));
+
+                    if (caster) {
+                        CGInstanceEncounter_C::DisengageUnit(caster);
+                    }
+
+                    break;
+                }
+
+                case 365:
+                case 370:
+                    World::SetFarClipOverride(0.0f);
+                    World::SetFarClipOverrideEnabled(1);
+                    World::SetUnderwaterViewEnabled(1);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        if (spell->m_id == 67483) {
+            if (!this->HasAura(67484, WOWGUID())) {
+                FrameScript_SignalEvent(SCRIPT_EVENT_ECLIPSE_DIRECTION_CHANGE, "%s", "none");
+            }
+        } else if (spell->m_id == 67484 && !this->HasAura(67483, WOWGUID())) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_ECLIPSE_DIRECTION_CHANGE, "%s", "none");
+        }
+    } else if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
+        CGSpellActivationOverlay::UpdateActiveMoverOverlays();
+    }
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect) {
+            continue;
+        }
+
+        switch (effect->m_effectAura) {
+            case 56:
+                if (spell->m_attributesExH & 0x400) {
+                    WOWGUID guid = this->m_obj->m_guid;
+                    CGGameUI::UnitNameUpdate(guid);
+                }
+
+                break;
+
+            case 78:
+                if (spell->m_spellVisualID[0]) {
+                    SpellVisualRec* visual = g_spellVisualDB.GetRecord(spell->m_spellVisualID[0]);
+
+                    if (visual) {
+                        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
+
+                        if (kit && kit->m_animID >= 0 && this->m_mountAnimBehaviorId == kit->m_animID) {
+                            this->m_mountAnimBehaviorId = 91;
+                        }
+                    }
+                }
+
+                break;
+
+            case 279: {
+                WOWGUID guid = this->m_obj->m_guid;
+                CGGameUI::UnitNameUpdate(guid);
+                break;
+            }
+
+            case 315:
+                this->m_clientFlags &= ~0x80000000;
+                break;
+
+            case 346: {
+                if (g_unitPowerBarDB.GetRecord(this->m_powerBarID)) {
+                    int32_t slot;
+
+                    if (this->m_obj->m_type & TYPEMASK_PLAYER) {
+                        slot = CGUnit_C::s_powerSlotByType[this->m_unit->m_unitFieldBytes0[1]][10];
+
+                        if (slot != -1) {
+                            this->SetPredictedPowerSlot(slot, 10, 0, 0);
+                        }
+                    } else {
+                        slot = this->m_unit->m_unitFieldBytes0[3] != 10;
+                        this->SetPredictedPowerSlot(slot, 10, 0, 0);
+                    }
+                }
+
+                this->m_powerBarID = 0;
+                WOWGUID guid = this->m_obj->m_guid;
+                Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER_BAR_HIDE);
+                break;
+            }
+
+            case 358:
+                this->UpdateAlteredForm(0);
+                break;
+
+            case 369: {
+                WOWGUID guid = this->m_obj->m_guid;
+                Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_POWER_BAR_TIMER_UPDATE);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (this->GetControllingPlayer() == player || this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        for (uint32_t i = 0; i < effectCount; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
+
+            if (effect && (effect->m_effectAura == 48 || effect->m_effectAura == 363)) {
+                Spell_C_RemovePeriodicClientTrigger(this->m_obj->m_guid, spell->m_id);
+            }
+        }
+    }
+
+    if (!this->unk_0F9C[index]) {
+        return;
+    }
+
+    WOWGUID caster = aura ? aura->m_creator : WOWGUID();
+    this->ReleaseAurasBySpell(this->unk_0F9C[index], caster);
+    this->UpdateAlphaEffectAlpha();
+    this->ReleaseProcEffectsBySpell(this->unk_0F9C[index], caster);
+    this->ClearSpellEffect(this->unk_0F9C[index], 1, caster.m_guid);
+    const SpellVisualRec* visual = GetSpellVisual(spell, static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(caster, TYPEMASK_UNIT, __FILE__, __LINE__)));
+
+    if (visual) {
+        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateDoneKit);
+
+        if (!kit || !(kit->m_flags & 0x4000)) {
+            if (CanPlaySpellVisualKit(0, this->m_obj->m_guid.m_guid, kit, visual)) {
+                PlaySpellVisuaKitData data(NULL, kit, 8);
+                this->PlaySpellVisualKit(data);
+            }
+        }
+    }
+
+    this->unk_0F9C[index] = 0;
+}
+
+// OFFSET: 0x005C4D90/0x14023BAD0
+void CGUnit_C::AddAuraEffect(uint32_t index, const SpellRec* spell) {
+    uint32_t count = this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count;
+
+    if (index >= count) {
+        return;
+    }
+
+    int32_t spellId = this->m_auras[index].m_spellId;
+
+    if (!this->unk_0F9C[index] || (spell && this->unk_0F9C[index] != static_cast<uint32_t>(spell->m_id))) {
+        if (spell) {
+            uint32_t visionMask = GetRequiredAuraVisionBitmask(spell);
+
+            if (visionMask) {
+                CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+                if (!player || !(static_cast<uint8_t>(visionMask) & player->m_player->m_playerFieldBytes2[3])) {
+                    return;
+                }
+            }
+        }
+    } else if (spell) {
+        return;
+    }
+
+    this->unk_0F9C[index] = spellId;
+
+    if (!spell) {
+        return;
+    }
+
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    if (this->IsActivePlayer()) {
+        for (uint32_t i = 0; i < effectCount; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
+
+            if (!effect) {
+                continue;
+            }
+
+            switch (effect->m_effectAura) {
+                case 76:
+                    CGWorldFrame::GetActiveCamera()->SetTelescope(effect->m_effectMiscValue);
+                    break;
+
+                case 260:
+                    CGWorldFrame::UpdateScreenEffect();
+                    break;
+
+                case 262:
+                    CGSpellActivationOverlay::UpdateUsable();
+                    CGSpellBook::UpdateUsable();
+                    break;
+
+                case 273:
+                    CGPlayer_C::UpdateXRayVision(spell);
+                    break;
+
+                case 275:
+                    CGSpellBook::UpdateUsable();
+                    break;
+
+                case 334:
+                    CGSpellBook::UpdateUsable();
+                    CGWorldFrame::UpdateScreenEffect();
+                    break;
+
+                case 336:
+                    CGGameUI::UpdateMountFlags();
+                    break;
+
+                case 341:
+                    Spell_C_UpdateOverrideSpell(effect->m_effectMiscValue);
+                    break;
+
+                case 357: {
+                    int32_t priority = effect->m_effectMiscValue;
+                    WOWGUID caster = WOWGUID::Make(this->GetAuraCaster(index));
+
+                    if (static_cast<uint32_t>(priority - 1) <= 0xFD && caster) {
+                        CGInstanceEncounter_C::EngageUnit(caster, priority);
+                    }
+
+                    break;
+                }
+
+                case 365:
+                    World::SetFarClipOverride(2000.0f);
+                    World::SetFarClipOverrideEnabled(0);
+                    World::SetUnderwaterViewEnabled(0);
+                    break;
+
+                case 370:
+                    World::SetFarClipOverride(450.0f);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        if (spell->m_id == 67483) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_ECLIPSE_DIRECTION_CHANGE, "%s", "sun");
+        } else if (spell->m_id == 67484) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_ECLIPSE_DIRECTION_CHANGE, "%s", "moon");
+        }
+    } else if (this->IsActiveMover()) {
+        CGSpellActivationOverlay::UpdateActiveMoverOverlays();
+    }
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect) {
+            continue;
+        }
+
+        switch (effect->m_effectAura) {
+            case 8:
+            case 20:
+                if (spell->m_attributesExH & 0x1000000) {
+                    AuraData* aura = this->GetAura(index);
+
+                    if (aura && aura->m_effectAmounts[i]) {
+                        WOWGUID caster = WOWGUID::Make(this->GetAuraCaster(index));
+                        this->AddHealPrediction(spellId, 0, caster, aura->m_effectAmounts[i], true, false);
+                    }
+                }
+
+                break;
+
+            case 56:
+                if (spell->m_attributesExH & 0x400) {
+                    WOWGUID guid = this->m_obj->m_guid;
+                    CGGameUI::UnitNameUpdate(guid);
+                }
+
+                break;
+
+            case 78:
+                CGSpellBook::SendCompanionUpdate(1);
+
+                if (spell->m_spellVisualID[0]) {
+                    SpellVisualRec* visual = g_spellVisualDB.GetRecord(spell->m_spellVisualID[0]);
+
+                    if (visual) {
+                        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
+
+                        if (kit && kit->m_animID >= 0) {
+                            this->m_mountAnimBehaviorId = kit->m_animID;
+                        }
+
+                        SpellVisualKitRec* doneKit = g_spellVisualKitDB.GetRecord(visual->m_stateDoneKit);
+
+                        if (doneKit && (doneKit->m_flags & 0x4000)) {
+                            this->m_mountSpellVisualKitID = doneKit->m_id;
+                        }
+                    }
+                }
+
+                if (this->m_mountedAnimKit) {
+                    this->m_mountedAnimKit->SetAnim(0, this->m_mountAnimBehaviorId, 255, 0, 0, 0);
+                }
+
+                break;
+
+            case 279: {
+                WOWGUID guid = this->m_obj->m_guid;
+                CGGameUI::UnitNameUpdate(guid);
+                break;
+            }
+
+            case 312:
+                this->UpdateCharacterAnimReplacementSets();
+                break;
+
+            case 313:
+                this->UpdateMountAnimReplacementSets();
+                break;
+
+            case 315:
+                this->m_clientFlags |= 0x80000000;
+                break;
+
+            case 346: {
+                this->m_powerBarID = effect->m_effectMiscValue;
+                UnitPowerBarRec* bar = g_unitPowerBarDB.GetRecord(this->m_powerBarID);
+                int32_t slot = this->GetPowerTypeSlot(10);
+                this->m_unit->m_unitFieldMaxpower[slot] = bar->m_maxPower;
+                this->m_unit->m_unitFieldPower[slot] = bar->m_startPower;
+                this->SetPredictedPowerSlot(slot, 10, bar->m_startPower, 0);
+                WOWGUID guid = this->m_obj->m_guid;
+                Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER_BAR_SHOW);
+                break;
+            }
+
+            case 369: {
+                WOWGUID guid = this->m_obj->m_guid;
+                Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_POWER_BAR_TIMER_UPDATE);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (this->GetControllingPlayer() == player || this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        for (uint32_t i = 0; i < effectCount; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
+
+            if (!effect || (effect->m_effectAura != 48 && effect->m_effectAura != 363)) {
+                continue;
+            }
+
+            int32_t period = 0;
+
+            if (effect->m_effectAura == 48) {
+                period = effect->m_effectAuraPeriod;
+                Spell_C_ModifySpellValue(spell, period, 19);
+            }
+
+            Spell_C_AddPeriodicClientTrigger(this->m_obj->m_guid, spell->m_id, effect->m_effectTriggerSpell, period);
+        }
+    }
+
+    AuraData& aura = this->m_auras[index];
+    const SpellVisualRec* visual = GetSpellVisual(spell, static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(aura.m_creator, TYPEMASK_UNIT, __FILE__, __LINE__)));
+
+    if (!visual) {
+        return;
+    }
+
+    if (visual->m_hasMissile) {
+        for (CMissile* missile = this->m_missiles; missile; missile = missile->m_next) {
+            if (missile->m_spellID == static_cast<uint32_t>(spellId)) {
+                return;
+            }
+        }
+    }
+
+    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
+
+    if (!kit) {
+        return;
+    }
+
+    for (int32_t i = 0; i < 4; i++) {
+        if (kit->m_charProc[i] == 11 && !this->m_worldModel->IsLoaded()) {
+            this->m_pendingStateKitSpell = spell->m_id;
+
+            if (visual->m_flags & 0x8) {
+                this->ShowHandItemSpellEffects(1, 1);
+            }
+
+            return;
+        }
+    }
+
+    WOWGUID caster = this->m_auras[index].m_creator;
+
+    if (CanPlaySpellVisualKit(caster.m_guid, this->m_obj->m_guid.m_guid, kit, visual)) {
+        PlaySpellVisuaKitData data(spell, kit, 2);
+        data.m_someGUID = caster;
+        data.unk_0048 = this->m_auras[index].m_duration;
+        this->PlaySpellVisualKit(data);
+    }
+
+    if (visual->m_flags & 0x8) {
+        this->ShowHandItemSpellEffects(1, 1);
+    }
+}
+
+// OFFSET: 0x005C6110
+bool CGUnit_C::CanAttack(const CGUnit_C* unit, bool ignoreFlags) const {
+    if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(this)->m_player->m_playerFlags & 0x80000)) {
+        return false;
+    }
+
+    if ((unit->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(unit)->m_player->m_playerFlags & 0x10)) {
+        if (!this->m_creatureCacheEntry || !(this->m_creatureCacheEntry->m_typeFlags[0] & 0x2)) {
+            return false;
+        }
+    }
+
+    uint32_t targetFlags = unit->m_unit->m_unitFieldFlags;
+
+    if ((targetFlags & 0x2) || (targetFlags & 0x100000) || (targetFlags & 0x80) || (targetFlags & 0x10000) || (targetFlags & 0x2000000)) {
+        return false;
+    }
+
+    if (unit->m_auraEffectMask[311 / 8] & (1 << (311 % 8))) {
+        return false;
+    }
+
+    uint32_t flags = this->m_unit->m_unitFieldFlags;
+
+    if (!(flags & 0x8) && (targetFlags & 0x200)) {
+        return false;
+    }
+
+    if (!(targetFlags & 0x8) && (flags & 0x200)) {
+        return false;
+    }
+
+    if ((!ignoreFlags && (flags & 0x8) && (targetFlags & 0x100)) || ((targetFlags & 0x8) && (flags & 0x100)) || ((unit->m_unit->m_unitFieldFlags2 & 0x10000000) && !this->IsFriendly(unit)) || unit->IsControlledByMountedPlayer()) {
+        return false;
+    }
+
+    CGUnit_C* self = const_cast<CGUnit_C*>(this);
+    CGUnit_C* other = const_cast<CGUnit_C*>(unit);
+
+    if ((this->m_unit->m_unitFieldFlags2 & 0x10000) || (unit->m_unit->m_unitFieldFlags2 & 0x10000)) {
+        const VehicleRec* vehicleRec = self->GetVehicleRec();
+        const VehicleRec* otherVehicleRec = other->GetVehicleRec();
+
+        if ((vehicleRec && (vehicleRec->m_flags & 0x20000000) && other->FindRootVehicle(self) == self) || (otherVehicleRec && (otherVehicleRec->m_flags & 0x20000000) && self->FindRootVehicle(other) == other)) {
+            return false;
+        }
+    }
+
+    if (!(this->m_unit->m_unitFieldFlags & 0x8) && !(unit->m_unit->m_unitFieldFlags & 0x8)) {
+        return this->IsHatedTowards(unit) || unit->IsHatedTowards(this);
+    }
+
+    if (this->m_unit->m_unitFieldFlags & 0x8) {
+        if (unit->m_unit->m_unitFieldFlags & 0x8) {
+            if (this->IsFriendly(unit)) {
+                return false;
+            }
+
+            CGUnit_C* controller = self->GetControllingPlayer();
+            CGUnit_C* otherController = other->GetControllingPlayer();
+
+            if (controller && otherController) {
+                CGPlayerLocalData* player = static_cast<CGPlayer_C*>(controller)->m_player;
+                CGPlayerLocalData* otherPlayer = static_cast<CGPlayer_C*>(otherController)->m_player;
+
+                if (player->m_playerDuelTeam && otherPlayer->m_playerDuelTeam && player->m_playerDuelArbiter == otherPlayer->m_playerDuelArbiter) {
+                    return true;
+                }
+            } else {
+                if (controller == ClntObjMgrGetActivePlayerObj() && *unit->GetCharmerOrCreatorGuid() == CGDuelInfo::m_dueler) {
+                    return true;
+                }
+
+                if (otherController == ClntObjMgrGetActivePlayerObj() && *this->GetCharmerOrCreatorGuid() == CGDuelInfo::m_dueler) {
+                    return true;
+                }
+            }
+
+            uint8_t otherPvp = unit->m_unit->m_unitFieldBytes2[1];
+            uint8_t pvp = this->m_unit->m_unitFieldBytes2[1];
+            bool notFfa;
+
+            if (otherPvp & 0x1) {
+                notFfa = !(pvp & 0x8);
+            } else {
+                if ((pvp & 0x4) && (otherPvp & 0x4)) {
+                    return true;
+                }
+
+                if (!(pvp & 0x2) && !(otherPvp & 0x2)) {
+                    return false;
+                }
+
+                notFfa = !(pvp & 0x8);
+            }
+
+            return notFfa && !(otherPvp & 0x8);
+        }
+
+        if (unit->m_unit->m_unitFieldBytes2[1] & 0x8) {
+            return false;
+        }
+    }
+
+    if ((unit->m_unit->m_unitFieldFlags & 0x8) && (this->m_unit->m_unitFieldBytes2[1] & 0x8)) {
+        return false;
+    }
+
+    return !this->IsFriendly(unit);
+}
+
+// OFFSET: 0x005C7570
+int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char* buffer, uint32_t size, uint32_t a5) {
+    if (a5 && (unit->m_auraEffectMask[279 / 8] & (1 << (279 % 8)))) {
+        for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
+            AuraData* aura = unit->GetAura(i);
+            const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+            if (!spell) {
+                continue;
+            }
+
+            uint32_t effectCount;
+            const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+            for (uint32_t j = 0; j < effectCount; j++) {
+                const SpellEffectRec* effect = effects->m_data[j];
+
+                if (!effect || effect->m_effectAura != 279 || !(aura->m_flags & (1 << j))) {
+                    continue;
+                }
+
+                CGUnit_C* creator = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(aura->m_creator, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+                if (creator) {
+                    return CGUnit_C::UpdateObjectNameStringForUnit(creator, a1, buffer, size, 0);
+                }
+            }
+        }
+    }
+
+    char afkText[40] = {};
+    char dndText[40] = {};
+    char gmText[40] = {};
+    char devText[40] = {};
+    char comText[40] = {};
+    unit->GetAFKText(afkText, 32);
+    unit->GetDNDText(dndText, 32);
+    unit->GetGMText(gmText, 32);
+    unit->GetDevText(devText, 32);
+    unit->GetComText(comText, 32);
+
+    char titleText[1024] = {};
+    char guildText[1024] = {};
+    char guildName[1024] = {};
+    char subNameText[1024] = {};
+    char summonedText[1024] = {};
+    char foreignText[8] = {};
+    uint32_t lines = 0;
+    unit->GetUnitChosenTitle(titleText, sizeof(titleText), (a1 & 8) != 0, reinterpret_cast<int32_t*>(&lines));
+
+    if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
+        if ((a1 & 4) && unit->m_obj->m_dataType == 1 && unit->m_obj->m_data) {
+            WOWGUID unitGuild = unit->m_obj->m_dataType == 1 ? unit->m_obj->m_data : WOWGUID();
+            CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+            WOWGUID playerGuild = player->m_obj->m_dataType == 1 ? player->m_obj->m_data : WOWGUID();
+
+            if (unitGuild == playerGuild) {
+                static_cast<CGPlayer_C*>(unit)->GetPlayerGuildNameTextWithTitle(guildName, sizeof(guildName), (a1 & 0x8000) != 0);
+
+                if (guildName[0]) {
+                    SStrPrintf(guildText, sizeof(guildText), "\n<%s>", guildName);
+                    lines++;
+                }
+            } else if (static_cast<CGPlayer_C*>(unit)->GetPlayerGuildNameText()) {
+                SStrPrintf(guildText, sizeof(guildText), "\n<%s>", static_cast<CGPlayer_C*>(unit)->GetPlayerGuildNameText());
+                lines++;
+            }
+        }
+
+        const char* realm = NULL;
+        unit->GetUnitName(&realm, 1);
+
+        if (realm && *realm && unit->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+            SStrPrintf(foreignText, sizeof(foreignText), FrameScript_GetText("FOREIGN_SERVER_LABEL", -1, GENDER_NOT_APPLICABLE));
+        }
+    } else {
+        CreatureStats_C* stats = unit->m_creatureCacheEntry;
+
+        if (stats) {
+            const char* subName = stats->m_subName;
+
+            if (subName && *subName && !unit->m_unit->m_unitFieldPetnumber && *subName) {
+                SStrPrintf(subNameText, sizeof(subNameText), "\n<%s>", subName);
+                lines++;
+            }
+        }
+
+        char summonedBy[128] = {};
+        CGTooltip::GetSummonedByString(unit, summonedBy, sizeof(summonedBy));
+
+        if (summonedBy[0]) {
+            SStrPrintf(summonedText, sizeof(summonedText), "\n<%s>", summonedBy);
+            lines++;
+        }
+    }
+
+    SStrPrintf(buffer, size, "%s%s%s%s%s%s%s%s%s%s", afkText, dndText, gmText, devText, comText, titleText, guildText, subNameText, summonedText, foreignText);
+
+    return lines;
+}
+
+// OFFSET: 0x005C7F10
+void CGUnit_C::SetUICastingSpell(const SpellRec* spell, const WOWGUID& target, int32_t castTime) {
+    if (!spell) {
+        return;
+    }
+
+    this->m_castingSpellId = spell->m_id;
+    this->m_castingObject = target;
+    uint32_t now = FrameTime::GetCurTimeMs();
+    this->m_castStartTime = now;
+    this->m_castEndTime = castTime + now;
+    int32_t arenaIndex;
+
+    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || CGBattlefieldInfo::GetArenaOpponentIndex(this->m_obj->m_guid, &arenaIndex)) {
+        this->ProcessCastNotInterruptible(spell);
+    }
+
+    this->m_channelSpellId = 0;
+    this->m_channelStartTime = 0;
+    this->m_channelEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C7FD0
+void CGUnit_C::SetUICastingDirect(const SpellRec* spell, const WOWGUID& target, uint32_t start, uint32_t end) {
+    if (!spell) {
+        return;
+    }
+
+    this->m_castingSpellId = spell->m_id;
+    this->m_castingObject = target;
+    this->m_castEndTime = end;
+    this->m_castStartTime = start;
+
+    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget) {
+        this->ProcessCastNotInterruptible(spell);
+    }
+
+    this->m_channelSpellId = 0;
+    this->m_channelStartTime = 0;
+    this->m_channelEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C8070
+void CGUnit_C::SetUIChannelSpell(const SpellRec* spell, int32_t duration) {
+    if (!spell) {
+        return;
+    }
+
+    this->m_channelSpellId = spell->m_id;
+    uint32_t now = FrameTime::GetCurTimeMs();
+    this->m_channelStartTime = now;
+    this->m_channelEndTime = duration + now;
+    int32_t arenaIndex;
+
+    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || CGBattlefieldInfo::GetArenaOpponentIndex(this->m_obj->m_guid, &arenaIndex)) {
+        this->ProcessCastNotInterruptible(spell);
+    }
+
+    this->m_castingSpellId = 0;
+    this->m_castStartTime = 0;
+    this->m_castEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C8120
+void CGUnit_C::SetUIChannelDirect(const SpellRec* spell, uint32_t start, uint32_t end) {
+    if (!spell) {
+        return;
+    }
+
+    this->m_channelSpellId = spell->m_id;
+    this->m_channelEndTime = end;
+    this->m_channelStartTime = start;
+
+    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget) {
+        this->ProcessCastNotInterruptible(spell);
+    }
+
+    this->m_castingSpellId = 0;
+    this->m_castStartTime = 0;
+    this->m_castEndTime = 0;
+    this->UpdateSpellCastBars();
+}
+
+// OFFSET: 0x005C8540
+int32_t CGUnit_C::PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) {
+    if (!spell || !visual || !Spell_C_SpellVisualHasChainEffect(visual) || a8 || !(kit->m_flags & 0x1)) {
+        return 0;
+    }
+
+    this->DelaySpellVisualKit(spell->m_id, kit->m_id, type, position, guid, a6, a7, a9, 0, FrameTime::GetCurTimeMs() + 10000, a12, a13);
+    return 1;
+}
+
+// OFFSET: 0x005C9060
+void CGUnit_C::OnAuraRemoved(uint32_t index, AuraData* aura) {
+    int32_t spellId = aura->m_spellId;
+    const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+    if (!spell) {
+        return;
+    }
+
+    this->RemoveAuraEffect(index, spell, aura);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGSpellActivationOverlay::OnAuraRemoved(spell);
+    }
+
+    if (spell->m_attributesExH & 0x1000000) {
+        this->RemoveHealPrediction(spellId, aura->m_creator, true, (spell->m_attributesEx & 0x44) != 0);
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        bool updateSpells = false;
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+        for (uint32_t i = 0; i < effectCount; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
+
+            if (effect && (effect->m_effectAura == 332 || effect->m_effectAura == 333)) {
+                int32_t overrideSpell = aura->m_effectAmounts[i];
+
+                if (CGActionBar::ClearOverrideSpellclass(overrideSpell) && !updateSpells) {
+                    updateSpells = true;
+                }
+
+                Spell_C_CancelSpellsWithId(overrideSpell);
+            }
+        }
+
+        CGActionBar::OnAuraChanged(spellId);
+
+        if (updateSpells) {
+            CGSpellBook::UpdateSpells(1, 0, 0);
+        }
+
+        if (CGSpellBook::IsTrackingSpell(spellId)) {
+            CGMinimapFrame::UpdateTrackingSpell();
+        }
+
+        if (CGSpellBook::IsShapeshiftSpell(spellId) && !SpellHasAuraEffect(spell, 36)) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
+        }
+    }
+
+    UnitCombatLogAuraAddedOrRemoved(this, aura, spell, false);
+
+    if (SpellHasAuraEffect(spell, 312)) {
+        this->UpdateCharacterAnimReplacementSets();
+    }
+
+    if (SpellHasAuraEffect(spell, 313)) {
+        this->UpdateMountAnimReplacementSets();
+    }
+}
+
+// OFFSET: 0x005C9240
+void CGUnit_C::OnAuraAdded(uint32_t index, AuraData* aura) {
+    const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+    if (!spell) {
+        return;
+    }
+
+    this->AddAuraEffect(index, spell);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGSpellActivationOverlay::OnAuraAdded(spell);
+    }
+
+    UnitCombatLogAuraAddedOrRemoved(this, aura, spell, true);
+    this->OnAuraAddedSpecial(spell, aura, 0);
+}
+
+// OFFSET: 0x005C92D0
+void CGUnit_C::UpdateAuraHealPrediction(uint32_t index, AuraData* aura) {
+    const SpellRec* spell = g_spellDB.GetRecord(aura->m_spellId);
+
+    if (!spell) {
+        return;
+    }
+
+    if (SpellHasAuraEffect(spell, 369)) {
+        WOWGUID guid = this->m_obj->m_guid;
+        Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_POWER_BAR_TIMER_UPDATE);
+    }
+
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (effect && (effect->m_effectAura == 8 || effect->m_effectAura == 20) && (spell->m_attributesExH & 0x1000000) && aura->m_effectAmounts[i]) {
+            this->AddHealPrediction(spell->m_id, 0, aura->m_creator, aura->m_effectAmounts[i], true, false);
+        }
+    }
+}
+
+// OFFSET: 0x005C9750
+void CGUnit_C::UpdateChannelEffects() {
+    this->m_clientFlags &= ~0x8000u;
+    const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
+
+    if (!spell) {
+        return;
+    }
+
+    if (spell->m_attributesEx & 0x4000) {
+        this->m_clientFlags |= 0x8000;
+
+        if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+            WOWGUID target = this->m_unit->m_unitFieldChannelObject;
+            this->SetTrackingTarget(target, 1);
+        }
+    }
+
+    const SpellVisualRec* visual = GetSpellVisual(spell, this);
+
+    if (!visual) {
+        return;
+    }
+
+    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_channelKit);
+
+    if (!kit) {
+        return;
+    }
+
+    SpellVisualKitRec* castKit = g_spellVisualKitDB.GetRecord(visual->m_castKit);
+    uint32_t playAnim = !castKit || castKit->m_animID;
+
+    if (CanPlaySpellVisualKit(this->m_obj->m_guid.m_guid, this->m_unit->m_unitFieldChannelObject.m_guid, kit, visual)) {
+        PlaySpellVisuaKitData data(spell, kit, 2);
+        data.m_animParam = playAnim;
+        data.m_someGUID = this->m_obj->m_guid;
+        this->PlaySpellVisualKit(data);
+    }
+
+    this->CreateFishingLineEffect();
+}
+
+// OFFSET: 0x005C98D0
+void CGUnit_C::AuraVisionUpdated(uint8_t vision) {
+    bool changed = false;
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_auras[i].m_spellId);
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t mask = GetRequiredAuraVisionBitmask(spell);
+
+        if (!(mask & vision)) {
+            continue;
+        }
+
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (static_cast<uint8_t>(mask) & player->m_player->m_playerFieldBytes2[3]) {
+            this->AddAuraEffect(i, spell);
+        } else {
+            this->RemoveAuraEffect(i, spell, NULL);
+        }
+
+        changed = true;
+    }
+
+    if (changed) {
+        Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_AURA);
+    }
+}
+
+// OFFSET: 0x005CB270
+void CGUnit_C::ScanAuraSpellsOnDisplayUpdate() {
+    for (uint32_t i = this->GetAuraCount(); i; ) {
+        i--;
+
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_auras[i].m_spellId);
+
+        if (spell) {
+            this->AddAuraEffect(i, spell);
+        }
+    }
+}
+
+// OFFSET: 0x005CD060
+void CGUnit_C::OnChannelSpellChanged(int32_t oldSpell) {
+    if (oldSpell) {
+        this->ReleaseAurasBySpell(oldSpell, WOWGUID());
+        this->UpdateAlphaEffectAlpha();
+        this->ReleaseProcEffectsBySpell(oldSpell, WOWGUID());
+        this->ClearSpellEffect(oldSpell, 1, this->m_obj->m_guid.m_guid);
+
+        if (this->m_fishingLineEffect) {
+            this->m_fishingLineEffect->Release();
+            this->m_fishingLineEffect = NULL;
+        }
+
+        for (uint32_t i = 0; i < (this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count); i++) {
+            if (this->unk_0F9C[i] && this->unk_0F9C[i] == static_cast<uint32_t>(oldSpell)) {
+                this->unk_0F9C[i] = 0;
+            }
+        }
+    }
+
+    if (this->m_unit->m_unitChannelSpell) {
+        this->UpdateChannelEffects();
+    } else {
+        const SpellRec* spell = g_spellDB.GetRecord(oldSpell);
+
+        if (spell && (spell->m_attributesEx & 0x4000) && this->IsActiveMoverTracking(2)) {
+            this->ClearTrackingTarget(false, true);
+        }
+
+        this->m_castSchoolImmunities = 0;
+        this->m_castImmunities = 0;
+        this->ClearSpellEffect(oldSpell, 1, this->m_obj->m_guid.m_guid);
+
+        if (this->m_fishingLineEffect) {
+            this->m_fishingLineEffect->Release();
+            this->m_fishingLineEffect = NULL;
+        }
+    }
+
+    this->UpdateEffectAnimKit();
+    this->m_animationState |= 0x80000;
+}
+
+// OFFSET: 0x005CEAD0
+void CGUnit_C::OnAuraUpdate(CDataStore* msg, bool updateAll) {
+    uint32_t time = FrameTime::GetCurTimeMs();
+    uint32_t oldCount = this->GetAuraCount();
+    AuraData* oldAuras = static_cast<AuraData*>(alloca(sizeof(AuraData) * oldCount));
+    memcpy(oldAuras, &this->m_auras[0], sizeof(AuraData) * oldCount);
+    uint8_t updated[256];
+
+    if (updateAll) {
+        memset(&this->m_auras[0], 0, sizeof(AuraData) * this->GetAuraCount());
+        memset(updated, 1, sizeof(updated));
+    } else {
+        memset(updated, 0, sizeof(updated));
+    }
+
+    while (!msg->IsRead()) {
+        uint8_t slot;
+        msg->Get(slot);
+        updated[slot] = 1;
+        this->AddAuraSlot(slot);
+        this->m_auras[slot].Unpack(this, time, msg);
+    }
+
+    this->m_clientFlags &= ~0x40000;
+    this->UpdateAuraEffectMask();
+    bool changed = false;
+
+    for (uint32_t i = 0; i < oldCount; i++) {
+        if (!updated[i]) {
+            continue;
+        }
+
+        int32_t oldSpellId = oldAuras[i].m_spellId;
+        uint32_t oldActive = oldAuras[i].m_flags & 0x7;
+        int32_t spellId = this->m_auras[i].m_spellId;
+        uint32_t active = this->m_auras[i].m_flags & 0x7;
+        bool wasActive = oldSpellId && oldActive;
+        bool stillActive = oldSpellId == spellId && active;
+
+        if ((wasActive && !stillActive) || !spellId) {
+            if (updateAll) {
+                const SpellRec* spell = g_spellDB.GetRecord(oldSpellId);
+
+                if (spell) {
+                    this->RemoveAuraEffect(i, spell, NULL);
+                }
+            } else {
+                this->OnAuraRemoved(i, &oldAuras[i]);
+                changed = true;
+            }
+        }
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        if (!updated[i]) {
+            continue;
+        }
+
+        bool hadOld = i < oldCount;
+        int32_t oldSpellId = hadOld ? oldAuras[i].m_spellId : 0;
+        uint32_t oldActive = hadOld ? oldAuras[i].m_flags & 0x7 : 0;
+        AuraData& aura = this->m_auras[i];
+        int32_t spellId = aura.m_spellId;
+        bool same = oldSpellId == spellId && oldActive;
+
+        if (!spellId || !(aura.m_flags & 0x7)) {
+            continue;
+        }
+
+        if (updateAll) {
+            const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+            if (!spell) {
+                continue;
+            }
+
+            this->AddAuraEffect(i, spell);
+            this->OnAuraAddedSpecial(spell, &aura, 1);
+        } else if (same) {
+            if (!hadOld) {
+                continue;
+            }
+
+            if (oldAuras[i].m_creator != aura.m_creator) {
+                this->RetargetAuraEffects(aura.m_spellId, oldAuras[i].m_creator, aura.m_creator);
+            }
+
+            if (oldAuras[i].m_stackCount == aura.m_stackCount) {
+                if (aura.m_flags & 0x100) {
+                    const SpellRec* spell = g_spellDB.GetRecord(this->m_auras[i].m_spellId);
+
+                    if (spell) {
+                        UnitCombatLogAuraRefreshed(this, &this->m_auras[i], spell);
+                    }
+                }
+            } else {
+                const SpellRec* spell = g_spellDB.GetRecord(spellId);
+                UnitCombatLogAuraModifiedApplications(this, aura.m_creator, spell, oldAuras[i].m_stackCount, aura.m_stackCount, (aura.m_flags & 0x80) != 0);
+            }
+
+            this->UpdateAuraHealPrediction(i, &aura);
+        } else {
+            this->OnAuraAdded(i, &aura);
+            changed = true;
+        }
+    }
+
+    WOWGUID guid = this->m_obj->m_guid;
+    int32_t arenaIndex;
+    int32_t arenaOpponent = CGBattlefieldInfo::GetArenaOpponentIndex(guid, &arenaIndex);
+    bool update = arenaOpponent != 0;
+
+    if (changed && (guid == ClntObjMgrGetActivePlayer() || this->m_unit->m_unitFieldCharmedby == ClntObjMgrGetActivePlayer() || *this->GetCharmerOrCreatorGuid() == ClntObjMgrGetActivePlayer() || this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget)) {
+        update = true;
+    }
+
+    if (update) {
+        CGSpellBook::UpdateUsable();
+        CGSpellActivationOverlay::UpdateUsable();
+        CGSpellActivationOverlay::UpdateActiveMoverOverlays();
+
+        if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || arenaOpponent) {
+            const SpellRec* spell = NULL;
+
+            if (this->m_castingSpellId) {
+                spell = g_spellDB.GetRecord(this->m_castingSpellId);
+            } else if (this->m_channelSpellId) {
+                spell = g_spellDB.GetRecord(this->m_channelSpellId);
+            }
+
+            if (spell && spell->m_spellCategoriesID) {
+                SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(spell->m_spellCategoriesID);
+
+                if (categories && (categories->m_preventionType & 0x1)) {
+                    bool processed = this->ProcessCastNotInterruptible(spell);
+
+                    if (this->IsCastNotInterruptible() != processed) {
+                        this->UpdateSpellCastBars();
+                        WOWGUID target = this->m_obj->m_guid;
+                        Script_SendUnitSignal(target, this->IsCastNotInterruptible() + SCRIPT_EVENT_UNIT_SPELLCAST_INTERRUPTIBLE);
+                    }
+                }
+            }
+        }
+    }
+
+    guid = this->m_obj->m_guid;
+    Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_AURA);
+}
+
+// OFFSET: 0x005CFFD0
+void CGUnit_C::OnFlagChanged(uint32_t oldFlags) {
+    uint32_t flags = this->m_unit->m_unitFieldFlags;
+    uint32_t changed = oldFlags ^ flags;
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->OnFlagChangedActivePlayer(flags, changed);
+    } else if (static_cast<int32_t>(this->m_unit->m_unitFieldHealth) > 0 && (changed & 0x400)) {
+        this->UpdateLootAnimKit(0);
+    }
+
+    if (changed & 0x200000) {
+        const CGUnitVirtualItem* mainHand = this->GetVirtualItem(0, true);
+
+        if (mainHand && mainHand->m_classID == 2) {
+            const CGUnitVirtualItem* item;
+
+            if ((this->m_unit->m_unitFieldFlags & 0x200000) && (item = this->GetVirtualItem(0, true)) && item->m_classID == 2 && this->m_sheatheState <= 1) {
+                this->RemoveHandItemModel(INVSLOT_MAINHAND, this->m_sheatheState ? 0 : mainHand->m_sheatheType, false);
+            } else {
+                if (this->unk_0948) {
+                    this->unk_0948->DeleteSelf();
+                }
+
+                this->AddHandItem(0);
+            }
+        }
+
+        const CGUnitVirtualItem* offHand = this->GetVirtualItem(1, true);
+
+        if (offHand && offHand->m_classID == 2) {
+            const CGUnitVirtualItem* item;
+
+            if ((((this->m_unit->m_unitFieldFlags & 0x200000) && (this->GetVirtualItem(0, true), !this->IsDisarmed(0)) && (item = this->GetVirtualItem(1, true)) && item->m_classID == 2) || static_cast<int8_t>(this->m_unit->m_unitFieldFlags2) < 0) && this->m_sheatheState == 1) {
+                this->RemoveHandItemModel(INVSLOT_OFFHAND, 0, false);
+            } else {
+                this->AddHandItem(1);
+            }
+        }
+
+        if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+            CGSpellBook::UpdateUsable();
+        }
+    }
+
+    if (changed & 0x180) {
+        this->UpdateReaction(false);
+    }
+
+    if (changed & 0x800) {
+        const WOWGUID& owner = this->m_unit->m_unitFieldCharmedby ? this->m_unit->m_unitFieldCharmedby : this->m_unit->m_unitFieldSummonedby;
+
+        if (owner == ClntObjMgrGetActivePlayer()) {
+            CGPetInfo::SetIsAttackingTarget((flags >> 11) & 1);
+        }
+    }
+
+    if ((oldFlags & 0x10) && !(flags & 0x10) && this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        CMoveSpline* spline = this->m_movement->m_spline;
+
+        if ((!spline || (spline->m_flags & 0x80)) && !this->CanSwim() && !(flags & 0x4000) && !(oldFlags & 0x4000)) {
+            if (this->m_movement->m_flags & 0x100000) {
+                this->OnSwimStop(0, 1);
+            }
+
+            this->m_clientFlags &= ~0x200000u;
+        }
+    }
+
+    if (changed & 0x4000000) {
+        CGGameUI::UnitTooltipUpdate(this->m_obj->m_guid);
+    }
+
+    if (changed & 0x8000000) {
+        Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_AURA);
+    }
+
+    if (changed & 0x2000000) {
+        if (this->m_unit->m_unitFieldFlags & 0x2000000) {
+            CGGameUI::BreakTarget(this->m_obj->m_guid);
+        } else {
+            this->RefreshInteractIcon();
+        }
+
+        Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_TARGETABLE_CHANGED);
+    }
+
+    if ((changed & 0x100000) && !(flags & 0x100000) && static_cast<int32_t>(this->m_unit->m_unitFieldMountdisplayid) <= 0) {
+        this->PlayTaxiDismountKit();
+    }
+}
+
+// OFFSET: 0x005D1020
+void CGUnit_C::UpdateChainTargets(const TSStackArray<WOWGUID>& targets, int32_t spellId) {
+    WOWGUID first = targets.m_data[0];
+
+    if (first && first != this->m_unit->m_unitFieldChannelObject) {
+        const SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+        if (spell && (spell->m_attributesEx & 0x4)) {
+            this->m_unit->m_unitFieldChannelObject = first;
+        }
+    }
+
+    this->SaveChainSpellTargets(targets);
+    this->OnChannelSpellChanged(spellId);
+}
+
+// OFFSET: 0x005D3440
+int32_t Packet_SMSG_STANDSTATE_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
+    uint8_t standState = 0;
+    msg->Get(standState);
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        player->UpdateClientStandState(player->GetClientStandState(), standState);
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x005D4A70
+void CGUnit_C::UpdateDisplay(uint32_t time) {
+    if ((this->m_modelFlags & 0x200000) && this->GetObjectModel()->IsLoaded()) {
+        this->ModelChanged();
+    }
+
+    if (this->m_missiles) {
+        if (this->m_clientFlags & 0x40000000) {
+            this->ReleaseMissiles(this->m_animEventPosition);
+        }
+
+        if (static_cast<int32_t>(time - this->m_lastMissileTime - 2000) >= 0) {
+            C3Vector position(0.0f, 0.0f, 0.0f);
+            position = this->GetMissileFirePosition();
+            this->ReleaseMissiles(position);
+        }
+
+        if (!this->m_castAnimKit) {
+            C3Vector position(0.0f, 0.0f, 0.0f);
+            position = this->GetMissileFirePosition();
+            this->ReleaseMissiles(position);
+        }
+    }
+
+    this->m_clientFlags &= ~0x40000000;
+
+    if (this->m_clientFlags & 0x800) {
+        if (this->m_missiles && this->m_missiles->m_model) {
+            if (this->m_missiles->m_model->IsLoaded()) {
+                this->ReleaseMissiles();
+                this->m_clientFlags &= ~0x800;
+            }
+        } else {
+            this->m_clientFlags &= ~0x800;
+        }
+    }
+
+    if (this->m_displayTransition && !this->m_displayTransition->UpdateState(1)) {
+        this->StopDisplayTransition();
+    }
+
+    if (!CGGameUI::FoundHiddenHostile() && !this->IsReadyToDraw()) {
+        CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (this->UnitReaction(player) <= 1) {
+            CGGameUI::SetFoundHiddenHostile();
+        }
+    }
+
+    if (!this->m_worldObject || !this->GetObjectModel() || !this->GetObjectModel()->IsLoaded()) {
+        return;
+    }
+
+    if (!World::QueryObjectVisible(this->m_worldObject)) {
+        this->DestroyNamePlate();
+    }
+
+    if (this->m_clientFlags & 0x2) {
+        this->HandleBloodPool(time);
+    }
+
+    if (this->m_obj->m_guid == CGUnit_C::s_activeMover && !(this->m_obj->m_type & TYPEMASK_PLAYER) && this->IsAutoTracking()) {
+        this->HandleTracking(0.0f, 0.0f);
+    }
+
+    if (this->m_vehiclePassenger && (this->m_vehiclePassenger->m_flags & 0x10)) {
+        this->UpdateWorldObject(0);
+    }
+
+    for (CEffect* effect = this->m_effectList; effect; ) {
+        CEffect* next = effect->m_next;
+        effect->EffectUpdate();
+        effect = next;
+    }
+
+    this->UpdateCamouflage();
+    uint32_t now = FrameTime::GetCurTimeMs();
+
+    if (CGGameUI::m_lockedTarget == this->m_obj->m_guid) {
+        CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+        if (player && ((player->m_combatModeFlags & 0x2) || player->m_combat.m_attacking) && player->CanAttack(this, false)) {
+            uint32_t flashTime = s_attackFlashTime;
+            this->m_clientFlags |= 0x10;
+
+            if (static_cast<int32_t>(now - flashTime - 500) >= 0) {
+                s_attackFlashToggle = s_attackFlashToggle == 0;
+                flashTime = now;
+                s_attackFlashTime = now;
+            }
+
+            float fraction = static_cast<float>(flashTime - now + 500) * 0.0020000001f;
+
+            if (s_attackFlashToggle) {
+                fraction = 1.0f - fraction;
+            }
+
+            s_attackTargetColor[1] = static_cast<uint8_t>(static_cast<int32_t>(fraction * 128.0f));
+            PlayerNameTriggerColorUpdate(this->m_nameDesc);
+        } else if (this->m_clientFlags & 0x10) {
+            this->m_clientFlags &= ~0x10u;
+            PlayerNameTriggerColorUpdate(this->m_nameDesc);
+        }
+    } else if (this->m_clientFlags & 0x10) {
+        this->m_clientFlags &= ~0x10u;
+        PlayerNameTriggerColorUpdate(this->m_nameDesc);
+    }
+
+    PlayerNameUpdateDrawCallback(this->m_nameDesc);
+}
+
+// OFFSET: 0x005D5130
+void CGUnit_C::PlaySpellVisualKit_PlayAnims(const PlaySpellVisualKitAnimData* data) {
+    int32_t spellId = 0;
+
+    if (data->m_spellRec) {
+        spellId = data->m_spellRec->m_id;
+    }
+
+    this->m_animationState &= ~0x80;
+    int32_t updateAnimKits = 1;
+
+    if (data->m_animParam) {
+        if (data->m_kit->m_animKitID > 0) {
+            CEffect* effect = CEffect::Create();
+            WOWGUID owner = this->m_obj->m_guid;
+            effect->AddAnimKitEffect(spellId, data->m_kit, owner, data->m_guid, data->m_flags, data->unk_0020, data->m_stopCallback, data->m_stopParam);
+            effect->Release();
+        }
+
+        const SpellVisualKitRec* kit = data->m_kit;
+        uint8_t playFlags = CGUnit_C::KitFlagsToPlayFlags(data->m_spellRec, data->m_visual, kit);
+
+        if (kit->m_animID >= 0) {
+            SpellVisualKitRec* castKit = data->m_visual ? g_spellVisualKitDB.GetRecord(data->m_visual->m_castKit) : NULL;
+            bool sameAnim = castKit && castKit->m_animID > 0 && castKit->m_animID == static_cast<int32_t>(this->GetCurrentTorsoAnimId());
+            int32_t castTime = this->GetSpellCastingTime(data->m_spellRec);
+            bool holdCast = (data->m_flags & 0x40) && castTime > 0 && sameAnim;
+            bool holdChannel = (data->m_flags & 0x1000) && sameAnim;
+
+            if (data->m_kitType == 2) {
+                if (!holdChannel) {
+                    if (data->m_hasEffect) {
+                        goto finish;
+                    }
+
+                    CEffect* effect = CEffect::Create();
+                    WOWGUID owner = this->m_obj->m_guid;
+                    effect->AddAnimEffect(spellId, data->m_kit, owner, data->m_guid, data->m_flags, data->unk_0020);
+                    effect->Release();
+                }
+            } else if (!(data->m_flags & 0x40) || (castTime > 0 && !holdCast)) {
+                uint32_t anim = data->m_kit->m_animID;
+
+                if (AnimationDataHasFlags(anim, 0x800000)) {
+                    this->PlayWoundAnimKit(anim == ANIM_COMBAT_CRITICAL);
+                } else {
+                    if (data->m_flags & 0x40) {
+                        int32_t precast = data->m_kit->m_flags & 0x40;
+
+                        if (static_cast<int32_t>(anim) > 0) {
+                            this->PlayPrecastAnimKit(1, precast, spellId, playFlags, anim, data->m_kit->m_startAnimID > 0 ? data->m_kit->m_startAnimID : anim);
+                        }
+                    } else {
+                        int32_t fullBody = this->IsVehicle() && this->m_vehicle->HasHighPriorityCastingAnim();
+                        uint32_t castAnim = data->m_kit->m_animID;
+
+                        if ((data->m_flags & 0x80) && AnimationDataHasFlags(castAnim, 0x200000)) {
+                            this->PlayCombatActionAnimKit(AnimationDataHasFlags(castAnim, 0x400000) ? 4 : 1, castAnim, playFlags, spellId);
+                        } else if (data->m_flags & 0x80) {
+                            this->PlayCastAnimKit(castAnim, playFlags, fullBody, spellId);
+                        } else {
+                            this->PlayOneShotSpellAnimKit(castAnim, playFlags, fullBody, spellId);
+                        }
+                    }
+
+                    updateAnimKits = 0;
+                }
+
+                if (data->m_flags & 0x80) {
+                    this->m_specialIdleAnim = data->m_kit->m_animID;
+                }
+            }
+
+            if (!data->m_hasEffect && (holdCast || holdChannel)) {
+                CEffect* effect = CEffect::Create();
+                WOWGUID owner = this->m_obj->m_guid;
+                effect->AddAnimEffect(spellId, data->m_kit, owner, data->m_guid, data->m_flags, data->unk_0020);
+                effect->Release();
+            }
+        }
+    }
+
+finish:
+    if (data->m_spellRec && (data->m_spellRec->m_attributes & 0x2) && (data->m_kitType == 4 || data->m_kitType == 0)) {
+        this->SetSheatheState(2, 1, 0);
+    }
+
+    if (updateAnimKits) {
+        this->UpdateEffectAnimKit();
+        this->UpdateDeathAnimKit();
+    }
+
+    if (data->m_animParam && data->unk_0014) {
+        this->PlayWoundAnimKit(0);
+    }
+
+    this->CreateProceduralEffect(data, 0);
+
+    if (this->unk_0AE4[1]) {
+        this->UpdateWeaponTrails(&this->unk_0AE4[0], this->unk_0AE4[1]);
+        this->unk_0AE4[1] = 0;
+    }
+
+    if (!data->m_hasEffect && data->m_kit->m_shakeID > 0) {
+        C3Vector objectPosition;
+        const C3Vector* shakePosition = data->m_position;
+
+        if (!shakePosition) {
+            objectPosition = this->GetPosition();
+            shakePosition = &objectPosition;
+        }
+
+        SpellVisualsPlayCameraShakeID(data->m_kit->m_shakeID, shakePosition);
+    }
+}
+
+// OFFSET: 0x005D5520
+void CGUnit_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect, uint32_t a9, int32_t a10) {
+    int32_t spellId = 0;
+
+    if (spell) {
+        spellId = spell->m_id;
+    }
+
+    SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(kit->m_leftWeaponEffect);
+
+    if (effectName) {
+        CreatureModelDataRec* modelData = this->GetModelData();
+
+        if (modelData && !(modelData->m_flags & 0x10)) {
+            if (!spell || !(spell->m_attributes & 0x40000)) {
+                this->SetSheatheState(0, 1, 0);
+            }
+
+            this->PlayEffectName(2, 0, spellId, kit, effectName, flags, callback, position, guid.m_guid, a5, NULL, -1, a9, a10);
+            *hasEffect = 1;
+        }
+    }
+
+    effectName = g_spellVisualEffectNameDB.GetRecord(kit->m_rightWeaponEffect);
+
+    if (effectName) {
+        CreatureModelDataRec* modelData = this->GetModelData();
+
+        if (modelData && !(modelData->m_flags & 0x10)) {
+            if (!spell || !(spell->m_attributes & 0x40000)) {
+                this->SetSheatheState(0, 1, 0);
+            }
+
+            this->PlayEffectName(1, 0, spellId, kit, effectName, flags, callback, position, guid.m_guid, a5, NULL, -1, a9, a10);
+            *hasEffect = 1;
+        }
+    }
 }
 
 // OFFSET: 0x005D5AE0
@@ -1017,6 +3814,433 @@ int32_t ChannelSpellOrObjectChangeHandler(WOWGUID guid, uint32_t fieldOffset, ui
     return 1;
 }
 
+// OFFSET: 0x005D8880
+bool CGUnit_C::CheckAndReportSpellInhibitFlags(PendingSpellCast* cast, const SpellRec* spell, const CGItem_C* item, int32_t ignorePower) {
+    if (!spell) {
+        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
+        return false;
+    }
+
+    int32_t reason = 0;
+    MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
+    int32_t instanceType;
+
+    if (map) {
+        if (!CGUnit_C::CheckSpellPvPUsability(spell, &reason)) {
+            Spell_C_SpellFailed(cast, spell, reason, -1, -1, false);
+            return false;
+        }
+
+        instanceType = map->m_instanceType;
+    } else {
+        instanceType = 0;
+    }
+
+    if (instanceType != 4 && (spell->m_attributesExF & 0x2)) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_IN_ARENA, -1, -1, false);
+        return false;
+    }
+
+    if (item) {
+        if (Spell_C_GetItemCooldown(const_cast<CGItem_C*>(item), NULL, NULL, NULL)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ITEM_NOT_READY, -1, -1, false);
+            return false;
+        }
+    } else {
+        bool player = this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
+        int32_t remaining = 0;
+
+        if (Spell_C_GetSpellCooldown(spell->m_id, !player, NULL, NULL, NULL, &remaining) && (!remaining || remaining >= Spell_C_GetMaxStartRecoveryOffset())) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_READY, -1, -1, false);
+            return false;
+        }
+
+        int32_t powerType;
+        int32_t powerCost;
+
+        if (!ignorePower && !Spell_C_HaveSpellPower(this, spell, powerType, powerCost)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NO_POWER, powerType, powerCost, false);
+            return false;
+        }
+    }
+
+    uint32_t effectCount;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+    for (uint32_t i = 0; i < effectCount; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (!effect) {
+            continue;
+        }
+
+        if (effect->m_effect == 36) {
+            int32_t learn = effect->m_effectTriggerSpell;
+
+            if (!learn) {
+                WOWGUID none = WOWGUID();
+                ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+
+                if (stats) {
+                    for (uint32_t j = 0; j < 5; j++) {
+                        if (stats->m_spellTrigger[j] == 6) {
+                            learn = stats->m_spellId[j];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (this->IsSpellKnown(learn) || this->IsSpellSuperceded(learn)) {
+                const SpellRec* known = g_spellDB.GetRecord(learn);
+                CGGameUI::DisplayError(ERR_SPELL_ALREADY_KNOWN_S, known ? known->m_name : "UNKNOWN");
+                return false;
+            }
+        }
+
+        if (effect->m_effect == 56 || effect->m_effect == 55 || effect->m_effectAura == 6 || effect->m_effectAura == 2) {
+            const WOWGUID* controlled = &this->m_unit->m_unitFieldCharm;
+
+            if (!*controlled) {
+                controlled = &this->m_unit->m_unitFieldSummon;
+            }
+
+            if (*controlled && !(spell->m_attributesEx & 0x1)) {
+                if (CGStableInfo::FindPetIndexBySpellID(spell->m_id, i) == -1) {
+                    Spell_C_SpellFailed(cast, spell, this->m_unit->m_unitFieldCharm ? SPELL_FAILED_ALREADY_HAVE_CHARM : SPELL_FAILED_ALREADY_HAVE_SUMMON, -1, -1, false);
+                } else {
+                    Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ALREADY_HAVE_PET, -1, -1, false);
+                }
+
+                return false;
+            }
+        }
+
+        if (effect->m_implicitTargetA == 5 || effect->m_implicitTargetB == 5) {
+            const WOWGUID* controlled = &this->m_unit->m_unitFieldCharm;
+
+            if (!*controlled) {
+                controlled = &this->m_unit->m_unitFieldSummon;
+            }
+
+            if (!*controlled) {
+                Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NO_PET, -1, -1, false);
+                return false;
+            }
+
+            if (effect->m_effect == 36) {
+                CGUnit_C* petUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*controlled, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+                if (petUnit) {
+                    int32_t learn = effect->m_effectTriggerSpell;
+                    int32_t level;
+
+                    if (!petUnit->CanLearnSpell(learn, level, false)) {
+                        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_SPELL_UNAVAILABLE, -1, -1, false);
+                        return false;
+                    }
+
+                    if (petUnit->IsSpellKnown(learn) || petUnit->IsSpellSuperceded(learn)) {
+                        CGGameUI::DisplayError(ERR_PET_SPELL_ALREADY_KNOWN_S, spell->m_name);
+                        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_DONT_REPORT, -1, -1, false);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        if ((this->m_obj->m_type & TYPEMASK_PLAYER) && effect->m_effect == 105 && !CGResearchFrame::CanScanResearchSite(effect->m_effectMiscValue)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_HERE, -1, -1, false);
+            return false;
+        }
+    }
+
+    if (this->m_unit->m_unitFieldHealth > 0) {
+        if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0] & 0x4)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_SPELL_IN_PROGRESS, -1, -1, false);
+            return false;
+        }
+
+        if (this->m_unit->m_unitFieldCharmedby && this->m_unit->m_unitFieldCharmedby != ClntObjMgrGetActivePlayer() && !(spell->m_attributesExH & 0x20) && !Spell_C_CancelsCharm(this, spell, &reason)) {
+            Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_CHARMED, reason ? reason : -1, -1, false);
+            return false;
+        }
+
+        if ((this->m_unit->m_unitFieldFlags & 0x40000) && !(spell->m_attributesExE & 0x8) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsStun(this, spell, &reason)) {
+            Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_STUNNED, reason ? reason : -1, -1, false);
+            return false;
+        }
+
+        if (spell->m_spellCategoriesID) {
+            SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(spell->m_spellCategoriesID);
+
+            if (categories) {
+                if ((categories->m_preventionType & 0x1) && (this->m_unit->m_unitFieldFlags & 0x2000) && !Spell_C_CancelsSilence(this, spell, &reason)) {
+                    Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_SILENCED, reason ? reason : -1, -1, false);
+                    return false;
+                }
+
+                if ((categories->m_preventionType & 0x2) && (this->m_unit->m_unitFieldFlags & 0x20000) && !Spell_C_CancelsPacify(this, spell, &reason)) {
+                    Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_PACIFIED, reason ? reason : -1, -1, false);
+                    return false;
+                }
+
+                if ((categories->m_preventionType & 0x4) && (this->m_unit->m_unitFieldFlags2 & 0x800000) && !Spell_C_CancelsNoActions(this, spell, &reason)) {
+                    Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_NO_ACTIONS, reason ? reason : -1, -1, false);
+                    return false;
+                }
+            }
+        }
+
+        if ((this->m_unit->m_unitFieldFlags & 0x800000) && !(spell->m_attributesExE & 0x20000) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsFear(this, spell, &reason)) {
+            Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_FLEEING, reason ? reason : -1, -1, false);
+            return false;
+        }
+
+        if ((this->m_unit->m_unitFieldFlags & 0x400000) && !(spell->m_attributesExE & 0x40000) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsConfuse(this, spell, &reason)) {
+            Spell_C_SpellFailed(cast, spell, reason ? SPELL_FAILED_PREVENTED_BY_MECHANIC : SPELL_FAILED_CONFUSED, reason ? reason : -1, -1, false);
+            return false;
+        }
+    }
+
+    uint32_t auraInterrupt = 0;
+    uint32_t auraInterrupt2 = 0;
+    uint32_t channelInterrupt = 0;
+    uint32_t channelInterrupt2 = 0;
+    uint32_t interruptFlags = 0;
+
+    if (spell->m_spellInterruptsID) {
+        SpellInterruptsRec* interrupts = g_spellInterruptsDB.GetRecord(spell->m_spellInterruptsID);
+
+        if (interrupts) {
+            auraInterrupt = interrupts->m_auraInterruptFlags;
+            auraInterrupt2 = interrupts->m_auraInterruptFlags2;
+            channelInterrupt = interrupts->m_channelInterruptFlags;
+            channelInterrupt2 = interrupts->m_channelInterruptFlags2;
+            interruptFlags = interrupts->m_interruptFlags;
+        }
+    }
+
+    int32_t channeled = spell->m_attributesEx & 0x44;
+
+    if (((auraInterrupt & 0x200) && !this->m_sheatheState) || (channeled && (channelInterrupt & 0x200) && !this->m_sheatheState)) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_UNSHEATHED, -1, -1, false);
+        return false;
+    }
+
+    if (((auraInterrupt & 0x40) && (this->m_mountDisplayId <= 0 || (this->m_clientFlags & 0x10000000))) || (channeled && (channelInterrupt & 0x40) && !this->IsMounted())) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_MOUNTED, -1, -1, false);
+        return false;
+    }
+
+    if (!(spell->m_attributes & 0x1000000) && this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000) && !(this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x800)) && !this->CanAutoDismount()) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_MOUNTED, -1, -1, false);
+        return false;
+    }
+
+    if (!(spell->m_attributes & 0x8000000) && this->GetClientStandState() && !this->CanAutoStand()) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_STANDING, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributes & 0x1000) && !g_clientGameTime.IsDaytime()) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_DAYTIME, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributes & 0x2000) && g_clientGameTime.IsDaytime()) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_NIGHTTIME, -1, -1, false);
+        return false;
+    }
+
+    if (((auraInterrupt & 0x100) && !(this->m_clientFlags & 0x200000)) || (channeled && (channelInterrupt & 0x100) && !(this->m_clientFlags & 0x200000))) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_UNDERWATER, -1, -1, false);
+        return false;
+    }
+
+    if (((auraInterrupt & 0x80) && (this->m_clientFlags & 0x200000)) || (channeled && (channelInterrupt & 0x80) && (this->m_clientFlags & 0x200000))) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_ABOVEWATER, -1, -1, false);
+        return false;
+    }
+
+    if (((auraInterrupt2 & 0x2) && (this->m_movement->m_flags & 0x100000)) || (channeled && (channelInterrupt2 & 0x2) && (this->m_movement->m_flags & 0x100000))) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_NOT_SWIMMING, -1, -1, false);
+        return false;
+    }
+
+    int32_t targets = 0;
+
+    if (spell->m_spellTargetRestrictionsID) {
+        SpellTargetRestrictionsRec* restrictions = g_spellTargetRestrictionsDB.GetRecord(spell->m_spellTargetRestrictionsID);
+
+        if (restrictions) {
+            targets = restrictions->m_targets;
+        }
+    }
+
+    if (channeled && (this->m_movement->m_flags & 0x60080F) && !(targets & 0x60)) {
+        if ((channelInterrupt & 0x18) && !this->HasAuraMatchingSpellClass(330, spell)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_MOVING, -1, -1, false);
+            return false;
+        }
+
+        if ((this->m_movement->m_flags & 0x800) && (channelInterrupt2 & 0x1)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_FALLING, -1, -1, false);
+            return false;
+        }
+    }
+
+    if ((spell->m_attributesEx & 0x44) && !(this->m_movement->m_flags & 0x60080F) && !(targets & 0x60) && (channelInterrupt2 & 0x4)) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_BY_NOT_MOVING, -1, -1, false);
+        return false;
+    }
+
+    if ((interruptFlags & 0x1) && (this->m_movement->m_flags & 0x60080F) && !(targets & 0x60) && !(spell->m_attributesExB & 0x20) && !this->HasAuraMatchingSpellClass(330, spell)) {
+        if (Spell_C_GetCastTime(spell, this->m_unit->m_unitFieldPetnumber != 0, 0, 0) || (auraInterrupt & 0x18)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_MOVING, -1, -1, false);
+            return false;
+        }
+
+        if ((this->m_movement->m_flags & 0x800) && (auraInterrupt2 & 0x1)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_FALLING, -1, -1, false);
+            return false;
+        }
+    }
+
+    if (!this->CheckShapeshiftRules(spell, &reason) && (reason == SPELL_FAILED_ONLY_SHAPESHIFT || !this->CanAutoUnshift())) {
+        Spell_C_SpellFailed(cast, spell, reason, -1, -1, false);
+        return false;
+    }
+
+    if (!this->CheckStealthRules(spell, &reason) || !this->CheckMountRules(spell, reinterpret_cast<SpellCastResult*>(&reason))) {
+        Spell_C_SpellFailed(cast, spell, reason, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributes & 0x10000000) && (this->m_unit->m_unitFieldFlags & 0x80000) && !this->HasIgnoreAuraState(spell)) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_AFFECTING_COMBAT, -1, -1, false);
+        return false;
+    }
+
+    if (spell->m_spellAuraRestrictionsID) {
+        SpellAuraRestrictionsRec* restrictions = g_spellAuraRestrictionsDB.GetRecord(spell->m_spellAuraRestrictionsID);
+
+        if (restrictions) {
+            int32_t casterAura;
+            int32_t excludeCasterAura;
+
+            if ((restrictions->m_casterAuraState && !this->HasAuraState(restrictions->m_casterAuraState) && !this->HasIgnoreAuraState(spell))
+                || (restrictions->m_excludeCasterAuraState && this->HasAuraState(restrictions->m_excludeCasterAuraState) && !this->HasIgnoreAuraState(spell))
+                || ((casterAura = Spell_C_SpellGetSpellIDForDifficulty(restrictions->m_casterAuraSpell)) && !this->HasAura(casterAura, WOWGUID()) && !this->HasIgnoreAuraState(spell))
+                || ((excludeCasterAura = Spell_C_SpellGetSpellIDForDifficulty(restrictions->m_excludeCasterAuraSpell)) && this->HasAura(excludeCasterAura, WOWGUID()) && !this->HasIgnoreAuraState(spell))) {
+                Spell_C_SpellFailed(cast, spell, SPELL_FAILED_CASTER_AURASTATE, -1, -1, false);
+                return false;
+            }
+        }
+    }
+
+    if (spell->m_spellCastingRequirementsID) {
+        SpellCastingRequirementsRec* requirements = g_spellCastingRequirementsDB.GetRecord(spell->m_spellCastingRequirementsID);
+
+        if (requirements) {
+            if (requirements->m_minFactionID && GetRepListRepValue(requirements->m_minFactionID) < CGReputationInfo::m_reactionThresholds[requirements->m_minReputation]) {
+                Spell_C_SpellFailed(cast, spell, SPELL_FAILED_REPUTATION, -1, -1, false);
+                return false;
+            }
+
+            if (requirements->m_requiredAreasID > 0) {
+                AreaTableRec* area = CGGameUI::GetCurrentSubzoneRec();
+
+                if (!area) {
+                    Spell_C_SpellFailed(cast, spell, SPELL_FAILED_INCORRECT_AREA, -1, -1, false);
+                    return false;
+                }
+
+                int32_t group = requirements->m_requiredAreasID;
+                int32_t checked;
+
+                if (!CGUnit_C::CheckIsInArea(area->m_id, group, &checked)) {
+                    if (checked == 1) {
+                        AreaGroupRec* groupRec = g_areaGroupDB.GetRecord(group);
+
+                        if (groupRec) {
+                            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_REQUIRES_AREA, groupRec->m_areaID[0], -1, false);
+                            return false;
+                        }
+                    }
+
+                    Spell_C_SpellFailed(cast, spell, SPELL_FAILED_INCORRECT_AREA, -1, -1, false);
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (spell->m_attributes & 0xC000) {
+        if (this->IsOutdoors()) {
+            if (spell->m_attributes & 0x4000) {
+                Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_INDOORS, -1, -1, false);
+                return false;
+            }
+        } else if (spell->m_attributes & 0x8000) {
+            Spell_C_SpellFailed(cast, spell, SpellHasAuraEffect(spell, 78) ? SPELL_FAILED_NO_MOUNTS_ALLOWED : SPELL_FAILED_ONLY_OUTDOORS, -1, -1, false);
+            return false;
+        }
+    }
+
+    if ((spell->m_attributesExD & 0x4000000) && !this->FlyingMountAllowed(!(spell->m_attributesExG & 0x400000))) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_HERE, -1, -1, false);
+        return false;
+    }
+
+    AreaTableRec* areaRec = g_areaTableDB.GetRecord(CGGameUI::m_areaID);
+
+    if (areaRec && areaRec->m_worldPvpID) {
+        World_PVP_AreaRec* pvpArea = g_world_PVP_AreaDB.GetRecord(areaRec->m_worldPvpID);
+
+        if (pvpArea && GetWorldState(pvpArea->m_gameTimeWorldState) > 0 && (spell->m_attributesExH & 0x10000000)) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_IN_BATTLEGROUND, -1, -1, false);
+            return false;
+        }
+    }
+
+    if (instanceType == 3) {
+        if (spell->m_attributesExH & 0x10000000) {
+            Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_IN_BATTLEGROUND, -1, -1, false);
+            return false;
+        }
+    } else if (spell->m_attributesExC & 0x800) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_ONLY_BATTLEGROUNDS, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributesExF & 0x800) && instanceType == 2) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_IN_RAID_INSTANCE, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributesExD & 0x40000000) && map && !map->m_instanceType) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_NOT_HERE, -1, -1, false);
+        return false;
+    }
+
+    if ((spell->m_attributesExB & 0x10000) && (this->m_obj->m_type & TYPEMASK_PLAYER) && (this->GetActivePlayerFieldBytes0() & 0x1)) {
+        Spell_C_PetTameFailure(CGStableInfo::GetNumActivePets() < 5 ? 5 : 2);
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_DONT_REPORT, -1, -1, false);
+        return false;
+    }
+
+    uint8_t used;
+    uint8_t maximum;
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && (Spell_C_GetSpellCategoryWeeklyUses(spell, used, maximum), maximum) && used >= maximum) {
+        Spell_C_SpellFailed(cast, spell, SPELL_FAILED_EXCEEDED_WEEKLY_USAGE, maximum, -1, false);
+        return false;
+    }
+
+    return true;
+}
+
 // OFFSET: 0x005D9D70
 int32_t MountDisplayIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -1065,74 +4289,6 @@ void CGUnit_C::PostAnimate(CGWorldFrame* worldFrame) {
         this->NamePlateAddOrUpdate(position, worldFrame);
     } else {
         this->DestroyNamePlate();
-    }
-}
-
-// OFFSET: 0x005D4A70
-void CGUnit_C::UpdateDisplay(uint32_t time) {
-    this->UpdateCritterDisplay();
-
-    if ((this->m_modelFlags & 0x200000) && this->GetObjectModel()->IsLoaded()) {
-        this->ModelChanged();
-    }
-
-    if (this->m_missiles) {
-        if (this->m_clientFlags & 0x80000000) {
-            this->ReleaseMissiles(this->m_animEventPosition);
-        }
-
-        if (static_cast<int32_t>(time - this->m_lastMissileTime - 2000) >= 0) {
-            C3Vector position(0.0f, 0.0f, 0.0f);
-            position = this->GetMissileFirePosition();
-            this->ReleaseMissiles(position);
-        }
-
-        if (this->m_specialIdleAnim == -1 || !IsSpecialIdleAnim(this->m_specialIdleAnim)) {
-            C3Vector position(0.0f, 0.0f, 0.0f);
-            position = this->GetMissileFirePosition();
-            this->ReleaseMissiles(position);
-        }
-    }
-
-    this->m_clientFlags &= ~0x80000000;
-
-    if (this->m_clientFlags & 0x800) {
-        if (this->m_missiles && this->m_missiles->m_model) {
-            if (this->m_missiles->m_model->IsLoaded()) {
-                this->ReleaseMissiles();
-                this->m_clientFlags &= ~0x800;
-            }
-        } else {
-            this->m_clientFlags &= ~0x800;
-        }
-    }
-
-    if (!this->m_worldObject || !this->GetObjectModel() || !this->GetObjectModel()->IsLoaded()) {
-        return;
-    }
-
-    if (!World::QueryObjectVisible(this->m_worldObject)) {
-        this->DestroyNamePlate();
-    }
-
-    if (this->m_clientFlags & 0x2) {
-        this->HandleBloodPool(time);
-    }
-
-    World::TickObject(this->m_worldObject);
-
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover && !(this->m_obj->m_type & TYPEMASK_PLAYER) && this->IsAutoTracking()) {
-        this->HandleTracking(0.0f, 0.0f);
-    }
-
-    if (this->m_vehiclePassenger && (this->m_vehiclePassenger->m_flags & 0x10)) {
-        this->UpdateWorldObject(0);
-    }
-
-    for (CEffect* effect = this->m_effectList; effect; ) {
-        CEffect* next = effect->m_next;
-        effect->EffectUpdate();
-        effect = next;
     }
 }
 
@@ -2789,32 +5945,6 @@ void CGUnit_C::SendSplineDone(uint32_t time, uint32_t splineId) {
     input->UpdatePlayer(time, 1);
 }
 
-// OFFSET: #0x00755270
-void CGUnit_C::HandleEnvironmentDamage(uint32_t type, int32_t damage, int32_t absorbed, int32_t resisted) {
-    if (damage || absorbed || resisted) {
-        WOWGUID guid = this->m_obj->m_guid;
-        UnitCombatLog(guid, type, damage, absorbed, resisted);
-
-        if (this->IsActivePlayer()) {
-            uint32_t flags = absorbed ? 0x20 : 0;
-
-            if (resisted) {
-                flags |= 0x80;
-            }
-
-            WOWGUID target = this->m_obj->m_guid;
-            CGGameUI::ShowCombatFeedback(target, damage, 1 << s_environmentalDamageSchools[type], flags);
-        }
-    }
-
-    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(g_environmentalDamageVisualKits[type]);
-
-    if (kit) {
-        PlaySpellVisuaKitData data(NULL, kit, 0);
-        this->PlaySpellVisualKit(data);
-    }
-}
-
 // OFFSET: #0x00714CE0
 void ApplyKitAnimFlags(uint32_t kitFlags, uint32_t* animFlags) {
     if (!animFlags) {
@@ -3001,7 +6131,7 @@ void CGUnit_C::PlayDeathAnim(int32_t force) {
     uint32_t anim = 466;
     CVehiclePassenger_C* passenger = this->m_vehiclePassenger;
 
-    if ((this->m_movement->m_flags & 0x100000) || (passenger && passenger->m_seatRec && (passenger->m_seatRec->unk_0104 & 0x2)) || (this->IsHovering() && (!this->HasDeathSequence() || this->IsDeepInLiquid()) && this->IsSplineDestinationInLiquid())) {
+    if ((this->m_movement->m_flags & 0x100000) || (passenger && passenger->m_seatRec && (passenger->m_seatRec->m_flagsC & 0x2)) || (this->IsHovering() && (!this->HasDeathSequence() || this->IsDeepInLiquid()) && this->IsSplineDestinationInLiquid())) {
         anim = 131;
     }
 
@@ -3243,113 +6373,6 @@ bool CGUnit_C::IsFriendly(const CGUnit_C* unit) const {
 // OFFSET: 0x0044E3D0
 bool CGUnit_C::IsHatedTowards(const CGUnit_C* unit) const {
     return this->UnitReaction(unit) <= 1;
-}
-
-// OFFSET: 0x005C6110/0x14023D1E0
-bool CGUnit_C::CanAttack(const CGUnit_C* unit) const {
-    if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(this)->m_player->m_playerFlags & 0x80000)) {
-        return false;
-    }
-
-    if ((unit->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<const CGPlayer_C*>(unit)->m_player->m_playerFlags & 0x10)) {
-        if (!this->m_creatureCacheEntry || !(this->m_creatureCacheEntry->m_typeFlags[0] & 0x2)) {
-            return false;
-        }
-    }
-
-    uint32_t targetFlags = unit->m_unit->m_unitFieldFlags;
-
-    if ((targetFlags & 0x2) || (targetFlags & 0x100000) || (targetFlags & 0x80) || (targetFlags & 0x10000) || (targetFlags & 0x2000000)) {
-        return false;
-    }
-
-    uint32_t flags = this->m_unit->m_unitFieldFlags;
-
-    if ((flags & 0x8) && (unit->m_unit->m_unitFieldFlags & 0x100)) {
-        return false;
-    }
-
-    if (!(flags & 0x8) && (unit->m_unit->m_unitFieldFlags & 0x200)) {
-        return false;
-    }
-
-    if ((unit->m_unit->m_unitFieldFlags & 0x8) && (flags & 0x100)) {
-        return false;
-    }
-
-    if (!(unit->m_unit->m_unitFieldFlags & 0x8) && (flags & 0x200)) {
-        return false;
-    }
-
-    CGUnit_C* self = const_cast<CGUnit_C*>(this);
-    CGUnit_C* other = const_cast<CGUnit_C*>(unit);
-
-    if ((this->m_unit->m_unitFieldFlags2 & 0x10000) || (unit->m_unit->m_unitFieldFlags2 & 0x10000)) {
-        const VehicleRec* vehicleRec = this->m_vehicle ? this->m_vehicle->m_vehicleRec : NULL;
-        const VehicleRec* otherVehicleRec = unit->m_vehicle ? unit->m_vehicle->m_vehicleRec : NULL;
-
-        if (vehicleRec && (vehicleRec->m_flags & 0x20000000) && other->FindRootVehicle(self) == self) {
-            return false;
-        }
-
-        if (otherVehicleRec && (otherVehicleRec->m_flags & 0x20000000) && self->FindRootVehicle(other) == other) {
-            return false;
-        }
-    }
-
-    CGUnitData* data = this->m_unit;
-
-    if (!(data->m_unitFieldFlags & 0x8) && !(unit->m_unit->m_unitFieldFlags & 0x8)) {
-        return this->IsHatedTowards(unit) || unit->IsHatedTowards(this);
-    }
-
-    if ((data->m_unitFieldFlags & 0x8) && (unit->m_unit->m_unitFieldFlags & 0x8)) {
-        bool result = false;
-
-        if (!this->IsFriendly(unit)) {
-            CGUnit_C* controller = self->GetControllingPlayer();
-            CGUnit_C* otherController = other->GetControllingPlayer();
-
-            if (controller && otherController) {
-                CGPlayerLocalData* player = static_cast<CGPlayer_C*>(controller)->m_player;
-                CGPlayerLocalData* otherPlayer = static_cast<CGPlayer_C*>(otherController)->m_player;
-
-                if (player->m_playerDuelTeam && otherPlayer->m_playerDuelTeam && player->m_playerDuelArbiter == otherPlayer->m_playerDuelArbiter) {
-                    result = true;
-                } else {
-                    uint8_t otherPvp = unit->m_unit->m_unitFieldBytes2[1];
-
-                    if (otherPvp & 0x1) {
-                        if (!(this->m_unit->m_unitFieldBytes2[1] & 0x8)) {
-                            result = !(otherPvp & 0x8);
-                        }
-                    } else {
-                        uint8_t pvp = this->m_unit->m_unitFieldBytes2[1];
-
-                        if ((pvp & 0x4) && (otherPvp & 0x4)) {
-                            result = true;
-                        } else if (((pvp & 0x2) || (otherPvp & 0x2)) && !(pvp & 0x8)) {
-                            result = !(otherPvp & 0x8);
-                        }
-                    }
-                }
-            } else if (!(this->m_unit->m_unitFieldBytes2[1] & 0x8)) {
-                result = !(unit->m_unit->m_unitFieldBytes2[1] & 0x8);
-            }
-        }
-
-        return result;
-    }
-
-    if ((data->m_unitFieldFlags & 0x8) && (unit->m_unit->m_unitFieldBytes2[1] & 0x8)) {
-        return false;
-    }
-
-    if ((unit->m_unit->m_unitFieldFlags & 0x8) && (data->m_unitFieldBytes2[1] & 0x8)) {
-        return false;
-    }
-
-    return !this->IsFriendly(unit);
 }
 
 // PROVEN: a712832d IDENTICAL/NONE
@@ -5799,7 +8822,7 @@ int32_t CGUnit_C::IsDeepInLiquid() const {
     return depth > this->m_movementData.m_collisionHeight * 0.5f;
 }
 
-// OFFSET: #0x00718A90
+// OFFSET: 0x005AFFA0/0x140222E30
 bool CGUnit_C::DoNotLogDeath() const {
     if (this->m_obj->m_type & TYPEMASK_PLAYER) {
         return false;
@@ -6044,15 +9067,28 @@ int32_t CGUnit_C::GetSpellRank(const SpellRec* spell) const {
     return rank;
 }
 
-// OFFSET: 0x005B2FE0/0x1402263C0
+// OFFSET: 0x005B2FE0
 void CGUnit_C::ApplyAlpha(uint32_t time) {
     CM2Model* model = this->GetObjectModel();
+    CM2Model* worldModel = this->m_worldModel;
+    float scale = static_cast<float>(this->m_alphaScale);
+    float mountAlpha = 1.0f;
 
-    if (this->m_forceWorldModelAlpha) {
-        model = this->m_worldModel;
+    if (model != worldModel && model) {
+        if (this->m_mountFadeDuration) {
+            if (static_cast<int32_t>(time - this->m_mountFadeStartTime - this->m_mountFadeDuration) < 0) {
+                this->m_mountAlpha = this->m_mountFadeStartAlpha + (time - this->m_mountFadeStartTime) * (this->m_mountFadeEndAlpha - this->m_mountFadeStartAlpha) / this->m_mountFadeDuration;
+            } else {
+                this->m_mountFadeDuration = 0;
+                this->m_mountAlpha = this->m_mountFadeEndAlpha;
+            }
+        }
+
+        mountAlpha = static_cast<float>(this->m_mountAlpha) * scale * (1.0f / 65025.0f);
+        model->m_fadeAlpha = mountAlpha;
     }
 
-    if (!model) {
+    if (!worldModel) {
         return;
     }
 
@@ -6065,7 +9101,22 @@ void CGUnit_C::ApplyAlpha(uint32_t time) {
         }
     }
 
-    model->m_fadeAlpha = static_cast<float>(this->m_alphaScale) * this->m_alpha * (1.0f / 65025.0f);
+    float alpha = static_cast<float>(this->m_alpha) * scale * (1.0f / 65025.0f);
+
+    if (mountAlpha > 0.00000011920929f) {
+        alpha = alpha / mountAlpha;
+
+        if (alpha < 0.0f) {
+            worldModel->m_fadeAlpha = 0.0f;
+            return;
+        }
+
+        if (alpha >= 1.0f) {
+            alpha = 1.0f;
+        }
+    }
+
+    worldModel->m_fadeAlpha = alpha;
 }
 
 // OFFSET: 0x005B3470
@@ -6854,84 +9905,6 @@ uint32_t CGUnit_C::IsVehicleCurrentlyUnstoppable() const {
     return vehicle->m_flags & ((this->m_movement->m_flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) ? 0x100 : 0x80);
 }
 
-// OFFSET: 0x005FF6F0/0x1402837F0
-const CGUnitVirtualItem* CGUnit_C::GetParryingItem(bool offhand) const {
-    const CGUnitVirtualItem* item = this->GetVirtualItem(0, false);
-
-    if (offhand || (item && item->m_classID != 2)) {
-        item = this->GetVirtualItem(1, false);
-
-        if (item && item->m_classID != 2 && item->m_classID != 4) {
-            return NULL;
-        }
-    }
-
-    return item;
-}
-
-// OFFSET: 0x005FF740/0x140283850
-int32_t CGUnit_C::GetUnitSize() const {
-    int32_t size = this->m_displayInfo->m_sizeClass;
-
-    if (size == -1) {
-        return this->m_modelData->m_sizeClass;
-    }
-
-    return size;
-}
-
-// OFFSET: 0x005FFB60/0x140283D60
-const CGUnitVirtualItem* CGUnit_C::GetAttackingWeapon(int32_t hand, bool requireLoadedModel) const {
-    if (!this->m_sheatheState) {
-        return NULL;
-    }
-
-    const CGUnitVirtualItem* item = this->GetVirtualItem(hand != 0, false);
-
-    if (!item || item->m_classID != 2) {
-        return NULL;
-    }
-
-    if (!requireLoadedModel) {
-        return item;
-    }
-
-    CM2Model* model = this->m_worldModel;
-
-    if (!model || !model->IsLoaded()) {
-        return NULL;
-    }
-
-    CM2Model* attached = model->m_attachList;
-
-    if (!attached) {
-        return NULL;
-    }
-
-    while (attached->m_attachmentId != (hand != 0) + 1) {
-        attached = attached->m_attachNext;
-
-        if (!attached) {
-            return NULL;
-        }
-    }
-
-    if (attached->IsLoaded()) {
-        return item;
-    }
-
-    return NULL;
-}
-
-// OFFSET: 0x00600100/0x140284440
-void CGUnit_C::StopAttack() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_ATTACK_STOP));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    this->m_stopAttackSent = 1;
-}
-
 // OFFSET: #0x0056C220
 bool CGUnit_C::IsInVehicle() const {
     return this->m_vehiclePassenger && this->m_vehiclePassenger->m_state;
@@ -7096,7 +10069,7 @@ void CGUnit_C::BuildSmoothMatrix(C44Matrix& matrix) const {
 }
 
 // OFFSET: 0x005B11E0
-bool __stdcall CGUnit_C::IsSpellAllowedInArena(const SpellRec* spell, int32_t* error) {
+bool __stdcall CGUnit_C::CheckSpellPvPUsability(const SpellRec* spell, int32_t* error) {
     int32_t categoryRecoveryTime = 0;
     int32_t recoveryTime = 0;
 
@@ -7212,7 +10185,7 @@ void CGUnit_C::RefreshNameDesc() {
 // OFFSET: #0x00719A90
 void CGUnit_C::GetSwimMatrix(C44Matrix& matrix) const {
     C33Matrix rotation(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-    rotation.FromEulerAnglesZYX(-(6.2831855f - this->GetRenderFacing()), 6.2831855f - this->m_movementData.m_pitch, 0.0f);
+    rotation.FromEulerAnglesZYX(-(6.2831855f - this->GetDisplayFacing()), 6.2831855f - this->m_movementData.m_pitch, 0.0f);
 
     matrix.a0 = rotation.a0;
     matrix.a1 = rotation.a1;
@@ -7545,18 +10518,6 @@ C3Vector CGUnit_C::GetMissileFirePosition() const {
     }
 
     return this->GetPosition();
-}
-
-// OFFSET: #0x0071A940
-void CGUnit_C::StartProceduralFade(uint8_t alpha, uint32_t type, uint32_t time, uint32_t hold, uint32_t endAlpha) {
-    if (type < 12) {
-        this->m_proceduralFadeAlpha = alpha;
-        this->m_proceduralFadeType = type;
-        this->m_proceduralFadeStart = FrameTime::s_curTimeMs;
-        this->m_proceduralFadeDuration = time + hold;
-        this->m_proceduralFadeEndAlpha = endAlpha;
-        this->DoFade(alpha, time);
-    }
 }
 
 // OFFSET: 0x005B3B90/0x1402270F0
@@ -8024,7 +10985,7 @@ float CGUnit_C::GetFacing() const {
 }
 
 // OFFSET: 0x005ABB10/0x140224040
-float CGUnit_C::GetRenderFacing() const {
+float CGUnit_C::GetDisplayFacing() const {
     return this->m_movementData.GetFacing(this->m_renderFacing);
 }
 
@@ -8252,55 +11213,6 @@ bool CGUnit_C::CanTurnWhileCasting() const {
     }
 
     return true;
-}
-
-// OFFSET: #0x007206A0
-void CGUnit_C::UpdateAmmoModel(uint32_t displayId, uint32_t invType) {
-    if (this->m_ammoDisplayId == displayId && this->m_ammoModel) {
-        return;
-    }
-
-    int32_t noAttach = 0;
-
-    if (this->m_ammoModel) {
-        if (this->m_ammoModel->m_attachParent) {
-            this->m_ammoModel->DetachFromParent();
-        }
-
-        this->m_ammoModel->Release();
-        this->m_ammoModel = NULL;
-    }
-
-    this->m_ammoDisplayId = displayId;
-
-    if (!displayId) {
-        return;
-    }
-
-    uint32_t ammoType = 24;
-    const CGUnitVirtualItem* ranged = this->GetVirtualItem(2, false);
-
-    if (invType == 30) {
-        if (ranged) {
-            ammoType = (ranged->m_inventoryType == 25) + 24;
-        }
-    } else {
-        ammoType = invType;
-    }
-
-    if (ranged && ranged->m_classID == 2 && (ranged->m_subclassID == 3 || ranged->m_subclassID == 18)) {
-        noAttach = 1;
-    }
-
-    ItemDisplayInfoRec rec;
-
-    if (g_itemDisplayInfoDB.GetRecord(this->m_ammoDisplayId, &rec)) {
-        this->m_ammoModel = CCharacterComponent::MakeAmmoModel(this->m_worldModel, &rec, ammoType);
-    }
-
-    if (this->m_ammoModel && !noAttach && (this->m_animationState & 0x4000) && ammoType == 24) {
-        this->m_ammoModel->AttachToParent(this->m_worldModel, 0x23, NULL, 0);
-    }
 }
 
 // OFFSET: 0x0056E090/0x1401CEC80
@@ -8589,7 +11501,7 @@ float CGUnit_C::GetSplineDuration() {
 }
 
 // OFFSET: 0x005B1320
-bool __stdcall CGUnit_C::IsAreaInAreaGroup(int32_t areaId, int32_t areaGroupId, int32_t* checked) {
+bool __stdcall CGUnit_C::CheckIsInArea(int32_t areaId, int32_t areaGroupId, int32_t* checked) {
     if (checked) {
         *checked = 0;
     }
@@ -8840,44 +11752,6 @@ void CGUnit_C::SetEmoteQueue(const QUESTGIVEREMOTENODE* nodes, uint32_t count) {
     this->m_emoteQueue[0].m_delay += OsGetAsyncTimeMs();
 }
 
-// OFFSET: #0x00728050
-DelayedSpellVisualKit* CGUnit_C::DelaySpellVisualKit(int32_t spellId, int32_t kitId, int32_t kitType, const C3Vector* position, WOWGUID targetGuid, int32_t a7, int32_t a8, int32_t delay, int32_t a10, int32_t a11) {
-    uint32_t index;
-
-    for (index = 0; index < this->m_delayedSpellVisualKits.m_count; index++) {
-        if (!(this->m_delayedSpellVisualKits.m_data[index].m_flags & 0x8)) {
-            break;
-        }
-    }
-
-    if (index == this->m_delayedSpellVisualKits.m_count) {
-        this->m_delayedSpellVisualKits.SetCount(this->m_delayedSpellVisualKits.m_count + 1);
-    }
-
-    DelayedSpellVisualKit* kit = &this->m_delayedSpellVisualKits.m_data[index];
-    kit->m_spellId = spellId;
-    kit->m_kitType = kitType;
-    kit->m_kitId = kitId;
-
-    if (position) {
-        kit->m_position = *position;
-        kit->m_flags |= 0x1;
-        kit->m_targetGuid = targetGuid;
-    } else {
-        kit->m_position.x = 0.0f;
-        kit->m_position.y = 0.0f;
-        kit->m_position.z = 0.0f;
-        kit->m_flags &= ~0x1u;
-        kit->m_targetGuid = WOWGUID();
-    }
-
-    kit->m_delay = delay;
-    kit->m_flags = (kit->m_flags & ~0x6u) | (((a7 != 0) | (((a8 != 0) | 2) << 1)) << 1);
-    kit->m_delayType = a10;
-    kit->m_startTime = a11;
-    return kit;
-}
-
 // OFFSET: #0x00716470
 C3Vector CGUnit_C::GetGroundNormal() const {
     return this->m_movement->GetGroundNormal();
@@ -8947,7 +11821,7 @@ void CGUnit_C::UpdateWorldTransform(float elapsed) {
 
     if (model) {
         float scale = this->GetTrueScale();
-        float facing = this->GetRenderFacing();
+        float facing = this->GetDisplayFacing();
         model->SetWorldTransform(this->GetPosition(), facing, scale, this->m_groundNormal, 0xFFFFFFFF);
     }
 }
@@ -9131,27 +12005,6 @@ const CGUnitVirtualItem* CGUnit_C::GetDefendingItem() const {
     return NULL;
 }
 
-// OFFSET: #0x007161C0
-ATTACKROUNDINFO::ATTACKROUNDINFO() {
-    uint32_t* words = reinterpret_cast<uint32_t*>(this);
-
-    for (int32_t i = 0; i < 21; i++) {
-        words[i] = 0;
-    }
-
-    for (int32_t i = 0; i < 6; i++) {
-        words[21 + i] = 0;
-    }
-
-    for (int32_t i = 0; i < 8; i++) {
-        this->unk_006C[i] = 0.0f;
-    }
-
-    for (int32_t i = 0; i < 5; i++) {
-        this->unk_008C[i] = 0;
-    }
-}
-
 // OFFSET: 0x005D5B30/0x1402504C0
 CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
     : CGObject_C(time, create),
@@ -9181,9 +12034,9 @@ CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
       m_mountModel(NULL),
       m_pendingDisplayModel(NULL),
       m_mountScale(1.0f),
-      unk_0958(0),
-      unk_095C(0),
-      m_forceWorldModelAlpha(0xFF),
+      m_mountFadeStartTime(0),
+      m_mountFadeDuration(0),
+      m_mountAlpha(0xFF),
       m_nextBreathCheckTime(CGWorldFrame::s_currentWorldFrame->GetSceneTime()),
       m_mountDisplayId(this->m_unit->m_unitFieldMountdisplayid),
       m_mountTransition(NULL),
@@ -9298,7 +12151,9 @@ CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
       m_currentClientRace(0),
       m_currentClientRaceFlags(0),
       m_displayTransitionSound(0),
-      unk_11B8(),
+      m_camouflage(0.0f),
+      m_camouflageFadeIn(0.0f),
+      m_camouflageFadeOut(0.0f),
       m_activeHeadLook(NULL),
       m_displayTransition(NULL),
       m_predictedHealth(this->m_unit->m_unitFieldHealth),
@@ -9309,8 +12164,8 @@ CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
     this->m_floodsafeTime[1] = 0;
     this->m_floodsafeOpcode[0] = 8229;
     this->m_floodsafeOpcode[1] = 8229;
-    this->unk_0961[0] = 0xFF;
-    this->unk_0961[1] = 0xFF;
+    this->m_mountFadeStartAlpha = 0xFF;
+    this->m_mountFadeEndAlpha = 0xFF;
     this->m_targetChangeTime = FrameTime::GetCurTimeMs() - 1000;
     this->unk_1041[0] = 0;
 
@@ -11780,7 +14635,7 @@ int32_t CGUnit_C::GetPredictedPower(int32_t powerType) const {
 }
 
 // OFFSET: 0x005C7E10/0x14023F3F0
-bool CGUnit_C::IgnoresAuraState(const SpellRec* spell) const {
+bool CGUnit_C::HasIgnoreAuraState(const SpellRec* spell) const {
     const CGUnit_C* unit = this;
 
     while (unit->m_unit->m_unitFieldCreatedby) {
@@ -11793,12 +14648,12 @@ bool CGUnit_C::IgnoresAuraState(const SpellRec* spell) const {
         unit = creator;
     }
 
-    return unit->AffectedByAura(262, spell);
+    return unit->HasAuraMatchingSpellClass(262, spell);
 }
 
 // OFFSET: 0x005C9530
 bool CGUnit_C::CheckStealthRules(const SpellRec* spell, int32_t* reason) const {
-    if (!(spell->m_attributes & 0x20000) || (this->m_unit->m_unitFieldBytes1[2] & 0x2) || this->AffectedByAura(275, spell)) {
+    if (!(spell->m_attributes & 0x20000) || (this->m_unit->m_unitFieldBytes1[2] & 0x2) || this->HasAuraMatchingSpellClass(275, spell)) {
         return true;
     }
 
@@ -13152,310 +16007,6 @@ void CGUnit_C::OnTeleportAck(uint32_t time, uint32_t ackCounter, CDataStore* msg
     this->m_movementData.OnTeleportLocal(time, ackCounter, status);
 }
 
-// PROVEN: 8eae0b5a IDENTICAL/NONE
-// OFFSET: 0x005FF780
-void TargetAttacker(const WOWGUID& attacker) {
-    if (!CGGameUI::m_lockedTarget.m_guid) {
-        CGGameUI::Target(attacker);
-    }
-}
-
-// OFFSET: #0x00755050
-ATTACKROUNDINFO& ATTACKROUNDINFO::operator=(const ATTACKROUNDINFO& other) {
-    memcpy(this, &other, sizeof(ATTACKROUNDINFO));
-    return *this;
-}
-
-// OFFSET: #0x00755130
-void CGUnit_C::PlayAttackerRound(const ATTACKROUNDINFO& info) {
-    if (this->m_unit->m_unitFieldHealth <= 0 || (info.m_hitInfo & 0x40000)) {
-        return;
-    }
-
-    bool skipAnimation = info.m_meleeSpellId != 0;
-    uint32_t anim = 16;
-
-    if (info.m_hitInfo & 0x4) {
-        const CGUnitVirtualItem* offhand = this->GetVirtualItem(1, false);
-
-        if (offhand && offhand->m_classID == 2) {
-            anim = (offhand->m_subclassID == 15) + 87;
-        } else {
-            anim = 117;
-        }
-    } else {
-        const CGUnitVirtualItem* mainhand = this->GetVirtualItem(0, false);
-
-        if (mainhand && mainhand->m_classID == 2) {
-            uint32_t oneHanded = 18 - (this->GetVirtualItem(1, false) != NULL);
-
-            switch (mainhand->m_subclassID) {
-                case 0:
-                case 4:
-                case 7:
-                case 11:
-                case 14:
-                    anim = 17;
-                    break;
-                case 1:
-                case 5:
-                case 8:
-                case 12:
-                    anim = oneHanded;
-                    break;
-                case 6:
-                case 10:
-                case 17:
-                case 20:
-                    anim = 19;
-                    break;
-                case 15:
-                    anim = 85;
-                    break;
-            }
-        }
-    }
-
-    if (!skipAnimation) {
-        this->PlayBaseAnimation(anim, 0);
-    }
-
-    if (info.m_victimState) {
-        this->PlayUnitSound((info.m_hitInfo >> 9) & 0x1, 0);
-    }
-}
-
-// OFFSET: #0x00755630
-void ATTACKROUNDINFO::Unpack(CDataStore& msg) {
-    msg.Get(this->m_hitInfo);
-    msg >> *reinterpret_cast<SmartGUID*>(&this->m_attacker);
-    msg >> *reinterpret_cast<SmartGUID*>(&this->m_target);
-    msg.Get(reinterpret_cast<uint32_t&>(this->m_damage));
-    msg.Get(reinterpret_cast<uint32_t&>(this->m_overkill));
-    uint8_t count;
-    msg.Get(count);
-
-    for (uint8_t i = 0; i < count; i++) {
-        msg.Get(this->m_schoolMask[i]);
-        msg.Get(this->m_subDamage[i]);
-        msg.Get(this->m_subDamageInt[i]);
-    }
-
-    if (this->m_hitInfo & 0x60) {
-        for (uint8_t i = 0; i < count; i++) {
-            msg.Get(this->m_absorbed[i]);
-        }
-    }
-
-    if (this->m_hitInfo & 0x180) {
-        for (uint8_t i = 0; i < count; i++) {
-            msg.Get(this->m_resisted[i]);
-        }
-    }
-
-    uint8_t victimState;
-    msg.Get(victimState);
-    this->m_victimState = victimState;
-    msg.Get(this->unk_0058);
-    msg.Get(this->m_meleeSpellId);
-
-    if (this->m_hitInfo & 0x2000) {
-        msg.Get(this->m_blocked);
-    }
-
-    if (this->m_hitInfo & 0x800000) {
-        msg.Get(this->m_rageGained);
-    }
-
-    if (this->m_hitInfo & 0x1) {
-        msg.Get(this->unk_0068);
-
-        for (uint32_t i = 0; i < 8; i++) {
-            msg.Get(this->unk_006C[i]);
-        }
-
-        for (uint32_t i = 0; i < 2; i++) {
-            msg.Get(this->unk_0024[i]);
-            msg.Get(this->unk_002C[i]);
-        }
-
-        msg.Get(this->unk_008C[0]);
-    }
-
-    if (ClntObjMgrObjectPtr(this->m_target, TYPEMASK_UNIT, __FILE__, __LINE__) && !this->m_damage && this->m_blocked) {
-        this->m_victimState = 5;
-    }
-}
-
-// OFFSET: #0x00756180
-void CGUnit_C::ClearAttackRound() {
-    if (!this->m_lastAttackRound.m_attacker.m_guid || !this->m_lastAttackRound.m_target.m_guid) {
-        return;
-    }
-
-    CGUnit_C* target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_lastAttackRound.m_target, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (target) {
-        target->PlayVictimWorldFeedback(this->m_lastAttackRound);
-    }
-
-    memset(&this->m_lastAttackRound, 0, sizeof(ATTACKROUNDINFO));
-}
-
-// OFFSET: #0x00756770
-void CGUnit_C::OnAttackStop(uint64_t target, int32_t faceTarget) {
-    this->m_combat.m_attacking = WOWGUID::Make(0);
-    this->m_combat.m_attackSent = 0;
-    this->m_stopAttackSent = 0;
-    this->ClearAttackRound();
-
-    if (!target || !faceTarget) {
-        return;
-    }
-
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(target), TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
-        this->m_clientFlags |= 0x1;
-        C3Vector targetPosition = unit->GetPosition();
-        C3Vector position = this->GetPosition();
-        this->m_scriptedFacing = CalculateFacingTo(&position, &targetPosition);
-    }
-}
-
-// OFFSET: #0x00756800
-int32_t Packet_Group_29(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    switch (msgId) {
-        case SMSG_ATTACK_START: {
-            WOWGUID attacker;
-            WOWGUID victim;
-            msg->Get(attacker.m_guid);
-            msg->Get(victim.m_guid);
-            CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (!unit) {
-                return 0;
-            }
-
-            unit->m_combat.m_attackSent = 0;
-            unit->SetAttacking(victim);
-
-            if (!unit->IsActivePlayer()) {
-                return 1;
-            }
-
-            FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_ENTER_COMBAT, NULL);
-            CGGameUI::UpdateCombatMode();
-            return 1;
-        }
-        case SMSG_ATTACK_STOP:
-        case SMSG_COMBAT_EVENT_FAILED: {
-            SmartGUID attacker;
-            SmartGUID victim;
-            *msg >> attacker;
-            *msg >> victim;
-            uint32_t faceTarget;
-            msg->Get(faceTarget);
-            CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (unit) {
-                unit->OnAttackStop(victim.m_guid, faceTarget);
-
-                if (unit->IsActivePlayer()) {
-                    FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_LEAVE_COMBAT, NULL);
-                    CGGameUI::UpdateCombatMode();
-                }
-            }
-
-            return 1;
-        }
-        case SMSG_ATTACKSWING_NOTINRANGE:
-            SetAttackSwingError(1);
-            return 0;
-        case SMSG_ATTACKSWING_BADFACING:
-            SetAttackSwingError(2);
-            return 0;
-        case SMSG_ATTACKSWING_DEADTARGET:
-        case SMSG_ATTACKSWING_CANT_ATTACK: {
-            CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-            if (!player) {
-                return 0;
-            }
-
-            player->SetCombatMode();
-            return 0;
-        }
-        case SMSG_ATTACKER_STATE_UPDATE: {
-            ATTACKROUNDINFO info;
-            info.Unpack(*msg);
-            CGUnit_C* attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (attacker) {
-                if (attacker->m_sheatheState != 1) {
-                    attacker->SetSheatheState(1, 1, 0);
-                }
-
-                attacker->m_combat.m_attackSent = 0;
-                attacker->ClearAttackRound();
-                attacker->m_lastAttackRound = info;
-                CGUnit_C* victim = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_target, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                if (attacker->IsActivePlayer() && victim) {
-                    static_cast<CGPlayer_C*>(attacker)->UpdateAttackPosition(victim);
-                }
-
-                attacker->PlayAttackerRound(info);
-
-                if (attacker->m_lastAttackRound.m_target == ClntObjMgrGetActivePlayer()) {
-                    WOWGUID guid = attacker->m_obj->m_guid;
-                    TargetAttacker(guid);
-                }
-
-                if (attacker->IsAutoTracking() && !attacker->IsActiveMoverTracking(4)) {
-                    attacker->ClearTrackingTarget(true, true);
-                }
-            } else {
-                CGUnit_C* victim = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_target, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                if (victim) {
-                    victim->PlayVictimRound(info);
-                }
-            }
-
-            UnitCombatLog(info);
-            return 0;
-        }
-        case SMSG_ENVIRONMENTAL_DAMAGE_LOG: {
-            uint64_t guid = 0;
-            msg->Get(guid);
-            uint8_t type = 0;
-            msg->Get(type);
-            uint32_t damage = 0;
-            msg->Get(damage);
-            uint32_t absorbed = 0;
-            msg->Get(absorbed);
-            uint32_t resisted = 0;
-            msg->Get(resisted);
-            CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(guid), TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (unit) {
-                unit->HandleEnvironmentDamage(type, damage, absorbed, resisted);
-            }
-
-            return 1;
-        }
-        case SMSG_CLEAR_TARGET: {
-            uint64_t guid;
-            msg->Get(guid);
-            CGGameUI::ClearTarget(WOWGUID::Make(guid), 1);
-            return 0;
-        }
-        default:
-            return 0;
-    }
-}
-
 // OFFSET: #0x007300A0
 int32_t Packet_AuraUpdate(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
@@ -13515,14 +16066,6 @@ void CGUnit_C::SpellInterrupted(uint8_t castCount, int32_t spellId) {
     if (this->m_obj->m_guid == CGUnit_C::s_activeMover && this->IsActiveMoverTracking(s_spellInterruptTrackingMask)) {
         this->ClearTrackingTarget(false, true);
     }
-}
-
-// OFFSET: #0x00726200
-void CGUnit_C::ResetUICastingSpell() {
-    this->m_castingSpellId = 0;
-    this->m_castStartTime = 0;
-    this->m_castEndTime = 0;
-    this->UpdateSpellCastBars();
 }
 
 // OFFSET: 0x005ACD50
@@ -13603,133 +16146,13 @@ void CGUnit_C::AddAuraSlot(uint8_t slot) {
     }
 }
 
-// OFFSET: 0x005CEAD0
-void CGUnit_C::OnAuraUpdate(CDataStore* msg, bool updateAll) {
-    uint32_t time = OsGetAsyncTimeMs();
-    uint32_t oldCount = this->GetAuraCount();
-    AuraData* oldAuras = static_cast<AuraData*>(alloca(sizeof(AuraData) * oldCount));
-    memcpy(oldAuras, &this->m_auras[0], sizeof(AuraData) * oldCount);
-    uint8_t updated[256];
-
-    if (updateAll) {
-        memset(&this->m_auras[0], 0, sizeof(AuraData) * this->GetAuraCount());
-        memset(updated, 1, sizeof(updated));
-    } else {
-        memset(updated, 0, sizeof(updated));
-    }
-
-    while (!msg->IsRead()) {
-        uint8_t slot;
-        msg->Get(slot);
-        updated[slot] = 1;
-        this->AddAuraSlot(slot);
-        this->m_auras[slot].Unpack(this, time, msg);
-    }
-
-    this->m_clientFlags &= ~0x40000;
-    this->UpdateAuraEffectMask();
-    bool changed = false;
-
-    for (uint32_t i = 0; i < oldCount; i++) {
-        if (!updated[i]) {
-            continue;
-        }
-
-        int32_t oldSpellId = oldAuras[i].m_spellId;
-        uint32_t oldActive = oldAuras[i].m_flags & 0x7;
-        int32_t spellId = this->m_auras[i].m_spellId;
-        bool wasActive = oldSpellId && oldActive;
-        bool stillActive = oldSpellId == spellId && (this->m_auras[i].m_flags & 0x7);
-
-        if ((wasActive && !stillActive) || !spellId) {
-            if (updateAll) {
-                SpellRec spell;
-
-                if (g_spellDB.GetRecord(oldSpellId, &spell)) {
-                    this->RemoveAuraEffect(i, &spell);
-                }
-            } else {
-                this->OnAuraRemoved(i, oldAuras[i].m_flags >> 7, &oldAuras[i], oldSpellId);
-                changed = true;
-            }
-        }
-    }
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        if (!updated[i]) {
-            continue;
-        }
-
-        bool hadOld = i < oldCount;
-        int32_t oldSpellId = hadOld ? oldAuras[i].m_spellId : 0;
-        uint32_t oldActive = hadOld ? oldAuras[i].m_flags & 0x7 : 0;
-        AuraData& aura = this->m_auras[i];
-        int32_t spellId = aura.m_spellId;
-        bool same = oldSpellId == spellId && oldActive;
-
-        if (!spellId || !(aura.m_flags & 0x7)) {
-            continue;
-        }
-
-        if (updateAll) {
-            SpellRec spell;
-
-            if (g_spellDB.GetRecord(spellId, &spell)) {
-                this->AddAuraEffect(i, &spell);
-            }
-
-            if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-                CGActionBar::OnAuraChanged(spellId);
-
-                if (CGSpellBook::IsTrackingSpell(spellId)) {
-                    CGMinimapFrame::SetTrackingSpell(spellId);
-                }
-            }
-        } else if (!same) {
-            this->OnAuraAdded(i, aura.m_flags >> 7, &aura, spellId);
-            changed = true;
-        } else if (hadOld) {
-            if (oldAuras[i].m_stackCount != aura.m_stackCount) {
-                UnitCombatLogAuraDose(this, &aura, spellId, oldAuras[i].m_stackCount, aura.m_stackCount, aura.m_flags >> 7);
-            } else if (oldAuras[i].m_endTime != aura.m_endTime) {
-                UnitCombatLogAuraRefreshed(this, &aura, aura.m_spellId, aura.m_flags >> 7);
-            }
-        }
-    }
-
-    WOWGUID guid = this->m_obj->m_guid;
-    int32_t arenaIndex;
-    int32_t arenaOpponent = CGBattlefieldInfo::GetArenaOpponentIndex(guid, &arenaIndex);
-
-    if ((changed && (guid == ClntObjMgrGetActivePlayer() || this->m_unit->m_unitFieldCharmedby == ClntObjMgrGetActivePlayer() || *this->GetCharmerOrCreatorGuid() == ClntObjMgrGetActivePlayer() || this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget)) || arenaOpponent) {
-        CGSpellBook::UpdateUsable();
-
-        if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || arenaOpponent) {
-            SpellRec spell;
-
-            if ((this->m_castingSpellId && g_spellDB.GetRecord(this->m_castingSpellId, &spell)) || (this->m_channelSpellId && g_spellDB.GetRecord(this->m_channelSpellId, &spell))) {
-                if (spell.m_preventionType == 1) {
-                    bool notInterruptible = this->IsCastNotInterruptible();
-
-                    if (notInterruptible != this->ProcessCastNotInterruptible(&spell)) {
-                        this->UpdateSpellCastBars();
-                        Script_SendUnitSignal(this->m_obj->m_guid, this->IsCastNotInterruptible() + 334);
-                    }
-                }
-            }
-        }
-    }
-
-    Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_AURA);
-}
-
-// OFFSET: 0x005D2D30/0x14024CB20
+// OFFSET: 0x005D2D30
 void CGUnit_C::SetSheatheState(uint32_t showWeapons, int32_t instant, int32_t noSend) {
     if (this->IsPlayingWeaponAnim()) {
         showWeapons = CGUnit_C::ResolveSheathState(showWeapons, this->GetVirtualItem(0, false), this->GetVirtualItem(1, false));
     }
 
-    if (showWeapons == 2 && (this->m_obj->m_type & TYPEMASK_PLAYER)) {
+    if (showWeapons == 2 && (this->m_obj->m_type & TYPEMASK_PLAYER) && !this->FindVirtualItemEffect(2)) {
         ChrClassesRec* classRec = g_chrClassesDB.GetRecord(this->m_unit->m_unitFieldBytes0[1]);
 
         if (!classRec || (classRec->m_flags & 0x8)) {
@@ -13749,14 +16172,8 @@ void CGUnit_C::SetSheatheState(uint32_t showWeapons, int32_t instant, int32_t no
         return;
     }
 
-    if (instant) {
-        this->UnsetKeyBoneSequence(this->m_worldModel, 3, 1, 1, 0);
-        this->UnsetKeyBoneSequence(this->m_worldModel, 2, 1, 1, 0);
-    }
-
-    uint32_t oldState = this->m_sheatheState;
+    this->m_previousSheatheState = this->m_sheatheState;
     this->m_sheatheState = showWeapons;
-    this->m_previousSheatheState = oldState;
 
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && !noSend) {
         CDataStore msg;
@@ -13775,60 +16192,8 @@ void CGUnit_C::SetSheatheState(uint32_t showWeapons, int32_t instant, int32_t no
     } else {
         this->SetSheatheStateAnimate();
     }
-}
 
-// OFFSET: #0x00755E40
-void CGUnit_C::PlayVictimRound(const ATTACKROUNDINFO& info) {
-    if (this->m_unit->m_unitDynamicFlags & 0x1) {
-        return;
-    }
-
-    this->PlayVictimWorldFeedback(info);
-
-    if (info.m_hitInfo & 0x2) {
-        this->PlayWoundAnimKit(info.m_hitInfo & 0x200);
-
-        if ((info.m_damage || (info.m_hitInfo & 0x1000000)) && (info.m_victimState == 1 || info.m_victimState == 4)) {
-            WOWGUID attacker = info.m_attacker;
-            this->ShowBloodSpurt(attacker, info.m_hitInfo & 0x8000);
-        }
-    }
-
-    if (this->DoNotPlayWoundAnim()) {
-        uint32_t now = FrameTime::s_curTimeMs;
-
-        if (now <= s_nextVictimImpactTime) {
-            return;
-        }
-
-        s_nextVictimImpactTime = static_cast<uint32_t>((static_cast<uint64_t>(CRandom::uint32_(g_rndSeed)) * 2000) >> 32) + now + 3000;
-    }
-
-    if (info.m_victimState == 3) {
-        C3Vector position = this->GetPosition();
-        this->SetImpactKitEffect(false, &info, &position);
-    } else if (info.m_blocked) {
-        C3Vector position = this->GetPosition();
-        this->SetImpactKitEffect(true, &info, &position);
-    } else if (info.m_victimState == 8) {
-        C3Vector position = this->GetPosition();
-        position.z += 2.0f;
-        SI3::PlaySoundKit("(DONOTRENAME)ShieldWoodImpact", &position, NULL, NULL);
-    }
-
-    if ((info.m_hitInfo & 0xA0) || info.m_victimState == 7) {
-        C3Vector position = this->GetPosition();
-        position.z += 2.0f;
-        SI3::PlaySoundKit("(DONOTRENAME)AbsorbGetHit", &position, NULL, NULL);
-    } else if (info.m_hitInfo & 0x2) {
-        if (info.m_hitInfo & 0x20000) {
-            this->PlayUnitSound(9, 0, 0);
-        } else if (info.m_hitInfo & 0x200) {
-            this->PlayUnitSound(3, 0, 0);
-        } else if (!(info.m_hitInfo & 0x10)) {
-            this->PlayUnitSound(2, 0, 0);
-        }
-    }
+    this->UpdateCombatReadyAnimKit(0);
 }
 
 // OFFSET: 0x005BC4D0
@@ -14089,10 +16454,9 @@ int32_t CGUnit_C::ShowRangedWeapon(bool sheathed, bool* rightHand) {
     }
 
     if (this->m_rangedWeaponModel) {
-        this->m_rangedWeaponModel->m_fFlags |= 0x20;
         this->m_rangedWeaponModel->m_drawCallback = NULL;
-        this->m_rangedWeaponModel->m_drawArg = NULL;
         this->m_rangedWeaponModel->Release();
+        this->m_rangedWeaponModel = NULL;
     }
 
     if (!sheathed) {
@@ -14108,12 +16472,7 @@ int32_t CGUnit_C::ShowRangedWeapon(bool sheathed, bool* rightHand) {
         displayRecPtr = &displayRec;
     }
 
-    GEOCOMPONENTLINKS link = CCharacterComponent::AddHandItem(this->m_worldModel, displayRecPtr, INVSLOT_RANGED, static_cast<SHEATHE_TYPE>(item->m_sheatheType), sheathed, false, isRightHand, 0);
-
-    if (this->m_characterComponent) {
-        this->m_characterComponent->SetItemSlotUsingAttachSlot(static_cast<ITEM_SLOT>(-1), link);
-    }
-
+    int32_t link = this->AddHandItemModel(displayRecPtr, INVSLOT_RANGED, item->m_sheatheType, sheathed, false, isRightHand, 0);
     CM2Model* child = this->m_worldModel->m_attachList;
 
     while (child && child->m_attachmentId != static_cast<uint32_t>(link)) {
@@ -14129,32 +16488,34 @@ int32_t CGUnit_C::ShowRangedWeapon(bool sheathed, bool* rightHand) {
         if (item->m_classID == 2 && item->m_subclassID == 2) {
             this->m_rangedWeaponModel->SetLoadedCallback(&CGUnit_C::BowModelLoaded, this);
         }
-    }
 
-    if (this->m_characterComponent && (this->m_obj->m_type & TYPEMASK_PLAYER)) {
-        if (sheathed) {
-            this->m_characterComponent->RemoveItem(ITEMSLOT_11);
-        } else if (!isRightHand) {
-            CGItem_C* ammo = static_cast<CGPlayer_C*>(this)->m_bag.FindItemOfClass(11, 0, 2);
-
-            if (ammo) {
-                this->m_characterComponent->AddItem(ITEMSLOT_11, ammo->GetDisplayID(), 0);
-            }
-        }
+        this->UpdateRangedWeaponOrientation();
     }
 
     bool track = false;
 
-    if (this->m_castSpellId && (this->m_animationState & 0x400)) {
-        SpellRec spell;
+    if (this->m_castSpellId && (this->m_animationState & 0x10)) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_castSpellId);
 
-        if (g_spellDB.GetRecord(this->m_castSpellId, &spell) && (spell.m_attributes & 0x400000) && (!(spell.m_facingCasterFlags & 0x1) || this->IsInFrontOfTargetWithGuid(CGGameUI::m_lockedTarget))) {
-            track = true;
+        if (spell) {
+            bool ignoreFacing = true;
+
+            if (spell->m_spellCastingRequirementsID) {
+                SpellCastingRequirementsRec* requirements = g_spellCastingRequirementsDB.GetRecord(spell->m_spellCastingRequirementsID);
+
+                if (requirements) {
+                    ignoreFacing = !(requirements->m_facingCasterFlags & 0x1);
+                }
+            }
+
+            if ((spell->m_attributes & 0x400000) && (ignoreFacing || this->IsInFrontOfTargetWithGuid(CGGameUI::m_lockedTarget))) {
+                track = true;
+            }
         }
     } else if (this->m_unit->m_unitChannelSpell) {
-        SpellRec spell;
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
 
-        if (g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell, &spell) && (spell.m_attributesEx & 0x4000)) {
+        if (spell && (spell->m_attributesEx & 0x4000)) {
             track = true;
         }
     }
@@ -14506,122 +16867,6 @@ void CGUnit_C::SetSheatheStateAnimate() {
             }
         }
     }
-}
-
-// OFFSET: #0x00755A60
-void CGUnit_C::PlayVictimWorldFeedback(const ATTACKROUNDINFO& info) {
-    WOWGUID activePlayer = ClntObjMgrGetActivePlayer();
-
-    if (info.m_meleeSpellId && info.m_victimState != 1) {
-        return;
-    }
-
-    uint32_t victimState = info.m_victimState;
-
-    if (victimState == 8) {
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 9, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (victimState == 3) {
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 4, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (victimState == 6) {
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 6, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (victimState == 2) {
-        if (info.m_attacker.m_guid) {
-            CGUnit_C* attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-            if (attacker) {
-                bool oneHand = !CGUnit_C::IsTwoHanded(attacker->GetVirtualItem(0, false));
-                int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
-                C3Vector position = attacker->GetPosition();
-                SI3::PlayMissedSound(oneHand, &position, self);
-            }
-        }
-
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 3, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (victimState == 5) {
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 5, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (victimState == 7) {
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, 7, NULL, false);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (info.m_damage || (info.m_hitInfo & 0x1000000)) {
-        CGUnit_C* victim = NULL;
-        CGUnit_C* attacker = NULL;
-
-        if (info.m_attacker.m_guid) {
-            attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-        }
-
-        if (info.m_target.m_guid) {
-            victim = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_target, TYPEMASK_UNIT, __FILE__, __LINE__));
-        }
-
-        if (attacker && victim) {
-            int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
-            C3Vector position = victim->GetPosition();
-            SI3::PlayHitSound(attacker->GetAttackingWeapon((info.m_hitInfo >> 2) & 1, true), victim->GetImpactType(), info.m_hitInfo & 0x200, &position, self);
-        }
-
-        WOWGUID source = info.m_attacker;
-        this->AddWorldDamageText(source, info.m_damage, 0, (info.m_hitInfo & 0x200) != 0, false, 0);
-        CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-        return;
-    }
-
-    if (activePlayer != info.m_target && !(info.m_hitInfo & 0x4000)) {
-        int32_t reason;
-
-        if (info.m_hitInfo & 0x20) {
-            reason = 10;
-        } else {
-            reason = (info.m_hitInfo & 0x80) ? 2 : 1;
-        }
-
-        WOWGUID source = info.m_attacker;
-        this->AddWorldText(source, reason, NULL, false);
-    }
-
-    if (info.m_attacker.m_guid) {
-        CGUnit_C* attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(info.m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-        if (attacker) {
-            bool oneHand = !CGUnit_C::IsTwoHanded(attacker->GetVirtualItem(0, false));
-            int32_t self = activePlayer == info.m_attacker || activePlayer == info.m_target;
-            C3Vector position = attacker->GetPosition();
-            SI3::PlayMissedSound(oneHand, &position, self);
-            CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
-            return;
-        }
-    }
-
-    CGGameUI::ShowCombatFeedbackAttackRoundInfo(&info);
 }
 
 // OFFSET: 0x005BD890
@@ -15062,6 +17307,20 @@ void CGUnit_C::OnKeyBoneAnimEnd(CM2Model* model, uint32_t boneId, uint32_t seque
 
 // OFFSET: 0x005D3C70
 void CGUnit_C::ExchangeSheathedWeapon(const C3Vector* position, uint32_t hand, uint32_t flag) {
+    if (hand == 0) {
+        if (!(this->m_animationState & 0x10000)) {
+            return;
+        }
+
+        this->m_animationState &= ~0x10000;
+    } else if (hand == 1) {
+        if (!(this->m_animationState & 0x20000)) {
+            return;
+        }
+
+        this->m_animationState &= ~0x20000;
+    }
+
     const CGUnitVirtualItem* item = this->GetVirtualItem(hand, false);
     const CGUnitVirtualItem* ranged = this->GetVirtualItem(2, false);
     uint32_t state;
@@ -15076,10 +17335,10 @@ void CGUnit_C::ExchangeSheathedWeapon(const C3Vector* position, uint32_t hand, u
 
     if (state != 2) {
         this->SheatheHandItem(hand, sheathe);
-        SI3::PlaySheatheSound(item, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
+        SI3::PlaySheatheSound(item, sheathe, *position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
     } else if (!ranged || (ranged->m_inventoryType == INVTYPE_RANGED ? hand != 0 : (static_cast<uint8_t>(ranged->m_inventoryType - INVTYPE_THROWN) > 1 || hand != 1))) {
         this->ShowRangedWeapon(sheathe, NULL);
-        SI3::PlaySheatheSound(ranged, sheathe, position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
+        SI3::PlaySheatheSound(ranged, sheathe, *position, this->m_obj->m_guid == CGUnit_C::s_activeMover);
     }
 
     if (this->m_previousSheatheState == 2) {
@@ -15088,29 +17347,6 @@ void CGUnit_C::ExchangeSheathedWeapon(const C3Vector* position, uint32_t hand, u
 
     WOWGUID guid = this->m_obj->m_guid;
     CGGameUI::UnitModelUpdate(guid, 1);
-}
-
-// OFFSET: #0x007228B0
-int32_t CGUnit_C::GetPrecastStartAnim() {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(this->m_castSpellId, &spell)) {
-        return -1;
-    }
-
-    const SpellVisualRec* visual = GetSpellVisual(&spell);
-
-    if (!visual) {
-        return -1;
-    }
-
-    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_precastKit);
-
-    if (!kit) {
-        return -1;
-    }
-
-    return kit->m_startAnimID;
 }
 
 // OFFSET: 0x005C59D0
@@ -15237,23 +17473,6 @@ void CGUnit_C::SetUpdateInfo(const CClientMoveUpdate& update, int32_t activeMove
     }
 }
 
-// OFFSET: #0x0071ABE0
-void CGUnit_C::ApplyModelFade() {
-    float alpha = this->GetBaseAlpha();
-    CEffect* effect = this->m_auraEffects;
-    uint32_t time = 1000;
-
-    if (effect) {
-        alpha *= effect->unk_00E8;
-
-        if (effect->unk_00A0) {
-            time = effect->unk_00A0;
-        }
-    }
-
-    this->DoFade(alpha, time);
-}
-
 // OFFSET: 0x005CA7E0/0x140242760
 void CGUnit_C::UpdateModelScale(const CreatureModelDataRec* modelRec) {
     float oldScale = this->m_modelScale;
@@ -15288,19 +17507,6 @@ int32_t Packet_SMSG_FORCE_DISPLAY_UPDATE(void* param, NETMESSAGE msgId, uint32_t
 
     if (unit) {
         unit->UpdateDisplayInfo(1);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x0073F540
-int32_t Packet_SMSG_STANDSTATE_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint8_t standState = 0;
-    msg->Get(standState);
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player) {
-        player->UpdateClientStandState(standState);
     }
 
     return 1;
@@ -15595,19 +17801,27 @@ int32_t CGUnit_C::GetDisplayClassGender(const CGUnit_C* unit, const NameCache* n
     return displaySex;
 }
 
-// OFFSET: 0x005C2EB0/0x140239290
-bool CGUnit_C::AffectedByAura(int32_t auraType, const SpellRec* spell) const {
-    SpellRec auraSpell;
+// OFFSET: 0x005C2EB0
+bool CGUnit_C::HasAuraMatchingSpellClass(int32_t auraType, const SpellRec* spell) const {
+    if (!this->HasAuraEffect(auraType)) {
+        return false;
+    }
 
     for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        const AuraData* aura = &const_cast<CGUnit_C*>(this)->m_auras[i];
+        const AuraData* aura = i < this->GetAuraCount() ? &const_cast<CGUnit_C*>(this)->m_auras[i] : NULL;
+        const SpellRec* auraSpell = g_spellDB.GetRecord(aura->m_spellId);
 
-        if (!g_spellDB.GetRecord(aura->m_spellId, &auraSpell)) {
+        if (!auraSpell) {
             continue;
         }
 
-        for (int32_t effect = 0; effect < 3; effect++) {
-            if (auraSpell.m_effectAura[effect] == auraType && ((1 << effect) & aura->m_flags) && SpellRec::IsAffectedBy(spell, &auraSpell, effect)) {
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(auraSpell->m_id, effectCount);
+
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == auraType && (aura->m_flags & (1 << j)) && SpellRec::IsAffectedBy(spell, auraSpell, j)) {
                 return true;
             }
         }
@@ -15735,63 +17949,6 @@ void CGUnit_C::DelayCast(int32_t delay) {
     this->m_channelStartTime = 0;
     this->m_channelEndTime = 0;
     this->UpdateSpellCastBars();
-}
-
-// OFFSET: #0x0072AC50
-void CGUnit_C::SetUICastingDirect(int32_t spellId, const WOWGUID& target, uint32_t start, uint32_t end) {
-    this->m_castingSpellId = spellId;
-    this->m_castingObject = target;
-    this->m_castStartTime = start;
-    this->m_castEndTime = end;
-
-    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(spellId, &spell)) {
-            this->ProcessCastNotInterruptible(&spell);
-        }
-    }
-
-    this->m_channelSpellId = 0;
-    this->m_channelStartTime = 0;
-    this->m_channelEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
-// OFFSET: #0x0072AE00
-void CGUnit_C::SetUIChannelDirect(int32_t spellId, uint32_t start, uint32_t end) {
-    this->m_channelSpellId = spellId;
-    this->m_channelStartTime = start;
-    this->m_channelEndTime = end;
-
-    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(spellId, &spell)) {
-            this->ProcessCastNotInterruptible(&spell);
-        }
-    }
-
-    this->m_castingSpellId = 0;
-    this->m_castStartTime = 0;
-    this->m_castEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
-// OFFSET: #0x00741210
-void CGUnit_C::UpdateChainTargets(const TSStackArray<WOWGUID>& targets, int32_t spellId) {
-    WOWGUID first = targets.m_data[0];
-
-    if (first && first != this->m_unit->m_unitFieldChannelObject) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(spellId, &spell) && (spell.m_attributesEx & 0x4)) {
-            this->m_unit->m_unitFieldChannelObject = targets.m_data[0];
-        }
-    }
-
-    this->SaveChainSpellTargets(targets);
-    this->OnChannelSpellChanged(spellId);
 }
 
 // OFFSET: 0x005EC6C0/0x14026DE20
@@ -16029,391 +18186,6 @@ uint8_t CGUnit_C::GetActivePlayerFieldBytes0() {
     return static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0];
 }
 
-// OFFSET: 0x005B2630/0x140225AD0
-bool CGUnit_C::GetSpellRequiredLevel(int32_t spellId, int32_t* level) {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
-        return false;
-    }
-
-    SkillLineAbilityRec* ability = this->LookupAbility(spellId);
-
-    if (!ability) {
-        return false;
-    }
-
-    const SkillRaceClassInfoRec* info = SpellTableLookupInfo(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], ability->m_skillLine);
-
-    if (info) {
-        int32_t required = info->m_minLevel;
-
-        if (spell.m_spellLevel > required) {
-            required = spell.m_spellLevel;
-        }
-
-        *level = required;
-        return true;
-    }
-
-    *level = spell.m_spellLevel;
-    return true;
-}
-
-// OFFSET: 0x005D8880/0x140253E60
-bool CGUnit_C::CheckAndReportSpellInhibitFlags(PendingSpellCast* cast, const SpellRec* spell, const CGItem_C* item) {
-    if (!spell) {
-        SErrSetLastError(STORM_ERROR_INVALID_PARAMETER);
-        return false;
-    }
-
-    MapRec* map = g_mapDB.GetRecord(CGGameUI::m_iCurrentMapID);
-
-    if (map) {
-        if (!CGUnit_C::IsSpellAllowedInArena(spell)) {
-            Spell_C_SpellFailed(cast, spell, 151, -1, -1, false);
-            return false;
-        }
-
-        if (map->m_instanceType != 4 && (spell->m_attributesExF & 0x2)) {
-            Spell_C_SpellFailed(cast, spell, 168, -1, -1, false);
-            return false;
-        }
-    }
-
-    if (item) {
-        if (Spell_C_GetItemCooldown(const_cast<CGItem_C*>(item), NULL, NULL, NULL)) {
-            Spell_C_SpellFailed(cast, spell, 45, -1, -1, false);
-            return false;
-        }
-    } else {
-        bool player = this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
-
-        if (Spell_C_GetSpellCooldown(spell->m_id, !player, NULL, NULL, NULL)) {
-            Spell_C_SpellFailed(cast, spell, 67, -1, -1, false);
-            return false;
-        }
-
-        if (!Spell_C_HaveSpellPower(this, spell)) {
-            Spell_C_SpellFailed(cast, spell, 85, -1, -1, false);
-            return false;
-        }
-    }
-
-    for (uint32_t i = 0; i < sizeof(spell->m_effect) / sizeof(spell->m_effect[0]); i++) {
-        int32_t effect = spell->m_effect[i];
-
-        if (effect == 36) {
-            int32_t learn = spell->m_effectTriggerSpell[i];
-
-            if (!learn) {
-                WOWGUID none = { 0 };
-                ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
-
-                if (stats) {
-                    for (uint32_t j = 0; j < 5; j++) {
-                        if (stats->m_spellTrigger[j] == 6) {
-                            learn = stats->m_spellId[j];
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (this->IsSpellKnown(learn) || this->IsSpellSuperceded(learn)) {
-                SpellRec known;
-
-                if (g_spellDB.GetRecord(learn, &known)) {
-                    CGGameUI::DisplayError(ERR_SPELL_ALREADY_KNOWN_S, known.m_name);
-                } else {
-                    CGGameUI::DisplayError(ERR_SPELL_ALREADY_KNOWN_S, "UNKNOWN");
-                }
-
-                return false;
-            }
-        }
-
-        if (effect == 56 || effect == 55 || spell->m_effectAura[i] == 6 || spell->m_effectAura[i] == 2) {
-            const WOWGUID* controlled = &this->m_unit->m_unitFieldCharm;
-
-            if (!*controlled) {
-                controlled = &this->m_unit->m_unitFieldSummon;
-            }
-
-            if (*controlled && !(spell->m_attributesEx & 0x1)) {
-                Spell_C_SpellFailed(cast, spell, this->m_unit->m_unitFieldCharm ? 6 : 7, -1, -1, false);
-                return false;
-            }
-        }
-
-        if (spell->m_implicitTargetA[i] == 5 || spell->m_implicitTargetB[i] == 5) {
-            const WOWGUID* controlled = &this->m_unit->m_unitFieldCharm;
-
-            if (!*controlled) {
-                controlled = &this->m_unit->m_unitFieldSummon;
-            }
-
-            if (!*controlled) {
-                Spell_C_SpellFailed(cast, spell, 84, -1, -1, false);
-                return false;
-            }
-
-            if (effect == 36) {
-                const WOWGUID* pet = &this->m_unit->m_unitFieldCharm;
-
-                if (!*pet) {
-                    pet = &this->m_unit->m_unitFieldSummon;
-                }
-
-                CGUnit_C* petUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*pet, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                if (petUnit) {
-                    int32_t learn = spell->m_effectTriggerSpell[i];
-                    int32_t level;
-
-                    if (!petUnit->GetSpellRequiredLevel(learn, &level)) {
-                        Spell_C_SpellFailed(cast, spell, 107, -1, -1, false);
-                        return false;
-                    }
-
-                    if (petUnit->IsSpellKnown(learn) || petUnit->IsSpellSuperceded(learn)) {
-                        CGGameUI::DisplayError(ERR_PET_SPELL_ALREADY_KNOWN_S, spell->m_name);
-                        Spell_C_SpellFailed(cast, spell, 27, -1, -1, false);
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-
-    int32_t reason;
-
-    if (this->m_unit->m_unitFieldHealth > 0) {
-        if ((this->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes[0] & 0x4)) {
-            Spell_C_SpellFailed(cast, spell, 105, -1, -1, false);
-            return false;
-        }
-
-        if (this->m_unit->m_unitFieldCharmedby && this->m_unit->m_unitFieldCharmedby != ClntObjMgrGetActivePlayer() && !Spell_C_CancelsCharm(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 24, -1, -1, false);
-            }
-
-            return false;
-        }
-
-        if ((this->m_unit->m_unitFieldFlags & 0x40000) && !(spell->m_attributesExE & 0x8) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsStun(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 108, -1, -1, false);
-            }
-
-            return false;
-        }
-
-        if (spell->m_preventionType == 1 && (this->m_unit->m_unitFieldFlags & 0x2000) && !Spell_C_CancelsSilence(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 104, -1, -1, false);
-            }
-
-            return false;
-        }
-
-        if (spell->m_preventionType == 2 && (this->m_unit->m_unitFieldFlags & 0x20000) && !Spell_C_CancelsPacify(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 98, -1, -1, false);
-            }
-
-            return false;
-        }
-
-        if ((this->m_unit->m_unitFieldFlags & 0x800000) && !(spell->m_attributesExE & 0x20000) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsFear(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 34, -1, -1, false);
-            }
-
-            return false;
-        }
-
-        if ((this->m_unit->m_unitFieldFlags & 0x400000) && !(spell->m_attributesExE & 0x40000) && !(spell->m_attributesExG & 0x100000) && !Spell_C_CancelsConfuse(this, spell, &reason)) {
-            if (reason) {
-                Spell_C_SpellFailed(cast, spell, 147, reason, -1, false);
-            } else {
-                Spell_C_SpellFailed(cast, spell, 26, -1, -1, false);
-            }
-
-            return false;
-        }
-    }
-
-    int32_t auraInterrupt = spell->m_auraInterruptFlags;
-
-    if (((auraInterrupt & 0x200) && !this->m_sheatheState) || ((spell->m_attributesEx & 0x44) && (spell->m_channelInterruptFlags & 0x200) && !this->m_sheatheState)) {
-        Spell_C_SpellFailed(cast, spell, 72, -1, -1, false);
-        return false;
-    }
-
-    if (((auraInterrupt & 0x40) && (this->m_mountDisplayId <= 0 || (this->m_clientFlags & 0x10000000))) || ((spell->m_attributesEx & 0x44) && (spell->m_channelInterruptFlags & 0x40) && !this->IsMounted())) {
-        Spell_C_SpellFailed(cast, spell, 91, -1, -1, false);
-        return false;
-    }
-
-    if (!(spell->m_attributes & 0x1000000) && this->m_mountDisplayId > 0 && !(this->m_clientFlags & 0x10000000) && !this->MountedCombatAllowed() && !this->CanAutoDismount()) {
-        Spell_C_SpellFailed(cast, spell, 64, -1, -1, false);
-        return false;
-    }
-
-    if (!(spell->m_attributes & 0x8000000) && this->GetClientStandState() && !this->CanAutoStand()) {
-        Spell_C_SpellFailed(cast, spell, 69, -1, -1, false);
-        return false;
-    }
-
-    if ((spell->m_attributes & 0x1000) && !g_clientGameTime.IsDaytime()) {
-        Spell_C_SpellFailed(cast, spell, 89, -1, -1, false);
-        return false;
-    }
-
-    if ((spell->m_attributes & 0x2000) && g_clientGameTime.IsDaytime()) {
-        Spell_C_SpellFailed(cast, spell, 92, -1, -1, false);
-        return false;
-    }
-
-    auraInterrupt = spell->m_auraInterruptFlags;
-    int32_t channeled = spell->m_attributesEx & 0x44;
-
-    if (((auraInterrupt & 0x100) && !(this->m_clientFlags & 0x200000)) || (channeled && (spell->m_channelInterruptFlags & 0x100) && !(this->m_clientFlags & 0x200000))) {
-        Spell_C_SpellFailed(cast, spell, 96, -1, -1, false);
-        return false;
-    }
-
-    if (((auraInterrupt & 0x80) && (this->m_clientFlags & 0x200000)) || (channeled && (spell->m_channelInterruptFlags & 0x80) && (this->m_clientFlags & 0x200000))) {
-        Spell_C_SpellFailed(cast, spell, 88, -1, -1, false);
-        return false;
-    }
-
-    if ((channeled && (spell->m_channelInterruptFlags & 0x18) && (this->m_movement->m_flags & 0xC0100F) && !(spell->m_targets & 0x60)) || ((spell->m_interruptFlags & 0x1) && (this->m_movement->m_flags & 0xC0100F) && !(spell->m_targets & 0x60) && !(spell->m_attributesExB & 0x20) && (SpellRec::GetCastTime(spell, this->m_unit->m_unitFieldPetnumber != 0, 0, 0) || (spell->m_auraInterruptFlags & 0x18)))) {
-        Spell_C_SpellFailed(cast, spell, 51, -1, -1, false);
-        return false;
-    }
-
-    if (!this->CheckShapeshiftRules(spell, &reason) && (reason == 94 || !this->CanAutoUnshift())) {
-        Spell_C_SpellFailed(cast, spell, reason, -1, -1, false);
-        return false;
-    }
-
-    if (!this->CheckStealthRules(spell, &reason)) {
-        Spell_C_SpellFailed(cast, spell, reason, -1, -1, false);
-        return false;
-    }
-
-    if ((spell->m_attributes & 0x10000000) && (this->m_unit->m_unitFieldFlags & 0x80000) && !this->IgnoresAuraState(spell)) {
-        Spell_C_SpellFailed(cast, spell, 1, -1, -1, false);
-        return false;
-    }
-
-    if (spell->m_casterAuraState && !this->HasAuraState(spell->m_casterAuraState) && !this->IgnoresAuraState(spell)) {
-        Spell_C_SpellFailed(cast, spell, 22, -1, -1, false);
-        return false;
-    }
-
-    if (spell->m_excludeCasterAuraState && this->HasAuraState(spell->m_excludeCasterAuraState) && !this->IgnoresAuraState(spell)) {
-        Spell_C_SpellFailed(cast, spell, 22, -1, -1, false);
-        return false;
-    }
-
-    int32_t casterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_casterAuraSpell);
-
-    if (casterAura && !this->HasAura(casterAura, WOWGUID()) && !this->IgnoresAuraState(spell)) {
-        Spell_C_SpellFailed(cast, spell, 22, -1, -1, false);
-        return false;
-    }
-
-    int32_t excludeCasterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_excludeCasterAuraSpell);
-
-    if (excludeCasterAura && this->HasAura(excludeCasterAura, WOWGUID()) && !this->IgnoresAuraState(spell)) {
-        Spell_C_SpellFailed(cast, spell, 22, -1, -1, false);
-        return false;
-    }
-
-    if (spell->m_minFactionID && GetRepListRepValue(spell->m_minFactionID) < CGReputationInfo::m_reactionThresholds[spell->m_minReputation]) {
-        Spell_C_SpellFailed(cast, spell, 149, -1, -1, false);
-        return false;
-    }
-
-    if (spell->m_requiredAreasID > 0) {
-        AreaTableRec* area = CGGameUI::GetCurrentSubzoneRec();
-
-        if (!area) {
-            Spell_C_SpellFailed(cast, spell, 39, -1, -1, false);
-            return false;
-        }
-
-        int32_t group = spell->m_requiredAreasID;
-        int32_t checked;
-
-        if (!CGUnit_C::IsAreaInAreaGroup(area->m_id, group, &checked)) {
-            if (checked == 1) {
-                AreaGroupRec* groupRec = g_areaGroupDB.GetRecord(group);
-
-                if (groupRec) {
-                    Spell_C_SpellFailed(cast, spell, 101, groupRec->m_areaID[0], -1, false);
-                    return false;
-                }
-            }
-
-            Spell_C_SpellFailed(cast, spell, 39, -1, -1, false);
-            return false;
-        }
-    }
-
-    if (spell->m_attributes & 0xC000) {
-        if (this->IsOutdoors()) {
-            if (spell->m_attributes & 0x4000) {
-                Spell_C_SpellFailed(cast, spell, 90, -1, -1, false);
-                return false;
-            }
-        } else if (spell->m_attributes & 0x8000) {
-            Spell_C_SpellFailed(cast, spell, SpellRec::HasAura(spell, 78) ? 83 : 93, -1, -1, false);
-            return false;
-        }
-    }
-
-    if ((spell->m_attributesExD & 0x4000000) && !static_cast<CGPlayer_C*>(this)->IsInFlyableZone(!(spell->m_attributesExG & 0x400000))) {
-        Spell_C_SpellFailed(cast, spell, 60, -1, -1, false);
-        return false;
-    }
-
-    int32_t mapId = CGGameUI::m_iCurrentMapID;
-    MapRec* current;
-
-    if ((spell->m_attributesExC & 0x800) && (current = g_mapDB.GetRecord(mapId)) != NULL && current->m_instanceType != 3) {
-        Spell_C_SpellFailed(cast, spell, 142, -1, -1, false);
-        return false;
-    }
-
-    if ((spell->m_attributesExF & 0x800) && (current = g_mapDB.GetRecord(mapId)) != NULL && current->m_instanceType == 2) {
-        Spell_C_SpellFailed(cast, spell, 167, -1, -1, false);
-        return false;
-    }
-
-    if ((spell->m_attributesExB & 0x10000) && (this->m_obj->m_type & TYPEMASK_PLAYER) && (this->GetActivePlayerFieldBytes0() & 0x1)) {
-        Spell_C_PetTameFailure(2);
-        Spell_C_SpellFailed(cast, spell, 27, -1, -1, false);
-        return false;
-    }
-
-    return true;
-}
-
 // OFFSET: #0x00727C00
 void CGUnit_C::InsertSortedAura(uint32_t list, uint32_t auraIndex, int32_t position) {
     AuraData* aura = auraIndex < this->GetAuraCount() ? &this->m_auras[auraIndex] : NULL;
@@ -16482,18 +18254,18 @@ void CGUnit_C::SortAuras() {
         }
     }
 
-    SpellRec spell;
-
     for (uint32_t index = this->GetAuraCount(); index; ) {
         index--;
 
         AuraData* aura = index < this->GetAuraCount() ? &this->m_auras[index] : NULL;
 
-        if (!aura->m_spellId || !(aura->m_flags & 0x7) || !g_spellDB.GetRecord(aura->m_spellId, &spell)) {
+        const SpellRec* spell;
+
+        if (!aura->m_spellId || !(aura->m_flags & 0x7) || !(spell = g_spellDB.GetRecord(aura->m_spellId))) {
             continue;
         }
 
-        if (!CGSpellBook::CanShowAura(&spell, &aura->m_creator, (this->m_auras[index].m_flags & 0x8) != 0)) {
+        if (!CGSpellBook::CanShowAura(spell, &aura->m_creator, (this->m_auras[index].m_flags & 0x8) != 0)) {
             continue;
         }
 
@@ -16508,7 +18280,17 @@ void CGUnit_C::SortAuras() {
             }
         }
 
-        if ((!(aura->m_flags & 0x80) && CGSpellBook::FindRaidBuff(aura->m_spellId)) || ((aura->m_flags & 0x80) && CGSpellBook::FindRaidDispel(spell.m_dispelType))) {
+        int32_t dispelType = 0;
+
+        if (spell->m_spellCategoriesID) {
+            SpellCategoriesRec* categories = g_spellCategoriesDB.GetRecord(spell->m_spellCategoriesID);
+
+            if (categories) {
+                dispelType = categories->m_dispelType;
+            }
+        }
+
+        if ((!(aura->m_flags & 0x80) && CGSpellBook::FindRaidBuff(aura->m_spellId)) || ((aura->m_flags & 0x80) && CGSpellBook::FindRaidDispel(dispelType))) {
             for (uint32_t j = 0; j < this->GetAuraCount(); j++) {
                 if (this->m_sortedAuras[1][j].m_spellId <= 0) {
                     this->InsertSortedAura(1, index, j);
@@ -16571,30 +18353,14 @@ uint32_t CGUnit_C::GetSortedAuraSlot(int32_t index, const char* name, const char
             continue;
         }
 
-        SpellRec spell;
+        const SpellRec* spell = g_spellDB.GetRecord(this->GetAuraSpellId(auraIndex));
 
-        if (g_spellDB.GetRecord(this->GetAuraSpellId(auraIndex), &spell) && !SStrCmpUTF8I(name, spell.m_name, STORM_MAX_STR) && (!rank || !SStrCmpUTF8I(rank, spell.m_nameSubtext, STORM_MAX_STR))) {
+        if (spell && !SStrCmpUTF8I(name, spell->m_name, STORM_MAX_STR) && (!rank || !SStrCmpUTF8I(rank, spell->m_nameSubtext, STORM_MAX_STR))) {
             return auraIndex;
         }
     }
 
     return 0xFFFFFFFF;
-}
-
-// OFFSET: #0x0071AB80
-void CGUnit_C::ReleaseAurasBySpell(int32_t spellId) {
-    CEffect* effect = this->m_auraEffects;
-
-    while (effect) {
-        CEffect* next = effect->m_next;
-
-        if (effect->m_spellId == static_cast<uint32_t>(spellId)) {
-            this->m_forceWorldModelAlpha = effect->m_kitRec && (effect->m_kitRec->m_flags & 0x400);
-            effect->Release();
-        }
-
-        effect = next;
-    }
 }
 
 // OFFSET: 0x005B47C0/0x140227D60
@@ -16609,717 +18375,6 @@ float CGUnit_C::GetSpellChanceToCrit() const {
     int32_t intellect = this->m_unit->m_unitFieldStat[3];
     return (ratio * (intellect < 0 ? 0 : intellect) + base) * 100.0f;
 }
-
-// OFFSET: #0x00722090
-void CGUnit_C::OnAuraRemoved(uint32_t index, uint8_t a3, AuraData* aura, int32_t spellId) {
-    SpellRec spell;
-    memset(&spell, 0, sizeof(spell));
-    g_spellDB.GetRecord(spellId, &spell);
-    this->RemoveAuraEffect(index, &spell);
-
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        CGActionBar::OnAuraChanged(spellId);
-
-        if (CGSpellBook::IsTrackingSpell(spellId)) {
-            CGMinimapFrame::SetTrackingSpell(0);
-        }
-
-        if (CGSpellBook::IsShapeshiftSpell(spellId) && !SpellRec::HasAura(&spell, 36)) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
-        }
-    }
-
-    UnitCombatLogAuraAddedOrRemoved(this, aura, &spell, a3, 0);
-}
-
-// OFFSET: #0x00727760
-void CGUnit_C::OnAuraAdded(uint32_t index, uint8_t a3, AuraData* aura, int32_t spellId) {
-    SpellRec spell;
-    memset(&spell, 0, sizeof(spell));
-    g_spellDB.GetRecord(spellId, &spell);
-    this->AddAuraEffect(index, &spell);
-    UnitCombatLogAuraAddedOrRemoved(this, aura, &spell, a3, 1);
-
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        CGActionBar::OnAuraChanged(spellId);
-
-        if (spellId != CGMinimapFrame::s_trackingSpell && CGSpellBook::IsTrackingSpell(spellId)) {
-            CGMinimapFrame::SetTrackingSpell(spellId);
-        }
-
-        if (CGSpellBook::IsShapeshiftSpell(spellId) && !SpellRec::HasAura(&spell, 36)) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
-        }
-    }
-}
-
-// OFFSET: #0x00727A70
-void CGUnit_C::AuraVisionUpdated(uint8_t vision) {
-    bool changed = false;
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        SpellRec spell;
-
-        if (!g_spellDB.GetRecord(this->m_auras[i].m_spellId, &spell)) {
-            continue;
-        }
-
-        uint8_t mask = GetRequiredAuraVisionBitmask(&spell);
-
-        if (!(mask & vision)) {
-            continue;
-        }
-
-        CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-        if (mask & reinterpret_cast<const uint8_t*>(&player->m_player->m_playerFieldBytes2)[3]) {
-            this->AddAuraEffect(i, &spell);
-        } else {
-            this->RemoveAuraEffect(i, &spell);
-        }
-
-        changed = true;
-    }
-
-    if (changed) {
-        Script_SendUniqueSignal(this->m_obj->m_guid, SCRIPT_EVENT_UNIT_AURA);
-    }
-}
-
-// OFFSET: #0x00728E70
-void CGUnit_C::ScanAuraSpellsOnDisplayUpdate() {
-    SpellRec spell;
-
-    for (uint32_t i = this->GetAuraCount(); i; ) {
-        i--;
-
-        int32_t spellId = this->m_auras[i].m_spellId;
-
-        if (spellId && g_spellDB.GetRecord(spellId, &spell)) {
-            this->AddAuraEffect(i, &spell);
-        }
-    }
-}
-
-// OFFSET: #0x00724820
-void CGUnit_C::AddAuraEffect(uint32_t index, const SpellRec* spell) {
-    uint32_t count = this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count;
-
-    if (index >= count) {
-        return;
-    }
-
-    int32_t spellId = this->m_auras[index].m_spellId;
-    bool hasSpell = spell != NULL;
-
-    if (this->unk_0F9C[index]) {
-        if (!hasSpell) {
-            goto store;
-        }
-
-        if (this->unk_0F9C[index] == static_cast<uint32_t>(spell->m_id)) {
-            return;
-        }
-
-        SpellRec current;
-
-        if (g_spellDB.GetRecord(this->unk_0F9C[index], &current) && current.m_spellPriority > spell->m_spellPriority) {
-            return;
-        }
-    }
-
-    if (hasSpell) {
-        uint32_t mask = GetRequiredAuraVisionBitmask(spell);
-
-        if (mask) {
-            CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-            if (!player || !(static_cast<uint8_t>(mask) & reinterpret_cast<const uint8_t*>(&player->m_player->m_playerFieldBytes2)[3])) {
-                return;
-            }
-        }
-    }
-
-store:
-    this->unk_0F9C[index] = spellId;
-
-    if (!hasSpell) {
-        return;
-    }
-
-    const int32_t* visualIds = spell->m_spellVisualID;
-
-    if (!visualIds) {
-        return;
-    }
-
-    if (this->IsActivePlayer()) {
-        for (uint32_t i = 0; i < 3; i++) {
-            switch (spell->m_effectAura[i]) {
-                case 76:
-                    CGWorldFrame::GetActiveCamera()->SetTelescope(spell->m_effectMiscValue[i]);
-                    break;
-
-                case 233:
-                    EnumVisibleForAuraEffect(spell, spell->m_effectMiscValue[i], spell->m_effectMiscValueB[i]);
-                    break;
-
-                case 260:
-                    CGWorldFrame::UpdateScreenEffect();
-                    break;
-
-                case 262:
-                case 275:
-                    CGSpellBook::UpdateUsable();
-                    break;
-
-                case 273:
-                    CGPlayer_C::UpdateXRayVision(spell);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    for (uint32_t i = 0; i < 3; i++) {
-        if (spell->m_effectAura[i] == 78) {
-            CGSpellBook::SendCompanionUpdate(1);
-
-            if (visualIds[0]) {
-                SpellVisualRec* visual = g_spellVisualDB.GetRecord(visualIds[0]);
-                SpellVisualKitRec* kit = visual ? g_spellVisualKitDB.GetRecord(visual->m_stateKit) : NULL;
-
-                if (kit && kit->m_animID >= 0) {
-                    this->m_mountAnimBehaviorId = kit->m_animID;
-                }
-            }
-        } else if (spell->m_effectAura[i] == 279) {
-            WOWGUID guid = this->m_obj->m_guid;
-            CGGameUI::UnitNameUpdate(guid);
-        }
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (this->GetControllingPlayer() == player || this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        for (uint32_t i = 0; i < 3; i++) {
-            if (spell->m_effectAura[i] == 48) {
-                int32_t period = spell->m_effectAuraPeriod[i];
-                Spell_C_ModifySpellValue(spell, period, 19);
-                Spell_C_AddPeriodicClientTrigger(this->m_obj->m_guid, spell->m_id, spell->m_effectTriggerSpell[i], period);
-            }
-        }
-    }
-
-    const SpellVisualRec* visual = GetSpellVisual(spell);
-
-    if (!visual) {
-        return;
-    }
-
-    if (visual->m_hasMissile) {
-        for (CMissile* missile = this->m_missiles; missile; missile = missile->m_next) {
-            if (missile->m_spellID == static_cast<uint32_t>(spellId)) {
-                return;
-            }
-        }
-    }
-
-    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
-
-    if (!kit) {
-        return;
-    }
-
-    for (uint32_t i = 0; i < 4; i++) {
-        if (kit->m_charProc[i] == 11 && !this->m_worldModel->IsLoaded()) {
-            this->unk_0A8C = spell->m_id;
-            goto handItems;
-        }
-    }
-
-    {
-        PlaySpellVisuaKitData data(spell, kit, 2);
-        data.m_someGUID = this->m_auras[index].m_creator;
-        this->PlaySpellVisualKit(data);
-    }
-
-handItems:
-    if (visual->m_flags & 0x8) {
-        this->ShowHandItemSpellEffects(1, 1);
-    }
-}
-
-// OFFSET: #0x0071E930
-void CGUnit_C::RemoveAuraEffect(uint32_t index, const SpellRec* spell) {
-    uint32_t count = this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count;
-
-    if (index >= count) {
-        return;
-    }
-
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        for (uint32_t i = 0; i < 3; i++) {
-            switch (spell->m_effectAura[i]) {
-                case 76:
-                    CGWorldFrame::GetActiveCamera()->SetTelescope(0);
-                    break;
-
-                case 78: {
-                    CGSpellBook::SendCompanionUpdate(1);
-
-                    if (spell->m_spellVisualID[0]) {
-                        SpellVisualRec* visual = g_spellVisualDB.GetRecord(spell->m_spellVisualID[0]);
-
-                        if (visual) {
-                            SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
-
-                            if (kit && kit->m_animID >= 0 && this->m_mountAnimBehaviorId == kit->m_animID) {
-                                this->m_mountAnimBehaviorId = 91;
-                            }
-                        }
-                    }
-
-                    break;
-                }
-
-                case 233:
-                    EnumVisibleForAuraEffect(spell, 0, 0);
-                    break;
-
-                case 260:
-                    CGWorldFrame::UpdateScreenEffect();
-                    break;
-
-                case 262:
-                case 275:
-                    CGSpellBook::UpdateUsable();
-                    break;
-
-                case 273:
-                    CGPlayer_C::UpdateXRayVision(spell);
-                    break;
-
-                case 292:
-                    CGStableInfo::CloseStables(true);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
-    for (uint32_t i = 0; i < 3; i++) {
-        if (spell->m_effectAura[i] == 279) {
-            WOWGUID guid = this->m_obj->m_guid;
-            CGGameUI::UnitNameUpdate(guid);
-        }
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (this->GetControllingPlayer() == player || this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        for (uint32_t i = 0; i < 3; i++) {
-            if (spell->m_effectAura[i] == 48) {
-                Spell_C_RemovePeriodicClientTrigger(this->m_obj->m_guid, spell->m_id);
-            }
-        }
-    }
-
-    if (!this->unk_0F9C[index]) {
-        return;
-    }
-
-    this->ReleaseAurasBySpell(this->unk_0F9C[index]);
-
-    float alpha = this->GetBaseAlpha();
-    uint32_t time = 1000;
-
-    if (this->m_auraEffects) {
-        alpha *= this->m_auraEffects->unk_00E8;
-
-        if (this->m_auraEffects->unk_00A0) {
-            time = this->m_auraEffects->unk_00A0;
-        }
-    }
-
-    this->DoFade(alpha, time);
-
-    uint32_t auraSpellId = this->unk_0F9C[index];
-
-    for (CEffect* effect = this->m_procEffects; effect; ) {
-        CEffect* next = effect->m_next;
-
-        if (effect->m_spellId == auraSpellId) {
-            effect->Release();
-        }
-
-        effect = next;
-    }
-
-    this->ClearSpellEffect(this->unk_0F9C[index], 1, 0);
-
-    const SpellVisualRec* visual = GetSpellVisual(spell);
-
-    if (visual) {
-        SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_stateDoneKit);
-
-        if (kit) {
-            PlaySpellVisuaKitData data(NULL, kit, 8);
-            this->PlaySpellVisualKit(data);
-        }
-    }
-
-    this->unk_0F9C[index] = 0;
-}
-
-// OFFSET: 0x005C7F10
-void CGUnit_C::SetUICastingSpell(int32_t spellId, const WOWGUID& target, int32_t castTime) {
-    this->m_castingSpellId = spellId;
-    this->m_castingObject = target;
-    this->m_castStartTime = FrameTime::s_curTimeMs;
-    this->m_castEndTime = castTime + FrameTime::s_curTimeMs;
-
-    int32_t arenaIndex;
-
-    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || CGBattlefieldInfo::GetArenaOpponentIndex(this->m_obj->m_guid, &arenaIndex)) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(spellId, &spell)) {
-            this->ProcessCastNotInterruptible(&spell);
-        }
-    }
-
-    this->m_channelSpellId = 0;
-    this->m_channelStartTime = 0;
-    this->m_channelEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
-// OFFSET: #0x0072AD20
-void CGUnit_C::SetUIChannelSpell(int32_t spellId, int32_t duration) {
-    this->m_channelSpellId = spellId;
-    this->m_channelStartTime = FrameTime::s_curTimeMs;
-    this->m_channelEndTime = duration + FrameTime::s_curTimeMs;
-
-    int32_t arenaIndex;
-
-    if (this->m_obj->m_guid == CGGameUI::m_lockedTarget || this->m_obj->m_guid == CGGameUI::m_focusTarget || CGBattlefieldInfo::GetArenaOpponentIndex(this->m_obj->m_guid, &arenaIndex)) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(spellId, &spell)) {
-            this->ProcessCastNotInterruptible(&spell);
-        }
-    }
-
-    this->m_castingSpellId = 0;
-    this->m_castStartTime = 0;
-    this->m_castEndTime = 0;
-    this->UpdateSpellCastBars();
-}
-
-// OFFSET: 0x005CD060
-void CGUnit_C::OnChannelSpellChanged(int32_t oldSpell) {
-    if (oldSpell) {
-        this->ReleaseAurasBySpell(oldSpell);
-
-        float alpha = this->GetBaseAlpha();
-        uint32_t time = 1000;
-
-        if (this->m_auraEffects) {
-            alpha *= this->m_auraEffects->unk_00E8;
-
-            if (this->m_auraEffects->unk_00A0) {
-                time = this->m_auraEffects->unk_00A0;
-            }
-        }
-
-        this->DoFade(alpha, time);
-        this->ReleaseEffectsBySpell(oldSpell);
-        this->ClearSpellEffect(oldSpell, 1, 0);
-
-        if (this->m_fishingLineEffect) {
-            this->m_fishingLineEffect->Release();
-            this->m_fishingLineEffect = NULL;
-        }
-
-        for (uint32_t i = 0; i < (this->unk_0F9C.m_count == 0xFFFFFFFF ? this->unk_0F9C.Dynamic().m_count : this->unk_0F9C.m_count); i++) {
-            if (this->unk_0F9C[i] && this->unk_0F9C[i] == static_cast<uint32_t>(oldSpell)) {
-                this->unk_0F9C[i] = 0;
-            }
-        }
-    }
-
-    if (this->m_unit->m_unitChannelSpell) {
-        this->UpdateChannelEffects();
-        return;
-    }
-
-    SpellRec spell;
-
-    if (g_spellDB.GetRecord(oldSpell, &spell) && (spell.m_attributesEx & 0x4000) && this->IsActiveMoverTracking(2)) {
-        this->ClearTrackingTarget(false, true);
-    }
-
-    this->ClearSpellEffect(oldSpell, 1, 0);
-
-    if (this->m_fishingLineEffect) {
-        this->m_fishingLineEffect->Release();
-        this->m_fishingLineEffect = NULL;
-    }
-
-    // WoWFix335 missing-pre-cast-animation: original ends with UpdateBaseAnimation(0, -1)
-}
-
-// OFFSET: #0x00755850
-void CGUnit_C::PlayCombatSpellMissEffects(uint32_t reason, const WOWGUID& source) {
-    if ((this->m_unit->m_unitFieldFlags2 & 0x1) || this->GetClientStandState() == 7) {
-        return;
-    }
-
-    CGUnit_C* attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(source, TYPEMASK_UNIT, __FILE__, __LINE__));
-    const CGUnitVirtualItem* weapon = NULL;
-
-    if (attacker && attacker->m_sheatheState) {
-        const CGUnitVirtualItem* item = attacker->GetVirtualItem(0, false);
-        weapon = item && item->m_classID == 2 ? item : NULL;
-    }
-
-    WOWGUID mover = CGUnit_C::s_activeMover;
-
-    switch (reason) {
-        case 3:
-            this->PlayBaseAnimation(ANIM_DODGE, 0);
-            break;
-
-        case 4: {
-            this->PlayParryAnimation();
-            C3Vector position = this->GetPosition();
-            SI3::PlayParrySound(weapon, this->GetParryingItem(false), 0, &position, mover == source);
-            break;
-        }
-
-        case 5: {
-            this->PlayBaseAnimation(ANIM_SHIELD_BLOCK, 0);
-            this->GetVirtualItem(0, false);
-            const CGUnitVirtualItem* shield = this->GetVirtualItem(1, false);
-
-            if (shield && shield->m_classID != 2 && shield->m_classID != 4) {
-                shield = NULL;
-            }
-
-            C3Vector position = this->GetPosition();
-            SI3::PlayParrySound(NULL, shield, 0, &position, mover == source);
-            break;
-        }
-
-        default:
-            break;
-    }
-}
-
-// OFFSET: #0x00763570
-void CGUnit_C::HandleSpellEventSound() {
-    if (!this->m_castSpellId) {
-        return;
-    }
-
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(this->m_castSpellId, &spell)) {
-        SysMsgPrintf(STATUS_ERROR, 2, "NOSPELLIDFOUND|%d", this->m_castSpellId);
-        return;
-    }
-
-    SpellVisualRec visualRec;
-    const SpellVisualRec* visual = this->GetAppropriateSpellVisual(&spell, visualRec, 0, 0);
-
-    if (!visual) {
-        SysMsgPrintf(STATUS_ERROR, 2, "SPELLVISUALIDNOTFOUND|%d", spell.m_spellVisualID[0]);
-        return;
-    }
-
-    if (visual->m_animEventSoundID) {
-        C3Vector position = this->GetPosition();
-        position.z += 1.0f;
-        SI3::PlaySoundKit(visual->m_animEventSoundID, &position, NULL, NULL, 0, NULL, 1, 0);
-    }
-}
-
-// OFFSET: 0x005C8540/0x14023FB50
-int32_t CGUnit_C::PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual) {
-    if (!spell || !visual || !Spell_C_SpellVisualHasChainEffect(visual) || a8 || !(kit->m_flags & 0x1)) {
-        return 0;
-    }
-
-    this->DelaySpellVisualKit(spell->m_id, kit->m_id, type, position, guid, a6, a7, a9, 0, FrameTime::s_curTimeMs + 10000);
-    return 1;
-}
-
-// OFFSET: 0x005D5520/0x14024FB80
-void CGUnit_C::PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect) {
-    int32_t spellId = 0;
-
-    if (spell) {
-        spellId = spell->m_id;
-    }
-
-    SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(kit->m_leftWeaponEffect);
-
-    if (effectName && !(this->GetModelData()->m_flags & 0x10)) {
-        if (!spell || !(spell->m_attributes & 0x40000)) {
-            this->SetSheatheState(0, 1, 0);
-        }
-
-        this->PlayEffectName(2, 0, spellId, kit, effectName, &flags, callback, position, guid, a5, NULL);
-        *hasEffect = 1;
-    }
-
-    effectName = g_spellVisualEffectNameDB.GetRecord(kit->m_rightWeaponEffect);
-
-    if (effectName && !(this->GetModelData()->m_flags & 0x10)) {
-        if (!spell || !(spell->m_attributes & 0x40000)) {
-            this->SetSheatheState(0, 1, 0);
-        }
-
-        this->PlayEffectName(1, 0, spellId, kit, effectName, &flags, callback, position, guid, a5, NULL);
-        *hasEffect = 1;
-    }
-}
-
-// OFFSET: #0x0071D510
-static int32_t IsWoundAnim(int32_t animId) {
-    AnimationDataRec* anim = g_animationDataDB.GetRecord(animId);
-    return anim && anim->m_behaviorID >= 8 && anim->m_behaviorID <= 10;
-}
-
-// OFFSET: 0x005D5130/0x14024F6D0
-void CGUnit_C::PlaySpellVisualKit_PlayAnims(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, int32_t a5, int32_t a6, WOWGUID guid, uint32_t a8, const SpellVisualRec* visual, uint32_t a10, int32_t a11) {
-    int32_t spellId = 0;
-
-    if (spell) {
-        spellId = spell->m_id;
-    }
-
-    this->m_animationState &= ~0x4000;
-
-    if (spell && (spell->m_attributes & 0x2) && (type == 4 || type == 0)) {
-        this->SetSheatheState(2, 1, 0);
-    }
-
-    if (a5) {
-        uint8_t animFlags = 0;
-
-        if (kit->m_flags & 0x4) {
-            animFlags = 2;
-        }
-
-        if (kit->m_flags & 0x8) {
-            animFlags |= 0x4;
-        }
-
-        if (kit->m_flags & 0x10) {
-            animFlags |= 0x8;
-        }
-
-        if (kit->m_flags & 0x100) {
-            animFlags |= 0x20;
-        }
-
-        if (spell && (spell->m_attributes & 0x40000)) {
-            animFlags |= 0x20;
-        }
-
-        if (visual && static_cast<uint32_t>(visual->m_missileModel) >= 0xFFFFFFFE) {
-            animFlags |= 0x20;
-        }
-
-        if ((a10 & 0x40) && kit->m_startAnimID >= 0) {
-            this->PlayBaseAnimation(kit->m_startAnimID, animFlags);
-            this->m_animationState |= 0x10000;
-        } else if (kit->m_animID >= 0) {
-            SpellVisualKitRec* castKit = visual ? g_spellVisualKitDB.GetRecord(visual->m_castKit) : NULL;
-            bool sameAnim = castKit && castKit->m_animID > 0 && castKit->m_animID == this->GetCurrentTorsoAnimId();
-            bool noCastTime = this->GetSpellCastingTime(spell) <= 0;
-            int32_t holdCast = (a10 & 0x40) && !noCastTime && sameAnim;
-            int32_t holdChannel = (a10 & 0x1000) && sameAnim;
-
-            if (type == 2) {
-                if (!holdChannel && !a11) {
-                    CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-                    WOWGUID owner = this->m_obj->m_guid;
-                    effect->AddAnimKitEffect(spellId, kit, &owner, a10, a8);
-                    effect->Release();
-                }
-
-                int32_t animId = kit->m_animID;
-
-                if (this->GetCurrentTorsoAnimId() != animId) {
-                    if (IsDeadOrDyingAnim(animId)) {
-                        this->PlayBaseAnimation(animId, animFlags);
-                    }
-
-                    this->UpdateBaseAnimation(animFlags, -1);
-                }
-            } else if (!(a10 & 0x40) || (!noCastTime && !holdCast)) {
-                if (IsWoundAnim(kit->m_animID)) {
-                    this->PlayWoundAnimKit(kit->m_animID == ANIM_COMBAT_CRITICAL);
-                } else {
-                    this->PlayBaseAnimation(kit->m_animID, animFlags);
-                }
-
-                if (a10 & 0x80) {
-                    this->m_specialIdleAnim = kit->m_animID;
-                }
-            }
-
-            if (!a11 && (holdCast || holdChannel)) {
-                CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-                WOWGUID owner = this->m_obj->m_guid;
-                effect->AddAnimKitEffect(spellId, kit, &owner, a10, a8);
-                effect->Release();
-            }
-
-            this->m_animationState &= ~0x10000;
-        }
-
-        if (a6) {
-            this->PlayWoundAnimKit(0);
-        }
-    }
-
-    this->CreateProceduralEffect(spell, visual, kit, 0, a10, guid);
-
-    if (this->unk_0B34[1]) {
-        this->UpdateWeaponTrails(&this->unk_0B34[0], this->unk_0B34[1]);
-        this->unk_0B34[1] = 0;
-    }
-
-    if (!(a10 & 0x400) && kit->m_soundID) {
-        CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-        effect->m_flags = a10;
-        effect->m_kitRec = kit;
-        effect->AddSoundEffect(kit->m_soundID, 0, spellId, position, this, a8);
-        effect->Release();
-    }
-
-    if (!a11 && kit->m_shakeID > 0) {
-        C3Vector objectPosition;
-        const C3Vector* shakePosition = position;
-
-        if (!shakePosition) {
-            objectPosition = this->GetPosition();
-            shakePosition = &objectPosition;
-        }
-
-        SpellVisualsPlayCameraShakeID(kit->m_shakeID, shakePosition);
-    }
-}
-
-
 
 // OFFSET: #0x00715D60
 void CGUnit_C::TriggerDamageFeedback() {
@@ -17387,6 +18442,17 @@ int32_t CGUnit_C::VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int
                     CGGameUI::DisplayError(ERR_ATTACK_PACIFIED);
                     return 0;
                 }
+            } else if (this->m_unit->m_unitFieldFlags2 & 0x800000) {
+                Spell_C_CancelsNoActions(this, NULL, &mechanic);
+
+                if (!showErrors) {
+                    return 0;
+                }
+
+                if (!mechanic) {
+                    CGGameUI::DisplayError(ERR_ATTACK_NO_ACTIONS);
+                    return 0;
+                }
             } else if (flags & 0x800000) {
                 Spell_C_CancelsFear(this, NULL, &mechanic);
 
@@ -17421,14 +18487,18 @@ int32_t CGUnit_C::VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int
         }
 
         if (this->m_unit->m_unitChannelSpell) {
-            SpellRec spell;
+            const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
 
-            if (g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell, &spell)) {
-                if ((spell.m_attributesEx & 0x1000) && showErrors) {
-                    CGGameUI::DisplayError(ERR_ATTACK_CHANNEL);
+            if (spell && spell->m_spellInterruptsID) {
+                SpellInterruptsRec* interrupts = g_spellInterruptsDB.GetRecord(spell->m_spellInterruptsID);
+
+                if (interrupts && (interrupts->m_channelInterruptFlags & 0x1000)) {
+                    if (showErrors) {
+                        CGGameUI::DisplayError(ERR_ATTACK_CHANNEL);
+                    }
+
+                    return 0;
                 }
-
-                return 0;
             }
         }
 
@@ -17455,8 +18525,6 @@ int32_t CGUnit_C::VerifyAttackIconPressed(WOWGUID* target, int32_t useGiven, int
             if (unit && this->IsFriendly(unit)) {
                 *target = WOWGUID();
             } else if (*target) {
-                CGGameUI::Target(*target);
-                *target = CGGameUI::m_lockedTarget;
                 goto checkTarget;
             }
         }
@@ -17475,10 +18543,6 @@ checkTarget:
         }
 
         return 0;
-    }
-
-    if (this->IsActivePlayer()) {
-        CGGameUI::Target(*target);
     }
 
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(*target, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -17586,8 +18650,8 @@ bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
     int32_t form = this->m_shapeshiftSuppressed ? 0 : this->m_unit->m_unitFieldBytes2[3];
 
     if (SpellRec::NotUsableInShapeshiftForm(spell, form - 1)) {
-        if (!this->AffectedByAura(275, spell)) {
-            *reason = 68;
+        if (!this->HasAuraMatchingSpellClass(275, spell)) {
+            *reason = SPELL_FAILED_NOT_SHAPESHIFT;
             return false;
         }
 
@@ -17596,14 +18660,14 @@ bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
 
     form = this->m_shapeshiftSuppressed ? 0 : this->m_unit->m_unitFieldBytes2[3];
 
-    if (SpellRec::UsableInShapeshift(spell, form - 1)) {
+    if (Spell_C_SpellHasShapeshiftMask(spell, form - 1)) {
         return true;
     }
 
     if (this->IsShapeShifted()) {
         if (spell->m_attributes & 0x10000) {
-            if (!this->AffectedByAura(275, spell)) {
-                *reason = 68;
+            if (!this->HasAuraMatchingSpellClass(275, spell)) {
+                *reason = SPELL_FAILED_NOT_SHAPESHIFT;
                 return false;
             }
 
@@ -17614,8 +18678,8 @@ bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
         SpellShapeshiftFormRec* shapeshift = g_spellShapeshiftFormDB.GetRecord(form);
 
         if (shapeshift && (shapeshift->m_flags & 0x400)) {
-            if (!this->AffectedByAura(275, spell)) {
-                *reason = 68;
+            if (!this->HasAuraMatchingSpellClass(275, spell)) {
+                *reason = SPELL_FAILED_NOT_SHAPESHIFT;
                 return false;
             }
 
@@ -17625,9 +18689,13 @@ bool CGUnit_C::CheckShapeshiftRules(const SpellRec* spell, int32_t* reason) {
         return true;
     }
 
-    if ((spell->m_shapeshiftMask[0] || spell->m_shapeshiftMask[1]) && !this->AffectedByAura(275, spell)) {
-        *reason = 94;
-        return false;
+    if (spell->m_spellShapeshiftID) {
+        SpellShapeshiftRec* shapeshift = g_spellShapeshiftDB.GetRecord(spell->m_spellShapeshiftID);
+
+        if (shapeshift && (shapeshift->m_shapeshiftMask[0] || shapeshift->m_shapeshiftMask[1]) && !this->HasAuraMatchingSpellClass(275, spell)) {
+            *reason = SPELL_FAILED_ONLY_SHAPESHIFT;
+            return false;
+        }
     }
 
     return true;
@@ -17776,7 +18844,7 @@ UnitThreat* CGUnit_C::CreateThreatEntry(const WOWGUID& guid) {
     return entry;
 }
 
-// OFFSET: #0x0071C3B0
+// OFFSET: 0x005B5F80
 bool CGUnit_C::UpdateThreatEntry(UnitThreat* entry, int32_t highestThreat, bool activePlayer) {
     bool changed = false;
     uint8_t percent;
@@ -17800,7 +18868,7 @@ bool CGUnit_C::UpdateThreatEntry(UnitThreat* entry, int32_t highestThreat, bool 
     if (status != entry->m_status) {
         if (activePlayer) {
             if (s_cvThreatPlaySounds->m_intValue && status == 2 && entry->m_status == 1) {
-                SI3::PlayUISound(15262);
+                SI3::PlayUISound(15262, NULL, true);
             }
 
             if (!(this->m_clientFlags & 0x8)) {
@@ -17842,7 +18910,7 @@ void CGUnit_C::UpdateThreatStatus() {
             this->AddWorldThreatUpdateText(highest->m_status, status);
 
             if (s_cvThreatPlaySounds->m_intValue) {
-                SI3::PlayUISound(15263);
+                SI3::PlayUISound(15263, NULL, true);
             }
         }
 
@@ -18040,7 +19108,7 @@ int32_t Packet_SMSG_PET_ACTION_SOUND(void* param, NETMESSAGE msgId, uint32_t tim
 
 // OFFSET: 0x005BC760
 void CGUnit_C::DoPowerRegen(int32_t powerType, uint32_t elapsed) {
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && ((1 << powerType) & static_cast<CGPlayer_C*>(this)->m_disabledPowerRegenMask)) {
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() && ((1 << powerType) & static_cast<CGPlayer_C*>(this)->m_player->m_playerFieldBytes2[2])) {
         return;
     }
 
@@ -18241,25 +19309,6 @@ void CGUnit_C::HandleBloodPool(uint32_t time) {
     CRandom::sfloat_(g_rndSeed);
 }
 
-// OFFSET: #0x007561E0
-void CGUnit_C::OnDeathAnimate() {
-    if (!this->DoNotLogDeath()) {
-        UnitCombatLogUnitDead(this);
-    }
-
-    this->PlayDeathAnim(0);
-
-    if (!(this->m_obj->m_type & TYPEMASK_PLAYER) || !(static_cast<CGPlayer_C*>(this)->m_player->m_playerFlags & 0x4000)) {
-        this->PlayUnitEventSound(4);
-    }
-
-    this->KillCreatureLoopSound();
-
-    if (this->IsActivePlayer()) {
-        CGGameUI::UpdateActivePlayer();
-    }
-}
-
 // OFFSET: 0x005AC520
 void CGUnit_C::ReadLootList(CDataStore* msg) {
     SmartGUID guid;
@@ -18439,11 +19488,17 @@ void CGUnit_C::ClearCastingSpell(int32_t spellId, bool clearChannel, bool a4) {
         return;
     }
 
-    this->m_animationState &= ~0x400u;
+    const SpellRec* castSpell = g_spellDB.GetRecord(spellId);
     this->m_castCount = 0;
     this->m_castSpellId = 0;
-    this->m_castSchoolImmunities = 0;
-    this->m_castImmunities = 0;
+
+    if ((!castSpell || !(castSpell->m_attributesEx & 0x4)) && !this->m_unit->m_unitChannelSpell) {
+        this->m_castSchoolImmunities = 0;
+        this->m_castImmunities = 0;
+    }
+
+    this->m_animationState &= ~0x10u;
+    this->UpdatePrecastAnimKit(0, WOWGUID());
 
     if (!a4) {
         return;
@@ -18463,9 +19518,9 @@ void CGUnit_C::ClearCastingSpell(int32_t spellId, bool clearChannel, bool a4) {
             }
         }
 
-        SpellRec spell;
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
 
-        if (g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell, &spell) && (spell.m_attributesEx & 0x4000) && this->IsActiveMoverTracking(2)) {
+        if (spell && (spell->m_attributesEx & 0x4000) && this->IsActiveMoverTracking(2)) {
             this->ClearTrackingTarget(false, true);
         }
     }
@@ -18482,7 +19537,7 @@ void CGUnit_C::ClearCastingSpell(int32_t spellId, bool clearChannel, bool a4) {
     }
 
     if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        CGGameUI::CloseLoot(true, (this->m_movement->m_flags & 0xC0100F) != 0, false);
+        CGGameUI::CloseLoot(true, (this->m_movement->m_flags & 0x60080F) != 0, false);
     }
 }
 
@@ -18491,8 +19546,6 @@ void CGUnit_C::ReleaseMissiles(const C3Vector& position) {
     if (this->m_missiles) {
         this->CancelRangedMode();
     }
-
-    SpellRec spell;
 
     while (this->m_missiles) {
         CM2Model* model = this->m_missiles->m_model;
@@ -18560,20 +19613,17 @@ void CGUnit_C::ReleaseMissiles(const C3Vector& position) {
             this->m_clientFlags &= ~0x1000000u;
             this->m_missiles->m_flags |= 0x2000000;
             CM2Model* missileModel = this->m_missiles->m_model;
-            missileModel->m_fFlags |= 0x8000;
+            missileModel->m_fFlags |= 0x4000;
             missileModel->m_worldTransform = transform;
             C3Vector firePosition(transform.d0, transform.d1, transform.d2);
             this->m_missiles->FireMissiles(&firePosition);
             continue;
         }
 
-        if (!g_spellDB.GetRecord(this->m_missiles->m_spellID, &spell)) {
-            continue;
-        }
-
+        const SpellRec* spell = g_spellDB.GetRecord(this->m_missiles->m_spellID);
         C3Vector overridePosition = C3Vector();
 
-        if (this->OverrideMissileFirePos(&overridePosition, &spell)) {
+        if (spell && this->OverrideMissileFirePos(&overridePosition, spell)) {
             this->m_missiles->FireMissiles(&overridePosition);
         } else {
             this->m_missiles->FireMissiles(&position);
@@ -18598,10 +19648,7 @@ void CGUnit_C::OnChannelObjectChanged(WOWGUID oldObject, int32_t oldSpell) {
     CGObject_C* object = ClntObjMgrObjectPtr(oldObject, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (object && oldSpell) {
-        object->ClearEffectKit(oldSpell, 2, 0, 0, 0);
-        object->ClearEffectKit(oldSpell, 1, 0, 0, 0);
-        object->ClearEffectKit(oldSpell, 5, 0, 0, 0);
-        object->ClearEffectKit(oldSpell, 6, 0, 0, 0);
+        object->ClearSpellEffect(oldSpell, 1, this->m_obj->m_guid.m_guid);
     }
 
     if (this->m_fishingLineEffect) {
@@ -18625,55 +19672,12 @@ void CGUnit_C::OnChannelObjectChanged(WOWGUID oldObject, int32_t oldSpell) {
         return;
     }
 
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell);
 
-    if (g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell, &spell) && (spell.m_attributesEx & 0x4000) && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+    if (spell && (spell->m_attributesEx & 0x4000) && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
         WOWGUID target = this->m_unit->m_unitFieldChannelObject;
         this->SetTrackingTarget(target, 1);
     }
-}
-
-// OFFSET: 0x005C9750/0x140241220
-void CGUnit_C::UpdateChannelEffects() {
-    this->m_clientFlags &= ~0x8000u;
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(this->m_unit->m_unitChannelSpell, &spell)) {
-        return;
-    }
-
-    if (spell.m_attributesEx & 0x4000) {
-        this->m_clientFlags |= 0x8000;
-
-        if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-            WOWGUID target = this->m_unit->m_unitFieldChannelObject;
-            this->SetTrackingTarget(target, 1);
-        }
-    }
-
-    const SpellVisualRec* visual = GetSpellVisual(&spell);
-
-    if (!visual) {
-        return;
-    }
-
-    SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(visual->m_channelKit);
-
-    if (!kit) {
-        return;
-    }
-
-    uint32_t playAnim = 1;
-    SpellVisualKitRec* castKit = g_spellVisualKitDB.GetRecord(visual->m_castKit);
-
-    if (castKit && this->GetCurrentTorsoAnimId() == static_cast<uint32_t>(castKit->m_animID)) {
-        playAnim = 0;
-    }
-
-    PlaySpellVisuaKitData data(&spell, kit, 2);
-    data.unk_0018 = playAnim;
-    this->PlaySpellVisualKit(data);
-    this->CreateFishingLineEffect();
 }
 
 // OFFSET: 0x005B8D50/0x14022CBE0
@@ -18752,76 +19756,6 @@ void CGUnit_C::OnFlagChangedActivePlayer(uint32_t oldFlags, uint32_t changed) {
     }
 }
 
-// OFFSET: 0x005CFFD0
-void CGUnit_C::OnFlagChanged(uint32_t oldFlags) {
-    uint32_t flags = this->m_unit->m_unitFieldFlags;
-    uint32_t changed = oldFlags ^ flags;
-
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-        this->OnFlagChangedActivePlayer(flags, changed);
-    } else if (static_cast<int32_t>(this->m_unit->m_unitFieldHealth) > 0 && (changed & 0x400)) {
-        this->UpdateBaseAnimation(0, -1);
-    }
-
-    if (changed & 0x200000) {
-        const CGUnitVirtualItem* mainHand = this->GetVirtualItem(0, true);
-
-        if (mainHand && mainHand->m_classID == 2) {
-            const CGUnitVirtualItem* item;
-
-            if ((this->m_unit->m_unitFieldFlags & 0x200000) && (item = this->GetVirtualItem(0, true)) && item->m_classID == 2 && this->m_sheatheState <= 1) {
-                CCharacterComponent::RemoveHandItem(this->m_worldModel, INVSLOT_MAINHAND, static_cast<SHEATHE_TYPE>(this->m_sheatheState ? 0 : mainHand->m_sheatheType), false);
-            } else {
-                if (this->unk_0988) {
-                    this->unk_0988->DeleteSelf();
-                }
-
-                this->AddHandItem(0);
-            }
-        }
-
-        const CGUnitVirtualItem* offHand = this->GetVirtualItem(1, true);
-
-        if (offHand && offHand->m_classID == 2) {
-            const CGUnitVirtualItem* item;
-
-            if ((((this->m_unit->m_unitFieldFlags & 0x200000) && (this->GetVirtualItem(0, true), !this->IsDisarmed(0)) && (item = this->GetVirtualItem(1, true)) && item->m_classID == 2) || static_cast<int8_t>(this->m_unit->m_unitFieldFlags2) < 0) && this->m_sheatheState == 1) {
-                CCharacterComponent::RemoveHandItem(this->m_worldModel, INVSLOT_OFFHAND, SHEATHE_NONE, false);
-            } else {
-                this->AddHandItem(1);
-            }
-        }
-
-        if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-            CGSpellBook::UpdateUsable();
-        }
-    }
-
-    if (changed & 0x180) {
-        this->UpdateReaction(false);
-    }
-
-    if (changed & 0x800) {
-        const WOWGUID& owner = this->m_unit->m_unitFieldCharmedby ? this->m_unit->m_unitFieldCharmedby : this->m_unit->m_unitFieldSummonedby;
-
-        if (owner == ClntObjMgrGetActivePlayer()) {
-            CGPetInfo::SetIsAttackingTarget((flags >> 11) & 1);
-        }
-    }
-
-    if (changed & 0x4000000) {
-        CGGameUI::UnitTooltipUpdate(this->m_obj->m_guid);
-    }
-
-    if (changed & 0x8000000) {
-        Script_SendUniqueSignal(this->m_obj->m_guid, 142);
-    }
-
-    if ((changed & 0x2000000) && (this->m_unit->m_unitFieldFlags & 0x2000000)) {
-        CGGameUI::BreakTarget(this->m_obj->m_guid);
-    }
-}
-
 // OFFSET: 0x005D59D0/0x1402502F0
 void CGUnit_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time, uint64_t param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(param), TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -18839,6 +19773,10 @@ void CGUnit_C::AnimEventCallback(CM2Model* model, uint32_t boneId, uint32_t even
 
 // OFFSET: 0x005D3E00/0x14024E060
 void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time) {
+    SE3SoundKitProperties properties;
+    properties.m_conditionArg = this;
+    properties.m_fpCondition = &CGUnit_C::IsOwnedByActiveMover;
+
     switch (eventId) {
         case 0x48414324:
         case 0x48544424:
@@ -18949,7 +19887,7 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x44435324:
             if (this->m_soundData) {
-                SI3::PlaySoundKit(this->m_soundData->m_spellCastDirectedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SE3::PlaySoundKit(this->m_soundData->m_spellCastDirectedSoundID, position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::HandleAnimEvent", 0, NULL);
             }
             return;
 
@@ -18989,13 +19927,13 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x474D5324:
             if (this->m_soundData) {
-                SI3::PlaySoundKit(this->m_soundData->m_submergeSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SE3::PlaySoundKit(this->m_soundData->m_submergeSoundID, position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::HandleAnimEvent", 0, NULL);
             }
             return;
 
         case 0x444D5324:
             if (this->m_soundData) {
-                SI3::PlaySoundKit(this->m_soundData->m_submergedSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SE3::PlaySoundKit(this->m_soundData->m_submergedSoundID, position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::HandleAnimEvent", 0, NULL);
             }
             return;
 
@@ -19016,7 +19954,7 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
             return;
 
         case 0x44534324:
-            this->PlayEmoteSound(data, true, -1);
+            this->PlayEmoteSound(data, true, -1, 0);
             return;
 
         case 0x44525424:
@@ -19027,7 +19965,7 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
 
         case 0x54524224:
             if (this->m_soundData) {
-                SI3::PlaySoundKit(this->m_soundData->m_birthSoundID, position, NULL, NULL, 0, NULL, 1, 0);
+                SE3::PlaySoundKit(this->m_soundData->m_birthSoundID, position, &properties, NULL, __FILE__, __LINE__, "CGUnit_C::HandleAnimEvent", 0, NULL);
             }
             return;
 
@@ -19074,169 +20012,8 @@ void CGUnit_C::HandleAnimEvent(uint32_t boneId, uint32_t eventId, uint32_t data,
     }
 }
 
-// OFFSET: #0x00756240
-void CGUnit_C::HandleCombatAnimEvent(uint32_t eventId, uint32_t data, const C3Vector* position, uint32_t time) {
-    CGUnit_C* attacker = NULL;
-    CGUnit_C* target = NULL;
-
-    if (this->m_lastAttackRound.m_attacker) {
-        attacker = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_lastAttackRound.m_attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-    }
-
-    if (this->m_lastAttackRound.m_target) {
-        target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_lastAttackRound.m_target, TYPEMASK_UNIT, __FILE__, __LINE__));
-    }
-
-    switch (eventId) {
-        case 0x30484124:
-        case 0x31484124:
-        case 0x32484124:
-        case 0x33484124:
-            if (this->m_lastAttackRound.m_damage && attacker && attacker->m_soundData) {
-                SE2SoundKitProperties properties;
-                properties.ResetToDefaults();
-                properties.m_group = 14;
-
-                switch (eventId) {
-                    case 0x30484124:
-                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[0], position, NULL, &properties, 0, NULL, 1, 0);
-                        break;
-
-                    case 0x31484124:
-                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[1], position, NULL, &properties, 0, NULL, 1, 0);
-                        break;
-
-                    case 0x32484124:
-                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[2], position, NULL, &properties, 0, NULL, 1, 0);
-                        break;
-
-                    case 0x33484124:
-                        SI3::PlaySoundKit(attacker->m_soundData->m_customAttack[3], position, NULL, &properties, 0, NULL, 1, 0);
-                        break;
-                }
-
-                this->m_lastAttackRound.m_hitInfo |= 0x200000;
-            }
-
-        case 0x48414324:
-            if (attacker) {
-                uint32_t victimState = attacker->m_lastAttackRound.m_victimState;
-
-                if (!victimState || victimState == 2 || victimState == 6) {
-                    attacker->SetKeyBoneSequenceSpeed(attacker->m_worldModel, 0xFFFFFFFF, 0.5f, 0);
-                }
-            } else if (!target) {
-                if (this->m_obj->m_type & TYPEMASK_PLAYER) {
-                    static_cast<CGPlayer_C*>(this)->HandleSpellEventSound();
-                } else {
-                    CreatureSoundDataRec* soundData = this->GetSoundData(0);
-
-                    if (soundData) {
-                        SI3::PlaySoundKit(soundData->m_soundExertionID, position, NULL, NULL, 0, NULL, 0, 0);
-                    }
-                }
-            }
-
-            if (target) {
-                target->PlayVictimRound(this->m_lastAttackRound);
-            }
-
-            this->m_lastAttackRound.m_attacker = WOWGUID();
-            this->m_lastAttackRound.m_target = WOWGUID();
-            return;
-
-        case 0x53534324: {
-            if (!attacker) {
-                return;
-            }
-
-            uint32_t victimState = this->m_lastAttackRound.m_victimState;
-
-            if (!victimState || victimState == 2 || victimState == 6) {
-                return;
-            }
-
-            int32_t swingType = 0;
-
-            if (this->GetWeaponSwingType(!(this->m_lastAttackRound.m_hitInfo & 4), &swingType) && this->m_lastAttackRound.m_victimState) {
-                int32_t self = CGUnit_C::s_activeMover == this->m_lastAttackRound.m_attacker || CGUnit_C::s_activeMover == this->m_lastAttackRound.m_target;
-                SI3::PlayWeaponSwooshSound(swingType, this->m_lastAttackRound.m_hitInfo & 0x200, position, this->m_lastAttackRound.m_hitInfo & 0x10, self);
-            }
-
-            return;
-        }
-
-        case 0x50574224: {
-            if (this->IsActivePlayer()) {
-                SpellRec spell;
-
-                if (!g_spellDB.GetRecord(this->m_castSpellId, &spell) || !(spell.m_attributes & 2)) {
-                    if (!g_spellDB.GetRecord(Spell_C_GetAutoRepeatingSpell(), &spell) || !(spell.m_attributes & 2)) {
-                        return;
-                    }
-                }
-            }
-
-            if (this->m_movementData.m_flags & 0x2E0100F) {
-                return;
-            }
-
-            this->PlayRangedItemPull();
-            const CGUnitVirtualItem* item = this->GetVirtualItem(2, false);
-
-            if (!item || item->m_classID != 2 || (item->m_subclassID != 3 && item->m_subclassID != 18)) {
-                if (this->m_ammoModel && !this->m_ammoModel->m_attachParent) {
-                    this->m_ammoModel->AttachToParent(this->m_worldModel, 35, NULL, 0);
-                }
-            }
-
-            this->m_animationState |= 0x4000;
-            return;
-        }
-
-        case 0x48544424:
-            this->PlayDeathThud();
-            this->ShakeCameraOnHit();
-            this->ShowLootEffect();
-            return;
-
-        case 0x50504324: {
-            if (!target || (target->m_unit->m_unitFieldFlags2 & 1) || target->GetClientStandState() == 7) {
-                return;
-            }
-
-            uint32_t victimState = this->m_lastAttackRound.m_victimState;
-
-            if (victimState == 3) {
-                if (!target->m_creatureCacheEntry || !(target->m_creatureCacheEntry->m_typeFlags[0] & 0x200000)) {
-                    target->PlayParryAnimation();
-                }
-
-                this->m_lastAttackRound.m_hitInfo &= ~2u;
-            } else if (victimState == 2 || victimState == 8) {
-                if (!target->m_creatureCacheEntry || !(target->m_creatureCacheEntry->m_typeFlags[0] & 0x200000)) {
-                    target->PlayBaseAnimation(ANIM_DODGE, 0);
-                }
-
-                this->m_lastAttackRound.m_hitInfo &= ~2u;
-            } else if (this->m_lastAttackRound.m_blocked) {
-                if (!target->m_creatureCacheEntry || !(target->m_creatureCacheEntry->m_typeFlags[0] & 0x200000)) {
-                    target->PlayBaseAnimation(ANIM_SHIELD_BLOCK, 0);
-                }
-
-                this->m_lastAttackRound.m_hitInfo &= ~2u;
-            }
-
-            return;
-        }
-
-        default:
-            return;
-    }
-}
-
 // OFFSET: #0x0073B050
-void CGUnit_C::PlayParryAnimation() {
+void CGUnit_C::PlayParryAnim() {
     if (this->AppearsDead(1) || !this->m_worldModel->IsLoaded() || this->DoNotPlayWoundAnim()) {
         return;
     }
@@ -19958,17 +20735,6 @@ void CGUnit_C::ChatBubbleShow(int32_t type, const char* text) {
     }
 }
 
-// OFFSET: #0x00616B10
-uint32_t CGUnit_C::GetPortraitDisplayId() {
-    uint32_t displayId = this->m_displayId;
-
-    if (!displayId || this->m_unit->m_unitFieldNativedisplayid != this->m_unit->m_unitFieldDisplayid) {
-        return this->m_unit->m_unitFieldDisplayid;
-    }
-
-    return displayId;
-}
-
 // OFFSET: #0x0071ACF0
 bool CGUnit_C::IsTracked() const {
     return CGMinimapFrame::s_trackingInfo && CGMinimapFrame::s_trackingInfo->m_type == 1 && (this->m_unit->m_unitNpcFlags & CGMinimapFrame::s_trackingInfo->m_npcFlags);
@@ -20239,92 +21005,6 @@ void NameQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool succes
     }
 }
 
-// OFFSET: 0x005C7570/0x14023E830
-int32_t CGUnit_C::UpdateObjectNameStringForUnit(CGUnit_C* unit, int32_t a1, char* buffer, uint32_t size, uint32_t a5) {
-    if (a5 && (unit->m_auraEffectMask[279 / 8] & (1 << (279 % 8)))) {
-        SpellRec spellRec;
-
-        for (uint32_t i = 0; i < unit->GetAuraCount(); i++) {
-            AuraData* aura = unit->GetAura(i);
-
-            if (!g_spellDB.GetRecord(aura->m_spellId, &spellRec)) {
-                continue;
-            }
-
-            for (int32_t effect = 0; effect < 3; effect++) {
-                if (spellRec.m_effectAura[effect] != 279 || !(aura->m_flags & (1 << effect))) {
-                    continue;
-                }
-
-                CGUnit_C* creator = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(aura->m_creator, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                if (creator) {
-                    return CGUnit_C::UpdateObjectNameStringForUnit(creator, a1, buffer, size, 0);
-                }
-            }
-        }
-    }
-
-    char afkText[32] = {};
-    char dndText[32] = {};
-    char gmText[32] = {};
-    char devText[32] = {};
-    unit->GetAFKText(afkText, sizeof(afkText));
-    unit->GetDNDText(dndText, sizeof(dndText));
-    unit->GetGMText(gmText, sizeof(gmText));
-    unit->GetDevText(devText, sizeof(devText));
-
-    char titleText[1024] = {};
-    char guildText[100] = {};
-    char subNameText[1024] = {};
-    char summonedText[1024] = {};
-    char foreignText[8] = {};
-
-    int32_t lines = 0;
-    unit->GetUnitChosenTitle(titleText, sizeof(titleText), (a1 & 8) != 0, &lines);
-
-    if (unit->m_obj->m_type & TYPEMASK_PLAYER) {
-        if (a1 & 4) {
-            const char* guildName = static_cast<CGPlayer_C*>(unit)->GetPlayerGuildNameText();
-
-            if (guildName && *guildName) {
-                SStrPrintf(guildText, sizeof(guildText), "\n<%s>", guildName);
-                lines++;
-            }
-        }
-
-        const char* realm = NULL;
-        unit->GetUnitName(&realm, 1);
-
-        if (realm && *realm && unit->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
-            SStrPrintf(foreignText, sizeof(foreignText), FrameScript_GetText("FOREIGN_SERVER_LABEL", -1, GENDER_NOT_APPLICABLE));
-        }
-    } else {
-        CreatureStats_C* stats = unit->m_creatureCacheEntry;
-
-        if (stats && *stats->m_subName) {
-            const char* subName = stats->m_subName;
-
-            if (!unit->m_unit->m_unitFieldPetnumber && subName && *subName) {
-                SStrPrintf(subNameText, sizeof(subNameText), "\n<%s>", subName);
-                lines++;
-            }
-        }
-
-        char summonedBy[128] = {};
-        CGTooltip::GetSummonedByString(unit, summonedBy, sizeof(summonedBy));
-
-        if (summonedBy[0]) {
-            SStrPrintf(summonedText, sizeof(summonedText), "\n<%s>", summonedBy);
-            lines++;
-        }
-    }
-
-    SStrPrintf(buffer, size, "%s%s%s%s%s%s%s%s%s", afkText, dndText, gmText, devText, titleText, guildText, subNameText, summonedText, foreignText);
-
-    return lines;
-}
-
 // STATIC
 // PROVEN: f5c49047 IDENTICAL/IDENTICAL
 // OFFSET: 0x00401000/0x1407D7E80
@@ -20528,78 +21208,6 @@ void CGUnit_C::UnitNameplatesReposition(CGWorldFrame* worldFrame) {
     }
 
     CLayoutFrame::ResizePending();
-}
-
-// OFFSET: 0x005C1850/0x1402377E0
-void CGUnit_C::CancelOpenStable() {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !this->HasAuraEffect(292)) {
-        return;
-    }
-
-    SpellRec spell;
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        if (!(this->GetAura(i)->m_flags & 0x10)) {
-            continue;
-        }
-
-        if (!g_spellDB.GetRecord(this->GetAura(i)->m_spellId, &spell)) {
-            continue;
-        }
-
-        for (uint32_t j = 0; j < 3; j++) {
-            if (spell.m_effectAura[j] == 292) {
-                Spell_C_CancelAura(&spell, this, -1);
-            }
-        }
-    }
-}
-
-// OFFSET: 0x005C1980
-void CGUnit_C::CancelShapeshiftForMount() {
-    if (this->IsShapeShifted()) {
-        this->CancelShapeshift();
-    }
-
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
-        return;
-    }
-
-    SpellRec spell;
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        AuraData& aura = this->m_auras[i];
-
-        if (!(aura.m_flags & 0x10) || !g_spellDB.GetRecord(aura.m_spellId, &spell)) {
-            continue;
-        }
-
-        for (uint32_t effect = 0; effect < 3; effect++) {
-            if (spell.m_effectAura[effect] != 36) {
-                continue;
-            }
-
-            SpellShapeshiftFormRec* form = g_spellShapeshiftFormDB.GetRecord(spell.m_effectMiscValue[effect]);
-
-            if (!form) {
-                continue;
-            }
-
-            for (uint32_t d = 0; d < 4; d++) {
-                if (!form->m_creatureDisplayID[d]) {
-                    continue;
-                }
-
-                CreatureDisplayInfoRec* display = g_creatureDisplayInfoDB.GetRecord(form->m_creatureDisplayID[d]);
-                CreatureModelDataRec* model = display ? g_creatureModelDataDB.GetRecord(display->m_modelID) : NULL;
-
-                if (model && model->m_flags >= 0) {
-                    Spell_C_CancelAura(&spell, this, -1);
-                    break;
-                }
-            }
-        }
-    }
 }
 
 // OFFSET: #0x00727130
@@ -20852,29 +21460,6 @@ void CGUnit_C::RemoveChannelEffects(int32_t spellId) {
     }
 }
 
-// OFFSET: #0x00721210
-void CGUnit_C::StartSwimming(uint32_t time, int32_t spline) {
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
-        this->m_movementData.OnSwimStartLocal(time);
-        CGTutorial::TriggerTutorial(27);
-    } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x400))) {
-        this->m_movementData.OnSplineStartSwim();
-    } else {
-        this->m_movementData.OnSwimStart(time);
-    }
-}
-
-// OFFSET: #0x00721290
-void CGUnit_C::StopSwimming(uint32_t time, int32_t spline) {
-    if (this->m_obj->m_guid == CGUnit_C::s_activeMover) {
-        this->m_movementData.OnSwimStopLocal(time);
-    } else if (spline || (this->m_movement->m_spline && !(this->m_movement->m_spline->m_flags & 0x400))) {
-        this->m_movementData.OnSplineStopSwim();
-    } else {
-        this->m_movementData.OnSwimStop(time);
-    }
-}
-
 // OFFSET: #0x00730D10
 void CGUnit_C::UpdateSwimmingStatus(uint32_t time, int32_t a3) {
     if (this->m_movement->m_flags2 & 0x4) {
@@ -20902,11 +21487,11 @@ void CGUnit_C::UpdateSwimmingStatus(uint32_t time, int32_t a3) {
         }
 
         if (!(this->m_movementData.m_flags & 0x2000000) && (!inLiquid || exitDepth > depth || !canSwim)) {
-            this->StopSwimming(time, a3);
+            this->OnSwimStop(time, a3);
         }
     } else {
         if (swimDepth < depth && canSwim && !this->m_movementData.IsJumpingUp()) {
-            this->StartSwimming(time, a3);
+            this->OnSwimStart(time, a3);
         }
 
         if ((this->m_movementData.m_collisionHeight * 0.4f < depth) != (this->m_movementData.m_collisionHeight * 0.4f < this->m_swimDepth)) {
@@ -21199,9 +21784,9 @@ void CGUnit_C::CreateOrDestroyObjectEffectManager() {
     int32_t displayId = this->m_mountDisplayId;
 
     if (!displayId) {
-        displayId = this->m_displayId;
-
-        if (!displayId || this->m_unit->m_unitFieldNativedisplayid != this->m_unit->m_unitFieldDisplayid) {
+        if (this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
+            displayId = this->GetCurrentClientNativeDisplayID();
+        } else {
             displayId = this->m_unit->m_unitFieldDisplayid;
         }
     }
@@ -21317,11 +21902,11 @@ void CGUnit_C::VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, Ve
             int32_t hasMax = flagsB & 0x8000;
             uint32_t wasRestore = restoreZoom;
             restoreZoom = 0;
-            float minDistance = hasMin ? seatRec->m_field33512213054 : camera->GetDefaultZoomMinDistance();
-            float maxDistance = hasMax ? seatRec->m_field33512213055 : CGCamera::GetDefaultZoomMaxDistance();
+            float minDistance = hasMin ? seatRec->m_cameraSeatZoomMin : camera->GetDefaultZoomMinDistance();
+            float maxDistance = hasMax ? seatRec->m_cameraSeatZoomMax : CGCamera::GetDefaultZoomMaxDistance();
 
             if (seatRec->m_flagsB & 0x800) {
-                float preferred = seatRec->m_field33512213053;
+                float preferred = seatRec->m_cameraEnteringZoom;
 
                 if (preferred > current && !(seatRec->m_flagsB & 0x1000)) {
                     target = preferred;
@@ -21407,195 +21992,6 @@ void CGUnit_C::SignalPlayerGainsVehicleDataEvent() {
     }
 }
 
-// OFFSET: #0x007265C0
-void CGUnit_C::CreateProceduralEffect(const SpellRec* spell, const SpellVisualRec* visual, const SpellVisualKitRec* kit, int32_t a4, uint32_t flags, WOWGUID guid) {
-    uint32_t spellId = spell ? spell->m_id : 0;
-
-    for (uint32_t i = 0; i < 4; i++) {
-        float param0 = kit->m_charParamZero[i];
-        float param1 = kit->m_charParamOne[i];
-        float param2 = kit->m_charParamTwo[i];
-        float param3 = kit->m_charParamThree[i];
-
-        switch (kit->m_charProc[i]) {
-            case 0:
-            case 12: {
-                void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                WOWGUID self = this->m_obj->m_guid;
-                effect->AddLightning(a4, spellId, kit, &self, flags & 0x300401);
-                effect->Release();
-
-                WOWGUID source = WOWGUID();
-                CGUnit_C* target = this;
-                const WOWGUID* targets;
-                uint32_t count;
-
-                if ((flags & 0x1000) && guid && guid != this->m_obj->m_guid) {
-                    target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-                    if (!target) {
-                        break;
-                    }
-
-                    source = this->m_obj->m_guid;
-                    targets = &source;
-                    count = 1;
-                } else if (this->m_clientFlags & 0x800000) {
-                    targets = NULL;
-                    count = 0;
-                } else if (spellId == this->m_unit->m_unitChannelSpell && this->m_unit->m_unitFieldChannelObject && this->m_chainSpellTargets.Count() <= 1) {
-                    targets = &this->m_unit->m_unitFieldChannelObject;
-                    count = 1;
-                } else {
-                    if (!this->m_chainSpellTargets.Count()) {
-                        this->m_chainSpellTargets.SetCount(0);
-                        break;
-                    }
-
-                    targets = this->m_chainSpellTargets.m_data;
-                    count = this->m_chainSpellTargets.Count();
-                }
-
-                const C3Vector* location = (this->m_clientFlags & 0x800000) ? &this->m_chainSpellLocation : NULL;
-                SpellVisualsCreateChainLightning(target, effect, static_cast<int32_t>(param0), param2 != 0.0f, param3 != 0.0f, spellId, targets, count, effect->m_lightning, 12, location, this->unk_0F58);
-                this->m_chainSpellTargets.SetCount(0);
-
-                if ((this->m_clientFlags & 0x800000) && spell && visual && visual->m_impactAreaKit != kit->m_id) {
-                    SpellVisualKitRec* areaKit = g_spellVisualKitDB.GetRecord(visual->m_impactAreaKit);
-                    C3Vector position = this->m_chainSpellLocation;
-
-                    if (areaKit) {
-                        PlaySpellVisuaKitData data(spell, areaKit, 3);
-                        data.m_position = &position;
-                        data.unk_0018 = 0;
-                        data.unk_0024 = this->unk_0F58;
-                        this->PlaySpellVisualKit(data);
-                    }
-                }
-
-                this->unk_0F58 += 2;
-                break;
-            }
-
-            case 1: {
-                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && SpellRec::IsHelpfulOrHarmful(spell) == 2) {
-                    break;
-                }
-
-                this->ReleaseEffectsBySpell(spellId);
-                void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                effect->m_spellId = spellId;
-                *reinterpret_cast<uint32_t*>(&effect->m_color) = static_cast<int32_t>(param0) | 0xFF000000;
-                effect->LinkTo(&this->m_procEffects);
-                break;
-            }
-
-            case 6: {
-                CImVector color;
-                *reinterpret_cast<uint32_t*>(&color) = static_cast<uint32_t>(static_cast<int64_t>(param0)) | 0xFF000000;
-                SpellVisualsHandleEclipse(&color, param1, spell);
-                break;
-            }
-
-            case 8: {
-                this->unk_0B34[0] = (static_cast<int32_t>(param3) << 24) | static_cast<int32_t>(param0);
-                this->unk_0B34[1] = static_cast<int32_t>(param2);
-                break;
-            }
-
-            case 11: {
-                void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                WOWGUID self = this->m_obj->m_guid;
-                effect->CreateProceduralEffectImpl(a4, param0, spellId, kit, &self, flags & 0x300401);
-                effect->Release();
-                break;
-            }
-
-            case 13: {
-                if (this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x40) && SpellRec::IsHelpfulOrHarmful(spell) == 2) {
-                    break;
-                }
-
-                uint32_t color = static_cast<int32_t>(param0) | 0xFF000000;
-                int32_t duration = FloatToInt64(param2 * 1000.0f);
-                int32_t delay = FloatToInt64(param1 * 1000.0f);
-                this->m_flashStartTime = FrameTime::s_curTimeMs;
-                *reinterpret_cast<uint32_t*>(&this->m_flashColor) = color;
-                this->m_flashDelay = delay;
-                this->m_flashDuration = duration;
-                break;
-            }
-
-            case 14: {
-                this->ReleaseAurasBySpell(spellId);
-
-                if (param0 >= 0.0f && param0 <= 1.0f) {
-                    void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                    CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                    effect->m_spellId = spellId;
-                    effect->unk_00E8 = param0;
-                    effect->m_kitRec = kit;
-
-                    if (kit->m_flags & 0x200) {
-                        effect->m_flags |= 0x2000000;
-                    }
-
-                    this->m_forceWorldModelAlpha = (kit->m_flags >> 10) & 1;
-                    effect->unk_00A0 = FloatToInt64(param2 * 1000.0f);
-                    effect->LinkTo(&this->m_auraEffects);
-                }
-
-                this->ApplyModelFade();
-                break;
-            }
-
-            case 15: {
-                uint8_t alpha = static_cast<uint8_t>(FloatToInt64(this->GetBaseAlpha() * param0));
-                int32_t endAlpha = FloatToInt64(param2);
-                int32_t hold = FloatToInt64(param3);
-                int32_t type = FloatToInt64(param1);
-                this->StartProceduralFade(alpha, type, 500, hold, endAlpha);
-                break;
-            }
-
-            case 16: {
-                if (this->IsMounted() || this->m_mountModel) {
-                    break;
-                }
-
-                void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                WOWGUID self = this->m_obj->m_guid;
-                effect->AddMountTransition(spellId, kit, &self);
-                effect->m_flags |= flags & 0xC0;
-                effect->Release();
-                break;
-            }
-
-            case 17: {
-                void* mem = SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0);
-                CEffect* effect = mem ? new (mem) CEffect() : NULL;
-                WOWGUID self = this->m_obj->m_guid;
-                effect->InitProceduralEffect(a4, static_cast<int32_t>(param1), spellId, kit, &self, flags);
-                effect->Release();
-                break;
-            }
-
-            default: {
-                break;
-            }
-        }
-    }
-}
-
-// PROVEN: 368c1cc8 IDENTICAL/IDENTICAL
-// OFFSET: 0x00401000/0x1407D7E80
-static void CritterDisplayCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-}
-
 // OFFSET: #0x0072CC30
 int32_t CGUnit_C::IsHostileCritter() {
     if (this->GetCreatureType() != 7) {
@@ -21619,49 +22015,6 @@ int32_t CGUnit_C::IsHostileCritter() {
     }
 
     return 0;
-}
-
-// OFFSET: #0x0072E270
-void CGUnit_C::UpdateCritterDisplay() {
-    if (!this->IsHostileCritter()) {
-        if (this->m_displayId) {
-            this->m_critterDisplayCreatureId = 0;
-            this->m_displayId = 0;
-            this->UpdateDisplayInfo(0);
-        }
-
-        return;
-    }
-
-    if (!GetVisibleAuraEffectDisplay() || GetVisibleAuraEffectDisplay() == this->m_critterDisplayCreatureId) {
-        ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__);
-
-        if (!GetVisibleAuraEffectDisplay() && this->m_critterDisplayCreatureId) {
-            this->m_critterDisplayCreatureId = 0;
-            this->m_displayId = 0;
-            this->UpdateDisplayInfo(0);
-        }
-
-        return;
-    }
-
-    WOWGUID guid = this->m_obj->m_guid;
-    CreatureStats_C* stats = g_creatureDBCache.GetRecord(GetVisibleAuraEffectDisplay(), guid, CritterDisplayCacheCallback, NULL, true);
-
-    if (!stats) {
-        return;
-    }
-
-    uint32_t count = (stats->m_displayId[3] != 0) + (stats->m_displayId[2] != 0) + (stats->m_displayId[1] != 0) + (stats->m_displayId[0] != 0);
-
-    if (!count) {
-        return;
-    }
-
-    uint32_t index = static_cast<uint32_t>(rand()) % count;
-    this->m_critterDisplayCreatureId = GetVisibleAuraEffectDisplay();
-    this->m_displayId = stats->m_displayId[index];
-    this->UpdateDisplayInfo(0);
 }
 
 // OFFSET: 0x0060C030/0x140295730
@@ -22070,20 +22423,6 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
     effect->Release();
 }
 
-// OFFSET: #0x007555E0
-void CGUnit_C::ShakeCameraOnHit() {
-    if (this->m_unit->m_unitFieldPetnumber) {
-        return;
-    }
-
-    int32_t shakeId = this->m_modelData->m_deathThudShakeSize;
-
-    if (shakeId) {
-        C3Vector position = this->GetPosition();
-        CGWorldFrame::GetActiveCamera()->AddShakeById(shakeId, &position);
-    }
-}
-
 // OFFSET: #0x0071DCC0
 int32_t IsSpecialIdleAnim(uint32_t animId) {
     if (IsSpellCastAnim(animId)) {
@@ -22134,44 +22473,6 @@ void CreatureQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool su
         totem->m_name = unit->GetUnitName(NULL, 1);
         FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_TOTEM_UPDATE, "%d", totem->m_slot + 1);
     }
-}
-
-// OFFSET: #0x00755380
-void CGUnit_C::ShowBloodSpurt(const WOWGUID& attacker, int32_t a3) {
-    UnitBloodRec* blood = this->GetBloodRecord();
-
-    if (!blood) {
-        return;
-    }
-
-    int32_t attachType = 15;
-    CGUnit_C* attackerUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(attacker, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (attackerUnit) {
-        C3Vector position = this->GetPosition();
-        C3Vector attackerPosition = attackerUnit->GetPosition();
-        float dx = attackerPosition.x - position.x;
-        float dy = attackerPosition.y - position.y;
-        float facing = this->CGUnit_C::GetRenderFacing();
-        float cosFacing = cosf(facing);
-        float sinFacing = sinf(facing);
-
-        if (dy * sinFacing + dx * cosFacing < 0.0f) {
-            attachType = 16;
-        }
-    }
-
-    int32_t effectId = attachType == 15 ? blood->m_combatBloodSpurtFront[a3 != 0] : blood->m_combatBloodSpurtBack[a3 != 0];
-    SpellVisualEffectNameRec* effectName = g_spellVisualEffectNameDB.GetRecord(effectId);
-
-    if (!effectName) {
-        return;
-    }
-
-    CEffect* effect = new (SMemAlloc(sizeof(CEffect), __FILE__, __LINE__, 0)) CEffect();
-    WOWGUID source = this->m_obj->m_guid;
-    effect->AddEffect(attachType, 0, NULL, effectName, &attacker, &source, 0x20, CGObject_C::EffectOnceHandler, NULL, 0, NULL);
-    effect->Release();
 }
 
 // OFFSET: #0x00720BF0
@@ -22395,33 +22696,6 @@ void CGUnit_C::OnVirtualItemChanged(uint32_t slot, int32_t oldItemId) {
     }
 }
 
-// OFFSET: 0x005C1710/0x140237650
-void CGUnit_C::CancelShapeshift() {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || this->m_shapeshiftSuppressed) {
-        return;
-    }
-
-    if (!this->m_unit->m_unitFieldBytes2[3]) {
-        return;
-    }
-
-    SpellRec spell;
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        AuraData* aura = this->GetAura(i);
-
-        if (!(aura->m_flags & 0x10) || !g_spellDB.GetRecord(this->GetAura(i)->m_spellId, &spell)) {
-            continue;
-        }
-
-        for (uint32_t j = 0; j < 3; j++) {
-            if (spell.m_effectAura[j] == 36 && spell.m_effectMiscValue[j] == static_cast<int32_t>(this->GetShapeshiftForm())) {
-                Spell_C_CancelAura(&spell, this, -1);
-            }
-        }
-    }
-}
-
 // OFFSET: #0x00719B80
 void CGUnit_C::ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32_t a3) {
     if (elapsed < 0.011111111f) {
@@ -22460,7 +22734,7 @@ void CGUnit_C::ComputeSmoothedSwimMatrix(C44Matrix* matrix, float elapsed, int32
         targetPitch = basePitch * -1.0f;
     }
 
-    float facing = this->GetRenderFacing();
+    float facing = this->GetDisplayFacing();
     float facingDelta = facing - this->m_smoothFacing;
     this->m_smoothFacing = facing;
 
@@ -23889,43 +24163,6 @@ const SpellVisualRec* CGUnit_C::GetAppropriateSpellVisual(const SpellRec* spell,
     return &visual;
 }
 
-// OFFSET: 0x005B4850/0x140227DF0
-void CGUnit_C::ConnectToLightningThisFrame(uint32_t a1, int32_t a2) {
-    CGObject_C::ConnectToLightningThisFrame(a1, a2);
-
-    SpellRec spellRec;
-    spellRec.m_id = 0;
-
-    for (uint32_t i = 0; i < this->m_delayedSpellVisualKits.m_count; i++) {
-        DelayedSpellVisualKit* delayed = &this->m_delayedSpellVisualKits.m_data[i];
-
-        if (!(delayed->m_flags & 0x8) || delayed->unk_0028 || delayed->m_spellId != static_cast<int32_t>(a1) || delayed->m_delay != a2) {
-            continue;
-        }
-
-        if (spellRec.m_id || g_spellDB.GetRecord(a1, &spellRec)) {
-            SpellVisualKitRec* kit = g_spellVisualKitDB.GetRecord(delayed->m_kitId);
-
-            if (kit) {
-                PlaySpellVisuaKitData data(&spellRec, kit, delayed->m_kitType);
-
-                if (delayed->m_flags & 0x1) {
-                    data.m_position = &delayed->m_position;
-                    data.m_transportGUID = delayed->m_targetGuid;
-                }
-
-                data.unk_001C = (delayed->m_flags >> 2) & 0x1;
-                data.unk_0018 = (delayed->m_flags >> 1) & 0x1;
-                data.unk_0020 = 1;
-                data.unk_0024 = delayed->m_delay;
-                this->PlaySpellVisualKit(data);
-            }
-        }
-
-        this->m_delayedSpellVisualKits.m_data[i].m_flags &= ~0x8;
-    }
-}
-
 // OFFSET: #0x00716DB0
 int32_t Packet_SMSG_PLAYER_VEHICLE_DATA(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     SmartGUID guid;
@@ -23975,7 +24212,7 @@ void CGUnit_C::MountTransitionSetCharacterTransform(float elapsed) {
     CM2Model* model = this->GetObjectModel();
 
     if (model) {
-        model->SetWorldTransform(this->GetPosition(), this->GetRenderFacing(), this->GetTrueScale(), this->m_groundNormal, flags & 0x3);
+        model->SetWorldTransform(this->GetPosition(), this->GetDisplayFacing(), this->GetTrueScale(), this->m_groundNormal, flags & 0x3);
     }
 
     C44Matrix transform = this->GetObjectModel()->m_worldTransform;
@@ -24037,56 +24274,6 @@ void CGUnit_C::AttachPrecastMissileModel(const SpellVisualRec* visual, uint8_t c
     this->m_precastMissileModel->SetWorldTransform(position, -1.5707964f, scale);
     this->m_precastMissileModel->AttachToParent(this->GetObjectModel(), attachId, NULL, 0);
     this->m_precastCastCount = castCount;
-}
-
-// OFFSET: 0x005C23C0/0x1402385E0
-bool CGUnit_C::CheckSelfResurrect() {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (!player || !(this->m_auraEffectMask[314 / 8] & (1 << (314 % 8)))) {
-        return true;
-    }
-
-    SpellRec spell;
-
-    if (g_spellDB.GetRecord(player->m_player->m_playerSelfResSpell, &spell) && (spell.m_attributesExG & 0x8000000)) {
-        return true;
-    }
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        if (!g_spellDB.GetRecord(this->m_auras[i].m_spellId, &spell)) {
-            continue;
-        }
-
-        for (uint32_t effect = 0; effect < 3; effect++) {
-            if (spell.m_effectAura[effect] == 314) {
-                char buffer[1024];
-                GetCustomSpellFailedString(buffer, sizeof(buffer), spell.m_effectMiscValue[effect]);
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-// OFFSET: 0x005C3520
-void CGUnit_C::CheckApplyPeriodicClientTriggers() {
-    SpellRec spell;
-
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
-        if (!g_spellDB.GetRecord(this->m_auras[i].m_spellId, &spell)) {
-            continue;
-        }
-
-        for (uint32_t effect = 0; effect < 3; effect++) {
-            if (spell.m_effectAura[effect] == 48) {
-                int32_t period = spell.m_effectAuraPeriod[effect];
-                Spell_C_ModifySpellValue(&spell, period, 19);
-                Spell_C_AddPeriodicClientTrigger(this->m_obj->m_guid, spell.m_id, spell.m_effectTriggerSpell[effect], period);
-            }
-        }
-    }
 }
 
 // OFFSET: #0x0072A560
@@ -24430,12 +24617,6 @@ void CGUnit_C::OnFlag2Changed(uint32_t oldFlags) {
     }
 }
 
-// PROVEN: 99326035 IDENTICAL/NONE
-// OFFSET: 0x005FF6D0
-void CGUnit_C::ShowPlayerPVPHonorGained(WOWGUID victim, int32_t rank, int32_t honor) {
-    CGChat::LogHonorGain(this, victim, rank, honor);
-}
-
 // OFFSET: 0x005EB650/0x14026CB90
 void CGUnit_C::CleanUpVehicleBoneAnimsBeforeObjectModelChange() {
     CVehicle_C* vehicle = this->m_vehicle;
@@ -24490,48 +24671,6 @@ CVehicleCamera_C* CGUnit_C::CreateVehicleCamera() {
     }
 
     return this->m_vehicleCamera;
-}
-
-// OFFSET: #0x00756040
-void CGUnit_C::PlayRangedItemPull() {
-    CM2Model* ranged = this->m_rangedWeaponModel;
-
-    if (!ranged || !ranged->IsLoaded() || !ranged->HasSequence(160)) {
-        return;
-    }
-
-    if (!this->m_worldModel || !this->m_worldModel->IsLoaded()) {
-        return;
-    }
-
-    M2BoneSequenceInfo info;
-    info.m_sequenceId = 0xFFFFFFFF;
-
-    if (this->m_torsoKeyBone == 4) {
-        this->m_worldModel->GetBoneSequenceInfo(4, info);
-
-        if (info.m_sequenceId == 0xFFFFFFFF) {
-            this->m_worldModel->GetBoneSequenceInfo(0xFFFFFFFF, info);
-        }
-    } else {
-        this->m_worldModel->GetBoneSequenceInfo(0xFFFFFFFF, info);
-    }
-
-    if (info.m_finished) {
-        return;
-    }
-
-    int32_t elapsed = static_cast<int32_t>(static_cast<int64_t>(static_cast<int32_t>(info.m_time) / info.m_speed));
-    int32_t remaining = info.m_endTime - elapsed - info.m_startTime;
-
-    if (remaining <= 0) {
-        return;
-    }
-
-    M2SequenceInfo sequence;
-    sequence.Clear();
-    this->m_rangedWeaponModel->GetSequenceInfo(160, 0, sequence);
-    this->m_rangedWeaponModel->SetBoneSequence(0xFFFFFFFF, 160, 0, 0, static_cast<float>(static_cast<int32_t>(sequence.m_duration)) / remaining, 1, 1, 0, 0, 0);
 }
 
 // OFFSET: 0x005B01B0
