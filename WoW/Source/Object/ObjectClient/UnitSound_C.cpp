@@ -360,12 +360,12 @@ int32_t CGUnit_C::GetUnitSoundKitIndex(uint32_t soundType) const {
     switch (soundType) {
         case 0:
         case 1:
-            return this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags & 0x20) ? 18 : 12;
+            return this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x20) ? 18 : 12;
 
         case 2:
         case 3:
         case 9:
-            return this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags & 0x20) ? 19 : 14;
+            return this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x20) ? 19 : 14;
 
         default:
             return 0;
@@ -617,7 +617,7 @@ void CGUnit_C::PlayUnitSound(uint32_t soundType, int32_t force, int32_t ignoreOv
 
 // OFFSET: 0x0060D570/0x1402970B0
 void CGUnit_C::PlayUnitEventSound(int32_t reaction) {
-    if (reaction == 4 && this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags & 0x1000000)) {
+    if (reaction == 4 && this->m_creatureCacheEntry && (this->m_creatureCacheEntry->m_typeFlags[0] & 0x1000000)) {
         return;
     }
 
@@ -695,14 +695,14 @@ void CGUnit_C::PlayUnitEventSound(int32_t reaction) {
     SE3::PlaySoundKit(soundKitId, atCharacter ? NULL : &position, &properties, &this->m_npcInteractSound, __FILE__, __LINE__, "CGUnit_C::PlayUnitEventSound");
 }
 
-// PROVEN: 8c3d9424 IDENTICAL/NONE
+// PROVEN: 6f4a82f6 IDENTICAL/NONE
 // OFFSET: 0x0060D820/0x140297400
 void CGUnit_C::UpdateSoundPosition() {
     C3Vector position = this->GetPosition();
     SE3::Set3DPosition(this->m_npcInteractSound, position);
     SE3::Set3DPosition(this->m_npcSound, position);
     SE3::Set3DPosition(this->m_loopSound, position);
-    SE3::Set3DPosition(this->unk_11B4[0], position);
+    SE3::Set3DPosition(this->m_displayTransitionSound, position);
     CVehicle_C* vehicle = this->m_vehicle;
 
     if (vehicle && vehicle->m_vehicleRec) {

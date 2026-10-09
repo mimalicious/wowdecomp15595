@@ -199,6 +199,7 @@ void Spell_C_SetPlayerClass(int32_t classId);
 int32_t Spell_C_IsSpellInTransit(WOWGUID caster, uint32_t spellId, uint32_t castTime);
 
 void Spell_C_CancelSpellByTarget(const WOWGUID& target, int32_t reason);
+const char* Spell_C_GetPowerTypeToken(uint32_t powerType);
 
 void Spell_C_CancelSpellByCaster(const WOWGUID& caster);
 void Spell_C_CancelCastingSpellByMovement();

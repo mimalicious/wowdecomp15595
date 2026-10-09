@@ -288,6 +288,7 @@ class CGGameUI {
     static void SetInteractTarget(const WOWGUID& guid);
     static void CloseInteraction();
     static AreaTableRec* GetCurrentSubzoneRec();
+    static bool IsInArea(int32_t areaID);
     static void SetAreaSpiritHealer(WOWGUID guid);
     static void UpdateAreaSpiritHealerTime(WOWGUID guid, int32_t time);
     static void DisplayPvPQueueRemovedError(int32_t reason);

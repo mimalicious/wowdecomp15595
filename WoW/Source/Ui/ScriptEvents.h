@@ -48,6 +48,7 @@ void SystemRegisterFunctions();
 void SystemUnregisterFunctions();
 void Script_SendUniqueSignal(const WOWGUID& guid, int32_t signal);
 void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal);
+void Script_SendUnitSignal(const WOWGUID& guid, int32_t signal, const char* format, ...);
 void Script_SendUniqueSignal(int32_t signal);
 void Script_SendUniqueSignalToAllUnits(int32_t signal);
 void Script_SendUniqueSignals();

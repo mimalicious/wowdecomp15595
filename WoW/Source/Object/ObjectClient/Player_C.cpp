@@ -1124,14 +1124,14 @@ void CGPlayer_C::SetAutoLoot(int32_t autoLoot) {
 bool CGPlayer_C::CanInteract(const CGUnit_C* unit) const {
     bool isPlayer = (this->m_obj->m_type & TYPEMASK_PLAYER) != 0;
 
-    if (isPlayer && (this->m_player->m_playerFlags & 0x10) && (!unit->m_creatureCacheEntry || !(unit->m_creatureCacheEntry->m_typeFlags & 0x2))) {
+    if (isPlayer && (this->m_player->m_playerFlags & 0x10) && (!unit->m_creatureCacheEntry || !(unit->m_creatureCacheEntry->m_typeFlags[0] & 0x2))) {
         return false;
     }
 
     CGUnitData* data = unit->m_unit;
     uint32_t npcFlags = data->m_unitNpcFlags;
 
-    if ((npcFlags & 0x1) && isPlayer && !(unit->m_obj->m_type & TYPEMASK_PLAYER) && unit->m_creatureCacheEntry && (unit->m_creatureCacheEntry->m_typeFlags & 0x800000) && data->m_unitFieldCreatedby != this->m_obj->m_guid) {
+    if ((npcFlags & 0x1) && isPlayer && !(unit->m_obj->m_type & TYPEMASK_PLAYER) && unit->m_creatureCacheEntry && (unit->m_creatureCacheEntry->m_typeFlags[0] & 0x800000) && data->m_unitFieldCreatedby != this->m_obj->m_guid) {
         return false;
     }
 
@@ -10286,20 +10286,20 @@ void CGPlayer_C::UpdateInventoryComponent(INVENTORY_SLOTS slot, const VisibleIte
                 this->m_characterComponent->RemoveItem(ITEMSLOT_11);
             }
 
-            if (!this->unk_0B40) {
+            if (!this->m_rangedWeaponModel) {
                 goto applyEffects;
             }
 
             if (this->m_sheatheState != 2) {
-                if (this->unk_0B40->m_attachParent) {
-                    this->unk_0B40->DetachFromParent();
+                if (this->m_rangedWeaponModel->m_attachParent) {
+                    this->m_rangedWeaponModel->DetachFromParent();
                 }
 
-                this->unk_0B40->m_fFlags |= 0x20;
-                this->unk_0B40->m_drawCallback = NULL;
-                this->unk_0B40->m_drawArg = NULL;
-                this->unk_0B40->Release();
-                this->unk_0B40 = NULL;
+                this->m_rangedWeaponModel->m_fFlags |= 0x20;
+                this->m_rangedWeaponModel->m_drawCallback = NULL;
+                this->m_rangedWeaponModel->m_drawArg = NULL;
+                this->m_rangedWeaponModel->Release();
+                this->m_rangedWeaponModel = NULL;
                 goto applyEffects;
             }
 

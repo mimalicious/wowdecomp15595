@@ -1301,7 +1301,7 @@ void CMissile::HitTargetAreaEffect(const SpellRec* spell, const SpellVisualRec* 
                 unit->PlaySpellVisualKit(data);
             }
 
-            if (stateKit && unit->m_unit->m_unitFieldHealth > 0 && unit->HasAuraBySpellId(spell->m_id) && (static_cast<int8_t>(stateKit->m_flags) >= 0 || unit->HasAuraActive(spell->m_id))) {
+            if (stateKit && unit->m_unit->m_unitFieldHealth > 0 && unit->HasAura(spell->m_id, WOWGUID()) && (static_cast<int8_t>(stateKit->m_flags) >= 0 || unit->HasAuraActive(spell->m_id))) {
                 PlaySpellVisuaKitData data(spell, stateKit, 2);
                 data.m_someGUID = this->m_casterGuid;
                 unit->PlaySpellVisualKit(data);
@@ -1505,7 +1505,7 @@ void CMissile::HitTarget(CGUnit_C* target, const SpellRec* spell, const SpellVis
 
         SpellVisualKitRec* stateKit = g_spellVisualKitDB.GetRecord(visual->m_stateKit);
 
-        if (stateKit && target->m_unit->m_unitFieldHealth > 0 && target->HasAuraBySpellId(spell->m_id) && (static_cast<int8_t>(stateKit->m_flags) >= 0 || target->HasAuraActive(spell->m_id))) {
+        if (stateKit && target->m_unit->m_unitFieldHealth > 0 && target->HasAura(spell->m_id, WOWGUID()) && (static_cast<int8_t>(stateKit->m_flags) >= 0 || target->HasAuraActive(spell->m_id))) {
             PlaySpellVisuaKitData data(spell, stateKit, 2);
             data.m_someGUID = this->m_casterGuid;
             target->PlaySpellVisualKit(data);

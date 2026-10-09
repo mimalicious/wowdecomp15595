@@ -27,7 +27,7 @@ class AreaTableRec {
     /* 0044 */ float m_minElevation;
     /* 0048 */ float m_ambientMultiplier;
     /* 004C */ int32_t unk_004C;
-    /* 0050 */ int32_t unk_0050;
+    /* 0050 */ int32_t m_mountFlags;
     /* 0054 */ int32_t m_uwIntroSound;
     /* 0058 */ int32_t m_uwZoneMusic;
     /* 005C */ int32_t m_uwAmbienceID;

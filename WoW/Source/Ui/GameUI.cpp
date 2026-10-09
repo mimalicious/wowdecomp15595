@@ -2794,7 +2794,7 @@ void CGGameUI::Target(WOWGUID guid) {
                 unit->ProcessCastNotInterruptible(&spell);
             }
 
-            unit->UpdateSpellCastBars(OsGetAsyncTimeMs());
+            unit->UpdateSpellCastBars();
 
             if (player) {
                 if (player->CanAttackNow(unit)) {
@@ -4353,7 +4353,7 @@ int32_t CGGameUI::OnMirrorTimerEvent(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
-// OFFSET: #0x00519CA0
+// OFFSET: 0x008CB9F0/0x14063C5E0
 AreaTableRec* CGGameUI::GetCurrentSubzoneRec() {
     AreaTableRec* area = g_areaTableDB.GetRecord(CGGameUI::m_subzoneID);
 
@@ -4362,6 +4362,27 @@ AreaTableRec* CGGameUI::GetCurrentSubzoneRec() {
     }
 
     return g_areaTableDB.GetRecord(CGGameUI::m_areaID);
+}
+
+// OFFSET: 0x008CBA90/0x14063C630
+bool CGGameUI::IsInArea(int32_t areaID) {
+    int32_t id = CGGameUI::m_subzoneID;
+
+    while (id) {
+        if (id == areaID) {
+            return true;
+        }
+
+        AreaTableRec* area = g_areaTableDB.GetRecord(id);
+
+        if (!area) {
+            return false;
+        }
+
+        id = area->m_parentAreaID;
+    }
+
+    return false;
 }
 
 // OFFSET: #0x0051FCE0

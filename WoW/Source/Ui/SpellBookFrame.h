@@ -31,6 +31,10 @@ struct SPELLRANKNODE : public TSLinkedNode<SPELLRANKNODE> {
     /* 001C */ uint32_t m_rank;
 };
 
+struct PASSIVESPELLNODE : public TSLinkedNode<PASSIVESPELLNODE> {
+    /* 0008 */ int32_t m_spellId;
+};
+
 struct SPELLSBYNAME : public TSHashObject<SPELLSBYNAME, HASHKEY_UTF8I> {
     /* 0018 */ TSList<SPELLRANKNODE> m_spells;
 };
@@ -48,6 +52,7 @@ class CGSpellBook {
     static void UpdateCooldowns();
     static int32_t IsTrackingSpell(int32_t spellId);
     static TSFixedArray<int32_t> m_languageSpells;
+    static TSList<PASSIVESPELLNODE> s_passiveSpells;
     static TSGrowableArray<int32_t> m_unlearnedSpells;
     static int32_t m_duelSpell;
     static int32_t m_stuckSpell;

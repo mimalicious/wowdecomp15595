@@ -38,6 +38,7 @@ class CUnitDisplayTransition_C {
 
     int32_t GetTargetDisplayID() const;
     int32_t UpdateState(int32_t a2);
+    void Expedite(int32_t a2);
     void Complete(int32_t swap);
     void Destroy();
     void UpdateTransform(C44Matrix matrix);

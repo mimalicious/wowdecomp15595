@@ -218,30 +218,6 @@ float CGUnit::GetFacing(float facing) const {
     return this->m_movement->GetFacing(facing);
 }
 
-// OFFSET: #0x004F5300
-float __stdcall CGUnit::GetPowerRegenBase(int32_t powerType, uint8_t inCombat) {
-    static float s_regen[7][2] = {
-        { 0.0f, 0.0f },
-        { -12.5f, 0.0f },
-        { 5.0f, 5.0f },
-        { 10.0f, 10.0f },
-        { 0.0f, 0.0f },
-        { 0.0f, 0.0f },
-        { -12.5f, 0.0f }
-    };
-
-    return s_regen[powerType][inCombat];
-}
-
-// OFFSET: #0x004F5390
-float CGUnit::GetPowerRegen(int32_t powerType, bool inCombat) const {
-    if (inCombat) {
-        return CGUnit::GetPowerRegenBase(powerType, 1) + this->m_unit->m_unitFieldPowerRegenInterruptedFlatModifier[powerType];
-    }
-
-    return CGUnit::GetPowerRegenBase(powerType, 0) + this->m_unit->m_unitFieldPowerRegenFlatModifier[powerType];
-}
-
 // OFFSET: #0x004F7250
 bool CGUnit::IsPossessedBy(const WOWGUID& guid) const {
     return (this->m_unit->m_unitFieldFlags & 0x1000000) && *this->GetCharmerOrCreatorGuid() == guid;

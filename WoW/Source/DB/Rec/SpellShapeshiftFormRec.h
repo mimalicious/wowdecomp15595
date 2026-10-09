@@ -19,7 +19,7 @@ class SpellShapeshiftFormRec {
     /* 0018 */ int32_t m_combatRoundTime;
     /* 001C */ int32_t m_creatureDisplayID [4];
     /* 002C */ int32_t m_presetSpellID [8];
-    /* 004C */ int32_t unk_004C;
+    /* 004C */ int32_t m_mountTypeID;
     /* 0050 */ int32_t unk_0050;
 };
 

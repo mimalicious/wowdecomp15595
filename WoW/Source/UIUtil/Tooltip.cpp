@@ -1441,7 +1441,7 @@ void CGTooltip::GetSummonedByString(CGUnit_C* unit, char* buffer, uint32_t size)
             if (properties && properties->m_title != -1) {
                 if (properties->m_title) {
                     SStrPrintf(token, sizeof(token), "UNITNAME_SUMMON_TITLE%d", properties->m_title);
-                    SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), GetObjectNameFromGuid(owner));
+                    SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(owner));
                 }
 
                 return;
@@ -1457,7 +1457,7 @@ void CGTooltip::GetSummonedByString(CGUnit_C* unit, char* buffer, uint32_t size)
         SStrPrintf(token, sizeof(token), "UNITNAME_SUMMON_TITLE3");
     }
 
-    SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), GetObjectNameFromGuid(owner));
+    SStrPrintf(buffer, size, FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), GetCombatLogObjectName(owner));
 }
 
 // OFFSET: #0x0061FE30
@@ -1913,7 +1913,7 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
         }
     } else {
         if (creature) {
-            classification = (creature->m_typeFlags & 0x4) ? "BOSS" : s_classificationTokens[creature->m_rank];
+            classification = (creature->m_typeFlags[0] & 0x4) ? "BOSS" : s_classificationTokens[creature->m_rank];
         }
 
         if (name) {
@@ -7269,12 +7269,12 @@ void CGTooltip::AddEmpathyText(CGUnit_C* unit, char* buffer, uint32_t size) {
 
     CreatureStats_C* stats = unit->m_creatureCacheEntry;
 
-    if (!stats || !(stats->m_typeFlags & 0x1) || !stats->m_family) {
+    if (!stats || !(stats->m_typeFlags[0] & 0x1) || !stats->m_family) {
         this->AddLine(FrameScript_GetText("NOT_TAMEABLE", -1, GENDER_NOT_APPLICABLE), NULL, textColor, textColor, 0);
         return;
     }
 
-    this->AddLine(FrameScript_GetText(stats->m_typeFlags & 0x10000 ? "TAMEABLE_EXOTIC" : "TAMEABLE", -1, GENDER_NOT_APPLICABLE), NULL, textColor, textColor, 0);
+    this->AddLine(FrameScript_GetText(stats->m_typeFlags[0] & 0x10000 ? "TAMEABLE_EXOTIC" : "TAMEABLE", -1, GENDER_NOT_APPLICABLE), NULL, textColor, textColor, 0);
 
     family = g_creatureFamilyDB.GetRecord(unit->GetCreatureFamily());
 

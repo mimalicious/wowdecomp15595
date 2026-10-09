@@ -2,7 +2,8 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Storm/H/storm.h"
 
-// OFFSET: #0x0053B8E0
+// PROVEN: 6c18e375 IDENTICAL/NONE
+// OFFSET: 0x00464860
 const char* CreatureStats::GetName(int32_t index) const {
     const char* name = this->m_name[index];
 
@@ -13,15 +14,30 @@ const char* CreatureStats::GetName(int32_t index) const {
     return name;
 }
 
-// OFFSET: #0x0098D3A0
+// PROVEN: 32694511 IDENTICAL/NONE
+// OFFSET: 0x00A287E0
 void CreatureStats::Pack(CDataStore* msg) const {
     for (uint32_t i = 0; i < 4; i++) {
-        msg->PutString(this->m_name[i] ? this->m_name[i] : "");
+        if (this->m_name[i]) {
+            msg->PutString(this->m_name[i]);
+        } else {
+            msg->PutString("");
+        }
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        if (this->m_nameAlt[i]) {
+            msg->PutString(this->m_nameAlt[i]);
+        } else {
+            msg->PutString("");
+        }
     }
 
     msg->PutString(this->m_subName);
     msg->PutString(this->m_iconName);
-    msg->Put(this->m_typeFlags);
+    for (uint32_t i = 0; i < 2; i++) {
+        msg->Put(this->m_typeFlags[i]);
+    }
     msg->Put(this->m_type);
     msg->Put(this->m_family);
     msg->Put(this->m_rank);
@@ -40,8 +56,10 @@ void CreatureStats::Pack(CDataStore* msg) const {
     }
 
     msg->Put(this->m_movementId);
+    msg->Put(this->m_expansion);
 }
 
+// PROVEN: 03835d8d IDENTICAL/NONE
 // OFFSET: 0x00A28950/0x1407D04C0
 void CreatureStats::Unpack(CDataStore* msg) {
     char buffer[1024];
@@ -60,6 +78,20 @@ void CreatureStats::Unpack(CDataStore* msg) {
         }
     }
 
+    for (uint32_t i = 0; i < 4; i++) {
+        if (this->m_nameAlt[i]) {
+            SMemFree(this->m_nameAlt[i], __FILE__, __LINE__, 0);
+        }
+
+        msg->GetString(buffer, sizeof(buffer));
+
+        if (buffer[0]) {
+            this->m_nameAlt[i] = SStrDupA(buffer, __FILE__, __LINE__);
+        } else {
+            this->m_nameAlt[i] = NULL;
+        }
+    }
+
     if (this->m_subName) {
         SMemFree(this->m_subName, __FILE__, __LINE__, 0);
     }
@@ -74,7 +106,9 @@ void CreatureStats::Unpack(CDataStore* msg) {
     msg->GetString(buffer, sizeof(buffer));
     this->m_iconName = SStrDupA(buffer, __FILE__, __LINE__);
 
-    msg->Get(this->m_typeFlags);
+    for (uint32_t i = 0; i < 2; i++) {
+        msg->Get(this->m_typeFlags[i]);
+    }
     msg->Get(this->m_type);
     msg->Get(this->m_family);
     msg->Get(this->m_rank);
@@ -96,4 +130,5 @@ void CreatureStats::Unpack(CDataStore* msg) {
     }
 
     msg->Get(this->m_movementId);
+    msg->Get(this->m_expansion);
 }

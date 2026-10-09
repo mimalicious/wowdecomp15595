@@ -70,6 +70,9 @@ TSBitField<TSFixedArray<uint32_t> > s_knownSpellBits;
 // STATIC: #0x00BE8DD8
 TSFixedArray<int32_t> CGSpellBook::m_languageSpells;
 
+// STATIC: 0x00D110D8
+TSList<PASSIVESPELLNODE> CGSpellBook::s_passiveSpells;
+
 // STATIC: #0x00ACCCCC
 static int32_t s_multiCastSpells[4] = { 66842, 66843, 66844, 36936 };
 

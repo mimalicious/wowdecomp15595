@@ -11,13 +11,13 @@ class UnitPowerBarRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ float unk_0018;
-    /* 001C */ int32_t unk_001C;
+    /* 0004 */ int32_t m_minPower;
+    /* 0008 */ int32_t m_maxPower;
+    /* 000C */ int32_t m_startPower;
+    /* 0010 */ int32_t m_centerPower;
+    /* 0014 */ float m_regenerationPeace;
+    /* 0018 */ float m_regenerationCombat;
+    /* 001C */ int32_t m_barType;
     /* 0020 */ int32_t unk_0020;
     /* 0024 */ int32_t unk_0024;
     /* 0028 */ int32_t unk_0028;
@@ -30,7 +30,7 @@ class UnitPowerBarRec {
     /* 0044 */ int32_t unk_0044;
     /* 0048 */ int32_t unk_0048;
     /* 004C */ int32_t unk_004C;
-    /* 0050 */ int32_t unk_0050;
+    /* 0050 */ int32_t m_flags;
     /* 0054 */ DBCString unk_0054;
     /* 0058 */ DBCString unk_0058;
     /* 005C */ DBCString unk_005C;

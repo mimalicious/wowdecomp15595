@@ -4028,11 +4028,11 @@ void CGChat::LogPetHappinessDecrease(const WOWGUID& caster, const WOWGUID& targe
     char text[3000];
 
     if (caster == ClntObjMgrGetActivePlayer()) {
-        const char* targetName = GetObjectNameFromGuid(target);
+        const char* targetName = GetCombatLogObjectName(target);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLHAPPINESSDRAINSELF", -1, GENDER_NOT_APPLICABLE), targetName, amount);
     } else {
-        const char* targetName = GetObjectNameFromGuid(target);
-        const char* casterName = GetObjectNameFromGuid(caster);
+        const char* targetName = GetCombatLogObjectName(target);
+        const char* casterName = GetCombatLogObjectName(caster);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLHAPPINESSDRAINOTHER", -1, GENDER_NOT_APPLICABLE), casterName, targetName, amount);
     }
 
@@ -4044,11 +4044,11 @@ void CGChat::LogDismissPet(const WOWGUID& guid, const WOWGUID& pet) {
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        const char* petName = GetObjectNameFromGuid(pet);
+        const char* petName = GetCombatLogObjectName(pet);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLDISMISSPETSELF", -1, GENDER_NOT_APPLICABLE), petName);
     } else {
-        const char* petName = GetObjectNameFromGuid(pet);
-        const char* name = GetObjectNameFromGuid(guid);
+        const char* petName = GetCombatLogObjectName(pet);
+        const char* name = GetCombatLogObjectName(guid);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("SPELLDISMISSPETOTHER", -1, GENDER_NOT_APPLICABLE), name, petName);
     }
 
@@ -6022,7 +6022,7 @@ void CGChat::LogTradeSkillCreate(const WOWGUID& guid, int32_t itemId) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_FIRSTPERSON", -1, GENDER_NOT_APPLICABLE), stats->m_name[0]);
     } else {
-        const char* name = GetObjectNameFromGuid(guid);
+        const char* name = GetCombatLogObjectName(guid);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("TRADESKILL_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), name, stats->m_name[0]);
     }
 
@@ -6101,7 +6101,7 @@ void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const ItemS
     if (guid == ClntObjMgrGetActivePlayer()) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), spell->m_name, stats->m_name[0]);
     } else {
-        const char* name = GetObjectNameFromGuid(guid);
+        const char* name = GetCombatLogObjectName(guid);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, spell->m_name, stats->m_name[0]);
     }
 
@@ -6119,7 +6119,7 @@ void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameO
     if (guid == ClntObjMgrGetActivePlayer()) {
         SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), spell->m_name, stats->m_name[0]);
     } else {
-        const char* name = GetObjectNameFromGuid(guid);
+        const char* name = GetCombatLogObjectName(guid);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, spell->m_name, stats->m_name[0]);
     }
 

@@ -4,6 +4,10 @@ inline CreatureStats::~CreatureStats() {
         if (this->m_name[i]) {
             SMemFree(this->m_name[i], __FILE__, __LINE__, 0);
         }
+
+        if (this->m_nameAlt[i]) {
+            SMemFree(this->m_nameAlt[i], __FILE__, __LINE__, 0);
+        }
     }
 
     if (this->m_subName) {

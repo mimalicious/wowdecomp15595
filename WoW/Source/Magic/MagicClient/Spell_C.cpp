@@ -302,6 +302,17 @@ bool Spell_C_HasEffect(const SpellRec* spell, int32_t effect) {
     return false;
 }
 
+// OFFSET: 0x008A5C90/0x1405E8890
+const char* Spell_C_GetPowerTypeToken(uint32_t powerType) {
+    const char* tokens[11] = { "MANA", "RAGE", "FOCUS", "ENERGY", "", "RUNES", "RUNIC_POWER", "SOUL_SHARDS", "ECLIPSE", "HOLY_POWER", "ALTERNATE" };
+
+    if (powerType >= 11) {
+        return "";
+    }
+
+    return tokens[powerType];
+}
+
 // PROVEN: 31a91915 IDENTICAL/NONE
 // OFFSET: 0x008A6020/0x1405E8C90
 int32_t Spell_C_IsOverride(int32_t spellId, const OverrideSpellDataRec* rec) {
@@ -586,13 +597,13 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
 
     int32_t casterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_casterAuraSpell);
 
-    if (casterAura && !unit->HasAuraBySpellId(casterAura) && !unit->IgnoresAuraState(spell)) {
+    if (casterAura && !unit->HasAura(casterAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
         return false;
     }
 
     int32_t excludeCasterAura = QuestTextParser::Spell_C_SpellGetSpellIDForDifficulty(spell->m_excludeCasterAuraSpell);
 
-    if (excludeCasterAura && unit->HasAuraBySpellId(excludeCasterAura) && !unit->IgnoresAuraState(spell)) {
+    if (excludeCasterAura && unit->HasAura(excludeCasterAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
         return false;
     }
 
@@ -625,11 +636,11 @@ bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID
                 return false;
             }
 
-            if (targetAura && !targetUnit->HasAuraBySpellId(targetAura) && !unit->IgnoresAuraState(spell)) {
+            if (targetAura && !targetUnit->HasAura(targetAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
                 return false;
             }
 
-            if (excludeTargetAura && targetUnit->HasAuraBySpellId(excludeTargetAura) && !unit->IgnoresAuraState(spell)) {
+            if (excludeTargetAura && targetUnit->HasAura(excludeTargetAura, WOWGUID()) && !unit->IgnoresAuraState(spell)) {
                 return false;
             }
 
@@ -1193,29 +1204,6 @@ int32_t Packet_Group_30(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
     }
 
     return 1;
-}
-
-// OFFSET: #0x00722C50
-void CGUnit_C::SetPredictedPower(int32_t powerType, int32_t value) {
-    uint32_t maximum = powerType == -2 ? this->m_unit->m_unitFieldMaxhealth : this->m_unit->m_unitFieldMaxpower[powerType];
-
-    if (static_cast<int32_t>(maximum) < value) {
-        value = maximum;
-    }
-
-    if (value == this->m_predictedPower[powerType]) {
-        return;
-    }
-
-    this->m_predictedPower[powerType] = value;
-
-    if (static_cast<uint32_t>(value) == maximum) {
-        Script_SendUnitSignal(this->m_obj->m_guid, powerType + 19);
-    }
-
-    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer() || this->m_obj->m_guid == CGPetInfo::GetPet(0)) {
-        CGSpellBook::UpdateUsablePower();
-    }
 }
 
 // OFFSET: 0x005CCD70
@@ -7316,11 +7304,11 @@ static bool ValidateSpellTarget(CGUnit_C* caster, const SpellRec* spell, uint32_
                 continue;
             }
 
-            if (targetAura && !target->HasAuraBySpellId(targetAura)) {
+            if (targetAura && !target->HasAura(targetAura, WOWGUID())) {
                 continue;
             }
 
-            if (excludeTargetAura && target->HasAuraBySpellId(excludeTargetAura)) {
+            if (excludeTargetAura && target->HasAura(excludeTargetAura, WOWGUID())) {
                 continue;
             }
 
@@ -7742,7 +7730,7 @@ void Spell_C::SendPendingCast(PendingSpellCast* cast, bool hideVisuals) {
     input->UpdateMouseMode(0);
 
     if (caster->IsActivePlayer()) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_SPELLCAST_SENT, "%s%s%s%s", "player", spell.m_name, spell.m_nameSubtext, cast->m_data.m_objectTarget ? GetObjectNameFromGuid(cast->m_data.m_objectTarget) : "");
+        FrameScript_SignalEvent(SCRIPT_EVENT_UNIT_SPELLCAST_SENT, "%s%s%s%s", "player", spell.m_name, spell.m_nameSubtext, cast->m_data.m_objectTarget ? GetCombatLogObjectName(cast->m_data.m_objectTarget) : "");
     }
 
     if (!hideVisuals) {

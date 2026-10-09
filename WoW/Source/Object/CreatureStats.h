@@ -11,18 +11,20 @@ class CreatureStats {
     public:
     /* 0004 */ char* m_subName;
     /* 0008 */ char* m_iconName;
-    /* 000C */ uint32_t m_typeFlags;
-    /* 0010 */ uint32_t m_type;
-    /* 0014 */ uint32_t m_family;
-    /* 0018 */ uint32_t m_rank;
-    /* 001C */ uint32_t m_killCredit [2];
-    /* 0024 */ uint32_t m_displayId [4];
-    /* 0034 */ float m_hpModifier;
-    /* 0038 */ float m_mpModifier;
-    /* 003C */ bool m_racialLeader;
-    /* 0040 */ uint32_t m_questItem [6];
-    /* 0058 */ uint32_t m_movementId;
-    /* 005C */ char* m_name [4];
+    /* 000C */ uint32_t m_typeFlags [2];
+    /* 0014 */ uint32_t m_type;
+    /* 0018 */ uint32_t m_family;
+    /* 001C */ uint32_t m_rank;
+    /* 0020 */ uint32_t m_killCredit [2];
+    /* 0028 */ uint32_t m_displayId [4];
+    /* 0038 */ float m_hpModifier;
+    /* 003C */ float m_mpModifier;
+    /* 0040 */ bool m_racialLeader;
+    /* 0044 */ uint32_t m_questItem [6];
+    /* 005C */ uint32_t m_movementId;
+    /* 0060 */ uint32_t m_expansion;
+    /* 0064 */ char* m_name [4];
+    /* 0074 */ char* m_nameAlt [4];
 
     virtual ~CreatureStats();
 

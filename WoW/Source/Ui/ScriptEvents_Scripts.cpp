@@ -3534,7 +3534,7 @@ static int32_t Script_UnitGUID(lua_State* L) {
     if ((high & 0xF0F00000) == 0xF0300000 || (high & 0xF0F00000) == 0xF0500000) {
         CreatureStats_C* creature = g_creatureDBCache.GetRecord((guid.m_guid >> 24) & 0xFFFFFFF, display, NULL, NULL, false);
 
-        if (creature && (creature->m_typeFlags & 0x4000)) {
+        if (creature && (creature->m_typeFlags[0] & 0x4000)) {
             display.m_guid &= 0xFFFFFFFFFF000000ULL;
         }
     }
@@ -3836,7 +3836,7 @@ static int32_t Script_PlayerIsPVPInactive(lua_State* L) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (unit) {
-        if (unit->HasAuraBySpellId(43681)) {
+        if (unit->HasAura(43681, WOWGUID())) {
             inactive = 1;
         }
     } else {

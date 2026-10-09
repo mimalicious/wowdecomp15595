@@ -17,7 +17,6 @@ class CGUnit {
     static uint32_t MirrorIndexFromFieldIndex(uint32_t fieldIndex);
     static uint32_t DescriptorToMirrorOffset(uint32_t offset, uint32_t a2, uint32_t a3, uint32_t base);
     static int32_t TotalFields();
-    static float __stdcall GetPowerRegenBase(int32_t powerType, uint8_t inCombat);
 
     /* 0000 */ CGUnitData* m_unit;
     /* 0004 */ void* m_unitMirror;
@@ -46,7 +45,6 @@ class CGUnit {
     int32_t IsOnFallingSpline() const;
     int32_t CanMove() const;
     float GetFacing(float facing) const;
-    float GetPowerRegen(int32_t powerType, bool inCombat) const;
 };
 
 class CGUnitData {

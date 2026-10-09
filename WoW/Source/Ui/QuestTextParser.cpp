@@ -331,7 +331,7 @@ static bool SpellParserGetCondition(const char** cursor) {
     switch (type) {
         case 'A':
         case 'a':
-            return player && player->HasAuraBySpellId(spellId);
+            return player && player->HasAura(spellId, WOWGUID());
 
         case 'S':
         case 's':

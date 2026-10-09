@@ -241,6 +241,10 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 21F8 */ uint32_t m_playedTimeBase;
     /* 21FC */ WOWGUID m_combatTarget;
     /* 2204 */ uint32_t unk_2204;
+    /* 2208 */ uint8_t unk_2208 [442];
+    /* 23C2 */ uint8_t m_disabledPowerRegenMask;
+    /* 23C3 */ uint8_t unk_23C3 [505];
+    /* 25BC */ float m_regenHasteModifier;
 
     ~CGPlayer_C();
     void Disable() override;

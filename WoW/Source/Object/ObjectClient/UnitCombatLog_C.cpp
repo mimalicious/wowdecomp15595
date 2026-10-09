@@ -223,7 +223,7 @@ void __stdcall CheckToSanitizeUnitLowGuid(WOWGUID* guid) {
     if (type == 0xF0300000 || type == 0xF0500000) {
         CreatureStats_C* stats = g_creatureDBCache.GetRecord(static_cast<int32_t>(guid->m_guid >> 24) & 0xFFFFFFF, *guid, NULL, NULL, false);
 
-        if (stats && (stats->m_typeFlags & 0x4000)) {
+        if (stats && (stats->m_typeFlags[0] & 0x4000)) {
             guid->m_guid &= 0xFFFFFFFFFF000000ull;
         }
     }
@@ -1964,14 +1964,14 @@ void SendHealEvent(int32_t event, const WOWGUID& source, const WOWGUID& dest, co
     if (s_combatTextActiveUnit == dest) {
         if (absorbed) {
             if (event == 35) {
-                FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d%d", s_combatTextTypes[44], GetObjectNameFromGuid(source), amount, absorbed);
+                FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d%d", s_combatTextTypes[44], GetCombatLogObjectName(source), amount, absorbed);
             } else {
-                SendToCombatText(crit ? 45 : 46, GetObjectNameFromGuid(source), amount, absorbed);
+                SendToCombatText(crit ? 45 : 46, GetCombatLogObjectName(source), amount, absorbed);
             }
         } else if (event == 35) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d", s_combatTextTypes[27], GetObjectNameFromGuid(source), amount);
+            FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s%d", s_combatTextTypes[27], GetCombatLogObjectName(source), amount);
         } else {
-            SendToCombatText(crit ? 37 : 38, GetObjectNameFromGuid(source), amount);
+            SendToCombatText(crit ? 37 : 38, GetCombatLogObjectName(source), amount);
         }
     } else {
         CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(dest, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -2114,7 +2114,7 @@ void DisplayMechanicEffect(const WOWGUID* unitGuid, const WOWGUID* sourceGuid, c
     if (s_combatTextActiveUnit == *sourceGuid) {
         SStrCopy(text, state, STORM_MAX_STR);
     } else {
-        SStrPrintf(text, sizeof(text), "%s (%s)", state, GetObjectNameFromGuid(*sourceGuid));
+        SStrPrintf(text, sizeof(text), "%s (%s)", state, GetCombatLogObjectName(*sourceGuid));
     }
 
     if (unit) {
