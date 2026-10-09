@@ -1940,15 +1940,20 @@ int32_t GetCurrentLocaleIndex() {
     }
 }
 
-// OFFSET: #0x00635D90
+// OFFSET: 0x00000000/0x1400AD130
+int32_t GetCurrentDB2Locale() {
+    return LocaleIndexToDB2Locale(GetCurrentLocaleIndex());
+}
+
+// OFFSET: 0x0048A6A0
 int32_t LocaleNameToIndex(const char* locale) {
-    for (int32_t i = 0; i < 15; i++) {
-        if (!SStrCmpI(locale, g_localeNames[i], 4)) {
-            return i;
-        }
+    int32_t index = LocaleIdToIndex(*reinterpret_cast<const uint32_t*>(locale));
+
+    if (index == 15) {
+        index = 2;
     }
 
-    return 2;
+    return index;
 }
 
 // PROVEN: 20c6d65c IDENTICAL/NONE

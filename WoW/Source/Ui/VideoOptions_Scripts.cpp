@@ -173,7 +173,7 @@ static void SetupFormats() {
 
     if (widescreen && widescreen->m_intValue) {
         TSGrowableArray<CGxMonitorMode> modes;
-        GxAdapterMonitorModes(s_requestedFormat.m_monitor, modes);
+        GxAdapterMonitorModes(s_monitor, modes);
 
         C2iVector last = { 0, 0 };
 
@@ -341,7 +341,7 @@ static int32_t Script_GetRefreshRates(lua_State* L) {
     }
 
     TSGrowableArray<CGxMonitorMode> modes;
-    GxAdapterMonitorModes(s_requestedFormat.m_monitor, modes);
+    GxAdapterMonitorModes(s_monitor, modes);
 
     int32_t* rates = static_cast<int32_t*>(alloca(sizeof(int32_t) * modes.Count()));
     uint32_t numRates = 0;

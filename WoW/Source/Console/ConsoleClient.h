@@ -57,6 +57,8 @@ void ConsoleScreenDestroy();
 void ConsoleScreenInitialize(const char* title);
 void GenerateNodeString(CONSOLELINE* node);
 void ConsoleAccessSetEnabled(int32_t enable);
+void BGLoadingThrottleCVarInitialize();
+void PatchOnDemandInitialize();
 const char* GetConsoleMessage();
 void SetConsoleMessage(const char* message);
 

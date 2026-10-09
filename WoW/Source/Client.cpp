@@ -112,8 +112,42 @@
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/FriendList.h"
 #include "WoW/Source/WowSysMessageOutput.h"
+#include "Engine/Source/Base/ConvertUTF.h"
+#include "Engine/Source/BlizzardCore/BackgroundCache.h"
+#include "Engine/Source/BlizzardCore/BGLoading-Core.h"
+#include "Engine/Source/BlizzardCore/Source/System/File/Filestack_Streaming.h"
+#include "Engine/Source/Os/Error.h"
+#include "Engine/Source/Os/Locale.h"
+#include "Engine/Source/Services/PreloadList.h"
+#include "WoW/Source/WowServices/InstallLocation.h"
+#include "Engine/Source/FFX/FFX.h"
+#include "Engine/Source/Os/Processor.h"
+#include "Engine/Source/ShaderEffect/DefaultShaders.h"
+#include "Engine/Source/Os/SockAddr.h"
 
 namespace {
+
+struct ArchivePreload {
+    /* 0000 */ TSLink<ArchivePreload> m_link;
+    /* 0008 */ HOSFILE m_lockFile;
+    /* 000C */ HOSFILE m_tempFile;
+    /* 0010 */ char m_path[260];
+    /* 0114 */ char m_tempPath[260];
+    /* 0218 */ char m_lockPath[260];
+    /* 0320 */ int64_t m_remaining;
+    /* 0328 */ uint32_t m_expansion;
+};
+
+struct ArchiveEnumParams {
+    /* 0000 */ uint32_t m_index;
+    /* 0004 */ int32_t m_priority;
+    /* 0008 */ const char* m_locale;
+};
+
+struct SignaturePrefix {
+    /* 0000 */ const char* m_prefix;
+    /* 0004 */ uint32_t m_length;
+};
 
 class ForEveryRunOnceWTF {
     public:
@@ -127,7 +161,7 @@ class ForEveryRunOnceWTF {
 
 }
 
-// STATIC: #0x009E1BE0
+// STATIC: 0x00B88080
 static const _ARGLIST s_wowArgList[] = {
     { 0, CMD_RES_800x600, "800x600", NULL },
     { 0, CMD_RES_1024x768, "1024x768", NULL },
@@ -146,46 +180,39 @@ static const _ARGLIST s_wowArgList[] = {
     { 0, CMD_HW_DETECT, "hwdetect", NULL },
     { 0, CMD_CONSOLE, "console", NULL },
     { 0x20000, CMD_GX_OVERRIDE, "gxoverride", NULL },
+    { 0x20000, CMD_CONFIG, "config", NULL },
+    { 0, CMD_LAUNCH, "launch", NULL },
 };
 
-// STATIC: #0x00AB6164
-static uint32_t s_startArchivePriority = 0x40;
+// STATIC: 0x00C97004/0x140B2E204
+static int32_t s_allArchivesComplete = 1;
 
-// STATIC: #0x00AB6168
-static ARCHIVEINFO s_archives[28] = {
-    { "alternate.MPQ", 3, 3, false },
-    { "interface.MPQ", 1, 1, false },
-    { "misc.MPQ", 1, 1, false },
-    { "model.MPQ", 1, 1, false },
-    { "texture.MPQ", 1, 1, false },
-    { "terrain.MPQ", 1, 1, false },
-    { "wmo.MPQ", 1, 1, false },
-    { "sound.MPQ", 1, 1, false },
-    { "fonts.MPQ", 1, 1, false },
-    { "dbc.MPQ", 1, 1, false },
-    { "speech.MPQ", 1, 1, false },
-    { "expansionloc.MPQ", 2, 1, false },
-    { "lichkingloc.MPQ", 2, 1, false },
-    { "expansionspeech.MPQ", 2, 1, false },
-    { "lichkingspeech.MPQ", 2, 1, false },
-    { "expansion.MPQ", 2, 3, false },
-    { "lichking.MPQ", 2, 3, false },
-    { "common.MPQ", 1, 2, false },
-    { "common-2.MPQ", 2, 2, false },
-    { "****\\locale-****.MPQ", 1, 2, false },
-    { "****\\speech-****.MPQ", 1, 2, false },
-    { "****\\expansion-locale-****.MPQ", 2, 2, false },
-    { "****\\lichking-locale-****.MPQ", 2, 2, false },
-    { "****\\expansion-speech-****.MPQ", 2, 2, false },
-    { "****\\lichking-speech-****.MPQ", 2, 2, false },
-    { "development.MPQ", 2, 1, false },
-    { "streaming.MPQ", 4, 1, false },
-    { "streamingloc.MPQ", 4, 1, false },
+// STATIC: 0x00C97238/0x140B2E260
+static ARCHIVEINFO s_archives[19] = {
+    { "art.MPQ", NULL, 0, 0x0, 0 },
+    { "world.MPQ", NULL, 0, 0x0, 0 },
+    { "sound.MPQ", NULL, 0, 0x0, 0 },
+    { "****\\locale-****.MPQ", NULL, 0, 0x0, 0 },
+    { "****\\speech-****.MPQ", NULL, 0, 0x0, 0 },
+    { "expansion1.MPQ", NULL, 0, 0x0, 1 },
+    { "****\\expansion1-locale-****.MPQ", NULL, 0, 0x0, 1 },
+    { "****\\expansion1-speech-****.MPQ", NULL, 0, 0x0, 1 },
+    { "expansion2.MPQ", NULL, 0, 0x0, 2 },
+    { "****\\expansion2-locale-****.MPQ", NULL, 0, 0x0, 2 },
+    { "****\\expansion2-speech-****.MPQ", NULL, 0, 0x0, 2 },
+    { "expansion3.MPQ", NULL, 0, 0x0, 3 },
+    { "****\\expansion3-locale-****.MPQ", NULL, 0, 0x0, 3 },
+    { "****\\expansion3-speech-****.MPQ", NULL, 0, 0x0, 3 },
+    { "development.MPQ", NULL, 0, 0x5, 0 },
+    { "development-locale-****.MPQ", NULL, 0, 0x5, 0 },
+    { "signaturefile.MPQ", NULL, 0, 0x1, 0 },
+    { "alternate.MPQ", "alternate", 0, 0x3, 0 },
+    { "world2.MPQ", NULL, 0, 0x0, 0 },
 };
-// STATIC: #0x009E0DA4
+// STATIC: 0x00B87400
 static const uint8_t s_signatureExponent[4] = { 0x01, 0x00, 0x01, 0x00 };
 
-// STATIC: #0x00AB6028
+// STATIC: 0x00C97008/0x140B2E108
 static const uint8_t s_signatureModulus[256] = {
     0x4F, 0x6F, 0xD4, 0x65, 0x56, 0x85, 0x88, 0xD9, 0xAA, 0xE6, 0xF7, 0x05, 0x72, 0xBB, 0x2A, 0x20,
     0xE0, 0x24, 0x38, 0x2B, 0x77, 0xB3, 0x3D, 0xC2, 0xD3, 0x2D, 0x52, 0x5C, 0xB7, 0xA3, 0x0F, 0xE6,
@@ -204,8 +231,53 @@ static const uint8_t s_signatureModulus[256] = {
     0x5D, 0xCA, 0x5D, 0xCF, 0x7D, 0xC3, 0x6F, 0x6B, 0x9D, 0xBC, 0x6D, 0x86, 0x4C, 0x91, 0xC5, 0x51,
     0xE8, 0xFD, 0xA6, 0x33, 0x10, 0xD1, 0x12, 0x8F, 0x05, 0x80, 0xDA, 0x42, 0x57, 0x0C, 0xEB, 0xC0,
 };
-// STATIC: #0x00AB6158
-static const char* s_dataDirectories[3] = { "Data\\", "..\\Data\\", "Data\\" };
+// STATIC: 0x00D1F1F8
+const char* s_raceFileNames[24] = { NULL, "Human", "Orc", "Dwarf", "NightElf", "Scourge", "Tauren", "Gnome", "Troll", "Goblin", "BloodElf", "Draenei", "FelOrc", "Naga_", "Broken", "Skeleton", "Vrykul", "Tuskarr", "ForestTroll", "Taunka", "NorthrendSkeleton", "IceTroll", "Worgen", "Gilnean" };
+
+// STATIC: 0x00D1F258
+const char* s_classFileNames[12] = { NULL, "WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "DEATHKNIGHT", "SHAMAN", "MAGE", "WARLOCK", NULL, "DRUID" };
+
+// STATIC: 0x00C97230/0x140B2E208
+static const char* s_dataDirectory = "Data\\";
+
+// STATIC: 0x00C97234/0x140B2E258
+static uint32_t s_archiveOpenFlags = 0x9E48;
+
+// STATIC: 0x00C9753C
+static const SignaturePrefix s_signaturePrefixes[1] = { { "alternate\\", 10 } };
+
+// STATIC: 0x00C97530
+static TSExplicitList<ArchivePreload, offsetof(ArchivePreload, m_link)> s_archivePreloads;
+
+// STATIC: 0x00C97570
+static char s_installLocationRegKeyName[128] = "World of Warcraft";
+
+// STATIC: 0x00D36358
+int32_t s_region;
+
+// STATIC: 0x00D3635C
+static int32_t s_showArchiveProgress;
+
+// STATIC: 0x00D36360
+static int64_t s_placeholderArchiveSize;
+
+// STATIC: 0x00D36368
+static char s_placeholderArchivePath[260];
+
+// STATIC: 0x00D3646C
+static int32_t s_engineInitialized;
+
+// STATIC: 0x00D364AC
+static uint8_t* s_preloadBuffer;
+
+// STATIC: 0x00D364B0
+static int32_t s_startBGLoadThread;
+
+// STATIC: 0x00D364CC
+static uint32_t s_numUpdateArchives;
+
+// STATIC: 0x00ED742C
+static PreloadList* s_startWorldCommonList;
 
 // STATIC: #0x00AB6350
 WowClientDB<Startup_StringsRec> g_startup_StringsDB;
@@ -216,14 +288,8 @@ const char* s_iniLocaleNames[9] = { "enUS", "koKR", "frFR", "deDE", "zhCN", "zhT
 // STATIC: 0x00C9A9CC
 uint32_t s_localeIds[15] = { 'deDE', 'enGB', 'enUS', 'esES', 'frFR', 'koKR', 'zhCN', 'zhTW', 'enCN', 'enTW', 'esMX', 'ruRU', 'enUS', 'ptBR', 'ptPT' };
 
-// STATIC: #0x00B2F99C
-int32_t s_region;
-
 // STATIC: #0x00B2F9E1
 uint8_t s_expansionLevel;
-
-// STATIC: #0x00B2FA14
-static uint32_t s_numPatchArchives;
 
 // STATIC: #0x00B2FA18
 static uint32_t s_firstBaseArchive;
@@ -231,7 +297,7 @@ static uint32_t s_firstBaseArchive;
 // STATIC: 0x00D364E8
 CRndSeed g_rndSeed(0);
 
-// STATIC: #0x00B2FA38
+// STATIC: 0x00D364D4
 static TSGrowableArray<SArchive*> s_archiveHandles;
 
 // STATIC: #0x00B2FE48
@@ -248,17 +314,20 @@ static uint32_t s_streamingDiag;
 // STATIC: #0x00B2F059
 static char s_streamingError[2051];
 
-// STATIC: #0x00B2F994
+// STATIC: 0x00D36334
 HEVENTCONTEXT g_clientEventContext;
 
 // STATIC: #0x00B2F9A4
 static int32_t s_closeErrorStringId;
 
-// STATIC: #0x00B2F9D8
+// STATIC: 0x00D364A8
 static uint32_t s_timeTestError;
 
-// STATIC: #0x00B2FA10
+// STATIC: 0x00D364C8/0x140BEF9EC
 static uint32_t s_unk_B2FA10;
+
+// STATIC: 0x00D36354/0x140BEF888
+static char* s_mfilDownloadErrors;
 
 // STATIC: #0x00B2FA48
 static char s_installLocation[1024];
@@ -266,7 +335,7 @@ static char s_installLocation[1024];
 // STATIC: 0x00D732EC
 bool g_hasIsoLocale[15];
 
-// STATIC: #0x00C5DE9C
+// STATIC: 0x00D732FC
 int32_t s_locale;
 
 // STATIC: #0x00B2F040
@@ -327,7 +396,7 @@ static C3Vector s_spawnPosition;
 template <>
 CommandManager* StaticSingleton<CommandManager>::m_instance = NULL;
 
-// OFFSET: #0x004031C0
+// OFFSET: 0x00402580/0x140002080
 static int32_t ListArchiveFilter(const char* fileName, void* param) {
     ARCHIVELISTPARAMS* params = static_cast<ARCHIVELISTPARAMS*>(param);
 
@@ -338,23 +407,1284 @@ static int32_t ListArchiveFilter(const char* fileName, void* param) {
     return params->m_callback(fileName, params->m_param);
 }
 
-// OFFSET: #0x004049F0
+// OFFSET: 0x00401FF0
+static bool GetArchivePath(char* buffer, uint32_t size, const char* name, const char* locale) {
+    SStrCopy(buffer, s_dataDirectory, size);
+    SStrPack(buffer, name, size);
+
+    for (char* token = strstr(buffer, "****"); token; token = strstr(token, "****")) {
+        *reinterpret_cast<uint32_t*>(token) = *reinterpret_cast<const uint32_t*>(locale);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00402110
+static void CheckAvailableLocales() {
+    for (int32_t i = 0; i < 15; i++) {
+        char path[1024];
+        g_hasIsoLocale[i] = false;
+        GetArchivePath(path, sizeof(path), s_archives[3].m_name, g_localeNames[i]);
+
+        if (OsFileExists(path)) {
+            g_hasIsoLocale[i] = true;
+        }
+    }
+}
+
+// OFFSET: 0x00402170/0x140001A90
+static bool FormatArchiveError(char* buffer, uint32_t size, const char* initErrors, const char* errors, const char* stormMessage) {
+    bool allowRetry = true;
+    int32_t error = SErrGetLastError();
+    const char* text;
+
+    if (error > 2) {
+        if (error == 5) {
+            text = "Cannot make local cache for streaming. The folder may be read only. Please check and try again.";
+            allowRetry = false;
+        } else if (error == 112) {
+            text = "Disk is full. User is already prompted.";
+        } else {
+            text = "Required archive failure.";
+        }
+    } else if (error == 2) {
+        if (SFile::IsStreamingDisabled()) {
+            text = SFile::IsStreamingDataReady() ? "The MPQ on the streaming server may be missing, invalid or corrupt.  Please try another build." : "Failed to initialize streaming.  Please check WoW.mfil.";
+        } else if (SFile::IsStreamingDataReady()) {
+            text = "The MPQ on the streaming server may be missing, invalid or corrupt.  Please try another build.";
+        } else {
+            text = "Failed to initialize streaming.  Please check your network connection.";
+        }
+    } else if (error == static_cast<int32_t>(0x8510006C)) {
+        text = "The MPQ on the streaming server may be missing, invalid or corrupt.  Please try another build.";
+    } else if (error == static_cast<int32_t>(0x85100094)) {
+        text = "Cannot download data due to connectivity issue. User is already prompted.";
+    } else if (error == static_cast<int32_t>(0x85100095)) {
+        if (SFile::IsStreamingDisabled()) {
+            text = "Failed to open a required archive because streaming is disabled.";
+        } else if (!SFile::IsStreamingMfilReady()) {
+            text = "Failed to open a required archive because WoW.mfil failed to download.";
+        } else if (SFile::IsStreamingDataReady()) {
+            text = "Cannot stream archive due to connectivity issue. User is already prompted.";
+        } else {
+            text = "Failed to open a required archive because streaming failed to initialize.";
+        }
+    } else {
+        text = "Required archive failure.";
+    }
+
+    const char* mfilErrors = s_mfilDownloadErrors ? s_mfilDownloadErrors : "None";
+    const char* dataStatus = SFile::IsStreamingDataReady() ? "Data Rdy" : "Data Not Rdy";
+    const char* mfilStatus = SFile::IsStreamingMfilReady() ? "Mfil Rdy" : "Mfil Not Rdy";
+    const char* streaming = SFile::IsStreamingDisabled() ? "Disabled" : "Enabled";
+    SStrPrintf(buffer, size, "%s\n\nDetails: (Streaming Status: %s / %s / %s, Build: %d)\nLast error code: %d\nCurrent error stack: \n%sStreaming init error stack: \n%sWow.mfil download error: %s\nStorm Error Msg:%s", text, streaming, mfilStatus, dataStatus, 15595, error, errors, initErrors, mfilErrors, stormMessage);
+    return allowRetry;
+}
+
+// OFFSET: 0x004022D0
+static int64_t GetStreamedArchiveSize() {
+    int64_t total = 0;
+
+    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
+        char path[260];
+        GetArchivePath(path, sizeof(path), s_archives[i].m_name, s_localeCode);
+        Blizzard::Streaming::GetStreamedFileSize(path, &s_archives[i].m_size);
+        total += s_archives[i].m_size;
+    }
+
+    return total;
+}
+
+// OFFSET: 0x00402340/0x140001DC0
+static void ShowArchiveError(uint32_t error) {
+    wchar_t message[260];
+
+    if ((error != 112 && (error <= 0x85100093 || error > 0x85100095)) || (!SErrGetErrorStrW(error, message, 260, OsGetUserDefaultLangID()) && !SErrGetErrorStrW(error, message, 260, OsGetLangIdFromLocale(s_localeIds[GetCurrentLocaleIndex()])))) {
+        SErrDisplayAppFatal("Unknown error code : %u\n", error);
+    }
+
+    char text[260];
+    ConvertUTF16toUTF8(text, sizeof(text), reinterpret_cast<const uint16_t*>(message), 260, NULL, NULL);
+    OsGuiMessageBox(NULL, 1, text, NULL);
+}
+
+// OFFSET: 0x00402400/0x140001E90
+static void ReportArchiveFailure(const char* name) {
+    uint32_t error = SErrGetLastError();
+    const char* errors = SFile::GetErrorDetails();
+    char stormMessage[256];
+    SErrGetErrorStr(SErrGetLastError(), stormMessage, sizeof(stormMessage));
+
+    if (SFile::IsStreamingDisabled() || !SFile::IsStreamingMfilReady() || !SFile::IsStreamingDataReady()) {
+        error = 0x85100095;
+    }
+
+    if (!_stricmp(ClientServices::GetPatchListURL(), "streaming.corp.blizzard.net/patchlist/ldap.php")) {
+        char report[2048];
+
+        if (FormatArchiveError(report, sizeof(report), SFile::GetStreamingStatusText(), errors, stormMessage)) {
+            SFile::SendErrorReport(report, true);
+        }
+
+        if (error == 112) {
+            ShowArchiveError(error);
+            return;
+        }
+
+        const char* mfilErrors = s_mfilDownloadErrors ? s_mfilDownloadErrors : "None";
+        const char* dataStatus = SFile::IsStreamingDataReady() ? "Data Rdy" : "Data Not Rdy";
+        const char* mfilStatus = SFile::IsStreamingMfilReady() ? "Mfil Rdy" : "Mfil Not Rdy";
+        const char* streaming = SFile::IsStreamingDisabled() ? "Disabled" : "Enabled";
+        SErrDisplayAppFatal("Failed to open required archive %s with error: %d\n\n(Streaming Status: %s / %s / %s, Build: %d)\n\nWow.mfil download error: %s\n\nDebug Details:\n\n%s\nStorm Error Msg:%s", name, error, streaming, mfilStatus, dataStatus, 15595, mfilErrors, errors, stormMessage);
+    }
+
+    if (error == 112 || (error > 0x85100093 && error <= 0x85100095)) {
+        ShowArchiveError(error);
+        return;
+    }
+
+    SErrDisplayAppFatal("Failed to open required archive %s with error : %d \n\nStreaming Status: Data Rdy\n\nWow.mfil download error: %s\n\nDebug Details:\n\n%sStorm Error Msg:%s", name, error, s_mfilDownloadErrors ? s_mfilDownloadErrors : "None", errors, stormMessage);
+}
+
+// OFFSET: 0x00402D90
+static void LoadInstallLocation() {
+    uint32_t size = 0;
+    char* data = GetComponentVersionData(&size);
+
+    if (!data) {
+        return;
+    }
+
+    XMLTree* tree = XMLTree_Load(data, size);
+
+    if (tree) {
+        if (XMLTree_GetRoot(tree)->m_child) {
+            XMLNode* product = XMLTree_GetRoot(tree)->m_child->GetChildByName("product");
+
+            if (product) {
+                SetInstallLocationByName(product->m_body);
+            }
+        }
+
+        XMLTree_Free(tree);
+    }
+
+    XMLTree_Cleanup();
+    delete[] data;
+}
+
+// OFFSET: 0x00402E10
+void StartupReport() {
+    if (SFile::IsTrial()) {
+        uint32_t speedTest;
+
+        if (!SRegLoadValue("World of Warcraft Trial", "SpeedTest", 1, &speedTest)) {
+            speedTest = 0;
+        }
+
+        Tracker::SetLocale(s_localeCode);
+        Tracker::SetBuildnum(15595);
+    }
+
+    char version[16];
+    SStrPrintf(version, sizeof(version), "%d", 15595);
+    s_cvarEnterWorld = CVar::Register("enterWorld", "Trial Client entered world", 0, "0", NULL, CATEGORY_GAME, false, NULL, false);
+    bool trial = SFile::IsTrial() == 1;
+    WoWReport::Initialize(version, s_localeCode, s_cvarEnterWorld->m_intValue != 0, trial);
+}
+
+// OFFSET: 0x00402ED0
+static void AddMfilDownloadError(const char* format, ...) {
+    char text[1024];
+    va_list args;
+    va_start(args, format);
+    SStrVPrintf(text, sizeof(text), format, args);
+    va_end(args);
+
+    if (!s_mfilDownloadErrors) {
+        s_mfilDownloadErrors = static_cast<char*>(SMemAlloc(16192, __FILE__, __LINE__, 0));
+        *s_mfilDownloadErrors = '\0';
+    }
+
+    SStrPack(s_mfilDownloadErrors, text, 16192);
+    SStrPack(s_mfilDownloadErrors, "\r\n", 16192);
+}
+
+// OFFSET: 0x00405320
+const char* GetInstallLocationRegKeyName() {
+    if (GetInstallLocation() == INSTALL_LOCATION_TEST) {
+        SStrPack(s_installLocationRegKeyName, "\\", sizeof(s_installLocationRegKeyName));
+        SStrPack(s_installLocationRegKeyName, "PTR", sizeof(s_installLocationRegKeyName));
+    } else if (GetInstallLocation() == INSTALL_LOCATION_BETA) {
+        SStrPack(s_installLocationRegKeyName, "\\", sizeof(s_installLocationRegKeyName));
+        SStrPack(s_installLocationRegKeyName, "Beta", sizeof(s_installLocationRegKeyName));
+    }
+
+    return s_installLocationRegKeyName;
+}
+
+// OFFSET: 0x00405450
+void UpdateInstallLocation() {
+    const char* key = GetInstallLocationRegKeyName();
+    char path[1560];
+    GetExecutablePathUTF8(path, sizeof(path));
+
+    if (!path[0]) {
+        return;
+    }
+
+    char* slash = strrchr(path, '\\');
+
+    if (slash) {
+        slash[1] = '\0';
+        SRegSaveString(key, "InstallPath", 4, path);
+    }
+}
+
+// OFFSET: 0x004054B0/0x140005E50
+static bool GetMfilBuild(int32_t* build) {
+    HOSFILE file = OsCreateFile("WoW.mfil", OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+    if (file == OS_INVALID_FILE) {
+        return false;
+    }
+
+    bool found = false;
+    uint64_t size = OsGetFileSize(file);
+
+    if (size - 1 <= 0x3F3E) {
+        char* data = static_cast<char*>(SMemAlloc(static_cast<uint32_t>(size) + 1, __FILE__, __LINE__, 0));
+        uint32_t bytes;
+
+        if (OsReadFile(file, data, static_cast<uint32_t>(size), &bytes) && bytes == size) {
+            data[size] = '\0';
+            char key[256];
+            SStrPrintf(key, sizeof(key), "manifest_partial=%s-", GetInstallLocationProgram());
+            char* match = SStrStrI(data, key);
+
+            if (match || (SStrPrintf(key, sizeof(key), "manifest_partial=WoW-"), (match = SStrStrI(data, key)) != NULL)) {
+                found = true;
+                size_t length = strlen(key);
+                match[length + 5] = '\0';
+                *build = atoi(match + length);
+            }
+        }
+
+        SMemFree(data, __FILE__, __LINE__, 0);
+    }
+
+    OsCloseFile(file);
+    return found;
+}
+
+// OFFSET: 0x00405940
+static bool ParsePatchRecord(const char* data, const char* program, const char* component, char* url, uint32_t urlSize, char* mfilName, uint32_t mfilSize) {
+    XMLTree* tree = XMLTree_Load(data, strlen(data));
+
+    if (tree) {
+        XMLNode* root = XMLTree_GetRoot(tree);
+        XMLNode* record;
+
+        if (!_stricmp(root->m_name.m_str, "patch") && (record = root->GetChildByName("record")) != NULL) {
+            for (; record; record = record->m_next) {
+                if (_stricmp(record->GetAttributeByName("program"), program) || _stricmp(record->GetAttributeByName("component"), component)) {
+                    continue;
+                }
+
+                const char* body = record->m_body;
+                char md5[260];
+                char type[260];
+                char build[10];
+                SStrTokenize(&body, url, urlSize, ";\n", NULL);
+                SStrTokenize(&body, md5, sizeof(md5), ";\n", NULL);
+                SStrTokenize(&body, type, sizeof(type), ";\n", NULL);
+                SStrTokenize(&body, build, sizeof(build), ";\n", NULL);
+
+                char name[260];
+
+                if (!_stricmp(type, "internal")) {
+                    SStrCopy(name, "WoW", sizeof(name));
+                } else {
+                    SStrCopy(name, program, sizeof(name));
+                    _strlwr(name);
+                }
+
+                SStrPrintf(mfilName, mfilSize, "%s-%s-%s.mfil", name, build, type);
+                XMLTree_Free(tree);
+                XMLTree_Cleanup();
+                return true;
+            }
+        }
+
+        XMLTree_Free(tree);
+    }
+
+    XMLTree_Cleanup();
+    return false;
+}
+
+// OFFSET: 0x00405B20
+static bool ParseServerConfig(const char* product, const char* data, char* servers, uint32_t size) {
+    XMLTree* tree = XMLTree_Load(data, strlen(data));
+
+    if (tree) {
+        XMLNode* root = XMLTree_GetRoot(tree);
+
+        if (!_stricmp(root->m_name.m_str, "config")) {
+            XMLNode* versionInfo = root->GetChildByName("versioninfo");
+
+            if (versionInfo) {
+                for (XMLNode* version = versionInfo->m_child; version && !_stricmp(version->m_name.m_str, "version"); version = version->m_next) {
+                    if (_stricmp(version->GetAttributeByName("product"), product)) {
+                        continue;
+                    }
+
+                    bool found = false;
+                    XMLNode* serverList = version->GetChildByName("servers");
+
+                    if (serverList) {
+                        XMLNode* server = serverList->m_child;
+
+                        while (server) {
+                            if (!_stricmp(server->m_name.m_str, "server")) {
+                                const char* id = server->GetAttributeByName("id");
+                                const char* url = server->GetAttributeByName("url");
+
+                                if (id && url) {
+                                    found = true;
+                                    char line[260];
+                                    SStrPrintf(line, sizeof(line), "server=%s\n\tlocation=%s\n", id, url);
+                                    SStrPack(servers, line, size);
+                                }
+
+                                server = server->m_next;
+                            }
+                        }
+                    }
+
+                    XMLTree_Free(tree);
+                    XMLTree_Cleanup();
+                    return found;
+                }
+            }
+        }
+
+        XMLTree_Free(tree);
+    }
+
+    XMLTree_Cleanup();
+    return false;
+}
+
+// OFFSET: 0x00405CC0/0x140006550
+static bool IsMfilCurrent() {
+    HOSFILE file = OsCreateFile("WoW.mfil", OS_GENERIC_READ, 0, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+    if (file == OS_INVALID_FILE) {
+        return false;
+    }
+
+    char* data = NULL;
+    bool current = false;
+    uint64_t size = OsGetFileSize(file);
+
+    if (size - 1 <= 0x3F3E) {
+        data = static_cast<char*>(SMemAlloc(static_cast<uint32_t>(size) + 1, __FILE__, __LINE__, 0));
+        uint32_t bytes;
+
+        if (OsReadFile(file, data, static_cast<uint32_t>(size), &bytes) && bytes == size) {
+            data[size] = '\0';
+            char key[256];
+            SStrPrintf(key, sizeof(key), "manifest_partial=%s-%d", GetInstallLocationProgram(), 15595);
+
+            if (SStrStrI(data, key) || (SStrPrintf(key, sizeof(key), "manifest_partial=WoW-%d-internal", 15595), SStrStrI(data, key))) {
+                current = true;
+            }
+        }
+    }
+
+    SMemFree(data, __FILE__, __LINE__, 0);
+    OsCloseFile(file);
+    return current;
+}
+
+// OFFSET: 0x00406260/0x1400077D0
+static bool DownloadMfil(const char* patchListURL, const char* locale, uint32_t timeout) {
+    char url[260];
+    SStrCopy(url, "http://", sizeof(url));
+    SStrPack(url, patchListURL, sizeof(url));
+
+    const char* status = NULL;
+    const char* program = GetInstallLocationProgram();
+    char request[512];
+    SStrPrintf(request, sizeof(request), "<version program=\"WoW\"><record program=\"Bnet\" component=\"Win\" version=\"1\" /><record program=\"%s\" component=\"%s\" version=\"%d\" build=\"%d\" /></version>", program, locale, 2 - (GetInstallLocation() != INSTALL_LOCATION_TEST), 15595);
+
+    char servers[16192];
+    char response[16192];
+    servers[0] = '\0';
+
+    if (!SFile::DownloadURLToBuffer(url, request, timeout, response, sizeof(response), &status)) {
+        AddMfilDownloadError("Error downloading patch data from server '%s' , error code : %s", url, status);
+        return false;
+    }
+
+    char mfilName[260];
+
+    if (!ParsePatchRecord(response, program, locale, url, sizeof(url), mfilName, sizeof(mfilName))) {
+        AddMfilDownloadError("Failed to parse patch data from server '%s'\r\nInstallID: '%s'", url, program);
+        return false;
+    }
+
+    if (!SFile::DownloadURLToBuffer(url, NULL, timeout, response, sizeof(response), &status)) {
+        AddMfilDownloadError("Failed to download manifest from server: '%s'\r\nInstallID: '%s', error code : %s", url, program, status);
+        return false;
+    }
+
+    if (!ParseServerConfig(program, response, servers, sizeof(servers))) {
+        AddMfilDownloadError("Failed to parse manifest from server '%s'\r\nInstallID: '%s'", url, program);
+        return false;
+    }
+
+    HOSFILE file = OsCreateFile("WoW.mfil", OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+    for (int32_t retry = 0; file == OS_INVALID_FILE; retry++) {
+        if (retry >= 10) {
+            AddMfilDownloadError("Failed to create file '%s'", "WoW.mfil");
+            return false;
+        }
+
+        OsSleep(100);
+        file = OsCreateFile("WoW.mfil", OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+    }
+
+    SStrPrintf(response, sizeof(response), "version=%d\n%smanifest_partial=%s", 2, servers, mfilName);
+    uint32_t written = 0;
+    bool result = OsWriteFile(file, response, strlen(response), &written) != 0;
+    OsCloseFile(file);
+    return result;
+}
+
+// OFFSET: 0x00406D30
+static bool InitializeStreamingManifest() {
+    bool mfilReady = false;
+    bool dataReady = false;
+    const char* errors = NULL;
+    const char* patchListURL = ClientServices::GetPatchListURL();
+
+    if (patchListURL) {
+        char mfilPath[260];
+        SStrCopy(mfilPath, "WoW.mfil", sizeof(mfilPath));
+
+        if (DownloadMfil(patchListURL, s_localeCode, 3000)) {
+            mfilReady = true;
+        } else if (IsMfilCurrent()) {
+            AddMfilDownloadError("Manifest is valid.");
+            mfilReady = true;
+        } else if (DownloadMfil(patchListURL, s_localeCode, 60000)) {
+            AddMfilDownloadError("Downloaded with longer timeout.");
+            mfilReady = true;
+        }
+
+        HOSFILE file = OS_INVALID_FILE;
+
+        if (mfilReady) {
+            int32_t build;
+
+            if (GetMfilBuild(&build) && build != 15595 && SCreateProcess("Launcher.exe", NULL, 0, NULL, NULL, NULL)) {
+                return false;
+            }
+
+            file = OsCreateFile(mfilPath, OS_GENERIC_READ, OS_FILE_SHARE_READ, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+            for (int32_t retry = 0; file == OS_INVALID_FILE && retry < 10; retry++) {
+                OsSleep(100);
+                file = OsCreateFile(mfilPath, OS_GENERIC_READ, OS_FILE_SHARE_READ, OS_OPEN_EXISTING, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+            }
+        }
+
+        if (!_stricmp(ClientServices::GetPatchListURL(), "streaming.corp.blizzard.net/patchlist/ldap.php")) {
+            SFile::EnableBuildReports();
+        }
+
+        char currentDirectory[260];
+
+        if (mfilReady && OsGetCurrentDirectory(sizeof(currentDirectory), currentDirectory) && SFile::InitializeStreaming(mfilPath, currentDirectory)) {
+            dataReady = true;
+        } else {
+            errors = SFile::GetErrorDetails();
+        }
+
+        if (file != OS_INVALID_FILE) {
+            OsCloseFile(file);
+        }
+    }
+
+    SFile::SetStreamingStatus(mfilReady, dataReady, false, 15595, errors);
+    return true;
+}
+
+// OFFSET: 0x004072A0
+static bool FindArchivesToPreload() {
+    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
+        char path[260];
+        GetArchivePath(path, sizeof(path), s_archives[i].m_name, s_localeCode);
+
+        char lockPath[260];
+        SStrCopy(lockPath, path, sizeof(lockPath));
+        SStrPack(lockPath, ".init", sizeof(lockPath));
+
+        char tempPath[260];
+        SStrCopy(tempPath, path, sizeof(tempPath));
+        SStrPack(tempPath, ".temp", sizeof(tempPath));
+
+        if (s_archives[i].m_flags & 0x1) {
+            continue;
+        }
+
+        if (OsFileExists(path) && !OsFileExists(lockPath) && !OsFileExists(tempPath)) {
+            continue;
+        }
+
+        if (!s_archives[i].m_expansion) {
+            s_showArchiveProgress = 1;
+        }
+
+        ArchivePreload* preload = s_archivePreloads.NewNode(2, 0, 0);
+        SStrCopy(preload->m_path, path, sizeof(preload->m_path));
+        SStrCopy(preload->m_tempPath, tempPath, sizeof(preload->m_tempPath));
+        SStrCopy(preload->m_lockPath, lockPath, sizeof(preload->m_lockPath));
+        preload->m_lockFile = OS_INVALID_FILE;
+        preload->m_tempFile = OS_INVALID_FILE;
+        preload->m_expansion = s_archives[i].m_expansion;
+        preload->m_remaining = 0;
+    }
+
+    OsDeleteFile(s_placeholderArchivePath);
+    return true;
+}
+
+// OFFSET: 0x00407830
+static void DestroyArchivePreloads() {
+    ArchivePreload* preload = s_archivePreloads.Head();
+
+    while (preload) {
+        ArchivePreload* next = s_archivePreloads.Next(preload);
+
+        if (preload->m_tempFile != OS_INVALID_FILE) {
+            OsCloseFile(preload->m_tempFile);
+            preload->m_tempFile = OS_INVALID_FILE;
+            OsDeleteFile(preload->m_tempPath);
+        }
+
+        if (preload->m_lockFile != OS_INVALID_FILE) {
+            OsCloseFile(preload->m_lockFile);
+            preload->m_tempFile = OS_INVALID_FILE;
+            OsDeleteFile(preload->m_lockPath);
+        }
+
+        s_archivePreloads.DeleteNode(preload);
+        preload = next;
+    }
+
+    if (s_preloadBuffer) {
+        SMemFree(s_preloadBuffer, __FILE__, __LINE__, 0);
+        s_preloadBuffer = NULL;
+    }
+}
+
+// OFFSET: 0x00406F30
+uint32_t ClientBeginInitializingArchives(uint8_t expansion) {
+    int64_t total = 0;
+
+    for (ArchivePreload* preload = s_archivePreloads.Head(); preload; preload = s_archivePreloads.Next(preload)) {
+        if (preload->m_expansion > expansion) {
+            continue;
+        }
+
+        int64_t size = 0;
+
+        if (!Blizzard::Streaming::GetStreamedFileSize(preload->m_path, &size) || size <= 0) {
+            continue;
+        }
+
+        preload->m_remaining = size - 8;
+        total += size - 8;
+
+        char directory[260];
+        SStrCopy(directory, preload->m_tempPath, sizeof(directory));
+        OsPathStripFilename(directory);
+        OsCreateDirectory(directory, 1);
+        preload->m_lockFile = OsCreateFile(preload->m_lockPath, OS_GENERIC_WRITE, 0, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+    }
+
+    if (total > 0) {
+        s_preloadBuffer = static_cast<uint8_t*>(SMemAlloc(4000000, __FILE__, __LINE__, SMEM_FLAG_ZEROMEMORY));
+        s_preloadBuffer[3999999] = '0';
+    }
+
+    return static_cast<uint32_t>(total / 4000000);
+}
+
+// OFFSET: 0x004078D0/0x140009490
+int32_t ClientContinueInitializingArchives(int32_t* stalled) {
+    if (stalled) {
+        *stalled = 0;
+    }
+
+    ArchivePreload* preload;
+
+    for (preload = s_archivePreloads.Head(); preload; preload = s_archivePreloads.Next(preload)) {
+        if (preload->m_lockFile != OS_INVALID_FILE) {
+            if (preload->m_tempFile == OS_INVALID_FILE) {
+                preload->m_tempFile = OsCreateFile(preload->m_tempPath, OS_GENERIC_WRITE, OS_FILE_SHARE_READ, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+                if (OsFileSetSparse(preload->m_tempFile, 1)) {
+                    OsSetFilePointer(preload->m_tempFile, preload->m_remaining, 0);
+                    OsSetEndOfFile(preload->m_tempFile);
+                    preload->m_remaining = 0;
+                }
+
+                if (preload->m_tempFile == OS_INVALID_FILE) {
+                    const char* error = OsGetLastErrorStr();
+                    const char* details = SFile::GetErrorDetails();
+                    OsCloseFile(preload->m_lockFile);
+                    preload->m_lockFile = OS_INVALID_FILE;
+                    SErrDisplayAppFatal("Unable to create archive file %s: %s\nError Details:%s", preload->m_tempPath, error, details);
+                }
+            }
+
+            if (preload->m_remaining <= 8000000) {
+                OsCloseFile(preload->m_tempFile);
+                preload->m_tempFile = OS_INVALID_FILE;
+                OsMoveFile(preload->m_tempPath, preload->m_path);
+                OsDeleteFile(preload->m_tempPath);
+                OsCloseFile(preload->m_lockFile);
+                preload->m_lockFile = OS_INVALID_FILE;
+                OsDeleteFile(preload->m_lockPath);
+                s_archivePreloads.DeleteNode(preload);
+            } else {
+                preload->m_remaining -= 4000000;
+                uint32_t written;
+
+                if (!OsWriteFile(preload->m_tempFile, s_preloadBuffer, 4000000, &written) || written != 4000000) {
+                    const char* error = OsGetLastErrorStr();
+                    const char* details = SFile::GetErrorDetails();
+                    SErrDisplayAppFatal("Unable to write archive file %s: %s\nError Details:%s", preload->m_tempPath, error, details);
+                }
+            }
+
+            return 0;
+        }
+
+        if (preload->m_remaining > 0) {
+            break;
+        }
+    }
+
+    if (!preload) {
+        SMemFree(s_preloadBuffer, __FILE__, __LINE__, 0);
+        s_preloadBuffer = NULL;
+        return 1;
+    }
+
+    if (stalled) {
+        *stalled = 1;
+    }
+
+    preload->m_lockFile = OsCreateFile(preload->m_lockPath, OS_GENERIC_WRITE, OS_FILE_SHARE_READ, OS_CREATE_ALWAYS, OS_FILE_ATTRIBUTE_NORMAL, OS_FILE_TYPE_ANY);
+
+    if (System_File::ExistsUnstreamed(preload->m_path)) {
+        if (preload->m_lockFile != OS_INVALID_FILE) {
+            OsCloseFile(preload->m_lockFile);
+            preload->m_lockFile = OS_INVALID_FILE;
+            OsDeleteFile(preload->m_tempPath);
+            OsDeleteFile(preload->m_lockPath);
+            s_archivePreloads.DeleteNode(preload);
+            return 0;
+        }
+    } else if (preload->m_lockFile != OS_INVALID_FILE) {
+        return 0;
+    }
+
+    OsSleep(10);
+    return 0;
+}
+
+// OFFSET: 0x00407D60
+static bool PreloadArchives() {
+    uint32_t chunks = ClientBeginInitializingArchives(0);
+
+    if (!chunks) {
+        return true;
+    }
+
+    ArchiveProgressSetStage(0);
+    uint32_t done = 0;
+
+    while (ArchiveProgressPump()) {
+        int32_t stalled = 0;
+
+        if (ClientContinueInitializingArchives(&stalled)) {
+            return true;
+        }
+
+        if (!stalled && done + 1 < chunks) {
+            done++;
+            ArchiveProgressSetPosition(static_cast<float>(done) / static_cast<float>(chunks));
+        }
+
+        if (done >= chunks) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x004042E0
+static bool OpenRequiredArchive(const char* name, const char* locale, int32_t priority, uint32_t index, bool optional, bool queue) {
+    char path[260];
+    GetArchivePath(path, sizeof(path), name, locale);
+
+    if (!SFile::OpenArchive(path, priority, s_archiveOpenFlags, &s_archiveHandles[index])) {
+        s_archiveHandles[index] = NULL;
+        return false;
+    }
+
+    int32_t complete = SFile::IsArchiveComplete(s_archiveHandles[index]);
+
+    if (!complete && !optional) {
+        s_allArchivesComplete = 0;
+    }
+
+    if (!SFile::IsStreamingDataReady() && !complete) {
+        SFile::CloseArchive(s_archiveHandles[index]);
+        SErrSetLastError(0x85100095);
+        s_archiveHandles[index] = NULL;
+        return false;
+    }
+
+    if (queue) {
+        BGLoading::QueueArchive(path);
+        s_startBGLoadThread |= complete == 0;
+    }
+
+    return true;
+}
+
+// OFFSET: 0x004043B0/0x1400047B0
+static bool LoadMopaqFileSigningData(const char* locale) {
+    SFileClearBlockTableMD5s();
+
+    char* data;
+    uint32_t size;
+
+    if (!SFile::LoadFile("signaturefile", reinterpret_cast<void**>(&data), &size, 0)) {
+        SErrPrepareAppFatal(__FILE__, __LINE__);
+        SErrDisplayAppFatalCustom(2, "file: %s", "signaturefile");
+    }
+
+    SFileSetSignatureCallbacks(1);
+
+    if (!SSignatureVerify(reinterpret_cast<const uint8_t*>(data), size, s_signatureModulus, sizeof(s_signatureModulus), s_signatureExponent, sizeof(s_signatureExponent))) {
+        SErrPrepareAppFatal(__FILE__, __LINE__);
+        SErrDisplayAppFatalCustom(0x4DC, "Could not authenticate the %s file.", "signaturefile");
+    }
+
+    char* line = strstr(data, "\r\n");
+    *line = '\0';
+    int32_t version = SStrToInt(data);
+
+    char* signature = line + 2;
+    line = strstr(signature, "\r\n");
+    *line = '\0';
+    int32_t signatureVersion = atoi(signature);
+
+    if (signatureVersion != 4) {
+        SErrPrepareAppFatal(__FILE__, __LINE__);
+        SErrDisplayAppFatalCustom(0x85100083, "Signature string (%d) in %s file does not match game's signature version (%d).", signatureVersion, "signaturefile", 4);
+    }
+
+    char* scope = line + 2;
+    line = strstr(scope, "\r\n");
+    *line = '\0';
+
+    if (strncmp(scope, "RELEASE", 7)) {
+        SErrPrepareAppFatal(__FILE__, __LINE__);
+        SErrDisplayAppFatalCustom(0x85100083, "Illegal scope string %s in %s: must be \"RELEASE\".", scope, "signaturefile");
+    }
+
+    char* record = line + 2;
+
+    if (version != 2) {
+        SErrPrepareAppFatal(__FILE__, __LINE__);
+        SErrDisplayAppFatalCustom(0x85100083, "Format version in %s file is not supported.", "signaturefile");
+    }
+
+    uint32_t localeTag = *reinterpret_cast<const uint32_t*>(locale);
+
+    while (record < data + size && strncmp(record, "NGIS", 4)) {
+        record[4] = '\0';
+        record[6] = '\0';
+        record[39] = '\0';
+        char* hash = record + 7;
+        char* name = record + 40;
+        char* end = strstr(name, "\r\n");
+        *end = '\0';
+
+        for (uint32_t i = 0; i < sizeof(s_signaturePrefixes) / sizeof(s_signaturePrefixes[0]); i++) {
+            if (!strncmp(record + 40, s_signaturePrefixes[i].m_prefix, s_signaturePrefixes[i].m_length)) {
+                name += s_signaturePrefixes[i].m_length;
+                break;
+            }
+        }
+
+        uint32_t tag = *reinterpret_cast<const uint32_t*>(record);
+
+        if ((tag == 'esab' || tag == localeTag) && (record[5] == 'c' || record[5] == 'e')) {
+            MD5 md5(hash);
+
+            if (!SFileSetFileBlockEntryMD5(name, md5)) {
+                if (SFile::IsStreamingDataReady()) {
+                    const char* details = SFile::GetErrorDetails();
+                    SErrPrepareAppFatal(__FILE__, __LINE__);
+                    const char* mfilErrors = s_mfilDownloadErrors ? s_mfilDownloadErrors : "None";
+                    const char* dataStatus = SFile::IsStreamingDataReady() ? "Data Rdy" : "Data Not Rdy";
+                    const char* mfilStatus = SFile::IsStreamingMfilReady() ? "Mfil Rdy" : "Mfil Not Rdy";
+                    SErrDisplayAppFatalCustom(0x85100083, "Fail to set signature (%s) for file (%s).\n%sStreaming Status: %s / %s\nWoW.mfil download error: %s\n", hash, name, details, mfilStatus, dataStatus, mfilErrors);
+                }
+
+                ReportArchiveFailure(name);
+                SFile::Unload(data);
+                return false;
+            }
+        }
+
+        record = end + 2;
+
+        if (record >= data + size) {
+            break;
+        }
+    }
+
+    SFile::Unload(data);
+    return true;
+}
+
+// OFFSET: 0x004046C0
+static bool OpenCacheArchive(ArchiveEnumParams* params, const char* path, int32_t writable) {
+    int32_t priority = params->m_priority;
+
+    if (writable) {
+        priority += 100;
+    }
+
+    int32_t opened;
+
+    if (!OsFileExists(path)) {
+        opened = SFile::CreateArchive(path, priority, &s_archiveHandles[params->m_index]);
+    } else if (SFile::OpenArchive(path, priority, 0x14818, &s_archiveHandles[params->m_index])) {
+        opened = 1;
+    } else if (SErrGetLastError() == 0x8510006C) {
+        if (!OsDeleteFile(path)) {
+            return false;
+        }
+
+        opened = SFile::CreateArchive(path, priority, &s_archiveHandles[params->m_index]);
+    } else {
+        opened = SFile::OpenArchive(path, priority, 0x18808, &s_archiveHandles[params->m_index]);
+    }
+
+    if (!opened) {
+        return false;
+    }
+
+    params->m_index++;
+    params->m_priority++;
+    return true;
+}
+
+// OFFSET: 0x00404760
+static int32_t OpenLocaleUpdateArchive(ArchiveEnumParams* params, const char* path, int32_t alternate) {
+    SArchive* archive = NULL;
+
+    if (!SFile::OpenArchive(path, params->m_priority, s_archiveOpenFlags, &archive)) {
+        ReportArchiveFailure(path);
+        return 0;
+    }
+
+    int32_t complete = SFile::IsArchiveComplete(archive);
+
+    if (!complete) {
+        s_allArchivesComplete = 0;
+    }
+
+    if (!SFile::IsStreamingDataReady() && !complete) {
+        SFile::CloseArchive(archive);
+        ReportArchiveFailure(path);
+        return 0;
+    }
+
+    s_archiveHandles[params->m_index] = archive;
+    params->m_priority++;
+    params->m_index++;
+    BGLoading::QueueArchive(path);
+    s_startBGLoadThread |= complete == 0;
+
+    if (!alternate) {
+        return 1;
+    }
+
+    if (!params->m_locale || (strncmp(params->m_locale, "zhCN", 4) && strncmp(params->m_locale, "enCN", 4))) {
+        return 1;
+    }
+
+    if (SFile::OpenPathAsArchive(archive, "alternate", params->m_priority + 100, 0, &s_archiveHandles[params->m_index])) {
+        params->m_priority++;
+        params->m_index++;
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00404870/0x140004DE0
+static int32_t OpenBaseUpdateArchive(ArchiveEnumParams* params, const char* path) {
+    bool opened = false;
+    SArchive* archive = NULL;
+
+    if (SFile::OpenArchive(path, 0, s_archiveOpenFlags, &archive) && archive) {
+        int32_t complete = SFile::IsArchiveComplete(archive);
+
+        if (!complete) {
+            s_allArchivesComplete = 0;
+        }
+
+        if (SFile::IsStreamingDataReady() || complete) {
+            BGLoading::QueueArchive(path);
+            s_startBGLoadThread |= complete == 0;
+
+            if (SFile::OpenPathAsArchive(archive, "base", params->m_priority, 0, &s_archiveHandles[params->m_index])) {
+                params->m_priority++;
+                params->m_index++;
+            }
+
+            if (params->m_locale) {
+                if (SFile::OpenPathAsArchive(archive, params->m_locale, params->m_priority, 0, &s_archiveHandles[params->m_index])) {
+                    params->m_priority++;
+                    params->m_index++;
+                }
+
+                if (!strncmp(params->m_locale, "zhCN", 4) || !strncmp(params->m_locale, "enCN", 4)) {
+                    char alternatePath[32];
+                    SStrPrintf(alternatePath, 30, "%s-alternate\\alternate", params->m_locale);
+
+                    if (SFile::OpenPathAsArchive(archive, alternatePath, params->m_priority + 100, 0, &s_archiveHandles[params->m_index])) {
+                        params->m_priority++;
+                        params->m_index++;
+                    }
+                }
+            }
+
+            opened = true;
+        }
+
+        SFile::CloseArchive(archive);
+
+        if (opened) {
+            return 1;
+        }
+    }
+
+    ReportArchiveFailure(path);
+    return 0;
+}
+
+// OFFSET: 0x004049E0
+static bool IsUpdateArchiveInManifest(const char* path) {
+    char name[260];
+    SStrCopy(name, path, sizeof(name));
+
+    char* extension = strrchr(name, '.');
+
+    if (!extension) {
+        return false;
+    }
+
+    *extension = '\0';
+    char* dash = strrchr(name, '-');
+
+    if (!dash) {
+        return false;
+    }
+
+    const char* build = dash + 1;
+    *dash = '\0';
+    dash = strrchr(name, '-');
+
+    if (!dash) {
+        return false;
+    }
+
+    char* type = dash + 1;
+    char manifestPath[260];
+
+    if (!_stricmp(type, "base") || !_stricmp(type, "patch")) {
+        SStrPrintf(manifestPath, sizeof(manifestPath), "Data/wow-update-base-%s.MPQ", build);
+    } else {
+        if (!_stricmp(type, "alternate")) {
+            SStrCopy(type, "zhCN", 5);
+        }
+
+        SStrPrintf(manifestPath, sizeof(manifestPath), "Data/%s/wow-update-%s-%s.MPQ", type, type, build);
+    }
+
+    if (Blizzard::Streaming::IsInManifest(manifestPath)) {
+        return true;
+    }
+
+    SStrPrintf(manifestPath, sizeof(manifestPath), "Data/wow-update-%s.MPQ", build);
+    return Blizzard::Streaming::IsInManifest(manifestPath);
+}
+
+// OFFSET: 0x00404B60
+static int32_t AcceptArchive(const char* path, void* param, uint8_t flags) {
+    ArchiveEnumParams* params = static_cast<ArchiveEnumParams*>(param);
+
+    if (SFile::IsStreamingMode() && (((flags & 0x7) && !Blizzard::Streaming::IsInManifest(path)) || ((flags & 0x18) && !IsUpdateArchiveInManifest(path)))) {
+        SFile::DeleteArchive(path);
+        return 1;
+    }
+
+    if (flags & 0x6) {
+        return OpenLocaleUpdateArchive(params, path, flags & 0x4);
+    }
+
+    if (flags & 0x1) {
+        return OpenBaseUpdateArchive(params, path);
+    }
+
+    OpenCacheArchive(params, path, flags & 0x10);
+    return 1;
+}
+
+// OFFSET: 0x00404C00
 static void ListArchives(const char* prefix, int32_t index, int32_t (*callback)(const char* fileName, void* param), void* param) {
     ARCHIVELISTPARAMS params;
     params.m_prefix = prefix;
-    params.m_prefixLength = SStrLen(prefix);
+    params.m_prefixLength = strlen(prefix);
     params.m_callback = callback;
     params.m_param = param;
 
-    for (uint32_t i = 0; i < s_numPatchArchives; i++) {
-        SFile::List(s_archiveHandles.m_data[i], ListArchiveFilter, &params);
+    for (int32_t i = s_numUpdateArchives - 1; i >= 0; i--) {
+        SFile::List(s_archiveHandles[i], ListArchiveFilter, &params);
     }
 
-    SArchive* archive = s_archiveHandles.m_data[index + s_firstBaseArchive];
-
-    if (archive) {
-        SFile::List(archive, ListArchiveFilter, &params);
+    if (s_archives[index].m_opened) {
+        SFile::List(s_archiveHandles[s_archives[index].m_slot], ListArchiveFilter, &params);
     }
+}
+
+// OFFSET: 0x00404C90
+void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param) {
+    ListArchives(prefix, 3, callback, param);
+}
+
+// OFFSET: 0x00404CB0
+static void CloseAllArchives() {
+    for (uint32_t i = s_archiveHandles.Count(); i; i--) {
+        if (s_archiveHandles[i - 1]) {
+            SFile::CloseArchive(s_archiveHandles[i - 1]);
+        }
+    }
+}
+
+// OFFSET: 0x00404CE0
+static void SetLocaleCode(const char* locale) {
+    int32_t index = LocaleNameToIndex(locale);
+    SStrCopy(s_localeCode, g_localeNames[index], sizeof(s_localeCode));
+    s_locale = LocaleIndexToDB2Locale(index);
+    SFile::s_locale = (s_localeCode[0] << 24) | (s_localeCode[1] << 16) | (s_localeCode[2] << 8) | s_localeCode[3];
+
+    switch (s_locale) {
+        case 1:
+        case 2:
+        case 4:
+        case 5:
+            FrameScript_SetPluralRule(PLURAL_RULE_1);
+            break;
+
+        case 8:
+            FrameScript_SetPluralRule(PLURAL_RULE_2);
+            break;
+
+        default:
+            FrameScript_SetPluralRule(PLURAL_RULE_0);
+            break;
+    }
+}
+
+// OFFSET: 0x00405DE0
+bool OpenExpansionArchives(uint8_t accountExpansion, uint8_t activeExpansion) {
+    s_startBGLoadThread = 0;
+
+    for (int32_t i = sizeof(s_archives) / sizeof(s_archives[0]) - 1; i >= 0; i--) {
+        ARCHIVEINFO* info = &s_archives[i];
+
+        if (!static_cast<uint8_t>(info->m_expansion) || (info->m_flags & 0x4)) {
+            continue;
+        }
+
+        SArchive* archive = s_archiveHandles[info->m_slot];
+        char path[260];
+        GetArchivePath(path, sizeof(path), info->m_name, s_localeCode);
+
+        if (info->m_opened && archive) {
+            int32_t complete = SFile::IsArchiveComplete(archive);
+            BGLoading::QueueArchive(path);
+            s_startBGLoadThread |= complete == 0;
+        } else {
+            if (!(info->m_flags & 0x1) && static_cast<uint8_t>(info->m_expansion) <= accountExpansion) {
+                ReportArchiveFailure(path);
+                return false;
+            }
+
+            if (static_cast<uint8_t>(info->m_expansion) <= activeExpansion) {
+                BGLoading::QueueFile(path);
+
+                if (!SFile::IsFileCompletelyLocal(path)) {
+                    s_startBGLoadThread |= 1;
+                }
+            }
+        }
+    }
+
+    if (s_startBGLoadThread && !BGLoading::BGLoadThreadStarted()) {
+        BGLoading::StartBGLoadThread();
+        s_startBGLoadThread = 0;
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00406570
+static bool OpenArchives() {
+    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
+        s_archives[i].m_opened = false;
+    }
+
+    s_archiveHandles.SetCount(PatchOnDemand::Cache::LoadArchives("Data", s_localeCode) + 100);
+
+    ArchiveEnumParams params;
+    params.m_index = 0;
+    params.m_priority = 1;
+    params.m_locale = s_localeCode;
+
+    ArchiveProgressSetStage(1);
+    int64_t loaded = 0;
+    int64_t total = GetStreamedArchiveSize();
+    params.m_priority = 100;
+
+    for (int32_t i = sizeof(s_archives) / sizeof(s_archives[0]) - 1; i >= 0; i--) {
+        ARCHIVEINFO* info = &s_archives[i];
+
+        if (!(info->m_flags & 0x2) || s_locale != 4) {
+            continue;
+        }
+
+        SArchive* archive = NULL;
+        char path[260];
+        GetArchivePath(path, sizeof(path), info->m_name, s_localeCode);
+
+        if (!SFile::OpenArchive(path, 0, s_archiveOpenFlags, &archive)) {
+            continue;
+        }
+
+        int32_t complete = SFile::IsArchiveComplete(archive);
+
+        if (!complete) {
+            s_allArchivesComplete = 0;
+        }
+
+        if (SFile::IsStreamingDataReady() || complete) {
+            BGLoading::QueueArchive(path);
+            s_startBGLoadThread |= complete == 0;
+
+            if (SFile::OpenPathAsArchive(archive, info->m_subdir, params.m_priority + 100, 0, &s_archiveHandles[params.m_index])) {
+                info->m_slot = params.m_index;
+                info->m_priority = params.m_priority;
+                info->m_opened = true;
+                params.m_index++;
+                params.m_priority++;
+            }
+        }
+
+        SFile::CloseArchive(archive);
+    }
+
+    SFile::EnableHash(false);
+    int32_t enumerated = PatchOnDemand::Cache::EnumerateArchives(AcceptArchive, &params);
+    SFile::EnableHash(true);
+
+    if (!enumerated) {
+        s_archiveHandles.SetCount(params.m_index);
+        return false;
+    }
+
+    s_numUpdateArchives = params.m_index;
+    params.m_priority = 99;
+
+    for (int32_t i = sizeof(s_archives) / sizeof(s_archives[0]) - 1; i >= 0; i--) {
+        ARCHIVEINFO* info = &s_archives[i];
+
+        if (info->m_flags & 0x6) {
+            continue;
+        }
+
+        uint8_t expansion = static_cast<uint8_t>(info->m_expansion);
+
+        if (expansion > 3) {
+            continue;
+        }
+
+        bool optional = (info->m_flags & 0x1) || (s_locale != 4 && expansion);
+
+        if (OpenRequiredArchive(info->m_name, s_localeCode, params.m_priority, params.m_index, optional, expansion == 0)) {
+            info->m_slot = params.m_index;
+            info->m_priority = params.m_priority;
+            info->m_opened = true;
+            params.m_index++;
+        } else if (!optional) {
+            char path[260];
+            GetArchivePath(path, sizeof(path), info->m_name, s_localeCode);
+            ReportArchiveFailure(path);
+            s_archiveHandles.SetCount(params.m_index);
+            return false;
+        }
+
+        params.m_priority--;
+        loaded += info->m_size;
+
+        if (s_showArchiveProgress) {
+            ArchiveProgressSetPosition(static_cast<float>(static_cast<double>(loaded) / static_cast<double>(total > 0 ? total : 1)));
+
+            if (!ArchiveProgressPump()) {
+                s_archiveHandles.SetCount(params.m_index);
+                return false;
+            }
+        }
+    }
+
+    s_archiveHandles.SetCount(params.m_index);
+
+    void* profile = ProfileCreate();
+
+    if (ProfileReadFile(profile, "Wow.ini")) {
+        ProfileGetValue(profile, "WoW Config", "Region", &s_region, 0);
+    }
+
+    ProfileClose(profile);
+
+    return LoadMopaqFileSigningData(s_localeCode) && (CmdLineGetBool(static_cast<CMDOPT>(CMD_LAUNCH)) || s_locale != 4 || s_allArchivesComplete || !SCreateProcess("Launcher.exe", NULL, 0, NULL, NULL, NULL));
 }
 
 // OFFSET: #0x00401220
@@ -434,28 +1764,13 @@ static void MovementInit() {
     EventRegisterEx(EVENT_ID_IDLE, MovementIdleMoveUnits, NULL, 2.0f);
 }
 
-// OFFSET: #0x00401FD0
-static int32_t PollNet(const void* data, void* param) {
-    RealmConnection::PollNet(NULL, NULL);
-    WardenClient_Process();
-    return 1;
-}
-
-// OFFSET: #0x004020E0
-static int32_t EnableCallback(const void* data, void* param) {
-    const EVENT_DATA_IDLE* idle = static_cast<const EVENT_DATA_IDLE*>(data);
-    CWorld::s_elapsedTimeSec += idle->m_elapsedSec;
-    int32_t ticks = Weather::TimeToFixed(idle->m_elapsedSec);
-    CWorld::s_elapsedTicks += ticks;
-    CWorld::s_tickTimeFixed = ticks;
-    return 1;
-}
-
-// OFFSET: #0x00402530
+// OFFSET: 0x00401C70/0x1400017E0
 static void SetDefaults(OPTION_PAGE page) {
-    DefaultSettings* defaults = ConsoleDeviceGetDefaultSettings();
+    const char* name;
 
     if (page == OPTION_PAGE_0) {
+        name = "windowResizeLock";
+    } else if (page == OPTION_PAGE_1) {
         if (s_desktopGammaCvar) {
             s_desktopGammaCvar->Set("0", true, false, false, true);
             s_desktopGammaCvar->Update();
@@ -466,33 +1781,47 @@ static void SetDefaults(OPTION_PAGE page) {
             s_gammaCvar->Update();
         }
 
-        CVar* var = CVar::Lookup("windowResizeLock");
-
-        if (var) {
-            var->Set(var->m_defaultValue.m_str, true, false, false, true);
-        }
-    } else if (page == OPTION_PAGE_1) {
-        if (s_cvTextureFilteringMode) {
-            s_cvTextureFilteringMode->Set(defaults->m_trilinear ? "1" : "0", true, false, false, true);
-        }
-    } else if (page == OPTION_PAGE_2) {
         CVar* var = CVar::Lookup("gxStereoEnabled");
 
         if (var) {
-            var->Set(var->m_defaultValue.m_str, true, false, false, true);
+            var->Default();
         }
 
         var = CVar::Lookup("gxStereoConvergence");
 
         if (var) {
-            var->Set(var->m_defaultValue.m_str, true, false, false, true);
+            var->Default();
         }
 
         var = CVar::Lookup("gxStereoSeparation");
 
         if (var) {
-            var->Set(var->m_defaultValue.m_str, true, false, false, true);
+            var->Default();
         }
+
+        var = CVar::Lookup("maxFPS");
+
+        if (var) {
+            var->Default();
+        }
+
+        name = "maxFPSBk";
+    } else if (page == OPTION_PAGE_2) {
+        CVar* var = CVar::Lookup("uiScale");
+
+        if (var) {
+            var->Default();
+        }
+
+        name = "useUiScale";
+    } else {
+        return;
+    }
+
+    CVar* var = CVar::Lookup(name);
+
+    if (var) {
+        var->Default();
     }
 }
 
@@ -563,7 +1892,7 @@ uint8_t GetClientExpansionLevel() {
     return s_expansionLevel;
 }
 
-// OFFSET: #0x00402B20
+// OFFSET: 0x004020A0
 void SetPaths() {
     SFile::DisableSFileCheckDisk();
     SFile::EnableDirectAccess(0);
@@ -579,7 +1908,7 @@ void SetPaths() {
     OsSetCurrentDirectory(path);
     SFile::SetBasePath(path);
     s_unk_B2FA10 = 0;
-    SFile::SetDataPath(s_dataDirectories[0]);
+    SFile::SetDataPath(s_dataDirectory);
 }
 
 // OFFSET: #0x00402A50
@@ -600,148 +1929,7 @@ const char* GetInstallLocationString() {
     return s_installLocation;
 }
 
-// OFFSET: #0x00402AA0
-static bool BuildDataFileName(int32_t directory, char* buffer, uint32_t size, const char* pattern, const char* locale) {
-    if (directory == 2) {
-        if (!GetInstallLocationString()) {
-            return false;
-        }
-
-        SStrPrintf(buffer, size, "%s%s%s", GetInstallLocationString(), s_dataDirectories[2], pattern);
-    } else {
-        SStrPrintf(buffer, size, "%s%s", s_dataDirectories[directory], pattern);
-    }
-
-    for (char* token = SStrStr(buffer, "****"); token; token = SStrStr(buffer, "****")) {
-        memcpy(token, locale, 4);
-    }
-
-    return true;
-}
-
-// OFFSET: #0x00402B90
-bool CheckDataFilesExist() {
-    char installPath[1024] = {};
-    char dataPath[1024];
-    char parentPath[1024];
-
-    BuildDataFileName(0, dataPath, sizeof(dataPath), s_archives[17].m_name, "----");
-    BuildDataFileName(1, parentPath, sizeof(parentPath), s_archives[17].m_name, "----");
-
-    if (BuildDataFileName(2, installPath, sizeof(installPath), s_archives[17].m_name, "----")) {
-        return OsFileExists(dataPath) || OsFileExists(parentPath) || OsFileExists(installPath);
-    }
-
-    return OsFileExists(dataPath) || OsFileExists(parentPath);
-}
-
-// OFFSET: #0x00402D50
-static void CheckAvailableLocales(char* locale) {
-    if (!CheckDataFilesExist()) {
-        return;
-    }
-
-    for (int32_t i = 0; i < 15; i++) {
-        char path[1024];
-        g_hasIsoLocale[i] = false;
-
-        for (int32_t directory = 0; directory < 3; directory++) {
-            if (BuildDataFileName(directory, path, sizeof(path), s_archives[19].m_name, g_localeNames[i]) && OsFileExists(path)) {
-                g_hasIsoLocale[i] = true;
-                break;
-            }
-        }
-    }
-
-    int32_t index = LocaleNameToIndex(locale);
-
-    for (int32_t i = 0; i < 15 && !g_hasIsoLocale[index]; i++) {
-        index = (index + 1) % 15;
-    }
-
-    SStrCopy(locale, g_localeNames[index], STORM_MAX_STR);
-}
-// OFFSET: #0x00402F60
-static void LoadMopaqFileSigningData(const char* locale) {
-#ifdef DISABLE_SIGNATURE_CHECKS
-    return;
-#endif
-
-    SFileClearBlockTableMD5s();
-
-    char* data;
-    uint32_t size;
-
-    if (!SFile::LoadFile("signaturefile", reinterpret_cast<void**>(&data), &size, 0)) {
-        SErrPrepareAppFatal(__FILE__, __LINE__);
-        SErrDisplayAppFatalCustom(2, "file: %s", "signaturefile");
-    }
-
-    SFileSetSignatureCallbacks(1);
-
-    if (!SSignatureVerify(reinterpret_cast<const uint8_t*>(data), size, s_signatureModulus, sizeof(s_signatureModulus), s_signatureExponent, sizeof(s_signatureExponent))) {
-        SErrPrepareAppFatal(__FILE__, __LINE__);
-        SErrDisplayAppFatalCustom(0x4DC, "Could not authenticate the %s file.", "signaturefile");
-    }
-
-    char* line = SStrStr(data, "\r\n");
-    *line = '\0';
-    int32_t version = SStrToInt(data);
-
-    char* signature = line + 2;
-    line = SStrStr(signature, "\r\n");
-    *line = '\0';
-    int32_t signatureVersion = atol(signature);
-
-    if (signatureVersion != 2) {
-        SErrPrepareAppFatal(__FILE__, __LINE__);
-        SErrDisplayAppFatalCustom(0x85100083, "Signature string (%s) in %s file does not match game's signature version (%d).", signature, "signaturefile", signatureVersion);
-    }
-
-    char* scope = line + 2;
-    line = SStrStr(scope, "\r\n");
-    *line = '\0';
-
-    if (SStrCmp(scope, "RELEASE", 7)) {
-        SErrPrepareAppFatal(__FILE__, __LINE__);
-        SErrDisplayAppFatalCustom(0x85100083, "Illegal scope string %s in %s: must be \"RELEASE\".", scope, "signaturefile");
-    }
-
-    char* record = line + 2;
-
-    if (version != 2) {
-        SErrPrepareAppFatal(__FILE__, __LINE__);
-        SErrDisplayAppFatalCustom(0x85100083, "Format version in %s file is not supported.", "signaturefile");
-        SFile::Unload(data);
-        return;
-    }
-
-    bool expansion = s_expansionLevel >= 1;
-    uint32_t localeTag = *reinterpret_cast<const uint32_t*>(locale);
-
-    while (record < data + size && SStrCmp(record, "NGIS", 4)) {
-        char* hash = record + 7;
-        char* name = hash + 0x21;
-        record[4] = '\0';
-        record[6] = '\0';
-        hash[0x20] = '\0';
-
-        char* end = SStrStr(name, "\r\n");
-        *end = '\0';
-
-        uint32_t tag = *reinterpret_cast<const uint32_t*>(record);
-
-        if ((tag == 'esab' || tag == localeTag) && (record[5] == 'c' || (record[5] == 'e' && expansion))) {
-            MD5 md5(hash);
-            SFileSetFileBlockEntryMD5(name, md5);
-        }
-
-        record = end + 2;
-    }
-
-    SFile::Unload(data);
-}
-// OFFSET: #0x00403300
+// OFFSET: 0x004026C0/0x1400020D0
 int ForEveryRunOnceWTF::FileNameCompare(const void* a, const void* b) {
     return SStrSortUTF8I(*static_cast<char* const*>(a), *static_cast<char* const*>(b), STORM_MAX_STR);
 }
@@ -760,21 +1948,19 @@ void ClientPostClose(int32_t reason) {
     EventPostClose();
 }
 
-// OFFSET: #0x004033E0
+// OFFSET: 0x00402A70/0x1400058F0
 static void LogRealmInfo(char* buffer, uint32_t size) {
     REALM_INFO* realm = ClientServices::GetSelectedRealm();
 
-    if (realm && realm->m_realmName[0] && realm->m_realmAddress[0]) {
-        SStrPack(buffer, "Realm: ", size);
-        SStrPack(buffer, realm->m_realmName, size);
-        SStrPack(buffer, " [", size);
-        SStrPack(buffer, realm->m_realmAddress, size);
-        SStrPack(buffer, "]", size);
-    } else {
-        SStrPack(buffer, "Realm: ???", size);
-    }
+    if (realm && realm->m_realmName[0] && realm->m_addresses[0].m_type) {
+        uint32_t length = strlen(buffer);
 
-    SStrPack(buffer, "\r\n", size);
+        if (length < size) {
+            SStrPrintf(buffer + length, size - length, "Realm: %s (%s)\r\n", realm->m_realmName, SockAddrString(&realm->m_addresses[0], realm->m_ports[0]).m_str);
+        }
+    } else {
+        SStrPack(buffer, "Realm: ???\r\n", size);
+    }
 }
 
 // OFFSET: #0x00403460
@@ -791,348 +1977,14 @@ static void LogObjectInfo(CGObject_C* object, const char* label, char* buffer, u
     SStrPack(buffer, line, size);
 }
 
-// OFFSET: #0x00403560
-static void SetInstallPath() {
-    const char* key = "World of Warcraft";
-
-    if (IsPTRBuild()) {
-        key = "World of Warcraft\\PTR";
-    }
-
-    if (SFile::IsTrial()) {
-        key = "World of Warcraft Trial";
-    }
-
-    char path[1560];
-    GetExecutablePathUTF8(path, sizeof(path));
-
-    if (!path[0]) {
-        return;
-    }
-
-    char* slash = SStrChrR(path, '\\');
-
-    if (!slash) {
-        return;
-    }
-
-    slash[1] = '\0';
-
-    if (SFile::IsTrial()) {
-        SRegSaveString(key, "InstallPath", 1, path);
-    } else {
-        SRegSaveString(key, "InstallPath", 4, path);
-    }
-}
-
-// OFFSET: #0x00403600
-static void LoadMFIL(const char* file) {
-    Blizzard::Time::GetElapsedSinceStart(true);
-
-    if (OsFileExists(file) && file) {
-        s_streamingDiag |= 1;
-        int32_t initialized = SFile::InitializeStreaming(file, NULL);
-        OsDeleteFile("WoW.stor");
-
-        if (initialized) {
-            s_streamingDiag |= 2;
-        } else {
-            SStrCopy(s_streamingError, SFile::GetErrorDetails(), 2048);
-        }
-    }
-
-    if (SFile::IsTrial()) {
-        InitOggDecompression();
-    }
-
-    SFile::SetStreamingStatus(s_streamingDiag & 1, (s_streamingDiag >> 1) & 1, false, 15595, s_streamingError);
-}
-
-// OFFSET: %0x00403150
-void StartupReport() {
-    if (SFile::IsTrial()) {
-        uint32_t speedTest;
-
-        if (!SRegLoadValue("World of Warcraft Trial", "SpeedTest", 1, &speedTest)) {
-            speedTest = 0;
-        }
-
-        Blizzard::Streaming::FileManifest::SetSpeedTest(speedTest);
-        Tracker::SetLocale(CVar::Lookup("locale")->m_stringValue.m_str);
-        Tracker::SetBuildnum(13623);
-    }
-
-    char version[16];
-    SStrPrintf(version, sizeof(version), "%d", 13623);
-    s_cvarEnterWorld = CVar::Register("enterWorld", "Trial Client entered world", 0, "0", NULL, 4, false, NULL, false);
-    bool trial = SFile::IsTrial() == 1;
-    WoWReport::Initialize(version, CVar::Lookup("locale")->m_stringValue.m_str, s_cvarEnterWorld->m_intValue != 0, trial);
-}
-
-// OFFSET: #0x00403B70
-static int32_t LoadNewWorld(const void* data, void* param) {
-    ClientServices::Connection()->CharacterSetInGame(0);
-    MovementDestroy();
-    EventUnregister(EVENT_ID_IDLE, MovementIdleMoveUnits);
-    CMissile::RemoveMissiles();
-    Spell_C_StopTargeting();
-    CGBarberShop::DisableBarberShop();
-    ClntObjMgrDestroy();
-    SpellVisualsClear();
-    CEffect::Destroy();
-    CGWorldFrame::SetScreenEffect(0);
-
-    if (CGWorldFrame::s_currentWorldFrame) {
-        CGWorldFrame::s_currentWorldFrame->UnitClear();
-    }
-
-    CGUnit_C::StopMissileTrajectoryTargeting();
-    World::UnloadMap();
-
-    if (World::s_weather) {
-        World::s_weather->Reset();
-    }
-
-    SI3::SetWeatherKitID(-1);
-    Spell_C_ClearCooldowns();
-    ClntObjMgrInitializeStd(s_zoneID);
-    MovementInit();
-    CloseAllLootRolls();
-    CGPartyInfo::CheckClearLFGSlot();
-    AsyncFileReadIngameProgressCallback(NULL, NULL);
-    AsyncFileReadProgressCallback(LoadingScreenAsyncCallback, NULL);
-    World::SetLoadProgressCallback(LoadingScreenWorldCallback, NULL);
-    CWorld::LoadMap(s_directory, &s_spawnPosition, s_zoneID, 1);
-    AsyncFileReadProgressCallback(NULL, NULL);
-    World::SetLoadProgressCallback(NULL, NULL);
-
-    CGCamera* camera = CGWorldFrame::GetActiveCamera();
-    camera->m_position = s_spawnPosition;
-    camera->SetFacing(s_spawnRotation, 0.0f, 0.0f);
-    camera->SetTarget(NULL, 0);
-
-    if (param) {
-        CDataStore msg;
-        msg.Put(static_cast<uint32_t>(MSG_MOVE_WORLDPORT_ACK));
-        msg.Finalize();
-        ClientServices::Send2(&msg);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x00403D10
-static int32_t Packet_SMSG_NEW_WORLD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    msg->Get(s_zoneID);
-    msg->Get(s_spawnPosition.x);
-    msg->Get(s_spawnPosition.y);
-    msg->Get(s_spawnPosition.z);
-    msg->Get(s_spawnRotation);
-
-    if (!msg->IsRead()) {
-        ConsoleWrite("Bad SMSG_NEW_WORLD\n", DEFAULT_COLOR);
-        msg->Reset();
-        return 1;
-    }
-
-    MapRec* map = g_mapDB.GetRecord(s_zoneID);
-
-    if (!map) {
-        ConsoleWrite("Bad SMSG_NEW_WORLD zoneID\n", DEFAULT_COLOR);
-        return 0;
-    }
-
-    s_directory = map->m_directory;
-    EventSetTimer(0, LoadNewWorld, reinterpret_cast<void*>(1));
-
-    return 1;
-}
-
-// OFFSET: #0x00403DE0
-static int32_t Packet_SMSG_LOGIN_VERIFY_WORLD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t zoneID;
-    C3Vector position(0.0f, 0.0f, 0.0f);
-    float rotation;
-
-    msg->Get(zoneID);
-    msg->Get(position.x);
-    msg->Get(position.y);
-    msg->Get(position.z);
-    msg->Get(rotation);
-
-    if (zoneID == ClntObjMgrGetMapID()) {
-        return 1;
-    }
-
-    s_spawnRotation = rotation;
-    s_spawnPosition = position;
-    s_zoneID = zoneID;
-
-    MapRec* map = g_mapDB.GetRecord(zoneID);
-
-    if (!map) {
-        ConsoleWrite("Bad SMSG_NEW_WORLD zoneID\n", DEFAULT_COLOR);
-        return 0;
-    }
-
-    s_directory = map->m_directory;
-    LoadNewWorld(NULL, NULL);
-
-    return 1;
-}
-
-// OFFSET: #0x00404130
-static void InitializeClient() {
-    FrameTime::Initialize(0);
-    EventRegister(EVENT_ID_IDLE, EnableCallback);
-    SysMsgInitialize();
-    WowSysMessageOutput::Initialize();
-    ClientRegisterConsoleCommands();
-    ClientDBInitialize();
-    LoadingScreenInitialize();
-    FrameScript_Initialize(0);
-    SI3::Init(0);
-    ObjectEffectSystem_Initialize();
-    FrameXML_RegisterDefault();
-    GlueScriptEventsInitialize();
-    ScriptEventsInitialize();
-    CCharacterComponent::Initialize();
-    ClientServices::Initialize();
-    ClientServices::SetMessageHandler(SMSG_TUTORIAL_FLAGS, CGTutorial::OnTutorialFlags, NULL);
-
-    CVar* voiceChat = CVar::Lookup("EnableVoiceChat");
-
-    if (voiceChat && voiceChat->m_intValue) {
-        ComSatClient_Init();
-    }
-
-    DBCache_RegisterHandlers();
-    DBCache_Initialize();
-    CWorldParam::Initialize();
-    CWorld::Initialize();
-    ShadowInit();
-    GxuLightInitialize();
-    GxuLightSetGridSize(16.665001f);
-    OsInputSetJoystickPollFcn(OsPollJoysticks);
-    InputControlInitialize();
-    CGlueMgr::Initialize();
-
-    if (GetConsoleMessage()) {
-        CGlueMgr::AddChangedOptionWarning(GetConsoleMessage());
-        SetConsoleMessage(NULL);
-    }
-
-    if (SFile::IsTrial()) {
-        StartDataPreloadThread();
-    }
-
-    if (s_expansionLevel == 1) {
-        if (s_cvExpansionMovie->m_intValue == 1) {
-            s_cvExpansionMovie->Set("0", true, false, false, true);
-            s_cvMovie->Set("0", true, false, false, true);
-            CGlueMgr::SetScreen("movie");
-        } else {
-            CGlueMgr::SetScreen("login");
-        }
-    } else if (s_cvMovie->m_intValue == 1) {
-        s_cvMovie->Set("0", true, false, false, true);
-        CGlueMgr::SetScreen("movie");
-    } else {
-        CGlueMgr::SetScreen("login");
-    }
-
-    CGlueMgr::m_pendingTimerAlert = s_timeTestError;
-    SpellVisualsInitialize();
-    EventRegister(EVENT_ID_POLL, PollNet);
-}
-
-// OFFSET: #0x004047E0
-int32_t InitializeEngineCallback(const void* data, void* param) {
-    BaseInitializeContext();
-    AsyncFileReadRegisterCVars();
-    TextureInitialize();
-    ModelBlobLoad("world\\model.blob");
-
-    if (SFile::IsStreamingMode()) {
-        TextureLoadBlob("world\\liquid.tex");
-    }
-
-    ScrnInitialize(0);
-    ConsoleScreenInitialize(NULL);
-
-    s_cvTextureFilteringMode = CVar::Register("textureFilteringMode", "Texture filtering mode", 1, "1", CWorldParam::TextureFilteringCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvarUIFaster = CVar::Register("UIFaster", "UI acceleration option", 0, "3", UIFasterCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvTextureCacheSize = CVar::Register("textureCacheSize", "Texture cache size in bytes", 1, "32", TextureCacheSizeCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    TextureSetCacheSize(s_cvTextureCacheSize->m_intValue << 20);
-
-    uint32_t m2Flags = GetM2CvarFlags();
-    AddConsoleDeviceDefaultCallback(SetDefaults);
-
-    if (ConsoleDeviceHardwareChanged()) {
-        for (uint32_t page = OPTION_PAGE_0; page < NUM_OPTION_PAGES; page++) {
-            SetDefaults(static_cast<OPTION_PAGE>(page));
-        }
-    }
-
-    M2Initialize(m2Flags, 0);
-
-    int32_t mode = s_cvTextureFilteringMode->m_intValue;
-    TextureSetFilterMode(s_textureFilterModes[mode]);
-    TextureSetMaxAnisotropy(s_textureMaxAnisotropy[mode]);
-
-    InitializeClient();
-
-    return 1;
-}
-
-// OFFSET: #0x00404930
-static bool OpenArchiveWithRetry(const char* name, int32_t priority, uint32_t slot, const char* locale) {
-    for (int32_t directory = 0; directory < 3; directory++) {
-        char path[260];
-
-        if (!BuildDataFileName(directory, path, sizeof(path), name, locale)) {
-            continue;
-        }
-
-        if (SFile::OpenArchive(path, priority, 0xC00, &s_archiveHandles[slot])) {
-            return true;
-        }
-
-        s_archiveHandles[slot] = NULL;
-
-        switch (SErrGetLastError()) {
-            case 5:
-            case 38:
-            case 108:
-            case 131:
-            case 0x8510006C:
-            case 0x85100083:
-                return false;
-        }
-    }
-
-    return false;
-}
-
-// OFFSET: #0x00404AD0
-static void CloseAllArchives() {
-    for (uint32_t i = s_archiveHandles.Count(); i; i--) {
-        if (s_archiveHandles[i - 1]) {
-            SFile::CloseArchive(s_archiveHandles[i - 1]);
-        }
-    }
-}
-
-// OFFSET: #0x00404B00
+// OFFSET: 0x00402B30/0x1400059F0
 static void LogZoneInfo(CGObject_C* object, char* buffer, uint32_t size) {
-    C3Vector position = object->GetPosition();
+    object->GetPosition();
     SStrPack(buffer, "Local Zone: ", size);
 
-    uint32_t areaId = 0;
-    CMap::QueryAreaId(object->m_worldObject, areaId);
-
+    AreaTableRec* area = AreaListGetObjectArea(object->m_worldObject);
     char name[260];
-    AreaListGetName(areaId, name, sizeof(name), 1);
+    AreaListGetName(area ? area->m_id : 0, name, sizeof(name), 1);
     SStrPack(buffer, name, size);
     SStrPack(buffer, "\r\n", size);
 }
@@ -1226,463 +2078,180 @@ int32_t STORMAPI WowLogHeader(char* buffer, uint32_t bufferchars) {
     return 1;
 }
 
-// OFFSET: #0x00405540
-void ClientInitializeGame(uint32_t mapId, C3Vector position) {
-    if (SFile::IsTrial()) {
-        SetClientInitialized(0);
-    }
-
-    g_theGxDevicePtr->MasterEnableSet(GxMasterEnable_Fog, 1);
-
-    if (World::s_weather) {
-        World::s_weather->Reset();
-    }
-
-    SI3::SetWeatherKitID(-1);
-
-    REALM_INFO* realm = ClientServices::GetSelectedRealm();
-
-    for (uint32_t i = 0; i < g_cfg_ConfigsDB.m_numRecords; i++) {
-        Cfg_ConfigsRec* config = i < g_cfg_ConfigsDB.m_numRecords ? &g_cfg_ConfigsDB.m_records[i] : NULL;
-
-        if (config->m_realmType == realm->m_type) {
-            s_isPvPRealm = config->m_playerKillingAllowed != 0;
-            break;
-        }
-    }
-
-    AccountDataInitialize(false);
-    ClntObjMgrInitializeShared();
-    ClntObjMgrInitializeStd(mapId);
-    CGUnit_C::ClientInitialize();
-    SI3::InitZoneSoundsHandler();
-    SI3::InitZoneIntros();
-    LootInitialize();
-    CGGameUI::InitializeGame();
-    CGWorldFrame::GetActiveCamera()->m_position = position;
-    WorldTextInitialize();
-    PlayerNameInitialize();
-    WeaponTrailsInitialize();
-    CGObject_C::Initialize();
-    SpellTableInitialize();
-    CGUnit_C::Initialize();
-    CGGameObject_C::Initialize();
-    PlayerClientInitialize();
-    CGPlayer_C::Initialize();
-    CGItem_C::Initialize();
-    CGContainer_C::Initialize();
-    CGCorpse_C::Initialize();
-    CGDynamicObject_C::Initialize();
-    FriendList::Initialize();
-    SmartScreenRectClearAllGrids();
-    Trade_C_Initialize();
-    MovementInit();
-    EventRegister(EVENT_ID_IDLE, ClientIdle);
-    ClientInitializeGameTime();
-
-    CommandManager* manager = StaticSingleton<CommandManager>::Instance();
-    manager->m_connection = ClientServices::Connection();
-    GameClientCommands* commands = new (__FILE__, __LINE__) GameClientCommands;
-    manager = StaticSingleton<CommandManager>::Instance();
-    manager->m_commands[manager->m_count++] = commands;
-    commands->Install();
-
-    ClientServices::SetMessageHandler(SMSG_NOTIFICATION, Packet_SMSG_NOTIFICATION, NULL);
-    ClientServices::SetMessageHandler(SMSG_PLAYED_TIME, Packet_SMSG_PLAYED_TIME, NULL);
-    ClientServices::SetMessageHandler(SMSG_NEW_WORLD, Packet_SMSG_NEW_WORLD, NULL);
-    ClientServices::SetMessageHandler(SMSG_TRANSFER_PENDING, Packet_SMSG_TRANSFER_PENDING, NULL);
-    ClientServices::SetMessageHandler(SMSG_TRANSFER_ABORTED, Packet_SMSG_TRANSFER_ABORTED, NULL);
-    ClientServices::SetMessageHandler(SMSG_LOGIN_VERIFY_WORLD, Packet_SMSG_LOGIN_VERIFY_WORLD, NULL);
-    ClientServices::SetMessageHandler(SMSG_KICK_REASON, CGlueMgr::OnKickReasonMsg, NULL);
-
-    MapRec* map = g_mapDB.GetRecord(mapId);
-
-    if (!map) {
-        DebugLog("Bad zone ID %i", mapId);
-    }
-
-    AsyncFileReadIngameProgressCallback(NULL, NULL);
-    AsyncFileReadProgressCallback(LoadingScreenAsyncCallback, NULL);
-    World::SetLoadProgressCallback(LoadingScreenWorldCallback, NULL);
-
-    if (SFile::IsTrial()) {
-        SetClientInitialized(1);
-    }
-
-    CWorld::LoadMap(map->m_directory, &position, mapId, 1);
-    AsyncFileReadProgressCallback(NULL, NULL);
-    World::SetLoadProgressCallback(NULL, NULL);
-
-    s_botCheckStartTime = OsGetAsyncTimeMs();
-    s_botCheckDelay = 1200;
-    s_botCheckEnabled = 1;
-    BattlenetUI_EnterRealm();
-    s_gameInitialized = 1;
-}
-
-// OFFSET: #0x00405DD0
-static void OpenArchives() {
-    int32_t availability = CheckDataFilesExist() + 1;
-
-    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
-        s_archives[i].m_opened = false;
-    }
-
-    const char* locale = (availability & 2) ? CVar::Lookup("locale")->m_stringValue.m_str : "----";
-
-    PatchFiles patches(locale, false);
-
-    int32_t priority = 64;
-    uint32_t slot = 0;
-    s_archiveHandles.SetCount(64);
-
-    for (uint32_t i = patches.m_files.Count(); i; i--) {
-        if (SFile::OpenArchive(patches.m_files[i - 1], priority, 0xC00, &s_archiveHandles[slot])) {
-            if (SStrStrI(patches.m_files[i - 1], "Start.MPQ")) {
-                s_startArchivePriority = priority;
-            }
-
-            slot++;
-            priority++;
-        }
-    }
-
-    uint32_t patchCount = slot;
-
-    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
-        if (s_archives[i].m_unk04 == 3 && OpenArchiveWithRetry(s_archives[i].m_name, priority, slot, locale)) {
-            slot++;
-            s_archives[i].m_opened = true;
-            priority++;
-        }
-    }
-
-    for (uint32_t patch = 0; patch < patchCount; patch++) {
-        SArchive* patchArchive = s_archiveHandles[patch];
-
-        for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
-            if (s_archives[i].m_unk04 != 3) {
-                continue;
-            }
-
-            if (!s_archives[i].m_opened && SStrCmpI(locale, "zhCN", STORM_MAX_STR) && SStrCmpI(locale, "enCN", STORM_MAX_STR) && SStrCmpI(locale, "zhTW", STORM_MAX_STR) && SStrCmpI(locale, "enTW", STORM_MAX_STR)) {
-                continue;
-            }
-
-            char path[256];
-            SStrCopy(path, s_archives[i].m_name, sizeof(path));
-            path[SStrLen(path) - 4] = '\0';
-
-            if (SFile::OpenPathAsArchive(patchArchive, path, priority, 0, &s_archiveHandles[slot])) {
-                slot++;
-                priority++;
-            }
-        }
-    }
-
-    s_numPatchArchives = slot;
-    int32_t basePriority = 63;
-    s_firstBaseArchive = slot;
-
-    for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
-        s_archiveHandles[slot] = NULL;
-
-        if (s_archives[i].m_unk04 == 3 || s_archives[i].m_unk04 == 4) {
-            slot++;
-            continue;
-        }
-
-        bool optional = s_archives[i].m_unk04 == 2;
-        bool available = (availability & s_archives[i].m_unk08) != 0;
-        bool allowed = !SFile::IsTrial() || s_archives[i].m_unk04 != 2;
-
-        if (allowed && available) {
-            if (!OpenArchiveWithRetry(s_archives[i].m_name, basePriority, slot, locale) && !optional) {
-                char path[260];
-                SStrPrintf(path, sizeof(path), "%s%s", s_dataDirectories[0], s_archives[i].m_name);
-
-                for (char* token = SStrStr(path, "****"); token; token = SStrStr(path, "****")) {
-                    memcpy(token, locale, 4);
-                }
-
-                const char* details = SFile::GetErrorDetails();
-                char errorText[256];
-                SErrGetErrorStr(SErrGetLastError(), errorText, sizeof(errorText));
-
-                if (s_streamingDiag & 1) {
-                    SErrDisplayAppFatal("Failed to read data from the network. Please check your Internet connection and try again.\n\nDebug Details:\n\n%s%sStorm Error Msg:%s", details, s_streamingError, errorText);
-                }
-
-                char message[256];
-                SStrPrintf(message, sizeof(message), "Failed to open archive %s.", s_archives[i].m_name);
-
-                char title[256];
-                SStrCopy(title, "Missing or corrupted data", STORM_MAX_STR);
-                OsGuiMessageBox(OsGuiGetWindow(2), 0, message, title);
-                StormExit(SErrGetLastError());
-            }
-        }
-
-        slot++;
-        basePriority--;
-        s_archives[i].m_opened = true;
-    }
-
-    if (SFile::IsTrial()) {
-        basePriority = 64;
-    }
-
-    if (SFile::IsStreamingMode()) {
-        for (uint32_t i = 0; i < sizeof(s_archives) / sizeof(s_archives[0]); i++) {
-            if (s_archives[i].m_unk04 == 4 && OpenArchiveWithRetry(s_archives[i].m_name, basePriority, slot, locale)) {
-                s_archives[i].m_opened = true;
-                slot++;
-            }
-        }
-    }
-
-    s_archiveHandles.SetCount(slot);
-
-    if (s_archiveHandles[s_firstBaseArchive + 16]) {
-        s_expansionLevel = 2;
-    } else {
-        s_expansionLevel = s_archiveHandles[s_firstBaseArchive + 15] != NULL;
-    }
-
-    void* profile = ProfileCreate();
-
-    if (ProfileReadFile(profile, "Wow.ini")) {
-        ProfileGetValue(profile, "WoW Config", "Region", &s_region, 0);
-
-        char language[16];
-        char country[16];
-
-        if (ProfileGetValue(profile, "WoW Config", "Language", language, sizeof(language), 0) && ProfileGetValue(profile, "WoW Config", "Country", country, sizeof(country), 0)) {
-            SStrPrintf(s_iniLocale, sizeof(s_iniLocale), "%s%s", language, country);
-
-            uint32_t code = 0;
-
-            for (uint32_t i = 0; i < 4 && s_iniLocale[i]; i++) {
-                code = (code << 8) + s_iniLocale[i];
-            }
-
-            SFile::s_locale = code;
-            bool isGB = SStrCmpI("enGB", s_iniLocale, STORM_MAX_STR) == 0;
-
-            for (int32_t i = 0; i < 9; i++) {
-                if (!SStrCmpI(s_iniLocale, s_iniLocaleNames[i], STORM_MAX_STR) || (isGB && !SStrCmpI("enUS", s_iniLocaleNames[i], STORM_MAX_STR))) {
-                    s_locale = i;
-
-                    switch (i) {
-                        case 1:
-                        case 2:
-                        case 4:
-                        case 5:
-                            FrameScript_SetPluralRule(PLURAL_RULE_1);
-                            break;
-
-                        case 8:
-                            FrameScript_SetPluralRule(PLURAL_RULE_2);
-                            break;
-
-                        default:
-                            FrameScript_SetPluralRule(PLURAL_RULE_0);
-                            break;
-                    }
-
-                    if (availability & 1) {
-                        CVar::Lookup("locale")->Set(s_iniLocale, true, false, false, true);
-                        locale = s_iniLocale;
-                    }
-
-                    break;
-                }
-            }
-        }
-    }
-
-    ProfileClose(profile);
-    ClientServices::InitLoginServerCVars();
-    LoadMopaqFileSigningData(locale);
-}
-// OFFSET: #0x004064A0
+// OFFSET: 0x00406A70
 int32_t ForEveryRunOnceWTF::AppendFileName(OS_FILE_DATA& data, void* param) {
-    TSGrowableArray<char*>* files = static_cast<TSGrowableArray<char*>*>(param);
-    char** slot = files->New();
-    *slot = SStrDupA(data.fileName, __FILE__, __LINE__);
-
+    static_cast<TSGrowableArray<char*>*>(param)->New(SStrDupA(data.fileName, __FILE__, __LINE__));
     return 0;
 }
 
-// OFFSET: #0x00406510
-void ClientDestroyGame(int32_t charSelect, int32_t resumeGlue, int32_t worldLogin) {
-    if (!s_gameInitialized) {
-        return;
-    }
-
-    s_botCheckEnabled = 0;
-    EventUnregister(EVENT_ID_IDLE, ClientIdle);
-    ClientServices::ClearMessageHandler(SMSG_NOTIFICATION);
-    ClientServices::ClearMessageHandler(SMSG_PLAYED_TIME);
-    ClientServices::ClearMessageHandler(SMSG_NEW_WORLD);
-    ClientServices::ClearMessageHandler(SMSG_TRANSFER_PENDING);
-    ClientServices::ClearMessageHandler(SMSG_TRANSFER_ABORTED);
-    ClientServices::ClearMessageHandler(SMSG_CHANNEL_NOTIFY);
-    ClientServices::ClearMessageHandler(SMSG_CHANNEL_LIST);
-    ClientServices::ClearMessageHandler(SMSG_LOGIN_VERIFY_WORLD);
-    ClientServices::ClearMessageHandler(SMSG_KICK_REASON);
-
-    if (StaticSingleton<CommandManager>::m_instance) {
-        delete StaticSingleton<CommandManager>::m_instance;
-        StaticSingleton<CommandManager>::m_instance = NULL;
-    }
-
-    Trade_C_Destroy();
-    FriendList::Destroy();
-    AreaListShutdown();
-    CGItem_C::Shutdown();
-    CGPlayer_C::Shutdown();
-    PlayerClientShutdown();
-    LootDestroy();
-    SpellTableDestroy();
-    CGUnit_C::Shutdown();
-    CGGameObject_C::Shutdown();
-    CGObject_C::Shutdown();
-    MovementDestroy();
-    LootRollShutdown();
-    EventUnregister(EVENT_ID_IDLE, MovementIdleMoveUnits);
-    Spell_C_StopTargeting();
-    ClntObjMgrDestroy();
-    CGUnit_C::PostShutdown();
-    SpellVisualsClear();
-    CEffect::Destroy();
-    CGWorldFrame::SetScreenEffect(0);
-
-    if (CGWorldFrame::s_currentWorldFrame) {
-        CGWorldFrame::s_currentWorldFrame->UnitClear();
-    }
-
-    World::UnloadMap();
-    WeaponTrailsShutdown();
-    PlayerNameShutdown();
-    WorldTextShutdown();
-    CGGameUI::ShutdownGame();
-    ClientDestroyGameTime();
-    SI3::ShutdownZoneSoundsHandler();
-    SI3::StopAllSounds();
-    SI3::FreeZoneIntros();
-    SI3::ClearSuppressorSounds();
-    ClntObjMgrDestroyShared();
-    AccountDataDestroy(false);
-    s_gameInitialized = 0;
-    LoadingScreenDisable();
-
-    if (s_clientTaxiBenchEnabled) {
-        s_clientTaxiBenchEnabled = 0;
-        s_clientTaxiBenchIsOnTaxi = 0;
-    }
-
-    BattlenetUI_LeaveRealm();
-
-    if (resumeGlue) {
-        CGlueMgr::Resume();
-
-        if (worldLogin) {
-            CGlueMgr::m_idleState = IDLE_WORLD_LOGIN;
-        }
-
-        CGlueMgr::SetScreen(charSelect ? "charselect" : "login");
-    }
-}
-
-// OFFSET: #0x004066D0
-int32_t DestroyEngineCallback(const void* data, void* param) {
-    RemoveConsoleDeviceDefaultCallback(SetDefaults);
-    ClientDestroyGame(0, 0, 0);
-    WowClientDestroy();
-    ClientServices::ClearMessageHandler(SMSG_TUTORIAL_FLAGS);
-    ClientServices::Destroy();
-    ShadowDestroy();
-    CWorld::Destroy();
-    ConsoleScreenDestroy();
-    ScrnDestroy();
-    M2Destroy();
-    ModelBlobDestroy();
-    TextureDestroy();
-    AsyncFileReadDestroy();
-    GxuLightShutdown();
-    ObjectAllocDestroy();
-    BaseDestroyContext();
-
-    return 1;
-}
-
-// OFFSET: #0x00406740
+// OFFSET: 0x00407090
 void ForEveryRunOnceWTF::Execute(int32_t (*callback)(const char*)) {
     char basePath[260];
     SFile::GetBasePath(basePath, sizeof(basePath));
 
-    char dir[260];
-    SStrPrintf(dir, sizeof(dir), "%sWTF\\", basePath);
-    OsFileList(dir, "RunOnce*.wtf", ForEveryRunOnceWTF::AppendFileName, &this->m_files, 1);
+    char directory[260];
+    SStrCopy(directory, "WTF\\", sizeof(directory));
+    OsFileList(directory, "RunOnce*.wtf", ForEveryRunOnceWTF::AppendFileName, &this->m_files, 1);
 
     uint32_t count = this->m_files.Count();
     qsort(this->m_files.Ptr(), count, sizeof(char*), ForEveryRunOnceWTF::FileNameCompare);
 
-    for (int32_t i = 0; i < static_cast<int32_t>(count); i++) {
+    for (uint32_t i = 0; i < count; i++) {
         callback(this->m_files[i]);
         SMemFree(this->m_files[i], __FILE__, __LINE__, 0);
     }
 }
 
-// OFFSET: #0x004067F0
+// OFFSET: 0x00407BA0
+static void AbortInitializeGlobal() {
+    CloseAllArchives();
+    DestroyArchivePreloads();
+    WoWReport::Shutdown();
+    PatchOnDemand::Cache::Shutdown();
+    BackgroundCache::ShutdownManager();
+    SFile::ShutdownStreaming();
+    ArchiveProgressDestroy();
+
+    {
+        ForEveryRunOnceWTF runOnce;
+        runOnce.Execute(CVar::Delete);
+    }
+
+    ConsoleDestroyClientCVar();
+    ConsoleDestroyClientCommand();
+    CStringManager::DestroyManager();
+}
+
+// OFFSET: 0x008C1630
+static const char* GetDefaultLocale() {
+    int32_t current = GetCurrentLocaleIndex();
+
+    if (g_hasIsoLocale[current]) {
+        return g_localeNames[current];
+    }
+
+    int32_t index;
+
+    for (index = 0; index < 15 && !g_hasIsoLocale[index]; index++) {
+    }
+
+    return g_localeNames[index == 15 ? current : index];
+}
+
+// OFFSET: 0x00407E10
 bool InitializeGlobal() {
     SCmdRegisterArgList(s_wowArgList, sizeof(s_wowArgList) / sizeof(s_wowArgList[0]));
     CmdLineProcess();
-    LoadMFIL("WoW.mfil");
-
-    if (s_unk_B2FA10 != 2) {
-        SetInstallPath();
-    }
-
-    bool firstRun = false;
-
-    if (SFile::IsTrial()) {
-        firstRun = !OsDirectoryExists("WTF/Account");
-    }
-
     ClientServices::LoadCDKey();
     ConsoleInitializeClientCommand();
-    ConsoleInitializeClientCVar("Config.wtf");
+
+    const char* config = CmdLineGetString(static_cast<CMDOPT>(CMD_CONFIG));
+
+    if (config && *config) {
+        ConsoleInitializeClientCVar(config);
+    } else {
+        ConsoleInitializeClientCVar("Config.wtf");
+    }
+
     CVar::ArchiveCodeRegisteredOnly();
 
     {
         ForEveryRunOnceWTF runOnce;
-        runOnce.Execute(static_cast<int32_t (*)(const char*)>(ConsoleLoadClientCVar));
+        runOnce.Execute(ConsoleLoadClientCVarAndSave);
     }
 
-    CVar::Register("dbCompress", "Database compression", 0, "-1", NULL, CATEGORY_DEFAULT, false, NULL, false);
-    CVar* locale = CVar::Register("locale", "Set the game locale", 0, "****", LocaleCallback, CATEGORY_DEFAULT, false, NULL, false);
-
-    if (!SStrCmp(locale->m_stringValue.m_str, "****", STORM_MAX_STR)) {
-        locale->Set("enUS", true, false, false, true);
-    }
-
+    CheckAvailableLocales();
+    CVar* locale = CVar::Register("locale", "Set the game locale", 0x800, GetDefaultLocale(), LocaleCallback, CATEGORY_DEFAULT, false, NULL, false);
     CVar::Register("useEnglishAudio", "override the locale and use English audio", 0, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
+    SetLocaleCode(locale->m_stringValue.m_str);
+    ClientServices::InitLoginServerCVars();
+    BackgroundCache::SetLocale(locale->m_stringValue.m_str);
+    LoadInstallLocation();
+
+    if (s_unk_B2FA10 != 2) {
+        UpdateInstallLocation();
+    }
+
+    SStrCopy(s_placeholderArchivePath, s_dataDirectory, sizeof(s_placeholderArchivePath));
+    SStrPack(s_placeholderArchivePath, "placeholderArchive.temp", sizeof(s_placeholderArchivePath));
+    FindArchivesToPreload();
+
+    if (!InitializeStreamingManifest()) {
+        DestroyArchivePreloads();
+
+        {
+            ForEveryRunOnceWTF runOnce;
+            runOnce.Execute(CVar::Delete);
+        }
+
+        ConsoleDestroyClientCVar();
+        ConsoleDestroyClientCommand();
+        CStringManager::DestroyManager();
+        return false;
+    }
+
+    PatchOnDemandInitialize();
+    CVar* imitateTrial = CVar::Lookup("imitateTrial");
+
+    if (!imitateTrial || !imitateTrial->m_intValue) {
+        CVar* accountType = CVar::Lookup("accounttype");
+        SFile::SetTrial(accountType && !_stricmp(accountType->m_stringValue.m_str, "RT"));
+    }
 
     StartupReport();
 
-    char localeName[5];
-    SStrCopy(localeName, locale->m_stringValue.m_str, sizeof(localeName));
-    CheckAvailableLocales(localeName);
-    locale->Set(localeName, true, false, false, true);
-
-    char dataPath[260];
-    SStrPrintf(dataPath, sizeof(dataPath), "%s%s", s_dataDirectories[0], locale->m_stringValue.m_str);
-    SFile::SetDataPathAlternate(dataPath);
+    char alternatePath[260];
+    SStrCopy(alternatePath, s_dataDirectory, sizeof(alternatePath));
+    SStrPack(alternatePath, locale->m_stringValue.m_str, sizeof(alternatePath));
+    SFile::SetDataPathAlternate(alternatePath);
     SFile::RebuildHash();
-    OpenArchives();
+    SFile::InitializeRepair(s_localeCode);
+    ArchiveProgressInitialize(OsFileSupportsSparse());
 
+    if (!PreloadArchives()) {
+        ArchiveProgressDestroy();
+        PatchOnDemand::Cache::Shutdown();
+        BackgroundCache::ShutdownManager();
+        SFile::ShutdownStreaming();
+        DestroyArchivePreloads();
+        ConsoleDestroyClientCVar();
+        ConsoleDestroyClientCommand();
+        CStringManager::DestroyManager();
+        return false;
+    }
+
+    if (!OpenArchives()) {
+        AbortInitializeGlobal();
+        return false;
+    }
+
+    BGLoadingThrottleCVarInitialize();
+
+    if (s_startBGLoadThread) {
+        BGLoading::StartBGLoadThread();
+        s_startBGLoadThread = 0;
+    }
+
+    g_startup_StringsDB.Load(&Startup_StringsRec::s_meta);
+
+    if (!(OsGetProcessorFeatures() & 0x4)) {
+        Startup_StringsRec* titleRec = g_startup_StringsDB.GetRecord(1);
+        const char* title = titleRec ? titleRec->m_message : "World of Warcraft";
+        Startup_StringsRec* textRec = g_startup_StringsDB.GetRecord(13);
+        const char* text = textRec ? textRec->m_message : "World of Warcraft requires SSE (Streaming SIMD Extensions) to run.  Please run on a computer that supports SSE.";
+        OsGuiMessageBox(NULL, 1, text, title);
+        BGLoading::StopBGLoadThread();
+        PatchOnDemand::Cache::Shutdown();
+        BackgroundCache::ShutdownManager();
+        ConsoleDestroyClientCVar();
+        ConsoleDestroyClientCommand();
+        BaseDestroyGlobal();
+        CloseAllArchives();
+        g_startup_StringsDB.Unload(&Startup_StringsRec::s_meta);
+        return false;
+    }
+
+    CVar::Register("simd", "Enable SIMD features (e.g. SSE)", 0, "255", SimdCallback, CATEGORY_DEFAULT, false, NULL, false);
     CVar* affinity = CVar::Register("processAffinityMask", "Sets which core(s) WoW may execute on - changes require restart to take effect", 2, "0", ProcessAffinityMaskCallback, CATEGORY_DEBUG, false, NULL, false);
     CVar* videoOptionsVersion = CVar::Lookup("videoOptionsVersion");
 
@@ -1700,11 +2269,10 @@ bool InitializeGlobal() {
     }
 
     BaseInitializeGlobal();
-    EventInitialize(1, 0);
 
     CVar* timingTestError = CVar::Register("timingTestError", "Error reported by the timing validation system", 6, "0", NULL, CATEGORY_DEFAULT, false, NULL, false);
     CVar* timingMethod = CVar::Register("timingMethod", "Desired method for game timing", 2, "0", TimingMethodCallback, CATEGORY_DEFAULT, false, timingTestError, false);
-    OsTimeStartup(static_cast<OsTimeManager::TimingMethod>(timingMethod->m_intValue));
+    OsTimeManagerCreate(static_cast<OsTimeManager::TimingMethod>(timingMethod->m_intValue));
     ConsoleCommandRegister("timingInfo", CCommand_TimingInfo, CATEGORY_DEBUG, NULL, NULL);
 
     s_timeTestError = OsTimeGetTestError();
@@ -1719,18 +2287,146 @@ bool InitializeGlobal() {
         ConsolePrintf("Timing test error: %d", timingTestError);
     }
 
-    g_startup_StringsDB.Load(&Startup_StringsRec::s_meta);
-
-    Startup_StringsRec* title = g_startup_StringsDB.GetRecord(1);
-    char windowTitle[260];
-    SStrCopy(windowTitle, title ? title->m_message : "World of Warcraft", STORM_MAX_STR);
-    ConsoleDeviceInitialize(windowTitle, 1, 1);
-
-    OsIMEInitialize();
+    EventInitialize(1, 0);
     g_rndSeed.SetSeed(OsGetAsyncTimeMs());
     g_clientEventContext = EventCreateContextEx(1, InitializeEngineCallback, DestroyEngineCallback, 0, 0);
 
     return true;
+}
+
+// OFFSET: 0x00401790/0x140003F00
+static int32_t PollNet(const void* data, void* param) {
+    RealmConnection::PollNet(NULL, NULL);
+    BackgroundCache::Pump();
+    BGLoading::UpdateLauncherNotification();
+
+    if (AsyncFileReadHasStreamingErrorOccurred() | World::GetLoadFailed()) {
+        if (ClientServices::Connection() && ClientServices::Connection()->unk_2F3C) {
+            ClientServices::Connection()->Disconnect(static_cast<DISCONNECT_REASON>(16));
+        }
+
+        AsyncFileReadResetStreamingError();
+        World::ClearLoadFailed();
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00404180/0x140004010
+static void InitializeClient() {
+    SysMsgInitialize();
+    WowSysMessageOutput::Initialize();
+    ConsoleCommandRegister("reloadUI", CCommand_ReloadUI, CATEGORY_GRAPHICS, NULL, NULL);
+    ConsoleCommandRegister("perf", CCommand_Perf, CATEGORY_DEBUG, NULL, NULL);
+    ClientRegisterConsoleCommands();
+    ClientDBInitialize();
+    LoadingScreenInitialize();
+    FrameScript_Initialize(0);
+    SI3::Init(0);
+    FrameXML_RegisterDefault();
+    GlueScriptEventsInitialize();
+    ScriptEventsInitialize();
+    ClientServices::Initialize();
+    ClientServices::SetMessageHandler(SMSG_TUTORIAL_FLAGS, CGTutorial::OnTutorialFlags, NULL);
+
+    CVar* voiceChat = CVar::Lookup("EnableVoiceChat");
+
+    if (voiceChat && voiceChat->m_intValue) {
+        ComSatClient_Init();
+    }
+
+    DBCache_RegisterHandlers();
+    DBCache_Initialize();
+    FrameTime::Initialize(0);
+    FFX::InitCVars();
+    World::Initialize();
+    CCharacterComponent::Initialize();
+    GxuLightInitialize();
+    GxuLightSetGridSize(16.665001f);
+    OsInputSetJoystickPollFcn(OsPollJoysticks);
+    InputControlInitialize();
+    CGlueMgr::Initialize();
+
+    if (GetConsoleMessage()) {
+        CGlueMgr::AddChangedOptionWarning(GetConsoleMessage());
+        SetConsoleMessage(NULL);
+    }
+
+    int32_t intro = g_playIntroMovie->m_intValue;
+
+    if (intro > 3) {
+        CGlueMgr::SetScreen(0);
+    } else {
+        g_playIntroMovie->Set(intro + 1, true, false, false, true);
+        CGlueMgr::SetScreen(5);
+    }
+
+    CGlueMgr::m_pendingTimerAlert = s_timeTestError;
+    EventRegister(EVENT_ID_POLL, PollNet);
+}
+
+// OFFSET: 0x00407600/0x1400098A0
+int32_t InitializeEngineCallback(const void* data, void* param) {
+    BaseInitializeContext();
+    AsyncFileReadRegisterCVars();
+    ArchiveProgressSetStage(2);
+
+    if (!PreloadList::DownloadAndWait("TrialLists\\StartClient.lst", 1, 0)) {
+        EventUnregister(EVENT_ID_DESTROY, DestroyEngineCallback);
+        AsyncFileReadDestroy();
+        ClientPostClose(0);
+        ObjectAllocDestroy();
+        BaseDestroyContext();
+        return 0;
+    }
+
+    ArchiveProgressDestroy();
+
+    Startup_StringsRec* titleRec = g_startup_StringsDB.GetRecord(1);
+    char title[260];
+    SStrCopy(title, titleRec ? titleRec->m_message : "World of Warcraft", sizeof(title));
+
+    ConsoleAccessSetEnabled(CmdLineGetBool(static_cast<CMDOPT>(CMD_CONSOLE)) == 1);
+
+    if (!ConsoleDeviceInitialize(title, 1, 1)) {
+        EventUnregister(EVENT_ID_DESTROY, DestroyEngineCallback);
+        AsyncFileReadDestroy();
+        ClientPostClose(0);
+        ObjectAllocDestroy();
+        BaseDestroyContext();
+        return 0;
+    }
+
+    DefaultShaders::Initialize();
+    OsIMEInitialize();
+    s_engineInitialized = 1;
+    s_startWorldCommonList = PreloadList::StartDownload("TrialLists\\StartWorldCommon.lst", 1);
+    TextureInitialize();
+    ModelBlobLoad("world\\model.blob");
+
+    if (SFile::IsStreamingMode()) {
+        TextureLoadBlob("world\\liquid.tex");
+    }
+
+    ScrnInitialize(0);
+    ConsoleScreenInitialize(NULL);
+    s_cvarUIFaster = CVar::Register("UIFaster", "UI acceleration option", 0, "3", UIFasterCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvTextureCacheSize = CVar::Register("textureCacheSize", "Texture cache size in bytes", 1, "32", TextureCacheSizeCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    TextureSetCacheSize(s_cvTextureCacheSize->m_intValue << 20);
+
+    uint32_t m2Flags = GetM2CvarFlags();
+    AddConsoleDeviceDefaultCallback(SetDefaults);
+
+    if (ConsoleDeviceHardwareChanged()) {
+        for (uint32_t page = OPTION_PAGE_0; page < NUM_OPTION_PAGES; page++) {
+            SetDefaults(static_cast<OPTION_PAGE>(page));
+        }
+    }
+
+    M2Initialize(m2Flags, 0);
+    InitializeClient();
+
+    return 1;
 }
 
 // OFFSET: #0x00406B70
@@ -1761,7 +2457,7 @@ void BeginCloseGame() {
     }
 }
 
-// OFFSET: #0x00406C70
+// OFFSET: 0x00408340/0x14000A610
 int32_t CommonMain() {
     OsGuiSetGxDevWindowFcn(GxDevWindow);
     StormInitialize();
@@ -1783,7 +2479,7 @@ int32_t CommonMain() {
         SRegSaveValue("World of Warcraft\\Client", "SendErrorLogs", 0, 1);
     }
 
-    SErrSetLogTitleString("World of WarCraft (build 12340)");
+    SErrSetLogTitleString("World of WarCraft: Retail Build (build 15595)");
     SErrSetLogCallback(WowLogHeader);
 
     if (sendErrorLogs) {
@@ -1795,24 +2491,11 @@ int32_t CommonMain() {
         BeginCloseGame();
     }
 
+    SMemFree(s_mfilDownloadErrors, __FILE__, __LINE__, 0);
+    s_mfilDownloadErrors = NULL;
     StormDestroy();
 
-    if (SFile::IsTrial()) {
-        ShutdownOggDecompression();
-    }
-
-    Blizzard::Time::GetElapsedSinceStart(false);
-
     return 0;
-}
-
-// OFFSET: #0x00404A80
-void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param) {
-    if (s_archiveHandles.m_data[s_firstBaseArchive + 1]) {
-        ListArchives(prefix, 1, callback, param);
-    } else {
-        ListArchives(prefix, 19, callback, param);
-    }
 }
 
 // OFFSET: #0x00406EF0

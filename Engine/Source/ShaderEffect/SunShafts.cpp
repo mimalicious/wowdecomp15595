@@ -38,6 +38,11 @@ static CTexture* s_tex[2];
 // STATIC: 0x00F803C8/0x140E78240
 static uint32_t s_mode;
 
+// OFFSET: 0x00A2ECF0/0x1407D86D0
+int32_t SunShafts::ModeNeedsDepthCache(uint32_t mode) {
+    return mode > 0;
+}
+
 // PROVEN: 2201f9d8 IDENTICAL/IDENTICAL
 // OFFSET: 0x00A2ED00/0x1407D86E0
 int32_t SunShafts::IsEnabled() {

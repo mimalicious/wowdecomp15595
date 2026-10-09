@@ -68,6 +68,7 @@ void LoadingScreenSetScreenTipForRaceData();
 void LoadingScreenSetTip(const char* tip);
 void LoadingScreenSetTransparent(bool transparent);
 void LoadingScreenShutdown();
+void LoadingScreenUpdateProgress(float progress, int32_t a2);
 void LoadingScreenSpellUpdateProgress(float progress);
 void LoadingScreenWorldCallback(float progress, void* param);
 void LoadingScreenXMLCallback(float progress, void* param);

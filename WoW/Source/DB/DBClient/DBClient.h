@@ -691,6 +691,7 @@ int32_t LocaleIdToIndex(uint32_t locale);
 int32_t LocaleIndexToDB2Locale(int32_t index);
 int32_t LocaleNameToDB2Locale(const char* locale);
 int32_t GetCurrentLocaleIndex();
+int32_t GetCurrentDB2Locale();
 void DBCache_ClearTemporaryCaches();
 const char* ClientDBStringLookup(uint32_t lookup);
 

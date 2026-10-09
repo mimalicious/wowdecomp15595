@@ -98,13 +98,9 @@ uint32_t CWardenKey::Hash() const {
     return (this->m_key[12] << 24 | this->m_key[13] << 16 | this->m_key[14] << 8 | this->m_key[15]) & 0x7FFFFFFF;
 }
 
-// OFFSET: #0x00667EF0
+// OFFSET: 0x0049B380
 void GetCacheDirectory(char* path) {
-    if (CheckDataFilesExist()) {
-        SStrPrintf(path, 260, "Cache/%s/%s", "WDB", s_localeCode);
-        OsCreateDirectory(path, 1);
-    } else {
-        SStrCopy(path, "WDB", 260);
-        OsCreateDirectory(path, 1);
-    }
+    SStrCopy(path, "Cache/WDB/", 260);
+    SStrPack(path, s_localeCode, 260);
+    OsCreateDirectory(path, 1);
 }

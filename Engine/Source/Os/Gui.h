@@ -155,6 +155,7 @@ void OsGuiSetGxDevWindowFcn(void* (*fcn)());
 int32_t OsGuiIsModifierKeyDown(int32_t key);
 int32_t OsGuiProcessMessage(void* message);
 int32_t OsGuiMessageBox(void* parentWindow, int32_t style, const char* message, const char* title);
+int32_t OsGuiMessageBoxW(void* parentWindow, int32_t style, const uint16_t* message, const uint16_t* title);
 void OsGuiSetWindowTitle(void* window, const char* title);
 
 #endif

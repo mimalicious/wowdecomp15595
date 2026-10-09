@@ -30,7 +30,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/Storm/Source/MD5.h"
 
-// STATIC: %0x00CBEA80
+// STATIC: 0x00DBE200
 uint32_t SFile::s_locale;
 
 // STATIC: %0x00D737C8

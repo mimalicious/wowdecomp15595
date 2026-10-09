@@ -23,6 +23,9 @@
 #include "Engine/Source/Tempest/CImVector.h"
 #include "Engine/Source/Tempest/CRect.h"
 #include "WoW/Source/ConsoleDevice/ConsoleDevice.h"
+#include "Engine/Source/BlizzardCore/BGLoading-Core.h"
+#include "Engine/Source/BlizzardCore/BackgroundCache.h"
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
 // STATIC: #0x00ADBAB4
 static RECTF s_rect = { 0.0f, 1.0f, 1.0f, 1.0f };
@@ -146,6 +149,9 @@ float s_consoleHeight;
 
 // STATIC: #0x00CA19B4
 static SCritSect s_critsect;
+
+// STATIC: 0x00DD8A98
+static CVar* s_bgLoadThrottleVar;
 
 // OFFSET: #0x00763680
 void GenerateNodeString(CONSOLELINE* node) {
@@ -1293,4 +1299,20 @@ void ConsolePostClose() {
 // OFFSET: %0x006184D0
 int32_t ConsoleGetActive() {
     return s_active;
+}
+
+// OFFSET: 0x006108E0
+static bool BGLoadThrottleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
+    BGLoading::SetBandwidthThrottlePercentage(SStrToInt(value));
+    return true;
+}
+
+// OFFSET: 0x00610900/0x14029AE10
+void BGLoadingThrottleCVarInitialize() {
+    s_bgLoadThrottleVar = CVar::Register("BGLoadThrottle", "Set the maximum percentage of available bandwidth for background streaming (0-100)", 0, "33", BGLoadThrottleCallback, CATEGORY_NET, false, NULL, false);
+}
+
+// OFFSET: 0x00610930
+void PatchOnDemandInitialize() {
+    PatchOnDemand::Cache::Init(50000000);
 }

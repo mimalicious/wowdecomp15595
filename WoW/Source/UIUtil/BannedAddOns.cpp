@@ -104,11 +104,8 @@ static bool WriteCacheRecord(HOSFILE file, const BannedAddOnCache* record, uint3
 static int32_t SaveCache() {
     char directory[260];
 
-    if (CheckDataFilesExist()) {
-        SStrPrintf(directory, sizeof(directory), "Cache/%s/%s", "WDB", s_localeCode);
-    } else {
-        SStrCopy(directory, "WDB", sizeof(directory));
-    }
+    SStrCopy(directory, "Cache/WDB/", sizeof(directory));
+    SStrPack(directory, s_localeCode, sizeof(directory));
 
     HOSFILE file = OpenCacheFile(directory, "baddons.wcf", 1);
 
@@ -269,11 +266,8 @@ static void LoadDatabase() {
 static int32_t LoadCache() {
     char directory[260];
 
-    if (CheckDataFilesExist()) {
-        SStrPrintf(directory, sizeof(directory), "Cache/%s/%s", "WDB", s_localeCode);
-    } else {
-        SStrCopy(directory, "WDB", sizeof(directory));
-    }
+    SStrCopy(directory, "Cache/WDB/", sizeof(directory));
+    SStrPack(directory, s_localeCode, sizeof(directory));
 
     char path[260];
     SStrCopy(path, directory, sizeof(path));

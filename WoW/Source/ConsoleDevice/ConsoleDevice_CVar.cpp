@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include "ConsoleDevice.h"
+#include "Engine/Source/Base/CmdLine.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/ConsoleBase/IConsole.h"
 #include "Engine/Source/Gx/CGxDevice/CGxDevice.h"
@@ -11,153 +12,118 @@
 #include "Engine/Source/Os/Input.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Client.h"
-#include "WoW/Source/Hardware.h"
 
-// STATIC: #0x00CABA98
-static CVar* s_cvGxStereoEnabled;
+// STATIC: 0x00D084EC
+const char* s_colorBitsNames[8] = { "16", "24", "24", "30", "0", "0", "0", "0" };
 
-// STATIC: #0x00CABA9C
-static CVar* s_cvGxRefresh;
+// STATIC: 0x00D0850C
+const char* s_depthBitsNames[8] = { "0", "0", "0", "0", "16", "24", "24", "32" };
 
-// STATIC: #0x00CABAA0
+// STATIC: 0x00D0852C
+const char* s_apiNames[4] = { "OpenGL", "D3D9", "D3D11", "GLL" };
+
+// STATIC: 0x00E288C0
+CVar* s_cvGxStereoEnabled;
+
+// STATIC: 0x00E288C8
+CVar* s_cvGxRefresh;
+
+// STATIC: 0x00E288CC
 CVar* s_cvGxMaximize;
 
-// STATIC: #0x00CABAA4
-static CVar* s_cvGxMultisample;
+// STATIC: 0x00E288D0
+CVar* s_cvGxMultisample;
 
-// STATIC: #0x00CABAA8
-static CVar* s_cvGxCursor;
+// STATIC: 0x00E288D4
+CVar* s_cvGxCursor;
 
-// STATIC: #0x00CABAAC
-static CVar* s_cvGxStereoSeparation;
+// STATIC: 0x00E288D8
+CVar* s_cvGxStereoSeparation;
 
-// STATIC: #0x00CABAB0
-static CVar* s_cvGxMultisampleQuality;
+// STATIC: 0x00E288DC
+CVar* s_cvGxMultisampleQuality;
 
-// STATIC: #0x00CABAB4
-static CVar* s_cvGxResolution;
+// STATIC: 0x00E288E0
+CVar* s_cvGxResolution;
 
-// STATIC: #0x00CABAB8
+// STATIC: 0x00E288E4
 CVar* s_cvHwDetect;
 
-// STATIC: #0x00CABABC
-static CVar* s_cvGxOverride;
+// STATIC: 0x00E288E8
+CVar* s_cvGraphicsQuality;
 
-// STATIC: #0x00CABAC0
+// STATIC: 0x00E288EC
+CVar* s_cvGxOverride;
+
+// STATIC: 0x00E288F0
 CVar* s_cvGxFixLag;
 
-// STATIC: #0x00CABAEC
-static CVar* s_cvGxVSync;
+// STATIC: 0x00E2891C
+CVar* s_cvGxVSync;
 
-// STATIC: #0x00CABB30
+// STATIC: 0x00E28920
+CVar* s_cvGxMonitor;
+
+// STATIC: 0x00E28924
 CVar* s_cvVideoOptionsVersion;
 
-// STATIC: #0x00CABB34
-static CVar* s_cvGxStereoConvergence;
+// STATIC: 0x00E28928
+CVar* s_cvGxStereoConvergence;
 
-// STATIC: #0x00CABB70
-static CVar* s_cvGxTripleBuffer;
+// STATIC: 0x00E28958
+CVar* s_cvGxTripleBuffer;
 
-// STATIC: #0x00CABB74
-static CVar* s_cvGxDepthBits;
+// STATIC: 0x00E2895C
+CVar* s_cvGxDepthBits;
 
-// STATIC: #0x00CABB78
-static CVar* s_cvGxColorBits;
+// STATIC: 0x00E28960
+CVar* s_cvGxColorBits;
 
-// STATIC: #0x00CABBA0
-static CVar* s_cvGxApi;
+// STATIC: 0x00E28988
+CVar* s_cvGxApi;
 
-// STATIC: #0x00CABBA4
-static CVar* s_cvGxAspect;
+// STATIC: 0x00E2898C
+CVar* s_cvGxAspect;
 
-// STATIC: #0x00CABBA8
+// STATIC: 0x00E28994
 CVar* s_cvFixedFunction;
 
-// STATIC: #0x00CABBAC
-static CVar* s_cvWidescreen;
-
-// STATIC: #0x00CABBB0
+// STATIC: 0x00E28998
 CVar* s_cvGxWindow;
 
-// STATIC: #0x00CABBB4
-static CVar* s_cvWindowResizeLock;
+// STATIC: 0x00E2899C
+CVar* s_cvWindowResizeLock;
 
-// OFFSET: #0x00769240
-static bool CVGxColorBitsCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    switch (SStrToInt(value)) {
-        case 16:
-            s_requestedFormat.m_colorFormat = CGxFormat::Fmt_Rgb565;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        case 24:
-            s_requestedFormat.m_colorFormat = CGxFormat::Fmt_ArgbX888;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        case 30:
-            s_requestedFormat.m_colorFormat = CGxFormat::Fmt_Argb2101010;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        default:
-            ConsoleWrite("Color bits must be 16, 24, or 30", DEFAULT_COLOR);
-            return false;
-    }
-}
-
-// OFFSET: #0x007692D0
-static bool CVGxDepthBitsCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    switch (SStrToInt(value)) {
-        case 16:
-            s_requestedFormat.m_depthFormat = CGxFormat::Fmt_Ds160;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        case 24:
-            s_requestedFormat.m_depthFormat = CGxFormat::Fmt_Ds24X;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        case 32:
-            s_requestedFormat.m_depthFormat = CGxFormat::Fmt_Ds320;
-            ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-            return true;
-
-        default:
-            ConsoleWrite("Depth bits must be 16, 24, or 32", DEFAULT_COLOR);
-            return false;
-    }
-}
-
-// OFFSET: #0x00769360
-static bool CVGxTripleBufferCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    uint32_t tripleBuffer = SStrToInt(value);
-
-    if (tripleBuffer >= 2) {
-        ConsoleWrite("TripleBuffer must be 0 or 1", DEFAULT_COLOR);
-        return false;
-    }
-
-    s_requestedFormat.m_backBufferCount = (tripleBuffer != 0) + 1;
+// OFFSET: 0x006352D0/0x1402CB6D0
+static bool CVGxRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-
     return true;
 }
 
-// OFFSET: #0x007693B0
+// OFFSET: 0x006352F0/0x1402CB6F0
+static bool CVClientRestartPendingCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
+    ConsoleWrite("set pending client restart", DEFAULT_COLOR);
+    return true;
+}
+
+// OFFSET: 0x00635310/0x1402CB710
 static bool CVGxApiCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    for (int32_t api = GxApi_OpenGl; api < GxApis_Last; api++) {
-        if (GxApiSupported(static_cast<EGxApi>(api)) && !SStrCmpI(value, g_gxApiNames[api], STORM_MAX_STR)) {
-            ConsoleWrite("GxApi set pending gxRestart", DEFAULT_COLOR);
+    for (uint32_t api = GxApi_OpenGl; api < 4; api++) {
+        if (GxApiSupported(static_cast<EGxApi>(api)) && !_stricmp(value, s_apiNames[api])) {
+            ConsoleWrite("GxApi set pending client restart", DEFAULT_COLOR);
             return true;
         }
+    }
+
+    if (!_stricmp(value, "d3d9ex")) {
+        ConsoleWrite("GxApi set pending client restart", DEFAULT_COLOR);
+        return true;
     }
 
     char message[1024] = "unsupported api, must be one of ";
     bool first = true;
 
-    for (int32_t api = GxApi_OpenGl; api < GxApis_Last; api++) {
+    for (uint32_t api = GxApi_OpenGl; api < 4; api++) {
         if (!GxApiSupported(static_cast<EGxApi>(api))) {
             continue;
         }
@@ -167,7 +133,7 @@ static bool CVGxApiCallback(CVar* var, const char* oldValue, const char* value, 
         }
 
         strcat(message, "'");
-        strcat(message, g_gxApiNames[api]);
+        strcat(message, s_apiNames[api]);
         strcat(message, "'");
         first = false;
     }
@@ -177,116 +143,26 @@ static bool CVGxApiCallback(CVar* var, const char* oldValue, const char* value, 
     return false;
 }
 
-// OFFSET: #0x00769520
-static bool CVGxVSyncCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_vsync = SStrToInt(value);
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x00769550
-static bool CVGxWindowCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_window = SStrToInt(value) != 0;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x00769580
-static bool CVGxAspectCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_aspect = SStrToInt(value) != 0;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x007695B0
-static bool CVGxMaximizeCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_maximize = SStrToInt(value) != 0;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x007695E0
-static bool CVGxCursorCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_hwCursor = SStrToInt(value) != 0;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x00769610
-static bool CVGxMultisampleCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    int32_t multisample = SStrToInt(value);
-
-    if (multisample <= 1) {
-        multisample = 1;
-    } else if (multisample >= 16) {
-        multisample = 16;
-    }
-
-    s_requestedFormat.m_multisampleCount = multisample;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-
-    return true;
-}
-
-// OFFSET: #0x00769650
-static bool CVGxMultisampleQualityCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    float quality = SStrToFloat(value);
-
-    if (quality < 0.0f) {
-        quality = 0.0f;
-    } else if (quality >= 1.0f) {
-        quality = 1.0f;
-    }
-
-    s_requestedFormat.m_multisampleQuality = quality;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-
-    return true;
-}
-
-// OFFSET: #0x007696A0
-static bool CVGxFixLagCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_fixLag = SStrToInt(value) != 0;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: %0x0061E950
+// OFFSET: 0x00635530/0x1402CB9A0
 static bool CVGxOverrideCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     ConsoleGxOverride(value);
     return true;
 }
 
-// OFFSET: %0x0061E9D0
-static bool CVGxWindowResizeLockCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
+// OFFSET: 0x00635550/0x1402CB9C0
+static bool CVWindowResizeLockCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     OsInputSetWindowResizeLock(SStrToInt(value));
     return true;
 }
 
-// OFFSET: #0x007698B0
-bool UpdateGxCVars() {
-    s_cvGxColorBits->Update();
-    s_cvGxDepthBits->Update();
-    s_cvGxWindow->Update();
-    s_cvGxResolution->Update();
-    s_cvGxRefresh->Update();
-    s_cvGxTripleBuffer->Update();
-    s_cvGxApi->Update();
-    s_cvGxVSync->Update();
-    s_cvGxAspect->Update();
-    s_cvGxMaximize->Update();
-    s_cvGxCursor->Update();
-    s_cvGxMultisample->Update();
-    s_cvGxMultisampleQuality->Update();
-    return s_cvGxFixLag->Update();
-}
-
-// OFFSET: #0x00769950
-bool SetGxCVars(const CGxFormat& format) {
+// OFFSET: 0x00635570/0x1402CB9E0
+void SetGxCVars(const CGxFormat& format) {
+    EGxApi api = GxGetRequestedApi();
     char value[1024];
 
-    s_cvGxColorBits->Set(s_formatToInt[format.m_colorFormat], true, false, false, true);
-    s_cvGxDepthBits->Set(s_formatToInt[format.m_depthFormat], true, false, false, true);
+    s_cvGxColorBits->Set(s_colorBitsNames[format.m_colorFormat], true, false, false, true);
+    s_cvGxDepthBits->Set(s_depthBitsNames[format.m_depthFormat], true, false, false, true);
+    s_cvGxApi->Set(s_apiNames[api], true, false, false, true);
 
     SStrPrintf(value, sizeof(value), "%d", format.m_window);
     s_cvGxWindow->Set(value, true, false, false, true);
@@ -294,10 +170,13 @@ bool SetGxCVars(const CGxFormat& format) {
     SStrPrintf(value, sizeof(value), "%dx%d", format.m_size.x, format.m_size.y);
     s_cvGxResolution->Set(value, true, false, false, true);
 
-    SStrPrintf(value, sizeof(value), "%d", format.m_refreshRate);
+    SStrPrintf(value, sizeof(value), "%d/%d", format.m_refreshRate, format.m_refreshRateDenom);
     s_cvGxRefresh->Set(value, true, false, false, true);
 
     s_cvGxTripleBuffer->Set(format.m_backBufferCount > 1 ? "1" : "0", true, false, false, true);
+
+    SStrPrintf(value, sizeof(value), "%d", format.m_monitor);
+    s_cvGxMonitor->Set(value, true, false, false, true);
 
     SStrPrintf(value, sizeof(value), "%d", format.m_vsync);
     s_cvGxVSync->Set(value, true, false, false, true);
@@ -319,148 +198,24 @@ bool SetGxCVars(const CGxFormat& format) {
 
     SStrPrintf(value, sizeof(value), "%d", format.m_fixLag);
     s_cvGxFixLag->Set(value, true, false, false, true);
-
-    return UpdateGxCVars();
 }
 
-// OFFSET: #0x00769C00
-static bool CVGxStereoEnabledCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    s_requestedFormat.m_stereoEnabled = SStrToInt(value) == 1;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-    return true;
-}
-
-// OFFSET: #0x00769C30
+// OFFSET: 0x00635870/0x1402CBD70
 static bool CVGxStereoConvergenceCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     g_theGxDevicePtr->StereoSetConvergence(SStrToFloat(value));
     return true;
 }
 
-// OFFSET: #0x00769C60
+// OFFSET: 0x006358A0/0x1402CBDA0
 static bool CVGxStereoSeparationCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
     g_theGxDevicePtr->StereoSetSeparation(SStrToFloat(value));
     return true;
 }
 
-// OFFSET: #0x0076A220
-static bool CVGxResolutionCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    int32_t width = -1;
-    int32_t height = -1;
-    char separator;
-    sscanf(value, "%d%c%d", &width, &separator, &height);
-
-    if (s_requestedFormat.m_window) {
-        s_requestedFormat.m_size.x = width;
-        s_requestedFormat.m_size.y = height;
-        ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-        return true;
-    }
-
-    TSGrowableArray<C2iVector> resolutions;
-    C2iVector resolution;
-
-    if (s_cvWidescreen->m_intValue) {
-        TSGrowableArray<CGxMonitorMode> modes;
-        GxAdapterMonitorModes(s_requestedFormat.m_monitor, modes);
-
-        C2iVector last = { 0, 0 };
-
-        for (uint32_t i = 0; i < modes.Count(); i++) {
-            const C2iVector& size = modes[i].m_size;
-
-            if (static_cast<float>(size.x) / size.y >= 1.248f && size.x >= 640 && size.y >= 480 && (size.x != last.x || size.y != last.y)) {
-                last = size;
-                resolutions.New(last);
-            }
-        }
-    }
-
-    if (!resolutions.Count()) {
-        resolution.x = 640;
-        resolution.y = 480;
-        resolutions.New(resolution);
-        resolution.x = 800;
-        resolution.y = 600;
-        resolutions.New(resolution);
-        resolution.x = 1024;
-        resolution.y = 768;
-        resolutions.New(resolution);
-        resolution.x = 1152;
-        resolution.y = 864;
-        resolutions.New(resolution);
-        resolution.x = 1280;
-        resolution.y = 960;
-        resolutions.New(resolution);
-        resolution.x = 1280;
-        resolution.y = 1024;
-        resolutions.New(resolution);
-        resolution.x = 1600;
-        resolution.y = 1200;
-        resolutions.New(resolution);
-    }
-
-    uint32_t i;
-
-    for (i = 0; i < resolutions.Count(); i++) {
-        if (width == resolutions[i].x && height == resolutions[i].y) {
-            break;
-        }
-    }
-
-    if (i == resolutions.Count()) {
-        char message[256] = "invalid resolution, must be one of ";
-
-        for (uint32_t j = 0; j < resolutions.Count(); j++) {
-            if (j) {
-                strcat(message, ", ");
-            }
-
-            if (SStrLen(message) > 100) {
-                ConsoleWrite(message, DEFAULT_COLOR);
-                message[0] = '\0';
-            }
-
-            char entry[16];
-            SStrPrintf(entry, 32, "%dx%d", resolutions[j].x, resolutions[j].y);
-            strcat(message, entry);
-        }
-
-        ConsoleWrite(message, DEFAULT_COLOR);
-
-        return false;
-    }
-
-    s_requestedFormat.m_size.x = width;
-    s_requestedFormat.m_size.y = height;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-
-    return true;
-}
-
-// OFFSET: #0x0076A580
-static bool CVGxRefreshCallback(CVar* var, const char* oldValue, const char* value, void* arg) {
-    uint32_t refreshRate = SStrToUnsigned(value);
-
-    TSGrowableArray<CGxMonitorMode> modes;
-    GxAdapterMonitorModes(s_requestedFormat.m_monitor, modes);
-
-    uint32_t i;
-
-    for (i = 0; i < modes.Count(); i++) {
-        if (refreshRate == modes[i].m_refreshRate) {
-            break;
-        }
-    }
-
-    if (i == modes.Count()) {
-        ConsoleWrite("Unsupported refresh rate", DEFAULT_COLOR);
-        return false;
-    }
-
-    s_requestedFormat.m_refreshRate = refreshRate;
-    ConsoleWrite("set pending gxRestart", DEFAULT_COLOR);
-
-    return true;
+// OFFSET: 0x006358D0/0x1402CBDD0
+void RegisterStereoCVars() {
+    s_cvGxStereoConvergence = CVar::Register("gxStereoConvergence", "Set stereoscopic rendering convergence depth", 1, "1", CVGxStereoConvergenceCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvGxStereoSeparation = CVar::Register("gxStereoSeparation", "Set stereoscopic rendering separation percentage", 1, "25", CVGxStereoSeparationCallback, CATEGORY_GRAPHICS, false, NULL, false);
 }
 
 // PROVEN: 59edf2bd IDENTICAL/IDENTICAL
@@ -469,50 +224,96 @@ static bool CVVideoOptionsVersionCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
-// OFFSET: #0x00769C90
-void RegisterStereoCVars() {
-    s_cvGxStereoConvergence = CVar::Register("gxStereoConvergence", "Set stereoscopic rendering convergence depth", 1, "1", CVGxStereoConvergenceCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxStereoSeparation = CVar::Register("gxStereoSeparation", "Set stereoscopic rendering separation percentage", 1, "25", CVGxStereoSeparationCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    g_theGxDevicePtr->AddDisplayChangeCallback(DisplayChangeCallback);
-}
-
-// OFFSET: #0x0076A630
+// OFFSET: 0x00635CA0/0x1402CC260
 void RegisterGxCVars() {
-    const CGxFormat& format = *s_defaults.m_format;
-    bool window = s_locale == 4;
     char value[260];
 
-    s_cvWidescreen = CVar::Register("widescreen", "Allow widescreen support", 0, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxWindow = CVar::Register("gxWindow", "toggle fullscreen/window", 3, window ? "1" : "0", CVGxWindowCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxMaximize = CVar::Register("gxMaximize", "maximize game window", 3, window ? "1" : "0", CVGxMaximizeCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvGxApi = CVar::Register("gxApi", "graphics api", 1, s_apiNames[GxDefaultApi()], CVGxApiCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    EGxApi api = GxDefaultApi();
 
-    SStrPrintf(value, sizeof(value), "%s", s_formatToInt[format.m_colorFormat]);
-    s_cvGxColorBits = CVar::Register("gxColorBits", "color bits", 3, value, CVGxColorBitsCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    if (s_cvGxApi) {
+        const char* name = s_cvGxApi->m_stringValue.m_str;
 
-    SStrPrintf(value, sizeof(value), "%s", s_formatToInt[format.m_depthFormat]);
-    s_cvGxDepthBits = CVar::Register("gxDepthBits", "depth bits", 3, value, CVGxDepthBitsCallback, CATEGORY_GRAPHICS, false, NULL, false);
+        for (uint32_t i = GxApi_OpenGl; i < 4; i++) {
+            if (GxApiSupported(static_cast<EGxApi>(i)) && !_stricmp(name, s_apiNames[i])) {
+                api = static_cast<EGxApi>(i);
+                break;
+            }
+        }
+    }
 
-    SStrPrintf(value, sizeof(value), "%dx%d", format.m_size.x, format.m_size.y);
-    s_cvGxResolution = CVar::Register("gxResolution", "resolution", 3, value, CVGxResolutionCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    if (CmdLineGetBool(CMD_OPENGL) && GxApiSupported(GxApi_OpenGl)) {
+        api = GxApi_OpenGl;
+    }
 
-    s_cvGxRefresh = CVar::Register("gxRefresh", "refresh rate", 3, "75", CVGxRefreshCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxTripleBuffer = CVar::Register("gxTripleBuffer", "triple buffer", 3, "0", CVGxTripleBufferCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxApi = CVar::Register("gxApi", "graphics api", 3, g_gxApiNames[GxDefaultApi()], CVGxApiCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxVSync = CVar::Register("gxVSync", "vsync on or off", 3, "1", CVGxVSyncCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxAspect = CVar::Register("gxAspect", "constrain window aspect", 3, "1", CVGxAspectCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvGxCursor = CVar::Register("gxCursor", "toggle hardware cursor", 3, "1", CVGxCursorCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    if (CmdLineGetBool(CMD_D3D) && GxApiSupported(GxApi_D3d9)) {
+        api = GxApi_D3d9;
+    }
 
-    SStrPrintf(value, sizeof(value), "%d", s_hardware.m_videoHw->m_multisample);
-    s_cvGxMultisample = CVar::Register("gxMultisample", "multisample", 3, value, CVGxMultisampleCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    if (CmdLineGetBool(CMD_D3D9EX) && GxApiSupported(GxApi_D3d11)) {
+        api = GxApi_D3d11;
+    }
 
-    s_cvGxMultisampleQuality = CVar::Register("gxMultisampleQuality", "multisample quality", 3, "0.0", CVGxMultisampleQualityCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    GxSetRequestedApi(api);
 
-    SStrPrintf(value, sizeof(value), "%d", s_hardware.m_videoHw->m_fixLag);
-    s_cvGxFixLag = CVar::Register("gxFixLag", "prevent cursor lag", 3, value, CVGxFixLagCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvFixedFunction = CVar::Register("fixedFunction", "Force fixed function rendering", 1, "0", CVClientRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_shaderModel = s_cvFixedFunction->m_intValue ? 0 : -1;
 
-    s_cvGxStereoEnabled = CVar::Register("gxStereoEnabled", "Enable stereoscopic rendering", 1, "0", CVGxStereoEnabledCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    bool window = s_locale == 4;
+    SStrPrintf(value, sizeof(value), "%d", window);
+    s_cvGxWindow = CVar::Register("gxWindow", "toggle fullscreen/window", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    SStrPrintf(value, sizeof(value), "%d", window);
+    s_cvGxMaximize = CVar::Register("gxMaximize", "maximize game window", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    s_cvGxMonitor = CVar::Register("gxMonitor", "monitor", 1, "0", CVClientRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    uint32_t monitor = s_cvGxMonitor->m_intValue;
+
+    if (monitor >= GxAdapterMonitorCount()) {
+        monitor = 0;
+    }
+
+    s_monitor = monitor;
+    GxAdapterMonitorModes(monitor, s_gxMonitorModes);
+    SetDesktopFormat();
+
+    SStrPrintf(value, sizeof(value), "%s", s_colorBitsNames[s_desktopFormat.m_colorFormat]);
+    s_cvGxColorBits = CVar::Register("gxColorBits", "color bits", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%s", s_depthBitsNames[s_desktopFormat.m_depthFormat]);
+    s_cvGxDepthBits = CVar::Register("gxDepthBits", "depth bits", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%dx%d", s_desktopFormat.m_size.x, s_desktopFormat.m_size.y);
+    s_cvGxResolution = CVar::Register("gxResolution", "resolution", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d/%d", s_desktopFormat.m_refreshRate, s_desktopFormat.m_refreshRateDenom);
+    s_cvGxRefresh = CVar::Register("gxRefresh", "refresh rate", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_backBufferCount > 1);
+    s_cvGxTripleBuffer = CVar::Register("gxTripleBuffer", "triple buffer", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_vsync);
+    s_cvGxVSync = CVar::Register("gxVSync", "vsync on or off", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_aspect);
+    s_cvGxAspect = CVar::Register("gxAspect", "constrain window aspect", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_hwCursor);
+    s_cvGxCursor = CVar::Register("gxCursor", "toggle hardware cursor", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_multisampleCount);
+    s_cvGxMultisample = CVar::Register("gxMultisample", "multisample", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%f", s_desktopFormat.m_multisampleQuality);
+    s_cvGxMultisampleQuality = CVar::Register("gxMultisampleQuality", "multisample quality", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_fixLag);
+    s_cvGxFixLag = CVar::Register("gxFixLag", "prevent cursor lag", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
+    SStrPrintf(value, sizeof(value), "%d", s_desktopFormat.m_stereoEnabled);
+    s_cvGxStereoEnabled = CVar::Register("gxStereoEnabled", "Enable stereoscopic rendering", 1, value, CVGxRestartPendingCallback, CATEGORY_GRAPHICS, false, NULL, false);
+
     s_cvGxOverride = CVar::Register("gxOverride", "gx overrides", 1, "", CVGxOverrideCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvVideoOptionsVersion = CVar::Register("videoOptionsVersion", "Video options version", 3, "0", CVVideoOptionsVersionCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvWindowResizeLock = CVar::Register("windowResizeLock", "prevent resizing in windowed mode", 1, "0", CVGxWindowResizeLockCallback, CATEGORY_GRAPHICS, false, NULL, false);
-    s_cvFixedFunction = CVar::Register("fixedFunction", "Force fixed function rendering", 3, "0", NULL, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvVideoOptionsVersion = CVar::Register("videoOptionsVersion", "Video options version", 1, "0", CVVideoOptionsVersionCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvWindowResizeLock = CVar::Register("windowResizeLock", "prevent resizing in windowed mode", 1, "0", CVWindowResizeLockCallback, CATEGORY_GRAPHICS, false, NULL, false);
+    s_cvGraphicsQuality = CVar::Register("graphicsQuality", "save for Graphics Quality Selection", 1, "1", NULL, CATEGORY_GRAPHICS, false, NULL, false);
 }

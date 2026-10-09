@@ -36,13 +36,19 @@ enum WOWCMDOPT {
     CMD_CONSOLE = 35,
     CMD_HW_DETECT = 36,
     CMD_GX_OVERRIDE = 39,
+    CMD_CONFIG = 40,
+    CMD_LAUNCH = 44,
 };
 
 struct ARCHIVEINFO {
     /* 0000 */ const char* m_name;
-    /* 0004 */ int32_t m_unk04;
-    /* 0008 */ int32_t m_unk08;
-    /* 000C */ bool m_opened;
+    /* 0004 */ const char* m_subdir;
+    /* 0008 */ int64_t m_size;
+    /* 0010 */ uint32_t m_flags;
+    /* 0014 */ uint16_t m_expansion;
+    /* 0016 */ uint16_t m_slot;
+    /* 0018 */ uint16_t m_priority;
+    /* 001A */ bool m_opened;
 };
 
 extern CVar* g_accountListVar;
@@ -71,6 +77,8 @@ extern CVar* s_desktopGammaCvar;
 extern uint8_t s_expansionLevel;
 extern CVar* s_gammaCvar;
 extern int32_t s_locale;
+extern const char* s_raceFileNames[24];
+extern const char* s_classFileNames[12];
 extern const char* s_iniLocaleNames[9];
 extern uint32_t s_localeIds[15];
 extern char s_localeCode[5];
@@ -145,6 +153,13 @@ void Client_MemFree(void* ptr);
 void SendBotDetected2(uint32_t msgId, uint32_t code);
 int32_t GatherAdditionalChecks(uint8_t* check1, uint8_t* check2, uint8_t* check3);
 void ClientUpdateTaxiBenchmarkMode();
+void ArchiveProgressInitialize(int32_t sparse);
+void ArchiveProgressSetStage(uint32_t stage);
+int32_t ArchiveProgressPump();
+void ArchiveProgressDestroy();
+void ArchiveProgressSetPosition(float position);
+const char* GetInstallLocationRegKeyName();
+void UpdateInstallLocation();
 void ClientKillTimer(uint32_t id, EVENTHANDLERFUNC handler, const char* name);
 void ListInterfaceArchive(const char* prefix, int32_t (*callback)(const char* fileName, void* param), void* param);
 

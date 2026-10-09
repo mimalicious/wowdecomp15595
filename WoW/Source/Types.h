@@ -5,34 +5,10 @@
 #include <cstdint>
 #include "Engine/Source/Gx/Types.h"
 
-class CGxFormat;
-struct CpuHardware;
-struct SoundHardware;
 class VideoHardwareRec;
 
 struct DefaultSettings {
-    /* 0000 */ float m_farClip;
-    /* 0004 */ uint32_t m_terrainShadowLOD;
-    /* 0008 */ uint32_t m_detailDoodadDensity;
-    /* 000C */ uint32_t m_detailDoodadAlpha;
-    /* 0010 */ bool m_animatingDoodads;
-    /* 0011 */ bool m_trilinear;
-    /* 0012 */ uint8_t unk_0012[2];
-    /* 0014 */ uint32_t m_numLights;
-    /* 0018 */ bool m_specularity;
-    /* 0019 */ bool unk_0019;
-    /* 001A */ bool unk_001A;
-    /* 001B */ uint8_t unk_001B[1];
-    /* 001C */ uint32_t m_waterLOD;
-    /* 0020 */ float m_particleDensity;
-    /* 0024 */ float m_unitDrawDist;
-    /* 0028 */ float m_smallCull;
-    /* 002C */ float m_distCull;
-    /* 0030 */ CGxFormat* m_format;
-    /* 0034 */ uint32_t m_baseMipLevel;
-    /* 0038 */ uint32_t m_numChannels;
-    /* 003C */ bool m_fivePointOne;
-    /* 003D */ uint8_t unk_003D[3];
+    /* 0000 */ uint32_t m_graphicsQuality;
 };
 
 struct Hardware {
@@ -50,8 +26,6 @@ struct Hardware {
     /* 0020 */ uint32_t m_soundIdx;
     /* 0024 */ uint32_t m_memIdx;
     /* 0028 */ VideoHardwareRec* m_videoHw;
-    /* 002C */ CpuHardware* m_cpuHw;
-    /* 0030 */ SoundHardware* m_soundHw;
 };
 
 #endif
