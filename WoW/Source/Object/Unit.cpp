@@ -335,3 +335,18 @@ void CGUnit::CalcMissileTravel(const C3Vector& target, float speed, bool speedAs
         }
     }
 }
+
+// OFFSET: 0x00A27900
+float CGUnit::GetMaxSplineSpeed(uint32_t splineFlags) const {
+    if (splineFlags & 0x2000A40) {
+        return 50.0f;
+    }
+
+    float speed = this->m_movement->m_runSpeed * 4.0f;
+
+    if (speed <= 28.0f) {
+        return 28.0f;
+    }
+
+    return speed;
+}

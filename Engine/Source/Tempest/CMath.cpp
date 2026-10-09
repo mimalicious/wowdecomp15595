@@ -390,7 +390,7 @@ int32_t CMath::fint_n(float f) {
     return static_cast<uint32_t>(f - 0.5f);
 }
 
-// OFFSET: #0x004828C0
+// OFFSET: 0x0043AA40
 int32_t fnotequalz(float a, float b, float z) {
     return !(fabsf(a - b) < z);
 }

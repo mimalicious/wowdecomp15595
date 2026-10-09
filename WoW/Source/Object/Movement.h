@@ -157,6 +157,7 @@ class CMovement_C : public CMovementShared {
     int32_t SendSetRunMode(uint32_t time);
     int32_t SendSetWalkMode(uint32_t time);
     int32_t SendSetFacing(uint32_t time);
+    int32_t SendNotActiveMover(uint32_t time);
     int32_t SendStartSwim(uint32_t time);
     int32_t SendStopSwim(uint32_t time);
     int32_t SendStartPitchUp(uint32_t time);

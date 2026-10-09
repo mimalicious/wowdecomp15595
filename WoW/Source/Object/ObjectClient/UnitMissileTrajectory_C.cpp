@@ -1287,7 +1287,7 @@ void CGUnit_C::SendFinalMissileTrajectoryUpdate() {
     msg.Put(impact.x);
     msg.Put(impact.y);
     msg.Put(impact.z);
-    WriteMovementPacket(this, MSG_MOVE_STOP, &msg, 1);
+    WriteMovementPacket(this, &msg);
     msg.Finalize();
     ClientServices::Send2(&msg);
 

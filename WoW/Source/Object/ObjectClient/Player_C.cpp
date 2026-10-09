@@ -10629,7 +10629,7 @@ int32_t AreaTriggerCheck(const void* data, void* param) {
         }
 
         if (AreaTriggerContains(rec, position)) {
-            mover->SendMovementUpdate(MSG_MOVE_HEARTBEAT);
+            mover->SendMovementHeartbeat();
 
             CDataStore msg;
             msg.Put(static_cast<uint32_t>(CMSG_AREA_TRIGGER));
@@ -10643,6 +10643,11 @@ int32_t AreaTriggerCheck(const void* data, void* param) {
     }
 
     return 1;
+}
+
+// OFFSET: 0x00560F40
+void AreaTriggerCheckNow() {
+    AreaTriggerCheck(NULL, NULL);
 }
 
 // OFFSET: #0x006D7630

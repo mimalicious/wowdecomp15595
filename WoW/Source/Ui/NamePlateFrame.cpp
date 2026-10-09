@@ -21,6 +21,33 @@
 #include "WoW/Source/Ui/RaidInfo.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
 
+// STATIC: 0x00F7636C
+static CVar* s_cvNamePlateStyle;
+
+// STATIC: 0x00F76368
+static CVar* s_cvBloatTest;
+
+// STATIC: 0x00F76364
+static CVar* s_cvBloatNamePlates;
+
+// STATIC: 0x00F76360
+static CVar* s_cvBloatThreat;
+
+// STATIC: 0x00F7635C
+static CVar* s_cvNamePlateMotion;
+
+// STATIC: 0x00F76358
+static CVar* s_cvMaxAlgoPlates;
+
+// STATIC: 0x00F76354
+static CVar* s_cvRepositionFrequency;
+
+// STATIC: 0x00F76350
+static CVar* s_cvNamePlateOverlapH;
+
+// STATIC: 0x00F7634C
+static CVar* s_cvNamePlateOverlapV;
+
 // STATIC: #0x00AA34B8
 static int32_t s_greenLevelRanges[20] = { 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 };
 
@@ -615,4 +642,17 @@ CGNamePlateFrame::CGNamePlateFrame(CSimpleFrame* parent) : CSimpleFrame(parent),
 
 // OFFSET: [#0x0098FFE0, #0x00990030]
 CGNamePlateFrame::~CGNamePlateFrame() {
+}
+
+// OFFSET: 0x009E7180/0x14077FA50
+void CGNamePlateFrame::RegisterCVars() {
+    s_cvNamePlateStyle = CVar::Register("NamePlateStlye", "Template used to create nameplates", 257, "", NULL, 1, false, NULL, false);
+    s_cvBloatTest = CVar::Register("bloatTest", "makes nameplates larger 1.0 + x", 1, "0.0", NULL, 1, false, NULL, false);
+    s_cvBloatNamePlates = CVar::Register("bloatnameplates", "makes nameplates larger depending on threat %", 1, "0.0", NULL, 1, false, NULL, false);
+    s_cvBloatThreat = CVar::Register("bloatthreat", "makes nameplates larger depending on gaining/losing threat", 1, "1", NULL, 1, false, NULL, false);
+    s_cvNamePlateMotion = CVar::Register("nameplateMotion", "Defines the movement/collison model for nameplates", 17, "1", NULL, 1, false, NULL, false);
+    s_cvMaxAlgoPlates = CVar::Register("maxAlgoplates", "max number nameplates on screen before overlapping nameplates are used", 17, "25", NULL, 1, false, NULL, false);
+    s_cvRepositionFrequency = CVar::Register("repositionfrequency", "how many frames to skip per nameplate reposition", 1, "1", NULL, 1, false, NULL, false);
+    s_cvNamePlateOverlapH = CVar::Register("nameplateOverlapH", "Percentage amount for horizontal overlap of nameplates", 17, "0.8", NULL, 1, false, NULL, false);
+    s_cvNamePlateOverlapV = CVar::Register("nameplateOverlapV", "Percentage amount for vertical overlap of nameplates", 17, "0.8", NULL, 1, false, NULL, false);
 }

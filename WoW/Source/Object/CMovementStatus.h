@@ -6,6 +6,8 @@
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/Object/WGUID.h"
 
+class CDataStore;
+
 class CMovementStatus {
     public:
     struct TransportInfo {
@@ -58,6 +60,7 @@ class CMovementStatus {
     CMovementStatus();
     ~CMovementStatus();
     bool IsValid() const;
+    void WriteEmbedded(CDataStore* msg) const;
 };
 
 #endif

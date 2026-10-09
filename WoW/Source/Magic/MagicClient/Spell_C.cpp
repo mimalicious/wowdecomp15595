@@ -7843,7 +7843,7 @@ void Spell_C::SendPendingCast(PendingSpellCast* cast, bool hideVisuals) {
         PendingSpellCastData::WriteTargetInfo(&cast->m_data, &msg);
         msg.Put(pitch);
         msg.Put(speed);
-        WriteMovementPacket(mover, MSG_MOVE_STOP, &msg, 1);
+        WriteMovementPacket(mover, &msg);
         caster->PreStartUpdatingMissileTrajectory(cast->m_data.m_spellId, OsGetAsyncTimeMs());
     } else {
         PendingSpellCastData::WriteTargetInfo(&cast->m_data, &msg);

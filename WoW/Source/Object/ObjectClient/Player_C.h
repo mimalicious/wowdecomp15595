@@ -617,6 +617,7 @@ void PlayerClientInitialize();
 void PlayerInitializeSounds();
 void AreaTriggersInitialize(uint32_t mapId);
 int32_t AreaTriggerCheck(const void* data, void* param);
+void AreaTriggerCheckNow();
 void PlayerClientShutdown();
 void PlayerShutdownSounds();
 int32_t Player_C_ZoneUpdateHandler(const void* data, void* param);

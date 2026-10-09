@@ -227,6 +227,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     CGUnit_C* GetVehicleUnit() const;
     void SetWeaponTrail(CM2Model* model, uint32_t hand);
     static void InitActiveMover(const WOWGUID& guid);
+    void OnSetActiveMover();
+    void OnUnsetActiveMover();
     void VehiclePassengerUpdateWorldCameraState(VehicleRec* vehicleRec, VehicleSeatRec* seatRec, uint32_t startTime, uint32_t endTime);
     void VehiclePassengerUpdateWorldCameraStateInstantly();
     int32_t ClampRawAngleToLegalFacingRange(float& angle) const;
@@ -257,6 +259,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static uint32_t s_pitchMissileTrajectoryTargetingNextFrame;
     static CVar* s_cvShowFootPrintParticles;
     static CVar* s_cvPathingDistTolerance;
+    static CVar* s_cvPathSmoothing;
     static const uint32_t s_impactTypes[4];
     static C3Vector s_trackingPosition;
     static float s_trackingDirection;
@@ -613,6 +616,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t GetAuraSpellId(uint32_t index);
     int32_t IsMounted() const;
     void UpdateFloodsafeMoveEvents(uint32_t time);
+    int32_t SendFloodsafeTurnEvent(uint32_t time);
+    int32_t SendFloodsafePitchEvent(uint32_t time);
     void PostAnimate(CGWorldFrame* worldFrame);
     AuraData* GetAura(uint32_t index);
     uint8_t GetAuraFlags(uint32_t index);
@@ -835,10 +840,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void OnFallLocal(uint32_t eventTime);
     void ChangeStandState(uint32_t standState);
     void TryJumpOrAscend(uint32_t eventTime);
-    int32_t ProcessLocalMoveEvent(uint32_t eventTime, uint32_t msgId, bool send, float value, uint32_t index, uint64_t transport, uint8_t seat);
-    int32_t SendMovementUpdate(uint32_t time, uint32_t msgId, float value, uint32_t index, uint64_t transport, uint8_t seat);
-    int32_t BuildMovementUpdate(uint32_t time, uint32_t msgId, CDataStore* msg, float value, uint32_t index);
-    int32_t IsAllowedToSendMessage(uint32_t msgId) const;
     void SendTimeSkip(uint32_t skip);
     void OnMovementFlagsChanged(uint32_t time, uint32_t oldFlags, int32_t teleport, int32_t a4, int32_t knockBack);
     void OnStartFlying();
@@ -861,7 +862,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     int32_t IsPitchUnchangedSinceSent();
     int32_t HandleFloodsafeTurnEvent(uint32_t time, uint32_t msgId);
     int32_t HandleFloodsafePitchEvent(uint32_t time, uint32_t msgId);
-    int32_t FlushFloodsafeMoveEvents(uint32_t time);
     int32_t IsBelowHalfBaseSpeed() const;
     void CancelRangedMode();
     bool CanAutoInteract() const;
@@ -873,7 +873,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool CanInteractNow(const CGUnit_C* unit) const;
     bool CanAutoStand() const;
     void SetTrackingDirection(const C3Vector& direction);
-    void MoveEventHappened(uint32_t msgId);
     void HandlePendingTrackEvents();
     void ToggleRunModeLocal(uint32_t eventTime);
     bool CanAssist(const CGCorpse_C* corpse) const;
@@ -904,7 +903,6 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void VehiclePassengerRequestPrevSeat();
     void VehiclePassengerRequestNextSeat();
     int32_t VehiclePassengerRequestSwitchToVirtualSeat(const CGUnit_C* vehicle, int32_t virtualSeat);
-    bool HasDispellableAura(int32_t dispelType, int32_t harmful, bool mechanic, bool steal);
     void CheckVehicleExitOnCast();
     uint8_t GetActivePlayerFieldBytes0();
     bool CanLearnSpell(int32_t spellId, int32_t& level, bool a4 = false);
@@ -1193,10 +1191,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void ClearThreatList();
     bool IsDuelingWith(CGUnit_C* unit);
     void PlayEmoteAnimation(uint32_t emote);
-    void OnTeleportAck(uint32_t time, uint32_t ackCounter, CDataStore* msg);
-    void OnKnockBackLocal(uint32_t time, uint32_t ackCounter, CDataStore* msg);
     void OnMovementInitiated(bool clearTracking, bool keepLoot);
-    int32_t SendMovementUpdate(uint32_t msgId);
+    void SendMovementHeartbeat();
     static void SetActiveMover(uint64_t guid);
     static void StartMissileTrajectoryTargeting(CGUnit_C* unit, const VehicleRec* vehicleRec);
     static void StartMissileTrajectoryTargeting(const VehicleRec* vehicleRec);
@@ -1417,7 +1413,7 @@ float CalculateFacingTo(const C3Vector* from, const C3Vector* to);
 void WeaponTrailsInitialize();
 
 const char* GetCombatLogObjectName(const WOWGUID& guid);
-void WriteMovementPacket(CGUnit_C* unit, uint32_t msgId, CDataStore* msg, int32_t include);
+void WriteMovementPacket(CGUnit_C* unit, CDataStore* msg);
 
 int32_t AnimationDataHasFlags(uint32_t anim, uint32_t flags);
 int32_t CreatureSoundDataGetFidgetSound(const CreatureSoundDataRec* rec, uint32_t index);

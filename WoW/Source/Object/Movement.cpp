@@ -7497,3 +7497,9 @@ int32_t CMovement_C::IsOnSwimSpline() const {
     CMoveSpline* spline = this->m_spline;
     return spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200000);
 }
+
+// OFFSET: 0x005ACB80
+int32_t CMovement_C::SendNotActiveMover(uint32_t time) {
+    PlayerMoveNotActiveMover msg;
+    return this->SendMoveStatus(time, CMSG_MOVE_NOT_ACTIVE_MOVER, &msg.m_status, &msg);
+}
