@@ -4,6 +4,9 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/Tempest/CMath.h"
 
+// STATIC: 0x00E4D7F4
+bool (*ClientAuraPointsDepleted::s_handler)(ClientAuraPointsDepleted* msg);
+
 // STATIC: 0x00E4D540
 bool (*ClientMoveCollisionDisable::s_handler)(ClientMoveCollisionDisable* msg);
 
@@ -136,8 +139,8 @@ bool (*ClientMoveUpdateWalkSpeed::s_handler)(ClientMoveUpdateWalkSpeed* msg);
 // STATIC: 0x00E4D5FC
 bool (*ClientPlaySpellVisual::s_handler)(ClientPlaySpellVisual* msg);
 
-// STATIC: 0x00E4D790
-bool (*ClientSetFootstepSoundsSuppressed::s_handler)(ClientSetFootstepSoundsSuppressed* msg);
+// STATIC: 0x00E4D794
+bool (*ClientSetPlayHoverAnim::s_handler)(ClientSetPlayHoverAnim* msg);
 
 // STATIC: 0x00E4D4BC
 bool (*ClientSplineMoveCollisionDisable::s_handler)(ClientSplineMoveCollisionDisable* msg);
@@ -220,11 +223,180 @@ bool (*ClientSplineMoveUnsetFlying::s_handler)(ClientSplineMoveUnsetFlying* msg)
 // STATIC: 0x00E4D628
 bool (*ClientSplineMoveUnsetHover::s_handler)(ClientSplineMoveUnsetHover* msg);
 
-// STATIC: 0x00E4D794
-bool (*ClientUnit30A6::s_handler)(ClientUnit30A6* msg);
+// STATIC: 0x00E4D790
+bool (*ClientSuppressNPCGreetings::s_handler)(ClientSuppressNPCGreetings* msg);
 
-// STATIC: 0x00E4D7F4
-bool (*ClientUnitClearSlotValue::s_handler)(ClientUnitClearSlotValue* msg);
+// PROVEN: 465ad810 IDENTICAL/NONE
+// OFFSET: 0x006C99C0/0x140381410
+ClientAuraPointsDepleted::ClientAuraPointsDepleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// PROVEN: 42684abe IDENTICAL/NONE
+// OFFSET: 0x006A18E0/0x14034EC90
+ClientAuraPointsDepleted::~ClientAuraPointsDepleted() {
+}
+
+// PROVEN: 6a517d52 IDENTICAL/NONE
+// OFFSET: 0x006B81F0/0x14036B2D0
+void ClientAuraPointsDepleted::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
+    guid[2] = bits.ReadBit();
+    guid[4] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[3] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    if (guid[5]) {
+        uint8_t value10 = 0;
+        msg->Get(value10);
+        guid[5] ^= value10;
+    }
+
+    if (guid[0]) {
+        uint8_t value16 = 0;
+        msg->Get(value16);
+        guid[0] ^= value16;
+    }
+
+    {
+        uint8_t value21 = 0;
+        msg->Get(value21);
+        this->m_effectIndex = value21;
+    }
+    if (guid[3]) {
+        uint8_t value25 = 0;
+        msg->Get(value25);
+        guid[3] ^= value25;
+    }
+
+    if (guid[7]) {
+        uint8_t value31 = 0;
+        msg->Get(value31);
+        guid[7] ^= value31;
+    }
+
+    if (guid[4]) {
+        uint8_t value37 = 0;
+        msg->Get(value37);
+        guid[4] ^= value37;
+    }
+
+    if (guid[2]) {
+        uint8_t value43 = 0;
+        msg->Get(value43);
+        guid[2] ^= value43;
+    }
+
+    {
+        uint8_t value48 = 0;
+        msg->Get(value48);
+        this->m_slot = value48;
+    }
+    if (guid[6]) {
+        uint8_t value52 = 0;
+        msg->Get(value52);
+        guid[6] ^= value52;
+    }
+
+    if (guid[1]) {
+        uint8_t value58 = 0;
+        msg->Get(value58);
+        guid[1] ^= value58;
+    }
+}
+
+// PROVEN: 48e55031 IDENTICAL/NONE
+// OFFSET: 0x006A8CF0
+bool ClientAuraPointsDepleted::Get(CDataStore* msg, bool full) {
+    return this->Read(msg, full);
+}
+
+// PROVEN: 86616813 IDENTICAL/NONE
+// OFFSET: 0x006A57F0
+bool ClientAuraPointsDepleted::Read(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
+    guid[2] = bits.ReadBit();
+    guid[4] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[3] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    if (guid[5]) {
+        uint8_t value10 = 0;
+        msg->Get(value10);
+        guid[5] ^= value10;
+    }
+
+    if (guid[0]) {
+        uint8_t value16 = 0;
+        msg->Get(value16);
+        guid[0] ^= value16;
+    }
+
+    {
+        uint8_t value21 = 0;
+        msg->Get(value21);
+        this->m_effectIndex = value21;
+    }
+    if (guid[3]) {
+        uint8_t value25 = 0;
+        msg->Get(value25);
+        guid[3] ^= value25;
+    }
+
+    if (guid[7]) {
+        uint8_t value31 = 0;
+        msg->Get(value31);
+        guid[7] ^= value31;
+    }
+
+    if (guid[4]) {
+        uint8_t value37 = 0;
+        msg->Get(value37);
+        guid[4] ^= value37;
+    }
+
+    if (guid[2]) {
+        uint8_t value43 = 0;
+        msg->Get(value43);
+        guid[2] ^= value43;
+    }
+
+    {
+        uint8_t value48 = 0;
+        msg->Get(value48);
+        this->m_slot = value48;
+    }
+    if (guid[6]) {
+        uint8_t value52 = 0;
+        msg->Get(value52);
+        guid[6] ^= value52;
+    }
+
+    if (guid[1]) {
+        uint8_t value58 = 0;
+        msg->Get(value58);
+        guid[1] ^= value58;
+    }
+
+    return msg->IsRead() != 0;
+}
+
+// OFFSET: 0x006B0820/0x140361650
+bool ClientAuraPointsDepleted::Handle() {
+    if (!ClientAuraPointsDepleted::s_handler) {
+        return false;
+    }
+
+    return ClientAuraPointsDepleted::s_handler(this);
+}
 
 // PROVEN: 14d411e4 IDENTICAL/NONE
 // OFFSET: 0x006A2410
@@ -13221,158 +13393,158 @@ bool ClientPlaySpellVisual::Handle() {
     return ClientPlaySpellVisual::s_handler(this);
 }
 
-// PROVEN: debfda3a IDENTICAL/NONE
-// OFFSET: 0x006C98B0/0x1403812F0
-ClientSetFootstepSoundsSuppressed::ClientSetFootstepSoundsSuppressed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+// PROVEN: 00e37547 IDENTICAL/NONE
+// OFFSET: 0x006BADE0/0x14036EA80
+ClientSetPlayHoverAnim::ClientSetPlayHoverAnim(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: d5fc10db IDENTICAL/NONE
-// OFFSET: 0x006A2370/0x14034F890
-ClientSetFootstepSoundsSuppressed::~ClientSetFootstepSoundsSuppressed() {
+// PROVEN: 21c339e1 IDENTICAL/NONE
+// OFFSET: 0x006A2D70/0x1403502D0
+ClientSetPlayHoverAnim::~ClientSetPlayHoverAnim() {
 }
 
-// PROVEN: bc868ba6 IDENTICAL/NONE
-// OFFSET: 0x006BE600/0x140373390
-void ClientSetFootstepSoundsSuppressed::Unpack(CDataStore* msg, bool full) {
+// PROVEN: cbac5179 IDENTICAL/NONE
+// OFFSET: 0x006AAA40/0x14035A210
+void ClientSetPlayHoverAnim::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
-    this->m_suppressed = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    guid[2] = bits.ReadBit();
     guid[4] = bits.ReadBit();
     guid[0] = bits.ReadBit();
-    guid[5] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    this->m_playHoverAnim = bits.ReadBit();
     guid[3] = bits.ReadBit();
-    if (guid[1]) {
+    guid[7] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    if (guid[3]) {
         uint8_t value11 = 0;
         msg->Get(value11);
-        guid[1] ^= value11;
-    }
-
-    if (guid[7]) {
-        uint8_t value17 = 0;
-        msg->Get(value17);
-        guid[7] ^= value17;
-    }
-
-    if (guid[0]) {
-        uint8_t value23 = 0;
-        msg->Get(value23);
-        guid[0] ^= value23;
+        guid[3] ^= value11;
     }
 
     if (guid[2]) {
+        uint8_t value17 = 0;
+        msg->Get(value17);
+        guid[2] ^= value17;
+    }
+
+    if (guid[1]) {
+        uint8_t value23 = 0;
+        msg->Get(value23);
+        guid[1] ^= value23;
+    }
+
+    if (guid[7]) {
         uint8_t value29 = 0;
         msg->Get(value29);
-        guid[2] ^= value29;
+        guid[7] ^= value29;
     }
 
-    if (guid[6]) {
+    if (guid[0]) {
         uint8_t value35 = 0;
         msg->Get(value35);
-        guid[6] ^= value35;
-    }
-
-    if (guid[4]) {
-        uint8_t value41 = 0;
-        msg->Get(value41);
-        guid[4] ^= value41;
-    }
-
-    if (guid[3]) {
-        uint8_t value47 = 0;
-        msg->Get(value47);
-        guid[3] ^= value47;
+        guid[0] ^= value35;
     }
 
     if (guid[5]) {
+        uint8_t value41 = 0;
+        msg->Get(value41);
+        guid[5] ^= value41;
+    }
+
+    if (guid[4]) {
+        uint8_t value47 = 0;
+        msg->Get(value47);
+        guid[4] ^= value47;
+    }
+
+    if (guid[6]) {
         uint8_t value53 = 0;
         msg->Get(value53);
-        guid[5] ^= value53;
+        guid[6] ^= value53;
     }
 }
 
-// PROVEN: 3bc04411 IDENTICAL/NONE
-// OFFSET: 0x006B7650
-bool ClientSetFootstepSoundsSuppressed::Get(CDataStore* msg, bool full) {
+// PROVEN: 3aac09d2 IDENTICAL/NONE
+// OFFSET: 0x006ACE60
+bool ClientSetPlayHoverAnim::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: 75cae6f1 IDENTICAL/NONE
-// OFFSET: 0x006AE260
-bool ClientSetFootstepSoundsSuppressed::Read(CDataStore* msg, bool full) {
+// PROVEN: 2693fc07 IDENTICAL/NONE
+// OFFSET: 0x006A86A0
+bool ClientSetPlayHoverAnim::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
-    this->m_suppressed = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    guid[2] = bits.ReadBit();
     guid[4] = bits.ReadBit();
     guid[0] = bits.ReadBit();
-    guid[5] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    this->m_playHoverAnim = bits.ReadBit();
     guid[3] = bits.ReadBit();
-    if (guid[1]) {
+    guid[7] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    if (guid[3]) {
         uint8_t value11 = 0;
         msg->Get(value11);
-        guid[1] ^= value11;
-    }
-
-    if (guid[7]) {
-        uint8_t value17 = 0;
-        msg->Get(value17);
-        guid[7] ^= value17;
-    }
-
-    if (guid[0]) {
-        uint8_t value23 = 0;
-        msg->Get(value23);
-        guid[0] ^= value23;
+        guid[3] ^= value11;
     }
 
     if (guid[2]) {
+        uint8_t value17 = 0;
+        msg->Get(value17);
+        guid[2] ^= value17;
+    }
+
+    if (guid[1]) {
+        uint8_t value23 = 0;
+        msg->Get(value23);
+        guid[1] ^= value23;
+    }
+
+    if (guid[7]) {
         uint8_t value29 = 0;
         msg->Get(value29);
-        guid[2] ^= value29;
+        guid[7] ^= value29;
     }
 
-    if (guid[6]) {
+    if (guid[0]) {
         uint8_t value35 = 0;
         msg->Get(value35);
-        guid[6] ^= value35;
-    }
-
-    if (guid[4]) {
-        uint8_t value41 = 0;
-        msg->Get(value41);
-        guid[4] ^= value41;
-    }
-
-    if (guid[3]) {
-        uint8_t value47 = 0;
-        msg->Get(value47);
-        guid[3] ^= value47;
+        guid[0] ^= value35;
     }
 
     if (guid[5]) {
+        uint8_t value41 = 0;
+        msg->Get(value41);
+        guid[5] ^= value41;
+    }
+
+    if (guid[4]) {
+        uint8_t value47 = 0;
+        msg->Get(value47);
+        guid[4] ^= value47;
+    }
+
+    if (guid[6]) {
         uint8_t value53 = 0;
         msg->Get(value53);
-        guid[5] ^= value53;
+        guid[6] ^= value53;
     }
 
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006B9030/0x14036C4C0
-bool ClientSetFootstepSoundsSuppressed::Handle() {
-    if (!ClientSetFootstepSoundsSuppressed::s_handler) {
+// OFFSET: 0x006B45A0/0x140366520
+bool ClientSetPlayHoverAnim::Handle() {
+    if (!ClientSetPlayHoverAnim::s_handler) {
         return false;
     }
 
-    return ClientSetFootstepSoundsSuppressed::s_handler(this);
+    return ClientSetPlayHoverAnim::s_handler(this);
 }
 
 // PROVEN: df10bd3f IDENTICAL/NONE
@@ -17571,330 +17743,158 @@ bool ClientSplineMoveUnsetHover::Handle() {
     return ClientSplineMoveUnsetHover::s_handler(this);
 }
 
-// PROVEN: 5ab5a016 IDENTICAL/NONE
-// OFFSET: 0x006BADE0/0x14036EA80
-ClientUnit30A6::ClientUnit30A6(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+// PROVEN: 3cf6ca4e IDENTICAL/NONE
+// OFFSET: 0x006C98B0/0x1403812F0
+ClientSuppressNPCGreetings::ClientSuppressNPCGreetings(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// PROVEN: 90aa562d IDENTICAL/NONE
-// OFFSET: 0x006A2D70/0x1403502D0
-ClientUnit30A6::~ClientUnit30A6() {
+// PROVEN: 00f1f479 IDENTICAL/NONE
+// OFFSET: 0x006A2370/0x14034F890
+ClientSuppressNPCGreetings::~ClientSuppressNPCGreetings() {
 }
 
-// PROVEN: 41300871 IDENTICAL/NONE
-// OFFSET: 0x006AAA40/0x14035A210
-void ClientUnit30A6::Unpack(CDataStore* msg, bool full) {
+// PROVEN: 8d515cf1 IDENTICAL/NONE
+// OFFSET: 0x006BE600/0x140373390
+void ClientSuppressNPCGreetings::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
+    this->m_suppressed = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
     guid[4] = bits.ReadBit();
     guid[0] = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    this->m_value = bits.ReadBit();
-    guid[3] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
     guid[5] = bits.ReadBit();
-    guid[2] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    if (guid[3]) {
+    guid[3] = bits.ReadBit();
+    if (guid[1]) {
         uint8_t value11 = 0;
         msg->Get(value11);
-        guid[3] ^= value11;
-    }
-
-    if (guid[2]) {
-        uint8_t value17 = 0;
-        msg->Get(value17);
-        guid[2] ^= value17;
-    }
-
-    if (guid[1]) {
-        uint8_t value23 = 0;
-        msg->Get(value23);
-        guid[1] ^= value23;
+        guid[1] ^= value11;
     }
 
     if (guid[7]) {
-        uint8_t value29 = 0;
-        msg->Get(value29);
-        guid[7] ^= value29;
+        uint8_t value17 = 0;
+        msg->Get(value17);
+        guid[7] ^= value17;
     }
 
     if (guid[0]) {
-        uint8_t value35 = 0;
-        msg->Get(value35);
-        guid[0] ^= value35;
+        uint8_t value23 = 0;
+        msg->Get(value23);
+        guid[0] ^= value23;
     }
 
-    if (guid[5]) {
-        uint8_t value41 = 0;
-        msg->Get(value41);
-        guid[5] ^= value41;
-    }
-
-    if (guid[4]) {
-        uint8_t value47 = 0;
-        msg->Get(value47);
-        guid[4] ^= value47;
+    if (guid[2]) {
+        uint8_t value29 = 0;
+        msg->Get(value29);
+        guid[2] ^= value29;
     }
 
     if (guid[6]) {
+        uint8_t value35 = 0;
+        msg->Get(value35);
+        guid[6] ^= value35;
+    }
+
+    if (guid[4]) {
+        uint8_t value41 = 0;
+        msg->Get(value41);
+        guid[4] ^= value41;
+    }
+
+    if (guid[3]) {
+        uint8_t value47 = 0;
+        msg->Get(value47);
+        guid[3] ^= value47;
+    }
+
+    if (guid[5]) {
         uint8_t value53 = 0;
         msg->Get(value53);
-        guid[6] ^= value53;
+        guid[5] ^= value53;
     }
 }
 
-// PROVEN: 76dd07e0 IDENTICAL/NONE
-// OFFSET: 0x006ACE60
-bool ClientUnit30A6::Get(CDataStore* msg, bool full) {
+// PROVEN: 1e0b8949 IDENTICAL/NONE
+// OFFSET: 0x006B7650
+bool ClientSuppressNPCGreetings::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
 }
 
-// PROVEN: dcb2e615 IDENTICAL/NONE
-// OFFSET: 0x006A86A0
-bool ClientUnit30A6::Read(CDataStore* msg, bool full) {
+// PROVEN: e24bafa7 IDENTICAL/NONE
+// OFFSET: 0x006AE260
+bool ClientSuppressNPCGreetings::Read(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
+    this->m_suppressed = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
     guid[4] = bits.ReadBit();
     guid[0] = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    this->m_value = bits.ReadBit();
-    guid[3] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
     guid[5] = bits.ReadBit();
-    guid[2] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    if (guid[3]) {
+    guid[3] = bits.ReadBit();
+    if (guid[1]) {
         uint8_t value11 = 0;
         msg->Get(value11);
-        guid[3] ^= value11;
-    }
-
-    if (guid[2]) {
-        uint8_t value17 = 0;
-        msg->Get(value17);
-        guid[2] ^= value17;
-    }
-
-    if (guid[1]) {
-        uint8_t value23 = 0;
-        msg->Get(value23);
-        guid[1] ^= value23;
+        guid[1] ^= value11;
     }
 
     if (guid[7]) {
-        uint8_t value29 = 0;
-        msg->Get(value29);
-        guid[7] ^= value29;
+        uint8_t value17 = 0;
+        msg->Get(value17);
+        guid[7] ^= value17;
     }
 
     if (guid[0]) {
-        uint8_t value35 = 0;
-        msg->Get(value35);
-        guid[0] ^= value35;
+        uint8_t value23 = 0;
+        msg->Get(value23);
+        guid[0] ^= value23;
     }
 
-    if (guid[5]) {
-        uint8_t value41 = 0;
-        msg->Get(value41);
-        guid[5] ^= value41;
-    }
-
-    if (guid[4]) {
-        uint8_t value47 = 0;
-        msg->Get(value47);
-        guid[4] ^= value47;
+    if (guid[2]) {
+        uint8_t value29 = 0;
+        msg->Get(value29);
+        guid[2] ^= value29;
     }
 
     if (guid[6]) {
+        uint8_t value35 = 0;
+        msg->Get(value35);
+        guid[6] ^= value35;
+    }
+
+    if (guid[4]) {
+        uint8_t value41 = 0;
+        msg->Get(value41);
+        guid[4] ^= value41;
+    }
+
+    if (guid[3]) {
+        uint8_t value47 = 0;
+        msg->Get(value47);
+        guid[3] ^= value47;
+    }
+
+    if (guid[5]) {
         uint8_t value53 = 0;
         msg->Get(value53);
-        guid[6] ^= value53;
+        guid[5] ^= value53;
     }
 
     return msg->IsRead() != 0;
 }
 
-// OFFSET: 0x006B45A0/0x140366520
-bool ClientUnit30A6::Handle() {
-    if (!ClientUnit30A6::s_handler) {
+// OFFSET: 0x006B9030/0x14036C4C0
+bool ClientSuppressNPCGreetings::Handle() {
+    if (!ClientSuppressNPCGreetings::s_handler) {
         return false;
     }
 
-    return ClientUnit30A6::s_handler(this);
-}
-
-// PROVEN: 216d8e8e IDENTICAL/NONE
-// OFFSET: 0x006C99C0/0x140381410
-ClientUnitClearSlotValue::ClientUnitClearSlotValue(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
-    this->Unpack(msg, true);
-}
-
-// PROVEN: 39e9d352 IDENTICAL/NONE
-// OFFSET: 0x006A18E0/0x14034EC90
-ClientUnitClearSlotValue::~ClientUnitClearSlotValue() {
-}
-
-// PROVEN: 6370717b IDENTICAL/NONE
-// OFFSET: 0x006B81F0/0x14036B2D0
-void ClientUnitClearSlotValue::Unpack(CDataStore* msg, bool full) {
-    JamBitReader bits(msg);
-    uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
-    guid[2] = bits.ReadBit();
-    guid[4] = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
-    guid[5] = bits.ReadBit();
-    guid[0] = bits.ReadBit();
-    guid[3] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    if (guid[5]) {
-        uint8_t value10 = 0;
-        msg->Get(value10);
-        guid[5] ^= value10;
-    }
-
-    if (guid[0]) {
-        uint8_t value16 = 0;
-        msg->Get(value16);
-        guid[0] ^= value16;
-    }
-
-    {
-        uint8_t value21 = 0;
-        msg->Get(value21);
-        this->m_index = value21;
-    }
-    if (guid[3]) {
-        uint8_t value25 = 0;
-        msg->Get(value25);
-        guid[3] ^= value25;
-    }
-
-    if (guid[7]) {
-        uint8_t value31 = 0;
-        msg->Get(value31);
-        guid[7] ^= value31;
-    }
-
-    if (guid[4]) {
-        uint8_t value37 = 0;
-        msg->Get(value37);
-        guid[4] ^= value37;
-    }
-
-    if (guid[2]) {
-        uint8_t value43 = 0;
-        msg->Get(value43);
-        guid[2] ^= value43;
-    }
-
-    {
-        uint8_t value48 = 0;
-        msg->Get(value48);
-        this->m_slot = value48;
-    }
-    if (guid[6]) {
-        uint8_t value52 = 0;
-        msg->Get(value52);
-        guid[6] ^= value52;
-    }
-
-    if (guid[1]) {
-        uint8_t value58 = 0;
-        msg->Get(value58);
-        guid[1] ^= value58;
-    }
-}
-
-// PROVEN: 82913a0b IDENTICAL/NONE
-// OFFSET: 0x006A8CF0
-bool ClientUnitClearSlotValue::Get(CDataStore* msg, bool full) {
-    return this->Read(msg, full);
-}
-
-// PROVEN: 5289626a IDENTICAL/NONE
-// OFFSET: 0x006A57F0
-bool ClientUnitClearSlotValue::Read(CDataStore* msg, bool full) {
-    JamBitReader bits(msg);
-    uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_guid);
-    guid[2] = bits.ReadBit();
-    guid[4] = bits.ReadBit();
-    guid[1] = bits.ReadBit();
-    guid[7] = bits.ReadBit();
-    guid[5] = bits.ReadBit();
-    guid[0] = bits.ReadBit();
-    guid[3] = bits.ReadBit();
-    guid[6] = bits.ReadBit();
-    if (guid[5]) {
-        uint8_t value10 = 0;
-        msg->Get(value10);
-        guid[5] ^= value10;
-    }
-
-    if (guid[0]) {
-        uint8_t value16 = 0;
-        msg->Get(value16);
-        guid[0] ^= value16;
-    }
-
-    {
-        uint8_t value21 = 0;
-        msg->Get(value21);
-        this->m_index = value21;
-    }
-    if (guid[3]) {
-        uint8_t value25 = 0;
-        msg->Get(value25);
-        guid[3] ^= value25;
-    }
-
-    if (guid[7]) {
-        uint8_t value31 = 0;
-        msg->Get(value31);
-        guid[7] ^= value31;
-    }
-
-    if (guid[4]) {
-        uint8_t value37 = 0;
-        msg->Get(value37);
-        guid[4] ^= value37;
-    }
-
-    if (guid[2]) {
-        uint8_t value43 = 0;
-        msg->Get(value43);
-        guid[2] ^= value43;
-    }
-
-    {
-        uint8_t value48 = 0;
-        msg->Get(value48);
-        this->m_slot = value48;
-    }
-    if (guid[6]) {
-        uint8_t value52 = 0;
-        msg->Get(value52);
-        guid[6] ^= value52;
-    }
-
-    if (guid[1]) {
-        uint8_t value58 = 0;
-        msg->Get(value58);
-        guid[1] ^= value58;
-    }
-
-    return msg->IsRead() != 0;
-}
-
-// OFFSET: 0x006B0820/0x140361650
-bool ClientUnitClearSlotValue::Handle() {
-    if (!ClientUnitClearSlotValue::s_handler) {
-        return false;
-    }
-
-    return ClientUnitClearSlotValue::s_handler(this);
+    return ClientSuppressNPCGreetings::s_handler(this);
 }
 
 // OFFSET: 0x006A2C10

@@ -10,6 +10,22 @@
 
 class CDataStore;
 
+class ClientAuraPointsDepleted : public JamClientMessage {
+    public:
+    static bool (*s_handler)(ClientAuraPointsDepleted* msg);
+
+    /* 0010 */ WOWGUID m_guid;
+    /* 0018 */ uint8_t m_slot;
+    /* 0019 */ uint8_t m_effectIndex;
+
+    ClientAuraPointsDepleted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientAuraPointsDepleted();
+    bool Get(CDataStore* msg, bool full) override;
+    bool Handle();
+    bool Read(CDataStore* msg, bool full);
+    void Unpack(CDataStore* msg, bool full);
+};
+
 class ClientMoveCollisionDisable : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMoveCollisionDisable* msg);
@@ -726,15 +742,15 @@ class ClientPlaySpellVisual : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
-class ClientSetFootstepSoundsSuppressed : public JamClientMessage {
+class ClientSetPlayHoverAnim : public JamClientMessage {
     public:
-    static bool (*s_handler)(ClientSetFootstepSoundsSuppressed* msg);
+    static bool (*s_handler)(ClientSetPlayHoverAnim* msg);
 
     /* 0010 */ WOWGUID m_guid;
-    /* 0018 */ bool m_suppressed;
+    /* 0018 */ bool m_playHoverAnim;
 
-    ClientSetFootstepSoundsSuppressed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
-    ~ClientSetFootstepSoundsSuppressed();
+    ClientSetPlayHoverAnim(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientSetPlayHoverAnim();
     bool Get(CDataStore* msg, bool full) override;
     bool Handle();
     bool Read(CDataStore* msg, bool full);
@@ -1128,31 +1144,15 @@ class ClientSplineMoveUnsetHover : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
-class ClientUnit30A6 : public JamClientMessage {
+class ClientSuppressNPCGreetings : public JamClientMessage {
     public:
-    static bool (*s_handler)(ClientUnit30A6* msg);
+    static bool (*s_handler)(ClientSuppressNPCGreetings* msg);
 
     /* 0010 */ WOWGUID m_guid;
-    /* 0018 */ bool m_value;
+    /* 0018 */ bool m_suppressed;
 
-    ClientUnit30A6(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
-    ~ClientUnit30A6();
-    bool Get(CDataStore* msg, bool full) override;
-    bool Handle();
-    bool Read(CDataStore* msg, bool full);
-    void Unpack(CDataStore* msg, bool full);
-};
-
-class ClientUnitClearSlotValue : public JamClientMessage {
-    public:
-    static bool (*s_handler)(ClientUnitClearSlotValue* msg);
-
-    /* 0010 */ WOWGUID m_guid;
-    /* 0018 */ uint8_t m_slot;
-    /* 0019 */ uint8_t m_index;
-
-    ClientUnitClearSlotValue(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
-    ~ClientUnitClearSlotValue();
+    ClientSuppressNPCGreetings(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
+    ~ClientSuppressNPCGreetings();
     bool Get(CDataStore* msg, bool full) override;
     bool Handle();
     bool Read(CDataStore* msg, bool full);
