@@ -27,7 +27,7 @@ extern DBCache<ItemNameCache_C, int32_t, HASHKEY_INT> g_itemNameDBCache;
 extern DBCache<ItemStats_C, int32_t, HASHKEY_INT> g_itemDBCache;
 extern DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache;
 extern DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache;
-extern DBCache<GuildStats_C, int32_t, HASHKEY_INT> g_guildInfoCache;
+extern DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache;
 extern DBCache<QuestCache, int32_t, HASHKEY_INT> g_questDBCache;
 extern DBCache<PageTextCache_C, int32_t, HASHKEY_INT> g_pageTextCache;
 extern DBCache<PetNameCache, int32_t, HASHKEY_INT> g_petNameCache;

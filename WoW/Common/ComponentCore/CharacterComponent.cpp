@@ -74,6 +74,9 @@ static const char* s_fileDecorations[3] = { "M", "F", "U" };
 // STATIC: #0x00AC46D0
 static CStatus s_status;
 
+// STATIC: 0x00CFFE08
+static const char* s_proceduralEmblemFormat = "Textures\\GuildEmblems\\emblem_%02i";
+
 // STATIC: #0x00AC46E4
 TSExplicitList<CCharacterComponent, 0> CCharacterComponent::s_queue;
 
@@ -513,6 +516,7 @@ void CCharacterComponent::RemoveLinkpt(CM2Model* model, GEOCOMPONENTLINKS link) 
     }
 }
 
+// PROVEN: 557dd2b4 IDENTICAL/NONE
 // OFFSET: 0x006F8F80
 INVENTORY_SLOTS CCharacterComponent::GetInvSlotForInvType(INVENTORY_TYPES invType) {
     switch (invType) {
@@ -909,6 +913,16 @@ char* CCharacterComponent::GetTabardEmblemFileName(COMPONENT_SECTIONS section, i
     }
 
     return buffer;
+}
+
+// OFFSET: 0x006F9860/0x1403C2AA0
+int32_t CCharacterComponent::GetProceduralEmblemFileName(int32_t emblem, char* buffer, int32_t size) {
+    if (!buffer || static_cast<uint32_t>(emblem) >= 196) {
+        return 0;
+    }
+
+    SStrPrintf(buffer, size, s_proceduralEmblemFormat, emblem);
+    return 1;
 }
 
 // OFFSET: #0x004E8260

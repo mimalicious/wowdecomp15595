@@ -116,6 +116,7 @@ class CCharacterComponent {
     static char* GetTabardBackgroundFileName(COMPONENT_SECTIONS section, int32_t background, char* buffer, int32_t size);
     static char* GetTabardBorderFileName(COMPONENT_SECTIONS section, int32_t border, int32_t color, char* buffer, int32_t size);
     static char* GetTabardEmblemFileName(COMPONENT_SECTIONS section, int32_t emblem, int32_t color, char* buffer, int32_t size);
+    static int32_t GetProceduralEmblemFileName(int32_t emblem, char* buffer, int32_t size);
     static void InitCVars();
     static void StreamingUpdate();
     static bool Initialize();

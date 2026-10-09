@@ -449,7 +449,7 @@ void CGBarberShop::DisableBarberShop() {
     VisibleItem_C* tabard = const_cast<VisibleItem_C*>(player->GetVisibleItem(INVSLOT_TABARD));
 
     if (tabard && tabard->GetDisplayID()) {
-        player->LoadGuildTextures(tabard->GetDisplayID());
+        player->LoadGuildTextures(static_cast<int32_t>(tabard->GetDisplayID()));
     } else {
         component->RemoveItemBySlot(INVSLOT_TABARD);
     }

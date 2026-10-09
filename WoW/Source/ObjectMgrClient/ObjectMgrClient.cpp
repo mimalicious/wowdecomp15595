@@ -854,7 +854,7 @@ static void ExpirePendingHandlers(TSExplicitList<CMirrorHandler, offsetof(CMirro
 static void ExpireOldObjects(OBJECT_TYPE_ID typeId, uint32_t expireTime) {
     CGObject_C* object = s_curMgr->m_lazyCleanupFifo[typeId - 1].Head();
 
-    if (object && !object->unk_00F0 && static_cast<int32_t>(FrameTime::GetCurTimeMs() - object->m_disableTime - expireTime) >= 0) {
+    if (object && !object->m_fadeoutInfo && static_cast<int32_t>(FrameTime::GetCurTimeMs() - object->m_disableTime - expireTime) >= 0) {
         s_curMgr->m_lazyCleanupObjects.Unlink(object);
         object->m_link.Unlink();
         DestroyRemovedObject(object);
@@ -1178,6 +1178,17 @@ static int32_t ExpireLazyObjects(const void* data, void* param) {
     }
 
     return 1;
+}
+
+// OFFSET: 0x004900F0/0x1400B4920
+void ClntObjMgrDestroyLazyCleanupObjects() {
+    CGObject_C* object;
+
+    while ((object = s_curMgr->m_lazyCleanupObjects.m_fulllist.Head()) != NULL) {
+        s_curMgr->m_lazyCleanupObjects.Unlink(object);
+        object->m_link.Unlink();
+        DestroyRemovedObject(object);
+    }
 }
 
 // OFFSET: 0x0048FFD0

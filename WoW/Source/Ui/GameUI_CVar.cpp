@@ -27,6 +27,9 @@ HSLOG s_taintLog;
 // STATIC: #0x00BD08E4
 CVar* g_taintLogCVar;
 
+// STATIC: 0x00ED7688
+CVar* g_emphasizeMySpellEffectsCVar;
+
 // STATIC: #0x00BD08E8
 CVar* g_scriptErrorsCVar;
 

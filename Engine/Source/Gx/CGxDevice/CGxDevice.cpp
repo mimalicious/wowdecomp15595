@@ -55,7 +55,7 @@ const char* CGxDevice::s_shaderProfileNames[GxShProfiles_Last] = { "none", "vs_f
 // STATIC: %0x00C0DB40
 const char* CGxDevice::s_texFormatNames[GxTexFormats_Last] = { "Unknown", "Abgr8888", "Argb8888", "Argb4444", "Argb1555", "Rgb565", "Uv88", "Dxt1", "Dxt3", "Dxt5", "R16_UNORM", "Gr1616F", "Abgr16161616F", "R24_UNORM_X8", "R32F", "Abgr32323232F", "NULL", "D24X8", "D16", "D32", "INTZ", "RAWZ", "RESZ", "ATI_D24" };
 
-// STATIC: %0x00C0E2F0
+// STATIC: 0x00D08FB0
 uint32_t CGxDevice::s_alphaRef[12] = { 0, 128, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
 
 // STATIC: %0x00C0E324

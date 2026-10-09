@@ -1963,7 +1963,7 @@ CGlueMgr::WeaponLoadOut CGlueMgr::AddItemsFromCharInfo(const CHARACTER_INFO* inf
                 if (slot == 18) {
                     component->ApplyGuildColor(displayRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
                 } else if (slot == 14) {
-                    CGObject_C::ReplaceGuildTextures(component->m_data.m_model, info->m_guildGUID, CGPlayer_C::GetPVPFactionIndex(info->m_raceID));
+                    CGObject_C::ReplaceGuildTextures(component->m_data.m_model, info->m_guildGUID.m_guid, CGPlayer_C::GetPVPFactionIndex(info->m_raceID));
                 } else {
                     component->ApplyShoulderGuildColor(displayRec.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
                 }

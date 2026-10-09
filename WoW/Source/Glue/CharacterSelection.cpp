@@ -493,7 +493,7 @@ void CCharacterSelection::GuildCallback(const WOWGUID& guildGUID, const WOWGUID&
             component->ApplyGuildColor(flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
         }
 
-        CGObject_C::ReplaceGuildTextures(component->m_data.m_model, guildGUID, -1);
+        CGObject_C::ReplaceGuildTextures(component->m_data.m_model, guildGUID.m_guid, -1);
         flags = CCharacterSelection::GetEquippedGuildTabardFlags(3, i);
 
         if (flags) {
@@ -524,7 +524,7 @@ void CCharacterSelection::ModelLoadedCallback(CM2Model* model, void* arg) {
             GuildGetGuildTabard(display->m_characterInfo.m_guid, display->m_characterInfo.m_guildGUID, CCharacterSelection::GuildCallback, NULL, emblemStyle, emblemColor, borderStyle, borderColor, background);
         }
 
-        CGObject_C::ReplaceGuildTextures(model, display->m_characterInfo.m_guildGUID, CGPlayer_C::GetPVPFactionIndex(display->m_characterInfo.m_raceID));
+        CGObject_C::ReplaceGuildTextures(model, display->m_characterInfo.m_guildGUID.m_guid, CGPlayer_C::GetPVPFactionIndex(display->m_characterInfo.m_raceID));
     }
 }
 

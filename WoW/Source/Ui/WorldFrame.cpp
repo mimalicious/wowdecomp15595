@@ -1753,7 +1753,7 @@ void CGWorldFrame::OnWorldRender() {
 }
 
 // OFFSET: #0x004F9F70
-int32_t CGWorldFrame::ObjectEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4) {
+int32_t CGWorldFrame::ObjectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4) {
     CGWorldFrame* frame = CGWorldFrame::s_currentWorldFrame;
     CGObject_C* object = ClntObjMgrObjectPtr(WOWGUID::Make(guid), TYPEMASK_OBJECT, __FILE__, __LINE__);
 

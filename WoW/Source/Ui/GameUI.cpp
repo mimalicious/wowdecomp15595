@@ -921,7 +921,7 @@ int32_t CGGameUI::m_cursorEquipmentSet = -1;
 // STATIC: #0x00AC80A4
 int32_t CGGameUI::m_phaseMask;
 
-// STATIC: #0x00AC80A8
+// STATIC: 0x00D0B2B4
 int32_t CGGameUI::m_visible = 1;
 
 // STATIC: #0x00AC8AE0
@@ -1029,7 +1029,7 @@ float s_inspectDistSq = 900.0f;
 // STATIC: #0x00AC8A70
 float s_followDistSq = 900.0f;
 
-// STATIC: #0x00BD07B0
+// STATIC: 0x00ED7448
 WOWGUID CGGameUI::m_lockedTarget;
 
 // STATIC: #0x00BD07B8
@@ -2548,7 +2548,7 @@ void CGGameUI::HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid) {
         CGGameUI::m_gameTooltip->FadeOut();
 
         if (object) {
-            object->HideHighlightType(1);
+            object->HideHighlightType(1, 0);
         }
     }
 
@@ -2560,7 +2560,7 @@ void CGGameUI::HandleObjectTrackChange(WOWGUID guid, WOWGUID prevGuid) {
     }
 
     if (CGGameUI::m_visible || (g_unitHighlightsCVar && g_unitHighlightsCVar->m_intValue)) {
-        object->ShowHighlightType(1);
+        object->ShowHighlightType(1, 0);
     }
 
     switch (static_cast<uint32_t>(object->m_obj->m_type)) {
@@ -2661,7 +2661,7 @@ void CGGameUI::ClearTarget(WOWGUID guid, int32_t a2) {
         CGObject_C* object = ClntObjMgrObjectPtr(CGGameUI::m_lockedTarget, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
         if (object) {
-            object->HideHighlightType(0);
+            object->HideHighlightType(0, 0);
 
             if (object->m_obj->m_type & TYPEMASK_UNIT) {
                 CGUnit_C* unit = static_cast<CGUnit_C*>(object);
@@ -2780,7 +2780,7 @@ void CGGameUI::Target(WOWGUID guid) {
         }
 
         if (CGGameUI::m_visible || (g_unitHighlightsCVar && g_unitHighlightsCVar->m_intValue)) {
-            object->ShowHighlightType(0);
+            object->ShowHighlightType(0, 0);
         }
 
         if (object->m_obj->m_type & TYPEMASK_UNIT) {
@@ -3899,9 +3899,9 @@ void CGGameUI::UpdateUnitHighlights() {
 
         if (object) {
             if (show) {
-                object->ShowHighlightType(1);
+                object->ShowHighlightType(1, 0);
             } else {
-                object->HideHighlightType(1);
+                object->HideHighlightType(1, 0);
             }
         }
     }
@@ -3911,9 +3911,9 @@ void CGGameUI::UpdateUnitHighlights() {
 
         if (object) {
             if (show) {
-                object->ShowHighlightType(0);
+                object->ShowHighlightType(0, 0);
             } else {
-                object->HideHighlightType(0);
+                object->HideHighlightType(0, 0);
             }
         }
     }

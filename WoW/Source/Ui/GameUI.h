@@ -43,6 +43,7 @@ class PetAction;
 struct lua_State;
 
 extern CVar* g_autoClearAFKCVar;
+extern CVar* g_emphasizeMySpellEffectsCVar;
 extern CVar* g_showLootSpamCVar;
 extern CImVector s_deadSelectionColor;
 extern CVar* g_assistAttackCVar;

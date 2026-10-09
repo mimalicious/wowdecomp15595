@@ -9061,7 +9061,7 @@ void PlayImpactVisual(const SpellRec* spell, const TSStackArray<WOWGUID>& target
 
         if (kit) {
             PlaySpellVisuaKitData data(spell, kit, 1);
-            data.unk_001C = SpellRec::IsHelpfulOrHarmful(spell) == 2;
+            data.unk_0024 = SpellRec::IsHelpfulOrHarmful(spell) == 2;
             object->PlaySpellVisualKit(data);
         }
     }

@@ -115,7 +115,7 @@ class CGWorldFrame : public CSimpleFrame {
     static void UpdateScreenEffectParams();
     static int32_t Update(const void* data, void* param);
     static void RenderWorld(void* param);
-    static int32_t ObjectEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
+    static int32_t ObjectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4);
     static int32_t MissileEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
     static int32_t SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4);
 

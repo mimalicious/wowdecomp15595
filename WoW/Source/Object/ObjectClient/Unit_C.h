@@ -474,13 +474,13 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
     void Reenable(const CClientObjCreate& create) override;
     void PostReenable(const CClientObjCreate& create) override;
-    void LoadGuildTextures() override;
+    bool LoadGuildTextures(uint64_t guildGUID) override;
     int32_t IsSolidSelectable() const override;
     void OnInteract() override;
     float AddSquelchedEffect() override;
     bool IsTransport() const override;
     int32_t IsPointInside(const C3Vector& point) const override;
-    void PlaySpellVisualKit_PlayAnims(const PlaySpellVisuaKitData* data) override;
+    void PlaySpellVisualKit_PlayAnims(const PlaySpellVisualKitAnimData* data) override;
     void PlaySpellVisualKit_HandleWeapons(const SpellRec* spell, const SpellVisualKitRec* kit, const C3Vector* position, WOWGUID guid, uint32_t a5, uint32_t flags, void (*callback)(CM2Model*, uint32_t, uint32_t, int32_t, uint32_t, uint64_t, int32_t), int32_t* hasEffect, uint32_t a9, int32_t a10) override;
     int32_t PlaySpellVisualKit_DelayLightningEffects(const SpellRec* spell, const SpellVisualKitRec* kit, SPELL_VISUAL_KIT_TYPE type, const C3Vector* position, WOWGUID guid, int32_t a6, int32_t a7, int32_t a8, int32_t a9, uint32_t a10, const SpellVisualRec* visual, uint32_t a12, int32_t a13) override;
     void CleanUpVehicleBoneAnimsBeforeObjectModelChange() override;
@@ -914,6 +914,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsHatedTowards(const CGUnit_C* unit) const;
     uint64_t GetComboPointTarget() const;
     bool IsVehiclePassengerSeated() const;
+    bool IsNPCTracked() const;
     const VehicleSeatRec* GetPassengerSeatRec() const;
     void UpdateWeaponTrails(const uint32_t* a2, uint32_t a3);
     int32_t ApplyAttachmentAnimOverride(const M2BoneSequenceInfo* mount, const M2BoneSequenceInfo* base, const M2BoneSequenceInfo* torso, int32_t hasTorso, M2BoneSequenceInfo* mountOut, M2BoneSequenceInfo* baseOut, M2BoneSequenceInfo* torsoOut, int32_t* keepBase, int32_t* keepTorso);

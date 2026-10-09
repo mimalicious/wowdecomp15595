@@ -253,6 +253,7 @@ bool OnCancelCombat();
 void Spell_C_ClearCooldowns();
 void Spell_C_ClearPetCooldowns();
 const SpellVisualRec* GetSpellVisual(const SpellRec* spell);
+const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit);
 void Spell_C_Destroy();
 void Spell_C_Initialize();
 PendingSpellCast* CreatePendingSpellCast(bool assignCastCount);

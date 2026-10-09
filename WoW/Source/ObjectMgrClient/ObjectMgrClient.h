@@ -60,6 +60,7 @@ class ObjectMgr {
 CGObject_C* ClntObjMgrAllocObject(OBJECT_TYPE_ID typeId, WOWGUID guid);
 void ClntObjMgrDestroyStd();
 void ClntObjMgrDestroyShared();
+void ClntObjMgrDestroyLazyCleanupObjects();
 int32_t ClntObjMgrEnumVisibleObjects(OBJECTENUMFUNC func, void* param);
 WOWGUID ClntObjMgrGetActivePlayer();
 CGPlayer_C* ClntObjMgrGetActivePlayerObj();

@@ -117,21 +117,21 @@ C3Vector LightningObject::GetImpactPosition(CGUnit_C* unit, uint32_t spellId) {
     int32_t raw = visual->m_flags & 0x200;
 
     if (model->IsLoaded() && (model->m_fFlags & 0x8000) && unit->HasAttachmentForEffect(visual->m_missileDestinationAttachment, raw)) {
-        position.x = visual->m_missileImpactOffset[0];
-        position.y = -visual->m_missileImpactOffset[1];
-        position.z = visual->m_missileImpactOffset[2];
+        position.x = visual->m_missileImpactOffset.x;
+        position.y = -visual->m_missileImpactOffset.y;
+        position.z = visual->m_missileImpactOffset.z;
         return unit->GetAttachmentPositionForEffect(visual->m_missileDestinationAttachment, position, raw);
     }
 
-    if (visual->m_missileImpactOffset[0] != 0.0f || visual->m_missileImpactOffset[1] != 0.0f || visual->m_missileImpactOffset[2] != 0.0f) {
+    if (visual->m_missileImpactOffset.x != 0.0f || visual->m_missileImpactOffset.y != 0.0f || visual->m_missileImpactOffset.z != 0.0f) {
         C44Matrix matrix = unit->m_vehiclePassenger ? unit->GetModelMatrix() : unit->GetMatrix();
         matrix.d0 = 0.0f;
         matrix.d1 = 0.0f;
         matrix.d2 = 0.0f;
         C3Vector offset;
-        offset.x = visual->m_missileImpactOffset[0];
-        offset.y = -visual->m_missileImpactOffset[1];
-        offset.z = visual->m_missileImpactOffset[2];
+        offset.x = visual->m_missileImpactOffset.x;
+        offset.y = -visual->m_missileImpactOffset.y;
+        offset.z = visual->m_missileImpactOffset.z;
         C3Vector transformed = offset * matrix;
         position.x = transformed.x + position.x;
         position.y = transformed.y + position.y;
@@ -487,13 +487,13 @@ void LightningObject::CreateFromSpell(CGObject_C* caster, CEffect* effect, uint3
         const SpellVisualRec* visual = GetSpellVisual(&spell);
 
         if (visual) {
-            sourceOffset.x = visual->m_missileCastOffset[0];
+            sourceOffset.x = visual->m_missileCastOffset.x;
             sourceAttachment = visual->m_missileAttachment;
-            sourceOffset.y = -visual->m_missileCastOffset[1];
-            sourceOffset.z = visual->m_missileCastOffset[2];
-            targetOffset.x = visual->m_missileImpactOffset[0];
-            targetOffset.y = -visual->m_missileImpactOffset[1];
-            targetOffset.z = visual->m_missileImpactOffset[2];
+            sourceOffset.y = -visual->m_missileCastOffset.y;
+            sourceOffset.z = visual->m_missileCastOffset.z;
+            targetOffset.x = visual->m_missileImpactOffset.x;
+            targetOffset.y = -visual->m_missileImpactOffset.y;
+            targetOffset.z = visual->m_missileImpactOffset.z;
             raw = visual->m_flags & 0x200;
         }
     }

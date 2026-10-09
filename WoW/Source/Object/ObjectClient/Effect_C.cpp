@@ -549,7 +549,7 @@ void CEffect::LoadGuildTextures() {
     if (object->m_obj->m_dataType == 1 && object->m_obj->m_data) {
         WOWGUID requester = object->m_obj->m_guid;
 
-        if (!g_guildInfoCache.GetRecord(static_cast<int32_t>(object->m_obj->m_data.m_guid), requester, CGObject_C::GuildTextureCallback, NULL, false)) {
+        if (!g_guildInfoCache.GetRecord2(object->m_obj->m_data.m_guid, requester, &CGObject_C::GuildTextureCallback, NULL, false)) {
             return;
         }
     }
@@ -560,7 +560,7 @@ void CEffect::LoadGuildTextures() {
         factionIndex = static_cast<CGPlayer_C*>(object)->GetPVPFactionIndex();
     }
 
-    CGObject_C::ReplaceGuildTextures(this->m_model, object->GetGuildGUID(), factionIndex);
+    CGObject_C::ReplaceGuildTextures(this->m_model, object->GetGuildGUID().m_guid, factionIndex);
 }
 
 // PROVEN: 5e7aa5d4 IDENTICAL/NONE

@@ -48,6 +48,7 @@ static bool ComponentTextureLevelCallback(CVar* var, const char* oldValue, const
     return true;
 }
 
+// PROVEN: 13a1ea1f IDENTICAL/NONE
 // OFFSET: 0x00B3C180/0x140909030
 void CCharacterComponent::InitCVars() {
     CCharacterComponent::g_componentTextureLevelVar = CVar::Register("componentTextureLevel", "Number of mip levels used for character component textures", 1, "8", ComponentTextureLevelCallback, CATEGORY_GRAPHICS, false, NULL, false);

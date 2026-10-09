@@ -275,7 +275,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void Reenable(const CClientObjCreate& create) override;
     void PostReenable(const CClientObjCreate& create) override;
     void HandleGuildIDUpdate() override;
-    void LoadGuildTextures() override;
+    bool LoadGuildTextures(uint64_t guildGUID) override;
     void PreAnimate(CGWorldFrame* frame) override;
     void ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) override;
 
@@ -458,17 +458,28 @@ class PlaySpellVisuaKitData {
     public:
     /* 0000 */ const SpellRec* m_spellRec;
     /* 0004 */ const SpellVisualKitRec* m_impactVisualKit;
-    /* 0008 */ uint32_t unk_0008;
+    /* 0008 */ uint32_t m_kitType;
     /* 000C */ C3Vector* m_position;
-    /* 0010 */ WOWGUID m_transportGUID;
-    /* 0018 */ uint32_t unk_0018;
-    /* 001C */ uint32_t unk_001C;
-    /* 0020 */ uint32_t unk_0020;
+    /* 0010 */ const C3Vector* m_orientation;
+    /* 0014 */ uint32_t unk_0014;
+    /* 0018 */ WOWGUID m_transportGUID;
+    /* 0020 */ uint32_t m_animParam;
     /* 0024 */ uint32_t unk_0024;
-    /* 0028 */ WOWGUID m_someGUID;
-    /* 0030 */ uint32_t unk_0030;
+    /* 0028 */ uint32_t unk_0028;
+    /* 002C */ uint32_t unk_002C;
+    /* 0030 */ WOWGUID m_someGUID;
+    /* 0038 */ uint32_t unk_0038;
+    /* 003C */ uint32_t m_displayId;
+    /* 0040 */ int32_t m_inventoryType;
+    /* 0044 */ uint32_t m_timeOffset;
+    /* 0048 */ uint32_t unk_0048;
+    /* 004C */ uint32_t m_flags;
+    /* 0050 */ uint32_t unk_0050;
+    /* 0054 */ uint32_t unk_0054;
+    /* 0058 */ uint32_t unk_0058;
+    /* 005C */ uint32_t unk_005C;
 
-    PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t a4);
+    PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t kitType);
 };
 
 uint32_t FindEmptySwapIndex();

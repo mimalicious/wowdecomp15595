@@ -43,7 +43,7 @@ DBCache<NPCText, int32_t, HASHKEY_INT> g_npcTextDBCache('WNPC', "npccache.wdb", 
 DBCache<NameCache, uint64_t, CHashKeyGUID> g_nameDBCache('WNAM', "namecache.wdb", CMSG_NAME_QUERY, 0, false, false, 256);
 
 // STATIC: #0x00C5D9C0
-DBCache<GuildStats_C, int32_t, HASHKEY_INT> g_guildInfoCache('WGLD', "guildcache.wdb", CMSG_QUERY_GUILD_INFO, 0, false, false, 0);
+DBCache<GuildStats_C, uint64_t, CHashKeyGUID> g_guildInfoCache('WGLD', "guildcache.wdb", CMSG_QUERY_GUILD_INFO, 0, false, false, 0);
 
 // STATIC: #0x00C5DA48
 DBCache<QuestCache, int32_t, HASHKEY_INT> g_questDBCache('WQST', "questcache.wdb", CMSG_QUERY_QUEST_INFO, 0, false, true, 0);
@@ -610,7 +610,7 @@ void DBCache<NameCache, uint64_t, CHashKeyGUID>::AddItem(NameCache* item, uint64
 
     for (DBCACHECALLBACK* node = hash->m_callbacks.Head(); node;) {
         DBCACHECALLBACK* next = hash->m_callbacks.Next(node);
-        node->m_callback(static_cast<int32_t>(key), node->m_guid, node->m_param, true);
+        DBCacheDispatch(node, key, static_cast<int32_t>(key), true);
         node = next;
     }
 

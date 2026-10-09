@@ -1382,19 +1382,28 @@ int32_t CGPlayer_C::IsGiftWrapping() {
     return static_cast<bool>(s_giftWrapItem);
 }
 
-// OFFSET: #0x006CF240
-PlaySpellVisuaKitData::PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t a4) {
+// OFFSET: 0x00554B80
+PlaySpellVisuaKitData::PlaySpellVisuaKitData(const SpellRec* spellRec, const SpellVisualKitRec* impactVisualKit, uint32_t kitType) {
     this->m_spellRec = spellRec;
-    this->unk_0008 = a4;
+    this->m_kitType = kitType;
     this->m_impactVisualKit = impactVisualKit;
     this->m_position = NULL;
+    this->m_orientation = NULL;
     this->m_transportGUID = WOWGUID();
-    this->unk_0018 = 1;
-    this->unk_001C = 0;
-    this->unk_0020 = 0;
-    this->unk_0024 = -1;
+    this->m_animParam = 1;
+    this->unk_0024 = 0;
+    this->unk_0028 = 0;
+    this->unk_002C = -1;
     this->m_someGUID = WOWGUID();
-    this->unk_0030 = 0;
+    this->unk_0038 = 0;
+    this->m_displayId = 0;
+    this->m_inventoryType = 0;
+    this->m_timeOffset = 0;
+    this->unk_0048 = 0;
+    this->m_flags = 0;
+    this->unk_0050 = 0;
+    this->unk_0058 = 0;
+    this->unk_005C = 0;
 }
 
 // OFFSET: #0x006CF290
@@ -2541,7 +2550,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatus(CDataStore* msg) {
     CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (object && object->IsQuestGiver()) {
-        object->SetQuestStatus(status);
+        object->UpdateInteractIcon(status);
     }
 
     return 1;
@@ -2562,7 +2571,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverStatusMultiple(CDataStore* msg) {
         CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
         if (object && object->IsQuestGiver()) {
-            object->SetQuestStatus(status);
+            object->UpdateInteractIcon(status);
         }
     }
 

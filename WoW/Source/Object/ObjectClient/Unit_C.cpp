@@ -190,7 +190,7 @@ static UnitThreatHeap* s_unitThreatPool;
 // STATIC: #0x00CA1254
 int32_t CGUnit_C::s_initialized;
 
-// STATIC: #0x00CA1238
+// STATIC: 0x00DD6210
 WOWGUID CGUnit_C::s_activeMover;
 
 // STATIC: #0x00CA11F4
@@ -2181,7 +2181,7 @@ void CGUnit_C::RenderAutoTrackCursor() {
     C3Vector position = this->m_movementData.GetPosition(CGUnit_C::s_trackingPosition);
     CAaBox box(C3Vector(position.x - size, position.y - size, position.z - size), C3Vector(position.x + size, position.y + size, position.z + size));
     C44Matrix matrix;
-    this->BuildSelectionRotMatrix(&matrix, &CGUnit_C::s_trackingPosition);
+    this->BuildSelectionRotMatrix(matrix, CGUnit_C::s_trackingPosition);
     g_theGxDevicePtr->RsPush();
 
     if (this->SetCircleRenderStates()) {
@@ -12201,7 +12201,7 @@ void CGUnit_C::ShowHandItemSpellEffects(int32_t show, int32_t force) {
             const SpellVisualRec* visual = this->GetAppropriateSpellVisual(&spell, visualRec, 0, 0);
 
             if (visual && visual->m_stateKit && (visual->m_flags & 0x8) && g_spellVisualKitDB.GetRecord(visual->m_stateKit)) {
-                this->ClearSpellEffect(this->unk_0EDC[i], 1);
+                this->ClearSpellEffect(this->unk_0EDC[i], 1, 0);
                 this->m_clientFlags |= 0x2000;
             }
         }
@@ -17258,7 +17258,7 @@ void CGUnit_C::RemoveAuraEffect(uint32_t index, const SpellRec* spell) {
         effect = next;
     }
 
-    this->ClearSpellEffect(this->unk_0EDC[index], 1);
+    this->ClearSpellEffect(this->unk_0EDC[index], 1, 0);
 
     const SpellVisualRec* visual = GetSpellVisual(spell);
 
@@ -17337,7 +17337,7 @@ void CGUnit_C::OnChannelSpellChanged(int32_t oldSpell) {
 
         this->DoFade(alpha, time);
         this->ReleaseEffectsBySpell(oldSpell);
-        this->ClearSpellEffect(oldSpell, 1);
+        this->ClearSpellEffect(oldSpell, 1, 0);
 
         if (this->m_fishingLineEffect) {
             this->m_fishingLineEffect->Release();
@@ -17362,7 +17362,7 @@ void CGUnit_C::OnChannelSpellChanged(int32_t oldSpell) {
         this->ClearTrackingTarget(false, true);
     }
 
-    this->ClearSpellEffect(oldSpell, 1);
+    this->ClearSpellEffect(oldSpell, 1, 0);
 
     if (this->m_fishingLineEffect) {
         this->m_fishingLineEffect->Release();
@@ -19780,7 +19780,7 @@ void CGUnit_C::CreateMissile(const WOWGUID* target, PendingSpellCastData* data, 
     }
 
     int32_t attachment = (visual->m_flags & 0x200) ? visual->m_missileDestinationAttachment : s_effectAttachmentIds[visual->m_missileDestinationAttachment];
-    C3Vector offset(visual->m_missileImpactOffset[0], -visual->m_missileImpactOffset[1], visual->m_missileImpactOffset[2]);
+    C3Vector offset(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
     bool hasOffset = 0.0f != offset.x || 0.0f != offset.y || offset.z != 0.0f;
 
     if (*target) {
@@ -20031,7 +20031,7 @@ void CGUnit_C::CreateMissile(const SpellCastTargetPoint* point, PendingSpellCast
         }
     }
 
-    C3Vector offset(visual->m_missileImpactOffset[0], -visual->m_missileImpactOffset[1], visual->m_missileImpactOffset[2]);
+    C3Vector offset(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
     bool hasOffset = 0.0f != offset.x || 0.0f != offset.y || offset.z != 0.0f;
     missile->m_impactPos = point->m_position;
     missile->m_transportGuid = point->m_transport;
@@ -20224,7 +20224,7 @@ void CGUnit_C::CreateMissile(const TSStackArray<SpellCastTargetPoint>* points, P
     missile->m_transportGuid = points->m_data[0].m_transport;
     missile->m_flags |= 1;
     missile->m_attachmentID = attachment;
-    missile->m_attachOffset = C3Vector(visual->m_missileImpactOffset[0], -visual->m_missileImpactOffset[1], visual->m_missileImpactOffset[2]);
+    missile->m_attachOffset = C3Vector(visual->m_missileImpactOffset.x, -visual->m_missileImpactOffset.y, visual->m_missileImpactOffset.z);
     missile->m_targetPoints.Set(points->m_count, points->m_data);
     missile->m_flags |= 0x200;
     missile->m_currentTarget = 0;
@@ -22565,16 +22565,16 @@ int32_t CGUnit_C::OverrideMissileFirePos(C3Vector* position, const SpellRec* spe
     C3Vector offset;
 
     if (visual->m_missileAttachment == -1) {
-        if (0.0f == visual->m_missileCastOffset[0] && 0.0f == visual->m_missileCastOffset[1] && 0.0f == visual->m_missileCastOffset[2]) {
+        if (0.0f == visual->m_missileCastOffset.x && 0.0f == visual->m_missileCastOffset.y && 0.0f == visual->m_missileCastOffset.z) {
             return 0;
         }
 
         CM2Model* model = this->m_worldModel;
 
         if (model && model->IsLoaded() && model->HasAttachment(s_effectAttachmentIds[12])) {
-            offset.x = visual->m_missileCastOffset[0];
-            offset.y = -visual->m_missileCastOffset[1];
-            offset.z = visual->m_missileCastOffset[2];
+            offset.x = visual->m_missileCastOffset.x;
+            offset.y = -visual->m_missileCastOffset.y;
+            offset.z = visual->m_missileCastOffset.z;
             *position = this->GetAttachmentPosition(s_effectAttachmentIds[12], &offset);
             return 1;
         }
@@ -22583,9 +22583,9 @@ int32_t CGUnit_C::OverrideMissileFirePos(C3Vector* position, const SpellRec* spe
         matrix.d0 = 0.0f;
         matrix.d1 = 0.0f;
         matrix.d2 = 0.0f;
-        offset.x = visual->m_missileCastOffset[0];
-        offset.y = -visual->m_missileCastOffset[1];
-        offset.z = visual->m_missileCastOffset[2];
+        offset.x = visual->m_missileCastOffset.x;
+        offset.y = -visual->m_missileCastOffset.y;
+        offset.z = visual->m_missileCastOffset.z;
         C3Vector rotated = offset * matrix;
         *position = this->GetModelPosition() + rotated;
         return 1;
@@ -22597,9 +22597,9 @@ int32_t CGUnit_C::OverrideMissileFirePos(C3Vector* position, const SpellRec* spe
         return 0;
     }
 
-    offset.x = visual->m_missileCastOffset[0];
-    offset.y = -visual->m_missileCastOffset[1];
-    offset.z = visual->m_missileCastOffset[2];
+    offset.x = visual->m_missileCastOffset.x;
+    offset.y = -visual->m_missileCastOffset.y;
+    offset.z = visual->m_missileCastOffset.z;
     *position = this->GetAttachmentPositionForEffect(visual->m_missileAttachment, offset, raw);
     return 1;
 }
@@ -24143,7 +24143,7 @@ void CGUnit_C::RenderTargetSelection() const {
     this->GetSelectionHighlightColor(&color);
 
     C44Matrix matrix;
-    CGObject_C::BuildSelectionRotMatrix(&matrix, &position);
+    CGObject_C::BuildSelectionRotMatrix(matrix, position);
     g_theGxDevicePtr->RsPush();
     int32_t states = CGObject_C::SetCircleRenderStates();
 
@@ -24219,7 +24219,7 @@ void CGUnit_C::RenderPetTargetSelection() const {
     box.Expand(amount);
 
     C44Matrix matrix;
-    CGObject_C::BuildSelectionRotMatrix(&matrix, &position);
+    CGObject_C::BuildSelectionRotMatrix(matrix, position);
     g_theGxDevicePtr->RsPush();
 
     if (CGObject_C::SetCircleRenderStates()) {

@@ -1261,7 +1261,7 @@ void CMissile::HitTargetAreaEffect(const SpellRec* spell, const SpellVisualRec* 
                 data.m_transportGUID = transport;
                 data.m_position = &position;
                 data.m_someGUID = this->m_casterGuid;
-                data.unk_0018 = 0;
+                data.m_animParam = 0;
                 player->PlaySpellVisualKit(data);
             }
         }

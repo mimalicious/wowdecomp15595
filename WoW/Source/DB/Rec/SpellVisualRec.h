@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include "WoW/Source/DB/WowClientDB.h"
+#include "Engine/Source/Tempest/C3Vector.h"
 
 class SpellVisualRec {
     public:
@@ -36,8 +37,8 @@ class SpellVisualRec {
     /* 005C */ int32_t m_instantAreaKit;
     /* 0060 */ int32_t m_impactAreaKit;
     /* 0064 */ int32_t m_persistentAreaKit;
-    /* 0068 */ float m_missileCastOffset [3];
-    /* 0074 */ float m_missileImpactOffset [3];
+    /* 0068 */ C3Vector m_missileCastOffset;
+    /* 0074 */ C3Vector m_missileImpactOffset;
     /* 0080 */ int32_t unk_0080;
 };
 
