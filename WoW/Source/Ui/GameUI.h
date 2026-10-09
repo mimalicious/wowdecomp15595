@@ -163,6 +163,8 @@ class CGGameUI {
 
     static TSHashTable<SAVEDVARIABLE, HASHKEY_STR> s_savedVariables[2];
     static int32_t HandleMouseDown(const CMouseEvent& evt);
+    static int32_t HandleMouseUp(const CMouseEvent& evt);
+    static void ResetDisplayUpdateCount();
     static void OnClientControlChanged(int32_t control);
     static void SetMinimapZoneText(const char* text);
     static void NewZoneFeedback(int32_t areaId, int32_t subzoneId, int32_t wmoGroupId, const char* zoneText, const char* subZoneText, int32_t inside);

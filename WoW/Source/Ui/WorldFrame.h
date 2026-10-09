@@ -14,6 +14,7 @@
 #include "Engine/Source/Event/Types.h"
 #include "WoW/Source/Object/WGUID.h"
 #include "Engine/Source/Tempest/CRect.h"
+#include "WoW/Source/WorldClient/World.h"
 
 class CGGameObject_C;
 class CGUnit_C;
@@ -27,46 +28,6 @@ class CRenderBatch;
 namespace FFX {
     class Effect;
 }
-
-class CGWorldFrameUnkObjSomeElement {
-    public:
-    /* 0000 */ uint32_t unk_0000;
-    /* 0004 */ uint32_t unk_0004;
-    /* 0008 */ uint32_t unk_0008;
-    /* 000C */ uint32_t unk_000C;
-    /* 0010 */ uint32_t unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ float unk_0018;
-    /* 001C */ float unk_001C;
-    /* 0020 */ float unk_0020;
-    /* 0024 */ float unk_0024;
-    /* 0028 */ float unk_0028;
-    /* 002C */ float unk_002C;
-    /* 0030 */ float unk_0030;
-    /* 0034 */ float unk_0034;
-    /* 0038 */ float unk_0038;
-    /* 003C */ uint32_t unk_003C;
-    /* 0040 */ uint32_t unk_0040;
-    /* 0044 */ uint32_t unk_0044;
-    /* 0048 */ uint32_t unk_0048;
-    /* 004C */ uint32_t unk_004C;
-    /* 0050 */ uint32_t unk_0050;
-    /* 0054 */ uint32_t unk_0054;
-    /* 0058 */ uint32_t unk_0058;
-    /* 005C */ uint32_t unk_005C;
-    /* 0060 */ uint32_t unk_0060;
-    /* 0064 */ uint32_t unk_0064;
-    /* 0068 */ uint32_t unk_0068;
-};
-
-class CGWorldFrameUnkObj {
-    public:
-    /* 0000 */ CGWorldFrameUnkObjSomeElement m_elements [16];
-    /* 06C0 */ uint8_t unk_06C0 [140];
-    /* 074C */ float m_tail [13];
-
-    CGWorldFrameUnkObj();
-};
 
 class CModelRecord : public TSLinkedNode<CModelRecord> {
     public:
@@ -96,13 +57,13 @@ struct KEYDOWNSTATE {
 
 class CGWorldFrame : public CSimpleFrame {
     public:
-    int32_t SetupDefaultAction();
-    uint32_t GetSceneTime() const;
     static CDataAllocator s_worldFrameHeap;
     static FFX::Effect* ffxEffectSwirlingFog;
     static FFX::Effect* ffxEffectNetherWorld;
     static FFX::Effect* ffxEffectGlow;
     static FFX::Effect* ffxEffectDeath;
+    static FFX::Effect* ffxEffectUnderwater;
+    static FFX::Effect* ffxEffectUnconscious;
     static CGWorldFrame* s_currentWorldFrame;
 
     static CSimpleFrame* Create(CSimpleFrame* parent);
@@ -113,37 +74,43 @@ class CGWorldFrame : public CSimpleFrame {
     static void SetScreenEffect(int32_t effect);
     static void UpdateScreenEffect();
     static void UpdateScreenEffectParams();
+    static void UpdatePlayerAmbientMultiplier();
+    static void WaterReset();
+    static void WaterResetCallback();
     static int32_t Update(const void* data, void* param);
     static void RenderWorld(void* param);
+    static void RenderPostAnimateCallback(void* param, uint32_t pass, uint64_t param64);
+    static void RenderOpaqueCallback(void* param, uint32_t pass, uint64_t param64);
+    static void RenderTransparentCallback(void* param, uint32_t pass, uint64_t param64);
     static int32_t ObjectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4);
     static int32_t MissileEnumProc(void* param, uint32_t flags, uint64_t guid, uintptr_t a4);
     static int32_t SpellEffectEnumProc(void* param, uintptr_t flags, uint64_t guid, uintptr_t a4);
 
-    /* 029C */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_modelList;
-    /* 02A8 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_hitModelList;
-    /* 02B4 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_freeModelList;
-    /* 02C0 */ uint32_t unk_02C0;
-    /* 02C4 */ uint32_t unk_02C4;
-    /* 02C8 */ WOWGUID m_trackedGuid;
-    /* 02D0 */ WOWGUID m_hitGuid;
-    /* 02D8 */ uint32_t m_defaultActionHitKind;
-    /* 02DC */ uint32_t unk_02DC;
-    /* 02E0 */ HITTESTRESULT m_defaultActionHit;
-    /* 0310 */ C2Vector m_defaultActionPointDDC;
-    /* 0318 */ uint32_t unk_0318;
-    /* 031C */ uint32_t m_worldFlags;
-    /* 0320 */ CRect m_viewportDDC;
-    /* 0330 */ CRect m_viewportNDC;
-    /* 0340 */ C44Matrix m_viewProjection;
-    /* 0380 */ WOWGUID m_trackedEffectGuidA;
-    /* 0388 */ WOWGUID m_trackedEffectGuidB;
-    /* 0390 */ CGWorldFrameUnkObj unk_0390;
-    /* 0B10 */ uint32_t m_namePlateFlags;
-    /* 0B14 */ float m_elapsedSec;
-    /* 0B18 */ KEYDOWNSTATE m_keyDown [787];
-    /* 79C4 */ KEYDOWNSTATE m_mouseDown [31];
-    /* 7E20 */ CGCamera* m_camera;
-    /* 7E24 */ uint32_t unk_7E24;
+    /* 01F0 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_modelList;
+    /* 01FC */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_hitModelList;
+    /* 0208 */ TSList<CModelRecord, TSGetLink<CModelRecord> > m_freeModelList;
+    /* 0214 */ uint32_t unk_0214;
+    /* 0218 */ uint32_t unk_0218;
+    /* 021C */ uint32_t unk_021C;
+    /* 0220 */ WOWGUID m_trackedGuid;
+    /* 0228 */ WOWGUID m_hitGuid;
+    /* 0230 */ uint32_t m_defaultActionHitKind;
+    /* 0234 */ uint32_t unk_0234;
+    /* 0238 */ HITTESTRESULT m_defaultActionHit;
+    /* 0268 */ C2Vector m_defaultActionPointDDC;
+    /* 0270 */ uint32_t unk_0270;
+    /* 0274 */ uint32_t m_worldFlags;
+    /* 0278 */ CRect m_viewportDDC;
+    /* 0288 */ CRect m_viewportNDC;
+    /* 0298 */ C44Matrix m_viewProjection;
+    /* 02D8 */ WOWGUID m_trackedEffectGuidA;
+    /* 02E0 */ WOWGUID m_trackedEffectGuidB;
+    /* 02E8 */ World::HitTestDebug m_hitTestDebug;
+    /* 0DC0 */ uint32_t m_namePlateFlags;
+    /* 0DC4 */ float m_elapsedSec;
+    /* 0DC8 */ KEYDOWNSTATE m_keyDown[787];
+    /* 7C74 */ KEYDOWNSTATE m_mouseDown[31];
+    /* 80D0 */ CGCamera* m_camera;
 
     CGWorldFrame(CSimpleFrame* parent);
     ~CGWorldFrame();
@@ -158,19 +125,23 @@ class CGWorldFrame : public CSimpleFrame {
     int32_t OnLayerMouseUp(const CMouseEvent& evt, const char* btn) override;
     int32_t OnLayerMouseWheel(const CMouseEvent& evt) override;
     void operator delete(void* ptr);
+    int32_t SetupDefaultAction();
+    uint32_t GetSceneTime() const;
     void AddObjectToHitTestList(CModelRecord* record, uint32_t flags);
-    void UpdateObject(CGObject_C* object, uint32_t flags);
+    void UpdateObject(CGObject_C* object);
     void ClearTrackedObjects();
     int32_t GetLineSegment(float mouseX, float mouseY, C3Vector* start, C3Vector* end);
-    bool GetScreenCoordinates(const C3Vector& world, C3Vector* screen, uint32_t* result);
-    bool HitTestModelList(const C3Vector& start, const C3Vector& end);
+    bool GetScreenCoordinates(const C3Vector& world, C3Vector* screen, uint32_t* result, bool* behind = NULL);
     void MoveToFreeList(TSList<CModelRecord, TSGetLink<CModelRecord> >* list);
     void OnMouseModeNormal();
     void OnMouseModeRelative();
     void PerformDefaultAction(MOUSEBUTTON button);
     void OnWorldRender();
     void OnWorldUpdate();
+    void UpdateWorld();
     void UpdateDayNight(float deltaSec);
+    void RenderPostAnimateCallback(uint32_t pass, uint64_t param64);
+    void RenderTransparentCallback(uint32_t pass, uint64_t param64);
     int32_t HandleSpriteTrack(WOWGUID guid);
     int32_t HitTestPoint(float x, float y, int32_t a3, HITTESTRESULT* result);
     int32_t CanTargetCorpseSelection(const CGCorpse_C* corpse, uint32_t flags);

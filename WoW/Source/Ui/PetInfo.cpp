@@ -34,6 +34,9 @@ int32_t CGPetInfo::m_possessSpell;
 // STATIC: #0x00C234E4
 uint8_t CGPetInfo::m_comboPoints;
 
+// STATIC: 0x00F43B75
+bool CGPetInfo::m_petOrderMoveTo;
+
 // STATIC: #0x00C234E8
 WOWGUID CGPetInfo::m_comboTarget;
 

@@ -33,7 +33,7 @@
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/Ui/CGWorldStateInfo.h"
-#include "WoW/Source/WorldClient/DayNight__DNInfo.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "Engine/Source/ShaderEffect/ShaderEffect.h"
 #include "Engine/Source/Services/SysMessage.h"
 #include "Engine/Source/Os/TimeManager.h"

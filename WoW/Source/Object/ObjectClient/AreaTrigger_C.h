@@ -11,6 +11,7 @@ class CClientObjCreate;
 
 class CGAreaTrigger_C : public CGObject_C, public CGAreaTrigger {
     public:
+    void UpdateDisplay(uint32_t time);
     /* 0100 */ uint8_t unk_0100[56];
     /* 0138 */ TSList<void> m_areaTriggerMirrorLists [6];
     /* 0180 */ uint8_t unk_0180[8];

@@ -4,8 +4,8 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Game/GameTime.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/WorldClient/DayNight.h"
-#include "WoW/Source/WorldClient/DayNight__DNInfo.h"
+#include "WoW/Source/DayNight/DayNight.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
 // STATIC: #0x00D37F80

@@ -151,7 +151,7 @@
 #include "WoW/Source/DB/Rec/WeatherRec.h"
 #include "WoW/Source/Object/CMoveSpline.h"
 #include "WoW/Source/Object/ObjectClient/Corpse_C.h"
-#include "WoW/Source/WorldClient/DayNight.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/WorldClient/MapWeather.h"
 #include <ctime>
 #include "Engine/Source/Event/CFocusEvent.h"

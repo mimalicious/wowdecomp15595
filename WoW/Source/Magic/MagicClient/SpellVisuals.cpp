@@ -17,7 +17,7 @@
 #include "WoW/Source/Object/ObjectClient/Effect_C.h"
 #include "WoW/Source/Object/MovementShared.h"
 #include "WoW/Source/DB/Rec/SpellEffectCameraShakesRec.h"
-#include "WoW/Source/WorldClient/DayNight__DNInfo.h"
+#include "WoW/Source/DayNight/DayNight.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CMath.h"

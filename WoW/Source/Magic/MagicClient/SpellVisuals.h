@@ -143,6 +143,7 @@ void SpellVisualsInitializeModelAttachLookup();
 void SpellVisualsRender();
 void SpellVisualsTick();
 void SpellVisualsClear();
+void SpellVisualsFreeDeleted();
 void SpellVisualsShutdown();
 void SpellVisualsShutdownModelAttachLookup();
 int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition);

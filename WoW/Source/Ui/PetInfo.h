@@ -7,6 +7,7 @@
 #include "WoW/Source/Object/WGUID.h"
 
 class CDataStore;
+class CTerrainClickEvent;
 struct lua_State;
 
 class PetAction {
@@ -19,6 +20,7 @@ class PetAction {
 class CGPetInfo {
     public:
     static uint8_t m_comboPoints;
+    static bool m_petOrderMoveTo;
     static int32_t m_possessSpell;
     static WOWGUID m_comboTarget;
     static int32_t m_attackingTarget;
@@ -28,6 +30,7 @@ class CGPetInfo {
     static WOWGUID m_pet;
     static uint32_t m_petBarState;
 
+    static int32_t HandleMoveToTerrainRay(const CTerrainClickEvent& evt);
     static void InitializeGame();
     static void ShutdownGame();
     static void LeaveWorld();

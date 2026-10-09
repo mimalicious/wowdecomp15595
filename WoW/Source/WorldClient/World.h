@@ -48,6 +48,54 @@ namespace World {
     typedef int32_t (*COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, CM2Model* model, int32_t blobShadow);
     typedef int32_t (*OBJECT_COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, ObjectCollisionData* data, uint32_t flags);
 
+    struct HitTestDebugItem {
+        struct TextureInfo {
+            /* 0000 */ const char* m_name;
+            /* 0004 */ uint32_t unk_0004;
+        };
+
+        /* 0000 */ const char* m_name;
+        /* 0004 */ uint32_t unk_0004;
+        /* 0008 */ C3Vector m_position;
+        /* 0014 */ uint32_t unk_0014[6];
+        /* 002C */ CAaBox m_box;
+        /* 0044 */ C3Vector m_center;
+        /* 0050 */ float m_radius;
+        /* 0054 */ uint32_t unk_0054;
+        /* 0058 */ uint32_t unk_0058;
+        /* 005C */ uint32_t unk_005C[5];
+        /* 0070 */ float unk_0070;
+        /* 0074 */ void* unk_0074;
+        /* 0078 */ uint32_t unk_0078;
+        /* 007C */ uint32_t unk_007C;
+        /* 0080 */ void* unk_0080;
+        /* 0084 */ uint32_t unk_0084;
+        /* 0088 */ uint32_t unk_0088;
+        /* 008C */ uint32_t m_flags;
+        /* 0090 */ TSGrowableArray<TextureInfo> m_textures;
+
+        HitTestDebugItem();
+    };
+
+    struct HitTestDebug {
+        /* 0000 */ uint32_t m_type;
+        /* 0004 */ uint32_t m_count;
+        /* 0008 */ void* unk_0008;
+        /* 000C */ HitTestDebugItem m_items[16];
+        /* 0A0C */ CM2Model* m_models[16];
+        /* 0A4C */ uint32_t unk_0A4C[16];
+        /* 0A8C */ CAaBox m_box;
+        /* 0AA4 */ C3Vector unk_0AA4;
+        /* 0AB0 */ float unk_0AB0;
+        /* 0AB4 */ C3Vector unk_0AB4;
+        /* 0AC0 */ C3Vector unk_0AC0;
+        /* 0ACC */ float unk_0ACC;
+        /* 0AD0 */ float unk_0AD0;
+        /* 0AD4 */ float unk_0AD4;
+
+        HitTestDebug();
+    };
+
     struct ObjectCollisionData {
         /* 0000 */ CM2Model* m_model;
         /* 0004 */ CAaBox m_bounds;
