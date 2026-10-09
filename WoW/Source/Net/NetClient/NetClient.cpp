@@ -19,6 +19,12 @@
 #include "WoW/Source/Glue/CGlueMgr.h"
 #include "WoW/Source/JamClientAutoCode/JamClientConnection.h"
 #include "WoW/Source/JamClientAutoCode/JamClientLegacy.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
+#include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
+#include "WoW/Source/JamClientAutoCode/JamClientMove.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayer.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayerMove.h"
+#include "WoW/Source/JamClientAutoCode/JamUserClient.h"
 
 // STATIC: 0x00C9A888
 static TSList<NETCLIENTNODE> s_clientList;
@@ -1426,6 +1432,1314 @@ bool NetClient::JAMClientConnectionDispatch(WowConnection* connection, uint32_t 
 
         case 0xF: {
             ClientConnectionPong message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        default:
+            return false;
+    }
+}
+
+// OFFSET: 0x006668A0/0x14030D230
+bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp, uint16_t msgId, CDataStore* msg) {
+    switch ((msgId & 7) | (((msgId & 0x10) | (((msgId & 0x100) | (((msgId & 0xC00) | ((msgId >> 1) & 0x3000)) >> 1)) >> 3)) >> 1)) {
+        case 0x1: {
+            ClientRaidMarkersChanged message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x4: {
+            ClientLfGuildApplicantListUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x5: {
+            ClientGuildMemberDailyReset message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x7: {
+            ClientAccountInfoResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8: {
+            ClientEnumCharactersResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x9: {
+            ClientPlaySpellVisual message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xA: {
+            ClientGuildEventLogQueryResults message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB: {
+            ClientGuildKnownRecipes message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE: {
+            ClientSetupResearchHistory message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x13: {
+            ClientDumpRideTicketsResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x17: {
+            ClientMoveCollisionEnable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x18: {
+            ClientMoveSetCollisionHeight message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x19: {
+            ClientLootContents message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A: {
+            ClientGuildMoveComplete message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B: {
+            ClientMoveSetActiveMover message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1C: {
+            ClientShowRatings message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1D: {
+            ClientWeeklySpellUsageUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x20: {
+            ClientNotification message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x21: {
+            ClientGuildXpGain message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x22: {
+            ClientGuildInvite message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x23: {
+            ClientGameObjectActivateAnimKit message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x26: {
+            ClientMoveUpdateRunSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x28: {
+            ClientSplineMoveSetPitchRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x29: {
+            ClientSuspendToken message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x2C: {
+            ClientGuildCriteriaData message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x2E: {
+            ClientSplineMoveSetHover message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x2F: {
+            ClientNewWorldAbort message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x31: {
+            ClientRatedBgRating message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x32: {
+            ClientMoveUnsetCanFly message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x33: {
+            ClientItemRefundInfoResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x34: {
+            ClientChatIgnoredAccountMuted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x35: {
+            ClientSetupCurrency message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x36: {
+            ClientBattlefieldMgrQueueInvite message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x37: {
+            ClientMoveSetSwimSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x38: {
+            ClientRespondInspectAchievements message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x39: {
+            ClientDifferentInstanceFromParty message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x3F: {
+            ClientStreamingMoviesUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x46: {
+            ClientTransferPending message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x47: {
+            ClientVoidStorageFailed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x48: {
+            ClientGuildRosterUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x49: {
+            ClientGuildChallengeUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x4E: {
+            ClientSummonRaidMemberValidateFailed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x53: {
+            ClientClearBossEmotes message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x54: {
+            ClientFailedPlayerCondition message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x55: {
+            ClientInspectRatedBgStats message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x5B: {
+            ClientMoveSkipTime message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x5D: {
+            ClientHotfixNotify message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x60: {
+            ClientItemExpirePurchaseRefund message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x65: {
+            ClientLfGuildMembershipListUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x68: {
+            ClientGuildMemberRecipes message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x6A: {
+            ClientLfGuildRecruitListUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x6D: {
+            ClientGuildReset message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x6F: {
+            ClientGuildMembersWithRecipe message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x72: {
+            ClientSplineMoveStopSwim message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x73: {
+            ClientLfGuildBrowseUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x74: {
+            ClientMoveSetWalkSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x76: {
+            ClientVoidTransferResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x77: {
+            ClientSpellinterruptlog message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x78: {
+            ClientGuildRewardList message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x7C: {
+            ClientCurrencyLootRemoved message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x7D: {
+            ClientMoveUpdatePitchRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x7E: {
+            ClientCustomLoadScreen message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x80: {
+            ClientCurrencyLootRestored message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x81: {
+            ClientMessageBox message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x82: {
+            ClientMoveSetFlightBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x85: {
+            ClientMoveSetTurnRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x86: {
+            ClientSetPlayHoverAnim message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x87: {
+            ClientRequestCemeteryListResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x89: {
+            ClientMoveUpdateFlightSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8A: {
+            ClientGuildBankLogQueryResults message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8B: {
+            ClientMoveGravityEnable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8C: {
+            ClientGuildRanks message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8D: {
+            ClientMoveUpdateSwimBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8E: {
+            ClientGuildFlaggedForRename message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x8F: {
+            ClientGuildReputationWeeklyCap message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x90: {
+            ClientWardenData message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x92: {
+            ClientWorldServerInfo message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x94: {
+            ClientLfgUpdateStatus message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x95: {
+            ClientSplineMoveStartSwim message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x96: {
+            ClientDisplayGameError message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x97: {
+            ClientGameEventDebugLog message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x98: {
+            ClientMoveCollisionDisable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x9A: {
+            ClientPartyInvite message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x9B: {
+            ClientDebugRuneRegen message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x9D: {
+            ClientSplineMoveSetFlying message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xA1: {
+            ClientRatedBgStats message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xA2: {
+            ClientBattlefieldMgrEjectPending message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xA3: {
+            ClientGuildPermissionsQueryResults message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xA5: {
+            ClientSplineMoveSetWalkSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xAA: {
+            ClientBattlegroundInfoThrottled message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xAB: {
+            ClientBattlefieldMgrEntryInvite message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xAF: {
+            ClientMoveSetLandWalk message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB0: {
+            ClientGuildAchievementDeleted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB1: {
+            ClientBattlefieldStatusQueued message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB3: {
+            ClientBattlefieldPortDenied message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB6: {
+            ClientResearchComplete message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB7: {
+            ClientGuildNews message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB8: {
+            ClientSupercededSpells message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xB9: {
+            ClientSplineMoveCollisionDisable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xBC: {
+            ClientBattlefieldMgrStateChange message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xBE: {
+            ClientSetDfFastLaunchResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xBF: {
+            ClientLfGuildPostUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xC2: {
+            ClientDontAutoPushSpellsToActionBar message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xC4: {
+            ClientDBReply message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xC5: {
+            ClientGuildAchievementMembers message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xC8: {
+            ClientCommentatorPartyInfo message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xC9: {
+            ClientGenerateRandomCharacterNameResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xCA: {
+            ClientSplineMoveSetNormalFall message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xCB: {
+            ClientSplineMoveSetFlightBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xCD: {
+            ClientUpdateActionButtons message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xCE: {
+            ClientLfgJoinResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xD0: {
+            ClientSplineMoveSetFlightSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xD1: {
+            ClientItemRemovePassive message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xD3: {
+            ClientGuildChallengeCompleted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xD4: {
+            ClientSplineMoveSetSwimSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xD6: {
+            ClientRoleChangedInform message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xDB: {
+            ClientArenaTeamCommandResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xDF: {
+            ClientWeeklySpellUsage message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE1: {
+            ClientWeeklyResetCurrency message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE4: {
+            ClientTimeSyncReq message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE5: {
+            ClientPetAdded message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE6: {
+            ClientSplineMoveGravityEnable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE8: {
+            ClientSplineMoveCollisionEnable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xE9: {
+            ClientGuildChangeNameResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xED: {
+            ClientUpdateDungeonEncounterForLoot message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF1: {
+            ClientMoveSetCanFly message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF3: {
+            ClientGuildRoster message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF4: {
+            ClientWargameCheckEntry message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF5: {
+            ClientSplineMoveSetFeatherFall message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF6: {
+            ClientMoveUpdateRunBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF7: {
+            ClientSplineMoveSetLandWalk message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF8: {
+            ClientGuildXp message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xF9: {
+            ClientAreaTriggerMovementUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xFA: {
+            ClientMoveUpdateKnockBack message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xFB: {
+            ClientSplineMoveSetRunBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xFC: {
+            ClientMissileCancel message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xFD: {
+            ClientMoveSetRunSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0xFF: {
+            ClientFeatureSystemStatus message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x101: {
+            ClientPvpOptionsEnabled message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x102: {
+            ClientSplineMoveSetWaterWalk message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x105: {
+            ClientWeeklyLastReset message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x106: {
+            ClientGuildPartyStateResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x108: {
+            ClientBattlegroundPlayerJoined message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x109: {
+            ClientLoadCufProfiles message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x10A: {
+            ClientMoveUpdateTeleport message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x10C: {
+            ClientXpGainAborted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x10D: {
+            ClientGuildAchievementEarned message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x113: {
+            ClientPetSlotUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x116: {
+            ClientVoidStorageTransferChanges message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x117: {
+            ClientAccountRestrictedWarning message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x119: {
+            ClientBattlefieldMgrExitRequest message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x11B: {
+            ClientMoveUnsetHover message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x11C: {
+            ClientSplineMoveRoot message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x11E: {
+            ClientMoveSetNormalFall message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x11F: {
+            ClientSplineMoveSetRunSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x121: {
+            ClientLfgSearchResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x122: {
+            ClientMoveUpdateWalkSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x123: {
+            ClientBattlefieldRatedInfo message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x126: {
+            ClientLfGuildCommandResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x12A: {
+            ClientMapObjEvents message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x12D: {
+            ClientLfgSlotInvalid message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x12E: {
+            ClientSplineMoveSetWalkMode message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x12F: {
+            ClientGuildAchievementData message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x130: {
+            ClientMoveTeleport message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x132: {
+            ClientDisenchantCredit message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x134: {
+            ClientQuestGiverQuestComplete message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x135: {
+            ClientPlaySpellVisualKit message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x137: {
+            ClientHotfixNotifyBlob message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x139: {
+            ClientGuildCriteriaDeleted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x13E: {
+            ClientMoneyNotify message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x141: {
+            ClientWaitQueueUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x142: {
+            ClientLearnedSpell message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x144: {
+            ClientReforgeResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x146: {
+            ClientSplineMoveUnsetFlying message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x149: {
+            ClientAllAchievementData message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x14C: {
+            ClientBattlefieldPlayerPositions message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x150: {
+            ClientBattlefieldStatusNeedconfirmation message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x151: {
+            ClientSplineMoveSetSwimBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x152: {
+            ClientMoveSetCanTransitionBetweenSwimAndFly message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x153: {
+            ClientMoveUpdateCollisionHeight message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x155: {
+            ClientStartTimer message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x156: {
+            ClientBattlegroundPlayerLeft message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x158: {
+            ClientSetCurrency message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x15A: {
+            ClientWargameRequestSent message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x15C: {
+            ClientClearCooldowns message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x15D: {
+            ClientMoveUpdateSwimSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x160: {
+            ClientBattlefieldMgrEntered message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x163: {
+            ClientTradeStatus message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x166: {
+            ClientMoveSetSwimBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x16A: {
+            ClientPvpLogData message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x16B: {
+            ClientMoveSetHover message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x16C: {
+            ClientMoveKnockBack message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x170: {
+            ClientGuildRanksUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x171: {
+            ClientMoveUpdateTurnRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x173: {
+            ClientPetitionAlreadySigned message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x174: {
+            ClientRequestPvpRewardsResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x177: {
+            ClientAverageItemLevelInform message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x179: {
+            ClientItemRefundResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x17C: {
+            ClientGuildBankMoneyWithdrawn message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x17D: {
+            ClientSplineMoveGravityDisable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x17E: {
+            ClientAuthResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x180: {
+            ClientPhaseShiftChange message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x181: {
+            ClientMoveSetVehicleRecId message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x182: {
+            ClientTradeUpdated message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x184: {
+            ClientGuildMoveStarting message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x187: {
+            ClientUpdateCurrencyWeekLimit message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x188: {
+            ClientRolePollBegin message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x189: {
+            ClientItemSendPassive message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x18F: {
+            ClientForgeMasterSet message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x195: {
+            ClientLfGuildApplicationsListChanged message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x196: {
+            ClientMoveSetFlightSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x197: {
+            ClientBattlefieldStatusFailed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x199: {
+            ClientMoveSetRunBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x19D: {
+            ClientBattlefieldList message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x19E: {
+            ClientCategoryCooldown message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A0: {
+            ClientMoveUpdateFlightBackSpeed message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A3: {
+            ClientUpdateServerPlayerPosition message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A4: {
+            ClientBattlefieldStatusActive message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A6: {
+            ClientGuildNameChanged message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A7: {
+            ClientGuildNewsDeleted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A8: {
+            ClientGuildReputationReactionChanged message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1A9: {
+            ClientSuppressNPCGreetings message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1AD: {
+            ClientServerInfoResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1AE: {
+            ClientServerPerf message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B0: {
+            ClientMoveSetCompoundState message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B1: {
+            ClientQuestNpcQueryResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B2: {
+            ClientBattlefieldStatusWaitforgroups message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B3: {
+            ClientGuildBankTextQueryResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B7: {
+            ClientSplineMoveSetRunMode message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B8: {
+            ClientMoveSetPitchRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1B9: {
+            ClientMoveSetWaterWalk message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1BA: {
+            ClientMoveGravityDisable message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1BC: {
+            ClientVoidStorageContents message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1BE: {
+            ClientSplineMoveUnroot message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1BF: {
+            ClientWaitQueueFinish message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1C2: {
+            ClientVoidItemSwapResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1C5: {
+            ClientGuildBankQueryResults message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1CC: {
+            ClientLfgQueueStatus message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1CD: {
+            ClientSplineMoveSetTurnRate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1D2: {
+            ClientMoveUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1D5: {
+            ClientInspectHonorStats message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1D8: {
+            ClientMoveSetFeatherFall message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1D9: {
+            ClientNewWorld message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1DD: {
+            ClientGuildMaxDailyXp message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1DE: {
+            ClientBattlefieldMgrQueueRequestResponse message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1DF: {
+            ClientTimeAdjustment message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1E0: {
+            ClientGuildMemberUpdateNote message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1E1: {
+            ClientLfgUpdateStatusNone message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1E7: {
+            ClientSorStartExperienceIncomplete message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1E8: {
+            ClientVendorInventory message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1EC: {
+            ClientItemAddPassive message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1EF: {
+            ClientAuraPointsDepleted message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1F0: {
+            ClientMoveRoot message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1F1: {
+            ClientBattlefieldStatus message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1F5: {
+            ClientSplineMoveUnsetHover message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1F6: {
+            ClientLfgProposalUpdate message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1FA: {
+            ClientMoveUnsetCanTransitionBetweenSwimAndFly message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1FB: {
+            ClientGuildCommandResult message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1FC: {
+            ClientMoveUnroot message(this, connection, msg, timeStamp);
+            return message.Handle();
+        }
+
+        case 0x1FF: {
+            ClientBattlefieldMgrEjected message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
