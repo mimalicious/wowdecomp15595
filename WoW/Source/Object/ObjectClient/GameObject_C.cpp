@@ -1,4 +1,5 @@
 #include "GameObject_C.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include <cmath>
 #include <cstring>
@@ -4134,7 +4135,7 @@ void GameObject_C_ProcessAnimEvent(uint32_t eventId, uint32_t displayId, uint32_
 
             if (shakes) {
                 for (int32_t i = 0; i < 3; i++) {
-                    CGWorldFrame::GetActiveCamera()->AddShakeById(shakes->m_cameraShake[i], &position);
+                    StaticSingleton<CCameraManager>::Instance()->AddShakeById(shakes->m_cameraShake[i], position);
                 }
             }
 

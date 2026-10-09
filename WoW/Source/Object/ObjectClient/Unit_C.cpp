@@ -1,4 +1,5 @@
 #include "Unit_C.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/DB/Rec/SpellAuraRestrictionsRec.h"
 #include "WoW/Source/DB/Rec/SpellCastingRequirementsRec.h"
 #include "WoW/Source/DB/Rec/SpellCategoriesRec.h"
@@ -1892,6 +1893,11 @@ DelayedSpellVisualKit* CGUnit_C::DelaySpellVisualKit(int32_t spellId, int32_t ki
     kit->m_delayType = delayType;
     kit->m_startTime = startTime;
     return kit;
+}
+
+// OFFSET: 0x005C33A0
+float CGUnit_C::GetDisplayModelScale() {
+    return this->GetModelScale(this->m_unit->m_unitFieldDisplayid);
 }
 
 // OFFSET: 0x005C3520
@@ -8821,15 +8827,19 @@ void CGUnit_C::SetPredictedHealth(int32_t health) {
     this->m_predictedHealth = health;
 }
 
-// OFFSET: #0x00718080
-float CGUnit_C::GetMaxCameraHeight() const {
+// OFFSET: 0x005B7970/0x14022B330
+float CGUnit_C::GetMaxCameraHeight(int32_t adjust) const {
     float height = this->m_movementData.m_collisionHeight;
 
-    if ((this->m_obj->m_type & TYPEMASK_PLAYER) || height <= 2.0277777f) {
-        return height - 0.16666667f;
+    if (this->m_currentClientRace && (this->m_auraEffectMask[0x2C] & 0x40) && this->m_unit->m_unitFieldNativedisplayid == this->m_unit->m_unitFieldDisplayid) {
+        height = this->m_worldModel->GetBoundingBox().t.z;
     }
 
-    return 2.0277777f - 0.16666667f;
+    if (!(this->m_obj->m_type & TYPEMASK_PLAYER) && height > 2.0277777f) {
+        height = 2.0277777f;
+    }
+
+    return adjust ? height - 0.16666667f : height - 0.0f;
 }
 
 // OFFSET: 0x005AFE80/0x140222CF0
@@ -22393,7 +22403,7 @@ void CGUnit_C::FootstepAnimEventHit(const C3Vector* position, int32_t left) {
     }
 
     if (this->m_modelData->m_footstepShakeSize) {
-        CGWorldFrame::GetActiveCamera()->AddShakeById(this->m_modelData->m_footstepShakeSize, position);
+        StaticSingleton<CCameraManager>::Instance()->AddShakeById(this->m_modelData->m_footstepShakeSize, *position);
     }
 
     if (distanceSquared > 625.0f || (this->m_movement->m_flags & 0x2) || (this->m_modelData->m_flags & 0x1) || !CGUnit_C::s_cvShowFootPrintParticles->m_intValue) {

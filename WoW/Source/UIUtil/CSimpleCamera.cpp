@@ -8,7 +8,7 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include <cmath>
 
-// OFFSET: #0x005FEE70
+// OFFSET: 0x0043BA30
 float CSimpleCamera::FOV() const {
     return this->m_fov;
 }
@@ -31,8 +31,8 @@ C3Vector CSimpleCamera::Up() const {
     return C3Vector(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
 }
 
-// OFFSET: #0x00607C20
-CSimpleCamera::CSimpleCamera(float nearZ, float farZ, float fov) {
+// OFFSET: 0x00445E80
+CSimpleCamera::CSimpleCamera(float fov) {
     this->m_scene = NULL;
     this->m_facing.a0 = 1.0f;
     this->m_facing.a1 = 0.0f;
@@ -43,10 +43,7 @@ CSimpleCamera::CSimpleCamera(float nearZ, float farZ, float fov) {
     this->m_facing.c0 = 0.0f;
     this->m_facing.c1 = 0.0f;
     this->m_facing.c2 = 1.0f;
-    this->m_nearZ = nearZ;
-    this->m_farZ = farZ;
     this->m_fov = fov;
-    this->m_aspect = 1.0f;
     this->m_facing.FromEulerAnglesZYX(0.0f, 0.0f, 0.0f);
 }
 
@@ -73,25 +70,7 @@ void CSimpleCamera::SetFacing(float yaw, float pitch, float roll) {
     this->m_facing.FromEulerAnglesZYX(yaw, pitch, roll);
 }
 
-// OFFSET: #0x00607CB0
-void CSimpleCamera::SetGxProjectionAndView(const CRect& rect) {
-    C44Matrix projection;
-    this->m_aspect = (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
-    GxuXformCreateProjection_Exact(this->FOV() * 0.6f, this->m_aspect, this->m_nearZ, this->m_farZ, projection);
-    g_theGxDevicePtr->XformSetProjection(projection);
-
-    C44Matrix view;
-    C3Vector eye;
-    GxuXformCreateLookAtSgCompat(eye, this->Forward(), this->Up(), view);
-    g_theGxDevicePtr->XformSetView(view);
-}
-
-// OFFSET: #0x00607C90
-void CSimpleCamera::SetScreenAspect(const CRect& rect) {
-    this->m_aspect = (rect.maxX - rect.minX) / (rect.maxY - rect.minY);
-}
-
-// OFFSET: #0x00607DF0
+// OFFSET: 0x00445F10
 static void FaceDirection(const C3Vector& direction, C3Vector& right, C3Vector& forward, C3Vector& up) {
     if (fabs(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z) < 0.00000023841858f) {
         SErrSetLastError(87);
@@ -117,7 +96,7 @@ static void FaceDirection(const C3Vector& direction, C3Vector& right, C3Vector& 
     up = C3Vector(-(right.y * forward.z), forward.z * right.x, right.y * forward.x - forward.y * right.x);
 }
 
-// OFFSET: #0x00607ED0
+// OFFSET: 0x00446040
 static void BuildBillboardMatrix(C33Matrix& matrix, const C3Vector& direction) {
     C3Vector forward(0.0f, 0.0f, 0.0f);
     C3Vector right(0.0f, 0.0f, 0.0f);
@@ -135,7 +114,7 @@ static void BuildBillboardMatrix(C33Matrix& matrix, const C3Vector& direction) {
     matrix.c2 = up.z;
 }
 
-// OFFSET: #0x00607F40
+// OFFSET: 0x004460D0
 static void FaceDirectionWithRoll(const C3Vector& direction, const C3Vector& upHint, C3Vector& right, C3Vector& forward, C3Vector& up) {
     if (fabs(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z) < 0.00000023841858f) {
         SErrSetLastError(87);
@@ -160,7 +139,7 @@ static void FaceDirectionWithRoll(const C3Vector& direction, const C3Vector& upH
     up = C3Vector(right.z * forward.y - forward.z * right.y, forward.z * right.x - right.z * forward.x, forward.x * right.y - right.x * forward.y);
 }
 
-// OFFSET: #0x00608080
+// OFFSET: 0x004462B0
 static void BuildBillboardMatrixWithRoll(C33Matrix& matrix, const C3Vector& direction, const C3Vector& upHint) {
     C3Vector forward(0.0f, 0.0f, 0.0f);
     C3Vector right(0.0f, 0.0f, 0.0f);
@@ -178,12 +157,12 @@ static void BuildBillboardMatrixWithRoll(C33Matrix& matrix, const C3Vector& dire
     matrix.c2 = up.z;
 }
 
-// OFFSET: #0x006080F0
+// OFFSET: 0x00446340
 void CSimpleCamera::SetFacing(const C3Vector& forward) {
     BuildBillboardMatrix(this->m_facing, forward);
 }
 
-// OFFSET: #0x00608110
+// OFFSET: 0x00446360
 void CSimpleCamera::SetFacing(const C3Vector& forward, const C3Vector& up) {
     BuildBillboardMatrixWithRoll(this->m_facing, forward, up);
 }

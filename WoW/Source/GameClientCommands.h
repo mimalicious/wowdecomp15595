@@ -3,24 +3,11 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "WoW/Source/StaticSingleton.h"
 
 class C3Vector;
 class CDataStore;
 class ClientConnection;
-
-template <class T>
-class StaticSingleton {
-    public:
-    static T* m_instance;
-
-    static T* Instance() {
-        if (!StaticSingleton<T>::m_instance) {
-            StaticSingleton<T>::m_instance = new T;
-        }
-
-        return StaticSingleton<T>::m_instance;
-    }
-};
 
 class GameClientCommands {
     public:

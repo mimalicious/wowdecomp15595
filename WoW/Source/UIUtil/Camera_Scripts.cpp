@@ -35,7 +35,7 @@ static int32_t Script_CameraZoomOut(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x005FF000
+// OFFSET: 0x0043BD80/0x140046790
 static int32_t MoveViewStart(lua_State* L, uint32_t motion) {
     uint32_t time = CSimpleTop::s_eventTime;
     float speed = 1.0f;
@@ -207,6 +207,7 @@ static int32_t Script_ResetView(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 193fdd1d IDENTICAL/NONE
 // OFFSET: 0x00443130/0x14004E6C0
 static int32_t Script_NextView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -219,6 +220,7 @@ static int32_t Script_NextView(lua_State* L) {
     return 0;
 }
 
+// PROVEN: dfc4e1ac IDENTICAL/NONE
 // OFFSET: 0x00443160/0x14004E700
 static int32_t Script_PrevView(lua_State* L) {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -231,6 +233,7 @@ static int32_t Script_PrevView(lua_State* L) {
     return 0;
 }
 
+// PROVEN: ecb57eca IDENTICAL/NONE
 // OFFSET: 0x0043C050/0x140046A70
 static int32_t Script_FlipCameraYaw(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -244,17 +247,19 @@ static int32_t Script_FlipCameraYaw(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 797fa63e IDENTICAL/NONE
 // OFFSET: 0x0043F5C0/0x14004A7E0
 static int32_t Script_VehicleCameraZoomIn(lua_State* L) {
     return Script_CameraZoomIn(L);
 }
 
+// PROVEN: 820a1f93 IDENTICAL/NONE
 // OFFSET: 0x0043F5D0/0x14004A7F0
 static int32_t Script_VehicleCameraZoomOut(lua_State* L) {
     return Script_CameraZoomOut(L);
 }
 
-// STATIC: #0x00AD2060
+// STATIC: 0x00C99170
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CameraZoomIn", &Script_CameraZoomIn },
     { "CameraZoomOut", &Script_CameraZoomOut },

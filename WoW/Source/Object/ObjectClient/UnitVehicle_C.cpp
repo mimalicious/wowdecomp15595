@@ -92,6 +92,25 @@ CGUnit_C* CGUnit_C::FindRootVehicleOfPassengerChain(CGUnit_C* stop) {
     return unit;
 }
 
+// OFFSET: 0x005EB910/0x14026CE90
+int32_t CGUnit_C::IsVehiclePassenger(WOWGUID guid) const {
+    CGUnit_C* vehicle = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (vehicle) {
+        for (const CGUnit_C* unit = this; unit; unit = unit->m_vehiclePassenger->GetVehicleUnit()) {
+            if (unit == vehicle) {
+                return 1;
+            }
+
+            if (!unit->m_vehiclePassenger) {
+                break;
+            }
+        }
+    }
+
+    return 0;
+}
+
 // OFFSET: 0x005EB780/0x14026CCC0
 bool CGUnit_C::IsVehiclePreventingTurning() const {
     uint32_t high = static_cast<uint32_t>(this->m_movementData.m_transportGuid.m_guid >> 32);

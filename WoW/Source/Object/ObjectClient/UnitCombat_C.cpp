@@ -1,4 +1,5 @@
 #include "UnitCombat_C.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include "Unit_C.h"
 #include "WoW/Source/LiquidSystem/Liquid.h"
 #include "WoW/Source/Object/ObjectClient/UnitDisplayTransition_C.h"
@@ -367,7 +368,7 @@ void CGUnit_C::ShakeCameraOnHit() {
 
     if (shakeId) {
         C3Vector position = this->GetPosition();
-        CGWorldFrame::GetActiveCamera()->AddShakeById(shakeId, &position);
+        StaticSingleton<CCameraManager>::Instance()->AddShakeById(shakeId, position);
     }
 }
 

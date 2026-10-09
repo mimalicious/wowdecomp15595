@@ -2,6 +2,7 @@
 #define WOW_SOURCE_DB_REC_CAMERAMODEREC_H
 
 #include <cstdint>
+#include "Engine/Source/Tempest/C3Vector.h"
 #include "WoW/Source/DB/WowClientDB.h"
 
 class CameraModeRec {
@@ -11,22 +12,18 @@ class CameraModeRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ DBCString unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ float unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ float unk_0018;
-    /* 001C */ float unk_001C;
-    /* 0020 */ float unk_0020;
-    /* 0024 */ float unk_0024;
-    /* 0028 */ float unk_0028;
-    /* 002C */ float unk_002C;
-    /* 0030 */ float unk_0030;
-    /* 0034 */ int32_t unk_0034;
-    /* 0038 */ int32_t unk_0038;
-    /* 003C */ int32_t unk_003C;
-    /* 0040 */ int32_t unk_0040;
+    /* 0004 */ DBCString m_name;
+    /* 0008 */ int32_t m_type;
+    /* 000C */ int32_t m_flags;
+    /* 0010 */ C3Vector m_positionOffset;
+    /* 001C */ C3Vector m_targetOffset;
+    /* 0028 */ float m_positionSmoothing;
+    /* 002C */ float m_rotationSmoothing;
+    /* 0030 */ float m_fieldOfView;
+    /* 0034 */ int32_t m_lockedPositionOffsetBase;
+    /* 0038 */ int32_t m_lockedPositionOffsetDirection;
+    /* 003C */ int32_t m_lockedTargetOffsetBase;
+    /* 0040 */ int32_t m_lockedTargetOffsetDirection;
 };
 
 #endif

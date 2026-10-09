@@ -1,4 +1,5 @@
 #include "Player_C.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include <malloc.h>
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/BlizzardCore/SFile2-Core.h"
@@ -9494,7 +9495,7 @@ int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
 
             if (rec) {
                 for (uint32_t i = 0; i < 3; i++) {
-                    CGWorldFrame::GetActiveCamera()->AddShakeById(rec->m_cameraShake[i], &position);
+                    StaticSingleton<CCameraManager>::Instance()->AddShakeById(rec->m_cameraShake[i], position);
                 }
             }
 

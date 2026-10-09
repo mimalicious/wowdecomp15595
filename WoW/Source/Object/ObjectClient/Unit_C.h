@@ -659,7 +659,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void InitWheels();
     int32_t GetPredictedHealth() const;
     void SetPredictedHealth(int32_t health);
-    float GetMaxCameraHeight() const;
+    float GetMaxCameraHeight(int32_t adjust) const;
     uint32_t GetCreatureClassification() const;
     int32_t IsDeepInLiquid() const;
     bool DoNotLogDeath() const;
@@ -1029,6 +1029,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void DisplayModelLoadedCallback(CM2Model* model, void* param);
     static void SequenceStartCallback(CM2Model* model, uint32_t boneId, uint32_t sequenceId, uint32_t variation, uint32_t time, uint64_t param, int32_t primary);
     float GetModelScale(uint32_t displayId);
+    float GetDisplayModelScale();
     float GetScaledModelScale(const CreatureDisplayInfoRec* displayInfo, const CreatureModelDataRec* modelData, float* modelScale);
     float GetModelScale(const CreatureDisplayInfoRec* displayInfo, const CreatureModelDataRec* modelData);
     void OnMoveUpdate(uint32_t time, int32_t a3, int32_t a4);
@@ -1120,6 +1121,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     bool IsHatedTowards(const CGUnit_C* unit) const;
     uint64_t GetComboPointTarget() const;
     bool IsVehiclePassengerSeated() const;
+    int32_t IsVehiclePassenger(WOWGUID guid) const;
     bool IsNPCTracked() const;
     const VehicleSeatRec* GetPassengerSeatRec() const;
     void UpdateWeaponTrails(const uint32_t* a2, uint32_t a3);

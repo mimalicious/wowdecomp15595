@@ -6616,11 +6616,11 @@ void CMovement_C::Teleport(WOWGUID transport, const C3Vector& position, float fa
     this->m_unit->OnTeleported();
     MovementUpdateWorld(*this->m_ownerGuid, world, distSq > maxTeleport * maxTeleport);
     this->m_flags2 &= ~(MOVEMENTFLAG2_INTERPOLATED_MOVEMENT | MOVEMENTFLAG2_INTERPOLATED_TURNING | MOVEMENTFLAG2_INTERPOLATED_PITCHING);
-    CCameraManager::Get()->ResetCameras(*this->m_ownerGuid);
+    StaticSingleton<CCameraManager>::Instance()->ResetCameras(*this->m_ownerGuid);
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
     if (camera && camera->m_targetGUID == *this->m_ownerGuid) {
-        camera->OnTargetTeleported(oldFacing);
+        camera->CameraTeleported(oldFacing);
         CGGameUI::ResetCamera(*this->m_ownerGuid);
     }
 }

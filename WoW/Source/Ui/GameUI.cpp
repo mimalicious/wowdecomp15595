@@ -6035,7 +6035,7 @@ static void AccountVariablesLoadedCallback(HOSFILE localFile, HOSFILE cacheFile,
     }
 
     if (flag == 0x20) {
-        camera->RestoreSavedDistancePitch();
+        camera->LoadCameraSettings();
     }
 
     if (!s_accountDataPending) {

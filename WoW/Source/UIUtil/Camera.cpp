@@ -21,7 +21,7 @@
 #include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CFacet.h"
 #include "Engine/Source/Tempest/CMath.h"
-#include "Engine/Source/Tempest/CWFrustum.h"
+#include "Engine/Source/Tempest/CFrustum.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/VehicleRec.h"
 #include "WoW/Source/Object/CMoveSpline.h"
@@ -37,20 +37,21 @@
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/WorldFrame.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include "WoW/Source/UIUtil/InputControl.h"
 #include "Engine/Source/Event/FrameTime.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// STATIC: #0x00AD1B4C
+// STATIC: 0x00C98C58
 float MAX_PITCH_ANGLE = 1.55334306f;
 
-// STATIC: #0x00AD1B50
+// STATIC: 0x00C98C5C
 float MIN_PITCH_ANGLE = -1.55334306f;
 
-// STATIC: #0x00AD1B80
+// STATIC: 0x00C98C8C
 int32_t s_cameraViewAngular[3] = { 0, 1, 1 };
 
-// STATIC: #0x00AD1BA8
+// STATIC: 0x00C98CA0
 CAMERA_DEFAULTS s_cameraViewDefaults[8] = {
     { { "0.0", "0.0", "0.0" } },
     { { "0.0", "0.0", "0.0" } },
@@ -62,7 +63,7 @@ CAMERA_DEFAULTS s_cameraViewDefaults[8] = {
     { { "5.0", "10.0", "0.0" } },
 };
 
-// STATIC: #0x00A1E9C8
+// STATIC: 0x00B8D8A0
 const float s_terrainTiltTable[10][2] = {
     { 0.0f, 0.0f },
     { 0.09f, 0.0872664626f },
@@ -76,26 +77,20 @@ const float s_terrainTiltTable[10][2] = {
     { 1.0f, 0.785398163f },
 };
 
-// STATIC: #0x00C24E80
+// STATIC: 0x00D38774
 float s_targetHeightOffset;
 
-// STATIC: #0x00AD213C
+// STATIC: 0x00C99254
 static const char* s_cameraViewModeNames[8] = { "FIRST_PERSON", "THIRD_PERSON_A", "THIRD_PERSON_B", "THIRD_PERSON_C", "THIRD_PERSON_D", "THIRD_PERSON_E", "VIEW_COMMENTATOR", "VIEW_BARBER_SHOP" };
 
-// STATIC: #0x00A1E368
+// STATIC: 0x00B8D160
 static const float s_smoothViewDataMin[2] = { 0.0f, 0.0f };
 
-// STATIC: #0x00A1E370
+// STATIC: 0x00B8D168
 static const float s_smoothViewDataMax[2] = { 100.0f, 100.0f };
 
-// STATIC: #0x00AD2178
-static float s_lastLiquidBumpPitch = std::numeric_limits<float>::max();
-
-// STATIC: #0x00AD2114
-static float s_shakeFalloffStartSqr = 81.0f;
-
-// STATIC: #0x00AD2118
-static float s_shakeFalloffMaxSqr = 6400.0f;
+// STATIC: 0x00C99274
+static float s_minCollideHeight = 0.00000095367432f;
 
 // OFFSET: #0x005FD5C0
 static float UnwrapAngleToward(float target, float current, float lo, float hi) {
@@ -123,13 +118,25 @@ static float WrapAngle0To2Pi(float angle) {
     return angle;
 }
 
-// OFFSET: #0x005FF500
+// OFFSET: 0x0043D0A0
 float CGCamera::FOV() const {
     float fov = this->m_targetFov + this->m_fov;
     return 0.0f > fov ? 0.0f : (3.1241393f <= fov ? 3.1241393f : fov);
 }
 
-// OFFSET: #0x00600C20
+// PROVEN: b4cc1112 IDENTICAL/NONE
+// OFFSET: 0x0043D3A0
+void CGCamera::UpdateFromModelCamera() {
+    C3Vector position;
+    C3Vector target;
+    CameraGetCoord(this->m_modelCamera, 7, &position);
+    CameraGetCoord(this->m_modelCamera, 8, &target);
+    float roll = CameraGetFloat(this->m_modelCamera, 5);
+    CameraGetFloat(this->m_modelCamera, 4);
+    this->SetPositionAndTargetWithRoll(position, target, roll);
+}
+
+// OFFSET: 0x0043E790
 C3Vector CGCamera::Forward() const {
     C3Vector forward(this->m_facing.a0, this->m_facing.a1, this->m_facing.a2);
 
@@ -140,7 +147,7 @@ C3Vector CGCamera::Forward() const {
     return forward * this->ParentToWorld();
 }
 
-// OFFSET: #0x00600CC0
+// OFFSET: 0x0043E880
 C3Vector CGCamera::Right() const {
     C3Vector right(this->m_facing.b0, this->m_facing.b1, this->m_facing.b2);
 
@@ -151,7 +158,7 @@ C3Vector CGCamera::Right() const {
     return right * this->ParentToWorld();
 }
 
-// OFFSET: #0x00600D60
+// OFFSET: 0x0043E970
 C3Vector CGCamera::Up() const {
     C3Vector up(this->m_facing.c0, this->m_facing.c1, this->m_facing.c2);
 
@@ -162,11 +169,11 @@ C3Vector CGCamera::Up() const {
     return up * this->ParentToWorld();
 }
 
-// OFFSET: #0x00606B30
-CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707964f) {
+// OFFSET: 0x00444170
+CGCamera::CGCamera() : CSimpleCamera(1.5707964f) {
     this->m_model = NULL;
-    this->m_someTime = OsGetAsyncTimeMs();
-    this->unk_0050 = NULL;
+    this->m_someTime = FrameTime::GetCurTimeMs();
+    this->m_modelCamera = NULL;
 
     this->m_modelMatrix.a0 = 1.0f;
     this->m_modelMatrix.a1 = 0.0f;
@@ -183,7 +190,6 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
 
     this->m_targetGUID = WOWGUID();
     this->m_terrainTilt = 0.0f;
-    this->m_guid0090 = WOWGUID();
     this->m_state = 0;
     this->m_flags = 0;
     this->m_relativeTo = WOWGUID();
@@ -213,10 +219,11 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
     this->m_targetPosition.x = 0.0f;
     this->m_targetPosition.y = 0.0f;
     this->m_targetPosition.z = 0.0f;
-    this->unk_01D0 = 0.0f;
+    this->unk_01BC = 0.0f;
     this->m_targetFacing = 0.0f;
     this->m_terrainTiltTime = 0;
-    this->unk_01DC = 0.0f;
+    this->unk_01C8 = 0.0f;
+    this->m_fade = 0xFF;
 
     this->m_smoothDistance.m_startTimeMs = 0;
     this->m_smoothDistance.m_rate = 0.0f;
@@ -272,7 +279,7 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
     this->m_bobStart.x = 0.0f;
     this->m_bobStart.y = 0.0f;
     this->m_bobStart.z = 0.0f;
-    this->unk_029C = 1;
+    this->unk_0288 = 1;
     this->m_underwater = 0;
     this->m_wasFlying = 0;
 
@@ -329,9 +336,9 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
 
     this->m_state |= 0x50;
     this->m_prevViewIndex = 2;
-    this->m_prevDistance = 1.8315002f;
-    this->unk_0314 = 1.8315002f;
-    this->unk_0318 = 0.0f;
+    this->m_prevDistance = 1.7f;
+    this->unk_02F4 = 1.7f;
+    this->unk_02F8 = 0.0f;
 
     if (g_cvAutoInteract->m_intValue) {
         this->m_flags |= 0x1;
@@ -340,16 +347,16 @@ CGCamera::CGCamera() : CSimpleCamera(World::s_nearClip, World::s_farClip, 1.5707
     }
 }
 
-// OFFSET: #0x00604D40
+// OFFSET: 0x0043CDC0
 CGCamera::~CGCamera() {
     this->m_state &= ~0x10;
 
     if (this->m_model) {
         this->m_state &= ~0x4;
 
-        if (this->unk_0050) {
-            HandleClose(this->unk_0050);
-            this->unk_0050 = NULL;
+        if (this->m_modelCamera) {
+            CameraRelease(this->m_modelCamera);
+            this->m_modelCamera = NULL;
         }
 
         this->m_model->Release();
@@ -359,7 +366,8 @@ CGCamera::~CGCamera() {
     ConsoleCommandUnregister("pitchLimit");
 }
 
-// OFFSET: #0x00603900
+// PROVEN: 53db0d52 IDENTICAL/NONE
+// OFFSET: 0x00441970
 void CGCamera::BarberShopSetView(float distance, float facing, float pitch) {
     this->m_views[7][0] = distance;
     this->m_views[7][2] = facing;
@@ -367,7 +375,7 @@ void CGCamera::BarberShopSetView(float distance, float facing, float pitch) {
     this->SetView(7, 1, 0);
 }
 
-// OFFSET: #0x00603A10
+// OFFSET: 0x00441BA0
 void CGCamera::CalcTerrainTilt(CGObject_C* target, uint32_t time) {
     if (!target) {
         return;
@@ -460,7 +468,7 @@ void CGCamera::CalcTerrainTilt(CGObject_C* target, uint32_t time) {
     this->m_terrainTilt = 0.0f;
 }
 
-// OFFSET: #0x005FFC20
+// OFFSET: 0x0043AD20/0x140045B30
 void CGCamera::ClampPitchToLimits(float delta) {
     float target = delta + this->m_smoothPitch.m_target;
     target = MIN_PITCH_ANGLE > target ? MIN_PITCH_ANGLE : (MAX_PITCH_ANGLE <= target ? MAX_PITCH_ANGLE : target);
@@ -475,7 +483,7 @@ void CGCamera::ClampPitchToLimits(float delta) {
     this->m_pitch = UnwrapAngleToward(target, pitch, -3.1415927f, 3.1415927f);
 }
 
-// OFFSET: #0x00601A70
+// OFFSET: 0x0043F760/0x14004A9B0
 void CGCamera::DecIgnoreFacing() {
     if (--this->m_ignoreFacingRefs != 0) {
         return;
@@ -491,7 +499,7 @@ void CGCamera::DecIgnoreFacing() {
             if (this->m_vehicleCamera && this->m_vehicleCamera->IsHierarchyChasingFacing()) {
                 facing = this->GetChaseFacing(unit);
             } else if (this->m_state & 0x4000) {
-                facing = this->unk_01DC;
+                facing = this->unk_01C8;
             } else if (this->m_vehicleCamera) {
                 facing = this->GetChaseFacing(unit);
             } else {
@@ -505,7 +513,7 @@ void CGCamera::DecIgnoreFacing() {
     this->UpdateYaw(-facing);
 }
 
-// OFFSET: #0x00604E00
+// OFFSET: 0x00443190
 int32_t CGCamera::FinishLoadingTarget(CGObject_C* target) {
     CM2Model* model = target->GetObjectModel();
 
@@ -523,7 +531,7 @@ int32_t CGCamera::FinishLoadingTarget(CGObject_C* target) {
 
     if ((target->m_obj->m_type & TYPEMASK_UNIT) && model) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(target);
-
+        scale = unit->GetDisplayModelScale() * scale;
         float mountScale = scale;
 
         if (unit->m_mountModel) {
@@ -653,14 +661,28 @@ int32_t CGCamera::FinishLoadingTarget(CGObject_C* target) {
             this->m_targetHeightSwim = mountHeight + this->m_targetHeightSwim;
         }
 
-        maxHeight = unit->GetMaxCameraHeight();
+        maxHeight = 15.0f;
 
-        if (maxHeight <= 0.0f) {
-            maxHeight = 15.0f;
-        }
+        if (!CGBarberShop::m_barberShopEnabled) {
+            float minimum = unit->m_movementData.m_collisionHeight * 0.77999997f + 0.11111111f;
 
-        if (CGBarberShop::m_barberShopEnabled) {
-            maxHeight *= 1.2;
+            if (minimum > this->m_targetHeightSwim) {
+                this->m_targetHeightSwim = minimum;
+            }
+
+            if (minimum > this->m_targetHeightNear) {
+                this->m_targetHeightNear = minimum;
+            }
+
+            if (minimum > this->m_targetHeightFar) {
+                this->m_targetHeightFar = minimum;
+            }
+
+            float unitMax = unit->GetMaxCameraHeight(1);
+
+            if (unitMax > 0.0f) {
+                maxHeight = unitMax;
+            }
         }
     } else {
         float height;
@@ -687,13 +709,14 @@ int32_t CGCamera::FinishLoadingTarget(CGObject_C* target) {
     this->m_targetHeightFar = this->m_targetHeightFar < 0.8333333f ? 0.8333333f : (this->m_targetHeightFar >= maxHeight ? maxHeight : this->m_targetHeightFar);
     this->m_targetHeightSwim = this->m_targetHeightSwim < 0.8333333f ? 0.8333333f : (this->m_targetHeightSwim >= maxHeight ? maxHeight : this->m_targetHeightSwim);
 
-    this->UpdateTargetHeight(target, OsGetAsyncTimeMs());
+    this->UpdateTargetHeight(target, FrameTime::GetCurTimeMs());
     this->UpdateLiquidSurfaceStatus(target);
 
     return 1;
 }
 
-// OFFSET: #0x006009E0
+// PROVEN: f117da69 IDENTICAL/NONE
+// OFFSET: 0x0043E540
 float CGCamera::GetChaseFacing(CGUnit_C* unit) const {
     if (this->m_vehicleCamera) {
         return this->m_vehicleCamera->m_facing;
@@ -702,7 +725,8 @@ float CGCamera::GetChaseFacing(CGUnit_C* unit) const {
     return unit->m_smoothTarget.m_value;
 }
 
-// OFFSET: #0x00603090
+// PROVEN: dec633bd IDENTICAL/NONE
+// OFFSET: 0x004410A0
 C3Vector CGCamera::GetSafeWorldPos(CGObject_C* target) const {
     CVehicleCamera_C* vehicleCamera = this->m_vehicleCamera;
 
@@ -717,7 +741,7 @@ C3Vector CGCamera::GetSafeWorldPos(CGObject_C* target) const {
     return target->GetPosition();
 }
 
-// OFFSET: #0x006019B0
+// OFFSET: 0x0043F6A0/0x14004A910
 void CGCamera::IncIgnoreFacing() {
     if (this->m_ignoreFacingRefs++ != 0) {
         return;
@@ -737,7 +761,8 @@ void CGCamera::IncIgnoreFacing() {
     this->UpdateYaw(facing);
 }
 
-// OFFSET: #0x005FE510
+// PROVEN: c182d5e3 IDENTICAL/NONE
+// OFFSET: 0x0043D520
 void CGCamera::InitializeView() {
     for (uint32_t i = 0; i < 8; i++) {
         for (uint32_t j = 0; j < 3; j++) {
@@ -752,7 +777,7 @@ void CGCamera::InitializeView() {
     }
 }
 
-// OFFSET: #0x00604A70
+// OFFSET: 0x00442E90/0x14004E410
 void CGCamera::MakeRelativeTo(WOWGUID guid) {
     if (guid == this->m_relativeTo) {
         return;
@@ -799,7 +824,7 @@ void CGCamera::MakeRelativeTo(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x00600B60
+// OFFSET: 0x0043E6B0
 C33Matrix CGCamera::ParentToWorld() const {
     CGObject_C* parent = ClntObjMgrObjectPtr(this->m_relativeTo, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -830,7 +855,7 @@ C33Matrix CGCamera::ParentToWorld() const {
     return C33Matrix::Rotation(facing);
 }
 
-// OFFSET: #0x00601B70
+// OFFSET: 0x0043F820
 void CGCamera::PerformTerrainTilt(CGObject_C* target, uint32_t time, int32_t immediate) {
     if (!target || !(target->m_obj->m_type & TYPEMASK_UNIT)) {
         return;
@@ -886,7 +911,7 @@ void CGCamera::PerformTerrainTilt(CGObject_C* target, uint32_t time, int32_t imm
     this->m_smoothGroundTilt.m_rate = 0.0f;
 }
 
-// OFFSET: #0x00604B90
+// OFFSET: 0x00442FC0/0x14004E550
 void CGCamera::PickVehicleCamera() {
     CGUnit_C* player = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     CGObject_C* target;
@@ -912,7 +937,7 @@ void CGCamera::PickVehicleCamera() {
     }
 }
 
-// OFFSET: #0x006030E0
+// OFFSET: 0x004410F0/0x14004C5A0
 int32_t CGCamera::SetDesiredFoVOffset(float offset, float delay, float scale, uint32_t time) {
     this->m_targetFov = UnwrapAngleToward(offset, this->m_targetFov, -3.1415927f, 3.1415927f);
 
@@ -935,10 +960,10 @@ int32_t CGCamera::SetDesiredFoVOffset(float offset, float delay, float scale, ui
         duration = scale * (fabsf(offset - this->m_targetFov) / (s_cvCameraFoVSmoothSpeed->m_floatValue * 0.017453292f));
     }
 
-    return this->StartSmoothFoV(offset, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothFoV(offset, duration, time + static_cast<int32_t>(delay * 1000.0f));
 }
 
-// OFFSET: #0x00600FA0
+// OFFSET: 0x0043EC50
 int32_t CGCamera::SetDesiredGroundOffset(float offset, float delay, float scale, uint32_t time) {
     this->m_groundTilt = UnwrapAngleToward(offset, this->m_groundTilt, -3.1415927f, 3.1415927f);
 
@@ -955,10 +980,10 @@ int32_t CGCamera::SetDesiredGroundOffset(float offset, float delay, float scale,
 
     float duration = scale * (fabsf(offset - this->m_groundTilt) / (s_cvCameraGroundSmoothSpeed->m_floatValue * 0.017453292f));
 
-    return this->StartSmoothGroundTilt(offset, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothGroundTilt(offset, duration, time + static_cast<int32_t>(delay * 1000.0f));
 }
 
-// OFFSET: #0x00601FF0
+// OFFSET: 0x004400C0/0x14004B390
 void CGCamera::SetModeFreeLook() {
     if (this->m_state & 0x1) {
         return;
@@ -988,7 +1013,7 @@ void CGCamera::SetModeFreeLook() {
     this->m_smoothYaw.m_rate = 0.0f;
 }
 
-// OFFSET: #0x00601F70
+// OFFSET: 0x00440030/0x14004B300
 void CGCamera::SetModeNormal() {
     if (!(this->m_state & 0x1) || (this->m_flags & 0x2)) {
         return;
@@ -1010,14 +1035,14 @@ void CGCamera::SetModeNormal() {
     this->m_state &= ~0x4000;
 }
 
-// OFFSET: #0x00606570
+// OFFSET: 0x00445CD0
 int32_t CGCamera::SetModelCamera(const char* fileName, const C3Vector* position, float facing, void (*callback)(CM2Model* model, uint32_t boneId, uint32_t sequenceId, int32_t interrupted, uint32_t time, uint64_t param), uint64_t param) {
     if (this->m_model) {
         this->m_state &= ~0x4;
 
-        if (this->unk_0050) {
-            HandleClose(this->unk_0050);
-            this->unk_0050 = NULL;
+        if (this->m_modelCamera) {
+            CameraRelease(this->m_modelCamera);
+            this->m_modelCamera = NULL;
         }
 
         this->m_model->Release();
@@ -1025,7 +1050,7 @@ int32_t CGCamera::SetModelCamera(const char* fileName, const C3Vector* position,
     }
 
     CStatus status;
-    this->m_model = this->GetScene()->CreateModel(fileName, 0);
+    this->m_model = this->GetScene()->CreateModel(fileName, 0, 3);
     SysMsgAdd(&status);
 
     if (!this->m_model) {
@@ -1050,24 +1075,13 @@ int32_t CGCamera::SetModelCamera(const char* fileName, const C3Vector* position,
     this->m_modelMatrix.d2 = position->z;
     this->m_modelMatrix.RotateAroundZ(facing);
     CM2Model* model = this->m_model;
-    model->m_fFlags |= 0x8000;
+    model->m_fFlags |= 0x4000;
     model->m_worldTransform = C44Matrix(this->m_modelMatrix);
-
     this->m_model->WaitUntilLoaded();
-
-    if (!this->m_model->IsLoaded()) {
-        this->m_state &= ~0x4;
-        return 1;
-    }
-
-    if (!this->FinishLoadingModel()) {
-        return 0;
-    }
-
-    return 1;
+    return this->FinishLoadingModel();
 }
 
-// OFFSET: #0x006066E0
+// OFFSET: 0x00443AD0/0x14004F320
 void CGCamera::SetTarget(CGObject_C* target, int32_t freeLook) {
     if (this->m_state & 0x10) {
         CGWorldFrame::s_currentWorldFrame->SetPlayerFadeCameraValue(0xFF);
@@ -1085,7 +1099,7 @@ void CGCamera::SetTarget(CGObject_C* target, int32_t freeLook) {
     int32_t immediate = !(this->m_state & 0x10) || newTarget;
 
     if (!(this->m_state & 0x10) || newTarget || moved) {
-        uint32_t time = OsGetAsyncTimeMs();
+        uint32_t time = FrameTime::GetCurTimeMs();
         this->CalcTerrainTilt(target, time);
         this->PerformTerrainTilt(target, time, immediate);
     }
@@ -1097,7 +1111,7 @@ void CGCamera::SetTarget(CGObject_C* target, int32_t freeLook) {
     }
 
     this->UpdateInebriation(drunkness, immediate);
-    this->unk_01D0 = 0.0f;
+    this->unk_01BC = 0.0f;
 
     if (target) {
         this->m_targetGUID = target->m_obj->m_guid;
@@ -1124,15 +1138,13 @@ void CGCamera::SetTarget(CGObject_C* target, int32_t freeLook) {
             this->SetModeNormal();
         }
 
-        this->m_guid0090 = WOWGUID();
-
         if (!this->FinishLoadingTarget(target)) {
             this->m_state &= ~0x4;
         }
     } else {
         this->m_targetGUID = WOWGUID();
         this->m_relativeTo = WOWGUID();
-        this->m_cameraShakeList.Clear();
+        StaticSingleton<CCameraManager>::Instance()->ClearShakes();
         this->m_flags &= ~0x2;
     }
 
@@ -1143,12 +1155,7 @@ void CGCamera::SetTarget(CGObject_C* target, int32_t freeLook) {
     }
 }
 
-// OFFSET: #0x005FE880
-void CGCamera::SetupWorldProjection(const CRect& rect) {
-    this->SetGxProjectionAndView(rect);
-}
-
-// OFFSET: #0x00601550
+// OFFSET: 0x0043F310
 int32_t CGCamera::SmoothSetFlyingMountHeight(float height, float delay, float scale, uint32_t time) {
     if ((this->m_state & 0x400000) && fabsf(this->m_smoothFlyingHeight.m_target - height) < 0.001f && fabsf(this->m_smoothFlyingHeight.m_param4 - delay) < 0.001f && fabsf(this->m_smoothFlyingHeight.m_param3 - scale) < 0.001f) {
         return 1;
@@ -1163,10 +1170,10 @@ int32_t CGCamera::SmoothSetFlyingMountHeight(float height, float delay, float sc
 
     float duration = fabsf(height - this->m_flyingMountHeight) / s_cvCameraFlyingMountHeightSmoothSpeed->m_floatValue * scale;
 
-    return this->StartSmoothFlyingMountHeight(height, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothFlyingMountHeight(height, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: #0x00603230
+// OFFSET: 0x004412A0
 int32_t CGCamera::SmoothSetHeight(float height, float delay, float scale, uint32_t time) {
     if ((this->m_state & 0x20000000) && fabsf(this->m_smoothHeight.m_target - height) < 0.001f && fabsf(this->m_smoothHeight.m_param4 - delay) < 0.001f && fabsf(this->m_smoothHeight.m_param3 - scale) < 0.001f) {
         return 1;
@@ -1181,10 +1188,10 @@ int32_t CGCamera::SmoothSetHeight(float height, float delay, float scale, uint32
 
     float duration = fabsf(height - this->m_height) / s_cvCameraHeightSmoothSpeed->m_floatValue * scale;
 
-    return this->StartSmoothHeight(height, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothHeight(height, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: #0x005FF5A0
+// OFFSET: 0x0043D140/0x1400481A0
 float CGCamera::SmoothTargetFacing(float facing, int32_t moved) {
     if (!s_cameraSmooth->m_intValue || !moved) {
         return facing;
@@ -1212,7 +1219,8 @@ float CGCamera::SmoothTargetFacing(float facing, int32_t moved) {
     return WrapAngle0To2Pi(step + this->m_targetFacing);
 }
 
-// OFFSET: #0x005FEBF0
+// PROVEN: e58284da IDENTICAL/NONE
+// OFFSET: 0x0043B610
 int32_t CGCamera::StartSmoothFlyingMountHeight(float height, float rate, uint32_t startTime) {
     if (fabsf(this->m_flyingMountHeight - height) < 0.001f) {
         return 0;
@@ -1227,7 +1235,8 @@ int32_t CGCamera::StartSmoothFlyingMountHeight(float height, float rate, uint32_
     return 1;
 }
 
-// OFFSET: #0x00600F00
+// PROVEN: 2d3da183 IDENTICAL/NONE
+// OFFSET: 0x0043EB70
 int32_t CGCamera::StartSmoothFoV(float offset, float rate, uint32_t startTime) {
     this->m_targetFov = UnwrapAngleToward(offset, this->m_targetFov, -3.1415927f, 3.1415927f);
 
@@ -1244,7 +1253,8 @@ int32_t CGCamera::StartSmoothFoV(float offset, float rate, uint32_t startTime) {
     return 1;
 }
 
-// OFFSET: #0x005FE9B0
+// PROVEN: 00e7bd04 IDENTICAL/NONE
+// OFFSET: 0x0043B290
 int32_t CGCamera::StartSmoothGroundTilt(float offset, float rate, uint32_t startTime) {
     this->m_groundTilt = UnwrapAngleToward(offset, this->m_groundTilt, -3.1415927f, 3.1415927f);
 
@@ -1261,7 +1271,7 @@ int32_t CGCamera::StartSmoothGroundTilt(float offset, float rate, uint32_t start
     return 1;
 }
 
-// OFFSET: #0x006010E0
+// OFFSET: 0x0043EDE0
 int32_t CGCamera::StartSmoothHeight(float height, float rate, uint32_t startTime) {
     if (fabsf(this->m_height - height) < 0.001f) {
         return 0;
@@ -1284,7 +1294,32 @@ int32_t CGCamera::StartSmoothHeight(float height, float rate, uint32_t startTime
     return 1;
 }
 
-// OFFSET: #0x00604940
+// OFFSET: 0x00442C10
+void CGCamera::SyncFreeLookFacing() {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
+    float yaw = this->m_yaw;
+
+    if (!unit || !unit->ClampRawAngleToLegalFacingRange(yaw)) {
+        float current = this->m_yaw;
+        this->m_state |= 0x4000;
+        this->m_flags |= 0x4;
+        this->unk_01C8 = current;
+    } else if (this->m_flags & 0x4) {
+        this->m_state |= 0x4000;
+        this->m_smoothYaw.m_target = yaw;
+        this->m_yaw = yaw;
+        this->unk_01C8 = yaw;
+    } else {
+        this->m_state &= ~0x4000;
+    }
+
+    uint32_t time = FrameTime::GetCurTimeMs();
+    CGInputControl::GetActive()->CameraTurnPlayer(time, this->m_yaw);
+    float pitch = this->m_targetOffset + this->m_pitch;
+    this->SyncFreeLookPitch(MIN_PITCH_ANGLE > pitch ? MIN_PITCH_ANGLE : (MAX_PITCH_ANGLE <= pitch ? MAX_PITCH_ANGLE : pitch), time, 1);
+}
+
+// OFFSET: 0x00442D20/0x14004E240
 int32_t CGCamera::UpdateInebriation(float drunkness, int32_t immediate) {
     if (this->m_state & 0x80008000) {
         return 0;
@@ -1298,40 +1333,38 @@ int32_t CGCamera::UpdateInebriation(float drunkness, int32_t immediate) {
         return changed;
     }
 
-    return this->SetDesiredFoVOffset(offset, 0.0f, 1.0f, OsGetAsyncTimeMs());
+    return this->SetDesiredFoVOffset(offset, 0.0f, 1.0f, FrameTime::GetCurTimeMs());
 }
 
-// OFFSET: #0x006049C0
+// OFFSET: 0x00442DB0
 float CGCamera::UpdateLiquidSurfaceStatus(CGObject_C* target) {
-    this->m_state &= ~0x300000;
-
-    int32_t liquidType;
+    uint32_t state = this->m_state;
+    this->m_state = state & ~0x300000;
+    uint32_t liquidType;
     float height;
     int32_t liquidFlags;
 
-    if (!target || !World::QueryObjectLiquid(target->m_worldObject, &liquidType, &height, &liquidFlags)) {
+    if (!target || !World::QueryObjectLiquid(target->m_worldObject, liquidType, height, liquidFlags)) {
         return 0.0f;
     }
 
     float depth = height - this->GetSafeWorldPos(target).z;
-    float targetHeight;
 
-    if (target->m_obj->m_type & TYPEMASK_UNIT) {
-        targetHeight = static_cast<CGUnit_C*>(target)->m_movementData.m_collisionHeight;
-    } else {
-        targetHeight = target->m_height * target->m_scale;
-    }
-
-    if (targetHeight - 0.22222222f < depth) {
+    if (this->m_height < depth) {
         this->m_state |= 0x200000;
     } else {
         this->m_state |= 0x100000;
     }
 
+    if (state != this->m_state && (target->m_obj->m_type & TYPEMASK_UNIT) && !static_cast<CGUnit_C*>(target)->IsAutoTracking()) {
+        uint32_t time = FrameTime::GetCurTimeMs();
+        this->SyncFreeLookPitch(-static_cast<CGUnit_C*>(target)->GetPitch(), time, 0);
+    }
+
     return depth;
 }
 
-// OFFSET: #0x00604490
+// OFFSET: 0x00442700/0x14004DBD0
 void CGCamera::UpdateTargetFacing(CGObject_C* target, float& yaw, float& pitch, float& roll) {
     yaw = this->m_yaw;
     pitch = this->m_pitch;
@@ -1347,7 +1380,7 @@ void CGCamera::UpdateTargetFacing(CGObject_C* target, float& yaw, float& pitch, 
 
     if (target->m_obj->m_type & TYPEMASK_UNIT) {
         CGUnit_C* unit = static_cast<CGUnit_C*>(target);
-        unit->UpdateSmoothFacing(NULL);
+        unit->UpdateSmoothFacing(NULL, NULL);
         facing = this->GetChaseFacing(unit);
 
         if (unit->m_obj->m_guid != CGUnit_C::s_activeMover && !this->m_vehicleCamera) {
@@ -1374,12 +1407,12 @@ void CGCamera::UpdateTargetFacing(CGObject_C* target, float& yaw, float& pitch, 
     this->SetFacing(yaw, pitch, roll);
 }
 
-// OFFSET: #0x00604640
+// OFFSET: 0x004428E0
 void CGCamera::UpdateTargetHeight(CGObject_C* target, uint32_t time) {
     float scale = 1.0f;
 
     if (static_cast<int32_t>(this->m_heightChangedTimeMs) > 0) {
-        if (OsGetAsyncTimeMs() - this->m_heightChangedTimeMs > 2999) {
+        if (FrameTime::GetCurTimeMs() - this->m_heightChangedTimeMs > 2999) {
             this->m_heightChangedTimeMs = 0;
         } else {
             scale = 0.5f;
@@ -1402,7 +1435,7 @@ void CGCamera::UpdateTargetHeight(CGObject_C* target, uint32_t time) {
     }
 }
 
-// OFFSET: #0x005FE5F0
+// OFFSET: 0x0043AE50
 void CGCamera::UpdateYaw(float delta) {
     this->m_smoothYaw.m_target = CMath::normalizeangle0to2pi_(delta + this->m_smoothYaw.m_target);
     this->m_smoothYaw.m_startValue = UnwrapAngleToward(this->m_smoothYaw.m_target, CMath::normalizeangle0to2pi_(delta + this->m_smoothYaw.m_startValue), -3.1415927f, 3.1415927f);
@@ -1428,48 +1461,30 @@ float CGCamera::GetDefaultZoomMaxDistance() {
     return 50.0f;
 }
 
-// OFFSET: #0x00606330
-void CGCamera::AddShake(const C3Vector& position, int32_t type, int32_t dir, float amplitude, float frequency, float duration, float timeOffset, float damping) {
-    CameraShake* shake = this->m_cameraShakeList.NewNode(2, 0, 0);
-
-    if (shake) {
-        shake->m_amplitude = amplitude;
-        shake->m_type = type;
-        shake->m_frequency = frequency;
-        shake->m_dir = dir;
-        shake->m_duration = duration;
-        shake->m_timeOffset = timeOffset;
-        shake->m_damping = damping;
-        shake->m_startTime = OsGetAsyncTimeMs();
-        shake->m_position = position;
-    }
-}
-
-// OFFSET: #0x00600030
+// PROVEN: 5b6700ad IDENTICAL/NONE
+// OFFSET: 0x0043DAE0
 void CGCamera::BeginBobbingSmooth() {
     this->m_state &= ~0x200;
     this->m_bobDuration = fabsf((&this->m_bobOffset.x)[this->m_bobOffset.MajorAxis()]) / s_cvCameraBobbingSmoothSpeed->m_floatValue;
     this->m_bobStart = this->m_bobOffset;
-    this->m_bobTime = OsGetAsyncTimeMs();
+    this->m_bobTime = FrameTime::GetCurTimeMs();
 }
 
-// OFFSET: #0x00600530
-void CGCamera::CameraTeleported(float facing) {
+// PROVEN: b5fe670d IDENTICAL/NONE
+// OFFSET: 0x0043DF70
+void CGCamera::CameraTeleported(float oldFacing) {
     if (!(this->m_state & 0x1)) {
         return;
     }
 
-    float current = 0.0f;
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
     if (target) {
-        current = target->GetFacing();
+        this->UpdateYaw(target->GetFacing() - oldFacing);
     }
-
-    this->UpdateYaw(facing - current);
 }
 
-// OFFSET: #0x005FFDE0
+// OFFSET: 0x0043D950
 uint32_t CGCamera::CanSmoothTargetFacing(CGObject_C* target) {
     if (!target || !(target->m_obj->m_type & TYPEMASK_UNIT) || !s_cvCameraPivot->m_intValue) {
         return 0;
@@ -1496,7 +1511,8 @@ uint32_t CGCamera::CanSmoothTargetFacing(CGObject_C* target) {
     return this->m_state & 0x30000;
 }
 
-// OFFSET: #0x005FEEE0
+// PROVEN: f82ecc8a IDENTICAL/NONE
+// OFFSET: 0x0043BAA0
 void CGCamera::CancelSmoothPitch() {
     this->m_state &= ~0x2000000;
     this->m_smoothPitch.m_target = this->m_pitch;
@@ -1504,7 +1520,8 @@ void CGCamera::CancelSmoothPitch() {
     this->m_smoothPitch.m_rate = 0.0f;
 }
 
-// OFFSET: #0x005FEF10
+// PROVEN: 12ed6e6c IDENTICAL/NONE
+// OFFSET: 0x0043BAD0
 void CGCamera::CancelSmoothTargetOffset() {
     this->m_state &= ~0x8000000;
     this->m_smoothTargetOffset.m_target = this->m_targetOffset;
@@ -1512,7 +1529,8 @@ void CGCamera::CancelSmoothTargetOffset() {
     this->m_smoothTargetOffset.m_rate = 0.0f;
 }
 
-// OFFSET: #0x005FEF40
+// PROVEN: 25b38e0b IDENTICAL/NONE
+// OFFSET: 0x0043BB00
 void CGCamera::CancelSmoothYaw() {
     this->m_state &= ~0x1000000;
     this->m_smoothYaw.m_target = this->m_yaw;
@@ -1520,7 +1538,7 @@ void CGCamera::CancelSmoothYaw() {
     this->m_smoothYaw.m_rate = 0.0f;
 }
 
-// OFFSET: #0x005FE7B0
+// OFFSET: 0x0043AFD0
 void CGCamera::CheckUnderwater() {
     float depth;
     int32_t underwater = World::SceneCamLiquidStatus(&depth);
@@ -1532,14 +1550,15 @@ void CGCamera::CheckUnderwater() {
     }
 }
 
-// OFFSET: #0x005FF530
+// OFFSET: 0x0043D0E0
 void CGCamera::ClampPitchAndNormalize() {
     this->m_pitch = MIN_PITCH_ANGLE > this->m_pitch ? MIN_PITCH_ANGLE : (MAX_PITCH_ANGLE <= this->m_pitch ? MAX_PITCH_ANGLE : this->m_pitch);
     this->m_yaw = CMath::normalizeangle0to2pi_(this->m_yaw);
     this->m_yawOffset = CMath::normalizeangle0to2pi_(this->m_yawOffset);
 }
 
-// OFFSET: #0x005FE360
+// PROVEN: e5422fad IDENTICAL/NONE
+// OFFSET: 0x0043A9A0/0x1400458A0
 void CGCamera::ClearModelCamera() {
     if (!this->m_model) {
         return;
@@ -1547,26 +1566,29 @@ void CGCamera::ClearModelCamera() {
 
     this->m_state &= ~0x4;
 
-    if (this->unk_0050) {
-        HandleClose(this->unk_0050);
-        this->unk_0050 = NULL;
+    if (this->m_modelCamera) {
+        CameraRelease(this->m_modelCamera);
+        this->m_modelCamera = NULL;
     }
 
     this->m_model->Release();
     this->m_model = NULL;
 }
 
-// OFFSET: #0x005FE940
+// PROVEN: abefe3e6 IDENTICAL/NONE
+// OFFSET: 0x0043B1A0
 void CGCamera::ClearVehicleExitZoomDistance() {
     this->m_flags &= ~0x20;
 }
 
-// OFFSET: #0x005FE4E0
+// PROVEN: c8effb53 IDENTICAL/NONE
+// OFFSET: 0x0043AB70
 void CGCamera::CreateViewFromCamera(uint32_t view) {
     this->SaveViewToCVars(view, this->m_smoothDistance.m_target, this->m_smoothPitch.m_target, this->m_smoothYaw.m_target);
 }
 
-// OFFSET: #0x00604850
+// PROVEN: 31290e6c IDENTICAL/NONE
+// OFFSET: 0x00442B10
 void CGCamera::DisableFreeLook(int32_t keepSmoothing) {
     this->SetModeNormal();
 
@@ -1581,7 +1603,7 @@ void CGCamera::DisableFreeLook(int32_t keepSmoothing) {
     this->m_smoothTargetOffset.m_target = this->m_targetOffset;
 }
 
-// OFFSET: #0x006047E0
+// OFFSET: 0x00442AB0
 void CGCamera::EnableFreeLook() {
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -1592,7 +1614,7 @@ void CGCamera::EnableFreeLook() {
     this->SetModeFreeLook();
 }
 
-// OFFSET: #0x00601D60
+// OFFSET: 0x0043FA40
 C3Vector CGCamera::GetCameraPosition(const C3Vector& target, float distance, const C3Vector& offset) {
     C3Vector position = target;
     C3Vector forward = this->Forward();
@@ -1622,12 +1644,14 @@ C3Vector CGCamera::GetCameraPosition(const C3Vector& target, float distance, con
     return position;
 }
 
-// OFFSET: #0x005FE310
+// PROVEN: 249cfbe9 IDENTICAL/NONE
+// OFFSET: 0x0043A950
 int32_t CGCamera::HasModelCamera() {
-    return this->unk_0050 != NULL;
+    return this->m_modelCamera != NULL;
 }
 
-// OFFSET: #0x005FFE50
+// PROVEN: 4ba48985 IDENTICAL/NONE
+// OFFSET: 0x0043D9C0
 int32_t CGCamera::HasTargetOffset() {
     if (fabsf(this->m_bobOffset.z + this->m_bobOffset.y + this->m_bobOffset.x) < 0.001f) {
         return 0;
@@ -1637,7 +1661,7 @@ int32_t CGCamera::HasTargetOffset() {
     return this->IsBobbingAllowed(target) == 0;
 }
 
-// OFFSET: #0x005FFD20
+// OFFSET: 0x0043D890
 uint32_t CGCamera::IsBobbingAllowed(CGObject_C* target) {
     if (this->m_distance > 0.16666667f) {
         return 0;
@@ -1667,17 +1691,19 @@ uint32_t CGCamera::IsBobbingAllowed(CGObject_C* target) {
     return state & 0x200;
 }
 
-// OFFSET: #0x005FFF40
+// OFFSET: 0x0043DAA0
 int32_t CGCamera::IsCustomViewSmoothingActive() {
     return !(this->m_state & 0x20) && (s_cvCameraCustomViewSmoothing->m_intValue || this->IsViewDefault(this->m_viewIndex)) && !(this->m_state & 0x8000);
 }
 
-// OFFSET: #0x005FE3A0
+// PROVEN: 0cd96380 IDENTICAL/NONE
+// OFFSET: 0x0043A9E0/0x1400458F0
 int32_t CGCamera::IsFirstPersonView() {
     return this->m_distance < 1.8315002f;
 }
 
-// OFFSET: #0x005FF8E0
+// PROVEN: a8740b07 IDENTICAL/NONE
+// OFFSET: 0x0043AC20
 int32_t CGCamera::IsViewDefault(uint32_t view) {
     for (uint32_t i = 0; i < 3; i++) {
         float value = SStrToFloat(s_cameraViewDefaults[view].m_values[i]);
@@ -1694,7 +1720,7 @@ int32_t CGCamera::IsViewDefault(uint32_t view) {
     return 1;
 }
 
-// OFFSET: #0x005FF3E0
+// OFFSET: 0x0043CF00
 void CGCamera::LoadCameraSettings() {
     float distance = s_cvCameraSavedDistance->m_floatValue;
     distance = 0.0f > distance ? 0.0f : (50.0f <= distance ? 50.0f : distance);
@@ -1706,20 +1732,22 @@ void CGCamera::LoadCameraSettings() {
     this->m_smoothPitch.m_target = pitch;
 }
 
-// OFFSET: #0x00604C70
+// PROVEN: 294a3fba IDENTICAL/NONE
+// OFFSET: 0x00443090/0x14004E650
 void CGCamera::OnVehicleCameraDestroyed() {
     this->m_vehicleCamera = NULL;
     this->PickVehicleCamera();
 }
 
-// OFFSET: #0x005FE320
+// PROVEN: 7ec8b696 IDENTICAL/NONE
+// OFFSET: 0x0043A960
 void CGCamera::ResetModelCamera() {
-    this->m_someTime = OsGetAsyncTimeMs();
+    this->m_someTime = FrameTime::GetCurTimeMs();
     this->GetScene()->SetTime(0);
-    this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0);
+    this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0, 0, 0);
 }
 
-// OFFSET: #0x00600730
+// OFFSET: 0x0043E160
 void CGCamera::RotateOffsetByRoll(C3Vector& offset) {
     if (0.0f != this->m_vehicleYawOffset) {
         C44Matrix rotation;
@@ -1728,13 +1756,14 @@ void CGCamera::RotateOffsetByRoll(C3Vector& offset) {
     }
 }
 
-// OFFSET: #0x005FF320
+// PROVEN: dd7e6375 IDENTICAL/NONE
+// OFFSET: 0x0043CE30
 void CGCamera::SaveCameraSettings() {
     char buffer[32];
     float distance;
 
     if (this->m_state & 0x8) {
-        distance = this->unk_0314;
+        distance = this->unk_02F4;
     } else if (this->m_flags & 0x20) {
         distance = this->m_vehicleExitZoomDistance;
     } else {
@@ -1753,7 +1782,7 @@ void CGCamera::SaveCameraSettings() {
     s_cvCameraSavedPitch->Set(buffer, true, false, false, true);
 }
 
-// OFFSET: #0x005FE440
+// OFFSET: 0x0043AAC0
 void CGCamera::SaveViewToCVars(uint32_t view, float distance, float pitch, float yaw) {
     char buffer[40];
 
@@ -1773,7 +1802,7 @@ void CGCamera::SaveViewToCVars(uint32_t view, float distance, float pitch, float
     }
 }
 
-// OFFSET: #0x00601190
+// OFFSET: 0x0043EE90
 int32_t CGCamera::SetDesiredPitchAngle(float pitch, float delay, float scale, uint32_t time) {
     this->m_pitch = UnwrapAngleToward(pitch, this->m_pitch, -3.1415927f, 3.1415927f);
 
@@ -1790,10 +1819,10 @@ int32_t CGCamera::SetDesiredPitchAngle(float pitch, float delay, float scale, ui
 
     float duration = scale * (fabsf(pitch - this->m_pitch) / (s_cvCameraPitchSmoothSpeed->m_floatValue * 0.017453292f));
 
-    return this->StartSmoothPitch(pitch, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothPitch(pitch, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: #0x006012D0
+// OFFSET: 0x0043F010
 int32_t CGCamera::SetDesiredTargetOffset(float offset, float delay, float scale, uint32_t time) {
     this->m_targetOffset = UnwrapAngleToward(offset, this->m_targetOffset, -3.1415927f, 3.1415927f);
 
@@ -1810,10 +1839,11 @@ int32_t CGCamera::SetDesiredTargetOffset(float offset, float delay, float scale,
 
     float duration = scale * (fabsf(offset - this->m_targetOffset) / (s_cvCameraTargetSmoothSpeed->m_floatValue * 0.017453292f));
 
-    return this->StartSmoothTargetOffset(offset, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothTargetOffset(offset, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: #0x005FE8D0
+// PROVEN: bc241a1a IDENTICAL/NONE
+// OFFSET: 0x0043B120
 void CGCamera::SetDesiredVehiclePitchOffset(float offset, uint32_t startTime, uint32_t endTime) {
     this->m_vehiclePitchStartTime = startTime;
     this->m_vehiclePitchEndTime = endTime;
@@ -1827,7 +1857,7 @@ void CGCamera::SetDesiredVehiclePitchOffset(float offset, uint32_t startTime, ui
 }
 
 // PROVEN: 0837dc8b IDENTICAL/NONE
-// OFFSET: 0x0043B120/0x140045DC0
+// OFFSET: 0x0043B0D0
 void CGCamera::SetDesiredVehicleYawOffset(float offset, uint32_t startTime, uint32_t endTime) {
     this->m_vehicleYawStartTime = startTime;
     this->m_vehicleYawEndTime = endTime;
@@ -1840,7 +1870,7 @@ void CGCamera::SetDesiredVehicleYawOffset(float offset, uint32_t startTime, uint
     }
 }
 
-// OFFSET: #0x00601410
+// OFFSET: 0x0043F190
 int32_t CGCamera::SetDesiredYawAngle(float yaw, float delay, float scale, uint32_t time) {
     this->m_yaw = UnwrapAngleToward(yaw, this->m_yaw, -3.1415927f, 3.1415927f);
 
@@ -1857,71 +1887,82 @@ int32_t CGCamera::SetDesiredYawAngle(float yaw, float delay, float scale, uint32
 
     float duration = scale * (fabsf(yaw - this->m_yaw) / (s_cvCameraYawSmoothSpeed->m_floatValue * 0.017453292f));
 
-    return this->StartSmoothYaw(yaw, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothYaw(yaw, duration, time - static_cast<uint32_t>(delay * -1000.0f));
 }
 
-// OFFSET: #0x005FE920
+// PROVEN: 56544018 IDENTICAL/NONE
+// OFFSET: 0x0043B180
 void CGCamera::SetVehicleExitZoomDistance(float distance) {
     this->m_flags |= 0x20;
     this->m_vehicleExitZoomDistance = distance;
 }
 
-// OFFSET: #0x00600890
+// PROVEN: 7a00c203 IDENTICAL/NONE
+// OFFSET: 0x0043E370
 void CGCamera::SetVehicleSeatZoomMaxDistance(float distance) {
     this->m_flags |= 0x10;
     this->m_overrideDistanceMax = distance;
 
-    if (distance < this->m_smoothDistance.m_target) {
-        this->m_state &= ~0x4000000;
-        this->m_smoothDistance.m_target = this->m_distance;
-        this->m_smoothDistance.m_startTimeMs = 0;
-        this->m_smoothDistance.m_rate = 0.0f;
+    if (this->m_smoothDistance.m_target > distance) {
+        this->ZoomToDistance(this->m_overrideDistanceMax, FrameTime::GetCurTimeMs(), 0.0f, 0);
     }
 }
 
-// OFFSET: #0x00600920
+// OFFSET: 0x0043E430
 void CGCamera::SetVehicleSeatZoomMaxDistanceToDefault() {
     this->m_flags &= ~0x10;
+    float maxDistance;
 
-    if (this->m_smoothDistance.m_target > 50.0f) {
-        this->m_state &= ~0x4000000;
-        this->m_smoothDistance.m_target = this->m_distance;
-        this->m_smoothDistance.m_startTimeMs = 0;
-        this->m_smoothDistance.m_rate = 0.0f;
+    if (this->m_flags & 0x10) {
+        maxDistance = this->m_overrideDistanceMax;
+    } else if (this->m_vehicleZoomEnabled) {
+        maxDistance = 50.0f;
+    } else {
+        maxDistance = s_cvCameraDistanceMaxFactor->m_floatValue * s_cvCameraDistanceMax->m_floatValue;
+        maxDistance = maxDistance < 0.0f ? 0.0f : (maxDistance >= 50.0f ? 50.0f : maxDistance);
+    }
+
+    if (this->m_smoothDistance.m_target > maxDistance) {
+        this->ZoomToDistance(maxDistance, FrameTime::GetCurTimeMs(), 0.0f, 0);
     }
 }
 
-// OFFSET: #0x00600840
+// PROVEN: 18d25176 IDENTICAL/NONE
+// OFFSET: 0x0043E320
 void CGCamera::SetVehicleSeatZoomMinDistance(float distance) {
     this->m_flags |= 0x8;
     this->m_overrideDistanceMin = distance;
 
     if (distance > this->m_smoothDistance.m_target) {
-        this->m_state &= ~0x4000000;
-        this->m_smoothDistance.m_target = this->m_distance;
-        this->m_smoothDistance.m_startTimeMs = 0;
-        this->m_smoothDistance.m_rate = 0.0f;
+        this->ZoomToDistance(this->m_overrideDistanceMin, FrameTime::GetCurTimeMs(), 0.0f, 0);
     }
 }
 
-// OFFSET: #0x006008E0
+// OFFSET: 0x0043E3C0
 void CGCamera::SetVehicleSeatZoomMinDistanceToDefault() {
     this->m_flags &= ~0x8;
+    float minDistance;
 
-    if (this->m_smoothDistance.m_target < 0.0f) {
-        this->m_state &= ~0x4000000;
-        this->m_smoothDistance.m_target = this->m_distance;
-        this->m_smoothDistance.m_startTimeMs = 0;
-        this->m_smoothDistance.m_rate = 0.0f;
+    if (this->m_flags & 0x8) {
+        minDistance = this->m_overrideDistanceMin;
+    } else if (CGBarberShop::m_barberShopEnabled) {
+        minDistance = CGBarberShop::GetMinCameraDistance();
+    } else {
+        minDistance = 0.0f;
+    }
+
+    if (minDistance > this->m_smoothDistance.m_target) {
+        this->ZoomToDistance(minDistance, FrameTime::GetCurTimeMs(), 0.0f, 0);
     }
 }
 
-// OFFSET: #0x005FE910
+// PROVEN: c4602811 IDENTICAL/NONE
+// OFFSET: 0x0043B170
 void CGCamera::SetVehicleTrackingStyle(uint32_t style) {
     this->m_vehicleTrackingStyle = style;
 }
 
-// OFFSET: #0x00600590
+// OFFSET: 0x0043DFC0
 void CGCamera::SetVehicleZoomEnabled(int32_t enabled, float duration, int32_t animate) {
     if (this->m_vehicleZoomEnabled == enabled) {
         return;
@@ -1948,23 +1989,23 @@ void CGCamera::SetVehicleZoomEnabled(int32_t enabled, float duration, int32_t an
 
     if (animate && fabsf(distance - this->m_distance) >= 0.001f) {
         if (distance <= this->m_distance) {
-            this->ZoomIn(this->m_distance - distance, OsGetAsyncTimeMs(), duration);
+            this->ZoomIn(this->m_distance - distance, FrameTime::GetCurTimeMs(), duration);
         } else {
-            this->ZoomOut(distance - this->m_distance, OsGetAsyncTimeMs(), duration);
+            this->ZoomOut(distance - this->m_distance, FrameTime::GetCurTimeMs(), duration);
         }
     }
 
     this->m_vehicleZoomEnabled = enabled;
 }
 
-// OFFSET: #0x005FFEB0
+// OFFSET: 0x0043DA20
 int32_t CGCamera::ShouldSmoothPitch(float minPitch, float maxPitch) {
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__);
 
     return target && !(this->m_state & 0x1) && s_cvCameraSmoothPitch->m_intValue && !(static_cast<CGUnit_C*>(target)->m_movement->m_flags & (MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SWIMMING)) && (minPitch > this->m_pitch || maxPitch < this->m_pitch);
 }
 
-// OFFSET: #0x00600E00
+// OFFSET: 0x0043EA60
 int32_t CGCamera::SmoothSetDistance(float distance, float delay, float scale, uint32_t time) {
     if ((this->m_state & 0x4000000) && fabsf(this->m_smoothDistance.m_target - distance) < 0.001f && fabsf(this->m_smoothDistance.m_param4 - delay) < 0.001f && fabsf(this->m_smoothDistance.m_param3 - scale) < 0.001f) {
         return 1;
@@ -1979,10 +2020,10 @@ int32_t CGCamera::SmoothSetDistance(float distance, float delay, float scale, ui
 
     float duration = fabsf(distance - this->m_distance) / s_cvCameraDistanceSmoothSpeed->m_floatValue * scale;
 
-    return this->StartSmoothDistance(distance, duration, time - static_cast<int32_t>(delay * -1000.0f));
+    return this->StartSmoothDistance(distance, duration, time + static_cast<int32_t>(delay * 1000.0f));
 }
 
-// OFFSET: #0x005FE580
+// OFFSET: 0x0043ACB0
 void CGCamera::StartMotion(uint32_t motion, uint32_t time, uint32_t duration, float speed) {
     if (this->m_flags & 0x40) {
         return;
@@ -1999,7 +2040,8 @@ void CGCamera::StartMotion(uint32_t motion, uint32_t time, uint32_t duration, fl
     this->m_motionEndTime[motion] = duration ? duration + time : 0;
 }
 
-// OFFSET: #0x005FE950
+// PROVEN: 64df17bf IDENTICAL/NONE
+// OFFSET: 0x0043B220
 int32_t CGCamera::StartSmoothDistance(float distance, float rate, uint32_t startTime) {
     if (fabsf(this->m_distance - distance) < 0.001f) {
         return 0;
@@ -2014,7 +2056,8 @@ int32_t CGCamera::StartSmoothDistance(float distance, float rate, uint32_t start
     return 1;
 }
 
-// OFFSET: #0x005FEA40
+// PROVEN: fa76e623 IDENTICAL/NONE
+// OFFSET: 0x0043B370
 int32_t CGCamera::StartSmoothPitch(float pitch, float rate, uint32_t startTime) {
     this->m_pitch = UnwrapAngleToward(pitch, this->m_pitch, -3.1415927f, 3.1415927f);
 
@@ -2031,7 +2074,8 @@ int32_t CGCamera::StartSmoothPitch(float pitch, float rate, uint32_t startTime) 
     return 1;
 }
 
-// OFFSET: #0x005FEAD0
+// PROVEN: 45ffb446 IDENTICAL/NONE
+// OFFSET: 0x0043B450
 int32_t CGCamera::StartSmoothTargetOffset(float offset, float rate, uint32_t startTime) {
     this->m_targetOffset = UnwrapAngleToward(offset, this->m_targetOffset, -3.1415927f, 3.1415927f);
 
@@ -2048,7 +2092,8 @@ int32_t CGCamera::StartSmoothTargetOffset(float offset, float rate, uint32_t sta
     return 1;
 }
 
-// OFFSET: #0x005FEB60
+// PROVEN: 4c41412e IDENTICAL/NONE
+// OFFSET: 0x0043B530
 int32_t CGCamera::StartSmoothYaw(float yaw, float rate, uint32_t startTime) {
     this->m_yaw = UnwrapAngleToward(yaw, this->m_yaw, -3.1415927f, 3.1415927f);
 
@@ -2065,7 +2110,8 @@ int32_t CGCamera::StartSmoothYaw(float yaw, float rate, uint32_t startTime) {
     return 1;
 }
 
-// OFFSET: #0x005FE6A0
+// PROVEN: a32e025a IDENTICAL/NONE
+// OFFSET: 0x0043AFB0
 void CGCamera::UpdateAutoInteractState(int32_t enabled) {
     if (enabled) {
         this->m_flags |= 0x1;
@@ -2074,11 +2120,12 @@ void CGCamera::UpdateAutoInteractState(int32_t enabled) {
     }
 }
 
-// OFFSET: #0x00600090
+// PROVEN: 1275f5a5 IDENTICAL/NONE
+// OFFSET: 0x0043DB40
 void CGCamera::UpdateBobbingState(int32_t moving) {
     if (!(this->m_state & 0x200) && moving) {
         this->m_state |= 0x200;
-        this->m_bobTime = OsGetAsyncTimeMs();
+        this->m_bobTime = FrameTime::GetCurTimeMs();
     }
 
     if ((this->m_state & 0x200) && !moving) {
@@ -2086,15 +2133,10 @@ void CGCamera::UpdateBobbingState(int32_t moving) {
     }
 }
 
-// OFFSET: #0x00600A10
+// OFFSET: 0x0043E570
 void CGCamera::UpdateMountHeightOrOffset(CGUnit_C* unit) {
     this->m_flags &= ~0x80;
     this->m_mountHeight = 0.0f;
-
-    if (!unit->GetCanFly()) {
-        return;
-    }
-
     CM2Model* mount = unit->m_mountModel;
 
     if (!mount || !mount->IsLoaded() || !unit->m_worldModel || !unit->m_worldModel->IsLoaded()) {
@@ -2102,7 +2144,7 @@ void CGCamera::UpdateMountHeightOrOffset(CGUnit_C* unit) {
     }
 
     if (mount->HasEvent(0x414D4324)) {
-        this->m_heightChangedTimeMs = OsGetAsyncTimeMs();
+        this->m_heightChangedTimeMs = FrameTime::GetCurTimeMs();
         this->m_mountHeight = 0.0f;
 
         float height = mount->GetEventPosition(0x414D4324).z - mount->GetWorldPosition().z;
@@ -2123,7 +2165,8 @@ void CGCamera::UpdateMountHeightOrOffset(CGUnit_C* unit) {
     }
 }
 
-// OFFSET: #0x00600970
+// PROVEN: bdff7d6a IDENTICAL/NONE
+// OFFSET: 0x0043E4D0
 void CGCamera::UpdateVehicleTarget(uint32_t time) {
     if (!this->m_vehicleCamera) {
         return;
@@ -2142,7 +2185,7 @@ void CGCamera::UpdateVehicleTarget(uint32_t time) {
     }
 }
 
-// OFFSET: #0x005FF950
+// OFFSET: 0x0043D5A0/0x140048700
 void CGCamera::ZoomIn(float distance, uint32_t time, float duration) {
     if (this->m_flags & 0x40) {
         return;
@@ -2170,7 +2213,7 @@ void CGCamera::ZoomIn(float distance, uint32_t time, float duration) {
     }
 }
 
-// OFFSET: #0x005FFA60
+// OFFSET: 0x0043D6C0/0x140048800
 void CGCamera::ZoomOut(float distance, uint32_t time, float duration) {
     if (this->m_flags & 0x40) {
         return;
@@ -2198,7 +2241,7 @@ void CGCamera::ZoomOut(float distance, uint32_t time, float duration) {
     }
 }
 
-// OFFSET: #0x005FFB70
+// OFFSET: 0x0043D7E0
 void CGCamera::ZoomToDistance(float distance, uint32_t time, float duration, int32_t lock) {
     if (this->m_flags & 0x40) {
         return;
@@ -2229,72 +2272,87 @@ void CGCamera::ZoomToDistance(float distance, uint32_t time, float duration, int
     }
 }
 
-// OFFSET: #0x00606F90
+// OFFSET: 0x004450C0
 void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
     if (!target) {
         SErrSetLastError(87);
         return;
     }
 
-    if (!(this->m_state & 0x4) && !this->FinishLoadingTarget(target)) {
-        return;
+    if (!(this->m_state & 0x4)) {
+        this->FinishLoadingTarget(target);
     }
 
-    this->UpdateVehicleTarget(FrameTime::s_curTimeMs);
-
-    float unitPitch = 0.0f;
+    this->UpdateVehicleTarget(FrameTime::GetCurTimeMs());
     CGUnit_C* unit = NULL;
+    CGPlayer_C* player = NULL;
     uint32_t flying = 0;
-    int32_t autoTracking = 0;
     int32_t onFlyingSpline = 0;
     uint32_t swimming = 0;
     int32_t uncontrolled = 0;
 
     if (target->m_obj->m_type & TYPEMASK_UNIT) {
         unit = static_cast<CGUnit_C*>(target);
-        flying = (unit->m_unit->m_unitFieldFlags >> 20) & 0x1;
-        autoTracking = unit->IsAutoTracking();
 
-        if (unit->IsOnFlyingSpline() || (unit->m_movement->m_flags & 0x2000000)) {
+        if (target->m_obj->m_type & TYPEMASK_PLAYER) {
+            player = static_cast<CGPlayer_C*>(target);
+        }
+
+        flying = (unit->m_unit->m_unitFieldFlags >> 20) & 0x1;
+        unit->IsAutoTracking();
+        CMoveSpline* spline = unit->m_movement->m_spline;
+
+        if ((spline && !(spline->m_flags & 0x80) && (spline->m_flags & 0x200)) || (unit->m_movement->m_flags & 0x1000000)) {
             onFlyingSpline = 1;
         }
 
-        swimming = unit->m_movement->m_flags & 0x200000;
-
-        CMoveSpline* spline = unit->m_movement->m_spline;
-        int32_t splineControlled = spline && !(spline->m_flags & 0x400) ? 1 : 0;
-
-        unitPitch = unit->GetPitch();
+        swimming = unit->m_movement->m_flags & 0x100000;
+        int32_t splineControlled = unit->m_movement->m_spline && !(unit->m_movement->m_spline->m_flags & 0x80) ? 1 : 0;
+        unit->GetPitch();
         this->UpdateMountHeightOrOffset(unit);
         uncontrolled = splineControlled && !flying ? 1 : 0;
     }
 
     this->UpdateUncontrolledState(uncontrolled);
-
     C3Vector safePos = this->GetSafeWorldPos(target);
     float flightLower = -500.0f;
-    World::GetFlightBoundsLower(safePos, &flightLower);
+    // STATIC: 0x00D391C4
+    static C3Vector s_clampedPosition;
+    // STATIC: 0x00D391C0
+    static uint8_t s_positionClamped;
+    // STATIC: 0x00D391C1
+    static uint8_t s_playSpaceDeath;
+    World::GetFlightBoundsLower(safePos, flightLower);
+    int32_t clampFlag = player && (player->m_player->m_playerFlags & 0x4000);
 
-    // STATIC: #0x00C24EA8
-    static uint8_t s_aboveFlightBounds;
+    if (flightLower > safePos.z || clampFlag) {
+        if (flightLower > safePos.z && !s_positionClamped) {
+            safePos = C3Vector(this->m_targetPosition.x, this->m_targetPosition.y, flightLower);
+        } else {
+            if (!s_positionClamped) {
+                s_clampedPosition = this->m_targetPosition;
+                s_positionClamped = 1;
+            }
 
-    if (flightLower <= safePos.z) {
-        s_aboveFlightBounds = 1;
-    } else {
-        safePos = C3Vector(this->m_targetPosition.x, this->m_targetPosition.y, flightLower);
-
-        if (s_aboveFlightBounds) {
-            SI3::PlaySoundKit("SpaceDeathUniversal", NULL, NULL, NULL);
+            safePos = s_clampedPosition;
         }
 
-        s_aboveFlightBounds = 0;
+        if (s_playSpaceDeath) {
+            SE3SoundKitProperties properties;
+            SE3::PlaySoundKit("SpaceDeathUniversal", NULL, &properties, NULL, __FILE__, __LINE__, "CGCamera::CalcTargetCamera");
+        }
+
+        s_playSpaceDeath = 0;
+    } else {
+        s_playSpaceDeath = 1;
+        s_positionClamped = 0;
     }
 
     if (flying && !this->m_wasFlying) {
-        this->SetDesiredYawAngle(0.0f, 0.0f, 1.0f, OsGetAsyncTimeMs());
+        this->SetDesiredYawAngle(0.0f, 0.0f, 1.0f, FrameTime::GetCurTimeMs());
 
-        if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<CGPlayer_C*>(unit)->m_player->m_playerFlags & 0x20000)) {
-            this->SetDesiredPitchAngle(0.0f, 0.0f, 1.0f, OsGetAsyncTimeMs());
+        if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER) && (static_cast<CGPlayer_C*>(target)->m_player->m_playerFlags & 0x20000)) {
+            this->SetDesiredPitchAngle(0.0f, 0.0f, 1.0f, FrameTime::GetCurTimeMs());
         }
     }
 
@@ -2303,98 +2361,43 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
     }
 
     this->UpdateTargetSmoothing(target, time);
-
     float facingYaw;
-    float facingDistance;
+    float facingPitch;
     float facingRoll;
-    this->UpdateTargetFacing(target, facingYaw, facingDistance, facingRoll);
+    this->UpdateTargetFacing(target, facingYaw, facingPitch, facingRoll);
+    C3Vector offset(0.0f, 0.0f, 0.0f);
+    CGUnit_C* targetUnit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    C3Vector offset = C3Vector(0.0f, 0.0f, 0.0f);
-
-    if (!onFlyingSpline && !swimming) {
-        C3Vector base = C3Vector(safePos.x, safePos.y, this->m_height + safePos.z);
+    if (targetUnit) {
+        float facing = targetUnit->GetSmoothFacing();
         C3Vector forward = this->Forward();
-        C3Vector position = C3Vector(base.x - forward.x * this->m_distance, base.y - forward.y * this->m_distance, base.z - forward.z * this->m_distance);
-        this->RunShakes(position, offset);
+        C3Vector position(safePos.x - this->m_distance * forward.x, safePos.y - forward.y * this->m_distance, this->m_height + safePos.z - forward.z * this->m_distance);
+        offset = StaticSingleton<CCameraManager>::Instance()->CalcShakeOffset(position, facing, onFlyingSpline, swimming);
     }
 
     this->RunBobs(this->m_bobOffset);
-    offset.x = offset.x + this->m_bobOffset.x;
+    offset.x = this->m_bobOffset.x + offset.x;
     offset.y = this->m_bobOffset.y + offset.y;
     offset.z = this->m_bobOffset.z + offset.z;
-
-    uint32_t wasSubmerged = this->m_state & 0x200000;
-    uint32_t wasSurfaced = this->m_state & 0x100000;
     float liquid = this->UpdateLiquidSurfaceStatus(target);
-    CGInputControl* input = CGInputControl::GetActive();
-    float distance = facingDistance + this->m_targetOffset;
-
-    if (swimming && !(unit && (unit->m_obj->m_type & TYPEMASK_PLAYER) && static_cast<CGPlayer_C*>(unit)->GetDrunknessTurnValue() != 0.0f)) {
-        uint32_t state = this->m_state;
-        uint32_t surfacing = state & 0x100000;
-
-        if ((surfacing || (state & 0x200000)) && s_cvCameraDive->m_intValue && fnotequal(unitPitch, 0.0f) && !autoTracking) {
-            float surfacePitch = s_cvCameraSurfacePitch->m_floatValue * 0.017453292f;
-            float submergePitch = 0.017453292f * s_cvCameraSubmergePitch->m_floatValue;
-            bool pitchPlayer = false;
-            bool decided = false;
-
-            if ((state & 0x200000) && surfacePitch < 0.0f) {
-                if (!(input->m_flags & 0x2000001) || (distance < 0.0f && distance > surfacePitch)) {
-                    pitchPlayer = true;
-                    decided = true;
-                }
-            }
-
-            if (!decided && surfacing && 0.0f < submergePitch) {
-                if (!(input->m_flags & 0x2000001) || (0.0f < distance && distance < submergePitch)) {
-                    pitchPlayer = true;
-                }
-            }
-
-            if (pitchPlayer) {
-                CGInputControl::GetActive()->CameraPitchPlayer(time, 0.0f);
-            }
-        }
-    }
-
-    if (s_cameraWaterCollision->m_intValue) {
-        float finalPitch;
-        bool haveFinalPitch = false;
-
-        if (wasSubmerged && (this->m_state & 0x100000)) {
-            finalPitch = s_cvCameraSurfaceFinalPitch->m_floatValue;
-            haveFinalPitch = true;
-        } else if (wasSurfaced && (this->m_state & 0x200000)) {
-            finalPitch = s_cvCameraSubmergeFinalPitch->m_floatValue;
-            haveFinalPitch = true;
-        }
-
-        if (haveFinalPitch) {
-            finalPitch = finalPitch * 0.017453292f;
-
-            if (0.0f != finalPitch) {
-                if (this->m_state & 0x1) {
-                    this->m_pitch = finalPitch;
-                    this->m_smoothPitch.m_target = finalPitch;
-                } else {
-                    this->SetDesiredPitchAngle(finalPitch, 0.0f, 1.0f, time);
-                }
-            }
-        }
-    }
 
     if (this->m_vehicleYawStartTime != this->m_vehicleYawEndTime) {
         this->UpdateVehicleYawOffset(time);
     }
 
-    float heightAdjust = 0.0f;
+    float distance;
+    float heightAdjust;
     this->m_state &= ~0x30000;
     this->m_state |= this->CollideCameraWithWorld(safePos, distance, heightAdjust, offset, liquid, this->m_collideExtent);
 
-    C3Vector cameraTarget = C3Vector(safePos.x + offset.x, safePos.y + offset.y, offset.z + safePos.z + heightAdjust);
+    if (distance <= 0.0f) {
+        distance = 0.0f;
+    }
 
-    if (!(this->m_state & 0x8) && !(this->m_state & 0x80000000)) {
+    C3Vector cameraTarget(safePos.x + offset.x, safePos.y + offset.y, offset.z + safePos.z + heightAdjust);
+    uint32_t state = this->m_state;
+
+    if (!(state & 0x8) && !(state & 0x80000000)) {
         if (this->CanSmoothTarget()) {
             this->SetDesiredTargetOffset(0.0f, 0.0f, 1.0f, time);
         } else {
@@ -2402,7 +2405,7 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
         }
     }
 
-    uint32_t state = this->m_state;
+    state = this->m_state;
 
     if ((state & 0x8) && !(state & 0x40000000)) {
         distance = 0.0f;
@@ -2411,14 +2414,14 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
         this->m_state = state & 0x7FFFFFFF;
     }
 
-    C3Vector noOffset = C3Vector(0.0f, 0.0f, 0.0f);
+    C3Vector noOffset(0.0f, 0.0f, 0.0f);
     this->m_position = this->GetCameraPosition(cameraTarget, distance, noOffset);
-    this->m_position = this->BumpCameraPositionFromLiquid(cameraTarget, distance, this->m_position);
+    this->BumpCameraPositionFromLiquid(cameraTarget, distance, this->m_position);
 
     if (!this->m_relativeTo && !s_cameraWaterCollision->m_intValue && 0.0f == this->m_vehicleYawOffset && (!unit || !unit->GetCanFly())) {
-        C3Vector forward = C3Vector(cameraTarget.x - this->m_position.x, cameraTarget.y - this->m_position.y, cameraTarget.z - this->m_position.z);
+        C3Vector forward(cameraTarget.x - this->m_position.x, cameraTarget.y - this->m_position.y, cameraTarget.z - this->m_position.z);
 
-        if (forward.x * forward.x + forward.y * forward.y + forward.z * forward.z > 0.1f) {
+        if (forward.z * forward.z + forward.y * forward.y + forward.x * forward.x > 0.1f) {
             forward.Normalize();
             this->SetFacing(forward);
         }
@@ -2438,18 +2441,18 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
 
     if (this->m_distance - distance > 0.11111111f) {
         this->m_state |= 0x4000000;
-        this->m_smoothDistance.m_startTimeMs = time;
         this->m_distance = distance + 0.11111207f;
         this->m_smoothDistance.m_startValue = distance + 0.11111207f;
         this->m_smoothDistance.m_rate = 2.0f;
+        this->m_smoothDistance.m_startTimeMs = time;
     }
 
     if (this->m_height - heightAdjust > 0.11111111f) {
         this->m_state |= 0x20000000;
-        this->m_smoothHeight.m_startTimeMs = time;
         this->m_height = heightAdjust + 0.11111207f;
         this->m_smoothHeight.m_startValue = heightAdjust + 0.11111207f;
         this->m_smoothHeight.m_rate = 2.0f;
+        this->m_smoothHeight.m_startTimeMs = time;
     }
 
     uint8_t fade = 0xFF;
@@ -2484,7 +2487,7 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
                         info.Clear();
                         model->GetSequenceInfo(0, 0, info);
                         fadeEnd = vehicleRec->m_cameraFadeDistScalarMin * info.m_radius;
-                        fadeStart = info.m_radius * vehicleRec->m_cameraFadeDistScalarMax;
+                        fadeStart = vehicleRec->m_cameraFadeDistScalarMax * info.m_radius;
                         distance = C3Vector::Distance(this->m_position, model->GetWorldPosition());
                     }
                 }
@@ -2495,18 +2498,22 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
             fadeStart = fadeStart * 0.33333334f;
         }
 
-        if (distance < this->m_height && this->m_pitch < -1.1868238f) {
-            float scale = (-1.5707964f - this->m_pitch) * -2.604353f;
+        if (this->m_height > distance) {
+            float pitch = this->m_pitch;
 
-            if (fabsf(scale) >= 0.00000023841858f) {
-                fadeStart = fadeStart / (scale * scale);
+            if (pitch < -1.1868238f) {
+                float scale = (-1.5707964f - pitch) * -2.604353f;
+
+                if (fabsf(scale) >= 0.00000023841858f) {
+                    fadeStart = fadeStart / (scale * scale);
+                }
             }
         }
 
-        float nearDistance = distance - this->m_nearZ;
+        float nearDistance = distance - World::GetNearClip();
 
         if (nearDistance < fadeStart) {
-            if (fadeEnd >= nearDistance) {
+            if (nearDistance <= fadeEnd) {
                 fade = 0;
                 break;
             }
@@ -2529,9 +2536,8 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
         break;
     }
 
-    CGWorldFrame::s_currentWorldFrame->SetPlayerFadeCameraValue(fade);
-
     state = this->m_state;
+    this->m_fade = fade;
 
     if ((state & 0x40000000) && ((state & 0x8000) || (state & 0x80000000))) {
         int32_t elapsed = time - this->m_smoothFoV.m_startTimeMs;
@@ -2555,7 +2561,7 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
                 fade = value;
             }
 
-            CGWorldFrame::s_currentWorldFrame->SetPlayerFadeCameraValue(fade);
+            this->m_fade = fade;
         }
     }
 
@@ -2564,7 +2570,8 @@ void CGCamera::CalcTargetCamera(CGObject_C* target, uint32_t time) {
     this->m_wasFlying = flying;
 }
 
-// OFFSET: #0x00607B00
+// PROVEN: eb8d33f8 IDENTICAL/NONE
+// OFFSET: 0x00445C60
 int32_t CGCamera::UpdateCallback(const void* data, void* param) {
     CGCamera* camera = static_cast<CGCamera*>(param);
 
@@ -2572,9 +2579,7 @@ int32_t CGCamera::UpdateCallback(const void* data, void* param) {
         return 1;
     }
 
-    uint32_t time = OsGetAsyncTimeMs();
-    camera->m_nearZ = World::s_nearClip;
-    camera->m_farZ = World::s_farClip;
+    uint32_t time = FrameTime::GetCurTimeMs();
 
     if (camera->m_model) {
         camera->CalcModelCamera(time);
@@ -2587,20 +2592,12 @@ int32_t CGCamera::UpdateCallback(const void* data, void* param) {
     if (target) {
         camera->CalcTargetCamera(target, time);
         camera->CheckUnderwater();
-        return 1;
-    }
-
-    CGObject_C* faceTarget = ClntObjMgrObjectPtr(camera->m_guid0090, TYPEMASK_OBJECT, __FILE__, __LINE__);
-
-    if (faceTarget) {
-        camera->FaceTarget(faceTarget, time);
-        camera->CheckUnderwater();
     }
 
     return 1;
 }
 
-// OFFSET: #0x006020B0
+// OFFSET: 0x00440190
 void CGCamera::UpdateFreeLookFacing(float x, float y, float* pitchOut) {
     if (pitchOut) {
         *pitchOut = 0.0f;
@@ -2683,7 +2680,7 @@ void CGCamera::UpdateFreeLookFacing(float x, float y, float* pitchOut) {
     }
 
     if (setDesired) {
-        this->SetDesiredTargetOffset(0.0f, 0.0f, 1.0f, OsGetAsyncTimeMs());
+        this->SetDesiredTargetOffset(0.0f, 0.0f, 1.0f, FrameTime::GetCurTimeMs());
         this->ClampPitchToLimits(pitchSign * pitchDelta);
     } else {
         this->m_smoothTargetOffset.m_target = this->m_targetOffset;
@@ -2696,58 +2693,7 @@ void CGCamera::UpdateFreeLookFacing(float x, float y, float* pitchOut) {
     this->ClampPitchAndNormalize();
 }
 
-// OFFSET: #0x006023D0
-void CGCamera::SyncFreeLookFacing() {
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
-    float yaw = this->m_yaw;
-
-    if (!unit || !unit->ClampRawAngleToLegalFacingRange(yaw)) {
-        this->m_state |= 0x4000;
-        this->m_flags |= 0x4;
-        this->unk_01DC = this->m_yaw;
-    } else if (this->m_flags & 0x4) {
-        this->m_state |= 0x4000;
-        this->m_smoothYaw.m_target = yaw;
-        this->m_yaw = yaw;
-        this->unk_01DC = yaw;
-    } else {
-        this->m_state &= ~0x4000;
-    }
-
-    float pitch = this->m_targetOffset + this->m_pitch;
-
-    if (MIN_PITCH_ANGLE > pitch) {
-        pitch = MIN_PITCH_ANGLE;
-    } else if (MAX_PITCH_ANGLE <= pitch) {
-        pitch = MAX_PITCH_ANGLE;
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_PLAYER, __FILE__, __LINE__));
-    uint32_t state = this->m_state;
-
-    if (!(state & 0x100) && ((state & 0x100000) || (state & 0x200000)) && s_cvCameraDive->m_intValue && (!player || player->GetDrunknessTurnValue() == 0.0f)) {
-        float surfacePitch = s_cvCameraSurfacePitch->m_floatValue * 0.017453292f;
-        float submergePitch = 0.017453292f * s_cvCameraSubmergePitch->m_floatValue;
-
-        if ((state & 0x200000) && surfacePitch < 0.0f && pitch < 0.0f && pitch > surfacePitch) {
-            pitch = 0.0f;
-        }
-
-        if ((state & 0x100000) && submergePitch > 0.0f && pitch > 0.0f && pitch < submergePitch) {
-            pitch = 0.0f;
-        }
-    }
-
-    uint32_t time = OsGetAsyncTimeMs();
-    CGInputControl* input = CGInputControl::GetActive();
-    input->CameraTurnPlayer(time, this->m_yaw);
-
-    if (!unit || !unit->m_vehicle || !unit->m_vehicle->m_vehicleRec || !unit->m_vehicle->IsSuppressingCameraPitchWhileMouseAiming()) {
-        input->CameraPitchPlayer(time, pitch);
-    }
-}
-
-// OFFSET: #0x006000E0
+// OFFSET: 0x0043DB90
 void CGCamera::UpdateMotion(uint32_t time) {
     float minDistance;
 
@@ -2897,7 +2843,7 @@ void CGCamera::UpdateMotion(uint32_t time) {
     }
 }
 
-// OFFSET: #0x006048A0
+// OFFSET: 0x00442B60/0x14004E040
 void CGCamera::ResetView(int32_t view) {
     if (view < 0) {
         for (int32_t i = 0; i < 8; i++) {
@@ -2920,7 +2866,7 @@ void CGCamera::ResetView(int32_t view) {
     }
 }
 
-// OFFSET: #0x00603330
+// OFFSET: 0x004413A0/0x14004C7F0
 void CGCamera::SetView(int32_t view, int32_t blendStyle, int32_t transition) {
     if (this->m_state & 0x8) {
         return;
@@ -2939,7 +2885,7 @@ void CGCamera::SetView(int32_t view, int32_t blendStyle, int32_t transition) {
     }
 
     SysMsgPrintf(STATUS_INFO, 4, "Camera view %s", s_cameraViewModeNames[view]);
-    uint32_t time = OsGetAsyncTimeMs();
+    uint32_t time = FrameTime::GetCurTimeMs();
 
     if (this->m_viewIndex != view) {
         if (!transition) {
@@ -2955,7 +2901,7 @@ void CGCamera::SetView(int32_t view, int32_t blendStyle, int32_t transition) {
     uint32_t state = this->m_state;
 
     if (transition == 1) {
-        this->unk_0314 = this->m_smoothDistance.m_target;
+        this->unk_02F4 = this->m_smoothDistance.m_target;
     }
 
     this->m_smoothDistance.m_target = this->m_distance;
@@ -2991,7 +2937,7 @@ void CGCamera::SetView(int32_t view, int32_t blendStyle, int32_t transition) {
             facing = 0.0f;
         } else if (target->m_obj->m_type & TYPEMASK_UNIT) {
             CGUnit_C* unit = static_cast<CGUnit_C*>(target);
-            unit->UpdateSmoothFacing(NULL);
+            unit->UpdateSmoothFacing(NULL, NULL);
             facing = this->m_vehicleCamera ? this->m_vehicleCamera->m_facing : unit->m_smoothTarget.m_value;
         } else {
             facing = target->GetFacing();
@@ -3094,7 +3040,7 @@ void CGCamera::SetView(int32_t view, int32_t blendStyle, int32_t transition) {
     }
 }
 
-// OFFSET: #0x00602DC0
+// OFFSET: 0x00440DA0
 void CGCamera::UpdateTrackingState(int32_t tracking) {
     uint32_t wasTracking = this->m_state & 0x100;
     this->m_state &= ~0x4000;
@@ -3142,7 +3088,39 @@ void CGCamera::UpdateTrackingState(int32_t tracking) {
     this->SmoothFreeLook(CGInputControl::GetActive(), 0);
 }
 
-// OFFSET: #0x00602600
+// OFFSET: 0x004404D0
+void CGCamera::SyncFreeLookPitch(float pitch, uint32_t time, int32_t force) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (unit && unit->m_vehicle && unit->m_vehicle->m_vehicleRec && unit->m_vehicle->IsSuppressingCameraPitchWhileMouseAiming()) {
+        return;
+    }
+
+    uint32_t state = this->m_state;
+
+    if (!(state & 0x100) && ((state & 0x100000) || (state & 0x200000)) && s_cvCameraDive->m_intValue && (!player || player->GetDrunknessTurnValue() == 0.0f)) {
+        float surfacePitch = s_cvCameraSurfacePitch->m_floatValue * 0.017453292f;
+        float submergePitch = s_cvCameraSubmergePitch->m_floatValue * 0.017453292f;
+
+        if ((state & 0x200000) && surfacePitch < 0.0f && pitch < 0.0f && pitch > surfacePitch) {
+            pitch = 0.0f;
+            force = 1;
+        }
+
+        if ((state & 0x100000) && submergePitch > 0.0f && ((unit && !(unit->m_movement->m_flags2 & MOVEMENTFLAG2_CAN_TRANSITION_BETWEEN_SWIM_AND_FLY)) || pitch > 0.0f) && submergePitch > pitch) {
+            pitch = 0.0f;
+        } else if (!force) {
+            return;
+        }
+    } else if (!force) {
+        return;
+    }
+
+    CGInputControl::GetActive()->CameraPitchPlayer(time, pitch);
+}
+
+// OFFSET: 0x00440650
 int32_t CGCamera::CanSmoothTarget() {
     if (fabs(this->m_targetOffset) < 0.001f) {
         return 0;
@@ -3161,7 +3139,7 @@ int32_t CGCamera::CanSmoothTarget() {
     return !this->CanSmoothTargetFacing(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__));
 }
 
-// OFFSET: #0x00602680
+// OFFSET: 0x004406D0
 int32_t CGCamera::CanSmoothYaw(float yawMin, float yawMax) {
     CGObject_C* target = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
@@ -3181,7 +3159,7 @@ int32_t CGCamera::CanSmoothYaw(float yawMin, float yawMax) {
         if (this->m_state & 0x100) {
             facing = CGUnit_C::GetTrackingTurn();
         } else {
-            unit->UpdateSmoothFacing(NULL);
+            unit->UpdateSmoothFacing(NULL, NULL);
             facing = this->GetChaseFacing(unit);
         }
     } else {
@@ -3191,7 +3169,7 @@ int32_t CGCamera::CanSmoothYaw(float yawMin, float yawMax) {
     return fnotequal(this->m_yaw, facing);
 }
 
-// OFFSET: #0x00602760
+// OFFSET: 0x004407B0
 void CGCamera::SmoothFreeLook(CGInputControl* input, int32_t idle) {
     if (!input) {
         return;
@@ -3242,7 +3220,7 @@ void CGCamera::SmoothFreeLook(CGInputControl* input, int32_t idle) {
         return;
     }
 
-    uint32_t time = OsGetAsyncTimeMs();
+    uint32_t time = FrameTime::GetCurTimeMs();
     uint32_t style;
 
     if (reasons & 0x44) {
@@ -3383,7 +3361,7 @@ void CGCamera::SmoothFreeLook(CGInputControl* input, int32_t idle) {
                     if (this->m_state & 0x100) {
                         yaw = CMath::normalizeangle0to2pi_(CGUnit_C::GetTrackingTurn() + base);
                     } else {
-                        unit->UpdateSmoothFacing(NULL);
+                        unit->UpdateSmoothFacing(NULL, NULL);
 
                         if (input->m_facingOverrideActive) {
                             yaw = CMath::normalizeangle0to2pi_(input->m_facingOverride + base);
@@ -3428,40 +3406,54 @@ void CGCamera::SmoothFreeLook(CGInputControl* input, int32_t idle) {
     }
 }
 
-// OFFSET: #0x006061D0
-C3Vector CGCamera::BumpCameraPositionFromLiquid(const C3Vector& target, float distance, const C3Vector& position) {
-    C3Vector result = position;
+// OFFSET: 0x0043D230
+void CGCamera::BumpCameraPositionFromLiquid(C3Vector& target, float distance, C3Vector& position) {
+    float offsets[4];
+    offsets[0] = -0.3f;
+    offsets[3] = -0.3f;
+    float x = position.x;
+    float y = position.y;
+    int32_t count = 0;
+    offsets[1] = 0.3f;
+    offsets[2] = 0.3f;
+    uint32_t liquidType = 0;
+    float liquidHeight = std::numeric_limits<float>::max();
+    World::QueryLiquidNearest(position, liquidType, liquidHeight);
 
-    if (!(0.0f < distance)) {
-        return result;
+    if (liquidHeight == std::numeric_limits<float>::max()) {
+        return;
     }
 
-    C3Vector start = C3Vector(position.x, position.y, position.z + 0.22222222f);
-    C3Vector end = C3Vector(position.x, position.y, position.z - 0.22222222f);
-    float hitDistance = 1.0f;
-    C3Vector hit = C3Vector(0.0f, 0.0f, 0.0f);
+    float z = position.z;
 
-    if (World::Intersect(start, end, &hit, &hitDistance, 0x20000, NULL)) {
-        result = hit;
+    if (!(liquidHeight - z > -0.3f) || !(liquidHeight - z < 0.3f)) {
+        return;
+    }
 
-        if (result.z < position.z) {
-            result.z = result.z + 0.22222222f;
-        } else {
-            result.z = result.z - 0.22222222f;
+    C3Vector end;
+
+    for (float* step = &offsets[2 * (z >= liquidHeight)]; ; step++) {
+        C3Vector hit(0.0f, 0.0f, 0.0f);
+        float hitDistance = 1.0f;
+        end = C3Vector(x, y, *step + liquidHeight);
+
+        if (!World::Intersect(position, end, &hit, &hitDistance, 0x900171, NULL)) {
+            break;
         }
 
-        if (this->GetCameraDistance(distance, result, target, 0x100171)) {
-            C3Vector forward = this->Forward();
-            this->RotateOffsetByRoll(forward);
-            result = C3Vector(target.x - forward.x * distance, target.y - forward.y * distance, target.z - forward.z * distance);
+        if (++count >= 2) {
+            return;
         }
     }
 
-    s_lastLiquidBumpPitch = this->m_pitch;
-    return result;
+    position = end;
+
+    if (distance < 0.001f) {
+        target = end;
+    }
 }
 
-// OFFSET: #0x00602F30
+// OFFSET: 0x00440F10
 void CGCamera::RunBobs(C3Vector& offset) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
 
@@ -3482,7 +3474,7 @@ void CGCamera::RunBobs(C3Vector& offset) {
     }
 
     frequency = speed * frequency;
-    float time = static_cast<float>(OsGetAsyncTimeMs() - this->m_bobTime) * 0.001f;
+    float time = static_cast<float>(FrameTime::GetCurTimeMs() - this->m_bobTime) * 0.001f;
     float sway = std::sin(time * frequency * 6.2831855f) * horizontal;
     float angle = facing + 1.5707964f;
     float c = std::cos(angle);
@@ -3492,7 +3484,8 @@ void CGCamera::RunBobs(C3Vector& offset) {
     offset.z = std::sin((frequency + frequency) * time * 6.2831855f) * vertical;
 }
 
-// OFFSET: #0x00602EB0
+// PROVEN: 85e968a6 IDENTICAL/NONE
+// OFFSET: 0x00440E90
 void CGCamera::UpdateUncontrolledState(int32_t uncontrolled) {
     if (uncontrolled) {
         if (!(this->m_state & 0x1000)) {
@@ -3510,130 +3503,109 @@ void CGCamera::UpdateUncontrolledState(int32_t uncontrolled) {
     }
 }
 
-// OFFSET: #0x00605D60
+// OFFSET: 0x00444C90/0x1400508A0
 uint32_t CGCamera::CollideCameraWithWorld(const C3Vector& target, float& distance, float& height, const C3Vector& offset, float liquid, float& extent) {
     extent = 1.0f;
     uint32_t result = 0;
-    distance = this->m_distance < this->m_smoothDistance.m_target ? this->m_smoothDistance.m_target : this->m_distance;
-    height = this->m_height < this->m_smoothHeight.m_target ? this->m_smoothHeight.m_target : this->m_height;
-    uint32_t state = this->m_state;
+    distance = this->m_smoothDistance.m_target <= this->m_distance ? this->m_distance : this->m_smoothDistance.m_target;
+    height = this->m_smoothHeight.m_target > this->m_height ? this->m_smoothHeight.m_target : this->m_height;
 
-    if (state & 0x8) {
+    if (this->m_state & 0x8) {
         distance = this->m_distance;
         return 0;
     }
 
-    uint32_t flags = s_cameraWaterCollision->m_intValue ? 0x120171 : 0x100171;
-    float minHeight = 0.83333331f;
-    float maxHeight = this->m_height;
+    float maxHeight = this->m_height <= 0.83333331f ? 0.83333331f : this->m_height;
 
-    if (height - this->m_nearZ > 0.00000095367432f) {
-        if (flags & 0x30000) {
-            if (state & 0x100000) {
-                minHeight = liquid + 0.22222222f;
-
-                if (!(minHeight < maxHeight)) {
-                    maxHeight = minHeight;
-                }
-            } else if (state & 0x200000) {
-                maxHeight = liquid - 0.83333331f;
-
-                if (maxHeight <= 0.83333331f) {
-                    maxHeight = 0.83333331f;
-                }
-            }
-        }
-
-        C3Vector start = C3Vector(target.x, target.y, target.z + minHeight);
-        height = height - minHeight;
-        height = height + this->m_flyingMountHeight;
-
-        if (!(0.11111111f < height)) {
-            height = 0.11111111f;
-        }
-
-        C3Vector hit = C3Vector(0.0f, 0.0f, 0.0f);
-        float probe = height;
-        C3Vector end = C3Vector(target.x, target.y, start.z + height);
-        float hitDistance = 1.0f;
-
-        if (World::Intersect(start, end, &hit, &hitDistance, flags, NULL)) {
-            extent = hitDistance;
-            result = 0x20000;
-            height = hitDistance * height;
-        }
-
-        if (std::fabs(probe - height) >= 0.00000023841858f) {
-            height = height - 0.11111111f;
-
-            if (height <= 0.11111111f) {
-                height = 0.11111111f;
-            }
-        }
-
-        height = height + minHeight;
-        height = height - this->m_flyingMountHeight;
+    if (height <= s_minCollideHeight) {
+        height = s_minCollideHeight;
+    } else {
+        C3Vector start(target.x, target.y, target.z + 0.83333331f);
+        float probe = this->m_flyingMountHeight + height;
         CGObject_C* object = ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_OBJECT, __FILE__, __LINE__);
+        float top;
 
         if (object && (object->m_obj->m_type & TYPEMASK_UNIT)) {
-            float collisionHeight = static_cast<CGUnit_C*>(object)->m_movementData.m_collisionHeight;
-            float minimum = object->m_obj->m_guid == ClntObjMgrGetActivePlayer() && CGBarberShop::m_barberShopEnabled ? collisionHeight : collisionHeight * 0.75f;
+            float maxCameraHeight = static_cast<CGUnit_C*>(object)->GetMaxCameraHeight(0);
+            top = probe > maxCameraHeight - 0.11111111f ? maxCameraHeight - 0.11111111f : probe;
+        } else {
+            top = probe;
+        }
 
-            if (!(minimum <= height)) {
-                height = minimum;
+        C3Vector end(target.x, target.y, target.z + top);
+
+        if (end.z - start.z >= 0.001f) {
+            float hitDistance = 1.0f;
+            C3Vector hit(0.0f, 0.0f, 0.0f);
+
+            if (World::Intersect(start, end, &hit, &hitDistance, 0x900171, NULL)) {
+                float collided = (end.z - start.z) * hitDistance;
+                extent = hitDistance;
+                height = collided;
+
+                if (collided < 0.0f) {
+                    height = 0.0f;
+                }
+
+                result = 0x20000;
             }
         }
     }
 
-    if (!(minHeight <= height)) {
-        height = minHeight;
+    if (height < 0.83333331f) {
+        height = 0.8333333f;
     }
 
-    if (maxHeight < height) {
+    if (height > maxHeight) {
         height = maxHeight;
     }
 
-    C3Vector base = C3Vector(target.x, target.y, height + target.z);
+    C3Vector base(target.x, target.y, height + target.z);
     float original = distance;
 
-    if (distance - this->m_nearZ > 0.00000095367432f) {
-        C3Vector hit = C3Vector(0.0f, 0.0f, 0.0f);
+    if (original > 0.001f) {
+        C3Vector hit(0.0f, 0.0f, 0.0f);
         C3Vector forward = this->Forward();
-        C3Vector end = C3Vector(base.x - forward.x * distance, base.y - forward.y * distance, base.z - forward.z * distance);
+        float lift = this->m_flyingMountHeight;
+        C3Vector end(base.x - forward.x * distance, base.y - forward.y * distance, base.z - forward.z * distance);
 
-        if (std::fabs(this->m_flyingMountHeight) >= 0.00000023841858f) {
-            float lift = this->m_flyingMountHeight;
+        if (fabsf(lift) >= 0.00000023841858f) {
             C3Vector up = this->Up();
-            end.x = up.x * lift * extent + end.x;
+            end.x = lift * up.x * extent + end.x;
             end.y = up.y * lift * extent + end.y;
             end.z = up.z * lift * extent + end.z;
         }
 
         float hitDistance = 1.0f;
+        uint32_t flags = s_cameraWaterCollision->m_intValue ? 0x920001 : 0x900001;
 
         if (World::Intersect(base, end, &hit, &hitDistance, flags, NULL)) {
             result |= 0x10000;
             distance = distance * hitDistance;
         }
 
-        if (0.00000095367432f < distance) {
-            C3Vector position = this->GetCameraPosition(base, distance, offset);
+        float probe = distance;
 
-            if (this->GetCameraDistance(distance, position, base, flags)) {
+        if (probe >= 0.001f) {
+            C3Vector position = this->GetCameraPosition(base, probe, offset);
+
+            if (this->GetCameraDistance(distance, position, base, 0x170)) {
                 result |= 0x10000;
             }
 
-            if (fnotequal(original, distance)) {
-                distance = distance - 0.11111111f;
+            float after = distance;
 
-                if (!(0.0f < distance)) {
+            if (fnotequal(original, after)) {
+                distance = after - 0.11111111f;
+
+                if (after - 0.11111111f <= 0.0f) {
                     distance = 0.0f;
                 }
             }
         }
     }
 
-    if (this->m_distance < distance) {
+    if (distance > this->m_distance) {
         distance = this->m_distance;
     }
 
@@ -3641,9 +3613,9 @@ uint32_t CGCamera::CollideCameraWithWorld(const C3Vector& target, float& distanc
 }
 
 
-// OFFSET: #0x00603D30
+// OFFSET: 0x00441F10
 void CGCamera::UpdateTargetSmoothing(CGObject_C* target, uint32_t time) {
-    if (this->HasTargetOffset()) {
+    if (this->HasTargetOffset() && fabsf(this->m_bobDuration) >= 2.3841858e-7f) {
         float t = (time - this->m_bobTime) * 0.001f / this->m_bobDuration;
 
         if (t < 1.0f) {
@@ -3753,41 +3725,45 @@ void CGCamera::UpdateTargetSmoothing(CGObject_C* target, uint32_t time) {
     this->PerformTerrainTilt(target, time, 0);
 }
 
-// OFFSET: #0x005FF670
-static void CreateFrustum(const C44Matrix& proj, const C44Matrix& view, float scale, CWFrustum& frustum, const C3Vector& offset) {
+// OFFSET: 0x0043FBB0
+static void CreateFrustum(const C3Vector& up, const C3Vector& target, const C3Vector& position, float size, CFrustum& frustum) {
+    C3Vector dir(target.x - position.x, target.y - position.y, target.z - position.z);
+    float scale = 1.0f / sqrtf(dir.y * dir.y + dir.x * dir.x + dir.z * dir.z);
+    dir.x = dir.x * scale;
+    dir.y = dir.y * scale;
+    dir.z = scale * dir.z;
+    C3Vector side(up.z * dir.y - up.y * dir.z, up.x * dir.z - up.z * dir.x, up.y * dir.x - up.x * dir.y);
+    float sideScale = 1.0f / sqrtf(side.z * side.z + side.y * side.y + side.x * side.x);
+    side.x = side.x * sideScale * size;
+    side.y = side.y * sideScale * size;
+    side.z = side.z * sideScale * size;
+    C3Vector height(up.x * size, up.y * size, up.z * size);
     C3Vector corners[8];
-    GxuXformCalcFrustumCorners(view, proj, corners);
-
-    C3Vector center = (corners[1] + corners[0] + corners[2] + corners[3]);
-    center.x *= 0.25f;
-    center.y *= 0.25f;
-    center.z *= 0.25f;
-
-    for (uint32_t i = 0; i < 4; i++) {
-        corners[i].x = (corners[i].x - center.x) * scale + center.x;
-        corners[i].y = (corners[i].y - center.y) * scale + center.y;
-        corners[i].z = (corners[i].z - center.z) * scale + center.z;
-    }
-
-    for (uint32_t i = 0; i < 4; i++) {
-        corners[i + 4] = offset + corners[i];
-    }
-
+    corners[0] = C3Vector(position.x - side.x - height.x, position.y - side.y - height.y, position.z - side.z - height.z);
+    corners[1] = C3Vector(position.x - side.x + height.x, position.y - side.y + height.y, position.z - side.z + height.z);
+    corners[2] = C3Vector(position.x + side.x + height.x, position.y + side.y + height.y, position.z + side.z + height.z);
+    corners[3] = C3Vector(position.x + side.x - height.x, position.y + side.y - height.y, position.z + side.z - height.z);
+    corners[4] = C3Vector(target.x - side.x - height.x, target.y - side.y - height.y, target.z - side.z - height.z);
+    corners[5] = C3Vector(target.x - side.x + height.x, target.y - side.y + height.y, target.z - side.z + height.z);
+    corners[6] = C3Vector(target.x + side.x + height.x, target.y + side.y + height.y, target.z + side.z + height.z);
+    corners[7] = C3Vector(target.x + side.x - height.x, target.y + side.y - height.y, target.z + side.z - height.z);
     frustum.CalcPlanesFromCorners(corners);
 }
 
-// OFFSET: #0x006057B0
-static int32_t CollideWithWorld(CWFrustum& frustum, uint32_t flags, float& hit) {
+// OFFSET: 0x00444650
+static int32_t CollideWithWorld(uint32_t flags, CFrustum& frustum, float& hit) {
     if (!flags) {
         return 0;
     }
 
-    // STATIC: #0x00C24E84
+    // STATIC: 0x00D39188
     static World::FacetData s_facets;
 
     s_facets.facets.SetCount(0);
     s_facets.facetIds.m_count = 0;
-    World::GetFacets(&frustum, &s_facets, flags, NULL);
+    s_facets.facetFlags.m_count = 0;
+    s_facets.m_status = 0;
+    World::GetFacets(frustum, s_facets, flags);
 
     if (!s_facets.facets.m_count) {
         return 0;
@@ -3795,7 +3771,7 @@ static int32_t CollideWithWorld(CWFrustum& frustum, uint32_t flags, float& hit) 
 
     C44Matrix xform;
 
-    if (!World::NDCXform(&frustum, &xform, false)) {
+    if (!World::NDCXform(frustum, xform, false)) {
         return 0;
     }
 
@@ -3811,11 +3787,11 @@ static int32_t CollideWithWorld(CWFrustum& frustum, uint32_t flags, float& hit) 
         C3Vector** clipped;
         uint32_t count;
 
-        if (World::NDCClip(facet.v, 3, &clipped, &count)) {
+        if (World::NDCClip(facet.v, 3, clipped, count)) {
             result = 1;
 
             for (uint32_t j = 0; j < count; j++) {
-                if (hit < clipped[j]->z) {
+                if (clipped[j]->z > hit) {
                     hit = clipped[j]->z;
                 }
             }
@@ -3825,57 +3801,58 @@ static int32_t CollideWithWorld(CWFrustum& frustum, uint32_t flags, float& hit) 
     return result;
 }
 
-// OFFSET: #0x006059E0
+// OFFSET: 0x00444A10
 int32_t CGCamera::GetCameraDistance(float& distance, const C3Vector& position, const C3Vector& target, uint32_t flags) {
-    float range = distance - this->m_nearZ;
+    float range = distance;
 
     if (range < 0.001f) {
         distance = 0.0f;
         return 1;
     }
 
-    C3Vector dir = target - position;
+    C3Vector dir(target.x - position.x, target.y - position.y, target.z - position.z);
+    float mag = dir.z * dir.z + dir.y * dir.y + dir.x * dir.x;
 
-    if (dir.x * dir.x + dir.y * dir.y + dir.z * dir.z < 0.001f) {
-        return 0;
+    if (mag < 0.001f) {
+        distance = 0.0f;
+        return 1;
     }
 
-    float inv = 1.0f / sqrtf(dir.z * dir.z + dir.y * dir.y + dir.x * dir.x);
-    C3Vector forward(dir.x * inv, dir.y * inv, dir.z * inv);
-    C3Vector up(forward.y * 0.0f - forward.z * 0.0f, forward.z - forward.x * 0.0f, forward.x * 0.0f - forward.y);
+    float scale = 1.0f / sqrtf(mag);
+    float fx = dir.x * scale;
+    float fy = scale * dir.y;
+    float fz = scale * dir.z;
+    C3Vector up(fy * fz - -fx * fz, fy * fz - fx * fz, -fx * fx - fy * fy);
 
-    if (up.y * up.y + up.z * up.z + up.x * up.x < 0.001f) {
-        up = C3Vector(forward.y * 0.0f - forward.z, forward.z * 0.0f - forward.x * 0.0f, forward.x - forward.y * 0.0f);
+    if (up.y * up.y + up.x * up.x + up.z * up.z < 0.001f) {
+        distance = 0.0f;
+        return 1;
     }
 
-    float upInv = 1.0f / sqrtf(up.z * up.z + up.y * up.y + up.x * up.x);
-    up.x *= upInv;
-    up.y *= upInv;
-    up.z *= upInv;
-
-    C3Vector offset(forward.x * range, forward.y * range, forward.z * range);
-    C44Matrix view;
-    C44Matrix proj;
-    C3Vector at(forward.x + position.x, forward.y + position.y, forward.z + position.z);
-    GxuXformCreateLookAtSgCompat(position, at, up, view);
-    GxuXformCreateProjection_SG(this->FOV(), this->m_aspect, this->m_nearZ, this->m_farZ, proj);
-
+    float upScale = 1.0f / sqrtf(up.y * up.y + up.x * up.x + up.z * up.z);
+    up.x = up.x * upScale;
+    up.y = up.y * upScale;
+    up.z = upScale * up.z;
+    CFrustum frustum;
     float hit = 0.0f;
     int32_t collided = 0;
-    CWFrustum frustum;
-    CreateFrustum(proj, view, 1.0f, frustum, offset);
+    uint32_t terrainFlags = flags & 0x30000;
 
-    if (CollideWithWorld(frustum, flags & 0x30000, hit)) {
-        collided = 1;
+    if (terrainFlags) {
+        CreateFrustum(up, target, position, 0.3f, frustum);
+
+        if (CollideWithWorld(terrainFlags, frustum, hit)) {
+            collided = 1;
+        }
     }
 
-    CreateFrustum(proj, view, 1.75f, frustum, offset);
+    CreateFrustum(up, target, position, 0.25f, frustum);
 
-    if (!CollideWithWorld(frustum, flags & 0xFFFCFFFF, hit) && !collided) {
+    if (!CollideWithWorld(flags & 0xFFFCFFFF, frustum, hit) && !collided) {
         return 0;
     }
 
-    distance -= hit * range;
+    distance = distance - hit * range;
 
     if (distance < 0.0f) {
         distance = 0.0f;
@@ -3884,114 +3861,27 @@ int32_t CGCamera::GetCameraDistance(float& distance, const C3Vector& position, c
     return 1;
 }
 
-// OFFSET: #0x006004B0
-static int32_t __stdcall ComputeShakeFalloff(const C3Vector& position, const C3Vector& shakePosition, float& amplitude, float start, float startSqr, float max, float maxSqr) {
-    float dy = position.y - shakePosition.y;
-    float dz = position.z - shakePosition.z;
-    float dx = position.x - shakePosition.x;
-    float distSqr = dx * dx + dz * dz + dy * dy;
-
-    if (maxSqr < distSqr) {
-        return 0;
-    }
-
-    if (startSqr < distSqr) {
-        amplitude = static_cast<float>(pow(0.699999988079071, static_cast<double>((sqrtf(distSqr) - start) / start))) * amplitude;
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x005FE6C0
-void CGCamera::AddShakeOffset(C3Vector& offset, float facing, float amplitude, float time, float frequency, int32_t type, float damping, int32_t dir) {
-    float value = sinf(frequency * time * 6.2831855f) * amplitude;
-
-    if (type == 1) {
-        value = value * expf(-(time * damping));
-    }
-
-    if (dir == 0) {
-        float c = cosf(facing);
-        float s = sinf(facing);
-        offset.x = c * value + offset.x;
-        offset.y = value * s + offset.y;
-    } else if (dir == 1) {
-        float angle = facing + 1.5707964f;
-        float c = cosf(angle);
-        float s = sinf(angle);
-        offset.x = c * value + offset.x;
-        offset.y = value * s + offset.y;
-    } else if (dir == 2) {
-        offset.z = value + offset.z;
-    }
-}
-
-// OFFSET: #0x00606970
-void CGCamera::RunShakes(const C3Vector& position, C3Vector& offset) {
-    if (!this->m_cameraShakeList.Head()) {
-        return;
-    }
-
-    uint32_t now = OsGetAsyncTimeMs();
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(this->m_targetGUID, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (!unit) {
-        return;
-    }
-
-    float facing = unit->GetSmoothFacing();
-    float amplitudes[3] = { 0.0f, 0.0f, 0.0f };
-    float times[3] = { 0.0f, 0.0f, 0.0f };
-    CameraShake* shakes[3] = { NULL, NULL, NULL };
-    CameraShake* next;
-
-    for (CameraShake* shake = this->m_cameraShakeList.Head(); !this->m_cameraShakeList.IsEnd(shake); shake = next) {
-        next = this->m_cameraShakeList.RawNext(shake);
-        float time = (now - shake->m_startTime) * 0.001f + shake->m_timeOffset;
-
-        if (time < shake->m_duration) {
-            float amplitude = shake->m_amplitude;
-
-            if (ComputeShakeFalloff(position, shake->m_position, amplitude, 9.0f, s_shakeFalloffStartSqr, 80.0f, s_shakeFalloffMaxSqr) && amplitude > amplitudes[shake->m_dir]) {
-                amplitudes[shake->m_dir] = amplitude;
-                shakes[shake->m_dir] = shake;
-                times[shake->m_dir] = time;
-            }
-        } else {
-            this->m_cameraShakeList.DeleteNode(shake);
-        }
-    }
-
-    for (uint32_t i = 0; i < 3; i++) {
-        CameraShake* shake = shakes[i];
-
-        if (shake) {
-            CGCamera::AddShakeOffset(offset, facing, amplitudes[i], times[i], shake->m_frequency, shake->m_type, shake->m_damping, shake->m_dir);
-        }
-    }
-}
-
-// OFFSET: #0x006053D0
+// OFFSET: 0x00443D80
 void CGCamera::SetTelescope(int32_t telescope) {
     if (!telescope) {
         if (this->m_state & 0x8) {
             float offset = this->m_smoothTargetOffset.m_target;
-            uint32_t time = OsGetAsyncTimeMs();
+            uint32_t time = FrameTime::GetCurTimeMs();
             this->StartSmoothFoV(0.0f, 0.5f, time);
             this->m_state = (this->m_state & 0x7FFF7FF7) | 0x80000000;
             this->SetView(this->m_prevViewIndex, 2, 2);
-            this->StartSmoothDistance(this->unk_0314, 0.5f, time);
+            this->StartSmoothDistance(this->unk_02F4, 0.5f, time);
 
-            if (fabsf(this->unk_0318) >= 2.3841858e-7f) {
-                this->StartSmoothTargetOffset(offset - this->unk_0318, 0.5f, time);
-                this->unk_0318 = 0.0f;
+            if (fabsf(this->unk_02F8) >= 2.3841858e-7f) {
+                this->StartSmoothTargetOffset(offset - this->unk_02F8, 0.5f, time);
+                this->unk_02F8 = 0.0f;
             }
         }
 
         return;
     }
 
-    uint32_t time = OsGetAsyncTimeMs();
+    uint32_t time = FrameTime::GetCurTimeMs();
     this->SetView(0, 2, 1);
     this->m_state = (this->m_state & 0x7FFF7FF7) | 0x8008;
     this->StartSmoothFoV(telescope * 0.017453292f - this->m_fov, 0.5f, time);
@@ -4034,10 +3924,10 @@ void CGCamera::SetTelescope(int32_t telescope) {
 
     float angle = UnwrapAngleToward(0.0f, -atan2f(dir.z, sqrtf(1.0f - dir.z * dir.z)) - base, -3.1415927f, 3.1415927f);
     this->StartSmoothTargetOffset(angle + offset, 0.5f, time);
-    this->unk_0318 = angle;
+    this->unk_02F8 = angle;
 }
 
-// OFFSET: #0x005FF440
+// OFFSET: 0x0043CFC0
 void CGCamera::SetPositionAndTargetWithRoll(const C3Vector& position, const C3Vector& target, float roll) {
     C3Vector forward(target.x - position.x, target.y - position.y, target.z - position.z);
     float lengthSqr = forward.z * forward.z + forward.y * forward.y + forward.x * forward.x;
@@ -4056,16 +3946,16 @@ void CGCamera::SetPositionAndTargetWithRoll(const C3Vector& position, const C3Ve
     this->SetFacing(forward, up);
 }
 
-// OFFSET: #0x006018C0
+// OFFSET: 0x0043F5E0
 int32_t CGCamera::FinishLoadingModel() {
     this->m_state |= 0x4;
-    this->m_someTime = OsGetAsyncTimeMs();
+    this->m_someTime = FrameTime::GetCurTimeMs();
     this->GetScene()->SetTime(0);
-    this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0);
+    this->m_model->SetBoneSequence(0xFFFFFFFF, 0, 0xFFFFFFFF, 0, 1.0f, 0, 1, 0, 0, 0);
     this->m_model->SetAnimating(1);
     C3Vector cameraPos;
     this->GetScene()->Animate(cameraPos);
-    void* camera = this->m_model->GetCameraByIndex(0);
+    CCamera* camera = static_cast<CCamera*>(this->m_model->GetCameraByIndex(0));
 
     if (!camera) {
         this->m_model->Release();
@@ -4073,35 +3963,28 @@ int32_t CGCamera::FinishLoadingModel() {
         return 0;
     }
 
-    this->unk_0050 = HandleDuplicate(static_cast<HOBJECT>(camera));
-    C3Vector position;
-    C3Vector target;
-    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 7, &position);
-    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 8, &target);
-    this->SetPositionAndTargetWithRoll(position, target, CameraGetFloat(reinterpret_cast<CCamera*>(this->unk_0050), 5));
+    CameraAddRef(camera);
+    this->m_modelCamera = camera;
+    this->UpdateFromModelCamera();
     return 1;
 }
 
-// OFFSET: #0x00601E90
+// OFFSET: 0x0043FFA0
 void CGCamera::CalcModelCamera(uint32_t time) {
     if (!(this->m_state & 0x4) && !(this->m_model->IsLoaded() && this->FinishLoadingModel())) {
         return;
     }
 
-    uint32_t now = OsGetAsyncTimeMs();
     this->m_model->SetAnimating(1);
-    this->GetScene()->AdvanceTime(now - this->m_someTime);
+    this->GetScene()->AdvanceTime(time - this->m_someTime);
     C3Vector cameraPos;
     this->GetScene()->Animate(cameraPos);
-    C3Vector position;
-    C3Vector target;
-    this->m_someTime = now;
-    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 7, &position);
-    CameraGetCoord(reinterpret_cast<CCamera*>(this->unk_0050), 8, &target);
-    this->SetPositionAndTargetWithRoll(position, target, CameraGetFloat(reinterpret_cast<CCamera*>(this->unk_0050), 5));
+    this->m_someTime = time;
+    this->UpdateFromModelCamera();
 }
 
-// OFFSET: #0x006038A0
+// PROVEN: d226a341 IDENTICAL/NONE
+// OFFSET: 0x00441910
 void CGCamera::CommentatorSetViewAndPosition(const C3Vector& position, float facing, float pitch) {
     this->m_views[6][0] = 0.0f;
     this->m_views[6][2] = facing;
@@ -4111,46 +3994,19 @@ void CGCamera::CommentatorSetViewAndPosition(const C3Vector& position, float fac
     this->SetView(6, 2, 0);
 }
 
-// OFFSET: #0x005FF3E0
-void CGCamera::RestoreSavedDistancePitch() {
-    float distance = s_cvCameraSavedDistance->m_floatValue;
-
-    if (distance < 0.0f) {
-        distance = 0.0f;
-    } else if (distance >= 50.0f) {
-        distance = 50.0f;
-    }
-
-    this->m_distance = distance;
-    this->m_smoothDistance.m_target = distance;
-
-    float pitch = s_cvCameraSavedPitch->m_floatValue * 0.017453292f;
-    this->m_pitch = pitch;
-    this->m_smoothPitch.m_target = pitch;
-}
-
 // PROVEN: 0207e58d IDENTICAL/IDENTICAL
 // OFFSET: 0x0076CA20/0x140586E10
 float CGCamera::GetDefaultZoomMinDistance() {
     return 0.0f;
 }
 
-// OFFSET: #0x00606410
-void CGCamera::AddShakeById(int32_t shakeId, const C3Vector* position) {
-    CameraShakesRec* shake = g_cameraShakesDB.GetRecord(shakeId);
-
-    if (shake) {
-        this->AddShake(*position, shake->m_shakeType, shake->m_direction, shake->m_amplitude * 0.027777778f, shake->m_frequency, shake->m_duration, shake->m_phase, shake->m_coefficient);
-    }
-}
-
-// OFFSET: #0x005FFFD0
+// OFFSET: 0x0043D490
 float CameraEaseInOut(float t) {
     return 0.5f - CMath::cos_(t * 3.1415927f) * 0.5f;
 }
 
 // PROVEN: 98f91ed2 IDENTICAL/NONE
-// OFFSET: 0x0043E280
+// OFFSET: 0x0043E0C0
 void CGCamera::UpdateVehicleYawOffset(uint32_t time) {
     float t = static_cast<float>(time - this->m_vehicleYawStartTime) / static_cast<float>(this->m_vehicleYawEndTime - this->m_vehicleYawStartTime);
 
@@ -4162,7 +4018,8 @@ void CGCamera::UpdateVehicleYawOffset(uint32_t time) {
     }
 }
 
-// OFFSET: #0x006007B0
+// PROVEN: c6ac440a IDENTICAL/NONE
+// OFFSET: 0x0043E280
 void CGCamera::UpdateVehiclePitchOffset(uint32_t time) {
     float t = static_cast<float>(time - this->m_vehiclePitchStartTime) / static_cast<float>(this->m_vehiclePitchEndTime - this->m_vehiclePitchStartTime);
 
@@ -4174,22 +4031,3 @@ void CGCamera::UpdateVehiclePitchOffset(uint32_t time) {
     }
 }
 
-// OFFSET: #0x00605700
-void CGCamera::FaceTarget(CGObject_C* target, uint32_t time) {
-    if (!target) {
-        SErrSetLastError(87);
-        return;
-    }
-
-    if (!(this->m_state & 0x4) && !this->FinishLoadingTarget(target)) {
-        return;
-    }
-
-    C3Vector direction(0.0f, 0.0f, 0.0f);
-    direction = this->GetSafeWorldPos(target);
-    direction.x = direction.x - this->m_position.x;
-    direction.y = direction.y - this->m_position.y;
-    direction.z = this->m_targetHeightFar + direction.z - this->m_position.z;
-    direction.NormalizeSafe();
-    this->SetFacing(direction);
-}

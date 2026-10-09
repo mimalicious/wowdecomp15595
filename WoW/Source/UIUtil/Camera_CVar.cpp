@@ -3,193 +3,199 @@
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/UIUtil/Camera.h"
 
-// STATIC: #0x00C24970
-CVar* s_cvCameraSmoothTimeMax;
+// STATIC: 0x00D38770
+CameraCVarRef* CameraCVarRef::s_head;
 
-// STATIC: #0x00C24974
-CVar* s_cvCameraSmoothTimeMin;
+// STATIC: 0x00D3876C
+uint32_t CameraCVarRef::s_count;
 
-// STATIC: #0x00C24978
-CVar* s_cvCameraYawSmoothMax;
+// STATIC: 0x00D39180
+CameraCVarRef s_cvCameraSmoothTimeMax;
 
-// STATIC: #0x00C2497C
-CVar* s_cvCameraYawSmoothMin;
+// STATIC: 0x00D39178
+CameraCVarRef s_cvCameraSmoothTimeMin;
 
-// STATIC: #0x00C24980
-CVar* s_cvCameraPitchSmoothMax;
+// STATIC: 0x00D39170
+CameraCVarRef s_cvCameraYawSmoothMax;
 
-// STATIC: #0x00C24984
-CVar* s_cvCameraPitchSmoothMin;
+// STATIC: 0x00D39168
+CameraCVarRef s_cvCameraYawSmoothMin;
 
-// STATIC: #0x00C24988
-CVar* s_cvCameraDistanceMaxFactor;
+// STATIC: 0x00D39160
+CameraCVarRef s_cvCameraPitchSmoothMax;
 
-// STATIC: #0x00C2498C
-CVar* s_cvCameraDistanceMax;
+// STATIC: 0x00D39158
+CameraCVarRef s_cvCameraPitchSmoothMin;
 
-// STATIC: #0x00C24990
-CVar* s_cvCameraSubmergeFinalPitch;
+// STATIC: 0x00D39150
+CameraCVarRef s_cvCameraDistanceMaxFactor;
 
-// STATIC: #0x00C24994
-CVar* s_cvCameraSurfaceFinalPitch;
+// STATIC: 0x00D39148
+CameraCVarRef s_cvCameraDistanceMax;
 
-// STATIC: #0x00C24998
-CVar* s_cvCameraSubmergePitch;
+// STATIC: 0x00D39140
+CameraCVarRef s_cvCameraSubmergeFinalPitch;
 
-// STATIC: #0x00C2499C
-CVar* s_cvCameraSurfacePitch;
+// STATIC: 0x00D39138
+CameraCVarRef s_cvCameraSurfaceFinalPitch;
 
-// STATIC: #0x00C249A0
-CVar* s_cvCameraDive;
+// STATIC: 0x00D39130
+CameraCVarRef s_cvCameraSubmergePitch;
 
-// STATIC: #0x00C249A4
-CVar* s_cvCameraPivotDYMin;
+// STATIC: 0x00D39128
+CameraCVarRef s_cvCameraSurfacePitch;
 
-// STATIC: #0x00C249A8
-CVar* s_cvCameraPivotDXMax;
+// STATIC: 0x00D39120
+CameraCVarRef s_cvCameraDive;
 
-// STATIC: #0x00C249AC
-CVar* s_cvCameraPivot;
+// STATIC: 0x00D39118
+CameraCVarRef s_cvCameraPivotDYMin;
 
-// STATIC: #0x00C249B0
-CVar* s_cvCameraHeightIgnoreStandState;
+// STATIC: 0x00D39110
+CameraCVarRef s_cvCameraPivotDXMax;
 
-// STATIC: #0x00C249B4
-CVar* s_cameraWaterCollision;
+// STATIC: 0x00D39108
+CameraCVarRef s_cvCameraPivot;
 
-// STATIC: #0x00C249B8
-CVar* s_cvCameraTerrainTiltTimeMax;
+// STATIC: 0x00D39100
+CameraCVarRef s_cvCameraHeightIgnoreStandState;
 
-// STATIC: #0x00C249BC
-CVar* s_cvCameraTerrainTiltTimeMin;
+// STATIC: 0x00D390F8
+CameraCVarRef s_cameraWaterCollision;
 
-// STATIC: #0x00C249C0
-CVar* s_cvCameraTerrainTiltState[5][10][3];
+// STATIC: 0x00D390F0
+CameraCVarRef s_cvCameraTerrainTiltTimeMax;
 
-// STATIC: #0x00C24C18
-CVar* s_cvCameraTerrainTilt;
+// STATIC: 0x00D390E8
+CameraCVarRef s_cvCameraTerrainTiltTimeMin;
 
-// STATIC: #0x00C24C1C
-CVar* s_cvCameraSmoothStyle;
+// STATIC: 0x00D38C38
+CameraCVarRef s_cvCameraTerrainTiltState[5][10][3];
 
-// STATIC: #0x00C24C20
-CVar* s_cvCameraSmoothViewData[5][3][2];
+// STATIC: 0x00D38C30
+CameraCVarRef s_cvCameraTerrainTilt;
 
-// STATIC: #0x00C24C98
-CVar* s_cvCameraSmoothState[5][7][2];
+// STATIC: 0x00D38908
+CameraCVarRef s_cvCameraSmoothStyle;
 
-// STATIC: #0x00C24DB0
-CVar* s_cvCameraSmoothYaw;
+// STATIC: 0x00D38B40
+CameraCVarRef s_cvCameraSmoothViewData[5][3][2];
 
-// STATIC: #0x00C24DB4
-CVar* s_cvCameraSmoothTrackingStyle;
+// STATIC: 0x00D38910
+CameraCVarRef s_cvCameraSmoothState[5][7][2];
 
-// STATIC: #0x00C24DB8
-CVar* s_cvCameraSmoothPitch;
+// STATIC: 0x00D38900
+CameraCVarRef s_cvCameraSmoothYaw;
 
-// STATIC: #0x00C24DBC
-CVar* s_cameraSmooth;
+// STATIC: 0x00D388F8
+CameraCVarRef s_cvCameraSmoothTrackingStyle;
 
-// STATIC: #0x00C24DC0
-CVar* s_cvCameraCustomViewSmoothing;
+// STATIC: 0x00D388F0
+CameraCVarRef s_cvCameraSmoothPitch;
 
-// STATIC: #0x00C24DC4
-CVar* s_cvCameraView;
+// STATIC: 0x00D388E8
+CameraCVarRef s_cameraSmooth;
 
-// STATIC: #0x00C24DC8
-CVar* s_cvCameraViewData[8][3];
+// STATIC: 0x00D388E0
+CameraCVarRef s_cvCameraCustomViewSmoothing;
 
-// STATIC: #0x00C24E28
-CVar* s_cvCameraViewBlendStyle;
+// STATIC: 0x00D38818
+CameraCVarRef s_cvCameraView;
 
-// STATIC: #0x00C24E2C
-CVar* s_cvCameraFlyingMountHeightSmoothSpeed;
+// STATIC: 0x00D38820
+CameraCVarRef s_cvCameraViewData[8][3];
 
-// STATIC: #0x00C24E30
-CVar* s_cvCameraYawSmoothSpeed;
+// STATIC: 0x00D38810
+CameraCVarRef s_cvCameraViewBlendStyle;
 
-// STATIC: #0x00C24E34
-CVar* s_cvCameraTargetSmoothSpeed;
+// STATIC: 0x00D38808
+CameraCVarRef s_cvCameraFlyingMountHeightSmoothSpeed;
 
-// STATIC: #0x00C24E38
-CVar* s_cvCameraPitchSmoothSpeed;
+// STATIC: 0x00D38800
+CameraCVarRef s_cvCameraYawSmoothSpeed;
 
-// STATIC: #0x00C24E3C
-CVar* s_cvCameraHeightSmoothSpeed;
+// STATIC: 0x00D387F8
+CameraCVarRef s_cvCameraTargetSmoothSpeed;
 
-// STATIC: #0x00C24E40
-CVar* s_cvCameraGroundSmoothSpeed;
+// STATIC: 0x00D387F0
+CameraCVarRef s_cvCameraPitchSmoothSpeed;
 
-// STATIC: #0x00C24E44
-CVar* s_cvCameraFoVSmoothSpeed;
+// STATIC: 0x00D387E8
+CameraCVarRef s_cvCameraHeightSmoothSpeed;
 
-// STATIC: #0x00C24E48
-CVar* s_cvCameraDistanceSmoothSpeed;
+// STATIC: 0x00D387E0
+CameraCVarRef s_cvCameraGroundSmoothSpeed;
 
-// STATIC: #0x00C24E4C
-CVar* s_cvCameraBobbingSmoothSpeed;
+// STATIC: 0x00D387D8
+CameraCVarRef s_cvCameraFoVSmoothSpeed;
 
-// STATIC: #0x00C24E50
-CVar* s_cvCameraYawMoveSpeed;
+// STATIC: 0x00D387D0
+CameraCVarRef s_cvCameraDistanceSmoothSpeed;
 
-// STATIC: #0x00C24E54
-CVar* s_cvCameraPitchMoveSpeed;
+// STATIC: 0x00D387C8
+CameraCVarRef s_cvCameraBobbingSmoothSpeed;
 
-// STATIC: #0x00C24E58
-CVar* s_cvCameraDistanceMoveSpeed;
+// STATIC: 0x00D387C0
+CameraCVarRef s_cvCameraYawMoveSpeed;
 
-// STATIC: #0x00C24E5C
+// STATIC: 0x00D387B0
+CameraCVarRef s_cvCameraPitchMoveSpeed;
+
+// STATIC: 0x00D387A8
+CameraCVarRef s_cvCameraDistanceMoveSpeed;
+
+// STATIC: 0x00D38760
 float s_cameraBobFrequency;
 
-// STATIC: #0x00C24E60
+// STATIC: 0x00D38764
 float s_cameraBobVerticalAmplitude;
 
-// STATIC: #0x00C24E64
+// STATIC: 0x00D38768
 float s_cameraBobHorizontalAmplitude;
 
-// STATIC: #0x00C24E68
-CVar* s_cvCameraBobbing;
+// STATIC: 0x00D387A0
+CameraCVarRef s_cvCameraBobbing;
 
-// STATIC: #0x00C24E6C
-CVar* s_cvMouseInvertPitch;
+// STATIC: 0x00D38798
+CameraCVarRef s_cvMouseInvertPitch;
 
-// STATIC: #0x00C24E70
-CVar* s_cvMouseInvertYaw;
+// STATIC: 0x00D38790
+CameraCVarRef s_cvMouseInvertYaw;
 
-// STATIC: #0x00C24E74
-CVar* s_cvCameraSavedPitch;
+// STATIC: 0x00D38788
+CameraCVarRef s_cvCameraSavedPitch;
 
-// STATIC: #0x00C24E78
-CVar* s_cvCameraSavedVehicleDistance;
+// STATIC: 0x00D38780
+CameraCVarRef s_cvCameraSavedVehicleDistance;
 
-// STATIC: #0x00C24E7C
-CVar* s_cvCameraSavedDistance;
+// STATIC: 0x00D38778
+CameraCVarRef s_cvCameraSavedDistance;
 
-// STATIC: #0x00AD1B54
+// STATIC: 0x00C98C60
 static const char* s_cameraViewNames[8] = { "", "A", "B", "C", "D", "E", "Com", "Barber Shop" };
 
-// STATIC: #0x00AD1B74
+// STATIC: 0x00C98C80
 static const char* s_cameraViewDataNames[3] = { "Distance", "Pitch", "Yaw" };
 
-// STATIC: #0x00AD1B8C
+// STATIC: 0x00C98C98
 static const char* s_defaultCameraViewBlendStyle = "1";
 
-// STATIC: #0x00AD1B90
+// STATIC: 0x00C98C9C
 static const char* s_defaultCameraView = "2";
 
-// STATIC: #0x00AD1B94
+// STATIC: 0x00C98D08
 static const char* s_cameraSmoothStyleNames[5] = { "Never", "Smart", "Always", "Spline", "Smarter" };
 
-// STATIC: #0x00AD1C08
+// STATIC: 0x00C98D00
 static const char* s_cameraSmoothParamNames[2] = { "Delay", "Factor" };
 
-// STATIC: #0x00AD1C10
+// STATIC: 0x00C98D1C
 static const char* s_cameraSmoothStateNames[7] = { "Idle", "Stop", "Track", "Move", "Strafe", "Turn", "Fear" };
 
-// STATIC: #0x00AD1C2C
+// STATIC: 0x00C98D38
 static const char* s_defaultCameraSmoothStyle = "4";
 
-// STATIC: #0x00AD1C30
+// STATIC: 0x00C98D48
 static const char* s_cameraSmoothStateDefaults[5][7][2] = {
     {
         { "0.0", "0.0" },
@@ -238,7 +244,7 @@ static const char* s_cameraSmoothStateDefaults[5][7][2] = {
     },
 };
 
-// STATIC: #0x00AD1D48
+// STATIC: 0x00C98E60
 static const char* s_cameraSmoothViewDataDefaults[5][3][2] = {
     {
         { "0.0", "0.0" },
@@ -267,13 +273,13 @@ static const char* s_cameraSmoothViewDataDefaults[5][3][2] = {
     },
 };
 
-// STATIC: #0x00AD1DC0
+// STATIC: 0x00C98ED8
 static const char* s_cameraTerrainTiltStateNames[10] = { "Fall", "Fear", "Idle", "Jump", "Move", "Strafe", "Swim", "Taxi", "Track", "Turn" };
 
-// STATIC: #0x00AD1DE8
+// STATIC: 0x00C98D3C
 static const char* s_cameraTerrainTiltParamNames[3] = { "Absorb", "Delay", "Factor" };
 
-// STATIC: #0x00AD1DF8
+// STATIC: 0x00C98F00
 static const char* s_cameraTerrainTiltStateDefaults[5][10][3] = {
     {
         { "0.0", "0.0", "-1.0" },
@@ -391,7 +397,7 @@ static bool ValidateCameraTime(CVar* var, const char* oldValue, const char* valu
     return false;
 }
 
-// OFFSET: #0x005FD7B0
+// OFFSET: 0x0043A780
 static bool ValidateCameraYaw(CVar* var, const char* oldValue, const char* value, void* arg) {
     float yaw = SStrToFloat(value);
 
@@ -403,7 +409,7 @@ static bool ValidateCameraYaw(CVar* var, const char* oldValue, const char* value
     return false;
 }
 
-// OFFSET: #0x005FD800
+// OFFSET: 0x0043A7E0
 static bool ValidateCameraAngularSpeed(CVar* var, const char* oldValue, const char* value, void* arg) {
     float speed = SStrToFloat(value);
 
@@ -441,10 +447,10 @@ static bool ValidateCameraSmoothStyle(CVar* var, const char* oldValue, const cha
     return false;
 }
 
-// STATIC: #0x00AD2054
+// STATIC: 0x00C99160
 static bool (*s_cameraViewDataValidators[3])(CVar*, const char*, const char*, void*) = { ValidateCameraDistance, ValidateCameraPitch, ValidateCameraYaw };
 
-// OFFSET: #0x005FD910
+// OFFSET: 0x0043C0B0/0x140046AE0
 void CameraRegisterCVars() {
     s_cvCameraSavedDistance = CVar::Register("cameraSavedDistance", NULL, 0x20, s_cameraViewDefaults[SStrToInt(s_defaultCameraView)].m_values[0], NULL, CATEGORY_DEFAULT, false, NULL, false);
     s_cvCameraSavedVehicleDistance = CVar::Register("cameraSavedVehicleDistance", NULL, 0x20, "-1.0", NULL, CATEGORY_DEFAULT, false, NULL, false);

@@ -1,4 +1,5 @@
 #include "DynamicObject_C.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include "Engine/Source/Model2/M2Model.h"
 #include "Engine/Source/Services/SysMessage.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
@@ -257,7 +258,7 @@ void CGDynamicObject_C::HandleAnimEvent(uint32_t eventId, uint32_t data, const C
 
     if (eventId == 0x4B485324 && shakes) {
         for (uint32_t i = 0; i < 3; i++) {
-            CGWorldFrame::GetActiveCamera()->AddShakeById(shakes->m_cameraShake[i], position);
+            StaticSingleton<CCameraManager>::Instance()->AddShakeById(shakes->m_cameraShake[i], *position);
         }
     }
 }

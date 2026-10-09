@@ -503,7 +503,7 @@ void CVehicleCamera_C::ComputeSafeCurWorldPos() {
     }
 
     C3Vector origin = root->GetPosition();
-    origin.z = root->GetMaxCameraHeight() + origin.z;
+    origin.z = root->GetMaxCameraHeight(1) + origin.z;
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
 
     if (!camera) {

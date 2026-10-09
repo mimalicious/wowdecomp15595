@@ -1,4 +1,5 @@
 #include "SpellVisuals.h"
+#include "WoW/Source/UIUtil/CameraManager.h"
 #include <new>
 #include <typeinfo>
 #include "Engine/Source/Base/CDataAllocator.h"
@@ -396,7 +397,7 @@ void SpellVisualsPlayCameraShakeID(int32_t id, const C3Vector* position) {
 
     for (uint32_t i = 0; i < 3; i++) {
         if (rec->m_cameraShake[i]) {
-            CGWorldFrame::GetActiveCamera()->AddShakeById(rec->m_cameraShake[i], position);
+            StaticSingleton<CCameraManager>::Instance()->AddShakeById(rec->m_cameraShake[i], *position);
         }
     }
 }

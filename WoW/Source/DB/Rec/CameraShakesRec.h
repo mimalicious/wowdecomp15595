@@ -18,7 +18,7 @@ class CameraShakesRec {
     /* 0014 */ float m_duration;
     /* 0018 */ float m_phase;
     /* 001C */ float m_coefficient;
-    /* 0020 */ int32_t unk_0020;
+    /* 0020 */ uint32_t m_flags;
 };
 
 #endif
