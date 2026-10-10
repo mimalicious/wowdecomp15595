@@ -5591,7 +5591,7 @@ static int32_t Script_ToggleTris(lua_State* L) {
 
 // OFFSET: 0x008C2760
 static int32_t Script_ConfirmOnUse(lua_State* L) {
-    CGItem_C::ConfirmBindOnUse();
+    CGItem_C::ConfirmOnUse();
     return 0;
 }
 

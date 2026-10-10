@@ -9,9 +9,12 @@ class ItemRecSparse {
     static const DB2Meta s_meta;
 
     static void FixupRecord(void* record);
+    static void Initialize();
 
     const char* GetName(int32_t index) const;
     class ItemRec* GetNonSparse() const;
+    int32_t GetBuyPrice(bool* computed) const;
+    int32_t GetSellPrice() const;
 
     /* 0000 */ int32_t m_ID;
     /* 0004 */ int32_t m_quality;

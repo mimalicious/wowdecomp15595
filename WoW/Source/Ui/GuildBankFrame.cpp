@@ -17,6 +17,7 @@
 #include "WoW/Source/Object/Item.h"
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Ui/GuildInfo.h"
 
 // STATIC: #0x00C1DC10

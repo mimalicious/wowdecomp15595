@@ -14,7 +14,7 @@ class ItemClassRec {
     /* 0004 */ int32_t m_classID;
     /* 0008 */ int32_t m_subclassMapID;
     /* 000C */ int32_t m_flags;
-    /* 0010 */ float unk_0010;
+    /* 0010 */ float m_priceFactor;
     /* 0014 */ DBCString m_className;
 };
 

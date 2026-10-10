@@ -10,12 +10,15 @@
 
 class CClientObjCreate;
 class CImVector;
-class ItemStats_C;
+class ItemRecSparse;
+class ItemReforgeRec;
 class ItemGroupSoundsRec;
 class LockRec;
 
 struct INVENTORYART : public TSHashObject<INVENTORYART, HASHKEY_NONE> {
     /* 0018 */ char* m_texture;
+
+    void SetTexture(const char* texture);
 };
 
 struct ITEMBYNAME : public TSHashObject<ITEMBYNAME, HASHKEY_UTF8I> {
@@ -25,6 +28,8 @@ struct ITEMBYNAME : public TSHashObject<ITEMBYNAME, HASHKEY_UTF8I> {
 extern const uint32_t s_inventoryTypeSlots[29];
 
 int32_t GetItemIDByName(const char* name);
+void EvalutateReforgeOfRandomProp(int32_t randomPropertiesId, int32_t propertySeed, const ItemReforgeRec* reforge, int32_t& hasSourceStat, int32_t& invalid, int32_t& reason);
+int32_t CalculateItemBonusFromRandomEnchant(int32_t stat, int32_t randomPropertiesId, int32_t propertySeed);
 
 class CGItem_C : public CGObject_C, public CGItem {
     public:
@@ -59,9 +64,7 @@ class CGItem_C : public CGObject_C, public CGItem {
     ~CGItem_C();
     void PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) override;
     void PostReenable(const CClientObjCreate& create) override;
-    int32_t GetModelFileName(const char** name) const override;
     int32_t GetSelectionHighlightColor(CImVector* color) const override;
-    void OnRightClick() override;
     const char* GetObjectName() const override;
     int32_t GetPageTextID(void (*callback)(int32_t, const WOWGUID&, void*, bool)) const override;
     uint32_t GetItemStaticFlags(int32_t index) override;
@@ -79,11 +82,14 @@ class CGItem_C : public CGObject_C, public CGItem {
     static WOWGUID s_bindOnUseTarget;
     static WOWGUID s_bindOnUseItem;
     static void ConfirmBindOnUse();
+    static void ConfirmOnUse();
     int32_t CanBeUsed();
+    bool CanBeUsedInArenas();
+    bool CanBeUsedInRatedBattleground();
+    bool CanBeStoredInVoidStorage(int32_t& error);
     uint32_t GetExpirationTimeLeft() const;
     char* GetFullItemName(char* buffer, uint32_t size) const;
     uint32_t GetInventoryType() const;
-    static char* GetStatName(uint32_t stat, char* buffer, int32_t size);
     int32_t GetNumSockets();
     int32_t GetOnUseSlot() const;
     int32_t GetPrismaticSocketCount();
@@ -91,8 +97,9 @@ class CGItem_C : public CGObject_C, public CGItem {
     int32_t GetRandomPropertyPoints() const;
     uint32_t GetSheatheType() const;
     uint32_t GetSpellItemEnchantmentId() const;
-    ItemStats_C* GetStats() const;
+    ItemRecSparse* GetStats() const;
     uint32_t GetSubtypeID() const;
+    int32_t GetTransmogrifyCost();
     int32_t GetUsableSpellCharges() const;
     bool HasEnchantments();
     int32_t HasOnUseEnchant() const;
@@ -103,14 +110,18 @@ class CGItem_C : public CGObject_C, public CGItem {
     void Lock();
     static void SignalEvent(CGItem_C* item, uint32_t event);
     static int32_t GetUseSpell(int32_t itemId);
-    static int32_t GetRandomPropertyValue(int32_t slot, int32_t randomPropertiesId, int32_t points);
+    static int32_t GetRandomPropertyOverrideAmountEx(int32_t slot, int32_t randomPropertiesId, int32_t points);
     static int32_t IsLocked(const LockRec* lock, int32_t itemLevel, int32_t* spellId, int32_t* skillValue, int32_t* requiredSkill, int32_t* lockIndex, CGItem_C** key, int32_t* entry);
-    int32_t GetRandomPropertyValue(int32_t slot);
+    static bool ReforgeIsValid(const ItemRecSparse* stats, const ItemReforgeRec* reforge, int32_t randomPropertiesId, int32_t propertySeed, int32_t& reason);
+    static void ModStatByReforge(int32_t level, const ItemRecSparse* stats, const ItemReforgeRec* reforge, int32_t stat, int32_t& value, int32_t randomPropertiesId, int32_t propertySeed);
+    bool ReforgeIsValid(const ItemReforgeRec* reforge, int32_t& reason);
+    int32_t GetRandomPropertyOverrideAmount(int32_t slot);
     int32_t GetRepairCost();
     int32_t GetEnchantmentSpell(int32_t a1);
     void GetSpellCooldownInfo(uint32_t& cooldown, uint32_t& categoryCooldown, uint32_t& category);
     bool IsBoundForTrade();
     bool IsBoundToAccount();
+    bool IsBoundToBattlenetAccount();
     bool IsInstanceBound() const;
     bool IsPermanentlyBoundForTrade();
     bool IsZoneBound() const;
@@ -120,7 +131,7 @@ class CGItem_C : public CGObject_C, public CGItem {
     void SetItemPurchaseData(ItemPurchaseData* data);
     void SetStorage(uint32_t* storage, uint32_t* saved);
     void SetTranslated();
-    void UpdateEnchantments();
+    void UpdateEnchantments(uint16_t changed);
     int32_t GetItemEnchantmentVisualID() const;
     void UpdateEnchantmentTime(int32_t slot, int32_t seconds);
     void UpdateExpirationTime(int32_t seconds);

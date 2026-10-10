@@ -67,6 +67,7 @@ struct PlayerPendingItemExpiration : public TSLinkedNode<PlayerPendingItemExpira
 };
 
 struct MerchantItem;
+class ItemRecSparse;
 class ItemStats_C;
 class EmotesTextRec;
 struct PlayerLootItem {
@@ -226,7 +227,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 20A4 */ TSHashTable<TRADESKILLLINE, HASHKEY_NONE> m_tradeSkillLines;
     /* 20D0 */ TSHashTable<PROFICIENCYSPELL, HASHKEY_NONE> m_proficiencySpells;
     /* 20FC */ TSExplicitList<PlayerPendingItemExpiration, 0> m_pendingItemExpirations;
-    /* 2108 */ uint32_t unk_2108;
+    /* 2108 */ uint32_t m_pendingItemCacheCount;
     /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
     /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
     /* 212C */ uint32_t unk_212C [17];
@@ -421,7 +422,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void RequestAllItemPurchaseData();
     float CalcRewardHonor(float honor);
     float GetQuestXPMultiplier();
-    int32_t CanUseItem(const ItemStats_C* stats, int32_t& error);
+    int32_t CanUseItem(const ItemRecSparse* stats, int32_t& error);
     static void BuyItem(WOWGUID vendor, const MerchantItem* item, uint32_t count, uint8_t a5);
     int32_t OnItemRefundResult(CDataStore* msg);
     void DelKnownSpell(int32_t spellId, int32_t a3);

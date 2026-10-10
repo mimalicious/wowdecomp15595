@@ -24,6 +24,7 @@
 #include "WoW/Source/DB/Rec/GlyphPropertiesRec.h"
 #include "WoW/Source/DB/Rec/ItemBagFamilyRec.h"
 #include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/DB/Rec/ItemSetRec.h"
 #include "WoW/Source/DB/Rec/ItemSubClassRec.h"
 #include "WoW/Source/DB/Rec/MapRec.h"
@@ -5694,24 +5695,30 @@ void CGPlayer_C::BuyItem(WOWGUID vendor, const MerchantItem* item, uint32_t coun
 }
 
 // OFFSET: 0x005616D0/0x1401BF5E0
-int32_t CGPlayer_C::CanUseItem(const ItemStats_C* stats, int32_t& error) {
+int32_t CGPlayer_C::CanUseItem(const ItemRecSparse* stats, int32_t& error) {
     error = ERR_MAX_VALUE;
+    ItemRec* rec;
 
-    if (!stats) {
+    if (!stats || !(rec = stats->GetNonSparse())) {
         error = ERR_ITEM_NOT_FOUND;
         return 0;
     }
 
     CGUnitData* unit = this->m_unit;
 
-    if (static_cast<int32_t>(stats->m_requiredLevel) > static_cast<int32_t>(unit->m_unitFieldLevel) || !((1 << (unit->m_unitFieldBytes0[1] - 1)) & stats->m_allowableClass) || !((1 << (unit->m_unitFieldBytes0[0] - 1)) & stats->m_allowableRace)) {
+    if (stats->m_requiredLevel > static_cast<int32_t>(unit->m_unitFieldLevel)) {
         error = ERR_CANT_USE_ITEM;
         return 0;
     }
 
-    uint8_t itemClass = static_cast<uint8_t>(stats->m_class);
+    if (!((1 << (unit->m_unitFieldBytes0[1] - 1)) & stats->m_allowableClass) || !((1 << (unit->m_unitFieldBytes0[0] - 1)) & stats->m_allowableRace)) {
+        error = ERR_CANT_USE_ITEM;
+        return 0;
+    }
 
-    if (itemClass < 17 && s_proficiency[itemClass] && !(s_proficiency[itemClass] & (1 << stats->m_subClass))) {
+    uint32_t proficiency = CGPlayer_C::GetProficiency(static_cast<uint8_t>(rec->m_classID));
+
+    if (proficiency && !((1 << rec->m_subclassID) & proficiency)) {
         error = ERR_PROFICIENCY_NEEDED;
         return 0;
     }
@@ -5719,7 +5726,7 @@ int32_t CGPlayer_C::CanUseItem(const ItemStats_C* stats, int32_t& error) {
     if (stats->m_requiredSkill && !(stats->m_flags[0] & 0x20040000)) {
         int32_t index = this->GetSkillIndex(stats->m_requiredSkill);
 
-        if (index < 0 || static_cast<int32_t>(this->GetSkillValue(index)) < static_cast<int32_t>(stats->m_requiredSkillRank)) {
+        if (index < 0 || static_cast<int32_t>(this->GetSkillValue(index)) < stats->m_requiredSkillRank) {
             error = ERR_CANT_USE_ITEM;
             return 0;
         }
@@ -5730,7 +5737,7 @@ int32_t CGPlayer_C::CanUseItem(const ItemStats_C* stats, int32_t& error) {
         return 0;
     }
 
-    if (stats->m_requiredHonorRank && static_cast<int32_t>(this->m_player->m_playerFieldBytes[3]) < static_cast<int32_t>(stats->m_requiredHonorRank)) {
+    if (stats->m_requiredHonorRank && static_cast<int32_t>(this->m_player->m_playerFieldBytes[3]) < stats->m_requiredHonorRank) {
         error = ERR_CANT_USE_ITEM;
         return 0;
     }
@@ -7496,7 +7503,7 @@ void CGPlayer_C::SwapItems(WOWGUID item, WOWGUID srcContainer, uint32_t srcSlot,
         CGItem_C* bagItem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
         if (bagItem && !bagItem->IsBound() && !ignoreBind) {
-            ItemStats_C* stats = g_itemDBCache.GetRecord(bagItem->m_obj->m_entryID, bagItem->m_obj->m_guid, SwapItemsStatsCallback, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(bagItem->m_obj->m_entryID, bagItem->m_obj->m_guid, SwapItemsStatsCallback, NULL, false);
 
             if (!stats) {
                 uint32_t index = FindEmptySwapIndex();
@@ -7663,7 +7670,7 @@ void CGPlayer_C::AutoEquipCursorItem(int32_t ignoreBind) {
         uint8_t bag = this->FindSlotIndex(container);
 
         if (!itemObject->IsBound() && !ignoreBind) {
-            ItemStats_C* stats = g_itemDBCache.GetRecord(itemObject->m_obj->m_entryID, item, AutoEquipStatsCallback, NULL, false);
+            ItemRecSparse* stats = g_itemSparseDB.GetRecord(itemObject->m_obj->m_entryID, item, AutoEquipStatsCallback, NULL, false);
 
             if (!stats) {
                 return;
@@ -8286,7 +8293,7 @@ void CGPlayer_C::AutoEquipItemToSlot(CGItem_C* item, uint32_t slot, int32_t igno
     CDataStore msg;
 
     if (!item->IsBound() && !ignoreBind) {
-        ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, guid, &AutoEquipItemCallback, NULL, false);
+        ItemRecSparse* stats = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, guid, &AutoEquipItemCallback, NULL, false);
 
         if (!stats) {
             uint32_t index = FindEmptySwapIndex();

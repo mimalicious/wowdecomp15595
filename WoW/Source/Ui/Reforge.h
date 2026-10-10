@@ -9,8 +9,10 @@ class CGReforge {
     static void EnterWorld();
     static void LeaveWorld();
     static WOWGUID m_forgeMaster;
+    static WOWGUID m_reforgeItem;
 
     static void SetForgeMaster(const WOWGUID& guid);
+    static void UpdateEnchantment(WOWGUID item);
 };
 
 #endif
