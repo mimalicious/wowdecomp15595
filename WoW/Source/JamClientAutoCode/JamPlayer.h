@@ -182,4 +182,14 @@ class PlayerClearTradeItem : public JamClientMessage {
     ~PlayerClearTradeItem();
 };
 
+class PlayerRequestGuildPartyState : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_guildGUID[8];
+
+    void Put(CDataStore* msg) override;
+
+    PlayerRequestGuildPartyState(uint64_t guildGUID);
+    ~PlayerRequestGuildPartyState();
+};
+
 #endif

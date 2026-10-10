@@ -2335,7 +2335,8 @@ void ChatRegisterScriptFunctions() {
     }
 }
 
-// OFFSET: %0x0088D540
+// PROVEN: f3e1b047 IDENTICAL/NONE
+// OFFSET: 0x009324A0
 void ChatUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -2302,15 +2302,6 @@ bool CGObject_C::LoadGuildTextures(uint64_t guildGUID) {
     return true;
 }
 
-// OFFSET: 0x0044E2F0
-WOWGUID CGObject_C::GetGuildGUID() const {
-    if (this->m_obj->m_dataType == 1) {
-        return this->m_obj->m_data;
-    }
-
-    return WOWGUID();
-}
-
 // OFFSET: %0x005E8F80
 void CGObject_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->m_obj = reinterpret_cast<CGObjectData*>(storage);

@@ -6,6 +6,7 @@
 #include "WoW/Source/Object/WGUID.h"
 
 struct lua_State;
+struct SkillLine;
 class SkillLineRec;
 
 struct TradeSkillInfo {
@@ -80,6 +81,8 @@ class CGTradeSkillInfo {
     static void SetInvSlotFilter(uint32_t filter);
     static void SetItemNameFilter(const char* filter);
     static void SetItemLevelFilter(int32_t minLevel, int32_t maxLevel);
+    static void OpenGuildMemberTradeSkill(const uint64_t& guid, const SkillLine& skillLine);
+    static void OpenGuildTradeSkill(int32_t skillLineID);
 };
 
 extern const char* s_invSlotTokens[27];

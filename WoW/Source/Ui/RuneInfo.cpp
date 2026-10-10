@@ -9,6 +9,7 @@
 #include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
+#include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
 // STATIC: #0x00C24304
 int32_t CGRuneInfo::m_runes[8];
@@ -53,6 +54,34 @@ void CGRuneInfo::InitializeGame() {
     CGRuneInfo::m_baseRunes[4] = 2;
     CGRuneInfo::m_runes[5] = 2;
     CGRuneInfo::m_baseRunes[5] = 2;
+}
+
+// OFFSET: 0x0093C4C0/0x1406A7B60
+void CGRuneInfo::EnterWorld() {
+    for (uint32_t i = 0; i < 6; i++) {
+        CGRuneInfo::m_runeLastUsed[i] = 0;
+    }
+
+    for (uint32_t i = 0; i < 6; i++) {
+        CGRuneInfo::m_runeCooldowns[i] = 0;
+    }
+
+    CGRuneInfo::m_predictedRunes = 0xFFFFFFFF;
+
+    if (!CGGameUI::m_currentlyReloadingUI) {
+        CGRuneInfo::m_runes[0] = 0;
+        CGRuneInfo::m_baseRunes[0] = 0;
+        CGRuneInfo::m_runes[1] = 0;
+        CGRuneInfo::m_baseRunes[1] = 0;
+        CGRuneInfo::m_runes[2] = 1;
+        CGRuneInfo::m_baseRunes[2] = 1;
+        CGRuneInfo::m_runes[3] = 1;
+        CGRuneInfo::m_baseRunes[3] = 1;
+        CGRuneInfo::m_runes[4] = 2;
+        CGRuneInfo::m_baseRunes[4] = 2;
+        CGRuneInfo::m_runes[5] = 2;
+        CGRuneInfo::m_baseRunes[5] = 2;
+    }
 }
 
 // OFFSET: #0x005EDFC0

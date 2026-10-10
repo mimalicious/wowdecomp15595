@@ -39,7 +39,7 @@ inline uint32_t JamBitReader::ReadBits() {
     return this->ReadBits<count>(JamBitCount<(count > 8)>());
 }
 
-// OFFSET: [0x00696C20/0x140342240<2>, 0x0066CCC0<4>, 0x0066CD60/0x140313CA0<5>, 0x00696CC0/0x140342300<6>, 0x0066CE00/0x140313D60<7>, 0x0066CEE0<8>]
+// OFFSET: [0x00696C20/0x140342240<2>, 0x006A3020<3>, 0x0066CCC0<4>, 0x0066CD60/0x140313CA0<5>, 0x00696CC0/0x140342300<6>, 0x0066CE00/0x140313D60<7>, 0x0066CEE0<8>]
 template <uint32_t count>
 uint32_t JamBitReader::ReadBits(JamBitCount<false>) {
     uint8_t bits = this->m_bits;
@@ -82,7 +82,7 @@ inline uint32_t JamBitReader::ReadBits<1>(JamBitCount<false>) {
     return this->ReadBit();
 }
 
-// OFFSET: [0x0066EBD0/0x140315BA0<9>, 0x0066EC70<12>, 0x006C2F70<21>, 0x00697660<22>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x00697860/0x140342E40<30>]
+// OFFSET: [0x0066EBD0/0x140315BA0<9>, 0x006C2BC0<11>, 0x0066EC70<12>, 0x006C2C50<14>, 0x006C2D90<18>, 0x006C2ED0<20>, 0x006C2F70<21>, 0x00697660<22>, 0x006C3010<23>, 0x00697700/0x1403BB7A0<24>, 0x006C30B0<26>, 0x00697860/0x140342E40<30>]
 template <uint32_t count>
 uint32_t JamBitReader::ReadBits(JamBitCount<true>) {
     uint32_t result = 0;
@@ -165,7 +165,19 @@ template <>
 inline void JamBitWriter::WriteBits<0>(uint32_t value, JamBitCount<false>) {
 }
 
-// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066AF20<12>, 0x0066EB50<24>, 0x006757D0<30>]
+// OFFSET: 0x0066A6F0
+template <>
+inline void JamBitWriter::WriteBits<8>(uint32_t value, JamBitCount<false>) {
+    if (!this->m_bits) {
+        this->m_msg->Put(static_cast<uint8_t>(value));
+        return;
+    }
+
+    this->m_msg->Put(static_cast<uint8_t>((static_cast<uint8_t>(value) >> this->m_bits) | (this->m_value << (8 - this->m_bits))));
+    this->m_value = value & ((1 << this->m_bits) - 1);
+}
+
+// OFFSET: [0x0066E960<9>, 0x0066E9E0<10>, 0x0066EA50<11>, 0x0066AF20<12>, 0x0069C820<14>, 0x0066EB50<24>, 0x006757D0<30>]
 template <uint32_t count>
 void JamBitWriter::WriteBits(uint32_t value, JamBitCount<true>) {
     for (int32_t i = 0; i < static_cast<int32_t>(count / 8 * 8); i += 8) {

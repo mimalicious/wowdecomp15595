@@ -22,7 +22,8 @@ class SkillLineAbilityRec {
     /* 0024 */ int32_t m_acquireMethod;
     /* 0028 */ int32_t m_trivialSkillLineRankHigh;
     /* 002C */ int32_t m_trivialSkillLineRankLow;
-    /* 0030 */ int32_t m_characterPoints [2];
+    /* 0030 */ int32_t m_characterPoints;
+    /* 0034 */ int32_t m_uniqueBit;
 };
 
 #endif

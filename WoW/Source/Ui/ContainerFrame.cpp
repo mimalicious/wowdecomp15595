@@ -369,7 +369,7 @@ void CGContainerInfo::UpdateContainers() {
 }
 
 // OFFSET: 0x009BD3C0/0x140748FB0
-static bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId) {
+bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId) {
     if (!CGContainerInfo::m_searchText) {
         return false;
     }
@@ -514,6 +514,11 @@ void CGContainerInfo::LeaveWorld() {
 
     CGContainerInfo::m_searchTextParsed = NULL;
     CGContainerInfo::m_searchText = NULL;
+}
+
+// OFFSET: 0x009BB320
+bool CGContainerInfo::IsSearchActive() {
+    return CGContainerInfo::m_searchText != NULL;
 }
 
 // OFFSET: 0x009BE790/0x14074A860

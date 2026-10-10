@@ -1097,7 +1097,7 @@ static int32_t Script_UseContainerItem(lua_State* L) {
     }
 
     if (CGGuildBankInfo::m_banker) {
-        CGGuildBankInfo::AutoStoreItem(guid, bag->m_guid, slot);
+        CGGuildBankInfo::AutoStoreItem(guid.m_guid, bag->m_guid.m_guid, slot);
         CGGameUI::SetPendingItemSound(guid, itemId);
         return 0;
     }

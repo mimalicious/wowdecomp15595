@@ -1534,7 +1534,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x21: {
-            ClientGuildXpGain message(this, connection, msg, timeStamp);
+            ClientGuildXPEarned message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2149,7 +2149,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x106: {
-            ClientGuildPartyStateResponse message(this, connection, msg, timeStamp);
+            ClientGuildPartyState message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 

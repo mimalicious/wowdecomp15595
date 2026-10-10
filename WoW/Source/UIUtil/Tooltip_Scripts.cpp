@@ -2581,7 +2581,7 @@ static int32_t Script_SetGuildBankItem(lua_State* L) {
 
     uint32_t tab = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2) - 1.0));
     uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 3) - 1.0));
-    GuildBankSlotInfo* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
+    GuildBankItem* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
 
     if (!bankItem) {
         return 0;
@@ -2589,15 +2589,15 @@ static int32_t Script_SetGuildBankItem(lua_State* L) {
 
     TooltipExtendedItemInfo* info = &tooltip->m_itemLinkInfo;
     info->Clear();
-    info->m_enchants[0] = bankItem->m_enchant;
-    info->m_enchants[8] = bankItem->m_reforgeEnchant;
-    info->m_enchants[7] = bankItem->m_engineeringEnchant;
-    info->m_enchants[2] = bankItem->m_enchants[0];
-    info->m_enchants[3] = bankItem->m_enchants[1];
-    info->m_enchants[4] = bankItem->m_enchants[2];
-    info->m_propertySeed = bankItem->m_suffixFactor;
-    info->m_randomPropertiesId = bankItem->m_randomPropertyID;
-    info->m_spellCharges = bankItem->m_spellCharges;
+    info->m_enchants[0] = bankItem->m_enchantmentID;
+    info->m_enchants[8] = bankItem->m_reforgeID;
+    info->m_enchants[7] = bankItem->m_onUseEnchantmentID;
+    info->m_enchants[2] = bankItem->m_socketEnchants[0];
+    info->m_enchants[3] = bankItem->m_socketEnchants[1];
+    info->m_enchants[4] = bankItem->m_socketEnchants[2];
+    info->m_propertySeed = bankItem->m_randomPropertiesSeed;
+    info->m_randomPropertiesId = bankItem->m_randomPropertiesID;
+    info->m_spellCharges = bankItem->m_charges;
     info->m_stackCount = bankItem->m_count;
 
     if (CGPlayer_C* player = ClntObjMgrGetActivePlayerObj()) {

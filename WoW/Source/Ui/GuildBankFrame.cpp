@@ -1,108 +1,161 @@
 #include "GuildBankFrame.h"
+#include <cstdint>
 #include <cstring>
-#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
-#include "Engine/Source/FrameScript/FrameScript.h"
-#include "WoW/Source/Ui/GameUI.h"
-#include "WoW/Source/Ui/Types.h"
-#include "Engine/Source/Base/CDataStore.h"
-#include "WoW/Source/Game/ValidateName.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include <ctime>
+#include "Engine/Source/Base/CDataStore.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/Client.h"
-#include "WoW/Source/Game/GameClient/NameCache.h"
-#include "WoW/Source/Object/ItemStats.h"
-#include "WoW/Source/Object/Item.h"
-#include "WoW/Source/Object/Player.h"
-#include "WoW/Source/Object/ObjectClient/Item_C.h"
+#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
 #include "WoW/Source/DB/Rec/ItemRecSparse.h"
+#include "WoW/Source/Game/GameClient/NameCache.h"
+#include "WoW/Source/Game/ValidateName.h"
+#include "WoW/Source/JamClientAutoCode/JamGlobal.h"
+#include "WoW/Source/Magic/MagicClient/Spell_C.h"
+#include "WoW/Source/Net/Types.h"
+#include "WoW/Source/Object/ObjectClient/Item_C.h"
+#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/Object/Player.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/Ui/ContainerFrame.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/GossipInfo.h"
 #include "WoW/Source/Ui/GuildInfo.h"
+#include "WoW/Source/Ui/Types.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00C1DC10
+// STATIC: 0x00F4DE58
+int32_t CGGuildBankInfo::m_textDirty[8];
+
+// STATIC: 0x00F4DE78
+GuildBankLogEntry CGGuildBankInfo::m_log[9][25];
+
+// STATIC: 0x00F501A0
+GuildBankTabInfo CGGuildBankInfo::m_tabInfo[8];
+
+// STATIC: 0x00F60BC0
+int32_t CGGuildBankInfo::m_numLogEntries[9];
+
+// STATIC: 0x00F60BE4
+int32_t CGGuildBankInfo::m_numTabs;
+
+// STATIC: 0x00F60BE8
 WOWGUID CGGuildBankInfo::m_banker;
 
-// STATIC: #0x00C1DC18
+// STATIC: 0x00F60BF0
 WOWGUID CGGuildBankInfo::m_pendingBanker;
 
-// STATIC: #0x00C11458
-GuildBankTabInfo CGGuildBankInfo::m_guildBankTabInfo[6];
+// STATIC: 0x00F60BF8
+int32_t CGGuildBankInfo::m_currentTab;
 
-// STATIC: #0x00C1DC0C
-uint8_t CGGuildBankInfo::m_numTabs;
+// STATIC: 0x00F60BFC
+int32_t CGGuildBankInfo::m_pendingItemCallbacks;
 
-// STATIC: #0x00C1DC0D
-uint8_t CGGuildBankInfo::m_currentTab;
-
-// STATIC: #0x00C1DC28
-static uint32_t s_pendingItemQueries;
-
-// STATIC: #0x00C1DC2C
-static uint32_t s_pendingLogQueries;
-
-// STATIC: #0x00C0F900
-GuildBankLogEntry CGGuildBankInfo::m_log[7][25];
-
-// STATIC: #0x00C1DC30
-uint32_t CGGuildBankInfo::m_withdrawMoneyRemaining;
-
-// STATIC: #0x00C1DC34
-int32_t CGGuildBankInfo::m_remainingWithdrawMoney;
-
-// STATIC: #0x00C1DC20
+// STATIC: 0x00F60C00
 uint64_t CGGuildBankInfo::m_money;
 
-// STATIC: #0x00C1DBF0
-int32_t CGGuildBankInfo::m_numLogEntries[7];
+// STATIC: 0x00F60C08
+uint64_t CGGuildBankInfo::m_bonusDepositMoney;
 
-// STATIC: #0x00ACF8C8
-uint8_t CGGuildBankInfo::m_logTab = 0xFF;
+// STATIC: 0x00F60C10
+int32_t CGGuildBankInfo::m_pendingLogCallbacks;
 
-// STATIC: #0x00C0F8E8
-int32_t CGGuildBankInfo::m_tabContentsDirty[6];
+// STATIC: 0x00F60C14
+int32_t CGGuildBankInfo::m_remainingWithdrawals;
 
-// STATIC: #0x00C1DC38
-TSGrowableArray<GuildBankSlotInfo> CGGuildBankInfo::m_tabSlots[6];
+// STATIC: 0x00F60C18
+uint64_t CGGuildBankInfo::m_remainingWithdrawMoney;
 
-// OFFSET: #0x005A77D0
-void CGGuildBankInfo::InitializeGame() {
-    ClientServices::SetMessageHandler(SMSG_GUILD_BANK_QUERY_RESULTS, Packet_SMSG_GUILD_BANK_LIST, NULL);
-    ClientServices::SetMessageHandler(MSG_GUILD_BANK_LOG_QUERY, Packet_MSG_GUILD_BANK_LOG_QUERY, NULL);
-    ClientServices::SetMessageHandler(MSG_GUILD_BANK_MONEY_WITHDRAWN, Packet_MSG_GUILD_BANK_MONEY_WITHDRAWN, NULL);
-    ClientServices::SetMessageHandler(MSG_QUERY_GUILD_BANK_TEXT, Packet_MSG_QUERY_GUILD_BANK_TEXT, NULL);
-    CGGuildBankInfo::m_numTabs = 0;
-    memset(CGGuildBankInfo::m_guildBankTabInfo, 0, sizeof(((CGGuildBankInfo*)0)->m_guildBankTabInfo));
-}
+// STATIC: 0x00F60C20
+TSGrowableArray<GuildBankItem> CGGuildBankInfo::m_tabSlots[8];
 
-// OFFSET: #0x005A4220
-void CGGuildBankInfo::UpdateTabInfo(uint8_t tab, const char* name, const char* icon) {
-    ScrubString(name, CGGuildBankInfo::m_guildBankTabInfo[tab].m_name, 16, sizeof(CGGuildBankInfo::m_guildBankTabInfo[tab].m_name), 1);
-    SStrCopy(CGGuildBankInfo::m_guildBankTabInfo[tab].m_icon, icon, STORM_MAX_STR);
-    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TABS, NULL);
-}
+// STATIC: 0x00D15C68
+uint32_t CGGuildBankInfo::m_logTab = 255;
 
-// OFFSET: #0x005A4270
+// OFFSET: 0x009C02D0/0x14074CBE0
 void CGGuildBankInfo::SetGuildBanker(const WOWGUID& banker) {
-    if (banker) {
-        CGGameUI::SetInteractTarget(banker);
-        CGGuildBankInfo::m_banker = banker;
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_OPENED, NULL);
+    if (!banker) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_CLOSED, NULL);
+        CGGameUI::ClearInteractTarget(CGGuildBankInfo::m_banker, 0);
+        CGGuildBankInfo::m_banker = WOWGUID::Make(0);
+        CGGuildBankInfo::m_pendingBanker = WOWGUID::Make(0);
         return;
     }
 
-    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_CLOSED, NULL);
-    CGGameUI::ClearInteractTarget(CGGuildBankInfo::m_banker, 0);
-    CGGuildBankInfo::m_banker = WOWGUID();
-    CGGuildBankInfo::m_pendingBanker = WOWGUID();
+    CGGameUI::SetInteractTarget(banker);
+    CGGuildBankInfo::m_banker = banker;
+    CGGossipInfo::ClearGossip();
+    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_OPENED, NULL);
 }
 
-// OFFSET: #0x005A5010
-void CGGuildBankInfo::BuyGuildBankTab() {
-    if (!CGGuildBankInfo::m_banker) {
+// OFFSET: 0x009C0350
+void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t& tab, uint32_t& slot) {
+    tab = virtualSlot / 98;
+    slot = virtualSlot % 98;
+}
+
+// OFFSET: 0x009C0380
+void CGGuildBankInfo::SetTextUpdate(uint32_t tab, int32_t update) {
+    CGGuildBankInfo::m_textDirty[tab] = update;
+}
+
+// PROVEN: 33bfb5e2 IDENTICAL/NONE
+// OFFSET: 0x009C0940
+void CGGuildBankInfo::GuildBankItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!CGGuildBankInfo::m_pendingItemCallbacks || !--CGGuildBankInfo::m_pendingItemCallbacks) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
+    }
+}
+
+// PROVEN: 3aa43c58 IDENTICAL/NONE
+// OFFSET: 0x009C0970
+void CGGuildBankInfo::GuildBankLogCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (!CGGuildBankInfo::m_pendingLogCallbacks || !--CGGuildBankInfo::m_pendingLogCallbacks) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKLOG_UPDATE, NULL);
+    }
+}
+
+// PROVEN: c115d3ca IDENTICAL/NONE
+// OFFSET: 0x009C09A0
+bool CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler(ClientGuildBankMoneyWithdrawn* msg) {
+    CGGuildBankInfo::m_remainingWithdrawMoney = msg->m_remainingWithdrawMoney;
+    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_WITHDRAWMONEY, NULL);
+    return true;
+}
+
+// PROVEN: 90b0ea75 IDENTICAL/NONE
+// OFFSET: 0x009C09D0
+bool CGGuildBankInfo::ClientGuildBankTextQueryResultHandler(ClientGuildBankTextQueryResult* msg) {
+    ScrubString(msg->m_text, CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text, 2048, sizeof(CGGuildBankInfo::m_tabInfo[msg->m_tab].m_text), 0);
+    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", msg->m_tab + 1);
+    return true;
+}
+
+// OFFSET: 0x009C0A20
+void CGGuildBankInfo::ClearGuildTabList(uint32_t tab) {
+    if (tab >= 8) {
         return;
     }
 
+    for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[tab].Count(); i++) {
+        GuildBankItem& item = CGGuildBankInfo::m_tabSlots[tab][i];
+        item.m_itemID = 0;
+        item.m_randomPropertiesID = 0;
+        item.m_randomPropertiesSeed = 0;
+        item.m_count = 0;
+        item.m_enchantmentID = 0;
+        item.m_charges = 0;
+        item.m_socketEnchants[0] = 0;
+        item.m_socketEnchants[1] = 0;
+        item.m_socketEnchants[2] = 0;
+        item.m_locked = 0;
+        item.m_flags = 0;
+    }
+}
+
+// OFFSET: 0x009C0AD0/0x14074D410
+void CGGuildBankInfo::BuyGuildBankTab() {
     uint8_t tab = CGGuildBankInfo::m_numTabs;
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_BUY_TAB));
@@ -112,33 +165,334 @@ void CGGuildBankInfo::BuyGuildBankTab() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x005A50C0
-void CGGuildBankInfo::SwapItems(uint8_t tab, uint32_t slot, WOWGUID item, WOWGUID container, uint32_t containerSlot, int32_t split) {
+// OFFSET: 0x009C0B60
+void CGGuildBankInfo::UpdateTabInfo(uint32_t tab, char* name, char* icon) {
+    ScrubString(name, CGGuildBankInfo::m_tabInfo[tab].m_name, 16, sizeof(CGGuildBankInfo::m_tabInfo[tab].m_name), 1);
+    SStrCopy(CGGuildBankInfo::m_tabInfo[tab].m_icon, icon, sizeof(CGGuildBankInfo::m_tabInfo[tab].m_icon));
+    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TABS, NULL);
+}
+
+// OFFSET: 0x009C0BC0/0x14074D570
+GuildBankItem* CGGuildBankInfo::GetGuildBankItem(uint32_t tab, uint32_t slot) {
+    if (tab >= 8 || slot >= CGGuildBankInfo::m_tabSlots[tab].Count()) {
+        return NULL;
+    }
+
+    GuildBankItem* item = &CGGuildBankInfo::m_tabSlots[tab][slot];
+
+    if (item->m_itemID) {
+        return item;
+    }
+
+    return NULL;
+}
+
+// OFFSET: 0x009C0BF0
+int32_t CGGuildBankInfo::IsLocked(int32_t itemID, uint32_t virtualSlot) {
+    uint32_t tab = virtualSlot / 98;
+    uint32_t slot = virtualSlot % 98;
+
+    if (tab >= 8 || slot >= CGGuildBankInfo::m_tabSlots[tab].Count()) {
+        return 0;
+    }
+
+    GuildBankItem* item = &CGGuildBankInfo::m_tabSlots[tab][slot];
+
+    if (itemID != item->m_itemID || !item->m_locked) {
+        return 0;
+    }
+
+    return item->m_locked;
+}
+
+// OFFSET: 0x009C0C40/0x14074D5F0
+void CGGuildBankInfo::Lock(int32_t itemID, uint32_t virtualSlot) {
+    uint32_t tab = virtualSlot / 98;
+    uint32_t slot = virtualSlot % 98;
+
+    if (tab < 8 && slot < CGGuildBankInfo::m_tabSlots[tab].Count()) {
+        GuildBankItem* item = &CGGuildBankInfo::m_tabSlots[tab][slot];
+
+        if (itemID == item->m_itemID) {
+            item->m_locked = 1;
+        }
+    }
+}
+
+// OFFSET: 0x009C0C90/0x14074D640
+void CGGuildBankInfo::Unlock(int32_t itemID, uint32_t virtualSlot) {
+    uint32_t tab = virtualSlot / 98;
+    uint32_t slot = virtualSlot % 98;
+
+    if (tab < 8 && slot < CGGuildBankInfo::m_tabSlots[tab].Count()) {
+        GuildBankItem* item = &CGGuildBankInfo::m_tabSlots[tab][slot];
+
+        if (itemID == item->m_itemID) {
+            item->m_locked = 0;
+        }
+    }
+}
+
+// OFFSET: 0x009C0CE0/0x14074D690
+void CGGuildBankInfo::EnterWorld() {
+    for (uint32_t i = 0; i < 9; i++) {
+        CGGuildBankInfo::m_numLogEntries[i] = 0;
+    }
+
+    CGGuildBankInfo::m_numTabs = 0;
+    CGGuildBankInfo::m_banker = WOWGUID::Make(0);
+    CGGuildBankInfo::m_pendingBanker = WOWGUID::Make(0);
+    CGGuildBankInfo::m_logTab = 255;
+
+    for (uint32_t i = 0; i < 8; i++) {
+        for (uint32_t j = 0; j < CGGuildBankInfo::m_tabSlots[i].Count(); j++) {
+            CGGuildBankInfo::m_tabSlots[i][j].m_itemID = 0;
+        }
+
+        CGGuildBankInfo::m_tabInfo[i].m_contentsDirty = 1;
+        CGGuildBankInfo::m_textDirty[i] = 1;
+    }
+
+    GlobalGuildBankRemainingWithdrawMoneyQuery query;
+    ClientServices::Send(&query);
+}
+
+// OFFSET: 0x009C0DC0
+void CGGuildBankInfo::QueryGuildBankTab(uint32_t tab) {
+    if (!CGGuildBankInfo::m_banker) {
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_QUERY_TAB));
+    msg.Put(CGGuildBankInfo::m_banker.m_guid);
+    msg.Put(static_cast<uint8_t>(tab));
+    msg.Put(static_cast<uint8_t>(CGGuildBankInfo::m_tabInfo[tab].m_contentsDirty != 0));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x009C0E80
+void CGGuildBankInfo::QueryGuildBankText(uint32_t tab) {
+    if (!CGGuildBankInfo::m_banker || !CGGuildBankInfo::m_textDirty[tab]) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", tab + 1);
+        return;
+    }
+
+    GlobalGuildBankTextQuery query(tab);
+    ClientServices::Send(&query);
+    CGGuildBankInfo::m_textDirty[tab] = 0;
+}
+
+// OFFSET: 0x009C0EF0
+void CGGuildBankInfo::SetTabInfo(uint32_t tab, const char* name, const char* icon) {
+    char scrubbed[64];
+    ScrubString(name, scrubbed, 16, sizeof(scrubbed), 1);
+
+    int32_t error = ValidateGuildBankTabName(s_locale, scrubbed);
+
+    if (error) {
+        CGGameUI::DisplayNameError(error);
+        return;
+    }
+
+    if (!CGGuildBankInfo::m_banker || static_cast<int32_t>(tab) >= CGGuildBankInfo::m_numTabs) {
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_UPDATE_TAB));
+    msg.Put(CGGuildBankInfo::m_banker.m_guid);
+    msg.Put(static_cast<uint8_t>(tab));
+    msg.PutString(scrubbed);
+    msg.PutString(icon);
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x009C1000/0x14074DA20
+void CGGuildBankInfo::DepositMoney(int64_t amount) {
+    if (!CGGuildBankInfo::m_banker || amount >= 10000000000ll) {
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_DEPOSIT_MONEY));
+    msg.Put(CGGuildBankInfo::m_banker.m_guid);
+    msg.Put(static_cast<uint64_t>(amount));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x009C10D0/0x14074DB00
+void CGGuildBankInfo::WithdrawMoney(int64_t amount) {
+    if (!CGGuildBankInfo::m_banker || amount >= 10000000000ll) {
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_WITHDRAW_MONEY));
+    msg.Put(CGGuildBankInfo::m_banker.m_guid);
+    msg.Put(static_cast<uint64_t>(amount));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x009C11A0/0x14074DBE0
+void CGGuildBankInfo::SetGuildBankText(uint32_t tab, const char* text) {
+    if (!CGGuildBankInfo::m_banker || static_cast<int32_t>(tab) >= CGGuildBankInfo::m_numTabs) {
+        return;
+    }
+
+    GlobalGuildBankSetTabText request;
+    request.m_tab = tab;
+    SStrCopy(request.m_tabText, text, sizeof(request.m_tabText));
+    ClientServices::Send(&request);
+}
+
+// PROVEN: 3f4cf561 IDENTICAL/NONE
+// OFFSET: 0x009C1F80
+void CGGuildBankInfo::ClearContents() {
+    for (uint32_t i = 0; i < 8; i++) {
+        CGGuildBankInfo::m_tabSlots[i].Clear();
+        CGGuildBankInfo::m_tabInfo[i].m_contentsDirty = 1;
+        CGGuildBankInfo::m_textDirty[i] = 1;
+    }
+
+    CGGuildBankInfo::m_numTabs = 0;
+    CGGuildBankInfo::m_currentTab = 0;
+}
+
+// PROVEN: a5bb2f62 IDENTICAL/NONE
+// OFFSET: 0x009C2000
+void CGGuildBankInfo::ShutdownGame() {
+    ClientGuildBankQueryResults::s_handler = NULL;
+    ClientGuildBankLogQueryResults::s_handler = NULL;
+    ClientGuildBankMoneyWithdrawn::s_handler = NULL;
+    ClientGuildBankTextQueryResult::s_handler = NULL;
+    CGGuildBankInfo::ClearContents();
+}
+
+// OFFSET: 0x009C2020
+bool CGGuildBankInfo::ClientGuildBankQueryResultsHandler(ClientGuildBankQueryResults* msg) {
+    CGGuildBankInfo::m_remainingWithdrawals = msg->m_withdrawalsRemaining;
+
+    if (CGGuildBankInfo::m_pendingItemCallbacks) {
+        CGGuildBankInfo::m_pendingItemCallbacks = 0;
+
+        for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[msg->m_tab].Count(); i++) {
+            g_nameDBCache.CancelCallback(static_cast<int64_t>(CGGuildBankInfo::m_tabSlots[msg->m_tab][i].m_itemID), &CGGuildBankInfo::GuildBankItemStatsCallback, NULL);
+        }
+    }
+
+    CGGuildBankInfo::m_money = msg->m_money >= 0x7FFFFFFFFFFFFull ? 0x7FFFFFFFFFFFFull : msg->m_money;
+
+    if (!CGGuildBankInfo::m_tabSlots[msg->m_tab].Count()) {
+        CGGuildBankInfo::m_tabSlots[msg->m_tab].SetCount(98);
+        CGGuildBankInfo::ClearGuildTabList(msg->m_tab);
+    }
+
+    if (msg->m_tabInfo.Count()) {
+        CGGuildBankInfo::m_numTabs = msg->m_tabInfo.Count();
+
+        for (int32_t i = 0; i < CGGuildBankInfo::m_numTabs; i++) {
+            CGGuildBankInfo::UpdateTabInfo(msg->m_tabInfo[i].m_tabIndex, msg->m_tabInfo[i].m_name, msg->m_tabInfo[i].m_icon);
+        }
+
+        CGGuildBankInfo::ClearGuildTabList(msg->m_tab);
+    }
+
+    int32_t cursorID = 0;
+    uint32_t cursorSlot = 0;
+
+    if (CGGameUI::m_cursorItemType == 10) {
+        CGGameUI::GetCursorVirtualItem(cursorID, reinterpret_cast<int32_t&>(cursorSlot));
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return true;
+    }
+
+    WOWGUID requester = player->m_obj->m_guid;
+
+    for (uint32_t i = 0; i < msg->m_itemInfo.Count(); i++) {
+        JamGuildBankItemInfo& info = msg->m_itemInfo[i];
+        uint32_t slot = info.m_slot;
+
+        if (cursorID && msg->m_tab == cursorSlot / 98 && slot == cursorSlot % 98) {
+            CGGameUI::ClearCursor(1, 1);
+            CGGameUI::UnlockVirtualItem(cursorID, cursorSlot, 0);
+        }
+
+        GuildBankItem& item = CGGuildBankInfo::m_tabSlots[msg->m_tab][slot];
+        item.m_itemID = info.m_itemID;
+
+        if (!item.m_itemID) {
+            continue;
+        }
+
+        item.m_flags = info.m_flags;
+        item.m_randomPropertiesID = info.m_randomPropertiesID;
+        item.m_randomPropertiesSeed = info.m_randomPropertiesSeed;
+        item.m_count = info.m_count;
+        item.m_enchantmentID = info.m_enchantmentID;
+        item.m_charges = info.m_charges;
+        item.m_reforgeID = info.m_reforgeID;
+        item.m_onUseEnchantmentID = info.m_onUseEnchantmentID;
+        item.m_locked = 0;
+        item.m_socketEnchants[0] = 0;
+        item.m_socketEnchants[1] = 0;
+        item.m_socketEnchants[2] = 0;
+
+        for (uint32_t j = 0; j < info.m_socketEnchant.Count(); j++) {
+            item.m_socketEnchants[info.m_socketEnchant[j].m_socketIndex] = info.m_socketEnchant[j].m_socketEnchantID;
+        }
+
+        if (!g_itemSparseDB.GetRecord(item.m_itemID, requester, &CGGuildBankInfo::GuildBankItemStatsCallback, NULL, false)) {
+            CGGuildBankInfo::m_pendingItemCallbacks++;
+        }
+    }
+
+    CGGuildBankInfo::m_tabInfo[msg->m_tab].m_contentsDirty = 0;
+
+    if (!CGGuildBankInfo::m_banker) {
+        CGGuildBankInfo::SetGuildBanker(CGGuildBankInfo::m_pendingBanker);
+    } else if (!CGGuildBankInfo::m_pendingItemCallbacks) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x009C2400/0x14074F190
+void CGGuildBankInfo::SwapItems(uint32_t tab, uint32_t slot, uint64_t item, uint64_t container, uint32_t containerSlot, int32_t split) {
     if (!CGGuildBankInfo::m_banker || !item) {
         return;
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
     }
 
-    CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
+    CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(item), TYPEMASK_ITEM, __FILE__, __LINE__));
 
     if (!object) {
         return;
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
+    WOWGUID requester = WOWGUID::Make(0);
+    ItemRecSparse* sparse = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, requester, NULL, NULL, false);
 
-    if (!stats) {
+    if (!sparse) {
         return;
     }
 
     if (object->IsBound()) {
-        if (stats->m_bonding == 4) {
+        if (sparse->m_bonding == 4) {
             CGGameUI::DisplayError(ERR_GUILD_BANK_QUEST_ITEM);
         } else {
             CGGameUI::DisplayError(ERR_GUILD_BANK_BOUND_ITEM);
@@ -147,37 +501,37 @@ void CGGuildBankInfo::SwapItems(uint8_t tab, uint32_t slot, WOWGUID item, WOWGUI
         return;
     }
 
-    if ((object->GetItemStaticFlags(0) & 2) || ((object->GetItemStaticFlags(0) & 0x10000) && static_cast<int32_t>(stats->m_duration) > 0) || object->m_item->m_itemFieldDuration || object->IsZoneBound() || object->IsInstanceBound()) {
+    if ((object->GetItemStaticFlags(0) & 0x2) || ((object->GetItemStaticFlags(0) & 0x10000) && sparse->m_duration > 0) || object->m_item->m_itemFieldDuration || object->IsZoneBound() || object->IsInstanceBound()) {
         CGGameUI::DisplayError(ERR_GUILD_BANK_CONJURED_ITEM);
         return;
     }
 
-    if (object->m_item->m_itemFieldFlags & 8) {
+    if (object->m_item->m_itemFieldFlags & 0x8) {
         CGGameUI::DisplayError(ERR_GUILD_BANK_WRAPPED_ITEM);
         return;
     }
 
-    if (container == player->m_obj->m_guid && containerSlot < 23) {
+    if (container == player->m_obj->m_guid.m_guid && containerSlot < 23) {
         CGGameUI::DisplayError(ERR_GUILD_BANK_EQUIPPED_ITEM);
         return;
     }
 
     CDataStore msg;
-    int32_t bankItemId = 0;
-    GuildBankSlotInfo* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
+    int32_t bankItemID = 0;
+    GuildBankItem* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
 
     if (bankItem) {
-        bankItemId = bankItem->m_itemID;
+        bankItemID = bankItem->m_itemID;
     }
 
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_SWAP_ITEMS));
     msg.Put(CGGuildBankInfo::m_banker.m_guid);
     msg.Put(static_cast<uint8_t>(0));
-    msg.Put(tab);
+    msg.Put(static_cast<uint8_t>(tab));
     msg.Put(static_cast<uint8_t>(slot));
-    msg.Put(static_cast<uint32_t>(bankItemId));
+    msg.Put(static_cast<uint32_t>(bankItemID));
 
-    if (!(CGGuildInfo::GetGuildBankTabPermissionsByRankID(tab, player->m_player->m_playerGuildrank) & 2)) {
+    if (!(CGGuildInfo::GetGuildBankTabPermissionsByRankID(tab, player->m_player->m_playerGuildrank) & 0x2)) {
         CGGameUI::DisplayError(ERR_GUILD_PERMISSIONS);
         return;
     }
@@ -188,12 +542,13 @@ void CGGuildBankInfo::SwapItems(uint8_t tab, uint32_t slot, WOWGUID item, WOWGUI
     msg.Put(static_cast<uint8_t>(0));
     msg.Put(bag);
     msg.Put(bagSlot);
+
     int32_t count = 0;
 
     if (object->GetStats() && object->GetStats()->m_stackable) {
-        if (!bankItemId) {
+        if (!bankItemID) {
             count = split;
-        } else if (bankItemId == object->m_obj->m_entryID) {
+        } else if (bankItemID == object->m_obj->m_entryID) {
             count = split;
 
             if (split) {
@@ -216,57 +571,52 @@ void CGGuildBankInfo::SwapItems(uint8_t tab, uint32_t slot, WOWGUID item, WOWGUI
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
 }
 
-// OFFSET: #0x005A5410
-void CGGuildBankInfo::SwapBankItems(uint8_t tab, uint32_t slot, int32_t itemId, uint32_t virtualSlot, int32_t split) {
-    if (!CGGuildBankInfo::m_banker) {
+// OFFSET: 0x009C2740
+void CGGuildBankInfo::SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID, uint32_t virtualSlot, int32_t split) {
+    if (!CGGuildBankInfo::m_banker || !itemID) {
         return;
     }
 
-    int32_t count = 0;
-
-    if (!itemId) {
-        return;
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (!player) {
         return;
     }
 
-    if (!(CGGuildInfo::GetGuildBankTabPermissionsByRankID(tab, player->m_player->m_playerGuildrank) & 2)) {
+    if (!(CGGuildInfo::GetGuildBankTabPermissionsByRankID(tab, player->m_player->m_playerGuildrank) & 0x2)) {
         CGGameUI::DisplayError(ERR_GUILD_PERMISSIONS);
         return;
     }
 
+    int32_t count = 0;
     CDataStore msg;
-    int32_t bankItemId = 0;
-    uint32_t sourceTab = tab;
-    GuildBankSlotInfo* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
+    int32_t bankItemID = 0;
+    GuildBankItem* bankItem = CGGuildBankInfo::GetGuildBankItem(tab, slot);
 
     if (bankItem) {
-        bankItemId = bankItem->m_itemID;
+        bankItemID = bankItem->m_itemID;
     }
 
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_SWAP_ITEMS));
     msg.Put(CGGuildBankInfo::m_banker.m_guid);
     msg.Put(static_cast<uint8_t>(1));
-    msg.Put(tab);
+    msg.Put(static_cast<uint8_t>(tab));
     msg.Put(static_cast<uint8_t>(slot));
-    msg.Put(static_cast<uint32_t>(bankItemId));
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
+    msg.Put(static_cast<uint32_t>(bankItemID));
+
+    WOWGUID requester = WOWGUID::Make(0);
+    ItemRecSparse* sparse = g_itemSparseDB.GetRecord(itemID, requester, NULL, NULL, false);
     int32_t stackable;
 
-    if (!stats || !(stackable = stats->m_stackable)) {
-        if (itemId == bankItemId) {
+    if (!sparse || !(stackable = sparse->m_stackable)) {
+        if (itemID == static_cast<uint32_t>(bankItemID)) {
             CGGameUI::ClearCursor(1, 1);
-            CGGameUI::UnlockVirtualItem(bankItemId, slot + 98 * sourceTab, 0);
+            CGGameUI::UnlockVirtualItem(bankItemID, slot + 98 * tab, 0);
             return;
         }
-    } else if (!bankItemId) {
+    } else if (!bankItemID) {
         count = split;
-    } else if (itemId == bankItemId) {
+    } else if (itemID == static_cast<uint32_t>(bankItemID)) {
         count = split;
 
         if (split) {
@@ -274,26 +624,25 @@ void CGGuildBankInfo::SwapBankItems(uint8_t tab, uint32_t slot, int32_t itemId, 
                 count = stackable - bankItem->m_count;
             }
         } else {
-            int32_t space = stackable - bankItem->m_count;
+            count = stackable - bankItem->m_count;
 
-            if (CGGameUI::GetVirtualItemCount(itemId, virtualSlot, 0) >= space) {
-                count = space;
-            } else {
-                count = CGGameUI::GetVirtualItemCount(itemId, virtualSlot, 0);
+            if (CGGameUI::GetVirtualItemCount(itemID, virtualSlot, 0) < count) {
+                count = CGGameUI::GetVirtualItemCount(itemID, virtualSlot, 0);
             }
         }
     }
 
     uint32_t otherTab = virtualSlot / 98;
+    uint32_t otherSlot = virtualSlot % 98;
 
-    if (otherTab != sourceTab && ((bankItemId && !CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(tab, player->m_player->m_playerGuildrank)) || !CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(otherTab, player->m_player->m_playerGuildrank))) {
+    if (otherTab != tab && ((bankItemID && !CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(tab, player->m_player->m_playerGuildrank)) || !CGGuildInfo::GetNumGuildBankTabItemWithdrawalsByRankID(static_cast<uint8_t>(otherTab), player->m_player->m_playerGuildrank))) {
         CGGameUI::DisplayError(ERR_GUILD_PERMISSIONS);
         return;
     }
 
     msg.Put(static_cast<uint8_t>(otherTab));
-    msg.Put(static_cast<uint8_t>(virtualSlot % 98));
-    msg.Put(static_cast<uint32_t>(itemId));
+    msg.Put(static_cast<uint8_t>(otherSlot));
+    msg.Put(itemID);
     msg.Put(static_cast<uint8_t>(0));
     msg.Put(static_cast<uint32_t>(count));
     msg.Finalize();
@@ -302,488 +651,114 @@ void CGGuildBankInfo::SwapBankItems(uint8_t tab, uint32_t slot, int32_t itemId, 
     FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
 }
 
-// OFFSET: %0x00915D20
-void CGGuildBankInfo::AutoStoreItem(WOWGUID item, WOWGUID container, uint32_t slot) {
+// OFFSET: 0x009C29E0
+void CGGuildBankInfo::AutoStoreItem(uint64_t item, uint64_t container, uint32_t containerSlot) {
     if (CGGuildBankInfo::m_banker) {
-        CGGuildBankInfo::SwapItems(CGGuildBankInfo::m_currentTab, 0xFF, item, container, slot, 0);
+        CGGuildBankInfo::SwapItems(CGGuildBankInfo::m_currentTab, 0xFF, item, container, containerSlot, 0);
     }
 }
 
-// OFFSET: #0x005A56F0
-void CGGuildBankInfo::EnterWorld() {
-    for (int32_t i = 0; i < 6; i++) {
-        CGGuildBankInfo::m_numLogEntries[i] = 0;
+// OFFSET: 0x009C2A20
+bool CGGuildBankInfo::IsTabFiltered(int32_t tab) {
+    if (!CGContainerInfo::IsSearchActive()) {
+        return false;
     }
 
-    CGGuildBankInfo::m_numLogEntries[6] = 0;
-    CGGuildBankInfo::m_numTabs = 0;
-    CGGuildBankInfo::m_banker = WOWGUID::Make(0);
-    CGGuildBankInfo::m_pendingBanker = WOWGUID::Make(0);
-    CGGuildBankInfo::m_logTab = 0xFF;
+    if (tab < 0 || tab >= CGGuildBankInfo::m_numTabs) {
+        return true;
+    }
 
-    for (int32_t tab = 0; tab < 6; tab++) {
-        for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[tab].m_count; i++) {
-            CGGuildBankInfo::m_tabSlots[tab].m_data[i].m_itemID = 0;
+    for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[tab].Count(); i++) {
+        if (static_cast<uint32_t>(tab) >= 8 || i >= CGGuildBankInfo::m_tabSlots[tab].Count()) {
+            continue;
         }
 
-        CGGuildBankInfo::m_guildBankTabInfo[tab].unk_2140 = 1;
-        CGGuildBankInfo::m_tabContentsDirty[tab] = 1;
-    }
+        GuildBankItem* item = &CGGuildBankInfo::m_tabSlots[tab][i];
 
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(MSG_GUILD_BANK_MONEY_WITHDRAWN));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
+        if (!item->m_itemID || !item) {
+            continue;
+        }
 
-// PROVEN: 2a1e5c60 IDENTICAL/NONE
-// OFFSET: 0x009C0350
-void CGGuildBankInfo::GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t* tab, uint32_t* slot) {
-    *tab = virtualSlot / 98;
-    *slot = virtualSlot % 98;
-}
+        WOWGUID requester = WOWGUID::Make(0);
+        ItemRec* rec = g_itemDB.GetRecord(item->m_itemID, requester, NULL, NULL, false);
 
-// OFFSET: #0x005A4C10
-GuildBankSlotInfo* CGGuildBankInfo::GetGuildBankItem(uint32_t tab, uint32_t slot) {
-    if (tab >= 6 || slot >= CGGuildBankInfo::m_tabSlots[tab].m_count) {
-        return NULL;
-    }
-
-    GuildBankSlotInfo* info = &CGGuildBankInfo::m_tabSlots[tab].m_data[slot];
-    return info->m_itemID ? info : NULL;
-}
-
-// OFFSET: #0x005A4C40
-int32_t CGGuildBankInfo::IsLocked(int32_t itemId, uint32_t virtualSlot) {
-    uint32_t tab = virtualSlot / 98;
-    uint32_t slot = virtualSlot % 98;
-
-    if (tab >= 6 || slot >= CGGuildBankInfo::m_tabSlots[tab].m_count) {
-        return 0;
-    }
-
-    GuildBankSlotInfo* info = &CGGuildBankInfo::m_tabSlots[tab].m_data[slot];
-
-    if (itemId != info->m_itemID || !info->m_locked) {
-        return 0;
-    }
-
-    return info->m_locked;
-}
-
-// OFFSET: #0x005A4C90
-void CGGuildBankInfo::Lock(int32_t itemId, uint32_t virtualSlot) {
-    uint32_t tab = virtualSlot / 98;
-    uint32_t slot = virtualSlot % 98;
-
-    if (tab < 6 && slot < CGGuildBankInfo::m_tabSlots[tab].m_count) {
-        GuildBankSlotInfo* info = &CGGuildBankInfo::m_tabSlots[tab].m_data[slot];
-
-        if (itemId == info->m_itemID) {
-            info->m_locked = 1;
+        if (rec && !ItemRecIsFiltered(rec, item->m_randomPropertiesID)) {
+            return false;
         }
     }
+
+    return true;
 }
 
-// OFFSET: #0x005A4CE0
-void CGGuildBankInfo::Unlock(int32_t itemId, uint32_t virtualSlot) {
-    uint32_t tab = virtualSlot / 98;
-    uint32_t slot = virtualSlot % 98;
+// OFFSET: 0x009C3850
+bool CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler(ClientGuildBankLogQueryResults* msg) {
+    int32_t now = _time32(NULL);
+    uint32_t tab = msg->m_tab;
 
-    if (tab < 6 && slot < CGGuildBankInfo::m_tabSlots[tab].m_count) {
-        GuildBankSlotInfo* info = &CGGuildBankInfo::m_tabSlots[tab].m_data[slot];
-
-        if (itemId == info->m_itemID) {
-            info->m_locked = 0;
-        }
-    }
-}
-
-// OFFSET: #0x005A7760
-void CGGuildBankInfo::ClearAllTabs() {
-    for (uint32_t i = 0; i < 6; i++) {
-        CGGuildBankInfo::m_tabSlots[i].Clear();
-        CGGuildBankInfo::m_guildBankTabInfo[i].unk_2140 = 1;
-        CGGuildBankInfo::m_tabContentsDirty[i] = 1;
-    }
-
-    CGGuildBankInfo::m_numTabs = 0;
-    CGGuildBankInfo::m_currentTab = 0;
-}
-
-// OFFSET: #0x005A7830
-void CGGuildBankInfo::ShutdownGame() {
-    ClientServices::ClearMessageHandler(SMSG_GUILD_BANK_QUERY_RESULTS);
-    ClientServices::ClearMessageHandler(MSG_GUILD_BANK_LOG_QUERY);
-    ClientServices::ClearMessageHandler(MSG_GUILD_BANK_MONEY_WITHDRAWN);
-    ClientServices::ClearMessageHandler(MSG_QUERY_GUILD_BANK_TEXT);
-    CGGuildBankInfo::ClearAllTabs();
-}
-
-// OFFSET: #0x005A47D0
-static void Signal_EVENT_GUILDBANKLOG_UPDATE(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (!s_pendingLogQueries || !--s_pendingLogQueries) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKLOG_UPDATE, NULL);
-    }
-}
-
-// OFFSET: #0x005A4800
-int32_t Packet_MSG_GUILD_BANK_LOG_QUERY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint32_t now = static_cast<uint32_t>(::time(NULL));
-    uint8_t tab;
-    uint8_t count;
-    msg->Get(tab);
-    msg->Get(count);
-
-    if (s_pendingLogQueries && CGGuildBankInfo::m_logTab < 7) {
-        s_pendingLogQueries = 0;
+    if (CGGuildBankInfo::m_pendingLogCallbacks && CGGuildBankInfo::m_logTab < 9) {
+        CGGuildBankInfo::m_pendingLogCallbacks = 0;
 
         for (uint32_t i = 0; i < 25; i++) {
-            GuildBankLogEntry* entry = &CGGuildBankInfo::m_log[CGGuildBankInfo::m_logTab][i];
-            g_nameDBCache.CancelCallback(entry->m_guid.m_guid, Signal_EVENT_GUILDBANKLOG_UPDATE, NULL);
+            g_nameDBCache.CancelCallback(CGGuildBankInfo::m_log[CGGuildBankInfo::m_logTab][i].m_playerGUID, &CGGuildBankInfo::GuildBankLogCallback, NULL);
 
-            if (entry->m_itemID) {
-                g_itemDBCache.CancelCallback(entry->m_itemID, Signal_EVENT_GUILDBANKLOG_UPDATE, NULL);
+            int32_t itemID = CGGuildBankInfo::m_log[CGGuildBankInfo::m_logTab][i].m_itemID;
+
+            if (itemID) {
+                g_itemSparseDB.CancelCallback(itemID, &CGGuildBankInfo::GuildBankLogCallback, NULL);
             }
         }
     }
 
     CGGuildBankInfo::m_logTab = tab;
 
-    for (uint32_t i = 0; i < count; i++) {
-        GuildBankLogEntry* entry = &CGGuildBankInfo::m_log[tab][i];
-        uint8_t type;
-        msg->Get(type);
-        entry->m_type = type;
-        msg->Get(entry->m_guid.m_guid);
-        entry->m_index = i;
+    for (uint32_t i = 0; i < msg->m_entry.Count(); i++) {
+        JamGuildBankLogEntry& entry = msg->m_entry[i];
+        GuildBankLogEntry& log = CGGuildBankInfo::m_log[tab][i];
 
-        if (entry->m_type == 4 || entry->m_type == 5 || entry->m_type == 6 || entry->m_type == 8 || entry->m_type == 9) {
-            msg->Get(entry->m_money);
+        log.m_type = entry.m_entryType;
+        log.m_playerGUID = *reinterpret_cast<uint64_t*>(entry.m_playerGUID);
+        log.m_time = now - entry.m_timeOffset;
+        log.m_money = entry.m_hasMoney ? entry.m_money : 0;
+
+        if (entry.m_hasItemID) {
+            log.m_itemID = entry.m_itemID;
+
+            if (!g_itemSparseDB.GetRecord(entry.m_itemID, reinterpret_cast<WOWGUID&>(log.m_playerGUID), &CGGuildBankInfo::GuildBankLogCallback, NULL, false)) {
+                CGGuildBankInfo::m_pendingLogCallbacks++;
+            }
         } else {
-            msg->Get(*reinterpret_cast<uint32_t*>(&entry->m_itemID));
-            msg->Get(entry->m_count);
-
-            if (entry->m_type == 3 || entry->m_type == 7) {
-                uint8_t otherTab;
-                msg->Get(otherTab);
-                entry->m_otherTab = otherTab;
-            }
-
-            if (!g_itemDBCache.GetRecord(entry->m_itemID, entry->m_guid, Signal_EVENT_GUILDBANKLOG_UPDATE, NULL, false)) {
-                s_pendingLogQueries++;
-            }
+            log.m_itemID = 0;
         }
 
-        if (!g_nameDBCache.GetRecord(entry->m_guid.m_guid, entry->m_guid, Signal_EVENT_GUILDBANKLOG_UPDATE, NULL, false)) {
-            s_pendingLogQueries++;
-        }
+        log.m_count = entry.m_hasCount ? entry.m_count : 0;
+        log.m_otherTab = entry.m_hasOtherTab ? entry.m_otherTab : 0;
 
-        uint32_t age;
-        msg->Get(age);
-        entry->m_time = now - age;
+        uint64_t guid = log.m_playerGUID;
+
+        if (!(guid & 0xF000000000000000ull) && (guid & 0xF07FFFFFFFFFFFFFull) && !g_nameDBCache.GetRecord(guid, reinterpret_cast<WOWGUID&>(log.m_playerGUID), &CGGuildBankInfo::GuildBankLogCallback, NULL, false)) {
+            CGGuildBankInfo::m_pendingLogCallbacks++;
+        }
     }
 
-    CGGuildBankInfo::m_numLogEntries[tab] = count;
+    if (msg->m_hasWeeklyBonusMoney) {
+        CGGuildBankInfo::m_bonusDepositMoney = msg->m_weeklyBonusMoney;
+    }
 
-    if (CGGuildBankInfo::m_banker && !s_pendingLogQueries) {
+    CGGuildBankInfo::m_numLogEntries[tab] = msg->m_entry.Count();
+
+    if (CGGuildBankInfo::m_banker && !CGGuildBankInfo::m_pendingLogCallbacks) {
         FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKLOG_UPDATE, NULL);
     }
 
-    return 1;
+    return true;
 }
 
-// OFFSET: #0x005A4AB0
-int32_t Packet_MSG_GUILD_BANK_MONEY_WITHDRAWN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_remainingWithdrawMoney));
-    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_WITHDRAWMONEY, NULL);
-
-    return 1;
-}
-
-// OFFSET: #0x005A47A0
-static void Signal_EVENT_GUILDBANKBAGSLOTS_CHANGED(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (!s_pendingItemQueries || !--s_pendingItemQueries) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
-    }
-}
-
-// OFFSET: #0x005A4AE0
-int32_t Packet_MSG_QUERY_GUILD_BANK_TEXT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint8_t tab = 0;
-    char text[8192];
-    msg->Get(tab);
-    msg->GetString(text, sizeof(text));
-    ScrubString(text, CGGuildBankInfo::m_guildBankTabInfo[tab].m_text, 2048, sizeof(CGGuildBankInfo::m_guildBankTabInfo[tab].m_text), 0);
-    FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", tab + 1);
-    return 1;
-}
-
-// OFFSET: #0x005A4B60
-void CGGuildBankInfo::ClearGuildTabList(uint32_t tab) {
-    if (tab >= 6) {
-        return;
-    }
-
-    for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[tab].m_count; i++) {
-        GuildBankSlotInfo& slot = CGGuildBankInfo::m_tabSlots[tab].m_data[i];
-        slot.m_itemID = 0;
-        slot.m_randomPropertyID = 0;
-        slot.m_suffixFactor = 0;
-        slot.m_count = 0;
-        slot.m_enchant = 0;
-        slot.m_spellCharges = 0;
-        slot.m_enchants[0] = 0;
-        slot.m_enchants[1] = 0;
-        slot.m_enchants[2] = 0;
-        slot.m_locked = 0;
-        slot.m_flags = 0;
-    }
-}
-
-// OFFSET: #0x005A5800
-void SendGuildBankQueryTabOpcode(uint8_t tab) {
-    if (!CGGuildBankInfo::m_banker) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_QUERY_TAB));
-    msg.Put(CGGuildBankInfo::m_banker.m_guid);
-    msg.Put(tab);
-    msg.Put(static_cast<uint8_t>(CGGuildBankInfo::m_guildBankTabInfo[tab].unk_2140 != 0));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A58C0
-void CGGuildBankInfo::QueryGuildBankLog(uint8_t tab) {
-    if (!CGGuildBankInfo::m_banker) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(MSG_GUILD_BANK_LOG_QUERY));
-    msg.Put(tab);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A5940
-void CGGuildBankInfo::QueryGuildBankText(uint8_t tab) {
-    if (!CGGuildBankInfo::m_banker || !CGGuildBankInfo::m_tabContentsDirty[tab]) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TEXT, "%d", tab + 1);
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(MSG_QUERY_GUILD_BANK_TEXT));
-    msg.Put(tab);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-    CGGuildBankInfo::m_tabContentsDirty[tab] = 0;
-}
-
-// OFFSET: #0x005A5A00
-void CGGuildBankInfo::SetTabInfo(uint8_t tab, const char* name, const char* icon) {
-    char scrubbed[64];
-    ScrubString(name, scrubbed, 16, sizeof(scrubbed), 1);
-    int32_t error = ValidateGuildBankTabName(s_locale, scrubbed);
-
-    if (error) {
-        CGGameUI::DisplayNameError(error);
-        return;
-    }
-
-    if (!CGGuildBankInfo::m_banker || tab >= CGGuildBankInfo::m_numTabs) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_UPDATE_TAB));
-    msg.Put(CGGuildBankInfo::m_banker.m_guid);
-    msg.Put(tab);
-    msg.PutString(scrubbed);
-    msg.PutString(icon);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A5B00
-void CGGuildBankInfo::DepositMoney(uint32_t amount) {
-    if (!CGGuildBankInfo::m_banker) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_DEPOSIT_MONEY));
-    msg.Put(CGGuildBankInfo::m_banker.m_guid);
-    msg.Put(amount);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A5BA0
-void CGGuildBankInfo::WithdrawMoney(uint32_t amount) {
-    if (!CGGuildBankInfo::m_banker) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_WITHDRAW_MONEY));
-    msg.Put(CGGuildBankInfo::m_banker.m_guid);
-    msg.Put(amount);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A5C40
-void CGGuildBankInfo::SetGuildBankText(uint8_t tab, const char* text) {
-    if (!CGGuildBankInfo::m_banker || tab >= CGGuildBankInfo::m_numTabs) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_SET_TAB_TEXT));
-    msg.Put(tab);
-    msg.PutString(text);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x005A7250
-int32_t Packet_SMSG_GUILD_BANK_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
-    uint64_t money;
-    uint8_t tab;
-    uint8_t hasTabInfo;
-    msg->Get(money);
-    msg->Get(tab);
-    msg->Get(CGGuildBankInfo::m_withdrawMoneyRemaining);
-    msg->Get(hasTabInfo);
-
-    if (s_pendingItemQueries) {
-        s_pendingItemQueries = 0;
-
-        for (uint32_t i = 0; i < CGGuildBankInfo::m_tabSlots[tab].m_count; i++) {
-            g_nameDBCache.CancelCallback(*reinterpret_cast<uint64_t*>(&CGGuildBankInfo::m_tabSlots[tab].m_data[i]), Signal_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
-        }
-    }
-
-    if (money >= 0x7FFFFFFFFFFFFull) {
-        money = 0x7FFFFFFFFFFFFull;
-    }
-
-    CGGuildBankInfo::m_money = money;
-
-    if (!CGGuildBankInfo::m_tabSlots[tab].m_count) {
-        CGGuildBankInfo::m_tabSlots[tab].SetCount(98);
-        CGGuildBankInfo::ClearGuildTabList(tab);
-    }
-
-    if (hasTabInfo && !tab) {
-        msg->Get(CGGuildBankInfo::m_numTabs);
-
-        for (uint32_t i = 0; i < CGGuildBankInfo::m_numTabs; i++) {
-            char name[64];
-            char icon[256];
-            msg->GetString(name, sizeof(name));
-            msg->GetString(icon, sizeof(icon));
-            ScrubString(name, CGGuildBankInfo::m_guildBankTabInfo[i].m_name, 16, sizeof(name), 1);
-            SStrCopy(CGGuildBankInfo::m_guildBankTabInfo[i].m_icon, icon, STORM_MAX_STR);
-            FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANK_UPDATE_TABS, NULL);
-        }
-
-        CGGuildBankInfo::ClearGuildTabList(tab);
-    }
-
-    uint8_t numSlots;
-    msg->Get(numSlots);
-    int32_t cursorId = 0;
-    int32_t cursorSlot = 0;
-
-    if (CGGameUI::m_cursorItemType == 11) {
-        CGGameUI::GetCursorVirtualItem(cursorId, cursorSlot);
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return 0;
-    }
-
-    WOWGUID playerGuid = player->m_obj->m_guid;
-
-    for (uint32_t i = 0; i < numSlots; i++) {
-        uint8_t slotIndex;
-        msg->Get(slotIndex);
-
-        if (cursorId && tab == static_cast<uint32_t>(cursorSlot) / 98 && slotIndex == static_cast<uint32_t>(cursorSlot) % 98) {
-            CGGameUI::ClearCursor(1, 1);
-            CGGameUI::UnlockVirtualItem(cursorId, cursorSlot, 0);
-        }
-
-        msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_itemID));
-        GuildBankSlotInfo* slot = &CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex];
-
-        if (!slot->m_itemID) {
-            continue;
-        }
-
-        msg->Get(slot->m_flags);
-        msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_randomPropertyID));
-        slot = &CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex];
-
-        if (slot->m_randomPropertyID) {
-            msg->Get(slot->m_suffixFactor);
-        } else {
-            slot->m_suffixFactor = 0;
-        }
-
-        msg->Get(reinterpret_cast<uint32_t&>(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_count));
-        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_enchant);
-        msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_spellCharges);
-        uint8_t numEnchants;
-        msg->Get(numEnchants);
-        slot = &CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex];
-        slot->m_enchants[0] = 0;
-        slot->m_enchants[1] = 0;
-        slot->m_enchants[2] = 0;
-
-        for (uint32_t j = 0; j < numEnchants; j++) {
-            uint8_t enchantSlot;
-            msg->Get(enchantSlot);
-            msg->Get(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_enchants[enchantSlot]);
-        }
-
-        CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_locked = 0;
-
-        if (!g_itemDBCache.GetRecord(CGGuildBankInfo::m_tabSlots[tab].m_data[slotIndex].m_itemID, playerGuid, Signal_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL, false)) {
-            s_pendingItemQueries++;
-        }
-    }
-
-    CGGuildBankInfo::m_guildBankTabInfo[tab].unk_2140 = 0;
-
-    if (CGGuildBankInfo::m_banker == WOWGUID()) {
-        if (CGGuildBankInfo::m_pendingBanker == WOWGUID()) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_CLOSED, NULL);
-            CGGameUI::ClearInteractTarget(CGGuildBankInfo::m_banker, 0);
-            CGGuildBankInfo::m_banker = WOWGUID();
-            CGGuildBankInfo::m_pendingBanker = WOWGUID();
-            return 1;
-        }
-
-        CGGameUI::SetInteractTarget(CGGuildBankInfo::m_pendingBanker);
-        CGGuildBankInfo::m_banker = CGGuildBankInfo::m_pendingBanker;
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKFRAME_OPENED, NULL);
-    } else if (!s_pendingItemQueries) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_GUILDBANKBAGSLOTS_CHANGED, NULL);
-    }
-
-    return 1;
-}
-
-// OFFSET: %0x009133D0
-void CGGuildBankInfo::SetTextUpdate(uint8_t tab, int32_t update) {
-    CGGuildBankInfo::m_tabContentsDirty[tab] = update;
+// OFFSET: 0x009C3A70/0x140750DA0
+void CGGuildBankInfo::InitializeGame() {
+    ClientGuildBankQueryResults::s_handler = &CGGuildBankInfo::ClientGuildBankQueryResultsHandler;
+    ClientGuildBankLogQueryResults::s_handler = &CGGuildBankInfo::ClientGuildBankLogQueryResultsHandler;
+    ClientGuildBankMoneyWithdrawn::s_handler = &CGGuildBankInfo::ClientGuildBankMoneyWithdrawnHandler;
+    ClientGuildBankTextQueryResult::s_handler = &CGGuildBankInfo::ClientGuildBankTextQueryResultHandler;
+    CGGuildBankInfo::m_numTabs = 0;
+    memset(CGGuildBankInfo::m_tabInfo, 0, sizeof(CGGuildBankInfo::m_tabInfo));
 }

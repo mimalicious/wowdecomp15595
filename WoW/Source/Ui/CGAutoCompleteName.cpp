@@ -14,6 +14,12 @@ TSList<AUTOCOMPLETE_NAMENODE, TSGetLink<AUTOCOMPLETE_NAMENODE>> CGAutoCompleteNa
 // STATIC: #0x00BEB994
 bool CGAutoCompleteName::s_resortNamesOnRecency;
 
+// STATIC: 0x00F60FDC
+bool CGAutoCompleteName::s_batchUpdate;
+
+// STATIC: 0x00F60FDD
+bool CGAutoCompleteName::s_resortPending;
+
 // STATIC: #0x00BEB995
 bool CGAutoCompleteName::s_whenEditingFromCenter;
 

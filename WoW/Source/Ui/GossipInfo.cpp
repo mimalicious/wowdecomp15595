@@ -27,7 +27,7 @@ GossipQuestInfo CGGossipInfo::m_quests[32];
 // STATIC: #0x00C00BE8
 int32_t CGGossipInfo::m_textPending;
 
-// STATIC: #0x00C016F8
+// STATIC: 0x00F75E40
 uint32_t CGGossipInfo::m_gossipID;
 
 // STATIC: 0x00F75E38
@@ -262,6 +262,13 @@ int32_t Packet_SMSG_GOSSIP_MESSAGE(void* param, NETMESSAGE msgId, uint32_t time,
 
     CGGossipInfo::SetGossipText(textId);
     return 1;
+}
+
+// OFFSET: 0x009E0F70/0x140777DC0
+void CGGossipInfo::ClearGossip() {
+    CGGossipInfo::m_gossip = WOWGUID::Make(0);
+    CGGossipInfo::m_gossipID = 0;
+    FrameScript_SignalEvent(SCRIPT_EVENT_GOSSIP_CLOSED, NULL);
 }
 
 // PROVEN: 99747931 IDENTICAL/NONE

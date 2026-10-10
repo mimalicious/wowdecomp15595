@@ -200,7 +200,7 @@ static int32_t Script_CalendarDefaultGuildFilter(lua_State* L) {
         double level = s_expansionMaxLevels[ClientServices::Connection()->m_accountExpansion];
         lua_pushnumber(L, level);
         lua_pushnumber(L, level);
-        lua_pushnumber(L, CGGuildInfo::m_numRanks);
+        lua_pushnumber(L, CGGuildInfo::m_numUsedRanks);
     } else {
         lua_pushnumber(L, 0.0);
         lua_pushnumber(L, 0.0);

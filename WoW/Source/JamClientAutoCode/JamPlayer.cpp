@@ -1,5 +1,6 @@
 #include "WoW/Source/JamClientAutoCode/JamPlayer.h"
 #include "Engine/Source/Base/CDataStore.h"
+#include <cstring>
 
 // PROVEN: 9ee87252 IDENTICAL/NONE
 // OFFSET: [0x00670580/0x140317EC0]
@@ -462,4 +463,64 @@ PlayerClearTradeItem::~PlayerClearTradeItem() {
 void PlayerClearTradeItem::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7018));
     msg->Put(this->m_tradeSlot);
+}
+
+// PROVEN: cc5a9340 IDENTICAL/NONE
+// OFFSET: 0x006743E0/0x14031C950
+PlayerRequestGuildPartyState::PlayerRequestGuildPartyState(uint64_t guildGUID) {
+    memcpy(this->m_guildGUID, &guildGUID, sizeof(this->m_guildGUID));
+}
+
+// PROVEN: 4fe4cb77 IDENTICAL/NONE
+// OFFSET: 0x006706F0/0x1403180C0
+PlayerRequestGuildPartyState::~PlayerRequestGuildPartyState() {
+}
+
+// PROVEN: 1b1d1bbe IDENTICAL/NONE
+// OFFSET: 0x00674D50
+void PlayerRequestGuildPartyState::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3900));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_guildGUID[0] != 0);
+    bits.WriteBit(this->m_guildGUID[6] != 0);
+    bits.WriteBit(this->m_guildGUID[7] != 0);
+    bits.WriteBit(this->m_guildGUID[3] != 0);
+    bits.WriteBit(this->m_guildGUID[5] != 0);
+    bits.WriteBit(this->m_guildGUID[1] != 0);
+    bits.WriteBit(this->m_guildGUID[2] != 0);
+    bits.WriteBit(this->m_guildGUID[4] != 0);
+    bits.Flush();
+
+    if (this->m_guildGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[6] ^ 1));
+    }
+
+    if (this->m_guildGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[3] ^ 1));
+    }
+
+    if (this->m_guildGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[2] ^ 1));
+    }
+
+    if (this->m_guildGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[1] ^ 1));
+    }
+
+    if (this->m_guildGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[5] ^ 1));
+    }
+
+    if (this->m_guildGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[0] ^ 1));
+    }
+
+    if (this->m_guildGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[7] ^ 1));
+    }
+
+    if (this->m_guildGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_guildGUID[4] ^ 1));
+    }
 }

@@ -3,90 +3,92 @@
 
 #include <cstdint>
 #include "Engine/Source/Storm/H/stpl.h"
-#include "WoW/Source/Net/Types.h"
+#include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "WoW/Source/Object/WGUID.h"
 
-class CDataStore;
 struct lua_State;
 
 struct GuildBankTabInfo {
     /* 0000 */ char m_name[64];
     /* 0040 */ char m_icon[256];
     /* 0140 */ char m_text[8192];
-    /* 2140 */ int32_t unk_2140;
+    /* 2140 */ int32_t m_contentsDirty;
 };
 
 struct GuildBankLogEntry {
-    /* 0000 */ uint32_t m_type;
+    /* 0000 */ int32_t m_type;
     /* 0004 */ uint32_t unk_0004;
-    /* 0008 */ WOWGUID m_guid;
+    /* 0008 */ uint64_t m_playerGUID;
     /* 0010 */ int32_t m_itemID;
-    /* 0014 */ uint32_t m_count;
-    /* 0018 */ uint32_t m_money;
-    /* 001C */ uint32_t m_otherTab;
-    /* 0020 */ uint32_t m_index;
-    /* 0024 */ uint32_t m_time;
+    /* 0014 */ int32_t m_count;
+    /* 0018 */ uint64_t m_money;
+    /* 0020 */ int32_t m_otherTab;
+    /* 0024 */ int32_t m_time;
 };
 
-struct GuildBankSlotInfo {
+struct GuildBankItem {
     /* 0000 */ int32_t m_itemID;
-    /* 0004 */ uint32_t m_suffixFactor;
-    /* 0008 */ int32_t m_randomPropertyID;
+    /* 0004 */ int32_t m_randomPropertiesSeed;
+    /* 0008 */ int32_t m_randomPropertiesID;
     /* 000C */ int32_t m_count;
-    /* 0010 */ uint32_t m_enchant;
-    /* 0014 */ uint32_t m_spellCharges;
-    /* 0018 */ uint32_t m_enchants[3];
-    /* 0024 */ uint32_t m_reforgeEnchant;
-    /* 0028 */ uint32_t m_engineeringEnchant;
+    /* 0010 */ int32_t m_enchantmentID;
+    /* 0014 */ int32_t m_charges;
+    /* 0018 */ int32_t m_socketEnchants[3];
+    /* 0024 */ int32_t m_reforgeID;
+    /* 0028 */ int32_t m_onUseEnchantmentID;
     /* 002C */ int32_t m_locked;
     /* 0030 */ uint32_t m_flags;
 };
 
-int32_t Packet_SMSG_GUILD_BANK_LIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_MSG_GUILD_BANK_LOG_QUERY(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-void SendGuildBankQueryTabOpcode(uint8_t tab);
-int32_t Packet_MSG_GUILD_BANK_MONEY_WITHDRAWN(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_MSG_QUERY_GUILD_BANK_TEXT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-
 class CGGuildBankInfo {
     public:
-    static void UpdateTabInfo(uint8_t tab, const char* name, const char* icon);
-    static void SetTextUpdate(uint8_t tab, int32_t update);
-    static void ClearGuildTabList(uint32_t tab);
-    static uint32_t m_withdrawMoneyRemaining;
+    static int32_t m_textDirty[8];
+    static GuildBankLogEntry m_log[9][25];
+    static GuildBankTabInfo m_tabInfo[8];
+    static int32_t m_numLogEntries[9];
+    static int32_t m_numTabs;
     static WOWGUID m_banker;
     static WOWGUID m_pendingBanker;
-    static void AutoStoreItem(WOWGUID item, WOWGUID container, uint32_t slot);
-    static uint8_t m_numTabs;
-    static GuildBankTabInfo m_guildBankTabInfo[6];
-    static uint8_t m_currentTab;
-    static int32_t m_remainingWithdrawMoney;
+    static int32_t m_currentTab;
+    static int32_t m_pendingItemCallbacks;
     static uint64_t m_money;
-    static int32_t m_numLogEntries[7];
-    static uint8_t m_logTab;
-    static GuildBankLogEntry m_log[7][25];
-    static int32_t m_tabContentsDirty[6];
-    static TSGrowableArray<GuildBankSlotInfo> m_tabSlots[6];
+    static uint64_t m_bonusDepositMoney;
+    static int32_t m_pendingLogCallbacks;
+    static int32_t m_remainingWithdrawals;
+    static uint64_t m_remainingWithdrawMoney;
+    static TSGrowableArray<GuildBankItem> m_tabSlots[8];
+    static uint32_t m_logTab;
 
     static void SetGuildBanker(const WOWGUID& banker);
-    static void EnterWorld();
-    static void InitializeGame();
-    static void ShutdownGame();
-    static void ClearAllTabs();
-    static void Unlock(int32_t itemId, uint32_t virtualSlot);
-    static void GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t* tab, uint32_t* slot);
-    static GuildBankSlotInfo* GetGuildBankItem(uint32_t tab, uint32_t slot);
-    static int32_t IsLocked(int32_t itemId, uint32_t virtualSlot);
-    static void Lock(int32_t itemId, uint32_t virtualSlot);
+    static void GetTabAndSlotFromVirtual(uint32_t virtualSlot, uint32_t& tab, uint32_t& slot);
+    static void SetTextUpdate(uint32_t tab, int32_t update);
+    static void GuildBankItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
+    static void GuildBankLogCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
+    static bool ClientGuildBankMoneyWithdrawnHandler(ClientGuildBankMoneyWithdrawn* msg);
+    static bool ClientGuildBankTextQueryResultHandler(ClientGuildBankTextQueryResult* msg);
+    static void ClearGuildTabList(uint32_t tab);
     static void BuyGuildBankTab();
-    static void SwapItems(uint8_t tab, uint32_t slot, WOWGUID item, WOWGUID container, uint32_t containerSlot, int32_t split);
-    static void SwapBankItems(uint8_t tab, uint32_t slot, int32_t itemId, uint32_t virtualSlot, int32_t split);
-    static void QueryGuildBankLog(uint8_t tab);
-    static void QueryGuildBankText(uint8_t tab);
-    static void SetTabInfo(uint8_t tab, const char* name, const char* icon);
-    static void DepositMoney(uint32_t amount);
-    static void WithdrawMoney(uint32_t amount);
-    static void SetGuildBankText(uint8_t tab, const char* text);
+    static void UpdateTabInfo(uint32_t tab, char* name, char* icon);
+    static GuildBankItem* GetGuildBankItem(uint32_t tab, uint32_t slot);
+    static int32_t IsLocked(int32_t itemID, uint32_t virtualSlot);
+    static void Lock(int32_t itemID, uint32_t virtualSlot);
+    static void Unlock(int32_t itemID, uint32_t virtualSlot);
+    static void EnterWorld();
+    static void QueryGuildBankTab(uint32_t tab);
+    static void QueryGuildBankText(uint32_t tab);
+    static void SetTabInfo(uint32_t tab, const char* name, const char* icon);
+    static void DepositMoney(int64_t amount);
+    static void WithdrawMoney(int64_t amount);
+    static void SetGuildBankText(uint32_t tab, const char* text);
+    static void ClearContents();
+    static void ShutdownGame();
+    static bool ClientGuildBankQueryResultsHandler(ClientGuildBankQueryResults* msg);
+    static void SwapItems(uint32_t tab, uint32_t slot, uint64_t item, uint64_t container, uint32_t containerSlot, int32_t split);
+    static void SwapBankItems(uint32_t tab, uint32_t slot, uint32_t itemID, uint32_t virtualSlot, int32_t split);
+    static void AutoStoreItem(uint64_t item, uint64_t container, uint32_t containerSlot);
+    static bool IsTabFiltered(int32_t tab);
+    static bool ClientGuildBankLogQueryResultsHandler(ClientGuildBankLogQueryResults* msg);
+    static void InitializeGame();
 };
 
 void GuildBankRegisterScriptFunctions();

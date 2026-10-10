@@ -625,7 +625,7 @@ int32_t ValidateGuildName(uint32_t language, const char* name) {
     return result;
 }
 
-// OFFSET: %0x004ED760
+// OFFSET: 0x004E7900
 int32_t ValidateGuildBankTabName(uint32_t language, const char* name) {
     uint16_t allowed[12] = { 32, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 0 };
     uint32_t length;

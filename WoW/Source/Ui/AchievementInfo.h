@@ -57,6 +57,7 @@ int32_t Packet_SMSG_QUERY_QUESTS_COMPLETED_RESPONSE(void* param, NETMESSAGE msgI
 class CGAchievementInfo {
     public:
     static void EnterWorld();
+    static void ClearGuildInfo();
     static void LeaveWorld();
     static void SaveTrackedAchievements();
     static int32_t m_showAchievementUI;

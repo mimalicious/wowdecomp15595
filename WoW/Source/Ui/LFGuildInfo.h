@@ -5,6 +5,7 @@ class CGLFGuildInfo {
     public:
     static void ShutdownGame();
     static void InitializeGame();
+    static void ClearRecruitmentSettings(bool signal);
 };
 
 #endif

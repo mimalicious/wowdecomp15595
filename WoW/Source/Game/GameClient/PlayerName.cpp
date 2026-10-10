@@ -32,7 +32,7 @@
 #include "WoW/Source/WorldClient/World.h"
 #include "Engine/Source/Os/TimeManager.h"
 
-// STATIC: #0x00D380A0
+// STATIC: 0x00DC70CC
 uint32_t s_nameMask;
 
 // STATIC: #0x00D380A4
@@ -170,6 +170,11 @@ void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc) {
 // OFFSET: 0x004E0530/0x1401208D0
 bool PlayerNameShowing(PLAYERNAMEDESC* desc) {
     return desc && (desc->m_flags & 0x8);
+}
+
+// OFFSET: 0x004E0550/0x1401208F0
+bool PlayerNameShouldShowGuildTitle() {
+    return (s_nameMask >> 15) & 1;
 }
 
 // OFFSET: #0x007E5580

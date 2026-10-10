@@ -3440,7 +3440,7 @@ static int32_t Script_UnitIsInMyGuild(lua_State* L) {
 
     if (name) {
         for (uint32_t i = 0; i < CGGuildInfo::m_numMembers; i++) {
-            GuildMemberInfo* member = i < CGGuildInfo::m_numMembers ? CGGuildInfo::m_roster.m_data[i] : NULL;
+            GuildMemberInfo* member = i < CGGuildInfo::m_numMembers ? CGGuildInfo::m_members.m_data[i] : NULL;
 
             if (!SStrCmpUTF8I(name, member->m_name, STORM_MAX_STR)) {
                 lua_pushnumber(L, 1.0);

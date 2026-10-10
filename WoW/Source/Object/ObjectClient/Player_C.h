@@ -218,7 +218,9 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 2108 */ uint32_t m_pendingItemCacheCount;
     /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
     /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
-    /* 212C */ uint32_t unk_212C [17];
+    /* 212C */ uint32_t unk_212C [11];
+    /* 2158 */ uint64_t m_guildMaxDailyXP;
+    /* 2160 */ uint32_t unk_2160 [4];
     /* 2170 */ TSList<void> unk_2170;
     /* 217C */ uint32_t unk_217C;
     /* 2180 */ WOWGUID m_lootTarget;
@@ -327,6 +329,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void GetPendingEnchantTime(CGItem_C* item);
     int32_t GetPlayedTime() const;
     int32_t GetPVPFactionIndex() const;
+    uint64_t GetGuildMaxDailyXP() const;
     static int32_t GetPVPFactionIndex(uint8_t raceID);
     static void GetSpellTextureBlobName(const ChrClassesRec* rec, char* name);
     const char* GetPVPRankString(int32_t rank) const;

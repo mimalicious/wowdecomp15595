@@ -4101,7 +4101,7 @@ void CGGameUI::EnterWorld() {
         CGLCD::Login();
     }
 
-    CGGuildInfo::ResetEnterWorld();
+    CGRuneInfo::EnterWorld();
     FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_ENTERING_WORLD, NULL);
     CGMinimapFrame::EnterWorld();
     CGChat::EnterWorld();
@@ -6078,7 +6078,7 @@ int32_t CGGameUI::GetVirtualItemCount(int32_t id, uint32_t virtualSlot, int32_t 
 
     uint32_t tab = 0;
     uint32_t slot = 0;
-    CGGuildBankInfo::GetTabAndSlotFromVirtual(virtualSlot, &tab, &slot);
+    CGGuildBankInfo::GetTabAndSlotFromVirtual(virtualSlot, tab, slot);
     return CGGuildBankInfo::GetGuildBankItem(tab, slot)->m_count;
 }
 
@@ -8108,7 +8108,7 @@ void CGGameUI::SetInstanceLockTime(uint32_t time, uint32_t a2, uint32_t a3) {
 
 // OFFSET: 0x008C5D20
 void CGGameUI::InvalidatePlayer(const WOWGUID& guid) {
-    CGGuildInfo::InvalidatePlayer(guid);
+    CGGuildInfo::InvalidatePlayer(guid.m_guid);
     CGCalendar::InvalidatePlayer(guid);
     CGAutoCompleteName::RefreshName(guid);
 }

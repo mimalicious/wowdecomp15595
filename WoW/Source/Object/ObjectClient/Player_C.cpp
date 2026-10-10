@@ -644,7 +644,7 @@ static int32_t GuildIDUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t
                 FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
             }
 
-            CGGuildBankInfo::ClearAllTabs();
+            CGGuildBankInfo::ClearContents();
         }
     }
 
@@ -1641,6 +1641,15 @@ void __stdcall CGPlayer_C::RequestPetitionSignatures(WOWGUID petition) {
     msg.Put(petition.m_guid);
     msg.Finalize();
     ClientServices::Send2(&msg);
+}
+
+// OFFSET: 0x0055ADB0/0x1401B0420
+uint64_t CGPlayer_C::GetGuildMaxDailyXP() const {
+    if (this->m_obj->m_dataType == 1 && this->m_obj->m_data) {
+        return this->m_guildMaxDailyXP;
+    }
+
+    return 0;
 }
 
 // OFFSET: 0x0055D2E0/0x1401BA5D0
@@ -4146,7 +4155,7 @@ int32_t Packet_SMSG_GUILD_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t
 
             case 19:
             case 20: {
-                UpdateGuildRoster(1);
+                CGGuildInfo::UpdateRoster(1);
                 break;
             }
         }
@@ -4247,7 +4256,7 @@ int32_t Packet_SMSG_GUILD_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t
 
         case 20: {
             if (command == 5) {
-                UpdateGuildRoster(1);
+                CGGuildInfo::UpdateRoster(1);
             }
 
             break;
@@ -4900,7 +4909,7 @@ void __stdcall CGPlayer_C::TalkToGuildBanker(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_ACTIVATE));
     msg.Put(guid.m_guid);
-    msg.Put(static_cast<uint8_t>(CGGuildBankInfo::m_guildBankTabInfo[0].unk_2140 != 0));
+    msg.Put(static_cast<uint8_t>(CGGuildBankInfo::m_tabInfo[0].m_contentsDirty != 0));
     msg.Finalize();
     ClientServices::Send2(&msg);
     CGGuildBankInfo::m_pendingBanker = guid;
@@ -7054,7 +7063,7 @@ void CGPlayer_C::SwapGuildBankItem(int32_t itemId, uint32_t virtualSlot, uint8_t
     uint8_t tabSlot = virtualSlot % 98;
     CDataStore msg;
 
-    if (tab < 6 && CGGuildInfo::m_rankInfo[this->m_player->m_playerGuildrank].m_bankTabStacksPerDay[tab]) {
+    if (tab < 6 && CGGuildInfo::m_rankInfo[this->m_player->m_playerGuildrank].m_tabWithdrawItemLimit[tab]) {
         msg.Put(static_cast<uint32_t>(CMSG_GUILD_BANK_SWAP_ITEMS));
         msg.Put(banker.m_guid);
         msg.Put(static_cast<uint8_t>(0));

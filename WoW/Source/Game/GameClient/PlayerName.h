@@ -52,6 +52,7 @@ void PlayerNameDeleteText(PLAYERNAMEDESC* desc, uint32_t type);
 
 void PlayerNameTriggerColorUpdate(PLAYERNAMEDESC* desc);
 void PlayerNameTriggerNameRegenerate(PLAYERNAMEDESC* desc);
+bool PlayerNameShouldShowGuildTitle();
 void PlayerNameUpdateDrawCallback(PLAYERNAMEDESC* desc);
 bool PlayerNameShowing(PLAYERNAMEDESC* desc);
 float PlayerNameComputeScale(CGObject_C* object);

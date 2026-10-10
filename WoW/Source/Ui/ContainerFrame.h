@@ -5,6 +5,7 @@
 #include "WoW/Source/Object/WGUID.h"
 
 struct lua_State;
+class ItemRec;
 
 class CGBag_C;
 class CGItem_C;
@@ -26,6 +27,7 @@ class CGContainerInfo {
     static void EnterWorld();
     static void LeaveWorld();
     static bool IsItemFiltered(const CGItem_C* item);
+    static bool IsSearchActive();
 };
 
 void ContainerRegisterScriptFunctions();
@@ -34,5 +36,7 @@ void ContainerUnregisterScriptFunctions();
 int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
+
+bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId);
 
 #endif

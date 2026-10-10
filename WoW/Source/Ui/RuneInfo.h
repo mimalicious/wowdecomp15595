@@ -21,6 +21,7 @@ class CGRuneInfo {
     static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns);
     static void SetPredictedRunes(uint8_t available, uint8_t used, const uint8_t* cooldowns, bool predicted);
     static void InitializeGame();
+    static void EnterWorld();
     static void ShutdownGame();
     static bool HasRunesForSpell(int32_t spellId, int32_t* needed);
     static uint32_t GetRuneRechargeTime(int32_t index);

@@ -20,6 +20,8 @@ class CGAutoCompleteName {
     static int32_t RemoveFlagsFromAllNodes(uint32_t flags);
     static TSList<AUTOCOMPLETE_NAMENODE, TSGetLink<AUTOCOMPLETE_NAMENODE>> m_list;
     static bool s_resortNamesOnRecency;
+    static bool s_batchUpdate;
+    static bool s_resortPending;
     static int32_t RemoveFlagsByName(const char* name, uint32_t flags, bool characters, bool battlenet);
     static bool s_whenEditingFromCenter;
     static bool s_useContext;
