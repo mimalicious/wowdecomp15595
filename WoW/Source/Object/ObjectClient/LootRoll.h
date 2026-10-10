@@ -50,7 +50,6 @@ void LootRollShowPending();
 void LootRoll(int32_t id, int32_t rollType, bool confirmed);
 
 void CloseAllLootRolls();
-void LootRollDestroy();
 void LootRollShutdown();
 int32_t LootRollMasterList(CDataStore* msg);
 int32_t LootRollRolled(CDataStore* msg);
