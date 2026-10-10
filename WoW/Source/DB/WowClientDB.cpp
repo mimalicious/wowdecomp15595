@@ -67,7 +67,7 @@ WowClientDB_Common::WowClientDB_Common() {
     this->m_minID = 0;
 }
 
-// PROVEN: d4f4dd99 IDENTICAL/NONE
+// PROVEN: 854c3dfe IDENTICAL/NONE
 // OFFSET: 0x0048AB40/0x1400ADBA0
 void WowClientDB_Common::Load(const DBCMeta* meta) {
     char error[256];

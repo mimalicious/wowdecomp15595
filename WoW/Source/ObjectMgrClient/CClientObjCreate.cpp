@@ -23,7 +23,6 @@ CClientObjCreate::CClientObjCreate() {
     this->unk_0004 = false;
 }
 
-// PROVEN: 5b60173f IDENTICAL/NONE
 // OFFSET: 0x00699F90/0x1403464F0
 CClientObjCreate::~CClientObjCreate() {
 }

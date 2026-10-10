@@ -4,7 +4,8 @@
 #include "WoW/Source/DB/Rec/WMOAreaTableRec.h"
 #include "WoW/Source/WorldClient/World.h"
 
-// OFFSET: 0x00B024B0
+// PROVEN: 5ac149c8 IDENTICAL/NONE
+// OFFSET: 0x00B024B0/0x1408C44B0
 static int WMOAreaTableCompare(const void* a, const void* b) {
     const WMOAreaTableRec* left = static_cast<const WMOAreaTableRec*>(a);
     const WMOAreaTableRec* right = static_cast<const WMOAreaTableRec*>(b);
@@ -21,7 +22,7 @@ static int WMOAreaTableCompare(const void* a, const void* b) {
     return result;
 }
 
-// OFFSET: 0x00B024E0
+// OFFSET: 0x00B024E0/0x1408C44D0
 const WMOAreaTableRec* SDBWMOAreaTableLookup(uint32_t wmoId, uint32_t nameSet, uint32_t groupId) {
     WMOAreaTableRec key;
     key.m_wmoid = wmoId;

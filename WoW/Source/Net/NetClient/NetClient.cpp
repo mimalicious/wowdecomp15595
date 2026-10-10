@@ -582,6 +582,7 @@ int32_t NetClient::HandleConnect() {
     return 1;
 }
 
+// PROVEN: 9a16649b IDENTICAL/NONE
 // OFFSET: 0x00487B30/0x1400A92D0
 int32_t NetClient::HandleDisconnect() {
     if (this->m_objMgr) {
@@ -2243,7 +2244,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0xF8: {
-            ClientGuildXp message(this, connection, msg, timeStamp);
+            ClientGuildSendGuildXP message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2548,7 +2549,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x170: {
-            ClientGuildRanksUpdate message(this, connection, msg, timeStamp);
+            ClientGuildSendRankChange message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2608,7 +2609,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x184: {
-            ClientGuildMoveStarting message(this, connection, msg, timeStamp);
+            ClientGuildNameChanged message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2678,7 +2679,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x1A6: {
-            ClientGuildNameChanged message(this, connection, msg, timeStamp);
+            ClientGuildMoveStarting message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 
@@ -2803,7 +2804,7 @@ bool NetClient::JAMClientDispatch(WowConnection* connection, uint32_t timeStamp,
         }
 
         case 0x1DD: {
-            ClientGuildMaxDailyXp message(this, connection, msg, timeStamp);
+            ClientGuildSendMaxDailyXP message(this, connection, msg, timeStamp);
             return message.Handle();
         }
 

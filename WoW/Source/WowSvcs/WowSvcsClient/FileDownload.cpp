@@ -39,7 +39,7 @@ GruntFileDownload::GruntFileDownload() {
     this->m_header.m_magic = 'DInf';
 }
 
-// PROVEN: 478fcc9b IDENTICAL/NONE
+// PROVEN: d5afe632 IDENTICAL/NONE
 // OFFSET: 0x00B0A980/0x1408CE580
 int32_t GruntFileDownload::Delete() {
     char path[260];
@@ -53,7 +53,7 @@ int32_t GruntFileDownload::Delete() {
     return OsDeleteFile(path);
 }
 
-// PROVEN: f1a10e9f IDENTICAL/NONE
+// PROVEN: 282df74c IDENTICAL/NONE
 // OFFSET: 0x00B0A350/0x1408CDE60
 void GruntFileDownload::RenamePartial() {
     if (!this->m_partial) {

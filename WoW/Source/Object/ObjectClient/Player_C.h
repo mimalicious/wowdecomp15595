@@ -15,6 +15,9 @@
 #include "WoW/Source/Object/WGUID.h"
 #include "WoW/Source/Ui/TradeSkillFrame.h"
 
+struct JamItemRefundInfo;
+struct JamItemRefundResult;
+struct JamQuestGiverQuestComplete;
 class PartyMemberState;
 class ChrClassesRec;
 class CClientObjCreate;
@@ -38,6 +41,10 @@ struct InspectItem {
 struct InspectData {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ InspectItem m_items [19];
+    /* 05F8 */ uint64_t m_guildGUID;
+    /* 0600 */ uint32_t m_guildLevel;
+    /* 0604 */ uint32_t m_guildNumMembers;
+    /* 0608 */ uint64_t m_guildXP;
 };
 
 class ItemSetRec;
@@ -149,13 +156,16 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static int32_t __stdcall OnLootItemNotify(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverStatus(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverStatusMultiple(CDataStore* msg);
-    static int32_t __stdcall OnRefundInfo(CDataStore* msg);
+    static void __stdcall OnRefundInfo(const JamItemRefundInfo* info);
+    static void __stdcall OnItemPurchaseRefundResult(const JamItemRefundResult* result);
+    static void __stdcall OnItemExpirePurchaseRefund(WOWGUID itemGuid);
+    static void TriggerMovie(uint32_t movie);
     static int32_t __stdcall OnQuestGiverListQuests(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverSendQuest(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverRequestItems(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverChooseReward(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverInvalidQuest(CDataStore* msg);
-    static int32_t __stdcall OnQuestGiverQuestComplete(CDataStore* msg);
+    static void __stdcall OnQuestGiverQuestComplete(const JamQuestGiverQuestComplete* complete);
     static int32_t __stdcall OnQuestGiverQuestFailed(CDataStore* msg);
     static int32_t __stdcall OnTrainerList(CDataStore* msg);
     static int32_t __stdcall OnSellResponse(CDataStore* msg);
@@ -227,9 +237,13 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
     /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
     /* 212C */ TSGrowableArray<int32_t> m_companionPetSpells;
-    /* 213C */ uint32_t unk_213C [7];
+    /* 213C */ uint32_t unk_213C;
+    /* 2140 */ uint64_t m_guildXP;
+    /* 2148 */ uint64_t m_guildRemainingXP;
+    /* 2150 */ uint64_t m_guildDailyXP;
     /* 2158 */ uint64_t m_guildMaxDailyXP;
-    /* 2160 */ uint32_t unk_2160 [4];
+    /* 2160 */ uint64_t m_guildPlayerWeeklyXP;
+    /* 2168 */ uint64_t m_guildPlayerTotalXP;
     /* 2170 */ TSList<CATEGORYCOOLDOWN, TSGetLink<CATEGORYCOOLDOWN>> m_categoryCooldowns;
     /* 217C */ uint32_t unk_217C;
     /* 2180 */ WOWGUID m_lootTarget;
@@ -339,7 +353,12 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void GetPendingEnchantTime(CGItem_C* item);
     int32_t GetPlayedTime() const;
     int32_t GetPVPFactionIndex() const;
+    uint64_t GetGuildXP() const;
+    uint64_t GetGuildRemainingXP() const;
+    uint64_t GetGuildDailyXP() const;
     uint64_t GetGuildMaxDailyXP() const;
+    uint64_t GetGuildPlayerWeeklyXP() const;
+    uint64_t GetGuildPlayerTotalXP() const;
     static int32_t GetPVPFactionIndex(uint8_t raceID);
     static void GetSpellTextureBlobName(const ChrClassesRec* rec, char* name);
     const char* GetPVPRankString(int32_t rank) const;
@@ -374,6 +393,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void OnLootGameObject(const WOWGUID& guid);
     bool HasEquipBypassSkill(int32_t skillId) const;
     bool HasItemPassive(int32_t spellId) const;
+    bool IsGuildLeader() const;
     void RemoveItemPassive(int32_t spellId);
     void AddCategoryCooldown(int32_t category, int32_t cooldown);
     void LootMoney();
@@ -392,6 +412,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void TalkToBinder(const WOWGUID& guid);
     bool ReportBagItemSubtypeMismatch(uint8_t bag);
     void CheckForQuestItemLoot(int32_t itemId);
+    void CheckForQuestItemLoot(int32_t itemId, int32_t count, int32_t total);
+    void CheckQuestAutoComplete(int32_t questId, int32_t itemId, int32_t count);
     void TalkToTalentMaster(const WOWGUID& guid, uint32_t cost);
     void UpdateRepopTimer();
     void ReceiveResurrectRequest(const char* name);
@@ -423,7 +445,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     float GetQuestXPMultiplier();
     int32_t CanUseItem(const ItemRecSparse* stats, int32_t& error);
     static void BuyItem(WOWGUID vendor, const VendorItem* item, uint32_t count, uint8_t a5);
-    int32_t OnItemRefundResult(CDataStore* msg);
     void DelKnownSpell(int32_t spellId, int32_t a3);
     bool VehicleAllowsInteraction() const;
     void SetAutoLoot(int32_t autoLoot);
@@ -531,12 +552,8 @@ int32_t Packet_SMSG_SET_PROFICIENCY(void* param, NETMESSAGE msgId, uint32_t time
 int32_t Packet_Group_9(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_Group_10(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t PH_LOOT_OPCODES(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_LEARNED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_REMOVED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_SUPERCEDED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_INITIAL_SPELLS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_ACTION_BUTTONS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_GROUP_INVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GROUP_CANCEL(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GROUP_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GROUP_UNINVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -554,11 +571,8 @@ int32_t Packet_SMSG_INSPECT_TALENT(void* param, NETMESSAGE msgId, uint32_t time,
 int32_t Packet_Group_14(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_CANCEL_COMBAT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 void PlayerNameGuildCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
-int32_t Packet_SMSG_GUILD_INVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GUILD_DECLINE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_GUILD_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GUILD_EVENT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_GUILD_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_SAVE_GUILD_EMBLEM(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_TABARDVENDOR_ACTIVATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 void GuildCharterTurnInCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
@@ -584,7 +598,6 @@ int32_t Packet_SMSG_SUMMON_REQUEST(void* param, NETMESSAGE msgId, uint32_t time,
 int32_t Packet_SMSG_PLAY_TIME_WARNING(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ARENA_TEAM_INVITE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ARENA_TEAM_EVENT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_ARENA_TEAM_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ARENA_ERROR(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_TIME_SYNC_REQ(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_VOICE_SESSION_ROSTER_UPDATE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
@@ -596,12 +609,10 @@ int32_t Packet_SMSG_AVAILABLE_VOICE_CHANNEL(void* param, NETMESSAGE msgId, uint3
 int32_t Packet_SMSG_CALENDAR_COMMAND_RESULT(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_GROUPACTION_THROTTLED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_SEND_UNLEARN_SPELLS(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_BATTLEGROUND_INFO_THROTTLED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_TALENTS_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_QUEST_POI_QUERY_RESPONSE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_DEBUG_SERVER_GEO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_QUEST_FORCE_REMOVE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_COMBAT_LOG_MULTIPLE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Player_C_SetPlayerRenderDisabled(int32_t disabled);
 int32_t Player_C_TogglePlayerRender();
 void SetAttackSwingError(int32_t error);

@@ -1995,7 +1995,7 @@ void CGGuildInfo::QueryRosterAndRanks() {
 
 // PROVEN: 46802d5c IDENTICAL/NONE
 // OFFSET: 0x00937BA0
-bool CGGuildInfo::ClientGuildRanksUpdateHandler(ClientGuildRanksUpdate* msg) {
+bool CGGuildInfo::ClientGuildReputationReactionChangedHandler(ClientGuildReputationReactionChanged* msg) {
     CGGuildInfo::m_nextAllowedQuery = 0;
     CGGuildInfo::QueryRosterAndRanks();
     return true;
@@ -2591,7 +2591,7 @@ void CGGuildInfo::ShutdownGame() {
     ClientGuildInvite::s_handler = NULL;
     ClientGuildPartyState::s_handler = NULL;
     ClientGuildReputationWeeklyCap::s_handler = NULL;
-    ClientGuildRanksUpdate::s_handler = NULL;
+    ClientGuildReputationReactionChanged::s_handler = NULL;
     ClientGuildChallengeUpdate::s_handler = NULL;
     ClientGuildChallengeCompleted::s_handler = NULL;
     ClientGuildReset::s_handler = NULL;
@@ -2853,7 +2853,7 @@ void CGGuildInfo::InitializeGame() {
     ClientGuildInvite::s_handler = &CGGuildInfo::ClientGuildInviteHandler;
     ClientGuildPartyState::s_handler = &CGGuildInfo::ClientGuildPartyStateHandler;
     ClientGuildReputationWeeklyCap::s_handler = &CGGuildInfo::ClientGuildReputationWeeklyCapHandler;
-    ClientGuildRanksUpdate::s_handler = &CGGuildInfo::ClientGuildRanksUpdateHandler;
+    ClientGuildReputationReactionChanged::s_handler = &CGGuildInfo::ClientGuildReputationReactionChangedHandler;
     ClientGuildChallengeUpdate::s_handler = &CGGuildInfo::ClientGuildChallengeUpdateHandler;
     ClientGuildChallengeCompleted::s_handler = &CGGuildInfo::ClientGuildChallengeCompletedHandler;
     ClientGuildReset::s_handler = &CGGuildInfo::ClientGuildResetHandler;

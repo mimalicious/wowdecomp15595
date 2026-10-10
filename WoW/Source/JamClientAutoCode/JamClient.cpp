@@ -86,7 +86,7 @@ bool (*ClientGuildInvite::s_handler)(ClientGuildInvite* msg);
 bool (*ClientGuildPartyState::s_handler)(ClientGuildPartyState* msg);
 
 // STATIC: 0x00E4D780
-bool (*ClientGuildRanksUpdate::s_handler)(ClientGuildRanksUpdate* msg);
+bool (*ClientGuildReputationReactionChanged::s_handler)(ClientGuildReputationReactionChanged* msg);
 
 // STATIC: 0x00E4D7BC
 bool (*ClientGuildChallengeUpdate::s_handler)(ClientGuildChallengeUpdate* msg);
@@ -1002,6 +1002,87 @@ bool (*ClientCurrencyLootRestored::s_handler)(ClientCurrencyLootRestored* msg);
 
 // STATIC: 0x00E4D5D4
 bool (*ClientLootContents::s_handler)(ClientLootContents* msg);
+
+// STATIC: 0x00E4D754
+bool (*ClientGuildSendGuildXP::s_handler)(ClientGuildSendGuildXP* msg);
+
+// STATIC: 0x00E4D4AC
+bool (*ClientGuildSendMaxDailyXP::s_handler)(ClientGuildSendMaxDailyXP* msg);
+
+// STATIC: 0x00E4D7B4
+bool (*ClientGuildSendRankChange::s_handler)(ClientGuildSendRankChange* msg);
+
+// STATIC: 0x00E4D5E4
+bool (*ClientBattlegroundInfoThrottled::s_handler)(ClientBattlegroundInfoThrottled* msg);
+
+// STATIC: 0x00E4D53C
+bool (*ClientGuildMemberRecipes::s_handler)(ClientGuildMemberRecipes* msg);
+
+// STATIC: 0x00E4D5A0
+bool (*ClientGuildMembersWithRecipe::s_handler)(ClientGuildMembersWithRecipe* msg);
+
+// STATIC: 0x00E4D530
+bool (*ClientGuildCommandResult::s_handler)(ClientGuildCommandResult* msg);
+
+// STATIC: 0x00E4D7A0
+bool (*ClientRolePollBegin::s_handler)(ClientRolePollBegin* msg);
+
+// STATIC: 0x00E4D78C
+bool (*ClientGuildKnownRecipes::s_handler)(ClientGuildKnownRecipes* msg);
+
+// STATIC: 0x00E4D6C4
+bool (*ClientRaidMarkersChanged::s_handler)(ClientRaidMarkersChanged* msg);
+
+// STATIC: 0x00E4D7D8
+bool (*ClientQuestNpcQueryResponse::s_handler)(ClientQuestNpcQueryResponse* msg);
+
+// STATIC: 0x00E4D564
+bool (*ClientRoleChangedInform::s_handler)(ClientRoleChangedInform* msg);
+
+// STATIC: 0x00E4D574
+bool (*ClientPetitionAlreadySigned::s_handler)(ClientPetitionAlreadySigned* msg);
+
+// STATIC: 0x00E4D444
+bool (*ClientSummonRaidMemberValidateFailed::s_handler)(ClientSummonRaidMemberValidateFailed* msg);
+
+// STATIC: 0x00E4D7E4
+bool (*ClientStartTimer::s_handler)(ClientStartTimer* msg);
+
+// STATIC: 0x00E4D748
+bool (*ClientSpellinterruptlog::s_handler)(ClientSpellinterruptlog* msg);
+
+// STATIC: 0x00E4D4A8
+bool (*ClientArenaTeamCommandResult::s_handler)(ClientArenaTeamCommandResult* msg);
+
+// STATIC: 0x00E4D514
+bool (*ClientXpGainAborted::s_handler)(ClientXpGainAborted* msg);
+
+// STATIC: 0x00E4D714
+bool (*ClientSorStartExperienceIncomplete::s_handler)(ClientSorStartExperienceIncomplete* msg);
+
+// STATIC: 0x00E4D7EC
+bool (*ClientDebugRuneRegen::s_handler)(ClientDebugRuneRegen* msg);
+
+// STATIC: 0x00E4D600
+bool (*ClientChatIgnoredAccountMuted::s_handler)(ClientChatIgnoredAccountMuted* msg);
+
+// STATIC: 0x00E4D830
+bool (*ClientItemRefundInfoResponse::s_handler)(ClientItemRefundInfoResponse* msg);
+
+// STATIC: 0x00E4D578
+bool (*ClientItemExpirePurchaseRefund::s_handler)(ClientItemExpirePurchaseRefund* msg);
+
+// STATIC: 0x00E4D6D0
+bool (*ClientItemRefundResult::s_handler)(ClientItemRefundResult* msg);
+
+// STATIC: 0x00E4D824
+bool (*ClientQuestGiverQuestComplete::s_handler)(ClientQuestGiverQuestComplete* msg);
+
+// STATIC: 0x00E4D4E8
+bool (*ClientSupercededSpells::s_handler)(ClientSupercededSpells* msg);
+
+// STATIC: 0x00E4D74C
+bool (*ClientLearnedSpell::s_handler)(ClientLearnedSpell* msg);
 
 // STATIC: 0x00E4D48C
 bool (*ClientMoveSetActiveMover::s_handler)(ClientMoveSetActiveMover* msg);
@@ -3598,17 +3679,17 @@ bool ClientGuildPartyState::Handle() {
 }
 
 // OFFSET: 0x006BE830/0x1403735E0
-ClientGuildRanksUpdate::ClientGuildRanksUpdate(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+ClientGuildReputationReactionChanged::ClientGuildReputationReactionChanged(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
 // OFFSET: 0x006A0DB0/0x14034DDD0
-ClientGuildRanksUpdate::~ClientGuildRanksUpdate() {
+ClientGuildReputationReactionChanged::~ClientGuildReputationReactionChanged() {
 }
 
 // PROVEN: ed58802d IDENTICAL/NONE
 // OFFSET: 0x006A4740/0x140352230
-void ClientGuildRanksUpdate::Unpack(CDataStore* msg, bool full) {
+void ClientGuildReputationReactionChanged::Unpack(CDataStore* msg, bool full) {
     uint8_t byteValue;
 
     JamBitReader bits(msg);
@@ -3671,12 +3752,12 @@ void ClientGuildRanksUpdate::Unpack(CDataStore* msg, bool full) {
 }
 
 // OFFSET: 0x006BC180/0x140370470
-bool ClientGuildRanksUpdate::Handle() {
-    if (!ClientGuildRanksUpdate::s_handler) {
+bool ClientGuildReputationReactionChanged::Handle() {
+    if (!ClientGuildReputationReactionChanged::s_handler) {
         return false;
     }
 
-    return ClientGuildRanksUpdate::s_handler(this);
+    return ClientGuildReputationReactionChanged::s_handler(this);
 }
 
 // OFFSET: 0x006A2B20/0x140350060
@@ -4643,16 +4724,16 @@ bool ClientGuildBankTextQueryResult::Handle() {
     return ClientGuildBankTextQueryResult::s_handler(this);
 }
 
-// OFFSET: 0x006C8800
+// OFFSET: 0x006C8800/0x14037F8D0
 ClientMoveSetActiveMover::ClientMoveSetActiveMover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006A20D0
+// OFFSET: 0x006A20D0/0x14034F550
 ClientMoveSetActiveMover::~ClientMoveSetActiveMover() {
 }
 
-// OFFSET: 0x006BF1A0
+// OFFSET: 0x006BF1A0/0x140374180
 void ClientMoveSetActiveMover::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
 
@@ -4716,7 +4797,7 @@ void ClientMoveSetActiveMover::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006B2A30
+// OFFSET: 0x006B2A30/0x140364170
 bool ClientMoveSetActiveMover::Handle() {
     if (!ClientMoveSetActiveMover::s_handler) {
         return false;
@@ -4725,16 +4806,16 @@ bool ClientMoveSetActiveMover::Handle() {
     return ClientMoveSetActiveMover::s_handler(this);
 }
 
-// OFFSET: 0x006DD590
+// OFFSET: 0x006DD590/0x14039CA20
 ClientRequestCemeteryListResponse::ClientRequestCemeteryListResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006CAD20
+// OFFSET: 0x006CAD20/0x140382F00
 ClientRequestCemeteryListResponse::~ClientRequestCemeteryListResponse() {
 }
 
-// OFFSET: 0x006DAD70
+// OFFSET: 0x006DAD70/0x140399590
 void ClientRequestCemeteryListResponse::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
 
@@ -4748,7 +4829,7 @@ void ClientRequestCemeteryListResponse::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006C0DA0
+// OFFSET: 0x006C0DA0/0x140376250
 bool ClientRequestCemeteryListResponse::Handle() {
     if (!ClientRequestCemeteryListResponse::s_handler) {
         return false;
@@ -4757,7 +4838,7 @@ bool ClientRequestCemeteryListResponse::Handle() {
     return ClientRequestCemeteryListResponse::s_handler(this);
 }
 
-// OFFSET: 0x006B4F80
+// OFFSET: 0x006B4F80/0x140367130
 ClientWorldServerInfo::ClientWorldServerInfo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_hasRestrictedMoney = false;
     this->m_hasRestrictedLevel = false;
@@ -4765,11 +4846,11 @@ ClientWorldServerInfo::ClientWorldServerInfo(NetClient* netClient, WowConnection
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006A1F10
+// OFFSET: 0x006A1F10/0x14034F390
 ClientWorldServerInfo::~ClientWorldServerInfo() {
 }
 
-// OFFSET: 0x006A8DD0
+// OFFSET: 0x006A8DD0/0x140357DC0
 void ClientWorldServerInfo::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
 
@@ -4810,7 +4891,7 @@ void ClientWorldServerInfo::Unpack(CDataStore* msg, bool full) {
     this->m_difficultyID = value;
 }
 
-// OFFSET: 0x006BF840
+// OFFSET: 0x006BF840/0x1403749E0
 bool ClientWorldServerInfo::Handle() {
     if (!ClientWorldServerInfo::s_handler) {
         return false;
@@ -4819,16 +4900,16 @@ bool ClientWorldServerInfo::Handle() {
     return ClientWorldServerInfo::s_handler(this);
 }
 
-// OFFSET: 0x006A2DA0
+// OFFSET: 0x006A2DA0/0x140350300
 ClientUpdateActionButtons::ClientUpdateActionButtons(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006A1990
+// OFFSET: 0x006A1990/0x14034ED50
 ClientUpdateActionButtons::~ClientUpdateActionButtons() {
 }
 
-// OFFSET: 0x006A2710
+// OFFSET: 0x006A2710/0x14034FBF0
 void ClientUpdateActionButtons::Unpack(CDataStore* msg, bool full) {
     for (uint32_t i = 0; i < 144; i++) {
         int32_t value = 0;
@@ -4841,7 +4922,7 @@ void ClientUpdateActionButtons::Unpack(CDataStore* msg, bool full) {
     this->m_reason = byteValue;
 }
 
-// OFFSET: 0x006A9220
+// OFFSET: 0x006A9220/0x140358360
 bool ClientUpdateActionButtons::Handle() {
     if (!ClientUpdateActionButtons::s_handler) {
         return false;
@@ -4850,18 +4931,18 @@ bool ClientUpdateActionButtons::Handle() {
     return ClientUpdateActionButtons::s_handler(this);
 }
 
-// OFFSET: 0x006A1EB0
+// OFFSET: 0x006A1EB0/0x14036EC10
 ClientTimeSyncReq::ClientTimeSyncReq(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     uint32_t value = 0;
     msg->Get(value);
     this->m_sequenceIndex = value;
 }
 
-// OFFSET: 0x006A25E0
+// OFFSET: 0x006A25E0/0x14034EC80
 ClientTimeSyncReq::~ClientTimeSyncReq() {
 }
 
-// OFFSET: 0x006A5C80
+// OFFSET: 0x006A5C80/0x140353C60
 bool ClientTimeSyncReq::Handle() {
     if (!ClientTimeSyncReq::s_handler) {
         return false;
@@ -4870,18 +4951,18 @@ bool ClientTimeSyncReq::Handle() {
     return ClientTimeSyncReq::s_handler(this);
 }
 
-// OFFSET: 0x006D7160
+// OFFSET: 0x006D7160/0x140394DC0
 ClientFeatureSystemStatus::ClientFeatureSystemStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->m_sessionAlertEnabled = false;
     this->m_europaTicketSystemEnabled = false;
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006D0470
+// OFFSET: 0x006D0470/0x14038AE70
 ClientFeatureSystemStatus::~ClientFeatureSystemStatus() {
 }
 
-// OFFSET: 0x006BA770
+// OFFSET: 0x006BA770/0x14036E250
 void ClientFeatureSystemStatus::Unpack(CDataStore* msg, bool full) {
     uint8_t byteValue = 0;
     msg->Get(byteValue);
@@ -4944,7 +5025,7 @@ void ClientFeatureSystemStatus::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006A72E0
+// OFFSET: 0x006A72E0/0x140355D30
 bool ClientFeatureSystemStatus::Handle() {
     if (!ClientFeatureSystemStatus::s_handler) {
         return false;
@@ -4953,19 +5034,19 @@ bool ClientFeatureSystemStatus::Handle() {
     return ClientFeatureSystemStatus::s_handler(this);
 }
 
-// OFFSET: 0x006E9850
+// OFFSET: 0x006E9850/0x1403AC8A0
 ClientCategoryCooldown::ClientCategoryCooldown(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006E5330
+// OFFSET: 0x006E5330/0x1403A6690
 ClientCategoryCooldown::~ClientCategoryCooldown() {
 }
 
-// OFFSET: 0x006DFD00
+// OFFSET: 0x006DFD00/0x14039FBF0
 void ClientCategoryCooldown::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
-    this->m_categoryCooldowns.SetCount(bits.ReadBits<24>());
+    this->m_categoryCooldowns.SetCount(bits.ReadBits<23>());
 
     for (uint32_t i = 0; i < this->m_categoryCooldowns.Count(); i++) {
         int32_t value = 0;
@@ -4978,7 +5059,7 @@ void ClientCategoryCooldown::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006AAF60
+// OFFSET: 0x006AAF60/0x14035A8D0
 bool ClientCategoryCooldown::Handle() {
     if (!ClientCategoryCooldown::s_handler) {
         return false;
@@ -4987,18 +5068,18 @@ bool ClientCategoryCooldown::Handle() {
     return ClientCategoryCooldown::s_handler(this);
 }
 
-// OFFSET: 0x006A1EB0
+// OFFSET: 0x006A1EB0/0x14036EC10
 ClientItemRemovePassive::ClientItemRemovePassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     int32_t value = 0;
     msg->Get(value);
     this->m_spellID = value;
 }
 
-// OFFSET: 0x006A25E0
+// OFFSET: 0x006A25E0/0x14034EC80
 ClientItemRemovePassive::~ClientItemRemovePassive() {
 }
 
-// OFFSET: 0x006C1320
+// OFFSET: 0x006C1320/0x1403768B0
 bool ClientItemRemovePassive::Handle() {
     if (!ClientItemRemovePassive::s_handler) {
         return false;
@@ -5007,16 +5088,16 @@ bool ClientItemRemovePassive::Handle() {
     return ClientItemRemovePassive::s_handler(this);
 }
 
-// OFFSET: 0x006C0020
+// OFFSET: 0x006C0020/0x1403752C0
 ClientDisenchantCredit::ClientDisenchantCredit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006A1F90
+// OFFSET: 0x006A1F90/0x14034F410
 ClientDisenchantCredit::~ClientDisenchantCredit() {
 }
 
-// OFFSET: 0x006BD850
+// OFFSET: 0x006BD850/0x140372190
 void ClientDisenchantCredit::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
 
@@ -5092,7 +5173,7 @@ void ClientDisenchantCredit::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006BC580
+// OFFSET: 0x006BC580/0x140370980
 bool ClientDisenchantCredit::Handle() {
     if (!ClientDisenchantCredit::s_handler) {
         return false;
@@ -5101,16 +5182,16 @@ bool ClientDisenchantCredit::Handle() {
     return ClientDisenchantCredit::s_handler(this);
 }
 
-// OFFSET: 0x006D97B0
+// OFFSET: 0x006D97B0/0x140397C60
 ClientItemSendPassive::ClientItemSendPassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
-// OFFSET: 0x006C50F0
+// OFFSET: 0x006C50F0/0x14037AE20
 ClientItemSendPassive::~ClientItemSendPassive() {
 }
 
-// OFFSET: 0x006D7210
+// OFFSET: 0x006D7210/0x140394E80
 void ClientItemSendPassive::Unpack(CDataStore* msg, bool full) {
     JamBitReader bits(msg);
     this->m_spellIDs.SetCount(bits.ReadBits<24>());
@@ -5122,7 +5203,7 @@ void ClientItemSendPassive::Unpack(CDataStore* msg, bool full) {
     }
 }
 
-// OFFSET: 0x006BF4F0
+// OFFSET: 0x006BF4F0/0x1403745B0
 bool ClientItemSendPassive::Handle() {
     if (!ClientItemSendPassive::s_handler) {
         return false;
@@ -5131,7 +5212,7 @@ bool ClientItemSendPassive::Handle() {
     return ClientItemSendPassive::s_handler(this);
 }
 
-// OFFSET: 0x006A7590
+// OFFSET: 0x006A7590/0x140356040
 ClientTimeAdjustment::ClientTimeAdjustment(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     uint32_t value = 0;
     msg->Get(value);
@@ -5142,11 +5223,11 @@ ClientTimeAdjustment::ClientTimeAdjustment(NetClient* netClient, WowConnection* 
     this->m_timeScale = scale;
 }
 
-// OFFSET: 0x006A1090
+// OFFSET: 0x006A1090/0x14034E2D0
 ClientTimeAdjustment::~ClientTimeAdjustment() {
 }
 
-// OFFSET: 0x006BAE20
+// OFFSET: 0x006BAE20/0x14036EAC0
 bool ClientTimeAdjustment::Handle() {
     if (!ClientTimeAdjustment::s_handler) {
         return false;
@@ -5155,22 +5236,1407 @@ bool ClientTimeAdjustment::Handle() {
     return ClientTimeAdjustment::s_handler(this);
 }
 
-// OFFSET: 0x006A1EB0
+// OFFSET: 0x006A1EB0/0x14036EC10
 ClientItemAddPassive::ClientItemAddPassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     int32_t value = 0;
     msg->Get(value);
     this->m_spellID = value;
 }
 
-// OFFSET: 0x006A25E0
+// OFFSET: 0x006A25E0/0x14034EC80
 ClientItemAddPassive::~ClientItemAddPassive() {
 }
 
-// OFFSET: 0x006B0510
+// OFFSET: 0x006B0510/0x1403612E0
 bool ClientItemAddPassive::Handle() {
     if (!ClientItemAddPassive::s_handler) {
         return false;
     }
 
     return ClientItemAddPassive::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40
+ClientBattlegroundInfoThrottled::ClientBattlegroundInfoThrottled(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120
+ClientBattlegroundInfoThrottled::~ClientBattlegroundInfoThrottled() {
+}
+
+// OFFSET: 0x006B04D0
+bool ClientBattlegroundInfoThrottled::Handle() {
+    if (!ClientBattlegroundInfoThrottled::s_handler) {
+        return false;
+    }
+
+    return ClientBattlegroundInfoThrottled::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40
+ClientChatIgnoredAccountMuted::ClientChatIgnoredAccountMuted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120
+ClientChatIgnoredAccountMuted::~ClientChatIgnoredAccountMuted() {
+}
+
+// OFFSET: 0x006B2230
+bool ClientChatIgnoredAccountMuted::Handle() {
+    if (!ClientChatIgnoredAccountMuted::s_handler) {
+        return false;
+    }
+
+    return ClientChatIgnoredAccountMuted::s_handler(this);
+}
+
+// OFFSET: 0x006A2E40
+ClientSorStartExperienceIncomplete::ClientSorStartExperienceIncomplete(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+}
+
+// OFFSET: 0x006A1120
+ClientSorStartExperienceIncomplete::~ClientSorStartExperienceIncomplete() {
+}
+
+// OFFSET: 0x006B5D30
+bool ClientSorStartExperienceIncomplete::Handle() {
+    if (!ClientSorStartExperienceIncomplete::s_handler) {
+        return false;
+    }
+
+    return ClientSorStartExperienceIncomplete::s_handler(this);
+}
+
+// OFFSET: 0x006C8760
+ClientGuildCommandResult::ClientGuildCommandResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1DC0
+ClientGuildCommandResult::~ClientGuildCommandResult() {
+}
+
+// OFFSET: 0x006BE9A0
+void ClientGuildCommandResult::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_command = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+
+    JamBitReader bits(msg);
+    uint32_t length = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = length;
+    msg->GetData(this->m_name, length);
+    this->m_name[length] = 0;
+}
+
+// OFFSET: 0x006BD100
+bool ClientGuildCommandResult::Handle() {
+    if (!ClientGuildCommandResult::s_handler) {
+        return false;
+    }
+
+    return ClientGuildCommandResult::s_handler(this);
+}
+
+// OFFSET: 0x006C60C0
+ClientArenaTeamCommandResult::ClientArenaTeamCommandResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2A90
+ClientArenaTeamCommandResult::~ClientArenaTeamCommandResult() {
+}
+
+// OFFSET: 0x006AD390
+void ClientArenaTeamCommandResult::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint32_t nameLength = bits.ReadBits<7>();
+    *reinterpret_cast<uint32_t*>(this->m_name) = nameLength;
+    uint32_t teamLength = bits.ReadBits<8>();
+    *reinterpret_cast<uint32_t*>(this->m_teamName) = teamLength;
+    msg->GetData(this->m_name, nameLength);
+    this->m_name[nameLength] = 0;
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_action = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_result = value;
+
+    msg->GetData(this->m_teamName, teamLength);
+    this->m_teamName[teamLength] = 0;
+}
+
+// OFFSET: 0x006B3E10
+bool ClientArenaTeamCommandResult::Handle() {
+    if (!ClientArenaTeamCommandResult::s_handler) {
+        return false;
+    }
+
+    return ClientArenaTeamCommandResult::s_handler(this);
+}
+
+// OFFSET: 0x006DC660
+ClientGuildMembersWithRecipe::ClientGuildMembersWithRecipe(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006D7310
+ClientGuildMembersWithRecipe::~ClientGuildMembersWithRecipe() {
+}
+
+// OFFSET: 0x006DA9B0
+void ClientGuildMembersWithRecipe::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_members.SetCount(bits.ReadBits<26>());
+
+    for (uint32_t i = 0; i < this->m_members.Count(); i++) {
+        uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_members.m_data[i]);
+        guid[2] = bits.ReadBit();
+        guid[3] = bits.ReadBit();
+        guid[1] = bits.ReadBit();
+        guid[6] = bits.ReadBit();
+        guid[0] = bits.ReadBit();
+        guid[7] = bits.ReadBit();
+        guid[4] = bits.ReadBit();
+        guid[5] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_members.Count(); i++) {
+        uint8_t* guid = reinterpret_cast<uint8_t*>(&this->m_members.m_data[i]);
+        static const uint8_t order[8] = { 1, 5, 6, 7, 2, 3, 0, 4 };
+
+        for (uint32_t j = 0; j < 8; j++) {
+            if (guid[order[j]]) {
+                uint8_t byteValue = 0;
+                msg->Get(byteValue);
+                guid[order[j]] ^= byteValue;
+            }
+        }
+    }
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_spellID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_skillLineID = value;
+}
+
+// OFFSET: 0x006C0CC0
+bool ClientGuildMembersWithRecipe::Handle() {
+    if (!ClientGuildMembersWithRecipe::s_handler) {
+        return false;
+    }
+
+    return ClientGuildMembersWithRecipe::s_handler(this);
+}
+
+// OFFSET: 0x006C0A50
+ClientRoleChangedInform::ClientRoleChangedInform(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2EE0
+ClientRoleChangedInform::~ClientRoleChangedInform() {
+}
+
+// OFFSET: 0x006AAFA0
+void ClientRoleChangedInform::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_changedByGUID[1] = bits.ReadBit();
+    this->m_targetGUID[0] = bits.ReadBit();
+    this->m_targetGUID[2] = bits.ReadBit();
+    this->m_targetGUID[4] = bits.ReadBit();
+    this->m_targetGUID[7] = bits.ReadBit();
+    this->m_targetGUID[3] = bits.ReadBit();
+    this->m_changedByGUID[7] = bits.ReadBit();
+    this->m_targetGUID[5] = bits.ReadBit();
+    this->m_changedByGUID[5] = bits.ReadBit();
+    this->m_changedByGUID[4] = bits.ReadBit();
+    this->m_changedByGUID[3] = bits.ReadBit();
+    this->m_targetGUID[6] = bits.ReadBit();
+    this->m_changedByGUID[2] = bits.ReadBit();
+    this->m_changedByGUID[6] = bits.ReadBit();
+    this->m_targetGUID[1] = bits.ReadBit();
+    this->m_changedByGUID[0] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_changedByGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[7] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[3] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[6] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[4] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[0] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_newRole = value;
+
+    if (this->m_targetGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[6] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[2] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[0] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[4] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[1] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[3] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[5] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[2] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[5] ^= byteValue;
+    }
+
+    if (this->m_targetGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_targetGUID[7] ^= byteValue;
+    }
+
+    if (this->m_changedByGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_changedByGUID[1] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_oldRole = value;
+}
+
+// OFFSET: 0x006AB430
+bool ClientRoleChangedInform::Handle() {
+    if (!ClientRoleChangedInform::s_handler) {
+        return false;
+    }
+
+    return ClientRoleChangedInform::s_handler(this);
+}
+
+// OFFSET: 0x006C45E0
+ClientRolePollBegin::ClientRolePollBegin(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0DC0
+ClientRolePollBegin::~ClientRolePollBegin() {
+}
+
+// OFFSET: 0x006B8DB0
+void ClientRolePollBegin::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_initiatorGUID[1] = bits.ReadBit();
+    this->m_initiatorGUID[5] = bits.ReadBit();
+    this->m_initiatorGUID[7] = bits.ReadBit();
+    this->m_initiatorGUID[3] = bits.ReadBit();
+    this->m_initiatorGUID[2] = bits.ReadBit();
+    this->m_initiatorGUID[4] = bits.ReadBit();
+    this->m_initiatorGUID[0] = bits.ReadBit();
+    this->m_initiatorGUID[6] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 4, 7, 0, 5, 1, 6, 2, 3 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_initiatorGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_initiatorGUID[order[i]] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006AE720
+bool ClientRolePollBegin::Handle() {
+    if (!ClientRolePollBegin::s_handler) {
+        return false;
+    }
+
+    return ClientRolePollBegin::s_handler(this);
+}
+
+// OFFSET: 0x006A1EB0
+ClientRaidMarkersChanged::ClientRaidMarkersChanged(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_raidMarkers = value;
+}
+
+// OFFSET: 0x006A25E0
+ClientRaidMarkersChanged::~ClientRaidMarkersChanged() {
+}
+
+// OFFSET: 0x006B8360
+bool ClientRaidMarkersChanged::Handle() {
+    if (!ClientRaidMarkersChanged::s_handler) {
+        return false;
+    }
+
+    return ClientRaidMarkersChanged::s_handler(this);
+}
+
+// OFFSET: 0x006B3560
+ClientPetitionAlreadySigned::ClientPetitionAlreadySigned(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A14E0
+ClientPetitionAlreadySigned::~ClientPetitionAlreadySigned() {
+}
+
+// OFFSET: 0x006A8EF0
+void ClientPetitionAlreadySigned::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_signerGUID[2] = bits.ReadBit();
+    this->m_signerGUID[3] = bits.ReadBit();
+    this->m_signerGUID[7] = bits.ReadBit();
+    this->m_signerGUID[6] = bits.ReadBit();
+    this->m_signerGUID[1] = bits.ReadBit();
+    this->m_signerGUID[5] = bits.ReadBit();
+    this->m_signerGUID[4] = bits.ReadBit();
+    this->m_signerGUID[0] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 4, 0, 3, 1, 5, 6, 7, 2 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_signerGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_signerGUID[order[i]] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006A97D0
+bool ClientPetitionAlreadySigned::Handle() {
+    if (!ClientPetitionAlreadySigned::s_handler) {
+        return false;
+    }
+
+    return ClientPetitionAlreadySigned::s_handler(this);
+}
+
+// OFFSET: 0x006E2C50
+ClientSummonRaidMemberValidateFailed::ClientSummonRaidMemberValidateFailed(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DB2D0
+ClientSummonRaidMemberValidateFailed::~ClientSummonRaidMemberValidateFailed() {
+}
+
+// OFFSET: 0x006DD220
+void ClientSummonRaidMemberValidateFailed::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_members.SetCount(bits.ReadBits<23>());
+
+    for (uint32_t i = 0; i < this->m_members.Count(); i++) {
+        uint8_t* guid = this->m_members.m_data[i].m_memberGUID;
+        guid[5] = bits.ReadBit();
+        guid[3] = bits.ReadBit();
+        guid[1] = bits.ReadBit();
+        guid[7] = bits.ReadBit();
+        guid[2] = bits.ReadBit();
+        guid[0] = bits.ReadBit();
+        guid[6] = bits.ReadBit();
+        guid[4] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_members.Count(); i++) {
+        uint8_t* guid = this->m_members.m_data[i].m_memberGUID;
+        static const uint8_t first[5] = { 4, 2, 0, 6, 5 };
+        static const uint8_t last[3] = { 7, 3, 1 };
+
+        for (uint32_t j = 0; j < 5; j++) {
+            if (guid[first[j]]) {
+                uint8_t byteValue = 0;
+                msg->Get(byteValue);
+                guid[first[j]] ^= byteValue;
+            }
+        }
+
+        int32_t value = 0;
+        msg->Get(value);
+        this->m_members.m_data[i].m_reasonCode = value;
+
+        for (uint32_t j = 0; j < 3; j++) {
+            if (guid[last[j]]) {
+                uint8_t byteValue = 0;
+                msg->Get(byteValue);
+                guid[last[j]] ^= byteValue;
+            }
+        }
+    }
+}
+
+// OFFSET: 0x006A5650
+bool ClientSummonRaidMemberValidateFailed::Handle() {
+    if (!ClientSummonRaidMemberValidateFailed::s_handler) {
+        return false;
+    }
+
+    return ClientSummonRaidMemberValidateFailed::s_handler(this);
+}
+
+// OFFSET: 0x006F8280
+ClientQuestNpcQueryResponse::ClientQuestNpcQueryResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006EE990
+ClientQuestNpcQueryResponse::~ClientQuestNpcQueryResponse() {
+}
+
+// OFFSET: 0x006F6DB0
+void ClientQuestNpcQueryResponse::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_quests.SetCount(bits.ReadBits<23>());
+
+    for (uint32_t i = 0; i < this->m_quests.Count(); i++) {
+        this->m_quests.m_data[i].m_npcs.SetCount(bits.ReadBits<24>());
+    }
+
+    for (uint32_t i = 0; i < this->m_quests.Count(); i++) {
+        int32_t value = 0;
+        msg->Get(value);
+        this->m_quests.m_data[i].m_questID = value;
+
+        for (uint32_t j = 0; j < this->m_quests.m_data[i].m_npcs.Count(); j++) {
+            value = 0;
+            msg->Get(value);
+            this->m_quests.m_data[i].m_npcs.m_data[j] = value;
+        }
+    }
+}
+
+// OFFSET: 0x006B5090
+bool ClientQuestNpcQueryResponse::Handle() {
+    if (!ClientQuestNpcQueryResponse::s_handler) {
+        return false;
+    }
+
+    return ClientQuestNpcQueryResponse::s_handler(this);
+}
+
+// OFFSET: 0x006C0D00
+ClientSpellinterruptlog::ClientSpellinterruptlog(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2D90
+ClientSpellinterruptlog::~ClientSpellinterruptlog() {
+}
+
+// OFFSET: 0x006AC8F0
+void ClientSpellinterruptlog::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_victimGUID[4] = bits.ReadBit();
+    this->m_casterGUID[5] = bits.ReadBit();
+    this->m_casterGUID[6] = bits.ReadBit();
+    this->m_casterGUID[1] = bits.ReadBit();
+    this->m_casterGUID[3] = bits.ReadBit();
+    this->m_casterGUID[0] = bits.ReadBit();
+    this->m_victimGUID[3] = bits.ReadBit();
+    this->m_victimGUID[5] = bits.ReadBit();
+    this->m_victimGUID[1] = bits.ReadBit();
+    this->m_casterGUID[4] = bits.ReadBit();
+    this->m_casterGUID[7] = bits.ReadBit();
+    this->m_victimGUID[7] = bits.ReadBit();
+    this->m_victimGUID[6] = bits.ReadBit();
+    this->m_casterGUID[2] = bits.ReadBit();
+    this->m_victimGUID[2] = bits.ReadBit();
+    this->m_victimGUID[0] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_casterGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[7] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[6] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[3] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[2] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[3] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[6] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[2] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[4] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[7] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[0] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[4] ^= byteValue;
+    }
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_interruptingSpellID = value;
+
+    if (this->m_victimGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[1] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[0] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[5] ^= byteValue;
+    }
+
+    if (this->m_casterGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_casterGUID[1] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_interruptedSpellID = value;
+
+    if (this->m_victimGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[5] ^= byteValue;
+    }
+}
+
+// OFFSET: 0x006C0800
+bool ClientSpellinterruptlog::Handle() {
+    if (!ClientSpellinterruptlog::s_handler) {
+        return false;
+    }
+
+    return ClientSpellinterruptlog::s_handler(this);
+}
+
+// OFFSET: 0x006C7960
+ClientXpGainAborted::ClientXpGainAborted(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A2640
+ClientXpGainAborted::~ClientXpGainAborted() {
+}
+
+// OFFSET: 0x006ACF00
+void ClientXpGainAborted::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_victimGUID[4] = bits.ReadBit();
+    this->m_victimGUID[0] = bits.ReadBit();
+    this->m_victimGUID[1] = bits.ReadBit();
+    this->m_victimGUID[7] = bits.ReadBit();
+    this->m_victimGUID[2] = bits.ReadBit();
+    this->m_victimGUID[6] = bits.ReadBit();
+    this->m_victimGUID[5] = bits.ReadBit();
+    this->m_victimGUID[3] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (this->m_victimGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[7] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[1] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[4] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[0] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[2] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_xpBonus = value;
+
+    if (this->m_victimGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[6] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_reason = value;
+
+    if (this->m_victimGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[3] ^= byteValue;
+    }
+
+    if (this->m_victimGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_victimGUID[5] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_xp = value;
+}
+
+// OFFSET: 0x006AD340
+bool ClientXpGainAborted::Handle() {
+    if (!ClientXpGainAborted::s_handler) {
+        return false;
+    }
+
+    return ClientXpGainAborted::s_handler(this);
+}
+
+// OFFSET: 0x006B1EA0
+ClientItemExpirePurchaseRefund::ClientItemExpirePurchaseRefund(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1230
+ClientItemExpirePurchaseRefund::~ClientItemExpirePurchaseRefund() {
+}
+
+// OFFSET: 0x006AABB0
+void ClientItemExpirePurchaseRefund::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_itemGUID[3] = bits.ReadBit();
+    this->m_itemGUID[0] = bits.ReadBit();
+    this->m_itemGUID[5] = bits.ReadBit();
+    this->m_itemGUID[4] = bits.ReadBit();
+    this->m_itemGUID[6] = bits.ReadBit();
+    this->m_itemGUID[2] = bits.ReadBit();
+    this->m_itemGUID[1] = bits.ReadBit();
+    this->m_itemGUID[7] = bits.ReadBit();
+
+    static const uint8_t order[8] = { 1, 0, 3, 4, 7, 6, 5, 2 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (this->m_itemGUID[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_itemGUID[order[i]] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006BE2C0
+bool ClientItemExpirePurchaseRefund::Handle() {
+    if (!ClientItemExpirePurchaseRefund::s_handler) {
+        return false;
+    }
+
+    return ClientItemExpirePurchaseRefund::s_handler(this);
+}
+
+// OFFSET: 0x006A2A20
+ClientGuildSendGuildXP::ClientGuildSendGuildXP(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0DE0
+ClientGuildSendGuildXP::~ClientGuildSendGuildXP() {
+}
+
+// OFFSET: 0x006A1BE0
+void ClientGuildSendGuildXP::Unpack(CDataStore* msg, bool full) {
+    uint64_t value = 0;
+    msg->Get(value);
+    this->m_memberTotalXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildRemainingXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildTodayXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_memberWeeklyXP = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_guildCurrentXP = value;
+}
+
+// OFFSET: 0x006B5720
+bool ClientGuildSendGuildXP::Handle() {
+    if (!ClientGuildSendGuildXP::s_handler) {
+        return false;
+    }
+
+    return ClientGuildSendGuildXP::s_handler(this);
+}
+
+// OFFSET: 0x006B3230
+ClientGuildSendMaxDailyXP::ClientGuildSendMaxDailyXP(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    uint64_t value = 0;
+    msg->Get(value);
+    this->m_xp = value;
+}
+
+// OFFSET: 0x006A2650
+ClientGuildSendMaxDailyXP::~ClientGuildSendMaxDailyXP() {
+}
+
+// OFFSET: 0x006BE040
+bool ClientGuildSendMaxDailyXP::Handle() {
+    if (!ClientGuildSendMaxDailyXP::s_handler) {
+        return false;
+    }
+
+    return ClientGuildSendMaxDailyXP::s_handler(this);
+}
+
+// OFFSET: 0x006B93F0
+ClientGuildSendRankChange::ClientGuildSendRankChange(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0ED0
+ClientGuildSendRankChange::~ClientGuildSendRankChange() {
+}
+
+// OFFSET: 0x006A4AD0
+void ClientGuildSendRankChange::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_officerGUID[7] = bits.ReadBit();
+    this->m_officerGUID[2] = bits.ReadBit();
+    this->m_otherGUID[2] = bits.ReadBit();
+    this->m_officerGUID[1] = bits.ReadBit();
+    this->m_otherGUID[1] = bits.ReadBit();
+    this->m_otherGUID[7] = bits.ReadBit();
+    this->m_otherGUID[0] = bits.ReadBit();
+    this->m_otherGUID[5] = bits.ReadBit();
+    this->m_otherGUID[4] = bits.ReadBit();
+    this->m_promote = bits.ReadBit() != 0;
+    this->m_officerGUID[5] = bits.ReadBit();
+    this->m_officerGUID[0] = bits.ReadBit();
+    this->m_otherGUID[6] = bits.ReadBit();
+    this->m_officerGUID[3] = bits.ReadBit();
+    this->m_officerGUID[6] = bits.ReadBit();
+    this->m_otherGUID[3] = bits.ReadBit();
+    this->m_officerGUID[4] = bits.ReadBit();
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_rankID = value;
+
+    uint8_t* guids = this->m_officerGUID;
+    static const uint8_t order[16] = { 3, 15, 6, 2, 13, 8, 7, 5, 10, 9, 0, 4, 1, 11, 14, 12 };
+
+    for (uint32_t i = 0; i < 16; i++) {
+        if (guids[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guids[order[i]] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006AB240
+bool ClientGuildSendRankChange::Handle() {
+    if (!ClientGuildSendRankChange::s_handler) {
+        return false;
+    }
+
+    return ClientGuildSendRankChange::s_handler(this);
+}
+
+// OFFSET: 0x006C7880
+ClientGuildMemberRecipes::ClientGuildMemberRecipes(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1980
+ClientGuildMemberRecipes::~ClientGuildMemberRecipes() {
+}
+
+// OFFSET: 0x006BDAF0
+void ClientGuildMemberRecipes::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_memberGUID[0] = bits.ReadBit();
+    this->m_memberGUID[3] = bits.ReadBit();
+    this->m_memberGUID[7] = bits.ReadBit();
+    this->m_memberGUID[4] = bits.ReadBit();
+    this->m_memberGUID[6] = bits.ReadBit();
+    this->m_memberGUID[2] = bits.ReadBit();
+    this->m_memberGUID[1] = bits.ReadBit();
+    this->m_memberGUID[5] = bits.ReadBit();
+
+    static const uint8_t first[5] = { 0, 1, 7, 4, 5 };
+    static const uint8_t last[3] = { 3, 6, 2 };
+
+    for (uint32_t i = 0; i < 5; i++) {
+        if (this->m_memberGUID[first[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_memberGUID[first[i]] ^= byteValue;
+        }
+    }
+
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_skillRank = value;
+
+    for (uint32_t i = 0; i < 300; i++) {
+        uint8_t byteValue = 0;
+        msg->Get(byteValue);
+        this->m_skillLineBitArray[i] = byteValue;
+    }
+
+    for (uint32_t i = 0; i < 3; i++) {
+        if (this->m_memberGUID[last[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_memberGUID[last[i]] ^= byteValue;
+        }
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_skillLineID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_skillStep = value;
+}
+
+// OFFSET: 0x006BE7F0
+bool ClientGuildMemberRecipes::Handle() {
+    if (!ClientGuildMemberRecipes::s_handler) {
+        return false;
+    }
+
+    return ClientGuildMemberRecipes::s_handler(this);
+}
+
+// OFFSET: 0x006EE9F0
+ClientGuildKnownRecipes::ClientGuildKnownRecipes(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E5530
+ClientGuildKnownRecipes::~ClientGuildKnownRecipes() {
+}
+
+// OFFSET: 0x006E36E0
+void ClientGuildKnownRecipes::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    uint32_t high = bits.ReadBits<8>() << 8;
+    this->m_recipes.SetCount(high | bits.ReadBits<8>());
+
+    for (uint32_t i = 0; i < this->m_recipes.Count(); i++) {
+        int32_t value = 0;
+        msg->Get(value);
+        this->m_recipes.m_data[i].m_skillLineID = value;
+
+        for (uint32_t j = 0; j < 300; j++) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            this->m_recipes.m_data[i].m_skillLineBitArray[j] = byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006A3300
+bool ClientGuildKnownRecipes::Handle() {
+    if (!ClientGuildKnownRecipes::s_handler) {
+        return false;
+    }
+
+    return ClientGuildKnownRecipes::s_handler(this);
+}
+
+// OFFSET: 0x006A6B80
+ClientStartTimer::ClientStartTimer(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A13A0
+ClientStartTimer::~ClientStartTimer() {
+}
+
+// OFFSET: 0x006A2460
+void ClientStartTimer::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_type = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_timeLeft = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_totalTime = value;
+}
+
+// OFFSET: 0x006B64E0
+bool ClientStartTimer::Handle() {
+    if (!ClientStartTimer::s_handler) {
+        return false;
+    }
+
+    return ClientStartTimer::s_handler(this);
+}
+
+// OFFSET: 0x006D6510
+ClientItemRefundInfoResponse::ClientItemRefundInfoResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006CA830
+ClientItemRefundInfoResponse::~ClientItemRefundInfoResponse() {
+}
+
+// OFFSET: 0x006A63A0
+void ClientItemRefundInfoResponse::Unpack(CDataStore* msg, bool full) {
+    uint8_t* guid = this->m_info.m_itemGUID;
+    JamBitReader bits(msg);
+    guid[3] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    guid[4] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+
+    uint8_t byteValue;
+
+    if (guid[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[7] ^= byteValue;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_info.m_refundTimeLeft = value;
+
+    for (uint32_t i = 0; i < 5; i++) {
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_items[i].m_count = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_items[i].m_id = value;
+    }
+
+    static const uint8_t middle[4] = { 6, 4, 3, 2 };
+
+    for (uint32_t i = 0; i < 4; i++) {
+        if (guid[middle[i]]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            guid[middle[i]] ^= byteValue;
+        }
+    }
+
+    for (uint32_t i = 0; i < 5; i++) {
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_currencies[i].m_count = value;
+
+        value = 0;
+        msg->Get(value);
+        this->m_info.m_cost.m_currencies[i].m_id = value;
+    }
+
+    if (guid[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[1] ^= byteValue;
+    }
+
+    if (guid[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[5] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_info.m_flags = value;
+
+    if (guid[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        guid[0] ^= byteValue;
+    }
+
+    value = 0;
+    msg->Get(value);
+    this->m_info.m_cost.m_money = value;
+}
+
+// OFFSET: 0x006ABBF0
+bool ClientItemRefundInfoResponse::Handle() {
+    if (!ClientItemRefundInfoResponse::s_handler) {
+        return false;
+    }
+
+    return ClientItemRefundInfoResponse::s_handler(this);
+}
+
+// OFFSET: 0x006D9620
+ClientItemRefundResult::ClientItemRefundResult(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->m_result.m_hasCost = false;
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006DA120
+ClientItemRefundResult::~ClientItemRefundResult() {
+}
+
+// OFFSET: 0x006B97B0
+void ClientItemRefundResult::Unpack(CDataStore* msg, bool full) {
+    uint8_t* guid = this->m_result.m_itemGUID;
+    JamBitReader bits(msg);
+    guid[4] = bits.ReadBit();
+    guid[5] = bits.ReadBit();
+    guid[1] = bits.ReadBit();
+    guid[6] = bits.ReadBit();
+    guid[7] = bits.ReadBit();
+    guid[0] = bits.ReadBit();
+    guid[3] = bits.ReadBit();
+    guid[2] = bits.ReadBit();
+    this->m_result.m_hasCost = bits.ReadBit() != 0;
+
+    if (this->m_result.m_hasCost) {
+        uint32_t value;
+
+        for (uint32_t i = 0; i < 5; i++) {
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_currencies[i].m_count = value;
+
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_currencies[i].m_id = value;
+        }
+
+        value = 0;
+        msg->Get(value);
+        this->m_result.m_cost.m_money = value;
+
+        for (uint32_t i = 0; i < 5; i++) {
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_items[i].m_count = value;
+
+            value = 0;
+            msg->Get(value);
+            this->m_result.m_cost.m_items[i].m_id = value;
+        }
+    }
+
+    static const uint8_t order[8] = { 0, 3, 1, 6, 4, 2, 7, 5 };
+
+    for (uint32_t i = 0; i < 8; i++) {
+        if (guid[order[i]]) {
+            uint8_t byteValue = 0;
+            msg->Get(byteValue);
+            guid[order[i]] ^= byteValue;
+        }
+    }
+
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_result.m_result = byteValue;
+}
+
+// OFFSET: 0x006BB780
+bool ClientItemRefundResult::Handle() {
+    if (!ClientItemRefundResult::s_handler) {
+        return false;
+    }
+
+    return ClientItemRefundResult::s_handler(this);
+}
+
+// OFFSET: 0x006C1180
+ClientQuestGiverQuestComplete::ClientQuestGiverQuestComplete(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A1DB0
+ClientQuestGiverQuestComplete::~ClientQuestGiverQuestComplete() {
+}
+
+// OFFSET: 0x006B54F0
+void ClientQuestGiverQuestComplete::Unpack(CDataStore* msg, bool full) {
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_complete.m_talentReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_numSkillUpsReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_moneyReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_xpReward = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_questID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_complete.m_skillLineIDReward = value;
+
+    JamBitReader bits(msg);
+    this->m_complete.m_useQuestReward = bits.ReadBit() != 0;
+    this->m_complete.m_launchGossip = bits.ReadBit() != 0;
+}
+
+// OFFSET: 0x006B07E0
+bool ClientQuestGiverQuestComplete::Handle() {
+    if (!ClientQuestGiverQuestComplete::s_handler) {
+        return false;
+    }
+
+    return ClientQuestGiverQuestComplete::s_handler(this);
+}
+
+// OFFSET: 0x006BD0A0
+ClientSupercededSpells::ClientSupercededSpells(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_supercededSpellID = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_spellID = value;
+}
+
+// OFFSET: 0x006A10B0
+ClientSupercededSpells::~ClientSupercededSpells() {
+}
+
+// OFFSET: 0x006B44D0
+bool ClientSupercededSpells::Handle() {
+    if (!ClientSupercededSpells::s_handler) {
+        return false;
+    }
+
+    return ClientSupercededSpells::s_handler(this);
+}
+
+// OFFSET: 0x006A2200
+ClientLearnedSpell::ClientLearnedSpell(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    int32_t value = 0;
+    msg->Get(value);
+    this->m_spellID = value;
+
+    uint32_t suppress = 0;
+    msg->Get(suppress);
+    this->m_suppressMessaging = suppress;
+}
+
+// OFFSET: 0x006A1E70
+ClientLearnedSpell::~ClientLearnedSpell() {
+}
+
+// OFFSET: 0x006ABD00
+bool ClientLearnedSpell::Handle() {
+    if (!ClientLearnedSpell::s_handler) {
+        return false;
+    }
+
+    return ClientLearnedSpell::s_handler(this);
+}
+
+// OFFSET: 0x006A2AD0
+ClientDebugRuneRegen::ClientDebugRuneRegen(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0D90
+ClientDebugRuneRegen::~ClientDebugRuneRegen() {
+}
+
+// OFFSET: 0x006A1410
+void ClientDebugRuneRegen::Unpack(CDataStore* msg, bool full) {
+    for (uint32_t i = 0; i < 6; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_runeCount[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 6; i++) {
+        uint32_t value = 0;
+        msg->Get(value);
+        this->m_runeCooldown[i] = value;
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        float value = 0.0f;
+        msg->Get(value);
+        this->m_regen[i] = value;
+    }
+
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_runeMask = value;
+
+    value = 0;
+    msg->Get(value);
+    this->m_runeState = value;
+}
+
+// OFFSET: 0x006A8D50
+bool ClientDebugRuneRegen::Handle() {
+    if (!ClientDebugRuneRegen::s_handler) {
+        return false;
+    }
+
+    return ClientDebugRuneRegen::s_handler(this);
 }

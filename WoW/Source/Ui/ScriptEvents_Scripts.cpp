@@ -3251,7 +3251,7 @@ static int32_t Script_GetUnitHealthRegenRateFromSpirit(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0044C140
+// OFFSET: 0x0044C140/0x140059780
 static int32_t PushItemStatsTable(lua_State* L, const CGItemStatsSummary* summary) {
     float dps = summary->m_dps;
 

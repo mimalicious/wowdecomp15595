@@ -710,7 +710,7 @@ static int32_t Script_GetMapZones(lua_State* L) {
     return count;
 }
 
-// OFFSET: 0x0091B4A0
+// OFFSET: 0x0091B4A0/0x14067C770
 static WorldMapOverlayRec* GetMapOverlayTexture(uint32_t index, char* texture, uint32_t size) {
     int32_t overlayID = index < CGWorldMap::m_numOverlays ? CGWorldMap::m_overlays.m_data[index] : 0;
     WorldMapOverlayRec* overlay = g_worldMapOverlayDB.GetRecord(overlayID);

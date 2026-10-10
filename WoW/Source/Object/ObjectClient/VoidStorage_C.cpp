@@ -6,7 +6,7 @@ CGVoidStorage_C::CGVoidStorage_C() {
     this->m_items = NULL;
 }
 
-// OFFSET: 0x00595BB0
+// OFFSET: 0x00595BB0/0x140203210
 CGVoidStorage_C::~CGVoidStorage_C() {
     if (this->m_items) {
         this->m_items->InternalClear(0);

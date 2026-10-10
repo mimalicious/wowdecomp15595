@@ -294,7 +294,7 @@ class CGGuildInfo {
     static bool ClientGuildMemberUpdateNoteHandler(ClientGuildMemberUpdateNote* msg);
     static bool ClientGuildInviteHandler(ClientGuildInvite* msg);
     static bool ClientGuildReputationWeeklyCapHandler(ClientGuildReputationWeeklyCap* msg);
-    static bool ClientGuildRanksUpdateHandler(ClientGuildRanksUpdate* msg);
+    static bool ClientGuildReputationReactionChangedHandler(ClientGuildReputationReactionChanged* msg);
     static bool ClientGuildResetHandler(ClientGuildReset* msg);
     static bool ClientGuildNameChangedHandler(ClientGuildNameChanged* msg);
     static bool ClientGuildRosterHandler(ClientGuildRoster* msg);

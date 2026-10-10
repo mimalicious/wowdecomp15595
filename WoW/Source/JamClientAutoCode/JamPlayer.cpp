@@ -525,11 +525,11 @@ void PlayerRequestGuildPartyState::Put(CDataStore* msg) {
     }
 }
 
-// OFFSET: 0x00673460
+// OFFSET: 0x00673460/0x140317D40
 PlayerRequestCategoryCooldowns::PlayerRequestCategoryCooldowns() {
 }
 
-// OFFSET: 0x006707A0
+// OFFSET: 0x006707A0/0x140318160
 PlayerRequestCategoryCooldowns::~PlayerRequestCategoryCooldowns() {
 }
 

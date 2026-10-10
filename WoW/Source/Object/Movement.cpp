@@ -6928,7 +6928,6 @@ void CMovement_C::FlushMoveEvent(CPlayerMoveEvent* event, int32_t removeSpline) 
     CPlayerMoveQueue::s_freeList.LinkToTail(event);
 }
 
-// PROVEN: a3e4bf89 IDENTICAL/NONE
 // OFFSET: 0x00577580
 void CMovement_C::SuspendMovement() {
     this->FlushMoveQueue(1, 1);
@@ -6936,6 +6935,7 @@ void CMovement_C::SuspendMovement() {
     this->m_flags |= 0x40000000;
 }
 
+// PROVEN: a3e4bf89 IDENTICAL/NONE
 // OFFSET: 0x00576360
 void CMovement_C::FlushMoveQueue(int32_t removeSpline, int32_t controlLost) {
     if (s_flushingQueue) {

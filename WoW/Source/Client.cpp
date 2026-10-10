@@ -1854,7 +1854,7 @@ static void SetDefaults(OPTION_PAGE page) {
 void ZoneDebugDestroy() {
 }
 
-// OFFSET: 0x00407150
+// OFFSET: 0x00407150/0x140009220
 static void WowClientDestroy() {
     CGPlayer_C::PlayerShutdownClientHandlers();
     ValidateNameDestroy();
