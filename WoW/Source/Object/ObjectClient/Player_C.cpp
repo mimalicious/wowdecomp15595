@@ -165,12 +165,6 @@ struct InitialSpellStruct {
     /* 0006 */ uint16_t unk_0006;
 };
 
-struct QuestItemLoot {
-    uint32_t m_itemId;
-    uint32_t m_count;
-    uint32_t m_totalCount;
-};
-
 struct RestStateInfo {
     UIErrors m_error;
     uint32_t m_tutorial;
@@ -8684,89 +8678,30 @@ int32_t __stdcall CGPlayer_C::OnSellResponse(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D7C30
-static int32_t OnQuestItemLoot(QuestCache* quest, int32_t itemId, int32_t count, int32_t totalCount) {
-    if (!quest) {
-        return 0;
-    }
-
-    uint32_t index = 0;
-
-    while (quest->m_collectItemId[index] != static_cast<uint32_t>(itemId)) {
-        if (++index >= 6) {
-            return 0;
-        }
-    }
-
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, WOWGUID(), NULL, NULL, false);
-
-    if (!stats) {
-        return 1;
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player || totalCount - count >= static_cast<int32_t>(quest->m_collectItemCount[index])) {
-        return 1;
-    }
-
-    int32_t required = quest->m_collectItemCount[index];
-    const char* name = stats->m_name[FrameScript_GetPluralIndex(required)];
-
-    if (!name || !*name) {
-        name = stats->m_name[0];
-    }
-
-    CGGameUI::DisplayError(ERR_QUEST_ADD_ITEM_SII, name, totalCount > required ? required : totalCount, required);
-    FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_WATCH_UPDATE, "%d", CGQuestLog::GetQuestIndex(quest->m_id));
-
-    if ((quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), CGQuestLog::GetQuestIndex(quest->m_id) - 1, true, 0, 0)) {
-        WOWGUID guid = player->m_obj->m_guid;
-        CGPlayer_C::CompleteQuest(guid, quest->m_id);
-    }
-
-    return 1;
-}
-
-// OFFSET: #0x006D7D70
-static void QuestLootQuestQueryCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    QuestItemLoot* loot = static_cast<QuestItemLoot*>(param);
-
-    if (success) {
-        QuestCache* quest = g_questDBCache.GetRecord(id, WOWGUID(), NULL, NULL, false);
-        OnQuestItemLoot(quest, loot->m_itemId, loot->m_count, loot->m_totalCount);
-    }
-
-    delete loot;
-}
-
-// OFFSET: #0x006D7DE0
-void CGPlayer_C::CheckForQuestItemLoot(uint32_t itemId, uint32_t count, uint32_t totalCount) {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+// OFFSET: 0x0055E3D0
+void CGPlayer_C::CheckForQuestItemLoot(int32_t itemId) {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer() || !itemId) {
         return;
     }
 
-    for (uint32_t i = 0; i < 25; i++) {
+    for (uint32_t i = 0; i < 50; i++) {
         PlayerQuestLogEntry* entry = &this->m_player->m_playerQuestLog[i];
 
-        if (static_cast<int32_t>(entry->m_questId) <= 0 || CGQuestLog::IsQuestExpiredByID(entry->m_questId)) {
+        if (!entry || static_cast<int32_t>(entry->m_questId) <= 0 || CGQuestLog::IsQuestExpiredByID(entry->m_questId)) {
             continue;
         }
 
-        QuestCache* quest = g_questDBCache.GetRecord(entry->m_questId, WOWGUID(), NULL, NULL, false);
+        WOWGUID requester = WOWGUID();
+        QuestCache* quest = g_questDBCache.GetRecord(entry->m_questId, requester, NULL, NULL, false);
 
-        if (quest) {
-            if (OnQuestItemLoot(quest, itemId, count, totalCount)) {
-                return;
-            }
-        } else {
-            QuestItemLoot* loot = new (__FILE__, __LINE__) QuestItemLoot;
-            loot->m_itemId = itemId;
-            loot->m_count = count;
-            loot->m_totalCount = totalCount;
+        if (!quest || !(quest->m_flags & 0x10000)) {
+            continue;
+        }
 
-            if (g_questDBCache.GetRecord(entry->m_questId, WOWGUID(), QuestLootQuestQueryCallback, loot, false)) {
-                SErrDisplayAppFatalMessage("", "", 0);
+        for (uint32_t j = 0; j < 6; j++) {
+            if (static_cast<int32_t>(quest->m_collectItemId[j]) == itemId) {
+                CGPlayer_C::CheckForQuestAutoComplete(quest->m_id, 0, 0);
+                break;
             }
         }
     }

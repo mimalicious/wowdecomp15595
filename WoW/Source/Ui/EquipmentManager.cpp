@@ -151,7 +151,7 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
                     itemGuid.m_guid = guid.m_guid;
                 } else {
                     for (uint32_t i = 19; i <= 22; i++) {
-                        WOWGUID container = GetBagAtIndex(i - 19);
+                        WOWGUID container = CGContainerInfo::GetContainer(i - 19);
 
                         if (container) {
                             bagSlot = CGPlayer_C::FindItemSlot(container, item);
@@ -166,7 +166,7 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
 
                     if (itemGuid.m_guid == 1 && CGBankInfo::m_banker) {
                         for (uint32_t i = 67; i <= 73; i++) {
-                            WOWGUID container = GetBagAtIndex(i - 63);
+                            WOWGUID container = CGContainerInfo::GetContainer(i - 63);
 
                             if (container) {
                                 bagSlot = CGPlayer_C::FindItemSlot(container, item);

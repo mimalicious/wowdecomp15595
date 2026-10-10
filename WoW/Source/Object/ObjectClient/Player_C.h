@@ -377,7 +377,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void SetPvpCooldownTimestamp(uint32_t flags);
     void TalkToBinder(const WOWGUID& guid);
     bool ReportBagItemSubtypeMismatch(uint8_t bag);
-    void CheckForQuestItemLoot(uint32_t itemId, uint32_t count, uint32_t totalCount);
+    void CheckForQuestItemLoot(int32_t itemId);
     void TalkToTalentMaster(const WOWGUID& guid, uint32_t cost);
     void UpdateRepopTimer();
     void ReceiveResurrectRequest(const char* name);

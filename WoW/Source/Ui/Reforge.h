@@ -12,6 +12,7 @@ class CGReforge {
     static WOWGUID m_reforgeItem;
 
     static void SetForgeMaster(const WOWGUID& guid);
+    static void SetItem(WOWGUID item);
     static void UpdateEnchantment(WOWGUID item);
 };
 

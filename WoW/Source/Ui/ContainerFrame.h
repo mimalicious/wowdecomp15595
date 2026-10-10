@@ -7,29 +7,32 @@
 struct lua_State;
 
 class CGBag_C;
+class CGItem_C;
 
 class CGContainerInfo {
     public:
     static WOWGUID m_containers[11];
+    static char* m_searchText;
+    static char* m_searchTextParsed;
+
+    static void UpdateCooldowns();
     static WOWGUID GetContainer(int32_t index);
-    static void UpdateContainers();
+    static void SetItemSearch(const char* search);
+    static void UpdateContents(WOWGUID guid);
     static void OpenContainer(WOWGUID guid);
+    static void UpdateItem(WOWGUID guid);
+    static bool GetLuaBagAndSlot(lua_State* L, CGBag_C*& bag, int32_t& slot, int32_t& bank);
+    static void UpdateContainers();
     static void EnterWorld();
     static void LeaveWorld();
-    static void UpdateCooldowns();
-    static void UpdateItem(WOWGUID guid);
-    static void UpdateContents(WOWGUID guid);
-    static bool GetLuaBagAndSlot(lua_State* L, CGBag_C** bag, int32_t* slot, int32_t* bank);
+    static bool IsItemFiltered(const CGItem_C* item);
 };
 
-int32_t Script_PickupContainerItem(lua_State* L);
 void ContainerRegisterScriptFunctions();
 void ContainerUnregisterScriptFunctions();
 
 int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
 int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param);
-
-WOWGUID GetBagAtIndex(uint32_t index);
 
 #endif

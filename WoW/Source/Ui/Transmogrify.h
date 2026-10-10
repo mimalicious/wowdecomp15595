@@ -6,6 +6,8 @@
 #include "Engine/Source/BlizzardCore/Source/System/Memory/AllocSTL.h"
 #include "WoW/Source/Object/WGUID.h"
 
+class CGItem_C;
+
 struct TransmogrifyPendingItem {
     /* 0000 */ WOWGUID m_item;
     /* 0008 */ uint32_t m_slot;
@@ -21,6 +23,7 @@ class CGTransmogrify {
     static void SetTransmogrifier(const WOWGUID& guid);
     static void OnTransmogrifySuccess(uint32_t slot);
     static TransmogrifyPendingItem* GetPendingItem(uint32_t slot);
+    static void AutoAddItem(CGItem_C* item);
 };
 
 #endif

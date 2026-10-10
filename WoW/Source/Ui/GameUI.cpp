@@ -6013,7 +6013,7 @@ void CGGameUI::UnlockAllItems() {
     }
 }
 
-// OFFSET: #0x005A4780
+// OFFSET: 0x009BB490
 void CGGameUI::SetPendingItemSound(WOWGUID guid, int32_t itemId) {
     CGGameUI::m_autoStoreItem = guid;
     CGGameUI::m_autoStoreItemID = itemId;

@@ -1,58 +1,110 @@
 #include "ContainerFrame.h"
+#include <cstddef>
 #include "Engine/Source/FrameScript/FrameScript.h"
+#include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
+#include "WoW/Source/Client.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/Game/ValidateName.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
+#include "WoW/Source/DB/Rec/ItemSubClassRec.h"
+#include "WoW/Source/Object/Container.h"
+#include "WoW/Source/Object/Player.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Container_C.h"
+#include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Ui/CGBankInfo.h"
-#include "WoW/Source/Ui/Types.h"
-#include "WoW/Source/Ui/ActionBarFrame.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
-#include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/Object/ItemStats.h"
-#include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/SoundInterface/SI3.h"
-#include "WoW/Source/Ui/CurrencyTypes.h"
+#include "WoW/Source/UIUtil/Tooltip.h"
+#include "WoW/Source/Ui/ActionBarFrame.h"
+#include "WoW/Source/Ui/CGBankInfo.h"
+#include "WoW/Source/Ui/EquipmentManager.h"
 #include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/PaperDollInfoFrame.h"
+#include "WoW/Source/Ui/ResearchFrame.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
 #include "WoW/Source/Ui/TradeSkillFrame.h"
 #include "WoW/Source/Ui/Tutorial.h"
-#include <cstddef>
+#include "WoW/Source/Ui/Types.h"
 
-// STATIC: #0x00C23540
+// STATIC: 0x00F4DDE0
 WOWGUID CGContainerInfo::m_containers[11];
 
-// OFFSET: #0x005D9C20
-void CGContainerInfo::EnterWorld() {
-    for (uint32_t offset = 0x358; offset <= 0x370; offset += sizeof(WOWGUID)) {
-        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    }
+// STATIC: 0x00F4DE38
+char* CGContainerInfo::m_searchText;
 
-    for (uint32_t offset = 0x378; offset <= 0x3F0; offset += sizeof(WOWGUID)) {
-        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), UpdateInvContents, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
-    }
+// STATIC: 0x00F4DE3C
+char* CGContainerInfo::m_searchTextParsed;
 
-    for (uint32_t offset = 0x4D8; offset <= 0x508; offset += sizeof(WOWGUID)) {
-        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
-    }
-
-    for (uint32_t offset = 0x570; offset <= 0x668; offset += sizeof(WOWGUID)) {
-        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), UpdateInvContents, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
-    }
-
-    for (uint32_t offset = 0x670; offset <= 0x768; offset += sizeof(WOWGUID)) {
-        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), UpdateInvContents, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
-    }
-
-    for (uint32_t i = 0; i < sizeof(((CGContainerInfo*)0)->m_containers) / sizeof(CGContainerInfo::m_containers[0]); i++) {
-        CGContainerInfo::m_containers[i] = WOWGUID();
-    }
-
-    CGContainerInfo::UpdateContainers();
+// PROVEN: 63fe3347 IDENTICAL/NONE
+// OFFSET: 0x009BB1E0/0x140746A00
+void CGContainerInfo::UpdateCooldowns() {
+    FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE_COOLDOWN, NULL);
 }
 
-// OFFSET: #0x005D7110
+// OFFSET: 0x009BB1F0/0x140746A10
+WOWGUID CGContainerInfo::GetContainer(int32_t index) {
+    if (static_cast<uint32_t>(index) <= 10 && (index < 4 || CGBankInfo::m_banker)) {
+        return CGContainerInfo::m_containers[index];
+    }
+
+    return WOWGUID();
+}
+
+// OFFSET: 0x009BB230/0x140746A40
+void CGContainerInfo::SetItemSearch(const char* search) {
+    uint32_t length = SStrLenUTF8(search);
+
+    if (CGContainerInfo::m_searchText) {
+        if (!SStrCmpUTF8I(CGContainerInfo::m_searchText, search, STORM_MAX_STR)) {
+            return;
+        }
+    } else if (!length) {
+        return;
+    }
+
+    if (CGContainerInfo::m_searchText) {
+        SMemFree(CGContainerInfo::m_searchText, __FILE__, __LINE__, 0);
+    }
+
+    if (CGContainerInfo::m_searchTextParsed) {
+        SMemFree(CGContainerInfo::m_searchTextParsed, __FILE__, __LINE__, 0);
+    }
+
+    CGContainerInfo::m_searchText = NULL;
+    CGContainerInfo::m_searchTextParsed = NULL;
+
+    if (SStrLenUTF8(search)) {
+        CGContainerInfo::m_searchText = SStrDupA(search, __FILE__, __LINE__);
+        CGContainerInfo::m_searchTextParsed = SStrDupA(search, __FILE__, __LINE__);
+        CaseAccentInsensitiveParse(CGContainerInfo::m_searchTextParsed, length, s_locale);
+    }
+
+    FrameScript_SignalEvent(SCRIPT_EVENT_INVENTORY_SEARCH_UPDATE, NULL);
+}
+
+// OFFSET: 0x009BB4B0/0x140746CF0
+void CGContainerInfo::UpdateContents(WOWGUID guid) {
+    CGActionBar::UpdateUsable();
+    CGResearchFrame::s_enteredWorld = 1;
+    CGCharacterInfo::AverageItemLevelDirty();
+
+    if (guid == ClntObjMgrGetActivePlayer()) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", 0);
+        return;
+    }
+
+    for (uint32_t i = 0; i < 11; i++) {
+        if (CGContainerInfo::m_containers[i] == guid) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", i + 1);
+            return;
+        }
+    }
+}
+
+// OFFSET: 0x009BB520
 void CGContainerInfo::OpenContainer(WOWGUID guid) {
     if (guid == ClntObjMgrGetActivePlayer()) {
         FrameScript_SignalEvent(SCRIPT_EVENT_BAG_OPEN, "%d", 0);
@@ -66,150 +118,7 @@ void CGContainerInfo::OpenContainer(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x005D9D90
-void CGContainerInfo::LeaveWorld() {
-    for (uint32_t i = 0; i < 11; i++) {
-        if (!CGContainerInfo::m_containers[i]) {
-            continue;
-        }
-
-        CGContainer_C* container = static_cast<CGContainer_C*>(ClntObjMgrObjectPtr(CGContainerInfo::m_containers[i], TYPEMASK_CONTAINER, __FILE__, __LINE__));
-
-        if (!container) {
-            continue;
-        }
-
-        int32_t count = container->GetBag()->m_numSlots;
-
-        for (int32_t j = 0; j < count; j++) {
-            ClntObjMgrUnsetObjMirrorHandler(CGContainerInfo::m_containers[i], ID_CONTAINER, offsetof(CGContainerData, m_containerFieldSlot1) + j * sizeof(WOWGUID), UpdateContainerContents, NULL);
-        }
-    }
-
-    for (uint32_t offset = 0x378; offset <= 0x3F0; offset += sizeof(WOWGUID)) {
-        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, UpdateInvContents, NULL);
-    }
-
-    for (uint32_t offset = 0x358; offset <= 0x370; offset += sizeof(WOWGUID)) {
-        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, InvUpdateHandler, NULL);
-    }
-
-    for (uint32_t offset = 0x4D8; offset <= 0x508; offset += sizeof(WOWGUID)) {
-        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, InvUpdateHandler, NULL);
-    }
-
-    for (uint32_t offset = 0x570; offset <= 0x668; offset += sizeof(WOWGUID)) {
-        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, UpdateInvContents, NULL);
-    }
-
-    for (uint32_t offset = 0x670; offset <= 0x768; offset += sizeof(WOWGUID)) {
-        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, UpdateInvContents, NULL);
-    }
-}
-
-// OFFSET: #0x005D6F10
-void CGContainerInfo::UpdateCooldowns() {
-    FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE_COOLDOWN, NULL);
-}
-
-// OFFSET: #0x005D6F20
-WOWGUID GetBagAtIndex(uint32_t index) {
-    if (index <= 10 && (index < 4 || CGBankInfo::m_banker)) {
-        return CGContainerInfo::m_containers[index];
-    }
-
-    return WOWGUID();
-}
-
-// OFFSET: #0x005D7380
-bool CGContainerInfo::GetLuaBagAndSlot(lua_State* L, CGBag_C** bag, int32_t* slot, int32_t* bank) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return false;
-    }
-
-    *bag = NULL;
-    *bank = 0;
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    *slot = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
-
-    if (index >= 0) {
-        if (index < 11) {
-            CGContainer_C* container = static_cast<CGContainer_C*>(ClntObjMgrObjectPtr(GetBagAtIndex(index), TYPEMASK_CONTAINER, __FILE__, __LINE__));
-
-            if (container) {
-                *bag = container->GetBag();
-            }
-
-            if (index >= 4) {
-                *bank = 1;
-            }
-        }
-    } else {
-        *bag = &player->m_bag;
-
-        switch (index) {
-            case -5:
-                return false;
-
-            case -3:
-                *slot += 86;
-
-                if (*slot > 117) {
-                    return false;
-                }
-
-                break;
-
-            case -2:
-                *slot += 39;
-
-                if (*slot > 66) {
-                    return false;
-                }
-
-                *bank = 1;
-                break;
-
-            case -1:
-                *slot += 23;
-
-                if (*slot > 38) {
-                    return false;
-                }
-
-                break;
-        }
-    }
-
-    if (!*bag) {
-        return false;
-    }
-
-    return *slot >= 0 && *slot < (*bag)->m_numSlots;
-}
-
-// OFFSET: #0x005D7070
-void CGContainerInfo::UpdateContents(WOWGUID guid) {
-    CGActionBar::UpdateUsable();
-
-    if (guid == ClntObjMgrGetActivePlayer()) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", 0);
-        FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", -2);
-        FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", -4);
-        return;
-    }
-
-    for (uint32_t i = 0; i < 11; i++) {
-        if (CGContainerInfo::m_containers[i] == guid) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_BAG_UPDATE, "%d", i + 1);
-            return;
-        }
-    }
-}
-
-// OFFSET: #0x005D7320
+// OFFSET: 0x009BB6B0
 void CGContainerInfo::UpdateItem(WOWGUID guid) {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -218,13 +127,59 @@ void CGContainerInfo::UpdateItem(WOWGUID guid) {
     }
 }
 
-// OFFSET: #0x005D9540
-static void TriggerMultiCastBarUpdate(const ItemStats_C* stats) {
-    if (!stats) {
+// OFFSET: 0x009BB710/0x140746FA0
+bool CGContainerInfo::GetLuaBagAndSlot(lua_State* L, CGBag_C*& bag, int32_t& slot, int32_t& bank) {
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+
+    if (!player) {
+        return false;
+    }
+
+    bag = NULL;
+    bank = 0;
+    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    slot = static_cast<int32_t>(lua_tonumber(L, 2)) - 1;
+
+    if (index >= 0) {
+        if (index < 11) {
+            if (CGContainer_C* container = static_cast<CGContainer_C*>(ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(index), TYPEMASK_CONTAINER, __FILE__, __LINE__))) {
+                bag = container->GetBag();
+            }
+
+            if (index >= 4) {
+                bank = 1;
+            }
+        }
+    } else {
+        bag = &player->m_bag;
+
+        if (index == -2) {
+            slot += 39;
+
+            if (slot > 66) {
+                return false;
+            }
+
+            bank = 1;
+        } else if (index == -1) {
+            slot += 23;
+
+            if (slot > 38) {
+                return false;
+            }
+        }
+    }
+
+    return bag && slot >= 0 && slot < bag->m_numSlots;
+}
+
+// OFFSET: 0x009BCD90/0x1407488B0
+static void TriggerMultiCastBarUpdate(const ItemRecSparse* rec) {
+    if (!rec) {
         return;
     }
 
-    uint32_t mask = CGActionBar::GetMultiCastSlotMaskForTotemCategory(stats->m_totemCategory);
+    uint32_t mask = CGActionBar::GetMultiCastSlotMaskForTotemCategory(rec->m_totemCategoryID);
 
     if (!mask) {
         return;
@@ -242,15 +197,18 @@ static void TriggerMultiCastBarUpdate(const ItemStats_C* stats) {
     CGActionBar::UpdateMultiCastBar();
 }
 
-// OFFSET: #0x005D95C0
+// OFFSET: 0x009BCE10/0x140748930
 static void MultiCastBarItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
-        WOWGUID none = WOWGUID();
-        TriggerMultiCastBarUpdate(g_itemDBCache.GetRecord(id, none, NULL, NULL, false));
+        WOWGUID requester = WOWGUID();
+
+        if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(id, requester, NULL, NULL, false)) {
+            TriggerMultiCastBarUpdate(rec);
+        }
     }
 }
 
-// OFFSET: #0x005D9600
+// OFFSET: 0x009BCE50/0x140748980
 int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGContainer_C* container = static_cast<CGContainer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_CONTAINER, __FILE__, __LINE__));
 
@@ -280,9 +238,9 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, WOWGUID(), NULL, NULL, false);
+        WOWGUID requester = WOWGUID();
 
-        if (item) {
+        if (ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, requester, NULL, NULL, false)) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
@@ -292,18 +250,24 @@ int32_t UpdateContainerContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fie
     CGContainerInfo::UpdateContents(guid);
 
     if (newItem) {
-        WOWGUID none = WOWGUID();
-        ItemStats_C* stats = g_itemDBCache.GetRecord(newItem->m_obj->m_entryID, none, MultiCastBarItemStatsCallback, NULL, false);
+        WOWGUID requester = WOWGUID();
 
-        if (stats) {
-            TriggerMultiCastBarUpdate(stats);
+        if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(newItem->m_obj->m_entryID, requester, MultiCastBarItemStatsCallback, NULL, false)) {
+            TriggerMultiCastBarUpdate(rec);
+        }
+
+        if (CGUnit_C* owner = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(newItem->m_item->m_itemFieldOwner, TYPEMASK_UNIT, __FILE__, __LINE__))) {
+            if (owner->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+                int32_t itemId = newItem->m_obj->m_entryID;
+                ClntObjMgrGetActivePlayerObj()->CheckForQuestItemLoot(itemId);
+            }
         }
     }
 
     return 1;
 }
 
-// OFFSET: #0x005D9790
+// OFFSET: 0x009BD030
 int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -332,9 +296,9 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
     CGGameUI::UnlockItem(newGuid);
 
     if (CGGameUI::m_autoStoreItem == oldGuid || CGGameUI::m_autoStoreItem == newGuid || (!CGGameUI::m_autoStoreItem && CGGameUI::m_autoStoreItemID)) {
-        ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, WOWGUID(), NULL, NULL, false);
+        WOWGUID requester = WOWGUID();
 
-        if (item) {
+        if (ItemRec* item = g_itemDB.GetRecord(CGGameUI::m_autoStoreItemID, requester, NULL, NULL, false)) {
             SI3::PlayItemSound(1, item->m_displayInfoID);
         }
     }
@@ -343,25 +307,22 @@ int32_t UpdateInvContents(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize
     CGGameUI::m_autoStoreItemID = 0;
     CGContainerInfo::UpdateContents(guid);
 
-    if ((oldItem && oldItem->GetClassID() == 10) || (newItem && newItem->GetClassID() == 10) || slot - 118 <= 31) {
-        CGCurrencyTypes::EnterWorld();
-    }
-
     if (newItem) {
-        WOWGUID none = WOWGUID();
-        ItemStats_C* stats = g_itemDBCache.GetRecord(newItem->m_obj->m_entryID, none, MultiCastBarItemStatsCallback, NULL, false);
+        WOWGUID requester = WOWGUID();
 
-        if (stats) {
-            TriggerMultiCastBarUpdate(stats);
+        if (ItemRecSparse* rec = g_itemSparseDB.GetRecord(newItem->m_obj->m_entryID, requester, MultiCastBarItemStatsCallback, NULL, false)) {
+            TriggerMultiCastBarUpdate(rec);
         }
+
+        player->CheckForQuestItemLoot(newItem->m_obj->m_entryID);
     }
 
     return 1;
 }
 
-// OFFSET: #0x005D9960
+// OFFSET: 0x009BD1E0/0x140748D50
 void CGContainerInfo::UpdateContainers() {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (!player) {
         return;
@@ -407,7 +368,63 @@ void CGContainerInfo::UpdateContainers() {
     }
 }
 
-// OFFSET: #0x005D9B40
+// OFFSET: 0x009BD3C0/0x140748FB0
+static bool ItemRecIsFiltered(const ItemRec* item, int32_t randomPropertiesId) {
+    if (!CGContainerInfo::m_searchText) {
+        return false;
+    }
+
+    char text[1024];
+    CGItem_C::BuildItemName(text, sizeof(text), item->m_ID, randomPropertiesId);
+    CaseAccentInsensitiveParse(text, sizeof(text), s_locale);
+
+    if (SStrStrUTF8I(text, CGContainerInfo::m_searchTextParsed)) {
+        return false;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_ID, requester, NULL, NULL, false);
+
+    if (!rec) {
+        return false;
+    }
+
+    for (int32_t i = 0; i < g_itemSubClassDB.m_numRecords; i++) {
+        ItemSubClassRec* subClass = g_itemSubClassDB.GetRecordByIndex(i);
+
+        if (!subClass || subClass->m_classID != item->m_classID || subClass->m_subClassID != item->m_subclassID) {
+            continue;
+        }
+
+        if (rec->m_inventoryType != 16 && !(subClass->m_flags & 0x1)) {
+            const char* name = subClass->m_displayName;
+
+            if (name && *name) {
+                SStrCopy(text, name, sizeof(text));
+            }
+        }
+
+        break;
+    }
+
+    CaseAccentInsensitiveParse(text, sizeof(text), s_locale);
+
+    if (SStrStrUTF8I(text, CGContainerInfo::m_searchTextParsed)) {
+        return false;
+    }
+
+    const char* type = FrameScript_GetText(s_inventoryTypeTokens[rec->m_inventoryType], -1, GENDER_NOT_APPLICABLE);
+    SStrCopy(text, type, sizeof(text));
+
+    if (!*type) {
+        text[0] = 0;
+    }
+
+    CaseAccentInsensitiveParse(text, sizeof(text), s_locale);
+    return SStrStrUTF8I(text, CGContainerInfo::m_searchTextParsed) == NULL;
+}
+
+// OFFSET: 0x009BE4B0
 int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize, const void* oldValue, void* param) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
 
@@ -421,13 +438,9 @@ int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize,
         CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(player->m_bag.m_slots[slot], TYPEMASK_ITEM, __FILE__, __LINE__));
 
         if (item && (item->m_obj->m_type & TYPEMASK_CONTAINER)) {
-            CGBag_C* bag = item->GetBag();
-
-            if (bag) {
+            if (CGBag_C* bag = item->GetBag()) {
                 for (uint32_t i = 0; i < static_cast<uint32_t>(bag->m_numSlots); i++) {
-                    CGItem_C* contained = bag->GetItemPointer(i);
-
-                    if (contained) {
+                    if (CGItem_C* contained = bag->GetItemPointer(i)) {
                         CGActionBar::UpdateItem(contained->m_obj->m_entryID);
                     }
                 }
@@ -439,4 +452,99 @@ int32_t InvUpdateHandler(WOWGUID guid, uint32_t fieldOffset, uint32_t fieldSize,
     CGContainerInfo::UpdateContainers();
     CGTradeSkillInfo::RefreshList(0);
     return 1;
+}
+
+// OFFSET: 0x009BE590/0x14074A580
+void CGContainerInfo::EnterWorld() {
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 19 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    }
+
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 39 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), UpdateInvContents, NULL, static_cast<HANDLER_PRIORITY>(0), 1);
+    }
+
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 67 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 74 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrSetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, sizeof(WOWGUID), InvUpdateHandler, NULL, static_cast<HANDLER_PRIORITY>(0), 0);
+    }
+
+    memset(CGContainerInfo::m_containers, 0, sizeof(CGContainerInfo::m_containers));
+    CGContainerInfo::UpdateContainers();
+}
+
+// OFFSET: 0x009BE640/0x14074A6B0
+void CGContainerInfo::LeaveWorld() {
+    for (uint32_t i = 0; i < 11; i++) {
+        if (!CGContainerInfo::m_containers[i]) {
+            continue;
+        }
+
+        CGContainer_C* container = static_cast<CGContainer_C*>(ClntObjMgrObjectPtr(CGContainerInfo::m_containers[i], TYPEMASK_CONTAINER, __FILE__, __LINE__));
+
+        if (!container) {
+            continue;
+        }
+
+        int32_t count = container->GetBag()->m_numSlots;
+
+        for (int32_t j = 0; j < count; j++) {
+            ClntObjMgrUnsetObjMirrorHandler(CGContainerInfo::m_containers[i], ID_CONTAINER, offsetof(CGContainerData, m_containerFieldSlot1) + j * sizeof(WOWGUID), UpdateContainerContents, NULL);
+        }
+    }
+
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 39 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, UpdateInvContents, NULL);
+    }
+
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 19 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 23 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, InvUpdateHandler, NULL);
+    }
+
+    for (uint32_t offset = offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 67 * sizeof(WOWGUID); offset < offsetof(CGPlayerLocalData, m_playerFieldInvSlotHead) + 74 * sizeof(WOWGUID); offset += sizeof(WOWGUID)) {
+        ClntObjMgrUnsetObjMirrorHandler(ClntObjMgrGetActivePlayer(), ID_PLAYER, offset, InvUpdateHandler, NULL);
+    }
+
+    if (CGContainerInfo::m_searchText) {
+        SMemFree(CGContainerInfo::m_searchText, __FILE__, __LINE__, 0);
+    }
+
+    if (CGContainerInfo::m_searchTextParsed) {
+        SMemFree(CGContainerInfo::m_searchTextParsed, __FILE__, __LINE__, 0);
+    }
+
+    CGContainerInfo::m_searchTextParsed = NULL;
+    CGContainerInfo::m_searchText = NULL;
+}
+
+// OFFSET: 0x009BE790/0x14074A860
+bool CGContainerInfo::IsItemFiltered(const CGItem_C* item) {
+    if (!CGContainerInfo::m_searchText) {
+        return false;
+    }
+
+    for (int32_t i = CGEquipmentManager::GetNumSets(); i >= 0; i--) {
+        EQUIPMENT_SET* set = CGEquipmentManager::GetSetByIndex(i);
+
+        if (!set) {
+            continue;
+        }
+
+        char name[1024];
+        SStrCopy(name, set->m_name, sizeof(name));
+        CaseAccentInsensitiveParse(name, sizeof(name), s_locale);
+
+        if (!SStrStrUTF8I(name, CGContainerInfo::m_searchTextParsed)) {
+            continue;
+        }
+
+        for (uint32_t j = 0; j <= 18; j++) {
+            if (set->m_items[j].m_guid > 1 && ClntObjMgrObjectPtr(set->m_items[j], TYPEMASK_ITEM, __FILE__, __LINE__) == item) {
+                return false;
+            }
+        }
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRec* rec = g_itemDB.GetRecord(item->m_obj->m_entryID, requester, NULL, NULL, false);
+    return ItemRecIsFiltered(rec, item->m_item->m_itemFieldRandomPropertiesId);
 }

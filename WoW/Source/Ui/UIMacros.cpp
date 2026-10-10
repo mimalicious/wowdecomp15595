@@ -949,7 +949,7 @@ int32_t MACRONODE::FindSpellID() {
                             bag = &player->m_bag;
                         }
                     } else if (static_cast<uint32_t>(bagIndex) <= 3) {
-                        CGObject_C* container = ClntObjMgrObjectPtr(GetBagAtIndex(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
+                        CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
 
                         if (container) {
                             bag = container->GetBag();

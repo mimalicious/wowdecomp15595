@@ -3,6 +3,8 @@
 
 #include "WoW/Source/Object/WGUID.h"
 
+class CGItem_C;
+
 class CGVoidStorageInfo {
     public:
     static void ShutdownGame();
@@ -11,6 +13,7 @@ class CGVoidStorageInfo {
     static WOWGUID m_npc;
 
     static void SetNPC(const WOWGUID& guid);
+    static void AutoDepositItem(CGItem_C* item);
 };
 
 #endif

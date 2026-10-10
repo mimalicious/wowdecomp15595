@@ -619,7 +619,7 @@ static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
     }
 
     for (uint32_t bagIndex = 0; bagIndex < 4; bagIndex++) {
-        CGObject_C* container = ClntObjMgrObjectPtr(GetBagAtIndex(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
+        CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
 
         if (!container) {
             continue;
@@ -666,7 +666,7 @@ static int32_t Script_GetInventoryItemsForSlot(lua_State* L) {
     }
 
     for (uint32_t bagIndex = 4; bagIndex < 11; bagIndex++) {
-        CGObject_C* container = ClntObjMgrObjectPtr(GetBagAtIndex(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
+        CGObject_C* container = ClntObjMgrObjectPtr(CGContainerInfo::GetContainer(bagIndex), TYPEMASK_CONTAINER, __FILE__, __LINE__);
 
         if (!container) {
             continue;
