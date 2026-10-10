@@ -4,6 +4,12 @@
 // STATIC: 0x00E4D570
 bool (*ClientPartyInvite::s_handler)(ClientPartyInvite* msg);
 
+// STATIC: 0x00E4D6A8
+bool (*ClientTradeStatus::s_handler)(ClientTradeStatus* msg);
+
+// STATIC: 0x00E4D56C
+bool (*ClientTradeUpdated::s_handler)(ClientTradeUpdated* msg);
+
 // STATIC: 0x00E4D694
 bool (*ClientSetupCurrency::s_handler)(ClientSetupCurrency* msg);
 
@@ -877,15 +883,18 @@ bool (*ClientCurrencyLootRestored::s_handler)(ClientCurrencyLootRestored* msg);
 // STATIC: 0x00E4D5D4
 bool (*ClientLootContents::s_handler)(ClientLootContents* msg);
 
+// PROVEN: 87b01d44 IDENTICAL/NONE
 // OFFSET: 0x006C1130/0x140376650
 ClientPlaySpellVisualKit::ClientPlaySpellVisualKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
+// PROVEN: 8c70b068 IDENTICAL/NONE
 // OFFSET: 0x006A28B0/0x14034FD30
 ClientPlaySpellVisualKit::~ClientPlaySpellVisualKit() {
 }
 
+// PROVEN: 66b3709f IDENTICAL/NONE
 // OFFSET: 0x006CA820
 bool ClientPlaySpellVisualKit::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
@@ -1048,15 +1057,18 @@ void ClientPlaySpellVisualKit::Unpack(CDataStore* msg, bool full) {
     }
 }
 
+// PROVEN: 6083fa7e IDENTICAL/NONE
 // OFFSET: 0x006DEB60/0x14039E700
 ClientWeeklySpellUsage::ClientWeeklySpellUsage(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
+// PROVEN: fa5189a5 IDENTICAL/NONE
 // OFFSET: 0x006E5A60/0x1403A6FE0
 ClientWeeklySpellUsage::~ClientWeeklySpellUsage() {
 }
 
+// PROVEN: bbe92838 IDENTICAL/NONE
 // OFFSET: 0x006E1F70
 bool ClientWeeklySpellUsage::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
@@ -1122,10 +1134,12 @@ ClientWeeklySpellUsageUpdate::ClientWeeklySpellUsageUpdate(NetClient* netClient,
     this->m_usage.m_category = category;
 }
 
+// PROVEN: f6a5c43f IDENTICAL/NONE
 // OFFSET: 0x006B1AE0/0x140350000
 ClientWeeklySpellUsageUpdate::~ClientWeeklySpellUsageUpdate() {
 }
 
+// PROVEN: f69565c9 IDENTICAL/NONE
 // OFFSET: 0x006C52E0
 bool ClientWeeklySpellUsageUpdate::Get(CDataStore* msg, bool full) {
     uint8_t uses = 0;
@@ -1148,15 +1162,18 @@ bool ClientWeeklySpellUsageUpdate::Handle() {
     return ClientWeeklySpellUsageUpdate::s_handler(this);
 }
 
+// PROVEN: d7ff0f75 IDENTICAL/NONE
 // OFFSET: 0x006D8620/0x140396710
 ClientClearCooldowns::ClientClearCooldowns(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
 }
 
+// PROVEN: f9e43d14 IDENTICAL/NONE
 // OFFSET: 0x006C9A90/0x1403814F0
 ClientClearCooldowns::~ClientClearCooldowns() {
 }
 
+// PROVEN: dbd0a56e IDENTICAL/NONE
 // OFFSET: 0x006D97A0
 bool ClientClearCooldowns::Get(CDataStore* msg, bool full) {
     return this->Read(msg, full);
@@ -1910,4 +1927,371 @@ bool ClientPartyInvite::Handle() {
     }
 
     return ClientPartyInvite::s_handler(this);
+}
+
+// OFFSET: 0x006B1AF0/0x140362E70
+ClientTradeStatus::ClientTradeStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0EE0/0x14034DFC0
+ClientTradeStatus::~ClientTradeStatus() {
+}
+
+// OFFSET: 0x006B16A0/0x1403628D0
+void ClientTradeStatus::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_partnerIsSameBnetAccount = bits.ReadBit() != 0;
+    this->m_status = bits.ReadBits<5>();
+
+    if (this->m_status == 12) {
+        this->m_partner[2] = bits.ReadBit();
+        this->m_partner[4] = bits.ReadBit();
+        this->m_partner[6] = bits.ReadBit();
+        this->m_partner[0] = bits.ReadBit();
+        this->m_partner[1] = bits.ReadBit();
+        this->m_partner[3] = bits.ReadBit();
+        this->m_partner[7] = bits.ReadBit();
+        this->m_partner[5] = bits.ReadBit();
+    }
+
+    if (this->m_status == 31) {
+        this->m_failureForYou = bits.ReadBit() != 0;
+    }
+
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    if (this->m_status == 31) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_itemID = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_bagResult = intValue;
+    }
+
+    if (this->m_status == 12) {
+        if (this->m_partner[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[4] ^= byteValue;
+        }
+
+        if (this->m_partner[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[1] ^= byteValue;
+        }
+
+        if (this->m_partner[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[2] ^= byteValue;
+        }
+
+        if (this->m_partner[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[3] ^= byteValue;
+        }
+
+        if (this->m_partner[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[0] ^= byteValue;
+        }
+
+        if (this->m_partner[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[7] ^= byteValue;
+        }
+
+        if (this->m_partner[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[6] ^= byteValue;
+        }
+
+        if (this->m_partner[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            this->m_partner[5] ^= byteValue;
+        }
+    }
+
+    if (this->m_status == 24 || this->m_status == 19) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_currencyQuantity = intValue;
+
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_currencyType = intValue;
+    }
+
+    if (this->m_status == 2 || this->m_status == 26) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_tradeSlot = byteValue;
+    }
+
+    if (this->m_status == 0) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_id = intValue;
+    }
+}
+
+// OFFSET: 0x006C08D0/0x140375C50
+bool ClientTradeStatus::Handle() {
+    if (!ClientTradeStatus::s_handler) {
+        return false;
+    }
+
+    return ClientTradeStatus::s_handler(this);
+}
+
+// INLINED
+ClientTradeItem::ClientTradeItem() {
+    this->m_hasUnwrapped = false;
+}
+
+// OFFSET: 0x006F2500/0x1403B8D30
+ClientTradeUpdated::ClientTradeUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006EE960/0x1403B3710
+ClientTradeUpdated::~ClientTradeUpdated() {
+}
+
+// OFFSET: 0x006EE100/0x1403B2D80
+void ClientTradeUpdated::Unpack(CDataStore* msg, bool full) {
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_id = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_currencyType = intValue;
+
+    uint64_t longValue = 0;
+    msg->Get(longValue);
+    this->m_gold = longValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_proposedEnchantment = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_clientStateIndex = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_currencyQuantity = intValue;
+
+    byteValue = 0;
+    msg->Get(byteValue);
+    this->m_whichPlayer = byteValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_stateIndex = intValue;
+
+    JamBitReader bits(msg);
+    this->m_items.SetCount(bits.ReadBits<22>());
+
+    for (uint32_t i = 0; i < this->m_items.Count(); i++) {
+        ClientTradeItem& item = this->m_items[i];
+        item.m_giftCreator[7] = bits.ReadBit();
+        item.m_giftCreator[1] = bits.ReadBit();
+        item.m_hasUnwrapped = bits.ReadBit() != 0;
+        item.m_giftCreator[3] = bits.ReadBit();
+
+        if (item.m_hasUnwrapped) {
+            item.m_unwrapped.m_creator[7] = bits.ReadBit();
+            item.m_unwrapped.m_creator[1] = bits.ReadBit();
+            item.m_unwrapped.m_creator[4] = bits.ReadBit();
+            item.m_unwrapped.m_creator[6] = bits.ReadBit();
+            item.m_unwrapped.m_creator[2] = bits.ReadBit();
+            item.m_unwrapped.m_creator[3] = bits.ReadBit();
+            item.m_unwrapped.m_creator[5] = bits.ReadBit();
+            item.m_unwrapped.m_lock = bits.ReadBit() != 0;
+            item.m_unwrapped.m_creator[0] = bits.ReadBit();
+        }
+
+        item.m_giftCreator[6] = bits.ReadBit();
+        item.m_giftCreator[4] = bits.ReadBit();
+        item.m_giftCreator[2] = bits.ReadBit();
+        item.m_giftCreator[0] = bits.ReadBit();
+        item.m_giftCreator[5] = bits.ReadBit();
+    }
+
+    for (uint32_t i = 0; i < this->m_items.Count(); i++) {
+        ClientTradeItem& item = this->m_items[i];
+
+        if (item.m_hasUnwrapped) {
+            if (item.m_unwrapped.m_creator[1]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[1] ^= byteValue;
+            }
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_enchantID = intValue;
+
+            for (uint32_t j = 0; j < 3; j++) {
+                intValue = 0;
+                msg->Get(intValue);
+                item.m_unwrapped.m_socketEnchant[j] = intValue;
+            }
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_maxDurability = intValue;
+
+            if (item.m_unwrapped.m_creator[6]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[6] ^= byteValue;
+            }
+
+            if (item.m_unwrapped.m_creator[2]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[2] ^= byteValue;
+            }
+
+            if (item.m_unwrapped.m_creator[7]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[7] ^= byteValue;
+            }
+
+            if (item.m_unwrapped.m_creator[4]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[4] ^= byteValue;
+            }
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_reforgeID = intValue;
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_durability = intValue;
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_randomPropertiesID = intValue;
+
+            if (item.m_unwrapped.m_creator[3]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[3] ^= byteValue;
+            }
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_onUseEnchantmentID = intValue;
+
+            if (item.m_unwrapped.m_creator[0]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[0] ^= byteValue;
+            }
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_charges = intValue;
+
+            intValue = 0;
+            msg->Get(intValue);
+            item.m_unwrapped.m_randomPropertiesSeed = intValue;
+
+            if (item.m_unwrapped.m_creator[5]) {
+                byteValue = 0;
+                msg->Get(byteValue);
+                item.m_unwrapped.m_creator[5] ^= byteValue;
+            }
+        }
+
+        if (item.m_giftCreator[6]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[6] ^= byteValue;
+        }
+
+        if (item.m_giftCreator[1]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[1] ^= byteValue;
+        }
+
+        if (item.m_giftCreator[7]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[7] ^= byteValue;
+        }
+
+        if (item.m_giftCreator[4]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[4] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_itemID = intValue;
+
+        if (item.m_giftCreator[0]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[0] ^= byteValue;
+        }
+
+        intValue = 0;
+        msg->Get(intValue);
+        item.m_stackCount = intValue;
+
+        if (item.m_giftCreator[5]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[5] ^= byteValue;
+        }
+
+        byteValue = 0;
+        msg->Get(byteValue);
+        item.m_slot = byteValue;
+
+        if (item.m_giftCreator[2]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[2] ^= byteValue;
+        }
+
+        if (item.m_giftCreator[3]) {
+            byteValue = 0;
+            msg->Get(byteValue);
+            item.m_giftCreator[3] ^= byteValue;
+        }
+    }
+}
+
+// OFFSET: 0x006B1600/0x140362800
+bool ClientTradeUpdated::Handle() {
+    if (!ClientTradeUpdated::s_handler) {
+        return false;
+    }
+
+    return ClientTradeUpdated::s_handler(this);
 }

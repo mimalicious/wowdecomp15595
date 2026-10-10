@@ -9584,7 +9584,7 @@ int32_t Spell_C_HandleTerrainRay(const CTerrainClickEvent& evt, bool checkRange)
 
 // OFFSET: 0x008B78B0/0x1405FF370
 int32_t Spell_C_TargetTradeItem() {
-    if (!(s_needTargets & 0x4010) || !CGTradeInfo::m_targetItemID[6]) {
+    if (!(s_needTargets & 0x4010) || !CGTradeInfo::m_targetTrade.m_items[6].m_itemID) {
         return 0;
     }
 

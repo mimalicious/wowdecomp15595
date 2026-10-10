@@ -66,7 +66,6 @@
 #include "WoW/Source/Object/ObjectClient/Object_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/ObjectClient/SimpleScript.h"
-#include "WoW/Source/Object/ObjectClient/Trade_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/Object/ObjectClient/UnitCombatLog_C.h"
 #include "WoW/Source/Object/ObjectClient/Vehicle_C.h"
@@ -188,13 +187,13 @@ static float s_setTitleTime;
 
 // OFFSET: 0x008C25A0/0x140631DB0
 static int32_t Script_BeginTrade(lua_State* L) {
-    Trade_C_BeginTrade();
+    CGTradeInfo::BeginTrade();
     return 0;
 }
 
 // OFFSET: 0x008C25B0/0x140631DC0
 static int32_t Script_CancelTrade(lua_State* L) {
-    Trade_C_CancelTrade();
+    CGTradeInfo::CancelTrade();
     return 0;
 }
 

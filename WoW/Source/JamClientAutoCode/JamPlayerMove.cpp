@@ -9797,10 +9797,12 @@ void PlayerSetActiveMover::Put(CDataStore* msg) {
 PlayerMoveUpdateMissileTrajectory::PlayerMoveUpdateMissileTrajectory() : m_hasStatus(false) {
 }
 
+// PROVEN: 2066f20e IDENTICAL/NONE
 // OFFSET: 0x00684840
 PlayerMoveUpdateMissileTrajectory::~PlayerMoveUpdateMissileTrajectory() {
 }
 
+// PROVEN: c5c496b4 IDENTICAL/NONE
 // OFFSET: 0x0067AB00
 void PlayerMoveUpdateMissileTrajectory::Put(CDataStore* msg) {
     const uint8_t* guid = reinterpret_cast<const uint8_t*>(&this->m_guid);

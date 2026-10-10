@@ -2,120 +2,121 @@
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
-#include "WoW/Source/Ui/GameUI.h"
-#include "WoW/Source/Ui/Types.h"
-#include "WoW/Source/Object/ObjectClient/Trade_C.h"
-#include "Engine/Source/lua-5.1/src/lua.h"
-#include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/Storm/H/storm.h"
-#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "Engine/Source/lua-5.1/src/lauxlib.h"
+#include "Engine/Source/lua-5.1/src/lua.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/CurrencyTypesRec.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
 #include "WoW/Source/Object/Item.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Bag_C.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/SoundInterface/SI3.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/Types.h"
 
-// OFFSET: 0x0096AC20/0x1406E1540
-static int32_t Script_CancelTradeAccept(lua_State* L) {
-    if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted) {
-        CGTradeInfo::m_playerAccepted = 0;
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_ACCEPT_UPDATE, "%d%d", 0, CGTradeInfo::m_targetAccepted);
-        Trade_C_UnacceptTrade();
+// PROVEN: a0cc92d6 IDENTICAL/NONE
+// OFFSET: 0x0096A7D0/0x1406E10B0
+static int32_t Script_GetPlayerTradeMoney(lua_State* L) {
+    lua_pushnumber(L, CGTradeInfo::m_tradingPlayer ? static_cast<double>(CGTradeInfo::m_playerTrade.m_money) : 0.0);
+    return 1;
+}
+
+// PROVEN: 666e1b94 IDENTICAL/NONE
+// OFFSET: 0x0096A840/0x1406E1100
+static int32_t Script_GetTargetTradeMoney(lua_State* L) {
+    lua_pushnumber(L, static_cast<double>(CGTradeInfo::m_targetTrade.m_money));
+    return 1;
+}
+
+// OFFSET: 0x0096A8A0/0x1406E1130
+static int32_t Script_PickupTradeMoney(lua_State* L) {
+    uint64_t money;
+
+    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &money)) {
+        luaL_error(L, "Usage: PickupTradeMoney(amount)");
+        return 0;
+    }
+
+    if (money <= CGTradeInfo::m_playerTrade.m_money) {
+        CGTradeInfo::RemoveMoney(money);
+        CGGameUI::SetCursorMoney(money);
     }
 
     return 0;
 }
 
-// OFFSET: 0x0096A7D0/0x1406E10B0
-static int32_t Script_GetPlayerTradeMoney(lua_State* L) {
-    uint32_t money = CGTradeInfo::m_tradingPlayer ? CGTradeInfo::GetPlayerTradeMoney() : 0;
-    lua_pushnumber(L, money);
-    return 1;
+// PROVEN: 91dff602 IDENTICAL/NONE
+// OFFSET: 0x0096A920/0x1406E11B0
+static int32_t Script_GetPlayerTradeCurrency(lua_State* L) {
+    int32_t type = 0;
+    int32_t quantity = 0;
+
+    if (CGTradeInfo::m_tradingPlayer) {
+        type = CGTradeInfo::m_playerTrade.m_currencyType;
+        quantity = CGTradeInfo::m_playerTrade.m_currencyQuantity;
+    }
+
+    lua_pushnumber(L, type);
+    lua_pushnumber(L, quantity);
+    return 2;
 }
 
-// OFFSET: 0x0096A840/0x1406E1100
-static int32_t Script_GetTargetTradeMoney(lua_State* L) {
-    lua_pushnumber(L, CGTradeInfo::GetTargetTradeMoney());
-    return 1;
+// PROVEN: cbec4e46 IDENTICAL/NONE
+// OFFSET: 0x0096A980/0x1406E1210
+static int32_t Script_GetTargetTradeCurrency(lua_State* L) {
+    int32_t quantity = CGTradeInfo::m_targetTrade.m_currencyQuantity;
+    lua_pushnumber(L, CGTradeInfo::m_targetTrade.m_currencyType);
+    lua_pushnumber(L, quantity);
+    return 2;
 }
 
-// OFFSET: 0x0096C240/0x1406E2EC0
-static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
+// OFFSET: 0x0096AB40/0x1406E1420
+static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTradeTargetItemLink(index)");
+        luaL_error(L, "Usage: GetTradePlayerItemLink(index)");
         return 0;
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[index].m_item;
+    CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
-    if (index > 6) {
+    if (!item) {
         return 0;
     }
 
-    int32_t itemId = CGTradeInfo::m_targetItemID[index];
-
-    if (!itemId) {
-        return 0;
-    }
-
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(itemId, none, NULL, NULL, false);
-
-    if (!stats) {
-        return 0;
-    }
-
-    int32_t gems[3];
-
-    for (uint32_t i = 0; i < 3; i++) {
-        gems[i] = CGTradeInfo::m_targetSocketEnchants[index][i];
-    }
-
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, stats->m_quality, CGTradeInfo::m_targetEnchant[index], gems, CGTradeInfo::m_targetRandomPropertyID[index], CGTradeInfo::m_targetSuffixFactor[index], 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item));
     return 1;
 }
 
+// PROVEN: 1c2c8da3 IDENTICAL/NONE
 // OFFSET: 0x0096ABD0/0x1406E14C0
 static int32_t Script_AcceptTrade(lua_State* L) {
     if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted != 1) {
         CGTradeInfo::m_playerAccepted = 1;
         FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_ACCEPT_UPDATE, "%d%d", 1, CGTradeInfo::m_targetAccepted);
-        Trade_C_AcceptTrade();
+        CGTradeInfo::AcceptTrade();
     }
 
     return 0;
 }
 
-// OFFSET: 0x0096A8A0/0x1406E1130
-static int32_t Script_PickupTradeMoney(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: PickupTradeMoney(amount)");
-        return 0;
+// PROVEN: 6b0f70a9 IDENTICAL/NONE
+// OFFSET: 0x0096AC20/0x1406E1540
+static int32_t Script_CancelTradeAccept(lua_State* L) {
+    if (CGGameUI::CanPerformAction(7) && CGTradeInfo::m_playerAccepted) {
+        CGTradeInfo::m_playerAccepted = 0;
+        FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_ACCEPT_UPDATE, "%d%d", 0, CGTradeInfo::m_targetAccepted);
+        CGTradeInfo::UnacceptTrade();
     }
 
-    int32_t amount = static_cast<int32_t>(lua_tonumber(L, 1));
-
-    if (amount > 0 && static_cast<uint32_t>(amount) <= CGTradeInfo::GetPlayerTradeMoney()) {
-        CGTradeInfo::RemoveMoney(amount);
-        CGGameUI::SetCursorMoney(amount);
-    }
-
-    return 0;
-}
-
-// OFFSET: 0x0096B2A0/0x1406E1D00
-static int32_t Script_SetTradeMoney(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetTradeMoney(amount)");
-        return 0;
-    }
-
-    CGTradeInfo::SetMoney(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
     return 0;
 }
 
@@ -129,37 +130,62 @@ static int32_t Script_ClickTargetTradeButton(lua_State* L) {
     if (CGGameUI::m_cursorMoney) {
         if (CGTradeInfo::AddMoney(CGGameUI::m_cursorMoney)) {
             CGGameUI::ClearCursor(1, 0);
+            return 0;
         }
-    } else if (static_cast<int32_t>(lua_tonumber(L, 1)) - 1 == 6) {
+    } else if (static_cast<int32_t>(lua_tonumber(L, 1)) == 7) {
         CGGameUI::TargetTradeItem();
     }
 
     return 0;
 }
 
-// OFFSET: 0x0096AB40/0x1406E1420
-static int32_t Script_GetTradePlayerItemLink(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTradePlayerItemLink(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerItems[index];
-    CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-    if (!item) {
-        return 0;
-    }
-
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(item));
-    return 1;
-}
-
+// PROVEN: 3e3c8e27 IDENTICAL/NONE
 // OFFSET: 0x0096B270/0x1406E1CD0
 static int32_t Script_AddTradeMoney(lua_State* L) {
     if (CGGameUI::m_cursorMoney && CGTradeInfo::AddMoney(CGGameUI::m_cursorMoney)) {
         CGGameUI::ClearCursor(1, 0);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0096B2A0/0x1406E1D00
+static int32_t Script_SetTradeMoney(lua_State* L) {
+    uint64_t money;
+
+    if (!lua_isnumber(L, 1) || !Script_GetMoney(L, 1, &money)) {
+        luaL_error(L, "Usage: SetTradeMoney(amount)");
+        return 0;
+    }
+
+    int64_t amount = money;
+
+    if (amount < 0) {
+        amount = 0;
+    } else if (amount >= 10000000000LL) {
+        amount = 9999999999LL;
+    }
+
+    CGTradeInfo::SetMoney(amount);
+    return 0;
+}
+
+// OFFSET: 0x0096B340/0x1406E1DC0
+static int32_t Script_SetTradeCurrency(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: SetTradeCurrency(type, amount)");
+        return 0;
+    }
+
+    int32_t type = static_cast<int32_t>(lua_tonumber(L, 1));
+    CurrencyTypesRec* rec = g_currencyTypesDB.GetRecord(type);
+
+    if (rec && (rec->m_flags & 1)) {
+        int32_t quantity = static_cast<int32_t>(lua_tonumber(L, 2));
+
+        if (quantity >= 0) {
+            CGTradeInfo::SetCurrency(type, quantity);
+        }
     }
 
     return 0;
@@ -171,19 +197,7 @@ static int32_t Script_CloseTrade(lua_State* L) {
         FrameScript_SignalEvent(SCRIPT_EVENT_PLAYER_TRADE_MONEY, NULL);
     }
 
-    if (CGTradeInfo::m_tradingPlayer) {
-        if (CGTradeInfo::m_enchantingItem) {
-            CGGameUI::UnlockItem(CGTradeInfo::m_enchantingItem);
-            CGTradeInfo::m_enchantingItem = WOWGUID();
-        }
-
-        CGTradeInfo::m_supressMoneyEvent = 0;
-        CGGameUI::ClearInteractTarget(CGTradeInfo::m_tradingPlayer, 0);
-        CGTradeInfo::m_tradingPlayer = WOWGUID();
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_CLOSED, NULL);
-    }
-
-    Trade_C_CancelTrade();
+    CGTradeInfo::SetTradePartner(WOWGUID(), 0, 0);
     return 0;
 }
 
@@ -208,7 +222,7 @@ static int32_t Script_ClickTradeButton(lua_State* L) {
             CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
 
             if (object) {
-                SndInterfacePlayItemSound(1, object);
+                SI3::PlayItemSound(1, object);
             }
         }
 
@@ -228,14 +242,17 @@ static int32_t Script_ClickTradeButton(lua_State* L) {
     uint32_t cursorSlot;
     CGGameUI::GetCursorItem(cursorItem, cursorContainer, cursorSlot);
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(cursorItem, TYPEMASK_ITEM, __FILE__, __LINE__));
+    bool canTradeBound = item && CanTradeBoundItem(item);
 
     if (slot < 6 && item) {
-        if (item->IsPermanentlyBoundForTrade()) {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, none, NULL, NULL, false);
+        if (item->IsPermanentlyBoundForTrade() && !canTradeBound) {
+            WOWGUID requester = WOWGUID();
+            ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, requester, NULL, NULL, false);
 
-            if (stats && stats->m_bonding == 4) {
+            if (rec && rec->m_bonding == 4) {
                 CGGameUI::DisplayError(ERR_TRADE_QUEST_ITEM);
+            } else if (item->IsBoundToAccount()) {
+                CGGameUI::DisplayError(ERR_NOT_SAME_ACCOUNT);
             } else {
                 CGGameUI::DisplayError(ERR_TRADE_BOUND_ITEM);
             }
@@ -243,15 +260,13 @@ static int32_t Script_ClickTradeButton(lua_State* L) {
             return 0;
         }
 
-        if (item->HasSoulboundEnchant()) {
+        if (item->HasSoulboundEnchant() && !canTradeBound) {
             CGGameUI::DisplayError(ERR_TRADE_TEMP_ENCHANT_BOUND);
             return 0;
         }
 
         if (item->m_obj->m_type & TYPEMASK_CONTAINER) {
-            CGBag_C* bag = item->GetBag();
-
-            if (bag) {
+            if (CGBag_C* bag = item->GetBag()) {
                 if (bag->GetNumItems()) {
                     CGGameUI::DisplayError(ERR_TRADE_BAG);
                     return 0;
@@ -291,9 +306,11 @@ static int32_t Script_GetTradeTargetItemInfo(lua_State* L) {
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     int32_t itemId;
-    ItemStats_C* stats;
+    WOWGUID requester;
+    ItemRecSparse* sparse;
+    ItemRec* rec;
 
-    if (index > 6 || !(itemId = CGTradeInfo::m_targetItemID[index]) || !(stats = g_itemDBCache.GetRecord(itemId, CGTradeInfo::m_tradingPlayer, &TradeItemStatsCallback, NULL, false))) {
+    if (index > 6 || !(itemId = CGTradeInfo::m_targetTrade.m_items[index].m_itemID) || (requester = CGTradeInfo::m_tradingPlayer, !(sparse = g_itemSparseDB.GetRecord(itemId, requester, &TradeItemStatsCallback, NULL, false))) || !(rec = sparse->GetNonSparse())) {
         lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnumber(L, 0.0);
@@ -304,38 +321,69 @@ static int32_t Script_GetTradeTargetItemInfo(lua_State* L) {
     }
 
     char name[256];
-    CGItem_C::BuildItemName(name, sizeof(name), itemId, CGTradeInfo::m_targetRandomPropertyID[index]);
+    CGItem_C::BuildItemName(name, sizeof(name), itemId, CGTradeInfo::GetTargetRandomPropertyID(index));
     lua_pushstring(L, name);
     const char* path = ClientDBStringLookup(3);
     char texture[260];
-    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(stats->m_displayId));
+    SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(rec->m_displayInfoID));
     lua_pushstring(L, texture);
-    lua_pushnumber(L, CGTradeInfo::m_targetCount[index]);
-    lua_pushnumber(L, stats->m_inventoryType ? static_cast<int32_t>(stats->m_quality) : -1);
+    lua_pushnumber(L, CGTradeInfo::GetTargetCount(index));
+    lua_pushnumber(L, sparse->m_inventoryType ? sparse->m_quality : -1);
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
     int32_t error;
 
-    if (!player || player->CanUseItem(stats, error)) {
+    if (!player || player->CanUseItem(sparse, error)) {
         lua_pushnumber(L, 1.0);
     } else {
         lua_pushnil(L);
     }
 
-    if (index == 6) {
-        int32_t spellId = Trade_C_GetEnchantSpell(0);
-
-        if (spellId) {
-            SpellRec spell;
-
-            if (g_spellDB.GetRecord(spellId, &spell)) {
-                lua_pushstring(L, spell.m_name);
-                return 6;
-            }
+    if (index == 6 && CGTradeInfo::m_playerTrade.m_proposedEnchant) {
+        if (SpellRec* spell = g_spellDB.GetRecord(CGTradeInfo::m_playerTrade.m_proposedEnchant)) {
+            lua_pushstring(L, spell->m_name);
+            return 6;
         }
     }
 
     lua_pushnil(L);
     return 6;
+}
+
+// OFFSET: 0x0096C240/0x1406E2EC0
+static int32_t Script_GetTradeTargetItemLink(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTradeTargetItemLink(index)");
+        return 0;
+    }
+
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+
+    if (index > 6) {
+        return 0;
+    }
+
+    int32_t itemId = CGTradeInfo::m_targetTrade.m_items[index].m_itemID;
+
+    if (!itemId) {
+        return 0;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(itemId, requester, NULL, NULL, false);
+
+    if (!rec) {
+        return 0;
+    }
+
+    const TradeTargetItem& item = CGTradeInfo::m_targetTrade.m_items[index];
+    int32_t gems[3];
+
+    for (uint32_t i = 0; i < 3; i++) {
+        gems[i] = item.m_socketEnchants[i];
+    }
+
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(itemId, rec->m_quality, item.m_enchant, gems, item.m_randomPropertyID, item.m_suffixFactor, item.m_reforgeEnchant));
+    return 1;
 }
 
 // OFFSET: 0x0096C340/0x1406E3020
@@ -346,7 +394,7 @@ static int32_t Script_GetTradePlayerItemInfo(lua_State* L) {
     }
 
     uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerItems[index];
+    WOWGUID guid = index > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[index].m_item;
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
     if (!item) {
@@ -367,19 +415,13 @@ static int32_t Script_GetTradePlayerItemInfo(lua_State* L) {
     lua_pushstring(L, texture);
     lua_pushnumber(L, item->m_item->m_itemFieldStackCount);
     WOWGUID requester = ClntObjMgrGetActivePlayer();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(item->m_obj->m_entryID, requester, &TradeItemStatsCallback, NULL, false);
-    lua_pushnumber(L, stats && stats->m_inventoryType ? static_cast<int32_t>(stats->m_quality) : -1);
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(item->m_obj->m_entryID, requester, &TradeItemStatsCallback, NULL, false);
+    lua_pushnumber(L, rec && rec->m_inventoryType ? rec->m_quality : -1);
 
-    if (index == 6) {
-        int32_t spellId = Trade_C_GetEnchantSpell(1);
-
-        if (spellId) {
-            SpellRec spell;
-
-            if (g_spellDB.GetRecord(spellId, &spell)) {
-                lua_pushstring(L, spell.m_name);
-                return 5;
-            }
+    if (index == 6 && CGTradeInfo::m_targetTrade.m_proposedEnchant) {
+        if (SpellRec* spell = g_spellDB.GetRecord(CGTradeInfo::m_targetTrade.m_proposedEnchant)) {
+            lua_pushstring(L, spell->m_name);
+            return 5;
         }
     }
 
@@ -387,7 +429,7 @@ static int32_t Script_GetTradePlayerItemInfo(lua_State* L) {
     return 5;
 }
 
-// STATIC: #0x00ACEDB0
+// STATIC: 0x00D13280
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CloseTrade", &Script_CloseTrade },
     { "ClickTradeButton", &Script_ClickTradeButton },
@@ -403,16 +445,21 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "PickupTradeMoney", &Script_PickupTradeMoney },
     { "AddTradeMoney", &Script_AddTradeMoney },
     { "SetTradeMoney", &Script_SetTradeMoney },
+    { "SetTradeCurrency", &Script_SetTradeCurrency },
+    { "GetPlayerTradeCurrency", &Script_GetPlayerTradeCurrency },
+    { "GetTargetTradeCurrency", &Script_GetTargetTradeCurrency },
 };
 
-// OFFSET: #0x005868E0
+// PROVEN: 21ea7c44 IDENTICAL/NONE
+// OFFSET: 0x0096A9C0
 void TradeInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x00586910
+// PROVEN: da9efac9 IDENTICAL/NONE
+// OFFSET: 0x0096A9F0
 void TradeInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -189,7 +189,6 @@
 #include "WoW/Source/DB/Rec/CinematicSequencesRec.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
-#include "WoW/Source/Object/ObjectClient/Trade_C.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 #include <cfloat>
 #include "Engine/Source/Tempest/C2Vector.h"
@@ -4598,7 +4597,7 @@ const char* MirrorTimerTypeToken(int32_t type) {
 
 // OFFSET: 0x008CB620
 void CGGameUI::TargetTradeItem() {
-    if (!CGTradeInfo::m_targetItemID[6]) {
+    if (!CGTradeInfo::m_targetTrade.m_items[6].m_itemID) {
         return;
     }
 
@@ -4674,7 +4673,7 @@ void CGGameUI::CloseInteraction() {
     WOWGUID none = WOWGUID();
 
     if (CGTradeInfo::m_tradingPlayer == target) {
-        CGTradeInfo::SetTradePartner(none, 0);
+        CGTradeInfo::SetTradePartner(none, 0, 0);
     } else if (CGItemText::m_itemGUID == target) {
         CGItemText::SetItem(none, 0);
     } else if (CGGossipInfo::m_gossip == target) {
@@ -7752,7 +7751,7 @@ void CGGameUI::Shutdown() {
     CGGameUI::Target(WOWGUID());
     CGGameUI::SetFocusTarget(WOWGUID());
     CGGameUI::ClearCursor(1, 1);
-    Trade_C_CancelTrade();
+    CGTradeInfo::CancelTrade();
     CGTradeSkillInfo::Close();
     DBClient_ClearDB2Caches();
 

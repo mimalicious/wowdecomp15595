@@ -1470,9 +1470,21 @@ class ClientTradeStatus : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientTradeStatus* msg);
 
+    /* 0010 */ bool m_partnerIsSameBnetAccount;
+    /* 0014 */ uint32_t m_status;
+    /* 0018 */ int32_t m_currencyType;
+    /* 001C */ int32_t m_currencyQuantity;
+    /* 0020 */ uint8_t m_tradeSlot;
+    /* 0024 */ uint32_t m_id;
+    /* 0028 */ uint8_t m_partner[8];
+    /* 0030 */ int32_t m_itemID;
+    /* 0034 */ int32_t m_bagResult;
+    /* 0038 */ bool m_failureForYou;
+
     ClientTradeStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTradeStatus();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientPvpLogData : public JamClientMessage {
@@ -1547,13 +1559,53 @@ class ClientPhaseShiftChange : public JamClientMessage {
     bool Handle();
 };
 
+struct ClientTradeItemUnwrapped {
+    /* 0000 */ int32_t m_enchantID;
+    /* 0004 */ int32_t m_reforgeID;
+    /* 0008 */ int32_t m_onUseEnchantmentID;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ uint8_t m_creator[8];
+    /* 0018 */ int32_t m_charges;
+    /* 001C */ int32_t m_randomPropertiesSeed;
+    /* 0020 */ int32_t m_randomPropertiesID;
+    /* 0024 */ bool m_lock;
+    /* 0028 */ int32_t m_maxDurability;
+    /* 002C */ int32_t m_durability;
+    /* 0030 */ int32_t m_socketEnchant[3];
+    /* 003C */ uint32_t unk_003C;
+};
+
+struct ClientTradeItem {
+    /* 0000 */ uint8_t m_slot;
+    /* 0004 */ int32_t m_itemID;
+    /* 0008 */ uint32_t m_stackCount;
+    /* 000C */ uint32_t unk_000C;
+    /* 0010 */ uint8_t m_giftCreator[8];
+    /* 0018 */ bool m_hasUnwrapped;
+    /* 0019 */ uint8_t unk_0019[7];
+    /* 0020 */ ClientTradeItemUnwrapped m_unwrapped;
+
+    ClientTradeItem();
+};
+
 class ClientTradeUpdated : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientTradeUpdated* msg);
 
+    /* 0010 */ uint32_t m_stateIndex;
+    /* 0014 */ uint8_t m_whichPlayer;
+    /* 0018 */ uint32_t m_clientStateIndex;
+    /* 001C */ int32_t m_currencyQuantity;
+    /* 0020 */ uint64_t m_gold;
+    /* 0028 */ int32_t m_currencyType;
+    /* 002C */ int32_t m_proposedEnchantment;
+    /* 0030 */ TSGrowableArray<ClientTradeItem> m_items;
+    /* 0040 */ uint32_t m_id;
+
     ClientTradeUpdated(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTradeUpdated();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildMoveStarting : public JamClientMessage {

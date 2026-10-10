@@ -69,4 +69,117 @@ class PlayerQueryQuestCompletionNPCs : public JamClientMessage {
     ~PlayerQueryQuestCompletionNPCs();
 };
 
+class PlayerCliCancelTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliCancelTrade();
+    ~PlayerCliCancelTrade();
+};
+
+class PlayerCliBeginTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliBeginTrade();
+    ~PlayerCliBeginTrade();
+};
+
+class PlayerCliUnacceptTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliUnacceptTrade();
+    ~PlayerCliUnacceptTrade();
+};
+
+class PlayerCliAcceptTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_stateIndex;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliAcceptTrade();
+    ~PlayerCliAcceptTrade();
+};
+
+class PlayerCliIgnoreTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliIgnoreTrade();
+    ~PlayerCliIgnoreTrade();
+};
+
+class PlayerCliBusyTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t unk_0010;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerCliBusyTrade();
+    ~PlayerCliBusyTrade();
+};
+
+class PlayerInitiateTrade : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_guid[8];
+
+    void Put(CDataStore* msg) override;
+
+    PlayerInitiateTrade();
+    ~PlayerInitiateTrade();
+};
+
+class PlayerSetTradeGold : public JamClientMessage {
+    public:
+    /* 0010 */ uint64_t m_coinage;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerSetTradeGold();
+    ~PlayerSetTradeGold();
+};
+
+class PlayerSetTradeCurrency : public JamClientMessage {
+    public:
+    /* 0010 */ int32_t m_type;
+    /* 0014 */ int32_t m_quantity;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerSetTradeCurrency();
+    ~PlayerSetTradeCurrency();
+};
+
+class PlayerSetTradeItem : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_packSlot;
+    /* 0011 */ uint8_t m_itemSlotInPack;
+    /* 0012 */ uint8_t m_tradeSlot;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerSetTradeItem();
+    ~PlayerSetTradeItem();
+};
+
+class PlayerClearTradeItem : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_tradeSlot;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerClearTradeItem();
+    ~PlayerClearTradeItem();
+};
+
 #endif

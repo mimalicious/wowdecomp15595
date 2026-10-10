@@ -933,7 +933,7 @@ void CGPlayer_C::SetFarSightFocus(CGObject_C* object) {
 }
 
 // OFFSET: 0x0044EE00/0x14005D110
-uint32_t CGPlayer_C::GetCoinage() const {
+uint64_t CGPlayer_C::GetCoinage() const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
         return 0;
     }

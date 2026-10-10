@@ -83,7 +83,6 @@
 #include "WoW/Source/Object/ObjectClient/Movement_C.h"
 #include "WoW/Source/Object/ObjectClient/ObjectEffect.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
-#include "WoW/Source/Object/ObjectClient/Trade_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
 #include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
 #include "WoW/Source/ObjectAlloc/ObjectAlloc.h"
