@@ -1,51 +1,27 @@
 #include "SpellTable.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/SkillLineAbilityRec.h"
+#include "WoW/Source/DB/Rec/SkillLineAbilitySortedSpellRec.h"
+#include "WoW/Source/DB/Rec/SkillLineRec.h"
+#include "WoW/Source/DB/Rec/SkillRaceClassInfoRec.h"
+#include "WoW/Source/DB/Rec/SkillTiersRec.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/Types.h"
 #include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "Engine/Source/Base/CDataAllocator.h"
-#include "WoW/Source/Ui/SkillInfo.h"
-#include "WoW/Source/DB/Rec/SkillLineRec.h"
-#include "WoW/Source/DB/Rec/SkillCostsDataRec.h"
-#include "WoW/Source/DB/Rec/SkillRaceClassInfoRec.h"
 
-// STATIC: #0x00D3F60C
+// STATIC: 0x00ED67C4
 static bool s_skillLineLinkInfoDirty;
 
-// STATIC: #0x00D3F610
+// STATIC: 0x00ED67C8
 static TSHashTable<RACECLASSINFO, HASHKEY_NONE> s_raceClassInfo;
 
-// STATIC: #0x00D3F638
-static TSHashTable<SKILLCOSTSINFO, HASHKEY_NONE> s_skillCostsInfo;
-
-class SkillLineRecTable : public TSHashTable<SKILLLINEREC, HASHKEY_SKILLLINE> {
-    public:
-    void InternalDelete(SKILLLINEREC* ptr) override;
-    SKILLLINEREC* InternalNew(TSExplicitList<SKILLLINEREC>* listptr, size_t extrabytes, uint32_t flags) override;
-};
-
-// STATIC: #0x00D3F660
-static SkillLineRecTable s_skillLineRecs;
-
-// STATIC: #0x00D3F688
+// STATIC: 0x00ED67F4
 static TSGrowableArray<SkillLineLinkInfo> s_skillLineLinkInfo;
 
-// STATIC: #0x00D3F698
-static CDataAllocator s_skillLineRecAllocator(sizeof(SKILLLINEREC), 0x1000);
+// STATIC: 0x00ED6804
+static bool s_destroyed;
 
-// OFFSET: #0x00811C90
-void SkillLineRecTable::InternalDelete(SKILLLINEREC* ptr) {
-    s_skillLineRecAllocator.Delete(ptr);
-}
-
-// OFFSET: #0x00811CC0
-SKILLLINEREC* SkillLineRecTable::InternalNew(TSExplicitList<SKILLLINEREC>* listptr, size_t extrabytes, uint32_t flags) {
-    SKILLLINEREC* rec = s_skillLineRecAllocator.New<SKILLLINEREC>(1);
-    listptr->LinkToHead(rec);
-    return rec;
-}
-
-// OFFSET: #0x00810320
+// OFFSET: 0x008C0420/0x14060A220
 bool SpellTableMatchRaceClass(int32_t race, int32_t classId, int32_t raceMask, int32_t classMask, int32_t excludeRace, int32_t excludeClass) {
     if (excludeRace) {
         raceMask = ~raceMask;
@@ -55,10 +31,10 @@ bool SpellTableMatchRaceClass(int32_t race, int32_t classId, int32_t raceMask, i
         classMask = ~classMask;
     }
 
-    return (!raceMask || ((1 << (race - 1)) & raceMask)) && (!classMask || ((1 << (classId - 1)) & classMask));
+    return (!raceMask || ((1 << (static_cast<int8_t>(race) - 1)) & raceMask)) && (!classMask || ((1 << (static_cast<int8_t>(classId) - 1)) & classMask));
 }
 
-// OFFSET: #0x00810410
+// OFFSET: 0x008C0520/0x14060A350
 SkillLineAbilityRec* SpellTableLookupPetAbility(int32_t skillLine, int32_t spellId) {
     for (int32_t i = 0; i < g_skillLineAbilityDB.m_numRecords; i++) {
         SkillLineAbilityRec* ability = g_skillLineAbilityDB.GetRecordByIndex(i);
@@ -71,7 +47,7 @@ SkillLineAbilityRec* SpellTableLookupPetAbility(int32_t skillLine, int32_t spell
     return NULL;
 }
 
-// OFFSET: #0x008104A0
+// OFFSET: 0x008C0570/0x14060A3A0
 bool SpellTableGetSkillLineLinkInfo(int32_t skillLine, const SkillLineAbilityRec*& ability, uint32_t& count) {
     for (uint32_t i = 0; i < s_skillLineLinkInfo.Count(); i++) {
         if (s_skillLineLinkInfo.m_data[i].m_ability->m_skillLine == skillLine) {
@@ -84,7 +60,38 @@ bool SpellTableGetSkillLineLinkInfo(int32_t skillLine, const SkillLineAbilityRec
     return false;
 }
 
-// OFFSET: #0x00810ED0
+// OFFSET: 0x008C05C0/0x14060A490
+static void SpellTableBuildSkillLineLinkInfo() {
+    SkillLineLinkInfo* link = NULL;
+    int32_t lastSkillLine = -1;
+
+    for (int32_t i = 0; i < g_skillLineAbilityDB.m_numRecords; i++) {
+        SkillLineAbilityRec* ability = g_skillLineAbilityDB.GetRecordByIndex(i);
+
+        if (lastSkillLine == ability->m_skillLine) {
+            if (link) {
+                link->m_count++;
+            }
+
+            continue;
+        }
+
+        SkillLineRec* skillLine = g_skillLineDB.GetRecord(ability->m_skillLine);
+
+        if (skillLine && skillLine->m_canLink) {
+            link = s_skillLineLinkInfo.New();
+            link->m_ability = ability;
+            link->m_count = 1;
+            lastSkillLine = ability->m_skillLine;
+        } else {
+            link = NULL;
+        }
+    }
+
+    s_skillLineLinkInfoDirty = false;
+}
+
+// OFFSET: 0x008C06E0/0x14060A580
 const SkillRaceClassInfoRec* SpellTableLookupInfo(int32_t race, int32_t classId, int32_t skillId) {
     HASHKEY_NONE key;
     RACECLASSINFO* info = s_raceClassInfo.Ptr(skillId, key);
@@ -96,7 +103,7 @@ const SkillRaceClassInfoRec* SpellTableLookupInfo(int32_t race, int32_t classId,
     const SkillRaceClassInfoRec* rec = info->m_info;
 
     for (int32_t i = 0; i < info->m_count; i++, rec++) {
-        if ((!rec->m_raceMask || ((1 << (race - 1)) & rec->m_raceMask)) && (!rec->m_classMask || ((1 << (classId - 1)) & rec->m_classMask))) {
+        if ((!rec->m_raceMask || ((1 << (static_cast<int8_t>(race) - 1)) & rec->m_raceMask)) && (!rec->m_classMask || ((1 << (static_cast<int8_t>(classId) - 1)) & rec->m_classMask))) {
             return rec;
         }
     }
@@ -104,95 +111,73 @@ const SkillRaceClassInfoRec* SpellTableLookupInfo(int32_t race, int32_t classId,
     return NULL;
 }
 
-// OFFSET: #0x00810F50
-int32_t CGSkillInfo::GetSkillCostField(const SkillRaceClassInfoRec* info, int32_t skillValue) {
-    SkillLineRec* skillLine = g_skillLineDB.GetRecord(info->m_skillID);
-
-    if (!skillLine || !skillLine->m_skillCostsID) {
-        return 0;
+// OFFSET: 0x008C0750/0x14060A640
+SkillLineAbilityRec* SpellTableLookupAbility(int32_t race, int32_t classId, int32_t spellId) {
+    if (s_skillLineLinkInfoDirty) {
+        SpellTableBuildSkillLineLinkInfo();
     }
 
-    HASHKEY_NONE key;
-    SKILLCOSTSINFO* costs = s_skillCostsInfo.Ptr(skillLine->m_skillCostsID, key);
-
-    if (!costs || skillValue > costs->m_count) {
-        return 0;
+    if (!ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
+        return NULL;
     }
 
-    return costs->m_info[skillValue - 1].m_cost[info->m_skillCostIndex];
-}
+    uint32_t low = 0;
+    uint32_t high = g_skillLineAbilityDB.m_numRecords;
 
-// OFFSET: #0x00811F20
-static bool SpellTableAddSkillLineRec(int32_t race, int32_t classId, const SkillLineAbilityRec* ability) {
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (player && race != player->m_unit->m_unitFieldBytes0[0] && classId != player->m_unit->m_unitFieldBytes0[1]) {
-        return false;
-    }
-
-    if (!SpellTableLookupInfo(race, classId, ability->m_skillLine) || !SpellTableMatchRaceClass(race, classId, ability->m_raceMask, ability->m_classMask, ability->m_excludeRace, ability->m_excludeClass)) {
-        return false;
-    }
-
-    HASHKEY_SKILLLINE key;
-    key.m_race = static_cast<uint8_t>(race);
-    key.m_class = static_cast<uint8_t>(classId);
-    key.m_spellId = ability->m_spell;
-
-    SKILLLINEREC* rec = s_skillLineRecs.New(ability->m_spell, key, 0, 0);
-    rec->m_ability = ability;
-    return true;
-}
-
-// OFFSET: #0x00812030
-static void SpellTableBuildSkillLineLinkInfo() {
-    SkillLineLinkInfo* link = NULL;
-    bool first = true;
-    int32_t lastSkillLine = -1;
-
-    for (int32_t i = 0; i < g_charBaseInfoDB.m_numRecords; i++) {
-        CharBaseInfoRec* base = g_charBaseInfoDB.GetRecordByIndex(i);
-        uint8_t race = static_cast<uint8_t>(base->m_raceID);
-
-        if (!g_chrRacesDB.GetRecord(race)) {
-            continue;
+    do {
+        if (low >= static_cast<uint32_t>(g_skillLineAbilityDB.m_numRecords)) {
+            break;
         }
 
-        for (int32_t j = 0; j < g_skillLineAbilityDB.m_numRecords; j++) {
-            SkillLineAbilityRec* ability = g_skillLineAbilityDB.GetRecordByIndex(j);
-            SpellTableAddSkillLineRec(race, static_cast<uint8_t>(base->m_classID), ability);
+        int32_t mid = static_cast<int32_t>((high + low) >> 1);
+        SkillLineAbilitySortedSpellRec* sorted = g_skillLineAbilitySortedSpellDB.GetRecordByIndex(mid);
 
-            if (!first) {
-                continue;
-            }
+        if (!sorted) {
+            break;
+        }
 
-            if (lastSkillLine == ability->m_skillLine) {
-                if (link) {
-                    link->m_count++;
+        if (spellId == sorted->m_spell) {
+            while (mid > 0) {
+                if (g_skillLineAbilitySortedSpellDB.GetRecordByIndex(mid - 1)->m_spell != spellId) {
+                    break;
                 }
 
-                continue;
+                mid--;
             }
 
-            SkillLineRec* skillLine = g_skillLineDB.GetRecord(ability->m_skillLine);
+            for (int32_t i = mid; i < g_skillLineAbilityDB.m_numRecords; i++) {
+                if (g_skillLineAbilitySortedSpellDB.GetRecordByIndex(i)->m_spell != spellId) {
+                    break;
+                }
 
-            if (skillLine && skillLine->m_canLink) {
-                link = s_skillLineLinkInfo.New();
-                link->m_ability = ability;
-                link->m_count = 1;
-                lastSkillLine = ability->m_skillLine;
-            } else {
-                link = NULL;
+                SkillLineAbilityRec* ability = g_skillLineAbilityDB.GetRecord(g_skillLineAbilitySortedSpellDB.GetRecordByIndex(i)->m_id);
+
+                if (ability->m_spell == spellId && SpellTableLookupInfo(race, classId, ability->m_skillLine) && SpellTableMatchRaceClass(race, classId, ability->m_raceMask, ability->m_classMask, ability->m_excludeRace, ability->m_excludeClass)) {
+                    return ability;
+                }
             }
+
+            return NULL;
         }
 
-        first = false;
-    }
+        if (spellId >= sorted->m_spell) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    } while (low <= high);
 
-    s_skillLineLinkInfoDirty = false;
+    return NULL;
 }
 
-// OFFSET: #0x00812200
+// OFFSET: 0x008C0A60
+void SpellTableDestroy() {
+    s_destroyed = true;
+    s_raceClassInfo.Clear();
+    s_skillLineLinkInfo.m_count = 0;
+}
+
+// OFFSET: 0x008C1110
 void SpellTableInitialize() {
     RACECLASSINFO* raceClassInfo = NULL;
     int32_t lastSkill = -1;
@@ -212,63 +197,7 @@ void SpellTableInitialize() {
         lastSkill = rec->m_skillID;
     }
 
-    SKILLCOSTSINFO* skillCostsInfo = NULL;
-    int32_t lastCosts = -1;
-
-    for (int32_t i = 0; i < g_skillCostsDataDB.m_numRecords; i++) {
-        SkillCostsDataRec* rec = g_skillCostsDataDB.GetRecordByIndex(i);
-
-        if (rec->m_skillCostsID == lastCosts) {
-            skillCostsInfo->m_count++;
-            continue;
-        }
-
-        HASHKEY_NONE key;
-        skillCostsInfo = s_skillCostsInfo.New(rec->m_skillCostsID, key, 0, 0);
-        skillCostsInfo->m_info = rec;
-        skillCostsInfo->m_count = 1;
-        lastCosts = rec->m_skillCostsID;
-    }
-
     s_skillLineLinkInfoDirty = true;
-}
-
-// OFFSET: #0x00812410
-SkillLineAbilityRec* SpellTableLookupAbility(int32_t race, int32_t classId, int32_t spellId) {
-    if (s_skillLineLinkInfoDirty) {
-        SpellTableBuildSkillLineLinkInfo();
-    }
-
-    HASHKEY_SKILLLINE key;
-    key.m_race = static_cast<uint8_t>(race);
-    key.m_class = static_cast<uint8_t>(classId);
-    key.m_spellId = spellId;
-
-    SKILLLINEREC* rec = s_skillLineRecs.Ptr(spellId, key);
-
-    if (rec) {
-        return const_cast<SkillLineAbilityRec*>(rec->m_ability);
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-
-    if (!player) {
-        return NULL;
-    }
-
-    if (player->m_unit->m_unitFieldBytes0[0] == race && player->m_unit->m_unitFieldBytes0[1] == classId) {
-        return NULL;
-    }
-
-    for (int32_t i = 0; i < g_skillLineAbilityDB.m_numRecords; i++) {
-        SkillLineAbilityRec* ability = g_skillLineAbilityDB.GetRecordByIndex(i);
-
-        if (ability->m_spell == spellId && SpellTableLookupInfo(race, classId, ability->m_skillLine) && SpellTableMatchRaceClass(race, classId, ability->m_raceMask, ability->m_classMask, ability->m_excludeRace, ability->m_excludeClass)) {
-            return ability;
-        }
-    }
-
-    return NULL;
 }
 
 // OFFSET: #0x00810460
@@ -284,14 +213,4 @@ int32_t GetSkillTierCost(const SkillRaceClassInfoRec* info, uint32_t step) {
     }
 
     return tier->m_cost[step];
-}
-
-// OFFSET: #0x00810920
-void SpellTableDestroy() {
-    s_skillLineRecs.Clear();
-    s_skillLineLinkInfoDirty = true;
-    s_raceClassInfo.Clear();
-    s_skillCostsInfo.Clear();
-    s_skillLineRecAllocator.Clear(typeid(SKILLLINEREC).raw_name(), SLOG_OBJECT, 1);
-    s_skillLineLinkInfo.m_count = 0;
 }

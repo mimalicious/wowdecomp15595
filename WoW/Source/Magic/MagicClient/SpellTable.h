@@ -5,30 +5,12 @@
 #include <cstdint>
 #include "Engine/Source/Storm/H/stpl.h"
 
-class SkillCostsDataRec;
 class SkillLineAbilityRec;
 class SkillRaceClassInfoRec;
-
-struct HASHKEY_SKILLLINE {
-    /* 0000 */ uint8_t m_race;
-    /* 0001 */ uint8_t m_class;
-    /* 0004 */ int32_t m_spellId;
-
-    bool operator==(const HASHKEY_SKILLLINE& key) const;
-};
 
 struct RACECLASSINFO : public TSHashObject<RACECLASSINFO, HASHKEY_NONE> {
     /* 0018 */ const SkillRaceClassInfoRec* m_info;
     /* 001C */ int32_t m_count;
-};
-
-struct SKILLCOSTSINFO : public TSHashObject<SKILLCOSTSINFO, HASHKEY_NONE> {
-    /* 0018 */ const SkillCostsDataRec* m_info;
-    /* 001C */ int32_t m_count;
-};
-
-struct SKILLLINEREC : public TSHashObject<SKILLLINEREC, HASHKEY_SKILLLINE> {
-    /* 001C */ const SkillLineAbilityRec* m_ability;
 };
 
 struct SkillLineLinkInfo {
@@ -44,7 +26,5 @@ bool SpellTableGetSkillLineLinkInfo(int32_t skillLine, const SkillLineAbilityRec
 const SkillRaceClassInfoRec* SpellTableLookupInfo(int32_t race, int32_t classId, int32_t skillId);
 SkillLineAbilityRec* SpellTableLookupAbility(int32_t race, int32_t classId, int32_t spellId);
 int32_t GetSkillTierCost(const SkillRaceClassInfoRec* info, uint32_t step);
-
-#include "WoW/Source/Magic/MagicClient/SpellTable.inl"
 
 #endif
