@@ -11195,6 +11195,16 @@ int32_t Packet_SMSG_PET_DISMISS_SOUND(void* param, NETMESSAGE msgId, uint32_t ti
     return 1;
 }
 
+// OFFSET: 0x005AED50
+void CGUnit_C::SuspendMovement() {
+    this->m_movementData.SuspendMovement();
+}
+
+// OFFSET: 0x005AED60
+void CGUnit_C::ResumeMovement() {
+    this->m_movementData.m_flags &= ~0x40000000;
+}
+
 // OFFSET: 0x005AED70/0x140221730
 void CGUnit_C::BuildSmoothMatrix(C44Matrix& matrix) const {
     matrix = C44Matrix::RotationAroundZ(this->m_smoothTarget.m_value);

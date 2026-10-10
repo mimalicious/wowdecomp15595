@@ -302,6 +302,7 @@ class CMovement_C : public CMovementShared {
     int32_t UpdateTransportStatus(WOWGUID transport, uint8_t seat, int32_t vehicleId);
     int32_t UpdateTransportStatus(const CMovementStatus& status);
     void FlushMoveQueue(int32_t removeSpline, int32_t controlLost);
+    void SuspendMovement();
     void RemoveFromMoversList(int32_t a1);
     int32_t UpdateStatusInternal(uint32_t time, const CMovementStatus& status, int32_t& timeOffset, int32_t local, int32_t force);
     void AddPlayerSpeedEvent(uint32_t eventTime, MoveEventId eventId, bool needAck, uint32_t ackCounter, float value, const CMovementStatus* status);

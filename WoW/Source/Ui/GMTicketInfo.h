@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include "WoW/Source/Net/Types.h"
+#include "WoW/Common/ThrottleObject.h"
 
 class CDataStore;
 struct lua_State;
@@ -23,7 +24,13 @@ class CGGMTicketInfo {
     static void ShutdownGame();
     static int32_t m_ticketID;
     static int32_t m_responseID;
+    static uint8_t s_quickTicketSystemStatus;
+    static uint8_t s_itemRestorationButtonStatus;
+    static ThrottleObject s_quickTicketThrottle;
     static void CreateTicket(const char* text, int32_t needResponse, uint32_t moreHelp);
+    static void SetQuickTicketSystemStatus(bool enabled);
+    static void SetQuickTicketThrottle(const ThrottleObject* throttle);
+    static void SetItemRestorationButtonStatus(bool enabled);
 };
 
 class CGGMReportLag {

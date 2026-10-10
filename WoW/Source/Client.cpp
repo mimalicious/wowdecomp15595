@@ -129,6 +129,10 @@
 #include "Engine/Source/FFX/FFX.h"
 #include "Engine/Source/Os/Processor.h"
 #include "Engine/Source/ShaderEffect/DefaultShaders.h"
+#include "WoW/Source/Magic/MagicClient/SpellTable.h"
+#include "WoW/Source/Game/GameClient/PhaseShift_C.h"
+#include "WoW/Source/DB/WowClientDB.h"
+#include "Engine/Source/Frame/CSimpleTexture.h"
 #include "Engine/Source/Os/SockAddr.h"
 
 namespace {
@@ -1850,10 +1854,12 @@ static void SetDefaults(OPTION_PAGE page) {
 void ZoneDebugDestroy() {
 }
 
-// OFFSET: #0x00402910
+// OFFSET: 0x00407150
 static void WowClientDestroy() {
+    CGPlayer_C::PlayerShutdownClientHandlers();
     ValidateNameDestroy();
     DeclinedWordsDestroy();
+    SpellTableDestroy();
     SpellVisualsShutdown();
     InputControlDestroy();
     CGlueMgr::Shutdown();
@@ -1866,6 +1872,7 @@ static void WowClientDestroy() {
     CCharacterComponent::Destroy();
     FrameXML_FreeHashNodes();
     FrameXML_ClearFactories();
+    CSimpleTexture::s_fileNameHash.Clear();
     SI3::VoiceChat_StopPlayingLoopbackSound();
     ComSatClient_Shutdown();
     ObjectEffectSystem_ShutDown();
@@ -1875,8 +1882,9 @@ static void WowClientDestroy() {
     WowSysMessageOutput::Shutdown();
     ConsoleCommandUnregister("reloadUI");
     ConsoleCommandUnregister("perf");
-    ConsoleCommandUnregister("timingInfo");
+    PhaseShift_C_CleanupDB();
     ClientDBShutdown();
+    StaticDBUnloadAll();
     SysMsgShutdown();
 }
 
@@ -2520,6 +2528,7 @@ static void InitializeClient() {
 
     CGlueMgr::m_pendingTimerAlert = s_timeTestError;
     EventRegister(EVENT_ID_POLL, PollNet);
+    CGPlayer_C::PlayerInitializeClientHandlers();
 }
 
 // OFFSET: 0x00407600/0x1400098A0

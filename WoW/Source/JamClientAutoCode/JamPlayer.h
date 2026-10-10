@@ -190,6 +190,38 @@ class PlayerRequestCategoryCooldowns : public JamClientMessage {
     ~PlayerRequestCategoryCooldowns();
 };
 
+class PlayerTimeSyncResponse : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_sequenceIndex;
+    /* 0014 */ uint32_t m_clientTime;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerTimeSyncResponse();
+    ~PlayerTimeSyncResponse();
+};
+
+class PlayerTimeSyncResponseFailed : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_sequenceIndex;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerTimeSyncResponseFailed(uint32_t sequenceIndex);
+    ~PlayerTimeSyncResponseFailed();
+};
+
+class PlayerTimeAdjustmentResponse : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_sequenceIndex;
+    /* 0014 */ uint32_t m_clientTime;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerTimeAdjustmentResponse();
+    ~PlayerTimeAdjustmentResponse();
+};
+
 class PlayerRequestGuildPartyState : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_guildGUID[8];

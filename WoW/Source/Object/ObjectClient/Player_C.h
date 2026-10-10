@@ -60,6 +60,8 @@ struct PROFICIENCYSPELL : public TSHashObject<PROFICIENCYSPELL, HASHKEY_NONE> {
 };
 
 struct CATEGORYCOOLDOWN : public TSLinkedNode<CATEGORYCOOLDOWN> {
+    /* 0008 */ int32_t m_category;
+    /* 000C */ int32_t m_cooldown;
 };
 
 struct PlayerPendingItemExpiration : public TSLinkedNode<PlayerPendingItemExpiration> {
@@ -92,7 +94,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void HandleSpellEventSound();
     static int32_t IsXRayVisionActive();
     static void ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
-    static bool LoadTabardGuildTextures(uint64_t guildGUID, const VisibleItem_C* item);
+    bool LoadTabardGuildTextures(uint64_t guildGUID, const VisibleItem_C* item);
     static void TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
     void AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t a4);
     void AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3);
@@ -196,6 +198,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void TalkToMailbox(WOWGUID guid);
     static void PlayerInitializeMessageHandlers();
     static void PlayerShutdownMessageHandlers();
+    static void PlayerInitializeClientHandlers();
+    static void PlayerShutdownClientHandlers();
     static void __stdcall TalkToAuctioneer(const WOWGUID& guid);
     static void __stdcall TalkToBanker(const WOWGUID& guid);
     static void __stdcall TalkToBattleMaster(const WOWGUID& guid);
@@ -222,7 +226,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 2108 */ uint32_t m_pendingItemCacheCount;
     /* 210C */ TSGrowableArray<int32_t> m_equipBypassSkills;
     /* 211C */ TSGrowableArray<int32_t> m_companionSpells;
-    /* 212C */ uint32_t unk_212C [11];
+    /* 212C */ TSGrowableArray<int32_t> m_companionPetSpells;
+    /* 213C */ uint32_t unk_213C [7];
     /* 2158 */ uint64_t m_guildMaxDailyXP;
     /* 2160 */ uint32_t unk_2160 [4];
     /* 2170 */ TSList<CATEGORYCOOLDOWN, TSGetLink<CATEGORYCOOLDOWN>> m_categoryCooldowns;
@@ -368,6 +373,9 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t IsInMelee() const;
     void OnLootGameObject(const WOWGUID& guid);
     bool HasEquipBypassSkill(int32_t skillId) const;
+    bool HasItemPassive(int32_t spellId) const;
+    void RemoveItemPassive(int32_t spellId);
+    void AddCategoryCooldown(int32_t category, int32_t cooldown);
     void LootMoney();
     void PutLootInSlot(WOWGUID bagGuid, uint8_t slot, uint8_t lootSlot);
     void QueueItemEnchantTime(WOWGUID item, int32_t slot, int32_t duration);

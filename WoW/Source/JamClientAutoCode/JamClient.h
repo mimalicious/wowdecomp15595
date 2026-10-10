@@ -250,6 +250,18 @@ class ClientGenerateRandomCharacterNameResult : public JamClientMessage {
     void Unpack(CDataStore* msg, bool full);
 };
 
+struct JamThrottleState {
+    /* 0000 */ uint32_t m_maxTries;
+    /* 0004 */ uint32_t m_perMilliseconds;
+    /* 0008 */ uint32_t m_tryCount;
+    /* 000C */ uint32_t m_lastResetTimeBeforeNow;
+};
+
+struct JamCategoryCooldown {
+    /* 0000 */ int32_t m_category;
+    /* 0004 */ int32_t m_modCooldown;
+};
+
 struct JamWeeklySpellUse {
     /* 0000 */ int32_t m_category;
     /* 0004 */ uint8_t m_uses;
@@ -445,9 +457,12 @@ class ClientMoveSetActiveMover : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientMoveSetActiveMover* msg);
 
+    /* 0010 */ uint8_t m_moverGUID[8];
+
     ClientMoveSetActiveMover(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientMoveSetActiveMover();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientShowRatings : public JamClientMessage {
@@ -869,9 +884,13 @@ class ClientRequestCemeteryListResponse : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientRequestCemeteryListResponse* msg);
 
+    /* 0010 */ bool m_isGossipTriggered;
+    /* 0014 */ TSGrowableArray<uint32_t> m_cemeteryIDs;
+
     ClientRequestCemeteryListResponse(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientRequestCemeteryListResponse();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildBankLogQueryResults : public JamClientMessage {
@@ -938,9 +957,20 @@ class ClientWorldServerInfo : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientWorldServerInfo* msg);
 
+    /* 0010 */ uint32_t m_weeklyReset;
+    /* 0014 */ bool m_hasRestrictedMoney;
+    /* 0018 */ uint32_t m_restrictedMoney;
+    /* 001C */ uint8_t m_isTournamentRealm;
+    /* 0020 */ bool m_hasRestrictedLevel;
+    /* 0024 */ uint32_t m_restrictedLevel;
+    /* 0028 */ uint32_t m_difficultyID;
+    /* 002C */ bool m_hasIneligibleForLootMask;
+    /* 0030 */ uint32_t m_ineligibleForLootMask;
+
     ClientWorldServerInfo(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientWorldServerInfo();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLfgUpdateStatus : public JamClientMessage {
@@ -1169,9 +1199,13 @@ class ClientUpdateActionButtons : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientUpdateActionButtons* msg);
 
+    /* 0010 */ int32_t m_actionButtons[144];
+    /* 0250 */ uint8_t m_reason;
+
     ClientUpdateActionButtons(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientUpdateActionButtons();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientLfgJoinResult : public JamClientMessage {
@@ -1186,6 +1220,8 @@ class ClientLfgJoinResult : public JamClientMessage {
 class ClientItemRemovePassive : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientItemRemovePassive* msg);
+
+    /* 0010 */ int32_t m_spellID;
 
     ClientItemRemovePassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientItemRemovePassive();
@@ -1252,6 +1288,8 @@ class ClientWeeklyResetCurrency : public JamClientMessage {
 class ClientTimeSyncReq : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientTimeSyncReq* msg);
+
+    /* 0010 */ uint32_t m_sequenceIndex;
 
     ClientTimeSyncReq(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTimeSyncReq();
@@ -1354,9 +1392,26 @@ class ClientFeatureSystemStatus : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientFeatureSystemStatus* msg);
 
+    /* 0010 */ bool m_sessionAlertEnabled;
+    /* 0014 */ int32_t m_sessionAlertDelay;
+    /* 0018 */ int32_t m_sessionAlertPeriod;
+    /* 001C */ int32_t m_sessionAlertDisplayTime;
+    /* 0020 */ uint8_t m_complaintStatus;
+    /* 0024 */ uint32_t m_cfgRealmID;
+    /* 0028 */ uint32_t m_cfgRealmRecID;
+    /* 002C */ bool m_scrollOfResurrectionEnabled;
+    /* 0030 */ uint32_t m_scrollOfResurrectionRequestsRemaining;
+    /* 0034 */ uint32_t m_scrollOfResurrectionMaxRequestsPerDay;
+    /* 0038 */ bool m_itemRestorationButtonEnabled;
+    /* 0039 */ bool m_voiceEnabled;
+    /* 003A */ bool m_travelPassEnabled;
+    /* 003C */ bool m_europaTicketSystemEnabled;
+    /* 0040 */ JamThrottleState m_europaTicketThrottle;
+
     ClientFeatureSystemStatus(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientFeatureSystemStatus();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientPvpOptionsEnabled : public JamClientMessage {
@@ -1519,9 +1574,15 @@ class ClientDisenchantCredit : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientDisenchantCredit* msg);
 
+    /* 0010 */ uint8_t m_lootedGUID[8];
+    /* 0018 */ int32_t m_randomPropertiesID;
+    /* 001C */ int32_t m_itemID;
+    /* 0020 */ int32_t m_randomPropertiesSeed;
+
     ClientDisenchantCredit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientDisenchantCredit();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientQuestGiverQuestComplete : public JamClientMessage {
@@ -1869,9 +1930,12 @@ class ClientItemSendPassive : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientItemSendPassive* msg);
 
+    /* 0010 */ TSGrowableArray<int32_t> m_spellIDs;
+
     ClientItemSendPassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientItemSendPassive();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientForgeMasterSet : public JamClientMessage {
@@ -1914,9 +1978,12 @@ class ClientCategoryCooldown : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientCategoryCooldown* msg);
 
+    /* 0010 */ TSGrowableArray<JamCategoryCooldown> m_categoryCooldowns;
+
     ClientCategoryCooldown(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCategoryCooldown();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientUpdateServerPlayerPosition : public JamClientMessage {
@@ -2108,6 +2175,9 @@ class ClientTimeAdjustment : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientTimeAdjustment* msg);
 
+    /* 0010 */ uint32_t m_sequenceIndex;
+    /* 0014 */ float m_timeScale;
+
     ClientTimeAdjustment(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientTimeAdjustment();
     bool Handle();
@@ -2175,6 +2245,8 @@ class ClientVendorInventory : public JamClientMessage {
 class ClientItemAddPassive : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientItemAddPassive* msg);
+
+    /* 0010 */ int32_t m_spellID;
 
     ClientItemAddPassive(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientItemAddPassive();

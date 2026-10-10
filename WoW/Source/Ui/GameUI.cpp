@@ -1017,6 +1017,15 @@ uint8_t CGGameUI::s_canSendSoR;
 // STATIC: 0x00ED7564
 int32_t CGGameUI::s_numSoRRemaining;
 
+// STATIC: 0x00ED7560
+int32_t CGGameUI::s_maxSoRPerDay;
+
+// STATIC: 0x00ED7568
+uint32_t CGGameUI::s_cfgRealmID;
+
+// STATIC: 0x00ED756C
+uint32_t CGGameUI::s_cfgRealmRecID;
+
 // STATIC: 0x00ED753C
 int32_t CGGameUI::s_tournamentRealm;
 
@@ -2326,6 +2335,42 @@ void CGGameUI::SetCursorVoidStorageItem(WOWGUID guid) {
     }
 
     CGGameUI::m_currentlyReloadingUI = 0;
+}
+
+// OFFSET: 0x008C3F60
+void CGGameUI::SetCanSendSoRByText(bool enabled) {
+    CGGameUI::s_canSendSoR = enabled;
+    FrameScript_SignalEvent(SCRIPT_EVENT_SOR_BY_TEXT_UPDATED, NULL);
+}
+
+// OFFSET: 0x008C3F80
+void CGGameUI::SetSoRCounts(int32_t maxPerDay, int32_t remaining) {
+    CGGameUI::s_maxSoRPerDay = maxPerDay;
+    CGGameUI::s_numSoRRemaining = remaining;
+    FrameScript_SignalEvent(SCRIPT_EVENT_SOR_COUNTS_UPDATED, NULL);
+}
+
+// OFFSET: 0x008CB2A0
+bool CGGameUI::OnWorldServerInfo(ClientWorldServerInfo* msg) {
+    CGGameUI::m_instanceDifficulty = msg->m_difficultyID;
+    CGGameUI::s_tournamentRealm = msg->m_isTournamentRealm;
+    CGGameUI::s_weeklyResetTime = msg->m_weeklyReset;
+    CGGameUI::s_restrictedLevel = 0;
+    CGGameUI::s_restrictedMoney = 0;
+
+    if (msg->m_hasRestrictedLevel) {
+        CGGameUI::s_restrictedLevel = msg->m_restrictedLevel;
+    }
+
+    if (msg->m_hasRestrictedMoney) {
+        CGGameUI::s_restrictedMoney = msg->m_restrictedMoney;
+    }
+
+    if (msg->m_hasIneligibleForLootMask) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_INELIGIBLE_FOR_LOOT, "%u", msg->m_ineligibleForLootMask);
+    }
+
+    return true;
 }
 
 // OFFSET: 0x008DE3E0/0x140653120

@@ -19,6 +19,38 @@ int32_t CGGMTicketInfo::m_ticketID;
 // STATIC: #0x00C1E8D4
 int32_t CGGMTicketInfo::m_responseID;
 
+// STATIC: 0x00D169F0
+uint8_t CGGMTicketInfo::s_quickTicketSystemStatus = 1;
+
+// STATIC: 0x00D169F1
+uint8_t CGGMTicketInfo::s_itemRestorationButtonStatus = 1;
+
+// STATIC: 0x00D16A98
+ThrottleObject CGGMTicketInfo::s_quickTicketThrottle(0, 1);
+
+// OFFSET: 0x009E5700
+void CGGMTicketInfo::SetQuickTicketSystemStatus(bool enabled) {
+    if (enabled != (CGGMTicketInfo::s_quickTicketSystemStatus != 0)) {
+        CGGMTicketInfo::s_quickTicketSystemStatus = enabled;
+        FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_SYSTEM_STATUS, NULL);
+    }
+}
+
+// OFFSET: 0x009E5730
+void CGGMTicketInfo::SetQuickTicketThrottle(const ThrottleObject* throttle) {
+    ThrottleObject saved = *throttle;
+    CGGMTicketInfo::s_quickTicketThrottle.Restore(saved);
+    FrameScript_SignalEvent(SCRIPT_EVENT_QUICK_TICKET_THROTTLE_CHANGED, NULL);
+}
+
+// OFFSET: 0x009E5780
+void CGGMTicketInfo::SetItemRestorationButtonStatus(bool enabled) {
+    if (enabled != (CGGMTicketInfo::s_itemRestorationButtonStatus != 0)) {
+        CGGMTicketInfo::s_itemRestorationButtonStatus = enabled;
+        FrameScript_SignalEvent(SCRIPT_EVENT_ITEM_RESTORATION_BUTTON_STATUS, NULL);
+    }
+}
+
 // PROVEN: 24dd1cb4 IDENTICAL/NONE
 // OFFSET: 0x009E5670/0x14077D9C0
 void CGGMTicketInfo::EnterWorld() {

@@ -159,6 +159,8 @@
 #include "WoW/Source/Ui/TaxiMapFrame.h"
 #include "WoW/Source/Ui/Tutorial.h"
 #include "WoW/Source/Ui/WorldFrame.h"
+#include "WoW/Source/Ui/GMTicketInfo.h"
+#include "WoW/Source/Ui/EquipmentManager.h"
 #include "WoW/Source/UIUtil/PortraitButton.h"
 
 struct GUILDUPDATETIMESTAMP {
@@ -381,7 +383,7 @@ static const int32_t s_trivialLevelDifference[20] = {
 // STATIC: #0x00C9ECC0
 static uint32_t s_combatModeExitCount;
 
-// STATIC: #0x00C9EAC8
+// STATIC: 0x00DD5040
 static int32_t s_dualWieldSpell;
 
 // STATIC: #0x00A32450
@@ -1159,9 +1161,14 @@ int32_t CGPlayer_C::IsGiftWrapping() {
     return static_cast<bool>(s_giftWrapItem);
 }
 
-// OFFSET: #0x006CF290
-uint32_t CGPlayer_C::GetPendingMovie() {
+// OFFSET: 0x00554950
+uint32_t CGPlayer_C::GetPendingCinematic() {
     return s_pendingMovie;
+}
+
+// OFFSET: 0x00554960
+uint32_t CGPlayer_C::GetPendingMovie() {
+    return s_pendingMovieID;
 }
 
 // OFFSET: #0x006CF2D0
@@ -1439,7 +1446,44 @@ void __stdcall CGPlayer_C::DeclineArenaTeam() {
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D49C0
+// OFFSET: 0x0055AF20
+void CGPlayer_C::RemoveItemPassive(int32_t spellId) {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return;
+    }
+
+    uint32_t count = this->m_companionSpells.Count();
+
+    for (uint32_t i = 0; i < count; i++) {
+        if (this->m_companionSpells.m_data[i] != spellId) {
+            continue;
+        }
+
+        if (i != count - 1) {
+            this->m_companionSpells.m_data[i] = this->m_companionSpells.m_data[count - 1];
+        }
+
+        this->m_companionSpells.m_count--;
+        return;
+    }
+}
+
+// OFFSET: 0x0055AF90
+bool CGPlayer_C::HasItemPassive(int32_t spellId) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return false;
+    }
+
+    for (uint32_t i = 0; i < this->m_companionSpells.m_count; i++) {
+        if (this->m_companionSpells.m_data[i] == spellId) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x0055B110
 bool CGPlayer_C::HasEquipBypassSkill(int32_t skillId) const {
     for (uint32_t i = 0; i < this->m_equipBypassSkills.m_count; i++) {
         if (this->m_equipBypassSkills.m_data[i] == skillId) {
@@ -2288,6 +2332,271 @@ void __stdcall CGPlayer_C::ClearAFK(int32_t force) {
     ClientServices::Send2(&msg);
 }
 
+// OFFSET: 0x005539C0
+void CGPlayer_C::GetSpellTextureBlobName(const ChrClassesRec* rec, char* name) {
+    strcpy(name, "World\\SpellTextureBlobs\\");
+    strcat(name, rec->m_filename);
+    strcat(name, "_SpellTextures.tex");
+}
+
+// OFFSET: 0x0055AFE0
+void CGPlayer_C::RefreshSpellCategoryCooldowns(const SpellRec* spell) {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return;
+    }
+
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+    for (uint32_t i = 0; i < count; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (effect && effect->m_effectAura == 341) {
+            Spell_C_RefreshCategoryCooldowns(effect->m_effectMiscValue);
+        }
+    }
+}
+
+// OFFSET: 0x0055D350
+int32_t CGPlayer_C::GetPVPFactionIndex(uint8_t raceID) {
+    ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(raceID);
+
+    if (!raceRec) {
+        return -1;
+    }
+
+    FactionTemplateRec* factionRec = g_factionTemplateDB.GetRecord(raceRec->m_factionID);
+
+    if (!factionRec) {
+        return -1;
+    }
+
+    if (factionRec->m_factionGroup & 0x4) {
+        return 0;
+    }
+
+    return 2 * ((factionRec->m_factionGroup & 0x2) != 0) - 1;
+}
+
+// OFFSET: 0x00558060
+bool CGPlayer_C::LoadTabardGuildTextures(uint64_t guildGUID, const VisibleItem_C* item) {
+    bool result = true;
+    VisibleItem_C* visible = const_cast<VisibleItem_C*>(item);
+    bool tabard = visible->GetInventoryType() == 19;
+    bool shirt = visible->GetInventoryType() == 4;
+
+    if (!item || (!tabard && !shirt)) {
+        return result;
+    }
+
+    int32_t displayId = visible->GetDisplayID();
+
+    if (!displayId) {
+        return result;
+    }
+
+    ItemDisplayInfoRec display;
+
+    if (!this->CanEquipItemsInThisForm() || !this->m_characterComponent || !g_itemDisplayInfoDB.GetRecord(displayId, &display) || (!shirt && (this->m_characterComponent->m_data.m_flags & 0x40))) {
+        return result;
+    }
+
+    if (tabard) {
+        this->m_characterComponent->AddItemBySlot(INVSLOT_TABARD, displayId, 0);
+    } else if (shirt) {
+        this->m_characterComponent->AddItemBySlot(INVSLOT_BODY, displayId, 0);
+    }
+
+    if (!(display.m_flags & 0x19)) {
+        return result;
+    }
+
+    int32_t emblemStyle;
+    int32_t emblemColor;
+    int32_t borderStyle;
+    int32_t borderColor;
+    int32_t background;
+
+    if (tabard && GuildGetGuildTabard(this->m_obj->m_guid, WOWGUID::Make(guildGUID), CGPlayer_C::TabardDrawCallback, this, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+        this->m_characterComponent->ApplyGuildColor(display.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        return result;
+    }
+
+    if (shirt && GuildGetGuildTabard(this->m_obj->m_guid, WOWGUID::Make(guildGUID), CGPlayer_C::ShirtTabardDrawCallback, this, emblemStyle, emblemColor, borderStyle, borderColor, background)) {
+        this->m_characterComponent->ApplyShirtGuildColor(display.m_flags, emblemStyle, emblemColor, borderStyle, borderColor, background);
+        return result;
+    }
+
+    return false;
+}
+
+// OFFSET: 0x00565F30
+int32_t CGPlayer_C::GetLanguageSkill(uint32_t language, uint32_t& skill) {
+    skill = 0;
+
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    if (CGSpellBook::m_languageSpells.m_data[language]) {
+        SkillLineAbilityRec* ability = SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], CGSpellBook::m_languageSpells.m_data[language]);
+
+        if (!ability) {
+            return 0;
+        }
+
+        for (int32_t i = 0; i < 128; i++) {
+            uint16_t skillLine = this->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? this->m_player->m_playerSkillLineid0[i] : 0;
+
+            if (skillLine != ability->m_skillLine) {
+                continue;
+            }
+
+            if (!g_skillLineDB.GetRecord(ability->m_skillLine)) {
+                return 0;
+            }
+
+            skill = this->GetSkillModifier(i) + this->GetSkillValue(i);
+            return 1;
+        }
+
+        return 0;
+    }
+
+    if (!(this->m_unit->m_unitFieldFlags2 & 0x8)) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(this->GetAuraSpellId(i));
+
+        if (!spell) {
+            continue;
+        }
+
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+
+        for (uint32_t j = 0; j < count; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
+
+            if (effect && effect->m_effectAura == 244 && effect->m_effectMiscValue == static_cast<int32_t>(language)) {
+                skill = 300;
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0056F9E0
+void CGPlayer_C::AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t a4) {
+    if (spellId > g_spellDB.m_maxID) {
+        SysMsgPrintf(STATUS_WARNING, 2, "NOSPELLIDFOUND|%d", spellId);
+        return;
+    }
+
+    if (a4) {
+        if (a3) {
+            CGActionBar::ReplaceSpell(0, spellId);
+        }
+
+        CGSpellBook::AddKnownSpell(spellId, a3, 0);
+    }
+
+    SpellRec* spell = g_spellDB.GetRecord(spellId);
+
+    if (!spell) {
+        return;
+    }
+
+    SkillLineAbilityRec* ability = SpellTableLookupAbility(this->m_unit->m_unitFieldBytes0[0], this->m_unit->m_unitFieldBytes0[1], spellId);
+    SkillLineRec* skillLine = ability ? g_skillLineDB.GetRecord(ability->m_skillLine) : NULL;
+
+    if (skillLine && skillLine->m_id == 778) {
+        this->m_companionPetSpells.Add(1, &spellId);
+    }
+
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, count);
+    int32_t effect = 0;
+
+    if (count && effects->m_data[0]) {
+        effect = effects->m_data[0]->m_effect;
+    }
+
+    if (spell->m_attributes & 0x20) {
+        if (skillLine) {
+            int32_t lineId = skillLine->m_id;
+            TRADESKILLLINE* line = this->m_tradeSkillLines.Ptr(lineId, HASHKEY_NONE());
+
+            if (!line) {
+                line = this->m_tradeSkillLines.New(lineId, HASHKEY_NONE(), 0, 0);
+            }
+
+            *line->m_spells.New() = spellId;
+        }
+
+        CGTradeSkillInfo::RefreshList(1);
+    } else if (effect == 101) {
+        SpellSetFeedPetSpell(spell->m_id);
+    } else if (effect == 155) {
+        if (!this->HasEquipBypassSkill(spellId)) {
+            this->m_equipBypassSkills.Add(1, &spellId);
+        }
+    } else if (spell->m_spellEquippedItemsID) {
+        SpellEquippedItemsRec* equipped = g_spellEquippedItemsDB.GetRecord(spell->m_spellEquippedItemsID);
+
+        if (equipped) {
+            int32_t index;
+
+            for (index = 0; index < static_cast<int32_t>(count); index++) {
+                if (effects->m_data[index] && effects->m_data[index]->m_effect == 60) {
+                    break;
+                }
+            }
+
+            if (index < static_cast<int32_t>(count)) {
+                for (int32_t i = 0; i < g_itemSubClassDB.m_numRecords; i++) {
+                    ItemSubClassRec* subClass = g_itemSubClassDB.GetRecordByIndex(i);
+
+                    if (subClass->m_classID <= 0 || subClass->m_classID != equipped->m_equippedItemClass || (1 << subClass->m_subClassID) != equipped->m_equippedItemSubclass) {
+                        continue;
+                    }
+
+                    int32_t key = subClass->m_id;
+
+                    if (key) {
+                        PROFICIENCYSPELL* proficiency = this->m_proficiencySpells.Ptr(key, HASHKEY_NONE());
+
+                        if (!proficiency) {
+                            proficiency = this->m_proficiencySpells.New(key, HASHKEY_NONE(), 0, 0);
+                        }
+
+                        proficiency->m_spellId = spellId;
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    if (a3) {
+        CGClassTrainer::RefreshList();
+        CGActionBar::UpdateSpell(spellId);
+    }
+
+    if (effect == 40) {
+        s_dualWieldSpell = spellId;
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGQuestLog::UpdateQuestSpell(spellId);
+    }
+}
+
 // OFFSET: 0x00555A90
 static int32_t GuildChangedUpdateProc(WOWGUID guid, void* param) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
@@ -2309,6 +2618,13 @@ static bool FindArenaOpponent(const WOWGUID& guid, uint32_t* index) {
     }
 
     return false;
+}
+
+// OFFSET: 0x005692E0
+void CGPlayer_C::AddCategoryCooldown(int32_t category, int32_t cooldown) {
+    CATEGORYCOOLDOWN* node = this->m_categoryCooldowns.NewNode(2, 0, 0);
+    node->m_category = category;
+    node->m_cooldown = cooldown;
 }
 
 // OFFSET: 0x00570450
@@ -2449,9 +2765,9 @@ void CGPlayer_C::HandleGuildIDUpdate() {
 
 // OFFSET: 0x00565C40
 bool CGPlayer_C::LoadGuildTextures(uint64_t guildGUID) {
-    bool loaded = CGPlayer_C::LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[18]) != 0;
+    bool loaded = this->LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[18]) != 0;
 
-    if (!CGPlayer_C::LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[3])) {
+    if (!this->LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[3])) {
         loaded = false;
     }
 
@@ -2534,10 +2850,8 @@ CGPlayer_C::CGPlayer_C(uint32_t time, const CClientObjCreate& create)
       unk_217C(0),
       m_lootTarget(),
       m_autoLoot(0) {
-    for (uint32_t i = 0; i < 11; i++) {
-        if (i != 4) {
-            this->unk_212C[i] = 0;
-        }
+    for (uint32_t i = 1; i < 7; i++) {
+        this->unk_213C[i] = 0;
     }
 
     for (uint32_t i = 0; i < 4; i++) {
@@ -3990,8 +4304,255 @@ int32_t Packet_SMSG_DEBUG_SERVER_GEO(void* param, NETMESSAGE msgId, uint32_t tim
     return 1;
 }
 
+// OFFSET: 0x00554060
+static bool OnTimeSyncReq(ClientTimeSyncReq* msg) {
+    PlayerTimeSyncResponse response;
+    response.m_sequenceIndex = msg->m_sequenceIndex;
+    response.m_clientTime = OsGetAsyncTimeMs();
+    ClientServices::Send(&response);
+    return true;
+}
+
+// OFFSET: 0x005540A0
+static bool OnTimeSyncReqSuspended(ClientTimeSyncReq* msg) {
+    if (msg->m_sequenceIndex) {
+        PlayerTimeSyncResponseFailed response(msg->m_sequenceIndex);
+        ClientServices::Send(&response);
+    } else {
+        ClientTimeSyncReq::s_handler = OnTimeSyncReq;
+        PlayerTimeSyncResponse response;
+        response.m_sequenceIndex = msg->m_sequenceIndex;
+        response.m_clientTime = OsGetAsyncTimeMs();
+        ClientServices::Send(&response);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00554110
+static bool OnTimeAdjustment(ClientTimeAdjustment* msg) {
+    OsTimeScaleTime(msg->m_timeScale);
+    SysMsgPrintf(STATUS_INFO, 7, "Time elapse scaled by %g to %g", static_cast<double>(msg->m_timeScale), OsTimeGetCurrentScale());
+    PlayerTimeAdjustmentResponse response;
+    response.m_sequenceIndex = msg->m_sequenceIndex;
+    response.m_clientTime = OsGetAsyncTimeMs();
+    ClientServices::Send(&response);
+    return true;
+}
+
+// OFFSET: 0x00554180
+static bool OnMoveSetActiveMover(ClientMoveSetActiveMover* msg) {
+    CGUnit_C::SetActiveMover(*reinterpret_cast<uint64_t*>(msg->m_moverGUID));
+    return true;
+}
+
+// OFFSET: 0x005541A0
+void CGPlayer_C::PlayerShutdownClientHandlers() {
+    ClientTimeSyncReq::s_handler = NULL;
+    ClientTimeAdjustment::s_handler = NULL;
+    ClientDisenchantCredit::s_handler = NULL;
+    ClientItemAddPassive::s_handler = NULL;
+    ClientItemRemovePassive::s_handler = NULL;
+    ClientItemSendPassive::s_handler = NULL;
+    ClientMoveSetActiveMover::s_handler = NULL;
+}
+
+// OFFSET: 0x00555380
+static bool OnFeatureSystemStatus(ClientFeatureSystemStatus* msg) {
+    CGChat::m_complaintsSystemStatus = msg->m_complaintStatus;
+    CGChat::m_voiceChatSystemStatus = msg->m_voiceEnabled;
+    CGGameUI::m_hasTravelPass = msg->m_travelPassEnabled;
+    CGGameUI::SetCanSendSoRByText(msg->m_scrollOfResurrectionEnabled);
+    CGGameUI::SetSoRCounts(msg->m_scrollOfResurrectionMaxRequestsPerDay, msg->m_scrollOfResurrectionRequestsRemaining);
+    CGGameUI::s_cfgRealmID = msg->m_cfgRealmID;
+    CGGameUI::s_cfgRealmRecID = msg->m_cfgRealmRecID;
+    CGGMTicketInfo::SetQuickTicketSystemStatus(msg->m_europaTicketSystemEnabled);
+
+    if (msg->m_europaTicketSystemEnabled) {
+        CGGMTicketInfo::SetQuickTicketThrottle(reinterpret_cast<const ThrottleObject*>(&msg->m_europaTicketThrottle));
+    }
+
+    CGGMTicketInfo::SetItemRestorationButtonStatus(msg->m_itemRestorationButtonEnabled);
+
+    if (msg->m_sessionAlertEnabled) {
+        CGGameUI::SetSessionTimeAlert(true, msg->m_sessionAlertDelay, msg->m_sessionAlertPeriod, msg->m_sessionAlertDisplayTime);
+    } else {
+        CGGameUI::SetSessionTimeAlert(false, 0, 0, 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00558A20
+void MovementSuspendActiveMover() {
+    ClientTimeSyncReq::s_handler = OnTimeSyncReqSuspended;
+    CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (mover) {
+        mover->SuspendMovement();
+    }
+}
+
+// OFFSET: 0x00558A60
+void MovementResumeActiveMover() {
+    ClientTimeSyncReq::s_handler = OnTimeSyncReq;
+    CGUnit_C* mover = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(CGUnit_C::s_activeMover, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (mover) {
+        mover->ResumeMovement();
+    }
+}
+
+// OFFSET: 0x00559F00
+static bool OnRequestCemeteryListResponse(ClientRequestCemeteryListResponse* msg) {
+    uint32_t count = msg->m_cemeteryIDs.Count();
+    CGGameUI::SetCemeteryList(count, count ? msg->m_cemeteryIDs.m_data : NULL);
+    FrameScript_SignalEvent(SCRIPT_EVENT_REQUEST_CEMETERY_LIST_RESPONSE, "%b", msg->m_isGossipTriggered);
+    return true;
+}
+
+// OFFSET: 0x0055EF90
+static bool OnUpdateActionButtons(ClientUpdateActionButtons* msg) {
+    uint8_t reason = msg->m_reason;
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (reason == 2) {
+        if (player) {
+            player->unk_21FC = 1;
+        }
+
+        return true;
+    }
+
+    if (reason > 1) {
+        return true;
+    }
+
+    for (uint32_t i = 0; i < 144; i++) {
+        s_actionButtons[i] = msg->m_actionButtons[i];
+    }
+
+    if (reason == 1 && player) {
+        player->unk_21FC = 0;
+
+        for (uint32_t i = 0; i < 144; i++) {
+            int32_t action = s_actionButtons[i];
+
+            if (((action & 0xF0000000) || player->IsSpellKnown(action & 0xF1FFFFFF)) && ((action & 0xF0000000) != 0x20000000 || CGEquipmentManager::HasSet(static_cast<int32_t>(action & 0xD1FFFFFF)))) {
+                CGActionBar::SetAction(i, action, 0, 1);
+            } else {
+                CGActionBar::RemoveAction(i, 0);
+            }
+        }
+
+        CGActionBar::UpdateOverrideSpellBar();
+        FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_SLOT_CHANGED, "%d", 0);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00560F50
+static bool OnItemRemovePassive(ClientItemRemovePassive* msg) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        player->RemoveItemPassive(msg->m_spellID);
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00568FA0
+static bool OnItemAddPassive(ClientItemAddPassive* msg) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        int32_t spellID = msg->m_spellID;
+
+        if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer() && !player->HasItemPassive(spellID)) {
+            player->m_companionSpells.Add(1, &spellID);
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x00569010
+static bool OnItemSendPassive(ClientItemSendPassive* msg) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        for (uint32_t i = 0; i < msg->m_spellIDs.Count(); i++) {
+            int32_t spellID = msg->m_spellIDs.m_data[i];
+
+            if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer() && !player->HasItemPassive(spellID)) {
+                player->m_companionSpells.Add(1, &spellID);
+            }
+        }
+
+        return true;
+    }
+
+    s_initialCompanionSpells.SetCount(msg->m_spellIDs.Count());
+
+    for (uint32_t i = 0; i < msg->m_spellIDs.Count(); i++) {
+        s_initialCompanionSpells.m_data[i] = msg->m_spellIDs.m_data[i];
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0056D0C0
+static bool OnDisenchantCredit(ClientDisenchantCredit* msg) {
+    WOWGUID looted = WOWGUID::Make(*reinterpret_cast<uint64_t*>(msg->m_lootedGUID));
+
+    if (g_nameDBCache.GetRecord(looted.m_guid, WOWGUID(), NULL, NULL, false)) {
+        ItemRecSparse* item = g_itemSparseDB.GetRecord(msg->m_itemID, WOWGUID(), NULL, NULL, false);
+
+        if (item) {
+            const char* link = CGTooltip::GetItemHyperlinkString(msg->m_itemID, item->m_quality, 0, msg->m_randomPropertiesID, msg->m_randomPropertiesSeed, 0);
+            char text[3000];
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("LOOT_DISENCHANT_CREDIT", -1, GENDER_NOT_APPLICABLE), link);
+            CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
+        }
+    }
+
+    return true;
+}
+
+// OFFSET: 0x0056D170
+void CGPlayer_C::PlayerInitializeClientHandlers() {
+    ClientTimeSyncReq::s_handler = OnTimeSyncReq;
+    ClientTimeAdjustment::s_handler = OnTimeAdjustment;
+    ClientDisenchantCredit::s_handler = OnDisenchantCredit;
+    ClientItemAddPassive::s_handler = OnItemAddPassive;
+    ClientItemRemovePassive::s_handler = OnItemRemovePassive;
+    ClientItemSendPassive::s_handler = OnItemSendPassive;
+    ClientMoveSetActiveMover::s_handler = OnMoveSetActiveMover;
+}
+
+// OFFSET: 0x0056D1C0
+static bool OnCategoryCooldown(ClientCategoryCooldown* msg) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (player) {
+        player->m_categoryCooldowns.Clear();
+
+        for (uint32_t i = 0; i < msg->m_categoryCooldowns.Count(); i++) {
+            player->AddCategoryCooldown(msg->m_categoryCooldowns.m_data[i].m_category, msg->m_categoryCooldowns.m_data[i].m_modCooldown);
+        }
+    }
+
+    return true;
+}
+
 // OFFSET: #0x006E83B0
 void CGPlayer_C::PlayerInitializeMessageHandlers() {
+    ClientUpdateActionButtons::s_handler = OnUpdateActionButtons;
+    ClientFeatureSystemStatus::s_handler = OnFeatureSystemStatus;
+    ClientCategoryCooldown::s_handler = OnCategoryCooldown;
+    ClientRequestCemeteryListResponse::s_handler = OnRequestCemeteryListResponse;
     ClientServices::SetMessageHandler(SMSG_MOUNT_RESULT, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_DISMOUNT_RESULT, Packet_Group_9, NULL);
     ClientServices::SetMessageHandler(SMSG_INVENTORY_CHANGE_FAILURE, Packet_Group_9, NULL);
@@ -5233,6 +5794,91 @@ static void CountGemsItemCacheCallback(int32_t id, const WOWGUID& guid, void* pa
 
     if (player) {
         player->CountEquippedGems();
+    }
+}
+
+// OFFSET: 0x0056D310
+void CGPlayer_C::CountEquippedGems() {
+    this->m_gemCounts[0] = 0;
+    this->m_gemCounts[1] = 0;
+    this->m_gemCounts[2] = 0;
+    this->m_gemCounts[3] = 0;
+    this->unk_21D4[0] = 0;
+    this->unk_21D4[1] = 0;
+
+    for (uint32_t slot = 0; slot <= 18; slot++) {
+        CGItem_C* item = NULL;
+        InspectItem* inspect = NULL;
+
+        if (ClntObjMgrGetActivePlayer() == this->m_obj->m_guid) {
+            item = const_cast<CGItem_C*>(this->m_bag.GetItemPointer(slot));
+
+            if (!item) {
+                continue;
+            }
+
+            uint32_t flags = item->m_item->m_itemFieldFlags;
+
+            if (!(flags & 0x8) && item->m_item->m_itemFieldMaxdurability && !item->m_item->m_itemFieldDurability) {
+                continue;
+            }
+
+            if (flags & 0x10) {
+                continue;
+            }
+        } else {
+            inspect = this->GetInspectedItem(slot);
+
+            if (!inspect || !(~inspect->m_flags & 1)) {
+                continue;
+            }
+        }
+
+        for (uint32_t socket = 2; socket <= 4; socket++) {
+            int32_t enchantId;
+
+            if (ClntObjMgrGetActivePlayer() == this->m_obj->m_guid) {
+                enchantId = (item->GetItemStaticFlags(0) & 0x2000) ? 0 : item->m_item->m_itemFieldEnchantment[socket].m_id;
+            } else if (socket <= 14) {
+                enchantId = inspect->m_enchants[socket];
+            } else {
+                enchantId = 0;
+            }
+
+            SpellItemEnchantmentRec* enchant = g_spellItemEnchantmentDB.GetRecord(enchantId);
+
+            if (!enchant || !enchant->m_srcItemID) {
+                continue;
+            }
+
+            ItemRecSparse* gem = g_itemSparseDB.GetRecord(enchant->m_srcItemID, WOWGUID(), CountGemsItemCacheCallback, NULL, false);
+
+            if (!gem) {
+                continue;
+            }
+
+            GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(gem->m_gemProperties);
+
+            if (!properties || !properties->m_type) {
+                continue;
+            }
+
+            if (properties->m_type & 0x1) {
+                this->m_gemCounts[0]++;
+            }
+
+            if (properties->m_type & 0x2) {
+                this->m_gemCounts[1]++;
+            }
+
+            if (properties->m_type & 0x4) {
+                this->m_gemCounts[2]++;
+            }
+
+            if (properties->m_type & 0x8) {
+                this->m_gemCounts[3]++;
+            }
+        }
     }
 }
 
@@ -8550,6 +9196,10 @@ void PlayerClientShutdown() {
 
 // OFFSET: #0x006CE480
 void CGPlayer_C::PlayerShutdownMessageHandlers() {
+    ClientUpdateActionButtons::s_handler = NULL;
+    ClientFeatureSystemStatus::s_handler = NULL;
+    ClientCategoryCooldown::s_handler = NULL;
+    ClientRequestCemeteryListResponse::s_handler = NULL;
     ClientServices::ClearMessageHandler(SMSG_MOUNT_RESULT);
     ClientServices::ClearMessageHandler(SMSG_DISMOUNT_RESULT);
     ClientServices::ClearMessageHandler(SMSG_INVENTORY_CHANGE_FAILURE);

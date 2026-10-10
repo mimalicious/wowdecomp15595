@@ -385,6 +385,9 @@ class CGGameUI {
     static uint8_t m_hasTravelPass;
     static uint8_t s_canSendSoR;
     static int32_t s_numSoRRemaining;
+    static int32_t s_maxSoRPerDay;
+    static uint32_t s_cfgRealmID;
+    static uint32_t s_cfgRealmRecID;
     static int32_t s_tournamentRealm;
     static uint32_t s_restrictedLevel;
     static uint32_t s_restrictedMoney;
@@ -393,6 +396,8 @@ class CGGameUI {
     static bool OnWorldServerInfo(ClientWorldServerInfo* msg);
     static bool OnDisplayGameError(ClientDisplayGameError* msg);
     static bool OnFailedPlayerCondition(ClientFailedPlayerCondition* msg);
+    static void SetCanSendSoRByText(bool enabled);
+    static void SetSoRCounts(int32_t maxPerDay, int32_t remaining);
     static WOWGUID m_lastEnemyTarget;
     static WOWGUID m_corpseGUID;
     static int32_t m_initialized;

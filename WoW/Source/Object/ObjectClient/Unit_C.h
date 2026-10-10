@@ -236,6 +236,8 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     static void UpdateMissileTrajectoryTargeting();
     void AuraVisionUpdated(uint8_t vision);
     bool IsSpellKnown(int32_t spellId) const;
+    void SuspendMovement();
+    void ResumeMovement();
     int32_t GetHighestThreatExcluding(WOWGUID exclude);
     double GetQuestExperienceModifier() const;
     bool IsSpellSuperceded(int32_t spellId);

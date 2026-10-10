@@ -537,3 +537,49 @@ PlayerRequestCategoryCooldowns::~PlayerRequestCategoryCooldowns() {
 void PlayerRequestCategoryCooldowns::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7102));
 }
+
+// OFFSET: 0x00670690
+PlayerTimeSyncResponse::PlayerTimeSyncResponse() {
+}
+
+// OFFSET: 0x00670950
+PlayerTimeSyncResponse::~PlayerTimeSyncResponse() {
+}
+
+// OFFSET: 0x00673ED0
+void PlayerTimeSyncResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3B0C));
+    msg->Put(this->m_sequenceIndex);
+    msg->Put(this->m_clientTime);
+}
+
+// OFFSET: 0x00674630
+PlayerTimeSyncResponseFailed::PlayerTimeSyncResponseFailed(uint32_t sequenceIndex) {
+    this->m_sequenceIndex = sequenceIndex;
+}
+
+// OFFSET: 0x006703B0
+PlayerTimeSyncResponseFailed::~PlayerTimeSyncResponseFailed() {
+}
+
+// OFFSET: 0x00670C40
+void PlayerTimeSyncResponseFailed::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x710A));
+    msg->Put(this->m_sequenceIndex);
+}
+
+// OFFSET: 0x00670B80
+PlayerTimeAdjustmentResponse::PlayerTimeAdjustmentResponse() {
+}
+
+// OFFSET: 0x00670450
+PlayerTimeAdjustmentResponse::~PlayerTimeAdjustmentResponse() {
+}
+
+// OFFSET: 0x00674480
+void PlayerTimeAdjustmentResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3818));
+    msg->Put(this->m_sequenceIndex);
+    msg->Put(this->m_clientTime);
+}
+
