@@ -4680,7 +4680,7 @@ void CGGameUI::CloseInteraction() {
     } else if (CGGossipInfo::m_gossip == target) {
         CGGossipInfo::SetGossip(none);
     } else if (CGQuestInfo::m_npc == target) {
-        CGQuestInfo::QuestGiverFinished(0, 0, 1);
+        CGQuestInfo::QuestGiverFinished(0, 0, 1, 0);
     } else if (CGMerchantInfo::m_merchant == target) {
         CGMerchantInfo::CloseMerchant();
     } else if (CGTaxiMap::m_unit == target) {

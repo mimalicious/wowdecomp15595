@@ -312,7 +312,7 @@ static int32_t Script_ProcessQuestLogRewardFactions(lua_State* L) {
             CGQuestInfo::SetRewardFactionInfo(i, quest->m_rewardReputationFaction[i], quest->m_factionRewardId[i], quest->m_rewardReputationOverride[i]);
         }
 
-        CGQuestInfo::InitRewRepShowMask(quest->m_rewardReputationMask);
+        CGQuestInfo::SetRewardFactionFlags(quest->m_rewardReputationMask);
         CGQuestInfo::ProcessFactionRewards();
     }
 

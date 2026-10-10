@@ -344,17 +344,6 @@ GossipQuestInfo* CGGossipInfo::GetActiveQuest(int32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x0058ABA0
-int32_t CGQuestInfo::IsLowLevel(int32_t level) {
-    if (level == -1) {
-        return 0;
-    }
-
-    uint32_t band = static_cast<int32_t>(static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_unit->m_unitFieldLevel) / 5;
-    int32_t range = band < 20 ? s_questGreenRange[band] : 8;
-    return level + range < static_cast<int32_t>(static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__))->m_unit->m_unitFieldLevel);
-}
-
 // OFFSET: #0x0058AF10
 void CGGossipInfo::SelectGossipOption(int32_t index, const char* code, int32_t confirmed) {
     if (CGGossipInfo::m_textPending || index < 0 || index >= 32) {
@@ -421,7 +410,7 @@ void CGGossipInfo::SelectGossipAvailableQuest(int32_t index) {
             if (quest.m_icon) {
                 CGPlayer_C::QueryQuest(gossip, quest.m_questID);
             } else {
-                CGPlayer_C::CompleteQuest(gossip, quest.m_questID);
+                CGPlayer_C::CompleteQuest(gossip, quest.m_questID, 0);
             }
         }
 
@@ -446,7 +435,7 @@ void CGGossipInfo::SelectGossipActiveQuest(int32_t index) {
 
         if (found == index && ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
             WOWGUID gossip = CGGossipInfo::m_gossip;
-            CGPlayer_C::CompleteQuest(gossip, quest.m_questID);
+            CGPlayer_C::CompleteQuest(gossip, quest.m_questID, 0);
         }
 
         found++;

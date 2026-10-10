@@ -1137,8 +1137,8 @@ static int32_t Script_SetUnit(lua_State* L) {
 static int32_t Script_SetQuestRewardSpell(lua_State* L) {
     CGTooltip* tooltip = static_cast<CGTooltip*>(FrameScript_GetObjectThis(L, CGTooltip::GetObjectType()));
 
-    if (CGQuestInfo::m_rewardSpell) {
-        tooltip->SetSpell(CGQuestInfo::m_rewardSpell, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
+    if (CGQuestInfo::m_rewards.m_spell) {
+        tooltip->SetSpell(CGQuestInfo::m_rewards.m_spell, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0, -1, -1, 0, 0, 0, 0);
     }
 
     return 0;
@@ -1671,10 +1671,10 @@ static int32_t Script_SetQuestItem(lua_State* L) {
 
     char name[256];
     char texture[260];
-    int32_t count;
+    uint32_t count;
     int32_t quality;
     int32_t usable;
-    CGQuestInfo::GetQuestItemInfo(type, index, name, sizeof(name), texture, sizeof(texture), &count, &quality, &usable);
+    CGQuestInfo::GetQuestItemInfo(type, index, name, sizeof(name), texture, sizeof(texture), count, quality, usable);
     TooltipExtendedItemInfo* info = &tooltip->m_itemLinkInfo;
     info->Clear();
     info->m_stackCount = count;

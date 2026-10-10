@@ -96,7 +96,7 @@ static int32_t Script_CloseGossip(lua_State* L) {
     return 0;
 }
 
-// PROVEN: d6917a3a IDENTICAL/NONE
+// PROVEN: fb0f2b6b IDENTICAL/NONE
 // OFFSET: 0x009E1470/0x1407781C0
 static int32_t Script_GetGossipAvailableQuests(lua_State* L) {
     uint32_t total = static_cast<uint32_t>(CGGossipInfo::GetNumAvailableQuests());
@@ -113,7 +113,7 @@ static int32_t Script_GetGossipAvailableQuests(lua_State* L) {
         lua_pushstring(L, quest->m_title);
         lua_pushnumber(L, quest->m_level);
 
-        if (CGQuestInfo::IsLowLevel(quest->m_level)) {
+        if (CGQuestInfo::IsTrivialQuest(quest->m_level)) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);
@@ -153,7 +153,7 @@ static int32_t Script_GetGossipActiveQuests(lua_State* L) {
         lua_pushstring(L, quest->m_title);
         lua_pushnumber(L, quest->m_level);
 
-        if (CGQuestInfo::IsLowLevel(quest->m_level)) {
+        if (CGQuestInfo::IsTrivialQuest(quest->m_level)) {
             lua_pushnumber(L, 1.0);
         } else {
             lua_pushnil(L);

@@ -298,25 +298,25 @@ static VendorItem s_vendorItems[150];
 // STATIC: #0x00C9EB08
 static int32_t s_questsAccepted;
 
-// STATIC: #0x00C9D548
+// STATIC: 0x00DD4D90
 static WOWGUID s_questListNpc;
 
-// STATIC: #0x00C9D750
+// STATIC: 0x00DD4F98
 static uint32_t s_questListIds[32];
 
-// STATIC: #0x00C9D6D0
+// STATIC: 0x00DD4F18
 static uint32_t s_questListStatus[32];
 
-// STATIC: #0x00C9D650
+// STATIC: 0x00DD4E98
 static uint32_t s_questListLevels[32];
 
-// STATIC: #0x00C9D5D0
+// STATIC: 0x00DD4E18
 static uint32_t s_questListFlags[32];
 
-// STATIC: #0x00C9D550
+// STATIC: 0x00DD4D98
 static uint32_t s_questListRepeatable[32];
 
-// STATIC: #0x00C9EB04
+// STATIC: 0x00DD507C
 static uint32_t s_questFailedReason;
 
 // STATIC: #0x00C9EB10
@@ -1494,7 +1494,7 @@ void __stdcall CGPlayer_C::QueryQuest(const WOWGUID& questGiver, int32_t questId
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4CA0
+// OFFSET: 0x0055B330
 void __stdcall CGPlayer_C::AcceptQuest(const WOWGUID& questGiver, int32_t questId, int32_t a3) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_ACCEPT_QUEST));
@@ -1506,11 +1506,12 @@ void __stdcall CGPlayer_C::AcceptQuest(const WOWGUID& questGiver, int32_t questI
 }
 
 // OFFSET: 0x0055B3D0/0x1401B8200
-void __stdcall CGPlayer_C::CompleteQuest(const WOWGUID& questGiver, int32_t questId) {
+void __stdcall CGPlayer_C::CompleteQuest(const WOWGUID& questGiver, int32_t questId, int32_t fromScript) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_COMPLETE_QUEST));
     msg.Put(questGiver.m_guid);
     msg.Put(static_cast<uint32_t>(questId));
+    msg.Put(static_cast<uint8_t>(fromScript != 0));
     msg.Finalize();
     ClientServices::Send2(&msg);
 }
@@ -1525,7 +1526,7 @@ void __stdcall CGPlayer_C::GiveQuestItems(const WOWGUID& questGiver, int32_t que
     ClientServices::Send2(&msg);
 }
 
-// OFFSET: #0x006D4E60
+// OFFSET: 0x0055B500
 void __stdcall CGPlayer_C::GetQuestReward(const WOWGUID& questGiver, int32_t questId, int32_t reward) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_QUEST_GIVER_CHOOSE_REWARD));
@@ -3053,15 +3054,15 @@ int32_t Packet_Group_12(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
         case SMSG_QUEST_GIVER_STATUS:
             return CGPlayer_C::OnQuestGiverStatus(msg);
         case SMSG_QUEST_GIVER_QUEST_LIST_MESSAGE:
-            return CGPlayer_C::OnQuestGiverQuestList(msg);
+            return CGPlayer_C::OnQuestGiverListQuests(msg);
         case SMSG_QUEST_GIVER_QUEST_DETAILS:
-            return CGPlayer_C::OnQuestGiverQuestDetails(msg);
+            return CGPlayer_C::OnQuestGiverSendQuest(msg);
         case SMSG_QUEST_GIVER_REQUEST_ITEMS:
             return CGPlayer_C::OnQuestGiverRequestItems(msg);
         case SMSG_QUEST_GIVER_OFFER_REWARD_MESSAGE:
-            return CGPlayer_C::OnQuestGiverOfferReward(msg);
+            return CGPlayer_C::OnQuestGiverChooseReward(msg);
         case SMSG_QUEST_GIVER_INVALID_QUEST:
-            return CGPlayer_C::OnQuestGiverQuestInvalid(msg);
+            return CGPlayer_C::OnQuestGiverInvalidQuest(msg);
         case SMSG_QUEST_GIVER_QUEST_COMPLETE:
             return CGPlayer_C::OnQuestGiverQuestComplete(msg);
         case SMSG_QUEST_GIVER_QUEST_FAILED:
@@ -4876,7 +4877,7 @@ static void CountGemsItemCacheCallback(int32_t id, const WOWGUID& guid, void* pa
     }
 }
 
-// OFFSET: #0x006D1E20
+// OFFSET: 0x005572A0/0x1401B40B0
 void __stdcall CGPlayer_C::TalkToGossip(const WOWGUID& guid) {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_GOSSIP_HELLO));
@@ -5470,115 +5471,78 @@ void CGPlayer_C::RequestAllItemPurchaseData() {
     }
 }
 
-// OFFSET: #0x006D0460
-int32_t __stdcall CGPlayer_C::OnQuestGiverQuestDetails(CDataStore* msg) {
+// OFFSET: 0x00553220
+static void ReadQuestRewards(CDataStore* msg, QuestRewards_C& rewards) {
+    msg->Get(rewards.m_numChoiceItems);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_choiceItemIDs), 6);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_choiceItemCounts), 6);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_choiceItemDisplayIDs), 6);
+    msg->Get(rewards.m_numRewardItems);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_rewardItemIDs), 4);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_rewardItemCounts), 4);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_rewardItemDisplayIDs), 4);
+    msg->Get(rewards.m_money);
+    msg->Get(rewards.m_xp);
+    msg->Get(rewards.m_title);
+    msg->Get(rewards.m_honor);
+    msg->Get(rewards.m_honorMultiplier);
+    msg->Get(rewards.m_talents);
+    msg->Get(rewards.m_arenaPoints);
+    msg->Get(rewards.m_factionFlags);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_factionIDs), 5);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_factionValues), 5);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_factionOverrides), 5);
+    msg->Get(rewards.m_spell);
+    msg->Get(rewards.m_spellCast);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_currencyIDs), 4);
+    msg->GetArray(reinterpret_cast<uint32_t*>(rewards.m_currencyCounts), 4);
+    msg->Get(rewards.m_skillLine);
+    msg->Get(rewards.m_skillPoints);
+}
+
+// OFFSET: 0x00555F90
+int32_t __stdcall CGPlayer_C::OnQuestGiverSendQuest(CDataStore* msg) {
+    QuestRewards_C rewards;
+    memset(&rewards, 0, sizeof(rewards));
     WOWGUID npc;
     msg->Get(npc.m_guid);
-
     WOWGUID inform;
     msg->Get(inform.m_guid);
-
-    uint32_t questId;
+    int32_t questId;
     msg->Get(questId);
-
     char title[512];
     msg->GetString(title, sizeof(title));
-
     char details[3000];
     msg->GetString(details, sizeof(details));
-
     char objectives[3000];
     msg->GetString(objectives, sizeof(objectives));
-
+    char giverText[1024];
+    msg->GetString(giverText, sizeof(giverText));
+    char giverName[256];
+    msg->GetString(giverName, sizeof(giverName));
+    char turnInText[1024];
+    msg->GetString(turnInText, sizeof(turnInText));
+    char turnInName[256];
+    msg->GetString(turnInName, sizeof(turnInName));
+    int32_t giverPortrait;
+    msg->Get(giverPortrait);
+    int32_t turnInPortrait;
+    msg->Get(turnInPortrait);
     uint8_t autoLaunched;
     msg->Get(autoLaunched);
-
     uint32_t flags;
     msg->Get(flags);
-
-    uint32_t suggestedGroupNum;
+    int32_t suggestedGroupNum;
     msg->Get(suggestedGroupNum);
-
     uint8_t startCheat;
     msg->Get(startCheat);
-
-    uint32_t numChoices;
-    msg->Get(numChoices);
-
-    uint32_t choiceItems[6] = { 0 };
-    uint32_t choiceDisplays[6] = { 0 };
-    uint32_t choiceCounts[6];
-
-    for (int32_t i = 0; i < static_cast<int32_t>(numChoices); i++) {
-        msg->Get(choiceItems[i]);
-        msg->Get(choiceCounts[i]);
-        msg->Get(choiceDisplays[i]);
-    }
-
-    uint32_t numRewards;
-    msg->Get(numRewards);
-
-    uint32_t rewardItems[4] = { 0 };
-    uint32_t rewardDisplays[4] = { 0 };
-    uint32_t rewardCounts[4];
-
-    for (int32_t i = 0; i < static_cast<int32_t>(numRewards); i++) {
-        msg->Get(rewardItems[i]);
-        msg->Get(rewardCounts[i]);
-        msg->Get(rewardDisplays[i]);
-    }
-
-    uint32_t money;
-    msg->Get(money);
-
-    uint32_t xp;
-    msg->Get(xp);
-
-    uint32_t honor;
-    msg->Get(honor);
-
-    float honorMultiplier;
-    msg->Get(honorMultiplier);
-
-    uint32_t spell;
-    msg->Get(spell);
-
-    uint32_t spellCast;
-    msg->Get(spellCast);
-
-    uint32_t rewardTitle;
-    msg->Get(rewardTitle);
-
-    uint32_t talents;
-    msg->Get(talents);
-
-    uint32_t arenaPoints;
-    msg->Get(arenaPoints);
-
-    uint32_t factionMask;
-    msg->Get(factionMask);
-
-    uint32_t factionIDs[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionIDs[i]);
-    }
-
-    uint32_t factionValues[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionValues[i]);
-    }
-
-    uint32_t factionOverrides[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionOverrides[i]);
-    }
-
+    uint8_t fromAreaTrigger;
+    msg->Get(fromAreaTrigger);
+    int32_t criteriaSpell;
+    msg->Get(criteriaSpell);
+    ReadQuestRewards(msg, rewards);
     uint32_t emoteCount;
     msg->Get(emoteCount);
-
     QUESTGIVEREMOTEQUEUE emotes;
     emotes.m_nodes = static_cast<QUESTGIVEREMOTENODE*>(alloca(emoteCount * sizeof(QUESTGIVEREMOTENODE)));
     emotes.m_count = emoteCount;
@@ -5599,7 +5563,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestDetails(CDataStore* msg) {
             CDataStore response;
             response.Put(static_cast<uint32_t>(MSG_QUEST_PUSH_RESULT));
             response.Put(inform ? inform.m_guid : npc.m_guid);
-            response.Put(questId);
+            response.Put(static_cast<uint32_t>(questId));
             response.Put(static_cast<uint8_t>(4));
             response.Finalize();
             ClientServices::Send2(&response);
@@ -5607,9 +5571,11 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestDetails(CDataStore* msg) {
         }
     }
 
-    CGQuestInfo::SetState(npc, inform, 1, details, questId, startCheat);
+    CGQuestInfo::SetState(npc, inform, 1, details, questId, startCheat, fromAreaTrigger, criteriaSpell);
     CGQuestInfo::SetLogDescription(objectives);
-    CGQuestInfo::AddReward(title, choiceItems, choiceDisplays, choiceCounts, numChoices, rewardItems, rewardDisplays, rewardCounts, numRewards, money, xp, honor, honorMultiplier, spell, spellCast, autoLaunched, suggestedGroupNum, rewardTitle, talents, arenaPoints, factionMask, factionIDs, factionValues, factionOverrides, flags);
+    CGQuestInfo::AddReward(title, rewards, autoLaunched, suggestedGroupNum, flags);
+    CGQuestInfo::SetPortraits(giverPortrait, giverText, giverName, turnInPortrait, turnInText, turnInName);
+    FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_DETAIL, NULL);
     return 1;
 }
 
@@ -5691,32 +5657,36 @@ int32_t CGPlayer_C::CanUseItem(const ItemRecSparse* stats, int32_t& error) {
     return 1;
 }
 
-// OFFSET: #0x006D0AB0
-int32_t __stdcall CGPlayer_C::OnQuestGiverOfferReward(CDataStore* msg) {
+// OFFSET: 0x005564D0
+int32_t __stdcall CGPlayer_C::OnQuestGiverChooseReward(CDataStore* msg) {
     WOWGUID npc;
     msg->Get(npc.m_guid);
-
-    uint32_t questId;
+    int32_t questId;
     msg->Get(questId);
-
     char title[512];
     msg->GetString(title, sizeof(title));
-
     char text[3000];
     msg->GetString(text, sizeof(text));
-
+    char giverText[1024];
+    msg->GetString(giverText, sizeof(giverText));
+    char giverName[256];
+    msg->GetString(giverName, sizeof(giverName));
+    char turnInText[1024];
+    msg->GetString(turnInText, sizeof(turnInText));
+    char turnInName[256];
+    msg->GetString(turnInName, sizeof(turnInName));
+    int32_t giverPortrait;
+    msg->Get(giverPortrait);
+    int32_t turnInPortrait;
+    msg->Get(turnInPortrait);
     uint8_t autoLaunched;
     msg->Get(autoLaunched);
-
     uint32_t flags;
     msg->Get(flags);
-
-    uint32_t suggestedGroupNum;
+    int32_t suggestedGroupNum;
     msg->Get(suggestedGroupNum);
-
     uint32_t emoteCount;
     msg->Get(emoteCount);
-
     QUESTGIVEREMOTEQUEUE emotes;
     emotes.m_nodes = static_cast<QUESTGIVEREMOTENODE*>(alloca(emoteCount * sizeof(QUESTGIVEREMOTENODE)));
     emotes.m_count = emoteCount;
@@ -5726,92 +5696,16 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverOfferReward(CDataStore* msg) {
         msg->Get(reinterpret_cast<uint32_t&>(emotes.m_nodes[i].m_emote));
     }
 
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(npc, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
+    if (CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(npc, TYPEMASK_UNIT, __FILE__, __LINE__))) {
         unit->PlayEmotes(emotes);
     }
 
-    uint32_t numChoices;
-    msg->Get(numChoices);
-
-    uint32_t choiceItems[6] = { 0 };
-    uint32_t choiceDisplays[6] = { 0 };
-    uint32_t choiceCounts[6];
-
-    for (int32_t i = 0; i < static_cast<int32_t>(numChoices); i++) {
-        msg->Get(choiceItems[i]);
-        msg->Get(choiceCounts[i]);
-        msg->Get(choiceDisplays[i]);
-    }
-
-    uint32_t numRewards;
-    msg->Get(numRewards);
-
-    uint32_t rewardItems[4] = { 0 };
-    uint32_t rewardDisplays[4] = { 0 };
-    uint32_t rewardCounts[4];
-
-    for (int32_t i = 0; i < static_cast<int32_t>(numRewards); i++) {
-        msg->Get(rewardItems[i]);
-        msg->Get(rewardCounts[i]);
-        msg->Get(rewardDisplays[i]);
-    }
-
-    uint32_t money;
-    msg->Get(money);
-
-    uint32_t xp;
-    msg->Get(xp);
-
-    uint32_t honor;
-    msg->Get(honor);
-
-    float honorMultiplier;
-    msg->Get(honorMultiplier);
-
-    uint32_t unknown;
-    msg->Get(unknown);
-
-    uint32_t spell;
-    msg->Get(spell);
-
-    uint32_t spellCast;
-    msg->Get(spellCast);
-
-    uint32_t rewardTitle;
-    msg->Get(rewardTitle);
-
-    uint32_t talents;
-    msg->Get(talents);
-
-    uint32_t arenaPoints;
-    msg->Get(arenaPoints);
-
-    uint32_t factionMask;
-    msg->Get(factionMask);
-
-    uint32_t factionIDs[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionIDs[i]);
-    }
-
-    uint32_t factionValues[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionValues[i]);
-    }
-
-    uint32_t factionOverrides[5];
-
-    for (uint32_t i = 0; i < 5; i++) {
-        msg->Get(factionOverrides[i]);
-    }
-
-    WOWGUID none = { 0 };
-    CGQuestInfo::SetState(npc, none, 3, text, questId, 0);
-    CGQuestInfo::AddReward(title, choiceItems, choiceDisplays, choiceCounts, numChoices, rewardItems, rewardDisplays, rewardCounts, numRewards, money, xp, honor, honorMultiplier, spell, spellCast, autoLaunched, suggestedGroupNum, rewardTitle, talents, arenaPoints, factionMask, factionIDs, factionValues, factionOverrides, flags);
+    QuestRewards_C rewards;
+    ReadQuestRewards(msg, rewards);
+    CGQuestInfo::SetState(npc, WOWGUID(), 3, text, questId, 0, 0, 0);
+    CGQuestInfo::AddReward(title, rewards, autoLaunched, suggestedGroupNum, flags);
+    CGQuestInfo::SetPortraits(giverPortrait, giverText, giverName, turnInPortrait, turnInText, turnInName);
+    FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_COMPLETE, NULL);
     return 1;
 }
 
@@ -5887,7 +5781,7 @@ int32_t OnUpdateQuest(WOWGUID guid, uint32_t offset, uint32_t count, const void*
 
         if (index >= 0 && (quest->m_flags & 0x10000) && CGQuestLog::IsQuestCompleteEx(ClntObjMgrGetActivePlayerObj(), index, true, 0, 0)) {
             WOWGUID self = player->m_obj->m_guid;
-            CGPlayer_C::CompleteQuest(self, quest->m_id);
+            CGPlayer_C::CompleteQuest(self, quest->m_id, 1);
         }
     }
 
@@ -6058,8 +5952,8 @@ int32_t Packet_SMSG_CROSSED_INEBRIATION_THRESHOLD(void* param, NETMESSAGE msgId,
     return 1;
 }
 
-// OFFSET: #0x006D0240
-int32_t __stdcall CGPlayer_C::OnQuestGiverQuestList(CDataStore* msg) {
+// OFFSET: 0x00555D70
+int32_t __stdcall CGPlayer_C::OnQuestGiverListQuests(CDataStore* msg) {
     WOWGUID npc;
     msg->Get(npc.m_guid);
 
@@ -6079,7 +5973,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestList(CDataStore* msg) {
     memset(s_questListLevels, 0, sizeof(s_questListLevels));
     memset(s_questListFlags, 0, sizeof(s_questListFlags));
     memset(s_questListRepeatable, 0, sizeof(s_questListRepeatable));
-    CGQuestInfo::SetState(npc, WOWGUID(), 0, greeting, 0, 0);
+    CGQuestInfo::SetState(npc, WOWGUID(), 0, greeting, 0, 0, 0, 0);
 
     char titles[32][512];
 
@@ -6114,76 +6008,69 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestList(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D08F0
+// OFFSET: 0x005562C0
 int32_t __stdcall CGPlayer_C::OnQuestGiverRequestItems(CDataStore* msg) {
+    QuestRequest request;
+    memset(&request, 0, sizeof(request));
     WOWGUID npc;
     msg->Get(npc.m_guid);
-
-    uint32_t questId;
+    int32_t questId;
     msg->Get(questId);
-
     char title[512];
     msg->GetString(title, sizeof(title));
-
     char text[3000];
     msg->GetString(text, sizeof(text));
-
     QUESTGIVEREMOTENODE emote;
     msg->Get(emote.m_delay);
     msg->Get(reinterpret_cast<uint32_t&>(emote.m_emote));
-
-    uint32_t autoLaunched;
+    int32_t autoLaunched;
     msg->Get(autoLaunched);
-
     uint32_t flags;
     msg->Get(flags);
-
-    uint32_t suggestedGroupNum;
+    int32_t suggestedGroupNum;
     msg->Get(suggestedGroupNum);
-
-    uint32_t requiredMoney;
+    int32_t requiredMoney;
     msg->Get(requiredMoney);
-
-    uint32_t numItems;
+    int32_t numItems;
     msg->Get(numItems);
 
-    uint32_t itemIds[6] = { 0 };
-    uint32_t itemCounts[6];
-    uint32_t itemDisplays[6];
+    for (int32_t i = 0; i < numItems && i < 6; i++) {
+        msg->Get(request.m_items[i].m_itemID);
+        msg->Get(request.m_items[i].m_count);
+        msg->Get(request.m_items[i].m_displayID);
+    }
 
-    for (int32_t i = 0; i < static_cast<int32_t>(numItems); i++) {
-        msg->Get(itemIds[i]);
-        msg->Get(itemCounts[i]);
-        msg->Get(itemDisplays[i]);
+    int32_t numCurrencies;
+    msg->Get(numCurrencies);
+
+    for (int32_t i = 0; i < numCurrencies && i < 4; i++) {
+        msg->Get(request.m_currencies[i].m_currencyID);
+        msg->Get(request.m_currencies[i].m_count);
     }
 
     uint32_t completable0;
     msg->Get(completable0);
-
     uint32_t completable1;
     msg->Get(completable1);
-
     uint32_t completable2;
     msg->Get(completable2);
-
     uint32_t completable3;
     msg->Get(completable3);
+    uint32_t completable4;
+    msg->Get(completable4);
+    CGQuestInfo::SetState(npc, WOWGUID(), 2, text, questId, 0, 0, 0);
+    int32_t canComplete = completable0 && completable1 && completable2 && completable3 && completable4;
+    CGQuestInfo::AddItemRequest(title, request, requiredMoney, canComplete, autoLaunched, suggestedGroupNum, flags);
 
-    CGQuestInfo::SetState(npc, WOWGUID(), 2, text, questId, 0);
-    int32_t canComplete = completable0 && completable1 && completable2 && completable3;
-    CGQuestInfo::AddItemRequest(title, itemIds, itemCounts, itemDisplays, numItems, requiredMoney, canComplete, autoLaunched, suggestedGroupNum, flags);
-
-    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(npc, TYPEMASK_UNIT, __FILE__, __LINE__));
-
-    if (unit) {
+    if (CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(npc, TYPEMASK_UNIT, __FILE__, __LINE__))) {
         unit->SetEmoteQueue(&emote, 1);
     }
 
     return 1;
 }
 
-// OFFSET: #0x006CD7C0
-int32_t __stdcall CGPlayer_C::OnQuestGiverQuestInvalid(CDataStore* msg) {
+// OFFSET: 0x00553120
+int32_t __stdcall CGPlayer_C::OnQuestGiverInvalidQuest(CDataStore* msg) {
     uint32_t reason;
     msg->Get(reason);
 
@@ -6233,12 +6120,16 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestInvalid(CDataStore* msg) {
             CGGameUI::DisplayError(ERR_QUEST_ALREADY_DONE_DAILY);
             break;
 
+        case 31:
+            CGGameUI::DisplayError(ERR_QUEST_FAILED_SPELL);
+            break;
+
         default:
             CGGameUI::DisplayError(ERR_QUEST_NEED_PREREQS);
             break;
     }
 
-    CGQuestInfo::QuestGiverFinished(0, 0, 0);
+    CGQuestInfo::QuestGiverFinished(0, 0, 0, 0);
     return 1;
 }
 
@@ -6265,7 +6156,7 @@ static void QuestRewardItemCallback(int32_t id, const WOWGUID& guid, void* param
     }
 }
 
-// OFFSET: #0x006CD940
+// OFFSET: 0x00553380
 static void QuestFailedCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (!success) {
         return;
@@ -6303,7 +6194,7 @@ static void QuestFailedCallback(int32_t id, const WOWGUID& guid, void* param, bo
     }
 }
 
-// OFFSET: #0x006CDA70
+// OFFSET: 0x005534B0
 int32_t __stdcall CGPlayer_C::OnQuestGiverQuestFailed(CDataStore* msg) {
     uint32_t questId;
     msg->Get(questId);
@@ -6337,7 +6228,7 @@ int32_t __stdcall CGPlayer_C::OnQuestGiverQuestFailed(CDataStore* msg) {
         }
     }
 
-    CGQuestInfo::QuestGiverFinished(0, questId, 0);
+    CGQuestInfo::QuestGiverFinished(0, questId, 0, 0);
     return 1;
 }
 

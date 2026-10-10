@@ -21917,7 +21917,7 @@ void CGUnit_C::NPCFlagChanged(uint32_t oldFlags) {
         this->RefreshInteractIcon();
 
         if (!(flags & 0x2) && CGQuestInfo::m_npc == this->m_obj->m_guid) {
-            CGQuestInfo::QuestGiverFinished(0, 0, 0);
+            CGQuestInfo::QuestGiverFinished(0, 0, 0, 0);
         }
     }
 

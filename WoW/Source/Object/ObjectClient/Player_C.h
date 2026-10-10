@@ -121,7 +121,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t TurnInArenaCharter(int32_t turnIn);
     static void __stdcall ClearAFK(int32_t force);
     static void __stdcall ClearPartyAssignment(uint8_t assignment, WOWGUID guid);
-    static void __stdcall CompleteQuest(const WOWGUID& questGiver, int32_t questId);
+    static void __stdcall CompleteQuest(const WOWGUID& questGiver, int32_t questId, int32_t fromScript);
     static void __stdcall DeclineArenaTeam();
     static void __stdcall DeclineGroup();
     static void __stdcall DeclineGuild();
@@ -146,11 +146,11 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static int32_t __stdcall OnQuestGiverStatus(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverStatusMultiple(CDataStore* msg);
     static int32_t __stdcall OnRefundInfo(CDataStore* msg);
-    static int32_t __stdcall OnQuestGiverQuestList(CDataStore* msg);
-    static int32_t __stdcall OnQuestGiverQuestDetails(CDataStore* msg);
+    static int32_t __stdcall OnQuestGiverListQuests(CDataStore* msg);
+    static int32_t __stdcall OnQuestGiverSendQuest(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverRequestItems(CDataStore* msg);
-    static int32_t __stdcall OnQuestGiverOfferReward(CDataStore* msg);
-    static int32_t __stdcall OnQuestGiverQuestInvalid(CDataStore* msg);
+    static int32_t __stdcall OnQuestGiverChooseReward(CDataStore* msg);
+    static int32_t __stdcall OnQuestGiverInvalidQuest(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverQuestComplete(CDataStore* msg);
     static int32_t __stdcall OnQuestGiverQuestFailed(CDataStore* msg);
     static int32_t __stdcall OnTrainerList(CDataStore* msg);
