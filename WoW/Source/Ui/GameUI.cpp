@@ -3321,7 +3321,7 @@ int32_t CGGameUI::OnTerrainClick(const CTerrainClickEvent& evt) {
             return 1;
         }
 
-        if (evt.m_button == MOUSE_BUTTON_LEFT && CGPetInfo::HandleMoveToTerrainRay(evt)) {
+        if (evt.m_button == MOUSE_BUTTON_LEFT && CGPetInfo::HandleTerrainClick(evt)) {
             return 1;
         }
 
@@ -3637,7 +3637,7 @@ void CGGameUI::SetCursorPetAction(const PetAction* action) {
         return;
     }
 
-    const char* texture = CGPetInfo::GetPetActionTexture(action);
+    const char* texture = CGPetInfo::GetPetActionTexture(*action);
 
     if (!texture) {
         return;
@@ -4232,7 +4232,7 @@ int32_t CGGameUI::HandleMouseDown(const CMouseEvent& evt) {
     }
 
     if (CGPetInfo::m_petOrderMoveTo) {
-        CGPetInfo::ClearMoveTo();
+        CGPetInfo::ClearPetOrderMoveTo();
     }
 
     if (CGPlayer_C::IsGiftWrapping()) {

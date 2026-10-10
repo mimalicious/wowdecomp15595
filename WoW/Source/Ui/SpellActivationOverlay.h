@@ -15,6 +15,8 @@ class CGSpellActivationOverlay {
     static void AddOverlayOnAvailableSpell(int32_t spellId);
     static void DelOverlayOnAvailableSpell(int32_t spellId);
     static void UpdateActiveMoverOverlays();
+    static void ClearActiveMoverSpells();
+    static void AddActiveMoverSpells();
     static void OnAuraAdded(const SpellRec* spell);
     static void OnAuraRemoved(const SpellRec* spell);
 };

@@ -513,7 +513,6 @@ class CGGameUI {
 };
 
 void EnableFadingScreen(float duration, void (*callback)(void*), void* param);
-void SendRequestPetInfo();
 
 class CObjectTrackEvent {
     public:

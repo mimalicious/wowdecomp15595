@@ -1382,7 +1382,7 @@ const char* CGActionBar::GetTexture(uint32_t slot) {
         PetAction* petAction = GetPetAction((slot - 120) & 0xE1FFFFFF);
 
         if (petAction && petAction->m_data) {
-            return CGPetInfo::GetPetActionTexture(petAction);
+            return CGPetInfo::GetPetActionTexture(*petAction);
         }
 
         return NULL;

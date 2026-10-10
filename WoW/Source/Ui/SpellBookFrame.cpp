@@ -1888,7 +1888,7 @@ const char* CGSpellBook::GetSpellBookItemTexture(int32_t slot, int32_t petSpell)
         case SPELLBOOK_ITEM_PETACTION: {
             PetAction action;
             action.m_data = item->m_id;
-            return CGPetInfo::GetPetActionTexture(&action);
+            return CGPetInfo::GetPetActionTexture(action);
         }
 
         case SPELLBOOK_ITEM_FLYOUT: {
