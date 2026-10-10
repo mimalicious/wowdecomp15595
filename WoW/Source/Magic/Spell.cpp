@@ -2,130 +2,144 @@
 #include <cmath>
 #include "Engine/Source/Tempest/C3Vector.h"
 
-// OFFSET: #0x0076BD50
-bool Spell_IsAuraEffect(int32_t effect) {
-    switch (effect) {
-        case 6:
-        case 27:
-        case 35:
-        case 65:
-        case 119:
-        case 128:
-        case 129:
-        case 143:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
-// OFFSET: #0x0076BE10
-bool Spell_IsUnitAuraEffect(int32_t effect) {
-    switch (effect) {
-        case 6:
-        case 35:
-        case 65:
-        case 119:
-        case 128:
-        case 129:
-        case 143:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
-// OFFSET: #0x0076BED0
-bool Spell_IsAreaAuraEffect(int32_t effect) {
-    switch (effect) {
-        case 27:
-        case 35:
-        case 65:
-        case 119:
-        case 128:
-        case 129:
-        case 143:
-            return true;
-
-        default:
-            return false;
-    }
-}
-
-// OFFSET: #0x0076BF80
-float SpellUtils_ComputeMissileTrajectoryTravelTime(float pitch, float speed, const C3Vector* delta, float gravity) {
-    bool hasGravity = fabs(gravity) > 0.0001f;
+// OFFSET: 0x00663530
+float SpellUtils_ComputeMissileTrajectoryTravelTime(float pitch, float speed, const C3Vector& delta, float gravity) {
+    bool hasGravity = fabs(gravity) > 0.000099999997f;
     float horizontal = cos(pitch) * speed;
 
-    if (horizontal > 0.0001f) {
-        return sqrt(delta->y * delta->y + delta->x * delta->x) / horizontal;
+    if (horizontal > 0.000099999997f) {
+        return sqrt(delta.y * delta.y + delta.x * delta.x) / horizontal;
     }
 
-    if (speed <= 0.0001f) {
+    if (speed <= 0.000099999997f) {
         if (!hasGravity) {
             return -1.0f;
         }
     } else if (!hasGravity) {
-        return fabs(delta->z) / speed;
+        return fabs(delta.z) / speed;
     }
 
     float vertical = speed * sin(pitch);
-    float discriminant = vertical * vertical - (delta->z * gravity + delta->z * gravity);
 
-    if (discriminant < 0.0f) {
+    if (vertical * vertical - delta.z * gravity * 2.0f < 0.0f) {
         return -1.0f;
     }
 
-    float root = sqrt(discriminant);
-    float scale = -1.0f / gravity;
-    float first = (root - vertical) * scale;
-    float second = scale * (-vertical - root);
+    float root = sqrt(vertical * vertical - delta.z * gravity * 2.0f);
+    float first = (root - vertical) * (-1.0f / gravity);
+    float second = (-vertical - root) * (-1.0f / gravity);
 
-    if (first >= 0.0f && (second < 0.0f || first < second)) {
+    if (first < 0.0f) {
+        return second;
+    }
+
+    if (second < 0.0f) {
         return first;
     }
 
-    return second;
+    if (second <= first) {
+        return second;
+    }
+
+    return first;
 }
 
-// OFFSET: #0x0076C070
-int32_t SpellUtils_ComputeMissileTrajectory(float pitch, const C3Vector* delta, float gravity, float* speed, float* time, C3Vector* velocity) {
+// OFFSET: 0x00663660
+int32_t SpellUtils_ComputeMissileTrajectory(float pitch, const C3Vector& delta, float gravity, float& speed, float& time, C3Vector* velocity) {
     float c = cos(pitch);
     float s = sin(pitch);
-    float horizontal = sqrt(delta->y * delta->y + delta->x * delta->x);
+    float horizontal = sqrt(delta.y * delta.y + delta.x * delta.x);
 
-    if (fabs(c) < 0.0001f || fabs(horizontal) < 0.0001f || fabs(gravity) < 0.0001f) {
+    if (fabs(c) < 0.000099999997f || fabs(horizontal) < 0.000099999997f || fabs(gravity) < 0.000099999997f) {
         return 1;
     }
 
-    float half = (1.0f / c * horizontal * s - delta->z) / gravity;
-    float squared = half + half;
+    float squared = (1.0f / c * horizontal * s - delta.z) / gravity * 2.0f;
 
-    if (squared <= 0.01f) {
+    if (squared <= 0.0099999998f) {
         return 0;
     }
 
     float t = sqrt(squared);
-    *time = t;
-    float v = 1.0f / c * (horizontal / t);
-    *speed = v;
+    time = t;
+    float v = horizontal / t * (1.0f / c);
+    speed = v;
 
     if (velocity) {
-        float inverse = 1.0f / horizontal;
-        velocity->x = v * delta->x * inverse * c;
-        velocity->y = c * (inverse * *speed) * delta->y;
-        velocity->z = s * *speed;
+        velocity->x = delta.x * v * (1.0f / horizontal) * c;
+        velocity->y = speed * (1.0f / horizontal) * c * delta.y;
+        velocity->z = speed * s;
     }
 
     return 2;
+}
+
+// OFFSET: 0x006637A0/0x140309910
+int32_t GetSkinningDifficulty(int32_t level) {
+    if (level <= 10) {
+        return 1;
+    }
+
+    if (level < 20) {
+        return 2 * (5 * level - 50);
+    }
+
+    if (level <= 73) {
+        return 5 * level;
+    }
+
+    if (level <= 80) {
+        return 10 * level - 365;
+    }
+
+    if (level > 83) {
+        return 20 * level - 1210;
+    }
+
+    return 5 * level + 35;
+}
+
+// OFFSET: 0x00663800
+bool SpellIsAuraEffect(int32_t effect) {
+    switch (effect) {
+        case 6:
+        case 27:
+        case 35:
+        case 65:
+        case 119:
+        case 128:
+        case 129:
+        case 143:
+        case 174:
+            return true;
+
+        default:
+            return false;
+    }
 }
 
 // OFFSET: 0x006638E0/0x140309A50
 bool SpellIsApplyAuraEffect(int32_t effect) {
     switch (effect) {
         case 6:
+        case 35:
+        case 65:
+        case 119:
+        case 128:
+        case 129:
+        case 143:
+        case 174:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+// OFFSET: 0x006639C0/0x140309B40
+bool SpellIsAreaAuraEffect(int32_t effect) {
+    switch (effect) {
+        case 27:
         case 35:
         case 65:
         case 119:

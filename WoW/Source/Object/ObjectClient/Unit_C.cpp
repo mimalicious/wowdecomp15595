@@ -2328,7 +2328,7 @@ void CGUnit_C::RemoveAuraEffect(uint32_t index, const SpellRec* spell, const Aur
                     break;
 
                 case 341:
-                    Spell_C_UpdateOverrideSpell(effect->m_effectMiscValue);
+                    Spell_C_RefreshCategoryCooldowns(effect->m_effectMiscValue);
                     break;
 
                 case 357: {
@@ -2554,7 +2554,7 @@ void CGUnit_C::AddAuraEffect(uint32_t index, const SpellRec* spell) {
                     break;
 
                 case 341:
-                    Spell_C_UpdateOverrideSpell(effect->m_effectMiscValue);
+                    Spell_C_RefreshCategoryCooldowns(effect->m_effectMiscValue);
                     break;
 
                 case 357: {
@@ -12997,7 +12997,7 @@ CGUnit_C::CGUnit_C(uint32_t time, const CClientObjCreate& create)
     this->m_mountFadeStartAlpha = 0xFF;
     this->m_mountFadeEndAlpha = 0xFF;
     this->m_targetChangeTime = FrameTime::GetCurTimeMs() - 1000;
-    this->unk_1041[0] = 0;
+    this->m_missileTrajectoryCastCount = 0;
 
     this->m_manaRegenInterruptTime = 0;
     this->m_powerBarID = 0;

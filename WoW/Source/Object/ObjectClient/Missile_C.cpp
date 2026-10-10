@@ -450,7 +450,7 @@ void CMissile::InitializeTrajectory() {
     const SpellMissileRec* missile = spell ? g_spellMissileDB.GetRecord(spell->m_spellMissileID) : NULL;
     this->m_gravity = missile ? missile->m_gravity : 19.291105f;
     float speed;
-    int32_t result = SpellUtils_ComputeMissileTrajectory(pitch, &delta, this->m_gravity, &speed, &this->m_travelTime, &velocity);
+    int32_t result = SpellUtils_ComputeMissileTrajectory(pitch, delta, this->m_gravity, speed, this->m_travelTime, &velocity);
 
     if (!result) {
         pitch = (this->m_gravity < 0.0f ? -0.0099999998f : 0.0099999998f) + this->m_pitch;
@@ -461,7 +461,7 @@ void CMissile::InitializeTrajectory() {
             pitch = (-1.5707964f - pitch) * 2.0f + pitch;
         }
 
-        result = SpellUtils_ComputeMissileTrajectory(pitch, &delta, this->m_gravity, &speed, &this->m_travelTime, &velocity);
+        result = SpellUtils_ComputeMissileTrajectory(pitch, delta, this->m_gravity, speed, this->m_travelTime, &velocity);
     }
 
     if (!result) {
@@ -469,15 +469,15 @@ void CMissile::InitializeTrajectory() {
     } else if (result == 1) {
         if (spell && missile) {
             speed = this->m_trajectorySpeed;
-            this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, &delta, this->m_gravity);
+            this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, delta, this->m_gravity);
 
             if (this->m_travelTime < 0.000099999997f) {
                 speed = missile->m_defaultSpeedMin;
-                this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, &delta, this->m_gravity);
+                this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, delta, this->m_gravity);
 
                 if (this->m_travelTime < 0.000099999997f) {
                     speed = missile->m_defaultSpeedMax;
-                    this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, &delta, this->m_gravity);
+                    this->m_travelTime = SpellUtils_ComputeMissileTrajectoryTravelTime(pitch, speed, delta, this->m_gravity);
 
                     if (this->m_travelTime < 0.000099999997f) {
                         this->m_flags &= ~0x10000;
