@@ -865,6 +865,15 @@ bool (*ClientWeeklySpellUsageUpdate::s_handler)(ClientWeeklySpellUsageUpdate* ms
 // STATIC: 0x00E4D77C
 bool (*ClientClearCooldowns::s_handler)(ClientClearCooldowns* msg);
 
+// STATIC: 0x00E4D654
+bool (*ClientCurrencyLootRemoved::s_handler)(ClientCurrencyLootRemoved* msg);
+
+// STATIC: 0x00E4D43C
+bool (*ClientCurrencyLootRestored::s_handler)(ClientCurrencyLootRestored* msg);
+
+// STATIC: 0x00E4D5D4
+bool (*ClientLootContents::s_handler)(ClientLootContents* msg);
+
 // OFFSET: 0x006C1130/0x140376650
 ClientPlaySpellVisualKit::ClientPlaySpellVisualKit(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
     this->Unpack(msg, true);
@@ -1685,4 +1694,99 @@ bool ClientPetAdded::Handle() {
     }
 
     return ClientPetAdded::s_handler(this);
+}
+
+// OFFSET: 0x006A3270/0x14034F7C0
+ClientCurrencyLootRemoved::ClientCurrencyLootRemoved(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    uint8_t value = 0;
+    msg->Get(value);
+    this->m_lootListID = value;
+}
+
+// OFFSET: 0x006A19B0/0x14034E9E0
+ClientCurrencyLootRemoved::~ClientCurrencyLootRemoved() {
+}
+
+// OFFSET: 0x006B0650/0x1403613F0
+bool ClientCurrencyLootRemoved::Handle() {
+    if (!ClientCurrencyLootRemoved::s_handler) {
+        return false;
+    }
+
+    return ClientCurrencyLootRemoved::s_handler(this);
+}
+
+// OFFSET: 0x006A9430/0x140358630
+ClientCurrencyLootRestored::ClientCurrencyLootRestored(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006A0D70/0x14034DD90
+ClientCurrencyLootRestored::~ClientCurrencyLootRestored() {
+}
+
+// OFFSET: 0x006A1B80
+void ClientCurrencyLootRestored::Unpack(CDataStore* msg, bool full) {
+    uint32_t value = 0;
+    msg->Get(value);
+    this->m_quantity = value;
+    uint8_t byteValue = 0;
+    msg->Get(byteValue);
+    this->m_lootListID = byteValue;
+    value = 0;
+    msg->Get(value);
+    this->m_currencyID = value;
+}
+
+// OFFSET: 0x006B06E0/0x1403614B0
+bool ClientCurrencyLootRestored::Handle() {
+    if (!ClientCurrencyLootRestored::s_handler) {
+        return false;
+    }
+
+    return ClientCurrencyLootRestored::s_handler(this);
+}
+
+// OFFSET: 0x006EF050/0x1403B4150
+ClientLootContents::ClientLootContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006E02A0/0x1403A02D0
+ClientLootContents::~ClientLootContents() {
+}
+
+// OFFSET: 0x006E5860/0x1403A6D80
+void ClientLootContents::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_items.SetCount(bits.ReadBits<21>());
+    uint32_t value;
+
+    for (uint32_t i = 0; i < this->m_items.Count(); i++) {
+        JamLootItem& item = this->m_items[i];
+        value = 0;
+        msg->Get(value);
+        item.m_displayID = value;
+        value = 0;
+        msg->Get(value);
+        item.m_randomSuffix = value;
+        value = 0;
+        msg->Get(value);
+        item.m_quantity = value;
+        value = 0;
+        msg->Get(value);
+        item.m_itemID = value;
+        value = 0;
+        msg->Get(value);
+        item.m_randomPropertiesID = value;
+    }
+}
+
+// OFFSET: 0x006B81A0/0x14036B250
+bool ClientLootContents::Handle() {
+    if (!ClientLootContents::s_handler) {
+        return false;
+    }
+
+    return ClientLootContents::s_handler(this);
 }

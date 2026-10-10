@@ -37,6 +37,16 @@ class PlayerSetCurrencyFlags : public JamClientMessage {
     ~PlayerSetCurrencyFlags();
 };
 
+class PlayerLootCurrency : public JamClientMessage {
+    public:
+    /* 0010 */ uint8_t m_lootListID;
+
+    void Put(CDataStore* msg) override;
+
+    PlayerLootCurrency();
+    ~PlayerLootCurrency();
+};
+
 class PlayerSetPetSlot : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_stableMaster[8];

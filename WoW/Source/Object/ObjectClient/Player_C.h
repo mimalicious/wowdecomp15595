@@ -69,15 +69,6 @@ struct VendorItem;
 class ItemRecSparse;
 class ItemStats_C;
 class EmotesTextRec;
-struct PlayerLootItem {
-    /* 0000 */ int32_t m_itemId;
-    /* 0004 */ int32_t m_displayId;
-    /* 0008 */ int32_t m_count;
-    /* 000C */ int32_t m_randomSuffix;
-    /* 0010 */ int32_t m_randomPropertyId;
-    /* 0014 */ int32_t m_slotType;
-};
-
 struct PlayerDance {
     /* 0000 */ int16_t* m_moves;
     /* 0004 */ int32_t m_start;
@@ -409,13 +400,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     int32_t OnLootResponse(uint32_t time, CDataStore* msg);
     void ClearLootingObject();
     void LootCorpse(CGCorpse_C* corpse, bool autoInteract);
-    static int32_t GetLootItem(uint32_t slot);
-    static void ClearLootItemSlotType(WOWGUID lootObject, uint32_t slot);
-    static int32_t GetLootItemDisplayId(uint32_t slot);
-    static int32_t GetLootQuantity(uint32_t slot);
-    static int32_t GetLootSeed(uint32_t slot);
-    static int32_t GetLootRandomPropertiesID(uint32_t slot);
-    static int32_t GetLootItemSlotType(uint32_t slot);
     int32_t OnLootReleaseResponse(CDataStore* msg);
     int32_t OnLootRemoved(CDataStore* msg);
     int32_t OnLootSlotChanged(CDataStore* msg);

@@ -386,9 +386,6 @@ struct DamageCalcLabel {
 // STATIC: #0x00AD9CD0
 static const DamageCalcLabel s_damageCalcLabels[41] = { { 0, "Base", 1, 1 }, { 3, "DPS Scaler", 2, 1 }, { 2, "Chain Reduction", 3, 0 }, { 2, "Combo Point Damage", 4, 0 }, { 3, "School Damage Done", 5, 0 }, { 3, "Creature Damage Done", 6, 0 }, { 3, "Creature Weapon Damage Done", 7, 0 }, { 2, "Weapon Effect", 8, 1 }, { 2, "Weapon Effect", 9, 0 }, { 3, "Spell Modifier", 10, 1 }, { 3, "Spell Modifier", 11, 1 }, { 3, "Offhand Penalty", 12, 0 }, { 3, "Attack Power Damage", 13, 1 }, { 3, "Creature Multiplier", 14, 1 }, { 3, "School Damage Done", 15, 1 }, { 3, "Weapon Multiplier", 16, 1 }, { 3, "School Damage Taken", 17, 1 }, { 3, "Source Damage Taken", 18, 1 }, { 3, "School Damage Taken", 19, 1 }, { 3, "Source Damage Taken", 20, 1 }, { 3, "Crit Damage Multiplier", 21, 0 }, { 4, "Crit Damage", 22, 1 }, { 2, "Resistance Coefficient", 23, 1 }, { 2, "Bonus Coefficient", 24, 2 }, { 3, "Critical Chance", 25, 2 }, { 3, "Critical Roll", 26, 2 }, { 3, "Seed For Rounding", 27, 0 }, { 4, "Fraction Adjust", 28, 1 }, { 3, "Resilience Modifier", 29, 1 }, { 3, "Armor Factor", 30, 0 }, { 4, "Armor Reduction", 31, 0 }, { 2, "Shield Block", 32, 1 }, { 2, "Melee Crit/Glance/Crush", 33, 1 }, { 3, "Pet Happiness Mult", 34, 1 }, { 3, "Creature Damage Done", 35, 0 }, { 2, "Number of Targets for Area Damage Cap", 36, 0 }, { 2, "Number of Targets", 37, 1 }, { 2, "Crowd Damage", 38, 1 }, { 3, "Mechanic Modifier", 39, 0 }, { 3, "Bonus From Attack Power Coefficient", 40, 1 }, { 3, "Aura State Modifier", 0x3F000000, static_cast<int32_t>(0xFFFFDE00) } };
 
-// STATIC: #0x00C9D340
-static PlayerLootItem s_lootItems[18];
-
 // STATIC: #0x00ADA1AC
 static const UIErrors s_mountResultErrors[] = { ERR_MOUNT_INVALIDMOUNTEE, ERR_MOUNT_TOOFARAWAY, ERR_MOUNT_ALREADYMOUNTED, ERR_MOUNT_NOTMOUNTABLE, ERR_MOUNT_NOTYOURPET, ERR_MOUNT_OTHER, ERR_MOUNT_LOOTING, ERR_MOUNT_RACECANTMOUNT, ERR_MOUNT_SHAPESHIFTED, ERR_MOUNT_FORCEDDISMOUNT, ERR_MAX_VALUE };
 
@@ -6742,73 +6739,6 @@ int32_t SkillMaxRankChangeHandler(WOWGUID guid, uint32_t offset, uint32_t count,
     return 1;
 }
 
-// OFFSET: #0x006CEB80
-int32_t CGPlayer_C::GetLootItem(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_itemId;
-}
-
-// OFFSET: #0x006CEBB0
-int32_t CGPlayer_C::GetLootItemDisplayId(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_displayId;
-}
-
-// OFFSET: #0x006CEBE0
-int32_t CGPlayer_C::GetLootQuantity(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_count;
-}
-
-// OFFSET: #0x006CEC10
-int32_t CGPlayer_C::GetLootSeed(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_randomSuffix;
-}
-
-// OFFSET: #0x006CEC40
-int32_t CGPlayer_C::GetLootRandomPropertiesID(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_randomPropertyId;
-}
-
-// OFFSET: #0x006CEC70
-int32_t CGPlayer_C::GetLootItemSlotType(uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    return s_lootItems[slot].m_slotType;
-}
-
-// OFFSET: #0x006DC770
-void CGPlayer_C::ClearLootItemSlotType(WOWGUID lootObject, uint32_t slot) {
-    if (slot >= 18) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (player && player->m_lootTarget == lootObject) {
-        s_lootItems[slot].m_slotType = 0;
-    }
-}
-
 // OFFSET: #0x006CECA0
 int32_t __stdcall CGPlayer_C::OnLootMoneyNotify(CDataStore* msg) {
     uint32_t amount;
@@ -6833,7 +6763,7 @@ void CGPlayer_C::ClearLootingObject() {
     this->UpdateBaseAnimation(0, -1);
 }
 
-// OFFSET: #0x006D53B0
+// OFFSET: 0x0055B920
 int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     WOWGUID guid;
     uint8_t lootType;
@@ -6841,7 +6771,7 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     msg->Get(lootType);
 
     if (!this->m_lootTarget || this->m_lootTarget != guid) {
-        if (this->m_lootTarget || (lootType != 2 && lootType != 3 && lootType != 4 && lootType != 6 && lootType != 7 && lootType != 8)) {
+        if (this->m_lootTarget || (lootType != 2 && lootType != 3 && lootType != 4 && lootType != 6 && lootType != 7 && lootType != 8 && lootType != 9)) {
             if (lootType) {
                 CDataStore release;
                 release.Put(static_cast<uint32_t>(CMSG_LOOT_RELEASE));
@@ -6858,26 +6788,23 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
             }
 
             this->m_lootTarget = WOWGUID();
-            this->UpdateBaseAnimation(0, -1);
+            this->UpdateLootAnimKit(0);
             CGGameUI::UnlockItem(guid);
+            msg->m_read = msg->m_size;
             return 1;
         }
     }
 
     if (lootType) {
-        uint32_t coins;
-        uint8_t count;
-        msg->Get(coins);
-        msg->Get(count);
-
-        if (count > 18) {
-            count = 18;
-        }
-
         CGObject_C* object = ClntObjMgrObjectPtr(guid, TYPEMASK_OBJECT, __FILE__, __LINE__);
 
         if (!object) {
-            CGGameUI::DisplayError(ERR_LOOT_DIDNT_KILL);
+            if ((guid.m_guid >> 32 & 0xF0000000) == 0x40000000) {
+                CGGameUI::DisplayError(ERR_NO_LOOT);
+            } else {
+                CGGameUI::DisplayError(ERR_LOOT_DIDNT_KILL);
+            }
+
             CDataStore release;
             release.Put(static_cast<uint32_t>(CMSG_LOOT_RELEASE));
             release.Put(guid.m_guid);
@@ -6891,25 +6818,9 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
         }
 
         this->m_lootTarget = guid;
-        memset(s_lootItems, 0, sizeof(s_lootItems));
+        CGLootInfo::SetObject(object, msg, lootType);
 
-        for (uint32_t i = 0; i < count; i++) {
-            uint8_t slot;
-            msg->Get(slot);
-            PlayerLootItem& item = s_lootItems[slot];
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_itemId));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_count));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_displayId));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_randomSuffix));
-            msg->Get(reinterpret_cast<uint32_t&>(item.m_randomPropertyId));
-            uint8_t slotType;
-            msg->Get(slotType);
-            s_lootItems[slot].m_slotType = slotType;
-        }
-
-        CGGameUI::OpenLoot(object, coins, lootType);
-
-        if (this->m_movement->m_flags & 0xC000FF) {
+        if (this->m_movement->m_flags & 0x6000FF) {
             CGGameUI::CloseLoot(true, true, false);
         }
 
@@ -6920,65 +6831,66 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     msg->Get(error);
 
     switch (error) {
-    case 4:
-        CGGameUI::DisplayError(ERR_LOOT_TOO_FAR);
-        break;
-    case 5:
-        CGGameUI::DisplayError(ERR_LOOT_BAD_FACING);
-        break;
-    case 6:
-        CGGameUI::DisplayError(ERR_LOOT_LOCKED);
-        break;
-    case 8:
-        CGGameUI::DisplayError(ERR_LOOT_NOTSTANDING);
-        break;
-    case 9:
-        CGGameUI::DisplayError(ERR_LOOT_STUNNED);
-        break;
-    case 10:
-        CGGameUI::DisplayError(ERR_LOOT_PLAYER_NOT_FOUND);
-        return 1;
-    case 11:
-        CGGameUI::DisplayError(ERR_PLAY_TIME_EXCEEDED);
-        break;
-    case 12:
-        CGGameUI::DisplayError(ERR_LOOT_MASTER_INV_FULL);
-        return 1;
-    case 13:
-        CGGameUI::DisplayError(ERR_LOOT_MASTER_UNIQUE_ITEM);
-        return 1;
-    case 14:
-        CGGameUI::DisplayError(ERR_LOOT_MASTER_OTHER);
-        return 1;
-    case 16:
-        CGGameUI::DisplayError(ERR_NOT_WHILE_SHAPESHIFTED);
-        return 1;
-    default:
-        CGGameUI::DisplayError(ERR_LOOT_DIDNT_KILL);
-        break;
+        case 4:
+            CGGameUI::DisplayError(ERR_LOOT_TOO_FAR);
+            break;
+        case 5:
+            CGGameUI::DisplayError(ERR_LOOT_BAD_FACING);
+            break;
+        case 6:
+            CGGameUI::DisplayError(ERR_LOOT_LOCKED);
+            break;
+        case 8:
+            CGGameUI::DisplayError(ERR_LOOT_NOTSTANDING);
+            break;
+        case 9:
+            CGGameUI::DisplayError(ERR_LOOT_STUNNED);
+            break;
+        case 10:
+            CGGameUI::DisplayError(ERR_LOOT_PLAYER_NOT_FOUND);
+            return 1;
+        case 11:
+            CGGameUI::DisplayError(ERR_PLAY_TIME_EXCEEDED);
+            break;
+        case 12:
+            CGGameUI::DisplayError(ERR_LOOT_MASTER_INV_FULL);
+            return 1;
+        case 13:
+            CGGameUI::DisplayError(ERR_LOOT_MASTER_UNIQUE_ITEM);
+            return 1;
+        case 14:
+            CGGameUI::DisplayError(ERR_LOOT_MASTER_OTHER);
+            return 1;
+        case 16:
+            CGGameUI::DisplayError(ERR_NOT_WHILE_SHAPESHIFTED);
+            return 1;
+        case 17:
+            CGGameUI::DisplayError(ERR_NO_LOOT);
+            return 1;
+        default:
+            CGGameUI::DisplayError(ERR_LOOT_DIDNT_KILL);
+            break;
     }
 
     this->m_lootTarget = WOWGUID();
-    this->UpdateBaseAnimation(0, -1);
+    this->UpdateLootAnimKit(0);
     CGGameUI::UnlockItem(guid);
-    this->UpdateBaseAnimation(0, -1);
     return 1;
 }
 
-// OFFSET: #0x006D5860
+// OFFSET: 0x0055BD30
 int32_t CGPlayer_C::OnLootRemoved(CDataStore* msg) {
     uint8_t slot;
     msg->Get(slot);
 
     if (ClntObjMgrObjectPtr(this->m_lootTarget, TYPEMASK_OBJECT, __FILE__, __LINE__)) {
-        memset(&s_lootItems[slot], 0, sizeof(s_lootItems[slot]));
-        CGGameUI::ClearLootSlot(slot);
+        CGLootInfo::ClearSlot(slot);
     }
 
     return 1;
 }
 
-// OFFSET: #0x006D58D0
+// OFFSET: 0x0055BD80
 int32_t CGPlayer_C::OnLootSlotChanged(CDataStore* msg) {
     WOWGUID guid;
     uint8_t slot;
@@ -6990,13 +6902,7 @@ int32_t CGPlayer_C::OnLootSlotChanged(CDataStore* msg) {
         return 1;
     }
 
-    PlayerLootItem& item = s_lootItems[slot];
-    msg->Get(reinterpret_cast<uint32_t&>(item.m_itemId));
-    msg->Get(reinterpret_cast<uint32_t&>(item.m_displayId));
-    msg->Get(reinterpret_cast<uint32_t&>(item.m_randomSuffix));
-    msg->Get(reinterpret_cast<uint32_t&>(item.m_randomPropertyId));
-    msg->Get(reinterpret_cast<uint32_t&>(item.m_count));
-    CGGameUI::LootSlotChanged(slot);
+    CGLootInfo::ChangedSlot(slot, msg);
     return 1;
 }
 

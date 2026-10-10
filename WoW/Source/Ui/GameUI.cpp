@@ -5842,16 +5842,6 @@ int32_t CGGameUI::IsRaidMemberOrPet(const WOWGUID& guid) {
     return 0;
 }
 
-// OFFSET: #0x005124E0
-void CGGameUI::ClearLootSlot(uint8_t slot) {
-    CGLootInfo::ClearSlot(slot);
-}
-
-// OFFSET: #0x005124F0
-void CGGameUI::LootSlotChanged(uint8_t slot) {
-    CGLootInfo::OnLootSlotChanged(slot);
-}
-
 // OFFSET: 0x008D7BB0/0x14064AFC0
 int32_t CGGameUI::StartCinematicCamera() {
     CGCamera* camera = CGWorldFrame::GetActiveCamera();
@@ -5894,15 +5884,6 @@ int32_t CGGameUI::StartCinematicCamera() {
     return 1;
 }
 
-// OFFSET: #0x005264F0
-void CGGameUI::OpenLoot(CGObject_C* object, int32_t coins, uint32_t lootType) {
-    if (object->m_obj->m_type & TYPEMASK_UNIT) {
-        CGGameUI::Target(object->m_obj->m_guid);
-    }
-
-    CGLootInfo::SetObject(object, coins, lootType);
-}
-
 // OFFSET: 0x008D4AA0
 void CGGameUI::NextCinematicInternal(void* param) {
     CGGameUI::m_cinematic.m_camera = NULL;
@@ -5930,7 +5911,7 @@ void CGGameUI::CloseLoot(bool a1, bool a2, bool a3) {
         return;
     }
 
-    if ((CGLootDisplay::GetLootAcquireType() == 4 || CGLootDisplay::GetLootAcquireType() == 7 || CGLootDisplay::GetLootAcquireType() == 8) && CGLootInfo::HasLoot() && !a2) {
+    if ((CGLootInfo::GetLootType() == 4 || CGLootInfo::GetLootType() == 7 || CGLootInfo::GetLootType() == 8) && CGLootInfo::HasLoot() && !a2) {
         CGLootInfo::DoAutoLoot(1);
     }
 
@@ -5960,7 +5941,7 @@ void CGGameUI::CloseLoot(bool a1, bool a2, bool a3) {
         ClientServices::Send2(&msg);
     }
 
-    CGLootInfo::SetObject(NULL, 0, 0);
+    CGLootInfo::SetObject(NULL, NULL, 0);
 
     if (object && (object->m_obj->m_type & TYPEMASK_UNIT) && static_cast<int32_t>(static_cast<CGUnit_C*>(object)->m_unit->m_unitFieldHealth) <= 0) {
         CGGameUI::ClearTarget(guid, 1);

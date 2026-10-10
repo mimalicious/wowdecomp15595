@@ -844,7 +844,7 @@ int32_t GetItemLimitCategoryCallback(const CGItem_C* item, void* param) {
 }
 
 // OFFSET: 0x005F31A0/0x140276060
-bool CGBag_C::ItemCountValid(int32_t itemId, const ItemStats_C* stats, int32_t count, bool showError) {
+bool CGBag_C::ItemCountValid(int32_t itemId, const ItemRecSparse* stats, int32_t count, bool showError) {
     if (stats->m_maxCount) {
         int32_t current;
 

@@ -211,3 +211,17 @@ void PlayerSetPetSlot::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->m_stableMaster[2] ^ 1));
     }
 }
+
+// OFFSET: 0x006733E0/0x140317CC0
+PlayerLootCurrency::PlayerLootCurrency() {
+}
+
+// OFFSET: 0x00670530/0x140317E60
+PlayerLootCurrency::~PlayerLootCurrency() {
+}
+
+// OFFSET: 0x00670CD0
+void PlayerLootCurrency::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x781C));
+    msg->Put(this->m_lootListID);
+}

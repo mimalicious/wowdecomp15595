@@ -279,13 +279,24 @@ class ClientDumpRideTicketsResponse : public JamClientMessage {
     bool Handle();
 };
 
+struct JamLootItem {
+    /* 0000 */ int32_t m_itemID;
+    /* 0004 */ int32_t m_displayID;
+    /* 0008 */ int32_t m_quantity;
+    /* 000C */ int32_t m_randomSuffix;
+    /* 0010 */ int32_t m_randomPropertiesID;
+};
+
 class ClientLootContents : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientLootContents* msg);
 
+    /* 0010 */ TSGrowableArray<JamLootItem> m_items;
+
     ClientLootContents(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientLootContents();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientGuildMoveComplete : public JamClientMessage {
@@ -647,6 +658,8 @@ class ClientCurrencyLootRemoved : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientCurrencyLootRemoved* msg);
 
+    /* 0010 */ uint8_t m_lootListID;
+
     ClientCurrencyLootRemoved(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCurrencyLootRemoved();
     bool Handle();
@@ -665,9 +678,14 @@ class ClientCurrencyLootRestored : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientCurrencyLootRestored* msg);
 
+    /* 0010 */ int32_t m_currencyID;
+    /* 0014 */ int32_t m_quantity;
+    /* 0018 */ uint8_t m_lootListID;
+
     ClientCurrencyLootRestored(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientCurrencyLootRestored();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientMessageBox : public JamClientMessage {

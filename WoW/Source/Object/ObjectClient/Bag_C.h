@@ -18,6 +18,7 @@ struct ItemTypeCountParam {
 };
 
 class ItemStats_C;
+class ItemRecSparse;
 
 class CGBag_C {
     public:
@@ -50,7 +51,7 @@ class CGBag_C {
     CGItem_C* FindItemOfType(int32_t itemId, WOWGUID& container, uint32_t& slot, uint32_t flags) const;
     int32_t GetItemTypeCount(int32_t itemId, uint32_t flags) const;
     int32_t GetItemTypeCharges(int32_t itemId, uint32_t flags) const;
-    bool ItemCountValid(int32_t itemId, const ItemStats_C* stats, int32_t count, bool showError);
+    bool ItemCountValid(int32_t itemId, const ItemRecSparse* stats, int32_t count, bool showError);
 };
 
 int32_t GetItemTypeCountCallback(const CGItem_C* item, void* param);

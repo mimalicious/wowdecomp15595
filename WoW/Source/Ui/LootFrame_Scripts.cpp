@@ -1,41 +1,32 @@
 #include "LootFrame.h"
 #include <cstdint>
+#include "Engine/Source/Event/FrameTime.h"
+#include "Engine/Source/Frame/CSimpleTexture.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
+#include "Engine/Source/FrameXML/LoadXML.h"
+#include "Engine/Source/Storm/H/storm.h"
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
-#include "Engine/Source/Os/Time.h"
-#include "WoW/Source/Object/ObjectClient/LootRoll.h"
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/Object/ItemStats.h"
-#include "WoW/Source/Object/ObjectClient/Item_C.h"
-#include "Engine/Source/Storm/H/storm.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Game/GameClient/NameCache.h"
-#include "WoW/Source/Ui/Types.h"
-#include "Engine/Source/FrameXML/LoadXML.h"
+#include "WoW/Source/Object/ObjectClient/Item_C.h"
+#include "WoW/Source/Object/ObjectClient/LootRoll.h"
+#include "WoW/Source/Object/ObjectClient/Unit_C.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/UIUtil/PortraitButton.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
 #include "WoW/Source/Ui/GameUI.h"
-#include "Engine/Source/Frame/CSimpleTexture.h"
-#include "WoW/Source/UIUtil/PortraitButton.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Object/ObjectClient/Unit_C.h"
+#include "WoW/Source/Ui/QuestLog.h"
+#include "WoW/Source/Ui/Types.h"
 
-// OFFSET: 0x00959EE0/0x1406CC440
-static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetLootRollTimeLeft(id)");
-        return 0;
-    }
-
-    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(lua_tonumber(L, 1)));
-
-    if (roll) {
-        lua_pushnumber(L, static_cast<int32_t>(roll->m_expireTime - OsGetAsyncTimeMs()));
-    } else {
-        lua_pushnumber(L, 0.0);
-    }
-
+// PROVEN: 5ed35569 IDENTICAL/NONE
+// OFFSET: 0x00959B70/0x1406CC0F0
+static int32_t Script_GetNumLootItems(lua_State* L) {
+    lua_pushnumber(L, CGLootWindow::GetNumLootItems());
     return 1;
 }
 
@@ -46,20 +37,50 @@ static int32_t Script_LootSlotIsItem(lua_State* L) {
         return 0;
     }
 
-    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
-    uint32_t index = slot - 1;
+    double value = lua_tonumber(L, 1);
+    uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(value)) - 1;
 
     if (CGLootInfo::m_lootObj) {
         if (CGLootInfo::m_coins) {
-            if (slot == 1) {
+            if (static_cast<uint32_t>(static_cast<int64_t>(value)) == 1) {
                 lua_pushnil(L);
                 return 1;
             }
 
-            index = slot - 2;
+            slot = static_cast<uint32_t>(static_cast<int64_t>(value)) - 2;
         }
 
-        if (index < 18 && CGLootInfo::m_slots[index].m_itemID > 0) {
+        if (slot < 24 && CGLootInfo::m_slots[slot].m_itemID > 0) {
+            lua_pushnumber(L, 1.0);
+            return 1;
+        }
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
+
+// OFFSET: 0x00959C60/0x1406CC1F0
+static int32_t Script_LootSlotIsCurrency(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: LootSlotIsCurrency(slot)");
+        return 0;
+    }
+
+    double value = lua_tonumber(L, 1);
+    uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(value)) - 1;
+
+    if (CGLootInfo::m_lootObj) {
+        if (CGLootInfo::m_coins) {
+            if (static_cast<uint32_t>(static_cast<int64_t>(value)) == 1) {
+                lua_pushnil(L);
+                return 1;
+            }
+
+            slot = static_cast<uint32_t>(static_cast<int64_t>(value)) - 2;
+        }
+
+        if (slot < 24 && CGLootInfo::m_slots[slot].m_currencyID > 0) {
             lua_pushnumber(L, 1.0);
             return 1;
         }
@@ -76,9 +97,9 @@ static int32_t Script_LootSlotIsCoin(lua_State* L) {
         return 0;
     }
 
-    int32_t slot = static_cast<int32_t>(lua_tonumber(L, 1));
+    double value = lua_tonumber(L, 1);
 
-    if (CGLootInfo::m_lootObj && CGLootInfo::m_coins > 0 && slot == 1) {
+    if (CGLootInfo::m_lootObj && CGLootInfo::m_coins > 0 && static_cast<uint32_t>(static_cast<int64_t>(value)) == 1) {
         lua_pushnumber(L, 1.0);
         return 1;
     }
@@ -87,6 +108,15 @@ static int32_t Script_LootSlotIsCoin(lua_State* L) {
     return 1;
 }
 
+// PROVEN: d9e7015c IDENTICAL/NONE
+// OFFSET: 0x00959DC0/0x1406CC320
+static int32_t Script_CloseLoot(lua_State* L) {
+    int32_t error = StringToBOOL(L, 1, 0);
+    CGGameUI::CloseLoot(true, false, error != 0);
+    return 0;
+}
+
+// PROVEN: 004c3d9c IDENTICAL/NONE
 // OFFSET: 0x00959DF0/0x1406CC350
 static int32_t Script_IsFishingLoot(lua_State* L) {
     if (CGLootInfo::m_lootType == 3) {
@@ -98,75 +128,6 @@ static int32_t Script_IsFishingLoot(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x0095B320/0x1406CDC70
-static int32_t Script_GetLootRollItemInfo(lua_State* L) {
-    char buffer[256];
-
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetLootRollItemInfo(id)");
-        return 0;
-    }
-
-    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(lua_tonumber(L, 1)));
-
-    if (!roll) {
-        return 0;
-    }
-
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(roll->m_itemId, none, NULL, NULL, false);
-
-    if (!stats) {
-        return 0;
-    }
-
-    const char* path = ClientDBStringLookup(3);
-    const char* separator = *path ? "\\" : "";
-    SStrPrintf(buffer, sizeof(buffer), "%s%s%s", path, separator, CGItem_C::GetInventoryArt(stats->m_displayId));
-    lua_pushstring(L, buffer);
-    CGItem_C::BuildItemName(buffer, sizeof(buffer), roll->m_itemId, roll->m_randomPropertyId);
-    lua_pushstring(L, buffer);
-    lua_pushnumber(L, roll->m_count);
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_quality));
-
-    if (stats->m_bonding == 1) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (roll->m_voteMask & 2) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (roll->m_voteMask & 4) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (roll->m_voteMask & 8) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    lua_pushnumber(L, roll->m_reasonNeed);
-    lua_pushnumber(L, roll->m_reasonGreed);
-    lua_pushnumber(L, roll->m_reasonDisenchant);
-    lua_pushnumber(L, static_cast<int32_t>(stats->m_requiredDisenchantSkill));
-    return 12;
-}
-
-// OFFSET: %0x008CB7F0
-static void MasterLootCandidateNameCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (success) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_MASTER_LOOT_LIST, NULL);
-    }
-}
-
 // OFFSET: 0x00959E30/0x1406CC390
 static int32_t Script_GetMasterLootCandidate(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -174,100 +135,36 @@ static int32_t Script_GetMasterLootCandidate(lua_State* L) {
         return 0;
     }
 
-    WOWGUID guid = GetMasterLootCandidate(static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)) - 1));
-    NameCache* record = guid != WOWGUID() ? g_nameDBCache.GetRecord(guid.m_guid, guid, MasterLootCandidateNameCallback, NULL, false) : NULL;
+    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    WOWGUID guid = GetMasterLootCandidate(index - 1);
+    NameCache* name;
 
-    if (record) {
-        lua_pushstring(L, record->m_name);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 1;
-}
-
-// OFFSET: 0x00959B70/0x1406CC0F0
-static int32_t Script_GetNumLootItems(lua_State* L) {
-    lua_pushnumber(L, CGLootWindow::GetNumLootItems());
-    return 1;
-}
-
-// OFFSET: 0x0095AF20/0x1406CD8B0
-static int32_t Script_GetLootSlotInfo(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetLootSlotInfo(slot)");
-        return 0;
-    }
-
-    uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    lua_pushstring(L, CGLootInfo::GetLootSlotTexture(slot));
-    char text[256];
-    CGLootInfo::GetLootSlotText(text, sizeof(text), slot);
-    lua_pushstring(L, text);
-    lua_pushnumber(L, CGLootInfo::GetLootQuantity(slot));
-    lua_pushnumber(L, CGLootWindow::GetLootItemRarity(slot));
-    uint32_t index = slot;
-
-    if (CGLootInfo::m_lootObj) {
-        if (CGLootInfo::m_coins) {
-            if (!slot) {
-                lua_pushnil(L);
-                return 5;
-            }
-
-            index = slot - 1;
-        }
-
-        if (index < 18 && CGLootInfo::m_slots[index].m_slotType == 3) {
-            lua_pushnumber(L, 1.0);
-            return 5;
-        }
+    if (guid.m_guid && (name = g_nameDBCache.GetRecord(guid.m_guid, guid, MasterLootCandidateCallback, NULL, false)) != NULL) {
+        lua_pushstring(L, name->m_name);
+        return 1;
     }
 
     lua_pushnil(L);
-    return 5;
-}
-
-// OFFSET: 0x0095B1C0/0x1406CDB60
-static int32_t Script_GetLootSlotLink(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetLootSlotLink(slot)");
-        return 0;
-    }
-
-    char link[1024];
-    lua_pushstring(L, CGLootInfo::GetLootSlotLink(static_cast<int32_t>(lua_tonumber(L, 1)) - 1, link, sizeof(link)));
     return 1;
 }
 
-// PROVEN: ad916c90 IDENTICAL/NONE
-// OFFSET: 0x00959DC0/0x1406CC320
-static int32_t Script_CloseLoot(lua_State* L) {
-    CGGameUI::CloseLoot(true, false, StringToBOOL(L, 1, 0) != 0);
-    return 0;
-}
-
-// OFFSET: 0x0095B570/0x1406CDEF0
-static int32_t Script_GetLootRollItemLink(lua_State* L) {
+// OFFSET: 0x00959EE0/0x1406CC440
+static int32_t Script_GetLootRollTimeLeft(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetLootRollItemLink(id)");
+        luaL_error(L, "Usage: GetLootRollTimeLeft(id)");
         return 0;
     }
 
-    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(lua_tonumber(L, 1)));
+    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+    double timeLeft;
 
-    if (!roll) {
-        return 0;
+    if (roll) {
+        timeLeft = static_cast<uint32_t>(roll->m_expireTime - FrameTime::GetCurTimeMs());
+    } else {
+        timeLeft = 0.0;
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(roll->m_itemId, none, NULL, NULL, false);
-
-    if (!stats) {
-        return 0;
-    }
-
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(roll->m_itemId, stats->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
+    lua_pushnumber(L, timeLeft);
     return 1;
 }
 
@@ -279,7 +176,8 @@ static int32_t Script_RollOnLoot(lua_State* L) {
     }
 
     int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
-    LootRoll(id, static_cast<int32_t>(lua_tonumber(L, 2)), false);
+    double rollType = lua_tonumber(L, 2);
+    LootRoll(id, static_cast<int32_t>(rollType), false);
     return 0;
 }
 
@@ -290,47 +188,9 @@ static int32_t Script_ConfirmLootRoll(lua_State* L) {
         return 0;
     }
 
-    int32_t id = static_cast<int32_t>(lua_tonumber(L, 1));
-    LootRoll(id, static_cast<int32_t>(lua_tonumber(L, 2)), true);
-    return 0;
-}
-
-// OFFSET: 0x0095B240/0x1406CDBD0
-static int32_t Script_LootSlot(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: LootSlot(slot)");
-        return 0;
-    }
-
-    CGLootInfo::LootSlot(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
-    return 0;
-}
-
-// OFFSET: 0x0095B2B0/0x1406CDC20
-static int32_t Script_ConfirmLootSlot(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: LootSlot(slot)");
-        return 0;
-    }
-
-    CGLootInfo::ConfirmLootSlot(static_cast<int32_t>(lua_tonumber(L, 1)) - 1);
-    return 0;
-}
-
-// OFFSET: 0x0095A810/0x1406CD000
-static int32_t Script_GiveMasterLoot(lua_State* L) {
-    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: GiveMasterLoot(slot, index)");
-        return 0;
-    }
-
-    uint32_t slot = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-    WOWGUID target = GetMasterLootCandidate(static_cast<int32_t>(lua_tonumber(L, 2)) - 1);
-
-    if (target) {
-        CGLootInfo::GiveMasterLoot(slot, target);
-    }
-
+    int32_t id = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    double rollType = lua_tonumber(L, 2);
+    LootRoll(id, static_cast<int32_t>(rollType), true);
     return 0;
 }
 
@@ -350,13 +210,312 @@ static int32_t Script_SetLootPortrait(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACEE28
+// OFFSET: 0x0095A5D0/0x1406CCC90
+static int32_t Script_GetNumMissingLootItems(lua_State* L) {
+    lua_pushnumber(L, CGLootInfo::m_missingItems.m_count);
+    return 1;
+}
+
+// OFFSET: 0x0095A810/0x1406CD000
+static int32_t Script_GiveMasterLoot(lua_State* L) {
+    if (!lua_isnumber(L, 1) || !lua_isnumber(L, 2)) {
+        luaL_error(L, "Usage: GiveMasterLoot(slot, index)");
+        return 0;
+    }
+
+    uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1))) - 1;
+    int32_t index = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 2)));
+    WOWGUID guid = GetMasterLootCandidate(index - 1);
+
+    if (guid.m_guid) {
+        CGLootInfo::GiveMasterLoot(slot, guid);
+    }
+
+    return 0;
+}
+
+// OFFSET: 0x0095AF20/0x1406CD8B0
+static int32_t Script_GetLootSlotInfo(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetLootSlotInfo(slot)");
+        return 0;
+    }
+
+    double value = lua_tonumber(L, 1);
+    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(value));
+    uint32_t slot = index - 1;
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(CGLootInfo::GetLootItem(slot), requester, NULL, NULL, false);
+
+    if (!rec) {
+        bool show = false;
+
+        if (CGLootInfo::m_lootObj) {
+            if (CGLootInfo::GetLootCurrency(slot) > 0) {
+                show = true;
+            } else if (CGLootInfo::m_coins > 0 && index == 1) {
+                show = true;
+            }
+        }
+
+        if (!show) {
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            lua_pushnil(L);
+            return 8;
+        }
+    }
+
+    lua_pushstring(L, CGLootInfo::GetLootSlotTexture(slot));
+    char text[256];
+    CGLootInfo::GetLootSlotText(text, sizeof(text), slot);
+    lua_pushstring(L, text);
+    lua_pushnumber(L, CGLootInfo::GetLootQuantity(slot));
+    lua_pushnumber(L, CGLootWindow::GetLootItemRarity(slot));
+    bool locked = false;
+
+    if (CGLootInfo::m_lootObj) {
+        uint32_t entry = slot;
+
+        if (CGLootInfo::m_coins) {
+            entry = index == 1 ? 24 : index - 2;
+        }
+
+        locked = entry < 24 && CGLootInfo::m_slots[entry].m_slotType == 3;
+    }
+
+    if (locked) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    if (rec && rec->m_bonding == 4) {
+        lua_pushboolean(L, 1);
+    } else {
+        lua_pushnil(L);
+    }
+
+    int32_t questId;
+
+    if (rec && (questId = rec->m_startQuest) != 0) {
+        lua_pushnumber(L, questId);
+        lua_pushboolean(L, CGQuestLog::IsOnQuest(rec->m_startQuest));
+        return 8;
+    }
+
+    lua_pushnil(L);
+    lua_pushnil(L);
+    return 8;
+}
+
+// OFFSET: 0x0095B1C0/0x1406CDB60
+static int32_t Script_GetLootSlotLink(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetLootSlotLink(slot)");
+        return 0;
+    }
+
+    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    char buffer[1024];
+    lua_pushstring(L, CGLootInfo::GetLootSlotLink(slot - 1, buffer, sizeof(buffer)));
+    return 1;
+}
+
+// PROVEN: 445ecabf IDENTICAL/NONE
+// OFFSET: 0x0095B240/0x1406CDBD0
+static int32_t Script_LootSlot(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: LootSlot(slot)");
+        return 0;
+    }
+
+    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    CGLootInfo::LootSlot(slot - 1);
+    return 0;
+}
+
+// PROVEN: 772a6e4e IDENTICAL/NONE
+// OFFSET: 0x0095B2B0/0x1406CDC20
+static int32_t Script_ConfirmLootSlot(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: LootSlot(slot)");
+        return 0;
+    }
+
+    int32_t slot = static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    CGLootInfo::ConfirmLootSlot(slot - 1);
+    return 0;
+}
+
+// OFFSET: 0x0095B320/0x1406CDC70
+static int32_t Script_GetLootRollItemInfo(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetLootRollItemInfo(id)");
+        return 0;
+    }
+
+    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+
+    if (!roll) {
+        return 0;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(roll->m_itemId, requester, NULL, NULL, false);
+
+    if (!rec) {
+        return 0;
+    }
+
+    ItemRec* item = rec->GetNonSparse();
+
+    if (!item) {
+        return 0;
+    }
+
+    char buffer[256];
+    const char* path = ClientDBStringLookup(3);
+    SStrPrintf(buffer, sizeof(buffer), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
+    lua_pushstring(L, buffer);
+    CGItem_C::BuildItemName(buffer, sizeof(buffer), roll->m_itemId, roll->m_randomPropertyId);
+    lua_pushstring(L, buffer);
+    lua_pushnumber(L, roll->m_count);
+    lua_pushnumber(L, rec->m_quality);
+
+    if (rec->m_bonding == 1) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    if (roll->m_voteMask & 0x2) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    if (roll->m_voteMask & 0x4) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    if (roll->m_voteMask & 0x8) {
+        lua_pushnumber(L, 1.0);
+    } else {
+        lua_pushnil(L);
+    }
+
+    lua_pushnumber(L, static_cast<int8_t>(roll->m_reasonNeed));
+    lua_pushnumber(L, static_cast<int8_t>(roll->m_reasonGreed));
+    lua_pushnumber(L, static_cast<int8_t>(roll->m_reasonDisenchant));
+    lua_pushnumber(L, rec->GetDisenchantSkillRequired());
+    return 12;
+}
+
+// OFFSET: 0x0095B570/0x1406CDEF0
+static int32_t Script_GetLootRollItemLink(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetLootRollItemLink(id)");
+        return 0;
+    }
+
+    PendingLootRoll* roll = FindRoll(static_cast<int32_t>(static_cast<int64_t>(lua_tonumber(L, 1))));
+
+    if (!roll) {
+        return 0;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(roll->m_itemId, requester, NULL, NULL, false);
+
+    if (!rec) {
+        return 0;
+    }
+
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(roll->m_itemId, rec->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
+    return 1;
+}
+
+// OFFSET: 0x0095B640/0x1406CDFC0
+static int32_t Script_GetMissingLootItemInfo(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetMissingLootInfo(index)");
+        return 0;
+    }
+
+    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+    MissingLootItem* missing;
+    ItemRecSparse* rec;
+    WOWGUID requester = WOWGUID();
+    double quality;
+
+    if (index - 1 < CGLootInfo::m_missingItems.m_count && (missing = &CGLootInfo::m_missingItems.m_data[index - 1]) != NULL && (rec = g_itemSparseDB.GetRecord(missing->m_itemId, requester, NULL, NULL, false)) != NULL) {
+        char buffer[256];
+        const char* path = ClientDBStringLookup(3);
+        SStrPrintf(buffer, sizeof(buffer), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(missing->m_displayId));
+        lua_pushstring(L, buffer);
+        CGItem_C::BuildItemName(buffer, sizeof(buffer), missing->m_itemId, missing->m_randomPropertiesId);
+        lua_pushstring(L, buffer);
+        lua_pushnumber(L, missing->m_quantity);
+        quality = rec->m_quality;
+    } else {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnumber(L, 0.0);
+        quality = 0.0;
+    }
+
+    lua_pushnumber(L, quality);
+    return 4;
+}
+
+// OFFSET: 0x0095B7B0/0x1406CE170
+static int32_t Script_GetMissingLootItemLink(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetMissingLootItemLink(index)");
+        return 0;
+    }
+
+    uint32_t index = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 1)));
+
+    if (index - 1 >= CGLootInfo::m_missingItems.m_count) {
+        return 0;
+    }
+
+    MissingLootItem* missing = &CGLootInfo::m_missingItems.m_data[index - 1];
+
+    if (!missing) {
+        return 0;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(missing->m_itemId, requester, NULL, NULL, false);
+
+    if (!rec) {
+        return 0;
+    }
+
+    char buffer[1024];
+    SStrCopy(buffer, CGTooltip::GetItemHyperlinkString(missing->m_itemId, rec->m_quality, 0, missing->m_randomPropertiesId, missing->m_seed, 0), sizeof(buffer));
+    lua_pushstring(L, buffer);
+    return 1;
+}
+
+// STATIC: 0x00D12DB8
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SetLootPortrait", &Script_SetLootPortrait },
     { "GetNumLootItems", &Script_GetNumLootItems },
     { "GetLootSlotInfo", &Script_GetLootSlotInfo },
     { "GetLootSlotLink", &Script_GetLootSlotLink },
     { "LootSlotIsItem", &Script_LootSlotIsItem },
+    { "LootSlotIsCurrency", &Script_LootSlotIsCurrency },
     { "LootSlotIsCoin", &Script_LootSlotIsCoin },
     { "LootSlot", &Script_LootSlot },
     { "ConfirmLootSlot", &Script_ConfirmLootSlot },
@@ -369,16 +528,19 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetLootRollTimeLeft", &Script_GetLootRollTimeLeft },
     { "RollOnLoot", &Script_RollOnLoot },
     { "ConfirmLootRoll", &Script_ConfirmLootRoll },
+    { "GetNumMissingLootItems", &Script_GetNumMissingLootItems },
+    { "GetMissingLootItemInfo", &Script_GetMissingLootItemInfo },
+    { "GetMissingLootItemLink", &Script_GetMissingLootItemLink },
 };
 
-// OFFSET: #0x00588E60
+// OFFSET: 0x0095A080
 void LootInfoRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x00588E90
+// OFFSET: 0x0095A0B0
 void LootInfoUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

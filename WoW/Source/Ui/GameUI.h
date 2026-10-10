@@ -453,9 +453,6 @@ class CGGameUI {
     static int32_t IsRaidMemberOrPet(const WOWGUID& guid);
     static void ClearInteractTarget(const WOWGUID& guid, int32_t a2);
     static void CloseLoot(bool a1, bool a2, bool a3);
-    static void OpenLoot(CGObject_C* object, int32_t coins, uint32_t lootType);
-    static void ClearLootSlot(uint8_t slot);
-    static void LootSlotChanged(uint8_t slot);
     static void LockItem(WOWGUID guid);
     static void SetPendingItemSound(WOWGUID guid, int32_t itemId);
     static void EnterWorld();
