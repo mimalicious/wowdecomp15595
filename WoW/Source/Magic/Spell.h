@@ -12,4 +12,7 @@ bool Spell_IsAreaAuraEffect(int32_t effect);
 float SpellUtils_ComputeMissileTrajectoryTravelTime(float pitch, float speed, const C3Vector* delta, float gravity);
 int32_t SpellUtils_ComputeMissileTrajectory(float pitch, const C3Vector* delta, float gravity, float* speed, float* time, C3Vector* velocity);
 
+bool SpellIsAuraEffect(int32_t effect);
+bool SpellIsAreaAuraEffect(int32_t effect);
+
 #endif

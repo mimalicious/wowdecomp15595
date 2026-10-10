@@ -20,6 +20,12 @@ class OVERRIDE_SPELL_NODE : public TSHashObject<OVERRIDE_SPELL_NODE, HASHKEY_NON
     /* 001C */ uint32_t m_flags;
 };
 
+class OVERRIDE_SPELL_BY_NAME_NODE : public TSHashObject<OVERRIDE_SPELL_BY_NAME_NODE, HASHKEY_UTF8I> {
+    public:
+    /* 0018 */ int32_t m_overrideSpellID;
+    /* 001C */ int32_t m_baseSpellID;
+};
+
 struct UIButtons {
     /* 0000 */ uint32_t m_slot;
     /* 0004 */ CSimpleCheckbox* m_checkbox;
@@ -43,6 +49,7 @@ class CGActionBar {
     static uint32_t m_tempPageActiveFlags;
     static TSCGrowableArray<UIButtons, 144> m_uiButtons;
     static TSHashTable<OVERRIDE_SPELL_NODE, HASHKEY_NONE> m_overrideSpells;
+    static TSHashTable<OVERRIDE_SPELL_BY_NAME_NODE, HASHKEY_UTF8I> m_overrideSpellsByName;
 
     static void InitializeGame();
     static void ShutdownGame();
@@ -117,6 +124,8 @@ class CGActionBar {
     static void OnAuraChanged(int32_t spellId);
     static bool ClearOverrideSpellclass(int32_t spellId);
     static bool SetOverrideSpellclass(const SpellRec* spell, uint32_t effectIndex, int32_t spellId);
+    static int32_t GetOverrideBaseSpellByName(const char* name);
+    static int32_t GetOverrideBaseSpell(int32_t spellId);
 };
 
 void ItemStatsCallback(int32_t id, const WOWGUID& guid, void* param, bool success);

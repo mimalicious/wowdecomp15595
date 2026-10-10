@@ -577,7 +577,7 @@ void CGPetInfo::SetPetOrders(uint32_t orders) {
 }
 
 // OFFSET: #0x005D3E80
-bool CGPetInfo::PetActionsUsable(bool ignoreControl) {
+bool CGPetInfo::PetActionsUsable(bool ignoreControl, bool a2) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (!player || player->m_unit->m_unitFieldCharmedby.m_guid) {

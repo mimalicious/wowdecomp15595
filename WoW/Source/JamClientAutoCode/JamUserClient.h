@@ -41,6 +41,16 @@ class UserClientWorldPortResponse : public JamClientMessage {
     ~UserClientWorldPortResponse();
 };
 
+class UserClientUnlearnSpecialization : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_index;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientUnlearnSpecialization();
+    ~UserClientUnlearnSpecialization();
+};
+
 class UserClientReturnToGraveyard : public JamClientMessage {
     public:
     void Put(CDataStore* msg) override;

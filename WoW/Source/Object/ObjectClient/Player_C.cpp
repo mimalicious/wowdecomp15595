@@ -2446,7 +2446,7 @@ void CGPlayer_C::PostInitActivePlayer() {
 
     if (this->IsShapeShifted()) {
         CGSpellBook::UpdateUsable();
-        CGSpellBook::UpdateSelection();
+        CGSpellBook::UpdateSelection(0);
         CGActionBar::UpdateShapeShiftBar();
         CGActionBar::UpdateBonusBar();
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
@@ -3571,7 +3571,7 @@ int32_t Packet_SMSG_LEARNED_SPELL(void* param, NETMESSAGE msgId, uint32_t time, 
     msg->Get(slot);
 
     if (SFile::IsStreamingMode() && !LoadingScreenDrawing()) {
-        PrefetchSpellVisuals(spellId);
+        PrefetchSpellVisuals(spellId, 0);
     }
 
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -3595,7 +3595,7 @@ int32_t Packet_SMSG_SUPERCEDED_SPELL(void* param, NETMESSAGE msgId, uint32_t tim
     msg->Get(newSpellId);
 
     if (SFile::IsStreamingMode() && !LoadingScreenDrawing()) {
-        PrefetchSpellVisuals(newSpellId);
+        PrefetchSpellVisuals(newSpellId, 0);
     }
 
     CGActionBar::ReplaceSpell(oldSpellId, newSpellId);
@@ -6522,7 +6522,7 @@ void CGPlayer_C::UpdateXRayVision(const SpellRec* spell) {
 int32_t OnUpdatePlayerOverrideSpellsID(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGSpellBook::UpdateUsable();
-        CGSpellBook::UpdateSelection();
+        CGSpellBook::UpdateSelection(0);
         CGActionBar::UpdateOverrideSpellBar();
         CGActionBar::UpdateBonusBar();
     }

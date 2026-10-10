@@ -989,7 +989,7 @@ int32_t CGUIBindings::ExecKey(uint32_t modifiers, const char* key, int32_t isDow
 
     if (!SStrCmpI(command, "SPELL ", 6)) {
         if (!isDown) {
-            int32_t spell = IsValidSpell(command + 6, &isDown);
+            int32_t spell = CGSpellBook::FindSlotByName(command + 6, isDown);
 
             if (spell >= 0) {
                 WOWGUID target = {};

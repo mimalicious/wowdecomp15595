@@ -268,11 +268,25 @@ void UserClientWorldPortResponse::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x2411));
 }
 
-// OFFSET: 0x006709E0
+// OFFSET: 0x00673680/0x140317DF0
+UserClientUnlearnSpecialization::UserClientUnlearnSpecialization() {
+}
+
+// OFFSET: 0x006703E0/0x140317C30
+UserClientUnlearnSpecialization::~UserClientUnlearnSpecialization() {
+}
+
+// OFFSET: 0x00673610
+void UserClientUnlearnSpecialization::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x3210));
+    msg->Put(this->m_index);
+}
+
+// OFFSET: 0x006709E0/0x140318AB0
 UserClientReturnToGraveyard::UserClientReturnToGraveyard() {
 }
 
-// OFFSET: 0x00670750
+// OFFSET: 0x00670750/0x140318100
 UserClientReturnToGraveyard::~UserClientReturnToGraveyard() {
 }
 
@@ -281,11 +295,11 @@ void UserClientReturnToGraveyard::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x301E));
 }
 
-// OFFSET: 0x00670870
+// OFFSET: 0x00670870/0x1403184D0
 UserClientQueryBattlefieldState::UserClientQueryBattlefieldState() {
 }
 
-// OFFSET: 0x006705E0
+// OFFSET: 0x006705E0/0x140317F40
 UserClientQueryBattlefieldState::~UserClientQueryBattlefieldState() {
 }
 
@@ -294,7 +308,7 @@ void UserClientQueryBattlefieldState::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7202));
 }
 
-// OFFSET: 0x00670610
+// OFFSET: 0x00670610/0x140317F70
 UserClientRequestCemeteryList::UserClientRequestCemeteryList() {
 }
 
@@ -307,11 +321,11 @@ void UserClientRequestCemeteryList::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x720A));
 }
 
-// OFFSET: 0x00670860
+// OFFSET: 0x00670860/0x1403184B0
 UserClientSetPreferredCemetery::UserClientSetPreferredCemetery() {
 }
 
-// OFFSET: 0x00670970
+// OFFSET: 0x00670970/0x140318950
 UserClientSetPreferredCemetery::~UserClientSetPreferredCemetery() {
 }
 

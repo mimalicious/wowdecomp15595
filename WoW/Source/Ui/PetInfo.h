@@ -52,7 +52,8 @@ class CGPetInfo {
     static void PickupAction(uint32_t index, int32_t a2);
     static void PlaceCursorAction(PetAction action, uint32_t index);
     static uint8_t GetComboPoints(WOWGUID target);
-    static bool PetActionsUsable(bool a1);
+    static bool PetActionsUsable(bool a1, bool a2 = false);
+    static bool PetActionIsActive(const PetAction& action);
     static void PetClearTarget();
     static void PetDismiss();
     static void PetAttackTarget(const WOWGUID& target, int32_t a2);

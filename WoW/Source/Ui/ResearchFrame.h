@@ -9,6 +9,7 @@ class CGResearchFrame {
     static void EnterWorld();
     static void LeaveWorld();
     static uint8_t s_enteredWorld;
+    static int32_t m_skillLine;
     static void InitializeGame();
     static bool IsInsideResearchSite(int32_t siteId);
     static bool CanScanResearchSite(int32_t researchField);

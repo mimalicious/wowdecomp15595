@@ -87,7 +87,7 @@ static int32_t Script_SetMacroSpell(lua_State* L) {
         return 0;
     }
 
-    int32_t spellId = GetSpellIdByName(lua_tolstring(L, 2, NULL), &macro->m_spellFlags);
+    int32_t spellId = CGSpellBook::FindSpellByName(lua_tolstring(L, 2, NULL), macro->m_spellFlags);
 
     if (!spellId) {
         spellId = -1;

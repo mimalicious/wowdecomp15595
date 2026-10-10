@@ -92,6 +92,8 @@ class CGTalentInfo {
     static uint32_t GetUnspentTalentPoints(uint32_t index, int32_t pet);
     static CGTalentGroup_C* GetTalentGroup(uint32_t index, int32_t pet);
     static TalentTabInfo* GetTab(uint32_t index, int32_t inspect, int32_t pet);
+    static TalentTabInfo* GetTab(uint32_t index, int32_t pet);
+    static int32_t GetNumTabs(int32_t pet);
     static int32_t IsTalentAvailableForPet(CGUnit_C* pet, const TalentRec* talent);
     static TalentGroupItem_C* GetTalentItem(uint32_t group, int32_t talentId, int32_t pet);
     static int32_t GetPreviewPointsSpent(uint32_t group, int32_t pet);

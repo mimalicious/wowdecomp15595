@@ -1118,7 +1118,7 @@ void StartSpellCastVisuals(CGUnit_C* unit, PendingSpellCast* cast, const SpellRe
     }
 
     if ((cast->m_data.m_caster == ClntObjMgrGetActivePlayer() || cast->IsCharmedUnitCast()) && cast->m_data.m_castCount) {
-        CGSpellBook::UpdateSelection();
+        CGSpellBook::UpdateSelection(0);
     }
 }
 
@@ -1458,7 +1458,7 @@ void FinishPendingSpellCast(PendingSpellCast* cast, const SpellRec* spell, CGUni
     ReleasePendingSpellCast(cast);
 
     if (playerCast && cast->m_data.m_castCount) {
-        CGSpellBook::UpdateSelection();
+        CGSpellBook::UpdateSelection(0);
     }
 }
 
@@ -8228,7 +8228,7 @@ static bool Spell_C_BeginCast(CGUnit_C* caster, const SpellRec* spell, WOWGUID t
 }
 
 // OFFSET: #0x0080CCE0
-bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, WOWGUID target, PendingSpellCast* cast, bool confirmed) {
+bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, WOWGUID target, PendingSpellCast* cast, bool confirmed, bool a7, int32_t baseSpell, int32_t ignoreCost) {
     SpellRec spell;
 
     if (!g_spellDB.GetRecord(spellId, &spell) || (spell.m_attributes & 0x40)) {
@@ -8539,7 +8539,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
         s_targetingSpell = cast;
         CursorSetResetMode(2);
         CursorSetMode(28);
-        CGSpellBook::UpdateSelection();
+        CGSpellBook::UpdateSelection(0);
         CGInputControl* input = CGInputControl::GetActive();
         input->m_mouseModeFlags |= 0x10;
         input->UpdateMouseMode(0);
@@ -8607,7 +8607,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
 }
 
 // OFFSET: #0x0080DA40
-bool Spell_C::CastSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, bool confirmed) {
+bool Spell_C::CastSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, bool confirmed, bool a5, int32_t baseSpell, int32_t ignoreCost) {
     return Spell_C_CastSpell(ClntObjMgrGetActivePlayerObj(), spellId, item, target, NULL, confirmed);
 }
 

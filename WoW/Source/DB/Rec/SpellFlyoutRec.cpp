@@ -16,6 +16,6 @@ const DBCMeta SpellFlyoutRec::s_meta = { "DBFilesClient\\SpellFlyout.dbc", 7, 28
 // OFFSET: 0x00A2EB30/0x1407D7E90
 void SpellFlyoutRec::FixupStrings(void* record, const char* strings) {
     SpellFlyoutRec* rec = static_cast<SpellFlyoutRec*>(record);
-    DBCFixupString(rec->unk_0014, strings);
-    DBCFixupString(rec->unk_0018, strings);
+    DBCFixupString(rec->m_name, strings);
+    DBCFixupString(rec->m_description, strings);
 }

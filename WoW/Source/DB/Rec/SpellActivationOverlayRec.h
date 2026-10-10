@@ -19,7 +19,7 @@ class SpellActivationOverlayRec {
     /* 0018 */ int32_t unk_0018;
     /* 001C */ int32_t unk_001C;
     /* 0020 */ int32_t unk_0020;
-    /* 0024 */ int32_t unk_0024;
+    /* 0024 */ int32_t m_triggerType;
     /* 0028 */ int32_t unk_0028;
 };
 

@@ -14,6 +14,7 @@ class SpellRec {
     static const int32_t* GetClassMask(const SpellRec* spell, int32_t effect);
     static bool IsAffectedBy(const SpellRec* spell, const SpellRec* modifier, int32_t effect);
     static bool IsMeleeRange(const SpellRec* spell);
+    static int32_t IsTrackingSpell(const SpellRec* spell);
     static bool IsMinimumRange(const SpellRec* spell);
     static void GetMinRange(const SpellRec* spell, float* range);
     static bool HasModifier(const SpellRec* spell, int32_t modifier);

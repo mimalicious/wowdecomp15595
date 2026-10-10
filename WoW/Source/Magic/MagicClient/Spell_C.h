@@ -145,7 +145,7 @@ class Spell_C {
     static void SendPendingCast(PendingSpellCast* cast, bool hideVisuals);
     static void GetSpellRange(CGUnit_C* caster, int32_t spellId, float* minRange, float* maxRange, CGObject_C* target);
     static bool HandleSpriteRay(const WOWGUID& guid, bool checkRange);
-    static bool CastSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, bool confirmed);
+    static bool CastSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, bool confirmed, bool a5 = false, int32_t baseSpell = 0, int32_t ignoreCost = 0);
 };
 
 extern PendingSpellCast* s_targetingSpell;
@@ -309,7 +309,7 @@ bool Spell_C_HasNoReagentCost(CGPlayer_C* player, const SpellRec* spell);
 int32_t Spell_C_GetTargetingSpell();
 bool Spell_C_GetItemCooldown(CGItem_C* item, uint32_t* duration, uint32_t* start, uint32_t* enable);
 void Spell_C_SpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t reason, int32_t misc1, int32_t misc2, bool resetCooldown);
-bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, WOWGUID target, PendingSpellCast* cast, bool confirmed);
+bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, WOWGUID target, PendingSpellCast* cast, bool confirmed, bool a7 = false, int32_t baseSpell = 0, int32_t ignoreCost = 0);
 void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, int32_t spellId);
 void Spell_C_StopTargeting();
 void SpellTableInitialize();
@@ -374,6 +374,7 @@ void Spell_C_DelayCooldown(int32_t index, int32_t spellId, int32_t delay);
 bool Spell_C_GetSpellCooldown(int32_t spellId, int32_t petSpell, uint32_t* duration, uint32_t* start, uint32_t* enable, int32_t* remaining = NULL);
 bool Spell_C_IsActiveSpell(const SpellRec* spell, const CGUnit_C* unit);
 uint32_t Spell_C_GetPowerDisplayMod(uint32_t powerType);
+void Spell_C_GetDefaultMinRange(const SpellRec* spell, float* minRange);
 const char* GetPowerString(uint32_t powerType);
 
 #endif

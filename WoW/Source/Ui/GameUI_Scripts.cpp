@@ -2499,10 +2499,10 @@ static int32_t Script_GetCursorInfo(lua_State* L) {
             }
 
             int32_t petSpell = 0;
-            int32_t slot = GetSpellSlot(spellId, 0);
+            int32_t slot = CGSpellBook::FindSlotBySpellID(spellId, 0);
 
             if (slot < 0) {
-                slot = GetSpellSlot(spellId, 1);
+                slot = CGSpellBook::FindSlotBySpellID(spellId, 1);
 
                 if (slot >= 0) {
                     petSpell = 1;

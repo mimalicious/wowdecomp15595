@@ -912,7 +912,7 @@ int32_t MACRONODE::FindSpellID() {
                     int32_t commandType = this->m_commands.m_data[index].m_type;
 
                     if (commandType != 5 && commandType != 6) {
-                        spellId = CGSpellBook::GetOverrideSpell(GetSpellIdByName(name, &this->m_spellFlags));
+                        spellId = CGSpellBook::GetOverrideSpell(CGSpellBook::FindSpellByName(name, this->m_spellFlags));
                     }
                 }
 
