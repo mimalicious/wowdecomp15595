@@ -253,7 +253,7 @@ void CGDanceStudio::DisplayDance(DanceCache* record) {
 
         if (move) {
             char text[64];
-            SStrPrintf(text, sizeof(text), "%d) Move: %s Chance: %d%%", i + 1, move->m_internalName, i < record->m_dataCount ? record->m_data[i].m_chance : 0);
+            SStrPrintf(text, sizeof(text), "%d) Move: %s Chance: %d%%", i + 1, static_cast<const char*>(move->m_internalName), i < record->m_dataCount ? record->m_data[i].m_chance : 0);
             COLOR_T color = DEFAULT_COLOR;
 
             if (!IsDanceMoveAvailable(move, player->m_unit->m_unitFieldBytes0[0])) {

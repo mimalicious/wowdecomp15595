@@ -329,7 +329,7 @@ static int32_t Script_GetTrainerServiceAbilityReq(lua_State* L) {
     if (player && service && abilityIndex < 3) {
         if (SpellRec* spell = g_spellDB.GetRecord(service->m_abilityReq[abilityIndex])) {
             if (spell->m_nameSubtext && *spell->m_nameSubtext) {
-                SStrPrintf(name, sizeof(name), "%s (%s)", spell->m_name, spell->m_nameSubtext);
+                SStrPrintf(name, sizeof(name), "%s (%s)", static_cast<const char*>(spell->m_name), static_cast<const char*>(spell->m_nameSubtext));
             } else {
                 SStrCopy(name, spell->m_name, sizeof(name));
             }

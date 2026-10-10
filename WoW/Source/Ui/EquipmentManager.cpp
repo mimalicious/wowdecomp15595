@@ -130,7 +130,7 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
 
         if ((inCombat && slot != 15 && slot != 16 && slot != 17) || guid.m_guid == 1) {
             if (inCombat && !combatWarned && guid.m_guid != 1 && guid.m_guid != player->m_bag.GetItemGuid(slot)) {
-                SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("EQUIPMENT_MANAGER_COMBAT_SWAP", -1, GENDER_NOT_APPLICABLE), set->m_name);
+                SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("EQUIPMENT_MANAGER_COMBAT_SWAP", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(set->m_name));
                 FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", buffer);
                 combatWarned = true;
             }
@@ -183,7 +183,7 @@ bool CGEquipmentManager::UseEquipmentSet(const EQUIPMENT_SET* set) {
             }
 
             if (itemGuid.m_guid == 1 && !missingWarned) {
-                SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("EQUIPMENT_MANAGER_MISSING_ITEM", -1, GENDER_NOT_APPLICABLE), set->m_name);
+                SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("EQUIPMENT_MANAGER_MISSING_ITEM", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(set->m_name));
                 FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", buffer);
                 missingWarned = true;
             }
@@ -400,7 +400,7 @@ void CGEquipmentManager::EquipSet(int32_t id) {
     EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(id);
 
     if (set) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_WEAR_EQUIPMENT_SET, "%s", set->m_name);
+        FrameScript_SignalEvent(SCRIPT_EVENT_WEAR_EQUIPMENT_SET, "%s", static_cast<const char*>(set->m_name));
     }
 }
 
@@ -412,7 +412,7 @@ void CGEquipmentManager::GetFullIconPath(int32_t id, char* buffer, uint32_t size
         const char* path = ClientDBStringLookup(3);
 
         if (*set->m_icon) {
-            SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", set->m_icon);
+            SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", static_cast<const char*>(set->m_icon));
             return;
         }
     }
@@ -565,10 +565,10 @@ int32_t CGEquipmentManager::OnEquipmentSetResult(void* param, NETMESSAGE msgId, 
 
     if (!result) {
         EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
-        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 1, set ? set->m_name : NULL);
+        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 1, set ? static_cast<const char*>(set->m_name) : NULL);
     } else {
         EQUIPMENT_SET* set = CGEquipmentManager::GetSetByID(CGEquipmentManager::m_pendingSetID);
-        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 0, set ? set->m_name : NULL);
+        FrameScript_SignalEvent(SCRIPT_EVENT_EQUIPMENT_SWAP_FINISHED, "%b%s", 0, set ? static_cast<const char*>(set->m_name) : NULL);
 
         if (result == 4) {
             FrameScript_SignalEvent(SCRIPT_EVENT_UI_ERROR_MESSAGE, "%s", FrameScript_GetText("EQUIPMENT_MANAGER_BAGS_FULL", -1, GENDER_NOT_APPLICABLE));

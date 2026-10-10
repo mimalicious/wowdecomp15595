@@ -4599,7 +4599,7 @@ int32_t CGGameObject_C_TypeBase::CanChangeCursor() const {
             if (lockType->m_id == 1 || canUse) {
                 SStrCopy(cursor, lockType->m_cursorName, sizeof(cursor));
             } else {
-                SStrPrintf(cursor, sizeof(cursor), "Unable%s", lockType->m_cursorName);
+                SStrPrintf(cursor, sizeof(cursor), "Unable%s", static_cast<const char*>(lockType->m_cursorName));
             }
 
             return CursorGetModeFromName(cursor);

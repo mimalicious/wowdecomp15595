@@ -1120,7 +1120,7 @@ static int32_t Script_GetSpellBookItemName(lua_State* L) {
 
             if (pet && *pet->m_name) {
                 char name[128];
-                SStrPrintf(name, sizeof(name), FrameScript_GetText("CALL_PET_SPELL_NAME", -1, GENDER_NOT_APPLICABLE), pet->m_name);
+                SStrPrintf(name, sizeof(name), FrameScript_GetText("CALL_PET_SPELL_NAME", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(pet->m_name));
                 lua_pushstring(L, name);
             } else {
                 lua_pushstring(L, spell->m_name);

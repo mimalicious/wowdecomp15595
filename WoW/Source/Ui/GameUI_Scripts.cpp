@@ -3506,7 +3506,7 @@ static void ResurrectNameQueryCallback(int32_t id, const WOWGUID& guid, void* pa
     NameCache* name = g_nameDBCache.GetRecord(CGPlayer_C::s_resurrectOfferer.m_guid, offerer, NULL, NULL, false);
 
     if (name) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_RESURRECT_REQUEST, "%s", name->m_name);
+        FrameScript_SignalEvent(SCRIPT_EVENT_RESURRECT_REQUEST, "%s", static_cast<const char*>(name->m_name));
     }
 }
 

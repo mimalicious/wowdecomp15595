@@ -746,7 +746,7 @@ int32_t ClientServices::Report(uint32_t suggestion, const char* text) {
                 MapRec* map = g_mapDB.GetRecord(mapId);
 
                 if (map) {
-                    SStrPrintf(line, sizeof(line), "Map:\t\t%u (%s)\n", mapId, map->m_directory);
+                    SStrPrintf(line, sizeof(line), "Map:\t\t%u (%s)\n", mapId, static_cast<const char*>(map->m_directory));
                 } else {
                     SStrPrintf(line, sizeof(line), "Map:\t\t%u\n", mapId);
                 }

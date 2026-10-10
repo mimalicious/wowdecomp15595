@@ -20,7 +20,7 @@ class CCameraTransition;
 struct CVar;
 
 struct CCameraModeBuffer {
-    /* 0000 */ uint32_t m_data[2];
+    /* 0000 */ uintptr_t m_data[2];
 };
 
 class CCameraModeEntry : public TSHashObject<CCameraModeEntry, HASHKEY_NONE> {

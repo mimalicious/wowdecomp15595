@@ -800,7 +800,7 @@ uint64_t CGAchievementInfo::BuildOutputString(char* buffer, int32_t size, uint64
 
         if (best) {
             if (flags & 0x1) {
-                SStrPrintf(buffer, size, "%I64d (%s)", highest, best->m_description);
+                SStrPrintf(buffer, size, "%I64d (%s)", highest, static_cast<const char*>(best->m_description));
             } else {
                 SStrPrintf(buffer, size, "%I64d", highest);
             }

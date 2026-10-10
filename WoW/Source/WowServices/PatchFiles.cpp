@@ -14,7 +14,7 @@ int32_t PatchFiles::EnumPatchArchives(OS_FILE_DATA& data, void* param) {
     PatchFiles* files = static_cast<PatchFiles*>(param);
 
     char path[260];
-    SStrPrintf(path, sizeof(path), "%s%s", files->m_directory, data.fileName);
+    SStrPrintf(path, sizeof(path), "%s%s", static_cast<const char*>(files->m_directory), data.fileName);
 
     char** slot = files->m_files.New();
     *slot = SStrDupA(path, __FILE__, __LINE__);

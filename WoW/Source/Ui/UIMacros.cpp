@@ -211,7 +211,7 @@ void CGUIMacros::GetFullIconPath(uint32_t id, char* buffer, uint32_t size) {
         }
     }
 
-    SStrPrintf(buffer, size, "%s%s", s_macroIconPath, macro->m_icon);
+    SStrPrintf(buffer, size, "%s%s", s_macroIconPath, static_cast<const char*>(macro->m_icon));
 }
 
 // OFFSET: 0x009C49D0/0x140752240
@@ -1030,7 +1030,7 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
         }
 
         char text[1536];
-        SStrPrintf(text, sizeof(text), "MACRO %d \"%s\" \"%s\"\r\n", macro->m_id, macro->m_name, macro->m_icon);
+        SStrPrintf(text, sizeof(text), "MACRO %d \"%s\" \"%s\"\r\n", macro->m_id, static_cast<const char*>(macro->m_name), static_cast<const char*>(macro->m_icon));
         const char* body = macro->m_body;
 
         while (body && *body) {

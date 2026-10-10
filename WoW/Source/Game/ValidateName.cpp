@@ -680,7 +680,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
 
             if (rec->m_language == language || rec->m_language == -1) {
                 if (regcomp(&profanityTokens.m_data[numProfanityTokens], rec->m_name, REG_ICASE)) {
-                    DebugLog("Warning: invalid profane names filter expression: \"%s\" (record ID %d)\n", rec->m_name, rec->m_id);
+                    DebugLog("Warning: invalid profane names filter expression: \"%s\" (record ID %d)\n", static_cast<const char*>(rec->m_name), rec->m_id);
                 } else {
                     numProfanityTokens++;
                 }
@@ -699,7 +699,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
 
             if (rec->m_language == language || rec->m_language == -1) {
                 if (regcomp(&chatProfanityTokens.m_data[numChatProfanityTokens], rec->m_text, REG_ICASE)) {
-                    DebugLog("Warning: invalid chat profanity filter expression: \"%s\" (record ID %d)\n", rec->m_text, rec->m_id);
+                    DebugLog("Warning: invalid chat profanity filter expression: \"%s\" (record ID %d)\n", static_cast<const char*>(rec->m_text), rec->m_id);
                 } else {
                     numChatProfanityTokens++;
                 }
@@ -718,7 +718,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
 
             if (rec->m_language == language || rec->m_language == -1) {
                 if (regcomp(&reservedNameTokens.m_data[numReservedNameTokens], rec->m_name, REG_ICASE)) {
-                    DebugLog("Warning: invalid reserved names filter expression: \"%s\" (record ID %d)\n", rec->m_name, rec->m_id);
+                    DebugLog("Warning: invalid reserved names filter expression: \"%s\" (record ID %d)\n", static_cast<const char*>(rec->m_name), rec->m_id);
                 } else {
                     numReservedNameTokens++;
                 }
@@ -736,7 +736,7 @@ void ValidateNameInitialize(int32_t localeMask, int32_t charsetMask, int32_t exi
         SpamMessagesRec* rec = g_spamMessagesDB.GetRecordByIndex(i);
 
         if (regcomp(&g_chatSpamTokens.m_data[numSpamTokens], rec->m_text, REG_ICASE)) {
-            DebugLog("Warning: invalid chat spam filter expression: \"%s\" (record ID %d)\n", rec->m_text, rec->m_id);
+            DebugLog("Warning: invalid chat spam filter expression: \"%s\" (record ID %d)\n", static_cast<const char*>(rec->m_text), rec->m_id);
         } else {
             numSpamTokens++;
         }

@@ -476,7 +476,7 @@ void SendToCombatText(int32_t type) {
 // OFFSET: 0x005F3BC0
 void UnitCombatLogProcGo(const WOWGUID& casterGuid, const SpellRec* spell) {
     if (s_combatTextActiveUnit == casterGuid && (spell->m_attributesExF & 0x40)) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s", s_combatTextTypes[30], spell->m_name);
+        FrameScript_SignalEvent(SCRIPT_EVENT_COMBAT_TEXT_UPDATE, "%s%s", s_combatTextTypes[30], static_cast<const char*>(spell->m_name));
     }
 }
 

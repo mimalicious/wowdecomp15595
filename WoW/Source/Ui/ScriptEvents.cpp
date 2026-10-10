@@ -477,7 +477,7 @@ bool Script_GetNameFromToken(const char* token, const char** name, bool defaultT
         return true;
     }
 
-    SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", record->m_name, record->m_realmName);
+    SStrPrintf(s_nameWithRealm, sizeof(s_nameWithRealm), "%s-%s", static_cast<const char*>(record->m_name), record->m_realmName);
     *name = s_nameWithRealm;
     return true;
 }
@@ -954,7 +954,7 @@ void Script_SendUnitSpellSignal(const WOWGUID& guid, uint8_t castCount, const Sp
     char** tokens = Script_GetTokenIDsFromGUID(guid, &count);
 
     for (int32_t i = 0; i < count; i++) {
-        FrameScript_SignalEvent(signal, "%s%s%s%d", tokens[i], spell->m_name, spell->m_nameSubtext, castCount);
+        FrameScript_SignalEvent(signal, "%s%s%s%d", tokens[i], static_cast<const char*>(spell->m_name), static_cast<const char*>(spell->m_nameSubtext), castCount);
     }
 }
 

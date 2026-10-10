@@ -2561,7 +2561,7 @@ static int32_t Script_GuildInfo(lua_State* L) {
 
     if (stats) {
         char text[3000];
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("GUILD_NAME_TEMPLATE", -1, GENDER_NOT_APPLICABLE), stats->m_name);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("GUILD_NAME_TEMPLATE", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(stats->m_name));
         CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);
         SStrPrintf(text, sizeof(text), FrameScript_GetText("GUILD_INFO_TEMPLATE", -1, GENDER_NOT_APPLICABLE), CGGuildInfo::m_createDate.m_month + 1, CGGuildInfo::m_createDate.m_monthDay + 1, CGGuildInfo::m_createDate.m_year + 2000, CGGuildInfo::m_numMembers, CGGuildInfo::m_numAccounts);
         CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL);

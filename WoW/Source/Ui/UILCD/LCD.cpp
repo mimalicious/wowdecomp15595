@@ -255,7 +255,7 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatus* status) {
 
         if (rec) {
             CGLCD::SetScreen(2);
-            SStrPrintf(s_battlefieldAlert, sizeof(s_battlefieldAlert), "%s", rec->m_name);
+            SStrPrintf(s_battlefieldAlert, sizeof(s_battlefieldAlert), "%s", static_cast<const char*>(rec->m_name));
             s_battlefieldPortExpiration = status->m_portExpiration;
         }
     } else {
@@ -263,7 +263,7 @@ void CGLCD::OnBattlefieldReady(const BattlefieldStatus* status) {
 
         if (map) {
             CGLCD::SetScreen(2);
-            SStrPrintf(s_battlefieldAlert, sizeof(s_battlefieldAlert), "%s %d", map->m_mapName, status->m_instanceID);
+            SStrPrintf(s_battlefieldAlert, sizeof(s_battlefieldAlert), "%s %d", static_cast<const char*>(map->m_mapName), status->m_instanceID);
             s_battlefieldPortExpiration = status->m_portExpiration;
         }
     }
@@ -1683,7 +1683,7 @@ bool CGLCD::GeneratePOIs(XMLNode* node) {
             CGLCD::m_lcd->SetOrigin(lcdBitmap, static_cast<int32_t>(static_cast<float>(x)), static_cast<int32_t>(originY));
 
             char name[64];
-            SStrPrintf(name, sizeof(name), "%s_%s", rec->m_name, rec->m_description);
+            SStrPrintf(name, sizeof(name), "%s_%s", static_cast<const char*>(rec->m_name), static_cast<const char*>(rec->m_description));
             LCDHANDLE* handle = CGLCD::m_handles.New(name, 0, 0);
             handle->m_handle = handle;
             handle->m_x = static_cast<int32_t>(originX);

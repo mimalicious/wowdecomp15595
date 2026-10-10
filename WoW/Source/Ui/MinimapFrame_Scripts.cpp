@@ -64,7 +64,7 @@ static int32_t Script_GetTrackingTexture(lua_State* L) {
     char texture[260];
 
     if (CGMinimapFrame::s_trackingInfo) {
-        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", CGMinimapFrame::s_trackingInfo->m_texture);
+        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", static_cast<const char*>(CGMinimapFrame::s_trackingInfo->m_texture));
     } else {
         SpellRec* spell;
 
@@ -137,7 +137,7 @@ static int32_t Script_GetTrackingInfo(lua_State* L) {
 
         lua_pushstring(L, FrameScript_GetText(info->m_name, -1, GENDER_NOT_APPLICABLE));
         char texture[128];
-        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", info->m_texture);
+        SStrPrintf(texture, sizeof(texture), "%s\\%s", "Interface\\Minimap\\Tracking", static_cast<const char*>(info->m_texture));
         lua_pushstring(L, texture);
 
         if (CGMinimapFrame::s_trackingInfo == info) {

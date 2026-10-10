@@ -3340,10 +3340,10 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
         if (showProgress) {
             SStrPrintf(buffer, sizeof(buffer), "FACTION_STANDING_LABEL%d", CGReputationInfo::GetFactionStandingReaction(quest->m_friendlyFactionId) + 1);
             SStrCopy(current, player->GetFrameScriptText(buffer, -1), sizeof(current));
-            SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("QUEST_FACTION_NEEDED", -1, GENDER_NOT_APPLICABLE), faction->m_name, current, needed);
+            SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("QUEST_FACTION_NEEDED", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(faction->m_name), current, needed);
             params->m_complete = GetRepListRepValue(quest->m_friendlyFactionId) >= static_cast<int32_t>(quest->m_friendlyFactionAmount);
         } else {
-            SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("QUEST_FACTION_NEEDED_NOPROGRESS", -1, GENDER_NOT_APPLICABLE), faction->m_name, needed);
+            SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("QUEST_FACTION_NEEDED_NOPROGRESS", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(faction->m_name), needed);
         }
 
         SStrCopy(text, buffer, 4096);

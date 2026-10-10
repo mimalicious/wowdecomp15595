@@ -4696,7 +4696,7 @@ void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
 
     if (name) {
         char buffer[3000];
-        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("REPORT_PVP_AFK_SENT", -1, GENDER_NOT_APPLICABLE), name->m_name);
+        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("REPORT_PVP_AFK_SENT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name));
         CGChat::AddChatMessage(buffer, 0, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
     }
 }
@@ -6993,7 +6993,7 @@ static void RandomRollNameQueryCallback(int32_t id, const WOWGUID& guid, void* p
 
         if (name) {
             char text[3000];
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("RANDOM_ROLL_RESULT", -1, GENDER_NOT_APPLICABLE), name->m_name, roll[2], roll[0], roll[1]);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("RANDOM_ROLL_RESULT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), roll[2], roll[0], roll[1]);
             CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
         }
     }
@@ -7987,7 +7987,7 @@ int32_t CGPlayer_C::UpdateUnitCollisionBox(int32_t a2, int32_t a3) {
     float scale = this->GetScaledModelScale(displayInfo, modelData, &modelScale);
 
     if (fabsf(modelData->m_collisionWidth) < 0.00000095367432f || fabsf(modelData->m_collisionHeight) < 0.00000095367432f) {
-        SysMsgPrintf(STATUS_ERROR, 0x10, "NOCOLLISIONBOX|%s", modelData->m_modelName);
+        SysMsgPrintf(STATUS_ERROR, 0x10, "NOCOLLISIONBOX|%s", static_cast<const char*>(modelData->m_modelName));
         return 1;
     }
 
@@ -7997,7 +7997,7 @@ int32_t CGPlayer_C::UpdateUnitCollisionBox(int32_t a2, int32_t a3) {
     }
 
     if (modelData->m_collisionWidth + 0.00000011920929f < 0.4167f) {
-        SysMsgPrintf(STATUS_ERROR, 2, "CreatureModelData record %d (%s) collision width is too small.", displayInfo->m_modelID, modelData->m_modelName);
+        SysMsgPrintf(STATUS_ERROR, 2, "CreatureModelData record %d (%s) collision width is too small.", displayInfo->m_modelID, static_cast<const char*>(modelData->m_modelName));
     }
 
     if (!a2 && this->IsActivePlayer() && this->m_movementData.CollisionBoxDoesntFit(modelData->m_collisionWidth, modelData->m_collisionHeight, scale)) {
@@ -8807,7 +8807,7 @@ void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
                 TaxiNodesRec* node;
 
                 if ((nodeMask[i] & (1ull << bit)) && (node = g_taxiNodesDB.GetRecord(nodeID))) {
-                    ConsolePrintf("[%02d]: %s", nodeID, node->m_name);
+                    ConsolePrintf("[%02d]: %s", nodeID, static_cast<const char*>(node->m_name));
                 }
 
                 nodeID++;

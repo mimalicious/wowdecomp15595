@@ -45,7 +45,7 @@ int32_t GruntFileDownload::Delete() {
     char path[260];
 
     if (this->m_partial) {
-        SStrPrintf(path, sizeof(path), "%s.partial", this->m_fileName);
+        SStrPrintf(path, sizeof(path), "%s.partial", static_cast<const char*>(this->m_fileName));
     } else {
         SStrCopy(path, this->m_fileName, sizeof(path));
     }
@@ -61,7 +61,7 @@ void GruntFileDownload::RenamePartial() {
     }
 
     char path[260];
-    SStrPrintf(path, sizeof(path), "%s.partial", this->m_fileName);
+    SStrPrintf(path, sizeof(path), "%s.partial", static_cast<const char*>(this->m_fileName));
 
     if (OsFileExists(this->m_fileName)) {
         OsDeleteFile(this->m_fileName);

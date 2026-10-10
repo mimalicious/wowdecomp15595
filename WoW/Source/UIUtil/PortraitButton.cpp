@@ -332,7 +332,7 @@ void SetPortraitTexture(CSimpleTexture* texture, uint32_t race, uint32_t sex, WO
 
     ChrRacesRec* raceRec = g_chrRacesDB.GetRecord(race);
     char fileName[64];
-    SStrPrintf(fileName, sizeof(fileName), "Interface\\CharacterFrame\\TemporaryPortrait-%s-%s", s_sexNames[sex], raceRec->m_clientFileString);
+    SStrPrintf(fileName, sizeof(fileName), "Interface\\CharacterFrame\\TemporaryPortrait-%s-%s", s_sexNames[sex], static_cast<const char*>(raceRec->m_clientFileString));
     texture->SetTexture(fileName, 0, 0, CSimpleTexture::s_textureFilterMode, ImageMode_Normal);
 }
 
@@ -898,7 +898,7 @@ void SetPortraitTextureFromDisplayID(CSimpleTexture* texture, int32_t displayId)
 
     if (display->m_portraitTextureName && *display->m_portraitTextureName) {
         char fileName[260];
-        SStrPrintf(fileName, sizeof(fileName), "interface\\icons\\%s", display->m_portraitTextureName);
+        SStrPrintf(fileName, sizeof(fileName), "interface\\icons\\%s", static_cast<const char*>(display->m_portraitTextureName));
         SetPortraitTexture(texture, fileName);
         return;
     }
@@ -945,7 +945,7 @@ void SetPortraitTextureFromDisplayID(CSimpleTexture* texture, int32_t displayId)
         data.m_preferences.m_facialHairId = extra->m_facialHairID;
         data.m_preferences.m_hairStyleId = extra->m_hairStyleID;
         data.m_flags |= 0x1;
-        SStrPrintf(data.m_npcSkinTexture, sizeof(data.m_npcSkinTexture), "%s%s", "Textures\\BakedNpcTextures\\", extra->m_bakeName);
+        SStrPrintf(data.m_npcSkinTexture, sizeof(data.m_npcSkinTexture), "%s%s", "Textures\\BakedNpcTextures\\", static_cast<const char*>(extra->m_bakeName));
         data.m_model = model;
         data.m_model->m_refCount++;
         component->Init(&data, NULL);

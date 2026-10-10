@@ -383,7 +383,7 @@ static int32_t Script_GetEquipmentSetInfo(lua_State* L) {
 
     lua_pushstring(L, set->m_name);
     char icon[260];
-    SStrPrintf(icon, sizeof(icon), "%s%s", s_equipmentSetIconPath, set->m_icon);
+    SStrPrintf(icon, sizeof(icon), "%s%s", s_equipmentSetIconPath, static_cast<const char*>(set->m_icon));
     lua_pushstring(L, icon);
     lua_pushnumber(L, set->m_id);
     lua_pushboolean(L, CGEquipmentManager::IsSetEquipped(set->m_id));

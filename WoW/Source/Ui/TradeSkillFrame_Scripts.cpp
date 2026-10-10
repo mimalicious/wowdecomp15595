@@ -414,9 +414,9 @@ static int32_t Script_GetTradeSkillRecipeLink(lua_State* L) {
     char link[1024];
 
     if (skillLine) {
-        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s: %s]|h|r", s_tradeLinkColor, spell->m_id, skillLine->m_displayName, spell->m_name);
+        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s: %s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(skillLine->m_displayName), static_cast<const char*>(spell->m_name));
     } else {
-        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, spell->m_name);
+        SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(spell->m_name));
     }
 
     lua_pushstring(L, link);
@@ -795,7 +795,7 @@ static int32_t Script_GetTradeSkillItemLink(lua_State* L) {
     }
 
     char link[1024];
-    SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, spell->m_name);
+    SStrPrintf(link, sizeof(link), "|c%s|Henchant:%d|h[%s]|h|r", s_tradeLinkColor, spell->m_id, static_cast<const char*>(spell->m_name));
     lua_pushstring(L, link);
     return 1;
 }

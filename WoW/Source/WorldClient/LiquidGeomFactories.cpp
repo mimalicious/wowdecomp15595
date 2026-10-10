@@ -1070,7 +1070,7 @@ CAreaGeomFactory::~CAreaGeomFactory() {
 // OFFSET: 0x007726D0/0x14045C180
 void CMeshGeomFactory::GetBuffers(EGxVertexBufferFormat format, CGxBuf*& vertexBuf, CGxBuf*& indexBuf, CGxBatch& batch, int32_t a5) {
     if (this->m_mapObjGroup->m_liquidMaterialId >= this->m_mapObj->m_materialCount) {
-        SErrDisplayAppFatal("Water in chunk \"%s\" of object \"%s\" has no materialId.", this->m_mapObjGroup->m_groupName, this->m_mapObj->m_name);
+        SErrDisplayAppFatal("Water in chunk \"%s\" of object \"%s\" has no materialId.", this->m_mapObjGroup->m_groupName, static_cast<const char*>(this->m_mapObj->m_name));
     }
 
     uint32_t vertexCount = this->m_mapObjGroup->m_liquidVerts.x * this->m_mapObjGroup->m_liquidVerts.y + 6 * this->m_mapObjGroup->GetNumSharedTiles();

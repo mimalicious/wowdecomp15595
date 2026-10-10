@@ -188,7 +188,7 @@ int32_t AreaListGetName(uint32_t areaID, char* buffer, uint32_t size, int32_t in
     AreaTableRec* parent;
 
     if (includeParent && area->m_parentAreaID && (parent = g_areaTableDB.GetRecord(area->m_parentAreaID)) != NULL) {
-        SStrPrintf(buffer, size, "%s, %s", area->m_areaName, parent->m_areaName);
+        SStrPrintf(buffer, size, "%s, %s", static_cast<const char*>(area->m_areaName), static_cast<const char*>(parent->m_areaName));
         return 1;
     }
 

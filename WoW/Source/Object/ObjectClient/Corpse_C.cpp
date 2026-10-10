@@ -55,7 +55,7 @@ int32_t CGCorpse_C::GetModelFileName(const char** name) const {
             return 0;
         }
 
-        SStrPrintf(s_modelName, sizeof(s_modelName), "World\\Generic\\PassiveDoodads\\DeathSkeletons\\%s%sDeathSkeleton.mdx", race->m_clientFileString, s_sexNames[this->m_corpse->m_corpseFieldBytes1[2]]);
+        SStrPrintf(s_modelName, sizeof(s_modelName), "World\\Generic\\PassiveDoodads\\DeathSkeletons\\%s%sDeathSkeleton.mdx", static_cast<const char*>(race->m_clientFileString), s_sexNames[this->m_corpse->m_corpseFieldBytes1[2]]);
         *name = s_modelName;
         return 1;
     }

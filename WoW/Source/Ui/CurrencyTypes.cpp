@@ -160,9 +160,9 @@ const char* CGCurrencyTypes::GetCurrencyIcon(const CurrencyTypesRec* rec) {
 
                     if (((1 << group->m_maskID) & faction->m_factionGroup) && *group->m_name) {
                         if (rec->m_id == 390) {
-                            SStrPrintf(s_currencyIcon, sizeof(s_currencyIcon), "PVPCurrency-Conquest-%s", group->m_internalName);
+                            SStrPrintf(s_currencyIcon, sizeof(s_currencyIcon), "PVPCurrency-Conquest-%s", static_cast<const char*>(group->m_internalName));
                         } else {
-                            SStrPrintf(s_currencyIcon, sizeof(s_currencyIcon), "PVPCurrency-Honor-%s", group->m_internalName);
+                            SStrPrintf(s_currencyIcon, sizeof(s_currencyIcon), "PVPCurrency-Honor-%s", static_cast<const char*>(group->m_internalName));
                         }
                     }
                 }

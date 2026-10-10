@@ -4627,7 +4627,7 @@ void CGGameUI::TargetTradeItem() {
         SpellItemEnchantmentRec* replacement = g_spellItemEnchantmentDB.GetRecord(effect->m_effectMiscValue);
 
         if (existing && replacement) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_REPLACE_ENCHANT, "%s%s", existing->m_name, replacement->m_name);
+            FrameScript_SignalEvent(SCRIPT_EVENT_TRADE_REPLACE_ENCHANT, "%s%s", static_cast<const char*>(existing->m_name), static_cast<const char*>(replacement->m_name));
             return;
         }
     }
@@ -5144,7 +5144,7 @@ void CGGameUI::CastItemSpell(WOWGUID guid, int32_t confirmed) {
 
                 if (existing && enchant) {
                     CGGameUI::m_lastItemSpellTarget = item->m_obj->m_guid;
-                    FrameScript_SignalEvent(SCRIPT_EVENT_REPLACE_ENCHANT, "%s%s", existing->m_name, enchant->m_name);
+                    FrameScript_SignalEvent(SCRIPT_EVENT_REPLACE_ENCHANT, "%s%s", static_cast<const char*>(existing->m_name), static_cast<const char*>(enchant->m_name));
                     return;
                 }
 
@@ -7640,13 +7640,13 @@ static void PrintTaintEvent(TAINTEVENT* event) {
 
     switch (event->m_type) {
         case 1:
-            SStrPrintf(text, sizeof(text), "Global variable %s tainted by %s - %s", event->m_name, event->m_taint, context);
+            SStrPrintf(text, sizeof(text), "Global variable %s tainted by %s - %s", static_cast<const char*>(event->m_name), event->m_taint, context);
             DebugLog("%s\n", text);
             SLogWrite(s_taintLog, "%s", text);
             break;
 
         case 2:
-            SStrPrintf(text, sizeof(text), "Execution tainted by %s while reading %s - %s", event->m_taint, event->m_name, context);
+            SStrPrintf(text, sizeof(text), "Execution tainted by %s while reading %s - %s", event->m_taint, static_cast<const char*>(event->m_name), context);
             DebugLog("%s\n", text);
             SLogWrite(s_taintLog, "%s", text);
             break;
@@ -8227,7 +8227,7 @@ static void PlayMovie() {
     }
 
     char path[1024];
-    SStrPrintf(path, sizeof(path), "%s%s", file->m_filepath, file->m_filename);
+    SStrPrintf(path, sizeof(path), "%s%s", static_cast<const char*>(file->m_filepath), static_cast<const char*>(file->m_filename));
     char* extension = SStrChrR(path, '.');
 
     if (extension) {

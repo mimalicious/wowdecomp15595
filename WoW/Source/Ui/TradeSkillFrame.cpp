@@ -593,7 +593,7 @@ bool CGTradeSkillInfo::GetTradeSkillListLink(int32_t spellId, char* buffer, uint
     }
 
     *out = 0;
-    SStrPrintf(out, buffer + bufferSize - out, "|h[%s]|h|r", spell->m_name);
+    SStrPrintf(out, buffer + bufferSize - out, "|h[%s]|h|r", static_cast<const char*>(spell->m_name));
     return true;
 }
 

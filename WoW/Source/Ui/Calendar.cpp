@@ -1526,7 +1526,7 @@ static void __stdcall FireEventAlarm(CGameTime* time, void* param) {
     if (*time == alarm && (event->m_inviteStatus == 3 || event->m_inviteStatus == 1)) {
         WowTime start;
         WowTime::WowDecodeTime(event->m_startTime, &start);
-        FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_EVENT_ALARM, "%s%d%d", event->m_title, start.m_hour, start.m_minute);
+        FrameScript_SignalEvent(SCRIPT_EVENT_CALENDAR_EVENT_ALARM, "%s%d%d", static_cast<const char*>(event->m_title), start.m_hour, start.m_minute);
         CGameTime::GameTimeUnregisterCallback(event->m_alarmCallback);
         event->m_alarmCallback = NULL;
     }

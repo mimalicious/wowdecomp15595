@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include "Engine/Source/Os/SockAddr.h"
 #include "WoW/Source/JamClientAutoCode/JamClientMessage.h"
 #include "WoW/Source/WowServices/WDataStore.h"
 
@@ -20,6 +21,18 @@ class ClientConnectionAuthChallenge : public JamClientMessage {
     ~ClientConnectionAuthChallenge();
     bool Handle();
     void Unpack(CDataStore* msg, bool full);
+};
+
+class ClientConnectPayload {
+    public:
+    /* 0000 */ SockAddr m_where;
+    /* 0014 */ uint8_t m_xorMagic;
+    /* 0015 */ uint8_t m_port[2];
+    /* 0017 */ char m_haiku[73];
+    /* 0060 */ uint8_t m_piDigits[142];
+    /* 00EE */ uint8_t m_hmac[20];
+
+    void Get(CDataStore* msg, bool full);
 };
 
 class ClientConnectionConnectTo : public JamClientMessage {

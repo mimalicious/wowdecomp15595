@@ -100,7 +100,7 @@ FriendInfo::~FriendInfo() {
 // OFFSET: 0x004D2270/0x14010F4B0
 char* NameCache::FullName(char* buffer, uint32_t size) {
     if (this->m_realmName[0]) {
-        SStrPrintf(buffer, size, "%s-%s", this->m_name, this->m_realmName);
+        SStrPrintf(buffer, size, "%s-%s", static_cast<const char*>(this->m_name), this->m_realmName);
     } else {
         SStrCopy(buffer, this->m_name, size);
     }
@@ -913,7 +913,7 @@ int32_t FriendList::DoLocalWho() {
         }
 
         char buffer[256];
-        sprintf(buffer, "%s-", name->m_name);
+        sprintf(buffer, "%s-", static_cast<const char*>(name->m_name));
         uint32_t length = strlen(name->m_name) + 1;
 
         for (const char* realm = name->m_realmName; *realm; realm++) {

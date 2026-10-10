@@ -463,7 +463,7 @@ static int32_t Script_GetInboxHeaderInfo(lua_State* L) {
 
     if (message->m_flags & 0x8) {
         char subject[512];
-        SStrPrintf(subject, sizeof(subject), FrameScript_GetText("COD_PAYMENT", -1, GENDER_NOT_APPLICABLE), message->m_subject);
+        SStrPrintf(subject, sizeof(subject), FrameScript_GetText("COD_PAYMENT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(message->m_subject));
         lua_pushstring(L, subject);
     } else {
         lua_pushstring(L, message->m_subject);

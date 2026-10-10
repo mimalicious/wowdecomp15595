@@ -1136,7 +1136,7 @@ const char* CGTooltip::GetSpellHyperlinkString(int32_t spellId) {
         return "";
     }
 
-    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hspell:%d|h[%s]|h%s", s_spellLinkColor, spellId, spell->m_name, *s_spellLinkColor ? "|r" : "");
+    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hspell:%d|h[%s]|h%s", s_spellLinkColor, spellId, static_cast<const char*>(spell->m_name), *s_spellLinkColor ? "|r" : "");
     return s_itemLink;
 }
 
@@ -1168,7 +1168,7 @@ const char* CGTooltip::GetGlyphHyperlinkString(int32_t glyphId) {
         return "";
     }
 
-    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hglyph:%d|h[%s]|h%s", s_glyphLinkColor, glyphId, spell->m_name, *s_glyphLinkColor ? "|r" : "");
+    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hglyph:%d|h[%s]|h%s", s_glyphLinkColor, glyphId, static_cast<const char*>(spell->m_name), *s_glyphLinkColor ? "|r" : "");
     return s_itemLink;
 }
 
@@ -1181,7 +1181,7 @@ const char* CGTooltip::GetInstanceLockHyperlink(int32_t mapId, int32_t difficult
     }
 
     const char* color = s_instanceLockLinkColor;
-    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hinstancelock:%016llX:%d:%d:%d|h[%s]|h%s", color, ClntObjMgrGetActivePlayer().m_guid, mapId, difficulty, encounterMask, map->m_mapName, *color ? "|r" : "");
+    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hinstancelock:%016llX:%d:%d:%d|h[%s]|h%s", color, ClntObjMgrGetActivePlayer().m_guid, mapId, difficulty, encounterMask, static_cast<const char*>(map->m_mapName), *color ? "|r" : "");
     return s_itemLink;
 }
 
@@ -2127,7 +2127,7 @@ const char* CGTooltip::GetQuestHyperlinkString(int32_t questId, int32_t level) {
     }
 
     const char* color = CGTooltip::GetQuestDifficultyColorString(level);
-    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hquest:%d:%d|h[%s]|h%s", color, questId, quest->m_level, quest->m_name, *color ? "|r" : "");
+    SStrPrintf(s_itemLink, sizeof(s_itemLink), "|c%s|Hquest:%d:%d|h[%s]|h%s", color, questId, quest->m_level, static_cast<const char*>(quest->m_name), *color ? "|r" : "");
     return s_itemLink;
 }
 
@@ -2752,7 +2752,7 @@ void CGTooltip::SetCorpse(const WOWGUID& guid) {
 
     if (name) {
         char line[1024];
-        SStrPrintf(line, sizeof(line), FrameScript_GetText("CORPSE_TOOLTIP", -1, GENDER_NOT_APPLICABLE), name->m_name);
+        SStrPrintf(line, sizeof(line), FrameScript_GetText("CORPSE_TOOLTIP", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name));
         this->AddLine(line, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
         this->Show();
     }
@@ -2795,7 +2795,7 @@ int32_t CGTooltip::AddTalentPrereqs(const TalentRec* talent, const CGTalentGroup
                 SpellRec* spell = g_spellDB.GetRecord(spellId);
 
                 if (spell) {
-                    SStrPrintf(text, sizeof(text), FrameScript_GetText("TOOLTIP_TALENT_PREREQ", -1, GENDER_NOT_APPLICABLE), rank + 1, spell->m_name);
+                    SStrPrintf(text, sizeof(text), FrameScript_GetText("TOOLTIP_TALENT_PREREQ", -1, GENDER_NOT_APPLICABLE), rank + 1, static_cast<const char*>(spell->m_name));
                     this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
                 }
 
@@ -2813,7 +2813,7 @@ int32_t CGTooltip::AddTalentPrereqs(const TalentRec* talent, const CGTalentGroup
             uint32_t required = talent->m_tierID * (2 * (isPet == 0) + 3);
 
             if (spent < required) {
-                SStrPrintf(text, sizeof(text), FrameScript_GetText("TOOLTIP_TALENT_TIER_POINTS", -1, GENDER_NOT_APPLICABLE), required, tab->m_name);
+                SStrPrintf(text, sizeof(text), FrameScript_GetText("TOOLTIP_TALENT_TIER_POINTS", -1, GENDER_NOT_APPLICABLE), required, static_cast<const char*>(tab->m_name));
                 this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
                 met = 0;
             }
@@ -2824,7 +2824,7 @@ int32_t CGTooltip::AddTalentPrereqs(const TalentRec* talent, const CGTalentGroup
         SpellRec* spell = g_spellDB.GetRecord(talent->m_requiredSpellID);
 
         if (spell) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE), spell->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name));
             this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
             return 0;
         }
@@ -3250,7 +3250,7 @@ void CGTooltip::SetInstanceLockCompletedEncounters(WOWGUID guid, int32_t mapId, 
     }
 
     char text[1024];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_LOCK_SS", -1, GENDER_NOT_APPLICABLE), name ? name->m_name : "UNKNOWN", map->m_mapName);
+    SStrPrintf(text, sizeof(text), FrameScript_GetText("INSTANCE_LOCK_SS", -1, GENDER_NOT_APPLICABLE), name ? static_cast<const char*>(name->m_name) : "UNKNOWN", static_cast<const char*>(map->m_mapName));
     this->AddLine(text, NULL, s_tooltipTitleColor, s_tooltipTitleColor, 0);
     uint32_t ineligible = 0;
 
@@ -3392,7 +3392,7 @@ void CGTooltip::SetFrameStack(bool showHidden) {
             lastLevel = info->m_level;
         }
 
-        SStrPrintf(text, sizeof(text), " <%d> %s", info->m_level, info->m_name);
+        SStrPrintf(text, sizeof(text), " <%d> %s", info->m_level, static_cast<const char*>(info->m_name));
 
         if (info->m_visible) {
             const CImVector* color = info->m_mouseEnabled ? &s_frameStackMouseColors[toggle] : &s_frameStackColors[toggle];
@@ -3792,7 +3792,7 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
         }
     } else if (name) {
         if (name->m_realmName[0]) {
-            SStrPrintf(line, sizeof(line), "%s - %s", name->m_name, name->m_realmName);
+            SStrPrintf(line, sizeof(line), "%s - %s", static_cast<const char*>(name->m_name), name->m_realmName);
             this->AddLine(line, NULL, s_tooltipTitleColor, s_tooltipTitleColor, 0);
         } else {
             this->AddLine(name->m_name, NULL, s_tooltipTitleColor, s_tooltipTitleColor, 0);
@@ -4047,9 +4047,9 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
                     }
 
                     if (CGPartyInfo::NumMembers()) {
-                        SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), params.m_text);
+                        SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), static_cast<const char*>(params.m_text));
                     } else {
-                        SStrPrintf(buffer, sizeof(buffer), " - %s", params.m_text);
+                        SStrPrintf(buffer, sizeof(buffer), " - %s", static_cast<const char*>(params.m_text));
                     }
 
                     this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -4063,9 +4063,9 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
                         }
 
                         if (CGPartyInfo::NumMembers()) {
-                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), static_cast<const char*>(params.m_text));
                         } else {
-                            SStrPrintf(buffer, sizeof(buffer), " - %s", params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " - %s", static_cast<const char*>(params.m_text));
                         }
 
                         this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -4086,9 +4086,9 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
                         }
 
                         if (CGPartyInfo::NumMembers()) {
-                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", player->GetVisibleUnitName(NULL, 1), static_cast<const char*>(params.m_text));
                         } else {
-                            SStrPrintf(buffer, sizeof(buffer), " - %s", params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " - %s", static_cast<const char*>(params.m_text));
                         }
 
                         this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -4133,7 +4133,7 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
 
             if (looter) {
                 char buffer[64];
-                SStrPrintf(buffer, sizeof(buffer), "%s: %s", FrameScript_GetText("MASTER_LOOTER", -1, GENDER_NOT_APPLICABLE), looter->m_name);
+                SStrPrintf(buffer, sizeof(buffer), "%s: %s", FrameScript_GetText("MASTER_LOOTER", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(looter->m_name));
                 this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
             }
         }
@@ -4144,7 +4144,7 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
 
             if (looter) {
                 char buffer[64];
-                SStrPrintf(buffer, sizeof(buffer), "%s: %s", FrameScript_GetText("LOOT", -1, GENDER_NOT_APPLICABLE), looter->m_name);
+                SStrPrintf(buffer, sizeof(buffer), "%s: %s", FrameScript_GetText("LOOT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(looter->m_name));
                 this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
             }
         }
@@ -4373,7 +4373,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
             SkillLineRec* skill = g_skillLineDB.GetRecord(ability->m_skillLine);
 
             if (skill) {
-                SStrPrintf(cost, sizeof(cost), "%s: %s", skill->m_displayName, spell->m_name);
+                SStrPrintf(cost, sizeof(cost), "%s: %s", static_cast<const char*>(skill->m_displayName), static_cast<const char*>(spell->m_name));
                 this->AddLine(cost, NULL, s_tooltipTitleColor, s_tooltipTitleColor, 0);
             }
         }
@@ -4384,7 +4384,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
         const char* right;
 
         if (!hideCallPetName && stable && stable->m_name[0]) {
-            SStrPrintf(token, sizeof(token), FrameScript_GetText("CALL_PET_SPELL_NAME", -1, GENDER_NOT_APPLICABLE), stable->m_name);
+            SStrPrintf(token, sizeof(token), FrameScript_GetText("CALL_PET_SPELL_NAME", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(stable->m_name));
             right = brief || showSubtext ? static_cast<const char*>(spell->m_nameSubtext) : NULL;
             left = token;
         } else {
@@ -4906,7 +4906,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
                 FactionRec* faction = g_factionDB.GetRecord(requirements->m_minFactionID);
                 SStrPrintf(token, sizeof(token), "FACTION_STANDING_LABEL%d", minReputation + 1);
                 const char* standing = player->GetFrameScriptText(token, -1);
-                SStrPrintf(cost, sizeof(cost), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? faction->m_name : "UNKNOWN", standing);
+                SStrPrintf(cost, sizeof(cost), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? static_cast<const char*>(faction->m_name) : "UNKNOWN", standing);
                 const CImVector& color = met ? s_tooltipTextColor : s_tooltipRedColor;
                 this->AddLine(cost, NULL, color, color, 0);
             }
@@ -5326,9 +5326,9 @@ void CGTooltip::SetObject(const WOWGUID& guid) {
                     }
 
                     if (CGPartyInfo::NumMembers()) {
-                        SStrPrintf(buffer, sizeof(buffer), " %s - %s", partyPlayer->GetVisibleUnitName(NULL, 1), params.m_text);
+                        SStrPrintf(buffer, sizeof(buffer), " %s - %s", partyPlayer->GetVisibleUnitName(NULL, 1), static_cast<const char*>(params.m_text));
                     } else {
-                        SStrPrintf(buffer, sizeof(buffer), " - %s", params.m_text);
+                        SStrPrintf(buffer, sizeof(buffer), " - %s", static_cast<const char*>(params.m_text));
                     }
 
                     this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -5355,9 +5355,9 @@ void CGTooltip::SetObject(const WOWGUID& guid) {
                         }
 
                         if (CGPartyInfo::NumMembers()) {
-                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", partyPlayer->GetVisibleUnitName(NULL, 1), params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " %s - %s", partyPlayer->GetVisibleUnitName(NULL, 1), static_cast<const char*>(params.m_text));
                         } else {
-                            SStrPrintf(buffer, sizeof(buffer), " - %s", params.m_text);
+                            SStrPrintf(buffer, sizeof(buffer), " - %s", static_cast<const char*>(params.m_text));
                         }
 
                         this->AddLine(buffer, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -5783,12 +5783,12 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             return 0;
         }
 
-        SStrPrintf(text, sizeof(text), FrameScript_GetText(petition->m_staticType ? "PETITION_TITLE" : "GUILD_CHARTER_TITLE", -1, GENDER_NOT_APPLICABLE), petition->m_title);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText(petition->m_staticType ? "PETITION_TITLE" : "GUILD_CHARTER_TITLE", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(petition->m_title));
         this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 1);
         NameCache* creator = g_nameDBCache.GetRecord(petition->m_ownerGuid.m_guid, petition->m_ownerGuid, TooltipItemCallback, this, true);
 
         if (creator) {
-            SStrPrintf(text, sizeof(text), FrameScript_GetText(petition->m_staticType ? "PETITION_CREATOR" : "GUILD_CHARTER_CREATOR", -1, GENDER_NOT_APPLICABLE), creator->m_name);
+            SStrPrintf(text, sizeof(text), FrameScript_GetText(petition->m_staticType ? "PETITION_CREATOR" : "GUILD_CHARTER_CREATOR", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(creator->m_name));
             this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
         }
 
@@ -5818,7 +5818,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                     ItemRecSparse* sourceRec = g_itemSparseDB.GetRecord(source->m_obj->m_entryID, none, NULL, NULL, false);
 
                     if (sourceRec) {
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRANSMOGRIFY_TOOLTIP_APPLY", -1, GENDER_NOT_APPLICABLE), sourceRec->m_name);
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("TRANSMOGRIFY_TOOLTIP_APPLY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(sourceRec->m_name));
                         this->AddLine(text, NULL, s_tooltipTransmogrifyColor, s_tooltipTransmogrifyColor, 0);
                     }
                 }
@@ -5865,7 +5865,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             ItemRecSparse* transmogRec = g_itemSparseDB.GetRecord(transmogItemId, none, NULL, NULL, false);
 
             if (transmogRec) {
-                SStrPrintf(text, sizeof(text), FrameScript_GetText("TRANSMOGRIFIED", -1, GENDER_NOT_APPLICABLE), transmogRec->m_name);
+                SStrPrintf(text, sizeof(text), FrameScript_GetText("TRANSMOGRIFIED", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(transmogRec->m_name));
                 this->AddLine(text, NULL, s_tooltipTransmogrifyColor, s_tooltipTransmogrifyColor, 0);
             }
         }
@@ -6838,7 +6838,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                     SpellItemEnchantmentRec* bonus = g_spellItemEnchantmentDB.GetRecord(abs(item->m_socketBonus));
 
                     if (bonus) {
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_SOCKET_BONUS", -1, GENDER_NOT_APPLICABLE), bonus->m_name);
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_SOCKET_BONUS", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(bonus->m_name));
                         CImVector bonusColor = s_tooltipGrayColor;
                         this->AddLine(text, NULL, bonusColor, bonusColor, 0);
                     }
@@ -6930,7 +6930,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                 ChrRacesRec* rec = g_chrRacesDB.GetRecordByIndex(i);
 
                 if (!(rec->m_flags & 0x1) && rec->m_name && ((1 << (rec->m_id - 1)) & races)) {
-                    SStrPrintf(text, sizeof(text), "%s ", rec->m_name);
+                    SStrPrintf(text, sizeof(text), "%s ", static_cast<const char*>(rec->m_name));
 
                     if (race != rec->m_id) {
                         allowed = 0;
@@ -7134,7 +7134,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
 
             if (spell) {
                 bool known = player->IsSpellKnown(item->m_requiredSpell) || player->IsSpellSuperceded(item->m_requiredSpell);
-                SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE), spell->m_name);
+                SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name));
                 const CImVector& spellColor = known ? s_tooltipTextColor : s_tooltipRedColor;
                 this->AddLine(text, NULL, spellColor, spellColor, 0);
             }
@@ -7195,7 +7195,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             count /= 100;
                         }
 
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_AMOUNT_EARNED", -1, GENDER_NOT_APPLICABLE), count, currency->m_name);
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_AMOUNT_EARNED", -1, GENDER_NOT_APPLICABLE), count, static_cast<const char*>(currency->m_name));
                         this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
                     }
 
@@ -7212,7 +7212,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                                 }
                             }
 
-                            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_PURCHASE_GROUP", -1, GENDER_NOT_APPLICABLE), group->m_name);
+                            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_PURCHASE_GROUP", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(group->m_name));
                             const CImVector& groupColor = owned ? s_tooltipTextColor : s_tooltipRedColor;
                             this->AddLine(text, NULL, groupColor, groupColor, 0);
                         }
@@ -7223,7 +7223,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         bool standingOk = GetRepListRepValue(cost->m_requiredFactionID) >= CGReputationInfo::m_reactionThresholds[standing];
                         FactionRec* faction = g_factionDB.GetRecord(cost->m_requiredFactionID);
                         SStrPrintf(buffer, sizeof(buffer), "FACTION_STANDING_LABEL%d", standing + 1);
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? faction->m_name : "UNKNOWN", player->GetFrameScriptText(buffer, -1));
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? static_cast<const char*>(faction->m_name) : "UNKNOWN", player->GetFrameScriptText(buffer, -1));
                         const CImVector& standingColor = standingOk ? s_tooltipTextColor : s_tooltipRedColor;
                         this->AddLine(text, NULL, standingColor, standingColor, 0);
                     }
@@ -7247,7 +7247,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
 
                         if (achievement) {
                             bool earned = CGAchievementInfo::GetAchievement(cost->m_requiredAchievement) != NULL;
-                            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_PURCHASE_ACHIEVEMENT", -1, GENDER_NOT_APPLICABLE), achievement->m_title);
+                            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_PURCHASE_ACHIEVEMENT", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(achievement->m_title));
                             const CImVector& achievementColor = earned ? s_tooltipTextColor : s_tooltipRedColor;
                             this->AddLine(text, NULL, achievementColor, achievementColor, 0);
                         }
@@ -7275,7 +7275,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             bool standingOk = GetRepListRepValue(item->m_requiredReputationFaction) >= CGReputationInfo::m_reactionThresholds[standing];
             FactionRec* faction = g_factionDB.GetRecord(item->m_requiredReputationFaction);
             SStrPrintf(buffer, sizeof(buffer), "FACTION_STANDING_LABEL%d", standing + 1);
-            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? faction->m_name : "UNKNOWN", player->GetFrameScriptText(buffer, -1));
+            SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_REQ_REPUTATION", -1, GENDER_NOT_APPLICABLE), faction ? static_cast<const char*>(faction->m_name) : "UNKNOWN", player->GetFrameScriptText(buffer, -1));
             const CImVector& standingColor = standingOk ? s_tooltipTextColor : s_tooltipRedColor;
             this->AddLine(text, NULL, standingColor, standingColor, 0);
         }
@@ -7650,7 +7650,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         SStrPrintf(text, sizeof(text), "\n%s %s", FrameScript_GetText("ITEM_SPELL_TRIGGER_ONUSE", -1, GENDER_NOT_APPLICABLE), buffer);
                     }
                 } else {
-                    SStrPrintf(text, sizeof(text), "%s %s", FrameScript_GetText("ITEM_SPELL_TRIGGER_ONUSE", -1, GENDER_NOT_APPLICABLE), item->m_description);
+                    SStrPrintf(text, sizeof(text), "%s %s", FrameScript_GetText("ITEM_SPELL_TRIGGER_ONUSE", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(item->m_description));
                 }
 
                 hasDescription = true;
@@ -7988,7 +7988,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                 NameCache* creator = g_nameDBCache.GetRecord(giftCreator.m_guid, giftCreator, TooltipItemCallback, this, true);
 
                 if (creator) {
-                    SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_WRAPPED_BY", -1, GENDER_NOT_APPLICABLE), creator->m_name);
+                    SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_WRAPPED_BY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(creator->m_name));
                     this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
                 }
             }
@@ -8008,9 +8008,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
 
                 if (creator) {
                     if (itemObj && (itemObj->m_item->m_itemFieldFlags & 0x200)) {
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_WRITTEN_BY", -1, GENDER_NOT_APPLICABLE), creator->m_name);
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_WRITTEN_BY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(creator->m_name));
                     } else {
-                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_CREATED_BY", -1, GENDER_NOT_APPLICABLE), creator->m_name);
+                        SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_CREATED_BY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(creator->m_name));
                     }
 
                     this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
@@ -8060,7 +8060,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         disenchantColor = &s_tooltipRedColor;
                     }
                 } else {
-                    SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_DISENCHANT_MIN_SKILL", -1, GENDER_NOT_APPLICABLE), skill->m_displayName, item->GetDisenchantSkillRequired());
+                    SStrPrintf(text, sizeof(text), FrameScript_GetText("ITEM_DISENCHANT_MIN_SKILL", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(skill->m_displayName), item->GetDisenchantSkillRequired());
                     disenchantColor = rank >= item->GetDisenchantSkillRequired() ? &s_tooltipDisenchantColor : &s_tooltipRedColor;
                 }
 

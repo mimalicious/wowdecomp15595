@@ -1496,7 +1496,7 @@ void CGlueMgr::RaceChange(WOWGUID guid, const CHARACTER_CREATE_INFO* info) {
 
 // OFFSET: 0x00802110
 bool CGlueMgr::OnRandomCharacterNameResult(ClientGenerateRandomCharacterNameResult* msg) {
-    FrameScript_SignalEvent(GLUE_EVENT_RANDOM_CHARACTER_NAME_RESULT, "%d%s", msg->m_success, msg->m_success ? msg->m_name : "");
+    FrameScript_SignalEvent(GLUE_EVENT_RANDOM_CHARACTER_NAME_RESULT, "%d%s", msg->m_success, msg->m_success ? static_cast<const char*>(msg->m_name) : "");
     return true;
 }
 

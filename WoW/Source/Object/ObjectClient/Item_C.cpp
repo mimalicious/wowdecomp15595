@@ -855,7 +855,7 @@ char* CGItem_C::BuildItemName(char* buffer, uint32_t size, int32_t itemId, int32
         ItemRandomPropertiesRec* rec = g_itemRandomPropertiesDB.GetRecord(randomPropertiesId);
 
         if (rec && rec->m_nameLang && *rec->m_nameLang) {
-            SStrPrintf(buffer, size, FrameScript_GetText("ITEM_SUFFIX_TEMPLATE", -1, GENDER_NOT_APPLICABLE), name, rec->m_nameLang);
+            SStrPrintf(buffer, size, FrameScript_GetText("ITEM_SUFFIX_TEMPLATE", -1, GENDER_NOT_APPLICABLE), name, static_cast<const char*>(rec->m_nameLang));
 
             return buffer;
         }

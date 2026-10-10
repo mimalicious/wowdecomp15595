@@ -333,7 +333,7 @@ void CGQuestInfo::ConfirmAcceptQuest(int32_t questId, const char* title, const W
     WOWGUID requester = WOWGUID();
 
     if (NameCache* name = g_nameDBCache.GetRecord(guid->m_guid, requester, NULL, NULL, false)) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_ACCEPT_CONFIRM, "%s%s", name->m_name, title);
+        FrameScript_SignalEvent(SCRIPT_EVENT_QUEST_ACCEPT_CONFIRM, "%s%s", static_cast<const char*>(name->m_name), title);
     }
 }
 

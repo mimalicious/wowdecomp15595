@@ -709,7 +709,7 @@ static int32_t Script_ListChannels(lua_State* L) {
 
         if (channel->m_channelNumber && !channel->m_unk9C) {
             char entry[138];
-            SStrPrintf(entry, sizeof(entry), "[%d. %s] ", channel->m_channelNumber, channel->m_name);
+            SStrPrintf(entry, sizeof(entry), "[%d. %s] ", channel->m_channelNumber, static_cast<const char*>(channel->m_name));
 
             if (SStrLen(&text[SStrLen(entry)]) >= sizeof(text)) {
                 CGChat::AddChatMessage(text, CHAT_MSG_CHANNEL_LIST, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
@@ -2072,14 +2072,14 @@ static int32_t Script_ResetChatWindows(lua_State* L) {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
 
     for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", s_chatColors[i].m_name, s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", s_chatColors[i].m_name, s_chatColors[i].m_unk48);
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_unk48);
     }
 
     for (uint32_t i = 0; i < s_channelColors.Count(); i++) {
         ChatColorInfo* color = &s_channelColors.m_data[i];
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", color->m_name, color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
-        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", color->m_name, color->m_unk48);
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(color->m_name), color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
+        FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(color->m_name), color->m_unk48);
     }
 
     return 0;

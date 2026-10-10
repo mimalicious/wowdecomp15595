@@ -295,7 +295,7 @@ int32_t CMap::Load(const char* mapName, CWorldMap* worldMap, int32_t mapId, int3
     strcpy(this->m_mapPath, "World\\Maps\\");
     strcpy(&this->m_mapPath[11], mapName);
     strcpy(this->m_mapName, mapName);
-    SStrPrintf(this->m_wdtFileName, sizeof(this->m_wdtFileName), "%s\\%s.wdt", this->m_mapPath, this->m_mapName);
+    SStrPrintf(this->m_wdtFileName, sizeof(this->m_wdtFileName), "%s\\%s.wdt", this->m_mapPath, static_cast<const char*>(this->m_mapName));
 
     this->m_mapFlags &= ~(Flag_GlobalMapObj | Flag_Preload);
     this->m_worldMap = worldMap;
@@ -326,7 +326,7 @@ int32_t CMap::Load(const char* mapName, CWorldMap* worldMap, int32_t mapId, int3
 void CMap::LoadArea(CMapArea* area) {
     char fileName[256];
     area->m_areaFlags &= ~0x2u;
-    SStrPrintf(fileName, sizeof(fileName), "%s\\%s_%d_%d.adt", this->m_mapPath, this->m_mapName, area->m_indexX, area->m_indexY);
+    SStrPrintf(fileName, sizeof(fileName), "%s\\%s_%d_%d.adt", this->m_mapPath, static_cast<const char*>(this->m_mapName), area->m_indexX, area->m_indexY);
     area->Load(fileName);
 
     char* ext = strrchr(fileName, '.');

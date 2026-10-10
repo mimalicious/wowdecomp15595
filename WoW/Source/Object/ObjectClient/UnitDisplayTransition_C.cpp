@@ -887,7 +887,7 @@ CUnitDisplayTransition_C* CUnitDisplayTransition_C::Create(CGUnit_C* unit, int32
     transition->m_model = World::GetScene()->CreateModel(modelData->m_modelName, 0, 3);
 
     if (!transition->m_model) {
-        DebugLog("Error: Unable to create model \"%s\" from display info %d in CUnitDisplayTransition_C::Create()", transition->m_modelData->m_modelName);
+        DebugLog("Error: Unable to create model \"%s\" from display info %d in CUnitDisplayTransition_C::Create()", static_cast<const char*>(transition->m_modelData->m_modelName));
         transition->Destroy();
         return NULL;
     }
@@ -910,7 +910,7 @@ CUnitDisplayTransition_C* CUnitDisplayTransition_C::Create(CGUnit_C* unit, int32
         transition->m_worldObject = World::ObjectCreate(transition->m_model, NULL, NULL, 0, 0, flags, __FILE__, __LINE__);
 
         if (!transition->m_worldObject) {
-            DebugLog("Error: Unable to create world object from model \"%s\" in CUnitDisplayTransition_C::Create()", transition->m_modelData->m_modelName);
+            DebugLog("Error: Unable to create world object from model \"%s\" in CUnitDisplayTransition_C::Create()", static_cast<const char*>(transition->m_modelData->m_modelName));
             transition->Destroy();
             return NULL;
         }

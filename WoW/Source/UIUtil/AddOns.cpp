@@ -1674,7 +1674,7 @@ void SaveAddOnEnableState() {
 
         list->m_dirty = false;
         char path[260];
-        SStrPrintf(path, sizeof(path), "WTF\\Account\\%s\\%s\\%s", s_addOnAccountName, ClientServices::GetSelectedRealmName(), list->m_name);
+        SStrPrintf(path, sizeof(path), "WTF\\Account\\%s\\%s\\%s", s_addOnAccountName, ClientServices::GetSelectedRealmName(), static_cast<const char*>(list->m_name));
 
         if (!OsDirectoryExists(path)) {
             OsCreateDirectory(path, 1);

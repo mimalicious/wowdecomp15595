@@ -1621,7 +1621,7 @@ void CGGuildInfo::SaveToFile() {
             }
 
             char line[512];
-            SStrPrintf(line, sizeof(line), "%s\t%i\t%s\t%s\t%s\t%s\t%s\t%i\r\n", CGGuildInfo::m_members[i]->m_name, CGGuildInfo::m_members[i]->m_level, classRec ? classRec->m_name : "", area ? area->m_areaName : "", rankName, CGGuildInfo::m_members[i]->m_note, CGGuildInfo::m_members[i]->m_officerNote, static_cast<uint32_t>(CGGuildInfo::m_members[i]->m_lastSave));
+            SStrPrintf(line, sizeof(line), "%s\t%i\t%s\t%s\t%s\t%s\t%s\t%i\r\n", static_cast<const char*>(CGGuildInfo::m_members[i]->m_name), CGGuildInfo::m_members[i]->m_level, classRec ? static_cast<const char*>(classRec->m_name) : "", area ? static_cast<const char*>(area->m_areaName) : "", rankName, CGGuildInfo::m_members[i]->m_note, CGGuildInfo::m_members[i]->m_officerNote, static_cast<uint32_t>(CGGuildInfo::m_members[i]->m_lastSave));
 
             uint32_t written;
             OsWriteFile(file, line, strlen(line), &written);

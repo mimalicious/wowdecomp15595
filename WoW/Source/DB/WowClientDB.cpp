@@ -77,7 +77,7 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
 
     if (!file) {
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
-        SErrDisplayAppFatal("Unable to open %s: ", meta->m_filename, error);
+        SErrDisplayAppFatal("Unable to open %s: ", static_cast<const char*>(meta->m_filename), error);
     }
 
     uint32_t size = SFileGetFileSize(file, NULL);
@@ -86,7 +86,7 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     if (!SFile::Read(file, data, size, NULL)) {
         SMemFree(data, __FILE__, __LINE__, 0);
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
-        SErrDisplayAppFatal("Unable to read data for %s: %s", meta->m_filename, error);
+        SErrDisplayAppFatal("Unable to read data for %s: %s", static_cast<const char*>(meta->m_filename), error);
     }
 
     SFileCloseFile(file);
@@ -94,11 +94,11 @@ void WowClientDB_Common::Load(const DBCMeta* meta) {
     uint32_t* header = reinterpret_cast<uint32_t*>(data);
 
     if (header[0] != 'CBDW') {
-        SErrDisplayAppFatal("Invalid signature 0x%x from %s", header[0], meta->m_filename);
+        SErrDisplayAppFatal("Invalid signature 0x%x from %s", header[0], static_cast<const char*>(meta->m_filename));
     }
 
     if (header[3] != static_cast<uint32_t>(meta->m_rowSize)) {
-        SErrDisplayAppFatalCustom(0x85100079, "%s has wrong row size (found %i, expected %i)", meta->m_filename, header[3], meta->m_rowSize);
+        SErrDisplayAppFatalCustom(0x85100079, "%s has wrong row size (found %i, expected %i)", static_cast<const char*>(meta->m_filename), header[3], meta->m_rowSize);
     }
 
     uint8_t* rows = &data[20];

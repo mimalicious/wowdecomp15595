@@ -1365,7 +1365,7 @@ emoteDone:
                 channelPrefix[0] = 0;
             }
 
-            SStrPrintf(token, sizeof(token), "CHAT_%s_GET", s_chatTypeInfo[type].m_name);
+            SStrPrintf(token, sizeof(token), "CHAT_%s_GET", static_cast<const char*>(s_chatTypeInfo[type].m_name));
 
             char header[304];
             SStrPrintf(header, sizeof(header), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), senderName ? senderName : "");
@@ -1844,7 +1844,7 @@ void CGChat::InviteNameQueryCallback(int32_t id, const WOWGUID& guid, void* para
     NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, requester, NULL, NULL, false);
 
     if (record) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_INVITE_REQUEST, "%s%s", s_inviteChannelName, record->m_name);
+        FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_INVITE_REQUEST, "%s%s", s_inviteChannelName, static_cast<const char*>(record->m_name));
         s_inviteChannelName[0] = 0;
     }
 }
@@ -2186,7 +2186,7 @@ int32_t CGChat::OnZoneUnderAttack(void* param, NETMESSAGE msgId, uint32_t time, 
     }
 
     char text[3000];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("ZONE_UNDER_ATTACK", -1, GENDER_NOT_APPLICABLE), area->m_areaName);
+    SStrPrintf(text, sizeof(text), FrameScript_GetText("ZONE_UNDER_ATTACK", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(area->m_areaName));
 
     if (area->m_parentAreaID) {
         areaId = area->m_parentAreaID;
@@ -2638,7 +2638,7 @@ int32_t CGChat::OnChannelNotify(void* param, NETMESSAGE msgId, uint32_t time, CD
             NameCache* record = g_nameDBCache.GetRecord(guid.m_guid, guid, CGChat::InviteNameQueryCallback, NULL, false);
 
             if (record) {
-                FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_INVITE_REQUEST, "%s%s", displayName, record->m_name);
+                FrameScript_SignalEvent(SCRIPT_EVENT_CHANNEL_INVITE_REQUEST, "%s%s", displayName, static_cast<const char*>(record->m_name));
             } else {
                 SStrCopy(s_inviteChannelName, displayName, sizeof(s_inviteChannelName));
             }
@@ -2919,7 +2919,7 @@ void CGChat::InformTargetIcon(WOWGUID setter, WOWGUID target, int32_t index) {
 
     if (name) {
         char buffer[3000];
-        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("TARGET_ICON_SET", -1, GENDER_NOT_APPLICABLE), name->m_name, name->m_name, index + 1, unitName);
+        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("TARGET_ICON_SET", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), static_cast<const char*>(name->m_name), index + 1, unitName);
         CGChat::AddChatMessage(buffer, 52, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
     }
 }
@@ -3011,7 +3011,7 @@ void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bon
     SStrPrintf(bonusText, sizeof(bonusText), "%s%d", rafBonus >= 0 ? "+" : "", rafBonus);
     ExhaustionRec* exhaustion = g_exhaustionDB.GetRecord(6);
     char text[3000];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("COMBATLOG_XPGAIN_QUEST", -1, GENDER_NOT_APPLICABLE), amount, bonusText, exhaustion->m_name, rafBonus);
+    SStrPrintf(text, sizeof(text), FrameScript_GetText("COMBATLOG_XPGAIN_QUEST", -1, GENDER_NOT_APPLICABLE), amount, bonusText, static_cast<const char*>(exhaustion->m_name), rafBonus);
     CGChat::AddChatMessage(text, 33, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 }
 
@@ -3221,7 +3221,7 @@ void CGChat::AddTextEmoteMessage(const WOWGUID& guid, uint32_t emote, const char
             GUIDToString(guid, guidString);
         }
 
-        FrameScript_SignalEvent(SCRIPT_EVENT_CHAT_MSG_TEXT_EMOTE, "%s%s%s%s%s%s%d%d%s%d%d%s%u", buffer, sender->m_name, languageName, "", "", "", 0, 0, "", 0, 0, guidString, 0);
+        FrameScript_SignalEvent(SCRIPT_EVENT_CHAT_MSG_TEXT_EMOTE, "%s%s%s%s%s%s%d%d%s%d%d%s%u", buffer, static_cast<const char*>(sender->m_name), languageName, "", "", "", 0, 0, "", 0, 0, guidString, 0);
 
         if (s_chatLogging[0]) {
             SLogWrite(s_chatLog[0], "%s", buffer);
@@ -3958,7 +3958,7 @@ void CGChat::LogReactionChanged(int32_t faction, int32_t reaction) {
     SStrPrintf(token, sizeof(token), "FACTION_STANDING_LABEL%d", reaction + 1);
     const char* label = player->GetFrameScriptText(token, -1);
     char text[3000];
-    SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED", -1, GENDER_NOT_APPLICABLE), label, rec->m_name);
+    SStrPrintf(text, sizeof(text), FrameScript_GetText("FACTION_STANDING_CHANGED", -1, GENDER_NOT_APPLICABLE), label, static_cast<const char*>(rec->m_name));
     CGChat::AddChatMessage(text, CHAT_MSG_SYSTEM, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
 }
 
@@ -3973,7 +3973,7 @@ void CGChat::LogFactionChanged(int32_t faction, int32_t delta, int32_t generic, 
     char text[3000];
 
     if (generic) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText(delta > 0 ? "FACTION_STANDING_INCREASED_GENERIC" : "FACTION_STANDING_DECREASED_GENERIC", -1, GENDER_NOT_APPLICABLE), rec->m_name);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText(delta > 0 ? "FACTION_STANDING_INCREASED_GENERIC" : "FACTION_STANDING_DECREASED_GENERIC", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(rec->m_name));
         CGChat::AddChatMessage(text, CHAT_MSG_COMBAT_FACTION_CHANGE, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
         return;
     }
@@ -4725,14 +4725,14 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
 
         for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", s_chatColors[i].m_name, s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", s_chatColors[i].m_name, s_chatColors[i].m_unk48);
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_unk48);
         }
 
         for (uint32_t i = 0; i < s_channelColors.m_count; i++) {
             ChatColorInfo* color = &s_channelColors.m_data[i];
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", color->m_name, color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", color->m_name, color->m_unk48);
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(color->m_name), color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(color->m_name), color->m_unk48);
         }
     } else {
         for (int32_t i = 0; i < g_chatChannelsDB.m_numRecords; i++) {
@@ -4753,14 +4753,14 @@ void CGChat::LoadChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_WINDOWS, NULL);
 
         for (uint32_t i = 0; i < CHAT_MSG_MAX; i++) {
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", s_chatColors[i].m_name, s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", s_chatColors[i].m_name, s_chatColors[i].m_unk48);
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_color[0] * (1.0f / 255.0f), s_chatColors[i].m_color[1] * (1.0f / 255.0f), s_chatColors[i].m_color[2] * (1.0f / 255.0f));
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(s_chatColors[i].m_name), s_chatColors[i].m_unk48);
         }
 
         for (uint32_t i = 0; i < s_channelColors.m_count; i++) {
             ChatColorInfo* color = &s_channelColors.m_data[i];
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", color->m_name, color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
-            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", color->m_name, color->m_unk48);
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR, "%s%f%f%f", static_cast<const char*>(color->m_name), color->m_color[0] * (1.0f / 255.0f), color->m_color[1] * (1.0f / 255.0f), color->m_color[2] * (1.0f / 255.0f));
+            FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_CHAT_COLOR_NAME_BY_CLASS, "%s%b", static_cast<const char*>(color->m_name), color->m_unk48);
         }
     }
 
@@ -5121,7 +5121,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         ChatChannel* channel = &CGChat::s_channels.m_data[i];
 
         if (channel->m_channelNumber && !channel->m_unk9C && !channel->m_zoneChannelID && channel->m_unkA5) {
-            SStrPrintf(line, sizeof(line), "%s %d %d\n", channel->m_name, channel->m_unkA4 != 0, channel->m_channelNumber);
+            SStrPrintf(line, sizeof(line), "%s %d %d\n", static_cast<const char*>(channel->m_name), channel->m_unkA4 != 0, channel->m_channelNumber);
             OsWriteFile(file, line, SStrLen(line), &written);
         }
     }
@@ -5135,7 +5135,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         ChatColorInfo* color = &s_chatColors[i];
 
         if (color->m_name[0]) {
-            SStrPrintf(line, sizeof(line), "%s %d %d %d %c\n", color->m_name, color->m_color[0], color->m_color[1], color->m_color[2], color->m_unk48 ? 'Y' : 'N');
+            SStrPrintf(line, sizeof(line), "%s %d %d %d %c\n", static_cast<const char*>(color->m_name), color->m_color[0], color->m_color[1], color->m_color[2], color->m_unk48 ? 'Y' : 'N');
             OsWriteFile(file, line, SStrLen(line), &written);
         }
     }
@@ -5144,7 +5144,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         ChatColorInfo* color = &s_channelColors.m_data[i];
 
         if (color->m_name[0]) {
-            SStrPrintf(line, sizeof(line), "%s %d %d %d %c\n", color->m_name, color->m_color[0], color->m_color[1], color->m_color[2], color->m_unk48 ? 'Y' : 'N');
+            SStrPrintf(line, sizeof(line), "%s %d %d %d %c\n", static_cast<const char*>(color->m_name), color->m_color[0], color->m_color[1], color->m_color[2], color->m_unk48 ? 'Y' : 'N');
             OsWriteFile(file, line, SStrLen(line), &written);
         }
     }
@@ -5157,7 +5157,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
         OsWriteFile(file, line, SStrLen(line), &written);
 
         if (info->m_name[0]) {
-            SStrPrintf(line, sizeof(line), "NAME %s\n", info->m_name);
+            SStrPrintf(line, sizeof(line), "NAME %s\n", static_cast<const char*>(info->m_name));
             OsWriteFile(file, line, SStrLen(line), &written);
         }
 
@@ -5185,7 +5185,7 @@ void CGChat::SaveChatSettingsCallback(HOSFILE localFile, HOSFILE file, void* par
 
         for (uint32_t i = 0; i < 46; i++) {
             if (info->m_messageGroups[i]) {
-                SStrPrintf(line, sizeof(line), "%s\n", s_chatMessageGroups[i].m_name);
+                SStrPrintf(line, sizeof(line), "%s\n", static_cast<const char*>(s_chatMessageGroups[i].m_name));
                 OsWriteFile(file, line, SStrLen(line), &written);
             }
         }
@@ -5739,7 +5739,7 @@ void CGChat::DisplayPendingUserList(ChatChannel* channel) {
         char fullName[305];
 
         if (name->m_realmName[0]) {
-            SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
+            SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
         } else {
             SStrCopy(fullName, name->m_name, sizeof(fullName));
         }
@@ -5944,7 +5944,7 @@ void CGChat::LogFeedPet(const WOWGUID& guid, int32_t itemId) {
             return;
         }
 
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), name->m_name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("FEEDPET_LOG_THIRDPERSON", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name), stats->m_name[0]);
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_PET_INFO, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
@@ -6040,10 +6040,10 @@ void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const ItemS
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), spell->m_name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name), stats->m_name[0]);
     } else {
         const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, spell->m_name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, static_cast<const char*>(spell->m_name), stats->m_name[0]);
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_OPENING, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
@@ -6058,10 +6058,10 @@ void CGChat::LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameO
     char text[3000];
 
     if (guid == ClntObjMgrGetActivePlayer()) {
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), spell->m_name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_SELF", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(spell->m_name), stats->m_name[0]);
     } else {
         const char* name = GetCombatLogObjectName(guid);
-        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, spell->m_name, stats->m_name[0]);
+        SStrPrintf(text, sizeof(text), FrameScript_GetText("OPEN_LOCK_OTHER", -1, GENDER_NOT_APPLICABLE), name, static_cast<const char*>(spell->m_name), stats->m_name[0]);
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_OPENING, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);

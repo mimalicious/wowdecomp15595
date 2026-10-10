@@ -184,7 +184,7 @@ void CGWorldMap::InitializeGame() {
         }
 
         char fileName[260];
-        SStrPrintf(fileName, sizeof(fileName), "Interface\\WorldMap\\%s.zmp", area->m_areaName);
+        SStrPrintf(fileName, sizeof(fileName), "Interface\\WorldMap\\%s.zmp", static_cast<const char*>(area->m_areaName));
 
         SFileImpl* file;
 
@@ -284,7 +284,7 @@ void CGWorldMap::InitializeGame() {
             }
 
             CGWorldMap::m_orphanZones.m_data[orphanIndex++] = zone->m_id;
-            DebugLog("Orphan Zone Found:  (%d) (%s)\n", zone->m_id, zone->m_areaName);
+            DebugLog("Orphan Zone Found:  (%d) (%s)\n", zone->m_id, static_cast<const char*>(zone->m_areaName));
         }
     }
 

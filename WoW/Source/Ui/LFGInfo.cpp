@@ -779,7 +779,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             LfgDungeonsRec* dungeon = g_lfgDungeonsDB.GetRecord(slot & 0xFFFFFF);
 
             if (dungeon) {
-                FrameScript_SignalEvent(SCRIPT_EVENT_LFG_OFFER_CONTINUE, "%s%d%d", dungeon->m_name, dungeon->m_id, dungeon->m_typeID);
+                FrameScript_SignalEvent(SCRIPT_EVENT_LFG_OFFER_CONTINUE, "%s%d%d", static_cast<const char*>(dungeon->m_name), dungeon->m_id, dungeon->m_typeID);
             }
 
             break;
@@ -800,7 +800,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
             }
 
             if (accepted) {
-                FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_ROLE_CHOSEN, "%s%b%b%b", name->m_name, (roles >> 1) & 1, (roles >> 2) & 1, (roles >> 3) & 1);
+                FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_ROLE_CHOSEN, "%s%b%b%b", static_cast<const char*>(name->m_name), (roles >> 1) & 1, (roles >> 2) & 1, (roles >> 3) & 1);
             } else {
                 CGGameUI::DisplayError(ERR_LFG_PLAYER_DECLINED_ROLE_CHECK, name->m_name);
             }
@@ -912,7 +912,7 @@ int32_t LFGPacketHandler(void* param, NETMESSAGE msgId, uint32_t time, CDataStor
                     NameCache* name = g_nameDBCache.GetRecord(member.m_guid.m_guid, WOWGUID(), NULL, NULL, false);
 
                     if (name) {
-                        FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_ROLE_CHOSEN, "%s%b%b%b", name->m_name, (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 1) & 1, (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 2) & 1, (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 3) & 1);
+                        FrameScript_SignalEvent(SCRIPT_EVENT_LFG_ROLE_CHECK_ROLE_CHOSEN, "%s%b%b%b", static_cast<const char*>(name->m_name), (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 1) & 1, (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 2) & 1, (CGLookingForGroup::m_roleCheckMembers.m_data[i].m_roles >> 3) & 1);
                     }
                 }
             }

@@ -687,7 +687,7 @@ static void BattlegroundPlayerJoinedNameCallback(int32_t id, const WOWGUID& guid
     char fullName[305];
 
     if (name->m_realmName[0]) {
-        SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
+        SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
     } else {
         SStrCopy(fullName, name->m_name, sizeof(fullName));
     }
@@ -707,7 +707,7 @@ static void BattlegroundPlayerLeftNameCallback(int32_t id, const WOWGUID& guid, 
     char fullName[305];
 
     if (name->m_realmName[0]) {
-        SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
+        SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
     } else {
         SStrCopy(fullName, name->m_name, sizeof(fullName));
     }
@@ -1028,7 +1028,7 @@ int32_t Packet_Group_3(void* param, NETMESSAGE msgId, uint32_t time, CDataStore*
     char fullName[305];
 
     if (name->m_realmName[0]) {
-        SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
+        SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
     } else {
         SStrCopy(fullName, name->m_name, sizeof(fullName));
     }

@@ -196,7 +196,7 @@ int32_t CCommand_WorldTeleport(const char* command, const char* arguments) {
         position.x = loc->m_loc[0];
         position.y = loc->m_loc[1];
         position.z = loc->m_loc[2];
-        ConsolePrintf("Porting to %s", loc->m_areaName);
+        ConsolePrintf("Porting to %s", static_cast<const char*>(loc->m_areaName));
         facing = player->GetFacing();
     }
 

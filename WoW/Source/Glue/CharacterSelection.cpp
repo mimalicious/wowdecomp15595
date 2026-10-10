@@ -206,10 +206,10 @@ void CCharacterSelection::UpdateCharacterName(WOWGUID guid, const char* name) {
 
     char oldPath[260];
     char newPath[260];
-    SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);
+    SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), static_cast<const char*>(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name));
     SStrPrintf(newPath, sizeof(newPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), name);
     OsMoveFile(oldPath, newPath);
-    SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);
+    SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, static_cast<const char*>(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name));
     SStrPrintf(newPath, sizeof(newPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, name);
     OsMoveFile(oldPath, newPath);
     ClearAddOnEnableState(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);
@@ -237,10 +237,10 @@ void CCharacterSelection::UpdateCharacterInfo(WOWGUID guid, const char* name, ui
     if (_stricmp(name, CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name)) {
         char oldPath[260];
         char newPath[260];
-        SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);
+        SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), static_cast<const char*>(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name));
         SStrPrintf(newPath, sizeof(newPath), "WTF\\Account\\%s\\%s\\%s", CGlueMgr::m_accountName, ClientServices::GetSelectedRealmName(), name);
         OsMoveFile(oldPath, newPath);
-        SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);
+        SStrPrintf(oldPath, sizeof(oldPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, static_cast<const char*>(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name));
         SStrPrintf(newPath, sizeof(newPath), "WTF\\Account\\%s\\%s", CGlueMgr::m_accountName, name);
         OsMoveFile(oldPath, newPath);
         ClearAddOnEnableState(CCharacterSelection::m_characterList.m_data[index].m_characterInfo.m_name);

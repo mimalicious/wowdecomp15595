@@ -300,7 +300,7 @@ static int32_t Script_GetIgnoreName(lua_State* L) {
             char name[308];
 
             if (record->m_realmName[0]) {
-                SStrPrintf(name, 305, "%s-%s", record->m_name, record->m_realmName);
+                SStrPrintf(name, 305, "%s-%s", static_cast<const char*>(record->m_name), record->m_realmName);
             } else {
                 SStrCopy(name, record->m_name, 305);
             }
@@ -331,7 +331,7 @@ static int32_t Script_GetMuteName(lua_State* L) {
             char name[308];
 
             if (record->m_realmName[0]) {
-                SStrPrintf(name, 305, "%s-%s", record->m_name, record->m_realmName);
+                SStrPrintf(name, 305, "%s-%s", static_cast<const char*>(record->m_name), record->m_realmName);
             } else {
                 SStrCopy(name, record->m_name, 305);
             }

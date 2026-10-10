@@ -791,7 +791,7 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
                     NameCache* name = g_nameDBCache.GetRecord(CGRaidInfo::m_members[i]->m_guid.m_guid, requester, NULL, NULL, false);
 
                     if (name && initiator) {
-                        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), name->m_name);
+                        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name));
                         CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
                     }
                 }
@@ -831,7 +831,7 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
                     NameCache* name = g_nameDBCache.GetRecord(info.m_guid.m_guid, requester, NULL, NULL, false);
 
                     if (name) {
-                        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), name->m_name);
+                        SStrPrintf(buffer, sizeof(buffer), FrameScript_GetText("RAID_MEMBER_NOT_READY", -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(name->m_name));
                         CGChat::AddChatMessage(buffer, static_cast<SLASH_COMMAND_ID>(0), NULL);
                     }
                 }
@@ -1142,7 +1142,7 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
                 CGGameUI::DisplayError(ERR_RAID_MEMBER_ADDED_S, name->m_name);
 
                 if (name->m_realmName[0]) {
-                    SStrPrintf(fullName, sizeof(fullName), "%s-%s", name->m_name, name->m_realmName);
+                    SStrPrintf(fullName, sizeof(fullName), "%s-%s", static_cast<const char*>(name->m_name), name->m_realmName);
                 } else {
                     SStrCopy(fullName, name->m_name, sizeof(fullName));
                 }

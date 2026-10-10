@@ -153,6 +153,7 @@ class NetClient : public WowConnectionResponse {
     /* 46C0 */ Crypt::RSA m_rsa;
 
     static bool ClientConnectionAuthChallengeHandler(ClientConnectionAuthChallenge* msg);
+    static bool ClientConnectionConnectToHandler(ClientConnectionConnectTo* msg);
     static bool ClientConnectionDropNewConnectionHandler(ClientConnectionDropNewConnection* msg);
     static bool ClientConnectionPongHandler(ClientConnectionPong* msg);
     static bool ClientConnectionResetCompressionContextHandler(ClientConnectionResetCompressionContext* msg);

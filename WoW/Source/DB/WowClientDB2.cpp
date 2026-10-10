@@ -271,7 +271,7 @@ void WowClientDB2_Base::Load(uint32_t hotfixTime) {
 
     if (!this->m_file) {
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
-        SErrDisplayAppFatal("Unable to open %s: ", this->m_meta->m_filename, error);
+        SErrDisplayAppFatal("Unable to open %s: ", static_cast<const char*>(this->m_meta->m_filename), error);
     }
 
     uint32_t size;
@@ -279,7 +279,7 @@ void WowClientDB2_Base::Load(uint32_t hotfixTime) {
     if (this->m_meta->m_sparse) {
         if (!SFile::Read(this->m_file, header, sizeof(header), NULL)) {
             SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
-            SErrDisplayAppFatal("Unable to read data for %s: %s", this->m_meta->m_filename, error);
+            SErrDisplayAppFatal("Unable to read data for %s: %s", static_cast<const char*>(this->m_meta->m_filename), error);
         }
 
         SFile::SetFilePointer(this->m_file, 0, NULL, 0);
@@ -302,7 +302,7 @@ void WowClientDB2_Base::Load(uint32_t hotfixTime) {
 
     if (!SFile::Read(this->m_file, this->m_data, size, NULL)) {
         SErrGetErrorStr(SErrGetLastError(), error, sizeof(error));
-        SErrDisplayAppFatal("Unable to read data for %s: %s", this->m_meta->m_filename, error);
+        SErrDisplayAppFatal("Unable to read data for %s: %s", static_cast<const char*>(this->m_meta->m_filename), error);
     }
 
     if (cacheValid && !SFile::Read(this->m_cacheFile, &this->m_data[size], cacheSize, NULL)) {
@@ -323,19 +323,19 @@ void WowClientDB2_Base::Load(uint32_t hotfixTime) {
     uint32_t* cacheHeader = reinterpret_cast<uint32_t*>(&this->m_data[size]);
 
     if (fileHeader[0] != '2BDW') {
-        SErrDisplayAppFatal("Invalid signature 0x%x from %s", fileHeader[0], this->m_meta->m_filename);
+        SErrDisplayAppFatal("Invalid signature 0x%x from %s", fileHeader[0], static_cast<const char*>(this->m_meta->m_filename));
     }
 
     if (fileHeader[5] != this->m_meta->m_tableHash) {
-        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong table hash (found %i, expected %i)", this->m_meta->m_filename, fileHeader[5], this->m_meta->m_tableHash);
+        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong table hash (found %i, expected %i)", static_cast<const char*>(this->m_meta->m_filename), fileHeader[5], this->m_meta->m_tableHash);
     }
 
     if (fileHeader[3] != static_cast<uint32_t>(this->m_meta->m_recordSize)) {
-        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong row size (found %i, expected %i)", this->m_meta->m_filename, fileHeader[3], this->m_meta->m_recordSize);
+        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong row size (found %i, expected %i)", static_cast<const char*>(this->m_meta->m_filename), fileHeader[3], this->m_meta->m_recordSize);
     }
 
     if ((fileHeader[10] & locale) != static_cast<uint32_t>(locale)) {
-        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong locale (found %i, expected %i)", this->m_meta->m_filename, fileHeader[10], locale);
+        SErrDisplayAppFatalCustom(STORM_ERROR_VERSION_MISMATCH, "%s has wrong locale (found %i, expected %i)", static_cast<const char*>(this->m_meta->m_filename), fileHeader[10], locale);
     }
 
     if (cacheValid) {
