@@ -39,7 +39,7 @@ class SpellVisualRec {
     /* 0064 */ int32_t m_persistentAreaKit;
     /* 0068 */ C3Vector m_missileCastOffset;
     /* 0074 */ C3Vector m_missileImpactOffset;
-    /* 0080 */ int32_t unk_0080;
+    /* 0080 */ int32_t m_hostileSpellVisualID;
 };
 
 #endif

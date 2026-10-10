@@ -2052,7 +2052,7 @@ void CEffect::AddBlizzard(uint32_t expireTime, const C3Vector* position, uint32_
     if (flags & 0x20) {
         flags &= ~0x20;
 
-        if (!expireTime && g_spellVisualKitAreaModelDB.GetRecord(static_cast<int32_t>(kit->m_charParamZero[index]))->unk_000C <= 0) {
+        if (!expireTime && g_spellVisualKitAreaModelDB.GetRecord(static_cast<int32_t>(kit->m_charParamZero[index]))->m_lifeTime <= 0) {
             expireTime = 2000;
         }
     }

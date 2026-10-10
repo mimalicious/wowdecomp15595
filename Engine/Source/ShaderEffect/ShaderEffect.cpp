@@ -51,7 +51,7 @@ float CShaderEffect::s_tesselationDist;
 // STATIC: %0x00C3CC1C
 float CShaderEffect::s_tesselationFactor;
 
-// STATIC: %0x00C3CC20
+// STATIC: 0x00D381D0
 int32_t CShaderEffect::s_enableShaders;
 
 // STATIC: %0x00C3CC24

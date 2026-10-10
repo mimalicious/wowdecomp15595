@@ -13,10 +13,10 @@ class SpellVisualKitAreaModelRec {
     /* 0000 */ int32_t m_id;
     /* 0004 */ DBCString m_name;
     /* 0008 */ int32_t m_enumID;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ float unk_0010;
-    /* 0014 */ float unk_0014;
-    /* 0018 */ float unk_0018;
+    /* 000C */ int32_t m_lifeTime;
+    /* 0010 */ float m_emissionRate;
+    /* 0014 */ float m_spacing;
+    /* 0018 */ float m_modelScale;
 };
 
 #endif

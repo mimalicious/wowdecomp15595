@@ -6,27 +6,30 @@
 #include "Engine/Source/Storm/H/stpl.h"
 #include "Engine/Source/Tempest/C3Vector.h"
 #include "Engine/Source/Tempest/C44Matrix.h"
+#include "Engine/Source/Tempest/CAaSphere.h"
 #include "Engine/Source/Tempest/CImVector.h"
 #include "WoW/Source/Object/WGUID.h"
 
 struct CVar;
 class CEffect;
+class CGObject_C;
+class CGUnit_C;
+class CM2Model;
+class CTexture;
 class LightningObject;
 class SpellChainEffectsRec;
-class CTexture;
-class CGObject_C;
-class SpellVisualKitModelAttachRec;
-class CM2Model;
-class CMapEntity;
 class SpellRec;
-class CGUnit_C;
+class SpellVisualKitAreaModelRec;
+class SpellVisualKitModelAttachRec;
 
 class Shard : public TSLinkedNode<Shard> {
     public:
     /* 0008 */ C3Vector m_position;
     /* 0014 */ CM2Model* m_model;
     /* 0018 */ uint32_t m_startTime;
-    /* 001C */ uint8_t m_started;
+    /* 001C */ uint8_t m_started : 1;
+    /* 001C */ uint8_t m_loop : 1;
+    /* 001C */ uint8_t m_dissolve : 1;
 
     Shard();
     ~Shard();
@@ -34,26 +37,39 @@ class Shard : public TSLinkedNode<Shard> {
 
 class BlizzardObject : public TSLinkedNode<BlizzardObject> {
     public:
-    static int32_t WorldObjectRender(void* param, uint32_t flags, uint64_t param64, uintptr_t param32);
+    static void ModelLoadedCallback(CM2Model* model, void* param);
+    static int32_t WorldObjectRender(void* param, uintptr_t flags, uint64_t param64, uintptr_t param32);
 
-    /* 0008 */ char m_modelName[260];
-    /* 010C */ CMapEntity* m_entity;
-    /* 0110 */ C3Vector m_position;
-    /* 011C */ float m_radius;
-    /* 0120 */ float m_shardAccum;
-    /* 0124 */ float m_shardRate;
-    /* 0128 */ float unk_0128[4];
-    /* 0138 */ TSList<Shard> m_shards;
-    /* 0144 */ C44Matrix m_frame;
-    /* 0184 */ int32_t m_hasFrame;
+    /* 0008 */ uintptr_t m_entity;
+    /* 000C */ C3Vector m_position;
+    /* 0018 */ float m_radius;
+    /* 001C */ float m_angle;
+    /* 0020 */ const SpellVisualKitAreaModelRec* m_areaModel;
+    /* 0024 */ uint32_t m_endTime;
+    /* 0028 */ float m_shardRate;
+    /* 002C */ float m_shardAccum;
+    /* 0030 */ float unk_0030[4];
+    /* 0040 */ TSList<Shard> m_shards;
+    /* 004C */ C44Matrix m_frame;
+    /* 008C */ int32_t m_hasFrame;
+    /* 0090 */ void (*m_deletedCallback)(BlizzardObject* object, void* param);
+    /* 0094 */ void* m_deletedParam;
+    /* 0098 */ CM2Model* m_model;
 
     BlizzardObject();
     ~BlizzardObject();
+    void AddShard(const C3Vector& center, const C3Vector& offset, float delayRange);
+    int32_t GetAngleRange(float& minAngle, float& maxAngle) const;
+    CAaSphere GetBoundingSphere();
+    C3Vector GetPolarOffset(float radius, float angle, int32_t rotate) const;
+    C3Vector GetRandomShardOffset();
     C3Vector GetWorldPosition() const;
-    void SetFrameOfReference(const C44Matrix* matrix);
+    void Init(const C3Vector* position, const SpellVisualKitAreaModelRec* areaModel, float radius, float angle);
     void Render(int32_t visible);
-    void Init(const C3Vector* position, const char* modelName, float radius, float rate);
+    void SetFrameOfReference(const C44Matrix* matrix);
+    void Stop();
     bool Update();
+    void UpdateWorldObject();
 };
 
 class EclipseState {
@@ -78,9 +94,9 @@ class LightningObject : public TSLinkedNode<LightningObject> {
         /* 0010 */ int32_t m_attachment;
     };
 
-    static void CreateFromSpell(CGObject_C* caster, CEffect* effect, uint32_t chainEffectsId, const WOWGUID* targets, uint32_t count, uint32_t spellId, bool persist, bool reverse, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment);
+    static void CreateFromSpell(CGUnit_C* caster, CEffect* effect, uint32_t chainEffectsId, const WOWGUID* targets, uint32_t count, uint32_t spellId, bool persist, bool reverse, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment);
     static C3Vector GetCasterPosition(CGUnit_C* unit, uint32_t attachment, const C3Vector& offset, int32_t raw);
-    static C3Vector GetImpactPosition(CGUnit_C* unit, uint32_t spellId);
+    static C3Vector GetImpactPosition(CGUnit_C* unit, uint32_t spellId, CGUnit_C* caster);
 
     /* 0008 */ TSGrowableArray<uint64_t> m_targets;
     /* 0018 */ TSGrowableArray<Bolt> m_bolts;
@@ -97,11 +113,9 @@ class LightningObject : public TSLinkedNode<LightningObject> {
 
     LightningObject();
     ~LightningObject();
-    void InitializeBolts(CGObject_C* caster, const WOWGUID* targets, uint32_t count, bool reverse, int32_t attachment);
+    void InitializeBolts(CGUnit_C* caster, const WOWGUID* targets, uint32_t count, bool reverse, int32_t attachment);
     bool Tick(uint32_t time);
 };
-
-void LightningObjectReleaseRef(LightningObject* object);
 
 class MountTransitionObject : public TSLinkedNode<MountTransitionObject> {
     public:
@@ -125,6 +139,7 @@ class MountTransitionObject : public TSLinkedNode<MountTransitionObject> {
     /* 0078 */ uint32_t m_flags;
     /* 007C */ float m_alpha;
     /* 0080 */ uint32_t m_lastTime;
+    /* 0084 */ uint32_t unk_0084;
 
     int32_t UpdateCharacterData();
     bool Tick();
@@ -132,33 +147,31 @@ class MountTransitionObject : public TSLinkedNode<MountTransitionObject> {
 
 extern CVar* s_spellEffectLevelVar;
 
-void SpellVisualsBlizzardStop(BlizzardObject** object);
-BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radius, int32_t spellId, int32_t density, float rate);
 BlizzardObject* SpellVisualsBlizzardCreate(const C3Vector* position, float radius, float angle, int32_t spellId, int32_t areaModelID);
 void SpellVisualsBlizzardSetDeletedCallback(BlizzardObject* object, void (*callback)(BlizzardObject* object, void* param), void* param);
+void SpellVisualsBlizzardSetFrameOfReference(BlizzardObject* object, const C44Matrix* matrix);
 void SpellVisualsBlizzardStop(BlizzardObject* object);
 void SpellVisualClearLightning(LightningObject* lightning);
+void SpellVisualGetLightning(CGUnit_C* caster, CEffect* effect, uint32_t chainEffectsId, bool persist, bool reverse, uint32_t spellId, const WOWGUID* targets, uint32_t count, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment);
+void SpellVisualsCancelMountTransition(MountTransitionObject* transition);
+void SpellVisualsClear();
+void SpellVisualsComputeMountTransitionJumpVec(const MountTransitionObject* transition, C3Vector* jump);
+void SpellVisualsFlagMountTransitionFinished(MountTransitionObject* transition);
+void SpellVisualsFreeDeleted();
+float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transition);
+float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition);
+void SpellVisualsGetMountTransitionPosAndNormal(const MountTransitionObject* transition, C3Vector* position, C3Vector* normal, float* facing);
+const SpellVisualKitModelAttachRec* SpellVisualsGetModelAttachRec(uint32_t kitId, uint32_t index);
+uint32_t SpellVisualsGetModelAttachRecCount(uint32_t kitId);
+void SpellVisualsHandleEclipse(const CImVector& color, float fadeIn, const SpellRec* spell);
 void SpellVisualsInitialize();
 void SpellVisualsInitializeModelAttachLookup();
+int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition);
+void SpellVisualsPlayCameraShakeID(uint32_t id, const C3Vector* position);
 void SpellVisualsRender();
-void SpellVisualsTick();
-void SpellVisualsClear();
-void SpellVisualsFreeDeleted();
 void SpellVisualsShutdown();
 void SpellVisualsShutdownModelAttachLookup();
-int32_t SpellVisualsIsMountTransitionFinished(const MountTransitionObject* transition);
-float SpellVisualsGetMountTransitionHeight(const MountTransitionObject* transition);
-void SpellVisualsGetMountTransitionTransform(const MountTransitionObject* transition, C3Vector* position, C3Vector* up, float* facing);
-float SpellVisualsGetMountTransitionAlpha(const MountTransitionObject* transition);
-void SpellVisualsFlagMountTransitionFinished(MountTransitionObject* transition);
-void SpellVisualsPlayCameraShakeID(int32_t id, const C3Vector* position);
-void SpellVisualsBlizzardSetFrameOfReference(BlizzardObject* object, const C44Matrix* matrix);
-void SpellVisualsComputeMountTransitionJumpVec(const MountTransitionObject* transition, C3Vector* jump);
-uint32_t SpellVisualsGetModelAttachRecCount(uint32_t kitId);
-const SpellVisualKitModelAttachRec* SpellVisualsGetModelAttachRec(uint32_t kitId, uint32_t index);
 MountTransitionObject* SpellVisualsStartMountTransition(CGUnit_C* unit);
-void SpellVisualsCancelMountTransition(MountTransitionObject* transition);
-void SpellVisualsCreateChainLightning(CGUnit_C* caster, CEffect* effect, uint32_t chainEffectsId, bool persist, bool reverse, uint32_t spellId, const WOWGUID* targets, uint32_t count, LightningObject** lightning, uint32_t maxLightning, const C3Vector* location, int32_t attachment);
-void SpellVisualsHandleEclipse(const CImVector* color, float fadeIn, const SpellRec* spell);
+void SpellVisualsTick();
 
 #endif

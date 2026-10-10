@@ -1712,7 +1712,7 @@ void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, in
                 uint32_t sequence = this->unk_1020;
                 this->unk_1020 = sequence + 2;
                 const C3Vector* location = (this->m_clientFlags & 0x800000) ? &this->m_chainSpellLocation : NULL;
-                SpellVisualsCreateChainLightning(target, effect, static_cast<int32_t>(data->m_kit->m_charParamZero[i]), data->m_kit->m_charParamTwo[i] != 0.0f, data->m_kit->m_charParamThree[i] != 0.0f, spellId, targets, count, effect->m_lightning, 12, location, sequence);
+                SpellVisualGetLightning(target, effect, static_cast<int32_t>(data->m_kit->m_charParamZero[i]), data->m_kit->m_charParamTwo[i] != 0.0f, data->m_kit->m_charParamThree[i] != 0.0f, spellId, targets, count, effect->m_lightning, 12, location, sequence);
                 this->m_chainSpellTargets.SetCount(0);
 
                 if ((this->m_clientFlags & 0x800000) && data->m_spellRec && data->m_visual && data->m_visual->m_impactAreaKit != data->m_kit->m_id) {
@@ -1749,7 +1749,7 @@ void CGUnit_C::CreateProceduralEffect(const PlaySpellVisualKitAnimData* data, in
             case 6: {
                 CImVector color;
                 *reinterpret_cast<uint32_t*>(&color) = static_cast<uint32_t>(static_cast<int64_t>(kit->m_charParamZero[i])) | 0xFF000000;
-                SpellVisualsHandleEclipse(&color, kit->m_charParamOne[i], data->m_spellRec);
+                SpellVisualsHandleEclipse(color, kit->m_charParamOne[i], data->m_spellRec);
                 break;
             }
 
@@ -20819,7 +20819,7 @@ void CGUnit_C::UpdateMountTransitionModel() {
     C3Vector up(0.0f, 0.0f, 0.0f);
     C44Matrix inverse;
     float facing;
-    SpellVisualsGetMountTransitionTransform(this->m_mountTransition, &position, &up, &facing);
+    SpellVisualsGetMountTransitionPosAndNormal(this->m_mountTransition, &position, &up, &facing);
 
     C44Matrix world = this->m_worldModel->m_worldTransform;
     inverse = world.AffineInverse(this->GetTrueScale());

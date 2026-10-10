@@ -416,7 +416,7 @@ const SpellVisualRec* GetSpellVisual(const SpellRec* spell, const CGUnit_C* unit
 bool CanPlaySpellVisualForPlayer(uint64_t caster, uint64_t target, int32_t casterIsPlayer, int32_t targetIsPlayer);
 bool CanPlaySpellVisual(uint64_t caster, uint64_t target, const SpellVisualRec* visual);
 bool CanPlaySpellVisualKit(uint64_t caster, uint64_t target, const SpellVisualKitRec* kit, const SpellVisualRec* visual);
-void SpellVisualsHandleCastStart(CGUnit_C* unit, SpellCast* data, const SpellRec* spell);
+void SpellVisualsHandleCastStart(CGUnit_C* unit, const SpellCast* cast, const SpellRec* spell);
 const char* GetPowerString(uint32_t powerType);
 int32_t Spell_C_GetDuration(const SpellRec* spell, int32_t isPet, int32_t isUnit, int32_t noModifiers, int32_t applyHaste);
 float Spell_C_GetPointsPerCombo(const CGUnit_C* unit, const SpellRec* spell, int32_t effectIndex);
