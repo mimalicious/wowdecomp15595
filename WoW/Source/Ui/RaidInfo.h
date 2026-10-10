@@ -92,6 +92,8 @@ class CGRaidInfo {
     static uint32_t GetIneligibleEncounterMask(int32_t mapId, uint32_t completedMask, uint32_t difficulty);
 };
 
+extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
+
 void RaidInfoRegisterScriptFunctions();
 void RaidInfoUnregisterScriptFunctions();
 
@@ -104,7 +106,5 @@ int32_t Packet_SMSG_READY_CHECK_ERROR(void* param, NETMESSAGE msgId, uint32_t ti
 int32_t Packet_SMSG_RAID_INSTANCE_INFO(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_MSG_NOTIFY_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
 int32_t Packet_SMSG_ECHO_PARTY_SQUELCH(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-
-extern TSGrowableArray<RaidInstanceInfo> s_savedInstances;
 
 #endif
