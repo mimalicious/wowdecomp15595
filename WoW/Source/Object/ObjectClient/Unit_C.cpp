@@ -247,7 +247,7 @@ static int32_t s_attackFlashToggle;
 // STATIC: 0x00DD631C
 static uint32_t s_attackFlashTime;
 
-// STATIC: #0x00A2D394
+// STATIC: 0x00B9E6CC
 extern const uint32_t s_environmentalDamageSchools[6] = { 0, 0, 0, 2, 3, 2 };
 
 // STATIC: #0x00A349B4
@@ -10719,22 +10719,32 @@ float CGUnit_C::GetTrueScale() const {
     return scale;
 }
 
-// OFFSET: #0x0071C260
+// OFFSET: 0x005AC360
+void CGUnit_C::TriggerNamePlateDamageFeedback() {
+    if (this->m_namePlateFrame) {
+        this->m_namePlateFrame->TriggerDamageFeedback();
+    }
+}
+
+// OFFSET: 0x005B57A0
 void CGUnit_C::ModifyPredictedHealth(int32_t delta) {
     if (delta < 0 && (this->m_unit->m_unitFieldFlags2 & 0x100)) {
         return;
     }
 
-    int32_t health = delta + this->m_predictedHealth;
+    int32_t old = this->m_predictedHealth;
+    int32_t health = old + delta;
 
     if (health < 1) {
-        this->m_predictedHealth = 1;
-    } else {
-        if (health > static_cast<int32_t>(this->m_unit->m_unitFieldMaxhealth)) {
-            health = this->m_unit->m_unitFieldMaxhealth;
-        }
+        health = 1;
+    } else if (health > static_cast<int32_t>(this->m_unit->m_unitFieldMaxhealth)) {
+        health = this->m_unit->m_unitFieldMaxhealth;
+    }
 
+    if (old != health) {
         this->m_predictedHealth = health;
+        WOWGUID guid = this->m_obj->m_guid;
+        Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_HEALTH_FREQUENT);
     }
 }
 
@@ -20215,26 +20225,26 @@ const char* GetCombatLogObjectName(const WOWGUID& guid) {
     } else {
         uint32_t type = high & 0xF0F00000;
 
-        if (type == 0xF0300000 || type == 0xF0500000) {
+        if (type == 0xF1300000 || type == 0xF1500000) {
             CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
             if (unit) {
                 name = unit->GetUnitName(NULL, 1);
             } else {
-                CreatureStats_C* stats = g_creatureDBCache.GetRecord(static_cast<int32_t>(guid.m_guid >> 24) & 0xFFFFFFF, guid, ObjectNameCacheCallback, NULL, true);
+                CreatureStats_C* stats = g_creatureDBCache.GetRecord(high & 0xFFFFF, guid, ObjectNameCacheCallback, NULL, true);
 
                 if (stats) {
                     name = stats->m_name[0];
                 }
             }
-        } else if (type == 0xF0400000) {
+        } else if (type == 0xF1400000) {
             PetNameCache* pet = g_petNameCache.GetRecord(static_cast<int32_t>(guid.m_guid >> 24) & 0xFFFFFFF, guid, ObjectNameCacheCallback, NULL, true);
 
             if (pet) {
                 name = pet->m_name;
             }
-        } else if (type == 0xF0100000) {
-            GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(static_cast<int32_t>(guid.m_guid >> 24) & 0xFFFFFFF, guid, ObjectNameCacheCallback, NULL, true);
+        } else if (type == 0xF1100000) {
+            GameObjectStats_C* stats = g_gameObjectDBCache.GetRecord(high & 0xFFFFF, guid, ObjectNameCacheCallback, NULL, true);
 
             if (stats) {
                 name = stats->GetName(0);

@@ -718,6 +718,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     CreatureModelDataRec* GetModelData() const;
     int32_t CanBeLooted(uint32_t time) const;
     void ModifyPredictedHealth(int32_t delta);
+    void TriggerNamePlateDamageFeedback();
     void InitPredictedPower();
     void SetManaRegenInterrupt();
     int32_t UsesNpcBakedTexture() const;

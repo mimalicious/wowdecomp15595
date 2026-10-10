@@ -1168,7 +1168,7 @@ void CMissile::HitTargetAreaEffect(const SpellRec* spell, const SpellVisualRec* 
                         CGGameUI::ShowSpellMissFeedback(unit->m_obj->m_guid, result);
                     }
 
-                    UnitCombatLogSpellMissed(this->m_casterGuid, unit->m_obj->m_guid, spell ? spell->m_id : 0, result, 0, 0, 0);
+                    UnitCombatLogSpellMissed(this->m_casterGuid, unit->m_obj->m_guid, spell, result, false, false, 0);
                 }
             } else if (!this->m_fizzleTime && CanPlaySpellVisual(0, unit->m_obj->m_guid.m_guid, visual)) {
                 const SpellVisualKitRec* kit = unit == caster ? casterKit : targetKit;
@@ -2051,7 +2051,7 @@ void CMissile::MissedTarget(CGUnit_C* target, const C3Vector* direction) {
             if (spell && !(spell->m_attributes & 0x100) && !this->m_missileIndex) {
                 target->AddWorldText(this->m_casterGuid, this->GetHitResult(), spell, 0);
                 CGGameUI::ShowSpellMissFeedback(target->m_obj->m_guid, this->GetHitResult());
-                UnitCombatLogSpellMissed(this->m_casterGuid, target->m_obj->m_guid, spell->m_id, this->GetHitResult(), 0, 0, 0);
+                UnitCombatLogSpellMissed(this->m_casterGuid, target->m_obj->m_guid, spell, this->GetHitResult(), false, false, 0);
             }
 
             this->m_flags |= 0x100;

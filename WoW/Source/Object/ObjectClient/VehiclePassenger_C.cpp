@@ -668,7 +668,7 @@ static void SignalVehicleTransitionEvent(WOWGUID guid, WOWGUID vehicleGuid, cons
 
     int32_t indicator = vehicleRec ? vehicleRec->m_vehicleUiindicatorID : 0;
     char vehicleGuidText[32];
-    Script_SendUnitSignal(guid, event, "%b%s%s%b%d%s", controlSeat, skin, sound, hasVehicleUI, indicator, GUIDToHexString(vehicleGuid, vehicleGuidText));
+    Script_SendUnitSignal(guid, event, "%b%s%s%b%d%s", controlSeat, skin, sound, hasVehicleUI, indicator, GUIDToString(vehicleGuid, vehicleGuidText));
 }
 
 // OFFSET: 0x005EE280

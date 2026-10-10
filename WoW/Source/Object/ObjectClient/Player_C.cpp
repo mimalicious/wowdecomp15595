@@ -2883,7 +2883,7 @@ int32_t Packet_SMSG_PLAYER_SKINNED(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
-// OFFSET: #0x006CE260
+// OFFSET: 0x00559210
 int32_t Packet_SMSG_SPELLINSTAKILLLOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID casterGuid;
     WOWGUID targetGuid;
@@ -2891,7 +2891,7 @@ int32_t Packet_SMSG_SPELLINSTAKILLLOG(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(targetGuid.m_guid);
     uint32_t spellId = 0;
     msg->Get(spellId);
-    UnitCombatLogInstakill(casterGuid, targetGuid, spellId);
+    UnitCombatLogInstakill(casterGuid, targetGuid, g_spellDB.GetRecord(spellId));
     return 1;
 }
 
@@ -2900,7 +2900,7 @@ int32_t Packet_Group_19(void* param, NETMESSAGE msgId, uint32_t time, CDataStore
     return CombatLog::HandleSpellRemoveLog(msgId, msg, 0);
 }
 
-// OFFSET: #0x006CE3D0
+// OFFSET: 0x00559AC0
 int32_t Packet_SMSG_SPELLORDAMAGE_IMMUNE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t value = 0;
     msg->Get(value);
@@ -2913,7 +2913,7 @@ int32_t Packet_SMSG_SPELLORDAMAGE_IMMUNE(void* param, NETMESSAGE msgId, uint32_t
     uint8_t debug = 0;
     msg->Get(debug);
     bool isDebug = debug != 0;
-    UnitCombatLogSpellMissed(casterGuid, targetGuid, spellId, 7, !isDebug, isDebug, 0);
+    UnitCombatLogSpellMissed(casterGuid, targetGuid, g_spellDB.GetRecord(spellId), 7, debug == 0, isDebug, 0);
     return 1;
 }
 
@@ -2948,14 +2948,14 @@ int32_t Packet_SMSG_SPELLLOGEXECUTE(void* param, NETMESSAGE msgId, uint32_t time
     return CombatLog::HandleSpellLogExecute(msg, 0);
 }
 
-// OFFSET: #0x006D3750
+// OFFSET: 0x005590F0
 int32_t Packet_SMSG_SPELLDAMAGESHIELD(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint64_t value = 0;
     msg->Get(value);
-    WOWGUID victimGuid = WOWGUID::Make(value);
+    WOWGUID casterGuid = WOWGUID::Make(value);
     value = 0;
     msg->Get(value);
-    WOWGUID casterGuid = WOWGUID::Make(value);
+    WOWGUID targetGuid = WOWGUID::Make(value);
     uint32_t spellId = 0;
     msg->Get(spellId);
     uint32_t damage = 0;
@@ -2964,14 +2964,16 @@ int32_t Packet_SMSG_SPELLDAMAGESHIELD(void* param, NETMESSAGE msgId, uint32_t ti
     msg->Get(overkill);
     uint32_t schoolMask = 0;
     msg->Get(schoolMask);
-    UnitCombatLogDamageShield(victimGuid, casterGuid, spellId, damage, overkill, schoolMask);
-    CGUnit_C* caster = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(casterGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
+    uint32_t absorbed = 0;
+    msg->Get(absorbed);
+    UnitCombatLogDamageShield(casterGuid, targetGuid, g_spellDB.GetRecord(spellId), damage, overkill, schoolMask, absorbed);
+    CGUnit_C* target = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(targetGuid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
-    if (caster) {
-        caster->AddWorldDamageText(victimGuid, damage, NULL, false, false, true);
+    if (target) {
+        target->AddWorldDamageText(casterGuid, damage, NULL, false, false, true);
     }
 
-    CGGameUI::ShowCombatFeedback(casterGuid, damage, schoolMask, 0);
+    CGGameUI::ShowCombatFeedback(targetGuid, damage, schoolMask, 0);
     return 1;
 }
 

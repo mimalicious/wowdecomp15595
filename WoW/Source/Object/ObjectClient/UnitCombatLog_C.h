@@ -9,6 +9,7 @@
 #include "Engine/Source/Storm/H/stpl.h"
 
 class ATTACKROUNDINFO;
+class AuraData;
 class CGUnit_C;
 class CDataStore;
 class SpellMechanicRec;
@@ -20,25 +21,31 @@ struct CombatLogEntry : public TSLinkedNode<CombatLogEntry> {
     /* 0008 */ uint32_t m_timestamp;
     /* 000C */ int32_t m_event;
     /* 0010 */ uint32_t m_pendingMask;
-    /* 0014 */ uint32_t unk_0014;
+    /* 0014 */ bool m_hideCaster;
     /* 0018 */ WOWGUID m_sourceGuid;
     /* 0020 */ const char* m_sourceName;
     /* 0024 */ const char* m_sourceRealm;
     /* 0028 */ uint32_t m_sourceFlags;
-    /* 002C */ uint32_t unk_002C;
+    /* 002C */ uint32_t m_sourceRaidFlags;
     /* 0030 */ WOWGUID m_destGuid;
     /* 0038 */ const char* m_destName;
     /* 003C */ const char* m_destRealm;
     /* 0040 */ uint32_t m_destFlags;
-    /* 0044 */ int32_t m_spellId;
-    /* 0048 */ RCString m_spellName;
-    /* 0054 */ uint32_t m_infoFlags;
-    /* 0058 */ union {
+    /* 0044 */ uint32_t m_destRaidFlags;
+    /* 0048 */ int32_t m_spellId;
+    /* 004C */ RCString m_spellName;
+    /* 0058 */ uint32_t m_infoFlags;
+    /* 005C */ union {
         char* m_text;
         int32_t m_values[7];
         const char* m_names[7];
+        uint8_t m_bytes[28];
     } m_info;
-    /* 0074 */ uint8_t m_infoBits;
+    /* 0078 */ uint32_t m_critical : 1;
+    /* 0078 */ uint32_t m_glancing : 1;
+    /* 0078 */ uint32_t m_crushing : 1;
+    /* 0078 */ uint32_t m_isOffHand : 1;
+    /* 007C */ uint32_t unk_007C;
 
     static void PendingCombatLogResolved(int32_t id, const WOWGUID& guid, void* param, bool success);
 
@@ -52,7 +59,9 @@ struct CombatLogEntry : public TSLinkedNode<CombatLogEntry> {
     bool MatchesFilter();
     void PackEvent(char* buffer, uint32_t size);
     void SetFailReason(const char* reason);
-    void SetMissInfo(int32_t missType, int32_t amount);
+    void SetAuraValues(const int32_t* values);
+    void SetMissInfo(int32_t missType, int32_t amount, bool offHand);
+    void SetSource(const WOWGUID& guid);
     void SetExecuteItem(int32_t itemId);
 };
 
@@ -74,114 +83,95 @@ struct PendingCombatLogData : public TSLinkedNode<PendingCombatLogData> {
 };
 
 struct CombatLogFilter : public TSLinkedNode<CombatLogFilter> {
-    /* 0008 */ TSBitField<TSFixedArray<uint32_t>> m_events;
+    /* 0008 */ TSBitField<TSFixedArray<uint32_t> > m_events;
     /* 0018 */ WOWGUID m_sourceGuid;
     /* 0020 */ WOWGUID m_destGuid;
     /* 0028 */ uint32_t m_sourceFlags;
-    /* 002C */ uint32_t m_destFlags;
-    /* 0030 */ int32_t m_spellId;
-    /* 0034 */ RCString m_spellName;
+    /* 002C */ uint32_t m_sourceRaidFlags;
+    /* 0030 */ uint32_t m_destFlags;
+    /* 0034 */ uint32_t m_destRaidFlags;
+    /* 0038 */ int32_t m_spellId;
+    /* 003C */ RCString m_spellName;
 
     CombatLogFilter();
-    bool SetFilterData(const char* events, const WOWGUID& sourceGuid, uint32_t sourceFlags, const WOWGUID& destGuid, uint32_t destFlags, int32_t spellId, const char* spellName);
-    bool MatchesFilter(int32_t event, const WOWGUID& sourceGuid, uint32_t sourceFlags, const WOWGUID& destGuid, uint32_t destFlags, int32_t spellId, const char* spellName);
+    bool SetFilterData(const char* events, const WOWGUID& sourceGuid, uint32_t sourceFlags, uint32_t sourceRaidFlags, const WOWGUID& destGuid, uint32_t destFlags, uint32_t destRaidFlags, int32_t spellId, const char* spellName);
+    bool MatchesFilter(int32_t event, const WOWGUID& sourceGuid, uint32_t sourceFlags, uint32_t sourceRaidFlags, const WOWGUID& destGuid, uint32_t destFlags, uint32_t destRaidFlags, int32_t spellId, const char* spellName);
 };
 
 class CombatLog {
     public:
-    static int32_t HandleSpellRemoveLog(NETMESSAGE msgId, CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellLogMiss(CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellLogExecute(CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellNonMeleeDamageLog(CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellHealLog(CDataStore* msg, int32_t timeOffset);
     static int32_t HandleSpellLogEnergizeLog(CDataStore* msg, int32_t timeOffset);
+    static int32_t HandleSpellRemoveLog(NETMESSAGE msgId, CDataStore* msg, int32_t timeOffset);
     static int32_t HandlePeriodicAuraLog(CDataStore* msg, int32_t timeOffset);
-    static void AddSpellCastEntry(const WOWGUID& source, const WOWGUID& dest, int32_t spellId);
-    static void AddSpellResurrectEntry(const WOWGUID& source, const WOWGUID& dest, int32_t spellId);
-    static void AddSpellDamageEntry(const WOWGUID& source, const WOWGUID& dest, int32_t spellId, int32_t damage, uint32_t timeOffset);
-    static void AddSpellExecuteEntry(const WOWGUID& source, const WOWGUID& dest, int32_t itemId, int32_t spellId);
-    static void AddSpellEnergizeEntry(const WOWGUID& source, const WOWGUID& dest, int32_t spellId);
-    static void AddAuraReplacedEntry(const WOWGUID& source, const WOWGUID& dest, int32_t spellId, int32_t replacedSpellId, uint8_t harmful, bool stolen, uint32_t timeOffset);
-    static void AddSpellRemoveEntry(const WOWGUID& source, const WOWGUID& dest, int32_t dispelSpellId, int32_t spellId, uint8_t harmful);
-    static void GetSpellLogLinkInfo(const WOWGUID& source, const WOWGUID& dest, int32_t spellId);
-    static void QueueMissedSpellText(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell, int32_t missType, int32_t amount, uint32_t timeOffset);
 };
 
-extern const uint32_t s_environmentalDamageSchools[6];
-
-void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId);
-void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t missType, bool a5, bool a6, int32_t a7);
-void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t missType, bool a5, bool a6, int32_t a7);
-void UnitCombatLogDamageShield(const WOWGUID& victimGuid, const WOWGUID& casterGuid, int32_t spellId, int32_t damage, uint32_t overkill, uint32_t schoolMask);
-PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask);
-CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell);
-void RecycleCombatLogEntry(CombatLogEntry* entry);
-uint32_t GetCombatLogFlags(const WOWGUID& guid);
-void SendCombatLogEvents();
-void QueueCombatLogEntry(CombatLogEntry* entry, uint32_t timeOffset);
-void UnitCombatLogBuildingDamage(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t damage, int32_t spellId);
-void UnitCombatLogBuildingHeal(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t amount, int32_t spellId);
-bool ShouldShowFeedback(const ATTACKROUNDINFO& info);
-void UnitCombatLogInvalidateName(const char* name);
-char* GUIDToHexString(WOWGUID guid, char* buffer);
-WOWGUID StringToGuid(const char* string);
-void UnitCombatLog(const WOWGUID& guid, uint32_t type, int32_t damage, int32_t absorbed, int32_t resisted);
-void UnitCombatLog(const ATTACKROUNDINFO& info);
-void UnitCombatLogUnitDead(CGUnit_C* unit);
-void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, int32_t spellId);
-void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
-void UnitCombatLogSpellFail(const WOWGUID& caster, int32_t spellId, const char* reason);
-void UnitCombatLogSpellFail(const WOWGUID& caster, const SpellRec* spell, const char* reason);
-void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
-class AuraData;
 extern TSList<CombatLogEntry, TSGetLink<CombatLogEntry> > s_entries;
 extern WOWGUID s_combatTextActiveUnit;
 extern CombatLogEntry* s_currentEntry;
 extern CombatLogEntry* s_pendingEntries;
 extern const char* g_spellMissStrings[12];
+extern const uint32_t s_environmentalDamageSchools[6];
 
-void UnitCombatLogAuraDose(CGUnit_C* unit, const AuraData* aura, int32_t spellId, int32_t oldStack, int32_t newStack, uint8_t a6);
-void UnitCombatLogAuraRefreshed(CGUnit_C* unit, const AuraData* aura, int32_t spellId, uint8_t a4);
-int32_t Packet_SMSG_PERIODICAURALOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_ENCHANTMENTLOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_PARTYKILLLOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_PROCRESIST(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_DISPEL_FAILED(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
-int32_t Packet_SMSG_DESTRUCTIBLE_BUILDING_DAMAGE(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg);
+char* GUIDToString(WOWGUID guid, char* buffer);
+WOWGUID StringToGUID(const char* string);
+bool CombatLogFlagsMatch(uint32_t flags, uint32_t mask, uint32_t raidFlags, uint32_t raidMask);
 void __stdcall CheckToSanitizeUnitLowGuid(WOWGUID* guid);
-int32_t IsCombatTextActiveUnit(WOWGUID guid);
+bool IsCombatTextActiveUnit(WOWGUID guid);
 void SendToCombatText(int32_t type, const char* text, int32_t amount);
 void SendToCombatText(int32_t type, const char* text, int32_t amount, int32_t overflow);
 void SendToCombatText(int32_t type, int32_t amount, int32_t overflow);
 void SendToCombatText(int32_t type, int32_t amount);
+void SendToCombatText(int32_t type, float amount);
 void SendToCombatText(int32_t type, const char* text);
 void SendToCombatText(int32_t type);
-void UnitCombatLogAuraAddedOrRemoved(CGUnit_C* unit, AuraData* aura, const SpellRec* spell, uint8_t harmful, int32_t added);
+uint32_t GetCombatLogObjectRaidFlags(const WOWGUID& guid);
+uint32_t GetCombatLogObjectFlags(const WOWGUID& guid);
+bool SpellHasLearnSpellEffect(const SpellRec* spell);
+bool SpellHasOpenLockEffect(const SpellRec* spell);
+void UnitCombatLogProcGo(const WOWGUID& casterGuid, const SpellRec* spell);
+void UnitCombatLogSpellMechanic(const WOWGUID& unitGuid, const AuraData* aura, const SpellRec* spell, uint32_t effectMask);
+PendingCombatLogData* GetPendingCombatLogData(CombatLogEntry* entry, const WOWGUID& guid, uint32_t mask);
+void UnitCombatLogInvalidateName(const char* name);
+void RecycleCombatLogEntry(CombatLogEntry* entry);
+CombatLogEntry* GetCombatLogEntry(const WOWGUID& source, const WOWGUID& dest, int32_t event, const SpellRec* spell);
+void QueueCombatLogEntry(CombatLogEntry* entry, uint32_t timeOffset);
+void SendCombatLogEvents();
+void UnitCombatLog(const WOWGUID& guid, int32_t type, int32_t damage, int32_t absorbed, int32_t resisted);
+void UnitCombatLog(const ATTACKROUNDINFO& info);
+void UnitCombatLogCastStart(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
+void UnitCombatLogCastGo(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
+void UnitCombatLogSpellFail(const WOWGUID& caster, const SpellRec* spell, const char* reason);
+void UnitCombatLogSpellMissed(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, uint32_t missType, bool damageShield, bool periodic, int32_t timeOffset);
+void UnitCombatLogSpellDamage(const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, int32_t hitInfo, bool periodic, int32_t timeOffset);
+void UnitCombatLogHeal(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t amount, int32_t overheal, int32_t absorbed, bool crit, bool periodic, int32_t timeOffset);
+void UnitCombatLogEnergize(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t powerType, int32_t amount, bool periodic, int32_t timeOffset);
+void UnitCombatLogPowerDrain(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t powerType, int32_t amount, float multiplier, bool periodic, int32_t timeOffset, bool leech);
+void UnitCombatLogInstakill(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell);
+void UnitCombatLogSummon(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell);
+void UnitCombatLogResurrect(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell);
+void UnitCombatLogInterrupt(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, const SpellRec* interrupted);
+void UnitCombatLogExtraAttacks(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t count, int32_t timeOffset);
+void UnitCombatLogDurabilityDamage(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t itemId);
+void UnitCombatLogDurabilityDamageAll(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell);
 void UnitCombatLogAuraAddedOrRemoved(CGUnit_C* unit, AuraData* aura, const SpellRec* spell, bool added);
+void UnitCombatLogAuraModifiedApplications(CGUnit_C* unit, WOWGUID& caster, const SpellRec* spell, int32_t oldStack, int32_t newStack, bool harmful);
+void UnitCombatLogDispelled(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, const SpellRec* dispelled, bool harmful, bool stolen, int32_t timeOffset);
+void UnitCombatLogAuraBroken(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, const SpellRec* breaker, bool harmful);
+void UnitCombatLogAuraRefreshed(CGUnit_C* unit, AuraData* aura, const SpellRec* spell);
+void UnitCombatLogDamageShield(const WOWGUID& casterGuid, const WOWGUID& targetGuid, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed);
+void UnitCombatLogSplitDamage(const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t damage, int32_t overkill, int32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, int32_t hitInfo, int32_t timeOffset);
+void UnitCombatLogUnitDead(CGUnit_C* unit);
+void UnitCombatLogBuildingDamage(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t damage, const SpellRec* spell);
+void UnitCombatLogBuildingHeal(const WOWGUID& caster, const WOWGUID& owner, const WOWGUID& building, int32_t amount, const SpellRec* spell);
 void UnitCombatLogReset();
 void UnitCombatLogInitialize();
 void UnitCombatLogShutdown();
-void UnitCombatLogAuraRefreshed(CGUnit_C* unit, AuraData* aura, const SpellRec* spell);
-void UnitCombatLogAuraModifiedApplications(CGUnit_C* unit, WOWGUID& caster, const SpellRec* spell, int32_t oldStack, int32_t newStack, bool harmful);
-void UnitCombatLogProcGo(const WOWGUID& casterGuid, const SpellRec* spell);
-void UnitCombatLogPowerDrain(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, uint32_t powerType, uint32_t amount, float multiplier, bool a7, uint32_t timeOffset);
-void UnitCombatLogInterrupt(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t interruptedSpellId);
-void UnitCombatLogHeal(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t amount, int32_t overheal, int32_t absorbed, bool crit, bool periodic, uint32_t timeOffset);
-void UnitCombatLogEnergize(const WOWGUID& casterGuid, const WOWGUID& targetGuid, int32_t spellId, int32_t powerType, int32_t amount, bool periodic, uint32_t timeOffset);
-void SendHealEvent(int32_t event, const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t amount, int32_t overheal, int32_t absorbed, bool crit, uint32_t timeOffset);
-void SendEnergizeEvent(int32_t event, const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t powerType, int32_t amount, uint32_t timeOffset);
-void AddPowerDrainEntry(int32_t event, const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t amount, int32_t powerType, int32_t extra, uint32_t timeOffset);
-void SendDamageEvent(int32_t event, const WOWGUID& source, const WOWGUID& dest, const SpellRec* spell, int32_t damage, int32_t overkill, uint32_t school, int32_t resisted, int32_t blocked, int32_t absorbed, bool crit, bool a11, bool a12, uint32_t timeOffset);
-void UnitCombatLogSpellDamage(const WOWGUID& source, const WOWGUID& dest, int32_t spellId, int32_t damage, int32_t overkill, uint32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, uint32_t hitInfo, bool periodic, uint32_t timeOffset);
-void UnitCombatLogSplitDamage(const WOWGUID& source, const WOWGUID& dest, int32_t spellId, int32_t damage, int32_t overkill, uint32_t school, int32_t absorbed, int32_t resisted, int32_t blocked, uint32_t hitInfo, uint32_t timeOffset);
-void UnitCombatLogSpellMechanic(const WOWGUID& guid, const AuraData* aura, const SpellRec* spell);
-bool SpellIsHiddenInCombatLog(const SpellRec* spell);
-bool SpellHasOpenLockEffect(const SpellRec* spell);
-void DisplayMechanicEffect(const WOWGUID* unitGuid, const WOWGUID* sourceGuid, const SpellRec* spell, const SpellMechanicRec* mechanic);
-
+bool ShouldShowFeedback(const ATTACKROUNDINFO& info);
 void UnitCombatLogRegisterScriptFunctions();
 void UnitCombatLogUnregisterScriptFunctions();
-
-#include "WoW/Source/Object/ObjectClient/UnitCombatLog_C.inl"
 
 #endif

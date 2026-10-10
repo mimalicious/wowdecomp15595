@@ -566,7 +566,7 @@ static int32_t Script_SetHyperlink(lua_State* L) {
     }
 
     if ((cursor = SStrStr(link, "unit:")) != NULL) {
-        WOWGUID guid = StringToGuid(cursor + 5);
+        WOWGUID guid = StringToGUID(cursor + 5);
 
         if (tooltip->m_shown && guid == tooltip->m_unitGuid) {
             tooltip->Hide();

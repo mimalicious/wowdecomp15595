@@ -660,7 +660,7 @@ static void SendChatEvent(ChatChannel* channel, uint32_t language, const char* t
     char guidString[20] = {};
 
     if (!(guid.m_guid & 0xF000000000000000ULL) && (guid.m_guid & 0xF07FFFFFFFFFFFFFULL) && (!flags || SStrCmp(flags, "GM", STORM_MAX_STR) || SStrCmp(flags, "DEV", STORM_MAX_STR))) {
-        GUIDToHexString(guid, guidString);
+        GUIDToString(guid, guidString);
     }
 
     uint32_t presenceID = conversation ? conversation->m_presenceID : 0;
@@ -3225,7 +3225,7 @@ void CGChat::AddTextEmoteMessage(const WOWGUID& guid, uint32_t emote, const char
         char guidString[20] = {};
 
         if (!(guid.m_guid & 0xF000000000000000ULL) && (guid.m_guid & 0xF07FFFFFFFFFFFFFULL)) {
-            GUIDToHexString(guid, guidString);
+            GUIDToString(guid, guidString);
         }
 
         FrameScript_SignalEvent(SCRIPT_EVENT_CHAT_MSG_TEXT_EMOTE, "%s%s%s%s%s%s%d%d%s%d%d%s%u", buffer, sender->m_name, languageName, "", "", "", 0, 0, "", 0, 0, guidString, 0);

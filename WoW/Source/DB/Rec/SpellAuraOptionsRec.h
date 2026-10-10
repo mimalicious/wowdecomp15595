@@ -11,10 +11,10 @@ class SpellAuraOptionsRec {
     static void FixupStrings(void* record, const char* strings);
 
     /* 0000 */ int32_t m_id;
-    /* 0004 */ int32_t unk_0004;
-    /* 0008 */ int32_t unk_0008;
-    /* 000C */ int32_t unk_000C;
-    /* 0010 */ int32_t unk_0010;
+    /* 0004 */ int32_t m_cumulativeAura;
+    /* 0008 */ int32_t m_procChance;
+    /* 000C */ int32_t m_procCharges;
+    /* 0010 */ int32_t m_procTypeMask;
 };
 
 #endif

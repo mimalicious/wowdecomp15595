@@ -394,6 +394,7 @@ class CGChat {
     static void LogHonorGain(CGUnit_C* unit, const WOWGUID& victim, int32_t rank, int32_t honor);
     static void DisplayParentControlsNotice(UIErrors error);
     static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const ItemStats_C* stats);
+    static void LogOpenLock(const WOWGUID& caster, const WOWGUID& target, const SpellRec* spell);
     static void LogOpenLock(const WOWGUID& guid, const SpellRec* spell, const GameObjectStats_C* stats);
     static const char* GetChannelStringForDisplay(int32_t session, int32_t* type);
     static int32_t IsPaused();

@@ -85,7 +85,7 @@ static int32_t Script_CombatLogAddFilter(lua_State* L) {
             break;
 
         case LUA_TSTRING:
-            sourceGuid = StringToGuid(lua_tolstring(L, 2, NULL));
+            sourceGuid = StringToGUID(lua_tolstring(L, 2, NULL));
             break;
 
         default:
@@ -105,7 +105,7 @@ static int32_t Script_CombatLogAddFilter(lua_State* L) {
             break;
 
         case LUA_TSTRING:
-            destGuid = StringToGuid(lua_tolstring(L, 3, NULL));
+            destGuid = StringToGUID(lua_tolstring(L, 3, NULL));
             break;
 
         default:
@@ -124,7 +124,7 @@ static int32_t Script_CombatLogAddFilter(lua_State* L) {
     }
 
     CombatLogFilter* filter = s_filters.NewNode(2, 0, 0);
-    filter->SetFilterData(events, sourceGuid, sourceFlags, destGuid, destFlags, spellId, spellName);
+    filter->SetFilterData(events, sourceGuid, sourceFlags, 0, destGuid, destFlags, 0, spellId, spellName);
     return 0;
 }
 
@@ -247,7 +247,7 @@ static int32_t Script_CombatLogAdvanceEntry(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ADB8E0
+// STATIC: 0x00CA79A0
 static FrameScript_Method s_ScriptFunctions[] = {
     { "CombatLogResetFilter", &Script_CombatLogResetFilter },
     { "CombatLogAddFilter", &Script_CombatLogAddFilter },
@@ -262,14 +262,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "CombatTextSetActiveUnit", &Script_CombatTextSetActiveUnit },
 };
 
-// OFFSET: #0x0074D6B0
+// OFFSET: 0x005F3B70
 void UnitCombatLogRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x0074D6E0
+// OFFSET: 0x005F3BA0
 void UnitCombatLogUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

@@ -14,6 +14,17 @@ const char* CreatureStats::GetName(int32_t index) const {
     return name;
 }
 
+// OFFSET: 0x005ACC80
+const char* CreatureStats::GetNameAlt(int32_t index) const {
+    const char* name = this->m_nameAlt[index];
+
+    if (!name || !*name) {
+        return this->m_nameAlt[0];
+    }
+
+    return name;
+}
+
 // PROVEN: 32694511 IDENTICAL/NONE
 // OFFSET: 0x00A287E0
 void CreatureStats::Pack(CDataStore* msg) const {

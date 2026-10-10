@@ -3540,7 +3540,7 @@ static int32_t Script_UnitGUID(lua_State* L) {
     }
 
     char buffer[68];
-    lua_pushstring(L, GUIDToHexString(display, buffer));
+    lua_pushstring(L, GUIDToString(display, buffer));
     return 1;
 }
 
@@ -3995,7 +3995,7 @@ static int32_t Script_GetPlayerInfoByGUID(lua_State* L) {
         return 0;
     }
 
-    WOWGUID guid = StringToGuid(lua_tolstring(L, 1, NULL));
+    WOWGUID guid = StringToGUID(lua_tolstring(L, 1, NULL));
 
     if (!guid) {
         luaL_error(L, "Usage: GetPlayerInfoByGUID(\"playerGUID\")");

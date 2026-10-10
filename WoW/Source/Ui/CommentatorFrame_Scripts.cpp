@@ -126,8 +126,8 @@ static int32_t Script_CommentatorGetSkirmishQueuePlayerInfo(lua_State* L) {
     }
 
     char buffer[64];
-    lua_pushstring(L, GUIDToHexString(node->unk_0000, buffer));
-    lua_pushstring(L, GUIDToHexString(node->unk_0008, buffer));
+    lua_pushstring(L, GUIDToString(node->unk_0000, buffer));
+    lua_pushstring(L, GUIDToString(node->unk_0008, buffer));
     lua_pushboolean(L, node->unk_0010);
     return 3;
 }
@@ -956,8 +956,8 @@ static int32_t Script_CommentatorStartSkirmishMatch(lua_State* L) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (player && (player->m_player->m_playerFlags & 0x80000) && lua_isstring(L, 1) && lua_isstring(L, 2)) {
-        WOWGUID first = StringToGuid(lua_tolstring(L, 1, NULL));
-        WOWGUID second = StringToGuid(lua_tolstring(L, 2, NULL));
+        WOWGUID first = StringToGUID(lua_tolstring(L, 1, NULL));
+        WOWGUID second = StringToGUID(lua_tolstring(L, 2, NULL));
         int32_t team = -1;
 
         if (lua_isnumber(L, 3)) {

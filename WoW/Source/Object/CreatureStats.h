@@ -29,6 +29,7 @@ class CreatureStats {
     virtual ~CreatureStats();
 
     const char* GetName(int32_t index) const;
+    const char* GetNameAlt(int32_t index) const;
     void Pack(CDataStore* msg) const;
     void Unpack(CDataStore* msg);
 };
