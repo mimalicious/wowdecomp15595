@@ -3300,7 +3300,7 @@ int32_t CGQuestLog::GetQuestLeaderBoardByID(int32_t questId, QuestLogLeaderBoard
         SpellRec* spell = g_spellDB.GetRecord(quest->m_requiredSpell);
 
         if (spell && spell->m_name) {
-            SStrPrintf(buffer, sizeof(buffer), format, spell->m_name);
+            SStrPrintf(buffer, sizeof(buffer), format, static_cast<const char*>(spell->m_name));
             SStrCopy(text, buffer, 4096);
             SStrCopy(type, "spell", 64);
             uint32_t spellId = quest->m_requiredSpell;

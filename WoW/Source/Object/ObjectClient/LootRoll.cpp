@@ -287,7 +287,7 @@ static void RolledStatsAndName(const NameCache* name, const ItemRecSparse* rec, 
         }
     } else {
         const char* format = roll->m_autoPass ? FrameScript_GetText("LOOT_ROLL_PASSED_AUTO", -1, static_cast<FRAMESCRIPT_GENDER>((name->m_sex != 0) + 2)) : FrameScript_GetText("LOOT_ROLL_PASSED", -1, GENDER_NOT_APPLICABLE);
-        SStrPrintf(text, sizeof(text), format, name->m_name, CGTooltip::GetItemHyperlinkString(roll->m_itemId, rec->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
+        SStrPrintf(text, sizeof(text), format, static_cast<const char*>(name->m_name), CGTooltip::GetItemHyperlinkString(roll->m_itemId, rec->m_quality, 0, roll->m_randomPropertyId, roll->m_randomSuffix, 0));
     }
 
     CGChat::AddChatMessage(text, CHAT_MSG_LOOT, NULL);

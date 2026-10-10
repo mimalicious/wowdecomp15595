@@ -59,6 +59,11 @@
 #include "WoW/Source/Ui/ActionBarFrame.h"
 #include "WoW/Source/Ui/BarberShop.h"
 #include "WoW/Source/Ui/BattlefieldInfo.h"
+#include "Engine/Source/Services/Texture.h"
+#include "WoW/Source/JamClientAutoCode/JamPlayer.h"
+#include "WoW/Source/Ui/GuildBankFrame.h"
+#include "WoW/Source/Ui/GlyphInfo.h"
+#include "WoW/Source/Ui/AchievementInfo.h"
 #include "WoW/Source/Ui/ChatFrame.h"
 #include "WoW/Source/Ui/ClassTrainerFrame.h"
 #include "WoW/Source/Ui/CommentatorFrame.h"
@@ -161,6 +166,11 @@ struct GUILDUPDATETIMESTAMP {
     /* 0004 */ uint32_t m_timestamp;
 };
 
+struct RuneConvert {
+    /* 0000 */ uint8_t m_rune;
+    /* 0001 */ uint8_t m_type;
+};
+
 struct InitialSpellStruct {
     /* 0000 */ uint32_t m_spellId;
     /* 0004 */ uint16_t unk_0004;
@@ -240,8 +250,17 @@ static WOWGUID s_lastBinderGuid;
 // STATIC: #0x00C9EAA8
 static int32_t s_attackSwingError;
 
-// STATIC: #0x00C9EAAC
+// STATIC: 0x00DD5028
 static uint32_t s_pendingMovie;
+
+// STATIC: 0x00DD502C
+static uint32_t s_pendingMovieID;
+
+// STATIC: 0x00DD4D88
+static uint32_t s_unk_DD4D88;
+
+// STATIC: 0x00DD5058
+static WOWGUID* s_unk_DD5058;
 
 // STATIC: #0x00C9EAB8
 WOWGUID CGPlayer_C::s_resurrectOfferer;
@@ -333,11 +352,17 @@ static WOWGUID s_binder;
 // STATIC: #0x00C9EB2C
 static C3Vector s_bindPosition;
 
-// STATIC: #0x00AD9F6C
+// STATIC: 0x00CA531C
 static int32_t s_actionButtons[144];
 
-// STATIC: #0x00C9EB38
+// STATIC: 0x00DD50AC
 static TSGrowableArray<InitialSpellStruct> s_initialSpells;
+
+// STATIC: 0x00DD50BC
+static TSGrowableArray<int32_t> s_initialCompanionSpells;
+
+// STATIC: 0x00DD50CC
+static TSGrowableArray<RuneConvert> s_pendingRuneConverts;
 
 // STATIC: #0x00C9EB48
 static TSFixedArray<uint32_t> s_weaponSkills;
@@ -2263,6 +2288,329 @@ void __stdcall CGPlayer_C::ClearAFK(int32_t force) {
     ClientServices::Send2(&msg);
 }
 
+// OFFSET: 0x00555A90
+static int32_t GuildChangedUpdateProc(WOWGUID guid, void* param) {
+    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
+
+    if (unit && (unit->m_obj->m_type & TYPEMASK_PLAYER)) {
+        unit->UpdateUnitNameText();
+    }
+
+    return 1;
+}
+
+// OFFSET: 0x00555100
+static bool FindArenaOpponent(const WOWGUID& guid, uint32_t* index) {
+    for (uint32_t i = 0; i < 5; i++) {
+        if (CGBattlefieldInfo::m_arenaOpponents[i] == guid) {
+            *index = i;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// OFFSET: 0x00570450
+void CGPlayer_C::PostInit(uint32_t time, const CClientObjCreate& create, bool reenable) {
+    this->m_clientStandState = this->m_unit->m_unitFieldBytes1[0];
+    this->CGUnit_C::PostInit(time, create, reenable);
+    this->GetUnitName(NULL, 1);
+    this->OnGuildChanged(0);
+    this->Animate(0.0f);
+    CGPartyInfo::EnableMember(this, 1);
+    CGRaidInfo::EnableMember(this, 1);
+
+    if (CGBattlefieldInfo::m_instanceType == 4 && this->m_player->m_playerBytes3[3] != CGBattlefieldInfo::m_arenaFaction) {
+        WOWGUID guid = this->m_obj->m_guid;
+        CGBattlefieldInfo::AddArenaOpponent(guid);
+        guid = this->m_obj->m_guid;
+        uint32_t index;
+
+        if (FindArenaOpponent(guid, &index)) {
+            CGBattlefieldInfo::m_arenaOpponentSeen[index] = 1;
+        }
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->PostInitActivePlayer();
+    } else {
+        this->UpdatePartyMemberState();
+    }
+
+    this->UpdatePetReaction();
+    this->OnMoveUpdate(time, 1, 1);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        PlayerRequestCategoryCooldowns msg;
+        ClientServices::Send(&msg);
+    }
+}
+
+// OFFSET: 0x0056F1B0
+void CGPlayer_C::Disable() {
+    if (this->GetGuildGUID().m_guid) {
+        WOWGUID requester;
+
+        if (!g_guildInfoCache.GetRecord2(this->GetGuildGUID().m_guid, requester, NULL, NULL, false)) {
+            g_guildInfoCache.CancelCallback(this->GetGuildGUID().m_guid, PlayerNameGuildCallback, this);
+            g_guildInfoCache.CancelCallback(this->GetGuildGUID().m_guid, CGPlayer_C::TabardDrawCallback, this);
+        }
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->UnsetActiveMirrorHandlers();
+        CGGameUI::CancelMirrorTimers();
+        CGGameUI::LeaveWorld();
+
+        if (this->m_voidStorage) {
+            delete this->m_voidStorage;
+        }
+
+        this->m_voidStorage = NULL;
+    }
+
+    CGPartyInfo::EnableMember(this, 0);
+    CGRaidInfo::EnableMember(this, 0);
+
+    if (this->m_obj->m_guid == CGPetitionInfo::m_petitionGUID) {
+        CGPetitionInfo::SetPetition(WOWGUID(), 0, WOWGUID());
+    }
+
+    this->CGUnit_C::Disable();
+
+    PlayerDance* dance = this->m_dance;
+
+    if (dance) {
+        if (dance->m_moves) {
+            SMemFree(dance->m_moves, "delete[]", -1, 0);
+        }
+
+        dance->m_moves = NULL;
+        SMemFree(dance, "delete", -1, 0);
+    }
+
+    this->m_dance = NULL;
+
+    if (s_unk_DD5058 && *s_unk_DD5058 == this->m_obj->m_guid) {
+        *s_unk_DD5058 = WOWGUID();
+    }
+}
+
+// OFFSET: 0x0056F340
+void CGPlayer_C::Reenable(const CClientObjCreate& create) {
+    this->m_clientStandState = this->m_unit->m_unitFieldBytes1[0];
+    this->CGUnit_C::Reenable(create);
+    this->m_pendingItemCacheCount = 0;
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->SetActiveMirrorHandlers();
+        CGGameUI::EnterWorld();
+    }
+}
+
+// OFFSET: 0x0056C430
+void CGPlayer_C::PostReenable(const CClientObjCreate& create) {
+    this->CGUnit_C::PostReenable(create);
+    CGPartyInfo::EnableMember(this, 1);
+    CGRaidInfo::EnableMember(this, 1);
+
+    if (CGBattlefieldInfo::m_instanceType == 4 && this->m_player->m_playerBytes3[3] != CGBattlefieldInfo::m_arenaFaction) {
+        WOWGUID guid = this->m_obj->m_guid;
+        CGBattlefieldInfo::AddArenaOpponent(guid);
+        guid = this->m_obj->m_guid;
+        uint32_t index;
+
+        if (FindArenaOpponent(guid, &index)) {
+            CGBattlefieldInfo::m_arenaOpponentSeen[index] = 1;
+        }
+    }
+
+    this->UpdatePartyMemberState();
+    this->UpdatePetReaction();
+}
+
+// OFFSET: 0x00560780
+void CGPlayer_C::HandleGuildIDUpdate() {
+    this->OnGuildChanged(1);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        CGGuildInfo::QueryPermissions();
+
+        if (CGMerchantInfo::m_merchant) {
+            FrameScript_SignalEvent(SCRIPT_EVENT_MERCHANT_UPDATE, NULL);
+        }
+
+        CGGuildBankInfo::ClearContents();
+        CGGuildInfo::ResetGuildState(true);
+        ClntObjMgrEnumVisibleObjects(GuildChangedUpdateProc, NULL);
+    }
+}
+
+// OFFSET: 0x00565C40
+bool CGPlayer_C::LoadGuildTextures(uint64_t guildGUID) {
+    bool loaded = CGPlayer_C::LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[18]) != 0;
+
+    if (!CGPlayer_C::LoadTabardGuildTextures(guildGUID, &this->m_player->m_playerVisibleItems[3])) {
+        loaded = false;
+    }
+
+    bool result = this->CGUnit_C::LoadGuildTextures(guildGUID);
+
+    if (result) {
+        return loaded;
+    }
+
+    return result;
+}
+
+// OFFSET: 0x00566140
+void CGPlayer_C::ShouldRender(uint32_t flags, int32_t& culled, int32_t& hidden) {
+    this->CGUnit_C::ShouldRender(flags, culled, hidden);
+
+    if (this->IsCommentatorUberOrInArena() || ((this->m_clientFlags & 0x400000) && this->m_pendingItemCacheCount)) {
+        hidden = 1;
+    } else if (!s_unk_DD4D88 && this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        hidden = 1;
+    }
+}
+
+// OFFSET: 0x00553900
+void CGPlayer_C::UpdateObjectComplete(bool transport) {
+    if (s_pendingMovie) {
+        CGGameUI::StartCinematic(s_pendingMovie);
+        s_pendingMovie = 0;
+    } else if (s_pendingMovieID) {
+        LoadingScreenDisable();
+        CGGameUI::StartMovie(s_pendingMovieID);
+        s_pendingMovieID = 0;
+    } else if (this->GetTransportGUID()) {
+        LoadingScreenSetTransparent(true);
+        World::Preload(this->GetPosition(), 1);
+        LoadingScreenDisable();
+    } else {
+        if (transport) {
+            World::UpdateAreaOfInterest(this->GetPosition(), 1);
+        }
+
+        LoadingScreenDisable();
+    }
+}
+
+// OFFSET: 0x00567700
+void CGPlayer_C::ConstructActivePlayer() {
+    for (uint32_t i = 0; i < 936; i++) {
+        new (&this->m_playerLocalMirrorLists[i]) TSList<void>();
+    }
+
+    if (this->m_unit->m_unitFieldHealth <= 0) {
+        if ((this->m_movementData.m_flags & 0x400) || (this->m_player->m_playerFlags & 0x4000)) {
+            this->HandleRepopRequest(true);
+        } else {
+            this->RequestRepopOnLanding();
+        }
+    }
+
+    CGWorldFrame::UpdateScreenEffect();
+    Spell_C_SetMissileTrajectoryNextSequenceIndex(static_cast<uint32_t>(this->m_obj->m_guid.m_guid));
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PLAYED_TIME));
+    msg.Put(static_cast<uint8_t>(0));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+
+    StaticSingleton<CCameraManager>::Instance()->SetGameCamera(4, this->m_obj->m_guid);
+    StaticSingleton<CCameraManager>::Instance()->ResetCameras(this->m_obj->m_guid);
+}
+
+// OFFSET: 0x0056DDC0
+CGPlayer_C::CGPlayer_C(uint32_t time, const CClientObjCreate& create)
+    : CGUnit_C(time, create),
+      unk_209C(-1),
+      m_combatModeFlags(0),
+      m_pendingItemCacheCount(0),
+      m_guildMaxDailyXP(0),
+      unk_217C(0),
+      m_lootTarget(),
+      m_autoLoot(0) {
+    for (uint32_t i = 0; i < 11; i++) {
+        if (i != 4) {
+            this->unk_212C[i] = 0;
+        }
+    }
+
+    for (uint32_t i = 0; i < 4; i++) {
+        this->unk_2160[i] = 0;
+    }
+
+    CGPlayerLocalData* player = this->m_player;
+    bool activePlayer = this->m_obj->m_guid == ClntObjMgrGetActivePlayer();
+    this->m_bag.m_guid = this->m_obj->m_guid;
+    this->m_bag.m_numSlots = activePlayer ? 86 : 0;
+    this->m_bag.m_slots = player->m_playerFieldInvSlotHead;
+    this->m_bag.m_hasBank = 1;
+    this->m_combatModeTime = FrameTime::GetCurTimeMs() - 500;
+    this->m_combatTarget = WOWGUID();
+    this->m_pvpCooldownTimestamp = 0;
+    this->m_dance = NULL;
+    this->m_danceMoveIndex = 0;
+    this->m_playedTime = -1;
+    this->m_playedTimeBase = 0;
+    this->unk_21FC = 0;
+    this->m_voidStorage = NULL;
+
+    this->m_gemCounts[0] = 0;
+    this->m_gemCounts[1] = 0;
+    this->m_gemCounts[2] = 0;
+    this->m_gemCounts[3] = 0;
+    this->unk_21D4[0] = 0;
+    this->unk_21D4[1] = 0;
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->ConstructActivePlayer();
+    }
+}
+
+// OFFSET: 0x0056E180
+CGPlayer_C::~CGPlayer_C() {
+    this->m_tradeSkillLines.InternalClear(0);
+    this->m_proficiencySpells.InternalClear(0);
+    this->m_pendingItemExpirations.Clear();
+    this->m_categoryCooldowns.Clear();
+
+    if (!(this->m_modelFlags & 0x10000)) {
+        CGPartyInfo::EnableMember(this, 0);
+        CGRaidInfo::EnableMember(this, 0);
+    }
+
+    if (this->GetGuildGUID().m_guid) {
+        WOWGUID requester;
+
+        if (!g_guildInfoCache.GetRecord2(this->GetGuildGUID().m_guid, requester, NULL, NULL, false)) {
+            g_guildInfoCache.CancelCallback(this->GetGuildGUID().m_guid, PlayerNameGuildCallback, this);
+            g_guildInfoCache.CancelCallback(this->GetGuildGUID().m_guid, CGPlayer_C::TabardDrawCallback, this);
+        }
+    }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        this->DestructActivePlayer();
+    }
+
+    PlayerDance* dance = this->m_dance;
+
+    if (dance) {
+        if (dance->m_moves) {
+            SMemFree(dance->m_moves, "delete[]", -1, 0);
+        }
+
+        dance->m_moves = NULL;
+        SMemFree(dance, "delete", -1, 0);
+    }
+
+    this->m_dance = NULL;
+}
+
 // OFFSET: #0x006D1CF0
 void CGPlayer_C::SetStorage(uint32_t* storage, uint32_t* saved) {
     this->CGUnit_C::SetStorage(storage, saved);
@@ -2387,15 +2735,47 @@ static int32_t AuraVisionUpdateHandler(WOWGUID guid, void* param) {
     return 1;
 }
 
-// OFFSET: #0x006E7F50
+// OFFSET: 0x0056FF20
 void CGPlayer_C::PostInitActivePlayer() {
-    this->m_movementData.m_flags |= 0x200;
     this->SetActiveMirrorHandlers();
-    SI3::InitVocalErrorSounds(this->m_unit->m_unitFieldBytes0[0], this->m_player->m_playerBytes3[0]);
+    CGGlyphInfo::InitializeKnownGlyphs();
     CGSpellBook::ClearSpells();
 
     for (uint32_t i = 0; i < s_initialSpells.Count(); i++) {
         this->AddKnownSpell(s_initialSpells[i].m_spellId, static_cast<int16_t>(s_initialSpells[i].unk_0004), 0, 1);
+    }
+
+    this->UpdateAuraEffectMask();
+
+    for (uint32_t i = 0; i < s_initialSpells.Count(); i++) {
+        const SpellRec* spell = g_spellDB.GetRecord(s_initialSpells[i].m_spellId);
+
+        if (spell && (spell->m_attributes & 0x40)) {
+            this->RefreshSpellCategoryCooldowns(spell);
+        }
+    }
+
+    for (uint32_t i = 0; i < s_initialCompanionSpells.Count(); i++) {
+        int32_t spellId = s_initialCompanionSpells[i];
+
+        if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+            continue;
+        }
+
+        bool found = false;
+
+        if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+            for (uint32_t j = 0; j < this->m_companionSpells.Count(); j++) {
+                if (this->m_companionSpells[j] == spellId) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if (!found) {
+            *this->m_companionSpells.New() = spellId;
+        }
     }
 
     CGSpellBook::UpdateSpells(1, 0, 1);
@@ -2403,10 +2783,17 @@ void CGPlayer_C::PostInitActivePlayer() {
     CGClassTrainer::RefreshList();
 
     if (!ClntObjMgrGetPlayerType()) {
-        for (uint32_t i = 0; i < sizeof(s_actionButtons) / sizeof(s_actionButtons[0]); i++) {
-            if ((s_actionButtons[i] & 0xF0000000) || this->IsSpellKnown(s_actionButtons[i])) {
+        char blobName[260];
+        CGPlayer_C::GetSpellTextureBlobName(g_chrClassesDB.GetRecord(this->m_unit->m_unitFieldBytes0[1]), blobName);
+        TextureLoadBlob(blobName);
+
+        for (uint32_t i = 0; i < 144; i++) {
+            if ((s_actionButtons[i] & 0xF0000000) || this->IsSpellKnown(s_actionButtons[i] & 0xF1FFFFFF)) {
                 CGActionBar::SetAction(i, s_actionButtons[i], 0, 1);
+                PrefetchSpellVisuals(s_actionButtons[i], 1);
             }
+
+            LoadingScreenSpellUpdateProgress(static_cast<float>(i + 1) * 0.0069444445f);
         }
 
         FrameScript_SignalEvent(SCRIPT_EVENT_ACTIONBAR_SLOT_CHANGED, "%d", 0);
@@ -2416,6 +2803,7 @@ void CGPlayer_C::PostInitActivePlayer() {
         CGSpellBook::UpdateUsable();
         CGSpellBook::UpdateSelection(0);
         CGActionBar::UpdateShapeShiftBar();
+        CGActionBar::UpdateOverrideSpellBar();
         CGActionBar::UpdateBonusBar();
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_FORM, NULL);
     }
@@ -2451,36 +2839,41 @@ void CGPlayer_C::PostInitActivePlayer() {
         }
 
         CGGameUI::EnterWorld();
+
+        if (this->m_unit->m_unitFieldHealth <= 0) {
+            uint8_t flags = this->m_player->m_playerFieldBytes[0];
+
+            if (flags & 0x10) {
+                CGGameUI::SetRepopTimeLeft(0);
+            } else if (!(flags & 0x8) || (this->m_player->m_playerFlags & 0x4000)) {
+                CGGameUI::ClearRepopTime();
+            } else {
+                CGGameUI::SetRepopTimeLeft(360000);
+            }
+        }
+
         CGGameUI::UpdateActivePlayer();
     }
 
-    ClientServices::Connection()->CharacterSetInGame(1);
-
-    if (s_pendingMovie) {
-        CGGameUI::StartCinematic(s_pendingMovie);
-        s_pendingMovie = 0;
-    } else if (this->GetTransportGUID()) {
-        LoadingScreenSetTransparent(true);
-    } else {
-        LoadingScreenDisable();
+    for (uint32_t i = 0; i < s_pendingRuneConverts.Count(); i++) {
+        CGRuneInfo::ConvertRune(s_pendingRuneConverts[i].m_rune, s_pendingRuneConverts[i].m_type);
     }
 
+    s_pendingRuneConverts.Clear();
+
+    ClientServices::Connection()->CharacterSetInGame(1);
     Spell_C_SetPlayerClass(this->m_unit->m_unitFieldBytes0[1]);
     this->CountEquippedGems();
 
     if (this->m_player->m_playerFlags & 0x200) {
         this->m_pvpCooldownTimestamp = 0;
     } else if (!(this->m_player->m_playerFlags & 0x40000)) {
-        this->m_pvpCooldownTimestamp = FrameTime::s_curTimeMs + 300000;
+        this->m_pvpCooldownTimestamp = FrameTime::GetCurTimeMs() + 300000;
     }
 
     ClntObjMgrEnumVisibleObjects(TrackingMaskUpdateProc, NULL);
     CGCommentator::PostInit(this);
-
-    if (SFile::IsStreamingMode() && this->GetTransportGUID()) {
-        LoadingScreenDisable();
-        World::Preload(this->GetPosition(), 1);
-    }
+    CGAchievementInfo::PostInitActivePlayer();
 }
 
 // PROVEN: 55ad6dcf IDENTICAL/NONE
@@ -8008,10 +8401,14 @@ int32_t CGPlayer_C::UpdateUnitCollisionBox(int32_t a2, int32_t a3) {
     return 1;
 }
 
-// OFFSET: #0x006DF7A0
+// OFFSET: 0x005582C0
 bool CGPlayer_C::OnGuildChanged(int32_t a2) {
     this->UpdateUnitNameText();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TABARD_CANSAVE_CHANGED, NULL);
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_TABARD_CANSAVE_CHANGED, NULL);
+    }
+
     WOWGUID guid = this->m_obj->m_guid;
     Script_SendUnitSignal(guid, SCRIPT_EVENT_PLAYER_GUILD_UPDATE);
 
@@ -8019,22 +8416,7 @@ bool CGPlayer_C::OnGuildChanged(int32_t a2) {
         CGCalendar::GuildChanged();
     }
 
-    VisibleItem_C* tabard = &this->m_player->m_playerVisibleItems[18];
-
-    if (!tabard || tabard->GetInventoryType() != 19) {
-        return false;
-    }
-
-    int32_t displayId = tabard->GetDisplayID();
-
-    if (!displayId) {
-        return false;
-    }
-
-    if (this->CanEquipItemsInThisForm()) {
-        this->LoadGuildTextures(displayId);
-    }
-
+    this->LoadGuildTextures(this->GetGuildGUID().m_guid);
     return true;
 }
 
@@ -9507,12 +9889,8 @@ void CGPlayer_C::DanceMoveAnimComplete() {
     }
 }
 
-// OFFSET: #0x006E5090
+// OFFSET: 0x0056A6D0
 void CGPlayer_C::DestructActivePlayer() {
-    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
-        SErrDisplayAppFatalMessage("", "", 0);
-    }
-
     if (ClntObjMgrGetPlayerType() != 1) {
         if (this->m_unit->m_unitFieldFlags & 0x80000) {
             CGGameUI::SetRegenEnabled(1);
@@ -9521,7 +9899,7 @@ void CGPlayer_C::DestructActivePlayer() {
         CGGameUI::LeaveWorld();
     }
 
-    for (uint32_t i = 0; i < 1002; i++) {
+    for (uint32_t i = 0; i < 936; i++) {
         this->m_playerLocalMirrorLists[i].~TSList<void>();
     }
 
@@ -9529,8 +9907,12 @@ void CGPlayer_C::DestructActivePlayer() {
     EventUnregister(EVENT_ID_IDLE, CGPlayer_C::AutoCombatModeEventHandler);
     this->m_combatModeFlags &= ~0xEu;
     CGGameUI::UpdateCombatMode();
-    s_unk_C9EAB0 = 0;
-    s_unk_C9EAB4 = 0;
+
+    if (this->m_voidStorage) {
+        delete this->m_voidStorage;
+    }
+
+    this->m_voidStorage = NULL;
 }
 
 // OFFSET: #0x006DE6D0

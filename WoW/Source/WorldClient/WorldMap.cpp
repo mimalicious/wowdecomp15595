@@ -1,4 +1,5 @@
 #include "WoW/Source/WorldClient/WorldMap.h"
+#include "WoW/Source/Object/WGUID.h"
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
@@ -2527,7 +2528,9 @@ void CWorldMap::VectorIntersectEntitys(TSExplicitList<CMapBaseObjLink, offsetof(
         entity->unk_0020 = CWorldMap::s_queryTag;
         World::ObjectCollisionData data;
 
-        if (!reinterpret_cast<World::OBJECT_COLLISION_CALLBACK>(World::s_entityRenderCallback)(entity->m_param64, entity->m_param32, &data, flags)) {
+        WOWGUID guid = WOWGUID::Make(entity->m_param64);
+
+        if (!reinterpret_cast<World::OBJECT_COLLISION_CALLBACK>(World::s_entityRenderCallback)(&guid, entity->m_param32, &data, flags)) {
             continue;
         }
 

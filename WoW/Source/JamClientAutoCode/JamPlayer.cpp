@@ -524,3 +524,16 @@ void PlayerRequestGuildPartyState::Put(CDataStore* msg) {
         msg->Put(static_cast<uint8_t>(this->m_guildGUID[4] ^ 1));
     }
 }
+
+// OFFSET: 0x00673460
+PlayerRequestCategoryCooldowns::PlayerRequestCategoryCooldowns() {
+}
+
+// OFFSET: 0x006707A0
+PlayerRequestCategoryCooldowns::~PlayerRequestCategoryCooldowns() {
+}
+
+// OFFSET: 0x00670700
+void PlayerRequestCategoryCooldowns::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x7102));
+}

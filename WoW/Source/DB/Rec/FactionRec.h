@@ -21,7 +21,7 @@ class FactionRec {
     /* 0054 */ int32_t m_parentFactionCap [2];
     /* 005C */ DBCString m_name;
     /* 0060 */ DBCString m_description;
-    /* 0064 */ int32_t unk_0064;
+    /* 0064 */ int32_t m_sortOrder;
 };
 
 #endif

@@ -74,7 +74,7 @@ CGObject_C::InteractIcon CGObject_C::s_interactIcons[12] = {
 const uint32_t CGObject_C::s_questStatusIcons[11] = { 0, 6, 1, 2, 3, 5, 10, 11, 4, 9, 9 };
 
 // STATIC: 0x00CA6628
-static TSExplicitList<CGObject_C, 0xE8> s_fadeoutList;
+static TSExplicitList<CGObject_C, offsetof(CGObject_C, m_fadeoutLink)> s_fadeoutList;
 
 // STATIC: 0x00DD6320
 CTexture* CGObject_C::s_selectionTexture;

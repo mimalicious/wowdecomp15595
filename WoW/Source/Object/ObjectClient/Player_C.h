@@ -59,6 +59,9 @@ struct PROFICIENCYSPELL : public TSHashObject<PROFICIENCYSPELL, HASHKEY_NONE> {
     /* 0018 */ int32_t m_spellId;
 };
 
+struct CATEGORYCOOLDOWN : public TSLinkedNode<CATEGORYCOOLDOWN> {
+};
+
 struct PlayerPendingItemExpiration : public TSLinkedNode<PlayerPendingItemExpiration> {
     /* 0008 */ WOWGUID m_itemGuid;
     /* 0010 */ int32_t m_slot;
@@ -89,6 +92,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void HandleSpellEventSound();
     static int32_t IsXRayVisionActive();
     static void ShirtTabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
+    static bool LoadTabardGuildTextures(uint64_t guildGUID, const VisibleItem_C* item);
     static void TabardDrawCallback(const uint64_t& key, const WOWGUID& guid, void* param, bool success);
     void AddKnownSpell(int32_t spellId, int32_t a2, int32_t a3, int32_t a4);
     void AutoEquipItem(WOWGUID container, uint32_t slot, int32_t a3);
@@ -221,7 +225,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 212C */ uint32_t unk_212C [11];
     /* 2158 */ uint64_t m_guildMaxDailyXP;
     /* 2160 */ uint32_t unk_2160 [4];
-    /* 2170 */ TSList<void> unk_2170;
+    /* 2170 */ TSList<CATEGORYCOOLDOWN, TSGetLink<CATEGORYCOOLDOWN>> m_categoryCooldowns;
     /* 217C */ uint32_t unk_217C;
     /* 2180 */ WOWGUID m_lootTarget;
     /* 2188 */ uint8_t m_autoLoot;
@@ -260,6 +264,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void StartDance(PlayerDance* dance);
     void DanceMoveComplete();
     void PlayDanceMove(const DanceMovesRec* move);
+    void ConstructActivePlayer();
     void DestructActivePlayer();
     const CGBag_C* GetBag() const override;
     CGBag_C* GetBag() override;
@@ -448,6 +453,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void UpdateObjComponentVisuals(const VisibleItem_C* item, GEOCOMPONENTLINKS link);
     void UpdateObjComponentVisualsSlot(const VisibleItem_C* item, int32_t slot);
     void PostInitActivePlayer();
+    void RefreshSpellCategoryCooldowns(const SpellRec* spell);
     void UpdateObjectComplete(bool transport);
     void UpdatePartyMemberState();
     void SetActiveMirrorHandlers();

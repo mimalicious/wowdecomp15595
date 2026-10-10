@@ -39,6 +39,8 @@ class WMOAreaTableRec;
 const LiquidTypeRec* GetLiquidTypeRecForArea(uint32_t areaId, uint32_t liquidType);
 const WMOAreaTableRec* SDBWMOAreaTableLookup(uint32_t wmoId, uint32_t nameSet, uint32_t groupId);
 
+struct WOWGUID;
+
 namespace World {
     struct HitTestDebug;
     struct MinimapQuad;
@@ -46,7 +48,7 @@ namespace World {
     struct TriData;
 
     typedef int32_t (*COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, CM2Model* model, int32_t blobShadow);
-    typedef int32_t (*OBJECT_COLLISION_CALLBACK)(uint64_t param64, uint32_t param32, ObjectCollisionData* data, uint32_t flags);
+    typedef int32_t (*OBJECT_COLLISION_CALLBACK)(WOWGUID* guid, uint32_t param32, ObjectCollisionData* data, uint32_t flags);
 
     struct HitTestDebugItem {
         struct TextureInfo {

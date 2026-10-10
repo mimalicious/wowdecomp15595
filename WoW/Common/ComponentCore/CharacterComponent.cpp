@@ -3818,7 +3818,7 @@ int32_t CCharacterComponent::ComposeHelmModelFilePath(const ChrRacesRec* raceRec
     char path[260];
     SStrPrintf(path, "Item\\ObjectComponents\\Head\\%s", displayRec->m_modelName[0]);
     OsPathReplaceExtension(path, sizeof(path), path, "");
-    CHelmPathSuffix suffix("_%s%s.m2", raceRec->m_clientPrefix, s_fileDecorations[this->m_data.m_preferences.m_sexID]);
+    CHelmPathSuffix suffix("_%s%s.m2", static_cast<const char*>(raceRec->m_clientPrefix), s_fileDecorations[this->m_data.m_preferences.m_sexID]);
     SStrPack(path, suffix.m_buffer, sizeof(path));
     strcpy(buffer, path);
 

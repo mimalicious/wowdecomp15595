@@ -22,6 +22,7 @@ class CGVoidStorage_C {
     /* 0008 */ TSGrowableArray<WOWGUID> unk_0008;
 
     CGVoidStorage_C();
+    ~CGVoidStorage_C();
     VoidItem_C* GetItemBySlot(uint32_t slot);
     VoidItem_C* GetItem(WOWGUID guid);
 };

@@ -3088,10 +3088,10 @@ int32_t CGTooltip::SetAchievement(int32_t achievementId, WOWGUID guid, bool comp
             index++;
 
             if (left[0]) {
-                SStrPrintf(right, sizeof(right), criteria->m_description);
+                SStrPrintf(right, sizeof(right), static_cast<const char*>(criteria->m_description));
                 rightColor = met ? s_skillColors[1] : s_skillColors[0];
             } else {
-                SStrPrintf(left, sizeof(left), criteria->m_description);
+                SStrPrintf(left, sizeof(left), static_cast<const char*>(criteria->m_description));
                 leftColor = met ? s_skillColors[1] : s_skillColors[0];
             }
 
@@ -4676,7 +4676,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
                     SpellCategoryRec* categoryRec = g_spellCategoryDB.GetRecord(category);
 
                     if (categoryRec) {
-                        SStrPrintf(cost, sizeof(cost), token, categoryRec->m_name, maxUses - used);
+                        SStrPrintf(cost, sizeof(cost), token, static_cast<const char*>(categoryRec->m_name), maxUses - used);
                     } else {
                         SStrPrintf(cost, sizeof(cost), token, "UNKNOWN", maxUses - used);
                     }
@@ -4987,7 +4987,7 @@ int32_t CGTooltip::SetSpell(int32_t spellId, int32_t brief, uint32_t cooldown, i
     if (!brief) {
         if (spell->m_attributesEx & 0x2) {
             if (powerDisplay) {
-                SStrPrintf(runeText, sizeof(runeText), FrameScript_GetText(powerDisplay->m_globalStringBaseTag, -1, GENDER_NOT_APPLICABLE));
+                SStrPrintf(runeText, sizeof(runeText), FrameScript_GetText(static_cast<const char*>(powerDisplay->m_globalStringBaseTag), -1, GENDER_NOT_APPLICABLE));
                 SStrPrintf(token, sizeof(token), FrameScript_GetText("SPELL_USE_ALL_POWER_DISPLAY", -1, GENDER_NOT_APPLICABLE), runeText);
             } else {
                 const char* useAll;
@@ -5263,7 +5263,7 @@ void CGTooltip::SetObject(const WOWGUID& guid) {
             if (show) {
                 char skill[256];
                 LockTypeRec* lockType = g_lockTypeDB.GetRecord(lock->m_index[0]);
-                SStrPrintf(skill, sizeof(skill), format, lockType ? lockType->m_name : "UNKNOWN");
+                SStrPrintf(skill, sizeof(skill), format, lockType ? static_cast<const char*>(lockType->m_name) : "UNKNOWN");
                 SStrPrintf(text, sizeof(text), "%s%s", suffix, skill);
                 this->AddLine(text, NULL, color, color, 0);
             }
@@ -5629,10 +5629,10 @@ static bool AppendMasterySpells(char* text, uint32_t size) {
 
     if (second && second->m_name) {
         FormatString("ITEM_MOD_MASTERY_RATING_TWO_SPELLS", -1, GENDER_NOT_APPLICABLE, format, sizeof(format));
-        SStrPrintf(mastery, sizeof(mastery), format, first->m_name, second->m_name);
+        SStrPrintf(mastery, sizeof(mastery), format, static_cast<const char*>(first->m_name), static_cast<const char*>(second->m_name));
     } else {
         FormatString("ITEM_MOD_MASTERY_RATING_SPELL", -1, GENDER_NOT_APPLICABLE, format, sizeof(format));
-        SStrPrintf(mastery, sizeof(mastery), format, first->m_name);
+        SStrPrintf(mastery, sizeof(mastery), format, static_cast<const char*>(first->m_name));
     }
 
     SStrPack(text, " ", size);
@@ -5955,7 +5955,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
         } else if (item->m_itemLimitCategory) {
             ItemLimitCategoryRec* category = g_itemLimitCategoryDB.GetRecord(item->m_itemLimitCategory);
             FormatString(category->m_flags & 0x1 ? "ITEM_LIMIT_CATEGORY_MULTIPLE" : "ITEM_LIMIT_CATEGORY", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
-            SStrPrintf(text, sizeof(text), buffer, category->m_name, category->m_quantity);
+            SStrPrintf(text, sizeof(text), buffer, static_cast<const char*>(category->m_name), category->m_quantity);
             this->AddLine(text, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
         }
 
@@ -6018,7 +6018,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         skillColor = *GetSkillColor(required, skill, &suffix);
                         FormatString("ITEM_MIN_SKILL", -1, GENDER_NOT_APPLICABLE, format, sizeof(format));
                         LockTypeRec* type = g_lockTypeDB.GetRecord(lock->m_index[i]);
-                        SStrPrintf(text, sizeof(text), format, type ? type->m_name : "UNKNOWN", lock->m_skill[i]);
+                        SStrPrintf(text, sizeof(text), format, type ? static_cast<const char*>(type->m_name) : "UNKNOWN", lock->m_skill[i]);
                         this->AddLine(text, NULL, skillColor, skillColor, 0);
                     }
 
@@ -6082,7 +6082,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
     if (isBag) {
         if (subclass && subclass->m_displayName && *subclass->m_displayName) {
             FormatString("CONTAINER_SLOTS", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
-            SStrPrintf(name, sizeof(name), buffer, item->m_containerSlots, subclass->m_displayName);
+            SStrPrintf(name, sizeof(name), buffer, item->m_containerSlots, static_cast<const char*>(subclass->m_displayName));
             this->AddLine(name, NULL, s_tooltipTextColor, s_tooltipTextColor, 0);
         }
     } else if (itemRec->m_classID == 16) {
@@ -6573,9 +6573,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                                 FormatString(prismatic->m_requiredSkillRank ? "SOCKET_ITEM_MIN_SKILL" : "SOCKET_ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
 
                                 if (prismatic->m_requiredSkillRank) {
-                                    SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN", prismatic->m_requiredSkillRank);
+                                    SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", prismatic->m_requiredSkillRank);
                                 } else {
-                                    SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN");
+                                    SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
                                 }
 
                                 this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
@@ -6754,9 +6754,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                         FormatString(enchant->m_requiredSkillRank ? "ENCHANT_ITEM_MIN_SKILL" : "ENCHANT_ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
 
                         if (enchant->m_requiredSkillRank) {
-                            SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN", enchant->m_requiredSkillRank);
+                            SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", enchant->m_requiredSkillRank);
                         } else {
-                            SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN");
+                            SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
                         }
 
                         this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
@@ -6776,9 +6776,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                             FormatString(socketEnchant->m_requiredSkillRank ? "SOCKET_ITEM_MIN_SKILL" : "SOCKET_ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
 
                             if (socketEnchant->m_requiredSkillRank) {
-                                SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN", socketEnchant->m_requiredSkillRank);
+                                SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", socketEnchant->m_requiredSkillRank);
                             } else {
-                                SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN");
+                                SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
                             }
 
                             this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
@@ -6791,7 +6791,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
 
                     if (spell) {
                         FormatString("ITEM_PROPOSED_ENCHANT", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
-                        SStrPrintf(text, sizeof(text), buffer, spell->m_name);
+                        SStrPrintf(text, sizeof(text), buffer, static_cast<const char*>(spell->m_name));
                         this->AddLine(text, NULL, s_tooltipGreenColor, s_tooltipGreenColor, 0);
                         this->AddLine(FrameScript_GetText("ITEM_ENCHANT_DISCLAIMER", -1, GENDER_NOT_APPLICABLE), NULL, s_tooltipBrightRedColor, s_tooltipBrightRedColor, 0);
                     }
@@ -7091,9 +7091,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                 FormatString(item->m_requiredSkillRank ? "ITEM_MIN_SKILL" : "ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
 
                 if (item->m_requiredSkillRank) {
-                    SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN", item->m_requiredSkillRank);
+                    SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", item->m_requiredSkillRank);
                 } else {
-                    SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN");
+                    SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
                 }
 
                 const CImVector& skillColor = skillOk ? s_tooltipTextColor : s_tooltipRedColor;
@@ -7833,9 +7833,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
                 FormatString(useEnchant->m_requiredSkillRank ? "ENCHANT_ITEM_MIN_SKILL" : "ENCHANT_ITEM_REQ_SKILL", -1, GENDER_NOT_APPLICABLE, skillFormat, sizeof(skillFormat));
 
                 if (useEnchant->m_requiredSkillRank) {
-                    SStrPrintf(text, sizeof(text), skillFormat, skill ? skill->m_displayName : "UNKNOWN", useEnchant->m_requiredSkillRank);
+                    SStrPrintf(text, sizeof(text), skillFormat, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", useEnchant->m_requiredSkillRank);
                 } else {
-                    SStrPrintf(text, sizeof(text), skillFormat, skill ? skill->m_displayName : "UNKNOWN");
+                    SStrPrintf(text, sizeof(text), skillFormat, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
                 }
 
                 this->AddLine(text, NULL, s_tooltipRedColor, s_tooltipRedColor, 0);
@@ -7853,7 +7853,7 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
     if (itemSet && !socketPreview) {
         this->AddLine(" ", NULL, s_tooltipTitleColor, s_tooltipTitleColor, 1);
         FormatString("ITEM_SET_NAME", -1, GENDER_NOT_APPLICABLE, buffer, sizeof(buffer));
-        SStrPrintf(text, sizeof(text), buffer, itemSet->m_name, numEquipped, numSetItems);
+        SStrPrintf(text, sizeof(text), buffer, static_cast<const char*>(itemSet->m_name), numEquipped, numSetItems);
         this->AddLine(text, NULL, s_tooltipTitleColor, s_tooltipTitleColor, 0);
 
         if (itemSet->m_requiredSkill) {
@@ -7861,9 +7861,9 @@ int32_t CGTooltip::SetItem(int32_t itemId, const WOWGUID& requester, const WOWGU
             SkillLineRec* skill = g_skillLineDB.GetRecord(itemSet->m_requiredSkill);
 
             if (itemSet->m_requiredSkillRank) {
-                SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN", itemSet->m_requiredSkillRank);
+                SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN", itemSet->m_requiredSkillRank);
             } else {
-                SStrPrintf(text, sizeof(text), buffer, skill ? skill->m_displayName : "UNKNOWN");
+                SStrPrintf(text, sizeof(text), buffer, skill ? static_cast<const char*>(skill->m_displayName) : "UNKNOWN");
             }
 
             int32_t index = player->GetSkillIndex(itemSet->m_requiredSkill);

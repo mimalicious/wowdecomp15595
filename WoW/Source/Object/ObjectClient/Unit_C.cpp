@@ -10533,6 +10533,7 @@ void CGUnit_C::RequestMirrorImageDataFromServer() {
     msg.Put(static_cast<uint32_t>(CMSG_GET_MIRROR_IMAGE_DATA));
     msg.Put(this->m_obj->m_guid.m_guid);
     msg.Put(static_cast<uint32_t>(this->m_unit->m_unitFieldDisplayid));
+    msg.Finalize();
     ClientServices::Send2(&msg);
 }
 
@@ -13982,6 +13983,7 @@ void CGUnit_C::Disable() {
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
         msg.Put(member->m_guid.m_guid);
+        msg.Finalize();
         ClientServices::Send2(&msg);
     }
 
@@ -13994,6 +13996,7 @@ void CGUnit_C::Disable() {
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
         msg.Put(member->m_guid.m_guid);
+        msg.Finalize();
         ClientServices::Send2(&msg);
     }
 
@@ -14373,6 +14376,7 @@ void CGUnit_C::TryJumpOrAscend(uint32_t eventTime) {
     this->OnSpecialMountAnim();
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_MOUNT_SPECIAL_ANIM));
+    msg.Finalize();
     ClientServices::Send2(&msg);
 }
 
@@ -23226,6 +23230,7 @@ bool CGUnit_C::IsAlteredFormTransitionPreventingAction() const {
 void CGUnit_C::CancelGrowthAura() {
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_CANCEL_GROWTH_AURA));
+    msg.Finalize();
     ClientServices::Send2(&msg);
 }
 

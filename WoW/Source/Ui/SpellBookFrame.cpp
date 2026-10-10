@@ -1516,7 +1516,8 @@ void CGSpellBook::UpdateFutureSpells() {
         }
 
         s_spellBookItems.Add(1, &s_futureSpells.m_data[i]);
-        s_skillInfos.m_data[CGSpellBook::AddSkillInfo(s_futureSpells.m_data[i]->m_skillLine, false)]->m_numFuture++;
+        uint32_t skillIndex = CGSpellBook::AddSkillInfo(s_futureSpells.m_data[i]->m_skillLine, false);
+        s_skillInfos.m_data[skillIndex]->m_numFuture++;
     }
 }
 
@@ -1539,7 +1540,8 @@ void CGSpellBook::AddFlyout(int32_t flyoutId, int32_t spellId) {
     bool isProfession = false;
     item->m_skillLine = CGSpellBook::GetRealSpellBookSkillLine(spellId, &isProfession);
     item->m_inFlyout = 0;
-    s_skillInfos.m_data[CGSpellBook::AddSkillInfo(item->m_skillLine, isProfession)]->m_numFlyouts++;
+    uint32_t skillIndex = CGSpellBook::AddSkillInfo(item->m_skillLine, isProfession);
+    s_skillInfos.m_data[skillIndex]->m_numFlyouts++;
 }
 
 // OFFSET: 0x00912740/0x14066EBB0

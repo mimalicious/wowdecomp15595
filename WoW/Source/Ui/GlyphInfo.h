@@ -8,6 +8,7 @@ struct lua_State;
 class CGGlyphInfo {
     public:
     static void InitializeGame();
+    static void InitializeKnownGlyphs();
     static void AddKnownGlyph(int32_t spellId);
     static void ClearSelectedGlyphBySpell(int32_t spellId);
 };

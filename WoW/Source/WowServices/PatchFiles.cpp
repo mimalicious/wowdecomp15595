@@ -55,7 +55,7 @@ PatchFiles::PatchFiles(const char* locale, bool flag) {
                 continue;
             }
 
-            SStrPrintf(directory, sizeof(directory), spec.m_directory, locale);
+            SStrPrintf(directory, sizeof(directory), static_cast<const char*>(spec.m_directory), locale);
             SStrPrintf(pattern, sizeof(pattern), spec.m_pattern, locale);
 
             if (spec.m_useInstallPath && *installPath) {

@@ -1187,7 +1187,7 @@ static int32_t MinimapBuildSource(const int32_t* tile, char* path, uint32_t size
         return 0;
     }
 
-    SStrPrintf(path, size, s_minimapTileFormat, map->m_directory, tile[0], tile[1]);
+    SStrPrintf(path, size, s_minimapTileFormat, static_cast<const char*>(map->m_directory), tile[0], tile[1]);
     MINIMAPMD5NAME* name = s_md5Names.Ptr(path);
 
     if (!name) {

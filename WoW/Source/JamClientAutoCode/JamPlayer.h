@@ -182,6 +182,14 @@ class PlayerClearTradeItem : public JamClientMessage {
     ~PlayerClearTradeItem();
 };
 
+class PlayerRequestCategoryCooldowns : public JamClientMessage {
+    public:
+    void Put(CDataStore* msg) override;
+
+    PlayerRequestCategoryCooldowns();
+    ~PlayerRequestCategoryCooldowns();
+};
+
 class PlayerRequestGuildPartyState : public JamClientMessage {
     public:
     /* 0010 */ uint8_t m_guildGUID[8];

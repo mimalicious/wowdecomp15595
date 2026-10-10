@@ -2262,7 +2262,7 @@ int32_t CGChat::OnServerMessage(void* param, NETMESSAGE msgId, uint32_t time, CD
 
     if (rec) {
         if (argument[0]) {
-            SStrPrintf(text, sizeof(text), rec->m_text, argument);
+            SStrPrintf(text, sizeof(text), static_cast<const char*>(rec->m_text), argument);
         } else {
             SStrCopy(text, rec->m_text, sizeof(text));
         }
@@ -2988,9 +2988,9 @@ void CGChat::LogXPGain(CGUnit_C* unit, int32_t amount, int32_t type, int32_t bon
             char text[3000];
 
             if (base == bonus) {
-                SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount, bonusText, exhaustion->m_name);
+                SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount, bonusText, static_cast<const char*>(exhaustion->m_name));
             } else {
-                SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount, bonusText, exhaustion->m_name, abs(bonus - base));
+                SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), unit->GetUnitName(NULL, 1), amount, bonusText, static_cast<const char*>(exhaustion->m_name), abs(bonus - base));
             }
 
             CGChat::AddChatMessage(text, 33, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
@@ -3198,14 +3198,14 @@ void CGChat::AddTextEmoteMessage(const WOWGUID& guid, uint32_t emote, const char
 
         if (hasSender) {
             if (hasTarget) {
-                SStrPrintf(buffer, sizeof(buffer), text->m_text, sender->m_name, target);
+                SStrPrintf(buffer, sizeof(buffer), static_cast<const char*>(text->m_text), static_cast<const char*>(sender->m_name), target);
             } else {
-                SStrPrintf(buffer, sizeof(buffer), text->m_text, sender->m_name);
+                SStrPrintf(buffer, sizeof(buffer), static_cast<const char*>(text->m_text), static_cast<const char*>(sender->m_name));
             }
         } else if (hasTarget) {
-            SStrPrintf(buffer, sizeof(buffer), text->m_text, target);
+            SStrPrintf(buffer, sizeof(buffer), static_cast<const char*>(text->m_text), target);
         } else {
-            SStrPrintf(buffer, sizeof(buffer), text->m_text);
+            SStrPrintf(buffer, sizeof(buffer), static_cast<const char*>(text->m_text));
         }
 
         const char* languageName = "";
@@ -3988,7 +3988,7 @@ void CGChat::LogFactionChanged(int32_t faction, int32_t delta, int32_t generic, 
         token = "FACTION_STANDING_INCREASED";
     }
 
-    SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), rec->m_name, abs(delta), bonus);
+    SStrPrintf(text, sizeof(text), FrameScript_GetText(token, -1, GENDER_NOT_APPLICABLE), static_cast<const char*>(rec->m_name), abs(delta), bonus);
     CGChat::AddChatMessage(text, CHAT_MSG_COMBAT_FACTION_CHANGE, NULL, 0, NULL, NULL, NULL, WOWGUID(), 0, WOWGUID(), 0, false, NULL);
     SendToCombatText(36, rec->m_name, delta);
 }
@@ -4216,7 +4216,7 @@ bool InternalJoinChannel(const char* channelName, const char* password, uint32_t
 
         *zoneChannelName = rec->m_shortcut;
         *zoneChannelID = rec->m_id;
-        SStrPrintf(name, sizeof(name), rec->m_name, text);
+        SStrPrintf(name, sizeof(name), static_cast<const char*>(rec->m_name), text);
         password = "";
 
         if (checkRecruitment && (rec->m_flags & 0x20000)) {
@@ -4798,7 +4798,7 @@ int32_t InternalLeaveChannel(const char* channelName, bool clearRecruitment, boo
 
         zoneChannelName = rec->m_shortcut;
         zoneChannelID = rec->m_id;
-        SStrPrintf(name, sizeof(name), rec->m_name, text);
+        SStrPrintf(name, sizeof(name), static_cast<const char*>(rec->m_name), text);
 
         if (clearRecruitment && (rec->m_flags & 0x20000) && CGChat::m_guildRecruitmentMode) {
             CGChat::m_guildRecruitmentMode = 0;
@@ -5987,14 +5987,14 @@ int32_t CGChat::OnTitleEarned(void* param, NETMESSAGE msgId, uint32_t time, CDat
 
     if (player->m_player->m_playerBytes3[0] == 1) {
         if (strcmp(title->m_name1, "")) {
-            SStrPrintf(name, sizeof(name), title->m_name1, player->GetUnitName(NULL, 1));
+            SStrPrintf(name, sizeof(name), static_cast<const char*>(title->m_name1), player->GetUnitName(NULL, 1));
         } else {
-            SStrPrintf(name, sizeof(name), title->m_name, player->GetUnitName(NULL, 1));
+            SStrPrintf(name, sizeof(name), static_cast<const char*>(title->m_name), player->GetUnitName(NULL, 1));
         }
     } else if (strcmp(title->m_name, "")) {
-        SStrPrintf(name, sizeof(name), title->m_name, player->GetUnitName(NULL, 1));
+        SStrPrintf(name, sizeof(name), static_cast<const char*>(title->m_name), player->GetUnitName(NULL, 1));
     } else {
-        SStrPrintf(name, sizeof(name), title->m_name1, player->GetUnitName(NULL, 1));
+        SStrPrintf(name, sizeof(name), static_cast<const char*>(title->m_name1), player->GetUnitName(NULL, 1));
     }
 
     char text[3000];

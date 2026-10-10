@@ -30,7 +30,8 @@ struct FactionHeader {
     /* 0000 */ int32_t m_factionId;
     /* 0004 */ int32_t m_count;
     /* 0008 */ int32_t m_parent;
-    /* 000C */ int32_t m_collapsed;
+    /* 000C */ uint8_t m_collapsed;
+    /* 000D */ uint8_t unk_000D[3];
 };
 
 struct ForcedReaction {
@@ -46,9 +47,9 @@ class CGReputationInfo {
     public:
     static void LoadFactions();
     static TSGrowableArray<const FactionRec*>* GetFactionChildren(int32_t faction);
-    static FactionStanding m_factionStandings[128];
+    static FactionStanding m_factionStandings[256];
     static const int32_t m_reactionThresholds[9];
-    static FactionHeader* m_headers[64];
+    static FactionHeader* m_headers[128];
     static uint32_t m_numHeaders;
     static uint32_t m_numFactions;
     static uint32_t m_numShownFactions;

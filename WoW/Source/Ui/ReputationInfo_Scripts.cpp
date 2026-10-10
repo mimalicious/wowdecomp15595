@@ -121,7 +121,7 @@ static int32_t Script_GetWatchedFactionInfo(lua_State* L) {
 
     if (player) {
         uint32_t index = player->m_player->m_playerFieldWatchedFactionIndex;
-        faction = index > 127 ? 0 : CGReputationInfo::m_factionStandings[index].m_factionId;
+        faction = index > 255 ? 0 : CGReputationInfo::m_factionStandings[index].m_factionId;
         rec = g_factionDB.GetRecord(faction);
     }
 

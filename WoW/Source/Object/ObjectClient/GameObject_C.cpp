@@ -983,8 +983,8 @@ const char* CGGameObject_C_Type_Null::DebugStatus() {
     return "Unknown Object Type";
 }
 
-// OFFSET: #0x007124B0
-CGGameObject_C_TypeAnimated::CGGameObject_C_TypeAnimated(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create), m_animState(-1), m_pendingAnimState(-1), m_nextAnimTime(-1) {
+// INLINED
+CGGameObject_C_TypeAnimated::CGGameObject_C_TypeAnimated(CGGameObject_C* owner, const CClientObjCreate& create) : CGGameObject_C_TypeBase(owner, create), m_animState(-1), m_pendingAnimState(-1), m_nextAnimTime(-1), m_sound(0), m_baseKit(NULL), m_stateKit(NULL), m_oneShotKit(NULL) {
     this->ResetAnimState();
 }
 

@@ -1060,7 +1060,7 @@ void CGLCD::SetAlertText() {
         }
 
         char text[64];
-        SStrPrintf(text, sizeof(text), format, message.m_text);
+        SStrPrintf(text, sizeof(text), format, static_cast<const char*>(message.m_text));
         char name[32];
         SStrPrintf(name, sizeof(name), "CHAT_ALERT_%d", ++i);
         LCDHANDLE* handle = CGLCD::m_handles.Ptr(name);

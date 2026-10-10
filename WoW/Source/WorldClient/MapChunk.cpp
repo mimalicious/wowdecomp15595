@@ -1,4 +1,5 @@
 #include "WoW/Source/WorldClient/MapChunk.h"
+#include "WoW/Source/Object/WGUID.h"
 #include <cfloat>
 #include <cmath>
 #include <cstring>
@@ -2070,9 +2071,9 @@ bool CMap::GetEntityFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjL
             continue;
         }
 
-        uint64_t guid = entity->m_param64;
+        WOWGUID guid = WOWGUID::Make(entity->m_param64);
 
-        if (!reinterpret_cast<World::OBJECT_COLLISION_CALLBACK>(World::s_entityRenderCallback)(guid, entity->m_param32, &data, flags)) {
+        if (!reinterpret_cast<World::OBJECT_COLLISION_CALLBACK>(World::s_entityRenderCallback)(&guid, entity->m_param32, &data, flags)) {
             continue;
         }
 
@@ -2102,7 +2103,7 @@ bool CMap::GetEntityFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjL
 
         if (data.m_model->IsLoaded()) {
             if (box2.Intersects(data.m_bounds)) {
-                CollectEntityFacets(data, facets, box2, guid);
+                CollectEntityFacets(data, facets, box2, guid.m_guid);
             }
 
             continue;
@@ -2114,7 +2115,7 @@ bool CMap::GetEntityFacets(TSExplicitList<CMapBaseObjLink, offsetof(CMapBaseObjL
         }
 
         if (static_cast<int32_t>(flags) < 0 && box2.Intersects(data.m_bounds)) {
-            World::AddAaBoxFacets(data.m_bounds, guid, facets, 1);
+            World::AddAaBoxFacets(data.m_bounds, guid.m_guid, facets, 1);
         }
     }
 
