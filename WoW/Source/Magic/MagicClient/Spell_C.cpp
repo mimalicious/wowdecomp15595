@@ -584,7 +584,7 @@ int32_t Spell_C_NeedsCooldownEvent(int32_t itemId) {
 }
 
 // OFFSET: #0x0080B5D0
-bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID& target, const ItemRecSparse* item, bool ignoreControl) {
+bool Spell_C_IsUsableAction(CGUnit_C* unit, const SpellRec* spell, const WOWGUID& target, const ItemRecSparse* item, bool ignoreControl, bool a6, bool ignoreCost) {
     if (!unit) {
         return false;
     }
@@ -8919,7 +8919,7 @@ int32_t Spell_C_TargetTradeItem() {
 }
 
 // OFFSET: #0x0080DA80
-void Spell_C_ClickSpell(int32_t spellId, const CGItem_C* item, WOWGUID target) {
+void Spell_C_ClickSpell(int32_t spellId, const CGItem_C* item, WOWGUID target, int32_t baseSpell, int32_t ignoreCost) {
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
 
     if (!player) {

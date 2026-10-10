@@ -28,9 +28,10 @@ class MACRONODE : public TSHashObject<MACRONODE, HASHKEY_NONE> {
     /* 056C */ int32_t m_spellFlags;
     /* 0570 */ uint32_t m_showTooltip;
     /* 0574 */ uint32_t m_dynamic;
-    /* 0578 */ WOWGUID m_target;
-    /* 0580 */ TSGrowableArray<MacroCommand> m_commands;
-    /* 0590 */ TSLink<MACRONODE> m_dynamicLink;
+    /* 0578 */ uint32_t unk_0578[2];
+    /* 0580 */ WOWGUID m_target;
+    /* 0588 */ TSGrowableArray<MacroCommand> m_commands;
+    /* 0598 */ TSLink<MACRONODE> m_dynamicLink;
 
     MACRONODE();
     ~MACRONODE();

@@ -18,7 +18,7 @@
 #include "Engine/Source/lua-5.1/src/lauxlib.h"
 #include "Engine/Source/lua-5.1/src/lua.h"
 
-// STATIC: #0x00C2423C
+// STATIC: 0x00F76BF0
 int32_t CGCooldown::s_objectType;
 
 // STATIC: #0x00AD13CC

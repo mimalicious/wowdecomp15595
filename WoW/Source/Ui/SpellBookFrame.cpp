@@ -683,7 +683,7 @@ void CGSpellBook::AddKnownSpell(int32_t spellId, int32_t notify, int32_t replace
             for (int32_t slot = offset; slot < offset + 12; slot++) {
                 if (!CGActionBar::HasAction(slot)) {
                     CGGameUI::SetCursorSpell(spell.m_id);
-                    CGActionBar::PutActionInSlot(slot);
+                    CGActionBar::PutActionInSlot(slot, 0);
                     break;
                 }
             }
@@ -1550,7 +1550,7 @@ bool HasSpell(int32_t spellId, int32_t petSpell) {
 
 // OFFSET: #0x0053BAC0
 void CGSpellBook::UpdateCooldowns() {
-    CGActionBar::SignalUpdateCooldown();
+    CGActionBar::UpdateCooldowns();
 
     if (s_shapeshiftSpells.Count()) {
         FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_SHAPESHIFT_COOLDOWN, NULL);

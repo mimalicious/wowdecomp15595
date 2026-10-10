@@ -688,7 +688,7 @@ void CGUIMacros::DeleteMacro(uint32_t id) {
     CGUIMacros::m_numMacros[macro->m_type]--;
     s_macros.Delete(macro);
     CGUIMacros::m_saveMacros = 1;
-    CGActionBar::RemoveMacroActions(id);
+    CGActionBar::RemoveMacro(id, 0);
     CGUIMacros::SortMacros();
 }
 

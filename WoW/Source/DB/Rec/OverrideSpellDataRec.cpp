@@ -16,5 +16,5 @@ const DBCMeta OverrideSpellDataRec::s_meta = { "DBFilesClient\\OverrideSpellData
 // OFFSET: 0x00A2EA80/0x1407D80B0
 void OverrideSpellDataRec::FixupStrings(void* record, const char* strings) {
     OverrideSpellDataRec* rec = static_cast<OverrideSpellDataRec*>(record);
-    DBCFixupString(rec->unk_0030, strings);
+    DBCFixupString(rec->m_overrideBarType, strings);
 }

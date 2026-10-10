@@ -55,6 +55,7 @@ class CGEquipmentManager {
     static void SaveSet(EQUIPMENT_SET* set, const char* name, const char* icon);
     static bool DeleteEquipmentSet(EQUIPMENT_SET* set);
     static bool HasSet(const char* name);
+    static bool HasSet(int32_t id);
     static int32_t GetNextFreeSetID();
     static EQUIPMENT_SET* GetSetByIndex(int32_t index);
     static EQUIPMENT_SET* GetSetByName(const char* name);

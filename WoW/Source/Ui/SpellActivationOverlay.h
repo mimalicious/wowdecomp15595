@@ -10,6 +10,7 @@ class CGSpellActivationOverlay {
     static void ShutdownGame();
     static void EnterWorld();
     static void UpdateUsable();
+    static uint32_t AddOverlayGlowableSpell(int32_t spellId);
     static void UpdateActiveMoverOverlays();
     static void OnAuraAdded(const SpellRec* spell);
     static void OnAuraRemoved(const SpellRec* spell);

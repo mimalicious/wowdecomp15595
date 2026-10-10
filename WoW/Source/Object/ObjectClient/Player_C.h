@@ -239,14 +239,16 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     /* 21A8 */ CGUnitVirtualItem m_virtualItems [3];
     /* 21C0 */ uint32_t m_clientStandState;
     /* 21C4 */ int32_t m_gemCounts [4];
-    /* 21D4 */ uint32_t m_combatModeTime;
-    /* 21D8 */ uint32_t unk_21D8 [4];
+    /* 21D4 */ uint32_t unk_21D4 [2];
+    /* 21DC */ uint32_t m_combatModeTime;
+    /* 21E0 */ WOWGUID m_combatTarget;
     /* 21E8 */ uint32_t m_pvpCooldownTimestamp;
     /* 21EC */ PlayerDance* m_dance;
     /* 21F0 */ int32_t m_danceMoveIndex;
     /* 21F4 */ int32_t m_playedTime;
     /* 21F8 */ uint32_t m_playedTimeBase;
-    /* 21FC */ WOWGUID m_combatTarget;
+    /* 21FC */ uint32_t unk_21FC;
+    /* 2200 */ uint32_t unk_2200;
     /* 2204 */ uint32_t unk_2204;
 
     ~CGPlayer_C();

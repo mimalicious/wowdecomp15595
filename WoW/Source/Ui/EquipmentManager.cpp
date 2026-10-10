@@ -666,3 +666,14 @@ void CGEquipmentManager::ShutdownGame() {
     delete CGEquipmentManager::s_equipmentSetHeap;
     CGEquipmentManager::s_equipmentSetHeap = NULL;
 }
+
+// OFFSET: 0x009A1DC0
+bool CGEquipmentManager::HasSet(int32_t id) {
+    for (EQUIPMENT_SET_NODE* node = CGEquipmentManager::s_equipmentSets.Head(); node; node = CGEquipmentManager::s_equipmentSets.Next(node)) {
+        if (node->m_set->m_id == id) {
+            return true;
+        }
+    }
+
+    return false;
+}

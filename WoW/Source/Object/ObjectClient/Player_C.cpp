@@ -10120,7 +10120,7 @@ int32_t OnUpdatePlayerRuneRegen(WOWGUID guid, uint32_t offset, uint32_t count, c
 
         CGRuneInfo::SetRuneLastUsedTime(i, FrameTime::s_curTimeMs - static_cast<uint32_t>(progress * 1000.0 / current));
         CGRuneInfo::ComputeRuneRechargeTime(i, clamped);
-        CGActionBar::SignalUpdateCooldown();
+        CGActionBar::UpdateCooldowns();
     }
 
     return 1;
