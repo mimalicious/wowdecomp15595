@@ -1,40 +1,38 @@
 #include "ClassTrainerFrame.h"
 #include <cstdint>
+#include <cstring>
+#include "Engine/Source/ConsoleBase/ConsoleVar.h"
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
-#include "Engine/Source/lua-5.1/src/lua.h"
-#include "Engine/Source/lua-5.1/src/lauxlib.h"
-#include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/DB/Rec/SpellRec.h"
-#include "WoW/Source/DB/Rec/SkillLineRec.h"
-#include "WoW/Source/DB/Rec/SkillLineAbilityRec.h"
-#include "WoW/Source/Magic/MagicClient/SpellTable.h"
-#include "WoW/Source/Object/ObjectClient/Player_C.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "Engine/Source/Storm/H/storm.h"
-#include "Engine/Source/ConsoleBase/ConsoleVar.h"
-#include "WoW/Source/Ui/GameUI.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
+#include "Engine/Source/lua-5.1/src/lauxlib.h"
+#include "Engine/Source/lua-5.1/src/lua.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
+#include "WoW/Source/DB/Rec/SkillLineAbilityRec.h"
+#include "WoW/Source/DB/Rec/SkillLineRec.h"
+#include "WoW/Source/DB/Rec/SpellEffectRec.h"
 #include "WoW/Source/DB/Rec/SpellIconRec.h"
-#include "WoW/Source/Object/ItemStats.h"
+#include "WoW/Source/DB/Rec/SpellRec.h"
+#include "WoW/Source/Magic/MagicClient/SpellTable.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
-#include "WoW/Source/Magic/MagicClient/Spell_C.h"
-#include "WoW/Source/Ui/QuestTextParser.h"
+#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/Object/Unit.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/UIUtil/Tooltip.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/QuestTextParser.h"
+#include "WoW/Source/Ui/Types.h"
 
-// OFFSET: 0x009B9100/0x140743F30
-static int32_t Script_GetTrainerGreetingText(lua_State* L) {
-    lua_pushstring(L, CGClassTrainer::m_greetingText);
-    return 1;
-}
-
+// PROVEN: 5332716c IDENTICAL/NONE
 // OFFSET: 0x009B9080/0x140743EC0
 static int32_t Script_GetNumTrainerServices(lua_State* L) {
     lua_pushnumber(L, CGClassTrainer::m_filteredServices);
     return 1;
 }
 
+// PROVEN: 2f9014ab IDENTICAL/NONE
 // OFFSET: 0x009B90C0/0x140743EF0
 static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     if (CGClassTrainer::m_trainerType == 2) {
@@ -46,6 +44,30 @@ static int32_t Script_IsTradeskillTrainer(lua_State* L) {
     return 1;
 }
 
+// PROVEN: 788fe43f IDENTICAL/NONE
+// OFFSET: 0x009B9100/0x140743F30
+static int32_t Script_GetTrainerGreetingText(lua_State* L) {
+    lua_pushstring(L, CGClassTrainer::m_greetingText);
+    return 1;
+}
+
+// OFFSET: 0x009B9170/0x140743FC0
+static int32_t Script_GetTrainerServiceStepIndex(lua_State* L) {
+    if (CGClassTrainer::m_stepIndex < 0) {
+        return 0;
+    }
+
+    lua_pushinteger(L, CGClassTrainer::m_stepIndex + 1);
+    return 1;
+}
+
+// PROVEN: d8087372 IDENTICAL/NONE
+// OFFSET: 0x009B9580/0x140744580
+static int32_t Script_CloseTrainer(lua_State* L) {
+    CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
+    return 0;
+}
+
 // OFFSET: 0x009B95B0/0x1407445D0
 static int32_t Script_SelectTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -53,7 +75,7 @@ static int32_t Script_SelectTrainerService(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int64_t>(lua_tonumber(L, 1)) - 1;
 
     if (index >= CGClassTrainer::m_numServices || (CGClassTrainer::m_currentSelection = CGClassTrainer::m_services.m_data[index]->m_spellID) < 0) {
         CGClassTrainer::m_currentSelection = 0;
@@ -62,32 +84,17 @@ static int32_t Script_SelectTrainerService(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009B9D80/0x140744F20
-static int32_t Script_GetTrainerServiceCost(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceCost(index)");
-        return 0;
+// OFFSET: 0x009B9640/0x140744650
+static int32_t Script_GetTrainerSelectionIndex(lua_State* L) {
+    int32_t index = CGClassTrainer::GetSelectionIndex();
+
+    if (index < 0) {
+        lua_pushnil(L);
+        return 1;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
-    int32_t moneyCost = 0;
-    int32_t talentCost;
-    int32_t professionCost;
-
-    if (service) {
-        moneyCost = service->m_moneyCost;
-        talentCost = service->m_talentCost;
-        professionCost = service->m_professionCost;
-    } else {
-        talentCost = 0;
-        professionCost = 0;
-    }
-
-    lua_pushnumber(L, moneyCost);
-    lua_pushnumber(L, talentCost);
-    lua_pushnumber(L, professionCost);
-    return 3;
+    lua_pushnumber(L, CGClassTrainer::GetSelectionIndex() + 1);
+    return 1;
 }
 
 // OFFSET: 0x009B96C0/0x1407446F0
@@ -97,7 +104,7 @@ static int32_t Script_GetTrainerServiceLevelReq(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     int32_t levelReq = 0;
 
     if (index < CGClassTrainer::m_numServices) {
@@ -119,7 +126,7 @@ static int32_t Script_GetTrainerServiceNumAbilityReq(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
     uint32_t count = 0;
 
@@ -139,151 +146,6 @@ static int32_t Script_GetTrainerServiceNumAbilityReq(lua_State* L) {
 
     lua_pushnumber(L, count);
     return 1;
-}
-
-// OFFSET: #0x00595B60
-static int32_t Script_IsTrainerServiceSkillStep(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: IsTrainerServiceSkillStep(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < CGClassTrainer::m_numServices) {
-        TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-        if (service) {
-            SpellRec spell;
-
-            if (g_spellDB.GetRecord(service->m_spellID, &spell)) {
-                for (uint32_t i = 0; i < 3; i++) {
-                    if (spell.m_effect[i] == 44) {
-                        lua_pushnumber(L, 1.0);
-                        return 1;
-                    }
-                }
-            }
-        }
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
-
-// OFFSET: #0x00594650
-static int32_t Script_GetTrainerSkillLines(lua_State* L) {
-    uint32_t count = CGClassTrainer::m_numSkillLines;
-
-    for (uint32_t i = 0; i < count; i++) {
-        int32_t skillLine = i < CGClassTrainer::m_numSkillLines ? CGClassTrainer::m_skillLines.m_data[i]->m_skillLine : 0;
-        SkillLineRec* rec = g_skillLineDB.GetRecord(skillLine);
-        lua_pushstring(L, rec ? rec->m_displayName : NULL);
-    }
-
-    return count;
-}
-
-// OFFSET: #0x00593EB0
-static int32_t Script_GetTrainerSkillLineFilter(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerSkillLineFilter(index)");
-        return 0;
-    }
-
-    uint32_t filter = CGClassTrainer::m_skillLineFilter;
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
-
-    if (index < 0) {
-        for (uint32_t i = 0; i < CGClassTrainer::m_numSkillLines; i++) {
-            if (!((1 << i) & filter)) {
-                lua_pushnil(L);
-                return 1;
-            }
-        }
-
-        lua_pushnumber(L, 1.0);
-        return 1;
-    }
-
-    if (index >= CGClassTrainer::m_numSkillLines) {
-        luaL_error(L, "Bad skill line in GetTrainerSkillLineFilter");
-        return 0;
-    }
-
-    if ((1 << index) & filter) {
-        lua_pushnumber(L, 1.0);
-        return 1;
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
-
-// OFFSET: 0x009B9C10/0x140744D00
-static int32_t Script_GetTrainerServiceSkillLine(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceSkillLine(index)");
-        return 0;
-    }
-
-    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
-
-    if (player && service) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(service->m_spellID, &spell)) {
-            for (uint32_t i = 0; i < 3; i++) {
-                int32_t effect = spell.m_effect[i];
-
-                if (!effect) {
-                    continue;
-                }
-
-                SkillLineRec* skill;
-
-                if (effect == 44) {
-                    skill = g_skillLineDB.GetRecord(spell.m_effectMiscValue[i]);
-                } else {
-                    int32_t spellId = effect != 36 || spell.m_implicitTargetA[i] == 5 ? spell.m_id : spell.m_effectTriggerSpell[i];
-                    SkillLineAbilityRec* ability = SpellTableLookupAbility(player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[1], spellId);
-
-                    if (!ability) {
-                        continue;
-                    }
-
-                    skill = g_skillLineDB.GetRecord(ability->m_skillLine);
-                }
-
-                if (skill) {
-                    lua_pushstring(L, skill->m_displayName);
-                    return 1;
-                }
-            }
-        }
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
-
-// OFFSET: #0x00593DB0
-static int32_t GetServiceTypeFromString(const char* type) {
-    if (!type) {
-        return 6;
-    }
-
-    if (!SStrCmpI(type, "available", STORM_MAX_STR)) {
-        return 0;
-    }
-
-    if (!SStrCmpI(type, "unavailable", STORM_MAX_STR)) {
-        return 1;
-    }
-
-    return SStrCmpI(type, "used", STORM_MAX_STR) ? 6 : 2;
 }
 
 // OFFSET: 0x009B97E0/0x140744810
@@ -309,27 +171,9 @@ static int32_t Script_GetTrainerServiceTypeFilter(lua_State* L) {
     return 1;
 }
 
-// OFFSET: 0x009B9580/0x140744580
-static int32_t Script_CloseTrainer(lua_State* L) {
-    WOWGUID none = WOWGUID();
-    CGClassTrainer::SetTrainer(none, 0);
-    return 0;
-}
-
-// OFFSET: 0x009B9640/0x140744650
-static int32_t Script_GetTrainerSelectionIndex(lua_State* L) {
-    if (CGClassTrainer::GetSelectionIndex() < 0) {
-        lua_pushnil(L);
-    } else {
-        lua_pushnumber(L, CGClassTrainer::GetSelectionIndex() + 1);
-    }
-
-    return 1;
-}
-
 // OFFSET: 0x009B9BC0/0x140744CB0
 static int32_t Script_OpenTrainer(lua_State* L) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
 
     if (player) {
         WOWGUID guid = player->m_obj->m_guid;
@@ -339,68 +183,78 @@ static int32_t Script_OpenTrainer(lua_State* L) {
     return 0;
 }
 
-// OFFSET: 0x009BABC0/0x140746250
-static int32_t Script_GetTrainerServiceInfo(lua_State* L) {
+// OFFSET: 0x009B9C10/0x140744D00
+static int32_t Script_GetTrainerServiceSkillLine(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceInfo(index)");
+        luaL_error(L, "Usage: GetTrainerServiceSkillLine(index)");
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    lua_pushstring(L, CGClassTrainer::GetServiceName(index));
-    lua_pushstring(L, CGClassTrainer::GetServiceSubtext(index));
-    lua_pushstring(L, CGClassTrainer::GetServiceType(index));
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
 
-    if (CGClassTrainer::IsCollapsedHeader(index)) {
-        lua_pushnil(L);
-    } else {
-        lua_pushnumber(L, 1.0);
-    }
+    if (player && service) {
+        uint32_t count;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(service->m_spellID, count);
 
-    return 4;
-}
+        for (uint32_t i = 0; i < count; i++) {
+            const SpellEffectRec* effect = effects->m_data[i];
 
-// OFFSET: 0x009BADD0/0x1407464F0
-static int32_t Script_GetTrainerServiceIcon(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceIcon(index)");
-        return 0;
-    }
+            if (!effect || !effect->m_effect) {
+                continue;
+            }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    TrainerServiceInfo* service;
+            SkillLineRec* skill;
 
-    if (index >= CGClassTrainer::m_numServices || !(service = CGClassTrainer::m_services.m_data[index])) {
-        lua_pushnil(L);
-        return 1;
-    }
+            if (effect->m_effect == 44) {
+                skill = g_skillLineDB.GetRecord(effect->m_effectMiscValue);
+            } else {
+                int32_t spellId = effect->m_effect != 36 || effect->m_implicitTargetA == 5 ? effect->m_spellID : effect->m_effectTriggerSpell;
+                SkillLineAbilityRec* ability = SpellTableLookupAbility(player->m_unit->m_unitFieldBytes0[0], player->m_unit->m_unitFieldBytes0[1], spellId);
 
-    SpellRec spell;
+                if (!ability) {
+                    continue;
+                }
 
-    if (!g_spellDB.GetRecord(service->m_spellID, &spell)) {
-        lua_pushnil(L);
-        return 1;
-    }
+                skill = g_skillLineDB.GetRecord(ability->m_skillLine);
+            }
 
-    ItemRec* item;
-
-    if (CGClassTrainer::m_trainerType == 2 && (spell.m_effect[0] == 24 || spell.m_effect[0] == 157 || spell.m_effect[0] == 59) && (item = g_itemDB.GetRecord(spell.m_effectItemType[0]))) {
-        const char* path = ClientDBStringLookup(3);
-        char texture[260];
-        SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
-        lua_pushstring(L, texture);
-        return 1;
-    }
-
-    SpellIconRec* icon = g_spellIconDB.GetRecord(spell.m_spellIconID);
-
-    if (icon) {
-        lua_pushstring(L, icon->m_textureFilename);
-        return 1;
+            if (skill) {
+                lua_pushstring(L, skill->m_displayName);
+                return 1;
+            }
+        }
     }
 
     lua_pushnil(L);
     return 1;
+}
+
+// OFFSET: 0x009B9D80/0x140744F20
+static int32_t Script_GetTrainerServiceCost(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTrainerServiceCost(index)");
+        return 0;
+    }
+
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
+    int32_t moneyCost = service ? service->m_moneyCost : 0;
+    lua_pushnumber(L, moneyCost);
+
+    if (service->m_skillLine != 2) {
+        return 1;
+    }
+
+    SkillLineRec* skill = g_skillLineDB.GetRecord(GetServiceSkillLine(service->m_spellID));
+
+    if (!skill || skill->m_categoryID != 11) {
+        return 1;
+    }
+
+    lua_pushboolean(L, service->m_skillRankReq == 0);
+    return 2;
 }
 
 // OFFSET: 0x009B9E60/0x140745020
@@ -410,36 +264,39 @@ static int32_t Script_GetTrainerServiceSkillReq(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     int32_t met = 1;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
-    SkillLineRec* skillLine;
 
-    if (player && service && service->m_skillReq && service->m_skillRankReq && (skillLine = g_skillLineDB.GetRecord(service->m_skillReq))) {
-        int32_t i;
+    if (player && service && service->m_skillReq && service->m_skillRankReq) {
+        if (SkillLineRec* skill = g_skillLineDB.GetRecord(service->m_skillReq)) {
+            uint32_t i = 0;
 
-        for (i = 0; i < 128; i++) {
-            if (player->GetSkillLineID(i) == service->m_skillReq) {
-                break;
-            }
-        }
-
-        if (i >= 128 || static_cast<int32_t>(player->GetSkillValue(i)) < service->m_skillRankReq) {
-            met = 0;
-        }
-
-        if (skillLine->m_displayName && *skillLine->m_displayName) {
-            lua_pushstring(L, skillLine->m_displayName);
-            lua_pushnumber(L, service->m_skillRankReq);
-
-            if (met) {
-                lua_pushnumber(L, 1.0);
-            } else {
-                lua_pushnil(L);
+            while (player->GetSkillLineID(i) != service->m_skillReq) {
+                if (++i >= 128) {
+                    break;
+                }
             }
 
-            return 3;
+            if (i >= 128 || player->GetSkillValue(i) < service->m_skillRankReq) {
+                met = 0;
+            }
+
+            uint32_t rank = service->m_skillRankReq;
+
+            if (skill->m_displayName && *skill->m_displayName) {
+                lua_pushstring(L, skill->m_displayName);
+                lua_pushnumber(L, rank);
+
+                if (met) {
+                    lua_pushnumber(L, 1.0);
+                } else {
+                    lua_pushnil(L);
+                }
+
+                return 3;
+            }
         }
     }
 
@@ -462,93 +319,28 @@ static int32_t Script_GetTrainerServiceAbilityReq(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    char text[256] = { 0 };
-    uint32_t ability = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    char name[256] = { 0 };
+    uint32_t abilityIndex = static_cast<int64_t>(lua_tonumber(L, 2)) - 1;
     int32_t met = 1;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
     TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
 
-    if (player && service && ability < 3) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(service->m_abilityReq[ability], &spell)) {
-            if (spell.m_nameSubtext && *spell.m_nameSubtext) {
-                SStrPrintf(text, sizeof(text), "%s (%s)", spell.m_name, spell.m_nameSubtext);
+    if (player && service && abilityIndex < 3) {
+        if (SpellRec* spell = g_spellDB.GetRecord(service->m_abilityReq[abilityIndex])) {
+            if (spell->m_nameSubtext && *spell->m_nameSubtext) {
+                SStrPrintf(name, sizeof(name), "%s (%s)", spell->m_name, spell->m_nameSubtext);
             } else {
-                SStrCopy(text, spell.m_name, sizeof(text));
+                SStrCopy(name, spell->m_name, sizeof(name));
             }
 
-            if (!player->IsSpellKnown(service->m_abilityReq[ability]) && !player->IsSpellSuperceded(service->m_abilityReq[ability])) {
+            if (!player->IsSpellKnown(service->m_abilityReq[abilityIndex]) && !player->IsSpellSuperceded(service->m_abilityReq[abilityIndex])) {
                 met = 0;
             }
         }
     }
 
-    if (text[0]) {
-        lua_pushstring(L, text);
-    } else {
-        lua_pushnil(L);
-    }
-
-    if (met) {
-        lua_pushnumber(L, 1.0);
-    } else {
-        lua_pushnil(L);
-    }
-
-    return 2;
-}
-
-// OFFSET: #0x005957D0
-static int32_t Script_GetTrainerServiceStepReq(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceStepReq(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    const char* name = NULL;
-    int32_t met = 1;
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    TrainerServiceInfo* service = index < CGClassTrainer::m_numServices ? CGClassTrainer::m_services.m_data[index] : NULL;
-
-    if (player && service && service->m_stepSpellID) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(service->m_stepSpellID, &spell)) {
-            met = 0;
-            int32_t effect;
-
-            for (effect = 0; effect < 3; effect++) {
-                if (spell.m_effect[effect] == 44) {
-                    break;
-                }
-            }
-
-            if (effect < 3) {
-                for (int32_t i = 0; i < 128; i++) {
-                    uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerSkillInfo[i].m_skillId : 0;
-
-                    if (skillId == spell.m_effectMiscValue[effect]) {
-                        int32_t minPoints;
-                        int32_t maxPoints;
-                        Spell_C_GetMinMaxPoints(&spell, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
-
-                        if (static_cast<int32_t>(player->GetSkillMaxRank(i)) >= 5 * maxPoints) {
-                            met = 1;
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            name = spell.m_name;
-        }
-    }
-
-    if (name && *name) {
+    if (name[0]) {
         lua_pushstring(L, name);
     } else {
         lua_pushnil(L);
@@ -563,107 +355,6 @@ static int32_t Script_GetTrainerServiceStepReq(lua_State* L) {
     return 2;
 }
 
-// OFFSET: 0x009BAF70/0x1407466E0
-static int32_t Script_GetTrainerServiceDescription(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceDescription(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    TrainerServiceInfo* service;
-
-    if (index < CGClassTrainer::m_numServices && (service = CGClassTrainer::m_services.m_data[index])) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(service->m_spellID, &spell)) {
-            if (spell.m_description && *spell.m_description) {
-                char text[1024];
-                SpellParserParseText(&spell, text, sizeof(text), 0, 0, 0, 0, 1, 0);
-                lua_pushstring(L, text);
-                return 1;
-            }
-
-            if ((spell.m_attributes & 0x20) && (spell.m_effect[0] == 24 || spell.m_effect[0] == 157 || spell.m_effect[0] == 59) && spell.m_effectItemType[0]) {
-                WOWGUID guid;
-                guid.m_guid = static_cast<uint32_t>(spell.m_id) | 0x1FE0000000000000ull;
-                ItemStats_C* stats = g_itemDBCache.GetRecord(spell.m_effectItemType[0], guid, TrainerItemCallback, NULL, false);
-
-                if (stats && stats->m_description && *stats->m_description) {
-                    lua_pushstring(L, stats->m_description);
-                    return 1;
-                }
-            }
-        }
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
-
-// OFFSET: #0x00595C40
-static int32_t Script_GetTrainerServiceStepIncrease(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetTrainerServiceStepIncrease(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    TrainerServiceInfo* service;
-
-    if (index < CGClassTrainer::m_numServices && (service = CGClassTrainer::m_services.m_data[index])) {
-        SpellRec spell;
-
-        if (g_spellDB.GetRecord(service->m_spellID, &spell)) {
-            int32_t effect;
-
-            for (effect = 0; effect < 3; effect++) {
-                if (spell.m_effect[effect] == 44) {
-                    break;
-                }
-            }
-
-            if (effect < 3 && service->m_state != 2) {
-                int32_t previous = 0;
-                SpellRec step;
-                int32_t minPoints;
-                int32_t maxPoints;
-
-                if (g_spellDB.GetRecord(service->m_stepSpellID, &step)) {
-                    int32_t stepEffect;
-
-                    for (stepEffect = 0; stepEffect < 3; stepEffect++) {
-                        if (step.m_effect[stepEffect] == 44) {
-                            break;
-                        }
-                    }
-
-                    if (stepEffect < 3) {
-                        Spell_C_GetMinMaxPoints(&step, stepEffect, &minPoints, &maxPoints, 0, 0, 0, 0);
-                        previous = maxPoints;
-                    }
-                }
-
-                Spell_C_GetMinMaxPoints(&spell, effect, &minPoints, &maxPoints, 0, 0, 0, 0);
-                int32_t increase = maxPoints - previous;
-                SkillLineRec* skillLine;
-
-                if (maxPoints != previous && (skillLine = g_skillLineDB.GetRecord(spell.m_effectMiscValue[effect]))) {
-                    char format[256];
-                    char text[256];
-                    SStrCopy(format, FrameScript_GetText("INCREASE_POTENTIAL", -1, GENDER_NOT_APPLICABLE), sizeof(format));
-                    SStrPrintf(text, sizeof(text), format, skillLine->m_displayName, 5 * increase);
-                    lua_pushstring(L, text);
-                    return 1;
-                }
-            }
-        }
-    }
-
-    lua_pushnil(L);
-    return 1;
-}
-
 // OFFSET: 0x009BA1C0/0x140745480
 static int32_t Script_BuyTrainerService(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
@@ -674,9 +365,9 @@ static int32_t Script_BuyTrainerService(lua_State* L) {
     int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
 
     if (index >= 0) {
-        CGPlayer_C::TrainerBuySpell(index);
+        CGClassTrainer::BuyService(index);
     } else {
-        CGClassTrainer::BuyService();
+        CGClassTrainer::BuyAllServices();
     }
 
     return 0;
@@ -689,18 +380,18 @@ static int32_t Script_SetTrainerServiceTypeFilter(lua_State* L) {
         return 0;
     }
 
-    const char* type = lua_tolstring(L, 1, NULL);
+    const char* name = lua_tolstring(L, 1, NULL);
 
-    if (!SStrCmpI(type, "all", STORM_MAX_STR)) {
+    if (!_stricmp(name, "all")) {
         g_serviceTypeFilterCVar->Set(7, true, false, false, true);
         CGClassTrainer::FilterAndSortServices();
         FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
         return 0;
     }
 
-    int32_t serviceType = GetServiceTypeFromString(type);
+    int32_t type = GetServiceTypeFromString(name);
 
-    if (serviceType == 6) {
+    if (type == 6) {
         luaL_error(L, "Bad service type in SetTrainerServiceTypeFilter");
         return 0;
     }
@@ -712,114 +403,191 @@ static int32_t Script_SetTrainerServiceTypeFilter(lua_State* L) {
 
     int32_t filter = g_serviceTypeFilterCVar->m_intValue;
 
-    if (!lua_tonumber(L, 2)) {
-        CGClassTrainer::SetServiceTypeFilter(filter & ~(1 << serviceType));
+    if (!static_cast<int32_t>(lua_tonumber(L, 2))) {
+        CGClassTrainer::SetServiceTypeFilter(filter & ~(1 << type));
         return 0;
     }
 
-    if (lua_isnumber(L, 3) && lua_tonumber(L, 3)) {
-        CGClassTrainer::SetServiceTypeFilter(1 << serviceType);
+    if (lua_isnumber(L, 3) && static_cast<int32_t>(lua_tonumber(L, 3))) {
+        CGClassTrainer::SetServiceTypeFilter(1 << type);
         return 0;
     }
 
-    CGClassTrainer::SetServiceTypeFilter(filter | (1 << serviceType));
+    CGClassTrainer::SetServiceTypeFilter(filter | (1 << type));
     return 0;
 }
 
-// OFFSET: #0x00596010
-static int32_t Script_SetTrainerSkillLineFilter(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: SetTrainerSkillLineFilter(index [, on\\off, exclusive])");
+// OFFSET: 0x009BA370/0x140745690
+static int32_t Script_GetTrainerTradeskillRankValues(lua_State* L) {
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player || CGClassTrainer::m_trainerType != 2 || !CGClassTrainer::m_numServices || !CGClassTrainer::m_services.m_data[0]) {
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int32_t skillLine = GetServiceSkillLine(CGClassTrainer::m_services.m_data[0]->m_spellID);
 
-    if (index < 0) {
-        CGClassTrainer::m_skillLineFilter = 0xFFFFFFFF;
-        CGClassTrainer::FilterAndSortServices();
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
+    if (!skillLine) {
         return 0;
     }
 
-    if (index >= CGClassTrainer::m_numSkillLines) {
-        luaL_error(L, "Bad skill line in SetTrainerSkillLineFilter");
-        return 0;
-    }
-
-    if (!lua_isnumber(L, 2)) {
-        luaL_error(L, "Missing on//off parameter in SetTrainerSkillLineFilter");
-        return 0;
-    }
-
-    uint32_t filter = CGClassTrainer::m_skillLineFilter;
-
-    if (!lua_tonumber(L, 2)) {
-        CGClassTrainer::SetSkillLineFilter(filter & ~(1 << index));
-        return 0;
-    }
-
-    if (lua_isnumber(L, 3) && lua_tonumber(L, 3)) {
-        CGClassTrainer::SetSkillLineFilter(1 << index);
-        return 0;
-    }
-
-    CGClassTrainer::SetSkillLineFilter(filter | (1 << index));
-    return 0;
+    int32_t rank;
+    int32_t bonus;
+    player->GetExpandedSkillRank(skillLine, rank, bonus);
+    int32_t index = player->GetSkillIndex(skillLine);
+    lua_pushnumber(L, rank);
+    lua_pushnumber(L, static_cast<int32_t>(player->GetSkillMaxRank(index)));
+    lua_pushnumber(L, bonus);
+    return 3;
 }
 
-// OFFSET: #0x00596150
-static int32_t Script_CollapseTrainerSkillLine(lua_State* L) {
+// OFFSET: 0x009BABC0/0x140746250
+static int32_t Script_GetTrainerServiceInfo(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: CollapseTrainerSkillLine(index)");
+        luaL_error(L, "Usage: GetTrainerServiceInfo(index)");
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    int64_t index = static_cast<int64_t>(lua_tonumber(L, 1));
 
-    if (index >= 0) {
-        int32_t skillLine = CGClassTrainer::GetSkillLineIndexFromService(index);
+    if (static_cast<uint32_t>(index - 1) >= CGClassTrainer::m_numServices) {
+        return 0;
+    }
 
-        if (skillLine < 0) {
-            luaL_error(L, "Bad skill line in CollapseTrainerSkillLine");
-            return 0;
-        }
+    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index - 1];
 
-        CGClassTrainer::m_expandedSkillLines &= ~(1 << skillLine);
+    if (!service || service->m_spellID < 0) {
+        return 0;
+    }
+
+    SpellRec* spell = g_spellDB.GetRecord(service->m_spellID);
+
+    if (!spell) {
+        return 0;
+    }
+
+    lua_pushstring(L, spell->m_name);
+    lua_pushstring(L, spell->m_nameSubtext);
+
+    if (!service->m_state) {
+        lua_pushstring(L, "used");
+    } else if (service->m_state == 1) {
+        lua_pushstring(L, "available");
     } else {
-        CGClassTrainer::m_expandedSkillLines = 0;
+        lua_pushstring(L, "unavailable");
     }
 
-    CGClassTrainer::FilterAndSortServices();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
-    return 0;
+    const char* icon = "";
+    char texture[260];
+
+    if (CGClassTrainer::m_trainerType == 2) {
+        const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+
+        if (effect && (effect->m_effect == 24 || effect->m_effect == 157 || effect->m_effect == 59)) {
+            WOWGUID requester = WOWGUID();
+
+            if (ItemRec* item = g_itemDB.GetRecord(effect->m_effectItemType, requester, NULL, NULL, false)) {
+                const char* path = ClientDBStringLookup(3);
+                SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
+                icon = texture;
+                lua_pushstring(L, icon);
+                lua_pushnumber(L, service->m_levelReq);
+                lua_pushnumber(L, service->m_skillLine);
+                return 6;
+            }
+        }
+    }
+
+    if (SpellIconRec* iconRec = g_spellIconDB.GetRecord(spell->m_spellIconID)) {
+        icon = iconRec->m_textureFilename;
+    }
+
+    lua_pushstring(L, icon);
+    lua_pushnumber(L, service->m_levelReq);
+    lua_pushnumber(L, service->m_skillLine);
+    return 6;
 }
 
-// OFFSET: #0x005961F0
-static int32_t Script_ExpandTrainerSkillLine(lua_State* L) {
+// OFFSET: 0x009BADD0/0x1407464F0
+static int32_t Script_GetTrainerServiceIcon(lua_State* L) {
     if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: ExpandTrainerSkillLine(index)");
+        luaL_error(L, "Usage: GetTrainerServiceIcon(index)");
         return 0;
     }
 
-    int32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    TrainerServiceInfo* service;
+    SpellRec* spell;
 
-    if (index >= 0) {
-        int32_t skillLine = CGClassTrainer::GetSkillLineIndexFromService(index);
-
-        if (skillLine < 0) {
-            luaL_error(L, "Bad skill line in ExpandTrainerSkillLine");
-            return 0;
-        }
-
-        CGClassTrainer::m_expandedSkillLines |= 1 << skillLine;
-    } else {
-        CGClassTrainer::m_expandedSkillLines = 0xFFFFFFFF;
+    if (index >= CGClassTrainer::m_numServices || !(service = CGClassTrainer::m_services.m_data[index]) || !(spell = g_spellDB.GetRecord(service->m_spellID))) {
+        lua_pushnil(L);
+        return 1;
     }
 
-    CGClassTrainer::FilterAndSortServices();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
-    return 0;
+    if (CGClassTrainer::m_trainerType == 2) {
+        const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+
+        if (effect && (effect->m_effect == 24 || effect->m_effect == 157 || effect->m_effect == 59)) {
+            WOWGUID requester = WOWGUID();
+
+            if (ItemRec* item = g_itemDB.GetRecord(effect->m_effectItemType, requester, NULL, NULL, false)) {
+                const char* path = ClientDBStringLookup(3);
+                char texture[260];
+                SStrPrintf(texture, sizeof(texture), "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(item->m_displayInfoID));
+                lua_pushstring(L, texture);
+                return 1;
+            }
+        }
+    }
+
+    if (SpellIconRec* icon = g_spellIconDB.GetRecord(spell->m_spellIconID)) {
+        lua_pushstring(L, icon->m_textureFilename);
+        return 1;
+    }
+
+    lua_pushnil(L);
+    return 1;
+}
+
+// OFFSET: 0x009BAF70/0x1407466E0
+static int32_t Script_GetTrainerServiceDescription(lua_State* L) {
+    if (!lua_isnumber(L, 1)) {
+        luaL_error(L, "Usage: GetTrainerServiceDescription(index)");
+        return 0;
+    }
+
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
+    TrainerServiceInfo* service;
+    SpellRec* spell;
+
+    if (index >= CGClassTrainer::m_numServices || !(service = CGClassTrainer::m_services.m_data[index]) || !(spell = g_spellDB.GetRecord(service->m_spellID))) {
+        lua_pushnil(L);
+        return 1;
+    }
+
+    if (spell->m_description && *spell->m_description) {
+        char text[1024];
+        SpellParserParseText(spell, text, sizeof(text), 0, 0, 0, 0, 1, 0, NULL);
+        lua_pushstring(L, text);
+        return 1;
+    }
+
+    const SpellEffectRec* effect = SpellGetEffect(spell->m_id, 0);
+    int32_t type = effect ? effect->m_effect : 0;
+    int32_t itemId;
+    ItemRecSparse* item;
+
+    if ((spell->m_attributes & 0x20) && (type == 24 || type == 157 || type == 59) && (itemId = effect->m_effectItemType) != 0) {
+        WOWGUID requester = WOWGUID::Make(static_cast<int64_t>(spell->m_id) | 0x1FE0000000000000LL);
+
+        if ((item = g_itemSparseDB.GetRecord(itemId, requester, &TrainerItemCallback, NULL, false)) && item->m_description && *item->m_description) {
+            lua_pushstring(L, item->m_description);
+            return 1;
+        }
+    }
+
+    lua_pushnil(L);
+    return 1;
 }
 
 // OFFSET: 0x009BB0E0/0x1407468E0
@@ -829,20 +597,24 @@ static int32_t Script_GetTrainerServiceItemLink(lua_State* L) {
         return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
+    uint32_t index = static_cast<int32_t>(lua_tonumber(L, 1)) - 1;
     TrainerServiceInfo* service;
 
-    if (index < CGClassTrainer::m_numServices && (service = CGClassTrainer::m_services.m_data[index])) {
-        SpellRec spell;
+    if (index >= CGClassTrainer::m_numServices || !(service = CGClassTrainer::m_services.m_data[index])) {
+        lua_pushnil(L);
+        return 1;
+    }
 
-        if (g_spellDB.GetRecord(service->m_spellID, &spell) && CGClassTrainer::m_trainerType == 2 && (spell.m_effect[0] == 24 || spell.m_effect[0] == 157 || spell.m_effect[0] == 59) && spell.m_effectItemType[0]) {
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(spell.m_effectItemType[0], none, NULL, NULL, false);
+    const SpellEffectRec* effect = SpellGetEffect(service->m_spellID, 0);
+    int32_t type = effect ? effect->m_effect : 0;
+    int32_t itemId;
 
-            if (stats) {
-                lua_pushstring(L, CGTooltip::GetItemHyperlinkString(spell.m_effectItemType[0], stats->m_quality, 0, 0, 0, 0));
-                return 1;
-            }
+    if (CGClassTrainer::m_trainerType == 2 && (type == 24 || type == 157 || type == 59) && (itemId = effect->m_effectItemType) != 0) {
+        WOWGUID requester = WOWGUID();
+
+        if (ItemRecSparse* item = g_itemSparseDB.GetRecord(itemId, requester, NULL, NULL, false)) {
+            lua_pushstring(L, CGTooltip::GetItemHyperlinkString(effect->m_effectItemType, item->m_quality, 0, 0, 0, 0));
+            return 1;
         }
     }
 
@@ -850,7 +622,7 @@ static int32_t Script_GetTrainerServiceItemLink(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00ACF3E8
+// STATIC: 0x00D15A30
 static FrameScript_Method s_ScriptFunctions[] = {
     { "OpenTrainer", &Script_OpenTrainer },
     { "CloseTrainer", &Script_CloseTrainer },
@@ -867,29 +639,25 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetTrainerServiceSkillReq", &Script_GetTrainerServiceSkillReq },
     { "GetTrainerServiceNumAbilityReq", &Script_GetTrainerServiceNumAbilityReq },
     { "GetTrainerServiceAbilityReq", &Script_GetTrainerServiceAbilityReq },
-    { "GetTrainerServiceStepReq", &Script_GetTrainerServiceStepReq },
     { "GetTrainerServiceDescription", &Script_GetTrainerServiceDescription },
-    { "IsTrainerServiceSkillStep", &Script_IsTrainerServiceSkillStep },
-    { "GetTrainerServiceStepIncrease", &Script_GetTrainerServiceStepIncrease },
     { "BuyTrainerService", &Script_BuyTrainerService },
     { "SetTrainerServiceTypeFilter", &Script_SetTrainerServiceTypeFilter },
-    { "SetTrainerSkillLineFilter", &Script_SetTrainerSkillLineFilter },
     { "GetTrainerServiceTypeFilter", &Script_GetTrainerServiceTypeFilter },
-    { "GetTrainerSkillLineFilter", &Script_GetTrainerSkillLineFilter },
-    { "GetTrainerSkillLines", &Script_GetTrainerSkillLines },
-    { "CollapseTrainerSkillLine", &Script_CollapseTrainerSkillLine },
-    { "ExpandTrainerSkillLine", &Script_ExpandTrainerSkillLine },
     { "GetTrainerServiceItemLink", &Script_GetTrainerServiceItemLink },
+    { "GetTrainerServiceStepIndex", &Script_GetTrainerServiceStepIndex },
+    { "GetTrainerTradeskillRankValues", &Script_GetTrainerTradeskillRankValues },
 };
 
-// OFFSET: #0x00593F70
+// PROVEN: 4c2fdd6d IDENTICAL/NONE
+// OFFSET: 0x009B91A0
 void ClassTrainerRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x00593FA0
+// PROVEN: 373c2929 IDENTICAL/NONE
+// OFFSET: 0x009B91D0
 void ClassTrainerUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

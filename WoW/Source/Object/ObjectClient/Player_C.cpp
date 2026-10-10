@@ -4848,7 +4848,7 @@ void __stdcall CGPlayer_C::TalkToQuestUnit(const WOWGUID& guid) {
 void __stdcall CGPlayer_C::TalkToTrainer(const WOWGUID& guid) {
     s_lastTrainerRequest = guid;
     WOWGUID none = { 0 };
-    CGClassTrainer::SetTrainer(none, 0);
+    CGClassTrainer::SetTrainer(none, 0, 0);
 
     CDataStore msg;
     msg.Put(static_cast<uint32_t>(CMSG_TRAINER_LIST));
@@ -7625,6 +7625,58 @@ int32_t CGPlayer_C::GetSkillIndex(int32_t skillId) const {
     return index == 128 ? -1 : index;
 }
 
+// OFFSET: 0x0055E220
+uint16_t CGPlayer_C::GetSkillLineID(int32_t index) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    return this->m_player->m_playerSkillLineid0[index];
+}
+
+// INLINED
+uint16_t CGPlayer_C::GetSkillStep(int32_t index) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    return this->m_player->m_playerSkillStep0[index];
+}
+
+// OFFSET: 0x00561540/0x1401BF410
+bool CGPlayer_C::GetExpandedSkillRank(int32_t skillId, int32_t& rank, int32_t& bonus) const {
+    int32_t index = this->GetSkillIndex(skillId);
+
+    if (index < 0) {
+        return false;
+    }
+
+    rank = this->GetSkillValue(index);
+
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        bonus = 0;
+        return true;
+    }
+
+    bonus = static_cast<int16_t>(this->m_player->m_playerSkillModifier0[index]);
+    return true;
+}
+
+// OFFSET: 0x0090FD00/0x14066B450
+uint32_t CGPlayer_C::GetSkillMaxRank(int32_t index) const {
+    if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    uint32_t value = this->m_player->m_playerSkillMaxRank0[index];
+
+    if (value) {
+        value += this->m_player->m_playerSkillTalent0[index];
+    }
+
+    return value;
+}
+
 // OFFSET: 0x00468FF0/0x14007D170
 uint32_t CGPlayer_C::GetSkillValue(int32_t index) const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
@@ -9603,51 +9655,49 @@ int32_t CGPlayer_C::OnSignedResults(CDataStore* msg) {
     return 1;
 }
 
-// OFFSET: #0x006D12C0
+// OFFSET: 0x005567D0
 int32_t __stdcall CGPlayer_C::OnTrainerList(CDataStore* msg) {
     WOWGUID trainer;
     msg->Get(trainer.m_guid);
     uint32_t type;
     msg->Get(type);
+    uint32_t trainerID;
+    msg->Get(trainerID);
     uint32_t count;
     msg->Get(count);
 
     int32_t* spellIds = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
     uint8_t* states = static_cast<uint8_t*>(alloca(count));
     int32_t* moneyCosts = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
-    int32_t* talentCosts = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
-    int32_t* professionCosts = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
     uint8_t* levelReqs = static_cast<uint8_t*>(alloca(count));
     int32_t* skillReqs = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
-    int32_t* skillRankReqs = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
-    int32_t* stepSpells = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
+    uint32_t* skillRankReqs = static_cast<uint32_t*>(alloca(sizeof(uint32_t) * count));
     int32_t* abilityReqs0 = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
     int32_t* abilityReqs1 = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
     int32_t* abilityReqs2 = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
+    int32_t* talentTabReqs = static_cast<int32_t*>(alloca(sizeof(int32_t) * count));
 
     for (uint32_t i = 0; i < count; i++) {
         msg->Get(reinterpret_cast<uint32_t&>(spellIds[i]));
         msg->Get(states[i]);
         msg->Get(reinterpret_cast<uint32_t&>(moneyCosts[i]));
-        msg->Get(reinterpret_cast<uint32_t&>(talentCosts[i]));
-        msg->Get(reinterpret_cast<uint32_t&>(professionCosts[i]));
         msg->Get(levelReqs[i]);
         msg->Get(reinterpret_cast<uint32_t&>(skillReqs[i]));
-        msg->Get(reinterpret_cast<uint32_t&>(skillRankReqs[i]));
-        stepSpells[i] = 0;
+        msg->Get(skillRankReqs[i]);
         msg->Get(reinterpret_cast<uint32_t&>(abilityReqs0[i]));
         msg->Get(reinterpret_cast<uint32_t&>(abilityReqs1[i]));
         msg->Get(reinterpret_cast<uint32_t&>(abilityReqs2[i]));
+        msg->Get(reinterpret_cast<uint32_t&>(talentTabReqs[i]));
     }
 
     char greeting[2048];
     msg->GetString(greeting, sizeof(greeting));
-    const int32_t* pointCosts[2] = { talentCosts, professionCosts };
     const int32_t* abilityReqs[3] = { abilityReqs0, abilityReqs1, abilityReqs2 };
 
     if (trainer == s_lastTrainerRequest || trainer == CGGossipInfo::m_gossip) {
-        CGClassTrainer::SetTrainer(trainer, type);
-        CGClassTrainer::AddServices(count, spellIds, moneyCosts, pointCosts, levelReqs, skillReqs, skillRankReqs, stepSpells, abilityReqs, states, greeting);
+        CGClassTrainer::SetTrainer(trainer, trainerID, type);
+        CGClassTrainer::AddServices(count, spellIds, moneyCosts, levelReqs, skillReqs, skillRankReqs, abilityReqs, talentTabReqs, states, greeting);
+        FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_SHOW, NULL);
     }
 
     return 1;

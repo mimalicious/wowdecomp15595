@@ -1,68 +1,92 @@
 #include "ClassTrainerFrame.h"
-#include "WoW/Source/Ui/ChatFrame.h"
-#include "Engine/Source/FrameScript/FrameScript.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Ui/GameUI.h"
-#include "WoW/Source/Ui/Types.h"
 #include <cstdlib>
+#include "Engine/Source/Base/CDataStore.h"
 #include "Engine/Source/ConsoleBase/ConsoleVar.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/Storm/H/storm.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/SpellEffectRec.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
 #include "WoW/Source/Magic/MagicClient/Spell_C.h"
+#include "WoW/Source/Net/Types.h"
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Object/Player.h"
 #include "WoW/Source/Object/Unit.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
+#include "WoW/Source/Ui/ChatFrame.h"
+#include "WoW/Source/Ui/GameUI.h"
+#include "WoW/Source/Ui/GossipInfo.h"
 #include "WoW/Source/Ui/SpellBookFrame.h"
-#include "WoW/Source/DB/Rec/SkillLineRec.h"
-#include "Engine/Source/Base/CDataStore.h"
-#include "WoW/Source/Net/Types.h"
+#include "WoW/Source/Ui/TalentInfo.h"
+#include "WoW/Source/Ui/Types.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
-#include "Engine/Source/FrameScript/Types.h"
 
-// STATIC: #0x00A13E08
-static const char s_tradeSkillServiceHeaders[4][64] = { "", "TRADESKILL_SERVICE_STEP", "TRADESKILL_SERVICE_LEARN", "TRADESKILL_SERVICE_PASSIVE" };
-
-// STATIC: #0x00C0E490
-WOWGUID CGClassTrainer::m_trainer;
-
-// STATIC: #0x00C0DC90
+// STATIC: 0x00F4D5B0
 char CGClassTrainer::m_greetingText[2048];
 
-// STATIC: #0x00C0E498
+// STATIC: 0x00F4DDB0
+WOWGUID CGClassTrainer::m_trainer;
+
+// STATIC: 0x00F4DDB8
+int32_t CGClassTrainer::m_trainerID;
+
+// STATIC: 0x00F4DDBC
 int32_t CGClassTrainer::m_trainerType;
 
-// STATIC: #0x00C0E49C
+// STATIC: 0x00F4DDC0
 int32_t CGClassTrainer::m_currentSelection;
 
-// STATIC: #0x00C0E4A0
+// STATIC: 0x00F4DDC4
 uint32_t CGClassTrainer::m_numServices;
 
-// STATIC: #0x00C0E4A4
-int32_t CGClassTrainer::m_numSkillLines;
-
-// STATIC: #0x00C0E4A8
+// STATIC: 0x00F4DDC8
 uint32_t CGClassTrainer::m_filteredServices;
 
-// STATIC: #0x00C0E4AC
-uint32_t CGClassTrainer::m_skillLineFilter;
-
-// STATIC: #0x00C0E4B0
-uint32_t CGClassTrainer::m_expandedSkillLines;
-
-// STATIC: #0x00C0E4B4
+// STATIC: 0x00F4DDCC
 TSGrowableArray<TrainerServiceInfo*> CGClassTrainer::m_services;
 
-// STATIC: #0x00C0E4C4
-TSGrowableArray<TrainerSkillLineInfo*> CGClassTrainer::m_skillLines;
+// STATIC: 0x00D15A28
+int32_t CGClassTrainer::m_stepIndex = -1;
 
-// PROVEN: 03233b9e IDENTICAL/IDENTICAL
-// OFFSET: 0x00401000/0x1407D7E80
-void CGClassTrainer::InitializeGame() {
+// PROVEN: 9ae5338c IDENTICAL/NONE
+// OFFSET: 0x009B9030/0x140743E70
+void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
+    if (success) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_DESCRIPTION_UPDATE, NULL);
+    }
 }
 
-// OFFSET: #0x005940E0
-void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t type) {
+// PROVEN: 842b99d2 IDENTICAL/NONE
+// OFFSET: 0x009B9050/0x140743E90
+void CGClassTrainer::EnterWorld() {
+    CGClassTrainer::m_trainer = WOWGUID();
+    CGClassTrainer::m_trainerID = 0;
+    CGClassTrainer::m_currentSelection = 0;
+    CGClassTrainer::m_numServices = 0;
+    CGClassTrainer::m_greetingText[0] = '\0';
+}
+
+// OFFSET: 0x009B9120/0x140743F50
+int32_t GetServiceTypeFromString(const char* type) {
+    if (!type) {
+        return 6;
+    }
+
+    if (!_stricmp(type, "available")) {
+        return 1;
+    }
+
+    if (!_stricmp(type, "unavailable")) {
+        return 2;
+    }
+
+    return _stricmp(type, "used") != 0 ? 6 : 0;
+}
+
+// OFFSET: 0x009B9290/0x140744170
+void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t trainerID, int32_t type) {
+    CGClassTrainer::m_trainerID = trainerID;
+
     if (trainer == CGClassTrainer::m_trainer) {
         return;
     }
@@ -71,7 +95,6 @@ void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t type) {
         FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_CLOSED, NULL);
         CGGameUI::ClearInteractTarget(CGClassTrainer::m_trainer, 0);
         CGClassTrainer::m_trainer = WOWGUID();
-        CGClassTrainer::m_numSkillLines = 0;
         CGClassTrainer::m_numServices = 0;
         return;
     }
@@ -82,24 +105,11 @@ void CGClassTrainer::SetTrainer(const WOWGUID& trainer, int32_t type) {
 
     CGClassTrainer::m_trainer = trainer;
     CGClassTrainer::m_trainerType = type;
+    CGGossipInfo::ClearGossip();
 }
 
-// OFFSET: #0x00593CA0
-void TrainerItemCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
-    if (success) {
-        FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_DESCRIPTION_UPDATE, NULL);
-    }
-}
-
-// OFFSET: #0x00593CC0
-void CGClassTrainer::EnterWorld() {
-    CGClassTrainer::m_trainer = WOWGUID::Make(0);
-    CGClassTrainer::m_currentSelection = 0;
-    CGClassTrainer::m_numServices = 0;
-    CGClassTrainer::m_greetingText[0] = '\0';
-}
-
-// OFFSET: #0x00594170
+// PROVEN: 42a706b4 IDENTICAL/NONE
+// OFFSET: 0x009B9330
 int32_t CGClassTrainer::GetSelectionIndex() {
     if (!CGClassTrainer::m_currentSelection) {
         return -1;
@@ -120,81 +130,7 @@ int32_t CGClassTrainer::GetSelectionIndex() {
     return i;
 }
 
-// OFFSET: #0x00594240
-TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
-    if (index < CGClassTrainer::m_numServices) {
-        return CGClassTrainer::m_services.m_data[index];
-    }
-
-    return NULL;
-}
-
-// OFFSET: #0x00594260
-const char* CGClassTrainer::GetServiceType(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return NULL;
-    }
-
-    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-    if (service->m_spellID < 0) {
-        return "header";
-    }
-
-    if (!service->m_state) {
-        return "available";
-    }
-
-    if (service->m_state == 2) {
-        return "used";
-    }
-
-    return "unavailable";
-}
-
-// OFFSET: #0x005942B0
-int32_t CGClassTrainer::GetSkillLineIndexFromService(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return -1;
-    }
-
-    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-    if (service->m_spellID >= 0) {
-        return -1;
-    }
-
-    for (int32_t i = 0; i < CGClassTrainer::m_numSkillLines; i++) {
-        if (CGClassTrainer::m_skillLines.m_data[i]->m_skillLine == service->m_skillLine) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-// OFFSET: #0x00594300
-int32_t CGClassTrainer::IsCollapsedHeader(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return 0;
-    }
-
-    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-    if (service->m_spellID >= 0) {
-        return 0;
-    }
-
-    for (int32_t i = 0; i < CGClassTrainer::m_numSkillLines; i++) {
-        if (CGClassTrainer::m_skillLines.m_data[i]->m_skillLine == service->m_skillLine) {
-            return !(CGClassTrainer::m_expandedSkillLines & (1 << i));
-        }
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x005947D0
+// OFFSET: 0x009B9370
 static int32_t QSortServices_General(const void* a, const void* b) {
     const TrainerServiceInfo* serviceA = *static_cast<TrainerServiceInfo* const*>(a);
     const TrainerServiceInfo* serviceB = *static_cast<TrainerServiceInfo* const*>(b);
@@ -207,33 +143,18 @@ static int32_t QSortServices_General(const void* a, const void* b) {
         return 2 * (serviceB->m_visible != 0) - 1;
     }
 
-    if (CGClassTrainer::m_numSkillLines) {
-        int32_t lineA = 0;
-        int32_t lineB = 0;
-
-        for (uint32_t i = 0; i < static_cast<uint32_t>(CGClassTrainer::m_numSkillLines); i++) {
-            if (CGClassTrainer::m_skillLines.m_data[i]->m_skillLine == serviceA->m_skillLine) {
-                lineA = i;
-            }
-
-            if (CGClassTrainer::m_skillLines.m_data[i]->m_skillLine == serviceB->m_skillLine) {
-                lineB = i;
-            }
-        }
-
-        if (lineA != lineB) {
-            return 2 * (lineA > lineB) - 1;
-        }
+    if (serviceB->m_state != serviceA->m_state) {
+        return serviceB->m_state < serviceA->m_state ? 1 : -1;
     }
 
     if (serviceA->m_spellID < 0 || serviceB->m_spellID < 0) {
         return 2 * (serviceA->m_spellID >= 0) - 1;
     }
 
-    SpellRec spellA;
-    SpellRec spellB;
+    SpellRec* spellA = g_spellDB.GetRecord(serviceA->m_spellID);
+    SpellRec* spellB = g_spellDB.GetRecord(serviceB->m_spellID);
 
-    if (!g_spellDB.GetRecord(serviceA->m_spellID, &spellA) || !g_spellDB.GetRecord(serviceB->m_spellID, &spellB)) {
+    if (!spellA || !spellB) {
         return 0;
     }
 
@@ -241,20 +162,16 @@ static int32_t QSortServices_General(const void* a, const void* b) {
         return serviceB->m_levelReq < serviceA->m_levelReq ? 1 : -1;
     }
 
-    if (static_cast<uint32_t>(serviceB->m_skillRankReq) != static_cast<uint32_t>(serviceA->m_skillRankReq)) {
-        return static_cast<uint32_t>(serviceB->m_skillRankReq) < static_cast<uint32_t>(serviceA->m_skillRankReq) ? 1 : -1;
-    }
-
-    int32_t result = SStrSortUTF8I(spellA.m_name, spellB.m_name, STORM_MAX_STR);
+    int32_t result = SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
 
     if (!result) {
-        result = SStrSortUTF8I(spellA.m_nameSubtext, spellB.m_nameSubtext, STORM_MAX_STR);
+        result = SStrSortUTF8I(spellA->m_nameSubtext, spellB->m_nameSubtext, STORM_MAX_STR);
     }
 
     return result;
 }
 
-// OFFSET: #0x005949A0
+// OFFSET: 0x009B9460
 static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
     const TrainerServiceInfo* serviceA = *static_cast<TrainerServiceInfo* const*>(a);
     const TrainerServiceInfo* serviceB = *static_cast<TrainerServiceInfo* const*>(b);
@@ -271,70 +188,78 @@ static int32_t QSortServices_Tradeskill(const void* a, const void* b) {
         return 2 * (serviceA->m_skillLine > serviceB->m_skillLine) - 1;
     }
 
+    if (serviceB->m_state != serviceA->m_state) {
+        return serviceB->m_state < serviceA->m_state ? 1 : -1;
+    }
+
     if (serviceA->m_spellID < 0 || serviceB->m_spellID < 0) {
         return 2 * (serviceA->m_spellID >= 0) - 1;
     }
 
-    SpellRec spellA;
-    SpellRec spellB;
+    SpellRec* spellA = g_spellDB.GetRecord(serviceA->m_spellID);
+    SpellRec* spellB = g_spellDB.GetRecord(serviceB->m_spellID);
 
-    if (!g_spellDB.GetRecord(serviceA->m_spellID, &spellA) || !g_spellDB.GetRecord(serviceB->m_spellID, &spellB)) {
+    if (!spellA || !spellB) {
         return 0;
     }
 
-    if (static_cast<uint32_t>(serviceB->m_skillRankReq) != static_cast<uint32_t>(serviceA->m_skillRankReq)) {
-        return static_cast<uint32_t>(serviceB->m_skillRankReq) < static_cast<uint32_t>(serviceA->m_skillRankReq) ? 1 : -1;
+    if (serviceB->m_skillRankReq != serviceA->m_skillRankReq) {
+        return serviceB->m_skillRankReq < serviceA->m_skillRankReq ? 1 : -1;
     }
 
-    return SStrSortUTF8I(spellA.m_name, spellB.m_name, STORM_MAX_STR);
+    return SStrSortUTF8I(spellA->m_name, spellB->m_name, STORM_MAX_STR);
 }
 
-// OFFSET: #0x00594BA0
+// OFFSET: 0x009B9560
+TrainerServiceInfo* CGClassTrainer::GetService(uint32_t index) {
+    if (index < CGClassTrainer::m_numServices) {
+        return CGClassTrainer::m_services.m_data[index];
+    }
+
+    return NULL;
+}
+
+// PROVEN: b695dbba IDENTICAL/NONE
+// OFFSET: 0x009B9880/0x1407448B0
+void CGClassTrainer::LeaveWorld() {
+    CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
+}
+
+// OFFSET: 0x009B98A0/0x140744900
+int32_t GetServiceSkillLine(int32_t spellId) {
+    uint32_t count;
+    const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spellId, count);
+    int32_t abilitySpell = spellId;
+
+    for (uint32_t i = 0; i < count; i++) {
+        const SpellEffectRec* effect = effects->m_data[i];
+
+        if (effect && effect->m_effect == 36 && effect->m_implicitTargetA != 5) {
+            abilitySpell = effects->m_data[i]->m_effectTriggerSpell;
+            break;
+        }
+    }
+
+    CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
+
+    if (!player) {
+        return 0;
+    }
+
+    return player->GetAbilitySkillLine(abilitySpell);
+}
+
+// OFFSET: 0x009B9930/0x140744990
 void CGClassTrainer::FilterAndSortServices() {
     CGClassTrainer::m_filteredServices = CGClassTrainer::m_numServices;
     int32_t filter = g_serviceTypeFilterCVar->m_intValue;
 
-    for (uint32_t i = 0; i < static_cast<uint32_t>(CGClassTrainer::m_numSkillLines); i++) {
-        int32_t visible = 0;
-
-        for (uint32_t state = 0; state < 6; state++) {
-            if (((1 << state) & filter) && CGClassTrainer::m_skillLines.m_data[i]->m_stateCounts[state]) {
-                visible = ((1 << i) & CGClassTrainer::m_skillLineFilter) != 0;
-                break;
-            }
-        }
-
-        CGClassTrainer::m_skillLines.m_data[i]->m_visible = visible;
-        CGClassTrainer::m_skillLines.m_data[i]->m_collapsed = (CGClassTrainer::m_expandedSkillLines & (1 << i)) == 0;
-    }
-
     for (uint32_t i = 0; i < CGClassTrainer::m_numServices; i++) {
         TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
 
-        if (service->m_spellID >= 0 && !((1 << service->m_state) & filter)) {
-            service->m_visible = 0;
-            CGClassTrainer::m_filteredServices--;
-            continue;
-        }
-
-        service->m_visible = 1;
-
-        if (!CGClassTrainer::m_numSkillLines) {
-            continue;
-        }
-
-        uint32_t index = 0;
-
-        for (uint32_t j = 0; j < static_cast<uint32_t>(CGClassTrainer::m_numSkillLines); j++) {
-            if (CGClassTrainer::m_skillLines.m_data[j]->m_skillLine == service->m_skillLine) {
-                index = j;
-                break;
-            }
-        }
-
-        TrainerSkillLineInfo* line = CGClassTrainer::m_skillLines.m_data[index];
-
-        if (!line->m_visible || (service->m_spellID >= 0 && line->m_collapsed)) {
+        if (service->m_spellID < 0 || ((1 << service->m_state) & filter)) {
+            service->m_visible = 1;
+        } else {
             service->m_visible = 0;
             CGClassTrainer::m_filteredServices--;
         }
@@ -346,34 +271,169 @@ void CGClassTrainer::FilterAndSortServices() {
         qsort(CGClassTrainer::m_services.m_data, CGClassTrainer::m_numServices, sizeof(TrainerServiceInfo*), QSortServices_General);
     }
 
+    int32_t step = -1;
+    CGClassTrainer::m_stepIndex = -1;
+
+    if (CGClassTrainer::m_numServices > 7) {
+        for (uint32_t i = 0; i < CGClassTrainer::m_numServices; i++) {
+            TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
+
+            if (service->m_skillLine != 2) {
+                continue;
+            }
+
+            if (step != -1) {
+                TrainerServiceInfo* current = CGClassTrainer::m_services.m_data[step];
+
+                if (current->m_state == service->m_state) {
+                    if (current->m_skillRankReq < service->m_skillRankReq) {
+                        if (service->m_state == 2) {
+                            continue;
+                        }
+                    } else if (service->m_state != 2) {
+                        continue;
+                    }
+                } else if (service->m_state != 1 && (service->m_state != 2 || current->m_state)) {
+                    continue;
+                }
+            }
+
+            step = i;
+            CGClassTrainer::m_stepIndex = i;
+        }
+    }
+
     uint32_t i;
 
     for (i = 0; i < CGClassTrainer::m_numServices; i++) {
         TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
 
-        if (service && service->m_spellID > 0 && !service->m_state && service->m_visible) {
+        if (service && service->m_spellID > 0 && service->m_state == 1 && service->m_visible) {
+            if (i >= CGClassTrainer::m_numServices || (CGClassTrainer::m_currentSelection = service->m_spellID) < 0) {
+                CGClassTrainer::m_currentSelection = 0;
+            }
+
             break;
         }
     }
 
-    if (i < CGClassTrainer::m_numServices) {
-        CGClassTrainer::m_currentSelection = CGClassTrainer::m_services.m_data[i]->m_spellID;
-
-        if (CGClassTrainer::m_currentSelection < 0) {
-            CGClassTrainer::m_currentSelection = 0;
-        }
-    }
-
     if (i == CGClassTrainer::m_numServices) {
-        CGClassTrainer::m_currentSelection = CGClassTrainer::m_numServices > 1 ? CGClassTrainer::m_services.m_data[1]->m_spellID : 0;
-
-        if (CGClassTrainer::m_currentSelection < 0) {
+        if (CGClassTrainer::m_numServices <= 1 || (CGClassTrainer::m_currentSelection = CGClassTrainer::m_services.m_data[1]->m_spellID) < 0) {
             CGClassTrainer::m_currentSelection = 0;
         }
     }
 }
 
-// OFFSET: #0x00596B00
+// OFFSET: 0x009B9A90
+void CGClassTrainer::BuyService(uint32_t index) {
+    if (index >= CGClassTrainer::m_numServices) {
+        return;
+    }
+
+    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
+
+    if (!service || service->m_state != 1) {
+        return;
+    }
+
+    CDataStore msg;
+    msg.Put(static_cast<uint32_t>(CMSG_TRAINER_BUY_SPELL));
+    msg.Put(CGClassTrainer::m_trainer.m_guid);
+    msg.Put(static_cast<uint32_t>(CGClassTrainer::m_trainerID));
+    msg.Put(static_cast<uint32_t>(service->m_spellID));
+    msg.Finalize();
+    ClientServices::Send2(&msg);
+}
+
+// PROVEN: 2f1cb4bc IDENTICAL/NONE
+// OFFSET: 0x009B9B60
+void CGClassTrainer::BuyAllServices() {
+    for (uint32_t i = 0; i < CGClassTrainer::m_filteredServices; i++) {
+        CGClassTrainer::BuyService(i);
+    }
+}
+
+// PROVEN: eab3fdf1 IDENTICAL/NONE
+// OFFSET: 0x009B9B90
+void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
+    g_serviceTypeFilterCVar->Set(filter, true, false, false, true);
+    CGClassTrainer::FilterAndSortServices();
+    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
+}
+
+// OFFSET: 0x009BA450
+void CGClassTrainer::ShutdownGame() {
+    for (uint32_t i = 0; i < CGClassTrainer::m_services.m_count; i++) {
+        delete CGClassTrainer::m_services.m_data[i];
+    }
+
+    CGClassTrainer::m_services.m_count = 0;
+}
+
+// OFFSET: 0x009BA4A0
+void CGClassTrainer::AddServices(uint32_t count, const int32_t* spellIds, const int32_t* moneyCosts, const uint8_t* levelReqs, const int32_t* skillReqs, const uint32_t* skillRankReqs, const int32_t* const* abilityReqs, const int32_t* talentTabReqs, const uint8_t* states, const char* greeting) {
+    for (uint32_t i = CGClassTrainer::m_services.Count(); i < count; i++) {
+        TrainerServiceInfo* info = static_cast<TrainerServiceInfo*>(SMemAlloc(sizeof(TrainerServiceInfo), __FILE__, __LINE__, 0));
+        *CGClassTrainer::m_services.New() = info;
+    }
+
+    uint32_t skipped = 0;
+
+    for (uint32_t i = 0; i + skipped < count; i++) {
+        uint32_t source = i + skipped;
+        CGClassTrainer::m_services.m_data[i]->m_spellID = spellIds[source];
+        CGClassTrainer::m_services.m_data[i]->m_moneyCost = moneyCosts[source];
+        CGClassTrainer::m_services.m_data[i]->m_levelReq = levelReqs[source];
+        CGClassTrainer::m_services.m_data[i]->m_skillReq = skillReqs[source];
+        CGClassTrainer::m_services.m_data[i]->m_skillRankReq = skillRankReqs[source];
+        CGClassTrainer::m_services.m_data[i]->m_abilityReq[0] = abilityReqs[0][source];
+        CGClassTrainer::m_services.m_data[i]->m_abilityReq[1] = abilityReqs[1][source];
+        CGClassTrainer::m_services.m_data[i]->m_abilityReq[2] = abilityReqs[2][source];
+        CGClassTrainer::m_services.m_data[i]->m_talentTabReq = talentTabReqs[source];
+        CGClassTrainer::m_services.m_data[i]->m_state = states[source];
+        int32_t skillLine;
+
+        if (CGClassTrainer::m_trainerType == 2) {
+            skillLine = 1;
+
+            if (SpellRec* spell = g_spellDB.GetRecord(CGClassTrainer::m_services.m_data[i]->m_spellID)) {
+                uint32_t effectCount;
+                const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+
+                for (uint32_t j = 0; j < effectCount; j++) {
+                    if (effects->m_data[j] && effects->m_data[j]->m_effect == 44) {
+                        skillLine = 2;
+                        break;
+                    }
+                }
+            }
+        } else {
+            TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
+
+            if (service->m_talentTabReq && TalentInfoGetPrimaryTalentTree(CGTalentInfo::GetActiveTalentGroup(0), 0, 0) != service->m_talentTabReq) {
+                CGClassTrainer::m_services.m_data[i]->m_state = 2;
+            }
+
+            skillLine = GetServiceSkillLine(CGClassTrainer::m_services.m_data[i]->m_spellID);
+        }
+
+        CGClassTrainer::m_services.m_data[i]->m_skillLine = skillLine;
+
+        if (!skillLine) {
+            i--;
+            skipped++;
+        }
+    }
+
+    CGClassTrainer::m_numServices = count - skipped;
+    CGClassTrainer::FilterAndSortServices();
+
+    if (greeting) {
+        QuestParserParseText(greeting, CGClassTrainer::m_greetingText, sizeof(CGClassTrainer::m_greetingText), ClntObjMgrGetActivePlayer(), NULL, 0);
+    }
+}
+
+// OFFSET: 0x009BA770/0x140745CD0
 void CGClassTrainer::RefreshList() {
     if (!CGClassTrainer::m_trainer) {
         return;
@@ -385,460 +445,119 @@ void CGClassTrainer::RefreshList() {
         return;
     }
 
-    for (uint32_t s = 0; s < CGClassTrainer::m_numServices; s++) {
-        if (CGClassTrainer::m_services.m_data[s]->m_spellID == -1) {
+    for (uint32_t i = 0; i < CGClassTrainer::m_numServices; i++) {
+        int32_t spellId = CGClassTrainer::m_services.m_data[i]->m_spellID;
+
+        if (spellId == -1) {
             continue;
         }
 
-        SpellRec spell;
+        SpellRec* spell = g_spellDB.GetRecord(spellId);
 
-        if (!g_spellDB.GetRecord(CGClassTrainer::m_services.m_data[s]->m_spellID, &spell)) {
+        if (!spell) {
             continue;
         }
 
-        CGClassTrainer::m_services.m_data[s]->m_state = 0;
-        bool teaches = false;
+        uint32_t effectCount;
+        const TSGrowableArray<const SpellEffectRec*>* effects = SpellGetEffects(spell->m_id, effectCount);
+        CGClassTrainer::m_services.m_data[i]->m_state = 1;
+        bool learnFound = false;
         int32_t total = 0;
         int32_t known = 0;
 
-        for (uint32_t e = 0; e < 3; e++) {
-            int32_t effect = spell.m_effect[e];
+        for (uint32_t j = 0; j < effectCount; j++) {
+            const SpellEffectRec* effect = effects->m_data[j];
 
-            if (!effect) {
+            if (!effect || !effect->m_effect) {
                 continue;
             }
 
-            if (effect == 44) {
+            if (effect->m_effect == 44) {
                 int32_t minPoints;
                 int32_t maxPoints;
-                Spell_C_GetMinMaxPoints(&spell, e, &minPoints, &maxPoints, 0, 0, 0, 0);
+                Spell_C_GetMinMaxPoints(spell, j, &minPoints, &maxPoints, 0, 0, 0, 0);
                 total++;
+                int32_t index = player->GetSkillIndex(effects->m_data[j]->m_effectMiscValue);
 
-                for (int32_t i = 0; i < 128; i++) {
-                    uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerSkillInfo[i].m_skillId : 0;
-
-                    if (skillId == spell.m_effectMiscValue[e]) {
-                        uint16_t step = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerSkillInfo[i].m_step : 0;
-
-                        if (step >= maxPoints) {
-                            known++;
-                        }
-
-                        break;
-                    }
+                if (index >= 0 && player->GetSkillStep(index) >= maxPoints) {
+                    known++;
                 }
 
                 continue;
             }
 
-            int32_t spellId;
+            int32_t learnSpell;
 
-            if (effect == 36 && spell.m_implicitTargetA[e] != 5) {
-                spellId = spell.m_effectTriggerSpell[e];
-                teaches = true;
+            if (effect->m_effect == 36 && effect->m_implicitTargetA != 5) {
+                learnSpell = effect->m_effectTriggerSpell;
+                learnFound = true;
             } else {
-                if (teaches) {
+                if (learnFound) {
                     continue;
                 }
 
-                spellId = spell.m_id;
+                learnSpell = spell->m_id;
             }
 
             total++;
 
-            if (player->IsSpellKnown(spellId) || player->IsSpellSuperceded(spellId)) {
+            if (player->IsSpellKnown(learnSpell) || player->IsSpellSuperceded(learnSpell)) {
                 known++;
             }
 
-            if (spellId == spell.m_id) {
+            if (learnSpell == spell->m_id) {
                 break;
             }
         }
 
         if (total > 0 && known == total) {
-            CGClassTrainer::m_services.m_data[s]->m_state = 2;
+            CGClassTrainer::m_services.m_data[i]->m_state = 0;
         }
 
-        if (CGClassTrainer::m_services.m_data[s]->m_state) {
+        if (CGClassTrainer::m_services.m_data[i]->m_state != 1) {
             continue;
         }
 
-        if (CGClassTrainer::m_services.m_data[s]->m_skillReq) {
-            int32_t maxRank = 0;
+        if (CGClassTrainer::m_services.m_data[i]->m_skillReq) {
+            int32_t index = player->GetSkillIndex(CGClassTrainer::m_services.m_data[i]->m_skillReq);
 
-            for (int32_t i = 0; i < 128; i++) {
-                uint16_t skillId = player->m_obj->m_guid == ClntObjMgrGetActivePlayer() ? player->m_player->m_playerSkillInfo[i].m_skillId : 0;
-
-                if (skillId == CGClassTrainer::m_services.m_data[s]->m_skillReq) {
-                    if (player->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
-                        maxRank = player->m_player->m_playerSkillInfo[i].m_maxRank;
-
-                        if (maxRank > 0) {
-                            maxRank += player->m_player->m_playerSkillInfo[i].m_permBonus;
-                        }
-                    } else {
-                        maxRank = 0;
-                    }
-
-                    if (static_cast<int32_t>(player->GetSkillValue(i)) < CGClassTrainer::m_services.m_data[s]->m_skillRankReq) {
-                        CGClassTrainer::m_services.m_data[s]->m_state = 1;
-                    }
-
-                    break;
-                }
-            }
-
-            SpellRec stepSpell;
-
-            if (g_spellDB.GetRecord(CGClassTrainer::m_services.m_data[s]->m_stepSpellID, &stepSpell)) {
-                for (uint32_t e = 0; e < 3; e++) {
-                    if (stepSpell.m_effect[e] == 44 && stepSpell.m_effectMiscValue[e] == CGClassTrainer::m_services.m_data[s]->m_skillReq) {
-                        int32_t minPoints;
-                        int32_t maxPoints;
-                        Spell_C_GetMinMaxPoints(&stepSpell, e, &minPoints, &maxPoints, 0, 0, 0, 0);
-
-                        if (maxRank < 5 * maxPoints) {
-                            CGClassTrainer::m_services.m_data[s]->m_state = 1;
-                        }
-
-                        break;
-                    }
-                }
+            if (index >= 0 && player->GetSkillValue(index) < CGClassTrainer::m_services.m_data[i]->m_skillRankReq) {
+                CGClassTrainer::m_services.m_data[i]->m_state = 2;
             }
         }
 
-        if (CGClassTrainer::m_services.m_data[s]->m_state) {
+        if (CGClassTrainer::m_services.m_data[i]->m_talentTabReq && TalentInfoGetPrimaryTalentTree(CGTalentInfo::GetActiveTalentGroup(0), 0, 0) != CGClassTrainer::m_services.m_data[i]->m_talentTabReq) {
+            CGClassTrainer::m_services.m_data[i]->m_state = 2;
+        }
+
+        if (CGClassTrainer::m_services.m_data[i]->m_state != 1) {
             continue;
         }
 
         bool abilitiesKnown = true;
 
-        for (uint32_t i = 0; i < 3; i++) {
-            int32_t ability = CGClassTrainer::m_services.m_data[s]->m_abilityReq[i];
+        for (uint32_t j = 0; j < 3; j++) {
+            int32_t ability = CGClassTrainer::m_services.m_data[i]->m_abilityReq[j];
 
-            if (ability && !player->IsSpellKnown(ability) && !player->IsSpellSuperceded(ability)) {
+            if (ability && !player->IsSpellKnown(ability) && !player->IsSpellSuperceded(CGClassTrainer::m_services.m_data[i]->m_abilityReq[j])) {
                 abilitiesKnown = false;
                 break;
             }
         }
 
-        TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[s];
+        if (CGSpellBook::IsUnlearnedSpell(CGClassTrainer::m_services.m_data[i]->m_spellID)) {
+            CGClassTrainer::m_services.m_data[i]->m_state = 0;
+        } else if (abilitiesKnown) {
+            TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[i];
 
-        if (CGSpellBook::IsUnlearnedSpell(service->m_spellID)) {
-            service->m_state = 2;
-        } else if (!abilitiesKnown) {
-            service->m_state = 1;
-        } else if (service->m_levelReq > 1 && static_cast<int32_t>(player->m_unit->m_unitFieldLevel) < service->m_levelReq) {
-            service->m_state = 1;
-        }
-    }
-
-    for (uint32_t i = 0; i < static_cast<uint32_t>(CGClassTrainer::m_numSkillLines); i++) {
-        TrainerSkillLineInfo* line = CGClassTrainer::m_skillLines.m_data[i];
-
-        for (uint32_t state = 0; state < 6; state++) {
-            line->m_stateCounts[state] = 0;
-        }
-
-        line->unk_0024 = 1;
-    }
-
-    for (uint32_t s = 0; s < CGClassTrainer::m_numServices; s++) {
-        TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[s];
-
-        if (service->m_spellID == -1) {
-            continue;
-        }
-
-        for (uint32_t i = 0; i < static_cast<uint32_t>(CGClassTrainer::m_numSkillLines); i++) {
-            if (CGClassTrainer::m_skillLines.m_data[i]->m_skillLine == service->m_skillLine) {
-                CGClassTrainer::m_skillLines.m_data[i]->m_stateCounts[service->m_state]++;
-                break;
+            if (service->m_levelReq > 1 && static_cast<int32_t>(player->m_unit->m_unitFieldLevel) < service->m_levelReq) {
+                service->m_state = 2;
             }
-        }
-    }
-
-    CGClassTrainer::FilterAndSortServices();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
-}
-
-// OFFSET: #0x00594DA0
-void CGPlayer_C::TrainerBuySpell(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return;
-    }
-
-    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-    if (!service || service->m_state) {
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_TRAINER_BUY_SPELL));
-    msg.Put(CGClassTrainer::m_trainer.m_guid);
-    msg.Put(static_cast<uint32_t>(service->m_spellID));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x00594E50
-void CGClassTrainer::BuyService() {
-    for (uint32_t i = 0; i < CGClassTrainer::m_filteredServices; i++) {
-        CGPlayer_C::TrainerBuySpell(i);
-    }
-}
-
-// OFFSET: #0x00594E80
-const char* CGClassTrainer::GetServiceName(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return NULL;
-    }
-
-    TrainerServiceInfo* service = CGClassTrainer::m_services.m_data[index];
-
-    if (service->m_spellID < 0) {
-        if (CGClassTrainer::m_trainerType == 2) {
-            return FrameScript_GetText(s_tradeSkillServiceHeaders[service->m_skillLine], -1, GENDER_NOT_APPLICABLE);
-        }
-
-        SkillLineRec* skillLine = g_skillLineDB.GetRecord(service->m_skillLine);
-        return skillLine ? skillLine->m_displayName : NULL;
-    }
-
-    SpellRec spell;
-    const char* name = g_spellDB.GetRecord(CGClassTrainer::m_services.m_data[index]->m_spellID, &spell) ? spell.m_name : NULL;
-    return name;
-}
-
-// OFFSET: #0x00594F60
-const char* CGClassTrainer::GetServiceSubtext(uint32_t index) {
-    if (index >= CGClassTrainer::m_numServices) {
-        return NULL;
-    }
-
-    if (CGClassTrainer::m_services.m_data[index]->m_spellID < 0) {
-        return "";
-    }
-
-    SpellRec spell;
-    const char* subtext = g_spellDB.GetRecord(CGClassTrainer::m_services.m_data[index]->m_spellID, &spell) ? spell.m_nameSubtext : NULL;
-    return subtext;
-}
-
-// OFFSET: #0x00594FE0
-void CGClassTrainer::SetServiceTypeFilter(int32_t filter) {
-    g_serviceTypeFilterCVar->Set(filter, true, false, false, true);
-    CGClassTrainer::FilterAndSortServices();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
-}
-
-// OFFSET: #0x00595010
-void CGClassTrainer::SetSkillLineFilter(uint32_t filter) {
-    CGClassTrainer::m_skillLineFilter = filter;
-    CGClassTrainer::FilterAndSortServices();
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
-}
-
-// OFFSET: #0x005963C0
-void CGClassTrainer::ShutdownGame() {
-    for (uint32_t i = 0; i < CGClassTrainer::m_services.m_count; i++) {
-        delete CGClassTrainer::m_services.m_data[i];
-    }
-
-    CGClassTrainer::m_services.m_count = 0;
-
-    for (uint32_t i = 0; i < CGClassTrainer::m_skillLines.m_count; i++) {
-        delete CGClassTrainer::m_skillLines.m_data[i];
-    }
-
-    CGClassTrainer::m_skillLines.m_count = 0;
-}
-
-// OFFSET: #0x00593CE0
-static int32_t QSortTradeSkillTypes(const void* a, const void* b) {
-    int32_t lineA = (*static_cast<TrainerSkillLineInfo* const*>(a))->m_skillLine;
-    int32_t lineB = (*static_cast<TrainerSkillLineInfo* const*>(b))->m_skillLine;
-
-    if (lineA == lineB) {
-        return 0;
-    }
-
-    return lineA > lineB ? 1 : -1;
-}
-
-// OFFSET: #0x005941B0
-static int32_t QSortSkillLines(const void* a, const void* b) {
-    const TrainerSkillLineInfo* infoA = *static_cast<TrainerSkillLineInfo* const*>(a);
-    const TrainerSkillLineInfo* infoB = *static_cast<TrainerSkillLineInfo* const*>(b);
-
-    if (infoA->m_skillLine == infoB->m_skillLine) {
-        return 0;
-    }
-
-    if (infoA->unk_0024 != infoB->unk_0024) {
-        return infoA->unk_0024 ? 1 : -1;
-    }
-
-    SkillLineRec* lineA = g_skillLineDB.GetRecord(infoA->m_skillLine);
-    SkillLineRec* lineB = g_skillLineDB.GetRecord(infoB->m_skillLine);
-
-    if (lineA && lineB) {
-        return SStrSortUTF8I(lineA->m_displayName, lineB->m_displayName, STORM_MAX_STR);
-    }
-
-    return 0;
-}
-
-// OFFSET: #0x00594AE0
-static int32_t GetSkillLineFromService(int32_t spellId) {
-    SpellRec spell;
-
-    if (!g_spellDB.GetRecord(spellId, &spell)) {
-        return 0;
-    }
-
-    int32_t effect = -1;
-
-    for (int32_t i = 0; i < 3; i++) {
-        if (spell.m_effect[i] == 36 && spell.m_implicitTargetA[i] != 5) {
-            effect = i;
-            break;
-        }
-    }
-
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (!player) {
-        return 0;
-    }
-
-    return player->GetAbilitySkillLine(effect < 0 ? spell.m_id : spell.m_effectTriggerSpell[effect]);
-}
-
-// OFFSET: #0x00596450
-void CGClassTrainer::AddServices(uint32_t count, const int32_t* spellIds, const int32_t* moneyCosts, const int32_t* const* pointCosts, const uint8_t* levelReqs, const int32_t* skillReqs, const int32_t* skillRankReqs, const int32_t* stepSpells, const int32_t* const* abilityReqs, const uint8_t* states, const char* greeting) {
-    for (uint32_t i = CGClassTrainer::m_services.Count(); i < count; i++) {
-        TrainerServiceInfo* info = static_cast<TrainerServiceInfo*>(SMemAlloc(sizeof(TrainerServiceInfo), __FILE__, __LINE__, 0));
-        *CGClassTrainer::m_services.New() = info;
-    }
-
-    CGClassTrainer::m_skillLineFilter = 0xFFFFFFFF;
-    CGClassTrainer::m_expandedSkillLines = 0xFFFFFFFF;
-    CGClassTrainer::m_numSkillLines = 0;
-    uint32_t skipped = 0;
-
-    for (uint32_t i = 0; i + skipped < count; i++) {
-        uint32_t source = i + skipped;
-        TrainerServiceInfo* info = CGClassTrainer::m_services.m_data[i];
-        info->m_spellID = spellIds[source];
-        info->m_moneyCost = moneyCosts[source];
-        info->m_talentCost = pointCosts[0][source];
-        info->m_professionCost = pointCosts[1][source];
-        info->m_levelReq = levelReqs[source];
-        info->m_skillReq = skillReqs[source];
-        info->m_skillRankReq = skillRankReqs[source];
-        info->m_stepSpellID = stepSpells[source];
-        info->m_abilityReq[0] = abilityReqs[0][source];
-        info->m_abilityReq[1] = abilityReqs[1][source];
-        info->m_abilityReq[2] = abilityReqs[2][source];
-        info->m_state = states[source];
-        int32_t skillLine;
-
-        if (CGClassTrainer::m_trainerType != 2) {
-            skillLine = GetSkillLineFromService(info->m_spellID);
         } else {
-            skillLine = 2;
-            SpellRec spell;
-
-            if (g_spellDB.GetRecord(info->m_spellID, &spell)) {
-                if (spell.m_attributes & 0x40) {
-                    skillLine = 3;
-                } else {
-                    for (int32_t j = 0; j < 3; j++) {
-                        if (spell.m_effect[j] == 44) {
-                            skillLine = 1;
-                            break;
-                        }
-                    }
-                }
-            }
+            CGClassTrainer::m_services.m_data[i]->m_state = 2;
         }
-
-        info->m_skillLine = skillLine;
-
-        if (!skillLine) {
-            i--;
-            skipped++;
-            continue;
-        }
-
-        int32_t line;
-
-        for (line = 0; line < CGClassTrainer::m_numSkillLines; line++) {
-            TrainerSkillLineInfo* lineInfo = CGClassTrainer::m_skillLines.m_data[line];
-
-            if (lineInfo->m_skillLine != skillLine) {
-                continue;
-            }
-
-            lineInfo->m_stateCounts[info->m_state]++;
-
-            if (lineInfo->unk_0024) {
-                lineInfo->unk_0024 = info->m_talentCost || info->m_professionCost;
-            }
-
-            break;
-        }
-
-        if (line != CGClassTrainer::m_numSkillLines) {
-            continue;
-        }
-
-        if (static_cast<uint32_t>(CGClassTrainer::m_numSkillLines) >= CGClassTrainer::m_skillLines.Count()) {
-            TrainerSkillLineInfo* lineInfo = static_cast<TrainerSkillLineInfo*>(SMemAlloc(sizeof(TrainerSkillLineInfo), __FILE__, __LINE__, 0));
-            *CGClassTrainer::m_skillLines.New() = lineInfo;
-        }
-
-        TrainerSkillLineInfo* lineInfo = CGClassTrainer::m_skillLines.m_data[CGClassTrainer::m_numSkillLines];
-        lineInfo->m_skillLine = skillLine;
-
-        for (uint32_t k = 0; k < 6; k++) {
-            lineInfo->m_stateCounts[k] = 0;
-        }
-
-        lineInfo->unk_0024 = 1;
-        lineInfo->m_stateCounts[info->m_state]++;
-        lineInfo->unk_0024 = info->m_talentCost || info->m_professionCost;
-        CGClassTrainer::m_numSkillLines++;
     }
 
-    CGClassTrainer::m_numServices = count - skipped;
-    qsort(CGClassTrainer::m_skillLines.m_data, CGClassTrainer::m_numSkillLines, sizeof(TrainerSkillLineInfo*), CGClassTrainer::m_trainerType != 2 ? QSortSkillLines : QSortTradeSkillTypes);
-
-    for (uint32_t i = CGClassTrainer::m_services.Count(); i < CGClassTrainer::m_numSkillLines + CGClassTrainer::m_numServices; i++) {
-        TrainerServiceInfo* info = static_cast<TrainerServiceInfo*>(SMemAlloc(sizeof(TrainerServiceInfo), __FILE__, __LINE__, 0));
-        *CGClassTrainer::m_services.New() = info;
-    }
-
-    for (int32_t i = 0; i < CGClassTrainer::m_numSkillLines; i++) {
-        TrainerServiceInfo* header = CGClassTrainer::m_services.m_data[CGClassTrainer::m_numServices + i];
-        header->m_spellID = -1;
-        header->m_skillLine = CGClassTrainer::m_skillLines.m_data[i]->m_skillLine;
-    }
-
-    CGClassTrainer::m_numServices += CGClassTrainer::m_numSkillLines;
     CGClassTrainer::FilterAndSortServices();
-
-    if (greeting) {
-        QuestParserParseText(greeting, CGClassTrainer::m_greetingText, sizeof(((CGClassTrainer*)0)->m_greetingText), ClntObjMgrGetActivePlayer(), NULL, 0);
-    }
-
-    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_SHOW, NULL);
-}
-
-// OFFSET: #0x005947B0
-void CGClassTrainer::LeaveWorld() {
-    WOWGUID trainer = { 0 };
-    CGClassTrainer::SetTrainer(trainer, 0);
+    FrameScript_SignalEvent(SCRIPT_EVENT_TRAINER_UPDATE, NULL);
 }

@@ -21922,7 +21922,7 @@ void CGUnit_C::NPCFlagChanged(uint32_t oldFlags) {
     }
 
     if ((changed & 0x10) && !(flags & 0x10) && CGClassTrainer::m_trainer == this->m_obj->m_guid) {
-        CGClassTrainer::SetTrainer(WOWGUID(), 0);
+        CGClassTrainer::SetTrainer(WOWGUID(), 0, 0);
     }
 
     if ((changed & 0x20000) && !(flags & 0x20000) && CGBankInfo::m_banker == this->m_obj->m_guid) {

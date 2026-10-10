@@ -202,7 +202,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall TalkToGossip(const WOWGUID& guid);
     static void __stdcall TalkToQuestUnit(const WOWGUID& guid);
     static void __stdcall TalkToTrainer(const WOWGUID& guid);
-    static void TrainerBuySpell(uint32_t index);
     static void __stdcall TalkToGuildBanker(const WOWGUID& guid);
     static void __stdcall ShopFromMerchant(const WOWGUID& guid);
     static void __stdcall Uninvite(WOWGUID guid, const char* name);

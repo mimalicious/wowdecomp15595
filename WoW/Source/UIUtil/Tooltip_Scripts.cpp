@@ -1958,7 +1958,7 @@ static int32_t Script_SetTradePlayerItem(lua_State* L) {
     }
 
     uint32_t slot = static_cast<uint32_t>(static_cast<int64_t>(lua_tonumber(L, 2) - 1.0));
-    WOWGUID itemGuid = slot > 6 ? WOWGUID() : CGTradeInfo::m_playerTradeItems[slot].m_item;
+    WOWGUID itemGuid = slot > 6 ? WOWGUID() : CGTradeInfo::m_playerTrade.m_items[slot].m_item;
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(itemGuid, TYPEMASK_ITEM, __FILE__, __LINE__));
 
     if (!item) {
@@ -1981,7 +1981,7 @@ static int32_t Script_SetTradePlayerItem(lua_State* L) {
         info->m_spellCharges = item->m_item->m_itemFieldSpellCharges[useSlot];
     }
 
-    info->m_proposedEnchant = slot != 6 ? 0 : CGTradeInfo::m_playerProposedEnchant;
+    info->m_proposedEnchant = slot != 6 ? 0 : CGTradeInfo::m_targetTrade.m_proposedEnchant;
     WOWGUID guid = item->m_obj->m_guid;
     WOWGUID requester = item->m_obj->m_guid;
     tooltip->SetItem(item->m_obj->m_entryID, requester, guid, 0, 0, 1, 0, WOWGUID(), 0, NULL, useSlot < 0, NULL, 0, 0, 0, NULL);
@@ -2003,7 +2003,7 @@ static int32_t Script_SetTradeTargetItem(lua_State* L) {
         return 0;
     }
 
-    TradeTargetItem* trade = &CGTradeInfo::m_targetTradeItems[slot];
+    TradeTargetItem* trade = &CGTradeInfo::m_targetTrade.m_items[slot];
     int32_t itemId = trade->m_itemID;
 
     if (itemId <= 0) {
@@ -2020,7 +2020,7 @@ static int32_t Script_SetTradeTargetItem(lua_State* L) {
     info->m_enchants[7] = trade->m_engineeringEnchant;
 
     for (uint32_t i = 0; i < 3; i++) {
-        info->m_enchants[2 + i] = slot < 7 && i < 3 ? CGTradeInfo::m_targetTradeItems[slot].m_socketEnchants[i] : 0;
+        info->m_enchants[2 + i] = slot < 7 && i < 3 ? CGTradeInfo::m_targetTrade.m_items[slot].m_socketEnchants[i] : 0;
         info->m_enchantDurations[2 + i] = 0;
         info->m_enchantCharges[2 + i] = 0;
     }
@@ -2034,7 +2034,7 @@ static int32_t Script_SetTradeTargetItem(lua_State* L) {
     info->m_propertySeed = trade->m_suffixFactor;
     info->m_randomPropertiesId = trade->m_randomPropertyID;
     info->m_spellCharges = trade->m_spellCharges;
-    info->m_proposedEnchant = slot != 6 ? 0 : CGTradeInfo::m_targetProposedEnchant;
+    info->m_proposedEnchant = slot != 6 ? 0 : CGTradeInfo::m_playerTrade.m_proposedEnchant;
     info->m_maxDurability = trade->m_maxDurability;
     info->m_durability = trade->m_durability;
     info->m_stackCount = trade->m_count;
