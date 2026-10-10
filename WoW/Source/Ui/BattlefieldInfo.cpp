@@ -50,7 +50,7 @@ WOWGUID CGBattlefieldInfo::m_arenaOpponentPets[5][2];
 WOWGUID CGBattlefieldInfo::m_arenaOpponents[5];
 
 // STATIC: #0x00BE8F90
-CGPartyMemberState CGBattlefieldInfo::m_arenaOpponentStats[5];
+PartyMemberState CGBattlefieldInfo::m_arenaOpponentStats[5];
 
 // STATIC: #0x00BEA580
 uint32_t CGBattlefieldInfo::m_numScores;
@@ -947,7 +947,7 @@ void CGBattlefieldInfo::SetBattlemaster(WOWGUID battlemaster) {
 }
 
 // OFFSET: #0x005497C0
-CGPartyMemberState* CGBattlefieldInfo::GetRemoteStats(const WOWGUID& guid) {
+PartyMemberState* CGBattlefieldInfo::GetRemoteStats(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
     }
@@ -962,7 +962,7 @@ CGPartyMemberState* CGBattlefieldInfo::GetRemoteStats(const WOWGUID& guid) {
 }
 
 // OFFSET: #0x00549860
-CGPartyPetState* CGBattlefieldInfo::GetRemotePetStats(const WOWGUID& guid) {
+PartyMemberPetState* CGBattlefieldInfo::GetRemotePetStats(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
     }
@@ -1171,7 +1171,7 @@ int32_t CGBattlefieldInfo::GetArenaOpponentIndex(const WOWGUID& guid, int32_t* i
 }
 
 // OFFSET: #0x00549810
-CGPartyMemberState* CGBattlefieldInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
+PartyMemberState* CGBattlefieldInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     for (uint32_t i = 0; i < 5; i++) {
         if (CGBattlefieldInfo::m_arenaOpponents[i] && CGBattlefieldInfo::m_arenaOpponentStats[i].m_pet.m_guid == petGuid) {
             return &CGBattlefieldInfo::m_arenaOpponentStats[i];
@@ -1839,7 +1839,7 @@ void CGBattlefieldInfo::AddArenaOpponentToSlot(const WOWGUID& guid, int32_t slot
 
     if (CGBattlefieldInfo::m_arenaOpponents[slot] != guid) {
         CGBattlefieldInfo::m_arenaOpponents[slot] = guid;
-        memset(&CGBattlefieldInfo::m_arenaOpponentStats[slot], 0, sizeof(CGPartyMemberState));
+        memset(&CGBattlefieldInfo::m_arenaOpponentStats[slot], 0, sizeof(PartyMemberState));
 
         if (unit) {
             unit->RegisterScript(0x4000);

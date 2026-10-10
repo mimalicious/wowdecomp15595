@@ -1,4 +1,5 @@
 #include "Player_C.h"
+#include "WoW/Source/Game/GameClient/PhaseShift_C.h"
 #include "WoW/Source/Object/ObjectClient/VoidStorage_C.h"
 #include "WoW/Source/UIUtil/CameraManager.h"
 #include <malloc.h>
@@ -1341,58 +1342,6 @@ void CGPlayer_C::SellItem(WOWGUID vendor, WOWGUID item, uint32_t count) {
     msg.Put(vendor.m_guid);
     msg.Put(item.m_guid);
     msg.Put(count);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D4300
-void CGPlayer_C::GroupInvite(const char* name, uint32_t flags) {
-    CGTutorial::FlagTutorial(17);
-
-    if (!SStrCmpUTF8I(name, this->GetUnitName(NULL, 1), STORM_MAX_STR)) {
-        CGGameUI::DisplayError(ERR_INVITE_SELF);
-        return;
-    }
-
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GROUP_INVITE));
-    msg.PutString(name);
-    msg.Put(flags);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D43C0
-void __stdcall CGPlayer_C::Uninvite(WOWGUID guid, const char* name) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GROUP_UNINVITE_GUID));
-    msg.Put(guid.m_guid);
-    msg.PutString(name);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D4450
-void __stdcall CGPlayer_C::AcceptGroup(uint32_t roles) {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GROUP_ACCEPT));
-    msg.Put(roles);
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D44D0
-void __stdcall CGPlayer_C::DeclineGroup() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GROUP_DECLINE));
-    msg.Finalize();
-    ClientServices::Send2(&msg);
-}
-
-// OFFSET: #0x006D4540
-void __stdcall CGPlayer_C::LeaveGroup() {
-    CDataStore msg;
-    msg.Put(static_cast<uint32_t>(CMSG_GROUP_DISBAND));
     msg.Finalize();
     ClientServices::Send2(&msg);
 }
@@ -4744,7 +4693,7 @@ bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
         return (player->m_unit->m_unitDynamicFlags >> 6) & 1;
     }
 
-    CGPartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
+    PartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
 
     if (!stats) {
         stats = CGRaidInfo::GetRemoteStats(guid);
@@ -7864,7 +7813,7 @@ int32_t __stdcall CGPlayer_C::CanSummonFriend(WOWGUID guid) {
             return 10;
         }
     } else {
-        CGPartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
+        PartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
 
         if (!stats) {
             stats = CGRaidInfo::GetRemoteStats(guid);
@@ -8765,96 +8714,241 @@ void __stdcall CGPlayer_C::ShowTaxiNodes(CDataStore* msg) {
     delete[] nodeMask;
 }
 
-// OFFSET: #0x006CBA60
-uint32_t CGPlayer_C::BuildPartyMemberStatsChanges(const CGPartyMemberState* oldState, const CGPartyMemberState* newState) {
-    uint32_t changes = newState->m_flags != oldState->m_flags;
+// OFFSET: 0x00564600/0x1401C2730
+uint32_t CGPlayer_C::BuildPartyMemberStatsChanges(PartyMemberState& oldState, PartyMemberState& newState) {
+    uint32_t changes = newState.m_flags != oldState.m_flags;
 
-    if (newState->m_health != oldState->m_health) {
+    if (newState.m_health != oldState.m_health) {
         changes |= 0x2;
     }
 
-    if (newState->m_maxHealth != oldState->m_maxHealth) {
+    if (newState.m_maxHealth != oldState.m_maxHealth) {
         changes |= 0x4;
     }
 
-    if (newState->m_powerType != oldState->m_powerType) {
+    if (newState.m_powerType != oldState.m_powerType) {
         changes |= 0x8;
     }
 
-    if (newState->m_power != oldState->m_power) {
+    if (newState.m_power != oldState.m_power) {
         changes |= 0x10;
     }
 
-    if (newState->m_maxPower != oldState->m_maxPower) {
+    if (newState.m_maxPower != oldState.m_maxPower) {
         changes |= 0x20;
     }
 
-    if (newState->m_level != oldState->m_level) {
+    if (newState.m_level != oldState.m_level) {
         changes |= 0x40;
     }
 
-    if (newState->m_zoneID != oldState->m_zoneID) {
+    if (newState.m_zoneID != oldState.m_zoneID) {
         changes |= 0x80;
     }
 
-    if (newState->m_posX != oldState->m_posX || newState->m_posY != oldState->m_posY) {
+    if (newState.unk_0022 != oldState.unk_0022) {
         changes |= 0x100;
     }
 
-    for (uint32_t i = 0; i < 64; i++) {
-        if (newState->m_auras[i] != oldState->m_auras[i] || newState->m_auraFlags[i] != oldState->m_auraFlags[i]) {
-            changes |= 0x200;
-            break;
+    if (newState.m_posX != oldState.m_posX || newState.m_posY != oldState.m_posY || newState.m_posZ != oldState.m_posZ) {
+        changes |= 0x200;
+    }
+
+    if (newState.m_numAuras > oldState.m_auras.Count()) {
+        oldState.m_auras.SetCount(newState.m_numAuras);
+    } else if (oldState.m_numAuras > newState.m_auras.Count()) {
+        newState.m_auras.SetCount(oldState.m_numAuras);
+    }
+
+    if (newState.m_numAuras != oldState.m_numAuras) {
+        changes |= 0x400;
+    } else {
+        for (uint32_t i = 0; i < newState.m_numAuras; i++) {
+            if (newState.m_auras[i].m_spellId != oldState.m_auras[i].m_spellId || newState.m_auras[i].m_flags != oldState.m_auras[i].m_flags) {
+                changes |= 0x400;
+                break;
+            }
         }
     }
 
-    if (newState->m_pet.m_guid != oldState->m_pet.m_guid) {
-        changes |= 0x400;
-    }
-
-    if (SStrCmp(newState->m_pet.m_name, oldState->m_pet.m_name, STORM_MAX_STR)) {
+    if (newState.m_pet.m_guid != oldState.m_pet.m_guid) {
         changes |= 0x800;
     }
 
-    if (newState->m_pet.m_displayId != oldState->m_pet.m_displayId) {
+    if (strcmp(newState.m_pet.m_name, oldState.m_pet.m_name)) {
         changes |= 0x1000;
     }
 
-    if (newState->m_pet.m_health != oldState->m_pet.m_health) {
+    if (newState.m_pet.m_displayId != oldState.m_pet.m_displayId) {
         changes |= 0x2000;
     }
 
-    if (newState->m_pet.m_maxHealth != oldState->m_pet.m_maxHealth) {
+    if (newState.m_pet.m_health != oldState.m_pet.m_health) {
         changes |= 0x4000;
     }
 
-    if (newState->m_pet.m_powerType != oldState->m_pet.m_powerType) {
+    if (newState.m_pet.m_maxHealth != oldState.m_pet.m_maxHealth) {
         changes |= 0x8000;
     }
 
-    if (newState->m_pet.m_power != oldState->m_pet.m_power) {
+    if (newState.m_pet.m_powerType != oldState.m_pet.m_powerType) {
         changes |= 0x10000;
     }
 
-    if (newState->m_pet.m_maxPower != oldState->m_pet.m_maxPower) {
+    if (newState.m_pet.m_power != oldState.m_pet.m_power) {
         changes |= 0x20000;
     }
 
-    for (uint32_t i = 0; i < 64; i++) {
-        if (newState->m_pet.m_auras[i] != oldState->m_pet.m_auras[i] || newState->m_pet.m_auraFlags[i] != oldState->m_pet.m_auraFlags[i]) {
-            changes |= 0x40000;
-            break;
+    if (newState.m_pet.m_maxPower != oldState.m_pet.m_maxPower) {
+        changes |= 0x40000;
+    }
+
+    if (newState.m_pet.m_numAuras > oldState.m_pet.m_auras.Count()) {
+        oldState.m_pet.m_auras.SetCount(newState.m_pet.m_numAuras);
+    } else if (oldState.m_pet.m_numAuras > newState.m_pet.m_auras.Count()) {
+        newState.m_pet.m_auras.SetCount(oldState.m_pet.m_numAuras);
+    }
+
+    if (newState.m_pet.m_numAuras != oldState.m_pet.m_numAuras) {
+        changes |= 0x80000;
+    } else {
+        for (uint32_t i = 0; i < newState.m_pet.m_numAuras; i++) {
+            if (newState.m_pet.m_auras[i].m_spellId != oldState.m_pet.m_auras[i].m_spellId || newState.m_pet.m_auras[i].m_flags != oldState.m_pet.m_auras[i].m_flags) {
+                changes |= 0x80000;
+                break;
+            }
         }
     }
 
-    if (newState->m_vehicleSeatId != oldState->m_vehicleSeatId) {
-        changes |= 0x80000;
+    if (newState.m_vehicleSeatId != oldState.m_vehicleSeatId) {
+        changes |= 0x100000;
+    }
+
+    if (!(oldState.m_phaseShift == newState.m_phaseShift)) {
+        changes |= 0x200000;
     }
 
     return changes;
 }
 
-// OFFSET: #0x006CF9B0
+// OFFSET: 0x00555430/0x1401B1CB0
+void CGPlayer_C::DispatchPartyMemberStatsChanges(const WOWGUID& guid, uint32_t changes, const PartyMemberState& oldState, const PartyMemberState& newState) {
+    if (changes & 0x1) {
+        uint8_t flagChanges = static_cast<uint8_t>(newState.m_flags ^ oldState.m_flags);
+
+        if (flagChanges & 0xC) {
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEALTH);
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEALTH_FREQUENT);
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER, "%s", Spell_C_GetPowerTypeToken(newState.m_powerType));
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER_FREQUENT, "%s", Spell_C_GetPowerTypeToken(newState.m_powerType));
+            changes &= ~0x12;
+        }
+
+        if (flagChanges & 0x1) {
+            Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_CONNECTION, "%b", newState.m_flags & 1);
+        }
+
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_FLAGS);
+    }
+
+    if (changes & 0x40) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_LEVEL);
+    }
+
+    if (changes & 0x2) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEALTH);
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_HEALTH_FREQUENT);
+    }
+
+    if (changes & 0x4) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_MAXHEALTH);
+    }
+
+    if (changes & 0x8) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_DISPLAYPOWER);
+    }
+
+    if (changes & 0x10) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER, "%s", Spell_C_GetPowerTypeToken(newState.m_powerType));
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_POWER_FREQUENT, "%s", Spell_C_GetPowerTypeToken(newState.m_powerType));
+    }
+
+    if (changes & 0x20) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_MAXPOWER, "%s", Spell_C_GetPowerTypeToken(newState.m_powerType));
+    }
+
+    if (static_cast<uint8_t>(newState.m_flags ^ oldState.m_flags) & 0x12) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_FACTION);
+    }
+
+    if (changes & 0x400) {
+        Script_SendUniqueSignal(guid, SCRIPT_EVENT_UNIT_AURA);
+    }
+
+    if (changes & 0x800) {
+        if (CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(oldState.m_pet.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__))) {
+            pet->UpdateScriptRegistration();
+        }
+
+        if (CGUnit_C* pet = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(newState.m_pet.m_guid, TYPEMASK_UNIT, __FILE__, __LINE__))) {
+            pet->UpdateScriptRegistration();
+        }
+
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_PET);
+    }
+
+    if (newState.m_pet.m_guid) {
+        const WOWGUID& pet = newState.m_pet.m_guid;
+
+        if (changes & 0x1000) {
+            CGGameUI::UnitNameUpdate(pet);
+        }
+
+        if (changes & 0x2000) {
+            CGGameUI::UnitModelUpdate(pet, 3);
+        }
+
+        if (changes & 0x4000) {
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_HEALTH);
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_HEALTH_FREQUENT);
+        }
+
+        if (changes & 0x8000) {
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_MAXHEALTH);
+        }
+
+        if (changes & 0x10000) {
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_DISPLAYPOWER);
+        }
+
+        if (changes & 0x20000) {
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_POWER, "%s", Spell_C_GetPowerTypeToken(newState.m_pet.m_powerType));
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_POWER_FREQUENT, "%s", Spell_C_GetPowerTypeToken(newState.m_pet.m_powerType));
+        }
+
+        if (changes & 0x40000) {
+            Script_SendUnitSignal(pet, SCRIPT_EVENT_UNIT_MAXPOWER, "%s", Spell_C_GetPowerTypeToken(newState.m_pet.m_powerType));
+        }
+
+        if (changes & 0x80000) {
+            Script_SendUniqueSignal(pet, SCRIPT_EVENT_UNIT_AURA);
+        }
+    }
+
+    if (changes & 0x100000) {
+        if (VehicleSeatRec* seat = g_vehicleSeatDB.GetRecord(newState.m_vehicleSeatId)) {
+            CVehiclePassenger_C::SendTransitionUIEvents(guid, WOWGUID(), NULL, seat, 0, 3);
+        } else {
+            CVehiclePassenger_C::SendTransitionUIEvents(guid, WOWGUID(), NULL, NULL, 3, 0);
+        }
+    }
+
+    if (changes & 0x200000) {
+        Script_SendUnitSignal(guid, SCRIPT_EVENT_UNIT_PHASE);
+    }
+}
+
+// OFFSET: 0x0056B390
 int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     uint8_t arena = 0;
 
@@ -8866,24 +8960,25 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
     *msg >> guid;
 
     if (arena) {
-        CGBattlefieldInfo::AddArenaOpponent(guid);
+        WOWGUID opponent = guid;
+        CGBattlefieldInfo::AddArenaOpponent(opponent);
     }
 
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
-    CGPartyMemberState oldState;
+    WOWGUID member = guid;
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(member);
+    PartyMemberState oldState;
+    PartyMemberState newState;
 
     if (state) {
-        memcpy(&oldState, state, sizeof(CGPartyMemberState));
+        oldState.Copy(state);
     } else {
-        memset(&oldState, 0, sizeof(CGPartyMemberState));
+        oldState.Reset();
     }
 
-    CGPartyMemberState newState;
-
     if (msgId == SMSG_PARTY_MEMBER_STATS_FULL) {
-        memset(&newState, 0, sizeof(CGPartyMemberState));
+        newState.Reset();
     } else {
-        memcpy(&newState, &oldState, sizeof(CGPartyMemberState));
+        newState.Copy(&oldState);
     }
 
     uint32_t mask;
@@ -8891,12 +8986,12 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
 
     if (mask & 0x1) {
         msg->Get(newState.m_flags);
-        WOWGUID member = guid;
+        WOWGUID flagged = guid;
 
         if (newState.m_flags & 0x1) {
-            CGAutoCompleteName::AddFlags(member, 0x20, 0, NULL);
+            CGAutoCompleteName::AddFlags(flagged, 32, 0, NULL);
         } else {
-            CGAutoCompleteName::RemoveFlags(member, 0x20);
+            CGAutoCompleteName::RemoveFlags(flagged, 32);
         }
     }
 
@@ -8935,23 +9030,48 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
     }
 
     if (mask & 0x100) {
-        msg->Get(reinterpret_cast<uint16_t&>(newState.m_posX));
-        msg->Get(reinterpret_cast<uint16_t&>(newState.m_posY));
+        msg->Get(newState.unk_0022);
     }
 
     if (mask & 0x200) {
+        msg->Get(reinterpret_cast<uint16_t&>(newState.m_posX));
+        msg->Get(reinterpret_cast<uint16_t&>(newState.m_posY));
+        msg->Get(reinterpret_cast<uint16_t&>(newState.m_posZ));
+    }
+
+    if (mask & 0x400) {
+        uint8_t full = 0;
+        msg->Get(full);
         uint64_t auraMask;
         msg->Get(auraMask);
+        uint32_t count;
+        msg->Get(count);
 
-        for (uint32_t i = 0; i < 64; i++) {
+        if (count > newState.m_auras.Count()) {
+            newState.m_auras.SetCount(count);
+        }
+
+        newState.m_numAuras = count;
+
+        for (uint32_t i = 0; i < count; i++) {
+            PartyMemberAuraStates& aura = newState.m_auras[i];
+
             if (auraMask & (static_cast<uint64_t>(1) << i)) {
-                msg->Get(reinterpret_cast<uint32_t&>(newState.m_auras[i]));
-                msg->Get(newState.m_auraFlags[i]);
+                msg->Get(reinterpret_cast<uint32_t&>(aura.m_spellId));
+                msg->Get(aura.m_flags);
+
+                if (aura.m_flags & 0x40) {
+                    for (uint32_t j = 0; j < 3; j++) {
+                        msg->Get(reinterpret_cast<uint32_t&>(aura.m_effectAmounts[j]));
+                    }
+                }
+            } else if (full) {
+                memset(&aura, 0, sizeof(aura));
             }
         }
     }
 
-    if (mask & 0x400) {
+    if (mask & 0x800) {
         msg->Get(newState.m_pet.m_guid.m_guid);
 
         if (arena && newState.m_pet.m_guid) {
@@ -8960,57 +9080,82 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
         }
     }
 
-    if (mask & 0x800) {
+    if (mask & 0x1000) {
         msg->GetString(newState.m_pet.m_name, sizeof(newState.m_pet.m_name));
     }
 
-    if (mask & 0x1000) {
+    if (mask & 0x2000) {
         msg->Get(newState.m_pet.m_displayId);
     }
 
-    if (mask & 0x2000) {
+    if (mask & 0x4000) {
         msg->Get(newState.m_pet.m_health);
     }
 
-    if (mask & 0x4000) {
+    if (mask & 0x8000) {
         msg->Get(newState.m_pet.m_maxHealth);
     }
 
-    if (mask & 0x8000) {
+    if (mask & 0x10000) {
         msg->Get(newState.m_pet.m_powerType);
     }
 
-    if (mask & 0x10000) {
+    if (mask & 0x20000) {
         msg->Get(newState.m_pet.m_power);
     }
 
-    if (mask & 0x20000) {
+    if (mask & 0x40000) {
         msg->Get(newState.m_pet.m_maxPower);
     }
 
-    if (mask & 0x40000) {
+    if (mask & 0x80000) {
+        uint8_t full = 0;
+        msg->Get(full);
         uint64_t auraMask;
         msg->Get(auraMask);
+        uint32_t count;
+        msg->Get(count);
 
-        for (uint32_t i = 0; i < 64; i++) {
+        if (count > newState.m_pet.m_auras.Count()) {
+            newState.m_pet.m_auras.SetCount(count);
+        }
+
+        newState.m_pet.m_numAuras = count;
+
+        for (uint32_t i = 0; i < count; i++) {
+            PartyMemberAuraStates& aura = newState.m_pet.m_auras[i];
+
             if (auraMask & (static_cast<uint64_t>(1) << i)) {
-                msg->Get(reinterpret_cast<uint32_t&>(newState.m_pet.m_auras[i]));
-                msg->Get(newState.m_pet.m_auraFlags[i]);
+                msg->Get(reinterpret_cast<uint32_t&>(aura.m_spellId));
+                msg->Get(aura.m_flags);
+
+                if (aura.m_flags & 0x40) {
+                    for (uint32_t j = 0; j < 3; j++) {
+                        msg->Get(reinterpret_cast<uint32_t&>(aura.m_effectAmounts[j]));
+                    }
+                }
+            } else if (full) {
+                memset(&aura, 0, sizeof(aura));
             }
         }
     }
 
-    if (mask & 0x80000) {
+    if (mask & 0x100000) {
         msg->Get(newState.m_vehicleSeatId);
     }
 
-    uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(&oldState, &newState);
-    int32_t index;
+    if (mask & 0x200000) {
+        newState.m_phaseShift.SetPhasesFromDataStore(msg);
+    }
 
-    if (CGBattlefieldInfo::GetArenaOpponentIndex(guid, &index) && CGBattlefieldInfo::m_arenaOpponentSeen[index]) {
+    uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(oldState, newState);
+    int32_t index;
+    WOWGUID opponent = guid;
+
+    if (CGBattlefieldInfo::GetArenaOpponentIndex(opponent, &index) && CGBattlefieldInfo::m_arenaOpponentSeen[index]) {
         changes = 0xFFFFFFFF;
 
-        if (CGBattlefieldInfo::GetArenaOpponentIndex(guid, &index)) {
+        if (CGBattlefieldInfo::GetArenaOpponentIndex(opponent, &index)) {
             CGBattlefieldInfo::m_arenaOpponentSeen[index] = 0;
         }
     }
@@ -9020,16 +9165,16 @@ int32_t Packet_HandlePartyMemberStats(void* param, NETMESSAGE msgId, uint32_t ti
             newState.m_flags |= 0x100;
         }
 
-        memcpy(state, &newState, sizeof(CGPartyMemberState));
+        state->Copy(&newState);
+        WOWGUID raidGuid = guid;
 
-        CGPartyMemberState* remote = CGRaidInfo::GetRemoteStats(guid);
-
-        if (remote) {
-            memcpy(remote, &newState, sizeof(CGPartyMemberState));
+        if (PartyMemberState* remote = CGRaidInfo::GetRemoteStats(raidGuid)) {
+            remote->Copy(&newState);
         }
     }
 
-    CGPlayer_C::DispatchPartyMemberStatsChanges(guid, changes, &oldState, &newState);
+    WOWGUID dispatch = guid;
+    CGPlayer_C::DispatchPartyMemberStatsChanges(dispatch, changes, oldState, newState);
     return 1;
 }
 
@@ -9866,8 +10011,8 @@ void CGPlayer_C::EquipItem(CGItem_C* item) {
     }
 }
 
-// OFFSET: #0x006E12E0
-void CGPlayer_C::FillPartyMemberState(CGPartyMemberState* state) {
+// OFFSET: 0x00566B80/0x1401C5400
+void CGPlayer_C::FillPartyMemberState(PartyMemberState* state) {
     state->m_flags = 1;
 
     if (this->m_player->m_playerFlags & 0x10) {
@@ -9906,78 +10051,94 @@ void CGPlayer_C::FillPartyMemberState(CGPartyMemberState* state) {
     state->m_maxHealth = this->m_unit->m_unitFieldMaxhealth;
     uint8_t powerType = this->m_unit->m_unitFieldBytes0[3];
     state->m_powerType = powerType;
-    state->m_power = this->m_unit->m_unitFieldPower[powerType];
-    state->m_maxPower = this->m_unit->m_unitFieldMaxpower[powerType];
-    state->m_level = this->m_unit->m_unitFieldLevel;
+    state->m_power = static_cast<uint16_t>(this->GetPower(powerType));
+    state->m_maxPower = static_cast<uint16_t>(this->GetMaxPower(powerType));
+    state->m_level = static_cast<uint16_t>(this->m_unit->m_unitFieldLevel);
 
     if (this->GetTransportGUID()) {
         state->m_zoneID = 0;
     } else {
-        state->m_zoneID = CGGameUI::m_areaID;
+        state->m_zoneID = static_cast<uint16_t>(CGGameUI::m_areaID);
+        state->m_zoneID = static_cast<uint16_t>(CGGameUI::m_wmoGroupID);
         C3Vector position = this->GetPosition();
-        state->m_posX = static_cast<int16_t>(position.x);
-        state->m_posY = static_cast<int16_t>(position.y);
+        state->m_posX = static_cast<int16_t>(static_cast<int32_t>(position.x));
+        state->m_posY = static_cast<int16_t>(static_cast<int32_t>(position.y));
+        state->m_posZ = static_cast<int16_t>(static_cast<int32_t>(position.z));
+    }
+
+    uint32_t limit = this->GetAuraCount() >= 64 ? 64 : this->GetAuraCount();
+
+    if (limit > state->m_auras.Count()) {
+        state->m_auras.SetCount(limit);
     }
 
     uint32_t count = 0;
 
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+    for (uint32_t i = 0; i < limit; i++) {
         AuraData* aura = this->GetAura(i);
 
         if (!aura->m_spellId || !(aura->m_flags & 0x7)) {
             continue;
         }
 
-        state->m_auras[count] = aura->m_spellId;
-        state->m_auraFlags[count] = aura->m_flags;
-        count++;
+        state->m_auras[count].m_spellId = aura->m_spellId;
+        state->m_auras[count].m_flags = aura->m_flags;
 
-        if (count == 64) {
-            break;
+        if (aura->m_flags & 0x40) {
+            state->m_auras[count].m_effectAmounts[0] = aura->m_effectAmounts[0];
+            state->m_auras[count].m_effectAmounts[1] = aura->m_effectAmounts[1];
+            state->m_auras[count].m_effectAmounts[2] = aura->m_effectAmounts[2];
         }
+
+        count++;
     }
 
-    if (count < 64) {
-        memset(&state->m_auras[count], 0, sizeof(int32_t) * (64 - count));
+    state->m_numAuras = count;
+
+    for (uint32_t i = count; i < limit; i++) {
+        state->m_auras[i].m_flags = 0;
+        state->m_auras[i].m_spellId = 0;
     }
 
     CGUnitData* unit = this->m_unit;
     state->m_pet.m_guid = unit->m_unitFieldCharm ? unit->m_unitFieldCharm : unit->m_unitFieldSummon;
 
-    if (!(state->m_flags & 0x200)) {
-        state->m_vehicleSeatId = 0;
-        return;
-    }
+    if (state->m_flags & 0x200) {
+        CGUnit_C* transport = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->GetTransportGUID()), TYPEMASK_UNIT, __FILE__, __LINE__));
+        VehicleRec* vehicle = transport && transport->m_vehicle ? transport->m_vehicle->m_vehicleRec : NULL;
+        uint8_t seat = this->m_movementData.m_transportSeat;
 
-    CGUnit_C* transport = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(WOWGUID::Make(this->GetTransportGUID()), TYPEMASK_UNIT, __FILE__, __LINE__));
-    VehicleRec* vehicle = transport && transport->m_vehicle ? transport->m_vehicle->m_vehicleRec : NULL;
-    uint8_t seat = this->m_movementData.m_transportSeat;
-
-    if (vehicle && seat < 8) {
-        state->m_vehicleSeatId = vehicle->m_seatID[seat];
+        if (vehicle && seat < 8) {
+            state->m_vehicleSeatId = vehicle->m_seatID[seat];
+        } else {
+            state->m_vehicleSeatId = 0;
+        }
     } else {
         state->m_vehicleSeatId = 0;
     }
+
+    if (this->m_obj->m_guid == ClntObjMgrGetActivePlayer()) {
+        state->m_phaseShift = *PhaseShift_C_GetPhase();
+    }
 }
 
-// OFFSET: #0x006E15A0
+// OFFSET: 0x0056AD20
 void CGPlayer_C::UpdatePartyMemberState() {
-    CGPartyMemberState* remote = CGPartyInfo::GetRemoteStats(this->m_obj->m_guid);
-    CGPartyMemberState* raid = CGRaidInfo::GetRemoteStats(this->m_obj->m_guid);
+    WOWGUID guid = this->m_obj->m_guid;
+    PartyMemberState* remote = CGPartyInfo::GetRemoteStats(guid);
+    WOWGUID raidGuid = this->m_obj->m_guid;
+    PartyMemberState* raid = CGRaidInfo::GetRemoteStats(raidGuid);
+    PartyMemberState oldState;
+    PartyMemberState newState;
 
-    if (!remote) {
-        if (!raid) {
-            return;
-        }
-
-        remote = raid;
+    if (remote || (remote = raid) != NULL) {
+        oldState.Copy(remote);
+        newState.Copy(remote);
+        this->FillPartyMemberState(&newState);
+        uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(oldState, newState);
+        WOWGUID self = this->m_obj->m_guid;
+        CGPlayer_C::DispatchPartyMemberStatsChanges(self, changes, oldState, newState);
     }
-
-    CGPartyMemberState oldState = *remote;
-    CGPartyMemberState newState = oldState;
-    this->FillPartyMemberState(&newState);
-    uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(&oldState, &newState);
-    CGPlayer_C::DispatchPartyMemberStatsChanges(this->m_obj->m_guid, changes, &oldState, &newState);
 }
 
 // OFFSET: #0x006E1A70

@@ -18,7 +18,7 @@ class CGRaidMember {
     /* 0000 */ WOWGUID m_guid;
     /* 0008 */ uint32_t m_subgroup;
     /* 000C */ int32_t m_rank;
-    /* 0010 */ CGPartyMemberState m_stats;
+    /* 0010 */ PartyMemberState m_stats;
     /* 00E8 */ int32_t m_readyCheckPending;
     /* 00EC */ int32_t m_readyCheckReady;
     /* 00F0 */ uint8_t m_assignments;
@@ -40,8 +40,6 @@ class CGRaidInfo {
     static WOWGUID m_readyCheckInitiator;
     static uint32_t m_readyCheckTimer;
     static uint8_t m_rosterCounter;
-    static int32_t m_partyReadyCheckReady[4];
-    static int32_t m_partyReadyCheckPending[4];
 
     static void EnterWorld();
     static void InitializeGame();
@@ -50,11 +48,11 @@ class CGRaidInfo {
     static int32_t GetPartyMemberIndex(WOWGUID guid);
     static int32_t IsPartyMemberReadyCheckPending(uint32_t index);
     static int32_t IsPartyMemberReadyCheckReady(uint32_t index);
-    static CGPartyMemberState* GetRemoteStats(const WOWGUID& guid);
+    static PartyMemberState* GetRemoteStats(const WOWGUID& guid);
     static void ClearRecruitAFriend(WOWGUID guid);
-    static CGPartyMemberState* GetRemoteStatsFromPet(const WOWGUID& petGuid);
+    static PartyMemberState* GetRemoteStatsFromPet(const WOWGUID& petGuid);
     static CGRaidMember* FindMemberByGuid(WOWGUID guid);
-    static CGPartyPetState* GetRemotePetStats(const WOWGUID& guid);
+    static PartyMemberPetState* GetRemotePetStats(const WOWGUID& guid);
 
     static void EnableMember(CGPlayer_C* player, int32_t enable);
     static void UpdateRealStats(uint32_t count, WOWGUID leader);

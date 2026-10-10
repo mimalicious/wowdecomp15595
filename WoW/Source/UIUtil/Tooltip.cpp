@@ -3529,16 +3529,16 @@ int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
     }
 
     uint32_t count;
-    const TSGrowableArray<PartyAura>* auras;
+    const TSGrowableArray<PartyMemberAuraStates>* auras;
 
-    if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(info->m_guid)) {
+    if (PartyMemberState* state = CGGameUI::GetPartyMemberState(info->m_guid)) {
         if (!(state->m_flags & 0x1)) {
             return 0;
         }
 
         count = state->m_numAuras;
         auras = &state->m_auras;
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(info->m_guid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(info->m_guid)) {
         count = petState->m_numAuras;
         auras = &petState->m_auras;
     } else {
@@ -3554,7 +3554,7 @@ int32_t SetTooltipUnitAura(CGTooltip* tooltip, ScriptAuraInfo* info) {
     int32_t found = 0;
 
     for (uint32_t i = 0; i < count; i++) {
-        const PartyAura* entry = &auras->m_data[i];
+        const PartyMemberAuraStates* entry = &auras->m_data[i];
 
         if (!entry->m_spellId) {
             break;
@@ -3709,8 +3709,8 @@ int32_t CGTooltip::SetUnit(const WOWGUID& guid, int32_t showHealth, const WOWGUI
         }
     }
 
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
-    CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(guid);
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
+    PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(guid);
     uint32_t high = static_cast<uint32_t>(guid.m_guid >> 32);
     NameCache* name = NULL;
 

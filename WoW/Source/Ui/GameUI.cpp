@@ -1403,12 +1403,12 @@ void CGGameUI::SetAspect() {
 
 // OFFSET: 0x008C4620/0x1406341B0
 WOWGUID CGGameUI::GetPartyMember(uint32_t index) {
-    return GetPartyMemberGUID(index);
+    return CGPartyInfo::GetMember(index);
 }
 
 // OFFSET: 0x008C4630/0x1406341C0
 WOWGUID CGGameUI::GetPartyMemberPet(uint32_t index) {
-    return GetPartyPetGUID(index);
+    return CGPartyInfo::GetMemberPet(index);
 }
 
 // OFFSET: 0x008C4640/0x1406341D0
@@ -2590,12 +2590,12 @@ int32_t CGGameUI::IsKeyDown(KEY key) {
 }
 
 // OFFSET: 0x008C5BB0/0x140635900
-CGPartyMemberState* CGPartyMemberStateRepository::GetState(const WOWGUID& guid) {
+PartyMemberState* CGGameUI::GetPartyMemberState(const WOWGUID& guid) {
     if (guid == WOWGUID()) {
         return NULL;
     }
 
-    CGPartyMemberState* state = CGPartyInfo::GetRemoteStats(guid);
+    PartyMemberState* state = CGPartyInfo::GetRemoteStats(guid);
 
     if (!state) {
         state = CGRaidInfo::GetRemoteStats(guid);
@@ -2609,12 +2609,12 @@ CGPartyMemberState* CGPartyMemberStateRepository::GetState(const WOWGUID& guid) 
 }
 
 // OFFSET: 0x008C5C30/0x140635980
-CGPartyPetState* CGPartyMemberStateRepository::FindPetState(const WOWGUID& guid) {
+PartyMemberPetState* CGGameUI::GetPartyMemberPetState(const WOWGUID& guid) {
     if (guid == WOWGUID()) {
         return NULL;
     }
 
-    CGPartyPetState* state = CGPartyInfo::GetRemotePetStats(guid);
+    PartyMemberPetState* state = CGPartyInfo::GetRemotePetStats(guid);
 
     if (!state) {
         state = CGRaidInfo::GetRemotePetStats(guid);
@@ -5348,7 +5348,7 @@ WOWGUID CGGameUI::ClosestObjectMatch(const char* name, uint32_t typeMask, int32_
 
     if (targetType != 1 && targetType != 2) {
         for (uint32_t i = 0; i < 4; i++) {
-            WOWGUID member = GetPartyMemberGUID(i);
+            WOWGUID member = CGPartyInfo::GetMember(i);
 
             if (member && !ClntObjMgrObjectPtr(member, TYPEMASK_UNIT, __FILE__, __LINE__)) {
                 WOWGUID none = WOWGUID();
@@ -6020,8 +6020,8 @@ void CGGameUI::SetPendingItemSound(WOWGUID guid, int32_t itemId) {
 }
 
 // OFFSET: 0x008C5BF0/0x140635940
-CGPartyMemberState* CGGameUI::GetPartyMemberStateFromPet(const WOWGUID& petGuid) {
-    CGPartyMemberState* state = NULL;
+PartyMemberState* CGGameUI::GetPartyMemberStateFromPet(const WOWGUID& petGuid) {
+    PartyMemberState* state = NULL;
 
     if (petGuid) {
         state = CGPartyInfo::GetRemoteStatsFromPet(petGuid);
@@ -6225,7 +6225,7 @@ void CGGameUI::GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color,
         bool pvp = false;
 
         if (guid) {
-            CGPartyMemberState* state = CGPartyInfo::GetRemoteStats(guid);
+            PartyMemberState* state = CGPartyInfo::GetRemoteStats(guid);
 
             if (state || (state = CGRaidInfo::GetRemoteStats(guid)) || (state = CGBattlefieldInfo::GetRemoteStats(guid))) {
                 pvp = (reinterpret_cast<const uint8_t*>(state)[24] & 2) != 0;

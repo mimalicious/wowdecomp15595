@@ -53,12 +53,6 @@ WOWGUID CGRaidInfo::m_readyCheckInitiator;
 // STATIC: #0x00BEB628
 uint32_t CGRaidInfo::m_readyCheckTimer;
 
-// STATIC: #0x00BD0CE0
-int32_t CGRaidInfo::m_partyReadyCheckReady[4];
-
-// STATIC: #0x00BD0CF0
-int32_t CGRaidInfo::m_partyReadyCheckPending[4];
-
 // STATIC: #0x00ACE788
 uint8_t CGRaidInfo::m_rosterCounter = 0xFF;
 
@@ -300,7 +294,7 @@ uint32_t GetRaidTargetIndexFromGuid(WOWGUID guid) {
 }
 
 // OFFSET: #0x005727B0
-CGPartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
+PartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
     }
@@ -315,7 +309,7 @@ CGPartyMemberState* CGRaidInfo::GetRemoteStats(const WOWGUID& guid) {
 }
 
 // OFFSET: #0x00572850
-CGPartyPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
+PartyMemberPetState* CGRaidInfo::GetRemotePetStats(const WOWGUID& guid) {
     if (!guid) {
         return NULL;
     }
@@ -489,9 +483,9 @@ int32_t Packet_MSG_RAID_READY_CHECK_CONFIRM(void* param, NETMESSAGE msgId, uint3
                 SignalReadyCheckConfirmEvents(guid, ready);
             }
 
-            CGPartyMemberState* state = CGPartyInfo::m_members[i] ? &s_partyMemberStates[i] : NULL;
+            PartyMemberState* state = CGPartyInfo::m_members[i] ? &s_partyMemberStates[i] : NULL;
 
-            if (pending || (state && (state->m_flags & 0x1) && i < 4 && CGRaidInfo::m_partyReadyCheckPending[i])) {
+            if (pending || (state && (state->m_flags & 0x1) && i < 4 && CGPartyInfo::m_readyCheckPending[i])) {
                 pending = true;
 
                 if (found) {
@@ -578,7 +572,7 @@ int32_t Packet_MSG_RAID_READY_CHECK(void* param, NETMESSAGE msgId, uint32_t time
         }
     } else if (CGPartyInfo::m_leader == ClntObjMgrGetActivePlayer()) {
         for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
-            if (GetPartyMemberGUID(i)) {
+            if (CGPartyInfo::GetMember(i)) {
                 PartyReadyCheckInfo info;
                 CGPartyInfo::GetReadyCheckInfo(&info, i);
 
@@ -642,7 +636,7 @@ void CGRaidInfo::RosterUpdateRefreshReadyCheck(uint32_t removed, WOWGUID leader)
         uint32_t i = 0;
 
         for (; i < CGPartyInfo::NumMembers(); i++) {
-            CGPartyMemberState* state = CGPartyInfo::GetMemberState(i);
+            PartyMemberState* state = CGPartyInfo::GetMemberState(i);
 
             if (state && (state->m_flags & 0x1) && CGRaidInfo::IsPartyMemberReadyCheckPending(i)) {
                 break;
@@ -683,14 +677,14 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
     WOWGUID* added = static_cast<WOWGUID*>(alloca(sizeof(WOWGUID) * count));
     uint32_t removedCount = 0;
     WOWGUID* removed = static_cast<WOWGUID*>(alloca(sizeof(WOWGUID) * oldCount));
-    CGPartyMemberState* stats = static_cast<CGPartyMemberState*>(alloca(sizeof(CGPartyMemberState) * count));
+    PartyMemberState* stats = static_cast<PartyMemberState*>(alloca(sizeof(PartyMemberState) * count));
 
     for (uint32_t i = 0; i < count; i++) {
         uint32_t j = 0;
 
         for (; j < oldCount; j++) {
             if (guids[i] == CGRaidInfo::m_members[j]->m_guid) {
-                memcpy(&stats[i], &CGRaidInfo::m_members[j]->m_stats, sizeof(CGPartyMemberState));
+                memcpy(&stats[i], &CGRaidInfo::m_members[j]->m_stats, sizeof(PartyMemberState));
                 oldCount = CGRaidInfo::m_numMembers;
                 break;
             }
@@ -700,7 +694,7 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
             continue;
         }
 
-        memset(&stats[i], 0, sizeof(CGPartyMemberState));
+        memset(&stats[i], 0, sizeof(PartyMemberState));
         stats[i].m_health = 1;
         stats[i].m_maxHealth = 1;
         stats[i].m_power = 1;
@@ -785,7 +779,7 @@ void CGRaidInfo::UpdateRoster(const WOWGUID* guids, const uint32_t* subgroups, c
         member->m_assignments = flags[i];
         member->m_groupRole = roles[i];
         member->m_rank = member->m_guid == CGPartyInfo::m_leader ? 2 : flags[i] & 0x1;
-        memcpy(&member->m_stats, &stats[i], sizeof(CGPartyMemberState));
+        memcpy(&member->m_stats, &stats[i], sizeof(PartyMemberState));
 
         if (online[i]) {
             member->m_stats.m_flags |= 0x1;
@@ -979,16 +973,16 @@ int32_t CGRaidInfo::GetPartyMemberIndex(WOWGUID guid) {
 
 // OFFSET: #0x00572450
 int32_t CGRaidInfo::IsPartyMemberReadyCheckPending(uint32_t index) {
-    return index < 4 ? CGRaidInfo::m_partyReadyCheckPending[index] : 0;
+    return index < 4 ? CGPartyInfo::m_readyCheckPending[index] : 0;
 }
 
 // OFFSET: #0x00572470
 int32_t CGRaidInfo::IsPartyMemberReadyCheckReady(uint32_t index) {
-    return index < 4 ? CGRaidInfo::m_partyReadyCheckReady[index] : 0;
+    return index < 4 ? CGPartyInfo::m_readyCheckReady[index] : 0;
 }
 
 // OFFSET: #0x00572800
-CGPartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
+PartyMemberState* CGRaidInfo::GetRemoteStatsFromPet(const WOWGUID& petGuid) {
     for (uint32_t i = 0; i < sizeof(((CGRaidInfo*)0)->m_members) / sizeof(CGRaidInfo::m_members[0]); i++) {
         CGRaidMember* member = CGRaidInfo::m_members[i];
 
@@ -1059,7 +1053,7 @@ int32_t CGRaidInfo::GetPartyAssignments(lua_State* L, int32_t assignment) {
 
 // OFFSET: %0x00888870
 void CGRaidInfo::ClearRecruitAFriend(WOWGUID guid) {
-    CGPartyMemberState* stats = CGRaidInfo::GetRemoteStats(guid);
+    PartyMemberState* stats = CGRaidInfo::GetRemoteStats(guid);
 
     if (stats) {
         stats->m_flags &= ~0x100;
@@ -1198,16 +1192,16 @@ void CGRaidInfo::CheckReadyCheckTime() {
         }
     } else {
         for (uint32_t i = 0; i < CGPartyInfo::NumMembers(); i++) {
-            if (i >= 4 || !CGRaidInfo::m_partyReadyCheckReady[i]) {
+            if (i >= 4 || !CGPartyInfo::m_readyCheckReady[i]) {
                 allReady = 0;
             }
 
-            if (i >= 4 || !CGRaidInfo::m_partyReadyCheckPending[i]) {
+            if (i >= 4 || !CGPartyInfo::m_readyCheckPending[i]) {
                 continue;
             }
 
             WOWGUID none = WOWGUID();
-            NameCache* name = g_nameDBCache.GetRecord(GetPartyMemberGUID(i).m_guid, none, NULL, NULL, false);
+            NameCache* name = g_nameDBCache.GetRecord(CGPartyInfo::GetMember(i).m_guid, none, NULL, NULL, false);
 
             if (!name) {
                 continue;

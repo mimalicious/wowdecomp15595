@@ -465,7 +465,9 @@ class CGGameUI {
     static void GetSelectionHighlightColor(const WOWGUID& guid, CImVector* color, int32_t a3);
     static void SetFocusTarget(const WOWGUID& guid);
     static void UnitModelUpdate(const WOWGUID& guid, uint32_t flags);
-    static CGPartyMemberState* GetPartyMemberStateFromPet(const WOWGUID& petGuid);
+    static PartyMemberState* GetPartyMemberState(const WOWGUID& guid);
+    static PartyMemberState* GetPartyMemberStateFromPet(const WOWGUID& petGuid);
+    static PartyMemberPetState* GetPartyMemberPetState(const WOWGUID& guid);
     static void UnitNameUpdate(const WOWGUID& guid);
     static void UnlockItem(WOWGUID guid);
     static int32_t m_stackSplit;

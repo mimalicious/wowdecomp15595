@@ -1078,7 +1078,7 @@ bool CGWorldMap::GetPlayerPosition(WOWGUID guid, float* x, float* y) {
         C3Vector position = player->GetPosition();
         result = CGWorldMap::GetWorldPosition(position, CGPlayer_C::GetNewContinentID(), x, y, &outland, false, 0);
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
 
         if (!state || (state->m_flags & 0x20)) {
             return false;

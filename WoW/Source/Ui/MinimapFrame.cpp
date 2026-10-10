@@ -2332,7 +2332,7 @@ static void SetMemberData(WOWGUID guid, MEMBERINFO* member, CGPlayer_C* player, 
             return;
         }
 
-        CGPartyMemberState* state = raid ? CGRaidInfo::GetRemoteStats(guid) : (index < 4 ? CGPartyInfo::GetMemberState(index) : NULL);
+        PartyMemberState* state = raid ? CGRaidInfo::GetRemoteStats(guid) : (index < 4 ? CGPartyInfo::GetMemberState(index) : NULL);
         int32_t continentId = -1;
 
         if (!state) {
@@ -2415,7 +2415,7 @@ static void MinimapGetPartyMembers(MEMBERINFO* members) {
     }
 
     for (uint32_t i = 0; i < 4; i++) {
-        WOWGUID guid = GetPartyMemberGUID(i);
+        WOWGUID guid = CGPartyInfo::GetMember(i);
 
         if (guid) {
             SetMemberData(guid, &members[i], player, i, false);

@@ -23,7 +23,8 @@
 
 class CGPlayer_C;
 class CGWorldFrame;
-class CGPartyPetState;
+class PartyMemberPetState;
+struct PartyMemberAuraStates;
 class CGChatBubbleFrame;
 class CGGameObject_C;
 class CGNamePlateFrame;
@@ -1271,7 +1272,7 @@ class CGUnit_C : public CGObject_C, public CGUnit {
     void SetUICastingDirect(const SpellRec* spell, const WOWGUID& target, uint32_t start, uint32_t end);
     void SetUIChannelDirect(const SpellRec* spell, uint32_t start, uint32_t end);
     void UpdateChainTargets(const TSStackArray<WOWGUID>& targets, int32_t spellId);
-    void FillPartyMemberPetState(CGPartyPetState* state);
+    void FillPartyMemberPetState(PartyMemberPetState* state, TSGrowableArray<PartyMemberAuraStates>& auras);
     void TrackingStopMove(uint32_t time);
     bool CanMoveTo(int32_t action, const C3Vector& position);
     bool GetInteractDistanceOfAction(int32_t action, const WOWGUID& guid, float* distance);

@@ -3556,12 +3556,12 @@ uint32_t BuildPartyDisplayList() {
     uint32_t count = 1;
 
     for (uint32_t i = 0; i < 5; i++) {
-        if (!GetPartyMemberGUID(i)) {
+        if (!CGPartyInfo::GetMember(i)) {
             continue;
         }
 
-        uint8_t flags = GetPartyMemberGUID(i) == CGPartyInfo::m_leader ? 5 : 4;
-        UpdateVoiceMemberFlags(&s_pendingUsers.m_data[count], flags, GetPartyMemberGUID(i), 2, "");
+        uint8_t flags = CGPartyInfo::GetMember(i) == CGPartyInfo::m_leader ? 5 : 4;
+        UpdateVoiceMemberFlags(&s_pendingUsers.m_data[count], flags, CGPartyInfo::GetMember(i), 2, "");
         count++;
     }
 

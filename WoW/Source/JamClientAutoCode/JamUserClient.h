@@ -133,4 +133,31 @@ class UserClientDBQueryBulk : public JamClientMessage {
     ~UserClientDBQueryBulk();
 };
 
+class UserClientPartyInvite : public JamClientMessage {
+    public:
+    /* 0010 */ uint32_t m_proposedRoles;
+    /* 0014 */ char m_targetName[305];
+    /* 0145 */ uint8_t unk_0145[3];
+    /* 0148 */ uint8_t m_targetGUID[8];
+    /* 0150 */ char m_targetRealm[256];
+    /* 0250 */ uint32_t m_targetCfgRealmID;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientPartyInvite();
+    ~UserClientPartyInvite();
+};
+
+class UserClientPartyInviteResponse : public JamClientMessage {
+    public:
+    /* 0010 */ bool m_accept;
+    /* 0014 */ bool m_hasRolesDesired;
+    /* 0018 */ uint32_t m_rolesDesired;
+
+    void Put(CDataStore* msg) override;
+
+    UserClientPartyInviteResponse();
+    ~UserClientPartyInviteResponse();
+};
+
 #endif

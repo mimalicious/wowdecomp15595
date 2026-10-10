@@ -5061,7 +5061,7 @@ bool CGGameObject_C_Type_MeetingStone::Use() {
         level = target->m_unit->m_unitFieldLevel;
     } else {
         WOWGUID guid = CGGameUI::m_lockedTarget;
-        CGPartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
+        PartyMemberState* stats = CGPartyInfo::GetRemoteStats(guid);
 
         if (!stats) {
             stats = CGRaidInfo::GetRemoteStats(guid);

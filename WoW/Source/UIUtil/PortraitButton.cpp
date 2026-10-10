@@ -347,7 +347,7 @@ void SetPortraitTexture(CSimpleTexture* texture, int32_t displayId, const WOWGUI
     }
 
     if (petGuid) {
-        CGPartyMemberState* state = CGGameUI::GetPartyMemberStateFromPet(petGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberStateFromPet(petGuid);
         uint32_t seatId = state->m_vehicleSeatId;
 
         if (seatId) {

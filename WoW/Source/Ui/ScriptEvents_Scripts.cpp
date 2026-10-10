@@ -371,9 +371,9 @@ static int32_t Script_UnitHealth(lua_State* L) {
         } else {
             health = 0;
         }
-    } else if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid)) {
+    } else if (PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid)) {
         health = state->m_health;
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
         health = petState->m_health;
     }
 
@@ -448,7 +448,7 @@ static int32_t Script_UnitIsDead(lua_State* L) {
             }
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
 
         if (state && (state->m_flags & 0x4)) {
             lua_pushnumber(L, 1.0);
@@ -478,7 +478,7 @@ static int32_t Script_UnitIsGhost(lua_State* L) {
             return 1;
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
 
         if (state && (state->m_flags & 0x8)) {
             lua_pushnumber(L, 1.0);
@@ -517,7 +517,7 @@ static int32_t Script_UnitIsDeadOrGhost(lua_State* L) {
             }
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
 
         if (state && (state->m_flags & 0xC)) {
             lua_pushnumber(L, 1.0);
@@ -541,8 +541,8 @@ static int32_t Script_UnitIsConnected(lua_State* L) {
     WOWGUID unitGuid = guid;
 
     if (!ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__)) {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
-        bool connected = state ? (state->m_flags & 0x1) != 0 : CGPartyMemberStateRepository::FindPetState(unitGuid) != NULL;
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
+        bool connected = state ? (state->m_flags & 0x1) != 0 : CGGameUI::GetPartyMemberPetState(unitGuid) != NULL;
 
         if (!connected) {
             lua_pushnil(L);
@@ -671,9 +671,9 @@ static int32_t Script_UnitHealthMax(lua_State* L) {
 
     if (unit) {
         maxHealth = unit->m_unit->m_unitFieldMaxhealth;
-    } else if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid)) {
+    } else if (PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid)) {
         maxHealth = state->m_maxHealth;
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
         maxHealth = petState->m_maxHealth;
     }
 
@@ -830,7 +830,7 @@ static int32_t Script_UnitName(lua_State* L) {
                 }
             }
         }
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
         name = petState->m_name;
     } else if ((unitGuid.m_guid & 0xF0F0000000000000ULL) == 0xF040000000000000ULL) {
         PetNameCache* record = g_petNameCache.GetRecord(static_cast<int32_t>((unitGuid.m_guid >> 24) & 0xFFFFFFF), unitGuid, UnitNameQueryCallback, NULL, true);
@@ -888,11 +888,11 @@ static int32_t Script_UnitPower(lua_State* L) {
         if ((!(unit->m_unit->m_unitDynamicFlags & 0x20) || CGGameUI::IsRaidMemberOrPet(unit->m_obj->m_guid)) && (powerType == unit->m_unit->m_unitFieldBytes0[3] || unit->IsActivePlayer())) {
             power = static_cast<uint32_t>(unit->GetPredictedPower(powerType)) / Spell_C_GetPowerDisplayMod(powerType);
         }
-    } else if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid)) {
+    } else if (PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid)) {
         if (powerType == 7 || powerType == state->m_powerType) {
             power = state->m_power / Spell_C_GetPowerDisplayMod(state->m_powerType);
         }
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
         if (powerType == 7 || powerType == petState->m_powerType) {
             power = petState->m_power / Spell_C_GetPowerDisplayMod(petState->m_powerType);
         }
@@ -932,11 +932,11 @@ static int32_t Script_UnitPowerMax(lua_State* L) {
         }
 
         power = unit->m_unit->m_unitFieldMaxpower[powerType] / Spell_C_GetPowerDisplayMod(powerType);
-    } else if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid)) {
+    } else if (PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid)) {
         if (powerType == 7 || powerType == state->m_powerType) {
             power = state->m_maxPower / Spell_C_GetPowerDisplayMod(state->m_powerType);
         }
-    } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+    } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
         if (powerType == 7 || powerType == petState->m_powerType) {
             power = petState->m_maxPower / Spell_C_GetPowerDisplayMod(petState->m_powerType);
         }
@@ -984,13 +984,13 @@ static int32_t Script_UnitPowerType(lua_State* L) {
             return 2;
         }
 
-        if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid)) {
+        if (PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid)) {
             lua_pushnumber(L, state->m_powerType);
             lua_pushstring(L, GetPowerString(state->m_powerType));
             return 2;
         }
 
-        if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid)) {
+        if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid)) {
             lua_pushnumber(L, petState->m_powerType);
             lua_pushstring(L, GetPowerString(petState->m_powerType));
             return 2;
@@ -1973,7 +1973,7 @@ static int32_t Script_UnitIsDND(lua_State* L) {
     if (player) {
         dnd = player->m_player->m_playerFlags >> 2;
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(stateGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(stateGuid);
 
         if (!state) {
             lua_pushnil(L);
@@ -2011,7 +2011,7 @@ static int32_t Script_UnitInVehicle(lua_State* L) {
             return 1;
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(stateGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(stateGuid);
 
         if (!state || !(state->m_flags & 0x200)) {
             lua_pushnil(L);
@@ -2042,7 +2042,7 @@ static int32_t Script_UnitUsingVehicle(lua_State* L) {
             return 1;
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(stateGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(stateGuid);
 
         if (!state || !(state->m_flags & 0x200)) {
             lua_pushnil(L);
@@ -2113,7 +2113,7 @@ static int32_t Script_UnitIsPVPFreeForAll(lua_State* L) {
     if (object && (object->m_obj->m_type & TYPEMASK_UNIT)) {
         ffa = static_cast<CGUnit_C*>(object)->m_unit->m_unitFieldBytes2[1] >> 2;
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(stateGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(stateGuid);
 
         if (!state) {
             lua_pushnil(L);
@@ -2482,7 +2482,7 @@ static int32_t Script_UnitLevel(lua_State* L) {
     } else if (!SStrCmpI(token, "player", STORM_MAX_STR)) {
         level = ClientServices::GetCharacterLevel();
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
 
         if (!state) {
             lua_pushnumber(L, 0.0);
@@ -2621,7 +2621,7 @@ VehicleSeatRec* GetVehicleSeatRecAsPassengerFromLua(lua_State* L) {
     CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_UNIT, __FILE__, __LINE__));
 
     if (!unit) {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
 
         if (state && state->m_vehicleSeatId > 0) {
             return g_vehicleSeatDB.GetRecord(state->m_vehicleSeatId);
@@ -2958,7 +2958,7 @@ static int32_t Script_UnitIsPVP(lua_State* L) {
     } else if (object && (object->m_obj->m_type & TYPEMASK_CORPSE)) {
         pvp = static_cast<CGCorpse_C*>(object)->m_corpse->m_corpseFieldFlags & 4;
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(stateGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(stateGuid);
         pvp = state && (state->m_flags & 2);
     }
 
@@ -3048,7 +3048,7 @@ static int32_t Script_SetPortraitTexture(lua_State* L) {
             }
         }
     } else if ((unitGuid.m_guid & 0xF000000000000000ull) || !(unitGuid.m_guid & 0xF07FFFFFFFFFFFFFull)) {
-        CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(unitGuid);
+        PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(unitGuid);
 
         if (petState) {
             SetPortraitTexture(texture, petState->m_displayId, petState->m_guid);
@@ -3840,15 +3840,15 @@ static int32_t Script_PlayerIsPVPInactive(lua_State* L) {
             inactive = 1;
         }
     } else {
-        TSGrowableArray<PartyAura>* auras = NULL;
+        TSGrowableArray<PartyMemberAuraStates>* auras = NULL;
         int32_t count = 0;
 
-        if (CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(target)) {
+        if (PartyMemberState* state = CGGameUI::GetPartyMemberState(target)) {
             if (state->m_flags & 0x1) {
                 count = state->m_numAuras;
                 auras = &state->m_auras;
             }
-        } else if (CGPartyPetState* petState = CGPartyMemberStateRepository::FindPetState(target)) {
+        } else if (PartyMemberPetState* petState = CGGameUI::GetPartyMemberPetState(target)) {
             count = petState->m_numAuras;
             auras = &petState->m_auras;
         }
@@ -4264,7 +4264,7 @@ static int32_t Script_UnitIsAFK(lua_State* L) {
 
         afk = (player->m_player->m_playerFlags & 0x2) != 0;
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(unitGuid);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(unitGuid);
 
         if (!state) {
             lua_pushnil(L);

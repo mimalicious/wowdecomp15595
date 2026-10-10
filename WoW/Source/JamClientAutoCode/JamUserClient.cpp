@@ -347,3 +347,89 @@ UserClientCancelQueuedSpell::~UserClientCancelQueuedSpell() {
 void UserClientCancelQueuedSpell::Put(CDataStore* msg) {
     msg->Put(static_cast<uint32_t>(0x7B1C));
 }
+
+// OFFSET: 0x0066D140/0x140314140
+UserClientPartyInvite::UserClientPartyInvite() {
+}
+
+// OFFSET: 0x0066BBD0/0x140312410
+UserClientPartyInvite::~UserClientPartyInvite() {
+}
+
+// OFFSET: 0x0066F350
+void UserClientPartyInvite::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x513));
+    msg->Put(this->m_targetCfgRealmID);
+    msg->Put(this->m_proposedRoles);
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_targetGUID[2] != 0);
+    bits.WriteBit(this->m_targetGUID[7] != 0);
+    bits.WriteBits<9>(static_cast<uint32_t>(strlen(this->m_targetRealm)));
+    bits.WriteBit(this->m_targetGUID[3] != 0);
+    bits.WriteBits<10>(static_cast<uint32_t>(strlen(this->m_targetName)));
+    bits.WriteBit(this->m_targetGUID[5] != 0);
+    bits.WriteBit(this->m_targetGUID[4] != 0);
+    bits.WriteBit(this->m_targetGUID[6] != 0);
+    bits.WriteBit(this->m_targetGUID[0] != 0);
+    bits.WriteBit(this->m_targetGUID[1] != 0);
+    bits.Flush();
+
+    if (this->m_targetGUID[4]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[4] ^ 1));
+    }
+
+    if (this->m_targetGUID[7]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[7] ^ 1));
+    }
+
+    if (this->m_targetGUID[6]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[6] ^ 1));
+    }
+
+    msg->PutData(this->m_targetName, static_cast<uint32_t>(strlen(this->m_targetName)));
+    msg->PutData(this->m_targetRealm, static_cast<uint32_t>(strlen(this->m_targetRealm)));
+
+    if (this->m_targetGUID[1]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[1] ^ 1));
+    }
+
+    if (this->m_targetGUID[0]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[0] ^ 1));
+    }
+
+    if (this->m_targetGUID[5]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[5] ^ 1));
+    }
+
+    if (this->m_targetGUID[3]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[3] ^ 1));
+    }
+
+    if (this->m_targetGUID[2]) {
+        msg->Put(static_cast<uint8_t>(this->m_targetGUID[2] ^ 1));
+    }
+}
+
+// OFFSET: 0x0066FA10/0x140316A30
+UserClientPartyInviteResponse::UserClientPartyInviteResponse() {
+    this->m_hasRolesDesired = false;
+}
+
+// OFFSET: 0x0066BA20/0x140312210
+UserClientPartyInviteResponse::~UserClientPartyInviteResponse() {
+}
+
+// OFFSET: 0x0066E4D0
+void UserClientPartyInviteResponse::Put(CDataStore* msg) {
+    msg->Put(static_cast<uint32_t>(0x410));
+
+    JamBitWriter bits(msg);
+    bits.WriteBit(this->m_hasRolesDesired);
+    bits.WriteBit(this->m_accept);
+    bits.Flush();
+
+    if (this->m_hasRolesDesired) {
+        msg->Put(this->m_rolesDesired);
+    }
+}

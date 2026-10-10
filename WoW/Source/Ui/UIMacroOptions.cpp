@@ -232,7 +232,7 @@ static VehicleSeatRec* GetVehicleSeatRec(const WOWGUID* guid) {
         return transport->m_vehicle->GetVehicleSeatRec(unit->m_movementData.m_transportSeat);
     }
 
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(*guid);
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(*guid);
 
     if (state && state->m_vehicleSeatId > 0) {
         return g_vehicleSeatDB.GetRecord(state->m_vehicleSeatId);
@@ -395,7 +395,7 @@ int32_t EvaluateDead(const WOWGUID* unit, const TSGrowableArray<MacroSubstring>*
             dead = 0;
         }
     } else {
-        CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(*unit);
+        PartyMemberState* state = CGGameUI::GetPartyMemberState(*unit);
         dead = state ? (state->m_flags & 0xC) : 0;
     }
 

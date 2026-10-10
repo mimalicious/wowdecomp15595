@@ -13977,8 +13977,8 @@ void CGUnit_C::Disable() {
     guid = this->m_obj->m_guid;
 
     if (CGPartyInfo::IsMemberPet(guid, &index) && index >= 0) {
-        CGPartyMemberState* member = CGPartyInfo::m_members[index] ? &s_partyMemberStates[index] : NULL;
-        this->FillPartyMemberPetState(&member->m_pet);
+        PartyMemberState* member = CGPartyInfo::m_members[index] ? &s_partyMemberStates[index] : NULL;
+        this->FillPartyMemberPetState(&member->m_pet, member->m_pet.m_auras);
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
         msg.Put(member->m_guid.m_guid);
@@ -13989,8 +13989,8 @@ void CGUnit_C::Disable() {
 
     if (CGRaidInfo::IsPetInRaid(guid, &index) && index >= 0) {
         CGRaidMember* raidMember = CGRaidInfo::m_members[index];
-        CGPartyMemberState* member = raidMember->m_guid ? &raidMember->m_stats : NULL;
-        this->FillPartyMemberPetState(&member->m_pet);
+        PartyMemberState* member = raidMember->m_guid ? &raidMember->m_stats : NULL;
+        this->FillPartyMemberPetState(&member->m_pet, member->m_pet.m_auras);
         CDataStore msg;
         msg.Put(static_cast<uint32_t>(CMSG_REQUEST_PARTY_MEMBER_STATS));
         msg.Put(member->m_guid.m_guid);
@@ -20978,10 +20978,12 @@ void CGUnit_C::CreateOrDestroyObjectEffectManager() {
 
 // OFFSET: 0x005D4E30/0x14024F2C0
 void CGUnit_C::UpdatePartyMemberPetState() {
-    WOWGUID guid = this->m_obj->m_guid;
-    CGPartyMemberState* partyState = NULL;
-    CGPartyMemberState* raidState = NULL;
+    PartyMemberState* partyState = NULL;
+    PartyMemberState* raidState = NULL;
+    PartyMemberState oldState;
+    PartyMemberState newState;
     int32_t index;
+    WOWGUID guid = this->m_obj->m_guid;
 
     if (CGPartyInfo::IsMemberPet(guid, &index) && index >= 0) {
         partyState = CGPartyInfo::m_members[index] ? &s_partyMemberStates[index] : NULL;
@@ -20993,25 +20995,15 @@ void CGUnit_C::UpdatePartyMemberPetState() {
         raidState = CGRaidInfo::m_members[index]->m_guid ? &CGRaidInfo::m_members[index]->m_stats : NULL;
     }
 
-    CGPartyMemberState oldState;
-    CGPartyMemberState* source;
+    PartyMemberState* source = partyState ? partyState : raidState;
 
-    if (partyState) {
-        oldState = *partyState;
-        source = partyState;
-    } else {
-        if (!raidState) {
-            return;
-        }
-
-        oldState = *raidState;
-        source = &oldState;
+    if (source) {
+        oldState.Copy(source);
+        newState.Copy(source);
+        this->FillPartyMemberPetState(&newState.m_pet, newState.m_pet.m_auras);
+        uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(oldState, newState);
+        CGPlayer_C::DispatchPartyMemberStatsChanges(newState.m_guid, changes, oldState, newState);
     }
-
-    CGPartyMemberState newState = *source;
-    this->FillPartyMemberPetState(&newState.m_pet);
-    uint32_t changes = CGPlayer_C::BuildPartyMemberStatsChanges(&oldState, &newState);
-    CGPlayer_C::DispatchPartyMemberStatsChanges(newState.m_guid, changes, &oldState, &newState);
 }
 
 // OFFSET: #0x0072CC30
@@ -23265,35 +23257,52 @@ void CGUnit_C::HandleScaleUpdate(float scale) {
     this->UpdateEffectAttachments();
 }
 
-// OFFSET: #0x0072A7F0
-void CGUnit_C::FillPartyMemberPetState(CGPartyPetState* state) {
+// OFFSET: 0x005C0390/0x140235E30
+void CGUnit_C::FillPartyMemberPetState(PartyMemberPetState* state, TSGrowableArray<PartyMemberAuraStates>& auras) {
     state->m_guid = this->m_obj->m_guid;
     SStrCopy(state->m_name, this->GetUnitName(NULL, 1), sizeof(state->m_name));
-    state->m_displayId = this->m_unit->m_unitFieldDisplayid;
+    state->m_displayId = static_cast<uint16_t>(this->m_unit->m_unitFieldDisplayid);
     state->m_health = this->m_unit->m_unitFieldHealth;
     state->m_maxHealth = this->m_unit->m_unitFieldMaxhealth;
     uint8_t powerType = this->m_unit->m_unitFieldBytes0[3];
     state->m_powerType = powerType;
-    state->m_power = this->m_unit->m_unitFieldPower[powerType];
-    state->m_maxPower = this->m_unit->m_unitFieldMaxpower[powerType];
+    int32_t slot = this->GetPowerTypeSlot(powerType);
+    state->m_power = slot == -1 ? 0 : static_cast<uint16_t>(this->m_unit->m_unitFieldPower[slot]);
+    slot = this->GetPowerTypeSlot(powerType);
+    state->m_maxPower = slot == -1 ? 0 : static_cast<uint16_t>(this->m_unit->m_unitFieldMaxpower[slot]);
+    uint32_t limit = this->GetAuraCount() >= 64 ? 64 : this->GetAuraCount();
+
+    if (limit > auras.Count()) {
+        auras.SetCount(limit);
+    }
 
     uint32_t count = 0;
 
-    for (uint32_t i = 0; i < this->GetAuraCount(); i++) {
+    for (uint32_t i = 0; i < limit; i++) {
         AuraData* aura = this->GetAura(i);
 
-        if (aura->m_spellId && (aura->m_flags & 0x7)) {
-            state->m_auras[count] = aura->m_spellId;
-            state->m_auraFlags[count] = aura->m_flags;
-            count++;
-
-            if (count == 64) {
-                return;
-            }
+        if (!aura->m_spellId || !(aura->m_flags & 0x7)) {
+            continue;
         }
+
+        auras[count].m_spellId = aura->m_spellId;
+        auras[count].m_flags = aura->m_flags;
+
+        if (aura->m_flags & 0x40) {
+            auras[count].m_effectAmounts[0] = aura->m_effectAmounts[0];
+            auras[count].m_effectAmounts[1] = aura->m_effectAmounts[1];
+            auras[count].m_effectAmounts[2] = aura->m_effectAmounts[2];
+        }
+
+        count++;
     }
 
-    memset(&state->m_auras[count], 0, sizeof(state->m_auras[0]) * (64 - count));
+    state->m_numAuras = count;
+
+    for (uint32_t i = count; i < limit; i++) {
+        auras[i].m_flags = 0;
+        auras[i].m_spellId = 0;
+    }
 }
 
 // OFFSET: 0x005CFA00

@@ -10,8 +10,8 @@
 #include "WoW/Source/Net/Types.h"
 
 class BattlemasterListRec;
-class CGPartyMemberState;
-class CGPartyPetState;
+class PartyMemberState;
+class PartyMemberPetState;
 class CGObject_C;
 struct lua_State;
 
@@ -92,7 +92,7 @@ class CGBattlefieldInfo {
     static void ShutdownGame();
     static WOWGUID m_arenaOpponentPets[5][2];
     static WOWGUID m_arenaOpponents[5];
-    static CGPartyMemberState m_arenaOpponentStats[5];
+    static PartyMemberState m_arenaOpponentStats[5];
     static int32_t m_instanceType;
     static int32_t m_activeIndex;
     static BattlefieldStatus m_status[2];
@@ -165,9 +165,9 @@ class CGBattlefieldInfo {
     static void AddArenaOpponentToSlot(const WOWGUID& guid, int32_t slot);
     static void AddArenaOpponentPetToSlot(const WOWGUID& petGuid, const WOWGUID& ownerGuid, int32_t slot, int32_t registerNew);
     static WOWGUID GetArenaOpponent(uint32_t index);
-    static CGPartyMemberState* GetRemoteStats(const WOWGUID& guid);
-    static CGPartyMemberState* GetRemoteStatsFromPet(const WOWGUID& petGuid);
-    static CGPartyPetState* GetRemotePetStats(const WOWGUID& guid);
+    static PartyMemberState* GetRemoteStats(const WOWGUID& guid);
+    static PartyMemberState* GetRemoteStatsFromPet(const WOWGUID& petGuid);
+    static PartyMemberPetState* GetRemotePetStats(const WOWGUID& guid);
     static WOWGUID GetArenaOpponentPet(uint32_t index);
     static int32_t GetArenaOpponentIndex(const WOWGUID& guid, int32_t* index);
     static void RemoveVehicle(const WOWGUID& guid);

@@ -1287,7 +1287,7 @@ static int32_t Script_UnitHasLFGRandomCooldown(lua_State* L) {
         return 1;
     }
 
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
 
     if (!state) {
         return 0;
@@ -1324,7 +1324,7 @@ static int32_t Script_UnitHasLFGDeserter(lua_State* L) {
         return 1;
     }
 
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
 
     if (!state) {
         return 0;

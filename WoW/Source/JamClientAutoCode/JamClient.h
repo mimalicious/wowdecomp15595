@@ -793,9 +793,23 @@ class ClientPartyInvite : public JamClientMessage {
     public:
     static bool (*s_handler)(ClientPartyInvite* msg);
 
+    /* 0010 */ uint32_t m_serial;
+    /* 0014 */ TSGrowableArray<uint32_t> m_lfgSlots;
+    /* 0024 */ uint32_t m_lfgCompletedMask;
+    /* 0028 */ char m_inviterRealmName[256];
+    /* 0128 */ uint32_t m_inviterCfgRealmID;
+    /* 012C */ uint32_t unk_012C;
+    /* 0130 */ uint8_t m_inviterGUID[8];
+    /* 0138 */ bool m_isXRealm;
+    /* 0139 */ char m_inviterName[48];
+    /* 0169 */ bool m_canAccept;
+    /* 016C */ uint32_t m_proposedRoles;
+    /* 0170 */ bool m_mustBeBNetFriend;
+
     ClientPartyInvite(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time);
     ~ClientPartyInvite();
     bool Handle();
+    void Unpack(CDataStore* msg, bool full);
 };
 
 class ClientDebugRuneRegen : public JamClientMessage {

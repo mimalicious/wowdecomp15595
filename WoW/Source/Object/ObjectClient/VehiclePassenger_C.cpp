@@ -1438,7 +1438,7 @@ void CVehiclePassenger_C::Init(CGUnit_C* unit) {
     }
 
     WOWGUID guid = unit->m_obj->m_guid;
-    CGPartyMemberState* state = CGPartyMemberStateRepository::GetState(guid);
+    PartyMemberState* state = CGGameUI::GetPartyMemberState(guid);
 
     if (!state || !(state->m_flags & 0x200)) {
         return;

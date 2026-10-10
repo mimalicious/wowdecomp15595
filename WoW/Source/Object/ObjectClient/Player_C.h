@@ -15,7 +15,7 @@
 #include "WoW/Source/Object/WGUID.h"
 #include "WoW/Source/Ui/TradeSkillFrame.h"
 
-class CGPartyMemberState;
+class PartyMemberState;
 class ChrClassesRec;
 class CClientObjCreate;
 class CDataStore;
@@ -110,7 +110,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static uint32_t s_resurrectOfferUseTimer;
 
     static void __stdcall AcceptArenaTeam();
-    static void __stdcall AcceptGroup(uint32_t roles);
     static void __stdcall AcceptGuild();
     static void __stdcall AcceptQuest(const WOWGUID& questGiver, int32_t questId, int32_t a3);
     static void __stdcall AcceptResurrectRequest(int32_t accept);
@@ -123,7 +122,6 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     static void __stdcall ClearPartyAssignment(uint8_t assignment, WOWGUID guid);
     static void __stdcall CompleteQuest(const WOWGUID& questGiver, int32_t questId, int32_t fromScript);
     static void __stdcall DeclineArenaTeam();
-    static void __stdcall DeclineGroup();
     static void __stdcall DeclineGuild();
     static void __stdcall EnableTaxiNode(const WOWGUID& guid);
     static uint32_t GetBindAreaID();
@@ -291,7 +289,8 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void AutoEquipCursorItem(int32_t ignoreBind);
     void AutoEquipItemToSlot(CGItem_C* item, uint32_t slot, int32_t ignoreBind);
     void ClearPendingEquip(uint32_t index, int32_t equip);
-    void GroupInvite(const char* name, uint32_t flags);
+    static void InviteToon(uint32_t toonId, uint32_t roles);
+    static void Invite(const char* name, uint32_t roles);
     CGItem_C* GetSoulstone();
     void ShowHelm();
     void HideHelm();
@@ -431,9 +430,9 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     void OnDeath();
     void EquipItem(CGItem_C* item);
     bool OnGuildChanged(int32_t a2);
-    void FillPartyMemberState(CGPartyMemberState* state);
-    static uint32_t BuildPartyMemberStatsChanges(const CGPartyMemberState* oldState, const CGPartyMemberState* newState);
-    static void DispatchPartyMemberStatsChanges(const WOWGUID& guid, uint32_t changes, const CGPartyMemberState* oldState, const CGPartyMemberState* newState);
+    void FillPartyMemberState(PartyMemberState* state);
+    static uint32_t BuildPartyMemberStatsChanges(PartyMemberState& oldState, PartyMemberState& newState);
+    static void DispatchPartyMemberStatsChanges(const WOWGUID& guid, uint32_t changes, const PartyMemberState& oldState, const PartyMemberState& newState);
     const char* GetPlayerGuildNameText();
     void GetPlayerGuildNameTextWithTitle(char* buffer, uint32_t size, bool showRank);
     void TogglePlayerFlag(uint32_t oldFlags);

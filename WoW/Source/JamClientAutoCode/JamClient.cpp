@@ -1,6 +1,9 @@
 #include "WoW/Source/JamClientAutoCode/JamClient.h"
 #include "Engine/Source/Base/CDataStore.h"
 
+// STATIC: 0x00E4D570
+bool (*ClientPartyInvite::s_handler)(ClientPartyInvite* msg);
+
 // STATIC: 0x00E4D694
 bool (*ClientSetupCurrency::s_handler)(ClientSetupCurrency* msg);
 
@@ -1789,4 +1792,122 @@ bool ClientLootContents::Handle() {
     }
 
     return ClientLootContents::s_handler(this);
+}
+
+// OFFSET: 0x006E1710/0x1403A1DF0
+ClientPartyInvite::ClientPartyInvite(NetClient* netClient, WowConnection* connection, CDataStore* msg, uint32_t time) : JamClientMessage(netClient, connection, time) {
+    this->Unpack(msg, true);
+}
+
+// OFFSET: 0x006CAB30/0x140382CA0
+ClientPartyInvite::~ClientPartyInvite() {
+}
+
+// OFFSET: 0x006DAF30/0x140399730
+void ClientPartyInvite::Unpack(CDataStore* msg, bool full) {
+    JamBitReader bits(msg);
+    this->m_mustBeBNetFriend = bits.ReadBit() != 0;
+    this->m_inviterGUID[0] = bits.ReadBit();
+    this->m_inviterGUID[3] = bits.ReadBit();
+    this->m_inviterGUID[2] = bits.ReadBit();
+    this->m_canAccept = bits.ReadBit() != 0;
+    this->m_inviterGUID[6] = bits.ReadBit();
+    this->m_inviterGUID[5] = bits.ReadBit();
+    this->m_inviterGUID[4] = bits.ReadBit();
+    *reinterpret_cast<uint32_t*>(this->m_inviterRealmName) = bits.ReadBits<9>();
+    *reinterpret_cast<uint32_t*>(this->m_inviterName) = bits.ReadBits<7>();
+    this->m_lfgSlots.SetCount(bits.ReadBits<24>());
+    this->m_isXRealm = bits.ReadBit() != 0;
+    this->m_inviterGUID[1] = bits.ReadBit();
+    this->m_inviterGUID[7] = bits.ReadBit();
+
+    uint8_t byteValue;
+    uint32_t intValue;
+
+    if (this->m_inviterGUID[1]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[1] ^= byteValue;
+    }
+
+    if (this->m_inviterGUID[4]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[4] ^= byteValue;
+    }
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_inviterCfgRealmID = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_proposedRoles = intValue;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_lfgCompletedMask = intValue;
+
+    if (this->m_inviterGUID[6]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[6] ^= byteValue;
+    }
+
+    if (this->m_inviterGUID[0]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[0] ^= byteValue;
+    }
+
+    if (this->m_inviterGUID[2]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[2] ^= byteValue;
+    }
+
+    if (this->m_inviterGUID[3]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[3] ^= byteValue;
+    }
+
+    for (uint32_t i = 0; i < this->m_lfgSlots.Count(); i++) {
+        intValue = 0;
+        msg->Get(intValue);
+        this->m_lfgSlots[i] = intValue;
+    }
+
+    if (this->m_inviterGUID[5]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[5] ^= byteValue;
+    }
+
+    uint32_t length = *reinterpret_cast<uint32_t*>(this->m_inviterRealmName);
+    msg->GetData(this->m_inviterRealmName, length);
+    this->m_inviterRealmName[length] = 0;
+
+    if (this->m_inviterGUID[7]) {
+        byteValue = 0;
+        msg->Get(byteValue);
+        this->m_inviterGUID[7] ^= byteValue;
+    }
+
+    length = *reinterpret_cast<uint32_t*>(this->m_inviterName);
+    msg->GetData(this->m_inviterName, length);
+    this->m_inviterName[length] = 0;
+
+    intValue = 0;
+    msg->Get(intValue);
+    this->m_serial = intValue;
+}
+
+// OFFSET: 0x006AC2C0/0x14035C140
+bool ClientPartyInvite::Handle() {
+    if (!ClientPartyInvite::s_handler) {
+        return false;
+    }
+
+    return ClientPartyInvite::s_handler(this);
 }
