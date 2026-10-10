@@ -9,10 +9,10 @@
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include <cstring>
 
-// STATIC: #0x00D31A8C
+// STATIC: 0x00DC0D3C
 int32_t s_currentOutputDevice;
 
-// STATIC: #0x00D31A90
+// STATIC: 0x00DC0D40
 int32_t s_currentCaptureDevice;
 
 // OFFSET: 0x004DC2E0/0x14011A7A0
@@ -357,7 +357,7 @@ static int32_t Script_SetActiveVoiceChannelBySessionID(lua_State* L) {
     return 1;
 }
 
-// STATIC: #0x00AF29C0
+// STATIC: 0x00CA0F20
 static FrameScript_Method s_ScriptFunctions[] = {
     { "VoiceEnumerateOutputDevices", &Script_VoiceEnumerateOutputDevices },
     { "VoiceEnumerateCaptureDevices", &Script_VoiceEnumerateCaptureDevices },
@@ -376,14 +376,14 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "UnitIsTalking", &Script_UnitIsTalking },
 };
 
-// OFFSET: #0x007DB9B0
+// OFFSET: 0x004DB2D0
 void VoiceRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: #0x007DB9E0
+// OFFSET: 0x004DB300
 void VoiceUnregisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);

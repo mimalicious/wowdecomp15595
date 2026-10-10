@@ -7,25 +7,25 @@
 #include "Engine/Source/Storm/Source/SLock.h"
 #include "Engine/Source/Storm/Source/SThread.h"
 
-// STATIC: #0x00D37D20
+// STATIC: 0x00DC6FD0
 int32_t ComSatThread::s_threadRunning;
 
-// STATIC: #0x00D37D24
+// STATIC: 0x00DC6FD4
 ComSat::Interface* ComSatThread::s_comsat;
 
-// STATIC: #0x00D37D28
+// STATIC: 0x00DC6FD8
 int32_t s_pushToTalkDown;
 
-// STATIC: #0x00D37D2C
+// STATIC: 0x00DC6FDC
 int32_t s_localTalkerActive;
 
-// STATIC: #0x00D37D58
+// STATIC: 0x00DC7004
 SThread ComSatThread::s_comsatThread;
 
-// STATIC: #0x00D37D84
+// STATIC: 0x00DC7030
 SEvent ComSatThread::s_threadShutdownEvent(0, 0);
 
-// OFFSET: #0x007DBA00
+// OFFSET: 0x004DB320/0x140119910
 static void QueryPushToTalkKey() {
     if (s_voiceActivation) {
         return;
@@ -53,13 +53,13 @@ static void QueryPushToTalkKey() {
     ComSatThread::s_comsat->LocalTalkerEnable(0, s_pushToTalkDown != 0);
 }
 
-// OFFSET: #0x007DC950
+// OFFSET: 0x004DC320/0x14011A7E0
 uint32_t STORMAPI ComSatThread::Work(void* param) {
     while (ComSatThread::s_threadShutdownEvent.Wait(0)) {
         s_comsatDeviceLock.Enter();
         QueryPushToTalkKey();
         SE3::CaptureWork();
-        uint32_t now = OsGetAsyncTimeMs();
+        uint32_t now = OsGetAsyncTimeMsPrecise();
 
         if (ComSatThread::s_comsat) {
             ComSatThread::s_comsat->Work(now);

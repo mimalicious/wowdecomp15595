@@ -11,6 +11,26 @@ inline SE3SoundBus::SE3SoundBus() {
     this->m_maxChannels = 10000;
 }
 
+// OFFSET: 0x004DB460
+inline float SE3SoundBus::GetVolume() {
+    if (this->m_muted || !this->m_enabled) {
+        return 0.0f;
+    }
+
+    return this->m_volume;
+}
+
+// OFFSET: 0x004DB430
+inline void SE3SoundBus::SetVolume(float volume) {
+    if (volume < 0.0f) {
+        volume = 0.0f;
+    } else if (volume > 1.0f) {
+        volume = 1.0f;
+    }
+
+    this->m_volume = volume;
+}
+
 // INLINED
 inline SE3SoundChannel::SE3SoundChannel() {
     this->m_pFMODChannel = NULL;

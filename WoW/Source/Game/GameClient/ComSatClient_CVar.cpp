@@ -11,13 +11,13 @@
 #include "WoW/Source/Ui/ScriptEvents.h"
 #include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00D37CF8
+// STATIC: 0x00DC6FA8
 CVar* s_cvarEnableVoiceChat;
 
-// STATIC: #0x00D37CFC
+// STATIC: 0x00DC6FAC
 CVar* s_cvarEnableMicrophone;
 
-// OFFSET: #0x007DC770
+// OFFSET: 0x004DC120/0x14011A590
 bool EnableMicrophoneHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (!s_cvarEnableVoiceChat) {
         return true;
@@ -42,7 +42,7 @@ bool EnableMicrophoneHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// OFFSET: #0x007DCEC0
+// OFFSET: 0x004DC8A0
 bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     float volume = SStrToFloat(value);
 
@@ -57,7 +57,7 @@ bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value
     return true;
 }
 
-// OFFSET: #0x007DCF20
+// OFFSET: 0x004DC900/0x14011AFA0
 bool VoiceChatModeHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value) == 1) {
         s_voiceActivation = 1;
@@ -89,7 +89,7 @@ bool VoiceChatModeHandler(CVar* var, const char* oldValue, const char* value, vo
     return true;
 }
 
-// OFFSET: #0x007DCFE0
+// OFFSET: 0x004DC9D0/0x14011B060
 bool VoiceActivationSensitivityHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     CVar* voiceChatMode = CVar::Lookup("VoiceChatMode");
 
@@ -116,7 +116,7 @@ bool PushToTalkButtonHandler(CVar* var, const char* oldValue, const char* value,
     return true;
 }
 
-// OFFSET: #0x007DD060
+// OFFSET: 0x004DCA60
 bool SelfMuteHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     if (SStrToInt(value)) {
         AddComSatEvent(2, 0u, 0);
@@ -129,12 +129,13 @@ bool SelfMuteHandler(CVar* var, const char* oldValue, const char* value, void* a
     return true;
 }
 
-// OFFSET: #0x007DFEA0
+// OFFSET: 0x004DF970/0x14011EC40
 bool EnableVoiceChatHandler(CVar* var, const char* oldValue, const char* value, void* arg) {
     bool wasEnabled = oldValue && SStrToInt(oldValue);
     bool enabled = SStrToInt(value) != 0;
     bool microphoneEnabled = s_cvarEnableMicrophone && s_cvarEnableMicrophone->m_intValue;
 
+    // STATIC: 0x00DC7090
     static CVar* s_voiceChatMode = CVar::Lookup("VoiceChatMode");
 
     if (!wasEnabled && enabled) {

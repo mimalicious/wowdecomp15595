@@ -125,6 +125,8 @@ struct SE3SoundBus {
     /* 0014 */ int32_t m_maxChannels;
 
     SE3SoundBus();
+    float GetVolume();
+    void SetVolume(float volume);
 };
 
 struct SE3EngineInitParams {

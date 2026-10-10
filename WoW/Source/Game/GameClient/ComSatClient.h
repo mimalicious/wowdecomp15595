@@ -114,8 +114,6 @@ int32_t ComSatClient_SetCurrentSession(int32_t type, const char* name);
 void ComSatClient_DisableCurrentSession();
 void ComSatClient_LeaveAllSessions(WOWGUID guid);
 void AddComSatEvent(uint32_t type, float value, uint64_t guid);
-void ComSatClient_SetCaptureDevice(int32_t index);
-void ComSatClient_SetOutputDevice(int32_t index);
 bool EnableMicrophoneHandler(CVar* var, const char* oldValue, const char* value, void* arg);
 bool EnableVoiceChatHandler(CVar* var, const char* oldValue, const char* value, void* arg);
 bool InboundChatVolumeHandler(CVar* var, const char* oldValue, const char* value, void* arg);
