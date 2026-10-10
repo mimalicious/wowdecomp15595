@@ -28,7 +28,8 @@ class MACRONODE : public TSHashObject<MACRONODE, HASHKEY_NONE> {
     /* 056C */ int32_t m_spellFlags;
     /* 0570 */ uint32_t m_showTooltip;
     /* 0574 */ uint32_t m_dynamic;
-    /* 0578 */ uint32_t unk_0578[2];
+    /* 0578 */ uint32_t m_isLocal;
+    /* 057C */ uint32_t unk_057C;
     /* 0580 */ WOWGUID m_target;
     /* 0588 */ TSGrowableArray<MacroCommand> m_commands;
     /* 0598 */ TSLink<MACRONODE> m_dynamicLink;
@@ -43,6 +44,9 @@ class MACRONODE : public TSHashObject<MACRONODE, HASHKEY_NONE> {
 
 int32_t EvaluateMacroOptions(const char* start, const char* end, MacroSubstring* result, MacroSubstring* target);
 void MacroQueryCastSequence(MacroSubstring* text);
+uint32_t GetNumMacroIcons();
+const char* GetMacroIcon(uint32_t index);
+const char* GetMacroItemIcon(uint32_t index);
 
 class CGUIMacros {
     public:
@@ -76,8 +80,8 @@ class CGUIMacros {
     static void GetFullIconPath(uint32_t id, char* buffer, uint32_t size);
     static int32_t GetSortedIndexByName(const char* name);
     static void EditMacro(uint32_t id, const char* name, const char* icon, const char* body);
-    static void DeleteMacro(uint32_t id);
-    static uint32_t CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter);
+    static void DeleteMacro(uint32_t id, int32_t silent);
+    static uint32_t CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter, int32_t isLocal);
     static void CountActionBarSlots(MACRONODE* macro);
 };
 
@@ -88,8 +92,5 @@ extern TSGrowableArray<char*> s_macroItemIcons;
 void UIMacrosRegisterScriptFunctions();
 void UIMacrosUnegisterScriptFunctions();
 
-const char* GetMacroIcon(uint32_t index);
-const char* GetMacroItemIcon(uint32_t index);
-uint32_t GetNumMacroIcons();
 
 #endif

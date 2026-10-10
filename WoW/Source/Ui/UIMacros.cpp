@@ -4,6 +4,8 @@
 #include "WoW/Source/DB/DBClient/DBCacheInstances.h"
 #include "WoW/Source/DB/DBClient/DBClient.h"
 #include "WoW/Source/DB/Rec/SpellRec.h"
+#include "WoW/Source/DB/Rec/ItemRec.h"
+#include "WoW/Source/DB/Rec/SpellIconRec.h"
 #include "WoW/Source/Object/ItemStats.h"
 #include "WoW/Source/Object/ObjectClient/Item_C.h"
 #include "WoW/Source/Object/ObjectClient/Unit_C.h"
@@ -28,55 +30,55 @@
 #include "WoW/Source/Object/ObjectClient/Player_C.h"
 #include "WoW/Source/Ui/MacroConditions.h"
 
-// STATIC: #0x00ACE2A0
+// STATIC: 0x00D15E38
 static TSExplicitList<MACRONODE, offsetof(MACRONODE, m_dynamicLink)> s_dynamicMacros;
 
-// STATIC: #0x00BEAE20
+// STATIC: 0x00F60CA0
 uint32_t CGUIMacros::m_sortedMacros[72];
 
-// STATIC: #0x00BEAF68
+// STATIC: 0x00F60DE8
 static TSHashTable<MACRONODE, HASHKEY_NONE> s_macros;
 
-// STATIC: #0x00ACE1E8
+// STATIC: 0x00D15D90
 const char* s_macroIconPath = "Interface\\Icons\\";
 
-// STATIC: #0x00BEAF40
+// STATIC: 0x00F60DC0
 int32_t CGUIMacros::m_saveMacros;
 
-// STATIC: #0x00BEAF44
+// STATIC: 0x00F60DC4
 uint32_t CGUIMacros::m_state;
 
-// STATIC: #0x00BEAF48
+// STATIC: 0x00F60DC8
 const char* CGUIMacros::m_macroRunning;
 
-// STATIC: #0x00BEAF4C
+// STATIC: 0x00F60DCC
 MACRONODE* CGUIMacros::m_macroButton;
 
-// STATIC: #0x00BEAF50
+// STATIC: 0x00F60DD0
 uint32_t CGUIMacros::m_numMacros[2];
 
-// STATIC: #0x00BEAF58
+// STATIC: 0x00F60DD8
 static uint32_t s_maxMacroID[2];
 
-// STATIC: #0x00A0F82C
+// STATIC: 0x00C074B0
 static const uint32_t s_maxMacros[2] = { 36, 18 };
 
-// STATIC: #0x00A0F834
+// STATIC: 0x00C074B8
 static const uint32_t s_macroIDBase[2] = { 0, 0x1000000 };
 
-// STATIC: #0x00BEAF90
+// STATIC: 0x00F60E14
 TSGrowableArray<char*> s_macroIcons;
 
-// STATIC: #0x00BEAFA0
+// STATIC: 0x00F60E24
 TSGrowableArray<char*> s_macroItemIcons;
 
-// STATIC: #0x00BEAF60
+// STATIC: 0x00F60DE0
 static uint16_t s_initCounter;
 
-// STATIC: #0x00BEAF64
+// STATIC: 0x00F60DE4
 static uint32_t s_pendingLoads;
 
-// OFFSET: #0x00564AB0
+// OFFSET: 0x009C3C30
 int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     for (int32_t i = 0; i < static_cast<int32_t>(sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])); i++) {
         if (CGUIMacros::m_sortedMacros[i] == id) {
@@ -87,7 +89,7 @@ int32_t CGUIMacros::GetMacroIndexByID(uint32_t id) {
     return -1;
 }
 
-// OFFSET: #0x005660E0
+// OFFSET: 0x009C50C0
 void MACRONODE::IncrementActionBarCount() {
     if (this->m_dynamic && !this->m_actionBarCount) {
         s_dynamicMacros.LinkToTail(this);
@@ -96,7 +98,7 @@ void MACRONODE::IncrementActionBarCount() {
     this->m_actionBarCount++;
 }
 
-// OFFSET: #0x00566110
+// OFFSET: 0x009C50F0
 void MACRONODE::DecrementActionBarCount() {
     this->m_actionBarCount--;
 
@@ -105,7 +107,7 @@ void MACRONODE::DecrementActionBarCount() {
     }
 }
 
-// OFFSET: #0x00566160
+// OFFSET: 0x009C4880/0x140752090
 void CGUIMacros::UpdateMacroSpells() {
     for (MACRONODE* macro = s_macros.m_fulllist.Head(); macro; macro = s_macros.m_fulllist.Next(macro)) {
         if (macro->m_spellID < 0 && macro->FindSpellID()) {
@@ -114,7 +116,7 @@ void CGUIMacros::UpdateMacroSpells() {
     }
 }
 
-// OFFSET: #0x00566620
+// OFFSET: 0x009C53F0
 int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
     MACRONODE* macro = CGUIMacros::FindMacro(name);
 
@@ -131,7 +133,7 @@ int32_t CGUIMacros::GetSortedIndexByName(const char* name) {
     return -1;
 }
 
-// OFFSET: #0x00566660
+// OFFSET: 0x009C4AA0
 void CGUIMacros::UpdateDynamicMacros() {
     for (MACRONODE* macro = s_dynamicMacros.Head(); macro; macro = s_dynamicMacros.Next(macro)) {
         if (macro->FindSpellID()) {
@@ -140,7 +142,7 @@ void CGUIMacros::UpdateDynamicMacros() {
     }
 }
 
-// OFFSET: #0x00566A70
+// OFFSET: 0x009C53C0
 MACRONODE* CGUIMacros::GetMacroByIndex(uint32_t index) {
     if (index < sizeof(((CGUIMacros*)0)->m_sortedMacros) / sizeof(CGUIMacros::m_sortedMacros[0])) {
         return s_macros.Ptr(CGUIMacros::m_sortedMacros[index], HASHKEY_NONE());
@@ -149,17 +151,17 @@ MACRONODE* CGUIMacros::GetMacroByIndex(uint32_t index) {
     return NULL;
 }
 
-// OFFSET: #0x00566AA0
+// OFFSET: 0x009C5430
 MACRONODE* CGUIMacros::GetMacroByID(uint32_t id) {
     return s_macros.Ptr(id, HASHKEY_NONE());
 }
 
-// OFFSET: #0x00566DC0
+// OFFSET: 0x009C54C0
 void CGUIMacros::RunMacro(int32_t id, const char* button) {
     CGUIMacros::RunMacro(s_macros.Ptr(id, HASHKEY_NONE()), button);
 }
 
-// OFFSET: #0x00566AC0
+// OFFSET: 0x009C6260/0x140754420
 void CGUIMacros::GetFullIconPath(uint32_t id, char* buffer, uint32_t size) {
     *buffer = 0;
     MACRONODE* macro = s_macros.Ptr(id, HASHKEY_NONE());
@@ -172,43 +174,39 @@ void CGUIMacros::GetFullIconPath(uint32_t id, char* buffer, uint32_t size) {
         macro->FindSpellID();
     }
 
-    if (!SStrCmp(macro->m_icon, "INV_Misc_QuestionMark", STORM_MAX_STR)) {
+    if (!_stricmp(macro->m_icon, "INV_Misc_QuestionMark")) {
         if (macro->m_itemID) {
             const char* path = ClientDBStringLookup(3);
-            WOWGUID none = WOWGUID();
-            ItemStats_C* stats = g_itemDBCache.GetRecord(macro->m_itemID, none, NULL, NULL, false);
-            int32_t displayId = stats ? stats->m_displayId : 0;
-            SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(displayId));
+            ItemRec* rec = g_itemDB.GetRecord(macro->m_itemID, WOWGUID(), NULL, NULL, false);
+            SStrPrintf(buffer, size, "%s%s%s", path, *path ? "\\" : "", CGItem_C::GetInventoryArt(rec ? rec->m_displayInfoID : 0));
             return;
         }
 
-        if (macro->m_spellID) {
-            SpellRec spell;
+        const SpellRec* spell;
 
-            if (g_spellDB.GetRecord(macro->m_spellID, &spell)) {
-                int32_t iconId = spell.m_spellIconID;
+        if (macro->m_spellID && (spell = g_spellDB.GetRecord(macro->m_spellID))) {
+            int32_t iconId = spell->m_spellIconID;
 
-                if (spell.m_activeIconID) {
-                    CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(macro->m_spellFlags ? CGPetInfo::GetPet(0) : ClntObjMgrGetActivePlayer(), TYPEMASK_UNIT, __FILE__, __LINE__));
+            if (spell->m_activeIconID) {
+                CGUnit_C* unit = static_cast<CGUnit_C*>(ClntObjMgrObjectPtr(macro->m_spellFlags ? CGPetInfo::GetPet(0) : ClntObjMgrGetActivePlayer(), TYPEMASK_UNIT, __FILE__, __LINE__));
 
-                    if (unit) {
-                        uint32_t count = unit->GetAuraCount();
+                if (unit) {
+                    uint32_t count = unit->GetAuraCount();
 
-                        for (uint32_t i = 0; i < count; i++) {
-                            if (unit->GetAuraSpellId(i) == spell.m_id && (unit->GetAuraFlags(i) & 0x10)) {
-                                iconId = spell.m_activeIconID;
-                                break;
-                            }
+                    for (uint32_t i = 0; i < count; i++) {
+                        if (unit->GetAuraSpellId(i) == spell->m_id && (unit->GetAuraFlags(i) & 0x10)) {
+                            iconId = spell->m_activeIconID;
+                            break;
                         }
                     }
                 }
+            }
 
-                SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
+            const SpellIconRec* icon = g_spellIconDB.GetRecord(iconId);
 
-                if (icon) {
-                    SStrCopy(buffer, icon->m_textureFilename, size);
-                    return;
-                }
+            if (icon) {
+                SStrCopy(buffer, icon->m_textureFilename, size);
+                return;
             }
         }
     }
@@ -216,7 +214,7 @@ void CGUIMacros::GetFullIconPath(uint32_t id, char* buffer, uint32_t size) {
     SStrPrintf(buffer, size, "%s%s", s_macroIconPath, macro->m_icon);
 }
 
-// OFFSET: #0x00566330
+// OFFSET: 0x009C49D0/0x140752240
 MACRONODE* CGUIMacros::FindMacro(const char* name) {
     if (!name || !*name) {
         return NULL;
@@ -237,12 +235,12 @@ bool CGUIMacros::IsActionAllowed(uint32_t action) {
     return !CGUIMacros::m_macroButton || ((1 << action) & CGUIMacros::m_state);
 }
 
-// OFFSET: #0x00565AD0
+// OFFSET: 0x009C4A40/0x140752360
 void CGUIMacros::RemoveDynamicMacro(MACRONODE* macro) {
     s_dynamicMacros.UnlinkNode(macro);
 }
 
-// OFFSET: %0x00917A80
+// OFFSET: 0x009C5120
 void CGUIMacros::Initialize() {
     do {
         s_initCounter++;
@@ -260,28 +258,17 @@ void CGUIMacros::LoadMacros() {
     LoadAccountData(5, CGUIMacros::LoadMacrosCallback, reinterpret_cast<void*>(static_cast<uintptr_t>(s_initCounter | 0x20000)));
 }
 
-// OFFSET: #0x00564A20
+// OFFSET: 0x009C3BF0
 static int32_t QSortIcons(const void* a, const void* b) {
-    const char* nameB = *static_cast<char* const*>(b);
-    const char* nameA = *static_cast<char* const*>(a);
-
-    if (!SStrCmp(nameA, "INV_Misc_QuestionMark", STORM_MAX_STR)) {
-        return -1;
-    }
-
-    if (!SStrCmp(nameB, "INV_Misc_QuestionMark", STORM_MAX_STR)) {
-        return 1;
-    }
-
-    return SStrCmpI(nameA, nameB, STORM_MAX_STR);
+    return _stricmp(*static_cast<char* const*>(a), *static_cast<char* const*>(b));
 }
 
-// OFFSET: #0x00564A80
+// OFFSET: 0x009C3C10
 static int32_t QSortMacrosByName(const void* a, const void* b) {
-    return SStrCmpI((*static_cast<MACRONODE* const*>(a))->m_name, (*static_cast<MACRONODE* const*>(b))->m_name, STORM_MAX_STR);
+    return _stricmp((*static_cast<MACRONODE* const*>(a))->m_name, (*static_cast<MACRONODE* const*>(b))->m_name);
 }
 
-// OFFSET: #0x00565550
+// OFFSET: 0x009C4390/0x1407519C0
 static void AddMacroIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
 
@@ -296,7 +283,7 @@ static void AddMacroIcon(const char* fileName) {
     }
 }
 
-// OFFSET: #0x005655C0
+// OFFSET: 0x009C4400/0x140751A50
 static void AddMacroItemIcon(const char* fileName) {
     char* ext = SStrChrR(const_cast<char*>(fileName), '.');
 
@@ -311,8 +298,12 @@ static void AddMacroItemIcon(const char* fileName) {
     }
 }
 
-// OFFSET: #0x00565630
+// OFFSET: 0x009C4470/0x140751AE0
 static int32_t IconListArchiveCallback(const char* fileName, void* param) {
+    if (!SFile::FileExists(fileName)) {
+        return 1;
+    }
+
     const char* name = fileName + SStrLen(s_macroIconPath);
 
     if (!SStrCmpI(name, "Ability_", SStrLen("Ability_")) || !SStrCmpI(name, "Spell_", SStrLen("Spell_"))) {
@@ -326,7 +317,7 @@ static int32_t IconListArchiveCallback(const char* fileName, void* param) {
     return 1;
 }
 
-// OFFSET: #0x005656B0
+// OFFSET: 0x009C4500/0x140751B90
 static int32_t IconListDirectoryCallback(OS_FILE_DATA& data, void* param) {
     if (data.flags & OS_FILE_ATTRIBUTE_DIRECTORY) {
         return 0;
@@ -374,12 +365,10 @@ static int32_t IconListCustomCallback(OS_FILE_DATA& data, void* param) {
     return 0;
 }
 
-// OFFSET: #0x00565840
+// OFFSET: 0x009C46B0/0x140751E50
 void CGUIMacros::LoadIcons() {
     s_macroIcons.m_chunk = 256;
     s_macroItemIcons.m_chunk = 256;
-    *s_macroIcons.New() = SStrDupA("INV_Misc_QuestionMark", __FILE__, __LINE__);
-    *s_macroItemIcons.New() = SStrDupA("INV_Misc_QuestionMark", __FILE__, __LINE__);
 
     ListInterfaceArchive(s_macroIconPath, IconListArchiveCallback, NULL);
 
@@ -444,11 +433,11 @@ struct MacroSlashCommand {
     int32_t m_type;
 };
 
-// OFFSET: #0x00565B30
+// OFFSET: 0x009C4AF0
 MACRONODE::~MACRONODE() {
 }
 
-// OFFSET: #0x00565BA0
+// OFFSET: 0x009C4B60
 MACRONODE::MACRONODE() {
     this->m_name[0] = '\0';
     this->m_icon[0] = '\0';
@@ -459,19 +448,11 @@ MACRONODE::MACRONODE() {
     this->m_spellFlags = 0;
     this->m_showTooltip = 0;
     this->m_dynamic = 0;
+    this->m_isLocal = 0;
     this->m_target = WOWGUID();
 }
 
-// OFFSET: #0x00565C20
-uint32_t GetNumMacroIcons() {
-    if (!s_macroIcons.m_count) {
-        CGUIMacros::LoadIcons();
-    }
-
-    return s_macroIcons.m_count;
-}
-
-// OFFSET: #0x00565C40
+// OFFSET: 0x009C4BE0/0x1407524C0
 int32_t MACRONODE::Parse() {
     lua_State* L = FrameScript_GetContext();
     this->m_showTooltip = 0;
@@ -491,7 +472,7 @@ int32_t MACRONODE::Parse() {
         command.SetText(line.m_start, line.m_end, ' ', &args.m_start);
 
         if (*command.m_start == '/') {
-            // STATIC: #0x00ACE300
+            // STATIC: 0x00D15E98
             static MacroSlashCommand s_slashCommands[] = {
                 { "SLASH_CAST", SStrLen("SLASH_CAST"), 2 },
                 { "SLASH_CASTRANDOM", SStrLen("SLASH_CASTRANDOM"), 3 },
@@ -592,7 +573,7 @@ int32_t MACRONODE::Parse() {
     return this->FindSpellID();
 }
 
-// OFFSET: #0x005661C0
+// OFFSET: 0x009C5340
 void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
     macro->m_actionBarCount = 0;
     CGUIMacros::RemoveDynamicMacro(macro);
@@ -611,7 +592,7 @@ void CGUIMacros::CountActionBarSlots(MACRONODE* macro) {
     }
 }
 
-// OFFSET: #0x00566240
+// OFFSET: 0x009C48E0
 void CGUIMacros::SortMacros() {
     memset(CGUIMacros::m_sortedMacros, 0, sizeof(((CGUIMacros*)0)->m_sortedMacros));
     MACRONODE** sorted = static_cast<MACRONODE**>(alloca(sizeof(MACRONODE*) * 36));
@@ -635,7 +616,7 @@ void CGUIMacros::SortMacros() {
     FrameScript_SignalEvent(SCRIPT_EVENT_UPDATE_MACROS, NULL);
 }
 
-// OFFSET: #0x005663A0
+// OFFSET: 0x009C54F0
 int32_t CGUIMacros::SetMacroBody(MACRONODE* macro, const char* body) {
     SStrCopy(macro->m_body, body, sizeof(macro->m_body));
     char* cursor = macro->m_body;
@@ -650,7 +631,7 @@ int32_t CGUIMacros::SetMacroBody(MACRONODE* macro, const char* body) {
     return macro->Parse();
 }
 
-// OFFSET: #0x00566CD0
+// OFFSET: 0x009C5EC0/0x140753F60
 void CGUIMacros::EditMacro(uint32_t id, const char* name, const char* icon, const char* body) {
     HASHKEY_NONE key;
     MACRONODE* macro = s_macros.Ptr(id, key);
@@ -676,8 +657,8 @@ void CGUIMacros::EditMacro(uint32_t id, const char* name, const char* icon, cons
     CGActionBar::UpdateMacro(id);
 }
 
-// OFFSET: #0x00566D50
-void CGUIMacros::DeleteMacro(uint32_t id) {
+// OFFSET: 0x009C5450/0x140753080
+void CGUIMacros::DeleteMacro(uint32_t id, int32_t silent) {
     HASHKEY_NONE key;
     MACRONODE* macro = s_macros.Ptr(id, key);
 
@@ -688,11 +669,11 @@ void CGUIMacros::DeleteMacro(uint32_t id) {
     CGUIMacros::m_numMacros[macro->m_type]--;
     s_macros.Delete(macro);
     CGUIMacros::m_saveMacros = 1;
-    CGActionBar::RemoveMacro(id, 0);
+    CGActionBar::RemoveMacro(id, silent);
     CGUIMacros::SortMacros();
 }
 
-// OFFSET: #0x00567520
+// OFFSET: 0x009C5D90
 void CGUIMacros::CheckActionBar() {
     for (MACRONODE* macro = s_macros.m_fulllist.Head(); macro; macro = s_macros.m_fulllist.Next(macro)) {
         macro->m_actionBarCount = 0;
@@ -716,7 +697,7 @@ void CGUIMacros::CheckActionBar() {
     }
 }
 
-// OFFSET: #0x00567C10
+// OFFSET: 0x009C6C10/0x140755270
 void CGUIMacros::LoadMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* param) {
     uint32_t value = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(param));
 
@@ -838,25 +819,7 @@ void CGUIMacros::LoadMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
     }
 }
 
-// OFFSET: #0x00564D70
-const char* GetMacroIcon(uint32_t index) {
-    if (index >= s_macroIcons.m_count) {
-        return NULL;
-    }
-
-    return s_macroIcons.m_data[index];
-}
-
-// OFFSET: #0x00564D90
-const char* GetMacroItemIcon(uint32_t index) {
-    if (index >= s_macroItemIcons.m_count) {
-        return NULL;
-    }
-
-    return s_macroItemIcons.m_data[index];
-}
-
-// OFFSET: #0x00564DB0
+// OFFSET: 0x009C3F00
 void CGUIMacros::RunMacro(MACRONODE* macro, const char* button) {
     MACRONODE* savedMacro = CGUIMacros::m_macroButton;
     const char* savedButton = CGUIMacros::m_macroRunning;
@@ -894,7 +857,7 @@ void CGUIMacros::RunMacro(MACRONODE* macro, const char* button) {
     }
 }
 
-// OFFSET: #0x005650C0
+// OFFSET: 0x009C3FE0/0x140751480
 int32_t MACRONODE::FindSpellID() {
     MacroSubstring text = { NULL, NULL };
     MacroSubstring target = { NULL, NULL };
@@ -949,7 +912,7 @@ int32_t MACRONODE::FindSpellID() {
                     int32_t commandType = this->m_commands.m_data[index].m_type;
 
                     if (commandType != 5 && commandType != 6) {
-                        spellId = GetSpellIdByName(name, &this->m_spellFlags);
+                        spellId = CGSpellBook::GetOverrideSpell(GetSpellIdByName(name, &this->m_spellFlags));
                     }
                 }
 
@@ -1028,7 +991,7 @@ int32_t MACRONODE::FindSpellID() {
     return 0;
 }
 
-// OFFSET: #0x00566530
+// OFFSET: 0x009C5C90/0x140753C40
 void CGUIMacros::Shutdown() {
     s_initCounter++;
     s_dynamicMacros.UnlinkAll();
@@ -1050,7 +1013,7 @@ void CGUIMacros::Shutdown() {
     s_macroConditions.Clear();
 }
 
-// OFFSET: #0x005668F0
+// OFFSET: 0x009C5140/0x140752BC0
 void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* param) {
     if (cacheFile == OS_INVALID_FILE) {
         return;
@@ -1061,8 +1024,13 @@ void CGUIMacros::SaveMacrosCallback(HOSFILE localFile, HOSFILE cacheFile, void* 
 
     for (uint32_t i = 0; i < CGUIMacros::m_numMacros[set]; i++) {
         MACRONODE* macro = s_macros.Ptr(CGUIMacros::m_sortedMacros[36 * set + i], HASHKEY_NONE());
+
+        if (macro->m_isLocal) {
+            continue;
+        }
+
         char text[1536];
-        SStrPrintf(text, sizeof(text), "MACRO %d \"%s\" %s\r\n", macro->m_id, macro->m_name, macro->m_icon);
+        SStrPrintf(text, sizeof(text), "MACRO %d \"%s\" \"%s\"\r\n", macro->m_id, macro->m_name, macro->m_icon);
         const char* body = macro->m_body;
 
         while (body && *body) {
@@ -1092,8 +1060,8 @@ void CGUIMacros::SaveMacros() {
     SaveAccountData(5, CGUIMacros::SaveMacrosCallback, reinterpret_cast<void*>(1));
 }
 
-// OFFSET: #0x00568020
-uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter) {
+// OFFSET: 0x009C70A0
+uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char* body, int32_t perCharacter, int32_t isLocal) {
     if (!name || !*name) {
         return 0;
     }
@@ -1107,6 +1075,7 @@ uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char*
     uint32_t id = ++s_maxMacroID[type];
     HASHKEY_NONE key;
     MACRONODE* macro = s_macros.New(id, key, 0, 0);
+    macro->m_isLocal = isLocal;
     macro->m_id = id;
     macro->m_type = type;
     SStrCopy(macro->m_name, name, sizeof(macro->m_name));
@@ -1131,7 +1100,7 @@ uint32_t CGUIMacros::CreateMacro(const char* name, const char* icon, const char*
     return id;
 }
 
-// OFFSET: #0x00564900
+// OFFSET: 0x009C3AC0/0x140750E00
 void MacroQueryCastSequence(MacroSubstring* text) {
     lua_State* L = FrameScript_GetContext();
     lua_taintexpected++;

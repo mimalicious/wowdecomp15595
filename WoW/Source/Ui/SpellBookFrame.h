@@ -66,6 +66,7 @@ class CGSpellBook {
     static void AddSpellToNameCache(int32_t spellId, int32_t a2);
     static void CompanionCallback(int32_t id, const WOWGUID& guid, void* param, bool success);
     static int32_t GetSpellProgressionRank(const SpellRec* spell);
+    static int32_t GetOverrideSpell(int32_t spellId);
     static int32_t GetCompanionType(const SpellRec* spell);
     static int32_t FindCompanionSlotByID(int32_t spellId, int32_t type);
     static TSGrowableArray<int32_t> m_totemSpells[4];

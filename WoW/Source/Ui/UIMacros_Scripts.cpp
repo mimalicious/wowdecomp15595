@@ -1,4 +1,5 @@
 #include "UIMacros.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include <cstdint>
 #include "Engine/Source/FrameScript/FrameScript.h"
 #include "Engine/Source/FrameScript/FrameScript_Object.h"
@@ -58,7 +59,7 @@ static int32_t Script_GetRunningMacro(lua_State* L) {
     return 1;
 }
 
-// OFFSET: #0x00566DF0
+// OFFSET: 0x009C5570/0x140753250
 static MACRONODE* GetMacroFromLua(lua_State* L) {
     if (lua_isnumber(L, 1)) {
         uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
@@ -124,17 +125,19 @@ static int32_t Script_GetMacroSpell(lua_State* L) {
         return 0;
     }
 
-    SpellRec spell;
+    const SpellRec* spell = g_spellDB.GetRecord(macro->m_spellID);
 
-    if (g_spellDB.GetRecord(macro->m_spellID, &spell)) {
-        lua_pushstring(L, spell.m_name);
-        lua_pushstring(L, spell.m_nameSubtext);
+    if (spell) {
+        lua_pushstring(L, spell->m_name);
+        lua_pushstring(L, spell->m_nameSubtext);
+        lua_pushnumber(L, static_cast<double>(macro->m_spellID));
     } else {
+        lua_pushnil(L);
         lua_pushnil(L);
         lua_pushnil(L);
     }
 
-    return 2;
+    return 3;
 }
 
 // OFFSET: 0x009C3C60/0x140751000
@@ -164,48 +167,6 @@ static int32_t Script_SecureCmdOptionParse(lua_State* L) {
     return 2;
 }
 
-// OFFSET: #0x00564E90
-static int32_t Script_GetMacroIconInfo(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetMacroIconInfo(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    const char* icon;
-
-    if (index < s_macroIcons.m_count && (icon = s_macroIcons.m_data[index]) && *icon) {
-        char texture[260];
-        SStrPrintf(texture, sizeof(texture), "%s%s", s_macroIconPath, icon);
-        lua_pushstring(L, texture);
-        return 1;
-    }
-
-    lua_pushstring(L, "");
-    return 1;
-}
-
-// OFFSET: #0x00564F60
-static int32_t Script_GetMacroItemIconInfo(lua_State* L) {
-    if (!lua_isnumber(L, 1)) {
-        luaL_error(L, "Usage: GetMacroItemIconInfo(index)");
-        return 0;
-    }
-
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 1)) - 1;
-    const char* icon;
-
-    if (index < s_macroItemIcons.m_count && (icon = s_macroItemIcons.m_data[index]) && *icon) {
-        char texture[260];
-        SStrPrintf(texture, sizeof(texture), "%s%s", s_macroIconPath, icon);
-        lua_pushstring(L, texture);
-        return 1;
-    }
-
-    lua_pushstring(L, "");
-    return 1;
-}
-
 // OFFSET: 0x009C5630/0x140753350
 static int32_t Script_RunMacroText(lua_State* L) {
     if (!lua_isstring(L, 1)) {
@@ -219,23 +180,57 @@ static int32_t Script_RunMacroText(lua_State* L) {
     return 0;
 }
 
-// OFFSET: #0x00566490
-static int32_t Script_GetNumMacroIcons(lua_State* L) {
+// OFFSET: 0x009C5A40/0x140753930
+static int32_t Script_GetMacroIcons(lua_State* L) {
+    if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
+        luaL_error(L, "Usage: GetMacroIcons([table])");
+    }
+
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        lua_createtable(L, 0, 0);
+    }
+
+    int32_t first = lua_objlen(L, -1) + 1;
+
     if (!s_macroIcons.m_count) {
         CGUIMacros::LoadIcons();
     }
 
-    lua_pushnumber(L, s_macroIcons.m_count);
+    int32_t count = s_macroIcons.m_count;
+
+    for (int32_t i = 0; i < count; i++) {
+        lua_pushnumber(L, static_cast<double>(i + first));
+        lua_pushstring(L, static_cast<uint32_t>(i) < s_macroIcons.m_count ? s_macroIcons.m_data[i] : NULL);
+        lua_settable(L, -3);
+    }
+
     return 1;
 }
 
-// OFFSET: #0x005664E0
-static int32_t Script_GetNumMacroItemIcons(lua_State* L) {
+// OFFSET: 0x009C5B20/0x140753A50
+static int32_t Script_GetMacroItemIcons(lua_State* L) {
+    if (lua_type(L, 1) != LUA_TTABLE && lua_type(L, 1) > LUA_TNIL) {
+        luaL_error(L, "Usage: GetMacroItemIcons([table])");
+    }
+
+    if (lua_type(L, 1) != LUA_TTABLE) {
+        lua_createtable(L, 0, 0);
+    }
+
+    int32_t first = lua_objlen(L, -1) + 1;
+
     if (!s_macroItemIcons.m_count) {
         CGUIMacros::LoadIcons();
     }
 
-    lua_pushnumber(L, s_macroItemIcons.m_count);
+    int32_t count = s_macroItemIcons.m_count;
+
+    for (int32_t i = 0; i < count; i++) {
+        lua_pushnumber(L, static_cast<double>(i + first));
+        lua_pushstring(L, static_cast<uint32_t>(i) < s_macroItemIcons.m_count ? s_macroItemIcons.m_data[i] : NULL);
+        lua_settable(L, -3);
+    }
+
     return 1;
 }
 
@@ -301,7 +296,7 @@ static int32_t Script_DeleteMacro(lua_State* L) {
         MACRONODE* macro = GetMacroFromLua(L);
 
         if (macro) {
-            CGUIMacros::DeleteMacro(macro->m_id);
+            CGUIMacros::DeleteMacro(macro->m_id, 0);
         }
     }
 
@@ -329,16 +324,8 @@ static int32_t Script_EditMacro(lua_State* L) {
                 name = lua_tolstring(L, 2, NULL);
             }
 
-            if (lua_isnumber(L, 3)) {
-                double index = lua_tonumber(L, 3);
-
-                if (!s_macroIcons.m_count) {
-                    CGUIMacros::LoadIcons();
-                }
-
-                if (static_cast<uint32_t>(index - 1.0) < s_macroIcons.m_count) {
-                    icon = GetMacroIcon(static_cast<uint32_t>(index - 1.0));
-                }
+            if (lua_isstring(L, 3)) {
+                icon = lua_tolstring(L, 3, NULL);
             }
 
             if (lua_isstring(L, 4)) {
@@ -346,8 +333,6 @@ static int32_t Script_EditMacro(lua_State* L) {
             }
 
             CGUIMacros::EditMacro(id, name, icon, body);
-        } else {
-            id = 0;
         }
     }
 
@@ -360,7 +345,7 @@ static int32_t Script_EditMacro(lua_State* L) {
         }
     }
 
-    lua_pushnumber(L, index + 1);
+    lua_pushnumber(L, static_cast<double>(index + 1));
     return 1;
 }
 
@@ -410,10 +395,9 @@ static int32_t Script_GetMacroItem(lua_State* L) {
         return 0;
     }
 
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(macro->m_itemID, none, NULL, NULL, false);
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(macro->m_itemID, WOWGUID(), NULL, NULL, false);
 
-    if (!stats) {
+    if (!rec) {
         return 0;
     }
 
@@ -431,7 +415,7 @@ static int32_t Script_GetMacroItem(lua_State* L) {
     }
 
     lua_pushstring(L, CGItem_C::BuildItemName(name, sizeof(name), macro->m_itemID, 0));
-    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, stats->m_quality, 0, 0, 0));
+    lua_pushstring(L, CGTooltip::GetItemHyperlinkString(macro->m_itemID, rec->m_quality, 0, 0, 0));
     return 2;
 }
 
@@ -451,9 +435,8 @@ static int32_t Script_PickupMacro(lua_State* L) {
 
 // OFFSET: 0x009C7220/0x140755B00
 static int32_t Script_CreateMacro(lua_State* L) {
-    if (!lua_isstring(L, 1) || !lua_isnumber(L, 2)) {
-        luaL_error(L, "Usage: CreateMacro(name, iconIndex, body, perCharacter)");
-        return 0;
+    if (!lua_isstring(L, 1) || !lua_isstring(L, 2)) {
+        luaL_error(L, "Usage: CreateMacro(name, iconFileName, body, perCharacter)");
     }
 
     if (!CGGameUI::CanPerformAction(12)) {
@@ -461,32 +444,32 @@ static int32_t Script_CreateMacro(lua_State* L) {
     }
 
     const char* name = lua_tolstring(L, 1, NULL);
-    const char* icon = NULL;
+    const char* icon = lua_tolstring(L, 2, NULL);
+    const char* body = NULL;
 
     if (!name || !*name) {
         luaL_error(L, "CreateMacro() failed, no name specified");
-        return 0;
     }
 
-    uint32_t index = static_cast<uint32_t>(lua_tonumber(L, 2)) - 1;
-
-    if (index < GetNumMacroIcons()) {
-        icon = GetMacroIcon(index);
+    if (!icon || !*icon) {
+        luaL_error(L, "CreateMacro() failed, no icon specified");
     }
 
-    const char* body = lua_isstring(L, 3) ? lua_tolstring(L, 3, NULL) : NULL;
-    uint32_t id = CGUIMacros::CreateMacro(name, icon, body, StringToBOOL(L, 4, 0));
+    if (lua_isstring(L, 3)) {
+        body = lua_tolstring(L, 3, NULL);
+    }
+
+    uint32_t id = CGUIMacros::CreateMacro(name, icon, body, StringToBOOL(L, 4, 0), 0);
 
     if (!id) {
         luaL_error(L, "CreateMacro() failed, already have %d macros", 36);
-        return 0;
     }
 
-    lua_pushnumber(L, CGUIMacros::GetMacroIndexByID(id) + 1);
+    lua_pushnumber(L, static_cast<double>(CGUIMacros::GetMacroIndexByID(id) + 1));
     return 1;
 }
 
-// STATIC: #0x00ACE1F0
+// STATIC: 0x00D15D98
 static FrameScript_Method s_ScriptFunctions[] = {
     { "SecureCmdOptionParse", &Script_SecureCmdOptionParse },
     { "RunMacro", &Script_RunMacro },
@@ -502,24 +485,22 @@ static FrameScript_Method s_ScriptFunctions[] = {
     { "GetMacroItem", &Script_GetMacroItem },
     { "SetMacroSpell", &Script_SetMacroSpell },
     { "GetMacroSpell", &Script_GetMacroSpell },
-    { "GetNumMacroIcons", &Script_GetNumMacroIcons },
-    { "GetNumMacroItemIcons", &Script_GetNumMacroItemIcons },
-    { "GetMacroIconInfo", &Script_GetMacroIconInfo },
-    { "GetMacroItemIconInfo", &Script_GetMacroItemIconInfo },
+    { "GetMacroIcons", &Script_GetMacroIcons },
+    { "GetMacroItemIcons", &Script_GetMacroItemIcons },
     { "PickupMacro", &Script_PickupMacro },
     { "GetMacroIndexByName", &Script_GetMacroIndexByName },
     { "GetRunningMacro", &Script_GetRunningMacro },
     { "GetRunningMacroButton", &Script_GetRunningMacroButton },
 };
 
-// OFFSET: %0x00916F20
+// OFFSET: 0x009C3E00
 void UIMacrosRegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_RegisterFunction(s_ScriptFunctions[i].m_name, s_ScriptFunctions[i].m_method);
     }
 }
 
-// OFFSET: %0x00916F50
+// OFFSET: 0x009C3E30
 void UIMacrosUnegisterScriptFunctions() {
     for (uint32_t i = 0; i < sizeof(s_ScriptFunctions) / sizeof(s_ScriptFunctions[0]); i++) {
         FrameScript_UnregisterFunction(s_ScriptFunctions[i].m_name);
