@@ -1,151 +1,34 @@
 #include "ItemSocketInfo.h"
-#include "WoW/Source/DB/DBClient/DBClient.h"
-#include "WoW/Source/DB/Rec/GemPropertiesRec.h"
-#include "WoW/Source/Object/ItemStats.h"
 #include <cstring>
 #include "Engine/Source/Base/CDataStore.h"
+#include "Engine/Source/FrameScript/FrameScript.h"
+#include "WoW/Source/DB/DBClient/DBClient.h"
+#include "WoW/Source/DB/Rec/GemPropertiesRec.h"
+#include "WoW/Source/DB/Rec/ItemRecSparse.h"
 #include "WoW/Source/Net/Types.h"
-#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
+#include "WoW/Source/Object/ObjectClient/Item_C.h"
+#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
 #include "WoW/Source/Ui/GameUI.h"
 #include "WoW/Source/Ui/Types.h"
-#include "Engine/Source/FrameScript/FrameScript.h"
-#include "WoW/Source/ObjectMgrClient/ObjectMgrClient.h"
-#include "WoW/Source/Object/ObjectClient/Item_C.h"
-#include "WoW/Source/DB/DBClient/DBCacheInstances.h"
-#include "WoW/Source/Object/ObjectClient/Player_C.h"
+#include "WoW/Source/WowSvcs/WowSvcsClient/ClientServices.h"
 
-// STATIC: #0x00C20FA8
+// STATIC: 0x00F4A290
 uint8_t CGItemSocketInfo::m_gemContainerSlot[3];
 
-// STATIC: #0x00C20FB0
+// STATIC: 0x00F4A298
 WOWGUID CGItemSocketInfo::m_gemItemContainer[3];
 
-// STATIC: #0x00C20FC8
+// STATIC: 0x00F4A2B0
 WOWGUID CGItemSocketInfo::m_gemItems[3];
 
-// STATIC: #0x00C20FE0
+// STATIC: 0x00F4A2C8
 WOWGUID CGItemSocketInfo::m_socketItem;
 
-// STATIC: #0x00C20FE8
-ItemStats_C* CGItemSocketInfo::m_socketItemStats;
+// STATIC: 0x00F4A2D0
+ItemRecSparse* CGItemSocketInfo::m_socketItemRec;
 
-// OFFSET: #0x005C4680
-void CGItemSocketInfo::SetItem(WOWGUID item) {
-    CGGameUI::UnlockItem(CGItemSocketInfo::m_socketItem);
-
-    for (uint32_t i = 0; i < 3; i++) {
-        if (CGItemSocketInfo::m_gemItems[i]) {
-            CGGameUI::UnlockItem(CGItemSocketInfo::m_gemItems[i]);
-        }
-    }
-
-    CGItemSocketInfo::m_gemItems[0] = WOWGUID();
-    CGItemSocketInfo::m_gemItems[1] = WOWGUID();
-    CGItemSocketInfo::m_gemItems[2] = WOWGUID();
-    CGItemSocketInfo::m_socketItemStats = NULL;
-    CGItemSocketInfo::m_socketItem = item;
-    CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-    if (object) {
-        WOWGUID none = WOWGUID();
-        CGItemSocketInfo::m_socketItemStats = g_itemDBCache.GetRecord(object->m_obj->m_entryID, none, NULL, NULL, false);
-    }
-
-    if (CGItemSocketInfo::m_socketItemStats && item) {
-        CGGameUI::LockItem(item);
-        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
-    } else {
-        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_CLOSE, NULL);
-    }
-}
-
-// OFFSET: #0x005C4780
-int32_t CGItemSocketInfo::SetGem(uint32_t slot, WOWGUID item, WOWGUID container, uint8_t containerSlot) {
-    if (slot >= 3 || !CGItemSocketInfo::m_socketItem || !CGItemSocketInfo::m_socketItemStats) {
-        return 0;
-    }
-
-    if (!item) {
-        CGItemSocketInfo::m_gemItems[slot] = WOWGUID();
-        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
-        return 1;
-    }
-
-    CGItem_C* gem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
-
-    if (!gem) {
-        return 0;
-    }
-
-    WOWGUID none = WOWGUID();
-    ItemStats_C* stats = g_itemDBCache.GetRecord(gem->m_obj->m_entryID, none, NULL, NULL, false);
-
-    if (!stats || !stats->m_gemProperties) {
-        return 0;
-    }
-
-    ItemStats_C* socketStats = CGItemSocketInfo::m_socketItemStats;
-    GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(stats->m_gemProperties);
-    uint32_t meta;
-
-    if (!properties || (meta = socketStats->m_socketColor[slot] & 0x1) == (properties->m_type & 0x1)) {
-        CGItemSocketInfo::m_gemItems[slot] = item;
-        CGItemSocketInfo::m_gemItemContainer[slot] = container;
-        CGItemSocketInfo::m_gemContainerSlot[slot] = containerSlot;
-        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
-        return 1;
-    }
-
-    if (meta) {
-        CGGameUI::DisplayError(ERR_SOCKETING_REQUIRES_META_GEM);
-        return 0;
-    }
-
-    CGGameUI::DisplayError(ERR_SOCKETING_META_GEM_ONLY_IN_METASLOT);
-    return 0;
-}
-
-// OFFSET: #0x005C48D0
-int32_t CGItemSocketInfo::GemMatchesSocket(const ItemStats_C* item, const ItemStats_C* gem, int32_t socket) {
-    if (!item || !gem) {
-        return 0;
-    }
-
-    uint32_t color = item->m_socketColor[socket];
-
-    if (!color) {
-        return 1;
-    }
-
-    GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(gem->m_gemProperties);
-
-    if (!properties) {
-        return 0;
-    }
-
-    int32_t type = properties->m_type;
-    int32_t match = 0;
-
-    if ((type & 1) && (color & 1)) {
-        match = 1;
-    }
-
-    if ((type & 2) && (color & 2)) {
-        match = 1;
-    }
-
-    if ((type & 4) && (color & 4)) {
-        match = 1;
-    }
-
-    if ((type & 8) && (color & 8)) {
-        return 1;
-    }
-
-    return match;
-}
-
-// OFFSET: #0x005C4470
+// OFFSET: 0x0097A150
 void CGItemSocketInfo::GetGemItemForSlot(uint32_t slot, WOWGUID& item, WOWGUID& container, uint8_t& containerSlot) {
     if (slot >= 3) {
         item = WOWGUID();
@@ -158,18 +41,18 @@ void CGItemSocketInfo::GetGemItemForSlot(uint32_t slot, WOWGUID& item, WOWGUID& 
     }
 }
 
-// OFFSET: #0x005C44D0
+// OFFSET: 0x0097A1B0/0x1406F3730
 void EnchantItemCacheCallback(int32_t id, const WOWGUID& guid, void* param, bool success) {
     if (success) {
         FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
     }
 }
 
-// PROVEN: c13384ac IDENTICAL/NONE
+// PROVEN: 0571ab78 IDENTICAL/NONE
 // OFFSET: 0x0097A1D0/0x1406F3750
 void CGItemSocketInfo::EnterWorld() {
     CGItemSocketInfo::m_socketItem = WOWGUID::Make(0);
-    CGItemSocketInfo::m_socketItemStats = NULL;
+    CGItemSocketInfo::m_socketItemRec = NULL;
     CGItemSocketInfo::m_gemItems[0] = WOWGUID::Make(0);
     CGItemSocketInfo::m_gemItems[1] = WOWGUID::Make(0);
     CGItemSocketInfo::m_gemItems[2] = WOWGUID::Make(0);
@@ -179,7 +62,23 @@ void CGItemSocketInfo::EnterWorld() {
     memset(CGItemSocketInfo::m_gemContainerSlot, 0, sizeof(((CGItemSocketInfo*)0)->m_gemContainerSlot));
 }
 
-// OFFSET: #0x005C4970
+// OFFSET: 0x0097A310/0x1406F38C0
+int32_t CGItemSocketInfo::GemMatchesSocket(const ItemRecSparse* item, const ItemRecSparse* gem, int32_t socket) {
+    if (!item || !gem) {
+        return 0;
+    }
+
+    int32_t color = item->m_socketColor[socket];
+
+    if (!color) {
+        return 1;
+    }
+
+    GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(gem->m_gemProperties);
+    return properties && (color & properties->m_type);
+}
+
+// OFFSET: 0x0097A370
 bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -190,7 +89,18 @@ bool CGItemSocketInfo::IsSocketItemBoundTradeable() {
     return item->IsBound() && !item->IsBoundForTrade();
 }
 
-// OFFSET: #0x005C4FF0
+// OFFSET: 0x0097A660
+void CGItemSocketInfo::UpdateItem(WOWGUID item) {
+    if (CGPlayer_C* player = ClntObjMgrGetActivePlayerObj()) {
+        player->CountEquippedGems();
+    }
+
+    if (item == CGItemSocketInfo::m_socketItem) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
+    }
+}
+
+// OFFSET: 0x0097A6B0/0x1406F3C40
 void CGItemSocketInfo::Accept() {
     if (!CGItemSocketInfo::m_socketItem) {
         return;
@@ -212,10 +122,11 @@ void CGItemSocketInfo::Accept() {
     if (count) {
         msg.Finalize();
         ClientServices::Send2(&msg);
+        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_ACCEPT, NULL);
     }
 }
 
-// OFFSET: #0x005C50E0
+// OFFSET: 0x0097A7B0/0x1406F3D50
 bool CGItemSocketInfo::IsSocketItemRefundable() {
     CGItem_C* item = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(CGItemSocketInfo::m_socketItem, TYPEMASK_ITEM, __FILE__, __LINE__));
 
@@ -225,33 +136,102 @@ bool CGItemSocketInfo::IsSocketItemRefundable() {
 
     CGItem_C::ItemPurchaseData* purchase = item->m_itemPurchaseData;
 
-    if (!purchase || item->HasEnchantments()) {
+    if (!purchase) {
         return false;
     }
 
     CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-    return static_cast<int32_t>(purchase->m_refundTimeLeft + 7200 - player->GetPlayedTime()) > 0;
+    return static_cast<int32_t>(purchase->m_refundTimeLeft - player->GetPlayedTime() + 7200) > 0;
 }
 
-// OFFSET: #0x005C4EE0
-void CGItemSocketInfo::LeaveWorld() {
-    CGItemSocketInfo::SetItem(WOWGUID::Make(0));
-}
+// OFFSET: 0x0097A870/0x1406F3E20
+void CGItemSocketInfo::SetItem(WOWGUID item) {
+    CGGameUI::UnlockItem(CGItemSocketInfo::m_socketItem);
 
-// OFFSET: #0x005C4EF0
-void CGItemSocketInfo::UpdateItem(WOWGUID item) {
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (player) {
-        player->CountEquippedGems();
+    for (uint32_t i = 0; i < 3; i++) {
+        if (CGItemSocketInfo::m_gemItems[i]) {
+            CGGameUI::UnlockItem(CGItemSocketInfo::m_gemItems[i]);
+        }
     }
 
-    if (item == CGItemSocketInfo::m_socketItem) {
+    CGItemSocketInfo::m_gemItems[0] = WOWGUID();
+    CGItemSocketInfo::m_gemItems[1] = WOWGUID();
+    CGItemSocketInfo::m_gemItems[2] = WOWGUID();
+    CGItemSocketInfo::m_socketItemRec = NULL;
+    CGItemSocketInfo::m_socketItem = item;
+
+    if (CGItem_C* object = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__))) {
+        WOWGUID requester = WOWGUID();
+        CGItemSocketInfo::m_socketItemRec = g_itemSparseDB.GetRecord(object->m_obj->m_entryID, requester, NULL, NULL, false);
+    }
+
+    if (!CGItemSocketInfo::m_socketItemRec || !item) {
+        FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_CLOSE, NULL);
+        return;
+    }
+
+    CGGameUI::LockItem(item);
+    FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
+}
+
+// OFFSET: 0x0097A970
+int32_t CGItemSocketInfo::SetGem(uint32_t slot, WOWGUID item, WOWGUID container, uint8_t containerSlot) {
+    if (slot >= 3 || !CGItemSocketInfo::m_socketItem || !CGItemSocketInfo::m_socketItemRec) {
+        return 0;
+    }
+
+    if (!item) {
+        CGItemSocketInfo::m_gemItems[slot] = WOWGUID();
         FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
+        return 1;
     }
+
+    CGItem_C* gem = static_cast<CGItem_C*>(ClntObjMgrObjectPtr(item, TYPEMASK_ITEM, __FILE__, __LINE__));
+
+    if (!gem) {
+        return 0;
+    }
+
+    WOWGUID requester = WOWGUID();
+    ItemRecSparse* rec = g_itemSparseDB.GetRecord(gem->m_obj->m_entryID, requester, NULL, NULL, false);
+
+    if (!rec || !rec->m_gemProperties) {
+        return 0;
+    }
+
+    if (GemPropertiesRec* properties = g_gemPropertiesDB.GetRecord(rec->m_gemProperties)) {
+        int32_t color = CGItemSocketInfo::m_socketItemRec->m_socketColor[slot];
+        int32_t type = properties->m_type;
+
+        if ((color & 0x1) != (type & 0x1)) {
+            CGGameUI::DisplayError((color & 0x1) ? ERR_SOCKETING_REQUIRES_META_GEM : ERR_SOCKETING_META_GEM_ONLY_IN_METASLOT);
+            return 0;
+        }
+
+        if ((color & 0x10) != (type & 0x10)) {
+            CGGameUI::DisplayError((color & 0x10) ? ERR_SOCKETING_REQUIRES_HYDRAULIC_GEM : ERR_SOCKETING_HYDRAULIC_GEM_ONLY_IN_HYDRAULICSLOT);
+            return 0;
+        }
+
+        if ((color & 0x20) != (type & 0x20)) {
+            CGGameUI::DisplayError((color & 0x20) ? ERR_SOCKETING_REQUIRES_COGWHEEL_GEM : ERR_SOCKETING_COGWHEEL_GEM_ONLY_IN_COGWHEELSLOT);
+            return 0;
+        }
+
+        if (properties->m_minItemLevel && CGItemSocketInfo::m_socketItemRec->m_itemLevel < properties->m_minItemLevel) {
+            CGGameUI::DisplayError(ERR_SOCKETING_ITEM_TOO_LOW_LEVEL);
+            return 0;
+        }
+    }
+
+    CGItemSocketInfo::m_gemItems[slot] = item;
+    CGItemSocketInfo::m_gemItemContainer[slot] = container;
+    CGItemSocketInfo::m_gemContainerSlot[slot] = containerSlot;
+    FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
+    return 1;
 }
 
-// OFFSET: #0x005C4F40
+// OFFSET: 0x0097AB60
 void CGItemSocketInfo::RemoveItem(WOWGUID item) {
     if (item == CGItemSocketInfo::m_socketItem) {
         CGItemSocketInfo::SetItem(WOWGUID::Make(0));
@@ -260,7 +240,7 @@ void CGItemSocketInfo::RemoveItem(WOWGUID item) {
 
     for (uint32_t i = 0; i < 3; i++) {
         if (item == CGItemSocketInfo::m_gemItems[i]) {
-            if (CGItemSocketInfo::m_socketItem.m_guid && CGItemSocketInfo::m_socketItemStats) {
+            if (CGItemSocketInfo::m_socketItem && CGItemSocketInfo::m_socketItemRec) {
                 CGItemSocketInfo::m_gemItems[i] = WOWGUID::Make(0);
                 FrameScript_SignalEvent(SCRIPT_EVENT_SOCKET_INFO_UPDATE, NULL);
             }
@@ -269,9 +249,12 @@ void CGItemSocketInfo::RemoveItem(WOWGUID item) {
         }
     }
 
-    CGPlayer_C* player = ClntObjMgrGetActivePlayerObj();
-
-    if (player) {
+    if (CGPlayer_C* player = ClntObjMgrGetActivePlayerObj()) {
         player->CountEquippedGems();
     }
+}
+
+// OFFSET: 0x0097B1E0/0x1406F47E0
+void CGItemSocketInfo::LeaveWorld() {
+    CGItemSocketInfo::SetItem(WOWGUID::Make(0));
 }

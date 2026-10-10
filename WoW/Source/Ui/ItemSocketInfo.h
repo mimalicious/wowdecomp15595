@@ -9,7 +9,6 @@ struct lua_State;
 void ItemSocketInfoRegisterScriptFunctions();
 void ItemSocketInfoUnregisterScriptFunctions();
 
-class ItemStats_C;
 class ItemRecSparse;
 
 class CGItemSocketInfo {
@@ -18,7 +17,7 @@ class CGItemSocketInfo {
     static WOWGUID m_gemItemContainer[3];
     static WOWGUID m_gemItems[3];
     static WOWGUID m_socketItem;
-    static ItemStats_C* m_socketItemStats;
+    static ItemRecSparse* m_socketItemRec;
 
     static void EnterWorld();
     static void Accept();
@@ -30,7 +29,6 @@ class CGItemSocketInfo {
     static void LeaveWorld();
     static void UpdateItem(WOWGUID item);
     static void RemoveItem(WOWGUID item);
-    static int32_t GemMatchesSocket(const ItemStats_C* item, const ItemStats_C* gem, int32_t socket);
     static int32_t GemMatchesSocket(const ItemRecSparse* item, const ItemRecSparse* gem, int32_t socket);
 };
 
