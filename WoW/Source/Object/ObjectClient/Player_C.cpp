@@ -941,6 +941,7 @@ uint64_t CGPlayer_C::GetCoinage() const {
     return this->m_player->m_playerFieldCoinage;
 }
 
+// PROVEN: 3d6f3098 IDENTICAL/NONE
 // OFFSET: 0x008FF7A0/0x140657270
 const char* CGPlayer_C::GetHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -956,6 +957,7 @@ const char* CGPlayer_C::GetHairCustomizationName() {
     return "NORMAL";
 }
 
+// PROVEN: 8ab8a553 IDENTICAL/NONE
 // OFFSET: 0x008FF800/0x140657300
 const char* CGPlayer_C::GetFacialHairCustomizationName() {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -1141,6 +1143,7 @@ int32_t CGPlayer_C::GetCombatModeFlashDuration() {
     return 500;
 }
 
+// PROVEN: 09ec8b50 IDENTICAL/NONE
 // OFFSET: 0x00554A80/0x1401B13D0
 int32_t CGPlayer_C::GetPlayedTime() const {
     if (this->m_playedTime < 0) {
@@ -1150,6 +1153,7 @@ int32_t CGPlayer_C::GetPlayedTime() const {
     return this->m_playedTime + static_cast<int32_t>(time(NULL)) - this->m_playedTimeBase;
 }
 
+// PROVEN: f04ddedd IDENTICAL/NONE
 // OFFSET: 0x00554AE0/0x1401B1440
 CGVoidStorage_C* CGPlayer_C::GetVoidStorage() {
     if (!this->m_voidStorage) {
@@ -1544,6 +1548,7 @@ void __stdcall CGPlayer_C::ReadItem(uint8_t bag, uint8_t slot) {
     ClientServices::Send2(&msg);
 }
 
+// PROVEN: bb158e16 IDENTICAL/NONE
 // OFFSET: 0x0055C280/0x1401B8FF0
 uint32_t CGPlayer_C::GetDefaultLanguage() const {
     ChrRacesRec* rec = g_chrRacesDB.GetRecord(this->m_unit->m_unitFieldBytes0[0]);
@@ -2847,6 +2852,7 @@ int32_t Packet_SMSG_PLAYER_SKINNED(void* param, NETMESSAGE msgId, uint32_t time,
     return 1;
 }
 
+// PROVEN: 2c7512f4 IDENTICAL/NONE
 // OFFSET: 0x00559210
 int32_t Packet_SMSG_SPELLINSTAKILLLOG(void* param, NETMESSAGE msgId, uint32_t time, CDataStore* msg) {
     WOWGUID casterGuid;
@@ -4694,6 +4700,7 @@ void __stdcall CGPlayer_C::ReportPVPAFK(WOWGUID guid) {
     }
 }
 
+// PROVEN: 63b86c08 IDENTICAL/NONE
 // OFFSET: 0x0055DB90/0x1401BB0F0
 bool __stdcall CGPlayer_C::IsRAFPlayer(WOWGUID guid) {
     CGPlayer_C* player = static_cast<CGPlayer_C*>(ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__));
@@ -6255,7 +6262,8 @@ void CGPlayer_C::UpdateXRayVision(const SpellRec* spell) {
     ClntObjMgrEnumVisibleObjects(CGPlayer_C::XRayVisionEffectProc, const_cast<SpellRec*>(spell));
 }
 
-// OFFSET: %0x00567290
+// PROVEN: 48b8bf8b IDENTICAL/NONE
+// OFFSET: 0x00557020
 int32_t OnUpdatePlayerOverrideSpellsID(WOWGUID guid, uint32_t offset, uint32_t count, const void* value, void* param) {
     if (ClntObjMgrObjectPtr(guid, TYPEMASK_PLAYER, __FILE__, __LINE__)) {
         CGSpellBook::UpdateUsable();
@@ -6721,6 +6729,7 @@ int32_t CGPlayer_C::OnLootResponse(uint32_t time, CDataStore* msg) {
     return 1;
 }
 
+// PROVEN: 0ff6f30e IDENTICAL/NONE
 // OFFSET: 0x0055BD30
 int32_t CGPlayer_C::OnLootRemoved(CDataStore* msg) {
     uint8_t slot;
@@ -6733,6 +6742,7 @@ int32_t CGPlayer_C::OnLootRemoved(CDataStore* msg) {
     return 1;
 }
 
+// PROVEN: 29e9f44a IDENTICAL/NONE
 // OFFSET: 0x0055BD80
 int32_t CGPlayer_C::OnLootSlotChanged(CDataStore* msg) {
     WOWGUID guid;
@@ -7671,6 +7681,18 @@ bool CGPlayer_C::GetExpandedSkillRank(int32_t skillId, int32_t& rank, int32_t& b
     return true;
 }
 
+// PROVEN: c1904e2d IDENTICAL/NONE
+// OFFSET: 0x0055E260/0x1401BB7A0
+int16_t CGPlayer_C::GetSkillModifier(int32_t index) const {
+    WOWGUID guid = this->m_obj->m_guid;
+
+    if (guid != ClntObjMgrGetActivePlayer()) {
+        return 0;
+    }
+
+    return this->m_player->m_playerSkillModifier0[index];
+}
+
 // OFFSET: 0x0090FD00/0x14066B450
 uint32_t CGPlayer_C::GetSkillMaxRank(int32_t index) const {
     if (this->m_obj->m_guid != ClntObjMgrGetActivePlayer()) {
@@ -7848,6 +7870,7 @@ int32_t AreaTriggerCheck(const void* data, void* param) {
     return 1;
 }
 
+// PROVEN: 36c36b78 IDENTICAL/NONE
 // OFFSET: 0x00560F40
 void AreaTriggerCheckNow() {
     AreaTriggerCheck(NULL, NULL);
@@ -7995,8 +8018,8 @@ bool CGPlayer_C::OnGuildChanged(int32_t a2) {
     return true;
 }
 
-// OFFSET: #0x006E73B0
-TSGrowableArray<int32_t>* CGPlayer_C::GetTradeSkillSpells(int32_t skillLine) {
+// OFFSET: 0x00567DA0
+TSGrowableArray<int32_t>* CGPlayer_C::GetTradeSkills(int32_t skillLine) {
     TRADESKILLLINE* line = this->m_tradeSkillLines.Ptr(skillLine, HASHKEY_NONE());
 
     return line ? &line->m_spells : NULL;
@@ -9829,7 +9852,8 @@ bool CGPlayer_C::ReportBagItemSubtypeMismatch(uint8_t bag) {
     return true;
 }
 
-// OFFSET: %0x0056C0C0
+// PROVEN: b9832e48 IDENTICAL/NONE
+// OFFSET: 0x0055C980/0x1401B0B20
 void CGPlayer_C::StartGiftWrap(CGItem_C* item) {
     s_giftWrapItem = item->m_obj->m_guid;
     CGGameUI::LockItem(s_giftWrapItem);

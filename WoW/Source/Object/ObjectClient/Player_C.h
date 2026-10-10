@@ -318,7 +318,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     uint32_t GetNextLevelXP() const;
     uint32_t GetDefaultLanguage() const;
     int32_t GetLanguageSkill(uint32_t language, uint32_t& skill);
-    int16_t GetSkillModifier(int32_t index);
+    int16_t GetSkillModifier(int32_t index) const;
     uint16_t GetSkillStep(int32_t index) const;
     int32_t GetCharacterPoints(int32_t index) const;
     int32_t GetSkillLineForSlot(int32_t hand);
@@ -335,7 +335,7 @@ class CGPlayer_C : public CGUnit_C, public CGPlayer {
     const char* GetPVPRankString(int32_t rank) const;
     int32_t GetPVPToggleTimer() const;
     int32_t GetSkillIndex(int32_t skillId) const;
-    TSGrowableArray<int32_t>* GetTradeSkillSpells(int32_t skillLine);
+    TSGrowableArray<int32_t>* GetTradeSkills(int32_t skillLine);
     uint32_t GetSkillMaxRank(int32_t index) const;
     int32_t GetSkillRank(int32_t skillId) const;
     uint32_t GetSkillValue(int32_t index) const;

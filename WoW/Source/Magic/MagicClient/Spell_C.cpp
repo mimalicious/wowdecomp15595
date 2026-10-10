@@ -1573,11 +1573,11 @@ void StartSpellCastVisuals(CGUnit_C* unit, PendingSpellCast* cast, const SpellRe
             ClearSpellCastState(unit, current);
 
             if (unit == ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
-                CGTradeSkillInfo::CommitPendingRecast(cast->m_data.m_spellId);
+                CGTradeSkillInfo::ActivatePendingRecast(cast->m_data.m_spellId);
             }
         }
     } else if (!hidden && unit == ClntObjMgrObjectPtr(ClntObjMgrGetActivePlayer(), TYPEMASK_PLAYER, __FILE__, __LINE__)) {
-        CGTradeSkillInfo::CommitPendingRecast(cast->m_data.m_spellId);
+        CGTradeSkillInfo::ActivatePendingRecast(cast->m_data.m_spellId);
     }
 
     if (!unit->m_castSpellId && !cast->m_trajectoryLaunched) {
@@ -7435,7 +7435,7 @@ void Spell_C_SpellFailed(PendingSpellCast* cast, const SpellRec* spell, int32_t 
         s_delayedTrajectoryCast = NULL;
     }
 
-    UpdateTradeSkillRecast(spellId);
+    CGTradeSkillInfo::StopRecast(spellId);
 
     if (s_autoRepeatingSpell && (reason == SPELL_FAILED_NOT_READY || reason == SPELL_FAILED_SPELL_IN_PROGRESS)) {
         SpellRec* autoRepeat = g_spellDB.GetRecord(s_autoRepeatingSpell);
@@ -10022,7 +10022,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
     }
 
     if (effect == 47) {
-        WOWGUID guid = unit->m_obj->m_guid;
+        uint64_t guid = unit->m_obj->m_guid.m_guid;
         SkillLineRec* skillLine = CGTradeSkillInfo::GetSkillLineRec(spell->m_id, guid);
 
         if (!skillLine) {
@@ -10033,7 +10033,7 @@ bool Spell_C_CastSpell(CGUnit_C* caster, int32_t spellId, const CGItem_C* item, 
             CGResearchFrame::m_skillLine = CGResearchFrame::m_skillLine != 794 ? 794 : 0;
             FrameScript_SignalEvent(SCRIPT_EVENT_ARCHAEOLOGY_TOGGLE, NULL);
         } else {
-            WOWGUID tradeGuid = unit->m_obj->m_guid;
+            uint64_t tradeGuid = unit->m_obj->m_guid.m_guid;
             CGTradeSkillInfo::SetTradeSkill(spell->m_id, tradeGuid, NULL, 0, 0);
         }
 

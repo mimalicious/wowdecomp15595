@@ -73,6 +73,7 @@ static int32_t Script_SetCurrentGuildBankTab(lua_State* L) {
     return 0;
 }
 
+// PROVEN: 2208c883 IDENTICAL/NONE
 // OFFSET: 0x009C0490/0x14074CD90
 static int32_t Script_GetCurrentGuildBankTab(lua_State* L) {
     lua_pushnumber(L, CGGuildBankInfo::m_currentTab + 1);
